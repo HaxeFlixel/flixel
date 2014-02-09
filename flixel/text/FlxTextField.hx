@@ -15,7 +15,7 @@ import flixel.util.FlxPoint;
 import openfl.Assets;
 
 /**
- * Extends <code>FlxText</code> for better support rendering text on cpp target.
+ * Extends FlxText for better support rendering text on cpp target.
  * Doesn't have multicamera support.
  * Displays over all other objects.
  */
@@ -25,7 +25,7 @@ class FlxTextField extends FlxText
 	private var _addedToDisplay:Bool = false;
 	
 	/**
-	 * Creates a new <code>FlxText</code> object at the specified position.
+	 * Creates a new FlxText object at the specified position.
 	 * @param	X				The X position of the text.
 	 * @param	Y				The Y position of the text.
 	 * @param	Width			The width of the text object (height is determined automatically).
@@ -76,14 +76,14 @@ class FlxTextField extends FlxText
 		return false;
 	}
 	
-	override private function simpleRenderSprite():Bool
+	override public function isSimpleRender():Bool
 	{
 		// This class doesn't support this operation
 		return true;
 	}
 	
 	/**
-	 * Set <code>pixels</code> to any <code>BitmapData</code> object.
+	 * Set pixels to any BitmapData object.
 	 * Automatically adjust graphic size and render helpers.
 	 */
 	override private function get_pixels():BitmapData
@@ -159,10 +159,10 @@ class FlxTextField extends FlxText
 			#end
 			
 			_addedToDisplay = true;
-			updateFormat(_format);
+			updateFormat(_defaultFormat);
 		}
 		
-		if (!_camera.visible || !_camera.exists || !onScreen(_camera))
+		if (!_camera.visible || !_camera.exists || !isOnScreen(_camera))
 		{
 			_textField.visible = false;
 		}

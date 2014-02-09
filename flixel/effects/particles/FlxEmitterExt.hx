@@ -1,7 +1,7 @@
 package flixel.effects.particles;
 
 /**
- * Extended <code>FlxEmitter</code> that emits particles in a circle (instead of a square).
+ * Extended FlxEmitter that emits particles in a circle (instead of a square).
  * It also provides a new function setMotion to control particle behavior even more.
  * This was inspired by the way Chevy Ray Johnston implemented his particle emitter in Flashpunk.
  * @author Dirk Bunk
@@ -9,7 +9,7 @@ package flixel.effects.particles;
 class FlxEmitterExt extends FlxTypedEmitterExt<FlxParticle>
 {
 	/**
-	 * Creates a new <code>FlxEmitterExt</code> object at a specific position.
+	 * Creates a new FlxEmitterExt object at a specific position.
 	 * Does NOT automatically generate or attach particles!
 	 * 
 	 * @param	X		The X position of the emitter.

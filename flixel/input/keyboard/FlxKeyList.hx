@@ -119,7 +119,7 @@ class FlxKeyList
 		var keyCode:Int = FlxKeyboard.TOTAL;
 		while(keyCode-- >= 0)
 		{
-			key = FlxG.keyboard._keyList[keyCode];
+			key = FlxG.keys._keyList[keyCode];
 			if (key != null)
 			{
 				if (check(keyCode))
@@ -132,9 +132,9 @@ class FlxKeyList
 		return false;
 	}
 	
-	inline public function check(keyCode:Int):Bool
+	public inline function check(keyCode:Int):Bool
 	{
-		return FlxG.keyboard.checkStatus(keyCode, checkStatus);
+		return FlxG.keys.checkStatus(keyCode, checkStatus);
 	}
 	#end
 }

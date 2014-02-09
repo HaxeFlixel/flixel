@@ -12,7 +12,7 @@ import flixel.text.pxText.PxTextAlign;
 import flixel.util.FlxAngle;
 
 /**
- * Extends <code>FlxSprite</code> to support rendering text.
+ * Extends FlxSprite to support rendering text.
  * Can tint, fade, rotate and scale just like a sprite.
  * Doesn't really animate though, as far as I know.
  * Also does nice pixel-perfect centering on pixel fonts
@@ -215,7 +215,7 @@ class FlxBitmapTextField extends FlxSprite
 			drawItem = camera.getDrawStackItem(cachedGraphics, useAlpha);
 			#end
 			
-			if (!camera.visible || !camera.exists || !onScreen(camera))
+			if (!camera.visible || !camera.exists || !isOnScreen(camera))
 			{
 				continue;
 			}
@@ -235,7 +235,7 @@ class FlxBitmapTextField extends FlxSprite
 			var x1:Float = 0;
 			var y1:Float = 0;
 
-			if (!simpleRenderSprite())
+			if (!isSimpleRender())
 			{
 				if (_angleChanged)
 				{

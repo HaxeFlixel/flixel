@@ -15,19 +15,21 @@ import flixel.util.FlxColor;
 import flixel.util.FlxMath;
 import openfl.Assets;
 
+@:bitmap("assets/images/debugger/windowHandle.png")	private class GraphicWindowHandle extends BitmapData { }
+
 /**
- * A generic, Flash-based window class, created for use in <code>FlxDebugger</code>.
+ * A generic, Flash-based window class, created for use in FlxDebugger.
  */
 class Window extends Sprite
 {
 	/**
 	 * The background color of the window.
 	 */
-	inline static public var BG_COLOR:Int = 0xDD5F5F5F;
+	public static inline var BG_COLOR:Int = 0xDD5F5F5F;
 	/**
 	 * The color used for the "handle" at the top of the window.
 	 */
-	inline static public var TOP_COLOR:Int = 0xBB000000;
+	public static inline var TOP_COLOR:Int = 0xBB000000;
 	/**
 	 * How many windows there are currently in total.
 	 */
@@ -106,15 +108,16 @@ class Window extends Sprite
 	private var _id:Int;
 	
 	/**
-	 * Creates a new window object.  This Flash-based class is mainly (only?) used by <code>FlxDebugger</code>.
-	 * @param	Title		The name of the window, displayed in the header bar.
-	 * @param	IconPath	Path to the icon to use for the window header.
-	 * @param	Width		The initial width of the window.
-	 * @param	Height		The initial height of the window.
-	 * @param	Resizable	Whether you can change the size of the window with a drag handle.
-	 * @param	Bounds		A rectangle indicating the valid screen area for the window.
+	 * Creates a new window object.  This Flash-based class is mainly (only?) used by FlxDebugger.
+	 * 
+	 * @param   Title       The name of the window, displayed in the header bar.
+	 * @param   Icon	    The icon to use for the window header.
+	 * @param   Width       The initial width of the window.
+	 * @param   Height      The initial height of the window.
+	 * @param   Resizable   Whether you can change the size of the window with a drag handle.
+	 * @param   Bounds      A rectangle indicating the valid screen area for the window.
 	 */
-	public function new(Title:String, ?IconPath:String, Width:Float, Height:Float, Resizable:Bool = true, ?Bounds:Rectangle)
+	public function new(Title:String, ?Icon:BitmapData, Width:Float = 0, Height:Float = 0, Resizable:Bool = true, ?Bounds:Rectangle)
 	{
 		super();
 		
@@ -145,9 +148,9 @@ class Window extends Sprite
 		_title.text = Title;
 		addChild(_title);
 		
-		if (IconPath != null)
+		if (Icon != null)
 		{
-			var _icon = new Bitmap(Assets.getBitmapData(IconPath));
+			var _icon = new Bitmap(Icon);
 			_icon.x = 5;
 			_icon.y = 2;
 			_icon.alpha = 0.8;
@@ -157,7 +160,7 @@ class Window extends Sprite
 		
 		if (_resizable)
 		{
-			_handle = new Bitmap(FlxAssets.getBitmapData(FlxAssets.IMG_WINDOW_HANDLE));
+			_handle = new Bitmap(new GraphicWindowHandle(0, 0));
 			addChild(_handle);
 		}
 		

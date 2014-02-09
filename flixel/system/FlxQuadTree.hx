@@ -26,7 +26,7 @@ class FlxQuadTree extends FlxRect
 	/**
 	 * Controls the granularity of the quad tree.  Default is 6 (decent performance on large and small worlds).
 	 */
-	static public var divisions:Int;
+	public static var divisions:Int;
 	
 	public var exists:Bool;
 	
@@ -59,7 +59,7 @@ class FlxQuadTree extends FlxRect
 	/**
 	 * Internal, governs and assists with the formation of the tree.
 	 */
-	static private var _min:Int;
+	private static var _min:Int;
 	/**
 	 * Internal, governs and assists with the formation of the tree.
 	 */
@@ -112,84 +112,84 @@ class FlxQuadTree extends FlxRect
 	/**
 	 * Internal, used to reduce recursive method parameters during object placement and tree formation.
 	 */
-	static private var _object:FlxObject;
+	private static var _object:FlxObject;
 	/**
 	 * Internal, used to reduce recursive method parameters during object placement and tree formation.
 	 */
-	static private var _objectLeftEdge:Float;
+	private static var _objectLeftEdge:Float;
 	/**
 	 * Internal, used to reduce recursive method parameters during object placement and tree formation.
 	 */
-	static private var _objectTopEdge:Float;
+	private static var _objectTopEdge:Float;
 	/**
 	 * Internal, used to reduce recursive method parameters during object placement and tree formation.
 	 */
-	static private var _objectRightEdge:Float;
+	private static var _objectRightEdge:Float;
 	/**
 	 * Internal, used to reduce recursive method parameters during object placement and tree formation.
 	 */
-	static private var _objectBottomEdge:Float;
+	private static var _objectBottomEdge:Float;
 	
 	/**
 	 * Internal, used during tree processing and overlap checks.
 	 */
-	static private var _list:Int;
+	private static var _list:Int;
 	/**
 	 * Internal, used during tree processing and overlap checks.
 	 */
-	static private var _useBothLists:Bool;
+	private static var _useBothLists:Bool;
 	/**
 	 * Internal, used during tree processing and overlap checks.
 	 */
-	static private var _processingCallback:FlxObject->FlxObject->Bool;
+	private static var _processingCallback:FlxObject->FlxObject->Bool;
 	/**
 	 * Internal, used during tree processing and overlap checks.
 	 */
-	static private var _notifyCallback:FlxObject->FlxObject->Void;
+	private static var _notifyCallback:FlxObject->FlxObject->Void;
 	/**
 	 * Internal, used during tree processing and overlap checks.
 	 */
-	static private var _iterator:FlxList;
+	private static var _iterator:FlxList;
 	
 	/**
-	 * Internal, helpers for comparing actual object-to-object overlap - see <code>overlapNode()</code>.
+	 * Internal, helpers for comparing actual object-to-object overlap - see overlapNode().
 	 */
-	static private var _objectHullX:Float;
+	private static var _objectHullX:Float;
 	/**
-	 * Internal, helpers for comparing actual object-to-object overlap - see <code>overlapNode()</code>.
+	 * Internal, helpers for comparing actual object-to-object overlap - see overlapNode().
 	 */
-	static private var _objectHullY:Float;
+	private static var _objectHullY:Float;
 	/**
-	 * Internal, helpers for comparing actual object-to-object overlap - see <code>overlapNode()</code>.
+	 * Internal, helpers for comparing actual object-to-object overlap - see overlapNode().
 	 */
-	static private var _objectHullWidth:Float;
+	private static var _objectHullWidth:Float;
 	/**
-	 * Internal, helpers for comparing actual object-to-object overlap - see <code>overlapNode()</code>.
+	 * Internal, helpers for comparing actual object-to-object overlap - see overlapNode().
 	 */
-	static private var _objectHullHeight:Float;
+	private static var _objectHullHeight:Float;
 	
 	/**
-	 * Internal, helpers for comparing actual object-to-object overlap - see <code>overlapNode()</code>.
+	 * Internal, helpers for comparing actual object-to-object overlap - see overlapNode().
 	 */
-	static private var _checkObjectHullX:Float;
+	private static var _checkObjectHullX:Float;
 	/**
-	 * Internal, helpers for comparing actual object-to-object overlap - see <code>overlapNode()</code>.
+	 * Internal, helpers for comparing actual object-to-object overlap - see overlapNode().
 	 */
-	static private var _checkObjectHullY:Float;
+	private static var _checkObjectHullY:Float;
 	/**
-	 * Internal, helpers for comparing actual object-to-object overlap - see <code>overlapNode()</code>.
+	 * Internal, helpers for comparing actual object-to-object overlap - see overlapNode().
 	 */
-	static private var _checkObjectHullWidth:Float;
+	private static var _checkObjectHullWidth:Float;
 	/**
-	 * Internal, helpers for comparing actual object-to-object overlap - see <code>overlapNode()</code>.
+	 * Internal, helpers for comparing actual object-to-object overlap - see overlapNode().
 	 */
-	static private var _checkObjectHullHeight:Float;
+	private static var _checkObjectHullHeight:Float;
 	
 	/**
 	 * Pooling mechanism, turn FlxQuadTree into a linked list, when FlxQuadTrees are destroyed, they get added to the list, and when they get recycled they get removed.
 	 */
 	static public  var _NUM_CACHED_QUAD_TREES:Int = 0;
-	static private var _cachedTreesHead:FlxQuadTree;
+	private static var _cachedTreesHead:FlxQuadTree;
 	private 	   var next:FlxQuadTree;
 	
 	/**
@@ -367,8 +367,8 @@ class FlxQuadTree extends FlxRect
 	 * Load objects and/or groups into the quad tree, and register notify and processing callbacks.
 	 * @param ObjectOrGroup1	Any object that is or extends FlxObject or FlxGroup.
 	 * @param ObjectOrGroup2	Any object that is or extends FlxObject or FlxGroup.  If null, the first parameter will be checked against itself.
-	 * @param NotifyCallback	A function with the form <code>myFunction(Object1:FlxObject,Object2:FlxObject):void</code> that is called whenever two objects are found to overlap in world space, and either no ProcessCallback is specified, or the ProcessCallback returns true. 
-	 * @param ProcessCallback	A function with the form <code>myFunction(Object1:FlxObject,Object2:FlxObject):Boolean</code> that is called whenever two objects are found to overlap in world space.  The NotifyCallback is only called if this function returns true.  See FlxObject.separate(). 
+	 * @param NotifyCallback	A function with the form myFunction(Object1:FlxObject,Object2:FlxObject):void that is called whenever two objects are found to overlap in world space, and either no ProcessCallback is specified, or the ProcessCallback returns true. 
+	 * @param ProcessCallback	A function with the form myFunction(Object1:FlxObject,Object2:FlxObject):Boolean that is called whenever two objects are found to overlap in world space.  The NotifyCallback is only called if this function returns true.  See FlxObject.separate(). 
 	 */
 	public function load(ObjectOrGroup1:FlxBasic, ObjectOrGroup2:FlxBasic = null, NotifyCallback:FlxObject->FlxObject->Void = null, ProcessCallback:FlxObject->FlxObject->Bool = null):Void
 	{
@@ -391,7 +391,7 @@ class FlxQuadTree extends FlxRect
 	 * This function will recursively add all group members, but
 	 * not the groups themselves.
 	 * @param	ObjectOrGroup	FlxObjects are just added, FlxGroups are recursed and their applicable members added accordingly.
-	 * @param	List			A <code>int</code> flag indicating the list to which you want to add the objects.  Options are <code>A_LIST</code> and <code>B_LIST</code>.
+	 * @param	List			A int flag indicating the list to which you want to add the objects.  Options are A_LIST and B_LIST.
 	 */
 	public function add(ObjectOrGroup:FlxBasic, list:Int):Void
 	{
@@ -595,8 +595,8 @@ class FlxQuadTree extends FlxRect
 	}
 	
 	/**
-	 * <code>FlxQuadTree</code>'s other main function.  Call this after adding objects
-	 * using <code>FlxQuadTree.load()</code> to compare the objects that you loaded.
+	 * FlxQuadTree's other main function.  Call this after adding objects
+	 * using FlxQuadTree.load() to compare the objects that you loaded.
 	 * @return	Whether or not any overlaps were found.
 	 */
 	public function execute():Bool

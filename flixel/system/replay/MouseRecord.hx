@@ -1,18 +1,12 @@
 package flixel.system.replay;
 
+import flixel.util.FlxPoint;
+
 /**
  * A helper class for the frame records, part of the replay/demo/recording system.
  */
-class MouseRecord
+class MouseRecord extends FlxPoint
 {
-	/**
-	 * The main X value of the mouse in screen space.
-	 */
-	public var x:Int;
-	/**
-	 * The main Y value of the mouse in screen space.
-	 */
-	public var y:Int;
 	/**
 	 * The state of the left mouse button.
 	 */
@@ -24,15 +18,16 @@ class MouseRecord
 	
 	/**
 	 * Instantiate a new mouse input record.
-	 * @param X			The main X value of the mouse in screen space.
-	 * @param Y			The main Y value of the mouse in screen space.
-	 * @param Button	The state of the left mouse button.
-	 * @param Wheel		The state of the mouse wheel.
+	 * 
+	 * @param   X        The main X value of the mouse in screen space.
+	 * @param   Y        The main Y value of the mouse in screen space.
+	 * @param   Button   The state of the left mouse button.
+	 * @param   Wheel    The state of the mouse wheel.
 	 */
 	public function new(X:Int, Y:Int, Button:Int, Wheel:Int)
 	{
-		x = X;
-		y = Y;
+		super(X, Y);
+		
 		button = Button;
 		wheel = Wheel;
 	}

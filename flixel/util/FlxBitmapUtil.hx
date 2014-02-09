@@ -143,7 +143,7 @@ class FlxBitmapUtil
 		#end
 	}
 	
-	inline static private function mergeColorComponent(source:Int, dest:Int, multiplier:Int):Int
+	private static inline function mergeColorComponent(source:Int, dest:Int, multiplier:Int):Int
 	{
 		return Std.int(((source * multiplier) + (dest * (256 - multiplier))) / 256);
 	}

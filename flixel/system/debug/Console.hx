@@ -1,5 +1,6 @@
 package flixel.system.debug;
 
+#if !FLX_NO_DEBUG
 import flash.errors.ArgumentError;
 import flash.events.Event;
 import flash.events.FocusEvent;
@@ -11,7 +12,7 @@ import flash.text.TextFormat;
 import flash.ui.Keyboard;
 import flixel.FlxG;
 import flixel.FlxObject;
-import flixel.system.FlxAssets;
+import flixel.system.debug.FlxDebugger;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxStringUtil;
 
@@ -25,11 +26,11 @@ class Console extends Window
 	/**
 	 * The text that is displayed in the console's input field by default.
 	 */
-	inline static private var _DEFAULT_TEXT:String = "(Click here / press [Tab] to enter command. Type 'help' for help.)";
+	private static inline var _DEFAULT_TEXT:String = "(Click here / press [Tab] to enter command. Type 'help' for help.)";
 	/**
 	 * The amount of commands that will be saved.
 	 */
-	inline static private var _HISTORY_MAX:Int = 25;
+	private static inline var _HISTORY_MAX:Int = 25;
 	
 	/**
 	 * Hash containing all registered Obejects for the set command. You can use the registerObject() 
@@ -66,17 +67,11 @@ class Console extends Window
 	private var _input:TextField;
 	
 	/**
-	 * Creates a new window object.  This Flash-based class is mainly (only?) used by <code>FlxDebugger</code>.
-	 * @param	Title		The name of the window, displayed in the header bar.
-	 * @param	IconPath	Path to the icon to use for the window header.
-	 * @param	Width		The initial width of the window.
-	 * @param	Height		The initial height of the window.
-	 * @param	Resizable	Whether you can change the size of the window with a drag handle.
-	 * @param	Bounds		A rectangle indicating the valid screen area for the window.
+	 * Creates a new console window object.
 	 */	
-	public function new(Title:String, ?IconPath:String, Width:Float, Height:Float, Resizable:Bool = true, ?Bounds:Rectangle)
+	public function new()
 	{	
-		super(Title, IconPath, Width, Height, Resizable, Bounds);
+		super("console", new GraphicConsole(0, 0), 0, 0, false);
 		
 		commands = new Array<Command>();
 		
@@ -132,7 +127,7 @@ class Console extends Window
 		
 		// Block keyboard input
 		#if !FLX_NO_KEYBOARD
-		FlxG.keyboard.enabled = false;
+		FlxG.keys.enabled = false;
 		#end
 		
 		if (_input.text == Console._DEFAULT_TEXT) 
@@ -154,7 +149,7 @@ class Console extends Window
 		#end
 		// Unblock keyboard input
 		#if !FLX_NO_KEYBOARD
-		FlxG.keyboard.enabled = true;
+		FlxG.keys.enabled = true;
 		#end
 		
 		if (_input.text == "") 
@@ -283,7 +278,7 @@ class Console extends Window
 		removeEventListener(Event.RENDER, overrideDefaultSelection);
 	}
 	
-	inline private function getPreviousCommand():String
+	private inline function getPreviousCommand():String
 	{
 		if (_historyIndex > 0) {
 			_historyIndex --;
@@ -292,7 +287,7 @@ class Console extends Window
 		return cmdHistory[_historyIndex];
 	}
 	
-	inline private function getNextCommand():String
+	private inline function getNextCommand():String
 	{
 		if (_historyIndex < cmdHistory.length) {
 			_historyIndex ++;
@@ -312,7 +307,7 @@ class Console extends Window
 	 * @param 	ObjectAlias		The name with which you want to access the object.
 	 * @param 	AnyObject		The object to register.
 	 */
-	inline public function registerObject(ObjectAlias:String, AnyObject:Dynamic):Void
+	public inline function registerObject(ObjectAlias:String, AnyObject:Dynamic):Void
 	{
 		registeredObjects.set(ObjectAlias, AnyObject);
 	}
@@ -323,7 +318,7 @@ class Console extends Window
 	 * @param 	FunctionAlias	The name with which you want to access the function.
 	 * @param 	Function		The function to register.
 	 */
-	inline public function registerFunction(FunctionAlias:String, Function:Dynamic):Void
+	public inline function registerFunction(FunctionAlias:String, Function:Dynamic):Void
 	{
 		registeredFunctions.set(FunctionAlias, Function);
 	}
@@ -338,7 +333,7 @@ class Console extends Window
 	 * @param 	NumParams		The amount of parameters a function has. Require to prevent crashes on Neko.
 	 * @param	ParamCutoff		At which parameter to put all remaining params into an array
 	 */
-	inline public function addCommand(Aliases:Array<String>, ProcessFunction:Dynamic, ?Help:String, ?ParamHelp:String, NumParams:Int = 0, ParamCutoff:Int = -1):Void
+	public inline function addCommand(Aliases:Array<String>, ProcessFunction:Dynamic, ?Help:String, ?ParamHelp:String, NumParams:Int = 0, ParamCutoff:Int = -1):Void
 	{
 		commands.push( { aliases:Aliases, processFunction:ProcessFunction, help:Help, paramHelp:ParamHelp, 
 						numParams:NumParams, paramCutoff:ParamCutoff });
@@ -380,6 +375,7 @@ class Console extends Window
 		_input.height = _height - 15;
 	}
 }
+#end
 
 typedef Command = {
 	aliases:Array<String>,

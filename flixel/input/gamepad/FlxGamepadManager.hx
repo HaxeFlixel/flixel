@@ -25,31 +25,22 @@ class FlxGamepadManager implements IFlxInput
 	public var lastActive:FlxGamepad;
 	
 	/**
+	 * A counter for the number of active Joysticks
+	 */
+	public var numActiveGamepads(get, null):Int;
+	
+	/**
+	 * While you can have each joystick use a custom dead zone, setting this will 
+	 * set every gamepad to use this deadzone.
+	 */
+	public var globalDeadZone(default, set):Float;
+	
+	/**
 	 * Storage for all connected joysticks
 	 */
 	private var _gamepads:Map<Int, FlxGamepad>;
 	
-	/**
-	 * Constructor
-	 */
-	public function new() 
-	{
-		firstActive = null;
-		lastActive = null;
-		_gamepads = new Map<Int, FlxGamepad>();
-		#if (cpp || neko)
-		Lib.current.stage.addEventListener(JoystickEvent.AXIS_MOVE, handleAxisMove);
-		Lib.current.stage.addEventListener(JoystickEvent.BALL_MOVE, handleBallMove);
-		Lib.current.stage.addEventListener(JoystickEvent.BUTTON_DOWN, handleButtonDown);
-		Lib.current.stage.addEventListener(JoystickEvent.BUTTON_UP, handleButtonUp);
-		Lib.current.stage.addEventListener(JoystickEvent.HAT_MOVE, handleHatMove);
-		#end
-	}
-	
-	/**
-	 * Get a particular Gamepad object
-	 */
-	public function get(GamepadID:Int):FlxGamepad
+	public function getByID(GamepadID:Int):FlxGamepad
 	{
 		var gamepad:FlxGamepad = _gamepads.get(GamepadID);
 		
@@ -279,14 +270,19 @@ class FlxGamepadManager implements IFlxInput
 	}
 	
 	/**
-	 * Updates the key states (for tracking just pressed, just released, etc).
+	 * Clean up memory. Internal use only.
 	 */
-	public function update():Void
+	@:noCompletion public function destroy():Void
 	{
 		for (gamepad in _gamepads)
 		{
-			gamepad.update();
+			gamepad.destroy();
 		}
+		
+		firstActive = FlxG.safeDestroy(firstActive);
+		lastActive = FlxG.safeDestroy(lastActive);
+		_gamepads = new Map<Int, FlxGamepad>();
+		numActiveGamepads = 0;
 	}
 	
 	/**
@@ -300,31 +296,26 @@ class FlxGamepadManager implements IFlxInput
 		}
 	}
 	
-	/**
-	 * Clean up memory.
-	 */
-	public function destroy():Void
+	@:allow(flixel.FlxG)
+	private function new() 
 	{
-		for (gamepad in _gamepads)
-		{
-			gamepad.destroy();
-		}
-		
-		firstActive = FlxG.safeDestroy(firstActive);
-		lastActive = FlxG.safeDestroy(lastActive);
+		firstActive = null;
+		lastActive = null;
 		_gamepads = new Map<Int, FlxGamepad>();
-		numActiveGamepads = 0;
+		
+		#if (cpp || neko)
+		Lib.current.stage.addEventListener(JoystickEvent.AXIS_MOVE, handleAxisMove);
+		Lib.current.stage.addEventListener(JoystickEvent.BALL_MOVE, handleBallMove);
+		Lib.current.stage.addEventListener(JoystickEvent.BUTTON_DOWN, handleButtonDown);
+		Lib.current.stage.addEventListener(JoystickEvent.BUTTON_UP, handleButtonUp);
+		Lib.current.stage.addEventListener(JoystickEvent.HAT_MOVE, handleHatMove);
+		#end
 	}
 	
 	#if (cpp || neko)
-	/**
-	 * Event handler so FlxGame can toggle buttons.
-	 * 
-	 * @param	FlashEvent	A <code>JoystickEvent</code> object.
-	 */
 	private function handleButtonDown(FlashEvent:JoystickEvent):Void
 	{
-		var gamepad:FlxGamepad = get(FlashEvent.device);
+		var gamepad:FlxGamepad = getByID(FlashEvent.device);
 		var o:FlxGamepadButton = gamepad.getButton(FlashEvent.id);
 		
 		if (o == null) 
@@ -342,14 +333,9 @@ class FlxGamepadManager implements IFlxInput
 		}
 	}
 	
-	/**
-	 * Event handler so FlxGame can toggle buttons.
-	 * 
-	 * @param	FlashEvent	A <code>JoystickEvent</code> object.
-	 */
 	private function handleButtonUp(FlashEvent:JoystickEvent):Void
 	{
-		var gamepad:FlxGamepad = get(FlashEvent.device);
+		var gamepad:FlxGamepad = getByID(FlashEvent.device);
 		var object:FlxGamepadButton = gamepad.getButton(FlashEvent.id);
 		
 		if (object == null) 
@@ -367,58 +353,44 @@ class FlxGamepadManager implements IFlxInput
 		}
 	}
 	
-	/**
-	 * Event handler so FlxGame can update joystick.
-	 * 
-	 * @param	FlashEvent	A <code>JoystickEvent</code> object.
-	 */
 	private function handleAxisMove(FlashEvent:JoystickEvent):Void
 	{
-		var gamepad:FlxGamepad = get(FlashEvent.device);
+		var gamepad:FlxGamepad = getByID(FlashEvent.device);
 		gamepad.axis = FlashEvent.axis;
 	}
 	
-	/**
-	 * Event handler so FlxGame can update joystick.
-	 * 
-	 * @param	FlashEvent	A <code>JoystickEvent</code> object.
-	 */
 	private function handleBallMove(FlashEvent:JoystickEvent):Void
 	{
-		var gamepad:FlxGamepad = get(FlashEvent.device);
+		var gamepad:FlxGamepad = getByID(FlashEvent.device);
 		gamepad.ball.x = (Math.abs(FlashEvent.x) < gamepad.deadZone) ? 0 : FlashEvent.x;
 		gamepad.ball.y = (Math.abs(FlashEvent.y) < gamepad.deadZone) ? 0 : FlashEvent.y;
 	}
 	
-	/**
-	 * Event handler so FlxGame can update joystick.
-	 * 
-	 * @param	FlashEvent	A <code>JoystickEvent</code> object.
-	 */
 	private function handleHatMove(FlashEvent:JoystickEvent):Void
 	{
-		var gamepad:FlxGamepad = get(FlashEvent.device);
+		var gamepad:FlxGamepad = getByID(FlashEvent.device);
 		gamepad.hat.x = (Math.abs(FlashEvent.x) < gamepad.deadZone) ? 0 : FlashEvent.x;
 		gamepad.hat.y = (Math.abs(FlashEvent.y) < gamepad.deadZone) ? 0 : FlashEvent.y;
 	}
 	#end
 	
-	inline public function onFocus():Void { }
+	/**
+	 * Updates the key states (for tracking just pressed, just released, etc).
+	 */
+	private function update():Void
+	{
+		for (gamepad in _gamepads)
+		{
+			gamepad.update();
+		}
+	}
+	
+	private inline function onFocus():Void { }
 
-	inline public function onFocusLost():Void
+	private inline function onFocusLost():Void
 	{
 		reset();
 	}
-
-	inline public function toString():String
-	{
-		return 'FlxGamepadManager';
-	}
-	
-	/**
-	 * A counter for the number of active Joysticks
-	 */
-	public var numActiveGamepads(get, null):Int;
 
 	private function get_numActiveGamepads():Int
 	{
@@ -431,12 +403,6 @@ class FlxGamepadManager implements IFlxInput
 		
 		return count;
 	}
-	
-	/**
-	 * While you can have each joystick use a custom dead zone, setting this will 
-	 * set every gamepad to use this deadzone.
-	 */
-	public var globalDeadZone(default, set):Float;
 	
 	/**
 	 * Facility function to set the deadzone on every available gamepad.

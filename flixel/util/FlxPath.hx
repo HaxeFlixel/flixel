@@ -10,9 +10,9 @@ import flixel.util.FlxPoint;
 
 /**
  * This is a simple path data container.  Basically a list of points that
- * a <code>FlxObject</code> can follow.  Also has code for drawing debug visuals.
- * <code>FlxTilemap.findPath()</code> returns a path object, but you can
- * also just make your own, using the <code>add()</code> functions below
+ * a FlxObject can follow.  Also has code for drawing debug visuals.
+ * FlxTilemap.findPath() returns a path object, but you can
+ * also just make your own, using the add() functions below
  * or by creating your own array of points.
  */
 class FlxPath
@@ -22,12 +22,12 @@ class FlxPath
 	/**
 	 * Returns a recycled path.
 	 */
-	static public function recycle():FlxPath
+	public static function recycle():FlxPath
 	{
 		return pool.get().reset();
 	}
 	
-	static public function put(path:FlxPath):Void
+	public static function put(path:FlxPath):Void
 	{
 		pool.put(path);
 	}
@@ -42,7 +42,7 @@ class FlxPath
 	 * @param	Mode		Optional, controls the behavior of the object following the path using the path behavior constants.  Can use multiple flags at once, for example PATH_YOYO|PATH_HORIZONTAL_ONLY will make an object move back and forth along the X axis of the path only.
 	 * @param	AutoRotate	Automatically point the object toward the next node.  Assumes the graphic is pointing upward.  Default behavior is false, or no automatic rotation.
 	 */
-	static public function start(Object:FlxObject, Nodes:Array<FlxPoint>, Speed:Float = 100, Mode:Int = 0x000000, AutoRotate:Bool = false, UsePooling:Bool = true):FlxPath
+	public static function start(Object:FlxObject, Nodes:Array<FlxPoint>, Speed:Float = 100, Mode:Int = 0x000000, AutoRotate:Bool = false, UsePooling:Bool = true):FlxPath
 	{
 		var path:FlxPath = recycle();
 		path.run(Object, Nodes, Speed, Mode, AutoRotate, UsePooling);
@@ -52,34 +52,34 @@ class FlxPath
 	/**
 	 * Path behavior controls: move from the start of the path to the end then stop.
 	 */
-	inline static public var FORWARD:Int = 0x000000;
+	public static inline var FORWARD:Int = 0x000000;
 	/**
 	 * Path behavior controls: move from the end of the path to the start then stop.
 	 */
-	inline static public var BACKWARD:Int= 0x000001;
+	public static inline var BACKWARD:Int= 0x000001;
 	/**
 	 * Path behavior controls: move from the start of the path to the end then directly back to the start, and start over.
 	 */
-	inline static public var LOOP_FORWARD:Int = 0x000010;
+	public static inline var LOOP_FORWARD:Int = 0x000010;
 	/**
 	 * Path behavior controls: move from the end of the path to the start then directly back to the end, and start over.
 	 */
-	inline static public var LOOP_BACKWARD:Int = 0x000100;
+	public static inline var LOOP_BACKWARD:Int = 0x000100;
 	/**
 	 * Path behavior controls: move from the start of the path to the end then turn around and go back to the start, over and over.
 	 */
-	inline static public var YOYO:Int = 0x001000;
+	public static inline var YOYO:Int = 0x001000;
 	/**
 	 * Path behavior controls: ignores any vertical component to the path data, only follows side to side.
 	 */
-	inline static public var HORIZONTAL_ONLY:Int = 0x010000;
+	public static inline var HORIZONTAL_ONLY:Int = 0x010000;
 	/**
 	 * Path behavior controls: ignores any horizontal component to the path data, only follows up and down.
 	 */
-	inline static public var VERTICAL_ONLY:Int = 0x100000;
+	public static inline var VERTICAL_ONLY:Int = 0x100000;
 	
 	/**
-	 * The list of <code>FlxPoint</code>s that make up the path data.
+	 * The list of FlxPoints that make up the path data.
 	 */
 	public var nodes:Array<FlxPoint>;
 	
@@ -93,8 +93,8 @@ class FlxPath
 	/**
 	 * The speed at which the object is moving on the path.
 	 * When an object completes a non-looping path circuit,
-	 * the pathSpeed will be zeroed out, but the <code>path</code> reference
-	 * will NOT be nulled out.  So <code>pathSpeed</code> is a good way
+	 * the pathSpeed will be zeroed out, but the path reference
+	 * will NOT be nulled out.  So pathSpeed is a good way
 	 * to check if this object is currently following a path or not.
 	 */
 	public var speed:Float = 0;
@@ -224,7 +224,7 @@ class FlxPath
 	
 	/**
 	 * Change the path node this object is currently at.
-	 * @param  NodeIndex    The index of the new node out of <code>path.nodes</code>.
+	 * @param  NodeIndex    The index of the new node out of path.nodes.
 	 */
 	public function setNode(NodeIndex:Int):Void
 	{
@@ -239,7 +239,7 @@ class FlxPath
 	
 	/**
 	 * Internal function for moving the object along the path.
-	 * Generally this function is called automatically by <code>preUpdate()</code>.
+	 * Generally this function is called automatically by preUpdate().
 	 * The first half of the function decides if the object can advance to the next node in the path,
 	 * while the second half handles actually picking a velocity toward the next node.
 	 */
@@ -352,7 +352,7 @@ class FlxPath
 	
 	/**
 	 * Internal function that decides what node in the path to aim for next based on the behavior flags.
-	 * @return	The node (a <code>FlxPoint</code> object) we are aiming for next.
+	 * @return	The node (a FlxPoint object) we are aiming for next.
 	 */
 	private function advancePath(Snap:Bool = true):FlxPoint
 	{
@@ -514,7 +514,7 @@ class FlxPath
 	/**
 	 * Sometimes its easier or faster to just pass a point object instead of separate X and Y coordinates.
 	 * This also gives you the option of not creating a new node but actually adding that specific
-	 * <code>FlxPoint</code> object to the path.  This allows you to do neat things, like dynamic paths.
+	 * FlxPoint object to the path.  This allows you to do neat things, like dynamic paths.
 	 * @param	Node			The point in world coordinates you want to add to the path.
 	 * @param	AsReference		Whether to add the point as a reference, or to create a new point with the specified values.
 	 */
@@ -534,7 +534,7 @@ class FlxPath
 	/**
 	 * Sometimes its easier or faster to just pass a point object instead of separate X and Y coordinates.
 	 * This also gives you the option of not creating a new node but actually adding that specific
-	 * <code>FlxPoint</code> object to the path.  This allows you to do neat things, like dynamic paths.
+	 * FlxPoint object to the path.  This allows you to do neat things, like dynamic paths.
 	 * @param	Node			The point in world coordinates you want to add to the path.
 	 * @param	Index			Where within the list of path nodes to insert this new point.
 	 * @param	AsReference		Whether to add the point as a reference, or to create a new point with the specified values.
@@ -559,7 +559,7 @@ class FlxPath
 	
 	/**
 	 * Remove a node from the path.
-	 * NOTE: only works with points added by reference or with references from <code>nodes</code> itself!
+	 * NOTE: only works with points added by reference or with references from nodes itself!
 	 * @param	Node	The point object you want to remove from the path.
 	 * @return	The node that was excised.  Returns null if the node was not found.
 	 */
@@ -622,10 +622,10 @@ class FlxPath
 	
 	#if !FLX_NO_DEBUG
 	/**
-	 * While this doesn't override <code>FlxBasic.drawDebug()</code>, the behavior is very similar.
+	 * While this doesn't override FlxBasic.drawDebug(), the behavior is very similar.
 	 * Based on this path data, it draws a simple lines-and-boxes representation of the path
-	 * if the visual debug mode was toggled in the debugger overlay.  You can use <code>debugColor</code>
-	 * and <code>debugScrollFactor</code> to control the path's appearance.
+	 * if the visual debug mode was toggled in the debugger overlay.  You can use debugColor
+	 * and debugScrollFactor to control the path's appearance.
 	 * @param	Camera		The camera object the path will draw to.
 	 */
 	public function drawDebug(Camera:FlxCamera = null):Void
@@ -716,7 +716,7 @@ class FlxPath
 	#end
 	
 	/**
-	 * Read-only: The <code>TimerManager</code> instance.
+	 * Read-only: The TimerManager instance.
 	 */
-	static public var manager:PathManager;
+	public static var manager:PathManager;
 }

@@ -13,21 +13,21 @@ import flixel.input.touch.FlxTouch;
 class FlxAngle
 {
 	/**
-	 * Use this to access the cos-table generated via <code>sinCosGenerator()</code>.
+	 * Use this to access the cos-table generated via sinCosGenerator().
 	 */
-	static public var cosTable:Array<Float> = new Array<Float>();
+	public static var cosTable:Array<Float> = new Array<Float>();
 	/**
-	 * Use this to access the sin-table generated via <code>sinCosGenerator()</code>.
+	 * Use this to access the sin-table generated via sinCosGenerator().
 	 */
-	static public var sinTable:Array<Float> = new Array<Float>();
+	public static var sinTable:Array<Float> = new Array<Float>();
 	/**
 	 * Convert radians to degrees by multiplying it with this value.
 	 */
-	static public var TO_DEG:Float = 180 / Math.PI;
+	public static var TO_DEG:Float = 180 / Math.PI;
 	/**
 	 * Convert degrees to radians by multiplying it with this value.
 	 */
-	static public var TO_RAD:Float = Math.PI / 180;
+	public static var TO_RAD:Float = Math.PI / 180;
 	
 	/**
 	 * Rotates a point in 2D space around another point by the given angle.
@@ -36,10 +36,10 @@ class FlxAngle
 	 * @param	PivotX	The X coordinate of the point you want to rotate around.
 	 * @param	PivotY	The Y coordinate of the point you want to rotate around.
 	 * @param	Angle	Rotate the point by this many degrees.
-	 * @param	Point	Optional <code>FlxPoint</code> to store the results in.
-	 * @return	A <code>FlxPoint</code> containing the coordinates of the rotated point.
+	 * @param	Point	Optional FlxPoint to store the results in.
+	 * @return	A FlxPoint containing the coordinates of the rotated point.
 	 */
-	inline static public function rotatePoint(X:Float, Y:Float, PivotX:Float, PivotY:Float, Angle:Float, ?point:FlxPoint):FlxPoint
+	public static inline function rotatePoint(X:Float, Y:Float, PivotX:Float, PivotY:Float, Angle:Float, ?point:FlxPoint):FlxPoint
 	{
 		var sin:Float = 0;
 		var cos:Float = 0;
@@ -123,26 +123,23 @@ class FlxAngle
 	
 	/**
 	 * Calculates the angle between two points.  0 degrees points straight up.
+	 * 
 	 * @param	Point1		The X coordinate of the point.
 	 * @param	Point2		The Y coordinate of the point.
-	 * @param	Round		Round x and y coordinates or not.
 	 * @return	The angle in degrees, between -180 and 180.
 	 */
-	inline static public function getAngle(Point1:FlxPoint, Point2:FlxPoint, Round:Bool = false):Float
+	public static inline function getAngle(Point1:FlxPoint, Point2:FlxPoint):Float
 	{
 		var x:Float = Point2.x - Point1.x;
 		var y:Float = Point2.y - Point1.y;
-		if(Round)
-		{
-			x = Math.fround(x);
-			y = Math.fround(y);
-		}
 		var angle:Float = 0;
+		
 		if ((x != 0) || (y != 0))
 		{
 			var c1:Float = Math.PI * 0.25;
 			var c2:Float = 3 * c1;
 			var ay:Float = (y < 0) ? -y : y;
+			
 			if (x >= 0)
 			{
 				angle = c1 - c1 * ((x - ay) / (x + ay));
@@ -151,7 +148,8 @@ class FlxAngle
 			{
 				angle = c2 - c1 * ((x + ay) / (ay - x));
 			}
-			angle = ((y < 0)? -angle:angle) * TO_DEG;
+			angle = ((y < 0) ? - angle : angle) * TO_DEG;
+			
 			if (angle > 90)
 			{
 				angle = angle - 270;
@@ -169,7 +167,7 @@ class FlxAngle
 	 * Generate a sine and cosine table simultaneously and extremely quickly. Based on research by Franky of scene.at
 	 * 
 	 * The parameters allow you to specify the length, amplitude and frequency of the wave. Once you have called this function
-	 * you should get the results via <code>sinTable</code> and <code>cosTable</code>. This generator is fast enough to be used in real-time.
+	 * you should get the results via sinTable and cosTable. This generator is fast enough to be used in real-time.
 	 * 
 	 * @param length 		The length of the wave
 	 * @param sinAmplitude 	The amplitude to apply to the sine table (default 1.0) if you need values between say -+ 125 then give 125 as the value
@@ -179,7 +177,7 @@ class FlxAngle
 	 * @see getSinTable
 	 * @see getCosTable
 	 */
-	static public function sinCosGenerator(length:Int, sinAmplitude:Float = 1.0, cosAmplitude:Float = 1.0, frequency:Float = 1.0):Void
+	public static function sinCosGenerator(length:Int, sinAmplitude:Float = 1.0, cosAmplitude:Float = 1.0, frequency:Float = 1.0):Void
 	{
 		var sin:Float = sinAmplitude;
 		var cos:Float = cosAmplitude;
@@ -206,7 +204,7 @@ class FlxAngle
 	 * 
 	 * @return	The new angle value, returns the same as the input angle if it was within bounds
 	 */
-	static public function wrapAngle(angle:Float):Int
+	public static function wrapAngle(angle:Float):Int
 	{
 		var result:Int = Std.int(angle);
 		
@@ -231,7 +229,7 @@ class FlxAngle
 	 * 
 	 * @return	The new angle value, returns the same as the input angle if it was within bounds
 	 */
-	static public function angleLimit(angle:Int, min:Int, max:Int):Int
+	public static function angleLimit(angle:Int, min:Int, max:Int):Int
 	{
 		var result:Int = angle;
 		
@@ -254,7 +252,7 @@ class FlxAngle
 	 * @param 	radians 	The value in radians
 	 * @return	Degrees
 	 */
-	inline static public function asDegrees(radians:Float):Float
+	public static inline function asDegrees(radians:Float):Float
 	{
 		return radians * TO_DEG;
 	}
@@ -266,7 +264,7 @@ class FlxAngle
 	 * @param 	degrees The value in degrees
 	 * @return	Radians
 	 */
-	inline static public function asRadians(degrees:Float):Float
+	public static inline function asRadians(degrees:Float):Float
 	{
 		return degrees * TO_RAD;
 	}
@@ -280,7 +278,7 @@ class FlxAngle
 	 * @param	AsDegrees	If you need the value in degrees instead of radians, set to true
 	 * @return	The angle (in radians unless asDegrees is true)
 	 */
-	inline static public function angleBetween(SpriteA:FlxSprite, SpriteB:FlxSprite, AsDegrees:Bool = false):Float
+	public static inline function angleBetween(SpriteA:FlxSprite, SpriteB:FlxSprite, AsDegrees:Bool = false):Float
 	{
 		var dx:Float = (SpriteB.x + SpriteB.origin.x) - (SpriteA.x + SpriteA.origin.x);
 		var dy:Float = (SpriteB.y + SpriteB.origin.y) - (SpriteA.y + SpriteA.origin.y);
@@ -300,7 +298,7 @@ class FlxAngle
 	 * @param	AsDegrees	If you need the value in degrees instead of radians, set to true
 	 * @return	The angle (in radians unless AsDegrees is true)
 	 */
-	static public function angleBetweenPoint(Sprite:FlxSprite, Target:FlxPoint, AsDegrees:Bool = false):Float
+	public static function angleBetweenPoint(Sprite:FlxSprite, Target:FlxPoint, AsDegrees:Bool = false):Float
 	{
 		var dx:Float = (Target.x) - (Sprite.x + Sprite.origin.x);
 		var dy:Float = (Target.y) - (Sprite.y + Sprite.origin.y);
@@ -320,7 +318,7 @@ class FlxAngle
 	 * @param	AsDegrees	If you need the value in degrees instead of radians, set to true
 	 * @return	The angle (in radians unless AsDegrees is true)
 	 */
-	static public function angleBetweenMouse(Object:FlxObject, AsDegrees:Bool = false):Float
+	public static function angleBetweenMouse(Object:FlxObject, AsDegrees:Bool = false):Float
 	{
 		//	In order to get the angle between the object and mouse, we need the objects screen coordinates (rather than world coordinates)
 		if (Object == null)
@@ -348,7 +346,7 @@ class FlxAngle
 	 * @param	AsDegrees	If you need the value in degrees instead of radians, set to true
 	 * @return	The angle (in radians unless AsDegrees is true)
 	 */
-	inline static public function angleBetweenTouch(Object:FlxObject, Touch:FlxTouch, AsDegrees:Bool = false):Float
+	public static inline function angleBetweenTouch(Object:FlxObject, Touch:FlxTouch, AsDegrees:Bool = false):Float
 	{
 		//	In order to get the angle between the object and mouse, we need the objects screen coordinates (rather than world coordinates)
 		var p:FlxPoint = Object.getScreenXY();
@@ -362,4 +360,46 @@ class FlxAngle
 			return Math.atan2(dy, dx);
 	}
 	#end
+	
+	/**
+	 * Convert polar coordinates (radius + angle) to cartesian coordinates (x + y)
+	 * 
+	 * @param	Radius	The radius
+	 * @param	Angle	The angle, in degrees
+	 * @param	point	Optional FlxPoint if you don't want a new one created
+	 * @return	The point in cartesian coords
+	 */
+	public static function getCartesianCoords(Radius:Float, Angle:Float, ?point:FlxPoint):FlxPoint
+	{
+		var p = point;
+		if (p == null)
+		{
+			p = new FlxPoint();
+		}
+		
+		p.x = Radius * Math.cos(Angle * TO_RAD);
+		p.y = Radius * Math.sin(Angle * TO_RAD);
+		return p;
+	}
+	
+	/**
+	 * Convert cartesian coordinates (x + y) to polar coordinates (radius + angle) 
+	 * 
+	 * @param	X		x position
+	 * @param	Y		y position
+	 * @param	point	Optional FlxPoint if you don't want a new one created
+	 * @return	The point in polar coords (x = Radius (degrees), y = Angle)
+	 */
+	public static function getPolarCoords(X:Float, Y:Float, ?point:FlxPoint):FlxPoint
+	{
+		var p = point;
+		if (p == null)
+		{
+			p = new FlxPoint();
+		}
+		
+		p.x = Math.sqrt((X * X) + (Y * Y));
+		p.y = Math.atan2(Y, X) * TO_DEG;
+		return p;
+	}
 }

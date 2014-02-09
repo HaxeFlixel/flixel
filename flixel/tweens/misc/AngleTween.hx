@@ -10,9 +10,6 @@ import flixel.util.FlxRandom;
  */
 class AngleTween extends FlxTween
 {
-	/**
-	 * The current value.
-	 */
 	public var angle:Float = 0;
 	
 	/**
@@ -24,8 +21,6 @@ class AngleTween extends FlxTween
 	private var _range:Float;
 	
 	/**
-	 * Constructor.
-	 * 
 	 * @param	Complete	Optional completion callback.
 	 * @param	type		Tween type.
 	 */
@@ -59,21 +54,19 @@ class AngleTween extends FlxTween
 		{
 			_range = FlxRandom.floatRanged(180, -180);
 		}
-		_target = Duration;
-		_ease = Ease;
+		duration = Duration;
+		ease = Ease;
 		sprite = Sprite;
 		start();
 		return this;
 	}
 	
-	/** 
-	 * Updates the Tween. 
-	 */
 	override public function update():Void
 	{
 		super.update();
 		
-		angle = (_start + _range * _t) % 360;
+		angle = (_start + _range * scale) % 360;
+		
 		if (angle < 0) 
 		{
 			angle += 360;

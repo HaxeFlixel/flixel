@@ -6,16 +6,23 @@ import flixel.FlxG;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
 
+@:allow(flixel.FlxGame)
 class CameraFrontEnd
 {
 	/**
-	 * An array listing <code>FlxCamera</code> objects that are used to draw stuff.
+	 * An array listing FlxCamera objects that are used to draw stuff.
 	 * By default flixel creates one camera the size of the screen.
 	 */
 	public var list(default, null):Array<FlxCamera>;
+	
+	/**
+	 * The current (global, applies to all cameras) bgColor.
+	 */
+	public var bgColor(get, set):Int;
+	
 	/**
 	 * Allows you to possibly slightly optimize the rendering process IF
-	 * you are not doing any pre-processing in your game state's <code>draw()</code> call.
+	 * you are not doing any pre-processing in your game state's draw() call.
 	 * @default false
 	 */
 	public var useBufferLocking:Bool = false;
@@ -24,122 +31,14 @@ class CameraFrontEnd
 	 */
 	private var _cameraRect:Rectangle;
 	
-	public function new() 
-	{
-		_cameraRect = new Rectangle();
-		list = new Array<FlxCamera>();
-	}
-	
-	/**
-	 * Called by the game object to lock all the camera buffers and clear them for the next draw pass.
-	 */
-	inline public function lock():Void
-	{
-		for (camera in list)
-		{
-			if (camera == null || !camera.exists || !camera.visible)
-			{
-				continue;
-			}
-			
-			#if flash
-			camera.checkResize();
-			
-			if (useBufferLocking)
-			{
-				camera.buffer.lock();
-			}
-			#end
-			
-		#if !flash
-			camera.clearDrawStack();
-			camera.canvas.graphics.clear();
-			// Clearing camera's debug sprite
-			#if !FLX_NO_DEBUG
-			camera.debugLayer.graphics.clear();
-			#end
-		#end
-			
-			#if flash
-			camera.fill(camera.bgColor, camera.useBgAlphaBlending);
-			camera.screen.dirty = true;
-			#else
-			camera.fill((camera.bgColor & 0x00ffffff), camera.useBgAlphaBlending, ((camera.bgColor >> 24) & 255) / 255);
-			#end
-		}
-	}
-	
-	#if !flash
-	inline public function render():Void
-	{
-		for (camera in list)
-		{
-			if (camera != null && camera.exists && camera.visible)
-			{
-				camera.render();
-			}
-		}
-	}
-	#end
-	
-	/**
-	 * Called by the game object to draw the special FX and unlock all the camera buffers.
-	 */
-	inline public function unlock():Void
-	{
-		for (camera in list)
-		{
-			if (camera == null || !camera.exists || !camera.visible)
-			{
-				continue;
-			}
-			
-			camera.drawFX();
-			
-			#if flash
-			if (useBufferLocking)
-			{
-				camera.buffer.unlock();
-			}
-			
-			camera.screen.resetFrameBitmapDatas();
-			#end
-		}
-	}
-	
-	/**
-	 * Called by the game object to update the cameras and their tracking/special effects logic.
-	 */
-	inline public function update():Void
-	{
-		for (camera in list)
-		{
-			if (camera != null && camera.exists)
-			{
-				if (camera.active)
-				{
-					camera.update();
-				}
-				
-				if (camera.target == null) 
-				{
-					camera.flashSprite.x = camera.x + camera.flashOffsetX;
-					camera.flashSprite.y = camera.y + camera.flashOffsetY;
-				}
-				
-				camera.flashSprite.visible = camera.visible;
-			}
-		}
-	}
-	
 	/**
 	 * Add a new camera object to the game.
 	 * Handy for PiP, split-screen, etc.
 	 * 
 	 * @param	NewCamera	The camera you want to add.
-	 * @return	This <code>FlxCamera</code> instance.
+	 * @return	This FlxCamera instance.
 	 */
-	inline public function add(NewCamera:FlxCamera):FlxCamera
+	@:generic public inline function add<T:FlxCamera>(NewCamera:T):T
 	{
 		FlxG.game.addChildAt(NewCamera.flashSprite, FlxG.game.getChildIndex(FlxG.game.inputContainer));
 		FlxG.cameras.list.push(NewCamera);
@@ -150,12 +49,12 @@ class CameraFrontEnd
 	/**
 	 * Remove a camera from the game.
 	 * 
-	 * @param	Camera	The camera you want to remove.
-	 * @param	Destroy	Whether to call destroy() on the camera, default value is true.
+	 * @param   Camera    The camera you want to remove.
+	 * @param   Destroy   Whether to call destroy() on the camera, default value is true.
 	 */
 	public function remove(Camera:FlxCamera, Destroy:Bool = true):Void
 	{
-		if (Camera != null && FlxG.game.contains(Camera.flashSprite))
+		if ((Camera != null) && FlxG.game.contains(Camera.flashSprite))
 		{
 			FlxG.game.removeChild(Camera.flashSprite);
 			var index = FlxArrayUtil.indexOf(FlxG.cameras.list, Camera);
@@ -167,7 +66,7 @@ class CameraFrontEnd
 		}
 		else
 		{
-			FlxG.log.error("Removing camera, not part of game.");
+			FlxG.log.warn("FlxG.cameras.remove(): The camera you attemped to remove is not a part of the game.");
 		}
 		
 		#if !flash
@@ -258,24 +157,119 @@ class CameraFrontEnd
 		}
 	}
 	
-	public var bgColor(get, set):Int;
-
-	/**
-	 * Get and set the background color of the game.
-	 * Get functionality is equivalent to FlxG.camera.bgColor.
-	 * Set functionality sets the background color of all the current cameras.
-	 */
-	inline private function get_bgColor():Int
+	@:allow(flixel.FlxG)
+	private function new() 
 	{
-		if (FlxG.camera == null)
+		_cameraRect = new Rectangle();
+		list = new Array<FlxCamera>();
+	}
+	
+	/**
+	 * Called by the game object to lock all the camera buffers and clear them for the next draw pass.
+	 */
+	private inline function lock():Void
+	{
+		for (camera in list)
 		{
-			return FlxColor.BLACK;
-		}
-		else
-		{
-			return FlxG.camera.bgColor;
+			if (camera == null || !camera.exists || !camera.visible)
+			{
+				continue;
+			}
+			
+			#if flash
+			camera.checkResize();
+			
+			if (useBufferLocking)
+			{
+				camera.buffer.lock();
+			}
+			#end
+			
+		#if !flash
+			camera.clearDrawStack();
+			camera.canvas.graphics.clear();
+			// Clearing camera's debug sprite
+			#if !FLX_NO_DEBUG
+			camera.debugLayer.graphics.clear();
+			#end
+		#end
+			
+			#if flash
+			camera.fill(camera.bgColor, camera.useBgAlphaBlending);
+			camera.screen.dirty = true;
+			#else
+			camera.fill((camera.bgColor & 0x00ffffff), camera.useBgAlphaBlending, ((camera.bgColor >> 24) & 255) / 255);
+			#end
 		}
 	}
+	
+	#if !flash
+	private inline function render():Void
+	{
+		for (camera in list)
+		{
+			if ((camera != null) && camera.exists && camera.visible)
+			{
+				camera.render();
+			}
+		}
+	}
+	#end
+	
+	/**
+	 * Called by the game object to draw the special FX and unlock all the camera buffers.
+	 */
+	private inline function unlock():Void
+	{
+		for (camera in list)
+		{
+			if ((camera == null) || !camera.exists || !camera.visible)
+			{
+				continue;
+			}
+			
+			camera.drawFX();
+			
+			#if flash
+			if (useBufferLocking)
+			{
+				camera.buffer.unlock();
+			}
+			
+			camera.screen.resetFrameBitmapDatas();
+			#end
+		}
+	}
+	
+	/**
+	 * Called by the game object to update the cameras and their tracking/special effects logic.
+	 */
+	private inline function update():Void
+	{
+		for (camera in list)
+		{
+			if ((camera != null) && camera.exists)
+			{
+				if (camera.active)
+				{
+					camera.update();
+				}
+				
+				if (camera.target == null) 
+				{
+					camera.flashSprite.x = camera.x + camera.flashOffsetX;
+					camera.flashSprite.y = camera.y + camera.flashOffsetY;
+				}
+				
+				camera.flashSprite.visible = camera.visible;
+			}
+		}
+	}
+	
+	private function get_bgColor():Int
+	{
+		return (FlxG.camera == null) ? FlxColor.BLACK : FlxG.camera.bgColor;
+	} 
 	
 	private function set_bgColor(Color:Int):Int
 	{

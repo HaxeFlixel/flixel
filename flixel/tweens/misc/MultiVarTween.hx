@@ -11,12 +11,17 @@ import Type;
  */
 class MultiVarTween extends FlxTween
 {
+	private var _object:Dynamic;
+	private var _properties:Dynamic;
+	private var _vars:Array<String>;
+	private var _start:Array<Float>;
+	private var _range:Array<Float>;
+	
 	/**
-	 * Constructor.
 	 * @param	complete		Optional completion callback.
 	 * @param	type			Tween type.
 	 */
-	public function new(complete:CompleteCallback = null, type:Int = 0)
+	public function new(?complete:CompleteCallback, type:Int = 0)
 	{
 		_vars = new Array<String>();
 		_start = new Array<Float>();
@@ -29,6 +34,7 @@ class MultiVarTween extends FlxTween
 	{
 		super.destroy();
 		_object = null;
+		_properties = null;
 		_vars = null;
 		_start = null;
 		_range = null;
@@ -36,25 +42,55 @@ class MultiVarTween extends FlxTween
 	
 	/**
 	 * Tweens multiple numeric public properties.
+	 * 
 	 * @param	object		The object containing the properties.
 	 * @param	properties	An object containing key/value pairs of properties and target values.
 	 * @param	duration	Duration of the tween.
 	 * @param	ease		Optional easer function.
 	 */
-	public function tween(object:Dynamic, properties:Dynamic, duration:Float, ease:EaseFunction = null):MultiVarTween
+	public function tween(object:Dynamic, properties:Dynamic, duration:Float, ?ease:EaseFunction):MultiVarTween
 	{
 		_object = object;
+		_properties = properties;
+		this.duration = duration;
+		this.ease = ease;
+		
 		FlxArrayUtil.setLength(_vars, 0);
 		FlxArrayUtil.setLength(_start, 0);
 		FlxArrayUtil.setLength(_range, 0);
-		_target = duration;
-		_ease = ease;
-		var p:String;
 		
-		var fields:Array<String> = null;
-		if (Reflect.isObject(properties))
+		start();
+		return this;
+	}
+	
+	override public function update():Void
+	{
+		if (_vars.length < 1)
 		{
-			fields = Reflect.fields(properties);
+			// We don't initalize() in tween() because otherwise the start values 
+			// will be inaccurate with delays
+			initialize();
+		}
+		
+		super.update();
+		var i:Int = _vars.length;
+		while (i-- > 0) 
+		{
+			if (_object != null)
+			{
+				Reflect.setProperty(_object, _vars[i], (_start[i] + _range[i] * scale));
+			}
+		}
+	}
+	
+	private function initialize():Void
+	{
+		var p:String;
+		var fields:Array<String>;
+		
+		if (Reflect.isObject(_properties))
+		{
+			fields = Reflect.fields(_properties);
 		}
 		else
 		{
@@ -63,12 +99,12 @@ class MultiVarTween extends FlxTween
 		
 		for (p in fields)
 		{
-			if (Reflect.getProperty(object, p) == null)
+			if (Reflect.getProperty(_object, p) == null)
 			{
 				throw "The Object does not have the property \"" + p + "\", or it is not accessible.";
 			}
 			
-			var a:Dynamic = Reflect.getProperty(object, p);
+			var a:Dynamic = Reflect.getProperty(_object, p);
 			
 			if (Math.isNaN(a)) 
 			{
@@ -76,31 +112,7 @@ class MultiVarTween extends FlxTween
 			}
 			_vars.push(p);
 			_start.push(a);
-			_range.push(Reflect.getProperty(properties, p) - a);
-		}
-		start();
-		return this;
-	}
-	
-	/**
-	 * Updates the Tween. 
-	 */
-	override public function update():Void
-	{
-		super.update();
-		var i:Int = _vars.length;
-		while (i-- > 0) 
-		{
-			if (_object != null)
-			{
-				Reflect.setProperty(_object, _vars[i], (_start[i] + _range[i] * _t));
-			}
+			_range.push(Reflect.getProperty(_properties, p) - a);
 		}
 	}
-	
-	// Tween information.
-	private var _object:Dynamic;
-	private var _vars:Array<String>;
-	private var _start:Array<Float>;
-	private var _range:Array<Float>;
 }

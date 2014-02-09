@@ -1,12 +1,14 @@
 package flixel.ui;
 
+import flash.display.BitmapData;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.interfaces.IFlxDestroyable;
-import flixel.system.FlxAssets;
-import flixel.system.FlxSound;
 import flixel.input.touch.FlxTouch;
+import flixel.interfaces.IFlxDestroyable;
+import flixel.system.FlxSound;
 import flixel.util.FlxPoint;
+
+@:bitmap("assets/images/ui/button.png")	private class GraphicButton	extends BitmapData {}
 
 /**
  * A simple button class that calls a function when clicked by the mouse.
@@ -22,12 +24,12 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	 */
 	public var labelOffsets:Array<FlxPoint>;
 	/**
-	 * What alpha value the label should have for each status. Default is <code>[0.8, 1.0, 0.5]</code>.
+	 * What alpha value the label should have for each status. Default is [0.8, 1.0, 0.5].
 	 */
 	public var labelAlphas:Array<Float>;
 	/**
-	 * Shows the current state of the button, either <code>FlxButton.NORMAL</code>, 
-	 * <code>FlxButton.HIGHLIGHT</code> or <code>FlxButton.PRESSED</code>.
+	 * Shows the current state of the button, either FlxButton.NORMAL, 
+	 * FlxButton.HIGHLIGHT or FlxButton.PRESSED.
 	 */
 	public var status(default, set):Int;
 	/**
@@ -57,7 +59,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	private var _pressedMouse:Bool = false;
 	
 	/**
-	 * Creates a new <code>FlxTypedButton</code> object with a gray background.
+	 * Creates a new FlxTypedButton object with a gray background.
 	 * 
 	 * @param	X				The X position of the button.
 	 * @param	Y				The Y position of the button.
@@ -65,13 +67,13 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	 * @param	OnClick			The function to call whenever the button is clicked.
 	 * @param	OnClickParams	The params to call the onClick function with
 	 */
-	public function new(X:Float = 0, Y:Float = 0, ?Label:String, ?OnClick:Dynamic, ?OnClickParams:Array<Dynamic>)
+	public function new(X:Float = 0, Y:Float = 0, ?Label:String, ?OnClick:Void->Void)
 	{
 		super(X, Y);
 		
-		loadGraphic(FlxAssets.IMG_BUTTON, true, false, 80, 20);
+		loadGraphic(GraphicButton, true, false, 80, 20);
 		
-		onUp = new FlxButtonEvent(OnClick, OnClickParams);
+		onUp = new FlxButtonEvent(OnClick);
 		onDown = new FlxButtonEvent();
 		onOver = new FlxButtonEvent();
 		onOut = new FlxButtonEvent();
@@ -83,14 +85,6 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		
 		// Since this is a UI element, the default scrollFactor is (0, 0)
 		scrollFactor.set();
-	}
-	
-	private function set_status(Value:Int):Int
-	{
-		if (((labelAlphas.length - 1) >= Value) && (label != null)) {
-			label.alpha = labelAlphas[Value];
-		}
-		return status = Value;
 	}
 	
 	/**
@@ -155,8 +149,36 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	}
 	
 	/**
+	 * Just draws the button graphic and text label to the screen.
+	 */
+	override public function draw():Void
+	{
+		super.draw();
+		
+		if (label != null)
+		{
+			label.cameras = cameras;
+			label.draw();
+		}
+	}
+	
+	#if !FLX_NO_DEBUG
+	/**
+	 * Helper function to draw the debug graphic for the label as well.
+	 */
+	override public function drawDebug():Void 
+	{
+		super.drawDebug();
+		
+		if (label != null) {
+			label.drawDebug();
+		}
+	}
+	#end
+	
+	/**
 	 * Basic button update logic - searches for overlaps with touches and
-	 * the mouse cursor and calls <code>updateStatus()</code>
+	 * the mouse cursor and calls updateStatus()
 	 */
 	private function updateButton():Void
 	{
@@ -251,33 +273,13 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 #end
 	}
 	
-	/**
-	 * Just draws the button graphic and text label to the screen.
-	 */
-	override public function draw():Void
+	private function set_status(Value:Int):Int
 	{
-		super.draw();
-		
-		if (label != null)
-		{
-			label.cameras = cameras;
-			label.draw();
+		if (((labelAlphas.length - 1) >= Value) && (label != null)) {
+			label.alpha = labelAlphas[Value];
 		}
+		return status = Value;
 	}
-	
-	#if !FLX_NO_DEBUG
-	/**
-	 * Helper function to draw the debug graphic for the label as well.
-	 */
-	override public function drawDebug():Void 
-	{
-		super.drawDebug();
-		
-		if (label != null) {
-			label.drawDebug();
-		}
-	}
-	#end
 	
 	/**
 	 * Internal function that handles the onUp event.
@@ -323,18 +325,14 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 }
 
 /** 
- * Helper function for <code>FlxButton</code> which handles its events.
+ * Helper function for FlxButton which handles its events.
  */ 
 private class FlxButtonEvent implements IFlxDestroyable
 {
 	/**
 	 * The callback function to call when this even fires.
 	 */
-	public var callback:Dynamic;
-	/**
-	 * The callback function parameters.
-	 */
-	public var callbackParams:Array<Dynamic>;
+	public var callback:Void->Void;
 	
 	#if !FLX_NO_SOUND_SYSTEM
 	/**
@@ -344,64 +342,47 @@ private class FlxButtonEvent implements IFlxDestroyable
 	#end
 	
 	/**
-	 * Creates a new <code>FlxButtonEvent</code>
+	 * Creates a new FlxButtonEvent
 	 * 
 	 * @param	Callback		The callback function to call when this even fires.
-	 * @param	CallbackParams	The callback function parameters.
 	 * @param	sound			The sound to play when this event fires.
 	 */
-	public function new(?Callback:Dynamic, ?CallbackParams:Dynamic, ?sound:FlxSound)
+	public function new(?Callback:Void->Void, ?sound:FlxSound)
 	{
 		callback = Callback;
-		callbackParams = CallbackParams;
 		
 		#if !FLX_NO_SOUND_SYSTEM
-			this.sound = sound;
+		this.sound = sound;
 		#end
 	}
 	
 	/**
 	 * Cleans up memory.
 	 */
-	inline public function destroy():Void
+	public inline function destroy():Void
 	{
 		callback = null;
-		callbackParams = null;
 		
 		#if !FLX_NO_SOUND_SYSTEM
-			sound = FlxG.safeDestroy(sound);
+		sound = FlxG.safeDestroy(sound);
 		#end
 	}
 	
 	/**
 	 * Fires this event (calls the callback and plays the sound)
 	 */
-	inline public function fire():Void
+	public inline function fire():Void
 	{
 		if (callback != null) 
 		{
-			if (callbackParams == null) {
-				callbackParams = [];
-			}
-			Reflect.callMethod(null, callback, callbackParams);
+			callback();
 		}
 		
 		#if !FLX_NO_SOUND_SYSTEM
-			if (sound != null) {
-				sound.play(true);
-			}
+		if (sound != null) 
+		{
+			sound.play(true);
+		}
 		#end
-	}
-	
-	/**
-	 * Sets the callback for this button event.
-	 * 
-	 * @param	Callback		The callback function to call when this even fires.
-	 * @param	CallbackParams	The callback function parameters.
-	 */
-	inline public function setCallback(Callback:Dynamic, ?CallbackParams:Array<Dynamic>):Void
-	{
-		callback = Callback;
-		callbackParams = CallbackParams;
 	}
 }

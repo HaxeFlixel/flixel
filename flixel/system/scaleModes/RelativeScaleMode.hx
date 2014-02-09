@@ -1,8 +1,8 @@
-package flixel.system.resolution;
+package flixel.system.scaleModes;
 
 import flixel.FlxG;
 
-class RelativeResolutionPolicy extends BaseResolutionPolicy 
+class RelativeScaleMode extends BaseScaleMode 
 {
 	private var _widthScale:Float;
 	private var _heightScale:Float;
@@ -13,7 +13,7 @@ class RelativeResolutionPolicy extends BaseResolutionPolicy
 		initScale(WidthScale, HeightScale);
 	}
 	
-	inline private function initScale(WidthScale:Float, HeightScale:Float):Void
+	private inline function initScale(WidthScale:Float, HeightScale:Float):Void
 	{
 		_widthScale = WidthScale;
 		_heightScale = HeightScale;

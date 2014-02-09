@@ -51,17 +51,12 @@ class TileSheetExt extends Tilesheet
 	*/
 	private function getKey(rect:Rectangle, point:Point = null):String
 	{
-		var hash:Float = 23;
-		hash = hash * 31 + rect.x;
-		hash = hash * 31 + rect.y;
-		hash = hash * 31 + rect.width;
-		hash = hash * 31 + rect.height;
+		var key:String = rect.x + "_" + rect.y + "_" + rect.width + "_" + rect.height + "_";
 		if (point != null)
 		{
-			hash = hash * 31 + point.x;
-			hash = hash * 31 + point.y;
+			key = key + point.x + "_" + point.y;
 		}
-		return Std.string(hash);
+		return key;
 	}
 	
 	/**

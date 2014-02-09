@@ -14,7 +14,7 @@ package flixel.util;
 		_pool = [];
 	}
 	
-	inline public function get():T
+	public inline function get():T
 	{
 		var obj:T = _pool.pop();
 		if (obj == null)	obj = new T();
@@ -31,7 +31,7 @@ package flixel.util;
 		}
 	}
 	
-	inline public function putUnsafe(obj:T):Void
+	public inline function putUnsafe(obj:T):Void
 	{
 		if (obj != null)
 		{
@@ -40,14 +40,14 @@ package flixel.util;
 		}
 	}
 	
-	inline public function clear():Array<T>
+	public inline function clear():Array<T>
 	{
 		var oldPool = _pool;
 		_pool = [];
 		return oldPool;
 	}
 	
-	inline private function get_length():Int
+	private inline function get_length():Int
 	{
 		return _pool.length;
 	}

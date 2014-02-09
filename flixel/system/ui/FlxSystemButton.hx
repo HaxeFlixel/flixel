@@ -15,7 +15,7 @@ class FlxSystemButton extends Sprite
 	/**
 	 * The function to be called when the button is pressed.
 	 */
-	public var downHandler:Dynamic;
+	public var downHandler:Void->Void;
 	/**
 	 * Whether or not the downHandler function will be called when 
 	 * the button is clicked.
@@ -54,23 +54,24 @@ class FlxSystemButton extends Sprite
 	/**
 	 * Create a new FlxSystemButton
 	 * 
-	 * @param	IconPath	The path to the icon to use for the button.
+	 * @param	Icon		The icon to use for the button.
 	 * @param	DownHandler	The function to be called when the button is pressed.
 	 * @param	ToggleMode	Whether this is a toggle button or not.
 	 */
-	public function new(IconPath:String, ?DownHandler:Dynamic, ToggleMode:Bool = false)
+	public function new(Icon:BitmapData, ?DownHandler:Void->Void, ToggleMode:Bool = false)
 	{
 		super();
 		
-		if (IconPath != null)
+		if (Icon != null)
 		{
-			icon = new Bitmap(FlxAssets.getBitmapData(IconPath));
+			icon = new Bitmap(Icon);
 			addChild(icon);
 		}
 		
 		#if flash
 		tabEnabled = false;
 		#end
+		
 		downHandler = DownHandler;
 		toggleMode = ToggleMode;
 		
@@ -82,34 +83,34 @@ class FlxSystemButton extends Sprite
 	/**
 	 * Change the Icon of the button
 	 * 
-	 * @param	IconPath The path to the icon to use for the button.
+	 * @param	Icon	The new icon to use for the button.
  	 */
-	public function changeIcon(IconPath:String):Void
+	public function changeIcon(Icon:BitmapData):Void
 	{
 		if (icon != null)
 		{
 			removeChild(icon);
 		}
 		
-		icon = new Bitmap(FlxAssets.getBitmapData(IconPath));
+		icon = new Bitmap(Icon);
 		addChild(icon);
 	}
 
-	inline private function onMouseUp(?E:MouseEvent):Void
+	private inline function onMouseUp(?E:MouseEvent):Void
 	{
 		if (downHandler != null && enabled)
 		{
 			toggled = !toggled;
-			Reflect.callMethod (null, downHandler, []);
+			downHandler();
 		}
 	}
 
-	inline private function onMouseOver(?E:MouseEvent):Void
+	private inline function onMouseOver(?E:MouseEvent):Void
 	{
 		alpha -= 0.2;
 	}
 
-	inline private function onMouseOut(?E:MouseEvent):Void
+	private inline function onMouseOut(?E:MouseEvent):Void
 	{
 		alpha += 0.2;
 	}

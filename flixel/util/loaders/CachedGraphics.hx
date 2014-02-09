@@ -17,54 +17,51 @@ class CachedGraphics
 	 */
 	public var bitmap:BitmapData;
 	/**
-	 * TexturePackerData associated with bitmapdata
-	 */
-	public var data:TexturePackerData;
-	
-	private var _tilesheet:TileSheetData;
-	/**
-	 * Whether this Cached object should stay in cache after state change or not.
-	 */
-	public var persist:Bool = false;
-	/**
 	 * Asset name from openfl.Assets
 	 */
 	public var assetsKey:String;
 	/**
-	 * Class name for bitmapdata
+	 * Class name for the BitmapData
 	 */
 	public var assetsClass:Class<BitmapData>;
+	/**
+	 * TexturePackerData associated with the BitmapData
+	 */
+	public var data:TexturePackerData;
 	
 	/**
-	 * Says if bitmapdata of this Cache object has been dumped or not
+	 * Whether this cached object should stay in cache after state changes or not.
+	 */
+	public var persist:Bool = false;
+	/**
+	 * Whether we should destroy this CachedGraphics object when useCount become zero.
+	 * Default is false.
+	 */
+	public var destroyOnNoUse(default, set):Bool = false;
+	
+	/**
+	 * Whether the BitmapData of this cached object has been dumped or not.
 	 */
 	public var isDumped(default, null):Bool = false;
-	
 	/**
-	 * Says if bitmapdata of this Cache object can be dumped for less memory usage
+	 * Whether the BitmapData of this cached object can be dumped for decreased memory usage.
 	 */
-	public var canBeDumped(get, null):Bool;
+	public var canBeDumped(get, never):Bool;
 	
-	public var tilesheet(get_tilesheet, null):TileSheetData;
+	public var tilesheet(get, null):TileSheetData;
 	
 	/**
 	 * Usage counter for this CachedGraphics object.
 	 */
-	public var useCount(get, set):Int;
+	public var useCount(default, set):Int = 0;
 	
-	private var _useCount:Int = 0;
+	private var _tilesheet:TileSheetData;
 	
-	/**
-	 * Whether we should destroy this CachedGraphics object when useCount become zero.
-	 * Default if false.
-	 */
-	public var destroyOnNoUse:Bool = false;
-	
-	public function new(key:String, bitmap:BitmapData, persist:Bool = false)
+	public function new(Key:String, Bitmap:BitmapData, Persist:Bool = false)
 	{
-		this.key = key;
-		this.bitmap = bitmap;
-		this.persist = persist;
+		key = Key;
+		bitmap = Bitmap;
+		persist = Persist;
 	}
 	
 	/**
@@ -108,27 +105,58 @@ class CachedGraphics
 	}
 	
 	/**
-	 * Use this method to restore cached bitmapdata (it it's possible).
-	 * It's called automatically when RESIZE event occurs.
+	 * Use this method to restore cached bitmapdata (if it's possible).
+	 * It's called automatically when the RESIZE event occurs.
 	 */
 	public function onContext():Void
 	{
 		// no need to restore tilesheet if it haven't been dumped
 		if (isDumped)
 		{
-			// restore everything
-			undump();
-			// and dump bitmapdata again
-			dump();
+			undump();	// restore everything
+			dump();	// and dump bitmapdata again
 		}
+	}
+	
+	public function getRegionForFrame(FrameName:String):TextureRegion
+	{
+		var region:TextureRegion = new TextureRegion(this);
+		var frame:FlxFrame = tilesheet.getFrame(FrameName);
+		
+		if (frame != null)
+		{
+			region.region.startX = Std.int(frame.frame.x);
+			region.region.startY = Std.int(frame.frame.y);
+			region.region.width = Std.int(frame.frame.width);
+			region.region.height = Std.int(frame.frame.height);
+		}
+		
+		return region;
+	}
+	
+	public function destroy():Void
+	{
+		if (bitmap != null)
+		{
+			bitmap.dispose();
+			bitmap = null;
+		}
+		
+		data = FlxG.safeDestroy(data);
+		tilesheet = FlxG.safeDestroy(tilesheet);
+		key = null;
+		assetsKey = null;
+		assetsClass = null;
 	}
 	
 	private function get_tilesheet():TileSheetData 
 	{
 		if (_tilesheet == null) 
 		{
-			if (isDumped)
+			if (isDumped) 
+			{
 				onContext();
+			}
 			
 			_tilesheet = new TileSheetData(bitmap);
 		}
@@ -151,63 +179,28 @@ class CachedGraphics
 		return newBitmap;
 	}
 	
-	public function getRegionForFrame(frameName:String):TextureRegion
+	private inline function get_canBeDumped():Bool
 	{
-		var region:TextureRegion = new TextureRegion(this);
-		var frame:FlxFrame = tilesheet.getFrame(frameName);
-		if (frame != null)
-		{
-			region.region.startX = Std.int(frame.frame.x);
-			region.region.startY = Std.int(frame.frame.y);
-			region.region.width = Std.int(frame.frame.width);
-			region.region.height = Std.int(frame.frame.height);
-		}
-		
-		return region;
-	}
-	
-	public function destroy():Void
-	{
-		key = null;
-		if (bitmap != null)
-		{
-			bitmap.dispose();
-		}
-		bitmap = null;
-		if (data != null)
-		{
-			data.destroy();
-		}
-		data = null;
-		if (_tilesheet != null)
-		{
-			_tilesheet.destroy();
-		}
-		_tilesheet = null;
-		
-		assetsKey = null;
-		assetsClass = null;
-	}
-	
-	private function get_canBeDumped():Bool
-	{
-		return (assetsClass != null || assetsKey != null);
-	}
-	
-	private function get_useCount():Int
-	{
-		return _useCount;
+		return ((assetsClass != null) || (assetsKey != null));
 	}
 	
 	private function set_useCount(Value:Int):Int
 	{
-		_useCount = Value;
-		
-		if (_useCount <= 0 && destroyOnNoUse && !persist)
+		if ((Value <= 0) && destroyOnNoUse && !persist)
 		{
 			FlxG.bitmap.remove(key);
 		}
 		
-		return Value;
+		return useCount = Value;
+	}
+	
+	private function set_destroyOnNoUse(Value:Bool):Bool
+	{
+		if (Value && useCount == 0 && key != null && !persist)
+		{
+			FlxG.bitmap.remove(key);
+		}
+		
+		return destroyOnNoUse = Value;
 	}
 }

@@ -12,18 +12,32 @@ import flixel.util.FlxArrayUtil;
 /**
  * Keeps track of what keys are pressed and how with handy Bools or strings.
  */
+@:allow(flixel.system.replay.FlxReplay)
+@:allow(flixel.input.keyboard.FlxKeyList)
 class FlxKeyboard implements IFlxInput
 {
 	/**
 	 * Whether or not keyboard input is currently enabled.
 	 */
 	public var enabled:Bool = true;
+	
+	/**
+	 * Helper class to check if a keys is pressed.
+	 */
+	public var pressed:FlxKeyList;
+	/**
+	 * Helper class to check if a keys was just pressed.
+	 */
+	public var justPressed:FlxKeyList;
+	/**
+	 * Helper class to check if a keys was just released.
+	 */
+	public var justReleased:FlxKeyList;
 
 	/**
 	 * Total amount of keys.
 	 */
-	@:allow(flixel.input.keyboard.FlxKeyList.get_ANY)
-	inline static private var TOTAL:Int = 256;
+	private static inline var TOTAL:Int = 256;
 	
 	/**
 	 * A map for key lookup.
@@ -32,11 +46,136 @@ class FlxKeyboard implements IFlxInput
 	/**
 	 * An array of FlxKey objects.
 	 */
-	@:allow(flixel.input.keyboard.FlxKeyList.get_ANY)
 	@:allow(flixel.input.android.FlxAndroidKeyList.get_ANY)
 	private var _keyList:Array<FlxKey>;
 	
-	public function new()
+	/**
+	 * Check to see if at least one key from an array of keys is pressed. See FlxG.keys for the key names, pass them in as Strings.
+	 * Example: FlxG.keys.anyPressed(["UP", "W", "SPACE"]) - having them in an array is handy for configurable keys!
+	 * 
+	 * @param	KeyArray 	An array of keys as Strings
+	 * @return	Whether at least one of the keys passed in is pressed.
+	 */
+	public inline function anyPressed(KeyArray:Array<String>):Bool
+	{ 
+		return checkKeyStatus(KeyArray, FlxKey.PRESSED);
+	}
+	
+	/**
+	 * Check to see if at least one key from an array of keys was just pressed. See FlxG.keys for the key names, pass them in as Strings.
+	 * Example: FlxG.keys.anyJustPressed(["UP", "W", "SPACE"]) - having them in an array is handy for configurable keys!
+	 * 
+	 * @param	KeyArray 	An array of keys as Strings
+	 * @return	Whether at least one of the keys passed was just pressed.
+	 */
+	public inline function anyJustPressed(KeyArray:Array<String>):Bool
+	{ 
+		return checkKeyStatus(KeyArray, FlxKey.JUST_PRESSED);
+	}
+	
+	/**
+	 * Check to see if at least one key from an array of keys was just released. See FlxG.keys for the key names, pass them in as Strings.
+	 * Example: FlxG.keys.anyJustReleased(["UP", "W", "SPACE"]) - having them in an array is handy for configurable keys!
+	 * 
+	 * @param	KeyArray 	An array of keys as Strings
+	 * @return	Whether at least one of the keys passed was just released.
+	 */
+	public inline function anyJustReleased(KeyArray:Array<String>):Bool
+	{ 
+		return checkKeyStatus(KeyArray, FlxKey.JUST_RELEASED);
+	}
+	
+	/**
+	 * Check the status of a single of key
+	 * 
+	 * @param	KeyCode		Index into _keyList array.
+	 * @param	Status		The key state to check for
+	 * @return	Whether the provided key has the specified status
+	 */
+	public function checkStatus(KeyCode:Int, Status:Int):Bool
+	{
+		var k:FlxKey = _keyList[KeyCode];
+		if (k != null)
+		{
+			if (k.current == Status)
+			{
+				return true;
+			}
+			else if (Status == FlxKey.PRESSED && k.current == FlxKey.JUST_PRESSED)
+			{
+				return true;
+			}
+			else if (Status == FlxKey.RELEASED && k.current == FlxKey.JUST_RELEASED)
+			{
+				return true;
+			}
+		}
+		#if !FLX_NO_DEBUG
+		else
+		{
+			FlxG.log.error("Invalid Key: `" + KeyCode + "`. Note that function and numpad keys can only be used in flash and js.");
+		}
+		#end
+		
+		return false;
+	}
+	
+	/**
+	 * Look up the key code for any given string name of the key or button.
+	 * 
+	 * @param	KeyName		The String name of the key.
+	 * @return	The key code for that key.
+	 */
+	public inline function getKeyCode(KeyName:String):Int
+	{
+		return _keyLookup.get(KeyName);
+	}
+
+	/**
+	 * Get an Array of FlxMapObjects that are in a pressed state
+	 * 
+	 * @return	Array<FlxMapObject> of keys that are currently pressed.
+	 */
+	public function getIsDown():Array<FlxKey>
+	{
+		var keysDown:Array<FlxKey> = new Array<FlxKey>();
+		
+		for (key in _keyList)
+		{
+			if (key != null && key.current > FlxKey.RELEASED)
+			{
+				keysDown.push(key);
+			}
+		}
+		return keysDown;
+	}
+
+	/**
+	 * Clean up memory.
+	 */
+	public function destroy():Void
+	{
+		_keyList = null;
+		_keyLookup = null;
+	}
+	
+	/**
+	 * Resets all the keys.
+	 */
+	public function reset():Void
+	{
+		for (key in _keyList)
+		{
+			if (key != null)
+			{
+				key.current = FlxKey.RELEASED;
+				key.last = FlxKey.RELEASED;
+			}
+		}
+	}
+	
+	@:allow(flixel.FlxG)
+	private function new()
 	{
 		_keyLookup = new Map<String, Int>();
 		
@@ -85,13 +224,13 @@ class FlxKeyboard implements IFlxInput
 		addKey("INSERT", 45);
 		
 		// FUNCTION KEYS
-#if (flash || js)
+		#if (flash || js)
 		i = 1;
 		while (i <= 12)
 		{
 			addKey("F" + i, 111 + (i++));
 		}
-#end
+		#end
 		
 		// SPECIAL KEYS + PUNCTUATION
 		addKey("ESCAPE", 27);
@@ -121,18 +260,18 @@ class FlxKeyboard implements IFlxInput
 		addKey("RIGHT", 39);
 		addKey("TAB", 9);
 		
-#if (flash || js)
+		#if (flash || js)
 		addKey("NUMPADMINUS", 109);
 		addKey("NUMPADPLUS", 107);
 		addKey("NUMPADPERIOD", 110);
-#end
+		#end
 		
 		Lib.current.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 		Lib.current.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 		
-		pressed = Reflect.makeVarArgs(anyPressed);
-		justPressed = Reflect.makeVarArgs(anyJustPressed);
-		justReleased = Reflect.makeVarArgs(anyJustReleased);
+		pressed = new FlxKeyList(FlxKey.PRESSED);
+		justPressed = new FlxKeyList(FlxKey.JUST_PRESSED);
+		justReleased = new FlxKeyList(FlxKey.JUST_RELEASED);
 	}
 	
 	/**
@@ -150,7 +289,7 @@ class FlxKeyboard implements IFlxInput
 	/**
 	 * Updates the key states (for tracking just pressed, just released, etc).
 	 */
-	public function update():Void
+	private function update():Void
 	{
 		for (key in _keyList)
 		{
@@ -173,101 +312,26 @@ class FlxKeyboard implements IFlxInput
 	}
 	
 	/**
-	 * Resets all the keys.
-	 */
-	public function reset():Void
-	{
-		for (key in _keyList)
-		{
-			if (key != null)
-			{
-				key.current = FlxKey.RELEASED;
-				key.last = FlxKey.RELEASED;
-			}
-		}
-	}
-	
-	/**
-	 * Check to see if a key, or one key from a list of mutliple keys is pressed. See FlxG.keys for the key names, pass them in as Strings.
-	 * Example: <code>FlxG.keyboard.pressed("UP", "W", "SPACE")</code>
-	 */
-	public var pressed:Dynamic;
-	
-	/**
-	 * Check to see if at least one key from an array of keys is pressed. See FlxG.keys for the key names, pass them in as Strings.
-	 * Example: <code>FlxG.keyboard.anyPressed(["UP", "W", "SPACE"])</code>
-	 * @param	KeyArray 	An array of keys as Strings
-	 * @return	Whether at least one of the keys passed in is pressed.
-	 */
-	inline public function anyPressed(KeyArray:Array<Dynamic>):Bool 
-	{ 
-		return checkKeyStatus(KeyArray, FlxKey.PRESSED);
-	}
-	
-	/**
-	 * Check to see if a key, or one key from a list of mutliple keys was just pressed. See FlxG.keys for the key names, pass them in as Strings.
-	 * Example: <code>FlxG.keyboard.justPressed("UP", "W", "SPACE")</code>
-	 */
-	public var justPressed:Dynamic;
-	
-	/**
-	 * Check to see if at least one key from an array of keys was just pressed. See FlxG.keys for the key names, pass them in as Strings.
-	 * Example: <code>FlxG.keyboard.anyJustPressed(["UP", "W", "SPACE"])</code>
-	 * @param	KeyArray 	An array of keys as Strings
-	 * @return	Whether at least one of the keys passed was just pressed.
-	 */
-	inline public function anyJustPressed(KeyArray:Array<Dynamic>):Bool 
-	{ 
-		return checkKeyStatus(KeyArray, FlxKey.JUST_PRESSED);
-	}
-	
-	/**
-	 * Check to see if a key, or one key from a list of mutliple keys was just released. See FlxG.keys for the key names, pass them in as Strings.
-	 * Example: <code>FlxG.keyboard.justReleased("UP", "W", "SPACE")</code>
-	 */
-	public var justReleased:Dynamic;
-	
-	/**
-	 * Check to see if at least one key from an array of keys was just released. See FlxG.keys for the key names, pass them in as Strings.
-	 * Example: <code>FlxG.keyboard.anyJustReleased(["UP", "W", "SPACE"])</code>
-	 * @param	KeyArray 	An array of keys as Strings
-	 * @return	Whether at least one of the keys passed was just released.
-	 */
-	inline public function anyJustReleased(KeyArray:Array<Dynamic>):Bool 
-	{ 
-		return checkKeyStatus(KeyArray, FlxKey.JUST_RELEASED);
-	}
-	
-	/**
 	 * Helper function to check the status of an array of keys
+	 * 
 	 * @param	KeyArray	An array of keys as Strings
 	 * @param	Status		The key state to check for
 	 * @return	Whether at least one of the keys has the specified status
 	 */
-	private function checkKeyStatus(KeyArray:Array<Dynamic>, Status:Int):Bool
+	private function checkKeyStatus(KeyArray:Array<String>, Status:Int):Bool
 	{
 		if (KeyArray == null)
 		{
 			return false;
 		}
 		
-		var isIntArray:Bool = KeyArray.length > 0 && Std.is(KeyArray[0], Int);
-		
 		for (code in KeyArray)
 		{
 			var key:FlxKey;
 			
-			if (isIntArray)
-			{
-				// Use direct array access if they're using an array type. Much faster.
-				key = _keyList[code];
-			}
-			else
-			{
-				// Also make lowercase keys work, like "space" or "sPaCe"
-				code = code.toUpperCase();
-				key = _keyList[_keyLookup.get(code)];
-			}
+			// Also make lowercase keys work, like "space" or "sPaCe"
+			code = code.toUpperCase();
+			key = _keyList[_keyLookup.get(code)];
 			
 			if (key != null)
 			{
@@ -275,11 +339,11 @@ class FlxKeyboard implements IFlxInput
 				{
 					return true;
 				}
-				else if (Status == FlxKey.PRESSED && key.current == FlxKey.JUST_PRESSED)
+				else if ((Status == FlxKey.PRESSED) && (key.current == FlxKey.JUST_PRESSED))
 				{
 					return true;
 				}
-				else if (Status == FlxKey.RELEASED && key.current == FlxKey.JUST_RELEASED)
+				else if ((Status == FlxKey.RELEASED) && (key.current == FlxKey.JUST_RELEASED))
 				{
 					return true;
 				}
@@ -296,134 +360,9 @@ class FlxKeyboard implements IFlxInput
 	}
 	
 	/**
-	 * Check the status of a single of key
-	 * @param	KeyCode		Index into _keyList array.
-	 * @param	Status		The key state to check for
-	 * @return	Whether the provided key has the specified status
-	 */
-	public function checkStatus(KeyCode:Int, Status:Int):Bool
-	{
-		var k:FlxKey = _keyList[KeyCode];
-		if (k != null)
-		{
-			if (k.current == Status)
-			{
-				return true;
-			}
-			else if (Status == FlxKey.PRESSED && k.current == FlxKey.JUST_PRESSED)
-			{
-				return true;
-			}
-			else if (Status == FlxKey.RELEASED && k.current == FlxKey.JUST_RELEASED)
-			{
-				return true;
-			}
-		}
-		#if !FLX_NO_DEBUG
-		else
-		{
-			FlxG.log.error("Invalid Key: `" + KeyCode + "`. Note that function and numpad keys can only be used in flash and js.");
-		}
-		#end
-		
-		return false;
-	}
-	
-	/**
-	 * If any keys are not "released" (0),
-	 * this function will return an array indicating
-	 * which keys are pressed and what state they are in.
-	 * 
-	 * @return	An array of key state data.  Null if there is no data.
-	 */
-	public function record():Array<CodeValuePair>
-	{
-		var data:Array<CodeValuePair> = null;
-		var i:Int = 0;
-		
-		while (i < TOTAL)
-		{
-			var key:FlxKey = _keyList[i++];
-			
-			if (key == null || key.current == FlxKey.RELEASED)
-			{
-				continue;
-			}
-			
-			if (data == null)
-			{
-				data = new Array<CodeValuePair>();
-			}
-			
-			data.push(new CodeValuePair(i - 1, key.current));
-		}
-		return data;
-	}
-	
-	/**
-	 * Part of the keystroke recording system.
-	 * Takes data about key presses and sets it into array.
-	 * 
-	 * @param	Record	Array of data about key states.
-	 */
-	public function playback(Record:Array<CodeValuePair>):Void
-	{
-		var i:Int = 0;
-		var l:Int = Record.length;
-		var o:CodeValuePair;
-		var o2:FlxKey;
-		
-		while (i < l)
-		{
-			o = Record[i++];
-			o2 = _keyList[o.code];
-			o2.current = o.value;
-		}
-	}
-	
-	/**
-	 * Look up the key code for any given string name of the key or button.
-	 * 
-	 * @param	KeyName		The <code>String</code> name of the key.
-	 * @return	The key code for that key.
-	 */
-	inline public function getKeyCode(KeyName:String):Int
-	{
-		return _keyLookup.get(KeyName);
-	}
-
-	/**
-	 * Get an Array of FlxMapObjects that are in a pressed state
-	 * 
-	 * @return	Array<FlxMapObject> of keys that are currently pressed.
-	 */
-	public function getIsDown():Array<FlxKey>
-	{
-		var keysDown:Array<FlxKey> = new Array<FlxKey>();
-		
-		for (key in _keyList)
-		{
-			if (key != null && key.current > FlxKey.RELEASED)
-			{
-				keysDown.push(key);
-			}
-		}
-		return keysDown;
-	}
-
-	/**
-	 * Clean up memory.
-	 */
-	public function destroy():Void
-	{
-		_keyList = null;
-		_keyLookup = null;
-	}
-	
-	/**
 	 * Event handler so FlxGame can toggle keys.
 	 * 
-	 * @param	FlashEvent	A <code>KeyboardEvent</code> object.
+	 * @param	FlashEvent	A KeyboardEvent object.
 	 */
 	private function onKeyUp(FlashEvent:KeyboardEvent):Void
 	{
@@ -551,7 +490,7 @@ class FlxKeyboard implements IFlxInput
 	/**
 	 * A helper function to update the key states based on a keycode provided.
 	 */
-	inline private function updateKeyStates(KeyCode:Int, Down:Bool):Void
+	private inline function updateKeyStates(KeyCode:Int, Down:Bool):Void
 	{
 		var obj:FlxKey = _keyList[KeyCode];
 		
@@ -582,16 +521,65 @@ class FlxKeyboard implements IFlxInput
 		}
 	}
 	
-	inline public function onFocus( ):Void { }
+	private inline function onFocus():Void {}
 
-	inline public function onFocusLost():Void
+	private inline function onFocusLost():Void
 	{
 		reset();
 	}
-
-	inline public function toString():String
+	
+	/** Replay functions **/
+	
+	/**
+	 * If any keys are not "released" (0),
+	 * this function will return an array indicating
+	 * which keys are pressed and what state they are in.
+	 * 
+	 * @return	An array of key state data.  Null if there is no data.
+	 */
+	private function record():Array<CodeValuePair>
 	{
-		return "FlxKeyboard";
+		var data:Array<CodeValuePair> = null;
+		var i:Int = 0;
+		
+		while (i < TOTAL)
+		{
+			var key:FlxKey = _keyList[i++];
+			
+			if (key == null || key.current == FlxKey.RELEASED)
+			{
+				continue;
+			}
+			
+			if (data == null)
+			{
+				data = new Array<CodeValuePair>();
+			}
+			
+			data.push(new CodeValuePair(i - 1, key.current));
+		}
+		return data;
+	}
+	
+	/**
+	 * Part of the keystroke recording system.
+	 * Takes data about key presses and sets it into array.
+	 * 
+	 * @param	Record	Array of data about key states.
+	 */
+	private function playback(Record:Array<CodeValuePair>):Void
+	{
+		var i:Int = 0;
+		var l:Int = Record.length;
+		var o:CodeValuePair;
+		var o2:FlxKey;
+		
+		while (i < l)
+		{
+			o = Record[i++];
+			o2 = _keyList[o.code];
+			o2.current = o.value;
+		}
 	}
 }
 #end

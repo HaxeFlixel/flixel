@@ -18,7 +18,7 @@ import openfl.Assets;
 class WatchEntry
 {
 	/**
-	 * The <code>Object</code> being watched.
+	 * The Object being watched.
 	 */
 	public var object:Dynamic;
 	/**
@@ -30,11 +30,11 @@ class WatchEntry
 	 */
 	public var custom:String;
 	/**
-	 * The Flash <code>TextField</code> object used to display this entry's name.
+	 * The Flash TextField object used to display this entry's name.
 	 */
 	public var nameDisplay:TextField;
 	/**
-	 * The Flash <code>TextField</code> object used to display and edit this entry's value.
+	 * The Flash TextField object used to display and edit this entry's value.
 	 */
 	public var valueDisplay:TextField;
 	/**
@@ -61,7 +61,7 @@ class WatchEntry
 	 * @param Y				The initial height in the Watch window.
 	 * @param NameWidth		The initial width of the name field.
 	 * @param ValueWidth	The initial width of the value field.
-	 * @param Obj			The <code>Object</code> containing the variable we want to watch.
+	 * @param Obj			The Object containing the variable we want to watch.
 	 * @param Field			The variable name we want to watch.
 	 * @param Custom		A custom display name (optional).
 	 */
@@ -164,7 +164,7 @@ class WatchEntry
 	}
 	
 	/**
-	 * Set the watch window Y height of the Flash <code>TextField</code> objects.
+	 * Set the watch window Y height of the Flash TextField objects.
 	 */
 	public function setY(Y:Float):Void
 	{
@@ -173,7 +173,7 @@ class WatchEntry
 	}
 	
 	/**
-	 * Adjust the width of the Flash <code>TextField</code> objects.
+	 * Adjust the width of the Flash TextField objects.
 	 */
 	public function updateWidth(NameWidth:Float, ValueWidth:Float):Void
 	{
@@ -187,7 +187,7 @@ class WatchEntry
 		{
 			nameDisplay.text = "";
 			if (NameWidth > 120)
-				nameDisplay.appendText(FlxStringUtil.getClassName(object, (NameWidth < 240)) + ".");
+				nameDisplay.appendText(FlxStringUtil.getClassName(object, true) + ".");
 			
 			nameDisplay.appendText(field);
 		}
@@ -218,7 +218,7 @@ class WatchEntry
 	{
 		editing = true;
 		#if !FLX_NO_KEYBOARD
-			FlxG.keyboard.enabled = false;
+			FlxG.keys.enabled = false;
 		#end
 		oldValue = Reflect.getProperty(object, field);
 		valueDisplay.type = TextFieldType.INPUT;
@@ -294,7 +294,7 @@ class WatchEntry
 		valueDisplay.background = false;
 		editing = false;
 		#if !FLX_NO_KEYBOARD
-			FlxG.keyboard.enabled = true;
+			FlxG.keys.enabled = true;
 		#end
 	}
 }

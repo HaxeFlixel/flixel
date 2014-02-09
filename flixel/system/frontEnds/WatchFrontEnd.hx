@@ -5,11 +5,6 @@ import flixel.FlxG;
 class WatchFrontEnd
 {
 	/**
-	 * Just needed to create an instance.
-	 */
-	public function new() { }
-	
-	/**
 	 * Add a variable to the watch list in the debugger.
 	 * This lets you see the value of the variable all the time.
 	 * 
@@ -17,7 +12,7 @@ class WatchFrontEnd
 	 * @param	VariableName	The name of the variable you want to watch, in quotes, as a string: e.g. "speed" or "health".
 	 * @param	DisplayName		Optional, display your own string instead of the class name + variable name: e.g. "enemy count".
 	 */
-	inline public function add(AnyObject:Dynamic, VariableName:String, ?DisplayName:String):Void
+	public inline function add(AnyObject:Dynamic, VariableName:String, ?DisplayName:String):Void
 	{
 		#if !FLX_NO_DEBUG
 		FlxG.game.debugger.watch.add(AnyObject, VariableName, DisplayName);
@@ -31,7 +26,7 @@ class WatchFrontEnd
 	 * @param	AnyObject		A reference to any object in your game, e.g. Player or Robot or this.
 	 * @param	VariableName	The name of the variable you want to watch, in quotes, as a string: e.g. "speed" or "health".
 	 */
-	inline public function remove(AnyObject:Dynamic, ?VariableName:String):Void
+	public inline function remove(AnyObject:Dynamic, ?VariableName:String):Void
 	{
 		#if !FLX_NO_DEBUG
 		FlxG.game.debugger.watch.remove(AnyObject, VariableName);
@@ -40,13 +35,13 @@ class WatchFrontEnd
 	
 	/**
 	 * Add or update a quickWatch entry to the watch list in the debugger.
-	 * Extremely useful when called in <code>update()</code> functions when there 
+	 * Extremely useful when called in update() functions when there 
 	 * doesn't exist a variable for a value you want to watch - so you won't have to create one.
 	 * 
 	 * @param	Name		The name of the quickWatch entry, for example "mousePressed".
-	 * @param	NewValue	The new value for this entry, for example <code>FlxG.mouse.pressed</code>.
+	 * @param	NewValue	The new value for this entry, for example FlxG.mouse.pressed.
 	 */
-	inline public function addQuick(Name:String, NewValue:Dynamic):Void
+	public inline function addQuick(Name:String, NewValue:Dynamic):Void
 	{
 		#if !FLX_NO_DEBUG
 		FlxG.game.debugger.watch.updateQuickWatch(Name, NewValue);
@@ -58,7 +53,7 @@ class WatchFrontEnd
 	 * 
 	 * @param	Name	The name of the quickWatch entry you want to remove.
 	 */
-	inline public function removeQuick(Name:String):Void
+	public inline function removeQuick(Name:String):Void
 	{
 		#if !FLX_NO_DEBUG
 		FlxG.game.debugger.watch.remove(null, null, Name);
@@ -69,7 +64,7 @@ class WatchFrontEnd
 	 * Add the mouse coords to the watch window. Useful for quickly 
 	 * getting coordinates for object placement during prototyping!
 	 */
-	inline public function addMouse():Void
+	public inline function addMouse():Void
 	{
 		#if !FLX_NO_DEBUG
 		add(FlxG, "mouse", "Mouse Position");
@@ -79,10 +74,16 @@ class WatchFrontEnd
 	/**
 	 * Removes the mouse coords from the watch window.
 	 */
-	inline public function removeMouse():Void
+	public inline function removeMouse():Void
 	{
 		#if !FLX_NO_DEBUG
 		remove(FlxG, "mouse");
 		#end
 	}
+	
+	/**
+	 * Just needed to create an instance.
+	 */
+	@:allow(flixel.FlxG)
+	public function new() { }
 }

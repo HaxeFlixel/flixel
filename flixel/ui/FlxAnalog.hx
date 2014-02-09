@@ -6,11 +6,13 @@ import flash.ui.Keyboard;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;
-import flixel.system.FlxAssets;
 import flixel.input.touch.FlxTouch;
 import flixel.util.FlxAngle;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRect;
+
+@:bitmap("assets/images/ui/analog/base.png")  private class GraphicBase  extends BitmapData {}
+@:bitmap("assets/images/ui/analog/thumb.png") private class GraphicThumb extends BitmapData {}
 
 /**
  * A virtual thumbstick - useful for input on mobile devices.
@@ -23,9 +25,6 @@ class FlxAnalog extends FlxSpriteGroup
 	 * Shows the current state of the button.
 	 */ 
 	public var status:Int = NORMAL;
-	/**
-	 * The thumb 
-	 */
 	public var thumb:FlxSprite;
 	/**
 	 * The background of the joystick, also known as the base.
@@ -48,22 +47,22 @@ class FlxAnalog extends FlxSpriteGroup
 	 */ 
 	public var onPressed:Void->Void;
 	/**
-	 * Used with public variable <code>status</code>, means not highlighted or pressed.
+	 * Used with public variable status, means not highlighted or pressed.
 	 */ 
-	inline static private var NORMAL:Int = 0;
+	private static inline var NORMAL:Int = 0;
 	/**
-	 * Used with public variable <code>status</code>, means highlighted (usually from mouse over).
+	 * Used with public variable status, means highlighted (usually from mouse over).
 	 */ 
-	inline static private var HIGHLIGHT:Int = 1;
+	private static inline var HIGHLIGHT:Int = 1;
 	/**
-	 * Used with public variable <code>status</code>, means pressed (usually from mouse click).
+	 * Used with public variable status, means pressed (usually from mouse click).
 	 */ 
-	inline static private var PRESSED:Int = 2;	
+	private static inline var PRESSED:Int = 2;
 	
 	/**
 	 * A list of analogs that are currently active.
 	 */ 
-	static private var _analogs:Array<FlxAnalog>;
+	private static var _analogs:Array<FlxAnalog>;
 	
 	#if !FLX_NO_TOUCH
 	/**
@@ -135,7 +134,7 @@ class FlxAnalog extends FlxSpriteGroup
 	private function createBase():Void
 	{
 		base = new FlxSprite(x, y);
-		base.loadGraphic(FlxAssets.IMG_BASE);
+		base.loadGraphic(GraphicBase);
 		base.x += -base.width * 0.5;
 		base.y += -base.height * 0.5;
 		base.scrollFactor.set();
@@ -155,7 +154,7 @@ class FlxAnalog extends FlxSpriteGroup
 	private function createThumb():Void 
 	{
 		thumb = new FlxSprite(x, y);
-		thumb.loadGraphic(FlxAssets.IMG_THUMB);
+		thumb.loadGraphic(GraphicThumb);
 		thumb.scrollFactor.set();
 		thumb.solid = false;
 		
@@ -391,7 +390,7 @@ class FlxAnalog extends FlxSpriteGroup
 	 */
 	public var pressed(get, never):Bool;
 	
-	inline private function get_pressed():Bool
+	private inline function get_pressed():Bool
 	{
 		return status == PRESSED;
 	}

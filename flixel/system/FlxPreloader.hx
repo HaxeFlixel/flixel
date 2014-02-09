@@ -9,18 +9,18 @@ import flash.display.Sprite;
 import flash.display.StageAlign;
 import flash.display.StageScaleMode;
 import flash.events.Event;
-import flash.geom.Rectangle;
-import flash.Lib;
-import flash.text.Font;
-import flash.utils.ByteArray;
-import flixel.FlxG;
 import flash.events.MouseEvent;
+import flash.Lib;
+import flash.net.URLRequest;
+import flash.text.Font;
+import flash.text.TextField;
 import flash.text.TextFormat;
 import flash.text.TextFormatAlign;
-import flash.text.TextField;
-import flash.net.URLRequest;
+import flixel.FlxG;
+import flixel.util.FlxColor;
+import flixel.util.FlxStringUtil;
 
-#if js
+#if (js || debug)
 class FlxPreloader extends NMEPreloader
 {	
 	public function new()
@@ -29,74 +29,17 @@ class FlxPreloader extends NMEPreloader
 	}
 }
 #else
-@:font("assets/fonts/nokiafc22.ttf") class PreloaderFont extends Font { }
 
-@:bitmap("assets/images/preloader/light.png") class LogoLight extends BitmapData {}
-@:bitmap("assets/images/preloader/corners.png") class LogoCorners extends BitmapData {}
+@:font("assets/fonts/nokiafc22.ttf") class PreloaderFont extends Font {}
+
+@:bitmap("assets/images/preloader/light.png")   private class GraphicLogoLight   extends BitmapData {}
+@:bitmap("assets/images/preloader/corners.png") private class GraphicLogoCorners extends BitmapData {}
 
 /**
  * This class handles the 8-bit style preloader.
  */
 class FlxPreloader extends NMEPreloader
 {	
-	private static var BlendModeScreen = BlendMode.SCREEN;
-	private static var BlendModeOverlay = BlendMode.OVERLAY;
-
-	/**
-	 * @private
-	 */
-	private var _init:Bool;
-	/**
-	 * @private
-	 */
-	private var _buffer:Sprite;
-	/**
-	 * @private
-	 */
-	private var _bmpBar:Bitmap;
-	/**
-	 * @private
-	 */
-	private var _text:TextField;
-	/**
-	 * Useful for storing "real" stage width if you're scaling your preloader graphics.
-	 */
-	private var _width:Int;
-	/**
-	 * Useful for storing "real" stage height if you're scaling your preloader graphics.
-	 */
-	private var _height:Int;
-	/**
-	 * @private
-	 */
-	private var _logo:Sprite;
-	/**
-	 * @private
-	 */
-	private var _logoGlow:Sprite;
-	/**
-	 * @private
-	 */
-	private var _min:Int;
-	
-	/**
-	 * @private
-	 */
-	private var _percent:Float;
-
-	/**
-	 * List of allowed URLs for built-in site-locking.
-	 * Use full swf's addresses with 'http' or 'https'.
-	 * Set it in FlxPreloader's subclass constructor as:
-	 * allowedURLs = ['http://adamatomic.com/canabalt/', FlxPreloader.LOCAL];
-	 */
-	public var allowedURLs:Array<String>;
-	
-	/**
-	 * @private
-	 */
-	private var _urlChecked:Bool;
-	
 	/**
 	 * Add this string to allowedURLs array if you want to be able to test game with enabled site-locking on local machine 
 	 */
@@ -105,20 +48,43 @@ class FlxPreloader extends NMEPreloader
 	/**
 	 * Change this if you want the flixel logo to show for more or less time.  Default value is 0 seconds.
 	 */
-	public var minDisplayTime:Float;
+	public var minDisplayTime:Float = 0.3;
 	
 	/**
-	 * Constructor
+	 * List of allowed URLs for built-in site-locking. Use full swf's addresses with 'http' or 'https'.
+	 * Set it in FlxPreloader's subclass constructor as: allowedURLs = ['http://adamatomic.com/canabalt/', FlxPreloader.LOCAL];
 	 */
+	public var allowedURLs:Array<String>;
+	
+	private static var BlendModeScreen = BlendMode.SCREEN;
+	private static var BlendModeOverlay = BlendMode.OVERLAY;
+
+	/**
+	 * Useful for storing "real" stage width if you're scaling your preloader graphics.
+	 */
+	private var _width:Int;
+	/**
+	 * Useful for storing "real" stage height if you're scaling your preloader graphics.
+	 */
+	private var _height:Int;
+	
+	private var _init:Bool = false;
+	private var _buffer:Sprite;
+	private var _bmpBar:Bitmap;
+	private var _text:TextField;
+	private var _logo:Sprite;
+	private var _logoGlow:Sprite;
+	private var _min:Int = 0;
+	private var _percent:Float;
+	private var _urlChecked:Bool = false;
+	
 	public function new()
 	{
 		super();
 		removeChild(outline);
 		removeChild(progress);
 		
-		minDisplayTime = 0.3;
-		this._init = false;
-		_urlChecked = false;
+		allowedURLs = [];
 		
 		addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 	}
@@ -140,17 +106,17 @@ class FlxPreloader extends NMEPreloader
 	 */
 	private function create():Void
 	{
-		_min = 0;
 		#if FLX_NO_DEBUG
 		_min = Std.int(minDisplayTime * 1000);
 		#end
+		
 		_buffer = new Sprite();
 		_buffer.scaleX = _buffer.scaleY = 2;
 		addChild(_buffer);
 		_width = Std.int(Lib.current.stage.stageWidth / _buffer.scaleX);
 		_height = Std.int(Lib.current.stage.stageHeight / _buffer.scaleY);
 		_buffer.addChild(new Bitmap(new BitmapData(_width, _height, false, 0x00345e)));
-		var bitmap:Bitmap = new Bitmap(new LogoLight(0, 0));
+		var bitmap = new Bitmap(new GraphicLogoLight(0, 0));
 		bitmap.smoothing = true;
 		bitmap.width = bitmap.height = _height;
 		bitmap.x = (_width - bitmap.width) / 2;
@@ -184,7 +150,7 @@ class FlxPreloader extends NMEPreloader
 		_logoGlow.x = (_width - _logoGlow.width) / 2;
 		_logoGlow.y = (_height - _logoGlow.height) / 2;
 		_buffer.addChild(_logoGlow);
-		bitmap = new Bitmap(new LogoCorners(0, 0));
+		bitmap = new Bitmap(new GraphicLogoCorners(0, 0));
 		bitmap.smoothing = true;
 		bitmap.width = _width;
 		bitmap.height = _height;
@@ -192,10 +158,10 @@ class FlxPreloader extends NMEPreloader
 		bitmap = new Bitmap(new BitmapData(_width, _height, false, 0xffffff));
 		var i:Int = 0;
 		var j:Int = 0;
-		while(i < _height)
+		while (i < _height)
 		{
 			j = 0;
-			while(j < _width)
+			while (j < _width)
 			{
 				bitmap.bitmapData.setPixel(j++, i, 0);
 			}
@@ -301,21 +267,22 @@ class FlxPreloader extends NMEPreloader
 	
 	private function onEnterFrame(event:Event):Void
 	{
-		if(!this._init)
+		if (!_init)
 		{
-			if((Lib.current.stage.stageWidth <= 0) || (Lib.current.stage.stageHeight <= 0))
+			if ((Lib.current.stage.stageWidth <= 0) || (Lib.current.stage.stageHeight <= 0))
 			{
 				return;
 			}
 			create();
-			this._init = true;
+			_init = true;
 		}
 		
 		checkSiteLock();
 		
 		graphics.clear();
 		var time:Int = Lib.getTimer();
-		if((_percent >= 1) && (time > _min))
+		
+		if ((_percent >= 1) && (time > _min))
 		{
 			super.onLoaded();
 			destroy();
@@ -334,21 +301,21 @@ class FlxPreloader extends NMEPreloader
 	private function checkSiteLock():Void
 	{
 		#if flash
-		if (_urlChecked == false && allowedURLs != null)
+		if (!_urlChecked && (allowedURLs != null))
 		{
-			if (atHome() == false)
+			if (!isHostUrlAllowed())
 			{
-				var tmp:Bitmap = new Bitmap(new BitmapData(stage.stageWidth, stage.stageHeight, true, 0xFFFFFFFF));
+				var tmp = new Bitmap(new BitmapData(stage.stageWidth, stage.stageHeight, true, FlxColor.WHITE));
 				addChild(tmp);
 				
-				var format:TextFormat = new TextFormat();
+				var format = new TextFormat();
 				format.color = 0x000000;
 				format.size = 16;
 				format.align = TextFormatAlign.CENTER;
 				format.bold = true;
 				format.font = "system";
 				
-				var textField:TextField = new TextField();
+				var textField = new TextField();
 				textField.width = tmp.width - 16;
 				textField.height = tmp.height - 16;
 				textField.y = 8;
@@ -362,7 +329,6 @@ class FlxPreloader extends NMEPreloader
 				tmp.addEventListener(MouseEvent.CLICK, goToMyURL);
 				
 				removeEventListener(Event.ENTER_FRAME, onEnterFrame);
-				return;
 			}
 			else
 			{
@@ -373,50 +339,26 @@ class FlxPreloader extends NMEPreloader
 	}
 	
 	#if flash
-	private function goToMyURL(e:MouseEvent = null):Void
+	private function goToMyURL(?e:MouseEvent):Void
 	{
 		Lib.getURL(new URLRequest(allowedURLs[0]));
 	}
 	
-	/**
-	 * Gets home domain
-	 */
-	private function getHomeDomain():String
-	{
-		return getDomain(loaderInfo.loaderURL);
-	}
-	
-	private function getDomain(url:String):String
-	{
-		var urlStart:Int = url.indexOf("://") + 3;
-		var urlEnd:Int = url.indexOf("/", urlStart);
-		var home:String = url.substring(urlStart, urlEnd);
-		var LastDot:Int = home.lastIndexOf(".") - 1;
-		var domEnd:Int = home.lastIndexOf(".", LastDot) + 1;
-		home = home.substring(domEnd, home.length);
-		home = home.split(":")[0];
-		return (home == "") ? LOCAL : home;
-	}
-	
-	/**
-	 * Simple site-lock check
-	 */
-	private function atHome():Bool
+	private function isHostUrlAllowed():Bool
 	{
 		if (allowedURLs.length == 0)
 		{
 			return true;
 		}
 		
-		var homeDomain:String = getHomeDomain();
-		for (i in 0...allowedURLs.length)
+		var homeDomain:String = FlxStringUtil.getDomain(loaderInfo.loaderURL);
+		for (allowedURL in allowedURLs)
 		{
-			var allowedURL:String = allowedURLs[i];
-			if (getDomain(allowedURL) == homeDomain)
+			if (FlxStringUtil.getDomain(allowedURL) == homeDomain)
 			{
 				return true;
 			}
-			else if (allowedURL == LOCAL && homeDomain == LOCAL)
+			else if ((allowedURL == LOCAL) && (homeDomain == LOCAL))
 			{
 				return true;
 			}
@@ -433,38 +375,39 @@ class FlxPreloader extends NMEPreloader
 	private function update(Percent:Float):Void
 	{
 		_bmpBar.scaleX = Percent * (_width - 8);
-		_text.text = "FLX v" + FlxG.LIBRARY_MAJOR_VERSION + "." + FlxG.LIBRARY_MINOR_VERSION + " " + Std.int(Percent * 100) + "%";
-		if(Percent < 0.1)
+		_text.text = Std.string(FlxG.VERSION) + " " + Std.int(Percent * 100) + "%";
+		
+		if (Percent < 0.1)
 		{
 			_logoGlow.alpha = 0;
 			_logo.alpha = 0;
 		}
-		else if(Percent < 0.15)
+		else if (Percent < 0.15)
 		{
 			_logoGlow.alpha = Math.random();
 			_logo.alpha = 0;
 		}
-		else if(Percent < 0.2)
+		else if (Percent < 0.2)
 		{
 			_logoGlow.alpha = 0;
 			_logo.alpha = 0;
 		}
-		else if(Percent < 0.25)
+		else if (Percent < 0.25)
 		{
 			_logoGlow.alpha = 0;
 			_logo.alpha = Math.random();
 		}
-		else if(Percent < 0.7)
+		else if (Percent < 0.7)
 		{
 			_logoGlow.alpha = (Percent - 0.45) / 0.45;
 			_logo.alpha = 1;
 		}
-		else if((Percent > 0.8) && (Percent < 0.9))
+		else if ((Percent > 0.8) && (Percent < 0.9))
 		{
 			_logoGlow.alpha = 1 - (Percent - 0.8) / 0.1;
 			_logo.alpha = 0;
 		}
-		else if(Percent > 0.9)
+		else if (Percent > 0.9)
 		{
 			_buffer.alpha = 1 - (Percent - 0.9) / 0.1;
 		}

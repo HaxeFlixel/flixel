@@ -1,6 +1,7 @@
 package flixel;
 
 import flixel.system.FlxBGSprite;
+import flixel.util.FlxColor;
 
 /**
  * This is the basic game "state" object - e.g. in a simple game you might have a menu state and a play state.
@@ -29,9 +30,11 @@ class FlxSubState extends FlxState
 	 */
 	private var _initialized:Bool = false;
 	
+	private var _bgColor:Int;
+	
 	public var initialized(get, null):Bool;
 	
-	inline private function get_initialized():Bool 
+	private inline function get_initialized():Bool
 	{ 
 		return _initialized; 
 	}
@@ -39,7 +42,7 @@ class FlxSubState extends FlxState
 	/**
 	 * Internal helper method
 	 */
-	inline public function initialize():Void 
+	public inline function initialize():Void
 	{ 
 		_initialized = true; 
 	}
@@ -49,7 +52,7 @@ class FlxSubState extends FlxState
 	 * @param	BGColor		background color for this substate
 	 * @param	UseMouse	whether to show mouse pointer or not
 	 */
-	public function new(BGColor:Int = 0x00000000, UseMouse:Bool = false)
+	public function new(BGColor:Int = FlxColor.TRANSPARENT)
 	{
 		super();
 		closeCallback = null;
@@ -58,10 +61,9 @@ class FlxSubState extends FlxState
 		_bgSprite = new FlxBGSprite();
 		#end
 		bgColor = BGColor;
-		useMouse = UseMouse;
 	}
 	
-	override private function get_bgColor():Int 
+	override private inline function get_bgColor():Int
 	{
 		return _bgColor;
 	}

@@ -4,6 +4,7 @@ import flash.geom.Rectangle;
 import flash.system.System;
 import flash.text.TextField;
 import flixel.FlxG;
+import flixel.system.debug.FlxDebugger;
 import flixel.system.FlxList;
 import flixel.system.FlxQuadTree;
 import flixel.util.FlxColor;
@@ -15,6 +16,7 @@ import flixel.util.FlxMath;
  * @author Adam "Atomic" Saltsman
  * @author Anton Karlov
  */
+#if !FLX_NO_DEBUG
 class Stats extends Window
 {
 	/**
@@ -93,18 +95,11 @@ class Stats extends Window
 	
 	/**
 	 * Creates a new window with fps and memory graphs, as well as other useful stats for debugging.
-	 * This Flash-based class is mainly (only?) used by <code>FlxDebugger</code>.
-	 * 
-	 * @param 	Title		The name of the window, displayed in the header bar.
-	 * @param	IconPath	Path to the icon to use for the window header.
-	 * @param 	Width		The initial width of the window.
-	 * @param 	Height		The initial height of the window.
-	 * @param 	Resizable	Whether you can change the size of the window with flashPlayerFramerate drag handle.
-	 * @param 	Bounds		A rectangle indicating the valid screen area for the window.
 	 */
-	public function new(Title:String, ?IconPath:String, Width:Float, Height:Float, Resizable:Bool = true, ?Bounds:Rectangle)
+	public function new()
 	{
-		super(Title, IconPath, Width, Height, Resizable, Bounds);
+		super("stats", new GraphicStats(0, 0), 0, 0, false);
+		
 		minSize.y = MIN_HEIGHT;
 		resize(INITIAL_WIDTH, MIN_HEIGHT);
 		
@@ -136,7 +131,7 @@ class Stats extends Window
 		_leftTextField.multiline = _rightTextField.multiline = true;
 		_leftTextField.wordWrap = _rightTextField.wordWrap = true;
 		
-		_leftTextField.text = "Draw: \nUpdate:" + #if !flash "\nDrawTiles:" + #end "\nQuadTrees: \nLists:";
+		_leftTextField.text = "Update: \nDraw:" + #if !flash "\nDrawTiles:" + #end "\nQuadTrees: \nLists:";
 	}
 	
 	/**
@@ -297,7 +292,7 @@ class Stats extends Window
 	/**
 	 * Calculates current game fps.
 	 */
-	inline public function currentFps():Float
+	public inline function currentFps():Float
 	{
 		return _frameCount / intervalTime();
 	}
@@ -305,7 +300,7 @@ class Stats extends Window
 	/**
 	 * Calculates average game fps (takes whole time the game is running).
 	 */
-	inline public function averageFps():Float
+	public inline function averageFps():Float
 	{
 		return _totalCount / runningTime();
 	}
@@ -313,7 +308,7 @@ class Stats extends Window
 	/**
 	 * Application life time.
 	 */
-	inline public function runningTime():Float
+	public inline function runningTime():Float
 	{
 		return (_currentTime - _initTime) / 1000;
 	}
@@ -321,7 +316,7 @@ class Stats extends Window
 	/**
 	 * Time since perfomance monitoring started.
 	 */
-	inline public function intervalTime():Float
+	public inline function intervalTime():Float
 	{
 		return (_currentTime - _itvTime) / 1000;
 	}
@@ -329,7 +324,7 @@ class Stats extends Window
 	/**
 	 * Current RAM consumtion.
 	 */
-	inline public function currentMem():Float
+	public inline function currentMem():Float
 	{
 		return (System.totalMemory / 1024) / 1000;
 	}
@@ -407,3 +402,4 @@ class Stats extends Window
 		_paused = true;
 	}
 }
+#end

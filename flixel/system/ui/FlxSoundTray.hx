@@ -13,6 +13,7 @@ import flash.text.TextFormatAlign;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.system.FlxAssets;
+import flixel.system.FlxSound;
 import flixel.util.FlxColor;
 
 /**
@@ -38,6 +39,8 @@ class FlxSoundTray extends Sprite
 	 */
 	private var _width:Int = 80;
 	
+	private var _defaultScale:Float = 2.0;
+	
 	/**
 	 * Sets up the "sound tray", the little volume meter that pops down sometimes.
 	 */
@@ -46,8 +49,8 @@ class FlxSoundTray extends Sprite
 		super();
 		
 		visible = false;
-		scaleX = 2;
-		scaleY = 2;
+		scaleX = _defaultScale;
+		scaleY = _defaultScale;
 		var tmp:Bitmap = new Bitmap(new BitmapData(_width, 30, true, 0x7F000000));
 		screenCenter();
 		addChild(tmp);
@@ -128,7 +131,7 @@ class FlxSoundTray extends Sprite
 	{
 		if (!Silent)
 		{
-			FlxG.sound.play(FlxAssets.SND_BEEP);
+			FlxG.sound.load(BeepSound).play();
 		}
 		
 		_timer = 1;
@@ -157,7 +160,10 @@ class FlxSoundTray extends Sprite
 	
 	public function screenCenter():Void
 	{
-		x = Std.int((Lib.current.stage.stageWidth / 2) - (_width / 2) * scaleX);
+		scaleX = _defaultScale / FlxG.game.scaleX;
+		scaleY = _defaultScale / FlxG.game.scaleY;
+		
+		x = (0.5 * (Lib.current.stage.stageWidth - _width * _defaultScale) - FlxG.game.x) / FlxG.game.scaleX;
 	}
 }
 #end

@@ -9,20 +9,20 @@ import flixel.util.FlxPoint;
 class FlxButton extends FlxTypedButton<FlxText>
 {
 	/**
-	 * Used with public variable <code>status</code>, means not highlighted or pressed.
+	 * Used with public variable status, means not highlighted or pressed.
 	 */
-	inline static public var NORMAL:Int = 0;
+	public static inline var NORMAL:Int = 0;
 	/**
-	 * Used with public variable <code>status</code>, means highlighted (usually from mouse over).
+	 * Used with public variable status, means highlighted (usually from mouse over).
 	 */
-	inline static public var HIGHLIGHT:Int = 1;
+	public static inline var HIGHLIGHT:Int = 1;
 	/**
-	 * Used with public variable <code>status</code>, means pressed (usually from mouse click).
+	 * Used with public variable status, means pressed (usually from mouse click).
 	 */
-	inline static public var PRESSED:Int = 2;
+	public static inline var PRESSED:Int = 2;
 	
 	/**
-	 * Creates a new <code>FlxButton</code> object with a gray background
+	 * Creates a new FlxButton object with a gray background
 	 * and a callback function on the UI thread.
 	 * 
 	 * @param	X				The X position of the button.
@@ -31,9 +31,9 @@ class FlxButton extends FlxTypedButton<FlxText>
 	 * @param	OnClick			The function to call whenever the button is clicked.
 	 * @param	OnClickParams	The params to call the onClick function with.
 	 */
-	public function new(X:Float = 0, Y:Float = 0, ?Label:String, ?OnClick:Dynamic, ?OnClickParams:Array<Dynamic>)
+	public function new(X:Float = 0, Y:Float = 0, ?Label:String, ?OnClick:Void->Void)
 	{
-		super(X, Y, Label, OnClick, OnClickParams);
+		super(X, Y, Label, OnClick);
 		
 		if (Label != null)
 		{

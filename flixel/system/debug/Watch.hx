@@ -1,8 +1,10 @@
 package flixel.system.debug;
 
+#if !FLX_NO_DEBUG
 import flash.display.Sprite;
 import flash.geom.Rectangle;
 import flixel.FlxG;
+import flixel.system.debug.FlxDebugger;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxPoint;
 import flixel.util.FlxStringUtil;
@@ -28,17 +30,11 @@ class Watch extends Window
 	private var _quickWatchList:Map<String, WatchEntry>;
 	
 	/**
-	 * Creates a new window object.  This Flash-based class is mainly (only?) used by <code>FlxDebugger</code>.
-	 * @param 	Title		The name of the window, displayed in the header bar.
-	 * @param	IconPath	Path to the icon to use for the window header.
-	 * @param 	Width		The initial width of the window.
-	 * @param 	Height		The initial height of the window.
-	 * @param 	Resizable	Whether you can change the size of the window with a drag handle.
-	 * @param 	Bounds		A rectangle indicating the valid screen area for the window.
+	 * Creates a new watch window object.
 	 */
-	public function new(Title:String, ?IconPath:String, Width:Float, Height:Float, Resizable:Bool = true, ?Bounds:Rectangle)
+	public function new()
 	{
-		super(Title, IconPath, Width, Height, Resizable, Bounds);
+		super("watch", new GraphicWatch(0, 0));
 		
 		_names = new Sprite();
 		_names.x = 2;
@@ -90,9 +86,9 @@ class Watch extends Window
 	 * Add a new variable to the watch window.
 	 * Has some simple code in place to prevent
 	 * accidentally watching the same variable twice.
-	 * @param AnyObject		The <code>Object</code> containing the variable you want to track, e.g. this or Player.velocity.
-	 * @param VariableName	The <code>String</code> name of the variable you want to track, e.g. "width" or "x".
-	 * @param DisplayName	Optional <code>String</code> that can be displayed in the watch window instead of the basic class-name information.
+	 * @param AnyObject		The Object containing the variable you want to track, e.g. this or Player.velocity.
+	 * @param VariableName	The String name of the variable you want to track, e.g. "width" or "x".
+	 * @param DisplayName	Optional String that can be displayed in the watch window instead of the basic class-name information.
 	 */
 	public function add(AnyObject:Dynamic, VariableName:String, DisplayName:String = null):Void
 	{
@@ -127,10 +123,10 @@ class Watch extends Window
 	#if !FLX_NO_DEBUG
 	/**
 	 * Add or update a quickWatch entry to the watch list in the debugger.
-	 * Extremely useful when called in <code>update()</code> functions when there 
+	 * Extremely useful when called in update() functions when there 
 	 * doesn't exist a variable for a value you want to watch - so you won't have to create one.
 	 * @param	Name		The name of the quickWatch entry, for example "mousePressed".
-	 * @param	NewValue	The new value for this entry, for example <code>FlxG.mouse.pressed</code>.
+	 * @param	NewValue	The new value for this entry, for example FlxG.mouse.pressed.
 	 */
 	public function updateQuickWatch(Name:String, NewValue:Dynamic):Void
 	{
@@ -156,8 +152,8 @@ class Watch extends Window
 	
 	/**
 	 * Remove a variable from the watch window.
-	 * @param 	AnyObject		The <code>Object</code> containing the variable you want to remove, e.g. this or Player.velocity.
-	 * @param 	VariableName	The <code>String</code> name of the variable you want to remove, e.g. "width" or "x".  If left null, this will remove all variables of that object. 
+	 * @param 	AnyObject		The Object containing the variable you want to remove, e.g. this or Player.velocity.
+	 * @param 	VariableName	The String name of the variable you want to remove, e.g. "width" or "x".  If left null, this will remove all variables of that object. 
 	 * @param	QuickWatchName	In case you want to remove a quickWatch entry.
 	 */
 	public function remove(AnyObject:Dynamic, VariableName:String = null, QuickWatchName:String = null):Void
@@ -295,3 +291,4 @@ class Watch extends Window
 		}
 	}
 }
+#end

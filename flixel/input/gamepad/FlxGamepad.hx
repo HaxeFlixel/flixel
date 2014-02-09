@@ -6,35 +6,36 @@ import flixel.util.FlxPoint;
 class FlxGamepad implements IFlxDestroyable
 {
 	// Button States (mirrors Key States in FlxKey.hx)
-	inline static public var JUST_RELEASED	:Int = -1;
-	inline static public var RELEASED		:Int = 0;
-	inline static public var PRESSED		:Int = 1;
-	inline static public var JUST_PRESSED	:Int = 2;
+	public static inline var JUST_RELEASED	:Int = -1;
+	public static inline var RELEASED		:Int = 0;
+	public static inline var PRESSED		:Int = 1;
+	public static inline var JUST_PRESSED	:Int = 2;
 	
 	public var id:Int;
 	public var buttons:Map<Int, FlxGamepadButton>;
-	
-	/**
-	 * Axis array is read-only, use "getAxis" function for deadZone checking.
-	 */
-	@:allow(flixel.input.gamepad)
-	private var axis:Array<Float>;
-	
-	/**
-	 * DPAD
-	 */
-	public var hat:FlxPoint;
-	public var ball:FlxPoint;
-	public var dpadUp(get, null):Bool = false;
-	public var dpadDown(get, null):Bool = false;
-	public var dpadLeft(get, null):Bool = false;
-	public var dpadRight(get, null):Bool = false;
 	
 	/**
 	 * Gamepad deadzone. Sets the sensibility. 
 	 * Less this number the more gamepad is sensible. Should be between 0.0 and 1.0.
 	 */
 	public var deadZone:Float = 0.15;
+	
+	/**
+	 * DPAD
+	 */
+	public var hat:FlxPoint;
+	public var ball:FlxPoint;
+	
+	public var dpadUp(get, null):Bool = false;
+	public var dpadDown(get, null):Bool = false;
+	public var dpadLeft(get, null):Bool = false;
+	public var dpadRight(get, null):Bool = false;
+	
+	/**
+	 * Axis array is read-only, use "getAxis" function for deadZone checking.
+	 */
+	@:allow(flixel.input.gamepad)
+	private var axis:Array<Float>;
 	
 	public function new(ID:Int, GlobalDeadZone:Float = 0) 
 	{
@@ -254,8 +255,6 @@ class FlxGamepad implements IFlxDestroyable
 	
 	/**
 	 * Check to see if any buttons are pressed right now.
-	 * 
-	 * @return	Whether any buttons are currently pressed.
 	 */
 	public function anyButton():Bool
 	{
@@ -272,8 +271,6 @@ class FlxGamepad implements IFlxDestroyable
 	
 	/**
 	 * Check to see if any buttons are pressed right or Axis, Ball and Hat Moved now.
-	 * 
-	 * @return	Whether any buttons are currently pressed.
 	 */
 	public function anyInput():Bool
 	{
@@ -306,8 +303,8 @@ class FlxGamepad implements IFlxDestroyable
 	/**
 	 * DPAD accessor properties
 	 */
-	inline public function get_dpadUp():Bool { return hat.y < 0; }
-	inline public function get_dpadDown():Bool { return hat.y > 0; }
-	inline public function get_dpadLeft():Bool { return hat.x < 0; }
-	inline public function get_dpadRight():Bool { return hat.x > 0; }
+	private inline function get_dpadUp():Bool { return hat.y < 0; }
+	private inline function get_dpadDown():Bool { return hat.y > 0; }
+	private inline function get_dpadLeft():Bool { return hat.x < 0; }
+	private inline function get_dpadRight():Bool { return hat.x > 0; }
 }
