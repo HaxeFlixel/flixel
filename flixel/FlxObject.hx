@@ -29,39 +29,39 @@ class FlxObject extends FlxBasic
 	/**
 	 * Generic value for "left" Used by facing, allowCollisions, and touching.
 	 */
-	static public inline var LEFT:Int	= 0x0001;
+	public static inline var LEFT:Int	= 0x0001;
 	/**
 	 * Generic value for "right" Used by facing, allowCollisions, and touching.
 	 */
-	static public inline var RIGHT:Int	= 0x0010;
+	public static inline var RIGHT:Int	= 0x0010;
 	/**
 	 * Generic value for "up" Used by facing, allowCollisions, and touching.
 	 */
-	static public inline var UP:Int		= 0x0100;
+	public static inline var UP:Int		= 0x0100;
 	/**
 	 * Generic value for "down" Used by facing, allowCollisions, and touching.
 	 */
-	static public inline var DOWN:Int	= 0x1000;
+	public static inline var DOWN:Int	= 0x1000;
 	/**
 	 * Special-case constant meaning no collisions, used mainly by allowCollisions and touching.
 	 */
-	static public inline var NONE:Int	= 0;
+	public static inline var NONE:Int	= 0;
 	/**
 	 * Special-case constant meaning up, used mainly by allowCollisions and touching.
 	 */
-	static public inline var CEILING:Int= UP;
+	public static inline var CEILING:Int= UP;
 	/**
 	 * Special-case constant meaning down, used mainly by allowCollisions and touching.
 	 */
-	static public inline var FLOOR:Int	= DOWN;
+	public static inline var FLOOR:Int	= DOWN;
 	/**
 	 * Special-case constant meaning only the left and right sides, used mainly by allowCollisions and touching.
 	 */
-	static public inline var WALL:Int	= LEFT | RIGHT;
+	public static inline var WALL:Int	= LEFT | RIGHT;
 	/**
 	 * Special-case constant meaning any direction, used mainly by allowCollisions and touching.
 	 */
-	static public inline var ANY:Int	= LEFT | RIGHT | UP | DOWN;
+	public static inline var ANY:Int	= LEFT | RIGHT | UP | DOWN;
 	/**
 	 * X position of the upper left corner of this object in world space.
 	 */
@@ -192,7 +192,7 @@ class FlxObject extends FlxBasic
 	 */
 	
 	/**
-	 * Internal static private variables, for performance reasons.
+	 * Internal private static variables, for performance reasons.
 	 */
 	private var _point:FlxPoint;
 	private static var _pZero:FlxPoint = new FlxPoint(); // Should always represent (0,0) - useful for avoiding unnecessary new calls.

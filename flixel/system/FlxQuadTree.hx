@@ -18,11 +18,11 @@ class FlxQuadTree extends FlxRect
 	/**
 	 * Flag for specifying that you want to add an object to the A list.
 	 */
-	static public inline var A_LIST:Int = 0;
+	public static inline var A_LIST:Int = 0;
 	/**
 	 * Flag for specifying that you want to add an object to the B list.
 	 */
-	static public inline var B_LIST:Int = 1;
+	public static inline var B_LIST:Int = 1;
 	/**
 	 * Controls the granularity of the quad tree.  Default is 6 (decent performance on large and small worlds).
 	 */
@@ -188,7 +188,7 @@ class FlxQuadTree extends FlxRect
 	/**
 	 * Pooling mechanism, turn FlxQuadTree into a linked list, when FlxQuadTrees are destroyed, they get added to the list, and when they get recycled they get removed.
 	 */
-	static public  var _NUM_CACHED_QUAD_TREES:Int = 0;
+	public static  var _NUM_CACHED_QUAD_TREES:Int = 0;
 	private static var _cachedTreesHead:FlxQuadTree;
 	private 	   var next:FlxQuadTree;
 	
