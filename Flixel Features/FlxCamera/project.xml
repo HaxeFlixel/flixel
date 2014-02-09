@@ -22,6 +22,6 @@
 	<!--haxedef name="dev" /-->
 	<haxedef name="NAPE_RELEASE_BUILD"/>
 	<haxedef name="HXCPP_DEBUGGER" if="cpp" />
-	<haxedef name="FLX_NO_DEBUG"/>
+	<haxedef name="FLX_NO_DEBUG" unless="debug" />
 	
 </project>

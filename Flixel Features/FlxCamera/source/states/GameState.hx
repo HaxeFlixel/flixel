@@ -152,21 +152,6 @@ class GameState extends FlxNapeState
 		
 		FlxG.camera.setBounds( LEVEL_MIN_X , LEVEL_MIN_Y , LEVEL_MAX_X + Math.abs(LEVEL_MIN_X), LEVEL_MAX_Y + Math.abs(LEVEL_MIN_Y), true );
 		FlxG.camera.follow(orb, 0, null, 0);
-		FlxG.camera.followAdjust(0, 0);
-		
-		//disablePhysDebug();
-		
-		//#if dev
-		//GameConsole.init();
-		//GameConsole.registerVariable(FlxG.camera.scroll, "x", "scrollX", true);
-		//GameConsole.registerVariable(FlxG.camera.scroll, "y", "scrollY", true);
-		//GameConsole.registerVariable(FlxG.camera, "x", "camX", true);
-		//GameConsole.registerVariable(FlxG.camera, "y", "camY", true);
-		//GameConsole.registerVariable(FlxG.camera, "width", "camWidth", true);
-		//GameConsole.registerVariable(FlxG.camera, "height", "camHeight", true);
-		//GameConsole.registerVariable(FlxG.camera, "zoom", "camZoom");
-		//GameConsole.registerFunction(this, "setZoom", "zoom"); 
-		//#end	
 		
 		#if TRUE_ZOOM_OUT
 		hudCam = new FlxCamera(440 + 50, 0 + 45, 200, 180); // +50 + 45 For 1/2 zoom out.
@@ -346,7 +331,7 @@ class GameState extends FlxNapeState
 		FlxG.game.swapChildren(FlxG.camera.flashSprite, overlayCamera.flashSprite);
 		
 		FlxG.camera.follow(orb, newCamStyle, null, oldCam.followLerp);
-		FlxG.camera.followAdjust(oldCam.followLead.x, oldCam.followLead.y);
+		FlxG.camera.followLead.set(oldCam.followLead.x, oldCam.followLead.y);
 		setZoom(oldCam.zoom);
 		
 		FlxG.cameras.remove(oldCam, true);
