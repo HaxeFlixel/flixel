@@ -589,7 +589,7 @@ class FlxCamera extends FlxBasic
 		updateShake();
 	}
 	
-	private inline function updateFollow():Void
+	private function updateFollow():Void
 	{
 		//Either follow the object closely, 
 		//or doublecheck our deadzone and update accordingly.
@@ -674,7 +674,7 @@ class FlxCamera extends FlxBasic
 		}
 	}
 	
-	private inline function updateFlash():Void
+	private function updateFlash():Void
 	{
 		//Update the "flash" special effect
 		if (_fxFlashAlpha > 0.0)
@@ -687,7 +687,7 @@ class FlxCamera extends FlxBasic
 		}
 	}
 	
-	private inline function updateFade():Void
+	private function updateFade():Void
 	{
 		if ((_fxFadeAlpha > 0.0) && (_fxFadeAlpha < 1.0))
 		{
@@ -718,7 +718,7 @@ class FlxCamera extends FlxBasic
 		}
 	}
 	
-	private inline function updateShake():Void
+	private function updateShake():Void
 	{
 		if (_fxShakeDuration > 0)
 		{
