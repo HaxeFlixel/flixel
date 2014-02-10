@@ -24,7 +24,7 @@ class FlxMath
 	/**
 	 * Maximum value of a floating point number.
 	 */
-	public static inline var MAX_VALUE:Float = 1.79e + 308;
+	public static inline var MAX_VALUE:Float = 1.79e+308;
 	
 	/**
 	 * Round a decimal number to have reduced precision (less decimal numbers).
