@@ -1,7 +1,10 @@
 package flixel.util;
 
+import flash.display.BitmapData;
+import flash.geom.Matrix;
 import flash.Lib;
 import flash.net.URLRequest;
+import flixel.system.FlxAssets;
 
 /**
  * A class primarily containing functions related 
@@ -305,5 +308,199 @@ class FlxStringUtil
 			return fArray;
 		}
 		return null;
+	}
+	
+	/**
+	 * Converts a one-dimensional array of tile data to a comma-separated string.
+	 * 
+	 * @param	Data		An array full of integer tile references.
+	 * @param	Width		The number of tiles in each row.
+	 * @param	Invert		Recommended only for 1-bit arrays - changes 0s to 1s and vice versa.
+	 * @return	A comma-separated string containing the level data in a FlxTilemap-friendly format.
+	 */
+	public static function arrayToCSV(Data:Array<Int>, Width:Int, Invert:Bool = false):String
+	{
+		var row:Int = 0;
+		var column:Int;
+		var csv:String = "";
+		var Height:Int = Std.int(Data.length / Width);
+		var index:Int;
+		var offset:Int = 0;
+		
+		while (row < Height)
+		{
+			column = 0;
+			
+			while (column < Width)
+			{
+				index = Data[offset];
+				
+				if (Invert)
+				{
+					if (index == 0)
+					{
+						index = 1;
+					}
+					else if (index == 1)
+					{
+						index = 0;
+					}
+				}
+				
+				if (column == 0)
+				{
+					if (row == 0)
+					{
+						csv += index;
+					}
+					else
+					{
+						csv += "\n" + index;
+					}
+				}
+				else
+				{
+					csv += ", "+index;
+				}
+				
+				column++;
+				offset++;
+			}
+			
+			row++;
+		}
+		
+		return csv;
+	}
+	
+	/**
+	 * Converts a BitmapData object to a comma-separated string. Black pixels are flagged as 'solid' by default,
+	 * non-black pixels are set as non-colliding. Black pixels must be PURE BLACK.
+	 * 
+	 * @param	Bitmap		A Flash BitmapData object, preferably black and white.
+	 * @param	Invert		Load white pixels as solid instead.
+	 * @param	Scale		Default is 1.  Scale of 2 means each pixel forms a 2x2 block of tiles, and so on.
+	 * @param  	ColorMap  	An array of color values (0xAARRGGBB) in the order they're intended to be assigned as indices
+	 * @return	A comma-separated string containing the level data in a FlxTilemap-friendly format.
+	 */
+	public static function bitmapToCSV(Bitmap:BitmapData, Invert:Bool = false, Scale:Int = 1, ?ColorMap:Array<Int>):String
+	{
+		if (Scale < 1) 
+		{
+			Scale = 1;
+		}
+		
+		// Import and scale image if necessary
+		if (Scale > 1)
+		{
+			var bd:BitmapData = Bitmap;
+			Bitmap = new BitmapData(Bitmap.width * Scale, Bitmap.height * Scale);
+			
+			#if js
+			var bdW:Int = bd.width;
+			var bdH:Int = bd.height;
+			var pCol:Int = 0;
+			
+			for (i in 0...bdW)
+			{
+				for (j in 0...bdH)
+				{
+					pCol = bd.getPixel(i, j);
+					
+					for (k in 0...Scale)
+					{
+						for (m in 0...Scale)
+						{
+							Bitmap.setPixel(i * Scale + k, j * Scale + m, pCol);
+						}
+					}
+				}
+			}
+			#else
+			var mtx = new Matrix();
+			mtx.scale(Scale, Scale);
+			Bitmap.draw(bd, mtx);
+			#end
+		}
+		
+		// Walk image and export pixel values
+		var row:Int = 0;
+		var column:Int;
+		var pixel:Int;
+		var csv:String = "";
+		var bitmapWidth:Int = Bitmap.width;
+		var bitmapHeight:Int = Bitmap.height;
+		
+		while (row < bitmapHeight)
+		{
+			column = 0;
+			
+			while(column < bitmapWidth)
+			{
+				// Decide if this pixel/tile is solid (1) or not (0)
+				pixel = Bitmap.getPixel(column, row);
+				
+				if (ColorMap != null)
+				{
+					pixel = FlxArrayUtil.indexOf(ColorMap, pixel);
+				}
+				else if ((Invert && (pixel > 0)) || (!Invert && (pixel == 0)))
+				{
+					pixel = 1;
+				}
+				else
+				{
+					pixel = 0;
+				}
+				
+				// Write the result to the string
+				if (column == 0)
+				{
+					if (row == 0)
+					{
+						csv += pixel;
+					}
+					else
+					{
+						csv += "\n" + pixel;
+					}
+				}
+				else
+				{
+					csv += ", " + pixel;
+				}
+				
+				column++;
+			}
+			
+			row++;
+		}
+		
+		return csv;
+	}
+	
+	/**
+	 * Converts a resource image file to a comma-separated string. Black pixels are flagged as 'solid' by default,
+	 * non-black pixels are set as non-colliding. Black pixels must be PURE BLACK.
+	 * 
+	 * @param	ImageFile	An embedded graphic, preferably black and white.
+	 * @param	Invert		Load white pixels as solid instead.
+	 * @param	Scale		Default is 1.  Scale of 2 means each pixel forms a 2x2 block of tiles, and so on.
+	 * @return	A comma-separated string containing the level data in a FlxTilemap-friendly format.
+	 */
+	public static function imageToCSV(ImageFile:Dynamic, Invert:Bool = false, Scale:Int = 1):String
+	{
+		var tempBitmapData:BitmapData;
+		
+		if (Std.is(ImageFile, String))
+		{
+			tempBitmapData = FlxAssets.getBitmapData(ImageFile);
+		}
+		else
+		{
+			tempBitmapData = (Type.createInstance(ImageFile, [])).bitmapData;
+		}
+		
+		return bitmapToCSV(tempBitmapData, Invert, Scale);
 	}
 }
