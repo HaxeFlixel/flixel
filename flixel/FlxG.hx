@@ -1,5 +1,6 @@
 package flixel;
 
+import flash.Lib;
 import flash.display.DisplayObject;
 import flash.display.Stage;
 import flash.display.StageDisplayState;
@@ -439,7 +440,7 @@ class FlxG
 		height = Std.int(Math.abs(Height));
 		FlxCamera.defaultZoom = Zoom;
 		
-		resizeGame(Lib.current.stage.stageWidth, Lib.current.stage.stageHeight);
+		resizeGame(stage.stageWidth, stage.stageHeight);
 		
 		// Instantiate inputs
 		#if !FLX_NO_KEYBOARD
@@ -498,7 +499,7 @@ class FlxG
 		return ScaleMode;
 	}
 	
-	inline private static function get_updateFramerate():Int
+	private static inline function get_updateFramerate():Int
 	{
 		return Std.int(1000 / game.stepMS);
 	}
@@ -573,12 +574,12 @@ class FlxG
 		return fullscreen = Value;
 	}
 	
-	inline private static function get_stage():Stage
+	private static inline function get_stage():Stage
 	{
-		return game.stage;
+		return Lib.current.stage;
 	}
 	
-	inline private static function get_state():FlxState
+	private static inline function get_state():FlxState
 	{
 		return game.state;
 	}

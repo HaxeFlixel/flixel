@@ -1,7 +1,10 @@
 package flixel.util;
+
+import flixel.FlxG;
 #if !FLX_NO_TOUCH
 import flixel.input.touch.FlxTouch;
 #end
+
 class FlxVelocity 
 {	
 	/**
@@ -226,7 +229,7 @@ class FlxVelocity
 	 * @param	Speed	The speed it will move, in pixels per second sq
 	 * @return	A FlxPoint where FlxPoint.x contains the velocity x value and FlxPoint.y contains the velocity y value
 	 */
-	inline public static function velocityFromAngle(Angle:Int, Speed:Int):FlxPoint
+	public static inline function velocityFromAngle(Angle:Int, Speed:Int):FlxPoint
 	{
 		var a:Float = FlxAngle.asRadians(Angle);
 		
@@ -272,5 +275,50 @@ class FlxVelocity
 		result.y = Std.int(Math.sin(a) * Speed);
 		
 		return result;
+	}
+	
+	/**
+	 * A tween-like function that takes a starting velocity and some other factors and returns an altered velocity.
+	 * 
+	 * @param	Velocity		Any component of velocity (e.g. 20).
+	 * @param	Acceleration	Rate at which the velocity is changing.
+	 * @param	Drag			Really kind of a deceleration, this is how much the velocity changes if Acceleration is not set.
+	 * @param	Max				An absolute value cap for the velocity (0 for no cap).
+	 * @return	The altered Velocity value.
+	 */
+	public static function computeVelocity(Velocity:Float, Acceleration:Float, Drag:Float, Max:Float):Float
+	{
+		if (Acceleration != 0)
+		{
+			Velocity += Acceleration * FlxG.elapsed;
+		}
+		else if (Drag != 0)
+		{
+			var drag:Float = Drag * FlxG.elapsed;
+			if (Velocity - drag > 0)
+			{
+				Velocity = Velocity - drag;
+			}
+			else if (Velocity + drag < 0)
+			{
+				Velocity += drag;
+			}
+			else
+			{
+				Velocity = 0;
+			}
+		}
+		if ((Velocity != 0) && (Max != 0))
+		{
+			if (Velocity > Max)
+			{
+				Velocity = Max;
+			}
+			else if (Velocity < -Max)
+			{
+				Velocity = -Max;
+			}
+		}
+		return Velocity;
 	}
 }

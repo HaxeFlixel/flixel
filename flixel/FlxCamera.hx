@@ -26,39 +26,39 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Camera "follow" style preset: camera has no deadzone, just tracks the focus object directly.
 	 */
-	static public inline var STYLE_LOCKON:Int = 0;
+	public static inline var STYLE_LOCKON:Int = 0;
 	/**
 	 * Camera "follow" style preset: camera deadzone is narrow but tall.
 	 */
-	static public inline var STYLE_PLATFORMER:Int = 1;
+	public static inline var STYLE_PLATFORMER:Int = 1;
 	/**
 	 * Camera "follow" style preset: camera deadzone is a medium-size square around the focus object.
 	 */
-	static public inline var STYLE_TOPDOWN:Int = 2;
+	public static inline var STYLE_TOPDOWN:Int = 2;
 	/**
 	 * Camera "follow" style preset: camera deadzone is a small square around the focus object.
 	 */
-	static public inline var STYLE_TOPDOWN_TIGHT:Int = 3;
+	public static inline var STYLE_TOPDOWN_TIGHT:Int = 3;
 	/**
 	 * Camera "follow" style preset: camera will move screenwise.
 	 */
-	static public inline var STYLE_SCREEN_BY_SCREEN:Int = 4;
+	public static inline var STYLE_SCREEN_BY_SCREEN:Int = 4;
 	/**
 	 * Camera "follow" style preset: camera has no deadzone, just tracks the focus object directly and centers it.
 	 */
-	static public inline var STYLE_NO_DEAD_ZONE:Int = 5;
+	public static inline var STYLE_NO_DEAD_ZONE:Int = 5;
 	/**
 	 * Camera "shake" effect preset: shake camera on both the X and Y axes.
 	 */
-	static public inline var SHAKE_BOTH_AXES:Int = 0;
+	public static inline var SHAKE_BOTH_AXES:Int = 0;
 	/**
 	 * Camera "shake" effect preset: shake camera on the X axis only.
 	 */
-	static public inline var SHAKE_HORIZONTAL_ONLY:Int = 1;
+	public static inline var SHAKE_HORIZONTAL_ONLY:Int = 1;
 	/**
 	 * Camera "shake" effect preset: shake camera on the Y axis only.
 	 */
-	static public inline var SHAKE_VERTICAL_ONLY:Int = 2;
+	public static inline var SHAKE_VERTICAL_ONLY:Int = 2;
 	/**
 	 * While you can alter the zoom of each camera after the fact,
 	 * this variable determines what value the camera will start at when created.
@@ -83,10 +83,6 @@ class FlxCamera extends FlxBasic
 	 * Tells the camera to follow this FlxObject object around.
 	 */
 	public var target:FlxObject = null;
-	/**
-	 * Used to force the camera to look ahead of the followTarget.
-	 */
-	public var followLead:Point;
 	/**
 	 * Used to smoothly track the camera as it follows.
 	 */
@@ -142,14 +138,6 @@ class FlxCamera extends FlxBasic
 	 * Uses include 3D projection, advanced display list modification, and more.
 	 */
 	public var flashSprite:Sprite;
-	/**
-	 * Internal, used to render buffer to screen space.
-	 */
-	public var flashOffsetX:Float;
-	/**
-	 * Internal, used to render buffer to screen space.
-	 */
-	public var flashOffsetY:Float;
 	
 	/**
 	 * How wide the camera display is, in game pixels.
@@ -183,6 +171,10 @@ class FlxCamera extends FlxBasic
 	 * Default behavior is chunky-style.
 	 */
 	public var antialiasing(default, set):Bool = false;
+	/**
+	 * Used to force the camera to look ahead of the target.
+	 */
+	public var followLead(default, null):FlxPoint;
 	
 	/**
 	 * Internal, used to render buffer to screen space.
@@ -192,6 +184,11 @@ class FlxCamera extends FlxBasic
 	 * Internal, used to render buffer to screen space.
 	 */
 	private var _flashPoint:Point;
+	/**
+	 * Internal, used to render buffer to screen space.
+	 */
+	@:allow(flixel.system.frontEnds.CameraFrontEnd)
+	private var _flashOffset:FlxPoint;
 	/**
 	 * Internal, used to control the "flash" special effect.
 	 */
@@ -448,7 +445,10 @@ class FlxCamera extends FlxBasic
 		height = (Height <= 0) ? FlxG.height : Height;
 		
 		scroll = new FlxPoint();
+		followLead = new FlxPoint();
 		_point = new FlxPoint();
+		_flashOffset = new FlxPoint();
+		
 		#if flash
 		screen = new FlxSprite();
 		buffer = new BitmapData(width, height, true, 0);
@@ -473,11 +473,10 @@ class FlxCamera extends FlxBasic
 		flashSprite = new Sprite();
 		zoom = Zoom; //sets the scale of flash sprite, which in turn loads flashoffset values
 		
-		flashOffsetX = width * 0.5 * zoom;
-		flashOffsetY = height * 0.5 * zoom;
+		_flashOffset.set((width * 0.5 * zoom), (height * 0.5 * zoom));
 		
-		flashSprite.x = x + flashOffsetX;
-		flashSprite.y = y + flashOffsetY;
+		flashSprite.x = x + _flashOffset.x;
+		flashSprite.y = y + _flashOffset.y;
 		
 		#if flash
 		flashSprite.addChild(_flashBitmap);
@@ -520,11 +519,7 @@ class FlxCamera extends FlxBasic
 	override public function destroy():Void
 	{
 		#if flash
-		if (screen != null)
-		{
-			screen.destroy();
-		}
-		screen = null;
+		screen = FlxG.safeDestroy(screen);
 		#end
 		target = null;
 		scroll = null;
@@ -576,113 +571,111 @@ class FlxCamera extends FlxBasic
 	 */
 	override public function update():Void
 	{
-		//Either follow the object closely, 
-		//or doublecheck our deadzone and update accordingly.
+		// follow the target, if there is one
 		if (target != null)
 		{
-			if (deadzone == null)
-			{
-				focusOn(target.getMidpoint(_point));
-			}
-			else
-			{
-				var edge:Float;
-				var targetX:Float = target.x;
-				var targetY:Float = target.y;
-				
-				if (style == STYLE_SCREEN_BY_SCREEN) 
-				{
-					if (targetX > scroll.x + width)
-					{
-						_scrollTarget.x += width;
-					}
-					else if (targetX < scroll.x)
-					{
-						_scrollTarget.x -= width;
-					}
-
-					if (targetY > scroll.y + height)
-					{
-						_scrollTarget.y += height;
-					}
-					else if (targetY < scroll.y)
-					{
-						_scrollTarget.y -= height;
-					}
-				}
-				else
-				{
-					edge = targetX - deadzone.x;
-					if (_scrollTarget.x > edge)
-					{
-						_scrollTarget.x = edge;
-					} 
-					edge = targetX + target.width - deadzone.x - deadzone.width;
-					if (_scrollTarget.x < edge)
-					{
-						_scrollTarget.x = edge;
-					}
-
-					edge = targetY - deadzone.y;
-					if (_scrollTarget.y > edge)
-					{
-						_scrollTarget.y = edge;
-					}
-					edge = targetY + target.height - deadzone.y - deadzone.height;
-					if (_scrollTarget.y < edge)
-					{
-						_scrollTarget.y = edge;
-					}
-				}
-				
-				if((followLead != null) && (Std.is(target, FlxSprite)))
-				{
-					if (_lastTargetPosition == null)  
-					{
-						_lastTargetPosition = new FlxPoint(target.x, target.y); // Creates this point.
-					} 
-					_scrollTarget.x += (target.x - _lastTargetPosition.x ) * followLead.x;
-					_scrollTarget.y += (target.y - _lastTargetPosition.y ) * followLead.y;
-					
-					_lastTargetPosition.x = target.x;
-					_lastTargetPosition.y = target.y;
-				}
-
-				
-				if (followLerp == 0) 
-				{
-					scroll.x = _scrollTarget.x; // Prevents Camera Jittering with no lerp.
-					scroll.y = _scrollTarget.y; // Prevents Camera Jittering with no lerp.
-				} else 
-				{
-					scroll.x += (_scrollTarget.x - scroll.x) * FlxG.elapsed / (FlxG.elapsed + followLerp * FlxG.elapsed);
-					scroll.y += (_scrollTarget.y - scroll.y) * FlxG.elapsed / (FlxG.elapsed + followLerp * FlxG.elapsed);
-				}
-				
-			}
+			updateFollow();
 		}
 		
 		//Make sure we didn't go outside the camera's bounds
 		if (bounds != null)
 		{
-			if (scroll.x < bounds.left)
-			{
-				scroll.x = bounds.left;
-			}
-			if (scroll.x > bounds.right - width)
-			{
-				scroll.x = bounds.right - width;
-			}
-			if (scroll.y < bounds.top)
-			{
-				scroll.y = bounds.top;
-			}
-			if (scroll.y > bounds.bottom - height)
-			{
-				scroll.y = bounds.bottom - height;
-			}
+			scroll.x = FlxMath.bound(scroll.x, bounds.left, (bounds.right - width));
+			scroll.y = FlxMath.bound(scroll.y, bounds.top, (bounds.bottom - height));
 		}
 		
+		updateFlash();
+		updateFade();
+		updateShake();
+	}
+	
+	private inline function updateFollow():Void
+	{
+		//Either follow the object closely, 
+		//or doublecheck our deadzone and update accordingly.
+		if (deadzone == null)
+		{
+			focusOn(target.getMidpoint(_point));
+		}
+		else
+		{
+			var edge:Float;
+			var targetX:Float = target.x;
+			var targetY:Float = target.y;
+			
+			if (style == STYLE_SCREEN_BY_SCREEN) 
+			{
+				if (targetX > (scroll.x + width))
+				{
+					_scrollTarget.x += width;
+				}
+				else if (targetX < scroll.x)
+				{
+					_scrollTarget.x -= width;
+				}
+
+				if (targetY > (scroll.y + height))
+				{
+					_scrollTarget.y += height;
+				}
+				else if (targetY < scroll.y)
+				{
+					_scrollTarget.y -= height;
+				}
+			}
+			else
+			{
+				edge = targetX - deadzone.x;
+				if (_scrollTarget.x > edge)
+				{
+					_scrollTarget.x = edge;
+				} 
+				edge = targetX + target.width - deadzone.x - deadzone.width;
+				if (_scrollTarget.x < edge)
+				{
+					_scrollTarget.x = edge;
+				}
+
+				edge = targetY - deadzone.y;
+				if (_scrollTarget.y > edge)
+				{
+					_scrollTarget.y = edge;
+				}
+				edge = targetY + target.height - deadzone.y - deadzone.height;
+				if (_scrollTarget.y < edge)
+				{
+					_scrollTarget.y = edge;
+				}
+			}
+			
+			if (Std.is(target, FlxSprite))
+			{
+				if (_lastTargetPosition == null)  
+				{
+					_lastTargetPosition = new FlxPoint(target.x, target.y); // Creates this point.
+				} 
+				_scrollTarget.x += (target.x - _lastTargetPosition.x ) * followLead.x;
+				_scrollTarget.y += (target.y - _lastTargetPosition.y ) * followLead.y;
+				
+				_lastTargetPosition.x = target.x;
+				_lastTargetPosition.y = target.y;
+			}
+			
+			if (followLerp == 0) 
+			{
+				scroll.x = _scrollTarget.x; // Prevents Camera Jittering with no lerp.
+				scroll.y = _scrollTarget.y; // Prevents Camera Jittering with no lerp.
+			} 
+			else 
+			{
+				scroll.x += (_scrollTarget.x - scroll.x) * FlxG.elapsed / (FlxG.elapsed + followLerp * FlxG.elapsed);
+				scroll.y += (_scrollTarget.y - scroll.y) * FlxG.elapsed / (FlxG.elapsed + followLerp * FlxG.elapsed);
+			}	
+		}
+	}
+	
+	private inline function updateFlash():Void
+	{
 		//Update the "flash" special effect
 		if (_fxFlashAlpha > 0.0)
 		{
@@ -692,8 +685,10 @@ class FlxCamera extends FlxBasic
 				_fxFlashComplete();
 			}
 		}
-		
-		//Update the "fade" special effect
+	}
+	
+	private inline function updateFade():Void
+	{
 		if ((_fxFadeAlpha > 0.0) && (_fxFadeAlpha < 1.0))
 		{
 			if (_fxFadeIn)
@@ -721,8 +716,10 @@ class FlxCamera extends FlxBasic
 				}
 			}
 		}
-		
-		//Update the "shake" special effect
+	}
+	
+	private inline function updateShake():Void
+	{
 		if (_fxShakeDuration > 0)
 		{
 			_fxShakeDuration -= FlxG.elapsed;
@@ -750,8 +747,8 @@ class FlxCamera extends FlxBasic
 			// Camera shake fix for target follow.
 			if (target != null)
 			{
-				flashSprite.x = x + flashOffsetX;
-				flashSprite.y = y + flashOffsetY;
+				flashSprite.x = x + _flashOffset.x;
+				flashSprite.y = y + _flashOffset.y;
 			}
 		}
 	}
@@ -773,18 +770,22 @@ class FlxCamera extends FlxBasic
 		var w:Float = 0;
 		var h:Float = 0;
 		_lastTargetPosition = null;
-		switch(Style)
+		
+		switch (Style)
 		{
 			case STYLE_PLATFORMER:
 				var w:Float = (width / 8) + (Offset != null ? Offset.x : 0);
 				var h:Float = (height / 3) + (Offset != null ? Offset.y : 0);
 				deadzone = new FlxRect((width - w) / 2, (height - h) / 2 - h * 0.25, w, h);
+				
 			case STYLE_TOPDOWN:
 				helper = Math.max(width, height) / 4;
 				deadzone = new FlxRect((width - helper) / 2, (height - helper) / 2, helper, helper);
+				
 			case STYLE_TOPDOWN_TIGHT:
 				helper = Math.max(width, height) / 8;
 				deadzone = new FlxRect((width - helper) / 2, (height - helper) / 2, helper, helper);
+				
 			case STYLE_LOCKON:
 				if (target != null) 
 				{	
@@ -792,28 +793,19 @@ class FlxCamera extends FlxBasic
 					h = target.height + (Offset != null ? Offset.y : 0);
 				}
 				deadzone = new FlxRect((width - w) / 2, (height - h) / 2 - h * 0.25, w, h);
+				
 			case STYLE_SCREEN_BY_SCREEN:
 				deadzone = new FlxRect(0, 0, width, height);
+				
 			default:
 				deadzone = null;
 		}
 		
 	}
 	
-    /**
-	 * Specify an additional camera component - the velocity-based "lead",
-	 * or amount the camera should track in front of a sprite.
-	 * 
-	 * @param	LeadX		Percentage of X velocity to add to the camera's motion.
-	 * @param	LeadY		Percentage of Y velocity to add to the camera's motion.
-	 */
-    public inline function followAdjust(LeadX:Float = 0, LeadY:Float = 0):Void
-    {
-	   followLead = new Point(LeadX,LeadY);
-    }
-	
 	/**
 	 * Move the camera focus to this location instantly.
+	 * 
 	 * @param	Point		Where you want the camera to focus.
 	 */
 	public inline function focusOn(point:FlxPoint):Void
@@ -829,7 +821,7 @@ class FlxCamera extends FlxBasic
 	 * @param	OnComplete	A function you want to run when the flash finishes.
 	 * @param	Force		Force the effect to reset.
 	 */
-	public function flash(Color:Int = 0xffffffff, Duration:Float = 1, ?OnComplete:Void->Void, Force:Bool = false):Void
+	public function flash(Color:Int = FlxColor.WHITE, Duration:Float = 1, ?OnComplete:Void->Void, Force:Bool = false):Void
 	{
 		if (!Force && (_fxFlashAlpha > 0.0))
 		{
@@ -854,7 +846,7 @@ class FlxCamera extends FlxBasic
 	 * @param	OnComplete	A function you want to run when the fade finishes.
 	 * @param	Force		Force the effect to reset.
 	 */
-	public function fade(Color:Int = 0xff000000, Duration:Float = 1, FadeIn:Bool = false, ?OnComplete:Void->Void, Force:Bool = false):Void
+	public function fade(Color:Int = FlxColor.BLACK, Duration:Float = 1, FadeIn:Bool = false, ?OnComplete:Void->Void, Force:Bool = false):Void
 	{
 		if (!Force && (_fxFadeAlpha > 0.0))
 		{
@@ -882,6 +874,7 @@ class FlxCamera extends FlxBasic
 	
 	/**
 	 * A simple screen-shake effect.
+	 * 
 	 * @param	Intensity	Percentage of screen size representing the maximum distance that the screen can move while shaking.
 	 * @param	Duration	The length in seconds that the shaking effect should last.
 	 * @param	OnComplete	A function you want to run when the shake effect finishes.
@@ -909,12 +902,13 @@ class FlxCamera extends FlxBasic
 		_fxFlashAlpha = 0.0;
 		_fxFadeAlpha = 0.0;
 		_fxShakeDuration = 0;
-		flashSprite.x = x + flashOffsetX;
-		flashSprite.y = y + flashOffsetY;
+		flashSprite.x = x + _flashOffset.x;
+		flashSprite.y = y + _flashOffset.y;
 	}
 	
 	/**
 	 * Copy the bounds, focus object, and deadzone info from an existing camera.
+	 * 
 	 * @param	Camera	The camera you want to copy from.
 	 * @return	A reference to this FlxCamera object.
 	 */
@@ -933,7 +927,8 @@ class FlxCamera extends FlxBasic
 			bounds.copyFrom(Camera.bounds);
 		}
 		target = Camera.target;
-		if(target != null)
+		
+		if (target != null)
 		{
 			if (Camera.deadzone == null)
 			{
@@ -957,7 +952,7 @@ class FlxCamera extends FlxBasic
 	 * @param	Color		The color to fill with in 0xAARRGGBB hex format.
 	 * @param	BlendAlpha	Whether to blend the alpha value or just wipe the previous contents.  Default is true.
 	 */
-	public function fill(Color:Int, BlendAlpha:Bool = true, FxAlpha:Float = 1.0, graphics:Graphics = null):Void
+	public function fill(Color:Int, BlendAlpha:Bool = true, FxAlpha:Float = 1.0, ?graphics:Graphics):Void
 	{
 	#if flash
 		if (BlendAlpha)
@@ -1101,8 +1096,8 @@ class FlxCamera extends FlxBasic
 		flashSprite.scaleY = Y;
 		
 		//camera positioning fix from bomski (https://github.com/Beeblerox/HaxeFlixel/issues/66)
-		flashOffsetX = width * 0.5 * X;
-		flashOffsetY = height * 0.5 * Y;	
+		_flashOffset.x = width * 0.5 * X;
+		_flashOffset.y = height * 0.5 * Y;	
 	}
 	
 	/**
@@ -1120,10 +1115,10 @@ class FlxCamera extends FlxBasic
 		{
 			width = Value; 
 			#if flash
-			if ( _flashBitmap != null )
+			if (_flashBitmap != null)
 			{
 				regen = (Value != buffer.width);
-				flashOffsetX = width * 0.5 * zoom;
+				_flashOffset.x = width * 0.5 * zoom;
 				_flashBitmap.x = -width * 0.5;
 			}
 			#else
@@ -1137,7 +1132,7 @@ class FlxCamera extends FlxBasic
 				#end
 				canvas.scrollRect = rect;
 				
-				flashOffsetX = width * 0.5 * zoom;
+				_flashOffset.x = width * 0.5 * zoom;
 				canvas.x = -width * 0.5;
 				#if !FLX_NO_DEBUG
 				debugLayer.x = canvas.x;
@@ -1157,7 +1152,7 @@ class FlxCamera extends FlxBasic
 			if (_flashBitmap != null)
 			{
 				regen = (Value != buffer.height);
-				flashOffsetY = height * 0.5 * zoom;
+				_flashOffset.y = height * 0.5 * zoom;
 				_flashBitmap.y = -height * 0.5;
 			}
 			#else
@@ -1171,7 +1166,7 @@ class FlxCamera extends FlxBasic
 				#end
 				canvas.scrollRect = rect;
 				
-				flashOffsetY = height * 0.5 * zoom;
+				_flashOffset.y = height * 0.5 * zoom;
 				canvas.y = -height * 0.5;
 				#if !FLX_NO_DEBUG
 				debugLayer.y = canvas.y;

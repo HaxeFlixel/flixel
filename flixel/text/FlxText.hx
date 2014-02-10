@@ -194,10 +194,15 @@ class FlxText extends FlxSprite implements IFlxDestroyable
 		_defaultFormat = null;
 		_formatAdjusted = null;
 		_filters = null;
-		if(_formats != null){
+		if (_formats != null)
+		{
 			for (format in _formats)
 			{
-				format.destroy();
+				if (format != null)
+				{
+					format.destroy();
+					format = null;
+				}
 			}
 		}
 		_formats = null;

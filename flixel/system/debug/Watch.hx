@@ -16,8 +16,8 @@ import haxe.ds.StringMap;
  */
 class Watch extends Window
 {
-	static private inline var MAX_LOG_LINES:Int = 1024;
-	static private inline var LINE_HEIGHT:Int = 15;
+	private static inline var MAX_LOG_LINES:Int = 1024;
+	private static inline var LINE_HEIGHT:Int = 15;
 	
 	/**
 	 * Whether a watch entry is currently being edited or not. 

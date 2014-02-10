@@ -38,7 +38,7 @@ class VCRFrontEnd
 	#if flash
 	private static var FILE_TYPES:Array<FileFilter> = [new FileFilter("Flixel Game Recording", "*.fgr")];
 
-	static private inline var DEFAULT_FILE_NAME:String = "replay.fgr";
+	private static inline var DEFAULT_FILE_NAME:String = "replay.fgr";
 
 	private var _file:FileReference = null;
 	#end

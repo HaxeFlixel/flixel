@@ -1,4 +1,15 @@
-v.3.1.0
+3.1.1
+------------------------------
+* Added PixelPerfectScaleMode (scales the game to the highest integer factor possible while maintaning the aspect ratio)
+* FlxTween
+ * backward is now a public, read-only property
+ * renamed delay to startDelay
+ * added loopDelay that controls the delay between loop executions with LOOPING and PINGPONG
+* Added some basic unit tests
+* FlxCamera: removed followAdjust(), the followLead point should be set directly
+* FlxSpriteUtil.screenWrap(): prevent sprite from ever being offscreen
+
+3.1.0
 ------------------------------
 * Refactor of FlxRandom
   * All functions are now deterministic and safe to use with replays
@@ -139,7 +150,7 @@ v.3.1.0
 * BUG: fixed onFocus and onFocusLost not working on mobile
 * Changed default volume from 0.5 to 1
 
-v.3.0.4
+3.0.4
 ------------------------------
 * Removed experimental FLX_THREADING conditional
 * Changes type of CHANGELOG and LICENSE files from .txt to .md - makes it more readable on github
@@ -159,11 +170,11 @@ v.3.0.4
 * FlxTrailArea added, an alternative to FlxTrail which should be more performant
 * FlxBitmapUtil.merge() added
 
-v.3.0.3
+3.0.3
 ------------------------------
 * No changes to 3.0.2, just a fix for the faulty 3.0.2 haxelib release
 
-v.3.0.2
+3.0.2
 ------------------------------
 * FlxTilemap: Region size checks added to fix a bug
 * FlxSprite.setColorTransformation() added
@@ -180,7 +191,7 @@ v.3.0.2
 * FlxColorTween now accepts FlxSprite as a parameter and it will change its color automatically
 * QuadPath doesn't generate control points anymore
 
-v.3.0.1-alpha
+3.0.1-alpha
 ------------------------------
 * Fixes to gamepad API.
 * Added tilemap scaling.
@@ -194,7 +205,7 @@ v.3.0.1-alpha
 * FlxObject.inWorldBounds() added
 * LICENSE.txt cleanup
 
-v.3.0.0-alpha
+3.0.0-alpha
 ------------------------------
 * New Front End classes to better encapsulate FlxG functionality.
 * Refactored the animation system.
@@ -202,7 +213,7 @@ v.3.0.0-alpha
 * Moved lots of stuff into utility classe to reduce clutter in core classes.
 * Continued optimizations for cpp targets.
 
-v.2.0.0-alpha.3
+2.0.0-alpha.3
 ------------------------------
 * Fix for FLX_MOUSE_ADVANCED (wouldn't compile earlier)
 * FlxMath functions are Float-compatible. Thanks @Gama11
@@ -242,7 +253,7 @@ v.2.0.0-alpha.3
 * Slightly better texture atlas handling. Now you can easily add support for new atlas format
 * Fixed tilesheet rendering (for latest openfl release) 
 
-v.2.0.0-alpha.2
+2.0.0-alpha.2
 ------------------------------
 * openfl compatibility
 * Removed isColored() method from FlxCamera, since Sprite's colorTransform is working properly with drawTiles() now
@@ -250,7 +261,7 @@ v.2.0.0-alpha.2
 * FlxPath enhancement, it has pathAutoCenter property now (true by default) and setPathNode() method for direct change of current path node. Thanks @Gama11
 * Little fixes regarding new compiler conditionals and mouse input
 
-v.2.0.0-alpha
+2.0.0-alpha
 ------------------------------
 * Perfomance optimization: merged preUpdate(), update() and postUpdate() methods. So you should call super.update(); from your classes.
 * A little bit better TexturePacker format support for FlxSprite
@@ -270,7 +281,7 @@ v.2.0.0-alpha
 * Added FlxColorUtils class. Thanks @Gama11
 * Added new compiler conditionals: FLX_NO_FOCUS_LOST_SCREEN and FLX_NO_SOUND_TRAY compiler conditionals. See template.nmml file for details. Thanks @Gama11
 
-v1.09
+1.09
 ------------------------------
 * Fix for FlxSprite.fill() on cpp targets
 * Now you can pass BitmapData to FlxTilemap's loadMap() method
@@ -295,7 +306,7 @@ v1.09
 * Pausing cameras when the game is paused
 * Many other little improvements, fixes and optimizations from FlixelCommunity, @impaler, @crazysam, @ProG4mr and others
 
-v1.08
+1.08
 ------------------------------
 * New draw stack rendering system for cpp and neko targets (replacement for layer system). It is simpler to use but little bit slower.
 * NME 3.5.1 compatible
@@ -306,7 +317,7 @@ v1.08
 * Added TaskManager addon (ported from AntHill: https://github.com/AntKarlov/Anthill-Framework)
 * Added onFocusLost() and onFocus() methods to FlxState class. These methods will called when app losts and gets focus. Override them in subclasses.
 
-v1.07
+1.07
 ------------------------------
 * New layer system for cpp and neko targets. See https://github.com/Beeblerox/HaxeFlixel/wiki/Introduction-in-layer-system-%5BEN%5D
 * Fixed draw position round issue for cpp and neko targets. It uses less math methods and more accurate now.
@@ -322,7 +333,7 @@ v1.07
 * Added FlxGamePad and FlxAnalog controls (initial state). Thanks to WingEraser for his Flixel-Android port (I took them from there).
 * Lots of small fixes, changes and tweaks (thanks to Samuel Batista aka crazysam and @FlixelCommunity)
 
-v1.06
+1.06
 ------------------------------
 * Added FlxKongregate plugin (flash only). Thanks to goldengrave for porting this class.
 * Fixed bug with FlxButton's makeGraphic() crashing on cpp and neko targets.
@@ -331,7 +342,7 @@ v1.06
 * Added new logo. Huge thanks to Impaler!!!
 * Added StarfieldFX class from FlixelPowerTools.
 
-v1.05
+1.05
 ------------------------------
 * Fixed bug with animation callback for FlxSprite on cpp target
 * Ported FlxButtonPlus class from FlixelPowerTools
@@ -344,11 +355,11 @@ v1.05
 * Integrated tweening system from HaxePunk (Thank you, Matt Tuttle). All FlxBasic's subclasses have this functionality now. See addTween(), removeTween(), clearTweens() methods of FlxBasic instances and 'org.flixel.tweens' package.
 * Added basic support for Joystick input (See FlxG.joystickManager and org.flixel.system.input.Joystick and org.flixel.system.input.JoystickManager classes for details). I need someone to test it.
 
-v1.04
+1.04
 ------------------------------
 * Fixed bug with FlxCamera's color property on cpp target. Sorry for it
 
-v1.03
+1.03
 ------------------------------
 * Updated rendering system for cpp target so it uses 2d tile transformations now (which means non-uniform scaling is working now)
 * FlxBitmapTextField's background property is working on cpp target now
@@ -362,7 +373,7 @@ v1.03
 * Made pixelPerfectCheck() method from FlxCollision plugin work on flash only. It's always returns false on other targets. Sorry:(
 * Fixed FlxCamera's bug with changing it's size (width, height and zoom)
 
-v1.02
+1.02
 ------------------------------
 * Ported FlxBar class
 * Added FlxBitmapTextField class (background property isn't working on cpp for now)
@@ -371,7 +382,7 @@ v1.02
 * Improvements in FlxQuadTree and FlxObject (less garbage)
 * Changed TileSheet creation process to insert gaps between frames. This should solve 'pixel bleeding' problem
 
-v1.01
+1.01
 ------------------------------
 * Finally ported FlxPreloader class
 * Fixed issue with FlxTextField class when it wasn't affected by fade() and flash() effects (on cpp and neko targets)
@@ -379,6 +390,6 @@ v1.01
 * Updated lib to work with haxe 2.09
 * Ported FlxGridOverlay from Flixel-Power-Tools
 
-v1.00
+1.00
 ------------------------------
 * Initial haxelib release

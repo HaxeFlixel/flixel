@@ -65,7 +65,7 @@ class ColorTween extends FlxTween
 	 * @param	FromAlpha		Start alpha
 	 * @param	ToAlpha			End alpha.
 	 * @param	Ease			Optional easer function.
-	 * @param	Sprite			Optional sprite object whose color to tween. 
+	 * @param	Sprite			Optional sprite object whose color to tween.
 	 * @return	The ColorTween.
 	 */
 	public function tween(Duration:Float, FromColor:Int, ToColor:Int, FromAlpha:Float = 1, ToAlpha:Float = 1, ?Ease:EaseFunction, ?Sprite:FlxSprite):ColorTween

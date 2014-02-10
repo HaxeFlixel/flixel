@@ -26,7 +26,7 @@ class AngleTween extends FlxTween
 	 */
 	public function new(?Complete:CompleteCallback, type:Int = 0) 
 	{
-		super(0, type, Complete);
+		super(0, type, Complete, null);
 	}
 	
 	/**
