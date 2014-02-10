@@ -10,6 +10,22 @@ import flixel.input.touch.FlxTouch;
  */
 class FlxMath
 {	
+	#if (flash || js || ios)
+	/**
+	 * Minimum value of a floating point number.
+	 */
+	public static inline var MIN_VALUE:Float = 0.0000000000000001;
+	#else
+	/**
+	 * Minimum value of a floating point number.
+	 */
+	public static inline var MIN_VALUE:Float = 5e-324;
+	#end
+	/**
+	 * Maximum value of a floating point number.
+	 */
+	public static inline var MAX_VALUE:Float = 1.79e + 308;
+	
 	/**
 	 * Round a decimal number to have reduced precision (less decimal numbers).
 	 * Ex: roundDecimal(1.2485, 2) -> 1.25
@@ -513,20 +529,4 @@ class FlxMath
 	{
 		return (Math.abs(aValueA - aValueB) <= aDiff);
 	}
-	
-	#if (flash || js || ios)
-	/**
-	 * Minimum value of a floating point number.
-	 */
-	public static inline var MIN_VALUE:Float = 0.0000000000000001;
-	#else
-	/**
-	 * Minimum value of a floating point number.
-	 */
-	public static inline var MIN_VALUE:Float = 5e-324;
-	#end
-	/**
-	 * Maximum value of a floating point number.
-	 */
-	public static inline var MAX_VALUE:Float = 1.79e+308;
 }
