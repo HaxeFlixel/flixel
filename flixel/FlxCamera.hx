@@ -571,114 +571,111 @@ class FlxCamera extends FlxBasic
 	 */
 	override public function update():Void
 	{
-		//Either follow the object closely, 
-		//or doublecheck our deadzone and update accordingly.
+		// follow the target, if there is one
 		if (target != null)
 		{
-			if (deadzone == null)
-			{
-				focusOn(target.getMidpoint(_point));
-			}
-			else
-			{
-				var edge:Float;
-				var targetX:Float = target.x;
-				var targetY:Float = target.y;
-				
-				if (style == STYLE_SCREEN_BY_SCREEN) 
-				{
-					if (targetX > scroll.x + width)
-					{
-						_scrollTarget.x += width;
-					}
-					else if (targetX < scroll.x)
-					{
-						_scrollTarget.x -= width;
-					}
-
-					if (targetY > scroll.y + height)
-					{
-						_scrollTarget.y += height;
-					}
-					else if (targetY < scroll.y)
-					{
-						_scrollTarget.y -= height;
-					}
-				}
-				else
-				{
-					edge = targetX - deadzone.x;
-					if (_scrollTarget.x > edge)
-					{
-						_scrollTarget.x = edge;
-					} 
-					edge = targetX + target.width - deadzone.x - deadzone.width;
-					if (_scrollTarget.x < edge)
-					{
-						_scrollTarget.x = edge;
-					}
-
-					edge = targetY - deadzone.y;
-					if (_scrollTarget.y > edge)
-					{
-						_scrollTarget.y = edge;
-					}
-					edge = targetY + target.height - deadzone.y - deadzone.height;
-					if (_scrollTarget.y < edge)
-					{
-						_scrollTarget.y = edge;
-					}
-				}
-				
-				if (Std.is(target, FlxSprite))
-				{
-					if (_lastTargetPosition == null)  
-					{
-						_lastTargetPosition = new FlxPoint(target.x, target.y); // Creates this point.
-					} 
-					_scrollTarget.x += (target.x - _lastTargetPosition.x ) * followLead.x;
-					_scrollTarget.y += (target.y - _lastTargetPosition.y ) * followLead.y;
-					
-					_lastTargetPosition.x = target.x;
-					_lastTargetPosition.y = target.y;
-				}
-
-				
-				if (followLerp == 0) 
-				{
-					scroll.x = _scrollTarget.x; // Prevents Camera Jittering with no lerp.
-					scroll.y = _scrollTarget.y; // Prevents Camera Jittering with no lerp.
-				} 
-				else 
-				{
-					scroll.x += (_scrollTarget.x - scroll.x) * FlxG.elapsed / (FlxG.elapsed + followLerp * FlxG.elapsed);
-					scroll.y += (_scrollTarget.y - scroll.y) * FlxG.elapsed / (FlxG.elapsed + followLerp * FlxG.elapsed);
-				}
-				
-			}
+			updateFollow();
 		}
 		
 		//Make sure we didn't go outside the camera's bounds
 		if (bounds != null)
 		{
-			if (scroll.x < bounds.left)
-			{
-				scroll.x = bounds.left;
-			}
-			if (scroll.x > bounds.right - width)
-			{
-				scroll.x = bounds.right - width;
-			}
-			if (scroll.y < bounds.top)
-			{
-				scroll.y = bounds.top;
-			}
-			if (scroll.y > bounds.bottom - height)
-			{
-				scroll.y = bounds.bottom - height;
-			}
+			scroll.x = FlxMath.bound(scroll.x, bounds.left, (bounds.right - width));
+			scroll.y = FlxMath.bound(scroll.y, bounds.top, (bounds.bottom - height));
 		}
 		
+		updateFlash();
+		updateFade();
+		updateShake();
+	}
+	
+	private inline function updateFollow():Void
+	{
+		//Either follow the object closely, 
+		//or doublecheck our deadzone and update accordingly.
+		if (deadzone == null)
+		{
+			focusOn(target.getMidpoint(_point));
+		}
+		else
+		{
+			var edge:Float;
+			var targetX:Float = target.x;
+			var targetY:Float = target.y;
+			
+			if (style == STYLE_SCREEN_BY_SCREEN) 
+			{
+				if (targetX > (scroll.x + width))
+				{
+					_scrollTarget.x += width;
+				}
+				else if (targetX < scroll.x)
+				{
+					_scrollTarget.x -= width;
+				}
+
+				if (targetY > (scroll.y + height))
+				{
+					_scrollTarget.y += height;
+				}
+				else if (targetY < scroll.y)
+				{
+					_scrollTarget.y -= height;
+				}
+			}
+			else
+			{
+				edge = targetX - deadzone.x;
+				if (_scrollTarget.x > edge)
+				{
+					_scrollTarget.x = edge;
+				} 
+				edge = targetX + target.width - deadzone.x - deadzone.width;
+				if (_scrollTarget.x < edge)
+				{
+					_scrollTarget.x = edge;
+				}
+
+				edge = targetY - deadzone.y;
+				if (_scrollTarget.y > edge)
+				{
+					_scrollTarget.y = edge;
+				}
+				edge = targetY + target.height - deadzone.y - deadzone.height;
+				if (_scrollTarget.y < edge)
+				{
+					_scrollTarget.y = edge;
+				}
+			}
+			
+			if (Std.is(target, FlxSprite))
+			{
+				if (_lastTargetPosition == null)  
+				{
+					_lastTargetPosition = new FlxPoint(target.x, target.y); // Creates this point.
+				} 
+				_scrollTarget.x += (target.x - _lastTargetPosition.x ) * followLead.x;
+				_scrollTarget.y += (target.y - _lastTargetPosition.y ) * followLead.y;
+				
+				_lastTargetPosition.x = target.x;
+				_lastTargetPosition.y = target.y;
+			}
+			
+			if (followLerp == 0) 
+			{
+				scroll.x = _scrollTarget.x; // Prevents Camera Jittering with no lerp.
+				scroll.y = _scrollTarget.y; // Prevents Camera Jittering with no lerp.
+			} 
+			else 
+			{
+				scroll.x += (_scrollTarget.x - scroll.x) * FlxG.elapsed / (FlxG.elapsed + followLerp * FlxG.elapsed);
+				scroll.y += (_scrollTarget.y - scroll.y) * FlxG.elapsed / (FlxG.elapsed + followLerp * FlxG.elapsed);
+			}	
+		}
+	}
+	
+	private inline function updateFlash():Void
+	{
 		//Update the "flash" special effect
 		if (_fxFlashAlpha > 0.0)
 		{
@@ -688,8 +685,10 @@ class FlxCamera extends FlxBasic
 				_fxFlashComplete();
 			}
 		}
-		
-		//Update the "fade" special effect
+	}
+	
+	private inline function updateFade():Void
+	{
 		if ((_fxFadeAlpha > 0.0) && (_fxFadeAlpha < 1.0))
 		{
 			if (_fxFadeIn)
@@ -717,8 +716,10 @@ class FlxCamera extends FlxBasic
 				}
 			}
 		}
-		
-		//Update the "shake" special effect
+	}
+	
+	private inline function updateShake():Void
+	{
 		if (_fxShakeDuration > 0)
 		{
 			_fxShakeDuration -= FlxG.elapsed;
