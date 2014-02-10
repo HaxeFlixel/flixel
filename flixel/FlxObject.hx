@@ -295,6 +295,12 @@ class FlxObject extends FlxBasic
 	 */
 	private inline function updateMotion():Void
 	{
+		// Hack to deal with floating point precision issues in flash
+		#if flash
+		x = Math.fround(x);
+		y = Math.fround(y);
+		#end
+		
 		var delta:Float;
 		var velocityDelta:Float;
 		
