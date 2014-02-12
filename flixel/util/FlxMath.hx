@@ -10,6 +10,22 @@ import flixel.input.touch.FlxTouch;
  */
 class FlxMath
 {	
+	#if (flash || js || ios)
+	/**
+	 * Minimum value of a floating point number.
+	 */
+	public static inline var MIN_VALUE:Float = 0.0000000000000001;
+	#else
+	/**
+	 * Minimum value of a floating point number.
+	 */
+	public static inline var MIN_VALUE:Float = 5e-324;
+	#end
+	/**
+	 * Maximum value of a floating point number.
+	 */
+	public static inline var MAX_VALUE:Float = 1.79e+308;
+	
 	/**
 	 * Round a decimal number to have reduced precision (less decimal numbers).
 	 * Ex: roundDecimal(1.2485, 2) -> 1.25
@@ -69,55 +85,9 @@ class FlxMath
 	}
 	
 	/**
-	 * A tween-like function that takes a starting velocity
-	 * and some other factors and returns an altered velocity.
-	 * @param	Velocity		Any component of velocity (e.g. 20).
-	 * @param	Acceleration	Rate at which the velocity is changing.
-	 * @param	Drag			Really kind of a deceleration, this is how much the velocity changes if Acceleration is not set.
-	 * @param	Max				An absolute value cap for the velocity (0 for no cap).
-	 * @return	The altered Velocity value.
-	 */
-	public static function computeVelocity(Velocity:Float, Acceleration:Float, Drag:Float, Max:Float):Float
-	{
-		if (Acceleration != 0)
-		{
-			Velocity += Acceleration * FlxG.elapsed;
-		}
-		else if(Drag != 0)
-		{
-			var drag:Float = Drag * FlxG.elapsed;
-			if (Velocity - drag > 0)
-			{
-				Velocity = Velocity - drag;
-			}
-			else if (Velocity + drag < 0)
-			{
-				Velocity += drag;
-			}
-			else
-			{
-				Velocity = 0;
-			}
-		}
-		if((Velocity != 0) && (Max != 0))
-		{
-			if (Velocity > Max)
-			{
-				Velocity = Max;
-			}
-			else if (Velocity < -Max)
-			{
-				Velocity = -Max;
-			}
-		}
-		return Velocity;
-	}
-	
-	/**
 	 * Returns true if the number given is odd.
 	 * 
-	 * @param	n	The number to check
-	 * 
+	 * @param	n	The number to check 
 	 * @return	True if the given number is odd. False if the given number is even.
 	 */
 	public static function isOdd(n:Float):Bool
@@ -136,7 +106,6 @@ class FlxMath
 	 * Returns true if the number given is even.
 	 * 
 	 * @param	n	The number to check
-	 * 
 	 * @return	True if the given number is even. False if the given number is odd.
 	 */
 	public static function isEven(n:Float):Bool
@@ -156,7 +125,6 @@ class FlxMath
 	 * 
 	 * @param	num1	The first number
 	 * @param	num2	The second number
-	 * 
 	 * @return	-1 if num1 is smaller, 1 if num2 is bigger, 0 if they are equal
 	 */
 	public static function numericComparison(num1:Float, num2:Float):Int
@@ -513,20 +481,4 @@ class FlxMath
 	{
 		return (Math.abs(aValueA - aValueB) <= aDiff);
 	}
-	
-	#if (flash || js || ios)
-	/**
-	 * Minimum value of a floating point number.
-	 */
-	public static inline var MIN_VALUE:Float = 0.0000000000000001;
-	#else
-	/**
-	 * Minimum value of a floating point number.
-	 */
-	public static inline var MIN_VALUE:Float = 5e-324;
-	#end
-	/**
-	 * Maximum value of a floating point number.
-	 */
-	public static inline var MAX_VALUE:Float = 1.79e+308;
 }

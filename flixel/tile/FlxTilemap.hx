@@ -14,6 +14,7 @@ import flixel.system.layer.DrawStackItem;
 import flixel.system.layer.Region;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
+import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRandom;
 import flixel.util.FlxRect;
@@ -971,24 +972,10 @@ class FlxTilemap extends FlxObject
 		var selectionHeight:Int = selectionY + Math.ceil(Object.height / _scaledTileHeight) + 1;
 		
 		// Then bound these coordinates by the map edges
-		if (selectionX < 0)
-		{
-			selectionX = 0;
-		}
-		if (selectionY < 0)
-		{
-			selectionY = 0;
-		}
-		if (selectionWidth > widthInTiles)
-		{
-			selectionWidth = widthInTiles;
-		}
-		if (selectionHeight > heightInTiles)
-		{
-			selectionHeight = heightInTiles;
-		}
+		selectionWidth = Std.int(FlxMath.bound(selectionWidth, 0, widthInTiles));
+		selectionHeight = Std.int(FlxMath.bound(selectionHeight, 0, heightInTiles));
 		
-		// Then loop through this selection of tiles and call FlxObject.separate() accordingly
+		// Then loop through this selection of tiles
 		var rowStart:Int = selectionY * widthInTiles;
 		var row:Int = selectionY;
 		var column:Int;
@@ -1018,7 +1005,9 @@ class FlxTilemap extends FlxObject
 				tile.y = Y + row * tile.height;
 				tile.last.x = tile.x - deltaX;
 				tile.last.y = tile.y - deltaY;
-				overlapFound = (Object.x + Object.width > tile.x) && (Object.x < tile.x + tile.width) && (Object.y + Object.height > tile.y) && (Object.y < tile.y + tile.height);
+				
+				overlapFound = ((Object.x + Object.width) > tile.x)  && (Object.x < (tile.x + tile.width)) && 
+				               ((Object.y + Object.height) > tile.y) && (Object.y < (tile.y + tile.height));
 				
 				if (tile.allowCollisions != FlxObject.NONE)
 				{

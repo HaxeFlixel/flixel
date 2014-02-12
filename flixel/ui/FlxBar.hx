@@ -367,13 +367,6 @@ class FlxBar extends FlxSprite
 		#end
 	}
 	
-	#if !FLX_NO_DEBUG
-	public function debug():Void
-	{
-		trace("FlxBar - Min: " + min + " Max: " + max + " Range: " + range + " pct: " + pct + " pxp: " + pxPerPercent + " Value: " + value);
-	}
-	#end
-	
 	public var stats(get_stats, null):Map<String, Dynamic>;
 	
 	private function get_stats():Map<String, Dynamic>
@@ -1293,4 +1286,9 @@ class FlxBar extends FlxSprite
 		_cachedFrontGraphics = value;
 	}
 	#end
+	
+	override public function toString():String
+	{
+		return ("FlxBar - Min: " + min + " Max: " + max + " Range: " + range + " pct: " + pct + " pxp: " + pxPerPercent + " Value: " + value);
+	}
 }
