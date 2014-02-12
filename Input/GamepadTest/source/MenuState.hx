@@ -22,21 +22,15 @@ class MenuState extends FlxState
 		FlxSpriteUtil.screenCenter(text);
 		add(text);
 		
-		#if !(cpp || neko)
-			text.text = "There is no gamepad support for this target.";
-		#end
-		
 		super.create();
 	}
 	
 	override public function update():Void 
 	{
-		#if (cpp || neko)
-			if (FlxG.gamepads.anyButton())
-			{
-				FlxG.switchState(new PlayState());
-			}
-		#end
+		if (FlxG.gamepads.anyButton())
+		{
+			FlxG.switchState(new PlayState());
+		}
 		
 		super.update();
 	}
