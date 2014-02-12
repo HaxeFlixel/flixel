@@ -6,6 +6,7 @@ import flixel.util.FlxPoint;
 #if flash
 import flash.ui.GameInputControl;
 import flash.ui.GameInputDevice;
+import flash.system.Capabilities;
 #end
 
 @:allow(flixel.input.gamepad)
@@ -270,9 +271,10 @@ class FlxGamepad implements IFlxDestroyable
 	{
 		var axisValue = getAxisValue(AxisID);
 		
-		// the y axis is inverted on the Xbox gamepad in flash for some reason :/
+		// the y axis is inverted on the Xbox gamepad in flash for some reason - but not in Chrome!
 		#if flash
-		if (_device.enabled && (_device.name.indexOf("Xbox") != -1))
+		if (_device.enabled && (_device.name.indexOf("Xbox") != -1) && 
+		   (Capabilities.manufacturer != "Google Pepper"))
 		{
 			axisValue = -axisValue;
 		}
