@@ -8,6 +8,7 @@ import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
 import flixel.util.FlxPath;
 import flixel.util.FlxPoint;
+import flixel.util.FlxStringUtil;
 
 class PlayState extends FlxState
 {
@@ -78,7 +79,7 @@ class PlayState extends FlxState
 		
 		// Basic level structure
 		var level:FlxTilemap = new FlxTilemap();
-		level.loadMap(FlxTilemap.imageToCSV("assets/map.png", false, 2), "assets/tiles.png", 0, 0, FlxTilemap.ALT);
+		level.loadMap(FlxStringUtil.imageToCSV("assets/map.png", false, 2), "assets/tiles.png", 0, 0, FlxTilemap.ALT);
 		level.follow();
 		add(level);
 		

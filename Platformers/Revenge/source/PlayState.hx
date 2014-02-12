@@ -9,6 +9,7 @@ import flixel.tile.FlxTilemap;
 import flixel.util.FlxColor;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRect;
+import flixel.util.FlxStringUtil;
 
 /**
  * Copyright (c) 2010 Yadu Rajiv
@@ -65,7 +66,7 @@ class PlayState extends FlxState
 		// map.auto to either FlxTilemap.AUTO(for platform friendly tiling) or FlxTilemap.ALT(for the alternate top down tiling)
 		_map = new FlxTilemap();
 		_map.auto = FlxTilemap.AUTO;
-		_map.loadMap(FlxTilemap.imageToCSV("assets/map.png"), "assets/tileset.png", 10, 10, FlxTilemap.AUTO);
+		_map.loadMap(FlxStringUtil.imageToCSV("assets/map.png"), "assets/tileset.png", 10, 10, FlxTilemap.AUTO);
 		add(_map);
 		
 		// Adding the exit door with which we will check an overlap later for the player
