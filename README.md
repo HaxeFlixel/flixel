@@ -2,6 +2,8 @@
 
 [flixel](https://github.com/HaxeFlixel/flixel) | [addons](https://github.com/HaxeFlixel/flixel-addons) | [ui](https://github.com/HaxeFlixel/flixel-ui) | [demos](https://github.com/HaxeFlixel/flixel-demos) | [tools](https://github.com/HaxeFlixel/flixel-tools) | [templates](https://github.com/HaxeFlixel/flixel-templates) | [docs](https://github.com/HaxeFlixel/flixel-docs) | [haxeflixel.com](https://github.com/HaxeFlixel/haxeflixel.com)
 
+[![Build Status](https://travis-ci.org/HaxeFlixel/flixel-demos.png)](https://travis-ci.org/HaxeFlixel/flixel-demos) [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/HaxeFlixel/flixel-demos/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
 ##About
 
 This is a large set of demos (**currently 45!**) using the HaxeFlixel engine and demonstrating its capabilities. All the ones that are compatible with flash can be found on [haxeflixel.com/demos](http://haxeflixel.com/demos/).
@@ -76,7 +78,3 @@ If you are wanting to contribute code, please review the follwing documentation:
 If you have a question or have not contributed on github before, there are friendly people in the community that help out in the [forums](http://haxeflixel.com/documentation/community/).
 
 For using git with github we recommended using a GUI application to manage your changes, for example [SourceTree](http://www.sourcetreeapp.com/).
-
-=
-
-[![Build Status](https://travis-ci.org/HaxeFlixel/flixel-demos.png)](https://travis-ci.org/HaxeFlixel/flixel-demos) [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/HaxeFlixel/flixel-demos/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
