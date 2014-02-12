@@ -185,7 +185,7 @@ class FlxG
 	public static var keys(default, null):FlxKeyboard;
 	#end
 	
-	#if (!FLX_NO_GAMEPAD && (cpp || neko || js))
+	#if !FLX_NO_GAMEPAD
 	/**
 	 * A reference to a FlxGamepadManager object.
 	 */
@@ -455,7 +455,7 @@ class FlxG
 		touches = inputs.add(new FlxTouchManager());
 		#end
 		
-		#if (!FLX_NO_GAMEPAD && (cpp||neko||js))
+		#if !FLX_NO_GAMEPAD
 		gamepads = inputs.add(new FlxGamepadManager());
 		#end
 		
