@@ -316,7 +316,7 @@ class FlxTilemap extends FlxObject
 			}
 		}
 		// Data is already set up as an Array<Int>
-		// DON'T FORGET TO SET 'widthInTiles' and 'heightInTyles' manually BEFORE CALLING loadMap() if you pass an Array<Int>!
+		// DON'T FORGET TO SET 'widthInTiles' and 'heightInTiles' manually BEFORE CALLING loadMap() if you pass an Array<Int>!
 		else if (Std.is(MapData, Array))
 		{
 			_data = MapData;
