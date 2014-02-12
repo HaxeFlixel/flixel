@@ -9,6 +9,7 @@ import flixel.tile.FlxTilemap;
 import flixel.ui.FlxButton;
 import flixel.util.FlxColor;
 import flixel.util.FlxSpriteUtil;
+import flixel.util.FlxStringUtil;
 import openfl.Assets;
 
 class PlayState extends FlxState
@@ -174,17 +175,17 @@ class PlayState extends FlxState
 		switch (_collisionMap.auto)
 		{
 			case FlxTilemap.AUTO:
-				_collisionMap.loadMap(FlxTilemap.arrayToCSV(_collisionMap.getData(true), _collisionMap.widthInTiles),
+				_collisionMap.loadMap(FlxStringUtil.arrayToCSV(_collisionMap.getData(true), _collisionMap.widthInTiles),
 					"assets/alt_tiles.png", TILE_WIDTH, TILE_HEIGHT, FlxTilemap.ALT);
 				_autoAltButton.label.text = "ALT";
 					
 			case FlxTilemap.ALT:
-				_collisionMap.loadMap(FlxTilemap.arrayToCSV(_collisionMap.getData(true), _collisionMap.widthInTiles),
+				_collisionMap.loadMap(FlxStringUtil.arrayToCSV(_collisionMap.getData(true), _collisionMap.widthInTiles),
 					"assets/empty_tiles.png", TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
 				_autoAltButton.label.text = "OFF";
 					
 			case FlxTilemap.OFF:
-				_collisionMap.loadMap(FlxTilemap.arrayToCSV(_collisionMap.getData(true), _collisionMap.widthInTiles),
+				_collisionMap.loadMap(FlxStringUtil.arrayToCSV(_collisionMap.getData(true), _collisionMap.widthInTiles),
 					"assets/auto_tiles.png", TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
 				_autoAltButton.label.text = "AUTO";
 		}
