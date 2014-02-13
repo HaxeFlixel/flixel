@@ -113,7 +113,8 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	{
 		super.update();
 		
-		if (!visible) {
+		if (!visible) 
+		{
 			return;
 		}
 		
@@ -140,9 +141,10 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		
 		// "Highlight" doesn't make much sense on mobile devices / touchscreens
 		#if mobile
-			if (nextFrame == FlxButton.HIGHLIGHT) {
-				nextFrame = FlxButton.NORMAL;
-			}
+		if (nextFrame == FlxButton.HIGHLIGHT) 
+		{
+			nextFrame = FlxButton.NORMAL;
+		}
 		#end
 		
 		frame = framesData.frames[nextFrame];
@@ -182,7 +184,8 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	 */
 	private function updateButton():Void
 	{
-		if (cameras == null) {
+		if (cameras == null) 
+		{
 			cameras = FlxG.cameras.list;
 		}
 		
@@ -193,28 +196,28 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		for (camera in cameras)
 		{
 			#if !FLX_NO_MOUSE
-				FlxG.mouse.getWorldPosition(camera, _point);
+			FlxG.mouse.getWorldPosition(camera, _point);
+			
+			if (overlapsPoint(_point, true, camera))
+			{
+				overlapFound = true;
+				updateStatus(true, FlxG.mouse.justPressed, FlxG.mouse.pressed);
+				break;
+			}
+			#end
+			
+			#if !FLX_NO_TOUCH
+			for (touch in FlxG.touches.list)
+			{
+				touch.getWorldPosition(camera, _point);
 				
 				if (overlapsPoint(_point, true, camera))
 				{
 					overlapFound = true;
-					updateStatus(true, FlxG.mouse.justPressed, FlxG.mouse.pressed);
+					updateStatus(true, touch.justPressed, touch.pressed, touch);
 					break;
 				}
-			#end
-			
-			#if !FLX_NO_TOUCH
-				for (touch in FlxG.touches.list)
-				{
-					touch.getWorldPosition(camera, _point);
-					
-					if (overlapsPoint(_point, true, camera))
-					{
-						overlapFound = true;
-						updateStatus(true, touch.justPressed, touch.pressed, touch);
-						break;
-					}
-				}
+			}
 			#end
 		}
 		
@@ -239,7 +242,8 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 			if (JustPressed)
 			{
 				_pressedTouch = Touch;
-				if (Touch == null) {
+				if (Touch == null) 
+				{
 					_pressedMouse = true;
 				}
 				onDownHandler();
@@ -261,65 +265,66 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		}
 		
 		// onUp
-		if ((_pressedTouch != null) && (_pressedTouch.justReleased))
+		if ((_pressedTouch != null) && _pressedTouch.justReleased)
 		{
 			onUpHandler();
 		}
-#if !FLX_NO_MOUSE
-		else if ((_pressedMouse) && (FlxG.mouse.justReleased))
+		#if !FLX_NO_MOUSE
+		else if (_pressedMouse && FlxG.mouse.justReleased)
 		{
 			onUpHandler();
 		}
-#end
+		#end
 	}
 	
 	private function set_status(Value:Int):Int
 	{
-		if (((labelAlphas.length - 1) >= Value) && (label != null)) {
-			label.alpha = labelAlphas[Value];
+		if ((labelAlphas.length > Value) && (label != null)) 
+		{
+			label.alpha = alpha * labelAlphas[Value];
 		}
 		return status = Value;
 	}
 	
 	/**
 	 * Internal function that handles the onUp event.
-	 * NOTE: Order matters here, because onUp.Fire could cause a state change and destroy this object.
 	 */
 	private function onUpHandler():Void
 	{
 		status = FlxButton.NORMAL;
 		_pressedMouse = false;
 		_pressedTouch = null;
+		// Order matters here, because onUp.fire() could cause a state change and destroy this object.
 		onUp.fire();
 	}
 	
 	/**
 	 * Internal function that handles the onDown event.
-	 * NOTE: Order matters here, because onUp.Fire could cause a state change and destroy this object.
 	 */
 	private function onDownHandler():Void
 	{
 		status = FlxButton.PRESSED;
+		// Order matters here, because onDown.fire() could cause a state change and destroy this object.
 		onDown.fire();
 	}
 	
 	/**
 	 * Internal function that handles the onOver event.
-	 * NOTE: Order matters here, because onUp.Fire could cause a state change and destroy this object.
 	 */
 	private function onOverHandler():Void
 	{
 		status = FlxButton.HIGHLIGHT;
+		// Order matters here, because onOver.fire() could cause a state change and destroy this object.
 		onOver.fire();
 	}
 	
 	/**
 	 * Internal function that handles the onOut event.
-	 * NOTE: Order matters here, because onUp.Fire could cause a state change and destroy this object.
 	 */
 	private function onOutHandler():Void
 	{
 		status = FlxButton.NORMAL;
+		// Order matters here, because onOut.fire() could cause a state change and destroy this object.
 		onOut.fire();
 	}
 }
