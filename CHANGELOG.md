@@ -8,6 +8,11 @@
 * Added some basic unit tests
 * FlxCamera: removed followAdjust(), the followLead point should be set directly
 * FlxSpriteUtil.screenWrap(): prevent sprite from ever being offscreen
+* FlxSprite:
+ * fixed crash on cpp with loadRotatedGraphic() on state switches
+ * fixed "jittering" in certain cases with y velocity in simple render on flash (for example when standing on a platform in a platformer)
+* Moved FlxTilemap-functions arrayToCSV(), bitmapToCSV() and imageToCSV() to FlxStringUtil
+* FlxMath.computeVelocity() -> FlxVelocity.computeVelocity()
 
 3.1.0
 ------------------------------
