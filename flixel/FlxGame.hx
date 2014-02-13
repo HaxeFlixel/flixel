@@ -662,7 +662,7 @@ class FlxGame extends Sprite
 		#end
 		FlxG.plugins.update();
 		
-		state.tryUpdate(); // Update the current state
+		state.tryUpdate();
 		
 		FlxG.cameras.update();
 		

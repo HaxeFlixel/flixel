@@ -30,7 +30,7 @@ class FlxState extends FlxGroup
 	/**
 	 * Current substate. Substates also can be nested.
 	 */
-	public var subState(default, null):FlxSubState;
+	public var subState(default, set):FlxSubState;
 	
 	/**
 	 * If a state change was requested, the new state object is stored here until we switch to it.
@@ -46,7 +46,7 @@ class FlxState extends FlxGroup
 	 * This function is called after the game engine successfully switches states. Override this function, NOT the constructor, to initialize or set up your game state.
 	 * We do NOT recommend overriding the constructor, unless you want some crazy unpredictable things to happen!
 	 */
-	public function create():Void { }
+	public function create():Void {}
 
 	override public function draw():Void
 	{
@@ -75,22 +75,13 @@ class FlxState extends FlxGroup
 		}
 	}
 	#end
-
-	/**
-	 * Manually close the sub-state
-	 */
-	public inline function setSubState(subState:FlxSubState):Void
-	{
-		_requestedSubState = subState;
-		_requestSubStateReset = true;
-	}
 	
 	/**
-	 * Manually close the sub-state
+	 * Closes the current substate.
 	 */
 	public inline function closeSubState():Void
 	{
-		setSubState(null);
+		set_subState(null);
 	}
 
 	/**
@@ -99,7 +90,7 @@ class FlxState extends FlxGroup
 	public function resetSubState():Void
 	{
 		// Close the old state (if there is an old state)
-		if(subState != null)
+		if (subState != null)
 		{
 			if (subState.closeCallback != null)
 			{
@@ -116,18 +107,15 @@ class FlxState extends FlxGroup
 		
 		if (subState != null)
 		{
-			// I'm just copying the code from "FlxGame::switchState" which doesn't check for already craeted states. :/
-			subState._parentState = this;
-			
 			//Reset the input so things like "justPressed" won't interfere
 			if (!persistentUpdate)
 			{
 				FlxG.inputs.reset();
 			}
 			
-			if (!subState.initialized)
+			if (!subState._initialized)
 			{
-				subState.initialize();
+				subState._initialized = true;
  				subState.create();
 			}
 		}
@@ -190,5 +178,11 @@ class FlxState extends FlxGroup
 	private function set_bgColor(Value:Int):Int
 	{
 		return FlxG.cameras.bgColor = Value;
+	}
+	
+	private function set_subState(SubState:FlxSubState):FlxSubState
+	{
+		_requestSubStateReset = true;
+		return _requestedSubState = subState;
 	}
 }
