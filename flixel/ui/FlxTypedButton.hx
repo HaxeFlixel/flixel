@@ -65,7 +65,6 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	 * @param	Y				The Y position of the button.
 	 * @param	Label			The text that you want to appear on the button.
 	 * @param	OnClick			The function to call whenever the button is clicked.
-	 * @param	OnClickParams	The params to call the onClick function with
 	 */
 	public function new(X:Float = 0, Y:Float = 0, ?Label:String, ?OnClick:Void->Void)
 	{
