@@ -380,6 +380,7 @@ class FlxGame extends Sprite
 		FlxG.inputs.onFocusLost();
 	}
 	
+	@:allow(flixel.FlxG)
 	private function onResize(?E:Event):Void 
 	{
 		var width:Int = Lib.current.stage.stageWidth;

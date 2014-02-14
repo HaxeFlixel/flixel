@@ -57,6 +57,7 @@ import flixel.input.FlxSwipe;
 /**
  * Global helper class for audio, input, the camera system, the debugger and other global properties.
  */
+@:allow(flixel.FlxGame)
 class FlxG 
 {
 	/**
@@ -118,7 +119,6 @@ class FlxG
 	/**
 	 * Represents the amount of time in seconds that passed since last frame.
 	 */
-	@:allow(flixel.FlxGame)
 	public static var elapsed(default, null):Float = 0;
 	
 	/**
@@ -173,7 +173,6 @@ class FlxG
 	/**
 	 * Contains all "swipes" from both mouse and touch input that have just ended.
 	 */
-	@:allow(flixel.FlxGame)
 	public static var swipes(default, null):Array<FlxSwipe> = [];
 	#end
 
@@ -429,7 +428,6 @@ class FlxG
 	/**
 	 * Called by FlxGame to set up FlxG during FlxGame's constructor.
 	 */
-	@:allow(flixel.FlxGame) // Access to this function is only needed in FlxGame::new()
 	private static function init(Game:FlxGame, Width:Int, Height:Int, Zoom:Float):Void
 	{	
 		// TODO: check this later on real device
@@ -475,7 +473,6 @@ class FlxG
 	/**
 	 * Called whenever the game is reset, doesn't have to do quite as much work as the basic initialization stuff.
 	 */
-	@:allow(flixel.FlxGame.resetGame) // Access to this function is only needed in FlxGame::resetGame()
 	private static function reset():Void
 	{
 		PxBitmapFont.clearStorage();
@@ -495,7 +492,7 @@ class FlxG
 	private static function set_scaleMode(ScaleMode:BaseScaleMode):BaseScaleMode
 	{
 		_scaleMode = ScaleMode;
-		resizeGame(FlxG.stage.stageWidth, FlxG.stage.stageHeight);
+		game.onResize();
 		return ScaleMode;
 	}
 	
