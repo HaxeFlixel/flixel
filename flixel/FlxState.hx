@@ -46,7 +46,7 @@ class FlxState extends FlxGroup
 	 * This function is called after the game engine successfully switches states. Override this function, NOT the constructor, to initialize or set up your game state.
 	 * We do NOT recommend overriding the constructor, unless you want some crazy unpredictable things to happen!
 	 */
-	public function create():Void { }
+	public function create():Void {}
 
 	override public function draw():Void
 	{
@@ -75,22 +75,20 @@ class FlxState extends FlxGroup
 		}
 	}
 	#end
-
-	/**
-	 * Manually close the sub-state
-	 */
-	public inline function setSubState(subState:FlxSubState):Void
+	
+	public inline function openSubState(SubState:FlxSubState):Void
 	{
-		_requestedSubState = subState;
 		_requestSubStateReset = true;
+		_requestedSubState = SubState;
 	}
 	
 	/**
-	 * Manually close the sub-state
+	 * Closes the substate of this state, if one exists.
 	 */
 	public inline function closeSubState():Void
 	{
-		setSubState(null);
+		_requestSubStateReset = true;
+		_requestedSubState = null;
 	}
 
 	/**
@@ -99,7 +97,7 @@ class FlxState extends FlxGroup
 	public function resetSubState():Void
 	{
 		// Close the old state (if there is an old state)
-		if(subState != null)
+		if (subState != null)
 		{
 			if (subState.closeCallback != null)
 			{
@@ -116,18 +114,16 @@ class FlxState extends FlxGroup
 		
 		if (subState != null)
 		{
-			// I'm just copying the code from "FlxGame::switchState" which doesn't check for already craeted states. :/
-			subState._parentState = this;
-			
 			//Reset the input so things like "justPressed" won't interfere
 			if (!persistentUpdate)
 			{
 				FlxG.inputs.reset();
 			}
 			
-			if (!subState.initialized)
+			if (!subState._created)
 			{
-				subState.initialize();
+				subState._created = true;
+				subState._parentState = this;
  				subState.create();
 			}
 		}

@@ -7,12 +7,9 @@ import flixel.util.FlxColor;
  * This is the basic game "state" object - e.g. in a simple game you might have a menu state and a play state.
  * It is for all intents and purpose a fancy FlxGroup. And really, it's not even that fancy.
  */
+@:allow(flixel.FlxState)
 class FlxSubState extends FlxState
 {
-	/**
-	 * Internal helper
-	 */
-	public var _parentState:FlxState;
 	/**
 	 * Callback method for state close event
 	 */
@@ -26,31 +23,16 @@ class FlxSubState extends FlxState
 	#end
 	
 	/**
-	 * Internal helper for substates which can be reused
-	 */
-	private var _initialized:Bool = false;
+	 * Helper var for close() so closeSubState() can be called on the parent.
+	 */ 
+	private var _parentState:FlxState;
 	
 	private var _bgColor:Int;
-	
-	public var initialized(get, null):Bool;
-	
-	private inline function get_initialized():Bool
-	{ 
-		return _initialized; 
-	}
+ 
+	private var _created:Bool = false;
 	
 	/**
-	 * Internal helper method
-	 */
-	public inline function initialize():Void
-	{ 
-		_initialized = true; 
-	}
-	
-	/**
-	 * Substate constructor
 	 * @param	BGColor		background color for this substate
-	 * @param	UseMouse	whether to show mouse pointer or not
 	 */
 	public function new(BGColor:Int = FlxColor.TRANSPARENT)
 	{
@@ -61,6 +43,48 @@ class FlxSubState extends FlxState
 		_bgSprite = new FlxBGSprite();
 		#end
 		bgColor = BGColor;
+	}
+	
+	override public function draw():Void
+	{
+		//Draw background
+		#if flash
+		if (cameras == null) 
+		{ 
+			cameras = FlxG.cameras.list; 
+		}
+		
+		for (camera in cameras)
+		{
+			camera.fill(bgColor);
+		}
+		#else
+		_bgSprite.draw();
+		#end
+		
+		//Now draw all children
+		super.draw();
+	}
+	
+	override public function destroy():Void 
+	{
+		super.destroy();
+		closeCallback = null;
+		_parentState = null;
+		#if !flash
+		_bgSprite = null;
+		#end
+	}
+	
+	/**
+	 * Closes this substate.
+	 */ 
+	public function close():Void
+	{
+		if (_parentState != null) 
+		{ 
+			_parentState.closeSubState(); 
+		}
 	}
 	
 	override private inline function get_bgColor():Int
@@ -78,52 +102,5 @@ class FlxSubState extends FlxState
 		#end
 		
 		return _bgColor = Value;
-	}
-	
-	override public function draw():Void
-	{
-		//Draw background
-		#if flash
-		if(cameras == null) { cameras = FlxG.cameras.list; }
-		var i:Int = 0;
-		var l:Int = cameras.length;
-		while (i < l)
-		{
-			var camera:FlxCamera = cameras[i++];
-			camera.fill(this.bgColor);
-		}
-		#else
-		_bgSprite.draw();
-		#end
-		
-		//Now draw all children
-		super.draw();
-	}
-	
-	/**
-	 * Use this method to close this substate
-	 * @param	destroy	whether to destroy this state or leave it in memory
-	 */
-	public function close():Void
-	{
-		if (_parentState != null) 
-		{ 
-			_parentState.closeSubState(); 
-		}
-		#if !FLX_NO_DEBUG
-		else 
-		{ 
-			// Missing parent from this state! Do something!!
-			throw "This subState haven't any parent state";
-		}
-		#end
-	}
-	
-	override public function destroy():Void 
-	{
-		super.destroy();
-		_initialized = false;
-		_parentState = null;
-		closeCallback = null;
 	}
 }
