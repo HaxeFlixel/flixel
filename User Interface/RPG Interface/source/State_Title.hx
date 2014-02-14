@@ -53,7 +53,7 @@ class State_Title extends FlxUIState
 						case "battle": FlxG.switchState(new State_Battle());
 						case "default_test": FlxG.switchState(new State_DefaultTest());
 						case "code_test": FlxG.switchState(new State_CodeTest());
-						case "popup": setSubState(new Popup_Demo());
+						case "popup": openSubState(new Popup_Demo());
 					}
 				}
 			case "click_radio_group":

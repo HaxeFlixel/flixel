@@ -38,7 +38,7 @@ class State_DefaultTest extends FlxUIState
 									 ); 	  							  //and localize them if possible, 
 																		  //otherwise it will display "YES", "NO", etc
 									
-									 setSubState(popup);				  //show the popup
+									 openSubState(popup);				  //show the popup
 									 
 									 //you can call quickSetup() before or after setting the subState, it will behave properly either way
 									 
