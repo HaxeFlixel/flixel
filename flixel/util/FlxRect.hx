@@ -236,7 +236,7 @@ class FlxRect
 	{
 		return FlxStringUtil.getDebugString([ { label: "x", value: x }, 
 		                                      { label: "y", value: y },
-											  { label: "w", value: width },
-											  { label: "h", value: height } ]);
+		                                      { label: "w", value: width },
+		                                      { label: "h", value: height } ]);
 	}
 }

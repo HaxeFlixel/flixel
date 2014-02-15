@@ -1292,9 +1292,9 @@ class FlxBar extends FlxSprite
 	{
 		return FlxStringUtil.getDebugString([ { label: "min", value: min }, 
 		                                      { label: "max", value: max },
-											  { label: "range", value: range },
-											  { label: "%", value: pct },
-											  { label: "px/%", value: pxPerPercent },
-											  { label: "value", value: value } ]);
+		                                      { label: "range", value: range },
+		                                      { label: "%", value: pct },
+		                                      { label: "px/%", value: pxPerPercent },
+		                                      { label: "value", value: value } ]);
 	}
 }

@@ -1076,9 +1076,9 @@ class FlxObject extends FlxBasic
 	{
 		return FlxStringUtil.getDebugString([ { label: "x", value: x }, 
 		                                      { label: "y", value: y },
-											  { label: "w", value: width },
-											  { label: "h", value: height },
-											  { label: "visible", value: visible },
-											  { label: "velocity", value: velocity }]);
+		                                      { label: "w", value: width },
+		                                      { label: "h", value: height },
+		                                      { label: "visible", value: visible },
+		                                      { label: "velocity", value: velocity }]);
 	}
 }
