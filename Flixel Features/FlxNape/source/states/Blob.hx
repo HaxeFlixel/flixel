@@ -87,12 +87,6 @@ class Blob extends FlxNapeState
 		add(txt);
 	}
 	
-	override public function destroy():Void 
-	{
-		//FlxG.stage.removeChild(blob);
-		super.destroy();
-	}
-	
 	function createBlob() 
 	{
 		listBlobCircles = new Array<FlxNapeSprite>();

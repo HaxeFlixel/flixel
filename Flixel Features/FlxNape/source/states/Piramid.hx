@@ -67,10 +67,8 @@ class Piramid extends FlxNapeState
 	override public function destroy():Void 
 	{
 		super.destroy();
-		FlxG.stage.removeChild(fps);
+		FlxG.removeChild(fps);
 	}
-	
-
 	
 	private function createBricks() 
 	{
