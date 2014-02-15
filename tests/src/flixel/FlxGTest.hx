@@ -3,12 +3,18 @@ package flixel;
 import flixel.FlxG;
 import massive.munit.Assert;
 
-class FlxGameTest extends FlxTest
+class FlxGTest extends FlxTest
 {
 	@Test
-	public function state():Void 
+	public function stateNull():Void 
 	{
 		Assert.isNotNull(FlxG.state);
+	}
+	
+	@Test
+	public function gameNull():Void 
+	{
+		Assert.isNotNull(FlxG.game);
 	}
 
 	@Test
