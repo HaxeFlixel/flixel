@@ -52,7 +52,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	/**
 	 * The touch currently pressing this button, if none, it's null. Needed to check for its release.
 	 */
-	private var _pressedTouch:FlxTouch = null;
+	private var _pressedTouch:FlxTouch;
 	/**
 	 * Whether this button is currently being pressed by the mouse. Needed to check for its release.
 	 */
@@ -264,10 +264,12 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		}
 		
 		// onUp
+		#if !FLX_NO_TOUCH
 		if ((_pressedTouch != null) && _pressedTouch.justReleased)
 		{
 			onUpHandler();
 		}
+		#end
 		#if !FLX_NO_MOUSE
 		else if (_pressedMouse && FlxG.mouse.justReleased)
 		{
