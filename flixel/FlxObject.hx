@@ -12,6 +12,7 @@ import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRect;
 import flixel.util.FlxSpriteUtil;
+import flixel.util.FlxStringUtil;
 import flixel.util.FlxVelocity;
 import flixel.util.loaders.CachedGraphics;
 
@@ -1073,8 +1074,11 @@ class FlxObject extends FlxBasic
 	 */
 	override public function toString():String
 	{
-		var p = FlxG.debugger.precision;
-		return "(x: " + FlxMath.roundDecimal(x, p) + " | y: " + FlxMath.roundDecimal(y, p) + " | w: " + FlxMath.roundDecimal(width, p) + " | h: " + FlxMath.roundDecimal(height, p) + 
-				" | visible: " +  visible + " | velocity: " +  Std.string(velocity) + ")"; 
+		return FlxStringUtil.getDebugString([ { label: "x", value: x }, 
+		                                      { label: "y", value: y },
+											  { label: "w", value: width },
+											  { label: "h", value: height },
+											  { label: "visible", value: visible },
+											  { label: "velocity", value: velocity }]);
 	}
 }

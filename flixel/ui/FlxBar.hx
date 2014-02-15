@@ -3,6 +3,7 @@ package flixel.ui;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import flash.display.BitmapData;
+import flixel.util.FlxStringUtil;
 
 import flixel.FlxG;
 import flixel.FlxBasic;
@@ -1289,6 +1290,11 @@ class FlxBar extends FlxSprite
 	
 	override public function toString():String
 	{
-		return ("FlxBar - Min: " + min + " Max: " + max + " Range: " + range + " pct: " + pct + " pxp: " + pxPerPercent + " Value: " + value);
+		return FlxStringUtil.getDebugString([ { label: "min", value: min }, 
+		                                      { label: "max", value: max },
+											  { label: "range", value: range },
+											  { label: "%", value: pct },
+											  { label: "px/%", value: pxPerPercent },
+											  { label: "value", value: value } ]);
 	}
 }

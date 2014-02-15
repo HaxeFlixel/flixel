@@ -4,7 +4,9 @@ import flash.display.BitmapData;
 import flash.geom.Matrix;
 import flash.Lib;
 import flash.net.URLRequest;
+import flixel.FlxG;
 import flixel.system.FlxAssets;
+using StringTools;
 
 /**
  * A class primarily containing functions related 
@@ -503,4 +505,33 @@ class FlxStringUtil
 		
 		return bitmapToCSV(tempBitmapData, Invert, Scale);
 	}
+	
+	/**
+	 * Helper function to create a string for toString() functions. Automatically rounds values according to FlxG.debugger.precision.
+	 * Strings are formatted in the format: (x: 50 | y: 60 | visible: false)
+	 * 
+	 * @param	LabelValuePairs		Array with the data for the string
+	 */
+	public static function getDebugString(LabelValuePairs:Array<LabelValuePair>):String
+	{
+		var output:String = "(";
+		for (pair in LabelValuePairs)
+		{
+			output += (pair.label + ": ");
+			var value:Dynamic = pair.value;
+			if (Std.is(value, Float))
+			{
+				value = FlxMath.roundDecimal(cast value, FlxG.debugger.precision);
+			}
+			output += (value + " | ");
+		}
+		// remove the | of the last item, we don't want that at the end
+		output = output.substr(0, output.length - 2).trim();
+		return (output + ")");
+	}
+}
+
+typedef LabelValuePair = {
+	label:String,
+	value:Dynamic
 }

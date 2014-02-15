@@ -140,14 +140,14 @@ class FlxPoint implements IFlxDestroyable
 		return FlxMath.getDistance(this, AnotherPoint);
 	}
 	
-	public function destroy() { } // Necessary for FlxPointHelper in FlxSpriteGroup!
+	public function destroy() {} // Necessary for FlxPointHelper in FlxSpriteGroup!
 	
 	/**
 	 * Convert object to readable string name. Useful for debugging, save games, etc.
 	 */
 	public inline function toString():String
 	{
-		var p = FlxG.debugger.precision;
-		return "(x: " + FlxMath.roundDecimal(x, p) + " | y: " +  FlxMath.roundDecimal(y, p) + ")"; 
+		return FlxStringUtil.getDebugString([ { label: "x", value: x }, 
+		                                      { label: "y", value: y }]);
 	}
 }
