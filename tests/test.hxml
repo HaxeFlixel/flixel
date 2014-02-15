@@ -4,15 +4,10 @@
 -lib hamcrest
 
 # -cp ../flixel
--cp test
 -cp src
 
 -lib flixel
--lib flixel-addons
--lib flixel-ui
 -lib openfl
--lib spinehx
--lib nape
 
 -lib mcover
 --macro mcover.MCover.coverage(['flixel'], ['../'], null)
@@ -21,7 +16,7 @@
 # -D debug
 
 -swf-version 11.2
--swf build/as3_test.swf
+-swf bin/as3_test.swf
 
 # --next
 
@@ -32,17 +27,14 @@
 
 # -lib flixel
 # -lib openfl
-# -lib spinehx
-# -lib nape
 
 # -cp src
-# -cp test
 
 # -D doc
 # --remap flash:flash 
 
 # -cp test
-# -js build/js_test.js
+# -js bin/js_test.js
 
 # --next
 
@@ -52,8 +44,8 @@
 # -lib hamcrest
 # -cp ../
 
-# -cp test
-# -neko build/neko_test.n
+# -cp src
+# -neko bin/neko_test.n
 
 # --next
 
@@ -63,15 +55,12 @@
 # -lib hamcrest
 # -lib flixel
 # -lib openfl
-# -lib spinehx
-# -lib nape
 
 # -cp src
-# -cp test
 
 # -D doc
 # --remap flash:flash 
 # #-D HXCPP_M64
-# -cpp build/cpp_test
+# -cpp bin/cpp_test
 
 

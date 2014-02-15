@@ -4,6 +4,7 @@ import flixel.FlxCameraTest;
 import flixel.FlxGameTest;
 import flixel.FlxSpriteTest;
 import flixel.FlxStateTest;
+import FlxTest;
 
 /**
  * Auto generated Test Suite for MassiveUnit.
@@ -21,5 +22,6 @@ class TestSuite extends massive.munit.TestSuite
 		add(flixel.FlxGameTest);
 		add(flixel.FlxSpriteTest);
 		add(flixel.FlxStateTest);
+		add(FlxTest);
 	}
 }
