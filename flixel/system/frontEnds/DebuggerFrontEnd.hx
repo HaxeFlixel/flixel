@@ -9,14 +9,12 @@ import flixel.system.ui.FlxSystemButton;
 class DebuggerFrontEnd
 {	
 	/**
-	 * Whether to show visual debug displays or not. Doesn't exist in FLX_NO_DEBUG mode.
-	 * @default false
+	 * Whether to draw the hitboxes of FlxObjects.
 	 */
 	public var drawDebug:Bool = false;
 	
 	/**
 	 * The amount of decimals FlxPoints / FlxRects are rounded to in log / watch / trace.
-	 * @default 3
 	 */
 	public var precision:Int = 3; 
 	
@@ -29,18 +27,11 @@ class DebuggerFrontEnd
 	public var toggleKeys:Array<String>;
 	#end
 	
-	/**
-	 * Used to instantiate this class and assign a value to toggleKeys
-	 */
-	public function new() 
-	{
-		#if !FLX_NO_KEYBOARD
-		toggleKeys = ["GRAVEACCENT", "BACKSLASH"];
-		#end
-	}
+	public var visible(default, set):Bool = false;
 	
 	/**
 	 * Change the way the debugger's windows are laid out.
+	 * 
 	 * @param	Layout	The layout codes can be found in FlxDebugger, for example FlxDebugger.MICRO
 	 */
 	public inline function setLayout(Layout:DebuggerLayout):Void
@@ -61,34 +52,19 @@ class DebuggerFrontEnd
 	}
 	
 	/**
-	 * Whether the debugger is visible or not.
-	 * @default false
-	 */
-	public var visible(default, set):Bool = false;
-	
-	private inline function set_visible(Visible:Bool):Bool
-	{
-		#if !FLX_NO_DEBUG
-		FlxG.game.debugger.visible = Visible;
-		#end
-		
-		return visible = Visible;
-	}
-	
-	/**
 	 * Create and add a new debugger button.
 	 * 
 	 * @param   Position       Either LEFT, MIDDLE or RIGHT.
 	 * @param   Icon           The icon to use for the button
-	 * @param   DownHandler    The function to be called when the button is pressed.
+	 * @param   UpHandler      The function to be called when the button is pressed.
 	 * @param   ToggleMode     Whether this is a toggle button or not.
 	 * @param   UpdateLayout   Whether to update the button layout.
 	 * @return  The added button.
 	 */
-	public function addButton(Alignment:ButtonAlignment, Icon:BitmapData, DownHandler:Void->Void, ToggleMode:Bool = false, UpdateLayout:Bool = true):FlxSystemButton
+	public function addButton(Alignment:ButtonAlignment, Icon:BitmapData, UpHandler:Void->Void, ToggleMode:Bool = false, UpdateLayout:Bool = true):FlxSystemButton
 	{
 		#if !FLX_NO_DEBUG
-		return FlxG.game.debugger.addButton(Alignment, Icon, DownHandler, ToggleMode, UpdateLayout);
+		return FlxG.game.debugger.addButton(Alignment, Icon, UpHandler, ToggleMode, UpdateLayout);
 		#else
 		return null;
 		#end
@@ -96,6 +72,7 @@ class DebuggerFrontEnd
 	
 	/**
 	 * Removes and destroys a button from the debugger.
+	 * 
 	 * @param	Button			The FlxSystemButton instance to remove.
 	 * @param	UpdateLayout	Whether to update the button layout.
 	 */
@@ -104,5 +81,22 @@ class DebuggerFrontEnd
 		#if !FLX_NO_DEBUG
 		FlxG.game.debugger.removeButton(Button, UpdateLayout);
 		#end
+	}
+	
+	@:allow(flixel.FlxG)
+	private function new() 
+	{
+		#if !FLX_NO_KEYBOARD
+		toggleKeys = ["GRAVEACCENT", "BACKSLASH"];
+		#end
+	}
+	
+	private inline function set_visible(Visible:Bool):Bool
+	{
+		#if !FLX_NO_DEBUG
+		FlxG.game.debugger.visible = Visible;
+		#end
+		
+		return visible = Visible;
 	}
 }
