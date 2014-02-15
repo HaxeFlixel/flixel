@@ -198,7 +198,7 @@ class FlxGame extends Sprite
 	 * @param	SkipSplash		Whether you want to skip the flixel splash screen in FLX_NO_DEBUG or not.
 	 * @param	StartFullscreen	Whether to start the game in fullscreen mode (desktop targets only), false by default
 	 */
-	public function new(GameSizeX:Int, GameSizeY:Int, InitialState:Class<FlxState>, Zoom:Float = 1, UpdateFramerate:Int = 60, DrawFramerate:Int = 60, SkipSplash:Bool = false, StartFullscreen:Bool = false)
+	public function new(GameSizeX:Int = 640, GameSizeY:Int = 480, ?InitialState:Class<FlxState>, Zoom:Float = 1, UpdateFramerate:Int = 60, DrawFramerate:Int = 60, SkipSplash:Bool = false, StartFullscreen:Bool = false)
 	{
 		super();
 		
@@ -222,7 +222,7 @@ class FlxGame extends Sprite
 		#end
 		
 		// Then get ready to create the game object for real
-		_initialState = InitialState;
+		_initialState = (InitialState == null) ? FlxState : InitialState;
 		
 		addEventListener(Event.ADDED_TO_STAGE, create);
 	}
