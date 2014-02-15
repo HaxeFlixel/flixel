@@ -403,14 +403,17 @@ class FlxG
 	}
 	
 	/**
-	 * Removes a child from the flixel display list.
+	 * Removes a child from the flixel display list, if it is part of it.
 	 * 
 	 * @param 	Child	The DisplayObject to add
 	 * @return	The removed DisplayObject
 	 */
 	@:generic public static inline function removeChild<T:DisplayObject>(Child:T):T
 	{
-		game.removeChild(Child);
+		if (game.contains(Child))
+		{
+			game.removeChild(Child);
+		}
 		return Child;
 	}
 	
