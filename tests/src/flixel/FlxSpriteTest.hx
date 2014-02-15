@@ -9,11 +9,10 @@ import TestMain;
 
 class FlxSpriteTest extends FlxTest
 {
-	public var sprite1:FlxSprite;
-	public var sprite2:FlxSprite;
+	var sprite1:FlxSprite;
+	var sprite2:FlxSprite;
 	
-	@BeforeClass
-	public function beforeClass():Void 
+	@BeforeClass function beforeClass():Void 
 	{
 		sprite1 = new FlxSprite();
 		sprite1.makeGraphic(100, 80);
@@ -22,15 +21,13 @@ class FlxSpriteTest extends FlxTest
 		sprite2.makeGraphic(100, 80);
 	}
 	
-	@Test
-	public function size():Void 
+	@Test function size():Void 
 	{
-		Assert.isTrue(sprite1.width == 100);
-		Assert.isTrue(sprite1.height == 80);
+		Assert.areEqual(sprite1.width, 100);
+		Assert.areEqual(sprite1.height, 80);
 	}
 	
-	@Test
-	public function sprites():Void 
+	@Test function sprites():Void 
 	{
 		Assert.isNotNull(sprite1);
 		Assert.isNotNull(sprite2);
@@ -46,35 +43,32 @@ class FlxSpriteTest extends FlxTest
 		Assert.isTrue(sprite2.exists);
 	}
 	
-	@Test
-	public function add():Void 
+	@Test function add():Void 
 	{
 		FlxG.state.add(sprite1);
 		FlxG.state.add(sprite2);
 		
 		var sprite1Index:Int = FlxArrayUtil.indexOf(FlxG.state.members, sprite1);
-		Assert.isTrue(sprite1Index != -1);
+		Assert.areNotEqual(sprite1Index, -1);
 		
 		var sprite2Index:Int = FlxArrayUtil.indexOf(FlxG.state.members, sprite2);
-		Assert.isTrue(sprite2Index != -1);
+		Assert.areNotEqual(sprite2Index, -1);
 	}
 
-	@Test
-	public function remove():Void 
+	@Test function remove():Void 
 	{
 		FlxG.state.remove(sprite1);
 		
 		var sprite1Index:Int = FlxArrayUtil.indexOf(FlxG.state.members, sprite1);
-		Assert.isTrue(sprite1Index == -1);
+		Assert.areEqual(sprite1Index, -1);
 		
 		FlxG.state.add(sprite1);
 		
 		var sprite1Index:Int = FlxArrayUtil.indexOf(FlxG.state.members, sprite1);
-		Assert.isTrue(sprite1Index != -1);
+		Assert.areNotEqual(sprite1Index, -1);
 	}
 	
-	@AsyncTest
-	public function overlap(factory:AsyncFactory):Void
+	@AsyncTest function overlap(factory:AsyncFactory):Void
 	{
 		Assert.isTrue(FlxG.overlap(sprite1, sprite2));
 		
@@ -86,7 +80,7 @@ class FlxSpriteTest extends FlxTest
 		TestMain.addAsync(resultHandler, 100);
 	}
 
-	private function testOverlap(?e:Dynamic):Void
+	function testOverlap(?e:Dynamic):Void
 	{
 		Assert.isFalse(FlxG.overlap(sprite1, sprite2));
 	}

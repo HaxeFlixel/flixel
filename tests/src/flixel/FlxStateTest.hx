@@ -1,15 +1,14 @@
 package flixel;
 
 import flixel.FlxG;
-import flixel.util.FlxColor;
+import helper.TestState;
 import massive.munit.Assert;
 import massive.munit.async.AsyncFactory;
 import TestMain;
 
 class FlxStateTest extends FlxTest
 {
-	@AsyncTest
-	public function switchState(factory:AsyncFactory):Void
+	@AsyncTest function switchState(factory:AsyncFactory):Void
 	{
 		FlxG.switchState(new TestState());
 		
@@ -17,16 +16,8 @@ class FlxStateTest extends FlxTest
 		TestMain.addAsync(resultHandler, 100);
 	}
 
-	private function testStateChange(?e:Dynamic):Void
+	function testStateChange(?e:Dynamic):Void
 	{
-		Assert.isTrue(FlxG.cameras.bgColor == FlxColor.RED);
-	}
-}
-
-class TestState extends FlxState
-{
-	override public function create():Void
-	{
-		bgColor = FlxColor.RED;
+		Assert.isTrue(Std.is(FlxG.state, TestState));
 	}
 }

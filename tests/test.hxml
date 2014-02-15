@@ -1,24 +1,76 @@
-## Flash 9+
+## Flash
 -main TestMain
--lib munit
--lib hamcrest
-
-# -cp ../flixel
 -cp src
 
+-lib munit
+-lib hamcrest
 -lib flixel
 -lib openfl
-
 -lib mcover
+
 --macro mcover.MCover.coverage(['flixel'], ['../'], null)
 
 -D doc
-# -D debug
 
 -swf-version 11.2
 -swf bin/as3_test.swf
 
-# --next
+--next
+
+## Flash with conditionals
+-main TestMain
+-cp src
+
+-lib munit
+-lib hamcrest
+-lib flixel
+-lib openfl
+-lib mcover
+
+--macro mcover.MCover.coverage(['flixel'], ['../'], null)
+
+-D doc
+-D FLX_RECORD
+-D FLX_NO_MOUSE_ADVANCED
+-D FLX_NO_NATIVE_CURSOR
+-D FLX_NO_MOUSE
+-D FLX_NO_KEYBOARD
+-D FLX_NO_TOUCH
+-D FLX_NO_GAMEPAD
+-D FLX_NO_SOUND_TRAY
+-D FLX_NO_SOUND_SYSTEM
+-D FLX_NO_FOCUS_LOST_SCREEN
+-D FLX_NO_DEBUG
+
+-swf-version 11.2
+-swf bin/as3_test.swf
+
+## Neko
+
+#--macro allowPackage("flash")
+#
+#-main TestMain
+#-cp src
+#
+#-lib munit
+#-lib hamcrest
+#-lib flixel
+#-lib openfl
+#-lib mcover
+#
+#--macro mcover.MCover.coverage(['flixel'], ['../'], null)
+#
+#-D doc
+#
+## openfl stuff
+#-D lime_native
+#-D no-compilation
+#-D windows
+#-D desktop
+#
+#-neko bin/neko_test.n
+
+#--next
 
 # ## JavaScript
 # -main TestMain
@@ -35,17 +87,6 @@
 
 # -cp test
 # -js bin/js_test.js
-
-# --next
-
-# ## Neko
-# -main TestMain
-# -lib munit
-# -lib hamcrest
-# -cp ../
-
-# -cp src
-# -neko bin/neko_test.n
 
 # --next
 
