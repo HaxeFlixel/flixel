@@ -112,8 +112,7 @@ class Cutup extends FlxNapeState
 	
 	override public function destroy():Void {
 		super.destroy();
-		FlxG.stage.removeChild(fps);
-		FlxTween.manager.clear(true);
+		FlxG.removeChild(fps);
 	}
 	
 	private function shootLaser() {
