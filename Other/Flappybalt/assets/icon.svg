@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="16px" height="16px" version="1.1" xmlns="http://www.w3.org/2000/svg">
+<path d="M 0 0 h 16 v 16 h -16 z" fill="#B0B0BF"/>
+<path d="M 0 4 h 4 v 3 h 4 v -5 h -1 v -2 h 9 v 15 h -16 z" fill="#868696"/>
+<path d="M 0 10 h 5 v 5 h 10 v -13 h -2 v -2 h 3 v 16 h -16 z" fill="#646A7D"/>
+<path d="M 4 5 h 1 v 1 h 2 v 1 h 3 v -1 h 1 v -1 h 1 v 2 h -1 v 1 h -1 v 2 h -2 v 1 h -3 v -1 h 1 v -2 h -1 v -2 h -1 z" fill="#FFFFFF"/>
+</svg>

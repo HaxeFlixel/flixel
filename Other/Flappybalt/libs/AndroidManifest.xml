@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.steverichey.flappybalt" android:versionCode="1" android:versionName="1.0" android:installLocation="preferExternal">
+	
+	<uses-feature android:glEsVersion="0x00020000" android:required="true" />
+	
+	<uses-sdk android:minSdkVersion="9" android:targetSdkVersion="16"/>
+	
+	<application android:label="Flappybalt" android:debuggable="false" android:icon="@drawable/icon">
+		
+		<activity android:name="MainActivity" android:launchMode="singleTask" android:label="Flappybalt" android:configChanges="keyboard|keyboardHidden|orientation" android:screenOrientation="sensorPortrait">
+			
+			<intent-filter>
+				
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
+				<category android:name="tv.ouya.intent.category.GAME" />
+				
+			</intent-filter>
+			
+		</activity>
+		
+	</application>
+	
+</manifest>
