@@ -1,5 +1,7 @@
 3.1.1
 ------------------------------
+* Exposed completed callback in FlxTimer, so now you can do: FlxTimer.start(...).complete = function(t) { };
+* Added easier to use FlxTween.tween function, which automatically determines whether to use single VarTween or MultivarTween based on the number of Values being tweened.
 * Added PixelPerfectScaleMode (scales the game to the highest integer factor possible while maintaning the aspect ratio)
 * FlxTween
  * backward is now a public, read-only property
