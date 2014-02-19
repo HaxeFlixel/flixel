@@ -306,7 +306,7 @@ class FlxGame extends Sprite
 		}
 		#end
 		
-		#if (cpp || neko)
+		#if desktop
 		// make sure the on focus event doesn't fire on startup 
 		if (!_onFocusFiredOnce)
 		{
