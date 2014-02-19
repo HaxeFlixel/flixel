@@ -5,6 +5,7 @@
  * backward is now a public, read-only property
  * renamed delay to startDelay
  * added loopDelay that controls the delay between loop executions with LOOPING and PINGPONG
+ * Added easier to use FlxTween.tween() function, which automatically determines whether to use single VarTween or MultivarTween based on the number of Values being tweened
 * Added some basic unit tests
 * FlxCamera: removed followAdjust(), the followLead point should be set directly
 * FlxSpriteUtil.screenWrap(): prevent sprite from ever being offscreen
@@ -18,7 +19,6 @@
 * Improvements to FlxSystemButton
 * Window: add optional close button
 * Exposed complete callback in FlxTimer, so now you can do: FlxTimer.start(...).complete = function(t) { };
-* Added easier to use FlxTween.tween() function, which automatically determines whether to use single VarTween or MultivarTween based on the number of Values being tweened
 
 3.1.0
 ------------------------------
