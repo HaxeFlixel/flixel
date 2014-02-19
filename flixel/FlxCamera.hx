@@ -697,7 +697,7 @@ class FlxCamera extends FlxBasic
                 if (_fxFadeAlpha <= 0.0)
                 {
                     _fxFadeAlpha = 0.0;
-                    if(_fxFadeComplete != null)
+                    if (_fxFadeComplete != null)
                     {
 						_fxFadeComplete();
 					}

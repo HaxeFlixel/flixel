@@ -96,7 +96,7 @@ class Watch extends Window
 		var watchEntry:WatchEntry;
 		var i:Int = 0;
 		var l:Int = _watching.length;
-		while(i < l)
+		while (i < l)
 		{
 			watchEntry = _watching[i++];
 			if ((watchEntry.object == AnyObject) && (watchEntry.field == VariableName))
@@ -175,7 +175,7 @@ class Watch extends Window
 		var watchEntry:WatchEntry;
 		
 		var i:Int = _watching.length - 1;
-		while(i >= 0)
+		while (i >= 0)
 		{
 			watchEntry = _watching[i];
 			
@@ -203,7 +203,7 @@ class Watch extends Window
 		// Reset the display heights of the remaining objects
 		var i:Int = 0;
 		var l:Int = _watching.length;
-		while(i < l)
+		while (i < l)
 		{
 			_watching[i].setY(i * LINE_HEIGHT);
 			i++;
@@ -218,7 +218,7 @@ class Watch extends Window
 		var watchEntry:WatchEntry;
 		var i:Int = 0;
 		var l:Int = _watching.length;
-		while(i < l)
+		while (i < l)
 		{
 			watchEntry = _watching.pop();
 			_names.removeChild(watchEntry.nameDisplay);
@@ -239,7 +239,7 @@ class Watch extends Window
 		editing = false;
 		var i:Int = 0;
 		var l:Int = _watching.length;
-		while(i < l)
+		while (i < l)
 		{
 			if (!_watching[i++].updateValue())
 			{
@@ -257,7 +257,7 @@ class Watch extends Window
 		var i:Int = 0;
 		var l:Int = _watching.length;
 		var watchEntry:WatchEntry;
-		while(i < l)
+		while (i < l)
 		{
 			watchEntry = _watching[i++];
 			if (watchEntry.editing)

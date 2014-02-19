@@ -242,7 +242,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 			
 			if (Multiple)
 			{
-				randomFrame = FlxRandom.intRanged( 0, totalFrames - 1 );
+				randomFrame = FlxRandom.intRanged(0, totalFrames - 1);
 				
 				if (bakedRotationAngles > 0)
 				{
@@ -511,7 +511,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 		var particleEndScale:Float = endScale.min;
 		if (endScale.min != endScale.max)
 		{
-		particleEndScale = endScale.min + FlxRandom.intRanged( 0, Std.int( endScale.max - endScale.min ) );
+			particleEndScale = endScale.min + FlxRandom.intRanged(0, Std.int(endScale.max - endScale.min));
 		}
 		
 		if (particleEndScale != particle.startScale)

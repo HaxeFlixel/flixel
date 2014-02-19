@@ -43,7 +43,7 @@ class TweenManager extends FlxPlugin
 		
 		if (finishedTweens != null)
 		{
-			while(finishedTweens.length > 0)
+			while (finishedTweens.length > 0)
 			{
 				finishedTweens.shift().finish();
 			}

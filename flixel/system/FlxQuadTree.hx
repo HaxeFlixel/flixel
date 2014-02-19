@@ -248,16 +248,16 @@ class FlxQuadTree extends FlxRect
 		_headB = _tailB = FlxList.recycle();
 		
 		//Copy the parent's children (if there are any)
-		if(Parent != null)
+		if (Parent != null)
 		{
 			var iterator:FlxList;
 			var ot:FlxList;
-			if(Parent._headA.object != null)
+			if (Parent._headA.object != null)
 			{
 				iterator = Parent._headA;
 				while(iterator != null)
 				{
-					if(_tailA.object != null)
+					if (_tailA.object != null)
 					{
 						ot = _tailA;
 						_tailA = FlxList.recycle();
@@ -267,12 +267,12 @@ class FlxQuadTree extends FlxRect
 					iterator = iterator.next;
 				}
 			}
-			if(Parent._headB.object != null)
+			if (Parent._headB.object != null)
 			{
 				iterator = Parent._headB;
 				while(iterator != null)
 				{
-					if(_tailB.object != null)
+					if (_tailB.object != null)
 					{
 						ot = _tailB;
 						_tailB = FlxList.recycle();
@@ -373,7 +373,7 @@ class FlxQuadTree extends FlxRect
 	public function load(ObjectOrGroup1:FlxBasic, ObjectOrGroup2:FlxBasic = null, NotifyCallback:FlxObject->FlxObject->Void = null, ProcessCallback:FlxObject->FlxObject->Bool = null):Void
 	{
 		add(ObjectOrGroup1, A_LIST);
-		if(ObjectOrGroup2 != null)
+		if (ObjectOrGroup2 != null)
 		{
 			add(ObjectOrGroup2, B_LIST);
 			_useBothLists = true;
@@ -428,7 +428,7 @@ class FlxQuadTree extends FlxRect
 					else if (collisionType == FlxCollisionType.OBJECT || collisionType == FlxCollisionType.TILEMAP)
 					{
 						_object = cast(basic, FlxObject);
-						if(_object.exists && _object.allowCollisions != FlxObject.NONE)
+						if (_object.exists && _object.allowCollisions != FlxObject.NONE)
 						{
 							_objectLeftEdge = _object.x;
 							_objectTopEdge = _object.y;
@@ -443,7 +443,7 @@ class FlxQuadTree extends FlxRect
 		else
 		{
 			_object = cast(ObjectOrGroup, FlxObject);
-			if(_object.exists && _object.allowCollisions != FlxObject.NONE)
+			if (_object.exists && _object.allowCollisions != FlxObject.NONE)
 			{
 				_objectLeftEdge = _object.x;
 				_objectTopEdge = _object.y;
@@ -472,7 +472,7 @@ class FlxQuadTree extends FlxRect
 		{
 			if((_objectTopEdge > _topEdge) && (_objectBottomEdge < _midpointY))
 			{
-				if(_northWestTree == null)
+				if (_northWestTree == null)
 				{
 					_northWestTree = FlxQuadTree.recycle(_leftEdge, _topEdge, _halfWidth, _halfHeight, this);
 				}
@@ -552,9 +552,9 @@ class FlxQuadTree extends FlxRect
 	private function addToList():Void
 	{
 		var ot:FlxList;
-		if(_list == A_LIST)
+		if (_list == A_LIST)
 		{
-			if(_tailA.object != null)
+			if (_tailA.object != null)
 			{
 				ot = _tailA;
 				_tailA = FlxList.recycle();
@@ -564,7 +564,7 @@ class FlxQuadTree extends FlxRect
 		}
 		else
 		{
-			if(_tailB.object != null)
+			if (_tailB.object != null)
 			{
 				ot = _tailB;
 				_tailB = FlxList.recycle();
@@ -604,7 +604,7 @@ class FlxQuadTree extends FlxRect
 		var overlapProcessed:Bool = false;
 		var iterator:FlxList;
 		
-		if(_headA.object != null)
+		if (_headA.object != null)
 		{
 			iterator = _headA;
 			while(iterator != null)

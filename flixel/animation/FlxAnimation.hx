@@ -87,7 +87,7 @@ class FlxAnimation extends FlxBaseAnimation
 		{
 			paused = false;
 			finished = false;
-			curFrame = curFrame;
+			set_curFrame(curFrame);
 			return;
 		}
 		
@@ -105,7 +105,7 @@ class FlxAnimation extends FlxBaseAnimation
 		
 		if (Frame < 0)
 		{
-			curFrame = FlxRandom.intRanged( 0, numFrames - 1 );
+			curFrame = FlxRandom.intRanged(0, numFrames - 1);
 		}
 		else if (numFrames > Frame)
 		{
@@ -180,7 +180,7 @@ class FlxAnimation extends FlxBaseAnimation
 		}
 		else
 		{
-			curFrame = FlxRandom.intRanged( 0, numFrames - 1 );
+			curFrame = FlxRandom.intRanged(0, numFrames - 1);
 		}
 		
 		curIndex = _frames[curFrame];

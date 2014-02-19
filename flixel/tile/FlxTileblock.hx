@@ -89,7 +89,7 @@ class FlxTileblock extends FlxSprite
 			destinationX = 0;
 			column = 0;
 			
-			while(column < widthInTiles)
+			while (column < widthInTiles)
 			{
 				if ( FlxRandom.float() * total > Empties)
 				{

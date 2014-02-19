@@ -206,7 +206,7 @@ class FlxSave
 	 */
 	private function checkBinding():Bool
 	{
-		if(_sharedObject == null)
+		if (_sharedObject == null)
 		{
 			FlxG.log.warn("You must call FlxSave.bind()\nbefore you can read or write data.");
 			return false;

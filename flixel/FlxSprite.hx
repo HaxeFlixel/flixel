@@ -988,7 +988,7 @@ class FlxSprite extends FlxObject
 		var rows:Int = region.height;
 		var columns:Int = region.width;
 		cachedGraphics.bitmap.lock();
-		while(row < rows)
+		while (row < rows)
 		{
 			column = region.startX;
 			while (column < columns)
@@ -1364,7 +1364,7 @@ class FlxSprite extends FlxObject
 			resetFrameSize();
 			dirty = true;
 		}
-		else if(framesData != null && framesData.frames != null && framesData.frames.length > 0)
+		else if (framesData != null && framesData.frames != null && framesData.frames.length > 0)
 		{
 			frame = framesData.frames[0];
 			dirty = true;

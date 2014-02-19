@@ -43,7 +43,7 @@ class FlxStringUtil
 			timeString += "0";
 		}
 		timeString += timeStringHelper;
-		if(ShowMS)
+		if (ShowMS)
 		{
 			timeString += ".";
 			timeStringHelper = Std.int((Seconds - Std.int(Seconds)) * 100);
@@ -115,7 +115,7 @@ class FlxStringUtil
 		var string:String = "";
 		var comma:String = "";
 		var zeroes:String = "";
-		while(amount > 0)
+		while (amount > 0)
 		{
 			if((string.length > 0) && comma.length <= 0)
 			{
@@ -131,7 +131,7 @@ class FlxStringUtil
 			zeroes = "";
 			helper = amount - Math.floor(amount / 1000) * 1000;
 			amount = Math.floor(amount / 1000);
-			if(amount > 0)
+			if (amount > 0)
 			{
 				if (helper < 100)
 				{
@@ -144,7 +144,7 @@ class FlxStringUtil
 			}
 			string = zeroes + helper + comma + string;
 		}
-		if(ShowDecimal)
+		if (ShowDecimal)
 		{
 			amount = Std.int(Amount * 100) - (Std.int(Amount) * 100);
 			string += (EnglishStyle ? "." : ",") + amount;
@@ -437,7 +437,7 @@ class FlxStringUtil
 		{
 			column = 0;
 			
-			while(column < bitmapWidth)
+			while (column < bitmapWidth)
 			{
 				// Decide if this pixel/tile is solid (1) or not (0)
 				pixel = Bitmap.getPixel(column, row);

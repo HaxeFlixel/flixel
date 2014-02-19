@@ -1745,7 +1745,7 @@ class FlxTilemap extends FlxObject
 					{
 						tile = _tileObjects[_data[columnIndex]];
 						
-						if(tile != null)
+						if (tile != null)
 						{
 							if (tile.allowCollisions <= FlxObject.NONE)
 							{
@@ -1971,7 +1971,7 @@ class FlxTilemap extends FlxObject
 			{
 				currentIndex = current[i++];
 				
-				if(currentIndex == Std.int(EndIndex))
+				if (currentIndex == Std.int(EndIndex))
 				{
 					foundEnd = true;
 					// Neighbors.length = 0;

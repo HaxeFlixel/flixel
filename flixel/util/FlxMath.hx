@@ -344,7 +344,7 @@ class FlxMath
 		var dx:Float = (SpriteA.x + SpriteA.origin.x) - (SpriteB.x + SpriteB.origin.x);
 		var dy:Float = (SpriteA.y + SpriteA.origin.y) - (SpriteB.y + SpriteB.origin.y);
 		
-		if(IncludeEqual)
+		if (IncludeEqual)
 			return dx * dx + dy * dy <= Distance * Distance;
 		else
 			return dx * dx + dy * dy < Distance * Distance;
@@ -381,7 +381,7 @@ class FlxMath
 		var dx:Float = (Sprite.x + Sprite.origin.x) - (Target.x);
 		var dy:Float = (Sprite.y + Sprite.origin.y) - (Target.y);
 		
-		if(IncludeEqual)
+		if (IncludeEqual)
 			return dx * dx + dy * dy <= Distance * Distance;
 		else
 			return dx * dx + dy * dy < Distance * Distance;
@@ -415,7 +415,7 @@ class FlxMath
 		var dx:Float = (Sprite.x + Sprite.origin.x) - FlxG.mouse.screenX;
 		var dy:Float = (Sprite.y + Sprite.origin.y) - FlxG.mouse.screenY;
 		
-		if(IncludeEqual)
+		if (IncludeEqual)
 			return dx * dx + dy * dy <= Distance * Distance;
 		else
 			return dx * dx + dy * dy < Distance * Distance;
@@ -451,7 +451,7 @@ class FlxMath
 		var dx:Float = (Sprite.x + Sprite.origin.x) - Touch.screenX;
 		var dy:Float = (Sprite.y + Sprite.origin.y) - Touch.screenY;
 		
-		if(IncludeEqual)
+		if (IncludeEqual)
 			return dx * dx + dy * dy <= Distance * Distance;
 		else
 			return dx * dx + dy * dy < Distance * Distance;

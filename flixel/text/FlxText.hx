@@ -400,7 +400,7 @@ class FlxText extends FlxSprite
 		var ot:String = _textField.text;
 		_textField.text = Text;
 		
-		if(_textField.text != ot)
+		if (_textField.text != ot)
 		{
 			dirty = true;
 		}

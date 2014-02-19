@@ -79,7 +79,7 @@ class VCRFrontEnd
 	**/
 	public function resume():Void
 	{
-		if(paused)
+		if (paused)
 		{
 			#if !FLX_NO_MOUSE
 			if (!FlxG.mouse.useSystemCursor)
@@ -192,7 +192,7 @@ class VCRFrontEnd
 	 */
 	public function startRecording(StandardMode:Bool = true):Void
 	{
-		FlxRandom.updateRecordingSeed( StandardMode );
+		FlxRandom.updateRecordingSeed(StandardMode);
 		
 		if (StandardMode)
 		{

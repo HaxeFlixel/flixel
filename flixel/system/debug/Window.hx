@@ -192,7 +192,7 @@ class Window extends Sprite
 			removeChild(_title);
 		}
 		_title = null;
-		if(_handle != null)
+		if (_handle != null)
 		{
 			removeChild(_handle);
 		}

@@ -117,7 +117,7 @@ class FlxAnimationController implements IFlxDestroyable
 		return this;
 	}
 	
-	public function createPrerotated(Controller:FlxAnimationController = null):Void
+	public function createPrerotated(?Controller:FlxAnimationController):Void
 	{
 		destroyAnimations();
 		Controller = (Controller != null) ? Controller : this;
@@ -443,7 +443,7 @@ class FlxAnimationController implements IFlxDestroyable
 			_curAnim.stop();
 			_curAnim = null;
 		}
-		frameIndex = FlxRandom.intRanged( 0, frames - 1 );
+		frameIndex = FlxRandom.intRanged(0, frames - 1);
 	}
 	
 	private function set_frameIndex(Frame:Int):Int

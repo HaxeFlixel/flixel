@@ -626,21 +626,21 @@ class FlxSpriteGroup extends FlxSprite
 	
 	override private function set_visible(Value:Bool):Bool
 	{
-		if(exists && visible != Value)
+		if (exists && visible != Value)
 			transformChildren(visibleTransform, Value);
 		return super.set_visible(Value);
 	}
 	
 	override private function set_active(Value:Bool):Bool
 	{
-		if(exists && active != Value)
+		if (exists && active != Value)
 			transformChildren(activeTransform, Value);
 		return super.set_active(Value);
 	}
 	
 	override private function set_alive(Value:Bool):Bool
 	{
-		if(exists && alive != Value)
+		if (exists && alive != Value)
 			transformChildren(aliveTransform, Value);
 		return super.set_alive(Value);
 	}

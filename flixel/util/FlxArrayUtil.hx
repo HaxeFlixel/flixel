@@ -68,7 +68,7 @@ class FlxArrayUtil
 	 */
 	@:generic public static inline function shuffle<T>(Objects:Array<T>, HowManyTimes:Int):Array<T>
 	{
-		return FlxRandom.shuffleArray( Objects, HowManyTimes );
+		return FlxRandom.shuffleArray(Objects, HowManyTimes);
 	}
 	
 	/**
@@ -82,7 +82,7 @@ class FlxArrayUtil
 	 */
 	@:generic public static inline function getRandom<T>(Objects:Array<T>, StartIndex:Int = 0, EndIndex:Int = 0):T
 	{
-		return FlxRandom.getObject( Objects, StartIndex, EndIndex );
+		return FlxRandom.getObject(Objects, StartIndex, EndIndex);
 	}
 	
 	/**

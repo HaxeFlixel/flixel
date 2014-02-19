@@ -488,7 +488,7 @@ class FlxObject extends FlxBasic
 			var i:Int = 0;
 			var grp:FlxTypedGroup<FlxBasic> = cast ObjectOrGroup;
 			var members:Array<FlxBasic> = grp.members;
-			while(i < Std.int(grp.length))
+			while (i < Std.int(grp.length))
 			{
 				basic = members[i++];
 				if (basic != null && basic.exists && overlapsAt(X, Y, basic, InScreenSpace, Camera))
