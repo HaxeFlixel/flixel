@@ -1,4 +1,4 @@
-3.1.1
+3.2.0
 ------------------------------
 * Added PixelPerfectScaleMode (scales the game to the highest integer factor possible while maintaning the aspect ratio)
 * FlxTween
