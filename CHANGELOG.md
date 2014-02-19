@@ -1,7 +1,5 @@
 3.1.1
 ------------------------------
-* Exposed completed callback in FlxTimer, so now you can do: FlxTimer.start(...).complete = function(t) { };
-* Added easier to use FlxTween.tween function, which automatically determines whether to use single VarTween or MultivarTween based on the number of Values being tweened.
 * Added PixelPerfectScaleMode (scales the game to the highest integer factor possible while maintaning the aspect ratio)
 * FlxTween
  * backward is now a public, read-only property
@@ -15,6 +13,12 @@
  * fixed "jittering" in certain cases with y velocity in simple render on flash (for example when standing on a platform in a platformer)
 * Moved FlxTilemap-functions arrayToCSV(), bitmapToCSV() and imageToCSV() to FlxStringUtil
 * FlxMath.computeVelocity() -> FlxVelocity.computeVelocity()
+* FlxState.setSubState() -> FlxState.openSubState()
+* Added FlxStringUtil.getDebugString()
+* Improvements to FlxSystemButton
+* Window: add optional close button
+* Exposed complete callback in FlxTimer, so now you can do: FlxTimer.start(...).complete = function(t) { };
+* Added easier to use FlxTween.tween() function, which automatically determines whether to use single VarTween or MultivarTween based on the number of Values being tweened
 
 3.1.0
 ------------------------------
