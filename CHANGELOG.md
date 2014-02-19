@@ -1,5 +1,14 @@
-v1.0.1
+1.0.2
 ------------------------------
+* Compatibility with flixel 3.1.1
+* Added demos:
+ * BlendModes
+ * Flappybalt
+* Replaced usage of Actuate with FlxTween 
+
+1.0.1
+------------------------------
+* Compatibility with flixel 3.1.0
 * Added several new demos:
   * FlxRandom 
   * TexturePackerAtlas
@@ -13,6 +22,6 @@ v1.0.1
 * Renamed Xbox-Gamepad to GamepadTest, some improvements
 * FlxTween: improvements to the UI (now using dropdown menus)
 
-v1.0.0
+1.0.0
 ------------------------------
 * Initial haxelib release
