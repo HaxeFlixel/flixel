@@ -35,6 +35,24 @@ class FlxSprite extends FlxObject
 	 */
 	public var animation:FlxAnimationController;
 	/**
+	 * The actual Flash BitmapData object representing the current display state of the sprite.
+	 */
+	public var framePixels:BitmapData;
+	/**
+	 * Controls whether the object is smoothed when rotated, affects performance.
+	 */
+	public var antialiasing:Bool = false;
+	/**
+	 * Set this flag to true to force the sprite to update during the draw() call.
+	 * NOTE: Rarely if ever necessary, most sprite operations will flip this flag automatically.
+	 */
+	public var dirty:Bool = true;
+	
+	#if !flash
+	public var isColored:Bool = false;
+	#end
+	
+	/**
 	 * Set pixels to any BitmapData object.
 	 * Automatically adjust graphic size and render helpers.
 	 */
@@ -43,10 +61,6 @@ class FlxSprite extends FlxObject
 	 * Link to current FlxFrame from loaded atlas
 	 */
 	public var frame(default, set):FlxFrame;
-	/**
-	 * The actual Flash BitmapData object representing the current display state of the sprite.
-	 */
-	public var framePixels:BitmapData;
 	/**
 	 * The width of the actual graphic or image being displayed (not necessarily the game object/bounding box).
 	 */
@@ -58,12 +72,12 @@ class FlxSprite extends FlxObject
 	/**
 	 * The total number of frames in this image.  WARNING: assumes each row in the sprite sheet is full!
 	 */
-	public var frames(default, null):Int;
+	public var frames(default, null):Int = 0;
 	/**
 	 * The minimum angle (out of 360°) for which a new baked rotation exists. Example: 90 means there 
 	 * are 4 baked rotations in the spritesheet. 0 if this sprite does not have any baked rotations.
 	 */
-	public var bakedRotationAngle(default, null):Float;
+	public var bakedRotationAngle(default, null):Float = 0;
 	/**
 	 * Set alpha to a number between 0 and 1 to change the opacity of the sprite.
 	 */
@@ -72,11 +86,11 @@ class FlxSprite extends FlxObject
 	 * Set facing using FlxObject.LEFT,RIGHT, UP, 
 	 * and DOWN to take advantage of flipped sprites and/or just track player orientation more easily.
 	 */
-	public var facing(default, set):Int;
+	public var facing(default, set):Int = FlxObject.RIGHT;
 	/**
 	 * If the Sprite is flipped.
 	 */
-	public var flipped(default, null):Int;
+	public var flipped(default, null):Int = 0;
 	/**
 	 * WARNING: The origin of the sprite will default to its center. If you change this, 
 	 * the visuals and the collisions will likely be pretty out-of-sync if you do any rotation.
@@ -93,22 +107,10 @@ class FlxSprite extends FlxObject
 	 */
 	public var scale(default, null):FlxPoint;
 	/**
-	 * Controls whether the object is smoothed when rotated, affects performance.
-	 */
-	public var antialiasing:Bool = false;
-	/**
-	 * Set this flag to true to force the sprite to update during the draw() call.
-	 * NOTE: Rarely if ever necessary, most sprite operations will flip this flag automatically.
-	 */
-	public var dirty:Bool = true;
-	/**
 	 * Blending modes, just like Photoshop or whatever, e.g. "multiply", "screen", etc.
 	 */
 	public var blend(default, set):BlendMode;
-	
-	#if !flash
-	private var _blendInt:Int = 0;
-	#end
+
 	/**
 	 * Tints the whole sprite to a color (0xRRGGBB format) - similar to OpenGL vertex colors. You can use
 	 * 0xAARRGGBB colors, but the alpha value will simply be ignored. To change the opacity use alpha. 
@@ -117,13 +119,19 @@ class FlxSprite extends FlxObject
 	
 	public var colorTransform(get, never):ColorTransform;
 	
+	/**
+	 * Whether or not to use a colorTransform set via setColorTransform.
+	 */
+	public var useColorTransform(default, null):Bool = false;
+	
 	#if !flash
-	public var isColored:Bool;
 	private var _red:Float = 1.0;
 	private var _green:Float = 1.0;
 	private var _blue:Float = 1.0;
 	private var _facingMult:Int = 1;
+	private var _blendInt:Int = 0;
 	#end
+	
 	/**
 	 * Internal, reused frequently during drawing and animating.
 	 */
@@ -144,10 +152,6 @@ class FlxSprite extends FlxObject
 	 * Internal, helps with animation, caching and drawing.
 	 */
 	private var _colorTransform:ColorTransform;
-	/**
-	 * Internal, reflects the need to use _colorTransform object
-	 */
-	public var useColorTransform(default, null):Bool = false;
 	/**
 	 * Internal, helps with animation, caching and drawing.
 	 */
@@ -173,8 +177,6 @@ class FlxSprite extends FlxObject
 	public function new(X:Float = 0, Y:Float = 0, ?SimpleGraphic:Dynamic)
 	{
 		super(X, Y);
-		
-		facing = FlxObject.RIGHT;
 		
 		if (SimpleGraphic != null)
 		{
@@ -206,11 +208,7 @@ class FlxSprite extends FlxObject
 	{
 		super.destroy();
 		
-		if (animation != null)
-		{
-			animation.destroy();
-		}
-		animation = null;
+		animation = FlxG.safeDestroy(animation);
 		
 		_flashPoint = null;
 		_flashRect = null;
@@ -237,8 +235,7 @@ class FlxSprite extends FlxObject
 			NewSprite = new FlxSprite();
 		}
 		
-		NewSprite.loadGraphicFromSprite(this);
-		return NewSprite;
+		return NewSprite.loadGraphicFromSprite(this);
 	}
 	
 	/**

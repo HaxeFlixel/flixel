@@ -2,12 +2,13 @@ package flixel.animation;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.interfaces.IFlxDestroyable;
 import flixel.system.layer.frames.FlxFrame;
 import flixel.system.layer.frames.FlxSpriteFrames;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxRandom;
 
-class FlxAnimationController  
+class FlxAnimationController implements IFlxDestroyable
 {
 	/**
 	 * Property access for currently playing FlxAnimation (warning: can be null).
@@ -17,7 +18,7 @@ class FlxAnimationController
 	/**
 	 * Tell the sprite to change to a specific frame of the _curAnim.
 	 */
-	@:isVar public var frameIndex(default, set):Int = 0;
+	public var frameIndex(default, set):Int = 0;
 	
 	/**
 	 * Tell the sprite to change to a frame with specific name.
@@ -59,7 +60,8 @@ class FlxAnimationController
 	/**
 	 * Internal, currently playing animation.
 	 */
-	@:allow(flixel.animation) private var _curAnim:FlxAnimation;
+	@:allow(flixel.animation) 
+	private var _curAnim:FlxAnimation;
 	
 	/**
 	 * Internal, store all the _animations that were added to this sprite.
@@ -124,8 +126,8 @@ class FlxAnimationController
 	
 	public function destroyAnimations():Void
 	{
-		clear_animations();
-		clear_prerotated();
+		clearAnimations();
+		clearPrerotated();
 	}
 	
 	public function destroy():Void
@@ -136,7 +138,7 @@ class FlxAnimationController
 		_sprite = null;
 	}
 	
-	private function clear_prerotated():Void
+	private function clearPrerotated():Void
 	{
 		if (_prerotated != null)
 		{
@@ -145,7 +147,7 @@ class FlxAnimationController
 		_prerotated = null;
 	}
 	
-	private function clear_animations():Void
+	private function clearAnimations():Void
 	{
 		if (_animations != null)
 		{
