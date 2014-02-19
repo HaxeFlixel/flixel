@@ -160,12 +160,12 @@ class FlxObject extends FlxBasic
 	public var health:Float = 1;
 	/**
 	 * Bit field of flags (use with UP, DOWN, LEFT, RIGHT, etc) indicating surface contacts. Use bitwise operators to check the values 
-	 * stored here, or use touching(), justStartedTouching(), etc. You can even use them broadly as boolean values if you're feeling saucy!
+	 * stored here, or use isTouching(), justTouched(), etc. You can even use them broadly as boolean values if you're feeling saucy!
 	 */
 	public var touching:Int = NONE;
 	/**
 	 * Bit field of flags (use with UP, DOWN, LEFT, RIGHT, etc) indicating surface contacts from the previous game loop step. Use bitwise operators to check the values 
-	 * stored here, or use touching(), justStartedTouching(), etc. You can even use them broadly as boolean values if you're feeling saucy!
+	 * stored here, or use isTouching(), justTouched(), etc. You can even use them broadly as boolean values if you're feeling saucy!
 	 */
 	public var wasTouching:Int = NONE;
 	/**
