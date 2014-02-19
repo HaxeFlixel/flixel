@@ -190,10 +190,6 @@ class FlxObject extends FlxBasic
 	public var framesData(default, null):FlxSpriteFrames;
 	public var cachedGraphics(default, set):CachedGraphics;
 	/**
-	 * Internal statically typed FlxPoint vars, for performance reasons.
-	 */
-	
-	/**
 	 * Internal private static variables, for performance reasons.
 	 */
 	private var _point:FlxPoint;
@@ -201,9 +197,7 @@ class FlxObject extends FlxBasic
 	private static var _firstSeparateFlxRect:FlxRect = new FlxRect();
 	private static var _secondSeparateFlxRect:FlxRect = new FlxRect();
 	
-	
 	/**
-	 * Instantiates a FlxObject.
 	 * @param	X		The X-coordinate of the point in space.
 	 * @param	Y		The Y-coordinate of the point in space.
 	 * @param	Width	Desired width of the rectangle.
