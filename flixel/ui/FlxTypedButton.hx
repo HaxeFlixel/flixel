@@ -28,6 +28,16 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	 */
 	public var labelAlphas:Array<Float>;
 	/**
+	 * Whether you can press the button simply by releasing the touch / mouse button over it (default).
+	 * If false, the input has to be pressed while hovering over the button.
+	 */
+	public var allowSwiping:Bool = true;
+	/**
+	 * Whether to allow the HIHGLIGHT frame of the button graphic to be used on mobile 
+	 * (false by default, the NORMAL graphic is used instead then).
+	 */
+	public var allowHighlightOnMobile:Bool = false;
+	/**
 	 * Shows the current state of the button, either FlxButton.NORMAL, 
 	 * FlxButton.HIGHLIGHT or FlxButton.PRESSED.
 	 */
@@ -140,7 +150,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		
 		// "Highlight" doesn't make much sense on mobile devices / touchscreens
 		#if mobile
-		if (nextFrame == FlxButton.HIGHLIGHT) 
+		if (!allowHighlightOnMobile && (nextFrame == FlxButton.HIGHLIGHT)) 
 		{
 			nextFrame = FlxButton.NORMAL;
 		}
@@ -250,10 +260,12 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 			else if (status == FlxButton.NORMAL)
 			{
 				// Allow "swiping" to press a button (dragging it over the button while pressed)
-				if (Pressed) {
+				if (allowSwiping && Pressed) 
+				{
 					onDownHandler();
 				}
-				else {
+				else 
+				{
 					onOverHandler();
 				}
 			}
