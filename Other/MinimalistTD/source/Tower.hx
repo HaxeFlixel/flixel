@@ -39,13 +39,13 @@ class Tower extends FlxSprite
 	 * @param	X		The X position for this tower.
 	 * @param	Y		The Y position for this tower.
 	 */
-	public function new( X:Float, Y:Float, Cost:Int )
+	public function new(X:Float, Y:Float, Cost:Int)
 	{
-		super( X, Y, "images/tower.png" );
+		super(X, Y, "images/tower.png");
 		
-		_indicator = new FlxSprite( getMidpoint().x - 1, getMidpoint().y - 1 );
-		_indicator.makeGraphic( 2, 2 );
-		Reg.PS.towerIndicators.add( _indicator );
+		_indicator = new FlxSprite(getMidpoint().x - 1, getMidpoint().y - 1);
+		_indicator.makeGraphic(2, 2);
+		Reg.PS.towerIndicators.add(_indicator);
 		
 		_initialCost = Cost;
 	}
@@ -57,18 +57,18 @@ class Tower extends FlxSprite
 	 */
 	override public function update():Void
 	{	
-		if ( getNearestEnemy() == null )
+		if (getNearestEnemy() == null)
 		{
 			_indicator.visible = false;
 		}
 		else
 		{
 			_indicator.visible = true;
-			_indicator.alpha = _shootCounter / ( _shootInvertall * FlxG.updateFramerate );
+			_indicator.alpha = _shootCounter / (_shootInvertall * FlxG.updateFramerate);
 			
-			_shootCounter += Std.int( FlxG.timeScale );
+			_shootCounter += Std.int(FlxG.timeScale);
 			
-			if ( _shootCounter > ( _shootInvertall * FlxG.updateFramerate ) * fireRate )
+			if (_shootCounter > (_shootInvertall * FlxG.updateFramerate) * fireRate)
 			{
 				shoot();
 			}
@@ -89,9 +89,9 @@ class Tower extends FlxSprite
 		val += range_PRIZE - BASE_PRIZE;
 		val += firerate_PRIZE - BASE_PRIZE;
 		val += damage_PRIZE - BASE_PRIZE;
-		val = Math.round( val / 2 );
+		val = Math.round(val / 2);
 		
-		return Std.int( val );
+		return Std.int(val);
 	}
 	
 	/**
@@ -101,16 +101,16 @@ class Tower extends FlxSprite
 	{
 		var target:Enemy = getNearestEnemy();
 		
-		if ( target == null )
+		if (target == null)
 		{
 			return;
 		}
 		
-		var bullet:Bullet = Reg.PS.bulletGroup.recycle( Bullet );
-		getMidpoint( HELPER_POINT );
-		bullet.init( HELPER_POINT.x, HELPER_POINT.y, target, damage );
+		var bullet:Bullet = Reg.PS.bulletGroup.recycle(Bullet);
+		getMidpoint(HELPER_POINT);
+		bullet.init(HELPER_POINT.x, HELPER_POINT.y, target, damage);
 		
-		FlxG.sound.play( "shoot" );
+		FlxG.sound.play("shoot");
 		
 		_shootCounter = 0;
 	}
@@ -125,15 +125,15 @@ class Tower extends FlxSprite
 		var firstEnemy:Enemy = null;
 		var enemies:FlxTypedGroup<Enemy> = Reg.PS.enemyGroup;
 		
-		for ( enemy in enemies.members )
+		for (enemy in enemies.members)
 		{
-			if ( enemy != null && enemy.alive )
+			if (enemy != null && enemy.alive)
 			{
-				HELPER_POINT.set( x, y );
-				HELPER_POINT_2.set( enemy.x, enemy.y );
-				var distance:Float = FlxMath.getDistance( HELPER_POINT, HELPER_POINT_2 );
+				HELPER_POINT.set(x, y);
+				HELPER_POINT_2.set(enemy.x, enemy.y);
+				var distance:Float = FlxMath.getDistance(HELPER_POINT, HELPER_POINT_2);
 				
-				if ( distance <= range )
+				if (distance <= range)
 				{
 					firstEnemy = enemy;
 					break;
@@ -152,7 +152,7 @@ class Tower extends FlxSprite
 	{
 		range += 10;
 		range_LEVEL++;
-		range_PRIZE = Std.int( range_PRIZE * COST_INCREASE );
+		range_PRIZE = Std.int(range_PRIZE * COST_INCREASE);
 	}
 	
 	/**
@@ -163,7 +163,7 @@ class Tower extends FlxSprite
 	{
 		damage++;
 		damage_LEVEL++;
-		damage_PRIZE = Std.int( damage_PRIZE * COST_INCREASE );
+		damage_PRIZE = Std.int(damage_PRIZE * COST_INCREASE);
 	}
 	
 	/**
@@ -174,6 +174,6 @@ class Tower extends FlxSprite
 	{
 		fireRate *= 0.9;
 		firerate_LEVEL++;
-		firerate_PRIZE = Std.int( firerate_PRIZE * COST_INCREASE );
+		firerate_PRIZE = Std.int(firerate_PRIZE * COST_INCREASE);
 	}
 }

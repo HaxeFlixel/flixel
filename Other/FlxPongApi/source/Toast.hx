@@ -27,41 +27,41 @@ class Toast extends FlxSpriteGroup
 	 * 
 	 * @param	TrophyID
 	 */
-	public function new( TrophyID:Int )
+	public function new(TrophyID:Int)
 	{
-		super( FlxG.width, FlxG.height - HEIGHT - 10 );
+		super(FlxG.width, FlxG.height - HEIGHT - 10);
 		_id = TrophyID;
 		//FlxGameJolt.addTrophy( TrophyID, fetchImage );
-		FlxGameJolt.fetchTrophy( _id, setUpTrophy );
+		FlxGameJolt.fetchTrophy(_id, setUpTrophy);
 	}
 	
-	private function setUpTrophy( Return:Map<String,String> ):Void
+	private function setUpTrophy(Return:Map<String,String>):Void
 	{
-		_name = Return.get( "title" );
-		FlxGameJolt.fetchTrophyImage( _id, awardTrophy );
+		_name = Return.get("title");
+		FlxGameJolt.fetchTrophyImage(_id, awardTrophy);
 	}
 	
-	private function awardTrophy( bd:BitmapData ):Void
+	private function awardTrophy(bd:BitmapData):Void
 	{
-		var bg:PongSprite = new PongSprite( 0, 0, WIDTH, HEIGHT, Reg.dark );
-		var top:FlxText = new FlxText( 0, -2, WIDTH, "Trophy Get!" );
+		var bg:PongSprite = new PongSprite(0, 0, WIDTH, HEIGHT, Reg.dark);
+		var top:FlxText = new FlxText(0, -2, WIDTH, "Trophy Get!");
 		top.color = Reg.med_lite;
 		top.alignment = "center";
-		var img:FlxSprite = new FlxSprite( Math.round( ( WIDTH - 75 ) / 2 ), 16, bd );
-		var bottom:FlxText = new FlxText( 0, HEIGHT - 23, WIDTH - 1, _name );
+		var img:FlxSprite = new FlxSprite(Math.round((WIDTH - 75) / 2), 16, bd);
+		var bottom:FlxText = new FlxText(0, HEIGHT - 23, WIDTH - 1, _name);
 		bottom.color = Reg.lite;
 		bottom.alignment = "center";
 		
-		add( bg );
-		add( img );
-		add( top );
-		add( bottom );
+		add(bg);
+		add(img);
+		add(top);
+		add(bottom);
 		
-		FlxTween.linearMotion( this, this.x, this.y, this.x - WIDTH - 10, this.y, 1 );
-		FlxTimer.start( 6, removeThis, 1 );
+		FlxTween.linearMotion(this, this.x, this.y, this.x - WIDTH - 10, this.y, 1);
+		FlxTimer.start(6, removeThis, 1);
 	}
 	
-	private function removeThis( t:FlxTimer ):Void
+	private function removeThis(t:FlxTimer):Void
 	{
 		visible = false;
 		active = false;

@@ -35,11 +35,11 @@ class VictoryState extends FlxState
 		add(gibs);
 		gibs.start(false, 0, 0.005);
 		
-		var text:FlxText = new FlxText( 0, 0, FlxG.width, "VICTORY\n\nSCORE: " + Reg.score, 16 );
+		var text:FlxText = new FlxText(0, 0, FlxG.width, "VICTORY\n\nSCORE: " + Reg.score, 16);
 		text.alignment = "center";
 		text.color = 0xffD8EBA2;
-		FlxSpriteUtil.screenCenter( text, false, true );
-		add( text );
+		FlxSpriteUtil.screenCenter(text, false, true);
+		add(text);
 		
 		super.create();
 	}

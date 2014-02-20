@@ -124,7 +124,7 @@ class PlayState extends FlxState
 				_player.animation.play("idle");
 			}
 		}
-		else if(_player.velocity.y > 0)
+		else if (_player.velocity.y > 0)
 		{
 			_player.animation.play("fall");
 		}

@@ -40,7 +40,7 @@ class Bullet extends FlxSprite
 	 */
 	public function init(X:Float, Y:Float, Target:Enemy, Damage:Int):Void
 	{
-		reset( X, Y );
+		reset(X, Y);
 		_target = Target;
 		damage = Damage;
 	}

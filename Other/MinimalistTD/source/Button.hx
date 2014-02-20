@@ -18,9 +18,9 @@ class Button extends FlxButton
 	 * @param	OnDown	An optional function to call when the button is clicked.
 	 * @param	Width	The width of this button. By default, it's set to seven times the length of the label string.
 	 */
-	public function new( X:Int = 0, Y:Int = 0, Label:String, ?OnDown:Void->Void, Width:Int = -1 )
+	public function new(X:Int = 0, Y:Int = 0, Label:String, ?OnDown:Void->Void, Width:Int = -1)
 	{
-		super( X, Y, Label, OnDown );
+		super(X, Y, Label, OnDown);
 		
 		if (Width > 0) {
 			width = Width;
@@ -32,7 +32,7 @@ class Button extends FlxButton
 		label.alpha = 1;
 		set_status(status);
 		
-		makeGraphic( Std.int( width ), Std.int( height ), 0 );
+		makeGraphic(Std.int(width), Std.int(height), 0);
 	}
 	
 	/**
@@ -71,7 +71,7 @@ class Button extends FlxButton
 		return label.text;
 	}
 	
-	private function set_text( NewText:String ):String
+	private function set_text(NewText:String):String
 	{
 		label.text = NewText;
 		

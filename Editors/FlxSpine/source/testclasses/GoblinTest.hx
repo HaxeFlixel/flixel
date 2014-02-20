@@ -11,7 +11,7 @@ import flixel.addons.editors.spine.FlxSpine;
  */
 class GoblinTest extends FlxSpine
 {
-	public function new( skeletonData:SkeletonData,  X:Float = 0, Y:Float = 0) 
+	public function new(skeletonData:SkeletonData,  X:Float = 0, Y:Float = 0) 
 	{
 		super(skeletonData, X, Y);
 		
@@ -35,7 +35,7 @@ class GoblinTest extends FlxSpine
         skeleton.setX(x);*/
 
 		
-		if ( FlxG.mouse.justPressed )
+		if (FlxG.mouse.justPressed)
 		{
 	
 			skeleton.setSkinByName(skeleton.getSkin().getName() == "goblin" ? "goblingirl" : "goblin");

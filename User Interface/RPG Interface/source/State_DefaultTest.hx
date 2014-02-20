@@ -35,7 +35,7 @@ class State_DefaultTest extends FlxUIState
 									   Main.tongue.get("$POPUP_DEMO_2_TITLE","ui"), 	//title text
 									   Main.tongue.get("$POPUP_DEMO_2_BODY","ui"), 		//body text
 									   ["<yes>", "<no>", "<cancel>"]	  //FlxUI will translate labels to "$POPUP_YES", etc, 
-									 ); 	  							  //and localize them if possible, 
+									); 	  							  //and localize them if possible, 
 																		  //otherwise it will display "YES", "NO", etc
 									
 									 openSubState(popup);				  //show the popup

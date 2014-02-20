@@ -107,7 +107,7 @@ class SolarSystem extends FlxNapeState
 			planets[0].body.applyImpulse(new Vec2(0, -10));
 			
 		if (FlxG.keys.justPressed.A)
-			planets[0].body.applyImpulse(new Vec2(-10, 0));
+			planets[0].body.applyImpulse(new Vec2( -10, 0));
 			
 		if (FlxG.keys.justPressed.S)
 			planets[0].body.applyImpulse(new Vec2(0, 10));

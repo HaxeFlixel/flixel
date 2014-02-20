@@ -53,7 +53,7 @@ class Piramid extends FlxNapeState
 		
 		
 		var txt:FlxText = new FlxText(FlxG.width - 100, 30, 100, "Bricks: " + bricks.length);
-		txt = new FlxText(-10, 5, 640, "      'R' - reset state, 'G' - toggle physics graphics");
+		txt = new FlxText( -10, 5, 640, "      'R' - reset state, 'G' - toggle physics graphics");
 		add(txt);
 		txt = new FlxText( -10, 20, 640, "      'LEFT' & 'RIGHT' - switch demo");
 		add(txt);

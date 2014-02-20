@@ -26,7 +26,7 @@ class Spawner extends FlxSprite
 		_botBullets = BotBullets;
 		_botGibs = BotGibs;
 		_player = ThePlayer;
-		_timer = FlxRandom.floatRanged( 0, 20 );
+		_timer = FlxRandom.floatRanged(0, 20);
 		_open = false;
 		health = 8;
 

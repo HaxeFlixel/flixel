@@ -33,7 +33,7 @@ class Bunny extends FlxSprite
 		velocity.x = speedMultiplier * FlxRandom.floatRanged( -5, 5);
 		velocity.y = speedMultiplier * FlxRandom.floatRanged( -7.5, 2.5);
 		acceleration.y = 5;
-		angle = FlxRandom.floatRanged(-15, 15);
+		angle = FlxRandom.floatRanged( -15, 15);
 		angularVelocity = 30 * FlxRandom.floatRanged( -5, 5);
 		complex = PlayState.complex;
 		elasticity = 1;

@@ -214,8 +214,8 @@ class Enemy extends FlxSprite
 			// Then, position the jets at the center of the Enemy,
 			// and point the jets the opposite way from where we're moving.
 			_jets.at(this);
-			_jets.setXSpeed(-velocity.x-30,-velocity.x+30);
-			_jets.setYSpeed(-velocity.y-30,-velocity.y+30);
+			_jets.setXSpeed( -velocity.x-30,-velocity.x+30);
+			_jets.setYSpeed( -velocity.y-30,-velocity.y+30);
 		}
 		// If jets are supposed to be off, just turn em off.
 		else	

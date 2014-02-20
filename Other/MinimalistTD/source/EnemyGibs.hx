@@ -17,35 +17,35 @@ class EnemyGibs extends FlxEmitter
 	 */
 	public function new()
 	{
-		super( 0, 0, SIZE );
+		super(0, 0, SIZE);
 		
-		setXSpeed( -SPEED, SPEED );
-		setYSpeed( -SPEED, SPEED );
+		setXSpeed( -SPEED, SPEED);
+		setYSpeed( -SPEED, SPEED);
 		
 		#if !(cpp || neko || js)
 		blend = BlendMode.INVERT;
 		#end
 		
-		for ( i in 0...SIZE )
+		for (i in 0...SIZE)
 		{
 			var p:FlxParticle = new FlxParticle();
 			
 			#if !(cpp || neko || js)
-			p.makeGraphic( 2, 2, FlxColor.BLACK );
+			p.makeGraphic(2, 2, FlxColor.BLACK);
 			#else
-			if ( FlxRandom.chanceRoll() )
+			if (FlxRandom.chanceRoll())
 			{
-				p.makeGraphic( 2, 2, FlxColor.BLACK );
+				p.makeGraphic(2, 2, FlxColor.BLACK);
 			}
 			else
 			{
-				p.makeGraphic( 2, 2, FlxColor.WHITE );
+				p.makeGraphic(2, 2, FlxColor.WHITE);
 			}
 			#end
-			add( p );
+			add(p);
 		}
 		
-		Reg.PS.emitterGroup.add( this );
+		Reg.PS.emitterGroup.add(this);
 	}
 	
 	/**
@@ -54,10 +54,10 @@ class EnemyGibs extends FlxEmitter
 	 * @param	X	The X position for this emitter.
 	 * @param	Y	The Y position for this emitter.
 	 */ 
-	public function explode( X:Float, Y:Float ):Void
+	public function explode(X:Float, Y:Float):Void
 	{
 		x = X;
 		y = Y;
-		start( true, 1, 0, SIZE, 1 );
+		start(true, 1, 0, SIZE, 1);
 	}
 }

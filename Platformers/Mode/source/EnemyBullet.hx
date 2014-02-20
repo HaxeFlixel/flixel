@@ -21,14 +21,14 @@ class EnemyBullet extends FlxSprite
 	
 	override public function update():Void
 	{
-		if(!alive)
+		if (!alive)
 		{
-			if(animation.finished)
+			if (animation.finished)
 			{
 				exists = false;
 			}
 		}
-		else if(touching != 0)
+		else if (touching != 0)
 		{
 			kill();
 		}
@@ -38,7 +38,7 @@ class EnemyBullet extends FlxSprite
 	
 	override public function kill():Void
 	{
-		if(!alive)
+		if (!alive)
 		{
 			return;
 		}

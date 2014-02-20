@@ -76,13 +76,13 @@ class TileAnims
 								rotate: FlxTileSpecial.ROTATE_0
 							};
 							
-							if ( frame.has.flipHorizontal && frame.att.flipHorizontal == "true") {
+							if (frame.has.flipHorizontal && frame.att.flipHorizontal == "true") {
 								params.flipHorizontal = true;
 							}
-							if ( frame.has.flipVertical && frame.att.flipVertical == "true") {
+							if (frame.has.flipVertical && frame.att.flipVertical == "true") {
 								params.flipVertical = true;
 							}
-							if ( frame.has.rotation ) {
+							if (frame.has.rotation) {
 								var rotation:Int = Std.parseInt(frame.att.rotation);
 								switch(rotation) {
 									case 90:

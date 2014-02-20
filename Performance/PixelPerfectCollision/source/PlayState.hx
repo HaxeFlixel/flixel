@@ -78,7 +78,7 @@ class PlayState extends FlxState
 		add(infoText);
 		
 		// just need this to get the fps, so we display it outside view range
-		FlxG.addChildBelowMouse(fps = new FPS(-100));
+		FlxG.addChildBelowMouse(fps = new FPS( -100));
 		
 		// makes low fps less noticable
 		FlxG.fixedTimestep = false;
@@ -115,7 +115,7 @@ class PlayState extends FlxState
 		obj.alpha = FlxRandom.floatRanged(0.3, 1.0);
 		
 		// Neat tweening effect for new aliens appearing
-		FlxTween.multiVar(obj, { x: destX, y:destY }, 2, { ease: FlxEase.expoOut } );
+		FlxTween.multiVar(obj, { x: destX, y:destY }, 2, { ease: FlxEase.expoOut });
 		
 		if (rotate) {
 			randomizeRotation(obj);

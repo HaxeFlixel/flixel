@@ -58,7 +58,7 @@ class Blob extends FlxNapeState
 		
 		add(new FlxSprite(0, 0, "assets/BlobBground.jpg"));
 		
-		startXOffset = FlxRandom.floatRanged(-200, 200);	
+		startXOffset = FlxRandom.floatRanged( -200, 200);	
 		
 		createWalls(0,-1000,0,0,10, new Material(1,1, 2,1,0.001));
 		FlxNapeState.space.gravity.setxy(0, 500);

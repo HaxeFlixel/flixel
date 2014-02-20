@@ -16,9 +16,9 @@ class Enemy extends FlxSprite
 	 * @param	X	The X position for the enemy.
 	 * @param	Y	The Y position for the enemy.
 	 */
-	override public function new( X:Int, Y:Int ) 
+	override public function new(X:Int, Y:Int) 
 	{
-		super( X, Y, Reg.enemyImage );
+		super(X, Y, Reg.enemyImage);
 		
 		health = maxHealth;
 	}
@@ -29,12 +29,12 @@ class Enemy extends FlxSprite
 	 * @param	X	The X position for the enemy.
 	 * @param	Y	The Y position for the enemy.
 	 */
-	public function init( X:Int, Y:Int )
+	public function init(X:Int, Y:Int)
 	{
-		reset( X, Y );
+		reset(X, Y);
 		
-		if ( Reg.PS != null ) {
-			health = Math.floor( Reg.PS.wave / 3 ) + 1;
+		if (Reg.PS != null) {
+			health = Math.floor(Reg.PS.wave / 3) + 1;
 		}
 		
 		maxHealth = health;
@@ -55,12 +55,12 @@ class Enemy extends FlxSprite
 	 * 
 	 * @param	Damage	The damage to deal to this enemy.
 	 */
-	override public function hurt( Damage:Float ):Void
+	override public function hurt(Damage:Float):Void
 	{
 		health -= Damage;
 		
-		if ( health <= 0 ) {
-			explode( true );
+		if (health <= 0) {
+			explode(true);
 		}
 	}
 	
@@ -70,21 +70,21 @@ class Enemy extends FlxSprite
 	 * 
 	 * @param	GainMoney	Whether or not this enemy should give the player money. True if killed by a tower, false if killed by colliding with the goal.
 	 */
-	public function explode( GainMoney:Bool ):Void
+	public function explode(GainMoney:Bool):Void
 	{
 		FlxG.sound.play("enemykill");
 		
-		var emitter:EnemyGibs = Reg.PS.emitterGroup.recycle( EnemyGibs );
-		emitter.explode( x, y );
+		var emitter:EnemyGibs = Reg.PS.emitterGroup.recycle(EnemyGibs);
+		emitter.explode(x, y);
 		
 		Reg.PS.enemiesToKill--;
 		
-		if ( Reg.PS.enemiesToKill <= 0 ) {
+		if (Reg.PS.enemiesToKill <= 0) {
 			Reg.PS.killedWave();
 		}
 		
-		if ( GainMoney ) {
-			var money:Int = ( Reg.PS.wave < 5 ) ? 2 : 1;
+		if (GainMoney) {
+			var money:Int = (Reg.PS.wave < 5) ? 2 : 1;
 			
 			Reg.PS.money += money;
 		}
@@ -99,19 +99,19 @@ class Enemy extends FlxSprite
 	 * 
 	 * @param	Path	The path to follow.
 	 */
-	public function followPath( Path:Array<FlxPoint> ):Void
+	public function followPath(Path:Array<FlxPoint>):Void
 	{
-		if ( Path == null ) {
-			throw( "No valid path was passed to the enemy! Does the tilemap provide a valid path from start to finish?" );
+		if (Path == null) {
+			throw("No valid path was passed to the enemy! Does the tilemap provide a valid path from start to finish?");
 		}
 		
 		x = Path[0].x;
 		y = Path[0].y;
 		
-		if ( Reg.PS != null ) {
-			FlxPath.start( this, Path, 20 + Reg.PS.wave, 0, true );
+		if (Reg.PS != null) {
+			FlxPath.start(this, Path, 20 + Reg.PS.wave, 0, true);
 		} else {
-			FlxPath.start( this, Path, 50, 0, true );
+			FlxPath.start(this, Path, 50, 0, true);
 		}
 	}
 }

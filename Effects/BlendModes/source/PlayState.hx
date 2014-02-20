@@ -119,7 +119,7 @@ class PlayState extends FlxUIState
 	}
 	
 	public override function getEvent(event:String,sender:IFlxUIWidget,data:Dynamic,?params:Dynamic):Void {
-		if(event == FlxUINumericStepper.CHANGE_EVENT){
+		if (event == FlxUINumericStepper.CHANGE_EVENT){
 			if (sender == _step_alpha) {
 				for (str in _list_blends) {
 					var top = _tops.get(str);

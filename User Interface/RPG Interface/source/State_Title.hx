@@ -41,7 +41,7 @@ class State_Title extends FlxUIState
 			case "finish_load":
 				var radio:FlxUIRadioGroup = cast _ui.getAsset("locale_radio");
 				if (radio != null) {
-					if(Main.tongue != null){
+					if (Main.tongue != null){
 						radio.selectedId = Main.tongue.locale.toLowerCase();
 					}
 				}

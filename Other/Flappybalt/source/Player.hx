@@ -8,8 +8,8 @@ class Player extends FlxSprite
 {
 	public function new()
 	{
-		super( FlxG.width * 0.5 - 4, FlxG.height * 0.5 - 4 );
-		loadGraphic( "assets/dove.png", true, true );
+		super(FlxG.width * 0.5 - 4, FlxG.height * 0.5 - 4);
+		loadGraphic("assets/dove.png", true, true);
 		animation.frameIndex = 2;
 		animation.add("flap",[1,0,1,2],12,false);
 	}
@@ -17,18 +17,18 @@ class Player extends FlxSprite
 	override public function update()
 	{
 		#if !FLX_NO_KEYBOARD
-		if ( FlxG.keys.justPressed.SPACE ) {
+		if (FlxG.keys.justPressed.SPACE) {
 		#elseif !FLX_NO_TOUCH
-		if ( FlxG.touches.justStarted().length > 0 ) {
+		if (FlxG.touches.justStarted().length > 0) {
 		#end
-			if ( acceleration.y == 0 ) {
+			if (acceleration.y == 0) {
 				acceleration.y = 500;
 				velocity.x = 80;
 			}
 			
 			velocity.y = -240;
 			
-			animation.play( "flap", true );
+			animation.play("flap", true);
 		}
 		
 		super.update();
@@ -36,15 +36,15 @@ class Player extends FlxSprite
 	
 	override public function kill():Void
 	{
-		if(!exists)
+		if (!exists)
 			return;
 		
-		Reg.PS.launchFeathers( x, y, 10 );
+		Reg.PS.launchFeathers(x, y, 10);
 		
 		super.kill();
 		
-		FlxG.camera.flash( 0xffFFFFFF, 1, onFlashDone );
-		FlxG.camera.shake( 0.02, 0.35 );
+		FlxG.camera.flash(0xffFFFFFF, 1, onFlashDone);
+		FlxG.camera.shake(0.02, 0.35);
 	}
 	
 	override public function revive():Void

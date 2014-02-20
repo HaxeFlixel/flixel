@@ -26,7 +26,7 @@ class MenuState extends FlxState
 	override public function create():Void
 	{
 		// Change the default mouse to an inverted triangle.
-		FlxG.mouse.load( "images/mouse.png" );
+		FlxG.mouse.load("images/mouse.png");
 		#if !(cpp || neko)
 		FlxG.mouse.cursorContainer.blendMode = BlendMode.INVERT;
 		#end
@@ -36,7 +36,7 @@ class MenuState extends FlxState
 		// Load a map from CSV data; note that the tile graphic does not need to be a file; in this case, it's BitmapData.
 		
 		_map = new FlxTilemap();
-		_map.loadMap( Assets.getText( "tilemaps/menu_tilemap.csv" ), Reg.tileImage );
+		_map.loadMap(Assets.getText("tilemaps/menu_tilemap.csv"), Reg.tileImage);
 		
 		// Game title
 		
@@ -49,21 +49,21 @@ class MenuState extends FlxState
 		
 		// Play button
 		
-		var playButton:Button = new Button( 0, Std.int( FlxG.height / 2 ), "[P]lay", playButtonCallback );
-		playButton.x = Std.int( ( FlxG.width - playButton.width ) / 2 );
+		var playButton:Button = new Button(0, Std.int(FlxG.height / 2), "[P]lay", playButtonCallback);
+		playButton.x = Std.int((FlxG.width - playButton.width) / 2);
 		
 		// The enemy that repeatedly traverses the screen.
 		
-		_enemy = new Enemy( START_X, START_Y );
+		_enemy = new Enemy(START_X, START_Y);
 		enemyFollowPath();
 		
 		// Add everything to the state
 		
-		add( _map );
-		add( headline );
-		add( credits );
-		add( playButton );
-		add( _enemy );
+		add(_map);
+		add(headline);
+		add(credits);
+		add(playButton);
+		add(_enemy);
 		
 		super.create();
 	}
@@ -73,21 +73,21 @@ class MenuState extends FlxState
 	 */
 	private function playButtonCallback():Void
 	{
-		FlxG.switchState( new PlayState() );
+		FlxG.switchState(new PlayState());
 	}
 	
 	override public function update():Void
 	{
 		// Check if the enemy has reached the end of the path yet
 		
-		if ( _enemy.y >= 28 * TILE_SIZE ) {
+		if (_enemy.y >= 28 * TILE_SIZE) {
 			// If so, reset them to the beginning of the path
 			enemyFollowPath();
 		}
 		
 		// Begin the game on a P keypress.
 		
-		if ( FlxG.keys.justReleased.P ) {
+		if (FlxG.keys.justReleased.P) {
 			playButtonCallback();
 		}
 		
@@ -99,7 +99,7 @@ class MenuState extends FlxState
 	 */
 	public function enemyFollowPath():Void
 	{
-		_enemy.followPath( _map.findPath( new FlxPoint( START_X, START_Y ), new FlxPoint( END_X, END_Y ) ) );
+		_enemy.followPath(_map.findPath(new FlxPoint(START_X, START_Y), new FlxPoint(END_X, END_Y)));
 	}
 	
 	override public function destroy():Void

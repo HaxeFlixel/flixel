@@ -17,14 +17,14 @@ class NonInlineFlxRandom
 	/**
 	 * Internal function to update the internal seed whenever the global seed is reset, and keep the global seed's value in range.
 	 */
-	private static function set_globalSeed( NewSeed:Int ):Int
+	private static function set_globalSeed(NewSeed:Int):Int
 	{
-		if ( NewSeed < 1 )
+		if (NewSeed < 1)
 		{
 			NewSeed = 1;
 		}
 		
-		if ( NewSeed > MODULUS )
+		if (NewSeed > MODULUS)
 		{
 			NewSeed = MODULUS;
 		}
@@ -59,7 +59,7 @@ class NonInlineFlxRandom
 	 */
 	public static function resetGlobalSeed():Int
 	{
-		return globalSeed = Std.int( Math.random() * MODULUS );
+		return globalSeed = Std.int(Math.random() * MODULUS);
 	}
 	
 	/**
@@ -86,11 +86,11 @@ class NonInlineFlxRandom
 	 * @param	Max			The maximum value that should be returned. 2,147,483,647 by default.
 	 * @param	?Excludes	An optional array of values that should not be returned.
 	 */
-	public static function intRanged( Min:Int = 0, Max:Int = 2147483647, ?Excludes:Array<Int> ):Int
+	public static function intRanged(Min:Int = 0, Max:Int = 2147483647, ?Excludes:Array<Int>):Int
 	{
 		var result:Int = 0;
 		
-		if ( Min == Max )
+		if (Min == Max)
 		{
 			result = Min;
 		}
@@ -98,23 +98,23 @@ class NonInlineFlxRandom
 		{
 			// Swap values if reversed
 			
-			if ( Min > Max )
+			if (Min > Max)
 			{
 				Min = Min + Max;
 				Max = Min - Max;
 				Min = Min - Max;
 			}
 			
-			if ( Excludes == null )
+			if (Excludes == null)
 			{
 				Excludes = [];
 			}
 			
 			do
 			{
-				result = Math.round( Min + float() * ( Max - Min ) );
+				result = Math.round(Min + float() * (Max - Min));
 			}
-			while ( FlxArrayUtil.indexOf( Excludes, result ) >= 0 );
+			while (FlxArrayUtil.indexOf(Excludes, result) >= 0);
 		}
 		
 		return result;
@@ -128,11 +128,11 @@ class NonInlineFlxRandom
 	 * @param	Max			The maximum value that should be returned. 33,554,429 by default.
 	 * @param	?Excludes	An optional array of values that should not be returned.
 	 */
-	public static function floatRanged( Min:Float = 0, Max:Float = 1, ?Excludes:Array<Float> ):Float
+	public static function floatRanged(Min:Float = 0, Max:Float = 1, ?Excludes:Array<Float>):Float
 	{
 		var result:Float = 0;
 		
-		if ( Min == Max )
+		if (Min == Max)
 		{
 			result = Min;
 		}
@@ -140,23 +140,23 @@ class NonInlineFlxRandom
 		{
 			// Swap values if reversed.
 			
-			if ( Min > Max )
+			if (Min > Max)
 			{
 				Min = Min + Max;
 				Max = Min - Max;
 				Min = Min - Max;
 			}
 			
-			if ( Excludes == null )
+			if (Excludes == null)
 			{
 				Excludes = [];
 			}
 			
 			do
 			{
-				result = Min + float() * ( Max - Min );
+				result = Min + float() * (Max - Min);
 			}
-			while ( FlxArrayUtil.indexOf( Excludes, result ) >= 0 );
+			while (FlxArrayUtil.indexOf(Excludes, result) >= 0);
 		}
 		
 		return result;
@@ -169,11 +169,11 @@ class NonInlineFlxRandom
 	 * @param 	Chance 	The chance of receiving the value. Should be given as a number between 0 and 100 (effectively 0% to 100%)
 	 * @return 	Whether the roll passed or not.
 	 */
-	public static function chanceRoll( Chance:Float = 50 ):Bool
+	public static function chanceRoll(Chance:Float = 50):Bool
 	{
 		var result:Bool = false;
 		
-		if ( floatRanged( 0, 100 ) < Chance )
+		if (floatRanged(0, 100) < Chance)
 		{
 			result = true;
 		}
@@ -187,9 +187,9 @@ class NonInlineFlxRandom
 	 * @param	Chance	The chance of receiving a positive value. Should be given as a number between 0 and 100 (effectively 0% to 100%)
 	 * @return	1 or -1
 	 */
-	public static function sign( Chance:Float = 50 ):Int
+	public static function sign(Chance:Float = 50):Int
 	{
-		return chanceRoll( Chance ) ? 1 : -1;
+		return chanceRoll(Chance) ? 1 : -1;
 	}
 	
 	/**
@@ -199,21 +199,21 @@ class NonInlineFlxRandom
 	 * @param	WeightsArray		An array of weights.
 	 * @return	A value between 0 and ( SelectionArray.length - 1 ), with a probability equivalent to the values in SelectionArray.
 	 */
-	public static function weightedPick( WeightsArray:Array<Float> ):Int
+	public static function weightedPick(WeightsArray:Array<Float>):Int
 	{
 		var pick:Int = 0;
 		var sumOfWeights:Float = 0;
 		
-		for ( i in WeightsArray )
+		for (i in WeightsArray)
 		{
 			sumOfWeights += i;
 		}
 		
-		var randSelect:Float = floatRanged( 0, sumOfWeights );
+		var randSelect:Float = floatRanged(0, sumOfWeights);
 		
-		for ( i in 0...WeightsArray.length - 1 )
+		for (i in 0...WeightsArray.length - 1)
 		{
-			if ( randSelect < WeightsArray[i] )
+			if (randSelect < WeightsArray[i])
 			{
 				pick = i;
 				break;
@@ -234,32 +234,32 @@ class NonInlineFlxRandom
 	 * @param	EndIndex		Optional index at which to restrict selection. Ignored if 0, which is the default value.
 	 * @return	The random object that was selected.
 	 */
-	@:generic public static function getObject<T>( Objects:Array<T>, StartIndex:Int = 0, EndIndex:Int = 0 ):T
+	@:generic public static function getObject<T>(Objects:Array<T>, StartIndex:Int = 0, EndIndex:Int = 0):T
 	{
 		var selected:Null<T> = null;
 		
-		if ( Objects.length != 0 )
+		if (Objects.length != 0)
 		{
-			if ( StartIndex < 0 )
+			if (StartIndex < 0)
 			{
 				StartIndex = 0;
 			}
 			
 			// Swap values if reversed
 			
-			if ( EndIndex < StartIndex )
+			if (EndIndex < StartIndex)
 			{
 				StartIndex = StartIndex + EndIndex;
 				EndIndex = StartIndex - EndIndex;
 				StartIndex = StartIndex - EndIndex;
 			}
 			
-			if ( ( EndIndex <= 0 ) || ( EndIndex > Objects.length - 1 ) )
+			if ((EndIndex <= 0) || (EndIndex > Objects.length - 1))
 			{
 				EndIndex = Objects.length - 1;
 			}
 			
-			selected = Objects[ intRanged( StartIndex, EndIndex ) ];
+			selected = Objects[intRanged(StartIndex, EndIndex)];
 		}
 		
 		return selected;
@@ -276,48 +276,48 @@ class NonInlineFlxRandom
 	 * @param 	EndIndex 		Optional index at which to restrict selection. Ignored if 0, which is the default value.
 	 * @return	A pseudorandomly chosen object from Objects.
 	 */
-	@:generic public static function weightedGetObject<T>( Objects:Array<T>, WeightsArray:Array<Float>, StartIndex:Int = 0, EndIndex:Int = 0 ):T
+	@:generic public static function weightedGetObject<T>(Objects:Array<T>, WeightsArray:Array<Float>, StartIndex:Int = 0, EndIndex:Int = 0):T
 	{
 		var selected:Null<T> = null;
 		
-		if ( Objects.length != 0 )
+		if (Objects.length != 0)
 		{
-			if ( StartIndex < 0 )
+			if (StartIndex < 0)
 			{
 				StartIndex = 0;
 			}
 			
 			// Swap values if reversed
 			
-			if ( EndIndex < StartIndex )
+			if (EndIndex < StartIndex)
 			{
 				StartIndex = StartIndex + EndIndex;
 				EndIndex = StartIndex - EndIndex;
 				StartIndex = StartIndex - EndIndex;
 			}
 			
-			if ( ( EndIndex <= 0 ) || ( EndIndex > Objects.length - 1 ) || ( EndIndex > WeightsArray.length - 1 ) )
+			if ((EndIndex <= 0) || (EndIndex > Objects.length - 1) || (EndIndex > WeightsArray.length - 1))
 			{
 				EndIndex = Objects.length - 1;
 			}
 			
 			var subArray:Array<T> = [];
 			
-			for ( i in StartIndex...EndIndex )
+			for (i in StartIndex...EndIndex)
 			{
-				subArray.push( Objects[ i ] );
+				subArray.push(Objects[i]);
 			}
 			
 			var weightedSubArray:Array<Float> = [];
 			
-			for ( i in StartIndex...EndIndex )
+			for (i in StartIndex...EndIndex)
 			{
-				weightedSubArray.push( WeightsArray[ i ] );
+				weightedSubArray.push(WeightsArray[i]);
 			}
 			
-			var selectionInt:Int = weightedPick( weightedSubArray );
+			var selectionInt:Int = weightedPick(weightedSubArray);
 			
-			selected = Objects[ selectionInt ];
+			selected = Objects[selectionInt];
 		}
 		
 		return selected;
@@ -331,13 +331,13 @@ class NonInlineFlxRandom
 	 * @param	Alpha	The alpha value of the returning color (default 255 = fully opaque).
 	 * @return 	A color value in hex ARGB format.
 	 */
-	public static function color( Min:Int = 0, Max:Int = 255, Alpha:Int = 255 ):Int
+	public static function color(Min:Int = 0, Max:Int = 255, Alpha:Int = 255):Int
 	{
-		var red:Int = intRanged( Min, Max );
-		var green:Int = intRanged( Min, Max );
-		var blue:Int = intRanged( Min, Max );
+		var red:Int = intRanged(Min, Max);
+		var green:Int = intRanged(Min, Max);
+		var blue:Int = intRanged(Min, Max);
 		
-		return FlxColorUtil.makeFromARGB( Alpha, red, green, blue );
+		return FlxColorUtil.makeFromARGB(Alpha, red, green, blue);
 	}
 	
 	/**
@@ -348,6 +348,6 @@ class NonInlineFlxRandom
 	 */
 	private static function generate():Int
 	{
-		return internalSeed = ( ( internalSeed * MULTIPLIER + INCREMENT ) % MODULUS ) & MODULUS;
+		return internalSeed = ((internalSeed * MULTIPLIER + INCREMENT) % MODULUS) & MODULUS;
 	}
 }

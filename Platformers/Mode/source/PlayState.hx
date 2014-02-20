@@ -352,7 +352,7 @@ class PlayState extends FlxState
 		// Escape to the main menu
 		if (FlxG.keys.pressed.ESCAPE)
 		{
-			FlxG.switchState( new MenuState() );
+			FlxG.switchState(new MenuState());
 		}
 	}
 	
@@ -440,12 +440,12 @@ class PlayState extends FlxState
 		
 		if (Spawners)
 		{
-			sx = FlxRandom.intRanged( 2, rw - 6 );
-			sy = FlxRandom.intRanged( 2, rw - 6 );
+			sx = FlxRandom.intRanged(2, rw - 6);
+			sy = FlxRandom.intRanged(2, rw - 6);
 		}
 		
 		// Then place a bunch of blocks
-		var numBlocks:Int = FlxRandom.intRanged( 3, 6 );
+		var numBlocks:Int = FlxRandom.intRanged(3, 6);
 		var maxW:Int = 10;
 		var minW:Int = 2;
 		var maxH:Int = 8;
@@ -466,10 +466,10 @@ class PlayState extends FlxState
 			do
 			{
 				// Keep generating different specs if they overlap the spawner
-				bw = FlxRandom.intRanged( minW, maxW );
-				bh = FlxRandom.intRanged( minH, maxH );
-				bx = FlxRandom.intRanged( -1, rw - bw );
-				by = FlxRandom.intRanged( -1, rw - bh );
+				bw = FlxRandom.intRanged(minW, maxW);
+				bh = FlxRandom.intRanged(minH, maxH);
+				bx = FlxRandom.intRanged( -1, rw - bw);
+				by = FlxRandom.intRanged( -1, rw - bh);
 				
 				if (Spawners)
 				{
@@ -523,7 +523,7 @@ class PlayState extends FlxState
 		{
 			for (j in 0...numColsToPush)
 			{
-				randomTile = FlxRandom.intRanged( StartTile, EndTile );
+				randomTile = FlxRandom.intRanged(StartTile, EndTile);
 				
 				currentTileIndex = (xStartIndex + j) + (yStartIndex + i) * MapWidth;
 				_map[currentTileIndex] = randomTile;

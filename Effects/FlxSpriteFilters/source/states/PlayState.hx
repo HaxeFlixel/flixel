@@ -129,7 +129,7 @@ class PlayState extends FlxState
 		spr6 = new FlxSprite(FlxG.width * 0.75 - 50, FlxG.height / 2 + 100 - 50, "assets/HaxeFlixel.png");
 		add(spr6);
 		filter6 = (new DisplacementMapFilter(Assets.getBitmapData("assets/StaticMap.png"), 
-						new Point(0, 0), 1, 1, 15, 1, DisplacementMapFilterMode.COLOR, 1, 0 ));
+						new Point(0, 0), 1, 1, 15, 1, DisplacementMapFilterMode.COLOR, 1, 0));
 		spr6Filter = new FlxSpriteFilter(spr6, 50, 50);
 		spr6Filter.addFilter(filter6);
 		
@@ -142,14 +142,14 @@ class PlayState extends FlxState
 		// FILTERS
 		
 		// Animations
-		tween2 = FlxTween.multiVar(filter2, { blurX: 4, blurY: 4 }, 1, { type: FlxTween.PINGPONG } );
+		tween2 = FlxTween.multiVar(filter2, { blurX: 4, blurY: 4 }, 1, { type: FlxTween.PINGPONG });
 		tween2.active = false;
 		
-		tween3 = FlxTween.multiVar(filter3, { blurX:50, blurY:50 }, 1.5, { type: FlxTween.PINGPONG } );
+		tween3 = FlxTween.multiVar(filter3, { blurX:50, blurY:50 }, 1.5, { type: FlxTween.PINGPONG });
 		tween3.active = false;
 		
 		#if flash
-		tween5 = FlxTween.multiVar(filter5, { distance: -6 }, 1.5, { type: FlxTween.PINGPONG, ease: FlxEase.quadInOut } );
+		tween5 = FlxTween.multiVar(filter5, { distance: -6 }, 1.5, { type: FlxTween.PINGPONG, ease: FlxEase.quadInOut });
 		tween5.active = false;
 		#end
 	}

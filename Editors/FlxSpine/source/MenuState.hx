@@ -47,24 +47,24 @@ class MenuState extends FlxState
 	{
 		// toggle debug display
 		#if !FLX_NO_DEBUG
-		if ( FlxG.keys.justPressed.SPACE )
+		if (FlxG.keys.justPressed.SPACE)
 			FlxG.debugger.drawDebug = !FlxG.debugger.drawDebug;
 		#end
 		
 		// movement
-		if ( FlxG.keys.pressed.UP )
+		if (FlxG.keys.pressed.UP)
 		{
 			spineSprite.y -= 500 * FlxG.elapsed;
 		}
-		else if ( FlxG.keys.pressed.DOWN )
+		else if (FlxG.keys.pressed.DOWN)
 		{
 			spineSprite.y += 500 * FlxG.elapsed;
 		}
-		if ( FlxG.keys.pressed.RIGHT )
+		if (FlxG.keys.pressed.RIGHT)
 		{
 			spineSprite.x += 500 * FlxG.elapsed;
 		}
-		else if ( FlxG.keys.pressed.LEFT )
+		else if (FlxG.keys.pressed.LEFT)
 		{
 			spineSprite.x -= 500 * FlxG.elapsed;
 		}

@@ -90,7 +90,7 @@ class MenuState extends FlxState
 		_attractMode = false;
 		
 		#if !FLX_NO_MOUSE
-		FlxG.mouse.load( Reg.CURSOR, 2 );
+		FlxG.mouse.load(Reg.CURSOR, 2);
 		FlxG.mouse.visible = true;
 		#end
 		
@@ -132,8 +132,8 @@ class MenuState extends FlxState
 			FlxG.cameras.shake(0.035, 0.5);
 			_title1.color = _title2.color = 0xd8eba2;
 			_gibs.start(true, 5);
-			_title1.angle = FlxRandom.floatRanged( -15, 15 );
-			_title2.angle = FlxRandom.floatRanged( -15, 15 );
+			_title1.angle = FlxRandom.floatRanged( -15, 15);
+			_title2.angle = FlxRandom.floatRanged( -15, 15);
 			
 			// Then we're going to add the text and buttons and things that appear
 			// If we were hip we'd use our own button animations, but we'll just recolor
@@ -174,9 +174,9 @@ class MenuState extends FlxState
 			_attractMode = true;
 		}
 		
-		if ( !_fading )
+		if (!_fading)
 		{
-			if  ( ( FlxG.keys.pressed.X && FlxG.keys.pressed.C ) || _attractMode )
+			if  ((FlxG.keys.pressed.X && FlxG.keys.pressed.C) || _attractMode)
 			{
 				_fading = true;
 				FlxG.sound.play("MenuHit2");
@@ -185,7 +185,7 @@ class MenuState extends FlxState
 				FlxG.cameras.fade(0xff131c1b, 1, false, onFade);
 			}
 			
-			if ( FlxG.keys.pressed.R && !_attractMode )
+			if (FlxG.keys.pressed.R && !_attractMode)
 			{
 				_attractMode = true;
 			}
@@ -195,9 +195,9 @@ class MenuState extends FlxState
 		if (FlxG.gamepads.anyButton())
 		{
 		#if OUYA
-			if(FlxG.gamepads.lastActive.justPressed(flixel.input.gamepad.OUYAButtonID.O))
+			if (FlxG.gamepads.lastActive.justPressed(flixel.input.gamepad.OUYAButtonID.O))
 		#else
-			if(FlxG.gamepads.lastActive.justPressed(flixel.input.gamepad.XboxButtonID.A))
+			if (FlxG.gamepads.lastActive.justPressed(flixel.input.gamepad.XboxButtonID.A))
 		#end 
 				onPlay();
 		}
@@ -233,7 +233,7 @@ class MenuState extends FlxState
 	{
 		if (_attractMode)
 		{
-			FlxG.vcr.loadReplay( FlxRandom.chanceRoll() ? (Assets.getText("data/attract1.fgr")) : (Assets.getText("data/attract2.fgr")), new PlayState(), ["ANY"], 22, onDemoComplete);
+			FlxG.vcr.loadReplay(FlxRandom.chanceRoll() ? (Assets.getText("data/attract1.fgr")) : (Assets.getText("data/attract2.fgr")), new PlayState(), ["ANY"], 22, onDemoComplete);
 		}
 		else
 		{

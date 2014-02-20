@@ -66,7 +66,7 @@ class PlayState extends FlxState
 		var sprite:FlxSprite;
 		
 		// Create 8 bullets for the player to recycle
-		for(i in 0...numPlayerBullets)			
+		for (i in 0...numPlayerBullets)			
 		{
 			// Instantiate a new sprite offscreen
 			sprite = new FlxSprite( -100, -100);	

@@ -76,7 +76,7 @@ class Cutup extends FlxNapeState
 		pieceCntTxt = new FlxText(FlxG.width - 100, 30, 100, "Total Pieces: ");
 		add(pieceCntTxt);
 
-		var txt = new FlxText(-10, 5, 640, "      'R' - reset state, 'G' - toggle physics graphics");
+		var txt = new FlxText( -10, 5, 640, "      'R' - reset state, 'G' - toggle physics graphics");
 		add(txt);
 		txt = new FlxText( -10, 20, 640, "      'LEFT' & 'RIGHT' - switch demo");
 		add(txt);
@@ -93,7 +93,7 @@ class Cutup extends FlxNapeState
 		pieceCntTxt.text = "Toatal Pieces:  " + (FlxNapeState.space.bodies.length-1);
 		
 		if (FlxG.keys.justPressed.G)
-			if(_physDbgSpr != null)
+			if (_physDbgSpr != null)
 				napeDebugEnabled = false;
 			else
 				napeDebugEnabled = true;
@@ -157,7 +157,7 @@ class Cutup extends FlxNapeState
 		// Make current FlxNapeSprite graphic (may rotated) a reference BitmapData
 		var bmp:BitmapData = new BitmapData(Math.ceil(orgBody.bounds.width), Math.ceil(orgBody.bounds.height), true, 0x0);
 		var mat:Matrix = new Matrix();
-		mat.translate(-orgPhySpr.origin.x, -orgPhySpr.origin.y);
+		mat.translate( -orgPhySpr.origin.x, -orgPhySpr.origin.y);
 		mat.rotate(orgPhySpr.angle * Math.PI/180 % 360);
 		mat.translate(orgBody.position.x - orgBody.bounds.x, orgBody.position.y - orgBody.bounds.y);
 		bmp.draw(orgPhySpr.pixels, mat);
@@ -232,7 +232,7 @@ class UFO extends FlxSprite {
 
 	override public function update(){
 		// after super.update() x and last.x become the same
-		if(x>last.x)
+		if (x>last.x)
 			set_facing(flixel.FlxObject.RIGHT);
 		else
 			set_facing(flixel.FlxObject.LEFT);

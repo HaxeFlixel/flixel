@@ -82,9 +82,9 @@ class Fight extends FlxNapeState
 			shooter.registerPhysSprite(spr);
 		}
 		
-		songoku.rLArm.body.applyImpulse(new Vec2(2000, FlxRandom.floatRanged(-2700, -2800)));
+		songoku.rLArm.body.applyImpulse(new Vec2(2000, FlxRandom.floatRanged( -2700, -2800)));
 		//songoku.rUArm.body.applyImpulse(new Vec2(1500, -2000));
-		vegeta.lLArm.body.applyImpulse(new Vec2(-2000, FlxRandom.floatRanged(-2700, -2800)));
+		vegeta.lLArm.body.applyImpulse(new Vec2( -2000, FlxRandom.floatRanged( -2700, -2800)));
 		//vegeta.lUArm.body.applyImpulse(new Vec2(-1500, -2000));
 													 
 		
@@ -348,7 +348,7 @@ class Ragdoll extends FlxGroup
 		constrain.space = FlxNapeState.space;
 		
 		// Upper legs with lower torso.
-		constrain = new PivotJoint(lULeg.body, lTorso.body, new Vec2(0, -ulegSize.y / 2 + 3), new Vec2(-lTorsoSize.x / 2  + ulegSize.x / 2, lTorsoSize.y / 2 - 6));
+		constrain = new PivotJoint(lULeg.body, lTorso.body, new Vec2(0, -ulegSize.y / 2 + 3), new Vec2( -lTorsoSize.x / 2  + ulegSize.x / 2, lTorsoSize.y / 2 - 6));
 		constrain.space = FlxNapeState.space;
 		constrain = new PivotJoint(rULeg.body, lTorso.body, new Vec2(0, -ulegSize.y / 2 + 3), new Vec2(lTorsoSize.x / 2  - ulegSize.x / 2, lTorsoSize.y / 2 - 6));
 		constrain.space = FlxNapeState.space;
@@ -358,9 +358,9 @@ class Ragdoll extends FlxGroup
 		constrain.space = FlxNapeState.space;
 		
 		// Upper arms with Upper torso.
-		constrain = new PivotJoint(lUArm.body, uTorso.body, new Vec2(uarmSize.x / 2 - 3, -uarmSize.y / 2 + 3), new Vec2(-uTorsoSize.x / 2 + 3, -uTorsoSize.y / 2 + 3));
+		constrain = new PivotJoint(lUArm.body, uTorso.body, new Vec2(uarmSize.x / 2 - 3, -uarmSize.y / 2 + 3), new Vec2( -uTorsoSize.x / 2 + 3, -uTorsoSize.y / 2 + 3));
 		constrain.space = FlxNapeState.space;
-		constrain = new PivotJoint(rUArm.body, uTorso.body, new Vec2(-uarmSize.x / 2 + 3, -uarmSize.y / 2 + 3), new Vec2(uTorsoSize.x / 2 - 3, -uTorsoSize.y / 2 + 3));
+		constrain = new PivotJoint(rUArm.body, uTorso.body, new Vec2( -uarmSize.x / 2 + 3, -uarmSize.y / 2 + 3), new Vec2(uTorsoSize.x / 2 - 3, -uTorsoSize.y / 2 + 3));
 		constrain.space = FlxNapeState.space;
 		
 		// Neck with upper torso.

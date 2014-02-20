@@ -15,9 +15,9 @@ class SpineBoyTest2 extends FlxSpine
 	private var walkAnimation:Animation;
 	private var jumpAnimation:Animation;
 	
-	public function new( skeletonData:SkeletonData,  X:Float = 0, Y:Float = 0, Width:Int = 0, Height:Int = 0 ) 
+	public function new(skeletonData:SkeletonData,  X:Float = 0, Y:Float = 0, Width:Int = 0, Height:Int = 0) 
 	{
-		super( skeletonData, X, Y, Width, Height );
+		super(skeletonData, X, Y, Width, Height);
 		
 		walkAnimation = skeletonData.findAnimation("walk");
 		jumpAnimation = skeletonData.findAnimation("jump");

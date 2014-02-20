@@ -87,7 +87,7 @@ class Explosions extends FlxNapeState
 	private function startBulletTime(Timer:FlxTimer) 
 	{
 		FlxG.timeScale = 0.2;
-		FlxTween.multiVar(FlxG, { timeScale: 1.0 }, 1, { ease: FlxEase.quadIn, delay: 1 } );
+		FlxTween.multiVar(FlxG, { timeScale: 1.0 }, 1, { ease: FlxEase.quadIn, delay: 1 });
 	}
 	
 	private function createExplosion() 

@@ -21,7 +21,7 @@ class State_TestMenu extends FlxUIState
 	}	
 	
 	public override function getEvent(name:String, target:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void {
-		if(params != null){
+		if (params != null){
 			switch(name) {
 				case "click_button":
 					switch(cast(params[0], String)) {

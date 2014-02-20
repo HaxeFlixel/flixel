@@ -58,7 +58,7 @@ class PlayState extends FlxState
 		score.borderStyle = FlxText.BORDER_SHADOW;
 		status.alignment = "right";
 		
-		if(youDied == false)
+		if (youDied == false)
 			status.text = "Collect coins.";
 		else
 			status.text = "Aww, you died!";

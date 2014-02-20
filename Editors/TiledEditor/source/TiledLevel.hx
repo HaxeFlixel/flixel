@@ -38,7 +38,7 @@ class TiledLevel extends TiledMap
 		FlxG.camera.setBounds(0, 0, fullWidth, fullHeight, true);
 		
 		// Load Tile Maps
-		for ( tileLayer in layers )
+		for (tileLayer in layers)
 		{
 			var tileSheetName:String = tileLayer.properties.get("tileset");
 			
@@ -46,9 +46,9 @@ class TiledLevel extends TiledMap
 				throw "'tileset' property not defined for the '" + tileLayer.name + "' layer. Please add the property to the layer.";
 				
 			var tileSet:TiledTileSet = null;
-			for ( ts in tilesets )
+			for (ts in tilesets)
 			{
-				if ( ts.name == tileSheetName)
+				if (ts.name == tileSheetName)
 				{
 					tileSet = ts;
 					break;
@@ -83,9 +83,9 @@ class TiledLevel extends TiledMap
 	
 	public function loadObjects(state:PlayState)
 	{
-		for ( group in objectGroups )
+		for (group in objectGroups)
 		{
-			for ( o in group.objects )
+			for (o in group.objects)
 			{
 				loadObject(o, group, state);
 			}
@@ -137,7 +137,7 @@ class TiledLevel extends TiledMap
 	{
 		if (collidableTileLayers != null)
 		{
-			for ( map in collidableTileLayers)
+			for (map in collidableTileLayers)
 			{
 				// IMPORTANT: Always collide the map with objects, not the other way around. 
 				//			  This prevents odd collision errors (collision separation code off by 1 px).

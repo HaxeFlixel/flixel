@@ -37,8 +37,8 @@ class PlayState2 extends FlxState
 		var dispenser:FlxEmitter = new FlxEmitter();
 		dispenser.gravity = 0;
 		dispenser.setSize(640, 480);
-		dispenser.setXSpeed(-100, 100);
-		dispenser.setYSpeed(-100, 100);
+		dispenser.setXSpeed( -100, 100);
+		dispenser.setYSpeed( -100, 100);
 		dispenser.bounce = 0.65;
 		dispenser.makeParticles("assets/gibs.png", 300, 16, true, 0.8);
 		dispenser.start(false, 10, 0.05);

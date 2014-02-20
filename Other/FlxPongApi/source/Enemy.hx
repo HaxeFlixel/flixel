@@ -10,13 +10,13 @@ class Enemy extends PongSprite
 	
 	public function new()
 	{
-		super( FlxG.width, 0, Reg.level, Reg.level * 4, Reg.dark );
+		super(FlxG.width, 0, Reg.level, Reg.level * 4, Reg.dark);
 		reset(0, 0);
 	}
 	
 	public function init():Void
 	{
-		_emitter = Reg.PS.emitterGroup.add( new Emitter( Std.int( x ), Std.int( y ), 1 ) );
+		_emitter = Reg.PS.emitterGroup.add(new Emitter(Std.int(x), Std.int(y), 1));
 		_emitter.width = width;
 		_emitter.height = height;
 	}
@@ -25,28 +25,28 @@ class Enemy extends PongSprite
 	{
 		acceleration.x = acceleration.y = 0;
 		
-		if ( Reg.PS.ball.my < my ) {
+		if (Reg.PS.ball.my < my) {
 			velocity.y = -Reg.level;
 		}
 		
-		if ( Reg.PS.ball.my > my ) {
+		if (Reg.PS.ball.my > my) {
 			velocity.y = Reg.level;
 		}
 		
 		super.update();
 	}
 	
-	override public function reset( X:Float, Y:Float ):Void
+	override public function reset(X:Float, Y:Float):Void
 	{
-		makeGraphic( Reg.level, Reg.level * 4, Reg.dark );
-		super.reset( FlxG.width, Std.int( ( FlxG.height - height ) / 2 ) );
-		FlxTween.linearMotion( this, this.x, this.y, this.x - 20, this.y, 1 );
+		makeGraphic(Reg.level, Reg.level * 4, Reg.dark);
+		super.reset(FlxG.width, Std.int((FlxG.height - height) / 2));
+		FlxTween.linearMotion(this, this.x, this.y, this.x - 20, this.y, 1);
 	}
 	
 	override public function kill():Void
 	{
-		_emitter.start( true );
-		FlxG.sound.play( "kaboom" );
+		_emitter.start(true);
+		FlxG.sound.play("kaboom");
 		
 		super.kill();
 	}

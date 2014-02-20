@@ -47,9 +47,9 @@ class Reg
 	public static function genColors():Void
 	{
 		var base:Array<Int> = [];
-		base.push( FlxRandom.intRanged( 64, 192 ) ); // red
-		base.push( FlxRandom.intRanged( 64, 192 ) ); // green
-		base.push( FlxRandom.intRanged( 64, 192 ) ); // blue
+		base.push(FlxRandom.intRanged(64, 192)); // red
+		base.push(FlxRandom.intRanged(64, 192)); // green
+		base.push(FlxRandom.intRanged(64, 192)); // blue
 		
 		// wipe or initiate colorArray
 		
@@ -57,9 +57,9 @@ class Reg
 		
 		// generate four colors
 		
-		for ( i in 0...4 ) {
-			var dist:Int = FlxRandom.intRanged( 32 * ( i - 2 ), 24 * ( i - 2 ) );
-			colorArray.push( 255 << 24 ); // alpha
+		for (i in 0...4) {
+			var dist:Int = FlxRandom.intRanged(32 * (i - 2), 24 * (i - 2));
+			colorArray.push(255 << 24); // alpha
 			colorArray[i] += base[0] + dist << 16; //red
 			colorArray[i] += base[1] + dist << 8; //green
 			colorArray[i] += base[2] + dist; // blue
@@ -71,7 +71,7 @@ class Reg
 	 */
 	public static function randomColor():Int
 	{
-		return colorArray[ FlxRandom.intRanged( 0, 3 ) ];
+		return colorArray[FlxRandom.intRanged(0, 3)];
 	}
 	
 	/**
@@ -80,8 +80,8 @@ class Reg
 	 * @param	Object
 	 * @param	Num
 	 */
-	public static function quarterX( Object:FlxObject, Num:Int = 2 ):Void {
-		Object.x = ( FlxG.width * Num / 2 - Object.width ) / 2;
+	public static function quarterX(Object:FlxObject, Num:Int = 2):Void {
+		Object.x = (FlxG.width * Num / 2 - Object.width) / 2;
 	}
 	
 	/**

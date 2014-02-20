@@ -107,7 +107,7 @@ class Player extends FlxSprite
 		}
 		
 		// Animations
-		if (velocity.x > 0 || velocity.x < 0 ) 
+		if (velocity.x > 0 || velocity.x < 0) 
 		{ 
 			animation.play("walking"); 
 		}

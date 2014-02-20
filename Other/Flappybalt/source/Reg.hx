@@ -30,8 +30,8 @@ class Reg
 	 */
 	static public function dustMote():BitmapData
 	{
-		if ( dustMoteData == null ) {
-			dustMoteData = new BitmapData( 2, 2, true, 0x88FFFFFF );
+		if (dustMoteData == null) {
+			dustMoteData = new BitmapData(2, 2, true, 0x88FFFFFF);
 		}
 		
 		return dustMoteData;
@@ -45,31 +45,31 @@ class Reg
 	 * @param	Height	The height of the panel to draw.
 	 * @return	A BitmapData object representing the paddle. Cached for the second paddle to save time.
 	 */
-	static public function getBounceImage( Height:Int ):BitmapData
+	static public function getBounceImage(Height:Int):BitmapData
 	{
-		if ( _bitmapData != null )
+		if (_bitmapData != null)
 			return _bitmapData;
 		
-		_bitmapData = new BitmapData( 8, Height, false, GREY_MED );
+		_bitmapData = new BitmapData(8, Height, false, GREY_MED);
 		
-		_rect = new Rectangle( 4, 0, 4, Height );
-		_bitmapData.fillRect( _rect, GREY_LIGHT );
-		_rect = new Rectangle( 0, 1, 1, Height - 2 );
-		_bitmapData.fillRect( _rect, GREY_DARK );
+		_rect = new Rectangle(4, 0, 4, Height);
+		_bitmapData.fillRect(_rect, GREY_LIGHT);
+		_rect = new Rectangle(0, 1, 1, Height - 2);
+		_bitmapData.fillRect(_rect, GREY_DARK);
 		_rect.x = 3;
-		_bitmapData.fillRect( _rect, GREY_DARK );
-		_rect = new Rectangle( 1, 0, 2, 1 );
-		_bitmapData.fillRect( _rect, GREY_DARK );
+		_bitmapData.fillRect(_rect, GREY_DARK);
+		_rect = new Rectangle(1, 0, 2, 1);
+		_bitmapData.fillRect(_rect, GREY_DARK);
 		_rect.y = Height - 1;
-		_bitmapData.fillRect( _rect, GREY_DARK );
-		_rect = new Rectangle( 4, 1, 1, Height - 2 );
-		_bitmapData.fillRect( _rect, WHITE );
+		_bitmapData.fillRect(_rect, GREY_DARK);
+		_rect = new Rectangle(4, 1, 1, Height - 2);
+		_bitmapData.fillRect(_rect, WHITE);
 		_rect.x = 7;
-		_bitmapData.fillRect( _rect, WHITE );
-		_rect = new Rectangle( 5, 0, 2, 1 );
-		_bitmapData.fillRect( _rect, WHITE );
+		_bitmapData.fillRect(_rect, WHITE);
+		_rect = new Rectangle(5, 0, 2, 1);
+		_bitmapData.fillRect(_rect, WHITE);
 		_rect.y = Height - 1;
-		_bitmapData.fillRect( _rect, WHITE );
+		_bitmapData.fillRect(_rect, WHITE);
 		
 		return _bitmapData;
 	}

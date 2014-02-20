@@ -15,8 +15,8 @@ class Reg
 	
 	public static function get_tileImage():BitmapData
 	{
-		var tileset:BitmapData = new BitmapData( 8 * 3, 8, false, FlxColor.WHITE );
-		tileset.draw( new BitmapData( 8, 8, false, FlxColor.BLACK ), new Matrix( 1, 0, 0, 1, 8, 0 ) );
+		var tileset:BitmapData = new BitmapData(8 * 3, 8, false, FlxColor.WHITE);
+		tileset.draw(new BitmapData(8, 8, false, FlxColor.BLACK), new Matrix(1, 0, 0, 1, 8, 0));
 		return tileset;
 	}
 	
@@ -27,10 +27,10 @@ class Reg
 	
 	public static function get_enemyImage():BitmapData
 	{
-		var enemy:BitmapData = new BitmapData( 6, 6, false, FlxColor.BLACK );
-		var eye:BitmapData = new BitmapData( 1, 2, false, FlxColor.WHITE );
-		enemy.draw( eye, new Matrix( 1, 0, 0, 1, 1, 1 ) );
-		enemy.draw( eye, new Matrix( 1, 0, 0, 1, 4, 1 ) );
+		var enemy:BitmapData = new BitmapData(6, 6, false, FlxColor.BLACK);
+		var eye:BitmapData = new BitmapData(1, 2, false, FlxColor.WHITE);
+		enemy.draw(eye, new Matrix(1, 0, 0, 1, 1, 1));
+		enemy.draw(eye, new Matrix(1, 0, 0, 1, 4, 1));
 		
 		return enemy;
 	}

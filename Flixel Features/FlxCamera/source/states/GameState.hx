@@ -101,7 +101,7 @@ class GameState extends FlxNapeState
 			switch (i) 
 			{
 				case 0: 
-					otherOrb.body.position.setxy( 320 - 400, 240 - 400);
+					otherOrb.body.position.setxy(320 - 400, 240 - 400);
 					otherOrb.animation.frameIndex = 0;
 				case 1: 
 					otherOrb.body.position.setxy(320 + 400, 240 - 400); 
@@ -119,7 +119,7 @@ class GameState extends FlxNapeState
 			otherOrb.body.velocity.setxy(Std.random(150) - 75, Std.random(150) - 75);
 		}
 		// Camera OVerlay ---------------------------------------------------------------------------
-		var cameraOverlay = new FlxSprite(-10000,-10000);
+		var cameraOverlay = new FlxSprite( -10000,-10000);
 		cameraOverlay.makeGraphic(640, 480, 0x0);
 		//cameraOverlay.scrollFactor.make(0, 0);
 		cameraOverlay.antialiasing = true;
@@ -150,7 +150,7 @@ class GameState extends FlxNapeState
 		hud = new HUD();
 		add(hud);
 		
-		FlxG.camera.setBounds( LEVEL_MIN_X , LEVEL_MIN_Y , LEVEL_MAX_X + Math.abs(LEVEL_MIN_X), LEVEL_MAX_Y + Math.abs(LEVEL_MIN_Y), true );
+		FlxG.camera.setBounds(LEVEL_MIN_X , LEVEL_MIN_Y , LEVEL_MAX_X + Math.abs(LEVEL_MIN_X), LEVEL_MAX_Y + Math.abs(LEVEL_MIN_Y), true);
 		FlxG.camera.follow(orb, 0, null, 0);
 		
 		#if TRUE_ZOOM_OUT
@@ -167,7 +167,7 @@ class GameState extends FlxNapeState
 	public function setZoom(zoom:Float)
 	{
 		if (zoom < .5) zoom = .5;
-		if (zoom > 4 ) zoom = 4;
+		if (zoom > 4) zoom = 4;
 		
 		zoom = Math.round(zoom * 10) / 10; // corrects float precision problems.
 		
@@ -182,7 +182,7 @@ class GameState extends FlxNapeState
 		var zoomDistDiffX;
 		
 		
-		if ( zoom <= 1 ) 
+		if (zoom <= 1) 
 		{
 			zoomDistDiffX = Math.abs((LEVEL_MIN_X + LEVEL_MAX_X) - (LEVEL_MIN_X + LEVEL_MAX_X) / 1 + (1 - zoom));
 			zoomDistDiffY = Math.abs((LEVEL_MIN_Y + LEVEL_MAX_Y) - (LEVEL_MIN_Y + LEVEL_MAX_Y) / 1 + (1 - zoom));
@@ -206,11 +206,11 @@ class GameState extends FlxNapeState
 			#end
 		}
 		
-		FlxG.camera.setBounds( LEVEL_MIN_X - zoomDistDiffX, 
+		FlxG.camera.setBounds(LEVEL_MIN_X - zoomDistDiffX, 
 							   LEVEL_MIN_Y - zoomDistDiffY,
 							   (LEVEL_MAX_X + Math.abs(LEVEL_MIN_X) + zoomDistDiffX * 2),
 							   (LEVEL_MAX_Y + Math.abs(LEVEL_MIN_Y) + zoomDistDiffY * 2),
-							   false );
+							   false);
 							   
 		hud.updateZoom(FlxG.camera.zoom);
 		//
@@ -228,9 +228,9 @@ class GameState extends FlxNapeState
 		var i = LEVEL_MIN_X; 
 		var j = LEVEL_MIN_Y; 
 		
-		while ( i <= LEVEL_MAX_X )  
+		while (i <= LEVEL_MAX_X)  
 		{
-			while ( j <= LEVEL_MAX_Y )
+			while (j <= LEVEL_MAX_Y)
 			{
 				var spr = new FlxSprite(i, j, FloorImg);
 				add(spr);
@@ -257,16 +257,16 @@ class GameState extends FlxNapeState
 		if (FlxG.keys.pressed.A)
 			orb.body.applyImpulse(new Vec2( -speed, 0));
 		if (FlxG.keys.pressed.S)
-			orb.body.applyImpulse(new Vec2( 0, speed));
+			orb.body.applyImpulse(new Vec2(0, speed));
 		if (FlxG.keys.pressed.D)
-			orb.body.applyImpulse(new Vec2( speed, 0));
+			orb.body.applyImpulse(new Vec2(speed, 0));
 		if (FlxG.keys.pressed.W)
-			orb.body.applyImpulse(new Vec2( 0, -speed));
+			orb.body.applyImpulse(new Vec2(0, -speed));
 			
 		if (FlxG.keys.justPressed.Y) 
 			setStyle(1);
 		if (FlxG.keys.justPressed.H) 
-			setStyle(-1);
+			setStyle( -1);
 			
 		if (FlxG.keys.justPressed.U)
 			setLerp(.5);

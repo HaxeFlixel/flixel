@@ -155,7 +155,7 @@ class PlayState extends FlxState
 				, descriptions: ["PNG files", "JPEG files"]
 				, extensions: ["*.png","*.jpg;*.jpeg"]	
 			};	
-			var result:Array<String> = Dialogs.openFile( 
+			var result:Array<String> = Dialogs.openFile(
 				"Select a file please!"
 				, "Please select one or more files, so we can see if this method works"
 				, filters
