@@ -12,7 +12,7 @@ class PostProcess
 {
 	public function new(shader:String)
 	{
-		#if !FLX_NO_DEBUG trace("Post processing not supported on Flash"); #end
+		#if !FLX_NO_DEBUG FlxG.log.error("Post processing not supported on Flash.") #end
 	}
 	public function enable(?to:PostProcess) { }
 	public function capture() { }
@@ -39,10 +39,10 @@ typedef Uniform = {
 class PostProcess extends OpenGLView
 {
 	
-	public var px:Int;
-	public var py:Int;
-	public var pwidth:Int;
-	public var pheight:Int;
+	public var px:Int = 0;
+	public var py:Int = 0;
+	public var pwidth:Int = 0;
+	public var pheight:Int = 0;
 	
 	/**
 	 * Create a new PostProcess object
@@ -53,20 +53,12 @@ class PostProcess extends OpenGLView
 		super();
 		uniforms = new Map<String, Uniform>();
 		
-		px = 0;
-		py = 0;
-		pwidth = 0;
-		pheight = 0;
-
-#if ios
-		defaultFramebuffer = new GLFramebuffer(GL.version, 1); // faked framebuffer
-#end
-
 		// create and bind the framebuffer
 		framebuffer = GL.createFramebuffer();
-		rebuild(0, 0);
-
-#if !ios
+		
+#if ios
+		defaultFramebuffer = new GLFramebuffer(GL.version, 1); // faked framebuffer
+#else
 		var status = GL.checkFramebufferStatus(GL.FRAMEBUFFER);
 		switch (status)
 		{
@@ -97,8 +89,6 @@ class PostProcess extends OpenGLView
 
 		vertexSlot = shader.attribute("aVertex");
 		texCoordSlot = shader.attribute("aTexCoord");
-		
-		chain();
 	}
 
 	/**
@@ -133,15 +123,6 @@ class PostProcess extends OpenGLView
 	}
 
 	/**
-	 * Enables the PostProcess object for rendering
-	 * @param to  (Optional) Render to PostProcess framebuffer instead of screen
-	 */
-	public function chain(?to:PostProcess):Void
-	{
-		this.to = to;
-	}
-
-	/**
 	 * Rebuilds the renderbuffer to match screen dimensions
 	 */
 	public function rebuild(pwidth:Int, pheight:Int)
@@ -151,13 +132,12 @@ class PostProcess extends OpenGLView
 		if (texture != null) GL.deleteTexture(texture);
 		if (renderbuffer != null) GL.deleteRenderbuffer(renderbuffer);
 
-		//pwidth = FlxG.stage.stageWidth;
-		//pheight = FlxG.stage.stageHeight;
 		this.pwidth = pwidth;
 		this.pheight = pheight;
 		
-		createTexture(Std.int(pwidth), Std.int(pheight));
-		createRenderbuffer(Std.int(pwidth), Std.int(pheight));
+		createTexture(pwidth, pheight);
+		createRenderbuffer(pwidth, pheight);
+		
 		GL.bindFramebuffer(GL.FRAMEBUFFER, null);
 	}
 
@@ -196,8 +176,9 @@ class PostProcess extends OpenGLView
 	{
 		GL.bindFramebuffer(GL.FRAMEBUFFER, framebuffer);
 
-		GL.viewport(Std.int(px), Std.int(py), Std.int(pwidth), Std.int(pheight));
-		//GL.clear(GL.DEPTH_BUFFER_BIT | GL.COLOR_BUFFER_BIT);
+		GL.viewport(px, py, pwidth, pheight);
+		
+		GL.clear(GL.DEPTH_BUFFER_BIT | GL.COLOR_BUFFER_BIT);
 	}
 
 	/**
@@ -208,7 +189,7 @@ class PostProcess extends OpenGLView
 		time += FlxG.elapsed;
 		GL.bindFramebuffer(GL.FRAMEBUFFER, renderTo);
 
-		//GL.clear(GL.COLOR_BUFFER_BIT | GL.DEPTH_BUFFER_BIT);
+		//aadwdGL.clear(GL.COLOR_BUFFER_BIT | GL.DEPTH_BUFFER_BIT);
 
 		shader.bind();
 
@@ -225,7 +206,7 @@ class PostProcess extends OpenGLView
 
 		GL.uniform1i(imageUniform, 0);
 		GL.uniform1f(timeUniform, time);
-		GL.uniform2f(resolutionUniform, Std.int(pwidth), Std.int(pheight));
+		GL.uniform2f(resolutionUniform, pwidth, pheight);
 
 		for (u in uniforms) GL.uniform1f(u.id, u.value);
 
@@ -275,7 +256,6 @@ class PostProcess extends OpenGLView
 #endif
 
 attribute vec2 aVertex;
-
 attribute vec2 aTexCoord;
 varying vec2 vTexCoord;
 

@@ -16,6 +16,7 @@ import flixel.util.FlxPoint;
 import flixel.util.FlxRandom;
 import flixel.util.FlxRect;
 import flixel.util.loaders.CachedGraphics;
+import openfl.display.OpenGLView;
 
 /**
  * The camera class is used to display the game's visuals in the Flash player.
@@ -173,6 +174,14 @@ class FlxCamera extends FlxBasic
 	 */
 	public var antialiasing(default, set):Bool = false;
 	/**
+	 * Sprite for postprocessing effects
+	 */
+	public var postProcessLayer:Sprite;
+	/**
+	 * Post process effects active on the postProcessLayer
+	 */
+	public var postProcesses:Array<PostProcess>;
+	/**
 	 * Used to force the camera to look ahead of the target.
 	 */
 	public var followLead(default, null):FlxPoint;
@@ -259,7 +268,7 @@ class FlxCamera extends FlxBasic
 	 */
 	private var _point:FlxPoint;
 	
-	#if flash
+#if flash
 	/**
 	 * Internal helper variable for doing better wipes/fills between renders.
 	 */
@@ -268,28 +277,11 @@ class FlxCamera extends FlxBasic
 	 * Internal, used to render buffer to screen space.
 	 */
 	private var _flashBitmap:Bitmap;
-	#end
-	
-#if !flash
+#else
 	/**
 	 * Sprite for drawing (instead of _flashBitmap in flash)
 	 */
-	public var canvas:Sprite = null;
-	
-	/**
-	 * Sprite for postprocessing effects
-	 */
-	public var postProcessLayer:Sprite;
-	
-	public var postProcesses:Array<PostProcess>;
-	
-	#if !FLX_NO_DEBUG
-	/**
-	 * Sprite for visual effects (flash and fade) and visual debug information (bounding boxes are drawn on it) for non-flash targets
-	 */
-	public var debugLayer:Sprite;
-	#end
-	
+	public var canvas:Sprite;
 	/**
 	 * Currently used draw stack item
 	 */
@@ -302,6 +294,12 @@ class FlxCamera extends FlxBasic
 	 * Draw stack items that can be reused
 	 */
 	private static var _storageHead:DrawStackItem;
+	#if !FLX_NO_DEBUG
+	/**
+	 * Sprite for visual effects (flash and fade) and visual debug information (bounding boxes are drawn on it) for non-flash targets
+	 */
+	public var debugLayer:Sprite;
+	#end
 	
 	#if !js
 	@:noCompletion public function getDrawStackItem(ObjGraphics:CachedGraphics, ObjColored:Bool, ObjBlending:Int, ObjAntialiasing:Bool = false):DrawStackItem
@@ -429,10 +427,12 @@ class FlxCamera extends FlxBasic
 			currItem = currItem.next;
 		}
 		
-		var postprocess:PostProcess = postProcesses[0];
-		if (postprocess != null) 
+		if (postProcesses != null)
 		{
-			postprocess.capture();
+			for(postProcess in postProcesses)
+			{
+				postProcess.capture();
+			}
 		}
 	}
 #end
@@ -449,13 +449,6 @@ class FlxCamera extends FlxBasic
 	public function new(X:Int = 0, Y:Int = 0, Width:Int = 0, Height:Int = 0, Zoom:Float = 0)
 	{
 		super();
-		
-		#if !flash
-		postProcessLayer = new Sprite();
-		postProcessLayer.x = X;
-		postProcessLayer.y = Y;
-		postProcesses = new Array<PostProcess>();
-		#end
 		
 		_scrollTarget = new FlxPoint();
 		
@@ -485,6 +478,12 @@ class FlxCamera extends FlxBasic
 		canvas = new Sprite();
 		canvas.x = -width * 0.5;
 		canvas.y = -height * 0.5;
+		
+		if (OpenGLView.isSupported)
+		{
+			postProcessLayer = new Sprite();
+			postProcesses = new Array<PostProcess>();
+		}
 		#end
 		
 		#if flash
@@ -503,8 +502,12 @@ class FlxCamera extends FlxBasic
 		flashSprite.addChild(_flashBitmap);
 		#else
 		flashSprite.addChild(canvas);
-		flashSprite.addChild(postProcessLayer);
+		if (postProcessLayer != null)
+		{
+			flashSprite.addChild(postProcessLayer);
+		}
 		#end
+		
 		_flashRect = new Rectangle(0, 0, width, height);
 		_flashPoint = new Point();
 		
@@ -570,13 +573,6 @@ class FlxCamera extends FlxBasic
 		debugLayer = null;
 		#end
 		
-		flashSprite.removeChild(postProcessLayer);
-		for (i in 0...(postProcessLayer.numChildren)) 
-		{
-			postProcessLayer.removeChildAt(0);
-		}
-		postProcessLayer = null;
-		
 		flashSprite.removeChild(canvas);
 		var canvasNumChildren:Int = canvas.numChildren;
 		for (i in 0...(canvasNumChildren))
@@ -584,6 +580,21 @@ class FlxCamera extends FlxBasic
 			canvas.removeChildAt(0);
 		}
 		canvas = null;
+		
+		if (postProcessLayer != null)
+		{
+			flashSprite.removeChild(postProcessLayer);
+			for (i in 0...(postProcessLayer.numChildren)) 
+			{
+				postProcessLayer.removeChildAt(0);
+			}
+			postProcessLayer = null;
+		}
+		if (postProcesses != null)
+		{
+			postProcesses.splice(0, postProcesses.length);
+			postProcesses = null;
+		}
 		
 		clearDrawStack();
 		
@@ -596,18 +607,23 @@ class FlxCamera extends FlxBasic
 		super.destroy();
 	}
 	
-	#if !flash
-	public function addPostProcess(postprocess:PostProcess):Void 
+	#if flash
+	public function addPostProcess(postprocess:PostProcess):Void { /* This is empty to prevent compilation errors */ } 
+	#else
+	public function addPostProcess(postProcess:PostProcess):Void 
 	{
-		postprocess.px = Std.int(x);
-		postprocess.py = Std.int(y);
-		postprocess.pwidth = width;
-		postprocess.pheight = height;
-		postprocess.rebuild(width, height);
-		postProcessLayer.addChild(postprocess);
-		postProcesses.push(postprocess);
-		trace(postProcesses.length);
-		trace(postprocess.px, postprocess.py, postprocess.pwidth, postprocess.pheight);
+		if (OpenGLView.isSupported)
+		{
+			postProcess.px = Std.int(x); // this does nothing?
+			postProcess.py = Std.int(y); // this does nothing?
+			postProcess.rebuild(width, height);
+			postProcessLayer.addChild(postProcess);
+			postProcesses.push(postProcess);
+		}
+		else
+		{
+			FlxG.log.error("Shaders are not supported on this platform.");
+		}
 	}
 	#end
 	
@@ -1184,11 +1200,13 @@ class FlxCamera extends FlxBasic
 				#end
 			}
 			
-			for (postprocess in postProcesses) 
+			if (postProcesses != null)
 			{
-				postprocess.width = Value;
+				for (postprocess in postProcesses) 
+				{
+					postprocess.width = Value;
+				}
 			}
-			
 			#end
 		}
 		return Value;
@@ -1224,9 +1242,12 @@ class FlxCamera extends FlxBasic
 				#end
 			}
 			
-			for (postprocess in postProcesses) 
+			if (postProcesses != null)
 			{
-				postprocess.height = Value;
+				for (postprocess in postProcesses) 
+				{
+					postprocess.height = Value;
+				}
 			}
 			#end
 		}
