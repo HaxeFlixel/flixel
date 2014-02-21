@@ -7,6 +7,7 @@ import flash.display.Sprite;
 import flash.geom.ColorTransform;
 import flash.geom.Point;
 import flash.geom.Rectangle;
+import flixel.effects.postprocess.PostProcess;
 import flixel.system.layer.DrawStackItem;
 import flixel.system.layer.TileSheetExt;
 import flixel.util.FlxColor;
@@ -275,6 +276,13 @@ class FlxCamera extends FlxBasic
 	 */
 	public var canvas:Sprite = null;
 	
+	/**
+	 * Sprite for postprocessing effects
+	 */
+	public var postProcessLayer:Sprite;
+	
+	public var postProcesses:Array<PostProcess>;
+	
 	#if !FLX_NO_DEBUG
 	/**
 	 * Sprite for visual effects (flash and fade) and visual debug information (bounding boxes are drawn on it) for non-flash targets
@@ -420,6 +428,12 @@ class FlxCamera extends FlxBasic
 			}
 			currItem = currItem.next;
 		}
+		
+		var postprocess:PostProcess = postProcesses[0];
+		if (postprocess != null) 
+		{
+			postprocess.capture();
+		}
 	}
 #end
 	
@@ -435,6 +449,13 @@ class FlxCamera extends FlxBasic
 	public function new(X:Int = 0, Y:Int = 0, Width:Int = 0, Height:Int = 0, Zoom:Float = 0)
 	{
 		super();
+		
+		#if !flash
+		postProcessLayer = new Sprite();
+		postProcessLayer.x = X;
+		postProcessLayer.y = Y;
+		postProcesses = new Array<PostProcess>();
+		#end
 		
 		_scrollTarget = new FlxPoint();
 		
@@ -482,6 +503,7 @@ class FlxCamera extends FlxBasic
 		flashSprite.addChild(_flashBitmap);
 		#else
 		flashSprite.addChild(canvas);
+		flashSprite.addChild(postProcessLayer);
 		#end
 		_flashRect = new Rectangle(0, 0, width, height);
 		_flashPoint = new Point();
@@ -547,6 +569,14 @@ class FlxCamera extends FlxBasic
 		flashSprite.removeChild(debugLayer);
 		debugLayer = null;
 		#end
+		
+		flashSprite.removeChild(postProcessLayer);
+		for (i in 0...(postProcessLayer.numChildren)) 
+		{
+			postProcessLayer.removeChildAt(0);
+		}
+		postProcessLayer = null;
+		
 		flashSprite.removeChild(canvas);
 		var canvasNumChildren:Int = canvas.numChildren;
 		for (i in 0...(canvasNumChildren))
@@ -565,6 +595,21 @@ class FlxCamera extends FlxBasic
 		
 		super.destroy();
 	}
+	
+	#if !flash
+	public function addPostProcess(postprocess:PostProcess):Void 
+	{
+		postprocess.px = Std.int(x);
+		postprocess.py = Std.int(y);
+		postprocess.pwidth = width;
+		postprocess.pheight = height;
+		postprocess.rebuild(width, height);
+		postProcessLayer.addChild(postprocess);
+		postProcesses.push(postprocess);
+		trace(postProcesses.length);
+		trace(postprocess.px, postprocess.py, postprocess.pwidth, postprocess.pheight);
+	}
+	#end
 	
 	/**
 	 * Updates the camera scroll as well as special effects like screen-shake or fades.
@@ -1138,6 +1183,12 @@ class FlxCamera extends FlxBasic
 				debugLayer.x = canvas.x;
 				#end
 			}
+			
+			for (postprocess in postProcesses) 
+			{
+				postprocess.width = Value;
+			}
+			
 			#end
 		}
 		return Value;
@@ -1171,6 +1222,11 @@ class FlxCamera extends FlxBasic
 				#if !FLX_NO_DEBUG
 				debugLayer.y = canvas.y;
 				#end
+			}
+			
+			for (postprocess in postProcesses) 
+			{
+				postprocess.height = Value;
 			}
 			#end
 		}
