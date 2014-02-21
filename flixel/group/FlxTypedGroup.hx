@@ -688,7 +688,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	{
 		for (member in _members)
 		{
-			if(member != null)
+			if (member != null)
 			{
 				Function(member);
 			}

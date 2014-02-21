@@ -106,13 +106,13 @@ class FlxReplay
 		var line:String;
 		var i:Int = 1;
 		var l:Int = lines.length;
-		while(i < l)
+		while (i < l)
 		{
 			line = lines[i++];
-			if(line.length > 3)
+			if (line.length > 3)
 			{
 				_frames[frameCount++] = new FrameRecord().load(line);
-				if(frameCount >= _capacity)
+				if (frameCount >= _capacity)
 				{
 					_capacity *= 2;
 					FlxArrayUtil.setLength(_frames, _capacity);
@@ -176,7 +176,7 @@ class FlxReplay
 		
 		_frames[frameCount++] = frameRecorded;
 		
-		if(frameCount >= _capacity)
+		if (frameCount >= _capacity)
 		{
 			_capacity *= 2;
 			FlxArrayUtil.setLength(_frames, _capacity);
@@ -190,7 +190,7 @@ class FlxReplay
 	{
 		FlxG.inputs.reset();
 		
-		if(_marker >= frameCount)
+		if (_marker >= frameCount)
 		{
 			finished = true;
 			return;

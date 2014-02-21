@@ -41,7 +41,7 @@ class FlxBGSprite extends FlxSprite
 		var useAlpha:Bool = (alpha < 1);
 		#end
 		
-		while(i < l)
+		while (i < l)
 		{
 			camera = cameras[i++];
 			

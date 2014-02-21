@@ -1,12 +1,13 @@
 package flixel.animation;
 
 import flixel.FlxSprite;
+import flixel.interfaces.IFlxDestroyable;
 
 /**
  * ...
  * @author Zaphod
  */
-class FlxBaseAnimation
+class FlxBaseAnimation implements IFlxDestroyable
 {
 	/**
 	 * Animation controller this animation belongs to
@@ -47,14 +48,10 @@ class FlxBaseAnimation
 		parent = null;
 	}
 	
-	public function update():Void
-	{
-		
-	}
+	public function update():Void {}
 	
 	public function clone(Parent:FlxAnimationController):FlxBaseAnimation
 	{
 		return null;
 	}
-	
 }

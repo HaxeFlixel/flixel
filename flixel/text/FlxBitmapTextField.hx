@@ -196,7 +196,7 @@ class FlxBitmapTextField extends FlxSprite
 		
 		var camID:Int;
 		
-		while(i < l)
+		while (i < l)
 		{
 			camera = cameras[i++];
 			

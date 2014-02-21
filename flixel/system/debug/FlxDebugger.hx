@@ -283,14 +283,14 @@ class FlxDebugger extends Sprite
 	 * 
 	 * @param   Position       Either LEFT, MIDDLE or RIGHT.
 	 * @param   Icon           The icon to use for the button
-	 * @param   DownHandler    The function to be called when the button is pressed.
+	 * @param   UpHandler      The function to be called when the button is pressed.
 	 * @param   ToggleMode     Whether this is a toggle button or not.
 	 * @param   UpdateLayout   Whether to update the button layout.
 	 * @return  The added button.
 	 */
-	public function addButton(Position:ButtonAlignment, ?Icon:BitmapData, ?DownHandler:Void->Void, ToggleMode:Bool = false, UpdateLayout:Bool = false):FlxSystemButton
+	public function addButton(Position:ButtonAlignment, ?Icon:BitmapData, ?UpHandler:Void->Void, ToggleMode:Bool = false, UpdateLayout:Bool = false):FlxSystemButton
 	{
-		var button = new FlxSystemButton(Icon, DownHandler, ToggleMode);
+		var button = new FlxSystemButton(Icon, UpHandler, ToggleMode);
 		
 		var array:Array<FlxSystemButton>; 
 		switch (Position)

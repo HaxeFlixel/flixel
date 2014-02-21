@@ -1,9 +1,10 @@
 import massive.munit.TestSuite;
 
 import flixel.FlxCameraTest;
-import flixel.FlxGameTest;
+import flixel.FlxGTest;
 import flixel.FlxSpriteTest;
 import flixel.FlxStateTest;
+import FlxTest;
 
 /**
  * Auto generated Test Suite for MassiveUnit.
@@ -18,8 +19,9 @@ class TestSuite extends massive.munit.TestSuite
 		super();
 
 		add(flixel.FlxCameraTest);
-		add(flixel.FlxGameTest);
+		add(flixel.FlxGTest);
 		add(flixel.FlxSpriteTest);
 		add(flixel.FlxStateTest);
+		add(FlxTest);
 	}
 }

@@ -17,6 +17,7 @@ import flixel.util.FlxPoint;
 @:allow(flixel.input.touch.FlxTouchManager)
 class FlxTouch extends FlxPoint implements IFlxDestroyable
 {	
+#if !FLX_NO_TOUCH
 	public var screenX:Int = 0;
 	public var screenY:Int = 0;
 	
@@ -225,4 +226,5 @@ class FlxTouch extends FlxPoint implements IFlxDestroyable
 	private inline function get_justPressed() :Bool { return _current == 2;  }
 	private inline function get_justReleased():Bool { return _current == -1; }
 	private inline function get_isActive()    :Bool { return _current != 0;  }
+#end
 }

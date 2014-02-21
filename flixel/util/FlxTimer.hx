@@ -34,17 +34,15 @@ class FlxTimer
 	 * FlxTimer.start(1, function(t) { trace(t.userData); } ).userData = "Hello World!";
 	 */
 	public var userData:Dynamic = null;
-	
 	/**
 	 * Whether to reset and put this FlxTimer object into internal timers pool automatically after it finishes it's work.
 	 */
 	public var usePooling:Bool = true;
-	
 	/**
-	 * Internal tracker for the time's-up callback function.
+	 * Function that gets called when timer completes.
 	 * Callback should be formed "onTimer(Timer:FlxTimer);"
 	 */
-	private var _callback:FlxTimer->Void = null;
+	public var complete:FlxTimer->Void = null;
 	/**
 	 * Internal tracker for the actual timer counting up.
 	 */
@@ -65,7 +63,7 @@ class FlxTimer
 	 */
 	public function destroy():Void
 	{
-		_callback = null;
+		complete = null;
 		userData = null;
 	}
 	
@@ -116,7 +114,7 @@ class FlxTimer
 		}
 		
 		loops = Loops;
-		_callback = Callback;
+		complete = Callback;
 		_timeCounter = 0;
 		_loopsCounter = 0;
 	}
@@ -131,7 +129,7 @@ class FlxTimer
 		{
 			NewTime = time;
 		}
-		run(NewTime, _callback, loops);
+		run(NewTime, complete, loops);
 		return this;
 	}
 	
@@ -162,9 +160,9 @@ class FlxTimer
 			_timeCounter -= time;
 			_loopsCounter++;
 			
-			if (_callback != null)
+			if (complete != null)
 			{
-				_callback(this);
+				complete(this);
 			}
 			
 			if (loops > 0 && (_loopsCounter >= loops))

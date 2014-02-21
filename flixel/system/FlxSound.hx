@@ -215,8 +215,8 @@ class FlxSound extends FlxBasic
 		if (_target != null)
 		{
 			radialMultiplier = FlxMath.getDistance(new FlxPoint(_target.x, _target.y), new FlxPoint(x, y)) / _radius;
-			if(radialMultiplier < 0) radialMultiplier = 0;
-			if(radialMultiplier > 1) radialMultiplier = 1;
+			if (radialMultiplier < 0) radialMultiplier = 0;
+			if (radialMultiplier > 1) radialMultiplier = 1;
 
 			radialMultiplier = 1 - radialMultiplier;
 

@@ -375,7 +375,7 @@ class BitmapFrontEnd
 			do
 			{
 				ukey = baseKey + inc++;
-			} while(checkCache(ukey));
+			} while (checkCache(ukey));
 			baseKey = ukey;
 		}
 		return baseKey;

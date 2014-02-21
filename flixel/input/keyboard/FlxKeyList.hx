@@ -117,7 +117,7 @@ class FlxKeyList
 	{
 		var key:FlxKey = null;
 		var keyCode:Int = FlxKeyboard.TOTAL;
-		while(keyCode-- >= 0)
+		while (keyCode-- >= 0)
 		{
 			key = FlxG.keys._keyList[keyCode];
 			if (key != null)

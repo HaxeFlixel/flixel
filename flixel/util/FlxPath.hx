@@ -652,7 +652,7 @@ class FlxPath
 		var nextNode:FlxPoint;
 		var i:Int = 0;
 		var l:Int = nodes.length;
-		while(i < l)
+		while (i < l)
 		{
 			//get a reference to the current node
 			node = nodes[i];
@@ -668,7 +668,7 @@ class FlxPath
 				nodeSize *= 2;
 			}
 			var nodeColor:Int = debugColor;
-			if(l > 1)
+			if (l > 1)
 			{
 				if (i == 0)
 				{

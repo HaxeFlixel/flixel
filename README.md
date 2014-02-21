@@ -2,6 +2,8 @@
 
 [flixel](https://github.com/HaxeFlixel/flixel) | [addons](https://github.com/HaxeFlixel/flixel-addons) | [ui](https://github.com/HaxeFlixel/flixel-ui) | [demos](https://github.com/HaxeFlixel/flixel-demos) | [tools](https://github.com/HaxeFlixel/flixel-tools) | [templates](https://github.com/HaxeFlixel/flixel-templates) | [docs](https://github.com/HaxeFlixel/flixel-docs) | [haxeflixel.com](https://github.com/HaxeFlixel/haxeflixel.com)
 
+[![Build Status](https://travis-ci.org/HaxeFlixel/flixel.png)](https://travis-ci.org/HaxeFlixel/flixel) [![Fixes Needed](https://badge.waffle.io/haxeflixel/flixel.png?label=ready)](http://waffle.io/haxeflixel/flixel) [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/HaxeFlixel/flixel/trend.png)](https://bitdeli.com/HaxeFlixel "Bitdeli Badge")
+
 ##Getting Started
 
 You can read our getting started docs [here](http://haxeflixel.com/wiki/getting-started).
@@ -112,7 +114,3 @@ There's also experimental support for HTML5.
 - Camera system for split screen
 - Pathfinding and following
 - Easy object recycling
-
-=
-
-[![Build Status](https://travis-ci.org/HaxeFlixel/flixel.png)](https://travis-ci.org/HaxeFlixel/flixel) [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/HaxeFlixel/flixel/trend.png)](https://bitdeli.com/free "Bitdeli Badge")

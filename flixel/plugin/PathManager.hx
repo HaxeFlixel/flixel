@@ -84,7 +84,7 @@ class PathManager extends FlxPlugin
 		var i:Int = _paths.length - 1;
 		var path:FlxPath;
 		
-		while(i >= 0)
+		while (i >= 0)
 		{
 			path = _paths[i--];
 			

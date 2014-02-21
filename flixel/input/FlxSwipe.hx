@@ -8,6 +8,7 @@ import flixel.system.frontEnds.PluginFrontEnd;
 import flixel.util.FlxAngle;
 import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
+import flixel.util.FlxStringUtil;
 
 @:allow(flixel.input.mouse.FlxMouseButton)
 @:allow(flixel.input.touch.FlxTouch)
@@ -38,13 +39,12 @@ class FlxSwipe
 	
 	private inline function toString():String
 	{
-		var p = FlxG.debugger.precision;
-		return "(ID: " + ID + 
-		       " | start: " + startPosition + 
-		       " | end: " + endPosition + 
-			   " | distance: " + FlxMath.roundDecimal(distance, p) + 
-		       " | angle: " + FlxMath.roundDecimal(angle, p)  + 
-			   " | duration: " + FlxMath.roundDecimal((duration / 1000), p) + "s )";
+		return FlxStringUtil.getDebugString([ { label: "ID", value: ID }, 
+		                                      { label: "start", value: startPosition },
+		                                      { label: "end", value: endPosition },
+		                                      { label: "distance", value: distance },
+		                                      { label: "angle", value: angle },
+		                                      { label: "duration", value: (duration / 1000) } ]);
 	}
 	
 	private inline function get_distance():Float

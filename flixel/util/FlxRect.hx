@@ -234,7 +234,9 @@ class FlxRect
 	 */
 	public inline function toString():String
 	{
-		var p = FlxG.debugger.precision;
-		return "(x: " + FlxMath.roundDecimal(x, p) + " | y: " + FlxMath.roundDecimal(y, p) + " | w: " + FlxMath.roundDecimal(width, p) + " | h: " + FlxMath.roundDecimal(height, p) + ")"; 
+		return FlxStringUtil.getDebugString([ { label: "x", value: x }, 
+		                                      { label: "y", value: y },
+		                                      { label: "w", value: width },
+		                                      { label: "h", value: height } ]);
 	}
 }

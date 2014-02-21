@@ -76,7 +76,7 @@ class VCR
 	public inline function recording():Void
 	{
 		recordBtn.changeIcon(new GraphicRecordOn(0, 0));
-		recordBtn.downHandler = FlxG.vcr.stopRecording;
+		recordBtn.upHandler = FlxG.vcr.stopRecording;
 	}
 
 	/**
@@ -86,7 +86,7 @@ class VCR
 	public inline function stoppedRecording():Void
 	{
 		recordBtn.changeIcon(new GraphicRecordOn(0, 0));
-		recordBtn.downHandler = FlxG.vcr.startRecording.bind(true);
+		recordBtn.upHandler = FlxG.vcr.startRecording.bind(true);
 	}
 	
 	/**
@@ -96,7 +96,7 @@ class VCR
 	public inline function stoppedReplay():Void
 	{
 		recordBtn.changeIcon(new GraphicRecordOff(0, 0));
-		recordBtn.downHandler = FlxG.vcr.startRecording.bind(true);
+		recordBtn.upHandler = FlxG.vcr.startRecording.bind(true);
 	}
 	
 	/**
@@ -106,7 +106,7 @@ class VCR
 	public inline function playingReplay():Void
 	{
 		recordBtn.changeIcon(new GraphicStop(0, 0));
-		recordBtn.downHandler = FlxG.vcr.stopReplay;
+		recordBtn.upHandler = FlxG.vcr.stopReplay;
 	}
 	
 	/**
@@ -130,7 +130,7 @@ class VCR
 	 */
 	public inline function onPause():Void
 	{
-		playbackToggleBtn.downHandler = FlxG.vcr.resume;
+		playbackToggleBtn.upHandler = FlxG.vcr.resume;
 		playbackToggleBtn.changeIcon(new GraphicPlay(0, 0));
 	}
 
@@ -140,7 +140,7 @@ class VCR
 	 */
 	public inline function onResume():Void
 	{
-		playbackToggleBtn.downHandler = FlxG.vcr.pause;
+		playbackToggleBtn.upHandler = FlxG.vcr.pause;
 		playbackToggleBtn.changeIcon(new GraphicPause(0, 0));
 	}
 

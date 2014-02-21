@@ -149,14 +149,13 @@ class FlxBitmapDataPool
 	}
 }
 
-@:publicFields
 private class FlxBitmapDataPoolNode 
 {
-	var bmd:BitmapData = null;
-	var prev:FlxBitmapDataPoolNode = null;
-	var next:FlxBitmapDataPoolNode = null;
+	public var bmd:BitmapData;
+	public var prev:FlxBitmapDataPoolNode;
+	public var next:FlxBitmapDataPoolNode;
 	
-	function new(?bmd:BitmapData, ?prev:FlxBitmapDataPoolNode, ?next:FlxBitmapDataPoolNode):Void 
+	public function new(?bmd:BitmapData, ?prev:FlxBitmapDataPoolNode, ?next:FlxBitmapDataPoolNode):Void 
 	{
 		this.bmd = bmd;
 		this.prev = prev;

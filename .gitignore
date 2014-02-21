@@ -1,5 +1,7 @@
 *.zip
 *.n
 template-bak/*
-test/report
-test/.temp
+*.log
+tests/report/
+tests/.temp/
+tests/bin/
