@@ -529,7 +529,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		var sprite:FlxSprite;
 		for (i in 0...length)
 		{
-			sprite = group.members[i];
+			sprite = _sprites[i];
 			if (sprite != null)
 			{
 				sprite.reset(X, Y);
