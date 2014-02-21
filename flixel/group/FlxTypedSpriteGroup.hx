@@ -52,6 +52,12 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	#end
 	
 	/**
+	 * Array of all the FlxSprites that exist in this group for 
+	 * optimization purposes / static typing on cpp targets.
+	 */
+	private var _sprites:Array<FlxSprite>;
+	
+	/**
 	 * @param	X			The initial X position of the group
 	 * @param	Y			The initial Y position of the group
 	 * @param	MaxSize		Maximum amount of members allowed
@@ -60,6 +66,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	{
 		super(X, Y);
 		group = new FlxTypedGroup<T>(MaxSize);
+		_sprites = cast group.members;
 	}
 	
 	/**
@@ -69,12 +76,12 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 */
 	override private function initVars():Void 
 	{
-		collisionType	= FlxCollisionType.SPRITEGROUP;
-		offset			= new FlxPointHelper<T>(this, offsetTransform);
-		origin			= new FlxPointHelper<T>(this, originTransform);
-		scale			= new FlxPointHelper<T>(this, scaleTransform);
-		scrollFactor	= new FlxPointHelper<T>(this, scrollFactorTransform);
+		collisionType = FlxCollisionType.SPRITEGROUP;
 		
+		offset = new FlxPointHelper<T>(this, offsetTransform);
+		origin = new FlxPointHelper<T>(this, originTransform);
+		scale = new FlxPointHelper<T>(this, scaleTransform);
+		scrollFactor = new FlxPointHelper<T>(this, scrollFactorTransform);
 		scrollFactor.set(1, 1);
 	 	
 		initMotionVars();
@@ -86,16 +93,14 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 */
 	override public function destroy():Void
 	{
-		if (offset != null)			
-		{ 
-			offset.destroy(); 
-			offset = null; 
-		}
-		if (origin != null)			{ origin.destroy(); origin = null; }
-		if (scale != null)			{ scale.destroy(); scale = null; }
-		if (scrollFactor != null)	{ scrollFactor.destroy(); scrollFactor = null; }
+		// normally don't have to destroy FlxPoints, but these are FlxPointHelpers!
+		offset = FlxG.safeDestroy(offset);
+		origin = FlxG.safeDestroy(origin);
+		scale = FlxG.safeDestroy(scale);
+		scrollFactor = FlxG.safeDestroy(scrollFactor);
 		
-		if (group != null)			{ group.destroy(); group = null; }
+		group = FlxG.safeDestroy(group);
+		_sprites = null;
 		
 		super.destroy();
 	}
@@ -116,7 +121,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		var cloned:FlxTypedSpriteGroup<T> = cast NewSprite;
 		cloned.maxSize = group.maxSize;
 		
-		for (basic in group.members)
+		for (basic in _sprites)
 		{
 			if (basic != null)
 			{
@@ -140,7 +145,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		}
 		
 		var result:Bool = false;
-		for (sprite in group.members)
+		for (sprite in _sprites)
 		{
 			if (sprite != null && sprite.exists && sprite.visible)
 			{
@@ -162,9 +167,9 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	override public function overlapsPoint(point:FlxPoint, InScreenSpace:Bool = false, ?Camera:FlxCamera):Bool 
 	{
 		var result:Bool = false;
-		for (sprite in group.members)
+		for (sprite in _sprites)
 		{
-			if (sprite != null && sprite.exists && sprite.visible)
+			if ((sprite != null) && sprite.exists && sprite.visible)
 			{
 				result = result || sprite.overlapsPoint(point, InScreenSpace, Camera);
 			}
@@ -185,9 +190,9 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	override public function pixelsOverlapPoint(point:FlxPoint, Mask:Int = 0xFF, ?Camera:FlxCamera):Bool 
 	{
 		var result:Bool = false;
-		for (sprite in group.members)
+		for (sprite in _sprites)
 		{
-			if (sprite != null && sprite.exists && sprite.visible)
+			if ((sprite != null) && sprite.exists && sprite.visible)
 			{
 				result = result || sprite.pixelsOverlapPoint(point, Mask, Camera);
 			}
@@ -231,7 +236,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		}
 		
 		var spritePositions:Array<FlxPoint>;
-		for (sprite in group.members)
+		for (sprite in _sprites)
 		{
 			if (sprite != null)
 			{
@@ -596,19 +601,19 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 			return;
 		}
 		
-		var basic:T;
+		var sprite:T;
 		var lambda:T->V->Void;
 		
 		for (i in 0...length)
 		{
-			basic = group.members[i];
+			sprite = group.members[i];
 			
-			if ((basic != null) && basic.exists)
+			if ((sprite != null) && sprite.exists)
 			{
 				for (j in 0...numProps)
 				{
 					lambda = FunctionArray[j];
-					lambda(basic, ValueArray[j]);
+					lambda(sprite, ValueArray[j]);
 				}
 			}
 		}
@@ -625,21 +630,21 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	
 	override private function set_visible(Value:Bool):Bool
 	{
-		if(exists && visible != Value)
+		if (exists && visible != Value)
 			transformChildren(visibleTransform, Value);
 		return super.set_visible(Value);
 	}
 	
 	override private function set_active(Value:Bool):Bool
 	{
-		if(exists && active != Value)
+		if (exists && active != Value)
 			transformChildren(activeTransform, Value);
 		return super.set_active(Value);
 	}
 	
 	override private function set_alive(Value:Bool):Bool
 	{
-		if(exists && alive != Value)
+		if (exists && alive != Value)
 			transformChildren(aliveTransform, Value);
 		return super.set_alive(Value);
 	}
@@ -766,7 +771,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		var minX:Float = Math.POSITIVE_INFINITY;
 		var maxX:Float = Math.NEGATIVE_INFINITY;
 		
-		for (member in group.members)
+		for (member in _sprites)
 		{
 			var minMemberX:Float = member.x;
 			var maxMemberX:Float = minMemberX + member.width;
@@ -801,7 +806,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		var minY:Float = Math.POSITIVE_INFINITY;
 		var maxY:Float = Math.NEGATIVE_INFINITY;
 		
-		for (member in group.members)
+		for (member in _sprites)
 		{
 			var minMemberY:Float = member.y;
 			var maxMemberY:Float = minMemberY + member.height;
