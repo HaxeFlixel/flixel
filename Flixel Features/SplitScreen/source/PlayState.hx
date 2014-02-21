@@ -44,11 +44,10 @@ class PlayState extends FlxState
 		add(_player2);
 		
 		// Then we setup two cameras to follow each of the two players
-		createCamera(_halfWidth, 0xFFCCCC, _player1, "assets/shaders/scanline.frag");
 		//createCamera(_halfWidth, 0xFFCCCC, _player1);
+		createCamera(_halfWidth, 0xFFCCCC, _player1);
+		createCamera(0, 0xCCCCFF, _player2, "assets/shaders/color/invert.frag");
 		//createCamera(0, 0xCCCCFF, _player2, "assets/shaders/scanline.frag");
-		//createCamera(0, 0xCCCCFF, _player2, "assets/shaders/color/invert.frag");
-		createCamera(0, 0xCCCCFF, _player2);
 		
 		// Some instructions
 		var textBG:FlxSprite = new FlxSprite(0, _textY);
@@ -76,16 +75,15 @@ class PlayState extends FlxState
 		return player;
 	}
 	
-	private function createCamera(X:Int, Color:Int, Follow:FlxSprite, ?shader:String):Void
+	private function createCamera(X:Int, Color:Int, Follow:FlxSprite, ?Shader:String):Void
 	{
 		var camera:FlxCamera = new FlxCamera(X, 0, _halfWidth, _textY);
 		camera.setBounds(0, 0, _level.width - 8, _textY);
 		camera.color = Color;
 		camera.follow(Follow);
-		if(shader != null) {
-			var shader:PostProcess = new PostProcess(shader);
-			trace(camera.x, camera.y);
-			camera.addPostProcess(shader);
+		if (Shader != null)
+		{
+			camera.addPostProcess(new PostProcess(Shader));
 		}
 		FlxG.cameras.add(camera);
 	}
