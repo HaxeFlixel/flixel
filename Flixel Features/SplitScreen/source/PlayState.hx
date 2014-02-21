@@ -1,5 +1,6 @@
 package;
 
+import flixel.effects.postprocess.PostProcess;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
@@ -25,7 +26,7 @@ class PlayState extends FlxState
 		
 		// Set the background color to white
 		FlxG.cameras.bgColor = FlxColor.WHITE;
-		
+		FlxG.log.redirectTraces = false;
 		// Create the tilemap from the levelData we just created
 		_level = new FlxTilemap();
 		_level.loadMap(Assets.getText("assets/level.csv"), GraphicAuto, 0, 0, FlxTilemap.AUTO);
@@ -43,7 +44,10 @@ class PlayState extends FlxState
 		add(_player2);
 		
 		// Then we setup two cameras to follow each of the two players
-		createCamera(_halfWidth, 0xFFCCCC, _player1);
+		createCamera(_halfWidth, 0xFFCCCC, _player1, "assets/shaders/scanline.frag");
+		//createCamera(_halfWidth, 0xFFCCCC, _player1);
+		//createCamera(0, 0xCCCCFF, _player2, "assets/shaders/scanline.frag");
+		//createCamera(0, 0xCCCCFF, _player2, "assets/shaders/color/invert.frag");
 		createCamera(0, 0xCCCCFF, _player2);
 		
 		// Some instructions
@@ -72,12 +76,17 @@ class PlayState extends FlxState
 		return player;
 	}
 	
-	private function createCamera(X:Int, Color:Int, Follow:FlxSprite):Void
+	private function createCamera(X:Int, Color:Int, Follow:FlxSprite, ?shader:String):Void
 	{
 		var camera:FlxCamera = new FlxCamera(X, 0, _halfWidth, _textY);
 		camera.setBounds(0, 0, _level.width - 8, _textY);
 		camera.color = Color;
 		camera.follow(Follow);
+		if(shader != null) {
+			var shader:PostProcess = new PostProcess(shader);
+			trace(camera.x, camera.y);
+			camera.addPostProcess(shader);
+		}
 		FlxG.cameras.add(camera);
 	}
 	
