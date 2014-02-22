@@ -295,11 +295,13 @@ class FlxSprite extends FlxObject
 		if (Width == 0)
 		{
 			Width = (Animated == true) ? cachedGraphics.bitmap.height : cachedGraphics.bitmap.width;
+			Width = (Width > cachedGraphics.bitmap.width) ? cachedGraphics.bitmap.width : Width;
 		}
 		
 		if (Height == 0)
 		{
 			Height = (Animated == true) ? Width : cachedGraphics.bitmap.height;
+			Height = (Height > cachedGraphics.bitmap.height) ? cachedGraphics.bitmap.height : Height;
 		}
 		
 		if (!Std.is(Graphic, TextureRegion))
