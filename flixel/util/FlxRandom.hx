@@ -252,6 +252,8 @@ class FlxRandom
 	 */
 	public static function weightedPick(WeightsArray:Array<Float>):Int
 	{
+		_floatHelper = 0;
+		
 		for (i in WeightsArray)
 		{
 			_floatHelper += i;
