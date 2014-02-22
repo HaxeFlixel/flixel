@@ -380,9 +380,9 @@ class FlxText extends FlxSprite
 		if (Width != width)
 		{
 			var newWidth:Float = super.set_width(Width);
-			if (_textField != null)
+			if (_textField != null && scale.x != 0)
 			{
-				_textField.width = newWidth;
+				_textField.width = newWidth / scale.x;
 			}
 			dirty = true;
 		}
