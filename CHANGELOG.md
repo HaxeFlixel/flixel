@@ -19,6 +19,10 @@
 * Improvements to FlxSystemButton
 * Window: add optional close button
 * Exposed complete callback in FlxTimer, so now you can do: FlxTimer.start(...).complete = function(t) { };
+* Fixed a bug with onFocus() not firing the first time on Android
+* FlxTypedButton
+ * added allowSwiping flag
+ * added allowHighlightOnMobile flag
 
 3.1.0
 ------------------------------
