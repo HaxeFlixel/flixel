@@ -1329,10 +1329,13 @@ class FlxSprite extends FlxObject
 		if (key == null)
 		{
 			key = FlxG.bitmap.getUniqueKey();
-			FlxG.bitmap.add(Pixels, false, key);
+			cachedGraphics = FlxG.bitmap.add(Pixels, false, key);
+			cached.destroyOnNoUse = true;
 		}
-		
-		cachedGraphics = FlxG.bitmap.get(key);
+		else
+		{
+			cachedGraphics = FlxG.bitmap.get(key);
+		}
 		
 		if (region == null)	
 		{
