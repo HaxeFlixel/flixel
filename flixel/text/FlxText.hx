@@ -110,12 +110,6 @@ class FlxText extends FlxSprite
 	public var textField(get, never):TextField;
 	
 	/**
-	 * The width of the TextField object used for bitmap generation for this FlxText object.
-	 * Use it when you want to change the visible width of text.
-	 */
-	public var fieldWidth(get, set):Float;
-	
-	/**
 	 * Internal reference to a Flash TextField object.
 	 */
 	private var _textField:TextField;
@@ -157,7 +151,7 @@ class FlxText extends FlxSprite
 		}
 		
 		_textField = new TextField();
-		fieldWidth = Width;
+		_textField.width = Width;
 		_textField.selectable = false;
 		_textField.multiline = true;
 		_textField.wordWrap = true;
@@ -381,20 +375,19 @@ class FlxText extends FlxSprite
 		}
 	}
 	
-	private function set_fieldWidth(value:Float):Float
+	override private function set_width(Width:Float):Float
 	{
-		if (_textField != null)
+		if (Width != width)
 		{
-			_textField.width = value;
+			var newWidth:Float = super.set_width(Width);
+			if (_textField != null)
+			{
+				_textField.width = newWidth;
+			}
 			dirty = true;
 		}
 		
-		return value;
-	}
-	
-	private function get_fieldWidth():Float
-	{
-		return (_textField != null) ? _textField.width : 0;
+		return Width;
 	}
 	
 	private function get_text():String
