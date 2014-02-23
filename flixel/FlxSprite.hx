@@ -1330,7 +1330,7 @@ class FlxSprite extends FlxObject
 		{
 			key = FlxG.bitmap.getUniqueKey();
 			cachedGraphics = FlxG.bitmap.add(Pixels, false, key);
-			cached.destroyOnNoUse = true;
+			cachedGraphics.destroyOnNoUse = true;
 		}
 		else
 		{
