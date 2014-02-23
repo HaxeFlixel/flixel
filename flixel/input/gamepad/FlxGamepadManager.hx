@@ -61,7 +61,9 @@ class FlxGamepadManager implements IFlxInput
 			
 			lastActive = gamepad;
 			if (firstActive == null)
+			{
 				firstActive = gamepad;
+			}
 		}
 		
 		return gamepad;
@@ -69,6 +71,7 @@ class FlxGamepadManager implements IFlxInput
 	
 	/**
 	 * Get array of ids for gamepads with any pressed buttons or moved Axis, Ball and Hat.
+	 * 
 	 * @param	IDsArray	optional array to fill with ids
 	 * @return	array filled with active gamepad ids
 	 */
@@ -79,17 +82,12 @@ class FlxGamepadManager implements IFlxInput
 			IDsArray = [];
 		}
 		
-		var it = _gamepads.iterator();
-		var gamepad = it.next();
-		
-		while (gamepad != null)
+		for (gamepad in _gamepads)
 		{
-			if (gamepad.anyInput())
+			if ((gamepad != null) && gamepad.anyInput())
 			{
 				IDsArray.push(gamepad.id);
 			}
-			
-			gamepad = it.next();
 		}
 		
 		return IDsArray;
@@ -97,6 +95,7 @@ class FlxGamepadManager implements IFlxInput
 	
 	/**
 	 * Get array of gamepads with any pressed buttons or moved Axis, Ball and Hat.
+	 * 
 	 * @param	GamepadArray	optional array to fill with active gamepads
 	 * @return	array filled with active gamepads
 	 */
@@ -107,17 +106,12 @@ class FlxGamepadManager implements IFlxInput
 			GamepadArray = [];
 		}
 		
-		var it = _gamepads.iterator();
-		var gamepad = it.next();
-		
-		while (gamepad != null)
+		for (gamepad in _gamepads)
 		{
-			if (gamepad.anyInput())
+			if ((gamepad != null) && gamepad.anyInput())
 			{
 				GamepadArray.push(gamepad);
 			}
-			
-			gamepad = it.next();
 		}
 		
 		return GamepadArray;
@@ -129,20 +123,8 @@ class FlxGamepadManager implements IFlxInput
 	 */
 	public function getFirstActiveGamepadID():Int
 	{
-		var it = _gamepads.iterator();
-		var gamepad:FlxGamepad = it.next();
-		
-		while (gamepad != null)
-		{
-			if (gamepad.anyInput())
-			{
-				return gamepad.id;
-			}
-			
-			gamepad = it.next();
-		}
-		
-		return -1;
+		var firstActive:FlxGamepad = getFirstActiveGamepad();
+		return (firstActive == null) ? -1 : firstActive.id;
 	}
 	
 	/**
@@ -151,17 +133,12 @@ class FlxGamepadManager implements IFlxInput
 	 */
 	public function getFirstActiveGamepad():FlxGamepad
 	{
-		var it = _gamepads.iterator();
-		var gamepad = it.next();
-		
-		while (gamepad != null)
+		for (gamepad in _gamepads)
 		{
-			if (gamepad.anyInput())
+			if ((gamepad != null) && gamepad.anyInput())
 			{
 				return gamepad;
 			}
-			
-			gamepad = it.next();
 		}
 		
 		return null;
@@ -172,17 +149,12 @@ class FlxGamepadManager implements IFlxInput
 	 */
 	public function anyButton():Bool
 	{
-		var it = _gamepads.iterator();
-		var gamepad = it.next();
-		
-		while (gamepad != null)
+		for (gamepad in _gamepads)
 		{
-			if (gamepad.anyButton())
+			if ((gamepad != null) && gamepad.anyButton())
 			{
 				return true;
 			}
-			
-			gamepad = it.next();
 		}
 		
 		return false;
@@ -193,17 +165,12 @@ class FlxGamepadManager implements IFlxInput
 	 */
 	public function anyInput():Bool
 	{
-		var it = _gamepads.iterator();
-		var gamepad = it.next();
-		
-		while (gamepad != null)
+		for (gamepad in _gamepads)
 		{
-			if (gamepad.anyInput())
+			if ((gamepad != null) && gamepad.anyInput())
 			{
 				return true;
 			}
-			
-			gamepad = it.next();
 		}
 		
 		return false;
@@ -217,17 +184,12 @@ class FlxGamepadManager implements IFlxInput
 	 */
 	public function anyPressed(ButtonID:Int):Bool
 	{
-		var it = _gamepads.iterator();
-		var gamepad = it.next();
-		
-		while (gamepad != null)
+		for (gamepad in _gamepads)
 		{
-			if (gamepad.pressed(ButtonID))
+			if ((gamepad != null) && gamepad.pressed(ButtonID))
 			{
 				return true;
 			}
-			
-			gamepad = it.next();
 		}
 		
 		return false;
@@ -241,18 +203,14 @@ class FlxGamepadManager implements IFlxInput
 	*/
 	public function anyJustPressed(ButtonID:Int):Bool
 	{
-		var it = _gamepads.iterator();
-		var gamepad = it.next();
-		
-		while (gamepad != null)
+		for (gamepad in _gamepads)
 		{
-			if (gamepad.justPressed(ButtonID))
+			if ((gamepad != null) && gamepad.justPressed(ButtonID))
 			{
 				return true;
 			}
-			
-			gamepad = it.next();
 		}
+		
 		return false;
 	}
 
@@ -264,18 +222,14 @@ class FlxGamepadManager implements IFlxInput
 	*/
 	public function anyJustReleased(ButtonID:Int):Bool
 	{
-		var it = _gamepads.iterator();
-		var gamepad = it.next();
-		
-		while (gamepad != null)
+		for (gamepad in _gamepads)
 		{
-			if (gamepad.justReleased(ButtonID))
+			if ((gamepad != null) && gamepad.justReleased(ButtonID))
 			{
 				return true;
 			}
-			
-			gamepad = it.next();
 		}
+		
 		return false;
 	}
 	
