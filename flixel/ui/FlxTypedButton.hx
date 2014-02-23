@@ -283,7 +283,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		}
 		#end
 		#if !FLX_NO_MOUSE
-		else if (_pressedMouse && FlxG.mouse.justReleased)
+		if (_pressedMouse && FlxG.mouse.justReleased)
 		{
 			onUpHandler();
 		}
