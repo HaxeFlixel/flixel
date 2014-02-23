@@ -253,7 +253,6 @@ class FlxObject extends FlxBasic
 		maxVelocity = null;
 		scrollFactor = null;
 		last = null;
-		cameras = null;
 		_point = null;
 		scrollFactor = null;
 		
@@ -318,24 +317,14 @@ class FlxObject extends FlxBasic
 	 */
 	override public function draw():Void
 	{
-		if (cameras == null)
+		for (camera in cameras)
 		{
-			cameras = FlxG.cameras.list;
-		}
-		var camera:FlxCamera;
-		var i:Int = 0;
-		var l:Int = cameras.length;
-		while (i < l)
-		{
-			camera = cameras[i++];
-			if (!camera.visible || !camera.exists || !isOnScreen(camera))
+			if (camera.visible && camera.exists && isOnScreen(camera))
 			{
-				continue;
+				#if !FLX_NO_DEBUG
+				FlxBasic._VISIBLECOUNT++;
+				#end
 			}
-			
-			#if !FLX_NO_DEBUG
-			FlxBasic._VISIBLECOUNT++;
-			#end
 		}
 	}
 	

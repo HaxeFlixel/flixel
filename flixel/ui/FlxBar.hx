@@ -1005,23 +1005,14 @@ class FlxBar extends FlxSprite
 			return;
 		}
 		
-		if (cameras == null)
-		{
-			cameras = FlxG.cameras.list;
-		}
-		var camera:FlxCamera;
-		var i:Int = 0;
-		var l:Int = cameras.length;
-		
 		var percentFrame:Int = 2 * (Math.floor(percent) - 1);
 		
 		var currDrawData:Array<Float>;
 		var currIndex:Int;
 		var drawItem:DrawStackItem;
 		
-		while (i < l)
+		for (camera in cameras)
 		{
-			camera = cameras[i++];
 			if (!camera.visible || !camera.exists || !isOnScreen(camera))
 			{
 				continue;
