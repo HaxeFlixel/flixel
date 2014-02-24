@@ -44,6 +44,7 @@ class ConsoleCommands
 		console.addCommand(["listFunctions", "lf"], listFunctions, "Lists all the aliases of the registered objects.");
 		
 		console.addCommand(["watchMouse", "wm"], watchMouse, "Adds the mouse coordinates to the watch window.");
+		console.addCommand(["track", "t"], track, "Adds a tracker window for the specified object.");
 		
 		console.addCommand(["pause", "p"], pause, "Toggle between paused and unpaused");
 		
@@ -314,6 +315,12 @@ class ConsoleCommands
 		}
 		
 		_watchingMouse = !_watchingMouse;
+	}
+	
+	private function track(ObjectAndVariable):Void
+	{
+		var pathToVariable:PathToVariable = ConsoleUtil.resolveObjectAndVariableFromMap(ObjectAndVariable, _console.registeredObjects);
+		FlxG.debugger.track(Reflect.getProperty(pathToVariable.object, pathToVariable.variableName));
 	}
 	
 	private function pause():Void
