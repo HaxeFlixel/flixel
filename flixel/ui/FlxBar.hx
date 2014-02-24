@@ -132,7 +132,7 @@ class FlxBar extends FlxSprite
 	 * @param	max			The maximum value the bar can reach. I.e. for a progress bar this would typically be 100.
 	 * @param	border		Include a 1px border around the bar? (if true it adds +2 to width and height to accommodate it)
 	 */
-	public function new(x:Float, y:Float, direction:Int = FILL_LEFT_TO_RIGHT, width:Int = 100, height:Int = 10, parentRef:Dynamic = null, variable:String = "", min:Float = 0, max:Float = 100, border:Bool = false)
+	public function new(x:Float = 0, y:Float = 0, direction:Int = FILL_LEFT_TO_RIGHT, width:Int = 100, height:Int = 10, parentRef:Dynamic = null, variable:String = "", min:Float = 0, max:Float = 100, border:Bool = false)
 	{
 		fixedPosition = true;
 		zeroOffset = new Point();

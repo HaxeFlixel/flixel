@@ -86,7 +86,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Used to smoothly track the camera as it follows.
 	 */
-	public var followLerp:Float;
+	public var followLerp:Float = 0;
 	/**
 	 * You can assign a "dead zone" to the camera in order to better control its movement. The camera will always keep the focus object inside the dead zone, unless it is bumping up against 
 	 * the bounds rectangle's edges. The deadzone's coordinates are measured from the camera's upper left corner in game pixels. For rapid prototyping, you can use the preset deadzones (e.g. STYLE_PLATFORMER) with follow().

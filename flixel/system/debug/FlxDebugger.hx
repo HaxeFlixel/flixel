@@ -260,6 +260,18 @@ class FlxDebugger extends Sprite
 		x = -FlxG.game.x * scaleX;
 		y = -FlxG.game.y * scaleY;
 	}
+	
+	public function onStateSwitch():Void
+	{
+		for (window in _windows)
+		{
+			if (Std.is(window, Tracker))
+			{
+				window.close();
+			}
+		}
+		Tracker.onStateSwitch();
+	}
 
 	/**
 	 * Align an array of debugger buttons, used for the middle and right layouts

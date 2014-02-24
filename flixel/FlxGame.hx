@@ -534,6 +534,7 @@ class FlxGame extends Sprite
 		if (debugger != null)
 		{
 			debugger.watch.removeAll();
+			debugger.onStateSwitch();
 		}
 		#end
 		

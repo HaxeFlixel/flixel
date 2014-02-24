@@ -380,7 +380,7 @@ class Window extends Sprite
 		}
 	}
 	
-	private function close():Void
+	public function close():Void
 	{
 		destroy();
 		#if !FLX_NO_DEBUG

@@ -3,6 +3,7 @@ package flixel.system.debug;
 import flash.display.Sprite;
 import flash.geom.Rectangle;
 import flixel.FlxG;
+import flixel.system.debug.ConsoleUtil.PathToVariable;
 import flixel.system.debug.FlxDebugger;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxPoint;
@@ -87,12 +88,17 @@ class Watch extends Window
 	 * Has some simple code in place to prevent
 	 * accidentally watching the same variable twice.
 	 * 
-	 * @param AnyObject		The Object containing the variable you want to track, e.g. this or Player.velocity.
-	 * @param VariableName	The String name of the variable you want to track, e.g. "width" or "x".
-	 * @param DisplayName	Optional String that can be displayed in the watch window instead of the basic class-name information.
+	 * @param 	AnyObject		The Object containing the variable you want to track, e.g. this or Player.velocity.
+	 * @param 	VariableName	The String name of the variable you want to track, e.g. "width" or "x".
+	 * @param 	DisplayName		Optional String that can be displayed in the watch window instead of the basic class-name information.
 	 */
 	public function add(AnyObject:Dynamic, VariableName:String, ?DisplayName:String):Void
 	{
+		// Attempt to resolve variable paths, like FlxG.state.members.length
+		var varData:PathToVariable = ConsoleUtil.resolveObjectAndVariable(VariableName, AnyObject);
+		AnyObject = varData.object;
+		VariableName = varData.variableName;
+		
 		// Don't add repeats
 		for (watchEntry in _watching)
 		{

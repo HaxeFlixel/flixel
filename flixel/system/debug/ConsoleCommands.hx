@@ -168,7 +168,7 @@ class ConsoleCommands
 	
 	private function set(ObjectAndVariable:String, NewVariableValue:Dynamic, ?WatchName:String):Void
 	{
-		var pathToVariable:PathToVariable = ConsoleUtil.resolveObjectAndVariable(ObjectAndVariable, _console.registeredObjects);
+		var pathToVariable:PathToVariable = ConsoleUtil.resolveObjectAndVariableFromMap(ObjectAndVariable, _console.registeredObjects);
 		
 		// In case resolving failed
 		if (pathToVariable == null) {
