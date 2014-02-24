@@ -82,7 +82,7 @@ class DebuggerFrontEnd
 	public function track(Object:Dynamic, ?WindowTitle:String):Window
 	{
 		#if !FLX_NO_DEBUG
-		if (Tracker.objectsBeingTracked.indexOf(Object) == -1)
+		if (Lambda.indexOf(Tracker.objectsBeingTracked, Object) == -1)
 		{
 			return FlxG.game.debugger.addWindow(new Tracker(Object, WindowTitle));
 		}

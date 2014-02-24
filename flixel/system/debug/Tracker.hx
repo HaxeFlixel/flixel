@@ -114,8 +114,7 @@ class Tracker extends Watch
 			addProfile(new TrackerProfile(FlxObject, ["velocity", "acceleration", "drag", "angle"],
 			                                         [FlxRect, FlxBasic]));
 			addProfile(new TrackerProfile(FlxTilemap, ["auto", "widthInTiles", "heightInTiles", "totalTiles", "scaleX", "scaleY"], [FlxObject]));
-			addProfile(new TrackerProfile(FlxSprite, ["frameWidth", "frameHeight", 
-			                                          "alpha", "origin", "offset", "scale"], [FlxObject]));
+			addProfile(new TrackerProfile(FlxSprite, ["frameWidth", "frameHeight", "alpha", "origin", "offset", "scale"], [FlxObject]));
 			addProfile(new TrackerProfile(FlxTypedButton, ["status", "labelAlphas"], [FlxSprite]));
 			addProfile(new TrackerProfile(FlxBar, ["min", "max", "range", "pct", "pxPerPercent", "value"], [FlxSprite]));
 			addProfile(new TrackerProfile(FlxText, ["text", "size", "font", "embedded", "bold", "italic", "wordWrap", "borderSize", 
