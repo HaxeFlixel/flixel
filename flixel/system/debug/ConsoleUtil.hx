@@ -169,7 +169,10 @@ class ConsoleUtil
 	 */
 	public static inline function resolveObjectAndVariableFromMap(ObjectAndVariable:String, ObjectMap:Map<String, Dynamic>):PathToVariable
 	{
-		var object:Dynamic = ObjectMap.get(ObjectAndVariable.split(".")[0]);
+		var splitString:Array<String> = ObjectAndVariable.split(".");
+		var object:Dynamic = ObjectMap.get(splitString[0]);
+		splitString.shift();
+		ObjectAndVariable = splitString.join(".");
 		return resolveObjectAndVariable(ObjectAndVariable, object);
 	}
 	
