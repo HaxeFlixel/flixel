@@ -379,7 +379,10 @@ class FlxDebugger extends Sprite
 	
 	public inline function removeWindow(window:Window):Void
 	{
-		removeChild(window);
+		if (contains(window))
+		{
+			removeChild(window);
+		}
 		FlxArrayUtil.fastSplice(_windows, window);
 	}
 	

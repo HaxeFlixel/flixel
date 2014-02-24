@@ -7,6 +7,7 @@ import flixel.system.debug.FlxDebugger.ButtonAlignment;
 import flixel.system.debug.FlxDebugger.DebuggerLayout;
 import flixel.system.debug.Window;
 import flixel.system.ui.FlxSystemButton;
+import flixel.util.FlxStringUtil;
 
 class DebuggerFrontEnd
 {	
@@ -84,7 +85,16 @@ class DebuggerFrontEnd
 		#if !FLX_NO_DEBUG
 		if (Lambda.indexOf(Tracker.objectsBeingTracked, Object) == -1)
 		{
-			return FlxG.game.debugger.addWindow(new Tracker(Object, WindowTitle));
+			var profile = Tracker.findProfile(Object);
+			if (profile == null)
+			{
+				FlxG.log.error("FlxG.debugger.track(): Could not find a tracking profile for this object of class '" + FlxStringUtil.getClassName(Object, true) + "'."); 
+				return null;
+			}
+			else 
+			{
+				return FlxG.game.debugger.addWindow(new Tracker(profile, Object, WindowTitle));
+			}
 		}
 		else 
 		{

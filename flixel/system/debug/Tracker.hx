@@ -53,55 +53,27 @@ class Tracker extends Watch
 		}
 	}
 	
+	public static function findProfile(Object:Dynamic):TrackerProfile
+	{
+		initProfiles();
+		
+		var lastMatchingProfile:TrackerProfile = null;
+		for (profile in profiles)
+		{
+			if ((profile != null) && Std.is(Object, profile.objectClass))
+			{
+				lastMatchingProfile = profile;
+			}
+		}
+		return lastMatchingProfile;
+	}
+	
 	public static function onStateSwitch():Void
 	{
 		_numTrackerWindows = 0;
 	}
 	
-	private static var _numTrackerWindows:Int = 0;
-	
-	private var _object:Dynamic;
-	
-	public function new(Object:Dynamic, ?WindowTitle:String) 
-	{
-		super(true);
-		
-		initProfiles();
-		_object = Object;
-		objectsBeingTracked.push(_object);
-		
-		var profile:TrackerProfile = findProfile();
-		if ((profile == null) || (Object == null))
-		{
-			FlxG.log.error("FlxG.debugger.track(): Could not find a tracking profile for this object."); 
-			close();
-		}
-		else
-		{
-			initWatchEntries(profile);
-		}
-		
-		_title.text = (WindowTitle == null) ? FlxStringUtil.getClassName(_object, true) : WindowTitle;
-		visible = true;
-		
-		var lastWatchEntryY:Float = _watching[_watching.length - 1].nameDisplay.y;
-		resize(200, lastWatchEntryY + 30);
-		
-		// Small x and y offset
-		x = _numTrackerWindows * 80;
-		y = _numTrackerWindows * 25 + 20;
-		_numTrackerWindows++;
-	}
-	
-	override public function destroy():Void
-	{
-		_numTrackerWindows--;
-		objectsBeingTracked.remove(_object);
-		_object = null;
-		super.destroy();
-	}
-
-	private function initProfiles():Void
+	private static function initProfiles():Void
 	{
 		if (profiles == null)
 		{
@@ -151,17 +123,38 @@ class Tracker extends Watch
 		}
 	}
 	
-	private function findProfile():TrackerProfile
+	private static var _numTrackerWindows:Int = 0;
+	
+	private var _object:Dynamic;
+	
+	public function new(Profile:TrackerProfile, Object:Dynamic, ?WindowTitle:String) 
 	{
-		var lastMatchingProfile:TrackerProfile = null;
-		for (profile in profiles)
-		{
-			if ((profile != null) && Std.is(_object, profile.objectClass))
-			{
-				lastMatchingProfile = profile;
-			}
-		}
-		return lastMatchingProfile;
+		super(true);
+		
+		initProfiles();
+		_object = Object;
+		objectsBeingTracked.push(_object);
+		
+		initWatchEntries(Profile);
+		
+		_title.text = (WindowTitle == null) ? FlxStringUtil.getClassName(_object, true) : WindowTitle;
+		visible = true;
+		
+		var lastWatchEntryY:Float = _watching[_watching.length - 1].nameDisplay.y;
+		resize(200, lastWatchEntryY + 30);
+		
+		// Small x and y offset
+		x = _numTrackerWindows * 80;
+		y = _numTrackerWindows * 25 + 20;
+		_numTrackerWindows++;
+	}
+	
+	override public function destroy():Void
+	{
+		_numTrackerWindows--;
+		objectsBeingTracked.remove(_object);
+		_object = null;
+		super.destroy();
 	}
 	
 	private function findProfileByClass(ObjectClass:Class<Dynamic>):TrackerProfile

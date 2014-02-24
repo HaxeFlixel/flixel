@@ -201,9 +201,20 @@ class Window extends Sprite
 		_handle = null;
 		_drag = null;
 		_closeButton = FlxG.safeDestroy(_closeButton);
-		stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
-		stage.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
-		stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+		
+		var stage = FlxG.stage;
+		if (stage.hasEventListener(MouseEvent.MOUSE_MOVE))
+		{
+			stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+		}
+		if (stage.hasEventListener(MouseEvent.MOUSE_MOVE))
+		{
+			stage.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+		}
+		if (stage.hasEventListener(MouseEvent.MOUSE_UP))
+		{
+			stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+		}
 	}
 	
 	/**
