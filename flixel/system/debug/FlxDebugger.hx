@@ -97,6 +97,7 @@ class FlxDebugger extends Sprite
 	 * The flash Sprite used for the top bar of the debugger ui
 	 **/
 	private var _topBar:Sprite;
+	private var _windows:Array<Window>;
 
 	/**
 	 * Clean up memory.
@@ -151,6 +152,8 @@ class FlxDebugger extends Sprite
 			console = null;
 		}
 		
+		_windows = null;
+		
 		removeEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
 		removeEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
 	}
@@ -192,7 +195,7 @@ class FlxDebugger extends Sprite
 				stats.reposition(_screen.x, 0);
 			case TOP:
 				console.resize(_screen.x - GUTTER * 2, 35);
-				console.reposition(0,0);
+				console.reposition(0, 0);
 				log.resize((_screen.x - GUTTER * 3) / 2, _screen.y / 4);
 				log.reposition(0,console.height + GUTTER + 15);
 				watch.resize((_screen.x - GUTTER * 3) / 2, _screen.y / 4);
@@ -205,7 +208,7 @@ class FlxDebugger extends Sprite
 				log.reposition(0,0);
 				watch.resize(_screen.x / 3, (_screen.y - 15 - GUTTER * 2.5) / 2 - console.height / 2);
 				watch.reposition(0,log.y + log.height + GUTTER);
-				stats.reposition(_screen.x,0);
+				stats.reposition(_screen.x, 0);
 			case RIGHT:
 				console.resize(_screen.x - GUTTER * 2, 35);
 				console.reposition(GUTTER, _screen.y);
@@ -213,7 +216,7 @@ class FlxDebugger extends Sprite
 				log.reposition(_screen.x,0);
 				watch.resize(_screen.x / 3, (_screen.y - 15 - GUTTER * 2.5) / 2 - console.height / 2);
 				watch.reposition(_screen.x,log.y + log.height + GUTTER);
-				stats.reposition(0,0);
+				stats.reposition(0, 0);
 			case STANDARD:
 				console.resize(_screen.x - GUTTER * 2, 35);
 				console.reposition(GUTTER, _screen.y);
@@ -225,15 +228,22 @@ class FlxDebugger extends Sprite
 		}
 	}
 	
-	public inline function onResize(Width:Float, Height:Float):Void
+	public function onResize(?Width:Null<Float>, ?Height:Null<Float>):Void
 	{
-		_screen.x = Width;
-		_screen.y = Height;
+		if (Width != null)
+		{
+			_screen.x = Width;
+		}
+		if (Height != null)
+		{
+			_screen.y = Height;
+		}
+		
 		_screenBounds = new Rectangle(GUTTER, TOP_HEIGHT + GUTTER / 2, _screen.x - GUTTER * 2, _screen.y - GUTTER * 2 - TOP_HEIGHT);
-		stats.updateBounds(_screenBounds);
-		log.updateBounds(_screenBounds);
-		watch.updateBounds(_screenBounds);
-		console.updateBounds(_screenBounds);
+		for (window in _windows)
+		{
+			window.updateBounds(_screenBounds);
+		}
 		_topBar.width = FlxG.stage.stageWidth;
 		resetButtonLayout();
 		resetLayout();
@@ -335,6 +345,24 @@ class FlxDebugger extends Sprite
 		}
 	}
 	
+	public inline function addWindow(window:Window):Window
+	{
+		_windows.push(window);
+		addChild(window);
+		if (_screenBounds != null)
+		{
+			onResize();
+			window.bound();
+		}
+		return window;
+	}
+	
+	public inline function removeWindow(window:Window):Void
+	{
+		removeChild(window);
+		FlxArrayUtil.fastSplice(_windows, window);
+	}
+	
 	/**
 	 * Instantiates the debugger overlay.
 	 * 
@@ -348,6 +376,7 @@ class FlxDebugger extends Sprite
 		visible = false;
 		_layout = STANDARD;
 		_screen = new Point();
+		_windows = [];
 		
 		_topBar = new Sprite();
 		_topBar.graphics.beginFill(0x000000, 0xAA / 255);
@@ -370,10 +399,10 @@ class FlxDebugger extends Sprite
 		_rightButtons = new Array<FlxSystemButton>();
 		_middleButtons = new Array<FlxSystemButton>();
 		
-		addChild(log = new Log());
-		addChild(watch = new Watch());
-		addChild(console = new Console());
-		addChild(stats = new Stats());
+		addWindow(log = new Log());
+		addWindow(watch = new Watch());
+		addWindow(console = new Console());
+		addWindow(stats = new Stats());
 		
 		stats.visible = true;
 		
