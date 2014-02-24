@@ -1,6 +1,5 @@
 package flixel.system.debug;
 
-#if !FLX_NO_DEBUG
 import flash.display.Sprite;
 import flash.geom.Rectangle;
 import flixel.FlxG;
@@ -16,6 +15,7 @@ import haxe.ds.StringMap;
  */
 class Watch extends Window
 {
+	#if !FLX_NO_DEBUG
 	private static inline var MAX_LOG_LINES:Int = 1024;
 	private static inline var LINE_HEIGHT:Int = 15;
 	
@@ -219,7 +219,7 @@ class Watch extends Window
 	/**
 	 * Update all the entries in the watch window.
 	 */
-	public function update():Void
+	override public function update():Void
 	{
 		editing = false;
 		
@@ -268,5 +268,5 @@ class Watch extends Window
 			watchEntry.updateWidth(_width / 2, _width / 2 - 10);
 		}
 	}
+	#end
 }
-#end

@@ -81,7 +81,11 @@ class DebuggerFrontEnd
 	 */
 	public function track(Object:Dynamic, ?WindowTitle:String):Window
 	{
+		#if !FLX_NO_DEBUG
 		return FlxG.game.debugger.addWindow(new Tracker(Object, WindowTitle));
+		#else 
+		return null;
+		#end
 	}
 	
 	/**
@@ -91,7 +95,9 @@ class DebuggerFrontEnd
 	 */
 	public inline function addTrackingProfile(Profile:TrackerProfile):Void
 	{
+		#if !FLX_NO_DEBUG
 		Tracker.addProfile(Profile);
+		#end
 	}
 	
 	/**

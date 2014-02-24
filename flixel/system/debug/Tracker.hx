@@ -6,6 +6,7 @@ import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.system.debug.Tracker.TrackerProfile;
 import flixel.system.debug.Watch;
+import flixel.tweens.FlxTween;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRect;
 import flixel.util.FlxStringUtil;
@@ -50,7 +51,6 @@ class Tracker extends Watch
 		
 		_title.text = (WindowTitle == null) ? FlxStringUtil.getClassName(_object, true) : WindowTitle;
 		visible = true;
-		update();
 		
 		var lastWatchEntryY:Float = _watching[_watching.length - 1].nameDisplay.y;
 		resize(200, lastWatchEntryY + 30);
@@ -79,6 +79,8 @@ class Tracker extends Watch
 			addProfile(new TrackerProfile(FlxObject, ["velocity", "acceleration"], [FlxRect, FlxBasic]));
 			addProfile(new TrackerProfile(FlxSprite, ["frameWidth", "frameHeight", 
 			                                            "alpha", "origin", "offset", "scale"], [FlxObject]));
+			addProfile(new TrackerProfile(FlxTween, ["active", "duration", "type", "percent", "finished", 
+			                                         "scale", "backward", "executions", "startDelay", "loopDelay"]));
 			
 			#if (!FLX_NO_MOUSE || !FLX_NO_TOUCH)
 			addProfile(new TrackerProfile(FlxSwipe, ["ID", "start", "end", "distance", "angle", "duration"]));

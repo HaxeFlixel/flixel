@@ -158,6 +158,14 @@ class FlxDebugger extends Sprite
 		removeEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
 	}
 	
+	public function update():Void
+	{
+		for (window in _windows)
+		{
+			window.update();
+		}
+	}
+	
 	/**
 	 * Change the way the debugger's windows are laid out.
 	 * 

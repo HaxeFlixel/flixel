@@ -252,6 +252,8 @@ class Window extends Sprite
 		FlxG.save.data.windowSettings[_id] = visible;
 	}
 	
+	public function update():Void {}
+	
 	//***EVENT HANDLERS***//
 	
 	/**
@@ -381,6 +383,8 @@ class Window extends Sprite
 	private function close():Void
 	{
 		destroy();
+		#if !FLX_NO_DEBUG
 		FlxG.game.debugger.removeWindow(this);
+		#end
 	}
 }
