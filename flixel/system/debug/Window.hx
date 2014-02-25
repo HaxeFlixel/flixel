@@ -144,6 +144,18 @@ class Window extends Sprite
 			_closeButton.alpha = HEADER_ALPHA;
 			addChild(_closeButton);
 		}
+		else 
+		{
+			_id = WINDOW_AMOUNT++;
+			if (FlxG.save.data.windowSettings != null)
+			{
+				visible = FlxG.save.data.windowSettings[_id];
+			}
+			else
+			{
+				FlxG.save.data.windowSettings = new Array<Bool>();
+			}
+		}
 		
 		if ((_width != 0) || (_height != 0))
 		{
@@ -152,16 +164,6 @@ class Window extends Sprite
 		bound();
 		
 		addEventListener(Event.ENTER_FRAME, init);
-		
-		_id = WINDOW_AMOUNT++;
-		if (FlxG.save.data.windowSettings != null)
-		{
-			visible = FlxG.save.data.windowSettings[_id];
-		}
-		else
-		{
-			FlxG.save.data.windowSettings = new Array<Bool>();
-		}
 	}
 	
 	/**
@@ -199,13 +201,25 @@ class Window extends Sprite
 		_handle = null;
 		_drag = null;
 		_closeButton = FlxG.safeDestroy(_closeButton);
-		stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
-		stage.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
-		stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+		
+		var stage = FlxG.stage;
+		if (stage.hasEventListener(MouseEvent.MOUSE_MOVE))
+		{
+			stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+		}
+		if (stage.hasEventListener(MouseEvent.MOUSE_MOVE))
+		{
+			stage.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+		}
+		if (stage.hasEventListener(MouseEvent.MOUSE_UP))
+		{
+			stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+		}
 	}
 	
 	/**
 	 * Resize the window.  Subject to pre-specified minimums, maximums, and bounding rectangles.
+	 *
 	 * @param 	Width	How wide to make the window.
 	 * @param 	Height	How tall to make the window.
 	 */
@@ -218,6 +232,7 @@ class Window extends Sprite
 	
 	/**
 	 * Change the position of the window.  Subject to pre-specified bounding rectangles.
+	 * 
 	 * @param 	X	Desired X position of top left corner of the window.
 	 * @param 	Y	Desired Y position of top left corner of the window.
 	 */
@@ -247,6 +262,8 @@ class Window extends Sprite
 		visible = !visible;
 		FlxG.save.data.windowSettings[_id] = visible;
 	}
+	
+	public function update():Void {}
 	
 	//***EVENT HANDLERS***//
 	
@@ -339,7 +356,7 @@ class Window extends Sprite
 	/**
 	 * Keep the window within the pre-specified bounding rectangle. 
 	 */
-	private function bound():Void
+	public function bound():Void
 	{
 		if (_bounds != null)
 		{
@@ -374,9 +391,11 @@ class Window extends Sprite
 		}
 	}
 	
-	private function close():Void
+	public function close():Void
 	{
 		destroy();
-		parent.removeChild(this);
+		#if !FLX_NO_DEBUG
+		FlxG.game.debugger.removeWindow(this);
+		#end
 	}
 }

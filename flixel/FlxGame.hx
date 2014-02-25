@@ -470,12 +470,8 @@ class FlxGame extends Sprite
 			draw();
 			
 			#if !FLX_NO_DEBUG
-			if (FlxG.debugger.visible)
-			{
-				debugger.watch.update();
-			}
 			debugger.stats.visibleObjects(FlxBasic._VISIBLECOUNT);
-			debugger.stats.update();
+			debugger.update();
 			#end
 		}
 	}
@@ -538,6 +534,7 @@ class FlxGame extends Sprite
 		if (debugger != null)
 		{
 			debugger.watch.removeAll();
+			debugger.onStateSwitch();
 		}
 		#end
 		

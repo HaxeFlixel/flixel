@@ -201,7 +201,7 @@ class Stats extends Window
 	 * Called each frame, but really only updates once every second or so, to save on performance.
 	 * Takes all the data in the accumulators and parses it into useful performance data.
 	 */
-	public function update():Void
+	override public function update():Void
 	{
 		if (_paused) 
 		{

@@ -1,3 +1,13 @@
+3.2.1
+------------------------------
+* FlxTypedButton:
+ * add onUp event listener again for actions that need to be user-initiated, like ExternalInterface.call()
+ * fix buttons not working when FLX_NO_TOUCH is defined
+* FlxSprite
+ * small optimization for set_pixels()
+ * fix for frame being null after loadGraphic() in some cases
+* FlxRandom: fix inaccurate results in weightedPick()
+
 3.2.0
 ------------------------------
 * Added PixelPerfectScaleMode (scales the game to the highest integer factor possible while maintaning the aspect ratio)

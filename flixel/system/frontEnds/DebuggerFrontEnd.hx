@@ -2,9 +2,12 @@ package flixel.system.frontEnds;
 
 import flash.display.BitmapData;
 import flixel.FlxG;
+import flixel.system.debug.Tracker;
 import flixel.system.debug.FlxDebugger.ButtonAlignment;
 import flixel.system.debug.FlxDebugger.DebuggerLayout;
+import flixel.system.debug.Window;
 import flixel.system.ui.FlxSystemButton;
+import flixel.util.FlxStringUtil;
 
 class DebuggerFrontEnd
 {	
@@ -67,6 +70,50 @@ class DebuggerFrontEnd
 		return FlxG.game.debugger.addButton(Alignment, Icon, UpHandler, ToggleMode, UpdateLayout);
 		#else
 		return null;
+		#end
+	}
+	
+	/**
+	 * Creates a new tracker window, if there exists a tracking profile for the class of the object.
+	 * By default, flixel classes like FlxBasics, FlxRect and FlxPoint are supported.
+	 * 
+	 * @param	Object	The object to track
+	 * @param	WindowTitle	Title for the tracker window, uses the Object's class name by default
+	 */
+	public function track(Object:Dynamic, ?WindowTitle:String):Window
+	{
+		#if !FLX_NO_DEBUG
+		if (Lambda.indexOf(Tracker.objectsBeingTracked, Object) == -1)
+		{
+			var profile = Tracker.findProfile(Object);
+			if (profile == null)
+			{
+				FlxG.log.error("FlxG.debugger.track(): Could not find a tracking profile for this object of class '" + FlxStringUtil.getClassName(Object, true) + "'."); 
+				return null;
+			}
+			else 
+			{
+				return FlxG.game.debugger.addWindow(new Tracker(profile, Object, WindowTitle));
+			}
+		}
+		else 
+		{
+			return null;
+		}
+		#else 
+		return null;
+		#end
+	}
+	
+	/**
+	 * Adds a new tracking profile for track().
+	 * 
+	 * @param	Profile	The TrackerProfile
+	 */
+	public inline function addTrackingProfile(Profile:TrackerProfile):Void
+	{
+		#if !FLX_NO_DEBUG
+		Tracker.addProfile(Profile);
 		#end
 	}
 	
