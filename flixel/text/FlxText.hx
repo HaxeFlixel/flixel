@@ -265,7 +265,7 @@ class FlxText extends FlxSprite
 	 * @param	BorderColor Int, color for the border, 0xRRGGBB format
 	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function setFormat(?Font:String, Size:Float = 8, Color:Int = 0xffffff, ?Alignment:String, BorderStyle:Int = BORDER_NONE, BorderColor:Int = 0x000000, Embedded:Bool = true):FlxText
+	public function setFormat(?Font:Dynamic, Size:Float = 8, Color:Int = 0xffffff, ?Alignment:String, BorderStyle:Int = BORDER_NONE, BorderColor:Int = 0x000000, Embedded:Bool = true):FlxText
 	{
 		if (Embedded)
 		{
@@ -273,9 +273,13 @@ class FlxText extends FlxSprite
 			{
 				_defaultFormat.font = FlxAssets.FONT_DEFAULT;
 			}
-			else 
+			else if(Std.is(Font, String))
 			{
 				_defaultFormat.font = Assets.getFont(Font).fontName;
+			}
+			else
+			{
+				_defaultFormat.font = cast Font;
 			}
 		}
 		else if (Font != null)
