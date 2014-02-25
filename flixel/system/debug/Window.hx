@@ -281,8 +281,10 @@ class Window extends Sprite
 		removeEventListener(Event.ENTER_FRAME, init);
 		
 		stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
-		addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 		stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+		// it's important that the mouse down event listener is added to the window sprite, not the stage - this way 
+		// only the window on top receives the event and we don't have to deal with overlapping windows ourselves.
+		addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 	}
 	
 	/**
