@@ -17,10 +17,10 @@ class FlxBasic implements IFlxDestroyable
 	 */
 	public var ID:Int = -1;
 	/**
-	 * This determines on which FlxCameras this object will be drawn - by default, 
-	 * it uses FlxG.cameras.list), which means it is drawn on all existing cameras.
+	 * This determines on which FlxCameras this object will be drawn. If it is null / has not been
+	 * set, it uses FlxCamera.defaultCameras, which is a reference to FlxG.cameras.list (all cameras) by default.
 	 */
-	public var cameras:Array<FlxCamera>;
+	public var cameras(get, set):Array<FlxCamera>;
 	/**
 	 * Controls whether update() is automatically called by FlxState/FlxGroup.
 	 */
@@ -58,6 +58,8 @@ class FlxBasic implements IFlxDestroyable
 	public static var _VISIBLECOUNT:Int = 0;
 	#end
 	
+	private var _cameras:Array<FlxCamera>;
+	
 	public function new() 
 	{ 
 		collisionType = FlxCollisionType.NONE;
@@ -71,6 +73,7 @@ class FlxBasic implements IFlxDestroyable
 	{
 		exists = false;
 		collisionType = null;
+		_cameras = null;
 	}
 	
 	/**
@@ -111,11 +114,6 @@ class FlxBasic implements IFlxDestroyable
 	public function draw():Void
 	{
 		#if !FLX_NO_DEBUG
-		if (cameras == null)
-		{
-			cameras = FlxG.cameras.list;
-		}
-		
 		for (camera in cameras)
 		{
 			_VISIBLECOUNT++;
@@ -128,15 +126,9 @@ class FlxBasic implements IFlxDestroyable
 	{
 		if (!ignoreDrawDebug)
 		{
-			var i:Int = 0;
-			if (cameras == null)
+			for (camera in cameras)
 			{
-				cameras = FlxG.cameras.list;
-			}
-			var l:Int = cameras.length;
-			while (i < l)
-			{
-				drawDebugOnCamera(cameras[i++]);
+				drawDebugOnCamera(camera);
 			}
 		}
 	}
@@ -146,8 +138,18 @@ class FlxBasic implements IFlxDestroyable
 	 * specified camera while the debugger's visual mode is toggled on.
 	 * @param	Camera	Which camera to draw the debug visuals to.
 	 */
-	public function drawDebugOnCamera(?Camera:FlxCamera):Void { }
+	public function drawDebugOnCamera(?Camera:FlxCamera):Void {}
 	#end
+	
+	private inline function get_cameras():Array<FlxCamera>
+	{
+		return (_cameras == null) ? FlxCamera.defaultCameras : _cameras;
+	}
+	
+	private inline function set_cameras(Value:Array<FlxCamera>):Array<FlxCamera>
+	{
+		return _cameras = Value;
+	}
 	
 	/**
 	 * Property setters, to provide override functionality in sub-classes

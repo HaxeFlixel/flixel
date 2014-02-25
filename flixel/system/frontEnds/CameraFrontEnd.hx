@@ -162,6 +162,7 @@ class CameraFrontEnd
 	{
 		_cameraRect = new Rectangle();
 		list = new Array<FlxCamera>();
+		FlxCamera.defaultCameras = list;
 	}
 	
 	/**
