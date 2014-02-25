@@ -106,11 +106,11 @@ class DebuggerFrontEnd
 	}
 	
 	/**
-	 * Adds a new tracking profile for track().
+	 * Adds a new TrackerProfile for track(). This also overrides existing profiles.
 	 * 
 	 * @param	Profile	The TrackerProfile
 	 */
-	public inline function addTrackingProfile(Profile:TrackerProfile):Void
+	public inline function addTrackerProfile(Profile:TrackerProfile):Void
 	{
 		#if !FLX_NO_DEBUG
 		Tracker.addProfile(Profile);
