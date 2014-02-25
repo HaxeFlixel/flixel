@@ -1,14 +1,14 @@
 package;
 
-import flixel.effects.postprocess.PostProcess;
-import flixel.FlxCamera;
 import flixel.FlxG;
+import flixel.FlxCamera;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
 import flixel.util.FlxColor;
+import flixel.effects.postprocess.PostProcess;
 import openfl.Assets;
 
 class PlayState extends FlxState
@@ -44,10 +44,8 @@ class PlayState extends FlxState
 		add(_player2);
 		
 		// Then we setup two cameras to follow each of the two players
-		//createCamera(_halfWidth, 0xFFCCCC, _player1);
 		createCamera(_halfWidth, 0xFFCCCC, _player1);
-		createCamera(0, 0xCCCCFF, _player2, "assets/shaders/color/invert.frag");
-		//createCamera(0, 0xCCCCFF, _player2, "assets/shaders/scanline.frag");
+		createCamera(0, 0xCCCCFF, _player2);
 		
 		// Some instructions
 		var textBG:FlxSprite = new FlxSprite(0, _textY);
@@ -61,6 +59,8 @@ class PlayState extends FlxState
 		var redText:FlxText = new FlxText(_halfWidth, _textY, _halfWidth, "Arrow keys", 16);
 		redText.setFormat(null, 16, FlxColor.RED, "center");
 		add(redText);
+		
+		FlxG.game.addPostProcess(new PostProcess("assets/shaders/color/invert.frag"));
 	}
 	
 	private function createPlayer(X:Int, Y:Int, Color:Int):FlxSprite
@@ -75,16 +75,12 @@ class PlayState extends FlxState
 		return player;
 	}
 	
-	private function createCamera(X:Int, Color:Int, Follow:FlxSprite, ?Shader:String):Void
+	private function createCamera(X:Int, Color:Int, Follow:FlxSprite):Void
 	{
 		var camera:FlxCamera = new FlxCamera(X, 0, _halfWidth, _textY);
 		camera.setBounds(0, 0, _level.width - 8, _textY);
 		camera.color = Color;
 		camera.follow(Follow);
-		if (Shader != null)
-		{
-			camera.addPostProcess(new PostProcess(Shader));
-		}
 		FlxG.cameras.add(camera);
 	}
 	
