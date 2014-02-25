@@ -27,12 +27,10 @@ class Window extends Sprite
 	 * The background color of the window.
 	 */
 	public static inline var BG_COLOR:Int = 0xDD5F5F5F;
-	/**
-	 * The color used for the "handle" at the top of the window.
-	 */
-	public static inline var TOP_COLOR:Int = 0xBB000000;
 	
+	public static inline var HEADER_COLOR:Int = 0xBB000000;
 	public static inline var HEADER_ALPHA:Float = 0.8;
+	public static inline var HEADER_HEIGHT:Int = 15;
 	
 	/**
 	 * How many windows there are currently in total.
@@ -99,16 +97,12 @@ class Window extends Sprite
 		_height = Std.int(Math.abs(Height));
 		updateBounds(Bounds);
 		_drag = new Point();
-		
 		_resizable = Resizable;
 		
 		_shadow = new Bitmap(new BitmapData(1, 2, true, FlxColor.BLACK));
-		addChild(_shadow);
 		_background = new Bitmap(new BitmapData(1, 1, true, BG_COLOR));
-		_background.y = 15;
-		addChild(_background);
-		_header = new Bitmap(new BitmapData(1, 15, true, TOP_COLOR));
-		addChild(_header);
+		_header = new Bitmap(new BitmapData(1, HEADER_HEIGHT, true, HEADER_COLOR));
+		_background.y = _header.height;
 		
 		_title = new TextField();
 		_title.x = 2;
@@ -120,6 +114,10 @@ class Window extends Sprite
 		_title.embedFonts = true;
 		_title.defaultTextFormat = new TextFormat(FlxAssets.FONT_DEBUGGER, 12, 0xffffff);
 		_title.text = Title;
+		
+		addChild(_shadow);
+		addChild(_background);
+		addChild(_header);
 		addChild(_title);
 		
 		if (Icon != null)
@@ -375,7 +373,7 @@ class Window extends Sprite
 		
 		_header.scaleX = _width;
 		_background.scaleX = _width;
-		_background.scaleY = _height-15;
+		_background.scaleY = _height - _header.height;
 		_shadow.scaleX = _width;
 		_shadow.y = _height;
 		_title.width = _width - 4;
