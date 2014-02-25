@@ -180,7 +180,7 @@ class Watch extends Window
 		for (i in 0..._watching.length)
 		{
 			var watchEntry:WatchEntry = _watching[i];
-			if ((watchEntry.object == AnyObject) && ((VariableName == null) || (watchEntry.field == VariableName)))
+			if (watchEntry != null && watchEntry.object == AnyObject && ((VariableName == null) || (watchEntry.field == VariableName)))
 			{
 				removeEntry(watchEntry, i);
 			}
