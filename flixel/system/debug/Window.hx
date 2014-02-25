@@ -205,9 +205,9 @@ class Window extends Sprite
 		{
 			stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 		}
-		if (stage.hasEventListener(MouseEvent.MOUSE_MOVE))
+		if (hasEventListener(MouseEvent.MOUSE_DOWN))
 		{
-			stage.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+			removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 		}
 		if (stage.hasEventListener(MouseEvent.MOUSE_UP))
 		{
@@ -281,7 +281,7 @@ class Window extends Sprite
 		removeEventListener(Event.ENTER_FRAME, init);
 		
 		stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
-		stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+		addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 		stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 	}
 	
