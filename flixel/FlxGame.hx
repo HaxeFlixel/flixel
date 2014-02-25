@@ -1,13 +1,15 @@
 package flixel;
 
+import flash.Lib;
 import flash.display.Sprite;
 import flash.display.StageAlign;
 import flash.display.StageScaleMode;
 import flash.events.Event;
 import flash.events.FocusEvent;
-import flash.Lib;
+import openfl.display.OpenGLView;
 import flixel.system.FlxSplash;
 import flixel.system.frontEnds.VCRFrontEnd;
+import flixel.effects.postprocess.PostProcess;
 import flixel.system.layer.TileSheetExt;
 import flixel.system.replay.FlxReplay;
 import flixel.text.pxText.PxBitmapFont;
@@ -185,6 +187,14 @@ class FlxGame extends Sprite
 	 */
 	private var _recordingRequested:Bool = false;
 	#end
+	/**
+	 * Sprite for postprocessing effects
+	 */
+	public var postProcessLayer:Sprite;
+	/**
+	 * Post process effects active on the postProcessLayer
+	 */
+	public var postProcesses:Array<PostProcess>;
 	
 	/**
 	 * Instantiate a new game object.
@@ -208,6 +218,10 @@ class FlxGame extends Sprite
 		
 		// Super high priority init stuff
 		_inputContainer = new Sprite();
+		
+		// Init shader container
+		if (OpenGLView.isSupported)
+			postProcessLayer = new Sprite();
 		
 		// Basic display and update setup stuff
 		FlxG.init(this, GameSizeX, GameSizeY, Zoom);
@@ -250,6 +264,9 @@ class FlxGame extends Sprite
 		stage.frameRate = FlxG.drawFramerate;
 		
 		addChild(_inputContainer);
+		
+		if (OpenGLView.isSupported)
+			addChild(postProcessLayer);
 		
 		// Creating the debugger overlay
 		#if !FLX_NO_DEBUG
@@ -411,6 +428,14 @@ class FlxGame extends Sprite
 		
 		_inputContainer.scaleX = 1 / FlxG.game.scaleX;
 		_inputContainer.scaleY = 1 / FlxG.game.scaleY;
+		
+		if (postProcesses != null)
+		{
+			for (p in postProcesses)
+			{
+				if (p != null) p.rebuild();
+			}
+		}
 	}
 	
 	/**
@@ -731,6 +756,27 @@ class FlxGame extends Sprite
 		#end
 	}
 	
+	#if flash
+	public function addPostProcess(postprocess:PostProcess):Void { /* This is empty to prevent compilation errors */ } 
+	#else
+	public function addPostProcess(postProcess:PostProcess):Void 
+	{
+		if (OpenGLView.isSupported)
+		{
+			postProcessLayer.addChild(postProcess);
+			
+			if (postProcesses == null)
+				postProcesses = [postProcess];
+			else
+				postProcesses.push(postProcess);
+		}
+		else
+		{
+			FlxG.log.error("Shaders are not supported on this platform.");
+		}
+	}
+	#end
+	
 	/**
 	 * Goes through the game state and draws all the game objects and special effects.
 	 */
@@ -747,6 +793,14 @@ class FlxGame extends Sprite
 		#if !flash
 		TileSheetExt._DRAWCALLS = 0;
 		#end
+		
+		if (postProcesses != null)
+		{
+			for(postProcess in postProcesses)
+			{
+				postProcess.capture();
+			}
+		}
 		
 		FlxG.cameras.lock();
 		

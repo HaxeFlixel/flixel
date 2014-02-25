@@ -40,7 +40,7 @@ class CameraFrontEnd
 	 */
 	@:generic public inline function add<T:FlxCamera>(NewCamera:T):T
 	{
-		FlxG.game.addChildAt(NewCamera.flashSprite, FlxG.game.getChildIndex(FlxG.game._inputContainer));
+		FlxG.game.addChildAt(NewCamera.displaySprite, FlxG.game.getChildIndex(FlxG.game._inputContainer));
 		FlxG.cameras.list.push(NewCamera);
 		NewCamera.ID = FlxG.cameras.list.length - 1;
 		return NewCamera;
@@ -54,9 +54,9 @@ class CameraFrontEnd
 	 */
 	public function remove(Camera:FlxCamera, Destroy:Bool = true):Void
 	{
-		if ((Camera != null) && FlxG.game.contains(Camera.flashSprite))
+		if ((Camera != null) && FlxG.game.contains(Camera.displaySprite))
 		{
-			FlxG.game.removeChild(Camera.flashSprite);
+			FlxG.game.removeChild(Camera.displaySprite);
 			var index = FlxArrayUtil.indexOf(FlxG.cameras.list, Camera);
 			
 			if (index >= 0)
@@ -92,7 +92,7 @@ class CameraFrontEnd
 	{
 		for (camera in list)
 		{
-			FlxG.game.removeChild(camera.flashSprite);
+			FlxG.game.removeChild(camera.displaySprite);
 			camera.destroy();
 		}
 		
@@ -257,11 +257,11 @@ class CameraFrontEnd
 				
 				if (camera.target == null) 
 				{
-					camera.flashSprite.x = camera.x + camera._flashOffset.x;
-					camera.flashSprite.y = camera.y + camera._flashOffset.y;
+					camera.displaySprite.x = camera.x + camera._flashOffset.x;
+					camera.displaySprite.y = camera.y + camera._flashOffset.y;
 				}
 				
-				camera.flashSprite.visible = camera.visible;
+				camera.displaySprite.visible = camera.visible;
 			}
 		}
 	}

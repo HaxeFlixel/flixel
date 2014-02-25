@@ -1,6 +1,7 @@
 package flixel.effects.postprocess;
 import flash.geom.Rectangle;
 import flixel.FlxG;
+import lime.gl.GLUniformLocation;
 
 #if flash
 
@@ -12,7 +13,7 @@ class PostProcess
 {
 	public function new(shader:String)
 	{
-		#if !FLX_NO_DEBUG FlxG.log.error("Post processing not supported on Flash.") #end
+		#if !FLX_NO_DEBUG FlxG.log.error("Post processing not supported on Flash."); #end
 	}
 	public function enable(?to:PostProcess) { }
 	public function capture() { }
@@ -27,10 +28,14 @@ import openfl.gl.*;
 import openfl.utils.Float32Array;
 import openfl.display.OpenGLView;
 
-typedef Uniform = {
-	var id:Int;
-	var value:Float;
-};
+private class Uniform {
+	public var id:Int;
+	public var value:Float;
+	public function new(id, value) {
+		this.id = id;
+		this.value = value;
+	}
+}
 
 /**
  * Fullscreen post processing class
@@ -38,12 +43,6 @@ typedef Uniform = {
  */
 class PostProcess extends OpenGLView
 {
-	
-	public var px:Int = 0;
-	public var py:Int = 0;
-	public var pwidth:Int = 0;
-	public var pheight:Int = 0;
-	
 	/**
 	 * Create a new PostProcess object
 	 * @param fragmentShader  A glsl file in your assets path
@@ -55,7 +54,7 @@ class PostProcess extends OpenGLView
 		
 		// create and bind the framebuffer
 		framebuffer = GL.createFramebuffer();
-		
+		rebuild();
 #if ios
 		defaultFramebuffer = new GLFramebuffer(GL.version, 1); // faked framebuffer
 #else
@@ -106,7 +105,7 @@ class PostProcess extends OpenGLView
 		else
 		{
 			var id:Int = shader.uniform(uniform);
-			if (id != -1) uniforms.set(uniform, {id: id, value: value});
+			if (id != -1) uniforms.set(uniform, new Uniform(id, value));
 		}
 	}
 
@@ -125,40 +124,39 @@ class PostProcess extends OpenGLView
 	/**
 	 * Rebuilds the renderbuffer to match screen dimensions
 	 */
-	public function rebuild(pwidth:Int, pheight:Int)
+	public function rebuild()
 	{
 		GL.bindFramebuffer(GL.FRAMEBUFFER, framebuffer);
 
 		if (texture != null) GL.deleteTexture(texture);
 		if (renderbuffer != null) GL.deleteRenderbuffer(renderbuffer);
 
-		this.pwidth = pwidth;
-		this.pheight = pheight;
-		
-		createTexture(pwidth, pheight);
-		createRenderbuffer(pwidth, pheight);
+		createTexture(FlxG.width, FlxG.height);
+		createRenderbuffer(FlxG.width, FlxG.height);
 		
 		GL.bindFramebuffer(GL.FRAMEBUFFER, null);
 	}
 
 	/* @private creates a renderbuffer object */
-	private inline function createRenderbuffer(pwidth:Int, pheight:Int)
+	private inline function createRenderbuffer(width:Int, height:Int)
 	{
 		// Bind the renderbuffer and create a depth buffer
 		renderbuffer = GL.createRenderbuffer();
+		
 		GL.bindRenderbuffer(GL.RENDERBUFFER, renderbuffer);
-		GL.renderbufferStorage(GL.RENDERBUFFER, GL.DEPTH_COMPONENT16, pwidth, pheight);
+		GL.renderbufferStorage(GL.RENDERBUFFER, GL.DEPTH_COMPONENT16, width, height);
 
 		// Specify renderbuffer as depth attachement
 		GL.framebufferRenderbuffer(GL.FRAMEBUFFER, GL.DEPTH_ATTACHMENT, GL.RENDERBUFFER, renderbuffer);
 	}
 
 	/* @private creates a texture */
-	private inline function createTexture(pwidth:Int, pheight:Int)
+	private inline function createTexture(width:Int, height:Int)
 	{
 		texture = GL.createTexture();
+		
 		GL.bindTexture(GL.TEXTURE_2D, texture);
-		GL.texImage2D(GL.TEXTURE_2D, 0, GL.RGB,  pwidth, pheight,  0,  GL.RGB, GL.UNSIGNED_BYTE, null);
+		GL.texImage2D(GL.TEXTURE_2D, 0, GL.RGB,  width, height,  0,  GL.RGB, GL.UNSIGNED_BYTE, null);
 
 		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_S, GL.CLAMP_TO_EDGE);
 		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_T, GL.CLAMP_TO_EDGE);
@@ -176,7 +174,7 @@ class PostProcess extends OpenGLView
 	{
 		GL.bindFramebuffer(GL.FRAMEBUFFER, framebuffer);
 
-		GL.viewport(px, py, pwidth, pheight);
+		GL.viewport(0, 0, FlxG.width, FlxG.height);
 		
 		GL.clear(GL.DEPTH_BUFFER_BIT | GL.COLOR_BUFFER_BIT);
 	}
@@ -188,8 +186,6 @@ class PostProcess extends OpenGLView
 	{
 		time += FlxG.elapsed;
 		GL.bindFramebuffer(GL.FRAMEBUFFER, renderTo);
-
-		//aadwdGL.clear(GL.COLOR_BUFFER_BIT | GL.DEPTH_BUFFER_BIT);
 
 		shader.bind();
 
@@ -206,9 +202,16 @@ class PostProcess extends OpenGLView
 
 		GL.uniform1i(imageUniform, 0);
 		GL.uniform1f(timeUniform, time);
-		GL.uniform2f(resolutionUniform, pwidth, pheight);
+		GL.uniform2f(resolutionUniform, FlxG.width, FlxG.height);
 
-		for (u in uniforms) GL.uniform1f(u.id, u.value);
+		//for (u in uniforms) GL.uniform1f(u.id, u.value);
+		var it = uniforms.iterator();
+		var u = it.next();
+		while (u != null)
+		{
+			GL.uniform1f(u.id, u.value);
+			u = it.next();
+		}
 
 		GL.drawArrays(GL.TRIANGLES, 0, 6);
 

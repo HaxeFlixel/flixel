@@ -7,7 +7,6 @@ import flash.display.Sprite;
 import flash.geom.ColorTransform;
 import flash.geom.Point;
 import flash.geom.Rectangle;
-import flixel.effects.postprocess.PostProcess;
 import flixel.system.layer.DrawStackItem;
 import flixel.system.layer.TileSheetExt;
 import flixel.util.FlxColor;
@@ -16,7 +15,6 @@ import flixel.util.FlxPoint;
 import flixel.util.FlxRandom;
 import flixel.util.FlxRect;
 import flixel.util.loaders.CachedGraphics;
-import openfl.display.OpenGLView;
 
 /**
  * The camera class is used to display the game's visuals in the Flash player.
@@ -139,7 +137,7 @@ class FlxCamera extends FlxBasic
 	 * Used to render buffer to screen space. NOTE: We don't recommend modifying this directly unless you are fairly experienced. 
 	 * Uses include 3D projection, advanced display list modification, and more.
 	 */
-	public var flashSprite:Sprite;
+	public var displaySprite:Sprite;
 	
 	/**
 	 * How wide the camera display is, in game pixels.
@@ -173,14 +171,6 @@ class FlxCamera extends FlxBasic
 	 * Default behavior is chunky-style.
 	 */
 	public var antialiasing(default, set):Bool = false;
-	/**
-	 * Sprite for postprocessing effects
-	 */
-	public var postProcessLayer:Sprite;
-	/**
-	 * Post process effects active on the postProcessLayer
-	 */
-	public var postProcesses:Array<PostProcess>;
 	/**
 	 * Used to force the camera to look ahead of the target.
 	 */
@@ -426,14 +416,6 @@ class FlxCamera extends FlxBasic
 			}
 			currItem = currItem.next;
 		}
-		
-		if (postProcesses != null)
-		{
-			for(postProcess in postProcesses)
-			{
-				postProcess.capture();
-			}
-		}
 	}
 #end
 	
@@ -478,34 +460,24 @@ class FlxCamera extends FlxBasic
 		canvas = new Sprite();
 		canvas.x = -width * 0.5;
 		canvas.y = -height * 0.5;
-		
-		if (OpenGLView.isSupported)
-		{
-			postProcessLayer = new Sprite();
-			postProcesses = new Array<PostProcess>();
-		}
 		#end
 		
 		#if flash
 		color = 0xffffff;
 		#end
 		
-		flashSprite = new Sprite();
+		displaySprite = new Sprite();
 		zoom = Zoom; //sets the scale of flash sprite, which in turn loads flashoffset values
 		
 		_flashOffset.set((width * 0.5 * zoom), (height * 0.5 * zoom));
 		
-		flashSprite.x = x + _flashOffset.x;
-		flashSprite.y = y + _flashOffset.y;
+		displaySprite.x = x + _flashOffset.x;
+		displaySprite.y = y + _flashOffset.y;
 		
 		#if flash
-		flashSprite.addChild(_flashBitmap);
+		displaySprite.addChild(_flashBitmap);
 		#else
-		flashSprite.addChild(canvas);
-		if (postProcessLayer != null)
-		{
-			flashSprite.addChild(postProcessLayer);
-		}
+		displaySprite.addChild(canvas);
 		#end
 		
 		_flashRect = new Rectangle(0, 0, width, height);
@@ -528,7 +500,7 @@ class FlxCamera extends FlxBasic
 		debugLayer.x = -width * 0.5;
 		debugLayer.y = -height * 0.5;
 		debugLayer.scaleX = 1;
-		flashSprite.addChild(debugLayer);
+		displaySprite.addChild(debugLayer);
 		#end
 		
 		_currentStackItem = new DrawStackItem();
@@ -569,11 +541,11 @@ class FlxCamera extends FlxBasic
 		#else
 		
 		#if !FLX_NO_DEBUG
-		flashSprite.removeChild(debugLayer);
+		displaySprite.removeChild(debugLayer);
 		debugLayer = null;
 		#end
 		
-		flashSprite.removeChild(canvas);
+		displaySprite.removeChild(canvas);
 		var canvasNumChildren:Int = canvas.numChildren;
 		for (i in 0...(canvasNumChildren))
 		{
@@ -581,51 +553,16 @@ class FlxCamera extends FlxBasic
 		}
 		canvas = null;
 		
-		if (postProcessLayer != null)
-		{
-			flashSprite.removeChild(postProcessLayer);
-			for (i in 0...(postProcessLayer.numChildren)) 
-			{
-				postProcessLayer.removeChildAt(0);
-			}
-			postProcessLayer = null;
-		}
-		if (postProcesses != null)
-		{
-			postProcesses.splice(0, postProcesses.length);
-			postProcesses = null;
-		}
-		
 		clearDrawStack();
 		
 		_headOfDrawStack.dispose();
 		_headOfDrawStack = null;
 		_currentStackItem = null;
 		#end
-		flashSprite = null;
+		displaySprite = null;
 		
 		super.destroy();
 	}
-	
-	#if flash
-	public function addPostProcess(postprocess:PostProcess):Void { /* This is empty to prevent compilation errors */ } 
-	#else
-	public function addPostProcess(postProcess:PostProcess):Void 
-	{
-		if (OpenGLView.isSupported)
-		{
-			postProcess.px = Std.int(x); // this does nothing?
-			postProcess.py = Std.int(y); // this does nothing?
-			postProcess.rebuild(width, height);
-			postProcessLayer.addChild(postProcess);
-			postProcesses.push(postProcess);
-		}
-		else
-		{
-			FlxG.log.error("Shaders are not supported on this platform.");
-		}
-	}
-	#end
 	
 	/**
 	 * Updates the camera scroll as well as special effects like screen-shake or fades.
@@ -808,8 +745,8 @@ class FlxCamera extends FlxBasic
 			// Camera shake fix for target follow.
 			if (target != null)
 			{
-				flashSprite.x = x + _flashOffset.x;
-				flashSprite.y = y + _flashOffset.y;
+				displaySprite.x = x + _flashOffset.x;
+				displaySprite.y = y + _flashOffset.y;
 			}
 		}
 	}
@@ -963,8 +900,8 @@ class FlxCamera extends FlxBasic
 		_fxFlashAlpha = 0.0;
 		_fxFadeAlpha = 0.0;
 		_fxShakeDuration = 0;
-		flashSprite.x = x + _flashOffset.x;
-		flashSprite.y = y + _flashOffset.y;
+		displaySprite.x = x + _flashOffset.x;
+		displaySprite.y = y + _flashOffset.y;
 	}
 	
 	/**
@@ -1075,8 +1012,8 @@ class FlxCamera extends FlxBasic
 		
 		if ((_fxShakeOffset.x != 0) || (_fxShakeOffset.y != 0))
 		{
-			flashSprite.x += _fxShakeOffset.x;
-			flashSprite.y += _fxShakeOffset.y;
+			displaySprite.x += _fxShakeOffset.x;
+			displaySprite.y += _fxShakeOffset.y;
 		}
 	}
 	
@@ -1153,8 +1090,8 @@ class FlxCamera extends FlxBasic
 	
 	public function setScale(X:Float, Y:Float):Void
 	{
-		flashSprite.scaleX = X;
-		flashSprite.scaleY = Y;
+		displaySprite.scaleX = X;
+		displaySprite.scaleY = Y;
 		
 		//camera positioning fix from bomski (https://github.com/Beeblerox/HaxeFlixel/issues/66)
 		_flashOffset.x = width * 0.5 * X;
@@ -1167,7 +1104,7 @@ class FlxCamera extends FlxBasic
 	 */
 	public inline function getScale():FlxPoint
 	{
-		return _point.set(flashSprite.scaleX, flashSprite.scaleY);
+		return _point.set(displaySprite.scaleX, displaySprite.scaleY);
 	}
 	
 	private function set_width(Value:Int):Int
@@ -1198,14 +1135,6 @@ class FlxCamera extends FlxBasic
 				#if !FLX_NO_DEBUG
 				debugLayer.x = canvas.x;
 				#end
-			}
-			
-			if (postProcesses != null)
-			{
-				for (postprocess in postProcesses) 
-				{
-					postprocess.width = Value;
-				}
 			}
 			#end
 		}
@@ -1241,14 +1170,6 @@ class FlxCamera extends FlxBasic
 				debugLayer.y = canvas.y;
 				#end
 			}
-			
-			if (postProcesses != null)
-			{
-				for (postprocess in postProcesses) 
-				{
-					postprocess.height = Value;
-				}
-			}
 			#end
 		}
 		return Value;
@@ -1282,7 +1203,7 @@ class FlxCamera extends FlxBasic
 	private function set_angle(Angle:Float):Float
 	{
 		angle = Angle;
-		flashSprite.rotation = Angle;
+		displaySprite.rotation = Angle;
 		return Angle;
 	}
 	
