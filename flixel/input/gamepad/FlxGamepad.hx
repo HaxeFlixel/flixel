@@ -3,6 +3,13 @@ package flixel.input.gamepad;
 import flixel.interfaces.IFlxDestroyable;
 import flixel.util.FlxPoint;
 
+#if flash
+import flash.ui.GameInputControl;
+import flash.ui.GameInputDevice;
+import flash.system.Capabilities;
+#end
+
+@:allow(flixel.input.gamepad)
 class FlxGamepad implements IFlxDestroyable
 {
 	// Button States (mirrors Key States in FlxKey.hx)
@@ -34,8 +41,11 @@ class FlxGamepad implements IFlxDestroyable
 	/**
 	 * Axis array is read-only, use "getAxis" function for deadZone checking.
 	 */
-	@:allow(flixel.input.gamepad)
 	private var axis:Array<Float>;
+	
+	#if flash
+	private var _device:GameInputDevice; 
+	#end
 	
 	public function new(ID:Int, GlobalDeadZone:Float = 0) 
 	{
@@ -69,6 +79,27 @@ class FlxGamepad implements IFlxDestroyable
 	 */
 	public function update():Void
 	{
+		#if flash
+		var control:GameInputControl;
+		var button:FlxGamepadButton;
+		
+		for (i in 0..._device.numControls)
+		{
+			control = _device.getControlAt(i);
+			var value = control.value;
+			button = getButton(i);
+			
+			if (value == 0)
+			{
+				button.release();
+			}
+			else if (value > deadZone)
+			{
+				button.press();
+			}
+		}
+		#end
+		
 		for (button in buttons)
 		{
 			if ((button.last == -1) && (button.current == -1)) 
@@ -79,7 +110,7 @@ class FlxGamepad implements IFlxDestroyable
 			{
 				button.current = 1;
 			}
-
+			
 			button.last = button.current;
 		}
 	}
@@ -135,14 +166,14 @@ class FlxGamepad implements IFlxDestroyable
 	 */
 	public function pressed(ButtonID:Int):Bool 
 	{
-		#if (cpp || neko)
+		#if js
+		var v = untyped navigator.webkitGetGamepads().item(id).buttons[ButtonID];
+		return if (Math.round(v) == 1) true else false;
+		#else
 		if (buttons.exists(ButtonID))
 		{
 			return (buttons.get(ButtonID).current > RELEASED);
 		}
-		#elseif js
-			var v = untyped navigator.webkitGetGamepads().item(id).buttons[ButtonID];
-			return if (Math.round(v) == 1) true else false;
 		#end
 		
 		return false;
@@ -228,29 +259,28 @@ class FlxGamepad implements IFlxDestroyable
 			}
 		}
 		
-		return -1;
+		return -1; 
 	}
 	
-	public function getAxis(AxisID:Int):Float
+	public inline function getXAxis(AxisID:Int):Float
 	{
-		if (AxisID < 0 || AxisID >= axis.length)
-		{
-			return 0;
-		}
+		return getAxisValue(AxisID);
+	}
+	
+	public function getYAxis(AxisID:Int):Float
+	{
+		var axisValue = getAxisValue(AxisID);
 		
-		#if (cpp || neko)
-		if (Math.abs(axis[AxisID]) > deadZone)
+		// the y axis is inverted on the Xbox gamepad in flash for some reason - but not in Chrome!
+		#if flash
+		if (_device.enabled && (_device.name.indexOf("Xbox") != -1) && 
+		   (Capabilities.manufacturer != "Google Pepper"))
 		{
-			return axis[AxisID];
-		}
-		#elseif js
-		var v:Float = untyped navigator.webkitGetGamepads().item(id).axes[AxisID];
-		if (Math.abs(v) > deadZone)
-		{
-			return Math.round(v);
+			axisValue = -axisValue;
 		}
 		#end
-		return 0;
+		
+		return axisValue;
 	}
 	
 	/**
@@ -298,6 +328,34 @@ class FlxGamepad implements IFlxDestroyable
 		}
 		
 		return false;
+	}
+	
+	private function getAxisValue(AxisID:Int):Float
+	{
+		if (AxisID < 0 || AxisID >= axis.length)
+		{
+			return 0;
+		}
+		
+		var axisValue:Float = 0;
+		
+		#if flash
+		if (_device.enabled)
+		{
+			axisValue = _device.getControlAt(AxisID).value;
+		}
+		#elseif js
+		axisValue = untyped navigator.webkitGetGamepads().item(id).axes[AxisID];
+		#else
+		axisValue = axis[AxisID];
+		#end
+		
+		if (Math.abs(axisValue) > deadZone)
+		{
+			return axisValue;
+		}
+		
+		return 0;
 	}
 	
 	/**

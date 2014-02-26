@@ -18,4 +18,28 @@ class FlxGamepadButton
 		current = 0;
 		last = 0;
 	}
+	
+	public function release():Void
+	{
+		if (current > 0) 
+		{
+			current = -1;
+		}
+		else 
+		{
+			current = 0;
+		}
+	}
+	
+	public function press():Void
+	{
+		if (current > 0) 
+		{
+			current = 1;
+		}
+		else 
+		{
+			current = 2;
+		}
+	}
 }
