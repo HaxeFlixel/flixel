@@ -2,12 +2,18 @@ package flixel.util;
 
 import flash.geom.Rectangle;
 import flixel.FlxG;
+import flixel.interfaces.IFlxDestroyable;
 
 /**
  * Stores a rectangle.
  */
-class FlxRect
+class FlxRect implements IFlxDestroyable
 {
+	/**
+	 * A pool that contains FlxTimers for recycling.
+	 */
+	public static var pool = new FlxPool<FlxRect>(FlxRect);
+	
 	/**
 	 * @default 0
 	 */
@@ -39,6 +45,25 @@ class FlxRect
 		y = Y;
 		width = Width;
 		height = Height;
+	}
+	
+	/**
+	 * Recycle or create new FlxRect.
+	 * 
+	 * @param	X		The X-coordinate of the point in space.
+	 * @param	Y		The Y-coordinate of the point in space.
+	 */
+	public static inline function get(X:Float = 0, Y:Float = 0, Width:Float = 0, Height:Float = 0):FlxRect
+	{
+		return pool.get().set(X, Y, Width, Height);
+	}
+	
+	/**
+	 * Add this FlxRect to the recycling pool.
+	 */
+	public inline function put():Void
+	{
+		pool.put(this);
 	}
 	
 	/**
@@ -228,6 +253,11 @@ class FlxRect
 		
 		return set(minX, minY, maxX - minX, maxY - minY);
 	}
+	
+	/**
+	 * Necessary for IFlxDestroyable.
+	 */
+	public function destroy() {}
 	
 	/**
 	 * Convert object to readable string name. Useful for debugging, save games, etc.

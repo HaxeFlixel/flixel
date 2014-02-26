@@ -426,8 +426,6 @@ class FlxDebugger extends Sprite
 		addWindow(console = new Console());
 		addWindow(stats = new Stats());
 		
-		stats.visible = true;
-		
 		vcr = new VCR(this);
 		
 		addButton(LEFT, new GraphicFlixel(0, 0), openHomepage);

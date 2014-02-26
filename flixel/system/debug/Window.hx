@@ -144,15 +144,9 @@ class Window extends Sprite
 		}
 		else 
 		{
-			_id = WINDOW_AMOUNT++;
-			if (FlxG.save.data.windowSettings != null)
-			{
-				visible = FlxG.save.data.windowSettings[_id];
-			}
-			else
-			{
-				FlxG.save.data.windowSettings = new Array<Bool>();
-			}
+			_id = WINDOW_AMOUNT;
+			loadSaveData();
+			WINDOW_AMOUNT++;
 		}
 		
 		if ((_width != 0) || (_height != 0))
@@ -259,6 +253,31 @@ class Window extends Sprite
 	{
 		visible = !visible;
 		FlxG.save.data.windowSettings[_id] = visible;
+		FlxG.save.flush();
+	}
+	
+	private function loadSaveData():Void
+	{
+		if (FlxG.save.data.windowSettings != null)
+		{
+			visible = FlxG.save.data.windowSettings[_id];
+		}
+		else
+		{
+			initSaveData();
+			loadSaveData();
+		}
+	}
+	
+	private function initSaveData():Void
+	{
+		var settings:Array<Bool> = [];
+		for (i in 0...10) // arbitrary max of windows
+		{
+			settings[i] = true;
+		}
+		FlxG.save.data.windowSettings = settings;
+		FlxG.save.flush();
 	}
 	
 	public function update():Void {}

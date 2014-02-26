@@ -6,6 +6,7 @@
  * Use the "track [object]" command to open a tracker window from the console
 * FlxCamera: added static defaultCameras array which is used by FlxBasics when their cameras array has not been set - previously the use of FlxG.cameras.list / all existing cameras was hardcoded
 * FlxText.setFormat() now accepts Font classes instead of only strings for its Font param
+* [gamedevsam] Added pooling functionality to FlxPoint, FlxVector, FlxRect objects (FlxPath and FlxTimer also support pooling, but that is handled transparently). Usage: ```var point = FlxPoint.get(); /* do stuff with point */ point.put(); // recycle point```
 
 3.2.1
 ------------------------------

@@ -374,7 +374,7 @@ class FlxAngle
 		var p = point;
 		if (p == null)
 		{
-			p = new FlxPoint();
+			p = FlxPoint.get();
 		}
 		
 		p.x = Radius * Math.cos(Angle * TO_RAD);
@@ -395,7 +395,7 @@ class FlxAngle
 		var p = point;
 		if (p == null)
 		{
-			p = new FlxPoint();
+			p = FlxPoint.get();
 		}
 		
 		p.x = Math.sqrt((X * X) + (Y * Y));
