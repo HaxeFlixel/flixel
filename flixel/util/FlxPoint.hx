@@ -22,12 +22,12 @@ class FlxPoint implements IFlxDestroyable
 	/**
 	 * Internal (static): head of recycle cache linked list
 	 */
-	private static var _head:FlxPoint;
+	private static var _headPoint:FlxPoint;
 	
 	/**
 	 * Internal: next FlxPoint in recycle cache linked list
 	 */
-	private var _next:FlxPoint;
+	private var _nextPoint:FlxPoint;
 	
 	/**
 	 * Instantiate a new point object.
@@ -47,10 +47,10 @@ class FlxPoint implements IFlxDestroyable
 	 */
 	public static function get(X:Float = 0, Y:Float = 0):FlxPoint
 	{
-		if (_head != null)
+		if (_headPoint != null)
 		{
-			var point:FlxPoint = _head;
-			_head = point._next;
+			var point:FlxPoint = _headPoint;
+			_headPoint = point._nextPoint;
 			return point.set(X, Y);
 		}
 		else
@@ -60,10 +60,10 @@ class FlxPoint implements IFlxDestroyable
 	/**
 	 * Add this FlxPoint to the recycling cache.
 	 */
-	public inline function put():Void
+	public function put():Void
 	{
-		_next = _head;
-		_head = this;
+		_nextPoint = _headPoint;
+		_headPoint = this;
 	}
 	
 	/**
