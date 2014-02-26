@@ -10,6 +10,11 @@ import flixel.interfaces.IFlxDestroyable;
 class FlxPoint implements IFlxDestroyable
 {
 	/**
+	 * Pool for recycling
+	 */
+	public static var pool = new FlxPool<FlxPoint>(FlxPoint);
+	
+	/**
 	 * @default 0
 	 */
 	public var x(default, set):Float = 0;
@@ -20,17 +25,8 @@ class FlxPoint implements IFlxDestroyable
 	public var y(default, set):Float = 0;
 	
 	/**
-	 * Internal (static): head of recycle cache linked list
-	 */
-	private static var _headPoint:FlxPoint;
-	
-	/**
-	 * Internal: next FlxPoint in recycle cache linked list
-	 */
-	private var _nextPoint:FlxPoint;
-	
-	/**
 	 * Instantiate a new point object.
+	 * 
 	 * @param	X		The X-coordinate of the point in space.
 	 * @param	Y		The Y-coordinate of the point in space.
 	 */
@@ -42,32 +38,26 @@ class FlxPoint implements IFlxDestroyable
 	
 	/**
 	 * Recycle or create new FlxPoint.
+	 * 
 	 * @param	X		The X-coordinate of the point in space.
 	 * @param	Y		The Y-coordinate of the point in space.
 	 */
-	public static function get(X:Float = 0, Y:Float = 0):FlxPoint
+	public static inline function get(X:Float = 0, Y:Float = 0):FlxPoint
 	{
-		if (_headPoint != null)
-		{
-			var point:FlxPoint = _headPoint;
-			_headPoint = point._nextPoint;
-			return point.set(X, Y);
-		}
-		else
-			return new FlxPoint(X, Y);
+		return pool.get().set(X, Y);
 	}
 	
 	/**
-	 * Add this FlxPoint to the recycling cache.
+	 * Add this FlxPoint to the recycling pool.
 	 */
-	public function put():Void
+	public inline function put():Void
 	{
-		_nextPoint = _headPoint;
-		_headPoint = this;
+		pool.put(this);
 	}
 	
 	/**
 	 * Set the coordinates of this point object.
+	 * 
 	 * @param	X		The X-coordinate of the point in space.
 	 * @param	Y		The Y-coordinate of the point in space.
 	 */
@@ -80,6 +70,7 @@ class FlxPoint implements IFlxDestroyable
 	
 	/**
 	 * Helper function, just copies the values from the specified point.
+	 * 
 	 * @param	Point	Any FlxPoint.
 	 * @return	A reference to itself.
 	 */
@@ -92,6 +83,7 @@ class FlxPoint implements IFlxDestroyable
 	
 	/**
 	 * Helper function, just copies the values from this point to the specified point.
+	 * 
 	 * @param	Point	Any FlxPoint.
 	 * @return	A reference to the altered point parameter.
 	 */
@@ -108,6 +100,7 @@ class FlxPoint implements IFlxDestroyable
 	
 	/**
 	 * Helper function, just copies the values from the specified Flash point.
+	 * 
 	 * @param	Point	Any Point.
 	 * @return	A reference to itself.
 	 */
@@ -120,6 +113,7 @@ class FlxPoint implements IFlxDestroyable
 	
 	/**
 	 * Helper function, just copies the values from this point to the specified Flash point.
+	 * 
 	 * @param	Point	Any Point.
 	 * @return	A reference to the altered point parameter.
 	 */
@@ -167,7 +161,7 @@ class FlxPoint implements IFlxDestroyable
 	}
 	
 	/**
-	 * Necessary for FlxPointHelper in FlxSpriteGroup.
+	 * Necessary for IFlxDestroyable.
 	 */
 	public function destroy() {}
 	

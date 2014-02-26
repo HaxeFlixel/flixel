@@ -307,7 +307,7 @@ class FlxQuadTree extends FlxRect
 	/**
 	 * Clean up memory.
 	 */
-	public function destroy():Void
+	override public function destroy():Void
 	{
 		if (_headA != null)
 		{

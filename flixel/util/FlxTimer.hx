@@ -2,6 +2,7 @@ package flixel.util;
 
 import flixel.FlxG;
 import flixel.plugin.TimerManager;
+import flixel.interfaces.IFlxDestroyable;
 
 /**
  * A simple timer class, leveraging the new plugins system.
@@ -9,10 +10,16 @@ import flixel.plugin.TimerManager;
  * Not intended to be added to a game state or group; the timer manager
  * is responsible for actually calling update(), not the user.
  */
-class FlxTimer
+class FlxTimer implements IFlxDestroyable
 {
-	private static var pool:FlxPool<FlxTimer> = new FlxPool<FlxTimer>();
-	
+	/**
+	 * The TimerManager instance.
+	 */
+	public static var manager:TimerManager;
+	/**
+	 * A pool that contains FlxTimers for recycling.
+	 */
+	public static var pool = new FlxPool<FlxTimer>(FlxTimer);
 	/**
 	 * How much time the timer was set for.
 	 */
@@ -34,10 +41,6 @@ class FlxTimer
 	 * FlxTimer.start(1, function(t) { trace(t.userData); } ).userData = "Hello World!";
 	 */
 	public var userData:Dynamic = null;
-	/**
-	 * Whether to reset and put this FlxTimer object into internal timers pool automatically after it finishes it's work.
-	 */
-	public var usePooling:Bool = true;
 	/**
 	 * Function that gets called when timer completes.
 	 * Callback should be formed "onTimer(Timer:FlxTimer);"
@@ -68,14 +71,6 @@ class FlxTimer
 	}
 	
 	/**
-	 * Returns a recycled timer.
-	 */
-	public static function recycle():FlxTimer
-	{
-		return pool.get();
-	}
-	
-	/**
 	 * Returns a recycled timer and starts it.
 	 * 
 	 * @param	Time		How many seconds it takes for the timer to go off.
@@ -84,7 +79,7 @@ class FlxTimer
  	 */
 	public static function start(Time:Float = 1, ?Callback:FlxTimer->Void, Loops:Int = 1):FlxTimer
 	{
-		var timer:FlxTimer = recycle();
+		var timer:FlxTimer = pool.get();
 		timer.run(Time, Callback, Loops);
 		return timer;
 	}
@@ -141,7 +136,8 @@ class FlxTimer
 		finished = true;
 		if (manager != null)
 		{
-			manager.remove(this, usePooling);
+			manager.remove(this);
+			pool.put(this);
 		}
 	}
 	
@@ -228,14 +224,4 @@ class FlxTimer
 			return 0;
 		}
 	}
-	
-	public static function put(timer:FlxTimer):Void
-	{
-		pool.put(timer);
-	}
-	
-	/**
-	 * Read-only: The TimerManager instance.
-	 */
-	public static var manager:TimerManager;
 }

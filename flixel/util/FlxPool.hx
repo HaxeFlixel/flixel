@@ -1,23 +1,28 @@
 package flixel.util;
 
+import flixel.interfaces.IFlxDestroyable;
+
 /**
  * A generic container that facilitates pooling and recycling of objects.
+ * WARNING: Pooled objects must have parameterless constructors: function new()
  */
-@:generic class FlxPool<T:({ private function new():Void; function destroy():Void; })>
+@:generic class FlxPool<T:IFlxDestroyable>
 {
 	private var _pool:Array<T>;
+	private var _class:Class<T>;
 	
 	public var length(get, never):Int;
 	
-	public function new() 
+	public function new(classObj:Class<T>) 
 	{
 		_pool = [];
+		_class = classObj;
 	}
 	
-	public inline function get():T
+	public function get():T
 	{
 		var obj:T = _pool.pop();
-		if (obj == null)	obj = new T();
+		if (obj == null) obj = Type.createInstance(_class, []);
 		return obj;
 	}
 	
@@ -31,7 +36,7 @@ package flixel.util;
 		}
 	}
 	
-	public inline function putUnsafe(obj:T):Void
+	public function putUnsafe(obj:T):Void
 	{
 		if (obj != null)
 		{
@@ -40,7 +45,15 @@ package flixel.util;
 		}
 	}
 	
-	public inline function clear():Array<T>
+	public function preAllocate(numObjects:Int):Void
+	{
+		for (i in 0...numObjects)
+		{
+			_pool.push(Type.createInstance(_class, []));
+		}
+	}
+	
+	public function clear():Array<T>
 	{
 		var oldPool = _pool;
 		_pool = [];
