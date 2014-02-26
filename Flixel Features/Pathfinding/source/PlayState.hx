@@ -131,8 +131,7 @@ class PlayState extends FlxState
 		var legends:FlxText = new FlxText(textX, 140, textWidth, "Legends:\nRed: Unit\nYellow: Goal\nBlue: Wall\nWhite: Path");
 		add(legends);
 		
-		path = FlxPath.recycle();
-		path.usePooling = false;
+		path = new FlxPath();
 	}
 	
 	override public function destroy():Void

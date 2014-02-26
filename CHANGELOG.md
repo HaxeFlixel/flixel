@@ -1,6 +1,6 @@
 1.0.2
 ------------------------------
-* Compatibility with flixel 3.1.1
+* Compatibility with flixel 3.2.0
 * Added demos:
  * BlendModes
  * Flappybalt

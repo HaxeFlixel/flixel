@@ -4,15 +4,17 @@ import flash.system.System;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
-import flixel.group.FlxTypedGroup;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
-import flixel.util.FlxAngle;
-import flixel.util.FlxCollision;
-import flixel.util.FlxColor;
+import flixel.util.FlxRect;
 import flixel.util.FlxPoint;
+import flixel.util.FlxVector;
+import flixel.util.FlxAngle;
+import flixel.util.FlxColor;
 import flixel.util.FlxRandom;
+import flixel.util.FlxCollision;
+import flixel.group.FlxTypedGroup;
 import openfl.display.FPS;
 
 using StringTools;	// so we can use String.replace() easily, yay!
@@ -62,6 +64,21 @@ class PlayState extends FlxState
 	{	
 		super.create();
 		
+		// test FlxVector - to make sure it compiles
+		var vector = FlxVector.get(10,15);
+		trace(vector.toString());
+		vector.put();
+		
+		// test FlxVector recycling - to make sure it compiles
+		var vector = FlxVector.get(10,15);
+		trace(vector.toString());
+		vector.put();
+		
+		// test FlxRect recycling - to make sure it compiles
+		var rect = FlxRect.get(10,15, 50, 50);
+		trace(rect.toString());
+		rect.put();
+		
 		// the group containing all the objects
 		add(aliens = new FlxTypedGroup<FlxSprite>());
 		
@@ -97,8 +114,7 @@ class PlayState extends FlxState
 		alien.animation.add("dance", [0, 1, 0, 2], FlxRandom.intRanged(6, 10));	// set dance dance interstellar animation
 		alien.animation.play("dance");	// dance!
 		randomize(alien);	// set position, angle and alpha to random values
-		
-		return aliens.add(alien);
+		return alien;
 	}
 	
 	/**
@@ -109,6 +125,7 @@ class PlayState extends FlxState
 		// The start position of the alien is offscreen on a circle
 		var point = getRandomCirclePos();
 		obj.setPosition(point.x, point.y);
+		point.put(); // recycle point
 		
 		var destX = FlxRandom.intRanged(0, Std.int(FlxG.width - obj.width));
 		var destY = FlxRandom.intRanged(0, Std.int(FlxG.height - obj.height));
