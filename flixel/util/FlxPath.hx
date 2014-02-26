@@ -135,7 +135,7 @@ class FlxPath implements IFlxDestroyable
 	/**
 	 * Instantiate a new path object.
 	 */
-	private function new() {  }
+	public function new() {  }
 	
 	/**
 	 * Call this function to give this object a path to follow.
@@ -697,8 +697,7 @@ class FlxPath implements IFlxDestroyable
 			}
 			else
 			{
-				nextNode = nodes[0];
-				linealpha = 0.15;
+				nextNode = nodes[i];
 			}
 			
 			//then draw a line to the next node
