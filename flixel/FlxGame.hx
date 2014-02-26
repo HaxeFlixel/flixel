@@ -219,9 +219,11 @@ class FlxGame extends Sprite
 		// Super high priority init stuff
 		_inputContainer = new Sprite();
 		
+		#if !flash
 		// Init shader container
 		if (OpenGLView.isSupported)
 			postProcessLayer = new Sprite();
+		#end
 		
 		// Basic display and update setup stuff
 		FlxG.init(this, GameSizeX, GameSizeY, Zoom);
@@ -265,8 +267,10 @@ class FlxGame extends Sprite
 		
 		addChild(_inputContainer);
 		
+		#if !flash
 		if (OpenGLView.isSupported)
 			addChild(postProcessLayer);
+		#end
 		
 		// Creating the debugger overlay
 		#if !FLX_NO_DEBUG
