@@ -14,20 +14,20 @@ class FlxPoint implements IFlxDestroyable
 	 */
 	public var x(default, set):Float = 0;
 	
-	private function set_x(Value:Float):Float
-	{
-		return x = Value;
-	}
-	
 	/**
 	 * @default 0
 	 */
 	public var y(default, set):Float = 0;
 	
-	private function set_y(Value:Float):Float
-	{
-		return y = Value;
-	}
+	/**
+	 * Internal (static): head of recycle cache linked list
+	 */
+	private static var _head:FlxPoint;
+	
+	/**
+	 * Internal: next FlxPoint in recycle cache linked list
+	 */
+	private var _next:FlxPoint;
 	
 	/**
 	 * Instantiate a new point object.
@@ -58,7 +58,7 @@ class FlxPoint implements IFlxDestroyable
 	}
 	
 	/**
-	 * Add this FlxPoint to the recycling cache
+	 * Add this FlxPoint to the recycling cache.
 	 */
 	public inline function put():Void
 	{
@@ -166,7 +166,20 @@ class FlxPoint implements IFlxDestroyable
 		return FlxMath.getDistance(this, AnotherPoint);
 	}
 	
-	public function destroy() {} // Necessary for FlxPointHelper in FlxSpriteGroup!
+	/**
+	 * Necessary for FlxPointHelper in FlxSpriteGroup.
+	 */
+	public function destroy() {}
+	
+	/**
+	 * Necessary for FlxPointHelper in FlxSpriteGroup.
+	 */
+	private function set_x(Value:Float):Float { return x = Value; }
+	
+	/**
+	 * Necessary for FlxPointHelper in FlxSpriteGroup.
+	 */
+	private function set_y(Value:Float):Float { return y = Value; }
 	
 	/**
 	 * Convert object to readable string name. Useful for debugging, save games, etc.
@@ -176,7 +189,4 @@ class FlxPoint implements IFlxDestroyable
 		return FlxStringUtil.getDebugString([ { label: "x", value: x }, 
 		                                      { label: "y", value: y }]);
 	}
-	
-	private var _next:FlxPoint;
-	private static var _head:FlxPoint;
 }
