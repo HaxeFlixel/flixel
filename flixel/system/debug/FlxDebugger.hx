@@ -236,22 +236,12 @@ class FlxDebugger extends Sprite
 		}
 	}
 	
-	public function onResize(?Width:Null<Float>, ?Height:Null<Float>):Void
+	public function onResize(Width:Float, Height:Float):Void
 	{
-		if (Width != null)
-		{
-			_screen.x = Width;
-		}
-		if (Height != null)
-		{
-			_screen.y = Height;
-		}
+		_screen.x = Width;
+		_screen.y = Height;
 		
-		_screenBounds = new Rectangle(GUTTER, TOP_HEIGHT + GUTTER / 2, _screen.x - GUTTER * 2, _screen.y - GUTTER * 2 - TOP_HEIGHT);
-		for (window in _windows)
-		{
-			window.updateBounds(_screenBounds);
-		}
+		updateBounds();
 		_topBar.width = FlxG.stage.stageWidth;
 		resetButtonLayout();
 		resetLayout();
@@ -259,6 +249,15 @@ class FlxDebugger extends Sprite
 		scaleY = 1 / FlxG.game.scaleY;
 		x = -FlxG.game.x * scaleX;
 		y = -FlxG.game.y * scaleY;
+	}
+	
+	private function updateBounds():Void
+	{
+		_screenBounds = new Rectangle(GUTTER, TOP_HEIGHT + GUTTER / 2, _screen.x - GUTTER * 2, _screen.y - GUTTER * 2 - TOP_HEIGHT);
+		for (window in _windows)
+		{
+			window.updateBounds(_screenBounds);
+		}
 	}
 	
 	public function onStateSwitch():Void
@@ -371,7 +370,7 @@ class FlxDebugger extends Sprite
 		addChild(window);
 		if (_screenBounds != null)
 		{
-			onResize();
+			updateBounds();
 			window.bound();
 		}
 		return window;

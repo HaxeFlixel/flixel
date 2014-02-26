@@ -203,11 +203,6 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	 */
 	private function updateButton():Void
 	{
-		if (cameras == null) 
-		{
-			cameras = FlxG.cameras.list;
-		}
-		
 		// We're looking for any touch / mouse overlaps with this button
 		var overlapFound = false;
 		

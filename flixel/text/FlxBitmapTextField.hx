@@ -164,18 +164,10 @@ class FlxBitmapTextField extends FlxSprite
 			updateBitmapData();
 		}
 		
-		if (cameras == null)
-		{
-			cameras = FlxG.cameras.list;
-		}
-		
-		var camera:FlxCamera;
 		var bgDrawItem:DrawStackItem = null;
 		var drawItem:DrawStackItem;
 		var currDrawData:Array<Float>;
 		var currIndex:Int;
-		var i:Int = 0;
-		var l:Int = cameras.length;
 		
 		var j:Int = 0;
 		var textLength:Int = Std.int(_drawData.length / 6);
@@ -196,10 +188,8 @@ class FlxBitmapTextField extends FlxSprite
 		
 		var camID:Int;
 		
-		while (i < l)
+		for (camera in cameras)
 		{
-			camera = cameras[i++];
-			
 			if (_background)
 			{
 				#if !js

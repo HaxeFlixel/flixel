@@ -26,14 +26,6 @@ class FlxBGSprite extends FlxSprite
 	 */
 	override public function draw():Void
 	{
-		if (cameras == null)
-		{
-			cameras = FlxG.cameras.list;
-		}
-		var camera:FlxCamera;
-		var i:Int = 0;
-		var l:Int = cameras.length;
-		
 		var drawItem:DrawStackItem;
 		var currDrawData:Array<Float>;
 		var currIndex:Int;
@@ -41,10 +33,8 @@ class FlxBGSprite extends FlxSprite
 		var useAlpha:Bool = (alpha < 1);
 		#end
 		
-		while (i < l)
+		for (camera in cameras)
 		{
-			camera = cameras[i++];
-			
 			if (!camera.visible || !camera.exists)
 			{
 				continue;

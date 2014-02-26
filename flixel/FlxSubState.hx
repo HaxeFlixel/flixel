@@ -49,11 +49,6 @@ class FlxSubState extends FlxState
 	{
 		//Draw background
 		#if flash
-		if (cameras == null) 
-		{ 
-			cameras = FlxG.cameras.list; 
-		}
-		
 		for (camera in cameras)
 		{
 			camera.fill(bgColor);
