@@ -13,6 +13,16 @@ class FlxVector extends FlxPoint
 	private static var _vector3:FlxVector = new FlxVector();
 	
 	/**
+	 * Internal (static): head of recycle cache linked list
+	 */
+	private static var _headVector:FlxVector;
+	
+	/**
+	 * Internal: next FlxVector in recycle cache linked list
+	 */
+	private var _nextVector:FlxVector;
+	
+	/**
 	 * Instantiate a new point object.
 	 * @param	X		The X-coordinate of the point in space.
 	 * @param	Y		The Y-coordinate of the point in space.
@@ -20,6 +30,32 @@ class FlxVector extends FlxPoint
 	public function new(X:Float = 0, Y:Float = 0)
 	{
 		super(X, Y);
+	}
+	
+	/**
+	 * Recycle or create new FlxPoint.
+	 * @param	X		The X-coordinate of the point in space.
+	 * @param	Y		The Y-coordinate of the point in space.
+	 */
+	public static function get(X:Float = 0, Y:Float = 0):FlxVector
+	{
+		if (_headVector != null)
+		{
+			var vector:FlxVector = _headVector;
+			_headPoint = vector._nextVector;
+			return vector.set(X, Y);
+		}
+		else
+			return new FlxVector(X, Y);
+	}
+	
+	/**
+	 * Add this FlxPoint to the recycling cache.
+	 */
+	override public function put():Void
+	{
+		_nextVector = _headVector;
+		_headVector = this;
 	}
 	
 	/**
