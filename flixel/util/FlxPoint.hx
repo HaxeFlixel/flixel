@@ -1,7 +1,7 @@
 package flixel.util;
 
-import flash.geom.Point;
 import flixel.FlxG;
+import flash.geom.Point;
 import flixel.interfaces.IFlxDestroyable;
 
 /**
@@ -41,6 +41,32 @@ class FlxPoint implements IFlxDestroyable
 	}
 	
 	/**
+	 * Recycle or create new FlxPoint.
+	 * @param	X		The X-coordinate of the point in space.
+	 * @param	Y		The Y-coordinate of the point in space.
+	 */
+	public static function get(X:Float = 0, Y:Float = 0):FlxPoint
+	{
+		if (_head != null)
+		{
+			var point:FlxPoint = _head;
+			_head = point._next;
+			return point.set(X, Y);
+		}
+		else
+			return new FlxPoint(X, Y);
+	}
+	
+	/**
+	 * Add this FlxPoint to the recycling cache
+	 */
+	public inline function put():Void
+	{
+		_next = _head;
+		_head = this;
+	}
+	
+	/**
 	 * Set the coordinates of this point object.
 	 * @param	X		The X-coordinate of the point in space.
 	 * @param	Y		The Y-coordinate of the point in space.
@@ -73,7 +99,7 @@ class FlxPoint implements IFlxDestroyable
 	{
 		if (point == null)
 		{
-			point = new FlxPoint();
+			point = FlxPoint.get();
 		}
 		point.x = x;
 		point.y = y;
@@ -150,4 +176,7 @@ class FlxPoint implements IFlxDestroyable
 		return FlxStringUtil.getDebugString([ { label: "x", value: x }, 
 		                                      { label: "y", value: y }]);
 	}
+	
+	private var _next:FlxPoint;
+	private static var _head:FlxPoint;
 }
