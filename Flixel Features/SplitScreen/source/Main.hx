@@ -8,6 +8,9 @@ import flash.events.KeyboardEvent;
 import flash.Lib;
 import flash.ui.Keyboard;
 import flixel.FlxGame;
+#if (cpp && HXCPP_DEBUGGER)
+import org.flashdevelop.cpp.debugger.HaxeRemote;
+#end
 
 /**
  * @author Joshua Granick
@@ -49,6 +52,9 @@ class Main extends Sprite
 	
 	private function initialize():Void 
 	{
+#if (cpp && HXCPP_DEBUGGER)
+		new HaxeRemote(true, "127.0.0.1");
+#end
 		Lib.current.stage.align = StageAlign.TOP_LEFT;
 		Lib.current.stage.scaleMode = StageScaleMode.NO_SCALE;
 	}
