@@ -21,6 +21,7 @@ class FlxGamepadButton
 	
 	public function release():Void
 	{
+		last = current;
 		if (current > 0) 
 		{
 			current = -1;
@@ -33,7 +34,8 @@ class FlxGamepadButton
 	
 	public function press():Void
 	{
-		if (current > 0) 
+		last = current;
+		if (current > 0)
 		{
 			current = 1;
 		}
