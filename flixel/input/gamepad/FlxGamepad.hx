@@ -13,10 +13,10 @@ import flash.system.Capabilities;
 class FlxGamepad implements IFlxDestroyable
 {
 	// Button States (mirrors Key States in FlxKey.hx)
-	public static inline var JUST_RELEASED	:Int = -1;
-	public static inline var RELEASED		:Int = 0;
-	public static inline var PRESSED		:Int = 1;
-	public static inline var JUST_PRESSED	:Int = 2;
+	public static inline var JUST_RELEASED:Int = -1;
+	public static inline var RELEASED:Int = 0;
+	public static inline var PRESSED:Int = 1;
+	public static inline var JUST_PRESSED:Int = 2;
 	
 	public var id:Int;
 	public var buttons:Map<Int, FlxGamepadButton>;
@@ -30,6 +30,7 @@ class FlxGamepad implements IFlxDestroyable
 	/**
 	 * DPAD
 	 */
+	#if !flash
 	public var hat:FlxPoint;
 	public var ball:FlxPoint;
 	
@@ -37,6 +38,7 @@ class FlxGamepad implements IFlxDestroyable
 	public var dpadDown(get, null):Bool = false;
 	public var dpadLeft(get, null):Bool = false;
 	public var dpadRight(get, null):Bool = false;
+	#end
 	
 	/**
 	 * Axis array is read-only, use "getAxis" function for deadZone checking.
@@ -51,14 +53,17 @@ class FlxGamepad implements IFlxDestroyable
 	{
 		buttons = new Map<Int, FlxGamepadButton>();
 		axis = [for (i in 0...6) 0];
-		ball = new FlxPoint();
-		hat = new FlxPoint();
 		id = ID;
 		
 		if (GlobalDeadZone != 0)
 		{
 			deadZone = GlobalDeadZone;
 		}
+		
+		#if !flash
+		ball = new FlxPoint();
+		hat = new FlxPoint();
+		#end
 	}
 	
 	public function getButton(ButtonID:Int):FlxGamepadButton
@@ -130,16 +135,21 @@ class FlxGamepad implements IFlxDestroyable
 			axis[i] = 0;
 		}
 		
+		#if !flash
 		hat.set();
 		ball.set();
+		#end
 	}
 	
 	public function destroy():Void
 	{
 		buttons = null;
 		axis = null;
+		
+		#if !flash
 		hat = null;
 		ball = null;
+		#end
 	}
 	
 	/**
@@ -317,6 +327,7 @@ class FlxGamepad implements IFlxDestroyable
 			}
 		}
 		
+		#if !flash
 		if (ball.x != 0 || ball.y != 0)
 		{
 			return true;
@@ -326,6 +337,7 @@ class FlxGamepad implements IFlxDestroyable
 		{
 			return true;
 		}
+		#end
 		
 		return false;
 	}
@@ -361,8 +373,10 @@ class FlxGamepad implements IFlxDestroyable
 	/**
 	 * DPAD accessor properties
 	 */
-	private inline function get_dpadUp():Bool { return hat.y < 0; }
-	private inline function get_dpadDown():Bool { return hat.y > 0; }
-	private inline function get_dpadLeft():Bool { return hat.x < 0; }
+	#if !flash
+	private inline function get_dpadUp():Bool    { return hat.y < 0; }
+	private inline function get_dpadDown():Bool  { return hat.y > 0; }
+	private inline function get_dpadLeft():Bool  { return hat.x < 0; }
 	private inline function get_dpadRight():Bool { return hat.x > 0; }
+	#end
 }
