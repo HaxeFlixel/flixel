@@ -1,4 +1,4 @@
-3.2.2
+3.3.0
 ------------------------------
 * Added "tracker" window to the debugger which creates a Watch window with the most important properties of an object
  * Use FlxG.debugger.track(Object); to create a new tracker window
