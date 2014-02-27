@@ -1,5 +1,8 @@
 3.3.0
 ------------------------------
+* Added flash gamepad support. This either requires a swf-player-version of 11.8 to be set or FLX_NO_GAMEPAD to be defined.
+ * FlxGamepad.getAxis() has been split into getXAxis() and getYAxis() for consistency across targets
+ * FlxGamepad.dpadUp / Down / Left / Right don't work in flash, use getButton() in conjunction with the IDs in the button ID classes instead
 * Added "tracker" window to the debugger which creates a Watch window with the most important properties of an object
  * Use FlxG.debugger.track(Object); to create a new tracker window
  * Use FlxG.debugger.addTrackerProfile() to add a profile for classes don't have one yet or override existing ones
@@ -7,6 +10,11 @@
 * FlxCamera: added static defaultCameras array which is used by FlxBasics when their cameras array has not been set - previously the use of FlxG.cameras.list / all existing cameras was hardcoded
 * FlxText.setFormat() now accepts Font classes instead of only strings for its Font param
 * [gamedevsam] Added pooling functionality to FlxPoint, FlxVector, FlxRect objects (FlxPath and FlxTimer also support pooling, but that is handled transparently). Usage: ```var point = FlxPoint.get(); /* do stuff with point */ point.put(); // recycle point```
+* Debugger windows:
+ * Fixed dragging of overlapping windows
+ * Fixed the visibility of windows on native targets (now saving correctly)
+* FlxPath: fixed a bug with drawDebug()
+* FlxG.fullscreen: fixed offset in flash
 
 3.2.1
 ------------------------------
