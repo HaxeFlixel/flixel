@@ -10,8 +10,10 @@ import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.Lib;
 import flash.ui.Mouse;
+#if (flash && !FLX_NO_NATIVE_CURSOR)
 import flash.ui.MouseCursor;
 import flash.ui.MouseCursorData;
+#end
 import flash.Vector;
 import flixel.FlxCamera;
 import flixel.FlxG;

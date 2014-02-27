@@ -82,7 +82,7 @@ class TileSheetExt extends Tilesheet
 	
 	public function destroy():Void
 	{
-		#if !(flash || js)
+		#if !(flash || js || nme)
 		__bitmap = null;
 		__handle = null;
 		#end
@@ -98,7 +98,7 @@ class TileSheetExt extends Tilesheet
 		tileIDs = null;
 	}
 	
-	#if !(flash || js)
+	#if !(flash || js || nme)
 	public var nmeBitmap(get_nmeBitmap, null):BitmapData;
 	
 	private function get_nmeBitmap():BitmapData

@@ -8,8 +8,10 @@ import flash.events.IOErrorEvent;
 import flash.events.MouseEvent;
 import flash.ui.Mouse;
 import flash.utils.ByteArray;
+#if flash
 import flash.net.FileReference;
 import flash.net.FileFilter;
+#end
 import flixel.util.FlxRandom;
 
 class VCRFrontEnd
