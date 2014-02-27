@@ -544,10 +544,6 @@ class FlxG
 		if (Value)
 		{
 			stage.displayState = StageDisplayState.FULL_SCREEN;
-			#if flash
-			camera.x = (stage.fullScreenWidth - width * camera.zoom) / 2;
-			camera.y = (stage.fullScreenHeight - height * camera.zoom) / 2;
-			#end
 		}
 		else
 		{
