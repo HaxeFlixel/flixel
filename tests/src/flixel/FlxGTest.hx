@@ -27,13 +27,13 @@ class FlxGTest extends FlxTest
 	#if !FLX_NO_KEYBOARD
 	@Test function keysNull():Void        { Assert.isNotNull(FlxG.keys); }
 	#end
-	#if (!FLX_NO_GAMEPAD && (cpp || neko || js))
+	#if !FLX_NO_GAMEPAD
 	@Test function gamepadsNull():Void    { Assert.isNotNull(FlxG.gamepads); }
 	#end
 	#if android
 	@Test function androidNull():Void     { Assert.isNotNull(FlxG.android); }
 	#end
-	#if js
+	#if html5
 	@Test function html5Null():Void       { Assert.isNotNull(FlxG.html5); }
 	#end
 	

@@ -12,7 +12,7 @@
 
 -D doc
 
--swf-version 11.2
+-swf-version 11.8
 -swf bin/as3_test.swf
 
 --next
@@ -42,7 +42,7 @@
 -D FLX_NO_FOCUS_LOST_SCREEN
 -D FLX_NO_DEBUG
 
--swf-version 11.2
+-swf-version 11.8
 -swf bin/as3_test.swf
 
 ## Neko
