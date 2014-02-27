@@ -420,6 +420,7 @@ class BitmapFrontEnd
 	
 	public function inOpenFlAssets(bitmap:BitmapData):Bool
 	{
+      #if !nme
 		var bitmapDataCache = Assets.cache.bitmapData;
 		if (bitmapDataCache != null)
 		{
@@ -431,6 +432,7 @@ class BitmapFrontEnd
 				}
 			}
 		}
+      #end
 		return false;
 	}
 }
