@@ -133,7 +133,7 @@ class Player extends FlxSprite
 		
 		if (FlxG.keys.pressed.LEFT 
 #if !FLX_NO_GAMEPAD
-			 || (gamepad.dpadLeft ||
+			 || (#if !flash gamepad.dpadLeft || #end
 	#if OUYA
 				 gamepad.getXAxis(OUYAButtonID.LEFT_ANALOGUE_X) < 0) || buttonPressed(virtualPad.buttonLeft)) 
 	#else
@@ -145,7 +145,7 @@ class Player extends FlxSprite
 		}
 		else if (FlxG.keys.pressed.RIGHT
 #if !FLX_NO_GAMEPAD
-			 || (gamepad.dpadRight ||
+			 || (#if !flash gamepad.dpadRight || #end
 	#if OUYA
 				 gamepad.getXAxis(OUYAButtonID.LEFT_ANALOGUE_X) > 0) || buttonPressed(virtualPad.buttonRight))
 	#else
@@ -161,7 +161,7 @@ class Player extends FlxSprite
 		// AIMING
 		if (FlxG.keys.pressed.UP
 #if !FLX_NO_GAMEPAD
-			 || (gamepad.dpadUp ||
+			 || (#if !flash gamepad.dpadUp || #end
 	#if OUYA
 				 gamepad.getYAxis(OUYAButtonID.LEFT_ANALOGUE_Y) < 0) || buttonPressed(virtualPad.buttonUp))
 	#else
@@ -173,7 +173,7 @@ class Player extends FlxSprite
 		}
 		else if (FlxG.keys.pressed.DOWN
 #if !FLX_NO_GAMEPAD
-			 || (gamepad.dpadDown ||
+			 || (#if !flash gamepad.dpadDown || #end
 	#if OUYA
 				 gamepad.getYAxis(OUYAButtonID.LEFT_ANALOGUE_Y) > 0) || buttonPressed(virtualPad.buttonDown))
 	#else
