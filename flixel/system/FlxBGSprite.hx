@@ -1,6 +1,6 @@
 package flixel.system;
 
-#if !flash
+#if FLX_RENDER_TILE
 import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.FlxSprite;
@@ -29,7 +29,7 @@ class FlxBGSprite extends FlxSprite
 		var drawItem:DrawStackItem;
 		var currDrawData:Array<Float>;
 		var currIndex:Int;
-		#if js
+		#if (js || true)
 		var useAlpha:Bool = (alpha < 1);
 		#end
 		
@@ -40,7 +40,7 @@ class FlxBGSprite extends FlxSprite
 				continue;
 			}
 			
-			#if !js
+			#if (!js || false)
 			drawItem = camera.getDrawStackItem(cachedGraphics, isColored, _blendInt);
 			#else
 			drawItem = camera.getDrawStackItem(cachedGraphics, useAlpha);
@@ -66,7 +66,7 @@ class FlxBGSprite extends FlxSprite
 			currDrawData[currIndex++] = -ssy;
 			currDrawData[currIndex++] = csy;
 			
-			#if !js
+			#if (!js || true)
 			if (isColored)
 			{
 				currDrawData[currIndex++] = _red; 

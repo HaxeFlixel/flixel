@@ -48,7 +48,7 @@ class FlxSprite extends FlxObject
 	 */
 	public var dirty:Bool = true;
 	
-	#if !flash
+	#if FLX_RENDER_TILE
 	public var isColored:Bool = false;
 	#end
 	
@@ -124,7 +124,7 @@ class FlxSprite extends FlxObject
 	 */
 	public var useColorTransform(default, null):Bool = false;
 	
-	#if !flash
+	#if FLX_RENDER_TILE
 	private var _red:Float = 1.0;
 	private var _green:Float = 1.0;
 	private var _blue:Float = 1.0;
@@ -469,7 +469,7 @@ class FlxSprite extends FlxObject
 		region.width = cachedGraphics.bitmap.width;
 		region.height = cachedGraphics.bitmap.height;
 		
-		#if !flash
+		#if FLX_RENDER_TILE
 		antialiasing = AntiAliasing;
 		#end
 		
@@ -560,7 +560,7 @@ class FlxSprite extends FlxObject
 		
 		animation.frameName = Image;
 		
-		#if !flash
+		#if FLX_RENDER_TILE
 		antialiasing = AntiAliasing;
 		#else
 		var frameBitmapData:BitmapData = getFlxFrameBitmapData();
@@ -685,7 +685,7 @@ class FlxSprite extends FlxObject
 		_flashRect2.height = cachedGraphics.bitmap.height;
 		setOriginToCenter();
 		
-	#if flash
+	#if FLX_RENDER_BLIT
 		if ((framePixels == null) || (framePixels.width != frameWidth) || (framePixels.height != frameHeight))
 		{
 			framePixels = new BitmapData(Std.int(width), Std.int(height));
@@ -719,7 +719,7 @@ class FlxSprite extends FlxObject
 			calcFrame();
 		}
 		
-	#if !flash
+	#if FLX_RENDER_TILE
 		var drawItem:DrawStackItem;
 		var currDrawData:Array<Float>;
 		var currIndex:Int;
@@ -737,8 +737,8 @@ class FlxSprite extends FlxObject
 				continue;
 			}
 			
-		#if !flash
-			#if !js
+		#if FLX_RENDER_TILE
+			#if (!js || true)
 			drawItem = camera.getDrawStackItem(cachedGraphics, isColored, _blendInt, antialiasing);
 			#else
 			var useAlpha:Bool = (alpha < 1) || (camera.alpha < 1);
@@ -753,7 +753,7 @@ class FlxSprite extends FlxObject
 			_point.x = (_point.x) + origin.x;
 			_point.y = (_point.y) + origin.y;
 			
-			#if js
+			#if (js || false)
 			_point.x = Math.floor(_point.x);
 			_point.y = Math.floor(_point.y);
 			#end
@@ -761,7 +761,7 @@ class FlxSprite extends FlxObject
 			_point.x = x - (camera.scroll.x * scrollFactor.x) - (offset.x);
 			_point.y = y - (camera.scroll.y * scrollFactor.y) - (offset.y);
 		#end
-#if flash
+#if FLX_RENDER_BLIT
 			if (simpleRender)
 			{
 				// use fround() to deal with floating point precision issues in flash
@@ -865,7 +865,7 @@ class FlxSprite extends FlxObject
 			currDrawData[currIndex++] = c;
 			currDrawData[currIndex++] = d;
 			
-			#if !js
+			#if (!js || true)
 			if (isColored)
 			{
 				currDrawData[currIndex++] = _red; 
@@ -912,7 +912,7 @@ class FlxSprite extends FlxObject
 			
 			resetFrameBitmapDatas();
 			
-			#if flash
+			#if FLX_RENDER_BLIT
 			calcFrame();
 			#end
 			return;
@@ -930,7 +930,7 @@ class FlxSprite extends FlxObject
 		var brushBlend:BlendMode = Brush.blend;
 		cachedGraphics.bitmap.draw(bitmapData, _matrix, null, brushBlend, null, Brush.antialiasing);
 		resetFrameBitmapDatas();
-		#if flash
+		#if FLX_RENDER_BLIT
 		calcFrame();
 		#end
 	}
@@ -942,7 +942,7 @@ class FlxSprite extends FlxObject
 	 */
 	public inline function drawFrame(Force:Bool = false):Void
 	{
-		#if flash
+		#if FLX_RENDER_BLIT
 		if (Force || dirty)
 		{
 			calcFrame();
@@ -1304,7 +1304,7 @@ class FlxSprite extends FlxObject
 	 */
 	public function isSimpleRender():Bool
 	{ 
-		#if flash
+		#if FLX_RENDER_BLIT
 		return (((angle == 0) || (bakedRotationAngle > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == null) && (forceComplexRender == false));
 		#else
 		return (((angle == 0 && frame.additionalAngle == 0) || (bakedRotationAngle > 0)) && (scale.x == 1) && (scale.y == 1));
@@ -1381,7 +1381,7 @@ class FlxSprite extends FlxObject
 			dirty = true;
 		}
 		facing = Direction;
-		#if !flash
+		#if FLX_RENDER_TILE
 		_facingMult = ((flipped != 0) && (facing == FlxObject.LEFT)) ? -1 : 1;
 		#end
 		return Direction;
@@ -1416,7 +1416,7 @@ class FlxSprite extends FlxObject
 		color = Color;
 		updateColorTransform();
 		
-		#if !flash
+		#if FLX_RENDER_TILE
 		_red = (color >> 16) / 255;
 		_green = (color >> 8 & 0xff) / 255;
 		_blue = (color & 0xff) / 255;
@@ -1439,14 +1439,14 @@ class FlxSprite extends FlxObject
 	
 	private function set_blend(Value:BlendMode):BlendMode 
 	{
-		#if !flash
+		#if FLX_RENDER_TILE
 		if (Value != null)
 		{
 			switch (Value)
 			{
 				case BlendMode.ADD:
 					_blendInt = Tilesheet.TILE_BLEND_ADD;
-			#if !js
+			#if (!js || true)
 				case BlendMode.MULTIPLY:
 					_blendInt = Tilesheet.TILE_BLEND_MULTIPLY;
 				case BlendMode.SCREEN:

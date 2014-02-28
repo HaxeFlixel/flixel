@@ -643,7 +643,7 @@ class FlxPath implements IFlxDestroyable
 		}
 		
 		//Set up our global flash graphics object to draw out the path
-		#if flash
+		#if FLX_RENDER_BLIT
 		var gfx:Graphics = FlxSpriteUtil.flashGfx;
 		gfx.clear();
 		#else
@@ -710,7 +710,7 @@ class FlxPath implements IFlxDestroyable
 			i++;
 		}
 		
-		#if flash
+		#if FLX_RENDER_BLIT
 		//then stamp the path down onto the game buffer
 		Camera.buffer.draw(FlxSpriteUtil.flashGfxSprite);
 		#end

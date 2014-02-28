@@ -44,7 +44,7 @@ class FlxTilemapBuffer
 	
 	public var forceComplexRender:Bool = false;
 	
-	#if flash
+	#if FLX_RENDER_BLIT
 	private var _pixels:BitmapData;	
 	private var _flashRect:Rectangle;
 	private var _matrix:Matrix;
@@ -64,7 +64,7 @@ class FlxTilemapBuffer
 		updateColumns(TileWidth, WidthInTiles, ScaleX, Camera);
 		updateRows(TileHeight, HeightInTiles, ScaleY, Camera);
 		
-		#if flash
+		#if FLX_RENDER_BLIT
 		_pixels = new BitmapData(Std.int(columns * TileWidth), Std.int(rows * TileHeight), true, 0);
 		_flashRect = new Rectangle(0, 0, _pixels.width, _pixels.height);
 		_matrix = new Matrix();
@@ -78,7 +78,7 @@ class FlxTilemapBuffer
 	 */
 	public function destroy():Void
 	{
-		#if flash
+		#if FLX_RENDER_BLIT
 		_pixels = null;
 		_matrix = null;
 		#end
@@ -90,7 +90,7 @@ class FlxTilemapBuffer
 	 * 
 	 * @param	Color	What color to fill with, in 0xAARRGGBB hex format.
 	 */
-	#if flash
+	#if FLX_RENDER_BLIT
 	public function fill(Color:Int = 0):Void
 	{
 		_pixels.fillRect(_flashRect, Color);

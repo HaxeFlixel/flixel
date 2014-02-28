@@ -246,7 +246,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 				
 				if (bakedRotationAngles > 0)
 				{
-					#if flash
+					#if FLX_RENDER_BLIT
 					particle.loadRotatedGraphic(Graphics, bakedRotationAngles, randomFrame, false, AutoBuffer);
 					#else
 					particle.loadGraphic(Graphics, true);
@@ -262,7 +262,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 			{
 				if (bakedRotationAngles > 0)
 				{
-					#if flash
+					#if FLX_RENDER_BLIT
 					particle.loadRotatedGraphic(Graphics, bakedRotationAngles, -1, false, AutoBuffer);
 					#else
 					particle.loadGraphic(Graphics);
