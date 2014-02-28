@@ -88,6 +88,11 @@ class FlxGamepad implements IFlxDestroyable
 		var control:GameInputControl;
 		var button:FlxGamepadButton;
 		
+		if (_device == null)
+		{
+			return;
+		}
+		
 		for (i in 0..._device.numControls)
 		{
 			control = _device.getControlAt(i);
@@ -283,7 +288,7 @@ class FlxGamepad implements IFlxDestroyable
 		
 		// the y axis is inverted on the Xbox gamepad in flash for some reason - but not in Chrome!
 		#if flash
-		if (_device.enabled && (_device.name.indexOf("Xbox") != -1) && 
+		if ((_device != null) && _device.enabled && (_device.name.indexOf("Xbox") != -1) && 
 		   (Capabilities.manufacturer != "Google Pepper"))
 		{
 			axisValue = -axisValue;
@@ -352,7 +357,7 @@ class FlxGamepad implements IFlxDestroyable
 		var axisValue:Float = 0;
 		
 		#if flash
-		if (_device.enabled)
+		if ((_device != null) && _device.enabled)
 		{
 			axisValue = _device.getControlAt(AxisID).value;
 		}
