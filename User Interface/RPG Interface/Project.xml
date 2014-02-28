@@ -4,14 +4,11 @@
 	
 	<window width="800" height="600" fps="30" orientation="landscape" fullscreen="false"/>
  	
+	<set name="SWF_VERSION" value="11.8" />
 	<set name="BUILD_DIR" value="export" />
-	
-	<!--<setenv name="no_console" value="1" />-->
 	
 	<classpath name="source" />
 	<assets path="assets" />
-	
-	<!--<haxedef name="kong"/>-->
 	
 	<haxelib name="flixel"/>
 	<haxelib name="flixel-ui"/>
