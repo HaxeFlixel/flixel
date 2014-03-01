@@ -315,7 +315,7 @@ class MouseEventManager extends FlxPlugin
 				continue;
 			}
 			
-			if (!reg.sprite.alive || !reg.mouseEnabled)
+			if (!reg.sprite.alive || !reg.sprite.exists || !reg.sprite.visible || !reg.mouseEnabled)
 			{
 				continue;
 			}
@@ -334,10 +334,10 @@ class MouseEventManager extends FlxPlugin
 		// MouseOver - Look for new sprites with mouse over.
 		for (current in currentOverSprites)
 		{
-			if (getRegister(current.sprite, _mouseOverSprites) == null)
+			if (current.onMouseOver != null)
 			{
-				if ((current.onMouseOver != null) && current.sprite.exists  && current.sprite.visible)
-				{
+				if(current.sprite.exists && current.sprite.visible && getRegister(current.sprite, _mouseOverSprites) == null)
+				{				
 					current.onMouseOver(current.sprite);
 				}
 			}
@@ -346,12 +346,12 @@ class MouseEventManager extends FlxPlugin
 		// MouseOut - Look for sprites that lost mouse over.
 		for (over in _mouseOverSprites)
 		{
-			if (getRegister(over.sprite, currentOverSprites) == null)
+			if (over.onMouseOut != null)
 			{
-				if ((over.onMouseOut != null) && over.sprite.exists  && over.sprite.visible)
+				if (!over.sprite.exists || !over.sprite.visible || getRegister(over.sprite, currentOverSprites) == null)
 				{
 					over.onMouseOut(over.sprite);
-				}
+				}	
 			}
 		}
 		
