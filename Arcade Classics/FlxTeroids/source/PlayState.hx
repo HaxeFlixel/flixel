@@ -1,12 +1,10 @@
 package;
 
-import flixel.addons.plugin.effects.FlxSpecialFX;
-import flixel.addons.plugin.effects.fx.StarfieldFX;
+import flixel.addons.display.FlxStarField.FlxStarField2D;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxState;
-import flixel.group.FlxSpriteGroup;
 import flixel.group.FlxTypedGroup;
 import flixel.text.FlxText;
 import flixel.tweens.FlxTween;
@@ -33,9 +31,7 @@ class PlayState extends FlxState
 		FlxG.mouse.visible = false;
 		
 		// Create a starfield
-		FlxG.plugins.add(new FlxSpecialFX());
-		var starfield:StarfieldFX = FlxSpecialFX.starfield();
-		add(starfield.create(0, 0, FlxG.width, FlxG.height, 200, StarfieldFX.STARFIELD_TYPE_2D));
+		add(new FlxStarField2D());
 		
 		// Spawn 3 asteroids for a start
 		asteroids = new FlxTypedGroup<Asteroid>();
@@ -86,7 +82,6 @@ class PlayState extends FlxState
 		_playerShip = null; 
 		bullets = null;
 		asteroids = null;
-		FlxSpecialFX.clear();
 	}
 	
 	override public function update():Void 
