@@ -44,6 +44,7 @@ class FlxCollision
 	 */
 	public static function pixelPerfectCheck(Contact:FlxSprite, Target:FlxSprite, AlphaTolerance:Int = 1, ?Camera:FlxCamera):Bool
 	{
+	#if !bitfive // missing BitmapData.getPixels()
 		//if either of the angles are non-zero, consider the angles of the sprites in the pixel check
 		var considerRotation:Bool = (Contact.angle != 0) || (Target.angle != 0);
 		
@@ -198,6 +199,9 @@ class FlxCollision
 		}
 		
 		return hit;
+	#else
+		return false;
+	#end
 	}
 	
 	/**

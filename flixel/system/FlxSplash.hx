@@ -80,7 +80,7 @@ class FlxSplash extends FlxState
 		FlxG.autoPause = false;
 		
 		#if !FLX_NO_KEYBOARD
-			FlxG.keys.enabled = false;
+		FlxG.keys.enabled = false;
 		#end
 		
 		_times = [0.041, 0.184, 0.334, 0.495, 0.636];
@@ -110,8 +110,10 @@ class FlxSplash extends FlxState
 		
 		onResize(stageWidth, stageHeight);
 		
+		#if !bitfive // missing support for @:sound and .wav sounds
 		#if (!FLX_NO_SOUND_SYSTEM && FLX_NO_DEBUG)
 		FlxG.sound.load(FlixelSound).play();
+		#end
 		#end
 	}
 	

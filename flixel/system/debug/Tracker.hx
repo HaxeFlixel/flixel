@@ -21,7 +21,9 @@ import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
 import flixel.tweens.FlxTween;
 import flixel.tweens.misc.MultiVarTween;
+#if !bitfive
 import flixel.ui.FlxBar;
+#end
 import flixel.ui.FlxTypedButton.FlxTypedButton;
 import flixel.util.FlxPath;
 import flixel.util.FlxPoint;
@@ -88,7 +90,9 @@ class Tracker extends Watch
 			addProfile(new TrackerProfile(FlxTilemap, ["auto", "widthInTiles", "heightInTiles", "totalTiles", "scaleX", "scaleY"], [FlxObject]));
 			addProfile(new TrackerProfile(FlxSprite, ["frameWidth", "frameHeight", "alpha", "origin", "offset", "scale"], [FlxObject]));
 			addProfile(new TrackerProfile(FlxTypedButton, ["status", "labelAlphas"], [FlxSprite]));
+			#if !bitfive // FlxBar uses FlxGradient which uses missing gradient matrix
 			addProfile(new TrackerProfile(FlxBar, ["min", "max", "range", "pct", "pxPerPercent", "value"], [FlxSprite]));
+			#end
 			addProfile(new TrackerProfile(FlxText, ["text", "size", "font", "embedded", "bold", "italic", "wordWrap", "borderSize", 
 			                                        "borderStyle"], [FlxSprite]));
 			
