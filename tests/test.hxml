@@ -8,6 +8,8 @@
 -lib openfl
 -lib mcover
 
+-D FLX_RENDER_BLIT
+
 --macro mcover.MCover.coverage(['flixel'], ['../'], null)
 
 -D doc
@@ -26,6 +28,8 @@
 -lib flixel
 -lib openfl
 -lib mcover
+
+-D FLX_RENDER_BLIT
 
 --macro mcover.MCover.coverage(['flixel'], ['../'], null)
 
