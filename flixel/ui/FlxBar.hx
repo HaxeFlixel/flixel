@@ -1017,23 +1017,13 @@ class FlxBar extends FlxSprite
 			{
 				continue;
 			}
-			#if (!js || true)
 			drawItem = camera.getDrawStackItem(cachedGraphics, isColored, _blendInt, antialiasing);
-			#else
-			var useAlpha:Bool = (alpha < 0);
-			drawItem = camera.getDrawStackItem(cachedGraphics, useAlpha);
-			#end
 			
 			currDrawData = drawItem.drawData;
 			currIndex = drawItem.position;
 			
 			_point.x = x - (camera.scroll.x * scrollFactor.x) - (offset.x) + origin.x;
 			_point.y = y - (camera.scroll.y * scrollFactor.y) - (offset.y) + origin.y;
-			
-			#if js
-			_point.x = Math.floor(_point.x);
-			_point.y = Math.floor(_point.y);
-			#end
 
 			var csx:Float = 1;
 			var ssy:Float = 0;
@@ -1076,7 +1066,6 @@ class FlxBar extends FlxSprite
 			currDrawData[currIndex++] = ssy;
 			currDrawData[currIndex++] = csy;
 
-			#if (!js || true)
 			if (isColored)
 			{
 				currDrawData[currIndex++] = _red;
@@ -1084,22 +1073,11 @@ class FlxBar extends FlxSprite
 				currDrawData[currIndex++] = _blue;
 			}
 			currDrawData[currIndex++] = alpha;
-			#else
-			if (useAlpha)
-			{
-				currDrawData[currIndex++] = alpha;
-			}
-			#end
 			
 			drawItem.position = currIndex;
 			
 			// Draw filled bar
-			#if (!js || true)
 			drawItem = camera.getDrawStackItem(_cachedFrontGraphics, isColored, _blendInt, antialiasing);
-			#else
-			var useAlpha:Bool = (alpha < 0);
-			drawItem = camera.getDrawStackItem(_cachedFrontGraphics, useAlpha);
-			#end
 			
 			currDrawData = drawItem.drawData;
 			currIndex = drawItem.position;
@@ -1131,7 +1109,6 @@ class FlxBar extends FlxSprite
 				currDrawData[currIndex++] = ssy;
 				currDrawData[currIndex++] = csy;
 				
-				#if (!js || true)
 				if (isColored)
 				{
 					currDrawData[currIndex++] = _red; 
@@ -1139,12 +1116,6 @@ class FlxBar extends FlxSprite
 					currDrawData[currIndex++] = _blue;
 				}
 				currDrawData[currIndex++] = alpha;
-				#else
-				if (useAlpha)
-				{
-					currDrawData[currIndex++] = alpha;
-				}
-				#end
 			}
 			
 			drawItem.position = currIndex;

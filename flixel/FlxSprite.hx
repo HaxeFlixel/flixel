@@ -738,12 +738,7 @@ class FlxSprite extends FlxObject
 			}
 			
 		#if FLX_RENDER_TILE
-			#if (!js || true)
 			drawItem = camera.getDrawStackItem(cachedGraphics, isColored, _blendInt, antialiasing);
-			#else
-			var useAlpha:Bool = (alpha < 1) || (camera.alpha < 1);
-			drawItem = camera.getDrawStackItem(cachedGraphics, useAlpha);
-			#end
 			currDrawData = drawItem.drawData;
 			currIndex = drawItem.position;
 			
@@ -752,11 +747,6 @@ class FlxSprite extends FlxObject
 			
 			_point.x = (_point.x) + origin.x;
 			_point.y = (_point.y) + origin.y;
-			
-			#if (js || false)
-			_point.x = Math.floor(_point.x);
-			_point.y = Math.floor(_point.y);
-			#end
 		#else
 			_point.x = x - (camera.scroll.x * scrollFactor.x) - (offset.x);
 			_point.y = y - (camera.scroll.y * scrollFactor.y) - (offset.y);
@@ -865,7 +855,6 @@ class FlxSprite extends FlxObject
 			currDrawData[currIndex++] = c;
 			currDrawData[currIndex++] = d;
 			
-			#if (!js || true)
 			if (isColored)
 			{
 				currDrawData[currIndex++] = _red; 
@@ -873,12 +862,6 @@ class FlxSprite extends FlxObject
 				currDrawData[currIndex++] = _blue;
 			}
 			currDrawData[currIndex++] = (alpha * camera.alpha);
-			#else
-			if (useAlpha)
-			{
-				currDrawData[currIndex++] = (alpha * camera.alpha);
-			}
-			#end
 			drawItem.position = currIndex;
 #end
 			#if !FLX_NO_DEBUG
@@ -1446,12 +1429,10 @@ class FlxSprite extends FlxObject
 			{
 				case BlendMode.ADD:
 					_blendInt = Tilesheet.TILE_BLEND_ADD;
-			#if (!js || true)
 				case BlendMode.MULTIPLY:
 					_blendInt = Tilesheet.TILE_BLEND_MULTIPLY;
 				case BlendMode.SCREEN:
 					_blendInt = Tilesheet.TILE_BLEND_SCREEN;
-			#end
 				default:
 					_blendInt = Tilesheet.TILE_BLEND_NORMAL;
 			}

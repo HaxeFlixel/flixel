@@ -302,9 +302,7 @@ class PxBitmapFont
 		}
 		
 		// Fix for html5
-		#if (js || false)
 		PxBitmapData.floodFill(0, 0, FlxColor.TRANSPARENT);
-		#end
 		
 		return PxBitmapData;
 	}

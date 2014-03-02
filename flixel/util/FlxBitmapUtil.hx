@@ -8,7 +8,7 @@ class FlxBitmapUtil
 {
 	public static function merge(sourceBitmapData:BitmapData, sourceRect:Rectangle, destBitmapData:BitmapData, destPoint:Point, redMultiplier:Int, greenMultiplier:Int, blueMultiplier:Int, alphaMultiplier:Int):Void
 	{
-		#if FLX_RENDER_BLIT
+		#if flash
 		destBitmapData.merge(sourceBitmapData, sourceRect, destPoint, redMultiplier, greenMultiplier, blueMultiplier, alphaMultiplier);
 		#else
 		if (	destPoint.x >= destBitmapData.width ||

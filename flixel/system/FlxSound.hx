@@ -331,7 +331,7 @@ class FlxSound extends FlxBasic
 	{
 		cleanup(true);
 		
-		#if html5
+		#if js
 		onComplete();
 		#else
 		_sound = new Sound();

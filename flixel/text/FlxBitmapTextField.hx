@@ -46,7 +46,7 @@ class FlxBitmapTextField extends FlxSprite
 	private var _pendingTextChange:Bool = false;
 	private var _multiLine:Bool = false;
 	
-	#if flash
+	#if FLX_RENDER_BLIT
 	private var _preparedTextGlyphs:Array<BitmapData>;
 	private var _preparedShadowGlyphs:Array<BitmapData>;
 	private var _preparedOutlineGlyphs:Array<BitmapData>;
@@ -80,7 +80,7 @@ class FlxBitmapTextField extends FlxSprite
 			_font = PxFont;
 		}
 		
-		#if flash
+		#if FLX_RENDER_BLIT
 		updateGlyphs(true, _shadow, _outline);
 		pixels = new BitmapData(1, 1, true);
 		#else
@@ -99,7 +99,7 @@ class FlxBitmapTextField extends FlxSprite
 	{
 		_font = null;
 		
-		#if flash
+		#if FLX_RENDER_BLIT
 		clearPreparedGlyphs(_preparedTextGlyphs);
 		clearPreparedGlyphs(_preparedShadowGlyphs);
 		clearPreparedGlyphs(_preparedOutlineGlyphs);
@@ -182,28 +182,16 @@ class FlxBitmapTextField extends FlxSprite
 		var relativeX:Float;
 		var relativeY:Float;
 		
-		#if js
-		var useAlpha:Bool = (alpha < 1);
-		#end
-		
 		var camID:Int;
 		
 		for (camera in cameras)
 		{
 			if (_background)
 			{
-				#if (!js || true)
 				bgDrawItem = camera.getDrawStackItem(FlxG.bitmap.whitePixel, true, _blendInt, antialiasing);
-				#else
-				bgDrawItem = camera.getDrawStackItem(FlxG.bitmap.whitePixel, useAlpha);
-				#end
 			}
 			
-			#if (!js || true)
 			drawItem = camera.getDrawStackItem(cachedGraphics, true, _blendInt, antialiasing);
-			#else
-			drawItem = camera.getDrawStackItem(cachedGraphics, useAlpha);
-			#end
 			
 			if (!camera.visible || !camera.exists || !isOnScreen(camera))
 			{
@@ -213,18 +201,13 @@ class FlxBitmapTextField extends FlxSprite
 			_point.x = (x - (camera.scroll.x * scrollFactor.x) - (offset.x)) + origin.x;
 			_point.y = (y - (camera.scroll.y * scrollFactor.y) - (offset.y)) + origin.y;
 			
-			#if js
-			_point.x = Math.floor(_point.x);
-			_point.y = Math.floor(_point.y);
-			#end
-
 			var csx:Float = 1;
 			var ssy:Float = 0;
 			var ssx:Float = 0;
 			var csy:Float = 1;
 			var x1:Float = 0;
 			var y1:Float = 0;
-
+			
 			if (!isSimpleRender())
 			{
 				if (_angleChanged)
@@ -243,7 +226,7 @@ class FlxBitmapTextField extends FlxSprite
 				x1 = (origin.x - _halfWidth);
 				y1 = (origin.y - _halfHeight);
 			}
-
+			
 			if (_background)
 			{
 				currDrawData = bgDrawItem.drawData;
@@ -265,17 +248,10 @@ class FlxBitmapTextField extends FlxSprite
 				currDrawData[currIndex++] = -ssy * height;
 				currDrawData[currIndex++] = csy * height;
 				
-				#if (!js || true)
 				currDrawData[currIndex++] = _bgDrawData[3];
 				currDrawData[currIndex++] = _bgDrawData[4];
 				currDrawData[currIndex++] = _bgDrawData[5];
 				currDrawData[currIndex++] = alpha;
-				#else
-				if (useAlpha)
-				{
-					currDrawData[currIndex++] = alpha;
-				}
-				#end
 				
 				bgDrawItem.position = currIndex;
 			}
@@ -306,17 +282,10 @@ class FlxBitmapTextField extends FlxSprite
 				currDrawData[currIndex++] = -ssy * _fontScale;
 				currDrawData[currIndex++] = csy * _fontScale;
 				
-				#if (!js || true)
 				currDrawData[currIndex++] = currTileRed;
 				currDrawData[currIndex++] = currTileGreen;
 				currDrawData[currIndex++] = currTileBlue;
 				currDrawData[currIndex++] = alpha;
-				#else
-				if (useAlpha)
-				{
-					currDrawData[currIndex++] = alpha;
-				}
-				#end
 				j++;
 			}
 			
@@ -432,7 +401,7 @@ class FlxBitmapTextField extends FlxSprite
 		var calcFieldWidth:Int = Std.int(width);
 		var rows:Array<String> = [];
 		
-		#if flash
+		#if FLX_RENDER_BLIT
 		var fontHeight:Int = Math.floor(_font.getFontHeight() * _fontScale);
 		#else
 		var fontHeight:Int = _font.getFontHeight();
@@ -608,7 +577,7 @@ class FlxBitmapTextField extends FlxSprite
 		
 		var finalWidth:Int = calcFieldWidth + _padding * 2 + (_outline ? 2 : 0);
 		
-		#if flash
+		#if FLX_RENDER_BLIT
 		var finalHeight:Int = Std.int(_padding * 2 + Math.max(1, (rows.length * fontHeight + (_shadow ? 1 : 0)) + (_outline ? 2 : 0))) + ((rows.length >= 1) ? _lineSpacing * (rows.length - 1) : 0);
 		#else
 		

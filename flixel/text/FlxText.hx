@@ -697,11 +697,7 @@ class FlxText extends FlxSprite
 			_matrix.translate(Std.int(0.5 * _widthInc), Std.int(0.5 * _heightInc));
 			
 			// If it's a single, centered line of text, we center it ourselves so it doesn't blur to hell
-			#if js
-			if (_defaultFormat.align == TextFormatAlign.CENTER)
-			#else
 			if ((_defaultFormat.align == TextFormatAlign.CENTER) && (_textField.numLines == 1))
-			#end
 			{
 				_formatAdjusted.align = TextFormatAlign.LEFT;
 				updateFormat(_formatAdjusted);	
