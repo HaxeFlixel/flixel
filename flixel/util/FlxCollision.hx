@@ -99,7 +99,7 @@ class FlxCollision
 		matrixB.identity();
 		matrixB.translate(-(intersect.x - boundsB.x), -(intersect.y - boundsB.y));
 		
-	#if !flash
+	#if FLX_RENDER_TILE
 		Contact.drawFrame();
 		Target.drawFrame();
 	#end
@@ -217,7 +217,7 @@ class FlxCollision
 			return false;
 		}
 		
-		#if flash
+		#if FLX_RENDER_BLIT
 		// How deep is pointX/Y within the rect?
 		var test:BitmapData = Target.framePixels;
 		#else
@@ -227,7 +227,7 @@ class FlxCollision
 		var pixelAlpha:Int = 0;  
 		pixelAlpha = FlxColorUtil.getAlpha(test.getPixel32(Math.floor(PointX - Target.x), Math.floor(PointY - Target.y)));
 		
-		#if !flash
+		#if FLX_RENDER_TILE
 		pixelAlpha = Std.int(pixelAlpha * Target.alpha);
 		#end
 		

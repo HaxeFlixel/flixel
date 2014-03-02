@@ -103,7 +103,7 @@ class SoundFrontEnd
 	 */
 	public function load(?EmbeddedSound:Dynamic, Volume:Float = 1, Looped:Bool = false, AutoDestroy:Bool = false, AutoPlay:Bool = false, ?URL:String, ?OnComplete:Void->Void):FlxSound
 	{
-		#if !js
+		#if (!js || true)
 		if (EmbeddedSound == null && URL == null)
 		{
 			FlxG.log.warn("FlxG.loadSound() requires either\nan embedded sound or a URL to work.");

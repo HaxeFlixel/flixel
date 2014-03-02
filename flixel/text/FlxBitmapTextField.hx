@@ -146,7 +146,7 @@ class FlxBitmapTextField extends FlxSprite
 		return Value;
 	}
 	
-	#if flash
+	#if FLX_RENDER_BLIT
 	override public function draw():Void 
 	{
 		if (_pendingTextChange)
@@ -192,14 +192,14 @@ class FlxBitmapTextField extends FlxSprite
 		{
 			if (_background)
 			{
-				#if !js
+				#if (!js || true)
 				bgDrawItem = camera.getDrawStackItem(FlxG.bitmap.whitePixel, true, _blendInt, antialiasing);
 				#else
 				bgDrawItem = camera.getDrawStackItem(FlxG.bitmap.whitePixel, useAlpha);
 				#end
 			}
 			
-			#if !js
+			#if (!js || true)
 			drawItem = camera.getDrawStackItem(cachedGraphics, true, _blendInt, antialiasing);
 			#else
 			drawItem = camera.getDrawStackItem(cachedGraphics, useAlpha);
@@ -265,7 +265,7 @@ class FlxBitmapTextField extends FlxSprite
 				currDrawData[currIndex++] = -ssy * height;
 				currDrawData[currIndex++] = csy * height;
 				
-				#if !js
+				#if (!js || true)
 				currDrawData[currIndex++] = _bgDrawData[3];
 				currDrawData[currIndex++] = _bgDrawData[4];
 				currDrawData[currIndex++] = _bgDrawData[5];
@@ -306,7 +306,7 @@ class FlxBitmapTextField extends FlxSprite
 				currDrawData[currIndex++] = -ssy * _fontScale;
 				currDrawData[currIndex++] = csy * _fontScale;
 				
-				#if !js
+				#if (!js || true)
 				currDrawData[currIndex++] = currTileRed;
 				currDrawData[currIndex++] = currTileGreen;
 				currDrawData[currIndex++] = currTileBlue;
@@ -380,7 +380,7 @@ class FlxBitmapTextField extends FlxSprite
 	
 	override private function set_alpha(PxAlpha:Float):Float
 	{
-		#if flash
+		#if FLX_RENDER_BLIT
 		super.set_alpha(PxAlpha);
 		#else
 		alpha = PxAlpha;
@@ -624,7 +624,7 @@ class FlxBitmapTextField extends FlxSprite
 		_halfHeight = origin.y;
 		#end
 		
-		#if flash
+		#if FLX_RENDER_BLIT
 		if (cachedGraphics != null) 
 		{
 			if (finalWidth != cachedGraphics.bitmap.width || finalHeight != cachedGraphics.bitmap.height) 
@@ -658,7 +658,7 @@ class FlxBitmapTextField extends FlxSprite
 			_bgDrawData.push( -_halfWidth);
 			_bgDrawData.push( -_halfHeight);
 			
-			#if !flash
+			#if FLX_RENDER_TILE
 			var colorMultiplier:Float = 1 / (255 * 255);
 			
 			var red:Float = (_backgroundColor >> 16) * colorMultiplier;
@@ -678,7 +678,7 @@ class FlxBitmapTextField extends FlxSprite
 		
 		if (_fontScale > 0)
 		{
-			#if flash
+			#if FLX_RENDER_BLIT
 			cachedGraphics.bitmap.lock();
 			#end
 			
@@ -719,7 +719,7 @@ class FlxBitmapTextField extends FlxSprite
 					{
 						for (px in 0...(2 + 1)) 
 						{
-							#if flash
+							#if FLX_RENDER_BLIT
 							_font.render(cachedGraphics.bitmap, _preparedOutlineGlyphs, t, _outlineColor, px + ox + _padding, py + row * (fontHeight + _lineSpacing) + _padding, _letterSpacing);
 							#else
 							_font.render(_drawData, t, _outlineColor, color, alpha, px + ox + _padding - _halfWidth, py + row * (fontHeight * _fontScale + _lineSpacing) + _padding - _halfHeight, _letterSpacing, _fontScale);
@@ -731,14 +731,14 @@ class FlxBitmapTextField extends FlxSprite
 				}
 				if (_shadow) 
 				{
-					#if flash
+					#if FLX_RENDER_BLIT
 					_font.render(cachedGraphics.bitmap, _preparedShadowGlyphs, t, _shadowColor, 1 + ox + _padding, 1 + oy + row * (fontHeight + _lineSpacing) + _padding, _letterSpacing);
 					#else
 					_font.render(_drawData, t, _shadowColor, color, alpha, 1 + ox + _padding - _halfWidth, 1 + oy + row * (fontHeight * _fontScale + _lineSpacing) + _padding - _halfHeight, _letterSpacing, _fontScale);
 					#end
 				}
 				
-				#if flash
+				#if FLX_RENDER_BLIT
 				_font.render(cachedGraphics.bitmap, _preparedTextGlyphs, t, _textColor, ox + _padding, oy + row * (fontHeight + _lineSpacing) + _padding, _letterSpacing);
 				#else
 				_font.render(_drawData, t, _textColor, color, alpha, ox + _padding - _halfWidth, oy + row * (fontHeight * _fontScale + _lineSpacing) + _padding - _halfHeight, _letterSpacing, _fontScale, _useTextColor);
@@ -746,7 +746,7 @@ class FlxBitmapTextField extends FlxSprite
 				row++;
 			}
 			
-			#if flash
+			#if FLX_RENDER_BLIT
 			cachedGraphics.bitmap.unlock();
 		//	pixels = _pixels;
 			dirty = true;
@@ -992,7 +992,7 @@ class FlxBitmapTextField extends FlxSprite
 			updateGlyphs(true, _shadow, _outline);
 			_pendingTextChange = true;
 			
-			#if !flash
+			#if FLX_RENDER_TILE
 			pixels = _font.pixels;
 			#end
 		}
@@ -1121,7 +1121,7 @@ class FlxBitmapTextField extends FlxSprite
 	
 	private function updateGlyphs(TextGlyphs:Bool = false, ShadowGlyphs:Bool = false, OutlineGlyphs:Bool = false):Void
 	{
-		#if flash
+		#if FLX_RENDER_BLIT
 		if (TextGlyphs)
 		{
 			clearPreparedGlyphs(_preparedTextGlyphs);
@@ -1142,7 +1142,7 @@ class FlxBitmapTextField extends FlxSprite
 		#end
 	}
 	
-	#if flash
+	#if FLX_RENDER_BLIT
 	private function clearPreparedGlyphs(PxGlyphs:Array<BitmapData>):Void
 	{
 		if (PxGlyphs != null)

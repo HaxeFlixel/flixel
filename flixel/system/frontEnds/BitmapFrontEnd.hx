@@ -21,7 +21,7 @@ class BitmapFrontEnd
 		clearCache();
 	}
 	
-	#if !flash
+	#if FLX_RENDER_TILE
 	public var whitePixel(get, null):CachedGraphics;
 	
 	private var _whitePixel:CachedGraphics;

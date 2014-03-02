@@ -117,7 +117,7 @@ class FlxGradient
 			height = 1;
 		}
 		
-		#if !flash
+		#if FLX_RENDER_TILE
 		var key:String = "Gradient: " + width + " x " + height + ", colors: [";
 		var a:Int;
 		var rgb:Int;
@@ -176,7 +176,7 @@ class FlxGradient
 			data.draw(tempBitmap, sM);
 		}
 		
-		#if !flash
+		#if FLX_RENDER_TILE
 		FlxG.bitmap.add(data, false, key);
 		#end
 		
