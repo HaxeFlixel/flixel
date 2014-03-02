@@ -1,16 +1,17 @@
 package flixel.system.layer;
 
-import haxe.ds.ObjectMap;
 import flash.display.BitmapData;
-import openfl.display.Tilesheet;
 import flash.geom.Point;
 import flash.geom.Rectangle;
+import flixel.FlxG;
+import flixel.interfaces.IFlxDestroyable;
+import openfl.display.Tilesheet;
 
-class TileSheetExt extends Tilesheet
+class TileSheetExt extends Tilesheet implements IFlxDestroyable
 {
 	public static var _DRAWCALLS:Int = 0;
 	
-	public var numTiles:Int;
+	public var numTiles:Int = 0;
 	
 	public var tileIDs:Map<String, RectPointTileID>;
 	public var tileOrder:Array<String>;
@@ -21,13 +22,11 @@ class TileSheetExt extends Tilesheet
 		
 		tileIDs = new Map<String, RectPointTileID>();
 		tileOrder = new Array<String>();
-		numTiles = 0;
 	}
 	
 	public function rebuildFromOld(old:TileSheetExt):Void
 	{
-		var num:Int = old.tileOrder.length;
-		for (i in 0...num)
+		for (i in 0...(old.tileOrder.length))
 		{
 			var tileName:String = old.tileOrder[i];
 			var tileObj:RectPointTileID = old.tileIDs.get(tileName);
@@ -40,7 +39,7 @@ class TileSheetExt extends Tilesheet
 		
 		old.tileIDs = null;
 		old.tileOrder = null;
-		old.destroy();
+		FlxG.safeDestroy(old);
 	}
 	
 	/**
@@ -49,7 +48,7 @@ class TileSheetExt extends Tilesheet
 	 * http://stackoverflow.com/questions/892618/create-a-hashcode-of-two-numbers
 	 * http://stackoverflow.com/questions/299304/why-does-javas-hashcode-in-string-use-31-as-a-multiplier
 	*/
-	private function getKey(rect:Rectangle, point:Point = null):String
+	private function getKey(rect:Rectangle, ?point:Point):String
 	{
 		var key:String = rect.x + "_" + rect.y + "_" + rect.width + "_" + rect.height + "_";
 		if (point != null)
@@ -63,7 +62,7 @@ class TileSheetExt extends Tilesheet
 	 * Adds new tileRect to tileSheet object
 	 * @return id of added tileRect
 	 */
-	public function addTileRectID(rect:Rectangle, point:Point = null):Int
+	public function addTileRectID(rect:Rectangle, ?point:Point):Int
 	{
 		var key:String = getKey(rect, point);
 		
@@ -92,23 +91,23 @@ class TileSheetExt extends Tilesheet
 		{
 			for (tileObj in tileIDs)
 			{
-				tileObj.destroy();
+				FlxG.safeDestroy(tileObj);
 			}
 		}
 		tileIDs = null;
 	}
 	
 	#if !(flash || js || nme)
-	public var nmeBitmap(get_nmeBitmap, null):BitmapData;
+	public var nmeBitmap(get, never):BitmapData;
 	
-	private function get_nmeBitmap():BitmapData
+	private inline function get_nmeBitmap():BitmapData
 	{
 		return __bitmap;
 	}
 	#end
 }
 
-class RectPointTileID
+private class RectPointTileID implements IFlxDestroyable
 {
 	public var rect:Rectangle;
 	public var point:Point;
