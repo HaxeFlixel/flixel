@@ -175,7 +175,7 @@ class FlxText extends FlxSprite
 		var key:String = FlxG.bitmap.getUniqueKey("text");
 		makeGraphic(Width, 1, FlxColor.TRANSPARENT, false, key);
 		
-		#if flash 
+		#if FLX_RENDER_BLIT 
 		calcFrame();
 		#else
 		if (Text != "")
