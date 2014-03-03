@@ -30,11 +30,15 @@ class FlxGradient
 		//	Last 2 values = horizontal and vertical shift (in pixels)
 		if (chunkSize == 1)
 		{
+			#if !bitfive
 			gradientMatrix.createGradientBox(width, height, rot, 0, 0);
+			#end
 		}
 		else
 		{
+			#if !bitfive
 			gradientMatrix.createGradientBox(width, height / chunkSize, rot, 0, 0);
+			#end
 		}
 		
 		//	Create the alpha and ratio arrays
@@ -142,11 +146,15 @@ class FlxGradient
 		
 		if (interpolate)
 		{
+			#if !bitfive
 			s.graphics.beginGradientFill(GradientType.LINEAR, cast(colors), gradient.alpha, gradient.ratio, gradient.matrix, SpreadMethod.PAD, InterpolationMethod.RGB, 0);
+			#end
 		}
 		else
 		{
+			#if !bitfive
 			s.graphics.beginGradientFill(GradientType.LINEAR, cast(colors), gradient.alpha, gradient.ratio, gradient.matrix, SpreadMethod.PAD, InterpolationMethod.LINEAR_RGB, 0);
+			#end
 		}
 		
 		if (chunkSize == 1)
