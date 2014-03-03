@@ -73,7 +73,6 @@ class SoundFrontEnd
 	 */
 	public function playMusic(Music:Dynamic, Volume:Float = 1, Looped:Bool = true):Void
 	{
-		#if !js
 		if (music == null)
 		{
 			music = new FlxSound();
@@ -87,7 +86,6 @@ class SoundFrontEnd
 		music.volume = Volume;
 		music.survive = true;
 		music.play();
-		#end
 	}
 	
 	/**
@@ -103,8 +101,7 @@ class SoundFrontEnd
 	 */
 	public function load(?EmbeddedSound:Dynamic, Volume:Float = 1, Looped:Bool = false, AutoDestroy:Bool = false, AutoPlay:Bool = false, ?URL:String, ?OnComplete:Void->Void):FlxSound
 	{
-		#if (!js || true)
-		if (EmbeddedSound == null && URL == null)
+		if ((EmbeddedSound == null) && (URL == null))
 		{
 			FlxG.log.warn("FlxG.loadSound() requires either\nan embedded sound or a URL to work.");
 			return null;
@@ -129,9 +126,6 @@ class SoundFrontEnd
 		}
 		
 		return sound;
-		#else
-		return null;
-		#end
 	}
 	
 	#if android
@@ -190,11 +184,7 @@ class SoundFrontEnd
 	 */
 	public inline function play(EmbeddedSound:Dynamic, Volume:Float = 1, Looped:Bool = false, AutoDestroy:Bool = true, ?OnComplete:Void->Void):FlxSound
 	{
-		#if !js
 		return load(EmbeddedSound, Volume, Looped, AutoDestroy, true, null, OnComplete);
-		#else
-		return null;
-		#end
 	}
 	#end
 	
@@ -210,11 +200,7 @@ class SoundFrontEnd
 	 */
 	public inline function stream(URL:String, Volume:Float = 1, Looped:Bool = false, AutoDestroy:Bool = true, ?OnComplete:Void->Void):FlxSound
 	{
-		#if !js
 		return load(null, Volume, Looped, AutoDestroy, true, URL, OnComplete);
-		#else
-		return null;
-		#end
 	}
 	
 	/**
