@@ -1012,7 +1012,8 @@ class FlxSprite extends FlxObject
 	}
 	
 	/**
-	 * Set sprite's color transformation with control over color offsets. Works only on flash target
+	 * Set sprite's color transformation with control over color offsets.
+	 * 
 	 * @param	redMultiplier		The value for the red multiplier, in the range from 0 to 1. 
 	 * @param	greenMultiplier		The value for the green multiplier, in the range from 0 to 1. 
 	 * @param	blueMultiplier		The value for the blue multiplier, in the range from 0 to 1. 
