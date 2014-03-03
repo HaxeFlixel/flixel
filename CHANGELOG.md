@@ -15,6 +15,15 @@
 * FlxPath: fixed a bug with drawDebug()
 * FlxG.fullscreen: fixed offset in flash
 * FlxSound: added loadByteArray()
+* MouseEventManager: improved handling of visible / exists:
+ * the mouse-over callback doesn't fire on invisible sprites anymore
+ * setting exists or visible to false will now cause a mouse out event
+* FlxPoint: added floor() and ceil()
+* Changed the default html5 backend to openf-bitfive
+ * middle and right mouse events are now supported
+ * sounds are now supported (.ogg and .mp3)
+* FlxObject: replaced forceComplexRender by pixelPerfectRender which rounds coordinates by default (if true) for drawing (also on cpp targets, making it consistent with flash)
+* FlxText: added shadowOffset
 
 3.2.1
 ------------------------------
