@@ -14,6 +14,7 @@ import flixel.system.FlxAssets;
 import flixel.text.FlxText.FlxTextFormat;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
+import flixel.util.FlxPoint;
 import flixel.util.loaders.CachedGraphics;
 import openfl.Assets;
 
@@ -110,6 +111,12 @@ class FlxText extends FlxSprite
 	public var textField(get, never):TextField;
 	
 	/**
+	 * Offset that is applied to the shadow border style, if active. 
+	 * x and y are multiplied by borderSize. Default is ( -1, -1), or lower-right corner.
+	 */
+	public var shadowOffset(default, null):FlxPoint;
+	
+	/**
 	 * Internal reference to a Flash TextField object.
 	 */
 	private var _textField:TextField;
@@ -183,6 +190,8 @@ class FlxText extends FlxSprite
 			calcFrame();
 		}
 		#end
+		
+		shadowOffset = new FlxPoint( -1, -1);
 	}
 	
 	/**
@@ -206,6 +215,7 @@ class FlxText extends FlxSprite
 			}
 		}
 		_formats = null;
+		shadowOffset = null;
 		super.destroy();
 	}
 	
@@ -730,7 +740,7 @@ class FlxText extends FlxSprite
 						cachedGraphics.bitmap.draw(_textField, _matrix);
 					}
 					
-					_matrix.translate(-borderSize, -borderSize);
+					_matrix.translate(shadowOffset.x * borderSize, shadowOffset.y * borderSize);
 					applyFormats(_formatAdjusted, false);
 				}
 				else if (borderStyle == BORDER_OUTLINE) 
