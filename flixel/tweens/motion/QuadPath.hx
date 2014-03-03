@@ -3,7 +3,9 @@
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxTween.CompleteCallback;
 import flixel.tweens.FlxEase.EaseFunction;
+import flixel.util.FlxArrayUtil;
 import flixel.util.FlxPoint;
+import flixel.util.FlxPool;
 
 /**
  * A series of points which will determine a path from the
@@ -32,25 +34,56 @@ class QuadPath extends Motion
 	private var _c:FlxPoint;
 	
 	/**
+	 * A pool that contains QuadPaths for recycling.
+	 */
+	@:isVar public static var pool(get, null):FlxPool<QuadPath>;
+	
+	/**
+	 * Only allocate the pool if needed.
+	 */
+	public static function get_pool():FlxPool<QuadPath>
+	{
+		if (pool == null)
+		{
+			pool = new FlxPool<QuadPath>(QuadPath);
+		}
+		return pool;
+	}
+	
+	public function new()
+	{
+		super();
+		_points = new Array<FlxPoint>();
+		_curveT = new Array<Float>();
+		_curveD = new Array<Float>();
+	}
+	
+	/**
+	 * This function is called when tween is created, or recycled.
+	 *
 	 * @param	complete	Optional completion callback.
 	 * @param	type		Tween type.
+	 * @param	Eease		Optional easer function.
 	 */
-	public function new(?complete:CompleteCallback, type:Int = 0) 
+	override public function init(Complete:CompleteCallback, TweenType:Int)
 	{
-		super(0, complete, type, null);
-		_points = new Array<FlxPoint>();
-		_curveD = new Array<Float>();
-		_curveT = new Array<Float>();
+		FlxArrayUtil.setLength(_points, 0);
+		FlxArrayUtil.setLength(_curveD, 0);
+		FlxArrayUtil.setLength(_curveT, 0);
 		_distance = _speed = _index = _numSegs = 0;
 		_updateCurve = true;
+		return super.init(Complete, TweenType);
 	}
 	
 	override public function destroy():Void 
 	{
 		super.destroy();
-		_points = null;
-		_curveD = null;
-		_curveT = null;
+		pool.put(this);
+		// recycle FlxPoints
+		for (point in _points)
+		{
+			point.put();
+		}
 		_a = null;
 		_b = null;
 		_c = null;
@@ -89,7 +122,7 @@ class QuadPath extends Motion
 	public function addPoint(x:Float = 0, y:Float = 0):QuadPath
 	{
 		_updateCurve = true;
-		_points[_points.length] = new FlxPoint(x, y);
+		_points.push(FlxPoint.get(x, y));
 		return this;
 	}
 	

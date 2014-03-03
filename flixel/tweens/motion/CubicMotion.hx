@@ -2,6 +2,7 @@
 
 import flixel.tweens.FlxEase.EaseFunction;
 import flixel.tweens.FlxTween.CompleteCallback;
+import flixel.util.FlxPool;
 
 /**
  * Determines motion along a cubic curve.
@@ -21,14 +22,43 @@ class CubicMotion extends Motion
 	private var _tt:Float;
 	
 	/**
+	 * A pool that contains CubicMotions for recycling.
+	 */
+	@:isVar public static var pool(get, null):FlxPool<CubicMotion>;
+	
+	/**
+	 * Only allocate the pool if needed.
+	 */
+	public static function get_pool()
+	{
+		if (pool == null)
+		{
+			pool = new FlxPool<CubicMotion>(CubicMotion);
+		}
+		return pool;
+	}
+	
+	/**
+	 * Clean up references and pool this object for recycling.
+	 */
+	override public function destroy()
+	{
+		super.destroy();
+		pool.put(this);
+	}
+	
+	/**
+	 * This function is called when tween is created, or recycled.
+	 *
 	 * @param	complete	Optional completion callback.
 	 * @param	type		Tween type.
+	 * @param	Eease		Optional easer function.
 	 */
-	public function new(?complete:CompleteCallback, type:Int = 0)
+	override public function init(Complete:CompleteCallback, TweenType:Int)
 	{
 		_fromX = _fromY = _toX = _toY = 0;
 		_aX = _aY = _bX = _bY = 0;
-		super(0, complete, type, null);
+		return super.init(Complete, TweenType);
 	}
 	
 	/**

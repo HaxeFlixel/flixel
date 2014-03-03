@@ -2,6 +2,7 @@
 
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
+import flixel.util.FlxPool;
 
 /**
  * Tweens a numeric value.
@@ -18,13 +19,29 @@ class NumTween extends FlxTween
 	private var _range:Float;
 	
 	/**
-	 * @param	complete	Optional completion callback.
-	 * @param	type		Tween type.
+	 * A pool that contains NumTweens for recycling.
 	 */
-	public function new(complete:CompleteCallback = null, type:Int = 0) 
+	@:isVar public static var pool(get, null):FlxPool<NumTween>;
+	
+	/**
+	 * Only allocate the pool if needed.
+	 */
+	public static function get_pool()
 	{
-		value = 0;
-		super(0, type, complete);
+		if (pool == null)
+		{
+			pool = new FlxPool<NumTween>(NumTween);
+		}
+		return pool;
+	}
+	
+	/**
+	 * Clean up references and pool this object for recycling.
+	 */
+	override public function destroy():Void 
+	{
+		super.destroy();
+		pool.put(this);
 	}
 	
 	/**

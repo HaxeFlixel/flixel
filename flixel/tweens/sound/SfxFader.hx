@@ -4,6 +4,7 @@
 import flixel.system.FlxSound;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
+import flixel.util.FlxPool;
 
 /**
  * Sound effect fader.
@@ -13,30 +14,38 @@ class SfxFader extends FlxTween
 	/**
 	 * The current Sfx this object is effecting.
 	 */
-	public var sfx(default, null):FlxSound;
+	public var sfx:FlxSound;
 
 	// Fader information.
 	private var _start:Float;
 	private var _range:Float;
 	private var _crossSfx:FlxSound;
 	private var _crossRange:Float;
-	private var _complete:CompleteCallback;
 	
 	/**
-	 * @param	sfx			The Sfx object to alter.
-	 * @param	complete	Optional completion callback.
-	 * @param	type		Tween type.
+	 * A pool that contains QuadPaths for recycling.
 	 */
-	public function new(sfx:FlxSound, ?complete:CompleteCallback, type:Int = 0)
+	@:isVar public static var pool(get, null):FlxPool<SfxFader>;
+	
+	/**
+	 * Only allocate the pool if needed.
+	 */
+	public static function get_pool():FlxPool<SfxFader>
 	{
-		super(0, type, finishCallback);
-		_complete = complete;
-		this.sfx = sfx;
+		if (pool == null)
+		{
+			pool = new FlxPool<SfxFader>(SfxFader);
+		}
+		return pool;
 	}
 	
+	/**
+	 * Clean up references and pool this object for recycling.
+	 */
 	override public function destroy():Void 
 	{
 		super.destroy();
+		pool.put(this);
 		sfx = null;
 		_crossSfx = null;
 		_complete = null;
@@ -113,9 +122,9 @@ class SfxFader extends FlxTween
 			sfx = _crossSfx;
 			_crossSfx = null;
 		}
-		if (_complete != null) 
+		if (complete != null) 
 		{
-			_complete(this);
+			complete(this);
 		}
 	}
 }
