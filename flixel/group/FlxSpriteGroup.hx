@@ -738,15 +738,11 @@ class FlxSpriteGroup extends FlxSprite
 		return blend = Value;
 	}
 	
-	/**
-	 * Whether the object should use complex render on flash target (which uses draw() method) or not.
-	 * WARNING: setting forceComplexRender to true decreases rendering performance for this object by a factor of 10x!
-	 */
-	override private function set_forceComplexRender(Value:Bool):Bool
+	override private function set_pixelPerfectRender(Value:Bool):Bool
 	{
-		if (exists && forceComplexRender != Value)
-			transformChildren(complexRenderTransform, Value);
-		return super.set_forceComplexRender(Value);
+		if (exists && (pixelPerfectRender != Value))
+			transformChildren(pixelPerfectTransform, Value);
+		return super.set_pixelPerfectRender(Value);
 	}
 	
 	/**
@@ -855,7 +851,7 @@ class FlxSpriteGroup extends FlxSprite
 	private function alphaTransform(Sprite:FlxSprite, Alpha:Float)						{ Sprite.alpha *= Alpha; }						// multiplication
 	private function facingTransform(Sprite:FlxSprite, Facing:Int)						{ Sprite.facing = Facing; }						// set
 	private function movesTransform(Sprite:FlxSprite, Moves:Bool)						{ Sprite.moves = Moves; }						// set
-	private function complexRenderTransform(Sprite:FlxSprite, Complex:Bool)				{ Sprite.forceComplexRender = Complex; }		// set
+	private function pixelPerfectTransform(Sprite:FlxSprite, PixelPerfect:Bool)			{ Sprite.pixelPerfectRender = PixelPerfect; }	// set
 	private function gColorTransform(Sprite:FlxSprite, Color:Int)						{ Sprite.color = Color; }						// set
 	private function blendTransform(Sprite:FlxSprite, Blend:BlendMode)					{ Sprite.blend = Blend; }						// set
 	private function immovableTransform(Sprite:FlxSprite, Immovable:Bool)				{ Sprite.immovable = Immovable; }				// set

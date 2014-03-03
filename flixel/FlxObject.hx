@@ -20,7 +20,6 @@ import flixel.util.loaders.CachedGraphics;
  * This is the base class for most of the display objects (FlxSprite, FlxText, etc).
  * It includes some basic attributes about game objects, basic state information, sizes, scrolling, and basic physics and motion.
  */
-
 class FlxObject extends FlxBasic
 {
 	/**
@@ -100,11 +99,11 @@ class FlxObject extends FlxBasic
 	 */
 	public var solid(get, set):Bool;
 	/**
-	 * Whether the object should use complex render on flash target (which uses draw() method) or not.
-	 * WARNING: setting forceComplexRender to true decreases rendering performance for this object by a factor of 10x!
-	 * @default false
+	 * Whether or not the coordinates should be rounded during draw(), true by default (recommended for pixel art). 
+	 * Only affects tilesheet rendering and rendering using BitmapData.draw() in blitting.
+	 * (copyPixels() only renders on whole pixels by nature). Causes draw() to be used if false, which is more expensive.
 	 */
-	public var forceComplexRender(default, set):Bool = false;
+	public var pixelPerfectRender(default, set):Bool = true;
 	/**
 	 * Controls how much this object is affected by camera scrolling. 0 = no movement (e.g. a background layer), 
 	 * 1 = same movement speed as the foreground. Default value is (1,1), except for UI elements like FlxButton where it's (0,0).
@@ -1032,9 +1031,9 @@ class FlxObject extends FlxBasic
 		return immovable = Value;
 	}
 	
-	private function set_forceComplexRender(Value:Bool):Bool 
+	private function set_pixelPerfectRender(Value:Bool):Bool 
 	{
-		return forceComplexRender = Value;
+		return pixelPerfectRender = Value;
 	}
 	
 	#if !FLX_NO_DEBUG

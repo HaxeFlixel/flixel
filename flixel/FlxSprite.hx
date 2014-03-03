@@ -751,6 +751,7 @@ class FlxSprite extends FlxObject
 			_point.x = x - (camera.scroll.x * scrollFactor.x) - (offset.x);
 			_point.y = y - (camera.scroll.y * scrollFactor.y) - (offset.y);
 		#end
+			
 #if FLX_RENDER_BLIT
 			if (simpleRender)
 			{
@@ -770,7 +771,16 @@ class FlxSprite extends FlxObject
 				{
 					_matrix.rotate(angle * FlxAngle.TO_RAD);
 				}
-				_matrix.translate(_point.x + origin.x, _point.y + origin.y);
+				
+				_point.x += origin.x;
+				_point.y += origin.y;
+				
+				if (pixelPerfectRender)
+				{
+					_point.floor();
+				}
+				
+				_matrix.translate(_point.x, _point.y);
 				camera.buffer.draw(framePixels, _matrix, null, blend, null, (antialiasing || camera.antialiasing));
 			}
 #else
@@ -845,8 +855,16 @@ class FlxSprite extends FlxObject
 				x2 = x1 * csx;
 			}
 			
-			currDrawData[currIndex++] = _point.x - x2;
-			currDrawData[currIndex++] = _point.y - y2;
+			_point.x -= x2;
+			_point.y -= y2;
+			
+			if (pixelPerfectRender)
+			{
+				_point.floor();
+			}
+			
+			currDrawData[currIndex++] = _point.x;
+			currDrawData[currIndex++] = _point.y;
 			
 			currDrawData[currIndex++] = frame.tileID;
 			
@@ -1288,7 +1306,7 @@ class FlxSprite extends FlxObject
 	public function isSimpleRender():Bool
 	{ 
 		#if FLX_RENDER_BLIT
-		return (((angle == 0) || (bakedRotationAngle > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == null) && (forceComplexRender == false));
+		return (((angle == 0) || (bakedRotationAngle > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == null) && pixelPerfectRender);
 		#else
 		return (((angle == 0 && frame.additionalAngle == 0) || (bakedRotationAngle > 0)) && (scale.x == 1) && (scale.y == 1));
 		#end

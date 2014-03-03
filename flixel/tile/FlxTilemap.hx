@@ -653,7 +653,7 @@ class FlxTilemap extends FlxObject
 			if (_buffers[i] == null)
 			{
 				_buffers[i] = new FlxTilemapBuffer(_tileWidth, _tileHeight, widthInTiles, heightInTiles, camera, scaleX, scaleY);
-				_buffers[i].forceComplexRender = forceComplexRender;
+				_buffers[i].pixelPerfectRender = pixelPerfectRender;
 			}
 			
 			buffer = _buffers[i++];
@@ -2278,7 +2278,7 @@ class FlxTilemap extends FlxObject
 		_data[Index] += 1;
 	}
 	
-	override private function set_forceComplexRender(Value:Bool):Bool 
+	override private function set_pixelPerfectRender(Value:Bool):Bool 
 	{
 		var i:Int = 0;
 		var l:Int;
@@ -2290,11 +2290,11 @@ class FlxTilemap extends FlxObject
 			
 			for (i in 0...l)
 			{
-				_buffers[i].forceComplexRender = Value;
+				_buffers[i].pixelPerfectRender = Value;
 			}
 		}
 		
-		return super.set_forceComplexRender(Value);
+		return super.set_pixelPerfectRender(Value);
 	}
 	
 	private function set_scaleX(Scale:Float):Float

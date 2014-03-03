@@ -41,8 +41,12 @@ class FlxTilemapBuffer
 	 * How many columns of tiles fit in this buffer.
 	 */
 	public var columns:Int;
-	
-	public var forceComplexRender:Bool = false;
+	/**
+	 * Whether or not the coordinates should be rounded during draw(), true by default (recommended for pixel art). 
+	 * Only affects tilesheet rendering and rendering using BitmapData.draw() in blitting.
+	 * (copyPixels() only renders on whole pixels by nature). Causes draw() to be used if false, which is more expensive.
+	 */
+	public var pixelPerfectRender:Bool = true;
 	
 	#if FLX_RENDER_BLIT
 	private var _pixels:BitmapData;	
@@ -116,7 +120,13 @@ class FlxTilemapBuffer
 	 */
 	public function draw(Camera:FlxCamera, FlashPoint:Point, ScaleX:Float = 1.0, ScaleY:Float = 1.0):Void
 	{
-		if (!forceComplexRender && (ScaleX == 1.0 && ScaleY == 1.0))
+		if (pixelPerfectRender)
+		{
+			FlashPoint.x = Math.floor(FlashPoint.x);
+			FlashPoint.y = Math.floor(FlashPoint.y);
+		}
+		
+		if (pixelPerfectRender && (ScaleX == 1.0 && ScaleY == 1.0))
 		{
 			Camera.buffer.copyPixels(_pixels, _flashRect, FlashPoint, null, null, true);
 		}
