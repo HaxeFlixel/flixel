@@ -66,7 +66,6 @@ class PlayState extends FlxState
 		player.makeGraphic(10, 12, Color);
 		player.maxVelocity.set(100, 200);
 		player.acceleration.y = 200;
-		player.forceComplexRender = true;
 		player.drag.x = player.maxVelocity.x * 4;
 		
 		return player;

@@ -99,8 +99,6 @@ class PlayState extends FlxState
 		_player.maxVelocity.set(80, 200);
 		_player.acceleration.y = 200;
 		_player.drag.x = _player.maxVelocity.x * 4;
-		// Smoother movement by enabling subpixel rendering
-		_player.forceComplexRender = true;
 		add(_player);
 		
 		_scoreText = new FlxText(2, 2, 80, "SCORE: " + (_coins.countDead() * 100));
