@@ -964,15 +964,6 @@ class FlxSpriteGroup extends FlxSprite
 	}
 	
 	/**
-	 * This functionality isn't supported in SpriteGroup
-	 * @return WARNING: returns null
-	 */
-	override private function get_colorTransform():ColorTransform 
-	{
-		return null;
-	}
-	
-	/**
 	 * Internal function to update the current animation frame.
 	 * 
 	 * @param	RunOnCpp	Whether the frame should also be recalculated if we're on a non-flash target

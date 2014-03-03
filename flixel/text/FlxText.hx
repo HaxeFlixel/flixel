@@ -620,21 +620,21 @@ class FlxText extends FlxSprite
 	{
 		if (alpha != 1)
 		{
-			if (_colorTransform == null)
+			if (colorTransform == null)
 			{
-				_colorTransform = new ColorTransform(1, 1, 1, alpha);
+				colorTransform = new ColorTransform(1, 1, 1, alpha);
 			}
 			else
 			{
-				_colorTransform.alphaMultiplier = alpha;
+				colorTransform.alphaMultiplier = alpha;
 			}
 			useColorTransform = true;
 		}
 		else
 		{
-			if (_colorTransform != null)
+			if (colorTransform != null)
 			{
-				_colorTransform.alphaMultiplier = 1;
+				colorTransform.alphaMultiplier = 1;
 			}
 			
 			useColorTransform = false;
@@ -830,7 +830,7 @@ class FlxText extends FlxSprite
 		
 		if (useColorTransform) 
 		{
-			framePixels.colorTransform(_flashRect, _colorTransform);
+			framePixels.colorTransform(_flashRect, colorTransform);
 		}
 	}
 	
