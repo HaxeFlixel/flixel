@@ -161,6 +161,24 @@ class FlxPoint implements IFlxDestroyable
 	}
 	
 	/**
+	 * Rounds x and y using Math.floor()
+	 */
+	public inline function floor():Void
+	{
+		x = Math.floor(x);
+		y = Math.floor(y);
+	}
+	
+	/**
+	 * Rounds x and y using Math.ceil()
+	 */
+	public inline function ceil():Void
+	{
+		x = Math.ceil(x);
+		y = Math.ceil(y);
+	}
+	
+	/**
 	 * Necessary for IFlxDestroyable.
 	 */
 	public function destroy() {}
