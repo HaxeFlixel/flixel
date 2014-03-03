@@ -112,7 +112,7 @@ class FlxText extends FlxSprite
 	
 	/**
 	 * Offset that is applied to the shadow border style, if active. 
-	 * x and y are multiplied by borderSize. Default is ( -1, -1), or lower-right corner.
+	 * x and y are multiplied by borderSize. Default is (1, 1), or lower-right corner.
 	 */
 	public var shadowOffset(default, null):FlxPoint;
 	
@@ -191,7 +191,7 @@ class FlxText extends FlxSprite
 		}
 		#end
 		
-		shadowOffset = new FlxPoint( -1, -1);
+		shadowOffset = new FlxPoint(1, 1);
 	}
 	
 	/**
@@ -740,7 +740,7 @@ class FlxText extends FlxSprite
 						cachedGraphics.bitmap.draw(_textField, _matrix);
 					}
 					
-					_matrix.translate(shadowOffset.x * borderSize, shadowOffset.y * borderSize);
+					_matrix.translate( -shadowOffset.x * borderSize, -shadowOffset.y * borderSize);
 					applyFormats(_formatAdjusted, false);
 				}
 				else if (borderStyle == BORDER_OUTLINE) 
