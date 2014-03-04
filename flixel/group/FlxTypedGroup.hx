@@ -32,7 +32,8 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	private var _marker:Int = 0;
 	
 	/**
-	 * Array of all the FlxBasics that exist in this group.
+	 * Array of all the FlxBasics that exist in this group for 
+	 * optimization purposes / static typing on cpp targets.
 	 */
 	private var _basics:Array<FlxBasic>;
 	/**
