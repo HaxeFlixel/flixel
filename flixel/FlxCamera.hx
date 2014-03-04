@@ -417,7 +417,7 @@ class FlxCamera extends FlxBasic
 	{
 		super();
 		
-		_scrollTarget = new FlxPoint();
+		_scrollTarget = FlxPoint.get();
 		
 		x = X;
 		y = Y;
@@ -425,10 +425,10 @@ class FlxCamera extends FlxBasic
 		width = (Width <= 0) ? FlxG.width : Width;
 		height = (Height <= 0) ? FlxG.height : Height;
 		
-		scroll = new FlxPoint();
-		followLead = new FlxPoint();
-		_point = new FlxPoint();
-		_flashOffset = new FlxPoint();
+		scroll = FlxPoint.get();
+		followLead = FlxPoint.get();
+		_point = FlxPoint.get();
+		_flashOffset = FlxPoint.get();
 		
 		#if FLX_RENDER_BLIT
 		screen = new FlxSprite();
@@ -467,7 +467,7 @@ class FlxCamera extends FlxBasic
 		_flashRect = new Rectangle(0, 0, width, height);
 		_flashPoint = new Point();
 		
-		_fxShakeOffset = new FlxPoint();
+		_fxShakeOffset = FlxPoint.get();
 		
 		#if FLX_RENDER_BLIT
 		_fill = new BitmapData(width, height, true, FlxColor.TRANSPARENT);
@@ -626,7 +626,7 @@ class FlxCamera extends FlxBasic
 			{
 				if (_lastTargetPosition == null)  
 				{
-					_lastTargetPosition = new FlxPoint(target.x, target.y); // Creates this point.
+					_lastTargetPosition = FlxPoint.get(target.x, target.y); // Creates this point.
 				} 
 				_scrollTarget.x += (target.x - _lastTargetPosition.x ) * followLead.x;
 				_scrollTarget.y += (target.y - _lastTargetPosition.y ) * followLead.y;
@@ -750,15 +750,15 @@ class FlxCamera extends FlxBasic
 			case STYLE_PLATFORMER:
 				var w:Float = (width / 8) + (Offset != null ? Offset.x : 0);
 				var h:Float = (height / 3) + (Offset != null ? Offset.y : 0);
-				deadzone = new FlxRect((width - w) / 2, (height - h) / 2 - h * 0.25, w, h);
+				deadzone = FlxRect.get((width - w) / 2, (height - h) / 2 - h * 0.25, w, h);
 				
 			case STYLE_TOPDOWN:
 				helper = Math.max(width, height) / 4;
-				deadzone = new FlxRect((width - helper) / 2, (height - helper) / 2, helper, helper);
+				deadzone = FlxRect.get((width - helper) / 2, (height - helper) / 2, helper, helper);
 				
 			case STYLE_TOPDOWN_TIGHT:
 				helper = Math.max(width, height) / 8;
-				deadzone = new FlxRect((width - helper) / 2, (height - helper) / 2, helper, helper);
+				deadzone = FlxRect.get((width - helper) / 2, (height - helper) / 2, helper, helper);
 				
 			case STYLE_LOCKON:
 				if (target != null) 
@@ -766,10 +766,10 @@ class FlxCamera extends FlxBasic
 					w = target.width + (Offset != null ? Offset.x : 0);
 					h = target.height + (Offset != null ? Offset.y : 0);
 				}
-				deadzone = new FlxRect((width - w) / 2, (height - h) / 2 - h * 0.25, w, h);
+				deadzone = FlxRect.get((width - w) / 2, (height - h) / 2 - h * 0.25, w, h);
 				
 			case STYLE_SCREEN_BY_SCREEN:
-				deadzone = new FlxRect(0, 0, width, height);
+				deadzone = FlxRect.get(0, 0, width, height);
 				
 			default:
 				deadzone = null;
@@ -896,7 +896,7 @@ class FlxCamera extends FlxBasic
 		{
 			if (bounds == null)
 			{
-				bounds = new FlxRect();
+				bounds = FlxRect.get();
 			}
 			bounds.copyFrom(Camera.bounds);
 		}
@@ -912,7 +912,7 @@ class FlxCamera extends FlxBasic
 			{
 				if (deadzone == null)
 				{
-					deadzone = new FlxRect();
+					deadzone = FlxRect.get();
 				}
 				deadzone.copyFrom(Camera.deadzone);
 			}
@@ -1054,7 +1054,7 @@ class FlxCamera extends FlxBasic
 	{
 		if (bounds == null)
 		{
-			bounds = new FlxRect();
+			bounds = FlxRect.get();
 		}
 		bounds.set(X, Y, Width, Height);
 		if (UpdateWorld)

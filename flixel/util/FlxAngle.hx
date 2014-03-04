@@ -114,7 +114,7 @@ class FlxAngle
 		var dy:Float = Y - PivotY;
 		if (point == null)
 		{
-			point = new FlxPoint();
+			point = FlxPoint.get();
 		}
 		point.x = PivotX + cos * dx - sin * dy;
 		point.y = PivotY - sin * dx - cos * dy;

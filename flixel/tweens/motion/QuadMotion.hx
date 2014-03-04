@@ -9,8 +9,8 @@ import flixel.tweens.FlxTween.CompleteCallback;
  */
 class QuadMotion extends Motion
 {
-	public static var point:FlxPoint = new FlxPoint();
-	public static var point2:FlxPoint = new FlxPoint();
+	public static var point:FlxPoint = FlxPoint.get();
+	public static var point2:FlxPoint = FlxPoint.get();
 	
 	/**
 	 * The distance of the entire curve.

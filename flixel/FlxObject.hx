@@ -192,9 +192,8 @@ class FlxObject extends FlxBasic
 	 * Internal private static variables, for performance reasons.
 	 */
 	private var _point:FlxPoint;
-	private static var _pZero:FlxPoint = new FlxPoint(); // Should always represent (0,0) - useful for avoiding unnecessary new calls.
-	private static var _firstSeparateFlxRect:FlxRect = new FlxRect();
-	private static var _secondSeparateFlxRect:FlxRect = new FlxRect();
+	private static var _firstSeparateFlxRect:FlxRect = FlxRect.get();
+	private static var _secondSeparateFlxRect:FlxRect = FlxRect.get();
 	
 	/**
 	 * @param	X		The X-coordinate of the point in space.
@@ -220,9 +219,9 @@ class FlxObject extends FlxBasic
 	private function initVars():Void
 	{
 		collisionType = FlxCollisionType.OBJECT;
-		last = new FlxPoint(x, y);
-		scrollFactor = new FlxPoint(1, 1);
-		_point = new FlxPoint();
+		last = FlxPoint.get(x, y);
+		scrollFactor = FlxPoint.get(1, 1);
+		_point = FlxPoint.get();
 		
 		initMotionVars();
 	}
@@ -232,10 +231,10 @@ class FlxObject extends FlxBasic
 	 */
 	private inline function initMotionVars():Void
 	{
-		velocity = new FlxPoint();
-		acceleration = new FlxPoint();
-		drag = new FlxPoint();
-		maxVelocity = new FlxPoint(10000, 10000);
+		velocity = FlxPoint.get();
+		acceleration = FlxPoint.get();
+		drag = FlxPoint.get();
+		maxVelocity = FlxPoint.get(10000, 10000);
 	}
 	
 	/**
@@ -558,7 +557,7 @@ class FlxObject extends FlxBasic
 	{
 		if (point == null)
 		{
-			point = new FlxPoint();
+			point = FlxPoint.get();
 		}
 		if (Camera == null)
 		{
@@ -576,7 +575,7 @@ class FlxObject extends FlxBasic
 	{
 		if (point == null)
 		{
-			point = new FlxPoint();
+			point = FlxPoint.get();
 		}
 		return point.set(x + width * 0.5, y + height * 0.5);
 	}

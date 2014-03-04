@@ -15,13 +15,17 @@ class FlxPoint implements IFlxDestroyable
 	public static var pool = new FlxPool<FlxPoint>(FlxPoint);
 	
 	/**
-	 * @default 0
+	 * Recycle or create new FlxRect.
+	 * 
+	 * @param	X		The X-coordinate of the point in space.
+	 * @param	Y		The Y-coordinate of the point in space.
 	 */
-	public var x(default, set):Float = 0;
+	public static inline function get(X:Float = 0, Y:Float = 0):FlxPoint
+	{
+		return pool.get().set(X, Y);
+	}
 	
-	/**
-	 * @default 0
-	 */
+	public var x(default, set):Float = 0;
 	public var y(default, set):Float = 0;
 	
 	/**
@@ -34,17 +38,6 @@ class FlxPoint implements IFlxDestroyable
 	{
 		x = X;
 		y = Y;
-	}
-	
-	/**
-	 * Recycle or create new FlxPoint.
-	 * 
-	 * @param	X		The X-coordinate of the point in space.
-	 * @param	Y		The Y-coordinate of the point in space.
-	 */
-	public static inline function get(X:Float = 0, Y:Float = 0):FlxPoint
-	{
-		return pool.get().set(X, Y);
 	}
 	
 	/**
@@ -87,7 +80,7 @@ class FlxPoint implements IFlxDestroyable
 	 * @param	Point	Any FlxPoint.
 	 * @return	A reference to the altered point parameter.
 	 */
-	public function copyTo(point:FlxPoint = null):FlxPoint
+	public function copyTo(?point:FlxPoint):FlxPoint
 	{
 		if (point == null)
 		{
@@ -163,19 +156,21 @@ class FlxPoint implements IFlxDestroyable
 	/**
 	 * Rounds x and y using Math.floor()
 	 */
-	public inline function floor():Void
+	public inline function floor():FlxPoint
 	{
 		x = Math.floor(x);
 		y = Math.floor(y);
+		return this;
 	}
 	
 	/**
 	 * Rounds x and y using Math.ceil()
 	 */
-	public inline function ceil():Void
+	public inline function ceil():FlxPoint
 	{
 		x = Math.ceil(x);
 		y = Math.ceil(y);
+		return this;
 	}
 	
 	/**
@@ -184,21 +179,27 @@ class FlxPoint implements IFlxDestroyable
 	public function destroy() {}
 	
 	/**
-	 * Necessary for FlxPointHelper in FlxSpriteGroup.
-	 */
-	private function set_x(Value:Float):Float { return x = Value; }
-	
-	/**
-	 * Necessary for FlxPointHelper in FlxSpriteGroup.
-	 */
-	private function set_y(Value:Float):Float { return y = Value; }
-	
-	/**
 	 * Convert object to readable string name. Useful for debugging, save games, etc.
 	 */
 	public inline function toString():String
 	{
 		return FlxStringUtil.getDebugString([ { label: "x", value: x }, 
 		                                      { label: "y", value: y }]);
+	}
+	
+	/**
+	 * Necessary for FlxPointHelper in FlxSpriteGroup.
+	 */
+	private function set_x(Value:Float):Float 
+	{ 
+		return x = Value;
+	}
+	
+	/**
+	 * Necessary for FlxPointHelper in FlxSpriteGroup.
+	 */
+	private function set_y(Value:Float):Float
+	{
+		return y = Value; 
 	}
 }

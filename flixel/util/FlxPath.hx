@@ -130,7 +130,7 @@ class FlxPath implements IFlxDestroyable
 	/**
 	 * Internal helper for keeping new variable instantiations under control.
 	 */
-	private static var _point:FlxPoint = new FlxPoint();
+	private static var _point:FlxPoint = FlxPoint.get();
 	
 	/**
 	 * Instantiate a new path object.

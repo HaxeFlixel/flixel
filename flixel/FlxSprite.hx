@@ -190,9 +190,9 @@ class FlxSprite extends FlxObject
 		_flashRect = new Rectangle();
 		_flashRect2 = new Rectangle();
 		_flashPointZero = new Point();
-		offset = new FlxPoint();
-		origin = new FlxPoint();
-		scale = new FlxPoint(1, 1);
+		offset = FlxPoint.get();
+		origin = FlxPoint.get();
+		scale = FlxPoint.get(1, 1);
 		_matrix = new Matrix();
 	}
 	
@@ -997,7 +997,7 @@ class FlxSprite extends FlxObject
 					cachedGraphics.bitmap.setPixel32(column, row, NewColor);
 					if (FetchPositions)
 					{
-						positions.push(new FlxPoint(column, row));
+						positions.push(FlxPoint.get(column, row));
 					}
 					dirty = true;
 				}
@@ -1209,7 +1209,7 @@ class FlxSprite extends FlxObject
 	{
 		if (point == null)
 		{
-			point = new FlxPoint();
+			point = FlxPoint.get();
 		}
 		return point.set(x + frameWidth * 0.5, y + frameHeight * 0.5);
 	}

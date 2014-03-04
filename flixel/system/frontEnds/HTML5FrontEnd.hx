@@ -47,7 +47,7 @@ class HTML5FrontEnd
 	private function get_browserPosition():FlxPoint
 	{
 		if (browserPosition == null) {
-			browserPosition = new FlxPoint(0, 0);
+			browserPosition = FlxPoint.get(0, 0);
 		}
 		browserPosition.set(Browser.window.screenX, Browser.window.screenY);
 		return browserPosition;

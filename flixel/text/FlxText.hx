@@ -191,7 +191,7 @@ class FlxText extends FlxSprite
 		}
 		#end
 		
-		shadowOffset = new FlxPoint(1, 1);
+		shadowOffset = FlxPoint.get(1, 1);
 	}
 	
 	/**

@@ -227,7 +227,7 @@ class FlxBar extends FlxSprite
 	{
 		fixedPosition = false;
 		
-		positionOffset = new FlxPoint(offsetX, offsetY);
+		positionOffset = FlxPoint.get(offsetX, offsetY);
 		
 		if (Reflect.hasField(parent, "scrollFactor"))
 		{

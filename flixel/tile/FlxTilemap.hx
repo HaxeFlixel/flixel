@@ -1148,7 +1148,7 @@ class FlxTilemap extends FlxObject
 		{
 			if (_data[i] == Index)
 			{
-				point = new FlxPoint(x + Std.int(i % widthInTiles) * _scaledTileWidth, y + Std.int(i / widthInTiles) * _scaledTileHeight);
+				point = FlxPoint.get(x + Std.int(i % widthInTiles) * _scaledTileWidth, y + Std.int(i / widthInTiles) * _scaledTileHeight);
 				
 				if (Midpoint)
 				{
@@ -1304,7 +1304,7 @@ class FlxTilemap extends FlxObject
 	{
 		if (Bounds == null)
 		{
-			Bounds = new FlxRect();
+			Bounds = FlxRect.get();
 		}
 		
 		return Bounds.set(x, y, width, height);
@@ -1497,12 +1497,10 @@ class FlxTilemap extends FlxObject
 				{
 					if (Result == null)
 					{
-						Result = new FlxPoint();
+						Result = FlxPoint.get();
 					}
 					
-					Result.x = rx;
-					Result.y = ry;
-					return Result;
+					return Result.set(rx, ry);
 				}
 
 				// Else, figure out if it crosses the Y boundary
@@ -1520,12 +1518,10 @@ class FlxTilemap extends FlxObject
 				{
 					if (Result == null)
 					{
-						Result = new FlxPoint();
+						Result = FlxPoint.get();
 					}
 					
-					Result.x = rx;
-					Result.y = ry;
-					return Result;
+					return Result.set(rx, ry);
 				}
 				
 				return null;
@@ -2088,7 +2084,7 @@ class FlxTilemap extends FlxObject
 	 */
 	private function walkPath(Data:Array<Int>, Start:Int, Points:Array<FlxPoint>):Void
 	{
-		Points.push(new FlxPoint(x + Math.floor(Start % widthInTiles) * _scaledTileWidth + _scaledTileWidth * 0.5, y + Math.floor(Start / widthInTiles) * _scaledTileHeight + _scaledTileHeight * 0.5));
+		Points.push(FlxPoint.get(x + Math.floor(Start % widthInTiles) * _scaledTileWidth + _scaledTileWidth * 0.5, y + Math.floor(Start / widthInTiles) * _scaledTileHeight + _scaledTileHeight * 0.5));
 		
 		if (Data[Start] == 0)
 		{
