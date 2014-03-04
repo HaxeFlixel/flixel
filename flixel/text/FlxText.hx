@@ -54,9 +54,10 @@ class FlxText extends FlxSprite
 	public var font(get, set):String;
 	
 	/**
-	 * Whether this text field uses embedded font (by default) or not
+	 * Whether this text field uses an embedded font (by default) or not. 
+	 * Read-only - use systemFont to specify a system font to use, which then automatically sets this to false.
 	 */
-	public var embedded(get, null):Bool;
+	public var embedded(get, never):Bool;
 	
 	/**
 	 * The system font for this text (not embedded). Setting this sets embedded to false.
