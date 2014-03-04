@@ -5,9 +5,6 @@ package flixel.util;
  */
 class FlxVector extends FlxPoint
 {
-	/**
-	 * Pool for recycling.
-	 */
 	public static var pool = new FlxPool<FlxVector>(FlxVector);
 	
 	public static inline var EPSILON:Float = 0.0000001;
@@ -18,18 +15,8 @@ class FlxVector extends FlxPoint
 	private static var _vector3:FlxVector = new FlxVector();
 	
 	/**
-	 * Instantiate a new vector object.
-	 * 
-	 * @param	X		The X-coordinate of the point in space.
-	 * @param	Y		The Y-coordinate of the point in space.
-	 */
-	public function new(X:Float = 0, Y:Float = 0)
-	{
-		super(X, Y);
-	}
-	
-	/**
-	 * Recycle or create new vector.
+	 * Recycle or create new FlxVector.
+	 * Be sure to put() them back into the pool after you're done with them!
 	 * 
 	 * @param	X		The X-coordinate of the point in space.
 	 * @param	Y		The Y-coordinate of the point in space.
@@ -691,7 +678,7 @@ class FlxVector extends FlxPoint
 	 * @param	vec		optional vector to copy this vector to
 	 * @return	copy	of this vector
 	 */
-	public function clone(vec:FlxVector = null):FlxVector
+	public function clone(?vec:FlxVector):FlxVector
 	{
 		if (vec == null)
 		{

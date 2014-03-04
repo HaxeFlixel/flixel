@@ -9,13 +9,11 @@ import flixel.interfaces.IFlxDestroyable;
  */
 class FlxPoint implements IFlxDestroyable
 {
-	/**
-	 * Pool for recycling
-	 */
 	public static var pool = new FlxPool<FlxPoint>(FlxPoint);
 	
 	/**
-	 * Recycle or create new FlxRect.
+	 * Recycle or create a new FlxPoint. 
+	 * Be sure to put() them back into the pool after you're done with them!
 	 * 
 	 * @param	X		The X-coordinate of the point in space.
 	 * @param	Y		The Y-coordinate of the point in space.
@@ -27,18 +25,6 @@ class FlxPoint implements IFlxDestroyable
 	
 	public var x(default, set):Float = 0;
 	public var y(default, set):Float = 0;
-	
-	/**
-	 * Instantiate a new point object.
-	 * 
-	 * @param	X		The X-coordinate of the point in space.
-	 * @param	Y		The Y-coordinate of the point in space.
-	 */
-	public function new(X:Float = 0, Y:Float = 0)
-	{
-		x = X;
-		y = Y;
-	}
 	
 	/**
 	 * Add this FlxPoint to the recycling pool.
@@ -186,6 +172,8 @@ class FlxPoint implements IFlxDestroyable
 		return FlxStringUtil.getDebugString([ { label: "x", value: x }, 
 		                                      { label: "y", value: y }]);
 	}
+	
+	private function new() {}
 	
 	/**
 	 * Necessary for FlxPointHelper in FlxSpriteGroup.

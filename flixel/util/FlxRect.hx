@@ -9,13 +9,11 @@ import flixel.interfaces.IFlxDestroyable;
  */
 class FlxRect implements IFlxDestroyable
 {
-	/**
-	 * A pool that contains FlxTimers for recycling.
-	 */
 	public static var pool = new FlxPool<FlxRect>(FlxRect);
 	
 	/**
 	 * Recycle or create new FlxRect.
+	 * Be sure to put() them back into the pool after you're done with them!
 	 * 
 	 * @param	X		The X-coordinate of the point in space.
 	 * @param	Y		The Y-coordinate of the point in space.
@@ -49,22 +47,6 @@ class FlxRect implements IFlxDestroyable
 	 * The y coordinate of the bottom of the rectangle.
 	 */
 	public var bottom(get, set):Float;
-	
-	/**
-	 * Instantiate a new rectangle.
-	 * 
-	 * @param	X		The X-coordinate of the point in space.
-	 * @param	Y		The Y-coordinate of the point in space.
-	 * @param	Width	Desired width of the rectangle.
-	 * @param	Height	Desired height of the rectangle.
-	 */
-	public function new(X:Float = 0, Y:Float = 0, Width:Float = 0, Height:Float = 0)
-	{
-		x = X; 
-		y = Y;
-		width = Width;
-		height = Height;
-	}
 	
 	/**
 	 * Add this FlxRect to the recycling pool.
@@ -219,6 +201,8 @@ class FlxRect implements IFlxDestroyable
 		                                      { label: "w", value: width },
 		                                      { label: "h", value: height } ]);
 	}
+	
+	private function new() {}
 	
 	private inline function get_left():Float
 	{

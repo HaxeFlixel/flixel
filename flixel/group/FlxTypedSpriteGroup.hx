@@ -998,7 +998,7 @@ private class FlxPointHelper<T:FlxSprite> extends FlxPoint
 	{
 		_parent = parent;
 		_transformFunc = transformFunc;
-		super(0, 0);
+		super();
 	}
 	
 	override public function set(X:Float = 0, Y:Float = 0):FlxPointHelper<T>
