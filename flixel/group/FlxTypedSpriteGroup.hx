@@ -276,11 +276,11 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 */
 	public function add(Sprite:T):T
 	{
-		Sprite.x += x;
-		Sprite.y += y;
-		Sprite.alpha *= alpha;
-		Sprite.scrollFactor.copyFrom(scrollFactor);
-		
+		var sprite:FlxSprite = cast Sprite;
+		sprite.x += x;
+		sprite.y += y;
+		sprite.alpha *= alpha;
+		sprite.scrollFactor.copyFrom(scrollFactor);
 		return group.add(Sprite);
 	}
 	
