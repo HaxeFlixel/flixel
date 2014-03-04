@@ -121,11 +121,11 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		var cloned:FlxTypedSpriteGroup<T> = cast NewSprite;
 		cloned.maxSize = group.maxSize;
 		
-		for (basic in _sprites)
+		for (sprite in _sprites)
 		{
-			if (basic != null)
+			if (sprite != null)
 			{
-				cloned.add(cast basic.clone());
+				cloned.add(cast sprite.clone());
 			}
 		}
 		return cloned;
@@ -526,10 +526,8 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		revive();
 		setPosition(X, Y);
 		
-		var sprite:FlxSprite;
-		for (i in 0...length)
+		for (sprite in _sprites)
 		{
-			sprite = _sprites[i];
 			if (sprite != null)
 			{
 				sprite.reset(X, Y);
