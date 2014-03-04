@@ -20,7 +20,6 @@ import flixel.util.loaders.CachedGraphics;
  * This is the base class for most of the display objects (FlxSprite, FlxText, etc).
  * It includes some basic attributes about game objects, basic state information, sizes, scrolling, and basic physics and motion.
  */
-
 class FlxObject extends FlxBasic
 {
 	/**
@@ -100,11 +99,11 @@ class FlxObject extends FlxBasic
 	 */
 	public var solid(get, set):Bool;
 	/**
-	 * Whether the object should use complex render on flash target (which uses draw() method) or not.
-	 * WARNING: setting forceComplexRender to true decreases rendering performance for this object by a factor of 10x!
-	 * @default false
+	 * Whether or not the coordinates should be rounded during draw(), true by default (recommended for pixel art). 
+	 * Only affects tilesheet rendering and rendering using BitmapData.draw() in blitting.
+	 * (copyPixels() only renders on whole pixels by nature). Causes draw() to be used if false, which is more expensive.
 	 */
-	public var forceComplexRender(default, set):Bool = false;
+	public var pixelPerfectRender(default, set):Bool = true;
 	/**
 	 * Controls how much this object is affected by camera scrolling. 0 = no movement (e.g. a background layer), 
 	 * 1 = same movement speed as the foreground. Default value is (1,1), except for UI elements like FlxButton where it's (0,0).
@@ -193,9 +192,8 @@ class FlxObject extends FlxBasic
 	 * Internal private static variables, for performance reasons.
 	 */
 	private var _point:FlxPoint;
-	private static var _pZero:FlxPoint = new FlxPoint(); // Should always represent (0,0) - useful for avoiding unnecessary new calls.
-	private static var _firstSeparateFlxRect:FlxRect = new FlxRect();
-	private static var _secondSeparateFlxRect:FlxRect = new FlxRect();
+	private static var _firstSeparateFlxRect:FlxRect = FlxRect.get();
+	private static var _secondSeparateFlxRect:FlxRect = FlxRect.get();
 	
 	/**
 	 * @param	X		The X-coordinate of the point in space.
@@ -221,9 +219,9 @@ class FlxObject extends FlxBasic
 	private function initVars():Void
 	{
 		collisionType = FlxCollisionType.OBJECT;
-		last = new FlxPoint(x, y);
-		scrollFactor = new FlxPoint(1, 1);
-		_point = new FlxPoint();
+		last = FlxPoint.get(x, y);
+		scrollFactor = FlxPoint.get(1, 1);
+		_point = FlxPoint.get();
 		
 		initMotionVars();
 	}
@@ -233,10 +231,10 @@ class FlxObject extends FlxBasic
 	 */
 	private inline function initMotionVars():Void
 	{
-		velocity = new FlxPoint();
-		acceleration = new FlxPoint();
-		drag = new FlxPoint();
-		maxVelocity = new FlxPoint(10000, 10000);
+		velocity = FlxPoint.get();
+		acceleration = FlxPoint.get();
+		drag = FlxPoint.get();
+		maxVelocity = FlxPoint.get(10000, 10000);
 	}
 	
 	/**
@@ -253,7 +251,6 @@ class FlxObject extends FlxBasic
 		maxVelocity = null;
 		scrollFactor = null;
 		last = null;
-		cameras = null;
 		_point = null;
 		scrollFactor = null;
 		
@@ -318,24 +315,14 @@ class FlxObject extends FlxBasic
 	 */
 	override public function draw():Void
 	{
-		if (cameras == null)
+		for (camera in cameras)
 		{
-			cameras = FlxG.cameras.list;
-		}
-		var camera:FlxCamera;
-		var i:Int = 0;
-		var l:Int = cameras.length;
-		while (i < l)
-		{
-			camera = cameras[i++];
-			if (!camera.visible || !camera.exists || !isOnScreen(camera))
+			if (camera.visible && camera.exists && isOnScreen(camera))
 			{
-				continue;
+				#if !FLX_NO_DEBUG
+				FlxBasic._VISIBLECOUNT++;
+				#end
 			}
-			
-			#if !FLX_NO_DEBUG
-			FlxBasic._VISIBLECOUNT++;
-			#end
 		}
 	}
 	
@@ -361,7 +348,7 @@ class FlxObject extends FlxBasic
 		//get bounding box coordinates
 		var boundingBoxX:Float = x - (Camera.scroll.x * scrollFactor.x); //copied from getScreenXY()
 		var boundingBoxY:Float = y - (Camera.scroll.y * scrollFactor.y);
-		#if flash
+		#if FLX_RENDER_BLIT
 		var boundingBoxWidth:Int = Std.int(width);
 		var boundingBoxHeight:Int = Std.int(height);
 		#end
@@ -387,7 +374,7 @@ class FlxObject extends FlxBasic
 		}
 		
 		//fill static graphics object with square shape
-		#if flash
+		#if FLX_RENDER_BLIT
 		var gfx:Graphics = FlxSpriteUtil.flashGfx;
 		gfx.clear();
 		gfx.moveTo(boundingBoxX, boundingBoxY);
@@ -570,7 +557,7 @@ class FlxObject extends FlxBasic
 	{
 		if (point == null)
 		{
-			point = new FlxPoint();
+			point = FlxPoint.get();
 		}
 		if (Camera == null)
 		{
@@ -588,7 +575,7 @@ class FlxObject extends FlxBasic
 	{
 		if (point == null)
 		{
-			point = new FlxPoint();
+			point = FlxPoint.get();
 		}
 		return point.set(x + width * 0.5, y + height * 0.5);
 	}
@@ -1043,9 +1030,9 @@ class FlxObject extends FlxBasic
 		return immovable = Value;
 	}
 	
-	private function set_forceComplexRender(Value:Bool):Bool 
+	private function set_pixelPerfectRender(Value:Bool):Bool 
 	{
-		return forceComplexRender = Value;
+		return pixelPerfectRender = Value;
 	}
 	
 	#if !FLX_NO_DEBUG

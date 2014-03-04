@@ -89,7 +89,7 @@ class FlxG
 	 * The HaxeFlixel version, in semantic versioning syntax. Use Std.string()
 	 * on it to get a String formatted like this: "HaxeFlixel MAJOR.MINOR.PATCH-PATCH_VERSION".
 	 */ 
-	public static var VERSION(default, null):FlxVersion = new FlxVersion(3, 2, 1, "dev");
+	public static var VERSION(default, null):FlxVersion = new FlxVersion(3, 3, 0, "dev");
 	
 	/**
 	 * Internal tracker for game object.
@@ -145,7 +145,7 @@ class FlxG
 	 * The dimensions of the game world, used by the quad tree for collisions and overlap checks.
 	 * Use .set() instead of creating a new object!
 	 */
-	public static var worldBounds(default, null):FlxRect = new FlxRect();
+	public static var worldBounds(default, null):FlxRect = FlxRect.get();
 	
 	/**
 	 * A FlxSave used internally by flixel to save sound preferences and 
@@ -184,7 +184,7 @@ class FlxG
 	public static var keys(default, null):FlxKeyboard;
 	#end
 	
-	#if (!FLX_NO_GAMEPAD && (cpp || neko || js))
+	#if !FLX_NO_GAMEPAD
 	/**
 	 * A reference to a FlxGamepadManager object.
 	 */
@@ -449,7 +449,7 @@ class FlxG
 		touches = inputs.add(new FlxTouchManager());
 		#end
 		
-		#if (!FLX_NO_GAMEPAD && (cpp||neko||js))
+		#if !FLX_NO_GAMEPAD
 		gamepads = inputs.add(new FlxGamepadManager());
 		#end
 		
@@ -544,10 +544,6 @@ class FlxG
 		if (Value)
 		{
 			stage.displayState = StageDisplayState.FULL_SCREEN;
-			#if flash
-			camera.x = (stage.fullScreenWidth - width * camera.zoom) / 2;
-			camera.y = (stage.fullScreenHeight - height * camera.zoom) / 2;
-			#end
 		}
 		else
 		{

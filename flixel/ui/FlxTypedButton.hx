@@ -1,6 +1,7 @@
 package flixel.ui;
 
 import flash.display.BitmapData;
+import flash.events.MouseEvent;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.input.touch.FlxTouch;
@@ -88,12 +89,16 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		onOut = new FlxButtonEvent();
 		
 		labelAlphas = [0.8, 1.0, 0.5];
-		labelOffsets = [new FlxPoint(), new FlxPoint(), new FlxPoint(0, 1)];
+		labelOffsets = [FlxPoint.get(), FlxPoint.get(), FlxPoint.get(0, 1)];
 		
 		status = FlxButton.NORMAL;
 		
 		// Since this is a UI element, the default scrollFactor is (0, 0)
 		scrollFactor.set();
+		
+		#if !FLX_NO_MOUSE
+		FlxG.stage.addEventListener(MouseEvent.MOUSE_UP, onUpEventListener);
+		#end
 	}
 	
 	/**
@@ -111,6 +116,10 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		labelOffsets = null;
 		labelAlphas = null;
 		_pressedTouch = null;
+		
+		#if !FLX_NO_MOUSE
+		FlxG.stage.removeEventListener(MouseEvent.MOUSE_UP, onUpEventListener);
+		#end
 		
 		super.destroy();
 	}
@@ -181,7 +190,8 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	{
 		super.drawDebug();
 		
-		if (label != null) {
+		if (label != null) 
+		{
 			label.drawDebug();
 		}
 	}
@@ -193,11 +203,6 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	 */
 	private function updateButton():Void
 	{
-		if (cameras == null) 
-		{
-			cameras = FlxG.cameras.list;
-		}
-		
 		// We're looking for any touch / mouse overlaps with this button
 		var overlapFound = false;
 		
@@ -282,12 +287,6 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 			onUpHandler();
 		}
 		#end
-		#if !FLX_NO_MOUSE
-		else if (_pressedMouse && FlxG.mouse.justReleased)
-		{
-			onUpHandler();
-		}
-		#end
 	}
 	
 	private function set_status(Value:Int):Int
@@ -298,6 +297,20 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		}
 		return status = Value;
 	}
+	
+	/**
+	 * Using an event listener is necessary for security reasons on flash - 
+	 * certain things like opening a new window are only allowed when they are user-initiated.
+	 */
+	#if !FLX_NO_MOUSE
+	private function onUpEventListener(E:MouseEvent):Void
+	{
+		if (visible && exists && active && (status == FlxButton.PRESSED))
+		{
+			onUpHandler();
+		}
+	}
+	#end
 	
 	/**
 	 * Internal function that handles the onUp event.
@@ -360,8 +373,6 @@ private class FlxButtonEvent implements IFlxDestroyable
 	#end
 	
 	/**
-	 * Creates a new FlxButtonEvent
-	 * 
 	 * @param	Callback		The callback function to call when this even fires.
 	 * @param	sound			The sound to play when this event fires.
 	 */

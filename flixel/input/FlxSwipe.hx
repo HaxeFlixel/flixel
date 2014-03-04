@@ -24,10 +24,11 @@ class FlxSwipe
 	public var endPosition:FlxPoint;
 	
 	public var distance(get, never):Float;
-	public var angle   (get, never):Float;
+	public var angle(get, never):Float;
 	public var duration(get, never):Float;
 	
 	private var _startTimeInTicks:Float;
+	private var _endTimeInTicks:Float;
 	
 	private function new(ID:Int, StartPosition:FlxPoint, EndPosition:FlxPoint, StartTimeInTicks:Float)
 	{
@@ -35,6 +36,7 @@ class FlxSwipe
 		startPosition = StartPosition;
 		endPosition = EndPosition;
 		_startTimeInTicks = StartTimeInTicks;
+		_endTimeInTicks = FlxG.game.ticks;
 	}
 	
 	private inline function toString():String
@@ -59,6 +61,6 @@ class FlxSwipe
 	
 	private inline function get_duration():Float
 	{
-		return (FlxG.game.ticks - _startTimeInTicks);
+		return (_endTimeInTicks - _startTimeInTicks);
 	}
 }

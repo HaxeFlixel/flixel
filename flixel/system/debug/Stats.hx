@@ -30,7 +30,7 @@ class Stats extends Window
 	/**
 	 * The minimal height of the window.
 	 */
-	private static inline var MIN_HEIGHT:Int = #if flash 180 #else 195 #end;
+	private static inline var MIN_HEIGHT:Int = #if !FLX_RENDER_TILE 180 #else 195 #end;
 	/**
 	 * The color of the fps graph.
 	 */
@@ -87,7 +87,7 @@ class Stats extends Window
 	
 	private var _paused:Bool = true;
 	
-	#if !flash
+	#if FLX_RENDER_TILE
 	private var drawCallsCount:Int = 0;
 	private var _drawCalls:Array<Int>;
 	private var _drawCallsMarker:Int = 0;
@@ -110,7 +110,7 @@ class Stats extends Window
 		_activeObject = [];
 		_visibleObject = [];
 		
-		#if !flash
+		#if FLX_RENDER_TILE
 		_drawCalls = [];
 		#end
 		
@@ -131,7 +131,7 @@ class Stats extends Window
 		_leftTextField.multiline = _rightTextField.multiline = true;
 		_leftTextField.wordWrap = _rightTextField.wordWrap = true;
 		
-		_leftTextField.text = "Update: \nDraw:" + #if !flash "\nDrawTiles:" + #end "\nQuadTrees: \nLists:";
+		_leftTextField.text = "Update: \nDraw:" + #if FLX_RENDER_TILE "\nDrawTiles:" + #end "\nQuadTrees: \nLists:";
 	}
 	
 	/**
@@ -190,7 +190,7 @@ class Stats extends Window
 		_activeObject = null;
 		_visibleObject = null;
 		
-		#if !flash
+		#if FLX_RENDER_TILE
 		_drawCalls = null;
 		#end
 		
@@ -201,7 +201,7 @@ class Stats extends Window
 	 * Called each frame, but really only updates once every second or so, to save on performance.
 	 * Takes all the data in the accumulators and parses it into useful performance data.
 	 */
-	public function update():Void
+	override public function update():Void
 	{
 		if (_paused) 
 		{
@@ -255,7 +255,7 @@ class Stats extends Window
 			}
 			visibleCount = Std.int(visibleCount / _visibleObjectMarker);
 			
-			#if !flash
+			#if FLX_RENDER_TILE
 			for (i in 0..._drawCallsMarker)
 			{
 				drawCallsCount += _drawCalls[i];
@@ -267,7 +267,7 @@ class Stats extends Window
 			_drawMarker = 0;
 			_activeObjectMarker = 0;
 			_visibleObjectMarker = 0;
-			#if !flash
+			#if FLX_RENDER_TILE
 			_drawCallsMarker = 0;
 			#end
 			
@@ -282,7 +282,7 @@ class Stats extends Window
 		
 		_rightTextField.text = 	activeCount + " (" + updTime + "ms)\n"
 								+ visibleCount + " (" + drwTime + "ms)\n" 
-								#if !flash
+								#if FLX_RENDER_TILE
 								+ drawCallsCount + "\n"
 								#end 
 								+ FlxQuadTree._NUM_CACHED_QUAD_TREES + "\n"
@@ -373,7 +373,7 @@ class Stats extends Window
 		_visibleObject[_visibleObjectMarker++] = Count;
 	}
 	
-	#if !flash
+	#if FLX_RENDER_TILE
 	/**
 	 * How many times drawTiles() method was called.
 	 * 

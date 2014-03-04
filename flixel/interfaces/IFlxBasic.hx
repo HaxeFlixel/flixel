@@ -5,7 +5,7 @@ import flixel.FlxCamera;
 interface IFlxBasic
 {
 	public var ID:Int;
-	public var cameras:Array<FlxCamera>;
+	public var cameras(get, set):Array<FlxCamera>;
 	public var active(default, set):Bool;
 	public var visible(default, set):Bool;
 	public var alive(default, set):Bool;

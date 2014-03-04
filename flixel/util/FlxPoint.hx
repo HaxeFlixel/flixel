@@ -1,7 +1,7 @@
 package flixel.util;
 
-import flash.geom.Point;
 import flixel.FlxG;
+import flash.geom.Point;
 import flixel.interfaces.IFlxDestroyable;
 
 /**
@@ -10,27 +10,27 @@ import flixel.interfaces.IFlxDestroyable;
 class FlxPoint implements IFlxDestroyable
 {
 	/**
-	 * @default 0
+	 * Pool for recycling
 	 */
-	public var x(default, set):Float = 0;
-	
-	private function set_x(Value:Float):Float
-	{
-		return x = Value;
-	}
+	public static var pool = new FlxPool<FlxPoint>(FlxPoint);
 	
 	/**
-	 * @default 0
+	 * Recycle or create new FlxRect.
+	 * 
+	 * @param	X		The X-coordinate of the point in space.
+	 * @param	Y		The Y-coordinate of the point in space.
 	 */
-	public var y(default, set):Float = 0;
-	
-	private function set_y(Value:Float):Float
+	public static inline function get(X:Float = 0, Y:Float = 0):FlxPoint
 	{
-		return y = Value;
+		return pool.get().set(X, Y);
 	}
+	
+	public var x(default, set):Float = 0;
+	public var y(default, set):Float = 0;
 	
 	/**
 	 * Instantiate a new point object.
+	 * 
 	 * @param	X		The X-coordinate of the point in space.
 	 * @param	Y		The Y-coordinate of the point in space.
 	 */
@@ -41,7 +41,16 @@ class FlxPoint implements IFlxDestroyable
 	}
 	
 	/**
+	 * Add this FlxPoint to the recycling pool.
+	 */
+	public inline function put():Void
+	{
+		pool.put(this);
+	}
+	
+	/**
 	 * Set the coordinates of this point object.
+	 * 
 	 * @param	X		The X-coordinate of the point in space.
 	 * @param	Y		The Y-coordinate of the point in space.
 	 */
@@ -54,6 +63,7 @@ class FlxPoint implements IFlxDestroyable
 	
 	/**
 	 * Helper function, just copies the values from the specified point.
+	 * 
 	 * @param	Point	Any FlxPoint.
 	 * @return	A reference to itself.
 	 */
@@ -66,14 +76,15 @@ class FlxPoint implements IFlxDestroyable
 	
 	/**
 	 * Helper function, just copies the values from this point to the specified point.
+	 * 
 	 * @param	Point	Any FlxPoint.
 	 * @return	A reference to the altered point parameter.
 	 */
-	public function copyTo(point:FlxPoint = null):FlxPoint
+	public function copyTo(?point:FlxPoint):FlxPoint
 	{
 		if (point == null)
 		{
-			point = new FlxPoint();
+			point = FlxPoint.get();
 		}
 		point.x = x;
 		point.y = y;
@@ -82,6 +93,7 @@ class FlxPoint implements IFlxDestroyable
 	
 	/**
 	 * Helper function, just copies the values from the specified Flash point.
+	 * 
 	 * @param	Point	Any Point.
 	 * @return	A reference to itself.
 	 */
@@ -94,6 +106,7 @@ class FlxPoint implements IFlxDestroyable
 	
 	/**
 	 * Helper function, just copies the values from this point to the specified Flash point.
+	 * 
 	 * @param	Point	Any Point.
 	 * @return	A reference to the altered point parameter.
 	 */
@@ -140,7 +153,30 @@ class FlxPoint implements IFlxDestroyable
 		return FlxMath.getDistance(this, AnotherPoint);
 	}
 	
-	public function destroy() {} // Necessary for FlxPointHelper in FlxSpriteGroup!
+	/**
+	 * Rounds x and y using Math.floor()
+	 */
+	public inline function floor():FlxPoint
+	{
+		x = Math.floor(x);
+		y = Math.floor(y);
+		return this;
+	}
+	
+	/**
+	 * Rounds x and y using Math.ceil()
+	 */
+	public inline function ceil():FlxPoint
+	{
+		x = Math.ceil(x);
+		y = Math.ceil(y);
+		return this;
+	}
+	
+	/**
+	 * Necessary for IFlxDestroyable.
+	 */
+	public function destroy() {}
 	
 	/**
 	 * Convert object to readable string name. Useful for debugging, save games, etc.
@@ -149,5 +185,21 @@ class FlxPoint implements IFlxDestroyable
 	{
 		return FlxStringUtil.getDebugString([ { label: "x", value: x }, 
 		                                      { label: "y", value: y }]);
+	}
+	
+	/**
+	 * Necessary for FlxPointHelper in FlxSpriteGroup.
+	 */
+	private function set_x(Value:Float):Float 
+	{ 
+		return x = Value;
+	}
+	
+	/**
+	 * Necessary for FlxPointHelper in FlxSpriteGroup.
+	 */
+	private function set_y(Value:Float):Float
+	{
+		return y = Value; 
 	}
 }

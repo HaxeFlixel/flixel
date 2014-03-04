@@ -27,12 +27,10 @@ class Window extends Sprite
 	 * The background color of the window.
 	 */
 	public static inline var BG_COLOR:Int = 0xDD5F5F5F;
-	/**
-	 * The color used for the "handle" at the top of the window.
-	 */
-	public static inline var TOP_COLOR:Int = 0xBB000000;
 	
+	public static inline var HEADER_COLOR:Int = 0xBB000000;
 	public static inline var HEADER_ALPHA:Float = 0.8;
+	public static inline var HEADER_HEIGHT:Int = 15;
 	
 	/**
 	 * How many windows there are currently in total.
@@ -99,16 +97,12 @@ class Window extends Sprite
 		_height = Std.int(Math.abs(Height));
 		updateBounds(Bounds);
 		_drag = new Point();
-		
 		_resizable = Resizable;
 		
 		_shadow = new Bitmap(new BitmapData(1, 2, true, FlxColor.BLACK));
-		addChild(_shadow);
 		_background = new Bitmap(new BitmapData(1, 1, true, BG_COLOR));
-		_background.y = 15;
-		addChild(_background);
-		_header = new Bitmap(new BitmapData(1, 15, true, TOP_COLOR));
-		addChild(_header);
+		_header = new Bitmap(new BitmapData(1, HEADER_HEIGHT, true, HEADER_COLOR));
+		_background.y = _header.height;
 		
 		_title = new TextField();
 		_title.x = 2;
@@ -120,6 +114,10 @@ class Window extends Sprite
 		_title.embedFonts = true;
 		_title.defaultTextFormat = new TextFormat(FlxAssets.FONT_DEBUGGER, 12, 0xffffff);
 		_title.text = Title;
+		
+		addChild(_shadow);
+		addChild(_background);
+		addChild(_header);
 		addChild(_title);
 		
 		if (Icon != null)
@@ -144,6 +142,12 @@ class Window extends Sprite
 			_closeButton.alpha = HEADER_ALPHA;
 			addChild(_closeButton);
 		}
+		else 
+		{
+			_id = WINDOW_AMOUNT;
+			loadSaveData();
+			WINDOW_AMOUNT++;
+		}
 		
 		if ((_width != 0) || (_height != 0))
 		{
@@ -152,16 +156,6 @@ class Window extends Sprite
 		bound();
 		
 		addEventListener(Event.ENTER_FRAME, init);
-		
-		_id = WINDOW_AMOUNT++;
-		if (FlxG.save.data.windowSettings != null)
-		{
-			visible = FlxG.save.data.windowSettings[_id];
-		}
-		else
-		{
-			FlxG.save.data.windowSettings = new Array<Bool>();
-		}
 	}
 	
 	/**
@@ -199,13 +193,25 @@ class Window extends Sprite
 		_handle = null;
 		_drag = null;
 		_closeButton = FlxG.safeDestroy(_closeButton);
-		stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
-		stage.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
-		stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+		
+		var stage = FlxG.stage;
+		if (stage.hasEventListener(MouseEvent.MOUSE_MOVE))
+		{
+			stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+		}
+		if (hasEventListener(MouseEvent.MOUSE_DOWN))
+		{
+			removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+		}
+		if (stage.hasEventListener(MouseEvent.MOUSE_UP))
+		{
+			stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+		}
 	}
 	
 	/**
 	 * Resize the window.  Subject to pre-specified minimums, maximums, and bounding rectangles.
+	 *
 	 * @param 	Width	How wide to make the window.
 	 * @param 	Height	How tall to make the window.
 	 */
@@ -218,6 +224,7 @@ class Window extends Sprite
 	
 	/**
 	 * Change the position of the window.  Subject to pre-specified bounding rectangles.
+	 * 
 	 * @param 	X	Desired X position of top left corner of the window.
 	 * @param 	Y	Desired Y position of top left corner of the window.
 	 */
@@ -246,7 +253,34 @@ class Window extends Sprite
 	{
 		visible = !visible;
 		FlxG.save.data.windowSettings[_id] = visible;
+		FlxG.save.flush();
 	}
+	
+	private function loadSaveData():Void
+	{
+		if (FlxG.save.data.windowSettings != null)
+		{
+			visible = FlxG.save.data.windowSettings[_id];
+		}
+		else
+		{
+			initSaveData();
+			loadSaveData();
+		}
+	}
+	
+	private function initSaveData():Void
+	{
+		var settings:Array<Bool> = [];
+		for (i in 0...10) // arbitrary max of windows
+		{
+			settings[i] = true;
+		}
+		FlxG.save.data.windowSettings = settings;
+		FlxG.save.flush();
+	}
+	
+	public function update():Void {}
 	
 	//***EVENT HANDLERS***//
 	
@@ -266,8 +300,10 @@ class Window extends Sprite
 		removeEventListener(Event.ENTER_FRAME, init);
 		
 		stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
-		stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 		stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+		// it's important that the mouse down event listener is added to the window sprite, not the stage - this way 
+		// only the window on top receives the event and we don't have to deal with overlapping windows ourselves.
+		addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 	}
 	
 	/**
@@ -339,7 +375,7 @@ class Window extends Sprite
 	/**
 	 * Keep the window within the pre-specified bounding rectangle. 
 	 */
-	private function bound():Void
+	public function bound():Void
 	{
 		if (_bounds != null)
 		{
@@ -358,7 +394,7 @@ class Window extends Sprite
 		
 		_header.scaleX = _width;
 		_background.scaleX = _width;
-		_background.scaleY = _height-15;
+		_background.scaleY = _height - _header.height;
 		_shadow.scaleX = _width;
 		_shadow.y = _height;
 		_title.width = _width - 4;
@@ -374,9 +410,11 @@ class Window extends Sprite
 		}
 	}
 	
-	private function close():Void
+	public function close():Void
 	{
 		destroy();
-		parent.removeChild(this);
+		#if !FLX_NO_DEBUG
+		FlxG.game.debugger.removeWindow(this);
+		#end
 	}
 }

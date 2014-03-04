@@ -9,12 +9,8 @@ class DrawStackItem
 	public var position:Int = 0;
 	public var next:DrawStackItem;
 	
-	#if !js
 	public var colored:Bool = false;
 	public var blending:Int = 0;
-	#else
-	public var useAlpha:Bool = false;
-	#end
 	
 	public var initialized:Bool = false;
 	

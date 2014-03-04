@@ -101,7 +101,7 @@ class FlxAnalog extends FlxSpriteGroup
 	 */
 	public function new(X:Float, Y:Float, Radius:Float = 0, Ease:Float = 0.25)
 	{
-		_zone = new FlxRect();
+		_zone = FlxRect.get();
 		
 		super();
 		
@@ -114,11 +114,11 @@ class FlxAnalog extends FlxSpriteGroup
 		}
 		_analogs.push(this);
 		
-		acceleration = new FlxPoint();
+		acceleration = FlxPoint.get();
 		#if !FLX_NO_TOUCH
 		_tempTouches = [];
 		#end
-		_point = new FlxPoint();
+		_point = FlxPoint.get();
 		
 		createBase();
 		createThumb();

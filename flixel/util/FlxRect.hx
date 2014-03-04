@@ -2,28 +2,53 @@ package flixel.util;
 
 import flash.geom.Rectangle;
 import flixel.FlxG;
+import flixel.interfaces.IFlxDestroyable;
 
 /**
  * Stores a rectangle.
  */
-class FlxRect
+class FlxRect implements IFlxDestroyable
 {
 	/**
-	 * @default 0
+	 * A pool that contains FlxTimers for recycling.
 	 */
+	public static var pool = new FlxPool<FlxRect>(FlxRect);
+	
+	/**
+	 * Recycle or create new FlxRect.
+	 * 
+	 * @param	X		The X-coordinate of the point in space.
+	 * @param	Y		The Y-coordinate of the point in space.
+	 */
+	public static inline function get(X:Float = 0, Y:Float = 0, Width:Float = 0, Height:Float = 0):FlxRect
+	{
+		return pool.get().set(X, Y, Width, Height);
+	}
+	
 	public var x:Float;
-	/**
-	 * @default 0
-	 */
 	public var y:Float;
-	/**
-	 * @default 0
-	 */
 	public var width:Float;
-	/**
-	 * @default 0
-	 */
 	public var height:Float;
+	
+	/**
+	 * The x coordinate of the left side of the rectangle.
+	 */
+	public var left(get, set):Float;
+	
+	/**
+	 * The x coordinate of the right side of the rectangle.
+	 */
+	public var right(get, set):Float;
+	
+	/**
+	 * The x coordinate of the top of the rectangle.
+	 */
+	public var top(get, set):Float;
+	
+	/**
+	 * The y coordinate of the bottom of the rectangle.
+	 */
+	public var bottom(get, set):Float;
 	
 	/**
 	 * Instantiate a new rectangle.
@@ -42,79 +67,24 @@ class FlxRect
 	}
 	
 	/**
+	 * Add this FlxRect to the recycling pool.
+	 */
+	public inline function put():Void
+	{
+		pool.put(this);
+	}
+	
+	/**
 	 * Shortcut for setting both width and Height.
 	 * 
 	 * @param	Width	The new sprite width.
 	 * @param	Height	The new sprite height.
 	 */
-	public inline function setSize(Width:Float, Height:Float)
+	public inline function setSize(Width:Float, Height:Float):FlxRect
 	{
 		width = Width;
 		height = Height;
-	}
-	
-	/**
-	 * The x coordinate of the left side of the rectangle.
-	 */
-	public var left(get, set):Float;
-	
-	private function get_left():Float
-	{
-		return x;
-	}
-	
-	private function set_left(Value:Float):Float
-	{
-		width -= Value - x;
-		return x = Value;
-	}
-	
-	/**
-	 * The x coordinate of the right side of the rectangle.
-	 */
-	public var right(get, set):Float;
-	
-	private function get_right():Float
-	{
-		return x + width;
-	}
-	
-	private function set_right(Value:Float):Float
-	{
-		width = Value - x;
-		return Value;
-	}
-	
-	/**
-	 * The x coordinate of the top of the rectangle.
-	 */
-	public var top(get, set):Float;
-	
-	private function get_top():Float
-	{
-		return y;
-	}
-	
-	private function set_top(Value:Float):Float
-	{
-		height -= Value - y;
-		return y = Value;
-	}
-	
-	/**
-	 * The y coordinate of the bottom of the rectangle.
-	 */
-	public var bottom(get, set):Float;
-	
-	private function get_bottom():Float
-	{
-		return y + height;
-	}
-	
-	private function set_bottom(Value:Float):Float
-	{
-		height = Value - y;
-		return Value;
+		return this;
 	}
 	
 	/**
@@ -137,6 +107,7 @@ class FlxRect
 
 	/**
 	 * Helper function, just copies the values from the specified rectangle.
+	 * 
 	 * @param	Rect	Any FlxRect.
 	 * @return	A reference to itself.
 	 */
@@ -151,6 +122,7 @@ class FlxRect
 	
 	/**
 	 * Helper function, just copies the values from this rectangle to the specified rectangle.
+	 * 
 	 * @param	Point	Any FlxRect.
 	 * @return	A reference to the altered rectangle parameter.
 	 */
@@ -165,6 +137,7 @@ class FlxRect
 	
 	/**
 	 * Helper function, just copies the values from the specified Flash rectangle.
+	 * 
 	 * @param	FlashRect	Any Rectangle.
 	 * @return	A reference to itself.
 	 */
@@ -179,6 +152,7 @@ class FlxRect
 	
 	/**
 	 * Helper function, just copies the values from this rectangle to the specified Flash rectangle.
+	 * 
 	 * @param	Point	Any Rectangle.
 	 * @return	A reference to the altered rectangle parameter.
 	 */
@@ -193,6 +167,7 @@ class FlxRect
 	
 	/**
 	 * Checks to see if some FlxRect object overlaps this FlxRect object.
+	 * 
 	 * @param	Rect	The rectangle being tested.
 	 * @return	Whether or not the two rectangles overlap.
 	 */
@@ -230,6 +205,11 @@ class FlxRect
 	}
 	
 	/**
+	 * Necessary for IFlxDestroyable.
+	 */
+	public function destroy() {}
+	
+	/**
 	 * Convert object to readable string name. Useful for debugging, save games, etc.
 	 */
 	public inline function toString():String
@@ -238,5 +218,49 @@ class FlxRect
 		                                      { label: "y", value: y },
 		                                      { label: "w", value: width },
 		                                      { label: "h", value: height } ]);
+	}
+	
+	private inline function get_left():Float
+	{
+		return x;
+	}
+	
+	private inline function set_left(Value:Float):Float
+	{
+		width -= Value - x;
+		return x = Value;
+	}
+	
+	private inline function get_right():Float
+	{
+		return x + width;
+	}
+	
+	private inline function set_right(Value:Float):Float
+	{
+		width = Value - x;
+		return Value;
+	}
+	
+	private inline function get_top():Float
+	{
+		return y;
+	}
+	
+	private inline function set_top(Value:Float):Float
+	{
+		height -= Value - y;
+		return y = Value;
+	}
+	
+	private inline function get_bottom():Float
+	{
+		return y + height;
+	}
+	
+	private inline function set_bottom(Value:Float):Float
+	{
+		height = Value - y;
+		return Value;
 	}
 }
