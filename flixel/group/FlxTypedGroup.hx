@@ -686,11 +686,13 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 */
 	public function forEach(Function:T->Void)
 	{
-		for (member in _members)
+		var i:Int = 0;
+		
+		while (i < length)
 		{
-			if (member != null)
+			if (_members[i] != null)
 			{
-				Function(member);
+				Function(_members[i]);
 			}
 		}
 	}
