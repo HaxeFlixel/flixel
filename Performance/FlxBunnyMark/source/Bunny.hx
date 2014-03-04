@@ -58,10 +58,10 @@ class Bunny extends FlxSprite
 	
 	private function setBounds():Void
 	{
-		if (x > FlxG.width)
+		if (x > (FlxG.width - width))
 		{
 			velocity.x *= -1;
-			x = FlxG.width;
+			x = (FlxG.width - width);
 		}
 		else if (x < 0)
 		{
@@ -69,10 +69,10 @@ class Bunny extends FlxSprite
 			x = 0;
 		}
 		
-		if (y > FlxG.height)
+		if (y > (FlxG.height - height))
 		{
 			velocity.y *= -0.8;
-			y = FlxG.height;
+			y = (FlxG.height - height);
 			
 			if (FlxRandom.chanceRoll()) 
 			{
