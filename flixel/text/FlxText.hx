@@ -59,7 +59,8 @@ class FlxText extends FlxSprite
 	public var embedded(get, null):Bool;
 	
 	/**
-	 * The system font for this text (not embedded).
+	 * The system font for this text (not embedded). Setting this sets embedded to false.
+	 * Passing an invalid font name (like "" or null) causes a default font to be used. 
 	 */
 	public var systemFont(get, set):String;
 	
@@ -467,12 +468,12 @@ class FlxText extends FlxSprite
 		return Font;
 	}
 	
-	private function get_embedded():Bool
+	private inline function get_embedded():Bool
 	{
 		return _textField.embedFonts = true;
 	}
 	
-	private function get_systemFont():String
+	private inline function get_systemFont():String
 	{
 		return _defaultFormat.font;
 	}
