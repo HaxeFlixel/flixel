@@ -33,8 +33,8 @@ import flixel.util.FlxPoint;
  */
 class MouseEventManager extends FlxPlugin
 {
-	private static var _registeredObjects:Array<ObjectMouseData<Dynamic>>;
-	private static var _mouseOverObjects:Array<ObjectMouseData<Dynamic>>;
+	private static var _registeredObjects:Array<ObjectMouseData<FlxObject>>;
+	private static var _mouseOverObjects:Array<ObjectMouseData<FlxObject>>;
 
 	private static var _point:FlxPoint;
 	
@@ -58,27 +58,19 @@ class MouseEventManager extends FlxPlugin
 	 * @param	MouseEnabled	If mouseEnabled this object will receive mouse events.
 	 * @param	PixelPerfect	If enabled the collision check will be pixel-perfect. Only works for FlxSprites.
 	 */
-	public static function add<T:FlxObject>(Object:T, ?OnMouseDown:T->Void, ?OnMouseUp:T->Void, ?OnMouseOver:T->Void, ?OnMouseOut:T->Void, MouseChildren = false, MouseEnabled = true, PixelPerfect = true):T
+	public static function add<T:FlxObject>(Object:T, ?OnMouseDown:T->Void, ?OnMouseUp:T->Void, ?OnMouseOver:T->Void, ?OnMouseOut:T->Void, 
+	                                        MouseChildren = false, MouseEnabled = true, PixelPerfect = true):T
 	{
 		init(); // MEManager is initialized and added to plugins if it was not there already.
 		
-		var newReg:ObjectMouseData<T> = {
-			object: Object,
-			mouseChildren: MouseChildren,
-			mouseEnabled: MouseEnabled,
-			onMouseDown: OnMouseDown,
-			onMouseUp: OnMouseUp,
-			onMouseOver: OnMouseOver,
-			onMouseOut: OnMouseOut,
-			pixelPerfect: PixelPerfect
-		}
+		var newReg = new ObjectMouseData<T>(Object, OnMouseDown, OnMouseUp, OnMouseOver, OnMouseOut, MouseChildren, MouseEnabled, PixelPerfect);
 		
 		if (Std.is(Object, FlxSprite))
 		{
 			newReg.sprite = cast Object;
 		}
 		
-		_registeredObjects.unshift(newReg);
+		_registeredObjects.unshift(cast newReg);
 		return Object;
 	}
 	
@@ -112,7 +104,7 @@ class MouseEventManager extends FlxPlugin
 	 */
 	public static function reorder():Void
 	{
-		var orderedObjects = new Array<ObjectMouseData<Dynamic>>();
+		var orderedObjects = new Array<ObjectMouseData<FlxObject>>();
 		var group:Array<FlxBasic> = FlxG.state.members;
 		
 		traverseFlxGroup(FlxG.state, orderedObjects);
@@ -266,7 +258,7 @@ class MouseEventManager extends FlxPlugin
 		}
 	}
 
-	private static function getRegister<T:FlxObject>(Object:T, ?Register:Array<ObjectMouseData<Dynamic>>):ObjectMouseData<T>
+	private static function getRegister<T:FlxObject>(Object:T, ?Register:Array<ObjectMouseData<FlxObject>>):ObjectMouseData<T>
 	{
 		if (Register == null)
 		{
@@ -277,7 +269,7 @@ class MouseEventManager extends FlxPlugin
 		{
 			if (reg.object == Object)
 			{
-				return reg;
+				return cast reg;
 			}
 		}
 		
@@ -295,8 +287,8 @@ class MouseEventManager extends FlxPlugin
 			clearRegistry();
 		}
 		
-		_registeredObjects = new Array<ObjectMouseData<Dynamic>>();
-		_mouseOverObjects = new Array<ObjectMouseData<Dynamic>>();
+		_registeredObjects = new Array<ObjectMouseData<FlxObject>>();
+		_mouseOverObjects = new Array<ObjectMouseData<FlxObject>>();
 	}
 	
 	override public function destroy():Void
@@ -311,7 +303,7 @@ class MouseEventManager extends FlxPlugin
 	{
 		super.update();
 		
-		var currentOverObjects = new Array<ObjectMouseData<Dynamic>>();
+		var currentOverObjects = new Array<ObjectMouseData<FlxObject>>();
 		
 		for (reg in _registeredObjects)
 		{
@@ -455,14 +447,28 @@ class MouseEventManager extends FlxPlugin
 	}
 }
 
-typedef ObjectMouseData<T:FlxObject> = {
-	object:T,
-	?sprite:FlxSprite,
-	mouseChildren:Bool,
-	mouseEnabled:Bool,
-	onMouseDown:T->Void,
-	onMouseUp:T->Void,
-	onMouseOver:T->Void,
-	onMouseOut:T->Void,
-	pixelPerfect:Bool
+private class ObjectMouseData<T:FlxObject>
+{
+	public var object:T;
+	public var onMouseDown:T->Void;
+	public var onMouseUp:T->Void;
+	public var onMouseOver:T->Void;
+	public var onMouseOut:T->Void;
+	public var mouseChildren:Bool;
+	public var mouseEnabled:Bool;
+	public var pixelPerfect:Bool;
+	public var sprite:FlxSprite;
+	
+	public function new(object:T, onMouseDown:T->Void, onMouseUp:T->Void, onMouseOver:T->Void, onMouseOut:T->Void, 
+	                    mouseChildren:Bool, mouseEnabled:Bool, pixelPerfect:Bool)
+	{
+		this.object = object;
+		this.onMouseDown = onMouseDown;
+		this.onMouseUp = onMouseUp;
+		this.onMouseOver = onMouseOver;
+		this.onMouseOut = onMouseOut;
+		this.mouseChildren = mouseChildren;
+		this.mouseEnabled = mouseEnabled;
+		this.pixelPerfect = pixelPerfect;
+	}
 }
