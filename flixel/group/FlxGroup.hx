@@ -4,6 +4,7 @@ import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.FlxObject;
 import flixel.system.FlxCollisionType;
+import flixel.tile.FlxTilemap;
 
 /**
  * This is an organizational class that can update and render a bunch of FlxBasics.
@@ -15,7 +16,9 @@ class FlxGroup extends FlxTypedGroup<FlxBasic>
 	/**
 	 * Helper function for overlap functions in FlxObject and FlxTilemap.
 	 */
-	public static inline function overlaps(Callback:FlxBasic->Float->Float->Bool->FlxCamera->Bool, 
+	@:allow(flixel.FlxObject)
+	@:allow(flixel.tile.FlxTilemap)
+	private static inline function overlaps(Callback:FlxBasic->Float->Float->Bool->FlxCamera->Bool, 
 	                                       ObjectOrGroup:FlxBasic, X:Float, Y:Float, InScreenSpace:Bool, Camera:FlxCamera):Bool
 	{
 		var result:Bool = false;
