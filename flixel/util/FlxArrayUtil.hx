@@ -68,7 +68,7 @@ class FlxArrayUtil
 	 */
 	@:generic public static inline function shuffle<T>(Objects:Array<T>, HowManyTimes:Int):Array<T>
 	{
-		return FlxRandom.shuffleArray( Objects, HowManyTimes );
+		return FlxRandom.shuffleArray(Objects, HowManyTimes);
 	}
 	
 	/**
@@ -82,12 +82,12 @@ class FlxArrayUtil
 	 */
 	@:generic public static inline function getRandom<T>(Objects:Array<T>, StartIndex:Int = 0, EndIndex:Int = 0):T
 	{
-		return FlxRandom.getObject( Objects, StartIndex, EndIndex );
+		return FlxRandom.getObject(Objects, StartIndex, EndIndex);
 	}
 	
 	/**
 	 * Safely removes an element from an array by swapping it with the last element and calling pop()
-	 * (won't do anything if the array is not part of the array). This is a lot faster than regular splice(), 
+	 * (won't do anything if the element is not in the array). This is a lot faster than regular splice(), 
 	 * but it can only be used on arrays where order doesn't matter.
 	 * 
 	 * @param	array	The array to remove the element from

@@ -69,7 +69,7 @@ class PluginFrontEnd
 		// Don't add repeats
 		var i:Int = list.length - 1;
 		
-		while(i >= 0)
+		while (i >= 0)
 		{
 			if (list[i] == Plugin)
 			{
@@ -94,7 +94,7 @@ class PluginFrontEnd
 		var results:Bool = false;
 		var i:Int = list.length - 1;
 		
-		while(i >= 0)
+		while (i >= 0)
 		{
 			if (Std.is(list[i], ClassType))
 			{

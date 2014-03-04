@@ -21,7 +21,7 @@ class BitmapFrontEnd
 		clearCache();
 	}
 	
-	#if !flash
+	#if FLX_RENDER_TILE
 	public var whitePixel(get, null):CachedGraphics;
 	
 	private var _whitePixel:CachedGraphics;
@@ -85,9 +85,9 @@ class BitmapFrontEnd
 	 * @param	Key		The string key identifying the bitmap.
 	 * @return	Whether or not this file can be found in the cache.
 	 */
-	public function checkCache(Key:String):Bool
+	public inline function checkCache(Key:String):Bool
 	{
-		return (_cache.exists(Key) && _cache.get(Key) != null);
+		return (_cache.exists(Key) && (_cache.get(Key) != null));
 	}
 	
 	/**
@@ -100,7 +100,7 @@ class BitmapFrontEnd
 	 * @param	Key		Force the cache to use a specific Key to index the bitmap.
 	 * @return	The BitmapData we just created.
 	 */
-	public function create(Width:Int, Height:Int, Color:Int, Unique:Bool = false, Key:String = null):CachedGraphics
+	public function create(Width:Int, Height:Int, Color:Int, Unique:Bool = false, ?Key:String):CachedGraphics
 	{
 		var key:String = Key;
 		if (key == null)
@@ -127,7 +127,7 @@ class BitmapFrontEnd
 	 * @param	Key			Force the cache to use a specific Key to index the bitmap.
 	 * @return	The CachedGraphics we just created.
 	 */
-	public function add(Graphic:Dynamic, Unique:Bool = false, Key:String = null):CachedGraphics
+	public inline function add(Graphic:Dynamic, Unique:Bool = false, ?Key:String):CachedGraphics
 	{
 		return addWithSpaces(Graphic, 0, 0, 1, 1, Unique, Key);
 	}
@@ -145,7 +145,7 @@ class BitmapFrontEnd
 	 * @param	Key				Force the cache to use a specific Key to index the bitmap.
 	 * @return	The CachedGraphics we just created.
 	 */
-	public function addWithSpaces(Graphic:Dynamic, FrameWidth:Int, FrameHeight:Int, SpacingX:Int = 1, SpacingY:Int = 1, Unique:Bool = false, Key:String = null):CachedGraphics
+	public function addWithSpaces(Graphic:Dynamic, FrameWidth:Int, FrameHeight:Int, SpacingX:Int = 1, SpacingY:Int = 1, Unique:Bool = false, ?Key:String):CachedGraphics
 	{
 		if (Graphic == null)
 		{
@@ -155,19 +155,15 @@ class BitmapFrontEnd
 		var region:TextureRegion = null;
 		var graphic:CachedGraphics = null;
 		
-		var isClass:Bool = true;
-		var isBitmap:Bool = true;
-		var isRegion:Bool = true;
-		var isGraphics:Bool = true;
+		var isClass:Bool = false;
+		var isBitmap:Bool = false;
+		var isRegion:Bool = false;
+		var isGraphics:Bool = false;
 		
 		if (Std.is(Graphic, CachedGraphics))
 		{
-			isClass = false;
-			isBitmap = false;
-			isRegion = false;
-			isGraphics = true;
-			
-			graphic = cast (Graphic, CachedGraphics);
+			isGraphics = true;	
+			graphic = cast(Graphic, CachedGraphics);
 			
 			if (!Unique && (FrameWidth <= 0 && FrameHeight <= 0))
 			{
@@ -177,32 +173,19 @@ class BitmapFrontEnd
 		else if (Std.is(Graphic, Class))
 		{
 			isClass = true;
-			isBitmap = false;
-			isRegion = false;
-			isGraphics = false;
 		}
 		else if (Std.is(Graphic, BitmapData))
 		{
-			isClass = false;
 			isBitmap = true;
-			isRegion = false;
-			isGraphics = false;
 		}
 		else if (Std.is(Graphic, TextureRegion))
 		{
-			isClass = false;
-			isBitmap = false;
 			isRegion = true;
-			isGraphics = false;
-			
 			region = cast(Graphic, TextureRegion);
 		}
 		else if (Std.is(Graphic, String))
 		{
-			isClass = false;
-			isBitmap = false;
-			isRegion = false;
-			isGraphics = false;
+			// don't need to set any of the flags
 		}
 		else
 		{
@@ -375,7 +358,7 @@ class BitmapFrontEnd
 			do
 			{
 				ukey = baseKey + inc++;
-			} while(checkCache(ukey));
+			} while (checkCache(ukey));
 			baseKey = ukey;
 		}
 		return baseKey;
@@ -420,6 +403,7 @@ class BitmapFrontEnd
 	
 	public function inOpenFlAssets(bitmap:BitmapData):Bool
 	{
+      #if !nme
 		var bitmapDataCache = Assets.cache.bitmapData;
 		if (bitmapDataCache != null)
 		{
@@ -431,6 +415,7 @@ class BitmapFrontEnd
 				}
 			}
 		}
+      #end
 		return false;
 	}
 }

@@ -38,9 +38,9 @@ class FlxFrame
 		_tileSheet = tileSheet;
 		additionalAngle = 0;
 		
-		sourceSize = new FlxPoint();
-		offset = new FlxPoint();
-		center = new FlxPoint();
+		sourceSize = FlxPoint.get();
+		offset = FlxPoint.get();
+		center = FlxPoint.get();
 	}
 	
 	public function getBitmap():BitmapData

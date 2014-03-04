@@ -66,7 +66,7 @@ class FrameRecord
 			var object:CodeValuePair;
 			var i:Int = 0;
 			var l:Int = keys.length;
-			while(i < l)
+			while (i < l)
 			{
 				if (i > 0)
 				{
@@ -105,7 +105,7 @@ class FrameRecord
 		var mouseData:String = array[1];
 		
 		//parse keyboard data
-		if(keyData.length > 0)
+		if (keyData.length > 0)
 		{
 			//get keystroke data pairs
 			array = keyData.split(",");
@@ -114,10 +114,10 @@ class FrameRecord
 			var keyPair:Array<String>;
 			i = 0;
 			l = array.length;
-			while(i < l)
+			while (i < l)
 			{
 				keyPair = array[i++].split(":");
-				if(keyPair.length == 2)
+				if (keyPair.length == 2)
 				{
 					if (keys == null)
 					{
@@ -129,7 +129,7 @@ class FrameRecord
 		}
 		
 		//mouse data is just 4 integers, easy peezy
-		if(mouseData.length > 0)
+		if (mouseData.length > 0)
 		{
 			array = mouseData.split(",");
 			if (array.length >= 4)

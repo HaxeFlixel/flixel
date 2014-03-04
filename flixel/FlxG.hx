@@ -57,6 +57,7 @@ import flixel.input.FlxSwipe;
 /**
  * Global helper class for audio, input, the camera system, the debugger and other global properties.
  */
+@:allow(flixel.FlxGame)
 class FlxG 
 {
 	/**
@@ -88,7 +89,7 @@ class FlxG
 	 * The HaxeFlixel version, in semantic versioning syntax. Use Std.string()
 	 * on it to get a String formatted like this: "HaxeFlixel MAJOR.MINOR.PATCH-PATCH_VERSION".
 	 */ 
-	public static var VERSION(default, null):FlxVersion = new FlxVersion(3, 1, 1, "dev");
+	public static var VERSION(default, null):FlxVersion = new FlxVersion(3, 3, 0, "dev");
 	
 	/**
 	 * Internal tracker for game object.
@@ -113,12 +114,11 @@ class FlxG
 	 * How many times you want your game to step each second. More steps usually means greater responsiveness, 
 	 * but it can also slowdown your game if the stage can't keep up with the update routine. NOTE: This is NOT the same thing as the Update framerate!
 	 */
-	public static var drawFramerate(get, set):Int;
+	public static var drawFramerate(default, set):Int;
 	
 	/**
 	 * Represents the amount of time in seconds that passed since last frame.
 	 */
-	@:allow(flixel.FlxGame)
 	public static var elapsed(default, null):Float = 0;
 	
 	/**
@@ -140,12 +140,12 @@ class FlxG
 	 * Use this to toggle between fullscreen and normal mode. Works in cpp and flash.
 	 * You can easily toggle fullscreen with eg: FlxG.fullscreen = !FlxG.fullscreen;
 	 */
-	@isVar public static var fullscreen(default, set):Bool = false;
+	public static var fullscreen(default, set):Bool = false;
 	/**
 	 * The dimensions of the game world, used by the quad tree for collisions and overlap checks.
 	 * Use .set() instead of creating a new object!
 	 */
-	public static var worldBounds(default, null):FlxRect = new FlxRect();
+	public static var worldBounds(default, null):FlxRect = FlxRect.get();
 	
 	/**
 	 * A FlxSave used internally by flixel to save sound preferences and 
@@ -173,7 +173,6 @@ class FlxG
 	/**
 	 * Contains all "swipes" from both mouse and touch input that have just ended.
 	 */
-	@:allow(flixel.FlxGame)
 	public static var swipes(default, null):Array<FlxSwipe> = [];
 	#end
 
@@ -185,7 +184,7 @@ class FlxG
 	public static var keys(default, null):FlxKeyboard;
 	#end
 	
-	#if (!FLX_NO_GAMEPAD && (cpp || neko || js))
+	#if !FLX_NO_GAMEPAD
 	/**
 	 * A reference to a FlxGamepadManager object.
 	 */
@@ -279,7 +278,7 @@ class FlxG
 	 */
 	public static inline function resetGame():Void
 	{
-		game.resetState = true;
+		game._resetGame = true;
 	}
 	
 	/**
@@ -287,7 +286,7 @@ class FlxG
 	 */
 	public static inline function switchState(State:FlxState):Void
 	{
-		game.requestedState = State; 
+		game._requestedState = State; 
 	}
 	
 	/**
@@ -296,13 +295,6 @@ class FlxG
 	public static inline function resetState():Void
 	{
 		switchState(Type.createInstance(Type.getClass(state), []));
-		
-		#if !FLX_NO_DEBUG
-		if (Std.is(game.requestedState, FlxSubState))
-		{
-			throw "You can't set FlxSubState class instance as the state for your game";
-		}
-		#end
 	}
 
 	/**
@@ -395,7 +387,7 @@ class FlxG
 	 */
 	@:generic public static function addChildBelowMouse<T:DisplayObject>(Child:T, IndexModifier:Int = 0):T
 	{
-		var index = game.getChildIndex(game.inputContainer);
+		var index = game.getChildIndex(game._inputContainer);
 		var max = game.numChildren;
 		
 		index = FlxMath.maxAdd(index, IndexModifier, max);
@@ -404,14 +396,17 @@ class FlxG
 	}
 	
 	/**
-	 * Removes a child from the flixel display list.
+	 * Removes a child from the flixel display list, if it is part of it.
 	 * 
 	 * @param 	Child	The DisplayObject to add
 	 * @return	The removed DisplayObject
 	 */
 	@:generic public static inline function removeChild<T:DisplayObject>(Child:T):T
 	{
-		game.removeChild(Child);
+		if (game.contains(Child))
+		{
+			game.removeChild(Child);
+		}
 		return Child;
 	}
 	
@@ -429,7 +424,6 @@ class FlxG
 	/**
 	 * Called by FlxGame to set up FlxG during FlxGame's constructor.
 	 */
-	@:allow(flixel.FlxGame) // Access to this function is only needed in FlxGame::new()
 	private static function init(Game:FlxGame, Width:Int, Height:Int, Zoom:Float):Void
 	{	
 		// TODO: check this later on real device
@@ -448,14 +442,14 @@ class FlxG
 		#end
 		
 		#if !FLX_NO_MOUSE
-		mouse = inputs.add(new FlxMouse(game.inputContainer));
+		mouse = inputs.add(new FlxMouse(game._inputContainer));
 		#end
 		
 		#if !FLX_NO_TOUCH
 		touches = inputs.add(new FlxTouchManager());
 		#end
 		
-		#if (!FLX_NO_GAMEPAD && (cpp||neko||js))
+		#if !FLX_NO_GAMEPAD
 		gamepads = inputs.add(new FlxGamepadManager());
 		#end
 		
@@ -475,7 +469,6 @@ class FlxG
 	/**
 	 * Called whenever the game is reset, doesn't have to do quite as much work as the basic initialization stuff.
 	 */
-	@:allow(flixel.FlxGame.resetGame) // Access to this function is only needed in FlxGame::resetGame()
 	private static function reset():Void
 	{
 		PxBitmapFont.clearStorage();
@@ -495,13 +488,13 @@ class FlxG
 	private static function set_scaleMode(ScaleMode:BaseScaleMode):BaseScaleMode
 	{
 		_scaleMode = ScaleMode;
-		resizeGame(FlxG.stage.stageWidth, FlxG.stage.stageHeight);
+		game.onResize();
 		return ScaleMode;
 	}
 	
 	private static inline function get_updateFramerate():Int
 	{
-		return Std.int(1000 / game.stepMS);
+		return Std.int(1000 / game._stepMS);
 	}
 	
 	private static function set_updateFramerate(Framerate:Int):Int
@@ -511,25 +504,15 @@ class FlxG
 			log.warn("FlxG.framerate: The game's framerate shouldn't be smaller than the flash framerate, since it can stop your game from updating.");
 		}
 		
-		game.stepMS = Std.int(Math.abs(1000 / Framerate));
-		game.stepSeconds = (game.stepMS / 1000);
+		game._stepMS = Std.int(Math.abs(1000 / Framerate));
+		game._stepSeconds = (game._stepMS / 1000);
 		
-		if (game.maxAccumulation < game.stepMS)
+		if (game._maxAccumulation < game._stepMS)
 		{
-			game.maxAccumulation = game.stepMS;
+			game._maxAccumulation = game._stepMS;
 		}
 		
 		return Framerate;
-	}
-	
-	private static function get_drawFramerate():Int
-	{
-		if (game.stage != null)
-		{
-			return Std.int(game.stage.frameRate);
-		}
-		
-		return 0;
 	}
 	
 	private static function set_drawFramerate(Framerate:Int):Int
@@ -539,18 +522,18 @@ class FlxG
 			log.warn("FlxG.drawFramerate: The update framerate shouldn't be smaller than the draw framerate, since it can stop your game from updating.");
 		}
 		
-		game.drawFramerate = Std.int(Math.abs(Framerate));
+		drawFramerate = Std.int(Math.abs(Framerate));
 		
 		if (game.stage != null)
 		{
-			game.stage.frameRate = game.drawFramerate;
+			game.stage.frameRate = drawFramerate;
 		}
 		
-		game.maxAccumulation = Std.int(2000 / game.drawFramerate) - 1;
+		game._maxAccumulation = Std.int(2000 / drawFramerate) - 1;
 		
-		if (game.maxAccumulation < game.stepMS)
+		if (game._maxAccumulation < game._stepMS)
 		{
-			game.maxAccumulation = game.stepMS;
+			game._maxAccumulation = game._stepMS;
 		}
 		
 		return Framerate;
@@ -561,10 +544,6 @@ class FlxG
 		if (Value)
 		{
 			stage.displayState = StageDisplayState.FULL_SCREEN;
-			#if flash
-			camera.x = (stage.fullScreenWidth - width * camera.zoom) / 2;
-			camera.y = (stage.fullScreenHeight - height * camera.zoom) / 2;
-			#end
 		}
 		else
 		{
@@ -581,6 +560,6 @@ class FlxG
 	
 	private static inline function get_state():FlxState
 	{
-		return game.state;
+		return game._state;
 	}
 }

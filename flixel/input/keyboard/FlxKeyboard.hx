@@ -395,7 +395,7 @@ class FlxKeyboard implements IFlxInput
 			}
 			
 			#if (!mobile && !FLX_NO_SOUND_TRAY)
-			if(FlxG.game.soundTray != null)
+			if (FlxG.game.soundTray != null)
 			{
 				FlxG.game.soundTray.show();
 			}
@@ -408,7 +408,7 @@ class FlxKeyboard implements IFlxInput
 			FlxG.sound.volume -= 0.1;
 			
 			#if (!mobile && !FLX_NO_SOUND_TRAY)
-			if(FlxG.game.soundTray != null)
+			if (FlxG.game.soundTray != null)
 			{
 				FlxG.game.soundTray.show();
 			}
@@ -421,7 +421,7 @@ class FlxKeyboard implements IFlxInput
 			FlxG.sound.volume += 0.1;
 			
 			#if (!mobile && !FLX_NO_SOUND_TRAY)
-			if(FlxG.game.soundTray != null)
+			if (FlxG.game.soundTray != null)
 			{
 				FlxG.game.soundTray.show();
 			}

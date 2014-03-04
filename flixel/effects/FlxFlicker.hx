@@ -3,14 +3,19 @@ package flixel.effects;
 import flixel.FlxObject;
 import flixel.util.FlxPool;
 import flixel.util.FlxTimer;
+import flixel.interfaces.IFlxDestroyable;
 
 /**
 * The retro flickering effect with callbacks.
 * You can use this as a mixin in any FlxObject subclass or by calling the static functions.
 * @author pixelomatic
 */
-class FlxFlicker
+class FlxFlicker implements IFlxDestroyable
 {
+	/**
+	* Pool for reusing FlxFlicker objects.
+	*/
+	public static var pool:FlxPool<FlxFlicker> = new FlxPool<FlxFlicker>(FlxFlicker);
 	/**
 	* The flickering object.
 	*/
@@ -46,128 +51,10 @@ class FlxFlicker
 	*/
 	public var interval(default, null):Float;
 	
-	// Private API
-	/**
-	* Internal pool for reusing FlxFlicker objects.
-	*/
-	private static var _pool:FlxPool<FlxFlicker> = new FlxPool<FlxFlicker>();
 	/**
 	* Internal map for looking up which objects are currently flickering and getting their flicker data.
 	*/
 	private static var _boundObjects:Map<FlxObject, FlxFlicker> = new Map<FlxObject, FlxFlicker>();
-	/**
-	* Internal constructor. Just use static methods.
-	*/
-	private function new() {  }
-	
-	/**
-	* Recycles a FlxFlicker instance from pool.
-	* @param  Object
-	* @param  Duration
-	* @param  Interval
-	* @param  EndVisibility
-	* @param  ?CompletionCallback
-	* @param  ?ProgressCallback
-	* @return The recycled instance.
-	*/
-	private static function recycle(Object:FlxObject, Duration:Float, Interval:Float,  EndVisibility:Bool, ?CompletionCallback:FlxFlicker->Void, ?ProgressCallback:FlxFlicker->Void):FlxFlicker
-	{
-		var flicker:FlxFlicker = _pool.get();
-		flicker.reset(Object, Duration, Interval, EndVisibility, CompletionCallback, ProgressCallback);
-		return flicker;
-	}
-	
-	/**
-	* Put instance to pool for reuse.
-	* @param  Flicker The flicker instance.
-	*/
-	private static function put(Flicker:FlxFlicker):Void
-	{
-		_pool.put(Flicker);
-	}
-	
-	/**
-	* Resets the state of flicker for reuse.
-	* @param  Object
-	* @param  Duration
-	* @param  Interval
-	* @param  EndVisibility
-	* @param  ?CompletionCallback
-	* @param  ?ProgressCallback
-	*/
-	private function reset(Object:FlxObject, Duration:Float, Interval:Float, EndVisibility:Bool, ?CompletionCallback:FlxFlicker->Void, ?ProgressCallback:FlxFlicker->Void):Void
-	{
-		object = Object;
-		duration = Duration;
-		interval = Interval;
-		completionCallback = CompletionCallback;
-		progressCallback = ProgressCallback;
-		endVisibility = EndVisibility;
-	}
-	
-	/**
-	* Starts flickering.
-	*/
-	private function start():Void
-	{
-		timer = FlxTimer.recycle();
-		timer.run(interval, flickerProgress, Std.int(duration / interval));
-	}
-	
-	/**
-	* Prematurely ends flickering.
-	*/
-	private function stop():Void
-	{
-		timer.abort();
-		object.visible = true;
-		release();
-	}
-	
-	/**
-	* Unbinds the object from flicker and releases it into pool for reuse.
-	*/
-	private function release():Void
-	{
-		_boundObjects.remove(object);
-		FlxFlicker.put(this);
-	}
-	
-	/**
-	* Just a helper function for flicker() to update object's visibility.
-	*/
-	private function flickerProgress(Timer:FlxTimer):Void
-	{
-		object.visible = !object.visible;
-		
-		if (progressCallback != null)
-		{
-			progressCallback(this);
-		}
-		
-		if (Timer.loops > 0 && Timer.loopsLeft == 0)
-		{
-			object.visible = endVisibility;
-			if (completionCallback != null)
-			{
-				completionCallback(this);
-			}
-			release();
-		}
-	}
-	
-	/**
-	* Nullifies the references to prepare object for reuse and avoid memory leaks.
-	*/
-	public function destroy():Void
-	{
-		object = null;
-		timer = null;
-		completionCallback = null;
-		progressCallback = null;
-	}
-	
-	// Public API
 	
 	/**
 	* A simple flicker effect for sprites using a ping-pong tween by toggling visibility.
@@ -200,9 +87,9 @@ class FlxFlicker
 			Interval = FlxG.elapsed;
 		}
 		
-		var fl:FlxFlicker = FlxFlicker.recycle(Object, Duration, Interval, EndVisibility, CompletionCallback, ProgressCallback);
-		_boundObjects[Object] = fl;
-		fl.start();
+		var flicker:FlxFlicker = pool.get();
+		flicker.start(Object, Duration, Interval, EndVisibility, CompletionCallback, ProgressCallback);
+		_boundObjects[Object] = flicker;
 	}
 	
 	/**
@@ -226,4 +113,82 @@ class FlxFlicker
 			boundFlicker.stop();
 		}
 	}
+	
+	/**
+	* Nullifies the references to prepare object for reuse and avoid memory leaks.
+	*/
+	public function destroy():Void
+	{
+		object = null;
+		timer = null;
+		completionCallback = null;
+		progressCallback = null;
+	}
+	
+	/**
+	* Starts flickering behavior.
+	* @param  Object
+	* @param  Duration
+	* @param  Interval
+	* @param  EndVisibility
+	* @param  ?CompletionCallback
+	* @param  ?ProgressCallback
+	*/
+	private function start(Object:FlxObject, Duration:Float, Interval:Float, EndVisibility:Bool, ?CompletionCallback:FlxFlicker->Void, ?ProgressCallback:FlxFlicker->Void):Void
+	{
+		object = Object;
+		duration = Duration;
+		interval = Interval;
+		completionCallback = CompletionCallback;
+		progressCallback = ProgressCallback;
+		endVisibility = EndVisibility;
+		timer = FlxTimer.start(interval, flickerProgress, Std.int(duration / interval));
+	}
+	
+	/**
+	* Prematurely ends flickering.
+	*/
+	private function stop():Void
+	{
+		timer.abort();
+		object.visible = true;
+		release();
+	}
+	
+	/**
+	* Unbinds the object from flicker and releases it into pool for reuse.
+	*/
+	private function release():Void
+	{
+		_boundObjects.remove(object);
+		pool.put(this);
+	}
+	
+	/**
+	* Just a helper function for flicker() to update object's visibility.
+	*/
+	private function flickerProgress(Timer:FlxTimer):Void
+	{
+		object.visible = !object.visible;
+		
+		if (progressCallback != null)
+		{
+			progressCallback(this);
+		}
+		
+		if (Timer.loops > 0 && Timer.loopsLeft == 0)
+		{
+			object.visible = endVisibility;
+			if (completionCallback != null)
+			{
+				completionCallback(this);
+			}
+			release();
+		}
+	}
+	
+	/**
+	* Internal constructor. Use static methods.
+	*/
+	private function new() {  }
 }

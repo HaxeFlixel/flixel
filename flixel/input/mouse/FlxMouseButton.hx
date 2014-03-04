@@ -1,5 +1,6 @@
 package flixel.input.mouse;
 
+#if !FLX_NO_MOUSE
 import flash.events.MouseEvent;
 import flixel.FlxG;
 import flixel.input.FlxSwipe;
@@ -32,7 +33,7 @@ class FlxMouseButton implements IFlxDestroyable
 	public function new(ID:Int)
 	{
 		_ID = ID;
-		_justPressedPosition = new FlxPoint();
+		_justPressedPosition = FlxPoint.get();
 	}
 	
 	/**
@@ -176,3 +177,4 @@ class FlxMouseButton implements IFlxDestroyable
 	 */
 	public inline function justReleased():Bool { return (current == JUST_RELEASED || current == FAST_PRESS_RELEASE); }
 }
+#end

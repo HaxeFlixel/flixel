@@ -41,8 +41,6 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	private var _members:Array<T>;
 	
 	/**
-	 * Create a new FlxTypedGroup
-	 * 
 	 * @param	MaxSize		Maximum amount of members allowed
 	 */
 	public function new(MaxSize:Int = 0)
@@ -333,7 +331,8 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	}
 	
 	/**
-	 * Replaces an existing FlxBasic with a new one.
+	 * Replaces an existing FlxBasic with a new one. 
+	 * Does not do anything and returns null if the old object is not part of the group.
 	 * 
 	 * @param	OldObject	The object you want to replace.
 	 * @param	NewObject	The new object you want to use instead.
@@ -690,7 +689,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	{
 		for (member in _members)
 		{
-			if(member != null)
+			if (member != null)
 			{
 				Function(member);
 			}

@@ -53,6 +53,41 @@ class FlxTween implements IFlxDestroyable
 	public static var manager:TweenManager;
 	
 	/**
+	 * Creates a singleVar or multiVar FlxTween based on how many fields you want to tween.
+	 * Shorthand for creating a VarTween or MultiVar tween, starting it and adding it to the TweenPlugin.
+	 * VarTween: FlxTween.var(Object, { x: 500 }, 500, 2.0, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT });
+	 * Example: FlxTween.var(Object, { x: 500, y: 350 }, 500, 2.0, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT });
+	 * 
+	 * @param	Object		The object containing the properties to tween.
+	 * @param	Values		The object containing values to tween (eg. { x: 500 } for singleVar, or { x: 500, y: 350 } for multiVar).
+	 * @param	Duration	Duration of the tween in seconds.
+	 * @param	Options		An object containing key/value pairs of the following optional parameters:
+	 * 						type		Tween type.
+	 * 						complete	Optional completion callback function.
+	 * 						ease		Optional easer function.
+	 *  					startDelay	Seconds to wait until starting this tween, 0 by default.
+	 *  					loopDelay	Seconds to wait between loops of this tween, 0 by default.
+	 * @return	FlxTween that was added to TweenManager plugin.
+	 */
+	public static function tween(Object:Dynamic, Values:Dynamic, Duration:Float, ?Options:TweenOptions):FlxTween
+	{
+		if (Options == null)
+		{
+			Options = { type : ONESHOT };
+		}
+		
+		var fields = Reflect.fields(Values);
+		if (fields.length == 1)
+		{
+			return cast singleVar(Object, fields[0], Reflect.field(Values, fields[0]), Duration, Options);
+		}
+		else
+		{
+			return cast multiVar(Object, Values, Duration, Options);
+		}
+	}
+	
+	/**
 	 * Tweens numeric public property of an Object. Shorthand for creating a VarTween tween, starting it and adding it to the TweenPlugin.
 	 * Example: FlxTween.singleVar(Object, "x", 500, 2.0, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT });
 	 * 
@@ -97,7 +132,7 @@ class FlxTween implements IFlxDestroyable
 	 * 						loopDelay	Seconds to wait between loops of this tween, 0 by default.
 	 * @return	The added MultiVarTween object.
 	 */
-	public static function multiVar(Object:Dynamic, Values:Dynamic, Duration:Float, ?Options:TweenOptions):MultiVarTween
+	public static function multiVar(Object:Dynamic, Values:Dynamic, Duration:Float, ?Options:TweenOptions):FlxTween
 	{
 		if (Options == null)
 		{
@@ -377,7 +412,7 @@ class FlxTween implements IFlxDestroyable
 	
 	/**
 	 * Create a new LinearPath tween.
-	 * Example: FlxTween.linearPath(Object, [new FlxPoint(0, 0), new FlxPoint(100, 100)], 2, true, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT });
+	 * Example: FlxTween.linearPath(Object, [FlxPoint.get(0, 0), FlxPoint.get(100, 100)], 2, true, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT });
 	 * 
 	 * @param	Object 			The object to move (FlxObject or FlxSpriteGroup)
 	 * @param	Points			An array of at least 2 FlxPoints defining the path
@@ -417,7 +452,7 @@ class FlxTween implements IFlxDestroyable
 	
 	/**
 	 * Create a new QuadPath tween.
-	 * Example: FlxTween.quadPath(Object, [new FlxPoint(0, 0), new FlxPoint(200, 200), new FlxPoint(400, 0)], 2, true, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT });
+	 * Example: FlxTween.quadPath(Object, [FlxPoint.get(0, 0), FlxPoint.get(200, 200), FlxPoint.get(400, 0)], 2, true, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT });
 	 * 
 	 * @param	Object			The object to move (FlxObject or FlxSpriteGroup)
 	 * @param	Points			An array of at least 3 FlxPoints defining the path

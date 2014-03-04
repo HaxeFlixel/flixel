@@ -6,6 +6,7 @@ import flash.text.TextField;
 import flash.text.TextFieldType;
 import flash.text.TextFormat;
 import flixel.FlxG;
+import flixel.interfaces.IFlxDestroyable;
 import flixel.system.FlxAssets;
 import flixel.util.FlxPoint;
 import flixel.util.FlxStringUtil;
@@ -15,7 +16,7 @@ import openfl.Assets;
  * Helper class for the debugger overlay's Watch window.
  * Handles the display and modification of game variables on the fly.
  */
-class WatchEntry
+class WatchEntry implements IFlxDestroyable
 {
 	/**
 	 * The Object being watched.
@@ -58,19 +59,21 @@ class WatchEntry
 	 * Creates a new watch entry in the watch window. 
 	 * Will be a "quickWatch" when Obj and Field are null, but a Custom name is set.
 	 * 
-	 * @param Y				The initial height in the Watch window.
-	 * @param NameWidth		The initial width of the name field.
-	 * @param ValueWidth	The initial width of the value field.
-	 * @param Obj			The Object containing the variable we want to watch.
-	 * @param Field			The variable name we want to watch.
-	 * @param Custom		A custom display name (optional).
+	 * @param 	Y			The initial height in the Watch window.
+	 * @param 	NameWidth	The initial width of the name field.
+	 * @param 	ValueWidth	The initial width of the value field.
+	 * @param 	Obj			The Object containing the variable we want to watch.
+	 * @param 	Field		The variable name we want to watch.
+	 * @param 	Custom		A custom display name (optional).
 	 */
-	public function new(Y:Float, NameWidth:Float, ValueWidth:Float, Obj:Dynamic, Field:String, Custom:String = null)
+	public function new(Y:Float, NameWidth:Float, ValueWidth:Float, Obj:Dynamic, Field:String, ?Custom:String)
 	{
 		editing = false;
 		
 		if (Obj == null && Field == null && Custom != null)
+		{
 			quickWatch = true;
+		}
 		
 		custom = Custom;
 		
@@ -113,7 +116,9 @@ class WatchEntry
 		// quickWatch is green, normal watch is white
 		var color:Int = 0xffffff;
 		if (quickWatch)
+		{
 			color = 0xA5F1ED;
+		}
 		
 		_whiteText = new TextFormat(fontName, 12, color);
 		_blackText = new TextFormat(fontName, 12, 0);
@@ -187,7 +192,9 @@ class WatchEntry
 		{
 			nameDisplay.text = "";
 			if (NameWidth > 120)
+			{
 				nameDisplay.appendText(FlxStringUtil.getClassName(object, true) + ".");
+			}
 			
 			nameDisplay.appendText(field);
 		}
@@ -199,7 +206,8 @@ class WatchEntry
 	 */
 	public function updateValue():Bool
 	{
-		if (editing || quickWatch) {
+		if (editing || quickWatch) 
+		{
 			return false;
 		}
 		
@@ -218,7 +226,7 @@ class WatchEntry
 	{
 		editing = true;
 		#if !FLX_NO_KEYBOARD
-			FlxG.keys.enabled = false;
+		FlxG.keys.enabled = false;
 		#end
 		oldValue = Reflect.getProperty(object, field);
 		valueDisplay.type = TextFieldType.INPUT;
@@ -273,14 +281,26 @@ class WatchEntry
 			var yValue:Float = Std.parseFloat(yString);
 			
 			if (!Math.isNaN(xValue)) 
+			{
 				Reflect.setField(property, "x", xValue);
+			}
 			if (!Math.isNaN(yValue)) 
+			{
 				Reflect.setField(property, "y", yValue);
+			}
 		}
 		else
+		{
 			Reflect.setProperty(object, field, valueDisplay.text); 
+		}
 		
 		doneEditing();
+	}
+	
+	public function toString():String
+	{
+		return FlxStringUtil.getDebugString([ { label: "object", value: FlxStringUtil.getClassName(object, true) },
+		                                      { label: "field", value: field } ]);
 	}
 	
 	/**
@@ -294,7 +314,7 @@ class WatchEntry
 		valueDisplay.background = false;
 		editing = false;
 		#if !FLX_NO_KEYBOARD
-			FlxG.keys.enabled = true;
+		FlxG.keys.enabled = true;
 		#end
 	}
 }

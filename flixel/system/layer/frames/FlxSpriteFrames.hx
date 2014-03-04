@@ -1,6 +1,8 @@
 package flixel.system.layer.frames;
 
-class FlxSpriteFrames
+import flixel.interfaces.IFlxDestroyable;
+
+class FlxSpriteFrames implements IFlxDestroyable
 {
 	public var frames:Array<FlxFrame>;
 	public var framesHash:Map<String, FlxFrame>;

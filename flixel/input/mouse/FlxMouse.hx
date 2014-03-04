@@ -1,5 +1,6 @@
 package flixel.input.mouse;
 
+#if !FLX_NO_MOUSE
 import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.Sprite;
@@ -9,8 +10,10 @@ import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.Lib;
 import flash.ui.Mouse;
+#if (flash && !FLX_NO_NATIVE_CURSOR)
 import flash.ui.MouseCursor;
 import flash.ui.MouseCursorData;
+#end
 import flash.Vector;
 import flixel.FlxCamera;
 import flixel.FlxG;
@@ -68,7 +71,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	 */
 	public var justReleased(get, never):Bool;
 
-	#if (!FLX_NO_MOUSE_ADVANCED && !js)
+	#if !FLX_NO_MOUSE_ADVANCED
 	/**
 	 * Check to see if the right mouse button is pressed.
 	 */
@@ -101,7 +104,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	 */
 	private var _leftButton:FlxMouseButton;
 	
-	#if (!FLX_NO_MOUSE_ADVANCED && !js)
+	#if !FLX_NO_MOUSE_ADVANCED
 	/**
 	 * The middle mouse button.
 	 */
@@ -311,7 +314,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		}
 		if (point == null)
 		{
-			point = new FlxPoint();
+			point = FlxPoint.get();
 		}
 		getScreenPosition(Camera, _point);
 		point.set((_point.x + Camera.scroll.x), (_point.y + Camera.scroll.y));
@@ -334,7 +337,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		}
 		if (point == null)
 		{
-			point = new FlxPoint();
+			point = FlxPoint.get();
 		}
 		point.x = (_globalScreenPosition.x - Camera.x) / Camera.zoom;
 		point.y = (_globalScreenPosition.y - Camera.y) / Camera.zoom;
@@ -356,7 +359,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		#end
 		
 		_leftButton   = FlxG.safeDestroy(_leftButton);
-		#if (!FLX_NO_MOUSE_ADVANCED && !js)
+		#if !FLX_NO_MOUSE_ADVANCED
 		_middleButton = FlxG.safeDestroy(_middleButton);
 		_rightButton  = FlxG.safeDestroy(_rightButton);
 		#end
@@ -375,7 +378,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	{
 		_leftButton.reset();
 		
-		#if (!FLX_NO_MOUSE_ADVANCED && !js)
+		#if !FLX_NO_MOUSE_ADVANCED
 		_middleButton.reset();
 		_rightButton.reset();
 		#end
@@ -393,8 +396,8 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		cursorContainer.mouseChildren = false;
 		cursorContainer.mouseEnabled = false;
 		
-		_point = new FlxPoint();
-		_globalScreenPosition = new FlxPoint();
+		_point = FlxPoint.get();
+		_globalScreenPosition = FlxPoint.get();
 		
 		_leftButton = new FlxMouseButton(FlxMouseButton.LEFT);
 		
@@ -402,7 +405,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		stage.addEventListener(MouseEvent.MOUSE_DOWN, _leftButton.onDown);
 		stage.addEventListener(MouseEvent.MOUSE_UP, _leftButton.onUp);
 		
-		#if (!FLX_NO_MOUSE_ADVANCED && !js)
+		#if !FLX_NO_MOUSE_ADVANCED
 		_middleButton = new FlxMouseButton(FlxMouseButton.MIDDLE);
 		_rightButton = new FlxMouseButton(FlxMouseButton.RIGHT);
 		
@@ -438,7 +441,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		
 		// Update the buttons
 		_leftButton.update();
-		#if (!FLX_NO_MOUSE_ADVANCED && !js)
+		#if !FLX_NO_MOUSE_ADVANCED
 		_middleButton.update();
 		_rightButton.update();
 		#end
@@ -522,7 +525,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		wheel = FlashEvent.delta;
 	}
 	
-	#if (!FLX_NO_MOUSE_ADVANCED && !js)
+	#if !FLX_NO_MOUSE_ADVANCED
 	/**
 	 * We're detecting the mouse leave event to prevent a bug where `pressed` remains true 
 	 * for the middle and right mouse button when pressed and dragged outside the window.
@@ -540,7 +543,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	private inline function get_justPressed():Bool        { return _leftButton.justPressed();    }
 	private inline function get_justReleased():Bool       { return _leftButton.justReleased();   }
 
-	#if (!FLX_NO_MOUSE_ADVANCED && !js)
+	#if !FLX_NO_MOUSE_ADVANCED
 	private inline function get_pressedRight():Bool       { return _rightButton.pressed();       }
 	private inline function get_justPressedRight():Bool   { return _rightButton.justPressed();   }
 	private inline function get_justReleasedRight():Bool  { return _rightButton.justReleased();  }
@@ -663,3 +666,4 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		updateCursor();
 	}
 }
+#end

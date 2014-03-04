@@ -53,8 +53,8 @@ class TexturePackerData implements IFlxDestroyable
 			texFrame.rotated = frame.rotated;
 			texFrame.name = frame.filename;
 			
-			texFrame.sourceSize = new FlxPoint(frame.sourceSize.w, frame.sourceSize.h);
-			texFrame.offset = new FlxPoint(0, 0);
+			texFrame.sourceSize = FlxPoint.get(frame.sourceSize.w, frame.sourceSize.h);
+			texFrame.offset = FlxPoint.get(0, 0);
 			texFrame.offset.set(frame.spriteSourceSize.x, frame.spriteSourceSize.y);
 			
 			if (frame.rotated)

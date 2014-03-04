@@ -168,13 +168,13 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 		endGreen = new Bounds<Float>(1.0, 1.0);
 		endBlue = new Bounds<Float>(1.0, 1.0);
 		
-		acceleration = new FlxPoint(0, 0);
+		acceleration = FlxPoint.get(0, 0);
 		_particleClass = cast FlxParticle;
-		particleDrag = new FlxPoint();
+		particleDrag = FlxPoint.get();
 		
 		life = new Bounds<Float>(3, 3);
 		exists = false;
-		_point = new FlxPoint();
+		_point = FlxPoint.get();
 	}
 	
 	/**
@@ -242,11 +242,11 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 			
 			if (Multiple)
 			{
-				randomFrame = FlxRandom.intRanged( 0, totalFrames - 1 );
+				randomFrame = FlxRandom.intRanged(0, totalFrames - 1);
 				
 				if (bakedRotationAngles > 0)
 				{
-					#if flash
+					#if FLX_RENDER_BLIT
 					particle.loadRotatedGraphic(Graphics, bakedRotationAngles, randomFrame, false, AutoBuffer);
 					#else
 					particle.loadGraphic(Graphics, true);
@@ -262,7 +262,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 			{
 				if (bakedRotationAngles > 0)
 				{
-					#if flash
+					#if FLX_RENDER_BLIT
 					particle.loadRotatedGraphic(Graphics, bakedRotationAngles, -1, false, AutoBuffer);
 					#else
 					particle.loadGraphic(Graphics);
@@ -511,7 +511,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 		var particleEndScale:Float = endScale.min;
 		if (endScale.min != endScale.max)
 		{
-		particleEndScale = endScale.min + FlxRandom.intRanged( 0, Std.int( endScale.max - endScale.min ) );
+			particleEndScale = endScale.min + FlxRandom.intRanged(0, Std.int(endScale.max - endScale.min));
 		}
 		
 		if (particleEndScale != particle.startScale)
