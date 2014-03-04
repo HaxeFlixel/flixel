@@ -11,6 +11,7 @@ import flixel.FlxObject;
 import flixel.group.FlxTypedGroup;
 import flixel.system.FlxCollisionType;
 import flixel.system.layer.DrawStackItem;
+import flixel.system.layer.frames.FlxSpriteFrames;
 import flixel.system.layer.Region;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
@@ -19,6 +20,7 @@ import flixel.util.FlxPoint;
 import flixel.util.FlxRandom;
 import flixel.util.FlxRect;
 import flixel.util.FlxSpriteUtil;
+import flixel.util.loaders.CachedGraphics;
 import flixel.util.loaders.TextureRegion;
 
 @:bitmap("assets/images/tile/autotiles.png")	 class GraphicAuto    extends BitmapData {}
@@ -80,6 +82,20 @@ class FlxTilemap extends FlxObject
 	
 	public var scaleX(default, set):Float = 1.0;
 	public var scaleY(default, set):Float = 1.0;
+	
+	/**
+	 * Rendering variables.
+	 */
+	public var region(default, null):Region;
+	public var framesData(default, null):FlxSpriteFrames;
+	public var cachedGraphics(default, set):CachedGraphics;
+	
+	/**
+	 * Whether or not the coordinates should be rounded during draw(), true by default (recommended for pixel art). 
+	 * Only affects tilesheet rendering and rendering using BitmapData.draw() in blitting.
+	 * (copyPixels() only renders on whole pixels by nature). Causes draw() to be used if false, which is more expensive.
+	 */
+	public var pixelPerfectRender(default, set):Bool = true;
 	
 	/**
 	 * If these next two arrays are not null, you're telling FlxTilemap to 
@@ -260,7 +276,11 @@ class FlxTilemap extends FlxObject
 		_helperPoint = null;
 		_rectIDs = null;
 		#end
-
+		
+		framesData = null;
+		cachedGraphics = null;
+		region = null;
+		
 		super.destroy();
 	}
 	
@@ -2274,25 +2294,6 @@ class FlxTilemap extends FlxObject
 		_data[Index] += 1;
 	}
 	
-	override private function set_pixelPerfectRender(Value:Bool):Bool 
-	{
-		var i:Int = 0;
-		var l:Int;
-		
-		if (_buffers != null)
-		{
-			i = 0;
-			l = _buffers.length;
-			
-			for (i in 0...l)
-			{
-				_buffers[i].pixelPerfectRender = Value;
-			}
-		}
-		
-		return super.set_pixelPerfectRender(Value);
-	}
-	
 	private function set_scaleX(Scale:Float):Float
 	{
 		Scale = Math.abs(Scale);
@@ -2339,5 +2340,39 @@ class FlxTilemap extends FlxObject
 		}
 		
 		return Scale;
+	}
+	
+	/**
+	 * Internal function for setting cachedGraphics property for this object. 
+	 * It changes cachedGraphics' useCount also for better memory tracking.
+	 */
+	private function set_cachedGraphics(Value:CachedGraphics):CachedGraphics
+	{
+		var oldCached:CachedGraphics = cachedGraphics;
+		
+		if ((cachedGraphics != Value) && (Value != null))
+		{
+			Value.useCount++;
+		}
+		
+		if ((oldCached != null) && (oldCached != Value))
+		{
+			oldCached.useCount--;
+		}
+		
+		return cachedGraphics = Value;
+	}
+	
+	private function set_pixelPerfectRender(Value:Bool):Bool 
+	{
+		if (_buffers != null)
+		{
+			for (buffer in _buffers)
+			{
+				buffer.pixelPerfectRender = Value;
+			}
+		}
+		
+		return pixelPerfectRender = Value;
 	}
 }

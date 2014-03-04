@@ -12,6 +12,7 @@ import flixel.FlxG;
 import flixel.system.FlxAssets;
 import flixel.system.layer.DrawStackItem;
 import flixel.system.layer.frames.FlxFrame;
+import flixel.system.layer.frames.FlxSpriteFrames;
 import flixel.system.layer.Region;
 import flixel.util.FlxAngle;
 import flixel.util.FlxColor;
@@ -73,6 +74,18 @@ class FlxSprite extends FlxObject
 	 * The total number of frames in this image.  WARNING: assumes each row in the sprite sheet is full!
 	 */
 	public var frames(default, null):Int = 0;
+	/**
+	 * Rendering variables.
+	 */
+	public var region(default, null):Region;
+	public var framesData(default, null):FlxSpriteFrames;
+	public var cachedGraphics(default, set):CachedGraphics;
+	/**
+	 * Whether or not the coordinates should be rounded during draw(), true by default (recommended for pixel art). 
+	 * Only affects tilesheet rendering and rendering using BitmapData.draw() in blitting.
+	 * (copyPixels() only renders on whole pixels by nature). Causes draw() to be used if false, which is more expensive.
+	 */
+	public var pixelPerfectRender(default, set):Bool = true;
 	/**
 	 * The minimum angle (out of 360°) for which a new baked rotation exists. Example: 90 means there 
 	 * are 4 baked rotations in the spritesheet. 0 if this sprite does not have any baked rotations.
@@ -222,6 +235,10 @@ class FlxSprite extends FlxObject
 		framePixels = null;
 		blend = null;
 		frame = null;
+		
+		framesData = null;
+		cachedGraphics = null;
+		region = null;
 	}
 	
 	public function clone(?NewSprite:FlxSprite):FlxSprite
@@ -1457,5 +1474,31 @@ class FlxSprite extends FlxObject
 		#end	
 		
 		return blend = Value;
+	}
+	
+	/**
+	 * Internal function for setting cachedGraphics property for this object. 
+	 * It changes cachedGraphics' useCount also for better memory tracking.
+	 */
+	private function set_cachedGraphics(Value:CachedGraphics):CachedGraphics
+	{
+		var oldCached:CachedGraphics = cachedGraphics;
+		
+		if ((cachedGraphics != Value) && (Value != null))
+		{
+			Value.useCount++;
+		}
+		
+		if ((oldCached != null) && (oldCached != Value))
+		{
+			oldCached.useCount--;
+		}
+		
+		return cachedGraphics = Value;
+	}
+	
+	private function set_pixelPerfectRender(Value:Bool):Bool 
+	{
+		return pixelPerfectRender = Value;
 	}
 }
