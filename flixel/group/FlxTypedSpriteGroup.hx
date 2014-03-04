@@ -594,25 +594,20 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		}
 		
 		var numProps:Int = FunctionArray.length;
-		
 		if (numProps > ValueArray.length)
 		{
 			return;
 		}
 		
 		var lambda:T->V->Void;
-		var sprite:FlxSprite;
-		
-		for (i in 0...length)
+		for (sprite in _sprites)
 		{
-			sprite = _sprites[i];
-			
 			if ((sprite != null) && sprite.exists)
 			{
-				for (j in 0...numProps)
+				for (i in 0...numProps)
 				{
-					lambda = FunctionArray[j];
-					lambda(cast sprite, ValueArray[j]);
+					lambda = FunctionArray[i];
+					lambda(cast sprite, ValueArray[i]);
 				}
 			}
 		}
