@@ -8,6 +8,7 @@ import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
+import flixel.group.FlxGroup;
 import flixel.group.FlxTypedGroup;
 import flixel.system.FlxCollisionType;
 import flixel.system.layer.DrawStackItem;
@@ -834,53 +835,29 @@ class FlxTilemap extends FlxObject
 	 */
 	override public function overlaps(ObjectOrGroup:FlxBasic, InScreenSpace:Bool = false, ?Camera:FlxCamera):Bool
 	{
-		var objType:FlxCollisionType = ObjectOrGroup.collisionType;
-		if (objType == FlxCollisionType.SPRITEGROUP)
+		var groupResult:Bool = FlxGroup.overlaps(tilemapOverlapsCallback, ObjectOrGroup, 0, 0, InScreenSpace, Camera);
+		if (groupResult)
 		{
-			ObjectOrGroup = Reflect.field(ObjectOrGroup, "group");
-			objType = FlxCollisionType.GROUP;
+			return true;
 		}
-		
-		if (objType == FlxCollisionType.GROUP)
+		else if (tilemapOverlapsCallback(ObjectOrGroup))
 		{
-			var results:Bool = false;
-			var basic:FlxBasic;
-			var i:Int = 0;
-			var grp:FlxTypedGroup<FlxBasic> = cast ObjectOrGroup;
-			var members:Array<FlxBasic> = grp.members;
-			
-			while (i < grp.length)
-			{
-				basic = members[i++];
-				
-				if ((basic != null) && basic.exists)
-				{
-					objType = basic.collisionType;
-					if (objType == FlxCollisionType.OBJECT || objType == FlxCollisionType.TILEMAP)
-					{
-						if (overlapsWithCallback(cast(basic, FlxObject)))
-						{
-							results = true;
-						}
-					}
-					else
-					{
-						if (overlaps(basic, InScreenSpace, Camera))
-						{
-							results = true;
-						}
-					}
-				}
-			}
-			
-			return results;
+			return true;
 		}
-		else if (objType == FlxCollisionType.OBJECT || objType == FlxCollisionType.TILEMAP)
+		return false;
+	}
+	
+	private inline function tilemapOverlapsCallback(ObjectOrGroup:FlxBasic, X:Float = 0, Y:Float = 0, InScreenSpace:Bool = false, ?Camera:FlxCamera):Bool
+	{
+		if ((ObjectOrGroup.collisionType == FlxCollisionType.OBJECT) || 
+		    (ObjectOrGroup.collisionType == FlxCollisionType.TILEMAP))
 		{
 			return overlapsWithCallback(cast(ObjectOrGroup, FlxObject));
 		}
-		
-		return false;
+		else 
+		{
+			return overlaps(ObjectOrGroup, InScreenSpace, Camera);
+		}
 	}
 	
 	/**
@@ -897,59 +874,30 @@ class FlxTilemap extends FlxObject
 	 */
 	override public function overlapsAt(X:Float, Y:Float, ObjectOrGroup:FlxBasic, InScreenSpace:Bool = false, ?Camera:FlxCamera):Bool
 	{
-		var objType:FlxCollisionType = ObjectOrGroup.collisionType;
-		if (ObjectOrGroup.collisionType == FlxCollisionType.SPRITEGROUP)
+		var groupResult:Bool = FlxGroup.overlaps(tilemapOverlapsAtCallback, ObjectOrGroup, X, Y, InScreenSpace, Camera);
+		if (groupResult)
 		{
-			ObjectOrGroup = Reflect.field(ObjectOrGroup, "group");
-			objType = FlxCollisionType.GROUP;
+			return true;
 		}
-		
-		if (objType == FlxCollisionType.GROUP)
+		else if (tilemapOverlapsAtCallback(ObjectOrGroup, X, Y, InScreenSpace, Camera))
 		{
-			var results:Bool = false;
-			var basic:FlxBasic;
-			var i:Int = 0;
-			var grp:FlxTypedGroup<FlxBasic> = cast ObjectOrGroup;
-			var members:Array<FlxBasic> = grp.members;
-			
-			while(i < grp.length)
-			{
-				basic = members[i++];
-				
-				if ((basic != null) && basic.exists)
-				{
-					objType = basic.collisionType;
-					if (objType == FlxCollisionType.OBJECT || objType == FlxCollisionType.TILEMAP)
-					{
-						_point.x = X;
-						_point.y = Y;
-						
-						if (overlapsWithCallback(cast(basic, FlxObject), null, false, _point))
-						{
-							results = true;
-						}
-					}
-					else
-					{
-						if (overlapsAt(X, Y, basic, InScreenSpace, Camera))
-						{
-							results = true;
-						}
-					}
-				}
-			}
-			
-			return results;
-		}
-		else if (objType == FlxCollisionType.OBJECT || objType == FlxCollisionType.TILEMAP)
-		{
-			_point.x = X;
-			_point.y = Y;
-			
-			return overlapsWithCallback(cast(ObjectOrGroup, FlxObject), null, false, _point);
+			return true;
 		}
 		
 		return false;
+	}
+	
+	private inline function tilemapOverlapsAtCallback(ObjectOrGroup:FlxBasic, X:Float, Y:Float, InScreenSpace:Bool, Camera:FlxCamera):Bool
+	{
+		if (ObjectOrGroup.collisionType == FlxCollisionType.OBJECT || 
+		    ObjectOrGroup.collisionType == FlxCollisionType.TILEMAP)
+		{
+			return overlapsWithCallback(cast(ObjectOrGroup, FlxObject), null, false, _point.set(X, Y));
+		}
+		else 
+		{
+			return overlapsAt(X, Y, ObjectOrGroup, InScreenSpace, Camera);
+		}
 	}
 	
 	/**

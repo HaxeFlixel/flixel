@@ -41,8 +41,6 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	private var _members:Array<T>;
 	
 	/**
-	 * Create a new FlxTypedGroup
-	 * 
 	 * @param	MaxSize		Maximum amount of members allowed
 	 */
 	public function new(MaxSize:Int = 0)

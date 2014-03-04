@@ -2,6 +2,8 @@ package flixel;
 
 import flash.display.Graphics;
 import flixel.FlxBasic;
+import flixel.group.FlxGroup;
+import flixel.group.FlxSpriteGroup;
 import flixel.group.FlxTypedGroup;
 import flixel.system.FlxCollisionType;
 import flixel.tile.FlxTilemap;
@@ -652,28 +654,10 @@ class FlxObject extends FlxBasic
 	 */
 	public function overlaps(ObjectOrGroup:FlxBasic, InScreenSpace:Bool = false, ?Camera:FlxCamera):Bool
 	{
-		if (ObjectOrGroup.collisionType == FlxCollisionType.SPRITEGROUP)
+		var groupResult:Bool = FlxGroup.overlaps(overlapsCallback, ObjectOrGroup, 0, 0, InScreenSpace, Camera);
+		if (groupResult)
 		{
-			ObjectOrGroup = Reflect.field(ObjectOrGroup, "group");
-		}
-		
-		if (ObjectOrGroup.collisionType == FlxCollisionType.GROUP)
-		{
-			var results:Bool = false;
-			var i:Int = 0;
-			var basic:FlxBasic;
-			var grp:FlxTypedGroup<FlxBasic> = cast ObjectOrGroup;
-			var members:Array<FlxBasic> = grp.members;
-			while (i < grp.length)
-			{
-				basic = members[i++];
-				if (basic != null && basic.exists && overlaps(basic, InScreenSpace, Camera))
-				{
-					results = true;
-					break;
-				}
-			}
-			return results;
+			return true;
 		}
 		
 		if (ObjectOrGroup.collisionType == FlxCollisionType.TILEMAP)
@@ -700,6 +684,11 @@ class FlxObject extends FlxBasic
 				(objectScreenPos.y + object.height > _point.y) && (objectScreenPos.y < _point.y + height);
 	}
 	
+	private inline function overlapsCallback(ObjectOrGroup:FlxBasic, X:Float, Y:Float, InScreenSpace:Bool, Camera:FlxCamera):Bool
+	{
+		return overlaps(ObjectOrGroup, InScreenSpace, Camera);
+	}
+	
 	/**
 	 * Checks to see if this FlxObject were located at the given position, would it overlap the FlxObject or FlxGroup?
 	 * This is distinct from overlapsPoint(), which just checks that point, rather than taking the object's size into account. WARNING: Currently tilemaps do NOT support screen space overlap checks!
@@ -712,28 +701,10 @@ class FlxObject extends FlxBasic
 	 */
 	public function overlapsAt(X:Float, Y:Float, ObjectOrGroup:FlxBasic, InScreenSpace:Bool = false, ?Camera:FlxCamera):Bool
 	{
-		if (ObjectOrGroup.collisionType == FlxCollisionType.SPRITEGROUP)
+		var groupResult:Bool = FlxGroup.overlaps(overlapsAtCallback, ObjectOrGroup, X, Y, InScreenSpace, Camera);
+		if (groupResult)
 		{
-			ObjectOrGroup = Reflect.field(ObjectOrGroup, "group");
-		}
-		
-		if (ObjectOrGroup.collisionType == FlxCollisionType.GROUP)
-		{
-			var results:Bool = false;
-			var basic:FlxBasic;
-			var i:Int = 0;
-			var grp:FlxTypedGroup<FlxBasic> = cast ObjectOrGroup;
-			var members:Array<FlxBasic> = grp.members;
-			while (i < Std.int(grp.length))
-			{
-				basic = members[i++];
-				if (basic != null && basic.exists && overlapsAt(X, Y, basic, InScreenSpace, Camera))
-				{
-					results = true;
-					break;
-				}
-			}
-			return results;
+			return true;
 		}
 		
 		if (ObjectOrGroup.collisionType == FlxCollisionType.TILEMAP)
@@ -761,6 +732,11 @@ class FlxObject extends FlxBasic
 		getScreenXY(_point, Camera);
 		return	(objectScreenPos.x + object.width > _point.x) && (objectScreenPos.x < _point.x + width) &&
 			(objectScreenPos.y + object.height > _point.y) && (objectScreenPos.y < _point.y + height);
+	}
+	
+	private inline function overlapsAtCallback(ObjectOrGroup:FlxBasic, X:Float, Y:Float, InScreenSpace:Bool, Camera:FlxCamera):Bool
+	{
+		return overlapsAt(X, Y, ObjectOrGroup, InScreenSpace, Camera);
 	}
 	
 	/**
