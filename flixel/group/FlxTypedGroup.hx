@@ -329,7 +329,8 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	}
 	
 	/**
-	 * Replaces an existing FlxBasic with a new one.
+	 * Replaces an existing FlxBasic with a new one. 
+	 * Does not do anything and returns null if the old object is not part of the group.
 	 * 
 	 * @param	OldObject	The object you want to replace.
 	 * @param	NewObject	The new object you want to use instead.
