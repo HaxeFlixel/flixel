@@ -88,7 +88,7 @@ class LinearPath extends Motion
 			distance += Math.sqrt((x - _last.x) * (x - _last.x) + (y - _last.y) * (y - _last.y));
 			_pointD[points.length] = distance;
 		}
-		points[points.length] = _last = new FlxPoint(x, y);
+		points[points.length] = _last = FlxPoint.get(x, y);
 		return this;
 	}
 	

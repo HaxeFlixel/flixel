@@ -382,7 +382,7 @@ class FlxGame extends Sprite
 		var width:Int = Lib.current.stage.stageWidth;
 		var height:Int = Lib.current.stage.stageHeight;
 		
-		#if !flash
+		#if FLX_RENDER_TILE
 		FlxG.bitmap.onContext();
 		#end
 		
@@ -744,7 +744,7 @@ class FlxGame extends Sprite
 		}
 		#end
 
-		#if !flash
+		#if FLX_RENDER_TILE
 		TileSheetExt._DRAWCALLS = 0;
 		#end
 		
@@ -768,7 +768,7 @@ class FlxGame extends Sprite
 		}
 		#end
 		
-		#if !flash
+		#if FLX_RENDER_TILE
 		FlxG.cameras.render();
 		
 		#if !FLX_NO_DEBUG

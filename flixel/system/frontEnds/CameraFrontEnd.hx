@@ -69,7 +69,7 @@ class CameraFrontEnd
 			FlxG.log.warn("FlxG.cameras.remove(): The camera you attemped to remove is not a part of the game.");
 		}
 		
-		#if !flash
+		#if FLX_RENDER_TILE
 		for (i in 0...list.length)
 		{
 			list[i].ID = i;
@@ -177,7 +177,7 @@ class CameraFrontEnd
 				continue;
 			}
 			
-			#if flash
+			#if FLX_RENDER_BLIT
 			camera.checkResize();
 			
 			if (useBufferLocking)
@@ -186,7 +186,7 @@ class CameraFrontEnd
 			}
 			#end
 			
-		#if !flash
+		#if FLX_RENDER_TILE
 			camera.clearDrawStack();
 			camera.canvas.graphics.clear();
 			// Clearing camera's debug sprite
@@ -195,7 +195,7 @@ class CameraFrontEnd
 			#end
 		#end
 			
-			#if flash
+			#if FLX_RENDER_BLIT
 			camera.fill(camera.bgColor, camera.useBgAlphaBlending);
 			camera.screen.dirty = true;
 			#else
@@ -204,7 +204,7 @@ class CameraFrontEnd
 		}
 	}
 	
-	#if !flash
+	#if FLX_RENDER_TILE
 	private inline function render():Void
 	{
 		for (camera in list)
@@ -231,7 +231,7 @@ class CameraFrontEnd
 			
 			camera.drawFX();
 			
-			#if flash
+			#if FLX_RENDER_BLIT
 			if (useBufferLocking)
 			{
 				camera.buffer.unlock();

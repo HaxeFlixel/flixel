@@ -71,14 +71,9 @@ class TimerManager extends FlxPlugin
 	 * @param	Timer	The FlxTimer you want to remove from the manager.
 	 * @param	ReturnInPool Whether to reset and put Timer into internal _pool.
 	 */
-	public function remove(Timer:FlxTimer, ReturnInPool:Bool = true):Void
+	public function remove(Timer:FlxTimer):Void
 	{
 		FlxArrayUtil.fastSplice(_timers, Timer);
-		
-		if (ReturnInPool)
-		{
-			FlxTimer.put(Timer);
-		}
 	}
 	
 	/**
@@ -88,8 +83,7 @@ class TimerManager extends FlxPlugin
 	{
 		while (_timers.length > 0)
 		{
-			var timer:FlxTimer = _timers.pop();
-			FlxTimer.put(timer);
+			FlxTimer.pool.put(_timers.pop());
 		}
 	}
 	

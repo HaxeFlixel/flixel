@@ -109,11 +109,6 @@ class PathManager extends FlxPlugin
 	public function remove(Path:FlxPath, ReturnInPool:Bool = true):Void
 	{
 		FlxArrayUtil.fastSplice(_paths, Path);
-		
-		if (ReturnInPool)
-		{
-			FlxPath.put(Path);
-		}
 	}
 	
 	/**
@@ -123,8 +118,7 @@ class PathManager extends FlxPlugin
 	{
 		while (_paths.length > 0)
 		{
-			var path:FlxPath = _paths.pop();
-			FlxPath.put(path);
+			FlxPath.pool.put(_paths.pop());
 		}
 	}
 	

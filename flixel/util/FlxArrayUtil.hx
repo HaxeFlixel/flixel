@@ -87,7 +87,7 @@ class FlxArrayUtil
 	
 	/**
 	 * Safely removes an element from an array by swapping it with the last element and calling pop()
-	 * (won't do anything if the array is not part of the array). This is a lot faster than regular splice(), 
+	 * (won't do anything if the element is not in the array). This is a lot faster than regular splice(), 
 	 * but it can only be used on arrays where order doesn't matter.
 	 * 
 	 * @param	array	The array to remove the element from

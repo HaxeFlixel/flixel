@@ -44,6 +44,7 @@ class FlxCollision
 	 */
 	public static function pixelPerfectCheck(Contact:FlxSprite, Target:FlxSprite, AlphaTolerance:Int = 1, ?Camera:FlxCamera):Bool
 	{
+	#if !bitfive // missing BitmapData.getPixels()
 		//if either of the angles are non-zero, consider the angles of the sprites in the pixel check
 		var considerRotation:Bool = (Contact.angle != 0) || (Target.angle != 0);
 		
@@ -99,7 +100,7 @@ class FlxCollision
 		matrixB.identity();
 		matrixB.translate(-(intersect.x - boundsB.x), -(intersect.y - boundsB.y));
 		
-	#if !flash
+	#if FLX_RENDER_TILE
 		Contact.drawFrame();
 		Target.drawFrame();
 	#end
@@ -198,6 +199,9 @@ class FlxCollision
 		}
 		
 		return hit;
+	#else
+		return false;
+	#end
 	}
 	
 	/**
@@ -217,7 +221,7 @@ class FlxCollision
 			return false;
 		}
 		
-		#if flash
+		#if FLX_RENDER_BLIT
 		// How deep is pointX/Y within the rect?
 		var test:BitmapData = Target.framePixels;
 		#else
@@ -227,7 +231,7 @@ class FlxCollision
 		var pixelAlpha:Int = 0;  
 		pixelAlpha = FlxColorUtil.getAlpha(test.getPixel32(Math.floor(PointX - Target.x), Math.floor(PointY - Target.y)));
 		
-		#if !flash
+		#if FLX_RENDER_TILE
 		pixelAlpha = Std.int(pixelAlpha * Target.alpha);
 		#end
 		

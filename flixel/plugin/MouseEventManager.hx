@@ -322,7 +322,7 @@ class MouseEventManager extends FlxPlugin
 				continue;
 			}
 			
-			if (!reg.object.alive || !reg.mouseEnabled)
+			if (!reg.object.alive || !reg.sprite.exists || !reg.sprite.visible || !reg.mouseEnabled)
 			{
 				continue;
 			}
@@ -341,9 +341,9 @@ class MouseEventManager extends FlxPlugin
 		// MouseOver - Look for new objects with mouse over.
 		for (current in currentOverObjects)
 		{
-			if (getRegister(current.object, _mouseOverObjects) == null)
+			if (current.onMouseOver != null)
 			{
-				if ((current.onMouseOver != null) && current.sprite.exists  && current.object.visible)
+				if (current.sprite.exists  && current.object.visible && getRegister(current.object, _mouseOverObjects) == null)
 				{
 					current.onMouseOver(current.object);
 				}
@@ -353,9 +353,10 @@ class MouseEventManager extends FlxPlugin
 		// MouseOut - Look for objects that lost mouse over.
 		for (over in _mouseOverObjects)
 		{
-			if (getRegister(over.object, currentOverObjects) == null)
+			if (over.onMouseOut != null)
 			{
-				if ((over.onMouseOut != null) && over.object.exists  && over.object.visible)
+				// slightly different logic here - objects whose exsits or visible property has been set to false should also receive a mouse out! 
+				if (!over.object.exists || !over.object.visible || getRegister(over.object, currentOverObjects) == null)
 				{
 					over.onMouseOut(over.object);
 				}
