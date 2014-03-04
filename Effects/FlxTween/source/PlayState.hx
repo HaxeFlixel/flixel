@@ -126,8 +126,8 @@ class PlayState extends FlxState
 		add(_trail);
 		add(_sprite);
 		
-		_min = new FlxPoint(FlxG.width * 0.1, FlxG.height * 0.25);
-		_max = new FlxPoint(FlxG.width * 0.7, FlxG.height * 0.75);
+		_min = FlxPoint.get(FlxG.width * 0.1, FlxG.height * 0.25);
+		_max = FlxPoint.get(FlxG.width * 0.7, FlxG.height * 0.75);
 		
 		/*** From here on: UI setup ***/
 		
@@ -238,9 +238,9 @@ class PlayState extends FlxState
 				
 			case LINEAR_PATH:
 				_sprite.y = (_max.y - _sprite.height);
-				var path:Array<FlxPoint> = [new FlxPoint(_sprite.x, _sprite.y),
-											new FlxPoint(_sprite.x + (_max.x - _min.x) * 0.5, _min.y),
-											new FlxPoint(_max.x, _sprite.y)];
+				var path:Array<FlxPoint> = [FlxPoint.get(_sprite.x, _sprite.y),
+											FlxPoint.get(_sprite.x + (_max.x - _min.x) * 0.5, _min.y),
+											FlxPoint.get(_max.x, _sprite.y)];
 				_tween = FlxTween.linearPath(_sprite, path, DURATION, true, options);
 				
 			case CIRCULAR_MOTION:
@@ -271,11 +271,11 @@ class PlayState extends FlxState
 												DURATION, true, options);
 	
 			case QUAD_PATH:
-				var path:Array<FlxPoint> = [new FlxPoint(_sprite.x, _sprite.y),
-											new FlxPoint(_sprite.x + (_max.x - _min.x) * 0.5, _max.y),
-											new FlxPoint(_max.x - (_max.x / 2) + (_sprite.width / 2), _sprite.y), 
-											new FlxPoint(_max.x - (_max.x / 2) + (_sprite.width / 2), _min.y),
-											new FlxPoint(_max.x, _sprite.y)];
+				var path:Array<FlxPoint> = [FlxPoint.get(_sprite.x, _sprite.y),
+											FlxPoint.get(_sprite.x + (_max.x - _min.x) * 0.5, _max.y),
+											FlxPoint.get(_max.x - (_max.x / 2) + (_sprite.width / 2), _sprite.y), 
+											FlxPoint.get(_max.x - (_max.x / 2) + (_sprite.width / 2), _min.y),
+											FlxPoint.get(_max.x, _sprite.y)];
 				_tween = FlxTween.quadPath(_sprite, path, DURATION, true, options);
 		}
 		

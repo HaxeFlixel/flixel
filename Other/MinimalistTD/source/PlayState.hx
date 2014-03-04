@@ -451,7 +451,7 @@ class PlayState extends FlxState
 	{
 		var minDistance:Float = SearchRadius;
 		var closestTower:Tower = null;
-		var searchPoint:FlxPoint = new FlxPoint(X, Y);
+		var searchPoint:FlxPoint = FlxPoint.get(X, Y);
 		
 		for (tower in _towerGroup.members) {
 			var dist:Float = FlxMath.getDistance(searchPoint, tower.getMidpoint());
@@ -828,7 +828,7 @@ class PlayState extends FlxState
 		
 		var enemy:Enemy = enemyGroup.recycle(Enemy);
 		enemy.init(_enemySpawnX, _enemySpawnY);
-		enemy.followPath(_map.findPath(new FlxPoint(_enemySpawnX, _enemySpawnY), new FlxPoint(_goalX + 5, _goalY + 5)));
+		enemy.followPath(_map.findPath(FlxPoint.get(_enemySpawnX, _enemySpawnY), FlxPoint.get(_goalX + 5, _goalY + 5)));
 		_spawnCounter = 0;
 	}
 	

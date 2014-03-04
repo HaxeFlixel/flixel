@@ -161,7 +161,7 @@ class Explosion extends FlxSprite
 	{
 		for (i in buildingSprites)
 		{
-			var distance = FlxMath.getDistance(new FlxPoint(i.x , i.y), new FlxPoint(trueX, trueY));
+			var distance = FlxMath.getDistance(FlxPoint.get(i.x , i.y), FlxPoint.get(trueX, trueY));
 			if (distance < this.width * scale.x / 2) 
 			{
 				var impulse = EXP_FORCE / (distance * distance);

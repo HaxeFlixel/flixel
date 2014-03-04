@@ -186,7 +186,7 @@ class Lurker extends EnemyTemplate
 				bulletX += Math.floor(width - 8);
 			}
 			
-			bullet.angleshoot(bulletX, bulletY, BULLET_SPEED, new FlxPoint(P.x, P.y));
+			bullet.angleshoot(bulletX, bulletY, BULLET_SPEED, FlxPoint.get(P.x, P.y));
 			FlxG.sound.play("assets/sounds/badshoot" + Reg.SoundExtension, 1, false);
 			// reset the shot clock
 			_cooldown = 0; 

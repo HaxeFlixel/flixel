@@ -190,7 +190,7 @@ class PlayState extends FlxState
 	private function moveToGoal():Void
 	{
 		// Find path to goal from unit to goal
-		var pathPoints:Array<FlxPoint> = _map.findPath(new FlxPoint(_unit.x + _unit.width / 2, _unit.y + _unit.height / 2), new FlxPoint(_goal.x + _goal.width / 2, _goal.y + _goal.height / 2));
+		var pathPoints:Array<FlxPoint> = _map.findPath(FlxPoint.get(_unit.x + _unit.width / 2, _unit.y + _unit.height / 2), FlxPoint.get(_goal.x + _goal.width / 2, _goal.y + _goal.height / 2));
 		
 		// Tell unit to follow path
 		if (pathPoints != null) 
