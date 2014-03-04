@@ -223,8 +223,8 @@ class FlxText extends FlxSprite
 	 * Adds another format to this FlxText
 	 * 
 	 * @param	Format	The format to be added.
-	 * @param	Start	(Default=-1) The start index of the string where the format will be applied. If greater than -1, this value will override the format.start value.
-	 * @param	End		(Default=-1) The end index of the string where the format will be applied. If greater than -1, this value will override the format.start value.
+	 * @param	Start	(Default = -1) The start index of the string where the format will be applied. If greater than -1, this value will override the format.start value.
+	 * @param	End		(Default = -1) The end index of the string where the format will be applied. If greater than -1, this value will override the format.start value.
 	 */
 	public function addFormat(Format:FlxTextFormat, Start:Int = -1, End:Int = -1):Void
 	{
@@ -273,6 +273,7 @@ class FlxText extends FlxSprite
 	 * @param	Alignment	A string representing the desired alignment ("left,"right" or "center").
 	 * @param	BorderStyle	FlxText.NONE, SHADOW, OUTLINE, or OUTLINE_FAST (use setBorderFormat
 	 * @param	BorderColor Int, color for the border, 0xRRGGBB format
+	 * @param	EmbeddedFont	Whether this text field uses embedded fonts or not
 	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
 	 */
 	public function setFormat(?Font:String, Size:Float = 8, Color:Int = 0xffffff, ?Alignment:String, BorderStyle:Int = BORDER_NONE, BorderColor:Int = 0x000000, Embedded:Bool = true):FlxText
