@@ -571,15 +571,11 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 			return;
 		}
 		
-		var sprite:T;
-		
-		for (i in 0...length)
+		for (sprite in _sprites)
 		{
-			sprite = group.members[i];
-			
 			if ((sprite != null) && sprite.exists)
 			{
-				Function(sprite, Value);
+				Function(cast sprite, Value);
 			}
 		}
 	}
@@ -592,7 +588,10 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 */
 	@:generic public function multiTransformChildren<V>(FunctionArray:Array<T->V->Void>, ValueArray:Array<V>):Void
 	{
-		if (group == null) return;
+		if (group == null) 
+		{
+			return;
+		}
 		
 		var numProps:Int = FunctionArray.length;
 		
@@ -601,19 +600,19 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 			return;
 		}
 		
-		var sprite:T;
 		var lambda:T->V->Void;
+		var sprite:FlxSprite;
 		
 		for (i in 0...length)
 		{
-			sprite = group.members[i];
+			sprite = _sprites[i];
 			
 			if ((sprite != null) && sprite.exists)
 			{
 				for (j in 0...numProps)
 				{
 					lambda = FunctionArray[j];
-					lambda(sprite, ValueArray[j]);
+					lambda(cast sprite, ValueArray[j]);
 				}
 			}
 		}
