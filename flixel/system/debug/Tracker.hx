@@ -229,7 +229,8 @@ class TrackerProfile
 	
 	public function toString():String
 	{
-		return FlxStringUtil.getDebugString([ { label: "vars", value: variables },
-	                                          { label: "extensions", value: extensions } ]);
+		return FlxStringUtil.getDebugString([
+			new LabelValuePair("variables", variables),
+			new LabelValuePair("extensions", extensions)]);
 	}
 }

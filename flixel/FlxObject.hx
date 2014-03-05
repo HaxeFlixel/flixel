@@ -988,11 +988,12 @@ class FlxObject extends FlxBasic
 	 */
 	override public function toString():String
 	{
-		return FlxStringUtil.getDebugString([ { label: "x", value: x }, 
-		                                      { label: "y", value: y },
-		                                      { label: "w", value: width },
-		                                      { label: "h", value: height },
-		                                      { label: "visible", value: visible },
-		                                      { label: "velocity", value: velocity }]);
+		return FlxStringUtil.getDebugString([
+			new LabelValuePair("x", x), 
+			new LabelValuePair("y", y), 
+			new LabelValuePair("w", width), 
+			new LabelValuePair("h", height), 
+			new LabelValuePair("visible", visible), 
+			new LabelValuePair("velocity", velocity)]);
 	}
 }

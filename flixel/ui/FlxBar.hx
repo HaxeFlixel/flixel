@@ -1252,11 +1252,12 @@ class FlxBar extends FlxSprite
 	
 	override public function toString():String
 	{
-		return FlxStringUtil.getDebugString([ { label: "min", value: min }, 
-		                                      { label: "max", value: max },
-		                                      { label: "range", value: range },
-		                                      { label: "%", value: pct },
-		                                      { label: "px/%", value: pxPerPercent },
-		                                      { label: "value", value: value } ]);
+		return FlxStringUtil.getDebugString([ 
+			new LabelValuePair("min", min),
+			new LabelValuePair("max", max),
+			new LabelValuePair("range", range),
+			new LabelValuePair("%", pct),
+			new LabelValuePair("px/%", pxPerPercent),
+			new LabelValuePair("value", value)]);
 	}
 }

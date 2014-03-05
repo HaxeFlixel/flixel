@@ -3,6 +3,7 @@ package flixel.util;
 import flash.geom.Rectangle;
 import flixel.FlxG;
 import flixel.interfaces.IFlxDestroyable;
+import flixel.util.FlxStringUtil;
 
 /**
  * Stores a rectangle.
@@ -196,10 +197,11 @@ class FlxRect implements IFlxDestroyable
 	 */
 	public inline function toString():String
 	{
-		return FlxStringUtil.getDebugString([ { label: "x", value: x }, 
-		                                      { label: "y", value: y },
-		                                      { label: "w", value: width },
-		                                      { label: "h", value: height } ]);
+		return FlxStringUtil.getDebugString([
+			new LabelValuePair("x", x),
+			new LabelValuePair("y", y),
+			new LabelValuePair("w", width),
+			new LabelValuePair("h", height)]);
 	}
 	
 	private function new() {}

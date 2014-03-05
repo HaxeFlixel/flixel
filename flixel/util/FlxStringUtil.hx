@@ -531,7 +531,14 @@ class FlxStringUtil
 	}
 }
 
-typedef LabelValuePair = {
-	label:String,
-	value:Dynamic
+class LabelValuePair
+{
+	public var label:String;
+	public var value:Dynamic;
+	
+	public function new(label:String, value:Dynamic)
+	{
+		this.label = label;
+		this.value = value;
+	}
 }

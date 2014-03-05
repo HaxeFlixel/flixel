@@ -3,6 +3,7 @@ package flixel.util;
 import flixel.FlxG;
 import flash.geom.Point;
 import flixel.interfaces.IFlxDestroyable;
+import flixel.util.FlxStringUtil;
 
 /**
  * Stores a 2D floating point coordinate.
@@ -169,8 +170,9 @@ class FlxPoint implements IFlxDestroyable
 	 */
 	public inline function toString():String
 	{
-		return FlxStringUtil.getDebugString([ { label: "x", value: x }, 
-		                                      { label: "y", value: y }]);
+		return FlxStringUtil.getDebugString([ 
+			new LabelValuePair("x", x),
+			new LabelValuePair("y", y)]);
 	}
 	
 	private function new() {}

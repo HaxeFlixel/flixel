@@ -299,8 +299,9 @@ class WatchEntry implements IFlxDestroyable
 	
 	public function toString():String
 	{
-		return FlxStringUtil.getDebugString([ { label: "object", value: FlxStringUtil.getClassName(object, true) },
-		                                      { label: "field", value: field } ]);
+		return FlxStringUtil.getDebugString([
+			new LabelValuePair("object", FlxStringUtil.getClassName(object, true)),
+			new LabelValuePair("field", field)]);
 	}
 	
 	/**
