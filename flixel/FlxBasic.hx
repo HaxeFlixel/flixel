@@ -177,9 +177,9 @@ class FlxBasic implements IFlxDestroyable
 	public function toString():String
 	{
 		return FlxStringUtil.getDebugString([
-			new LabelValuePair("active", active),
-			new LabelValuePair("visible", visible),
-			new LabelValuePair("alive", alive),
-			new LabelValuePair("exists", exists)]);
+			LabelValuePair.weak("active", active),
+			LabelValuePair.weak("visible", visible),
+			LabelValuePair.weak("alive", alive),
+			LabelValuePair.weak("exists", exists)]);
 	}
 }

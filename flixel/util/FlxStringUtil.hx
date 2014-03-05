@@ -5,6 +5,7 @@ import flash.geom.Matrix;
 import flash.Lib;
 import flash.net.URLRequest;
 import flixel.FlxG;
+import flixel.interfaces.IFlxDestroyable;
 import flixel.system.FlxAssets;
 using StringTools;
 
@@ -524,6 +525,7 @@ class FlxStringUtil
 				value = FlxMath.roundDecimal(cast value, FlxG.debugger.precision);
 			}
 			output += (value + " | ");
+			pair.put(); // free for recycling
 		}
 		// remove the | of the last item, we don't want that at the end
 		output = output.substr(0, output.length - 2).trim();
@@ -531,14 +533,35 @@ class FlxStringUtil
 	}
 }
 
-class LabelValuePair
+class LabelValuePair implements IFlxDestroyable
 {
+	private static var _pool = new FlxPool<LabelValuePair>(LabelValuePair);
+	
+	public static inline function weak(label:String, value:Dynamic):LabelValuePair
+	{
+		return _pool.get().create(label, value);
+	}
+	
 	public var label:String;
 	public var value:Dynamic;
 	
-	public function new(label:String, value:Dynamic)
+	public inline function create(label:String, value:Dynamic):LabelValuePair
 	{
 		this.label = label;
 		this.value = value;
+		return this;
 	}
+	
+	public inline function put():Void
+	{
+		_pool.put(this);
+	}
+	
+	public inline function destroy():Void
+	{
+		label = null;
+		value = null;
+	}
+	
+	private function new() {}
 }

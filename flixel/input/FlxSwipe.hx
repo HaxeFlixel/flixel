@@ -42,12 +42,12 @@ class FlxSwipe
 	private inline function toString():String
 	{
 		return FlxStringUtil.getDebugString([
-			new LabelValuePair("ID", ID), 
-			new LabelValuePair("start", startPosition),
-			new LabelValuePair("end", endPosition),
-			new LabelValuePair("distance", distance),
-			new LabelValuePair("angle", angle),
-			new LabelValuePair("duration", (duration / 1000))]);
+			LabelValuePair.weak("ID", ID), 
+			LabelValuePair.weak("start", startPosition),
+			LabelValuePair.weak("end", endPosition),
+			LabelValuePair.weak("distance", distance),
+			LabelValuePair.weak("angle", angle),
+			LabelValuePair.weak("duration", (duration / 1000))]);
 	}
 	
 	private inline function get_distance():Float

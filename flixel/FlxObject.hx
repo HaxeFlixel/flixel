@@ -989,11 +989,11 @@ class FlxObject extends FlxBasic
 	override public function toString():String
 	{
 		return FlxStringUtil.getDebugString([
-			new LabelValuePair("x", x), 
-			new LabelValuePair("y", y), 
-			new LabelValuePair("w", width), 
-			new LabelValuePair("h", height), 
-			new LabelValuePair("visible", visible), 
-			new LabelValuePair("velocity", velocity)]);
+			LabelValuePair.weak("x", x), 
+			LabelValuePair.weak("y", y), 
+			LabelValuePair.weak("w", width), 
+			LabelValuePair.weak("h", height), 
+			LabelValuePair.weak("visible", visible), 
+			LabelValuePair.weak("velocity", velocity)]);
 	}
 }

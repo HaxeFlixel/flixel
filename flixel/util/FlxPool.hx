@@ -22,7 +22,10 @@ import flixel.interfaces.IFlxDestroyable;
 	public function get():T
 	{
 		var obj:T = _pool.pop();
-		if (obj == null) obj = Type.createInstance(_class, []);
+		if (obj == null) 
+		{
+			obj = Type.createInstance(_class, []);
+		}
 		return obj;
 	}
 	

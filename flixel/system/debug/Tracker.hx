@@ -230,7 +230,7 @@ class TrackerProfile
 	public function toString():String
 	{
 		return FlxStringUtil.getDebugString([
-			new LabelValuePair("variables", variables),
-			new LabelValuePair("extensions", extensions)]);
+			LabelValuePair.weak("variables", variables),
+			LabelValuePair.weak("extensions", extensions)]);
 	}
 }

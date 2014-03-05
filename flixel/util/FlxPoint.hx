@@ -171,8 +171,8 @@ class FlxPoint implements IFlxDestroyable
 	public inline function toString():String
 	{
 		return FlxStringUtil.getDebugString([ 
-			new LabelValuePair("x", x),
-			new LabelValuePair("y", y)]);
+			LabelValuePair.weak("x", x),
+			LabelValuePair.weak("y", y)]);
 	}
 	
 	private function new() {}

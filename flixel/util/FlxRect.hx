@@ -198,10 +198,10 @@ class FlxRect implements IFlxDestroyable
 	public inline function toString():String
 	{
 		return FlxStringUtil.getDebugString([
-			new LabelValuePair("x", x),
-			new LabelValuePair("y", y),
-			new LabelValuePair("w", width),
-			new LabelValuePair("h", height)]);
+			LabelValuePair.weak("x", x),
+			LabelValuePair.weak("y", y),
+			LabelValuePair.weak("w", width),
+			LabelValuePair.weak("h", height)]);
 	}
 	
 	private function new() {}
