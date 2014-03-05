@@ -70,7 +70,7 @@ class CachedGraphics
 	 */
 	public function dump():Void
 	{
-		#if !(flash || js)
+		#if FLX_RENDER_TILE
 		if (canBeDumped)
 		{
 			bitmap.dumpBits();
@@ -84,7 +84,7 @@ class CachedGraphics
 	 */
 	public function undump():Void
 	{
-		#if !(flash || js)
+		#if FLX_RENDER_TILE
 		if (isDumped)
 		{
 			var newBitmap:BitmapData = getBitmapFromSystem();
