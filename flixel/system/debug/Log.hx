@@ -16,6 +16,7 @@ import haxe.ds.StringMap;
 class Log extends Window
 {
 	public static inline var MAX_LOG_LINES:Int = 200;
+	private static inline var LINE_BREAK:String = #if js "\n" #else "<br>"#end; 
 
 	private var _text:TextField;
 	private var _lines:Array<String>;
@@ -116,7 +117,7 @@ class Log extends Window
 			var newText:String = "";
 			for (i in 0..._lines.length) 
 			{
-				newText += _lines[i] + "<br>";
+				newText += _lines[i] + LINE_BREAK;
 			}
 			// TODO: Make htmlText work on HTML5 target
 			#if !js
@@ -129,9 +130,9 @@ class Log extends Window
 		{
 			// TODO: Make htmlText work on HTML5 target
 			#if !js
-			_text.htmlText += (text + "<br>");
+			_text.htmlText += (text + LINE_BREAK);
 			#else
-			_text.text += text + "\n";
+			_text.text += text + LINE_BREAK;
 			#end
 		}
 		
