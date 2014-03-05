@@ -118,7 +118,7 @@ class PathManager extends FlxPlugin
 	{
 		while (_paths.length > 0)
 		{
-			FlxPath.pool.put(_paths.pop());
+			FlxPath._pool.put(_paths.pop());
 		}
 	}
 	

@@ -190,7 +190,7 @@ class FlxQuadTree extends FlxRect
 	 */
 	public static  var _NUM_CACHED_QUAD_TREES:Int = 0;
 	private static var _cachedTreesHead:FlxQuadTree;
-	private 	   var next:FlxQuadTree;
+	private var next:FlxQuadTree;
 	
 	/**
 	 * Private, use recycle instead.

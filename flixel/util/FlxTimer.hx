@@ -16,10 +16,12 @@ class FlxTimer implements IFlxDestroyable
 	 * The TimerManager instance.
 	 */
 	public static var manager:TimerManager;
+	
 	/**
 	 * A pool that contains FlxTimers for recycling.
 	 */
-	public static var pool = new FlxPool<FlxTimer>(FlxTimer);
+	@:allow(flixel.plugin.TimerManager)
+	private static var _pool = new FlxPool<FlxTimer>(FlxTimer);
 	
 	/**
 	 * Returns a recycled timer and starts it.
@@ -30,7 +32,7 @@ class FlxTimer implements IFlxDestroyable
  	 */
 	public static function start(Time:Float = 1, ?Callback:FlxTimer->Void, Loops:Int = 1):FlxTimer
 	{
-		var timer:FlxTimer = pool.get();
+		var timer:FlxTimer = _pool.get();
 		timer.run(Time, Callback, Loops);
 		return timer;
 	}
@@ -164,7 +166,7 @@ class FlxTimer implements IFlxDestroyable
 		if (manager != null)
 		{
 			manager.remove(this);
-			pool.put(this);
+			_pool.put(this);
 		}
 	}
 	

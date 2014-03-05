@@ -9,7 +9,7 @@ import flixel.interfaces.IFlxDestroyable;
  */
 class FlxRect implements IFlxDestroyable
 {
-	public static var pool = new FlxPool<FlxRect>(FlxRect);
+	private static var _pool = new FlxPool<FlxRect>(FlxRect);
 	
 	/**
 	 * Recycle or create new FlxRect.
@@ -20,7 +20,7 @@ class FlxRect implements IFlxDestroyable
 	 */
 	public static inline function get(X:Float = 0, Y:Float = 0, Width:Float = 0, Height:Float = 0):FlxRect
 	{
-		return pool.get().set(X, Y, Width, Height);
+		return _pool.get().set(X, Y, Width, Height);
 	}
 	
 	public var x:Float;
@@ -53,7 +53,7 @@ class FlxRect implements IFlxDestroyable
 	 */
 	public inline function put():Void
 	{
-		pool.put(this);
+		_pool.put(this);
 	}
 	
 	/**

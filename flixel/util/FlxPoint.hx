@@ -9,7 +9,7 @@ import flixel.interfaces.IFlxDestroyable;
  */
 class FlxPoint implements IFlxDestroyable
 {
-	public static var pool = new FlxPool<FlxPoint>(FlxPoint);
+	private static var _pool = new FlxPool<FlxPoint>(FlxPoint);
 	
 	/**
 	 * Recycle or create a new FlxPoint. 
@@ -20,7 +20,7 @@ class FlxPoint implements IFlxDestroyable
 	 */
 	public static inline function get(X:Float = 0, Y:Float = 0):FlxPoint
 	{
-		return pool.get().set(X, Y);
+		return _pool.get().set(X, Y);
 	}
 	
 	public var x(default, set):Float = 0;
@@ -31,7 +31,7 @@ class FlxPoint implements IFlxDestroyable
 	 */
 	public inline function put():Void
 	{
-		pool.put(this);
+		_pool.put(this);
 	}
 	
 	/**
