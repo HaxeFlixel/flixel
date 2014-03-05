@@ -90,7 +90,6 @@ class VCRFrontEnd
 	}
 
 	#if FLX_RECORD
-
 	/**
 	 * Called when the user presses the Rewind-looking button. If Alt is pressed, the entire game is reset.
 	 * If Alt is NOT pressed, only the current state is reset. The GUI is updated accordingly.
@@ -246,9 +245,6 @@ class VCRFrontEnd
 		#end
 	}
 	
-	@:allow(flixel.FlxG)
-	private function new() {}
-	
 	/**
 	 * Clean up memory.
 	 */
@@ -372,4 +368,7 @@ class VCRFrontEnd
 		#end
 	}
 	#end
+	
+	@:allow(flixel.FlxG)
+	private function new() {}
 }
