@@ -250,7 +250,7 @@ class VCRFrontEnd
 	 */
 	private function destroy():Void
 	{
-		#if FLX_RECORD)
+		#if FLX_RECORD
 		cancelKeys = null;
 		#if flash
 		_file = null;
