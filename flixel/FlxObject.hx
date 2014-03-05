@@ -64,6 +64,8 @@ class FlxObject extends FlxBasic
 	
 	private static var _firstSeparateFlxRect:FlxRect = FlxRect.get();
 	private static var _secondSeparateFlxRect:FlxRect = FlxRect.get();
+	private static var _floatHelper1:Float = 0;
+	private static var _floatHelper2:Float = 0;
 	
 	/**
 	 * The main collision resolution function in flixel.
@@ -530,27 +532,25 @@ class FlxObject extends FlxBasic
 	 */
 	private inline function updateMotion():Void
 	{
-		var delta:Float;
-		var velocityDelta:Float;
+		// _floatHelper1 = velocityDelta
+		// _floatHelper2 = delta
 		
-		var dt:Float = FlxG.elapsed;
+		_floatHelper1 = 0.5 * (FlxVelocity.computeVelocity(angularVelocity, angularAcceleration, angularDrag, maxAngular) - angularVelocity);
+		angularVelocity += _floatHelper1; 
+		angle += angularVelocity * FlxG.elapsed;
+		angularVelocity += _floatHelper1;
 		
-		velocityDelta = 0.5 * (FlxVelocity.computeVelocity(angularVelocity, angularAcceleration, angularDrag, maxAngular) - angularVelocity);
-		angularVelocity += velocityDelta; 
-		angle += angularVelocity * dt;
-		angularVelocity += velocityDelta;
+		_floatHelper1 = 0.5 * (FlxVelocity.computeVelocity(velocity.x, acceleration.x, drag.x, maxVelocity.x) - velocity.x);
+		velocity.x += _floatHelper1;
+		_floatHelper2 = velocity.x * FlxG.elapsed;
+		velocity.x += _floatHelper1;
+		x += _floatHelper2;
 		
-		velocityDelta = 0.5 * (FlxVelocity.computeVelocity(velocity.x, acceleration.x, drag.x, maxVelocity.x) - velocity.x);
-		velocity.x += velocityDelta;
-		delta = velocity.x * dt;
-		velocity.x += velocityDelta;
-		x += delta;
-		
-		velocityDelta = 0.5 * (FlxVelocity.computeVelocity(velocity.y, acceleration.y, drag.y, maxVelocity.y) - velocity.y);
-		velocity.y += velocityDelta;
-		delta = velocity.y * dt;
-		velocity.y += velocityDelta;
-		y += delta;
+		_floatHelper1 = 0.5 * (FlxVelocity.computeVelocity(velocity.y, acceleration.y, drag.y, maxVelocity.y) - velocity.y);
+		velocity.y += _floatHelper1;
+		_floatHelper2 = velocity.y * FlxG.elapsed;
+		velocity.y += _floatHelper1;
+		y += _floatHelper2;
 	}
 	
 	/**
