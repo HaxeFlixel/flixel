@@ -159,18 +159,20 @@ class FlxTween implements IFlxDestroyable
 	 * 						ease		Optional easer function.
 	 *  					startDelay	Seconds to wait until starting this tween, 0 by default.
 	 * 						loopDelay	Seconds to wait between loops of this tween, 0 by default.
+	 * @param	Object		An optional object to be passed in to TweenFunction during tween update
+	 * @param	TweenFunction	A function to be called when tween updates
 	 * @return	The added NumTween object.
 	 */
-	public static function num(FromValue:Float, ToValue:Float, Duration:Float, ?Options:TweenOptions):NumTween
+	public static function num<T>(FromValue:Float, ToValue:Float, Duration:Float, ?Options:TweenOptions, ?Object:T, ?TweenFunction:T->Float->Void):NumTween<T>
 	{
 		if (Options == null)
 		{
 			Options = { type : ONESHOT };
 		}
 		
-		var tween:NumTween = new NumTween(Options.complete, Options.type);
+		var tween = new NumTween<T>(Options.complete, Options.type);
 		tween.setDelays(Options.startDelay, Options.loopDelay);
-		tween.tween(FromValue, ToValue, Duration, Options.ease);
+		tween.tween(FromValue, ToValue, Duration, Options.ease, Object, TweenFunction);
 		manager.add(tween);
 		return tween;
 	}
