@@ -27,6 +27,47 @@ class FlxVector extends FlxPoint
 	}
 	
 	/**
+	 * The horizontal component of the unit vector
+	 */
+	public var dx(get, never):Float;
+	/**
+	 * The vertical component of the unit vector
+	 */
+	public var dy(get, never):Float;
+	/**
+	 * Length of the vector
+	 */
+	public var length(get, set):Float;
+	/**
+	 * length of the vector squared
+	 */
+	public var lengthSquared(get, never):Float;
+	/**
+	 * The angle formed by the vector with the horizontal axis (in degrees)
+	 */
+	public var degrees(get, set):Float;
+	/**
+	 * The angle formed by the vector with the horizontal axis (in radians)
+	 */
+	public var radians(get, set):Float;
+	/**
+	 * The horizontal component of the right normal of the vector
+	 */
+	public var rx(get, never):Float;
+	/**
+	 * The vertical component of the right normal of the vector
+	 */
+	public var ry(get, never):Float;
+	/**
+	 * The horizontal component of the left normal of the vector
+	 */
+	public var lx(get, never):Float;
+	/**
+	 * The vertical component of the left normal of the vector
+	 */
+	public var ly(get, never):Float;
+	
+	/**
 	 * Set the coordinates of this point object.
 	 * 
 	 * @param	X		The X-coordinate of the point in space.
@@ -200,30 +241,6 @@ class FlxVector extends FlxPoint
 	}
 	
 	/**
-	 * The horizontal component of the unit vector
-	 */
-	public var dx(get, never):Float;
-	
-	private inline function get_dx():Float
-	{
-		if (isZero()) return 0;
-		
-		return x / length;
-	}
-	
-	/**
-	 * The vertical component of the unit vector
-	 */
-	public var dy(get, never):Float;
-	
-	private inline function get_dy():Float
-	{
-		if (isZero()) return 0;
-		
-		return y / length;
-	}
-	
-	/**
 	 * Check the vector for unit length
 	 */
 	public inline function isNormalized():Bool
@@ -239,71 +256,6 @@ class FlxVector extends FlxPoint
 	public inline function equals(v:FlxVector):Bool
 	{
 		return (Math.abs(x - v.x) < EPSILON && Math.abs(y - v.y) < EPSILON);
-	}
-	
-	/**
-	 * Length of the vector
-	 */
-	public var length(get, set):Float;
-	
-	private inline function get_length():Float
-	{
-		return Math.sqrt(lengthSquared);
-	}
-	
-	private inline function set_length(l:Float):Float
-	{
-		var a:Float = radians;
-		x = l * Math.cos(a);
-		y = l * Math.sin(a);
-		return l;
-	}
-	
-	/**
-	 * length of the vector squared
-	 */
-	public var lengthSquared(get, never):Float;
-	
-	private inline function get_lengthSquared():Float
-	{
-		return x * x + y * y;
-	}
-	
-	/**
-	 * The angle formed by the vector with the horizontal axis (in degrees)
-	 */
-	public var degrees(get, set):Float;
-	
-	private inline function get_degrees():Float
-	{
-		return radians * FlxAngle.TO_DEG;
-	}
-	
-	private inline function set_degrees(degs:Float):Float
-	{
-		radians = degs * FlxAngle.TO_RAD;
-		return degs;
-	}
-	
-	/**
-	 * The angle formed by the vector with the horizontal axis (in radians)
-	 */
-	public var radians(get, set):Float;
-	
-	private function get_radians():Float
-	{
-		if (isZero()) return 0;
-		
-		return Math.atan2(y, x);
-	}
-	
-	private inline function set_radians(rads:Float):Float
-	{
-		var len:Float = length;
-		
-		x = len * Math.cos(rads);
-		y = len * Math.sin(rads);
-		return rads;
 	}
 	
 	/**
@@ -349,7 +301,7 @@ class FlxVector extends FlxPoint
 		y = tempX * sin + y * cos;
 		return this;
 	}
-		
+	
 	/**
 	 * Right normal of the vector
 	 */
@@ -362,27 +314,7 @@ class FlxVector extends FlxPoint
 		vec.set( -y, x);
 		return vec; 
 	}
-		
-	/**
-	 * The horizontal component of the right normal of the vector
-	 */
-	public var rx(get, never):Float;
 	
-	private inline function get_rx():Float
-	{
-		return -y;
-	}
-		
-	/**
-	 * The vertical component of the right normal of the vector
-	 */
-	public var ry(get, never):Float;
-	
-	private inline function get_ry():Float
-	{
-		return x;
-	}
-        
 	/**
 	 * Left normal of the vector
 	 */
@@ -395,27 +327,7 @@ class FlxVector extends FlxPoint
 		vec.set(y, -x);
 		return vec; 
 	}
-		
-	/**
-	 * The horizontal component of the left normal of the vector
-	 */
-	public var lx(get, never):Float;
 	
-	private inline function get_lx():Float
-	{
-		return y;
-	}
-		
-	/**
-	 * The vertical component of the left normal of the vector
-	 */
-	public var ly(get, never):Float;
-	
-	private inline function get_ly():Float
-	{
-		return -x;
-	}
-        
 	/**
 	 * Change direction of the vector to opposite
 	 */
@@ -688,5 +600,84 @@ class FlxVector extends FlxPoint
 		vec.x = x;
 		vec.y = y;
 		return vec;
+	}
+	
+	private inline function get_dx():Float
+	{
+		if (isZero()) return 0;
+		
+		return x / length;
+	}
+	
+	private inline function get_dy():Float
+	{
+		if (isZero()) return 0;
+		
+		return y / length;
+	}
+	
+	private inline function get_length():Float
+	{
+		return Math.sqrt(lengthSquared);
+	}
+	
+	private inline function set_length(l:Float):Float
+	{
+		var a:Float = radians;
+		x = l * Math.cos(a);
+		y = l * Math.sin(a);
+		return l;
+	}
+	
+	private inline function get_lengthSquared():Float
+	{
+		return x * x + y * y;
+	}
+	
+	private inline function get_degrees():Float
+	{
+		return radians * FlxAngle.TO_DEG;
+	}
+	
+	private inline function set_degrees(degs:Float):Float
+	{
+		radians = degs * FlxAngle.TO_RAD;
+		return degs;
+	}
+	
+	private function get_radians():Float
+	{
+		if (isZero()) return 0;
+		
+		return Math.atan2(y, x);
+	}
+	
+	private inline function set_radians(rads:Float):Float
+	{
+		var len:Float = length;
+		
+		x = len * Math.cos(rads);
+		y = len * Math.sin(rads);
+		return rads;
+	}
+	
+	private inline function get_rx():Float
+	{
+		return -y;
+	}
+	
+	private inline function get_ry():Float
+	{
+		return x;
+	}
+	
+	private inline function get_lx():Float
+	{
+		return y;
+	}
+	
+	private inline function get_ly():Float
+	{
+		return -x;
 	}
 }
