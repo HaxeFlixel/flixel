@@ -815,7 +815,7 @@ class FlxText extends FlxSprite
 		
 		dirty = false;
 		
-		#if !(flash || js)
+		#if FLX_RENDER_TILE
 		if (!RunOnCpp)
 		{
 			return;

@@ -1142,7 +1142,7 @@ class FlxSprite extends FlxObject
 			loadGraphic(GraphicDefault);
 		}
 		
-		#if !(flash || js)
+		#if FLX_RENDER_TILE
 		if (!RunOnCpp)
 		{
 			return;
