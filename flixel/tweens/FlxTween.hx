@@ -88,7 +88,7 @@ class FlxTween implements IFlxDestroyable
 		}
 	}
 	
-	public static function customTween<T>(Object:T, TweenFunction:T->Float->Void, From:Float, To:Float, Duration:Float, ?Options:TweenOptions):CustomTween<T>
+	public static function custom<T>(Object:T, TweenFunction:T->Float->Void, From:Float, To:Float, Duration:Float, ?Options:TweenOptions):CustomTween<T>
 	{
 		if (Options == null)
 		{
