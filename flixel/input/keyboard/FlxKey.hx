@@ -79,7 +79,6 @@ class FlxKey
 	public static inline var LEFT        :Int = 37;
 	public static inline var RIGHT       :Int = 39;
 	public static inline var TAB         :Int = 9;
-#if (flash || js)
 	public static inline var F1          :Int = 112;
 	public static inline var F2          :Int = 113;
 	public static inline var F3          :Int = 114;
@@ -105,7 +104,6 @@ class FlxKey
 	public static inline var NUMPADMINUS :Int = 109;
 	public static inline var NUMPADPLUS  :Int = 107;
 	public static inline var NUMPADPERIOD:Int = 110;
-#end
 	
 	/**
 	 * The name of this key.
