@@ -6,7 +6,6 @@ import flixel.tweens.FlxEase;
 /**
  * Use a custom function to tween
  */
-@:generic
 class CustomTween<T> extends FlxTween
 {
 	private var _object:T;
