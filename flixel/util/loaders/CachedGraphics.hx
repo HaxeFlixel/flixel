@@ -70,7 +70,7 @@ class CachedGraphics
 	 */
 	public function dump():Void
 	{
-		#if FLX_RENDER_TILE
+		#if (FLX_RENDER_TILE && !flash)
 		if (canBeDumped)
 		{
 			bitmap.dumpBits();
