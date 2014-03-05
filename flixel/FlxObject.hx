@@ -64,8 +64,8 @@ class FlxObject extends FlxBasic
 	
 	private static var _firstSeparateFlxRect:FlxRect = FlxRect.get();
 	private static var _secondSeparateFlxRect:FlxRect = FlxRect.get();
-	private static var _floatHelper1:Float = 0;
-	private static var _floatHelper2:Float = 0;
+	private static var _velocityDelta:Float = 0;
+	private static var _delta:Float = 0;
 	
 	/**
 	 * The main collision resolution function in flixel.
@@ -532,25 +532,22 @@ class FlxObject extends FlxBasic
 	 */
 	private inline function updateMotion():Void
 	{
-		// _floatHelper1 = velocityDelta
-		// _floatHelper2 = delta
-		
-		_floatHelper1 = 0.5 * (FlxVelocity.computeVelocity(angularVelocity, angularAcceleration, angularDrag, maxAngular) - angularVelocity);
-		angularVelocity += _floatHelper1; 
+		_velocityDelta = 0.5 * (FlxVelocity.computeVelocity(angularVelocity, angularAcceleration, angularDrag, maxAngular) - angularVelocity);
+		angularVelocity += _velocityDelta; 
 		angle += angularVelocity * FlxG.elapsed;
-		angularVelocity += _floatHelper1;
+		angularVelocity += _velocityDelta;
 		
-		_floatHelper1 = 0.5 * (FlxVelocity.computeVelocity(velocity.x, acceleration.x, drag.x, maxVelocity.x) - velocity.x);
-		velocity.x += _floatHelper1;
-		_floatHelper2 = velocity.x * FlxG.elapsed;
-		velocity.x += _floatHelper1;
-		x += _floatHelper2;
+		_velocityDelta = 0.5 * (FlxVelocity.computeVelocity(velocity.x, acceleration.x, drag.x, maxVelocity.x) - velocity.x);
+		velocity.x += _velocityDelta;
+		_delta = velocity.x * FlxG.elapsed;
+		velocity.x += _velocityDelta;
+		x += _delta;
 		
-		_floatHelper1 = 0.5 * (FlxVelocity.computeVelocity(velocity.y, acceleration.y, drag.y, maxVelocity.y) - velocity.y);
-		velocity.y += _floatHelper1;
-		_floatHelper2 = velocity.y * FlxG.elapsed;
-		velocity.y += _floatHelper1;
-		y += _floatHelper2;
+		_velocityDelta = 0.5 * (FlxVelocity.computeVelocity(velocity.y, acceleration.y, drag.y, maxVelocity.y) - velocity.y);
+		velocity.y += _velocityDelta;
+		_delta = velocity.y * FlxG.elapsed;
+		velocity.y += _velocityDelta;
+		y += _delta;
 	}
 	
 	/**
