@@ -99,12 +99,6 @@ class FlxTimer implements IFlxDestroyable
 	private var _loopsCounter:Int = 0;
 	
 	/**
-	 * Internal constructor.
-	 * This is private, use recycle() or start() to get timers instead.
-	 */
-	private function new() { }
-	
-	/**
 	 * Clean up memory.
 	 */
 	public function destroy():Void
@@ -196,6 +190,8 @@ class FlxTimer implements IFlxDestroyable
 			}
 		}
 	}
+	
+	private function new() {}
 	
 	private inline function get_timeLeft():Float
 	{

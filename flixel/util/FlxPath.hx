@@ -151,11 +151,6 @@ class FlxPath implements IFlxDestroyable
 	 */
 	private var _autoRotate:Bool = false;
 	
-	/**
-	 * Instantiate a new path object.
-	 */
-	public function new() {}
-	
 	public function reset():FlxPath
 	{
 		#if !FLX_NO_DEBUG
@@ -717,4 +712,6 @@ class FlxPath implements IFlxDestroyable
 		#end
 	}
 	#end
+	
+	private function new() {}
 }
