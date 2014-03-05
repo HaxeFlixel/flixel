@@ -536,7 +536,7 @@ class FlxKeyboard implements IFlxInput
 		return false;
 	}
 	
-	private function resolveKeyCode(e:KeyboardEvent):Int
+	private inline function resolveKeyCode(e:KeyboardEvent):Int
 	{
 		#if (flash || js)
 		return e.keyCode;
