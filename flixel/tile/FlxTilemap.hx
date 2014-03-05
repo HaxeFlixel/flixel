@@ -340,7 +340,8 @@ class FlxTilemap extends FlxObject
 		// DON'T FORGET TO SET 'widthInTiles' and 'heightInTiles' manually BEFORE CALLING loadMap() if you pass an Array<Int>!
 		else if (Std.is(MapData, Array))
 		{
-			_data = MapData.copy(); // make a copy to make sure we don't mess with the original array, which might be used for something!
+			_data = cast MapData; // need to cast this to make sure it works in js, can't call copy() on a Dynamic
+			_data = _data.copy(); // make a copy to make sure we don't mess with the original array, which might be used for something!
 		}
 		else
 		{

@@ -134,9 +134,9 @@ class FlxCamera extends FlxBasic
 	
 	/**
 	 * Whether to use alpha blending for camera's background fill or not. 
-	 * Useful for flash target (and works only on this target). Default value is true.
+	 * Useful for flash target (and works only on this target). Default value is false.
 	 */
-	public var useBgAlphaBlending:Bool = true;
+	public var useBgAlphaBlending:Bool = false;
 	
 	/**
 	 * Used to render buffer to screen space. NOTE: We don't recommend modifying this directly unless you are fairly experienced. 
