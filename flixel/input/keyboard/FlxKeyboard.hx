@@ -266,6 +266,7 @@ class FlxKeyboard implements IFlxInput
 		addKey("RIGHT", 39);
 		addKey("TAB", 9);
 		
+		addKey("NUMPADMULTIPLY", 106);
 		addKey("NUMPADMINUS", 109);
 		addKey("NUMPADPLUS", 107);
 		addKey("NUMPADPERIOD", 110);
@@ -320,6 +321,8 @@ class FlxKeyboard implements IFlxInput
 		_nativeCorrection.set("43_75", FlxKey.NUMPADPLUS);
 		_nativeCorrection.set("45_77", FlxKey.NUMPADMINUS);
 		_nativeCorrection.set("47_79", FlxKey.NUMPADSLASH);
+		_nativeCorrection.set("46_78", FlxKey.NUMPADPERIOD);
+		_nativeCorrection.set("42_74", FlxKey.NUMPADMULTIPLY);
 		#end
 		
 		Lib.current.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
