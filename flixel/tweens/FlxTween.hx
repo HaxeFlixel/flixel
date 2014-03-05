@@ -8,6 +8,7 @@ import flixel.plugin.TweenManager;
 import flixel.tweens.FlxEase.EaseFunction;
 import flixel.tweens.misc.AngleTween;
 import flixel.tweens.misc.ColorTween;
+import flixel.tweens.misc.CustomTween;
 import flixel.tweens.misc.MultiVarTween;
 import flixel.tweens.misc.NumTween;
 import flixel.tweens.misc.VarTween;
@@ -85,6 +86,20 @@ class FlxTween implements IFlxDestroyable
 		{
 			return cast multiVar(Object, Values, Duration, Options);
 		}
+	}
+	
+	public static function custom<T>(Object:T, TweenFunction:T->Float->Void, From:Float, To:Float, Duration:Float, ?Options:TweenOptions):CustomTween<T>
+	{
+		if (Options == null)
+		{
+			Options = { type : ONESHOT };
+		}
+		
+		var tween = new CustomTween<T>(Options.complete, Options.type);		
+		tween.setDelays(Options.startDelay, Options.loopDelay);
+		tween.tween(Object, TweenFunction, From, To, Duration, Options.ease);
+		manager.add(tween);
+		return tween;
 	}
 	
 	/**
