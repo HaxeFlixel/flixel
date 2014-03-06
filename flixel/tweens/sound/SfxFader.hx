@@ -14,7 +14,9 @@ class SfxFader extends FlxTween
 	/**
 	 * A pool that contains SfxFaders for recycling.
 	 */
-	@:isVar private static var pool(get, null):FlxPool<SfxFader>;
+	@:isVar 
+	@:allow(flixel.tweens.FlxTween)
+	private static var _pool(get, null):FlxPool<SfxFader>;
 	
 	/**
 	 * Only allocate the pool if needed.
@@ -31,7 +33,7 @@ class SfxFader extends FlxTween
 	/**
 	 * The current Sfx this object is effecting.
 	 */
-	public var sfx:FlxSound;
+	public var sfx(default, null):FlxSound;
 
 	// Fader information.
 	private var _start:Float;
@@ -45,25 +47,25 @@ class SfxFader extends FlxTween
 	override public function destroy():Void 
 	{
 		super.destroy();
-		pool.put(this);
+		_pool.put(this);
 		sfx = null;
 		_crossSfx = null;
-		_complete = null;
 	}
 
 	/**
 	 * Fades the Sfx to the target volume.
 	 * 
+	 * @param	sound		The FlxSound
 	 * @param	volume		The volume to fade to.
 	 * @param	duration	Duration of the fade.
 	 * @param	ease		Optional easer function.
 	 */
-	public function fadeTo(volume:Float, duration:Float, ?ease:EaseFunction):SfxFader
+	public function fadeTo(sound:FlxSound, volume:Float, duration:Float, ?ease:EaseFunction):SfxFader
 	{
 		if (volume < 0) 
-		{
 			volume = 0;
-		}
+		
+		this.sfx = sound;
 		_start = sfx.volume;
 		_range = volume - _start;
 		this.duration = duration;

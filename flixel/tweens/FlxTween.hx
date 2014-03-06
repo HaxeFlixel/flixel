@@ -5,6 +5,7 @@ import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.interfaces.IFlxDestroyable;
 import flixel.plugin.TweenManager;
+import flixel.system.FlxSound;
 import flixel.tweens.FlxEase.EaseFunction;
 import flixel.tweens.misc.AngleTween;
 import flixel.tweens.misc.ColorTween;
@@ -17,6 +18,7 @@ import flixel.tweens.motion.LinearMotion;
 import flixel.tweens.motion.LinearPath;
 import flixel.tweens.motion.QuadMotion;
 import flixel.tweens.motion.QuadPath;
+import flixel.tweens.sound.SfxFader;
 import flixel.util.FlxPoint;
 import flixel.util.FlxTimer;
 
@@ -88,7 +90,7 @@ class FlxTween implements IFlxDestroyable
 	}
 	
 	/**
-	 * Tweens some numeric value. Shorthand for creating a NumTween objects, starting it and adding it to the TweenPlugin. Using it in 
+	 * Tweens some numeric value. Shorthand for creating a NumTween object, starting it and adding it to the TweenPlugin. Using it in 
 	 * conjunction with a TweenFunction requires more setup, but is faster than MulitVarTween and SingleVarTween because it doesn't use Reflection.
 	 * 
 	 * Example: 
@@ -124,7 +126,7 @@ class FlxTween implements IFlxDestroyable
 	}
 	
 	/**
-	 * Tweens numeric value which represents angle. Shorthand for creating a AngleTween objects, starting it and adding it to the TweenManager.
+	 * Tweens numeric value which represents angle. Shorthand for creating a AngleTween object, starting it and adding it to the TweenManager.
 	 * Example: FlxTween.angle(Sprite, -90, 90, 2.0, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT });
 	 * 
 	 * @param	Sprite		Optional Sprite whose angle should be tweened.
@@ -155,7 +157,7 @@ class FlxTween implements IFlxDestroyable
 	}
 	
 	/**
-	 * Tweens numeric value which represents color. Shorthand for creating a ColorTween objects, starting it and adding it to a TweenPlugin.
+	 * Tweens numeric value which represents color. Shorthand for creating a ColorTween object, starting it and adding it to a TweenPlugin.
 	 * Example: FlxTween.color(Sprite, 2.0, 0x000000, 0xffffff, 0.0, 1.0, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT });
 	 * 
 	 * @param	Sprite		Optional Sprite whose color should be tweened.
@@ -189,7 +191,7 @@ class FlxTween implements IFlxDestroyable
 	
 	#if !FLX_NO_SOUND_SYSTEM
 	/**
-	 * Tweens FlxG.sound.volume. Shorthand for creating a Fader tweens, starting it and adding it to the TweenManager.
+	 * Tweens FlxG.sound.volume. Shorthand for creating a Fader tween, starting it and adding it to the TweenManager.
 	 * Example: FlxTween.fader(0.5, 2.0, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT });
 	 *
 	 * @param	Volume		The volume to fade to.
@@ -213,6 +215,35 @@ class FlxTween implements IFlxDestroyable
 		tween.init(Options.complete, Options.type);
 		tween.setDelays(Options.startDelay, Options.loopDelay);
 		tween.fadeTo(Volume, Duration, Options.ease);
+		manager.add(tween);
+		return tween;
+	}
+	
+	/**
+	 * Tweens the volume of a FlxSound. Shorthand for creating a SfxFader tween, starting it and adding it to the TweenManager.
+	 * 
+	 * @param	Sound		The FlxSound.
+	 * @param	ToVolume	The volume to tween to.
+	 * @param	Duration	Duration of the fade in seconds.
+	 * @param	Options		An object containing key/value pairs of the following optional parameters:
+	 * 						type		Tween type.
+	 * 						complete	Optional completion callback function.
+	 * 						ease		Optional easer function.
+	 *  					startDelay	Seconds to wait until starting this tween, 0 by default.
+	 * 						loopDelay	Seconds to wait between loops of this tween, 0 by default.
+	 * @return	The added SfxFader object.
+	 */
+	public static function sfx(Sound:FlxSound, ToVolume:Float, Duration:Float, ?Options:TweenOptions):SfxFader
+	{
+		if (Options == null)
+		{
+			Options = { type : ONESHOT };
+		}
+		
+		var tween = SfxFader._pool.get();
+		tween.init(Options.complete, Options.type);
+		tween.setDelays(Options.startDelay, Options.loopDelay);
+		tween.fadeTo(Sound, ToVolume, Duration, Options.ease);
 		manager.add(tween);
 		return tween;
 	}
