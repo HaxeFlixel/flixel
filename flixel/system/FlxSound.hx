@@ -355,7 +355,6 @@ class FlxSound extends FlxBasic
 	 * @param	TargetObject		The object you want to track.
 	 * @param	Radius			The maximum distance this sound can travel.
 	 * @param	Pan			Whether panning should be used in addition to the volume changes (default: true).
-	 *
 	 * @return	This FlxSound instance (nice for chaining stuff together, if you're into that).
 	 */
 	public function proximity(X:Float, Y:Float, TargetObject:FlxObject, Radius:Float, Pan:Bool = true):FlxSound
@@ -370,13 +369,14 @@ class FlxSound extends FlxBasic
 	
 	/**
 	 * Call this function to play the sound - also works on paused sounds.
+	 * 
 	 * @param	ForceRestart	Whether to start the sound over or not.  Default value is false, meaning if the sound is already playing or was paused when you call play(), it will continue playing from its current position, NOT start again from the beginning.
 	 */
-	public function play(ForceRestart:Bool = false):Void
+	public function play(ForceRestart:Bool = false):FlxSound
 	{
 		if (!exists)
 		{
-			return;
+			return this;
 		}
 		if (ForceRestart)
 		{
@@ -385,7 +385,7 @@ class FlxSound extends FlxBasic
 		else if (playing)
 		{
 			// Already playing sound
-			return;
+			return this;
 		}
 		
 		if (_paused)
@@ -396,39 +396,43 @@ class FlxSound extends FlxBasic
 		{
 			startSound(0);
 		}
+		return this;
 	}
 	
 	/**
 	 * Unpause a sound.  Only works on sounds that have been paused.
 	 */
-	public function resume():Void
+	public function resume():FlxSound
 	{
 		if (_paused)
 		{
 			startSound(_position);
 		}
+		return this;
 	}
 	
 	/**
 	 * Call this function to pause this sound.
 	 */
-	public function pause():Void
+	public function pause():FlxSound
 	{
 		if (!playing)
 		{
-			return;
+			return this;
 		}
 		_position = _channel.position;
 		_paused = true;
 		cleanup(false, false, false);
+		return this;
 	}
 	
 	/**
 	 * Call this function to stop this sound.
 	 */
-	public inline function stop():Void
+	public inline function stop():FlxSound
 	{
 		cleanup(autoDestroy, true, true);
+		return this;
 	}
 	
 	/**
@@ -437,9 +441,10 @@ class FlxSound extends FlxBasic
 	 * @param	Duration	The amount of time the fade-out operation should take.
 	 * @param	To			The volume to tween to, 0 by default.
 	 */
-	public inline function fadeOut(Duration:Float, ?To:Float = 0):Void
+	public inline function fadeOut(Duration:Float, ?To:Float = 0):FlxSound
 	{
-		FlxTween.singleVar(this, "volume", To, Duration);
+		FlxTween.tween(this, { volume: To }, Duration);
+		return this;
 	}
 	
 	/**
@@ -449,10 +454,11 @@ class FlxSound extends FlxBasic
 	 * @param	From		The volume to tween from, 0 by default.
 	 * @param	To			The volume to tween to, 1 by default.
 	 */
-	public inline function fadeIn(Duration:Float, From:Float = 0, To:Float = 1):Void
+	public inline function fadeIn(Duration:Float, From:Float = 0, To:Float = 1):FlxSound
 	{
 		volume = From;
-		FlxTween.singleVar(this, "volume", To, Duration);
+		FlxTween.tween(this, { volume: To}, Duration);
+		return this;
 	}
 	
 	/**
