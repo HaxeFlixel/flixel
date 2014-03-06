@@ -1,6 +1,7 @@
 package flixel.util;
 
 import flixel.FlxG;
+import flixel.FlxSprite;
 #if !FLX_NO_TOUCH
 import flixel.input.touch.FlxTouch;
 #end
@@ -195,6 +196,8 @@ class FlxVelocity
 		
 		Source.velocity.x = Math.cos(a) * Speed;
 		Source.velocity.y = Math.sin(a) * Speed;
+		
+		Target.putWeak();
 	}
 	
 	/**
@@ -220,6 +223,8 @@ class FlxVelocity
 		
 		Source.maxVelocity.x = MaxXSpeed;
 		Source.maxVelocity.y = MaxYSpeed;
+		
+		Target.putWeak();
 	}
 	
 	/**

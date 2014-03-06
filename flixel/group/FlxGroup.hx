@@ -1,6 +1,10 @@
 package flixel.group;
 
 import flixel.FlxBasic;
+import flixel.FlxCamera;
+import flixel.FlxObject;
+import flixel.system.FlxCollisionType;
+import flixel.tile.FlxTilemap;
 
 /**
  * This is an organizational class that can update and render a bunch of FlxBasics.
@@ -10,12 +14,44 @@ import flixel.FlxBasic;
 class FlxGroup extends FlxTypedGroup<FlxBasic>
 {
 	/**
-	 * Create a new FlxGroup
-	 * 
-	 * @param	MaxSize		Maximum amount of members allowed
+	 * Helper function for overlap functions in FlxObject and FlxTilemap.
 	 */
-	public function new(MaxSize:Int = 0)
+	@:allow(flixel.FlxObject)
+	@:allow(flixel.tile.FlxTilemap)
+	private static inline function overlaps(Callback:FlxBasic->Float->Float->Bool->FlxCamera->Bool, 
+	                                       ObjectOrGroup:FlxBasic, X:Float, Y:Float, InScreenSpace:Bool, Camera:FlxCamera):Bool
 	{
-		super(MaxSize);
+		var result:Bool = false;
+		var group:FlxGroup = resolveGroup(ObjectOrGroup);
+		if (group != null)
+		{
+			for (basic in group._basics)
+			{
+				if (Callback(basic, X, Y, InScreenSpace, Camera))
+				{
+					result = true;
+					break;
+				}
+			}
+		}
+		return result;
+	}
+	
+	private static inline function resolveGroup(ObjectOrGroup:FlxBasic):FlxGroup
+	{
+		var group:FlxGroup = null;
+		if ((ObjectOrGroup.collisionType == FlxCollisionType.SPRITEGROUP) || 
+		    (ObjectOrGroup.collisionType == FlxCollisionType.GROUP))
+		{
+			if (ObjectOrGroup.collisionType == FlxCollisionType.GROUP)
+			{
+				group = cast ObjectOrGroup;
+			}
+			else if (ObjectOrGroup.collisionType == FlxCollisionType.SPRITEGROUP)
+			{
+				group = cast cast(ObjectOrGroup, FlxSpriteGroup).group;
+			}
+		}
+		return group;
 	}
 }

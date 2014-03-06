@@ -15,6 +15,7 @@ import flixel.util.FlxPoint;
 import flixel.util.FlxRandom;
 import flixel.util.FlxRect;
 import flixel.util.loaders.CachedGraphics;
+import openfl.display.Tilesheet;
 
 /**
  * The camera class is used to display the game's visuals in the Flash player.
@@ -134,9 +135,9 @@ class FlxCamera extends FlxBasic
 	
 	/**
 	 * Whether to use alpha blending for camera's background fill or not. 
-	 * Useful for flash target (and works only on this target). Default value is true.
+	 * Useful for flash target (and works only on this target). Default value is false.
 	 */
-	public var useBgAlphaBlending:Bool = true;
+	public var useBgAlphaBlending:Bool = false;
 	
 	/**
 	 * Used to render buffer to screen space. NOTE: We don't recommend modifying this directly unless you are fairly experienced. 
@@ -389,11 +390,11 @@ class FlxCamera extends FlxBasic
 				{
 					untyped data.length = position; // optimized way of resizing an array
 				}
-				var tempFlags:Int = Graphics.TILE_TRANS_2x2;
-				tempFlags |= Graphics.TILE_ALPHA;
+				var tempFlags:Int = Tilesheet.TILE_TRANS_2x2;
+				tempFlags |= Tilesheet.TILE_ALPHA;
 				if (currItem.colored)
 				{
-					tempFlags |= Graphics.TILE_RGB;
+					tempFlags |= Tilesheet.TILE_RGB;
 				}
 				tempFlags |= currItem.blending;
 				currItem.graphics.tilesheet.tileSheet.drawTiles(canvas.graphics, data, (antialiasing || currItem.antialiasing), tempFlags);
@@ -410,7 +411,7 @@ class FlxCamera extends FlxBasic
 	 * @param 	X			X location of the camera's display in pixels. Uses native, 1:1 resolution, ignores zoom.
 	 * @param 	Y			Y location of the camera's display in pixels. Uses native, 1:1 resolution, ignores zoom.
 	 * @param 	Width		The width of the camera display in pixels.
-	 * @param 	Height	The height of the camera display in pixels.
+	 * @param 	Height		The height of the camera display in pixels.
 	 * @param 	Zoom		The initial zoom level of the camera.  A zoom level of 2 will make all pixels display at 2x resolution.
 	 */
 	public function new(X:Int = 0, Y:Int = 0, Width:Int = 0, Height:Int = 0, Zoom:Float = 0)
