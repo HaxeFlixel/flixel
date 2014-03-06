@@ -2320,7 +2320,7 @@ class FlxTilemap extends FlxObject
 			{
 				if (_buffers[i] != null)
 				{
-					_buffers[i].updateColumns(_tileHeight, heightInTiles, scale.y, cameras[i]);
+					_buffers[i].updateRows(_tileHeight, heightInTiles, scale.y, cameras[i]);
 				}
 			}
 		}
