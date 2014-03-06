@@ -449,7 +449,7 @@ class MouseEventManager extends FlxPlugin
 
 private class ObjectMouseData<T:FlxObject>
 {
-	public var object:T;
+	public var object:FlxObject;
 	public var onMouseDown:T->Void;
 	public var onMouseUp:T->Void;
 	public var onMouseOver:T->Void;
