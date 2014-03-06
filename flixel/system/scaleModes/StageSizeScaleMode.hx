@@ -5,7 +5,7 @@ import flixel.FlxG;
 class StageSizeScaleMode extends BaseScaleMode
 {
 	override public function onMeasure(Width:Int, Height:Int):Void
-	{		
+	{
 		FlxG.width = Width;
 		FlxG.height = Height;
 		
