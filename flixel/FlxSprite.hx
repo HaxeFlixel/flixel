@@ -1099,6 +1099,7 @@ class FlxSprite extends FlxObject
 	/**
 	 * Checks to see if a point in 2D world space overlaps this FlxSprite object's current displayed pixels.
 	 * This check is ALWAYS made in screen space, and always takes scroll factors into account.
+	 * 
 	 * @param	Point		The point in world space you want to check.
 	 * @param	Mask		Used in the pixel hit test to determine what counts as solid.
 	 * @param	Camera		Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
@@ -1115,7 +1116,9 @@ class FlxSprite extends FlxObject
 		_point.y = _point.y - offset.y;
 		_flashPoint.x = (point.x - Camera.scroll.x) - _point.x;
 		_flashPoint.y = (point.y - Camera.scroll.y) - _point.y;
-
+		
+		point.putWeak();
+		
 		// 1. Check to see if the point is outside of framePixels rectangle
 		if (_flashPoint.x < 0 || _flashPoint.x > frameWidth || _flashPoint.y < 0 || _flashPoint.y > frameHeight)
 		{
@@ -1181,7 +1184,7 @@ class FlxSprite extends FlxObject
 			return;
 		}
 		
-		if (cachedGraphics.data != null && (region.tileWidth == 0 && region.tileHeight == 0))
+		if ((cachedGraphics.data != null) && (region.tileWidth == 0 && region.tileHeight == 0))
 		{
 			framesData = cachedGraphics.tilesheet.getTexturePackerFrames(cachedGraphics.data);
 		}

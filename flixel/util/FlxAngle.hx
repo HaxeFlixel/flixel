@@ -160,6 +160,9 @@ class FlxAngle
 			}
 		}
 		
+		Point1.putWeak();
+		Point2.putWeak();
+		
 		return angle;
 	}
 	

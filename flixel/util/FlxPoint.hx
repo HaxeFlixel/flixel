@@ -24,8 +24,24 @@ class FlxPoint implements IFlxDestroyable
 		return _pool.get().set(X, Y);
 	}
 	
+	/**
+	 * Recycle or create a new FlxPoint which will automatically be released 
+	 * to the pool when passed into a flixel function.
+	 * 
+	 * @param	X		The X-coordinate of the point in space.
+	 * @param	Y		The Y-coordinate of the point in space.
+	 */
+	public static inline function weak(X:Float = 0, Y:Float = 0):FlxPoint
+	{
+		var point = _pool.get().set(X, Y);
+		point._weak = true;
+		return point;
+	}
+	
 	public var x(default, set):Float = 0;
 	public var y(default, set):Float = 0;
+	
+	private var _weak:Bool = false;
 	
 	/**
 	 * Add this FlxPoint to the recycling pool.
@@ -33,6 +49,17 @@ class FlxPoint implements IFlxDestroyable
 	public inline function put():Void
 	{
 		_pool.put(this);
+	}
+	
+	/**
+	 * Add this FlxPoint to the recycling pool if it's a weak reference (allocated via weak()).
+	 */
+	public inline function putWeak():Void
+	{
+		if (_weak)
+		{
+			_pool.put(this);
+		}
 	}
 	
 	/**

@@ -647,6 +647,7 @@ class FlxObject extends FlxBasic
 	/**
 	 * Checks to see if some FlxObject overlaps this FlxObject or FlxGroup. If the group has a LOT of things in it, 
 	 * it might be faster to use FlxG.overlaps(). WARNING: Currently tilemaps do NOT support screen space overlap checks!
+	 * 
 	 * @param	ObjectOrGroup	The object or group being tested.
 	 * @param	InScreenSpace	Whether to take scroll factors into account when checking for overlap.  Default is false, or "only compare in world space."
 	 * @param	Camera			Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
@@ -692,6 +693,7 @@ class FlxObject extends FlxBasic
 	/**
 	 * Checks to see if this FlxObject were located at the given position, would it overlap the FlxObject or FlxGroup?
 	 * This is distinct from overlapsPoint(), which just checks that point, rather than taking the object's size into account. WARNING: Currently tilemaps do NOT support screen space overlap checks!
+	 * 
 	 * @param	X				The X position you want to check.  Pretends this object (the caller, not the parameter) is located here.
 	 * @param	Y				The Y position you want to check.  Pretends this object (the caller, not the parameter) is located here.
 	 * @param	ObjectOrGroup	The object or group being tested.
@@ -741,6 +743,7 @@ class FlxObject extends FlxBasic
 	
 	/**
 	 * Checks to see if a point in 2D world space overlaps this FlxObject object.
+	 * 
 	 * @param	Point			The point in world space you want to check.
 	 * @param	InScreenSpace	Whether to take scroll factors into account when checking for overlap.
 	 * @param	Camera			Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
@@ -760,11 +763,13 @@ class FlxObject extends FlxBasic
 		var X:Float = point.x - Camera.scroll.x;
 		var Y:Float = point.y - Camera.scroll.y;
 		getScreenXY(_point, Camera);
+		point.putWeak();
 		return (X > _point.x) && (X < _point.x + width) && (Y > _point.y) && (Y < _point.y + height);
 	}
 	
 	/**
 	 * Check and see if this object is currently within the Worldbounds - useful for killing objects that get too far away.
+	 * 
 	 * @return	Whether the object is within the Worldbounds or not.
 	 */
 	public inline function inWorldBounds():Bool
@@ -774,6 +779,7 @@ class FlxObject extends FlxBasic
 	
 	/**
 	 * Call this function to figure out the on-screen position of the object.
+	 * 
 	 * @param	Camera		Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
 	 * @param	Point		Takes a FlxPoint object and assigns the post-scrolled X and Y values of this object to it.
 	 * @return	The Point you passed in, or a new Point if you didn't pass one, containing the screen X and Y position of this object.
@@ -793,6 +799,7 @@ class FlxObject extends FlxBasic
 	
 	/**
 	 * Retrieve the midpoint of this object in world coordinates.
+	 * 
 	 * @param	point	Allows you to pass in an existing FlxPoint object if you're so inclined.  Otherwise a new one is created.
 	 * @return	A FlxPoint object containing the midpoint of this object in world coordinates.
 	 */
@@ -808,6 +815,7 @@ class FlxObject extends FlxBasic
 	/**
 	 * Handy function for reviving game objects.
 	 * Resets their existence flags and position.
+	 * 
 	 * @param	X	The new X position of this object.
 	 * @param	Y	The new Y position of this object.
 	 */
@@ -823,8 +831,8 @@ class FlxObject extends FlxBasic
 	
 	/**
 	 * Check and see if this object is currently on screen.
-	 * @param	Camera		Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
 	 * 
+	 * @param	Camera		Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
 	 * @return	Whether the object is on screen or not.
 	 */
 	public function isOnScreen(?Camera:FlxCamera):Bool
@@ -839,6 +847,7 @@ class FlxObject extends FlxBasic
 	
 	/**
 	 * Handy function for checking if this object is touching a particular surface.
+	 * 
 	 * @param	Direction	Any of the collision flags (e.g. LEFT, FLOOR, etc).
 	 * @return	Whether the object is touching an object in (any of) the specified direction(s) this frame.
 	 */
@@ -849,6 +858,7 @@ class FlxObject extends FlxBasic
 	
 	/**
 	 * Handy function for checking if this object is just landed on a particular surface.
+	 * 
 	 * @param	Direction	Any of the collision flags (e.g. LEFT, FLOOR, etc).
 	 * @return	Whether the object just landed on (any of) the specified surface(s) this frame.
 	 */
@@ -860,6 +870,7 @@ class FlxObject extends FlxBasic
 	/**
 	 * Reduces the "health" variable of this sprite by the amount specified in Damage.
 	 * Calls kill() if health drops to or below zero.
+	 * 
 	 * @param	Damage		How much health to take away (use a negative number to give a health bonus).
 	 */
 	public function hurt(Damage:Float):Void
@@ -874,6 +885,7 @@ class FlxObject extends FlxBasic
 	/**
 	 * Helper function to set the coordinates of this object.
 	 * Handy since it only requires one line of code.
+	 * 
 	 * @param	X	The new x position
 	 * @param	Y	The new y position
 	 */
@@ -885,6 +897,7 @@ class FlxObject extends FlxBasic
 	
 	/**
 	 * Shortcut for setting both width and Height.
+	 * 
 	 * @param	Width	The new sprite width.
 	 * @param	Height	The new sprite height.
 	 */

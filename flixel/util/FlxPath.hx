@@ -73,7 +73,7 @@ class FlxPath implements IFlxDestroyable
 	 * @param	Mode		Optional, controls the behavior of the object following the path using the path behavior constants.  Can use multiple flags at once, for example PATH_YOYO|PATH_HORIZONTAL_ONLY will make an object move back and forth along the X axis of the path only.
 	 * @param	AutoRotate	Automatically point the object toward the next node.  Assumes the graphic is pointing upward.  Default behavior is false, or no automatic rotation.
 	 */
-	public static function start(Object:FlxObject, Nodes:Array<FlxPoint>, Speed:Float = 100, Mode:Int = 0x000000, AutoRotate:Bool = false):FlxPath
+	public static function start(Object:FlxObject, Nodes:Array<FlxPoint>, Speed:Float = 100, Mode:Int = FlxPath.FORWARD, AutoRotate:Bool = false):FlxPath
 	{
 		var path:FlxPath = _pool.get();
 		path.run(Object, Nodes, Speed, Mode, AutoRotate);
@@ -163,7 +163,7 @@ class FlxPath implements IFlxDestroyable
 		return this;
 	}
 	
-	public function run(Object:FlxObject, Nodes:Array<FlxPoint>, Speed:Float = 100, Mode:Int = 0x000000, AutoRotate:Bool = false):FlxPath
+	public function run(Object:FlxObject, Nodes:Array<FlxPoint>, Speed:Float = 100, Mode:Int = FlxPath.FORWARD, AutoRotate:Bool = false):FlxPath
 	{
 		object = Object;
 		nodes = Nodes;

@@ -1032,7 +1032,9 @@ class FlxTilemap extends FlxObject
 		WorldPoint.y = WorldPoint.y - Camera.scroll.y;
 		getScreenXY(_point, Camera);
 		
-		return _tileObjects[_data[Std.int(Std.int((WorldPoint.y - WorldPoint.y) / _scaledTileHeight) * widthInTiles + (WorldPoint.x - WorldPoint.x) / _scaledTileWidth)]].allowCollisions > 0;
+		var result:Bool =  _tileObjects[_data[Std.int(Std.int((WorldPoint.y - WorldPoint.y) / _scaledTileHeight) * widthInTiles + (WorldPoint.x - WorldPoint.x) / _scaledTileWidth)]].allowCollisions > 0;
+		WorldPoint.putWeak();
+		return result;
 	}
 	
 	/**
@@ -1226,7 +1228,7 @@ class FlxTilemap extends FlxObject
 	 * @param	CallbackFilter		If you only want the callback to go off for certain classes or objects based on a certain class, set that class here.
 	 * @param	Range				If you want this callback to work for a bunch of different tiles, input the range here.  Default value is 1.
 	 */
-	public function setTileProperties(Tile:Int, AllowCollisions:Int = 0x1111, ?Callback:FlxObject->FlxObject->Void, ?CallbackFilter:Class<Dynamic>, Range:Int = 1):Void
+	public function setTileProperties(Tile:Int, AllowCollisions:Int = FlxObject.ANY, ?Callback:FlxObject->FlxObject->Void, ?CallbackFilter:Class<Dynamic>, Range:Int = 1):Void
 	{
 		if (Range <= 0)
 		{
@@ -1390,19 +1392,17 @@ class FlxTilemap extends FlxObject
 	}
 	
 	/**
-	* Works exactly like ray() except it explicitly returns the hit result.
-	* Shoots a ray from the start point to the end point.
-	* If/when it passes through a tile, it returns that point.
-	* If it does not, it returns null.
-	* Usage:
-	* var hit:FlxPoint = tilemap.rayHit(startPoint, endPoint);
-	* if (hit != null) //code ;
-	*
-	* @param 	Start		The world coordinates of the start of the ray.
-	* @param 	End 		The world coordinates of the end of the ray.
-	* @param 	Resolution 	Defaults to 1, meaning check every tile or so. Higher means more checks!
-	* @return Returns null if the ray made it from Start to End without hitting anything. Returns FlxPoint if a tile was hit.
-	*/
+	 * Works exactly like ray() except it explicitly returns the hit result. Shoots a ray from the start point to the end point.
+	 * If/when it passes through a tile, it returns that point. If it does not, it returns null.
+	 * Usage:
+	 * var hit:FlxPoint = tilemap.rayHit(startPoint, endPoint);
+	 * if (hit != null) //code ;
+	 *
+	 * @param 	Start		The world coordinates of the start of the ray.
+	 * @param 	End 		The world coordinates of the end of the ray.
+	 * @param 	Resolution 	Defaults to 1, meaning check every tile or so. Higher means more checks!
+	 * @return Returns null if the ray made it from Start to End without hitting anything. Returns FlxPoint if a tile was hit.
+	 */
 	public function rayHit(Start:FlxPoint, End:FlxPoint, Resolution:Float = 1):FlxPoint
 	{
 		var Result:FlxPoint = null;
@@ -1426,17 +1426,20 @@ class FlxTilemap extends FlxObject
 		var tileY:Int;
 		var i:Int = 0;
 		
+		Start.putWeak();
+		End.putWeak();
+		
 		while (i < steps)
 		{
 			curX += stepX;
 			curY += stepY;
-
+			
 			if ((curX < 0) || (curX > width) || (curY < 0) || (curY > height))
 			{
 				i++;
 				continue;
 			}
-
+			
 			tileX = Math.floor(curX / _scaledTileWidth);
 			tileY = Math.floor(curY / _scaledTileHeight);
 			
