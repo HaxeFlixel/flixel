@@ -13,7 +13,6 @@ import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxTimer;
 #if (android && OUYA)
 import flixel.input.gamepad.OUYAButtonID;
-#elseif (!FLX_NO_GAMEPAD && (cpp || neko || js))
 #end
 
 class Player extends FlxSprite
@@ -35,7 +34,7 @@ class Player extends FlxSprite
 	private var _bullets:FlxTypedGroup<Bullet>;
 	
 	// Internal private: accessor to first active gamepad
-	#if (!FLX_NO_GAMEPAD && (cpp || neko || js))
+	#if !FLX_NO_GAMEPAD
 	private var gamepad(get, never):FlxGamepad;
 	private function get_gamepad():FlxGamepad 
 	{
@@ -131,8 +130,8 @@ class Player extends FlxSprite
 		// INPUT
 		
 		if (FlxG.keys.pressed.LEFT 
-#if (!FLX_NO_GAMEPAD && (cpp || neko || js))
-			 || (gamepad.dpadLeft ||
+#if !FLX_NO_GAMEPAD
+			 || (#if flash gamepad.pressed(XboxButtonID.DPAD_LEFT) #else gamepad.dpadLeft #end ||
 	#if OUYA
 				 gamepad.getXAxis(OUYAButtonID.LEFT_ANALOGUE_X) < 0) || buttonPressed(virtualPad.buttonLeft)) 
 	#else
@@ -143,8 +142,8 @@ class Player extends FlxSprite
 			moveLeft();
 		}
 		else if (FlxG.keys.pressed.RIGHT
-#if (!FLX_NO_GAMEPAD && (cpp || neko || js))
-			 || (gamepad.dpadRight ||
+#if !FLX_NO_GAMEPAD
+			 || (#if flash gamepad.pressed(XboxButtonID.DPAD_RIGHT) #else gamepad.dpadRight #end ||
 	#if OUYA
 				 gamepad.getXAxis(OUYAButtonID.LEFT_ANALOGUE_X) > 0) || buttonPressed(virtualPad.buttonRight))
 	#else
@@ -159,8 +158,8 @@ class Player extends FlxSprite
 		
 		// AIMING
 		if (FlxG.keys.pressed.UP
-#if (!FLX_NO_GAMEPAD && (cpp || neko || js))
-			 || (gamepad.dpadUp ||
+#if !FLX_NO_GAMEPAD
+			 || (#if flash gamepad.pressed(XboxButtonID.DPAD_UP) #else gamepad.dpadUp #end ||
 	#if OUYA
 				 gamepad.getYAxis(OUYAButtonID.LEFT_ANALOGUE_Y) < 0) || buttonPressed(virtualPad.buttonUp))
 	#else
@@ -171,8 +170,8 @@ class Player extends FlxSprite
 			moveUp();
 		}
 		else if (FlxG.keys.pressed.DOWN
-#if (!FLX_NO_GAMEPAD && (cpp || neko || js))
-			 || (gamepad.dpadDown ||
+#if !FLX_NO_GAMEPAD
+			 || (#if flash gamepad.pressed(XboxButtonID.DPAD_DOWN) #else gamepad.dpadDown #end ||
 	#if OUYA
 				 gamepad.getYAxis(OUYAButtonID.LEFT_ANALOGUE_Y) > 0) || buttonPressed(virtualPad.buttonDown))
 	#else
@@ -185,7 +184,7 @@ class Player extends FlxSprite
 		
 		// JUMPING
 		if (FlxG.keys.justPressed.X 
-#if (!FLX_NO_GAMEPAD && (cpp || neko || js))
+#if !FLX_NO_GAMEPAD
 	#if OUYA
 			|| gamepad.justPressed(OUYAButtonID.O) || buttonPressed(virtualPad.buttonA))
 	#else
@@ -237,7 +236,7 @@ class Player extends FlxSprite
 		
 		// SHOOTING
 		if (FlxG.keys.pressed.C
-#if (!FLX_NO_GAMEPAD && (cpp || neko || js))
+#if !FLX_NO_GAMEPAD
 	#if OUYA
 			|| gamepad.pressed(OUYAButtonID.U) || buttonPressed(virtualPad.buttonB)) 
 	#else

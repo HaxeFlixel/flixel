@@ -92,8 +92,8 @@ class Shooter extends FlxGroup
 		
 		spr.body.position.y = 30;
 		spr.body.position.x = 30 + Std.random(640 - 30);
-		var angle = FlxAngle.getAngle(new FlxPoint(FlxG.mouse.x, FlxG.mouse.y), 
-									  new FlxPoint(spr.body.position.x, spr.body.position.y));
+		var angle = FlxAngle.getAngle(FlxPoint.get(FlxG.mouse.x, FlxG.mouse.y), 
+									  FlxPoint.get(spr.body.position.x, spr.body.position.y));
 		angle += 90;
 		spr.body.velocity.setxy(impulse * Math.cos(angle * 3.14 / 180),
 								impulse * Math.sin(angle * 3.14 / 180));

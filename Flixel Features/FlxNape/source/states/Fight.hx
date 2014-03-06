@@ -163,12 +163,12 @@ class Ragdoll extends FlxGroup
 		Scale > 0 ? scale = Scale : scale = 1;
 		
 		//
-		larmSize = new FlxPoint(12 * scale, 45 * scale);
-		uarmSize = new FlxPoint(12 * scale, 40 * scale);
-		llegSize = new FlxPoint(15 * scale, 45 * scale);
-		ulegSize = new FlxPoint(15 * scale, 50 * scale);
-		uTorsoSize = new FlxPoint(35 * scale, 35 * scale);
-		lTorsoSize = new FlxPoint(35 * scale, 15 * scale);
+		larmSize = FlxPoint.get(12 * scale, 45 * scale);
+		uarmSize = FlxPoint.get(12 * scale, 40 * scale);
+		llegSize = FlxPoint.get(15 * scale, 45 * scale);
+		ulegSize = FlxPoint.get(15 * scale, 50 * scale);
+		uTorsoSize = FlxPoint.get(35 * scale, 35 * scale);
+		lTorsoSize = FlxPoint.get(35 * scale, 15 * scale);
 		neckHeight = 5 * scale;
 		headRadius = 15 * scale;
 		

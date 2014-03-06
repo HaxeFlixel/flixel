@@ -53,7 +53,7 @@ class PlayState extends FlxState
 		add(dragText);
 		
 		//Set out offset to non-null here
-		dragOffset = new FlxPoint(0, 0);
+		dragOffset = FlxPoint.get(0, 0);
 		
 		//Make a group to place the boxes in
 		_boxGroup = new FlxTypedGroup<FlxButton>();
@@ -164,7 +164,7 @@ class PlayState extends FlxState
 			for (i in 0...NUM_BOXES) 
 			{
 				var box:FlxButton = _boxGroup.members[i];
-				_gameSave.data.boxPositions.push(new FlxPoint(box.x, box.y));
+				_gameSave.data.boxPositions.push(FlxPoint.get(box.x, box.y));
 			}
 			
 			_topText.text = "Created a new save, and saved positions";
@@ -180,7 +180,7 @@ class PlayState extends FlxState
 			for (i in 0...NUM_BOXES) 
 			{
 				var box:FlxButton = _boxGroup.members[i], FlxButton;
-				_gameSave.data.boxPositions[tempCount] = new FlxPoint(box.x, box.y);
+				_gameSave.data.boxPositions[tempCount] = FlxPoint.get(box.x, box.y);
 				tempCount++;
 			}
 			

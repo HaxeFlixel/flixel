@@ -1,4 +1,5 @@
 package states;
+import flixel.FlxObject;
 import flixel.util.FlxColor;
 import flixel.util.FlxRandom;
 import FlxPhysicsDemo;
@@ -61,8 +62,9 @@ class Cutup extends FlxNapeState
 		
 		pieces = new FlxTypedGroup<FlxNapeSprite>();
 		var houseCnt:Int = 3;
-		for (i in 0...houseCnt) {
-			var house:FlxNapeSprite = new FlxNapeSprite(FlxG.width / 2 - 100 * (Math.floor(houseCnt / 2) - i), FlxG.height / 2, "assets/cutup/cutup_" + i + ".png");
+		for (i in 0...houseCnt) 
+		{
+			var house = new FlxNapeSprite(FlxG.width / 2 - 100 * (Math.floor(houseCnt / 2) - i), FlxG.height / 2, "assets/cutup/cutup_" + i + ".png");
 			house.body.userData.flxSprite = house;
 			pieces.add(house);
 		}
@@ -87,7 +89,8 @@ class Cutup extends FlxNapeState
 		FlxG.addChildBelowMouse(fps = new FPS(FlxG.width - 60, 5, FlxColor.WHITE));
 	}
 	
-	override public function update():Void {
+	override public function update():Void 
+	{
 		super.update();
 		// won't count the default Body added by Nape itself
 		pieceCntTxt.text = "Toatal Pieces:  " + (FlxNapeState.space.bodies.length-1);
@@ -106,21 +109,23 @@ class Cutup extends FlxNapeState
 		if (FlxG.keys.justPressed.RIGHT)
 			FlxPhysicsDemo.nextState();
 			
-		if (FlxG.mouse.justPressed && FlxG.mouse.y > ufo.getMidpoint().y)
+		if (FlxG.mouse.justPressed && (FlxG.mouse.y > ufo.getMidpoint().y))
 			shootLaser();
 	}
 	
-	override public function destroy():Void {
+	override public function destroy():Void 
+	{
 		super.destroy();
 		FlxG.removeChild(fps);
 	}
 	
-	private function shootLaser() {
+	private function shootLaser() 
+	{
 		var source:FlxPoint = ufo.getMidpoint();
 		var mouse:FlxPoint = FlxG.mouse.getWorldPosition();
 		// getAngle return angle with 0 degree point up, but we need the angle start from pointing right
 		var deg:Float = FlxAngle.getAngle(source, mouse)-90;
-		var groundPoint:FlxPoint = new FlxPoint(source.x + (ground-source.y)/Math.tan(deg*FlxAngle.TO_RAD), ground);
+		var groundPoint = FlxPoint.get(source.x + (ground-source.y) / Math.tan(deg * FlxAngle.TO_RAD), ground);
 		var length:Float = FlxMath.getDistance(source, groundPoint);
 		
 		var laser:Laser = new Laser(source.x, source.y, null, length, deg);
@@ -129,9 +134,11 @@ class Cutup extends FlxNapeState
 		var sP:Vec2 = Vec2.get(source.x, source.y);
 		var eP:Vec2 = Vec2.get(groundPoint.x, groundPoint.y+1);	// +1 make sure no tiny gap in between groundPoint and groundY 
 		var ray:Ray = Ray.fromSegment(sP, eP);
-		if (ray.maxDistance > 5) {
+		if (ray.maxDistance > 5) 
+		{
 			var rayResultList:RayResultList = FlxNapeState.space.rayMultiCast(ray);
-			for (rayResult in rayResultList) {
+			for (rayResult in rayResultList) 
+			{
 				var orgBody:Body = rayResult.shape.body;
 				if (orgBody.isStatic())
 					continue;
@@ -149,20 +156,22 @@ class Cutup extends FlxNapeState
 		eP.dispose();
 	}
 	
-	private function applyCut(orgPhySpr:FlxNapeSprite, sP:Vec2, eP:Vec2):Void {
+	private function applyCut(orgPhySpr:FlxNapeSprite, sP:Vec2, eP:Vec2):Void 
+	{
 		var orgBody = orgPhySpr.body;
 		var geomPoly:GeomPoly = new GeomPoly(orgBody.shapes.at(0).castPolygon.worldVerts);
 		var geomPolyList:GeomPolyList = geomPoly.cut(sP, eP, true, true);
-
+		
 		// Make current FlxNapeSprite graphic (may rotated) a reference BitmapData
 		var bmp:BitmapData = new BitmapData(Math.ceil(orgBody.bounds.width), Math.ceil(orgBody.bounds.height), true, 0x0);
 		var mat:Matrix = new Matrix();
 		mat.translate( -orgPhySpr.origin.x, -orgPhySpr.origin.y);
-		mat.rotate(orgPhySpr.angle * Math.PI/180 % 360);
+		mat.rotate(orgPhySpr.angle * FlxAngle.TO_RAD % 360);
 		mat.translate(orgBody.position.x - orgBody.bounds.x, orgBody.position.y - orgBody.bounds.y);
 		bmp.draw(orgPhySpr.pixels, mat);
-
-		if (geomPolyList.length > 1){
+		
+		if (geomPolyList.length > 1)
+		{
 			for (cutGeomPoly in geomPolyList){ 	
 				// Make a new body in world space
 				var cutPoly:Polygon = new Polygon(cutGeomPoly);
@@ -200,7 +209,7 @@ class Cutup extends FlxNapeState
 				cutPhySpr.pixels.draw(sprite, new Matrix(1, 0, 0, 1, cutBody.worldCOM.x - cutBody.bounds.x, cutBody.worldCOM.y - cutBody.bounds.y));
 				cutPhySpr.origin.set(cutBody.worldCOM.x - cutBody.bounds.x, cutBody.worldCOM.y - cutBody.bounds.y);
 				cutPhySpr.setPosition(cutBody.worldCOM.x - cutPhySpr.origin.x, cutBody.worldCOM.y - cutPhySpr.origin.y);
-				cutPhySpr.angle = cutBody.rotation * 180 / Math.PI;
+				cutPhySpr.angle = cutBody.rotation * FlxAngle.TO_DEG;
 				pieces.add(cutPhySpr);
 				
 				// apply small random impulse
@@ -217,41 +226,42 @@ class Cutup extends FlxNapeState
 	}
 }
 
-class UFO extends FlxSprite {
-	public function new(X:Float, Y:Float, SimpleGraphics:Dynamic){
+class UFO extends FlxSprite 
+{
+	public function new(X:Float, Y:Float, SimpleGraphics:Dynamic)
+	{
 		super(X, Y, SimpleGraphics);
 		loadGraphic("assets/cutup/ufo.png", true, true, 32, 32);
 		animation.add("fly", [for (i in 0...9) i], 10, true);
 		animation.play("fly");
-		var ufoTween:QuadPath = new QuadPath(null, FlxTween.LOOPING);	// NOTE Loop seems not working
-		ufoTween.setObject(this);
-		ufoTween.addPoint(50, 100).addPoint(FlxG.width / 2, 20).addPoint(FlxG.width - 50, 100).addPoint(FlxG.width / 2, 150).addPoint(50, 100); 
-		ufoTween.setMotion(5);
-		FlxTween.manager.add(ufoTween);
+		
+		var path:Array<FlxPoint> = [FlxPoint.get(50, 100), FlxPoint.get(FlxG.width / 2, 20), FlxPoint.get(FlxG.width - 50, 100), 
+		                            FlxPoint.get(FlxG.width / 2, 150), FlxPoint.get(50, 100)];
+		FlxTween.quadPath(this, path, 5, true, { type: FlxTween.LOOPING } );
 	}
 
-	override public function update(){
+	override public function update()
+	{
 		// after super.update() x and last.x become the same
-		if (x>last.x)
-			set_facing(flixel.FlxObject.RIGHT);
+		if (x > last.x)
+			facing = FlxObject.RIGHT;
 		else
-			set_facing(flixel.FlxObject.LEFT);
-
+			facing = FlxObject.LEFT;
+		
 		super.update();
 	}
 }
 
-class Laser extends FlxSprite {
-	public function new(X:Float, Y:Float, SimpleGraphics:Dynamic, Length:Float, Rotation:Float) {
+class Laser extends FlxSprite 
+{
+	public function new(X:Float, Y:Float, SimpleGraphics:Dynamic, Length:Float, Rotation:Float) 
+	{
 		super(X, Y, SimpleGraphics);
 		loadGraphic("assets/cutup/laser.png");
 		angle = Rotation;
 		scale.set(Length / pixels.width, 1);
 		origin.set(0, pixels.height/2);
 		
-		var alphaTween:VarTween = new VarTween(function(t:FlxTween) { kill(); }, FlxTween.ONESHOT);
-		alphaTween.tween(this, "alpha", 0, 0.4, FlxEase.quadOut);
-		alphaTween.start();
-		FlxTween.manager.add(alphaTween);
+		FlxTween.tween(this, { alpha: 0 }, 0.4, { complete: function(t:FlxTween) { kill(); }, ease: FlxEase.quadOut } );
 	}
 }
