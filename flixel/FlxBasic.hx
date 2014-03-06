@@ -145,15 +145,15 @@ class FlxBasic implements IFlxDestroyable
 	public function drawDebugOnCamera(?Camera:FlxCamera):Void {}
 	#end
 	
-	private inline function get_camera():FlxCamera
+	private function get_camera():FlxCamera
 	{
 		return (_cameras == null || _cameras.length == 0) ? FlxCamera.defaultCameras[0] : _cameras[0];
 	}
 	
-	private inline function set_camera(Value:FlxCamera):FlxCamera
+	private function set_camera(Value:FlxCamera):FlxCamera
 	{
 		if (_cameras == null)
-			_cameras = [ Value ];
+			_cameras = [Value];
 		else
 			_cameras[0] = Value;
 		return Value;

@@ -214,17 +214,12 @@ class FlxTextField extends FlxText
 		}
 	}
 	
-	/**
-	 * Camera on which this text will be displayed. Default is FlxG.camera.
-	 */
-	public var camera(get, set):FlxCamera;
-	
-	private function get_camera():FlxCamera 
+	override private function get_camera():FlxCamera 
 	{
 		return _camera;
 	}
 	
-	private function set_camera(Value:FlxCamera):FlxCamera 
+	override private function set_camera(Value:FlxCamera):FlxCamera 
 	{
 		if (_camera != Value)
 		{

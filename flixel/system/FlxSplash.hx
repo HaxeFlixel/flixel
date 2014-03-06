@@ -127,8 +127,8 @@ class FlxSplash extends FlxState
 		if (_curPart == 5)
 		{
 			// Make the logo a tad bit longer, so our users fully appreciate our hard work :D
-			FlxTween.multiVar(_sprite, { alpha: 0 }, 3.0, { ease: FlxEase.quadOut, complete: onComplete } );
-			FlxTween.multiVar(_text, { alpha: 0 }, 3.0, { ease: FlxEase.quadOut } );
+			FlxTween.tween(_sprite, { alpha: 0 }, 3.0, { ease: FlxEase.quadOut, complete: onComplete } );
+			FlxTween.tween(_text, { alpha: 0 }, 3.0, { ease: FlxEase.quadOut } );
 		}
 	}
 	
