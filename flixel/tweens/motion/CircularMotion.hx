@@ -2,6 +2,7 @@
 
 import flixel.tweens.FlxEase.EaseFunction;
 import flixel.tweens.FlxTween.CompleteCallback;
+import flixel.util.FlxPool;
 
 /**
  * Determines a circular motion.
@@ -9,9 +10,28 @@ import flixel.tweens.FlxTween.CompleteCallback;
 class CircularMotion extends Motion
 {
 	/**
+	 * A pool that contains CircularMotions for recycling.
+	 */
+	@:isVar 
+	@:allow(flixel.tweens.FlxTween)
+	private static var _pool(get, null):FlxPool<CircularMotion>;
+	
+	/**
+	 * Only allocate the pool if needed.
+	 */
+	private static function get__pool()
+	{
+		if (_pool == null)
+		{
+			_pool = new FlxPool<CircularMotion>(CircularMotion);
+		}
+		return _pool;
+	}
+	
+	/**
 	 * The current position on the circle.
 	 */
-	public var angle(default, null):Float;
+	public var angle:Float;
 
 	/**
 	 * The circumference of the current circle motion.
@@ -26,15 +46,27 @@ class CircularMotion extends Motion
 	private var _angleFinish:Float;
 	
 	/**
+	 * Clean up references and pool this object for recycling.
+	 */
+	override public function destroy()
+	{
+		super.destroy();
+		_pool.put(this);
+	}
+	
+	/**
+	 * This function is called when tween is created, or recycled.
+	 *
 	 * @param	complete	Optional completion callback.
 	 * @param	type		Tween type.
+	 * @param	Eease		Optional easer function.
 	 */
-	public function new(?complete:CompleteCallback, type:Int = 0)
+	override public function init(Complete:CompleteCallback, TweenType:Int)
 	{
 		_centerX = _centerY = 0;
 		_radius = angle = 0;
 		_angleStart = _angleFinish = 0;
-		super(0, complete, type, null);
+		return super.init(Complete, TweenType);
 	}
 
 	/**

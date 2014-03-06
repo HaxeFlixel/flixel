@@ -3,14 +3,32 @@ package flixel.tweens.misc;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
 import flixel.util.FlxArrayUtil;
-
-import Type;
+import flixel.util.FlxPool;
 
 /**
  * Tweens multiple numeric public properties of an Object simultaneously.
  */
 class MultiVarTween extends FlxTween
 {
+	/**
+	 * A pool that contains MultiVarTweens for recycling.
+	 */
+	@:isVar 
+	@:allow(flixel.tweens.FlxTween)
+	private static var _pool(get, null):FlxPool<MultiVarTween>;
+	
+	/**
+	 * Only allocate the pool if needed.
+	 */
+	private static function get__pool()
+	{
+		if (_pool == null)
+		{
+			_pool = new FlxPool<MultiVarTween>(MultiVarTween);
+		}
+		return _pool;
+	}
+	
 	private var _object:Dynamic;
 	private var _properties:Dynamic;
 	private var _vars:Array<String>;
@@ -18,26 +36,29 @@ class MultiVarTween extends FlxTween
 	private var _range:Array<Float>;
 	
 	/**
-	 * @param	complete		Optional completion callback.
-	 * @param	type			Tween type.
+	 * Clean up references and pool this object for recycling.
 	 */
-	public function new(?complete:CompleteCallback, type:Int = 0)
-	{
-		_vars = new Array<String>();
-		_start = new Array<Float>();
-		_range = new Array<Float>();
-		
-		super(0, type, complete);
-	}
-	
 	override public function destroy():Void 
 	{
 		super.destroy();
+		_pool.put(this);
 		_object = null;
 		_properties = null;
-		_vars = null;
-		_start = null;
-		_range = null;
+	}
+	
+	/**
+	 * This function is called when tween is created, or recycled.
+	 *
+	 * @param	complete	Optional completion callback.
+	 * @param	type		Tween type.
+	 * @param	Eease		Optional easer function.
+	 */
+	override public function init(Complete:CompleteCallback, TweenType:Int)
+	{
+		FlxArrayUtil.setLength(_vars, 0);
+		FlxArrayUtil.setLength(_start, 0);
+		FlxArrayUtil.setLength(_range, 0);
+		return super.init(Complete, TweenType);
 	}
 	
 	/**
@@ -54,11 +75,6 @@ class MultiVarTween extends FlxTween
 		_properties = properties;
 		this.duration = duration;
 		this.ease = ease;
-		
-		FlxArrayUtil.setLength(_vars, 0);
-		FlxArrayUtil.setLength(_start, 0);
-		FlxArrayUtil.setLength(_range, 0);
-		
 		start();
 		return this;
 	}
@@ -69,7 +85,7 @@ class MultiVarTween extends FlxTween
 		{
 			// We don't initalize() in tween() because otherwise the start values 
 			// will be inaccurate with delays
-			initialize();
+			initializeVars();
 		}
 		
 		super.update();
@@ -83,7 +99,15 @@ class MultiVarTween extends FlxTween
 		}
 	}
 	
-	private function initialize():Void
+	private function new()
+	{
+		super();
+		_vars = new Array<String>();
+		_start = new Array<Float>();
+		_range = new Array<Float>();
+	}
+	
+	private function initializeVars():Void
 	{
 		var p:String;
 		var fields:Array<String>;

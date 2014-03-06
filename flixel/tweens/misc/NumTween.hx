@@ -2,12 +2,32 @@
 
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
+import flixel.util.FlxPool;
 
 /**
  * Tweens a numeric value. See FlxTween.num()
  */
 class NumTween extends FlxTween
 {
+	/**
+	 * A pool that contains NumTweens for recycling.
+	 */
+	@:isVar 
+	@:allow(flixel.tweens.FlxTween)
+	private static var _pool(get, null):FlxPool<NumTween>;
+	
+	/**
+	 * Only allocate the pool if needed.
+	 */
+	private static function get__pool()
+	{
+		if (_pool == null)
+		{
+			_pool = new FlxPool<NumTween>(NumTween);
+		}
+		return _pool;
+	}
+	
 	/**
 	 * The current value.
 	 */
@@ -19,15 +39,8 @@ class NumTween extends FlxTween
 	private var _range:Float;
 	
 	/**
-	 * @param	complete	Optional completion callback.
-	 * @param	type		Tween type.
+	 * Clean up references and pool this object for recycling.
 	 */
-	public function new(?complete:CompleteCallback, type:Int = 0) 
-	{
-		value = 0;
-		super(0, type, complete);
-	}
-	
 	override public function destroy():Void 
 	{
 		super.destroy();

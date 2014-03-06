@@ -2,30 +2,45 @@
 
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
+import flixel.util.FlxPool;
 
 /**
  * Tweens a numeric public property of an Object.
  */
 class VarTween extends FlxTween
 {
+	/**
+	 * A pool that contains VarTweens for recycling.
+	 */
+	@:isVar 
+	@:allow(flixel.tweens.FlxTween)
+	private static var _pool(get, null):FlxPool<VarTween>;
+	
+	/**
+	 * Only allocate the pool if needed.
+	 */
+	private static function get__pool()
+	{
+		if (_pool == null)
+		{
+			_pool = new FlxPool<VarTween>(VarTween);
+		}
+		return _pool;
+	}
+	
 	private var _object:Dynamic;
 	private var _property:String;
 	private var _start:Float;
 	private var _range:Float;
 	
 	/**
-	 * @param	complete	Optional completion callback.
-	 * @param	type		Tween type.
+	 * Clean up references and pool this object for recycling.
 	 */
-	public function new(?complete:CompleteCallback, type:Int = 0) 
-	{
-		super(0, type, complete);
-	}
-	
 	override public function destroy():Void 
 	{
 		super.destroy();
 		_object = null;
+		_pool.put(this);
 	}
 	
 	/**
