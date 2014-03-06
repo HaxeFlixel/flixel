@@ -47,7 +47,7 @@ class Card extends FlxNapeSprite
 		body.setShapeFilters(new InteractionFilter(2, ~2));
 		
 		// Setup the mouse events
-		MouseEventManager.addSprite(this, onDown, null, onOver, onOut);
+		MouseEventManager.add(this, onDown, null, onOver, onOut);
 	}
 	
 	private function onDown(Sprite:FlxSprite)
