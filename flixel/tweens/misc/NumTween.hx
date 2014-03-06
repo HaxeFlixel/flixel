@@ -4,7 +4,7 @@ import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
 
 /**
- * Tweens a numeric value.
+ * Tweens a numeric value. See FlxTween.num()
  */
 class NumTween extends FlxTween
 {
@@ -14,6 +14,7 @@ class NumTween extends FlxTween
 	public var value:Float;
 	
 	// Tween information.
+	private var _tweenFunction:Float->Void;
 	private var _start:Float;
 	private var _range:Float;
 	
@@ -27,6 +28,12 @@ class NumTween extends FlxTween
 		super(0, type, complete);
 	}
 	
+	override public function destroy():Void 
+	{
+		super.destroy();
+		_tweenFunction = null;
+	}
+	
 	/**
 	 * Tweens the value from one value to another.
 	 * 
@@ -34,9 +41,11 @@ class NumTween extends FlxTween
 	 * @param	toValue			End value.
 	 * @param	duration		Duration of the tween.
 	 * @param	ease			Optional easer function.
+	 * @param	tweenFunction	Optional tween function. See FlxTween.num()
 	 */
-	public function tween(fromValue:Float, toValue:Float, duration:Float, ease:EaseFunction = null):NumTween
-	{
+	public function tween(fromValue:Float, toValue:Float, duration:Float, ease:EaseFunction = null, ?tweenFunction:Float->Void):NumTween
+	{	
+		_tweenFunction = tweenFunction;
 		_start = value = fromValue;
 		_range = toValue - value;
 		this.duration = duration;
@@ -49,5 +58,8 @@ class NumTween extends FlxTween
 	{
 		super.update();
 		value = _start + _range * scale;
+		
+		if(_tweenFunction != null)
+			_tweenFunction(value);
 	}
 }
