@@ -81,8 +81,11 @@ class FlxTilemap extends FlxObject
 	 */
 	public var customTileRemap:Array<Int>;
 	
-	public var scaleX(default, set):Float = 1.0;
-	public var scaleY(default, set):Float = 1.0;
+	/**
+	 * Changes the size of this tilemap. Default is (1, 1). 
+	 * Anything other than the default is very slow with blitting!
+	 */
+	public var scale(default, null):FlxPoint;
 	
 	/**
 	 * Rendering variables.
@@ -211,9 +214,6 @@ class FlxTilemap extends FlxObject
 		_buffers = new Array<FlxTilemapBuffer>();
 		_flashPoint = new Point();
 		
-		_tileWidth = 0;
-		_tileHeight = 0;
-		
 		immovable = true;
 		moves = false;
 		
@@ -226,6 +226,9 @@ class FlxTilemap extends FlxObject
 		#if FLX_RENDER_TILE
 		_helperPoint = new Point();
 		#end
+		
+		scale = new FlxCallbackPoint(setScaleXCallback, setScaleYCallback, setScaleXYCallback);
+		scale.set(1, 1);
 	}
 	
 	/**
@@ -281,6 +284,9 @@ class FlxTilemap extends FlxObject
 		framesData = null;
 		cachedGraphics = null;
 		region = null;
+		
+		// need to destroy FlxCallbackPoints
+		scale = FlxG.safeDestroy(scale);
 		
 		super.destroy();
 	}
@@ -468,8 +474,8 @@ class FlxTilemap extends FlxObject
 		_debugTileSolid = makeDebugTile(FlxColor.GREEN);
 		#end
 		
-		_scaledTileWidth = _tileWidth * scaleX;
-		_scaledTileHeight = _tileHeight * scaleY;
+		_scaledTileWidth = _tileWidth * scale.x;
+		_scaledTileHeight = _tileHeight * scale.y;
 		
 		// Then go through and create the actual map
 		width = widthInTiles * _scaledTileWidth;
@@ -674,7 +680,7 @@ class FlxTilemap extends FlxObject
 			
 			if (_buffers[i] == null)
 			{
-				_buffers[i] = new FlxTilemapBuffer(_tileWidth, _tileHeight, widthInTiles, heightInTiles, camera, scaleX, scaleY);
+				_buffers[i] = new FlxTilemapBuffer(_tileWidth, _tileHeight, widthInTiles, heightInTiles, camera, scale.x, scale.y);
 				_buffers[i].pixelPerfectRender = pixelPerfectRender;
 			}
 			
@@ -698,7 +704,7 @@ class FlxTilemap extends FlxObject
 			// Copied from getScreenXY()
 			_flashPoint.x = x - (camera.scroll.x * scrollFactor.x) + buffer.x; 
 			_flashPoint.y = y - (camera.scroll.y * scrollFactor.y) + buffer.y;
-			buffer.draw(camera, _flashPoint, scaleX, scaleY);
+			buffer.draw(camera, _flashPoint, scale.x, scale.y);
 			#else
 			drawTilemap(buffer, camera);
 			#end
@@ -1573,8 +1579,8 @@ class FlxTilemap extends FlxObject
 		tileSprite.makeGraphic(_tileWidth, _tileHeight, FlxColor.TRANSPARENT, true);
 		tileSprite.x = X * _tileWidth + x;
 		tileSprite.y = Y * _tileHeight + y;
-		tileSprite.scale.x = scaleX;
-		tileSprite.scale.y = scaleY;
+		tileSprite.scale.x = scale.x;
+		tileSprite.scale.y = scale.y;
 		
 		if (rect != null) 
 		{
@@ -1634,8 +1640,8 @@ class FlxTilemap extends FlxObject
 		var drawX:Float;
 		var drawY:Float;
 		
-		var hackScaleX:Float = tileScaleHack * scaleX;
-		var hackScaleY:Float = tileScaleHack * scaleY;
+		var hackScaleX:Float = tileScaleHack * scale.x;
+		var hackScaleY:Float = tileScaleHack * scale.y;
 		
 		var drawItem:DrawStackItem = Camera.getDrawStackItem(cachedGraphics, false, 0);
 		var currDrawData:Array<Float> = drawItem.drawData;
@@ -2246,54 +2252,6 @@ class FlxTilemap extends FlxObject
 		_data[Index] += 1;
 	}
 	
-	private function set_scaleX(Scale:Float):Float
-	{
-		Scale = Math.abs(Scale);
-		scaleX = Scale;
-		_scaledTileWidth = _tileWidth * Scale;
-		width = widthInTiles * _scaledTileWidth;
-		
-		if (cameras != null)
-		{
-			var i:Int = 0;
-			var l:Int = cameras.length;
-			while (i < l)
-			{
-				if (_buffers[i] != null)
-				{
-					_buffers[i].updateColumns(_tileWidth, widthInTiles, Scale, cameras[i]);
-				}
-				i++;
-			}
-		}
-		
-		return Scale;
-	}
-	
-	private function set_scaleY(Scale:Float):Float
-	{
-		Scale = Math.abs(Scale);
-		scaleY = Scale;
-		_scaledTileHeight = _tileHeight * Scale;
-		height = heightInTiles * _scaledTileHeight;
-		
-		if (cameras != null)
-		{
-			var i:Int = 0;
-			var l:Int = cameras.length;
-			while (i < l)
-			{
-				if (_buffers[i] != null)
-				{
-					_buffers[i].updateRows(_tileHeight, heightInTiles, Scale, cameras[i]);
-				}
-				i++;
-			}
-		}
-		
-		return Scale;
-	}
-	
 	/**
 	 * Internal function for setting cachedGraphics property for this object. 
 	 * It changes cachedGraphics' useCount also for better memory tracking.
@@ -2326,5 +2284,45 @@ class FlxTilemap extends FlxObject
 		}
 		
 		return pixelPerfectRender = Value;
+	}
+	
+	private function setScaleXYCallback(Scale:FlxPoint):Void
+	{
+		setScaleXCallback(Scale);
+		setScaleYCallback(Scale);
+	}
+	
+	private function setScaleXCallback(Scale:FlxPoint):Void
+	{
+		_scaledTileWidth = _tileWidth * scale.x;
+		width = widthInTiles * _scaledTileWidth;
+		
+		if (cameras != null)
+		{
+			for (i in 0...cameras.length)
+			{
+				if (_buffers[i] != null)
+				{
+					_buffers[i].updateColumns(_tileWidth, widthInTiles, scale.x, cameras[i]);
+				}
+			}
+		}
+	}
+	
+	private function setScaleYCallback(Scale:FlxPoint):Void
+	{
+		_scaledTileHeight = _tileHeight * scale.y;
+		height = heightInTiles * _scaledTileHeight;
+		
+		if (cameras != null)
+		{
+			for (i in 0...cameras.length)
+			{
+				if (_buffers[i] != null)
+				{
+					_buffers[i].updateColumns(_tileHeight, heightInTiles, scale.y, cameras[i]);
+				}
+			}
+		}
 	}
 }
