@@ -149,8 +149,8 @@ class FlxTween implements IFlxDestroyable
 	/**
 	 * Tweens some numeric value. Shorthand for creating a NumTween objects, starting it and adding it to the TweenPlugin.
 	 * Example: 
-		 * var myTweenFunction = function(s:FlxSprite, v:Float) s.alpha = v;
-		 * FlxTween.num(-1000, 0, 2.0, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT }, myTweenFunction.bind(mySprite));
+	 *    private function tweenFunction(s:FlxSprite, v:Float) { s.alpha = v; }
+	 *    FlxTween.num(1, 0, 2.0, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT }, tweenFunction.bind(mySprite));
 	 * 
 	 * @param	FromValue	Start value.
 	 * @param	ToValue		End value.

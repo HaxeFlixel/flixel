@@ -22,7 +22,7 @@ class NumTween extends FlxTween
 	 * @param	complete	Optional completion callback.
 	 * @param	type		Tween type.
 	 */
-	public function new(complete:CompleteCallback = null, type:Int = 0) 
+	public function new(?complete:CompleteCallback, type:Int = 0) 
 	{
 		value = 0;
 		super(0, type, complete);
@@ -43,7 +43,7 @@ class NumTween extends FlxTween
 	 * @param	ease			Optional easer function.
 	 * @param	tweenFunction	Optional tween function. See FlxTween.num()
 	 */
-	public function tween(fromValue:Float, toValue:Float, duration:Float, ease:EaseFunction = null, ?tweenFunction:Float->Void):NumTween
+	public function tween(fromValue:Float, toValue:Float, duration:Float, ?ease:EaseFunction, ?tweenFunction:Float->Void):NumTween
 	{	
 		_tweenFunction = tweenFunction;
 		_start = value = fromValue;
@@ -59,7 +59,7 @@ class NumTween extends FlxTween
 		super.update();
 		value = _start + _range * scale;
 		
-		if(_tweenFunction != null)
+		if (_tweenFunction != null)
 			_tweenFunction(value);
 	}
 }
