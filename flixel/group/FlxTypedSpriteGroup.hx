@@ -78,10 +78,10 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	{
 		collisionType = FlxCollisionType.SPRITEGROUP;
 		
-		offset = new FlxPointHelper<T>(this, offsetTransform);
-		origin = new FlxPointHelper<T>(this, originTransform);
-		scale = new FlxPointHelper<T>(this, scaleTransform);
-		scrollFactor = new FlxPointHelper<T>(this, scrollFactorTransform);
+		offset = new FlxCallbackPoint(offsetCallback);
+		origin = new FlxCallbackPoint(originCallback);
+		scale = new FlxCallbackPoint(scaleCallback);
+		scrollFactor = new FlxCallbackPoint(scrollFactorCallback);
 		scrollFactor.set(1, 1);
 	 	
 		initMotionVars();
@@ -835,27 +835,35 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	
 	// TRANSFORM FUNCTIONS - STATIC TYPING
 	
-	private function xTransform(Sprite:FlxSprite, X:Float)								{ Sprite.x += X; }								// addition
-	private function yTransform(Sprite:FlxSprite, Y:Float)								{ Sprite.y += Y; }								// addition
-	private function angleTransform(Sprite:FlxSprite, Angle:Float)						{ Sprite.angle += Angle; }						// addition
-	private function alphaTransform(Sprite:FlxSprite, Alpha:Float)						{ Sprite.alpha *= Alpha; }						// multiplication
-	private function facingTransform(Sprite:FlxSprite, Facing:Int)						{ Sprite.facing = Facing; }						// set
-	private function movesTransform(Sprite:FlxSprite, Moves:Bool)						{ Sprite.moves = Moves; }						// set
-	private function pixelPerfectTransform(Sprite:FlxSprite, PixelPerfect:Bool)			{ Sprite.pixelPerfectRender = PixelPerfect; }	// set
-	private function gColorTransform(Sprite:FlxSprite, Color:Int)						{ Sprite.color = Color; }						// set
-	private function blendTransform(Sprite:FlxSprite, Blend:BlendMode)					{ Sprite.blend = Blend; }						// set
-	private function immovableTransform(Sprite:FlxSprite, Immovable:Bool)				{ Sprite.immovable = Immovable; }				// set
-	private function visibleTransform(Sprite:FlxSprite, Visible:Bool)					{ Sprite.visible = Visible; }					// set
-	private function activeTransform(Sprite:FlxSprite, Active:Bool)						{ Sprite.active = Active; }						// set
-	private function solidTransform(Sprite:FlxSprite, Solid:Bool)						{ Sprite.solid = Solid; }						// set
-	private function aliveTransform(Sprite:FlxSprite, Alive:Bool)						{ Sprite.alive = Alive; }						// set
-	private function existsTransform(Sprite:FlxSprite, Exists:Bool)						{ Sprite.exists = Exists; }						// set
-	private function offsetTransform(Sprite:FlxSprite, Offset:FlxPoint)					{ Sprite.offset.copyFrom(Offset); }				// set
-	private function originTransform(Sprite:FlxSprite, Origin:FlxPoint)					{ Sprite.origin.copyFrom(Origin); }				// set
-	private function scaleTransform(Sprite:FlxSprite, Scale:FlxPoint)					{ Sprite.scale.copyFrom(Scale); }				// set
-	private function scrollFactorTransform(Sprite:FlxSprite, ScrollFactor:FlxPoint)		{ Sprite.scrollFactor.copyFrom(ScrollFactor); }	// set
-	// NOT SUPPORTED FUNCTIONALITY
-	// THESE METHODS OVERRIDEN FOR SAFETY PURPOSES
+	private inline function xTransform(Sprite:FlxSprite, X:Float)								{ Sprite.x += X; }								// addition
+	private inline function yTransform(Sprite:FlxSprite, Y:Float)								{ Sprite.y += Y; }								// addition
+	private inline function angleTransform(Sprite:FlxSprite, Angle:Float)						{ Sprite.angle += Angle; }						// addition
+	private inline function alphaTransform(Sprite:FlxSprite, Alpha:Float)						{ Sprite.alpha *= Alpha; }						// multiplication
+	private inline function facingTransform(Sprite:FlxSprite, Facing:Int)						{ Sprite.facing = Facing; }						// set
+	private inline function movesTransform(Sprite:FlxSprite, Moves:Bool)						{ Sprite.moves = Moves; }						// set
+	private inline function pixelPerfectTransform(Sprite:FlxSprite, PixelPerfect:Bool)			{ Sprite.pixelPerfectRender = PixelPerfect; }	// set
+	private inline function gColorTransform(Sprite:FlxSprite, Color:Int)						{ Sprite.color = Color; }						// set
+	private inline function blendTransform(Sprite:FlxSprite, Blend:BlendMode)					{ Sprite.blend = Blend; }						// set
+	private inline function immovableTransform(Sprite:FlxSprite, Immovable:Bool)				{ Sprite.immovable = Immovable; }				// set
+	private inline function visibleTransform(Sprite:FlxSprite, Visible:Bool)					{ Sprite.visible = Visible; }					// set
+	private inline function activeTransform(Sprite:FlxSprite, Active:Bool)						{ Sprite.active = Active; }						// set
+	private inline function solidTransform(Sprite:FlxSprite, Solid:Bool)						{ Sprite.solid = Solid; }						// set
+	private inline function aliveTransform(Sprite:FlxSprite, Alive:Bool)						{ Sprite.alive = Alive; }						// set
+	private inline function existsTransform(Sprite:FlxSprite, Exists:Bool)						{ Sprite.exists = Exists; }						// set
+
+	private inline function offsetTransform(Sprite:FlxSprite, Offset:FlxPoint)					{ Sprite.offset.copyFrom(Offset); }				// set
+	private inline function originTransform(Sprite:FlxSprite, Origin:FlxPoint)					{ Sprite.origin.copyFrom(Origin); }				// set
+	private inline function scaleTransform(Sprite:FlxSprite, Scale:FlxPoint)					{ Sprite.scale.copyFrom(Scale); }				// set
+	private inline function scrollFactorTransform(Sprite:FlxSprite, ScrollFactor:FlxPoint)		{ Sprite.scrollFactor.copyFrom(ScrollFactor); }	// set
+
+	// Functions for the FlxCallbackPoint
+	private inline function offsetCallback(Offset:FlxPoint)             { transformChildren(offsetTransform, Offset); }
+	private inline function originCallback(Origin:FlxPoint)             { transformChildren(originTransform, Origin); }
+	private inline function scaleCallback(Scale:FlxPoint)               { transformChildren(scaleTransform, Scale); }
+	private inline function scrollFactorCallback(ScrollFactor:FlxPoint) { transformChildren(scrollFactorTransform, ScrollFactor); }
+	
+	// NON-SUPPORTED FUNCTIONALITY
+	// THESE METHODS ARE OVERRIDEN FOR SAFETY PURPOSES
 	
 	/**
 	 * This functionality isn't supported in SpriteGroup
@@ -958,7 +966,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 * 
 	 * @param	RunOnCpp	Whether the frame should also be recalculated if we're on a non-flash target
 	 */
-	inline override private function calcFrame(RunOnCpp:Bool = false):Void
+	override private inline function calcFrame(RunOnCpp:Bool = false):Void
 	{
 		// Nothing to do here
 	}
@@ -966,66 +974,20 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	/**
 	 * This functionality isn't supported in SpriteGroup
 	 */
-	inline override private function resetHelpers():Void {}
+	override private inline function resetHelpers():Void {}
 	
 	/**
 	 * This functionality isn't supported in SpriteGroup
 	 */
-	inline override public function stamp(Brush:FlxSprite, X:Int = 0, Y:Int = 0):Void {}
+	override public inline function stamp(Brush:FlxSprite, X:Int = 0, Y:Int = 0):Void {}
 	
 	/**
 	 * This functionality isn't supported in SpriteGroup
 	 */
-	inline override private function updateColorTransform():Void {}
+	override private inline function updateColorTransform():Void {}
 	
 	/**
 	 * This functionality isn't supported in SpriteGroup
 	 */
-	inline override public function updateFrameData():Void {}
-}
-
-/**
- * Helper class to make sure the FlxPoint vars of FlxSpriteGroup members
- * can be updated when the points of the FlxSpriteGroup are changed.
- * IMPORTANT: Calling set(x, y); is MUCH FASTER than setting x, and y separately.
- */
-private class FlxPointHelper<T:FlxSprite> extends FlxPoint
-{
-	private var _parent:FlxTypedSpriteGroup<T>;
-	private var _transformFunc:FlxSprite->FlxPoint->Void;
-	
-	public function new(parent:FlxTypedSpriteGroup<T>, transformFunc:FlxSprite->FlxPoint->Void)
-	{
-		_parent = parent;
-		_transformFunc = transformFunc;
-		super();
-	}
-	
-	override public function set(X:Float = 0, Y:Float = 0):FlxPointHelper<T>
-	{
-		super.set(X, Y);
-		_parent.transformChildren(_transformFunc, this);
-		return this;
-	}
-	
-	override private function set_x(Value:Float):Float
-	{
-		super.set_x(Value);
-		_parent.transformChildren(_transformFunc, this);
-		return Value;
-	}
-	
-	override private function set_y(Value:Float):Float
-	{
-		super.set_y(Value);
-		_parent.transformChildren(_transformFunc, this);
-		return Value;
-	}
-	
-	override public function destroy():Void
-	{
-		super.destroy();
-		_parent = null;
-		_transformFunc = null;
-	}
+	override public inline function updateFrameData():Void {}
 }
