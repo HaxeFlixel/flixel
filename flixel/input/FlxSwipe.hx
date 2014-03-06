@@ -13,15 +13,15 @@ import flixel.util.FlxStringUtil;
 @:allow(flixel.input.mouse.FlxMouseButton)
 @:allow(flixel.input.touch.FlxTouch)
 class FlxSwipe
-{	
+{
 	/**
 	 * Either LEFT_MOUSE, MIDDLE_MOUSE or RIGHT_MOUSE, 
 	 * or the touchPointID of a FlxTouch.
 	 */
-	public var ID:Int;
+	public var ID(default, null):Int;
 	
-	public var startPosition:FlxPoint;
-	public var endPosition:FlxPoint;
+	public var startPosition(default, null):FlxPoint;
+	public var endPosition(default, null):FlxPoint;
 	
 	public var distance(get, never):Float;
 	public var angle(get, never):Float;
