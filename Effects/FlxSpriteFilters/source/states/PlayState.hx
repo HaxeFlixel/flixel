@@ -142,14 +142,14 @@ class PlayState extends FlxState
 		// FILTERS
 		
 		// Animations
-		tween2 = FlxTween.multiVar(filter2, { blurX: 4, blurY: 4 }, 1, { type: FlxTween.PINGPONG });
+		tween2 = FlxTween.tween(filter2, { blurX: 4, blurY: 4 }, 1, { type: FlxTween.PINGPONG });
 		tween2.active = false;
 		
-		tween3 = FlxTween.multiVar(filter3, { blurX:50, blurY:50 }, 1.5, { type: FlxTween.PINGPONG });
+		tween3 = FlxTween.tween(filter3, { blurX:50, blurY:50 }, 1.5, { type: FlxTween.PINGPONG });
 		tween3.active = false;
 		
 		#if flash
-		tween5 = FlxTween.multiVar(filter5, { distance: -6 }, 1.5, { type: FlxTween.PINGPONG, ease: FlxEase.quadInOut });
+		tween5 = FlxTween.tween(filter5, { distance: -6 }, 1.5, { type: FlxTween.PINGPONG, ease: FlxEase.quadInOut });
 		tween5.active = false;
 		#end
 	}

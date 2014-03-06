@@ -132,7 +132,7 @@ class PlayState extends FlxState
 		obj.alpha = FlxRandom.floatRanged(0.3, 1.0);
 		
 		// Neat tweening effect for new aliens appearing
-		FlxTween.multiVar(obj, { x: destX, y:destY }, 2, { ease: FlxEase.expoOut });
+		FlxTween.tween(obj, { x: destX, y:destY }, 2, { ease: FlxEase.expoOut });
 		
 		if (rotate) {
 			randomizeRotation(obj);

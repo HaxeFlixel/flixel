@@ -123,7 +123,7 @@ class PlayState extends FlxState
 		_score += Amount;
 		_scoreText.text = "Score: " + _score;
 		_scoreText.alpha = 0;
-		FlxTween.multiVar(_scoreText, { alpha:1 }, 0.5);
+		FlxTween.tween(_scoreText, { alpha:1 }, 0.5);
 	}
 	
 	private function bulletHitsAsteroid(Object1:FlxObject, Object2:FlxObject):Void

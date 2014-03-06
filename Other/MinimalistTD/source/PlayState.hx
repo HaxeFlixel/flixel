@@ -781,7 +781,7 @@ class PlayState extends FlxState
 			_centerText.text = "Game Over! :(";
 		}
 		
-		FlxTween.multiVar(_centerText, { x: 0 }, 2, { ease: FlxEase.expoOut, complete: hideText });
+		FlxTween.tween(_centerText, { x: 0 }, 2, { ease: FlxEase.expoOut, complete: hideText });
 		
 		_waveText.text = "Wave: " + wave;
 		_waveText.size = 16;
@@ -793,7 +793,7 @@ class PlayState extends FlxState
 	 */
 	private function hideText(Tween:FlxTween):Void
 	{
-		FlxTween.multiVar(_centerText, { x: FlxG.width }, 2, { ease: FlxEase.expoIn });
+		FlxTween.tween(_centerText, { x: FlxG.width }, 2, { ease: FlxEase.expoIn });
 	}
 	
 	/**
