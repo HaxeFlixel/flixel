@@ -64,6 +64,8 @@ class FlxObject extends FlxBasic
 	
 	private static var _firstSeparateFlxRect:FlxRect = FlxRect.get();
 	private static var _secondSeparateFlxRect:FlxRect = FlxRect.get();
+	private static var _velocityDelta:Float = 0;
+	private static var _delta:Float = 0;
 	
 	/**
 	 * The main collision resolution function in flixel.
@@ -530,27 +532,22 @@ class FlxObject extends FlxBasic
 	 */
 	private inline function updateMotion():Void
 	{
-		var delta:Float;
-		var velocityDelta:Float;
+		_velocityDelta = 0.5 * (FlxVelocity.computeVelocity(angularVelocity, angularAcceleration, angularDrag, maxAngular) - angularVelocity);
+		angularVelocity += _velocityDelta; 
+		angle += angularVelocity * FlxG.elapsed;
+		angularVelocity += _velocityDelta;
 		
-		var dt:Float = FlxG.elapsed;
+		_velocityDelta = 0.5 * (FlxVelocity.computeVelocity(velocity.x, acceleration.x, drag.x, maxVelocity.x) - velocity.x);
+		velocity.x += _velocityDelta;
+		_delta = velocity.x * FlxG.elapsed;
+		velocity.x += _velocityDelta;
+		x += _delta;
 		
-		velocityDelta = 0.5 * (FlxVelocity.computeVelocity(angularVelocity, angularAcceleration, angularDrag, maxAngular) - angularVelocity);
-		angularVelocity += velocityDelta; 
-		angle += angularVelocity * dt;
-		angularVelocity += velocityDelta;
-		
-		velocityDelta = 0.5 * (FlxVelocity.computeVelocity(velocity.x, acceleration.x, drag.x, maxVelocity.x) - velocity.x);
-		velocity.x += velocityDelta;
-		delta = velocity.x * dt;
-		velocity.x += velocityDelta;
-		x += delta;
-		
-		velocityDelta = 0.5 * (FlxVelocity.computeVelocity(velocity.y, acceleration.y, drag.y, maxVelocity.y) - velocity.y);
-		velocity.y += velocityDelta;
-		delta = velocity.y * dt;
-		velocity.y += velocityDelta;
-		y += delta;
+		_velocityDelta = 0.5 * (FlxVelocity.computeVelocity(velocity.y, acceleration.y, drag.y, maxVelocity.y) - velocity.y);
+		velocity.y += _velocityDelta;
+		_delta = velocity.y * FlxG.elapsed;
+		velocity.y += _velocityDelta;
+		y += _delta;
 	}
 	
 	/**
