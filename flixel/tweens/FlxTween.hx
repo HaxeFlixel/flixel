@@ -148,7 +148,9 @@ class FlxTween implements IFlxDestroyable
 	
 	/**
 	 * Tweens some numeric value. Shorthand for creating a NumTween objects, starting it and adding it to the TweenPlugin.
-	 * Example: FlxTween.num(-1000, 0, 2.0, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT });
+	 * Example: 
+		 * var myTweenFunction = function(s:FlxSprite, v:Float) s.alpha = v;
+		 * FlxTween.num(-1000, 0, 2.0, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT }, myTweenFunction.bind(mySprite));
 	 * 
 	 * @param	FromValue	Start value.
 	 * @param	ToValue		End value.
@@ -159,20 +161,19 @@ class FlxTween implements IFlxDestroyable
 	 * 						ease		Optional easer function.
 	 *  					startDelay	Seconds to wait until starting this tween, 0 by default.
 	 * 						loopDelay	Seconds to wait between loops of this tween, 0 by default.
-	 * @param	Object		An optional object to be passed in to TweenFunction during tween update
-	 * @param	TweenFunction	A function to be called when tween updates
+	 * @param	TweenFunction	A function to be called when the tweened value updates. 
 	 * @return	The added NumTween object.
 	 */
-	public static function num<T>(FromValue:Float, ToValue:Float, Duration:Float, ?Options:TweenOptions, ?Object:T, ?TweenFunction:T->Float->Void):NumTween<T>
+	public static function num(FromValue:Float, ToValue:Float, Duration:Float, ?Options:TweenOptions, ?TweenFunction:Float->Void):NumTween
 	{
 		if (Options == null)
 		{
 			Options = { type : ONESHOT };
 		}
 		
-		var tween = new NumTween<T>(Options.complete, Options.type);
+		var tween = new NumTween(Options.complete, Options.type);
 		tween.setDelays(Options.startDelay, Options.loopDelay);
-		tween.tween(FromValue, ToValue, Duration, Options.ease, Object, TweenFunction);
+		tween.tween(FromValue, ToValue, Duration, Options.ease, TweenFunction);
 		manager.add(tween);
 		return tween;
 	}
