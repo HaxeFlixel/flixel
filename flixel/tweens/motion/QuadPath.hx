@@ -69,7 +69,6 @@ class QuadPath extends Motion
 	override public function destroy():Void 
 	{
 		super.destroy();
-		_pool.put(this);
 		// recycle FlxPoints
 		for (point in _points)
 		{
@@ -134,6 +133,11 @@ class QuadPath extends Motion
 		_index = (backward) ? (_numSegs - 1) : 0; 
 		super.start();
 		return this;
+	}
+	
+	override inline public function put():Void
+	{
+		_pool.put(this);
 	}
 	
 	override public function update():Void

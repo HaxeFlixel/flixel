@@ -698,6 +698,11 @@ class FlxTween implements IFlxDestroyable
 	}
 	
 	/**
+	 * To be overriden in pooled subclasses
+	 */ 
+	 public function put():Void {} 
+	
+	/**
 	 * Empty constructor because of pooling.
 	 */
 	private function new() {}

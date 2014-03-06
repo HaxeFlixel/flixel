@@ -44,15 +44,6 @@ class QuadMotion extends Motion
 	private var _controlY:Float;
 	
 	/**
-	 * Clean up references and pool this object for recycling.
-	 */
-	override public function destroy()
-	{
-		super.destroy();
-		_pool.put(this);
-	}
-	
-	/**
 	 * This function is called when tween is created, or recycled.
 	 *
 	 * @param	complete	Optional completion callback.
@@ -114,6 +105,11 @@ class QuadMotion extends Motion
 		{
 			postUpdate();
 		}
+	}
+	
+	override inline public function put():Void
+	{
+		_pool.put(this);
 	}
 	
 	private function get_distance():Float

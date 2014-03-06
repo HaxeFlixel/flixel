@@ -40,7 +40,6 @@ class VarTween extends FlxTween
 	{
 		super.destroy();
 		_object = null;
-		_pool.put(this);
 	}
 	
 	/**
@@ -89,5 +88,10 @@ class VarTween extends FlxTween
 	{
 		super.update();
 		Reflect.setProperty(_object, _property, (_start + _range * scale));
+	}
+	
+	override inline public function put():Void
+	{
+		_pool.put(this);
 	}
 }

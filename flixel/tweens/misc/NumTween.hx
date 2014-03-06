@@ -75,4 +75,9 @@ class NumTween extends FlxTween
 		if (_tweenFunction != null)
 			_tweenFunction(value);
 	}
+	
+	override inline public function put():Void
+	{
+		_pool.put(this);
+	}
 }

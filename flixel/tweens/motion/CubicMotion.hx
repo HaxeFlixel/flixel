@@ -41,15 +41,6 @@ class CubicMotion extends Motion
 	private var _tt:Float;
 	
 	/**
-	 * Clean up references and pool this object for recycling.
-	 */
-	override public function destroy()
-	{
-		super.destroy();
-		_pool.put(this);
-	}
-	
-	/**
 	 * This function is called when tween is created, or recycled.
 	 *
 	 * @param	complete	Optional completion callback.
@@ -102,5 +93,10 @@ class CubicMotion extends Motion
 		{
 			postUpdate();
 		}
+	}
+	
+	override inline public function put():Void
+	{
+		_pool.put(this);
 	}
 }

@@ -34,15 +34,6 @@ class Fader extends FlxTween
 	private var _range:Float;
 	
 	/**
-	 * Clean up references and pool this object for recycling.
-	 */
-	override public function destroy()
-	{
-		super.destroy();
-		_pool.put(this);
-	}
-	
-	/**
 	 * Fades FlxG.volume to the target volume.
 	 * 
 	 * @param	volume		The volume to fade to.
@@ -63,6 +54,11 @@ class Fader extends FlxTween
 	{
 		super.update();
 		FlxG.sound.volume = _start + _range * scale;
+	}
+	
+	override inline public function put():Void
+	{
+		_pool.put(this);
 	}
 }
 #end

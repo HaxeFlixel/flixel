@@ -46,15 +46,6 @@ class CircularMotion extends Motion
 	private var _angleFinish:Float;
 	
 	/**
-	 * Clean up references and pool this object for recycling.
-	 */
-	override public function destroy()
-	{
-		super.destroy();
-		_pool.put(this);
-	}
-	
-	/**
 	 * This function is called when tween is created, or recycled.
 	 *
 	 * @param	complete	Optional completion callback.
@@ -113,6 +104,11 @@ class CircularMotion extends Motion
 		{
 			postUpdate();
 		}
+	}
+	
+	override inline public function put():Void
+	{
+		_pool.put(this);
 	}
 
 	private function get_circumference():Float 

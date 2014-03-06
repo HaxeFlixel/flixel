@@ -71,7 +71,6 @@ class LinearPath extends Motion
 	override public function destroy():Void 
 	{
 		super.destroy();
-		_pool.put(this);
 		// recycle FlxPoints
 		for (point in points)
 		{
@@ -193,6 +192,11 @@ class LinearPath extends Motion
 		}
 		
 		super.postUpdate();
+	}
+	
+	override inline public function put():Void
+	{
+		_pool.put(this);
 	}
 	
 	private function new()

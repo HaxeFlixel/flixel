@@ -41,7 +41,6 @@ class MultiVarTween extends FlxTween
 	override public function destroy():Void 
 	{
 		super.destroy();
-		_pool.put(this);
 		_object = null;
 		_properties = null;
 	}
@@ -138,5 +137,10 @@ class MultiVarTween extends FlxTween
 			_start.push(a);
 			_range.push(Reflect.getProperty(_properties, p) - a);
 		}
+	}
+	
+	override inline public function put():Void
+	{
+		_pool.put(this);
 	}
 }

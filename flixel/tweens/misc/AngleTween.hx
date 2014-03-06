@@ -47,7 +47,6 @@ class AngleTween extends FlxTween
 	{
 		super.destroy();
 		sprite = null;
-		_pool.put(this);
 	}
 	
 	/**
@@ -97,5 +96,10 @@ class AngleTween extends FlxTween
 		{
 			sprite.angle = angle;
 		}
+	}
+	
+	override inline public function put():Void
+	{
+		_pool.put(this);
 	}
 }

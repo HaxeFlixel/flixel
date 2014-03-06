@@ -68,7 +68,6 @@ class ColorTween extends FlxTween
 	{
 		super.destroy();
 		sprite = null;
-		_pool.put(this);
 	}
 
 	/**
@@ -120,5 +119,10 @@ class ColorTween extends FlxTween
 			sprite.color = color;
 			sprite.alpha = alpha;
 		}
+	}
+	
+	override inline public function put():Void
+	{
+		_pool.put(this);
 	}
 }

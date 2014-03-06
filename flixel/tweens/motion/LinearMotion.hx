@@ -41,15 +41,6 @@ class LinearMotion extends Motion
 	private var _distance:Float;
 	
 	/**
-	 * Clean up references and pool this object for recycling.
-	 */
-	override public function destroy()
-	{
-		super.destroy();
-		_pool.put(this);
-	}
-	
-	/**
 	 * This function is called when tween is created, or recycled.
 	 *
 	 * @param	complete	Optional completion callback.
@@ -118,5 +109,10 @@ class LinearMotion extends Motion
 	{
 		if (_distance >= 0) return _distance;
 		return (_distance = Math.sqrt(_moveX * _moveX + _moveY * _moveY));
+	}
+	
+	override inline public function put():Void
+	{
+		_pool.put(this);
 	}
 }

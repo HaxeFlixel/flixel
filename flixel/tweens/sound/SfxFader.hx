@@ -47,7 +47,6 @@ class SfxFader extends FlxTween
 	override public function destroy():Void 
 	{
 		super.destroy();
-		_pool.put(this);
 		sfx = null;
 		_crossSfx = null;
 	}
@@ -108,9 +107,14 @@ class SfxFader extends FlxTween
 		}
 	}
 
-	override public function finish():Void 
+	override inline public function finish():Void 
 	{ 
 		finishCallback(this);
+	}
+	
+	override inline public function put():Void
+	{
+		_pool.put(this);
 	}
 	
 	private function finishCallback(tween:FlxTween):Void
