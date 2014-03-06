@@ -22,12 +22,12 @@ class Player extends FlxSprite
 	public static var virtualPad:FlxVirtualPad;
 	#end
 	
-	private static var SHOOT_DELAY;
+	private static var SHOOT_RATE:Float = 1 / 10; // 10 shots per second
 	
 	public var isReadyToJump:Bool = true;
 	public var flickering:Bool = false;
 	
-	private var _shootCounter:Int = 0;
+	private var _shootCounter:Float = 0;
 	private var _jumpPower:Int = 200;
 	private var _aim:Int;
 	private var _restart:Float = 0;
@@ -88,9 +88,6 @@ class Player extends FlxSprite
 		virtualPad = new FlxVirtualPad(FULL, A_B);
 		virtualPad.alpha = 0.5;
 		#end
-		
-		// 6 shots per second
-		SHOOT_DELAY = Std.int(FlxG.updateFramerate / 6);
 	}
 	
 	override public function destroy():Void
@@ -107,7 +104,8 @@ class Player extends FlxSprite
 	
 	override public function update():Void
 	{
-		_shootCounter --;
+		if(_shootCounter > 0)
+			_shootCounter -= FlxG.elapsed;
 		
 		// Game restart timer
 		if (!alive)
@@ -136,9 +134,9 @@ class Player extends FlxSprite
 #if (!FLX_NO_GAMEPAD && (cpp || neko || js))
 			 || (gamepad.dpadLeft ||
 	#if OUYA
-				 gamepad.getAxis(OUYAButtonID.LEFT_ANALOGUE_X) < 0) || buttonPressed(virtualPad.buttonLeft)) 
+				 gamepad.getXAxis(OUYAButtonID.LEFT_ANALOGUE_X) < 0) || buttonPressed(virtualPad.buttonLeft)) 
 	#else
-				 gamepad.getAxis(XboxButtonID.LEFT_ANALOGUE_X) < 0))
+				 gamepad.getXAxis(XboxButtonID.LEFT_ANALOGUE_X) < 0))
 	#end
 #else) #end
 		{
@@ -148,9 +146,9 @@ class Player extends FlxSprite
 #if (!FLX_NO_GAMEPAD && (cpp || neko || js))
 			 || (gamepad.dpadRight ||
 	#if OUYA
-				 gamepad.getAxis(OUYAButtonID.LEFT_ANALOGUE_X) > 0) || buttonPressed(virtualPad.buttonRight))
+				 gamepad.getXAxis(OUYAButtonID.LEFT_ANALOGUE_X) > 0) || buttonPressed(virtualPad.buttonRight))
 	#else
-				 gamepad.getAxis(XboxButtonID.LEFT_ANALOGUE_X) > 0))
+				 gamepad.getXAxis(XboxButtonID.LEFT_ANALOGUE_X) > 0))
 	#end
 #else) #end
 		{
@@ -164,9 +162,9 @@ class Player extends FlxSprite
 #if (!FLX_NO_GAMEPAD && (cpp || neko || js))
 			 || (gamepad.dpadUp ||
 	#if OUYA
-				 gamepad.getAxis(OUYAButtonID.LEFT_ANALOGUE_Y) < 0) || buttonPressed(virtualPad.buttonUp))
+				 gamepad.getYAxis(OUYAButtonID.LEFT_ANALOGUE_Y) < 0) || buttonPressed(virtualPad.buttonUp))
 	#else
-				 gamepad.getAxis(XboxButtonID.LEFT_ANALOGUE_Y) < 0))
+				 gamepad.getYAxis(XboxButtonID.LEFT_ANALOGUE_Y) < 0))
 	#end
 #else) #end
 		{
@@ -176,9 +174,9 @@ class Player extends FlxSprite
 #if (!FLX_NO_GAMEPAD && (cpp || neko || js))
 			 || (gamepad.dpadDown ||
 	#if OUYA
-				 gamepad.getAxis(OUYAButtonID.LEFT_ANALOGUE_Y) > 0) || buttonPressed(virtualPad.buttonDown))
+				 gamepad.getYAxis(OUYAButtonID.LEFT_ANALOGUE_Y) > 0) || buttonPressed(virtualPad.buttonDown))
 	#else
-				 gamepad.getAxis(XboxButtonID.LEFT_ANALOGUE_Y) > 0))
+				 gamepad.getYAxis(XboxButtonID.LEFT_ANALOGUE_Y) > 0))
 	#end
 #else) #end
 		{
@@ -241,9 +239,9 @@ class Player extends FlxSprite
 		if (FlxG.keys.pressed.C
 #if (!FLX_NO_GAMEPAD && (cpp || neko || js))
 	#if OUYA
-			|| gamepad.justPressed(OUYAButtonID.U) || buttonPressed(virtualPad.buttonB)) 
+			|| gamepad.pressed(OUYAButtonID.U) || buttonPressed(virtualPad.buttonB)) 
 	#else
-			|| gamepad.justPressed(XboxButtonID.X))
+			|| gamepad.pressed(XboxButtonID.X))
 	#end
 #else) #end
 		{
@@ -354,8 +352,7 @@ class Player extends FlxSprite
 		{
 			return;
 		}
-		
-		_shootCounter = SHOOT_DELAY;
+		_shootCounter = SHOOT_RATE;
 		
 		if (flickering)
 		{
