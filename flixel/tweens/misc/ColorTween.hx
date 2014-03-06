@@ -11,6 +11,25 @@ import flixel.util.FlxPool;
  */
 class ColorTween extends FlxTween
 {
+	/**
+	 * A pool that contains ColorTweens for recycling.
+	 */
+	@:isVar 
+	@:allow(flixel.tweens.FlxTween)
+	private static var _pool(get, null):FlxPool<ColorTween>;
+	
+	/**
+	 * Only allocate the pool if needed.
+	 */
+	private static function get__pool()
+	{
+		if (_pool == null)
+		{
+			_pool = new FlxPool<ColorTween>(ColorTween);
+		}
+		return _pool;
+	}
+	
 	public var color:Int;
 	public var alpha:Float = 1;
 	
@@ -43,30 +62,13 @@ class ColorTween extends FlxTween
 	private var _rangeB:Float;
 	
 	/**
-	 * A pool that contains ColorTweens for recycling.
-	 */
-	@:isVar public static var pool(get, null):FlxPool<ColorTween>;
-	
-	/**
-	 * Only allocate the pool if needed.
-	 */
-	public static function get_pool()
-	{
-		if (pool == null)
-		{
-			pool = new FlxPool<ColorTween>(ColorTween);
-		}
-		return pool;
-	}
-	
-	/**
 	 * Clean up references and pool this object for recycling.
 	 */
 	override public function destroy() 
 	{
 		super.destroy();
 		sprite = null;
-		pool.put(this);
+		_pool.put(this);
 	}
 
 	/**

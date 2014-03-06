@@ -12,6 +12,25 @@ import flixel.util.FlxPool;
 class LinearPath extends Motion
 {
 	/**
+	 * A pool that contains LinearPaths for recycling.
+	 */
+	@:isVar 
+	@:allow(flixel.tweens.FlxTween)
+	private static var _pool(get, null):FlxPool<LinearPath>;
+	
+	/**
+	 * Only allocate the pool if needed.
+	 */
+	private static function get__pool():FlxPool<LinearPath>
+	{
+		if (_pool == null)
+		{
+			_pool = new FlxPool<LinearPath>(LinearPath);
+		}
+		return _pool;
+	}
+	
+	/**
 	 * The full length of the path.
 	 */
 	public var distance(default, null):Float;
@@ -28,31 +47,6 @@ class LinearPath extends Motion
 	private var _last:FlxPoint;
 	private var _prevPoint:FlxPoint;
 	private var _nextPoint:FlxPoint;
-	
-	/**
-	 * A pool that contains LinearPaths for recycling.
-	 */
-	@:isVar public static var pool(get, null):FlxPool<LinearPath>;
-	
-	/**
-	 * Only allocate the pool if needed.
-	 */
-	public static function get_pool():FlxPool<LinearPath>
-	{
-		if (pool == null)
-		{
-			pool = new FlxPool<LinearPath>(LinearPath);
-		}
-		return pool;
-	}
-	
-	public function new()
-	{
-		super();
-		points = new Array<FlxPoint>();
-		_pointD = new Array<Float>();
-		_pointT = new Array<Float>();
-	}
 	
 	/**
 	 * This function is called when tween is created, or recycled.
@@ -77,7 +71,7 @@ class LinearPath extends Motion
 	override public function destroy():Void 
 	{
 		super.destroy();
-		pool.put(this);
+		_pool.put(this);
 		// recycle FlxPoints
 		for (point in points)
 		{
@@ -199,6 +193,14 @@ class LinearPath extends Motion
 		}
 		
 		super.postUpdate();
+	}
+	
+	private function new()
+	{
+		super();
+		points = new Array<FlxPoint>();
+		_pointD = new Array<Float>();
+		_pointT = new Array<Float>();
 	}
 
 	/**

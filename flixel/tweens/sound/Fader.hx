@@ -11,25 +11,27 @@ import flixel.util.FlxPool;
  */
 class Fader extends FlxTween
 {
-	private var _start:Float;
-	private var _range:Float;
-	
 	/**
-	 * A pool that contains QuadPaths for recycling.
+	 * A pool that contains Faders for recycling.
 	 */
-	@:isVar public static var pool(get, null):FlxPool<Fader>;
+	@:isVar 
+	@:allow(flixel.tweens.FlxTween)
+	private static var _pool(get, null):FlxPool<Fader>;
 	
 	/**
 	 * Only allocate the pool if needed.
 	 */
-	public static function get_pool():FlxPool<Fader>
+	private static function get__pool():FlxPool<Fader>
 	{
-		if (pool == null)
+		if (_pool == null)
 		{
-			pool = new FlxPool<Fader>(Fader);
+			_pool = new FlxPool<Fader>(Fader);
 		}
-		return pool;
+		return _pool;
 	}
+	
+	private var _start:Float;
+	private var _range:Float;
 	
 	/**
 	 * Clean up references and pool this object for recycling.
@@ -37,7 +39,7 @@ class Fader extends FlxTween
 	override public function destroy()
 	{
 		super.destroy();
-		pool.put(this);
+		_pool.put(this);
 	}
 	
 	/**

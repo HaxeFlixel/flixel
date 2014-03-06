@@ -10,6 +10,25 @@ import flixel.util.FlxPool;
 class NumTween extends FlxTween
 {
 	/**
+	 * A pool that contains NumTweens for recycling.
+	 */
+	@:isVar 
+	@:allow(flixel.tweens.FlxTween)
+	private static var _pool(get, null):FlxPool<NumTween>;
+	
+	/**
+	 * Only allocate the pool if needed.
+	 */
+	private static function get__pool()
+	{
+		if (_pool == null)
+		{
+			_pool = new FlxPool<NumTween>(NumTween);
+		}
+		return _pool;
+	}
+	
+	/**
 	 * The current value.
 	 */
 	public var value:Float;
@@ -18,23 +37,6 @@ class NumTween extends FlxTween
 	private var _tweenFunction:Float->Void;
 	private var _start:Float;
 	private var _range:Float;
-	
-	/**
-	 * A pool that contains NumTweens for recycling.
-	 */
-	@:isVar public static var pool(get, null):FlxPool<NumTween>;
-	
-	/**
-	 * Only allocate the pool if needed.
-	 */
-	public static function get_pool()
-	{
-		if (pool == null)
-		{
-			pool = new FlxPool<NumTween>(NumTween);
-		}
-		return pool;
-	}
 	
 	/**
 	 * Clean up references and pool this object for recycling.

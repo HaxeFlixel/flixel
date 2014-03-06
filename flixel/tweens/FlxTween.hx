@@ -110,7 +110,7 @@ class FlxTween implements IFlxDestroyable
 			Options = { type : ONESHOT };
 		}
 		
-		var tween:VarTween = VarTween.pool.get();
+		var tween = VarTween._pool.get();
 		tween.init(Options.complete, Options.type);
 		tween.setDelays(Options.startDelay, Options.loopDelay);
 		tween.tween(Object, Property, To, Duration, Options.ease);
@@ -140,7 +140,7 @@ class FlxTween implements IFlxDestroyable
 			Options = { type : ONESHOT };
 		}
 		
-		var tween:MultiVarTween = MultiVarTween.pool.get();
+		var tween = MultiVarTween._pool.get();
 		tween.init(Options.complete, Options.type);
 		tween.setDelays(Options.startDelay, Options.loopDelay);
 		tween.tween(Object, Values, Duration, Options.ease);
@@ -176,7 +176,7 @@ class FlxTween implements IFlxDestroyable
 			Options = { type : ONESHOT };
 		}
 		
-		var tween:NumTween = NumTween.pool.get();
+		var tween = NumTween._pool.get();
 		tween.init(Options.complete, Options.type);
 		tween.setDelays(Options.startDelay, Options.loopDelay);
 		tween.tween(FromValue, ToValue, Duration, Options.ease, TweenFunction);
@@ -207,7 +207,7 @@ class FlxTween implements IFlxDestroyable
 			Options = { type : ONESHOT };
 		}
 		
-		var tween:AngleTween = AngleTween.pool.get();
+		var tween = AngleTween._pool.get();
 		tween.init(Options.complete, Options.type);
 		tween.setDelays(Options.startDelay, Options.loopDelay);
 		tween.tween(FromAngle, ToAngle, Duration, Options.ease, Sprite);
@@ -240,7 +240,7 @@ class FlxTween implements IFlxDestroyable
 			Options = { type : ONESHOT };
 		}
 		
-		var tween:ColorTween = ColorTween.pool.get();
+		var tween = ColorTween._pool.get();
 		tween.init(Options.complete, Options.type);
 		tween.setDelays(Options.startDelay, Options.loopDelay);
 		tween.tween(Duration, FromColor, ToColor, FromAlpha, ToAlpha, Options.ease, Sprite);
@@ -270,7 +270,7 @@ class FlxTween implements IFlxDestroyable
 			Options = { type : ONESHOT };
 		}
 		
-		var tween:Fader = Fader.pool.get();
+		var tween = Fader._pool.get();
 		tween.init(Options.complete, Options.type);
 		tween.setDelays(Options.startDelay, Options.loopDelay);
 		tween.fadeTo(Volume, Duration, Options.ease);
@@ -305,7 +305,7 @@ class FlxTween implements IFlxDestroyable
 			Options = { type : ONESHOT };
 		}
 		
-		var tween:LinearMotion = LinearMotion.pool.get();
+		var tween = LinearMotion._pool.get();
 		tween.init(Options.complete, Options.type);
 		tween.setObject(Object);
 		tween.setDelays(Options.startDelay, Options.loopDelay);
@@ -342,7 +342,7 @@ class FlxTween implements IFlxDestroyable
 			Options = { type : ONESHOT };
 		}
 		
-		var tween:QuadMotion = QuadMotion.pool.get();
+		var tween = QuadMotion._pool.get();
 		tween.init(Options.complete, Options.type);
 		tween.setObject(Object);
 		tween.setDelays(Options.startDelay, Options.loopDelay);
@@ -380,7 +380,7 @@ class FlxTween implements IFlxDestroyable
 			Options = { type : ONESHOT };
 		}
 		
-		var tween:CubicMotion = CubicMotion.pool.get();
+		var tween = CubicMotion._pool.get();
 		tween.init(Options.complete, Options.type);
 		tween.setObject(Object);
 		tween.setDelays(Options.startDelay, Options.loopDelay);
@@ -417,7 +417,7 @@ class FlxTween implements IFlxDestroyable
 			Options = { type : ONESHOT };
 		}
 		
-		var tween:CircularMotion = CircularMotion.pool.get();
+		var tween = CircularMotion._pool.get();
 		tween.init(Options.complete, Options.type);
 		tween.setObject(Object);
 		tween.setDelays(Options.startDelay, Options.loopDelay);
@@ -449,7 +449,7 @@ class FlxTween implements IFlxDestroyable
 			Options = { type : ONESHOT };
 		}
 		
-		var tween:LinearPath = LinearPath.pool.get();
+		var tween = LinearPath._pool.get();
 		tween.init(Options.complete, Options.type);
 		
 		if (Points != null)
@@ -490,7 +490,7 @@ class FlxTween implements IFlxDestroyable
 			Options = { type : ONESHOT };
 		}
 		
-		var tween:QuadPath = QuadPath.pool.get();
+		var tween = QuadPath._pool.get();
 		tween.init(Options.complete, Options.type);
 		
 		if (Points != null)
@@ -543,11 +543,6 @@ class FlxTween implements IFlxDestroyable
 	private var _secondsSinceStart:Float = 0;
 	
 	private var _delayToUse:Float = 0;
-
-	/**
-	 * Empty constructor because of pooling.
-	 */
-	public function new() {}
 
 	/**
 	 * This function is called when tween is created, or recycled.
@@ -670,6 +665,11 @@ class FlxTween implements IFlxDestroyable
 		startDelay = StartDelay != null ? StartDelay : 0;
 		loopDelay = LoopDelay != null ? LoopDelay : 0;
 	}
+	
+	/**
+	 * Empty constructor because of pooling.
+	 */
+	private function new() {}
 	
 	private function set_startDelay(value:Float):Float
 	{
