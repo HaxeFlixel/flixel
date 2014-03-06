@@ -190,14 +190,15 @@ class FlxQuadTree extends FlxRect
 	 */
 	public static  var _NUM_CACHED_QUAD_TREES:Int = 0;
 	private static var _cachedTreesHead:FlxQuadTree;
-	private 	   var next:FlxQuadTree;
+	private var next:FlxQuadTree;
 	
 	/**
 	 * Private, use recycle instead.
 	 */
-	private function new(X:Float, Y:Float, Width:Float, Height:Float, Parent:FlxQuadTree = null)
+	private function new(X:Float, Y:Float, Width:Float, Height:Float, ?Parent:FlxQuadTree)
 	{
-		super(X, Y, Width, Height);
+		super();
+		set(X, Y, Width, Height);
 		reset(X, Y, Width, Height, Parent);
 	}
 	
@@ -209,7 +210,7 @@ class FlxQuadTree extends FlxRect
 	 * @param	Height		Desired height of this node.
 	 * @param	Parent		The parent branch or node.  Pass null to create a root.
 	 */
-	public static function recycle(X:Float, Y:Float, Width:Float, Height:Float, Parent:FlxQuadTree = null):FlxQuadTree
+	public static function recycle(X:Float, Y:Float, Width:Float, Height:Float, ?Parent:FlxQuadTree):FlxQuadTree
 	{
 		if (_cachedTreesHead != null)
 		{

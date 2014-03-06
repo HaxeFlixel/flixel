@@ -89,7 +89,7 @@ class FlxG
 	 * The HaxeFlixel version, in semantic versioning syntax. Use Std.string()
 	 * on it to get a String formatted like this: "HaxeFlixel MAJOR.MINOR.PATCH-PATCH_VERSION".
 	 */ 
-	public static var VERSION(default, null):FlxVersion = new FlxVersion(3, 2, 2, "dev");
+	public static var VERSION(default, null):FlxVersion = new FlxVersion(3, 3, 0, "dev");
 	
 	/**
 	 * Internal tracker for game object.
@@ -145,7 +145,7 @@ class FlxG
 	 * The dimensions of the game world, used by the quad tree for collisions and overlap checks.
 	 * Use .set() instead of creating a new object!
 	 */
-	public static var worldBounds(default, null):FlxRect = new FlxRect();
+	public static var worldBounds(default, null):FlxRect = FlxRect.get();
 	
 	/**
 	 * A FlxSave used internally by flixel to save sound preferences and 

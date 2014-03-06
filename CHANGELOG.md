@@ -1,12 +1,33 @@
-3.2.2
+3.3.0
 ------------------------------
+* Added flash gamepad support. This either requires a swf-player-version of 11.8 to be set or FLX_NO_GAMEPAD to be defined.
+ * FlxGamepad.getAxis() has been split into getXAxis() and getYAxis() for consistency across targets
+ * FlxGamepad.dpadUp / Down / Left / Right don't work in flash, use getButton() in conjunction with the IDs in the button ID classes instead
 * Added "tracker" window to the debugger which creates a Watch window with the most important properties of an object
  * Use FlxG.debugger.track(Object); to create a new tracker window
  * Use FlxG.debugger.addTrackerProfile() to add a profile for classes don't have one yet or override existing ones
  * Use the "track [object]" command to open a tracker window from the console
 * FlxCamera: added static defaultCameras array which is used by FlxBasics when their cameras array has not been set - previously the use of FlxG.cameras.list / all existing cameras was hardcoded
-* FlxText.setFormat() now accepts Font classes instead of only strings for its Font param
-* [gamedevsam] Added pooling functionality to FlxPoint, FlxVector, FlxRect objects (FlxPath and FlxTimer also support pooling, but that is handled transparently). Usage: ```var point = FlxPoint.get(); /* do stuff with point */ point.put(); // recycle point```
+* Added pooling functionality to FlxPoint, FlxVector, FlxRect objects (FlxPath and FlxTimer also support pooling, but that is handled transparently). Usage: var point = FlxPoint.get(); /* do stuff with point */ point.put(); // recycle point. Instantiating these objects directly via new() is no longer possible to enforce the use of pooling.
+* Debugger windows:
+ * Fixed dragging of overlapping windows
+ * Fixed the visibility of windows on native targets (now saving correctly)
+* FlxPath: fixed a bug with drawDebug()
+* FlxG.fullscreen: fixed offset in flash
+* FlxSound: added loadByteArray()
+* MouseEventManager: improved handling of visible / exists:
+ * the mouse-over callback doesn't fire on invisible sprites anymore
+ * setting exists or visible to false will now cause a mouse out event
+* FlxPoint: added floor() and ceil()
+* Changed the default html5 backend to openf-bitfive
+ * middle and right mouse events are now supported
+ * sounds are now supported (.ogg and .mp3)
+* FlxObject: replaced forceComplexRender by pixelPerfectRender which rounds coordinates by default (if true) for drawing (also on cpp targets, making it consistent with flash)
+* FlxText: 
+ * added shadowOffset
+ * fixed the widthInc and heightInc of addFilter() which did not work at all previously
+* FlxSpriteUtil: added bound()
+* Added FlxTypedSpriteGroup, which can be used in the same way as FlxTypedGroup, but its type parameter is T:FlxSprite
 
 3.2.1
 ------------------------------

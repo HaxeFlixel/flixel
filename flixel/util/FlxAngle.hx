@@ -23,11 +23,11 @@ class FlxAngle
 	/**
 	 * Convert radians to degrees by multiplying it with this value.
 	 */
-	public static var TO_DEG:Float = 180 / Math.PI;
+	public static var TO_DEG(get, never):Float;
 	/**
 	 * Convert degrees to radians by multiplying it with this value.
 	 */
-	public static var TO_RAD:Float = Math.PI / 180;
+	public static var TO_RAD(get, never):Float;
 	
 	/**
 	 * Rotates a point in 2D space around another point by the given angle.
@@ -114,7 +114,7 @@ class FlxAngle
 		var dy:Float = Y - PivotY;
 		if (point == null)
 		{
-			point = new FlxPoint();
+			point = FlxPoint.get();
 		}
 		point.x = PivotX + cos * dx - sin * dy;
 		point.y = PivotY - sin * dx - cos * dy;
@@ -401,5 +401,15 @@ class FlxAngle
 		p.x = Math.sqrt((X * X) + (Y * Y));
 		p.y = Math.atan2(Y, X) * TO_DEG;
 		return p;
+	}
+	
+	private static inline function get_TO_DEG():Float
+	{
+		return 180 / Math.PI;
+	}
+	
+	private static inline function get_TO_RAD():Float
+	{
+		return Math.PI / 180;
 	}
 }

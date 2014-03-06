@@ -11,8 +11,8 @@ import flixel.util.FlxPoint;
  */
 class QuadPath extends Motion
 {
-	private static var _Point:FlxPoint = new FlxPoint();
-	private static var _Point2:FlxPoint = new FlxPoint();
+	private static var _Point:FlxPoint = FlxPoint.get();
+	private static var _Point2:FlxPoint = FlxPoint.get();
 	
 	// Path information.
 	private var _points:Array<FlxPoint>;
@@ -89,7 +89,7 @@ class QuadPath extends Motion
 	public function addPoint(x:Float = 0, y:Float = 0):QuadPath
 	{
 		_updateCurve = true;
-		_points[_points.length] = new FlxPoint(x, y);
+		_points[_points.length] = FlxPoint.get(x, y);
 		return this;
 	}
 	

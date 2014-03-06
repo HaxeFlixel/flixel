@@ -41,12 +41,13 @@ class FlxSwipe
 	
 	private inline function toString():String
 	{
-		return FlxStringUtil.getDebugString([ { label: "ID", value: ID }, 
-		                                      { label: "start", value: startPosition },
-		                                      { label: "end", value: endPosition },
-		                                      { label: "distance", value: distance },
-		                                      { label: "angle", value: angle },
-		                                      { label: "duration", value: (duration / 1000) } ]);
+		return FlxStringUtil.getDebugString([
+			LabelValuePair.weak("ID", ID), 
+			LabelValuePair.weak("start", startPosition),
+			LabelValuePair.weak("end", endPosition),
+			LabelValuePair.weak("distance", distance),
+			LabelValuePair.weak("angle", angle),
+			LabelValuePair.weak("duration", (duration / 1000))]);
 	}
 	
 	private inline function get_distance():Float

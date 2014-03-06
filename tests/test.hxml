@@ -8,11 +8,13 @@
 -lib openfl
 -lib mcover
 
+-D FLX_RENDER_BLIT
+
 --macro mcover.MCover.coverage(['flixel'], ['../'], null)
 
 -D doc
 
--swf-version 11.2
+-swf-version 11.8
 -swf bin/as3_test.swf
 
 --next
@@ -26,6 +28,8 @@
 -lib flixel
 -lib openfl
 -lib mcover
+
+-D FLX_RENDER_BLIT
 
 --macro mcover.MCover.coverage(['flixel'], ['../'], null)
 
@@ -42,7 +46,7 @@
 -D FLX_NO_FOCUS_LOST_SCREEN
 -D FLX_NO_DEBUG
 
--swf-version 11.2
+-swf-version 11.8
 -swf bin/as3_test.swf
 
 ## Neko

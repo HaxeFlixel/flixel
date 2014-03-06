@@ -23,10 +23,6 @@ class FlxPath implements IFlxDestroyable
 	 */
 	public static var manager:PathManager;
 	/**
-	 * A pool that contains FlxPaths for recycling.
-	 */
-	public static var pool = new FlxPool<FlxPath>(FlxPath);
-	/**
 	 * Path behavior controls: move from the start of the path to the end then stop.
 	 */
 	public static inline var FORWARD:Int = 0x000000;
@@ -56,6 +52,35 @@ class FlxPath implements IFlxDestroyable
 	public static inline var VERTICAL_ONLY:Int = 0x100000;
 	
 	/**
+	 * A pool that contains FlxPaths for recycling.
+	 */
+	@:allow(flixel.plugin.PathManager)
+	private static var _pool = new FlxPool<FlxPath>(FlxPath);
+	
+	/**
+	 * Internal helper for keeping new variable instantiations under control.
+	 */
+	private static var _point:FlxPoint = FlxPoint.get();
+	
+	/**
+	 * Call this function to give this object a path to follow.
+	 * If the path does not have at least one node in it, this function
+	 * will log a warning message and return.
+	 * 
+	 * @param	Object		The Object which will follow this path
+	 * @param	Nodes		Array of points which will construct path.
+	 * @param	Speed		How fast to travel along the path in pixels per second.
+	 * @param	Mode		Optional, controls the behavior of the object following the path using the path behavior constants.  Can use multiple flags at once, for example PATH_YOYO|PATH_HORIZONTAL_ONLY will make an object move back and forth along the X axis of the path only.
+	 * @param	AutoRotate	Automatically point the object toward the next node.  Assumes the graphic is pointing upward.  Default behavior is false, or no automatic rotation.
+	 */
+	public static function start(Object:FlxObject, Nodes:Array<FlxPoint>, Speed:Float = 100, Mode:Int = 0x000000, AutoRotate:Bool = false):FlxPath
+	{
+		var path:FlxPath = _pool.get();
+		path.run(Object, Nodes, Speed, Mode, AutoRotate);
+		return path;
+	}
+	
+	/**
 	 * The list of FlxPoints that make up the path data.
 	 */
 	public var nodes:Array<FlxPoint>;
@@ -79,32 +104,13 @@ class FlxPath implements IFlxDestroyable
 	public var angle:Float = 0;
 	/**
 	 * Whether the object should auto-center the path or at its origin.
-	 * @default true
 	 */
 	public var autoCenter:Bool = true;
-	/**
-	 * Internal helper, tracks which node of the path this object is moving toward.
-	 */
-	private var _nodeIndex:Int = 0;
-	/**
-	 * Internal tracker for path behavior flags (like looping, horizontal only, etc).
-	 */
-	private var _mode:Int;
-	/**
-	 * Internal helper for node navigation, specifically yo-yo and backwards movement.
-	 */
-	private var _inc:Int = 1;
-	/**
-	 * Internal flag for whether the object's angle should be adjusted to the path angle during path follow behavior.
-	 */
-	private var _autoRotate:Bool = false;
 	
 	/**
 	 * Pauses or checks the pause state of the timer.
 	 */
 	public var paused:Bool = false;
-	
-	public var finished(default, null):Bool = false;
 	
 	public var onComplete:FlxPath->Void;
 
@@ -122,38 +128,28 @@ class FlxPath implements IFlxDestroyable
 	/**
 	 * Setting this to true will prevent the object from appearing
 	 * when the visual debug mode in the debugger overlay is toggled on.
-	 * @default false
 	 */
 	public var ignoreDrawDebug:Bool = false;
 	#end
 	
-	/**
-	 * Internal helper for keeping new variable instantiations under control.
-	 */
-	private static var _point:FlxPoint = new FlxPoint();
+	public var finished(default, null):Bool = false;
 	
 	/**
-	 * Instantiate a new path object.
+	 * Internal helper, tracks which node of the path this object is moving toward.
 	 */
-	public function new() {  }
-	
+	private var _nodeIndex:Int = 0;
 	/**
-	 * Call this function to give this object a path to follow.
-	 * If the path does not have at least one node in it, this function
-	 * will log a warning message and return.
-	 * 
-	 * @param	Object		The Object which will follow this path
-	 * @param	Nodes		Array of points which will construct path.
-	 * @param	Speed		How fast to travel along the path in pixels per second.
-	 * @param	Mode		Optional, controls the behavior of the object following the path using the path behavior constants.  Can use multiple flags at once, for example PATH_YOYO|PATH_HORIZONTAL_ONLY will make an object move back and forth along the X axis of the path only.
-	 * @param	AutoRotate	Automatically point the object toward the next node.  Assumes the graphic is pointing upward.  Default behavior is false, or no automatic rotation.
+	 * Internal tracker for path behavior flags (like looping, horizontal only, etc).
 	 */
-	public static function start(Object:FlxObject, Nodes:Array<FlxPoint>, Speed:Float = 100, Mode:Int = 0x000000, AutoRotate:Bool = false):FlxPath
-	{
-		var path:FlxPath = pool.get();
-		path.run(Object, Nodes, Speed, Mode, AutoRotate);
-		return path;
-	}
+	private var _mode:Int;
+	/**
+	 * Internal helper for node navigation, specifically yo-yo and backwards movement.
+	 */
+	private var _inc:Int = 1;
+	/**
+	 * Internal flag for whether the object's angle should be adjusted to the path angle during path follow behavior.
+	 */
+	private var _autoRotate:Bool = false;
 	
 	public function reset():FlxPath
 	{
@@ -458,7 +454,7 @@ class FlxPath implements IFlxDestroyable
 		if (manager != null)
 		{
 			manager.remove(this);
-			pool.put(this);
+			_pool.put(this);
 		}
 	}
 	
@@ -643,7 +639,7 @@ class FlxPath implements IFlxDestroyable
 		}
 		
 		//Set up our global flash graphics object to draw out the path
-		#if flash
+		#if FLX_RENDER_BLIT
 		var gfx:Graphics = FlxSpriteUtil.flashGfx;
 		gfx.clear();
 		#else
@@ -710,10 +706,12 @@ class FlxPath implements IFlxDestroyable
 			i++;
 		}
 		
-		#if flash
+		#if FLX_RENDER_BLIT
 		//then stamp the path down onto the game buffer
 		Camera.buffer.draw(FlxSpriteUtil.flashGfxSprite);
 		#end
 	}
 	#end
+	
+	private function new() {}
 }

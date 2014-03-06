@@ -35,6 +35,15 @@ class FlxAtlas
 	public var borderX(default, null):Int;
 	public var borderY(default, null):Int;
 	
+	/**
+	 * Total width of atlas
+	 */
+	public var width(get, null):Int;
+	/**
+	 * Total height of atlas
+	 */
+	public var height(get, null):Int;
+	
 	private var _tempStorage:Array<TempAtlasObj>;
 	
 	/**
@@ -62,7 +71,7 @@ class FlxAtlas
 	 * @param	key		image name
 	 * @return			added node
 	 */
-	public function addNode(Graphic:Dynamic, Key:String = null):FlxNode
+	public function addNode(Graphic:Dynamic, ?Key:String):FlxNode
 	{
 		var isClass:Bool = true;
 		var isBitmapData:Bool = true;
@@ -71,7 +80,7 @@ class FlxAtlas
 			isClass = true;
 			isBitmapData = false;
 		}
-		else if (Std.is(Graphic, BitmapData) && Key != null)
+		else if (Std.is(Graphic, BitmapData) && (Key != null))
 		{
 			isClass = false;
 			isBitmapData = true;
@@ -162,26 +171,6 @@ class FlxAtlas
 	}
 	
 	/**
-	 * Total width of atlas
-	 */
-	public var width(get_width, null):Int;
-	
-	private function get_width():Int
-	{
-		return root.width;
-	}
-	
-	/**
-	 * Total height of atlas
-	 */
-	public var height(get_height, null):Int;
-	
-	private function get_height():Int
-	{
-		return root.height;
-	}
-	
-	/**
 	 * Generates TextureRegion object for node with specified name
 	 * @param	nodeName	name of the node to generate TextureRegion object for
 	 * @return	Generated TextureRegion
@@ -191,7 +180,7 @@ class FlxAtlas
 		if (hasNodeWithName(nodeName))
 		{
 			var cached:CachedGraphics = FlxG.bitmap.add(this.atlasBitmapData, false, name);
-			var region:TextureRegion = new TextureRegion(cached);
+			var region = new TextureRegion(cached);
 			var node:FlxNode = getNode(nodeName);
 			region.region.startX = node.x;
 			region.region.startY = node.y;
@@ -214,20 +203,20 @@ class FlxAtlas
 		
 		if (cached.data == null)
 		{
-			var packerData:TexturePackerData = new TexturePackerData(null, name);
+			var packerData = new TexturePackerData(null, name);
 			var node:FlxNode;
 			for (key in nodes.keys())
 			{
 				node = nodes.get(key);
 				if (node.filled)
 				{
-					var texFrame:TextureAtlasFrame = new TextureAtlasFrame();
+					var texFrame = new TextureAtlasFrame();
 					
 					texFrame.trimmed = false;
 					texFrame.rotated = false;
 					texFrame.name = key;
-					texFrame.sourceSize = new FlxPoint(node.width, node.height);
-					texFrame.offset = new FlxPoint(0, 0);
+					texFrame.sourceSize = FlxPoint.get(node.width, node.height);
+					texFrame.offset = FlxPoint.get(0, 0);
 					texFrame.frame = new Rectangle(node.x, node.y, node.width, node.height);
 					
 					packerData.frames.push(texFrame);
@@ -469,6 +458,15 @@ class FlxAtlas
 		return null;
 	}
 	
+	private inline function get_width():Int
+	{
+		return root.width;
+	}
+	
+	private inline function get_height():Int
+	{
+		return root.height;
+	}
 }
 
 typedef TempAtlasObj = {

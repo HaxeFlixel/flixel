@@ -83,7 +83,7 @@ class TimerManager extends FlxPlugin
 	{
 		while (_timers.length > 0)
 		{
-			FlxTimer.pool.put(_timers.pop());
+			FlxTimer._pool.put(_timers.pop());
 		}
 	}
 	

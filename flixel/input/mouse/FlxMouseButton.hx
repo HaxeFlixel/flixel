@@ -33,7 +33,7 @@ class FlxMouseButton implements IFlxDestroyable
 	public function new(ID:Int)
 	{
 		_ID = ID;
-		_justPressedPosition = new FlxPoint();
+		_justPressedPosition = FlxPoint.get();
 	}
 	
 	/**

@@ -233,7 +233,7 @@ class FlxVelocity
 	{
 		var a:Float = FlxAngle.asRadians(Angle);
 		
-		var result:FlxPoint = new FlxPoint();
+		var result = FlxPoint.get();
 		
 		result.x = Std.int(Math.cos(a) * Speed);
 		result.y = Std.int(Math.sin(a) * Speed);
@@ -269,7 +269,7 @@ class FlxVelocity
 			a = FlxAngle.asRadians(90);
 		}
 		
-		var result:FlxPoint = new FlxPoint();
+		var result:FlxPoint = FlxPoint.get();
 		
 		result.x = Std.int(Math.cos(a) * Speed);
 		result.y = Std.int(Math.sin(a) * Speed);

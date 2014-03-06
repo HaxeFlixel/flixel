@@ -13,10 +13,10 @@ import flash.system.Capabilities;
 class FlxGamepad implements IFlxDestroyable
 {
 	// Button States (mirrors Key States in FlxKey.hx)
-	public static inline var JUST_RELEASED	:Int = -1;
-	public static inline var RELEASED		:Int = 0;
-	public static inline var PRESSED		:Int = 1;
-	public static inline var JUST_PRESSED	:Int = 2;
+	public static inline var JUST_RELEASED:Int = -1;
+	public static inline var RELEASED:Int = 0;
+	public static inline var PRESSED:Int = 1;
+	public static inline var JUST_PRESSED:Int = 2;
 	
 	public var id:Int;
 	public var buttons:Map<Int, FlxGamepadButton>;
@@ -30,6 +30,7 @@ class FlxGamepad implements IFlxDestroyable
 	/**
 	 * DPAD
 	 */
+	#if !flash
 	public var hat:FlxPoint;
 	public var ball:FlxPoint;
 	
@@ -37,6 +38,7 @@ class FlxGamepad implements IFlxDestroyable
 	public var dpadDown(get, null):Bool = false;
 	public var dpadLeft(get, null):Bool = false;
 	public var dpadRight(get, null):Bool = false;
+	#end
 	
 	/**
 	 * Axis array is read-only, use "getAxis" function for deadZone checking.
@@ -51,14 +53,17 @@ class FlxGamepad implements IFlxDestroyable
 	{
 		buttons = new Map<Int, FlxGamepadButton>();
 		axis = [for (i in 0...6) 0];
-		ball = new FlxPoint();
-		hat = new FlxPoint();
 		id = ID;
 		
 		if (GlobalDeadZone != 0)
 		{
 			deadZone = GlobalDeadZone;
 		}
+		
+		#if !flash
+		ball = FlxPoint.get();
+		hat = FlxPoint.get();
+		#end
 	}
 	
 	public function getButton(ButtonID:Int):FlxGamepadButton
@@ -82,6 +87,11 @@ class FlxGamepad implements IFlxDestroyable
 		#if flash
 		var control:GameInputControl;
 		var button:FlxGamepadButton;
+		
+		if (_device == null)
+		{
+			return;
+		}
 		
 		for (i in 0..._device.numControls)
 		{
@@ -130,16 +140,21 @@ class FlxGamepad implements IFlxDestroyable
 			axis[i] = 0;
 		}
 		
+		#if !flash
 		hat.set();
 		ball.set();
+		#end
 	}
 	
 	public function destroy():Void
 	{
 		buttons = null;
 		axis = null;
+		
+		#if !flash
 		hat = null;
 		ball = null;
+		#end
 	}
 	
 	/**
@@ -167,8 +182,12 @@ class FlxGamepad implements IFlxDestroyable
 	public function pressed(ButtonID:Int):Bool 
 	{
 		#if js
-		var v = untyped navigator.webkitGetGamepads().item(id).buttons[ButtonID];
-		return if (Math.round(v) == 1) true else false;
+		var pad:js.html.Gamepad = null,
+			nav:js.html.Navigator = untyped navigator;
+		if (untyped nav.webkitGetGamepads != null) { // if browser has webkit gamepads as such
+			pad = untyped nav.webkitGetGamepads().item(id);
+		}
+		return (pad != null) && (Math.round(pad.buttons[ButtonID]) == 1);
 		#else
 		if (buttons.exists(ButtonID))
 		{
@@ -273,7 +292,7 @@ class FlxGamepad implements IFlxDestroyable
 		
 		// the y axis is inverted on the Xbox gamepad in flash for some reason - but not in Chrome!
 		#if flash
-		if (_device.enabled && (_device.name.indexOf("Xbox") != -1) && 
+		if ((_device != null) && _device.enabled && (_device.name.indexOf("Xbox") != -1) && 
 		   (Capabilities.manufacturer != "Google Pepper"))
 		{
 			axisValue = -axisValue;
@@ -317,6 +336,7 @@ class FlxGamepad implements IFlxDestroyable
 			}
 		}
 		
+		#if !flash
 		if (ball.x != 0 || ball.y != 0)
 		{
 			return true;
@@ -326,6 +346,7 @@ class FlxGamepad implements IFlxDestroyable
 		{
 			return true;
 		}
+		#end
 		
 		return false;
 	}
@@ -340,12 +361,13 @@ class FlxGamepad implements IFlxDestroyable
 		var axisValue:Float = 0;
 		
 		#if flash
-		if (_device.enabled)
+		if ((_device != null) && _device.enabled)
 		{
 			axisValue = _device.getControlAt(AxisID).value;
 		}
 		#elseif js
-		axisValue = untyped navigator.webkitGetGamepads().item(id).axes[AxisID];
+		// TODO: fix this for html5
+		//axisValue = untyped navigator.webkitGetGamepads().item(id).axes[AxisID];
 		#else
 		axisValue = axis[AxisID];
 		#end
@@ -361,8 +383,10 @@ class FlxGamepad implements IFlxDestroyable
 	/**
 	 * DPAD accessor properties
 	 */
-	private inline function get_dpadUp():Bool { return hat.y < 0; }
-	private inline function get_dpadDown():Bool { return hat.y > 0; }
-	private inline function get_dpadLeft():Bool { return hat.x < 0; }
+	#if !flash
+	private inline function get_dpadUp():Bool    { return hat.y < 0; }
+	private inline function get_dpadDown():Bool  { return hat.y > 0; }
+	private inline function get_dpadLeft():Bool  { return hat.x < 0; }
 	private inline function get_dpadRight():Bool { return hat.x > 0; }
+	#end
 }

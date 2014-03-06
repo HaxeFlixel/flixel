@@ -6,6 +6,7 @@ import flash.media.Sound;
 import flash.media.SoundChannel;
 import flash.media.SoundTransform;
 import flash.net.URLRequest;
+import flash.utils.ByteArray;
 import flixel.FlxBasic;
 import flixel.system.frontEnds.SoundFrontEnd;
 import flixel.tweens.FlxTween;
@@ -214,12 +215,12 @@ class FlxSound extends FlxBasic
 		//Distance-based volume control
 		if (_target != null)
 		{
-			radialMultiplier = FlxMath.getDistance(new FlxPoint(_target.x, _target.y), new FlxPoint(x, y)) / _radius;
+			radialMultiplier = FlxMath.getDistance(FlxPoint.get(_target.x, _target.y), FlxPoint.get(x, y)) / _radius;
 			if (radialMultiplier < 0) radialMultiplier = 0;
 			if (radialMultiplier > 1) radialMultiplier = 1;
-
+			
 			radialMultiplier = 1 - radialMultiplier;
-
+			
 			if (_proximityPan)
 			{
 				var d:Float = (x - _target.x) / _radius;
@@ -315,6 +316,34 @@ class FlxSound extends FlxBasic
 		exists = true;
 		onComplete = OnComplete;
 		return this;
+	}
+	
+	/**
+	 * One of the main setup functions for sounds, this function loads a sound from a ByteArray.
+	 * 
+	 * @param	Bytes 			A ByteArray object.
+	 * @param	Looped			Whether or not this sound should loop endlessly.
+	 * @param	AutoDestroy		Whether or not this FlxSound instance should be destroyed when the sound finishes playing.  Default value is false, but FlxG.sound.play() and FlxG.sound.stream() will set it to true by default.
+	 * 
+	 * @return	This FlxSound instance (nice for chaining stuff together, if you're into that).
+	 */
+	public function loadByteArray(Bytes:ByteArray, Looped:Bool = false, AutoDestroy:Bool = false, OnComplete:Void->Void = null):FlxSound
+	{
+		cleanup(true);
+		
+		#if js
+		onComplete();
+		#else
+		_sound = new Sound();
+		_sound.addEventListener(Event.ID3, gotID3);
+		_sound.loadCompressedDataFromByteArray(Bytes, Bytes.length);
+		_looped = Looped;
+		autoDestroy = AutoDestroy;
+		updateTransform();
+		exists = true;
+		onComplete = OnComplete;
+		#end
+		return this;	
 	}
 	
 	/**
