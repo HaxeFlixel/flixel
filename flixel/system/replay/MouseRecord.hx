@@ -26,7 +26,8 @@ class MouseRecord extends FlxPoint
 	 */
 	public function new(X:Int, Y:Int, Button:Int, Wheel:Int)
 	{
-		super(X, Y);
+		super();
+		set(X, Y);
 		
 		button = Button;
 		wheel = Wheel;

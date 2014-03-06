@@ -115,28 +115,63 @@ class FlxSpriteUtil
 	 * Checks the x/y coordinates of the FlxSprite and keeps them within the 
 	 * area of 0, 0, FlxG.width, FlxG.height (i.e. wraps it around the screen)
 	 * 
-	 * @param	object		The FlxObject to keep within the screen
+	 * @param	sprite		The FlxSprite to keep within the screen
 	 * @param	Left		Whether to activate screen wrapping on the left side of the screen
 	 * @param	Right		Whether to activate screen wrapping on the right side of the screen
 	 * @param	Top			Whether to activate screen wrapping on the top of the screen
 	 * @param	Bottom		Whether to activate screen wrapping on the bottom of the screen
-	 * @return 	The FlxObject for chaining
+	 * @return	The FlxSprite for chaining
 	 */
 	public static function screenWrap(sprite:FlxSprite, Left:Bool = true, Right:Bool = true, Top:Bool = true, Bottom:Bool = true):FlxSprite
 	{
-		if (Left && ((sprite.x + sprite.frameWidth) <= 0)) {
+		if (Left && ((sprite.x + sprite.frameWidth) <= 0)) 
+		{
 			sprite.x = FlxG.width;
 		}
-		else if (Right && (sprite.x >= FlxG.width)) {
+		else if (Right && (sprite.x >= FlxG.width)) 
+		{
 			sprite.x = 0;
 		}
 		
-		if (Top && ((sprite.y + sprite.frameHeight) <= 0)) {
+		if (Top && ((sprite.y + sprite.frameHeight) <= 0)) 
+		{
 			sprite.y = FlxG.height;
 		}
-		else if (Bottom && (sprite.y >= FlxG.height)) {
+		else if (Bottom && (sprite.y >= FlxG.height)) 
+		{
 			sprite.y = 0;
 		}
+		return sprite;
+	}
+	
+	/**
+	 * Makes sure a FlxSprite doesn't leave the specified area - most common use case is to call this every frame in update().
+	 * If you call this without specifying an area, the game area (FlxG.width / height as max) will be used. Takes the graphic size into account.
+	 * 
+	 * @param	sprite	The FlxSprite to bound to an area
+	 * @param	MinX	The minimum x position allowed
+	 * @param	MaxX	The maximum x position allowed
+	 * @param	MinY	The minimum y position allowed
+	 * @param	MaxY	The minimum y position allowed
+	 * @return	The FlxSprite for chaining
+	 */
+	public static function bound(sprite:FlxSprite, MinX:Float = 0, MaxX:Float = 0, MinY:Float = 0, MaxY:Float = 0):FlxSprite
+	{
+		if (MaxX <= 0)
+		{
+			MaxX = FlxG.width;
+		}
+		if (MaxY <= 0)
+		{
+			MaxY = FlxG.height;
+		}
+		
+		MaxX -= sprite.frameWidth;
+		MaxY -= sprite.frameHeight;
+		
+		sprite.x = FlxMath.bound(sprite.x, MinX, MaxX);
+		sprite.y = FlxMath.bound(sprite.y, MinY, MaxY);
+		
 		return sprite;
 	}
 	

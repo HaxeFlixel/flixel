@@ -149,8 +149,12 @@ class FlxTween implements IFlxDestroyable
 	}
 	
 	/**
-	 * Tweens some numeric value. Shorthand for creating a NumTween objects, starting it and adding it to the TweenPlugin.
-	 * Example: FlxTween.num(-1000, 0, 2.0, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT });
+	 * Tweens some numeric value. Shorthand for creating a NumTween objects, starting it and adding it to the TweenPlugin. Using it in 
+	 * conjunction with a TweenFunction requires more setup, but is faster than MulitVarTween and SingleVarTween because it doesn't use Reflection.
+	 * 
+	 * Example: 
+	 *    private function tweenFunction(s:FlxSprite, v:Float) { s.alpha = v; }
+	 *    FlxTween.num(1, 0, 2.0, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT }, tweenFunction.bind(mySprite));
 	 * 
 	 * @param	FromValue	Start value.
 	 * @param	ToValue		End value.
@@ -161,9 +165,11 @@ class FlxTween implements IFlxDestroyable
 	 * 						ease		Optional easer function.
 	 *  					startDelay	Seconds to wait until starting this tween, 0 by default.
 	 * 						loopDelay	Seconds to wait between loops of this tween, 0 by default.
+	 * @param	TweenFunction	A function to be called when the tweened value updates.  It is recommended not to use an anonoymous 
+	 *							function if you are maximizing performance, as those will be compiled to Dynamics on cpp.
 	 * @return	The added NumTween object.
 	 */
-	public static function num(FromValue:Float, ToValue:Float, Duration:Float, ?Options:TweenOptions):NumTween
+	public static function num(FromValue:Float, ToValue:Float, Duration:Float, ?Options:TweenOptions, ?TweenFunction:Float->Void):NumTween
 	{
 		if (Options == null)
 		{
@@ -173,7 +179,7 @@ class FlxTween implements IFlxDestroyable
 		var tween:NumTween = NumTween.pool.get();
 		tween.init(Options.complete, Options.type);
 		tween.setDelays(Options.startDelay, Options.loopDelay);
-		tween.tween(FromValue, ToValue, Duration, Options.ease);
+		tween.tween(FromValue, ToValue, Duration, Options.ease, TweenFunction);
 		manager.add(tween);
 		return tween;
 	}
@@ -422,7 +428,7 @@ class FlxTween implements IFlxDestroyable
 	
 	/**
 	 * Create a new LinearPath tween.
-	 * Example: FlxTween.linearPath(Object, [new FlxPoint(0, 0), new FlxPoint(100, 100)], 2, true, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT });
+	 * Example: FlxTween.linearPath(Object, [FlxPoint.get(0, 0), FlxPoint.get(100, 100)], 2, true, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT });
 	 * 
 	 * @param	Object 			The object to move (FlxObject or FlxSpriteGroup)
 	 * @param	Points			An array of at least 2 FlxPoints defining the path
@@ -463,7 +469,7 @@ class FlxTween implements IFlxDestroyable
 	
 	/**
 	 * Create a new QuadPath tween.
-	 * Example: FlxTween.quadPath(Object, [new FlxPoint(0, 0), new FlxPoint(200, 200), new FlxPoint(400, 0)], 2, true, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT });
+	 * Example: FlxTween.quadPath(Object, [FlxPoint.get(0, 0), FlxPoint.get(200, 200), FlxPoint.get(400, 0)], 2, true, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT });
 	 * 
 	 * @param	Object			The object to move (FlxObject or FlxSpriteGroup)
 	 * @param	Points			An array of at least 3 FlxPoints defining the path

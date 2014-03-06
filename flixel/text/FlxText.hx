@@ -54,12 +54,14 @@ class FlxText extends FlxSprite
 	public var font(get, set):String;
 	
 	/**
-	 * Whether this text field uses embedded font (by default) or not
+	 * Whether this text field uses an embedded font (by default) or not. 
+	 * Read-only - use systemFont to specify a system font to use, which then automatically sets this to false.
 	 */
-	public var embedded(get, null):Bool;
+	public var embedded(get, never):Bool;
 	
 	/**
-	 * The system font for this text (not embedded).
+	 * The system font for this text (not embedded). Setting this sets embedded to false.
+	 * Passing an invalid font name (like "" or null) causes a default font to be used. 
 	 */
 	public var systemFont(get, set):String;
 	
@@ -191,7 +193,7 @@ class FlxText extends FlxSprite
 		}
 		#end
 		
-		shadowOffset = new FlxPoint(1, 1);
+		shadowOffset = FlxPoint.get(1, 1);
 	}
 	
 	/**
@@ -223,8 +225,8 @@ class FlxText extends FlxSprite
 	 * Adds another format to this FlxText
 	 * 
 	 * @param	Format	The format to be added.
-	 * @param	Start	(Default=-1) The start index of the string where the format will be applied. If greater than -1, this value will override the format.start value.
-	 * @param	End		(Default=-1) The end index of the string where the format will be applied. If greater than -1, this value will override the format.start value.
+	 * @param	Start	(Default = -1) The start index of the string where the format will be applied. If greater than -1, this value will override the format.start value.
+	 * @param	End		(Default = -1) The end index of the string where the format will be applied. If greater than -1, this value will override the format.start value.
 	 */
 	public function addFormat(Format:FlxTextFormat, Start:Int = -1, End:Int = -1):Void
 	{
@@ -273,6 +275,7 @@ class FlxText extends FlxSprite
 	 * @param	Alignment	A string representing the desired alignment ("left,"right" or "center").
 	 * @param	BorderStyle	FlxText.NONE, SHADOW, OUTLINE, or OUTLINE_FAST (use setBorderFormat
 	 * @param	BorderColor Int, color for the border, 0xRRGGBB format
+	 * @param	EmbeddedFont	Whether this text field uses embedded fonts or not
 	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
 	 */
 	public function setFormat(?Font:String, Size:Float = 8, Color:Int = 0xffffff, ?Alignment:String, BorderStyle:Int = BORDER_NONE, BorderColor:Int = 0x000000, Embedded:Bool = true):FlxText
@@ -324,9 +327,11 @@ class FlxText extends FlxSprite
 		borderQuality = Quality;
 	}
 	
-	public function addFilter(filter:BitmapFilter, widthInc:Int = 0, heightInc:Int = 0):Void
+	public inline function addFilter(filter:BitmapFilter, widthInc:Int = 0, heightInc:Int = 0):Void
 	{
 		_filters.push(filter);
+		_widthInc = widthInc;
+		_heightInc = heightInc;
 		dirty = true;
 	}
 	
@@ -466,12 +471,12 @@ class FlxText extends FlxSprite
 		return Font;
 	}
 	
-	private function get_embedded():Bool
+	private inline function get_embedded():Bool
 	{
 		return _textField.embedFonts = true;
 	}
 	
-	private function get_systemFont():String
+	private inline function get_systemFont():String
 	{
 		return _defaultFormat.font;
 	}
@@ -620,21 +625,21 @@ class FlxText extends FlxSprite
 	{
 		if (alpha != 1)
 		{
-			if (_colorTransform == null)
+			if (colorTransform == null)
 			{
-				_colorTransform = new ColorTransform(1, 1, 1, alpha);
+				colorTransform = new ColorTransform(1, 1, 1, alpha);
 			}
 			else
 			{
-				_colorTransform.alphaMultiplier = alpha;
+				colorTransform.alphaMultiplier = alpha;
 			}
 			useColorTransform = true;
 		}
 		else
 		{
-			if (_colorTransform != null)
+			if (colorTransform != null)
 			{
-				_colorTransform.alphaMultiplier = 1;
+				colorTransform.alphaMultiplier = 1;
 			}
 			
 			useColorTransform = false;
@@ -810,7 +815,7 @@ class FlxText extends FlxSprite
 		
 		dirty = false;
 		
-		#if !(flash || js)
+		#if FLX_RENDER_TILE
 		if (!RunOnCpp)
 		{
 			return;
@@ -830,7 +835,7 @@ class FlxText extends FlxSprite
 		
 		if (useColorTransform) 
 		{
-			framePixels.colorTransform(_flashRect, _colorTransform);
+			framePixels.colorTransform(_flashRect, colorTransform);
 		}
 	}
 	

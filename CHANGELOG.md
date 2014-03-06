@@ -8,7 +8,7 @@
  * Use FlxG.debugger.addTrackerProfile() to add a profile for classes don't have one yet or override existing ones
  * Use the "track [object]" command to open a tracker window from the console
 * FlxCamera: added static defaultCameras array which is used by FlxBasics when their cameras array has not been set - previously the use of FlxG.cameras.list / all existing cameras was hardcoded
-* Added pooling functionality to FlxPoint, FlxVector, FlxRect objects (FlxPath and FlxTimer also support pooling, but that is handled transparently). Usage: var point = FlxPoint.get(); /* do stuff with point */ point.put(); // recycle point
+* Added pooling functionality to FlxPoint, FlxVector, FlxRect objects (FlxPath and FlxTimer also support pooling, but that is handled transparently). Usage: var point = FlxPoint.get(); /* do stuff with point */ point.put(); // recycle point. Instantiating these objects directly via new() is no longer possible to enforce the use of pooling. FlxPoint.weak() should be used instead of get() when passing points into flixel functions, that way they'll be recycled automatically.
 * Debugger windows:
  * Fixed dragging of overlapping windows
  * Fixed the visibility of windows on native targets (now saving correctly)
@@ -23,7 +23,18 @@
  * middle and right mouse events are now supported
  * sounds are now supported (.ogg and .mp3)
 * FlxObject: replaced forceComplexRender by pixelPerfectRender which rounds coordinates by default (if true) for drawing (also on cpp targets, making it consistent with flash)
-* FlxText: added shadowOffset
+* FlxText: 
+ * added shadowOffset
+ * fixed the widthInc and heightInc of addFilter() which did not work at all previously
+* FlxSpriteUtil: added bound()
+* Added FlxTypedSpriteGroup, which can be used in the same way as FlxTypedGroup, but its type parameter is T:FlxSprite
+* Abstracted rendering into FLX_RENDER_TILE and FLX_RENDER_BLIT conditionals as opposed to being hardcoded based on the target
+* FlxTween.num(): added an optional tweenFunction parameter which can be used for increased performance (as MultiVarTween and SingleVarTween are fairly slow, using Reflection)
+* FlxKeyboard:
+ * Implemented a workaround for function and numpad keys not working on native targets
+ * Added FlxKey.NUMPADMULTIPLY / "NUMPADMULTIPLY" 
+* Added FlxCallbackPoint, a FlxPoint that calls a function when x, y or both are changed.
+* FlxTilemap: replaced scaleX and scaleY by a scale FlxPoint
 
 3.2.1
 ------------------------------

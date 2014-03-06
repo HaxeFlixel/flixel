@@ -13,8 +13,8 @@ import flixel.util.FlxPool;
  */
 class QuadPath extends Motion
 {
-	private static var _Point:FlxPoint = new FlxPoint();
-	private static var _Point2:FlxPoint = new FlxPoint();
+	private static var _Point:FlxPoint = FlxPoint.get();
+	private static var _Point2:FlxPoint = FlxPoint.get();
 	
 	// Path information.
 	private var _points:Array<FlxPoint>;

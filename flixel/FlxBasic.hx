@@ -17,6 +17,10 @@ class FlxBasic implements IFlxDestroyable
 	 */
 	public var ID:Int = -1;
 	/**
+	 * Gets ot sets the first camera of this object.
+	 */
+	public var camera(get, set):FlxCamera;
+	/**
 	 * This determines on which FlxCameras this object will be drawn. If it is null / has not been
 	 * set, it uses FlxCamera.defaultCameras, which is a reference to FlxG.cameras.list (all cameras) by default.
 	 */
@@ -141,6 +145,19 @@ class FlxBasic implements IFlxDestroyable
 	public function drawDebugOnCamera(?Camera:FlxCamera):Void {}
 	#end
 	
+	private inline function get_camera():FlxCamera
+	{
+		return (_cameras == null || _cameras.length == 0) ? FlxCamera.defaultCameras[0] : _cameras[0];
+	}
+	
+	private inline function set_camera(Value:FlxCamera):FlxCamera
+	{
+		if (_cameras == null)
+			_cameras = [ Value ];
+		else
+			_cameras[0] = Value;
+		return Value;
+	}
 	private inline function get_cameras():Array<FlxCamera>
 	{
 		return (_cameras == null) ? FlxCamera.defaultCameras : _cameras;
@@ -176,9 +193,10 @@ class FlxBasic implements IFlxDestroyable
 	 */
 	public function toString():String
 	{
-		return FlxStringUtil.getDebugString([ { label: "active", value: active }, 
-		                                      { label: "visible", value: visible },
-		                                      { label: "alive", value: alive },
-		                                      { label: "exists", value: exists } ]);
+		return FlxStringUtil.getDebugString([
+			LabelValuePair.weak("active", active),
+			LabelValuePair.weak("visible", visible),
+			LabelValuePair.weak("alive", alive),
+			LabelValuePair.weak("exists", exists)]);
 	}
 }

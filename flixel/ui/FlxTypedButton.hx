@@ -89,7 +89,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		onOut = new FlxButtonEvent();
 		
 		labelAlphas = [0.8, 1.0, 0.5];
-		labelOffsets = [new FlxPoint(), new FlxPoint(), new FlxPoint(0, 1)];
+		labelOffsets = [FlxPoint.get(), FlxPoint.get(), FlxPoint.get(0, 1)];
 		
 		status = FlxButton.NORMAL;
 		

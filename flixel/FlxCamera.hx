@@ -15,6 +15,7 @@ import flixel.util.FlxPoint;
 import flixel.util.FlxRandom;
 import flixel.util.FlxRect;
 import flixel.util.loaders.CachedGraphics;
+import openfl.display.Tilesheet;
 
 /**
  * The camera class is used to display the game's visuals in the Flash player.
@@ -134,9 +135,9 @@ class FlxCamera extends FlxBasic
 	
 	/**
 	 * Whether to use alpha blending for camera's background fill or not. 
-	 * Useful for flash target (and works only on this target). Default value is true.
+	 * Useful for flash target (and works only on this target). Default value is false.
 	 */
-	public var useBgAlphaBlending:Bool = true;
+	public var useBgAlphaBlending:Bool = false;
 	
 	/**
 	 * Used to render buffer to screen space. NOTE: We don't recommend modifying this directly unless you are fairly experienced. 
@@ -389,11 +390,11 @@ class FlxCamera extends FlxBasic
 				{
 					untyped data.length = position; // optimized way of resizing an array
 				}
-				var tempFlags:Int = Graphics.TILE_TRANS_2x2;
-				tempFlags |= Graphics.TILE_ALPHA;
+				var tempFlags:Int = Tilesheet.TILE_TRANS_2x2;
+				tempFlags |= Tilesheet.TILE_ALPHA;
 				if (currItem.colored)
 				{
-					tempFlags |= Graphics.TILE_RGB;
+					tempFlags |= Tilesheet.TILE_RGB;
 				}
 				tempFlags |= currItem.blending;
 				currItem.graphics.tilesheet.tileSheet.drawTiles(canvas.graphics, data, (antialiasing || currItem.antialiasing), tempFlags);
@@ -410,14 +411,14 @@ class FlxCamera extends FlxBasic
 	 * @param 	X			X location of the camera's display in pixels. Uses native, 1:1 resolution, ignores zoom.
 	 * @param 	Y			Y location of the camera's display in pixels. Uses native, 1:1 resolution, ignores zoom.
 	 * @param 	Width		The width of the camera display in pixels.
-	 * @param 	Height	The height of the camera display in pixels.
+	 * @param 	Height		The height of the camera display in pixels.
 	 * @param 	Zoom		The initial zoom level of the camera.  A zoom level of 2 will make all pixels display at 2x resolution.
 	 */
 	public function new(X:Int = 0, Y:Int = 0, Width:Int = 0, Height:Int = 0, Zoom:Float = 0)
 	{
 		super();
 		
-		_scrollTarget = new FlxPoint();
+		_scrollTarget = FlxPoint.get();
 		
 		x = X;
 		y = Y;
@@ -425,10 +426,10 @@ class FlxCamera extends FlxBasic
 		width = (Width <= 0) ? FlxG.width : Width;
 		height = (Height <= 0) ? FlxG.height : Height;
 		
-		scroll = new FlxPoint();
-		followLead = new FlxPoint();
-		_point = new FlxPoint();
-		_flashOffset = new FlxPoint();
+		scroll = FlxPoint.get();
+		followLead = FlxPoint.get();
+		_point = FlxPoint.get();
+		_flashOffset = FlxPoint.get();
 		
 		#if FLX_RENDER_BLIT
 		screen = new FlxSprite();
@@ -467,7 +468,7 @@ class FlxCamera extends FlxBasic
 		_flashRect = new Rectangle(0, 0, width, height);
 		_flashPoint = new Point();
 		
-		_fxShakeOffset = new FlxPoint();
+		_fxShakeOffset = FlxPoint.get();
 		
 		#if FLX_RENDER_BLIT
 		_fill = new BitmapData(width, height, true, FlxColor.TRANSPARENT);
@@ -626,7 +627,7 @@ class FlxCamera extends FlxBasic
 			{
 				if (_lastTargetPosition == null)  
 				{
-					_lastTargetPosition = new FlxPoint(target.x, target.y); // Creates this point.
+					_lastTargetPosition = FlxPoint.get(target.x, target.y); // Creates this point.
 				} 
 				_scrollTarget.x += (target.x - _lastTargetPosition.x ) * followLead.x;
 				_scrollTarget.y += (target.y - _lastTargetPosition.y ) * followLead.y;
@@ -750,15 +751,15 @@ class FlxCamera extends FlxBasic
 			case STYLE_PLATFORMER:
 				var w:Float = (width / 8) + (Offset != null ? Offset.x : 0);
 				var h:Float = (height / 3) + (Offset != null ? Offset.y : 0);
-				deadzone = new FlxRect((width - w) / 2, (height - h) / 2 - h * 0.25, w, h);
+				deadzone = FlxRect.get((width - w) / 2, (height - h) / 2 - h * 0.25, w, h);
 				
 			case STYLE_TOPDOWN:
 				helper = Math.max(width, height) / 4;
-				deadzone = new FlxRect((width - helper) / 2, (height - helper) / 2, helper, helper);
+				deadzone = FlxRect.get((width - helper) / 2, (height - helper) / 2, helper, helper);
 				
 			case STYLE_TOPDOWN_TIGHT:
 				helper = Math.max(width, height) / 8;
-				deadzone = new FlxRect((width - helper) / 2, (height - helper) / 2, helper, helper);
+				deadzone = FlxRect.get((width - helper) / 2, (height - helper) / 2, helper, helper);
 				
 			case STYLE_LOCKON:
 				if (target != null) 
@@ -766,10 +767,10 @@ class FlxCamera extends FlxBasic
 					w = target.width + (Offset != null ? Offset.x : 0);
 					h = target.height + (Offset != null ? Offset.y : 0);
 				}
-				deadzone = new FlxRect((width - w) / 2, (height - h) / 2 - h * 0.25, w, h);
+				deadzone = FlxRect.get((width - w) / 2, (height - h) / 2 - h * 0.25, w, h);
 				
 			case STYLE_SCREEN_BY_SCREEN:
-				deadzone = new FlxRect(0, 0, width, height);
+				deadzone = FlxRect.get(0, 0, width, height);
 				
 			default:
 				deadzone = null;
@@ -896,7 +897,7 @@ class FlxCamera extends FlxBasic
 		{
 			if (bounds == null)
 			{
-				bounds = new FlxRect();
+				bounds = FlxRect.get();
 			}
 			bounds.copyFrom(Camera.bounds);
 		}
@@ -912,7 +913,7 @@ class FlxCamera extends FlxBasic
 			{
 				if (deadzone == null)
 				{
-					deadzone = new FlxRect();
+					deadzone = FlxRect.get();
 				}
 				deadzone.copyFrom(Camera.deadzone);
 			}
@@ -1054,7 +1055,7 @@ class FlxCamera extends FlxBasic
 	{
 		if (bounds == null)
 		{
-			bounds = new FlxRect();
+			bounds = FlxRect.get();
 		}
 		bounds.set(X, Y, Width, Height);
 		if (UpdateWorld)
