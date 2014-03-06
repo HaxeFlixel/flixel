@@ -152,6 +152,9 @@ class FlxGamepad implements IFlxDestroyable
 		axis = null;
 		
 		#if !flash
+		hat.put();
+		ball.put();
+		
 		hat = null;
 		ball = null;
 		#end

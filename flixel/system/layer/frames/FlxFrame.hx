@@ -132,6 +132,10 @@ class FlxFrame
 		name = null;
 		frame = null;
 		
+		sourceSize.put();
+		offset.put();
+		center.put();
+		
 		sourceSize = null;
 		offset = null;
 		center = null;

@@ -201,6 +201,8 @@ class FlxText extends FlxSprite
 	 */
 	override public function destroy():Void
 	{
+		shadowOffset.put();
+		
 		_textField = null;
 		_defaultFormat = null;
 		_formatAdjusted = null;

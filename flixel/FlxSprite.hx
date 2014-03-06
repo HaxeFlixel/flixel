@@ -219,6 +219,10 @@ class FlxSprite extends FlxObject
 		
 		animation = FlxG.safeDestroy(animation);
 		
+		offset.put();
+		origin.put();
+		scale.put();
+		
 		_flashPoint = null;
 		_flashRect = null;
 		_flashRect2 = null;

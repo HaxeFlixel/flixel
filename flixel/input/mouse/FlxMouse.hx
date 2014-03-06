@@ -349,6 +349,9 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	 */
 	@:noCompletion override public function destroy():Void
 	{
+		_point.put();
+		_globalScreenPosition.put();
+		
 		cursorContainer = null;
 		_cursor = null;
 		_point = null;

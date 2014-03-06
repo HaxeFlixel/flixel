@@ -46,6 +46,10 @@ class FlxTouch extends FlxPoint implements IFlxDestroyable
 	 */
 	override public function destroy():Void
 	{
+		_point.put();
+		_globalScreenPosition.put();
+		_justPressedPosition.put();
+		
 		_point = null;
 		_globalScreenPosition = null;
 		_flashPoint = null;

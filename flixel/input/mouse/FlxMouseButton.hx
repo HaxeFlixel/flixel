@@ -69,6 +69,7 @@ class FlxMouseButton implements IFlxDestroyable
 	
 	public function destroy():Void
 	{
+		_justPressedPosition.put();
 		_justPressedPosition = null;
 	}
 	

@@ -526,6 +526,10 @@ class FlxCamera extends FlxBasic
 		_currentStackItem = null;
 	#end
 		
+		scroll.put();
+		deadzone.put();
+		bounds.put();
+		
 		target = null;
 		scroll = null;
 		deadzone = null;

@@ -492,6 +492,13 @@ class FlxObject extends FlxBasic
 	{
 		super.destroy();
 		
+		velocity.put();
+		acceleration.put();
+		drag.put();
+		scrollFactor.put();
+		last.put();
+		_point.put();
+		
 		velocity = null;
 		acceleration = null;
 		drag = null;
@@ -499,7 +506,6 @@ class FlxObject extends FlxBasic
 		scrollFactor = null;
 		last = null;
 		_point = null;
-		scrollFactor = null;
 	}
 	
 	/**

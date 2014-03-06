@@ -93,7 +93,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 */
 	override public function destroy():Void
 	{
-		// normally don't have to destroy FlxPoints, but these are FlxPointHelpers!
+		// normally don't have to destroy FlxPoints, but these are FlxCallbackPoints!
 		offset = FlxG.safeDestroy(offset);
 		origin = FlxG.safeDestroy(origin);
 		scale = FlxG.safeDestroy(scale);

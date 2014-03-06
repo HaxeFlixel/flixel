@@ -182,6 +182,8 @@ class FlxBar extends FlxSprite
 	
 	override public function destroy():Void 
 	{
+		positionOffset.put();
+		
 		#if FLX_RENDER_BLIT
 		canvas.dispose();
 		canvas = null;

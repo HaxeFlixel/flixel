@@ -1,40 +1,20 @@
 package flixel.system;
 
 import flixel.FlxObject;
+import flixel.interfaces.IFlxDestroyable;
 
 /**
  * A miniature linked list class.
  * Useful for optimizing time-critical or highly repetitive tasks!
  * See FlxQuadTree for how to use it, IF YOU DARE.
  */
-class FlxList
+class FlxList implements IFlxDestroyable
 {
 	/**
 	 * Pooling mechanism, when FlxLists are destroyed, they get added to this collection, and when they get recycled they get removed.
 	 */
 	public static var  _NUM_CACHED_FLX_LIST:Int = 0;
 	private static var _cachedListsHead:FlxList;
-	
-	/**
-	 * Stores a reference to a FlxObject.
-	 */
-	public var object:FlxObject;
-	/**
-	 * Stores a reference to the next link in the list.
-	 */
-	public var next:FlxList;
-	
-	public var exists:Bool;
-	
-	/**
-	 * Private, use recycle instead.
-	 */
-	private function new()
-	{
-		object = null;
-		next = null;
-		exists = true;
-	}
 	
 	/**
 	 * Recycle a cached Linked List, or creates a new one if needed.
@@ -70,6 +50,22 @@ class FlxList
 		}
 		_NUM_CACHED_FLX_LIST = 0;
 	}
+	
+	/**
+	 * Stores a reference to a FlxObject.
+	 */
+	public var object:FlxObject;
+	/**
+	 * Stores a reference to the next link in the list.
+	 */
+	public var next:FlxList;
+	
+	public var exists:Bool = true;
+	
+	/**
+	 * Private, use recycle instead.
+	 */
+	private function new() {}
 	
 	/**
 	 * Clean up memory.
