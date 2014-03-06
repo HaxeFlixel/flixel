@@ -13,8 +13,24 @@ import flixel.util.FlxPool;
  */
 class QuadPath extends Motion
 {
-	private static var _Point:FlxPoint = new FlxPoint();
-	private static var _Point2:FlxPoint = new FlxPoint();
+	/**
+	 * A pool that contains QuadPaths for recycling.
+	 */
+	@:isVar 
+	@:allow(flixel.tweens.FlxTween)
+	private static var _pool(get, null):FlxPool<QuadPath>;
+	
+	/**
+	 * Only allocate the pool if needed.
+	 */
+	private static function get__pool():FlxPool<QuadPath>
+	{
+		if (_pool == null)
+		{
+			_pool = new FlxPool<QuadPath>(QuadPath);
+		}
+		return _pool;
+	}
 	
 	// Path information.
 	private var _points:Array<FlxPoint>;
@@ -32,31 +48,6 @@ class QuadPath extends Motion
 	private var _a:FlxPoint;
 	private var _b:FlxPoint;
 	private var _c:FlxPoint;
-	
-	/**
-	 * A pool that contains QuadPaths for recycling.
-	 */
-	@:isVar public static var pool(get, null):FlxPool<QuadPath>;
-	
-	/**
-	 * Only allocate the pool if needed.
-	 */
-	public static function get_pool():FlxPool<QuadPath>
-	{
-		if (pool == null)
-		{
-			pool = new FlxPool<QuadPath>(QuadPath);
-		}
-		return pool;
-	}
-	
-	public function new()
-	{
-		super();
-		_points = new Array<FlxPoint>();
-		_curveT = new Array<Float>();
-		_curveD = new Array<Float>();
-	}
 	
 	/**
 	 * This function is called when tween is created, or recycled.
@@ -78,7 +69,7 @@ class QuadPath extends Motion
 	override public function destroy():Void 
 	{
 		super.destroy();
-		pool.put(this);
+		_pool.put(this);
 		// recycle FlxPoints
 		for (point in _points)
 		{
@@ -201,6 +192,14 @@ class QuadPath extends Motion
 		super.postUpdate();
 	}
 	
+	private function new()
+	{
+		super();
+		_points = new Array<FlxPoint>();
+		_curveT = new Array<Float>();
+		_curveD = new Array<Float>();
+	}
+	
 	// [from, control, to, control, to, control, to, control, to ...]
 	private function updatePath():Void
 	{
@@ -240,8 +239,9 @@ class QuadPath extends Motion
 	
 	private function getCurveLength(start:FlxPoint, control:FlxPoint, finish:FlxPoint):Float
 	{
-		var a:FlxPoint = QuadPath._Point,
-			b:FlxPoint = QuadPath._Point2;
+		var a = FlxPoint.get();
+		var b = FlxPoint.get();
+		
 		a.x = start.x - 2 * control.x + finish.x;
 		a.y = start.y - 2 * control.y + finish.y;
 		b.x = 2 * control.x - 2 * start.x;
@@ -254,6 +254,10 @@ class QuadPath extends Motion
 			A32:Float = 2 * A * A2,
 			C2:Float = 2 * Math.sqrt(C),
 			BA:Float = B / A2;
+			
+		a.put();
+		b.put();
+			
 		return (A32 * ABC + A2 * B * (ABC - C2) + (4 * C * A - B * B) * Math.log((2 * A2 + BA + ABC) / (BA + C2))) / (4 * A32);
 	}
 }

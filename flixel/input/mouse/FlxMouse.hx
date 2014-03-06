@@ -314,7 +314,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		}
 		if (point == null)
 		{
-			point = new FlxPoint();
+			point = FlxPoint.get();
 		}
 		getScreenPosition(Camera, _point);
 		point.set((_point.x + Camera.scroll.x), (_point.y + Camera.scroll.y));
@@ -337,7 +337,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		}
 		if (point == null)
 		{
-			point = new FlxPoint();
+			point = FlxPoint.get();
 		}
 		point.x = (_globalScreenPosition.x - Camera.x) / Camera.zoom;
 		point.y = (_globalScreenPosition.y - Camera.y) / Camera.zoom;
@@ -396,8 +396,8 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		cursorContainer.mouseChildren = false;
 		cursorContainer.mouseEnabled = false;
 		
-		_point = new FlxPoint();
-		_globalScreenPosition = new FlxPoint();
+		_point = FlxPoint.get();
+		_globalScreenPosition = FlxPoint.get();
 		
 		_leftButton = new FlxMouseButton(FlxMouseButton.LEFT);
 		

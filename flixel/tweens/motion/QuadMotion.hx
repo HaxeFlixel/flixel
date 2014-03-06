@@ -10,8 +10,24 @@ import flixel.tweens.FlxTween.CompleteCallback;
  */
 class QuadMotion extends Motion
 {
-	public static var point:FlxPoint = new FlxPoint();
-	public static var point2:FlxPoint = new FlxPoint();
+	/**
+	 * A pool that contains QuadMotions for recycling.
+	 */
+	@:isVar 
+	@:allow(flixel.tweens.FlxTween)
+	private static var _pool(get, null):FlxPool<QuadMotion>;
+	
+	/**
+	 * Only allocate the pool if needed.
+	 */
+	private static function get__pool():FlxPool<QuadMotion>
+	{
+		if (_pool == null)
+		{
+			_pool = new FlxPool<QuadMotion>(QuadMotion);
+		}
+		return _pool;
+	}
 	
 	/**
 	 * The distance of the entire curve.
@@ -28,29 +44,12 @@ class QuadMotion extends Motion
 	private var _controlY:Float;
 	
 	/**
-	 * A pool that contains QuadMotions for recycling.
-	 */
-	@:isVar public static var pool(get, null):FlxPool<QuadMotion>;
-	
-	/**
-	 * Only allocate the pool if needed.
-	 */
-	public static function get_pool():FlxPool<QuadMotion>
-	{
-		if (pool == null)
-		{
-			pool = new FlxPool<QuadMotion>(QuadMotion);
-		}
-		return pool;
-	}
-	
-	/**
 	 * Clean up references and pool this object for recycling.
 	 */
 	override public function destroy()
 	{
 		super.destroy();
-		pool.put(this);
+		_pool.put(this);
 	}
 	
 	/**
@@ -120,8 +119,8 @@ class QuadMotion extends Motion
 	private function get_distance():Float
 	{
 		if (_distance >= 0) return _distance;
-		var a:FlxPoint = QuadMotion.point;
-		var b:FlxPoint = QuadMotion.point2;
+		var a = FlxPoint.get();
+		var b = FlxPoint.get();
 		a.x = x - 2 * _controlX + _toX;
 		a.y = y - 2 * _controlY + _toY;
 		b.x = 2 * _controlX - 2 * x;
@@ -134,6 +133,10 @@ class QuadMotion extends Motion
 			A32:Float = 2 * A * A2,
 			C2:Float = 2 * Math.sqrt(C),
 			BA:Float = B / A2;
+			
+		a.put();
+		b.put();
+		
 		return (A32 * ABC + A2 * B * (ABC - C2) + (4 * C * A - B * B) * Math.log((2 * A2 + BA + ABC) / (BA + C2))) / (4 * A32);
 	}
 }

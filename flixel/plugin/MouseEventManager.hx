@@ -281,7 +281,7 @@ class MouseEventManager extends FlxPlugin
 	{
 		super();
 		
-		_point = new FlxPoint();
+		_point = FlxPoint.get();
 		
 		if (_registeredSprites != null)
 		{

@@ -227,7 +227,7 @@ class FlxBar extends FlxSprite
 	{
 		fixedPosition = false;
 		
-		positionOffset = new FlxPoint(offsetX, offsetY);
+		positionOffset = FlxPoint.get(offsetX, offsetY);
 		
 		if (Reflect.hasField(parent, "scrollFactor"))
 		{
@@ -1252,11 +1252,12 @@ class FlxBar extends FlxSprite
 	
 	override public function toString():String
 	{
-		return FlxStringUtil.getDebugString([ { label: "min", value: min }, 
-		                                      { label: "max", value: max },
-		                                      { label: "range", value: range },
-		                                      { label: "%", value: pct },
-		                                      { label: "px/%", value: pxPerPercent },
-		                                      { label: "value", value: value } ]);
+		return FlxStringUtil.getDebugString([ 
+			LabelValuePair.weak("min", min),
+			LabelValuePair.weak("max", max),
+			LabelValuePair.weak("range", range),
+			LabelValuePair.weak("%", pct),
+			LabelValuePair.weak("px/%", pxPerPercent),
+			LabelValuePair.weak("value", value)]);
 	}
 }

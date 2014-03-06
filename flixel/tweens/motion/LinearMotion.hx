@@ -10,6 +10,25 @@ import flixel.util.FlxPool;
 class LinearMotion extends Motion
 {
 	/**
+	 * A pool that contains LinearMotions for recycling.
+	 */
+	@:isVar 
+	@:allow(flixel.tweens.FlxTween)
+	private static var _pool(get, null):FlxPool<LinearMotion>;
+	
+	/**
+	 * Only allocate the pool if needed.
+	 */
+	private static function get__pool()
+	{
+		if (_pool == null)
+		{
+			_pool = new FlxPool<LinearMotion>(LinearMotion);
+		}
+		return _pool;
+	}
+	
+	/**
 	 * Length of the current line of movement.
 	 */
 	public var distance(get, never):Float;
@@ -22,29 +41,12 @@ class LinearMotion extends Motion
 	private var _distance:Float;
 	
 	/**
-	 * A pool that contains LinearMotions for recycling.
-	 */
-	@:isVar public static var pool(get, null):FlxPool<LinearMotion>;
-	
-	/**
-	 * Only allocate the pool if needed.
-	 */
-	public static function get_pool()
-	{
-		if (pool == null)
-		{
-			pool = new FlxPool<LinearMotion>(LinearMotion);
-		}
-		return pool;
-	}
-	
-	/**
 	 * Clean up references and pool this object for recycling.
 	 */
 	override public function destroy()
 	{
 		super.destroy();
-		pool.put(this);
+		_pool.put(this);
 	}
 	
 	/**

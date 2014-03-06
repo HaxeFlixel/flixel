@@ -1,4 +1,5 @@
 package flixel.util;
+
 import flixel.FlxG;
 
 /**

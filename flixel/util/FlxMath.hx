@@ -1,6 +1,8 @@
 package flixel.util;
 
 import flash.geom.Rectangle;
+import flixel.FlxG;
+import flixel.FlxSprite;
 #if !FLX_NO_TOUCH
 import flixel.input.touch.FlxTouch;
 #end
@@ -312,6 +314,8 @@ class FlxMath
 	{
 		var dx:Float = Point1.x - Point2.x;
 		var dy:Float = Point1.y - Point2.y;
+		Point1.putWeak();
+		Point2.putWeak();
 		return vectorLength(dx, dy);
 	}
 	
@@ -362,6 +366,7 @@ class FlxMath
 	{
 		var dx:Float = (Sprite.x + Sprite.origin.x) - (Target.x);
 		var dy:Float = (Sprite.y + Sprite.origin.y) - (Target.y);
+		Target.putWeak();
 		return Std.int(FlxMath.vectorLength(dx, dy));
 	}
 	
@@ -380,6 +385,8 @@ class FlxMath
 	{
 		var dx:Float = (Sprite.x + Sprite.origin.x) - (Target.x);
 		var dy:Float = (Sprite.y + Sprite.origin.y) - (Target.y);
+		
+		Target.putWeak();
 		
 		if (IncludeEqual)
 			return dx * dx + dy * dy <= Distance * Distance;

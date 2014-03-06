@@ -12,6 +12,23 @@ import flixel.util.FlxPool;
 class SfxFader extends FlxTween
 {
 	/**
+	 * A pool that contains SfxFaders for recycling.
+	 */
+	@:isVar private static var pool(get, null):FlxPool<SfxFader>;
+	
+	/**
+	 * Only allocate the pool if needed.
+	 */
+	private static function get__pool():FlxPool<SfxFader>
+	{
+		if (_pool == null)
+		{
+			_pool = new FlxPool<SfxFader>(SfxFader);
+		}
+		return _pool;
+	}
+	
+	/**
 	 * The current Sfx this object is effecting.
 	 */
 	public var sfx:FlxSound;
@@ -21,23 +38,6 @@ class SfxFader extends FlxTween
 	private var _range:Float;
 	private var _crossSfx:FlxSound;
 	private var _crossRange:Float;
-	
-	/**
-	 * A pool that contains QuadPaths for recycling.
-	 */
-	@:isVar public static var pool(get, null):FlxPool<SfxFader>;
-	
-	/**
-	 * Only allocate the pool if needed.
-	 */
-	public static function get_pool():FlxPool<SfxFader>
-	{
-		if (pool == null)
-		{
-			pool = new FlxPool<SfxFader>(SfxFader);
-		}
-		return pool;
-	}
 	
 	/**
 	 * Clean up references and pool this object for recycling.

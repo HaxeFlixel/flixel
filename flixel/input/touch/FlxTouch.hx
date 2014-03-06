@@ -68,7 +68,7 @@ class FlxTouch extends FlxPoint implements IFlxDestroyable
 		}
 		if (point == null)
 		{
-			point = new FlxPoint();
+			point = FlxPoint.get();
 		}
 		getScreenPosition(Camera,_point);
 		point.x = _point.x + Camera.scroll.x;
@@ -92,7 +92,7 @@ class FlxTouch extends FlxPoint implements IFlxDestroyable
 		}
 		if (point == null)
 		{
-			point = new FlxPoint();
+			point = FlxPoint.get();
 		}
 		point.x = (_globalScreenPosition.x - Camera.x) / Camera.zoom;
 		point.y = (_globalScreenPosition.y - Camera.y) / Camera.zoom;
@@ -156,9 +156,9 @@ class FlxTouch extends FlxPoint implements IFlxDestroyable
 	private function new(X:Float = 0, Y:Float = 0, PointID:Int = 0)
 	{
 		super();
-		_point = new FlxPoint();
-		_globalScreenPosition = new FlxPoint();
-		_justPressedPosition = new FlxPoint();
+		_point = FlxPoint.get();
+		_globalScreenPosition = FlxPoint.get();
+		_justPressedPosition = FlxPoint.get();
 		
 		_flashPoint = new Point();
 		updatePosition(X, Y);

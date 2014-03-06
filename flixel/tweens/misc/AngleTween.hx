@@ -11,6 +11,25 @@ import flixel.util.FlxPool;
  */
 class AngleTween extends FlxTween
 {
+	/**
+	 * A pool that contains AngleTweens for recycling.
+	 */
+	@:isVar 
+	@:allow(flixel.tweens.FlxTween)
+	private static var _pool(get, null):FlxPool<AngleTween>;
+	
+	/**
+	 * Only allocate the pool if needed.
+	 */
+	private static function get__pool()
+	{
+		if (_pool == null)
+		{
+			_pool = new FlxPool<AngleTween>(AngleTween);
+		}
+		return _pool;
+	}
+	
 	public var angle:Float;
 	
 	/**
@@ -22,30 +41,13 @@ class AngleTween extends FlxTween
 	private var _range:Float;
 	
 	/**
-	 * A pool that contains AngleTweens for recycling.
-	 */
-	@:isVar public static var pool(get, null):FlxPool<AngleTween>;
-	
-	/**
-	 * Only allocate the pool if needed.
-	 */
-	public static function get_pool()
-	{
-		if (pool == null)
-		{
-			pool = new FlxPool<AngleTween>(AngleTween);
-		}
-		return pool;
-	}
-	
-	/**
 	 * Clean up references and pool this object for recycling.
 	 */
 	override public function destroy()
 	{
 		super.destroy();
 		sprite = null;
-		pool.put(this);
+		_pool.put(this);
 	}
 	
 	/**

@@ -9,6 +9,25 @@ import flixel.util.FlxPool;
  */
 class CubicMotion extends Motion
 {
+	/**
+	 * A pool that contains CubicMotions for recycling.
+	 */
+	@:isVar 
+	@:allow(flixel.tweens.FlxTween)
+	private static var _pool(get, null):FlxPool<CubicMotion>;
+	
+	/**
+	 * Only allocate the pool if needed.
+	 */
+	private static function get__pool()
+	{
+		if (_pool == null)
+		{
+			_pool = new FlxPool<CubicMotion>(CubicMotion);
+		}
+		return _pool;
+	}
+	
 	// Curve information.
 	private var _fromX:Float;
 	private var _fromY:Float;
@@ -22,29 +41,12 @@ class CubicMotion extends Motion
 	private var _tt:Float;
 	
 	/**
-	 * A pool that contains CubicMotions for recycling.
-	 */
-	@:isVar public static var pool(get, null):FlxPool<CubicMotion>;
-	
-	/**
-	 * Only allocate the pool if needed.
-	 */
-	public static function get_pool()
-	{
-		if (pool == null)
-		{
-			pool = new FlxPool<CubicMotion>(CubicMotion);
-		}
-		return pool;
-	}
-	
-	/**
 	 * Clean up references and pool this object for recycling.
 	 */
 	override public function destroy()
 	{
 		super.destroy();
-		pool.put(this);
+		_pool.put(this);
 	}
 	
 	/**

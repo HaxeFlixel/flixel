@@ -42,7 +42,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 	/**
 	 * The X and Y drag component of particles launched from the emitter.
 	 */
-	public var particleDrag:FlxPoint;
+	public var particleDrag(default, null):FlxPoint;
 	/**
 	 * The minimum and maximum possible angular velocity of a particle.  The default value is (-360, 360).
 	 * NOTE: rotating particles are more expensive to draw than non-rotating ones!
@@ -51,7 +51,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 	/**
 	 * Sets the acceleration member of each particle to this value on launch.
 	 */
-	public var acceleration:FlxPoint;
+	public var acceleration(default, null):FlxPoint;
 	/**
 	 * Determines whether the emitter is currently emitting particles.
 	 * It is totally safe to directly toggle this.
@@ -106,7 +106,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 	 * Sets particle's blend mode. null by default.
 	 * Warning: expensive on flash target
 	 */
-	public var blend:BlendMode = null;
+	public var blend:BlendMode;
 	/**
 	 * How much each particle should bounce.  1 = full bounce, 0 = no bounce.
 	 */
@@ -168,13 +168,13 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 		endGreen = new Bounds<Float>(1.0, 1.0);
 		endBlue = new Bounds<Float>(1.0, 1.0);
 		
-		acceleration = new FlxPoint(0, 0);
+		acceleration = FlxPoint.get(0, 0);
 		_particleClass = cast FlxParticle;
-		particleDrag = new FlxPoint();
+		particleDrag = FlxPoint.get();
 		
 		life = new Bounds<Float>(3, 3);
 		exists = false;
-		_point = new FlxPoint();
+		_point = FlxPoint.get();
 	}
 	
 	/**

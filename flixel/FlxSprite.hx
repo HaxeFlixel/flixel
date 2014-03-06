@@ -12,6 +12,7 @@ import flixel.FlxG;
 import flixel.system.FlxAssets;
 import flixel.system.layer.DrawStackItem;
 import flixel.system.layer.frames.FlxFrame;
+import flixel.system.layer.frames.FlxSpriteFrames;
 import flixel.system.layer.Region;
 import flixel.util.FlxAngle;
 import flixel.util.FlxColor;
@@ -74,6 +75,18 @@ class FlxSprite extends FlxObject
 	 */
 	public var frames(default, null):Int = 0;
 	/**
+	 * Rendering variables.
+	 */
+	public var region(default, null):Region;
+	public var framesData(default, null):FlxSpriteFrames;
+	public var cachedGraphics(default, set):CachedGraphics;
+	/**
+	 * Whether or not the coordinates should be rounded during draw(), true by default (recommended for pixel art). 
+	 * Only affects tilesheet rendering and rendering using BitmapData.draw() in blitting.
+	 * (copyPixels() only renders on whole pixels by nature). Causes draw() to be used if false, which is more expensive.
+	 */
+	public var pixelPerfectRender(default, set):Bool = true;
+	/**
 	 * The minimum angle (out of 360°) for which a new baked rotation exists. Example: 90 means there 
 	 * are 4 baked rotations in the spritesheet. 0 if this sprite does not have any baked rotations.
 	 */
@@ -117,7 +130,7 @@ class FlxSprite extends FlxObject
 	 */
 	public var color(default, set):Int = 0xffffff;
 	
-	public var colorTransform(get, never):ColorTransform;
+	public var colorTransform(default, null):ColorTransform;
 	
 	/**
 	 * Whether or not to use a colorTransform set via setColorTransform.
@@ -148,10 +161,6 @@ class FlxSprite extends FlxObject
 	 * Internal, reused frequently during drawing and animating. Always contains (0,0).
 	 */
 	private var _flashPointZero:Point;
-	/**
-	 * Internal, helps with animation, caching and drawing.
-	 */
-	private var _colorTransform:ColorTransform;
 	/**
 	 * Internal, helps with animation, caching and drawing.
 	 */
@@ -194,9 +203,9 @@ class FlxSprite extends FlxObject
 		_flashRect = new Rectangle();
 		_flashRect2 = new Rectangle();
 		_flashPointZero = new Point();
-		offset = new FlxPoint();
-		origin = new FlxPoint();
-		scale = new FlxPoint(1, 1);
+		offset = FlxPoint.get();
+		origin = FlxPoint.get();
+		scale = FlxPoint.get(1, 1);
 		_matrix = new Matrix();
 	}
 	
@@ -218,7 +227,7 @@ class FlxSprite extends FlxObject
 		origin = null;
 		scale = null;
 		_matrix = null;
-		_colorTransform = null;
+		colorTransform = null;
 		if (framePixels != null)
 		{
 			framePixels.dispose();
@@ -226,6 +235,10 @@ class FlxSprite extends FlxObject
 		framePixels = null;
 		blend = null;
 		frame = null;
+		
+		framesData = null;
+		cachedGraphics = null;
+		region = null;
 	}
 	
 	public function clone(?NewSprite:FlxSprite):FlxSprite
@@ -691,7 +704,10 @@ class FlxSprite extends FlxObject
 			framePixels = new BitmapData(Std.int(width), Std.int(height));
 		}
 		framePixels.copyPixels(cachedGraphics.bitmap, _flashRect, _flashPointZero);
-		if (useColorTransform) framePixels.colorTransform(_flashRect, _colorTransform);
+		if (useColorTransform) 
+		{
+			framePixels.colorTransform(_flashRect, colorTransform);
+		}
 	#end
 		
 		_halfWidth = frameWidth * 0.5;
@@ -998,7 +1014,7 @@ class FlxSprite extends FlxObject
 					cachedGraphics.bitmap.setPixel32(column, row, NewColor);
 					if (FetchPositions)
 					{
-						positions.push(new FlxPoint(column, row));
+						positions.push(FlxPoint.get(column, row));
 					}
 					dirty = true;
 				}
@@ -1012,7 +1028,8 @@ class FlxSprite extends FlxObject
 	}
 	
 	/**
-	 * Set sprite's color transformation with control over color offsets. Works only on flash target
+	 * Set sprite's color transformation with control over color offsets.
+	 * 
 	 * @param	redMultiplier		The value for the red multiplier, in the range from 0 to 1. 
 	 * @param	greenMultiplier		The value for the green multiplier, in the range from 0 to 1. 
 	 * @param	blueMultiplier		The value for the blue multiplier, in the range from 0 to 1. 
@@ -1027,20 +1044,20 @@ class FlxSprite extends FlxObject
 		color = FlxColorUtil.getColor24(Std.int(redMultiplier * 255), Std.int(greenMultiplier * 255), Std.int(blueMultiplier * 255));
 		alpha = alphaMultiplier;
 		
-		if (_colorTransform == null)
+		if (colorTransform == null)
 		{
-			_colorTransform = new ColorTransform();
+			colorTransform = new ColorTransform();
 		}
 		else
 		{
-			_colorTransform.redMultiplier = redMultiplier;
-			_colorTransform.greenMultiplier = greenMultiplier;
-			_colorTransform.blueMultiplier = blueMultiplier;
-			_colorTransform.alphaMultiplier = alphaMultiplier;
-			_colorTransform.redOffset = redOffset;
-			_colorTransform.greenOffset = greenOffset;
-			_colorTransform.blueOffset = blueOffset;
-			_colorTransform.alphaOffset = alphaOffset;
+			colorTransform.redMultiplier = redMultiplier;
+			colorTransform.greenMultiplier = greenMultiplier;
+			colorTransform.blueMultiplier = blueMultiplier;
+			colorTransform.alphaMultiplier = alphaMultiplier;
+			colorTransform.redOffset = redOffset;
+			colorTransform.greenOffset = greenOffset;
+			colorTransform.blueOffset = blueOffset;
+			colorTransform.alphaOffset = alphaOffset;
 		}
 		
 		useColorTransform = ((alpha != 1) || (color != 0xffffff) || (redOffset != 0) || (greenOffset != 0) || (blueOffset != 0) || (alphaOffset != 0));
@@ -1051,27 +1068,27 @@ class FlxSprite extends FlxObject
 	{
 		if ((alpha != 1) || (color != 0xffffff))
 		{
-			if (_colorTransform == null)
+			if (colorTransform == null)
 			{
-				_colorTransform = new ColorTransform((color >> 16) / 255, (color >> 8 & 0xff) / 255, (color & 0xff) / 255, alpha);
+				colorTransform = new ColorTransform((color >> 16) / 255, (color >> 8 & 0xff) / 255, (color & 0xff) / 255, alpha);
 			}
 			else
 			{
-				_colorTransform.redMultiplier = (color >> 16) / 255;
-				_colorTransform.greenMultiplier = (color >> 8 & 0xff) / 255;
-				_colorTransform.blueMultiplier = (color & 0xff) / 255;
-				_colorTransform.alphaMultiplier = alpha;
+				colorTransform.redMultiplier = (color >> 16) / 255;
+				colorTransform.greenMultiplier = (color >> 8 & 0xff) / 255;
+				colorTransform.blueMultiplier = (color & 0xff) / 255;
+				colorTransform.alphaMultiplier = alpha;
 			}
 			useColorTransform = true;
 		}
 		else
 		{
-			if (_colorTransform != null)
+			if (colorTransform != null)
 			{
-				_colorTransform.redMultiplier = 1;
-				_colorTransform.greenMultiplier = 1;
-				_colorTransform.blueMultiplier = 1;
-				_colorTransform.alphaMultiplier = 1;
+				colorTransform.redMultiplier = 1;
+				colorTransform.greenMultiplier = 1;
+				colorTransform.blueMultiplier = 1;
+				colorTransform.alphaMultiplier = 1;
 			}
 			
 			useColorTransform = false;
@@ -1082,6 +1099,7 @@ class FlxSprite extends FlxObject
 	/**
 	 * Checks to see if a point in 2D world space overlaps this FlxSprite object's current displayed pixels.
 	 * This check is ALWAYS made in screen space, and always takes scroll factors into account.
+	 * 
 	 * @param	Point		The point in world space you want to check.
 	 * @param	Mask		Used in the pixel hit test to determine what counts as solid.
 	 * @param	Camera		Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
@@ -1098,7 +1116,9 @@ class FlxSprite extends FlxObject
 		_point.y = _point.y - offset.y;
 		_flashPoint.x = (point.x - Camera.scroll.x) - _point.x;
 		_flashPoint.y = (point.y - Camera.scroll.y) - _point.y;
-
+		
+		point.putWeak();
+		
 		// 1. Check to see if the point is outside of framePixels rectangle
 		if (_flashPoint.x < 0 || _flashPoint.x > frameWidth || _flashPoint.y < 0 || _flashPoint.y > frameHeight)
 		{
@@ -1125,7 +1145,7 @@ class FlxSprite extends FlxObject
 			loadGraphic(GraphicDefault);
 		}
 		
-		#if !(flash || js)
+		#if FLX_RENDER_TILE
 		if (!RunOnCpp)
 		{
 			return;
@@ -1147,7 +1167,7 @@ class FlxSprite extends FlxObject
 			
 		if (useColorTransform) 
 		{
-			framePixels.colorTransform(_flashRect, _colorTransform);
+			framePixels.colorTransform(_flashRect, colorTransform);
 		}
 		
 		dirty = false;
@@ -1164,7 +1184,7 @@ class FlxSprite extends FlxObject
 			return;
 		}
 		
-		if (cachedGraphics.data != null && (region.tileWidth == 0 && region.tileHeight == 0))
+		if ((cachedGraphics.data != null) && (region.tileWidth == 0 && region.tileHeight == 0))
 		{
 			framesData = cachedGraphics.tilesheet.getTexturePackerFrames(cachedGraphics.data);
 		}
@@ -1209,7 +1229,7 @@ class FlxSprite extends FlxObject
 	{
 		if (point == null)
 		{
-			point = new FlxPoint();
+			point = FlxPoint.get();
 		}
 		return point.set(x + frameWidth * 0.5, y + frameHeight * 0.5);
 	}
@@ -1427,11 +1447,6 @@ class FlxSprite extends FlxObject
 		return color;
 	}
 	
-	private function get_colorTransform():ColorTransform 
-	{
-		return _colorTransform;
-	}
-	
 	override private function set_angle(Value:Float):Float
 	{
 		_angleChanged = (angle != Value) || _angleChanged;
@@ -1447,10 +1462,12 @@ class FlxSprite extends FlxObject
 			{
 				case BlendMode.ADD:
 					_blendInt = Tilesheet.TILE_BLEND_ADD;
+				#if !flash
 				case BlendMode.MULTIPLY:
 					_blendInt = Tilesheet.TILE_BLEND_MULTIPLY;
 				case BlendMode.SCREEN:
 					_blendInt = Tilesheet.TILE_BLEND_SCREEN;
+				#end
 				default:
 					_blendInt = Tilesheet.TILE_BLEND_NORMAL;
 			}
@@ -1462,5 +1479,31 @@ class FlxSprite extends FlxObject
 		#end	
 		
 		return blend = Value;
+	}
+	
+	/**
+	 * Internal function for setting cachedGraphics property for this object. 
+	 * It changes cachedGraphics' useCount also for better memory tracking.
+	 */
+	private function set_cachedGraphics(Value:CachedGraphics):CachedGraphics
+	{
+		var oldCached:CachedGraphics = cachedGraphics;
+		
+		if ((cachedGraphics != Value) && (Value != null))
+		{
+			Value.useCount++;
+		}
+		
+		if ((oldCached != null) && (oldCached != Value))
+		{
+			oldCached.useCount--;
+		}
+		
+		return cachedGraphics = Value;
+	}
+	
+	private function set_pixelPerfectRender(Value:Bool):Bool 
+	{
+		return pixelPerfectRender = Value;
 	}
 }

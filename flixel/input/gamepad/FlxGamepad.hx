@@ -61,8 +61,8 @@ class FlxGamepad implements IFlxDestroyable
 		}
 		
 		#if !flash
-		ball = new FlxPoint();
-		hat = new FlxPoint();
+		ball = FlxPoint.get();
+		hat = FlxPoint.get();
 		#end
 	}
 	

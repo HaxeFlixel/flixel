@@ -10,6 +10,25 @@ import flixel.util.FlxPool;
 class CircularMotion extends Motion
 {
 	/**
+	 * A pool that contains CircularMotions for recycling.
+	 */
+	@:isVar 
+	@:allow(flixel.tweens.FlxTween)
+	private static var _pool(get, null):FlxPool<CircularMotion>;
+	
+	/**
+	 * Only allocate the pool if needed.
+	 */
+	private static function get__pool()
+	{
+		if (_pool == null)
+		{
+			_pool = new FlxPool<CircularMotion>(CircularMotion);
+		}
+		return _pool;
+	}
+	
+	/**
 	 * The current position on the circle.
 	 */
 	public var angle:Float;
@@ -27,29 +46,12 @@ class CircularMotion extends Motion
 	private var _angleFinish:Float;
 	
 	/**
-	 * A pool that contains CircularMotions for recycling.
-	 */
-	@:isVar public static var pool(get, null):FlxPool<CircularMotion>;
-	
-	/**
-	 * Only allocate the pool if needed.
-	 */
-	public static function get_pool()
-	{
-		if (pool == null)
-		{
-			pool = new FlxPool<CircularMotion>(CircularMotion);
-		}
-		return pool;
-	}
-	
-	/**
 	 * Clean up references and pool this object for recycling.
 	 */
 	override public function destroy()
 	{
 		super.destroy();
-		pool.put(this);
+		_pool.put(this);
 	}
 	
 	/**

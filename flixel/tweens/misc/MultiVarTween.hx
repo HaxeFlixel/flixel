@@ -10,6 +10,25 @@ import flixel.util.FlxPool;
  */
 class MultiVarTween extends FlxTween
 {
+	/**
+	 * A pool that contains MultiVarTweens for recycling.
+	 */
+	@:isVar 
+	@:allow(flixel.tweens.FlxTween)
+	private static var _pool(get, null):FlxPool<MultiVarTween>;
+	
+	/**
+	 * Only allocate the pool if needed.
+	 */
+	private static function get__pool()
+	{
+		if (_pool == null)
+		{
+			_pool = new FlxPool<MultiVarTween>(MultiVarTween);
+		}
+		return _pool;
+	}
+	
 	private var _object:Dynamic;
 	private var _properties:Dynamic;
 	private var _vars:Array<String>;
@@ -17,37 +36,12 @@ class MultiVarTween extends FlxTween
 	private var _range:Array<Float>;
 	
 	/**
-	 * A pool that contains MultiVarTweens for recycling.
-	 */
-	@:isVar public static var pool(get, null):FlxPool<MultiVarTween>;
-	
-	/**
-	 * Only allocate the pool if needed.
-	 */
-	public static function get_pool()
-	{
-		if (pool == null)
-		{
-			pool = new FlxPool<MultiVarTween>(MultiVarTween);
-		}
-		return pool;
-	}
-	
-	public function new()
-	{
-		super();
-		_vars = new Array<String>();
-		_start = new Array<Float>();
-		_range = new Array<Float>();
-	}
-	
-	/**
 	 * Clean up references and pool this object for recycling.
 	 */
 	override public function destroy():Void 
 	{
 		super.destroy();
-		pool.put(this);
+		_pool.put(this);
 		_object = null;
 		_properties = null;
 	}
@@ -103,6 +97,14 @@ class MultiVarTween extends FlxTween
 				Reflect.setProperty(_object, _vars[i], (_start[i] + _range[i] * scale));
 			}
 		}
+	}
+	
+	private function new()
+	{
+		super();
+		_vars = new Array<String>();
+		_start = new Array<Float>();
+		_range = new Array<Float>();
 	}
 	
 	private function initializeVars():Void

@@ -9,27 +9,29 @@ import flixel.util.FlxPool;
  */
 class VarTween extends FlxTween
 {
-	private var _object:Dynamic;
-	private var _property:String;
-	private var _start:Float;
-	private var _range:Float;
-	
 	/**
 	 * A pool that contains VarTweens for recycling.
 	 */
-	@:isVar public static var pool(get, null):FlxPool<VarTween>;
+	@:isVar 
+	@:allow(flixel.tweens.FlxTween)
+	private static var _pool(get, null):FlxPool<VarTween>;
 	
 	/**
 	 * Only allocate the pool if needed.
 	 */
-	public static function get_pool()
+	private static function get__pool()
 	{
-		if (pool == null)
+		if (_pool == null)
 		{
-			pool = new FlxPool<VarTween>(VarTween);
+			_pool = new FlxPool<VarTween>(VarTween);
 		}
-		return pool;
+		return _pool;
 	}
+	
+	private var _object:Dynamic;
+	private var _property:String;
+	private var _start:Float;
+	private var _range:Float;
 	
 	/**
 	 * Clean up references and pool this object for recycling.
@@ -38,7 +40,7 @@ class VarTween extends FlxTween
 	{
 		super.destroy();
 		_object = null;
-		pool.put(this);
+		_pool.put(this);
 	}
 	
 	/**
