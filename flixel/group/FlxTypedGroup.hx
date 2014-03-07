@@ -676,7 +676,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 */
 	public inline function iterator(?filter:T->Bool):FlxTypedGroupIterator<T>
 	{
-		return new FlxTypedGroupIterator<T>(_members, (filter == null) ? function(m) { return true; } : filter);
+		return new FlxTypedGroupIterator<T>(_members, filter);
 	}
 	
 	/**
