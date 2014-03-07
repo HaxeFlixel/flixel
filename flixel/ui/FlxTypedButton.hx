@@ -113,9 +113,12 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		onOver = FlxG.safeDestroy(onOver);
 		onOut = FlxG.safeDestroy(onOut);
 		
-		for (point in labelOffsets)
+		if (labelOffsets != null)
 		{
-			point.put();
+			for (point in labelOffsets)
+			{
+				point.put();
+			}
 		}
 		
 		labelOffsets = null;
