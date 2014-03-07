@@ -35,20 +35,20 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	 * Current "delta" value of mouse wheel. If the wheel was just scrolled up, 
 	 * it will have a positive value and vice versa. Otherwise the value will be 0.
 	 */
-	public var wheel:Int = 0;
+	public var wheel(default, null):Int = 0;
 	/**
 	 * Current X position of the mouse pointer on the screen.
 	 */
-	public var screenX:Int = 0;
+	public var screenX(default, null):Int = 0;
 	/**
 	 * Current Y position of the mouse pointer on the screen.
 	 */
-	public var screenY:Int = 0;
+	public var screenY(default, null):Int = 0;
 	/**
 	 * A display container for the mouse cursor. It is a child of FlxGame and 
 	 * sits at the right "height". Not used on flash with the native cursor API.
 	 */
-	public var cursorContainer:Sprite;
+	public var cursorContainer(default, null):Sprite;
 	/**
 	 * Used to toggle the visiblity of the mouse cursor - works on both 
 	 * the flixel and the system cursor, depending on which one is active.
