@@ -314,7 +314,7 @@ class MouseEventManager extends FlxPlugin
 				continue;
 			}
 			
-			if (!reg.object.alive || !reg.sprite.exists || !reg.sprite.visible || !reg.mouseEnabled)
+			if (!reg.object.alive || !reg.object.exists || !reg.object.visible || !reg.mouseEnabled)
 			{
 				continue;
 			}
@@ -335,7 +335,7 @@ class MouseEventManager extends FlxPlugin
 		{
 			if (current.onMouseOver != null)
 			{
-				if (current.sprite.exists  && current.object.visible && getRegister(current.object, _mouseOverObjects) == null)
+				if (current.object.exists && current.object.visible && getRegister(current.object, _mouseOverObjects) == null)
 				{
 					current.onMouseOver(current.object);
 				}
