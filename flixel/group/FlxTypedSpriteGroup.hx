@@ -744,12 +744,12 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	/**
 	 * This functionality isn't supported in SpriteGroup
 	 */
-	override public function set_width(Value:Float):Float
+	override private function set_width(Value:Float):Float
 	{
 		return Value;
 	}
 	
-	override public function get_width():Float
+	override private function get_width():Float
 	{
 		if (length == 0)
 		{
@@ -779,12 +779,12 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	/**
 	 * This functionality isn't supported in SpriteGroup
 	 */
-	override public function set_height(Value:Float):Float
+	override private function set_height(Value:Float):Float
 	{
 		return Value;
 	}
 	
-	override public function get_height():Float
+	override private function get_height():Float
 	{
 		if (length == 0)
 		{

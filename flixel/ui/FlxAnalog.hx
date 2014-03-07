@@ -437,7 +437,7 @@ class FlxAnalog extends FlxSpriteGroup
 		return false;
 	}
 	
-	override public function set_x(X:Float):Float
+	override private function set_x(X:Float):Float
 	{
 		super.set_x(X);
 		createZone();
@@ -445,7 +445,7 @@ class FlxAnalog extends FlxSpriteGroup
 		return X;
 	}
 	
-	override public function set_y(Y:Float):Float
+	override private function set_y(Y:Float):Float
 	{
 		super.set_y(Y);
 		createZone();
