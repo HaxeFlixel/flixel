@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
 	<icon path="assets/images/logo/HaxeFlixel.svg" />
-	
-	<!-- Disable shaders by default, HaxeFlixel doesn't support them -->
-	<!-- This can significantly improve performance on some devices, especially iOS -->
-	<window allow-shaders="false" />
-	
+
 	<haxelib name="openfl" />
 </project>
