@@ -115,14 +115,15 @@ class Stats extends Window
 		#end
 		
 		var graphHeight:Int = 40;
+		var graphWidth:Int = INITIAL_WIDTH - 20;
 		var gutter:Int = 5;
 		
-		fpsGraph = new StatsGraph(gutter, Std.int(_header.height) + 5, INITIAL_WIDTH - 10, graphHeight, FPS_COLOR, "fps");
+		fpsGraph = new StatsGraph(gutter, Std.int(_header.height) + 5, graphWidth, graphHeight, FPS_COLOR, "fps");
 		addChild(fpsGraph);	
 		fpsGraph.maxValue = FlxG.drawFramerate;
 		fpsGraph.minValue = 0;
 		
-		memoryGraph = new StatsGraph(gutter, Std.int(_header.height) +  graphHeight + 20, INITIAL_WIDTH - 10, graphHeight, MEMORY_COLOR, "MB");
+		memoryGraph = new StatsGraph(gutter, Std.int(_header.height) +  graphHeight + 20, graphWidth, graphHeight, MEMORY_COLOR, "MB");
 		addChild(memoryGraph);
 		
 		addChild(_leftTextField = DebuggerUtil.createTextField(gutter, (graphHeight * 2) + 45, LABEL_COLOR, TEXT_SIZE));
@@ -226,6 +227,7 @@ class Stats extends Window
 		{
 			fpsGraph.update(currentFps(), averageFps());
 			memoryGraph.update(currentMem());
+			
 			updateTexts();
 			
 			_frameCount = 0;
