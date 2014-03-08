@@ -10,6 +10,7 @@ import flash.geom.Rectangle;
 import flixel.system.layer.DrawStackItem;
 import flixel.system.layer.TileSheetExt;
 import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
 import flixel.util.FlxPool.FlxPool;
@@ -498,7 +499,7 @@ class FlxCamera extends FlxBasic
 	override public function destroy():Void
 	{
 	#if FLX_RENDER_BLIT
-		screen = FlxG.safeDestroy(screen);
+		screen = FlxDestroyUtil.destroy(screen);
 		buffer = null;
 		_flashBitmap = null;
 		if (_fill != null)
@@ -527,9 +528,9 @@ class FlxCamera extends FlxBasic
 		_currentStackItem = null;
 	#end
 		
-		scroll = FlxG.safePut(scroll);
-		deadzone = FlxG.safePut(deadzone);
-		bounds = FlxG.safePut(bounds);
+		scroll = FlxDestroyUtil.put(scroll);
+		deadzone = FlxDestroyUtil.put(deadzone);
+		bounds = FlxDestroyUtil.put(bounds);
 		
 		target = null;
 		flashSprite = null;

@@ -466,7 +466,7 @@ class FlxPath implements IFlxDestroyable
 		// recycle FlxPoints
 		for (point in nodes)
 		{
-			point = FlxG.safePut(point);
+			point = FlxDestroyUtil.put(point);
 		}
 		nodes = null;
 		object = null;

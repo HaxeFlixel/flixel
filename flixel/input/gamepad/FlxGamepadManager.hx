@@ -4,6 +4,7 @@ import flash.Lib;
 import flixel.FlxG;
 import flixel.input.gamepad.FlxGamepad;
 import flixel.interfaces.IFlxInput;
+import flixel.util.FlxDestroyUtil;
 
 #if (cpp || neko)
 import openfl.events.JoystickEvent;
@@ -240,7 +241,7 @@ class FlxGamepadManager implements IFlxInput
 	{
 		for (gamepad in _gamepads)
 		{
-			gamepad = FlxG.safeDestroy(gamepad);
+			gamepad = FlxDestroyUtil.destroy(gamepad);
 		}
 		
 		firstActive = null;
@@ -340,7 +341,7 @@ class FlxGamepadManager implements IFlxInput
 			if (id >= 0)
 			{
 				var gamepad:FlxGamepad = _gamepads.get(id);
-				gamepad = FlxG.safeDestroy(gamepad);
+				gamepad = FlxDestroyUtil.destroy(gamepad);
 				_gamepads.remove(id);
 			}
 		}

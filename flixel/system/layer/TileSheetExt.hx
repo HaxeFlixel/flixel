@@ -5,6 +5,7 @@ import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.FlxG;
 import flixel.interfaces.IFlxDestroyable;
+import flixel.util.FlxDestroyUtil;
 import openfl.display.Tilesheet;
 
 class TileSheetExt extends Tilesheet implements IFlxDestroyable
@@ -39,7 +40,7 @@ class TileSheetExt extends Tilesheet implements IFlxDestroyable
 		
 		old.tileIDs = null;
 		old.tileOrder = null;
-		FlxG.safeDestroy(old);
+		FlxDestroyUtil.destroy(old);
 	}
 	
 	/**
@@ -91,7 +92,7 @@ class TileSheetExt extends Tilesheet implements IFlxDestroyable
 		{
 			for (tileObj in tileIDs)
 			{
-				FlxG.safeDestroy(tileObj);
+				FlxDestroyUtil.destroy(tileObj);
 			}
 		}
 		tileIDs = null;

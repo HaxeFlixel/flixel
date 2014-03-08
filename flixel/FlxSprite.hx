@@ -17,6 +17,7 @@ import flixel.system.layer.Region;
 import flixel.util.FlxAngle;
 import flixel.util.FlxColor;
 import flixel.util.FlxColorUtil;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxPoint;
 import flixel.util.loaders.CachedGraphics;
 import flixel.util.loaders.TexturePackerData;
@@ -217,11 +218,11 @@ class FlxSprite extends FlxObject
 	{
 		super.destroy();
 		
-		animation = FlxG.safeDestroy(animation);
+		animation = FlxDestroyUtil.destroy(animation);
 		
-		offset = FlxG.safePut(offset);
-		origin = FlxG.safePut(origin);
-		scale = FlxG.safePut(scale);
+		offset = FlxDestroyUtil.put(offset);
+		origin = FlxDestroyUtil.put(origin);
+		scale = FlxDestroyUtil.put(scale);
 		
 		_flashPoint = null;
 		_flashRect = null;

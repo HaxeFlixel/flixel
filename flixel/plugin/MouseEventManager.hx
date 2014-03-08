@@ -8,6 +8,7 @@ import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup;
 import flixel.util.FlxAngle;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxPoint;
 
 /**
@@ -294,7 +295,7 @@ class MouseEventManager extends FlxPlugin
 	override public function destroy():Void
 	{
 		clearRegistry();
-		_point = FlxG.safePut(_point);
+		_point = FlxDestroyUtil.put(_point);
 		super.destroy();
 	}
 	

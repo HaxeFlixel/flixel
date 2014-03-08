@@ -6,6 +6,7 @@ import flixel.FlxG;
 import flixel.system.debug.ConsoleUtil.PathToVariable;
 import flixel.system.debug.FlxDebugger;
 import flixel.util.FlxArrayUtil;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxPoint;
 import flixel.util.FlxStringUtil;
 import haxe.ds.StringMap;
@@ -74,7 +75,7 @@ class Watch extends Window
 		{
 			for (watchEntry in _watching)
 			{
-				watchEntry = FlxG.safeDestroy(watchEntry);
+				watchEntry = FlxDestroyUtil.destroy(watchEntry);
 			}
 			_watching = null;
 		}

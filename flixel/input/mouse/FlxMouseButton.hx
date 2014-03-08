@@ -5,6 +5,7 @@ import flash.events.MouseEvent;
 import flixel.FlxG;
 import flixel.input.FlxSwipe;
 import flixel.interfaces.IFlxDestroyable;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxPoint;
 
 class FlxMouseButton implements IFlxDestroyable
@@ -69,7 +70,7 @@ class FlxMouseButton implements IFlxDestroyable
 	
 	public inline function destroy():Void
 	{
-		_justPressedPosition = FlxG.safePut(_justPressedPosition);
+		_justPressedPosition = FlxDestroyUtil.put(_justPressedPosition);
 	}
 	
 	public function onDown(FlashEvent:MouseEvent):Void

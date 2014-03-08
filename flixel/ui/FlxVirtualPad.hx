@@ -4,6 +4,7 @@ import flash.display.BitmapData;
 import flixel.FlxG;
 import flixel.group.FlxSpriteGroup;
 import flixel.system.FlxAssets;
+import flixel.util.FlxDestroyUtil;
 
 @:bitmap("assets/images/ui/virtualpad/a.png")     private class GraphicA     extends BitmapData {}
 @:bitmap("assets/images/ui/virtualpad/b.png")     private class GraphicB     extends BitmapData {}
@@ -109,8 +110,8 @@ class FlxVirtualPad extends FlxSpriteGroup
 	{
 		super.destroy();
 		
-		dPad = FlxG.safeDestroy(dPad);
-		actions = FlxG.safeDestroy(actions);
+		dPad = FlxDestroyUtil.destroy(dPad);
+		actions = FlxDestroyUtil.destroy(actions);
 		
 		dPad = null;
 		actions = null;

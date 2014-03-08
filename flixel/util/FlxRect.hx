@@ -21,7 +21,9 @@ class FlxRect implements IFlxPooled
 	 */
 	public static inline function get(X:Float = 0, Y:Float = 0, Width:Float = 0, Height:Float = 0):FlxRect
 	{
-		return _pool.get().set(X, Y, Width, Height);
+		var rect = _pool.get().set(X, Y, Width, Height);
+		rect._inPool = false;
+		return rect;
 	}
 	
 	public var x:Float;
@@ -49,12 +51,18 @@ class FlxRect implements IFlxPooled
 	 */
 	public var bottom(get, set):Float;
 	
+	private var _inPool:Bool = false;
+	
 	/**
 	 * Add this FlxRect to the recycling pool.
 	 */
 	public inline function put():Void
 	{
-		_pool.put(this);
+		if (!_inPool)
+		{
+			_inPool = true;
+			_pool.put(this);
+		}
 	}
 	
 	/**

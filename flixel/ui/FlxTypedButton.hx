@@ -7,6 +7,7 @@ import flixel.FlxSprite;
 import flixel.input.touch.FlxTouch;
 import flixel.interfaces.IFlxDestroyable;
 import flixel.system.FlxSound;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxPoint;
 
 @:bitmap("assets/images/ui/button.png")	private class GraphicButton	extends BitmapData {}
@@ -106,18 +107,18 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	 */
 	override public function destroy():Void
 	{
-		label = FlxG.safeDestroy(label);
+		label = FlxDestroyUtil.destroy(label);
 		
-		onUp = FlxG.safeDestroy(onUp);
-		onDown = FlxG.safeDestroy(onDown);
-		onOver = FlxG.safeDestroy(onOver);
-		onOut = FlxG.safeDestroy(onOut);
+		onUp = FlxDestroyUtil.destroy(onUp);
+		onDown = FlxDestroyUtil.destroy(onDown);
+		onOver = FlxDestroyUtil.destroy(onOver);
+		onOut = FlxDestroyUtil.destroy(onOut);
 		
 		if (labelOffsets != null)
 		{
 			for (point in labelOffsets)
 			{
-				point = FlxG.safePut(point);
+				point = FlxDestroyUtil.put(point);
 			}
 		}
 		
@@ -401,7 +402,7 @@ private class FlxButtonEvent implements IFlxDestroyable
 		callback = null;
 		
 		#if !FLX_NO_SOUND_SYSTEM
-		sound = FlxG.safeDestroy(sound);
+		sound = FlxDestroyUtil.destroy(sound);
 		#end
 	}
 	

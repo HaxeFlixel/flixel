@@ -16,6 +16,7 @@ import flixel.system.layer.frames.FlxSpriteFrames;
 import flixel.system.layer.Region;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRandom;
@@ -286,7 +287,7 @@ class FlxTilemap extends FlxObject
 		region = null;
 		
 		// need to destroy FlxCallbackPoints
-		scale = FlxG.safeDestroy(scale);
+		scale = FlxDestroyUtil.destroy(scale);
 		
 		super.destroy();
 	}

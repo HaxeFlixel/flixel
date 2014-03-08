@@ -8,6 +8,7 @@ import flixel.FlxG;
 import flixel.system.layer.TileSheetData;
 import flixel.util.FlxAngle;
 import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxPoint;
 
 class FlxFrame
@@ -133,9 +134,9 @@ class FlxFrame
 		name = null;
 		frame = null;
 		
-		sourceSize = FlxG.safePut(sourceSize);
-		offset = FlxG.safePut(offset);
-		center = FlxG.safePut(center);
+		sourceSize = FlxDestroyUtil.put(sourceSize);
+		offset = FlxDestroyUtil.put(offset);
+		center = FlxDestroyUtil.put(center);
 		
 		_tileSheet = null;
 		

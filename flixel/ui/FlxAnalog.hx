@@ -8,6 +8,7 @@ import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;
 import flixel.input.touch.FlxTouch;
 import flixel.util.FlxAngle;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRect;
 
@@ -187,7 +188,7 @@ class FlxAnalog extends FlxSpriteGroup
 	{
 		super.destroy();
 		
-		_zone = FlxG.safePut(_zone);
+		_zone = FlxDestroyUtil.put(_zone);
 		
 		_analogs = null;
 		onUp = null;

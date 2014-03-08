@@ -142,8 +142,8 @@ class CachedGraphics
 			bitmap = null;
 		}
 		
-		data = FlxG.safeDestroy(data);
-		_tilesheet = FlxG.safeDestroy(_tilesheet);
+		data = FlxDestroyUtil.destroy(data);
+		_tilesheet = FlxDestroyUtil.destroy(_tilesheet);
 		key = null;
 		assetsKey = null;
 		assetsClass = null;

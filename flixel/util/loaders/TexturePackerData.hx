@@ -77,7 +77,7 @@ class TexturePackerData implements IFlxDestroyable
 	{
 		for (frame in frames)
 		{
-			frame = FlxG.safeDestroy(frame);
+			frame = FlxDestroyUtil.destroy(frame);
 		}
 		frames = null;
 		assetName = null;

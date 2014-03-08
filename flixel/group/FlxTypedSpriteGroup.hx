@@ -9,6 +9,7 @@ import flixel.FlxSprite;
 import flixel.group.FlxTypedGroup;
 import flixel.system.FlxCollisionType;
 import flixel.system.layer.frames.FlxFrame;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxPoint;
 import flixel.util.FlxSort;
 
@@ -94,12 +95,12 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	override public function destroy():Void
 	{
 		// normally don't have to destroy FlxPoints, but these are FlxCallbackPoints!
-		offset = FlxG.safeDestroy(offset);
-		origin = FlxG.safeDestroy(origin);
-		scale = FlxG.safeDestroy(scale);
-		scrollFactor = FlxG.safeDestroy(scrollFactor);
+		offset = FlxDestroyUtil.destroy(offset);
+		origin = FlxDestroyUtil.destroy(origin);
+		scale = FlxDestroyUtil.destroy(scale);
+		scrollFactor = FlxDestroyUtil.destroy(scrollFactor);
 		
-		group = FlxG.safeDestroy(group);
+		group = FlxDestroyUtil.destroy(group);
 		_sprites = null;
 		
 		super.destroy();

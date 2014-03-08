@@ -10,6 +10,7 @@ import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.Lib;
 import flash.ui.Mouse;
+import flixel.util.FlxDestroyUtil;
 #if (flash && !FLX_NO_NATIVE_CURSOR)
 import flash.ui.MouseCursor;
 import flash.ui.MouseCursorData;
@@ -349,8 +350,8 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	 */
 	@:noCompletion override public function destroy():Void
 	{
-		_point = FlxG.safePut(_point);
-		_globalScreenPosition = FlxG.safePut(_globalScreenPosition);
+		_point = FlxDestroyUtil.put(_point);
+		_globalScreenPosition = FlxDestroyUtil.put(_globalScreenPosition);
 		
 		cursorContainer = null;
 		_cursor = null;
@@ -359,10 +360,10 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		_matrix = null;
 		#end
 		
-		_leftButton   = FlxG.safeDestroy(_leftButton);
+		_leftButton   = FlxDestroyUtil.destroy(_leftButton);
 		#if !FLX_NO_MOUSE_ADVANCED
-		_middleButton = FlxG.safeDestroy(_middleButton);
-		_rightButton  = FlxG.safeDestroy(_rightButton);
+		_middleButton = FlxDestroyUtil.destroy(_middleButton);
+		_rightButton  = FlxDestroyUtil.destroy(_rightButton);
 		#end
 		
 		if (_cursorBitmapData != null)

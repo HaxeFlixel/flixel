@@ -8,6 +8,7 @@ import flixel.FlxObject;
 import flixel.group.FlxTypedGroup;
 import flixel.input.FlxSwipe;
 import flixel.interfaces.IFlxDestroyable;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxPoint;
 
 /**
@@ -46,9 +47,9 @@ class FlxTouch extends FlxPoint implements IFlxDestroyable
 	 */
 	override public function destroy():Void
 	{
-		_point = FlxG.safePut(_point);
-		_globalScreenPosition = FlxG.safePut(_globalScreenPosition);
-		_justPressedPosition = FlxG.safePut(_justPressedPosition);
+		_point = FlxDestroyUtil.put(_point);
+		_globalScreenPosition = FlxDestroyUtil.put(_globalScreenPosition);
+		_justPressedPosition = FlxDestroyUtil.put(_justPressedPosition);
 		
 		_point = null;
 		_globalScreenPosition = null;

@@ -13,6 +13,7 @@ import flixel.FlxG;
 import flixel.system.FlxAssets;
 import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxMath;
 
 @:bitmap("assets/images/debugger/windowHandle.png") private class GraphicWindowHandle extends BitmapData {}
@@ -192,7 +193,7 @@ class Window extends Sprite
 		}
 		_handle = null;
 		_drag = null;
-		_closeButton = FlxG.safeDestroy(_closeButton);
+		_closeButton = FlxDestroyUtil.destroy(_closeButton);
 		
 		var stage = FlxG.stage;
 		if (stage.hasEventListener(MouseEvent.MOUSE_MOVE))

@@ -3,6 +3,7 @@ package flixel.ui;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import flash.display.BitmapData;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxStringUtil;
 
 import flixel.FlxG;
@@ -183,7 +184,7 @@ class FlxBar extends FlxSprite
 	
 	override public function destroy():Void 
 	{
-		positionOffset = FlxG.safePut(positionOffset);
+		positionOffset = FlxDestroyUtil.put(positionOffset);
 		
 		#if FLX_RENDER_BLIT
 		canvas.dispose();
