@@ -349,13 +349,11 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	 */
 	@:noCompletion override public function destroy():Void
 	{
-		_point.put();
-		_globalScreenPosition.put();
+		_point = FlxG.safePut(_point);
+		_globalScreenPosition = FlxG.safePut(_globalScreenPosition);
 		
 		cursorContainer = null;
 		_cursor = null;
-		_point = null;
-		_globalScreenPosition = null;
 		
 		#if (flash && !FLX_NO_NATIVE_CURSOR)
 		_matrix = null;

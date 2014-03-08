@@ -12,6 +12,7 @@ import flixel.system.layer.TileSheetExt;
 import flixel.util.FlxColor;
 import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
+import flixel.util.FlxPool.FlxPool;
 import flixel.util.FlxRandom;
 import flixel.util.FlxRect;
 import flixel.util.loaders.CachedGraphics;
@@ -526,14 +527,11 @@ class FlxCamera extends FlxBasic
 		_currentStackItem = null;
 	#end
 		
-		scroll.put();
-		deadzone.put();
-		bounds.put();
+		scroll = FlxG.safePut(scroll);
+		deadzone = FlxG.safePut(deadzone);
+		bounds = FlxG.safePut(bounds);
 		
 		target = null;
-		scroll = null;
-		deadzone = null;
-		bounds = null;
 		flashSprite = null;
 		_flashRect = null;
 		_flashPoint = null;

@@ -2,13 +2,13 @@ package flixel.util;
 
 import flixel.FlxG;
 import flash.geom.Point;
-import flixel.interfaces.IFlxDestroyable;
+import flixel.interfaces.IFlxPooled;
 import flixel.util.FlxStringUtil;
 
 /**
  * Stores a 2D floating point coordinate.
  */
-class FlxPoint implements IFlxDestroyable
+class FlxPoint implements IFlxPooled
 {
 	private static var _pool = new FlxPool<FlxPoint>(FlxPoint);
 	

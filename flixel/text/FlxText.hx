@@ -201,8 +201,6 @@ class FlxText extends FlxSprite
 	 */
 	override public function destroy():Void
 	{
-		shadowOffset.put();
-		
 		_textField = null;
 		_defaultFormat = null;
 		_formatAdjusted = null;
@@ -219,7 +217,7 @@ class FlxText extends FlxSprite
 			}
 		}
 		_formats = null;
-		shadowOffset = null;
+		shadowOffset = FlxG.safePut(shadowOffset);
 		super.destroy();
 	}
 	

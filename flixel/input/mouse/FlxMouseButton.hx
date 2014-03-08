@@ -67,10 +67,9 @@ class FlxMouseButton implements IFlxDestroyable
 		}
 	}
 	
-	public function destroy():Void
+	public inline function destroy():Void
 	{
-		_justPressedPosition.put();
-		_justPressedPosition = null;
+		_justPressedPosition = FlxG.safePut(_justPressedPosition);
 	}
 	
 	public function onDown(FlashEvent:MouseEvent):Void

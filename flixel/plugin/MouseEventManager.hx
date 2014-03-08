@@ -294,8 +294,7 @@ class MouseEventManager extends FlxPlugin
 	override public function destroy():Void
 	{
 		clearRegistry();
-		_point = null;
-		
+		_point = FlxG.safePut(_point);
 		super.destroy();
 	}
 	

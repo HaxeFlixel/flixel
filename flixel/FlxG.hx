@@ -8,6 +8,7 @@ import flash.Lib;
 import flash.net.URLRequest;
 import flixel.FlxBasic;
 import flixel.interfaces.IFlxDestroyable;
+import flixel.interfaces.IFlxPooled;
 import flixel.system.FlxAssets;
 import flixel.system.FlxQuadTree;
 import flixel.system.FlxVersion;
@@ -365,15 +366,26 @@ class FlxG
 	/**
 	 * Checks if an object is not null before calling destroy(), always returns null.
 	 * 
-	 * @param	Object	An FlxBasic object that will be destroyed if it's not null.
+	 * @param	Object	An IFlxDestroyable object that will be destroyed if it's not null.
 	 * @return	Null
 	 */
 	public static function safeDestroy<T:IFlxDestroyable>(Object:Null<IFlxDestroyable>):T
 	{
 		if (Object != null)
-		{
 			Object.destroy(); 
-		}
+		return null;
+	}
+	
+	/**
+	 * Checks if an object is not null before calling put(), always returns null.
+	 * 
+	 * @param	Object	An IFlxPooled object that will be put back into the pool if it's not null
+	 * @return	Null
+	 */
+	public static function safePut<T:IFlxPooled>(Object:IFlxPooled):T
+	{
+		if (Object != null)
+			Object.put();
 		return null;
 	}
 	

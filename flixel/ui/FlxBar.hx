@@ -27,6 +27,22 @@ import flixel.util.loaders.CachedGraphics;
  */
 class FlxBar extends FlxSprite
 {
+	public static inline var FILL_LEFT_TO_RIGHT:Int = 1;
+	public static inline var FILL_RIGHT_TO_LEFT:Int = 2;
+	public static inline var FILL_TOP_TO_BOTTOM:Int = 3;
+	public static inline var FILL_BOTTOM_TO_TOP:Int = 4;
+	public static inline var FILL_HORIZONTAL_INSIDE_OUT:Int = 5;
+	public static inline var FILL_HORIZONTAL_OUTSIDE_IN:Int = 6;
+	public static inline var FILL_VERTICAL_INSIDE_OUT:Int = 7;
+	public static inline var FILL_VERTICAL_OUTSIDE_IN:Int = 8;
+	
+	public static inline var FRAMES_POSITION_HORIZONTAL:String = "horizontal";
+	public static inline var FRAMES_POSITION_VERTICAL:String = "vertical";
+	
+	private static inline var BAR_FILLED:Int = 1;
+	private static inline var BAR_GRADIENT:Int = 2;
+	private static inline var BAR_IMAGE:Int = 3;
+	
 	#if FLX_RENDER_BLIT
 	private var canvas:BitmapData;
 	#end
@@ -46,7 +62,7 @@ class FlxBar extends FlxSprite
 	/**
 	 * The positionOffset controls how far offset the FlxBar is from the parent sprite (if at all)
 	 */
-	public var positionOffset:FlxPoint;
+	public var positionOffset(default, null):FlxPoint;
 	
 	/**
 	 * The minimum value the bar can be (can never be >= max)
@@ -93,26 +109,11 @@ class FlxBar extends FlxSprite
 	private var fillDirection:Int;
 	private var fillHorizontal:Bool;
 	
-	public static inline var FILL_LEFT_TO_RIGHT:Int = 1;
-	public static inline var FILL_RIGHT_TO_LEFT:Int = 2;
-	public static inline var FILL_TOP_TO_BOTTOM:Int = 3;
-	public static inline var FILL_BOTTOM_TO_TOP:Int = 4;
-	public static inline var FILL_HORIZONTAL_INSIDE_OUT:Int = 5;
-	public static inline var FILL_HORIZONTAL_OUTSIDE_IN:Int = 6;
-	public static inline var FILL_VERTICAL_INSIDE_OUT:Int = 7;
-	public static inline var FILL_VERTICAL_OUTSIDE_IN:Int = 8;
-	
-	private static inline var BAR_FILLED:Int = 1;
-	private static inline var BAR_GRADIENT:Int = 2;
-	private static inline var BAR_IMAGE:Int = 3;
-	
 	#if FLX_RENDER_TILE
 	private var _emptyBarFrameID:Int;
 	private var _filledBarFrames:Array<Float>;
 	
 	private var _framesPosition:String;
-	public static inline var FRAMES_POSITION_HORIZONTAL:String = "horizontal";
-	public static inline var FRAMES_POSITION_VERTICAL:String = "vertical";
 	
 	private var _cachedFrontGraphics:CachedGraphics;
 	private var _frontRegion:Region;
@@ -182,7 +183,7 @@ class FlxBar extends FlxSprite
 	
 	override public function destroy():Void 
 	{
-		positionOffset.put();
+		positionOffset = FlxG.safePut(positionOffset);
 		
 		#if FLX_RENDER_BLIT
 		canvas.dispose();
@@ -302,7 +303,7 @@ class FlxBar extends FlxSprite
 		}
 	}
 	
-	public var killOnEmpty(get_killOnEmpty, set_killOnEmpty):Bool;
+	public var killOnEmpty(get, set):Bool;
 	
 	/**
 	 * If this FlxBar should be killed when its value reaches empty, set to true
@@ -370,7 +371,7 @@ class FlxBar extends FlxSprite
 		#end
 	}
 	
-	public var stats(get_stats, null):Map<String, Dynamic>;
+	public var stats(get, null):Map<String, Dynamic>;
 	
 	private function get_stats():Map<String, Dynamic>
 	{
@@ -944,7 +945,7 @@ class FlxBar extends FlxSprite
 		super.update();
 	}
 	
-	public var percent(get_percent, set_percent):Float;
+	public var percent(get, set):Float;
 	
 	/**
 	 * The percentage of how full the bar is (a value between 0 and 100)
@@ -979,7 +980,7 @@ class FlxBar extends FlxSprite
 		return newPct;
 	}
 	
-	public var currentValue(get_currentValue, set_currentValue):Float;
+	public var currentValue(get, set):Float;
 	
 	/**
 	 * Set the current value of the bar (must be between min and max range)

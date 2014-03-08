@@ -246,7 +246,6 @@ class FlxGamepadManager implements IFlxInput
 		firstActive = null;
 		lastActive = null;
 		_gamepads = null;
-		numActiveGamepads = 0;
 		
 		#if flash
 		_gameInput = null;

@@ -182,9 +182,9 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 	 */
 	override public function destroy():Void
 	{
-		_point.put();
-		acceleration.put();
-		particleDrag.put();
+		_point = FlxG.safePut(_point);
+		acceleration = FlxG.safePut(acceleration);
+		particleDrag = FlxG.safePut(particleDrag);
 		
 		xPosition = null;
 		yPosition = null;
@@ -202,9 +202,6 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 		endGreen = null;
 		endBlue = null;
 		blend = null;
-		acceleration = null;
-		particleDrag = null;
-		_particleClass = null;
 		_point = null;
 		
 		super.destroy();

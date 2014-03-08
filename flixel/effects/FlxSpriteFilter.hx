@@ -104,7 +104,7 @@ class FlxSpriteFilter
 	
 	public function destroy():Void
 	{
-		filters = [];
+		filters = null;
 		sprite = null;
 		backupGraphics = null;
 		backupRegion = null;

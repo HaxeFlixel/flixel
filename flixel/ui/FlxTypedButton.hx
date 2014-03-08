@@ -117,7 +117,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		{
 			for (point in labelOffsets)
 			{
-				point.put();
+				point = FlxG.safePut(point);
 			}
 		}
 		

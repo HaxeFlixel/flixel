@@ -2,13 +2,13 @@ package flixel.util;
 
 import flash.geom.Rectangle;
 import flixel.FlxG;
-import flixel.interfaces.IFlxDestroyable;
+import flixel.interfaces.IFlxPooled;
 import flixel.util.FlxStringUtil;
 
 /**
  * Stores a rectangle.
  */
-class FlxRect implements IFlxDestroyable
+class FlxRect implements IFlxPooled
 {
 	private static var _pool = new FlxPool<FlxRect>(FlxRect);
 	

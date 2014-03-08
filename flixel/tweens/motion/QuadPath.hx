@@ -1,5 +1,6 @@
 ﻿package flixel.tweens.motion;
 
+import flixel.FlxG;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxTween.CompleteCallback;
 import flixel.tweens.FlxEase.EaseFunction;
@@ -72,11 +73,11 @@ class QuadPath extends Motion
 		// recycle FlxPoints
 		for (point in _points)
 		{
-			point.put();
+			point = FlxG.safePut(point);
 		}
-		_a = null;
-		_b = null;
-		_c = null;
+		_a = FlxG.safePut(_a);
+		_b = FlxG.safePut(_b);
+		_c = FlxG.safePut(_c);
 	}
 	
 	/**

@@ -492,20 +492,13 @@ class FlxObject extends FlxBasic
 	{
 		super.destroy();
 		
-		velocity.put();
-		acceleration.put();
-		drag.put();
-		scrollFactor.put();
-		last.put();
-		_point.put();
-		
-		velocity = null;
-		acceleration = null;
-		drag = null;
-		maxVelocity = null;
-		scrollFactor = null;
-		last = null;
-		_point = null;
+		velocity = FlxG.safePut(velocity);
+		acceleration = FlxG.safePut(acceleration);
+		drag = FlxG.safePut(drag);
+		maxVelocity = FlxG.safePut(maxVelocity);
+		scrollFactor = FlxG.safePut(scrollFactor);
+		last = FlxG.safePut(last);
+		_point = FlxG.safePut(_point);
 	}
 	
 	/**

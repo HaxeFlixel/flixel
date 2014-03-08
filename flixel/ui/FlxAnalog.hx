@@ -187,16 +187,15 @@ class FlxAnalog extends FlxSpriteGroup
 	{
 		super.destroy();
 		
+		_zone = FlxG.safePut(_zone);
+		
 		_analogs = null;
 		onUp = null;
 		onDown = null;
 		onOver = null;
 		onPressed = null;
-		acceleration = null;
 		thumb = null;
 		base = null;
-		_zone = null;
-		_point = null;
 		
 		#if !FLX_NO_TOUCH
 		_currentTouch = null;

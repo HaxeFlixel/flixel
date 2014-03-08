@@ -4,6 +4,7 @@ import flash.display.BitmapData;
 import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
+import flixel.FlxG;
 import flixel.system.layer.TileSheetData;
 import flixel.util.FlxAngle;
 import flixel.util.FlxColor;
@@ -132,13 +133,9 @@ class FlxFrame
 		name = null;
 		frame = null;
 		
-		sourceSize.put();
-		offset.put();
-		center.put();
-		
-		sourceSize = null;
-		offset = null;
-		center = null;
+		sourceSize = FlxG.safePut(sourceSize);
+		offset = FlxG.safePut(offset);
+		center = FlxG.safePut(center);
 		
 		_tileSheet = null;
 		
