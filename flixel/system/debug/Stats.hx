@@ -1,5 +1,6 @@
 package flixel.system.debug;
 
+import flash.display.BitmapData;
 import flash.geom.Rectangle;
 import flash.system.System;
 import flash.text.TextField;
@@ -7,8 +8,11 @@ import flixel.FlxG;
 import flixel.system.debug.FlxDebugger;
 import flixel.system.FlxList;
 import flixel.system.FlxQuadTree;
+import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxColor;
 import flixel.util.FlxMath;
+
+@:bitmap("assets/images/debugger/buttons/toggleSize.png") private class GraphicToggleSizeButton extends BitmapData {}
 
 /**
  * A simple performance monitor widget, for use in the debugger overlay.
@@ -31,25 +35,14 @@ class Stats extends Window
 	 * The minimal height of the window.
 	 */
 	private static inline var MIN_HEIGHT:Int = #if !FLX_RENDER_TILE 180 #else 195 #end;
-	/**
-	 * The color of the fps graph.
-	 */
+	
 	private static inline var FPS_COLOR:Int = 0xff96ff00;
-	/**
-	 * The color of the memory graph.
-	 */
 	private static inline var MEMORY_COLOR:Int = 0xff009cff;
-	/**
-	 * The label color.
-	 */
+	private static inline var DRAW_TIME_COLOR:Int = 0xffb70000;
+	private static inline var UPDATE_TIME_COLOR:Int = 0xffdcd400;
+	
 	public static inline var LABEL_COLOR:Int = 0xaaffffff;
-	/**
-	 * The textfield size color.
-	 */
 	public static inline var TEXT_SIZE:Int = 11;
-	/**
-	 * The amount of decimals to display for the stats.
-	 */
 	public static inline var DECIMALS:Int = 1;
 	
 	private var _leftTextField:TextField;
@@ -63,6 +56,8 @@ class Stats extends Window
 	
 	private var fpsGraph:StatsGraph;
 	private var memoryGraph:StatsGraph;
+	private var drawTimeGraph:StatsGraph;
+	private var updateTimeGraph:StatsGraph;
 	
 	private var flashPlayerFramerate:Float = 0;
 	private var visibleCount:Int = 0;
@@ -86,6 +81,8 @@ class Stats extends Window
 	private var _activeObjectMarker:Int = 0;
 	
 	private var _paused:Bool = true;
+	
+	private var _toggleSizeButton:FlxSystemButton;
 	
 	#if FLX_RENDER_TILE
 	private var drawCallsCount:Int = 0;
@@ -114,17 +111,35 @@ class Stats extends Window
 		_drawCalls = [];
 		#end
 		
+		var gutter:Int = 5;
+		var graphX:Int = gutter;
+		var graphY:Int = Std.int(_header.height) + gutter;
 		var graphHeight:Int = 40;
 		var graphWidth:Int = INITIAL_WIDTH - 20;
-		var gutter:Int = 5;
 		
-		fpsGraph = new StatsGraph(gutter, Std.int(_header.height) + 5, graphWidth, graphHeight, FPS_COLOR, "fps");
+		fpsGraph = new StatsGraph(graphX, graphY, graphWidth, graphHeight, FPS_COLOR, "fps");
 		addChild(fpsGraph);	
 		fpsGraph.maxValue = FlxG.drawFramerate;
 		fpsGraph.minValue = 0;
 		
-		memoryGraph = new StatsGraph(gutter, Std.int(_header.height) +  graphHeight + 20, graphWidth, graphHeight, MEMORY_COLOR, "MB");
+		graphY = (Std.int(_header.height) +  graphHeight + 20);
+		
+		memoryGraph = new StatsGraph(graphX, graphY, graphWidth, graphHeight, MEMORY_COLOR, "MB");
 		addChild(memoryGraph);
+		
+		graphY = Std.int(_header.height) + gutter;
+		graphX += (gutter + graphWidth + 20);
+		graphWidth -= 10;
+		
+		updateTimeGraph = new StatsGraph(graphX, graphY, graphWidth, graphHeight, UPDATE_TIME_COLOR, "ms", 35, "Update");
+		updateTimeGraph.visible = false;
+		addChild(updateTimeGraph);
+		
+		graphY = (Std.int(_header.height) +  graphHeight + 20);
+		
+		drawTimeGraph = new StatsGraph(graphX, graphY, graphWidth, graphHeight, DRAW_TIME_COLOR, "ms", 35, "Draw");
+		drawTimeGraph.visible = false;
+		addChild(drawTimeGraph);
 		
 		addChild(_leftTextField = DebuggerUtil.createTextField(gutter, (graphHeight * 2) + 45, LABEL_COLOR, TEXT_SIZE));
 		addChild(_rightTextField = DebuggerUtil.createTextField(gutter + 70, (graphHeight * 2) + 45, FlxColor.WHITE, TEXT_SIZE));
@@ -133,6 +148,12 @@ class Stats extends Window
 		_leftTextField.wordWrap = _rightTextField.wordWrap = true;
 		
 		_leftTextField.text = "Update: \nDraw:" + #if FLX_RENDER_TILE "\nDrawTiles:" + #end "\nQuadTrees: \nLists:";
+		
+		_toggleSizeButton = new FlxSystemButton(new GraphicToggleSizeButton(0, 0), toggleSize);
+		_toggleSizeButton.alpha = Window.HEADER_ALPHA;
+		addChild(_toggleSizeButton);
+		
+		updateSize();
 	}
 	
 	/**
@@ -227,7 +248,6 @@ class Stats extends Window
 		{
 			fpsGraph.update(currentFps(), averageFps());
 			memoryGraph.update(currentMem());
-			
 			updateTexts();
 			
 			_frameCount = 0;
@@ -281,6 +301,9 @@ class Stats extends Window
 	{
 		var updTime = FlxMath.roundDecimal(updateTime / _updateMarker, DECIMALS);
 		var drwTime = FlxMath.roundDecimal(drawTime / _drawMarker, DECIMALS);
+		
+		drawTimeGraph.update(drwTime);
+		updateTimeGraph.update(updTime);
 		
 		_rightTextField.text = 	activeCount + " (" + updTime + "ms)\n"
 								+ visibleCount + " (" + drwTime + "ms)\n" 
@@ -338,7 +361,8 @@ class Stats extends Window
 	 */
 	public function flixelUpdate(Time:Int):Void
 	{
-		if (_paused) return;
+		if (_paused) 
+			return;
 		_update[_updateMarker++] = Time;
 	}
 	
@@ -349,7 +373,8 @@ class Stats extends Window
 	 */
 	public function flixelDraw(Time:Int):Void
 	{
-		if (_paused) return;
+		if (_paused) 
+			return;
 		_draw[_drawMarker++] = Time;
 	}
 	
@@ -360,7 +385,8 @@ class Stats extends Window
 	 */
 	public function activeObjects(Count:Int):Void
 	{
-		if (_paused) return;
+		if (_paused) 
+			return;
 		_activeObject[_activeObjectMarker++] = Count;
 	}
 	
@@ -371,7 +397,8 @@ class Stats extends Window
 	 */
 	public function visibleObjects(Count:Int):Void
 	{
-		if (_paused) return;
+		if (_paused) 
+			return;
 		_visibleObject[_visibleObjectMarker++] = Count;
 	}
 	
@@ -383,7 +410,8 @@ class Stats extends Window
 	 */
 	public function drawCalls(Drawcalls:Int):Void
 	{
-		if (_paused) return;
+		if (_paused) 
+			return;
 		_drawCalls[_drawCallsMarker++] = Drawcalls;
 	}
 	#end
@@ -402,6 +430,37 @@ class Stats extends Window
 	public function onFocusLost():Void
 	{
 		_paused = true;
+	}
+	
+	private function toggleSize():Void
+	{
+		if (_width == INITIAL_WIDTH)
+		{
+			resize(INITIAL_WIDTH * 2, _height);
+			x -= INITIAL_WIDTH;
+			drawTimeGraph.visible = true;
+			updateTimeGraph.visible = true;
+		}
+		else
+		{
+			resize(INITIAL_WIDTH, _height);
+			x += INITIAL_WIDTH;
+			drawTimeGraph.visible = false;
+			updateTimeGraph.visible = false;
+		}
+		
+		updateSize();
+		bound();
+	}
+	
+	override private function updateSize():Void
+	{
+		super.updateSize();
+		if (_toggleSizeButton != null)
+		{
+			_toggleSizeButton.x = _width - _toggleSizeButton.width - 3;
+			_toggleSizeButton.y = 3;
+		}
 	}
 }
 #end
