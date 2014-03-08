@@ -29,7 +29,7 @@ class DrawStackItem
 		position = 0;
 	}
 	
-	public function dispose():Void
+	public inline function dispose():Void
 	{
 		graphics = null;
 		drawData = null;

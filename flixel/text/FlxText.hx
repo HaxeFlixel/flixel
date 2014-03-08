@@ -826,9 +826,7 @@ class FlxText extends FlxSprite
 		//Finally, update the visible pixels
 		if ((framePixels == null) || (framePixels.width != cachedGraphics.bitmap.width) || (framePixels.height != cachedGraphics.bitmap.height))
 		{
-			if (framePixels != null)
-				framePixels.dispose();
-			
+			framePixels = FlxDestroyUtil.dispose(framePixels);
 			framePixels = new BitmapData(cachedGraphics.bitmap.width, cachedGraphics.bitmap.height, true, 0);
 		}
 		

@@ -224,17 +224,14 @@ class FlxSprite extends FlxObject
 		origin = FlxDestroyUtil.put(origin);
 		scale = FlxDestroyUtil.put(scale);
 		
+		framePixels = FlxDestroyUtil.dispose(framePixels);
+		
 		_flashPoint = null;
 		_flashRect = null;
 		_flashRect2 = null;
 		_flashPointZero = null;
 		_matrix = null;
 		colorTransform = null;
-		if (framePixels != null)
-		{
-			framePixels.dispose();
-		}
-		framePixels = null;
 		blend = null;
 		frame = null;
 		

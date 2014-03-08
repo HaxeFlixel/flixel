@@ -366,11 +366,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		_rightButton  = FlxDestroyUtil.destroy(_rightButton);
 		#end
 		
-		if (_cursorBitmapData != null)
-		{
-			_cursorBitmapData.dispose();
-			_cursorBitmapData = null;
-		}
+		_cursorBitmapData = FlxDestroyUtil.dispose(_cursorBitmapData);
 	}
 	
 	/**

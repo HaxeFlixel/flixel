@@ -286,9 +286,5 @@ class TileSheetData implements IFlxDestroyable
 		{
 			flxFrames.get(frameNames[i]).destroyBitmapDatas();
 		}
-		/*for (frame in flxFrames)
-		{
-			frame.destroyBitmapDatas();
-		}*/
 	}
 }

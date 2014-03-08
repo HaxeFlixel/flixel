@@ -5,6 +5,7 @@ import flixel.FlxG;
 import flixel.system.FlxAssets;
 import flixel.system.layer.frames.FlxFrame;
 import flixel.system.layer.TileSheetData;
+import flixel.util.FlxDestroyUtil;
 
 class CachedGraphics
 {
@@ -136,12 +137,7 @@ class CachedGraphics
 	
 	public function destroy():Void
 	{
-		if (bitmap != null)
-		{
-			bitmap.dispose();
-			bitmap = null;
-		}
-		
+		bitmap = FlxDestroyUtil.dispose(bitmap);
 		data = FlxDestroyUtil.destroy(data);
 		_tilesheet = FlxDestroyUtil.destroy(_tilesheet);
 		key = null;

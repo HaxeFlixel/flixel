@@ -502,11 +502,7 @@ class FlxCamera extends FlxBasic
 		screen = FlxDestroyUtil.destroy(screen);
 		buffer = null;
 		_flashBitmap = null;
-		if (_fill != null)
-		{
-			_fill.dispose();
-		}
-		_fill = null;
+		_fill = FlxDestroyUtil.dispose(_fill);
 	#else
 		#if !FLX_NO_DEBUG
 		flashSprite.removeChild(debugLayer);

@@ -1,14 +1,11 @@
 package flixel;
 
-import flash.Lib;
 import flash.display.DisplayObject;
 import flash.display.Stage;
 import flash.display.StageDisplayState;
 import flash.Lib;
 import flash.net.URLRequest;
 import flixel.FlxBasic;
-import flixel.interfaces.IFlxDestroyable;
-import flixel.interfaces.IFlxPooled;
 import flixel.system.FlxAssets;
 import flixel.system.FlxQuadTree;
 import flixel.system.FlxVersion;

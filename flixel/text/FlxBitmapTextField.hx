@@ -10,6 +10,7 @@ import flixel.text.pxText.PxBitmapFont;
 import flixel.text.pxText.PxDefaultFontGenerator;
 import flixel.text.pxText.PxTextAlign;
 import flixel.util.FlxAngle;
+import flixel.util.FlxDestroyUtil;
 
 /**
  * Extends FlxSprite to support rendering text.
@@ -1118,10 +1119,7 @@ class FlxBitmapTextField extends FlxSprite
 		{
 			for (bmd in PxGlyphs)
 			{
-				if (bmd != null)
-				{
-					bmd.dispose();
-				}
+				FlxDestroyUtil.dispose(bmd);
 			}
 			
 			PxGlyphs = null;
