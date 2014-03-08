@@ -1,3 +1,7 @@
+3.2.2
+------------------------------
+* Removed the allow-shaders="false" attribute from the window tag in the include.xml, as causes problems (white screen) with lime 0.9.5 on iOS
+
 3.2.1
 ------------------------------
 * FlxTypedButton:
