@@ -1,6 +1,11 @@
 package flixel.system.debug;
 
 #if !FLX_NO_DEBUG
+import flash.display.DisplayObject;
+import flash.display.Sprite;
+import flash.geom.Matrix;
+import flash.geom.Point;
+import flash.geom.Rectangle;
 import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.FlxG;
@@ -82,7 +87,7 @@ class Tracker extends Watch
 			profiles = [];
 			
 			addProfile(new TrackerProfile(FlxPoint, ["x", "y"]));
-			addProfile(new TrackerProfile(FlxRect, ["x", "y", "width", "height"]));
+			addProfile(new TrackerProfile(FlxRect, ["width", "height"], [FlxPoint]));
 			
 			addProfile(new TrackerProfile(FlxBasic, ["active", "visible", "alive", "exists"]));
 			addProfile(new TrackerProfile(FlxObject, ["velocity", "acceleration", "drag", "angle"],
@@ -124,6 +129,11 @@ class Tracker extends Watch
 			#if (!FLX_NO_MOUSE || !FLX_NO_TOUCH)
 			addProfile(new TrackerProfile(FlxSwipe, ["ID", "startPosition", "endPosition", "distance", "angle", "duration"]));
 			#end
+			
+			addProfile(new TrackerProfile(DisplayObject, ["z", "scaleX", "scaleY", "mouseX", "mouseY", "rotationX", "rotationY", "visible"], [FlxRect]));
+			addProfile(new TrackerProfile(Point, null, [FlxPoint]));
+			addProfile(new TrackerProfile(Rectangle, null, [FlxRect]));
+			addProfile(new TrackerProfile(Matrix, ["a", "b", "c", "d", "tx", "ty"]));
 		}
 	}
 	
