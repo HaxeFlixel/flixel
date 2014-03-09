@@ -2,6 +2,7 @@ package flixel.system.frontEnds;
 
 import flixel.FlxG;
 import flixel.system.debug.LogStyle;
+import flixel.system.FlxAssets;
 import haxe.Log;
 import haxe.PosInfos;
 
@@ -71,13 +72,11 @@ class LogFrontEnd
 		
 		if (FlxG.game.debugger.log.add(Data, Style, FireOnce))
 		{
-			#if !js // TODO: use .ogg (native) and .mp3 (flashs + html5) for the sound assets
 			#if !FLX_NO_SOUND_SYSTEM
 			if (Style.errorSound != null)
 			{
-				FlxG.sound.load(Style.errorSound).play();
+				FlxG.sound.load(FlxAssets.getSound(Style.errorSound).play());
 			}
-			#end
 			#end
 			
 			if (Style.openConsole) 
