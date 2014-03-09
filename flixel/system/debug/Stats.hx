@@ -12,7 +12,8 @@ import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxColor;
 import flixel.util.FlxMath;
 
-@:bitmap("assets/images/debugger/buttons/toggleSize.png") private class GraphicToggleSizeButton extends BitmapData {}
+@:bitmap("assets/images/debugger/buttons/minimize.png") private class GraphicMinimizeButton extends BitmapData {}
+@:bitmap("assets/images/debugger/buttons/maximize.png") private class GraphicMaximizeButton extends BitmapData {}
 
 /**
  * A simple performance monitor widget, for use in the debugger overlay.
@@ -149,7 +150,7 @@ class Stats extends Window
 		
 		_leftTextField.text = "Update: \nDraw:" + #if FLX_RENDER_TILE "\nDrawTiles:" + #end "\nQuadTrees: \nLists:";
 		
-		_toggleSizeButton = new FlxSystemButton(new GraphicToggleSizeButton(0, 0), toggleSize);
+		_toggleSizeButton = new FlxSystemButton(new GraphicMaximizeButton(0, 0), toggleSize);
 		_toggleSizeButton.alpha = Window.HEADER_ALPHA;
 		addChild(_toggleSizeButton);
 		
@@ -440,6 +441,7 @@ class Stats extends Window
 			x -= INITIAL_WIDTH;
 			drawTimeGraph.visible = true;
 			updateTimeGraph.visible = true;
+			_toggleSizeButton.changeIcon(new GraphicMinimizeButton(0, 0));
 		}
 		else
 		{
@@ -447,6 +449,7 @@ class Stats extends Window
 			x += INITIAL_WIDTH;
 			drawTimeGraph.visible = false;
 			updateTimeGraph.visible = false;
+			_toggleSizeButton.changeIcon(new GraphicMaximizeButton(0, 0));
 		}
 		
 		updateSize();
