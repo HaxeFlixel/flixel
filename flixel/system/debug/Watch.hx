@@ -85,8 +85,7 @@ class Watch extends Window
 	}
 
 	/**
-	 * Add a new variable to the watch window.
-	 * Has some simple code in place to prevent
+	 * Add a new variable to the watch window. Has some simple code in place to prevent
 	 * accidentally watching the same variable twice.
 	 * 
 	 * @param 	AnyObject		The Object containing the variable you want to track, e.g. this or Player.velocity.
@@ -125,9 +124,8 @@ class Watch extends Window
 	}
 	
 	/**
-	 * Add or update a quickWatch entry to the watch list in the debugger.
-	 * Extremely useful when called in update() functions when there 
-	 * doesn't exist a variable for a value you want to watch - so you won't have to create one.
+	 * Add or update a quickWatch entry to the watch list in the debugger. Extremely useful when called in update() 
+	 * functions when there doesn't exist a variable for a value you want to watch - so you won't have to create one.
 	 * 
 	 * @param	Name		The name of the quickWatch entry, for example "mousePressed".
 	 * @param	NewValue	The new value for this entry, for example FlxG.mouse.pressed.
@@ -137,7 +135,7 @@ class Watch extends Window
 		// Does this quickWatch exist yet? If not, create one.
 		if (_quickWatchList.get(Name) == null)
 		{
-			var quickWatch:WatchEntry = new WatchEntry(_watching.length * LINE_HEIGHT, _width / 2, _width / 2 - 10, null, null, Name);
+			var quickWatch = new WatchEntry(_watching.length * LINE_HEIGHT, _width / 2, _width / 2 - 10, null, null, Name);
 			_names.addChild(quickWatch.nameDisplay);
 			_values.addChild(quickWatch.valueDisplay);
 			_watching.push(quickWatch);
@@ -160,7 +158,7 @@ class Watch extends Window
 	 * @param 	VariableName	The String name of the variable you want to remove, e.g. "width" or "x".  If left null, this will remove all variables of that object. 
 	 * @param	QuickWatchName	In case you want to remove a quickWatch entry.
 	 */
-	public function remove(AnyObject:Dynamic, VariableName:String = null, QuickWatchName:String = null):Void
+	public function remove(AnyObject:Dynamic, VariableName:String = null, ?QuickWatchName:String):Void
 	{
 		// Remove quickWatch entry
 		if (AnyObject == null && VariableName == null && QuickWatchName != null)
@@ -213,7 +211,6 @@ class Watch extends Window
 	{
 		for (watchEntry in _watching)
 		{
-			watchEntry = _watching.pop();
 			_names.removeChild(watchEntry.nameDisplay);
 			_values.removeChild(watchEntry.valueDisplay);
 			watchEntry.destroy();
@@ -233,9 +230,7 @@ class Watch extends Window
 		for (watchEntry in _watching)
 		{
 			if (!watchEntry.updateValue())
-			{
 				editing = true;
-			}
 		}
 	}
 	
@@ -247,9 +242,7 @@ class Watch extends Window
 		for (watchEntry in _watching)
 		{
 			if (watchEntry.editing)
-			{
 				watchEntry.submit();
-			}
 		}
 		
 		editing = false;

@@ -2,7 +2,6 @@ package flixel.system.debug;
 
 #if !FLX_NO_DEBUG
 import flash.display.DisplayObject;
-import flash.display.Sprite;
 import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
