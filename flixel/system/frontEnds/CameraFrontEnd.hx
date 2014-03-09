@@ -256,12 +256,8 @@ class CameraFrontEnd
 					camera.update();
 				}
 				
-				if (camera.target == null) 
-				{
-					camera.flashSprite.x = camera.x + camera._flashOffset.x;
-					camera.flashSprite.y = camera.y + camera._flashOffset.y;
-				}
-				
+				camera.flashSprite.x = camera.x + camera._flashOffset.x;
+				camera.flashSprite.y = camera.y + camera._flashOffset.y;
 				camera.flashSprite.visible = camera.visible;
 			}
 		}
