@@ -4,6 +4,7 @@ import flash.display.BitmapData;
 import flash.geom.Rectangle;
 import flixel.FlxG;
 import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxPoint;
 import flixel.util.loaders.CachedGraphics;
 import flixel.util.loaders.TexturePackerData;
@@ -379,11 +380,7 @@ class FlxAtlas
 		_tempStorage = null;
 		deleteSubtree(root);
 		root = null;
-		if (atlasBitmapData != null)	
-		{
-			atlasBitmapData.dispose();
-		}
-		atlasBitmapData = null;
+		atlasBitmapData = FlxDestroyUtil.dispose(atlasBitmapData);
 		nodes = null;
 	}
 	

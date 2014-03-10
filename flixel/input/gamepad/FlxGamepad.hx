@@ -1,6 +1,8 @@
 package flixel.input.gamepad;
 
+import flixel.FlxG;
 import flixel.interfaces.IFlxDestroyable;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxPoint;
 
 #if flash
@@ -152,6 +154,9 @@ class FlxGamepad implements IFlxDestroyable
 		axis = null;
 		
 		#if !flash
+		hat = FlxDestroyUtil.put(hat);
+		ball = FlxDestroyUtil.put(ball);
+		
 		hat = null;
 		ball = null;
 		#end

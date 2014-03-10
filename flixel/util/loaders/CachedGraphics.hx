@@ -5,6 +5,7 @@ import flixel.FlxG;
 import flixel.system.FlxAssets;
 import flixel.system.layer.frames.FlxFrame;
 import flixel.system.layer.TileSheetData;
+import flixel.util.FlxDestroyUtil;
 
 class CachedGraphics
 {
@@ -70,7 +71,7 @@ class CachedGraphics
 	 */
 	public function dump():Void
 	{
-		#if !(flash || js)
+		#if (FLX_RENDER_TILE && !flash)
 		if (canBeDumped)
 		{
 			bitmap.dumpBits();
@@ -84,7 +85,7 @@ class CachedGraphics
 	 */
 	public function undump():Void
 	{
-		#if !(flash || js)
+		#if FLX_RENDER_TILE
 		if (isDumped)
 		{
 			var newBitmap:BitmapData = getBitmapFromSystem();
@@ -136,14 +137,9 @@ class CachedGraphics
 	
 	public function destroy():Void
 	{
-		if (bitmap != null)
-		{
-			bitmap.dispose();
-			bitmap = null;
-		}
-		
-		data = FlxG.safeDestroy(data);
-		_tilesheet = FlxG.safeDestroy(_tilesheet);
+		bitmap = FlxDestroyUtil.dispose(bitmap);
+		data = FlxDestroyUtil.destroy(data);
+		_tilesheet = FlxDestroyUtil.destroy(_tilesheet);
 		key = null;
 		assetsKey = null;
 		assetsClass = null;

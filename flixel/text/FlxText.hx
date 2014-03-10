@@ -14,6 +14,7 @@ import flixel.system.FlxAssets;
 import flixel.text.FlxText.FlxTextFormat;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxPoint;
 import flixel.util.loaders.CachedGraphics;
 import openfl.Assets;
@@ -217,7 +218,7 @@ class FlxText extends FlxSprite implements IFlxDestroyable
 			}
 		}
 		_formats = null;
-		shadowOffset = null;
+		shadowOffset = FlxDestroyUtil.put(shadowOffset);
 		super.destroy();
 	}
 	
@@ -815,7 +816,7 @@ class FlxText extends FlxSprite implements IFlxDestroyable
 		
 		dirty = false;
 		
-		#if !(flash || js)
+		#if FLX_RENDER_TILE
 		if (!RunOnCpp)
 		{
 			return;
@@ -825,9 +826,7 @@ class FlxText extends FlxSprite implements IFlxDestroyable
 		//Finally, update the visible pixels
 		if ((framePixels == null) || (framePixels.width != cachedGraphics.bitmap.width) || (framePixels.height != cachedGraphics.bitmap.height))
 		{
-			if (framePixels != null)
-				framePixels.dispose();
-			
+			framePixels = FlxDestroyUtil.dispose(framePixels);
 			framePixels = new BitmapData(cachedGraphics.bitmap.width, cachedGraphics.bitmap.height, true, 0);
 		}
 		

@@ -11,7 +11,7 @@ import flixel.interfaces.IFlxParticle;
  * @author Dirk Bunk
  */
 class FlxTypedEmitterExt<T:(FlxSprite, IFlxParticle)> extends FlxTypedEmitter<T>
-{		
+{
 	/**
 	 * 	Launch Direction.
 	 */

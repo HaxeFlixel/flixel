@@ -1,14 +1,37 @@
 package flixel.tweens.motion;
 
+import flixel.FlxG;
 import flixel.tweens.FlxEase.EaseFunction;
 import flixel.tweens.FlxTween.CompleteCallback;
+import flixel.util.FlxArrayUtil;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxPoint;
+import flixel.util.FlxPool;
 
 /**
  * Determines linear motion along a set of points.
  */
 class LinearPath extends Motion
 {
+	/**
+	 * A pool that contains LinearPaths for recycling.
+	 */
+	@:isVar 
+	@:allow(flixel.tweens.FlxTween)
+	private static var _pool(get, null):FlxPool<LinearPath>;
+	
+	/**
+	 * Only allocate the pool if needed.
+	 */
+	private static function get__pool():FlxPool<LinearPath>
+	{
+		if (_pool == null)
+		{
+			_pool = new FlxPool<LinearPath>(LinearPath);
+		}
+		return _pool;
+	}
+	
 	/**
 	 * The full length of the path.
 	 */
@@ -28,30 +51,36 @@ class LinearPath extends Motion
 	private var _nextPoint:FlxPoint;
 	
 	/**
+	 * This function is called when tween is created, or recycled.
+	 *
 	 * @param	complete	Optional completion callback.
 	 * @param	type		Tween type.
+	 * @param	Eease		Optional easer function.
 	 */
-	public function new(?complete:CompleteCallback, type:Int = 0)
+	override public function init(Complete:CompleteCallback, TweenType:Int)
 	{
-		super(0, complete, type, null);
-		points = new Array<FlxPoint>();
-		_pointD = new Array<Float>();
-		_pointT = new Array<Float>();
-
-		distance = _speed = _index = 0;
+		FlxArrayUtil.setLength(points, 0);
+		FlxArrayUtil.setLength(_pointD, 1);
+		FlxArrayUtil.setLength(_pointT, 1);
 		
 		_pointD[0] = _pointT[0] = 0;
+		
+		distance = _speed = _index = 0;
+		
+		return super.init(Complete, TweenType);
 	}
 	
 	override public function destroy():Void 
 	{
 		super.destroy();
-		points = null;
-		_pointD = null;
-		_pointT = null;
-		_last = null;
-		_prevPoint = null;
-		_nextPoint = null;
+		// recycle FlxPoints
+		for (point in points)
+		{
+			point = FlxDestroyUtil.put(point);
+		}
+		_last = FlxDestroyUtil.put(_last);
+		_prevPoint = FlxDestroyUtil.put(_prevPoint);
+		_nextPoint = FlxDestroyUtil.put(_nextPoint);
 	}
 
 	/**
@@ -165,6 +194,19 @@ class LinearPath extends Motion
 		}
 		
 		super.postUpdate();
+	}
+	
+	override inline public function put():Void
+	{
+		_pool.put(this);
+	}
+	
+	private function new()
+	{
+		super();
+		points = new Array<FlxPoint>();
+		_pointD = new Array<Float>();
+		_pointT = new Array<Float>();
 	}
 
 	/**

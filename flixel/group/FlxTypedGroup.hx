@@ -32,7 +32,8 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	private var _marker:Int = 0;
 	
 	/**
-	 * Array of all the FlxBasics that exist in this group.
+	 * Array of all the FlxBasics that exist in this group for 
+	 * optimization purposes / static typing on cpp targets.
 	 */
 	private var _basics:Array<FlxBasic>;
 	/**
@@ -677,7 +678,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 */
 	public inline function iterator(?filter:T->Bool):FlxTypedGroupIterator<T>
 	{
-		return new FlxTypedGroupIterator<T>(_members, (filter == null) ? function(m) { return true; } : filter);
+		return new FlxTypedGroupIterator<T>(_members, filter);
 	}
 	
 	/**
@@ -687,11 +688,13 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 */
 	public function forEach(Function:T->Void)
 	{
-		for (member in _members)
+		var i:Int = 0;
+		
+		while (i < length)
 		{
-			if (member != null)
+			if (_members[i] != null)
 			{
-				Function(member);
+				Function(_members[i]);
 			}
 		}
 	}

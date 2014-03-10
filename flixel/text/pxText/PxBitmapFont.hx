@@ -665,7 +665,7 @@ class PxBitmapFont
 	}
 	#end
 	
-	public function get_numLetters():Int 
+	private function get_numLetters():Int 
 	{
 		#if FLX_RENDER_BLIT
 		return _glyphs.length;

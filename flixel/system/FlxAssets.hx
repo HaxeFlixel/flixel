@@ -2,23 +2,15 @@ package flixel.system;
 
 import flash.display.BitmapData;
 import flash.display.Graphics;
-import flash.text.Font;
-import openfl.Assets;
-import flixel.FlxG;
-
-#if !FLX_NO_SOUND_SYSTEM
 import flash.media.Sound;
-#end
+import flash.text.Font;
+import flixel.FlxG;
+import openfl.Assets;
 
 /** Fonts **/
 @:font("assets/fonts/nokiafc22.ttf") private class FontDefault extends Font {}
 #if !FLX_NO_DEBUG
 @:font("assets/fonts/arial.ttf") private class FontDebugger extends Font {}
-#end
-
-/** Sounds **/
-#if !FLX_NO_SOUND_SYSTEM
-@:sound("assets/sounds/beep.wav") class BeepSound extends Sound {}
 #end
 
 @:bitmap("assets/images/logo/logo.png") class GraphicLogo extends BitmapData {}
@@ -97,6 +89,17 @@ class FlxAssets
 	public static inline function getBitmapData(id:String):BitmapData
 	{
 		return Assets.getBitmapData(id, false);
+	}
+	
+	public static inline function getSound(id:String):Sound
+	{
+		var extension = "";
+		#if flash
+		extension = ".mp3";
+		#else
+		extension = ".ogg";
+		#end
+		return Assets.getSound(id + extension);
 	}
 	
 	#if !FLX_NO_SOUND_SYSTEM

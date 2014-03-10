@@ -2,29 +2,49 @@
 
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
+import flixel.util.FlxPool;
 
 /**
- * Tweens a numeric value.
+ * Tweens a numeric value. See FlxTween.num()
  */
 class NumTween extends FlxTween
 {
+	/**
+	 * A pool that contains NumTweens for recycling.
+	 */
+	@:isVar 
+	@:allow(flixel.tweens.FlxTween)
+	private static var _pool(get, null):FlxPool<NumTween>;
+	
+	/**
+	 * Only allocate the pool if needed.
+	 */
+	private static function get__pool()
+	{
+		if (_pool == null)
+		{
+			_pool = new FlxPool<NumTween>(NumTween);
+		}
+		return _pool;
+	}
+	
 	/**
 	 * The current value.
 	 */
 	public var value:Float;
 	
 	// Tween information.
+	private var _tweenFunction:Float->Void;
 	private var _start:Float;
 	private var _range:Float;
 	
 	/**
-	 * @param	complete	Optional completion callback.
-	 * @param	type		Tween type.
+	 * Clean up references and pool this object for recycling.
 	 */
-	public function new(complete:CompleteCallback = null, type:Int = 0) 
+	override public function destroy():Void 
 	{
-		value = 0;
-		super(0, type, complete);
+		super.destroy();
+		_tweenFunction = null;
 	}
 	
 	/**
@@ -34,9 +54,11 @@ class NumTween extends FlxTween
 	 * @param	toValue			End value.
 	 * @param	duration		Duration of the tween.
 	 * @param	ease			Optional easer function.
+	 * @param	tweenFunction	Optional tween function. See FlxTween.num()
 	 */
-	public function tween(fromValue:Float, toValue:Float, duration:Float, ease:EaseFunction = null):NumTween
-	{
+	public function tween(fromValue:Float, toValue:Float, duration:Float, ?ease:EaseFunction, ?tweenFunction:Float->Void):NumTween
+	{	
+		_tweenFunction = tweenFunction;
 		_start = value = fromValue;
 		_range = toValue - value;
 		this.duration = duration;
@@ -49,5 +71,13 @@ class NumTween extends FlxTween
 	{
 		super.update();
 		value = _start + _range * scale;
+		
+		if (_tweenFunction != null)
+			_tweenFunction(value);
+	}
+	
+	override inline public function put():Void
+	{
+		_pool.put(this);
 	}
 }

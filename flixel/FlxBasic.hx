@@ -17,6 +17,10 @@ class FlxBasic implements IFlxDestroyable
 	 */
 	public var ID:Int = -1;
 	/**
+	 * Gets ot sets the first camera of this object.
+	 */
+	public var camera(get, set):FlxCamera;
+	/**
 	 * This determines on which FlxCameras this object will be drawn. If it is null / has not been
 	 * set, it uses FlxCamera.defaultCameras, which is a reference to FlxG.cameras.list (all cameras) by default.
 	 */
@@ -136,12 +140,27 @@ class FlxBasic implements IFlxDestroyable
 	/**
 	 * Override this function to draw custom "debug mode" graphics to the
 	 * specified camera while the debugger's visual mode is toggled on.
+	 * 
 	 * @param	Camera	Which camera to draw the debug visuals to.
 	 */
 	public function drawDebugOnCamera(?Camera:FlxCamera):Void {}
 	#end
 	
-	private inline function get_cameras():Array<FlxCamera>
+	private function get_camera():FlxCamera
+	{
+		return (_cameras == null || _cameras.length == 0) ? FlxCamera.defaultCameras[0] : _cameras[0];
+	}
+	
+	private function set_camera(Value:FlxCamera):FlxCamera
+	{
+		if (_cameras == null)
+			_cameras = [Value];
+		else
+			_cameras[0] = Value;
+		return Value;
+	}
+	
+	private function get_cameras():Array<FlxCamera>
 	{
 		return (_cameras == null) ? FlxCamera.defaultCameras : _cameras;
 	}
@@ -151,34 +170,32 @@ class FlxBasic implements IFlxDestroyable
 		return _cameras = Value;
 	}
 	
-	/**
-	 * Property setters, to provide override functionality in sub-classes
-	 */
 	private function set_visible(Value:Bool):Bool
 	{
 		return visible = Value;
 	}
+	
 	private function set_active(Value:Bool):Bool
 	{
 		return active = Value;
 	}
+	
 	private function set_alive(Value:Bool):Bool
 	{
 		return alive = Value;
 	}
+	
 	private function set_exists(Value:Bool):Bool
 	{
 		return exists = Value;
 	}
 	
-	/**
-	 * Convert object to readable string name.  Useful for debugging, save games, etc.
-	 */
 	public function toString():String
 	{
-		return FlxStringUtil.getDebugString([ { label: "active", value: active }, 
-		                                      { label: "visible", value: visible },
-		                                      { label: "alive", value: alive },
-		                                      { label: "exists", value: exists } ]);
+		return FlxStringUtil.getDebugString([
+			LabelValuePair.weak("active", active),
+			LabelValuePair.weak("visible", visible),
+			LabelValuePair.weak("alive", alive),
+			LabelValuePair.weak("exists", exists)]);
 	}
 }

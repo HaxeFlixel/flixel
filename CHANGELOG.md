@@ -7,23 +7,47 @@
  * Use FlxG.debugger.track(Object); to create a new tracker window
  * Use FlxG.debugger.addTrackerProfile() to add a profile for classes don't have one yet or override existing ones
  * Use the "track [object]" command to open a tracker window from the console
-* FlxCamera: added static defaultCameras array which is used by FlxBasics when their cameras array has not been set - previously the use of FlxG.cameras.list / all existing cameras was hardcoded
-* Added pooling functionality to FlxPoint, FlxVector, FlxRect objects (FlxPath and FlxTimer also support pooling, but that is handled transparently). Usage: var point = FlxPoint.get(); /* do stuff with point */ point.put(); // recycle point
+* FlxCamera: 
+ * added static defaultCameras array which is used by FlxBasics when their cameras array has not been set - previously the use of FlxG.cameras.list / all existing cameras was hardcoded
+ * fixed a bug where following a target would prevent you from setting the coordinates of the camera
+* Added pooling functionality to FlxPoint, FlxVector, FlxRect objects (FlxPath and FlxTimer also support pooling, but that is handled transparently). Usage: var point = FlxPoint.get(); /* do stuff with point */ point.put(); // recycle point. Instantiating these objects directly via new() is no longer possible to enforce the use of pooling. FlxPoint.weak() should be used instead of get() when passing points into flixel functions, that way they'll be recycled automatically.
 * Debugger windows:
  * Fixed dragging of overlapping windows
  * Fixed the visibility of windows on native targets (now saving correctly)
+ * Fixed resizing when moving the mouse to the left / above the window
 * FlxPath: fixed a bug with drawDebug()
 * FlxG.fullscreen: fixed offset in flash
 * FlxSound: added loadByteArray()
-* MouseEventManager: improved handling of visible / exists:
- * the mouse-over callback doesn't fire on invisible sprites anymore
- * setting exists or visible to false will now cause a mouse out event
+* MouseEventManager: 
+ * improved handling of visible / exists
+ * now works on FlxObjects
 * FlxPoint: added floor() and ceil()
 * Changed the default html5 backend to openf-bitfive
  * middle and right mouse events are now supported
  * sounds are now supported (.ogg and .mp3)
 * FlxObject: replaced forceComplexRender by pixelPerfectRender which rounds coordinates by default (if true) for drawing (also on cpp targets, making it consistent with flash)
-* FlxText: added shadowOffset
+* FlxText: 
+ * added shadowOffset
+ * fixed the widthInc and heightInc of addFilter() which did not work at all previously
+* FlxSpriteUtil: added bound()
+* Added FlxTypedSpriteGroup, which can be used in the same way as FlxTypedGroup, but its type parameter is T:FlxSprite
+* Abstracted rendering into FLX_RENDER_TILE and FLX_RENDER_BLIT conditionals as opposed to being hardcoded based on the target
+* FlxTween:
+ * num(): added an optional tweenFunction parameter which can be used for increased performance (as MultiVarTween and SingleVarTween are fairly slow, using Reflection)
+ * tweens are now being pooled
+ * added sfx()
+ * singleVar() and multiVar() have been replaced by tween()
+* FlxKeyboard:
+ * Implemented a workaround for function and numpad keys not working on native targets
+ * Added FlxKey.NUMPADMULTIPLY / "NUMPADMULTIPLY" 
+* Added FlxCallbackPoint, a FlxPoint that calls a function when x, y or both are changed.
+* FlxTilemap: replaced scaleX and scaleY by a scale FlxPoint
+* Added FlxDestroyUtil (FlxG.safeDestroy() -> FlxDestroyUtil.destroy())
+* Debugger stats window: added a button to expand the window and show two more graphs (draw and update time)
+
+3.2.2
+------------------------------
+* Removed the allow-shaders="false" attribute from the window tag in the include.xml, as causes problems (white screen) with lime 0.9.5 on iOS
 
 3.2.1
 ------------------------------

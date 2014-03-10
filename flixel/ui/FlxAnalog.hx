@@ -8,6 +8,7 @@ import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;
 import flixel.input.touch.FlxTouch;
 import flixel.util.FlxAngle;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRect;
 
@@ -187,16 +188,15 @@ class FlxAnalog extends FlxSpriteGroup
 	{
 		super.destroy();
 		
+		_zone = FlxDestroyUtil.put(_zone);
+		
 		_analogs = null;
 		onUp = null;
 		onDown = null;
 		onOver = null;
 		onPressed = null;
-		acceleration = null;
 		thumb = null;
 		base = null;
-		_zone = null;
-		_point = null;
 		
 		#if !FLX_NO_TOUCH
 		_currentTouch = null;
@@ -437,7 +437,7 @@ class FlxAnalog extends FlxSpriteGroup
 		return false;
 	}
 	
-	override public function set_x(X:Float):Float
+	override private function set_x(X:Float):Float
 	{
 		super.set_x(X);
 		createZone();
@@ -445,7 +445,7 @@ class FlxAnalog extends FlxSpriteGroup
 		return X;
 	}
 	
-	override public function set_y(Y:Float):Float
+	override private function set_y(Y:Float):Float
 	{
 		super.set_y(Y);
 		createZone();

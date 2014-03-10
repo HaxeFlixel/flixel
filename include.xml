@@ -2,9 +2,8 @@
 <project>
 	<icon path="assets/images/logo/HaxeFlixel.svg" />
 	
-	<!-- Disable shaders by default, HaxeFlixel doesn't support them -->
-	<!-- This can significantly improve performance on some devices, especially iOS -->
-	<window allow-shaders="false" />
+	<assets path="assets/sounds" include="*.mp3" if="web" />
+	<assets path="assets/sounds" include="*.ogg" unless="flash" />
 	
 	<haxelib name="openfl" />
 	<haxelib name="openfl-bitfive" if="html5" />

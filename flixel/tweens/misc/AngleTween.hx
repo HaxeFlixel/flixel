@@ -4,13 +4,33 @@ import flixel.FlxSprite;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
 import flixel.util.FlxRandom;
+import flixel.util.FlxPool;
 
 /**
  * Tweens from one angle to another.
  */
 class AngleTween extends FlxTween
 {
-	public var angle:Float = 0;
+	/**
+	 * A pool that contains AngleTweens for recycling.
+	 */
+	@:isVar 
+	@:allow(flixel.tweens.FlxTween)
+	private static var _pool(get, null):FlxPool<AngleTween>;
+	
+	/**
+	 * Only allocate the pool if needed.
+	 */
+	private static function get__pool()
+	{
+		if (_pool == null)
+		{
+			_pool = new FlxPool<AngleTween>(AngleTween);
+		}
+		return _pool;
+	}
+	
+	public var angle:Float;
 	
 	/**
 	 * Optional sprite object whose angle to tween
@@ -21,12 +41,12 @@ class AngleTween extends FlxTween
 	private var _range:Float;
 	
 	/**
-	 * @param	Complete	Optional completion callback.
-	 * @param	type		Tween type.
+	 * Clean up references and pool this object for recycling.
 	 */
-	public function new(?Complete:CompleteCallback, type:Int = 0) 
+	override public function destroy()
 	{
-		super(0, type, Complete, null);
+		super.destroy();
+		sprite = null;
 	}
 	
 	/**
@@ -76,5 +96,10 @@ class AngleTween extends FlxTween
 		{
 			sprite.angle = angle;
 		}
+	}
+	
+	override inline public function put():Void
+	{
+		_pool.put(this);
 	}
 }

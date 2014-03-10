@@ -13,6 +13,7 @@ import flixel.FlxG;
 import flixel.system.FlxAssets;
 import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxMath;
 
 @:bitmap("assets/images/debugger/windowHandle.png") private class GraphicWindowHandle extends BitmapData {}
@@ -192,7 +193,7 @@ class Window extends Sprite
 		}
 		_handle = null;
 		_drag = null;
-		_closeButton = FlxG.safeDestroy(_closeButton);
+		_closeButton = FlxDestroyUtil.destroy(_closeButton);
 		
 		var stage = FlxG.stage;
 		if (stage.hasEventListener(MouseEvent.MOUSE_MOVE))
@@ -311,6 +312,10 @@ class Window extends Sprite
 	 */
 	private function onMouseMove(?E:MouseEvent):Void
 	{
+		// mouseX / Y can be negative, which messes with the resizing if draggin in the opposite direction
+		var mouseX:Float = (this.mouseX < 0) ? 0 : this.mouseX;
+		var mouseY:Float = (this.mouseY < 0) ? 0 : this.mouseY;
+		
 		if (!parent.visible)
 		{
 			_overHandle = _overHeader = false;

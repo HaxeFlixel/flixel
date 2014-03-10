@@ -10,6 +10,7 @@ import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.Lib;
 import flash.ui.Mouse;
+import flixel.util.FlxDestroyUtil;
 #if (flash && !FLX_NO_NATIVE_CURSOR)
 import flash.ui.MouseCursor;
 import flash.ui.MouseCursorData;
@@ -35,20 +36,20 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	 * Current "delta" value of mouse wheel. If the wheel was just scrolled up, 
 	 * it will have a positive value and vice versa. Otherwise the value will be 0.
 	 */
-	public var wheel:Int = 0;
+	public var wheel(default, null):Int = 0;
 	/**
 	 * Current X position of the mouse pointer on the screen.
 	 */
-	public var screenX:Int = 0;
+	public var screenX(default, null):Int = 0;
 	/**
 	 * Current Y position of the mouse pointer on the screen.
 	 */
-	public var screenY:Int = 0;
+	public var screenY(default, null):Int = 0;
 	/**
 	 * A display container for the mouse cursor. It is a child of FlxGame and 
 	 * sits at the right "height". Not used on flash with the native cursor API.
 	 */
-	public var cursorContainer:Sprite;
+	public var cursorContainer(default, null):Sprite;
 	/**
 	 * Used to toggle the visiblity of the mouse cursor - works on both 
 	 * the flixel and the system cursor, depending on which one is active.
@@ -349,26 +350,23 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	 */
 	@:noCompletion override public function destroy():Void
 	{
+		_point = FlxDestroyUtil.put(_point);
+		_globalScreenPosition = FlxDestroyUtil.put(_globalScreenPosition);
+		
 		cursorContainer = null;
 		_cursor = null;
-		_point = null;
-		_globalScreenPosition = null;
 		
 		#if (flash && !FLX_NO_NATIVE_CURSOR)
 		_matrix = null;
 		#end
 		
-		_leftButton   = FlxG.safeDestroy(_leftButton);
+		_leftButton   = FlxDestroyUtil.destroy(_leftButton);
 		#if !FLX_NO_MOUSE_ADVANCED
-		_middleButton = FlxG.safeDestroy(_middleButton);
-		_rightButton  = FlxG.safeDestroy(_rightButton);
+		_middleButton = FlxDestroyUtil.destroy(_middleButton);
+		_rightButton  = FlxDestroyUtil.destroy(_rightButton);
 		#end
 		
-		if (_cursorBitmapData != null)
-		{
-			_cursorBitmapData.dispose();
-			_cursorBitmapData = null;
-		}
+		_cursorBitmapData = FlxDestroyUtil.dispose(_cursorBitmapData);
 	}
 	
 	/**

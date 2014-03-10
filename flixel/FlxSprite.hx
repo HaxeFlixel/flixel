@@ -17,6 +17,7 @@ import flixel.system.layer.Region;
 import flixel.util.FlxAngle;
 import flixel.util.FlxColor;
 import flixel.util.FlxColorUtil;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxPoint;
 import flixel.util.loaders.CachedGraphics;
 import flixel.util.loaders.TexturePackerData;
@@ -217,22 +218,20 @@ class FlxSprite extends FlxObject
 	{
 		super.destroy();
 		
-		animation = FlxG.safeDestroy(animation);
+		animation = FlxDestroyUtil.destroy(animation);
+		
+		offset = FlxDestroyUtil.put(offset);
+		origin = FlxDestroyUtil.put(origin);
+		scale = FlxDestroyUtil.put(scale);
+		
+		framePixels = FlxDestroyUtil.dispose(framePixels);
 		
 		_flashPoint = null;
 		_flashRect = null;
 		_flashRect2 = null;
 		_flashPointZero = null;
-		offset = null;
-		origin = null;
-		scale = null;
 		_matrix = null;
 		colorTransform = null;
-		if (framePixels != null)
-		{
-			framePixels.dispose();
-		}
-		framePixels = null;
 		blend = null;
 		frame = null;
 		
@@ -1099,6 +1098,7 @@ class FlxSprite extends FlxObject
 	/**
 	 * Checks to see if a point in 2D world space overlaps this FlxSprite object's current displayed pixels.
 	 * This check is ALWAYS made in screen space, and always takes scroll factors into account.
+	 * 
 	 * @param	Point		The point in world space you want to check.
 	 * @param	Mask		Used in the pixel hit test to determine what counts as solid.
 	 * @param	Camera		Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
@@ -1115,7 +1115,9 @@ class FlxSprite extends FlxObject
 		_point.y = _point.y - offset.y;
 		_flashPoint.x = (point.x - Camera.scroll.x) - _point.x;
 		_flashPoint.y = (point.y - Camera.scroll.y) - _point.y;
-
+		
+		point.putWeak();
+		
 		// 1. Check to see if the point is outside of framePixels rectangle
 		if (_flashPoint.x < 0 || _flashPoint.x > frameWidth || _flashPoint.y < 0 || _flashPoint.y > frameHeight)
 		{
@@ -1142,7 +1144,7 @@ class FlxSprite extends FlxObject
 			loadGraphic(GraphicDefault);
 		}
 		
-		#if !(flash || js)
+		#if FLX_RENDER_TILE
 		if (!RunOnCpp)
 		{
 			return;
@@ -1181,7 +1183,7 @@ class FlxSprite extends FlxObject
 			return;
 		}
 		
-		if (cachedGraphics.data != null && (region.tileWidth == 0 && region.tileHeight == 0))
+		if ((cachedGraphics.data != null) && (region.tileWidth == 0 && region.tileHeight == 0))
 		{
 			framesData = cachedGraphics.tilesheet.getTexturePackerFrames(cachedGraphics.data);
 		}
@@ -1459,10 +1461,12 @@ class FlxSprite extends FlxObject
 			{
 				case BlendMode.ADD:
 					_blendInt = Tilesheet.TILE_BLEND_ADD;
+				#if !flash
 				case BlendMode.MULTIPLY:
 					_blendInt = Tilesheet.TILE_BLEND_MULTIPLY;
 				case BlendMode.SCREEN:
 					_blendInt = Tilesheet.TILE_BLEND_SCREEN;
+				#end
 				default:
 					_blendInt = Tilesheet.TILE_BLEND_NORMAL;
 			}

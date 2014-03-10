@@ -46,6 +46,7 @@ class FlxBaseAnimation implements IFlxDestroyable
 	public function destroy():Void
 	{
 		parent = null;
+		name = null;
 	}
 	
 	public function update():Void {}

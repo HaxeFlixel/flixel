@@ -13,11 +13,6 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 
-#if (!FLX_NO_SOUND_SYSTEM && FLX_NO_DEBUG)
-import flash.media.Sound;
-@:sound("assets/sounds/flixel.wav") class FlixelSound extends Sound {}
-#end
-
 class FlxSplash extends FlxState
 {
 	private var _nextState:Class<FlxState>;
@@ -110,10 +105,8 @@ class FlxSplash extends FlxState
 		
 		onResize(stageWidth, stageHeight);
 		
-		#if !bitfive // missing support for @:sound and .wav sounds
 		#if (!FLX_NO_SOUND_SYSTEM && FLX_NO_DEBUG)
-		FlxG.sound.load(FlixelSound).play();
-		#end
+		FlxG.sound.load(FlxAssets.getSound("assets/sounds/flixel")).play();
 		#end
 	}
 	
@@ -127,8 +120,8 @@ class FlxSplash extends FlxState
 		if (_curPart == 5)
 		{
 			// Make the logo a tad bit longer, so our users fully appreciate our hard work :D
-			FlxTween.multiVar(_sprite, { alpha: 0 }, 3.0, { ease: FlxEase.quadOut, complete: onComplete } );
-			FlxTween.multiVar(_text, { alpha: 0 }, 3.0, { ease: FlxEase.quadOut } );
+			FlxTween.tween(_sprite, { alpha: 0 }, 3.0, { ease: FlxEase.quadOut, complete: onComplete } );
+			FlxTween.tween(_text, { alpha: 0 }, 3.0, { ease: FlxEase.quadOut } );
 		}
 	}
 	

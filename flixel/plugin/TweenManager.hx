@@ -94,7 +94,8 @@ class TweenManager extends FlxPlugin
 		
 		if (Destroy) 
 		{
-			Tween.destroy();
+			// calls destroy
+			Tween.put();
 		}
 		
 		Tween.active = false;
