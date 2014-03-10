@@ -1,31 +1,31 @@
-package ;
+package;
+
 import flixel.FlxSprite;
+import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
 import flixel.util.FlxVector;
 
-/**
- * ...
- * @author 
- */
 class Seeker extends FlxSprite
 {
-
 	public var moving:Bool = false;
 	
 	private var dest:FlxPoint;
 	private var vec:FlxVector;
 	
-	public function new(X:Float,Y:Float,?SimpleGraphic:Dynamic)
+	public function new(X:Float, Y:Float)
 	{
-		super(X, Y, SimpleGraphic);
-		dest = new FlxPoint();
-		vec = new FlxVector();
+		super(X, Y, "assets/images/seeker.png");
+		dest = FlxPoint.get();
+		vec = FlxVector.get();
+		setSize(12, 12);
+		offset.set(2, 2);
+		setPosition(2, 2);
 	}
 	
-	public function moveTo(X:Float, Y:Float, Speed:Float):Void {
+	public function moveTo(X:Float, Y:Float, Speed:Float):Void 
+	{
 		moving = true;
-		dest.x = X;
-		dest.y = Y;
+		dest.set(X, Y);
 		
 		vec.x = dest.x - x;
 		vec.y = dest.y - y;
@@ -36,29 +36,30 @@ class Seeker extends FlxSprite
 		velocity.y = (vec.y) * Speed;
 	}
 	
-	private function finishMoveTo():Void {
-		x = dest.x;
-		y = dest.y;
-		velocity.x = 0;
-		velocity.y = 0;
+	private function finishMoveTo():Void 
+	{
+		setPosition(dest.x, dest.y);
+		velocity.set();
 		moving = false;
 	}
 	
-	public override function update():Void {
+	public override function update():Void 
+	{
 		var oldx:Float = vec.x;
 		var oldy:Float = vec.y;
 		super.update();
-		vec.x = dest.x-x;
-		vec.y = dest.y-y;
-		if (signOf(oldx) != signOf(vec.x) || signOf(oldy) != signOf(vec.y)) {
+		vec.x = dest.x - x;
+		vec.y = dest.y - y;
+		
+		if (signOf(oldx) != signOf(vec.x) || signOf(oldy) != signOf(vec.y))
 			finishMoveTo();
-		}
 	}
 	
-	private function signOf(f:Float):Int {
-		if (f < 0) { 
+	private function signOf(f:Float):Int 
+	{
+		if (f < 0)
 			return -1;
-		}
-		return 1;
+		else
+			return 1;
 	}
 }
