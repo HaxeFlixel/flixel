@@ -5,6 +5,7 @@ import flixel.effects.particles.FlxEmitter;
 import flixel.effects.particles.FlxParticle;
 import flixel.FlxG;
 import flixel.FlxState;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxTimer;
 
 class ParticleState extends FlxState
@@ -53,7 +54,7 @@ class ParticleState extends FlxState
 	 */
 	override public function destroy():Void
 	{
-		FlxG.safeDestroy(_emitter);
+		_emitter = FlxDestroyUtil.destroy(_emitter);
 		super.destroy();
 	}
 
