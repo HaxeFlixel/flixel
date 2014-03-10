@@ -23,7 +23,7 @@ import openfl.Assets;
  * Extends FlxSprite to support rendering text. Can tint, fade, rotate and scale just like a sprite. Doesn't really animate 
  * though, as far as I know. Also does nice pixel-perfect centering on pixel fonts as long as they are only one liners.
  */
-class FlxText extends FlxSprite implements IFlxDestroyable
+class FlxText extends FlxSprite
 {
 	public static inline var BORDER_NONE:Int = 0;
 	/**
