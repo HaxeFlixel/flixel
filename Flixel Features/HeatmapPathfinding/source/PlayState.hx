@@ -5,6 +5,7 @@ import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxGroup;
+import flixel.group.FlxTypedGroup.FlxTypedGroup;
 import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
 import flixel.ui.FlxButton;
@@ -19,15 +20,16 @@ import flixel.util.FlxVector;
  */
 class PlayState extends FlxState
 {
+	public static inline var SPEED:Int = 64;
+	
 	public var tilemap:FlxTilemap;
 	public var distmap:FlxTilemap;
-	public var distances:Array<Int> = null;
+	public var distances:Array<Int>;
 	public var mcguffin:FlxPoint;
 	public var mcguffinSprite:FlxSprite;
 	
-	public var SPEED:Int = 64;
-	public var group_seekers:FlxGroup;
-	private var vec:FlxVector = new FlxVector();
+	public var seekers:FlxTypedGroup<Seeker>;
+	private var vec:FlxVector = FlxVector.get();
 	
 	/**
 	 * Function that is called up when to state is created to set it up. 
@@ -37,15 +39,8 @@ class PlayState extends FlxState
 		bgColor = FlxColor.WHITE;
 		super.create();
 		makeTiles();
-	}
-	
-	/**
-	 * Function that is called when this state is destroyed - you might want to 
-	 * consider setting all objects this state uses to null to help garbage collection.
-	 */
-	override public function destroy():Void
-	{
-		super.destroy();
+		
+		openSubState(new InstructionState());
 	}
 
 	/**
@@ -55,28 +50,31 @@ class PlayState extends FlxState
 	{
 		super.update();
 		
-		if (FlxG.keys.justPressed.DELETE) {
-			var seeker = group_seekers.getFirstAlive();
+		if (FlxG.keys.justPressed.DELETE)
+		{
+			var seeker = seekers.getFirstAlive();
 			seeker.kill();
-		}else if (FlxG.keys.justPressed.SPACE) {
+		}
+		else if (FlxG.keys.justPressed.SPACE)
 			placeSeeker();
-		}
 		
-		if (FlxG.mouse.pressed) {
+		if (FlxG.mouse.pressed)
 			clickTile(1);
-		}else if (FlxG.mouse.pressedRight) {
+		else if (FlxG.mouse.pressedRight)
 			clickTile(0);
-		}else if (FlxG.mouse.pressedMiddle) {
-			placeMcguffin(FlxG.mouse.x,FlxG.mouse.y);
-		}
+		else if (FlxG.mouse.pressedMiddle)
+			placeMcguffin(FlxG.mouse.x, FlxG.mouse.y);
+		
 		updateSeekers();
 	}
 	
-	private function updateSeekers():Void {
-		FlxG.collide(tilemap, group_seekers);
+	private function updateSeekers():Void 
+	{
+		FlxG.collide(tilemap, seekers);
 		
 		var seeker:Seeker;
-		for (basic in group_seekers.members) {
+		for (basic in seekers.members) 
+		{
 			seeker = cast basic;
 			if (!seeker.moving)
 			{
@@ -87,18 +85,24 @@ class PlayState extends FlxState
 				var bestY:Int = 0;
 				var bestDist:Float = Math.POSITIVE_INFINITY;
 				var neighbors:Array<Array<Float>> = [[999, 999, 999], [999, 999, 999], [999, 999, 999]];
-				for (yy in -1...1 + 1) {
-					for (xx in -1...1 + 1) {
+				for (yy in -1...2) 
+				{
+					for (xx in -1...2) 
+					{
 						var theX:Int = tx + xx;
 						var theY:Int = ty + yy;
 						
-						if (theX >= 0 && theY < distmap.widthInTiles) {
-							if (theY >= 0 && theY < distmap.heightInTiles) {
-								if(xx == 0 || yy == 0){
+						if (theX >= 0 && theY < distmap.widthInTiles) 
+						{
+							if (theY >= 0 && theY < distmap.heightInTiles) 
+							{
+								if (xx == 0 || yy == 0)
+								{
 									var distance:Float = distances[theY * distmap.widthInTiles + theX];
-									neighbors[yy+1][xx+1] = distance;
-									if (distance > 0) {
-										if(distance < bestDist || (bestX == 0 && bestY == 0))
+									neighbors[yy + 1][xx + 1] = distance;
+									if (distance > 0)
+									{
+										if (distance < bestDist || (bestX == 0 && bestY == 0))
 										{
 											bestDist = distance;
 											bestX = xx;
@@ -119,33 +123,17 @@ class PlayState extends FlxState
 		}
 	}
 	
-	private function placeSeeker():Void {
-		var tx:Int = Std.int(FlxG.mouse.x / 16);
-		var ty:Int = Std.int(FlxG.mouse.y / 16);
+	private function placeSeeker():Void 
+	{
+		var x:Float = FlxG.mouse.x - (FlxG.mouse.x % 16);
+		var y:Float = FlxG.mouse.y - (FlxG.mouse.y % 16);
 		
-		var seeker:Seeker = cast group_seekers.getFirstDead();
-		if(seeker == null){
-			seeker = new Seeker(tx * 16, ty * 16, "assets/images/seeker.png");
-			seeker.offset.x = 2;
-			seeker.offset.y = 2;
-			seeker.x += 2;
-			seeker.y += 2;
-			seeker.width = 12;
-			seeker.height = 12;
-			seeker.solid = true;
-		}else {
-			seeker.reset(tx * 16, ty * 16);
-			seeker.offset.x = 2;
-			seeker.offset.y = 2;
-			seeker.x += 2;
-			seeker.y += 2;
-			seeker.width = 12;
-			seeker.height = 12;
-		}
-		group_seekers.add(seeker);
+		var seeker = seekers.recycle(Seeker);
+		seeker.reset(x, y);
 	}
 	
-	private function placeMcguffin(X:Float,Y:Float):Void {
+	private function placeMcguffin(X:Float, Y:Float):Void 
+	{
 		mcguffin.x = Std.int(X / 16);
 		mcguffin.y = Std.int(Y / 16);
 		
@@ -155,34 +143,41 @@ class PlayState extends FlxState
 		updateDistance();
 	}
 	
-	private function updateDistance():Void {
+	private function updateDistance():Void 
+	{
 		var startX:Int = Std.int((mcguffin.y * tilemap.widthInTiles) + mcguffin.x);
 		var endX:Int = 0;
-		if (startX == endX) {
+		if (startX == endX)
 			endX = 1;
-		}
+			
+		var tempDistances = tilemap.computePathDistance(startX, endX, true, false);
 		
-		distances = tilemap.computePathDistance(startX, endX, true, false);
+		if (tempDistances == null)
+			return;
+		else
+			distances = tempDistances; // safe to assign
 		
 		var maxDistance:Int = 1;
-		for (dist in distances) {
-			if (dist > maxDistance) {
+		for (dist in distances) 
+		{
+			if (dist > maxDistance)
 				maxDistance = dist;
-			}
 		}
 		
-		for (i in 0...distances.length) {
+		for (i in 0...distances.length) 
+		{
 			var disti:Int = 0;
-			if (distances[i] < 0) {
+			if (distances[i] < 0) 
 				disti = 1000;
-			}else{
-				disti = Std.int(999*(distances[i] / maxDistance));
-			}
+			else
+				disti = Std.int(999 * (distances[i] / maxDistance));
+				
 			distmap.setTileByIndex(i, disti, true);
 		}
 	}
 	
-	private function clickTile(value:Int):Void {
+	private function clickTile(value:Int):Void 
+	{
 		var tx:Int = Std.int(FlxG.mouse.x / 16);
 		var ty:Int = Std.int(FlxG.mouse.y / 16);
 		tilemap.setTile(tx, ty, value, true);
@@ -193,13 +188,12 @@ class PlayState extends FlxState
 		updateDistance();
 	}
 	
-	private function makeTiles():Void {
+	private function makeTiles():Void 
+	{
 		tilemap = new FlxTilemap();
 		distmap = new FlxTilemap();
-		tilemap.scaleX = 16;
-		tilemap.scaleY = 16;
-		distmap.scaleX = 16;
-		distmap.scaleY = 16;
+		tilemap.scale.set(16, 16);
+		distmap.scale.set(16, 16);
 		
 		var tw:Int = Std.int(FlxG.width / 16);
 		var th:Int = Std.int(FlxG.height / 16);
@@ -223,16 +217,14 @@ class PlayState extends FlxState
 		tilemap.loadMap(arr, "assets/images/tileset.png", 1, 1);
 		distmap.loadMap(arr2, "assets/images/heat.png", 1, 1);
 		add(distmap);
-		//add(tilemap);
 		
 		tilemap.setTileProperties(0, FlxObject.NONE);
 		tilemap.setTileProperties(1, FlxObject.ANY);
-		tilemap.solid = true;
 		
-		group_seekers = new FlxGroup();
-		add(group_seekers);
+		seekers = new FlxTypedGroup<Seeker>();
+		add(seekers);
 		
-		mcguffin = new FlxPoint(0, 0);
+		mcguffin = FlxPoint.get();
 		mcguffinSprite = new FlxSprite(0, 0, "assets/images/mcguffin.png");
 		add(mcguffinSprite);
 		
