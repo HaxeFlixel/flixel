@@ -51,7 +51,7 @@ class Seeker extends FlxSprite
 		vec.x = dest.x - x;
 		vec.y = dest.y - y;
 		
-		if (signOf(oldx) != signOf(vec.x) || signOf(oldy) != signOf(vec.y))
+		if (!FlxMath.sameSign(oldx, vec.x) || !FlxMath.sameSign(oldy, vec.y))
 			finishMoveTo();
 	}
 	
