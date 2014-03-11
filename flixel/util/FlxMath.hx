@@ -488,4 +488,20 @@ class FlxMath
 	{
 		return (Math.abs(aValueA - aValueB) <= aDiff);
 	}
+	
+	/**
+	 * Returns -1 if the number is smaller than 0 and 1 otherwise
+	 */
+	public static inline function signOf(f:Float):Int
+	{
+		return (f < 0) ? -1 : 1;
+	}
+	
+	/**
+	 * Checks if two numbers have the same sign (using signOf()).
+	 */
+	public static inline function sameSign(f1:Float, f2:Float):Bool
+	{
+		return signOf(f1) == signOf(f2);
+	}
 }
