@@ -855,6 +855,9 @@ class FlxText extends FlxSprite
 	 */
 	#if (flash || js)
 	private function convertTextAlignmentFromString(StrAlign:String):TextFormatAlign
+	#else
+	private function convertTextAlignmentFromString(StrAlign:String):String
+	#end
 	{
 		if (StrAlign == "right")
 		{
@@ -873,12 +876,6 @@ class FlxText extends FlxSprite
 			return TextFormatAlign.LEFT;
 		}
 	}
-	#else
-	private function convertTextAlignmentFromString(StrAlign:String):String
-	{
-		return StrAlign;
-	}
-	#end
 	
 	private inline function updateFormat(Format:TextFormat):Void
 	{
