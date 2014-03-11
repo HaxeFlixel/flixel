@@ -60,7 +60,7 @@ class FlxBuildMacros
 						break;
 				}
 				
-				fileReferences.push(new FileReference(name));
+				fileReferences.push(new FileReference(directory + name));
 			}
 			else if (subDirectories)
 			{
@@ -83,8 +83,10 @@ private class FileReference
         
         // replace some forbidden names to underscores, since variables cannot have these symbols.
         this.name = value.split("-").join("_").split(".").join("__");
+		var split:Array<String> = name.split("/");
+		this.name = split[split.length - 1];
         
         // auto generate documentation
-        this.documentation = "Reference to file on disk \"" + value + "\". (auto generated)";
+        this.documentation = "\"" + value + "\" (auto generated).";
     }
 }
