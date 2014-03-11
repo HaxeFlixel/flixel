@@ -217,17 +217,18 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	
 	/**
 	 * Recycling is designed to help you reuse game objects without always re-allocating or "newing" them.
-	 * If you specified a maximum size for this group (like in FlxEmitter ),
-	 * then recycle will employ what we're calling "rotating" recycling.
-	 * recycle() will first check to see if the group is at capacity yet.
-	 * If group is not yet at capacity, recycle() returns a new object.
-	 * If the group IS at capacity, then recycle() just returns the next object in line.
-	 * If you did NOT specify a maximum size for this group,
-	 * then recycle() will employ what we're calling "grow-style" recycling.
-	 * recycle() will return either the first object with exists == false(),
-	 * or, finding none, add a new object to the array, doubling the size of the array if necessary.
-	 * WARNING: If this function needs to create a new object, and no object class was provided, it will return null
-	 * instead of a valid object!
+	 * It behaves differently depending on whether maxSize equals 0 or is bigger than 0.
+	 * 
+	 * maxSize == 0 / "rotating-recycling" (used by FlxEmitter):
+	 *   - at capacity:  returns the next object in line, no matter its properties like alive, exists etc.
+	 *   - otherwise:    returns a new object.
+	 * 
+	 * maxSize > 0 / "grow-style-recycling"
+	 *   - at capacity:  tries to find the first object with exists == false, or if none found:
+	 *   - otherwise:    adds a new object to the members array, doubling its size if necessary
+	 *
+	 * WARNING: If this function needs to create a new object, and no object class was provided, 
+	 * it will return null instead of a valid object!
 	 * 
 	 * @param	ObjectClass		The class type you want to recycle (e.g. FlxSprite, EvilRobot, etc). Do NOT "new" the class in the parameter!
 	 * @param 	ContructorArgs  An array of arguments passed into a newly object if there aren't any dead members to recycle. 
