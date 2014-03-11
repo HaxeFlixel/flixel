@@ -123,7 +123,7 @@ class FlxColor
     /**
      * Magenta is a color between blue and red. 0xffff00ff
      */
-    static public inline var MAGENTA:Int = 0xffff00ff;
+    public static inline var MAGENTA:Int = 0xffff00ff;
 	
     /** 
      * Aquamarine is a color that is a bluish tint of cerulean toned toward cyan. 0xff7fffd4

@@ -1882,7 +1882,7 @@ class FlxTilemap extends FlxObject
 	 * @param	StopOnEnd		Whether to stop at the end or not (default true)
 	 * @return	A Flash Array of FlxPoint nodes.  If the end tile could not be found, then a null Array is returned instead.
 	 */
-	public function computePathDistance(StartIndex:Int, EndIndex:Int, WideDiagonal:Bool, StopOnEnd:Bool=true):Array<Int>
+	public function computePathDistance(StartIndex:Int, EndIndex:Int, WideDiagonal:Bool, StopOnEnd:Bool = true):Array<Int>
 	{
 		// Create a distance-based representation of the tilemap.
 		// All walls are flagged as -2, all open areas as -1.
@@ -1930,7 +1930,8 @@ class FlxTilemap extends FlxObject
 				if (currentIndex == Std.int(EndIndex))
 				{
 					foundEnd = true;
-					if(StopOnEnd){
+					if (StopOnEnd)
+					{
 						neighbors = [];
 						break;
 					}

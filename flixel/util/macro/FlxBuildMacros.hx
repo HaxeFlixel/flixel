@@ -1,5 +1,6 @@
 package flixel.util.macro;
 
+#if macro
 import haxe.macro.Context;
 import haxe.macro.Expr;
 import sys.FileSystem;
@@ -60,7 +61,7 @@ class FlxBuildMacros
 						break;
 				}
 				
-				fileReferences.push(new FileReference(name));
+				fileReferences.push(new FileReference(directory + name));
 			}
 			else if (subDirectories)
 			{
@@ -73,18 +74,23 @@ class FlxBuildMacros
 
 private class FileReference
 {
-    public var name:String;
-    public var value:String;
-    public var documentation:String;
-    
-    public function new(value:String)
-    {
-        this.value = value;
-        
-        // replace some forbidden names to underscores, since variables cannot have these symbols.
-        this.name = value.split("-").join("_").split(".").join("__");
-        
-        // auto generate documentation
-        this.documentation = "Reference to file on disk \"" + value + "\". (auto generated)";
-    }
+	public var name:String;
+	public var value:String;
+	public var documentation:String;
+	
+	public function new(value:String)
+	{
+		this.value = value;
+		
+		// replace some forbidden names to underscores, since variables cannot have these symbols.
+		this.name = value.split("-").join("_").split(".").join("__");
+		var split:Array<String> = name.split("/");
+		this.name = split[split.length - 1];
+		
+		// auto generate documentation
+		this.documentation = "\"" + value + "\" (auto generated).";
+	}
 }
+#else
+class FlxBuildMacros {}
+#end
