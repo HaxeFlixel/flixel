@@ -73,20 +73,20 @@ class FlxBuildMacros
 
 private class FileReference
 {
-    public var name:String;
-    public var value:String;
-    public var documentation:String;
-    
-    public function new(value:String)
-    {
-        this.value = value;
-        
-        // replace some forbidden names to underscores, since variables cannot have these symbols.
-        this.name = value.split("-").join("_").split(".").join("__");
+	public var name:String;
+	public var value:String;
+	public var documentation:String;
+	
+	public function new(value:String)
+	{
+		this.value = value;
+		
+		// replace some forbidden names to underscores, since variables cannot have these symbols.
+		this.name = value.split("-").join("_").split(".").join("__");
 		var split:Array<String> = name.split("/");
 		this.name = split[split.length - 1];
-        
-        // auto generate documentation
-        this.documentation = "\"" + value + "\" (auto generated).";
-    }
+		
+		// auto generate documentation
+		this.documentation = "\"" + value + "\" (auto generated).";
+	}
 }
