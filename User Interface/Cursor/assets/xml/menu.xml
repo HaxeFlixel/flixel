@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<data>
+	
+	<button id="butt_0" center_x="true" label="Thing 0">
+		<param type="int" value="0"/>
+	</button>
+	<button id="butt_1" center_x="true" label="Thing 1">
+		<param type="int" value="1"/>
+	</button>
+	<button id="butt_2" center_x="true" label="Thing 2">
+		<param type="int" value="2"/>
+	</button>
+	<button id="butt_3" center_x="true" label="Thing 3">
+		<param type="int" value="3"/>
+	</button>
+	<button id="butt_4" center_x="true" label="Thing 4">
+		<param type="int" value="4"/>
+	</button>
+	
+	<align axis="vertical">
+		<objects value="butt_0,butt_1,butt_2,butt_3,butt_4"/>
+		<bounds top="25%" bottom="75%"/>
+	</align>
+	
+	<text id="text" center_x="true" y="80%" align="center" width="100%" color="0xFFFFFF" text="Tab/Shift+Tab to move, Enter to click"/>
+	
+	<text id="move_text" center_x="true" y="5" align="center" width="100%" color="0xFFFFFF" text="(Changes when cursor moves)">
+		<anchor y="text.bottom" y-flush="top"/>
+	</text>
+	<text id="click_text" center_x="true" y="5" align="center" width="100%" color="0xFFFFFF" text="(Changes when cursor clicks)">
+		<anchor y="move_text.bottom" y-flush="top"/>
+	</text>
+	<text id="event_text" center_x="true" y="5" align="center" width="100%" color="0xFFFFFF" text="(Changes when real mouse events happen)">
+		<anchor y="click_text.bottom" y-flush="top"/>
+	</text>
+	
+</data>
