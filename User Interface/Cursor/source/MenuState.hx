@@ -29,6 +29,8 @@ class MenuState extends FlxUIState
 		_makeCursor = true;
 		super.create();
 		
+		cursor.setDefaultKeys(FlxUICursor.KEYS_DEFAULT_ARROWS | FlxUICursor.KEYS_DEFAULT_TAB);
+		
 		click_text = cast _ui.getAsset("click_text");
 		move_text = cast _ui.getAsset("move_text");
 		event_text = cast _ui.getAsset("event_text");
@@ -57,7 +59,7 @@ class MenuState extends FlxUIState
 			if (widget != null && Std.is(widget, FlxUIButton))
 			{
 				var fuib:FlxUIButton = cast widget;
-				if(name == "cursor_move"){
+				if(name == "cursor_jump"){
 					move_text.text = name + ": " + fuib.params;
 				}else if (name == "cursor_click") {
 					click_text.text = name + ": " + fuib.params;
