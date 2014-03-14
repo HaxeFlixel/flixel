@@ -4,7 +4,9 @@ package flixel.input.mouse;
 import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.Sprite;
+import flash.display.Stage;
 import flash.events.Event;
+import flash.events.EventDispatcher;
 import flash.events.MouseEvent;
 import flash.geom.Matrix;
 import flash.geom.Point;
@@ -49,7 +51,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	 * A display container for the mouse cursor. It is a child of FlxGame and 
 	 * sits at the right "height". Not used on flash with the native cursor API.
 	 */
-	public var cursorContainer(default, null):Sprite;
+	public var cursorContainer:Sprite;
 	/**
 	 * Used to toggle the visiblity of the mouse cursor - works on both 
 	 * the flixel and the system cursor, depending on which one is active.
@@ -133,6 +135,9 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	private var _point:FlxPoint;
 	private var _globalScreenPosition:FlxPoint;
 	
+	//Helper variable for cleaning up memory
+	private var _stage:Stage;
+	
 	/**
 	 * Helper variables for flash native cursors
 	 */
@@ -209,9 +214,12 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		var bitmapHeight:Int = scaledHeight + YOffset;
 		
 		var cursorBitmap:BitmapData = new BitmapData(bitmapWidth, bitmapHeight, true, 0x0);
-		_matrix.identity();
-		_matrix.scale(Scale, Scale);
-		_matrix.translate(XOffset, YOffset);
+		if (_matrix != null)
+		{
+			_matrix.identity();
+			_matrix.scale(Scale, Scale);
+			_matrix.translate(XOffset, YOffset);
+		}
 		cursorBitmap.draw(_cursor.bitmapData, _matrix);
 		setSimpleNativeCursorData(_cursorDefaultName, cursorBitmap);
 		#else
@@ -350,6 +358,23 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	 */
 	@:noCompletion override public function destroy():Void
 	{
+		if (_stage != null)
+		{
+			_stage.removeEventListener(MouseEvent.MOUSE_DOWN, _leftButton.onDown);
+			_stage.removeEventListener(MouseEvent.MOUSE_UP, _leftButton.onUp);
+			
+			#if !FLX_NO_MOUSE_ADVANCED
+			_stage.removeEventListener(untyped MouseEvent.MIDDLE_MOUSE_DOWN, _middleButton.onDown);
+			_stage.removeEventListener(untyped MouseEvent.MIDDLE_MOUSE_UP, _middleButton.onUp);
+			_stage.removeEventListener(untyped MouseEvent.RIGHT_MOUSE_DOWN, _rightButton.onDown);
+			_stage.removeEventListener(untyped MouseEvent.RIGHT_MOUSE_UP, _rightButton.onUp);
+			
+			_stage.removeEventListener(Event.MOUSE_LEAVE, onMouseLeave);
+			#end
+			
+			_stage.removeEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+		}
+		
 		_point = FlxDestroyUtil.put(_point);
 		_globalScreenPosition = FlxDestroyUtil.put(_globalScreenPosition);
 		
@@ -412,23 +437,23 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		
 		_leftButton = new FlxMouseButton(FlxMouseButton.LEFT);
 		
-		var stage = Lib.current.stage;
-		stage.addEventListener(MouseEvent.MOUSE_DOWN, _leftButton.onDown);
-		stage.addEventListener(MouseEvent.MOUSE_UP, _leftButton.onUp);
+		_stage = Lib.current.stage;
+		_stage.addEventListener(MouseEvent.MOUSE_DOWN, _leftButton.onDown);
+		_stage.addEventListener(MouseEvent.MOUSE_UP, _leftButton.onUp);
 		
 		#if !FLX_NO_MOUSE_ADVANCED
 		_middleButton = new FlxMouseButton(FlxMouseButton.MIDDLE);
 		_rightButton = new FlxMouseButton(FlxMouseButton.RIGHT);
 		
-		stage.addEventListener(untyped MouseEvent.MIDDLE_MOUSE_DOWN, _middleButton.onDown);
-		stage.addEventListener(untyped MouseEvent.MIDDLE_MOUSE_UP, _middleButton.onUp);
-		stage.addEventListener(untyped MouseEvent.RIGHT_MOUSE_DOWN, _rightButton.onDown);
-		stage.addEventListener(untyped MouseEvent.RIGHT_MOUSE_UP, _rightButton.onUp);
+		_stage.addEventListener(untyped MouseEvent.MIDDLE_MOUSE_DOWN, _middleButton.onDown);
+		_stage.addEventListener(untyped MouseEvent.MIDDLE_MOUSE_UP, _middleButton.onUp);
+		_stage.addEventListener(untyped MouseEvent.RIGHT_MOUSE_DOWN, _rightButton.onDown);
+		_stage.addEventListener(untyped MouseEvent.RIGHT_MOUSE_UP, _rightButton.onUp);
 		
-		stage.addEventListener(Event.MOUSE_LEAVE, onMouseLeave);
+		_stage.addEventListener(Event.MOUSE_LEAVE, onMouseLeave);
 		#end
 		
-		stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+		_stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
 		
 		Mouse.hide();
 	}
