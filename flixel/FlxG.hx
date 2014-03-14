@@ -156,7 +156,7 @@ class FlxG
 	 * A FlxMouse object for mouse input. e.g.: check if the left mouse button 
 	 * is pressed with if (FlxG.mouse.pressed) { }) in update().
 	 */
-	public static var mouse(default, null):FlxMouse;
+	public static var mouse:FlxMouse;
 	#end
 	
 	#if !FLX_NO_TOUCH
