@@ -37,8 +37,6 @@ class MenuState extends FlxState
 		spineSprite = cast new SpineBoyTest(FlxSpine.readSkeletonData("spineboy", "assets"), 300, 420);
 		add(spineSprite);
 		
-		FlxG.timeScale = 0.66;
-		
 		var instructions = new FlxText(0, 0, 250, "Space: Toggle Debug Display\nMove: Arrows", 12);
 		add(instructions);
 	}
