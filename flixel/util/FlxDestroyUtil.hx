@@ -40,25 +40,6 @@ class FlxDestroyUtil
 	}
 	
 	/**
-	 * Clears an array structure, but leaves the object data untouched
-	 * Useful for cleaning up temporary references to data you want to preserve
-	 * WARNING: Can lead to memory leaks. Use destroyArray() instead for data you truly want GONE.
-	 *
-	 * @param	arr
-	 */
-	
-	public static function clearArray(arr:Array<Dynamic>):Void
-	{
-		if (arr != null)
-		{
-			while (arr.length > 0)
-			{
-				arr.pop();
-			}
-		}
-	}
-	
-	/**
 	 * Checks if an object is not null before putting it back into the pool, always returns null.
 	 * 
 	 * @param	Object	An IFlxPooled object that will be put back into the pool if it's not null
