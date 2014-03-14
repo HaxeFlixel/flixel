@@ -120,14 +120,16 @@ class FlxArrayUtil
 		{
 			if (!Recursive)
 			{
-				Arr.length = 0;
+				while (Arr.length > 0) {
+					Arr.pop();
+				}
 			}
 			else
 			{
 				while (Arr.length > 0)
 				{
 					var thing:Dynamic = Arr.pop();
-					if (Std.is(thing, Array<Dynamic>)
+					if (Std.is(thing, Array))
 					{
 						clearArray(Arr, Recursive);
 					}
