@@ -27,7 +27,7 @@ class FlxDestroyUtil
 	 * @param	Array<IFlxDestroyable>	An Array of IFlxDestroyable objects
 	 */
 	
-	public static function destroyArray(arr:Array<IFlxDestroyable>):Void
+	public static function destroyArray<T:IFlxDestroyable>(arr:Array<T>):Void
 	{
 		if (arr != null)
 		{
