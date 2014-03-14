@@ -20,6 +20,26 @@ class FlxDestroyUtil
 	}
 	
 	/**
+	 * Completely destroys an array of destroyable objects:
+	 * 1) Clears the array structure
+	 * 2) Calls FlxDestroyUtil.destroy() on every element
+	 *
+	 * @param	Array<IFlxDestroyable>	An Array of IFlxDestroyable objects
+	 */
+	
+	public static function destroyArray(arr:Array<IFlxDestroyable>):Void
+	{
+		if (arr != null)
+		{
+			while (arr.length > 0)
+			{
+				var ifx:IFlxDestroyable = arr.pop();
+				destroy(ifx);
+			}
+		}
+	}
+	
+	/**
 	 * Checks if an object is not null before putting it back into the pool, always returns null.
 	 * 
 	 * @param	Object	An IFlxPooled object that will be put back into the pool if it's not null

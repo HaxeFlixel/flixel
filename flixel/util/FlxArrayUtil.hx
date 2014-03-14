@@ -104,4 +104,35 @@ class FlxArrayUtil
 		}
 		return array;
 	}
+	
+	/**
+	 * Clears an array structure, but leaves the object data untouched
+	 * Useful for cleaning up temporary references to data you want to preserve
+	 * WARNING: Can lead to memory leaks. Use destroyArray() instead for data you truly want GONE.
+	 *
+	 * @param	Arr			The array to clear out
+	 * @param	Recursive	Whether to search for arrays inside of arr and clear them out, too (false by default)
+	 */
+	
+	public static function clearArray(Arr:Array<Dynamic>,Recursive:Bool=false):Void
+	{
+		if (Arr != null)
+		{
+			if (!Recursive)
+			{
+				Arr.length = 0;
+			}
+			else
+			{
+				while (Arr.length > 0)
+				{
+					var thing:Dynamic = Arr.pop();
+					if (Std.is(thing, Array<Dynamic>)
+					{
+						clearArray(Arr, Recursive);
+					}
+				}
+			}
+		}
+	}
 }
