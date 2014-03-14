@@ -20,6 +20,45 @@ class FlxDestroyUtil
 	}
 	
 	/**
+	 * Completely destroys an array of destroyable objects:
+	 * 1) Clears the array structure
+	 * 2) Calls FlxDestroyUtil.destroy() on every element
+	 *
+	 * @param	Array<IFlxDestroyable>	An Array of IFlxDestroyable objects
+	 */
+	
+	public static function destroyArray(arr:Array<IFlxDestroyable>):Void
+	{
+		if (arr != null)
+		{
+			while (arr.length > 0)
+			{
+				var ifx:IFlxDestroyable = arr.pop();
+				destroy(ifx);
+			}
+		}
+	}
+	
+	/**
+	 * Clears an array structure, but leaves the object data untouched
+	 * Useful for cleaning up temporary references to data you want to preserve
+	 * WARNING: Can lead to memory leaks. Use destroyArray() instead for data you truly want GONE.
+	 *
+	 * @param	arr
+	 */
+	
+	public static function clearArray(arr:Array<Dynamic>):Void
+	{
+		if (arr != null)
+		{
+			while (arr.length > 0)
+			{
+				arr.pop();
+			}
+		}
+	}
+	
+	/**
 	 * Checks if an object is not null before putting it back into the pool, always returns null.
 	 * 
 	 * @param	Object	An IFlxPooled object that will be put back into the pool if it's not null
