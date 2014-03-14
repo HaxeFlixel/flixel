@@ -58,8 +58,6 @@ class MenuState extends FlxUIState
 	
 	public override function getEvent(name:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void {
 		var widget:IFlxUIWidget = cast sender;
-		trace("getEvent(" + name + "," + sender + "," + data + "," + params + ")");
-			
 		if (name == FlxUICheckBox.CLICK_EVENT) {
 			var checked:Bool = cast data;
 			var type:String = cast params[0];
