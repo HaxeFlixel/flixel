@@ -73,6 +73,9 @@ class FlxAnimationController implements IFlxDestroyable
 	private static var prefixLength:Int = 0;
 	private static var postfixLength:Int = 0;
 	
+	public static var frame_splice_in_add_is_on:Bool = true;
+	public static var frame_splice_warn_in_add_is_on:Bool = true;
+	
 	private var _prerotated:FlxPrerotatedAnimation;
 	
 	public function new(Sprite:FlxSprite)
@@ -191,7 +194,16 @@ class FlxAnimationController implements IFlxDestroyable
 		{
 			if (Frames[i] >= frames)
 			{
-				Frames.splice(i, 1);
+				if (frame_splice_in_add_is_on) {
+					Frames.splice(i, 1);
+					if (frame_splice_warn_in_add_is_on) {
+						FlxG.log.warn("Animation \""+Name+"\" frame value "+Std.string(Frames[i])+" too large! Removing frame value from animation. See FlxAnimationController.add() to remove this behavior.");
+					}
+				} else {
+					if (frame_splice_warn_in_add_is_on) {
+						FlxG.log.warn("Animation \""+Name+"\" frame value "+Std.string(Frames[i])+" too large!");
+					}
+				}
 			}
 			i--;
 		}
