@@ -46,9 +46,9 @@ class FlxPreloader extends NMEPreloader
 	public static inline var LOCAL:String = "local";
 	
 	/**
-	 * Change this if you want the flixel logo to show for more or less time.  Default value is 0 seconds.
+	 * Change this if you want the flixel logo to show for more or less time.  Default value is 1 second. Don't go lower or you'll jam the preloader.
 	 */
-	public var minDisplayTime:Float = 0.3;
+	public var minDisplayTime:Float = 1;
 	
 	/**
 	 * List of allowed URLs for built-in site-locking. Use full swf's addresses with 'http' or 'https'.
@@ -250,11 +250,11 @@ class FlxPreloader extends NMEPreloader
 	override public function onUpdate(bytesLoaded:Int, bytesTotal:Int):Void 
 	{
 		#if !(desktop || mobile)
-		//in case there is a problem with reading the bytesTotal (like on Chrome, or a Gzipped swf)
+		//in case there is a problem with reading the bytesTotal (Gzipped swf)
 		if (root.loaderInfo.bytesTotal == 0) 
 		{
-			//Set Any value (650000>x>0) in bytesTotal to avoid "stucking" the preloader. 
-			//Attention! try to find the actual size of your file for better accuracy on Chrome.
+			//To avoid "stucking" the preloader use X (=bytesTotal) like so: Actual file size > X > 0.
+			//Attention! use the actual file size (minus a few KB) for better accuracy on Chrome.
 			var bytesTotal:Int = 50000; 
 			_percent = (bytesTotal != 0) ? bytesLoaded / bytesTotal : 0;
 		}
