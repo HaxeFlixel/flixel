@@ -362,6 +362,8 @@ class FlxQuadTree extends FlxRect
 		next = _cachedTreesHead;
 		_cachedTreesHead = this;
 		_NUM_CACHED_QUAD_TREES++;
+
+		super.destroy();
 	}
 
 	/**
