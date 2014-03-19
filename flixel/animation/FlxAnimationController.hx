@@ -203,6 +203,30 @@ class FlxAnimationController implements IFlxDestroyable
 		}
 	}
 	
+	public function append(Name:String, Frames:Array<Int>)
+	{
+		var anim:FlxAnimation = _animations.get(Name);
+		
+		if (anim == null)
+		{
+			FlxG.log.warn("No animation called \"" + Name + "\"");
+			return;
+		}
+		
+		// Check _animations frames
+		var numFrames:Int = Frames.length - 1;
+		var i:Int = numFrames;
+		while (i >= 0)
+		{
+			if (Frames[i] < frames)
+			{
+				// add to existing animation
+				anim._frames.push(Frames[i]);
+			}
+			i--;
+		}	
+	}
+	
 	/**
 	 * Adds a new _animations to the sprite.
 	 * @param	Name			What this _animations should be called (e.g. "run").
@@ -230,6 +254,31 @@ class FlxAnimationController implements IFlxDestroyable
 			{
 				var anim:FlxAnimation = new FlxAnimation(this, Name, indices, FrameRate, Looped);
 				_animations.set(Name, anim);
+			}
+		}
+	}
+	
+	public function appendByNames(Name:String, FrameNames:Array<String>):Void
+	{
+		var anim:FlxAnimation = _animations.get(Name);
+		
+		if (anim == null)
+		{
+			FlxG.log.warn("No animation called \"" + Name + "\"");
+			return;
+		}
+		
+		if (_sprite.cachedGraphics != null && _sprite.cachedGraphics.data != null)
+		{
+			var l:Int = FrameNames.length;
+			for (i in 0...l)
+			{
+				var name:String = FrameNames[i];
+				if (_sprite.framesData.framesHash.exists(name))
+				{
+					var frameToAdd:FlxFrame = _sprite.framesData.framesHash.get(name);
+					anim._frames.push(getFrameIndex(frameToAdd));
+				}
 			}
 		}
 	}
