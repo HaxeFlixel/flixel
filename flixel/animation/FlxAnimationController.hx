@@ -204,6 +204,38 @@ class FlxAnimationController implements IFlxDestroyable
 	}
 	
 	/**
+	 * Adds to an existing _animations in the sprite by appending the specified frames to the existing frames.
+	 * Use this method when the indices of the frames in the atlas are already known.
+	 * The animation must already exist in order to append frames to it. FrameRate and Looped are unchanged.
+	 * @param	Name		What the existing _animations is called (e.g. "run").
+	 * @param	Frames		An array of numbers indicating what frames to append (e.g. 1, 2, 3).
+	*/
+	public function append(Name:String, Frames:Array<Int>):Void
+	{
+		var anim:FlxAnimation = _animations.get(Name);
+		
+		if (anim == null)
+		{
+			// anim must already exist
+			FlxG.log.warn("No animation called \"" + Name + "\"");
+			return;
+		}
+		
+		// Check _animations frames
+		var numFrames:Int = Frames.length - 1;
+		var i:Int = numFrames;
+		while (i >= 0)
+		{
+			if (Frames[numFrames - i] < frames)
+			{
+				// add to existing animation, forward to backward
+				anim._frames.push(Frames[numFrames - i]);
+			}
+			i--;
+		}	
+	}
+	
+	/**
 	 * Adds a new _animations to the sprite.
 	 * @param	Name			What this _animations should be called (e.g. "run").
 	 * @param	FrameNames		An array of image names from atlas indicating what frames to play in what order.
@@ -235,23 +267,55 @@ class FlxAnimationController implements IFlxDestroyable
 	}
 	
 	/**
-	 * Adds a new _animations to the sprite. Should works a little bit faster than addByIndicies()
+	 * Adds to an existing _animations in the sprite by appending the specified frames to the existing frames.
+	 * Use this method when the exact name of each frame from the atlas is known (e.g. "walk00.png", "walk01.png").
+	 * The animation must already exist in order to append frames to it. FrameRate and Looped are unchanged.
+	 * @param	Name			What the existing _animations is called (e.g. "run").
+	 * @param	FrameNames		An array of image names from atlas indicating what frames to append.
+	*/
+	public function appendByNames(Name:String, FrameNames:Array<String>):Void
+	{
+		var anim:FlxAnimation = _animations.get(Name);
+		
+		if (anim == null)
+		{
+			FlxG.log.warn("No animation called \"" + Name + "\"");
+			return;
+		}
+		
+		if (_sprite.cachedGraphics != null && _sprite.cachedGraphics.data != null)
+		{
+			var l:Int = FrameNames.length;
+			for (i in 0...l)
+			{
+				var name:String = FrameNames[i];
+				if (_sprite.framesData.framesHash.exists(name))
+				{
+					var frameToAdd:FlxFrame = _sprite.framesData.framesHash.get(name);
+					anim._frames.push(getFrameIndex(frameToAdd));
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Adds a new _animations to the sprite. Should works a little bit faster than addByIndices()
 	 * @param	Name			What this _animations should be called (e.g. "run").
 	 * @param	Prefix			Common beginning of image names in atlas (e.g. "tiles-")
-	 * @param	Indicies		An array of strings indicating what frames to play in what order (e.g. ["01", "02", "03"]).
+	 * @param	Indices			An array of strings indicating what frames to play in what order (e.g. ["01", "02", "03"]).
 	 * @param	Postfix			Common ending of image names in atlas (e.g. ".png")
 	 * @param	FrameRate		The speed in frames per second that the _animations should play at (e.g. 40 fps).
 	 * @param	Looped			Whether or not the _animations is looped or just plays once.
 	 */
-	public function addByStringIndicies(Name:String, Prefix:String, Indicies:Array<String>, Postfix:String, FrameRate:Int = 30, Looped:Bool = true):Void
+	public function addByStringIndices(Name:String, Prefix:String, Indices:Array<String>, Postfix:String, FrameRate:Int = 30, Looped:Bool = true):Void
 	{
 		if (_sprite.cachedGraphics != null && _sprite.cachedGraphics.data != null)
 		{
 			var frameIndices:Array<Int> = new Array<Int>();
-			var l:Int = Indicies.length;
+			var l:Int = Indices.length;
 			for (i in 0...l)
 			{
-				var name:String = Prefix + Indicies[i] + Postfix;
+				var name:String = Prefix + Indices[i] + Postfix;
 				if (_sprite.framesData.framesHash.exists(name))
 				{
 					var frameToAdd:FlxFrame = _sprite.framesData.framesHash.get(name);
@@ -268,23 +332,57 @@ class FlxAnimationController implements IFlxDestroyable
 	}
 	
 	/**
+	 * Adds to an existing _animations in the sprite by appending the specified frames to the existing frames. Should works a little bit faster than appendByIndices().
+	 * Use this method when the names of each frame from the atlas share a common prefix and postfix (e.g. "walk00.png", "walk01.png").
+	 * The animation must already exist in order to append frames to it. FrameRate and Looped are unchanged.
+	 * @param	Name			What the existing _animations is called (e.g. "run").
+	 * @param	Prefix			Common beginning of image names in atlas (e.g. "tiles-")
+	 * @param	Indices			An array of strings indicating what frames to append (e.g. "01", "02", "03").
+	 * @param	Postfix			Common ending of image names in atlas (e.g. ".png")
+	*/
+	public function appendByStringIndices(Name:String, Prefix:String, Indices:Array<String>, Postfix:String):Void
+	{
+		var anim:FlxAnimation = _animations.get(Name);
+		
+		if (anim == null)
+		{
+			FlxG.log.warn("No animation called \"" + Name + "\"");
+			return;
+		}
+		
+		if (_sprite.cachedGraphics != null && _sprite.cachedGraphics.data != null)
+		{
+			var l:Int = Indices.length;
+			for (i in 0...l)
+			{
+				var name:String = Prefix + Indices[i] + Postfix;
+				if (_sprite.framesData.framesHash.exists(name))
+				{
+					var frameToAdd:FlxFrame = _sprite.framesData.framesHash.get(name);
+					anim._frames.push(getFrameIndex(frameToAdd));
+				}
+			}
+		}
+	}
+	
+	/**
 	 * Adds a new _animations to the sprite.
 	 * @param	Name			What this _animations should be called (e.g. "run").
 	 * @param	Prefix			Common beginning of image names in atlas (e.g. "tiles-")
-	 * @param	Indicies		An array of numbers indicating what frames to play in what order (e.g. 1, 2, 3).
+	 * @param	Indices			An array of numbers indicating what frames to play in what order (e.g. 1, 2, 3).
 	 * @param	Postfix			Common ending of image names in atlas (e.g. ".png")
 	 * @param	FrameRate		The speed in frames per second that the _animations should play at (e.g. 40 fps).
 	 * @param	Looped			Whether or not the _animations is looped or just plays once.
 	 */
-	public function addByIndicies(Name:String, Prefix:String, Indicies:Array<Int>, Postfix:String, FrameRate:Int = 30, Looped:Bool = true):Void
+	public function addByIndices(Name:String, Prefix:String, Indices:Array<Int>, Postfix:String, FrameRate:Int = 30, Looped:Bool = true):Void
 	{
 		if (_sprite.cachedGraphics != null && _sprite.cachedGraphics.data != null)
 		{
 			var frameIndices:Array<Int> = new Array<Int>();
-			var l:Int = Indicies.length;
+			var l:Int = Indices.length;
 			for (i in 0...l)
 			{
-				var indexToAdd:Int = findSpriteFrame(Prefix, Indicies[i], Postfix);
+				var indexToAdd:Int = findSpriteFrame(Prefix, Indices[i], Postfix);
 				if (indexToAdd != -1) 
 				{
 					frameIndices.push(indexToAdd);
@@ -295,6 +393,39 @@ class FlxAnimationController implements IFlxDestroyable
 			{
 				var anim:FlxAnimation = new FlxAnimation(this, Name, frameIndices, FrameRate, Looped);
 				_animations.set(Name, anim);
+			}
+		}
+	}
+	
+	/**
+	 * Adds to an existing _animations in the sprite by appending the specified frames to the existing frames.
+	 * Use this method when the names of each frame from the atlas share a common prefix and postfix (e.g. "walk00.png", "walk01.png"). Leading zeroes are ignored for matching indices (5 will match "5" and "005").
+	 * The animation must already exist in order to append frames to it. FrameRate and Looped are unchanged.
+	 * @param	Name			What the existing _animations is called (e.g. "run").
+	 * @param	Prefix			Common beginning of image names in atlas (e.g. "tiles-")
+	 * @param	Indices			An array of numbers indicating what frames to append (e.g. 1, 2, 3).
+	 * @param	Postfix			Common ending of image names in atlas (e.g. ".png")
+	*/
+	public function appendByIndices(Name:String, Prefix:String, Indices:Array<Int>, Postfix:String):Void
+	{
+		var anim:FlxAnimation = _animations.get(Name);
+		
+		if (anim == null)
+		{
+			FlxG.log.warn("No animation called \"" + Name + "\"");
+			return;
+		}
+		
+		if (_sprite.cachedGraphics != null && _sprite.cachedGraphics.data != null)
+		{
+			var l:Int = Indices.length;
+			for (i in 0...l)
+			{
+				var indexToAdd:Int = findSpriteFrame(Prefix, Indices[i], Postfix);
+				if (indexToAdd != -1) 
+				{
+					anim._frames.push(indexToAdd);
+				}
 			}
 		}
 	}
@@ -349,7 +480,9 @@ class FlxAnimationController implements IFlxDestroyable
 			if (animFrames.length > 0)
 			{
 				var name:String = animFrames[0].name;
-				var postFix:String = name.substring(name.indexOf(".", Prefix.length), name.length);
+				// check for potential postFix: ".png", ".gif", etc
+				var postIndex:Int = name.indexOf(".", Prefix.length);
+				var postFix:String = name.substring(postIndex == -1 ? name.length : postIndex, name.length);
 				FlxAnimationController.prefixLength = Prefix.length;
 				FlxAnimationController.postfixLength = postFix.length;
 				animFrames.sort(FlxAnimationController.frameSortFunction);
@@ -365,6 +498,53 @@ class FlxAnimationController implements IFlxDestroyable
 				{
 					var anim:FlxAnimation = new FlxAnimation(this, Name, frameIndices, FrameRate, Looped);
 					_animations.set(Name, anim);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Adds to an existing _animations in the sprite by appending the specified frames to the existing frames.
+	 * Use this method when the names of each frame from the atlas share a common prefix (e.g. "walk00.png", "walk01.png"). Frames are sorted numerically while ignoring postfixes (e.g. ".png", ".gif").
+	 * The animation must already exist in order to append frames to it. FrameRate and Looped are unchanged.
+	 * @param	Name			What the existing _animations is called (e.g. "run").
+	 * @param	Prefix			Common beginning of image names in atlas (e.g. "tiles-")
+	*/
+	public function appendByPrefix(Name:String, Prefix:String):Void
+	{
+		var anim:FlxAnimation = _animations.get(Name);
+		
+		if (anim == null)
+		{
+			FlxG.log.warn("No animation called \"" + Name + "\"");
+			return;
+		}
+		
+		if (_sprite.cachedGraphics != null && _sprite.cachedGraphics.data != null)
+		{
+			var animFrames:Array<FlxFrame> = new Array<FlxFrame>();
+			var l:Int = _sprite.framesData.frames.length;
+			for (i in 0...l)
+			{
+				if (StringTools.startsWith(_sprite.framesData.frames[i].name, Prefix))
+				{
+					animFrames.push(_sprite.framesData.frames[i]);
+				}
+			}
+			
+			if (animFrames.length > 0)
+			{
+				var name:String = animFrames[0].name;
+				var postIndex:Int = name.indexOf(".", Prefix.length);
+				var postFix:String = name.substring(postIndex == -1 ? name.length : postIndex, name.length);
+				FlxAnimationController.prefixLength = Prefix.length;
+				FlxAnimationController.postfixLength = postFix.length;
+				animFrames.sort(FlxAnimationController.frameSortFunction);
+				
+				l = animFrames.length;
+				for (i in 0...l)
+				{
+					anim._frames.push(getFrameIndex(animFrames[i]));
 				}
 			}
 		}
