@@ -44,6 +44,12 @@
 * FlxTilemap: replaced scaleX and scaleY by a scale FlxPoint
 * Added FlxDestroyUtil (FlxG.safeDestroy() -> FlxDestroyUtil.destroy())
 * Debugger stats window: added a button to expand the window and show two more graphs (draw and update time)
+* Added buildFileReferences() macro to FlxAssets.hx (auto-completion for asset string paths)
+* FlxTilemap.computePathDistance() is now public and has a new StopOnEnd parameter
+* Added FlxColor.MAGENTA
+* Added FlxMouse.setGlobalScreenPositionUnsafe()
+* Small fix for FlxPreloader which should prevent it from getting stuck
+* FlxTypedButton: fixed label.visible = false; not working
 
 3.2.2
 ------------------------------
