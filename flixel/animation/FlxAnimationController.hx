@@ -205,8 +205,8 @@ class FlxAnimationController implements IFlxDestroyable
 	
 	/**
 	 * Adds to an existing _animations in the sprite.
-	 * @param	Name			What the existing _animations is called (e.g. "run").
-	 * @param	Frames			An array of numbers indicating what frames to play in what order (e.g. 1, 2, 3).
+	 * @param	Name		What the existing _animations is called (e.g. "run").
+	 * @param	Frames		An array of numbers indicating what frames to play in what order (e.g. 1, 2, 3).
 	*/
 	public function append(Name:String, Frames:Array<Int>):Void
 	{
@@ -298,7 +298,7 @@ class FlxAnimationController implements IFlxDestroyable
 	 * Adds a new _animations to the sprite. Should works a little bit faster than addByIndices()
 	 * @param	Name			What this _animations should be called (e.g. "run").
 	 * @param	Prefix			Common beginning of image names in atlas (e.g. "tiles-")
-	 * @param	Indices		An array of strings indicating what frames to play in what order (e.g. ["01", "02", "03"]).
+	 * @param	Indices			An array of strings indicating what frames to play in what order (e.g. ["01", "02", "03"]).
 	 * @param	Postfix			Common ending of image names in atlas (e.g. ".png")
 	 * @param	FrameRate		The speed in frames per second that the _animations should play at (e.g. 40 fps).
 	 * @param	Looped			Whether or not the _animations is looped or just plays once.
@@ -363,7 +363,7 @@ class FlxAnimationController implements IFlxDestroyable
 	 * Adds a new _animations to the sprite.
 	 * @param	Name			What this _animations should be called (e.g. "run").
 	 * @param	Prefix			Common beginning of image names in atlas (e.g. "tiles-")
-	 * @param	Indices		An array of numbers indicating what frames to play in what order (e.g. 1, 2, 3).
+	 * @param	Indices			An array of numbers indicating what frames to play in what order (e.g. 1, 2, 3).
 	 * @param	Postfix			Common ending of image names in atlas (e.g. ".png")
 	 * @param	FrameRate		The speed in frames per second that the _animations should play at (e.g. 40 fps).
 	 * @param	Looped			Whether or not the _animations is looped or just plays once.
