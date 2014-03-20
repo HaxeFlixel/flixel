@@ -204,9 +204,11 @@ class FlxAnimationController implements IFlxDestroyable
 	}
 	
 	/**
-	 * Adds to an existing _animations in the sprite.
+	 * Adds to an existing _animations in the sprite by appending the specified frames to the existing frames.
+	 * Use this method when the indices of the frames in the atlas are already known.
+	 * The animation must already exist in order to append frames to it. FrameRate and Looped are unchanged.
 	 * @param	Name		What the existing _animations is called (e.g. "run").
-	 * @param	Frames		An array of numbers indicating what frames to play in what order (e.g. 1, 2, 3).
+	 * @param	Frames		An array of numbers indicating what frames to append (e.g. 1, 2, 3).
 	*/
 	public function append(Name:String, Frames:Array<Int>):Void
 	{
@@ -265,9 +267,11 @@ class FlxAnimationController implements IFlxDestroyable
 	}
 	
 	/**
-	 * Adds to an existing _animations in the sprite.
+	 * Adds to an existing _animations in the sprite by appending the specified frames to the existing frames.
+	 * Use this method when the exact name of each frame from the atlas is known (e.g. "walk00.png", "walk01.png").
+	 * The animation must already exist in order to append frames to it. FrameRate and Looped are unchanged.
 	 * @param	Name			What the existing _animations is called (e.g. "run").
-	 * @param	FrameNames		An array of image names from atlas indicating what frames to play in what order.
+	 * @param	FrameNames		An array of image names from atlas indicating what frames to append.
 	*/
 	public function appendByNames(Name:String, FrameNames:Array<String>):Void
 	{
@@ -328,10 +332,12 @@ class FlxAnimationController implements IFlxDestroyable
 	}
 	
 	/**
-	 * Adds to an existing _animations in the sprite.
+	 * Adds to an existing _animations in the sprite by appending the specified frames to the existing frames. Should works a little bit faster than appendByIndices().
+	 * Use this method when the names of each frame from the atlas share a common prefix and postfix (e.g. "walk00.png", "walk01.png").
+	 * The animation must already exist in order to append frames to it. FrameRate and Looped are unchanged.
 	 * @param	Name			What the existing _animations is called (e.g. "run").
 	 * @param	Prefix			Common beginning of image names in atlas (e.g. "tiles-")
-	 * @param	Indices			An array of strings indicating what frames to play in what order (e.g. 1, 2, 3).
+	 * @param	Indices			An array of strings indicating what frames to append (e.g. "01", "02", "03").
 	 * @param	Postfix			Common ending of image names in atlas (e.g. ".png")
 	*/
 	public function appendByStringIndices(Name:String, Prefix:String, Indices:Array<String>, Postfix:String):Void
@@ -392,10 +398,12 @@ class FlxAnimationController implements IFlxDestroyable
 	}
 	
 	/**
-	 * Adds to an existing _animations in the sprite.
+	 * Adds to an existing _animations in the sprite by appending the specified frames to the existing frames.
+	 * Use this method when the names of each frame from the atlas share a common prefix and postfix (e.g. "walk00.png", "walk01.png"). Leading zeroes are ignored for matching indices (5 will match "5" and "005").
+	 * The animation must already exist in order to append frames to it. FrameRate and Looped are unchanged.
 	 * @param	Name			What the existing _animations is called (e.g. "run").
 	 * @param	Prefix			Common beginning of image names in atlas (e.g. "tiles-")
-	 * @param	Indices			An array of numbers indicating what frames to play in what order (e.g. 1, 2, 3).
+	 * @param	Indices			An array of numbers indicating what frames to append (e.g. 1, 2, 3).
 	 * @param	Postfix			Common ending of image names in atlas (e.g. ".png")
 	*/
 	public function appendByIndices(Name:String, Prefix:String, Indices:Array<Int>, Postfix:String):Void
@@ -496,7 +504,9 @@ class FlxAnimationController implements IFlxDestroyable
 	}
 	
 	/**
-	 * Adds to an existing _animations in the sprite.
+	 * Adds to an existing _animations in the sprite by appending the specified frames to the existing frames.
+	 * Use this method when the names of each frame from the atlas share a common prefix (e.g. "walk00.png", "walk01.png"). Frames are sorted numerically while ignoring postfixes (e.g. ".png", ".gif").
+	 * The animation must already exist in order to append frames to it. FrameRate and Looped are unchanged.
 	 * @param	Name			What the existing _animations is called (e.g. "run").
 	 * @param	Prefix			Common beginning of image names in atlas (e.g. "tiles-")
 	*/
