@@ -55,6 +55,8 @@ class FlxTouch extends FlxPoint implements IFlxDestroyable
 		_globalScreenPosition = null;
 		_flashPoint = null;
 		_justPressedPosition = null;
+
+		super.destroy();
 	}
 	
 	/**
