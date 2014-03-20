@@ -224,10 +224,10 @@ class FlxAnimationController implements IFlxDestroyable
 		var i:Int = numFrames;
 		while (i >= 0)
 		{
-			if (Frames[i] < frames)
+			if (Frames[numFrames - i] < frames)
 			{
-				// add to existing animation
-				anim._frames.push(Frames[i]);
+				// add to existing animation, forward to backward
+				anim._frames.push(Frames[numFrames - i]);
 			}
 			i--;
 		}	
@@ -295,23 +295,23 @@ class FlxAnimationController implements IFlxDestroyable
 	}
 	
 	/**
-	 * Adds a new _animations to the sprite. Should works a little bit faster than addByIndicies()
+	 * Adds a new _animations to the sprite. Should works a little bit faster than addByIndices()
 	 * @param	Name			What this _animations should be called (e.g. "run").
 	 * @param	Prefix			Common beginning of image names in atlas (e.g. "tiles-")
-	 * @param	Indicies		An array of strings indicating what frames to play in what order (e.g. ["01", "02", "03"]).
+	 * @param	Indices		An array of strings indicating what frames to play in what order (e.g. ["01", "02", "03"]).
 	 * @param	Postfix			Common ending of image names in atlas (e.g. ".png")
 	 * @param	FrameRate		The speed in frames per second that the _animations should play at (e.g. 40 fps).
 	 * @param	Looped			Whether or not the _animations is looped or just plays once.
 	 */
-	public function addByStringIndicies(Name:String, Prefix:String, Indicies:Array<String>, Postfix:String, FrameRate:Int = 30, Looped:Bool = true):Void
+	public function addByStringIndices(Name:String, Prefix:String, Indices:Array<String>, Postfix:String, FrameRate:Int = 30, Looped:Bool = true):Void
 	{
 		if (_sprite.cachedGraphics != null && _sprite.cachedGraphics.data != null)
 		{
 			var frameIndices:Array<Int> = new Array<Int>();
-			var l:Int = Indicies.length;
+			var l:Int = Indices.length;
 			for (i in 0...l)
 			{
-				var name:String = Prefix + Indicies[i] + Postfix;
+				var name:String = Prefix + Indices[i] + Postfix;
 				if (_sprite.framesData.framesHash.exists(name))
 				{
 					var frameToAdd:FlxFrame = _sprite.framesData.framesHash.get(name);
@@ -334,7 +334,7 @@ class FlxAnimationController implements IFlxDestroyable
 	 * @param	Indices			An array of strings indicating what frames to play in what order (e.g. 1, 2, 3).
 	 * @param	Postfix			Common ending of image names in atlas (e.g. ".png")
 	*/
-	public function appendByStringIndicies(Name:String, Prefix:String, Indicies:Array<String>, Postfix:String):Void
+	public function appendByStringIndices(Name:String, Prefix:String, Indices:Array<String>, Postfix:String):Void
 	{
 		var anim:FlxAnimation = _animations.get(Name);
 		
@@ -346,10 +346,10 @@ class FlxAnimationController implements IFlxDestroyable
 		
 		if (_sprite.cachedGraphics != null && _sprite.cachedGraphics.data != null)
 		{
-			var l:Int = Indicies.length;
+			var l:Int = Indices.length;
 			for (i in 0...l)
 			{
-				var name:String = Prefix + Indicies[i] + Postfix;
+				var name:String = Prefix + Indices[i] + Postfix;
 				if (_sprite.framesData.framesHash.exists(name))
 				{
 					var frameToAdd:FlxFrame = _sprite.framesData.framesHash.get(name);
@@ -363,7 +363,7 @@ class FlxAnimationController implements IFlxDestroyable
 	 * Adds a new _animations to the sprite.
 	 * @param	Name			What this _animations should be called (e.g. "run").
 	 * @param	Prefix			Common beginning of image names in atlas (e.g. "tiles-")
-	 * @param	Indicies		An array of numbers indicating what frames to play in what order (e.g. 1, 2, 3).
+	 * @param	Indices		An array of numbers indicating what frames to play in what order (e.g. 1, 2, 3).
 	 * @param	Postfix			Common ending of image names in atlas (e.g. ".png")
 	 * @param	FrameRate		The speed in frames per second that the _animations should play at (e.g. 40 fps).
 	 * @param	Looped			Whether or not the _animations is looped or just plays once.
@@ -472,7 +472,9 @@ class FlxAnimationController implements IFlxDestroyable
 			if (animFrames.length > 0)
 			{
 				var name:String = animFrames[0].name;
-				var postFix:String = name.substring(name.indexOf(".", Prefix.length), name.length);
+				// check for potential postFix: ".png", ".gif", etc
+				var postIndex:Int = name.indexOf(".", Prefix.length);
+				var postFix:String = name.substring(postIndex == -1 ? name.length : postIndex, name.length);
 				FlxAnimationController.prefixLength = Prefix.length;
 				FlxAnimationController.postfixLength = postFix.length;
 				animFrames.sort(FlxAnimationController.frameSortFunction);
@@ -523,7 +525,8 @@ class FlxAnimationController implements IFlxDestroyable
 			if (animFrames.length > 0)
 			{
 				var name:String = animFrames[0].name;
-				var postFix:String = name.substring(name.indexOf(".", Prefix.length), name.length);
+				var postIndex:Int = name.indexOf(".", Prefix.length);
+				var postFix:String = name.substring(postIndex == -1 ? name.length : postIndex, name.length);
 				FlxAnimationController.prefixLength = Prefix.length;
 				FlxAnimationController.postfixLength = postFix.length;
 				animFrames.sort(FlxAnimationController.frameSortFunction);
