@@ -250,7 +250,7 @@ class FlxSound extends FlxBasic
 		}
 	}
 	
-	override inline public function kill():Void
+	override public function kill():Void
 	{
 		super.kill();
 		cleanup(false);

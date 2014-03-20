@@ -184,7 +184,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	{
 		super.draw();
 		
-		if (label != null)
+		if (label != null && label.visible)
 		{
 			label.cameras = cameras;
 			label.draw();
