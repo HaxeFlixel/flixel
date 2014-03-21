@@ -149,10 +149,8 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			return null;
 		}
 		
-		var basic:FlxBasic = cast Object;
-		
 		// Don't bother adding an object twice.
-		if (basic.group == cast this)
+		if (FlxArrayUtil.indexOf(members, Object) >= 0)
 		{
 			return Object;
 		}
@@ -162,8 +160,6 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		if (index != -1)
 		{
 			members[index] = Object;
-			basic.group = cast this;
-			basic._groupIndex = index;
 			
 			if (index >= length)
 			{
@@ -181,8 +177,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		
 		// If we made it this far, we need to add the object to the group.
 		members.push(Object);
-		basic.group = cast this;
-		basic._groupIndex = length++;
+		length++;
 		
 		return Object;
 	}
@@ -282,22 +277,15 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		if (members == null)
 			return null;
 		
-		var basic:FlxBasic = cast Object;
+		var index:Int = FlxArrayUtil.indexOf(members, Object);
 		
-		// Don't bother removing an object twice.
-		if (basic.group != cast this)
+		if ((index < 0) || (index >= members.length))
 			return null;
 		
 		if (Splice)
-		{
-			members.splice(basic._groupIndex, 1);
-		}
+			members.splice(index, 1);
 		else
-		{
-			members[basic._groupIndex] = null;
-		}
-		
-		basic.group = null;
+			members[index] = null;
 		
 		return Object;
 	}
@@ -312,21 +300,12 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 */
 	public function replace(OldObject:T, NewObject:T):T
 	{
-		var basic:FlxBasic = cast OldObject;
+		var index:Int = FlxArrayUtil.indexOf(members, OldObject);
 		
-		if (basic.group != cast this)
+		if ((index < 0) || (index >= members.length))
 			return null;
 		
-		var index = basic._groupIndex;
 		members[index] = NewObject;
-		
-		basic.group = null;
-		basic._groupIndex = -1;
-		
-		basic = cast NewObject;
-		
-		basic.group = cast this;
-		basic._groupIndex = index;
 		
 		return NewObject;
 	}

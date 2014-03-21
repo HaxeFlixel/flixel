@@ -48,16 +48,6 @@ class FlxBasic implements IFlxDestroyable
 	 * Enum that informs the collision system which type of object this is (to avoid expensive type casting).
 	 */
 	public var collisionType(default, null):FlxCollisionType = FlxCollisionType.NONE;
-	/**
-	 * Gets the group that contains this object.
-	 */
-	@:allow(flixel.group)
-	public var group(default, null):FlxTypedGroup<FlxBasic>;
-	/**
-	 * This is the index into the members array of the container group.
-	 */
-	@:allow(flixel.group)
-	private var _groupIndex:Int = -1;
 	
 	private var _cameras:Array<FlxCamera>;
 	
@@ -84,7 +74,6 @@ class FlxBasic implements IFlxDestroyable
 	{
 		exists = false;
 		_cameras = null;
-		group = null;
 	}
 	
 	/**
