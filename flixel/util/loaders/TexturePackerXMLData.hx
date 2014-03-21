@@ -34,7 +34,7 @@ class TexturePackerXMLData extends TexturePackerData implements IFlxDestroyable
 		if ((assetName == null) || (description == null)) return;
 		
 		asset = FlxG.bitmap.add(assetName).bitmap;
-		var xml = Xml.parse(Assets.getText(file));
+		var xml = Xml.parse(Assets.getText(description));
 		var root = xml.firstElement();
 		
 		for (sprite in root.elements())
