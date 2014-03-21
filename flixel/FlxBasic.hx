@@ -48,6 +48,18 @@ class FlxBasic implements IFlxDestroyable
 	 * Enum that informs the collision system which type of object this is (to avoid expensive type casting).
 	 */
 	public var collisionType(default, null):FlxCollisionType = FlxCollisionType.NONE;
+	/**
+	 * Gets the group that contains this object (might be an FlxState).
+	 */
+	@:allow(flixel.group)
+	public var group(default, null):FlxTypedGroup<FlxBasic>;
+	/**
+	 * This is the index into the members array of the container group.
+	 */
+	@:allow(flixel.group)
+	private var _groupIndex:Int = -1;
+	
+	private var _cameras:Array<FlxCamera>;
 	
 	#if !FLX_NO_DEBUG
 	/**
@@ -62,13 +74,7 @@ class FlxBasic implements IFlxDestroyable
 	public static var _VISIBLECOUNT:Int = 0;
 	#end
 	
-	private var _cameras:Array<FlxCamera>;
-	@:allow(flixel.group) private var _groupIndex:Int = -1; // index of this object into groups arrays
-	@:allow(flixel.group) private var _group:FlxTypedGroup<FlxBasic>; // group that contains this object
-	
-	public function new()
-	{
-	}
+	public function new() {}
 	
 	/**
 	 * WARNING: This will remove this object entirely. Use kill() if you want to disable it temporarily only and revive() it later.
@@ -78,7 +84,7 @@ class FlxBasic implements IFlxDestroyable
 	{
 		exists = false;
 		_cameras = null;
-		_group = null;
+		group = null;
 	}
 	
 	/**
@@ -173,28 +179,28 @@ class FlxBasic implements IFlxDestroyable
 	
 	private function set_visible(Value:Bool):Bool
 	{
-		if (_group != null)
+		if (group != null)
 		{
-			_group._visibleMembers[_groupIndex] = Value ? this : null;
+			group._visibleMembers[_groupIndex] = Value ? this : null;
 		}
 		return visible = Value;
 	}
 	
 	private function set_active(Value:Bool):Bool
 	{
-		if (_group != null)
+		if (group != null)
 		{
-			_group._activeMembers[_groupIndex] = Value ? this : null;
+			group._activeMembers[_groupIndex] = Value ? this : null;
 		}
 		return active = Value;
 	}
 	
 	private function set_exists(Value:Bool):Bool
 	{
-		if (_group != null)
+		if (group != null)
 		{
-			_group._activeMembers[_groupIndex] = Value && active ? this : null;
-			_group._visibleMembers[_groupIndex] = Value && visible ? this : null;
+			group._activeMembers[_groupIndex] = Value && active ? this : null;
+			group._visibleMembers[_groupIndex] = Value && visible ? this : null;
 		}
 		return exists = Value;
 	}

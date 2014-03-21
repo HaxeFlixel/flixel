@@ -22,7 +22,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	/**
 	 * The actual group which holds all sprites
 	 */
-	public var group:FlxTypedGroup<T>;
+	public var spriteGroup:FlxTypedGroup<T>;
 	
 	/**
 	 * The link to a group's members array
@@ -66,8 +66,8 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	public function new(X:Float = 0, Y:Float = 0, MaxSize:Int = 0)
 	{
 		super(X, Y);
-		group = new FlxTypedGroup<T>(MaxSize);
-		_sprites = cast group.members;
+		spriteGroup = new FlxTypedGroup<T>(MaxSize);
+		_sprites = cast spriteGroup.members;
 	}
 	
 	/**
@@ -100,7 +100,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		scale = FlxDestroyUtil.destroy(scale);
 		scrollFactor = FlxDestroyUtil.destroy(scrollFactor);
 		
-		group = FlxDestroyUtil.destroy(group);
+		spriteGroup = FlxDestroyUtil.destroy(spriteGroup);
 		_sprites = null;
 		
 		super.destroy();
@@ -116,11 +116,11 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	{
 		if (NewSprite == null || !Std.is(NewSprite, FlxTypedSpriteGroup))
 		{
-			NewSprite = new FlxTypedSpriteGroup<T>(0, 0, group.maxSize);
+			NewSprite = new FlxTypedSpriteGroup<T>(0, 0, spriteGroup.maxSize);
 		}
 		
 		var cloned:FlxTypedSpriteGroup<T> = cast NewSprite;
-		cloned.maxSize = group.maxSize;
+		cloned.maxSize = spriteGroup.maxSize;
 		
 		for (sprite in _sprites)
 		{
@@ -209,12 +209,12 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 			updateMotion();
 		}
 		
-		group.update();
+		spriteGroup.update();
 	}
 	
 	override public function draw():Void 
 	{
-		group.draw();
+		spriteGroup.draw();
 		#if !FLX_NO_DEBUG
 		_isDrawnDebug = false;
 		#end
@@ -263,7 +263,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	{
 		if (!_isDrawnDebug)	
 		{
-			group.drawDebug();
+			spriteGroup.drawDebug();
 			_isDrawnDebug = true;
 		}
 	}
@@ -282,7 +282,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		sprite.y += y;
 		sprite.alpha *= alpha;
 		sprite.scrollFactor.copyFrom(scrollFactor);
-		return group.add(Sprite);
+		return spriteGroup.add(Sprite);
 	}
 	
 	/**
@@ -295,7 +295,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 */
 	public inline function recycle(?ObjectClass:Class<T>, ?ContructorArgs:Array<Dynamic>, Force:Bool = false):FlxSprite
 	{
-		return group.recycle(ObjectClass, ContructorArgs, Force);
+		return spriteGroup.recycle(ObjectClass, ContructorArgs, Force);
 	}
 	
 	/**
@@ -307,7 +307,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 */
 	public function remove(Object:T, Splice:Bool = false):T
 	{
-		return group.remove(Object, Splice);
+		return spriteGroup.remove(Object, Splice);
 	}
 	
 	/**
@@ -319,7 +319,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 */
 	public inline function replace(OldObject:T, NewObject:T):T
 	{
-		return group.replace(OldObject, NewObject);
+		return spriteGroup.replace(OldObject, NewObject);
 	}
 	
 	/**
@@ -331,7 +331,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 */
 	public inline function sort(Function:Int->T->T->Int, Order:Int = FlxSort.ASCENDING):Void
 	{
-		group.sort(Function, Order);
+		spriteGroup.sort(Function, Order);
 	}
 	
 	/**
@@ -343,7 +343,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 */
 	public inline function setAll(VariableName:String, Value:Dynamic, Recurse:Bool = true):Void
 	{
-		group.setAll(VariableName, Value, Recurse);
+		spriteGroup.setAll(VariableName, Value, Recurse);
 	}
 	
 	/**
@@ -355,7 +355,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 */ 
 	public inline function callAll(FunctionName:String, ?Args:Array<Dynamic>, Recurse:Bool = true):Void
 	{
-		group.callAll(FunctionName, Args, Recurse);
+		spriteGroup.callAll(FunctionName, Args, Recurse);
 	}
 	
 	/**
@@ -368,7 +368,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 */
 	public inline function getFirstAvailable(?ObjectClass:Class<T>, Force:Bool = false):T
 	{
-		return group.getFirstAvailable(ObjectClass, Force);
+		return spriteGroup.getFirstAvailable(ObjectClass, Force);
 	}
 	
 	/**
@@ -379,7 +379,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 */
 	public inline function getFirstNull():Int
 	{
-		return group.getFirstNull();
+		return spriteGroup.getFirstNull();
 	}
 	
 	/**
@@ -390,7 +390,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 */
 	public inline function getFirstExisting():T
 	{
-		return group.getFirstExisting();
+		return spriteGroup.getFirstExisting();
 	}
 	
 	/**
@@ -401,7 +401,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 */
 	public inline function getFirstAlive():T
 	{
-		return group.getFirstAlive();
+		return spriteGroup.getFirstAlive();
 	}
 	
 	/**
@@ -412,7 +412,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 */
 	public inline function getFirstDead():T
 	{
-		return group.getFirstDead();
+		return spriteGroup.getFirstDead();
 	}
 	
 	/**
@@ -422,7 +422,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 */
 	public inline function countLiving():Int
 	{
-		return group.countLiving();
+		return spriteGroup.countLiving();
 	}
 	
 	/**
@@ -432,7 +432,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 */
 	public inline function countDead():Int
 	{
-		return group.countDead();
+		return spriteGroup.countDead();
 	}
 	
 	/**
@@ -444,7 +444,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 */
 	public inline function getRandom(StartIndex:Int = 0, Length:Int = 0):T
 	{
-		return group.getRandom(StartIndex, Length);
+		return spriteGroup.getRandom(StartIndex, Length);
 	}
 	
 	/**
@@ -454,7 +454,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 */
 	public inline function forEach(Function:T->Void):Void
 	{
-		group.forEach(Function);
+		spriteGroup.forEach(Function);
 	}
 
 	/**
@@ -464,7 +464,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 */
 	public inline function forEachAlive(Function:T->Void):Void
 	{
-		group.forEachAlive(Function);
+		spriteGroup.forEachAlive(Function);
 	}
 
 	/**
@@ -474,7 +474,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 */
 	public inline function forEachDead(Function:T->Void):Void
 	{
-		group.forEachDead(Function);
+		spriteGroup.forEachDead(Function);
 	}
 
 	/**
@@ -484,7 +484,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 */
 	public function forEachExists(Function:T->Void):Void
 	{
-		group.forEachExists(Function);
+		spriteGroup.forEachExists(Function);
 	}
 	
 	/**
@@ -493,7 +493,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 */
 	public inline function clear():Void
 	{
-		group.clear();
+		spriteGroup.clear();
 	}
 	
 	/**
@@ -503,7 +503,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	override public function kill():Void
 	{
 		super.kill();
-		group.kill();
+		spriteGroup.kill();
 	}
 	
 	/**
@@ -512,7 +512,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	override public function revive():Void
 	{
 		super.revive();
-		group.revive();
+		spriteGroup.revive();
 	}
 	
 	/**
@@ -565,7 +565,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 */
 	@:generic public function transformChildren<V>(Function:T->V->Void, Value:V):Void
 	{
-		if (group == null) 
+		if (spriteGroup == null) 
 		{
 			return;
 		}
@@ -587,7 +587,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 */
 	@:generic public function multiTransformChildren<V>(FunctionArray:Array<T->V->Void>, ValueArray:Array<V>):Void
 	{
-		if (group == null) 
+		if (spriteGroup == null) 
 		{
 			return;
 		}
@@ -816,22 +816,22 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	
 	private inline function get_length():Int
 	{
-		return group.length;
+		return spriteGroup.length;
 	}
 	
 	private inline function get_maxSize():Int
 	{
-		return group.maxSize;
+		return spriteGroup.maxSize;
 	}
 	
 	private inline function set_maxSize(Size:Int):Int
 	{
-		return group.maxSize = Size;
+		return spriteGroup.maxSize = Size;
 	}
 	
 	private inline function get_members():Array<T>
 	{
-		return group.members;
+		return spriteGroup.members;
 	}
 	
 	// TRANSFORM FUNCTIONS - STATIC TYPING
