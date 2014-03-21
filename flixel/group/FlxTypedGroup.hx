@@ -311,10 +311,14 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		if (Splice)
 		{
 			members.splice(basic._groupIndex, 1);
+			_activeMembers.splice(basic._groupIndex, 1);
+			_visibleMembers.splice(basic._groupIndex, 1);
 		}
 		else
 		{
 			members[basic._groupIndex] = null;
+			_activeMembers[basic._groupIndex] = null;
+			_visibleMembers[basic._groupIndex] = null;
 		}
 		
 		basic.group = null;
