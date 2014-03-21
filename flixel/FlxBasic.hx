@@ -49,7 +49,7 @@ class FlxBasic implements IFlxDestroyable
 	 */
 	public var collisionType(default, null):FlxCollisionType = FlxCollisionType.NONE;
 	/**
-	 * Gets the group that contains this object (might be an FlxState).
+	 * Gets the group that contains this object.
 	 */
 	@:allow(flixel.group)
 	public var group(default, null):FlxTypedGroup<FlxBasic>;
@@ -179,29 +179,16 @@ class FlxBasic implements IFlxDestroyable
 	
 	private function set_visible(Value:Bool):Bool
 	{
-		if (group != null)
-		{
-			group._visibleMembers[_groupIndex] = Value ? this : null;
-		}
 		return visible = Value;
 	}
 	
 	private function set_active(Value:Bool):Bool
 	{
-		if (group != null)
-		{
-			group._activeMembers[_groupIndex] = Value ? this : null;
-		}
 		return active = Value;
 	}
 	
 	private function set_exists(Value:Bool):Bool
 	{
-		if (group != null)
-		{
-			group._activeMembers[_groupIndex] = Value && active ? this : null;
-			group._visibleMembers[_groupIndex] = Value && visible ? this : null;
-		}
 		return exists = Value;
 	}
 	

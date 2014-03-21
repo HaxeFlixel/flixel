@@ -30,16 +30,6 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 * Internal helper variable for recycling objects a la FlxEmitter.
 	 */
 	private var _marker:Int = 0;
-	/**
-	 * Array of all active the FlxBasics that exist in this group for optimization purposes.
-	 */
-	@:allow(flixel.FlxBasic)
-	private var _activeMembers:Array<FlxBasic>;
-	/**
-	 * Array of all visible the FlxBasics that exist in this group for optimization purposes.
-	 */
-	@:allow(flixel.FlxBasic)
-	private var _visibleMembers:Array<FlxBasic>;
 	
 	/**
 	 * @param	MaxSize		Maximum amount of members allowed
@@ -51,8 +41,6 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		maxSize = Std.int(Math.abs(MaxSize));
 		
 		members = new Array<T>();
-		_activeMembers = new Array<FlxBasic>();
-		_visibleMembers = new Array<FlxBasic>();
 		
 		collisionType = FlxCollisionType.GROUP;
 	}
@@ -83,8 +71,6 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			}
 			
 			members = null;
-			_activeMembers = null;
-			_visibleMembers = null;
 		}
 	}
 	
@@ -98,9 +84,9 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		
 		while (i < length)
 		{
-			basic = _activeMembers[i++];
+			basic = members[i++];
 			
-			if (basic != null)
+			if (basic != null && basic.exists && basic.active)
 			{
 				basic.update();
 			}
@@ -117,9 +103,9 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		
 		while (i < length)
 		{
-			basic = _visibleMembers[i++];
+			basic = members[i++];
 			
-			if (basic != null)
+			if (basic != null && basic.exists && basic.visible)
 			{
 				basic.draw();
 			}
@@ -134,9 +120,9 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		
 		while (i < length)
 		{
-			basic = _visibleMembers[i++];
+			basic = members[i++];
 			
-			if (basic != null)
+			if (basic != null && basic.exists && basic.visible)
 			{
 				basic.drawDebug();
 			}
@@ -176,11 +162,8 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		if (index != -1)
 		{
 			members[index] = Object;
-			
 			basic.group = cast this;
 			basic._groupIndex = index;
-			_activeMembers[index] = (basic.exists && basic.active) ? basic : null;
-			_visibleMembers[index] = (basic.exists && basic.visible) ? basic : null;
 			
 			if (index >= length)
 			{
@@ -198,11 +181,8 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		
 		// If we made it this far, we need to add the object to the group.
 		members.push(Object);
-		
 		basic.group = cast this;
 		basic._groupIndex = length++;
-		_activeMembers.push((basic.exists && basic.active) ? basic : null);
-		_visibleMembers.push((basic.exists && basic.visible) ? basic : null);
 		
 		return Object;
 	}
@@ -311,14 +291,10 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		if (Splice)
 		{
 			members.splice(basic._groupIndex, 1);
-			_activeMembers.splice(basic._groupIndex, 1);
-			_visibleMembers.splice(basic._groupIndex, 1);
 		}
 		else
 		{
 			members[basic._groupIndex] = null;
-			_activeMembers[basic._groupIndex] = null;
-			_visibleMembers[basic._groupIndex] = null;
 		}
 		
 		basic.group = null;
