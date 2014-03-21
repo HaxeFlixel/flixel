@@ -1,6 +1,7 @@
 package flixel;
 
 import flixel.FlxG;
+import flixel.group.FlxTypedGroup;
 import flixel.interfaces.IFlxDestroyable;
 import flixel.system.FlxCollisionType;
 import flixel.util.FlxStringUtil;
@@ -43,11 +44,10 @@ class FlxBasic implements IFlxDestroyable
 	 * Cannot be set, use destroy() and revive().
 	 */
 	public var exists(default, set):Bool = true;
-	
 	/**
 	 * Enum that informs the collision system which type of object this is (to avoid expensive type casting).
 	 */
-	public var collisionType(default, null):FlxCollisionType;
+	public var collisionType(default, null):FlxCollisionType = FlxCollisionType.NONE;
 	
 	#if !FLX_NO_DEBUG
 	/**
@@ -63,10 +63,11 @@ class FlxBasic implements IFlxDestroyable
 	#end
 	
 	private var _cameras:Array<FlxCamera>;
+	@:allow(flixel.group) private var _groupIndex:Int = -1; // index of this object into groups arrays
+	@:allow(flixel.group) private var _group:FlxTypedGroup<FlxBasic>; // group that contains this object
 	
-	public function new() 
-	{ 
-		collisionType = FlxCollisionType.NONE;
+	public function new()
+	{
 	}
 	
 	/**
@@ -76,8 +77,8 @@ class FlxBasic implements IFlxDestroyable
 	public function destroy():Void 
 	{
 		exists = false;
-		collisionType = null;
 		_cameras = null;
+		_group = null;
 	}
 	
 	/**
@@ -172,22 +173,35 @@ class FlxBasic implements IFlxDestroyable
 	
 	private function set_visible(Value:Bool):Bool
 	{
+		if (_group != null)
+		{
+			_group._visibleMembers[_groupIndex] = Value ? this : null;
+		}
 		return visible = Value;
 	}
 	
 	private function set_active(Value:Bool):Bool
 	{
+		if (_group != null)
+		{
+			_group._activeMembers[_groupIndex] = Value ? this : null;
+		}
 		return active = Value;
+	}
+	
+	private function set_exists(Value:Bool):Bool
+	{
+		if (_group != null)
+		{
+			_group._activeMembers[_groupIndex] = Value && active ? this : null;
+			_group._visibleMembers[_groupIndex] = Value && visible ? this : null;
+		}
+		return exists = Value;
 	}
 	
 	private function set_alive(Value:Bool):Bool
 	{
 		return alive = Value;
-	}
-	
-	private function set_exists(Value:Bool):Bool
-	{
-		return exists = Value;
 	}
 	
 	public function toString():String
