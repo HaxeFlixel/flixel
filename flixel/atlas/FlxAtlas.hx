@@ -415,6 +415,9 @@ class FlxAtlas
 		var stack:Array<FlxNode> = new Array<FlxNode>();
 		// Current node
 		var current:FlxNode = root;
+		
+		var canPlaceRight:Bool = false;
+		var canPlaceLeft:Bool = false;
 		// Main loop
 		while (true)
 		{
@@ -424,16 +427,18 @@ class FlxAtlas
 				return current;
 			}
 			// Move to next node
-			if (current.right != null && current.right.canPlace(insertWidth, insertHeight) && current.left != null && current.left.canPlace(insertWidth, insertHeight))
+			canPlaceRight = (current.right != null && current.right.canPlace(insertWidth, insertHeight));
+			canPlaceLeft = (current.left != null && current.left.canPlace(insertWidth, insertHeight));
+			if (canPlaceRight && canPlaceLeft)
 			{
 				stack.push(current.right);
 				current = current.left;
 			}
-			else if (current.left != null && current.left.canPlace(insertWidth, insertHeight))
+			else if (canPlaceLeft)
 			{
 				current = current.left;
 			}
-			else if (current.right != null && current.right.canPlace(insertWidth, insertHeight))
+			else if (canPlaceRight)
 			{
 				current = current.right;
 			}
