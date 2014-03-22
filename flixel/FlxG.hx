@@ -418,7 +418,11 @@ class FlxG
 	 */
 	public static inline function openURL(URL:String, Target:String = "_blank"):Void
 	{
-		Lib.getURL(new URLRequest(URL), Target);
+		var prefix:String = "";
+		//if the URL does not already start with "http://" or "https://", add it.
+		if(~/^https?:\/\//.match(URL)
+			prefix = "http://";
+		Lib.getURL(new URLRequest(prefix + URL), Target);
 	}
 	
 	/**
