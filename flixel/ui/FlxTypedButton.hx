@@ -150,15 +150,8 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		updateButton();
 		#end
 		
-		// Label positioning
 		if (label != null)
 		{
-			label.x = x;
-			label.y = y;
-			
-			label.x += labelOffsets[status].x;
-			label.y += labelOffsets[status].y;
-			
 			label.scrollFactor = scrollFactor;
 		}
 		
@@ -305,6 +298,28 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 			label.alpha = alpha * labelAlphas[Value];
 		}
 		return status = Value;
+	}
+	
+	override private function set_x(NewX:Float):Float 
+	{
+		// Label positioning
+		if (label != null)
+		{
+			label.x = x + labelOffsets[status].x;	
+		}
+		
+		return super.set_x(NewX);
+	}
+	
+	override private function set_y(NewY:Float):Float 
+	{
+		// Label positioning
+		if (label != null)
+		{
+			label.y = y + labelOffsets[status].y;			
+		}
+		
+		return super.set_y(NewY);
 	}
 	
 	/**
