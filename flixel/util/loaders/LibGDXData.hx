@@ -34,8 +34,7 @@ class LibGDXData extends TexturePackerData implements IFlxDestroyable
 		
 		asset = FlxG.bitmap.add(assetName).bitmap;
 		
-		
-		var pack:String = Assets.getText("assets/test.pack");
+		var pack:String = Assets.getText(description);
 		pack = StringTools.trim(pack);
 		var lines:Array<String> = pack.split("\n");
 		lines.splice(0, 4);
