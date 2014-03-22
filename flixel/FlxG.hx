@@ -157,23 +157,6 @@ class FlxG
 	 * is pressed with if (FlxG.mouse.pressed) { }) in update().
 	 */
 	public static var mouse(default, set):FlxMouse;
-	private static function set_mouse(NewMouse:FlxMouse):FlxMouse
-	{
-		if (mouse == null)					//if no mouse, just add it
-		{
-			mouse = inputs.add(NewMouse);	//safe to do b/c it won't add repeats!
-			return mouse;
-		}
-		var oldMouse:FlxMouse = mouse;
-		var result:FlxMouse = inputs.replace(oldMouse, NewMouse);	//replace existing mouse
-		if (result != null)
-		{
-			mouse = result;
-			oldMouse.destroy();
-			return NewMouse;
-		}
-		return oldMouse;
-	}
 	#end
 	
 	#if !FLX_NO_TOUCH
@@ -491,6 +474,26 @@ class FlxG
 		game.onResize();
 		return ScaleMode;
 	}
+	
+	#if !FLX_NO_MOUSE
+	private static function set_mouse(NewMouse:FlxMouse):FlxMouse
+	{
+		if (mouse == null)					//if no mouse, just add it
+		{
+			mouse = inputs.add(NewMouse);	//safe to do b/c it won't add repeats!
+			return mouse;
+		}
+		var oldMouse:FlxMouse = mouse;
+		var result:FlxMouse = inputs.replace(oldMouse, NewMouse);	//replace existing mouse
+		if (result != null)
+		{
+			mouse = result;
+			oldMouse.destroy();
+			return NewMouse;
+		}
+		return oldMouse;
+	}
+	#end
 	
 	private static inline function get_updateFramerate():Int
 	{
