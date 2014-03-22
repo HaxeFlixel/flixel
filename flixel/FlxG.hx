@@ -412,6 +412,8 @@ class FlxG
 	
 	/**
 	 * Opens a web page, by default a new tab or window.
+	 * If the URL does not already start with "http://" or
+	 * "https://", it gets added automatically.
 	 * 
 	 * @param	URL		The address of the web page.
 	 * @param	Target	"_blank", "_self", "_parent" or "_top"
