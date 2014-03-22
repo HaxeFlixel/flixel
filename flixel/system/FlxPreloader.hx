@@ -51,10 +51,16 @@ class FlxPreloader extends NMEPreloader
 	public var minDisplayTime:Float = 1;
 	
 	/**
-	 * List of allowed URLs for built-in site-locking. Use full swf's addresses with 'http' or 'https'.
+	 * List of allowed URLs for built-in site-locking.
 	 * Set it in FlxPreloader's subclass constructor as: allowedURLs = ['http://adamatomic.com/canabalt/', FlxPreloader.LOCAL];
 	 */
 	public var allowedURLs:Array<String>;
+
+	/**
+	* The index of the site in the allowedURLs array on which to site-lock.
+	* Defaults to 0.
+	*/
+	public var siteLockURLIndex:Int = 0;
 	
 	private static var BlendModeScreen = BlendMode.SCREEN;
 	private static var BlendModeOverlay = BlendMode.OVERLAY;
@@ -341,7 +347,11 @@ class FlxPreloader extends NMEPreloader
 	#if flash
 	private function goToMyURL(?e:MouseEvent):Void
 	{
-		Lib.getURL(new URLRequest(allowedURLs[0]));
+		//if the chosen URL isn't "local", use FlxG's openURL() function.
+		if(allowedURLs[siteLockURLIndex] != FlxPreloader.LOCAL)
+			FlxG.openURL(allowedURLs[siteLockURLIndex]);
+		else
+			Lib.getURL(new URLRequest(allowedURLs[siteLockURLIndex]));
 	}
 	
 	private function isHostUrlAllowed():Bool
