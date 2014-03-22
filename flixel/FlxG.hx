@@ -422,7 +422,7 @@ class FlxG
 	{
 		var prefix:String = "";
 		//if the URL does not already start with "http://" or "https://", add it.
-		if(~/^https?:\/\//.match(URL)
+		if(!~/^https?:\/\//.match(URL))
 			prefix = "http://";
 		Lib.getURL(new URLRequest(prefix + URL), Target);
 	}
