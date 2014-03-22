@@ -347,7 +347,10 @@ class FlxPreloader extends NMEPreloader
 	#if flash
 	private function goToMyURL(?e:MouseEvent):Void
 	{
-		var prefix:String = allowedURLs[myURLIndex] == FlxPreloader.LOCAL ? "" : ~/^https?:\/\//.match(allowedURLs[myURLIndex]) ? "" : "http://";
+		var prefix:String = "";
+		//if the chosen URL isn't "local" and the URL does not already start with "http://" or "https://"
+		if(allowedURLs[myURLIndex] != FlxPreloader.LOCAL && ~/^https?:\/\//.match(allowedURLs[myURLIndex]))
+			prefix = "http://";
 		Lib.getURL(new URLRequest(prefix+allowedURLs[myURLIndex]));
 	}
 	
