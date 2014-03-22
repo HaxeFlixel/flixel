@@ -57,10 +57,10 @@ class FlxPreloader extends NMEPreloader
 	public var allowedURLs:Array<String>;
 
 	/**
-	* The index of your own site's url in the allowedURLs array.
-	* Used in goToMyURL(). Defaults to 0.
+	* The index of the site in the allowedURLs array on which to site-lock.
+	* Defaults to 0.
 	*/
-	public var myURLIndex:Int = 0;
+	public var siteLockURLIndex:Int = 0;
 	
 	private static var BlendModeScreen = BlendMode.SCREEN;
 	private static var BlendModeOverlay = BlendMode.OVERLAY;
@@ -349,9 +349,9 @@ class FlxPreloader extends NMEPreloader
 	{
 		var prefix:String = "";
 		//if the chosen URL isn't "local" and the URL does not already start with "http://" or "https://"
-		if(allowedURLs[myURLIndex] != FlxPreloader.LOCAL && ~/^https?:\/\//.match(allowedURLs[myURLIndex]))
+		if(allowedURLs[siteLockURLIndex] != FlxPreloader.LOCAL && ~/^https?:\/\//.match(allowedURLs[siteLockURLIndex]))
 			prefix = "http://";
-		Lib.getURL(new URLRequest(prefix+allowedURLs[myURLIndex]));
+		Lib.getURL(new URLRequest(prefix + allowedURLs[siteLockURLIndex]));
 	}
 	
 	private function isHostUrlAllowed():Bool
