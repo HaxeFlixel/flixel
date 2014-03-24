@@ -9,6 +9,7 @@ class FlxVector extends FlxPoint
 	public static inline var EPSILON_SQUARED:Float = EPSILON * EPSILON;
 	
 	private static var _pool = new FlxPool<FlxVector>(FlxVector);
+	private var _inPool:Bool = false;
 	
 	private static var _vector1:FlxVector = new FlxVector();
 	private static var _vector2:FlxVector = new FlxVector();
@@ -23,7 +24,22 @@ class FlxVector extends FlxPoint
 	 */
 	public static inline function get(X:Float = 0, Y:Float = 0):FlxVector
 	{
-		return _pool.get().set(X, Y);
+		var vector = _pool.get().set(X, Y);
+		vector._inPool = false;
+		return vector;
+	}
+	
+	
+	/**
+	 * Add this FlxVector to the recycling pool.
+	 */
+	public inline function put():Void
+	{
+		if (!_inPool)
+		{
+			_inPool = true;
+			_pool.putUnsafe(this);
+		}
 	}
 	
 	/**
