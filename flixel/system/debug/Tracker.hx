@@ -66,7 +66,7 @@ class Tracker extends Watch
 		var lastMatchingProfile:TrackerProfile = null;
 		for (profile in profiles)
 		{
-			if ((profile != null) && Std.is(Object, profile.objectClass))
+			if (Std.is(Object, profile.objectClass) || (Object == profile.objectClass))
 			{
 				lastMatchingProfile = profile;
 			}
@@ -84,6 +84,9 @@ class Tracker extends Watch
 		if (profiles == null)
 		{
 			profiles = [];
+			
+			addProfile(new TrackerProfile(FlxG, ["width", "height", "worldBounds.x", "worldBounds.y", "worldBounds.width", "worldBounds.height", 
+			                                     "worldDivisions", "updateFramerate", "drawFramerate", "elapsed", "autoPause", "fixedTimestep", "timeScale"]));
 			
 			addProfile(new TrackerProfile(FlxPoint, ["x", "y"]));
 			addProfile(new TrackerProfile(FlxRect, ["width", "height"], [FlxPoint]));
