@@ -52,11 +52,13 @@ class TweenManager extends FlxPlugin
 	
 	/**
 	 * Add a FlxTween.
+	 * 
 	 * @param	Tween	The FlxTween to add.
 	 * @param	Start	Whether you want it to start right away.
 	 * @return	The added FlxTween object.
 	 */
-	public function add(Tween:FlxTween, Start:Bool = false):FlxTween
+	@:generic
+	public function add<T:FlxTween>(Tween:T, Start:Bool = false):T
 	{
 		// Don't add a null object
 		if (Tween == null)
