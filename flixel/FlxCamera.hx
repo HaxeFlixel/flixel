@@ -609,7 +609,7 @@ class FlxCamera extends FlxBasic
 				{
 					_scrollTarget.x = edge;
 				}
-
+				
 				edge = targetY - deadzone.y;
 				if (_scrollTarget.y > edge)
 				{
@@ -637,8 +637,7 @@ class FlxCamera extends FlxBasic
 			
 			if (followLerp == 0) 
 			{
-				scroll.x = _scrollTarget.x; // Prevents Camera Jittering with no lerp.
-				scroll.y = _scrollTarget.y; // Prevents Camera Jittering with no lerp.
+				scroll.copyFrom(_scrollTarget); // Prevents Camera Jittering with no lerp.
 			} 
 			else 
 			{
