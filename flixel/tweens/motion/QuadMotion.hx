@@ -50,12 +50,12 @@ class QuadMotion extends Motion
 	 * @param	type		Tween type.
 	 * @param	Eease		Optional easer function.
 	 */
-	override public function init(Complete:CompleteCallback, TweenType:Int)
+	override public function init(Complete:CompleteCallback, TweenType:Int, UsePooling:Bool)
 	{
 		_distance = -1;
 		_fromX = _fromY = _toX = _toY = 0;
 		_controlX = _controlY = 0;
-		return super.init(Complete, TweenType);
+		return super.init(Complete, TweenType, UsePooling);
 	}
 	
 	/**

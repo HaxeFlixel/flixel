@@ -47,11 +47,11 @@ class CubicMotion extends Motion
 	 * @param	type		Tween type.
 	 * @param	Eease		Optional easer function.
 	 */
-	override public function init(Complete:CompleteCallback, TweenType:Int)
+	override public function init(Complete:CompleteCallback, TweenType:Int, UsePooling:Bool)
 	{
 		_fromX = _fromY = _toX = _toY = 0;
 		_aX = _aY = _bX = _bY = 0;
-		return super.init(Complete, TweenType);
+		return super.init(Complete, TweenType, UsePooling);
 	}
 	
 	/**

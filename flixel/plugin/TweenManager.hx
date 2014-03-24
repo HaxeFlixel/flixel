@@ -83,6 +83,7 @@ class TweenManager extends FlxPlugin
 
 	/**
 	 * Remove a FlxTween.
+	 * 
 	 * @param	Tween		The FlxTween to remove.
 	 * @param	Destroy		Whether you want to destroy the FlxTween.
 	 * @return	The added FlxTween object.
@@ -94,7 +95,7 @@ class TweenManager extends FlxPlugin
 			return null;
 		}
 		
-		if (Destroy) 
+		if (Destroy && Tween._usePooling) 
 		{
 			// calls destroy
 			Tween.put();
@@ -109,6 +110,7 @@ class TweenManager extends FlxPlugin
 
 	/**
 	 * Removes all FlxTweens.
+	 * 
 	 * @param	Destroy		Whether you want to destroy the FlxTweens.
 	 */
 	public function clear(Destroy:Bool = false):Void

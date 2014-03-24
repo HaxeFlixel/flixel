@@ -52,12 +52,12 @@ class CircularMotion extends Motion
 	 * @param	type		Tween type.
 	 * @param	Eease		Optional easer function.
 	 */
-	override public function init(Complete:CompleteCallback, TweenType:Int)
+	override public function init(Complete:CompleteCallback, TweenType:Int, UsePooling:Bool)
 	{
 		_centerX = _centerY = 0;
 		_radius = angle = 0;
 		_angleStart = _angleFinish = 0;
-		return super.init(Complete, TweenType);
+		return super.init(Complete, TweenType, UsePooling);
 	}
 
 	/**

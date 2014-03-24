@@ -47,11 +47,11 @@ class LinearMotion extends Motion
 	 * @param	type		Tween type.
 	 * @param	Eease		Optional easer function.
 	 */
-	override public function init(Complete:CompleteCallback, TweenType:Int)
+	override public function init(Complete:CompleteCallback, TweenType:Int, UsePooling:Bool)
 	{
 		_fromX = _fromY = _moveX = _moveY = 0;
 		_distance = -1;
-		return super.init(Complete, TweenType);
+		return super.init(Complete, TweenType, UsePooling);
 	}
 
 	/**

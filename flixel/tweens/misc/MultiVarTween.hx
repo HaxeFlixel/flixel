@@ -52,12 +52,12 @@ class MultiVarTween extends FlxTween
 	 * @param	type		Tween type.
 	 * @param	Eease		Optional easer function.
 	 */
-	override public function init(Complete:CompleteCallback, TweenType:Int)
+	override public function init(Complete:CompleteCallback, TweenType:Int, UsePooling:Bool)
 	{
 		FlxArrayUtil.setLength(_vars, 0);
 		FlxArrayUtil.setLength(_start, 0);
 		FlxArrayUtil.setLength(_range, 0);
-		return super.init(Complete, TweenType);
+		return super.init(Complete, TweenType, UsePooling);
 	}
 	
 	/**
@@ -96,6 +96,11 @@ class MultiVarTween extends FlxTween
 				Reflect.setProperty(_object, _vars[i], (_start[i] + _range[i] * scale));
 			}
 		}
+	}
+	
+	override inline public function put():Void
+	{
+		_pool.put(this);
 	}
 	
 	private function new()
@@ -137,10 +142,5 @@ class MultiVarTween extends FlxTween
 			_start.push(a);
 			_range.push(Reflect.getProperty(_properties, p) - a);
 		}
-	}
-	
-	override inline public function put():Void
-	{
-		_pool.put(this);
 	}
 }
