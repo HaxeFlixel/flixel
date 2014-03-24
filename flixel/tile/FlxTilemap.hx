@@ -734,7 +734,7 @@ class FlxTilemap extends FlxObject
 		var data:Array<Int> = new Array(/*l*/);
 		FlxArrayUtil.setLength(data, l);
 		
-		while(i < l)
+		while (i < l)
 		{
 			data[i] = (_tileObjects[_data[i]].allowCollisions > 0) ? 1 : 0;
 			i++;
@@ -1815,7 +1815,7 @@ class FlxTilemap extends FlxObject
 		var i:Int = 1;
 		var l:Int = Points.length - 1;
 		
-		while(i < l)
+		while (i < l)
 		{
 			node = Points[i];
 			deltaPrevious = (node.x - last.x)/(node.y - last.y);
@@ -1847,7 +1847,7 @@ class FlxTilemap extends FlxObject
 		var i:Int = 1;
 		var l:Int = Points.length;
 		
-		while(i < l)
+		while (i < l)
 		{
 			node = Points[i++];
 			
@@ -1891,7 +1891,7 @@ class FlxTilemap extends FlxObject
 		FlxArrayUtil.setLength(distances, mapSize);
 		var i:Int = 0;
 		
-		while(i < mapSize)
+		while (i < mapSize)
 		{
 			if (_tileObjects[_data[i]].allowCollisions != FlxObject.NONE)
 			{
@@ -1916,14 +1916,14 @@ class FlxTilemap extends FlxObject
 		var currentLength:Int;
 		var foundEnd:Bool = false;
 		
-		while(neighbors.length > 0)
+		while (neighbors.length > 0)
 		{
 			current = neighbors;
 			neighbors = new Array<Int>();
 			
 			i = 0;
 			currentLength = current.length;
-			while(i < currentLength)
+			while (i < currentLength)
 			{
 				currentIndex = current[i++];
 				

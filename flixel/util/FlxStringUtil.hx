@@ -118,7 +118,7 @@ class FlxStringUtil
 		var zeroes:String = "";
 		while (amount > 0)
 		{
-			if((string.length > 0) && comma.length <= 0)
+			if ((string.length > 0) && (comma.length <= 0))
 			{
 				if (EnglishStyle)
 				{

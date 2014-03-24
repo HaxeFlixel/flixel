@@ -32,7 +32,7 @@ class FlxVector extends FlxPoint
 	/**
 	 * Add this FlxVector to the recycling pool.
 	 */
-	public override function put():Void
+	override public function put():Void
 	{
 		if (!_inPool)
 		{

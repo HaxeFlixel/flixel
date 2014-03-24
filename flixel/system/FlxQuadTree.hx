@@ -256,7 +256,7 @@ class FlxQuadTree extends FlxRect
 			if (Parent._headA.object != null)
 			{
 				iterator = Parent._headA;
-				while(iterator != null)
+				while (iterator != null)
 				{
 					if (_tailA.object != null)
 					{
@@ -271,7 +271,7 @@ class FlxQuadTree extends FlxRect
 			if (Parent._headB.object != null)
 			{
 				iterator = Parent._headB;
-				while(iterator != null)
+				while (iterator != null)
 				{
 					if (_tailB.object != null)
 					{
@@ -464,16 +464,16 @@ class FlxQuadTree extends FlxRect
 	private function addObject():Void
 	{
 		//If this quad (not its children) lies entirely inside this object, add it here
-		if(!_canSubdivide || ((_leftEdge >= _objectLeftEdge) && (_rightEdge <= _objectRightEdge) && (_topEdge >= _objectTopEdge) && (_bottomEdge <= _objectBottomEdge)))
+		if (!_canSubdivide || ((_leftEdge >= _objectLeftEdge) && (_rightEdge <= _objectRightEdge) && (_topEdge >= _objectTopEdge) && (_bottomEdge <= _objectBottomEdge)))
 		{
 			addToList();
 			return;
 		}
 		
 		//See if the selected object fits completely inside any of the quadrants
-		if((_objectLeftEdge > _leftEdge) && (_objectRightEdge < _midpointX))
+		if ((_objectLeftEdge > _leftEdge) && (_objectRightEdge < _midpointX))
 		{
-			if((_objectTopEdge > _topEdge) && (_objectBottomEdge < _midpointY))
+			if ((_objectTopEdge > _topEdge) && (_objectBottomEdge < _midpointY))
 			{
 				if (_northWestTree == null)
 				{
@@ -482,7 +482,7 @@ class FlxQuadTree extends FlxRect
 				_northWestTree.addObject();
 				return;
 			}
-			if((_objectTopEdge > _midpointY) && (_objectBottomEdge < _bottomEdge))
+			if ((_objectTopEdge > _midpointY) && (_objectBottomEdge < _bottomEdge))
 			{
 				if (_southWestTree == null)
 				{
@@ -492,9 +492,9 @@ class FlxQuadTree extends FlxRect
 				return;
 			}
 		}
-		if((_objectLeftEdge > _midpointX) && (_objectRightEdge < _rightEdge))
+		if ((_objectLeftEdge > _midpointX) && (_objectRightEdge < _rightEdge))
 		{
-			if((_objectTopEdge > _topEdge) && (_objectBottomEdge < _midpointY))
+			if ((_objectTopEdge > _topEdge) && (_objectBottomEdge < _midpointY))
 			{
 				if (_northEastTree == null)
 				{
@@ -503,7 +503,7 @@ class FlxQuadTree extends FlxRect
 				_northEastTree.addObject();
 				return;
 			}
-			if((_objectTopEdge > _midpointY) && (_objectBottomEdge < _bottomEdge))
+			if ((_objectTopEdge > _midpointY) && (_objectBottomEdge < _bottomEdge))
 			{
 				if (_southEastTree == null)
 				{
@@ -515,7 +515,7 @@ class FlxQuadTree extends FlxRect
 		}
 		
 		//If it wasn't completely contained we have to check out the partial overlaps
-		if((_objectRightEdge > _leftEdge) && (_objectLeftEdge < _midpointX) && (_objectBottomEdge > _topEdge) && (_objectTopEdge < _midpointY))
+		if ((_objectRightEdge > _leftEdge) && (_objectLeftEdge < _midpointX) && (_objectBottomEdge > _topEdge) && (_objectTopEdge < _midpointY))
 		{
 			if (_northWestTree == null)
 			{
@@ -523,7 +523,7 @@ class FlxQuadTree extends FlxRect
 			}
 			_northWestTree.addObject();
 		}
-		if((_objectRightEdge > _midpointX) && (_objectLeftEdge < _rightEdge) && (_objectBottomEdge > _topEdge) && (_objectTopEdge < _midpointY))
+		if ((_objectRightEdge > _midpointX) && (_objectLeftEdge < _rightEdge) && (_objectBottomEdge > _topEdge) && (_objectTopEdge < _midpointY))
 		{
 			if (_northEastTree == null)
 			{
@@ -531,7 +531,7 @@ class FlxQuadTree extends FlxRect
 			}
 			_northEastTree.addObject();
 		}
-		if((_objectRightEdge > _midpointX) && (_objectLeftEdge < _rightEdge) && (_objectBottomEdge > _midpointY) && (_objectTopEdge < _bottomEdge))
+		if ((_objectRightEdge > _midpointX) && (_objectLeftEdge < _rightEdge) && (_objectBottomEdge > _midpointY) && (_objectTopEdge < _bottomEdge))
 		{
 			if (_southEastTree == null)
 			{
@@ -539,7 +539,7 @@ class FlxQuadTree extends FlxRect
 			}
 			_southEastTree.addObject();
 		}
-		if((_objectRightEdge > _leftEdge) && (_objectLeftEdge < _midpointX) && (_objectBottomEdge > _midpointY) && (_objectTopEdge < _bottomEdge))
+		if ((_objectRightEdge > _leftEdge) && (_objectLeftEdge < _midpointX) && (_objectBottomEdge > _midpointY) && (_objectTopEdge < _bottomEdge))
 		{
 			if (_southWestTree == null)
 			{
@@ -610,7 +610,7 @@ class FlxQuadTree extends FlxRect
 		if (_headA.object != null)
 		{
 			iterator = _headA;
-			while(iterator != null)
+			while (iterator != null)
 			{
 				_object = iterator.object;
 				if (_useBothLists)
@@ -669,7 +669,7 @@ class FlxQuadTree extends FlxRect
 			}
 			
 			checkObject = _iterator.object;
-			if((_object == checkObject) || !checkObject.exists || (checkObject.allowCollisions <= 0))
+			if ((_object == checkObject) || !checkObject.exists || (checkObject.allowCollisions <= 0))
 			{
 				_iterator = _iterator.next;
 				continue;

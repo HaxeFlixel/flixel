@@ -296,7 +296,7 @@ class FlxPreloader extends NMEPreloader
 		else
 		{
 			var percent:Float = _percent;
-			if((_min > 0) && (percent > time/_min))
+			if ((_min > 0) && (percent > time/_min))
 			{
 				percent = time / _min;
 			}
@@ -348,7 +348,7 @@ class FlxPreloader extends NMEPreloader
 	private function goToMyURL(?e:MouseEvent):Void
 	{
 		//if the chosen URL isn't "local", use FlxG's openURL() function.
-		if(allowedURLs[siteLockURLIndex] != FlxPreloader.LOCAL)
+		if (allowedURLs[siteLockURLIndex] != FlxPreloader.LOCAL)
 			FlxG.openURL(allowedURLs[siteLockURLIndex]);
 		else
 			Lib.getURL(new URLRequest(allowedURLs[siteLockURLIndex]));

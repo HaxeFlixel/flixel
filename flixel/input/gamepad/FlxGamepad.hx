@@ -287,7 +287,8 @@ class FlxGamepad implements IFlxDestroyable
 	}
 	
 	/**
-	 * Gets the value of the specified axis - DOES NOT WORK WELL ON HTML5 TARGET, use getXAxis() and getYAxis() instead.
+	 * Gets the value of the specified axis - DOES NOT WORK WELL ON 
+	 * THE FLASH TARGET, use getXAxis() and getYAxis() instead.
 	 */
 	public inline function getAxis(AxisID:Int):Float
 	{
@@ -295,7 +296,7 @@ class FlxGamepad implements IFlxDestroyable
 	}
 	
 	/**
-	 * * Gets the value of the specified X axis - USE THIS FOR HTML5 TARGET.
+	 * Gets the value of the specified X axis.
 	 */
 	public inline function getXAxis(AxisID:Int):Float
 	{
@@ -303,7 +304,8 @@ class FlxGamepad implements IFlxDestroyable
 	}
 	
 	/**
-	 * * Gets the value of the specified Y axis - USE THIS FOR HTML5 TARGET.
+	 * Gets the value of the specified Y axis - 
+	 * should be used in flash to correct the inverted y axis.
 	 */
 	public function getYAxis(AxisID:Int):Float
 	{
