@@ -49,7 +49,7 @@ class FlxPoint implements IFlxPooled
 	/**
 	 * Add this FlxPoint to the recycling pool.
 	 */
-	public inline function put():Void
+	public function put():Void
 	{
 		if (!_inPool)
 		{

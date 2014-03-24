@@ -9,7 +9,6 @@ class FlxVector extends FlxPoint
 	public static inline var EPSILON_SQUARED:Float = EPSILON * EPSILON;
 	
 	private static var _pool = new FlxPool<FlxVector>(FlxVector);
-	private var _inPool:Bool = false;
 	
 	private static var _vector1:FlxVector = new FlxVector();
 	private static var _vector2:FlxVector = new FlxVector();
@@ -33,7 +32,7 @@ class FlxVector extends FlxPoint
 	/**
 	 * Add this FlxVector to the recycling pool.
 	 */
-	public inline function put():Void
+	public override function put():Void
 	{
 		if (!_inPool)
 		{
