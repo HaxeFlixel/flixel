@@ -286,11 +286,25 @@ class FlxGamepad implements IFlxDestroyable
 		return -1; 
 	}
 	
+	/**
+	 * Gets the value of the specified axis - DOES NOT WORK WELL ON HTML5 TARGET, use getXAxis() and getYAxis() instead.
+	 */
+	public inline function getAxis(AxisID:Int):Float
+	{
+		return getAxisValue(AxisID);
+	}
+	
+	/**
+	 * * Gets the value of the specified X axis - USE THIS FOR HTML5 TARGET.
+	 */
 	public inline function getXAxis(AxisID:Int):Float
 	{
 		return getAxisValue(AxisID);
 	}
 	
+	/**
+	 * * Gets the value of the specified Y axis - USE THIS FOR HTML5 TARGET.
+	 */
 	public function getYAxis(AxisID:Int):Float
 	{
 		var axisValue = getAxisValue(AxisID);
