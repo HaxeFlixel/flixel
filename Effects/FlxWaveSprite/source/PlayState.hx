@@ -3,6 +3,7 @@ package;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
+import flixel.input.touch.FlxTouch;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import flixel.util.FlxMath;
@@ -38,6 +39,8 @@ class PlayState extends FlxState
 		_wavLogo.center = center;
 		
 		var _txtInstruct:FlxText;
+		
+		#if !FLX_NO_KEYBOARD
 		_txtInstruct = new FlxText(0, 0, FlxG.width, "Space to Cycle Modes", 12);
 		_txtInstruct.alignment = "center";
 		add(_txtInstruct);
@@ -47,6 +50,12 @@ class PlayState extends FlxState
 		_txtInstruct = new FlxText(0, _txtInstruct.y+_txtInstruct.height, FlxG.width, "Up/Down to adjust center", 12);
 		_txtInstruct.alignment = "center";
 		add(_txtInstruct);
+		#end
+		#if !FLX_NO_TOUCH
+		_txtInstruct = new FlxText(0, 0, FlxG.width, "Touch to Cycle Modes", 12);
+		_txtInstruct.alignment = "center";
+		add(_txtInstruct);
+		#end
 		
 		_txtMode = new FlxText(10, 0, 200, "Mode: " + modes[mode]);
 		_txtMode.y = FlxG.height - _txtMode.height - 4;
@@ -63,16 +72,14 @@ class PlayState extends FlxState
 		_txtCenter.y = FlxG.height - _txtCenter.height - 4;
 		
 		add(_txtCenter);
-		
-		
-		
-		
+
 		super.create();
 		
 	}
 	
 	override public function update():Void
 	{
+		#if !FLX_NO_KEYBOARD
 		if (FlxG.keys.anyJustReleased(["SPACE"]))
 		{
 			mode++;
@@ -114,7 +121,21 @@ class PlayState extends FlxState
 			_txtCenter.text = "Center: " + Std.string(center);
 			_wavLogo.center = center;
 		}
+		#end
+		
+		#if !FLX_NO_TOUCH
+		if (FlxG.touches.justStarted().length > 0)
+		{
+			mode++;
+			if (mode > 2)
+				mode = 0;
+			_txtMode.text = "Mode: " + modes[mode];
+			_wavLogo.mode = mode;
+		}
+		#end
 		
 		super.update();
+		
+		
 	}	
 }
