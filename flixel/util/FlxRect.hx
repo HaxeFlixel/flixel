@@ -61,7 +61,7 @@ class FlxRect implements IFlxPooled
 		if (!_inPool)
 		{
 			_inPool = true;
-			_pool.put(this);
+			_pool.putUnsafe(this);
 		}
 	}
 	
