@@ -635,6 +635,10 @@ class FlxCamera extends FlxBasic
 				_lastTargetPosition.y = target.y;
 			}
 			
+			var zoomRatio:Float = FlxCamera.defaultZoom / zoom;
+			_scrollTarget.x *= zoomRatio;
+			_scrollTarget.y *= zoomRatio;
+			
 			if (followLerp == 0) 
 			{
 				scroll.copyFrom(_scrollTarget); // Prevents Camera Jittering with no lerp.
