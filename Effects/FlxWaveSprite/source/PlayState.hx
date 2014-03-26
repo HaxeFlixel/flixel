@@ -1,6 +1,7 @@
 package;
 
 import flixel.FlxG;
+import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.input.touch.FlxTouch;
@@ -19,10 +20,12 @@ class PlayState extends FlxState
 	private var mode:Int = 0;
 	private var strength:Int = 20;
 	private var center:Int = 0;
+	private var speed:Float = 4;
 	
 	private var _txtMode:FlxText;
 	private var _txtStr:FlxText;
 	private var _txtCenter:FlxText;
+	private var _txtSpeed:FlxText;
 	
 	override public function create():Void
 	{
@@ -41,37 +44,48 @@ class PlayState extends FlxState
 		var _txtInstruct:FlxText;
 		
 		#if !FLX_NO_KEYBOARD
-		_txtInstruct = new FlxText(0, 0, FlxG.width, "Space to Cycle Modes", 12);
+		_txtInstruct = new FlxText(0, 0, FlxG.width, "Space to Cycle Modes", 8);
 		_txtInstruct.alignment = "center";
 		add(_txtInstruct);
-		_txtInstruct = new FlxText(0, _txtInstruct.y+_txtInstruct.height, FlxG.width, "Left/Right to adjust strength", 12);
+		_txtInstruct = new FlxText(0, _txtInstruct.y+_txtInstruct.height-4, FlxG.width, "Left/Right to adjust strength", 8);
 		_txtInstruct.alignment = "center";
 		add(_txtInstruct);
-		_txtInstruct = new FlxText(0, _txtInstruct.y+_txtInstruct.height, FlxG.width, "Up/Down to adjust center", 12);
+		_txtInstruct = new FlxText(0, _txtInstruct.y+_txtInstruct.height-4, FlxG.width, "Up/Down to adjust center", 8);
 		_txtInstruct.alignment = "center";
 		add(_txtInstruct);
-		#end
-		#if !FLX_NO_TOUCH
-		_txtInstruct = new FlxText(0, 0, FlxG.width, "Touch to Cycle Modes", 12);
+		_txtInstruct = new FlxText(0, _txtInstruct.y+_txtInstruct.height-4, FlxG.width, "W/S to adjust speed", 8);
+		_txtInstruct.alignment = "center";
+		add(_txtInstruct);
+		#else
+		_txtInstruct = new FlxText(0, 0, FlxG.width, "Touch to Cycle Modes", 8);
 		_txtInstruct.alignment = "center";
 		add(_txtInstruct);
 		#end
 		
-		_txtMode = new FlxText(10, 0, 200, "Mode: " + modes[mode]);
-		_txtMode.y = FlxG.height - _txtMode.height - 4;
+		var w:Int = Std.int((FlxG.width) / 4);
+		var a:Array<FlxObject> = [];
+		
+		_txtMode = new FlxText(0, 0, w, "Mode: " + modes[mode]);
+		_txtMode.alignment = "center";
 		add(_txtMode);
+		a.push(_txtMode);
 		
-		_txtStr = new FlxText(0, 0, 200, "Strength: " + Std.string(strength));
+		_txtStr = new FlxText(0, 0, w, "Strength: " + Std.string(strength));
 		_txtStr.alignment = "center";
-		_txtStr.y = FlxG.height - _txtStr.height - 4;
-		FlxSpriteUtil.screenCenter(_txtStr, true, false);
 		add(_txtStr);
+		a.push(_txtStr);
 		
-		_txtCenter = new FlxText(FlxG.width-210, 0, 200, "Center: " + Std.string(center));
-		_txtCenter.alignment = "right";
-		_txtCenter.y = FlxG.height - _txtCenter.height - 4;
-		
+		_txtCenter = new FlxText(0, 0, w, "Center: " + Std.string(center));
+		_txtCenter.alignment = "center";
 		add(_txtCenter);
+		a.push(_txtCenter);
+		
+		_txtSpeed = new FlxText(0, 0, w, "Speed: " + Std.string(speed));
+		_txtSpeed.alignment = "center";
+		add(_txtSpeed);
+		a.push(_txtSpeed);
+		
+		FlxSpriteUtil.space(a, 0, Std.int(FlxG.height - _txtSpeed.height),w);
 
 		super.create();
 		
@@ -120,6 +134,22 @@ class PlayState extends FlxState
 				center = Std.int(_wavLogo.height);
 			_txtCenter.text = "Center: " + Std.string(center);
 			_wavLogo.center = center;
+		}
+		if (FlxG.keys.anyPressed(["W"]))
+		{
+			speed++;
+			if (speed > 80)
+				speed = 80;
+			_txtSpeed.text = "Speed: " + Std.string(speed);
+			_wavLogo.speed = speed;
+		}
+		if (FlxG.keys.anyPressed(["S"]))
+		{
+			speed--;
+			if (speed < 0)
+				speed = 0;
+			_txtSpeed.text = "Speed: " + Std.string(speed);
+			_wavLogo.speed = speed;
 		}
 		#end
 		
