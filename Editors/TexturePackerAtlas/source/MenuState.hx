@@ -78,17 +78,17 @@ class MenuState extends FlxState
 		x5.animation.play("Animation");
 		add(x5);
 		
-		// 2. The second one requires three additional parameters: image name prefix, array of frame indicies and image name postfix
+		// 2. The second one requires three additional parameters: image name prefix, array of frame indices and image name postfix
 		var x6:FlxSprite = new FlxSprite(300, 200);
 		x6.loadGraphicFromTexture(tex5);
-		// Array with frame indicies in animation
-		var indicies:Array<Int> = new Array<Int>();
+		// Array with frame indices in animation
+		var indices:Array<Int> = new Array<Int>();
 		for (i in 0...20)
 		{
-			indicies.push(i);
+			indices.push(i);
 		}
 		
-		x6.animation.addByIndicies("Animation", "tiles-", indicies, ".png", 8);
+		x6.animation.addByIndices("Animation", "tiles-", indices, ".png", 8);
 		x6.animation.play("Animation", false, 1);
 		add(x6);
 		
