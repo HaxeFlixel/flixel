@@ -646,7 +646,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		
 		while (i < length)
 		{
-			basic = members[i];
+			basic = members[i++];
 			if (basic != null)
 			{
 				Function(cast basic);
@@ -666,12 +666,11 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		
 		while (i < length)
 		{
-			basic = members[i];
+			basic = members[i++];
 			if (basic != null && basic.exists && basic.alive)
 			{
 				Function(cast basic);
 			}
-			i++;
 		}
 	}
 
@@ -687,12 +686,11 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		
 		while (i < length)
 		{
-			basic = members[i];
+			basic = members[i++];
 			if (basic != null && !basic.alive)
 			{
 				Function(cast basic);
 			}
-			i++;
 		}
 	}
 
@@ -708,12 +706,11 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		
 		while (i < length)
 		{
-			basic = members[i];
+			basic = members[i++];
 			if (basic != null && basic.exists)
 			{
 				Function(cast basic);
 			}
-			i++;
 		}
 	}
 	
