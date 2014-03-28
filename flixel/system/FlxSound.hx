@@ -77,6 +77,10 @@ class FlxSound extends FlxBasic
 	 * Set volume to a value between 0 and 1 to change how this sound is.
 	 */
 	public var volume(get, set):Float;
+	/**
+	 * The position in runtime of the music playback.
+	 */
+	public var time(default, null):Float;
 
 	/**
 	 * Internal tracker for a Flash sound object.
@@ -94,10 +98,6 @@ class FlxSound extends FlxBasic
 	 * Internal tracker for whether the sound is paused or not (not the same as stopped).
 	 */
 	private var _paused:Bool;
-	/**
-	 * Internal tracker for the position in runtime of the music playback.
-	 */
-	private var _position:Float;
 	/**
 	 * Internal tracker for volume.
 	 */
@@ -146,7 +146,7 @@ class FlxSound extends FlxBasic
 		x = 0;
 		y = 0;
 		
-		_position = 0;
+		time = 0;
 		_paused = false;
 		_volume = 1.0;
 		_volumeAdjust = 1.0;
@@ -204,7 +204,7 @@ class FlxSound extends FlxBasic
 			return;
 		}
 		
-		_position = _channel.position;
+		time = _channel.position;
 		
 		var radialMultiplier:Float = 1.0;
 		var fadeMultiplier:Float = 1.0;
@@ -402,7 +402,7 @@ class FlxSound extends FlxBasic
 	{
 		if (_paused)
 		{
-			startSound(_position);
+			startSound(time);
 		}
 		return this;
 	}
@@ -416,7 +416,7 @@ class FlxSound extends FlxBasic
 		{
 			return this;
 		}
-		_position = _channel.position;
+		time = _channel.position;
 		_paused = true;
 		cleanup(false, false, false);
 		return this;
@@ -498,9 +498,9 @@ class FlxSound extends FlxBasic
 	private function startSound(Position:Float):Void
 	{
 		var numLoops:Int = (_looped && (Position == 0)) ? 9999 : 0;
-		_position = Position;
+		time = Position;
 		_paused = false;
-		_channel = _sound.play(_position, numLoops, _transform);
+		_channel = _sound.play(time, numLoops, _transform);
 		if (_channel != null)
 		{
 			_channel.addEventListener(Event.SOUND_COMPLETE, stopped);
@@ -562,7 +562,7 @@ class FlxSound extends FlxBasic
 
 		if (resetPosition)
 		{
-			_position = 0;
+			time = 0;
 			_paused = false;
 		}
 	}
