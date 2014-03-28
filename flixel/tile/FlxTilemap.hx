@@ -709,6 +709,9 @@ class FlxTilemap extends FlxObject
 			
 			if (needNewBuffer)
 			{
+				if (_buffers[i] != null)
+					_buffers[i].destroy();
+					
 				_buffers[i] = new FlxTilemapBuffer(_tileWidth, _tileHeight, widthInTiles, heightInTiles, camera, scale.x, scale.y);
 				_buffers[i].pixelPerfectRender = pixelPerfectRender;
 			}
