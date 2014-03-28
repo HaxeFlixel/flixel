@@ -105,6 +105,11 @@ class FlxTilemap extends FlxObject
 	 */
 	public var pixelPerfectRender(default, set):Bool = true;
 	
+	/** 
+	 * A helper buffer for calculating if the size of screen changed *
+	 */
+	private static var _helperBuffer:FlxTilemapBuffer;
+	 
 	/**
 	 * If these next two arrays are not null, you're telling FlxTilemap to 
 	 * draw random tiles in certain places. 
@@ -233,6 +238,9 @@ class FlxTilemap extends FlxObject
 		
 		scale = new FlxCallbackPoint(setScaleXCallback, setScaleYCallback, setScaleXYCallback);
 		scale.set(1, 1);
+		
+		if (_helperBuffer == null)
+			_helperBuffer = Type.createEmptyInstance(FlxTilemapBuffer);
 	}
 	
 	/**
@@ -682,7 +690,24 @@ class FlxTilemap extends FlxObject
 				continue;
 			}
 			
+			var needNewBuffer = false;
+			
+			// Check if buffer already exist
 			if (_buffers[i] == null)
+			{
+				needNewBuffer = true;
+			}				
+			// Check number of columns and rows
+			else
+			{
+				_helperBuffer.updateColumns(_tileWidth, widthInTiles, scale.x, camera);
+				_helperBuffer.updateRows(_tileHeight, heightInTiles, scale.y, camera);
+				
+				if(_helperBuffer.columns != _buffers[i].columns || _helperBuffer.rows != _buffers[i].rows)
+					needNewBuffer = true;
+			}
+			
+			if (needNewBuffer)
 			{
 				_buffers[i] = new FlxTilemapBuffer(_tileWidth, _tileHeight, widthInTiles, heightInTiles, camera, scale.x, scale.y);
 				_buffers[i].pixelPerfectRender = pixelPerfectRender;
