@@ -303,7 +303,8 @@ class FlxCamera extends FlxBasic
 	 */
 	private static var _storageHead:DrawStackItem;
 	
-	@:noCompletion public function getDrawStackItem(ObjGraphics:CachedGraphics, ObjColored:Bool, ObjBlending:Int, ObjAntialiasing:Bool = false):DrawStackItem
+	@:noCompletion
+	public function getDrawStackItem(ObjGraphics:CachedGraphics, ObjColored:Bool, ObjBlending:Int, ObjAntialiasing:Bool = false):DrawStackItem
 	{
 		var itemToReturn:DrawStackItem = null;
 		if (_currentStackItem.initialized == false)

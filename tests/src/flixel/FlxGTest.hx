@@ -54,12 +54,14 @@ class FlxGTest extends FlxTest
 	
 	@Test function _scaleModeNull():Void   { Assert.isNotNull(FlxG._scaleMode); }
 	
-	@Test function initialWidth():Void
+	@Test
+	function initialWidth():Void
 	{
 		Assert.areEqual(FlxG.width, 640);
 	}
 	
-	@Test function initialHeight():Void
+	@Test
+	function initialHeight():Void
 	{
 		Assert.areEqual(FlxG.height, 480);
 	}

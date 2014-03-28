@@ -25,8 +25,11 @@ import flixel.util.FlxSpriteUtil;
 import flixel.util.loaders.CachedGraphics;
 import flixel.util.loaders.TextureRegion;
 
-@:bitmap("assets/images/tile/autotiles.png")	 class GraphicAuto    extends BitmapData {}
-@:bitmap("assets/images/tile/autotiles_alt.png") class GraphicAutoAlt extends BitmapData {}
+@:bitmap("assets/images/tile/autotiles.png")
+class GraphicAuto extends BitmapData {}
+
+@:bitmap("assets/images/tile/autotiles_alt.png")
+class GraphicAutoAlt extends BitmapData {}
 
 /**
  * This is a traditional tilemap display and collision class. It takes a string of comma-separated numbers and then associates

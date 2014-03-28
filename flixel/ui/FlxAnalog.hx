@@ -12,8 +12,11 @@ import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRect;
 
-@:bitmap("assets/images/ui/analog/base.png")  private class GraphicBase  extends BitmapData {}
-@:bitmap("assets/images/ui/analog/thumb.png") private class GraphicThumb extends BitmapData {}
+@:bitmap("assets/images/ui/analog/base.png")
+private class GraphicBase extends BitmapData {}
+
+@:bitmap("assets/images/ui/analog/thumb.png")
+private class GraphicThumb extends BitmapData {}
 
 /**
  * A virtual thumbstick - useful for input on mobile devices.

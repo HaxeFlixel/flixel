@@ -237,7 +237,8 @@ class FlxGamepadManager implements IFlxInput
 	/**
 	 * Clean up memory. Internal use only.
 	 */
-	@:noCompletion public function destroy():Void
+	@:noCompletion
+	public function destroy():Void
 	{
 		for (gamepad in _gamepads)
 		{

@@ -24,7 +24,8 @@ import flixel.util.loaders.TexturePackerData;
 import flixel.util.loaders.TextureRegion;
 import openfl.display.Tilesheet;
 
-@:bitmap("assets/images/logo/default.png")	private class GraphicDefault extends BitmapData {}
+@:bitmap("assets/images/logo/default.png")
+private class GraphicDefault extends BitmapData {}
 
 /**
  * The main "game object" class, the sprite is a FlxObject
