@@ -14,6 +14,8 @@ class TextureAtlasFrame implements IFlxDestroyable
 	public var sourceSize:FlxPoint = null;
 	public var offset:FlxPoint = null;
 	
+	public var additionalAngle:Int = 0;
+	
 	public function new() {}
 	
 	public function destroy():Void

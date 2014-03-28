@@ -49,7 +49,7 @@ class FlxPoint implements IFlxPooled
 	/**
 	 * Add this FlxPoint to the recycling pool.
 	 */
-	public inline function put():Void
+	public function put():Void
 	{
 		if (!_inPool)
 		{
@@ -88,7 +88,7 @@ class FlxPoint implements IFlxPooled
 	 * @param	Point	Any FlxPoint.
 	 * @return	A reference to itself.
 	 */
-	public function copyFrom(point:FlxPoint):FlxPoint
+	public inline function copyFrom(point:FlxPoint):FlxPoint
 	{
 		x = point.x;
 		y = point.y;
@@ -118,7 +118,7 @@ class FlxPoint implements IFlxPooled
 	 * @param	Point	Any Point.
 	 * @return	A reference to itself.
 	 */
-	public function copyFromFlash(FlashPoint:Point):FlxPoint
+	public inline function copyFromFlash(FlashPoint:Point):FlxPoint
 	{
 		x = FlashPoint.x;
 		y = FlashPoint.y;
@@ -131,7 +131,7 @@ class FlxPoint implements IFlxPooled
 	 * @param	Point	Any Point.
 	 * @return	A reference to the altered point parameter.
 	 */
-	public function copyToFlash(FlashPoint:Point):Point
+	public inline function copyToFlash(FlashPoint:Point):Point
 	{
 		FlashPoint.x = x;
 		FlashPoint.y = y;

@@ -21,7 +21,8 @@ class InputFrontEnd
 	 * @param	Input 	The input to add
 	 * @return	The input
 	 */
-	@:generic public function add<T:IFlxInput>(Input:T):T
+	@:generic
+	public function add<T:IFlxInput>(Input:T):T
 	{
 		// Don't add repeats
 		for (input in list)
@@ -43,7 +44,8 @@ class InputFrontEnd
 	 * @return	Bool indicating whether it was removed or not
 	 */
 	
-	@:generic public function remove<T:IFlxInput>(Input:T):Bool
+	@:generic
+	public function remove<T:IFlxInput>(Input:T):Bool
 	{
 		var i:Int = 0;
 		for (input in list)
@@ -66,7 +68,8 @@ class InputFrontEnd
 	 * @return	If successful returns New. Otherwise returns null.
 	 */
 	
-	@:generic public function replace<T:IFlxInput>(Old:T,New:T):T
+	@:generic
+	public function replace<T:IFlxInput>(Old:T,New:T):T
 	{
 		var i:Int = 0;
 		var success:Bool = false;

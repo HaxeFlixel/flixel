@@ -22,12 +22,23 @@ import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxStringUtil;
 
-@:bitmap("assets/images/debugger/flixel.png")	           private class GraphicFlixel     extends BitmapData {}
-@:bitmap("assets/images/debugger/buttons/drawDebug.png")   private class GraphicDrawDebug  extends BitmapData {}
-@:bitmap("assets/images/debugger/buttons/log.png")         class GraphicLog        extends BitmapData {}
-@:bitmap("assets/images/debugger/buttons/stats.png")       class GraphicStats      extends BitmapData {}
-@:bitmap("assets/images/debugger/buttons/watch.png")       class GraphicWatch      extends BitmapData {}
-@:bitmap("assets/images/debugger/buttons/console.png")     class GraphicConsole    extends BitmapData {}
+@:bitmap("assets/images/debugger/flixel.png")
+private class GraphicFlixel extends BitmapData {}
+
+@:bitmap("assets/images/debugger/buttons/drawDebug.png")
+private class GraphicDrawDebug extends BitmapData {}
+
+@:bitmap("assets/images/debugger/buttons/log.png")
+class GraphicLog extends BitmapData {}
+
+@:bitmap("assets/images/debugger/buttons/stats.png") 
+class GraphicStats extends BitmapData {}
+
+@:bitmap("assets/images/debugger/buttons/watch.png")
+class GraphicWatch extends BitmapData {}
+
+@:bitmap("assets/images/debugger/buttons/console.png") 
+class GraphicConsole extends BitmapData {}
 
 /**
  * Container for the new debugger overlay. Most of the functionality is in the debug folder widgets,

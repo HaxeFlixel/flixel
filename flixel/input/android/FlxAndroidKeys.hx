@@ -34,7 +34,7 @@ class FlxAndroidKeys implements IFlxInput
 	/**
 	 * And array of FlxKey objects.
 	 */
-	@:allow(flixel.input.keyboard.FlxAndroidKeyList.get_ANY) // Need to access the var there
+	@:allow(flixel.input.keyboard.FlxAndroidKeyList.get_ANY)
 	private var _keyList:Map<Int, FlxKey>;
 	
 	public var preventDefaultBackAction:Bool = false;

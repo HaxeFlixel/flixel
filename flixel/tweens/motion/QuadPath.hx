@@ -58,14 +58,14 @@ class QuadPath extends Motion
 	 * @param	type		Tween type.
 	 * @param	Eease		Optional easer function.
 	 */
-	override public function init(Complete:CompleteCallback, TweenType:Int)
+	override public function init(Complete:CompleteCallback, TweenType:Int, UsePooling:Bool)
 	{
 		FlxArrayUtil.setLength(_points, 0);
 		FlxArrayUtil.setLength(_curveD, 0);
 		FlxArrayUtil.setLength(_curveT, 0);
 		_distance = _speed = _index = _numSegs = 0;
 		_updateCurve = true;
-		return super.init(Complete, TweenType);
+		return super.init(Complete, TweenType, UsePooling);
 	}
 	
 	override public function destroy():Void 

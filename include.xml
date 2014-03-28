@@ -5,8 +5,8 @@
 	<assets path="assets/sounds" include="*.mp3" if="web" />
 	<assets path="assets/sounds" include="*.ogg" unless="flash" />
 	
+	<set name="html5-backend" value="openfl-bitfive" />
 	<haxelib name="openfl" />
-	<haxelib name="openfl-bitfive" if="html5" />
 	
 	<!-- Allow this setting to be overridden on the command-line -->
 	<set name="FLX_RENDER_BLIT" if="flash || html5" unless="FLX_RENDER_TILE" />

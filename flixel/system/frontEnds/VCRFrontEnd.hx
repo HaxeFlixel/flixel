@@ -54,7 +54,7 @@ class VCRFrontEnd
 	 **/
 	public function pause():Void
 	{
-		if(!paused)
+		if (!paused)
 		{
 			#if !FLX_NO_MOUSE
 			if (!FlxG.mouse.useSystemCursor)
@@ -218,7 +218,7 @@ class VCRFrontEnd
 		
 		var data:String = FlxG.game._replay.save();
 		
-		if((data != null) && (data.length > 0))
+		if ((data != null) && (data.length > 0))
 		{
 			#if flash
 			_file = new FileReference();
@@ -292,7 +292,7 @@ class VCRFrontEnd
 			fileContents = data.readUTFBytes(data.bytesAvailable);
 		}
 		_file = null;
-		if((fileContents == null) || (fileContents.length <= 0))
+		if ((fileContents == null) || (fileContents.length <= 0))
 		{
 			FlxG.log.error("Empty flixel gameplay record.");
 			return;

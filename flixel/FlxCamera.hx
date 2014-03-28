@@ -303,7 +303,8 @@ class FlxCamera extends FlxBasic
 	 */
 	private static var _storageHead:DrawStackItem;
 	
-	@:noCompletion public function getDrawStackItem(ObjGraphics:CachedGraphics, ObjColored:Bool, ObjBlending:Int, ObjAntialiasing:Bool = false):DrawStackItem
+	@:noCompletion
+	public function getDrawStackItem(ObjGraphics:CachedGraphics, ObjColored:Bool, ObjBlending:Int, ObjAntialiasing:Bool = false):DrawStackItem
 	{
 		var itemToReturn:DrawStackItem = null;
 		if (_currentStackItem.initialized == false)
@@ -609,7 +610,7 @@ class FlxCamera extends FlxBasic
 				{
 					_scrollTarget.x = edge;
 				}
-
+				
 				edge = targetY - deadzone.y;
 				if (_scrollTarget.y > edge)
 				{
@@ -637,8 +638,7 @@ class FlxCamera extends FlxBasic
 			
 			if (followLerp == 0) 
 			{
-				scroll.x = _scrollTarget.x; // Prevents Camera Jittering with no lerp.
-				scroll.y = _scrollTarget.y; // Prevents Camera Jittering with no lerp.
+				scroll.copyFrom(_scrollTarget); // Prevents Camera Jittering with no lerp.
 			} 
 			else 
 			{

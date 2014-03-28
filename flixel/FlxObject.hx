@@ -327,11 +327,13 @@ class FlxObject extends FlxBasic
 	/**
 	 * The width of this object's hitbox. For sprites, use offset to control the hitbox position.
 	 */
-	@:isVar public var width(get, set):Float;
+	@:isVar
+	public var width(get, set):Float;
 	/**
 	 * The height of this object's hitbox. For sprites, use offset to control the hitbox position.
 	 */
-	@:isVar public var height(get, set):Float;
+	@:isVar
+	public var height(get, set):Float;
 	/**
 	 * Set the angle of a sprite to rotate it. WARNING: rotating sprites decreases rendering
 	 * performance for this sprite by a factor of 10x (in Flash target)!

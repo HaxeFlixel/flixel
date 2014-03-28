@@ -10,7 +10,8 @@ import flixel.system.FlxSound;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxPoint;
 
-@:bitmap("assets/images/ui/button.png")	private class GraphicButton	extends BitmapData {}
+@:bitmap("assets/images/ui/button.png")
+private class GraphicButton extends BitmapData {}
 
 /**
  * A simple button class that calls a function when clicked by the mouse.

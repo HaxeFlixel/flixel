@@ -265,12 +265,14 @@ class TileSheetData implements IFlxDestroyable
 		if (frameData.rotated)
 		{
 			texFrame.center.set(texFrame.frame.height * 0.5 + texFrame.offset.x, texFrame.frame.width * 0.5 + texFrame.offset.y);
-			texFrame.additionalAngle = -90.0;
 		}
 		else
 		{
 			texFrame.center.set(texFrame.frame.width * 0.5 + texFrame.offset.x, texFrame.frame.height * 0.5 + texFrame.offset.y);
 		}
+		
+		texFrame.additionalAngle = frameData.additionalAngle;
+		
 		#if FLX_RENDER_TILE
 		texFrame.tileID = addTileRect(texFrame.frame, new Point(0.5 * texFrame.frame.width, 0.5 * texFrame.frame.height));
 		#end

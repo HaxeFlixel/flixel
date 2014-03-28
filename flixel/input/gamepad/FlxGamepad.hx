@@ -286,11 +286,27 @@ class FlxGamepad implements IFlxDestroyable
 		return -1; 
 	}
 	
+	/**
+	 * Gets the value of the specified axis - DOES NOT WORK WELL ON 
+	 * THE FLASH TARGET, use getXAxis() and getYAxis() instead.
+	 */
+	public inline function getAxis(AxisID:Int):Float
+	{
+		return getAxisValue(AxisID);
+	}
+	
+	/**
+	 * Gets the value of the specified X axis.
+	 */
 	public inline function getXAxis(AxisID:Int):Float
 	{
 		return getAxisValue(AxisID);
 	}
 	
+	/**
+	 * Gets the value of the specified Y axis - 
+	 * should be used in flash to correct the inverted y axis.
+	 */
 	public function getYAxis(AxisID:Int):Float
 	{
 		var axisValue = getAxisValue(AxisID);

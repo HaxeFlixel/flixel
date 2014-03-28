@@ -189,7 +189,7 @@ class FlxPath implements IFlxDestroyable
 		}
 		
 		//get starting node
-		if((_mode == FlxPath.BACKWARD) || (_mode == FlxPath.LOOP_BACKWARD))
+		if ((_mode == FlxPath.BACKWARD) || (_mode == FlxPath.LOOP_BACKWARD))
 		{
 			_nodeIndex = nodes.length - 1;
 			_inc = -1;

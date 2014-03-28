@@ -312,7 +312,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 					l = length;
 				}
 				
-				while(i < l)
+				while (i < l)
 				{
 					emitParticle();
 					i++;
@@ -327,7 +327,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 				{
 					emitParticle();
 					
-					if((_quantity > 0) && (++_counter >= _quantity))
+					if ((_quantity > 0) && (++_counter >= _quantity))
 					{
 						on = false;
 						_waitForKill = true;

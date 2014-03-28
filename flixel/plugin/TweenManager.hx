@@ -52,11 +52,13 @@ class TweenManager extends FlxPlugin
 	
 	/**
 	 * Add a FlxTween.
+	 * 
 	 * @param	Tween	The FlxTween to add.
 	 * @param	Start	Whether you want it to start right away.
 	 * @return	The added FlxTween object.
 	 */
-	public function add(Tween:FlxTween, Start:Bool = false):FlxTween
+	@:generic
+	public function add<T:FlxTween>(Tween:T, Start:Bool = false):T
 	{
 		// Don't add a null object
 		if (Tween == null)
@@ -81,6 +83,7 @@ class TweenManager extends FlxPlugin
 
 	/**
 	 * Remove a FlxTween.
+	 * 
 	 * @param	Tween		The FlxTween to remove.
 	 * @param	Destroy		Whether you want to destroy the FlxTween.
 	 * @return	The added FlxTween object.
@@ -92,7 +95,7 @@ class TweenManager extends FlxPlugin
 			return null;
 		}
 		
-		if (Destroy) 
+		if (Destroy && Tween._usePooling) 
 		{
 			// calls destroy
 			Tween.put();
@@ -107,6 +110,7 @@ class TweenManager extends FlxPlugin
 
 	/**
 	 * Removes all FlxTweens.
+	 * 
 	 * @param	Destroy		Whether you want to destroy the FlxTweens.
 	 */
 	public function clear(Destroy:Bool = false):Void

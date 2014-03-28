@@ -1,6 +1,7 @@
 package flixel;
 
 import flixel.FlxG;
+import flixel.group.FlxTypedGroup;
 import flixel.interfaces.IFlxDestroyable;
 import flixel.system.FlxCollisionType;
 import flixel.util.FlxStringUtil;
@@ -43,11 +44,12 @@ class FlxBasic implements IFlxDestroyable
 	 * Cannot be set, use destroy() and revive().
 	 */
 	public var exists(default, set):Bool = true;
-	
 	/**
 	 * Enum that informs the collision system which type of object this is (to avoid expensive type casting).
 	 */
-	public var collisionType(default, null):FlxCollisionType;
+	public var collisionType(default, null):FlxCollisionType = FlxCollisionType.NONE;
+	
+	private var _cameras:Array<FlxCamera>;
 	
 	#if !FLX_NO_DEBUG
 	/**
@@ -62,12 +64,7 @@ class FlxBasic implements IFlxDestroyable
 	public static var _VISIBLECOUNT:Int = 0;
 	#end
 	
-	private var _cameras:Array<FlxCamera>;
-	
-	public function new() 
-	{ 
-		collisionType = FlxCollisionType.NONE;
-	}
+	public function new() {}
 	
 	/**
 	 * WARNING: This will remove this object entirely. Use kill() if you want to disable it temporarily only and revive() it later.
@@ -76,7 +73,6 @@ class FlxBasic implements IFlxDestroyable
 	public function destroy():Void 
 	{
 		exists = false;
-		collisionType = null;
 		_cameras = null;
 	}
 	
@@ -180,14 +176,14 @@ class FlxBasic implements IFlxDestroyable
 		return active = Value;
 	}
 	
-	private function set_alive(Value:Bool):Bool
-	{
-		return alive = Value;
-	}
-	
 	private function set_exists(Value:Bool):Bool
 	{
 		return exists = Value;
+	}
+	
+	private function set_alive(Value:Bool):Bool
+	{
+		return alive = Value;
 	}
 	
 	public function toString():String

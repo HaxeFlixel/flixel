@@ -114,6 +114,12 @@ class FlxText extends FlxSprite
 	public var textField(get, never):TextField;
 	
 	/**
+	 * The width of the TextField object used for bitmap generation for this FlxText object.
+	 * Use it when you want to change the visible width of text.
+	 */
+	public var fieldWidth(get, set):Float;
+	
+	/**
 	 * Offset that is applied to the shadow border style, if active. 
 	 * x and y are multiplied by borderSize. Default is (1, 1), or lower-right corner.
 	 */
@@ -161,7 +167,7 @@ class FlxText extends FlxSprite
 		}
 		
 		_textField = new TextField();
-		_textField.width = Width;
+		fieldWidth = Width;
 		_textField.selectable = false;
 		_textField.multiline = true;
 		_textField.wordWrap = true;
@@ -391,19 +397,20 @@ class FlxText extends FlxSprite
 		}
 	}
 	
-	override private function set_width(Width:Float):Float
+	private function set_fieldWidth(value:Float):Float
 	{
-		if (Width != width)
+		if (_textField != null)
 		{
-			var newWidth:Float = super.set_width(Width);
-			if (_textField != null)
-			{
-				_textField.width = newWidth;
-			}
+			_textField.width = value;
 			dirty = true;
 		}
 		
-		return Width;
+		return value;
+	}
+	
+	private function get_fieldWidth():Float
+	{
+		return (_textField != null) ? _textField.width : 0;
 	}
 	
 	private function get_text():String

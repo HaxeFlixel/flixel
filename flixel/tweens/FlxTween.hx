@@ -69,6 +69,7 @@ class FlxTween implements IFlxDestroyable
 	 * 						ease		Optional easer function.
 	 *  					startDelay	Seconds to wait until starting this tween, 0 by default.
 	 *  					loopDelay	Seconds to wait between loops of this tween, 0 by default.
+	 * 						usePooling	Whether to pool this tween or not, necessary if you need to call functions like cancel()
 	 * @return	FlxTween that was added to TweenManager plugin.
 	 */
 	public static function tween(Object:Dynamic, Values:Dynamic, Duration:Float, ?Options:TweenOptions):FlxTween
@@ -101,20 +102,17 @@ class FlxTween implements IFlxDestroyable
 	 * 						ease		Optional easer function.
 	 *  					startDelay	Seconds to wait until starting this tween, 0 by default.
 	 * 						loopDelay	Seconds to wait between loops of this tween, 0 by default.
+	 * 						usePooling	Whether to pool this tween or not, necessary if you need to call functions like cancel()
 	 * @param	TweenFunction	A function to be called when the tweened value updates.  It is recommended not to use an anonoymous 
 	 *							function if you are maximizing performance, as those will be compiled to Dynamics on cpp.
 	 * @return	The added NumTween object.
 	 */
 	public static function num(FromValue:Float, ToValue:Float, Duration:Float, ?Options:TweenOptions, ?TweenFunction:Float->Void):NumTween
 	{
-		Options = resolveTweenOptions(Options);
-		
 		var tween = NumTween._pool.get();
-		tween.init(Options.complete, Options.type);
-		tween.setDelays(Options.startDelay, Options.loopDelay);
+		Options = initTweenOptions(tween, Options);
 		tween.tween(FromValue, ToValue, Duration, Options.ease, TweenFunction);
-		manager.add(tween);
-		return tween;
+		return manager.add(tween);
 	}
 	
 	/**
@@ -131,18 +129,15 @@ class FlxTween implements IFlxDestroyable
 	 * 						ease		Optional easer function.
 	 *  					startDelay	Seconds to wait until starting this tween, 0 by default.
 	 * 						loopDelay	Seconds to wait between loops of this tween, 0 by default.
+	 * 						usePooling	Whether to pool this tween or not, necessary if you need to call functions like cancel()
 	 * @return	The added AngleTween object.
 	 */
 	public static function angle(Sprite:FlxSprite, FromAngle:Float, ToAngle:Float, Duration:Float, ?Options:TweenOptions):AngleTween
 	{
-		Options = resolveTweenOptions(Options);
-		
 		var tween = AngleTween._pool.get();
-		tween.init(Options.complete, Options.type);
-		tween.setDelays(Options.startDelay, Options.loopDelay);
+		Options = initTweenOptions(tween, Options);
 		tween.tween(FromAngle, ToAngle, Duration, Options.ease, Sprite);
-		manager.add(tween);
-		return tween;
+		return manager.add(tween);
 	}
 	
 	/**
@@ -161,18 +156,15 @@ class FlxTween implements IFlxDestroyable
 	 * 						ease		Optional easer function.
 	 *  					startDelay	Seconds to wait until starting this tween, 0 by default.
 	 * 						loopDelay	Seconds to wait between loops of this tween, 0 by default.
+	 * 						usePooling	Whether to pool this tween or not, necessary if you need to call functions like cancel()
 	 * @return	The added ColorTween object.
 	 */
 	public static function color(Sprite:FlxSprite, Duration:Float, FromColor:Int, ToColor:Int, FromAlpha:Float = 1, ToAlpha:Float = 1, ?Options:TweenOptions):ColorTween
 	{
-		Options = resolveTweenOptions(Options);
-		
 		var tween = ColorTween._pool.get();
-		tween.init(Options.complete, Options.type);
-		tween.setDelays(Options.startDelay, Options.loopDelay);
+		Options = initTweenOptions(tween, Options);
 		tween.tween(Duration, FromColor, ToColor, FromAlpha, ToAlpha, Options.ease, Sprite);
-		manager.add(tween);
-		return tween;
+		return manager.add(tween);
 	}
 	
 	#if !FLX_NO_SOUND_SYSTEM
@@ -188,18 +180,15 @@ class FlxTween implements IFlxDestroyable
 	 * 						ease		Optional easer function.
 	 *  					startDelay	Seconds to wait until starting this tween, 0 by default.
 	 * 						loopDelay	Seconds to wait between loops of this tween, 0 by default.
+	 * 						usePooling	Whether to pool this tween or not, necessary if you need to call functions like cancel()
 	 * @return	The added Fader object.
 	 */
 	public static function fader(Volume:Float, Duration:Float, ?Options:TweenOptions):Fader
 	{
-		Options = resolveTweenOptions(Options);
-		
 		var tween = Fader._pool.get();
-		tween.init(Options.complete, Options.type);
-		tween.setDelays(Options.startDelay, Options.loopDelay);
+		Options = initTweenOptions(tween, Options);
 		tween.fadeTo(Volume, Duration, Options.ease);
-		manager.add(tween);
-		return tween;
+		return manager.add(tween);
 	}
 	
 	/**
@@ -214,18 +203,15 @@ class FlxTween implements IFlxDestroyable
 	 * 						ease		Optional easer function.
 	 *  					startDelay	Seconds to wait until starting this tween, 0 by default.
 	 * 						loopDelay	Seconds to wait between loops of this tween, 0 by default.
+	 * 						usePooling	Whether to pool this tween or not, necessary if you need to call functions like cancel()
 	 * @return	The added SfxFader object.
 	 */
 	public static function sfx(Sound:FlxSound, ToVolume:Float, Duration:Float, ?Options:TweenOptions):SfxFader
 	{
-		Options = resolveTweenOptions(Options);
-		
 		var tween = SfxFader._pool.get();
-		tween.init(Options.complete, Options.type);
-		tween.setDelays(Options.startDelay, Options.loopDelay);
+		Options = initTweenOptions(tween, Options);
 		tween.fadeTo(Sound, ToVolume, Duration, Options.ease);
-		manager.add(tween);
-		return tween;
+		return manager.add(tween);
 	}
 	#end
 	
@@ -246,19 +232,16 @@ class FlxTween implements IFlxDestroyable
 	 * 							ease		Optional easer function.
 	 *  						startDelay	Seconds to wait until starting this tween, 0 by default.
 	 * 							loopDelay	Seconds to wait between loops of this tween, 0 by default.
+	 * 							usePooling	Whether to pool this tween or not, necessary if you need to call functions like cancel()
 	 * @return The LinearMotion object.
 	 */
 	public static function linearMotion(Object:FlxObject, FromX:Float, FromY:Float, ToX:Float, ToY:Float, DurationOrSpeed:Float, UseDuration:Bool = true, ?Options:TweenOptions):LinearMotion
 	{
-		Options = resolveTweenOptions(Options);
-		
 		var tween = LinearMotion._pool.get();
-		tween.init(Options.complete, Options.type);
+		Options = initTweenOptions(tween, Options);
 		tween.setObject(Object);
-		tween.setDelays(Options.startDelay, Options.loopDelay);
 		tween.setMotion(FromX, FromY, ToX, ToY, DurationOrSpeed, UseDuration, Options.ease);
-		manager.add(tween);
-		return tween;
+		return manager.add(tween);
 	}
 	
 	/**
@@ -280,19 +263,16 @@ class FlxTween implements IFlxDestroyable
 	 * 							ease		Optional easer function.
 	 *  						startDelay	Seconds to wait until starting this tween, 0 by default.
 	 * 							loopDelay	Seconds to wait between loops of this tween, 0 by default.
+	 * 							usePooling	Whether to pool this tween or not, necessary if you need to call functions like cancel()
 	 * @return The QuadMotion object.
 	 */
 	public static function quadMotion(Object:FlxObject, FromX:Float, FromY:Float, ControlX:Float, ControlY:Float, ToX:Float, ToY:Float, DurationOrSpeed:Float, UseDuration:Bool = true, ?Options:TweenOptions):QuadMotion
 	{
-		Options = resolveTweenOptions(Options);
-		
 		var tween = QuadMotion._pool.get();
-		tween.init(Options.complete, Options.type);
+		Options = initTweenOptions(tween, Options);
 		tween.setObject(Object);
-		tween.setDelays(Options.startDelay, Options.loopDelay);
 		tween.setMotion(FromX, FromY, ControlX, ControlY, ToX, ToY, DurationOrSpeed, UseDuration, Options.ease);
-		manager.add(tween);
-		return tween;
+		return manager.add(tween);
 	}
 	
 	/**
@@ -315,19 +295,16 @@ class FlxTween implements IFlxDestroyable
 	 * 						ease		Optional easer function.
 	 *  					startDelay	Seconds to wait until starting this tween, 0 by default.
 	 * 						loopDelay	Seconds to wait between loops of this tween, 0 by default.
+	 * 						usePooling	Whether to pool this tween or not, necessary if you need to call functions like cancel()
 	 * @return The CubicMotion object.
 	 */
 	public static function cubicMotion(Object:FlxObject, FromX:Float, FromY:Float, aX:Float, aY:Float, bX:Float, bY:Float, ToX:Float, ToY:Float, Duration:Float, ?Options:TweenOptions):CubicMotion
 	{
-		Options = resolveTweenOptions(Options);
-		
 		var tween = CubicMotion._pool.get();
-		tween.init(Options.complete, Options.type);
+		Options = initTweenOptions(tween, Options);
 		tween.setObject(Object);
-		tween.setDelays(Options.startDelay, Options.loopDelay);
 		tween.setMotion(FromX, FromY, aX, aY, bX, bY, ToX, ToY, Duration, Options.ease);
-		manager.add(tween);
-		return tween;
+		return manager.add(tween);
 	}
 	
 	/**
@@ -349,19 +326,16 @@ class FlxTween implements IFlxDestroyable
 	 * 							ease		Optional easer function.
 	 *  						startDelay	Seconds to wait until starting this tween, 0 by default.
 	 * 							loopDelay	Seconds to wait between loops of this tween, 0 by default.
+	 * 							usePooling	Whether to pool this tween or not, necessary if you need to call functions like cancel()
 	 * @return The CircularMotion object.
 	 */
 	public static function circularMotion(Object:FlxObject, CenterX:Float, CenterY:Float, Radius:Float, Angle:Float, Clockwise:Bool, DurationOrSpeed:Float, UseDuration:Bool = true, ?Options:TweenOptions):CircularMotion
 	{
-		Options = resolveTweenOptions(Options);
-		
 		var tween = CircularMotion._pool.get();
-		tween.init(Options.complete, Options.type);
+		Options = initTweenOptions(tween, Options);
 		tween.setObject(Object);
-		tween.setDelays(Options.startDelay, Options.loopDelay);
 		tween.setMotion(CenterX, CenterY, Radius, Angle, Clockwise, DurationOrSpeed, UseDuration, Options.ease);
-		manager.add(tween);
-		return tween;
+		return manager.add(tween);
 	}
 	
 	/**
@@ -378,14 +352,13 @@ class FlxTween implements IFlxDestroyable
 	 * 							ease		Optional easer function.
 	 * 							startDelay	Seconds to wait until starting this tween, 0 by default.
 	 * 							loopDelay	Seconds to wait between loops of this tween, 0 by default.
+	 * 							usePooling	Whether to pool this tween or not, necessary if you need to call functions like cancel()
 	 * @return	The LinearPath object.
 	 */
 	public static function linearPath(Object:FlxObject, Points:Array<FlxPoint>, DurationOrSpeed:Float, UseDuration:Bool = true, ?Options:TweenOptions):LinearPath
 	{
-		Options = resolveTweenOptions(Options);
-		
 		var tween = LinearPath._pool.get();
-		tween.init(Options.complete, Options.type);
+		Options = initTweenOptions(tween, Options);
 		
 		if (Points != null)
 		{
@@ -396,10 +369,8 @@ class FlxTween implements IFlxDestroyable
 		}
 		
 		tween.setObject(Object);
-		tween.setDelays(Options.startDelay, Options.loopDelay);
 		tween.setMotion(DurationOrSpeed, UseDuration, Options.ease);
-		manager.add(tween);
-		return tween;
+		return manager.add(tween);
 	}
 	
 	/**
@@ -416,14 +387,13 @@ class FlxTween implements IFlxDestroyable
 	 * 							ease		Optional easer function.
 	 * 							startDelay	Seconds to wait until starting this tween, 0 by default.
 	 * 							loopDelay	Seconds to wait between loops of this tween, 0 by default.
+	 * 							usePooling	Whether to pool this tween or not, necessary if you need to call functions like cancel()
 	 * @return	The QuadPath object.
 	 */
 	public static function quadPath(Object:FlxObject, Points:Array<FlxPoint>, DurationOrSpeed:Float, UseDuration:Bool = true, ?Options:TweenOptions):QuadPath
 	{
-		Options = resolveTweenOptions(Options);
-		
 		var tween = QuadPath._pool.get();
-		tween.init(Options.complete, Options.type);
+		Options = initTweenOptions(tween, Options);
 		
 		if (Points != null)
 		{
@@ -434,10 +404,8 @@ class FlxTween implements IFlxDestroyable
 		}
 		
 		tween.setObject(Object);
-		tween.setDelays(Options.startDelay, Options.loopDelay);
 		tween.setMotion(DurationOrSpeed, UseDuration, Options.ease);
-		manager.add(tween);
-		return tween;
+		return manager.add(tween);
 	}
 	
 	/**
@@ -452,20 +420,17 @@ class FlxTween implements IFlxDestroyable
 	 * 						type		Tween type.
 	 * 						complete	Optional completion callback function.
 	 * 						ease		Optional easer function.
-	 *  					startDelay	Seconds to wait until starting this tween, 0 by default.
-	 *  					loopDelay	Seconds to wait between loops of this tween, 0 by default.
+	 * 						startDelay	Seconds to wait until starting this tween, 0 by default.
+	 * 						loopDelay	Seconds to wait between loops of this tween, 0 by default.
+	 * 						usePooling	Whether to pool this tween or not, necessary if you need to call functions like cancel()
 	 * @return	The added MultiVarTween object.
 	 */
 	private static function singleVar(Object:Dynamic, Property:String, To:Float, Duration:Float, ?Options:TweenOptions):VarTween
 	{
-		Options = resolveTweenOptions(Options);
-		
 		var tween = VarTween._pool.get();
-		tween.init(Options.complete, Options.type);
-		tween.setDelays(Options.startDelay, Options.loopDelay);
+		Options = initTweenOptions(tween, Options);
 		tween.tween(Object, Property, To, Duration, Options.ease);
-		manager.add(tween);
-		return tween;
+		return manager.add(tween);
 	}
 	
 	/**
@@ -481,18 +446,24 @@ class FlxTween implements IFlxDestroyable
 	 * 						ease		Optional easer function.
 	 *  					startDelay	Seconds to wait until starting this tween, 0 by default.
 	 * 						loopDelay	Seconds to wait between loops of this tween, 0 by default.
+	 * 						usePooling	Whether to pool this tween or not, necessary if you need to call functions like cancel()
 	 * @return	The added MultiVarTween object.
 	 */
 	private static function multiVar(Object:Dynamic, Values:Dynamic, Duration:Float, ?Options:TweenOptions):FlxTween
 	{
+		var tween = MultiVarTween._pool.get();
+		Options = initTweenOptions(tween, Options);
+		tween.tween(Object, Values, Duration, Options.ease);
+		return manager.add(tween);
+	}
+	
+	private static inline function initTweenOptions(Tween:FlxTween, Options:TweenOptions):TweenOptions
+	{
 		Options = resolveTweenOptions(Options);
 		
-		var tween = MultiVarTween._pool.get();
-		tween.init(Options.complete, Options.type);
-		tween.setDelays(Options.startDelay, Options.loopDelay);
-		tween.tween(Object, Values, Duration, Options.ease);
-		manager.add(tween);
-		return tween;
+		Tween.init(Options.complete, Options.type, Options.usePooling);
+		Tween.setDelays(Options.startDelay, Options.loopDelay);
+		return Options;
 	}
 	
 	private static function resolveTweenOptions(Options:TweenOptions):TweenOptions
@@ -502,19 +473,24 @@ class FlxTween implements IFlxDestroyable
 		
 		if (Options.type == null)
 			Options.type = ONESHOT;
-			
+		
+		if ((Options.usePooling == null) && (Options.type &~ FlxTween.BACKWARD) == FlxTween.ONESHOT)
+			Options.usePooling = true;
+		else 
+			Options.usePooling = false;
+		
 		return Options;
 	}
 	
 	public var active:Bool = true;
-	public var complete:CompleteCallback;
 	public var duration:Float = 0;
 	public var ease:EaseFunction;
+	public var complete:CompleteCallback;
 	
 	/**
 	 * Useful to store values you want to access within your callback function.
 	 */
-	public var userData:Dynamic = null;
+	public var userData:Dynamic;
 	
 	public var type(default, set):Int;
 	public var percent(get, set):Float;
@@ -539,16 +515,19 @@ class FlxTween implements IFlxDestroyable
 	public var loopDelay(default, set):Float = 0;
 	
 	private var _secondsSinceStart:Float = 0;
-	
 	private var _delayToUse:Float = 0;
+	
+	@:allow(flixel.plugin.TweenManager)
+	private var _usePooling:Bool;
 
 	/**
 	 * This function is called when tween is created, or recycled.
 	 */
-	public function init(Complete:CompleteCallback, TweenType:Int):Void
+	public function init(Complete:CompleteCallback, TweenType:Int, UsePooling:Bool):Void
 	{
 		type = TweenType;
 		complete = Complete;
+		_usePooling = UsePooling;
 		userData = {};
 	}
 	
@@ -597,10 +576,14 @@ class FlxTween implements IFlxDestroyable
 	}
 	
 	/**
-	 * Immediately stops the Tween and removes it from its Tweener without calling the complete callback.
+	 * Immediately stops the Tween and removes it from the 
+	 * TweenManager without calling the complete callback.
 	 */
 	public function cancel():Void
 	{
+		if (_usePooling)
+			throw("It is not safe to cancel a Tween that uses pooling. Please specify { usePooling: false } in the TweenOptions.");
+		
 		active = false;
 		manager.remove(this);
 	}
@@ -610,11 +593,9 @@ class FlxTween implements IFlxDestroyable
 		executions++;
 		
 		if (complete != null) 
-		{
 			complete(this);
-		}
 		
-		switch ((type & ~ FlxTween.BACKWARD))
+		switch (type & ~ FlxTween.BACKWARD)
 		{
 			case FlxTween.PERSIST:
 				_secondsSinceStart = duration + startDelay;
@@ -658,10 +639,11 @@ class FlxTween implements IFlxDestroyable
 	 * @param	startDelay		Seconds to wait until starting this tween, 0 by default.
 	 * @param	loopDelay		Seconds to wait between loops of this tween, 0 by default.
 	 */
-	public function setDelays(?StartDelay:Null<Float>, ?LoopDelay:Null<Float>):Void
+	public function setDelays(?StartDelay:Null<Float>, ?LoopDelay:Null<Float>):FlxTween
 	{
 		startDelay = (StartDelay != null) ? StartDelay : 0;
 		loopDelay = (LoopDelay != null) ? LoopDelay : 0;
+		return this;
 	}
 	
 	/**
@@ -718,7 +700,6 @@ class FlxTween implements IFlxDestroyable
 		}
 		
 		backward = (value & FlxTween.BACKWARD) > 0;
-		
 		return type = value;
 	}
 }
@@ -730,5 +711,6 @@ typedef TweenOptions = {
 	?ease:EaseFunction,
 	?complete:CompleteCallback,
 	?startDelay:Null<Float>,
-	?loopDelay:Null<Float>
+	?loopDelay:Null<Float>,
+	?usePooling:Bool
 }

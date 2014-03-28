@@ -14,7 +14,8 @@ class FlxSpriteTest extends FlxTest
 	var sprite1:FlxSprite;
 	var sprite2:FlxSprite;
 	
-	@BeforeClass function beforeClass():Void 
+	@BeforeClass
+	function beforeClass():Void 
 	{
 		sprite1 = new FlxSprite();
 		sprite1.makeGraphic(100, 80);
@@ -23,13 +24,15 @@ class FlxSpriteTest extends FlxTest
 		sprite2.makeGraphic(100, 80);
 	}
 	
-	@Test function size():Void 
+	@Test
+	function size():Void 
 	{
 		Assert.areEqual(sprite1.width, 100);
 		Assert.areEqual(sprite1.height, 80);
 	}
 	
-	@Test function sprites():Void 
+	@Test
+	function sprites():Void 
 	{
 		Assert.isNotNull(sprite1);
 		Assert.isNotNull(sprite2);
@@ -45,7 +48,8 @@ class FlxSpriteTest extends FlxTest
 		Assert.isTrue(sprite2.exists);
 	}
 	
-	@Test function add():Void 
+	@Test
+	function add():Void 
 	{
 		FlxG.state.add(sprite1);
 		FlxG.state.add(sprite2);
@@ -57,7 +61,8 @@ class FlxSpriteTest extends FlxTest
 		Assert.areNotEqual(sprite2Index, -1);
 	}
 
-	@Test function remove():Void 
+	@Test
+	function remove():Void 
 	{
 		FlxG.state.remove(sprite1);
 		
@@ -70,7 +75,8 @@ class FlxSpriteTest extends FlxTest
 		Assert.areNotEqual(sprite1Index, -1);
 	}
 
-	@Test function makeGraphicColor():Void
+	@Test
+	function makeGraphicColor():Void
 	{
 		var colorSprite = new FlxSprite();
 		colorSprite.makeGraphic(100, 100, FlxColor.CRIMSON);
@@ -82,7 +88,8 @@ class FlxSpriteTest extends FlxTest
 		Assert.areEqual (StringTools.hex (FlxColor.CHARTREUSE), "FF" + StringTools.hex (colorSprite.framePixels.getPixel (119, 119)));
 	}
 
-	@Test function height():Void
+	@Test
+	function height():Void
 	{
 		var heightSprite = new FlxSprite();
 		var bitmapData = new BitmapData (1, 1);
@@ -101,7 +108,8 @@ class FlxSpriteTest extends FlxTest
 		Assert.areEqual (456, heightSprite.height);
 	}
 	
-	@Test function width():Void
+	@Test
+	function width():Void
 	{
 		var widthSprite = new FlxSprite();
 		var bitmapData = new BitmapData (1, 1);
@@ -120,7 +128,8 @@ class FlxSpriteTest extends FlxTest
 		Assert.areEqual (323, widthSprite.width);
 	}
 	
-	@Test function setSize():Void
+	@Test
+	function setSize():Void
 	{
 		var sizeSprite = new FlxSprite();
 		var bitmapData = new BitmapData (100, 130);
@@ -135,7 +144,8 @@ class FlxSpriteTest extends FlxTest
 		Assert.areEqual (333, sizeSprite.height);
 	}
 	
-	@Test function x():Void
+	@Test
+	function x():Void
 	{
 		var xSprite = new FlxSprite(33,445);
 		FlxG.state.add(xSprite);
@@ -143,7 +153,8 @@ class FlxSpriteTest extends FlxTest
 		Assert.areEqual(xSprite.x, 33);
 	}
 	
-	@Test function y():Void
+	@Test
+	function y():Void
 	{
 		var ySprite = new FlxSprite(433,444);
 		FlxG.state.add(ySprite);
@@ -151,7 +162,8 @@ class FlxSpriteTest extends FlxTest
 		Assert.areEqual(ySprite.y, 444);
 	}
 	
-	@Test function setPosition()
+	@Test
+	function setPosition()
 	{
 		var positionSprite = new FlxSprite(433,444);
 		FlxG.state.add(positionSprite);
@@ -167,7 +179,8 @@ class FlxSpriteTest extends FlxTest
 		Assert.areEqual(positionSprite.y, 545);
 	}
 	
-	@AsyncTest function overlap(factory:AsyncFactory):Void
+	@AsyncTest
+	function overlap(factory:AsyncFactory):Void
 	{
 		Assert.isTrue(FlxG.overlap(sprite1, sprite2));
 		
