@@ -154,11 +154,11 @@ class FlxText extends FlxSprite
 	 * 
 	 * @param	X				The X position of the text.
 	 * @param	Y				The Y position of the text.
-	 * @param	Width			The width of the text object (height is determined automatically).
+	 * @param	FieldWidth		The width of the text object (height is determined automatically).
 	 * @param	Text			The actual text you would like to display initially.
 	 * @param	EmbeddedFont	Whether this text field uses embedded fonts or not
 	 */
-	public function new(X:Float, Y:Float, Width:Int, ?Text:String, size:Int = 8, EmbeddedFont:Bool = true)
+	public function new(X:Float, Y:Float, FieldWidth:Int, ?Text:String, Size:Int = 8, EmbeddedFont:Bool = true)
 	{
 		super(X, Y);
 		
@@ -170,11 +170,11 @@ class FlxText extends FlxSprite
 		}
 		
 		_textField = new TextField();
-		fieldWidth = Width;
+		fieldWidth = FieldWidth;
 		_textField.selectable = false;
 		_textField.multiline = true;
 		_textField.wordWrap = true;
-		_defaultFormat = new TextFormat(FlxAssets.FONT_DEFAULT, size, 0xffffff);
+		_defaultFormat = new TextFormat(FlxAssets.FONT_DEFAULT, Size, 0xffffff);
 		_formatAdjusted = new TextFormat();
 		_textField.defaultTextFormat = _defaultFormat;
 		_textField.text = Text;
@@ -192,7 +192,7 @@ class FlxText extends FlxSprite
 		moves = false;
 		
 		var key:String = FlxG.bitmap.getUniqueKey("text");
-		makeGraphic(Width, 1, FlxColor.TRANSPARENT, false, key);
+		makeGraphic(FieldWidth, 1, FlxColor.TRANSPARENT, false, key);
 		
 		#if FLX_RENDER_BLIT 
 		calcFrame();
