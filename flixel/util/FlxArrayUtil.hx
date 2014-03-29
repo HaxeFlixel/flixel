@@ -14,7 +14,8 @@ class FlxArrayUtil
 	 * @param 	fromIndex	The index to start the search from (optional, for optimization).
 	 * @return	The index of the element within the array. -1 if it wasn't found.
 	 */
-	@:generic public static function indexOf<T>(array:Array<T>, whatToFind:T, fromIndex:Int = 0):Int
+	@:generic
+	public static function indexOf<T>(array:Array<T>, whatToFind:T, fromIndex:Int = 0):Int
 	{
 		#if flash
 		return untyped array.indexOf(whatToFind, fromIndex);
@@ -39,7 +40,8 @@ class FlxArrayUtil
 	 * @param	array		The array.
 	 * @param	newLength	The length you want the array to have.
 	 */
-	@:generic public static function setLength<T>(array:Array<T>, newLength:Int):Void
+	@:generic
+	public static function setLength<T>(array:Array<T>, newLength:Int):Void
 	{
 		if (newLength < 0) return;
 		var oldLength:Int = array.length;
@@ -66,7 +68,8 @@ class FlxArrayUtil
 	 * @param	HowManyTimes	How many swaps to perform during the shuffle operation.  A good rule of thumb is 2-4 times the number of objects in the list.
 	 * @return	The newly shuffled array.
 	 */
-	@:generic public static inline function shuffle<T>(Objects:Array<T>, HowManyTimes:Int):Array<T>
+	@:generic
+	public static inline function shuffle<T>(Objects:Array<T>, HowManyTimes:Int):Array<T>
 	{
 		return FlxRandom.shuffleArray(Objects, HowManyTimes);
 	}
@@ -80,7 +83,8 @@ class FlxArrayUtil
 	 * @param	EndIndex		Optional index at which to restrict selection. Ignored if 0, which is the default value.
 	 * @return	The random object that was selected.
 	 */
-	@:generic public static inline function getRandom<T>(Objects:Array<T>, StartIndex:Int = 0, EndIndex:Int = 0):T
+	@:generic
+	public static inline function getRandom<T>(Objects:Array<T>, StartIndex:Int = 0, EndIndex:Int = 0):T
 	{
 		return FlxRandom.getObject(Objects, StartIndex, EndIndex);
 	}
@@ -94,14 +98,28 @@ class FlxArrayUtil
 	 * @param 	element	The element to remove from the array
 	 * @return	The array
 	 */
-	@:generic public static function fastSplice<T>(array:Array<T>, element:T):Array<T>
+	@:generic
+	public static function fastSplice<T>(array:Array<T>, element:T):Array<T>
 	{
 		var index = indexOf(array, element);
-		if (index >= 0)
-		{
-			array[index] = array[array.length - 1]; // swap element to remove and last element
-			array.pop();
-		}
+		if(index != -1)
+			return swapAndPop(array, index);
+		return array;
+	}
+	
+	/**
+	 * Removes an element from an array by swapping it with the last element and calling pop().
+	 * This is a lot faster than regular splice(), but it can only be used on arrays where order doesn't matter.
+	 * 
+	 * @param	array	The array to remove the element from
+	 * @param 	index	The index of the element to be removed from the array
+	 * @return	The array
+	 */
+	@:generic
+	public static inline function swapAndPop<T>(array:Array<T>, index:Int):Array<T>
+	{
+		array[index] = array[array.length - 1]; // swap element to remove and last element
+		array.pop();
 		return array;
 	}
 	
