@@ -120,7 +120,7 @@ class FlxText extends FlxSprite
 	 */
 	public var fieldWidth(get, set):Float;
 	
-	public var autoSize(get, set):TextFieldAutoSize;
+	public var autoSize(get, set):Bool;
 	
 	/**
 	 * Offset that is applied to the shadow border style, if active. 
@@ -416,20 +416,24 @@ class FlxText extends FlxSprite
 		return (_textField != null) ? _textField.width : 0;
 	}
 	
-	private function set_autoSize(value:TextFieldAutoSize):TextFieldAutoSize
+	private function set_autoSize(value:Bool):Bool
 	{
 		if (_textField != null)
 		{
-			_textField.autoSize = value;
+			if (value)
+				_textField.autoSize = TextFieldAutoSize.LEFT;
+			else
+				_textField.autoSize = TextFieldAutoSize.NONE;
+			
 			dirty = true;
 		}
 		
 		return value;
 	}
 	
-	private function get_autoSize():TextFieldAutoSize
+	private function get_autoSize():Bool
 	{
-		return (_textField != null) ? _textField.autoSize : TextFieldAutoSize.NONE;
+		return (_textField != null) ? (_textField.autoSize != TextFieldAutoSize.NONE) : false;
 	}
 	
 	private function get_text():String
