@@ -446,7 +446,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	public function getFirstExisting():T
 	{
 		var i:Int = 0;
-		var basic:T = null;
+		var basic:FlxBasic = null;
 		
 		while (i < length)
 		{
@@ -454,7 +454,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			
 			if (basic != null && basic.exists)
 			{
-				return basic;
+				return cast basic;
 			}
 		}
 		
@@ -470,7 +470,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	public function getFirstAlive():T
 	{
 		var i:Int = 0;
-		var basic:T = null;
+		var basic:FlxBasic = null;
 		
 		while (i < length)
 		{
@@ -478,7 +478,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			
 			if (basic != null && basic.exists && basic.alive)
 			{
-				return basic;
+				return cast basic;
 			}
 		}
 		
@@ -494,7 +494,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	public function getFirstDead():T
 	{
 		var i:Int = 0;
-		var basic:T = null;
+		var basic:FlxBasic = null;
 		
 		while (i < length)
 		{
@@ -502,7 +502,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			
 			if (basic != null && !basic.alive)
 			{
-				return basic;
+				return cast basic;
 			}
 		}
 		
@@ -642,14 +642,14 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	public function forEach(Function:T->Void)
 	{
 		var i:Int = 0;
-		var basic:T = null;
+		var basic:FlxBasic = null;
 		
 		while (i < length)
 		{
 			basic = members[i++];
 			if (basic != null)
 			{
-				Function(basic);
+				Function(cast basic);
 			}
 		}
 	}
@@ -662,14 +662,14 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	public function forEachAlive(Function:T->Void)
 	{
 		var i:Int = 0;
-		var basic:T = null;
+		var basic:FlxBasic = null;
 		
 		while (i < length)
 		{
 			basic = members[i++];
 			if (basic != null && basic.exists && basic.alive)
 			{
-				Function(basic);
+				Function(cast basic);
 			}
 		}
 	}
@@ -682,14 +682,14 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	public function forEachDead(Function:T->Void)
 	{
 		var i:Int = 0;
-		var basic:T = null;
+		var basic:FlxBasic = null;
 		
 		while (i < length)
 		{
 			basic = members[i++];
 			if (basic != null && !basic.alive)
 			{
-				Function(basic);
+				Function(cast basic);
 			}
 		}
 	}
@@ -702,14 +702,14 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	public function forEachExists(Function:T->Void)
 	{
 		var i:Int = 0;
-		var basic:T = null;
+		var basic:FlxBasic = null;
 		
 		while (i < length)
 		{
 			basic = members[i++];
 			if (basic != null && basic.exists)
 			{
-				Function(basic);
+				Function(cast basic);
 			}
 		}
 	}
