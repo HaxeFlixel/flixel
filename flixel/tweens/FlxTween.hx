@@ -55,6 +55,12 @@ class FlxTween implements IFlxDestroyable
 	public static var manager:TweenManager;
 	
 	/**
+	 * @private
+	 */
+	@:allow(flixel.plugin.TweenManager)
+	private var _inPool:Bool = false;
+	
+	/**
 	 * Creates a singleVar or multiVar FlxTween based on how many fields you want to tween.
 	 * Shorthand for creating a VarTween or MultiVar tween, starting it and adding it to the TweenPlugin.
 	 * 
@@ -460,7 +466,6 @@ class FlxTween implements IFlxDestroyable
 	private static inline function initTweenOptions(Tween:FlxTween, Options:TweenOptions):TweenOptions
 	{
 		Options = resolveTweenOptions(Options);
-		
 		Tween.init(Options.complete, Options.type, Options.usePooling);
 		Tween.setDelays(Options.startDelay, Options.loopDelay);
 		return Options;
@@ -606,7 +611,7 @@ class FlxTween implements IFlxDestroyable
 				active = false;
 				finished = true;
 				_secondsSinceStart = duration + startDelay;
-				manager.remove(this, true); // destroy tween
+				manager.remove(this);
 				
 			case FlxTween.LOOPING:
 				_secondsSinceStart = (_secondsSinceStart - _delayToUse) % duration + _delayToUse;
@@ -648,8 +653,8 @@ class FlxTween implements IFlxDestroyable
 	
 	/**
 	 * To be overriden in pooled subclasses
-	 */ 
-	 public function put():Void {} 
+	 */
+	public function put():Void {} 
 	
 	/**
 	 * Empty constructor because of pooling.

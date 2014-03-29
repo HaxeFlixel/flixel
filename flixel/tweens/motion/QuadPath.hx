@@ -139,7 +139,8 @@ class QuadPath extends Motion
 	
 	override inline public function put():Void
 	{
-		_pool.put(this);
+		if (!_inPool)
+			_pool.putUnsafe(this);
 	}
 	
 	override public function update():Void
