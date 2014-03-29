@@ -355,7 +355,7 @@ class FlxRandom
 	@:generic
 	public static function weightedGetObject<T>(Objects:Array<T>, WeightsArray:Array<Float>, StartIndex:Int = 0, EndIndex:Int = 0):T
 	{
-		var selected:T = null;
+		var selected:Null<T> = null;
 		
 		if (Objects.length != 0)
 		{
