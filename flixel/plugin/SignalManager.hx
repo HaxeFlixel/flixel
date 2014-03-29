@@ -5,7 +5,7 @@ import flixel.util.FlxSignal;
 import flixel.util.FlxArrayUtil;
 
 /**
- * A manager for managing the lifetime of FlxSignal objects.
+ * Manages the lifetime of FlxSignal objects.
  * 
  * @author Sam Batista (https://github.com/gamedevsam)
  */
