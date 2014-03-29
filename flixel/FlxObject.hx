@@ -560,15 +560,15 @@ class FlxObject extends FlxBasic
 	 */
 	override public function draw():Void
 	{
+		#if !FLX_NO_DEBUG
 		for (camera in cameras)
 		{
 			if (camera.visible && camera.exists && isOnScreen(camera))
 			{
-				#if !FLX_NO_DEBUG
 				FlxBasic._VISIBLECOUNT++;
-				#end
 			}
 		}
+		#end
 	}
 	
 	#if !FLX_NO_DEBUG

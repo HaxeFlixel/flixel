@@ -40,7 +40,7 @@ class FlxSignal implements IFlxDestroyable
 	/**
 	 * Creates a new signal or recycles a used one if available.
 	 * 
-	 * @param	Persists	If signal should remain active between state switches.
+	 * @param	Persist If signal should remain active between state switches.
 	 */
 	public static inline function get(Persist:Bool = false):FlxSignal
 	{
