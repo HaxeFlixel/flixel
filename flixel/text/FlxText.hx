@@ -116,10 +116,13 @@ class FlxText extends FlxSprite
 	
 	/**
 	 * The width of the TextField object used for bitmap generation for this FlxText object.
-	 * Use it when you want to change the visible width of text.
+	 * Use it when you want to change the visible width of text. Enables autoSize if <= 0.
 	 */
 	public var fieldWidth(get, set):Float;
 	
+	/**
+	 * Whether the fieldWidth should be determined automatically. Requires wordWrap to be false.
+	 */
 	public var autoSize(get, set):Bool;
 	
 	/**
@@ -154,12 +157,12 @@ class FlxText extends FlxSprite
 	 * 
 	 * @param	X				The X position of the text.
 	 * @param	Y				The Y position of the text.
-	 * @param	FieldWidth		The width of the text object (height is determined automatically).
+	 * @param	FieldWidth		The width of the text object. Enables autoSize if <= 0. (height is determined automatically).
 	 * @param	Text			The actual text you would like to display initially.
-	 * @param	Size			The font size for this text object (you can always change it by the way).
+	 * @param	Size			The font size for this text object.
 	 * @param	EmbeddedFont	Whether this text field uses embedded fonts or not.
 	 */
-	public function new(X:Float, Y:Float, FieldWidth:Int, ?Text:String, Size:Int = 8, EmbeddedFont:Bool = true)
+	public function new(X:Float = 0, Y:Float = 0, FieldWidth:Float = 0, ?Text:String, Size:Int = 8, EmbeddedFont:Bool = true)
 	{
 		super(X, Y);
 		
@@ -193,7 +196,8 @@ class FlxText extends FlxSprite
 		moves = false;
 		
 		var key:String = FlxG.bitmap.getUniqueKey("text");
-		makeGraphic((FieldWidth <= 0) ? 1 : FieldWidth, 1, FlxColor.TRANSPARENT, false, key);
+		var graphicWidth:Int = (FieldWidth <= 0) ? 1 : Std.int(FieldWidth);
+		makeGraphic(graphicWidth, 1, FlxColor.TRANSPARENT, false, key);
 		
 		#if FLX_RENDER_BLIT 
 		calcFrame();
