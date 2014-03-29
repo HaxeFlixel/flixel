@@ -4,6 +4,7 @@ import flash.display.BitmapData;
 import flash.filters.BitmapFilter;
 import flash.geom.ColorTransform;
 import flash.text.TextField;
+import flash.text.TextFieldAutoSize;
 import flash.text.TextFormat;
 import flash.text.TextFormatAlign;
 import flixel.FlxG;
@@ -118,6 +119,8 @@ class FlxText extends FlxSprite
 	 * Use it when you want to change the visible width of text.
 	 */
 	public var fieldWidth(get, set):Float;
+	
+	public var autoSize(get, set):TextFieldAutoSize;
 	
 	/**
 	 * Offset that is applied to the shadow border style, if active. 
@@ -413,6 +416,22 @@ class FlxText extends FlxSprite
 		return (_textField != null) ? _textField.width : 0;
 	}
 	
+	private function set_autoSize(value:TextFieldAutoSize):TextFieldAutoSize
+	{
+		if (_textField != null)
+		{
+			_textField.autoSize = value;
+			dirty = true;
+		}
+		
+		return value;
+	}
+	
+	private function get_autoSize():TextFieldAutoSize
+	{
+		return (_textField != null) ? _textField.autoSize : TextFieldAutoSize.NONE;
+	}
+	
 	private function get_text():String
 	{
 		return _textField.text;
@@ -543,7 +562,7 @@ class FlxText extends FlxSprite
 		if (_textField.wordWrap != value)
 		{
 			_textField.wordWrap = value;
-			_textField.multiline = value;
+		//	_textField.multiline = value;
 			dirty = true;
 		}
 		return value;
