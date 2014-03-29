@@ -4,6 +4,7 @@ import flash.display.BitmapData;
 import flash.filters.BitmapFilter;
 import flash.geom.ColorTransform;
 import flash.text.TextField;
+import flash.text.TextFieldAutoSize;
 import flash.text.TextFormat;
 import flash.text.TextFormatAlign;
 import flixel.FlxG;
@@ -114,6 +115,14 @@ class FlxText extends FlxSprite
 	public var textField(get, never):TextField;
 	
 	/**
+	 * The width of the TextField object used for bitmap generation for this FlxText object.
+	 * Use it when you want to change the visible width of text.
+	 */
+	public var fieldWidth(get, set):Float;
+	
+	public var autoSize(get, set):Bool;
+	
+	/**
 	 * Offset that is applied to the shadow border style, if active. 
 	 * x and y are multiplied by borderSize. Default is (1, 1), or lower-right corner.
 	 */
@@ -161,7 +170,7 @@ class FlxText extends FlxSprite
 		}
 		
 		_textField = new TextField();
-		_textField.width = Width;
+		fieldWidth = Width;
 		_textField.selectable = false;
 		_textField.multiline = true;
 		_textField.wordWrap = true;
@@ -391,19 +400,40 @@ class FlxText extends FlxSprite
 		}
 	}
 	
-	override private function set_width(Width:Float):Float
+	private function set_fieldWidth(value:Float):Float
 	{
-		if (Width != width)
+		if (_textField != null)
 		{
-			var newWidth:Float = super.set_width(Width);
-			if (_textField != null)
-			{
-				_textField.width = newWidth;
-			}
+			_textField.width = value;
 			dirty = true;
 		}
 		
-		return Width;
+		return value;
+	}
+	
+	private function get_fieldWidth():Float
+	{
+		return (_textField != null) ? _textField.width : 0;
+	}
+	
+	private function set_autoSize(value:Bool):Bool
+	{
+		if (_textField != null)
+		{
+			if (value)
+				_textField.autoSize = TextFieldAutoSize.LEFT;
+			else
+				_textField.autoSize = TextFieldAutoSize.NONE;
+			
+			dirty = true;
+		}
+		
+		return value;
+	}
+	
+	private function get_autoSize():Bool
+	{
+		return (_textField != null) ? (_textField.autoSize != TextFieldAutoSize.NONE) : false;
 	}
 	
 	private function get_text():String
@@ -536,7 +566,7 @@ class FlxText extends FlxSprite
 		if (_textField.wordWrap != value)
 		{
 			_textField.wordWrap = value;
-			_textField.multiline = value;
+		//	_textField.multiline = value;
 			dirty = true;
 		}
 		return value;

@@ -24,7 +24,8 @@ import flixel.util.loaders.TexturePackerData;
 import flixel.util.loaders.TextureRegion;
 import openfl.display.Tilesheet;
 
-@:bitmap("assets/images/logo/default.png")	private class GraphicDefault extends BitmapData {}
+@:bitmap("assets/images/logo/default.png")
+private class GraphicDefault extends BitmapData {}
 
 /**
  * The main "game object" class, the sprite is a FlxObject
@@ -117,7 +118,7 @@ class FlxSprite extends FlxObject
 	public var offset(default, null):FlxPoint;
 	/**
 	 * Change the size of your sprite's graphic. NOTE: The hitbox is not automatically adjusted, use updateHitbox for that
-	 * (or setGraphicSize(). WARNING: scaling sprites decreases rendering performance by a factor of about x10!
+	 * (or setGraphicSize(). WARNING: When using blitting (flash), scaling sprites decreases rendering performance by a factor of about x10!
 	 */
 	public var scale(default, null):FlxPoint;
 	/**

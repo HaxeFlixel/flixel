@@ -60,7 +60,7 @@ class FlxAnimationController implements IFlxDestroyable
 	/**
 	 * Internal, currently playing animation.
 	 */
-	@:allow(flixel.animation) 
+	@:allow(flixel.animation)
 	private var _curAnim:FlxAnimation;
 	
 	/**

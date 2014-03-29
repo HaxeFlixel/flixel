@@ -563,7 +563,8 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 * @param 	Function 	Function to transform the sprites. Example: function(s:FlxSprite, v:Dynamic) { s.acceleration.x = v; s.makeGraphic(10,10,0xFF000000); }
 	 * @param 	Value  		Value which will passed to lambda function
 	 */
-	@:generic public function transformChildren<V>(Function:T->V->Void, Value:V):Void
+	@:generic
+	public function transformChildren<V>(Function:T->V->Void, Value:V):Void
 	{
 		if (group == null) 
 		{
@@ -585,7 +586,8 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 * @param	FunctionArray	Array of functions to transform sprites in this group.
 	 * @param	ValueArray		Array of values which will be passed to lambda functions
 	 */
-	@:generic public function multiTransformChildren<V>(FunctionArray:Array<T->V->Void>, ValueArray:Array<V>):Void
+	@:generic
+	public function multiTransformChildren<V>(FunctionArray:Array<T->V->Void>, ValueArray:Array<V>):Void
 	{
 		if (group == null) 
 		{

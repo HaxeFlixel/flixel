@@ -48,7 +48,7 @@ class FlxAnimation extends FlxBaseAnimation
 	/**
 	 * A list of frames stored as int objects
 	 */
-	@:allow(flixel.animation) 
+	@:allow(flixel.animation)
 	private var _frames:Array<Int>;
 	
 	/**

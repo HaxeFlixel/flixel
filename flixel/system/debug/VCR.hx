@@ -11,14 +11,29 @@ import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxColor;
 import flixel.util.FlxStringUtil;
 
-@:bitmap("assets/images/debugger/buttons/open.png")         private class GraphicOpen        extends BitmapData {}
-@:bitmap("assets/images/debugger/buttons/pause.png")        private class GraphicPause       extends BitmapData {}
-@:bitmap("assets/images/debugger/buttons/play.png")         private class GraphicPlay        extends BitmapData {}
-@:bitmap("assets/images/debugger/buttons/record_off.png")   private class GraphicRecordOff   extends BitmapData {}
-@:bitmap("assets/images/debugger/buttons/record_on.png")    private class GraphicRecordOn    extends BitmapData {}
-@:bitmap("assets/images/debugger/buttons/restart.png")      private class GraphicRestart     extends BitmapData {}
-@:bitmap("assets/images/debugger/buttons/step.png")         private class GraphicStep        extends BitmapData {}
-@:bitmap("assets/images/debugger/buttons/stop.png")         private class GraphicStop        extends BitmapData {}
+@:bitmap("assets/images/debugger/buttons/open.png")
+private class GraphicOpen extends BitmapData {}
+
+@:bitmap("assets/images/debugger/buttons/pause.png")
+private class GraphicPause extends BitmapData {}
+
+@:bitmap("assets/images/debugger/buttons/play.png")
+private class GraphicPlay extends BitmapData {}
+
+@:bitmap("assets/images/debugger/buttons/record_off.png") 
+private class GraphicRecordOff extends BitmapData {}
+
+@:bitmap("assets/images/debugger/buttons/record_on.png")
+private class GraphicRecordOn extends BitmapData {}
+
+@:bitmap("assets/images/debugger/buttons/restart.png")
+private class GraphicRestart extends BitmapData {}
+
+@:bitmap("assets/images/debugger/buttons/step.png")
+private class GraphicStep extends BitmapData {}
+
+@:bitmap("assets/images/debugger/buttons/stop.png")
+private class GraphicStop extends BitmapData {}
 
 /**
  * This class contains the record, stop, play, and step 1 frame buttons seen on the top edge of the debugger overlay.

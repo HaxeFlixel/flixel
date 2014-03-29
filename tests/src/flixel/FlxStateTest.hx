@@ -8,7 +8,8 @@ import TestMain;
 
 class FlxStateTest extends FlxTest
 {
-	@AsyncTest function switchState(factory:AsyncFactory):Void
+	@AsyncTest
+	function switchState(factory:AsyncFactory):Void
 	{
 		FlxG.switchState(new TestState());
 		

@@ -85,7 +85,8 @@ class ConsoleUtil
 	 * @param	Params		An optional array of constructor params
 	 * @return	The created instance, or null
 	 */
-	@:generic public static function attemptToCreateInstance<T>(ClassName:String, type:Class<T>, ?Params:Array<String>):Dynamic
+	@:generic
+	public static function attemptToCreateInstance<T>(ClassName:String, type:Class<T>, ?Params:Array<String>):Dynamic
 	{
 		if (Params == null) {
 			Params = [];

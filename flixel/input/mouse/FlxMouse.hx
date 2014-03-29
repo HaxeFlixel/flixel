@@ -24,7 +24,8 @@ import flixel.system.FlxAssets;
 import flixel.system.replay.MouseRecord;
 import flixel.util.FlxPoint;
 
-@:bitmap("assets/images/ui/cursor.png")	private class GraphicCursor extends BitmapData {}
+@:bitmap("assets/images/ui/cursor.png")
+private class GraphicCursor extends BitmapData {}
 
 /**
  * This class helps contain and track the mouse pointer in your game.
@@ -355,7 +356,8 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	/**
 	 * Clean up memory. Internal use only.
 	 */
-	@:noCompletion override public function destroy():Void
+	@:noCompletion
+	override public function destroy():Void
 	{
 		if (_stage != null)
 		{

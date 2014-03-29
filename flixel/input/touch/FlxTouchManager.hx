@@ -59,7 +59,8 @@ class FlxTouchManager implements IFlxInput
 	/**
 	 * Clean up memory. Internal use only.
 	 */
-	@:noCompletion public function destroy():Void
+	@:noCompletion
+	public function destroy():Void
 	{
 		for (touch in list)
 		{

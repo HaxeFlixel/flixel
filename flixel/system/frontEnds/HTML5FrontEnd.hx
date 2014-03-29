@@ -22,7 +22,8 @@ class HTML5FrontEnd
 	public var browserHeight  (get, never):Int;
 	public var browserPosition(get, null):FlxPoint;
 	
-	@:allow(flixel.FlxG) private function new() {}
+	@:allow(flixel.FlxG)
+	private function new() {}
 	
 	private function get_browser():String
 	{

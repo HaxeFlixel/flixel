@@ -16,8 +16,11 @@ import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxMath;
 
-@:bitmap("assets/images/debugger/windowHandle.png") private class GraphicWindowHandle extends BitmapData {}
-@:bitmap("assets/images/debugger/buttons/close.png") private class GraphicCloseButton extends BitmapData {}
+@:bitmap("assets/images/debugger/windowHandle.png")
+private class GraphicWindowHandle extends BitmapData {}
+
+@:bitmap("assets/images/debugger/buttons/close.png")
+private class GraphicCloseButton extends BitmapData {}
 
 /**
  * A generic, Flash-based window class, created for use in FlxDebugger.

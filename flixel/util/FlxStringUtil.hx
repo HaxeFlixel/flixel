@@ -218,7 +218,8 @@ class FlxStringUtil
 	 * @param	Simple	Returns only the class name, not the package or packages.
 	 * @return	The name of the Class as a String object.
 	 */
-	@:extern public static inline function getClassName(Obj:Dynamic, Simple:Bool = false):String
+	@:extern
+	public static inline function getClassName(Obj:Dynamic, Simple:Bool = false):String
 	{
 		var cl:Class<Dynamic>;
 		if (Std.is(Obj, Class))
