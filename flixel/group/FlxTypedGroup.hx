@@ -373,7 +373,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			{
 				if (Recurse && (basic.collisionType == FlxCollisionType.GROUP))
 				{
-					(cast(basic, FlxGroup)).callAll(FunctionName, Args, Recurse);
+					(cast(basic, FlxTypedGroup<Dynamic>)).callAll(FunctionName, Args, Recurse);
 				}
 				else
 				{
