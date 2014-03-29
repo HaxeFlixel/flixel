@@ -323,7 +323,8 @@ class FlxRandom
 	 * @param	HowManyTimes	How many swaps to perform during the shuffle operation.  A good rule of thumb is 2-4 times the number of objects in the list.
 	 * @return	The newly shuffled array.
 	 */
-	@:generic public static function shuffleArray<T>(Objects:Array<T>, HowManyTimes:Int):Array<T>
+	@:generic
+	public static function shuffleArray<T>(Objects:Array<T>, HowManyTimes:Int):Array<T>
 	{
 		HowManyTimes = Std.int(Math.max(HowManyTimes, 0));
 		
@@ -354,7 +355,7 @@ class FlxRandom
 	@:generic
 	public static function weightedGetObject<T>(Objects:Array<T>, WeightsArray:Array<Float>, StartIndex:Int = 0, EndIndex:Int = 0):T
 	{
-		var selected:Null<T> = null;
+		var selected:T = null;
 		
 		if (Objects.length != 0)
 		{
