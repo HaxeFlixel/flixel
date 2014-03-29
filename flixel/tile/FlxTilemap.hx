@@ -293,6 +293,7 @@ class FlxTilemap extends FlxObject
 		_rectIDs = null;
 		#end
 		
+		_helperBuffer = null;
 		framesData = null;
 		cachedGraphics = null;
 		region = null;
