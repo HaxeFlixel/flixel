@@ -55,10 +55,6 @@
 	<assets path="assets" include="*.atlas" type="atlas" />
 	<assets path="assets" include="*.skel" type="skel" />
 
-	<icon name="assets/HaxeFlixel.svg" />
-
-
-	<haxelib name="openfl" />
 	<haxelib name="flixel" />
 	<haxelib name="flixel-addons" />
 	<haxelib name="spinehx" />

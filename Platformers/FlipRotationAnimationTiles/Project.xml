@@ -18,7 +18,6 @@
 	<assets path="assets/images" rename ="images" />
 	<assets path="assets/maps" rename ="maps" />
 	
-	<haxelib name="openfl" />
 	<haxelib name="flixel"/>
 	
 	<!--In case you want to use the addons package-->

@@ -35,7 +35,6 @@
 	
 	<!--------------------------------LIBRARIES------------------------------------->
 
-	<haxelib name="openfl" />
 	<haxelib name="flixel"/>
 	
 	<!-- This has priority over the icon specified in the flixel include.xml because we embed flixel earlier -->

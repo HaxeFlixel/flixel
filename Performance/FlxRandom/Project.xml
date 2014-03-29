@@ -14,7 +14,6 @@
 	<set name="BUILD_DIR" value="export" />
 	<classpath name="source" />
 	
-	<haxelib name="openfl" />
 	<haxelib name="flixel"/>
 	
 	<haxeflag name="-D" value="swf-script-timeout=65" />

@@ -15,7 +15,6 @@
 	<set name="BUILD_DIR" value="export" />
 	<classpath name="source" />
 	
-	<haxelib name="openfl" />
 	<haxelib name="flixel"/>
 	
 	<!--In case you want to use the addons package-->

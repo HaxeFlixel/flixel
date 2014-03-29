@@ -69,7 +69,6 @@
 	
 	<!--------------------------------LIBRARIES------------------------------------->
 
-	<haxelib name="openfl" />
 	<haxelib name="flixel"/>
 	<haxelib name="flixel-demos"/>
 	

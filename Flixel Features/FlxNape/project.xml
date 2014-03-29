@@ -11,7 +11,7 @@
 	
 	<!-- classpath, haxe libs -->
 	<source path="source" />
-	<haxelib name="openfl" />
+
 	<haxelib name="flixel"/>
 	<haxelib name="flixel-addons"/>
 	<haxelib name="nape"/>

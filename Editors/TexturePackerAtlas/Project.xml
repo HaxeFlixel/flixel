@@ -12,7 +12,6 @@
 	
 	<assets path="assets" />
 	
-	<haxelib name="openfl" />
 	<haxelib name="flixel"/>
 	<haxelib name="flixel-addons"/>
 	
