@@ -11,7 +11,7 @@ class TweenManager extends FlxPlugin
 	/**
 	 * A list of all FlxTween objects.
 	 */
-	public var _tweens(default, null):Array<FlxTween>;
+	private var _tweens(default, null):Array<FlxTween>;
 	
 	public function new():Void
 	{
@@ -112,7 +112,7 @@ class TweenManager extends FlxPlugin
 	 */
 	public function clear():Void
 	{
-		while(_tweens.length > 0)
+		while (_tweens.length > 0)
 		{
 			remove(_tweens[0]);
 		}

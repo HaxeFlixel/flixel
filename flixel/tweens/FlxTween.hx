@@ -48,14 +48,12 @@ class FlxTween implements IFlxDestroyable
 	 * Backward Tween type, will play tween in reverse direction
 	 */
 	public static inline var BACKWARD:Int = 16;
-	
 	/**
 	 * The tweening plugin that handles all the tweens.
 	 */
 	public static var manager:TweenManager;
-	
 	/**
-	 * @private
+	 * Bool that prevents this object drom being recycled / destroyed multiple times in a row.
 	 */
 	@:allow(flixel.plugin.TweenManager)
 	private var _inPool:Bool = false;
