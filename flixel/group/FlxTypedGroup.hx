@@ -38,9 +38,9 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	{
 		super();
 		
-		maxSize = Std.int(Math.abs(MaxSize));
+		members = [];
 		
-		members = new Array<T>();
+		maxSize = Std.int(Math.abs(MaxSize));
 		
 		collisionType = FlxCollisionType.GROUP;
 	}
@@ -65,9 +65,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 				basic = members[i++];
 				
 				if (basic != null)
-				{
 					basic.destroy();
-				}
 			}
 			
 			members = null;
@@ -279,7 +277,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		
 		var index:Int = FlxArrayUtil.indexOf(members, Object);
 		
-		if ((index < 0) || (index >= members.length))
+		if (index < 0)
 			return null;
 		
 		if (Splice)
@@ -302,7 +300,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	{
 		var index:Int = FlxArrayUtil.indexOf(members, OldObject);
 		
-		if ((index < 0) || (index >= members.length))
+		if (index < 0)
 			return null;
 		
 		members[index] = NewObject;
@@ -375,7 +373,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			{
 				if (Recurse && (basic.collisionType == FlxCollisionType.GROUP))
 				{
-					(cast(basic, FlxTypedGroup<Dynamic>)).callAll(FunctionName, Args, Recurse);
+					(cast(basic, FlxGroup)).callAll(FunctionName, Args, Recurse);
 				}
 				else
 				{
@@ -599,7 +597,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	public function clear():Void
 	{
 		length = 0;
-		members.splice(0, members.length);
+		FlxArrayUtil.clearArray(members);
 	}
 	
 	/**
@@ -647,10 +645,9 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		while (i < length)
 		{
 			basic = members[i++];
+			
 			if (basic != null)
-			{
 				Function(cast basic);
-			}
 		}
 	}
 
@@ -667,10 +664,9 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		while (i < length)
 		{
 			basic = members[i++];
+			
 			if (basic != null && basic.exists && basic.alive)
-			{
 				Function(cast basic);
-			}
 		}
 	}
 
@@ -687,10 +683,9 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		while (i < length)
 		{
 			basic = members[i++];
+			
 			if (basic != null && !basic.alive)
-			{
 				Function(cast basic);
-			}
 		}
 	}
 
@@ -707,10 +702,9 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		while (i < length)
 		{
 			basic = members[i++];
+			
 			if (basic != null && basic.exists)
-			{
 				Function(cast basic);
-			}
 		}
 	}
 	
@@ -722,14 +716,14 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		{
 			_marker = 0;
 		}
-		if (maxSize == 0 || members == null || maxSize >= members.length)
+		if (maxSize == 0 || members == null || maxSize >= length)
 		{
 			return maxSize;
 		}
 		
 		// If the max size has shrunk, we need to get rid of some objects
 		var i:Int = maxSize;
-		var l:Int = members.length;
+		var l:Int = length;
 		var basic:FlxBasic = null;
 		
 		while (i < l)
@@ -737,9 +731,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			basic = members[i++];
 			
 			if (basic != null)
-			{
 				basic.destroy();
-			}
 		}
 		
 		FlxArrayUtil.setLength(members, maxSize);
