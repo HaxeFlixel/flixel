@@ -24,29 +24,28 @@ class FlxSignal implements IFlxDestroyable
 	/**
 	 * If signal should remain active between state switches.
 	 */
-	public var permanent:Bool = false;
+	public var persist:Bool = false;
 	/**
-	 * [read only] Object that contains data passed into the dispatch function (can be null).
+	 * Object that contains data passed into the dispatch function (can be null).
 	 */
-	public var userData(default, null):Dynamic;
-	
+	public var userData:Dynamic = null;
 	/**
 	 * @private
 	 */
-	var _inPool:Bool = false;
-	var _handlers:Array<SignalHandler>;
-	static var _pool = new FlxPool<FlxSignal>(FlxSignal);
-	static var _handlersPool = new FlxPool<SignalHandler>(SignalHandler);
+	private var _inPool:Bool = false;
+	private var _handlers:Array<SignalHandler>;
+	private static var _pool = new FlxPool<FlxSignal>(FlxSignal);
+	private static var _handlersPool = new FlxPool<SignalHandler>(SignalHandler);
 	
 	/**
 	 * Creates a new signal or recycles a used one if available.
 	 * 
-	 * @param	Permanent	If signal should remain active between state switches.
+	 * @param	Persists	If signal should remain active between state switches.
 	 */
-	public static inline function get(Permanent:Bool = false):FlxSignal
+	public static inline function get(Persist:Bool = false):FlxSignal
 	{
 		var signal = _pool.get();
-		signal.permanent = Permanent;
+		signal.persist = Persist;
 		signal._inPool = false;
 		manager.add(signal);
 		return signal;
@@ -69,7 +68,7 @@ class FlxSignal implements IFlxDestroyable
 	 * 
 	 * @return	This FlxSignal instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function add(Callback:FlxSignal -> Void, DispatchOnce:Bool = false):FlxSignal
+	public function add(Callback:FlxSignal->Void, DispatchOnce:Bool = false):FlxSignal
 	{
 		var handler:SignalHandler = _handlersPool.get().init(Callback, DispatchOnce);
 		if (_handlers == null)
@@ -84,7 +83,7 @@ class FlxSignal implements IFlxDestroyable
 	 * @param Callback	function callback to check
 	 * @return	Bool	true if callback was found, otherwise false 
 	 */
-	public function has(Callback:FlxSignal -> Void):Bool
+	public function has(Callback:FlxSignal->Void):Bool
 	{
 		if (_handlers != null)
 		{
@@ -100,7 +99,7 @@ class FlxSignal implements IFlxDestroyable
 	/**
 	 * Removes a function callback.
 	 */
-	public function remove(Callback:FlxSignal -> Void)
+	public function remove(Callback:FlxSignal->Void)
 	{
 		if (_handlers != null)
 		{
@@ -132,9 +131,12 @@ class FlxSignal implements IFlxDestroyable
 	{
 		if (active && _handlers != null)
 		{
-			userData = Data;
+			if (Data != null)
+				userData = Data;
 			
 			var i = _handlers.length;
+			
+			// must count down when using swapAndPop
 			while (i-- > 0)
 			{
 				var handler = _handlers[i];
@@ -144,8 +146,6 @@ class FlxSignal implements IFlxDestroyable
 				if (handler._isOnce)
 					FlxArrayUtil.swapAndPop(_handlers, i);
 			}
-			
-			userData = null;
 		}
 	}
 	
@@ -161,18 +161,19 @@ class FlxSignal implements IFlxDestroyable
 	}
 }
 
-@:publicFields
 private class SignalHandler implements IFlxDestroyable
 {
-	var _isOnce:Bool;
-	var _callback:FlxSignal -> Void;
-	function init(callback:FlxSignal -> Void, isOnce:Bool)
+	public var _isOnce:Bool;
+	public var _callback:FlxSignal->Void;
+	
+	public function init(callback:FlxSignal->Void, isOnce:Bool)
 	{
 		_callback = callback;
 		_isOnce = isOnce;
 		return this;
 	}
-	function destroy()
+	
+	public function destroy()
 	{
 		_callback = null;
 	}

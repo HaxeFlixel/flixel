@@ -14,7 +14,7 @@ class SignalManager extends FlxPlugin
 	private var _signals:Array<FlxSignal>;
 	
 	/**
-	 * Instantiates a new timer manager.
+	 * Instantiates a new signal manager.
 	 */
 	public function new()
 	{
@@ -78,7 +78,7 @@ class SignalManager extends FlxPlugin
 		var i = _signals.length;
 		while (i-- > 0)
 		{
-			if (!_signals[i].permanent)
+			if (!_signals[i].persist)
 				_signals[i].put();
 		}
 	}
