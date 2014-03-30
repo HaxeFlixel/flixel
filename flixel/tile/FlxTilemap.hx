@@ -960,13 +960,13 @@ class FlxTilemap extends FlxObject
 			
 			while (column < selectionWidth)
 			{
-				var dataIndex:Int = _data[rowStart + column];
-				
-				if (dataIndex < 0)
+				var index:Int = rowStart + column;
+				if ((index < 0) || (index > _data.length - 1))
 				{
 					column++;
 					continue;
 				}
+				var dataIndex:Int = _data[index];
 				
 				tile = _tileObjects[dataIndex];
 				tile.width = _scaledTileWidth;
