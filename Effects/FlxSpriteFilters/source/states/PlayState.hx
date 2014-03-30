@@ -38,9 +38,11 @@ class PlayState extends FlxState
 	var txt6:FlxText;
 	
 	var filter1:BitmapFilter;
+	#if !js
 	var filter2:GlowFilter;
 	var filter3:BlurFilter;
 	var filter4:DropShadowFilter;
+	#end
 	#if flash
 	var filter5:BevelFilter;
 	var filter6:DisplacementMapFilter;
@@ -69,7 +71,12 @@ class PlayState extends FlxState
 		
 		var txt:FlxText = new FlxText(0, 10, 640, " Sprite filters - click on each sprite to animate or stop animation. ", 8);
 		txt.alignment = "center";
-		add (txt);
+		add(txt);
+		
+		#if js
+		txt.text = "Filters are currently not supported on HTML5";
+		return;
+		#end
 		
 		// SPRITES
 		
@@ -81,6 +88,7 @@ class PlayState extends FlxState
 		txt1.alignment = "center";
 		add(txt1);
 		
+		#if !js
 		// GLOW
 		spr2 = new FlxSprite(FlxG.width * 0.5 - 50, FlxG.height / 2 - 100 - 50, "assets/HaxeFlixel.png");
 		add(spr2);
@@ -113,6 +121,7 @@ class PlayState extends FlxState
 		
 		spr4Filter = new FlxSpriteFilter(spr4, 50, 50);
 		spr4Filter.addFilter(filter4);
+		#end
 		
 		#if flash
 		// BEVEL
@@ -142,11 +151,13 @@ class PlayState extends FlxState
 		// FILTERS
 		
 		// Animations
+		#if !js
 		tween2 = FlxTween.tween(filter2, { blurX: 4, blurY: 4 }, 1, { type: FlxTween.PINGPONG });
 		tween2.active = false;
 		
 		tween3 = FlxTween.tween(filter3, { blurX:50, blurY:50 }, 1.5, { type: FlxTween.PINGPONG });
 		tween3.active = false;
+		#end
 		
 		#if flash
 		tween5 = FlxTween.tween(filter5, { distance: -6 }, 1.5, { type: FlxTween.PINGPONG, ease: FlxEase.quadInOut });
@@ -233,8 +244,10 @@ class PlayState extends FlxState
 	
 	function updateDropShadowFilter()
 	{
+		#if !js
 		filter4.angle -= 360 * FlxG.elapsed;
 		updateFilter(spr4Filter);
+		#end
 	}
 	
 	function updateFilter(sprFilter:FlxSpriteFilter)
