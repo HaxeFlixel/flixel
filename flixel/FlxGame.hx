@@ -7,6 +7,7 @@ import flash.display.StageAlign;
 import flash.display.StageScaleMode;
 import flash.events.Event;
 import flash.events.FocusEvent;
+import flash.geom.ColorTransform;
 import flash.geom.Matrix;
 import flash.geom.Rectangle;
 import flash.Lib;
@@ -198,6 +199,7 @@ class FlxGame extends Sprite
 	 */
 	private var _display:BitmapData;
 	private var _displayMatrix:Matrix;
+	private var _displayColorTransform:ColorTransform;
 	#end
 	
 	/**
@@ -266,6 +268,7 @@ class FlxGame extends Sprite
 		#if js
 		_display = new BitmapData(Lib.current.stage.stageWidth, Lib.current.stage.stageHeight);
 		_displayMatrix = new Matrix();
+		_displayColorTransform = new ColorTransform();
 		addChild(new Bitmap(_display));
 		#end
 		
@@ -797,9 +800,10 @@ class FlxGame extends Sprite
 		#end
 		
 		#if js
+		_display.fillRect(_display.rect, FlxColor.TRANSPARENT);
+		
 		for (camera in FlxG.cameras.list)
 		{
-			_display.fillRect(null, camera.bgColor & 0xFF000000);
 			_displayMatrix.identity();
 			_displayMatrix.scale(camera.zoom, camera.zoom);
 			_displayMatrix.translate(camera.x, camera.y);
@@ -812,7 +816,8 @@ class FlxGame extends Sprite
 				_displayMatrix.translate(_display.width >> 1, _display.height >> 1);
 			}
 			
-			_display.draw(camera.buffer, _displayMatrix, null, null, null, camera.antialiasing);
+			_displayColorTransform.alphaMultiplier = camera.alpha;
+			_display.draw(camera.buffer, _displayMatrix, _displayColorTransform, null, null, camera.antialiasing);
 		}
 		#end
 	
