@@ -730,8 +730,6 @@ class FlxSprite extends FlxObject
 			return;
 		}
 		
-		super.draw();
-		
 		if (dirty)	//rarely 
 		{
 			calcFrame();
