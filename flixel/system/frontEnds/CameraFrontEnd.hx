@@ -41,7 +41,9 @@ class CameraFrontEnd
 	@:generic
 	public inline function add<T:FlxCamera>(NewCamera:T):T
 	{
+		#if !js
 		FlxG.game.addChildAt(NewCamera.flashSprite, FlxG.game.getChildIndex(FlxG.game._inputContainer));
+		#end
 		FlxG.cameras.list.push(NewCamera);
 		NewCamera.ID = FlxG.cameras.list.length - 1;
 		return NewCamera;
@@ -55,6 +57,7 @@ class CameraFrontEnd
 	 */
 	public function remove(Camera:FlxCamera, Destroy:Bool = true):Void
 	{
+		#if !js
 		if ((Camera != null) && FlxG.game.contains(Camera.flashSprite))
 		{
 			FlxG.game.removeChild(Camera.flashSprite);
@@ -69,6 +72,7 @@ class CameraFrontEnd
 		{
 			FlxG.log.warn("FlxG.cameras.remove(): The camera you attemped to remove is not a part of the game.");
 		}
+		#end
 		
 		#if FLX_RENDER_TILE
 		for (i in 0...list.length)
@@ -91,11 +95,13 @@ class CameraFrontEnd
 	 */
 	public function reset(?NewCamera:FlxCamera):Void
 	{
+		#if !js
 		for (camera in list)
 		{
 			FlxG.game.removeChild(camera.flashSprite);
 			camera.destroy();
 		}
+		#end
 		
 		list.splice(0, list.length);
 		

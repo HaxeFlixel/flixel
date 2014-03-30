@@ -1,16 +1,22 @@
 package flixel;
 
+import flash.display.Bitmap;
+import flash.display.BitmapData;
 import flash.display.Sprite;
 import flash.display.StageAlign;
 import flash.display.StageScaleMode;
 import flash.events.Event;
 import flash.events.FocusEvent;
+import flash.geom.Matrix;
+import flash.geom.Rectangle;
 import flash.Lib;
 import flixel.system.FlxSplash;
 import flixel.system.frontEnds.VCRFrontEnd;
 import flixel.system.layer.TileSheetExt;
 import flixel.system.replay.FlxReplay;
 import flixel.text.pxText.PxBitmapFont;
+import flixel.util.FlxAngle;
+import flixel.util.FlxColor;
 import flixel.util.FlxRandom;
 
 #if !FLX_NO_DEBUG
@@ -186,6 +192,14 @@ class FlxGame extends Sprite
 	private var _recordingRequested:Bool = false;
 	#end
 	
+	#if js
+	/**
+	 * On html5, we draw() all our cameras into a bitmap to avoid blurry zooming.
+	 */
+	private var _display:BitmapData;
+	private var _displayMatrix:Matrix;
+	#end
+	
 	/**
 	 * Instantiate a new game object.
 	 * 
@@ -248,6 +262,12 @@ class FlxGame extends Sprite
 		stage.scaleMode = StageScaleMode.NO_SCALE;
 		stage.align = StageAlign.TOP_LEFT;
 		stage.frameRate = FlxG.drawFramerate;
+		
+		#if js
+		_display = new BitmapData(Lib.current.stage.stageWidth, Lib.current.stage.stageHeight);
+		_displayMatrix = new Matrix();
+		addChild(new Bitmap(_display));
+		#end
 		
 		addChild(_inputContainer);
 		
@@ -776,6 +796,26 @@ class FlxGame extends Sprite
 		#end
 		#end
 		
+		#if js
+		for (camera in FlxG.cameras.list)
+		{
+			_display.fillRect(null, camera.bgColor & 0xFF000000);
+			_displayMatrix.identity();
+			_displayMatrix.scale(camera.zoom, camera.zoom);
+			_displayMatrix.translate(camera.x, camera.y);
+			
+			// rotate around center
+			if (camera.angle != 0)
+			{
+				_displayMatrix.translate( - _display.width >> 1, - _display.height >> 1);
+				_displayMatrix.rotate(camera.angle * FlxAngle.TO_RAD);
+				_displayMatrix.translate(_display.width >> 1, _display.height >> 1);
+			}
+			
+			_display.draw(camera.buffer, _displayMatrix, null, null, null, camera.antialiasing);
+		}
+		#end
+	
 		FlxG.cameras.unlock();
 		
 		#if !FLX_NO_DEBUG

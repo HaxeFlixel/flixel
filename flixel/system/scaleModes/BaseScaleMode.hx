@@ -62,8 +62,10 @@ class BaseScaleMode
 	
 	private function updateGameScale():Void
 	{
+		#if !js
 		FlxG.game.scaleX = scale.x;
 		FlxG.game.scaleY = scale.y;
+		#end
 	}
 	
 	private function updateGamePosition():Void

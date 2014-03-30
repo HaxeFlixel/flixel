@@ -24,6 +24,7 @@ import openfl.display.Tilesheet;
  * By default one camera is created automatically, that is the same size as the Flash player.
  * You can add more cameras or even replace the main camera using utilities in FlxG.
  */
+@:allow(flixel.FlxGame)
 class FlxCamera extends FlxBasic
 {
 	/**
