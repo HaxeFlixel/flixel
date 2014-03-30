@@ -281,9 +281,7 @@ class FlxAnimationController implements IFlxDestroyable
 	}
 	
 	/**
-	 * Private helper method for add- and appendByNames. Gets frames and appends them to the input array.
-	 * @param	AddTo			Array to add frames to. A blank array for add- and the existing anim._frames for append-
-	 * @param	FrameNames		An array of image names from atlas indicating what frames to append.
+	 * Private helper method for add- and appendByNames. Gets frames and appends them to AddTo.
 	 */
 	private function byNamesHelper(AddTo:Array<Int>, FrameNames:Array<String>):Void {
 		
@@ -349,11 +347,7 @@ class FlxAnimationController implements IFlxDestroyable
 	}
 	
 	/**
-	 * Private helper method for add- and appendByStringIndices. Gets frames and appends them to the input array.
-	 * @param	AddTo			Array to add frames to. A blank array for add- and the existing anim._frames for append-
-	 * @param	Prefix			Common beginning of image names in atlas (e.g. "tiles-")
-	 * @param	Indices			An array of strings indicating what frames to append (e.g. "01", "02", "03").
-	 * @param	Postfix			Common ending of image names in atlas (e.g. ".png")
+	 * Private helper method for add- and appendByStringIndices. Gets frames and appends them to AddTo.
 	 */
 	private function byStringIndicesHelper(AddTo:Array<Int>, Prefix:String, Indices:Array<String>, Postfix:String):Void {
 		
@@ -419,11 +413,7 @@ class FlxAnimationController implements IFlxDestroyable
 	}
 	
 	/**
-	 * Private helper method for add- and appendByIndices. Finds frames and appends them to the input array.
-	 * @param	AddTo			Array to add frames to. A blank array for add- and the existing anim._frames for append-
-	 * @param	Prefix			Common beginning of image names in atlas (e.g. "tiles-")
-	 * @param	Indices			An array of numbers indicating what frames to append (e.g. 1, 2, 3).
-	 * @param	Postfix			Common ending of image names in atlas (e.g. ".png")
+	 * Private helper method for add- and appendByIndices. Finds frames and appends them to AddTo.
 	 */
 	private function byIndicesHelper(AddTo:Array<Int>, Prefix:String, Indices:Array<Int>, Postfix:String):Void {
 		
@@ -522,10 +512,7 @@ class FlxAnimationController implements IFlxDestroyable
 	}
 	
 	/**
-	 * Private helper method for add- and appendByPrefix. Sorts frames and appends them to the input array.
-	 * @param	AddTo			Array to add frames to. A blank array for add- and the existing anim._frames for append-
-	 * @param   AnimFrames		Array of frames to be sorted and appended.
-	 * @param	Prefix			Common beginning of image names in atlas (e.g. "tiles-")
+	 * Private helper method for add- and appendByPrefix. Sorts frames and appends them to AddTo.
 	 */
 	private function byPrefixHelper(AddTo:Array<Int>, AnimFrames:Array<FlxFrame>, Prefix:String):Void {
 		
@@ -544,9 +531,7 @@ class FlxAnimationController implements IFlxDestroyable
 	}
 	
 	/**
-	 * Private helper method for add- and appendByPrefix. Finds frames with the given prefix.
-	 * @param   AnimFrames		Array of frames to be sorted and appended.
-	 * @param	Prefix			Common beginning of image names in atlas (e.g. "tiles-")
+	 * Private helper method for add- and appendByPrefix. Finds frames with the given prefix and appends them to AnimFrames.
 	 */
 	private function findByPrefix(AnimFrames:Array<FlxFrame>, Prefix:String):Void {
 		
