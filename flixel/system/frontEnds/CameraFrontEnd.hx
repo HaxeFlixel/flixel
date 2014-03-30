@@ -57,22 +57,19 @@ class CameraFrontEnd
 	 */
 	public function remove(Camera:FlxCamera, Destroy:Bool = true):Void
 	{
-		#if !js
-		if ((Camera != null) && FlxG.game.contains(Camera.flashSprite))
+		var index:Int = list.indexOf(Camera);
+		if ((Camera != null) && index != -1)
 		{
+			#if !js
 			FlxG.game.removeChild(Camera.flashSprite);
-			var index = FlxArrayUtil.indexOf(FlxG.cameras.list, Camera);
+			#end
 			
-			if (index >= 0)
-			{
-				FlxG.cameras.list.splice(index, 1);
-			}
+			list.splice(index, 1);
 		}
 		else
 		{
 			FlxG.log.warn("FlxG.cameras.remove(): The camera you attemped to remove is not a part of the game.");
 		}
-		#end
 		
 		#if FLX_RENDER_TILE
 		for (i in 0...list.length)
