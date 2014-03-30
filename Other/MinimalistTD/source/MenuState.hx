@@ -27,7 +27,7 @@ class MenuState extends FlxState
 	{
 		// Change the default mouse to an inverted triangle.
 		FlxG.mouse.load("images/mouse.png");
-		#if !(cpp || neko)
+		#if flash
 		FlxG.mouse.cursorContainer.blendMode = BlendMode.INVERT;
 		#end
 		
