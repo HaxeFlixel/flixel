@@ -281,23 +281,6 @@ class FlxAnimationController implements IFlxDestroyable
 	}
 	
 	/**
-	 * Private helper method for add- and appendByNames. Gets frames and appends them to AddTo.
-	 */
-	private function byNamesHelper(AddTo:Array<Int>, FrameNames:Array<String>):Void {
-		
-		var l:Int = FrameNames.length;
-		for (i in 0...l)
-		{
-			var name:String = FrameNames[i];
-			if (_sprite.framesData.framesHash.exists(name))
-			{
-				var frameToAdd:FlxFrame = _sprite.framesData.framesHash.get(name);
-				AddTo.push(getFrameIndex(frameToAdd));
-			}
-		}
-	}
-	
-	/**
 	 * Adds a new _animations to the sprite. Should works a little bit faster than addByIndices()
 	 * @param	Name			What this _animations should be called (e.g. "run").
 	 * @param	Prefix			Common beginning of image names in atlas (e.g. "tiles-")
@@ -347,23 +330,6 @@ class FlxAnimationController implements IFlxDestroyable
 	}
 	
 	/**
-	 * Private helper method for add- and appendByStringIndices. Gets frames and appends them to AddTo.
-	 */
-	private function byStringIndicesHelper(AddTo:Array<Int>, Prefix:String, Indices:Array<String>, Postfix:String):Void {
-		
-		var l:Int = Indices.length;
-		for (i in 0...l)
-		{
-			var name:String = Prefix + Indices[i] + Postfix;
-			if (_sprite.framesData.framesHash.exists(name))
-			{
-				var frameToAdd:FlxFrame = _sprite.framesData.framesHash.get(name);
-				AddTo.push(getFrameIndex(frameToAdd));
-			}
-		}
-	}
-	
-	/**
 	 * Adds a new _animations to the sprite.
 	 * @param	Name			What this _animations should be called (e.g. "run").
 	 * @param	Prefix			Common beginning of image names in atlas (e.g. "tiles-")
@@ -409,22 +375,6 @@ class FlxAnimationController implements IFlxDestroyable
 		if (_sprite.cachedGraphics != null && _sprite.cachedGraphics.data != null)
 		{
 			byIndicesHelper(anim._frames, Prefix, Indices, Postfix); // finds frames and appends them to the existing array
-		}
-	}
-	
-	/**
-	 * Private helper method for add- and appendByIndices. Finds frames and appends them to AddTo.
-	 */
-	private function byIndicesHelper(AddTo:Array<Int>, Prefix:String, Indices:Array<Int>, Postfix:String):Void {
-		
-		var l:Int = Indices.length;
-		for (i in 0...l)
-		{
-			var indexToAdd:Int = findSpriteFrame(Prefix, Indices[i], Postfix);
-			if (indexToAdd != -1) 
-			{
-				AddTo.push(indexToAdd);
-			}
 		}
 	}
 	
@@ -512,40 +462,6 @@ class FlxAnimationController implements IFlxDestroyable
 	}
 	
 	/**
-	 * Private helper method for add- and appendByPrefix. Sorts frames and appends them to AddTo.
-	 */
-	private function byPrefixHelper(AddTo:Array<Int>, AnimFrames:Array<FlxFrame>, Prefix:String):Void {
-		
-		var name:String = AnimFrames[0].name;
-		var postIndex:Int = name.indexOf(".", Prefix.length);
-		var postFix:String = name.substring(postIndex == -1 ? name.length : postIndex, name.length);
-		FlxAnimationController.prefixLength = Prefix.length;
-		FlxAnimationController.postfixLength = postFix.length;
-		AnimFrames.sort(FlxAnimationController.frameSortFunction);
-		
-		var l:Int = AnimFrames.length;
-		for (i in 0...l)
-		{
-			AddTo.push(getFrameIndex(AnimFrames[i]));
-		}
-	}
-	
-	/**
-	 * Private helper method for add- and appendByPrefix. Finds frames with the given prefix and appends them to AnimFrames.
-	 */
-	private function findByPrefix(AnimFrames:Array<FlxFrame>, Prefix:String):Void {
-		
-		var l:Int = _sprite.framesData.frames.length;
-		for (i in 0...l)
-		{
-			if (StringTools.startsWith(_sprite.framesData.frames[i].name, Prefix))
-			{
-				AnimFrames.push(_sprite.framesData.frames[i]);
-			}
-		}
-	}
-	
-	/**
 	 * Plays an existing _animations (e.g. "run").
 	 * If you call an _animations that is already playing it will be ignored.
 	 * @param	AnimName	The string name of the _animations you want to play.
@@ -619,6 +535,90 @@ class FlxAnimationController implements IFlxDestroyable
 			_curAnim = null;
 		}
 		frameIndex = FlxRandom.intRanged(0, frames - 1);
+	}
+	
+	/**
+	 * Private helper method for add- and appendByNames. Gets frames and appends them to AddTo.
+	 */
+	private function byNamesHelper(AddTo:Array<Int>, FrameNames:Array<String>):Void
+	{
+		var l:Int = FrameNames.length;
+		for (i in 0...l)
+		{
+			var name:String = FrameNames[i];
+			if (_sprite.framesData.framesHash.exists(name))
+			{
+				var frameToAdd:FlxFrame = _sprite.framesData.framesHash.get(name);
+				AddTo.push(getFrameIndex(frameToAdd));
+			}
+		}
+	}
+	
+	/**
+	 * Private helper method for add- and appendByStringIndices. Gets frames and appends them to AddTo.
+	 */
+	private function byStringIndicesHelper(AddTo:Array<Int>, Prefix:String, Indices:Array<String>, Postfix:String):Void
+	{
+		var l:Int = Indices.length;
+		for (i in 0...l)
+		{
+			var name:String = Prefix + Indices[i] + Postfix;
+			if (_sprite.framesData.framesHash.exists(name))
+			{
+				var frameToAdd:FlxFrame = _sprite.framesData.framesHash.get(name);
+				AddTo.push(getFrameIndex(frameToAdd));
+			}
+		}
+	}
+	
+	/**
+	 * Private helper method for add- and appendByIndices. Finds frames and appends them to AddTo.
+	 */
+	private function byIndicesHelper(AddTo:Array<Int>, Prefix:String, Indices:Array<Int>, Postfix:String):Void
+	{
+		var l:Int = Indices.length;
+		for (i in 0...l)
+		{
+			var indexToAdd:Int = findSpriteFrame(Prefix, Indices[i], Postfix);
+			if (indexToAdd != -1) 
+			{
+				AddTo.push(indexToAdd);
+			}
+		}
+	}
+	
+	/**
+	 * Private helper method for add- and appendByPrefix. Sorts frames and appends them to AddTo.
+	 */
+	private function byPrefixHelper(AddTo:Array<Int>, AnimFrames:Array<FlxFrame>, Prefix:String):Void
+	{
+		var name:String = AnimFrames[0].name;
+		var postIndex:Int = name.indexOf(".", Prefix.length);
+		var postFix:String = name.substring(postIndex == -1 ? name.length : postIndex, name.length);
+		FlxAnimationController.prefixLength = Prefix.length;
+		FlxAnimationController.postfixLength = postFix.length;
+		AnimFrames.sort(FlxAnimationController.frameSortFunction);
+		
+		var l:Int = AnimFrames.length;
+		for (i in 0...l)
+		{
+			AddTo.push(getFrameIndex(AnimFrames[i]));
+		}
+	}
+	
+	/**
+	 * Private helper method for add- and appendByPrefix. Finds frames with the given prefix and appends them to AnimFrames.
+	 */
+	private function findByPrefix(AnimFrames:Array<FlxFrame>, Prefix:String):Void
+	{
+		var l:Int = _sprite.framesData.frames.length;
+		for (i in 0...l)
+		{
+			if (StringTools.startsWith(_sprite.framesData.frames[i].name, Prefix))
+			{
+				AnimFrames.push(_sprite.framesData.frames[i]);
+			}
+		}
 	}
 	
 	private function set_frameIndex(Frame:Int):Int
