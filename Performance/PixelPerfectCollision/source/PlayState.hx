@@ -260,7 +260,7 @@ class PlayState extends FlxState
 		infoText.text = INFO.replace("|objects|", Std.string(aliens.countLiving() + 1)) // + 1 for the player that is not in the group
 							.replace("|alpha|", Std.string(alphaTolerance))
 							.replace("|hits|", Std.string(numCollisions))
-							.replace("|fps|", Std.string(fps.text.substr(5)));
+							.replace("|fps|", Std.string(fps.currentFPS));
 	}
 	
 	function set_rotate(Value:Bool):Bool
