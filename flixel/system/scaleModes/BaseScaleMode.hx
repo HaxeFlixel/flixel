@@ -4,6 +4,7 @@ import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.util.FlxPoint;
 
+@:allow(flixel.FlxGame)
 class BaseScaleMode
 {
 	private var deviceSize:FlxPoint;
