@@ -46,9 +46,9 @@ HaxeFlixel presents substantial enhancements from the original Flixel AS3 code:
 
 If you are wanting to contribute code, please review the follwing documentation:
 
+- [Install development flixel](http://haxeflixel.com/documentation/install-development-flixel/)
 - [Code Contributions](http://haxeflixel.com/documentation/code-contributions)
 - [Code Style](http://haxeflixel.com/documentation/code-style)
-- [Install development flixel](http://haxeflixel.com/documentation/install-development-flixel/)
 
 If you have a question or have not contributed on github before, there are friendly people in the community that help out in the [forums](http://haxeflixel.com/documentation/community/).
 
