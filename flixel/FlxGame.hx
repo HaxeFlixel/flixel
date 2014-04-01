@@ -547,6 +547,7 @@ class FlxGame extends Sprite
 		FlxG.sound.destroy();
 		#end
 		FlxG.plugins.onStateSwitch();
+		FlxG.stateSwitchSignal.dispatch();
 		
 		#if FLX_RECORD
 		FlxRandom.updateStateSeed();

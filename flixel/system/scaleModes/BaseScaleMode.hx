@@ -7,10 +7,10 @@ import flixel.util.FlxPoint;
 @:allow(flixel.FlxGame)
 class BaseScaleMode
 {
-	private var deviceSize:FlxPoint;
-	private var gameSize:FlxPoint;
-	private var scale:FlxPoint;
-	private var offset:FlxPoint;
+	public var deviceSize(default, null):FlxPoint;
+	public var gameSize(default, null):FlxPoint;
+	public var scale(default, null):FlxPoint;
+	public var offset(default, null):FlxPoint;
 	
 	private static var zoom:FlxPoint = FlxPoint.get();
 	

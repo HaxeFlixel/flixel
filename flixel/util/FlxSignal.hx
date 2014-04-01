@@ -3,6 +3,7 @@ package flixel.util;
 import flixel.FlxG;
 import flixel.util.FlxPool;
 import flixel.plugin.SignalManager;
+import flixel.interfaces.IFlxPooled;
 import flixel.interfaces.IFlxDestroyable;
 
 /**
@@ -10,7 +11,7 @@ import flixel.interfaces.IFlxDestroyable;
  * 
  * @author Sam Batista (https://github.com/gamedevsam)
  */
-class FlxSignal implements IFlxDestroyable
+class FlxSignal implements IFlxPooled
 {
 	/**
 	 * The SignalsManager instance.
