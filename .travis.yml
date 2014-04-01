@@ -17,10 +17,10 @@ before_script:
   - haxelib -notimeout install task
   - haxelib git firetongue https://github.com/larsiusprime/firetongue
   - haxelib git flixel-tools https://github.com/HaxeFlixel/flixel-tools
-  - haxelib git flixel-demos https://github.com/HaxeFlixel/flixel-demos dev
   - haxelib git flixel-addons https://github.com/HaxeFlixel/flixel-addons dev
   - haxelib git flixel-ui https://github.com/HaxeFlixel/flixel-ui dev
-  - haxelib dev flixel .
+  - haxelib git flixel https://github.com/HaxeFlixel/flixel dev
+  - haxelib dev flixel-demos .
 
 script:
   - cd ./tests
