@@ -30,11 +30,10 @@
 	<classpath name="source" />
 	
 	<!--You can use rename="newName" to shorten the paths to individual subdirectories!-->
-	<assets path="assets" />
-	
+	<!--assets path="assets" --/>
+
 	<!--------------------------------LIBRARIES------------------------------------->
 	
-	<haxelib name="openfl" />
 	<haxelib name="flixel"/>
 	
 	<!--In case you want to use the addons package-->
