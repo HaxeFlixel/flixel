@@ -57,12 +57,12 @@ class FlxGTest extends FlxTest
 	@Test
 	function initialWidth():Void
 	{
-		Assert.areEqual(FlxG.width, 640);
+		Assert.areEqual(640, FlxG.width);
 	}
 	
 	@Test
 	function initialHeight():Void
 	{
-		Assert.areEqual(FlxG.height, 480);
+		Assert.areEqual(480, FlxG.height);
 	}
 }

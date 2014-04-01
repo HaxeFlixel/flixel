@@ -16,21 +16,21 @@ class FlxCameraTest extends FlxTest
 	@Test
 	function zoom():Void
 	{
-		Assert.isTrue(FlxG.camera.zoom == 1);
-		Assert.isTrue(FlxCamera.defaultZoom == 1);
+		Assert.areEqual(1, FlxG.camera.zoom);
+		Assert.areEqual(1, FlxCamera.defaultZoom);
 	}
 
 	@Test
 	function length():Void
 	{
-		Assert.isTrue(FlxG.cameras.list.length == 1);
+		Assert.areEqual(1, FlxG.cameras.list.length);
 		
 		var camera = new FlxCamera();
 		
 		FlxG.cameras.add(camera);
-		Assert.isTrue(FlxG.cameras.list.length == 2);
+		Assert.areEqual(2, FlxG.cameras.list.length);
 		
 		FlxG.cameras.remove(camera);
-		Assert.isTrue(FlxG.cameras.list.length == 1);
+		Assert.areEqual(1, FlxG.cameras.list.length);
 	}
 }
