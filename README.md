@@ -6,9 +6,11 @@
 
 ##Getting Started
 
-You can read our getting started docs [here](http://haxeflixel.com/wiki/getting-started).
+[Click here to get started making games with HaxeFlixel.](http://haxeflixel.com/documentation/getting-started/)
 
-It is recomended to use Haxeflixel via [haxelib](http://lib.haxe.org/p/flixel). Just run `haxelib install flixel` once you have it installed.
+HaxeFlixel is open source software developed by volunteers, [click here to meet the team!](https://github.com/orgs/HaxeFlixel/members)
+
+If you're a developer and like what we're doing, [read the docs](For Developers) and get involved.
 
 ##Links
 
