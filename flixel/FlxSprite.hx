@@ -67,11 +67,11 @@ class FlxSprite extends FlxObject
 	/**
 	 * The width of the actual graphic or image being displayed (not necessarily the game object/bounding box).
 	 */
-	public var frameWidth(default, null):Int;
+	public var frameWidth(default, null):Int = 0;
 	/**
 	 * The height of the actual graphic or image being displayed (not necessarily the game object/bounding box).
 	 */
-	public var frameHeight(default, null):Int;
+	public var frameHeight(default, null):Int = 0;
 	/**
 	 * The total number of frames in this image.  WARNING: assumes each row in the sprite sheet is full!
 	 */
