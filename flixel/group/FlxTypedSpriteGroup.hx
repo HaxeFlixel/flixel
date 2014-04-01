@@ -282,6 +282,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		sprite.y += y;
 		sprite.alpha *= alpha;
 		sprite.scrollFactor.copyFrom(scrollFactor);
+		sprite.cameras = _cameras; // _cameras instead of cameras because get_cameras() will not return null
 		return group.add(Sprite);
 	}
 	
