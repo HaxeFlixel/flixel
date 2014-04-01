@@ -1,10 +1,8 @@
 package flixel.util;
 
-import flixel.FlxG;
-import flixel.util.FlxPool;
-import flixel.plugin.SignalManager;
-import flixel.interfaces.IFlxPooled;
 import flixel.interfaces.IFlxDestroyable;
+import flixel.interfaces.IFlxPooled;
+import flixel.util.FlxPool;
 
 /**
  * An object that contains a list of callbacks to be executed when dispatch is triggered.
@@ -13,19 +11,43 @@ import flixel.interfaces.IFlxDestroyable;
  */
 class FlxSignal implements IFlxPooled
 {
+	private static var _pool = new FlxPool<FlxSignal>(FlxSignal);
+	private static var _handlersPool = new FlxPool<SignalHandler>(SignalHandler);
+	private static var _signals:Array<FlxSignal> = [];
+	
 	/**
 	 * A signal that gets dispatched when a state change occurs. Signal.userData is null!
 	 */
-	public static var STATE_SWITCH(default, null) = FlxSignal.get(true);
+	public static var STATE_SWITCH(default, null) = get(true).add(onStateSwitch);
 	/**
-	 * A signal that gets dispatched when a state change occurs. Signal.userData is FlxPoint (_scaleMode.gameSize)!
+	 * A signal that gets dispatched when a state change occurs. Signal.userData is a FlxPoint (_scaleMode.gameSize)!
 	 */
-	public static var GAME_RESIZE(default, null) = FlxSignal.get(true);
+	public static var GAME_RESIZE(default, null) = get(true);
 	
 	/**
-	 * The SignalsManager instance.
+	 * Creates a new signal or recycles a used one if available.
+	 * 
+	 * @param	Persist If signal should remain active between state switches.
 	 */
-	public static var manager:SignalManager;
+	public static inline function get(Persist:Bool = false):FlxSignal
+	{
+		var signal = _pool.get();
+		signal.persist = Persist;
+		signal._inPool = false;
+		_signals.push(signal);
+		return signal;
+	}
+	
+	public static function onStateSwitch(_):Void
+	{
+		var i = _signals.length;
+		while (i-- > 0)
+		{
+			if (!_signals[i].persist)
+				_signals[i].put();
+		}
+	}
+	
 	/**
 	 * If Signal is active and should broadcast events.
 	 * IMPORTANT: Setting this property during a dispatch will only affect the next dispatch, if you want to stop the propagation of a signal use `halt()` instead.</p>
@@ -42,22 +64,6 @@ class FlxSignal implements IFlxPooled
 	
 	private var _inPool:Bool = false;
 	private var _handlers:Array<SignalHandler>;
-	private static var _pool = new FlxPool<FlxSignal>(FlxSignal);
-	private static var _handlersPool = new FlxPool<SignalHandler>(SignalHandler);
-	
-	/**
-	 * Creates a new signal or recycles a used one if available.
-	 * 
-	 * @param	Persist If signal should remain active between state switches.
-	 */
-	public static inline function get(Persist:Bool = false):FlxSignal
-	{
-		var signal = _pool.get();
-		signal.persist = Persist;
-		signal._inPool = false;
-		manager.add(signal);
-		return signal;
-	}
 	
 	/**
 	 * Restores this signal to the pool (destroys it in the process).
@@ -88,7 +94,7 @@ class FlxSignal implements IFlxPooled
 	/**
 	 * Determines whether the provided callback is registered with this signal.
 	 * 
-	 * @param Callback	function callback to check
+	 * @param	Callback	function callback to check
 	 * @return	Bool	true if callback was found, otherwise false 
 	 */
 	public function has(Callback:FlxSignal->Void):Bool
@@ -161,8 +167,8 @@ class FlxSignal implements IFlxPooled
 	{
 		removeAll();
 		_handlers = null;
-		manager.remove(this);
 		userData = null;
+		FlxArrayUtil.fastSplice(_signals, this);
 	}
 }
 
