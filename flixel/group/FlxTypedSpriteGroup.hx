@@ -488,6 +488,17 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	}
 	
 	/**
+	 * Applies a function to all members of type Class<T>
+	 * 
+	 * @param   Class<T>   A class that objects will be checked against before Function is applied, ex: FlxSprite
+	 * @param   Function   A function that modifies one element at a time
+	 */
+	public function forEachOfType(ObjectClass:Class<T>, Function:T->Void)
+	{
+		group.forEachOfType(ObjectClass, Function);
+	}
+	
+	/**
 	 * Remove all instances of FlxSprite from the list.
 	 * WARNING: does not destroy() or kill() any of these objects!
 	 */

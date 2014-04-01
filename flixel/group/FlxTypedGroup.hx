@@ -650,7 +650,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 				Function(cast basic);
 		}
 	}
-
+	
 	/**
 	 * Applies a function to all alive members
 	 * 
@@ -704,6 +704,26 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			basic = members[i++];
 			
 			if (basic != null && basic.exists)
+				Function(cast basic);
+		}
+	}
+	
+	/**
+	 * Applies a function to all members of type Class<T>
+	 * 
+	 * @param   Class<T>   A class that objects will be checked against before Function is applied, ex: FlxSprite
+	 * @param   Function   A function that modifies one element at a time
+	 */
+	public function forEachOfType<K>(ObjectClass:Class<K>, Function:K->Void)
+	{
+		var i:Int = 0;
+		var basic:FlxBasic = null;
+		
+		while (i < length)
+		{
+			basic = members[i++];
+			
+			if (basic != null &&  Std.is(basic, ObjectClass))
 				Function(cast basic);
 		}
 	}
