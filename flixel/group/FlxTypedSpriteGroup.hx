@@ -482,18 +482,18 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 * 
 	 * @param   Function   A function that modifies one element at a time
 	 */
-	public function forEachExists(Function:T->Void):Void
+	public inline function forEachExists(Function:T->Void):Void
 	{
 		group.forEachExists(Function);
 	}
 	
 	/**
-	 * Applies a function to all members of type Class<T>
+	 * Applies a function to all members of type Class<K>
 	 * 
-	 * @param   Class<T>   A class that objects will be checked against before Function is applied, ex: FlxSprite
-	 * @param   Function   A function that modifies one element at a time
+	 * @param   ObjectClass   A class that objects will be checked against before Function is applied, ex: FlxSprite
+	 * @param   Function      A function that modifies one element at a time
 	 */
-	public function forEachOfType(ObjectClass:Class<T>, Function:T->Void)
+	public inline function forEachOfType(ObjectClass:Class<T>, Function:T->Void)
 	{
 		group.forEachOfType(ObjectClass, Function);
 	}

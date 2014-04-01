@@ -709,10 +709,10 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	}
 	
 	/**
-	 * Applies a function to all members of type Class<T>
+	 * Applies a function to all members of type Class<K>
 	 * 
-	 * @param   Class<T>   A class that objects will be checked against before Function is applied, ex: FlxSprite
-	 * @param   Function   A function that modifies one element at a time
+	 * @param   ObjectClass   A class that objects will be checked against before Function is applied, ex: FlxSprite
+	 * @param   Function      A function that modifies one element at a time
 	 */
 	public function forEachOfType<K>(ObjectClass:Class<K>, Function:K->Void)
 	{
