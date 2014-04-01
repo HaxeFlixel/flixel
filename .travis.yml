@@ -23,6 +23,4 @@ before_script:
   - haxelib dev flixel-demos .
 
 script:
-  - cd ./tests
-  - haxe test.hxml
   - haxelib run flixel-tools testdemos
