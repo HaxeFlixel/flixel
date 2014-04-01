@@ -6,15 +6,14 @@ before_script:
   - sudo apt-get install haxe -y
   - sudo apt-get install -qq --force-yes libgd2-xpm ia32-libs ia32-libs-multiarch
   - mkdir ~/haxelib
-  - haxelib -notimeout setup ~/haxelib 
-  - haxelib -notimeout install munit
-  - haxelib -notimeout install lime
-  - haxelib -notimeout install lime-tools
-  - haxelib -notimeout run lime install openfl
-  - haxelib -notimeout install systools
-  - haxelib -notimeout install spinehx
-  - haxelib -notimeout install nape
-  - haxelib -notimeout install task
+  - haxelib setup ~/haxelib 
+  - haxelib install munit
+  - haxelib install openfl
+  - haxelib install openfl-bitfive
+  - haxelib install systools
+  - haxelib install spinehx
+  - haxelib install nape
+  - haxelib install task
   - haxelib git firetongue https://github.com/larsiusprime/firetongue
   - haxelib git flixel-tools https://github.com/HaxeFlixel/flixel-tools
   - haxelib git flixel-demos https://github.com/HaxeFlixel/flixel-demos dev
