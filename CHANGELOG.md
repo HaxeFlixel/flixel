@@ -8,48 +8,71 @@
  * Use FlxG.debugger.addTrackerProfile() to add a profile for classes don't have one yet or override existing ones
  * Use the "track [object]" command to open a tracker window from the console
 * FlxCamera: 
- * added static defaultCameras array which is used by FlxBasics when their cameras array has not been set - previously the use of FlxG.cameras.list / all existing cameras was hardcoded
- * fixed a bug where following a target would prevent you from setting the coordinates of the camera
+ * Added static defaultCameras array which is used by FlxBasics when their cameras array has not been set - previously the use of FlxG.cameras.list / all existing cameras was hardcoded
+ * Fixed a bug where following a target would prevent you from setting the coordinates of the camera
 * Added pooling functionality to FlxPoint, FlxVector, FlxRect objects (FlxPath and FlxTimer also support pooling, but that is handled transparently). Usage: var point = FlxPoint.get(); /* do stuff with point */ point.put(); // recycle point. Instantiating these objects directly via new() is no longer possible to enforce the use of pooling. FlxPoint.weak() should be used instead of get() when passing points into flixel functions, that way they'll be recycled automatically.
 * Debugger windows:
  * Fixed dragging of overlapping windows
  * Fixed the visibility of windows on native targets (now saving correctly)
  * Fixed resizing when moving the mouse to the left / above the window
 * FlxPath: fixed a bug with drawDebug()
-* FlxG.fullscreen: fixed offset in flash
-* FlxSound: added loadByteArray()
+* FlxG:
+ * fullscreen: fixed offset in flash
+ * openURL(): now adds "http://" to the URL if necessary
+* FlxSound: 
+ * Added loadByteArray()
+ * Now has a read-only variable time
 * MouseEventManager: 
- * improved handling of visible / exists
- * now works on FlxObjects
+ * Improved handling of visible / exists
+ * Now works on FlxObjects
 * FlxPoint: added floor() and ceil()
 * Changed the default html5 backend to openf-bitfive
- * middle and right mouse events are now supported
- * sounds are now supported (.ogg and .mp3)
+ * Middle and right mouse events are now supported
+ * Sounds are now supported
 * FlxObject: replaced forceComplexRender by pixelPerfectRender which rounds coordinates by default (if true) for drawing (also on cpp targets, making it consistent with flash)
 * FlxText: 
- * added shadowOffset
- * fixed the widthInc and heightInc of addFilter() which did not work at all previously
+ * Added shadowOffset
+ * Fixed the widthInc and heightInc of addFilter() which did not work at all previously
+ * Seperated visible and physical width by adding fieldWidth to fix a bug
+ * Added autoSize that makes sure the entire text is displayed if true with wordWrap = false. Setting fieldWidth to 0 in the constructor is now allowed and activates this behaviour.
 * FlxSpriteUtil: added bound()
 * Added FlxTypedSpriteGroup, which can be used in the same way as FlxTypedGroup, but its type parameter is T:FlxSprite
 * Abstracted rendering into FLX_RENDER_TILE and FLX_RENDER_BLIT conditionals as opposed to being hardcoded based on the target
 * FlxTween:
  * num(): added an optional tweenFunction parameter which can be used for increased performance (as MultiVarTween and SingleVarTween are fairly slow, using Reflection)
- * tweens are now being pooled
- * added sfx()
+ * Tweens are now being pooled
+ * Added sfx()
  * singleVar() and multiVar() have been replaced by tween()
 * FlxKeyboard:
  * Implemented a workaround for function and numpad keys not working on native targets
  * Added FlxKey.NUMPADMULTIPLY / "NUMPADMULTIPLY" 
 * Added FlxCallbackPoint, a FlxPoint that calls a function when x, y or both are changed.
-* FlxTilemap: replaced scaleX and scaleY by a scale FlxPoint
+* FlxTilemap: 
+ * Replaced scaleX and scaleY by a scale FlxPoint
+ * Removed rayHit(), ray() provides the same functionality
 * Added FlxDestroyUtil (FlxG.safeDestroy() -> FlxDestroyUtil.destroy())
 * Debugger stats window: added a button to expand the window and show two more graphs (draw and update time)
 * Added buildFileReferences() macro to FlxAssets.hx (auto-completion for asset string paths)
 * FlxTilemap.computePathDistance() is now public and has a new StopOnEnd parameter
 * Added FlxColor.MAGENTA
 * Added FlxMouse.setGlobalScreenPositionUnsafe()
-* Small fix for FlxPreloader which should prevent it from getting stuck
-* FlxTypedButton: fixed label.visible = false; not working
+* FlxTypedButton: 
+ * Fixed label.visible = false; not working
+ * Fixed a one-frame-delay between setting the label's position and it taking effect
+* FlxSprite:
+ * Added support for more texture packer formats: LibGDXData, SparrowData, TexturePackerXMLData
+ * Fixed a null error crash in FlxAtlas on cpp targets with haxe 3.1.0+
+* FlxPreloader:
+ * Small fix that should prevent it from getting stuck 
+ * Added siteLockURLIndex to control which URL in allowdURLs is used when the site-lock triggers
+ * allowedURLs now works with URLs that don't start with "http://"
+* Fixed camera shifting after resizing with StageSizeScaleMode
+* Added FlxSignal
+* FlxAnimationController:
+ * Added append(), appendByNames(), appendByStringIndices(), appendByIndices() and appendByPrefix()
+ * addByStringIndicies() -> addByStringIndices()
+ * addByIndicies() -> addByIndices()
+* FlxTypedGroup: added forEachOfType() iterator
 
 3.2.2
 ------------------------------
