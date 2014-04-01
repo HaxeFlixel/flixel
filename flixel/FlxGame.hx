@@ -19,6 +19,7 @@ import flixel.text.pxText.PxBitmapFont;
 import flixel.util.FlxAngle;
 import flixel.util.FlxColor;
 import flixel.util.FlxRandom;
+import flixel.util.FlxSignal;
 
 #if !FLX_NO_DEBUG
 import flixel.system.debug.FlxDebugger;
@@ -547,7 +548,7 @@ class FlxGame extends Sprite
 		FlxG.sound.destroy();
 		#end
 		FlxG.plugins.onStateSwitch();
-		FlxG.stateSwitchSignal.dispatch();
+		FlxSignal.STATE_SWITCH.dispatch();
 		
 		#if FLX_RECORD
 		FlxRandom.updateStateSeed();

@@ -14,6 +14,15 @@ import flixel.interfaces.IFlxDestroyable;
 class FlxSignal implements IFlxPooled
 {
 	/**
+	 * A signal that gets dispatched when a state change occurs. Signal.userData is null!
+	 */
+	public static var STATE_SWITCH(default, null) = FlxSignal.get(true);
+	/**
+	 * A signal that gets dispatched when a state change occurs. Signal.userData is FlxPoint (_scaleMode.gameSize)!
+	 */
+	public static var GAME_RESIZE(default, null) = FlxSignal.get(true);
+	
+	/**
 	 * The SignalsManager instance.
 	 */
 	public static var manager:SignalManager;
@@ -30,9 +39,7 @@ class FlxSignal implements IFlxPooled
 	 * Object that contains data passed into the dispatch function (can be null).
 	 */
 	public var userData:Dynamic = null;
-	/**
-	 * @private
-	 */
+	
 	private var _inPool:Bool = false;
 	private var _handlers:Array<SignalHandler>;
 	private static var _pool = new FlxPool<FlxSignal>(FlxSignal);
@@ -126,7 +133,7 @@ class FlxSignal implements IFlxPooled
 	/**
 	 * Dispatches this Signal to all bound callbacks.
 	 * 
-	 * @param Data [optional] Data temporaily stored in userData which can be accessed in callback functions.
+	 * @param	Data	Data temporaily stored in userData which can be accessed in callback functions.
 	 */
 	public function dispatch(?Data:Dynamic)
 	{
@@ -150,9 +157,6 @@ class FlxSignal implements IFlxPooled
 		}
 	}
 	
-	/**
-	 * Destroy this Signal.
-	 */
 	public function destroy()
 	{
 		removeAll();

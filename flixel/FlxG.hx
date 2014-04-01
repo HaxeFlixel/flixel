@@ -263,21 +263,14 @@ class FlxG
 	#end
 	
 	private static var _scaleMode:BaseScaleMode = new RatioScaleMode();
-	/**
-	 * A signal that gets dispatched when a state change occurs. Signal.userData is null!
-	 */
-	public static var stateSwitchSignal(default, null):FlxSignal = FlxSignal.get(true);
-	/**
-	 * A signal that gets dispatched when a state change occurs. Signal.userData is FlxPoint (_scaleMode.gameSize)!
-	 */
-	public static var gameResizedSignal(default, null):FlxSignal = FlxSignal.get(true);
+	
 	/**
 	 * Handy helper functions that takes care of all the things to resize the game.
 	 */
 	public static inline function resizeGame(Width:Int, Height:Int):Void
 	{
 		_scaleMode.onMeasure(Width, Height);
-		gameResizedSignal.dispatch(_scaleMode.gameSize);
+		FlxSignal.GAME_RESIZE.dispatch(_scaleMode.gameSize);
 	}
 	
 	/**
