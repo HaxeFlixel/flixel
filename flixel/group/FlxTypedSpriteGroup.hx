@@ -627,6 +627,13 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	
 	// PROPERTIES GETTERS/SETTERS
 	
+	override private function set_cameras(Value:Array<FlxCamera>):Array<FlxCamera>
+	{
+		if (cameras != Value)
+			transformChildren(camerasTransform, Value);
+		return super.set_cameras(Value);
+	}
+	
 	override private function set_exists(Value:Bool):Bool
 	{
 		if (exists != Value)
@@ -743,7 +750,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	
 	override private function set_blend(Value:BlendMode):BlendMode 
 	{
-		if (exists && (blend != Value))
+		if (exists && blend != Value)
 			transformChildren(blendTransform, Value);
 		return blend = Value;
 	}
@@ -864,6 +871,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	private inline function solidTransform(Sprite:FlxSprite, Solid:Bool)						{ Sprite.solid = Solid; }						// set
 	private inline function aliveTransform(Sprite:FlxSprite, Alive:Bool)						{ Sprite.alive = Alive; }						// set
 	private inline function existsTransform(Sprite:FlxSprite, Exists:Bool)						{ Sprite.exists = Exists; }						// set
+	private inline function camerasTransform(Sprite:FlxSprite, Cameras:Array<FlxCamera>)		{ Sprite.cameras = Cameras; }						// set
 
 	private inline function offsetTransform(Sprite:FlxSprite, Offset:FlxPoint)					{ Sprite.offset.copyFrom(Offset); }				// set
 	private inline function originTransform(Sprite:FlxSprite, Origin:FlxPoint)					{ Sprite.origin.copyFrom(Origin); }				// set

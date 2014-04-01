@@ -161,7 +161,7 @@ class FlxBasic implements IFlxDestroyable
 		return (_cameras == null) ? FlxCamera.defaultCameras : _cameras;
 	}
 	
-	private inline function set_cameras(Value:Array<FlxCamera>):Array<FlxCamera>
+	private function set_cameras(Value:Array<FlxCamera>):Array<FlxCamera>
 	{
 		return _cameras = Value;
 	}
