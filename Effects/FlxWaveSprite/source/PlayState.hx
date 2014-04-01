@@ -30,11 +30,12 @@ class PlayState extends FlxState
 	{
 		var _sprite = new FlxSprite(0, 0, GraphicLogo);
 		_sprite.screenCenter();
+		_sprite.y += 10;
 		
 		_waveSprite = new FlxWaveSprite(_sprite);
 		add(_waveSprite);
 		
-		var _txtInstruct:FlxText = new FlxText(0, 0, FlxG.width, INSTRUCTIONS);
+		var _txtInstruct:FlxText = new FlxText(0, 5, FlxG.width, INSTRUCTIONS);
 		_txtInstruct.alignment = "center";
 		add(_txtInstruct);
 		
@@ -91,12 +92,12 @@ class PlayState extends FlxState
 	{
 		switch (_waveSprite.mode)
 		{
-			case FlxWaveSprite.MODE_ALL:
-				_waveSprite.mode = FlxWaveSprite.MODE_BOTTOM;
-			case FlxWaveSprite.MODE_BOTTOM:
-				_waveSprite.mode = FlxWaveSprite.MODE_TOP;
-			case FlxWaveSprite.MODE_TOP:
-				_waveSprite.mode = FlxWaveSprite.MODE_ALL;
+			case ALL:
+				_waveSprite.mode = TOP;
+			case TOP:
+				_waveSprite.mode = BOTTOM;
+			case BOTTOM:
+				_waveSprite.mode = ALL;
 		}
 	}
 	
