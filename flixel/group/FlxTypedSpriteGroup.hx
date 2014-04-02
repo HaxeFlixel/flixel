@@ -494,7 +494,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 * @param   ObjectClass   A class that objects will be checked against before Function is applied, ex: FlxSprite
 	 * @param   Function      A function that modifies one element at a time
 	 */
-	public inline function forEachOfType(ObjectClass:Class<T>, Function:T->Void)
+	public inline function forEachOfType<K>(ObjectClass:Class<K>, Function:K->Void)
 	{
 		group.forEachOfType(ObjectClass, Function);
 	}
