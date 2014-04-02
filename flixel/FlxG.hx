@@ -270,7 +270,7 @@ class FlxG
 	public static inline function resizeGame(Width:Int, Height:Int):Void
 	{
 		_scaleMode.onMeasure(Width, Height);
-		FlxSignal.GAME_RESIZE.dispatch(_scaleMode.gameSize);
+		FlxSignal.gameResize.dispatch(_scaleMode.gameSize);
 	}
 	
 	/**

@@ -18,11 +18,11 @@ class FlxSignal implements IFlxPooled
 	/**
 	 * A signal that gets dispatched when a state change occurs. Signal.userData is null!
 	 */
-	public static var STATE_SWITCH(default, null) = get(true).add(onStateSwitch);
+	public static var stateSwitch(default, null) = get(true).add(onStateSwitch);
 	/**
 	 * A signal that gets dispatched when a state change occurs. Signal.userData is a FlxPoint (_scaleMode.gameSize)!
 	 */
-	public static var GAME_RESIZE(default, null) = get(true);
+	public static var gameResize(default, null) = get(true);
 	
 	/**
 	 * Creates a new signal or recycles a used one if available.
