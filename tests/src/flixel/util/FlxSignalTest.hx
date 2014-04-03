@@ -3,42 +3,46 @@ package flixel.util;
 import flixel.FlxState;
 import flixel.util.FlxSignal;
 import massive.munit.Assert;
-import massive.munit.async.AsyncFactory;
 
 class FlxSignalTest extends FlxTest
 {
-	function func1(_) {}
-	function func2(_) {}
-	function func3(_) { }
+	var signal:FlxSignal;
+	var flag:Bool = false;
+	var counter:Int = 0;
+	
+	function callbackEmpty1(_) {}
+	function callbackEmpty2(_) {}
+	function callbackEmpty3(_) {}
+	function callbackSetFlagTrue(_) { flag = true; }
+	function callbackSetFlagFalse(_) { flag = false; }
+	function callbackIncrementCounter(_) { counter++; }
 	
 	function addAllCallbacks():Void 
 	{
-		signal.add(func1);
-		signal.add(func2);
-		signal.add(func3);
+		signal.add(callbackEmpty1);
+		signal.add(callbackEmpty2);
+		signal.add(callbackEmpty3);
 	}
-	
-	var signal:FlxSignal;
 	
 	@Before
 	function before():Void
 	{
 		signal = FlxSignal.get();
-		persistFlag = false;
+		flag = false;
+		counter = 0;
 	}
 	
 	@Test
-	function dispatch():Void
+	function testDispatchOneCallback():Void
 	{
-		var flag:Bool = false;
-		signal.add(function(_) { flag = true; } );
+		signal.add(callbackSetFlagTrue);
 		
 		signal.dispatch();
 		Assert.isTrue(flag);
 	}
 	
 	@Test
-	function multiDispatch():Void
+	function testDispatchMultipleCallbacks():Void
 	{
 		var flag1:Bool = false;
 		var flag2:Bool = false;
@@ -56,83 +60,91 @@ class FlxSignalTest extends FlxTest
 	}
 	
 	@Test
-	function has():Void
+	function testHasCallback():Void
 	{
-		signal.add(func1);
-		Assert.isTrue(signal.has(func1));
+		signal.add(callbackEmpty1);
+		Assert.isTrue(signal.has(callbackEmpty1));
 	}
 	
 	@Test
-	function remove():Void
+	function testRemoveOneCallback():Void
 	{
-		signal.add(func1);
-		signal.remove(func1);
-		Assert.isFalse(signal.has(func1));
+		signal.add(callbackEmpty1);
+		signal.remove(callbackEmpty1);
+		Assert.isFalse(signal.has(callbackEmpty1));
 	}
 	
 	@Test
-	function multiRemove():Void
+	function testRemoveMultipleCallbacks():Void
 	{
 		addAllCallbacks();
-		signal.remove(func2);
+		signal.remove(callbackEmpty2);
 		
-		Assert.isTrue(signal.has(func1));
-		Assert.isFalse(signal.has(func2));
-		Assert.isTrue(signal.has(func3));
+		Assert.isTrue(signal.has(callbackEmpty1));
+		Assert.isFalse(signal.has(callbackEmpty2));
+		Assert.isTrue(signal.has(callbackEmpty3));
 	}
 	
 	@Test
-	function removeAll():Void
+	function testRemoveAll():Void
 	{
 		addAllCallbacks();
 		signal.removeAll();
 		
-		Assert.isFalse(signal.has(func1));
-		Assert.isFalse(signal.has(func2));
-		Assert.isFalse(signal.has(func3));
+		Assert.isFalse(signal.has(callbackEmpty1));
+		Assert.isFalse(signal.has(callbackEmpty2));
+		Assert.isFalse(signal.has(callbackEmpty3));
 	}
 
 	@Test
-	function noDispatch():Void
+	function testNoDispatch():Void
 	{
-		var flag:Bool = false;
-		signal.add(function(_) { flag = true; } );
-		
+		signal.add(callbackSetFlagTrue);
 		Assert.isFalse(flag);
 	}
 	
-	var persistFlag:Bool = false;
-	
-	@AsyncTest
-	function persist(factory:AsyncFactory):Void
+	@Test
+	function testPersistTrue():Void
 	{
 		var signal = FlxSignal.get(true);
-		signal.add(function(_) { persistFlag = true; } );
+		signal.add(callbackSetFlagTrue);
 		FlxG.switchState(new DispatchState(signal));
 		
-		var resultHandler:Dynamic = factory.createHandler(this, testPersistDispatch);
-		TestMain.addAsync(resultHandler, 100);
+		delay(function() { Assert.isTrue(flag); });
 	}
 	
-	function testPersistDispatch():Void
-	{
-		Assert.isTrue(persistFlag); 
-	}
-	
-	@AsyncTest
-	function noPersist(factory:AsyncFactory):Void
+	@Test
+	function testPersistFalse():Void
 	{
 		var signal = FlxSignal.get(false);
-		signal.add(function(_) { persistFlag = true; } );
+		signal.add(function(_) { flag = true; } );
 		FlxG.switchState(new DispatchState(signal));
 		
-		var resultHandler:Dynamic = factory.createHandler(this, testNoPersistDispatch);
-		TestMain.addAsync(resultHandler, 100);
+		delay(function() { Assert.isFalse(flag); });
 	}
 	
-	function testNoPersistDispatch():Void
+	@Test
+	function testDispatchOnceTrue():Void
 	{
-		Assert.isFalse(persistFlag); 
+		signal.add(callbackIncrementCounter, true);
+
+		signal.dispatch();
+		signal.dispatch();
+		signal.dispatch();
+		
+		Assert.areEqual(1, counter);
+	}
+	
+	@Test
+	function testDispatchOnceFalse():Void
+	{
+		signal.add(callbackIncrementCounter, false);
+
+		signal.dispatch();
+		signal.dispatch();
+		signal.dispatch();
+		
+		Assert.areEqual(3, counter);
 	}
 }
 

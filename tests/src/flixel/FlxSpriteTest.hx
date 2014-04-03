@@ -1,13 +1,11 @@
 package flixel;
 
 import flash.display.BitmapData;
-import flixel.util.FlxColor;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.util.FlxArrayUtil;
+import flixel.util.FlxColor;
 import massive.munit.Assert;
-import massive.munit.async.AsyncFactory;
-import TestMain;
 
 class FlxSpriteTest extends FlxTest
 {
@@ -25,14 +23,14 @@ class FlxSpriteTest extends FlxTest
 	}
 	
 	@Test
-	function size():Void 
+	function testSize():Void 
 	{
 		Assert.areEqual(100, sprite1.width);
 		Assert.areEqual(80, sprite1.height);
 	}
 	
 	@Test
-	function sprites():Void 
+	function testSpriteDefaultValues():Void 
 	{
 		Assert.isNotNull(sprite1);
 		Assert.isNotNull(sprite2);
@@ -49,7 +47,7 @@ class FlxSpriteTest extends FlxTest
 	}
 	
 	@Test
-	function add():Void 
+	function testAddToState():Void 
 	{
 		FlxG.state.add(sprite1);
 		FlxG.state.add(sprite2);
@@ -62,7 +60,7 @@ class FlxSpriteTest extends FlxTest
 	}
 
 	@Test
-	function remove():Void 
+	function testRemoveFromState():Void 
 	{
 		FlxG.state.remove(sprite1);
 		
@@ -76,7 +74,7 @@ class FlxSpriteTest extends FlxTest
 	}
 
 	@Test
-	function makeGraphicColor():Void
+	function testMakeGraphicColor():Void
 	{
 		var colorSprite = new FlxSprite();
 		colorSprite.makeGraphic(100, 100, FlxColor.CRIMSON);
@@ -89,7 +87,7 @@ class FlxSpriteTest extends FlxTest
 	}
 
 	@Test
-	function height():Void
+	function testHeight():Void
 	{
 		var heightSprite = new FlxSprite();
 		var bitmapData = new BitmapData (1, 1);
@@ -109,7 +107,7 @@ class FlxSpriteTest extends FlxTest
 	}
 	
 	@Test
-	function width():Void
+	function testWidth():Void
 	{
 		var widthSprite = new FlxSprite();
 		var bitmapData = new BitmapData(1, 1);
@@ -129,7 +127,7 @@ class FlxSpriteTest extends FlxTest
 	}
 	
 	@Test
-	function setSize():Void
+	function testSetSize():Void
 	{
 		var sizeSprite = new FlxSprite();
 		var bitmapData = new BitmapData(100, 130);
@@ -145,25 +143,25 @@ class FlxSpriteTest extends FlxTest
 	}
 	
 	@Test
-	function x():Void
+	function testXAfterAddingToState():Void
 	{
-		var xSprite = new FlxSprite(33,445);
+		var xSprite = new FlxSprite(33, 445);
 		FlxG.state.add(xSprite);
 		
 		Assert.areEqual(xSprite.x, 33);
 	}
 	
 	@Test
-	function y():Void
+	function testYAfterAddingToState():Void
 	{
-		var ySprite = new FlxSprite(433,444);
+		var ySprite = new FlxSprite(433, 444);
 		FlxG.state.add(ySprite);
 		
 		Assert.areEqual(ySprite.y, 444);
 	}
 	
 	@Test
-	function setPosition()
+	function testSetPositionAfterAddingToState()
 	{
 		var positionSprite = new FlxSprite(433,444);
 		FlxG.state.add(positionSprite);
@@ -179,8 +177,8 @@ class FlxSpriteTest extends FlxTest
 		Assert.areEqual(positionSprite.y, 545);
 	}
 	
-	@AsyncTest
-	function overlap(factory:AsyncFactory):Void
+	@Test
+	function testOverlap():Void
 	{
 		Assert.isTrue(FlxG.overlap(sprite1, sprite2));
 		
@@ -188,12 +186,6 @@ class FlxSpriteTest extends FlxTest
 		sprite1.velocity.x = 2000;
 		sprite2.velocity.x = -2000;
 		
-		var resultHandler:Dynamic = factory.createHandler(this, testOverlap);
-		TestMain.addAsync(resultHandler, 100);
-	}
-
-	function testOverlap(?e:Dynamic):Void
-	{
-		Assert.isFalse(FlxG.overlap(sprite1, sprite2));
+		delay(function() { Assert.isFalse(FlxG.overlap(sprite1, sprite2)); });
 	}
 }
