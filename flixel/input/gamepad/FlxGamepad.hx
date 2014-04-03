@@ -184,7 +184,7 @@ class FlxGamepad implements IFlxDestroyable
 	 * @param	ButtonArray	An array of button IDs as Int
 	 * @return	Whether at least one of the keys passed in is pressed
 	 */
-	public inline function anyPressed(ButtonArray:Array<Int>):Bool
+	public function anyPressed(ButtonArray:Array<Int>):Bool
 	{
 		for (b in ButtonArray)
 		{
@@ -201,7 +201,7 @@ class FlxGamepad implements IFlxDestroyable
 	 * @param	ButtonArray	An array of button IDs as Int
 	 * @return	Whether at least one of the keys passed in is justRressed
 	 */
-	public inline function anyJustPressed(ButtonArray:Array<Int>):Bool
+	public function anyJustPressed(ButtonArray:Array<Int>):Bool
 	{
 		for (b in ButtonArray)
 		{
@@ -217,7 +217,7 @@ class FlxGamepad implements IFlxDestroyable
 	 * @param	ButtonArray	An array of button IDs as Int
 	 * @return	Whether at least one of the keys passed in is justReleased
 	 */
-	public inline function anyJustReleased(ButtonArray:Array<Int>):Bool
+	public function anyJustReleased(ButtonArray:Array<Int>):Bool
 	{
 		for (b in ButtonArray)
 		{
