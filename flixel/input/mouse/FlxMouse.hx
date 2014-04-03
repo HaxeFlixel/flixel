@@ -398,14 +398,10 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	}
 	
 	/**
-	 * Directly set the underyling screen position variable.
-	 * WARNING! You should never use this unless you are trying to manually
-	 * dispatch low-level mouse events to the stage.
-	 * @param	X
-	 * @param	Y
+	 * Directly set the underyling screen position variable. WARNING! You should never use
+	 * this unless you are trying to manually dispatch low-level mouse events to the stage.
 	 */
-	
-	public function setGlobalScreenPositionUnsafe(X:Float, Y:Float):Void 
+	public inline function setGlobalScreenPositionUnsafe(X:Float, Y:Float):Void 
 	{
 		_globalScreenPosition.set(X, Y);
 	}
