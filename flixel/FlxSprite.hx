@@ -1330,6 +1330,24 @@ class FlxSprite extends FlxObject
 		return (((angle == 0 && frame.additionalAngle == 0) || (bakedRotationAngle > 0)) && (scale.x == 1) && (scale.y == 1));
 		#end
 	}
+
+	/**
+	 * Flips graphics horizontally
+	 *
+	 */
+	public function flipHorizontally():Void
+	{
+		scale.x *= -1;
+	}
+
+	/**
+	 * Flips graphics vertically
+	 *
+	 */
+	public function flipVertically():Void
+	{
+		scale.y *= -1;
+	}
 	
 	/**
 	 * PROPERTIES
