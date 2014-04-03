@@ -121,7 +121,7 @@ class FlxKeyboard implements IFlxInput
 		#if !FLX_NO_DEBUG
 		else
 		{
-			FlxG.log.error("Invalid Key: `" + KeyCode + "`. Note that function and numpad keys can only be used in flash and js.");
+			FlxG.log.error("Invalid Key: `" + KeyCode + "`.");
 		}
 		#end
 		
