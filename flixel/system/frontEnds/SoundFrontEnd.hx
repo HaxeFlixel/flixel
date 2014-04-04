@@ -58,7 +58,7 @@ class SoundFrontEnd
 	public var volume(default, set):Float = 1;
 	
 	
-	#if android
+	#if (android || ios)
 	private var _soundCache:Map<String, Sound>;
 	private var _soundTransform:SoundTransform;
 	#end
@@ -128,7 +128,7 @@ class SoundFrontEnd
 		return sound;
 	}
 	
-	#if android
+	#if (android || ios)
 	/**
 	 * Method for sound caching on Android target.
 	 * Application may freeze for some time at first try to play sound if you don't use this method
@@ -274,7 +274,7 @@ class SoundFrontEnd
 		
 		list = new FlxTypedGroup<FlxSound>();
 		
-		#if android
+		#if (android || ios)
 		_soundCache = new Map<String, Sound>();
 		_soundTransform = new SoundTransform();
 		#end
