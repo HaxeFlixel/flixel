@@ -58,12 +58,11 @@ class SoundFrontEnd
 	public var volume(default, set):Float = 1;
 	
 	
-	#if (android || ios)
+	#if mobile
 	private var _soundCache:Map<String, Sound>;
 	private var _soundTransform:SoundTransform;
 	#end
 	
-	// TODO: Return from Sound -> Class<Sound>
 	/**
 	 * Set up and play a looping background soundtrack.
 	 * 
@@ -128,12 +127,12 @@ class SoundFrontEnd
 		return sound;
 	}
 	
-	#if (android || ios)
+	#if mobile
 	/**
-	 * Method for sound caching on Android target.
+	 * Method for sound caching sound on mobile targets.
 	 * Application may freeze for some time at first try to play sound if you don't use this method
 	 * 
-	 * @param	EmbeddedSound	Name of sound assets specified in your .nmml project file
+	 * @param	EmbeddedSound	Name of sound assets specified in your .xml project file
 	 * @return	Cached Sound object
 	 */
 	public function add(EmbeddedSound:String):Sound
@@ -274,7 +273,7 @@ class SoundFrontEnd
 		
 		list = new FlxTypedGroup<FlxSound>();
 		
-		#if (android || ios)
+		#if mobile
 		_soundCache = new Map<String, Sound>();
 		_soundTransform = new SoundTransform();
 		#end
