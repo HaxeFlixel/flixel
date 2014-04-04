@@ -179,6 +179,56 @@ class FlxGamepad implements IFlxDestroyable
 	}
 	
 	/**
+	 * Check if at least one button from an array of keys is pressed.
+	 * 
+	 * @param	ButtonArray	An array of button IDs as Int
+	 * @return	Whether at least one of the keys passed in is pressed
+	 */
+	public function anyPressed(ButtonArray:Array<Int>):Bool
+	{
+		for (b in ButtonArray)
+		{
+			if (buttons.get(b).current == PRESSED)
+				return true;
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Check if at least one button from an array of keys is justPressed.
+	 * 
+	 * @param	ButtonArray	An array of button IDs as Int
+	 * @return	Whether at least one of the keys passed in is justPressed
+	 */
+	public function anyJustPressed(ButtonArray:Array<Int>):Bool
+	{
+		for (b in ButtonArray)
+		{
+			if (buttons.get(b).current == JUST_PRESSED)
+				return true;
+		}
+		
+		return false;
+	}
+	/**
+	 * Check if at least one button from an array of keys is justReleased.
+	 * 
+	 * @param	ButtonArray	An array of button IDs as Int
+	 * @return	Whether at least one of the keys passed in is justReleased
+	 */
+	public function anyJustReleased(ButtonArray:Array<Int>):Bool
+	{
+		for (b in ButtonArray)
+		{
+			if (buttons.get(b).current == JUST_RELEASED)
+				return true;
+		}
+		
+		return false;
+	}
+	
+	/**
 	 * Check to see if this button is pressed.
 	 * 
 	 * @param	ButtonID	The button id (from 0 to 7).
