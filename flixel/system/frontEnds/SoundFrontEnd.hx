@@ -49,6 +49,12 @@ class SoundFrontEnd
 	#end
 	
 	/**
+	 * Whether or not the soundTray should be shown when any of the
+	 * volumeUp-, volumeDown- or muteKeys is pressed.
+	 */ 
+	public var soundTrayEnabled:Bool = true;
+	
+	/**
 	 * A list of all the sounds being played in the game.
 	 */
 	public var list(default, null):FlxTypedGroup<FlxSound>;
