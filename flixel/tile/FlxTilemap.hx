@@ -546,7 +546,7 @@ class FlxTilemap extends FlxObject
 	#end
 	
 	#if !FLX_NO_DEBUG
-	override public function drawDebugOnCamera(?Camera:FlxCamera):Void
+	override public function drawDebugOnCamera(Camera:FlxCamera):Void
 	{
 		#if FLX_RENDER_TILE
 		var buffer:FlxTilemapBuffer = null;

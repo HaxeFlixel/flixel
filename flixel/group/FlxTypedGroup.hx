@@ -110,24 +110,6 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		}
 	}
 	
-	#if !FLX_NO_DEBUG
-	override public function drawDebug():Void 
-	{
-		var i:Int = 0;
-		var basic:FlxBasic = null;
-		
-		while (i < length)
-		{
-			basic = members[i++];
-			
-			if (basic != null && basic.exists && basic.visible)
-			{
-				basic.drawDebug();
-			}
-		}
-	}
-	#end
-	
 	/**
 	 * Adds a new FlxBasic subclass (FlxBasic, FlxSprite, Enemy, etc) to the group.
 	 * FlxGroup will try to replace a null member of the array first.

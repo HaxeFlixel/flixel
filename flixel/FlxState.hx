@@ -60,21 +60,6 @@ class FlxState extends FlxGroup
 			subState.draw();
 		}
 	}
-
-	#if !FLX_NO_DEBUG
-	override public function drawDebug():Void
-	{
-		if (persistentDraw || subState == null)
-		{
-			super.drawDebug();
-		}
-		
-		if (subState != null)
-		{
-			subState.drawDebug();
-		}
-	}
-	#end
 	
 	public inline function openSubState(SubState:FlxSubState):Void
 	{
