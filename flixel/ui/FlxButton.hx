@@ -21,6 +21,8 @@ class FlxButton extends FlxTypedButton<FlxText>
 	 */
 	public static inline var PRESSED:Int = 2;
 	
+	public var text(get, set):String;
+	
 	/**
 	 * Creates a new FlxButton object with a gray background
 	 * and a callback function on the UI thread.
@@ -34,15 +36,14 @@ class FlxButton extends FlxTypedButton<FlxText>
 	{
 		super(X, Y, Label, OnClick);
 		
+		for (point in labelOffsets)
+		{
+			point.set(point.x - 1, point.y + 3);
+		}
+		
 		if (Label != null)
 		{
-			for (point in labelOffsets)
-			{
-				point.set(point.x -1, point.y + 3);
-			}
-			label = new FlxText(X + labelOffsets[NORMAL].x, Y + labelOffsets[NORMAL].y, 80, Label);
-			label.setFormat(null, 8, 0x333333, "center");
-			label.alpha = labelAlphas[status];
+			initLabel(Label);
 		}
 	}
 	
@@ -58,5 +59,34 @@ class FlxButton extends FlxTypedButton<FlxText>
 			label.width = label.frameWidth = Std.int(width);
 			label.size = label.size; // Calls set_size(), don't remove!
 		}
+	}
+	
+	private inline function initLabel(Text:String):Void 
+	{
+		label = new FlxText(x + labelOffsets[NORMAL].x, y + labelOffsets[NORMAL].y, 80, Text);
+		label.setFormat(null, 8, 0x333333, "center");
+		label.alpha = labelAlphas[status];
+	}
+	
+	private inline function get_text():String 
+	{
+		if (label == null)
+		{
+			return "";
+		}
+		
+		return label.text;
+	}
+	
+	private inline function set_text(Text:String):String 
+	{
+		if (label == null)
+		{
+			initLabel(Text);
+		}
+		
+		label.text = Text;
+		
+		return Text;
 	}
 }
