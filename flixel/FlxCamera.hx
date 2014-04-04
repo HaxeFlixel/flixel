@@ -391,10 +391,6 @@ class FlxCamera extends FlxBasic
 			var position:Int = currItem.position;
 			if (position > 0)
 			{
-				if (dataLen != position)
-				{
-					untyped data.length = position; // optimized way of resizing an array
-				}
 				var tempFlags:Int = Tilesheet.TILE_TRANS_2x2;
 				tempFlags |= Tilesheet.TILE_ALPHA;
 				if (currItem.colored)
@@ -402,7 +398,7 @@ class FlxCamera extends FlxBasic
 					tempFlags |= Tilesheet.TILE_RGB;
 				}
 				tempFlags |= currItem.blending;
-				currItem.graphics.tilesheet.tileSheet.drawTiles(canvas.graphics, data, (antialiasing || currItem.antialiasing), tempFlags);
+				currItem.graphics.tilesheet.tileSheet.drawTiles(canvas.graphics, data, (antialiasing || currItem.antialiasing), tempFlags, position);
 				TileSheetExt._DRAWCALLS++;
 			}
 			currItem = currItem.next;
