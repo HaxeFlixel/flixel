@@ -53,7 +53,7 @@ class PathManager extends FlxPlugin
 		super.draw();
 		if (FlxG.debugger.drawDebug)
 		{
-			for(path in _paths)
+			for (path in _paths)
 			{
 				if ((path != null) && !path.ignoreDrawDebug)
 				{

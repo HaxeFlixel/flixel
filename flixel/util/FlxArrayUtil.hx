@@ -102,7 +102,7 @@ class FlxArrayUtil
 	public static inline function fastSplice<T>(array:Array<T>, element:T):Array<T>
 	{
 		var index = indexOf(array, element);
-		if(index != -1)
+		if (index != -1)
 			return swapAndPop(array, index);
 		return array;
 	}
