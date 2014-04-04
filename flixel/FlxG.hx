@@ -216,11 +216,10 @@ class FlxG
 	 */
 	public static var console(default, null):ConsoleFrontEnd = new ConsoleFrontEnd();
 	/**
-	 * A reference to the LogFrontEnd object. Use it to add messages to the log window. It is recommended 
-	 * to use trace() instead of the old FlxG.log(), since traces will be redirected by default.
+	 * A reference to the LogFrontEnd object. Use it to add messages to the log window
+	 * or enable trace() redirection.
 	 */
 	public static var log(default, null):LogFrontEnd = new LogFrontEnd();
-	
 	/**
 	 * A reference to the WatchFrontEnd object. Use it to add or remove things to / from the 
 	 * watch window.
