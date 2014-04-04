@@ -322,7 +322,8 @@ class FlxObject extends FlxBasic
 	{
 		#if !FLX_NO_DEBUG
 		super.draw();
-		if(!ignoreDrawDebug)
+		
+		if (FlxG.debugger.drawDebug && !ignoreDrawDebug)
 			drawDebug();
 		#end
 	}
