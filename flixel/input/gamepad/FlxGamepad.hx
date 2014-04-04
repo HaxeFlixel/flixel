@@ -199,7 +199,7 @@ class FlxGamepad implements IFlxDestroyable
 	 * Check if at least one button from an array of keys is justPressed.
 	 * 
 	 * @param	ButtonArray	An array of button IDs as Int
-	 * @return	Whether at least one of the keys passed in is justRressed
+	 * @return	Whether at least one of the keys passed in is justPressed
 	 */
 	public function anyJustPressed(ButtonArray:Array<Int>):Bool
 	{
