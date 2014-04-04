@@ -16,10 +16,6 @@ interface IFlxBasic
 	
 	public function kill():Void;
 	public function revive():Void;
-
-	#if !FLX_NO_DEBUG
-	public var ignoreDrawDebug:Bool;
-	#end
 	
 	public function toString():String;
 }
