@@ -56,7 +56,7 @@ class FlxButton extends FlxTypedButton<FlxText>
 		
 		if (label != null)
 		{
-			label.width = label.frameWidth = Std.int(width);
+			label.fieldWidth = label.frameWidth = Std.int(width);
 			label.size = label.size; // Calls set_size(), don't remove!
 		}
 	}
@@ -71,22 +71,14 @@ class FlxButton extends FlxTypedButton<FlxText>
 	private inline function get_text():String 
 	{
 		if (label == null)
-		{
 			return "";
-		}
-		
 		return label.text;
 	}
 	
 	private inline function set_text(Text:String):String 
 	{
 		if (label == null)
-		{
 			initLabel(Text);
-		}
-		
-		label.text = Text;
-		
-		return Text;
+		return label.text = Text;
 	}
 }
