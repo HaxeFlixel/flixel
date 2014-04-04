@@ -34,7 +34,7 @@ class FlxButton extends FlxTypedButton<FlxText>
 	 */
 	public function new(X:Float = 0, Y:Float = 0, ?Label:String, ?OnClick:Void->Void)
 	{
-		super(X, Y, Label, OnClick);
+		super(X, Y, OnClick);
 		
 		for (point in labelOffsets)
 		{
