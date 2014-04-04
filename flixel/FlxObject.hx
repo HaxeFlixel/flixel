@@ -193,6 +193,11 @@ class FlxObject extends FlxBasic
 	 * Overriding this will force a specific color to be used for debug rect.
 	 */
 	public var debugBoundingBoxColor:Null<Int> = null;
+	/**
+	 * Setting this to true will prevent the object from appearing
+	 * when the visual debug mode in the debugger overlay is toggled on.
+	 */
+	public var ignoreDrawDebug:Bool = false;
 	#end
 	
 	/**
@@ -321,7 +326,7 @@ class FlxObject extends FlxBasic
 		#if !FLX_NO_DEBUG
 		super.draw();
 		
-		if (FlxG.debugger.drawDebug && !ignoreDrawDebug)
+		if (FlxG.debugger.drawDebug)
 			drawDebug();
 		#end
 	}

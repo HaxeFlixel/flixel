@@ -42,11 +42,6 @@ class FlxBasic implements IFlxDestroyable
 	
 	#if !FLX_NO_DEBUG
 	/**
-	 * Setting this to true will prevent the object from appearing
-	 * when the visual debug mode in the debugger overlay is toggled on.
-	 */
-	public var ignoreDrawDebug:Bool = false;
-	/**
 	 * Static counters for performance tracking.
 	 */
 	public static var _ACTIVECOUNT:Int = 0;
