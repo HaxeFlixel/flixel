@@ -325,8 +325,7 @@ class FlxObject extends FlxBasic
 	{
 		#if !FLX_NO_DEBUG
 		super.draw();
-		
-		if (FlxG.debugger.drawDebug)
+		if(FlxG.debugger.drawDebug)
 			drawDebug();
 		#end
 	}
@@ -772,8 +771,12 @@ class FlxObject extends FlxBasic
 	 * @param	Camera		Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
 	 * @return	Whether the object is on screen or not.
 	 */
-	public function isOnScreen(Camera:FlxCamera):Bool
+	public function isOnScreen(?Camera:FlxCamera):Bool
 	{
+		if (Camera == null)
+		{
+			Camera = FlxG.camera;
+		}
 		getScreenXY(_point, Camera);
 		return (_point.x + width > 0) && (_point.x < Camera.width) && (_point.y + height > 0) && (_point.y < Camera.height);
 	}

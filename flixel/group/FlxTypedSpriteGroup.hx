@@ -138,7 +138,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 * @param	Camera		Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
 	 * @return	Whether the object is on screen or not.
 	 */
-	override public function isOnScreen(Camera:FlxCamera):Bool 
+	override public function isOnScreen(?Camera:FlxCamera):Bool 
 	{
 		var result:Bool = false;
 		for (sprite in _sprites)
