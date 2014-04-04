@@ -261,8 +261,6 @@ class FlxObject extends FlxBasic
 		scrollFactor = FlxDestroyUtil.put(scrollFactor);
 		last = FlxDestroyUtil.put(last);
 		_point = FlxDestroyUtil.put(_point);
-		_firstSeparateFlxRect = FlxDestroyUtil.put(last);
-		_secondSeparateFlxRect = FlxDestroyUtil.put(last);
 		_cameras = null;
 	}
 	
