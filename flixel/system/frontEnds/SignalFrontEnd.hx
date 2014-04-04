@@ -27,15 +27,15 @@ class SignalFrontEnd
 	@:allow(flixel.FlxG)
 	private function new() 
 	{
-		stateSwitch = FlxSignal.get().add(FlxSignal.onStateSwitch);
-		gameResize = FlxSignal.get();
-		gameReset = FlxSignal.get();
-		gameStart = FlxSignal.get();
-		preUpdate = FlxSignal.get();
-		postUpdate = FlxSignal.get();
-		preDraw = FlxSignal.get();
-		postDraw = FlxSignal.get();
-		focusGained = FlxSignal.get();
-		focusLost = FlxSignal.get();
+		stateSwitch = FlxSignal.get(true).add(FlxSignal.onStateSwitch);
+		gameResize = FlxSignal.get(true);
+		gameReset = FlxSignal.get(true);
+		gameStart = FlxSignal.get(true);
+		preUpdate = FlxSignal.get(true);
+		postUpdate = FlxSignal.get(true);
+		preDraw = FlxSignal.get(true);
+		postDraw = FlxSignal.get(true);
+		focusGained = FlxSignal.get(true);
+		focusLost = FlxSignal.get(true);
 	}
 }
