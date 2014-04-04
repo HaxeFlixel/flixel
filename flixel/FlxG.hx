@@ -227,8 +227,8 @@ class FlxG
 	 */
 	public static var watch(default, null):WatchFrontEnd = new WatchFrontEnd();
 	/**
-	 * A reference to the DebuggerFrontEnd object. Use it to show / hide / toggle the debguger
-	 * change its layout, activate visual debugging or change the key used to toggle it.
+	 * A reference to the DebuggerFrontEnd object. Use it to show / hide the debguger,
+	 * change its layout, activate debug drawing or change the key used to toggle it.
 	 */
 	public static var debugger(default, null):DebuggerFrontEnd = new DebuggerFrontEnd();
 

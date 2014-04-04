@@ -286,7 +286,8 @@ class FlxCamera extends FlxBasic
 	
 	#if !FLX_NO_DEBUG
 	/**
-	 * Sprite for visual effects (flash and fade) and visual debug information (bounding boxes are drawn on it) for non-flash targets
+	 * Sprite for visual effects (flash and fade) and drawDebug information 
+	 * (bounding boxes are drawn on it) for non-flash targets
 	 */
 	public var debugLayer:Sprite;
 	#end

@@ -530,7 +530,7 @@ class FlxTilemap extends FlxObject
 	
 	#if !FLX_NO_DEBUG
 	/**
-	 * Main logic loop for tilemap is pretty simple, just checks to see if visual debug got turned on.
+	 * Main logic loop for tilemap is pretty simple, just checks to see if drawDebug got turned on.
 	 * If it did, the tilemap is flagged as dirty so it will be redrawn with debug info on the next draw call.
 	 */
 	override public function update():Void

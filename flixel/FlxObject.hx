@@ -195,7 +195,7 @@ class FlxObject extends FlxBasic
 	public var debugBoundingBoxColor:Null<Int> = null;
 	/**
 	 * Setting this to true will prevent the object from appearing
-	 * when the visual debug mode in the debugger overlay is toggled on.
+	 * when FlxG.debugger.drawDebug is true.
 	 */
 	public var ignoreDrawDebug:Bool = false;
 	#end
@@ -857,7 +857,7 @@ class FlxObject extends FlxBasic
 	
 	/**
 	 * Override this function to draw custom "debug mode" graphics to the
-	 * specified camera while the debugger's visual mode is toggled on.
+	 * specified camera while the debugger's drawDebug mode is toggled on.
 	 * 
 	 * @param	Camera	Which camera to draw the debug visuals to.
 	 */
