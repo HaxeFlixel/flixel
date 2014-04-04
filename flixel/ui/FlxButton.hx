@@ -21,6 +21,9 @@ class FlxButton extends FlxTypedButton<FlxText>
 	 */
 	public static inline var PRESSED:Int = 2;
 	
+	/**
+	 * Shortcut to setting label.text
+	 */
 	public var text(get, set):String;
 	
 	/**
@@ -29,10 +32,10 @@ class FlxButton extends FlxTypedButton<FlxText>
 	 * 
 	 * @param	X				The X position of the button.
 	 * @param	Y				The Y position of the button.
-	 * @param	Label			The text that you want to appear on the button.
+	 * @param	Text			The text that you want to appear on the button.
 	 * @param	OnClick			The function to call whenever the button is clicked.
 	 */
-	public function new(X:Float = 0, Y:Float = 0, ?Label:String, ?OnClick:Void->Void)
+	public function new(X:Float = 0, Y:Float = 0, ?Text:String, ?OnClick:Void->Void)
 	{
 		super(X, Y, OnClick);
 		
@@ -41,10 +44,7 @@ class FlxButton extends FlxTypedButton<FlxText>
 			point.set(point.x - 1, point.y + 3);
 		}
 		
-		if (Label != null)
-		{
-			initLabel(Label);
-		}
+		initLabel(Text);
 	}
 	
 	/**
@@ -70,15 +70,11 @@ class FlxButton extends FlxTypedButton<FlxText>
 	
 	private inline function get_text():String 
 	{
-		if (label == null)
-			return "";
 		return label.text;
 	}
 	
 	private inline function set_text(Text:String):String 
 	{
-		if (label == null)
-			initLabel(Text);
 		return label.text = Text;
 	}
 }
