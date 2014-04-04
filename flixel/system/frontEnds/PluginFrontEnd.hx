@@ -180,20 +180,4 @@ class PluginFrontEnd
 			}
 		}
 	}
-	
-	#if !FLX_NO_DEBUG
-	/**
-	 * You shouldn't need to call this. Used to draw the debug graphics for any installed plugins.
-	 */
-	private inline function drawDebug():Void
-	{
-		for (plugin in list)
-		{
-			if (plugin.exists && plugin.visible && !plugin.ignoreDrawDebug)
-			{
-				plugin.drawDebug();
-			}
-		}
-	}
-	#end
 }

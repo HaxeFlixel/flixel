@@ -776,21 +776,7 @@ class FlxGame extends Sprite
 		
 		FlxG.plugins.draw();
 		
-		#if !FLX_NO_DEBUG
-		if (FlxG.debugger.drawDebug)
-		{
-			FlxG.plugins.drawDebug();
-		}
-		#end
-		
 		_state.draw();
-		
-		#if !FLX_NO_DEBUG
-		if (FlxG.debugger.drawDebug)
-		{
-			_state.drawDebug();
-		}
-		#end
 		
 		#if FLX_RENDER_TILE
 		FlxG.cameras.render();

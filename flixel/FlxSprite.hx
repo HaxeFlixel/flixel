@@ -725,6 +725,10 @@ class FlxSprite extends FlxObject
 	 */
 	override public function draw():Void
 	{
+		#if !FLX_NO_DEBUG
+		super.draw();
+		#end
+		
 		if (alpha == 0)
 		{
 			return;
@@ -1250,13 +1254,8 @@ class FlxSprite extends FlxObject
 	 * @param	Camera		Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
 	 * @return	Whether the object is on screen or not.
 	 */
-	override public function isOnScreen(?Camera:FlxCamera):Bool
+	override public function isOnScreen(Camera:FlxCamera):Bool
 	{
-		if (Camera == null)
-		{
-			Camera = FlxG.camera;
-		}
-		
 		var minX:Float = x - offset.x - Camera.scroll.x * scrollFactor.x;
 		var minY:Float = y - offset.y - Camera.scroll.y * scrollFactor.y;
 		var maxX:Float = 0;

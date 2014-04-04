@@ -18,15 +18,6 @@ class FlxBasic implements IFlxDestroyable
 	 */
 	public var ID:Int = -1;
 	/**
-	 * Gets ot sets the first camera of this object.
-	 */
-	public var camera(get, set):FlxCamera;
-	/**
-	 * This determines on which FlxCameras this object will be drawn. If it is null / has not been
-	 * set, it uses FlxCamera.defaultCameras, which is a reference to FlxG.cameras.list (all cameras) by default.
-	 */
-	public var cameras(get, set):Array<FlxCamera>;
-	/**
 	 * Controls whether update() is automatically called by FlxState/FlxGroup.
 	 */
 	public var active(default, set):Bool = true;
@@ -48,8 +39,6 @@ class FlxBasic implements IFlxDestroyable
 	 * Enum that informs the collision system which type of object this is (to avoid expensive type casting).
 	 */
 	public var collisionType(default, null):FlxCollisionType = FlxCollisionType.NONE;
-	
-	private var _cameras:Array<FlxCamera>;
 	
 	#if !FLX_NO_DEBUG
 	/**
@@ -73,7 +62,6 @@ class FlxBasic implements IFlxDestroyable
 	public function destroy():Void 
 	{
 		exists = false;
-		_cameras = null;
 	}
 	
 	/**
@@ -114,56 +102,8 @@ class FlxBasic implements IFlxDestroyable
 	public function draw():Void
 	{
 		#if !FLX_NO_DEBUG
-		for (camera in cameras)
-		{
-			_VISIBLECOUNT++;
-		}
+		_VISIBLECOUNT++;
 		#end
-	}
-	
-	#if !FLX_NO_DEBUG
-	public function drawDebug():Void
-	{
-		if (!ignoreDrawDebug)
-		{
-			for (camera in cameras)
-			{
-				drawDebugOnCamera(camera);
-			}
-		}
-	}
-	
-	/**
-	 * Override this function to draw custom "debug mode" graphics to the
-	 * specified camera while the debugger's visual mode is toggled on.
-	 * 
-	 * @param	Camera	Which camera to draw the debug visuals to.
-	 */
-	public function drawDebugOnCamera(?Camera:FlxCamera):Void {}
-	#end
-	
-	private function get_camera():FlxCamera
-	{
-		return (_cameras == null || _cameras.length == 0) ? FlxCamera.defaultCameras[0] : _cameras[0];
-	}
-	
-	private function set_camera(Value:FlxCamera):FlxCamera
-	{
-		if (_cameras == null)
-			_cameras = [Value];
-		else
-			_cameras[0] = Value;
-		return Value;
-	}
-	
-	private function get_cameras():Array<FlxCamera>
-	{
-		return (_cameras == null) ? FlxCamera.defaultCameras : _cameras;
-	}
-	
-	private function set_cameras(Value:Array<FlxCamera>):Array<FlxCamera>
-	{
-		return _cameras = Value;
 	}
 	
 	private function set_visible(Value:Bool):Bool

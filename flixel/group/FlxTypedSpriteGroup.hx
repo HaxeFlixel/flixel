@@ -138,13 +138,8 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 * @param	Camera		Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
 	 * @return	Whether the object is on screen or not.
 	 */
-	override public function isOnScreen(?Camera:FlxCamera):Bool 
+	override public function isOnScreen(Camera:FlxCamera):Bool 
 	{
-		if (Camera == null)
-		{
-			Camera = FlxG.camera;
-		}
-		
 		var result:Bool = false;
 		for (sprite in _sprites)
 		{
@@ -251,23 +246,6 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		
 		return positions;
 	}
-	
-	#if !FLX_NO_DEBUG
-	/**
-	 * Override this function to draw custom "debug mode" graphics to the
-	 * specified camera while the debugger's visual mode is toggled on.
-	 * 
-	 * @param	Camera	Which camera to draw the debug visuals to.
-	 */
-	override public function drawDebugOnCamera(?Camera:FlxCamera):Void
-	{
-		if (!_isDrawnDebug)	
-		{
-			group.drawDebug();
-			_isDrawnDebug = true;
-		}
-	}
-	#end
 	
 	/**
 	 * Adds a new FlxSprite subclass to the group.
