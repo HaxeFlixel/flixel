@@ -454,6 +454,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		
 		_stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
 		
+		FlxG.signals.gameStart.add(onGameStart);
 		Mouse.hide();
 	}
 	
@@ -521,7 +522,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	}
 	
 	@:allow(flixel.FlxGame)
-	private function onGameStart():Void
+	private function onGameStart(_):Void
 	{
 		// Call set_visible with the value visible has been initialized with
 		// (unless set in create() of the initial state)

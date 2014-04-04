@@ -2,6 +2,7 @@ package flixel.util;
 
 import flixel.interfaces.IFlxDestroyable;
 import flixel.interfaces.IFlxPooled;
+import flixel.system.frontEnds.SignalFrontEnd;
 import flixel.util.FlxPool;
 
 /**
@@ -14,15 +15,6 @@ class FlxSignal implements IFlxPooled
 	private static var _pool = new FlxPool<FlxSignal>(FlxSignal);
 	private static var _handlersPool = new FlxPool<SignalHandler>(SignalHandler);
 	private static var _signals:Array<FlxSignal> = [];
-	
-	/**
-	 * A signal that gets dispatched when a state change occurs. Signal.userData is null!
-	 */
-	public static var stateSwitch(default, null) = get(true).add(onStateSwitch);
-	/**
-	 * A signal that gets dispatched when a state change occurs. Signal.userData is a FlxPoint (_scaleMode.gameSize)!
-	 */
-	public static var gameResize(default, null) = get(true);
 	
 	/**
 	 * Creates a new signal or recycles a used one if available.
@@ -38,7 +30,8 @@ class FlxSignal implements IFlxPooled
 		return signal;
 	}
 	
-	public static function onStateSwitch(_):Void
+	@:allow(flixel.system.frontEnds.SignalFrontEnd)
+	private static function onStateSwitch(_):Void
 	{
 		var i = _signals.length;
 		while (i-- > 0)

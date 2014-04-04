@@ -340,6 +340,7 @@ class FlxGame extends Sprite
 		#end
 		
 		_lostFocus = false;
+		FlxG.signals.focusGained.dispatch();
 		
 		if (!FlxG.autoPause) 
 		{
@@ -375,6 +376,7 @@ class FlxGame extends Sprite
 		#end
 		
 		_lostFocus = true;
+		FlxG.signals.focusLost.dispatch();
 		
 		if (!FlxG.autoPause) 
 		{
@@ -505,6 +507,8 @@ class FlxGame extends Sprite
 	 */
 	private inline function resetGame():Void
 	{
+		FlxG.signals.gameReset.dispatch();
+		
 		#if !FLX_NO_DEBUG
 		_requestedState = cast (Type.createInstance(_initialState, []));
 		_gameJustStarted = true;
@@ -547,7 +551,7 @@ class FlxGame extends Sprite
 		FlxG.sound.destroy();
 		#end
 		FlxG.plugins.onStateSwitch();
-		FlxSignal.stateSwitch.dispatch();
+		FlxG.signals.stateSwitch.dispatch();
 		
 		#if FLX_RECORD
 		FlxRandom.updateStateSeed();
@@ -585,9 +589,7 @@ class FlxGame extends Sprite
 	
 	private function gameStart():Void
 	{
-		#if !FLX_NO_MOUSE
-		FlxG.mouse.onGameStart();
-		#end
+		FlxG.signals.gameStart.dispatch();
 		_gameJustStarted = false;
 	}
 	
@@ -663,6 +665,8 @@ class FlxGame extends Sprite
 		}
 		#end
 		
+		FlxG.signals.preUpdate.dispatch();
+		
 		if (FlxG.fixedTimestep)
 		{
 			FlxG.elapsed = FlxG.timeScale * _stepSeconds; // fixed timestep
@@ -682,6 +686,7 @@ class FlxGame extends Sprite
 		_state.tryUpdate();
 		
 		FlxG.cameras.update();
+		FlxG.signals.postUpdate.dispatch();
 		
 		#if !FLX_NO_DEBUG
 		debugger.stats.flixelUpdate(Lib.getTimer() - ticks);
@@ -767,7 +772,9 @@ class FlxGame extends Sprite
 			ticks = Lib.getTimer(); 
 		}
 		#end
-
+		
+		FlxG.signals.preDraw.dispatch();
+		
 		#if FLX_RENDER_TILE
 		TileSheetExt._DRAWCALLS = 0;
 		#end
@@ -809,6 +816,8 @@ class FlxGame extends Sprite
 		#end
 	
 		FlxG.cameras.unlock();
+		
+		FlxG.signals.postDraw.dispatch();
 		
 		#if !FLX_NO_DEBUG
 		debugger.stats.flixelDraw(Lib.getTimer() - ticks);

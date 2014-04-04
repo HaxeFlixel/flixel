@@ -16,6 +16,7 @@ import flixel.system.frontEnds.DebuggerFrontEnd;
 import flixel.system.frontEnds.InputFrontEnd;
 import flixel.system.frontEnds.LogFrontEnd;
 import flixel.system.frontEnds.PluginFrontEnd;
+import flixel.system.frontEnds.SignalFrontEnd;
 import flixel.system.frontEnds.VCRFrontEnd;
 import flixel.system.frontEnds.WatchFrontEnd;
 import flixel.system.scaleModes.BaseScaleMode;
@@ -261,6 +262,11 @@ class FlxG
 	public static var sound(default, null):SoundFrontEnd = new SoundFrontEnd();
 	#end
 	
+	/**
+	 * Contains system-wide signals like gameResize or stateSwitch.
+	 */ 
+	public static var signals(default, null):SignalFrontEnd = new SignalFrontEnd();
+	
 	private static var _scaleMode:BaseScaleMode = new RatioScaleMode();
 	
 	/**
@@ -269,7 +275,7 @@ class FlxG
 	public static inline function resizeGame(Width:Int, Height:Int):Void
 	{
 		_scaleMode.onMeasure(Width, Height);
-		FlxSignal.gameResize.dispatch(_scaleMode.gameSize);
+		signals.gameResize.dispatch(_scaleMode.gameSize);
 	}
 	
 	/**
