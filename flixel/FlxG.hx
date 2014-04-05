@@ -88,7 +88,7 @@ class FlxG
 	 * The HaxeFlixel version, in semantic versioning syntax. Use Std.string()
 	 * on it to get a String formatted like this: "HaxeFlixel MAJOR.MINOR.PATCH-PATCH_VERSION".
 	 */ 
-	public static var VERSION(default, null) = new FlxVersion(3, 3, 0, "dev");
+	public static var VERSION(default, null):FlxVersion = new FlxVersion(3, 3, 0, "dev");
 	
 	/**
 	 * Internal tracker for game object.
@@ -144,13 +144,13 @@ class FlxG
 	 * The dimensions of the game world, used by the quad tree for collisions and overlap checks.
 	 * Use .set() instead of creating a new object!
 	 */
-	public static var worldBounds(default, null) = FlxRect.get();
+	public static var worldBounds(default, null):FlxRect = FlxRect.get();
 	
 	/**
 	 * A FlxSave used internally by flixel to save sound preferences and 
 	 * the history of the console window, but no reason you can't use it for your own stuff too!
 	 */
-	public static var save(default, null) = new FlxSave();
+	public static var save(default, null):FlxSave = new FlxSave();
 	
 	#if !FLX_NO_MOUSE
 	/**
@@ -200,60 +200,60 @@ class FlxG
 	/**
 	 * Has some HTML5-specific things like browser detection, browser dimensions etc...
 	 */
-	public static var html5(default, null) = new HTML5FrontEnd();
+	public static var html5(default, null):HTML5FrontEnd = new HTML5FrontEnd();
 	#end
 	
 	/**
 	 * Mostly used internally, but you can use it too to reset inputs and create input classes of your own.
 	 */
-	public static var inputs(default, null) = new InputFrontEnd();
+	public static var inputs(default, null):InputFrontEnd = new InputFrontEnd();
 	/**
 	 * Used to register functions and objects or add new commands to the console window.
 	 */
-	public static var console(default, null) = new ConsoleFrontEnd();
+	public static var console(default, null):ConsoleFrontEnd = new ConsoleFrontEnd();
 	/**
 	 * Used to add messages to the log window or enable trace() redirection.
 	 */
-	public static var log(default, null) = new LogFrontEnd();
+	public static var log(default, null):LogFrontEnd = new LogFrontEnd();
 	/**
 	 * Used to add or remove things to / from the watch window.
 	 */
-	public static var watch(default, null) = new WatchFrontEnd();
+	public static var watch(default, null):WatchFrontEnd = new WatchFrontEnd();
 	/**
 	 * Used it to show / hide the debguger, change its layout, 
 	 * activate debug drawing or change the key used to toggle it.
 	 */
-	public static var debugger(default, null) = new DebuggerFrontEnd();
+	public static var debugger(default, null):DebuggerFrontEnd = new DebuggerFrontEnd();
 
 	/**
 	 * Contains all the functions needed for recording and replaying.
 	 */
-	public static var vcr(default, null) = new VCRFrontEnd();
+	public static var vcr(default, null):VCRFrontEnd = new VCRFrontEnd();
 	
 	/**
 	 * Contains things related to bimtaps, for example regarding the bitmap cache and the cache itself.
 	 */
-	public static var bitmap(default, null) = new BitmapFrontEnd();
+	public static var bitmap(default, null):BitmapFrontEnd = new BitmapFrontEnd();
 	/**
 	 * Contains things related to cameras, a list of all cameras and several effects like flash() or fade().
 	 */
-	public static var cameras(default, null) = new CameraFrontEnd();
+	public static var cameras(default, null):CameraFrontEnd = new CameraFrontEnd();
 	/**
 	 * Contains a list of all plugins and the functions required to add(), remove() them etc.
 	 */
-	public static var plugins(default, null) = new PluginFrontEnd();
+	public static var plugins(default, null):PluginFrontEnd = new PluginFrontEnd();
 	
 	#if !FLX_NO_SOUND_SYSTEM
 	/**
 	 * Contains a list of all sounds and other things to manage or play() sounds.
 	 */
-	public static var sound(default, null) = new SoundFrontEnd();
+	public static var sound(default, null):SoundFrontEnd = new SoundFrontEnd();
 	#end
 	
 	/**
 	 * Contains system-wide signals like gameResize or stateSwitch.
 	 */ 
-	public static var signals(default, null) = new SignalFrontEnd();
+	public static var signals(default, null):SignalFrontEnd = new SignalFrontEnd();
 	
 	private static var _scaleMode:BaseScaleMode = new RatioScaleMode();
 	
