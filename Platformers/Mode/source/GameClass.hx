@@ -35,20 +35,20 @@ class GameClass extends FlxGame
 		super(gameWidth, gameHeight, initialState, zoom, framerate, framerate, skipSplash, startFullscreen);
 		
 		#if android
-		FlxG.sound.add("Asplode");
-		FlxG.sound.add("Button");
-		FlxG.sound.add("Countdown");
-		FlxG.sound.add("Enemy");
-		FlxG.sound.add("Hit");
-		FlxG.sound.add("Hurt");
-		FlxG.sound.add("Jam");
-		FlxG.sound.add("Jet");
-		FlxG.sound.add("Jump");
-		FlxG.sound.add("Land");
-		FlxG.sound.add("MenuHit");
-		FlxG.sound.add("MenuHit2");
-		FlxG.sound.add("Mode");
-		FlxG.sound.add("Shoot");
+		FlxG.sound.cache("Asplode");
+		FlxG.sound.cache("Button");
+		FlxG.sound.cache("Countdown");
+		FlxG.sound.cache("Enemy");
+		FlxG.sound.cache("Hit");
+		FlxG.sound.cache("Hurt");
+		FlxG.sound.cache("Jam");
+		FlxG.sound.cache("Jet");
+		FlxG.sound.cache("Jump");
+		FlxG.sound.cache("Land");
+		FlxG.sound.cache("MenuHit");
+		FlxG.sound.cache("MenuHit2");
+		FlxG.sound.cache("Mode");
+		FlxG.sound.cache("Shoot");
 		#end
 	}
 }
