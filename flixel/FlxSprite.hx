@@ -727,7 +727,8 @@ class FlxSprite extends FlxObject
 	override public function draw():Void
 	{
 		#if !FLX_NO_DEBUG
-		super.draw();
+		if (FlxG.debugger.drawDebug)
+			drawDebug();
 		#end
 		
 		if (alpha == 0)
