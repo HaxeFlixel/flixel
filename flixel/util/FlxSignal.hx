@@ -188,4 +188,6 @@ private class SignalHandler implements IFlxDestroyable
 	{
 		_callback = null;
 	}
+	
+	private function new() {}
 }
