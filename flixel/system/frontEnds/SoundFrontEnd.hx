@@ -137,7 +137,7 @@ class SoundFrontEnd
 	 * @param	EmbeddedSound	Name of sound assets specified in your .xml project file
 	 * @return	Cached Sound object
 	 */
-	public function add(EmbeddedSound:String):Sound
+	public function cache(EmbeddedSound:String):Sound
 	{
 		if (_soundCache.exists(EmbeddedSound))
 		{
