@@ -84,12 +84,6 @@ class FlxSprite extends FlxObject
 	public var framesData(default, null):FlxSpriteFrames;
 	public var cachedGraphics(default, set):CachedGraphics;
 	/**
-	 * Whether or not the coordinates should be rounded during draw(), true by default (recommended for pixel art). 
-	 * Only affects tilesheet rendering and rendering using BitmapData.draw() in blitting.
-	 * (copyPixels() only renders on whole pixels by nature). Causes draw() to be used if false, which is more expensive.
-	 */
-	public var pixelPerfectRender(default, set):Bool = true;
-	/**
 	 * The minimum angle (out of 360°) for which a new baked rotation exists. Example: 90 means there 
 	 * are 4 baked rotations in the spritesheet. 0 if this sprite does not have any baked rotations.
 	 */
@@ -1524,10 +1518,5 @@ class FlxSprite extends FlxObject
 		}
 		
 		return cachedGraphics = Value;
-	}
-	
-	private function set_pixelPerfectRender(Value:Bool):Bool 
-	{
-		return pixelPerfectRender = Value;
 	}
 }

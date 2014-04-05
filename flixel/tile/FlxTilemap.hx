@@ -99,13 +99,6 @@ class FlxTilemap extends FlxObject
 	public var cachedGraphics(default, set):CachedGraphics;
 	
 	/**
-	 * Whether or not the coordinates should be rounded during draw(), true by default (recommended for pixel art). 
-	 * Only affects tilesheet rendering and rendering using BitmapData.draw() in blitting.
-	 * (copyPixels() only renders on whole pixels by nature). Causes draw() to be used if false, which is more expensive.
-	 */
-	public var pixelPerfectRender(default, set):Bool = true;
-	
-	/**
 	 * If these next two arrays are not null, you're telling FlxTilemap to 
 	 * draw random tiles in certain places. 
 	 * 
@@ -2176,7 +2169,7 @@ class FlxTilemap extends FlxObject
 		return cachedGraphics = Value;
 	}
 	
-	private function set_pixelPerfectRender(Value:Bool):Bool 
+	override private function set_pixelPerfectRender(Value:Bool):Bool 
 	{
 		if (_buffers != null)
 		{

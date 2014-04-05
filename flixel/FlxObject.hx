@@ -91,6 +91,12 @@ class FlxObject extends FlxBasic
 	 */
 	public var cameras(get, set):Array<FlxCamera>;
 	/**
+	 * Whether or not the coordinates should be rounded during draw(), true by default (recommended for pixel art). 
+	 * Only affects tilesheet rendering and rendering using BitmapData.draw() in blitting.
+	 * (copyPixels() only renders on whole pixels by nature). Causes draw() to be used if false, which is more expensive.
+	 */
+	public var pixelPerfectRender(default, set):Bool = true;
+	/**
 	 * Set the angle of a sprite to rotate it. WARNING: rotating sprites decreases rendering
 	 * performance for this sprite by a factor of 10x (in Flash target)!
 	 */
@@ -872,6 +878,12 @@ class FlxObject extends FlxBasic
 		var boundingBoxX:Float = x - (Camera.scroll.x * scrollFactor.x); //copied from getScreenXY()
 		var boundingBoxY:Float = y - (Camera.scroll.y * scrollFactor.y);
 		
+		if (pixelPerfectRender)
+		{
+			boundingBoxX = Math.floor(boundingBoxX);
+			boundingBoxY = Math.floor(boundingBoxY);
+		}
+		
 		#if FLX_RENDER_BLIT
 		var boundingBoxWidth:Int = Std.int(width);
 		var boundingBoxHeight:Int = Std.int(height);
@@ -1049,5 +1061,10 @@ class FlxObject extends FlxBasic
 	private function set_cameras(Value:Array<FlxCamera>):Array<FlxCamera>
 	{
 		return _cameras = Value;
+	}
+	
+	private function set_pixelPerfectRender(Value:Bool):Bool 
+	{
+		return pixelPerfectRender = Value;
 	}
 }
