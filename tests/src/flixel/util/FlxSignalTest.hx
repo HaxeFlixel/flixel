@@ -17,7 +17,7 @@ class FlxSignalTest extends FlxTest
 	function callbackSetFlagFalse(_) { flag = false; }
 	function callbackIncrementCounter(_) { counter++; }
 	
-	function addAllCallbacks():Void 
+	function addAllEmptyCallbacks():Void 
 	{
 		signal.add(callbackEmpty1);
 		signal.add(callbackEmpty2);
@@ -30,6 +30,13 @@ class FlxSignalTest extends FlxTest
 		signal = FlxSignal.get();
 		flag = false;
 		counter = 0;
+	}
+	
+	@Test
+	function testAddNull():Void
+	{
+		Assert.isNull(signal.add(null));
+		signal.dispatch(); // crash if null could be added
 	}
 	
 	@Test
@@ -67,6 +74,13 @@ class FlxSignalTest extends FlxTest
 	}
 	
 	@Test
+	function testHasNull():Void
+	{
+		signal.add(null);
+		Assert.isFalse(signal.has(null));
+	}
+	
+	@Test
 	function testRemoveOneCallback():Void
 	{
 		signal.add(callbackEmpty1);
@@ -77,7 +91,7 @@ class FlxSignalTest extends FlxTest
 	@Test
 	function testRemoveMultipleCallbacks():Void
 	{
-		addAllCallbacks();
+		addAllEmptyCallbacks();
 		signal.remove(callbackEmpty2);
 		
 		Assert.isTrue(signal.has(callbackEmpty1));
@@ -86,9 +100,21 @@ class FlxSignalTest extends FlxTest
 	}
 	
 	@Test
+	function testRemoveNotAddedCallback():Void
+	{
+		addAllEmptyCallbacks();
+		signal.remove(callbackSetFlagTrue);
+		
+		Assert.isTrue(signal.has(callbackEmpty1));
+		Assert.isTrue(signal.has(callbackEmpty2));
+		Assert.isTrue(signal.has(callbackEmpty3));
+		Assert.isFalse(signal.has(callbackSetFlagTrue));
+	}
+	
+	@Test
 	function testRemoveAll():Void
 	{
-		addAllCallbacks();
+		addAllEmptyCallbacks();
 		signal.removeAll();
 		
 		Assert.isFalse(signal.has(callbackEmpty1));
@@ -145,6 +171,16 @@ class FlxSignalTest extends FlxTest
 		signal.dispatch();
 		
 		Assert.areEqual(3, counter);
+	}
+	
+	@Test
+	function testActiveFalse():Void
+	{
+		signal.add(callbackSetFlagTrue);
+		signal.active = false;
+		signal.dispatch();
+		
+		Assert.isFalse(flag);
 	}
 }
 

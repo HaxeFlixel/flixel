@@ -42,8 +42,8 @@ class FlxSignal implements IFlxPooled
 	}
 	
 	/**
-	 * If Signal is active and should broadcast events.
-	 * IMPORTANT: Setting this property during a dispatch will only affect the next dispatch, if you want to stop the propagation of a signal use `halt()` instead.</p>
+	 * If this signal is active and should dispatch events. IMPORTANT: Setting this 
+	 * property during a  dispatch will only affect the next dispatch.
 	 */
 	public var active:Bool = true;
 	/**
@@ -71,12 +71,16 @@ class FlxSignal implements IFlxPooled
 	}
 	
 	/**
-	 * Adds a function callback to be triggered when dispatch is called.
+	 * Adds a function callback to be triggered when dispatch() is called. 
+	 * Returns null if you try to add a null callback.
 	 * 
 	 * @return	This FlxSignal instance (nice for chaining stuff together, if you're into that).
 	 */
 	public function add(Callback:FlxSignal->Void, DispatchOnce:Bool = false):FlxSignal
 	{
+		if (Callback == null)
+			return null;
+			
 		var handler:SignalHandler = _handlersPool.get().init(Callback, DispatchOnce);
 		if (_handlers == null)
 			_handlers = new Array<SignalHandler>();
@@ -85,13 +89,16 @@ class FlxSignal implements IFlxPooled
 	}
 	
 	/**
-	 * Determines whether the provided callback is registered with this signal.
+	 * Determines whether the provided callback has been added to this signal.
 	 * 
 	 * @param	Callback	function callback to check
 	 * @return	Bool	true if callback was found, otherwise false 
 	 */
 	public function has(Callback:FlxSignal->Void):Bool
 	{
+		if (Callback == null)
+			return false;
+		
 		if (_handlers != null)
 		{
 			for (i in 0..._handlers.length)
@@ -104,7 +111,7 @@ class FlxSignal implements IFlxPooled
 	}
 	
 	/**
-	 * Removes a function callback.
+	 * Removes a callback.
 	 */
 	public function remove(Callback:FlxSignal->Void)
 	{
@@ -124,7 +131,7 @@ class FlxSignal implements IFlxPooled
 	/**
 	 * Remove all callbacks from the Signal.
 	 */
-	public function removeAll()
+	public inline function removeAll()
 	{
 		FlxArrayUtil.clearArray(_handlers);
 	}
@@ -177,7 +184,7 @@ private class SignalHandler implements IFlxDestroyable
 		return this;
 	}
 	
-	public function destroy()
+	public inline function destroy()
 	{
 		_callback = null;
 	}
