@@ -120,10 +120,10 @@ class FlxG
 	 */
 	public static var elapsed(default, null):Float = 0;
 	/**
-	* Useful when timestep is NOT fixed (i.e. variable), to prevet jerky movement or erratic behavior at very low fps.
-	* Essentially locks the framerate to a minimum value - any slower and you'll get slowdown instead of frameskip; default is 1/30th of a second.
+	* Useful when timestep is NOT fixed (i.e. variable), to prevent jerky movement or erratic behavior at very low fps.
+	* Essentially locks the framerate to a minimum value - any slower and you'll get slowdown instead of frameskip; default is 1/10th of a second.
 	*/
-	static public var maxElapsed:Float = 0.0333333;
+	static public var maxElapsed:Float = 0.1;
 	
 	/**
 	 * The width of the screen in game pixels. Read-only, use resizeGame() to change.
