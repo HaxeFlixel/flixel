@@ -99,14 +99,36 @@ class FlxArrayUtil
 	 * @return	The array
 	 */
 	@:generic
-	public static function fastSplice<T>(array:Array<T>, element:T):Array<T>
+	public static inline function fastSplice<T>(array:Array<T>, element:T):Array<T>
 	{
 		var index = indexOf(array, element);
-		if (index >= 0)
-		{
-			array[index] = array[array.length - 1]; // swap element to remove and last element
-			array.pop();
-		}
+		if (index != -1)
+			return swapAndPop(array, index);
+		return array;
+	}
+	
+	/**
+	 * Removes an element from an array by swapping it with the last element and calling pop().
+	 * This is a lot faster than regular splice(), but it can only be used on arrays where order doesn't matter.
+	 * 
+	 * IMPORTANT: always count down from length to zero if removing elements from whithin a loop
+	 * 
+	 * var i = array.length;
+	 * while (i-- > 0)
+	 * {
+	 * if (array[i].shouldRemove)
+	 * 			FlxArrayUtil.swapAndPop(array, i);
+	 * }
+	 * 
+	 * @param	array	The array to remove the element from
+	 * @param 	index	The index of the element to be removed from the array
+	 * @return	The array
+	 */
+	@:generic
+	public static inline function swapAndPop<T>(array:Array<T>, index:Int):Array<T>
+	{
+		array[index] = array[array.length - 1]; // swap element to remove and last element
+		array.pop();
 		return array;
 	}
 	
@@ -118,16 +140,15 @@ class FlxArrayUtil
 	 * @param	Arr			The array to clear out
 	 * @param	Recursive	Whether to search for arrays inside of arr and clear them out, too (false by default)
 	 */
-	
-	public static function clearArray(Arr:Array<Dynamic>,Recursive:Bool=false):Void
+	@:generic
+	public static function clearArray<T>(Arr:Array<T>,Recursive:Bool=false):Void
 	{
 		if (Arr != null)
 		{
 			if (!Recursive)
 			{
-				while (Arr.length > 0) {
+				while (Arr.length > 0)
 					Arr.pop();
-				}
 			}
 			else
 			{
@@ -135,9 +156,7 @@ class FlxArrayUtil
 				{
 					var thing:Dynamic = Arr.pop();
 					if (Std.is(thing, Array))
-					{
 						clearArray(Arr, Recursive);
-					}
 				}
 			}
 		}

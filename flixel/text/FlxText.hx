@@ -4,6 +4,7 @@ import flash.display.BitmapData;
 import flash.filters.BitmapFilter;
 import flash.geom.ColorTransform;
 import flash.text.TextField;
+import flash.text.TextFieldAutoSize;
 import flash.text.TextFormat;
 import flash.text.TextFormatAlign;
 import flixel.FlxG;
@@ -115,9 +116,14 @@ class FlxText extends FlxSprite
 	
 	/**
 	 * The width of the TextField object used for bitmap generation for this FlxText object.
-	 * Use it when you want to change the visible width of text.
+	 * Use it when you want to change the visible width of text. Enables autoSize if <= 0.
 	 */
 	public var fieldWidth(get, set):Float;
+	
+	/**
+	 * Whether the fieldWidth should be determined automatically. Requires wordWrap to be false.
+	 */
+	public var autoSize(get, set):Bool;
 	
 	/**
 	 * Offset that is applied to the shadow border style, if active. 
@@ -151,11 +157,12 @@ class FlxText extends FlxSprite
 	 * 
 	 * @param	X				The X position of the text.
 	 * @param	Y				The Y position of the text.
-	 * @param	Width			The width of the text object (height is determined automatically).
+	 * @param	FieldWidth		The width of the text object. Enables autoSize if <= 0. (height is determined automatically).
 	 * @param	Text			The actual text you would like to display initially.
-	 * @param	EmbeddedFont	Whether this text field uses embedded fonts or not
+	 * @param	Size			The font size for this text object.
+	 * @param	EmbeddedFont	Whether this text field uses embedded fonts or not.
 	 */
-	public function new(X:Float, Y:Float, Width:Int, ?Text:String, size:Int = 8, EmbeddedFont:Bool = true)
+	public function new(X:Float = 0, Y:Float = 0, FieldWidth:Float = 0, ?Text:String, Size:Int = 8, EmbeddedFont:Bool = true)
 	{
 		super(X, Y);
 		
@@ -167,14 +174,14 @@ class FlxText extends FlxSprite
 		}
 		
 		_textField = new TextField();
-		fieldWidth = Width;
 		_textField.selectable = false;
 		_textField.multiline = true;
 		_textField.wordWrap = true;
-		_defaultFormat = new TextFormat(FlxAssets.FONT_DEFAULT, size, 0xffffff);
+		_defaultFormat = new TextFormat(FlxAssets.FONT_DEFAULT, Size, 0xffffff);
 		_formatAdjusted = new TextFormat();
 		_textField.defaultTextFormat = _defaultFormat;
 		_textField.text = Text;
+		fieldWidth = FieldWidth;
 		_textField.embedFonts = EmbeddedFont;
 		
 		_formats = new Array<FlxTextFormat>();
@@ -189,7 +196,8 @@ class FlxText extends FlxSprite
 		moves = false;
 		
 		var key:String = FlxG.bitmap.getUniqueKey("text");
-		makeGraphic(Width, 1, FlxColor.TRANSPARENT, false, key);
+		var graphicWidth:Int = (FieldWidth <= 0) ? 1 : Std.int(FieldWidth);
+		makeGraphic(graphicWidth, 1, FlxColor.TRANSPARENT, false, key);
 		
 		#if FLX_RENDER_BLIT 
 		calcFrame();
@@ -401,7 +409,16 @@ class FlxText extends FlxSprite
 	{
 		if (_textField != null)
 		{
-			_textField.width = value;
+			if (value <= 0)
+			{
+				wordWrap = false;
+				autoSize = true;
+			}
+			else
+			{
+				_textField.width = value;
+			}
+			
 			dirty = true;
 		}
 		
@@ -411,6 +428,26 @@ class FlxText extends FlxSprite
 	private function get_fieldWidth():Float
 	{
 		return (_textField != null) ? _textField.width : 0;
+	}
+	
+	private function set_autoSize(value:Bool):Bool
+	{
+		if (_textField != null)
+		{
+			if (value)
+				_textField.autoSize = TextFieldAutoSize.LEFT;
+			else
+				_textField.autoSize = TextFieldAutoSize.NONE;
+			
+			dirty = true;
+		}
+		
+		return value;
+	}
+	
+	private function get_autoSize():Bool
+	{
+		return (_textField != null) ? (_textField.autoSize != TextFieldAutoSize.NONE) : false;
 	}
 	
 	private function get_text():String
@@ -543,7 +580,7 @@ class FlxText extends FlxSprite
 		if (_textField.wordWrap != value)
 		{
 			_textField.wordWrap = value;
-			_textField.multiline = value;
+		//	_textField.multiline = value;
 			dirty = true;
 		}
 		return value;

@@ -48,11 +48,15 @@ class FlxTween implements IFlxDestroyable
 	 * Backward Tween type, will play tween in reverse direction
 	 */
 	public static inline var BACKWARD:Int = 16;
-	
 	/**
 	 * The tweening plugin that handles all the tweens.
 	 */
 	public static var manager:TweenManager;
+	/**
+	 * Bool that prevents this object drom being recycled / destroyed multiple times in a row.
+	 */
+	@:allow(flixel.plugin.TweenManager)
+	private var _inPool:Bool = false;
 	
 	/**
 	 * Creates a singleVar or multiVar FlxTween based on how many fields you want to tween.
@@ -460,7 +464,6 @@ class FlxTween implements IFlxDestroyable
 	private static inline function initTweenOptions(Tween:FlxTween, Options:TweenOptions):TweenOptions
 	{
 		Options = resolveTweenOptions(Options);
-		
 		Tween.init(Options.complete, Options.type, Options.usePooling);
 		Tween.setDelays(Options.startDelay, Options.loopDelay);
 		return Options;
@@ -606,7 +609,7 @@ class FlxTween implements IFlxDestroyable
 				active = false;
 				finished = true;
 				_secondsSinceStart = duration + startDelay;
-				manager.remove(this, true); // destroy tween
+				manager.remove(this);
 				
 			case FlxTween.LOOPING:
 				_secondsSinceStart = (_secondsSinceStart - _delayToUse) % duration + _delayToUse;
@@ -648,8 +651,8 @@ class FlxTween implements IFlxDestroyable
 	
 	/**
 	 * To be overriden in pooled subclasses
-	 */ 
-	 public function put():Void {} 
+	 */
+	public function put():Void {} 
 	
 	/**
 	 * Empty constructor because of pooling.

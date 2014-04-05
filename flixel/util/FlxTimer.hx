@@ -3,6 +3,7 @@ package flixel.util;
 import flixel.FlxG;
 import flixel.plugin.TimerManager;
 import flixel.interfaces.IFlxDestroyable;
+import flixel.system.frontEnds.PluginFrontEnd;
 
 /**
  * A simple timer class, leveraging the new plugins system.
@@ -16,27 +17,6 @@ class FlxTimer implements IFlxDestroyable
 	 * The TimerManager instance.
 	 */
 	public static var manager:TimerManager;
-	
-	/**
-	 * A pool that contains FlxTimers for recycling.
-	 */
-	@:allow(flixel.plugin.TimerManager)
-	private static var _pool = new FlxPool<FlxTimer>(FlxTimer);
-	
-	/**
-	 * Returns a recycled timer and starts it.
-	 * 
-	 * @param	Time		How many seconds it takes for the timer to go off.
-	 * @param	Callback	Optional, triggered whenever the time runs out, once for each loop. Callback should be formed "onTimer(Timer:FlxTimer);"
-	 * @param	Loops		How many times the timer should go off. 0 means "looping forever".
- 	 */
-	public static function start(Time:Float = 1, ?Callback:FlxTimer->Void, Loops:Int = 1):FlxTimer
-	{
-		var timer:FlxTimer = _pool.get();
-		timer.run(Time, Callback, Loops);
-		return timer;
-	}
-	
 	/**
 	 * How much time the timer was set for.
 	 */
@@ -63,32 +43,26 @@ class FlxTimer implements IFlxDestroyable
 	 * Callback should be formed "onTimer(Timer:FlxTimer);"
 	 */
 	public var complete:FlxTimer->Void;
-	
 	/**
 	 * Read-only: check how much time is left on the timer.
 	 */
 	public var timeLeft(get, never):Float;
-	
 	/**
 	 * Read-only: The amount of milliseconds that have elapsed since the timer was started
 	 */
 	public var elapsedTime(get, never):Float;
-	
 	/**
 	 * Read-only: check how many loops are left on the timer.
 	 */
 	public var loopsLeft(get, never):Int;
-	
 	/**
 	 * Read-only: how many loops that have elapsed since the timer was started.
 	 */
 	public var elapsedLoops(get, never):Int;
-	
 	/**
 	 * Read-only: how far along the timer is, on a scale of 0.0 to 1.0.
 	 */
 	public var progress(get_progress, never):Float;
-	
 	/**
 	 * Internal tracker for the actual timer counting up.
 	 */
@@ -97,6 +71,25 @@ class FlxTimer implements IFlxDestroyable
 	 * Internal tracker for the loops counting up.
 	 */
 	private var _loopsCounter:Int = 0;
+	/**
+	 * A pool that contains FlxTimers for recycling.
+	 */
+	@:allow(flixel.plugin.TimerManager)
+	private static var _pool = new FlxPool<FlxTimer>(FlxTimer);
+	
+	/**
+	 * Returns a recycled timer and starts it.
+	 * 
+	 * @param	Time		How many seconds it takes for the timer to go off.
+	 * @param	Callback	Optional, triggered whenever the time runs out, once for each loop. Callback should be formed "onTimer(Timer:FlxTimer);"
+	 * @param	Loops		How many times the timer should go off. 0 means "looping forever".
+ 	 */
+	public static function start(Time:Float = 1, ?Callback:FlxTimer->Void, Loops:Int = 1):FlxTimer
+	{
+		var timer:FlxTimer = _pool.get();
+		timer.run(Time, Callback, Loops);
+		return timer;
+	}
 	
 	/**
 	 * Clean up memory.
@@ -191,6 +184,9 @@ class FlxTimer implements IFlxDestroyable
 		}
 	}
 	
+	/**
+	 * @private contructor
+	 */ 
 	private function new() {}
 	
 	private inline function get_timeLeft():Float

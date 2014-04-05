@@ -24,6 +24,7 @@ import openfl.display.Tilesheet;
  * By default one camera is created automatically, that is the same size as the Flash player.
  * You can add more cameras or even replace the main camera using utilities in FlxG.
  */
+@:allow(flixel.FlxGame)
 class FlxCamera extends FlxBasic
 {
 	/**
@@ -285,7 +286,8 @@ class FlxCamera extends FlxBasic
 	
 	#if !FLX_NO_DEBUG
 	/**
-	 * Sprite for visual effects (flash and fade) and visual debug information (bounding boxes are drawn on it) for non-flash targets
+	 * Sprite for visual effects (flash and fade) and drawDebug information 
+	 * (bounding boxes are drawn on it) for non-flash targets
 	 */
 	public var debugLayer:Sprite;
 	#end
@@ -389,10 +391,6 @@ class FlxCamera extends FlxBasic
 			var position:Int = currItem.position;
 			if (position > 0)
 			{
-				if (dataLen != position)
-				{
-					untyped data.length = position; // optimized way of resizing an array
-				}
 				var tempFlags:Int = Tilesheet.TILE_TRANS_2x2;
 				tempFlags |= Tilesheet.TILE_ALPHA;
 				if (currItem.colored)
@@ -400,7 +398,7 @@ class FlxCamera extends FlxBasic
 					tempFlags |= Tilesheet.TILE_RGB;
 				}
 				tempFlags |= currItem.blending;
-				currItem.graphics.tilesheet.tileSheet.drawTiles(canvas.graphics, data, (antialiasing || currItem.antialiasing), tempFlags);
+				currItem.graphics.tilesheet.tileSheet.drawTiles(canvas.graphics, data, (antialiasing || currItem.antialiasing), tempFlags, position);
 				TileSheetExt._DRAWCALLS++;
 			}
 			currItem = currItem.next;

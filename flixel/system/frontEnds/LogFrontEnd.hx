@@ -10,7 +10,6 @@ class LogFrontEnd
 {
 	/**
 	 * Whether everything you trace() is being redirected into the log window.
-	 * True by default, except on android.
 	 */
 	public var redirectTraces(default, set):Bool = false;
 	

@@ -16,6 +16,7 @@ import flixel.system.frontEnds.DebuggerFrontEnd;
 import flixel.system.frontEnds.InputFrontEnd;
 import flixel.system.frontEnds.LogFrontEnd;
 import flixel.system.frontEnds.PluginFrontEnd;
+import flixel.system.frontEnds.SignalFrontEnd;
 import flixel.system.frontEnds.VCRFrontEnd;
 import flixel.system.frontEnds.WatchFrontEnd;
 import flixel.system.scaleModes.BaseScaleMode;
@@ -153,7 +154,7 @@ class FlxG
 	
 	#if !FLX_NO_MOUSE
 	/**
-	 * A FlxMouse object for mouse input. e.g.: check if the left mouse button 
+	 * Used for mouse input. e.g.: check if the left mouse button 
 	 * is pressed with if (FlxG.mouse.pressed) { }) in update().
 	 */
 	public static var mouse(default, set):FlxMouse;
@@ -161,7 +162,6 @@ class FlxG
 	
 	#if !FLX_NO_TOUCH
 	/**
-	 * A reference to a FlxTouchManager object. 
 	 * Useful for devices with multitouch support.
 	 */
 	public static var touches(default, null):FlxTouchManager;
@@ -176,7 +176,7 @@ class FlxG
 
 	#if !FLX_NO_KEYBOARD
 	/**
-	 * A FlxKeyboard object for keyboard input e.g.: check if the left arrow key is 
+	 * Used for keyboard input e.g.: check if the left arrow key is 
 	 * pressed with if (FlxG.keys.pressed.LEFT) { } in update().
 	 */
 	public static var keys(default, null):FlxKeyboard;
@@ -191,75 +191,69 @@ class FlxG
 	
 	#if android
 	/**
-	 * A reference to a FlxAndroidKeys object. Useful for tracking Back, Home, etc on Android devices.
+	 * Useful for tracking Back, Home buttons etc on Android devices.
 	 */
 	public static var android(default, null):FlxAndroidKeys;
 	#end
 	
 	#if js
 	/**
-	 * A reference to the HTML5FrontEnd object. Has some HTML5-specific things like
-	 * browser detection, browser dimensions etc...
+	 * Has some HTML5-specific things like browser detection, browser dimensions etc...
 	 */
 	public static var html5(default, null):HTML5FrontEnd = new HTML5FrontEnd();
 	#end
 	
 	/**
-	 * A reference to the InputFrontEnd object. Mostly used internally, 
-	 * but you can use it too to reset inputs and create input classes of your own.
+	 * Mostly used internally, but you can use it too to reset inputs and create input classes of your own.
 	 */
 	public static var inputs(default, null):InputFrontEnd = new InputFrontEnd();
 	/**
-	 * A reference to the ConsoleFrontEnd object. Use it to register functions and objects
-	 * or add new commands to the console window.
+	 * Used to register functions and objects or add new commands to the console window.
 	 */
 	public static var console(default, null):ConsoleFrontEnd = new ConsoleFrontEnd();
 	/**
-	 * A reference to the LogFrontEnd object. Use it to add messages to the log window. It is recommended 
-	 * to use trace() instead of the old FlxG.log(), since traces will be redirected by default.
+	 * Used to add messages to the log window or enable trace() redirection.
 	 */
 	public static var log(default, null):LogFrontEnd = new LogFrontEnd();
-	
 	/**
-	 * A reference to the WatchFrontEnd object. Use it to add or remove things to / from the 
-	 * watch window.
+	 * Used to add or remove things to / from the watch window.
 	 */
 	public static var watch(default, null):WatchFrontEnd = new WatchFrontEnd();
 	/**
-	 * A reference to the DebuggerFrontEnd object. Use it to show / hide / toggle the debguger
-	 * change its layout, activate visual debugging or change the key used to toggle it.
+	 * Used it to show / hide the debguger, change its layout, 
+	 * activate debug drawing or change the key used to toggle it.
 	 */
 	public static var debugger(default, null):DebuggerFrontEnd = new DebuggerFrontEnd();
 
 	/**
-	 * A reference to the VCRFrontEnd object. Contains all the functions needed for recording
-	 * and replaying.
+	 * Contains all the functions needed for recording and replaying.
 	 */
 	public static var vcr(default, null):VCRFrontEnd = new VCRFrontEnd();
 	
 	/**
-	 * A reference to the BitmapFrontEnd object. Contains things related to bimtaps,
-	 * for example regarding the bitmap cache and the cache itself.
+	 * Contains things related to bimtaps, for example regarding the bitmap cache and the cache itself.
 	 */
 	public static var bitmap(default, null):BitmapFrontEnd = new BitmapFrontEnd();
 	/**
-	 * A reference to the CameraFrontEnd object. Contains things related to cameras,
-	 * a list of all cameras and several effects like flash() or fade().
+	 * Contains things related to cameras, a list of all cameras and several effects like flash() or fade().
 	 */
 	public static var cameras(default, null):CameraFrontEnd = new CameraFrontEnd();
 	/**
-	 * A reference to the PluginFrontEnd object. Contains a list of all 
-	 * plugins and the functions required to add(), remove() them etc.
+	 * Contains a list of all plugins and the functions required to add(), remove() them etc.
 	 */
 	public static var plugins(default, null):PluginFrontEnd = new PluginFrontEnd();
 	
 	#if !FLX_NO_SOUND_SYSTEM
 	/**
-	 * A reference to the SoundFrontEnd object. Contains a list of all 
-	 * sounds and other things to manage or play() sounds.
+	 * Contains a list of all sounds and other things to manage or play() sounds.
 	 */
 	public static var sound(default, null):SoundFrontEnd = new SoundFrontEnd();
 	#end
+	
+	/**
+	 * Contains system-wide signals like gameResize or stateSwitch.
+	 */ 
+	public static var signals(default, null):SignalFrontEnd = new SignalFrontEnd();
 	
 	private static var _scaleMode:BaseScaleMode = new RatioScaleMode();
 	
@@ -269,6 +263,7 @@ class FlxG
 	public static inline function resizeGame(Width:Int, Height:Int):Void
 	{
 		_scaleMode.onMeasure(Width, Height);
+		signals.gameResize.dispatch(_scaleMode.gameSize);
 	}
 	
 	/**

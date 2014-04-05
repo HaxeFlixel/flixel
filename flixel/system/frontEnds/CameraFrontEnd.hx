@@ -41,7 +41,9 @@ class CameraFrontEnd
 	@:generic
 	public inline function add<T:FlxCamera>(NewCamera:T):T
 	{
+		#if !js
 		FlxG.game.addChildAt(NewCamera.flashSprite, FlxG.game.getChildIndex(FlxG.game._inputContainer));
+		#end
 		FlxG.cameras.list.push(NewCamera);
 		NewCamera.ID = FlxG.cameras.list.length - 1;
 		return NewCamera;
@@ -55,15 +57,14 @@ class CameraFrontEnd
 	 */
 	public function remove(Camera:FlxCamera, Destroy:Bool = true):Void
 	{
-		if ((Camera != null) && FlxG.game.contains(Camera.flashSprite))
+		var index:Int = list.indexOf(Camera);
+		if ((Camera != null) && index != -1)
 		{
+			#if !js
 			FlxG.game.removeChild(Camera.flashSprite);
-			var index = FlxArrayUtil.indexOf(FlxG.cameras.list, Camera);
+			#end
 			
-			if (index >= 0)
-			{
-				FlxG.cameras.list.splice(index, 1);
-			}
+			list.splice(index, 1);
 		}
 		else
 		{
@@ -91,11 +92,13 @@ class CameraFrontEnd
 	 */
 	public function reset(?NewCamera:FlxCamera):Void
 	{
+		#if !js
 		for (camera in list)
 		{
 			FlxG.game.removeChild(camera.flashSprite);
 			camera.destroy();
 		}
+		#end
 		
 		list.splice(0, list.length);
 		

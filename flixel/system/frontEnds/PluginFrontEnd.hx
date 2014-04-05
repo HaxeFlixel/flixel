@@ -8,6 +8,7 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxPath;
 import flixel.util.FlxStringUtil;
 import flixel.util.FlxTimer;
+import flixel.util.FlxSignal;
 
 @:allow(flixel.FlxGame)
 class PluginFrontEnd
@@ -117,9 +118,9 @@ class PluginFrontEnd
 	{
 		list = new Array<FlxPlugin>();
 		
+		add(FlxPath.manager = new PathManager());
 		add(FlxTimer.manager = new TimerManager());
 		add(FlxTween.manager = new TweenManager());
-		add(FlxPath.manager = new PathManager());
 	}
 	
 	/**
@@ -179,20 +180,4 @@ class PluginFrontEnd
 			}
 		}
 	}
-	
-	#if !FLX_NO_DEBUG
-	/**
-	 * You shouldn't need to call this. Used to draw the debug graphics for any installed plugins.
-	 */
-	private inline function drawDebug():Void
-	{
-		for (plugin in list)
-		{
-			if (plugin.exists && plugin.visible && !plugin.ignoreDrawDebug)
-			{
-				plugin.drawDebug();
-			}
-		}
-	}
-	#end
 }

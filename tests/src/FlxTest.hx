@@ -1,6 +1,7 @@
 package;
 
 import flixel.FlxG;
+import haxe.Timer;
 
 class FlxTest
 {
@@ -11,5 +12,10 @@ class FlxTest
 	{
 		// make sure we have the same starting conditions for each test
 		FlxG.resetGame();
+	}
+	
+	function delay(f:Void->Void)
+	{
+		Timer.delay(f, 1000);
 	}
 }

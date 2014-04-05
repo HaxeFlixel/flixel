@@ -49,6 +49,12 @@ class SoundFrontEnd
 	#end
 	
 	/**
+	 * Whether or not the soundTray should be shown when any of the
+	 * volumeUp-, volumeDown- or muteKeys is pressed.
+	 */ 
+	public var soundTrayEnabled:Bool = true;
+	
+	/**
 	 * A list of all the sounds being played in the game.
 	 */
 	public var list(default, null):FlxTypedGroup<FlxSound>;
@@ -57,13 +63,9 @@ class SoundFrontEnd
 	 */
 	public var volume(default, set):Float = 1;
 	
-	
-	#if android
 	private var _soundCache:Map<String, Sound>;
 	private var _soundTransform:SoundTransform;
-	#end
 	
-	// TODO: Return from Sound -> Class<Sound>
 	/**
 	 * Set up and play a looping background soundtrack.
 	 * 
@@ -128,15 +130,14 @@ class SoundFrontEnd
 		return sound;
 	}
 	
-	#if android
 	/**
-	 * Method for sound caching on Android target.
-	 * Application may freeze for some time at first try to play sound if you don't use this method
+	 * Method for sound caching (especially useful on mobile targets). The game may freeze
+	 * for some time the first time yout try to play a sound if you don't use this method.
 	 * 
-	 * @param	EmbeddedSound	Name of sound assets specified in your .nmml project file
+	 * @param	EmbeddedSound	Name of sound assets specified in your .xml project file
 	 * @return	Cached Sound object
 	 */
-	public function add(EmbeddedSound:String):Sound
+	public function cache(EmbeddedSound:String):Sound
 	{
 		if (_soundCache.exists(EmbeddedSound))
 		{
@@ -151,6 +152,15 @@ class SoundFrontEnd
 		}
 	}
 	
+	/**
+	 * Plays a sound from an embedded sound. Tries to recycle a cached sound first.
+	 * 
+	 * @param	EmbeddedSound	The sound you want to play.
+	 * @param	Volume			How loud to play it (0 to 1).
+	 * @param	Looped			Whether to loop this sound.
+	 * @param	AutoDestroy		Whether to destroy this sound when it finishes playing.  Leave this value set to "false" if you want to re-use this FlxSound instance.
+	 * @return	The FlxSound object.
+	 */
 	public function play(EmbeddedSound:String, Volume:Float = 1, Looped:Bool = false, AutoDestroy:Bool = true, ?OnComplete:Void->Void):FlxSound
 	{
 		var sound:Sound = null;
@@ -168,25 +178,8 @@ class SoundFrontEnd
 			_soundCache.set(EmbeddedSound, sound);
 		}
 		var flixelSound = list.recycle(FlxSound).loadEmbedded(sound, Looped, AutoDestroy, OnComplete);
-		flixelSound.play();
-		return flixelSound;
+		return flixelSound.play();
 	}
-	#else
-	/**
-	 * Creates a new sound object from an embedded Class object.
-	 * NOTE: Just calls FlxG.loadSound() with AutoPlay == true.
-	 * 
-	 * @param	EmbeddedSound	The sound you want to play.
-	 * @param	Volume			How loud to play it (0 to 1).
-	 * @param	Looped			Whether to loop this sound.
-	 * @param	AutoDestroy		Whether to destroy this sound when it finishes playing.  Leave this value set to "false" if you want to re-use this FlxSound instance.
-	 * @return	A FlxSound object.
-	 */
-	public inline function play(EmbeddedSound:Dynamic, Volume:Float = 1, Looped:Bool = false, AutoDestroy:Bool = true, ?OnComplete:Void->Void):FlxSound
-	{
-		return load(EmbeddedSound, Volume, Looped, AutoDestroy, true, null, OnComplete);
-	}
-	#end
 	
 	/**
 	 * Creates a new sound object from a URL.
@@ -244,7 +237,7 @@ class SoundFrontEnd
 	/**
 	 * Called by FlxGame on state changes to stop and destroy sounds.
 	 * 
-	 * @param	ForceDestroy		Kill sounds even if they're flagged survive.
+	 * @param	ForceDestroy	Kill sounds even if they're flagged survive.
 	 */
 	public function destroy(ForceDestroy:Bool = false):Void
 	{
@@ -273,11 +266,8 @@ class SoundFrontEnd
 		#end
 		
 		list = new FlxTypedGroup<FlxSound>();
-		
-		#if android
 		_soundCache = new Map<String, Sound>();
 		_soundTransform = new SoundTransform();
-		#end
 	}
 	
 	/**

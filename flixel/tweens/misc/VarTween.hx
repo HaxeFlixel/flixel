@@ -92,6 +92,7 @@ class VarTween extends FlxTween
 	
 	override inline public function put():Void
 	{
-		_pool.put(this);
+		if (!_inPool)
+			_pool.putUnsafe(this);
 	}
 }

@@ -6,9 +6,11 @@
 
 ##Getting Started
 
-You can read our getting started docs [here](http://haxeflixel.com/wiki/getting-started).
+[Click here to get started making games with HaxeFlixel.](http://haxeflixel.com/documentation/getting-started/)
 
-It is recomended to use Haxeflixel via [haxelib](http://lib.haxe.org/p/flixel). Just run `haxelib install flixel` once you have it installed.
+HaxeFlixel is open source software developed by volunteers, [click here to meet the team!](https://github.com/orgs/HaxeFlixel/members)
+
+If you're a developer and like what we're doing, [read the docs](For Developers) and get involved.
 
 ##Links
 
@@ -44,9 +46,9 @@ HaxeFlixel presents substantial enhancements from the original Flixel AS3 code:
 
 If you are wanting to contribute code, please review the follwing documentation:
 
+- [Install development flixel](http://haxeflixel.com/documentation/install-development-flixel/)
 - [Code Contributions](http://haxeflixel.com/documentation/code-contributions)
 - [Code Style](http://haxeflixel.com/documentation/code-style)
-- [Install development flixel](http://haxeflixel.com/documentation/install-development-flixel/)
 
 If you have a question or have not contributed on github before, there are friendly people in the community that help out in the [forums](http://haxeflixel.com/documentation/community/).
 

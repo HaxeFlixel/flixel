@@ -247,16 +247,7 @@ class FlxAnimationController implements IFlxDestroyable
 		if (_sprite.cachedGraphics != null && _sprite.cachedGraphics.data != null)
 		{
 			var indices:Array<Int> = new Array<Int>();
-			var l:Int = FrameNames.length;
-			for (i in 0...l)
-			{
-				var name:String = FrameNames[i];
-				if (_sprite.framesData.framesHash.exists(name))
-				{
-					var frameToAdd:FlxFrame = _sprite.framesData.framesHash.get(name);
-					indices.push(getFrameIndex(frameToAdd));
-				}
-			}
+			byNamesHelper(indices, FrameNames); // finds frames and appends them to the blank array
 			
 			if (indices.length > 0)
 			{
@@ -285,16 +276,7 @@ class FlxAnimationController implements IFlxDestroyable
 		
 		if (_sprite.cachedGraphics != null && _sprite.cachedGraphics.data != null)
 		{
-			var l:Int = FrameNames.length;
-			for (i in 0...l)
-			{
-				var name:String = FrameNames[i];
-				if (_sprite.framesData.framesHash.exists(name))
-				{
-					var frameToAdd:FlxFrame = _sprite.framesData.framesHash.get(name);
-					anim._frames.push(getFrameIndex(frameToAdd));
-				}
-			}
+			byNamesHelper(anim._frames, FrameNames); // finds frames and appends them to the existing array
 		}
 	}
 	
@@ -312,16 +294,7 @@ class FlxAnimationController implements IFlxDestroyable
 		if (_sprite.cachedGraphics != null && _sprite.cachedGraphics.data != null)
 		{
 			var frameIndices:Array<Int> = new Array<Int>();
-			var l:Int = Indices.length;
-			for (i in 0...l)
-			{
-				var name:String = Prefix + Indices[i] + Postfix;
-				if (_sprite.framesData.framesHash.exists(name))
-				{
-					var frameToAdd:FlxFrame = _sprite.framesData.framesHash.get(name);
-					frameIndices.push(getFrameIndex(frameToAdd));
-				}
-			}
+			byStringIndicesHelper(frameIndices, Prefix, Indices, Postfix); // finds frames and appends them to the blank array
 			
 			if (frameIndices.length > 0)
 			{
@@ -352,16 +325,7 @@ class FlxAnimationController implements IFlxDestroyable
 		
 		if (_sprite.cachedGraphics != null && _sprite.cachedGraphics.data != null)
 		{
-			var l:Int = Indices.length;
-			for (i in 0...l)
-			{
-				var name:String = Prefix + Indices[i] + Postfix;
-				if (_sprite.framesData.framesHash.exists(name))
-				{
-					var frameToAdd:FlxFrame = _sprite.framesData.framesHash.get(name);
-					anim._frames.push(getFrameIndex(frameToAdd));
-				}
-			}
+			byStringIndicesHelper(anim._frames, Prefix, Indices, Postfix); // finds frames and appends them to the existing array
 		}
 	}
 	
@@ -379,15 +343,7 @@ class FlxAnimationController implements IFlxDestroyable
 		if (_sprite.cachedGraphics != null && _sprite.cachedGraphics.data != null)
 		{
 			var frameIndices:Array<Int> = new Array<Int>();
-			var l:Int = Indices.length;
-			for (i in 0...l)
-			{
-				var indexToAdd:Int = findSpriteFrame(Prefix, Indices[i], Postfix);
-				if (indexToAdd != -1) 
-				{
-					frameIndices.push(indexToAdd);
-				}
-			}
+			byIndicesHelper(frameIndices, Prefix, Indices, Postfix); // finds frames and appends them to the blank array
 			
 			if (frameIndices.length > 0)
 			{
@@ -418,15 +374,7 @@ class FlxAnimationController implements IFlxDestroyable
 		
 		if (_sprite.cachedGraphics != null && _sprite.cachedGraphics.data != null)
 		{
-			var l:Int = Indices.length;
-			for (i in 0...l)
-			{
-				var indexToAdd:Int = findSpriteFrame(Prefix, Indices[i], Postfix);
-				if (indexToAdd != -1) 
-				{
-					anim._frames.push(indexToAdd);
-				}
-			}
+			byIndicesHelper(anim._frames, Prefix, Indices, Postfix); // finds frames and appends them to the existing array
 		}
 	}
 	
@@ -468,31 +416,12 @@ class FlxAnimationController implements IFlxDestroyable
 		if (_sprite.cachedGraphics != null && _sprite.cachedGraphics.data != null)
 		{
 			var animFrames:Array<FlxFrame> = new Array<FlxFrame>();
-			var l:Int = _sprite.framesData.frames.length;
-			for (i in 0...l)
-			{
-				if (StringTools.startsWith(_sprite.framesData.frames[i].name, Prefix))
-				{
-					animFrames.push(_sprite.framesData.frames[i]);
-				}
-			}
+			findByPrefix(animFrames, Prefix); // adds valid frames to animFrames
 			
 			if (animFrames.length > 0)
 			{
-				var name:String = animFrames[0].name;
-				// check for potential postFix: ".png", ".gif", etc
-				var postIndex:Int = name.indexOf(".", Prefix.length);
-				var postFix:String = name.substring(postIndex == -1 ? name.length : postIndex, name.length);
-				FlxAnimationController.prefixLength = Prefix.length;
-				FlxAnimationController.postfixLength = postFix.length;
-				animFrames.sort(FlxAnimationController.frameSortFunction);
 				var frameIndices:Array<Int> = new Array<Int>();
-				
-				l = animFrames.length;
-				for (i in 0...l)
-				{
-					frameIndices.push(getFrameIndex(animFrames[i]));
-				}
+				byPrefixHelper(frameIndices, animFrames, Prefix); // finds frames and appends them to the blank array
 				
 				if (frameIndices.length > 0)
 				{
@@ -523,29 +452,11 @@ class FlxAnimationController implements IFlxDestroyable
 		if (_sprite.cachedGraphics != null && _sprite.cachedGraphics.data != null)
 		{
 			var animFrames:Array<FlxFrame> = new Array<FlxFrame>();
-			var l:Int = _sprite.framesData.frames.length;
-			for (i in 0...l)
-			{
-				if (StringTools.startsWith(_sprite.framesData.frames[i].name, Prefix))
-				{
-					animFrames.push(_sprite.framesData.frames[i]);
-				}
-			}
+			findByPrefix(animFrames, Prefix); // adds valid frames to animFrames
 			
 			if (animFrames.length > 0)
 			{
-				var name:String = animFrames[0].name;
-				var postIndex:Int = name.indexOf(".", Prefix.length);
-				var postFix:String = name.substring(postIndex == -1 ? name.length : postIndex, name.length);
-				FlxAnimationController.prefixLength = Prefix.length;
-				FlxAnimationController.postfixLength = postFix.length;
-				animFrames.sort(FlxAnimationController.frameSortFunction);
-				
-				l = animFrames.length;
-				for (i in 0...l)
-				{
-					anim._frames.push(getFrameIndex(animFrames[i]));
-				}
+				byPrefixHelper(anim._frames, animFrames, Prefix); // finds frames and appends them to the existing array
 			}
 		}
 	}
@@ -624,6 +535,90 @@ class FlxAnimationController implements IFlxDestroyable
 			_curAnim = null;
 		}
 		frameIndex = FlxRandom.intRanged(0, frames - 1);
+	}
+	
+	/**
+	 * Private helper method for add- and appendByNames. Gets frames and appends them to AddTo.
+	 */
+	private function byNamesHelper(AddTo:Array<Int>, FrameNames:Array<String>):Void
+	{
+		var l:Int = FrameNames.length;
+		for (i in 0...l)
+		{
+			var name:String = FrameNames[i];
+			if (_sprite.framesData.framesHash.exists(name))
+			{
+				var frameToAdd:FlxFrame = _sprite.framesData.framesHash.get(name);
+				AddTo.push(getFrameIndex(frameToAdd));
+			}
+		}
+	}
+	
+	/**
+	 * Private helper method for add- and appendByStringIndices. Gets frames and appends them to AddTo.
+	 */
+	private function byStringIndicesHelper(AddTo:Array<Int>, Prefix:String, Indices:Array<String>, Postfix:String):Void
+	{
+		var l:Int = Indices.length;
+		for (i in 0...l)
+		{
+			var name:String = Prefix + Indices[i] + Postfix;
+			if (_sprite.framesData.framesHash.exists(name))
+			{
+				var frameToAdd:FlxFrame = _sprite.framesData.framesHash.get(name);
+				AddTo.push(getFrameIndex(frameToAdd));
+			}
+		}
+	}
+	
+	/**
+	 * Private helper method for add- and appendByIndices. Finds frames and appends them to AddTo.
+	 */
+	private function byIndicesHelper(AddTo:Array<Int>, Prefix:String, Indices:Array<Int>, Postfix:String):Void
+	{
+		var l:Int = Indices.length;
+		for (i in 0...l)
+		{
+			var indexToAdd:Int = findSpriteFrame(Prefix, Indices[i], Postfix);
+			if (indexToAdd != -1) 
+			{
+				AddTo.push(indexToAdd);
+			}
+		}
+	}
+	
+	/**
+	 * Private helper method for add- and appendByPrefix. Sorts frames and appends them to AddTo.
+	 */
+	private function byPrefixHelper(AddTo:Array<Int>, AnimFrames:Array<FlxFrame>, Prefix:String):Void
+	{
+		var name:String = AnimFrames[0].name;
+		var postIndex:Int = name.indexOf(".", Prefix.length);
+		var postFix:String = name.substring(postIndex == -1 ? name.length : postIndex, name.length);
+		FlxAnimationController.prefixLength = Prefix.length;
+		FlxAnimationController.postfixLength = postFix.length;
+		AnimFrames.sort(FlxAnimationController.frameSortFunction);
+		
+		var l:Int = AnimFrames.length;
+		for (i in 0...l)
+		{
+			AddTo.push(getFrameIndex(AnimFrames[i]));
+		}
+	}
+	
+	/**
+	 * Private helper method for add- and appendByPrefix. Finds frames with the given prefix and appends them to AnimFrames.
+	 */
+	private function findByPrefix(AnimFrames:Array<FlxFrame>, Prefix:String):Void
+	{
+		var l:Int = _sprite.framesData.frames.length;
+		for (i in 0...l)
+		{
+			if (StringTools.startsWith(_sprite.framesData.frames[i].name, Prefix))
+			{
+				AnimFrames.push(_sprite.framesData.frames[i]);
+			}
+		}
 	}
 	
 	private function set_frameIndex(Frame:Int):Int

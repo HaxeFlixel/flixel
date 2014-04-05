@@ -67,11 +67,11 @@ class FlxSprite extends FlxObject
 	/**
 	 * The width of the actual graphic or image being displayed (not necessarily the game object/bounding box).
 	 */
-	public var frameWidth(default, null):Int;
+	public var frameWidth(default, null):Int = 0;
 	/**
 	 * The height of the actual graphic or image being displayed (not necessarily the game object/bounding box).
 	 */
-	public var frameHeight(default, null):Int;
+	public var frameHeight(default, null):Int = 0;
 	/**
 	 * The total number of frames in this image.  WARNING: assumes each row in the sprite sheet is full!
 	 */
@@ -725,7 +725,11 @@ class FlxSprite extends FlxObject
 	 */
 	override public function draw():Void
 	{
-		if (alpha == 0)	
+		#if !FLX_NO_DEBUG
+		super.draw();
+		#end
+		
+		if (alpha == 0)
 		{
 			return;
 		}
@@ -1330,6 +1334,24 @@ class FlxSprite extends FlxObject
 		#else
 		return (((angle == 0 && frame.additionalAngle == 0) || (bakedRotationAngle > 0)) && (scale.x == 1) && (scale.y == 1));
 		#end
+	}
+
+	/**
+	 * Flips graphics horizontally
+	 *
+	 */
+	public function flipHorizontally():Void
+	{
+		scale.x *= -1;
+	}
+
+	/**
+	 * Flips graphics vertically
+	 *
+	 */
+	public function flipVertically():Void
+	{
+		scale.y *= -1;
 	}
 	
 	/**

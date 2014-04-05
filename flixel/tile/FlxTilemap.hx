@@ -530,7 +530,7 @@ class FlxTilemap extends FlxObject
 	
 	#if !FLX_NO_DEBUG
 	/**
-	 * Main logic loop for tilemap is pretty simple, just checks to see if visual debug got turned on.
+	 * Main logic loop for tilemap is pretty simple, just checks to see if drawDebug got turned on.
 	 * If it did, the tilemap is flagged as dirty so it will be redrawn with debug info on the next draw call.
 	 */
 	override public function update():Void
@@ -546,7 +546,7 @@ class FlxTilemap extends FlxObject
 	#end
 	
 	#if !FLX_NO_DEBUG
-	override public function drawDebugOnCamera(?Camera:FlxCamera):Void
+	override public function drawDebugOnCamera(Camera:FlxCamera):Void
 	{
 		#if FLX_RENDER_TILE
 		var buffer:FlxTilemapBuffer = null;
@@ -960,13 +960,13 @@ class FlxTilemap extends FlxObject
 			
 			while (column < selectionWidth)
 			{
-				var dataIndex:Int = _data[rowStart + column];
-				
-				if (dataIndex < 0)
+				var index:Int = rowStart + column;
+				if ((index < 0) || (index > _data.length - 1))
 				{
 					column++;
 					continue;
 				}
+				var dataIndex:Int = _data[index];
 				
 				tile = _tileObjects[dataIndex];
 				tile.width = _scaledTileWidth;
@@ -1082,7 +1082,7 @@ class FlxTilemap extends FlxObject
 	}
 	
 	/**
-	 * Returns a new Flash Array full of every map index of the requested tile type.
+	 * Returns a new array full of every map index of the requested tile type.
 	 * 
 	 * @param	Index	The requested tile type.
 	 * @return	An Array with a list of all map indices of that tile type.
@@ -1111,7 +1111,7 @@ class FlxTilemap extends FlxObject
 	}
 	
 	/**
-	 * Returns a new Flash Array full of every coordinate of the requested tile type.
+	 * Returns a new array full of every coordinate of the requested tile type.
 	 * 
 	 * @param	Index		The requested tile type.
 	 * @param	Midpoint	Whether to return the coordinates of the tile midpoint, or upper left corner. Default is true, return midpoint.
@@ -1297,9 +1297,9 @@ class FlxTilemap extends FlxObject
 	 * 
 	 * @param	Start		The world coordinates of the start of the ray.
 	 * @param	End			The world coordinates of the end of the ray.
-	 * @param	Result		A Point object containing the first wall impact.
+	 * @param	Result		An optional point containing the first wall impact if there was one. Null otherwise.
 	 * @param	Resolution	Defaults to 1, meaning check every tile or so.  Higher means more checks!
-	 * @return	Returns true if the ray made it from Start to End without hitting anything.  Returns false and fills Result if a tile was hit.
+	 * @return	Returns true if the ray made it from Start to End without hitting anything. Returns false and fills Result if a tile was hit.
 	 */
 	public function ray(Start:FlxPoint, End:FlxPoint, ?Result:FlxPoint, Resolution:Float = 1):Bool
 	{
@@ -1322,6 +1322,9 @@ class FlxTilemap extends FlxObject
 		var tileX:Int;
 		var tileY:Int;
 		var i:Int = 0;
+		
+		Start.putWeak();
+		End.putWeak();
 		
 		while (i < steps)
 		{
@@ -1361,11 +1364,13 @@ class FlxTilemap extends FlxObject
 				
 				if ((ry > tileY) && (ry < tileY + _scaledTileHeight))
 				{
-					if (Result != null)
+					if (Result == null)
 					{
-						Result.x = rx;
-						Result.y = ry;
+						Result = FlxPoint.get();
 					}
+					
+					Result.x = rx;
+					Result.y = ry;
 					
 					return false;
 				}
@@ -1399,120 +1404,6 @@ class FlxTilemap extends FlxObject
 		}
 		
 		return true;
-	}
-	
-	/**
-	 * Works exactly like ray() except it explicitly returns the hit result. Shoots a ray from the start point to the end point.
-	 * If/when it passes through a tile, it returns that point. If it does not, it returns null.
-	 * Usage:
-	 * var hit:FlxPoint = tilemap.rayHit(startPoint, endPoint);
-	 * if (hit != null) //code ;
-	 *
-	 * @param 	Start		The world coordinates of the start of the ray.
-	 * @param 	End 		The world coordinates of the end of the ray.
-	 * @param 	Resolution 	Defaults to 1, meaning check every tile or so. Higher means more checks!
-	 * @return Returns null if the ray made it from Start to End without hitting anything. Returns FlxPoint if a tile was hit.
-	 */
-	public function rayHit(Start:FlxPoint, End:FlxPoint, Resolution:Float = 1):FlxPoint
-	{
-		var Result:FlxPoint = null;
-		var step:Float = _scaledTileWidth;
-		
-		if (_scaledTileHeight < _scaledTileWidth)
-		{
-			step = _scaledTileHeight;
-		}
-		
-		step /= Resolution;
-		var deltaX:Float = End.x - Start.x;
-		var deltaY:Float = End.y - Start.y;
-		var distance:Float = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-		var steps:Int = Math.ceil(distance / step);
-		var stepX:Float = deltaX / steps;
-		var stepY:Float = deltaY / steps;
-		var curX:Float = Start.x - stepX - x;
-		var curY:Float = Start.y - stepY - y;
-		var tileX:Int;
-		var tileY:Int;
-		var i:Int = 0;
-		
-		Start.putWeak();
-		End.putWeak();
-		
-		while (i < steps)
-		{
-			curX += stepX;
-			curY += stepY;
-			
-			if ((curX < 0) || (curX > width) || (curY < 0) || (curY > height))
-			{
-				i++;
-				continue;
-			}
-			
-			tileX = Math.floor(curX / _scaledTileWidth);
-			tileY = Math.floor(curY / _scaledTileHeight);
-			
-			if (_tileObjects[_data[tileY * widthInTiles + tileX]].allowCollisions != 0)
-			{
-				// Some basic helper stuff
-				tileX *= Std.int(_scaledTileWidth);
-				tileY *= Std.int(_scaledTileHeight);
-				var rx:Float = 0;
-				var ry:Float = 0;
-				var q:Float;
-				var lx:Float = curX - stepX;
-				var ly:Float = curY - stepY;
-
-				// Figure out if it crosses the X boundary
-				q = tileX;
-				
-				if (deltaX < 0)
-				{
-					q += _scaledTileWidth;
-				}
-				
-				rx = q;
-				ry = ly + stepY * ((q - lx) / stepX);
-				
-				if ((ry > tileY) && (ry < tileY + _scaledTileHeight))
-				{
-					if (Result == null)
-					{
-						Result = FlxPoint.get();
-					}
-					
-					return Result.set(rx, ry);
-				}
-
-				// Else, figure out if it crosses the Y boundary
-				q = tileY;
-				
-				if (deltaY < 0)
-				{
-					q += _scaledTileHeight;
-				}
-				
-				rx = lx + stepX * ((q - ly) / stepY);
-				ry = q;
-				
-				if ((rx > tileX) && (rx < tileX + _scaledTileWidth))
-				{
-					if (Result == null)
-					{
-						Result = FlxPoint.get();
-					}
-					
-					return Result.set(rx, ry);
-				}
-				
-				return null;
-			}
-			
-			i++;
-		}
-		
-		return null;
 	}
 	
 	/**

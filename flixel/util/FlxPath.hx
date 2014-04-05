@@ -127,7 +127,7 @@ class FlxPath implements IFlxDestroyable
 	public var debugScrollY:Float = 1.0;
 	/**
 	 * Setting this to true will prevent the object from appearing
-	 * when the visual debug mode in the debugger overlay is toggled on.
+	 * when FlxG.debugger.drawDebug is true.
 	 */
 	public var ignoreDrawDebug:Bool = false;
 	#end
@@ -622,12 +622,12 @@ class FlxPath implements IFlxDestroyable
 	/**
 	 * While this doesn't override FlxBasic.drawDebug(), the behavior is very similar.
 	 * Based on this path data, it draws a simple lines-and-boxes representation of the path
-	 * if the visual debug mode was toggled in the debugger overlay.  You can use debugColor
+	 * if the drawDebug mode was toggled in the debugger overlay. You can use debugColor
 	 * and debugScrollFactor to control the path's appearance.
 	 * 
 	 * @param	Camera		The camera object the path will draw to.
 	 */
-	public function drawDebug(Camera:FlxCamera = null):Void
+	public function drawDebug(?Camera:FlxCamera):Void
 	{
 		if (nodes == null || nodes.length <= 0)
 		{

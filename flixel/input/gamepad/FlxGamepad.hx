@@ -179,9 +179,60 @@ class FlxGamepad implements IFlxDestroyable
 	}
 	
 	/**
+	 * Check if at least one button from an array of button IDs is pressed.
+	 * 
+	 * @param	ButtonArray	An array of button IDs
+	 * @return	Whether at least one of the buttons is pressed
+	 */
+	public function anyPressed(ButtonArray:Array<Int>):Bool
+	{
+		for (b in ButtonArray)
+		{
+			if (buttons.get(b).current == PRESSED)
+				return true;
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Check if at least one button from an array of button IDs was just pressed.
+	 * 
+	 * @param	ButtonArray	An array of button IDs
+	 * @return	Whether at least one of the buttons was just pressed
+	 */
+	public function anyJustPressed(ButtonArray:Array<Int>):Bool
+	{
+		for (b in ButtonArray)
+		{
+			if (buttons.get(b).current == JUST_PRESSED)
+				return true;
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Check if at least one button from an array of button IDs was just released.
+	 * 
+	 * @param	ButtonArray	An array of button IDs
+	 * @return	Whether at least one of the buttons was just released
+	 */
+	public function anyJustReleased(ButtonArray:Array<Int>):Bool
+	{
+		for (b in ButtonArray)
+		{
+			if (buttons.get(b).current == JUST_RELEASED)
+				return true;
+		}
+		
+		return false;
+	}
+	
+	/**
 	 * Check to see if this button is pressed.
 	 * 
-	 * @param	ButtonID	The button id (from 0 to 7).
+	 * @param	ButtonID	The button ID.
 	 * @return	Whether the button is pressed
 	 */
 	public function pressed(ButtonID:Int):Bool 
@@ -206,7 +257,7 @@ class FlxGamepad implements IFlxDestroyable
 	/**
 	 * Check to see if this button was just pressed.
 	 * 
-	 * @param	ButtonID	The button id (from 0 to 7).
+	 * @param	ButtonID	The button ID.
 	 * @return	Whether the button was just pressed
 	 */
 	public function justPressed(ButtonID:Int):Bool 
@@ -220,10 +271,10 @@ class FlxGamepad implements IFlxDestroyable
 	}
 	
 	/**
-	 * Check to see if this button is just released.
+	 * Check to see if this button was just released.
 	 * 
-	 * @param	buttonID	The button id (from 0 to 7).
-	 * @return	Whether the button is just released.
+	 * @param	ButtonID	The button ID.
+	 * @return	Whether the button was just released.
 	 */
 	public function justReleased(ButtonID:Int):Bool 
 	{ 
@@ -401,9 +452,6 @@ class FlxGamepad implements IFlxDestroyable
 		return 0;
 	}
 	
-	/**
-	 * DPAD accessor properties
-	 */
 	#if !flash
 	private inline function get_dpadUp():Bool    { return hat.y < 0; }
 	private inline function get_dpadDown():Bool  { return hat.y > 0; }
