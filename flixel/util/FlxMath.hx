@@ -28,7 +28,7 @@ class FlxMath
 	 */
 	public static inline var MAX_VALUE:Float = 1.79e+308;
 	/**
-	 * Square root of 2.
+	 * Approximation of Math.sqrt(2).
 	 */
 	public static inline var SQUARE_ROOT_OF_TWO:Float = 1.41421356237;
 	

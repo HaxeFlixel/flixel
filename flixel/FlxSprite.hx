@@ -18,6 +18,7 @@ import flixel.util.FlxAngle;
 import flixel.util.FlxColor;
 import flixel.util.FlxColorUtil;
 import flixel.util.FlxDestroyUtil;
+import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
 import flixel.util.loaders.CachedGraphics;
 import flixel.util.loaders.TexturePackerData;
@@ -1303,7 +1304,7 @@ class FlxSprite extends FlxObject
 			}
 			
 			var radius:Float = Math.max(radiusX, radiusY);
-			radius *= 1.415; // Math.sqrt(2);
+			radius *= FlxMath.SQUARE_ROOT_OF_TWO;
 			
 			minX += origin.x;
 			maxX = minX + radius;
