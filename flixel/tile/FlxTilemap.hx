@@ -159,8 +159,7 @@ class FlxTilemap extends FlxObject
 	 */
 	private var _tileObjects:Array<FlxTile>;
 	
-	#if !FLX_NO_DEBUG
-	#if FLX_RENDER_BLIT
+	#if (FLX_RENDER_BLIT && !FLX_NO_DEBUG)
 	/**
 	 * Internal, used for rendering the debug bounding box display.
 	 */
@@ -178,16 +177,12 @@ class FlxTilemap extends FlxObject
 	 */
 	private var _debugRect:Rectangle;
 	#end
-	/**
-	 * Internal flag for checking to see if we need to refresh
-	 * the tilemap display to show or hide the bounding boxes.
-	 */
-	private var _lastVisualDebug:Bool;
-	#end
+	
 	/**
 	 * Internal, used to sort of insert blank tiles in front of the tiles in the provided graphic.
 	 */
 	private var _startingIndex:Int = 0;
+	
 	#if FLX_RENDER_TILE
 	/**
 	 * Rendering helper, minimize new object instantiation on repetitive methods. Used only in cpp
@@ -213,12 +208,6 @@ class FlxTilemap extends FlxObject
 		
 		immovable = true;
 		moves = false;
-		
-		#if !FLX_NO_DEBUG
-		_lastVisualDebug = FlxG.debugger.drawDebug;
-		#end
-		
-		_startingIndex = 0;
 		
 		#if FLX_RENDER_TILE
 		_helperPoint = new Point();
@@ -522,23 +511,6 @@ class FlxTilemap extends FlxObject
 	}
 	
 	#if !FLX_NO_DEBUG
-	/**
-	 * Main logic loop for tilemap is pretty simple, just checks to see if drawDebug got turned on.
-	 * If it did, the tilemap is flagged as dirty so it will be redrawn with debug info on the next draw call.
-	 */
-	override public function update():Void
-	{
-		if (_lastVisualDebug != FlxG.debugger.drawDebug)
-		{
-			_lastVisualDebug = FlxG.debugger.drawDebug;
-			setDirty();
-		}
-		
-		super.update();
-	}
-	#end
-	
-	#if !FLX_NO_DEBUG
 	override public function drawDebugOnCamera(Camera:FlxCamera):Void
 	{
 		#if FLX_RENDER_TILE
@@ -732,7 +704,7 @@ class FlxTilemap extends FlxObject
 		
 		var i:Int = 0;
 		var l:Int = _data.length;
-		var data:Array<Int> = new Array(/*l*/);
+		var data:Array<Int> = new Array();
 		FlxArrayUtil.setLength(data, l);
 		
 		while (i < l)
@@ -752,12 +724,9 @@ class FlxTilemap extends FlxObject
 	 */
 	public function setDirty(Dirty:Bool = true):Void
 	{
-		var i:Int = 0;
-		var l:Int = _buffers.length;
-		
-		while (i < l)
+		for (buffer in _buffers)
 		{
-			_buffers[i++].dirty = Dirty;
+			buffer.dirty = true;
 		}
 	}
 	
