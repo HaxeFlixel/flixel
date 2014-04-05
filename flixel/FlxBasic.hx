@@ -12,6 +12,14 @@ import flixel.util.FlxStringUtil;
  */
 class FlxBasic implements IFlxDestroyable
 {
+	#if !FLX_NO_DEBUG
+	/**
+	 * Static counters for performance tracking.
+	 */
+	public static var _ACTIVECOUNT:Int = 0;
+	public static var _VISIBLECOUNT:Int = 0;
+	#end
+	
 	/**
 	 * IDs seem like they could be pretty useful, huh?
 	 * They're not actually used for anything yet though.
@@ -39,14 +47,6 @@ class FlxBasic implements IFlxDestroyable
 	 * Enum that informs the collision system which type of object this is (to avoid expensive type casting).
 	 */
 	public var collisionType(default, null):FlxCollisionType = FlxCollisionType.NONE;
-	
-	#if !FLX_NO_DEBUG
-	/**
-	 * Static counters for performance tracking.
-	 */
-	public static var _ACTIVECOUNT:Int = 0;
-	public static var _VISIBLECOUNT:Int = 0;
-	#end
 	
 	public function new() {}
 	
