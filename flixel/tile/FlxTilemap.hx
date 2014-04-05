@@ -667,6 +667,11 @@ class FlxTilemap extends FlxObject
 	 */
 	override public function draw():Void
 	{
+		#if !FLX_NO_DEBUG
+		if (FlxG.debugger.drawDebug)
+			drawDebug();
+		#end
+		
 		var cameras = cameras;
 		var camera:FlxCamera;
 		var buffer:FlxTilemapBuffer;
