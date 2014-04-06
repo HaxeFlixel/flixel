@@ -83,6 +83,8 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		origin = new FlxCallbackPoint(originCallback);
 		scale = new FlxCallbackPoint(scaleCallback);
 		scrollFactor = new FlxCallbackPoint(scrollFactorCallback);
+		
+		scale.set(1, 1);
 		scrollFactor.set(1, 1);
 	 	
 		initMotionVars();
