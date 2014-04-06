@@ -157,6 +157,25 @@ class FlxKeyboard implements IFlxInput
 		}
 		return keysDown;
 	}
+	
+	
+	/**
+	 * Get the first of all keys just released
+	 * 
+	 * @return	FlxKey of first just released key
+	 */
+	public function getFirstJustReleased():FlxKey
+	{
+		
+		for (key in _keyList)
+		{
+			if (key != null && key.current == FlxKey.JUST_RELEASED)
+			{
+				return key;
+			}
+		}
+		return null;
+	}
 
 	/**
 	 * Clean up memory.
