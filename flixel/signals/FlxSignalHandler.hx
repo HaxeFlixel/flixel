@@ -1,4 +1,4 @@
-package flixel.util.signals;
+package flixel.signals;
 import flixel.interfaces.IFlxDestroyable;
 
 /**

@@ -1,6 +1,8 @@
-package flixel.util.signals;
+package flixel.signals;
 import flixel.interfaces.IFlxDestroyable;
-import flixel.util.signals.FlxSignalHandler;
+import flixel.signals.FlxSignalHandler;
+import flixel.util.FlxArrayUtil;
+import flixel.util.FlxDestroyUtil;
 
 /**
  * ...
