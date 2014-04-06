@@ -1,41 +1,43 @@
 package flixel.system.frontEnds;
 
-import flixel.util.FlxSignal;
+import flixel.util.FlxPoint;
+import flixel.signals.FlxSignal;
+
 
 class SignalFrontEnd
 {
 	/**
-	 * Gets dispatched when a state change occurs. Signal.userData is null!
+	 * Gets dispatched when a state change occurs.
 	 */
-	public var stateSwitch(default, null):FlxSignal;
+	public var stateSwitch(default, null):FlxSignal0;
 	/**
-	 * Gets dispatched when the game is resized. Signal.userData is a FlxPoint (FlxG.scaleMode.gameSize)!
+	 * Gets dispatched when the game is resized.
 	 */
-	public var gameResize(default, null):FlxSignal;
-	public var gameReset(default, null):FlxSignal;
+	public var gameResize(default, null):FlxSignal1<FlxPoint>;
+	public var gameReset(default, null):FlxSignal0;
 	/**
 	 * Gets dispatched when the game is started (first state after the splash screen).
 	 */
-	public var gameStart(default, null):FlxSignal;
-	public var preUpdate(default, null):FlxSignal;
-	public var postUpdate(default, null):FlxSignal;
-	public var preDraw(default, null):FlxSignal;
-	public var postDraw(default, null):FlxSignal;
-	public var focusGained(default, null):FlxSignal;
-	public var focusLost(default, null):FlxSignal;
+	public var gameStart(default, null):FlxSignal0;
+	public var preUpdate(default, null):FlxSignal0;
+	public var postUpdate(default, null):FlxSignal0;
+	public var preDraw(default, null):FlxSignal0;
+	public var postDraw(default, null):FlxSignal0;
+	public var focusGained(default, null):FlxSignal0;
+	public var focusLost(default, null):FlxSignal0;	
 	
 	@:allow(flixel.FlxG)
 	private function new() 
 	{
-		stateSwitch = FlxSignal.get(true).add(FlxSignal.onStateSwitch);
-		gameResize = FlxSignal.get(true);
-		gameReset = FlxSignal.get(true);
-		gameStart = FlxSignal.get(true);
-		preUpdate = FlxSignal.get(true);
-		postUpdate = FlxSignal.get(true);
-		preDraw = FlxSignal.get(true);
-		postDraw = FlxSignal.get(true);
-		focusGained = FlxSignal.get(true);
-		focusLost = FlxSignal.get(true);
+		stateSwitch = new FlxSignal0();		
+		gameResize = new FlxSignal1<FlxPoint>();
+		gameReset = new FlxSignal0();
+		gameStart = new FlxSignal0();
+		preUpdate = new FlxSignal0();
+		postUpdate = new FlxSignal0();
+		preDraw = new FlxSignal0();
+		postDraw = new FlxSignal0();
+		focusGained = new FlxSignal0();
+		focusLost = new FlxSignal0();
 	}
 }
