@@ -522,7 +522,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	}
 	
 	@:allow(flixel.FlxGame)
-	private function onGameStart(_):Void
+	private function onGameStart():Void
 	{
 		// Call set_visible with the value visible has been initialized with
 		// (unless set in create() of the initial state)
