@@ -1,7 +1,7 @@
 package flixel.util;
 
 import flixel.FlxState;
-import flixel.util.signals.FlxSignal;
+import flixel.signals.FlxSignal;
 import massive.munit.Assert;
 
 class FlxSignalTest extends FlxTest
@@ -142,7 +142,7 @@ class FlxSignalTest extends FlxTest
 	@Test
 	function testDispatchOnceTrue():Void
 	{
-		signal0.add(callbackIncrementCounter, true);
+		signal0.addOnce(callbackIncrementCounter);
 
 		signal0.dispatch();
 		signal0.dispatch();
@@ -154,7 +154,7 @@ class FlxSignalTest extends FlxTest
 	@Test
 	function testDispatchOnceFalse():Void
 	{
-		signal0.add(callbackIncrementCounter, false);
+		signal0.add(callbackIncrementCounter);
 
 		signal0.dispatch();
 		signal0.dispatch();
