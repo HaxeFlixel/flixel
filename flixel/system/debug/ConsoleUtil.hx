@@ -88,9 +88,8 @@ class ConsoleUtil
 	@:generic
 	public static function attemptToCreateInstance<T>(ClassName:String, type:Class<T>, ?Params:Array<String>):Dynamic
 	{
-		if (Params == null) {
+		if (Params == null)
 			Params = [];
-		}
 		
 		var obj:Dynamic = Type.resolveClass(ClassName);
 		if (!Reflect.isObject(obj)) 

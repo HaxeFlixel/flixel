@@ -83,11 +83,13 @@ class Console extends Window
 		cmdHistory = new Array<String>();
 		
 		// Load old command history if existant
-		if (FlxG.save.data.history != null) {
+		if (FlxG.save.data.history != null) 
+		{
 			cmdHistory = FlxG.save.data.history;
 			_historyIndex = cmdHistory.length;
 		}
-		else {
+		else 
+		{
 			cmdHistory = new Array<String>();
 			FlxG.save.data.history = cmdHistory;
 		}
@@ -120,9 +122,7 @@ class Console extends Window
 		#if flash 
 		// Pause game
 		if (FlxG.console.autoPause)
-		{
 			FlxG.vcr.pause();
-		}
 		#end
 		
 		// Block keyboard input
@@ -131,9 +131,7 @@ class Console extends Window
 		#end
 		
 		if (_input.text == Console._DEFAULT_TEXT) 
-		{
 			_input.text = "";
-		}
 		#end
 	}
 	
@@ -153,40 +151,33 @@ class Console extends Window
 		#end
 		
 		if (_input.text == "") 
-		{
 			_input.text = Console._DEFAULT_TEXT;
-		}
 		#end
 	}
 	
 	private function onKeyPress(e:KeyboardEvent):Void
 	{
 		// Don't allow spaces at the start, they break commands
-		if (e.keyCode == Keyboard.SPACE && _input.text == " ") {
+		if (e.keyCode == Keyboard.SPACE && _input.text == " ") 
 			_input.text = "";	
-		}
 		
 		// Submitting the command
-		if (e.keyCode == Keyboard.ENTER && _input.text != "") {
+		if (e.keyCode == Keyboard.ENTER && _input.text != "")
 			processCommand();
-		}
 		
 		// Quick-unfcous
-		else if (e.keyCode == Keyboard.ESCAPE) {
+		else if (e.keyCode == Keyboard.ESCAPE)
 			FlxG.stage.focus = null;
-		}
 		
 		// Delete the current text
-		else if (e.keyCode == Keyboard.DELETE) {
+		else if (e.keyCode == Keyboard.DELETE)
 			_input.text = "";
-		}
 		
 		// Show previous command in history
 		else if (e.keyCode == Keyboard.UP) 
 		{
-			if (cmdHistory.length == 0) {
+			if (cmdHistory.length == 0)
 				return;
-			}
 			
 			_input.text = getPreviousCommand();
 			
@@ -197,10 +188,8 @@ class Console extends Window
 		// Show next command in history
 		else if (e.keyCode == Keyboard.DOWN) 
 		{
-			if (cmdHistory.length == 0) {
+			if (cmdHistory.length == 0) 
 				return;
-			}
-			
 			_input.text = getNextCommand();
 		}
 	}
@@ -216,17 +205,6 @@ class Console extends Window
 		{
 			var func:Dynamic = command.processFunction;
 			
-			#if neko
-			/**
-			 * Ugly fix to prevent a crash with optional params on neko - requires padding with nulls. 
-			 * @link https://github.com/HaxeFoundation/haxe/issues/976
-			 */
-			if (command.numParams > 0)
-			{
-				args[command.numParams - 1] = null;
-			}
-			#end
-			
 			// Only save new commands 
 			if (getPreviousCommand() != _input.text) 
 			{
@@ -235,9 +213,8 @@ class Console extends Window
 				FlxG.save.flush();
 				
 				// Set a maximum for commands you can save
-				if (cmdHistory.length > Console._HISTORY_MAX) {
+				if (cmdHistory.length > Console._HISTORY_MAX)
 					cmdHistory.shift();
-				}
 			}
 			
 			_historyIndex = cmdHistory.length;
@@ -280,25 +257,21 @@ class Console extends Window
 	
 	private inline function getPreviousCommand():String
 	{
-		if (_historyIndex > 0) {
+		if (_historyIndex > 0)
 			_historyIndex --;
-		}
 		
 		return cmdHistory[_historyIndex];
 	}
 	
 	private inline function getNextCommand():String
 	{
-		if (_historyIndex < cmdHistory.length) {
+		if (_historyIndex < cmdHistory.length)
 			_historyIndex ++;
-		}
 		
-		if (cmdHistory[_historyIndex] != null) {
+		if (cmdHistory[_historyIndex] != null)
 			return cmdHistory[_historyIndex];
-		}
-		else {
+		else 
 			return "";
-		}
 	}
 	
 	/**
