@@ -1,4 +1,4 @@
-package flixel.signals;
+package flixel.util;
 
 import flixel.FlxState;
 import flixel.util.FlxSignal;
