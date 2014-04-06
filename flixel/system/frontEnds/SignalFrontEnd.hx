@@ -10,7 +10,8 @@ class SignalFrontEnd
 	 */
 	public var stateSwitch(default, null):FlxSignal0;
 	/**
-	 * Gets dispatched when the game is resized.
+	 * Gets dispatched when the game is resized. 
+	 * Passes the new window width and height to callback functions.
 	 */
 	public var gameResize(default, null):FlxSignal2<Int, Int>;
 	public var gameReset(default, null):FlxSignal0;
