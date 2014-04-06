@@ -26,12 +26,20 @@ private class FlxSignal<THandler:AnyHandler, TListener> implements IFlxDestroyab
 		_handlers = [];			
 	}
 	
-	public function add(listener:TListener, isOnce:Bool = false)
+	public function add(listener:TListener)
 	{
 		if (listener == null)
 			return null;
 			
-		return registerListener(listener, isOnce);
+		return registerListener(listener);
+	}
+	
+	public function addOnce(listener:TListener)
+	{
+		if (listener == null)
+			return null;
+			
+		return registerListener(listener, true);
 	}
 	
 	public function remove(listener:TListener):THandler
