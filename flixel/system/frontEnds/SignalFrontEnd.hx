@@ -5,7 +5,7 @@ import flixel.util.signals.FlxSignal;
 
 
 class SignalFrontEnd
-{	
+{
 	/**
 	 * Gets dispatched when a state change occurs. Signal.userData is null!
 	 */
