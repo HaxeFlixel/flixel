@@ -1,4 +1,5 @@
 package flixel.signals;
+
 import flixel.interfaces.IFlxDestroyable;
 
 /**
@@ -21,7 +22,6 @@ class FlxSignalHandler<TListener> implements IFlxDestroyable
 	{
 		listener = null;
 	}
-	
 }
 
 class FlxSignalHandler0 extends FlxSignalHandler <Void->Void>

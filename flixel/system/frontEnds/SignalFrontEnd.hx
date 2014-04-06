@@ -3,7 +3,6 @@ package flixel.system.frontEnds;
 import flixel.util.FlxPoint;
 import flixel.signals.FlxSignal;
 
-
 class SignalFrontEnd
 {
 	/**
@@ -13,7 +12,7 @@ class SignalFrontEnd
 	/**
 	 * Gets dispatched when the game is resized.
 	 */
-	public var gameResize(default, null):FlxSignal1<FlxPoint>;
+	public var gameResize(default, null):FlxSignal2<Int, Int>;
 	public var gameReset(default, null):FlxSignal0;
 	/**
 	 * Gets dispatched when the game is started (first state after the splash screen).
@@ -30,7 +29,7 @@ class SignalFrontEnd
 	private function new() 
 	{
 		stateSwitch = new FlxSignal0();		
-		gameResize = new FlxSignal1<FlxPoint>();
+		gameResize = new FlxSignal2<Int, Int>();
 		gameReset = new FlxSignal0();
 		gameStart = new FlxSignal0();
 		preUpdate = new FlxSignal0();

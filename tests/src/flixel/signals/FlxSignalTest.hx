@@ -1,4 +1,4 @@
-package flixel.util;
+package flixel.signals;
 
 import flixel.FlxState;
 import flixel.signals.FlxSignal;
@@ -171,21 +171,5 @@ class FlxSignalTest extends FlxTest
 		signal0.dispatch();
 		
 		Assert.isFalse(flag);
-	}
-}
-
-class DispatchState extends FlxState 
-{
-	private var _signal0:FlxSignal0;
-	
-	public function new(signal0:FlxSignal0)
-	{
-		_signal0 = signal0;
-		super();
-	}
-	
-	override public function create():Void
-	{
-		_signal0.dispatch();
 	}
 }

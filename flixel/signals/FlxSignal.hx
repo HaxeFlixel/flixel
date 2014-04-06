@@ -1,4 +1,5 @@
 package flixel.signals;
+
 import flixel.interfaces.IFlxDestroyable;
 import flixel.signals.FlxSignalHandler;
 import flixel.util.FlxArrayUtil;
@@ -81,7 +82,7 @@ private class FlxSignal<THandler:AnyHandler, TListener> implements IFlxDestroyab
 		{
 			// If the listener was previously added, definitely don't add it again.
 			// But throw an exception if their once values differ.
-			if(handler.isOnce != isOnce)
+			if (handler.isOnce != isOnce)
 				throw "You cannot addOnce() then add() the same listener without removing the relationship first.";
 			else
 				return handler;
@@ -91,6 +92,7 @@ private class FlxSignal<THandler:AnyHandler, TListener> implements IFlxDestroyab
 	/**
 	 * Return the handler of the listener or null if not exist.
 	 * Does not care about the isOnce property.
+	 * 
 	 * @param	listener
 	 * @return	the handler, or null if the listener is not yet added
 	 */
@@ -112,7 +114,6 @@ private class FlxSignal<THandler:AnyHandler, TListener> implements IFlxDestroyab
 		throw "This function must be overridden.";
 		return null;
 	}
-	
 }
 
 class FlxSignal0 extends FlxSignal<FlxSignalHandler0, Void->Void>
