@@ -176,7 +176,7 @@ class FlxAssets
 		return Assets.getSound(id + extension);
 	}
 	
-	#if !FLX_NO_SOUND_SYSTEM
+	#if (!FLX_NO_SOUND_SYSTEM && !doc)
 	/**
 	 * Sound caching for android target
 	 */
