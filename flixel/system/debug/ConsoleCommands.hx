@@ -221,7 +221,7 @@ class ConsoleCommands
 			FlxG.watch.add(object, varName, WatchName);
 	}
 	
-	private function fields(ObjectAndVariable:String, NumSupperClassesToInclude:Int = 0):Void
+	private function fields(ObjectAndVariable:String, NumSuperClassesToInclude:Int = 0):Void
 	{
 		var pathToVariable:PathToVariable = ConsoleUtil.resolveObjectAndVariableFromMap(ObjectAndVariable, _console.registeredObjects);
 		
@@ -243,7 +243,7 @@ class ConsoleCommands
 				return;
 		
 			var cl = Type.getClass(instance);
-			fields = ConsoleUtil.getInstanceFieldsAdvanced(cl, NumSupperClassesToInclude);
+			fields = ConsoleUtil.getInstanceFieldsAdvanced(cl, NumSuperClassesToInclude);
 		}
 		
 		ConsoleUtil.log("fields: list of fields for " + ObjectAndVariable);
