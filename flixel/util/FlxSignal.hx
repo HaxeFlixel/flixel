@@ -1,4 +1,4 @@
-package flixel.signals;
+package flixel.util;
 
 #if macro
 import haxe.macro.Expr;

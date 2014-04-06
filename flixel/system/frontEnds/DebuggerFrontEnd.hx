@@ -8,7 +8,7 @@ import flixel.system.debug.FlxDebugger.DebuggerLayout;
 import flixel.system.debug.Window;
 import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxStringUtil;
-import flixel.signals.FlxSignal;
+import flixel.util.FlxSignal;
 
 class DebuggerFrontEnd
 {	

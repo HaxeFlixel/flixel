@@ -1,7 +1,7 @@
 package flixel.system.frontEnds;
 
 import flixel.util.FlxPoint;
-import flixel.signals.FlxSignal;
+import flixel.util.FlxSignal;
 
 class SignalFrontEnd
 {

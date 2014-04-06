@@ -1,7 +1,7 @@
 package flixel.signals;
 
 import flixel.FlxState;
-import flixel.signals.FlxSignal;
+import flixel.util.FlxSignal;
 import massive.munit.Assert;
 
 class FlxSignalTest extends FlxTest
