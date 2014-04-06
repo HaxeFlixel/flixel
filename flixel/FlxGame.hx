@@ -106,7 +106,7 @@ class FlxGame extends Sprite
 	 */
 	private var _elapsedMS:Int;
 	/**
-	 * Milliseconds of time per step of the game loop. FlashEvent.g. 60 fps = 16ms.
+	 * Milliseconds of time per step of the game loop. e.g. 60 fps = 16ms.
 	 */
 	private var _stepMS:Int;
 	/**
@@ -247,7 +247,7 @@ class FlxGame extends Sprite
 	/**
 	 * Used to instantiate the guts of the flixel game object once we have a valid reference to the root.
 	 */
-	private function create(FlashEvent:Event):Void
+	private function create(_):Void
 	{
 		if (stage == null)
 		{
@@ -319,9 +319,11 @@ class FlxGame extends Sprite
 		// We need to listen for resize event which means new context
 		// it means that we need to recreate bitmapdatas of dumped tilesheets
 		stage.addEventListener(Event.RESIZE, onResize);
+		
+		onResize(null); // fixes initial _inputContainer scale
 	}
 	
-	private function onFocus(?FlashEvent:Event):Void
+	private function onFocus(_):Void
 	{
 		#if flash
 		if (!_lostFocus) 
@@ -366,7 +368,7 @@ class FlxGame extends Sprite
 		FlxG.inputs.onFocus();
 	}
 	
-	private function onFocusLost(?FlashEvent:Event):Void
+	private function onFocusLost(_):Void
 	{
 		#if flash
 		if (_lostFocus) 
@@ -403,7 +405,7 @@ class FlxGame extends Sprite
 	}
 	
 	@:allow(flixel.FlxG)
-	private function onResize(?E:Event):Void 
+	private function onResize(_):Void 
 	{
 		var width:Int = Lib.current.stage.stageWidth;
 		var height:Int = Lib.current.stage.stageHeight;
@@ -443,7 +445,7 @@ class FlxGame extends Sprite
 	/**
 	 * Handles the onEnterFrame call and figures out how many updates and draw calls to do.
 	 */
-	private function onEnterFrame(?FlashEvent:Event):Void
+	private function onEnterFrame(_):Void
 	{
 		ticks = Lib.getTimer();
 		_elapsedMS = ticks - _total;
