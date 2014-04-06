@@ -108,7 +108,7 @@ private class FlxSignal<THandler:AnyHandler, TListener> implements IFlxDestroyab
 	
 }
 
-class FlxSignal0 extends FlxSignal <FlxSignalHandler0, Void->Void>
+class FlxSignal0 extends FlxSignal<FlxSignalHandler0, Void->Void>
 {
 	public function dispatch():Void
 	{
@@ -124,13 +124,13 @@ class FlxSignal0 extends FlxSignal <FlxSignalHandler0, Void->Void>
 		}
 	}
 	
-	override function createHandler(listener:Void->Void, isOnce:Bool):FlxSignalHandler0 
+	override function createHandler(listener:Void->Void, isOnce:Bool)
 	{
 		return new FlxSignalHandler0(listener, isOnce);
 	}
 }
 
-class FlxSignal1<T1> extends FlxSignal <FlxSignalHandler1<T1>, T1->Void>
+class FlxSignal1<T1> extends FlxSignal<FlxSignalHandler1<T1>, T1->Void>
 {
 	public function dispatch(value1:T1):Void
 	{
@@ -146,13 +146,13 @@ class FlxSignal1<T1> extends FlxSignal <FlxSignalHandler1<T1>, T1->Void>
 		}
 	}
 	
-	override function createHandler(listener:T1->Void, isOnce:Bool):FlxSignalHandler1<T1>
+	override function createHandler(listener:T1->Void, isOnce:Bool)
 	{
 		return new FlxSignalHandler1<T1>(listener, isOnce);
 	}
 }
 
-class FlxSignal2<T1, T2> extends FlxSignal <FlxSignalHandler2<T1, T2>, T1->T2->Void>
+class FlxSignal2<T1, T2> extends FlxSignal<FlxSignalHandler2<T1, T2>, T1->T2->Void>
 {
 	public function dispatch(value1:T1, value2:T2):Void
 	{
@@ -168,8 +168,52 @@ class FlxSignal2<T1, T2> extends FlxSignal <FlxSignalHandler2<T1, T2>, T1->T2->V
 		}
 	}
 	
-	override function createHandler(listener:T1->T2->Void, isOnce:Bool):FlxSignalHandler2<T1, T2>
+	override function createHandler(listener:T1->T2->Void, isOnce:Bool)
 	{
 		return new FlxSignalHandler2<T1, T2>(listener, isOnce);
+	}
+}
+
+class FlxSignal3<T1, T2, T3> extends FlxSignal<FlxSignalHandler3<T1, T2, T3>, T1->T2->T3->Void>
+{
+	public function dispatch(value1:T1, value2:T2, value3:T3):Void
+	{
+		if (!active)
+			return;
+		
+		for (handler in _handlers)
+		{
+			handler.execute(value1, value2, value3);
+			
+			if (handler.isOnce)
+				remove(handler.listener);
+		}
+	}
+	
+	override function createHandler(listener:T1->T2->T3->Void, isOnce:Bool)
+	{
+		return new FlxSignalHandler3<T1, T2, T3>(listener, isOnce);
+	}
+}
+
+class FlxSignal4<T1, T2, T3, T4> extends FlxSignal<FlxSignalHandler4<T1, T2, T3, T4>, T1->T2->T3->T4->Void>
+{
+	public function dispatch(value1:T1, value2:T2, value3:T3, value4:T4):Void
+	{
+		if (!active)
+			return;
+		
+		for (handler in _handlers)
+		{
+			handler.execute(value1, value2, value3, value4);
+			
+			if (handler.isOnce)
+				remove(handler.listener);
+		}
+	}
+	
+	override function createHandler(listener:T1->T2->T3->T4->Void, isOnce:Bool)
+	{
+		return new FlxSignalHandler4<T1, T2, T3, T4>(listener, isOnce);
 	}
 }
