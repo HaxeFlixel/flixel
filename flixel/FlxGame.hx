@@ -19,7 +19,6 @@ import flixel.text.pxText.PxBitmapFont;
 import flixel.util.FlxAngle;
 import flixel.util.FlxColor;
 import flixel.util.FlxRandom;
-import flixel.util.FlxSignal;
 
 #if !FLX_NO_DEBUG
 import flixel.system.debug.FlxDebugger;

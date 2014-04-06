@@ -449,7 +449,7 @@ class FlxDebugger extends Sprite
 		
 		var drawDebugButton = addButton(RIGHT, new GraphicDrawDebug(0, 0), toggleDrawDebug, true);
 		drawDebugButton.toggled = !FlxG.debugger.drawDebug;
-		FlxG.debugger.drawDebugChanged.add(function(_) { drawDebugButton.toggled = FlxG.debugger.drawDebug; } );
+		FlxG.debugger.drawDebugChanged.add(function() { drawDebugButton.toggled = FlxG.debugger.drawDebug; } );
 		
 		#if FLX_RECORD
 		addButton(MIDDLE).addChild(vcr.runtimeDisplay);

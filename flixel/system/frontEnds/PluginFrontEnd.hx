@@ -8,7 +8,6 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxPath;
 import flixel.util.FlxStringUtil;
 import flixel.util.FlxTimer;
-import flixel.util.FlxSignal;
 
 @:allow(flixel.FlxGame)
 class PluginFrontEnd
