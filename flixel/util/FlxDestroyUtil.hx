@@ -24,10 +24,10 @@ class FlxDestroyUtil
 	 * 1) Clears the array structure
 	 * 2) Calls FlxDestroyUtil.destroy() on every element
 	 *
-	 * @param	Array<IFlxDestroyable>	An Array of IFlxDestroyable objects
+	 * @param	arr	An Array of IFlxDestroyable objects
+	 * @return	null
 	 */
-	
-	public static function destroyArray<T:IFlxDestroyable>(arr:Array<T>):Void
+	public static function destroyArray<T:IFlxDestroyable>(arr:Array<T>):T
 	{
 		if (arr != null)
 		{
@@ -37,6 +37,7 @@ class FlxDestroyUtil
 				destroy(ifx);
 			}
 		}
+		return null;
 	}
 	
 	/**
