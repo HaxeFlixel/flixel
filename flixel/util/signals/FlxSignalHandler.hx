@@ -1,10 +1,11 @@
 package flixel.util.signals;
+import flixel.interfaces.IFlxDestroyable;
 
 /**
  * ...
  * @author Kevin
  */
-class FlxSignalHandler<TListener>
+class FlxSignalHandler<TListener> implements IFlxDestroyable
 {
 	public var listener:TListener;
 	
@@ -14,6 +15,11 @@ class FlxSignalHandler<TListener>
 	{
 		this.listener = listener;
 		this.isOnce = isOnce;
+	}
+	
+	public function destroy()
+	{
+		listener = null;
 	}
 	
 }

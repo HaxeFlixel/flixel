@@ -41,7 +41,7 @@ private class FlxSignal<THandler:AnyHandler, TListener> implements IFlxDestroyab
 		return handler;
 	}
 	
-	public function removeAll():Void 
+	public inline function removeAll():Void 
 	{
 		FlxArrayUtil.clearArray(_handlers);
 	}
@@ -56,6 +56,9 @@ private class FlxSignal<THandler:AnyHandler, TListener> implements IFlxDestroyab
 	
 	public function destroy():Void
 	{
+		for (handler in _handlers)
+			handler.destroy();
+		
 		removeAll();
 		_handlers = null;
 	}
@@ -124,7 +127,7 @@ class FlxSignal0 extends FlxSignal<FlxSignalHandler0, Void->Void>
 		}
 	}
 	
-	override function createHandler(listener:Void->Void, isOnce:Bool)
+	override private inline function createHandler(listener:Void->Void, isOnce:Bool)
 	{
 		return new FlxSignalHandler0(listener, isOnce);
 	}
@@ -146,7 +149,7 @@ class FlxSignal1<T1> extends FlxSignal<FlxSignalHandler1<T1>, T1->Void>
 		}
 	}
 	
-	override function createHandler(listener:T1->Void, isOnce:Bool)
+	override private inline function createHandler(listener:T1->Void, isOnce:Bool)
 	{
 		return new FlxSignalHandler1<T1>(listener, isOnce);
 	}
@@ -168,7 +171,7 @@ class FlxSignal2<T1, T2> extends FlxSignal<FlxSignalHandler2<T1, T2>, T1->T2->Vo
 		}
 	}
 	
-	override function createHandler(listener:T1->T2->Void, isOnce:Bool)
+	override private inline function createHandler(listener:T1->T2->Void, isOnce:Bool)
 	{
 		return new FlxSignalHandler2<T1, T2>(listener, isOnce);
 	}
@@ -190,7 +193,7 @@ class FlxSignal3<T1, T2, T3> extends FlxSignal<FlxSignalHandler3<T1, T2, T3>, T1
 		}
 	}
 	
-	override function createHandler(listener:T1->T2->T3->Void, isOnce:Bool)
+	override private inline function createHandler(listener:T1->T2->T3->Void, isOnce:Bool)
 	{
 		return new FlxSignalHandler3<T1, T2, T3>(listener, isOnce);
 	}
@@ -212,7 +215,7 @@ class FlxSignal4<T1, T2, T3, T4> extends FlxSignal<FlxSignalHandler4<T1, T2, T3,
 		}
 	}
 	
-	override function createHandler(listener:T1->T2->T3->T4->Void, isOnce:Bool)
+	override private inline function createHandler(listener:T1->T2->T3->T4->Void, isOnce:Bool)
 	{
 		return new FlxSignalHandler4<T1, T2, T3, T4>(listener, isOnce);
 	}

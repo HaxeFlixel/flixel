@@ -7,11 +7,11 @@ import flixel.util.signals.FlxSignal;
 class SignalFrontEnd
 {
 	/**
-	 * Gets dispatched when a state change occurs. Signal.userData is null!
+	 * Gets dispatched when a state change occurs.
 	 */
 	public var stateSwitch(default, null):FlxSignal0;
 	/**
-	 * Gets dispatched when the game is resized. Signal.userData is a FlxPoint (FlxG.scaleMode.gameSize)!
+	 * Gets dispatched when the game is resized.
 	 */
 	public var gameResize(default, null):FlxSignal1<FlxPoint>;
 	public var gameReset(default, null):FlxSignal0;
