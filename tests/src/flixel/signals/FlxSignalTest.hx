@@ -6,11 +6,11 @@ import massive.munit.Assert;
 
 class FlxSignalTest extends FlxTest
 {
-	var signal0:FlxSignal0;
-	var signal1:FlxSignal1<Int>;
-	var signal2:FlxSignal2<Int, Int>;
-	var signal3:FlxSignal3<Int, Int, Int>;
-	var signal4:FlxSignal4<Int, Int, Int, Int>;
+	var signal0:FlxSignal;
+	var signal1:FlxTypedSignal<Int->Void>;
+	var signal2:FlxTypedSignal<Int->Int->Void>;
+	var signal3:FlxTypedSignal<Int->Int->Int->Void>;
+	var signal4:FlxTypedSignal<Int->Int->Int->Int->Void>;
 	
 	var flag:Bool = false;
 	var counter:Int = 0;
@@ -32,21 +32,14 @@ class FlxSignalTest extends FlxTest
 	@Before
 	function before():Void
 	{
-		signal0 = new FlxSignal0();
-		signal1 = new FlxSignal1<Int>();
-		signal2 = new FlxSignal2<Int, Int>();
-		signal3 = new FlxSignal3<Int, Int, Int>();
-		signal4 = new FlxSignal4<Int, Int, Int, Int>();
+		signal0 = new FlxSignal();
+		signal1 = new FlxTypedSignal();
+		signal2 = new FlxTypedSignal();
+		signal3 = new FlxTypedSignal();
+		signal4 = new FlxTypedSignal();
 		
 		flag = false;
 		counter = 0;
-	}
-	
-	@Test
-	function testAddNull():Void
-	{
-		Assert.isNull(signal0.add(null));
-		signal0.dispatch(); // crash if null could be added
 	}
 	
 	@Test
@@ -81,13 +74,6 @@ class FlxSignalTest extends FlxTest
 	{
 		signal0.add(callbackEmpty1);
 		Assert.isTrue(signal0.has(callbackEmpty1));
-	}
-	
-	@Test
-	function testHasNull():Void
-	{
-		signal0.add(null);
-		Assert.isFalse(signal0.has(null));
 	}
 	
 	@Test
@@ -161,15 +147,5 @@ class FlxSignalTest extends FlxTest
 		signal0.dispatch();
 		
 		Assert.areEqual(3, counter);
-	}
-	
-	@Test
-	function testActiveFalse():Void
-	{
-		signal0.add(callbackSetFlagTrue);
-		signal0.active = false;
-		signal0.dispatch();
-		
-		Assert.isFalse(flag);
 	}
 }

@@ -1,80 +1,105 @@
 package flixel.signals;
 
-import flixel.interfaces.IFlxDestroyable;
-import flixel.signals.FlxSignalHandler;
-import flixel.util.FlxArrayUtil;
-import flixel.util.FlxDestroyUtil;
+#if macro
+import haxe.macro.Expr;
+#end
 
-/**
- * ...
- * @author Kevin
- */
-typedef AnyHandler = FlxSignalHandler<Dynamic>;
-typedef AnySignal = FlxSignal<Dynamic, Dynamic>;
- 
-private class FlxSignal<THandler:AnyHandler, TListener> implements IFlxDestroyable
+import flixel.interfaces.IFlxSignal;
+import flixel.interfaces.IFlxDestroyable;
+
+typedef FlxSignal = FlxTypedSignal<Void->Void>;
+
+@:multiType
+abstract FlxTypedSignal<T>(IFlxSignal<T>)
+{
+	public function new();
+	
+	public var dispatch(get, never):T;
+	private inline function get_dispatch() return this.dispatch;
+	
+	public inline function add(listener:T):Void this.add(listener);
+	public inline function addOnce(listener:T):Void this.addOnce(listener);
+	public inline function remove(listener:T):Void this.remove(listener);
+	public inline function has(listener:T):Bool return this.has(listener);
+	public inline function removeAll():Void this.removeAll();
+	
+	@:to static inline function toSignal0(signal:IFlxSignal<Void->Void>):FlxSignal0 return new FlxSignal0();
+	@:to static inline function toSignal1<T1>(signal:IFlxSignal<T1->Void>):FlxSignal1<T1> return new FlxSignal1();
+	@:to static inline function toSignal2<T1,T2>(signal:IFlxSignal<T1->T2->Void>):FlxSignal2<T1,T2> return new FlxSignal2();
+	@:to static inline function toSignal3<T1,T2,T3>(signal:IFlxSignal<T1->T2->T3->Void>):FlxSignal3<T1,T2,T3> return new FlxSignal3();
+	@:to static inline function toSignal4<T1,T2,T3,T4>(signal:IFlxSignal<T1->T2->T3->T4->Void>):FlxSignal4<T1,T2,T3,T4> return new FlxSignal4();
+}
+
+private class FlxSignalBase<T> implements IFlxSignal<T> 
 {
 	/**
-	 * If this signal is active and should dispatch events. IMPORTANT: Setting this 
-	 * property during a  dispatch will only affect the next dispatch.
+	 * Typed function reference used to dispatch this signal.
 	 */
-	public var active:Bool = true;	
+	public var dispatch:T;
 	
-	private var _handlers:Array<THandler>;	
+	private var _handlers:Array<FlxSignalHandler<T>>;
 	
 	public function new() 
 	{
-		_handlers = [];			
+		_handlers = [];
 	}
 	
-	public function add(listener:TListener)
+	public function add(listener:T)
+	{
+		if (listener != null)
+			registerListener(listener, false);
+	}
+	
+	public function addOnce(listener:T):Void
+	{
+		if (listener != null)
+			registerListener(listener, true);
+	}
+	
+	public function remove(listener:T):Void
+	{
+		if (listener != null)
+		{
+			var handler = getHandler(listener);
+			if (handler != null)
+			{
+				_handlers.remove(handler);
+				handler.destroy();
+				handler = null;
+			}
+		}
+	}
+	
+	public function has(listener:T):Bool
 	{
 		if (listener == null)
-			return null;
-			
-		return registerListener(listener);
-	}
-	
-	public function addOnce(listener:TListener)
-	{
-		if (listener == null)
-			return null;
-			
-		return registerListener(listener, true);
-	}
-	
-	public function remove(listener:TListener):THandler
-	{
-		var handler = getHandler(listener);
-		_handlers.remove(handler);
-		return handler;
+			return false;
+		return getHandler(listener) != null;
 	}
 	
 	public inline function removeAll():Void 
 	{
-		FlxArrayUtil.clearArray(_handlers);
-	}
-	
-	public function has(listener:TListener):Bool
-	{
-		if (listener == null)
-			return false;
-		
-		return getHandler(listener) != null;
+		while (_handlers.length > 0)
+		{
+			var handler = _handlers.pop();
+			handler.destroy();
+			handler = null;
+		}
 	}
 	
 	public function destroy():Void
 	{
-		_handlers = FlxDestroyUtil.destroyArray(_handlers);
+		removeAll();
+		_handlers = null;
 	}
 	
-	private function registerListener(listener:TListener, isOnce:Bool = false):THandler
+	private function registerListener(listener:T, isOnce:Bool):FlxSignalHandler<T>
 	{
 		var handler = getHandler(listener);
 		
 		if (handler == null)
 		{
-			handler = createHandler(listener, isOnce);
+			handler = new FlxSignalHandler<T>(listener, isOnce);
 			_handlers.push(handler);
 			return handler;
 		}
@@ -89,14 +114,7 @@ private class FlxSignal<THandler:AnyHandler, TListener> implements IFlxDestroyab
 		}
 	}
 	
-	/**
-	 * Return the handler of the listener or null if not exist.
-	 * Does not care about the isOnce property.
-	 * 
-	 * @param	listener
-	 * @return	the handler, or null if the listener is not yet added
-	 */
-	private function getHandler(listener:TListener):THandler
+	private function getHandler(listener:T):FlxSignalHandler<T>
 	{
 		for (handler in _handlers)
 		{
@@ -105,123 +123,90 @@ private class FlxSignal<THandler:AnyHandler, TListener> implements IFlxDestroyab
 				return handler; // Listener was already registered.
 			}
 		}
-		
 		return null; // Listener not yet registered.
 	}
 	
-	private function createHandler(listener:TListener, isOnce:Bool):THandler
+	macro static function buildDispatch(exprs:Array<Expr>):Expr
 	{
-		throw "This function must be overridden.";
-		return null;
+		return macro
+		{ 
+			for (handler in _handlers)
+			{
+				handler.listener($a{exprs});
+				
+				if (handler.isOnce)
+					remove(handler.listener);
+			}
+		}
 	}
 }
 
-class FlxSignal0 extends FlxSignal<FlxSignalHandler0, Void->Void>
+class FlxSignal0 extends FlxSignalBase<Void->Void>
 {
-	public function dispatch():Void
+	public function new()
 	{
-		if (!active)
-			return;
-		
-		for (handler in _handlers)
-		{
-			handler.execute();
-			
-			if (handler.isOnce)
-				remove(handler.listener);
-		}
+		super();
+		this.dispatch = dispatch0;
 	}
 	
-	override private inline function createHandler(listener:Void->Void, isOnce:Bool)
+	public function dispatch0():Void
 	{
-		return new FlxSignalHandler0(listener, isOnce);
+		FlxSignalBase.buildDispatch();
 	}
 }
 
-class FlxSignal1<T1> extends FlxSignal<FlxSignalHandler1<T1>, T1->Void>
+class FlxSignal1<T1> extends FlxSignalBase<T1->Void>
 {
-	public function dispatch(value1:T1):Void
+	public function new()
 	{
-		if (!active)
-			return;
-		
-		for (handler in _handlers)
-		{
-			handler.execute(value1);
-			
-			if (handler.isOnce)
-				remove(handler.listener);
-		}
+		super();
+		this.dispatch = dispatch1;
 	}
 	
-	override private inline function createHandler(listener:T1->Void, isOnce:Bool)
+	public function dispatch1(value1:T1):Void
 	{
-		return new FlxSignalHandler1<T1>(listener, isOnce);
+		FlxSignalBase.buildDispatch(value1);
 	}
 }
 
-class FlxSignal2<T1, T2> extends FlxSignal<FlxSignalHandler2<T1, T2>, T1->T2->Void>
+class FlxSignal2<T1,T2> extends FlxSignalBase<T1->T2->Void>
 {
-	public function dispatch(value1:T1, value2:T2):Void
+	public function new()
 	{
-		if (!active)
-			return;
-		
-		for (handler in _handlers)
-		{
-			handler.execute(value1, value2);
-			
-			if (handler.isOnce)
-				remove(handler.listener);
-		}
+		super();
+		this.dispatch = dispatch2;
 	}
 	
-	override private inline function createHandler(listener:T1->T2->Void, isOnce:Bool)
+	public function dispatch2(value1:T1, value2:T2):Void
 	{
-		return new FlxSignalHandler2<T1, T2>(listener, isOnce);
+		FlxSignalBase.buildDispatch(value1, value2);
 	}
 }
 
-class FlxSignal3<T1, T2, T3> extends FlxSignal<FlxSignalHandler3<T1, T2, T3>, T1->T2->T3->Void>
+class FlxSignal3<T1,T2,T3> extends FlxSignalBase<T1->T2->T3->Void>
 {
-	public function dispatch(value1:T1, value2:T2, value3:T3):Void
+	public function new()
 	{
-		if (!active)
-			return;
-		
-		for (handler in _handlers)
-		{
-			handler.execute(value1, value2, value3);
-			
-			if (handler.isOnce)
-				remove(handler.listener);
-		}
+		super();
+		this.dispatch = dispatch3;
 	}
 	
-	override private inline function createHandler(listener:T1->T2->T3->Void, isOnce:Bool)
+	public function dispatch3(value1:T1, value2:T2, value3:T3):Void
 	{
-		return new FlxSignalHandler3<T1, T2, T3>(listener, isOnce);
+		FlxSignalBase.buildDispatch(value1, value2, value3);
 	}
 }
 
-class FlxSignal4<T1, T2, T3, T4> extends FlxSignal<FlxSignalHandler4<T1, T2, T3, T4>, T1->T2->T3->T4->Void>
+class FlxSignal4<T1,T2,T3,T4> extends FlxSignalBase<T1->T2->T3->T4->Void>
 {
-	public function dispatch(value1:T1, value2:T2, value3:T3, value4:T4):Void
+	public function new()
 	{
-		if (!active)
-			return;
-		
-		for (handler in _handlers)
-		{
-			handler.execute(value1, value2, value3, value4);
-			
-			if (handler.isOnce)
-				remove(handler.listener);
-		}
+		super();
+		this.dispatch = dispatch4;
 	}
 	
-	override private inline function createHandler(listener:T1->T2->T3->T4->Void, isOnce:Bool)
+	public function dispatch4(value1:T1, value2:T2, value3:T3, value4:T4):Void
 	{
-		return new FlxSignalHandler4<T1, T2, T3, T4>(listener, isOnce);
+		FlxSignalBase.buildDispatch(value1, value2, value3, value4);
 	}
 }
