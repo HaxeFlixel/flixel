@@ -64,8 +64,7 @@ private class FlxSignal<THandler:AnyHandler, TListener> implements IFlxDestroyab
 	
 	public function destroy():Void
 	{
-		FlxDestroyUtil.destroyArray(_handlers);
-		_handlers = null;
+		_handlers = FlxDestroyUtil.destroyArray(_handlers);
 	}
 	
 	private function registerListener(listener:TListener, isOnce:Bool = false):THandler
