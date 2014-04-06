@@ -1,4 +1,5 @@
 package flixel.util.signals;
+import flixel.interfaces.IFlxDestroyable;
 import flixel.util.signals.FlxSignalHandler;
 
 /**
@@ -8,8 +9,8 @@ import flixel.util.signals.FlxSignalHandler;
 typedef AnyHandler = FlxSignalHandler<Dynamic>;
 typedef AnySignal = FlxSignal<Dynamic, Dynamic>;
  
-private class FlxSignal<THandler:AnyHandler, TListener>
-{	
+private class FlxSignal<THandler:AnyHandler, TListener> implements IFlxDestroyable
+{
 	/**
 	 * If this signal is active and should dispatch events. IMPORTANT: Setting this 
 	 * property during a  dispatch will only affect the next dispatch.
@@ -31,13 +32,32 @@ private class FlxSignal<THandler:AnyHandler, TListener>
 	public function addOnce(listener:TListener)
 	{
 		return registerListener(listener, true);
-	}	
+	}
 	
 	public function remove(listener:TListener):THandler
 	{
 		var handler = getHandler(listener);
 		_handlers.remove(handler);
 		return handler;
+	}
+	
+	public function removeAll():Void 
+	{
+		FlxArrayUtil.clearArray(_handlers);
+	}
+	
+	public function has(listener:TListener):Bool
+	{
+		if (listener == null)
+			return false;
+		
+		return getHandler(listener) != null;
+	}
+	
+	public function destroy():Void
+	{
+		removeAll();
+		_handlers = null;
 	}
 	
 	private function registerListener(listener:TListener, isOnce:Bool = false):THandler
