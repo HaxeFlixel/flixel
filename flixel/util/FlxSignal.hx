@@ -33,12 +33,12 @@ abstract FlxTypedSignal<T>(IFlxSignal<T>)
 private class FlxSignalHandler<T> implements IFlxDestroyable
 {
 	public var listener:T;
-	public var isOnce(default, null):Bool = false;
+	public var dispatchOnce(default, null):Bool = false;
 	
-	public function new(listener:T, isOnce:Bool) 
+	public function new(listener:T, dispatchOnce:Bool) 
 	{
 		this.listener = listener;
-		this.isOnce = isOnce;
+		this.dispatchOnce = dispatchOnce;
 	}
 	
 	public function destroy()
@@ -110,13 +110,13 @@ private class FlxSignalBase<T> implements IFlxSignal<T>
 		_handlers = null;
 	}
 	
-	private function registerListener(listener:T, isOnce:Bool):FlxSignalHandler<T>
+	private function registerListener(listener:T, dispatchOnce:Bool):FlxSignalHandler<T>
 	{
 		var handler = getHandler(listener);
 		
 		if (handler == null)
 		{
-			handler = new FlxSignalHandler<T>(listener, isOnce);
+			handler = new FlxSignalHandler<T>(listener, dispatchOnce);
 			_handlers.push(handler);
 			return handler;
 		}
@@ -124,7 +124,7 @@ private class FlxSignalBase<T> implements IFlxSignal<T>
 		{
 			// If the listener was previously added, definitely don't add it again.
 			// But throw an exception if their once values differ.
-			if (handler.isOnce != isOnce)
+			if (handler.dispatchOnce != dispatchOnce)
 				throw "You cannot addOnce() then add() the same listener without removing the relationship first.";
 			else
 				return handler;
@@ -151,7 +151,7 @@ private class FlxSignalBase<T> implements IFlxSignal<T>
 			{
 				handler.listener($a{exprs});
 				
-				if (handler.isOnce)
+				if (handler.dispatchOnce)
 					remove(handler.listener);
 			}
 		}
