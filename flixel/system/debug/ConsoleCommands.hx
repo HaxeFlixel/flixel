@@ -172,9 +172,8 @@ class ConsoleCommands
 		var pathToVariable:PathToVariable = ConsoleUtil.resolveObjectAndVariableFromMap(ObjectAndVariable, _console.registeredObjects);
 		
 		// In case resolving failed
-		if (pathToVariable == null) {
+		if (pathToVariable == null)
 			return;
-		}
 		
 		var object:Dynamic = pathToVariable.object;
 		var varName:String = pathToVariable.variableName;
@@ -186,6 +185,12 @@ class ConsoleCommands
 		}
 		catch (e:Dynamic)
 		{
+			return;
+		}
+		
+		if (variable == null)
+		{
+			FlxG.log.error("set: '" +  ObjectAndVariable + "' could not be found");
 			return;
 		}
 		
@@ -218,9 +223,8 @@ class ConsoleCommands
 		Reflect.setProperty(object, varName, NewVariableValue);
 		ConsoleUtil.log("set: " + FlxStringUtil.getClassName(object, true) + "." + varName + " is now " + NewVariableValue);
 		
-		if (WatchName != null) {
+		if (WatchName != null)
 			FlxG.watch.add(object, varName, WatchName);
-		}
 	}
 	
 	private function call(FunctionAlias:String, ?Params:Array<String>):Void
