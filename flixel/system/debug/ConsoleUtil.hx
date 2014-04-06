@@ -179,7 +179,7 @@ class ConsoleUtil
 	
 	/**
 	 * Type.getInstanceFields() returns all fields, including all those from super classes. This function allows
-	 * controlling the number of super classes whose fields should still be included in the list using Type.getSuperFields().
+	 * controlling the number of super classes whose fields should still be included in the list using Type.getSuperClass().
 	 * 
 	 * Example:
 	 * 	For a class PlayState with the following inheritance:
@@ -197,7 +197,7 @@ class ConsoleUtil
 			while (curClass != null) // no more super classes if null
 			{
 				superClasses.push(curClass);
-				curClass = Type.getSuperClass(curClass);					
+				curClass = Type.getSuperClass(curClass);
 			}
 			
 			superClasses.reverse();

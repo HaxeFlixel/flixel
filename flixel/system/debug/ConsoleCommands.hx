@@ -241,7 +241,7 @@ class ConsoleCommands
 			var instance = Reflect.getProperty(pathToVariable.object, pathToVariable.variableName);
 			if (instance == null)
 				return;
-			
+		
 			var cl = Type.getClass(instance);
 			fields = ConsoleUtil.getInstanceFieldsAdvanced(cl, NumSupperClassesToInclude);
 		}
@@ -250,7 +250,7 @@ class ConsoleCommands
 		var output:String = "";
 		for (field in fields)
 		{
-			output += field + "\t\n";
+			output += field + "\n";
 		}
 		ConsoleUtil.log(output);
 	}
