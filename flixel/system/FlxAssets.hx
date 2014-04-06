@@ -184,25 +184,25 @@ class FlxAssets
 	@:access(openfl.AssetType)
 	public static function cacheSounds():Void
 	{
-		#if android
 		Assets.initialize();
 		
 		var defaultLibrary = Assets.libraries.get("default");
 		
-		if (defaultLibrary == null) return;
+		if (defaultLibrary == null) 
+			return;
 		
 		var types:Map<String, Dynamic> = DefaultAssetLibrary.type;
 		
-		if (types == null) return;
+		if (types == null) 
+			return;
 		
 		for (key in types.keys())
 		{
 			if (types.get(key) == AssetType.SOUND)
 			{
-				FlxG.sound.add(key);
+				FlxG.sound.cache(key);
 			}
 		}
-		#end
 	}
 	#end
 #end
