@@ -24,14 +24,12 @@ private class FlxSignal<THandler:AnyHandler, TListener> implements IFlxDestroyab
 		_handlers = [];			
 	}
 	
-	public function add(listener:TListener)
+	public function add(listener:TListener, isOnce:Bool = false)
 	{
-		return registerListener(listener);
-	}
-	
-	public function addOnce(listener:TListener)
-	{
-		return registerListener(listener, true);
+		if (listener == null)
+			return null;
+			
+		return registerListener(listener, isOnce);
 	}
 	
 	public function remove(listener:TListener):THandler
@@ -56,10 +54,7 @@ private class FlxSignal<THandler:AnyHandler, TListener> implements IFlxDestroyab
 	
 	public function destroy():Void
 	{
-		for (handler in _handlers)
-			handler.destroy();
-		
-		removeAll();
+		FlxDestroyUtil.destroyArray(_handlers);
 		_handlers = null;
 	}
 	

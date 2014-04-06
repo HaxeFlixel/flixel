@@ -32,7 +32,7 @@ class FlxSignalHandler0 extends FlxSignalHandler <Void->Void>
 	}
 }
 
-class FlxSignalHandler1<T1> extends FlxSignalHandler <T1->Void>
+class FlxSignalHandler1<T1> extends FlxSignalHandler<T1->Void>
 {
 	public inline function execute(value1:T1):Void
 	{
@@ -40,7 +40,7 @@ class FlxSignalHandler1<T1> extends FlxSignalHandler <T1->Void>
 	}
 }
 
-class FlxSignalHandler2<T1, T2> extends FlxSignalHandler <T1->T2->Void>
+class FlxSignalHandler2<T1, T2> extends FlxSignalHandler<T1->T2->Void>
 {
 	public inline function execute(value1:T1, value2:T2):Void
 	{
@@ -48,7 +48,7 @@ class FlxSignalHandler2<T1, T2> extends FlxSignalHandler <T1->T2->Void>
 	}
 }
 
-class FlxSignalHandler3<T1, T2, T3> extends FlxSignalHandler <T1->T2->T3->Void>
+class FlxSignalHandler3<T1, T2, T3> extends FlxSignalHandler<T1->T2->T3->Void>
 {
 	public inline function execute(value1:T1, value2:T2, value3:T3):Void
 	{
@@ -56,7 +56,7 @@ class FlxSignalHandler3<T1, T2, T3> extends FlxSignalHandler <T1->T2->T3->Void>
 	}
 }
 
-class FlxSignalHandler4<T1, T2, T3, T4> extends FlxSignalHandler <T1->T2->T3->T4->Void>
+class FlxSignalHandler4<T1, T2, T3, T4> extends FlxSignalHandler<T1->T2->T3->T4->Void>
 {
 	public inline function execute(value1:T1, value2:T2, value3:T3, value4:T4):Void
 	{
