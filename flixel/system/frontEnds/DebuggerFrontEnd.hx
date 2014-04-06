@@ -8,7 +8,7 @@ import flixel.system.debug.FlxDebugger.DebuggerLayout;
 import flixel.system.debug.Window;
 import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxStringUtil;
-import flixel.signals.FlxSignal;
+import flixel.util.FlxSignal;
 
 class DebuggerFrontEnd
 {	
@@ -33,7 +33,7 @@ class DebuggerFrontEnd
 	/**
 	 * Dispatched when drawDebug is changed.
 	 */
-	public var drawDebugChanged(default, null):FlxSignal0;
+	public var drawDebugChanged(default, null):FlxSignal;
 	
 	public var visible(default, set):Bool = false;
 	
@@ -141,7 +141,7 @@ class DebuggerFrontEnd
 		#if !FLX_NO_KEYBOARD
 		toggleKeys = ["GRAVEACCENT", "BACKSLASH"];
 		#end
-		drawDebugChanged = new FlxSignal0();
+		drawDebugChanged = new FlxSignal();
 	}
 	
 	private inline function set_drawDebug(Value:Bool):Bool
