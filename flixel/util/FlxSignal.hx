@@ -30,6 +30,23 @@ abstract FlxTypedSignal<T>(IFlxSignal<T>)
 	@:to static inline function toSignal4<T1,T2,T3,T4>(signal:IFlxSignal<T1->T2->T3->T4->Void>):FlxSignal4<T1,T2,T3,T4> return new FlxSignal4();
 }
 
+private class FlxSignalHandler<T> implements IFlxDestroyable
+{
+	public var listener:T;
+	public var isOnce(default, null):Bool = false;
+	
+	public function new(listener:T, isOnce:Bool) 
+	{
+		this.listener = listener;
+		this.isOnce = isOnce;
+	}
+	
+	public function destroy()
+	{
+		listener = null;
+	}
+}
+
 private class FlxSignalBase<T> implements IFlxSignal<T> 
 {
 	/**
@@ -141,7 +158,7 @@ private class FlxSignalBase<T> implements IFlxSignal<T>
 	}
 }
 
-class FlxSignal0 extends FlxSignalBase<Void->Void>
+private class FlxSignal0 extends FlxSignalBase<Void->Void>
 {
 	public function new()
 	{
@@ -155,7 +172,7 @@ class FlxSignal0 extends FlxSignalBase<Void->Void>
 	}
 }
 
-class FlxSignal1<T1> extends FlxSignalBase<T1->Void>
+private class FlxSignal1<T1> extends FlxSignalBase<T1->Void>
 {
 	public function new()
 	{
@@ -169,7 +186,7 @@ class FlxSignal1<T1> extends FlxSignalBase<T1->Void>
 	}
 }
 
-class FlxSignal2<T1,T2> extends FlxSignalBase<T1->T2->Void>
+private class FlxSignal2<T1,T2> extends FlxSignalBase<T1->T2->Void>
 {
 	public function new()
 	{
@@ -183,7 +200,7 @@ class FlxSignal2<T1,T2> extends FlxSignalBase<T1->T2->Void>
 	}
 }
 
-class FlxSignal3<T1,T2,T3> extends FlxSignalBase<T1->T2->T3->Void>
+private class FlxSignal3<T1,T2,T3> extends FlxSignalBase<T1->T2->T3->Void>
 {
 	public function new()
 	{
@@ -197,7 +214,7 @@ class FlxSignal3<T1,T2,T3> extends FlxSignalBase<T1->T2->T3->Void>
 	}
 }
 
-class FlxSignal4<T1,T2,T3,T4> extends FlxSignalBase<T1->T2->T3->T4->Void>
+private class FlxSignal4<T1,T2,T3,T4> extends FlxSignalBase<T1->T2->T3->T4->Void>
 {
 	public function new()
 	{
