@@ -195,7 +195,7 @@ class FlxTilemap extends FlxObject
 	#end
 	
 	/** 
- 	 * A helper buffer for calculating if the size of screen changed
+ 	 * A helper buffer for calculating number of columns and rows when the game size changed
  	 */
  	private static var _helperBuffer:FlxTilemapBuffer;
 	
