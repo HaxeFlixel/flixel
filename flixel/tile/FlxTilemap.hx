@@ -54,6 +54,7 @@ class FlxTilemap extends FlxObject
 	
 	/** 
  	 * A helper buffer for calculating number of columns and rows when the game size changed
+	 * We are only using its member functions that's why it is an empty instance
  	 */
  	private static var _helperBuffer:FlxTilemapBuffer = Type.createEmptyInstance(FlxTilemapBuffer);
 	
