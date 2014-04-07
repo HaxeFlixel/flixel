@@ -194,6 +194,11 @@ class FlxTilemap extends FlxObject
 	private var _rectIDs:Array<Int>;
 	#end
 	
+	/** 
+ 	 * A helper buffer for calculating if the size of screen changed
+ 	 */
+ 	private static var _helperBuffer:FlxTilemapBuffer;
+	
 	/**
 	 * The tilemap constructor just initializes some basic variables.
 	 */
@@ -215,6 +220,11 @@ class FlxTilemap extends FlxObject
 		
 		scale = new FlxCallbackPoint(setScaleXCallback, setScaleYCallback, setScaleXYCallback);
 		scale.set(1, 1);
+		
+		if (_helperBuffer == null)
+			_helperBuffer = Type.createEmptyInstance(FlxTilemapBuffer);
+		
+		FlxG.signals.gameResize.add(onGameResize);
 	}
 	
 	/**
@@ -267,6 +277,7 @@ class FlxTilemap extends FlxObject
 		_rectIDs = null;
 		#end
 		
+		_helperBuffer = null;		
 		framesData = null;
 		cachedGraphics = null;
 		region = null;
@@ -2115,6 +2126,33 @@ class FlxTilemap extends FlxObject
 		}
 		
 		_data[Index] += 1;
+	}
+	
+	/**
+	 * Signal listener for gameResize 
+	 * @param	width
+	 * @param	height
+	 */
+	private function onGameResize(width:Int, height:Int):Void
+	{
+		for(i in 0...cameras.length)
+		{
+			var camera = cameras[i];
+			
+			// Calculate the required number of columns and rows
+			_helperBuffer.updateColumns(_tileWidth, widthInTiles, scale.x, camera);
+			_helperBuffer.updateRows(_tileHeight, heightInTiles, scale.y, camera);
+			
+			// Create a new buffer if the number of columns and rows differs
+			if(_buffers[i] == null || _helperBuffer.columns != _buffers[i].columns || _helperBuffer.rows != _buffers[i].rows)			
+			{
+				if (_buffers[i] != null)
+					_buffers[i].destroy();
+
+				_buffers[i] = new FlxTilemapBuffer(_tileWidth, _tileHeight, widthInTiles, heightInTiles, camera, scale.x, scale.y);
+				_buffers[i].pixelPerfectRender = pixelPerfectRender;
+			}
+		}
 	}
 	
 	/**
