@@ -18,6 +18,7 @@ import flixel.util.FlxAngle;
 import flixel.util.FlxColor;
 import flixel.util.FlxColorUtil;
 import flixel.util.FlxDestroyUtil;
+import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
 import flixel.util.loaders.CachedGraphics;
 import flixel.util.loaders.TexturePackerData;
@@ -82,12 +83,6 @@ class FlxSprite extends FlxObject
 	public var region(default, null):Region;
 	public var framesData(default, null):FlxSpriteFrames;
 	public var cachedGraphics(default, set):CachedGraphics;
-	/**
-	 * Whether or not the coordinates should be rounded during draw(), true by default (recommended for pixel art). 
-	 * Only affects tilesheet rendering and rendering using BitmapData.draw() in blitting.
-	 * (copyPixels() only renders on whole pixels by nature). Causes draw() to be used if false, which is more expensive.
-	 */
-	public var pixelPerfectRender(default, set):Bool = true;
 	/**
 	 * The minimum angle (out of 360°) for which a new baked rotation exists. Example: 90 means there 
 	 * are 4 baked rotations in the spritesheet. 0 if this sprite does not have any baked rotations.
@@ -726,7 +721,8 @@ class FlxSprite extends FlxObject
 	override public function draw():Void
 	{
 		#if !FLX_NO_DEBUG
-		super.draw();
+		if (FlxG.debugger.drawDebug)
+			drawDebug();
 		#end
 		
 		if (alpha == 0)
@@ -1303,7 +1299,7 @@ class FlxSprite extends FlxObject
 			}
 			
 			var radius:Float = Math.max(radiusX, radiusY);
-			radius *= 1.415; // Math.sqrt(2);
+			radius *= FlxMath.SQUARE_ROOT_OF_TWO;
 			
 			minX += origin.x;
 			maxX = minX + radius;
@@ -1522,10 +1518,5 @@ class FlxSprite extends FlxObject
 		}
 		
 		return cachedGraphics = Value;
-	}
-	
-	private function set_pixelPerfectRender(Value:Bool):Bool 
-	{
-		return pixelPerfectRender = Value;
 	}
 }

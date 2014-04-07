@@ -13,17 +13,16 @@ import FlxTest;
  */
 
 class TestSuite extends massive.munit.TestSuite
-{		
-
+{
 	public function new()
 	{
 		super();
-
-		add(flixel.FlxCameraTest);
-		add(flixel.FlxGTest);
-		add(flixel.FlxSpriteTest);
-		add(flixel.FlxStateTest);
-		add(flixel.util.FlxSignalTest);
+		
+		add(FlxCameraTest);
+		add(FlxGTest);
+		add(FlxSpriteTest);
+		add(FlxStateTest);
+		add(FlxSignalTest);
 		add(FlxTest);
 	}
 }

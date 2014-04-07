@@ -9,46 +9,65 @@ class FlxDestroyUtil
 	/**
 	 * Checks if an object is not null before calling destroy(), always returns null.
 	 * 
-	 * @param	Object	An IFlxDestroyable object that will be destroyed if it's not null.
+	 * @param	object	An IFlxDestroyable object that will be destroyed if it's not null.
 	 * @return	null
 	 */
-	public static function destroy<T:IFlxDestroyable>(Object:Null<IFlxDestroyable>):T
+	public static function destroy<T:IFlxDestroyable>(object:Null<IFlxDestroyable>):T
 	{
-		if (Object != null)
-			Object.destroy(); 
+		if (object != null)
+			object.destroy(); 
 		return null;
 	}
 	
 	/**
-	 * Completely destroys an array of destroyable objects:
+	 * Completely destroys an Array of destroyable objects:
 	 * 1) Clears the array structure
 	 * 2) Calls FlxDestroyUtil.destroy() on every element
 	 *
-	 * @param	Array<IFlxDestroyable>	An Array of IFlxDestroyable objects
+	 * @param	array	An Array of IFlxDestroyable objects
+	 * @return	null
 	 */
-	
-	public static function destroyArray<T:IFlxDestroyable>(arr:Array<T>):Void
+	public static function destroyArray<T:IFlxDestroyable>(array:Array<T>):Array<T>
 	{
-		if (arr != null)
+		if (array != null)
 		{
-			while (arr.length > 0)
+			while (array.length > 0)
 			{
-				var ifx:IFlxDestroyable = arr.pop();
-				destroy(ifx);
+				destroy(array.pop());
 			}
 		}
+		return null;
 	}
 	
 	/**
 	 * Checks if an object is not null before putting it back into the pool, always returns null.
 	 * 
-	 * @param	Object	An IFlxPooled object that will be put back into the pool if it's not null
+	 * @param	object	An IFlxPooled object that will be put back into the pool if it's not null
 	 * @return	null
 	 */
-	public static function put<T:IFlxPooled>(Object:IFlxPooled):T
+	public static function put<T:IFlxPooled>(object:IFlxPooled):T
 	{
-		if (Object != null)
-			Object.put();
+		if (object != null)
+			object.put();
+		return null;
+	}
+	
+	/**
+	 * Puts all objects in an Array of IFlxPooled objects back into 
+	 * the pool by calling FlxDestroyUtil.put() on them
+	 *
+	 * @param	array	An Array of IFlxPooled objects
+	 * @return	null
+	 */
+	public static function putArray<T:IFlxPooled>(array:Array<T>):Array<T>
+	{
+		if (array != null)
+		{
+			while (array.length > 0)
+			{
+				put(array.pop());
+			}
+		}
 		return null;
 	}
 	

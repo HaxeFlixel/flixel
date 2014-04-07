@@ -446,7 +446,10 @@ class FlxDebugger extends Sprite
 		addButton(RIGHT, new GraphicWatch(0, 0), watch.toggleVisibility, true).toggled = !watch.visible; 
 		addButton(RIGHT, new GraphicConsole(0, 0), console.toggleVisibility, true).toggled = !console.visible; 
 		addButton(RIGHT, new GraphicStats(0, 0), stats.toggleVisibility, true).toggled = !stats.visible; 
-		addButton(RIGHT, new GraphicDrawDebug(0, 0), toggleVisualDebug, true).toggled = !FlxG.debugger.drawDebug;
+		
+		var drawDebugButton = addButton(RIGHT, new GraphicDrawDebug(0, 0), toggleDrawDebug, true);
+		drawDebugButton.toggled = !FlxG.debugger.drawDebug;
+		FlxG.debugger.drawDebugChanged.add(function() { drawDebugButton.toggled = FlxG.debugger.drawDebug; } );
 		
 		#if FLX_RECORD
 		addButton(MIDDLE).addChild(vcr.runtimeDisplay);
@@ -460,10 +463,8 @@ class FlxDebugger extends Sprite
 	
 	/**
 	 * Mouse handler that helps with fake "mouse focus" type behavior.
-	 * 
-	 * @param   E   Flash mouse event.
 	 */
-	private inline function onMouseOver(?E:MouseEvent):Void
+	private inline function onMouseOver(_):Void
 	{
 		hasMouse = true;
 		#if !FLX_NO_MOUSE
@@ -473,10 +474,8 @@ class FlxDebugger extends Sprite
 	
 	/**
 	 * Mouse handler that helps with fake "mouse focus" type behavior.
-	 * 
-	 * @param   E   Flash mouse event.
 	 */
-	private inline function onMouseOut(?E:MouseEvent):Void
+	private inline function onMouseOut(_):Void
 	{
 		hasMouse = false;
 		
@@ -497,7 +496,7 @@ class FlxDebugger extends Sprite
 		}
 	}
 
-	private inline function toggleVisualDebug ():Void
+	private inline function toggleDrawDebug():Void
 	{
 		FlxG.debugger.drawDebug = !FlxG.debugger.drawDebug;
 	}

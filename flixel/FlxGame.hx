@@ -19,7 +19,6 @@ import flixel.text.pxText.PxBitmapFont;
 import flixel.util.FlxAngle;
 import flixel.util.FlxColor;
 import flixel.util.FlxRandom;
-import flixel.util.FlxSignal;
 
 #if !FLX_NO_DEBUG
 import flixel.system.debug.FlxDebugger;
@@ -106,7 +105,7 @@ class FlxGame extends Sprite
 	 */
 	private var _elapsedMS:Int;
 	/**
-	 * Milliseconds of time per step of the game loop. FlashEvent.g. 60 fps = 16ms.
+	 * Milliseconds of time per step of the game loop. e.g. 60 fps = 16ms.
 	 */
 	private var _stepMS:Int;
 	/**
@@ -247,7 +246,7 @@ class FlxGame extends Sprite
 	/**
 	 * Used to instantiate the guts of the flixel game object once we have a valid reference to the root.
 	 */
-	private function create(FlashEvent:Event):Void
+	private function create(_):Void
 	{
 		if (stage == null)
 		{
@@ -319,9 +318,11 @@ class FlxGame extends Sprite
 		// We need to listen for resize event which means new context
 		// it means that we need to recreate bitmapdatas of dumped tilesheets
 		stage.addEventListener(Event.RESIZE, onResize);
+		
+		onResize(null); // fixes initial _inputContainer scale
 	}
 	
-	private function onFocus(?FlashEvent:Event):Void
+	private function onFocus(_):Void
 	{
 		#if flash
 		if (!_lostFocus) 
@@ -340,6 +341,7 @@ class FlxGame extends Sprite
 		#end
 		
 		_lostFocus = false;
+		FlxG.signals.focusGained.dispatch();
 		
 		if (!FlxG.autoPause) 
 		{
@@ -365,7 +367,7 @@ class FlxGame extends Sprite
 		FlxG.inputs.onFocus();
 	}
 	
-	private function onFocusLost(?FlashEvent:Event):Void
+	private function onFocusLost(_):Void
 	{
 		#if flash
 		if (_lostFocus) 
@@ -375,6 +377,7 @@ class FlxGame extends Sprite
 		#end
 		
 		_lostFocus = true;
+		FlxG.signals.focusLost.dispatch();
 		
 		if (!FlxG.autoPause) 
 		{
@@ -401,7 +404,7 @@ class FlxGame extends Sprite
 	}
 	
 	@:allow(flixel.FlxG)
-	private function onResize(?E:Event):Void 
+	private function onResize(_):Void 
 	{
 		var width:Int = Lib.current.stage.stageWidth;
 		var height:Int = Lib.current.stage.stageHeight;
@@ -414,6 +417,7 @@ class FlxGame extends Sprite
 		
 		_state.onResize(width, height);
 		FlxG.plugins.onResize(width, height);
+		FlxG.signals.gameResize.dispatch(width, height);
 		
 		#if !FLX_NO_DEBUG
 		debugger.onResize(width, height);
@@ -440,7 +444,7 @@ class FlxGame extends Sprite
 	/**
 	 * Handles the onEnterFrame call and figures out how many updates and draw calls to do.
 	 */
-	private function onEnterFrame(?FlashEvent:Event):Void
+	private function onEnterFrame(_):Void
 	{
 		ticks = Lib.getTimer();
 		_elapsedMS = ticks - _total;
@@ -505,6 +509,8 @@ class FlxGame extends Sprite
 	 */
 	private inline function resetGame():Void
 	{
+		FlxG.signals.gameReset.dispatch();
+		
 		#if !FLX_NO_DEBUG
 		_requestedState = cast (Type.createInstance(_initialState, []));
 		_gameJustStarted = true;
@@ -547,7 +553,7 @@ class FlxGame extends Sprite
 		FlxG.sound.destroy();
 		#end
 		FlxG.plugins.onStateSwitch();
-		FlxSignal.stateSwitch.dispatch();
+		FlxG.signals.stateSwitch.dispatch();
 		
 		#if FLX_RECORD
 		FlxRandom.updateStateSeed();
@@ -585,9 +591,7 @@ class FlxGame extends Sprite
 	
 	private function gameStart():Void
 	{
-		#if !FLX_NO_MOUSE
-		FlxG.mouse.onGameStart();
-		#end
+		FlxG.signals.gameStart.dispatch();
 		_gameJustStarted = false;
 	}
 	
@@ -663,6 +667,8 @@ class FlxGame extends Sprite
 		}
 		#end
 		
+		FlxG.signals.preUpdate.dispatch();
+		
 		if (FlxG.fixedTimestep)
 		{
 			FlxG.elapsed = FlxG.timeScale * _stepSeconds; // fixed timestep
@@ -670,6 +676,10 @@ class FlxGame extends Sprite
 		else
 		{
 			FlxG.elapsed = FlxG.timeScale * (_elapsedMS / 1000); // variable timestep
+			
+			var max = FlxG.maxElapsed * FlxG.timeScale;
+			if (FlxG.elapsed > max) 
+				FlxG.elapsed = max;
 		}
 		
 		updateInput();
@@ -682,6 +692,7 @@ class FlxGame extends Sprite
 		_state.tryUpdate();
 		
 		FlxG.cameras.update();
+		FlxG.signals.postUpdate.dispatch();
 		
 		#if !FLX_NO_DEBUG
 		debugger.stats.flixelUpdate(Lib.getTimer() - ticks);
@@ -767,7 +778,9 @@ class FlxGame extends Sprite
 			ticks = Lib.getTimer(); 
 		}
 		#end
-
+		
+		FlxG.signals.preDraw.dispatch();
+		
 		#if FLX_RENDER_TILE
 		TileSheetExt._DRAWCALLS = 0;
 		#end
@@ -809,6 +822,8 @@ class FlxGame extends Sprite
 		#end
 	
 		FlxG.cameras.unlock();
+		
+		FlxG.signals.postDraw.dispatch();
 		
 		#if !FLX_NO_DEBUG
 		debugger.stats.flixelDraw(Lib.getTimer() - ticks);

@@ -63,272 +63,8 @@ class FlxObject extends FlxBasic
 	 */
 	public static inline var ANY:Int	= LEFT | RIGHT | UP | DOWN;
 	
-	/**
-	 * X position of the upper left corner of this object in world space.
-	 */
-	public var x(default, set):Float = 0;
-	/**
-	 * Y position of the upper left corner of this object in world space.
-	 */
-	public var y(default, set):Float = 0;
-	/**
-	 * The width of this object's hitbox. For sprites, use offset to control the hitbox position.
-	 */
-	@:isVar
-	public var width(get, set):Float;
-	/**
-	 * The height of this object's hitbox. For sprites, use offset to control the hitbox position.
-	 */
-	@:isVar
-	public var height(get, set):Float;
-	/**
-	 * Gets ot sets the first camera of this object.
-	 */
-	public var camera(get, set):FlxCamera;
-	/**
-	 * This determines on which FlxCameras this object will be drawn. If it is null / has not been
-	 * set, it uses FlxCamera.defaultCameras, which is a reference to FlxG.cameras.list (all cameras) by default.
-	 */
-	public var cameras(get, set):Array<FlxCamera>;
-	/**
-	 * Set the angle of a sprite to rotate it. WARNING: rotating sprites decreases rendering
-	 * performance for this sprite by a factor of 10x (in Flash target)!
-	 */
-	public var angle(default, set):Float = 0;
-	/**
-	 * Set this to false if you want to skip the automatic motion/movement stuff (see updateMotion()).
-	 * FlxObject and FlxSprite default to true. FlxText, FlxTileblock and FlxTilemap default to false.
-	 */
-	public var moves(default, set):Bool = true;
-	/**
-	 * Whether an object will move/alter position after a collision.
-	 */
-	public var immovable(default, set):Bool = false;
-	/**
-	 * Whether the object collides or not.  For more control over what directions the object will collide from, 
-	 * use collision constants (like LEFT, FLOOR, etc) to set the value of allowCollisions directly.
-	 */
-	public var solid(get, set):Bool;
-	/**
-	 * Controls how much this object is affected by camera scrolling. 0 = no movement (e.g. a background layer), 
-	 * 1 = same movement speed as the foreground. Default value is (1,1), except for UI elements like FlxButton where it's (0,0).
-	 */
-	public var scrollFactor(default, null):FlxPoint;
-	/**
-	 * The basic speed of this object (in pixels per second).
-	 */
-	public var velocity(default, null):FlxPoint;
-	/**
-	 * How fast the speed of this object is changing (in pixels per second).
-	 * Useful for smooth movement and gravity.
-	 */
-	public var acceleration(default, null):FlxPoint;
-	/**
-	 * This isn't drag exactly, more like deceleration that is only applied
-	 * when acceleration is not affecting the sprite.
-	 */
-	public var drag(default, null):FlxPoint;
-	/**
-	 * If you are using acceleration, you can use maxVelocity with it
-	 * to cap the speed automatically (very useful!).
-	 */
-	public var maxVelocity(default, null):FlxPoint;
-	/**
-	 * Important variable for collision processing.
-	 * By default this value is set automatically during preUpdate().
-	 */
-	public var last(default, null):FlxPoint;
-	/**
-	 * The virtual mass of the object. Default value is 1. Currently only used with elasticity 
-	 * during collision resolution. Change at your own risk; effects seem crazy unpredictable so far!
-	 */
-	public var mass:Float = 1;
-	/**
-	 * The bounciness of this object. Only affects collisions. Default value is 0, or "not bouncy at all."
-	 */
-	public var elasticity:Float = 0;
-	/**
-	 * This is how fast you want this sprite to spin (in degrees per second).
-	 */
-	public var angularVelocity:Float = 0;
-	/**
-	 * How fast the spin speed should change (in degrees per second).
-	 */
-	public var angularAcceleration:Float = 0;
-	/**
-	 * Like drag but for spinning.
-	 */
-	public var angularDrag:Float = 0;
-	/**
-	 * Use in conjunction with angularAcceleration for fluid spin speed control.
-	 */
-	public var maxAngular:Float = 10000;
-	/**
-	 * Handy for storing health percentage or armor points or whatever.
-	 */
-	public var health:Float = 1;
-	/**
-	 * Bit field of flags (use with UP, DOWN, LEFT, RIGHT, etc) indicating surface contacts. Use bitwise operators to check the values 
-	 * stored here, or use isTouching(), justTouched(), etc. You can even use them broadly as boolean values if you're feeling saucy!
-	 */
-	public var touching:Int = NONE;
-	/**
-	 * Bit field of flags (use with UP, DOWN, LEFT, RIGHT, etc) indicating surface contacts from the previous game loop step. Use bitwise operators to check the values 
-	 * stored here, or use isTouching(), justTouched(), etc. You can even use them broadly as boolean values if you're feeling saucy!
-	 */
-	public var wasTouching:Int = NONE;
-	/**
-	 * Bit field of flags (use with UP, DOWN, LEFT, RIGHT, etc) indicating collision directions. Use bitwise operators to check the values stored here.
-	 * Useful for things like one-way platforms (e.g. allowCollisions = UP;). The accessor "solid" just flips this variable between NONE and ANY.
-	 */
-	public var allowCollisions:Int = ANY;
-	/**
-	 * Whether this sprite is dragged along with the horizontal movement of objects it collides with 
-	 * (makes sense for horizontally-moving platforms in platformers for example).
-	 */
-	public var collisonXDrag:Bool = true;
-	
-	#if !FLX_NO_DEBUG
-	/**
-	 * Overriding this will force a specific color to be used for debug rect.
-	 */
-	public var debugBoundingBoxColor:Null<Int> = null;
-	/**
-	 * Setting this to true will prevent the object from appearing
-	 * when FlxG.debugger.drawDebug is true.
-	 */
-	public var ignoreDrawDebug:Bool = false;
-	#end
-	
-	/**
-	 * Internal private static variables, for performance reasons.
-	 */
-	private var _point:FlxPoint;
-	private var _cameras:Array<FlxCamera>;
-	
 	private static var _firstSeparateFlxRect:FlxRect = FlxRect.get();
 	private static var _secondSeparateFlxRect:FlxRect = FlxRect.get();
-	
-	/**
-	 * @param	X		The X-coordinate of the point in space.
-	 * @param	Y		The Y-coordinate of the point in space.
-	 * @param	Width	Desired width of the rectangle.
-	 * @param	Height	Desired height of the rectangle.
-	 */
-	public function new(X:Float = 0, Y:Float = 0, Width:Float = 0, Height:Float = 0)
-	{
-		super();
-		
-		x = X;
-		y = Y;
-		width = Width;
-		height = Height;
-		
-		initVars();
-	}
-	
-	/**
-	 * Internal function for initialization of some object's variables
-	 */
-	private function initVars():Void
-	{
-		collisionType = FlxCollisionType.OBJECT;
-		last = FlxPoint.get(x, y);
-		scrollFactor = FlxPoint.get(1, 1);
-		_point = FlxPoint.get();
-		
-		initMotionVars();
-	}
-	
-	/**
-	 * Internal function for initialization of some variables that are used in updateMotion()
-	 */
-	private inline function initMotionVars():Void
-	{
-		velocity = FlxPoint.get();
-		acceleration = FlxPoint.get();
-		drag = FlxPoint.get();
-		maxVelocity = FlxPoint.get(10000, 10000);
-	}
-	
-	/**
-	 * WARNING: This will remove this object entirely. Use kill() if you want to disable it temporarily only and reset() it later to revive it.
-	 * Override this function to null out variables manually or call destroy() on class members if necessary. Don't forget to call super.destroy()!
-	 */
-	override public function destroy():Void
-	{
-		super.destroy();
-		
-		velocity = FlxDestroyUtil.put(velocity);
-		acceleration = FlxDestroyUtil.put(acceleration);
-		drag = FlxDestroyUtil.put(drag);
-		maxVelocity = FlxDestroyUtil.put(maxVelocity);
-		scrollFactor = FlxDestroyUtil.put(scrollFactor);
-		last = FlxDestroyUtil.put(last);
-		_point = FlxDestroyUtil.put(_point);
-		_cameras = null;
-	}
-	
-	/**
-	 * Override this function to update your class's position and appearance.
-	 * This is where most of your game rules and behavioral code will go.
-	 */
-	override public function update():Void 
-	{
-		#if !FLX_NO_DEBUG
-		// this just increments FlxBasic._ACTIVECOUNT, no need to waste a function call on release
-		super.update();
-		#end
-		
-		last.x = x;
-		last.y = y;
-		
-		if (moves)
-		{
-			updateMotion();
-		}
-		
-		wasTouching = touching;
-		touching = NONE;
-	}
-	
-	/**
-	 * Internal function for updating the position and speed of this object. Useful for cases when you need to update this but are buried down in too many supers.
-	 * Does a slightly fancier-than-normal integration to help with higher fidelity framerate-independenct motion.
-	 */
-	private inline function updateMotion():Void
-	{
-		var dt:Float = FlxG.elapsed;
-		
-		var velocityDelta = 0.5 * (FlxVelocity.computeVelocity(angularVelocity, angularAcceleration, angularDrag, maxAngular) - angularVelocity);
-		angularVelocity += velocityDelta; 
-		angle += angularVelocity * dt;
-		angularVelocity += velocityDelta;
-		
-		velocityDelta = 0.5 * (FlxVelocity.computeVelocity(velocity.x, acceleration.x, drag.x, maxVelocity.x) - velocity.x);
-		velocity.x += velocityDelta;
-		var delta = velocity.x * dt;
-		velocity.x += velocityDelta;
-		x += delta;
-		
-		velocityDelta = 0.5 * (FlxVelocity.computeVelocity(velocity.y, acceleration.y, drag.y, maxVelocity.y) - velocity.y);
-		velocity.y += velocityDelta;
-		delta = velocity.y * dt;
-		velocity.y += velocityDelta;
-		y += delta;
-	}
-	
-	/**
-	 * Rarely called, and in this case just increments the visible objects count and calls drawDebug() if necessary.
-	 */
-	override public function draw():Void
-	{
-		#if !FLX_NO_DEBUG
-		super.draw();
-		if (FlxG.debugger.drawDebug)
-			drawDebug();
-		#end
-	}
 	
 	/**
 	 * The main collision resolution function in flixel.
@@ -578,6 +314,276 @@ class FlxObject extends FlxBasic
 		{
 			return false;
 		}
+	}
+	
+	/**
+	 * X position of the upper left corner of this object in world space.
+	 */
+	public var x(default, set):Float = 0;
+	/**
+	 * Y position of the upper left corner of this object in world space.
+	 */
+	public var y(default, set):Float = 0;
+	/**
+	 * The width of this object's hitbox. For sprites, use offset to control the hitbox position.
+	 */
+	@:isVar
+	public var width(get, set):Float;
+	/**
+	 * The height of this object's hitbox. For sprites, use offset to control the hitbox position.
+	 */
+	@:isVar
+	public var height(get, set):Float;
+	/**
+	 * Gets ot sets the first camera of this object.
+	 */
+	public var camera(get, set):FlxCamera;
+	/**
+	 * This determines on which FlxCameras this object will be drawn. If it is null / has not been
+	 * set, it uses FlxCamera.defaultCameras, which is a reference to FlxG.cameras.list (all cameras) by default.
+	 */
+	public var cameras(get, set):Array<FlxCamera>;
+	/**
+	 * Whether or not the coordinates should be rounded during draw(), true by default (recommended for pixel art). 
+	 * Only affects tilesheet rendering and rendering using BitmapData.draw() in blitting.
+	 * (copyPixels() only renders on whole pixels by nature). Causes draw() to be used if false, which is more expensive.
+	 */
+	public var pixelPerfectRender(default, set):Bool = true;
+	/**
+	 * Set the angle of a sprite to rotate it. WARNING: rotating sprites decreases rendering
+	 * performance for this sprite by a factor of 10x (in Flash target)!
+	 */
+	public var angle(default, set):Float = 0;
+	/**
+	 * Set this to false if you want to skip the automatic motion/movement stuff (see updateMotion()).
+	 * FlxObject and FlxSprite default to true. FlxText, FlxTileblock and FlxTilemap default to false.
+	 */
+	public var moves(default, set):Bool = true;
+	/**
+	 * Whether an object will move/alter position after a collision.
+	 */
+	public var immovable(default, set):Bool = false;
+	/**
+	 * Whether the object collides or not.  For more control over what directions the object will collide from, 
+	 * use collision constants (like LEFT, FLOOR, etc) to set the value of allowCollisions directly.
+	 */
+	public var solid(get, set):Bool;
+	/**
+	 * Controls how much this object is affected by camera scrolling. 0 = no movement (e.g. a background layer), 
+	 * 1 = same movement speed as the foreground. Default value is (1,1), except for UI elements like FlxButton where it's (0,0).
+	 */
+	public var scrollFactor(default, null):FlxPoint;
+	/**
+	 * The basic speed of this object (in pixels per second).
+	 */
+	public var velocity(default, null):FlxPoint;
+	/**
+	 * How fast the speed of this object is changing (in pixels per second).
+	 * Useful for smooth movement and gravity.
+	 */
+	public var acceleration(default, null):FlxPoint;
+	/**
+	 * This isn't drag exactly, more like deceleration that is only applied
+	 * when acceleration is not affecting the sprite.
+	 */
+	public var drag(default, null):FlxPoint;
+	/**
+	 * If you are using acceleration, you can use maxVelocity with it
+	 * to cap the speed automatically (very useful!).
+	 */
+	public var maxVelocity(default, null):FlxPoint;
+	/**
+	 * Important variable for collision processing.
+	 * By default this value is set automatically during preUpdate().
+	 */
+	public var last(default, null):FlxPoint;
+	/**
+	 * The virtual mass of the object. Default value is 1. Currently only used with elasticity 
+	 * during collision resolution. Change at your own risk; effects seem crazy unpredictable so far!
+	 */
+	public var mass:Float = 1;
+	/**
+	 * The bounciness of this object. Only affects collisions. Default value is 0, or "not bouncy at all."
+	 */
+	public var elasticity:Float = 0;
+	/**
+	 * This is how fast you want this sprite to spin (in degrees per second).
+	 */
+	public var angularVelocity:Float = 0;
+	/**
+	 * How fast the spin speed should change (in degrees per second).
+	 */
+	public var angularAcceleration:Float = 0;
+	/**
+	 * Like drag but for spinning.
+	 */
+	public var angularDrag:Float = 0;
+	/**
+	 * Use in conjunction with angularAcceleration for fluid spin speed control.
+	 */
+	public var maxAngular:Float = 10000;
+	/**
+	 * Handy for storing health percentage or armor points or whatever.
+	 */
+	public var health:Float = 1;
+	/**
+	 * Bit field of flags (use with UP, DOWN, LEFT, RIGHT, etc) indicating surface contacts. Use bitwise operators to check the values 
+	 * stored here, or use isTouching(), justTouched(), etc. You can even use them broadly as boolean values if you're feeling saucy!
+	 */
+	public var touching:Int = NONE;
+	/**
+	 * Bit field of flags (use with UP, DOWN, LEFT, RIGHT, etc) indicating surface contacts from the previous game loop step. Use bitwise operators to check the values 
+	 * stored here, or use isTouching(), justTouched(), etc. You can even use them broadly as boolean values if you're feeling saucy!
+	 */
+	public var wasTouching:Int = NONE;
+	/**
+	 * Bit field of flags (use with UP, DOWN, LEFT, RIGHT, etc) indicating collision directions. Use bitwise operators to check the values stored here.
+	 * Useful for things like one-way platforms (e.g. allowCollisions = UP;). The accessor "solid" just flips this variable between NONE and ANY.
+	 */
+	public var allowCollisions:Int = ANY;
+	/**
+	 * Whether this sprite is dragged along with the horizontal movement of objects it collides with 
+	 * (makes sense for horizontally-moving platforms in platformers for example).
+	 */
+	public var collisonXDrag:Bool = true;
+	
+	#if !FLX_NO_DEBUG
+	/**
+	 * Overriding this will force a specific color to be used for debug rect.
+	 */
+	public var debugBoundingBoxColor:Null<Int> = null;
+	/**
+	 * Setting this to true will prevent the object from appearing
+	 * when FlxG.debugger.drawDebug is true.
+	 */
+	public var ignoreDrawDebug:Bool = false;
+	#end
+	
+	/**
+	 * Internal private static variables, for performance reasons.
+	 */
+	private var _point:FlxPoint;
+	private var _cameras:Array<FlxCamera>;
+	
+	/**
+	 * @param	X		The X-coordinate of the point in space.
+	 * @param	Y		The Y-coordinate of the point in space.
+	 * @param	Width	Desired width of the rectangle.
+	 * @param	Height	Desired height of the rectangle.
+	 */
+	public function new(X:Float = 0, Y:Float = 0, Width:Float = 0, Height:Float = 0)
+	{
+		super();
+		
+		x = X;
+		y = Y;
+		width = Width;
+		height = Height;
+		
+		initVars();
+	}
+	
+	/**
+	 * Internal function for initialization of some object's variables
+	 */
+	private function initVars():Void
+	{
+		collisionType = FlxCollisionType.OBJECT;
+		last = FlxPoint.get(x, y);
+		scrollFactor = FlxPoint.get(1, 1);
+		_point = FlxPoint.get();
+		
+		initMotionVars();
+	}
+	
+	/**
+	 * Internal function for initialization of some variables that are used in updateMotion()
+	 */
+	private inline function initMotionVars():Void
+	{
+		velocity = FlxPoint.get();
+		acceleration = FlxPoint.get();
+		drag = FlxPoint.get();
+		maxVelocity = FlxPoint.get(10000, 10000);
+	}
+	
+	/**
+	 * WARNING: This will remove this object entirely. Use kill() if you want to disable it temporarily only and reset() it later to revive it.
+	 * Override this function to null out variables manually or call destroy() on class members if necessary. Don't forget to call super.destroy()!
+	 */
+	override public function destroy():Void
+	{
+		super.destroy();
+		
+		velocity = FlxDestroyUtil.put(velocity);
+		acceleration = FlxDestroyUtil.put(acceleration);
+		drag = FlxDestroyUtil.put(drag);
+		maxVelocity = FlxDestroyUtil.put(maxVelocity);
+		scrollFactor = FlxDestroyUtil.put(scrollFactor);
+		last = FlxDestroyUtil.put(last);
+		_point = FlxDestroyUtil.put(_point);
+		_cameras = null;
+	}
+	
+	/**
+	 * Override this function to update your class's position and appearance.
+	 * This is where most of your game rules and behavioral code will go.
+	 */
+	override public function update():Void 
+	{
+		#if !FLX_NO_DEBUG
+		// this just increments FlxBasic._ACTIVECOUNT, no need to waste a function call on release
+		super.update();
+		#end
+		
+		last.x = x;
+		last.y = y;
+		
+		if (moves)
+		{
+			updateMotion();
+		}
+		
+		wasTouching = touching;
+		touching = NONE;
+	}
+	
+	/**
+	 * Internal function for updating the position and speed of this object. Useful for cases when you need to update this but are buried down in too many supers.
+	 * Does a slightly fancier-than-normal integration to help with higher fidelity framerate-independenct motion.
+	 */
+	private inline function updateMotion():Void
+	{
+		var dt:Float = FlxG.elapsed;
+		
+		var velocityDelta = 0.5 * (FlxVelocity.computeVelocity(angularVelocity, angularAcceleration, angularDrag, maxAngular) - angularVelocity);
+		angularVelocity += velocityDelta; 
+		angle += angularVelocity * dt;
+		angularVelocity += velocityDelta;
+		
+		velocityDelta = 0.5 * (FlxVelocity.computeVelocity(velocity.x, acceleration.x, drag.x, maxVelocity.x) - velocity.x);
+		velocity.x += velocityDelta;
+		var delta = velocity.x * dt;
+		velocity.x += velocityDelta;
+		x += delta;
+		
+		velocityDelta = 0.5 * (FlxVelocity.computeVelocity(velocity.y, acceleration.y, drag.y, maxVelocity.y) - velocity.y);
+		velocity.y += velocityDelta;
+		delta = velocity.y * dt;
+		velocity.y += velocityDelta;
+		y += delta;
+	}
+	
+	/**
+	 * Rarely called, and in this case just increments the visible objects count and calls drawDebug() if necessary.
+	 */
+	override public function draw():Void
+	{
+		#if !FLX_NO_DEBUG
+		super.draw();
+		if (FlxG.debugger.drawDebug)
+			drawDebug();
+		#end
 	}
 	
 	/**
@@ -872,6 +878,12 @@ class FlxObject extends FlxBasic
 		var boundingBoxX:Float = x - (Camera.scroll.x * scrollFactor.x); //copied from getScreenXY()
 		var boundingBoxY:Float = y - (Camera.scroll.y * scrollFactor.y);
 		
+		if (pixelPerfectRender)
+		{
+			boundingBoxX = Math.floor(boundingBoxX);
+			boundingBoxY = Math.floor(boundingBoxY);
+		}
+		
 		#if FLX_RENDER_BLIT
 		var boundingBoxWidth:Int = Std.int(width);
 		var boundingBoxHeight:Int = Std.int(height);
@@ -1049,5 +1061,10 @@ class FlxObject extends FlxBasic
 	private function set_cameras(Value:Array<FlxCamera>):Array<FlxCamera>
 	{
 		return _cameras = Value;
+	}
+	
+	private function set_pixelPerfectRender(Value:Bool):Bool 
+	{
+		return pixelPerfectRender = Value;
 	}
 }

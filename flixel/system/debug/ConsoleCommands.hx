@@ -39,6 +39,7 @@ class ConsoleCommands
 							"[FlxObject] (MousePos = true)", 3, 3);
 		console.addCommand(["set", "s"], set, "Sets a variable within a registered object.", "[Path to function]", 3);
 		console.addCommand(["call", "c"], call, "Calls a registered function / function within a registered object.", 3, 2);
+		console.addCommand(["fields", "f"], fields, "Lists the fields of a class or instance", "[Class or path to instance] [NumSuperClassesToInclude]", 2);
 		
 		console.addCommand(["listObjects", "lo"], listObjects, "Lists all the aliases of the registered objects.");
 		console.addCommand(["listFunctions", "lf"], listFunctions, "Lists all the aliases of the registered objects.");
@@ -79,18 +80,15 @@ class ConsoleCommands
 				FlxG.log.add("");
 				ConsoleUtil.log(command.aliases);
 				
-				if (command.help != null) {
+				if (command.help != null)
 					ConsoleUtil.log(command.help);
-				}
 				
 				var cutoffHelp:String = "";
-				if (command.paramCutoff > 0) {
+				if (command.paramCutoff > 0)
 					cutoffHelp = " [param0...paramX]";
-				}
 				
-				if (command.paramHelp != null || cutoffHelp != "") {
+				if (command.paramHelp != null || cutoffHelp != "")
 					ConsoleUtil.log("Params: " + command.paramHelp + cutoffHelp);
-				}
 			}
 			else 
 			{
@@ -120,9 +118,8 @@ class ConsoleCommands
 	private function switchState(ClassName:String):Void 
 	{
 		var instance:Dynamic = ConsoleUtil.attemptToCreateInstance(ClassName, FlxState);
-		if (instance == null) {
+		if (instance == null)
 			return;
-		}
 		
 		FlxG.switchState(instance);
 		ConsoleUtil.log("switchState: New '" + ClassName + "' created");  
@@ -136,30 +133,27 @@ class ConsoleCommands
 	
 	private function create(ClassName:String, MousePos:String = "true", ?Params:Array<String>):Void
 	{	
-		if (Params == null) {
+		if (Params == null)
 			Params = [];
-		}
 		
 		var instance:Dynamic = ConsoleUtil.attemptToCreateInstance(ClassName, FlxObject, Params);
-		if (instance == null) {
+		if (instance == null) 
 			return;
-		}
 		
 		var obj:FlxObject = instance;
 		
-		if (MousePos == "true") {
+		if (MousePos == "true") 
+		{
 			obj.x = FlxG.game.mouseX;
 			obj.y = FlxG.game.mouseY;
 		}
 		
 		FlxG.state.add(instance);
 		
-		if (Params.length == 0) {
+		if (Params.length == 0)
 			ConsoleUtil.log("create: New " + ClassName + " created at X = " + obj.x + " Y = " + obj.y);
-		}
-		else {
+		else
 			ConsoleUtil.log("create: New " + ClassName + " created at X = " + obj.x + " Y = " + obj.y + " with params " + Params);
-		}
 		
 		_console.objectStack.push(instance);
 		_console.registerObject(Std.string(_console.objectStack.length), instance);
@@ -172,9 +166,8 @@ class ConsoleCommands
 		var pathToVariable:PathToVariable = ConsoleUtil.resolveObjectAndVariableFromMap(ObjectAndVariable, _console.registeredObjects);
 		
 		// In case resolving failed
-		if (pathToVariable == null) {
+		if (pathToVariable == null)
 			return;
-		}
 		
 		var object:Dynamic = pathToVariable.object;
 		var varName:String = pathToVariable.variableName;
@@ -186,6 +179,12 @@ class ConsoleCommands
 		}
 		catch (e:Dynamic)
 		{
+			return;
+		}
+		
+		if (variable == null)
+		{
+			FlxG.log.error("set: '" +  ObjectAndVariable + "' could not be found");
 			return;
 		}
 		
@@ -218,16 +217,48 @@ class ConsoleCommands
 		Reflect.setProperty(object, varName, NewVariableValue);
 		ConsoleUtil.log("set: " + FlxStringUtil.getClassName(object, true) + "." + varName + " is now " + NewVariableValue);
 		
-		if (WatchName != null) {
+		if (WatchName != null)
 			FlxG.watch.add(object, varName, WatchName);
+	}
+	
+	private function fields(ObjectAndVariable:String, NumSuperClassesToInclude:Int = 0):Void
+	{
+		var pathToVariable:PathToVariable = ConsoleUtil.resolveObjectAndVariableFromMap(ObjectAndVariable, _console.registeredObjects);
+		
+		// In case resolving failed
+		if (pathToVariable == null)
+			return;
+	
+		var fields:Array<String> = [];
+		
+		// passed a class -> get static fields
+		if (Std.is(pathToVariable.object, Class) && pathToVariable.variableName == "")
+		{
+			fields = Type.getClassFields(pathToVariable.object);
 		}
+		else // get instance fields
+		{
+			var instance = Reflect.getProperty(pathToVariable.object, pathToVariable.variableName);
+			if (instance == null)
+				return;
+		
+			var cl = Type.getClass(instance);
+			fields = ConsoleUtil.getInstanceFieldsAdvanced(cl, NumSuperClassesToInclude);
+		}
+		
+		ConsoleUtil.log("fields: list of fields for " + ObjectAndVariable);
+		var output:String = "";
+		for (field in fields)
+		{
+			output += field + "\n";
+		}
+		ConsoleUtil.log(output);
 	}
 	
 	private function call(FunctionAlias:String, ?Params:Array<String>):Void
 	{	
-		if (Params == null) {
+		if (Params == null)
 			Params = [];
-		}
 		
 		// Search for function in registeredFunctions hash
 		var func:Dynamic = _console.registeredFunctions.get(FunctionAlias);

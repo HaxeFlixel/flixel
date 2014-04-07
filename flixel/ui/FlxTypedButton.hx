@@ -76,10 +76,9 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	 * 
 	 * @param	X				The X position of the button.
 	 * @param	Y				The Y position of the button.
-	 * @param	Label			The text that you want to appear on the button.
 	 * @param	OnClick			The function to call whenever the button is clicked.
 	 */
-	public function new(X:Float = 0, Y:Float = 0, ?Label:String, ?OnClick:Void->Void)
+	public function new(X:Float = 0, Y:Float = 0, ?OnClick:Void->Void)
 	{
 		super(X, Y);
 		
@@ -115,15 +114,8 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		onOver = FlxDestroyUtil.destroy(onOver);
 		onOut = FlxDestroyUtil.destroy(onOut);
 		
-		if (labelOffsets != null)
-		{
-			for (point in labelOffsets)
-			{
-				point = FlxDestroyUtil.put(point);
-			}
-		}
+		labelOffsets = FlxDestroyUtil.putArray(labelOffsets);
 		
-		labelOffsets = null;
 		labelAlphas = null;
 		_pressedTouch = null;
 		

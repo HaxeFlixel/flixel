@@ -27,6 +27,10 @@ class FlxMath
 	 * Maximum value of a floating point number.
 	 */
 	public static inline var MAX_VALUE:Float = 1.79e+308;
+	/**
+	 * Approximation of Math.sqrt(2).
+	 */
+	public static inline var SQUARE_ROOT_OF_TWO:Float = 1.41421356237;
 	
 	/**
 	 * Round a decimal number to have reduced precision (less decimal numbers).
