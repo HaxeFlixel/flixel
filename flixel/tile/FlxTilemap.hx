@@ -665,8 +665,7 @@ class FlxTilemap extends FlxObject
 			
 			if (_buffers[i] == null)
 			{
-				_buffers[i] = new FlxTilemapBuffer(_tileWidth, _tileHeight, widthInTiles, heightInTiles, camera, scale.x, scale.y);
-				_buffers[i].pixelPerfectRender = pixelPerfectRender;
+				_buffers[i] = createBuffer(camera);
 			}
 			
 			buffer = _buffers[i++];
@@ -2128,6 +2127,13 @@ class FlxTilemap extends FlxObject
 		_data[Index] += 1;
 	}
 	
+	private inline function createBuffer(camera:FlxCamera):FlxTilemapBuffer
+	{
+		var buffer = new FlxTilemapBuffer(_tileWidth, _tileHeight, widthInTiles, heightInTiles, camera, scale.x, scale.y);
+		buffer.pixelPerfectRender = pixelPerfectRender;
+		return buffer;
+	}
+	
 	/**
 	 * Signal listener for gameResize 
 	 * @param	width
@@ -2149,8 +2155,7 @@ class FlxTilemap extends FlxObject
 				if (_buffers[i] != null)
 					_buffers[i].destroy();
 
-				_buffers[i] = new FlxTilemapBuffer(_tileWidth, _tileHeight, widthInTiles, heightInTiles, camera, scale.x, scale.y);
-				_buffers[i].pixelPerfectRender = pixelPerfectRender;
+				_buffers[i] = createBuffer(camera);
 			}
 		}
 	}
