@@ -51,6 +51,12 @@ class FlxTilemap extends FlxObject
 	 */
 	public static inline var ALT:Int = 2;
 	
+	
+	/** 
+ 	 * A helper buffer for calculating number of columns and rows when the game size changed
+ 	 */
+ 	private static var _helperBuffer:FlxTilemapBuffer = Type.createEmptyInstance(FlxTilemapBuffer);
+	
 	/**
 	 * Set this flag to use one of the 16-tile binary auto-tile algorithms (OFF, AUTO, or ALT).
 	 */
@@ -194,10 +200,6 @@ class FlxTilemap extends FlxObject
 	private var _rectIDs:Array<Int>;
 	#end
 	
-	/** 
- 	 * A helper buffer for calculating number of columns and rows when the game size changed
- 	 */
- 	private static var _helperBuffer:FlxTilemapBuffer;
 	
 	/**
 	 * The tilemap constructor just initializes some basic variables.
@@ -220,9 +222,6 @@ class FlxTilemap extends FlxObject
 		
 		scale = new FlxCallbackPoint(setScaleXCallback, setScaleYCallback, setScaleXYCallback);
 		scale.set(1, 1);
-		
-		if (_helperBuffer == null)
-			_helperBuffer = Type.createEmptyInstance(FlxTilemapBuffer);
 		
 		FlxG.signals.gameResize.add(onGameResize);
 	}
@@ -277,7 +276,6 @@ class FlxTilemap extends FlxObject
 		_rectIDs = null;
 		#end
 		
-		_helperBuffer = null;		
 		framesData = null;
 		cachedGraphics = null;
 		region = null;
@@ -2136,12 +2134,10 @@ class FlxTilemap extends FlxObject
 	
 	/**
 	 * Signal listener for gameResize 
-	 * @param	width
-	 * @param	height
 	 */
-	private function onGameResize(width:Int, height:Int):Void
+	private function onGameResize(_,_):Void
 	{
-		for(i in 0...cameras.length)
+		for (i in 0...cameras.length)
 		{
 			var camera = cameras[i];
 			var buffer = _buffers[i];
@@ -2151,7 +2147,7 @@ class FlxTilemap extends FlxObject
 			_helperBuffer.updateRows(_tileHeight, heightInTiles, scale.y, camera);
 			
 			// Create a new buffer if the number of columns and rows differs
-			if(buffer == null || _helperBuffer.columns != buffer.columns || _helperBuffer.rows != buffer.rows)			
+			if (buffer == null || _helperBuffer.columns != buffer.columns || _helperBuffer.rows != buffer.rows)			
 			{
 				if (buffer != null)
 					buffer.destroy();
