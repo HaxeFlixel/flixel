@@ -2144,16 +2144,17 @@ class FlxTilemap extends FlxObject
 		for(i in 0...cameras.length)
 		{
 			var camera = cameras[i];
+			var buffer = _buffers[i];
 			
 			// Calculate the required number of columns and rows
 			_helperBuffer.updateColumns(_tileWidth, widthInTiles, scale.x, camera);
 			_helperBuffer.updateRows(_tileHeight, heightInTiles, scale.y, camera);
 			
 			// Create a new buffer if the number of columns and rows differs
-			if(_buffers[i] == null || _helperBuffer.columns != _buffers[i].columns || _helperBuffer.rows != _buffers[i].rows)			
+			if(buffer == null || _helperBuffer.columns != buffer.columns || _helperBuffer.rows != buffer.rows)			
 			{
-				if (_buffers[i] != null)
-					_buffers[i].destroy();
+				if (buffer != null)
+					buffer.destroy();
 
 				_buffers[i] = createBuffer(camera);
 			}
