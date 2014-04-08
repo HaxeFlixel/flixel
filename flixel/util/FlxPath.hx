@@ -108,7 +108,7 @@ class FlxPath implements IFlxDestroyable
 	public var autoCenter:Bool = true;
 	
 	/**
-	 * Pauses or checks the pause state of the timer.
+	 * Pauses or checks the pause state of the path.
 	 */
 	public var paused:Bool = false;
 	
@@ -116,7 +116,7 @@ class FlxPath implements IFlxDestroyable
 
 	#if !FLX_NO_DEBUG
 	/**
-	 * Specify a debug display color for the path.  Default is white.
+	 * Specify a debug display color for the path. Default is white.
 	 */
 	public var debugColor:Int = 0xffffff;
 	/**
