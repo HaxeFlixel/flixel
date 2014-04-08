@@ -82,7 +82,7 @@ class FlxTimer implements IFlxDestroyable
 	/**
 	 * Read-only: how far along the timer is, on a scale of 0.0 to 1.0.
 	 */
-	public var progress(get_progress, never):Float;
+	public var progress(get, never):Float;
 	/**
 	 * Internal tracker for the actual timer counting up.
 	 */
