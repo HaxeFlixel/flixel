@@ -188,8 +188,11 @@ class FlxGamepad implements IFlxDestroyable
 	{
 		for (b in ButtonArray)
 		{
-			if (buttons.get(b).current == PRESSED)
+			if (buttons.exists(b))
+			{
+				if (buttons.get(b).current == PRESSED)
 				return true;
+			}
 		}
 		
 		return false;
@@ -205,8 +208,11 @@ class FlxGamepad implements IFlxDestroyable
 	{
 		for (b in ButtonArray)
 		{
-			if (buttons.get(b).current == JUST_PRESSED)
+			if (buttons.exists(b))
+			{
+				if (buttons.get(b).current == JUST_PRESSED)
 				return true;
+			}
 		}
 		
 		return false;
@@ -222,8 +228,11 @@ class FlxGamepad implements IFlxDestroyable
 	{
 		for (b in ButtonArray)
 		{
-			if (buttons.get(b).current == JUST_RELEASED)
+			if (buttons.exists(b))
+			{
+				if (buttons.get(b).current == JUST_RELEASED)
 				return true;
+			}
 		}
 		
 		return false;
