@@ -1,0 +1,23 @@
+-main ApplicationMain 
+-lib openfl
+-lib flixel
+-lib flixel-addons
+-cp source
+-cp C:\Motion-Twin\Haxe\lib\flixel-addons\flixel-addons
+-cp C:\Motion-Twin\Haxe\lib\flixel\flixel
+-D nme4=1
+-D tools=1
+-D FLX_NO_DEBUG
+-D nme_ver=4.0.2
+-D nme
+-D FLX_NO_NATIVE_CURSOR
+-D nme_install_tool=1
+-D display
+-D web
+--no-output
+-swf-version 11.6
+-swf export/flash/bin/neonvector.swf
+-swf-header 800:600:60:FFFFFF
+-cp export/flash/haxe
+#--remap nme:flash
+
