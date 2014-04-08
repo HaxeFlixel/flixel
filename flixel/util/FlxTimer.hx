@@ -18,6 +18,26 @@ class FlxTimer implements IFlxDestroyable
 	 */
 	public static var manager:TimerManager;
 	/**
+	 * A pool that contains FlxTimers for recycling.
+	 */
+	@:allow(flixel.plugin.TimerManager)
+	private static var _pool = new FlxPool<FlxTimer>(FlxTimer);
+	
+	/**
+	 * Returns a recycled timer and starts it.
+	 * 
+	 * @param	Time		How many seconds it takes for the timer to go off.
+	 * @param	Callback	Optional, triggered whenever the time runs out, once for each loop. Callback should be formed "onTimer(Timer:FlxTimer);"
+	 * @param	Loops		How many times the timer should go off. 0 means "looping forever".
+ 	 */
+	public static function start(Time:Float = 1, ?Callback:FlxTimer->Void, Loops:Int = 1):FlxTimer
+	{
+		var timer:FlxTimer = _pool.get();
+		timer.run(Time, Callback, Loops);
+		return timer;
+	}
+	
+	/**
 	 * How much time the timer was set for.
 	 */
 	public var time:Float = 0;
@@ -71,25 +91,6 @@ class FlxTimer implements IFlxDestroyable
 	 * Internal tracker for the loops counting up.
 	 */
 	private var _loopsCounter:Int = 0;
-	/**
-	 * A pool that contains FlxTimers for recycling.
-	 */
-	@:allow(flixel.plugin.TimerManager)
-	private static var _pool = new FlxPool<FlxTimer>(FlxTimer);
-	
-	/**
-	 * Returns a recycled timer and starts it.
-	 * 
-	 * @param	Time		How many seconds it takes for the timer to go off.
-	 * @param	Callback	Optional, triggered whenever the time runs out, once for each loop. Callback should be formed "onTimer(Timer:FlxTimer);"
-	 * @param	Loops		How many times the timer should go off. 0 means "looping forever".
- 	 */
-	public static function start(Time:Float = 1, ?Callback:FlxTimer->Void, Loops:Int = 1):FlxTimer
-	{
-		var timer:FlxTimer = _pool.get();
-		timer.run(Time, Callback, Loops);
-		return timer;
-	}
 	
 	/**
 	 * Clean up memory.
@@ -184,9 +185,6 @@ class FlxTimer implements IFlxDestroyable
 		}
 	}
 	
-	/**
-	 * @private contructor
-	 */ 
 	private function new() {}
 	
 	private inline function get_timeLeft():Float

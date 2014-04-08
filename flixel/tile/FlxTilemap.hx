@@ -224,7 +224,7 @@ class FlxTilemap extends FlxObject
 		scale = new FlxCallbackPoint(setScaleXCallback, setScaleYCallback, setScaleXYCallback);
 		scale.set(1, 1);
 		
-		FlxG.signals.gameResize.add(onGameResize);
+		FlxG.signals.gameResized.add(onGameResize);
 	}
 	
 	/**
@@ -284,7 +284,7 @@ class FlxTilemap extends FlxObject
 		// need to destroy FlxCallbackPoints
 		scale = FlxDestroyUtil.destroy(scale);
 		
-		FlxG.signals.gameResize.remove(onGameResize);
+		FlxG.signals.gameResized.remove(onGameResize);
 		
 		super.destroy();
 	}
