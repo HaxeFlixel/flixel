@@ -324,7 +324,22 @@ class FlxTilemap extends FlxObject
 				
 				while (column < widthInTiles)
 				{
-					_data.push(Std.parseInt(columns[column++]));
+					var curColumn : Int = Std.parseInt(columns[column]);
+					#if neko
+					if (curColumn != null)
+					{
+						_data.push(curColumn);	
+						column++;
+					}
+					else
+					{
+						widthInTiles--;
+					}
+					#else
+					_data.push(curColumn);	
+					column++;
+					#end
+					
 				}
 			}
 		}
