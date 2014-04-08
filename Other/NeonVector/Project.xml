@@ -22,8 +22,6 @@
 
 	<assets path="assets/images" rename="images" include="*.jpg|*.png" />
 
-	<assets path="assets/data" rename="data" include="*.csv" />
-
 	<assets path="assets/sounds" rename="sounds" include="*.wav|*.mp3" />
 
 	<assets path="assets/music" rename="music" include="*.wav|*.mp3|*.ogg" />
