@@ -51,6 +51,13 @@ class FlxTilemap extends FlxObject
 	 */
 	public static inline var ALT:Int = 2;
 	
+	
+	/** 
+ 	 * A helper buffer for calculating number of columns and rows when the game size changed
+	 * We are only using its member functions that's why it is an empty instance
+ 	 */
+ 	private static var _helperBuffer:FlxTilemapBuffer = Type.createEmptyInstance(FlxTilemapBuffer);
+	
 	/**
 	 * Set this flag to use one of the 16-tile binary auto-tile algorithms (OFF, AUTO, or ALT).
 	 */
@@ -194,6 +201,7 @@ class FlxTilemap extends FlxObject
 	private var _rectIDs:Array<Int>;
 	#end
 	
+	
 	/**
 	 * The tilemap constructor just initializes some basic variables.
 	 */
@@ -215,6 +223,8 @@ class FlxTilemap extends FlxObject
 		
 		scale = new FlxCallbackPoint(setScaleXCallback, setScaleYCallback, setScaleXYCallback);
 		scale.set(1, 1);
+		
+		FlxG.signals.gameResize.add(onGameResize);
 	}
 	
 	/**
@@ -654,8 +664,7 @@ class FlxTilemap extends FlxObject
 			
 			if (_buffers[i] == null)
 			{
-				_buffers[i] = new FlxTilemapBuffer(_tileWidth, _tileHeight, widthInTiles, heightInTiles, camera, scale.x, scale.y);
-				_buffers[i].pixelPerfectRender = pixelPerfectRender;
+				_buffers[i] = createBuffer(camera);
 			}
 			
 			buffer = _buffers[i++];
@@ -2115,6 +2124,38 @@ class FlxTilemap extends FlxObject
 		}
 		
 		_data[Index] += 1;
+	}
+	
+	private inline function createBuffer(camera:FlxCamera):FlxTilemapBuffer
+	{
+		var buffer = new FlxTilemapBuffer(_tileWidth, _tileHeight, widthInTiles, heightInTiles, camera, scale.x, scale.y);
+		buffer.pixelPerfectRender = pixelPerfectRender;
+		return buffer;
+	}
+	
+	/**
+	 * Signal listener for gameResize 
+	 */
+	private function onGameResize(_,_):Void
+	{
+		for (i in 0...cameras.length)
+		{
+			var camera = cameras[i];
+			var buffer = _buffers[i];
+			
+			// Calculate the required number of columns and rows
+			_helperBuffer.updateColumns(_tileWidth, widthInTiles, scale.x, camera);
+			_helperBuffer.updateRows(_tileHeight, heightInTiles, scale.y, camera);
+			
+			// Create a new buffer if the number of columns and rows differs
+			if (buffer == null || _helperBuffer.columns != buffer.columns || _helperBuffer.rows != buffer.rows)			
+			{
+				if (buffer != null)
+					buffer.destroy();
+
+				_buffers[i] = createBuffer(camera);
+			}
+		}
 	}
 	
 	/**
