@@ -2,6 +2,8 @@ package;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.ui.FlxButton;
+import flixel.ui.FlxVirtualPad;
 
 /**
  * ...
@@ -37,6 +39,10 @@ class Player extends FlxSprite
 	 */ 
 	private var moveDirection:MoveDirection;
 	
+	#if mobile
+	private var _virtualPad:FlxVirtualPad;
+	#end
+	
 	public function new(X:Int, Y:Int)
 	{
 		// X,Y: Starting coordinates
@@ -44,6 +50,12 @@ class Player extends FlxSprite
 		
 		// Make the player graphic.
 		makeGraphic(TILE_SIZE, TILE_SIZE, 0xffc04040);
+		
+		#if mobile
+		_virtualPad = new FlxVirtualPad(FULL, NONE);
+		_virtualPad.alpha = 0.5;
+		FlxG.state.add(_virtualPad);
+		#end
 	}
 	
 	override public function update():Void
@@ -53,7 +65,7 @@ class Player extends FlxSprite
 		// Move the player to the next block
 		if (moveToNextTile)
 		{
-			switch(moveDirection)
+			switch (moveDirection)
 			{
 				case UP:
 					y -= MOVEMENT_SPEED;
@@ -72,6 +84,24 @@ class Player extends FlxSprite
 			moveToNextTile = false;
 		}
 		
+		#if mobile
+		if (_virtualPad.buttonDown.status == FlxButton.PRESSED)
+		{
+			moveTo(MoveDirection.DOWN);
+		}
+		else if (_virtualPad.buttonUp.status == FlxButton.PRESSED)
+		{
+			moveTo(MoveDirection.UP);
+		}
+		else if (_virtualPad.buttonLeft.status == FlxButton.PRESSED)
+		{
+			moveTo(MoveDirection.LEFT);
+		}
+		else if (_virtualPad.buttonRight.status == FlxButton.PRESSED)
+		{
+			moveTo(MoveDirection.RIGHT);
+		}
+		#else
 		// Check for WASD or arrow key presses and move accordingly
 		if (FlxG.keys.anyPressed(["DOWN", "S"]))
 		{
@@ -89,6 +119,7 @@ class Player extends FlxSprite
 		{
 			moveTo(MoveDirection.RIGHT);
 		}
+		#end
 	}
 	
 	public function moveTo(Direction:MoveDirection):Void
