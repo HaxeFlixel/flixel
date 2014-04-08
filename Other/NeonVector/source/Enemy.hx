@@ -1,13 +1,10 @@
-package ;
+package;
+
 import flash.Lib;
+import flixel.FlxG;
 import flixel.util.FlxAngle;
 import flixel.util.FlxColor;
-import flixel.FlxSprite;
-import flash.display.BitmapData;
-import flixel.FlxG;
-import flixel.util.FlxMath;
 import flixel.util.FlxRandom;
-import flixel.util.FlxTimer;
 
 /**
  * ...
@@ -32,7 +29,7 @@ class Enemy extends Entity
 
 		//enemyPixels = new Array<BitmapData>();
 		enemyPixels = new Array<String>();
-//
+
 		//enemyPixels.push(loadRotatedGraphic("images/Seeker.png", 360, -1, true, true).pixels);
 		//enemyPixels.push(loadRotatedGraphic("images/Wanderer.png", 360, -1, true, true).pixels);
 		//enemyPixels.push(loadRotatedGraphic("images/BlackHole.png", 360, -1, true, true).pixels);
@@ -42,7 +39,7 @@ class Enemy extends Entity
 
 		//_saveWidth = cast width;
 		//_saveHeight = cast height;
-//		cachedGraphics.bitmap = enemyPixels[SEEKER];
+		//cachedGraphics.bitmap = enemyPixels[SEEKER];
 		//pixels = enemyPixels[SEEKER];
 		//region.width = cast width = frameWidth = _saveWidth;
 		//region.height = cast height = frameHeight = _saveHeight;
@@ -57,11 +54,6 @@ class Enemy extends Entity
 		
 		alive = false;
 		exists = false;
-	}
-	
-	override public function draw():Void
-	{
-		super.draw();
 	}
 	
 	override public function update():Void
@@ -82,15 +74,15 @@ class Enemy extends Entity
 		if (type == BLACK_HOLE)
 		{
 			var _angle:Float = (0.720 * Lib.getTimer()) % 360;
-			ScreenState.grid.applyImplosiveForce(position, 0.5 * Math.sin(Entity.toRadians(_angle)) * 150 + 300, 200);
+			ScreenState.grid.applyImplosiveForce(position, 0.5 * Math.sin(FlxAngle.asRadians(_angle)) * 150 + 300, 200);
 			if (cooldownTimer.finished)
 			{
-//					cooldownTimer.abort();
+				//cooldownTimer.abort();
 				cooldownTimer.reset(0.02 + 0.08 * FlxRandom.float());
 				var _color:UInt = 0xff00ff;//Entity.HSVtoRGB(5, 0.5, 0.8); // light purple
 				var _speed:Float = 360 + FlxRandom.float() * 90;
-				var _offsetX:Float = 16 * Math.sin(Entity.toRadians(_angle));
-				var _offsetY:Float = -16 * Math.cos(Entity.toRadians(_angle));
+				var _offsetX:Float = 16 * Math.sin(FlxAngle.asRadians(_angle));
+				var _offsetY:Float = -16 * Math.cos(FlxAngle.asRadians(_angle));
 				ScreenState.makeParticle(Particle.ENEMY, position.x + _offsetX, position.y + _offsetY, _angle, _speed, _color);
 			}
 		}
@@ -104,11 +96,6 @@ class Enemy extends Entity
 	public function postUpdate():Void
 	{
 		if (type != BLACK_HOLE) hitEdgeOfScreen = clampToScreen();
-	}
-	
-	override public function destroy():Void
-	{
-		super.destroy();
 	}
 	
 	override public function hurt(Damage:Float):Void
@@ -196,7 +183,7 @@ class Enemy extends Entity
 	{
 		var CombinedHitBoxRadius:Float = hitboxRadius + Object.hitboxRadius;
 		var IsHitBoxCollision:Bool = (CombinedHitBoxRadius * CombinedHitBoxRadius) >= DistanceSquared;
-		var AngleFromCenters:Float = Entity.toRadians(FlxAngle.getAngle(position, Object.position));
+		var AngleFromCenters:Float = FlxAngle.asRadians(FlxAngle.getAngle(position, Object.position));
 		if (Std.is(Object, Bullet))
 		{
 			if (IsHitBoxCollision) 

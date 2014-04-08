@@ -1,4 +1,4 @@
-package ;
+package;
 
 /**
  * @author Masadow
@@ -16,11 +16,6 @@ class Bullet extends Entity
 		kill();
 	}
 	
-	override public function draw():Void
-	{
-		super.draw();
-	}
-	
 	override public function update():Void
 	{
 		super.update();
@@ -34,11 +29,6 @@ class Bullet extends Entity
 		else ScreenState.grid.applyExplosiveForce(position, 0.25 * Math.sqrt(velocity.x * velocity.x + velocity.y * velocity.y), 80);
 	}
 	
-	override public function destroy():Void
-	{
-		super.destroy();
-	}
-	
 	override public function reset(X:Float, Y:Float):Void
 	{
 		cooldownTimer.abort();
@@ -46,10 +36,5 @@ class Bullet extends Entity
 		acceleration.x = acceleration.y = 0;
 		angularVelocity = 0;
 		super.reset(X - 0.5 * width, Y - 0.5 * height);
-	}
-	
-	override public function collidesWith(Object:Entity, Distance:Float):Void
-	{
-			
 	}
 }

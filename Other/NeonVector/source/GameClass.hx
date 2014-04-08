@@ -14,7 +14,7 @@ class GameClass extends FlxGame
 		var ratioY:Float = stageHeight / 600;
 		var ratio:Float = Math.min(ratioX, ratioY);
 		
-		var fps:Int = 60;
+		var fps:Int = 30;
 		
 		super(Math.ceil(stageWidth / ratio), Math.ceil(stageHeight / ratio), ScreenState, ratio, fps, fps);
 	}

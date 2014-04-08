@@ -41,25 +41,7 @@ class Entity extends FlxSprite
 		cooldownTimer.finished = true;
 	}
 	
-	override public function draw():Void
-	{
-		super.draw();
-	}
-	
-	override public function update():Void
-	{
-		super.update();
-	}
-	
-	override public function destroy():Void
-	{
-		super.destroy();
-	}
-	
-	public function collidesWith(Object:Entity, Distance:Float):Void
-	{
-			
-	}
+	public function collidesWith(Object:Entity, Distance:Float):Void {}
 	
 	public function clampToScreen():Bool
 	{
@@ -106,16 +88,6 @@ class Entity extends FlxSprite
 		return _position;
 	}
 	
-	public static function toRadians(AngleInDegrees:Float):Float
-	{
-		return ((90 + AngleInDegrees) * Math.PI) / 180;
-	}
-	
-	public static function toDegrees(AngleInRadians:Float):Float
-	{
-		return (AngleInRadians * 180) / Math.PI;
-	}
-	
 	public static function angleInDegrees(Vector:FlxPoint):Float
 	{
 		var _angleInRadians:Float = Math.atan2(Vector.y, Vector.x);
@@ -144,9 +116,10 @@ class Entity extends FlxSprite
 	/**
 	 * Modified from http://www.therealjoshua.com/code/flex/calico/src/com/flashfactory/calico/utils/ColorMathUtil.as
 	 * Converts Hue, Saturation, Value to RRGGBB format
-	 * @Hue Angle between 0-360
-	 * @Saturation Float between 0 and 1
-	 * @Value Float between 0 and 1
+	 * 
+	 * @param	Hue Angle between 0-360
+	 * @param	Saturation Float between 0 and 1
+	 * @param	Value Float between 0 and 1
 	 */
 	public static function HSVtoRGB(Hue:Float, Saturation:Float, Value:Float):UInt
 	{

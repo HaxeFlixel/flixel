@@ -1,26 +1,22 @@
-package ;
+package;
 
 import flash.filters.BitmapFilterQuality;
-import flash.Lib;
-import flash.utils.Timer;
-import flixel.FlxState;
-import flixel.FlxG;
-import flixel.FlxSprite;
-import flixel.group.FlxGroup;
-import flixel.system.debug.FlxDebugger;
-import flixel.util.FlxColor;
-import flixel.util.FlxColorUtil;
-import flixel.util.FlxPoint;
-import flixel.text.FlxText;
-import flixel.FlxObject;
-import flash.geom.Point;
 import flash.filters.BlurFilter;
+import flash.geom.Point;
 import flash.geom.Rectangle;
+import flash.Lib;
+import flixel.FlxG;
+import flixel.FlxObject;
+import flixel.FlxSprite;
+import flixel.FlxState;
+import flixel.group.FlxGroup;
+import flixel.text.FlxText;
+import flixel.util.FlxColor;
+import flixel.util.FlxPoint;
 import flixel.util.FlxRandom;
 import flixel.util.FlxSpriteUtil;
 
 /**
- * 
  * @author Masadow
  */
 class ScreenState extends FlxState
@@ -45,29 +41,18 @@ class ScreenState extends FlxState
 	private static var inverseSpawnChance:Float = 60;
 	private static var _spawnPosition:FlxPoint;
 	
-	public function new()
-	{
-		super();
-	}
-	
 	override public function create():Void
 	{
-		// Set a background color
-		FlxG.cameras.bgColor = 0xff131c1b;
-		// Show the mouse (in case it hasn't been disabled)
-		//#if !FLX_NO_MOUSE
-		//FlxG.mouse.show();
-		//#end
-
+		//FlxG.cameras.bgColor = 0xff131c1b;
+		FlxG.mouse.visible = false;
 		FlxG.fixedTimestep = false;
-		FlxG.debugger.setLayout(MICRO);
-		super.create();
+		
 		GameInput.create();
 		GameSound.create();
-			
+		
 		fpsBuffer = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 		fpsIndex = 0;
-			
+		
 		// Neither the grid nor the particles group are added to the FlxState here. Instead, their update() and draw() routines will
 		// be called in a custom order.
 		var _gridRect:Rectangle = new Rectangle(0, 0, FlxG.width, FlxG.height);
@@ -75,7 +60,7 @@ class ScreenState extends FlxState
 		
 		particles = new FlxGroup();
 		for (i in 0...2500) particles.add(new Particle());
-								
+		
 		entities = new FlxGroup();
 		entities.add(new PlayerShip());
 		for (i in 0...100) entities.add(new Bullet());
@@ -168,10 +153,10 @@ class ScreenState extends FlxState
 		FlxG.camera.screen.pixels.applyFilter(FlxG.camera.screen.pixels, _rect, _point, blur);
 		_fx.draw();
 		#else
-		_fx.stamp(FlxG.camera);
+		/*_fx.stamp(FlxG.camera);
 		FlxG.camera.canvas.stage.
 		FlxG.camera.screen.pixels.applyFilter(FlxG.camera.screen.pixels, _rect, _point, blur);
-		_fx.draw();
+		_fx.draw();*/
 		#end
 	}
 	
@@ -193,19 +178,6 @@ class ScreenState extends FlxState
 		cast(Object1, Entity).collidesWith(cast(Object2, Entity), DistanceSquared);
 		cast(Object2, Entity).collidesWith(cast(Object1, Entity), DistanceSquared);
 	}
-	
-	//Not ported, was already commented
-	/*public function circularCollision(Object1:FlxObject, Object2:FlxObject):Bool
-	{
-			var _distanceFromCenters:Float
-			if (Object1 is Entity && Object2 is Entity)
-			{
-					_distanceFromCenters = FlxU.getDistance((Object1 as Entity).position, (Object2 as Entity).position);
-					if (_distanceFromCenters < (Object1 as Entity).radius + (Object2 as Entity).radius) return true;
-					else return false;
-			}
-			else return false;
-	}*/
 	
 	public static function reset():Void
 	{
@@ -254,10 +226,8 @@ class ScreenState extends FlxState
 		else return false;
 	}
 	
-	public static function makeParticle(Type:UInt, PositionX:Float, PositionY:Float, Angle:Float, Speed:Float, ?Color:UInt, Glowing:Bool = false):Bool
+	public static function makeParticle(Type:UInt, PositionX:Float, PositionY:Float, Angle:Float, Speed:Float, Color:UInt = FlxColor.WHITE, Glowing:Bool = false):Bool
 	{
-		if (Color == null)
-			Color = FlxColor.WHITE;
 		Particle.index += 1;
 		if (Particle.index >= Particle.max) Particle.index = 0;
 		var _overwritten:Bool = false;
@@ -309,5 +279,4 @@ class ScreenState extends FlxState
 		
 		return Source;
 	}
-
 }

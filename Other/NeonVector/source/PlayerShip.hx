@@ -1,10 +1,10 @@
-package ;
+package;
 
 import flash.Lib;
 import flixel.FlxG;
 import flixel.util.FlxAngle;
-import flixel.util.FlxRandom;
 import flixel.util.FlxPoint;
+import flixel.util.FlxRandom;
 import flixel.util.FlxTimer;
 
 /**
@@ -42,11 +42,6 @@ class PlayerShip extends Entity
 		UserSettings.load();
 	}
 	
-	override public function draw():Void
-	{
-		super.draw();
-	}
-	
 	override public function update():Void
 	{
 		super.update();
@@ -81,11 +76,6 @@ class PlayerShip extends Entity
 		clampToScreen();
 	}
 	
-	override public function destroy():Void
-	{
-		super.destroy();
-	}
-	
 	override public function kill():Void
 	{
 		super.kill();
@@ -114,10 +104,10 @@ class PlayerShip extends Entity
 	
 	override public function reset(X:Float, Y:Float):Void
 	{
-			super.reset(X - 0.5 * width, Y - 0.5 * height);
-			
-			cooldownTimer.abort();
-			cooldownTimer.finished = true;
+		super.reset(X - 0.5 * width, Y - 0.5 * height);
+		
+		cooldownTimer.abort();
+		cooldownTimer.finished = true;
 	}
 	
 	public function restart():Void
@@ -130,11 +120,6 @@ class PlayerShip extends Entity
 		lives = 4;
 		scoreForExtraLife = 2000;
 		multiplierTimeLeft = 0;
-	}
-	
-	override public function collidesWith(Object:Entity, Distance:Float):Void
-	{
-			
 	}
 	
 	public function shoot(Aim:FlxPoint):Void

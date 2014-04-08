@@ -14,8 +14,6 @@
 	
 	<set name="BUILD_DIR" value="export" />
 	<classpath name="source" />
-	<classpath name="C:\Motion-Twin\Haxe\lib\flixel-addons\flixel-addons" />
-	<classpath name="C:\Motion-Twin\Haxe\lib\flixel\flixel" />
 	
 	<!--You can use rename="newName" to shorten the paths to the individual subdirectories!-->
 	<assets path="assets" />

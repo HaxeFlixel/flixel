@@ -1,12 +1,12 @@
-package ;
+package;
 
+import flash.display.Graphics;
+import flash.display.GraphicsPathCommand;
+import flash.geom.Rectangle;
 import flash.Vector;
+import flixel.FlxG;
 import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
-import flash.geom.Rectangle;
-import flixel.FlxG;
-import flash.display.GraphicsPathCommand;
-import flash.display.Graphics;
 import flixel.util.FlxSpriteUtil;
 
 /**
