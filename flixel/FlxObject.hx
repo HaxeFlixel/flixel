@@ -597,10 +597,10 @@ class FlxObject extends FlxBasic
 	 */
 	public function overlaps(ObjectOrGroup:FlxBasic, InScreenSpace:Bool = false, ?Camera:FlxCamera):Bool
 	{
-		var groupResult:Bool = FlxGroup.overlaps(overlapsCallback, ObjectOrGroup, 0, 0, InScreenSpace, Camera);
-		if (groupResult)
+		var group:FlxGroup = FlxGroup.resolveGroup(ObjectOrGroup);
+		if (group != null) // if it is a group
 		{
-			return true;
+			return FlxGroup.overlaps(overlapsCallback, group, 0, 0, InScreenSpace, Camera);
 		}
 		
 		if (ObjectOrGroup.collisionType == FlxCollisionType.TILEMAP)
@@ -627,7 +627,7 @@ class FlxObject extends FlxBasic
 				(objectScreenPos.y + object.height > _point.y) && (objectScreenPos.y < _point.y + height);
 	}
 	
-	private inline function overlapsCallback(ObjectOrGroup:FlxBasic, X:Float, Y:Float, InScreenSpace:Bool, Camera:FlxCamera):Bool
+	private function overlapsCallback(ObjectOrGroup:FlxBasic, X:Float, Y:Float, InScreenSpace:Bool, Camera:FlxCamera):Bool
 	{
 		return overlaps(ObjectOrGroup, InScreenSpace, Camera);
 	}
@@ -645,10 +645,10 @@ class FlxObject extends FlxBasic
 	 */
 	public function overlapsAt(X:Float, Y:Float, ObjectOrGroup:FlxBasic, InScreenSpace:Bool = false, ?Camera:FlxCamera):Bool
 	{
-		var groupResult:Bool = FlxGroup.overlaps(overlapsAtCallback, ObjectOrGroup, X, Y, InScreenSpace, Camera);
-		if (groupResult)
+		var group:FlxGroup = FlxGroup.resolveGroup(ObjectOrGroup);
+		if (group != null) // if it is a group
 		{
-			return true;
+			return FlxGroup.overlaps(overlapsCallback, group, 0, 0, InScreenSpace, Camera);
 		}
 		
 		if (ObjectOrGroup.collisionType == FlxCollisionType.TILEMAP)
