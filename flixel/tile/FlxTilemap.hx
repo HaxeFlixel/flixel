@@ -284,6 +284,8 @@ class FlxTilemap extends FlxObject
 		// need to destroy FlxCallbackPoints
 		scale = FlxDestroyUtil.destroy(scale);
 		
+		FlxG.signals.gameResize.remove(onGameResize);
+		
 		super.destroy();
 	}
 	
