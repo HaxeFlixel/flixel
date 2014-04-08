@@ -87,6 +87,7 @@ class FlxPreloader extends NMEPreloader
 	private var _min:Int = 0;
 	private var _percent:Float;
 	private var _urlChecked:Bool = false;
+	private var _loaded:Bool = false;
 	
 	public function new()
 	{
@@ -251,18 +252,13 @@ class FlxPreloader extends NMEPreloader
 		_logo = null;
 		_logoGlow = null;
 	}
-	
-	override public function onLoaded():Void 
-	{
-		// Do nothing here
-	}
-	
+
 	override public function onUpdate(bytesLoaded:Int, bytesTotal:Int):Void 
 	{
 		#if !(desktop || mobile)
 		//in case there is a problem with reading the bytesTotal (Gzipped swf)
 		if (root.loaderInfo.bytesTotal == 0) 
-		{
+		{			
 			//To avoid "stucking" the preloader use X (=bytesTotal) like so: Actual file size > X > 0.
 			//Attention! use the actual file size (minus a few KB) for better accuracy on Chrome.
 			var bytesTotal:Int = 50000; 
@@ -277,6 +273,8 @@ class FlxPreloader extends NMEPreloader
 	
 	private function onEnterFrame(event:Event):Void
 	{
+		if (_loaded)
+			return;
 		if (!_init)
 		{
 			if ((Lib.current.stage.stageWidth <= 0) || (Lib.current.stage.stageHeight <= 0))
@@ -294,8 +292,8 @@ class FlxPreloader extends NMEPreloader
 		
 		if ((_percent >= 1) && (time > _min))
 		{
+			_loaded = true;
 			super.onLoaded();
-			destroy();
 		}
 		else
 		{
