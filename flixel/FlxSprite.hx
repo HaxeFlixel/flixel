@@ -542,7 +542,7 @@ class FlxSprite extends FlxObject
 		}
 		
 		resetSizeFromFrame();
-		setOriginToCenter();
+		centerOrigin();
 		return this;
 	}
 	
@@ -636,7 +636,7 @@ class FlxSprite extends FlxObject
 	 * Sets the sprite's origin to its center - useful after adjusting 
 	 * scale to make sure rotations work as expected.
 	 */
-	public inline function setOriginToCenter():Void
+	public inline function centerOrigin():Void
 	{
 		origin.set(frameWidth * 0.5, frameHeight * 0.5);
 	}
@@ -678,7 +678,7 @@ class FlxSprite extends FlxObject
 		width = newWidth;
 		height = newHeight;
 		offset.set( - ((newWidth - frameWidth) * 0.5), - ((newHeight - frameHeight) * 0.5));
-		setOriginToCenter();
+		centerOrigin();
 	}
 	
 	/**
@@ -691,7 +691,7 @@ class FlxSprite extends FlxObject
 		_flashRect2.y = 0;
 		_flashRect2.width = cachedGraphics.bitmap.width;
 		_flashRect2.height = cachedGraphics.bitmap.height;
-		setOriginToCenter();
+		centerOrigin();
 		
 	#if FLX_RENDER_BLIT
 		if ((framePixels == null) || (framePixels.width != frameWidth) || (framePixels.height != frameHeight))
