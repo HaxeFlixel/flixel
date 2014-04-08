@@ -40,7 +40,7 @@ class MenuState extends FlxState
 		var x1:FlxSprite = new FlxSprite(20, 20);
 		x1.loadGraphicFromTexture(tex3, true, false, "100px-1,202,0,200-Scythescraper.png");
 		x1.resetSizeFromFrame();
-		x1.setOriginToCenter();
+		x1.centerOrigin();
 		x1.angularVelocity = 50;
 		add(x1);
 		
@@ -56,7 +56,7 @@ class MenuState extends FlxState
 		x3.loadGraphicFromTexture(tex3, true);
 		x3.animation.frameName = "super_element_50px_0.png";
 		x3.resetSizeFromFrame();
-		x3.setOriginToCenter();
+		x3.centerOrigin();
 		x3.facing = FlxObject.LEFT;
 		add(x3);
 		
