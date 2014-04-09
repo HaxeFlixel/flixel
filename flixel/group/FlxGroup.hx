@@ -19,19 +19,18 @@ class FlxGroup extends FlxTypedGroup<FlxBasic>
 	@:allow(flixel.FlxObject)
 	@:allow(flixel.tile.FlxTilemap)
 	private static inline function overlaps(Callback:FlxBasic->Float->Float->Bool->FlxCamera->Bool, 
-	                                        ObjectOrGroup:FlxBasic, X:Float, Y:Float, InScreenSpace:Bool, Camera:FlxCamera):Bool
+	                                        Group:FlxGroup, X:Float, Y:Float, InScreenSpace:Bool, Camera:FlxCamera):Bool
 	{
 		var result:Bool = false;
-		var group:FlxGroup = resolveGroup(ObjectOrGroup);
-		if (group != null)
+		if (Group != null)
 		{
 			var i = 0;
-			var l = group.length;
+			var l = Group.length;
 			var basic:FlxBasic;
 			
 			while (i < l)
 			{
-				basic = cast group.members[i++];
+				basic = cast Group.members[i++];
 				
 				if (basic != null && Callback(basic, X, Y, InScreenSpace, Camera))
 				{
@@ -43,6 +42,8 @@ class FlxGroup extends FlxTypedGroup<FlxBasic>
 		return result;
 	}
 	
+	@:allow(flixel.FlxObject)
+	@:allow(flixel.tile.FlxTilemap)
 	private static inline function resolveGroup(ObjectOrGroup:FlxBasic):FlxGroup
 	{
 		var group:FlxGroup = null;

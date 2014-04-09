@@ -19,6 +19,7 @@
 * FlxG:
  * fullscreen: fixed offset in flash
  * openURL(): now adds "http://" to the URL if necessary
+ * Added FlxG.maxElapsed
 * FlxSound: 
  * Added loadByteArray()
  * Now has a read-only variable time
@@ -39,8 +40,8 @@
  * Added autoSize that makes sure the entire text is displayed if true with wordWrap = false. Setting fieldWidth to 0 in the constructor is now allowed and activates this behaviour.
 * FlxSpriteUtil: added bound()
 * FlxSpriteGroup:
-	* Added FlxTypedSpriteGroup, which can be used in the same way as FlxTypedGroup, but its type parameter is T:FlxSprite
-	* Setting cameras will now set cameras on its members, add()-ing a sprite will synchronize the values
+ * Added FlxTypedSpriteGroup, which can be used in the same way as FlxTypedGroup, but its type parameter is T:FlxSprite
+ * Setting cameras will now set cameras on its members, add()-ing a sprite will synchronize the values
 * Abstracted rendering into FLX_RENDER_TILE and FLX_RENDER_BLIT conditionals as opposed to being hardcoded based on the target
 * FlxTween:
  * num(): added an optional tweenFunction parameter which can be used for increased performance (as MultiVarTween and SingleVarTween are fairly slow, using Reflection)
@@ -63,11 +64,13 @@
 * FlxTypedButton: 
  * Fixed label.visible = false; not working
  * Fixed a one-frame-delay between setting the label's position and it taking effect
+ * Fixed label scrollfactor being out of sync before the first update()
 * FlxButton: Added a text property as a shortcut for label.text
 * FlxSprite:
  * Added support for more texture packer formats: LibGDXData, SparrowData, TexturePackerXMLData
  * Fixed a null error crash in FlxAtlas on cpp targets with haxe 3.1.0+
  * Added flipHorizontally() and flipVertically(), using negative scale
+ * setOriginToCenter() -> centerOrigin()
 * FlxPreloader:
  * Small fix that should prevent it from getting stuck 
  * Added siteLockURLIndex to control which URL in allowdURLs is used when the site-lock triggers
@@ -80,11 +83,12 @@
  * addByIndicies() -> addByIndices()
 * FlxTypedGroup: added forEachOfType() iterator
 * FlxGamepad: added anyPressed(), anyJustPressed() and anyJustReleased()
-* Traces are not being redirected to the debugger log window anymore
+* Traces are not being redirected to the debugger log window anymore by default
+* Fixed mouse cursor scale at initial camera zoom levels different from 1
 
 3.2.2
 ------------------------------
-* Removed the allow-shaders="false" attribute from the window tag in the include.xml, as causes problems (white screen) with lime 0.9.5 on iOS
+* Removed the allow-shaders="false" attribute from the window tag in the include.xml, as it causes problems (white screen) with lime 0.9.5 on iOS
 
 3.2.1
 ------------------------------

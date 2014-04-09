@@ -8,17 +8,17 @@ class SignalFrontEnd
 	/**
 	 * Gets dispatched when a state change occurs.
 	 */
-	public var stateSwitch(default, null):FlxSignal;
+	public var stateSwitched(default, null):FlxSignal;
 	/**
 	 * Gets dispatched when the game is resized. 
 	 * Passes the new window width and height to callback functions.
 	 */
-	public var gameResize(default, null):FlxTypedSignal<Int->Int->Void>;
+	public var gameResized(default, null):FlxTypedSignal<Int->Int->Void>;
 	public var gameReset(default, null):FlxSignal;
 	/**
 	 * Gets dispatched when the game is started (first state after the splash screen).
 	 */
-	public var gameStart(default, null):FlxSignal;
+	public var gameStarted(default, null):FlxSignal;
 	public var preUpdate(default, null):FlxSignal;
 	public var postUpdate(default, null):FlxSignal;
 	public var preDraw(default, null):FlxSignal;
@@ -29,10 +29,10 @@ class SignalFrontEnd
 	@:allow(flixel.FlxG)
 	private function new() 
 	{
-		stateSwitch = new FlxSignal();
-		gameResize = new FlxTypedSignal<Int->Int->Void>();
+		stateSwitched = new FlxSignal();
+		gameResized = new FlxTypedSignal<Int->Int->Void>();
 		gameReset = new FlxSignal();
-		gameStart = new FlxSignal();
+		gameStarted = new FlxSignal();
 		preUpdate = new FlxSignal();
 		postUpdate = new FlxSignal();
 		preDraw = new FlxSignal();

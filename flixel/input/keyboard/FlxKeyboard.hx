@@ -93,6 +93,57 @@ class FlxKeyboard implements IFlxInput
 		return checkKeyStatus(KeyArray, FlxKey.JUST_RELEASED);
 	}
 	
+		/**
+	 * Get the name of the first key which is currently pressed.
+	 * 
+	 * @return	The name of the key or "" if none could be found.
+	 */
+	public function firstPressed():String
+	{
+		for (key in _keyList)
+		{
+			if (key != null && key.current == FlxKey.PRESSED)
+			{
+				return key.name;
+			}
+		}
+		return "";
+	}
+	
+	/**
+	 * Get the name of the first key which has just been pressed.
+	 * 
+	 * @return	The name of the key or "" if none could be found.
+	 */
+	public function firstJustPressed():String
+	{
+		for (key in _keyList)
+		{
+			if (key != null && key.current == FlxKey.JUST_PRESSED)
+			{
+				return key.name;
+			}
+		}
+		return "";
+	}
+	
+	/**
+	 * Get the name of the first key which has just been released.
+	 * 
+	 * @return	The name of the key or "" if none could be found.
+	 */
+	public function firstJustReleased():String
+	{
+		for (key in _keyList)
+		{
+			if (key != null && key.current == FlxKey.JUST_RELEASED)
+			{
+				return key.name;
+			}
+		}
+		return "";
+	}
+	
 	/**
 	 * Check the status of a single of key
 	 * 

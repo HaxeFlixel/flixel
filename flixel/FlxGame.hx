@@ -417,7 +417,7 @@ class FlxGame extends Sprite
 		
 		_state.onResize(width, height);
 		FlxG.plugins.onResize(width, height);
-		FlxG.signals.gameResize.dispatch(width, height);
+		FlxG.signals.gameResized.dispatch(width, height);
 		
 		#if !FLX_NO_DEBUG
 		debugger.onResize(width, height);
@@ -553,7 +553,7 @@ class FlxGame extends Sprite
 		FlxG.sound.destroy();
 		#end
 		FlxG.plugins.onStateSwitch();
-		FlxG.signals.stateSwitch.dispatch();
+		FlxG.signals.stateSwitched.dispatch();
 		
 		#if FLX_RECORD
 		FlxRandom.updateStateSeed();
@@ -591,7 +591,7 @@ class FlxGame extends Sprite
 	
 	private function gameStart():Void
 	{
-		FlxG.signals.gameStart.dispatch();
+		FlxG.signals.gameStarted.dispatch();
 		_gameJustStarted = false;
 	}
 	
