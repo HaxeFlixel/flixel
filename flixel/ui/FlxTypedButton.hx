@@ -356,20 +356,24 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	
 	override private function set_x(Value:Float):Float 
 	{
+		super.set_x(Value);
+		
 		if (label != null) // Label positioning
 		{
 			label.x = x + labelOffsets[status].x;	
 		}
-		return super.set_x(Value);
+		return x;
 	}
 	
 	override private function set_y(Value:Float):Float 
-	{
+	{	
+		super.set_y(Value);
+		
 		if (label != null) // Label positioning
 		{
 			label.y = y + labelOffsets[status].y;			
 		}
-		return super.set_y(Value);
+		return y;
 	}
 }
 
