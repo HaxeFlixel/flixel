@@ -163,7 +163,7 @@ class FlxKeyboard implements IFlxInput
 	 * 
 	 * @return	FlxKey or null if no button is pressed.
 	 */
-	public function firstPressedButtonID():Int
+	public function firstPressed():FlxKey
 	{
 		for (key in _keyList)
 		{
