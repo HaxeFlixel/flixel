@@ -337,7 +337,7 @@ class FlxTilemap extends FlxObject
 				while (column < widthInTiles)
 				{
 					//the current tile to be added:
-					var curTile : Int = Std.parseInt(columns[column]);
+					var curTile:Int = Std.parseInt(columns[column]);
 
 					//if neko, make sure the value was not null, and if it is null,
 					//make sure it is the last in the row (used to ignore commas)
@@ -347,7 +347,7 @@ class FlxTilemap extends FlxObject
 						_data.push(curTile);	
 						column++;
 					}
-					else if(column == columns.length - 1)
+					else if (column == columns.length - 1)
 					{
 						//if value was a comma, decrease the width by one
 						widthInTiles--;
