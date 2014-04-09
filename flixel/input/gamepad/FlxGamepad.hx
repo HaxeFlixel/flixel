@@ -191,7 +191,7 @@ class FlxGamepad implements IFlxDestroyable
 			if (buttons.exists(b))
 			{
 				if (buttons.get(b).current == PRESSED)
-				return true;
+					return true;
 			}
 		}
 		
@@ -211,7 +211,7 @@ class FlxGamepad implements IFlxDestroyable
 			if (buttons.exists(b))
 			{
 				if (buttons.get(b).current == JUST_PRESSED)
-				return true;
+					return true;
 			}
 		}
 		
@@ -231,7 +231,7 @@ class FlxGamepad implements IFlxDestroyable
 			if (buttons.exists(b))
 			{
 				if (buttons.get(b).current == JUST_RELEASED)
-				return true;
+					return true;
 			}
 		}
 		

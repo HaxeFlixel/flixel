@@ -258,7 +258,7 @@ class FlxPreloader extends NMEPreloader
 		#if !(desktop || mobile)
 		//in case there is a problem with reading the bytesTotal (Gzipped swf)
 		if (root.loaderInfo.bytesTotal == 0) 
-		{			
+		{
 			//To avoid "stucking" the preloader use X (=bytesTotal) like so: Actual file size > X > 0.
 			//Attention! use the actual file size (minus a few KB) for better accuracy on Chrome.
 			var bytesTotal:Int = 50000; 
