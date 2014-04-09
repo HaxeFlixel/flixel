@@ -158,13 +158,47 @@ class FlxKeyboard implements IFlxInput
 		return keysDown;
 	}
 	
+	/**
+	 * Get the first key which is currently pressed.
+	 * 
+	 * @return	FlxKey or null if no button is pressed.
+	 */
+	public function firstPressedButtonID():Int
+	{
+		for (key in _keyList)
+		{
+			if (key != null && key.current == FlxKey.PRESSED)
+			{
+				return key;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * Get the first of all keys just pressed
+	 * 
+	 * @return	FlxKey of first just pressed key or null if none
+	 */
+	public function firstJustPressed():FlxKey
+	{
+		
+		for (key in _keyList)
+		{
+			if (key != null && key.current == FlxKey.JUST_PRESSED)
+			{
+				return key;
+			}
+		}
+		return null;
+	}
 	
 	/**
 	 * Get the first of all keys just released
 	 * 
-	 * @return	FlxKey of first just released key
+	 * @return	FlxKey of first just released key or null if none
 	 */
-	public function getFirstJustReleased():FlxKey
+	public function firstJustReleased():FlxKey
 	{
 		
 		for (key in _keyList)
