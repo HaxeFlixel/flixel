@@ -32,6 +32,7 @@ import flixel.ui.FlxTypedButton.FlxTypedButton;
 import flixel.util.FlxPath;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRect;
+import flixel.util.FlxTimer;
 #end
 
 import flixel.util.FlxStringUtil;
@@ -50,6 +51,8 @@ class Tracker extends Watch
 	 * to prevent the creation of two windows for the same object.
 	 */ 
 	public static var objectsBeingTracked:Array<Dynamic> = [];
+	
+	private static var _numTrackerWindows:Int = 0;
 	
 	public static inline function addProfile(Profile:TrackerProfile):Void
 	{
@@ -114,6 +117,7 @@ class Tracker extends Watch
 			                                         "scale", "backward", "executions", "startDelay", "loopDelay"]));
 			
 			addProfile(new TrackerProfile(FlxPath, ["speed", "angle", "autoCenter", "_nodeIndex", "paused", "finished"]));
+			addProfile(new TrackerProfile(FlxTimer, ["time", "loops", "paused", "finished", "timeLeft", "elapsedTime", "loopsLeft", "elapsedLoops", "progress"]));
 			
 			// Inputs
 			#if !FLX_NO_MOUSE
@@ -138,8 +142,6 @@ class Tracker extends Watch
 			addProfile(new TrackerProfile(Matrix, ["a", "b", "c", "d", "tx", "ty"]));
 		}
 	}
-	
-	private static var _numTrackerWindows:Int = 0;
 	
 	private var _object:Dynamic;
 	

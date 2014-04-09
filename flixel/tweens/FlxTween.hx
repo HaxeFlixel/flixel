@@ -52,11 +52,6 @@ class FlxTween implements IFlxDestroyable
 	 * The tweening plugin that handles all the tweens.
 	 */
 	public static var manager:TweenManager;
-	/**
-	 * Bool that prevents this object drom being recycled / destroyed multiple times in a row.
-	 */
-	@:allow(flixel.plugin.TweenManager)
-	private var _inPool:Bool = false;
 	
 	/**
 	 * Creates a singleVar or multiVar FlxTween based on how many fields you want to tween.
@@ -522,6 +517,12 @@ class FlxTween implements IFlxDestroyable
 	
 	@:allow(flixel.plugin.TweenManager)
 	private var _usePooling:Bool;
+	
+	/**
+	 * Bool that prevents this object drom being recycled / destroyed multiple times in a row.
+	 */
+	@:allow(flixel.plugin.TweenManager)
+	private var _inPool:Bool = false;
 
 	/**
 	 * This function is called when tween is created, or recycled.

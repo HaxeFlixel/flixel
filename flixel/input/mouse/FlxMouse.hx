@@ -454,7 +454,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		
 		_stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
 		
-		FlxG.signals.gameStart.add(onGameStart);
+		FlxG.signals.gameStarted.add(onGameStart);
 		Mouse.hide();
 	}
 	
