@@ -52,7 +52,7 @@ class FlxPreloader extends NMEPreloader
 	/**
 	 * Change this if you want the flixel logo to show for more or less time.  Default value is 1 second. Don't go lower or you'll jam the preloader.
 	 */
-	public var minDisplayTime:Float = 1;
+	public var minDisplayTime:Float = 5;
 	
 	/**
 	 * List of allowed URLs for built-in site-locking.
@@ -271,8 +271,20 @@ class FlxPreloader extends NMEPreloader
 		#end
 	}
 	
+	override public function onLoaded():Void
+	{
+
+	}
+	
+	private function realLoad():Void
+	{
+		super.onLoaded();
+		destroy();
+	}
+	
 	private function onEnterFrame(event:Event):Void
 	{
+		
 		if (_loaded)
 			return;
 		if (!_init)
@@ -289,11 +301,10 @@ class FlxPreloader extends NMEPreloader
 		
 		graphics.clear();
 		var time:Int = Lib.getTimer();
-		
 		if ((_percent >= 1) && (time > _min))
 		{
 			_loaded = true;
-			super.onLoaded();
+			realLoad();
 		}
 		else
 		{
