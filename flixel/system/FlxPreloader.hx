@@ -52,7 +52,7 @@ class FlxPreloader extends NMEPreloader
 	/**
 	 * Change this if you want the flixel logo to show for more or less time.  Default value is 1 second. Don't go lower or you'll jam the preloader.
 	 */
-	public var minDisplayTime:Float = 5;
+	public var minDisplayTime:Float = .33;
 	
 	/**
 	 * List of allowed URLs for built-in site-locking.
