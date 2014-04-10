@@ -12,22 +12,69 @@ typedef FlxSignal = FlxTypedSignal<Void->Void>;
 @:multiType
 abstract FlxTypedSignal<T>(IFlxSignal<T>)
 {
+	public var dispatch(get, never):T;
+	
 	public function new();
 	
-	public var dispatch(get, never):T;
-	private inline function get_dispatch() return this.dispatch;
+	public inline function add(listener:T):Void 
+	{
+		this.add(listener);
+	}
 	
-	public inline function add(listener:T):Void this.add(listener);
-	public inline function addOnce(listener:T):Void this.addOnce(listener);
-	public inline function remove(listener:T):Void this.remove(listener);
-	public inline function has(listener:T):Bool return this.has(listener);
-	public inline function removeAll():Void this.removeAll();
+	public inline function addOnce(listener:T):Void 
+	{
+		this.addOnce(listener);
+	}
 	
-	@:to static inline function toSignal0(signal:IFlxSignal<Void->Void>):FlxSignal0 return new FlxSignal0();
-	@:to static inline function toSignal1<T1>(signal:IFlxSignal<T1->Void>):FlxSignal1<T1> return new FlxSignal1();
-	@:to static inline function toSignal2<T1,T2>(signal:IFlxSignal<T1->T2->Void>):FlxSignal2<T1,T2> return new FlxSignal2();
-	@:to static inline function toSignal3<T1,T2,T3>(signal:IFlxSignal<T1->T2->T3->Void>):FlxSignal3<T1,T2,T3> return new FlxSignal3();
-	@:to static inline function toSignal4<T1,T2,T3,T4>(signal:IFlxSignal<T1->T2->T3->T4->Void>):FlxSignal4<T1,T2,T3,T4> return new FlxSignal4();
+	public inline function remove(listener:T):Void
+	{
+		this.remove(listener);
+	}
+	
+	public inline function has(listener:T):Bool 
+	{
+		return this.has(listener);
+	}
+	
+	public inline function removeAll():Void 
+	{
+		this.removeAll();
+	}
+	
+	private inline function get_dispatch():T
+	{
+		return this.dispatch;
+	}
+	
+	@:to 
+	private static inline function toSignal0(signal:IFlxSignal<Void->Void>):FlxSignal0 
+	{
+		return new FlxSignal0();
+	}
+	
+	@:to 
+	private static inline function toSignal1<T1>(signal:IFlxSignal<T1->Void>):FlxSignal1<T1> 
+	{
+		return new FlxSignal1();
+	}
+	
+	@:to 
+	private static inline function toSignal2<T1, T2>(signal:IFlxSignal<T1->T2->Void>):FlxSignal2<T1,T2> 
+	{
+		return new FlxSignal2();
+	}
+	
+	@:to 
+	private static inline function toSignal3<T1, T2, T3>(signal:IFlxSignal<T1->T2->T3->Void>):FlxSignal3<T1,T2,T3> 
+	{
+		return new FlxSignal3();
+	}
+	
+	@:to 
+	private static inline function toSignal4<T1, T2, T3, T4>(signal:IFlxSignal<T1->T2->T3->T4->Void>):FlxSignal4<T1,T2,T3,T4> 
+	{
+		return new FlxSignal4();
+	}
 }
 
 private class FlxSignalHandler<T> implements IFlxDestroyable
@@ -49,6 +96,20 @@ private class FlxSignalHandler<T> implements IFlxDestroyable
 
 private class FlxSignalBase<T> implements IFlxSignal<T> 
 {
+	macro static function buildDispatch(exprs:Array<Expr>):Expr
+	{
+		return macro
+		{ 
+			for (handler in _handlers)
+			{
+				handler.listener($a{exprs});
+				
+				if (handler.dispatchOnce)
+					remove(handler.listener);
+			}
+		}
+	}
+	
 	/**
 	 * Typed function reference used to dispatch this signal.
 	 */
@@ -141,20 +202,6 @@ private class FlxSignalBase<T> implements IFlxSignal<T>
 			}
 		}
 		return null; // Listener not yet registered.
-	}
-	
-	macro static function buildDispatch(exprs:Array<Expr>):Expr
-	{
-		return macro
-		{ 
-			for (handler in _handlers)
-			{
-				handler.listener($a{exprs});
-				
-				if (handler.dispatchOnce)
-					remove(handler.listener);
-			}
-		}
 	}
 }
 
