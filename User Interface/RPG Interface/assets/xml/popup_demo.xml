@@ -43,7 +43,7 @@
 	<mode id="demo_0" is_default="true">
 		<show id="btn0,btn1,btn2"/>
 		<align axis="horizontal" spacing="10" resize="true">
-			<bounds left="back.left+10" right="back.right-10"/>		
+			<bounds left="back.left+10" right="back.right-10"/>
 			<objects value="btn0,btn1,btn2"/>
 		</align>
 		<change id="title" text="$POPUP_DEMO_0_TITLE"/>
@@ -57,9 +57,9 @@
 		<show id="btn0,btn1"/>
 		<hide id="btn2"/>
 		<align axis="horizontal" spacing="10" resize="true">
-			<bounds left="back.left+10" right="back.right-10"/>		
+			<bounds left="back.left+10" right="back.right-10"/>
 			<objects value="btn0,btn1"/>
-		</align>				
+		</align>
 		<change id="title" text="$POPUP_DEMO_1_TITLE"/>
 		<change id="body" text="$POPUP_DEMO_1_BODY"/>
 		<change id="btn0" label="$POPUP_BACK"/>

@@ -44,8 +44,8 @@ class PlayState extends FlxState
 		add(_player2);
 		
 		// Then we setup two cameras to follow each of the two players
-		createCamera(_halfWidth, 0xFFCCCC, _player1);
-		createCamera(0, 0xCCCCFF, _player2);
+		createCamera(_halfWidth, 0xFFFFCCCC, _player1);
+		createCamera(0, 0xFFCCCCFF, _player2);
 		
 		// Some instructions
 		var textBG:FlxSprite = new FlxSprite(0, _textY);
@@ -69,7 +69,6 @@ class PlayState extends FlxState
 		player.makeGraphic(10, 12, Color);
 		player.maxVelocity.set(100, 200);
 		player.acceleration.y = 200;
-		player.forceComplexRender = true;
 		player.drag.x = player.maxVelocity.x * 4;
 		
 		return player;
@@ -79,7 +78,7 @@ class PlayState extends FlxState
 	{
 		var camera:FlxCamera = new FlxCamera(X, 0, _halfWidth, _textY);
 		camera.setBounds(0, 0, _level.width - 8, _textY);
-		camera.color = Color;
+		camera.bgColor = Color;
 		camera.follow(Follow);
 		FlxG.cameras.add(camera);
 	}

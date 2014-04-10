@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<data>
+	
+	<button id="butt_0" label="Thing 0">
+		<anchor x="70%" x-flush="right"/>
+		<param type="int" value="0"/>
+	</button>
+	<button id="butt_1" label="Thing 1">
+		<anchor x="70%" x-flush="right"/>
+		<param type="int" value="1"/>
+	</button>
+	<button id="butt_2" label="Thing 2">
+		<anchor x="70%" x-flush="right"/>
+		<param type="int" value="2"/>
+	</button>
+	<button id="butt_3" label="Thing 3">
+		<anchor x="70%" x-flush="right"/>
+		<param type="int" value="3"/>
+	</button>
+	<button id="butt_4" label="Thing 4">
+		<anchor x="70%" x-flush="right"/>
+		<param type="int" value="4"/>
+	</button>
+	
+	<button id="butt_5" label="Thing 5" x="5">
+		<anchor x="butt_0.right" x-flush="left"/>
+		<param type="int" value="5"/>
+	</button>
+	<button id="butt_6" label="Thing 6" x="5">
+		<anchor x="butt_0.right" x-flush="left"/>
+		<param type="int" value="6"/>
+	</button>
+	<button id="butt_7" label="Thing 7" x="5">
+		<anchor x="butt_0.right" x-flush="left"/>
+		<param type="int" value="7"/>
+	</button>
+	<button id="butt_8" label="Thing 8" x="5">
+		<anchor x="butt_0.right" x-flush="left"/>
+		<param type="int" value="8"/>
+	</button>
+	<button id="butt_9" label="Thing 9" x="5">
+		<anchor x="butt_0.right" x-flush="left"/>
+		<param type="int" value="9"/>
+	</button>
+	
+	<align axis="vertical">
+		<objects value="butt_0,butt_1,butt_2,butt_3,butt_4"/>
+		<objects value="butt_5,butt_6,butt_7,butt_8,butt_9"/>
+		<bounds top="10%" bottom="60%"/>
+	</align>
+	
+	<checkbox id="check_wrap" label="Wrap" checked="true" x="10%">
+		<anchor y="butt_0.top" x-flush="top"/>
+		<param type="string" value="wrap"/>
+	</checkbox>
+	<checkbox id="check_tab" label="Tab" checked="true" x="10%">
+		<anchor y="butt_1.top" x-flush="top"/>
+		<param type="string" value="tab"/>
+	</checkbox>
+	<checkbox id="check_arrows" label="Arrows" checked="true" x="10%">
+		<anchor y="butt_2.top" x-flush="top"/>
+		<param type="string" value="arrows"/>
+	</checkbox>
+	<checkbox id="check_wasd" label="WASD" checked="false" x="10%">
+		<anchor y="butt_3.top" x-flush="top"/>
+		<param type="string" value="wasd"/>
+	</checkbox>
+	<checkbox id="check_numpad" label="NUMPAD" checked="false" x="10%">
+		<anchor y="butt_4.top" x-flush="top"/>
+		<param type="string" value="numpad"/>
+	</checkbox>
+	
+	<text id="text" center_x="true" y="65%" align="center" width="100%" color="0xFFFFFF" text="Tab/Shift+Tab to move, Enter to click"/>
+	
+	<text id="move_text" center_x="true" y="5" align="center" width="100%" color="0xFFFFFF" text="(Changes when cursor moves)">
+		<anchor y="text.bottom" y-flush="top"/>
+	</text>
+	<text id="click_text" center_x="true" y="5" align="center" width="100%" color="0xFFFFFF" text="(Changes when cursor clicks)">
+		<anchor y="move_text.bottom" y-flush="top"/>
+	</text>
+	<text id="event_text" center_x="true" y="5" align="center" width="100%" color="0xFFFFFF" text="(Changes when real mouse events happen)">
+		<anchor y="click_text.bottom" y-flush="top"/>
+	</text>
+	
+</data>

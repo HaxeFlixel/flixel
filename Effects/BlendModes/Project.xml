@@ -12,7 +12,6 @@
 	<haxelib name="flixel"/>
 	<haxelib name="flixel-ui"/>
 	<haxelib name="flixel-addons"/>
-	<haxelib name="openfl"/>
 	
 	<haxedef name="FLX_BMP_DEBUG"/>
 	<haxedef name="FLX_NO_DEBUG" unless="debug"/>

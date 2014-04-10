@@ -27,7 +27,7 @@ class MenuState extends FlxState
 	{
 		// Change the default mouse to an inverted triangle.
 		FlxG.mouse.load("images/mouse.png");
-		#if !(cpp || neko)
+		#if flash
 		FlxG.mouse.cursorContainer.blendMode = BlendMode.INVERT;
 		#end
 		
@@ -99,7 +99,7 @@ class MenuState extends FlxState
 	 */
 	public function enemyFollowPath():Void
 	{
-		_enemy.followPath(_map.findPath(new FlxPoint(START_X, START_Y), new FlxPoint(END_X, END_Y)));
+		_enemy.followPath(_map.findPath(FlxPoint.get(START_X, START_Y), FlxPoint.get(END_X, END_Y)));
 	}
 	
 	override public function destroy():Void

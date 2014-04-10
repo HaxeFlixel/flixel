@@ -56,9 +56,6 @@ class PlayState extends FlxState
 		// Simulate Gravity on the Player
 		_player.acceleration.y = 200;
 		
-		// Make it look smoother
-		_player.forceComplexRender = true;
-		
 		_player.drag.x = _player.maxVelocity.x * 4;
 		add(_player);
 		

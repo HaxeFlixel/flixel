@@ -3,13 +3,15 @@
 	
 	<app title="FlxNape" file="FlxNape" path="bin" main="Main" version="1.0.0" company="TiagoLr ( ~~~ProG4mr~~~)" />
 
+	<set name="SWF_VERSION" value="11.8" />
+	
 	<window background="#000000" fps="60" />
 	<window width="640" height="480" unless="mobile" />
 	<window orientation="landscape" vsync="true" antialiasing="0" if="cpp" />
 	
 	<!-- classpath, haxe libs -->
 	<source path="source" />
-	<haxelib name="openfl" />
+
 	<haxelib name="flixel"/>
 	<haxelib name="flixel-addons"/>
 	<haxelib name="nape"/>

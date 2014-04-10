@@ -172,7 +172,7 @@ class Character extends FlxExtendedSprite {
 		y = json.collision_map.y;
 		w = json.collision_map.width;
 		h = json.collision_map.height;
-		collisionMap = new FlxRect(x, y, w, h);
+		collisionMap = FlxRect.get(x, y, w, h);
 
 		// animations
 		var v_def:Int = json.animations.velocities.def;

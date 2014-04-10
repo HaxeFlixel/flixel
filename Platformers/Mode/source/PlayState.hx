@@ -194,7 +194,7 @@ class PlayState extends FlxState
 		// with this sweet function.  In this case, we want to set
 		// the scroll factors to zero, to make sure the HUD doesn't
 		// wiggle around while we play.
-		_hud.setAll("scrollFactor", new FlxPoint(0, 0));
+		_hud.setAll("scrollFactor", FlxPoint.get(0, 0));
 		_hud.setAll("cameras", [FlxG.camera]);
 		
 		FlxG.sound.playMusic("Mode");

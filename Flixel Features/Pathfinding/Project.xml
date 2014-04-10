@@ -17,7 +17,6 @@
 	<classpath name="source" />
 	<assets path="assets" rename="assets" />
 	
-	<haxelib name="openfl" />
 	<haxelib name="flixel"/>
 	
 	<!--In case you want to use the addons-->

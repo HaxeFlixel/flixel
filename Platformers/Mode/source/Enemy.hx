@@ -47,7 +47,7 @@ class Enemy extends FlxSprite
 	/**
 	 * This object isn't strictly necessary, and is only used with getMidpoint().
 	 * By passing this object, we can avoid a potentially costly allocation of
-	 * a new FlxPoint() object by the getMidpoint() function.
+	 * a FlxPoint.get() object by the getMidpoint() function.
 	 */
 	private var _playerMidpoint:FlxPoint;
 	
@@ -83,7 +83,7 @@ class Enemy extends FlxSprite
 		angularDrag = 400;
 		drag.x = 35;
 		_thrust = 0;
-		_playerMidpoint = new FlxPoint();
+		_playerMidpoint = FlxPoint.get();
 	}
 	/**
 	 * Each time an Enemy is recycled (in this game, by the Spawner object)

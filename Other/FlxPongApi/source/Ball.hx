@@ -17,16 +17,16 @@ class Ball extends PongSprite
 	
 	inline private static function DEFAULT_VELOCITY():FlxPoint
 	{
-		return new FlxPoint( -128, -128);
+		return FlxPoint.get( -128, -128);
 	}
 	
 	public function new()
 	{
 		super(Std.int(FlxG.width / 2), Std.int(FlxG.height / 2), 4, 4, Reg.dark);
 		velocity = DEFAULT_VELOCITY();
-		minVelocity = new FlxPoint(32, 32);
-		maxVelocity = new FlxPoint(256, 256);
-		drag = new FlxPoint(0, 0);
+		minVelocity = FlxPoint.get(32, 32);
+		maxVelocity = FlxPoint.get(256, 256);
+		drag = FlxPoint.get(0, 0);
 		elasticity = 1.0;
 	}
 	

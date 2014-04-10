@@ -59,22 +59,4 @@ class Button extends FlxButton
 		}
 		return status = Value;
 	}
-	
-	/**
-	 * Just an easy way to get the label text from this button.
-	 * Lets you call myButton.text instead of myButton.label.text
-	 */
-	public var text(get, set):String;
-	
-	private function get_text():String
-	{
-		return label.text;
-	}
-	
-	private function set_text(NewText:String):String
-	{
-		label.text = NewText;
-		
-		return label.text;
-	}
 }

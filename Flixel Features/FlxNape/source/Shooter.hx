@@ -51,7 +51,7 @@ class Shooter extends FlxGroup
 		background.alpha = 1;
 		FlxG.state.members.insert(0, background);
 		FlxG.state.length++;
-		MouseEventManager.addSprite(background, launchProjectile);
+		MouseEventManager.add(background, launchProjectile);
 		//var color = FlxRandom.intRanged(0, FlxRandom.MAX_RANGE);
 		var color = 0x333333;
 		
@@ -92,8 +92,8 @@ class Shooter extends FlxGroup
 		
 		spr.body.position.y = 30;
 		spr.body.position.x = 30 + Std.random(640 - 30);
-		var angle = FlxAngle.getAngle(new FlxPoint(FlxG.mouse.x, FlxG.mouse.y), 
-									  new FlxPoint(spr.body.position.x, spr.body.position.y));
+		var angle = FlxAngle.getAngle(FlxPoint.get(FlxG.mouse.x, FlxG.mouse.y), 
+									  FlxPoint.get(spr.body.position.x, spr.body.position.y));
 		angle += 90;
 		spr.body.velocity.setxy(impulse * Math.cos(angle * 3.14 / 180),
 								impulse * Math.sin(angle * 3.14 / 180));
@@ -108,9 +108,9 @@ class Shooter extends FlxGroup
 			spr.kill();
 	}
 	
-	public function registerPhysSprite(spr:FlxNapeSprite)
+	public inline function registerPhysSprite(spr:FlxNapeSprite)
 	{
-		MouseEventManager.addSprite(spr, createMouseJoint);
+		MouseEventManager.add(spr, createMouseJoint);
 	}
 	
 	function createMouseJoint(spr:FlxSprite) 
