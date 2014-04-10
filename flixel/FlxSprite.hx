@@ -763,9 +763,10 @@ class FlxSprite extends FlxObject
 #if FLX_RENDER_BLIT
 			if (simpleRender)
 			{
-				// use fround() to deal with floating point precision issues in flash
-				_flashPoint.x = Math.fround(_point.x);
-				_flashPoint.y = Math.fround(_point.y);
+				// Used to use fround() to "deal with floating point precision issues in flash"
+				// Changed to ffloor() for consistency with everything else
+				_flashPoint.x = Math.ffloor(_point.x);
+				_flashPoint.y = Math.ffloor(_point.y);
 				
 				camera.buffer.copyPixels(framePixels, _flashRect, _flashPoint, null, null, true);
 			}
