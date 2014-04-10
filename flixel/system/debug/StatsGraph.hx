@@ -16,14 +16,7 @@ class StatsGraph extends Sprite
 {
 	private static inline var AXIS_COLOR:Int = 0xffffff;
 	private static inline var AXIS_ALPHA:Float = 0.5;
-	private static inline var LABEL_WIDTH:Int = 50;
 	private static inline var HISTORY_MAX:Int = 30;
-	
-	private var _axis:Shape;
-	private var _axisWidth:Int;
-	private var _width:Int;
-	private var _height:Int;
-	private var _unit:String;
 	
 	public var minLabel:TextField;
 	public var curLabel:TextField;
@@ -37,36 +30,37 @@ class StatsGraph extends Sprite
 	
 	public var history:Array<Float>;
 	
-	/**
-	 * Creates a new stats gaph.
-	 * 
-	 * @param	X
-	 * @param	Y
-	 * @param	Width
-	 * @param	Height
-	 */
-	public function new(X:Int, Y:Int, Width:Int, Height:Int, GraphColor:Int, Unit:String)
+	private var _axis:Shape;
+	private var _width:Int;
+	private var _height:Int;
+	private var _unit:String;
+	private var _labelWidth:Int;
+	private var _label:String;
+	
+	public function new(X:Int, Y:Int, Width:Int, Height:Int, GraphColor:Int, Unit:String, LabelWidth:Int = 45, ?Label:String)
 	{
 		super();
 		x = X;
 		y = Y;
-		_width = Width;
+		_width = Width - LabelWidth;
 		_height = Height;
 		graphColor = GraphColor;
 		_unit = Unit;
+		_labelWidth = LabelWidth;
+		_label = (Label == null) ? "" : Label;
 		
 		history = [];
 		
 		_axis = new Shape();
-		_axis.x = x + LABEL_WIDTH;
+		_axis.x = _labelWidth + 10;
 		
 		maxLabel = DebuggerUtil.createTextField(0, 0, Stats.LABEL_COLOR, Stats.TEXT_SIZE);
 		curLabel = DebuggerUtil.createTextField(0, (_height / 2) - (Stats.TEXT_SIZE / 2), graphColor, Stats.TEXT_SIZE);
 		minLabel = DebuggerUtil.createTextField(0, _height - Stats.TEXT_SIZE, Stats.LABEL_COLOR, Stats.TEXT_SIZE);
-		avgLabel = DebuggerUtil.createTextField((_width / 2), (_height / 2) - (Stats.TEXT_SIZE / 2), Stats.LABEL_COLOR, Stats.TEXT_SIZE);
+		
+		avgLabel = DebuggerUtil.createTextField(_labelWidth + 20, (_height / 2) - (Stats.TEXT_SIZE / 2) - 10, Stats.LABEL_COLOR, Stats.TEXT_SIZE);
 		avgLabel.width = _width;
 		avgLabel.defaultTextFormat.align = TextFormatAlign.CENTER;
-		//avgLabel.defaultTextFormat.bold = true;
 		avgLabel.alpha = 0.5;
 		
 		addChild(_axis);
@@ -94,7 +88,7 @@ class StatsGraph extends Sprite
 		
 		// x-Axis
 		gfx.moveTo(0, _height);
-		gfx.lineTo(_width - _axis.x, _height);
+		gfx.lineTo(_width, _height);
 		
 		gfx.endFill();
 	}
@@ -109,7 +103,7 @@ class StatsGraph extends Sprite
 		gfx.lineStyle(1, graphColor, 1);
 		gfx.moveTo(_axis.x, _axis.y);
 		
-		var inc:Float = (_width - _axis.x) / (HISTORY_MAX - 1);
+		var inc:Float = (_width) / (HISTORY_MAX - 1);
 		var range:Float = maxValue - minValue;
 		var value:Float;
 		
@@ -124,9 +118,8 @@ class StatsGraph extends Sprite
 	{
 		history.unshift(Value);
 		
-		if (history.length > HISTORY_MAX) {
+		if (history.length > HISTORY_MAX)
 			history.pop();
-		}
 		
 		// Update range
 		maxValue = Math.max(maxValue, Value);
@@ -136,10 +129,10 @@ class StatsGraph extends Sprite
 		curLabel.text = FlxMath.roundDecimal(Value, Stats.DECIMALS) + " " + _unit;
 		maxLabel.text = FlxMath.roundDecimal(maxValue, Stats.DECIMALS) + " " + _unit;
 		
-		if (Average == null) {
+		if (Average == null)
 			Average = average();
-		}
-		avgLabel.text = "Avg: " + FlxMath.roundDecimal(Average, Stats.DECIMALS) + " " + _unit;
+		
+		avgLabel.text = _label +"\nAvg: " + FlxMath.roundDecimal(Average, Stats.DECIMALS) + " " + _unit;
 		
 		drawGraph();
 	}

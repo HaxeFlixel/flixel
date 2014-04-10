@@ -8,14 +8,10 @@ import flixel.system.debug.FlxDebugger.DebuggerLayout;
 import flixel.system.debug.Window;
 import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxStringUtil;
+import flixel.util.FlxSignal;
 
 class DebuggerFrontEnd
 {	
-	/**
-	 * Whether to draw the hitboxes of FlxObjects.
-	 */
-	public var drawDebug:Bool = false;
-	
 	/**
 	 * The amount of decimals FlxPoints / FlxRects are rounded to in log / watch / trace.
 	 */
@@ -25,10 +21,18 @@ class DebuggerFrontEnd
 	/**
 	 * The key codes used to toggle the debugger (see FlxG.keys for the keys available).
 	 * Default keys: ` and \. Set to null to deactivate.
-	 * @default ["GRAVEACCENT", "BACKSLASH"]
 	 */
 	public var toggleKeys:Array<String>;
 	#end
+	
+	/**
+	 * Whether to draw the hitboxes of FlxObjects.
+	 */
+	public var drawDebug(default, set):Bool = false;
+	/**
+	 * Dispatched when drawDebug is changed.
+	 */
+	public var drawDebugChanged(default, null):FlxSignal;
 	
 	public var visible(default, set):Bool = false;
 	
@@ -136,14 +140,25 @@ class DebuggerFrontEnd
 		#if !FLX_NO_KEYBOARD
 		toggleKeys = ["GRAVEACCENT", "BACKSLASH"];
 		#end
+		drawDebugChanged = new FlxSignal();
 	}
 	
-	private inline function set_visible(Visible:Bool):Bool
+	private inline function set_drawDebug(Value:Bool):Bool
 	{
 		#if !FLX_NO_DEBUG
-		FlxG.game.debugger.visible = Visible;
+		if (Value != drawDebug)
+			drawDebugChanged.dispatch();
 		#end
 		
-		return visible = Visible;
+		return drawDebug = Value;
+	}
+	
+	private inline function set_visible(Value:Bool):Bool
+	{
+		#if !FLX_NO_DEBUG
+		FlxG.game.debugger.visible = Value;
+		#end
+		
+		return visible = Value;
 	}
 }

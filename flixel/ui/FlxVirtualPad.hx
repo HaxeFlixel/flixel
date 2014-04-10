@@ -4,16 +4,34 @@ import flash.display.BitmapData;
 import flixel.FlxG;
 import flixel.group.FlxSpriteGroup;
 import flixel.system.FlxAssets;
+import flixel.util.FlxDestroyUtil;
 
-@:bitmap("assets/images/ui/virtualpad/a.png")     private class GraphicA     extends BitmapData {}
-@:bitmap("assets/images/ui/virtualpad/b.png")     private class GraphicB     extends BitmapData {}
-@:bitmap("assets/images/ui/virtualpad/c.png")     private class GraphicC     extends BitmapData {}
-@:bitmap("assets/images/ui/virtualpad/down.png")  private class GraphicDown  extends BitmapData {}
-@:bitmap("assets/images/ui/virtualpad/left.png")  private class GraphicLeft  extends BitmapData {}
-@:bitmap("assets/images/ui/virtualpad/right.png") private class GraphicRight extends BitmapData {}
-@:bitmap("assets/images/ui/virtualpad/up.png")    private class GraphicUp    extends BitmapData {}
-@:bitmap("assets/images/ui/virtualpad/x.png")     private class GraphicX     extends BitmapData {}
-@:bitmap("assets/images/ui/virtualpad/y.png")     private class GraphicY     extends BitmapData {}
+@:bitmap("assets/images/ui/virtualpad/a.png")
+private class GraphicA extends BitmapData {}
+
+@:bitmap("assets/images/ui/virtualpad/b.png")
+private class GraphicB extends BitmapData {}
+
+@:bitmap("assets/images/ui/virtualpad/c.png")
+private class GraphicC extends BitmapData {}
+
+@:bitmap("assets/images/ui/virtualpad/down.png")
+private class GraphicDown extends BitmapData {}
+
+@:bitmap("assets/images/ui/virtualpad/left.png")
+private class GraphicLeft extends BitmapData {}
+
+@:bitmap("assets/images/ui/virtualpad/right.png")
+private class GraphicRight extends BitmapData {}
+
+@:bitmap("assets/images/ui/virtualpad/up.png")
+private class GraphicUp extends BitmapData {}
+
+@:bitmap("assets/images/ui/virtualpad/x.png")
+private class GraphicX extends BitmapData {}
+
+@:bitmap("assets/images/ui/virtualpad/y.png")
+private class GraphicY extends BitmapData {}
 
 /**
  * A gamepad which contains 4 directional buttons and 4 action buttons.
@@ -109,8 +127,8 @@ class FlxVirtualPad extends FlxSpriteGroup
 	{
 		super.destroy();
 		
-		dPad = FlxG.safeDestroy(dPad);
-		actions = FlxG.safeDestroy(actions);
+		dPad = FlxDestroyUtil.destroy(dPad);
+		actions = FlxDestroyUtil.destroy(actions);
 		
 		dPad = null;
 		actions = null;

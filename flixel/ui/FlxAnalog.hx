@@ -8,11 +8,15 @@ import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;
 import flixel.input.touch.FlxTouch;
 import flixel.util.FlxAngle;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRect;
 
-@:bitmap("assets/images/ui/analog/base.png")  private class GraphicBase  extends BitmapData {}
-@:bitmap("assets/images/ui/analog/thumb.png") private class GraphicThumb extends BitmapData {}
+@:bitmap("assets/images/ui/analog/base.png")
+private class GraphicBase extends BitmapData {}
+
+@:bitmap("assets/images/ui/analog/thumb.png")
+private class GraphicThumb extends BitmapData {}
 
 /**
  * A virtual thumbstick - useful for input on mobile devices.
@@ -101,7 +105,7 @@ class FlxAnalog extends FlxSpriteGroup
 	 */
 	public function new(X:Float, Y:Float, Radius:Float = 0, Ease:Float = 0.25)
 	{
-		_zone = new FlxRect();
+		_zone = FlxRect.get();
 		
 		super();
 		
@@ -114,11 +118,11 @@ class FlxAnalog extends FlxSpriteGroup
 		}
 		_analogs.push(this);
 		
-		acceleration = new FlxPoint();
+		acceleration = FlxPoint.get();
 		#if !FLX_NO_TOUCH
 		_tempTouches = [];
 		#end
-		_point = new FlxPoint();
+		_point = FlxPoint.get();
 		
 		createBase();
 		createThumb();
@@ -187,16 +191,15 @@ class FlxAnalog extends FlxSpriteGroup
 	{
 		super.destroy();
 		
+		_zone = FlxDestroyUtil.put(_zone);
+		
 		_analogs = null;
 		onUp = null;
 		onDown = null;
 		onOver = null;
 		onPressed = null;
-		acceleration = null;
 		thumb = null;
 		base = null;
-		_zone = null;
-		_point = null;
 		
 		#if !FLX_NO_TOUCH
 		_currentTouch = null;
@@ -437,7 +440,7 @@ class FlxAnalog extends FlxSpriteGroup
 		return false;
 	}
 	
-	override public function set_x(X:Float):Float
+	override private function set_x(X:Float):Float
 	{
 		super.set_x(X);
 		createZone();
@@ -445,7 +448,7 @@ class FlxAnalog extends FlxSpriteGroup
 		return X;
 	}
 	
-	override public function set_y(Y:Float):Float
+	override private function set_y(Y:Float):Float
 	{
 		super.set_y(Y);
 		createZone();

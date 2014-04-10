@@ -4,9 +4,11 @@ import flash.display.BitmapData;
 import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
+import flixel.FlxG;
 import flixel.system.layer.TileSheetData;
 import flixel.util.FlxAngle;
 import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxPoint;
 
 class FlxFrame
@@ -38,9 +40,9 @@ class FlxFrame
 		_tileSheet = tileSheet;
 		additionalAngle = 0;
 		
-		sourceSize = new FlxPoint();
-		offset = new FlxPoint();
-		center = new FlxPoint();
+		sourceSize = FlxPoint.get();
+		offset = FlxPoint.get();
+		center = FlxPoint.get();
 	}
 	
 	public function getBitmap():BitmapData
@@ -131,40 +133,20 @@ class FlxFrame
 	{
 		name = null;
 		frame = null;
-		
-		sourceSize = null;
-		offset = null;
-		center = null;
-		
 		_tileSheet = null;
+		
+		sourceSize = FlxDestroyUtil.put(sourceSize);
+		offset = FlxDestroyUtil.put(offset);
+		center = FlxDestroyUtil.put(center);
 		
 		destroyBitmapDatas();
 	}
 	
 	public function destroyBitmapDatas():Void
 	{
-		if (_bitmapData != null)
-		{
-			_bitmapData.dispose();
-			_bitmapData = null;
-		}
-		
-		if (_hReversedBitmapData != null)
-		{
-			_hReversedBitmapData.dispose();
-			_hReversedBitmapData = null;
-		}
-		
-		if (_vReversedBitmapData != null)
-		{
-			_vReversedBitmapData.dispose();
-			_vReversedBitmapData = null;
-		}
-		
-		if (_hvReversedBitmapData != null)
-		{
-			_hvReversedBitmapData.dispose();
-			_hvReversedBitmapData = null;
-		}
+		_bitmapData = FlxDestroyUtil.dispose(_bitmapData);
+		_hReversedBitmapData = FlxDestroyUtil.dispose(_hReversedBitmapData);
+		_vReversedBitmapData = FlxDestroyUtil.dispose(_vReversedBitmapData);
+		_hvReversedBitmapData = FlxDestroyUtil.dispose(_hvReversedBitmapData);
 	}
 }

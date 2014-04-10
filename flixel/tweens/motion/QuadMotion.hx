@@ -1,5 +1,6 @@
 ﻿package flixel.tweens.motion;
 
+import flixel.util.FlxPool;
 import flixel.util.FlxPoint;
 import flixel.tweens.FlxEase.EaseFunction;
 import flixel.tweens.FlxTween.CompleteCallback;
@@ -9,8 +10,24 @@ import flixel.tweens.FlxTween.CompleteCallback;
  */
 class QuadMotion extends Motion
 {
-	public static var point:FlxPoint = new FlxPoint();
-	public static var point2:FlxPoint = new FlxPoint();
+	/**
+	 * A pool that contains QuadMotions for recycling.
+	 */
+	@:isVar 
+	@:allow(flixel.tweens.FlxTween)
+	private static var _pool(get, null):FlxPool<QuadMotion>;
+	
+	/**
+	 * Only allocate the pool if needed.
+	 */
+	private static function get__pool():FlxPool<QuadMotion>
+	{
+		if (_pool == null)
+		{
+			_pool = new FlxPool<QuadMotion>(QuadMotion);
+		}
+		return _pool;
+	}
 	
 	/**
 	 * The distance of the entire curve.
@@ -27,15 +44,18 @@ class QuadMotion extends Motion
 	private var _controlY:Float;
 	
 	/**
+	 * This function is called when tween is created, or recycled.
+	 *
 	 * @param	complete	Optional completion callback.
 	 * @param	type		Tween type.
+	 * @param	Eease		Optional easer function.
 	 */
-	public function new(?complete:CompleteCallback, type:Int = 0)
+	override public function init(Complete:CompleteCallback, TweenType:Int, UsePooling:Bool)
 	{
 		_distance = -1;
 		_fromX = _fromY = _toX = _toY = 0;
 		_controlX = _controlY = 0;
-		super(0, complete, type, null);
+		return super.init(Complete, TweenType, UsePooling);
 	}
 	
 	/**
@@ -87,11 +107,17 @@ class QuadMotion extends Motion
 		}
 	}
 	
+	override inline public function put():Void
+	{
+		if (!_inPool)
+			_pool.putUnsafe(this);
+	}
+	
 	private function get_distance():Float
 	{
 		if (_distance >= 0) return _distance;
-		var a:FlxPoint = QuadMotion.point;
-		var b:FlxPoint = QuadMotion.point2;
+		var a = FlxPoint.get();
+		var b = FlxPoint.get();
 		a.x = x - 2 * _controlX + _toX;
 		a.y = y - 2 * _controlY + _toY;
 		b.x = 2 * _controlX - 2 * x;
@@ -104,6 +130,10 @@ class QuadMotion extends Motion
 			A32:Float = 2 * A * A2,
 			C2:Float = 2 * Math.sqrt(C),
 			BA:Float = B / A2;
+			
+		a.put();
+		b.put();
+		
 		return (A32 * ABC + A2 * B * (ABC - C2) + (4 * C * A - B * B) * Math.log((2 * A2 + BA + ABC) / (BA + C2))) / (4 * A32);
 	}
 }

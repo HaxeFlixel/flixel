@@ -85,11 +85,11 @@ class ConsoleUtil
 	 * @param	Params		An optional array of constructor params
 	 * @return	The created instance, or null
 	 */
-	@:generic public static function attemptToCreateInstance<T>(ClassName:String, type:Class<T>, ?Params:Array<String>):Dynamic
+	@:generic
+	public static function attemptToCreateInstance<T>(ClassName:String, type:Class<T>, ?Params:Array<String>):Dynamic
 	{
-		if (Params == null) {
+		if (Params == null)
 			Params = [];
-		}
 		
 		var obj:Dynamic = Type.resolveClass(ClassName);
 		if (!Reflect.isObject(obj)) 
@@ -177,6 +177,47 @@ class ConsoleUtil
 	}
 	
 	/**
+	 * Type.getInstanceFields() returns all fields, including all those from super classes. This function allows
+	 * controlling the number of super classes whose fields should still be included in the list using Type.getSuperClass().
+	 * 
+	 * Example:
+	 * 	For a class PlayState with the following inheritance:
+	 * 	FlxBasic -> FlxTypedGroup -> FlxGroup -> FlxState -> PlayState 
+	 * 		numSuperClassesToInclude == 0 would only return the fields of PlayState itself	
+	 * 		numSuperClassesToInclude == 1 would only return the fields of PlayState and FlxState etc...
+	 */
+	public static function getInstanceFieldsAdvanced(cl:Class<Dynamic>, numSuperClassesToInclude:Int = 0):Array<String>
+	{
+		var fields:Array<String> = Type.getInstanceFields(cl);
+		if (numSuperClassesToInclude >= 0)
+		{
+			var curClass = Type.getSuperClass(cl);
+			var superClasses:Array<Class<Dynamic>> = [];
+			while (curClass != null) // no more super classes if null
+			{
+				superClasses.push(curClass);
+				curClass = Type.getSuperClass(curClass);
+			}
+			
+			superClasses.reverse();
+			
+			if (numSuperClassesToInclude > superClasses.length)
+				numSuperClassesToInclude = superClasses.length;
+				
+			for (i in 0...(superClasses.length - numSuperClassesToInclude))
+			{
+				var superFields:Array<String> = Type.getInstanceFields(superClasses[i]);
+				for (superField in superFields)
+				{
+					if (fields.indexOf(superField) != -1)
+						fields.remove(superField);
+				}
+			}
+		}
+		return fields;
+	}
+	
+	/**
 	 * Attempts to parse a String into a Boolean, returns 
 	 * true for "true", false for "false", and null otherwise.
 	 * 
@@ -186,17 +227,11 @@ class ConsoleUtil
 	public static function parseBool(s:String):Null<Bool>
 	{
 		if (s == "true") 
-		{
 			return true;
-		}
 		else if (s == "false") 
-		{
 			return false;
-		}
 		else
-		{
 			return null;
-		}
 	}
 	
 	/**

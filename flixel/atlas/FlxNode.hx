@@ -1,14 +1,14 @@
 package flixel.atlas;
 
-import flash.display.BitmapData;
 import flash.geom.Point;
 import flash.geom.Rectangle;
+import flixel.interfaces.IFlxDestroyable;
 
 /**
  * Atlas Node holds BitmapData and it's position on Atlas
  * @author Zaphod
  */
-class FlxNode
+class FlxNode implements IFlxDestroyable
 {
 	public var left:FlxNode;
 	public var right:FlxNode;
@@ -17,6 +17,12 @@ class FlxNode
 	public var point:Point;
 	public var key:String;
 	public var filled:Bool;
+	
+	public var x(get, null):Int;
+	public var y(get, null):Int;
+	public var width(get, null):Int;
+	public var height(get, null):Int;
+	public var isEmpty(get, null):Bool;
 	
 	public function new(rect:Rectangle, filled:Bool = false, key:String = "") 
 	{
@@ -28,48 +34,41 @@ class FlxNode
 		this.key = key;
 	}
 	
-	public var isEmpty(get_isEmpty, null):Bool;
-	
-	private function get_isEmpty():Bool
+	public inline function destroy():Void
 	{
-		return (filled == false && left == null && right == null);
+		left = null;
+		right = null;
+		rect = null;
+		point = null;
 	}
 	
-	public function canPlace(width:Int, height:Int):Bool
+	public inline function canPlace(width:Int, height:Int):Bool
 	{
-		return (rect.width >= width && rect.height >= height);
+		return ((rect.width >= width) && (rect.height >= height));
 	}
 	
-	public var x(get_x, null):Int;
-	public var y(get_y, null):Int;
-	public var width(get_width, null):Int;
-	public var height(get_height, null):Int;
+	private inline function get_isEmpty():Bool
+	{
+		return (!filled && (left == null) && (right == null));
+	}
 	
-	private function get_x():Int
+	private inline function get_x():Int
 	{
 		return Std.int(rect.x);
 	}
 	
-	private function get_y():Int
+	private inline function get_y():Int
 	{
 		return Std.int(rect.y);
 	}
 	
-	private function get_width():Int
+	private inline function get_width():Int
 	{
 		return Std.int(rect.width);
 	}
 	
-	private function get_height():Int
+	private inline function get_height():Int
 	{
 		return Std.int(rect.height);
-	}
-	
-	public function destroy():Void
-	{
-		this.left = null;
-		this.right = null;
-		this.rect = null;
-		this.point = null;
 	}
 }

@@ -25,28 +25,31 @@ class SoundFrontEnd
 	 * Set this hook to get a callback whenever the volume changes.
 	 * Function should take the form myVolumeHandler(Volume:Number).
 	 */
-	public var volumeHandler:Float->Void = null;
+	public var volumeHandler:Float->Void;
 	
 	#if !FLX_NO_KEYBOARD
 	/**
 	 * The key codes used to increase volume (see FlxG.keys for the keys available).
 	 * Default keys: + (and numpad +). Set to null to deactivate.
-	 * @default ["PLUS", "NUMPADPLUS"]
 	 */
 	public var volumeUpKeys:Array<String>;
 	/**
 	 * The keys to decrease volume (see FlxG.keys for the keys available).
 	 * Default keys: - (and numpad -). Set to null to deactivate.
-	 * @default ["MINUS", "NUMPADMINUS"]
 	 */
 	public var volumeDownKeys:Array<String>;
 	/**
 	 * The keys used to mute / unmute the game (see FlxG.keys for the keys available).
 	 * Default keys: 0 (and numpad 0). Set to null to deactivate.
-	 * @default ["ZERO", "NUMPADZERO"]
-	*/
+	 */
 	public var muteKeys:Array<String>; 
 	#end
+	
+	/**
+	 * Whether or not the soundTray should be shown when any of the
+	 * volumeUp-, volumeDown- or muteKeys is pressed.
+	 */ 
+	public var soundTrayEnabled:Bool = true;
 	
 	/**
 	 * A list of all the sounds being played in the game.
@@ -57,13 +60,9 @@ class SoundFrontEnd
 	 */
 	public var volume(default, set):Float = 1;
 	
-	
-	#if android
 	private var _soundCache:Map<String, Sound>;
 	private var _soundTransform:SoundTransform;
-	#end
 	
-	// TODO: Return from Sound -> Class<Sound>
 	/**
 	 * Set up and play a looping background soundtrack.
 	 * 
@@ -73,7 +72,6 @@ class SoundFrontEnd
 	 */
 	public function playMusic(Music:Dynamic, Volume:Float = 1, Looped:Bool = true):Void
 	{
-		#if !js
 		if (music == null)
 		{
 			music = new FlxSound();
@@ -85,9 +83,8 @@ class SoundFrontEnd
 		
 		music.loadEmbedded(Music, Looped);
 		music.volume = Volume;
-		music.survive = true;
+		music.persist = true;
 		music.play();
-		#end
 	}
 	
 	/**
@@ -103,8 +100,7 @@ class SoundFrontEnd
 	 */
 	public function load(?EmbeddedSound:Dynamic, Volume:Float = 1, Looped:Bool = false, AutoDestroy:Bool = false, AutoPlay:Bool = false, ?URL:String, ?OnComplete:Void->Void):FlxSound
 	{
-		#if !js
-		if (EmbeddedSound == null && URL == null)
+		if ((EmbeddedSound == null) && (URL == null))
 		{
 			FlxG.log.warn("FlxG.loadSound() requires either\nan embedded sound or a URL to work.");
 			return null;
@@ -129,20 +125,16 @@ class SoundFrontEnd
 		}
 		
 		return sound;
-		#else
-		return null;
-		#end
 	}
 	
-	#if android
 	/**
-	 * Method for sound caching on Android target.
-	 * Application may freeze for some time at first try to play sound if you don't use this method
+	 * Method for sound caching (especially useful on mobile targets). The game may freeze
+	 * for some time the first time yout try to play a sound if you don't use this method.
 	 * 
-	 * @param	EmbeddedSound	Name of sound assets specified in your .nmml project file
+	 * @param	EmbeddedSound	Name of sound assets specified in your .xml project file
 	 * @return	Cached Sound object
 	 */
-	public function add(EmbeddedSound:String):Sound
+	public function cache(EmbeddedSound:String):Sound
 	{
 		if (_soundCache.exists(EmbeddedSound))
 		{
@@ -157,6 +149,15 @@ class SoundFrontEnd
 		}
 	}
 	
+	/**
+	 * Plays a sound from an embedded sound. Tries to recycle a cached sound first.
+	 * 
+	 * @param	EmbeddedSound	The sound you want to play.
+	 * @param	Volume			How loud to play it (0 to 1).
+	 * @param	Looped			Whether to loop this sound.
+	 * @param	AutoDestroy		Whether to destroy this sound when it finishes playing.  Leave this value set to "false" if you want to re-use this FlxSound instance.
+	 * @return	The FlxSound object.
+	 */
 	public function play(EmbeddedSound:String, Volume:Float = 1, Looped:Bool = false, AutoDestroy:Bool = true, ?OnComplete:Void->Void):FlxSound
 	{
 		var sound:Sound = null;
@@ -174,29 +175,8 @@ class SoundFrontEnd
 			_soundCache.set(EmbeddedSound, sound);
 		}
 		var flixelSound = list.recycle(FlxSound).loadEmbedded(sound, Looped, AutoDestroy, OnComplete);
-		flixelSound.play();
-		return flixelSound;
+		return flixelSound.play();
 	}
-	#else
-	/**
-	 * Creates a new sound object from an embedded Class object.
-	 * NOTE: Just calls FlxG.loadSound() with AutoPlay == true.
-	 * 
-	 * @param	EmbeddedSound	The sound you want to play.
-	 * @param	Volume			How loud to play it (0 to 1).
-	 * @param	Looped			Whether to loop this sound.
-	 * @param	AutoDestroy		Whether to destroy this sound when it finishes playing.  Leave this value set to "false" if you want to re-use this FlxSound instance.
-	 * @return	A FlxSound object.
-	 */
-	public inline function play(EmbeddedSound:Dynamic, Volume:Float = 1, Looped:Bool = false, AutoDestroy:Bool = true, ?OnComplete:Void->Void):FlxSound
-	{
-		#if !js
-		return load(EmbeddedSound, Volume, Looped, AutoDestroy, true, null, OnComplete);
-		#else
-		return null;
-		#end
-	}
-	#end
 	
 	/**
 	 * Creates a new sound object from a URL.
@@ -210,11 +190,7 @@ class SoundFrontEnd
 	 */
 	public inline function stream(URL:String, Volume:Float = 1, Looped:Bool = false, AutoDestroy:Bool = true, ?OnComplete:Void->Void):FlxSound
 	{
-		#if !js
 		return load(null, Volume, Looped, AutoDestroy, true, URL, OnComplete);
-		#else
-		return null;
-		#end
 	}
 	
 	/**
@@ -258,11 +234,11 @@ class SoundFrontEnd
 	/**
 	 * Called by FlxGame on state changes to stop and destroy sounds.
 	 * 
-	 * @param	ForceDestroy		Kill sounds even if they're flagged survive.
+	 * @param	ForceDestroy	Kill sounds even if persist is true.
 	 */
 	public function destroy(ForceDestroy:Bool = false):Void
 	{
-		if (music != null && (ForceDestroy || !music.survive))
+		if (music != null && (ForceDestroy || !music.persist))
 		{
 			music.destroy();
 			music = null;
@@ -270,7 +246,7 @@ class SoundFrontEnd
 		
 		for (sound in list.members)
 		{
-			if (sound != null && (ForceDestroy || !sound.survive))
+			if (sound != null && (ForceDestroy || !sound.persist))
 			{
 				sound.destroy();
 			}
@@ -287,11 +263,8 @@ class SoundFrontEnd
 		#end
 		
 		list = new FlxTypedGroup<FlxSound>();
-		
-		#if android
 		_soundCache = new Map<String, Sound>();
 		_soundTransform = new SoundTransform();
-		#end
 	}
 	
 	/**

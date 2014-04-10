@@ -6,7 +6,6 @@ class ConsoleFrontEnd
 {
 	/**
 	 * Whether the console should auto-pause or not when it's focused. Only works for flash atm.
-	 * @default true
 	 */
 	public var autoPause:Bool = true;
 	
@@ -57,5 +56,5 @@ class ConsoleFrontEnd
 	 * Just needed to create an instance.
 	 */
 	@:allow(flixel.FlxG)
-	private function new() { }
+	private function new() {}
 }

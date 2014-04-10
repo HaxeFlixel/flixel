@@ -6,7 +6,8 @@ import flixel.interfaces.IFlxDestroyable;
  * A generic container that facilitates pooling and recycling of objects.
  * WARNING: Pooled objects must have parameterless constructors: function new()
  */
-@:generic class FlxPool<T:IFlxDestroyable>
+@:generic
+class FlxPool<T:IFlxDestroyable>
 {
 	private var _pool:Array<T>;
 	private var _class:Class<T>;
@@ -22,7 +23,10 @@ import flixel.interfaces.IFlxDestroyable;
 	public function get():T
 	{
 		var obj:T = _pool.pop();
-		if (obj == null) obj = Type.createInstance(_class, []);
+		if (obj == null) 
+		{
+			obj = Type.createInstance(_class, []);
+		}
 		return obj;
 	}
 	

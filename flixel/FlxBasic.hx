@@ -1,6 +1,7 @@
 package flixel;
 
 import flixel.FlxG;
+import flixel.group.FlxTypedGroup;
 import flixel.interfaces.IFlxDestroyable;
 import flixel.system.FlxCollisionType;
 import flixel.util.FlxStringUtil;
@@ -11,16 +12,19 @@ import flixel.util.FlxStringUtil;
  */
 class FlxBasic implements IFlxDestroyable
 {
+	#if !FLX_NO_DEBUG
+	/**
+	 * Static counters for performance tracking.
+	 */
+	public static var _ACTIVECOUNT:Int = 0;
+	public static var _VISIBLECOUNT:Int = 0;
+	#end
+	
 	/**
 	 * IDs seem like they could be pretty useful, huh?
 	 * They're not actually used for anything yet though.
 	 */
 	public var ID:Int = -1;
-	/**
-	 * This determines on which FlxCameras this object will be drawn. If it is null / has not been
-	 * set, it uses FlxCamera.defaultCameras, which is a reference to FlxG.cameras.list (all cameras) by default.
-	 */
-	public var cameras(get, set):Array<FlxCamera>;
 	/**
 	 * Controls whether update() is automatically called by FlxState/FlxGroup.
 	 */
@@ -39,31 +43,12 @@ class FlxBasic implements IFlxDestroyable
 	 * Cannot be set, use destroy() and revive().
 	 */
 	public var exists(default, set):Bool = true;
-	
 	/**
 	 * Enum that informs the collision system which type of object this is (to avoid expensive type casting).
 	 */
-	public var collisionType(default, null):FlxCollisionType;
+	public var collisionType(default, null):FlxCollisionType = FlxCollisionType.NONE;
 	
-	#if !FLX_NO_DEBUG
-	/**
-	 * Setting this to true will prevent the object from appearing
-	 * when the visual debug mode in the debugger overlay is toggled on.
-	 */
-	public var ignoreDrawDebug:Bool = false;
-	/**
-	 * Static counters for performance tracking.
-	 */
-	public static var _ACTIVECOUNT:Int = 0;
-	public static var _VISIBLECOUNT:Int = 0;
-	#end
-	
-	private var _cameras:Array<FlxCamera>;
-	
-	public function new() 
-	{ 
-		collisionType = FlxCollisionType.NONE;
-	}
+	public function new() {}
 	
 	/**
 	 * WARNING: This will remove this object entirely. Use kill() if you want to disable it temporarily only and revive() it later.
@@ -72,8 +57,6 @@ class FlxBasic implements IFlxDestroyable
 	public function destroy():Void 
 	{
 		exists = false;
-		collisionType = null;
-		_cameras = null;
 	}
 	
 	/**
@@ -114,71 +97,36 @@ class FlxBasic implements IFlxDestroyable
 	public function draw():Void
 	{
 		#if !FLX_NO_DEBUG
-		for (camera in cameras)
-		{
-			_VISIBLECOUNT++;
-		}
+		_VISIBLECOUNT++;
 		#end
 	}
 	
-	#if !FLX_NO_DEBUG
-	public function drawDebug():Void
-	{
-		if (!ignoreDrawDebug)
-		{
-			for (camera in cameras)
-			{
-				drawDebugOnCamera(camera);
-			}
-		}
-	}
-	
-	/**
-	 * Override this function to draw custom "debug mode" graphics to the
-	 * specified camera while the debugger's visual mode is toggled on.
-	 * @param	Camera	Which camera to draw the debug visuals to.
-	 */
-	public function drawDebugOnCamera(?Camera:FlxCamera):Void {}
-	#end
-	
-	private inline function get_cameras():Array<FlxCamera>
-	{
-		return (_cameras == null) ? FlxCamera.defaultCameras : _cameras;
-	}
-	
-	private inline function set_cameras(Value:Array<FlxCamera>):Array<FlxCamera>
-	{
-		return _cameras = Value;
-	}
-	
-	/**
-	 * Property setters, to provide override functionality in sub-classes
-	 */
 	private function set_visible(Value:Bool):Bool
 	{
 		return visible = Value;
 	}
+	
 	private function set_active(Value:Bool):Bool
 	{
 		return active = Value;
 	}
-	private function set_alive(Value:Bool):Bool
-	{
-		return alive = Value;
-	}
+	
 	private function set_exists(Value:Bool):Bool
 	{
 		return exists = Value;
 	}
 	
-	/**
-	 * Convert object to readable string name.  Useful for debugging, save games, etc.
-	 */
+	private function set_alive(Value:Bool):Bool
+	{
+		return alive = Value;
+	}
+	
 	public function toString():String
 	{
-		return FlxStringUtil.getDebugString([ { label: "active", value: active }, 
-		                                      { label: "visible", value: visible },
-		                                      { label: "alive", value: alive },
-		                                      { label: "exists", value: exists } ]);
+		return FlxStringUtil.getDebugString([
+			LabelValuePair.weak("active", active),
+			LabelValuePair.weak("visible", visible),
+			LabelValuePair.weak("alive", alive),
+			LabelValuePair.weak("exists", exists)]);
 	}
 }

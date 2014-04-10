@@ -1,12 +1,94 @@
-3.2.2
+3.3.0
 ------------------------------
+* Added flash gamepad support. This either requires a swf-player-version of 11.8 to be set or FLX_NO_GAMEPAD to be defined.
+ * FlxGamepad.getAxis() has been split into getXAxis() and getYAxis() for consistency across targets
+ * FlxGamepad.dpadUp / Down / Left / Right don't work in flash, use getButton() in conjunction with the IDs in the button ID classes instead
 * Added "tracker" window to the debugger which creates a Watch window with the most important properties of an object
  * Use FlxG.debugger.track(Object); to create a new tracker window
  * Use FlxG.debugger.addTrackerProfile() to add a profile for classes don't have one yet or override existing ones
  * Use the "track [object]" command to open a tracker window from the console
-* FlxCamera: added static defaultCameras array which is used by FlxBasics when their cameras array has not been set - previously the use of FlxG.cameras.list / all existing cameras was hardcoded
-* FlxText.setFormat() now accepts Font classes instead of only strings for its Font param
-* [gamedevsam] Added pooling functionality to FlxPoint, FlxVector, FlxRect objects (FlxPath and FlxTimer also support pooling, but that is handled transparently). Usage: ```var point = FlxPoint.get(); /* do stuff with point */ point.put(); // recycle point```
+* FlxCamera: 
+ * Added static defaultCameras array which is used by FlxBasics when their cameras array has not been set - previously the use of FlxG.cameras.list / all existing cameras was hardcoded
+ * Fixed a bug where following a target would prevent you from setting the coordinates of the camera
+* Added pooling for FlxPoint, FlxVector, and FlxRect (FlxPath and FlxTimer also support pooling, but that is handled transparently). Usage: var point = FlxPoint.get(); /* do stuff with point */ point.put(); // recycle point. Instantiating these objects directly via new() is no longer possible to enforce the use of pooling. FlxPoint.weak() should be used instead of get() when passing points into flixel functions, that way they'll be recycled automatically.
+* Debugger windows:
+ * Fixed dragging of overlapping windows
+ * Fixed the visibility of windows on native targets (now saving correctly)
+ * Fixed resizing when moving the mouse to the left / above the window
+* FlxPath: fixed a bug with drawDebug()
+* FlxG:
+ * fullscreen: fixed offset in flash
+ * openURL(): now adds "http://" to the URL if necessary
+ * Added FlxG.maxElapsed
+* FlxSound: 
+ * Added loadByteArray()
+ * Now has a read-only variable time
+ * Allow sound caching on all targets instead of only on Android
+ * Added FlxG.sound.soundTrayEnabled to allow dis- and enabling the tray at runtime
+* MouseEventManager: 
+ * Improved handling of visible / exists
+ * Now works on FlxObjects
+* FlxPoint: added floor() and ceil()
+* Changed the default html5 backend to openf-bitfive
+ * Middle and right mouse events are now supported
+ * Sounds are now supported
+* FlxObject: replaced forceComplexRender by pixelPerfectRender which rounds coordinates by default (if true) for drawing (also on cpp targets, making it consistent with flash)
+* FlxText: 
+ * Added shadowOffset
+ * Fixed the widthInc and heightInc of addFilter() which did not work at all previously
+ * Seperated visible and physical width by adding fieldWidth to fix a bug
+ * Added autoSize that makes sure the entire text is displayed if true with wordWrap = false. Setting fieldWidth to 0 in the constructor is now allowed and activates this behaviour.
+* FlxSpriteUtil: added bound()
+* FlxSpriteGroup:
+ * Added FlxTypedSpriteGroup, which can be used in the same way as FlxTypedGroup, but its type parameter is T:FlxSprite
+ * Setting cameras will now set cameras on its members, add()-ing a sprite will synchronize the values
+* Abstracted rendering into FLX_RENDER_TILE and FLX_RENDER_BLIT conditionals as opposed to being hardcoded based on the target
+* FlxTween:
+ * num(): added an optional tweenFunction parameter which can be used for increased performance (as MultiVarTween and SingleVarTween are fairly slow, using Reflection)
+ * Tweens are now being pooled
+ * Added sfx()
+ * singleVar() and multiVar() have been replaced by tween()
+* FlxKeyboard:
+ * Implemented a workaround for function and numpad keys not working on native targets
+ * Added FlxKey.NUMPADMULTIPLY / "NUMPADMULTIPLY" 
+* Added FlxCallbackPoint, a FlxPoint that calls a function when x, y or both are changed.
+* FlxTilemap: 
+ * Replaced scaleX and scaleY by a scale FlxPoint
+ * Removed rayHit(), ray() provides the same functionality
+* Added FlxDestroyUtil (FlxG.safeDestroy() -> FlxDestroyUtil.destroy())
+* Debugger stats window: added a button to expand the window and show two more graphs (draw and update time)
+* Added buildFileReferences() macro to FlxAssets.hx (auto-completion for asset string paths)
+* FlxTilemap.computePathDistance() is now public and has a new StopOnEnd parameter
+* Added FlxColor.MAGENTA
+* Added FlxMouse.setGlobalScreenPositionUnsafe()
+* FlxTypedButton: 
+ * Fixed label.visible = false; not working
+ * Fixed a one-frame-delay between setting the label's position and it taking effect
+ * Fixed label scrollfactor being out of sync before the first update()
+* FlxButton: Added a text property as a shortcut for label.text
+* FlxSprite:
+ * Added support for more texture packer formats: LibGDXData, SparrowData, TexturePackerXMLData
+ * Fixed a null error crash in FlxAtlas on cpp targets with haxe 3.1.0+
+ * Added flipHorizontally() and flipVertically(), using negative scale
+ * setOriginToCenter() -> centerOrigin()
+* FlxPreloader:
+ * Small fix that should prevent it from getting stuck 
+ * Added siteLockURLIndex to control which URL in allowdURLs is used when the site-lock triggers
+ * allowedURLs now works with URLs that don't start with "http://"
+* Fixed camera shifting after resizing with StageSizeScaleMode
+* Added flixel.util.FlxSignal and FlxG.signals
+* FlxAnimationController:
+ * Added append(), appendByNames(), appendByStringIndices(), appendByIndices() and appendByPrefix()
+ * addByStringIndicies() -> addByStringIndices()
+ * addByIndicies() -> addByIndices()
+* FlxTypedGroup: added forEachOfType() iterator
+* FlxGamepad: added anyPressed(), anyJustPressed() and anyJustReleased()
+* Traces are not being redirected to the debugger log window anymore by default
+* Fixed mouse cursor scale at initial camera zoom levels different from 1
+
+3.2.2
+------------------------------
+* Removed the allow-shaders="false" attribute from the window tag in the include.xml, as it causes problems (white screen) with lime 0.9.5 on iOS
 
 3.2.1
 ------------------------------

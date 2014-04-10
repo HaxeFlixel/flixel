@@ -7,9 +7,11 @@ import flixel.FlxSprite;
 import flixel.input.touch.FlxTouch;
 import flixel.interfaces.IFlxDestroyable;
 import flixel.system.FlxSound;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxPoint;
 
-@:bitmap("assets/images/ui/button.png")	private class GraphicButton	extends BitmapData {}
+@:bitmap("assets/images/ui/button.png")
+private class GraphicButton extends BitmapData {}
 
 /**
  * A simple button class that calls a function when clicked by the mouse.
@@ -19,7 +21,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	/**
 	 * The label that appears on the button. Can be any FlxSprite.
 	 */
-	public var label:T;
+	public var label(default, set):T;
 	/**
 	 * What offsets the label should have for each status.
 	 */
@@ -72,12 +74,11 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	/**
 	 * Creates a new FlxTypedButton object with a gray background.
 	 * 
-	 * @param	X				The X position of the button.
-	 * @param	Y				The Y position of the button.
-	 * @param	Label			The text that you want to appear on the button.
-	 * @param	OnClick			The function to call whenever the button is clicked.
+	 * @param	X			The X position of the button.
+	 * @param	Y			The Y position of the button.
+	 * @param	OnClick		The function to call whenever the button is clicked.
 	 */
-	public function new(X:Float = 0, Y:Float = 0, ?Label:String, ?OnClick:Void->Void)
+	public function new(X:Float = 0, Y:Float = 0, ?OnClick:Void->Void)
 	{
 		super(X, Y);
 		
@@ -89,7 +90,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		onOut = new FlxButtonEvent();
 		
 		labelAlphas = [0.8, 1.0, 0.5];
-		labelOffsets = [new FlxPoint(), new FlxPoint(), new FlxPoint(0, 1)];
+		labelOffsets = [FlxPoint.get(), FlxPoint.get(), FlxPoint.get(0, 1)];
 		
 		status = FlxButton.NORMAL;
 		
@@ -106,14 +107,15 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	 */
 	override public function destroy():Void
 	{
-		label = FlxG.safeDestroy(label);
+		label = FlxDestroyUtil.destroy(label);
 		
-		onUp = FlxG.safeDestroy(onUp);
-		onDown = FlxG.safeDestroy(onDown);
-		onOver = FlxG.safeDestroy(onOver);
-		onOut = FlxG.safeDestroy(onOut);
+		onUp = FlxDestroyUtil.destroy(onUp);
+		onDown = FlxDestroyUtil.destroy(onDown);
+		onOver = FlxDestroyUtil.destroy(onOver);
+		onOut = FlxDestroyUtil.destroy(onOut);
 		
-		labelOffsets = null;
+		labelOffsets = FlxDestroyUtil.putArray(labelOffsets);
+		
 		labelAlphas = null;
 		_pressedTouch = null;
 		
@@ -141,20 +143,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		updateButton();
 		#end
 		
-		// Label positioning
-		if (label != null)
-		{
-			label.x = x;
-			label.y = y;
-			
-			label.x += labelOffsets[status].x;
-			label.y += labelOffsets[status].y;
-			
-			label.scrollFactor = scrollFactor;
-		}
-		
 		// Pick the appropriate animation frame
-		
 		var nextFrame:Int = status;
 		
 		// "Highlight" doesn't make much sense on mobile devices / touchscreens
@@ -175,7 +164,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	{
 		super.draw();
 		
-		if (label != null)
+		if (label != null && label.visible)
 		{
 			label.cameras = cameras;
 			label.draw();
@@ -289,15 +278,6 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		#end
 	}
 	
-	private function set_status(Value:Int):Int
-	{
-		if ((labelAlphas.length > Value) && (label != null)) 
-		{
-			label.alpha = alpha * labelAlphas[Value];
-		}
-		return status = Value;
-	}
-	
 	/**
 	 * Using an event listener is necessary for security reasons on flash - 
 	 * certain things like opening a new window are only allowed when they are user-initiated.
@@ -353,6 +333,48 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		// Order matters here, because onOut.fire() could cause a state change and destroy this object.
 		onOut.fire();
 	}
+	
+	private function set_label(Value:T):T
+	{
+		if (Value != null)
+		{
+			// use the same FlxPoint object for both
+			Value.scrollFactor.put();
+			Value.scrollFactor = scrollFactor;
+		}
+		return label = Value;
+	}
+	
+	private function set_status(Value:Int):Int
+	{
+		if ((labelAlphas.length > Value) && (label != null)) 
+		{
+			label.alpha = alpha * labelAlphas[Value];
+		}
+		return status = Value;
+	}
+	
+	override private function set_x(Value:Float):Float 
+	{
+		super.set_x(Value);
+		
+		if (label != null) // Label positioning
+		{
+			label.x = x + labelOffsets[status].x;	
+		}
+		return x;
+	}
+	
+	override private function set_y(Value:Float):Float 
+	{	
+		super.set_y(Value);
+		
+		if (label != null) // Label positioning
+		{
+			label.y = y + labelOffsets[status].y;			
+		}
+		return y;
+	}
 }
 
 /** 
@@ -393,7 +415,7 @@ private class FlxButtonEvent implements IFlxDestroyable
 		callback = null;
 		
 		#if !FLX_NO_SOUND_SYSTEM
-		sound = FlxG.safeDestroy(sound);
+		sound = FlxDestroyUtil.destroy(sound);
 		#end
 	}
 	

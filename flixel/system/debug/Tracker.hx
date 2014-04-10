@@ -1,6 +1,10 @@
 package flixel.system.debug;
 
 #if !FLX_NO_DEBUG
+import flash.display.DisplayObject;
+import flash.geom.Matrix;
+import flash.geom.Point;
+import flash.geom.Rectangle;
 import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.FlxG;
@@ -20,12 +24,14 @@ import flixel.system.debug.Watch;
 import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
 import flixel.tweens.FlxTween;
-import flixel.tweens.misc.MultiVarTween;
+#if !bitfive
 import flixel.ui.FlxBar;
+#end
 import flixel.ui.FlxTypedButton.FlxTypedButton;
 import flixel.util.FlxPath;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRect;
+import flixel.util.FlxTimer;
 #end
 
 import flixel.util.FlxStringUtil;
@@ -45,6 +51,8 @@ class Tracker extends Watch
 	 */ 
 	public static var objectsBeingTracked:Array<Dynamic> = [];
 	
+	private static var _numTrackerWindows:Int = 0;
+	
 	public static inline function addProfile(Profile:TrackerProfile):Void
 	{
 		if (Profile != null)
@@ -60,7 +68,7 @@ class Tracker extends Watch
 		var lastMatchingProfile:TrackerProfile = null;
 		for (profile in profiles)
 		{
-			if ((profile != null) && Std.is(Object, profile.objectClass))
+			if (Std.is(Object, profile.objectClass) || (Object == profile.objectClass))
 			{
 				lastMatchingProfile = profile;
 			}
@@ -79,8 +87,11 @@ class Tracker extends Watch
 		{
 			profiles = [];
 			
+			addProfile(new TrackerProfile(FlxG, ["width", "height", "worldBounds.x", "worldBounds.y", "worldBounds.width", "worldBounds.height", 
+			                                     "worldDivisions", "updateFramerate", "drawFramerate", "elapsed", "autoPause", "fixedTimestep", "timeScale"]));
+			
 			addProfile(new TrackerProfile(FlxPoint, ["x", "y"]));
-			addProfile(new TrackerProfile(FlxRect, ["x", "y", "width", "height"]));
+			addProfile(new TrackerProfile(FlxRect, ["width", "height"], [FlxPoint]));
 			
 			addProfile(new TrackerProfile(FlxBasic, ["active", "visible", "alive", "exists"]));
 			addProfile(new TrackerProfile(FlxObject, ["velocity", "acceleration", "drag", "angle"],
@@ -88,7 +99,9 @@ class Tracker extends Watch
 			addProfile(new TrackerProfile(FlxTilemap, ["auto", "widthInTiles", "heightInTiles", "totalTiles", "scaleX", "scaleY"], [FlxObject]));
 			addProfile(new TrackerProfile(FlxSprite, ["frameWidth", "frameHeight", "alpha", "origin", "offset", "scale"], [FlxObject]));
 			addProfile(new TrackerProfile(FlxTypedButton, ["status", "labelAlphas"], [FlxSprite]));
+			#if !bitfive // FlxBar uses FlxGradient which uses missing gradient matrix
 			addProfile(new TrackerProfile(FlxBar, ["min", "max", "range", "pct", "pxPerPercent", "value"], [FlxSprite]));
+			#end
 			addProfile(new TrackerProfile(FlxText, ["text", "size", "font", "embedded", "bold", "italic", "wordWrap", "borderSize", 
 			                                        "borderStyle"], [FlxSprite]));
 			
@@ -103,6 +116,7 @@ class Tracker extends Watch
 			                                         "scale", "backward", "executions", "startDelay", "loopDelay"]));
 			
 			addProfile(new TrackerProfile(FlxPath, ["speed", "angle", "autoCenter", "_nodeIndex", "paused", "finished"]));
+			addProfile(new TrackerProfile(FlxTimer, ["time", "loops", "paused", "finished", "timeLeft", "elapsedTime", "loopsLeft", "elapsedLoops", "progress"]));
 			
 			// Inputs
 			#if !FLX_NO_MOUSE
@@ -120,10 +134,13 @@ class Tracker extends Watch
 			#if (!FLX_NO_MOUSE || !FLX_NO_TOUCH)
 			addProfile(new TrackerProfile(FlxSwipe, ["ID", "startPosition", "endPosition", "distance", "angle", "duration"]));
 			#end
+			
+			addProfile(new TrackerProfile(DisplayObject, ["z", "scaleX", "scaleY", "mouseX", "mouseY", "rotationX", "rotationY", "visible"], [FlxRect]));
+			addProfile(new TrackerProfile(Point, null, [FlxPoint]));
+			addProfile(new TrackerProfile(Rectangle, null, [FlxRect]));
+			addProfile(new TrackerProfile(Matrix, ["a", "b", "c", "d", "tx", "ty"]));
 		}
 	}
-	
-	private static var _numTrackerWindows:Int = 0;
 	
 	private var _object:Dynamic;
 	
@@ -225,7 +242,8 @@ class TrackerProfile
 	
 	public function toString():String
 	{
-		return FlxStringUtil.getDebugString([ { label: "vars", value: variables },
-	                                          { label: "extensions", value: extensions } ]);
+		return FlxStringUtil.getDebugString([
+			LabelValuePair.weak("variables", variables),
+			LabelValuePair.weak("extensions", extensions)]);
 	}
 }

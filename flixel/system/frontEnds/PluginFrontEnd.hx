@@ -23,7 +23,8 @@ class PluginFrontEnd
 	 * @param	Plugin	Any object that extends FlxPlugin. Useful for managers and other things. See flixel.plugin for some examples!
 	 * @return	The same FlxPlugin-based plugin you passed in.
 	 */
-	@:generic public function add<T:FlxPlugin>(Plugin:T):T
+	@:generic
+	public function add<T:FlxPlugin>(Plugin:T):T
 	{
 		// Don't add repeats
 		for (plugin in list)
@@ -116,9 +117,9 @@ class PluginFrontEnd
 	{
 		list = new Array<FlxPlugin>();
 		
+		add(FlxPath.manager = new PathManager());
 		add(FlxTimer.manager = new TimerManager());
 		add(FlxTween.manager = new TweenManager());
-		add(FlxPath.manager = new PathManager());
 	}
 	
 	/**
@@ -178,20 +179,4 @@ class PluginFrontEnd
 			}
 		}
 	}
-	
-	#if !FLX_NO_DEBUG
-	/**
-	 * You shouldn't need to call this. Used to draw the debug graphics for any installed plugins.
-	 */
-	private inline function drawDebug():Void
-	{
-		for (plugin in list)
-		{
-			if (plugin.exists && plugin.visible && !plugin.ignoreDrawDebug)
-			{
-				plugin.drawDebug();
-			}
-		}
-	}
-	#end
 }

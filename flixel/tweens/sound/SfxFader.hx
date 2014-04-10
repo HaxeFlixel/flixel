@@ -4,12 +4,32 @@
 import flixel.system.FlxSound;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
+import flixel.util.FlxPool;
 
 /**
  * Sound effect fader.
  */
 class SfxFader extends FlxTween
 {
+	/**
+	 * A pool that contains SfxFaders for recycling.
+	 */
+	@:isVar 
+	@:allow(flixel.tweens.FlxTween)
+	private static var _pool(get, null):FlxPool<SfxFader>;
+	
+	/**
+	 * Only allocate the pool if needed.
+	 */
+	private static function get__pool():FlxPool<SfxFader>
+	{
+		if (_pool == null)
+		{
+			_pool = new FlxPool<SfxFader>(SfxFader);
+		}
+		return _pool;
+	}
+	
 	/**
 	 * The current Sfx this object is effecting.
 	 */
@@ -20,41 +40,31 @@ class SfxFader extends FlxTween
 	private var _range:Float;
 	private var _crossSfx:FlxSound;
 	private var _crossRange:Float;
-	private var _complete:CompleteCallback;
 	
 	/**
-	 * @param	sfx			The Sfx object to alter.
-	 * @param	complete	Optional completion callback.
-	 * @param	type		Tween type.
+	 * Clean up references and pool this object for recycling.
 	 */
-	public function new(sfx:FlxSound, ?complete:CompleteCallback, type:Int = 0)
-	{
-		super(0, type, finishCallback);
-		_complete = complete;
-		this.sfx = sfx;
-	}
-	
 	override public function destroy():Void 
 	{
 		super.destroy();
 		sfx = null;
 		_crossSfx = null;
-		_complete = null;
 	}
 
 	/**
 	 * Fades the Sfx to the target volume.
 	 * 
+	 * @param	sound		The FlxSound
 	 * @param	volume		The volume to fade to.
 	 * @param	duration	Duration of the fade.
 	 * @param	ease		Optional easer function.
 	 */
-	public function fadeTo(volume:Float, duration:Float, ?ease:EaseFunction):SfxFader
+	public function fadeTo(sound:FlxSound, volume:Float, duration:Float, ?ease:EaseFunction):SfxFader
 	{
 		if (volume < 0) 
-		{
 			volume = 0;
-		}
+		
+		this.sfx = sound;
 		_start = sfx.volume;
 		_range = volume - _start;
 		this.duration = duration;
@@ -97,9 +107,15 @@ class SfxFader extends FlxTween
 		}
 	}
 
-	override public function finish():Void 
+	override inline public function finish():Void 
 	{ 
 		finishCallback(this);
+	}
+	
+	override inline public function put():Void
+	{
+		if (!_inPool)
+			_pool.putUnsafe(this);
 	}
 	
 	private function finishCallback(tween:FlxTween):Void
@@ -113,9 +129,9 @@ class SfxFader extends FlxTween
 			sfx = _crossSfx;
 			_crossSfx = null;
 		}
-		if (_complete != null) 
+		if (complete != null) 
 		{
-			_complete(this);
+			complete(this);
 		}
 	}
 }

@@ -23,7 +23,6 @@ class CameraFrontEnd
 	/**
 	 * Allows you to possibly slightly optimize the rendering process IF
 	 * you are not doing any pre-processing in your game state's draw() call.
-	 * @default false
 	 */
 	public var useBufferLocking:Bool = false;
 	/**
@@ -38,9 +37,12 @@ class CameraFrontEnd
 	 * @param	NewCamera	The camera you want to add.
 	 * @return	This FlxCamera instance.
 	 */
-	@:generic public inline function add<T:FlxCamera>(NewCamera:T):T
+	@:generic
+	public inline function add<T:FlxCamera>(NewCamera:T):T
 	{
-		FlxG.game.addChildAt(NewCamera.displaySprite, FlxG.game.getChildIndex(FlxG.game._inputContainer));
+		#if !js
+		FlxG.game.addChildAt(NewCamera.flashSprite, FlxG.game.getChildIndex(FlxG.game._inputContainer));
+		#end
 		FlxG.cameras.list.push(NewCamera);
 		NewCamera.ID = FlxG.cameras.list.length - 1;
 		return NewCamera;
@@ -54,22 +56,21 @@ class CameraFrontEnd
 	 */
 	public function remove(Camera:FlxCamera, Destroy:Bool = true):Void
 	{
-		if ((Camera != null) && FlxG.game.contains(Camera.displaySprite))
+		var index:Int = list.indexOf(Camera);
+		if ((Camera != null) && index != -1)
 		{
-			FlxG.game.removeChild(Camera.displaySprite);
-			var index = FlxArrayUtil.indexOf(FlxG.cameras.list, Camera);
+			#if !js
+			FlxG.game.removeChild(Camera.flashSprite);
+			#end
 			
-			if (index >= 0)
-			{
-				FlxG.cameras.list.splice(index, 1);
-			}
+			list.splice(index, 1);
 		}
 		else
 		{
 			FlxG.log.warn("FlxG.cameras.remove(): The camera you attemped to remove is not a part of the game.");
 		}
 		
-		#if !flash
+		#if FLX_RENDER_TILE
 		for (i in 0...list.length)
 		{
 			list[i].ID = i;
@@ -90,11 +91,13 @@ class CameraFrontEnd
 	 */
 	public function reset(?NewCamera:FlxCamera):Void
 	{
+		#if !js
 		for (camera in list)
 		{
-			FlxG.game.removeChild(camera.displaySprite);
+			FlxG.game.removeChild(camera.flashSprite);
 			camera.destroy();
 		}
+		#end
 		
 		list.splice(0, list.length);
 		
@@ -177,7 +180,7 @@ class CameraFrontEnd
 				continue;
 			}
 			
-			#if flash
+			#if FLX_RENDER_BLIT
 			camera.checkResize();
 			
 			if (useBufferLocking)
@@ -186,7 +189,7 @@ class CameraFrontEnd
 			}
 			#end
 			
-		#if !flash
+		#if FLX_RENDER_TILE
 			camera.clearDrawStack();
 			camera.canvas.graphics.clear();
 			// Clearing camera's debug sprite
@@ -195,7 +198,7 @@ class CameraFrontEnd
 			#end
 		#end
 			
-			#if flash
+			#if FLX_RENDER_BLIT
 			camera.fill(camera.bgColor, camera.useBgAlphaBlending);
 			camera.screen.dirty = true;
 			#else
@@ -204,7 +207,7 @@ class CameraFrontEnd
 		}
 	}
 	
-	#if !flash
+	#if FLX_RENDER_TILE
 	private inline function render():Void
 	{
 		for (camera in list)
@@ -231,7 +234,7 @@ class CameraFrontEnd
 			
 			camera.drawFX();
 			
-			#if flash
+			#if FLX_RENDER_BLIT
 			if (useBufferLocking)
 			{
 				camera.buffer.unlock();
@@ -256,13 +259,9 @@ class CameraFrontEnd
 					camera.update();
 				}
 				
-				if (camera.target == null) 
-				{
-					camera.displaySprite.x = camera.x + camera._flashOffset.x;
-					camera.displaySprite.y = camera.y + camera._flashOffset.y;
-				}
-				
-				camera.displaySprite.visible = camera.visible;
+				camera.flashSprite.x = camera.x + camera._flashOffset.x;
+				camera.flashSprite.y = camera.y + camera._flashOffset.y;
+				camera.flashSprite.visible = camera.visible;
 			}
 		}
 	}

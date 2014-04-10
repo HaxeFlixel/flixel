@@ -4,23 +4,34 @@
 import flixel.FlxG;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
+import flixel.util.FlxPool;
 
 /**
  * Global volume fader.
  */
 class Fader extends FlxTween
 {
-	private var _start:Float;
-	private var _range:Float;
+	/**
+	 * A pool that contains Faders for recycling.
+	 */
+	@:isVar 
+	@:allow(flixel.tweens.FlxTween)
+	private static var _pool(get, null):FlxPool<Fader>;
 	
 	/**
-	 * @param	complete	Optional completion callback.
-	 * @param	type		Tween type.
+	 * Only allocate the pool if needed.
 	 */
-	public function new(?complete:CompleteCallback, type:Int = 0) 
+	private static function get__pool():FlxPool<Fader>
 	{
-		super(0, type, complete);
+		if (_pool == null)
+		{
+			_pool = new FlxPool<Fader>(Fader);
+		}
+		return _pool;
 	}
+	
+	private var _start:Float;
+	private var _range:Float;
 	
 	/**
 	 * Fades FlxG.volume to the target volume.
@@ -43,6 +54,12 @@ class Fader extends FlxTween
 	{
 		super.update();
 		FlxG.sound.volume = _start + _range * scale;
+	}
+	
+	override inline public function put():Void
+	{
+		if (!_inPool)
+			_pool.putUnsafe(this);
 	}
 }
 #end

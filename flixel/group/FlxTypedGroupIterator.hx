@@ -10,14 +10,16 @@ import flixel.FlxBasic;
 class FlxTypedGroupIterator<T>
 {
 	private var _groupMembers : Array<T>;
-	private var _cursor : Int;
 	private var _filter : T -> Bool;
+	private var _cursor : Int;
+	private var _length : Int;
 
 	public function new(GroupMembers : Array<T>, filter : T -> Bool = null)
 	{
 		_groupMembers = GroupMembers;
-		_cursor = 0;
 		_filter = filter;
+		_cursor = 0;
+		_length = _groupMembers.length;
 	}
 
 	public function next()
@@ -27,11 +29,11 @@ class FlxTypedGroupIterator<T>
 
 	public function hasNext() : Bool
 	{
-		while (_cursor < _groupMembers.length && (_groupMembers[_cursor] == null || _filter != null && !_filter(_groupMembers[_cursor])))
+		while (_cursor < _length && (_groupMembers[_cursor] == null || _filter != null && !_filter(_groupMembers[_cursor])))
 		{
 			_cursor++;
 		}
-		return _cursor < _groupMembers.length;
+		return _cursor < _length;
 	}
 	
 }

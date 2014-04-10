@@ -6,6 +6,7 @@ import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.group.FlxTypedGroup;
 import flixel.interfaces.IFlxParticle;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRandom;
 
@@ -42,7 +43,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 	/**
 	 * The X and Y drag component of particles launched from the emitter.
 	 */
-	public var particleDrag:FlxPoint;
+	public var particleDrag(default, null):FlxPoint;
 	/**
 	 * The minimum and maximum possible angular velocity of a particle.  The default value is (-360, 360).
 	 * NOTE: rotating particles are more expensive to draw than non-rotating ones!
@@ -51,7 +52,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 	/**
 	 * Sets the acceleration member of each particle to this value on launch.
 	 */
-	public var acceleration:FlxPoint;
+	public var acceleration(default, null):FlxPoint;
 	/**
 	 * Determines whether the emitter is currently emitting particles.
 	 * It is totally safe to directly toggle this.
@@ -106,7 +107,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 	 * Sets particle's blend mode. null by default.
 	 * Warning: expensive on flash target
 	 */
-	public var blend:BlendMode = null;
+	public var blend:BlendMode;
 	/**
 	 * How much each particle should bounce.  1 = full bounce, 0 = no bounce.
 	 */
@@ -168,13 +169,13 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 		endGreen = new Bounds<Float>(1.0, 1.0);
 		endBlue = new Bounds<Float>(1.0, 1.0);
 		
-		acceleration = new FlxPoint(0, 0);
+		acceleration = FlxPoint.get(0, 0);
 		_particleClass = cast FlxParticle;
-		particleDrag = new FlxPoint();
+		particleDrag = FlxPoint.get();
 		
 		life = new Bounds<Float>(3, 3);
 		exists = false;
-		_point = new FlxPoint();
+		_point = FlxPoint.get();
 	}
 	
 	/**
@@ -182,6 +183,10 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 	 */
 	override public function destroy():Void
 	{
+		_point = FlxDestroyUtil.put(_point);
+		acceleration = FlxDestroyUtil.put(acceleration);
+		particleDrag = FlxDestroyUtil.put(particleDrag);
+		
 		xPosition = null;
 		yPosition = null;
 		xVelocity = null;
@@ -198,10 +203,6 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 		endGreen = null;
 		endBlue = null;
 		blend = null;
-		acceleration = null;
-		
-		particleDrag = null;
-		_particleClass = null;
 		_point = null;
 		
 		super.destroy();
@@ -246,7 +247,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 				
 				if (bakedRotationAngles > 0)
 				{
-					#if flash
+					#if FLX_RENDER_BLIT
 					particle.loadRotatedGraphic(Graphics, bakedRotationAngles, randomFrame, false, AutoBuffer);
 					#else
 					particle.loadGraphic(Graphics, true);
@@ -262,7 +263,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 			{
 				if (bakedRotationAngles > 0)
 				{
-					#if flash
+					#if FLX_RENDER_BLIT
 					particle.loadRotatedGraphic(Graphics, bakedRotationAngles, -1, false, AutoBuffer);
 					#else
 					particle.loadGraphic(Graphics);
@@ -311,7 +312,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 					l = length;
 				}
 				
-				while(i < l)
+				while (i < l)
 				{
 					emitParticle();
 					i++;
@@ -326,7 +327,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 				{
 					emitParticle();
 					
-					if((_quantity > 0) && (++_counter >= _quantity))
+					if ((_quantity > 0) && (++_counter >= _quantity))
 					{
 						on = false;
 						_waitForKill = true;

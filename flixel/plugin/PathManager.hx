@@ -16,7 +16,9 @@ class PathManager extends FlxPlugin
 	{
 		super();
 		_paths = new Array<FlxPath>();
+		#if !FLX_NO_DEBUG
 		visible = false; // No draw-calls needed 
+		#end
 	}
 	
 	/**
@@ -46,41 +48,17 @@ class PathManager extends FlxPlugin
 	 * Called by FlxG.plugins.draw() after the game state has been drawn.
 	 * Cycles through cameras and calls drawDebug() on each one.
 	 */
-	override public function drawDebug():Void
+	override public function draw():Void
 	{
-		if (FlxG.debugger.drawDebug && !ignoreDrawDebug)
+		super.draw();
+		if (FlxG.debugger.drawDebug)
 		{
-			for (camera in cameras)
+			for (path in _paths)
 			{
-				drawDebugOnCamera(camera);
-			}
-		}
-	}
-	
-	/**
-	 * Similar to FlxObject's drawDebug() functionality,
-	 * this function calls drawDebug() on each FlxPath for the specified camera.
-	 * Very helpful for debugging!
-	 * 
-	 * @param	Camera	Which FlxCamera object to draw the debug data to.
-	 */
-	override public function drawDebugOnCamera(?Camera:FlxCamera):Void
-	{
-		if (Camera == null)
-		{
-			Camera = FlxG.camera;
-		}
-		
-		var i:Int = _paths.length - 1;
-		var path:FlxPath;
-		
-		while (i >= 0)
-		{
-			path = _paths[i--];
-			
-			if ((path != null) && !path.ignoreDrawDebug)
-			{
-				path.drawDebug(Camera);
+				if ((path != null) && !path.ignoreDrawDebug)
+				{
+					path.drawDebug();
+				}
 			}
 		}
 	}
@@ -118,7 +96,7 @@ class PathManager extends FlxPlugin
 	{
 		while (_paths.length > 0)
 		{
-			FlxPath.pool.put(_paths.pop());
+			FlxPath._pool.put(_paths.pop());
 		}
 	}
 	

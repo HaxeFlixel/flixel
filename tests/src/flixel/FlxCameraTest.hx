@@ -7,27 +7,34 @@ import massive.munit.Assert;
 
 class FlxCameraTest extends FlxTest
 {
-	@Test function bgColor():Void
+	@Test
+	function testDefaultBgColor():Void
 	{
-		Assert.isTrue(FlxG.cameras.bgColor == FlxColor.BLACK);
+		Assert.areEqual(FlxColor.BLACK, FlxG.cameras.bgColor);
 	}
 
-	@Test function zoom():Void
+	@Test
+	function testDefaultZoom():Void
 	{
-		Assert.isTrue(FlxG.camera.zoom == 1);
-		Assert.isTrue(FlxCamera.defaultZoom == 1);
+		Assert.areEqual(1, FlxG.camera.zoom);
+		Assert.areEqual(1, FlxCamera.defaultZoom);
 	}
 
-	@Test function length():Void
+	@Test
+	function testDefaultLength():Void
 	{
-		Assert.isTrue(FlxG.cameras.list.length == 1);
-		
+		Assert.areEqual(1, FlxG.cameras.list.length);
+	}
+	
+	@Test
+	function testAddAndRemoveCamera():Void
+	{
 		var camera = new FlxCamera();
 		
 		FlxG.cameras.add(camera);
-		Assert.isTrue(FlxG.cameras.list.length == 2);
+		Assert.areEqual(2, FlxG.cameras.list.length);
 		
 		FlxG.cameras.remove(camera);
-		Assert.isTrue(FlxG.cameras.list.length == 1);
+		Assert.areEqual(1, FlxG.cameras.list.length);
 	}
 }

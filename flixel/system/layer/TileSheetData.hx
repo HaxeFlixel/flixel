@@ -17,7 +17,7 @@ import flixel.util.loaders.TexturePackerData;
  */
 class TileSheetData implements IFlxDestroyable
 {
-	#if !flash
+	#if FLX_RENDER_TILE
 	public var tileSheet:TileSheetExt;
 	#end
 	
@@ -38,7 +38,7 @@ class TileSheetData implements IFlxDestroyable
 	public function new(Bitmap:BitmapData)
 	{
 		bitmap = Bitmap;
-		#if !flash
+		#if FLX_RENDER_TILE
 		tileSheet = new TileSheetExt(bitmap);
 		#end
 		flxSpriteFrames = new Map<String, FlxSpriteFrames>();
@@ -148,7 +148,7 @@ class TileSheetData implements IFlxDestroyable
 		}
 		
 		var frame:FlxFrame = new FlxFrame(this);
-		#if !flash
+		#if FLX_RENDER_TILE
 		frame.tileID = addTileRect(rect, point);
 		#end
 		frame.name = key;
@@ -170,7 +170,7 @@ class TileSheetData implements IFlxDestroyable
 		return flxFrames.exists(key);
 	}
 	
-	#if !flash
+	#if FLX_RENDER_TILE
 	public inline function addTileRect(tileRect:Rectangle, ?point:Point):Int
 	{
 		return tileSheet.addTileRectID(tileRect, point);
@@ -180,7 +180,7 @@ class TileSheetData implements IFlxDestroyable
 	public function destroy():Void
 	{
 		bitmap = null;
-		#if !flash
+		#if FLX_RENDER_TILE
 		tileSheet.destroy();
 		tileSheet = null;
 		#end
@@ -205,7 +205,7 @@ class TileSheetData implements IFlxDestroyable
 		frameNames = null;
 	}
 	
-	#if !flash
+	#if FLX_RENDER_TILE
 	public function onContext(bitmap:BitmapData):Void
 	{
 		this.bitmap = bitmap;
@@ -265,13 +265,15 @@ class TileSheetData implements IFlxDestroyable
 		if (frameData.rotated)
 		{
 			texFrame.center.set(texFrame.frame.height * 0.5 + texFrame.offset.x, texFrame.frame.width * 0.5 + texFrame.offset.y);
-			texFrame.additionalAngle = -90.0;
 		}
 		else
 		{
 			texFrame.center.set(texFrame.frame.width * 0.5 + texFrame.offset.x, texFrame.frame.height * 0.5 + texFrame.offset.y);
 		}
-		#if !flash
+		
+		texFrame.additionalAngle = frameData.additionalAngle;
+		
+		#if FLX_RENDER_TILE
 		texFrame.tileID = addTileRect(texFrame.frame, new Point(0.5 * texFrame.frame.width, 0.5 * texFrame.frame.height));
 		#end
 		flxFrames.set(key, texFrame);
@@ -286,9 +288,5 @@ class TileSheetData implements IFlxDestroyable
 		{
 			flxFrames.get(frameNames[i]).destroyBitmapDatas();
 		}
-		/*for (frame in flxFrames)
-		{
-			frame.destroyBitmapDatas();
-		}*/
 	}
 }

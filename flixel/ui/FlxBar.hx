@@ -3,6 +3,7 @@ package flixel.ui;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import flash.display.BitmapData;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxStringUtil;
 
 import flixel.FlxG;
@@ -27,7 +28,23 @@ import flixel.util.loaders.CachedGraphics;
  */
 class FlxBar extends FlxSprite
 {
-	#if flash
+	public static inline var FILL_LEFT_TO_RIGHT:Int = 1;
+	public static inline var FILL_RIGHT_TO_LEFT:Int = 2;
+	public static inline var FILL_TOP_TO_BOTTOM:Int = 3;
+	public static inline var FILL_BOTTOM_TO_TOP:Int = 4;
+	public static inline var FILL_HORIZONTAL_INSIDE_OUT:Int = 5;
+	public static inline var FILL_HORIZONTAL_OUTSIDE_IN:Int = 6;
+	public static inline var FILL_VERTICAL_INSIDE_OUT:Int = 7;
+	public static inline var FILL_VERTICAL_OUTSIDE_IN:Int = 8;
+	
+	public static inline var FRAMES_POSITION_HORIZONTAL:String = "horizontal";
+	public static inline var FRAMES_POSITION_VERTICAL:String = "vertical";
+	
+	private static inline var BAR_FILLED:Int = 1;
+	private static inline var BAR_GRADIENT:Int = 2;
+	private static inline var BAR_IMAGE:Int = 3;
+	
+	#if FLX_RENDER_BLIT
 	private var canvas:BitmapData;
 	#end
 	
@@ -46,7 +63,7 @@ class FlxBar extends FlxSprite
 	/**
 	 * The positionOffset controls how far offset the FlxBar is from the parent sprite (if at all)
 	 */
-	public var positionOffset:FlxPoint;
+	public var positionOffset(default, null):FlxPoint;
 	
 	/**
 	 * The minimum value the bar can be (can never be >= max)
@@ -93,26 +110,11 @@ class FlxBar extends FlxSprite
 	private var fillDirection:Int;
 	private var fillHorizontal:Bool;
 	
-	public static inline var FILL_LEFT_TO_RIGHT:Int = 1;
-	public static inline var FILL_RIGHT_TO_LEFT:Int = 2;
-	public static inline var FILL_TOP_TO_BOTTOM:Int = 3;
-	public static inline var FILL_BOTTOM_TO_TOP:Int = 4;
-	public static inline var FILL_HORIZONTAL_INSIDE_OUT:Int = 5;
-	public static inline var FILL_HORIZONTAL_OUTSIDE_IN:Int = 6;
-	public static inline var FILL_VERTICAL_INSIDE_OUT:Int = 7;
-	public static inline var FILL_VERTICAL_OUTSIDE_IN:Int = 8;
-	
-	private static inline var BAR_FILLED:Int = 1;
-	private static inline var BAR_GRADIENT:Int = 2;
-	private static inline var BAR_IMAGE:Int = 3;
-	
-	#if !flash
+	#if FLX_RENDER_TILE
 	private var _emptyBarFrameID:Int;
 	private var _filledBarFrames:Array<Float>;
 	
 	private var _framesPosition:String;
-	public static inline var FRAMES_POSITION_HORIZONTAL:String = "horizontal";
-	public static inline var FRAMES_POSITION_VERTICAL:String = "vertical";
 	
 	private var _cachedFrontGraphics:CachedGraphics;
 	private var _frontRegion:Region;
@@ -142,7 +144,7 @@ class FlxBar extends FlxSprite
 		barWidth = width;
 		barHeight = height;
 		
-		#if flash
+		#if FLX_RENDER_BLIT
 		makeGraphic(barWidth, barHeight, FlxColor.WHITE, true);
 		#else
 		this.width = frameWidth = width;
@@ -156,7 +158,7 @@ class FlxBar extends FlxSprite
 		
 		filledBarPoint = new Point(0, 0);
 		
-		#if flash
+		#if FLX_RENDER_BLIT
  		canvas = new BitmapData(width, height, true, FlxColor.TRANSPARENT);
 		#end
 		
@@ -175,14 +177,16 @@ class FlxBar extends FlxSprite
 		emptyKill = false;
 		
 		// Make sure the bar is drawn
-		#if flash
+		#if FLX_RENDER_BLIT
 		updateBar();
 		#end
 	}
 	
 	override public function destroy():Void 
 	{
-		#if flash
+		positionOffset = FlxDestroyUtil.put(positionOffset);
+		
+		#if FLX_RENDER_BLIT
 		canvas.dispose();
 		canvas = null;
 		#else
@@ -199,17 +203,8 @@ class FlxBar extends FlxSprite
 		filledBarRect = null;
 		filledBarPoint = null;
 		
-		if (emptyBar != null)
-		{
-			emptyBar.dispose();
-			emptyBar = null;
-		}
-		
-		if (filledBar != null)
-		{
-			filledBar.dispose();
-			filledBar = null;
-		}
+		emptyBar = FlxDestroyUtil.dispose(emptyBar);
+		filledBar = FlxDestroyUtil.dispose(filledBar);
 		
 		super.destroy();
 	}
@@ -227,7 +222,7 @@ class FlxBar extends FlxSprite
 	{
 		fixedPosition = false;
 		
-		positionOffset = new FlxPoint(offsetX, offsetY);
+		positionOffset = FlxPoint.get(offsetX, offsetY);
 		
 		if (Reflect.hasField(parent, "scrollFactor"))
 		{
@@ -300,7 +295,7 @@ class FlxBar extends FlxSprite
 		}
 	}
 	
-	public var killOnEmpty(get_killOnEmpty, set_killOnEmpty):Bool;
+	public var killOnEmpty(get, set):Bool;
 	
 	/**
 	 * If this FlxBar should be killed when its value reaches empty, set to true
@@ -363,12 +358,12 @@ class FlxBar extends FlxSprite
 			value = min;
 		}
 		
-		#if !flash
+		#if FLX_RENDER_TILE
 		updateFrameData();
 		#end
 	}
 	
-	public var stats(get_stats, null):Map<String, Dynamic>;
+	public var stats(get, null):Map<String, Dynamic>;
 	
 	private function get_stats():Map<String, Dynamic>
 	{
@@ -396,7 +391,7 @@ class FlxBar extends FlxSprite
 	{
 		barType = BAR_FILLED;
 		
-		#if !flash
+		#if FLX_RENDER_TILE
 		var emptyA:Int = (empty >> 24) & 255;
 		var emptyRGB:Int = empty & 0x00ffffff;
 		var fillA:Int = (fill >> 24) & 255;
@@ -424,7 +419,7 @@ class FlxBar extends FlxSprite
 		
 		if (showBorder)
 		{
-		#if !flash
+		#if FLX_RENDER_TILE
 			if (FlxG.bitmap.checkCache(emptyKey) == false)
 			{
 				var emptyBar:BitmapData = new BitmapData(barWidth, barHeight, true, border);
@@ -450,7 +445,7 @@ class FlxBar extends FlxSprite
 		}
 		else
 		{
-		#if !flash
+		#if FLX_RENDER_TILE
 			if (FlxG.bitmap.checkCache(emptyKey) == false)
 			{
 				var emptyBar:BitmapData = new BitmapData(barWidth, barHeight, true, empty);
@@ -468,7 +463,7 @@ class FlxBar extends FlxSprite
 		#end
 		}
 		
-		#if flash
+		#if FLX_RENDER_BLIT
 		filledBarRect = new Rectangle(0, 0, filledBar.width, filledBar.height);
 		emptyBarRect = new Rectangle(0, 0, emptyBar.width, emptyBar.height);
 		#else
@@ -500,7 +495,7 @@ class FlxBar extends FlxSprite
 	{
 		barType = BAR_GRADIENT;
 		
-		#if !flash
+		#if FLX_RENDER_TILE
 		var colA:Int;
 		var colRGB:Int;
 		
@@ -545,7 +540,7 @@ class FlxBar extends FlxSprite
 		
 		if (showBorder)
 		{
-			#if flash
+			#if FLX_RENDER_BLIT
 			emptyBar = new BitmapData(barWidth, barHeight, true, border);
 			FlxGradient.overlayGradientOnBitmapData(emptyBar, barWidth - 2, barHeight - 2, empty, 1, 1, chunkSize, rotation);
 			
@@ -569,7 +564,7 @@ class FlxBar extends FlxSprite
 		}
 		else
 		{
-			#if flash
+			#if FLX_RENDER_BLIT
 			emptyBar = FlxGradient.createGradientBitmapData(barWidth, barHeight, empty, chunkSize, rotation);
 			filledBar = FlxGradient.createGradientBitmapData(barWidth, barHeight, fill, chunkSize, rotation);
 			#else
@@ -587,7 +582,7 @@ class FlxBar extends FlxSprite
 			#end
 		}
 		
-		#if flash
+		#if FLX_RENDER_BLIT
 		emptyBarRect = new Rectangle(0, 0, emptyBar.width, emptyBar.height);
 		filledBarRect = new Rectangle(0, 0, filledBar.width, filledBar.height);
 		#else
@@ -622,7 +617,7 @@ class FlxBar extends FlxSprite
 		var emptyBitmapData:BitmapData = (emptyGraphics != null) ? emptyGraphics.bitmap : null; 
 		var fillBitmapData:BitmapData = (filledGraphics != null) ? filledGraphics.bitmap : null;
 		
-	#if !flash
+	#if FLX_RENDER_TILE
 		var emptyKey:String = "";
 		var filledKey:String = "";
 		
@@ -669,7 +664,7 @@ class FlxBar extends FlxSprite
 		if (empty != null && fill == null)
 		{
 			//	If empty is set, but fill is not ...
-		#if flash
+		#if FLX_RENDER_BLIT
 			emptyBar = emptyBitmapData;
 			emptyBarRect = new Rectangle(0, 0, emptyBar.width, emptyBar.height);
 			
@@ -706,7 +701,7 @@ class FlxBar extends FlxSprite
 		else if (empty == null && fill != null)
 		{
 			//	If fill is set, but empty is not ...
-			#if flash
+			#if FLX_RENDER_BLIT
 			filledBar = fillBitmapData;
 			filledBarRect = new Rectangle(0, 0, filledBar.width, filledBar.height);
 			
@@ -743,7 +738,7 @@ class FlxBar extends FlxSprite
 		else if (empty != null && fill != null)
 		{
 			//	If both are set
-			#if flash
+			#if FLX_RENDER_BLIT
 			emptyBar = emptyBitmapData;
 			emptyBarRect = new Rectangle(0, 0, emptyBar.width, emptyBar.height);
 			
@@ -777,7 +772,7 @@ class FlxBar extends FlxSprite
 			#end
 		}
 		
-		#if flash
+		#if FLX_RENDER_BLIT
 		canvas = new BitmapData(barWidth, barHeight, true, 0x0);
 		#else
 		setCachedGraphics(FlxG.bitmap.get(emptyKey));
@@ -820,7 +815,7 @@ class FlxBar extends FlxSprite
 			fillHorizontal = false;
 		}
 		
-		#if !flash
+		#if FLX_RENDER_TILE
 		updateFrameData();
 		#end
 	}
@@ -866,7 +861,7 @@ class FlxBar extends FlxSprite
 	 */
 	private function updateBar():Void
 	{
-		#if flash
+		#if FLX_RENDER_BLIT
 		if (fillHorizontal)
 		{
 			filledBarRect.width = Std.int(percent * pxPerPercent);
@@ -942,7 +937,7 @@ class FlxBar extends FlxSprite
 		super.update();
 	}
 	
-	public var percent(get_percent, set_percent):Float;
+	public var percent(get, set):Float;
 	
 	/**
 	 * The percentage of how full the bar is (a value between 0 and 100)
@@ -977,7 +972,7 @@ class FlxBar extends FlxSprite
 		return newPct;
 	}
 	
-	public var currentValue(get_currentValue, set_currentValue):Float;
+	public var currentValue(get, set):Float;
 	
 	/**
 	 * Set the current value of the bar (must be between min and max range)
@@ -997,7 +992,7 @@ class FlxBar extends FlxSprite
 		return value;
 	}
 	
-	#if !flash
+	#if FLX_RENDER_TILE
 	override public function draw():Void 
 	{
 		if (_cachedFrontGraphics == null || cachedGraphics == null)
@@ -1017,23 +1012,13 @@ class FlxBar extends FlxSprite
 			{
 				continue;
 			}
-			#if !js
 			drawItem = camera.getDrawStackItem(cachedGraphics, isColored, _blendInt, antialiasing);
-			#else
-			var useAlpha:Bool = (alpha < 0);
-			drawItem = camera.getDrawStackItem(cachedGraphics, useAlpha);
-			#end
 			
 			currDrawData = drawItem.drawData;
 			currIndex = drawItem.position;
 			
 			_point.x = x - (camera.scroll.x * scrollFactor.x) - (offset.x) + origin.x;
 			_point.y = y - (camera.scroll.y * scrollFactor.y) - (offset.y) + origin.y;
-			
-			#if js
-			_point.x = Math.floor(_point.x);
-			_point.y = Math.floor(_point.y);
-			#end
 
 			var csx:Float = 1;
 			var ssy:Float = 0;
@@ -1076,7 +1061,6 @@ class FlxBar extends FlxSprite
 			currDrawData[currIndex++] = ssy;
 			currDrawData[currIndex++] = csy;
 
-			#if !js
 			if (isColored)
 			{
 				currDrawData[currIndex++] = _red;
@@ -1084,22 +1068,11 @@ class FlxBar extends FlxSprite
 				currDrawData[currIndex++] = _blue;
 			}
 			currDrawData[currIndex++] = alpha;
-			#else
-			if (useAlpha)
-			{
-				currDrawData[currIndex++] = alpha;
-			}
-			#end
 			
 			drawItem.position = currIndex;
 			
 			// Draw filled bar
-			#if !js
 			drawItem = camera.getDrawStackItem(_cachedFrontGraphics, isColored, _blendInt, antialiasing);
-			#else
-			var useAlpha:Bool = (alpha < 0);
-			drawItem = camera.getDrawStackItem(_cachedFrontGraphics, useAlpha);
-			#end
 			
 			currDrawData = drawItem.drawData;
 			currIndex = drawItem.position;
@@ -1131,7 +1104,6 @@ class FlxBar extends FlxSprite
 				currDrawData[currIndex++] = ssy;
 				currDrawData[currIndex++] = csy;
 				
-				#if !js
 				if (isColored)
 				{
 					currDrawData[currIndex++] = _red; 
@@ -1139,12 +1111,6 @@ class FlxBar extends FlxSprite
 					currDrawData[currIndex++] = _blue;
 				}
 				currDrawData[currIndex++] = alpha;
-				#else
-				if (useAlpha)
-				{
-					currDrawData[currIndex++] = alpha;
-				}
-				#end
 			}
 			
 			drawItem.position = currIndex;
@@ -1168,7 +1134,7 @@ class FlxBar extends FlxSprite
 	
 	override public function updateFrameData():Void 
 	{	
-	#if !flash
+	#if FLX_RENDER_TILE
 		if (cachedGraphics == null || _cachedFrontGraphics == null)
 		{
 			return;
@@ -1259,7 +1225,7 @@ class FlxBar extends FlxSprite
 	#end
 	}
 	
-	#if !flash
+	#if FLX_RENDER_TILE
 	private inline function setCachedGraphics(value:CachedGraphics):Void
 	{
 		cachedGraphics = value;
@@ -1281,11 +1247,12 @@ class FlxBar extends FlxSprite
 	
 	override public function toString():String
 	{
-		return FlxStringUtil.getDebugString([ { label: "min", value: min }, 
-		                                      { label: "max", value: max },
-		                                      { label: "range", value: range },
-		                                      { label: "%", value: pct },
-		                                      { label: "px/%", value: pxPerPercent },
-		                                      { label: "value", value: value } ]);
+		return FlxStringUtil.getDebugString([ 
+			LabelValuePair.weak("min", min),
+			LabelValuePair.weak("max", max),
+			LabelValuePair.weak("range", range),
+			LabelValuePair.weak("%", pct),
+			LabelValuePair.weak("px/%", pxPerPercent),
+			LabelValuePair.weak("value", value)]);
 	}
 }

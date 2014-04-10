@@ -2,6 +2,7 @@ package flixel.system.frontEnds;
 
 import flixel.FlxG;
 import flixel.system.debug.LogStyle;
+import flixel.system.FlxAssets;
 import haxe.Log;
 import haxe.PosInfos;
 
@@ -9,7 +10,6 @@ class LogFrontEnd
 {
 	/**
 	 * Whether everything you trace() is being redirected into the log window.
-	 * True by default, except on android.
 	 */
 	public var redirectTraces(default, set):Bool = false;
 	
@@ -74,7 +74,7 @@ class LogFrontEnd
 			#if !FLX_NO_SOUND_SYSTEM
 			if (Style.errorSound != null)
 			{
-				FlxG.sound.load(Style.errorSound).play();
+				FlxG.sound.load(FlxAssets.getSound(Style.errorSound).play());
 			}
 			#end
 			

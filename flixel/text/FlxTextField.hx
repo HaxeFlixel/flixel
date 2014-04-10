@@ -152,7 +152,7 @@ class FlxTextField extends FlxText
 		
 		if (!_addedToDisplay)
 		{
-			#if !flash
+			#if FLX_RENDER_TILE
 			_camera.canvas.addChild(_textField);
 			#else
 			_camera.flashSprite.addChild(_textField);
@@ -174,7 +174,7 @@ class FlxTextField extends FlxText
 		_point.x = x - (_camera.scroll.x * scrollFactor.x) - (offset.x);
 		_point.y = y - (_camera.scroll.y * scrollFactor.y) - (offset.y);
 		
-		#if !flash
+		#if FLX_RENDER_TILE
 		_textField.x = _point.x;
 		_textField.y = _point.y;
 		#else
@@ -214,23 +214,18 @@ class FlxTextField extends FlxText
 		}
 	}
 	
-	/**
-	 * Camera on which this text will be displayed. Default is FlxG.camera.
-	 */
-	public var camera(get, set):FlxCamera;
-	
-	private function get_camera():FlxCamera 
+	override private function get_camera():FlxCamera 
 	{
 		return _camera;
 	}
 	
-	private function set_camera(Value:FlxCamera):FlxCamera 
+	override private function set_camera(Value:FlxCamera):FlxCamera 
 	{
 		if (_camera != Value)
 		{
 			if (Value != null)
 			{
-				#if !flash
+				#if FLX_RENDER_TILE
 				Value.canvas.addChild(_textField);
 				#else
 				Value.flashSprite.addChild(_textField);

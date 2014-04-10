@@ -17,6 +17,11 @@ import flixel.util.FlxArrayUtil;
 class FlxKeyboard implements IFlxInput
 {
 	/**
+	 * Total amount of keys.
+	 */
+	private static inline var TOTAL:Int = 256;
+	
+	/**
 	 * Whether or not keyboard input is currently enabled.
 	 */
 	public var enabled:Bool = true;
@@ -33,21 +38,24 @@ class FlxKeyboard implements IFlxInput
 	 * Helper class to check if a keys was just released.
 	 */
 	public var justReleased:FlxKeyList;
-
-	/**
-	 * Total amount of keys.
-	 */
-	private static inline var TOTAL:Int = 256;
 	
-	/**
-	 * A map for key lookup.
-	 */
-	private var _keyLookup:Map<String, Int>;
 	/**
 	 * An array of FlxKey objects.
 	 */
 	@:allow(flixel.input.android.FlxAndroidKeyList.get_ANY)
 	private var _keyList:Array<FlxKey>;
+	/**
+	 * A map for key lookup.
+	 */
+	private var _keyLookup:Map<String, Int>;
+	/**
+	 * Function and numpad keycodes on native targets are incorrect, 
+	 * this workaround fixes that. Thanks @HaxePunk!
+	 * @see https://github.com/openfl/openfl-native/issues/193
+	 */
+	#if !(flash || js)
+	private var _nativeCorrection:Map<String, Int>;
+	#end
 	
 	/**
 	 * Check to see if at least one key from an array of keys is pressed. See FlxG.keys for the key names, pass them in as Strings.
@@ -85,6 +93,57 @@ class FlxKeyboard implements IFlxInput
 		return checkKeyStatus(KeyArray, FlxKey.JUST_RELEASED);
 	}
 	
+		/**
+	 * Get the name of the first key which is currently pressed.
+	 * 
+	 * @return	The name of the key or "" if none could be found.
+	 */
+	public function firstPressed():String
+	{
+		for (key in _keyList)
+		{
+			if (key != null && key.current == FlxKey.PRESSED)
+			{
+				return key.name;
+			}
+		}
+		return "";
+	}
+	
+	/**
+	 * Get the name of the first key which has just been pressed.
+	 * 
+	 * @return	The name of the key or "" if none could be found.
+	 */
+	public function firstJustPressed():String
+	{
+		for (key in _keyList)
+		{
+			if (key != null && key.current == FlxKey.JUST_PRESSED)
+			{
+				return key.name;
+			}
+		}
+		return "";
+	}
+	
+	/**
+	 * Get the name of the first key which has just been released.
+	 * 
+	 * @return	The name of the key or "" if none could be found.
+	 */
+	public function firstJustReleased():String
+	{
+		for (key in _keyList)
+		{
+			if (key != null && key.current == FlxKey.JUST_RELEASED)
+			{
+				return key.name;
+			}
+		}
+		return "";
+	}
+	
 	/**
 	 * Check the status of a single of key
 	 * 
@@ -113,7 +172,7 @@ class FlxKeyboard implements IFlxInput
 		#if !FLX_NO_DEBUG
 		else
 		{
-			FlxG.log.error("Invalid Key: `" + KeyCode + "`. Note that function and numpad keys can only be used in flash and js.");
+			FlxG.log.error("Invalid Key: `" + KeyCode + "`.");
 		}
 		#end
 		
@@ -224,13 +283,11 @@ class FlxKeyboard implements IFlxInput
 		addKey("INSERT", 45);
 		
 		// FUNCTION KEYS
-		#if (flash || js)
 		i = 1;
 		while (i <= 12)
 		{
 			addKey("F" + i, 111 + (i++));
 		}
-		#end
 		
 		// SPECIAL KEYS + PUNCTUATION
 		addKey("ESCAPE", 27);
@@ -260,10 +317,63 @@ class FlxKeyboard implements IFlxInput
 		addKey("RIGHT", 39);
 		addKey("TAB", 9);
 		
-		#if (flash || js)
+		addKey("NUMPADMULTIPLY", 106);
 		addKey("NUMPADMINUS", 109);
 		addKey("NUMPADPLUS", 107);
 		addKey("NUMPADPERIOD", 110);
+		
+		#if !(flash || js)
+		_nativeCorrection = new Map<String, Int>();
+		
+		_nativeCorrection.set("0_64", FlxKey.INSERT);
+		_nativeCorrection.set("0_65", FlxKey.END);
+		_nativeCorrection.set("0_67", FlxKey.PAGEDOWN);
+		_nativeCorrection.set("0_69", -1);
+		_nativeCorrection.set("0_73", FlxKey.PAGEUP);
+		_nativeCorrection.set("0_266", FlxKey.DELETE);
+		_nativeCorrection.set("123_222", FlxKey.LBRACKET);
+		_nativeCorrection.set("125_187", FlxKey.RBRACKET);
+		_nativeCorrection.set("126_233", FlxKey.GRAVEACCENT);
+		
+		_nativeCorrection.set("0_80", FlxKey.F1);
+		_nativeCorrection.set("0_81", FlxKey.F2);
+		_nativeCorrection.set("0_82", FlxKey.F3);
+		_nativeCorrection.set("0_83", FlxKey.F4);
+		_nativeCorrection.set("0_84", FlxKey.F5);
+		_nativeCorrection.set("0_85", FlxKey.F6);
+		_nativeCorrection.set("0_86", FlxKey.F7);
+		_nativeCorrection.set("0_87", FlxKey.F8);
+		_nativeCorrection.set("0_88", FlxKey.F9);
+		_nativeCorrection.set("0_89", FlxKey.F10);
+		_nativeCorrection.set("0_90", FlxKey.F11);
+		
+		_nativeCorrection.set("48_224", FlxKey.ZERO);
+		_nativeCorrection.set("49_38", FlxKey.ONE);
+		_nativeCorrection.set("50_233", FlxKey.TWO);
+		_nativeCorrection.set("51_34", FlxKey.THREE);
+		_nativeCorrection.set("52_222", FlxKey.FOUR);
+		_nativeCorrection.set("53_40", FlxKey.FIVE);
+		_nativeCorrection.set("54_189", FlxKey.SIX);
+		_nativeCorrection.set("55_232", FlxKey.SEVEN);
+		_nativeCorrection.set("56_95", FlxKey.EIGHT);
+		_nativeCorrection.set("57_231", FlxKey.NINE);
+		
+		_nativeCorrection.set("48_64", FlxKey.NUMPADZERO);
+		_nativeCorrection.set("49_65", FlxKey.NUMPADONE);
+		_nativeCorrection.set("50_66", FlxKey.NUMPADTWO);
+		_nativeCorrection.set("51_67", FlxKey.NUMPADTHREE);
+		_nativeCorrection.set("52_68", FlxKey.NUMPADFOUR);
+		_nativeCorrection.set("53_69", FlxKey.NUMPADFIVE);
+		_nativeCorrection.set("54_70", FlxKey.NUMPADSIX);
+		_nativeCorrection.set("55_71", FlxKey.NUMPADSEVEN);
+		_nativeCorrection.set("56_72", FlxKey.NUMPADEIGHT);
+		_nativeCorrection.set("57_73", FlxKey.NUMPADNINE);
+		
+		_nativeCorrection.set("43_75", FlxKey.NUMPADPLUS);
+		_nativeCorrection.set("45_77", FlxKey.NUMPADMINUS);
+		_nativeCorrection.set("47_79", FlxKey.NUMPADSLASH);
+		_nativeCorrection.set("46_78", FlxKey.NUMPADPERIOD);
+		_nativeCorrection.set("42_74", FlxKey.NUMPADMULTIPLY);
 		#end
 		
 		Lib.current.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
@@ -348,12 +458,6 @@ class FlxKeyboard implements IFlxInput
 					return true;
 				}
 			}
-			#if !FLX_NO_DEBUG
-			else
-			{
-				FlxG.log.error("Invalid Key: `" + code + "`. Note that function and numpad keys can only be used in flash and js.");
-			}
-			#end
 		}
 		
 		return false;
@@ -361,12 +465,10 @@ class FlxKeyboard implements IFlxInput
 	
 	/**
 	 * Event handler so FlxGame can toggle keys.
-	 * 
-	 * @param	FlashEvent	A KeyboardEvent object.
 	 */
 	private function onKeyUp(FlashEvent:KeyboardEvent):Void
 	{
-		var c:Int = FlashEvent.keyCode;
+		var c:Int = resolveKeyCode(FlashEvent);
 		
 		// Debugger toggle
 		#if !FLX_NO_DEBUG
@@ -394,8 +496,8 @@ class FlxKeyboard implements IFlxInput
 				FlxG.sound.volumeHandler(FlxG.sound.muted ? 0 : FlxG.sound.volume);
 			}
 			
-			#if (!mobile && !FLX_NO_SOUND_TRAY)
-			if (FlxG.game.soundTray != null)
+			#if !FLX_NO_SOUND_TRAY
+			if (FlxG.game.soundTray != null && FlxG.sound.soundTrayEnabled)
 			{
 				FlxG.game.soundTray.show();
 			}
@@ -407,8 +509,8 @@ class FlxKeyboard implements IFlxInput
 			FlxG.sound.muted = false;
 			FlxG.sound.volume -= 0.1;
 			
-			#if (!mobile && !FLX_NO_SOUND_TRAY)
-			if (FlxG.game.soundTray != null)
+			#if !FLX_NO_SOUND_TRAY
+			if (FlxG.game.soundTray != null && FlxG.sound.soundTrayEnabled)
 			{
 				FlxG.game.soundTray.show();
 			}
@@ -420,8 +522,8 @@ class FlxKeyboard implements IFlxInput
 			FlxG.sound.muted = false;
 			FlxG.sound.volume += 0.1;
 			
-			#if (!mobile && !FLX_NO_SOUND_TRAY)
-			if (FlxG.game.soundTray != null)
+			#if !FLX_NO_SOUND_TRAY
+			if (FlxG.game.soundTray != null && FlxG.sound.soundTrayEnabled)
 			{
 				FlxG.game.soundTray.show();
 			}
@@ -434,12 +536,10 @@ class FlxKeyboard implements IFlxInput
 	
 	/**
 	 * Internal event handler for input and focus.
-	 * 
-	 * @param	FlashEvent	Flash keyboard event.
 	 */
 	private function onKeyDown(FlashEvent:KeyboardEvent):Void
 	{
-		var c:Int = FlashEvent.keyCode;
+		var c:Int = resolveKeyCode(FlashEvent);
 		
 		// Attempted to cancel the replay?
 		#if FLX_RECORD
@@ -485,6 +585,16 @@ class FlxKeyboard implements IFlxInput
 		}
 		
 		return false;
+	}
+	
+	private inline function resolveKeyCode(e:KeyboardEvent):Int
+	{
+		#if (flash || js)
+		return e.keyCode;
+		#else
+		var code = _nativeCorrection.get(e.charCode + "_" + e.keyCode);
+		return (code == null) ? e.keyCode : code;
+		#end
 	}
 	
 	/**

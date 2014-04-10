@@ -80,7 +80,7 @@ class FlxRandom
 	 * 
 	 * @return	The new value of the state seed.
 	 */
-	@:allow(flixel.FlxGame.switchState) // Access to this function is only needed in FlxGame::switchState()
+	@:allow(flixel.FlxGame.switchState)
 	private static inline function updateStateSeed():Int
 	{
 		return _stateSeed = _internalSeed;
@@ -93,7 +93,7 @@ class FlxRandom
 	 * @param	StandardMode	If true, entire game will be reset, else just the current state will be reset.
 	 * @return
 	 */
-	@:allow(flixel.system.frontEnds.VCRFrontEnd.startRecording)// Access to this function is only needed in VCRFrontEnd::startRecording()
+	@:allow(flixel.system.frontEnds.VCRFrontEnd.startRecording)
 	private static inline function updateRecordingSeed(StandardMode:Bool = true):Int
 	{
 		return _recordingSeed = globalSeed = StandardMode ? globalSeed : _stateSeed;
@@ -102,7 +102,7 @@ class FlxRandom
 	/**
 	 * Returns the seed to use for the requested recording.
 	 */
-	@:allow(flixel.FlxGame.step) // Access to this function is only needed in FlxGame.step()
+	@:allow(flixel.FlxGame.step)
 	private static inline function getRecordingSeed():Int
 	{
 		return _recordingSeed;
@@ -284,7 +284,8 @@ class FlxRandom
 	 * @param	EndIndex		Optional index at which to restrict selection. Ignored if 0, which is the default value.
 	 * @return	The random object that was selected.
 	 */
-	@:generic public static function getObject<T>(Objects:Array<T>, StartIndex:Int = 0, EndIndex:Int = 0):T
+	@:generic
+	public static function getObject<T>(Objects:Array<T>, StartIndex:Int = 0, EndIndex:Int = 0):T
 	{
 		var selected:Null<T> = null;
 		
@@ -322,7 +323,8 @@ class FlxRandom
 	 * @param	HowManyTimes	How many swaps to perform during the shuffle operation.  A good rule of thumb is 2-4 times the number of objects in the list.
 	 * @return	The newly shuffled array.
 	 */
-	@:generic public static function shuffleArray<T>(Objects:Array<T>, HowManyTimes:Int):Array<T>
+	@:generic
+	public static function shuffleArray<T>(Objects:Array<T>, HowManyTimes:Int):Array<T>
 	{
 		HowManyTimes = Std.int(Math.max(HowManyTimes, 0));
 		
@@ -350,7 +352,8 @@ class FlxRandom
 	 * @param 	EndIndex 		Optional index at which to restrict selection. Ignored if 0, which is the default value.
 	 * @return	A pseudorandomly chosen object from Objects.
 	 */
-	@:generic public static function weightedGetObject<T>(Objects:Array<T>, WeightsArray:Array<Float>, StartIndex:Int = 0, EndIndex:Int = 0):T
+	@:generic
+	public static function weightedGetObject<T>(Objects:Array<T>, WeightsArray:Array<Float>, StartIndex:Int = 0, EndIndex:Int = 0):T
 	{
 		var selected:Null<T> = null;
 		

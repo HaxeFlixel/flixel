@@ -11,12 +11,12 @@ class TweenManager extends FlxPlugin
 	/**
 	 * A list of all FlxTween objects.
 	 */
-	public var list(default, null):Array<FlxTween>;
+	private var _tweens(default, null):Array<FlxTween>;
 	
 	public function new():Void
 	{
 		super();
-		list = new Array<FlxTween>();
+		_tweens = new Array<FlxTween>();
 		visible = false; // No draw-calls needed 
 	}
 	
@@ -25,7 +25,7 @@ class TweenManager extends FlxPlugin
 		// process finished tweens after iterating through main list, since finish() can manipulate FlxTween.list
 		var finishedTweens:Array<FlxTween> = null;
 		
-		for (tween in list)
+		for (tween in _tweens)
 		{
 			if (tween.active)
 			{
@@ -52,11 +52,14 @@ class TweenManager extends FlxPlugin
 	
 	/**
 	 * Add a FlxTween.
+	 * 
 	 * @param	Tween	The FlxTween to add.
 	 * @param	Start	Whether you want it to start right away.
 	 * @return	The added FlxTween object.
 	 */
-	public function add(Tween:FlxTween, Start:Bool = false):FlxTween
+	@:generic
+	@:allow(flixel.tweens.FlxTween)
+	private function add<T:FlxTween>(Tween:T, Start:Bool = false):T
 	{
 		// Don't add a null object
 		if (Tween == null)
@@ -64,13 +67,10 @@ class TweenManager extends FlxPlugin
 			return null;
 		}
 		
-		// Don't add the same tween twice
-		if (FlxArrayUtil.indexOf(list, Tween) > 0)
-		{
-			return Tween;
-		}
+		// regardless if we're actually pooled or not, freshly added tweens are never in the pool
+		Tween._inPool = false;
 		
-		list.push(Tween);
+		_tweens.push(Tween);
 		
 		if (Start) 
 		{
@@ -81,44 +81,45 @@ class TweenManager extends FlxPlugin
 
 	/**
 	 * Remove a FlxTween.
+	 * 
 	 * @param	Tween		The FlxTween to remove.
 	 * @param	Destroy		Whether you want to destroy the FlxTween.
 	 * @return	The added FlxTween object.
 	 */
-	public function remove(Tween:FlxTween, Destroy:Bool = false):FlxTween
+	@:allow(flixel.tweens.FlxTween)
+	private function remove(Tween:FlxTween):FlxTween
 	{
 		if (Tween == null)
 		{
 			return null;
 		}
 		
-		if (Destroy) 
+		if (Tween._usePooling && !Tween._inPool)
 		{
-			Tween.destroy();
+			Tween.put(); // calls destroy
+			Tween._inPool = true;
 		}
 		
 		Tween.active = false;
 		
-		FlxArrayUtil.fastSplice(list, Tween);
+		FlxArrayUtil.fastSplice(_tweens, Tween);
 		
 		return Tween;
 	}
 
 	/**
 	 * Removes all FlxTweens.
-	 * @param	Destroy		Whether you want to destroy the FlxTweens.
 	 */
-	public function clear(Destroy:Bool = false):Void
+	public function clear():Void
 	{
-		for (tween in list)
+		while (_tweens.length > 0)
 		{
-			remove(tween, Destroy);
+			remove(_tweens[0]);
 		}
-		list = new Array<FlxTween>();
 	}
 	
 	override public inline function onStateSwitch():Void
 	{
-		clear(true);
+		clear();
 	}
 }

@@ -10,10 +10,8 @@ import flixel.system.FlxAssets;
 class LogStyle
 {
 	public static var NORMAL:LogStyle = new LogStyle();
-	public static var WARNING:LogStyle = new LogStyle("[WARNING] ", "FFFF00", 12, true, false, false,  
-	                                                #if FLX_NO_SOUND_SYSTEM null, #else new BeepSound(), #end true);
-	public static var ERROR:LogStyle = new LogStyle("[ERROR] ", "FF0000", 12, true, false, false, 
-	                                                #if FLX_NO_SOUND_SYSTEM null, #else new BeepSound(), #end true);
+	public static var WARNING:LogStyle = new LogStyle("[WARNING] ", "FFFF00", 12, true, false, false, "assets/sounds/beep", true);
+	public static var ERROR:LogStyle = new LogStyle("[ERROR] ", "FF0000", 12, true, false, false, "assets/sounds/beep", true);
 	public static var NOTICE:LogStyle = new LogStyle("[NOTICE] ", "008000", 12, true);
 	public static var CONSOLE:LogStyle = new LogStyle("&#62; ", "0000ff", 12, true);
 	
@@ -29,7 +27,7 @@ class LogStyle
 	/**
 	 * A sound to be played when this LogStyle is used.
 	 */
-	public var errorSound:Sound;
+	public var errorSound:String;
 	/**
 	 * Whether the console should be forced to open when this LogStyle is used.
 	 */
@@ -52,7 +50,7 @@ class LogStyle
 	 * @param	OpenConsole			Whether the console should be forced to open when this LogStyle is used.
 	 * @param	CallbackFunction	A callback function that is called when this LogStyle is used.
 	 */
-	public function new(Prefix:String = "", Color:String = "FFFFFF", Size:Int = 12, Bold:Bool = false, Italic:Bool = false, Underlined:Bool = false, ?ErrorSound:Sound, OpenConsole:Bool = false, ?CallbackFunction:Void->Void)
+	public function new(Prefix:String = "", Color:String = "FFFFFF", Size:Int = 12, Bold:Bool = false, Italic:Bool = false, Underlined:Bool = false, ?ErrorSound:String, OpenConsole:Bool = false, ?CallbackFunction:Void->Void)
 	{
 		prefix = Prefix;
 		color = Color;

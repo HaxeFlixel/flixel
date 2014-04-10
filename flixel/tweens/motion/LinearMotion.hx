@@ -2,12 +2,32 @@
 
 import flixel.tweens.FlxEase.EaseFunction;
 import flixel.tweens.FlxTween.CompleteCallback;
+import flixel.util.FlxPool;
 
 /**
  * Determines motion along a line, from one point to another.
  */
 class LinearMotion extends Motion
 {
+	/**
+	 * A pool that contains LinearMotions for recycling.
+	 */
+	@:isVar 
+	@:allow(flixel.tweens.FlxTween)
+	private static var _pool(get, null):FlxPool<LinearMotion>;
+	
+	/**
+	 * Only allocate the pool if needed.
+	 */
+	private static function get__pool()
+	{
+		if (_pool == null)
+		{
+			_pool = new FlxPool<LinearMotion>(LinearMotion);
+		}
+		return _pool;
+	}
+	
 	/**
 	 * Length of the current line of movement.
 	 */
@@ -21,14 +41,17 @@ class LinearMotion extends Motion
 	private var _distance:Float;
 	
 	/**
+	 * This function is called when tween is created, or recycled.
+	 *
 	 * @param	complete	Optional completion callback.
 	 * @param	type		Tween type.
+	 * @param	Eease		Optional easer function.
 	 */
-	public function new(?complete:CompleteCallback, type:Int = 0)
+	override public function init(Complete:CompleteCallback, TweenType:Int, UsePooling:Bool)
 	{
-		super(0, complete, type, null);
 		_fromX = _fromY = _moveX = _moveY = 0;
 		_distance = -1;
+		return super.init(Complete, TweenType, UsePooling);
 	}
 
 	/**
@@ -86,5 +109,11 @@ class LinearMotion extends Motion
 	{
 		if (_distance >= 0) return _distance;
 		return (_distance = Math.sqrt(_moveX * _moveX + _moveY * _moveY));
+	}
+	
+	override inline public function put():Void
+	{
+		if (!_inPool)
+			_pool.putUnsafe(this);
 	}
 }

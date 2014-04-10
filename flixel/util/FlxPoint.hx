@@ -2,57 +2,71 @@ package flixel.util;
 
 import flixel.FlxG;
 import flash.geom.Point;
-import flixel.interfaces.IFlxDestroyable;
+import flixel.interfaces.IFlxPooled;
+import flixel.util.FlxStringUtil;
 
 /**
  * Stores a 2D floating point coordinate.
  */
-class FlxPoint implements IFlxDestroyable
+class FlxPoint implements IFlxPooled
 {
-	/**
-	 * Pool for recycling
-	 */
-	public static var pool = new FlxPool<FlxPoint>(FlxPoint);
+	private static var _pool = new FlxPool<FlxPoint>(FlxPoint);
 	
 	/**
-	 * @default 0
-	 */
-	public var x(default, set):Float = 0;
-	
-	/**
-	 * @default 0
-	 */
-	public var y(default, set):Float = 0;
-	
-	/**
-	 * Instantiate a new point object.
-	 * 
-	 * @param	X		The X-coordinate of the point in space.
-	 * @param	Y		The Y-coordinate of the point in space.
-	 */
-	public function new(X:Float = 0, Y:Float = 0)
-	{
-		x = X;
-		y = Y;
-	}
-	
-	/**
-	 * Recycle or create new FlxPoint.
+	 * Recycle or create a new FlxPoint. 
+	 * Be sure to put() them back into the pool after you're done with them!
 	 * 
 	 * @param	X		The X-coordinate of the point in space.
 	 * @param	Y		The Y-coordinate of the point in space.
 	 */
 	public static inline function get(X:Float = 0, Y:Float = 0):FlxPoint
 	{
-		return pool.get().set(X, Y);
+		var point = _pool.get().set(X, Y);
+		point._inPool = false;
+		return point;
 	}
+	
+	/**
+	 * Recycle or create a new FlxPoint which will automatically be released 
+	 * to the pool when passed into a flixel function.
+	 * 
+	 * @param	X		The X-coordinate of the point in space.
+	 * @param	Y		The Y-coordinate of the point in space.
+	 */
+	public static inline function weak(X:Float = 0, Y:Float = 0):FlxPoint
+	{
+		var point = _pool.get().set(X, Y);
+		point._weak = true;
+		return point;
+	}
+	
+	public var x(default, set):Float = 0;
+	public var y(default, set):Float = 0;
+	
+	private var _weak:Bool = false;
+	private var _inPool:Bool = false;
 	
 	/**
 	 * Add this FlxPoint to the recycling pool.
 	 */
-	public inline function put():Void
+	public function put():Void
 	{
-		pool.put(this);
+		if (!_inPool)
+		{
+			_inPool = true;
+			_pool.putUnsafe(this);
+		}
+	}
+	
+	/**
+	 * Add this FlxPoint to the recycling pool if it's a weak reference (allocated via weak()).
+	 */
+	public inline function putWeak():Void
+	{
+		if (_weak)
+		{
+			_pool.put(this);
+		}
 	}
 	
 	/**
@@ -74,7 +88,7 @@ class FlxPoint implements IFlxDestroyable
 	 * @param	Point	Any FlxPoint.
 	 * @return	A reference to itself.
 	 */
-	public function copyFrom(point:FlxPoint):FlxPoint
+	public inline function copyFrom(point:FlxPoint):FlxPoint
 	{
 		x = point.x;
 		y = point.y;
@@ -87,7 +101,7 @@ class FlxPoint implements IFlxDestroyable
 	 * @param	Point	Any FlxPoint.
 	 * @return	A reference to the altered point parameter.
 	 */
-	public function copyTo(point:FlxPoint = null):FlxPoint
+	public function copyTo(?point:FlxPoint):FlxPoint
 	{
 		if (point == null)
 		{
@@ -104,7 +118,7 @@ class FlxPoint implements IFlxDestroyable
 	 * @param	Point	Any Point.
 	 * @return	A reference to itself.
 	 */
-	public function copyFromFlash(FlashPoint:Point):FlxPoint
+	public inline function copyFromFlash(FlashPoint:Point):FlxPoint
 	{
 		x = FlashPoint.x;
 		y = FlashPoint.y;
@@ -117,7 +131,7 @@ class FlxPoint implements IFlxDestroyable
 	 * @param	Point	Any Point.
 	 * @return	A reference to the altered point parameter.
 	 */
-	public function copyToFlash(FlashPoint:Point):Point
+	public inline function copyToFlash(FlashPoint:Point):Point
 	{
 		FlashPoint.x = x;
 		FlashPoint.y = y;
@@ -161,26 +175,122 @@ class FlxPoint implements IFlxDestroyable
 	}
 	
 	/**
+	 * Rounds x and y using Math.floor()
+	 */
+	public inline function floor():FlxPoint
+	{
+		x = Math.floor(x);
+		y = Math.floor(y);
+		return this;
+	}
+	
+	/**
+	 * Rounds x and y using Math.ceil()
+	 */
+	public inline function ceil():FlxPoint
+	{
+		x = Math.ceil(x);
+		y = Math.ceil(y);
+		return this;
+	}
+	
+	/**
 	 * Necessary for IFlxDestroyable.
 	 */
 	public function destroy() {}
-	
-	/**
-	 * Necessary for FlxPointHelper in FlxSpriteGroup.
-	 */
-	private function set_x(Value:Float):Float { return x = Value; }
-	
-	/**
-	 * Necessary for FlxPointHelper in FlxSpriteGroup.
-	 */
-	private function set_y(Value:Float):Float { return y = Value; }
 	
 	/**
 	 * Convert object to readable string name. Useful for debugging, save games, etc.
 	 */
 	public inline function toString():String
 	{
-		return FlxStringUtil.getDebugString([ { label: "x", value: x }, 
-		                                      { label: "y", value: y }]);
+		return FlxStringUtil.getDebugString([ 
+			LabelValuePair.weak("x", x),
+			LabelValuePair.weak("y", y)]);
+	}
+	
+	private function new() {}
+	
+	/**
+	 * Necessary for FlxPointHelper in FlxSpriteGroup.
+	 */
+	private function set_x(Value:Float):Float 
+	{ 
+		return x = Value;
+	}
+	
+	/**
+	 * Necessary for FlxPointHelper in FlxSpriteGroup.
+	 */
+	private function set_y(Value:Float):Float
+	{
+		return y = Value; 
+	}
+}
+
+/**
+ * A FlxPoint that calls a function when set_x(), set_y() or set() is called. Used in FlxSpriteGroup.
+ * IMPORTANT: Calling set(x, y); is MUCH FASTER than setting x and y separately. Needs to be destroyed unlike simple FlxPoints!
+ */
+class FlxCallbackPoint extends FlxPoint
+{
+	private var _setXCallback:FlxPoint->Void;
+	private var _setYCallback:FlxPoint->Void;
+	private var _setXYCallback:FlxPoint->Void;
+	
+	/**
+	 * If you only specifiy one callback function, then the remaining two will use the same.
+	 * 
+	 * @param	setXCallback	Callback for set_x()
+	 * @param	setYCallback	Callback for set_y()
+	 * @param	setXYCallback	Callback for set()
+	 */
+	public function new(setXCallback:FlxPoint->Void, ?setYCallback:FlxPoint->Void, ?setXYCallback:FlxPoint->Void)
+	{
+		_setXCallback = setXCallback;
+		_setYCallback = setXYCallback;
+		_setXYCallback = setXYCallback;
+		
+		if (_setXCallback != null)
+		{
+			if (_setYCallback == null)
+				_setYCallback = setXCallback;
+			if (_setXYCallback == null)
+				_setXYCallback = setXCallback;
+		}
+		
+		super();
+	}
+	
+	override public inline function set(X:Float = 0, Y:Float = 0):FlxCallbackPoint
+	{
+		super.set(X, Y);
+		if (_setXYCallback != null)
+			_setXYCallback(this);
+		return this;
+	}
+	
+	override private inline function set_x(Value:Float):Float
+	{
+		super.set_x(Value);
+		if (_setXCallback != null)
+			_setXCallback(this);
+		return Value;
+	}
+	
+	override private inline function set_y(Value:Float):Float
+	{
+		super.set_y(Value);
+		if (_setYCallback != null)
+			_setYCallback(this);
+		return Value;
+	}
+	
+	override public function destroy():Void
+	{
+		super.destroy();
+		_setXCallback = null;
+		_setYCallback = null;
+		_setXYCallback = null;
 	}
 }

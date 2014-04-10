@@ -14,7 +14,7 @@ class PxButton extends FlxTypedButton<FlxBitmapTextField>
 {
 	public function new(X:Float = 0, Y:Float = 0, ?Label:String, ?OnClick:Dynamic)
 	{
-		super(X, Y, Label, OnClick);
+		super(X, Y, OnClick);
 		
 		if (Label != null)
 		{

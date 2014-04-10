@@ -1,6 +1,8 @@
 package flixel.util;
 
 import flash.geom.Rectangle;
+import flixel.FlxG;
+import flixel.FlxSprite;
 #if !FLX_NO_TOUCH
 import flixel.input.touch.FlxTouch;
 #end
@@ -25,6 +27,10 @@ class FlxMath
 	 * Maximum value of a floating point number.
 	 */
 	public static inline var MAX_VALUE:Float = 1.79e+308;
+	/**
+	 * Approximation of Math.sqrt(2).
+	 */
+	public static inline var SQUARE_ROOT_OF_TWO:Float = 1.41421356237;
 	
 	/**
 	 * Round a decimal number to have reduced precision (less decimal numbers).
@@ -312,6 +318,8 @@ class FlxMath
 	{
 		var dx:Float = Point1.x - Point2.x;
 		var dy:Float = Point1.y - Point2.y;
+		Point1.putWeak();
+		Point2.putWeak();
 		return vectorLength(dx, dy);
 	}
 	
@@ -362,6 +370,7 @@ class FlxMath
 	{
 		var dx:Float = (Sprite.x + Sprite.origin.x) - (Target.x);
 		var dy:Float = (Sprite.y + Sprite.origin.y) - (Target.y);
+		Target.putWeak();
 		return Std.int(FlxMath.vectorLength(dx, dy));
 	}
 	
@@ -380,6 +389,8 @@ class FlxMath
 	{
 		var dx:Float = (Sprite.x + Sprite.origin.x) - (Target.x);
 		var dy:Float = (Sprite.y + Sprite.origin.y) - (Target.y);
+		
+		Target.putWeak();
 		
 		if (IncludeEqual)
 			return dx * dx + dy * dy <= Distance * Distance;
@@ -480,5 +491,21 @@ class FlxMath
 	public static inline function equal(aValueA:Float, aValueB:Float, aDiff:Float = 0.00001):Bool
 	{
 		return (Math.abs(aValueA - aValueB) <= aDiff);
+	}
+	
+	/**
+	 * Returns -1 if the number is smaller than 0 and 1 otherwise
+	 */
+	public static inline function signOf(f:Float):Int
+	{
+		return (f < 0) ? -1 : 1;
+	}
+	
+	/**
+	 * Checks if two numbers have the same sign (using signOf()).
+	 */
+	public static inline function sameSign(f1:Float, f2:Float):Bool
+	{
+		return signOf(f1) == signOf(f2);
 	}
 }

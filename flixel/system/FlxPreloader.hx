@@ -30,10 +30,14 @@ class FlxPreloader extends NMEPreloader
 }
 #else
 
-@:font("assets/fonts/nokiafc22.ttf") class PreloaderFont extends Font {}
+@:font("assets/fonts/nokiafc22.ttf")
+class PreloaderFont extends Font {}
 
-@:bitmap("assets/images/preloader/light.png")   private class GraphicLogoLight   extends BitmapData {}
-@:bitmap("assets/images/preloader/corners.png") private class GraphicLogoCorners extends BitmapData {}
+@:bitmap("assets/images/preloader/light.png")
+private class GraphicLogoLight extends BitmapData {}
+
+@:bitmap("assets/images/preloader/corners.png")
+private class GraphicLogoCorners extends BitmapData {}
 
 /**
  * This class handles the 8-bit style preloader.
@@ -46,15 +50,21 @@ class FlxPreloader extends NMEPreloader
 	public static inline var LOCAL:String = "local";
 	
 	/**
-	 * Change this if you want the flixel logo to show for more or less time.  Default value is 0 seconds.
+	 * Change this if you want the flixel logo to show for more or less time.  Default value is 1 second. Don't go lower or you'll jam the preloader.
 	 */
-	public var minDisplayTime:Float = 0.3;
+	public var minDisplayTime:Float = 1;
 	
 	/**
-	 * List of allowed URLs for built-in site-locking. Use full swf's addresses with 'http' or 'https'.
+	 * List of allowed URLs for built-in site-locking.
 	 * Set it in FlxPreloader's subclass constructor as: allowedURLs = ['http://adamatomic.com/canabalt/', FlxPreloader.LOCAL];
 	 */
 	public var allowedURLs:Array<String>;
+
+	/**
+	* The index of the site in the allowedURLs array on which to site-lock.
+	* Defaults to 0.
+	*/
+	public var siteLockURLIndex:Int = 0;
 	
 	private static var BlendModeScreen = BlendMode.SCREEN;
 	private static var BlendModeOverlay = BlendMode.OVERLAY;
@@ -77,6 +87,7 @@ class FlxPreloader extends NMEPreloader
 	private var _min:Int = 0;
 	private var _percent:Float;
 	private var _urlChecked:Bool = false;
+	private var _loaded:Bool = false;
 	
 	public function new()
 	{
@@ -241,20 +252,15 @@ class FlxPreloader extends NMEPreloader
 		_logo = null;
 		_logoGlow = null;
 	}
-	
-	override public function onLoaded():Void 
-	{
-		// Do nothing here
-	}
-	
+
 	override public function onUpdate(bytesLoaded:Int, bytesTotal:Int):Void 
 	{
 		#if !(desktop || mobile)
-		//in case there is a problem with reading the bytesTotal (like on Chrome, or a Gzipped swf)
+		//in case there is a problem with reading the bytesTotal (Gzipped swf)
 		if (root.loaderInfo.bytesTotal == 0) 
 		{
-			//Set Any value (650000>x>0) in bytesTotal to avoid "stucking" the preloader. 
-			//Attention! try to find the actual size of your file for better accuracy on Chrome.
+			//To avoid "stucking" the preloader use X (=bytesTotal) like so: Actual file size > X > 0.
+			//Attention! use the actual file size (minus a few KB) for better accuracy on Chrome.
 			var bytesTotal:Int = 50000; 
 			_percent = (bytesTotal != 0) ? bytesLoaded / bytesTotal : 0;
 		}
@@ -267,6 +273,8 @@ class FlxPreloader extends NMEPreloader
 	
 	private function onEnterFrame(event:Event):Void
 	{
+		if (_loaded)
+			return;
 		if (!_init)
 		{
 			if ((Lib.current.stage.stageWidth <= 0) || (Lib.current.stage.stageHeight <= 0))
@@ -284,13 +292,13 @@ class FlxPreloader extends NMEPreloader
 		
 		if ((_percent >= 1) && (time > _min))
 		{
+			_loaded = true;
 			super.onLoaded();
-			destroy();
 		}
 		else
 		{
 			var percent:Float = _percent;
-			if((_min > 0) && (percent > time/_min))
+			if ((_min > 0) && (percent > time/_min))
 			{
 				percent = time / _min;
 			}
@@ -341,7 +349,11 @@ class FlxPreloader extends NMEPreloader
 	#if flash
 	private function goToMyURL(?e:MouseEvent):Void
 	{
-		Lib.getURL(new URLRequest(allowedURLs[0]));
+		//if the chosen URL isn't "local", use FlxG's openURL() function.
+		if (allowedURLs[siteLockURLIndex] != FlxPreloader.LOCAL)
+			FlxG.openURL(allowedURLs[siteLockURLIndex]);
+		else
+			Lib.getURL(new URLRequest(allowedURLs[siteLockURLIndex]));
 	}
 	
 	private function isHostUrlAllowed():Bool

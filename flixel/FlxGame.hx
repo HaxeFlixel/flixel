@@ -1,19 +1,29 @@
 package flixel;
 
 import flash.Lib;
+import flash.display.Bitmap;
+import flash.display.BitmapData;
 import flash.display.Sprite;
 import flash.display.StageAlign;
 import flash.display.StageScaleMode;
 import flash.events.Event;
 import flash.events.FocusEvent;
-import openfl.display.OpenGLView;
+import flash.geom.ColorTransform;
+import flash.geom.Matrix;
+import flash.geom.Rectangle;
 import flixel.system.FlxSplash;
 import flixel.system.frontEnds.VCRFrontEnd;
 import flixel.effects.postprocess.PostProcess;
 import flixel.system.layer.TileSheetExt;
 import flixel.system.replay.FlxReplay;
 import flixel.text.pxText.PxBitmapFont;
+import flixel.util.FlxAngle;
+import flixel.util.FlxColor;
 import flixel.util.FlxRandom;
+
+#if cpp
+import openfl.display.OpenGLView;
+#end
 
 #if !FLX_NO_DEBUG
 import flixel.system.debug.FlxDebugger;
@@ -100,7 +110,7 @@ class FlxGame extends Sprite
 	 */
 	private var _elapsedMS:Int;
 	/**
-	 * Milliseconds of time per step of the game loop. FlashEvent.g. 60 fps = 16ms.
+	 * Milliseconds of time per step of the game loop. e.g. 60 fps = 16ms.
 	 */
 	private var _stepMS:Int;
 	/**
@@ -153,10 +163,12 @@ class FlxGame extends Sprite
 	 */
 	private var _customFocusLostScreen:Class<FlxFocusLostScreen> = FlxFocusLostScreen;
 	#end
+	
 	/**
 	 * Whether the splash screen should be skipped.
 	 */
 	private var _skipSplash:Bool = false;
+	
 	#if desktop
 	/**
 	 * Should we start Fullscreen or not? This is useful if you want to load Fullscreen settings from a FlxSave and set it when the game starts, instead of having it hard-set in your project XML.
@@ -187,6 +199,15 @@ class FlxGame extends Sprite
 	 */
 	private var _recordingRequested:Bool = false;
 	#end
+	
+	#if js
+	/**
+	 * On html5, we draw() all our cameras into a bitmap to avoid blurry zooming.
+	 */
+	private var _display:BitmapData;
+	private var _displayMatrix:Matrix;
+	private var _displayColorTransform:ColorTransform;
+	#end
 	/**
 	 * Sprite for postprocessing effects
 	 */
@@ -195,6 +216,7 @@ class FlxGame extends Sprite
 	 * Post process effects active on the postProcessLayer
 	 */
 	public var postProcesses:Array<PostProcess>;
+	
 	
 	/**
 	 * Instantiate a new game object.
@@ -219,7 +241,7 @@ class FlxGame extends Sprite
 		// Super high priority init stuff
 		_inputContainer = new Sprite();
 		
-		#if !flash
+		#if cpp
 		// Init shader container
 		if (OpenGLView.isSupported)
 			postProcessLayer = new Sprite();
@@ -246,7 +268,7 @@ class FlxGame extends Sprite
 	/**
 	 * Used to instantiate the guts of the flixel game object once we have a valid reference to the root.
 	 */
-	private function create(FlashEvent:Event):Void
+	private function create(_):Void
 	{
 		if (stage == null)
 		{
@@ -265,9 +287,16 @@ class FlxGame extends Sprite
 		stage.align = StageAlign.TOP_LEFT;
 		stage.frameRate = FlxG.drawFramerate;
 		
+		#if js
+		_display = new BitmapData(Lib.current.stage.stageWidth, Lib.current.stage.stageHeight);
+		_displayMatrix = new Matrix();
+		_displayColorTransform = new ColorTransform();
+		addChild(new Bitmap(_display));
+		#end
+		
 		addChild(_inputContainer);
 		
-		#if !flash
+		#if cpp
 		if (OpenGLView.isSupported)
 			addChild(postProcessLayer);
 		#end
@@ -316,9 +345,11 @@ class FlxGame extends Sprite
 		// We need to listen for resize event which means new context
 		// it means that we need to recreate bitmapdatas of dumped tilesheets
 		stage.addEventListener(Event.RESIZE, onResize);
+		
+		onResize(null); // fixes initial _inputContainer scale
 	}
 	
-	private function onFocus(?FlashEvent:Event):Void
+	private function onFocus(_):Void
 	{
 		#if flash
 		if (!_lostFocus) 
@@ -337,6 +368,7 @@ class FlxGame extends Sprite
 		#end
 		
 		_lostFocus = false;
+		FlxG.signals.focusGained.dispatch();
 		
 		if (!FlxG.autoPause) 
 		{
@@ -362,7 +394,7 @@ class FlxGame extends Sprite
 		FlxG.inputs.onFocus();
 	}
 	
-	private function onFocusLost(?FlashEvent:Event):Void
+	private function onFocusLost(_):Void
 	{
 		#if flash
 		if (_lostFocus) 
@@ -372,6 +404,7 @@ class FlxGame extends Sprite
 		#end
 		
 		_lostFocus = true;
+		FlxG.signals.focusLost.dispatch();
 		
 		if (!FlxG.autoPause) 
 		{
@@ -398,12 +431,12 @@ class FlxGame extends Sprite
 	}
 	
 	@:allow(flixel.FlxG)
-	private function onResize(?E:Event):Void 
+	private function onResize(_):Void 
 	{
 		var width:Int = Lib.current.stage.stageWidth;
 		var height:Int = Lib.current.stage.stageHeight;
 		
-		#if !flash
+		#if FLX_RENDER_TILE
 		FlxG.bitmap.onContext();
 		#end
 		
@@ -411,6 +444,7 @@ class FlxGame extends Sprite
 		
 		_state.onResize(width, height);
 		FlxG.plugins.onResize(width, height);
+		FlxG.signals.gameResized.dispatch(width, height);
 		
 		#if !FLX_NO_DEBUG
 		debugger.onResize(width, height);
@@ -433,19 +467,21 @@ class FlxGame extends Sprite
 		_inputContainer.scaleX = 1 / FlxG.game.scaleX;
 		_inputContainer.scaleY = 1 / FlxG.game.scaleY;
 		
+		#if cpp
 		if (postProcesses != null)
 		{
 			for (p in postProcesses)
 			{
-				if (p != null) p.rebuild();
+				p.rebuild();
 			}
 		}
+		#end
 	}
 	
 	/**
 	 * Handles the onEnterFrame call and figures out how many updates and draw calls to do.
 	 */
-	private function onEnterFrame(?FlashEvent:Event):Void
+	private function onEnterFrame(_):Void
 	{
 		ticks = Lib.getTimer();
 		_elapsedMS = ticks - _total;
@@ -479,9 +515,8 @@ class FlxGame extends Sprite
 				{
 					_accumulator = _maxAccumulation;
 				}
-				// TODO: You may uncomment following lines
+				
 				while (_accumulator > _stepMS)
-				//while(_accumulator >= stepMS)
 				{
 					step();
 					_accumulator = _accumulator - _stepMS; 
@@ -511,21 +546,23 @@ class FlxGame extends Sprite
 	 */
 	private inline function resetGame():Void
 	{
+		FlxG.signals.gameReset.dispatch();
+		
 		#if !FLX_NO_DEBUG
-		_requestedState = cast (Type.createInstance(_initialState, []));
-		_gameJustStarted = true;
-		#else
-		if (_skipSplash)
+		_skipSplash = true;
+		#end
+		
+		if (_skipSplash || FlxSplash.nextState != null) // already played
 		{
 			_requestedState = cast (Type.createInstance(_initialState, []));
 			_gameJustStarted = true;
 		}
 		else
 		{
-			_requestedState = new FlxSplash(_initialState);
-			_skipSplash = true; // only show splashscreen once
+			FlxSplash.nextState = _initialState;
+			_requestedState = new FlxSplash();
+			_skipSplash = true; // only play it once
 		}
-		#end
 		
 		#if !FLX_NO_DEBUG
 		if (Std.is(_requestedState, FlxSubState))
@@ -553,6 +590,7 @@ class FlxGame extends Sprite
 		FlxG.sound.destroy();
 		#end
 		FlxG.plugins.onStateSwitch();
+		FlxG.signals.stateSwitched.dispatch();
 		
 		#if FLX_RECORD
 		FlxRandom.updateStateSeed();
@@ -590,9 +628,7 @@ class FlxGame extends Sprite
 	
 	private function gameStart():Void
 	{
-		#if !FLX_NO_MOUSE
-		FlxG.mouse.onGameStart();
-		#end
+		FlxG.signals.gameStarted.dispatch();
 		_gameJustStarted = false;
 	}
 	
@@ -656,6 +692,11 @@ class FlxGame extends Sprite
 	 */
 	private function update():Void
 	{
+		if (!_state.active || !_state.exists)
+		{
+			return;
+		}
+		
 		if (_state != _requestedState)
 		{
 			switchState();
@@ -668,6 +709,8 @@ class FlxGame extends Sprite
 		}
 		#end
 		
+		FlxG.signals.preUpdate.dispatch();
+		
 		if (FlxG.fixedTimestep)
 		{
 			FlxG.elapsed = FlxG.timeScale * _stepSeconds; // fixed timestep
@@ -675,6 +718,10 @@ class FlxGame extends Sprite
 		else
 		{
 			FlxG.elapsed = FlxG.timeScale * (_elapsedMS / 1000); // variable timestep
+			
+			var max = FlxG.maxElapsed * FlxG.timeScale;
+			if (FlxG.elapsed > max) 
+				FlxG.elapsed = max;
 		}
 		
 		updateInput();
@@ -687,6 +734,7 @@ class FlxGame extends Sprite
 		_state.tryUpdate();
 		
 		FlxG.cameras.update();
+		FlxG.signals.postUpdate.dispatch();
 		
 		#if !FLX_NO_DEBUG
 		debugger.stats.flixelUpdate(Lib.getTimer() - ticks);
@@ -760,9 +808,7 @@ class FlxGame extends Sprite
 		#end
 	}
 	
-	#if flash
-	public function addPostProcess(postprocess:PostProcess):Void { /* This is empty to prevent compilation errors */ } 
-	#else
+	#if cpp
 	public function addPostProcess(postProcess:PostProcess):Void 
 	{
 		if (OpenGLView.isSupported)
@@ -779,6 +825,8 @@ class FlxGame extends Sprite
 			FlxG.log.error("Shaders are not supported on this platform.");
 		}
 	}
+	#else
+	public function addPostProcess(postprocess:PostProcess):Void { /* This is empty to prevent compilation errors */ } 
 	#end
 	
 	/**
@@ -786,6 +834,11 @@ class FlxGame extends Sprite
 	 */
 	private function draw():Void
 	{
+		if (!_state.visible || !_state.exists)
+		{
+			return;
+		}
+		
 		#if !FLX_NO_DEBUG
 		if (FlxG.debugger.visible)
 		{
@@ -793,40 +846,30 @@ class FlxGame extends Sprite
 			ticks = Lib.getTimer(); 
 		}
 		#end
-
-		#if !flash
+		
+		FlxG.signals.preDraw.dispatch();
+		
+		#if FLX_RENDER_TILE
 		TileSheetExt._DRAWCALLS = 0;
 		#end
 		
+		#if cpp
 		if (postProcesses != null)
-		{
-			for(postProcess in postProcesses)
-			{
-				postProcess.capture();
-			}
-		}
+        {
+            for(postProcess in postProcesses)
+            {
+                postProcess.capture();
+            }
+        }
+		#end
 		
 		FlxG.cameras.lock();
 		
 		FlxG.plugins.draw();
 		
-		#if !FLX_NO_DEBUG
-		if (FlxG.debugger.drawDebug)
-		{
-			FlxG.plugins.drawDebug();
-		}
-		#end
-		
 		_state.draw();
 		
-		#if !FLX_NO_DEBUG
-		if (FlxG.debugger.drawDebug)
-		{
-			_state.drawDebug();
-		}
-		#end
-		
-		#if !flash
+		#if FLX_RENDER_TILE
 		FlxG.cameras.render();
 		
 		#if !FLX_NO_DEBUG
@@ -834,7 +877,31 @@ class FlxGame extends Sprite
 		#end
 		#end
 		
+		#if js
+		_display.fillRect(_display.rect, FlxColor.TRANSPARENT);
+		
+		for (camera in FlxG.cameras.list)
+		{
+			_displayMatrix.identity();
+			_displayMatrix.scale(camera.zoom * FlxG._scaleMode.scale.x, camera.zoom * FlxG._scaleMode.scale.y);
+			_displayMatrix.translate(camera.x * FlxG._scaleMode.scale.x, camera.y * FlxG._scaleMode.scale.y);
+			
+			// rotate around center
+			if (camera.angle != 0)
+			{
+				_displayMatrix.translate( - _display.width >> 1, - _display.height >> 1);
+				_displayMatrix.rotate(camera.angle * FlxAngle.TO_RAD);
+				_displayMatrix.translate(_display.width >> 1, _display.height >> 1);
+			}
+			
+			_displayColorTransform.alphaMultiplier = camera.alpha;
+			_display.draw(camera.buffer, _displayMatrix, _displayColorTransform, null, null, camera.antialiasing);
+		}
+		#end
+	
 		FlxG.cameras.unlock();
+		
+		FlxG.signals.postDraw.dispatch();
 		
 		#if !FLX_NO_DEBUG
 		debugger.stats.flixelDraw(Lib.getTimer() - ticks);

@@ -53,17 +53,19 @@ class TexturePackerData implements IFlxDestroyable
 			texFrame.rotated = frame.rotated;
 			texFrame.name = frame.filename;
 			
-			texFrame.sourceSize = new FlxPoint(frame.sourceSize.w, frame.sourceSize.h);
-			texFrame.offset = new FlxPoint(0, 0);
+			texFrame.sourceSize = FlxPoint.get(frame.sourceSize.w, frame.sourceSize.h);
+			texFrame.offset = FlxPoint.get(0, 0);
 			texFrame.offset.set(frame.spriteSourceSize.x, frame.spriteSourceSize.y);
 			
 			if (frame.rotated)
 			{
 				texFrame.frame = new Rectangle(frame.frame.x, frame.frame.y, frame.frame.h, frame.frame.w);
+				texFrame.additionalAngle = -90;
 			}
 			else
 			{
 				texFrame.frame = new Rectangle(frame.frame.x, frame.frame.y, frame.frame.w, frame.frame.h);
+				texFrame.additionalAngle = 0;
 			}
 			
 			frames.push(texFrame);
@@ -77,7 +79,7 @@ class TexturePackerData implements IFlxDestroyable
 	{
 		for (frame in frames)
 		{
-			frame = FlxG.safeDestroy(frame);
+			frame = FlxDestroyUtil.destroy(frame);
 		}
 		frames = null;
 		assetName = null;
