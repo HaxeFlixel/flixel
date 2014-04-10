@@ -35,7 +35,7 @@ class FlxSound extends FlxBasic
 	/**
 	 * Whether or not this sound should be automatically destroyed when you switch states.
 	 */
-	public var survive:Bool;
+	public var persist:Bool;
 	/**
 	 * The ID3 song name.  Defaults to null.  Currently only works for streamed sounds.
 	 */

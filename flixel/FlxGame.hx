@@ -657,6 +657,11 @@ class FlxGame extends Sprite
 	 */
 	private function update():Void
 	{
+		if (!_state.active || !_state.exists)
+		{
+			return;
+		}
+		
 		if (_state != _requestedState)
 		{
 			switchState();
@@ -773,6 +778,11 @@ class FlxGame extends Sprite
 	 */
 	private function draw():Void
 	{
+		if (!_state.visible || !_state.exists)
+		{
+			return;
+		}
+		
 		#if !FLX_NO_DEBUG
 		if (FlxG.debugger.visible)
 		{
