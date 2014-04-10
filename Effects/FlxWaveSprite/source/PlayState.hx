@@ -20,7 +20,7 @@ class PlayState extends FlxState
 	                                         #else
 	                                         "Touch to Cycle Modes"
 	                                         #end
-											 
+	
 	private static inline var STATUS = "Mode: [mode]    Strength: [strength]    Center: [center]    Speed: [speed]";
 	
 	private var _waveSprite:FlxWaveSprite;

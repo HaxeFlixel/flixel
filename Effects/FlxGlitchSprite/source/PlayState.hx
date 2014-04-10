@@ -5,8 +5,8 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.text.FlxText;
-import flixel.ui.FlxButton;
 import flixel.util.FlxMath;
+import flixel.system.FlxAssets;
 using flixel.util.FlxSpriteUtil;
 using StringTools;
 
@@ -15,15 +15,15 @@ using StringTools;
  */
 class PlayState extends FlxState
 {
+	private static inline var INSTRUCTIONS = #if !mobile
+	                                         "Space to Toggle Direction\n" +
+	                                         "Left/Right to adjust strength\n" + 
+	                                         "Up/Down to adjust size\n" +
+	                                         "W/S to adjust delay";
+	                                         #else
+	                                         "Touch to Toggle Direction"
+	                                         #end
 	
-	private static inline var INSTRUCTIONS = 	#if !mobile
-												"Space to Toggle Direction\n" +
-												"Left/Right to adjust strength\n" + 
-												"Up/Down to adjust size\n" +
-												"W/S to adjust delay";
-												#else
-												"Touch to Toggle Direction"
-												#end
 	private static inline var STATUS = "Dir: [direction]    Strength: [strength]    Size: [size]    Delay: [delay]";
 	
 	private var _glitch:FlxGlitchSprite;
@@ -34,11 +34,10 @@ class PlayState extends FlxState
 	 */
 	override public function create():Void
 	{
-		
-		var target:FlxSprite = new FlxSprite(0, 0, "assets/images/HaxeFlixel.png");
-		FlxSpriteUtil.screenCenter(target);
+		var target:FlxSprite = new FlxSprite(0, 0, GraphicLogo);
+		target.screenCenter();
 		target.y += 10;
-
+		
 		_glitch = new FlxGlitchSprite(target);
 		add(_glitch);
 		
@@ -51,15 +50,6 @@ class PlayState extends FlxState
 		add(_statusText);
 		
 		super.create();
-	}
-	
-	/**
-	 * Function that is called when this state is destroyed - you might want to 
-	 * consider setting all objects this state uses to null to help garbage collection.
-	 */
-	override public function destroy():Void
-	{
-		super.destroy();
 	}
 
 	/**
@@ -79,9 +69,9 @@ class PlayState extends FlxState
 		
 		// control strength
 		if (FlxG.keys.pressed.LEFT)
-			_glitch.strength -= 5;
+			_glitch.strength -= 2;
 		if (FlxG.keys.pressed.RIGHT)
-			_glitch.strength += 5;
+			_glitch.strength += 2;
 		
 		// control delay
 		if (FlxG.keys.pressed.W)
@@ -104,8 +94,8 @@ class PlayState extends FlxState
 	private function boundValues():Void
 	{
 		_glitch.size = Std.int(FlxMath.bound(_glitch.size, 1, _glitch.height));
-		_glitch.strength = Std.int(FlxMath.bound(_glitch.strength, 0, 100));
-		_glitch.delay = FlxMath.bound(_glitch.delay, 0.01, 2);
+		_glitch.strength = Std.int(FlxMath.bound(_glitch.strength, 0, 80));
+		_glitch.delay = FlxMath.bound(_glitch.delay, 0.01, 0.5);
 	}
 	
 	private function toggleMode():Void
@@ -119,8 +109,8 @@ class PlayState extends FlxState
 	private function updateStatusText():Void
 	{
 		_statusText.text = STATUS.replace("[direction]", Std.string(_glitch.direction))
-								 .replace("[strength]", Std.string(_glitch.strength))
-								 .replace("[size]", Std.string(_glitch.size))
-								 .replace("[delay]", Std.string(FlxMath.roundDecimal(_glitch.delay,2)));
+	                             .replace("[strength]", Std.string(_glitch.strength))
+	                             .replace("[size]", Std.string(_glitch.size))
+	                             .replace("[delay]", Std.string(FlxMath.roundDecimal(_glitch.delay,2)));
 	}
 }

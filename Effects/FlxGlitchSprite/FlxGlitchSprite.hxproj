@@ -20,7 +20,7 @@
   </classpaths>
   <!-- Build options -->
   <build>
-    <option directives="tools=1.3.2&#xA;FLX_NO_DEBUG&#xA;FLX_RENDER_BLIT&#xA;display&#xA;web" />
+    <option directives="FLX_NO_FOCUS_LOST_SCREEN&#xA;tools=1.3.2&#xA;FLX_NO_DEBUG&#xA;FLX_RENDER_BLIT&#xA;display&#xA;web" />
     <option flashStrict="False" />
     <option noInlineOnDebug="False" />
     <option mainClass="ApplicationMain" />
