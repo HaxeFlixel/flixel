@@ -21,7 +21,6 @@ class DebuggerFrontEnd
 	/**
 	 * The key codes used to toggle the debugger (see FlxG.keys for the keys available).
 	 * Default keys: ` and \. Set to null to deactivate.
-	 * @default ["GRAVEACCENT", "BACKSLASH"]
 	 */
 	public var toggleKeys:Array<String>;
 	#end

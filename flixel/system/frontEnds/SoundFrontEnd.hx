@@ -25,26 +25,23 @@ class SoundFrontEnd
 	 * Set this hook to get a callback whenever the volume changes.
 	 * Function should take the form myVolumeHandler(Volume:Number).
 	 */
-	public var volumeHandler:Float->Void = null;
+	public var volumeHandler:Float->Void;
 	
 	#if !FLX_NO_KEYBOARD
 	/**
 	 * The key codes used to increase volume (see FlxG.keys for the keys available).
 	 * Default keys: + (and numpad +). Set to null to deactivate.
-	 * @default ["PLUS", "NUMPADPLUS"]
 	 */
 	public var volumeUpKeys:Array<String>;
 	/**
 	 * The keys to decrease volume (see FlxG.keys for the keys available).
 	 * Default keys: - (and numpad -). Set to null to deactivate.
-	 * @default ["MINUS", "NUMPADMINUS"]
 	 */
 	public var volumeDownKeys:Array<String>;
 	/**
 	 * The keys used to mute / unmute the game (see FlxG.keys for the keys available).
 	 * Default keys: 0 (and numpad 0). Set to null to deactivate.
-	 * @default ["ZERO", "NUMPADZERO"]
-	*/
+	 */
 	public var muteKeys:Array<String>; 
 	#end
 	
