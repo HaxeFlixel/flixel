@@ -158,10 +158,12 @@ class FlxGame extends Sprite
 	 */
 	private var _customFocusLostScreen:Class<FlxFocusLostScreen> = FlxFocusLostScreen;
 	#end
+	
 	/**
 	 * Whether the splash screen should be skipped.
 	 */
 	private var _skipSplash:Bool = false;
+	
 	#if desktop
 	/**
 	 * Should we start Fullscreen or not? This is useful if you want to load Fullscreen settings from a FlxSave and set it when the game starts, instead of having it hard-set in your project XML.
@@ -512,20 +514,20 @@ class FlxGame extends Sprite
 		FlxG.signals.gameReset.dispatch();
 		
 		#if !FLX_NO_DEBUG
-		_requestedState = cast (Type.createInstance(_initialState, []));
-		_gameJustStarted = true;
-		#else
-		if (_skipSplash)
+		_skipSplash = true;
+		#end
+		
+		if (_skipSplash || FlxSplash.nextState != null) // already played
 		{
 			_requestedState = cast (Type.createInstance(_initialState, []));
 			_gameJustStarted = true;
 		}
 		else
 		{
-			_requestedState = new FlxSplash(_initialState);
-			_skipSplash = true; // only show splashscreen once
+			FlxSplash.nextState = _initialState;
+			_requestedState = new FlxSplash();
+			_skipSplash = true; // only play it once
 		}
-		#end
 		
 		#if !FLX_NO_DEBUG
 		if (Std.is(_requestedState, FlxSubState))

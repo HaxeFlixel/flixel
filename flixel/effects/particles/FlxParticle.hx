@@ -24,7 +24,6 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 	/**
 	 * Determines how quickly the particles come to rest on the ground.
 	 * Only used if the particle has gravity-like acceleration applied.
-	 * @default 500
 	 */
 	public var friction:Float = 500;
 	/**
