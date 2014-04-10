@@ -3,6 +3,7 @@ package;
 import flash.Lib;
 import flixel.FlxG;
 import flixel.FlxGame;
+import flixel.system.FlxSplash;
 import FlxPhysicsDemo;
 import states.Balloons;
 import states.Blob;
@@ -30,10 +31,12 @@ class FlxPhysicsDemo extends FlxGame
 		var ratioY:Float = stageHeight / 480;
 		var ratio:Float = Math.min(ratioX, ratioY);
 		
+		// we're in debug mode because we need the debug drawing, but let's play the splash anyway!
+		FlxSplash.nextState = Piramid;
 		#if (flash || desktop || neko)
-		super(Math.floor(stageWidth / ratio) , Math.floor(stageHeight / ratio), Piramid, ratio, 60, 60);
+		super(Math.floor(stageWidth / ratio) , Math.floor(stageHeight / ratio), FlxSplash, ratio, 60, 60);
 		#else
-		super(Math.floor(stageWidth / ratio), Math.floor(stageHeight / ratio), Piramid, ratio, 60, 30);
+		super(Math.floor(stageWidth / ratio), Math.floor(stageHeight / ratio), FlxSplash, ratio, 60, 30);
 		#end
 		
 	}
