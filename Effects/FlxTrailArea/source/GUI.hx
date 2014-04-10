@@ -7,6 +7,7 @@ import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
+import flixel.util.FlxDestroyUtil;
 
 class GUI extends FlxSpriteGroup
 {
@@ -89,7 +90,7 @@ class GUI extends FlxSpriteGroup
 	 */
 	override public function destroy():Void
 	{
-		_trailArea = FlxG.safeDestroy(_trailArea);
+		_trailArea = FlxDestroyUtil.destroy(_trailArea);
 		_sliderCallback = null;
 		super.destroy();
 	}

@@ -34,23 +34,22 @@ class PlayState extends FlxState
 	/**
 	 * The tween types
 	 */
-	private static inline var VAR				:Int = 0;
-	private static inline var MULTI_VAR			:Int = 1;
-	private static inline var ANGLE				:Int = 2;
-	private static inline var COLOR				:Int = 3;
-	private static inline var LINEAR_MOTION		:Int = 4;
-	private static inline var LINEAR_PATH		:Int = 5;
-	private static inline var CIRCULAR_MOTION	:Int = 6;
-	private static inline var CUBIC_MOTION		:Int = 7;
-	private static inline var QUAD_MOTION		:Int = 8;
-	private static inline var QUAD_PATH			:Int = 9;
+	private static inline var TWEEN				:Int = 0;
+	private static inline var ANGLE				:Int = 1;
+	private static inline var COLOR				:Int = 2;
+	private static inline var LINEAR_MOTION		:Int = 3;
+	private static inline var LINEAR_PATH		:Int = 4;
+	private static inline var CIRCULAR_MOTION	:Int = 5;
+	private static inline var CUBIC_MOTION		:Int = 6;
+	private static inline var QUAD_MOTION		:Int = 7;
+	private static inline var QUAD_PATH			:Int = 8;
 
 	private var _easeInfo:Array<EaseInfo>;
 	
 	private var _currentEaseIndex:Int = 0;
 	private var _currentEaseType:String = "quad";
 	private var _currentEaseDirection:String = "In";
-	private var _currentTweenIndex:Int = MULTI_VAR; // Start with multiVar tween, it's used most commonly.
+	private var _currentTweenIndex:Int = TWEEN; // Start with tween() tween, it's used most commonly.
 	
 	private var _tween:FlxTween;
 	private var _sprite:FlxSprite;
@@ -126,8 +125,8 @@ class PlayState extends FlxState
 		add(_trail);
 		add(_sprite);
 		
-		_min = new FlxPoint(FlxG.width * 0.1, FlxG.height * 0.25);
-		_max = new FlxPoint(FlxG.width * 0.7, FlxG.height * 0.75);
+		_min = FlxPoint.get(FlxG.width * 0.1, FlxG.height * 0.25);
+		_max = FlxPoint.get(FlxG.width * 0.7, FlxG.height * 0.75);
 		
 		/*** From here on: UI setup ***/
 		
@@ -142,12 +141,12 @@ class PlayState extends FlxState
 		
 		xOff = 80;
 		
-		var tweenTypes:Array<String> = ["singleVar", "multiVar", "angle", "color", "linearMotion", "linearPath", "circularMotion", "cubicMotion",
+		var tweenTypes:Array<String> = ["tween", "angle", "color", "linearMotion", "linearPath", "circularMotion", "cubicMotion",
 										 "quadMotion", "quadPath"];
 		
 		var header = new FlxUIDropDownHeader(130);
 		var tweenTypeDropDown = new FlxUIDropDownMenu(xOff, yOff, FlxUIDropDownMenu.makeStrIdLabelArray(tweenTypes, true), onTweenChange, header);
-		tweenTypeDropDown.header.text.text = "multiVar"; // Initialize header with correct value
+		tweenTypeDropDown.header.text.text = "tween"; // Initialize header with correct value
 		
 		// Second row
 		
@@ -216,14 +215,11 @@ class PlayState extends FlxState
 		
 		switch (_currentTweenIndex)
 		{
-			case VAR:
-				_tween = FlxTween.multiVar(_sprite, { x: _max.x }, DURATION, options);
-				
-			case MULTI_VAR:
-				_tween = FlxTween.multiVar(_sprite, { x: _max.x, angle: 180 }, DURATION, options);
+			case TWEEN:
+				_tween = FlxTween.tween(_sprite, { x: _max.x, angle: 180 }, DURATION, options);
 				
 			case ANGLE:
-				_tween = FlxTween.multiVar(_sprite, { angle: 90 }, DURATION, options);
+				_tween = FlxTween.angle(_sprite, 0, 90, DURATION, options);
 				FlxSpriteUtil.screenCenter(_sprite);
 				
 			case COLOR:
@@ -238,9 +234,9 @@ class PlayState extends FlxState
 				
 			case LINEAR_PATH:
 				_sprite.y = (_max.y - _sprite.height);
-				var path:Array<FlxPoint> = [new FlxPoint(_sprite.x, _sprite.y),
-											new FlxPoint(_sprite.x + (_max.x - _min.x) * 0.5, _min.y),
-											new FlxPoint(_max.x, _sprite.y)];
+				var path:Array<FlxPoint> = [FlxPoint.get(_sprite.x, _sprite.y),
+											FlxPoint.get(_sprite.x + (_max.x - _min.x) * 0.5, _min.y),
+											FlxPoint.get(_max.x, _sprite.y)];
 				_tween = FlxTween.linearPath(_sprite, path, DURATION, true, options);
 				
 			case CIRCULAR_MOTION:
@@ -271,11 +267,11 @@ class PlayState extends FlxState
 												DURATION, true, options);
 	
 			case QUAD_PATH:
-				var path:Array<FlxPoint> = [new FlxPoint(_sprite.x, _sprite.y),
-											new FlxPoint(_sprite.x + (_max.x - _min.x) * 0.5, _max.y),
-											new FlxPoint(_max.x - (_max.x / 2) + (_sprite.width / 2), _sprite.y), 
-											new FlxPoint(_max.x - (_max.x / 2) + (_sprite.width / 2), _min.y),
-											new FlxPoint(_max.x, _sprite.y)];
+				var path:Array<FlxPoint> = [FlxPoint.get(_sprite.x, _sprite.y),
+											FlxPoint.get(_sprite.x + (_max.x - _min.x) * 0.5, _max.y),
+											FlxPoint.get(_max.x - (_max.x / 2) + (_sprite.width / 2), _sprite.y), 
+											FlxPoint.get(_max.x - (_max.x / 2) + (_sprite.width / 2), _min.y),
+											FlxPoint.get(_max.x, _sprite.y)];
 				_tween = FlxTween.quadPath(_sprite, path, DURATION, true, options);
 		}
 		

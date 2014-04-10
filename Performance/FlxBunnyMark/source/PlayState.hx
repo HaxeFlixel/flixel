@@ -142,10 +142,7 @@ class PlayState extends FlxState
 			for (i in 0..._changeAmount)
 			{
 				// It's much slower to recycle objects, but keeps runtime costs of garbage collection low
-				//_bunnies.recycle(Bunny).init();
-				
-				// It's much faster to directly add new members to the array, but if removed they will incurr a GC penalty
-				_bunnies.members[_bunnies.length++] = new Bunny().init();
+				_bunnies.add(new Bunny().init());
 			}
 		}
 		else 
@@ -156,8 +153,7 @@ class PlayState extends FlxState
 				
 				if (bunny != null) 
 				{
-					bunny.destroy();
-					_bunnies.remove(bunny, true);
+					_bunnies.remove(bunny);
 				}
 			}
 		}

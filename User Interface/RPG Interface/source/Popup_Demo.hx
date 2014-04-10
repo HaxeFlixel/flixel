@@ -11,9 +11,9 @@ class Popup_Demo extends FlxUIPopup
 	
 	public override function getEvent(id:String, target:Dynamic, data:Array<Dynamic>, ?params:Array<Dynamic>):Void 
 	{
-		if (params != null) {
+		if (params != null && params.length > 0) {
 			if (id == "click_button") {
-				var i:Int = Std.int(params[0]);
+				var i:Int = cast params[0];
 				if (_ui.currMode == "demo_0"){
 					switch(i) {
 						case 0: openSubState(new Popup_Simple());

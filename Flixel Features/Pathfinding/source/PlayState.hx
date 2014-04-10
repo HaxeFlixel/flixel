@@ -130,8 +130,6 @@ class PlayState extends FlxState
 		
 		var legends:FlxText = new FlxText(textX, 140, textWidth, "Legends:\nRed: Unit\nYellow: Goal\nBlue: Wall\nWhite: Path");
 		add(legends);
-		
-		path = new FlxPath();
 	}
 	
 	override public function destroy():Void
@@ -152,7 +150,7 @@ class PlayState extends FlxState
 		super.draw();
 		
 		// To draw path
-		if (!path.finished)
+		if ((path != null) && !path.finished)
 		{
 			path.drawDebug();
 		}
@@ -190,12 +188,12 @@ class PlayState extends FlxState
 	private function moveToGoal():Void
 	{
 		// Find path to goal from unit to goal
-		var pathPoints:Array<FlxPoint> = _map.findPath(new FlxPoint(_unit.x + _unit.width / 2, _unit.y + _unit.height / 2), new FlxPoint(_goal.x + _goal.width / 2, _goal.y + _goal.height / 2));
+		var pathPoints:Array<FlxPoint> = _map.findPath(FlxPoint.get(_unit.x + _unit.width / 2, _unit.y + _unit.height / 2), FlxPoint.get(_goal.x + _goal.width / 2, _goal.y + _goal.height / 2));
 		
 		// Tell unit to follow path
 		if (pathPoints != null) 
 		{
-			path.run(_unit, pathPoints);
+			path = FlxPath.start(_unit, pathPoints);
 			_action = ACTION_GO;
 			_instructions.text = INSTRUCTION_1;
 		}

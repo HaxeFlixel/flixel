@@ -19,8 +19,8 @@ class PlayState extends FlxState
 	private static inline var LB_Y:Float = 2;
 	private static inline var RB_Y:Float = 2;
 	
-	private static var LEFT_STICK_POS:FlxPoint = new FlxPoint(80, 48);
-	private static var RIGHT_STICK_POS:FlxPoint = new FlxPoint(304, 136);
+	private static var LEFT_STICK_POS:FlxPoint = FlxPoint.get(80, 48);
+	private static var RIGHT_STICK_POS:FlxPoint = FlxPoint.get(304, 136);
 	
 	private var _controllerBg:FlxSprite;
 	private var _leftStick:FlxSprite;
@@ -142,11 +142,7 @@ class PlayState extends FlxState
 		updateAxis(GamepadIDs.LEFT_ANALOGUE_X, GamepadIDs.LEFT_ANALOGUE_Y, _leftStick, LEFT_STICK_POS);
 		updateAxis(GamepadIDs.RIGHT_ANALOGUE_X, GamepadIDs.RIGHT_ANALOGUE_Y, _rightStick, RIGHT_STICK_POS);
 		
-		#if flash
-		updateFlashDpad();
-		#else
-		updateNonFlashDpad();
-		#end
+		updateDpad();
 	}
 	
 	private function updateAxis(xID:Int, yID:Int, stickSprite:FlxSprite, stickPosition:FlxPoint):Void
@@ -170,7 +166,8 @@ class PlayState extends FlxState
 		}
 	}
 	
-	private function updateFlashDpad():Void
+	#if flash
+	private function updateDpad():Void
 	{
 		var dpadLeft = _gamePad.pressed(XboxButtonID.DPAD_LEFT);
 		var dpadRight = _gamePad.pressed(XboxButtonID.DPAD_RIGHT);
@@ -204,8 +201,8 @@ class PlayState extends FlxState
 		_dPad.animation.frameIndex = newIndex;
 		_dPad.alpha = newAlpha;
 	}
-	
-	private function updateNonFlashDpad():Void
+	#else
+	private function updateDpad():Void
 	{
 		if (_gamePad.hat.x != 0 || _gamePad.hat.y != 0)
 		{
@@ -258,4 +255,5 @@ class PlayState extends FlxState
 			_dPad.alpha = ALPHA_OFF;
 		}
 	}
+	#end
 }

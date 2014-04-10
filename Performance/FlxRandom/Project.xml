@@ -9,12 +9,11 @@
 	<app preloader="flixel.system.FlxPreloader" />
 	
 	<!--The swf version should be at least 11.2 if you want to use the FLX_MOUSE_ADVANCED option-->
-	<set name="SWF_VERSION" value="11.2" />
+	<set name="SWF_VERSION" value="11.8" />
 	
 	<set name="BUILD_DIR" value="export" />
 	<classpath name="source" />
 	
-	<haxelib name="openfl" />
 	<haxelib name="flixel"/>
 	
 	<haxeflag name="-D" value="swf-script-timeout=65" />

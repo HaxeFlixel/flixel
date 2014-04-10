@@ -64,21 +64,6 @@ class PlayState extends FlxState
 	{	
 		super.create();
 		
-		// test FlxVector - to make sure it compiles
-		var vector = FlxVector.get(10,15);
-		trace(vector.toString());
-		vector.put();
-		
-		// test FlxVector recycling - to make sure it compiles
-		var vector = FlxVector.get(10,15);
-		trace(vector.toString());
-		vector.put();
-		
-		// test FlxRect recycling - to make sure it compiles
-		var rect = FlxRect.get(10,15, 50, 50);
-		trace(rect.toString());
-		rect.put();
-		
 		// the group containing all the objects
 		add(aliens = new FlxTypedGroup<FlxSprite>());
 		
@@ -132,7 +117,7 @@ class PlayState extends FlxState
 		obj.alpha = FlxRandom.floatRanged(0.3, 1.0);
 		
 		// Neat tweening effect for new aliens appearing
-		FlxTween.multiVar(obj, { x: destX, y:destY }, 2, { ease: FlxEase.expoOut });
+		FlxTween.tween(obj, { x: destX, y:destY }, 2, { ease: FlxEase.expoOut });
 		
 		if (rotate) {
 			randomizeRotation(obj);
@@ -275,7 +260,7 @@ class PlayState extends FlxState
 		infoText.text = INFO.replace("|objects|", Std.string(aliens.countLiving() + 1)) // + 1 for the player that is not in the group
 							.replace("|alpha|", Std.string(alphaTolerance))
 							.replace("|hits|", Std.string(numCollisions))
-							.replace("|fps|", Std.string(fps.text.substr(5)));
+							.replace("|fps|", Std.string(fps.currentFPS));
 	}
 	
 	function set_rotate(Value:Bool):Bool

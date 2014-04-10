@@ -46,7 +46,7 @@ class Level extends TiledMap
 		collisionGroup = new FlxTypedGroup<FlxObject>();
 		
 		// The bound of the map for the camera
-		bounds = new FlxRect(0, 0, fullWidth, fullHeight);
+		bounds = FlxRect.get(0, 0, fullWidth, fullHeight);
 		
 		var tileset:TiledTileSet;
 		var tilemap:FlxTilemapExt;

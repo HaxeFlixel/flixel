@@ -1,7 +1,8 @@
-package ;
+package;
 
 import flash.Lib;
 import flixel.FlxGame;
+import flixel.system.FlxSplash;
 
 class ProjectClass extends FlxGame
 {
@@ -16,6 +17,8 @@ class ProjectClass extends FlxGame
 
 		var fps:Int = 60;
 
-		super(Math.ceil(stageWidth / ratio), Math.ceil(stageHeight / ratio), MenuState, ratio, fps, fps);
+		// we're in debug mode because we need the debug drawing, but let's play the splash anyway!
+		FlxSplash.nextState = MenuState;
+		super(Math.ceil(stageWidth / ratio), Math.ceil(stageHeight / ratio), FlxSplash, ratio, fps, fps);
 	}
 }

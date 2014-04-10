@@ -52,7 +52,7 @@ class PlayState extends FlxState
 		offestSprite(_snakeHead);
 		
 		// This array stores the recent head positions to update the segment positions step by step
-		_headPositions = [new FlxPoint(_snakeHead.x, _snakeHead.y)];
+		_headPositions = [FlxPoint.get(_snakeHead.x, _snakeHead.y)];
 		
 		// The group holding the body segments
 		_snakeBody = new FlxSpriteGroup();
@@ -157,7 +157,7 @@ class PlayState extends FlxState
 		
 		// Our reward - a new segment! :)
 		addSegment();
-		FlxG.sound.load(BeepSound).play();
+		FlxG.sound.load(FlxAssets.getSound("assets/sounds/beep").play());
 		
 		// Become faster each pickup - set a max speed though!
 		if (_movementIntervall >= MIN_INTERVALL)
@@ -207,7 +207,7 @@ class PlayState extends FlxState
 	
 	private function moveSnake():Void
 	{	
-		_headPositions.unshift(new FlxPoint(_snakeHead.x, _snakeHead.y));
+		_headPositions.unshift(FlxPoint.get(_snakeHead.x, _snakeHead.y));
 		
 		if (_headPositions.length >= _snakeBody.members.length)
 		{

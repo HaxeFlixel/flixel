@@ -2,23 +2,31 @@
 <project>
 	<app title="GridMovement" file="GridMovement" main="Main" version="0.0.1" company="HaxeFlixel" />
 	
-	<window width="672" height="480" fps="60" orientation="portrait" resizable="true" if="web" />
-	<window width="672" height="480" fps="60" orientation="landscape" fullscreen="false" hardware="true" vsync="true" unless="web" />
+	<!--These window settings apply to all targets-->
+	<window width="672" height="480" fps="60" background="#18A068" hardware="true" vsync="true" />
+	
+	<!--Web-specific-->
+	<window if="web"		orientation="portrait"  />
+	
+	<!--Desktop-specific-->
+	<window if="desktop"	orientation="landscape" fullscreen="false" resizable="true" />
+	
+	<!--Mobile-specific-->
+	<window if="mobile"		orientation="landscape" fullscreen="true" width="0" height="0" />
 	
 	<!--The flixel preloader gets stuck in Chrome, so it's disabled by default for now. 
 	Safe to use if you embed the swf into a html file!-->
 	<!--<app preloader="flixel.system.FlxPreloader" />-->
 	
 	<!--The swf version should be at least 11.2 if you want to use the FLX_MOUSE_ADVANCED option-->
-	<set name="SWF_VERSION" value="11.2" />
+	<set name="SWF_VERSION" value="11.8" />
 	
 	<set name="BUILD_DIR" value="export" />
 	<classpath name="source" />
 	
 	<!--You can use rename="newName" to shorten the paths to the individual subdirectories!-->
 	<assets path="assets" />
-	
-	<haxelib name="openfl" />
+
 	<haxelib name="flixel"/>
 	
 	<!--In case you want to use the addons package-->
@@ -43,7 +51,7 @@
 	
 	<!--Optimise inputs, be careful you will get null errors if you don't use conditionals in your game-->
 	<!--<haxedef name="FLX_NO_MOUSE" if="mobile" />-->
-	<!--<haxedef name="FLX_NO_KEYBOARD" if="mobile" />-->
+	<haxedef name="FLX_NO_KEYBOARD" if="mobile" />
 	<!--<haxedef name="FLX_NO_TOUCH" if="desktop" />-->
 	<!--<haxedef name="FLX_NO_GAMEPAD" />-->
 	

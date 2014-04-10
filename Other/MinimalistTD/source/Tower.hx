@@ -27,8 +27,8 @@ class Tower extends FlxSprite
 	private var _initialCost:Int = 0;
 	private var _indicator:FlxSprite;
 	
-	private static var HELPER_POINT:FlxPoint = new FlxPoint();
-	private static var HELPER_POINT_2:FlxPoint = new FlxPoint();
+	private static var HELPER_POINT:FlxPoint = FlxPoint.get();
+	private static var HELPER_POINT_2:FlxPoint = FlxPoint.get();
 	
 	private static inline var COST_INCREASE:Float = 1.5;
 	private static inline var BASE_PRIZE:Int = 10;

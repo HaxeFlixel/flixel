@@ -35,16 +35,16 @@ class GameClass extends FlxGame
 		super(gameWidth, gameHeight, initialState, zoom, framerate, framerate, skipSplash, startFullscreen);
 		
 		#if android
-		FlxG.sound.add("build");
-		FlxG.sound.add("deny");
-		FlxG.sound.add("enemyhit");
-		FlxG.sound.add("enemykill");
-		FlxG.sound.add("gameover");
-		FlxG.sound.add("hurt");
-		FlxG.sound.add("select");
-		FlxG.sound.add("shoot");
-		FlxG.sound.add("td2");
-		FlxG.sound.add("wavedefeated");
+		FlxG.sound.cache("build");
+		FlxG.sound.cache("deny");
+		FlxG.sound.cache("enemyhit");
+		FlxG.sound.cache("enemykill");
+		FlxG.sound.cache("gameover");
+		FlxG.sound.cache("hurt");
+		FlxG.sound.cache("select");
+		FlxG.sound.cache("shoot");
+		FlxG.sound.cache("td2");
+		FlxG.sound.cache("wavedefeated");
 		#end
 	}
 }

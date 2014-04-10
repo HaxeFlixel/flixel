@@ -1,0 +1,26 @@
+
+test-me.png
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+test02 (non POT)
+  rotate: false
+  xy: 1, 1
+  size: 300, 300
+  orig: 300, 300
+  offset: 0, 0
+  index: -1
+test01
+  rotate: false
+  xy: 303, 45
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+test03 (multi shapes)
+  rotate: false
+  xy: 561, 45
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1

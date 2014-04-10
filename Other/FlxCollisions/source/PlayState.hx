@@ -51,11 +51,11 @@ class PlayState extends FlxState
 		
 		// Then create the crates that are sprinkled around the level
 		var crates:Array<FlxPoint> = [
-			new FlxPoint(64, 208),
-			new FlxPoint(108, 176),
-			new FlxPoint(140, 176),
-			new FlxPoint(192, 208),
-			new FlxPoint(272, 48)];
+			FlxPoint.get(64, 208),
+			FlxPoint.get(108, 176),
+			FlxPoint.get(140, 176),
+			FlxPoint.get(192, 208),
+			FlxPoint.get(272, 48)];
 		
 		for (i in 0...crates.length)
 		{
