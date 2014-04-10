@@ -9,7 +9,6 @@ import flixel.system.FlxSound;
 import flixel.tweens.FlxEase.EaseFunction;
 import flixel.tweens.misc.AngleTween;
 import flixel.tweens.misc.ColorTween;
-import flixel.tweens.misc.MultiVarTween;
 import flixel.tweens.misc.NumTween;
 import flixel.tweens.misc.VarTween;
 import flixel.tweens.motion.CircularMotion;
@@ -54,39 +53,32 @@ class FlxTween implements IFlxDestroyable
 	public static var manager:TweenManager;
 	
 	/**
-	 * Creates a singleVar or multiVar FlxTween based on how many fields you want to tween.
-	 * Shorthand for creating a VarTween or MultiVar tween, starting it and adding it to the TweenPlugin.
-	 * 
-	 * Example: FlxTween.tween(Object, { x: 500, y: 350 }, 500, 2.0, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT });
+	 * Tweens numeric public properties of an Object. Shorthand for creating a VarTween, starting it and adding it to the TweenManager.
+	 * Example: FlxTween.tween(Object, { x: 500, y: 350 }, 2.0, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT });
 	 * 
 	 * @param	Object		The object containing the properties to tween.
-	 * @param	Values		The object containing values to tween (eg. { x: 500 } for singleVar, or { x: 500, y: 350 } for multiVar).
+	 * @param	Values		An object containing key/value pairs of properties and target values.
 	 * @param	Duration	Duration of the tween in seconds.
 	 * @param	Options		An object containing key/value pairs of the following optional parameters:
 	 * 						type		Tween type.
 	 * 						complete	Optional completion callback function.
 	 * 						ease		Optional easer function.
 	 *  					startDelay	Seconds to wait until starting this tween, 0 by default.
-	 *  					loopDelay	Seconds to wait between loops of this tween, 0 by default.
+	 * 						loopDelay	Seconds to wait between loops of this tween, 0 by default.
 	 * 						usePooling	Whether to pool this tween or not, necessary if you need to call functions like cancel()
-	 * @return	FlxTween that was added to TweenManager plugin.
+	 * @return	The added VarTween object.
 	 */
-	public static function tween(Object:Dynamic, Values:Dynamic, Duration:Float, ?Options:TweenOptions):FlxTween
+	public static function tween(Object:Dynamic, Values:Dynamic, Duration:Float, ?Options:TweenOptions):VarTween
 	{
-		var fields = Reflect.fields(Values);
-		if (fields.length == 1)
-		{
-			return cast singleVar(Object, fields[0], Reflect.field(Values, fields[0]), Duration, Options);
-		}
-		else
-		{
-			return cast multiVar(Object, Values, Duration, Options);
-		}
+		var tween = VarTween._pool.get();
+		Options = initTweenOptions(tween, Options);
+		tween.tween(Object, Values, Duration, Options.ease);
+		return manager.add(tween);
 	}
 	
 	/**
-	 * Tweens some numeric value. Shorthand for creating a NumTween object, starting it and adding it to the TweenPlugin. Using it in 
-	 * conjunction with a TweenFunction requires more setup, but is faster than MulitVarTween and SingleVarTween because it doesn't use Reflection.
+	 * Tweens some numeric value. Shorthand for creating a NumTween, starting it and adding it to the TweenManager. Using it in 
+	 * conjunction with a TweenFunction requires more setup, but is faster than VarTween because it doesn't use Reflection.
 	 * 
 	 * Example: 
 	 *    private function tweenFunction(s:FlxSprite, v:Float) { s.alpha = v; }
@@ -404,55 +396,6 @@ class FlxTween implements IFlxDestroyable
 		
 		tween.setObject(Object);
 		tween.setMotion(DurationOrSpeed, UseDuration, Options.ease);
-		return manager.add(tween);
-	}
-	
-	/**
-	 * Tweens numeric public property of an Object. Shorthand for creating a VarTween tween, starting it and adding it to the TweenPlugin.
-	 * Example: FlxTween.singleVar(Object, "x", 500, 2.0, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT });
-	 * 
-	 * @param	Object		The object containing the properties to tween.
-	 * @param	Property	The name of the property (eg. "x").
-	 * @param	To			Value to tween to.
-	 * @param	Duration	Duration of the tween in seconds.
-	 * @param	Options		An object containing key/value pairs of the following optional parameters:
-	 * 						type		Tween type.
-	 * 						complete	Optional completion callback function.
-	 * 						ease		Optional easer function.
-	 * 						startDelay	Seconds to wait until starting this tween, 0 by default.
-	 * 						loopDelay	Seconds to wait between loops of this tween, 0 by default.
-	 * 						usePooling	Whether to pool this tween or not, necessary if you need to call functions like cancel()
-	 * @return	The added MultiVarTween object.
-	 */
-	private static function singleVar(Object:Dynamic, Property:String, To:Float, Duration:Float, ?Options:TweenOptions):VarTween
-	{
-		var tween = VarTween._pool.get();
-		Options = initTweenOptions(tween, Options);
-		tween.tween(Object, Property, To, Duration, Options.ease);
-		return manager.add(tween);
-	}
-	
-	/**
-	 * Tweens numeric public properties of an Object. Shorthand for creating a MultiVarTween tween, starting it and adding it to the TweenPlugin.
-	 * Example: FlxTween.multiVar(Object, { x: 500, y: 350 }, 2.0, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT });
-	 * 
-	 * @param	Object		The object containing the properties to tween.
-	 * @param	Values		An object containing key/value pairs of properties and target values.
-	 * @param	Duration	Duration of the tween in seconds.
-	 * @param	Options		An object containing key/value pairs of the following optional parameters:
-	 * 						type		Tween type.
-	 * 						complete	Optional completion callback function.
-	 * 						ease		Optional easer function.
-	 *  					startDelay	Seconds to wait until starting this tween, 0 by default.
-	 * 						loopDelay	Seconds to wait between loops of this tween, 0 by default.
-	 * 						usePooling	Whether to pool this tween or not, necessary if you need to call functions like cancel()
-	 * @return	The added MultiVarTween object.
-	 */
-	private static function multiVar(Object:Dynamic, Values:Dynamic, Duration:Float, ?Options:TweenOptions):FlxTween
-	{
-		var tween = MultiVarTween._pool.get();
-		Options = initTweenOptions(tween, Options);
-		tween.tween(Object, Values, Duration, Options.ease);
 		return manager.add(tween);
 	}
 	

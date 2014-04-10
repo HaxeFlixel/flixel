@@ -9,15 +9,15 @@ import flixel.group.FlxGroup;
 class FlxState extends FlxGroup
 {
 	/**
-	* Determines whether or not this state is updated even when it is not the active state. For example, if you have your game state first, and then you push a menu state on top of it,
-	* if this is set to true, the game state would continue to update in the background. By default this is false, so background states will be "paused" when they are not active.
-	*/
+	 * Determines whether or not this state is updated even when it is not the active state. For example, if you have your game state first, and then you push a menu state on top of it,
+	 * if this is set to true, the game state would continue to update in the background. By default this is false, so background states will be "paused" when they are not active.
+	 */
 	public var persistentUpdate:Bool = false;
 
 	/**
-	* Determines whether or not this state is updated even when it is not the active state. For example, if you have your game state first, and then you push a menu state on top of it, if this is set to true, the game state would continue to be drawn behind the pause state.
-	* By default this is true, so background states will continue to be drawn behind the current state. If background states are not visible when you have a different state on top, you should set this to false for improved performance.
-	*/
+	 * Determines whether or not this state is updated even when it is not the active state. For example, if you have your game state first, and then you push a menu state on top of it, if this is set to true, the game state would continue to be drawn behind the pause state.
+	 * By default this is true, so background states will continue to be drawn behind the current state. If background states are not visible when you have a different state on top, you should set this to false for improved performance.
+	 */
 	public var persistentDraw:Bool = true;
 
 	/**

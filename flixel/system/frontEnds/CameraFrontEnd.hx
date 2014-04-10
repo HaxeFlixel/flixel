@@ -23,7 +23,6 @@ class CameraFrontEnd
 	/**
 	 * Allows you to possibly slightly optimize the rendering process IF
 	 * you are not doing any pre-processing in your game state's draw() call.
-	 * @default false
 	 */
 	public var useBufferLocking:Bool = false;
 	/**

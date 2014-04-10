@@ -24,7 +24,6 @@ import flixel.system.debug.Watch;
 import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
 import flixel.tweens.FlxTween;
-import flixel.tweens.misc.MultiVarTween;
 #if !bitfive
 import flixel.ui.FlxBar;
 #end
