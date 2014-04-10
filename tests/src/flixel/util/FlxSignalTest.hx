@@ -152,7 +152,7 @@ class FlxSignalTest extends FlxTest
 	@Test
 	function testAddNull():Void
 	{
-		Assert.isNull(signal0.add(null));
+		signal0.add(null);
 		signal0.dispatch(); // crash if null could be added
 	}
 	
