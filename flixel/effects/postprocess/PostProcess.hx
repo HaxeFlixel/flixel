@@ -173,9 +173,6 @@ class PostProcess extends OpenGLView
 	public function capture()
 	{
 		GL.bindFramebuffer(GL.FRAMEBUFFER, framebuffer);
-
-		GL.viewport(0, 0, FlxG.width, FlxG.height);
-		
 		GL.clear(GL.DEPTH_BUFFER_BIT | GL.COLOR_BUFFER_BIT);
 	}
 
@@ -185,8 +182,10 @@ class PostProcess extends OpenGLView
 	override public function render(rect:Rectangle)
 	{
 		time += FlxG.elapsed;
+		
 		GL.bindFramebuffer(GL.FRAMEBUFFER, renderTo);
-
+		GL.viewport(0, 0, FlxG.width, FlxG.height);
+		
 		shader.bind();
 
 		GL.enableVertexAttribArray(vertexSlot);
@@ -279,7 +278,6 @@ void main() {
 			-1.0,  1.0, 0, 1
 		];
 	}
-
 }
 
 #end
