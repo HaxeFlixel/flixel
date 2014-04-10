@@ -60,7 +60,7 @@ class PlayState extends FlxState
 		redText.setFormat(null, 16, FlxColor.RED, "center");
 		add(redText);
 		
-		FlxG.game.addPostProcess(new PostProcess("assets/shaders/color/invert.frag"));
+		FlxG.game.addPostProcess(new PostProcess("assets/shaders/scanline.frag"));
 	}
 	
 	private function createPlayer(X:Int, Y:Int, Color:Int):FlxSprite
