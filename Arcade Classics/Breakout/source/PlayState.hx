@@ -100,6 +100,29 @@ class PlayState extends FlxState
 		
 		_bat.velocity.x = 0;
 		
+		#if !FLX_NO_TOUCH
+		// Simple routine to move bat to x position of touch
+		for (touch in FlxG.touches.list)
+		{
+			if (touch.pressed)
+			{
+				if (touch.x > 10 && touch.x < 270)
+				_bat.x = touch.x;
+			}
+		}
+		// Vertical long swipe up or down resets game state
+		for (swipe in FlxG.swipes)
+		{
+			if (swipe.distance > 100)
+			{
+				if ((swipe.angle < 10 && swipe.angle > -10) || (swipe.angle > 170 || swipe.angle < -170))
+				{
+					FlxG.resetState();
+				}
+			}
+		}
+		#end
+		
 		if (FlxG.keys.anyPressed(["LEFT", "A"]) && _bat.x > 10)
 		{
 			_bat.velocity.x = - BAT_SPEED;
