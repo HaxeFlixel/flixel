@@ -702,6 +702,11 @@ class FlxText extends FlxSprite
 		// Account for 2px gutter on top and bottom (that's why there is "+ 4")
 		var newHeight:Float = _textField.textHeight + _heightInc + 4;
 		
+		if (_textField.textHeight == 0) 
+		{
+			newHeight = oldHeight;			//fixes bug with empty text field
+		}
+		
 		if ((oldWidth != newWidth) || (oldHeight != newHeight))
 		{
 			// Need to generate a new buffer to store the text graphic
