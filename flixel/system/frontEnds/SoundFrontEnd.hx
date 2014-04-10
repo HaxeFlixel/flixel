@@ -83,7 +83,7 @@ class SoundFrontEnd
 		
 		music.loadEmbedded(Music, Looped);
 		music.volume = Volume;
-		music.survive = true;
+		music.persist = true;
 		music.play();
 	}
 	
@@ -234,11 +234,11 @@ class SoundFrontEnd
 	/**
 	 * Called by FlxGame on state changes to stop and destroy sounds.
 	 * 
-	 * @param	ForceDestroy	Kill sounds even if they're flagged survive.
+	 * @param	ForceDestroy	Kill sounds even if persist is true.
 	 */
 	public function destroy(ForceDestroy:Bool = false):Void
 	{
-		if (music != null && (ForceDestroy || !music.survive))
+		if (music != null && (ForceDestroy || !music.persist))
 		{
 			music.destroy();
 			music = null;
@@ -246,7 +246,7 @@ class SoundFrontEnd
 		
 		for (sound in list.members)
 		{
-			if (sound != null && (ForceDestroy || !sound.survive))
+			if (sound != null && (ForceDestroy || !sound.persist))
 			{
 				sound.destroy();
 			}
