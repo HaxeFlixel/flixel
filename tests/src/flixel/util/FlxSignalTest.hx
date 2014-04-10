@@ -148,4 +148,18 @@ class FlxSignalTest extends FlxTest
 		
 		Assert.areEqual(3, counter);
 	}
+	
+	@Test
+	function testAddNull():Void
+	{
+		Assert.isNull(signal0.add(null));
+		signal0.dispatch(); // crash if null could be added
+	}
+	
+	@Test
+	function testHasNull():Void
+	{
+		signal0.add(null);
+		Assert.isFalse(signal0.has(null));
+	}
 }
