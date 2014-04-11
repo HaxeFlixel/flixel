@@ -105,7 +105,7 @@ class FlxPoint implements IFlxPooled
 	 * @param	point	The point to add to this point
 	 * @return	This point.
 	 */
-	public inline function addPoint(point:FlxPoint):FlxPoint
+	public function addPoint(point:FlxPoint):FlxPoint
 	{
 		x += point.x;
 		y += point.y;
