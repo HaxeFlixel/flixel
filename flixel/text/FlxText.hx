@@ -702,6 +702,16 @@ class FlxText extends FlxSprite
 		// Account for 2px gutter on top and bottom (that's why there is "+ 4")
 		var newHeight:Float = _textField.textHeight + _heightInc + 4;
 		
+		if (_textField.textHeight == 0) 
+		{
+			//This fixes a bug with empty text fields.
+			//Before, when text was == "", _textField.textHeight 
+			//would return 0 on flash targets and so the vertical
+			//size of the text field would shrink when it was empty.
+			//This forces it to remain the correct size when empty.
+			newHeight = oldHeight;
+		}
+		
 		if ((oldWidth != newWidth) || (oldHeight != newHeight))
 		{
 			// Need to generate a new buffer to store the text graphic
