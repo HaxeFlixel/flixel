@@ -712,11 +712,6 @@ class FlxSprite extends FlxObject
 	 */
 	override public function draw():Void
 	{
-		#if !FLX_NO_DEBUG
-		if (FlxG.debugger.drawDebug)
-			drawDebug();
-		#end
-		
 		if (alpha == 0)
 		{
 			return;
@@ -894,6 +889,11 @@ class FlxSprite extends FlxObject
 			FlxBasic._VISIBLECOUNT++;
 			#end
 		}
+		
+		#if !FLX_NO_DEBUG
+		if (FlxG.debugger.drawDebug)
+			drawDebug();
+		#end
 	}
 	
 	/**

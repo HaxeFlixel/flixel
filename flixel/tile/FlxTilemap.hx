@@ -670,11 +670,6 @@ class FlxTilemap extends FlxObject
 	 */
 	override public function draw():Void
 	{
-		#if !FLX_NO_DEBUG
-		if (FlxG.debugger.drawDebug)
-			drawDebug();
-		#end
-		
 		var cameras = cameras;
 		var camera:FlxCamera;
 		var buffer:FlxTilemapBuffer;
@@ -724,6 +719,11 @@ class FlxTilemap extends FlxObject
 			FlxBasic._VISIBLECOUNT++;
 			#end
 		}
+		
+		#if !FLX_NO_DEBUG
+		if (FlxG.debugger.drawDebug)
+			drawDebug();
+		#end
 	}
 	
 	/**
@@ -853,7 +853,7 @@ class FlxTilemap extends FlxObject
 		var group:FlxGroup = FlxGroup.resolveGroup(ObjectOrGroup);
 		if (group != null) // if it is a group
 		{
-			return FlxGroup.overlaps(overlapsCallback, group, 0, 0, InScreenSpace, Camera);
+			return FlxGroup.overlaps(tilemapOverlapsCallback, group, 0, 0, InScreenSpace, Camera);
 		}
 		else if (tilemapOverlapsCallback(ObjectOrGroup))
 		{
@@ -892,7 +892,7 @@ class FlxTilemap extends FlxObject
 		var group:FlxGroup = FlxGroup.resolveGroup(ObjectOrGroup);
 		if (group != null) // if it is a group
 		{
-			return FlxGroup.overlaps(overlapsCallback, group, 0, 0, InScreenSpace, Camera);
+			return FlxGroup.overlaps(tilemapOverlapsAtCallback, group, X, Y, InScreenSpace, Camera);
 		}
 		else if (tilemapOverlapsAtCallback(ObjectOrGroup, X, Y, InScreenSpace, Camera))
 		{
