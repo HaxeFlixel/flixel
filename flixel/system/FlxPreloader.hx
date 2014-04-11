@@ -271,12 +271,21 @@ class FlxPreloader extends NMEPreloader
 		#end
 	}
 	
+	/**
+	 * This class is what would actually trigger the Preloader to 'finish' and exit, however, 
+	 * NMEPreloader tries to call this too early in some cases, so we have to override it with an empty
+	 * function.
+	 */
 	override public function onLoaded():Void
 	{
-
+		// Empty / Do Nothing
 	}
 	
-	private function realLoad():Void
+	/**
+	 * This function is called once the project is completely loaded, AND at least _minDisplayTime has passed.
+	 * It triggers the parent class that everything is finished loading and then destroys this instance.
+	 */
+	private function finish():Void
 	{
 		super.onLoaded();
 		destroy();
@@ -304,7 +313,7 @@ class FlxPreloader extends NMEPreloader
 		if ((_percent >= 1) && (time > _min))
 		{
 			_loaded = true;
-			realLoad();
+			finish();
 		}
 		else
 		{
