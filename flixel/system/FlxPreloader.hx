@@ -20,16 +20,6 @@ import flixel.FlxG;
 import flixel.util.FlxColor;
 import flixel.util.FlxStringUtil;
 
-#if (js || debug)
-class FlxPreloader extends NMEPreloader
-{	
-	public function new()
-	{
-		super();
-	}
-}
-#else
-
 @:font("assets/fonts/nokiafc22.ttf")
 class PreloaderFont extends Font {}
 
@@ -84,7 +74,6 @@ class FlxPreloader extends NMEPreloader
 	private var _text:TextField;
 	private var _logo:Sprite;
 	private var _logoGlow:Sprite;
-	private var _min:Int = 0;
 	private var _percent:Float;
 	private var _urlChecked:Bool = false;
 	private var _loaded:Bool = false;
@@ -117,10 +106,6 @@ class FlxPreloader extends NMEPreloader
 	 */
 	private function create():Void
 	{
-		#if FLX_NO_DEBUG
-		_min = Std.int(minDisplayTime * 1000);
-		#end
-		
 		_buffer = new Sprite();
 		_buffer.scaleX = _buffer.scaleY = 2;
 		addChild(_buffer);
@@ -239,6 +224,10 @@ class FlxPreloader extends NMEPreloader
 		graph.endFill();
 	}
 	
+	/**
+	 * This function is called when the project has finished loading to clean up and remove itself.
+	 * If overriding, make sure you remove the ENTER_FRAME event listener!
+	 */
 	private function destroy():Void
 	{
 		removeEventListener(Event.ENTER_FRAME, onEnterFrame);
@@ -253,6 +242,10 @@ class FlxPreloader extends NMEPreloader
 		_logoGlow = null;
 	}
 
+	/**
+	 * This function is called each update to check the load status of the project. 
+	 * It is highly recommended that you do NOT override this.
+	 */
 	override public function onUpdate(bytesLoaded:Int, bytesTotal:Int):Void 
 	{
 		#if !(desktop || mobile)
@@ -291,6 +284,10 @@ class FlxPreloader extends NMEPreloader
 		destroy();
 	}
 	
+	/**
+	 * This function is triggered on each 'frame'.
+	 * It is highly reccommended that you do NOT override this.
+	 */
 	private function onEnterFrame(event:Event):Void
 	{
 		
@@ -310,7 +307,8 @@ class FlxPreloader extends NMEPreloader
 		
 		graphics.clear();
 		var time:Int = Lib.getTimer();
-		if ((_percent >= 1) && (time > _min))
+		var min:Int = Std.int(minDisplayTime * 1000);
+		if ((_percent >= 1) && (time > min))
 		{
 			_loaded = true;
 			finish();
@@ -318,9 +316,9 @@ class FlxPreloader extends NMEPreloader
 		else
 		{
 			var percent:Float = _percent;
-			if ((_min > 0) && (percent > time/_min))
+			if ((min > 0) && (percent > time/min))
 			{
-				percent = time / _min;
+				percent = time / min;
 			}
 			update(percent);
 		}
@@ -445,5 +443,4 @@ class FlxPreloader extends NMEPreloader
 		}
 	}
 }
-#end
 #end
