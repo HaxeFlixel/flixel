@@ -144,12 +144,12 @@ class FlxVector extends FlxPoint
 	}
 	
 	/**
-	 * Vector substraction.
+	 * Vector subtraction.
 	 * 
-	 * @param	v	vector to substract
-	 * @return	substraction result
+	 * @param	v	vector to subtract
+	 * @return	subtraction result
 	 */
-	public inline function substract(v:FlxVector):FlxVector
+	public inline function subtract(v:FlxVector):FlxVector
 	{
 		x -= v.x;
 		y -= v.y;
@@ -157,14 +157,14 @@ class FlxVector extends FlxPoint
 	}
 	
 	/**
-	 * Returns new vector which is result of substraction of v vector from this vector.
+	 * Returns new vector which is result of subtraction of v vector from this vector.
 	 * 
-	 * @param	v	vector to substract
-	 * @return	substraction result
+	 * @param	v	vector to subtract
+	 * @return	subtraction result
 	 */
-	public inline function substractNew(v:FlxVector):FlxVector
+	public inline function subtractNew(v:FlxVector):FlxVector
 	{
-		return clone().substract(v);
+		return clone().subtract(v);
 	}
 	
 	/**
@@ -320,7 +320,7 @@ class FlxVector extends FlxPoint
 	/**
 	 * Right normal of the vector
 	 */
-	public function rightNormal(vec:FlxVector = null):FlxVector
+	public function rightNormal(?vec:FlxVector):FlxVector
 	{ 
 		if (vec == null)
 		{
@@ -333,7 +333,7 @@ class FlxVector extends FlxPoint
 	/**
 	 * Left normal of the vector
 	 */
-	public function leftNormal(vec:FlxVector = null):FlxVector
+	public function leftNormal(?vec:FlxVector):FlxVector
 	{ 
 		if (vec == null)
 		{
@@ -366,7 +366,7 @@ class FlxVector extends FlxPoint
 	 * @param	proj	optional argument - result vector
 	 * @return	projection of the vector
 	 */
-	public function projectTo(v:FlxVector, proj:FlxVector = null):FlxVector
+	public function projectTo(v:FlxVector, ?proj:FlxVector):FlxVector
 	{
 		var dp:Float = dotProduct(v);
 		var lenSq:Float = v.lengthSquared;
@@ -420,7 +420,7 @@ class FlxVector extends FlxPoint
 		if (lengthSquared < EPSILON_SQUARED || v.lengthSquared < EPSILON_SQUARED) return Math.NaN;
 		
 		_vector1 = b.clone(_vector1);
-		_vector1.substract(a);
+		_vector1.subtract(a);
 		
 		return _vector1.perpProduct(v) / perpProduct(v);
 	}
