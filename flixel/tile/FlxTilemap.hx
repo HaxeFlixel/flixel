@@ -853,7 +853,7 @@ class FlxTilemap extends FlxObject
 		var group:FlxGroup = FlxGroup.resolveGroup(ObjectOrGroup);
 		if (group != null) // if it is a group
 		{
-			return FlxGroup.overlaps(overlapsCallback, group, 0, 0, InScreenSpace, Camera);
+			return FlxGroup.overlaps(tilemapOverlapsCallback, group, 0, 0, InScreenSpace, Camera);
 		}
 		else if (tilemapOverlapsCallback(ObjectOrGroup))
 		{
@@ -892,7 +892,7 @@ class FlxTilemap extends FlxObject
 		var group:FlxGroup = FlxGroup.resolveGroup(ObjectOrGroup);
 		if (group != null) // if it is a group
 		{
-			return FlxGroup.overlaps(overlapsCallback, group, 0, 0, InScreenSpace, Camera);
+			return FlxGroup.overlaps(tilemapOverlapsAtCallback, group, X, Y, InScreenSpace, Camera);
 		}
 		else if (tilemapOverlapsAtCallback(ObjectOrGroup, X, Y, InScreenSpace, Camera))
 		{
