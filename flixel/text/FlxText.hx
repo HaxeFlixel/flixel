@@ -704,7 +704,12 @@ class FlxText extends FlxSprite
 		
 		if (_textField.textHeight == 0) 
 		{
-			newHeight = oldHeight;			//fixes bug with empty text field
+			newHeight = oldHeight;
+			//this fixes a bug with empty text fields.
+			//Before, when text was == "", _textField.textHeight 
+			//would return 0 on flash targets and so the vertical
+			//size of the text field would shrink when it was empty.
+			//This forces it to remain the correct size when empty.
 		}
 		
 		if ((oldWidth != newWidth) || (oldHeight != newHeight))
