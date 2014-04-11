@@ -763,8 +763,7 @@ class FlxSprite extends FlxObject
 #if FLX_RENDER_BLIT
 			if (simpleRender)
 			{
-				// Used to use fround() to "deal with floating point precision issues in flash"
-				// Changed to ffloor() for consistency with everything else
+				// Floor point to prevent rounding issues
 				_flashPoint.x = Math.ffloor(_point.x);
 				_flashPoint.y = Math.ffloor(_point.y);
 				
