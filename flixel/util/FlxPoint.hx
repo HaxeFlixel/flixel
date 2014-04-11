@@ -18,6 +18,7 @@ class FlxPoint implements IFlxPooled
 	 * 
 	 * @param	X		The X-coordinate of the point in space.
 	 * @param	Y		The Y-coordinate of the point in space.
+	 * @return	This point.
 	 */
 	public static inline function get(X:Float = 0, Y:Float = 0):FlxPoint
 	{
@@ -32,6 +33,7 @@ class FlxPoint implements IFlxPooled
 	 * 
 	 * @param	X		The X-coordinate of the point in space.
 	 * @param	Y		The Y-coordinate of the point in space.
+	 * @return	This point.
 	 */
 	public static inline function weak(X:Float = 0, Y:Float = 0):FlxPoint
 	{
@@ -70,10 +72,11 @@ class FlxPoint implements IFlxPooled
 	}
 	
 	/**
-	 * Set the coordinates of this point object.
+	 * Set the coordinates of this point.
 	 * 
-	 * @param	X		The X-coordinate of the point in space.
-	 * @param	Y		The Y-coordinate of the point in space.
+	 * @param	X	The X-coordinate of the point in space.
+	 * @param	Y	The Y-coordinate of the point in space.
+	 * @return	This point.
 	 */
 	public function set(X:Float = 0, Y:Float = 0):FlxPoint
 	{
@@ -83,9 +86,37 @@ class FlxPoint implements IFlxPooled
 	}
 	
 	/**
+	 * Adds the to the coordinates of this point.
+	 * 
+	 * @param	X	Amount to add to x
+	 * @param	Y	Amount to add to y
+	 * @return	This point.
+	 */
+	public inline function add(X:Float = 0, Y:Float = 0):FlxPoint
+	{
+		x += X;
+		y += Y;
+		return this;
+	}
+	
+	/**
+	 * Adds the coordinates of another point to the coordinates of this point.
+	 * 
+	 * @param	point	The point to add to this point
+	 * @return	This point.
+	 */
+	public inline function addPoint(point:FlxPoint):FlxPoint
+	{
+		x += point.x;
+		y += point.y;
+		point.putWeak();
+		return this;
+	}
+	
+	/**
 	 * Helper function, just copies the values from the specified point.
 	 * 
-	 * @param	Point	Any FlxPoint.
+	 * @param	point	Any FlxPoint.
 	 * @return	A reference to itself.
 	 */
 	public inline function copyFrom(point:FlxPoint):FlxPoint
