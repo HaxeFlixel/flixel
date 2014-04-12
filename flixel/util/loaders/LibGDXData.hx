@@ -8,7 +8,7 @@ import flixel.util.FlxPoint;
 import haxe.Json;
 import openfl.Assets;
 
-class LibGDXData extends TexturePackerData implements IFlxDestroyable
+class LibGDXData extends TexturePackerData
 {
 	/**
 	 * Constructor
