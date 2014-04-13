@@ -45,7 +45,7 @@ class FlxGamepadManager implements IFlxInput
 	/**
 	 * Storage for all connected joysticks
 	 */
-	private var _gamepads:Map<Int, FlxGamepad>;
+	private var _gamepads:Array<FlxGamepad>;
 	
 	#if flash
 	private var _gameInput:GameInput;
@@ -53,12 +53,12 @@ class FlxGamepadManager implements IFlxInput
 	
 	public function getByID(GamepadID:Int):FlxGamepad
 	{
-		var gamepad:FlxGamepad = _gamepads.get(GamepadID);
+		var gamepad:FlxGamepad = _gamepads[GamepadID];
 		
 		if (gamepad == null)
 		{
 			gamepad = new FlxGamepad(GamepadID, globalDeadZone);
-			_gamepads.set(GamepadID, gamepad);
+			_gamepads[GamepadID] = gamepad;
 			
 			lastActive = gamepad;
 			if (firstActive == null)
@@ -261,14 +261,17 @@ class FlxGamepadManager implements IFlxInput
 	{
 		for (gamepad in _gamepads)
 		{
-			gamepad.reset();
+			if (gamepad != null)
+			{
+				gamepad.reset();
+			}
 		}
 	}
 	
 	@:allow(flixel.FlxG)
 	private function new() 
 	{
-		_gamepads = new Map<Int, FlxGamepad>();
+		_gamepads = [];
 		
 		#if (cpp || neko)
 		Lib.current.stage.addEventListener(JoystickEvent.AXIS_MOVE, handleAxisMove);
@@ -341,9 +344,9 @@ class FlxGamepadManager implements IFlxInput
 			
 			if (id >= 0)
 			{
-				var gamepad:FlxGamepad = _gamepads.get(id);
+				var gamepad:FlxGamepad = _gamepads[id];
 				gamepad = FlxDestroyUtil.destroy(gamepad);
-				_gamepads.remove(id);
+				_gamepads[id] = null;
 			}
 		}
 	}
@@ -400,7 +403,10 @@ class FlxGamepadManager implements IFlxInput
 	{
 		for (gamepad in _gamepads)
 		{
-			gamepad.update();
+			if (gamepad != null)
+			{
+				gamepad.update();
+			}
 		}
 	}
 	
@@ -414,12 +420,13 @@ class FlxGamepadManager implements IFlxInput
 	private function get_numActiveGamepads():Int
 	{
 		var count = 0;
-		
 		for (gamepad in _gamepads)
 		{
-			count++;
+			if (gamepad != null)
+			{
+				count++;
+			}
 		}
-		
 		return count;
 	}
 	
@@ -432,12 +439,13 @@ class FlxGamepadManager implements IFlxInput
 	private function set_globalDeadZone(DeadZone:Float):Float
 	{
 		globalDeadZone = DeadZone;
-		
 		for (gamepad in _gamepads)
 		{
-			gamepad.deadZone = DeadZone;
+			if (gamepad != null)
+			{
+				gamepad.deadZone = DeadZone;
+			}
 		}
-		
 		return globalDeadZone;
 	}
 }

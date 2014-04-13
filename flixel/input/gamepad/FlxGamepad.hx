@@ -21,7 +21,7 @@ class FlxGamepad implements IFlxDestroyable
 	public static inline var JUST_PRESSED:Int = 2;
 	
 	public var id:Int;
-	public var buttons:Map<Int, FlxGamepadButton>;
+	public var buttons:Array<FlxGamepadButton>;
 	
 	/**
 	 * Gamepad deadzone. Sets the sensibility. 
@@ -53,7 +53,7 @@ class FlxGamepad implements IFlxDestroyable
 	
 	public function new(ID:Int, GlobalDeadZone:Float = 0) 
 	{
-		buttons = new Map<Int, FlxGamepadButton>();
+		buttons = [];
 		axis = [for (i in 0...6) 0];
 		id = ID;
 		
@@ -70,12 +70,12 @@ class FlxGamepad implements IFlxDestroyable
 	
 	public function getButton(ButtonID:Int):FlxGamepadButton
 	{
-		var gamepadButton:FlxGamepadButton = buttons.get(ButtonID);
+		var gamepadButton:FlxGamepadButton = buttons[ButtonID];
 		
 		if (gamepadButton == null)
 		{
 			gamepadButton = new FlxGamepadButton(ButtonID);
-			buttons.set(ButtonID, gamepadButton);
+			buttons[ButtonID] = gamepadButton;
 		}
 		
 		return gamepadButton;
@@ -114,6 +114,11 @@ class FlxGamepad implements IFlxDestroyable
 		
 		for (button in buttons)
 		{
+			if (button == null) 
+			{
+				return;
+			}
+			
 			if ((button.last == -1) && (button.current == -1)) 
 			{
 				button.current = 0;
@@ -131,8 +136,11 @@ class FlxGamepad implements IFlxDestroyable
 	{
 		for (button in buttons)
 		{
-			button.current = 0;
-			button.last = 0;
+			if (button != null)
+			{
+				button.current = 0;
+				button.last = 0;
+			}
 		}
 		
 		var numAxis:Int = axis.length;
@@ -171,9 +179,9 @@ class FlxGamepad implements IFlxDestroyable
 	 */
 	public function checkStatus(ButtonID:Int, Status:Int):Bool 
 	{ 
-		if (buttons.exists(ButtonID))
+		if (buttons[ButtonID] != null)
 		{
-			return (buttons.get(ButtonID).current == Status);
+			return (buttons[ButtonID].current == Status);
 		}
 		return false;
 	}
@@ -181,16 +189,16 @@ class FlxGamepad implements IFlxDestroyable
 	/**
 	 * Check if at least one button from an array of button IDs is pressed.
 	 * 
-	 * @param	ButtonArray	An array of button IDs
+	 * @param	ButtonIDArray	An array of button IDs
 	 * @return	Whether at least one of the buttons is pressed
 	 */
-	public function anyPressed(ButtonArray:Array<Int>):Bool
+	public function anyPressed(ButtonIDArray:Array<Int>):Bool
 	{
-		for (b in ButtonArray)
+		for (b in ButtonIDArray)
 		{
-			if (buttons.exists(b))
+			if (buttons[b] != null)
 			{
-				if (buttons.get(b).current == PRESSED)
+				if (buttons[b].current == PRESSED)
 					return true;
 			}
 		}
@@ -204,13 +212,13 @@ class FlxGamepad implements IFlxDestroyable
 	 * @param	ButtonArray	An array of button IDs
 	 * @return	Whether at least one of the buttons was just pressed
 	 */
-	public function anyJustPressed(ButtonArray:Array<Int>):Bool
+	public function anyJustPressed(ButtonIDArray:Array<Int>):Bool
 	{
-		for (b in ButtonArray)
+		for (b in ButtonIDArray)
 		{
-			if (buttons.exists(b))
+			if (buttons[b] != null)
 			{
-				if (buttons.get(b).current == JUST_PRESSED)
+				if (buttons[b].current == JUST_PRESSED)
 					return true;
 			}
 		}
@@ -224,13 +232,13 @@ class FlxGamepad implements IFlxDestroyable
 	 * @param	ButtonArray	An array of button IDs
 	 * @return	Whether at least one of the buttons was just released
 	 */
-	public function anyJustReleased(ButtonArray:Array<Int>):Bool
+	public function anyJustReleased(ButtonIDArray:Array<Int>):Bool
 	{
-		for (b in ButtonArray)
+		for (b in ButtonIDArray)
 		{
-			if (buttons.exists(b))
+			if (buttons[b] != null)
 			{
-				if (buttons.get(b).current == JUST_RELEASED)
+				if (buttons[b].current == JUST_RELEASED)
 					return true;
 			}
 		}
@@ -254,9 +262,9 @@ class FlxGamepad implements IFlxDestroyable
 		}
 		return (pad != null) && (Math.round(pad.buttons[ButtonID]) == 1);
 		#else
-		if (buttons.exists(ButtonID))
+		if (buttons[ButtonID] != null)
 		{
-			return (buttons.get(ButtonID).current > RELEASED);
+			return (buttons[ButtonID].current > RELEASED);
 		}
 		#end
 		
@@ -271,9 +279,9 @@ class FlxGamepad implements IFlxDestroyable
 	 */
 	public function justPressed(ButtonID:Int):Bool 
 	{ 
-		if (buttons.exists(ButtonID))
+		if (buttons[ButtonID] != null)
 		{
-			return (buttons.get(ButtonID).current == JUST_PRESSED);
+			return (buttons[ButtonID].current == JUST_PRESSED);
 		}
 		
 		return false;
@@ -287,9 +295,9 @@ class FlxGamepad implements IFlxDestroyable
 	 */
 	public function justReleased(ButtonID:Int):Bool 
 	{ 
-		if (buttons.exists(ButtonID))
+		if (buttons[ButtonID] != null)
 		{
-			return (buttons.get(ButtonID).current == JUST_RELEASED);
+			return (buttons[ButtonID].current == JUST_RELEASED);
 		}
 		
 		return false;
@@ -303,7 +311,7 @@ class FlxGamepad implements IFlxDestroyable
 	{
 		for (button in buttons)
 		{
-			if (button.current > RELEASED)
+			if (button != null && button.current > RELEASED)
 			{
 				return button.id;
 			}
@@ -320,7 +328,7 @@ class FlxGamepad implements IFlxDestroyable
 	{
 		for (button in buttons)
 		{
-			if (button.current == JUST_PRESSED)
+			if (button != null && button.current == JUST_PRESSED)
 			{
 				return button.id;
 			}
@@ -337,7 +345,7 @@ class FlxGamepad implements IFlxDestroyable
 	{
 		for (button in buttons)
 		{
-			if (button.current == JUST_RELEASED)
+			if (button != null && button.current == JUST_RELEASED)
 			{
 				return button.id;
 			}
@@ -390,7 +398,7 @@ class FlxGamepad implements IFlxDestroyable
 	{
 		for (button in buttons)
 		{
-			if (button.current > RELEASED)
+			if (button != null && button.current > RELEASED)
 			{
 				return true;
 			}
