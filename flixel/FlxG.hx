@@ -77,7 +77,7 @@ class FlxG
 	 * How many times the quad tree should divide the world on each axis. Generally, sparse collisions can have fewer divisons,
 	 * while denser collision activity usually profits from more. Default value is 6.
 	 */
-	public static var worldDivisions:Int;
+	public static var worldDivisions:Int = 6;
 	/**
 	 * By default this just refers to the first entry in the FlxG.cameras.list 
 	 * array but you can do what you like with it.
@@ -414,10 +414,7 @@ class FlxG
 	 * Called by FlxGame to set up FlxG during FlxGame's constructor.
 	 */
 	private static function init(Game:FlxGame, Width:Int, Height:Int, Zoom:Float):Void
-	{	
-		// TODO: check this later on real device
-		//FlxAssets.cacheSounds();
-		
+	{
 		game = Game;
 		width = Std.int(Math.abs(Width));
 		height = Std.int(Math.abs(Height));
@@ -468,10 +465,13 @@ class FlxG
 		#if !FLX_NO_SOUND_SYSTEM
 		sound.destroy(true);
 		#end
+		autoPause = true;
+		fixedTimestep = true;
 		timeScale = 1.0;
 		elapsed = 0;
+		maxElapsed = 0.1;
 		worldBounds.set( -10, -10, width + 20, height + 20);
-		worldDivisions = 6;
+		worldDivisions = 6;	
 	}
 	
 	private static function set_scaleMode(ScaleMode:BaseScaleMode):BaseScaleMode

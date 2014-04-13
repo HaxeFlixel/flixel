@@ -11,6 +11,9 @@ class FlxStateTest extends FlxTest
 	{
 		Assert.isFalse(Std.is(FlxG.state, TestState));
 		FlxG.switchState(new TestState());
-		delay(function() { Assert.isTrue(Std.is(FlxG.state, TestState)); });
+		
+		delay(function() { 
+			Assert.isTrue(Std.is(FlxG.state, TestState)); 
+		});
 	}
 }
