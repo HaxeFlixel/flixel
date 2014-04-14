@@ -98,13 +98,9 @@ class FlxSprite extends FlxObject
 	 */
 	public var facing(default, set):Int = FlxObject.RIGHT;
 	/**
-	 * The width of the flipped graphic.
-	 */
-	public var flippedWidth(default, null):Int = 0;
-	/**
 	 * Whether or not this sprite may be flipped.
 	 */
-	public var flippable(default, set):Bool = false;
+	public var flippable:Bool = false;
 	 
 	/**
 	 * WARNING: The origin of the sprite will default to its center. If you change this, 
@@ -266,7 +262,7 @@ class FlxSprite extends FlxObject
 		}
 		
 		region = Sprite.region.clone();
-		flippedWidth = Sprite.flippedWidth;
+		flippable = Sprite.flippable;
 		bakedRotationAngle = Sprite.bakedRotationAngle;
 		cachedGraphics = Sprite.cachedGraphics;
 		
@@ -1525,19 +1521,6 @@ class FlxSprite extends FlxObject
 			oldCached.useCount--;
 		}
 		
-		cachedGraphics = Value;
-		updateFlippedWidth();
-		
-		return cachedGraphics;
-	}
-	
-	private function set_flippable(Flippable:Bool):Bool {
-		flippable = Flippable;
-		updateFlippedWidth();
-		return Flippable;
-	}
-	
-	private function updateFlippedWidth():Void {
-		flippedWidth = flippable ? cachedGraphics.bitmap.width : 0;
+		return cachedGraphics = Value;
 	}
 }
