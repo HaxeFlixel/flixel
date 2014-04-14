@@ -380,6 +380,7 @@ class FlxGamepad implements IFlxDestroyable
 		var axisValue = getAxisValue(AxisID);
 		
 		// the y axis is inverted on the Xbox gamepad in flash for some reason - but not in Chrome!
+		// WARNING: this causes unnecessary string allocations - we should remove this hack when possible.
 		#if flash
 		if ((_device != null) && _device.enabled && (_device.name.indexOf("Xbox") != -1) && 
 		   (Capabilities.manufacturer != "Google Pepper"))
@@ -390,7 +391,7 @@ class FlxGamepad implements IFlxDestroyable
 		
 		return axisValue;
 	}
-	
+
 	/**
 	 * Check to see if any buttons are pressed right now.
 	 */
