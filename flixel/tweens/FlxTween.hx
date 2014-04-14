@@ -63,7 +63,7 @@ class FlxTween implements IFlxDestroyable
 	 * 						usePooling	Whether to pool this tween or not, necessary if you need to call functions like cancel()
 	 * @return	The added VarTween object.
 	 */
-	public static function tween(Object:Dynamic, Values:Dynamic, Duration:Float, ?Options:TweenOptions):VarTween
+	public static function tween(Object:Dynamic, Values:Dynamic, Duration:Float = 1, ?Options:TweenOptions):VarTween
 	{
 		var tween = VarTween._pool.get();
 		Options = initTweenOptions(tween, Options);
@@ -93,7 +93,7 @@ class FlxTween implements IFlxDestroyable
 	 *							function if you are maximizing performance, as those will be compiled to Dynamics on cpp.
 	 * @return	The added NumTween object.
 	 */
-	public static function num(FromValue:Float, ToValue:Float, Duration:Float, ?Options:TweenOptions, ?TweenFunction:Float->Void):NumTween
+	public static function num(FromValue:Float, ToValue:Float, Duration:Float = 1, ?Options:TweenOptions, ?TweenFunction:Float->Void):NumTween
 	{
 		var tween = NumTween._pool.get();
 		Options = initTweenOptions(tween, Options);
@@ -118,7 +118,7 @@ class FlxTween implements IFlxDestroyable
 	 * 						usePooling	Whether to pool this tween or not, necessary if you need to call functions like cancel()
 	 * @return	The added AngleTween object.
 	 */
-	public static function angle(Sprite:FlxSprite, FromAngle:Float, ToAngle:Float, Duration:Float, ?Options:TweenOptions):AngleTween
+	public static function angle(Sprite:FlxSprite, FromAngle:Float, ToAngle:Float, Duration:Float = 1, ?Options:TweenOptions):AngleTween
 	{
 		var tween = AngleTween._pool.get();
 		Options = initTweenOptions(tween, Options);
@@ -145,7 +145,7 @@ class FlxTween implements IFlxDestroyable
 	 * 						usePooling	Whether to pool this tween or not, necessary if you need to call functions like cancel()
 	 * @return	The added ColorTween object.
 	 */
-	public static function color(Sprite:FlxSprite, Duration:Float, FromColor:Int, ToColor:Int, FromAlpha:Float = 1, ToAlpha:Float = 1, ?Options:TweenOptions):ColorTween
+	public static function color(Sprite:FlxSprite, Duration:Float = 1, FromColor:Int, ToColor:Int, FromAlpha:Float = 1, ToAlpha:Float = 1, ?Options:TweenOptions):ColorTween
 	{
 		var tween = ColorTween._pool.get();
 		Options = initTweenOptions(tween, Options);
@@ -173,7 +173,7 @@ class FlxTween implements IFlxDestroyable
 	 * 							usePooling	Whether to pool this tween or not, necessary if you need to call functions like cancel()
 	 * @return The LinearMotion object.
 	 */
-	public static function linearMotion(Object:FlxObject, FromX:Float, FromY:Float, ToX:Float, ToY:Float, DurationOrSpeed:Float, UseDuration:Bool = true, ?Options:TweenOptions):LinearMotion
+	public static function linearMotion(Object:FlxObject, FromX:Float, FromY:Float, ToX:Float, ToY:Float, DurationOrSpeed:Float = 1, UseDuration:Bool = true, ?Options:TweenOptions):LinearMotion
 	{
 		var tween = LinearMotion._pool.get();
 		Options = initTweenOptions(tween, Options);
@@ -204,7 +204,7 @@ class FlxTween implements IFlxDestroyable
 	 * 							usePooling	Whether to pool this tween or not, necessary if you need to call functions like cancel()
 	 * @return The QuadMotion object.
 	 */
-	public static function quadMotion(Object:FlxObject, FromX:Float, FromY:Float, ControlX:Float, ControlY:Float, ToX:Float, ToY:Float, DurationOrSpeed:Float, UseDuration:Bool = true, ?Options:TweenOptions):QuadMotion
+	public static function quadMotion(Object:FlxObject, FromX:Float, FromY:Float, ControlX:Float, ControlY:Float, ToX:Float, ToY:Float, DurationOrSpeed:Float = 1, UseDuration:Bool = true, ?Options:TweenOptions):QuadMotion
 	{
 		var tween = QuadMotion._pool.get();
 		Options = initTweenOptions(tween, Options);
@@ -236,7 +236,7 @@ class FlxTween implements IFlxDestroyable
 	 * 						usePooling	Whether to pool this tween or not, necessary if you need to call functions like cancel()
 	 * @return The CubicMotion object.
 	 */
-	public static function cubicMotion(Object:FlxObject, FromX:Float, FromY:Float, aX:Float, aY:Float, bX:Float, bY:Float, ToX:Float, ToY:Float, Duration:Float, ?Options:TweenOptions):CubicMotion
+	public static function cubicMotion(Object:FlxObject, FromX:Float, FromY:Float, aX:Float, aY:Float, bX:Float, bY:Float, ToX:Float, ToY:Float, Duration:Float = 1, ?Options:TweenOptions):CubicMotion
 	{
 		var tween = CubicMotion._pool.get();
 		Options = initTweenOptions(tween, Options);
@@ -267,7 +267,7 @@ class FlxTween implements IFlxDestroyable
 	 * 							usePooling	Whether to pool this tween or not, necessary if you need to call functions like cancel()
 	 * @return The CircularMotion object.
 	 */
-	public static function circularMotion(Object:FlxObject, CenterX:Float, CenterY:Float, Radius:Float, Angle:Float, Clockwise:Bool, DurationOrSpeed:Float, UseDuration:Bool = true, ?Options:TweenOptions):CircularMotion
+	public static function circularMotion(Object:FlxObject, CenterX:Float, CenterY:Float, Radius:Float, Angle:Float, Clockwise:Bool, DurationOrSpeed:Float = 1, UseDuration:Bool = true, ?Options:TweenOptions):CircularMotion
 	{
 		var tween = CircularMotion._pool.get();
 		Options = initTweenOptions(tween, Options);
@@ -293,7 +293,7 @@ class FlxTween implements IFlxDestroyable
 	 * 							usePooling	Whether to pool this tween or not, necessary if you need to call functions like cancel()
 	 * @return	The LinearPath object.
 	 */
-	public static function linearPath(Object:FlxObject, Points:Array<FlxPoint>, DurationOrSpeed:Float, UseDuration:Bool = true, ?Options:TweenOptions):LinearPath
+	public static function linearPath(Object:FlxObject, Points:Array<FlxPoint>, DurationOrSpeed:Float = 1, UseDuration:Bool = true, ?Options:TweenOptions):LinearPath
 	{
 		var tween = LinearPath._pool.get();
 		Options = initTweenOptions(tween, Options);
@@ -328,7 +328,7 @@ class FlxTween implements IFlxDestroyable
 	 * 							usePooling	Whether to pool this tween or not, necessary if you need to call functions like cancel()
 	 * @return	The QuadPath object.
 	 */
-	public static function quadPath(Object:FlxObject, Points:Array<FlxPoint>, DurationOrSpeed:Float, UseDuration:Bool = true, ?Options:TweenOptions):QuadPath
+	public static function quadPath(Object:FlxObject, Points:Array<FlxPoint>, DurationOrSpeed:Float = 1, UseDuration:Bool = true, ?Options:TweenOptions):QuadPath
 	{
 		var tween = QuadPath._pool.get();
 		Options = initTweenOptions(tween, Options);
@@ -476,7 +476,9 @@ class FlxTween implements IFlxDestroyable
 	public function cancel():Void
 	{
 		if (_usePooling)
+		{
 			throw("It is not safe to cancel a Tween that uses pooling. Please specify { usePooling: false } in the TweenOptions.");
+		}
 		
 		active = false;
 		manager.remove(this);
