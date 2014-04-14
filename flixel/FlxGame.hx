@@ -19,6 +19,7 @@ import flixel.text.pxText.PxBitmapFont;
 import flixel.util.FlxAngle;
 import flixel.util.FlxColor;
 import flixel.util.FlxRandom;
+import flixel.util.FlxArrayUtil;
 
 #if !FLX_NO_DEBUG
 import flixel.system.debug.FlxDebugger;
@@ -710,7 +711,7 @@ class FlxGame extends Sprite
 		{
 			swipe = null;
 		}
-		FlxG.swipes = [];
+		FlxArrayUtil.clearArray(FlxG.swipes);
 		#end
 	}
 	

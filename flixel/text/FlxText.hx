@@ -168,9 +168,17 @@ class FlxText extends FlxSprite
 		
 		_filters = [];
 		
-		if (Text == null)
+		var setTextEmpty:Bool = false;
+		if (Text == null || Text == "")
 		{
+			// empty texts have a textHeight of 0, need to
+			// prevent initialiazing with "" before the first calcFrame() call
+			#if flash
+			Text = " ";
+			#else
 			Text = "";
+			#end
+			setTextEmpty = true;
 		}
 		
 		_textField = new TextField();
@@ -201,6 +209,10 @@ class FlxText extends FlxSprite
 		
 		#if FLX_RENDER_BLIT 
 		calcFrame();
+		if (setTextEmpty)
+		{
+			text = "";
+		}
 		#else
 		if (Text != "")
 		{
@@ -702,13 +714,9 @@ class FlxText extends FlxSprite
 		// Account for 2px gutter on top and bottom (that's why there is "+ 4")
 		var newHeight:Float = _textField.textHeight + _heightInc + 4;
 		
+		// prevent text height from shrinking on flash if text == ""
 		if (_textField.textHeight == 0) 
 		{
-			//This fixes a bug with empty text fields.
-			//Before, when text was == "", _textField.textHeight 
-			//would return 0 on flash targets and so the vertical
-			//size of the text field would shrink when it was empty.
-			//This forces it to remain the correct size when empty.
 			newHeight = oldHeight;
 		}
 		

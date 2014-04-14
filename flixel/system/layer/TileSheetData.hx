@@ -23,11 +23,13 @@ class TileSheetData implements IFlxDestroyable
 	
 	/**
 	 * Storage for all groups of FlxFrames.
+	 * WARNING: accessing Map data structure causes string allocations - avoid doing every frame.
 	 */
 	private var flxSpriteFrames:Map<String, FlxSpriteFrames>;
 	
 	/**
 	 * Storage for all FlxFrames in this TileSheetData object.
+	 * WARNING: accessing Map data structure causes string allocations - avoid doing every frame.
 	 */
 	private var flxFrames:Map<String, FlxFrame>;
 	

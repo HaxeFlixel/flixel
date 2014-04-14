@@ -758,9 +758,9 @@ class FlxSprite extends FlxObject
 #if FLX_RENDER_BLIT
 			if (simpleRender)
 			{
-				// use fround() to deal with floating point precision issues in flash
-				_flashPoint.x = Math.fround(_point.x);
-				_flashPoint.y = Math.fround(_point.y);
+				// Floor point to prevent rounding issues
+				_flashPoint.x = Math.ffloor(_point.x);
+				_flashPoint.y = Math.ffloor(_point.y);
 				
 				camera.buffer.copyPixels(framePixels, _flashRect, _flashPoint, null, null, true);
 			}
@@ -1392,7 +1392,9 @@ class FlxSprite extends FlxObject
 		
 		updateFrameData();
 		resetHelpers();
+		
 		// not sure if i should add this line...
+		// WARNING: this is causing unnecessary string allocations (Map.get) - use arrays, or figure out a way to not call this every frame.
 		resetFrameBitmapDatas();
 		
 		return Pixels;

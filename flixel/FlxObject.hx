@@ -627,7 +627,7 @@ class FlxObject extends FlxBasic
 				(objectScreenPos.y + object.height > _point.y) && (objectScreenPos.y < _point.y + height);
 	}
 	
-	private function overlapsCallback(ObjectOrGroup:FlxBasic, X:Float, Y:Float, InScreenSpace:Bool, Camera:FlxCamera):Bool
+	private inline function overlapsCallback(ObjectOrGroup:FlxBasic, X:Float, Y:Float, InScreenSpace:Bool, Camera:FlxCamera):Bool
 	{
 		return overlaps(ObjectOrGroup, InScreenSpace, Camera);
 	}
@@ -648,7 +648,7 @@ class FlxObject extends FlxBasic
 		var group:FlxGroup = FlxGroup.resolveGroup(ObjectOrGroup);
 		if (group != null) // if it is a group
 		{
-			return FlxGroup.overlaps(overlapsCallback, group, 0, 0, InScreenSpace, Camera);
+			return FlxGroup.overlaps(overlapsAtCallback, group, X, Y, InScreenSpace, Camera);
 		}
 		
 		if (ObjectOrGroup.collisionType == FlxCollisionType.TILEMAP)
