@@ -48,7 +48,10 @@ class FlxGamepadManager implements IFlxInput
 	private var _gamepads:Array<FlxGamepad>;
 	
 	#if flash
-	private var _gameInput:GameInput;
+	/**
+	 * GameInput needs to be statically created, otherwise GameInput.numDevices will be zero during construction.
+	 */
+	private static var _gameInput:GameInput = new GameInput();
 	#end
 	
 	public function getByID(GamepadID:Int):FlxGamepad
@@ -250,7 +253,9 @@ class FlxGamepadManager implements IFlxInput
 		_gamepads = null;
 		
 		#if flash
-		_gameInput = null;
+		// not sure this is needed - can't imagine any use case where FlxGamepadManager would be destroyed
+		_gameInput.removeEventListener(GameInputEvent.DEVICE_ADDED, onDeviceAdded);
+		_gameInput.removeEventListener(GameInputEvent.DEVICE_REMOVED, onDeviceRemoved);
 		#end
 	}
 	
@@ -282,7 +287,6 @@ class FlxGamepadManager implements IFlxInput
 		#end
 		
 		#if flash
-		_gameInput = new GameInput();
 		_gameInput.addEventListener(GameInputEvent.DEVICE_ADDED, onDeviceAdded);
 		_gameInput.addEventListener(GameInputEvent.DEVICE_REMOVED, onDeviceRemoved);
 		
