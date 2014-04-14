@@ -1397,7 +1397,9 @@ class FlxSprite extends FlxObject
 		
 		updateFrameData();
 		resetHelpers();
+		
 		// not sure if i should add this line...
+		// WARNING: this is causing unnecessary string allocations (Map.get) - use arrays, or figure out a way to not call this every frame.
 		resetFrameBitmapDatas();
 		
 		return Pixels;

@@ -186,6 +186,8 @@ class FlxSpriteTest extends FlxTest
 		sprite1.velocity.x = 2000;
 		sprite2.velocity.x = -2000;
 		
-		delay(function() { Assert.isFalse(FlxG.overlap(sprite1, sprite2)); });
+		delay(function() { 
+			Assert.isFalse(FlxG.overlap(sprite1, sprite2)); 
+		});
 	}
 }
