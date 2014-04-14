@@ -17,13 +17,8 @@ import flixel.tweens.motion.LinearMotion;
 import flixel.tweens.motion.LinearPath;
 import flixel.tweens.motion.QuadMotion;
 import flixel.tweens.motion.QuadPath;
-import flixel.tweens.sound.SfxFader;
 import flixel.util.FlxPoint;
 import flixel.util.FlxTimer;
-
-#if !FLX_NO_SOUND_SYSTEM
-import flixel.tweens.sound.Fader;
-#end
 
 class FlxTween implements IFlxDestroyable
 {
@@ -157,54 +152,6 @@ class FlxTween implements IFlxDestroyable
 		tween.tween(Duration, FromColor, ToColor, FromAlpha, ToAlpha, Options.ease, Sprite);
 		return manager.add(tween);
 	}
-	
-	#if !FLX_NO_SOUND_SYSTEM
-	/**
-	 * Tweens FlxG.sound.volume. Shorthand for creating a Fader tween, starting it and adding it to the TweenManager.
-	 * Example: FlxTween.fader(0.5, 2.0, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT });
-	 *
-	 * @param	Volume		The volume to fade to.
-	 * @param	Duration	Duration of the fade in seconds.
-	 * @param	Options		An object containing key/value pairs of the following optional parameters:
-	 * 						type		Tween type.
-	 * 						complete	Optional completion callback function.
-	 * 						ease		Optional easer function.
-	 *  					startDelay	Seconds to wait until starting this tween, 0 by default.
-	 * 						loopDelay	Seconds to wait between loops of this tween, 0 by default.
-	 * 						usePooling	Whether to pool this tween or not, necessary if you need to call functions like cancel()
-	 * @return	The added Fader object.
-	 */
-	public static function fader(Volume:Float, Duration:Float, ?Options:TweenOptions):Fader
-	{
-		var tween = Fader._pool.get();
-		Options = initTweenOptions(tween, Options);
-		tween.fadeTo(Volume, Duration, Options.ease);
-		return manager.add(tween);
-	}
-	
-	/**
-	 * Tweens the volume of a FlxSound. Shorthand for creating a SfxFader tween, starting it and adding it to the TweenManager.
-	 * 
-	 * @param	Sound		The FlxSound.
-	 * @param	ToVolume	The volume to tween to.
-	 * @param	Duration	Duration of the fade in seconds.
-	 * @param	Options		An object containing key/value pairs of the following optional parameters:
-	 * 						type		Tween type.
-	 * 						complete	Optional completion callback function.
-	 * 						ease		Optional easer function.
-	 *  					startDelay	Seconds to wait until starting this tween, 0 by default.
-	 * 						loopDelay	Seconds to wait between loops of this tween, 0 by default.
-	 * 						usePooling	Whether to pool this tween or not, necessary if you need to call functions like cancel()
-	 * @return	The added SfxFader object.
-	 */
-	public static function sfx(Sound:FlxSound, ToVolume:Float, Duration:Float, ?Options:TweenOptions):SfxFader
-	{
-		var tween = SfxFader._pool.get();
-		Options = initTweenOptions(tween, Options);
-		tween.fadeTo(Sound, ToVolume, Duration, Options.ease);
-		return manager.add(tween);
-	}
-	#end
 	
 	/**
 	 * Create a new LinearMotion tween.
