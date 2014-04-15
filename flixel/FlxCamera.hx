@@ -709,20 +709,20 @@ class FlxCamera extends FlxBasic
 		
 		switch (Style)
 		{
-			case FlxCameraFollowMode.PLATFORMER:
+			case PLATFORMER:
 				var w:Float = (width / 8) + (Offset != null ? Offset.x : 0);
 				var h:Float = (height / 3) + (Offset != null ? Offset.y : 0);
 				deadzone = FlxRect.get((width - w) / 2, (height - h) / 2 - h * 0.25, w, h);
 				
-			case FlxCameraFollowMode.TOPDOWN:
+			case TOPDOWN:
 				helper = Math.max(width, height) / 4;
 				deadzone = FlxRect.get((width - helper) / 2, (height - helper) / 2, helper, helper);
 				
-			case FlxCameraFollowMode.TOPDOWN_TIGHT:
+			case TOPDOWN_TIGHT:
 				helper = Math.max(width, height) / 8;
 				deadzone = FlxRect.get((width - helper) / 2, (height - helper) / 2, helper, helper);
 				
-			case FlxCameraFollowMode.LOCKON:
+			case LOCKON:
 				if (target != null) 
 				{	
 					w = target.width + (Offset != null ? Offset.x : 0);
@@ -730,7 +730,7 @@ class FlxCamera extends FlxBasic
 				}
 				deadzone = FlxRect.get((width - w) / 2, (height - h) / 2 - h * 0.25, w, h);
 				
-			case FlxCameraFollowMode.SCREEN_BY_SCREEN:
+			case SCREEN_BY_SCREEN:
 				deadzone = FlxRect.get(0, 0, width, height);
 				
 			default:
