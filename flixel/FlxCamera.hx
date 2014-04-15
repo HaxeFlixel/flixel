@@ -51,7 +51,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Tells the camera to use this following style.
 	 */
-	public var style:FlxCameraFollowMode;
+	public var style:CameraFollowMode;
 	/**
 	 * Tells the camera to follow this FlxObject object around.
 	 */
@@ -62,7 +62,7 @@ class FlxCamera extends FlxBasic
 	public var followLerp:Float = 0;
 	/**
 	 * You can assign a "dead zone" to the camera in order to better control its movement. The camera will always keep the focus object inside the dead zone, unless it is bumping up against 
-	 * the bounds rectangle's edges. The deadzone's coordinates are measured from the camera's upper left corner in game pixels. For rapid prototyping, you can use the preset deadzones (e.g. FlxCameraFollowMode.PLATFORMER) with follow().
+	 * the bounds rectangle's edges. The deadzone's coordinates are measured from the camera's upper left corner in game pixels. For rapid prototyping, you can use the preset deadzones (e.g. CameraFollowMode.PLATFORMER) with follow().
 	 */
 	public var deadzone:FlxRect = null;
 	/**
@@ -225,7 +225,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Internal, used to control the "shake" special effect.
 	 */
-	private var _fxShakeDirection:FlxCameraShakeMode = FlxCameraShakeMode.BOTH_AXES;
+	private var _fxShakeDirection:CameraShakeMode = CameraShakeMode.BOTH_AXES;
 	/**
 	 * Internal, to help avoid costly allocations.
 	 */
@@ -540,7 +540,7 @@ class FlxCamera extends FlxBasic
 			var targetX:Float = target.x;
 			var targetY:Float = target.y;
 			
-			if (style == FlxCameraFollowMode.SCREEN_BY_SCREEN) 
+			if (style == CameraFollowMode.SCREEN_BY_SCREEN) 
 			{
 				if (targetX > (scroll.x + width))
 				{
@@ -670,11 +670,11 @@ class FlxCamera extends FlxBasic
 			}
 			else
 			{
-				if ((_fxShakeDirection == FlxCameraShakeMode.BOTH_AXES) || (_fxShakeDirection == FlxCameraShakeMode.HORIZONTAL_ONLY))
+				if ((_fxShakeDirection == CameraShakeMode.BOTH_AXES) || (_fxShakeDirection == CameraShakeMode.HORIZONTAL_ONLY))
 				{
 					_fxShakeOffset.x = (FlxRandom.float() * _fxShakeIntensity * width * 2 - _fxShakeIntensity * width) * zoom;
 				}
-				if ((_fxShakeDirection == FlxCameraShakeMode.BOTH_AXES) || (_fxShakeDirection == FlxCameraShakeMode.VERTICAL_ONLY))
+				if ((_fxShakeDirection == CameraShakeMode.BOTH_AXES) || (_fxShakeDirection == CameraShakeMode.VERTICAL_ONLY))
 				{
 					_fxShakeOffset.y = (FlxRandom.float() * _fxShakeIntensity * height * 2 - _fxShakeIntensity * height) * zoom;
 				}
@@ -694,10 +694,10 @@ class FlxCamera extends FlxBasic
 	 * 
 	 * @param	Target		The object you want the camera to track.  Set to null to not follow anything.
 	 * @param	Style		Leverage one of the existing "deadzone" presets.  If you use a custom deadzone, ignore this parameter and manually specify the deadzone after calling follow().
-	 * @param	Offset		Offset the follow deadzone by a certain amount. Only applicable for FlxCameraFollowMode.PLATFORMER and FlxCameraFollowMode.LOCKON styles.
+	 * @param	Offset		Offset the follow deadzone by a certain amount. Only applicable for CameraFollowMode.PLATFORMER and CameraFollowMode.LOCKON styles.
 	 * @param	Lerp		How much lag the camera should have (can help smooth out the camera movement).
 	 */
-	public function follow(Target:FlxObject, Style:FlxCameraFollowMode = FlxCameraFollowMode.LOCKON, ?Offset:FlxPoint, Lerp:Float = 0):Void
+	public function follow(Target:FlxObject, Style:CameraFollowMode = CameraFollowMode.LOCKON, ?Offset:FlxPoint, Lerp:Float = 0):Void
 	{
 		style = Style;
 		target = Target;
@@ -709,20 +709,20 @@ class FlxCamera extends FlxBasic
 		
 		switch (Style)
 		{
-			case FlxCameraFollowMode.PLATFORMER:
+			case PLATFORMER:
 				var w:Float = (width / 8) + (Offset != null ? Offset.x : 0);
 				var h:Float = (height / 3) + (Offset != null ? Offset.y : 0);
 				deadzone = FlxRect.get((width - w) / 2, (height - h) / 2 - h * 0.25, w, h);
 				
-			case FlxCameraFollowMode.TOPDOWN:
+			case TOPDOWN:
 				helper = Math.max(width, height) / 4;
 				deadzone = FlxRect.get((width - helper) / 2, (height - helper) / 2, helper, helper);
 				
-			case FlxCameraFollowMode.TOPDOWN_TIGHT:
+			case TOPDOWN_TIGHT:
 				helper = Math.max(width, height) / 8;
 				deadzone = FlxRect.get((width - helper) / 2, (height - helper) / 2, helper, helper);
 				
-			case FlxCameraFollowMode.LOCKON:
+			case LOCKON:
 				if (target != null) 
 				{	
 					w = target.width + (Offset != null ? Offset.x : 0);
@@ -730,7 +730,7 @@ class FlxCamera extends FlxBasic
 				}
 				deadzone = FlxRect.get((width - w) / 2, (height - h) / 2 - h * 0.25, w, h);
 				
-			case FlxCameraFollowMode.SCREEN_BY_SCREEN:
+			case SCREEN_BY_SCREEN:
 				deadzone = FlxRect.get(0, 0, width, height);
 				
 			default:
@@ -815,9 +815,9 @@ class FlxCamera extends FlxBasic
 	 * @param	Duration	The length in seconds that the shaking effect should last.
 	 * @param	OnComplete	A function you want to run when the shake effect finishes.
 	 * @param	Force		Force the effect to reset (default = true, unlike flash() and fade()!).
-	 * @param	Direction	Whether to shake on both axes, just up and down, or just side to side (use class constants FlxCameraShakeMode.BOTH_AXES, FlxCameraShakeMode.VERTICAL_ONLY, or FlxCameraShakeMode.HORIZONTAL_ONLY).
+	 * @param	Direction	Whether to shake on both axes, just up and down, or just side to side (use class constants CameraShakeMode.BOTH_AXES, CameraShakeMode.VERTICAL_ONLY, or CameraShakeMode.HORIZONTAL_ONLY).
 	 */
-	public function shake(Intensity:Float = 0.05, Duration:Float = 0.5, ?OnComplete:Void->Void, Force:Bool = true, Direction:FlxCameraShakeMode = FlxCameraShakeMode.BOTH_AXES):Void
+	public function shake(Intensity:Float = 0.05, Duration:Float = 0.5, ?OnComplete:Void->Void, Force:Bool = true, Direction:CameraShakeMode = CameraShakeMode.BOTH_AXES):Void
 	{
 		if (!Force && ((_fxShakeOffset.x != 0) || (_fxShakeOffset.y != 0)))
 		{
@@ -1175,7 +1175,7 @@ class FlxCamera extends FlxBasic
  * FlxCamera shaking modes.
  */
  @:enum
- abstract FlxCameraShakeMode(Int)
+ abstract CameraShakeMode(Int)
  {
 	/**
 	* Shake camera on both the X and Y axes.
@@ -1196,7 +1196,7 @@ class FlxCamera extends FlxBasic
  * FlxCamera object following modes.
  */
 @:enum
-abstract FlxCameraFollowMode(Int)
+abstract CameraFollowMode(Int)
 {
 	/**
 	* Camera has no deadzone, just tracks the focus object directly.
