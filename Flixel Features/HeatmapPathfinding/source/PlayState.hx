@@ -72,10 +72,8 @@ class PlayState extends FlxState
 	{
 		FlxG.collide(tilemap, seekers);
 		
-		var seeker:Seeker;
-		for (basic in seekers.members) 
+		for (seeker in seekers.members) 
 		{
-			seeker = cast basic;
 			if (!seeker.moving)
 			{
 				var tx:Int = Std.int((seeker.x-seeker.offset.x) / 16);
