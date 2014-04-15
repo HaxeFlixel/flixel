@@ -23,4 +23,5 @@ before_script:
   - haxelib dev flixel-demos .
 
 script:
-  - haxelib run flixel-tools testdemos
+  - haxelib run flixel-tools testdemos flash
+  - haxelib run flixel-tools testdemos neko
