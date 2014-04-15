@@ -53,7 +53,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Tells the camera to use this following style.
 	 */
-	public var style:Int;
+	public var style:FlxCameraFollowMode;
 	/**
 	 * Tells the camera to follow this FlxObject object around.
 	 */
@@ -227,7 +227,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Internal, used to control the "shake" special effect.
 	 */
-	private var _fxShakeDirection:Int = 0;
+	private var _fxShakeDirection:FlxCameraShakeMode = FlxCameraShakeMode.SHAKE_BOTH_AXES;
 	/**
 	 * Internal, to help avoid costly allocations.
 	 */
@@ -699,7 +699,7 @@ class FlxCamera extends FlxBasic
 	 * @param	Offset		Offset the follow deadzone by a certain amount. Only applicable for STYLE_PLATFORMER and STYLE_LOCKON styles.
 	 * @param	Lerp		How much lag the camera should have (can help smooth out the camera movement).
 	 */
-	public function follow(Target:FlxObject, Style:Int = STYLE_LOCKON, ?Offset:FlxPoint, Lerp:Float = 0):Void
+	public function follow(Target:FlxObject, Style:FlxCameraFollowMode = FlxCameraFollowMode.STYLE_LOCKON, ?Offset:FlxPoint, Lerp:Float = 0):Void
 	{
 		style = Style;
 		target = Target;
@@ -819,7 +819,7 @@ class FlxCamera extends FlxBasic
 	 * @param	Force		Force the effect to reset (default = true, unlike flash() and fade()!).
 	 * @param	Direction	Whether to FlxCameraShakeMode.SHAKE on both axes, just up and down, or just side to side (use class constants FlxCameraShakeMode.SHAKE_BOTH_AXES, FlxCameraShakeMode.SHAKE_VERTICAL_ONLY, or FlxCameraShakeMode.SHAKE_HORIZONTAL_ONLY).
 	 */
-	public function shake(Intensity:Float = 0.05, Duration:Float = 0.5, ?OnComplete:Void->Void, Force:Bool = true, Direction:Int = FlxCameraShakeMode.SHAKE_BOTH_AXES):Void
+	public function shake(Intensity:Float = 0.05, Duration:Float = 0.5, ?OnComplete:Void->Void, Force:Bool = true, Direction:FlxCameraShakeMode = FlxCameraShakeMode.SHAKE_BOTH_AXES):Void
 	{
 		if (!Force && ((_fxShakeOffset.x != 0) || (_fxShakeOffset.y != 0)))
 		{
