@@ -7,6 +7,8 @@ import flash.display.Sprite;
 import flash.geom.ColorTransform;
 import flash.geom.Point;
 import flash.geom.Rectangle;
+import flixel.FlxCameraFollowMode;
+import flixel.FlxCameraShakeMode;
 import flixel.system.layer.DrawStackItem;
 import flixel.system.layer.TileSheetExt;
 import flixel.util.FlxColor;
@@ -27,42 +29,6 @@ import openfl.display.Tilesheet;
 @:allow(flixel.FlxGame)
 class FlxCamera extends FlxBasic
 {
-	/**
-	 * Camera "follow" style preset: camera has no deadzone, just tracks the focus object directly.
-	 */
-	public static inline var STYLE_LOCKON:Int = 0;
-	/**
-	 * Camera "follow" style preset: camera deadzone is narrow but tall.
-	 */
-	public static inline var STYLE_PLATFORMER:Int = 1;
-	/**
-	 * Camera "follow" style preset: camera deadzone is a medium-size square around the focus object.
-	 */
-	public static inline var STYLE_TOPDOWN:Int = 2;
-	/**
-	 * Camera "follow" style preset: camera deadzone is a small square around the focus object.
-	 */
-	public static inline var STYLE_TOPDOWN_TIGHT:Int = 3;
-	/**
-	 * Camera "follow" style preset: camera will move screenwise.
-	 */
-	public static inline var STYLE_SCREEN_BY_SCREEN:Int = 4;
-	/**
-	 * Camera "follow" style preset: camera has no deadzone, just tracks the focus object directly and centers it.
-	 */
-	public static inline var STYLE_NO_DEAD_ZONE:Int = 5;
-	/**
-	 * Camera "shake" effect preset: shake camera on both the X and Y axes.
-	 */
-	public static inline var SHAKE_BOTH_AXES:Int = 0;
-	/**
-	 * Camera "shake" effect preset: shake camera on the X axis only.
-	 */
-	public static inline var SHAKE_HORIZONTAL_ONLY:Int = 1;
-	/**
-	 * Camera "shake" effect preset: shake camera on the Y axis only.
-	 */
-	public static inline var SHAKE_VERTICAL_ONLY:Int = 2;
 	/**
 	 * While you can alter the zoom of each camera after the fact,
 	 * this variable determines what value the camera will start at when created.
