@@ -30,6 +30,7 @@
 * MouseEventManager: 
  * Improved handling of visible / exists
  * Now works on FlxObjects
+ * addSprite() -> add()
 * FlxPoint: 
  * Added floor() and ceil()
  * Added add() and addPoint() (removed add() from FlxVector)
