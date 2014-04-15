@@ -542,7 +542,7 @@ class FlxCamera extends FlxBasic
 			var targetX:Float = target.x;
 			var targetY:Float = target.y;
 			
-			if (style == STYLE_SCREEN_BY_SCREEN) 
+			if (style == FlxCameraFollowMode.STYLE_SCREEN_BY_SCREEN) 
 			{
 				if (targetX > (scroll.x + width))
 				{
@@ -672,17 +672,17 @@ class FlxCamera extends FlxBasic
 			}
 			else
 			{
-				if ((_fxShakeDirection == SHAKE_BOTH_AXES) || (_fxShakeDirection == SHAKE_HORIZONTAL_ONLY))
+				if ((_fxShakeDirection == FlxCameraShakeMode.SHAKE_BOTH_AXES) || (_fxShakeDirection == FlxCameraShakeMode.SHAKE_HORIZONTAL_ONLY))
 				{
 					_fxShakeOffset.x = (FlxRandom.float() * _fxShakeIntensity * width * 2 - _fxShakeIntensity * width) * zoom;
 				}
-				if ((_fxShakeDirection == SHAKE_BOTH_AXES) || (_fxShakeDirection == SHAKE_VERTICAL_ONLY))
+				if ((_fxShakeDirection == FlxCameraShakeMode.SHAKE_BOTH_AXES) || (_fxShakeDirection == FlxCameraShakeMode.SHAKE_VERTICAL_ONLY))
 				{
 					_fxShakeOffset.y = (FlxRandom.float() * _fxShakeIntensity * height * 2 - _fxShakeIntensity * height) * zoom;
 				}
 			}
 			
-			// Camera shake fix for target follow.
+			// Camera FlxCameraShakeMode.SHAKE fix for target follow.
 			if (target != null)
 			{
 				flashSprite.x = x + _flashOffset.x;
@@ -815,11 +815,11 @@ class FlxCamera extends FlxBasic
 	 * 
 	 * @param	Intensity	Percentage of screen size representing the maximum distance that the screen can move while shaking.
 	 * @param	Duration	The length in seconds that the shaking effect should last.
-	 * @param	OnComplete	A function you want to run when the shake effect finishes.
+	 * @param	OnComplete	A function you want to run when the FlxCameraShakeMode.SHAKE effect finishes.
 	 * @param	Force		Force the effect to reset (default = true, unlike flash() and fade()!).
-	 * @param	Direction	Whether to shake on both axes, just up and down, or just side to side (use class constants SHAKE_BOTH_AXES, SHAKE_VERTICAL_ONLY, or SHAKE_HORIZONTAL_ONLY).
+	 * @param	Direction	Whether to FlxCameraShakeMode.SHAKE on both axes, just up and down, or just side to side (use class constants FlxCameraShakeMode.SHAKE_BOTH_AXES, FlxCameraShakeMode.SHAKE_VERTICAL_ONLY, or FlxCameraShakeMode.SHAKE_HORIZONTAL_ONLY).
 	 */
-	public function shake(Intensity:Float = 0.05, Duration:Float = 0.5, ?OnComplete:Void->Void, Force:Bool = true, Direction:Int = SHAKE_BOTH_AXES):Void
+	public function shake(Intensity:Float = 0.05, Duration:Float = 0.5, ?OnComplete:Void->Void, Force:Bool = true, Direction:Int = FlxCameraShakeMode.SHAKE_BOTH_AXES):Void
 	{
 		if (!Force && ((_fxShakeOffset.x != 0) || (_fxShakeOffset.y != 0)))
 		{
