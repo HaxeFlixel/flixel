@@ -19,7 +19,7 @@
 * FlxG:
  * fullscreen: fixed offset in flash
  * openURL(): now adds "http://" to the URL if necessary
- * Added FlxG.maxElapsed
+ * Added maxElapsed
  * Fixed some variables not being reset in resetGame()
 * FlxSound: 
  * Added loadByteArray()
@@ -30,7 +30,10 @@
 * MouseEventManager: 
  * Improved handling of visible / exists
  * Now works on FlxObjects
-* FlxPoint: added floor() and ceil()
+* FlxPoint: 
+ * Added floor() and ceil()
+ * Added add() and addPoint() (removed add() from FlxVector)
+ * Added subtract() and subtractPoint() (removed substract() from FlxVector)
 * Changed the default html5 backend to openfl-bitfive
  * Middle and right mouse events are now supported
  * Sounds are now supported
@@ -49,8 +52,8 @@
 * FlxTween:
  * num(): added an optional tweenFunction parameter which can be used for increased performance (as MultiVarTween and SingleVarTween are fairly slow, using Reflection)
  * Tweens are now being pooled
- * Added sfx()
  * singleVar() and multiVar() have been replaced by tween()
+ * Removed SfxFader and Fader
 * FlxKeyboard:
  * Implemented a workaround for function and numpad keys not working on native targets
  * Added FlxKey.NUMPADMULTIPLY / "NUMPADMULTIPLY"
@@ -76,6 +79,7 @@
  * Added flipHorizontally() and flipVertically(), using negative scale
  * setOriginToCenter() -> centerOrigin()
  * Fixed a "jittering"-issue between simple and complex render sprites due to rounding
+ * Replaced flipped with flippable (can be set at any time)
 * FlxPreloader:
  * Small fix that should prevent it from getting stuck 
  * Added siteLockURLIndex to control which URL in allowdURLs is used when the site-lock triggers
@@ -93,7 +97,8 @@
 * Traces are not being redirected to the debugger log window anymore by default
 * Fixed mouse cursor scale at initial camera zoom levels different from 1
 * FlxState: active, visible and exists are now respected
-* FlxVector: substract() -> subtract(), substractNew() -> subtractNew()
+* FlxVector: substractNew() -> subtractNew()
+* FlxGradient: fixed a memory leak in the overlayGradientOn()-functions
 
 3.2.2
 ------------------------------
