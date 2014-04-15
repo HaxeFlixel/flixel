@@ -53,21 +53,19 @@ class NumTween extends FlxTween
 	 * @param	fromValue		Start value.
 	 * @param	toValue			End value.
 	 * @param	duration		Duration of the tween.
-	 * @param	ease			Optional easer function.
 	 * @param	tweenFunction	Optional tween function. See FlxTween.num()
 	 */
-	public function tween(fromValue:Float, toValue:Float, duration:Float, ?ease:EaseFunction, ?tweenFunction:Float->Void):NumTween
+	public function tween(fromValue:Float, toValue:Float, duration:Float, ?tweenFunction:Float->Void):NumTween
 	{	
 		_tweenFunction = tweenFunction;
 		_start = value = fromValue;
 		_range = toValue - value;
 		this.duration = duration;
-		this.ease = ease;
 		start();
 		return this;
 	}
 	
-	override public function update():Void
+	override private function update():Void
 	{
 		super.update();
 		value = _start + _range * scale;
@@ -76,7 +74,7 @@ class NumTween extends FlxTween
 			_tweenFunction(value);
 	}
 	
-	override inline public function put():Void
+	override inline private function put():Void
 	{
 		if (!_inPool)
 			_pool.putUnsafe(this);

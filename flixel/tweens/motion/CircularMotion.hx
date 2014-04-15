@@ -2,6 +2,7 @@
 
 import flixel.tweens.FlxEase.EaseFunction;
 import flixel.tweens.FlxTween.CompleteCallback;
+import flixel.tweens.FlxTween.TweenOptions;
 import flixel.util.FlxPool;
 
 /**
@@ -45,19 +46,12 @@ class CircularMotion extends Motion
 	private var _angleStart:Float;
 	private var _angleFinish:Float;
 	
-	/**
-	 * This function is called when tween is created, or recycled.
-	 *
-	 * @param	complete	Optional completion callback.
-	 * @param	type		Tween type.
-	 * @param	Eease		Optional easer function.
-	 */
-	override public function init(Complete:CompleteCallback, TweenType:Int, UsePooling:Bool)
+	override private function init(Options:TweenOptions)
 	{
 		_centerX = _centerY = 0;
 		_radius = angle = 0;
 		_angleStart = _angleFinish = 0;
-		return super.init(Complete, TweenType, UsePooling);
+		return super.init(Options);
 	}
 
 	/**
@@ -70,9 +64,8 @@ class CircularMotion extends Motion
 	 * @param	Clockwise		If the motion is clockwise.
 	 * @param	DurationOrSpeed	Duration of the movement.
 	 * @param	UseDuration		Duration of the movement.
-	 * @param	Eease			Optional easer function.
 	 */
-	public function setMotion(CenterX:Float, CenterY:Float, Radius:Float, Angle:Float, Clockwise:Bool, DurationOrSpeed:Float, UseDuration:Bool = true, ?Ease:EaseFunction):CircularMotion
+	public function setMotion(CenterX:Float, CenterY:Float, Radius:Float, Angle:Float, Clockwise:Bool, DurationOrSpeed:Float, UseDuration:Bool = true):CircularMotion
 	{
 		_centerX = CenterX;
 		_centerY = CenterY;
@@ -89,12 +82,11 @@ class CircularMotion extends Motion
 			duration = (_radius * (Math.PI * 2)) / DurationOrSpeed;
 		}
 		
-		this.ease = Ease;
 		start();
 		return this;
 	}
 
-	override public function update():Void
+	override private function update():Void
 	{
 		super.update();
 		angle = _angleStart + _angleFinish * scale;
@@ -106,7 +98,7 @@ class CircularMotion extends Motion
 		}
 	}
 	
-	override inline public function put():Void
+	override inline private function put():Void
 	{
 		if (!_inPool)
 			_pool.putUnsafe(this);

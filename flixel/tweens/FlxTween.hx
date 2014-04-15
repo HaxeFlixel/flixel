@@ -5,7 +5,6 @@ import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.interfaces.IFlxDestroyable;
 import flixel.plugin.TweenManager;
-import flixel.system.FlxSound;
 import flixel.tweens.FlxEase.EaseFunction;
 import flixel.tweens.misc.AngleTween;
 import flixel.tweens.misc.ColorTween;
@@ -18,8 +17,8 @@ import flixel.tweens.motion.LinearPath;
 import flixel.tweens.motion.QuadMotion;
 import flixel.tweens.motion.QuadPath;
 import flixel.util.FlxPoint;
-import flixel.util.FlxTimer;
 
+@:allow(flixel.plugin.TweenManager)
 class FlxTween implements IFlxDestroyable
 {
 	/**
@@ -66,8 +65,8 @@ class FlxTween implements IFlxDestroyable
 	public static function tween(Object:Dynamic, Values:Dynamic, Duration:Float = 1, ?Options:TweenOptions):VarTween
 	{
 		var tween = VarTween._pool.get();
-		Options = initTweenOptions(tween, Options);
-		tween.tween(Object, Values, Duration, Options.ease);
+		tween.init(Options);
+		tween.tween(Object, Values, Duration);
 		return manager.add(tween);
 	}
 	
@@ -96,8 +95,8 @@ class FlxTween implements IFlxDestroyable
 	public static function num(FromValue:Float, ToValue:Float, Duration:Float = 1, ?Options:TweenOptions, ?TweenFunction:Float->Void):NumTween
 	{
 		var tween = NumTween._pool.get();
-		Options = initTweenOptions(tween, Options);
-		tween.tween(FromValue, ToValue, Duration, Options.ease, TweenFunction);
+		tween.init(Options);
+		tween.tween(FromValue, ToValue, Duration, TweenFunction);
 		return manager.add(tween);
 	}
 	
@@ -121,8 +120,8 @@ class FlxTween implements IFlxDestroyable
 	public static function angle(Sprite:FlxSprite, FromAngle:Float, ToAngle:Float, Duration:Float = 1, ?Options:TweenOptions):AngleTween
 	{
 		var tween = AngleTween._pool.get();
-		Options = initTweenOptions(tween, Options);
-		tween.tween(FromAngle, ToAngle, Duration, Options.ease, Sprite);
+		tween.init(Options);
+		tween.tween(FromAngle, ToAngle, Duration, Sprite);
 		return manager.add(tween);
 	}
 	
@@ -148,8 +147,8 @@ class FlxTween implements IFlxDestroyable
 	public static function color(Sprite:FlxSprite, Duration:Float = 1, FromColor:Int, ToColor:Int, FromAlpha:Float = 1, ToAlpha:Float = 1, ?Options:TweenOptions):ColorTween
 	{
 		var tween = ColorTween._pool.get();
-		Options = initTweenOptions(tween, Options);
-		tween.tween(Duration, FromColor, ToColor, FromAlpha, ToAlpha, Options.ease, Sprite);
+		tween.init(Options);
+		tween.tween(Duration, FromColor, ToColor, FromAlpha, ToAlpha, Sprite);
 		return manager.add(tween);
 	}
 	
@@ -176,9 +175,9 @@ class FlxTween implements IFlxDestroyable
 	public static function linearMotion(Object:FlxObject, FromX:Float, FromY:Float, ToX:Float, ToY:Float, DurationOrSpeed:Float = 1, UseDuration:Bool = true, ?Options:TweenOptions):LinearMotion
 	{
 		var tween = LinearMotion._pool.get();
-		Options = initTweenOptions(tween, Options);
+		tween.init(Options);
 		tween.setObject(Object);
-		tween.setMotion(FromX, FromY, ToX, ToY, DurationOrSpeed, UseDuration, Options.ease);
+		tween.setMotion(FromX, FromY, ToX, ToY, DurationOrSpeed, UseDuration);
 		return manager.add(tween);
 	}
 	
@@ -207,9 +206,9 @@ class FlxTween implements IFlxDestroyable
 	public static function quadMotion(Object:FlxObject, FromX:Float, FromY:Float, ControlX:Float, ControlY:Float, ToX:Float, ToY:Float, DurationOrSpeed:Float = 1, UseDuration:Bool = true, ?Options:TweenOptions):QuadMotion
 	{
 		var tween = QuadMotion._pool.get();
-		Options = initTweenOptions(tween, Options);
+		tween.init(Options);
 		tween.setObject(Object);
-		tween.setMotion(FromX, FromY, ControlX, ControlY, ToX, ToY, DurationOrSpeed, UseDuration, Options.ease);
+		tween.setMotion(FromX, FromY, ControlX, ControlY, ToX, ToY, DurationOrSpeed, UseDuration);
 		return manager.add(tween);
 	}
 	
@@ -239,9 +238,9 @@ class FlxTween implements IFlxDestroyable
 	public static function cubicMotion(Object:FlxObject, FromX:Float, FromY:Float, aX:Float, aY:Float, bX:Float, bY:Float, ToX:Float, ToY:Float, Duration:Float = 1, ?Options:TweenOptions):CubicMotion
 	{
 		var tween = CubicMotion._pool.get();
-		Options = initTweenOptions(tween, Options);
+		tween.init(Options);
 		tween.setObject(Object);
-		tween.setMotion(FromX, FromY, aX, aY, bX, bY, ToX, ToY, Duration, Options.ease);
+		tween.setMotion(FromX, FromY, aX, aY, bX, bY, ToX, ToY, Duration);
 		return manager.add(tween);
 	}
 	
@@ -270,9 +269,9 @@ class FlxTween implements IFlxDestroyable
 	public static function circularMotion(Object:FlxObject, CenterX:Float, CenterY:Float, Radius:Float, Angle:Float, Clockwise:Bool, DurationOrSpeed:Float = 1, UseDuration:Bool = true, ?Options:TweenOptions):CircularMotion
 	{
 		var tween = CircularMotion._pool.get();
-		Options = initTweenOptions(tween, Options);
+		tween.init(Options);
 		tween.setObject(Object);
-		tween.setMotion(CenterX, CenterY, Radius, Angle, Clockwise, DurationOrSpeed, UseDuration, Options.ease);
+		tween.setMotion(CenterX, CenterY, Radius, Angle, Clockwise, DurationOrSpeed, UseDuration);
 		return manager.add(tween);
 	}
 	
@@ -296,7 +295,7 @@ class FlxTween implements IFlxDestroyable
 	public static function linearPath(Object:FlxObject, Points:Array<FlxPoint>, DurationOrSpeed:Float = 1, UseDuration:Bool = true, ?Options:TweenOptions):LinearPath
 	{
 		var tween = LinearPath._pool.get();
-		Options = initTweenOptions(tween, Options);
+		tween.init(Options);
 		
 		if (Points != null)
 		{
@@ -307,7 +306,7 @@ class FlxTween implements IFlxDestroyable
 		}
 		
 		tween.setObject(Object);
-		tween.setMotion(DurationOrSpeed, UseDuration, Options.ease);
+		tween.setMotion(DurationOrSpeed, UseDuration);
 		return manager.add(tween);
 	}
 	
@@ -331,7 +330,7 @@ class FlxTween implements IFlxDestroyable
 	public static function quadPath(Object:FlxObject, Points:Array<FlxPoint>, DurationOrSpeed:Float = 1, UseDuration:Bool = true, ?Options:TweenOptions):QuadPath
 	{
 		var tween = QuadPath._pool.get();
-		Options = initTweenOptions(tween, Options);
+		tween.init(Options);
 		
 		if (Points != null)
 		{
@@ -342,32 +341,8 @@ class FlxTween implements IFlxDestroyable
 		}
 		
 		tween.setObject(Object);
-		tween.setMotion(DurationOrSpeed, UseDuration, Options.ease);
+		tween.setMotion(DurationOrSpeed, UseDuration);
 		return manager.add(tween);
-	}
-	
-	private static inline function initTweenOptions(Tween:FlxTween, Options:TweenOptions):TweenOptions
-	{
-		Options = resolveTweenOptions(Options);
-		Tween.init(Options.complete, Options.type, Options.usePooling);
-		Tween.setDelays(Options.startDelay, Options.loopDelay);
-		return Options;
-	}
-	
-	private static function resolveTweenOptions(Options:TweenOptions):TweenOptions
-	{
-		if (Options == null)
-			Options = { type : ONESHOT };
-		
-		if (Options.type == null)
-			Options.type = ONESHOT;
-		
-		if ((Options.usePooling == null) && (Options.type &~ FlxTween.BACKWARD) == FlxTween.ONESHOT)
-			Options.usePooling = true;
-		else 
-			Options.usePooling = false;
-		
-		return Options;
 	}
 	
 	public var active:Bool = true;
@@ -417,12 +392,32 @@ class FlxTween implements IFlxDestroyable
 	/**
 	 * This function is called when tween is created, or recycled.
 	 */
-	public function init(Complete:CompleteCallback, TweenType:Int, UsePooling:Bool):Void
+	private function init(Options:TweenOptions):Void
 	{
-		type = TweenType;
-		complete = Complete;
-		_usePooling = UsePooling;
+		Options = resolveTweenOptions(Options);
+		
+		type = Options.type;
+		complete = Options.complete;
+		_usePooling = Options.usePooling;
+		ease = Options.ease;
+		setDelays(Options.startDelay, Options.loopDelay);
 		userData = {};
+	}
+	
+	private function resolveTweenOptions(Options:TweenOptions):TweenOptions
+	{
+		if (Options == null)
+			Options = { type : ONESHOT };
+		
+		if (Options.type == null)
+			Options.type = ONESHOT;
+		
+		if ((Options.usePooling == null) && (Options.type &~ FlxTween.BACKWARD) == FlxTween.ONESHOT)
+			Options.usePooling = true;
+		else 
+			Options.usePooling = false;
+		
+		return Options;
 	}
 	
 	public function destroy():Void
@@ -432,7 +427,7 @@ class FlxTween implements IFlxDestroyable
 		userData = null;
 	}
 
-	public function update():Void
+	private function update():Void
 	{
 		_secondsSinceStart += FlxG.elapsed;
 		var delay:Float = (executions > 0) ? loopDelay : startDelay;
@@ -455,7 +450,7 @@ class FlxTween implements IFlxDestroyable
 	/**
 	 * Starts the Tween, or restarts it if it's currently running.
 	 */
-	public function start():FlxTween
+	private function start():FlxTween
 	{
 		_secondsSinceStart = 0;
 		_delayToUse = (executions > 0) ? loopDelay : startDelay;
@@ -477,7 +472,7 @@ class FlxTween implements IFlxDestroyable
 	{
 		if (_usePooling)
 		{
-			throw("It is not safe to cancel a Tween that uses pooling. Please specify { usePooling: false } in the TweenOptions.");
+			throw("It is not safe to call cancel() on a Tween that uses pooling. Please specify { usePooling: false } in the TweenOptions.");
 		}
 		
 		active = false;
@@ -485,6 +480,15 @@ class FlxTween implements IFlxDestroyable
 	}
 	
 	public function finish():Void
+	{
+		if (_usePooling)
+		{
+			throw("It is not safe to call finish() on a Tween that uses pooling. Please specify { usePooling: false } in the TweenOptions.");
+		}
+		_finish();
+	}
+	
+	private function _finish():Void
 	{
 		executions++;
 		
@@ -532,10 +536,10 @@ class FlxTween implements IFlxDestroyable
 	/**
 	 * Set both type of delays for this tween.
 	 * 
-	 * @param	startDelay		Seconds to wait until starting this tween, 0 by default.
-	 * @param	loopDelay		Seconds to wait between loops of this tween, 0 by default.
+	 * @param	startDelay	Seconds to wait until starting this tween, 0 by default.
+	 * @param	loopDelay	Seconds to wait between loops of this tween, 0 by default.
 	 */
-	public function setDelays(?StartDelay:Null<Float>, ?LoopDelay:Null<Float>):FlxTween
+	private function setDelays(?StartDelay:Null<Float>, ?LoopDelay:Null<Float>):FlxTween
 	{
 		startDelay = (StartDelay != null) ? StartDelay : 0;
 		loopDelay = (LoopDelay != null) ? LoopDelay : 0;
@@ -545,7 +549,7 @@ class FlxTween implements IFlxDestroyable
 	/**
 	 * To be overriden in pooled subclasses
 	 */
-	public function put():Void {} 
+	private function put():Void {} 
 	
 	/**
 	 * Empty constructor because of pooling.

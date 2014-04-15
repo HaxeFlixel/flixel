@@ -1,7 +1,7 @@
 ﻿package flixel.tweens.motion;
 
 import flixel.tweens.FlxEase.EaseFunction;
-import flixel.tweens.FlxTween.CompleteCallback;
+import flixel.tweens.FlxTween;
 import flixel.util.FlxPool;
 
 /**
@@ -40,18 +40,11 @@ class CubicMotion extends Motion
 	private var _ttt:Float;
 	private var _tt:Float;
 	
-	/**
-	 * This function is called when tween is created, or recycled.
-	 *
-	 * @param	complete	Optional completion callback.
-	 * @param	type		Tween type.
-	 * @param	Eease		Optional easer function.
-	 */
-	override public function init(Complete:CompleteCallback, TweenType:Int, UsePooling:Bool)
+	override private function init(Options:TweenOptions)
 	{
 		_fromX = _fromY = _toX = _toY = 0;
 		_aX = _aY = _bX = _bY = 0;
-		return super.init(Complete, TweenType, UsePooling);
+		return super.init(Options);
 	}
 	
 	/**
@@ -66,9 +59,8 @@ class CubicMotion extends Motion
 	 * @param	toX			X finish.
 	 * @param	toY			Y finish.
 	 * @param	duration	Duration of the movement.
-	 * @param	ease		Optional easer function.
 	 */
-	public function setMotion(fromX:Float, fromY:Float, aX:Float, aY:Float, bX:Float, bY:Float, toX:Float, toY:Float, duration:Float, ?ease:EaseFunction):CubicMotion
+	public function setMotion(fromX:Float, fromY:Float, aX:Float, aY:Float, bX:Float, bY:Float, toX:Float, toY:Float, duration:Float):CubicMotion
 	{
 		x = _fromX = fromX;
 		y = _fromY = fromY;
@@ -79,12 +71,11 @@ class CubicMotion extends Motion
 		_toX = toX;
 		_toY = toY;
 		this.duration = duration;
-		this.ease = ease;
 		start();
 		return this;
 	}
 	
-	override public function update():Void
+	override private function update():Void
 	{
 		super.update();
 		x = scale * scale * scale * (_toX + 3 * (_aX - _bX) - _fromX) + 3 * scale * scale * (_fromX - 2 * _aX + _bX) + 3 * scale * (_aX - _fromX) + _fromX;
@@ -95,7 +86,7 @@ class CubicMotion extends Motion
 		}
 	}
 	
-	override inline public function put():Void
+	override inline private function put():Void
 	{
 		if (!_inPool)
 			_pool.putUnsafe(this);

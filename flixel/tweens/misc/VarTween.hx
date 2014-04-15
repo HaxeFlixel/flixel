@@ -29,7 +29,7 @@ class VarTween extends FlxTween
 	private var _object:Dynamic;
 	private var _properties:Dynamic;
 	private var _vars:Array<String>;
-	private var _start:Array<Float>;
+	private var _startValues:Array<Float>;
 	private var _range:Array<Float>;
 	
 	/**
@@ -42,19 +42,12 @@ class VarTween extends FlxTween
 		_properties = null;
 	}
 	
-	/**
-	 * This function is called when tween is created, or recycled.
-	 *
-	 * @param	complete	Optional completion callback.
-	 * @param	type		Tween type.
-	 * @param	Eease		Optional easer function.
-	 */
-	override public function init(Complete:CompleteCallback, TweenType:Int, UsePooling:Bool)
+	override private function init(Options:TweenOptions)
 	{
 		FlxArrayUtil.setLength(_vars, 0);
-		FlxArrayUtil.setLength(_start, 0);
+		FlxArrayUtil.setLength(_startValues, 0);
 		FlxArrayUtil.setLength(_range, 0);
-		return super.init(Complete, TweenType, UsePooling);
+		return super.init(Options);
 	}
 	
 	/**
@@ -63,9 +56,8 @@ class VarTween extends FlxTween
 	 * @param	object		The object containing the properties.
 	 * @param	properties	An object containing key/value pairs of properties and target values.
 	 * @param	duration	Duration of the tween.
-	 * @param	ease		Optional easer function.
 	 */
-	public function tween(object:Dynamic, properties:Dynamic, duration:Float, ?ease:EaseFunction):VarTween
+	public function tween(object:Dynamic, properties:Dynamic, duration:Float):VarTween
 	{
 		#if !FLX_NO_DEBUG
 		if (object == null)
@@ -81,12 +73,11 @@ class VarTween extends FlxTween
 		_object = object;
 		_properties = properties;
 		this.duration = duration;
-		this.ease = ease;
 		start();
 		return this;
 	}
 	
-	override public function update():Void
+	override private function update():Void
 	{
 		if (_vars.length < 1)
 		{
@@ -99,11 +90,11 @@ class VarTween extends FlxTween
 		var i:Int = _vars.length;
 		while (i-- > 0) 
 		{
-			Reflect.setProperty(_object, _vars[i], (_start[i] + _range[i] * scale));
+			Reflect.setProperty(_object, _vars[i], (_startValues[i] + _range[i] * scale));
 		}
 	}
 	
-	override inline public function put():Void
+	override inline private function put():Void
 	{
 		if (!_inPool)
 			_pool.putUnsafe(this);
@@ -113,7 +104,7 @@ class VarTween extends FlxTween
 	{
 		super();
 		_vars = new Array<String>();
-		_start = new Array<Float>();
+		_startValues = new Array<Float>();
 		_range = new Array<Float>();
 	}
 	
@@ -145,7 +136,7 @@ class VarTween extends FlxTween
 				throw "The property \"" + p + "\" is not numeric.";
 			}
 			_vars.push(p);
-			_start.push(a);
+			_startValues.push(a);
 			_range.push(Reflect.getProperty(_properties, p) - a);
 		}
 	}
