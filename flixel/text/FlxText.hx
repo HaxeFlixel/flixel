@@ -774,7 +774,7 @@ class FlxText extends FlxSprite
 				#end
 			}
 			
-			if (borderStyle != FlxTextBorders.NONE)
+			if (borderStyle != NONE)
 			{
 				var iterations:Int = Std.int(borderSize * borderQuality);
 				if (iterations <= 0) 
