@@ -28,7 +28,6 @@ class FlxVector extends FlxPoint
 		return vector;
 	}
 	
-	
 	/**
 	 * Add this FlxVector to the recycling pool.
 	 */
@@ -133,19 +132,6 @@ class FlxVector extends FlxPoint
 	}
 	
 	/**
-	 * Vector subtraction.
-	 * 
-	 * @param	v	vector to subtract
-	 * @return	subtraction result
-	 */
-	public inline function subtract(v:FlxVector):FlxVector
-	{
-		x -= v.x;
-		y -= v.y;
-		return this;
-	}
-	
-	/**
 	 * Returns new vector which is result of subtraction of v vector from this vector.
 	 * 
 	 * @param	v	vector to subtract
@@ -153,7 +139,9 @@ class FlxVector extends FlxPoint
 	 */
 	public inline function subtractNew(v:FlxVector):FlxVector
 	{
-		return clone().subtract(v);
+		var nv:FlxVector = clone();
+		nv.subtractPoint(v);
+		return clone();
 	}
 	
 	/**
@@ -409,7 +397,7 @@ class FlxVector extends FlxPoint
 		if (lengthSquared < EPSILON_SQUARED || v.lengthSquared < EPSILON_SQUARED) return Math.NaN;
 		
 		_vector1 = b.clone(_vector1);
-		_vector1.subtract(a);
+		_vector1.subtractPoint(a);
 		
 		return _vector1.perpProduct(v) / perpProduct(v);
 	}

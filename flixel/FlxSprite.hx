@@ -99,8 +99,8 @@ class FlxSprite extends FlxObject
 	 */
 	public var alpha(default, set):Float = 1.0;
 	/**
-	 * Set facing using FlxObject.LEFT,RIGHT, UP, 
-	 * and DOWN to take advantage of flipped sprites and/or just track player orientation more easily.
+	 * Set facing using FlxObject.LEFT, RIGHT, UP, and DOWN to take advantage 
+	 * of flipped sprites and/or just track player orientation more easily.
 	 */
 	public var facing(default, set):Int = FlxObject.RIGHT;
 	/**
@@ -1366,7 +1366,7 @@ class FlxSprite extends FlxObject
 	/**
 	 * Toggles flipHorizontal
 	 */
-	public function flipHorizontally():Void
+	public inline function flipHorizontally():Void
 	{
 		flipHorizontal = !flipHorizontal;
 	}
@@ -1374,7 +1374,7 @@ class FlxSprite extends FlxObject
 	/**
 	 * Toggles flipVertical
 	 */
-	public function flipVertically():Void
+	public inline function flipVertically():Void
 	{
 		flipVertical = !flipVertical;
 	}

@@ -956,7 +956,8 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Internal helper function, handles the actual drawing of all the special effects.
 	 */
-	public function drawFX():Void
+	@:allow(flixel.system.frontEnds.CameraFrontEnd)
+	private function drawFX():Void
 	{
 		var alphaComponent:Float;
 		

@@ -220,6 +220,7 @@ class FlxGradient
 		
 		var source:FlxSprite = createGradientFlxSprite(width, height, colors, chunkSize, rotation, interpolate);
 		dest.stamp(source, destX, destY);
+		source.destroy();
 		return dest;
 	}
 	
@@ -251,9 +252,8 @@ class FlxGradient
 		}
 		
 		var source:BitmapData = createGradientBitmapData(width, height, colors, chunkSize, rotation, interpolate);
-		
 		dest.copyPixels(source, new Rectangle(0, 0, source.width, source.height), new Point(destX, destY), null, null, true);
-		
+		source.dispose();
 		return dest;
 	}
 	

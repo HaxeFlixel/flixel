@@ -1,8 +1,7 @@
 package flixel.tweens.motion;
 
-import flixel.FlxG;
 import flixel.tweens.FlxEase.EaseFunction;
-import flixel.tweens.FlxTween.CompleteCallback;
+import flixel.tweens.FlxTween;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxPoint;
@@ -50,14 +49,7 @@ class LinearPath extends Motion
 	private var _prevPoint:FlxPoint;
 	private var _nextPoint:FlxPoint;
 	
-	/**
-	 * This function is called when tween is created, or recycled.
-	 *
-	 * @param	complete	Optional completion callback.
-	 * @param	type		Tween type.
-	 * @param	Eease		Optional easer function.
-	 */
-	override public function init(Complete:CompleteCallback, TweenType:Int, UsePooling:Bool)
+	override private function init(Options:TweenOptions)
 	{
 		FlxArrayUtil.setLength(points, 0);
 		FlxArrayUtil.setLength(_pointD, 1);
@@ -67,7 +59,7 @@ class LinearPath extends Motion
 		
 		distance = _speed = _index = 0;
 		
-		return super.init(Complete, TweenType, UsePooling);
+		return super.init(Options);
 	}
 	
 	override public function destroy():Void 
@@ -88,9 +80,8 @@ class LinearPath extends Motion
 	 * 
 	 * @param	DurationOrSpeed		Duration or speed of the movement.
 	 * @param	UseDuration			Whether to use the previous param as duration or speed.
-	 * @param	Ease				Optional easer function.
 	 */
-	public function setMotion(DurationOrSpeed:Float, UseDuration:Bool = true, ?Ease:EaseFunction):LinearPath
+	public function setMotion(DurationOrSpeed:Float, UseDuration:Bool = true):LinearPath
 	{
 		updatePath();
 		
@@ -105,7 +96,6 @@ class LinearPath extends Motion
 			_speed = DurationOrSpeed;
 		}
 		
-		this.ease = Ease;
 		start();
 		return this;
 	}
@@ -130,14 +120,14 @@ class LinearPath extends Motion
 		return points[index % points.length];
 	}
 
-	override public function start():LinearPath
+	override private function start():LinearPath
 	{
 		_index = (backward) ? (points.length - 1) : 0;
 		super.start();
 		return this;
 	}
 
-	override public function update():Void
+	override private function update():Void
 	{
 		super.update();
 		var td:Float;
@@ -196,7 +186,7 @@ class LinearPath extends Motion
 		super.postUpdate();
 	}
 	
-	override inline public function put():Void
+	override inline private function put():Void
 	{
 		if (!_inPool)
 			_pool.putUnsafe(this);

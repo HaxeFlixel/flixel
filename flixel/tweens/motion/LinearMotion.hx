@@ -1,7 +1,7 @@
 ﻿package flixel.tweens.motion;
 
 import flixel.tweens.FlxEase.EaseFunction;
-import flixel.tweens.FlxTween.CompleteCallback;
+import flixel.tweens.FlxTween;
 import flixel.util.FlxPool;
 
 /**
@@ -40,18 +40,11 @@ class LinearMotion extends Motion
 	private var _moveY:Float;
 	private var _distance:Float;
 	
-	/**
-	 * This function is called when tween is created, or recycled.
-	 *
-	 * @param	complete	Optional completion callback.
-	 * @param	type		Tween type.
-	 * @param	Eease		Optional easer function.
-	 */
-	override public function init(Complete:CompleteCallback, TweenType:Int, UsePooling:Bool)
+	override private function init(Options:TweenOptions)
 	{
 		_fromX = _fromY = _moveX = _moveY = 0;
 		_distance = -1;
-		return super.init(Complete, TweenType, UsePooling);
+		return super.init(Options);
 	}
 
 	/**
@@ -63,9 +56,8 @@ class LinearMotion extends Motion
 	 * @param	ToY				Y finish.
 	 * @param	DurationOrSpeed	Duration or speed of the movement.
 	 * @param	UseDuration		Whether to use the previous param as duration or speed.
-	 * @param	Ease			Optional easer function.
 	 */
-	public function setMotion(FromX:Float, FromY:Float, ToX:Float, ToY:Float, DurationOrSpeed:Float, UseDuration:Bool = true, ?Ease:EaseFunction):LinearMotion
+	public function setMotion(FromX:Float, FromY:Float, ToX:Float, ToY:Float, DurationOrSpeed:Float, UseDuration:Bool = true):LinearMotion
 	{
 		_distance = -1;
 		x = _fromX = FromX;
@@ -82,13 +74,12 @@ class LinearMotion extends Motion
 			duration = distance / DurationOrSpeed;
 		}
 		
-		this.ease = Ease;
 		start();
 		
 		return this;
 	}
 
-	override public function update():Void
+	override private function update():Void
 	{
 		super.update();
 		x = _fromX + _moveX * scale;
@@ -111,7 +102,7 @@ class LinearMotion extends Motion
 		return (_distance = Math.sqrt(_moveX * _moveX + _moveY * _moveY));
 	}
 	
-	override inline public function put():Void
+	override inline private function put():Void
 	{
 		if (!_inPool)
 			_pool.putUnsafe(this);
