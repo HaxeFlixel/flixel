@@ -1,4 +1,5 @@
 package flixel.system;
+#if !doc
 import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.BlendMode;
@@ -10,7 +11,6 @@ import flash.text.TextField;
 import flash.text.TextFormat;
 import flixel.FlxG;
 import flixel.system.FlxPreloaderBase;
-#if !doc
 
 @:font("assets/fonts/nokiafc22.ttf")
 class PreloaderFont extends Font {}
