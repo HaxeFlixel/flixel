@@ -2,50 +2,23 @@
 
 import flixel.tweens.FlxEase.EaseFunction;
 import flixel.tweens.FlxTween;
-import flixel.util.FlxPool;
 
 /**
  * Determines motion along a cubic curve.
  */
 class CubicMotion extends Motion
 {
-	/**
-	 * A pool that contains CubicMotions for recycling.
-	 */
-	@:isVar 
-	@:allow(flixel.tweens.FlxTween)
-	private static var _pool(get, null):FlxPool<CubicMotion>;
-	
-	/**
-	 * Only allocate the pool if needed.
-	 */
-	private static function get__pool()
-	{
-		if (_pool == null)
-		{
-			_pool = new FlxPool<CubicMotion>(CubicMotion);
-		}
-		return _pool;
-	}
-	
 	// Curve information.
-	private var _fromX:Float;
-	private var _fromY:Float;
-	private var _toX:Float;
-	private var _toY:Float;
-	private var _aX:Float;
-	private var _aY:Float;
-	private var _bX:Float;
-	private var _bY:Float;
-	private var _ttt:Float;
-	private var _tt:Float;
-	
-	override private function init(Options:TweenOptions)
-	{
-		_fromX = _fromY = _toX = _toY = 0;
-		_aX = _aY = _bX = _bY = 0;
-		return super.init(Options);
-	}
+	private var _fromX:Float = 0;
+	private var _fromY:Float = 0;
+	private var _toX:Float = 0;
+	private var _toY:Float = 0;
+	private var _aX:Float = 0;
+	private var _aY:Float = 0;
+	private var _bX:Float = 0;
+	private var _bY:Float = 0;
+	private var _ttt:Float = 0;
+	private var _tt:Float = 0;
 	
 	/**
 	 * Starts moving along the curve.
@@ -84,11 +57,5 @@ class CubicMotion extends Motion
 		{
 			postUpdate();
 		}
-	}
-	
-	override inline private function put():Void
-	{
-		if (!_inPool)
-			_pool.putUnsafe(this);
 	}
 }

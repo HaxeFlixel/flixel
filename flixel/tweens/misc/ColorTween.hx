@@ -2,8 +2,6 @@
 
 import flixel.FlxSprite;
 import flixel.tweens.FlxTween;
-import flixel.tweens.FlxEase;
-import flixel.util.FlxPool;
 
 /**
  * Tweens a color's red, green, and blue properties
@@ -11,32 +9,13 @@ import flixel.util.FlxPool;
  */
 class ColorTween extends FlxTween
 {
-	/**
-	 * A pool that contains ColorTweens for recycling.
-	 */
-	@:isVar 
-	@:allow(flixel.tweens.FlxTween)
-	private static var _pool(get, null):FlxPool<ColorTween>;
-	
-	/**
-	 * Only allocate the pool if needed.
-	 */
-	private static function get__pool()
-	{
-		if (_pool == null)
-		{
-			_pool = new FlxPool<ColorTween>(ColorTween);
-		}
-		return _pool;
-	}
-	
-	public var color:Int;
-	public var alpha:Float = 1;
+	public var color(default, null):Int;
+	public var alpha(default, null):Float = 1;
 	
 	/**
 	 * Optional sprite object whose color to tween
 	 */
-	public var sprite:FlxSprite;
+	public var sprite(default, null):FlxSprite;
 
 	/**
 	 * Red value of the current color, from 0 to 255.
@@ -62,7 +41,7 @@ class ColorTween extends FlxTween
 	private var _rangeB:Float;
 	
 	/**
-	 * Clean up references and pool this object for recycling.
+	 * Clean up references
 	 */
 	override public function destroy() 
 	{
@@ -117,11 +96,5 @@ class ColorTween extends FlxTween
 			sprite.color = color;
 			sprite.alpha = alpha;
 		}
-	}
-	
-	override inline private function put():Void
-	{
-		if (!_inPool)
-			_pool.putUnsafe(this);
 	}
 }

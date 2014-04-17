@@ -45,7 +45,7 @@ class TweenManager extends FlxPlugin
 		{
 			while (finishedTweens.length > 0)
 			{
-				finishedTweens.shift()._finish();
+				finishedTweens.shift().finish();
 			}
 		}
 	}
@@ -66,9 +66,6 @@ class TweenManager extends FlxPlugin
 		{
 			return null;
 		}
-		
-		// regardless if we're actually pooled or not, freshly added tweens are never in the pool
-		Tween._inPool = false;
 		
 		_tweens.push(Tween);
 		
@@ -94,13 +91,8 @@ class TweenManager extends FlxPlugin
 			return null;
 		}
 		
-		if (Tween._usePooling && !Tween._inPool)
-		{
-			Tween.put(); // calls destroy
-			Tween._inPool = true;
-		}
-		
 		Tween.active = false;
+		Tween.destroy();
 		
 		FlxArrayUtil.fastSplice(_tweens, Tween);
 		

@@ -1,31 +1,13 @@
 package flixel.tweens.misc;
 
 import flixel.tweens.FlxTween;
-import flixel.tweens.FlxEase;
 import flixel.util.FlxArrayUtil;
-import flixel.util.FlxPool;
 
 /**
  * Tweens multiple numeric public properties of an Object simultaneously.
  */
 class VarTween extends FlxTween
 {
-	@:isVar 
-	@:allow(flixel.tweens.FlxTween)
-	private static var _pool(get, null):FlxPool<VarTween>;
-	
-	/**
-	 * Only allocate the pool if needed.
-	 */
-	private static function get__pool()
-	{
-		if (_pool == null)
-		{
-			_pool = new FlxPool<VarTween>(VarTween);
-		}
-		return _pool;
-	}
-	
 	private var _object:Dynamic;
 	private var _properties:Dynamic;
 	private var _vars:Array<String>;
@@ -33,7 +15,7 @@ class VarTween extends FlxTween
 	private var _range:Array<Float>;
 	
 	/**
-	 * Clean up references and pool this object for recycling.
+	 * Clean up references
 	 */
 	override public function destroy():Void 
 	{
@@ -42,12 +24,13 @@ class VarTween extends FlxTween
 		_properties = null;
 	}
 	
-	override private function init(Options:TweenOptions)
+	private function new(Options:TweenOptions)
 	{
-		FlxArrayUtil.setLength(_vars, 0);
-		FlxArrayUtil.setLength(_startValues, 0);
-		FlxArrayUtil.setLength(_range, 0);
-		return super.init(Options);
+		super(Options);
+		
+		_vars = [];
+		_startValues = [];
+		_range = [];
 	}
 	
 	/**
@@ -92,20 +75,6 @@ class VarTween extends FlxTween
 		{
 			Reflect.setProperty(_object, _vars[i], (_startValues[i] + _range[i] * scale));
 		}
-	}
-	
-	override inline private function put():Void
-	{
-		if (!_inPool)
-			_pool.putUnsafe(this);
-	}
-	
-	private function new()
-	{
-		super();
-		_vars = new Array<String>();
-		_startValues = new Array<Float>();
-		_range = new Array<Float>();
 	}
 	
 	private function initializeVars():Void
