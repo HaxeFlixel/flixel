@@ -51,21 +51,14 @@ class QuadPath extends Motion
 	private var _b:FlxPoint;
 	private var _c:FlxPoint;
 	
-	/**
-	 * This function is called when tween is created, or recycled.
-	 *
-	 * @param	complete	Optional completion callback.
-	 * @param	type		Tween type.
-	 * @param	Eease		Optional easer function.
-	 */
-	override public function init(Complete:CompleteCallback, TweenType:Int, UsePooling:Bool)
+	override private function init(Options:TweenOptions)
 	{
 		FlxArrayUtil.setLength(_points, 0);
 		FlxArrayUtil.setLength(_curveD, 0);
 		FlxArrayUtil.setLength(_curveT, 0);
 		_distance = _speed = _index = _numSegs = 0;
 		_updateCurve = true;
-		return super.init(Complete, TweenType, UsePooling);
+		return super.init(Options);
 	}
 	
 	override public function destroy():Void 
@@ -86,9 +79,8 @@ class QuadPath extends Motion
 	 * 
 	 * @param	DurationOrSpeed		Duration or speed of the movement.
 	 * @param	UseDuration			Whether to use the previous param as duration or speed.
-	 * @param	Ease				Optional easer function.
 	 */
-	public function setMotion(DurationOrSpeed:Float, UseDuration:Bool = true, ?Ease:EaseFunction):QuadPath
+	public function setMotion(DurationOrSpeed:Float, UseDuration:Bool = true):QuadPath
 	{
 		updatePath();
 		
@@ -103,7 +95,6 @@ class QuadPath extends Motion
 			_speed = DurationOrSpeed;
 		}
 		
-		ease = Ease;
 		start();
 		return this;
 	}
@@ -130,20 +121,20 @@ class QuadPath extends Motion
 		return _points[index % _points.length];
 	}
 	
-	override public function start():QuadPath
+	override private function start():QuadPath
 	{
 		_index = (backward) ? (_numSegs - 1) : 0; 
 		super.start();
 		return this;
 	}
 	
-	override inline public function put():Void
+	override inline private function put():Void
 	{
 		if (!_inPool)
 			_pool.putUnsafe(this);
 	}
 	
-	override public function update():Void
+	override private function update():Void
 	{
 		super.update();
 		var td:Float;

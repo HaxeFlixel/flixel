@@ -6,10 +6,10 @@ package flixel.interfaces;
  */
 interface IFlxSignal<T> extends IFlxDestroyable
 {
-	var dispatch:T;
-	function add(listener:T):Void;
-	function addOnce(listener:T):Void;
-	function remove(listener:T):Void;
-	function removeAll():Void;
-	function has(listener:T):Bool;
+	public var dispatch:T;
+	public function add(listener:T):Void;
+	public function addOnce(listener:T):Void;
+	public function remove(listener:T):Void;
+	public function removeAll():Void;
+	public function has(listener:T):Bool;
 }

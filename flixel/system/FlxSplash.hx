@@ -15,8 +15,8 @@ import flixel.util.FlxTimer;
 
 class FlxSplash extends FlxState
 {
-	private var _nextState:Class<FlxState>;
-
+	public static var nextState:Class<FlxState>;
+	
 	private var _sprite:Sprite;
 	private var _gfx:Graphics;
 	private var _text:TextField;
@@ -28,39 +28,6 @@ class FlxSplash extends FlxState
 	private var _cachedBgColor:Int;
 	private var _cachedTimestep:Bool;
 	private var _cachedAutoPause:Bool;
-	
-	public function new(NextState:Class<FlxState>)
-	{
-		_nextState = NextState;
-		super();
-	}
-	
-	override public function destroy():Void 
-	{
-		_nextState = null;
-		_sprite = null;
-		_gfx = null;
-		_text = null;
-		_times = null;
-		_colors = null;
-		_functions = null;
-		super.destroy();
-	}
-	
-	override public function onResize(Width:Int, Height:Int):Void 
-	{
-		super.onResize(Width, Height);
-		
-		_sprite.x = (Width / 2);
-		_sprite.y = (Height / 2) - 20 * FlxG.game.scaleY;
-		
-		_text.width = Width / FlxG.game.scaleX;
-		_text.x = 0;
-		_text.y = _sprite.y + 80 * FlxG.game.scaleY;
-		
-		_sprite.scaleX = _text.scaleX = FlxG.game.scaleX;
-		_sprite.scaleY = _text.scaleY = FlxG.game.scaleY;
-	}
 	
 	override public function create():Void
 	{
@@ -105,9 +72,35 @@ class FlxSplash extends FlxState
 		
 		onResize(stageWidth, stageHeight);
 		
-		#if (!FLX_NO_SOUND_SYSTEM && FLX_NO_DEBUG)
+		#if !FLX_NO_SOUND_SYSTEM 
 		FlxG.sound.load(FlxAssets.getSound("assets/sounds/flixel")).play();
 		#end
+	}
+	
+	override public function destroy():Void 
+	{
+		_sprite = null;
+		_gfx = null;
+		_text = null;
+		_times = null;
+		_colors = null;
+		_functions = null;
+		super.destroy();
+	}
+	
+	override public function onResize(Width:Int, Height:Int):Void 
+	{
+		super.onResize(Width, Height);
+		
+		_sprite.x = (Width / 2);
+		_sprite.y = (Height / 2) - 20 * FlxG.game.scaleY;
+		
+		_text.width = Width / FlxG.game.scaleX;
+		_text.x = 0;
+		_text.y = _sprite.y + 80 * FlxG.game.scaleY;
+		
+		_sprite.scaleX = _text.scaleX = FlxG.game.scaleX;
+		_sprite.scaleY = _text.scaleY = FlxG.game.scaleY;
 	}
 	
 	private function timerCallback(Timer:FlxTimer):Void
@@ -198,7 +191,7 @@ class FlxSplash extends FlxState
 		#end
 		FlxG.stage.removeChild(_sprite);
 		FlxG.stage.removeChild(_text);
-		FlxG.switchState(Type.createInstance(_nextState, []));
+		FlxG.switchState(Type.createInstance(nextState, []));
 		FlxG.game._gameJustStarted = true;
 	}
 }

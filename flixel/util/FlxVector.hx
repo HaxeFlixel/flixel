@@ -28,7 +28,6 @@ class FlxVector extends FlxPoint
 		return vector;
 	}
 	
-	
 	/**
 	 * Add this FlxVector to the recycling pool.
 	 */
@@ -120,19 +119,6 @@ class FlxVector extends FlxPoint
 	}
 	
 	/**
-	 * Vector addition.
-	 * 
-	 * @param	v	vector to add
-	 * @return	addition result
-	 */
-	public inline function add(v:FlxVector):FlxVector
-	{
-		x += v.x;
-		y += v.y;
-		return this;
-	}
-	
-	/**
 	 * Return new vector which equals to sum of this vector and passed v vector.
 	 * 
 	 * @param	v	vector to add
@@ -140,31 +126,22 @@ class FlxVector extends FlxPoint
 	 */
 	public inline function addNew(v:FlxVector):FlxVector
 	{
-		return clone().add(v);
+		var nv:FlxVector = clone();
+		nv.addPoint(v);
+		return nv;
 	}
 	
 	/**
-	 * Vector substraction.
+	 * Returns new vector which is result of subtraction of v vector from this vector.
 	 * 
-	 * @param	v	vector to substract
-	 * @return	substraction result
+	 * @param	v	vector to subtract
+	 * @return	subtraction result
 	 */
-	public inline function substract(v:FlxVector):FlxVector
+	public inline function subtractNew(v:FlxVector):FlxVector
 	{
-		x -= v.x;
-		y -= v.y;
-		return this;
-	}
-	
-	/**
-	 * Returns new vector which is result of substraction of v vector from this vector.
-	 * 
-	 * @param	v	vector to substract
-	 * @return	substraction result
-	 */
-	public inline function substractNew(v:FlxVector):FlxVector
-	{
-		return clone().substract(v);
+		var nv:FlxVector = clone();
+		nv.subtractPoint(v);
+		return clone();
 	}
 	
 	/**
@@ -320,7 +297,7 @@ class FlxVector extends FlxPoint
 	/**
 	 * Right normal of the vector
 	 */
-	public function rightNormal(vec:FlxVector = null):FlxVector
+	public function rightNormal(?vec:FlxVector):FlxVector
 	{ 
 		if (vec == null)
 		{
@@ -333,7 +310,7 @@ class FlxVector extends FlxPoint
 	/**
 	 * Left normal of the vector
 	 */
-	public function leftNormal(vec:FlxVector = null):FlxVector
+	public function leftNormal(?vec:FlxVector):FlxVector
 	{ 
 		if (vec == null)
 		{
@@ -366,7 +343,7 @@ class FlxVector extends FlxPoint
 	 * @param	proj	optional argument - result vector
 	 * @return	projection of the vector
 	 */
-	public function projectTo(v:FlxVector, proj:FlxVector = null):FlxVector
+	public function projectTo(v:FlxVector, ?proj:FlxVector):FlxVector
 	{
 		var dp:Float = dotProduct(v);
 		var lenSq:Float = v.lengthSquared;
@@ -420,7 +397,7 @@ class FlxVector extends FlxPoint
 		if (lengthSquared < EPSILON_SQUARED || v.lengthSquared < EPSILON_SQUARED) return Math.NaN;
 		
 		_vector1 = b.clone(_vector1);
-		_vector1.substract(a);
+		_vector1.subtractPoint(a);
 		
 		return _vector1.perpProduct(v) / perpProduct(v);
 	}
@@ -433,7 +410,7 @@ class FlxVector extends FlxPoint
 	 * @param	v	the second vector
 	 * @return the point of intersection of vectors
 	 */
-	public function findIntersection(a:FlxVector, b:FlxVector, v:FlxVector, intersection:FlxVector = null):FlxVector
+	public function findIntersection(a:FlxVector, b:FlxVector, v:FlxVector, ?intersection:FlxVector):FlxVector
 	{
 		var t:Float = ratio(a, b, v);
 		

@@ -9,7 +9,7 @@ import haxe.Json;
 import haxe.xml.Fast;
 import openfl.Assets;
 
-class SparrowData extends TexturePackerData implements IFlxDestroyable
+class SparrowData extends TexturePackerData
 {
 	/**
 	 * Constructor

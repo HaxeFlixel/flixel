@@ -78,11 +78,10 @@ class ColorTween extends FlxTween
 	 * @param	ToColor			End color.
 	 * @param	FromAlpha		Start alpha
 	 * @param	ToAlpha			End alpha.
-	 * @param	Ease			Optional easer function.
 	 * @param	Sprite			Optional sprite object whose color to tween.
 	 * @return	The ColorTween.
 	 */
-	public function tween(Duration:Float, FromColor:Int, ToColor:Int, FromAlpha:Float = 1, ToAlpha:Float = 1, ?Ease:EaseFunction, ?Sprite:FlxSprite):ColorTween
+	public function tween(Duration:Float, FromColor:Int, ToColor:Int, FromAlpha:Float = 1, ToAlpha:Float = 1, ?Sprite:FlxSprite):ColorTween
 	{
 		FromColor &= 0xFFFFFF;
 		ToColor &= 0xFFFFFF;
@@ -99,13 +98,12 @@ class ColorTween extends FlxTween
 		_startA = alpha = FromAlpha;
 		_rangeA = ToAlpha - alpha;
 		duration = Duration;
-		ease = Ease;
 		sprite = Sprite;
 		start();
 		return this;
 	}
 	
-	override public function update():Void
+	override private function update():Void
 	{
 		super.update();
 		alpha = _startA + _rangeA * scale;
@@ -121,7 +119,7 @@ class ColorTween extends FlxTween
 		}
 	}
 	
-	override inline public function put():Void
+	override inline private function put():Void
 	{
 		if (!_inPool)
 			_pool.putUnsafe(this);

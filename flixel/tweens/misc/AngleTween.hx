@@ -55,9 +55,8 @@ class AngleTween extends FlxTween
 	 * @param	FromAngle		Start angle.
 	 * @param	ToAngle			End angle.
 	 * @param	Duration		Duration of the tween.
-	 * @param	Ease			Optional easer function.
 	 */
-	public function tween(FromAngle:Float, ToAngle:Float, Duration:Float, ?Ease:EaseFunction, ?Sprite:FlxSprite):AngleTween
+	public function tween(FromAngle:Float, ToAngle:Float, Duration:Float, ?Sprite:FlxSprite):AngleTween
 	{
 		_start = angle = FromAngle;
 		var d:Float = ToAngle - angle;
@@ -75,13 +74,12 @@ class AngleTween extends FlxTween
 			_range = FlxRandom.floatRanged(180, -180);
 		}
 		duration = Duration;
-		ease = Ease;
 		sprite = Sprite;
 		start();
 		return this;
 	}
 	
-	override public function update():Void
+	override private function update():Void
 	{
 		super.update();
 		
@@ -98,7 +96,7 @@ class AngleTween extends FlxTween
 		}
 	}
 	
-	override inline public function put():Void
+	override inline private function put():Void
 	{
 		if (!_inPool)
 			_pool.putUnsafe(this);
