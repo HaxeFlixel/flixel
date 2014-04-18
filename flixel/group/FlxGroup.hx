@@ -44,6 +44,7 @@ class FlxGroup extends FlxTypedGroup<FlxBasic>
 	
 	@:allow(flixel.FlxObject)
 	@:allow(flixel.tile.FlxTilemap)
+	@:allow(flixel.system.FlxQuadTree)
 	private static inline function resolveGroup(ObjectOrGroup:FlxBasic):FlxGroup
 	{
 		var group:FlxGroup = null;
