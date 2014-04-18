@@ -114,6 +114,34 @@ class FlxPoint implements IFlxPooled
 	}
 	
 	/**
+	 * Adds the to the coordinates of this point.
+	 * 
+	 * @param	X	Amount to subtract from x
+	 * @param	Y	Amount to subtract from y
+	 * @return	This point.
+	 */
+	public inline function subtract(X:Float = 0, Y:Float = 0):FlxPoint
+	{
+		x -= X;
+		y -= Y;
+		return this;
+	}
+	
+	/**
+	 * Adds the coordinates of another point to the coordinates of this point.
+	 * 
+	 * @param	point	The point to subtract from this point
+	 * @return	This point.
+	 */
+	public function subtractPoint(point:FlxPoint):FlxPoint
+	{
+		x -= point.x;
+		y -= point.y;
+		point.putWeak();
+		return this;
+	}
+	
+	/**
 	 * Helper function, just copies the values from the specified point.
 	 * 
 	 * @param	point	Any FlxPoint.

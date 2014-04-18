@@ -48,16 +48,11 @@ class FlxTimer implements IFlxDestroyable
 	/**
 	 * Pauses or checks the pause state of the timer.
 	 */
-	public var paused:Bool = false;
+	public var active:Bool = true;
 	/**
 	 * Check to see if the timer is finished.
 	 */
 	public var finished:Bool = false;
-	/**
-	 * Useful to store values you want to access within your callback function, ex:
-	 * FlxTimer.start(1, function(t) { trace(t.userData); } ).userData = "Hello World!";
-	 */
-	public var userData:Dynamic;
 	/**
 	 * Function that gets called when timer completes.
 	 * Callback should be formed "onTimer(Timer:FlxTimer);"
@@ -83,6 +78,7 @@ class FlxTimer implements IFlxDestroyable
 	 * Read-only: how far along the timer is, on a scale of 0.0 to 1.0.
 	 */
 	public var progress(get, never):Float;
+	
 	/**
 	 * Internal tracker for the actual timer counting up.
 	 */
@@ -98,7 +94,6 @@ class FlxTimer implements IFlxDestroyable
 	public function destroy():Void
 	{
 		complete = null;
-		userData = null;
 	}
 	
 	/**
@@ -116,7 +111,7 @@ class FlxTimer implements IFlxDestroyable
 			manager.add(this);
 		}
 		
-		paused = false;
+		active = true;
 		finished = false;
 		time = Math.abs(Time);
 		
@@ -148,7 +143,7 @@ class FlxTimer implements IFlxDestroyable
 	/**
 	 * Stops the timer and removes it from the timer manager.
 	 */
-	public function abort():Void
+	public function cancel():Void
 	{
 		finished = true;
 		if (manager != null)
@@ -168,7 +163,7 @@ class FlxTimer implements IFlxDestroyable
 	{
 		_timeCounter += FlxG.elapsed;
 		
-		while ((_timeCounter >= time) && !paused && !finished)
+		while ((_timeCounter >= time) && active && !finished)
 		{
 			_timeCounter -= time;
 			_loopsCounter++;
@@ -180,7 +175,7 @@ class FlxTimer implements IFlxDestroyable
 			
 			if (loops > 0 && (_loopsCounter >= loops))
 			{
-				abort();
+				cancel();
 			}
 		}
 	}

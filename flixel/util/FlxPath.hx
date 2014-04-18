@@ -110,7 +110,7 @@ class FlxPath implements IFlxDestroyable
 	/**
 	 * Pauses or checks the pause state of the path.
 	 */
-	public var paused:Bool = false;
+	public var active:Bool = true;
 	
 	public var onComplete:FlxPath->Void;
 
@@ -182,10 +182,10 @@ class FlxPath implements IFlxDestroyable
 		}
 		
 		finished = false;
-		paused = false;
+		active = true;
 		if (nodes.length <= 0)
 		{
-			paused = true;
+			active = false;
 		}
 		
 		//get starting node
@@ -328,7 +328,7 @@ class FlxPath implements IFlxDestroyable
 			
 			if (finished)
 			{
-				abort();
+				cancel();
 			}
 		}
 	}
@@ -441,7 +441,7 @@ class FlxPath implements IFlxDestroyable
 	/**
 	 * Stops path movement and removes this path it from the path manager.
 	 */
-	public function abort():Void
+	public function cancel():Void
 	{
 		finished = true;
 		

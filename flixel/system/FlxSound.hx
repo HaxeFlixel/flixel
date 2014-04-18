@@ -432,29 +432,33 @@ class FlxSound extends FlxBasic
 	}
 	
 	/**
-	 * Helper function that calls FlxTween.singleVar() on this sound's volume.
+	 * Helper function that tweens this sound's volume.
 	 * 
 	 * @param	Duration	The amount of time the fade-out operation should take.
 	 * @param	To			The volume to tween to, 0 by default.
 	 */
-	public inline function fadeOut(Duration:Float, ?To:Float = 0):FlxSound
+	public inline function fadeOut(Duration:Float = 1, ?To:Float = 0):FlxSound
 	{
-		FlxTween.tween(this, { volume: To }, Duration);
+		FlxTween.num(volume, To, Duration, null, volumeTween);
 		return this;
 	}
 	
 	/**
-	 * Helper function that calls FlxTween.singleVar() on this sound's volume.
+	 * Helper function that tweens this sound's volume.
 	 * 
 	 * @param	Duration	The amount of time the fade-in operation should take.
 	 * @param	From		The volume to tween from, 0 by default.
 	 * @param	To			The volume to tween to, 1 by default.
 	 */
-	public inline function fadeIn(Duration:Float, From:Float = 0, To:Float = 1):FlxSound
+	public inline function fadeIn(Duration:Float = 1, From:Float = 0, To:Float = 1):FlxSound
 	{
-		volume = From;
-		FlxTween.tween(this, { volume: To}, Duration);
+		FlxTween.num(From, To, Duration, null, volumeTween);
 		return this;
+	}
+	
+	private function volumeTween(f:Float):Void
+	{
+		volume = f;
 	}
 	
 	/**

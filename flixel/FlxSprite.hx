@@ -93,14 +93,15 @@ class FlxSprite extends FlxObject
 	 */
 	public var alpha(default, set):Float = 1.0;
 	/**
-	 * Set facing using FlxObject.LEFT,RIGHT, UP, 
-	 * and DOWN to take advantage of flipped sprites and/or just track player orientation more easily.
+	 * Set facing using FlxObject.LEFT, RIGHT, UP, and DOWN to take advantage 
+	 * of flipped sprites and/or just track player orientation more easily.
 	 */
 	public var facing(default, set):Int = FlxObject.RIGHT;
 	/**
-	 * If the Sprite is flipped.
+	 * Whether or not this sprite may be flipped horizontally via facing.
 	 */
-	public var flipped(default, null):Int = 0;
+	public var flippable:Bool = false;
+	 
 	/**
 	 * WARNING: The origin of the sprite will default to its center. If you change this, 
 	 * the visuals and the collisions will likely be pretty out-of-sync if you do any rotation.
@@ -261,7 +262,7 @@ class FlxSprite extends FlxObject
 		}
 		
 		region = Sprite.region.clone();
-		flipped = Sprite.flipped;
+		flippable = Sprite.flippable;
 		bakedRotationAngle = Sprite.bakedRotationAngle;
 		cachedGraphics = Sprite.cachedGraphics;
 		
@@ -286,19 +287,19 @@ class FlxSprite extends FlxObject
 	 * 
 	 * @param	Graphic		The image you want to use.
 	 * @param	Animated	Whether the Graphic parameter is a single sprite or a row of sprites.
-	 * @param	Reverse		Whether you need this class to generate horizontally flipped versions of the animation frames.
+	 * @param	Flippable	Whether flippable should be set to true.
 	 * @param	Width		Optional, specify the width of your sprite (helps FlxSprite figure out what to do with non-square sprites or sprite sheets).
 	 * @param	Height		Optional, specify the height of your sprite (helps FlxSprite figure out what to do with non-square sprites or sprite sheets).
 	 * @param	Unique		Optional, whether the graphic should be a unique instance in the graphics cache.  Default is false.
 	 * @param	Key			Optional, set this parameter if you're loading BitmapData.
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function loadGraphic(Graphic:Dynamic, Animated:Bool = false, Reverse:Bool = false, Width:Int = 0, Height:Int = 0, Unique:Bool = false, ?Key:String):FlxSprite
+	public function loadGraphic(Graphic:Dynamic, Animated:Bool = false, Flippable:Bool = false, Width:Int = 0, Height:Int = 0, Unique:Bool = false, ?Key:String):FlxSprite
 	{
 		bakedRotationAngle = 0;
 		cachedGraphics = FlxG.bitmap.add(Graphic, Unique, Key);
 		
-		flipped = (Reverse == true) ? cachedGraphics.bitmap.width : 0;
+		flippable = Flippable;
 		
 		if (Width == 0)
 		{
@@ -500,12 +501,12 @@ class FlxSprite extends FlxObject
 	 * Loads TexturePacker atlas.
 	 * 
 	 * @param	Data		Atlas data holding links to json-data and atlas image
-	 * @param	Reverse		Whether you need this class to generate horizontally flipped versions of the animation frames. 
+	 * @param	Flippable	Whether flippable should be set to true.
 	 * @param	Unique		Optional, whether the graphic should be a unique instance in the graphics cache.  Default is false.
 	 * @param	FrameName	Default frame to show. If null then will be used first available frame.
 	 * @return This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function loadGraphicFromTexture(Data:Dynamic, Reverse:Bool = false, Unique:Bool = false, ?FrameName:String):FlxSprite
+	public function loadGraphicFromTexture(Data:Dynamic, Flippable:Bool = false, Unique:Bool = false, ?FrameName:String):FlxSprite
 	{
 		bakedRotationAngle = 0;
 		
@@ -531,7 +532,7 @@ class FlxSprite extends FlxObject
 		region.width = cachedGraphics.bitmap.width;
 		region.height = cachedGraphics.bitmap.height;
 		
-		flipped = (Reverse == true) ? cachedGraphics.bitmap.width : 0;
+		flippable = Flippable;
 		
 		animation.destroyAnimations();
 		updateFrameData();
@@ -1207,7 +1208,7 @@ class FlxSprite extends FlxObject
 		var frameBmd:BitmapData = null;
 		if (frame != null)
 		{
-			if (facing == FlxObject.LEFT && flipped > 0)
+			if (facing == FlxObject.LEFT && flippable)
 			{
 				frameBmd = frame.getHReversedBitmap();
 			}
@@ -1334,19 +1335,17 @@ class FlxSprite extends FlxObject
 	}
 
 	/**
-	 * Flips graphics horizontally
-	 *
+	 * Flips the graphic horizontally using scale
 	 */
-	public function flipHorizontally():Void
+	public inline function flipHorizontally():Void
 	{
 		scale.x *= -1;
 	}
 
 	/**
-	 * Flips graphics vertically
-	 *
+	 * Flips the graphic vertically using scale
 	 */
-	public function flipVertically():Void
+	public inline function flipVertically():Void
 	{
 		scale.y *= -1;
 	}
@@ -1424,7 +1423,7 @@ class FlxSprite extends FlxObject
 		}
 		facing = Direction;
 		#if FLX_RENDER_TILE
-		_facingMult = ((flipped != 0) && (facing == FlxObject.LEFT)) ? -1 : 1;
+		_facingMult = (flippable && (facing == FlxObject.LEFT)) ? -1 : 1;
 		#end
 		return Direction;
 	}
