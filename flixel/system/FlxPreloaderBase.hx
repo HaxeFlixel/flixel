@@ -52,6 +52,11 @@ class FlxPreloaderBase extends NMEPreloader
 	private var _loaded:Bool = false;
 	private var _urlChecked:Bool = false;
 	
+	/**
+	 * FlxPreloaderBase Constructor.
+	 * @param	MinDisplayTime	Minimum time the preloader should be shown. (Default = 0)
+	 * @param	AllowedURLs		Allowed URLs used for Site-locking. If the game is run anywhere else, a message will be displayed on the screen (Default = [])
+	 */
 	public function new(MinDisplayTime:Float = 0, ?AllowedURLs:Array<String>)
 	{
 		super();
@@ -66,11 +71,17 @@ class FlxPreloaderBase extends NMEPreloader
 			allowedURLs = [];
 	}
 	
+	/**
+	 * Override this to create your own preloader objects.
+	 */
 	private function create():Void
 	{
 		
 	}
 	
+	/**
+	 * This function is called externally to initialize the Preloader.
+	 */
 	override public function onInit() 
 	{
 		super.onInit();
@@ -82,6 +93,10 @@ class FlxPreloaderBase extends NMEPreloader
 
 	}
 	
+	/**
+	 * This function is called each update to check the load status of the project. 
+	 * It is highly recommended that you do NOT override this.
+	 */
 	override public function onUpdate(bytesLoaded:Int, bytesTotal:Int) 
 	{
 		#if !(desktop || mobile)
@@ -91,6 +106,10 @@ class FlxPreloaderBase extends NMEPreloader
 		#end
 	}
 	
+	/**
+	 * This function is triggered on each 'frame'.
+	 * It is highly reccommended that you do NOT override this.
+	 */
 	private function onEnterFrame(E:Event):Void
 	{
 		var time:Int = Lib.getTimer();
@@ -109,22 +128,38 @@ class FlxPreloaderBase extends NMEPreloader
 		}
 	}
 	
+	/**
+	 * This function is called when the project has finished loading.
+	 * Override it to remove all of your objects.
+	 */
 	private function destroy():Void
 	{
 		
 	}
 	
+	/**
+	 * Override to draw your preloader objects in response to the Percent
+	 * 
+	 * @param	Percent		How much of the program has loaded.
+	 */
 	private function update(Percent:Float):Void
 	{
 		
 	}
 	
+	/**
+	 * This function is called EXTERNALLY once the movie has actually finished being loaded. 
+	 * Highly recommended you DO NO override.
+	 */
 	override public function onLoaded() 
 	{	
 		_loaded = true;
 		_percent = 1;
 	}
 	
+	/**
+	 * Site-locking Functionality
+	 */
 	private function checkSiteLock():Void
 	{
 		#if flash
