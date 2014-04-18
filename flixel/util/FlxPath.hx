@@ -110,7 +110,7 @@ class FlxPath implements IFlxDestroyable
 	/**
 	 * Pauses or checks the pause state of the path.
 	 */
-	public var active:Bool = false;
+	public var active:Bool = true;
 	
 	public var onComplete:FlxPath->Void;
 
