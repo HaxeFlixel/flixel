@@ -347,13 +347,14 @@ class FlxDebugger extends Sprite
 	}
 	
 	/**
-	 * Set a system button and its associated window's visibility
+	 * Set the visibility of a system button AND its associated window
 	 * @param	Name one of these: "log","bmpLog","watch","console","stats"
 	 * @param	Visible is it visible or not
 	 */
 	public function setButtonVisibility(Name:String,Visible:Bool):Void
 	{
-		switch(Name) {
+		switch(Name)
+		{
 			case "log"		: log.visible = Visible;
 			case "bmpLog"	: bmpLog.visible = Visible;
 			case "watch"	: watch.visible = Visible;
@@ -362,7 +363,8 @@ class FlxDebugger extends Sprite
 			default: return;
 		}
 		var array:Array<FlxSystemButton>; 
-		for(position in [ButtonAlignment.LEFT,ButtonAlignment.MIDDLE,ButtonAlignment.RIGHT]){
+		for (position in [ButtonAlignment.LEFT, ButtonAlignment.MIDDLE, ButtonAlignment.RIGHT])
+		{
 			switch (position)
 			{
 				case LEFT:
@@ -375,7 +377,8 @@ class FlxDebugger extends Sprite
 			var f:FlxSystemButton = null;
 			for (f in array)
 			{
-				if (f.name == Name) {
+				if (f.name == Name)
+				{
 					f.toggled = !Visible;
 					break;
 				}
