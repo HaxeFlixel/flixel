@@ -23,16 +23,16 @@ import flash.events.GameInputEvent;
 class FlxGamepadManager implements IFlxInput
 {
 	/**
-	 * First accessed gamepad
+	 * The first accessed gamepad - can be null!
 	 */
 	public var firstActive:FlxGamepad;
 	/**
-	 * Last accessed gamepad
+	 * The last accessed gamepad - can be null!
 	 */
 	public var lastActive:FlxGamepad;
 	
 	/**
-	 * A counter for the number of active Joysticks
+	 * A counter for the number of active gamepads
 	 */
 	public var numActiveGamepads(get, null):Int;
 	

@@ -1,9 +1,7 @@
 ﻿package flixel.tweens.motion;
 
-import flixel.tweens.FlxEase.EaseFunction;
-import flixel.tweens.FlxTween;
+import flixel.tweens.FlxTween.TweenOptions;
 import flixel.util.FlxPoint;
-import flixel.util.FlxPool;
 
 /**
  * Determines motion along a quadratic curve.
@@ -11,45 +9,18 @@ import flixel.util.FlxPool;
 class QuadMotion extends Motion
 {
 	/**
-	 * A pool that contains QuadMotions for recycling.
-	 */
-	@:isVar 
-	@:allow(flixel.tweens.FlxTween)
-	private static var _pool(get, null):FlxPool<QuadMotion>;
-	
-	/**
-	 * Only allocate the pool if needed.
-	 */
-	private static function get__pool():FlxPool<QuadMotion>
-	{
-		if (_pool == null)
-		{
-			_pool = new FlxPool<QuadMotion>(QuadMotion);
-		}
-		return _pool;
-	}
-	
-	/**
 	 * The distance of the entire curve.
 	 */
 	public var distance(get, never):Float;
 	
 	// Curve information.
-	private var _distance:Float;
-	private var _fromX:Float;
-	private var _fromY:Float;
-	private var _toX:Float;
-	private var _toY:Float;
-	private var _controlX:Float;
-	private var _controlY:Float;
-	
-	override private function init(Options:TweenOptions)
-	{
-		_distance = -1;
-		_fromX = _fromY = _toX = _toY = 0;
-		_controlX = _controlY = 0;
-		return super.init(Options);
-	}
+	private var _distance:Float = -1;
+	private var _fromX:Float = 0;
+	private var _fromY:Float = 0;
+	private var _toX:Float = 0;
+	private var _toY:Float = 0;
+	private var _controlX:Float = 0;
+	private var _controlY:Float = 0;
 	
 	/**
 	 * Starts moving along the curve.
@@ -96,12 +67,6 @@ class QuadMotion extends Motion
 		{
 			postUpdate();
 		}
-	}
-	
-	override inline private function put():Void
-	{
-		if (!_inPool)
-			_pool.putUnsafe(this);
 	}
 	
 	private function get_distance():Float

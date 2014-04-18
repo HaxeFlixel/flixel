@@ -1,8 +1,6 @@
 ﻿package flixel.tweens.misc;
 
 import flixel.tweens.FlxTween;
-import flixel.tweens.FlxEase;
-import flixel.util.FlxPool;
 
 /**
  * Tweens a numeric value. See FlxTween.num()
@@ -10,28 +8,9 @@ import flixel.util.FlxPool;
 class NumTween extends FlxTween
 {
 	/**
-	 * A pool that contains NumTweens for recycling.
-	 */
-	@:isVar 
-	@:allow(flixel.tweens.FlxTween)
-	private static var _pool(get, null):FlxPool<NumTween>;
-	
-	/**
-	 * Only allocate the pool if needed.
-	 */
-	private static function get__pool()
-	{
-		if (_pool == null)
-		{
-			_pool = new FlxPool<NumTween>(NumTween);
-		}
-		return _pool;
-	}
-	
-	/**
 	 * The current value.
 	 */
-	public var value:Float;
+	public var value(default, null):Float;
 	
 	// Tween information.
 	private var _tweenFunction:Float->Void;
@@ -39,7 +18,7 @@ class NumTween extends FlxTween
 	private var _range:Float;
 	
 	/**
-	 * Clean up references and pool this object for recycling.
+	 * Clean up references
 	 */
 	override public function destroy():Void 
 	{
@@ -72,11 +51,5 @@ class NumTween extends FlxTween
 		
 		if (_tweenFunction != null)
 			_tweenFunction(value);
-	}
-	
-	override inline private function put():Void
-	{
-		if (!_inPool)
-			_pool.putUnsafe(this);
 	}
 }
