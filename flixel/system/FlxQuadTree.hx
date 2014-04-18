@@ -656,12 +656,12 @@ class FlxQuadTree extends FlxRect
 	private function overlapNode():Bool
 	{
 		//Calculate bulk hull for _object
-		_objectHullX = (_object.x < _object.last.x)?_object.x:_object.last.x;
-		_objectHullY = (_object.y < _object.last.y)?_object.y:_object.last.y;
+		_objectHullX = (_object.x < _object.last.x) ? _object.x : _object.last.x;
+		_objectHullY = (_object.y < _object.last.y) ? _object.y : _object.last.y;
 		_objectHullWidth = _object.x - _object.last.x;
-		_objectHullWidth = _object.width + ((_objectHullWidth>0)?_objectHullWidth:-_objectHullWidth);
+		_objectHullWidth = _object.width + ((_objectHullWidth > 0) ? _objectHullWidth : -_objectHullWidth);
 		_objectHullHeight = _object.y - _object.last.y;
-		_objectHullHeight = _object.height + ((_objectHullHeight>0)?_objectHullHeight:-_objectHullHeight);
+		_objectHullHeight = _object.height + ((_objectHullHeight > 0) ? _objectHullHeight : -_objectHullHeight);
 		
 		//Walk the list and check for overlaps
 		var overlapProcessed:Bool = false;
@@ -677,12 +677,12 @@ class FlxQuadTree extends FlxRect
 			}
 			
 			//Calculate bulk hull for checkObject
-			_checkObjectHullX = (checkObject.x < checkObject.last.x)?checkObject.x:checkObject.last.x;
-			_checkObjectHullY = (checkObject.y < checkObject.last.y)?checkObject.y:checkObject.last.y;
+			_checkObjectHullX = (checkObject.x < checkObject.last.x) ? checkObject.x : checkObject.last.x;
+			_checkObjectHullY = (checkObject.y < checkObject.last.y) ? checkObject.y : checkObject.last.y;
 			_checkObjectHullWidth = checkObject.x - checkObject.last.x;
-			_checkObjectHullWidth = checkObject.width + ((_checkObjectHullWidth>0)?_checkObjectHullWidth:-_checkObjectHullWidth);
+			_checkObjectHullWidth = checkObject.width + ((_checkObjectHullWidth > 0) ? _checkObjectHullWidth : -_checkObjectHullWidth);
 			_checkObjectHullHeight = checkObject.y - checkObject.last.y;
-			_checkObjectHullHeight = checkObject.height + ((_checkObjectHullHeight>0)?_checkObjectHullHeight:-_checkObjectHullHeight);
+			_checkObjectHullHeight = checkObject.height + ((_checkObjectHullHeight > 0) ? _checkObjectHullHeight : -_checkObjectHullHeight);
 			
 			//Check for intersection of the two hulls
 			if ((_objectHullX + _objectHullWidth > _checkObjectHullX) &&
