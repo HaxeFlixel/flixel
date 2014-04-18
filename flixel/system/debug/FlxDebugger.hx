@@ -37,7 +37,7 @@ class GraphicStats extends BitmapData {}
 @:bitmap("assets/images/debugger/buttons/watch.png")
 class GraphicWatch extends BitmapData {}
 
-@:bitmap("assets/images/debugger/buttons/bmplog.png")
+@:bitmap("assets/images/debugger/buttons/bmpLog.png")
 class GraphicBmpLog extends BitmapData {}
 
 @:bitmap("assets/images/debugger/buttons/console.png") 
