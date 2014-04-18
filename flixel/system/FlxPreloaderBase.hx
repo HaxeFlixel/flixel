@@ -3,38 +3,25 @@ package flixel.system;
 #if js
 class FlxPreloaderBase extends NMEPreloader
 {
-	public function new()
-	{
-		super();
-	}
 }
 #else
-import flash.display.Bitmap;
-import flash.display.BitmapData;
-import flash.display.BlendMode;
-import flash.display.Graphics;
-import flash.display.Sprite;
+import flash.events.Event;
+import flash.Lib;
 import flash.display.StageAlign;
 import flash.display.StageScaleMode;
-import flash.events.Event;
 import flash.events.MouseEvent;
-import flash.Lib;
+import flash.display.Bitmap;
+import flash.display.BitmapData;
 import flash.net.URLRequest;
-import flash.text.Font;
 import flash.text.TextField;
 import flash.text.TextFormat;
 import flash.text.TextFormatAlign;
-import flixel.FlxG;
 import flixel.util.FlxColor;
 import flixel.util.FlxStringUtil;
 
-
-
-/**
- * This class handles the 8-bit style preloader.
- */
-class FlxPreloaderBase extends Sprite
+class FlxPreloaderBase extends NMEPreloader
 {	
+	
 	/**
 	 * Add this string to allowedURLs array if you want to be able to test game with enabled site-locking on local machine 
 	 */
@@ -58,130 +45,84 @@ class FlxPreloaderBase extends Sprite
 	* Defaults to 0.
 	*/
 	public var siteLockURLIndex:Int = 0;
-
-	/**
-	 * Useful for storing "real" stage width if you're scaling your preloader graphics.
-	 */
+	
+	private var _percent:Float = 0;
 	private var _width:Int;
-	/**
-	 * Useful for storing "real" stage height if you're scaling your preloader graphics.
-	 */
 	private var _height:Int;
-	
-	private var _init:Bool = false;	
-	private var _percent:Float;
-	private var _urlChecked:Bool = false;
 	private var _loaded:Bool = false;
-	private var _firstPass:Bool = true;
+	private var _urlChecked:Bool = false;
 	
-	/**
-	 * FlxPreloaderBase Constructor.
-	 * @param	MinDisplayTime	Minimum time the preloader should be shown. (Default = 0)
-	 * @param	AllowedURLs		Allowed URLs used for Site-locking. If the game is run anywhere else, a message will be displayed on the screen (Default = [])
-	 */
 	public function new(MinDisplayTime:Float = 0, ?AllowedURLs:Array<String>)
 	{
 		super();
+		
+		removeChild(progress);
+		removeChild(outline);
+		
 		minDisplayTime = MinDisplayTime;
 		if (AllowedURLs != null)
 			allowedURLs = AllowedURLs;
 		else
 			allowedURLs = [];
-		
-		addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 	}
 	
-	/**
-	 * This function is used to create the Preloader. Do not override.
-	 * @param	e
-	 */
-	private function onAddedToStage(e:Event):Void 
-	{
-		removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-		Lib.current.stage.scaleMode = StageScaleMode.NO_SCALE;
-		Lib.current.stage.align = StageAlign.TOP_LEFT;
-		addEventListener(Event.ENTER_FRAME, onEnterFrame);
-		create();
-	}
-	
-	/**
-	 * Override this to create your own preloader objects.
-	 * Make sure you call super.create() - Highly recommended you also override update()!
-	 */
 	private function create():Void
 	{
-		_init = true;
+		
 	}
 	
-	
-	/**
-	 * This function is called when the project has finished loading to clean up and remove itself.
-	 * If overriding, make sure you remove the ENTER_FRAME event listener!
-	 */
-	private function destroy():Void
+	override public function onInit() 
 	{
-		removeEventListener(Event.ENTER_FRAME, onEnterFrame);
-	}
+		super.onInit();
+		Lib.current.stage.scaleMode = StageScaleMode.NO_SCALE;
+		Lib.current.stage.align = StageAlign.TOP_LEFT;
+		create();
+		checkSiteLock();
+		addEventListener(Event.ENTER_FRAME, onEnterFrame);
 
-	/**
-	 * This function is called each update to check the load status of the project. 
-	 * It is highly recommended that you do NOT override this.
-	 */
-	public function onUpdate(bytesLoaded:Int, bytesTotal:Int):Void 
+	}
+	
+	override public function onUpdate(bytesLoaded:Int, bytesTotal:Int) 
 	{
 		#if !(desktop || mobile)
-		//in case there is a problem with reading the bytesTotal (Gzipped swf)
-		if (root.loaderInfo.bytesTotal == 0) 
-		{
-			//To avoid "stucking" the preloader use X (=bytesTotal) like so: Actual file size > X > 0.
-			//Attention! use the actual file size (minus a few KB) for better accuracy on Chrome.
-			var bytesTotal:Int = 50000; 
-			_percent = (bytesTotal != 0) ? bytesLoaded / bytesTotal : 0;
-		}
-		else //Continue regulary
-		{
-			_percent = (bytesTotal != 0) ? bytesLoaded / bytesTotal : 0;
-		}
+		if (root.loaderInfo.bytesTotal == 0)
+			bytesTotal = 50000;
+		_percent = (bytesTotal != 0)?bytesLoaded / bytesTotal : 0;
 		#end
 	}
-
-	/**
-	 * This function is called once the project is completely loaded, AND at least _minDisplayTime has passed.
-	 * It triggers the parent class that everything is finished loading and then destroys this instance.
-	 */
-	public function load():Void
-	{
-		dispatchEvent(new Event(Event.COMPLETE));
-		destroy();
-	}
 	
-	/**
-	 * This function is triggered on each 'frame'.
-	 * It is highly reccommended that you do NOT override this.
-	 */
-	private function onEnterFrame(event:Event):Void
+	private function onEnterFrame(E:Event):Void
 	{
-		if (_loaded || !_init)
-			return;
-		
-		checkSiteLock();
-		
-		graphics.clear();
 		var time:Int = Lib.getTimer();
 		var min:Int = Std.int(minDisplayTime * 1000);
 		var percent:Float = _percent;
-		if ((min > 0) && (percent > time/min))
-		{
+		trace(_percent + " " + time / min);
+		if ((min > 0) && (_percent > time / min))
 			percent = time / min;
-		}
 		update(percent);
 		
-		if (!_firstPass && (_percent >= 1) && (time > min))
-		{	
-			_loaded = true;
-			load();
+		if (_loaded && (min <= 0 || time/min >= 1))
+		{
+			removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+			super.onLoaded();
+			destroy();
 		}
-		_firstPass = false;
+	}
+	
+	private function destroy():Void
+	{
+		
+	}
+	
+	private function update(Percent:Float):Void
+	{
+		
+	}
+	
+	override public function onLoaded() 
+	{	
+		_loaded = true;
+		_percent = 1;
 	}
 	
 	private function checkSiteLock():Void
@@ -257,31 +198,6 @@ class FlxPreloaderBase extends Sprite
 	}
 	#end
 	
-	/**
-	 * Override this function to manually update the preloader.
-	 * 
-	 * @param	Percent		How much of the program has loaded.
-	 */
-	private function update(Percent:Float):Void
-	{
-	}
-	
-	/**
-	 * ----------------------------------------------------------------------------------------------
-	 * These functions need to exist, but should be empty (unless you really know what you're doing!)
-	 */
-	public function onInit()
-	{
-		// EMPTY
-	}
-	
-	public function onLoaded()
-	{
-		// EMPTY
-	}
-	/**
-	 * ----------------------------------------------------------------------------------------------
-	 */
 }
 #end
 #end

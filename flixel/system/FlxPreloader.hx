@@ -42,9 +42,9 @@ class FlxPreloader extends FlxPreloaderBase
 	/**
 	 * Initialize your preloader here.
 	 */
-	override public function new():Void
+	override public function new(MinDisplayTime:Float = 0, ?AllowedURLs:Array<String>):Void
 	{
-		super();
+		super(MinDisplayTime, AllowedURLs);
 		
 		// super(0, ["test.com", FlxPreloaderBase.LOCAL]); // example of site-locking
 		
