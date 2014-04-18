@@ -1,6 +1,6 @@
 package flixel.system;
 #if !doc
-#if js
+#if true // preloader is causing too many issues - disabled for now.
 class FlxPreloader extends NMEPreloader
 {
 	public function new()
