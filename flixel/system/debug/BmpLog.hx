@@ -16,7 +16,7 @@ import flixel.util.FlxStringUtil;
 import haxe.ds.StringMap;
 
 /**
- * A simple trace output window for use in the debugger overlay.
+ * An output window that lets you paste BitmapData in the debugger overlay.
  */
 class BmpLog extends Window
 {
@@ -58,7 +58,8 @@ class BmpLog extends Window
 		_bmps = null;
 	}
 	
-	public override function resize(Width:Float,Height:Float):Void {
+	public override function resize(Width:Float, Height:Float):Void
+	{
 		super.resize(Width, Height);
 		var bmp = _canvas.bitmapData;
 		_canvas.bitmapData = null;
@@ -67,14 +68,26 @@ class BmpLog extends Window
 		refreshBmp(_currIndex);
 	}
 	
-	public function next():Void {
+	/**
+	 * Show the next logged BitmapData in memory
+	 */
+	public function next():Void
+	{
 		refreshBmp(_currIndex + 1);
 	}
 	
+	
+	/**
+	 * Show the previous logged BitmapData in memory
+	 */
 	public function previous():Void {
 		refreshBmp(_currIndex - 1);
 	}
 	
+	
+	/**
+	 * Add a BitmapData to the log
+	 */
 	public function add(bmp:BitmapData):Bool
 	{
 		if (bmp == null)
@@ -83,38 +96,6 @@ class BmpLog extends Window
 		}
 		_bmps.push(bmp.clone());
 		return refreshBmp();
-	}
-	
-	private function refreshBmp(Index:Int = -1):Bool
-	{
-		_canvas.bitmapData.fillRect(_canvas.bitmapData.rect, 0x00000000);
-		
-		if (Index == -1)
-		{
-			Index = _bmps.length - 1;
-		}
-		
-		if (_bmps == null || _bmps.length <= 0)
-		{
-			_currIndex = 0;
-			_title.text = "bmpLog";
-			return false;
-		}
-		else if(Index >= _bmps.length-1)
-		{
-			Index = _bmps.length - 1;
-		}
-		
-		_canvas.bitmapData.copyPixels(_bmps[Index], _canvas.bitmapData.rect, _zeroPt, null, null, true);
-		_currIndex = Index;
-		
-		if(_bmps.length >= 0){
-			_title.text = "bmpLog (" + (_currIndex + 1) + "/" + _bmps.length + ")";
-		}else {
-			_title.text = "bmpLog";
-		}
-		
-		return true;
 	}
 	
 	/**
@@ -155,6 +136,38 @@ class BmpLog extends Window
 	override private function updateSize():Void
 	{
 		super.updateSize();
+	}
+	
+	private function refreshBmp(Index:Int = -1):Bool
+	{
+		_canvas.bitmapData.fillRect(_canvas.bitmapData.rect, 0x00000000);
+		
+		if (Index == -1)
+		{
+			Index = _bmps.length - 1;
+		}
+		
+		if (_bmps == null || _bmps.length <= 0)
+		{
+			_currIndex = 0;
+			_title.text = "bmpLog";
+			return false;
+		}
+		else if(Index >= _bmps.length-1)
+		{
+			Index = _bmps.length - 1;
+		}
+		
+		_canvas.bitmapData.copyPixels(_bmps[Index], _canvas.bitmapData.rect, _zeroPt, null, null, true);
+		_currIndex = Index;
+		
+		if(_bmps.length >= 0){
+			_title.text = "bmpLog (" + (_currIndex + 1) + "/" + _bmps.length + ")";
+		}else {
+			_title.text = "bmpLog";
+		}
+		
+		return true;
 	}
 }
 #end
