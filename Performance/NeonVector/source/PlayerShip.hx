@@ -66,7 +66,10 @@ class PlayerShip extends Entity
 		}
 		
 		aim = GameInput.aim;
-		if (cooldownTimer.finished && (aim.x != 0 || aim.y != 0)) shoot(aim);
+		if (cooldownTimer.finished && (aim.x != 0 || aim.y != 0)) 
+		{
+			shoot(aim);
+		}
 		
 		postUpdate();
 	}
@@ -80,7 +83,7 @@ class PlayerShip extends Entity
 	{
 		super.kill();
 		ScreenState.makeExplosion(Particle.NONE, position.x, position.y, 1200, Particle.HIGH_SPEED, 0xffff00, 0xffffff);
-		cooldownTimer.abort();
+		cooldownTimer.cancel();
 		if (lives-- < 0) 
 		{
 			isGameOver = true;
@@ -106,7 +109,7 @@ class PlayerShip extends Entity
 	{
 		super.reset(X - 0.5 * width, Y - 0.5 * height);
 		
-		cooldownTimer.abort();
+		cooldownTimer.cancel();
 		cooldownTimer.finished = true;
 	}
 	
@@ -124,7 +127,7 @@ class PlayerShip extends Entity
 	
 	public function shoot(Aim:FlxPoint):Void
 	{
-		cooldownTimer.abort();
+		cooldownTimer.cancel();
 		cooldownTimer.run(cooldown);
 		
 		var RandomSpread:Float = 4.58366236 * (FlxRandom.float() + FlxRandom.float()) - 4.58366236;

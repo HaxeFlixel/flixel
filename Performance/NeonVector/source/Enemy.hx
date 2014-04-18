@@ -234,7 +234,7 @@ class Enemy extends Entity
 	
 	override public function reset(X:Float, Y:Float):Void
 	{
-		cooldownTimer.abort();
+		cooldownTimer.cancel();
 		alpha = 0;
 		acceleration.x = acceleration.y = 0;	
 		angularVelocity = 0;

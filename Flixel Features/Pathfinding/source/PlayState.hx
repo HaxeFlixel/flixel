@@ -207,7 +207,7 @@ class PlayState extends FlxState
 	{
 		// Stop unit and destroy unit path
 		_action = ACTION_IDLE;
-		path.abort();
+		path.cancel();
 		_unit.velocity.x = _unit.velocity.y = 0;
 	}
 	

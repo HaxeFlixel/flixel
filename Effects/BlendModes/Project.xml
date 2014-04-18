@@ -3,7 +3,8 @@
 	<app title="BlendModes" file="BlendModes" main="Main" version="0.0.0" company="Level Up Labs"/>
 	
 	<window width="1024" height="768" fps="30" orientation="landscape" fullscreen="false"/>
- 	
+ 	<set name="SWF_VERSION" value="11.8" />
+	
 	<set name="BUILD_DIR" value="export" />
 	
 	<classpath name="source" />

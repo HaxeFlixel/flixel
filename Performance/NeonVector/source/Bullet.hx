@@ -31,7 +31,7 @@ class Bullet extends Entity
 	
 	override public function reset(X:Float, Y:Float):Void
 	{
-		cooldownTimer.abort();
+		cooldownTimer.cancel();
 		alpha = 1;
 		acceleration.x = acceleration.y = 0;
 		angularVelocity = 0;
