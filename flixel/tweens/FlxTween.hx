@@ -330,11 +330,6 @@ class FlxTween implements IFlxDestroyable
 	public var ease:EaseFunction;
 	public var complete:CompleteCallback;
 	
-	/**
-	 * Useful to store values you want to access within your callback function.
-	 */
-	public var userData:Dynamic;
-	
 	public var type(default, set):Int;
 	public var percent(get, set):Float;
 	public var finished(default, null):Bool;
@@ -371,7 +366,6 @@ class FlxTween implements IFlxDestroyable
 		complete = Options.complete;
 		ease = Options.ease;
 		setDelays(Options.startDelay, Options.loopDelay);
-		userData = {};
 	}
 	
 	private function resolveTweenOptions(Options:TweenOptions):TweenOptions
@@ -389,7 +383,6 @@ class FlxTween implements IFlxDestroyable
 	{
 		complete = null;
 		ease = null;
-		userData = null;
 	}
 
 	private function update():Void
@@ -436,6 +429,7 @@ class FlxTween implements IFlxDestroyable
 	public function cancel():Void
 	{
 		active = false;
+		finished = true;
 		manager.remove(this);
 	}
 	

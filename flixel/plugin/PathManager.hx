@@ -36,7 +36,7 @@ class PathManager extends FlxPlugin
 	{
 		for (path in _paths)
 		{
-			if (!path.paused)
+			if (path.active)
 			{
 				path.update();
 			}
