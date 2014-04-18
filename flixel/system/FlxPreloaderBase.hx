@@ -115,7 +115,6 @@ class FlxPreloaderBase extends NMEPreloader
 		var time:Int = Lib.getTimer();
 		var min:Int = Std.int(minDisplayTime * 1000);
 		var percent:Float = _percent;
-		trace(_percent + " " + time / min);
 		if ((min > 0) && (_percent > time / min))
 			percent = time / min;
 		update(percent);
