@@ -40,6 +40,10 @@ class BmpLog extends Window
 		_canvas.y = 15;
 		
 		addChild(_canvas);
+		
+		//Put handle on top:
+		removeChild(_handle);
+		addChild(_handle);
 	}
 	
 	/**
