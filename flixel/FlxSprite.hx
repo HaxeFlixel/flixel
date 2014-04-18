@@ -9,12 +9,12 @@ import flash.geom.Rectangle;
 import flixel.animation.FlxAnimationController;
 import flixel.FlxBasic;
 import flixel.FlxG;
-import flixel.system.FlxAssets;
 import flixel.system.layer.DrawStackItem;
 import flixel.system.layer.frames.FlxFrame;
 import flixel.system.layer.frames.FlxSpriteFrames;
 import flixel.system.layer.Region;
 import flixel.util.FlxAngle;
+import flixel.util.FlxAxis;
 import flixel.util.FlxColor;
 import flixel.util.FlxColorUtil;
 import flixel.util.FlxDestroyUtil;
@@ -27,12 +27,6 @@ import openfl.display.Tilesheet;
 
 @:bitmap("assets/images/logo/default.png")
 private class GraphicDefault extends BitmapData {}
-
-enum FlxSpriteFlip {
-	FLIP_HORIZONTAL;
-	FLIP_VERTICAL;
-	FLIP_BOTH;
-}
 
 /**
  * The main "game object" class, the sprite is a FlxObject
@@ -104,29 +98,9 @@ class FlxSprite extends FlxObject
 	 */
 	public var facing(default, set):Int = FlxObject.RIGHT;
 	/**
-	 * Whether to flip this sprite horizontally
+	 * The axis on which this sprite is flipped
 	 */
-	public var flipHorizontal(default, set):Bool = false;
-	/**
-	 * Whether to flip this sprite vertically
-	 */
-	public var flipVertical(default, set):Bool = false;
-	/**
-	 * How to flip this sprite when facing left
-	 */
-	public var facingUpFlip:FlxSpriteFlip = null;
-	/**
-	 * How to flip this sprite when facing left
-	 */
-	public var facingDownFlip:FlxSpriteFlip = null;
-	/**
-	 * How to flip this sprite when facing left
-	 */
-	public var facingLeftFlip:FlxSpriteFlip = null;
-	/**
-	 * How to flip this sprite when facing left
-	 */
-	public var facingRightFlip:FlxSpriteFlip = null;
+	public var flip(default, set):FlxAxis = FlxAxis.NONE;
 	 
 	/**
 	 * WARNING: The origin of the sprite will default to its center. If you change this, 
@@ -199,6 +173,10 @@ class FlxSprite extends FlxObject
 	private var _sinAngle:Float = 0;
 	private var _cosAngle:Float = 1;
 	private var _angleChanged:Bool = false;
+	/**
+	 * Maps FlxObject direction constants to flip axis
+	 */
+	private var _facingFlip:Map<Int, FlxAxis> = new Map<Int, FlxAxis>();
 	
 	/**
 	 * Creates a FlxSprite at a specified position with a specified one-frame graphic. 
@@ -232,6 +210,8 @@ class FlxSprite extends FlxObject
 		origin = FlxPoint.get();
 		scale = FlxPoint.get(1, 1);
 		_matrix = new Matrix();
+		
+		
 	}
 	
 	/**
@@ -1229,21 +1209,16 @@ class FlxSprite extends FlxObject
 		var frameBmd:BitmapData = null;
 		if (frame != null)
 		{
-			if (flipHorizontal && flipVertical)
+			switch (flip)
 			{
-				frameBmd = frame.getHVReversedBitmap();
-			}
-			else if (flipHorizontal)
-			{
-				frameBmd = frame.getHReversedBitmap();
-			}
-			else if (flipVertical)
-			{
-				frameBmd = frame.getVReversedBitmap();
-			}
-			else
-			{
-				frameBmd = frame.getBitmap();
+				case FlxAxis.BOTH:
+					frameBmd = frame.getHVReversedBitmap();
+				case FlxAxis.X:
+					frameBmd = frame.getHReversedBitmap();
+				case FlxAxis.Y:	
+					frameBmd = frame.getVReversedBitmap();
+				default:
+					frameBmd = frame.getBitmap();
 			}
 		}
 		
@@ -1362,30 +1337,34 @@ class FlxSprite extends FlxObject
 		return (((angle == 0 && frame.additionalAngle == 0) || (bakedRotationAngle > 0)) && (scale.x == 1) && (scale.y == 1));
 		#end
 	}
-
-	/**
-	 * Toggles flipHorizontal
-	 */
-	public inline function flipHorizontally():Void
-	{
-		flipHorizontal = !flipHorizontal;
-	}
-
-	/**
-	 * Toggles flipVertical
-	 */
-	public inline function flipVertically():Void
-	{
-		flipVertical = !flipVertical;
-	}
 	
 	/**
-	 * Set whether this sprite is flipped horizontally and vertically
+	 * Set how a sprite flips when facing in a particular direction.
+	 * 
+	 * @param	Direction Use constants from FlxObject: LEFT, RIGHT, UP, and DOWN.
+	 * 			These may be combined with the bitwise OR operator.
+	 * 			E.g. To make a sprite flip horizontally when it is facing both UP and LEFT,
+	 * 			use setFacingFlip(FlxObject.LEFT | FlxObject.UP, FlxAxis.X);
+	 * @param	Flip The axis on which the sprite should be flipped. Default is X (horizontal flip).
 	 */
-	public function setFlip(FlipHorizontal:Bool, FlipVertical:Bool):Void
+	public inline function setFacingFlip(Direction:Int, ?Flip:FlxAxis):Void
 	{
-		flipHorizontal = FlipHorizontal;
-		flipVertical = FlipVertical;
+		if (Flip == null) Flip = FlxAxis.X;
+		_facingFlip.set(Direction, Flip);
+	}
+	/**
+	 * Get how a sprite is flipped when facing a particular direction.
+	 * 
+	 * @param	Direction Use constants from FlxObject: LEFT, RIGHT, UP, and DOWN.
+	 * 			These may be combined with the bitwise OR operator.
+	 * 			E.g. To make a sprite flip horizontally when it is facing both UP and LEFT,
+	 * 			use setFacingFlip(FlxObject.LEFT | FlxObject.UP, FlxAxis.X);
+	 * @return	The axis on which the sprite is flipped
+	 */
+	public inline function getFacingFlip(Direction:Int):FlxAxis
+	{
+		var flip:FlxAxis = _facingFlip.get(Direction);
+		return flip != null ? flip : FlxAxis.NONE;
 	}
 	
 	/**
@@ -1460,24 +1439,9 @@ class FlxSprite extends FlxObject
 			dirty = true;
 		}
 		
-		facing = Direction;
+		flip = getFacingFlip(Direction);
 		
-		//Flip according to new facing
-		var flip:FlxSpriteFlip = null;
-		switch (Direction) {
-			case FlxObject.UP:		flip = facingUpFlip; 
-			case FlxObject.DOWN:	flip = facingDownFlip; 
-			case FlxObject.LEFT:	flip = facingLeftFlip; 
-			case FlxObject.RIGHT:	flip = facingRightFlip; 
-		}
-		if (flip != null) {
-			flipHorizontal = (flip == FLIP_HORIZONTAL) || (flip == FLIP_BOTH);
-			flipVertical = (flip == FLIP_VERTICAL) || (flip == FLIP_BOTH);
-		} else {
-			setFlip(false, false);
-		}
-		
-		return Direction;
+		return facing = Direction;
 	}
 	
 	private function set_alpha(Alpha:Float):Float
@@ -1574,17 +1538,12 @@ class FlxSprite extends FlxObject
 		return cachedGraphics = Value;
 	}
 	
-	private function set_flipHorizontal(Value:Bool):Bool {
+	private function set_flip(Axis:FlxAxis):FlxAxis
+	{
 		#if FLX_RENDER_TILE
-		_facingHorizontalMult = Value ? -1 : 1;
+		_facingHorizontalMult = (Axis == FlxAxis.X || Axis == FlxAxis.BOTH) ? -1 : 1;
+		_facingVerticalMult = (Axis == FlxAxis.Y || Axis == FlxAxis.BOTH) ? -1 : 1;
 		#end
-		return flipHorizontal = Value;
-	}
-	
-	private function set_flipVertical(Value:Bool):Bool {
-		#if FLX_RENDER_TILE
-		_facingVerticalMult = Value ? -1 : 1;
-		#end
-		return flipVertical = Value;
+		return flip = Axis;
 	}
 }
