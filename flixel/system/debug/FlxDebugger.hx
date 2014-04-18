@@ -40,6 +40,9 @@ class GraphicWatch extends BitmapData {}
 @:bitmap("assets/images/debugger/buttons/console.png") 
 class GraphicConsole extends BitmapData {}
 
+@:bitmap("assets/images/debugger/buttons/bitmap.png")
+class GraphicBmpLog extends BitmapData {}
+
 /**
  * Container for the new debugger overlay. Most of the functionality is in the debug folder widgets,
  * but this class instantiates the widgets and handles their basic formatting and arrangement.
