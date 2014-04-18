@@ -1,13 +1,9 @@
 ﻿package flixel.tweens.motion;
 
-import flixel.FlxG;
 import flixel.tweens.FlxTween;
-import flixel.tweens.FlxTween.CompleteCallback;
-import flixel.tweens.FlxEase.EaseFunction;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxPoint;
-import flixel.util.FlxPool;
 
 /**
  * A series of points which will determine a path from the
@@ -15,34 +11,15 @@ import flixel.util.FlxPool;
  */
 class QuadPath extends Motion
 {
-	/**
-	 * A pool that contains QuadPaths for recycling.
-	 */
-	@:isVar 
-	@:allow(flixel.tweens.FlxTween)
-	private static var _pool(get, null):FlxPool<QuadPath>;
-	
-	/**
-	 * Only allocate the pool if needed.
-	 */
-	private static function get__pool():FlxPool<QuadPath>
-	{
-		if (_pool == null)
-		{
-			_pool = new FlxPool<QuadPath>(QuadPath);
-		}
-		return _pool;
-	}
-	
 	// Path information.
 	private var _points:Array<FlxPoint>;
-	private var _distance:Float;
-	private var _speed:Float;
-	private var _index:Int;
-	private var _numSegs:Int;
+	private var _distance:Float = 0;
+	private var _speed:Float = 0;
+	private var _index:Int = 0;
+	private var _numSegs:Int = 0;
 	
 	// Curve information.
-	private var _updateCurve:Bool;
+	private var _updateCurve:Bool = true;
 	private var _curveT:Array<Float>;
 	private var _curveD:Array<Float>;
 	
@@ -51,14 +28,13 @@ class QuadPath extends Motion
 	private var _b:FlxPoint;
 	private var _c:FlxPoint;
 	
-	override private function init(Options:TweenOptions)
+	private function new(Options:TweenOptions)
 	{
-		FlxArrayUtil.setLength(_points, 0);
-		FlxArrayUtil.setLength(_curveD, 0);
-		FlxArrayUtil.setLength(_curveT, 0);
-		_distance = _speed = _index = _numSegs = 0;
-		_updateCurve = true;
-		return super.init(Options);
+		super(Options);
+		
+		_points = [];
+		_curveT = [];
+		_curveD = [];
 	}
 	
 	override public function destroy():Void 
@@ -128,12 +104,6 @@ class QuadPath extends Motion
 		return this;
 	}
 	
-	override inline private function put():Void
-	{
-		if (!_inPool)
-			_pool.putUnsafe(this);
-	}
-	
 	override private function update():Void
 	{
 		super.update();
@@ -188,14 +158,6 @@ class QuadPath extends Motion
 			y = _a.y * (1 - td) * (1 - td) + _b.y * 2 * (1 - td) * td + _c.y * td * td;
 		}
 		super.postUpdate();
-	}
-	
-	private function new()
-	{
-		super();
-		_points = new Array<FlxPoint>();
-		_curveT = new Array<Float>();
-		_curveD = new Array<Float>();
 	}
 	
 	// [from, control, to, control, to, control, to, control, to ...]

@@ -52,7 +52,6 @@
 * Abstracted rendering into FLX_RENDER_TILE and FLX_RENDER_BLIT conditionals as opposed to being hardcoded based on the target
 * FlxTween:
  * num(): added an optional tweenFunction parameter which can be used for increased performance (as MultiVarTween and SingleVarTween are fairly slow, using Reflection)
- * Tweens are now being pooled
  * singleVar() and multiVar() have been replaced by tween()
  * Removed SfxFader and Fader
 * FlxKeyboard:

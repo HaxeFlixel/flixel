@@ -1,11 +1,9 @@
 package flixel.tweens.motion;
 
-import flixel.tweens.FlxEase.EaseFunction;
-import flixel.tweens.FlxTween;
+import flixel.tweens.FlxTween.TweenOptions;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxPoint;
-import flixel.util.FlxPool;
 
 /**
  * Determines linear motion along a set of points.
@@ -13,53 +11,30 @@ import flixel.util.FlxPool;
 class LinearPath extends Motion
 {
 	/**
-	 * A pool that contains LinearPaths for recycling.
-	 */
-	@:isVar 
-	@:allow(flixel.tweens.FlxTween)
-	private static var _pool(get, null):FlxPool<LinearPath>;
-	
-	/**
-	 * Only allocate the pool if needed.
-	 */
-	private static function get__pool():FlxPool<LinearPath>
-	{
-		if (_pool == null)
-		{
-			_pool = new FlxPool<LinearPath>(LinearPath);
-		}
-		return _pool;
-	}
-	
-	/**
 	 * The full length of the path.
 	 */
-	public var distance(default, null):Float;
+	public var distance(default, null):Float = 0;
 
 	public var points:Array<FlxPoint>;
 	
 	// Path information.
 	private var _pointD:Array<Float>;
 	private var _pointT:Array<Float>;
-	private var _speed:Float;
-	private var _index:Int;
+	private var _speed:Float = 0;
+	private var _index:Int = 0;
 
 	// Line information.
 	private var _last:FlxPoint;
 	private var _prevPoint:FlxPoint;
 	private var _nextPoint:FlxPoint;
 	
-	override private function init(Options:TweenOptions)
+	private function new(Options:TweenOptions)
 	{
-		FlxArrayUtil.setLength(points, 0);
-		FlxArrayUtil.setLength(_pointD, 1);
-		FlxArrayUtil.setLength(_pointT, 1);
+		super(Options);
 		
-		_pointD[0] = _pointT[0] = 0;
-		
-		distance = _speed = _index = 0;
-		
-		return super.init(Options);
+		points = [];
+		_pointD = [0];
+		_pointT = [0];
 	}
 	
 	override public function destroy():Void 
@@ -184,20 +159,6 @@ class LinearPath extends Motion
 		}
 		
 		super.postUpdate();
-	}
-	
-	override inline private function put():Void
-	{
-		if (!_inPool)
-			_pool.putUnsafe(this);
-	}
-	
-	private function new()
-	{
-		super();
-		points = new Array<FlxPoint>();
-		_pointD = new Array<Float>();
-		_pointT = new Array<Float>();
 	}
 
 	/**
