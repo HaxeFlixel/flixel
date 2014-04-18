@@ -422,7 +422,7 @@ class FlxQuadTree extends FlxRect
 					group = FlxGroup.resolveGroup(basic);
 					if (group != null)
 					{
-					   add(group, list);
+						add(group, list);
 					}
 					else
 					{
