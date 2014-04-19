@@ -310,7 +310,7 @@ class FlxTilemap extends FlxObject
 		// Populate data if MapData is a CSV string
 		if (Std.is(MapData, String))
 		{
-			var mapString : String = cast MapData; //cast the data to a string to prevent neko getting map for invalid calls
+			var mapString:String = cast MapData; //cast the data to a string to prevent neko getting map for invalid calls
 
 			// Figure out the map dimensions based on the data string
 			_data = new Array<Int>();
