@@ -6,6 +6,7 @@ import flixel.group.FlxGroup;
 import flixel.group.FlxSpriteGroup;
 import flixel.group.FlxTypedGroup;
 import flixel.system.FlxCollisionType;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxRect;
 
 /**
@@ -312,47 +313,17 @@ class FlxQuadTree extends FlxRect
 	 */
 	override public function destroy():Void
 	{
-		if (_headA != null)
-		{
-			_headA.destroy();
-		}
-		_headA = null;
-		if (_tailA != null)
-		{
-			_tailA.destroy();
-		}
-		_tailA = null;
-		if (_headB != null)
-		{
-			_headB.destroy();
-		}
-		_headB = null;
-		if (_tailB != null)
-		{
-			_tailB.destroy();
-		}
-		_tailB = null;
+		_headA = FlxDestroyUtil.destroy(_headA);
+		_headB = FlxDestroyUtil.destroy(_headB);
 
-		if (_northWestTree != null)
-		{
-			_northWestTree.destroy();
-		}
-		_northWestTree = null;
-		if (_northEastTree != null)
-		{
-			_northEastTree.destroy();
-		}
-		_northEastTree = null;
-		if (_southEastTree != null)
-		{
-			_southEastTree.destroy();
-		}
-		_southEastTree = null;
-		if (_southWestTree != null)
-		{
-			_southWestTree.destroy();
-		}
-		_southWestTree = null;
+		_tailA = FlxDestroyUtil.destroy(_tailA);
+		_tailB = FlxDestroyUtil.destroy(_tailB);
+
+		_northWestTree = FlxDestroyUtil.destroy(_northWestTree);
+		_northEastTree = FlxDestroyUtil.destroy(_northEastTree);
+		
+		_southWestTree = FlxDestroyUtil.destroy(_southWestTree);
+		_southEastTree = FlxDestroyUtil.destroy(_southEastTree);
 
 		_object = null;
 		_processingCallback = null;
