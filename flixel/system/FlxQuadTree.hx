@@ -402,16 +402,12 @@ class FlxQuadTree extends FlxRect
 	{
 		_list = list;
 		
-		if (ObjectOrGroup.collisionType == FlxCollisionType.SPRITEGROUP)
-		{
-			ObjectOrGroup = cast cast(ObjectOrGroup, FlxSpriteGroup).group;
-		}
+		var group:FlxGroup = FlxGroup.resolveGroup(ObjectOrGroup);
 		
-		if (ObjectOrGroup.collisionType == FlxCollisionType.GROUP)
+		if (group != null)
 		{
 			var i:Int = 0;
 			var basic:FlxBasic;
-			var group:FlxGroup = cast ObjectOrGroup;
 			var members:Array<FlxBasic> = group.members;
 			var l:Int = group.length;
 			while (i < l)
