@@ -91,6 +91,8 @@ class Card extends FlxNapeSprite
 		// Finish the card animation
 		FlxTween.tween(scale, { x: 1 }, TURNING_TIME / 2);
 	}
+	
+	// Make sure that this object is removed from the MouseEventManger for gc
 	override public function destroy():Void {
 		MouseEventManager.remove(this);
 		super.destroy();
