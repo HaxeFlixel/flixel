@@ -115,11 +115,11 @@ class FlxObject extends FlxBasic
 		if (obj1delta != obj2delta)
 		{
 			//Check if the X hulls actually overlap
-			var obj1deltaAbs:Float = (obj1delta > 0)?obj1delta: -obj1delta;
-			var obj2deltaAbs:Float = (obj2delta > 0)?obj2delta: -obj2delta;
+			var obj1deltaAbs:Float = (obj1delta > 0) ? obj1delta : -obj1delta;
+			var obj2deltaAbs:Float = (obj2delta > 0) ? obj2delta : -obj2delta;
 			
-			var obj1rect:FlxRect = _firstSeparateFlxRect.set(Object1.x - ((obj1delta > 0)?obj1delta:0), Object1.last.y, Object1.width + ((obj1delta > 0)?obj1delta: -obj1delta), Object1.height);
-			var obj2rect:FlxRect = _secondSeparateFlxRect.set(Object2.x - ((obj2delta > 0)?obj2delta:0), Object2.last.y, Object2.width + ((obj2delta > 0)?obj2delta: -obj2delta), Object2.height);
+			var obj1rect:FlxRect = _firstSeparateFlxRect.set(Object1.x - ((obj1delta > 0) ? obj1delta : 0), Object1.last.y, Object1.width + obj1deltaAbs, Object1.height);
+			var obj2rect:FlxRect = _secondSeparateFlxRect.set(Object2.x - ((obj2delta > 0) ? obj2delta : 0), Object2.last.y, Object2.width + obj2deltaAbs, Object2.height);
 			
 			if ((obj1rect.x + obj1rect.width > obj2rect.x) && (obj1rect.x < obj2rect.x + obj2rect.width) && (obj1rect.y + obj1rect.height > obj2rect.y) && (obj1rect.y < obj2rect.y + obj2rect.height))
 			{
@@ -167,8 +167,8 @@ class FlxObject extends FlxBasic
 				Object1.x = Object1.x - overlap;
 				Object2.x += overlap;
 				
-				var obj1velocity:Float = Math.sqrt((obj2v * obj2v * Object2.mass) / Object1.mass) * ((obj2v > 0)?1: -1);
-				var obj2velocity:Float = Math.sqrt((obj1v * obj1v * Object1.mass) / Object2.mass) * ((obj1v > 0)?1: -1);
+				var obj1velocity:Float = Math.sqrt((obj2v * obj2v * Object2.mass) / Object1.mass) * ((obj2v > 0) ? 1 : -1);
+				var obj2velocity:Float = Math.sqrt((obj1v * obj1v * Object1.mass) / Object2.mass) * ((obj1v > 0) ? 1 : -1);
 				var average:Float = (obj1velocity + obj2velocity) * 0.5;
 				obj1velocity -= average;
 				obj2velocity -= average;
@@ -228,11 +228,11 @@ class FlxObject extends FlxBasic
 		if (obj1delta != obj2delta)
 		{
 			//Check if the Y hulls actually overlap
-			var obj1deltaAbs:Float = (obj1delta > 0)?obj1delta: -obj1delta;
-			var obj2deltaAbs:Float = (obj2delta > 0)?obj2delta: -obj2delta;
+			var obj1deltaAbs:Float = (obj1delta > 0) ? obj1delta : -obj1delta;
+			var obj2deltaAbs:Float = (obj2delta > 0) ? obj2delta : -obj2delta;
 			
-			var obj1rect:FlxRect = _firstSeparateFlxRect.set(Object1.x, Object1.y - ((obj1delta > 0)?obj1delta:0), Object1.width, Object1.height + obj1deltaAbs);
-			var obj2rect:FlxRect = _secondSeparateFlxRect.set(Object2.x, Object2.y - ((obj2delta > 0)?obj2delta:0), Object2.width, Object2.height + obj2deltaAbs);
+			var obj1rect:FlxRect = _firstSeparateFlxRect.set(Object1.x, Object1.y - ((obj1delta > 0) ? obj1delta : 0), Object1.width, Object1.height + obj1deltaAbs);
+			var obj2rect:FlxRect = _secondSeparateFlxRect.set(Object2.x, Object2.y - ((obj2delta > 0) ? obj2delta : 0), Object2.width, Object2.height + obj2deltaAbs);
 			
 			if ((obj1rect.x + obj1rect.width > obj2rect.x) && (obj1rect.x < obj2rect.x + obj2rect.width) && (obj1rect.y + obj1rect.height > obj2rect.y) && (obj1rect.y < obj2rect.y + obj2rect.height))
 			{
@@ -280,8 +280,8 @@ class FlxObject extends FlxBasic
 				Object1.y = Object1.y - overlap;
 				Object2.y += overlap;
 				
-				var obj1velocity:Float = Math.sqrt((obj2v * obj2v * Object2.mass)/Object1.mass) * ((obj2v > 0)?1:-1);
-				var obj2velocity:Float = Math.sqrt((obj1v * obj1v * Object1.mass)/Object2.mass) * ((obj1v > 0)?1:-1);
+				var obj1velocity:Float = Math.sqrt((obj2v * obj2v * Object2.mass)/Object1.mass) * ((obj2v > 0) ? 1 : -1);
+				var obj2velocity:Float = Math.sqrt((obj1v * obj1v * Object1.mass)/Object2.mass) * ((obj1v > 0) ? 1 : -1);
 				var average:Float = (obj1velocity + obj2velocity) * 0.5;
 				obj1velocity -= average;
 				obj2velocity -= average;
