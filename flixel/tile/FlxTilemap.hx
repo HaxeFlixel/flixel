@@ -313,12 +313,15 @@ class FlxTilemap extends FlxObject
 		{
 			var mapString : String = cast MapData; //cast the data to a string to prevent neko getting map for invalid calls
 			//remove any tiled xml data at the start or end
-			if (mapString.charAt(0) == "<")
+			if (IgnoreXml)
 			{
-				var startData : Int = mapString.indexOf("\"csv\">") + 7; //the 7 is the "csv"> + the \n
-				var endData : Int = mapString.indexOf("</data>");
-				
-				mapString = mapString.substring(startData, endData);
+				if (mapString.charAt(0) == "<")
+				{
+					var startData : Int = mapString.indexOf("\"csv\">") + 7; //the 7 is the "csv"> + the \n
+					var endData : Int = mapString.indexOf("</data>");
+					
+					mapString = mapString.substring(startData, endData);
+				}
 			}
 			// Figure out the map dimensions based on the data string
 			_data = new Array<Int>();
