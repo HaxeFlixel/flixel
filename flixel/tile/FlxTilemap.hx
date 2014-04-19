@@ -339,7 +339,7 @@ class FlxTilemap extends FlxObject
 					var curChar:String = columns[column];
 					
 					//refular expresson to check if value is a number:
-					var isNumeric:EReg = ~/^[-0-9]+$/;
+					var isNumeric:EReg = ~/^[ ]*[-0-9]+[ ]*$/;
 					
 					//if value is a number, add to map
 					if (isNumeric.match(curChar))
@@ -349,9 +349,9 @@ class FlxTilemap extends FlxObject
 					}
 					else
 					{
-						//if the current char is empty and at the end, ignore it and decrease the width
+						//if the string is at the end of the line, ignore it and decrease the width
 						//solves problems with lines ending in commas
-						if (curChar.length == 0 && column == columns.length - 1)
+						if (column == columns.length - 1)
 						{
 							widthInTiles--;
 							continue;
@@ -359,7 +359,7 @@ class FlxTilemap extends FlxObject
 						else
 						{
 							//if the value was not a number, warn the user
-							throw "value passed in map: (" + curChar + ") was not a valid number";
+							throw "value passed in map: (" + curChar + ") at: " + row + " " + column + " was not a valid number";
 						}
 					}	
 				}
