@@ -46,6 +46,9 @@ import flixel.system.frontEnds.SoundFrontEnd;
 #if android
 import flixel.input.android.FlxAndroidKeys;
 #end
+#if mobile
+import flixel.system.input.FlxAccelerometer;
+#end
 #if js
 import flixel.system.frontEnds.HTML5FrontEnd;
 #end
@@ -199,6 +202,13 @@ class FlxG
 	 * Useful for tracking Back, Home buttons etc on Android devices.
 	 */
 	public static var android(default, null):FlxAndroidKeys;
+	#end
+	
+	#if mobile
+	/**
+	 * A reference to a FlxAccelerometer object.
+	 */
+	public static var accelerometer(default, null):FlxAccelerometer;
 	#end
 	
 	#if js
