@@ -327,15 +327,16 @@ class FlxTilemap extends FlxObject
 				{
 					heightInTiles--;
 					
-					if (columns.length == 1)
+					if (columns.length == 1) //if a row only has one section of text
 					{
-						var isSpaces:EReg = ~/^[ ]*\r?$/;
+						var isSpaces:EReg = ~/^[ ]*\r?$/; //check that the text is only spaces
 						if (isSpaces.match(columns[0]))
 						{
-							continue;
+							continue; //skip this row if its empty
+							//this ensures no data is allowed to get through simply because it is not separated by commas
 						}
 					}
-					else
+					else //if the row is empty, skip it
 					{
 						continue;
 					}
