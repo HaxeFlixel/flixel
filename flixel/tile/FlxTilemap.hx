@@ -339,7 +339,7 @@ class FlxTilemap extends FlxObject
 					var curChar:String = columns[column];
 					
 					//refular expresson to check if value is a number:
-					var isNumeric:EReg = ~/^[ ]*[-0-9]+[ ]*[\r*\n*]?$/;
+					var isNumeric:EReg = ~/^[ ]*[-0-9]+[ ]*\r?\n?$/;
 					
 					//if value is a number, add to map
 					if (isNumeric.match(curChar))
