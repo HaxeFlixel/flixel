@@ -1,4 +1,6 @@
 package flixel.system.input;
+
+#if mobile
 import flash.events.AccelerometerEvent;
 import flash.sensors.Accelerometer;
 
@@ -30,3 +32,4 @@ class FlxAccelerometer {
 		z = event.accelerationZ;
 	}
 }
+#end
