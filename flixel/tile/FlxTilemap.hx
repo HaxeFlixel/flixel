@@ -351,7 +351,7 @@ class FlxTilemap extends FlxObject
 					{
 						//if the string is at the end of the line, ignore it and decrease the width
 						//solves problems with lines ending in commas
-						if (column == columns.length - 1)
+						if (column == columns.length - 1 && curChar.length == 0)
 						{
 							widthInTiles--;
 						}
