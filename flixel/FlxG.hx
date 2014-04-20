@@ -206,7 +206,7 @@ class FlxG
 	
 	#if mobile
 	/**
-	 * A reference to a FlxAccelerometer object.
+	 * Provides access to the accelerometer data of mobile devices as x/y/z values.
 	 */
 	public static var accelerometer(default, null):FlxAccelerometer;
 	#end
