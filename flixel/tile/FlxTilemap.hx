@@ -288,7 +288,7 @@ class FlxTilemap extends FlxObject
 		
 		super.destroy();
 	}
-	
+
 	/**
 	 * Load the tilemap with string data and a tile graphic.
 	 * 
@@ -326,6 +326,12 @@ class FlxTilemap extends FlxObject
 				if (columns.length <= 1)
 				{
 					heightInTiles--;
+					
+					var isSpaces:EReg = ~/^[ ]*\r?$/;
+					if (isSpaces.match(columns[0]))
+					{
+						continue;
+					}
 				}
 				if (widthInTiles == 0)
 				{
@@ -339,7 +345,7 @@ class FlxTilemap extends FlxObject
 					var curChar:String = columns[column];
 					
 					//regular expresson to check if value can be parsed as a number:
-					var isNumeric:EReg = ~/^[ ]*[-0-9]+[ ]*\r?\n?$/;
+					var isNumeric:EReg = ~/^[ ]*[-0-9]+[ ]*\r?$/;
 					
 					//if value is can be parsed, add to map
 					if (isNumeric.match(curChar))
@@ -349,9 +355,8 @@ class FlxTilemap extends FlxObject
 					}
 					else
 					{
-						//if the string is at the end of the line, ignore it and decrease the width
-						//solves problems with lines ending in commas
-						if (column == columns.length - 1 && curChar.length == 0)
+						var isLineEnd:EReg = ~/^[ ]*\r[ ]*$/;
+						if (isLineEnd.match(curChar) || curChar.length == 0)
 						{
 							widthInTiles--;
 						}
