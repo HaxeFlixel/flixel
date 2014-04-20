@@ -43,7 +43,9 @@ import flixel.system.frontEnds.SoundFrontEnd;
 #if android
 import flixel.system.input.android.FlxAndroidKeys;
 #end
-
+#if mobile
+import flixel.system.input.FlxAccelerometer;
+#end
 interface IDestroyable
 {
 	public function destroy():Void;
@@ -172,6 +174,13 @@ class FlxG
 	public static var android(default, null):FlxAndroidKeys;
 	#end
 	
+	#if mobile
+	/**
+	 * A reference to a <code>FlxAccelerometer</code> object. 
+	 */
+	public static var accelerometer(default, null):FlxAccelerometer;
+	#end
+	
 	/**
 	 * From here on: frontEnd classes.
 	 */ 
@@ -274,6 +283,10 @@ class FlxG
 		
 		#if android
 			android = cast(inputs.add(new FlxAndroidKeys()), FlxAndroidKeys);
+		#end
+		
+		#if mobile
+			accelerometer = new FlxAccelerometer();
 		#end
 		
 		save.bind("flixel");
