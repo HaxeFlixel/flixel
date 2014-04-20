@@ -373,8 +373,7 @@ class FlxQuadTree extends FlxRect
 	{
 		_list = list;
 		
-		var group:FlxGroup = FlxGroup.resolveGroup(ObjectOrGroup);
-		
+		var group = FlxGroup.resolveGroup(ObjectOrGroup);
 		if (group != null)
 		{
 			var i:Int = 0;

@@ -597,7 +597,7 @@ class FlxObject extends FlxBasic
 	 */
 	public function overlaps(ObjectOrGroup:FlxBasic, InScreenSpace:Bool = false, ?Camera:FlxCamera):Bool
 	{
-		var group:FlxGroup = FlxGroup.resolveGroup(ObjectOrGroup);
+		var group = FlxGroup.resolveGroup(ObjectOrGroup);
 		if (group != null) // if it is a group
 		{
 			return FlxGroup.overlaps(overlapsCallback, group, 0, 0, InScreenSpace, Camera);
@@ -645,7 +645,7 @@ class FlxObject extends FlxBasic
 	 */
 	public function overlapsAt(X:Float, Y:Float, ObjectOrGroup:FlxBasic, InScreenSpace:Bool = false, ?Camera:FlxCamera):Bool
 	{
-		var group:FlxGroup = FlxGroup.resolveGroup(ObjectOrGroup);
+		var group = FlxGroup.resolveGroup(ObjectOrGroup);
 		if (group != null) // if it is a group
 		{
 			return FlxGroup.overlaps(overlapsAtCallback, group, X, Y, InScreenSpace, Camera);
