@@ -208,7 +208,7 @@ class FlxG
 	/**
 	 * Provides access to the accelerometer data of mobile devices as x/y/z values.
 	 */
-	public static var accelerometer(default, null):FlxAccelerometer;
+	public static var accelerometer(default, null):FlxAccelerometer = new FlxAccelerometer();
 	#end
 	
 	#if js
