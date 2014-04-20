@@ -327,8 +327,15 @@ class FlxTilemap extends FlxObject
 				{
 					heightInTiles--;
 					
-					var isSpaces:EReg = ~/^[ ]*\r?$/;
-					if (isSpaces.match(columns[0]))
+					if (columns.length == 1)
+					{
+						var isSpaces:EReg = ~/^[ ]*\r?$/;
+						if (isSpaces.match(columns[0]))
+						{
+							continue;
+						}
+					}
+					else
 					{
 						continue;
 					}
