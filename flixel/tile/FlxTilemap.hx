@@ -338,7 +338,7 @@ class FlxTilemap extends FlxObject
 					//the current character in the column:
 					var curChar:String = columns[column];
 					
-					//regular expresson to check if value can be parsed a number:
+					//regular expresson to check if value can be parsed as a number:
 					var isNumeric:EReg = ~/^[ ]*[-0-9]+[ ]*\r?\n?$/;
 					
 					//if value is can be parsed, add to map
