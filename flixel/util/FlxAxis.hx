@@ -1,9 +1,10 @@
 package flixel.util;
 
-enum FlxAxis 
+@:enum
+abstract FlxAxis(Int) 
 {
-	X;
-	Y;
-	BOTH;
-	NONE;
+	var NONE = 0; //0b00 (default value)
+	var X 	 = 1; //0b01
+	var Y	 = 2; //0b10
+	var BOTH = 3; //0b11
 }

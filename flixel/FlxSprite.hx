@@ -98,9 +98,17 @@ class FlxSprite extends FlxObject
 	 */
 	public var facing(default, set):Int = FlxObject.RIGHT;
 	/**
-	 * The axis on which this sprite is flipped
+	 * The FlxAxis on which this sprite is flipped
 	 */
-	public var flip(default, set):FlxAxis = FlxAxis.NONE;
+	public var flip(get, set):FlxAxis;
+	/**
+	 * Whether this sprite is flipped on the X axis
+	 */
+	public var flipX(default, set):Bool = false;
+	/**
+	 * Whether this sprite is flipped on the Y axis
+	 */
+	public var flipY(default, set):Bool = false;
 	 
 	/**
 	 * WARNING: The origin of the sprite will default to its center. If you change this, 
@@ -210,8 +218,6 @@ class FlxSprite extends FlxObject
 		origin = FlxPoint.get();
 		scale = FlxPoint.get(1, 1);
 		_matrix = new Matrix();
-		
-		
 	}
 	
 	/**
@@ -1349,7 +1355,6 @@ class FlxSprite extends FlxObject
 	 */
 	public inline function setFacingFlip(Direction:Int, ?Flip:FlxAxis):Void
 	{
-		if (Flip == null) Flip = FlxAxis.X;
 		_facingFlip.set(Direction, Flip);
 	}
 	/**
@@ -1363,8 +1368,7 @@ class FlxSprite extends FlxObject
 	 */
 	public inline function getFacingFlip(Direction:Int):FlxAxis
 	{
-		var flip:FlxAxis = _facingFlip.get(Direction);
-		return flip != null ? flip : FlxAxis.NONE;
+		return _facingFlip.get(Direction);
 	}
 	
 	/**
@@ -1540,10 +1544,41 @@ class FlxSprite extends FlxObject
 	
 	private function set_flip(Axis:FlxAxis):FlxAxis
 	{
+		flipX = Axis == FlxAxis.X || Axis == FlxAxis.BOTH;
+		flipY = Axis == FlxAxis.Y || Axis == FlxAxis.BOTH;
+		return Axis;
+	}
+	private function get_flip():FlxAxis
+	{
+		if (flipX && flipY)
+		{
+			return FlxAxis.BOTH;
+		}
+		else if (flipX)
+		{
+			return FlxAxis.X;
+		}
+		else if (flipY)
+		{
+			return FlxAxis.Y;
+		}
+		else
+		{
+			return FlxAxis.NONE;
+		}
+	}
+	private function set_flipX(Value:Bool):Bool
+	{
 		#if FLX_RENDER_TILE
-		_facingHorizontalMult = (Axis == FlxAxis.X || Axis == FlxAxis.BOTH) ? -1 : 1;
-		_facingVerticalMult = (Axis == FlxAxis.Y || Axis == FlxAxis.BOTH) ? -1 : 1;
+		_facingHorizontalMult = Value ? -1 : 1;
 		#end
-		return flip = Axis;
+		return flipX = Value;
+	}
+	private function set_flipY(Value:Bool):Bool
+	{
+		#if FLX_RENDER_TILE
+		_facingVerticalMult = Value ? -1 : 1;
+		#end
+		return flipY = Value;
 	}
 }
