@@ -48,6 +48,11 @@ class FlxPoint implements IFlxPooled
 	private var _weak:Bool = false;
 	private var _inPool:Bool = false;
 	
+	public function new(X:Float = 0, Y:Float = 0) 
+	{
+		set(X, Y);
+	}
+	
 	/**
 	 * Add this FlxPoint to the recycling pool.
 	 */
@@ -267,8 +272,6 @@ class FlxPoint implements IFlxPooled
 			LabelValuePair.weak("x", x),
 			LabelValuePair.weak("y", y)]);
 	}
-	
-	private function new() {}
 	
 	/**
 	 * Necessary for FlxPointHelper in FlxSpriteGroup.
