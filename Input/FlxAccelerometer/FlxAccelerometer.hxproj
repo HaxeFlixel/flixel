@@ -16,16 +16,16 @@
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
     <class path="source" />
-    <class path="export\flash\haxe" />
+    <class path="export\android\haxe" />
   </classpaths>
   <!-- Build options -->
   <build>
-    <option directives="FLX_NO_GAMEPAD&#xA;tools=1.3.2&#xA;FLX_NO_DEBUG&#xA;FLX_RENDER_BLIT&#xA;display&#xA;web" />
+    <option directives="FLX_NO_GAMEPAD&#xA;tools=1.3.2&#xA;FLX_NO_DEBUG&#xA;lime_native&#xA;no-compilation&#xA;display&#xA;FLX_RENDER_TILE&#xA;android&#xA;mobile&#xA;android&#xA;android-9" />
     <option flashStrict="False" />
     <option noInlineOnDebug="False" />
     <option mainClass="ApplicationMain" />
     <option enabledebug="False" />
-    <option additional="--no-output&#xA;-swf-version 11.2&#xA;#--remap nme:flash" />
+    <option additional="--no-output&#xA;--macro allowPackage('flash')&#xA;--macro keep(&quot;Main&quot;)" />
   </build>
   <!-- haxelib libraries -->
   <haxelib>

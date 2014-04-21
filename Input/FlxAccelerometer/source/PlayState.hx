@@ -1,33 +1,31 @@
 package;
 
+import flixel.addons.nape.FlxNapeSprite;
 import flixel.addons.nape.FlxNapeState;
 import flixel.FlxG;
 import flixel.text.FlxText;
+import flixel.util.FlxMath;
 import flixel.util.FlxRandom;
 import nape.geom.Vec2;
-import flixel.input.FlxAccelerometer;
 
-/**
- * A FlxState which can be used for the actual gameplay.
- */
 class PlayState extends FlxNapeState
 {
+	private static inline var GRAVITY_FACTOR:Int = 5000; 
+	
 	private var xText:FlxText;
 	private var yText:FlxText;
 	private var zText:FlxText;
 	
-	/**
-	 * Function that is called up when to state is created to set it up. 
-	 */
 	override public function create():Void
 	{
 		super.create();
 		
 		createWalls();
-		FlxNapeState.space.gravity = Vec2.get(0, 5000);
+		FlxNapeState.space.gravity = Vec2.get(0, GRAVITY_FACTOR);
 		
-		for (i in 0...20) {
-			var box:Box = new Box(FlxRandom.intRanged(0, FlxG.width - 30), FlxRandom.intRanged(0, FlxG.height - 30));
+		for (i in 0...50) 
+		{
+			var box = new Box(FlxRandom.intRanged(0, FlxG.width - 30), FlxRandom.intRanged(0, FlxG.height - 30));
 			box.body.space = FlxNapeState.space;
 			add(box);
 		}
@@ -44,30 +42,34 @@ class PlayState extends FlxNapeState
 		add(zText);
 	}
 	
-	/**
-	 * Function that is called when this state is destroyed - you might want to 
-	 * consider setting all objects this state uses to null to help garbage collection.
-	 */
-	override public function destroy():Void
-	{
-		super.destroy();
-	}
-
-	/**
-	 * Function that is called once every frame.
-	 */
 	override public function update():Void
 	{
 		super.update();
+		
+		#if mobile
 		if (FlxG.accelerometer.isSupported) 
 		{
 			//Display the accelerometer values rounded to the first decimal number
-			xText.text = "x: " + Std.string(Math.round(FlxG.accelerometer.x * 10) / 10);
-			yText.text = "y: " + Std.string(Math.round(FlxG.accelerometer.y * 10) / 10);
-			zText.text = "z: " + Std.string(Math.round(FlxG.accelerometer.z * 10) / 10);
+			xText.text = "x: " + FlxMath.roundDecimal(FlxG.accelerometer.x, 1);
+			yText.text = "y: " + FlxMath.roundDecimal(FlxG.accelerometer.y, 1);
+			zText.text = "z: " + FlxMath.roundDecimal(FlxG.accelerometer.z, 1);
 			
 			//Inverting the x axis to align the device and the screen coordinates
-			FlxNapeState.space.gravity.setxy(-FlxG.accelerometer.x * 5000, FlxG.accelerometer.y * 5000);
+			FlxNapeState.space.gravity.setxy(-FlxG.accelerometer.x * GRAVITY_FACTOR, FlxG.accelerometer.y * GRAVITY_FACTOR);
 		}
+		#end
 	}	
+}
+
+class Box extends FlxNapeSprite 
+{
+	public function new(X:Float, Y:Float) 
+	{
+		super(X, Y);
+		makeGraphic(30, 30, FlxRandom.color());
+		createRectangularBody(30, 30);
+		setBodyMaterial(0.5, 0.5, 0.5, 2);
+		body.space = FlxNapeState.space;
+		physicsEnabled = true;
+	}
 }
