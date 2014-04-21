@@ -231,7 +231,7 @@ class UFO extends FlxSprite
 	public function new(X:Float, Y:Float, SimpleGraphics:Dynamic)
 	{
 		super(X, Y, SimpleGraphics);
-		loadGraphic("assets/cutup/ufo.png", true, true, 32, 32);
+		loadGraphic("assets/cutup/ufo.png", true, 32, 32);
 		animation.add("fly", [for (i in 0...9) i], 10, true);
 		animation.play("fly");
 		
@@ -244,9 +244,9 @@ class UFO extends FlxSprite
 	{
 		// after super.update() x and last.x become the same
 		if (x > last.x)
-			facing = FlxObject.RIGHT;
+			flipX = false;
 		else
-			facing = FlxObject.LEFT;
+			flipX = true;
 		
 		super.update();
 	}

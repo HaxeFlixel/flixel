@@ -92,7 +92,7 @@ class PlayState extends FlxState
 	private function setupPlayer():Void
 	{
 		_player = new FlxSprite(64, 220);
-		_player.loadGraphic("assets/spaceman.png", true, true, 16);
+		_player.loadGraphic("assets/spaceman.png", true, 16);
 		
 		// Bounding box tweaks
 		_player.setSize(14, 14);
@@ -141,12 +141,12 @@ class PlayState extends FlxState
 		
 		if (FlxG.keys.anyPressed(["LEFT", "A"]))
 		{
-			_player.facing = FlxObject.LEFT;
+			_player.flipX = true;
 			_player.acceleration.x -= _player.drag.x;
 		}
 		else if (FlxG.keys.anyPressed(["RIGHT", "D"]))
 		{
-			_player.facing = FlxObject.RIGHT;
+			_player.flipX = false;
 			_player.acceleration.x += _player.drag.x;
 		}
 		if (FlxG.keys.anyJustPressed(["UP", "W"]) && _player.velocity.y == 0)

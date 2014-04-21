@@ -30,7 +30,8 @@ class Enemy extends EnemyTemplate
 		_spawntimer = 0;
 		
 		// Set up the graphics
-		loadGraphic("assets/art/spikemonsta.png", true, true); 
+		loadGraphic("assets/art/spikemonsta.png", true); 
+		
 		animation.add("walking", [0, 1], 10, true);
 		animation.add("idle", [0]);
 		

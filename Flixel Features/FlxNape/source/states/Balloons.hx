@@ -228,7 +228,6 @@ class Wire
 		distJoint.frequency = 5;
 		distJoint.space = FlxNapeState.space;
 		joints.push(distJoint);
-		
 	}
 	
 	public function draw()
@@ -238,7 +237,6 @@ class Wire
 		var gfx:Graphics = FlxSpriteUtil.flashGfxSprite.graphics;
 		gfx.lineStyle(1, 0x0);
 		
-		
 		for (joint in joints)
 		{
 			from = joint.body1.localPointToWorld(joint.anchor1);
@@ -246,7 +244,6 @@ class Wire
 			gfx.moveTo(from.x, from.y); 
 			gfx.lineTo(to.x, to.y);
 		}
-		
 	}
 }
 
@@ -255,7 +252,7 @@ class Balloon extends FlxNapeSprite
 	public function new(X:Int, Y:Int)
 	{
 		super(X, Y);
-		loadGraphic("assets/Balloon.png", true, false, 68, 68);
+		loadGraphic("assets/Balloon.png", true, 68, 68);
 		
 		this.animation.frameIndex = FlxRandom.intRanged(0, 6);
 		
@@ -277,6 +274,6 @@ class Balloon extends FlxNapeSprite
 	public function onCollide() 
 	{
 		body.shapes.pop();
-		this.animation.frameIndex += 7;
+		animation.frameIndex += 7;
 	}
 }

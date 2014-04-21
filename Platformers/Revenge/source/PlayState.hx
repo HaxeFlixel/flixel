@@ -75,7 +75,7 @@ class PlayState extends FlxState
 		
 		// Creating the player sprite, loading the sprite sheet and adding animations
 		_player = new FlxSprite(240, 200);
-		_player.loadGraphic("assets/aye.png", true, true, 32, 32);
+		_player.loadGraphic("assets/aye.png", true, 32, 32);
 		_player.animation.add("idle", [0]);
 		_player.animation.add("walk", [1, 2, 3, 4, 5, 6], 6, true);
 		_player.animation.add("down", [7]);
@@ -133,7 +133,7 @@ class PlayState extends FlxState
 		if (FlxG.keys.anyPressed(["LEFT", "A"]))
 		{
 			_player.velocity.x = -_playerSpeed;
-			_player.facing = FlxObject.LEFT;
+			_player.flipX = true;
 			
 			// If the player is actually moving right and if he is not jumping/falling then you do the walk animaiton
 			if (_player.isTouching(FlxObject.FLOOR) && !_player.isTouching(FlxObject.WALL)) 
@@ -151,7 +151,7 @@ class PlayState extends FlxState
 		if (FlxG.keys.anyPressed(["RIGHT", "D"]))
 		{
 			_player.velocity.x = _playerSpeed;
-			_player.facing = FlxObject.RIGHT;
+			_player.flipX = false;
 			
 			// If the player is actually moving right and if he is not jumping/falling then you do the walk animaiton
 			if (_player.isTouching(FlxObject.FLOOR) && !_player.isTouching(FlxObject.WALL)) 

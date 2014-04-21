@@ -13,18 +13,13 @@ class MenuState extends FlxState
 	override public function create():Void
 	{
 		// TexturePackerData is a helper class to store links to atlas image and atlas data files
-		var tex1 = new TexturePackerData(	"assets/test-trim-rotation.json", 
-											"assets/test-trim-rotation.png");
+		var tex1 = new TexturePackerData("assets/test-trim-rotation.json", "assets/test-trim-rotation.png");
 		// Create some sprite
 		var x1 = new FlxSprite(20, 20);
 		// and loading atlas in it finally
-		x1.loadGraphicFromTexture(	tex1, 
-									true, 
-									true, 
-									"100px-1,202,0,200-Scythescraper.png");
-		
+		x1.loadGraphicFromTexture(tex1, true, "100px-1,202,0,200-Scythescraper.png");
 		x1.angularVelocity = 50;
-		x1.facing = FlxObject.LEFT;
+		x1.flipX = true;
 		add(x1);
 		
 		// Let's create some more atlases (just for testing of rotation and trim support)
@@ -36,7 +31,7 @@ class MenuState extends FlxState
 		// You can provide first frame to show (see last parameter in loadImageFromTexture() method)
 		// Plus you can generate reversed sprites which is useful for animating character in games
 		var x1 = new FlxSprite(20, 20);
-		x1.loadGraphicFromTexture(tex3, true, false, "100px-1,202,0,200-Scythescraper.png");
+		x1.loadGraphicFromTexture(tex3, true, "100px-1,202,0,200-Scythescraper.png");
 		x1.resetSizeFromFrame();
 		x1.centerOrigin();
 		x1.angularVelocity = 50;

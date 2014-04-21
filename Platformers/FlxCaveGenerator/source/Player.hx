@@ -15,7 +15,7 @@ class Player extends FlxSprite
 	public function new(X:Int, Y:Int)
 	{
 		super(X,Y);
-		loadGraphic("assets/spaceman.png", true, true, 8);
+		loadGraphic("assets/spaceman.png", true, 8);
 		
 		//bounding box tweaks
 		width = 6;
@@ -43,12 +43,12 @@ class Player extends FlxSprite
 		
 		if (FlxG.keys.anyPressed(["LEFT", "A"]))
 		{
-			facing = FlxObject.LEFT;
+			flipX = true;
 			acceleration.x -= drag.x;
 		}
 		else if (FlxG.keys.anyPressed(["RIGHT", "D"]))
 		{
-			facing = FlxObject.RIGHT;
+			flipX = false;
 			acceleration.x += drag.x;
 		}
 		

@@ -57,7 +57,10 @@ class Player extends FlxSprite
 	{
 		super(X, Y);
 		
-		loadGraphic(Reg.SPACEMAN, true, true, 8);
+		loadGraphic(Reg.SPACEMAN, true, 8);
+		
+		setFacingFlip(FlxObject.LEFT, true, false);
+		setFacingFlip(FlxObject.RIGHT, false, false);
 		
 		// Bounding box tweaks
 		width = 6;
@@ -315,13 +318,13 @@ class Player extends FlxSprite
 	
 	function moveLeft():Void
 	{
-		facing = FlxObject.LEFT;
+		flipX = true;
 		acceleration.x -= drag.x;
 	}
 	
 	function moveRight():Void
 	{
-		facing = FlxObject.RIGHT;
+		flipX = false;
 		acceleration.x += drag.x;
 	}
 	

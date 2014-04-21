@@ -9,7 +9,7 @@ class Player extends FlxSprite
 	public function new()
 	{
 		super(FlxG.width * 0.5 - 4, FlxG.height * 0.5 - 4);
-		loadGraphic("assets/dove.png", true, true);
+		loadGraphic("assets/dove.png", true);
 		animation.frameIndex = 2;
 		animation.add("flap",[1,0,1,2],12,false);
 	}
@@ -55,7 +55,6 @@ class Player extends FlxSprite
 		acceleration.y = 0;
 		velocity.x = 0;
 		velocity.y = 0;
-		facing = FlxObject.RIGHT;
 		
 		super.revive();
 	}

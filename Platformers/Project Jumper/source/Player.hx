@@ -45,7 +45,8 @@ class Player extends FlxSprite
 		_bullets = Bullets;
 		
 		//Set up the graphics
-		loadGraphic("assets/art/lizardhead3.png", true, true, 16, 20);  
+		loadGraphic("assets/art/lizardhead3.png", true, 16, 20);
+		
 		animation.add("walking", [0, 1, 2, 3], 12, true);
 		animation.add("idle", [3]);
 		animation.add("jump", [2]);
@@ -82,12 +83,12 @@ class Player extends FlxSprite
 		
 		if (FlxG.keys.anyPressed(["LEFT", "A"]))
 		{
-			facing = FlxObject.LEFT; 
+			flipX = true;
 			acceleration.x = -drag.x;
 		}
 		else if (FlxG.keys.anyPressed(["RIGHT", "D"]))
 		{
-			facing = FlxObject.RIGHT;
+			flipX = false;
 			acceleration.x = drag.x;				
 		}
 		
@@ -233,7 +234,7 @@ class Player extends FlxSprite
 			
 			if (_blt != null)
 			{
-				if (facing == FlxObject.LEFT)
+				if (flipX)
 				{
 					// nudge it a little to the side so it doesn't emerge from the middle of helmutguy
 					bulletX -= Math.floor(_blt.width - 8); 

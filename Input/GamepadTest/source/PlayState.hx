@@ -53,7 +53,7 @@ class PlayState extends FlxState
 		_rightStick = createSprite(RIGHT_STICK_POS.x, RIGHT_STICK_POS.y, "assets/Stick.png");
 		
 		_dPad = new FlxSprite(144, 126);
-		_dPad.loadGraphic("assets/DPad.png", true, false, 87, 87);
+		_dPad.loadGraphic("assets/DPad.png", true, 87, 87);
 		_dPad.alpha = ALPHA_OFF;
 		add(_dPad);
 		

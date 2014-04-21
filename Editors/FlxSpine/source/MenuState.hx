@@ -40,6 +40,9 @@ class MenuState extends FlxState
 		var instructions = new FlxText(0, 0, 250, "Space: Toggle Debug Display\nMove: Arrows / WASD\nLeft mouse: Jump", 12);
 		instructions.ignoreDrawDebug = true;
 		add(instructions);
+		
+		//spineSprite.flipX = true;
+		spineSprite.flipY = true;
 	}
 	
 	override public function update():Void

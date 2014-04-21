@@ -87,7 +87,7 @@ class GameState extends FlxNapeState
 			otherOrbShadow.blend = BlendMode.MULTIPLY;
 			
 			var otherOrb = new Orb();
-			otherOrb.loadGraphic("assets/OtherOrb.png", true, false, 140, 140);
+			otherOrb.loadGraphic("assets/OtherOrb.png", true, 140, 140);
 			otherOrb.createCircularBody(50);
 			otherOrb.setBodyMaterial(1, 0.2, 0.4, 0.5);
 			otherOrb.antialiasing = true;

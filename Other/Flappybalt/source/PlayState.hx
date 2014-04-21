@@ -73,14 +73,14 @@ class PlayState extends FlxState
 		// The left bounce panel. Drawn via code in Reg to fit screen height.
 		
 		_bounceLeft = new FlxSprite(1, 17);
-		_bounceLeft.loadGraphic(Reg.getBounceImage(FlxG.height - 34), true, false, 4, FlxG.height - 34);
+		_bounceLeft.loadGraphic(Reg.getBounceImage(FlxG.height - 34), true, 4, FlxG.height - 34);
 		_bounceLeft.animation.add("flash", [1,0], 8, false);
 		add(_bounceLeft);
 		
 		// The right bounce panel.
 		
 		_bounceRight = new FlxSprite(FlxG.width - 5, 17);
-		_bounceRight.loadGraphic(Reg.getBounceImage(FlxG.height - 34), true, false, 4, FlxG.height - 34);
+		_bounceRight.loadGraphic(Reg.getBounceImage(FlxG.height - 34), true, 4, FlxG.height - 34);
 		_bounceRight.animation.add("flash", [1,0], 8, false);
 		add(_bounceRight);
 		
@@ -131,7 +131,7 @@ class PlayState extends FlxState
 		} else if (_player.x < 5) {
 			_player.x = 5;
 			_player.velocity.x = -_player.velocity.x;
-			_player.facing = FlxObject.RIGHT;
+			_player.flipX = false;
 			Reg.score++;
 			_scoreDisplay.text = Std.string(Reg.score);
 			_bounceLeft.animation.play("flash");
@@ -139,7 +139,7 @@ class PlayState extends FlxState
 		} else if (_player.x + _player.width > FlxG.width - 5) {
 			_player.x = FlxG.width - _player.width - 5;
 			_player.velocity.x = -_player.velocity.x;
-			_player.facing = FlxObject.LEFT;
+			_player.flipX = true;
 			Reg.score++;
 			_scoreDisplay.text = Std.string(Reg.score);
 			_bounceRight.animation.play("flash");
