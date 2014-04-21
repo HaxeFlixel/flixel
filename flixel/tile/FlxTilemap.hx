@@ -288,7 +288,7 @@ class FlxTilemap extends FlxObject
 		
 		super.destroy();
 	}
-	
+
 	/**
 	 * Load the tilemap with string data and a tile graphic.
 	 * 
@@ -325,8 +325,21 @@ class FlxTilemap extends FlxObject
 				
 				if (columns.length <= 1)
 				{
-					heightInTiles = heightInTiles - 1;
-					continue;
+					heightInTiles--;
+					
+					if (columns.length == 1) //if a row only has one section of text
+					{
+						var isSpaces:EReg = ~/^[ ]*\r?$/; //check that the text is only spaces
+						if (isSpaces.match(columns[0]))
+						{
+							continue; //skip this row if its empty
+							//this ensures no data is allowed to get through simply because it is not separated by commas
+						}
+					}
+					else //if the row is empty, skip it
+					{
+						continue;
+					}
 				}
 				if (widthInTiles == 0)
 				{
@@ -336,33 +349,31 @@ class FlxTilemap extends FlxObject
 				
 				while (column < widthInTiles)
 				{
-					//the current tile to be added:
-					var curTile:Int = Std.parseInt(columns[column]);
-
-					//if neko, make sure the value was not null, and if it is null,
-					//make sure it is the last in the row (used to ignore commas)
-					#if neko
-					if (curTile != null)
+					//the current character in the column:
+					var curChar:String = columns[column];
+					
+					//regular expresson to check if value can be parsed as a number:
+					var isNumeric:EReg = ~/^[ ]*[-0-9]+[ ]*\r?$/;
+					
+					//if value is can be parsed, add to map
+					if (isNumeric.match(curChar))
 					{
-						_data.push(curTile);	
+						_data.push(Std.parseInt(curChar));	
 						column++;
-					}
-					else if (column == columns.length - 1)
-					{
-						//if value was a comma, decrease the width by one
-						widthInTiles--;
 					}
 					else
 					{
-						//if a non-int value was passed not at the end, warn the user
-						throw "Value passed wan NaN";
-					}
-					#else
-					//if not neko, dont worry about the comma
-					_data.push(curTile);	
-					column++;
-					#end
-					
+						var isLineEnd:EReg = ~/^[ ]*\r[ ]*$/;
+						if (isLineEnd.match(curChar) || curChar.length == 0)
+						{
+							widthInTiles--;
+						}
+						else
+						{
+							//if the value was not a number, warn the user
+							throw "value passed in map: (" + curChar + ") at: " + row + " " + column + " was not a valid number";
+						}
+					}	
 				}
 			}
 		}
