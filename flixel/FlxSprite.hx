@@ -177,7 +177,7 @@ class FlxSprite extends FlxObject
 	private var _cosAngle:Float = 1;
 	private var _angleChanged:Bool = false;
 	/**
-	 * Maps FlxObject direction constants to flip axis
+	 * Maps FlxObject direction constants to axis flips
 	 */
 	private var _facingFlip:Map<Int, {x:Bool, y:Bool}> = new Map<Int, {x:Bool, y:Bool}>();
 	
@@ -1362,7 +1362,7 @@ class FlxSprite extends FlxObject
 	 * @param	Direction Use constants from FlxObject: LEFT, RIGHT, UP, and DOWN.
 	 * 			These may be combined with the bitwise OR operator.
 	 * 			E.g. To make a sprite flip horizontally when it is facing both UP and LEFT,
-	 * 			use setFacingFlip(FlxObject.LEFT | FlxObject.UP, FlxAxis.X);
+	 * 			use setFacingFlip(FlxObject.LEFT | FlxObject.UP, true, false);
 	 * @param	FlipX Whether to flip the sprite on the X axis
 	 * @param	FlipY Whether to flip the sprite on the Y axis
 	 */
