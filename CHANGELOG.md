@@ -80,7 +80,7 @@
  * setOriginToCenter() -> centerOrigin()
  * Fixed a "jittering"-issue between simple and complex render sprites due to rounding
  * Replaced flipped with flippable (can be set at any time)
- * Fixed a bug with flipped graphis + origin on FLX_RENDER_TILE targets
+ * Fixed a bug with flipped graphics + origin on FLX_RENDER_TILE targets
 * FlxPreloader:
  * Small fix that should prevent it from getting stuck
  * Added siteLockURLIndex to control which URL in allowdURLs is used when the site-lock triggers
