@@ -15,6 +15,7 @@ class PlayState extends FlxNapeState
 	private var xText:FlxText;
 	private var yText:FlxText;
 	private var zText:FlxText;
+	
 	/**
 	 * Function that is called up when to state is created to set it up. 
 	 */
@@ -23,7 +24,7 @@ class PlayState extends FlxNapeState
 		super.create();
 		
 		createWalls();
-		FlxNapeState.space.gravity = Vec2.get(0, 500);
+		FlxNapeState.space.gravity = Vec2.get(0, 5000);
 		
 		for (i in 0...20) {
 			var box:Box = new Box(FlxRandom.intRanged(0, FlxG.width - 30), FlxRandom.intRanged(0, FlxG.height - 30));
@@ -41,7 +42,6 @@ class PlayState extends FlxNapeState
 		add(xText);
 		add(yText);
 		add(zText);
-		
 	}
 	
 	/**
@@ -67,8 +67,7 @@ class PlayState extends FlxNapeState
 			zText.text = "z: " + Std.string(Math.round(FlxG.accelerometer.z * 10) / 10);
 			
 			//Inverting the x axis to align the device and the screen coordinates
-			FlxNapeState.space.gravity.setxy(-FlxG.accelerometer.x * 500, FlxG.accelerometer.y * 500);
+			FlxNapeState.space.gravity.setxy(-FlxG.accelerometer.x * 5000, FlxG.accelerometer.y * 5000);
 		}
-		
 	}	
 }
