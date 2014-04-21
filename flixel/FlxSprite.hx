@@ -9,7 +9,6 @@ import flash.geom.Rectangle;
 import flixel.animation.FlxAnimationController;
 import flixel.FlxBasic;
 import flixel.FlxG;
-import flixel.system.FlxAssets;
 import flixel.system.layer.DrawStackItem;
 import flixel.system.layer.frames.FlxFrame;
 import flixel.system.layer.frames.FlxSpriteFrames;
@@ -98,9 +97,13 @@ class FlxSprite extends FlxObject
 	 */
 	public var facing(default, set):Int = FlxObject.RIGHT;
 	/**
-	 * Whether or not this sprite may be flipped horizontally via facing.
+	 * Whether this sprite is flipped on the X axis
 	 */
-	public var flippable:Bool = false;
+	public var flipX(default, set):Bool = false;
+	/**
+	 * Whether this sprite is flipped on the Y axis
+	 */
+	public var flipY(default, set):Bool = false;
 	 
 	/**
 	 * WARNING: The origin of the sprite will default to its center. If you change this, 
@@ -139,7 +142,8 @@ class FlxSprite extends FlxObject
 	private var _red:Float = 1.0;
 	private var _green:Float = 1.0;
 	private var _blue:Float = 1.0;
-	private var _facingMult:Int = 1;
+	private var _facingHorizontalMult:Int = 1;
+	private var _facingVerticalMult:Int = 1;
 	private var _blendInt:Int = 0;
 	#end
 	
@@ -172,6 +176,10 @@ class FlxSprite extends FlxObject
 	private var _sinAngle:Float = 0;
 	private var _cosAngle:Float = 1;
 	private var _angleChanged:Bool = false;
+	/**
+	 * Maps FlxObject direction constants to axis flips
+	 */
+	private var _facingFlip:Map<Int, {x:Bool, y:Bool}> = new Map<Int, {x:Bool, y:Bool}>();
 	
 	/**
 	 * Creates a FlxSprite at a specified position with a specified one-frame graphic. 
@@ -262,7 +270,6 @@ class FlxSprite extends FlxObject
 		}
 		
 		region = Sprite.region.clone();
-		flippable = Sprite.flippable;
 		bakedRotationAngle = Sprite.bakedRotationAngle;
 		cachedGraphics = Sprite.cachedGraphics;
 		
@@ -287,19 +294,16 @@ class FlxSprite extends FlxObject
 	 * 
 	 * @param	Graphic		The image you want to use.
 	 * @param	Animated	Whether the Graphic parameter is a single sprite or a row of sprites.
-	 * @param	Flippable	Whether flippable should be set to true.
 	 * @param	Width		Optional, specify the width of your sprite (helps FlxSprite figure out what to do with non-square sprites or sprite sheets).
 	 * @param	Height		Optional, specify the height of your sprite (helps FlxSprite figure out what to do with non-square sprites or sprite sheets).
 	 * @param	Unique		Optional, whether the graphic should be a unique instance in the graphics cache.  Default is false.
 	 * @param	Key			Optional, set this parameter if you're loading BitmapData.
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function loadGraphic(Graphic:Dynamic, Animated:Bool = false, Flippable:Bool = false, Width:Int = 0, Height:Int = 0, Unique:Bool = false, ?Key:String):FlxSprite
+	public function loadGraphic(Graphic:Dynamic, Animated:Bool = false, Width:Int = 0, Height:Int = 0, Unique:Bool = false, ?Key:String):FlxSprite
 	{
 		bakedRotationAngle = 0;
 		cachedGraphics = FlxG.bitmap.add(Graphic, Unique, Key);
-		
-		flippable = Flippable;
 		
 		if (Width == 0)
 		{
@@ -501,12 +505,11 @@ class FlxSprite extends FlxObject
 	 * Loads TexturePacker atlas.
 	 * 
 	 * @param	Data		Atlas data holding links to json-data and atlas image
-	 * @param	Flippable	Whether flippable should be set to true.
 	 * @param	Unique		Optional, whether the graphic should be a unique instance in the graphics cache.  Default is false.
 	 * @param	FrameName	Default frame to show. If null then will be used first available frame.
 	 * @return This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function loadGraphicFromTexture(Data:Dynamic, Flippable:Bool = false, Unique:Bool = false, ?FrameName:String):FlxSprite
+	public function loadGraphicFromTexture(Data:Dynamic, Unique:Bool = false, ?FrameName:String):FlxSprite
 	{
 		bakedRotationAngle = 0;
 		
@@ -531,8 +534,6 @@ class FlxSprite extends FlxObject
 		region = new Region();
 		region.width = cachedGraphics.bitmap.width;
 		region.height = cachedGraphics.bitmap.height;
-		
-		flippable = Flippable;
 		
 		animation.destroyAnimations();
 		updateFrameData();
@@ -732,9 +733,14 @@ class FlxSprite extends FlxObject
 		var sin:Float;
 		
 		var ox:Float = origin.x;
-		if (_facingMult != 1)
+		if (_facingHorizontalMult != 1)
 		{
 			ox = frameWidth - ox;
+		}
+		var oy:Float = origin.y;
+		if (_facingVerticalMult != 1)
+		{
+			oy = frameHeight - oy;
 		}
 	#end
 		
@@ -794,13 +800,13 @@ class FlxSprite extends FlxObject
 				camera.buffer.draw(framePixels, _matrix, null, blend, null, (antialiasing || camera.antialiasing));
 			}
 #else
-			var csx:Float = _facingMult;
+			var csx:Float = _facingHorizontalMult;
+			var csy:Float = _facingVerticalMult;
 			var ssy:Float = 0;
 			var ssx:Float = 0;
-			var csy:Float = 1;
 			
 			var x1:Float = (ox - frame.center.x);
-			var y1:Float = (origin.y - frame.center.y);
+			var y1:Float = (oy - frame.center.y);
 			
 			var x2:Float = x1;
 			var y2:Float = y1;
@@ -821,7 +827,8 @@ class FlxSprite extends FlxObject
 					_angleChanged = false;
 				}
 				
-				var sx:Float = scale.x * _facingMult;
+				var sx:Float = scale.x * _facingHorizontalMult;
+				var sy:Float = scale.y * _facingVerticalMult;
 				
 				if (frame.rotated) // todo: handle different additional angles (since different packers adds different values, e.g. -90 or +90)
 				{
@@ -829,9 +836,9 @@ class FlxSprite extends FlxObject
 					sin = _cosAngle;
 					
 					csx = cos * sx;
-					ssy = sin * scale.y;
+					ssy = sin * sy;
 					ssx = sin * sx;
-					csy = cos * scale.y;
+					csy = cos * sy;
 					
 					x2 = x1 * ssx - y1 * csy;
 					y2 = x1 * csx + y1 * ssy;
@@ -847,9 +854,9 @@ class FlxSprite extends FlxObject
 					sin = _sinAngle;
 					
 					csx = cos * sx;
-					ssy = sin * scale.y;
+					ssy = sin * sy;
 					ssx = sin * sx;
-					csy = cos * scale.y;
+					csy = cos * sy;
 					
 					x2 = x1 * csx + y1 * ssy;
 					y2 = -x1 * ssx + y1 * csy;
@@ -863,6 +870,7 @@ class FlxSprite extends FlxObject
 			else
 			{
 				x2 = x1 * csx;
+				y2 = y1 * csy;
 			}
 			
 			_point.x -= x2;
@@ -1214,9 +1222,17 @@ class FlxSprite extends FlxObject
 		var frameBmd:BitmapData = null;
 		if (frame != null)
 		{
-			if (facing == FlxObject.LEFT && flippable)
+			if (flipX && flipY)
+			{
+				frameBmd = frame.getHVReversedBitmap();
+			}
+			else if (flipX)
 			{
 				frameBmd = frame.getHReversedBitmap();
+			}
+			else if (flipY)
+			{
+				frameBmd = frame.getVReversedBitmap();
 			}
 			else
 			{
@@ -1339,21 +1355,20 @@ class FlxSprite extends FlxObject
 		return (((angle == 0 && frame.additionalAngle == 0) || (bakedRotationAngle > 0)) && (scale.x == 1) && (scale.y == 1));
 		#end
 	}
-
+	
 	/**
-	 * Flips the graphic horizontally using scale
+	 * Set how a sprite flips when facing in a particular direction.
+	 * 
+	 * @param	Direction Use constants from FlxObject: LEFT, RIGHT, UP, and DOWN.
+	 * 			These may be combined with the bitwise OR operator.
+	 * 			E.g. To make a sprite flip horizontally when it is facing both UP and LEFT,
+	 * 			use setFacingFlip(FlxObject.LEFT | FlxObject.UP, true, false);
+	 * @param	FlipX Whether to flip the sprite on the X axis
+	 * @param	FlipY Whether to flip the sprite on the Y axis
 	 */
-	public inline function flipHorizontally():Void
+	public inline function setFacingFlip(Direction:Int, FlipX:Bool, FlipY:Bool):Void
 	{
-		scale.x *= -1;
-	}
-
-	/**
-	 * Flips the graphic vertically using scale
-	 */
-	public inline function flipVertically():Void
-	{
-		scale.y *= -1;
+		_facingFlip.set(Direction, {x: FlipX, y: FlipY});
 	}
 	
 	/**
@@ -1422,16 +1437,15 @@ class FlxSprite extends FlxObject
 	}
 	
 	private function set_facing(Direction:Int):Int
-	{
-		if (facing != Direction)
+	{		
+		var flip = _facingFlip.get(Direction);
+		if (flip != null)
 		{
-			dirty = true;
+			flipX = flip.x;
+			flipY = flip.y;
 		}
-		facing = Direction;
-		#if FLX_RENDER_TILE
-		_facingMult = (flippable && (facing == FlxObject.LEFT)) ? -1 : 1;
-		#end
-		return Direction;
+		
+		return facing = Direction;
 	}
 	
 	private function set_alpha(Alpha:Float):Float
@@ -1526,5 +1540,28 @@ class FlxSprite extends FlxObject
 		}
 		
 		return cachedGraphics = Value;
+	}
+	
+	private function set_flipX(Value:Bool):Bool
+	{
+		#if FLX_RENDER_TILE
+		_facingHorizontalMult = Value ? -1 : 1;
+		#end
+		if (flipX != Value)
+		{
+			dirty = true;
+		}
+		return flipX = Value;
+	}
+	private function set_flipY(Value:Bool):Bool
+	{
+		#if FLX_RENDER_TILE
+		_facingVerticalMult = Value ? -1 : 1;
+		#end
+		if (flipY != Value)
+		{
+			dirty = true;
+		}
+		return flipY = Value;
 	}
 }
