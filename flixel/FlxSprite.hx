@@ -1436,12 +1436,7 @@ class FlxSprite extends FlxObject
 	}
 	
 	private function set_facing(Direction:Int):Int
-	{
-		if (facing != Direction)
-		{
-			dirty = true;
-		}
-		
+	{		
 		var flip = _facingFlip.get(Direction);
 		if (flip != null)
 		{
@@ -1551,6 +1546,10 @@ class FlxSprite extends FlxObject
 		#if FLX_RENDER_TILE
 		_facingHorizontalMult = Value ? -1 : 1;
 		#end
+		if (flipX != Value)
+		{
+			dirty = true;
+		}
 		return flipX = Value;
 	}
 	private function set_flipY(Value:Bool):Bool
@@ -1558,6 +1557,10 @@ class FlxSprite extends FlxObject
 		#if FLX_RENDER_TILE
 		_facingVerticalMult = Value ? -1 : 1;
 		#end
+		if (flipY != Value)
+		{
+			dirty = true;
+		}
 		return flipY = Value;
 	}
 }
