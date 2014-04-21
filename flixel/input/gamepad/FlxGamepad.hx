@@ -257,7 +257,8 @@ class FlxGamepad implements IFlxDestroyable
 		#if js
 		var pad:js.html.Gamepad = null,
 			nav:js.html.Navigator = untyped navigator;
-		if (untyped nav.webkitGetGamepads != null) { // if browser has webkit gamepads as such
+		if (untyped nav.webkitGetGamepads != null) 
+		{ // if browser has webkit gamepads as such
 			pad = untyped nav.webkitGetGamepads().item(id);
 		}
 		return (pad != null) && (Math.round(pad.buttons[ButtonID]) == 1);

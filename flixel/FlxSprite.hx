@@ -1553,6 +1553,7 @@ class FlxSprite extends FlxObject
 		}
 		return flipX = Value;
 	}
+	
 	private function set_flipY(Value:Bool):Bool
 	{
 		#if FLX_RENDER_TILE
