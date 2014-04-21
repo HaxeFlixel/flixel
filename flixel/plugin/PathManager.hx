@@ -92,12 +92,9 @@ class PathManager extends FlxPlugin
 	/**
 	 * Removes all the paths from the path debug display manager.
 	 */
-	public function clear():Void
+	public inline function clear():Void
 	{
-		while (_paths.length > 0)
-		{
-			FlxPath._pool.put(_paths.pop());
-		}
+		FlxArrayUtil.clearArray(_paths);
 	}
 	
 	override public inline function onStateSwitch():Void
