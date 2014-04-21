@@ -34,7 +34,7 @@ class PlayState extends FlxState
 		sprite.immovable = true;
 		destination = sprite.getMidpoint();
 		destination.y += 112;
-		path = FlxPath.start(sprite, [sprite.getMidpoint(),destination], 40, FlxPath.YOYO);
+		path = new FlxPath(sprite, [sprite.getMidpoint(), destination], 40, FlxPath.YOYO);
 		add(sprite);
 		
 		// Create the side-to-side pusher object and put it on a different path
@@ -42,7 +42,7 @@ class PlayState extends FlxState
 		sprite.immovable = true;
 		destination = sprite.getMidpoint();
 		destination.x += 56;
-		var path:FlxPath = FlxPath.start(sprite, [sprite.getMidpoint(),destination], 40, FlxPath.YOYO);
+		var path = new FlxPath(sprite, [sprite.getMidpoint(), destination], 40, FlxPath.YOYO);
 		add(sprite);
 		
 		// Then add the player, its own class with its own logic
@@ -84,21 +84,17 @@ class PlayState extends FlxState
 		add(level);
 		
 		// Library label in upper left
-		var tx:FlxText;
-		tx = new FlxText(2, 0, Std.int(FlxG.width / 2), Std.string(FlxG.VERSION));
-		tx.scrollFactor.x = tx.scrollFactor.y = 0;
+		var tx:FlxText = new FlxText(2, 0, Std.int(FlxG.width / 2), Std.string(FlxG.VERSION));
+		tx.scrollFactor.set(0, 0);
+		tx.setBorderStyle(FlxText.BORDER_SHADOW, 0x233e58);
 		tx.color = 0x778ea1;
-		//tx.shadow = 0x233e58;
-		//tx.useShadow = true;
 		add(tx);
 		
 		// Instructions
 		tx = new FlxText(2, FlxG.height - 12, FlxG.width, "Interact with ARROWS / WASD, or press ENTER for next demo.");
-		tx.scrollFactor.x = tx.scrollFactor.y = 0;
-		tx.color = 0x778ea1;
-		//tx.shadow = 0x233e58;
-		//tx.useShadow = true;
-		tx.alignment = "center";
+		tx.scrollFactor.set(0, 0);
+		tx.setBorderStyle(FlxText.BORDER_SHADOW, 0x233e58);
+		tx.setFormat(null, 8, 0x778ea1, "center");
 		add(tx);
 	}
 	

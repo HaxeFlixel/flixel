@@ -130,6 +130,8 @@ class PlayState extends FlxState
 		
 		var legends:FlxText = new FlxText(textX, 140, textWidth, "Legends:\nRed: Unit\nYellow: Goal\nBlue: Wall\nWhite: Path");
 		add(legends);
+		
+		path = new FlxPath();
 	}
 	
 	override public function destroy():Void
@@ -193,7 +195,7 @@ class PlayState extends FlxState
 		// Tell unit to follow path
 		if (pathPoints != null) 
 		{
-			path = FlxPath.start(_unit, pathPoints);
+			path.start(_unit, pathPoints);
 			_action = ACTION_GO;
 			_instructions.text = INSTRUCTION_1;
 		}

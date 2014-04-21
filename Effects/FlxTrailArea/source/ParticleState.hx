@@ -43,7 +43,9 @@ class ParticleState extends FlxState
 		add(new GUI(trailArea, startEmitter));
 		
 		// Start the emitter with a small delay to avoid the initial laggieness on startup
-		FlxTimer.start(0.5, function(T:FlxTimer) { _emitter.start(true, 1, 0, 0, 0.5); });
+		new FlxTimer(0.5, function(_) { 
+			_emitter.start(true, 1, 0, 0, 0.5); 
+		});
 		
 		super.create();
 	}

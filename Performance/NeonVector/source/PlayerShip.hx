@@ -87,9 +87,9 @@ class PlayerShip extends Entity
 		if (lives-- < 0) 
 		{
 			isGameOver = true;
-			cooldownTimer.run(5, onTimerRestart);
+			cooldownTimer.start(5, onTimerRestart);
 		}
-		else cooldownTimer.run(2, onTimerReset);
+		else cooldownTimer.start(2, onTimerReset);
 	}
 	
 	public function onTimerRestart(Timer:FlxTimer):Void
@@ -128,7 +128,7 @@ class PlayerShip extends Entity
 	public function shoot(Aim:FlxPoint):Void
 	{
 		cooldownTimer.cancel();
-		cooldownTimer.run(cooldown);
+		cooldownTimer.start(cooldown);
 		
 		var RandomSpread:Float = 4.58366236 * (FlxRandom.float() + FlxRandom.float()) - 4.58366236;
 		

@@ -109,9 +109,9 @@ class Enemy extends FlxSprite
 		y = Path[0].y;
 		
 		if (Reg.PS != null) {
-			FlxPath.start(this, Path, 20 + Reg.PS.wave, 0, true);
+			new FlxPath(this, Path, 20 + Reg.PS.wave, 0, true);
 		} else {
-			FlxPath.start(this, Path, 50, 0, true);
+			new FlxPath(this, Path, 50, 0, true);
 		}
 	}
 }

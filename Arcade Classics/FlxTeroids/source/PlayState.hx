@@ -43,7 +43,7 @@ class PlayState extends FlxState
 		}
 		
 		// Make sure we don't ever run out of asteroids! :)
-		resetTimer();
+		resetTimer(new FlxTimer());
 		
 		// Create the player ship
 		_playerShip = new PlayerShip();
@@ -113,7 +113,7 @@ class PlayState extends FlxState
 		{
 			if (bullet.exists)
 			{
-				FlxSpriteUtil.screenWrap(cast (bullet,FlxSprite));
+				FlxSpriteUtil.screenWrap(bullet);
 			}
 		}
 	}
@@ -123,7 +123,7 @@ class PlayState extends FlxState
 		_score += Amount;
 		_scoreText.text = "Score: " + _score;
 		_scoreText.alpha = 0;
-		FlxTween.tween(_scoreText, { alpha:1 }, 0.5);
+		FlxTween.tween(_scoreText, { alpha: 1 }, 0.5);
 	}
 	
 	private function bulletHitsAsteroid(Object1:FlxObject, Object2:FlxObject):Void
@@ -141,9 +141,9 @@ class PlayState extends FlxState
 		_scoreText.text = "Game Over! Final score: " + _score + " - Press R to retry.";
 	}
 	
-	private function resetTimer(?Timer:FlxTimer):Void
+	private function resetTimer(Timer:FlxTimer):Void
 	{
-		FlxTimer.start(5, resetTimer);
+		Timer.start(5, resetTimer);
 		spawnAsteroid();
 	}
 	
