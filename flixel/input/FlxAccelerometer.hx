@@ -48,9 +48,15 @@ class FlxAccelerometer {
 	
 	private function updateCallback(Event:AccelerometerEvent):Void 
 	{
+		#if android
 		x = Event.accelerationX;
 		y = Event.accelerationY;
 		z = Event.accelerationZ;
+		#else //Values on iOS and BlackBerry are inverted
+		x = -Event.accelerationX;
+		y = -Event.accelerationY;
+		z = -Event.accelerationZ;
+		#end
 	}
 }
 #end
