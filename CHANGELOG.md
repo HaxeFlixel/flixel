@@ -10,7 +10,7 @@
 * FlxCamera: 
  * Added static defaultCameras array which is used by FlxBasics when their cameras array has not been set - previously the use of FlxG.cameras.list / all existing cameras was hardcoded
  * Fixed a bug where following a target would prevent you from setting the coordinates of the camera
-* Added pooling for FlxPoint, FlxVector, and FlxRect (FlxPath and FlxTimer also support pooling, but that is handled transparently). Usage: var point = FlxPoint.get(); /* do stuff with point */ point.put(); // recycle point. Instantiating these objects directly via new() is no longer possible to enforce the use of pooling. FlxPoint.weak() should be used instead of get() when passing points into flixel functions, that way they'll be recycled automatically.
+* Added pooling for FlxPoint, FlxVector, and FlxRect. Usage: var point = FlxPoint.get(); /* do stuff with point */ point.put(); // recycle point. FlxPoint.weak() should be used instead of get() when passing points into flixel functions, that way they'll be recycled automatically.
 * Debugger windows:
  * Fixed dragging of overlapping windows
  * Fixed the visibility of windows on native targets (now saving correctly)
@@ -80,8 +80,9 @@
  * setOriginToCenter() -> centerOrigin()
  * Fixed a "jittering"-issue between simple and complex render sprites due to rounding
  * Replaced flipped with flippable (can be set at any time)
+ * Fixed a bug with flipped graphis + origin on FLX_RENDER_TILE targets
 * FlxPreloader:
- * Small fix that should prevent it from getting stuck 
+ * Small fix that should prevent it from getting stuck
  * Added siteLockURLIndex to control which URL in allowdURLs is used when the site-lock triggers
  * allowedURLs now works with URLs that don't start with "http://"
 * Fixed camera shifting after resizing with StageSizeScaleMode
@@ -99,6 +100,13 @@
 * FlxState: active, visible and exists are now respected
 * FlxVector: substractNew() -> subtractNew()
 * FlxGradient: fixed a memory leak in the overlayGradientOn()-functions
+* FlxTimer and FlxPath:
+ * paused -> active
+ * abort() -> cancel()
+ * removed pooling due to potential issues
+ * start() -> new FlxTimer() / FlxPath()
+ * run() -> start()
+* FlxTimer and FlxTween: removed userData 
 
 3.2.2
 ------------------------------
