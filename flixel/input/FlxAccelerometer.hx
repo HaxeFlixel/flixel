@@ -43,11 +43,11 @@ class FlxAccelerometer {
 	}
 	
 	
-	private function updateCallback(event:AccelerometerEvent):Void 
+	private function updateCallback(Event:AccelerometerEvent):Void 
 	{
-		x = event.accelerationX;
-		y = event.accelerationY;
-		z = event.accelerationZ;
+		x = Event.accelerationX;
+		y = Event.accelerationY;
+		z = Event.accelerationZ;
 	}
 }
 #end
