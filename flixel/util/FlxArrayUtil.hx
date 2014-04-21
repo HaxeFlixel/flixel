@@ -116,8 +116,10 @@ class FlxArrayUtil
 	 * var i = array.length;
 	 * while (i-- > 0)
 	 * {
-	 * if (array[i].shouldRemove)
-	 * 			FlxArrayUtil.swapAndPop(array, i);
+	 *      if (array[i].shouldRemove)
+	 *      {
+	 *           FlxArrayUtil.swapAndPop(array, i);
+	 *      }
 	 * }
 	 * 
 	 * @param	array	The array to remove the element from
@@ -137,26 +139,30 @@ class FlxArrayUtil
 	 * Useful for cleaning up temporary references to data you want to preserve
 	 * WARNING: Can lead to memory leaks. Use destroyArray() instead for data you truly want GONE.
 	 *
-	 * @param	Arr			The array to clear out
+	 * @param	array		The array to clear out
 	 * @param	Recursive	Whether to search for arrays inside of arr and clear them out, too (false by default)
 	 */
 	@:generic
-	public static function clearArray<T>(Arr:Array<T>,Recursive:Bool=false):Void
+	public static function clearArray<T>(array:Array<T>, recursive:Bool = false):Void
 	{
-		if (Arr != null)
+		if (array != null)
 		{
-			if (!Recursive)
+			if (!recursive)
 			{
-				while (Arr.length > 0)
-					Arr.pop();
+				while (array.length > 0)
+				{
+					array.pop();
+				}
 			}
 			else
 			{
-				while (Arr.length > 0)
+				while (array.length > 0)
 				{
-					var thing:Dynamic = Arr.pop();
+					var thing:Dynamic = array.pop();
 					if (Std.is(thing, Array))
-						clearArray(Arr, Recursive);
+					{
+						clearArray(array, recursive);
+					}
 				}
 			}
 		}

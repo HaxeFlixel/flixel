@@ -17,25 +17,6 @@ class FlxTimer implements IFlxDestroyable
 	 * The TimerManager instance.
 	 */
 	public static var manager:TimerManager;
-	/**
-	 * A pool that contains FlxTimers for recycling.
-	 */
-	@:allow(flixel.plugin.TimerManager)
-	private static var _pool = new FlxPool<FlxTimer>(FlxTimer);
-	
-	/**
-	 * Returns a recycled timer and starts it.
-	 * 
-	 * @param	Time		How many seconds it takes for the timer to go off.
-	 * @param	Callback	Optional, triggered whenever the time runs out, once for each loop. Callback should be formed "onTimer(Timer:FlxTimer);"
-	 * @param	Loops		How many times the timer should go off. 0 means "looping forever".
- 	 */
-	public static function start(Time:Float = 1, ?Callback:FlxTimer->Void, Loops:Int = 1):FlxTimer
-	{
-		var timer:FlxTimer = _pool.get();
-		timer.run(Time, Callback, Loops);
-		return timer;
-	}
 	
 	/**
 	 * How much time the timer was set for.
@@ -89,6 +70,21 @@ class FlxTimer implements IFlxDestroyable
 	private var _loopsCounter:Int = 0;
 	
 	/**
+	 * Creates a new timer (and calls start() right away if Time != null).
+	 * 
+	 * @param	Time		How many seconds it takes for the timer to go off.
+	 * @param	Callback	Optional, triggered whenever the time runs out, once for each loop. Callback should be formed "onTimer(Timer:FlxTimer);"
+	 * @param	Loops		How many times the timer should go off. 0 means "looping forever".
+	 */
+	public function new(?Time:Null<Float>, ?Callback:FlxTimer->Void, Loops:Int = 1)
+	{
+		if (Time != null)
+		{
+			start(Time, Callback, Loops);
+		}
+	}
+	
+	/**
 	 * Clean up memory.
 	 */
 	public function destroy():Void
@@ -104,7 +100,7 @@ class FlxTimer implements IFlxDestroyable
 	 * @param	Loops		How many times the timer should go off. 0 means "looping forever".
 	 * @return	A reference to itself (handy for chaining or whatever).
 	 */
-	public function run(Time:Float = 1, ?Callback:FlxTimer->Void, Loops:Int = 1):Void
+	public function start(Time:Float = 1, ?Callback:FlxTimer->Void, Loops:Int = 1):FlxTimer
 	{
 		if (manager != null)
 		{
@@ -124,6 +120,7 @@ class FlxTimer implements IFlxDestroyable
 		complete = Callback;
 		_timeCounter = 0;
 		_loopsCounter = 0;
+		return this;
 	}
 	
 	/**
@@ -136,7 +133,7 @@ class FlxTimer implements IFlxDestroyable
 		{
 			NewTime = time;
 		}
-		run(NewTime, complete, loops);
+		start(NewTime, complete, loops);
 		return this;
 	}
 	
@@ -149,7 +146,6 @@ class FlxTimer implements IFlxDestroyable
 		if (manager != null)
 		{
 			manager.remove(this);
-			_pool.put(this);
 		}
 	}
 	
@@ -179,8 +175,6 @@ class FlxTimer implements IFlxDestroyable
 			}
 		}
 	}
-	
-	private function new() {}
 	
 	private inline function get_timeLeft():Float
 	{

@@ -52,33 +52,9 @@ class FlxPath implements IFlxDestroyable
 	public static inline var VERTICAL_ONLY:Int = 0x100000;
 	
 	/**
-	 * A pool that contains FlxPaths for recycling.
-	 */
-	@:allow(flixel.plugin.PathManager)
-	private static var _pool = new FlxPool<FlxPath>(FlxPath);
-	
-	/**
 	 * Internal helper for keeping new variable instantiations under control.
 	 */
 	private static var _point:FlxPoint = FlxPoint.get();
-	
-	/**
-	 * Call this function to give this object a path to follow.
-	 * If the path does not have at least one node in it, this function
-	 * will log a warning message and return.
-	 * 
-	 * @param	Object		The Object which will follow this path
-	 * @param	Nodes		Array of points which will construct path.
-	 * @param	Speed		How fast to travel along the path in pixels per second.
-	 * @param	Mode		Optional, controls the behavior of the object following the path using the path behavior constants.  Can use multiple flags at once, for example PATH_YOYO|PATH_HORIZONTAL_ONLY will make an object move back and forth along the X axis of the path only.
-	 * @param	AutoRotate	Automatically point the object toward the next node.  Assumes the graphic is pointing upward.  Default behavior is false, or no automatic rotation.
-	 */
-	public static function start(Object:FlxObject, Nodes:Array<FlxPoint>, Speed:Float = 100, Mode:Int = FlxPath.FORWARD, AutoRotate:Bool = false):FlxPath
-	{
-		var path:FlxPath = _pool.get();
-		path.run(Object, Nodes, Speed, Mode, AutoRotate);
-		return path;
-	}
 	
 	/**
 	 * The list of FlxPoints that make up the path data.
@@ -151,6 +127,17 @@ class FlxPath implements IFlxDestroyable
 	 */
 	private var _autoRotate:Bool = false;
 	
+	/**
+	 * Creates a new FlxPath (and calls start() right away if Object != null).
+	 */
+	public function new(?Object:FlxObject, ?Nodes:Array<FlxPoint>, Speed:Float = 100, Mode:Int = FlxPath.FORWARD, AutoRotate:Bool = false) 
+	{
+		if (Object != null)
+		{
+			start(Object, Nodes, Speed, Mode, AutoRotate);
+		}
+	}
+	
 	public function reset():FlxPath
 	{
 		#if !FLX_NO_DEBUG
@@ -163,7 +150,7 @@ class FlxPath implements IFlxDestroyable
 		return this;
 	}
 	
-	public function run(Object:FlxObject, Nodes:Array<FlxPoint>, Speed:Float = 100, Mode:Int = FlxPath.FORWARD, AutoRotate:Bool = false):FlxPath
+	public function start(Object:FlxObject, Nodes:Array<FlxPoint>, Speed:Float = 100, Mode:Int = FlxPath.FORWARD, AutoRotate:Bool = false):FlxPath
 	{
 		object = Object;
 		nodes = Nodes;
@@ -447,14 +434,12 @@ class FlxPath implements IFlxDestroyable
 		
 		if (object != null)
 		{
-			object.velocity.x = 0;
-			object.velocity.y = 0;
+			object.velocity.set(0, 0);
 		}
 		
 		if (manager != null)
 		{
 			manager.remove(this);
-			_pool.put(this);
 		}
 	}
 	
@@ -712,6 +697,4 @@ class FlxPath implements IFlxDestroyable
 		#end
 	}
 	#end
-	
-	private function new() {}
 }

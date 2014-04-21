@@ -53,6 +53,11 @@ class FlxRect implements IFlxPooled
 	
 	private var _inPool:Bool = false;
 	
+	public function new(X:Float = 0, Y:Float = 0, Width:Float = 0, Height:Float = 0)
+	{
+		set(X, Y, Width, Height);
+	}
+	
 	/**
 	 * Add this FlxRect to the recycling pool.
 	 */
@@ -211,8 +216,6 @@ class FlxRect implements IFlxPooled
 			LabelValuePair.weak("w", width),
 			LabelValuePair.weak("h", height)]);
 	}
-	
-	private function new() {}
 	
 	private inline function get_left():Float
 	{

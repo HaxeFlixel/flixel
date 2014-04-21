@@ -18,7 +18,7 @@ class TimerManager extends FlxPlugin
 	{
 		super();
 		
-		_timers = new Array<FlxTimer>();
+		_timers = [];
 		
 		// Don't call draw on this plugin
 		visible = false; 
@@ -77,12 +77,9 @@ class TimerManager extends FlxPlugin
 	/**
 	 * Removes all the timers from the timer manager.
 	 */
-	public function clear():Void
+	public inline function clear():Void
 	{
-		while (_timers.length > 0)
-		{
-			FlxTimer._pool.put(_timers.pop());
-		}
+		FlxArrayUtil.clearArray(_timers);
 	}
 	
 	override public inline function onStateSwitch():Void

@@ -112,7 +112,7 @@ class FlxTween implements IFlxDestroyable
 	 * 						loopDelay	Seconds to wait between loops of this tween, 0 by default.
 	 * @return	The added AngleTween object.
 	 */
-	public static function angle(Sprite:FlxSprite, FromAngle:Float, ToAngle:Float, Duration:Float = 1, ?Options:TweenOptions):AngleTween
+	public static function angle(?Sprite:FlxSprite, FromAngle:Float, ToAngle:Float, Duration:Float = 1, ?Options:TweenOptions):AngleTween
 	{
 		var tween = new AngleTween(Options);
 		tween.tween(FromAngle, ToAngle, Duration, Sprite);
@@ -137,7 +137,7 @@ class FlxTween implements IFlxDestroyable
 	 * 						loopDelay	Seconds to wait between loops of this tween, 0 by default.
 	 * @return	The added ColorTween object.
 	 */
-	public static function color(Sprite:FlxSprite, Duration:Float = 1, FromColor:Int, ToColor:Int, FromAlpha:Float = 1, ToAlpha:Float = 1, ?Options:TweenOptions):ColorTween
+	public static function color(?Sprite:FlxSprite, Duration:Float = 1, FromColor:Int, ToColor:Int, FromAlpha:Float = 1, ToAlpha:Float = 1, ?Options:TweenOptions):ColorTween
 	{
 		var tween = new ColorTween(Options);
 		tween.tween(Duration, FromColor, ToColor, FromAlpha, ToAlpha, Sprite);
