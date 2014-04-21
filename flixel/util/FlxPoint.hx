@@ -309,6 +309,8 @@ class FlxCallbackPoint extends FlxPoint
 	 */
 	public function new(setXCallback:FlxPoint->Void, ?setYCallback:FlxPoint->Void, ?setXYCallback:FlxPoint->Void)
 	{
+		super();
+		
 		_setXCallback = setXCallback;
 		_setYCallback = setXYCallback;
 		_setXYCallback = setXYCallback;
@@ -320,8 +322,6 @@ class FlxCallbackPoint extends FlxPoint
 			if (_setXYCallback == null)
 				_setXYCallback = setXCallback;
 		}
-		
-		super();
 	}
 	
 	override public inline function set(X:Float = 0, Y:Float = 0):FlxCallbackPoint
@@ -355,4 +355,6 @@ class FlxCallbackPoint extends FlxPoint
 		_setYCallback = null;
 		_setXYCallback = null;
 	}
+	
+	override public function put():Void {} // don't pool FlxCallbackPoints
 }
