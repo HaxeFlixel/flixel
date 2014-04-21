@@ -730,6 +730,12 @@ class FlxSprite extends FlxObject
 		
 		var cos:Float;
 		var sin:Float;
+		
+		var ox:Float = origin.x;
+		if (_facingMult != 1)
+		{
+			ox = frameWidth - ox;
+		}
 	#end
 		
 		var simpleRender:Bool = isSimpleRender();
@@ -793,7 +799,7 @@ class FlxSprite extends FlxObject
 			var ssx:Float = 0;
 			var csy:Float = 1;
 			
-			var x1:Float = (origin.x - frame.center.x);
+			var x1:Float = (ox - frame.center.x);
 			var y1:Float = (origin.y - frame.center.y);
 			
 			var x2:Float = x1;
@@ -817,7 +823,7 @@ class FlxSprite extends FlxObject
 				
 				var sx:Float = scale.x * _facingMult;
 				
-				if (frame.rotated) // todo: handle different additional angles (since different packers adds different values -90 or +90)
+				if (frame.rotated) // todo: handle different additional angles (since different packers adds different values, e.g. -90 or +90)
 				{
 					cos = -_sinAngle;
 					sin = _cosAngle;
