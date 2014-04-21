@@ -10,15 +10,18 @@ import flash.sensors.Accelerometer;
 class FlxAccelerometer {
 	
 	/**
-	 * The x-axis value, in G (Multiples of 9.8m/s/s)
+	 * The x-axis value, in Gs (1G is roughly 9.8m/s/s), normally between -1 and 1
+	 * The x-axis runs from the left to the right of the device in upright position. The acceleration is positive if the device is moving to the right.
 	 */
 	public var x(default, null):Float = 0;
 	/**
-	 * The y-axis value, in G (Multiples of 9.8m/s/s)
+	 * The y-axis value, in Gs (1G is roughly 9.8m/s/s), normally between -1 and 1
+	 * The y-axis runs from the bottom to the top of the device in upright position. The acceleration is positive if the device is moving up along this axis.
 	 */
 	public var y(default, null):Float = 0;
 	/**
-	 * The z-axis value, in G (Multiples of 9.8m/s/s)
+	 * The z-axis value, in Gs (1G is roughly 9.8m/s/s), normally between -1 and 1
+	 * The z-axis runs perpendicular to the screen of the device. The acceleration is positive if the device is moving the direction the screen is facing.
 	 */
 	public var z(default, null):Float = 0;
 	
@@ -27,13 +30,13 @@ class FlxAccelerometer {
 	 */
 	public var isSupported(get, never):Bool;
 	
-	private var sensor:Accelerometer;
+	private var _sensor:Accelerometer;
 	
 	public function new() 
 	{
 		if (Accelerometer.isSupported) {
-			sensor = new Accelerometer();
-			sensor.addEventListener(AccelerometerEvent.UPDATE, updateCallback);
+			_sensor = new Accelerometer();
+			_sensor.addEventListener(AccelerometerEvent.UPDATE, updateCallback);
 		}
 	}
 	
