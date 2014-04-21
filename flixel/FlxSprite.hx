@@ -801,9 +801,9 @@ class FlxSprite extends FlxObject
 			}
 #else
 			var csx:Float = _facingHorizontalMult;
+			var csy:Float = _facingVerticalMult;
 			var ssy:Float = 0;
 			var ssx:Float = 0;
-			var csy:Float = _facingVerticalMult;
 			
 			var x1:Float = (ox - frame.center.x);
 			var y1:Float = (oy - frame.center.y);
@@ -870,6 +870,7 @@ class FlxSprite extends FlxObject
 			else
 			{
 				x2 = x1 * csx;
+				y2 = y1 * csy;
 			}
 			
 			_point.x -= x2;
