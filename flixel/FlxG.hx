@@ -47,7 +47,7 @@ import flixel.system.frontEnds.SoundFrontEnd;
 import flixel.input.android.FlxAndroidKeys;
 #end
 #if mobile
-import flixel.system.input.FlxAccelerometer;
+import flixel.input.FlxAccelerometer;
 #end
 #if js
 import flixel.system.frontEnds.HTML5FrontEnd;

@@ -1,4 +1,4 @@
-package flixel.system.input;
+package flixel.input;
 
 #if mobile
 import flash.events.AccelerometerEvent;
@@ -10,15 +10,15 @@ import flash.sensors.Accelerometer;
 class FlxAccelerometer {
 	
 	/**
-	 * The x-axis value, in G (Multiples of 9.8m/s/s), can take any value
+	 * The x-axis value, in G (Multiples of 9.8m/s/s)
 	 */
 	public var x(default, null):Float = 0;
 	/**
-	 * The y-axis value, in G (Multiples of 9.8m/s/s), can take any value
+	 * The y-axis value, in G (Multiples of 9.8m/s/s)
 	 */
 	public var y(default, null):Float = 0;
 	/**
-	 * The z-axis value, in G (Multiples of 9.8m/s/s), can take any value
+	 * The z-axis value, in G (Multiples of 9.8m/s/s)
 	 */
 	public var z(default, null):Float = 0;
 	
