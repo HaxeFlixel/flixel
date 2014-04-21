@@ -738,9 +738,14 @@ class FlxSprite extends FlxObject
 		var sin:Float;
 		
 		var ox:Float = origin.x;
-		if (_facingMult != 1)
+		if (_facingHorizontalMult != 1)
 		{
 			ox = frameWidth - ox;
+		}
+		var oy:Float = origin.y;
+		if (_facingVerticalMult != 1)
+		{
+			oy = frameHeight - oy;
 		}
 	#end
 		
@@ -806,7 +811,7 @@ class FlxSprite extends FlxObject
 			var csy:Float = _facingVerticalMult;
 			
 			var x1:Float = (ox - frame.center.x);
-			var y1:Float = (origin.y - frame.center.y);
+			var y1:Float = (oy - frame.center.y);
 			
 			var x2:Float = x1;
 			var y2:Float = y1;
