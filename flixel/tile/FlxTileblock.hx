@@ -47,7 +47,7 @@ class FlxTileblock extends FlxSprite
 		}
 		
 		// First create a tile brush
-		var sprite:FlxSprite = new FlxSprite().loadGraphic(TileGraphic, true, false, TileWidth, TileHeight);
+		var sprite:FlxSprite = new FlxSprite().loadGraphic(TileGraphic, true, TileWidth, TileHeight);
 		var spriteWidth:Int = Std.int(sprite.width);
 		var spriteHeight:Int = Std.int(sprite.height);
 		var total:Int = sprite.frames + Empties;
