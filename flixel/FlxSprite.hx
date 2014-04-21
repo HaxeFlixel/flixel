@@ -1442,7 +1442,7 @@ class FlxSprite extends FlxObject
 			dirty = true;
 		}
 		
-		var flip:Dynamic = _facingFlip.get(Direction);
+		var flip = _facingFlip.get(Direction);
 		if (flip != null)
 		{
 			flipX = flip.x;
