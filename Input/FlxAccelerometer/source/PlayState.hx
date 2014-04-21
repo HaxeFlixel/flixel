@@ -5,7 +5,7 @@ import flixel.FlxG;
 import flixel.text.FlxText;
 import flixel.util.FlxRandom;
 import nape.geom.Vec2;
-import flixel.system.input.FlxAccelerometer;
+import flixel.input.FlxAccelerometer;
 
 /**
  * A FlxState which can be used for the actual gameplay.
