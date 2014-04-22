@@ -21,6 +21,7 @@
  * openURL(): now adds "http://" to the URL if necessary
  * Added maxElapsed
  * Fixed some variables not being reset in resetGame()
+ * added FlxG.accelerometer for mobile targets
 * FlxSound: 
  * Added loadByteArray()
  * Now has a read-only variable time
@@ -76,10 +77,10 @@
 * FlxSprite:
  * Added support for more texture packer formats: LibGDXData, SparrowData, TexturePackerXMLData
  * Fixed a null error crash in FlxAtlas on cpp targets with haxe 3.1.0+
- * Added flipHorizontally() and flipVertically(), using negative scale
  * setOriginToCenter() -> centerOrigin()
  * Fixed a "jittering"-issue between simple and complex render sprites due to rounding
- * Replaced flipped with flippable (can be set at any time)
+ * Removed flipped as well as the "Reverse" param from loadGraphic() and loadGraphicFromTexture()
+ * Added flipX, flipY and setFacingFlip() - graphics can now be flipped vertically as well
  * Fixed a bug with flipped graphics + origin on FLX_RENDER_TILE targets
 * FlxPreloader:
  * Small fix that should prevent it from getting stuck
@@ -91,6 +92,7 @@
  * Added append(), appendByNames(), appendByStringIndices(), appendByIndices() and appendByPrefix()
  * addByStringIndicies() -> addByStringIndices()
  * addByIndicies() -> addByIndices()
+ * Fixed a bug with callback firing every time play() was called instead of only when the frame changes
 * FlxTypedGroup: added forEachOfType() iterator
 * FlxGamepad: 
  * Added anyPressed(), anyJustPressed() and anyJustReleased()
