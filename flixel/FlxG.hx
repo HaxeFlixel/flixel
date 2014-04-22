@@ -270,6 +270,7 @@ class FlxG
 	 */ 
 	public static var signals(default, null):SignalFrontEnd = new SignalFrontEnd();
 	
+	@:allow(flixel.input.mouse.FlxMouse)
 	private static var _scaleMode:BaseScaleMode = new RatioScaleMode();
 	
 	/**
