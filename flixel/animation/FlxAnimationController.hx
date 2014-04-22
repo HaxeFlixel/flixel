@@ -537,6 +537,16 @@ class FlxAnimationController implements IFlxDestroyable
 		frameIndex = FlxRandom.intRanged(0, frames - 1);
 	}
 	
+	private inline function fireCallback():Void
+	{
+		if (callback != null)
+		{
+			var name:String = (_curAnim != null) ? (_curAnim.name) : null;
+			var number:Int = (_curAnim != null) ? (_curAnim.curFrame) : frameIndex;
+			callback(name, number, frameIndex);
+		}
+	}
+	
 	/**
 	 * Private helper method for add- and appendByNames. Gets frames and appends them to AddTo.
 	 */
@@ -626,11 +636,11 @@ class FlxAnimationController implements IFlxDestroyable
 		if (_sprite.framesData != null)
 		{
 			Frame = Frame % frames;
-			_sprite.frame = _sprite.framesData.frames[Frame];
 			
-			if (callback != null)
+			if (Frame != frameIndex)
 			{
-				callback(((_curAnim != null) ? (_curAnim.name) : null), ((_curAnim != null) ? (_curAnim.curFrame) : Frame), Frame);
+				_sprite.frame = _sprite.framesData.frames[Frame];
+				fireCallback();
 			}
 		}
 		
@@ -791,5 +801,4 @@ class FlxAnimationController implements IFlxDestroyable
 		
 		return 0;
 	}
-	
 }
