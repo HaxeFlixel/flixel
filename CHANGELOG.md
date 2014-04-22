@@ -83,6 +83,7 @@
  * Added flipX, flipY and setFacingFlip() - graphics can now be flipped vertically as well
  * Fixed a bug with flipped graphics + origin on FLX_RENDER_TILE targets
 * FlxPreloader:
+ * Spit up FlxPreloader into FlxPreloader and FlxPreloaderBase to make it easier to extend
  * Small fix that should prevent it from getting stuck
  * Added siteLockURLIndex to control which URL in allowdURLs is used when the site-lock triggers
  * allowedURLs now works with URLs that don't start with "http://"
