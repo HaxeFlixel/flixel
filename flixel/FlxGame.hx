@@ -527,7 +527,10 @@ class FlxGame extends Sprite
 		if (_skipSplash || FlxSplash.nextState != null) // already played
 		{
 			_requestedState = cast (Type.createInstance(_initialState, []));
-			_gameJustStarted = true;
+			if (FlxSplash.nextState == null)
+			{
+				_gameJustStarted = true;
+			}
 		}
 		else
 		{
