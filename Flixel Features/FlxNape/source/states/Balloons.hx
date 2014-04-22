@@ -166,9 +166,9 @@ class Balloons extends FlxNapeState
 			FlxG.resetState();
 			
 		if (FlxG.keys.justPressed.LEFT)
-			FlxPhysicsDemo.prevState();
+			Main.prevState();
 		if (FlxG.keys.justPressed.RIGHT)
-			FlxPhysicsDemo.nextState();
+			Main.nextState();
 			
 		if (FlxG.keys.pressed.W)
 			box.body.position.y -= 10;
@@ -180,13 +180,11 @@ class Balloons extends FlxNapeState
 			box.body.position.x += 10;
 		// end 
 	}
-	
 }
 
 // Set of connected bodies to form a rope.
 class Wire
 {
-	
 	public var joints:Array<DistanceJoint>; 		// Used to draw the wire.
 	
 	public function new(body1:Body, body2:Body, anchor1:Vec2, anchor2:Vec2, maxDist:Float, segments:Int)

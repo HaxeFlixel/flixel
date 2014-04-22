@@ -1,4 +1,5 @@
-package states;
+package;
+
 import flixel.addons.nape.FlxNapeSprite;
 import flixel.addons.nape.FlxNapeState;
 import flixel.util.FlxSpriteUtil;
@@ -18,15 +19,11 @@ import flixel.FlxSprite;
 import HUD;
 import openfl.Assets;
 
-//#if dev
-//import pgr.gconsole.GameConsole;
-//#end
-
 /**
  * @author TiagoLr ( ~~~ProG4mr~~~ )
  */
 
-class GameState extends FlxNapeState
+class PlayState extends FlxNapeState
 {
 	// Demo arena boundaries
 	static var LEVEL_MIN_X;

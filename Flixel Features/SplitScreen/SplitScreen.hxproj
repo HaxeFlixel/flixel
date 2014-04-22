@@ -17,16 +17,16 @@
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
     <class path="source" />
-    <class path="export\windows\cpp\haxe" />
+    <class path="export\windows\neko\haxe" />
   </classpaths>
   <!-- Build options -->
   <build>
-    <option directives="tools=1.2.9&#xA;FLX_NO_DEBUG&#xA;lime_native&#xA;no-compilation&#xA;FLX_NO_SOUND_TRAY&#xA;display&#xA;windows&#xA;desktop&#xA;no-compilation" />
+    <option directives="tools=1.4.0&#xA;FLX_NO_DEBUG&#xA;lime_native&#xA;no-compilation&#xA;FLX_NO_SOUND_TRAY&#xA;display&#xA;FLX_RENDER_TILE&#xA;windows&#xA;desktop" />
     <option flashStrict="False" />
     <option noInlineOnDebug="False" />
     <option mainClass="ApplicationMain" />
     <option enabledebug="True" />
-    <option additional="--no-output&#xA;--macro allowPackage(&quot;flash&quot;)&#xA;--macro keep(&quot;Main&quot;)" />
+    <option additional="--no-output&#xA;--macro allowPackage('flash')&#xA;--macro keep(&quot;Main&quot;)" />
   </build>
   <!-- haxelib libraries -->
   <haxelib>

@@ -1,41 +1,31 @@
 package states;
-import flixel.FlxObject;
-import flixel.util.FlxColor;
-import flixel.util.FlxRandom;
-import FlxPhysicsDemo;
-import openfl.Assets;
-import openfl.display.FPS;
-import flixel.tweens.misc.VarTween;
-import flixel.util.FlxPoint;
-import flixel.FlxG;
-import flixel.FlxSprite;
-import flixel.group.FlxTypedGroup;
-import flixel.text.FlxText;
-import flixel.addons.nape.FlxNapeState;
-import flixel.addons.nape.FlxNapeSprite;
-import flixel.plugin.TweenManager;
-import flixel.util.FlxAngle;
-import flixel.util.FlxMath;
-
-import nape.geom.Vec2;
-import nape.geom.AABB;
-import nape.geom.GeomPoly;
-import nape.geom.GeomPolyList;
-import nape.geom.Ray;
-import nape.geom.RayResultList;
-import nape.shape.Polygon;
-import nape.phys.Body;
-import nape.phys.BodyType;
-import nape.phys.Material;
 
 import flash.display.BitmapData;
 import flash.display.Sprite;
 import flash.geom.Matrix;
-
-import flixel.tweens.FlxTween;
+import flixel.addons.nape.FlxNapeSprite;
+import flixel.addons.nape.FlxNapeState;
+import flixel.FlxG;
+import flixel.FlxSprite;
+import flixel.group.FlxTypedGroup;
+import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
-import flixel.tweens.motion.QuadPath;
-import flixel.tweens.motion.LinearPath;
+import flixel.tweens.FlxTween;
+import flixel.util.FlxAngle;
+import flixel.util.FlxColor;
+import flixel.util.FlxMath;
+import flixel.util.FlxPoint;
+import flixel.util.FlxRandom;
+import nape.geom.GeomPoly;
+import nape.geom.GeomPolyList;
+import nape.geom.Ray;
+import nape.geom.RayResultList;
+import nape.geom.Vec2;
+import nape.phys.Body;
+import nape.phys.BodyType;
+import nape.phys.Material;
+import nape.shape.Polygon;
+import openfl.display.FPS;
 
 /**
  * ...
@@ -96,18 +86,15 @@ class Cutup extends FlxNapeState
 		pieceCntTxt.text = "Toatal Pieces:  " + (FlxNapeState.space.bodies.length-1);
 		
 		if (FlxG.keys.justPressed.G)
-			if (_physDbgSpr != null)
-				napeDebugEnabled = false;
-			else
-				napeDebugEnabled = true;
+			napeDebugEnabled = !napeDebugEnabled;
 		
 		if (FlxG.keys.justPressed.R)
 			FlxG.resetState();
 		
 		if (FlxG.keys.justPressed.LEFT)
-			FlxPhysicsDemo.prevState();
+			Main.prevState();
 		if (FlxG.keys.justPressed.RIGHT)
-			FlxPhysicsDemo.nextState();
+			Main.nextState();
 			
 		if (FlxG.mouse.justPressed && (FlxG.mouse.y > ufo.getMidpoint().y))
 			shootLaser();

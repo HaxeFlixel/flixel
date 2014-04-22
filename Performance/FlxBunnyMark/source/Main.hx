@@ -4,17 +4,22 @@ import flash.display.Sprite;
 import flash.display.StageAlign;
 import flash.display.StageScaleMode;
 import flash.events.Event;
-import flash.events.KeyboardEvent;
 import flash.Lib;
-import flash.ui.Keyboard;
 import flixel.FlxGame;
+import flixel.FlxState;
 
-/**
- * @author Joshua Granick
- */
 class Main extends Sprite 
 {
-	// Entry point
+	var gameWidth:Int = 640; // Width of the game in pixels (might be less / more in actual pixels depending on your zoom).
+	var gameHeight:Int = 480; // Height of the game in pixels (might be less / more in actual pixels depending on your zoom).
+	var initialState:Class<FlxState> = PlayState; // The FlxState the game starts with.
+	var zoom:Float = -1; // If -1, zoom is automatically calculated to fit the window dimensions.
+	var framerate:Int = 60; // How many frames per second the game should run at.
+	var skipSplash:Bool = false; // Whether to skip the flixel splash screen that appears in release mode.
+	var startFullscreen:Bool = false; // Whether to start the game in fullscreen on desktop targets
+	
+	// You can pretty much ignore everything from here on - your code should go in your states.
+	
 	public static function main():Void
 	{	
 		Lib.current.addChild(new Main());
@@ -41,36 +46,23 @@ class Main extends Sprite
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 		}
 		
-		initialize();
-		
-		// Profile code - disable <haxedef name="profile_cpp" if="target_cpp" /> before ship
-		#if (profile_cpp && !neko)
-		cpp.vm.Profiler.start("perf.txt");
-		#end
-		
-		var game:FlxGame = new GameClass();
-		addChild(game);
+		setupGame();
 	}
 	
-	private function initialize():Void 
+	private function setupGame():Void
 	{
-		Lib.current.stage.align = StageAlign.TOP_LEFT;
-		Lib.current.stage.scaleMode = StageScaleMode.NO_SCALE;
-		#if (cpp || neko)
-		Lib.current.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUP);
-		#end
-	}
-	
-	#if (cpp || neko)
-	private function onKeyUP(e:KeyboardEvent):Void 
-	{
-		if (e.keyCode == Keyboard.ESCAPE) 
+		var stageWidth:Int = Lib.current.stage.stageWidth;
+		var stageHeight:Int = Lib.current.stage.stageHeight;
+
+		if (zoom == -1)
 		{
-			#if (profile_cpp && !neko)
-			cpp.vm.Profiler.stop();
-			#end
-			Lib.exit();
+			var ratioX:Float = stageWidth / gameWidth;
+			var ratioY:Float = stageHeight / gameHeight;
+			zoom = Math.min(ratioX, ratioY);
+			gameWidth = Math.ceil(stageWidth / zoom);
+			gameHeight = Math.ceil(stageHeight / zoom);
 		}
+
+		addChild(new FlxGame(gameWidth, gameHeight, initialState, zoom, framerate, framerate, skipSplash, startFullscreen));
 	}
-	#end
 }

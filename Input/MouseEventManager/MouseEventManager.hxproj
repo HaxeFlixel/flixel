@@ -16,22 +16,21 @@
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
     <class path="source" />
-    <class path="C:\HaxeToolkit\haxe\lib/openfl/1,0,5/" />
-    <class path="C:\HaxeToolkit\haxe\lib/flixel/git/" />
-    <class path="export/flash/haxe" />
+    <class path="export\windows\neko\haxe" />
   </classpaths>
   <!-- Build options -->
   <build>
-    <option directives="tools=1&#xA;FLX_NO_DEBUG&#xA;openfl_ver=1.0.5&#xA;nme&#xA;openfl&#xA;FLX_NO_SOUND_TRAY&#xA;display&#xA;web" />
+    <option directives="tools=1.4.0&#xA;NAPE_NO_INLINE&#xA;FLX_NO_DEBUG&#xA;lime_native&#xA;no-compilation&#xA;NAPE_RELEASE_BUILD&#xA;FLX_NO_SOUND_TRAY&#xA;display&#xA;FLX_RENDER_TILE&#xA;windows&#xA;desktop" />
     <option flashStrict="False" />
+    <option noInlineOnDebug="False" />
     <option mainClass="ApplicationMain" />
     <option enabledebug="True" />
-    <option additional="--no-output&#xA;-swf-version 11.2&#xA;#--remap nme:flash" />
+    <option additional="--no-output&#xA;--macro allowPackage('flash')&#xA;--macro keep(&quot;Main&quot;)" />
   </build>
   <!-- haxelib libraries -->
   <haxelib>
-    <library name="openfl" />
     <library name="flixel" />
+    <library name="openfl" />
     <library name="flixel-addons" />
     <library name="nape" />
   </haxelib>
@@ -45,7 +44,7 @@
   </library>
   <!-- Paths to exclude from the Project Explorer tree -->
   <hiddenPaths>
-    <!-- example: <hidden path="..." /> -->
+    <hidden path="obj" />
   </hiddenPaths>
   <!-- Executed before build -->
   <preBuildCommand />

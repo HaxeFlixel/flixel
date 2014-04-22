@@ -106,13 +106,11 @@ class Fight extends FlxNapeState
 			FlxG.resetState();
 			
 		if (FlxG.keys.justPressed.LEFT)
-			FlxPhysicsDemo.prevState();
+			Main.prevState();
 		if (FlxG.keys.justPressed.RIGHT)
-			FlxPhysicsDemo.nextState();
+			Main.nextState();
 	}
-	
 }
-
 
 class Ragdoll extends FlxGroup 
 {

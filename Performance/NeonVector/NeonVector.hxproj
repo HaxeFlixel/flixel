@@ -16,29 +16,26 @@
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
     <class path="source" />
-    <class path="C:\Motion-Twin\Haxe\lib\flixel-addons\flixel-addons" />
-    <class path="C:\Motion-Twin\Haxe\lib\flixel\flixel" />
     <class path="export\flash\haxe" />
   </classpaths>
   <!-- Build options -->
   <build>
-    <option directives="tools=1.2.3&#xA;FLX_NO_DEBUG&#xA;FLX_NO_NATIVE_CURSOR&#xA;display&#xA;web" />
+    <option directives="tools=1.4.0&#xA;FLX_NO_DEBUG&#xA;FLX_RENDER_BLIT&#xA;FLX_NO_NATIVE_CURSOR&#xA;display&#xA;web" />
     <option flashStrict="False" />
     <option noInlineOnDebug="False" />
     <option mainClass="ApplicationMain" />
     <option enabledebug="False" />
-    <option additional="--no-output&#xA;-swf-version 11.6&#xA;#--remap nme:flash" />
+    <option additional="--no-output&#xA;-swf-version 11.8&#xA;#--remap nme:flash" />
   </build>
   <!-- haxelib libraries -->
   <haxelib>
-    <library name="openfl" />
     <library name="flixel" />
     <library name="openfl" />
     <library name="flixel-addons" />
   </haxelib>
   <!-- Class files to compile (other referenced classes will automatically be included) -->
   <compileTargets>
-    <compile path="source\GameClass.hx" />
+    <!-- example: <compile path="..." /> -->
   </compileTargets>
   <!-- Assets to embed into the output SWF -->
   <library>

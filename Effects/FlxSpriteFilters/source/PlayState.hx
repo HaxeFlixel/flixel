@@ -1,4 +1,4 @@
-package states;
+package;
 
 import flash.filters.BitmapFilter;
 import flash.filters.BlurFilter;
@@ -14,6 +14,7 @@ import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxRandom;
 import openfl.Assets;
+import flixel.system.FlxAssets;
 
 #if flash
 import flash.filters.BevelFilter;
@@ -81,7 +82,7 @@ class PlayState extends FlxState
 		// SPRITES
 		
 		// NO FILTER
-		spr1 = new FlxSprite(FlxG.width * 0.25 - 50, FlxG.height / 2 - 100 - 50, "assets/HaxeFlixel.png"); 
+		spr1 = new FlxSprite(FlxG.width * 0.25 - 50, FlxG.height / 2 - 100 - 50, GraphicLogo); 
 		spr1.antialiasing = true;
 		add(spr1);
 		txt1 = new FlxText(spr1.x, spr1.y + 120, 100, "No Filter", 10);
@@ -90,7 +91,7 @@ class PlayState extends FlxState
 		
 		#if !js
 		// GLOW
-		spr2 = new FlxSprite(FlxG.width * 0.5 - 50, FlxG.height / 2 - 100 - 50, "assets/HaxeFlixel.png");
+		spr2 = new FlxSprite(FlxG.width * 0.5 - 50, FlxG.height / 2 - 100 - 50, GraphicLogo);
 		add(spr2);
 		txt2 = new FlxText(spr2.x, spr2.y + 120, 100, "Glow", 10);
 		txt2.alignment = "center";
@@ -101,7 +102,7 @@ class PlayState extends FlxState
 		spr2Filter.addFilter(filter2);
 		
 		// BLUR
-		spr3 = new FlxSprite(FlxG.width * 0.75 - 50, FlxG.height / 2 - 100 - 50, "assets/HaxeFlixel.png");
+		spr3 = new FlxSprite(FlxG.width * 0.75 - 50, FlxG.height / 2 - 100 - 50, GraphicLogo);
 		add(spr3);
 		txt3 = new FlxText(spr3.x, spr3.y + 120, 100, "Blur", 10);
 		txt3.alignment = "center";
@@ -112,7 +113,7 @@ class PlayState extends FlxState
 		spr3Filter.addFilter(filter3);
 		
 		// DROP SHADOW
-		spr4 = new FlxSprite(FlxG.width * 0.25 - 50, FlxG.height / 2 + 100 - 50, "assets/HaxeFlixel.png");
+		spr4 = new FlxSprite(FlxG.width * 0.25 - 50, FlxG.height / 2 + 100 - 50, GraphicLogo);
 		add(spr4);
 		txt4 = new FlxText(spr4.x, spr4.y + 120, 100, "Drop Shadow", 10); 
 		txt4.alignment = "center";
@@ -125,7 +126,7 @@ class PlayState extends FlxState
 		
 		#if flash
 		// BEVEL
-		spr5 = new FlxSprite(FlxG.width * 0.5 - 50, FlxG.height / 2 + 100 - 50, "assets/HaxeFlixel.png");
+		spr5 = new FlxSprite(FlxG.width * 0.5 - 50, FlxG.height / 2 + 100 - 50, GraphicLogo);
 		add(spr5);
 		filter5 = new BevelFilter(6);
 		spr5Filter = new FlxSpriteFilter(spr5, 50, 50);
@@ -135,7 +136,7 @@ class PlayState extends FlxState
 		add(txt5);
 		
 		// DISPLACEMENT MAP
-		spr6 = new FlxSprite(FlxG.width * 0.75 - 50, FlxG.height / 2 + 100 - 50, "assets/HaxeFlixel.png");
+		spr6 = new FlxSprite(FlxG.width * 0.75 - 50, FlxG.height / 2 + 100 - 50, GraphicLogo);
 		add(spr6);
 		filter6 = (new DisplacementMapFilter(Assets.getBitmapData("assets/StaticMap.png"), 
 						new Point(0, 0), 1, 1, 15, 1, DisplacementMapFilterMode.COLOR, 1, 0));

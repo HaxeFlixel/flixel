@@ -1,14 +1,13 @@
-package ;
+package;
+
 import flixel.FlxG;
 import flixel.group.FlxGroup;
 import flixel.FlxSprite;
 import flixel.text.FlxText;
-//import pgr.gconsole.GameConsole;
 
 /**
  * @author TiagoLr ( ~~~ProG4mr~~~ )
  */
-
 class HUD extends FlxGroup
 {
 	private var txtStyle:FlxText;
@@ -65,5 +64,4 @@ class HUD extends FlxGroup
 		//GameConsole.log("zoom  " + zoom);
 		txtZoom.text = "Camera Zoom: " + Math.floor(zoom * 10) / 10;
 	}
-	
 }

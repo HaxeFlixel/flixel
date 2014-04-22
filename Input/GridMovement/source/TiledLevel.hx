@@ -1,17 +1,14 @@
 package;
 
-import haxe.io.Path;
-
-import flixel.FlxG;
-import flixel.FlxObject;
-import flixel.FlxSprite;
-import flixel.group.FlxGroup;
-import flixel.tile.FlxTilemap;
-
 import flixel.addons.editors.tiled.TiledMap;
 import flixel.addons.editors.tiled.TiledObject;
 import flixel.addons.editors.tiled.TiledObjectGroup;
 import flixel.addons.editors.tiled.TiledTileSet;
+import flixel.FlxG;
+import flixel.FlxObject;
+import flixel.group.FlxGroup;
+import flixel.tile.FlxTilemap;
+import haxe.io.Path;
 
 /**
  * ...

@@ -201,9 +201,9 @@ class Blob extends FlxNapeState
 		if (FlxG.keys.justPressed.R)
 			FlxG.resetState();
 		if (FlxG.keys.justPressed.LEFT) 
-			FlxPhysicsDemo.prevState();
+			Main.prevState();
 		if (FlxG.keys.justPressed.RIGHT)
-			FlxPhysicsDemo.nextState();
+			Main.nextState();
 			
 		
 		// Positions Eyes in the middle of the blob, using the median x and y values of the blob.
