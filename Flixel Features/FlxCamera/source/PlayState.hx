@@ -296,7 +296,7 @@ class PlayState extends FlxNapeState
 			cam.followLead.x = 0;
 			cam.followLead.y = 0;
 		}
-			
+		
 		hud.updateCamLead(cam.followLead.x);
 	}
 	
@@ -307,32 +307,16 @@ class PlayState extends FlxNapeState
 		
 		if (cam.followLerp < 0)
 			cam.followLerp = 0;
-			
+		
 		hud.updateCamLerp(cam.followLerp);
 	}
 	
 	private function setStyle(i:Int) 
 	{
-		var oldCam:FlxCamera = FlxG.camera;
-		
-		var newCamStyle:Int = oldCam.style + i;
+		var newCamStyle:Int = FlxG.camera.style + i;
 		newCamStyle < 0 ? newCamStyle += 6 : newCamStyle %= 6;
 		
-		
-		#if TRUE_ZOOM_OUT
-		FlxG.camera = FlxG.cameras.add(new FlxCamera(Std.int( -640 / 2), Std.int( -480 / 2), 640 * 2, 480 * 2, 1)); 
-		#else
-		FlxG.camera = FlxG.cameras.add(new FlxCamera(0, 0, 640, 480, 1));
-		
-		#end
-		FlxG.game.swapChildren(FlxG.camera.flashSprite, hudCam.flashSprite);
-		FlxG.game.swapChildren(FlxG.camera.flashSprite, overlayCamera.flashSprite);
-		
-		FlxG.camera.follow(orb, newCamStyle, null, oldCam.followLerp);
-		FlxG.camera.followLead.set(oldCam.followLead.x, oldCam.followLead.y);
-		setZoom(oldCam.zoom);
-		
-		FlxG.cameras.remove(oldCam, true);
+		FlxG.camera.follow(orb, newCamStyle, null, FlxG.camera.followLerp);
 		
 		switch (newCamStyle) 
 		{
