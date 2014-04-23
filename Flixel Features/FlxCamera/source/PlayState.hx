@@ -30,7 +30,6 @@ class PlayState extends FlxNapeState
 	static var LEVEL_MAX_X;
 	static var LEVEL_MIN_Y;
 	static var LEVEL_MAX_Y;
-	//
 	
 	#if TRUE_ZOOM_OUT
 	private var firstUpdate:Bool;
@@ -49,6 +48,8 @@ class PlayState extends FlxNapeState
 		LEVEL_MAX_Y = Lib.current.stage.stageHeight * 1.5;
 		
 		super.create();
+		
+		FlxG.mouse.visible = false;
 		
 		#if TRUE_ZOOM_OUT
 		FlxG.width = 640; // For 1/2 zoom out
@@ -251,13 +252,13 @@ class PlayState extends FlxNapeState
 		super.update();
 		
 		var speed = 20;
-		if (FlxG.keys.pressed.A)
+		if (FlxG.keys.anyPressed(["A", "LEFT"]))
 			orb.body.applyImpulse(new Vec2( -speed, 0));
-		if (FlxG.keys.pressed.S)
+		if (FlxG.keys.anyPressed(["S", "DOWN"]))
 			orb.body.applyImpulse(new Vec2(0, speed));
-		if (FlxG.keys.pressed.D)
+		if (FlxG.keys.anyPressed(["D", "RIGHT"]))
 			orb.body.applyImpulse(new Vec2(speed, 0));
-		if (FlxG.keys.pressed.W)
+		if (FlxG.keys.anyPressed(["W", "UP"]))
 			orb.body.applyImpulse(new Vec2(0, -speed));
 			
 		if (FlxG.keys.justPressed.Y) 
@@ -342,11 +343,5 @@ class PlayState extends FlxNapeState
 			case 4:hud.updateStyle("STYLE_SCREEN_BY_SCREEN"); setZoom(1);
 			case 5:hud.updateStyle("STYLE_NO_DEAD_ZONE");
 		}
-	}
-	
-	override public function draw():Void 
-	{
-		super.draw();
-		
 	}
 }
