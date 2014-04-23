@@ -190,6 +190,7 @@ class FlxBitmapTextField extends FlxSprite
 			if (_background)
 			{
 				bgDrawItem = camera.getDrawStackItem(FlxG.bitmap.whitePixel, true, _blendInt, antialiasing);
+				// TODO: make it work again
 			}
 			
 			drawItem = camera.getDrawStackItem(cachedGraphics, true, _blendInt, antialiasing);
