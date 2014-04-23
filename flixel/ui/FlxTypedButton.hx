@@ -154,7 +154,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		}
 		#end
 		
-		frame = framesData.frames[nextFrame];
+		animation.frameIndex = nextFrame;
 	}
 	
 	/**
