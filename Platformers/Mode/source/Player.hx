@@ -318,13 +318,13 @@ class Player extends FlxSprite
 	
 	function moveLeft():Void
 	{
-		flipX = true;
+		facing = FlxObject.LEFT;
 		acceleration.x -= drag.x;
 	}
 	
 	function moveRight():Void
 	{
-		flipX = false;
+		facing = FlxObject.RIGHT;
 		acceleration.x += drag.x;
 	}
 	
