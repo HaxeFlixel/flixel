@@ -596,15 +596,7 @@ class FlxBitmapTextField extends FlxSprite
 		#end
 		
 		#if FLX_RENDER_BLIT
-		if (pixels != null) 
-		{
-			if (finalWidth != pixels.width || finalHeight != pixels.height) 
-			{
-				FlxG.bitmap.remove(cachedGraphics.key);
-			}
-		}
-		
-		if (pixels == null) 
+		if (pixels == null || (finalWidth != pixels.width || finalHeight != pixels.height)) 
 		{
 			pixels = new BitmapData(finalWidth, finalHeight, !_background, _backgroundColor);
 		} 
