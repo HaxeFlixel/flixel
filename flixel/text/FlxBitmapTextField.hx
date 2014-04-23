@@ -596,21 +596,21 @@ class FlxBitmapTextField extends FlxSprite
 		#end
 		
 		#if FLX_RENDER_BLIT
-		if (cachedGraphics != null) 
+		if (pixels != null) 
 		{
-			if (finalWidth != cachedGraphics.bitmap.width || finalHeight != cachedGraphics.bitmap.height) 
+			if (finalWidth != pixels.width || finalHeight != pixels.height) 
 			{
-				cachedGraphics.bitmap.dispose();
+				FlxG.bitmap.remove(cachedGraphics.key);
 			}
 		}
 		
-		if (cachedGraphics.bitmap == null) 
+		if (pixels == null) 
 		{
-			cachedGraphics.bitmap = new BitmapData(finalWidth, finalHeight, !_background, _backgroundColor);
+			pixels = new BitmapData(finalWidth, finalHeight, !_background, _backgroundColor);
 		} 
 		else 
 		{
-			cachedGraphics.bitmap.fillRect(cachedGraphics.bitmap.rect, _backgroundColor);
+			pixels.fillRect(cachedGraphics.bitmap.rect, _backgroundColor);
 		}
 		#else
 		_drawData.splice(0, _drawData.length);
@@ -650,7 +650,7 @@ class FlxBitmapTextField extends FlxSprite
 		if (_fontScale > 0)
 		{
 			#if FLX_RENDER_BLIT
-			cachedGraphics.bitmap.lock();
+			pixels.lock();
 			#end
 			
 			// Render text
@@ -691,7 +691,7 @@ class FlxBitmapTextField extends FlxSprite
 						for (px in 0...(2 + 1)) 
 						{
 							#if FLX_RENDER_BLIT
-							_font.render(cachedGraphics.bitmap, _preparedOutlineGlyphs, t, _outlineColor, px + ox + _padding, py + row * (fontHeight + _lineSpacing) + _padding, _letterSpacing);
+							_font.render(pixels, _preparedOutlineGlyphs, t, _outlineColor, px + ox + _padding, py + row * (fontHeight + _lineSpacing) + _padding, _letterSpacing);
 							#else
 							_font.render(_drawData, t, _outlineColor, color, alpha, px + ox + _padding - _halfWidth, py + row * (fontHeight * _fontScale + _lineSpacing) + _padding - _halfHeight, _letterSpacing, _fontScale);
 							#end
@@ -703,14 +703,14 @@ class FlxBitmapTextField extends FlxSprite
 				if (_shadow) 
 				{
 					#if FLX_RENDER_BLIT
-					_font.render(cachedGraphics.bitmap, _preparedShadowGlyphs, t, _shadowColor, 1 + ox + _padding, 1 + oy + row * (fontHeight + _lineSpacing) + _padding, _letterSpacing);
+					_font.render(pixels, _preparedShadowGlyphs, t, _shadowColor, 1 + ox + _padding, 1 + oy + row * (fontHeight + _lineSpacing) + _padding, _letterSpacing);
 					#else
 					_font.render(_drawData, t, _shadowColor, color, alpha, 1 + ox + _padding - _halfWidth, 1 + oy + row * (fontHeight * _fontScale + _lineSpacing) + _padding - _halfHeight, _letterSpacing, _fontScale);
 					#end
 				}
 				
 				#if FLX_RENDER_BLIT
-				_font.render(cachedGraphics.bitmap, _preparedTextGlyphs, t, _textColor, ox + _padding, oy + row * (fontHeight + _lineSpacing) + _padding, _letterSpacing);
+				_font.render(pixels, _preparedTextGlyphs, t, _textColor, ox + _padding, oy + row * (fontHeight + _lineSpacing) + _padding, _letterSpacing);
 				#else
 				_font.render(_drawData, t, _textColor, color, alpha, ox + _padding - _halfWidth, oy + row * (fontHeight * _fontScale + _lineSpacing) + _padding - _halfHeight, _letterSpacing, _fontScale, _useTextColor);
 				#end
@@ -718,8 +718,8 @@ class FlxBitmapTextField extends FlxSprite
 			}
 			
 			#if FLX_RENDER_BLIT
-			cachedGraphics.bitmap.unlock();
-		//	pixels = _pixels;
+			pixels.unlock();
+			resetFrameBitmapDatas();
 			dirty = true;
 			#end
 		}
