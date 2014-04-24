@@ -74,7 +74,9 @@ class Enemy extends Entity
 		if (type == BLACK_HOLE)
 		{
 			var _angle:Float = (0.720 * Lib.getTimer()) % 360;
+			#if !js
 			ScreenState.grid.applyImplosiveForce(position, 0.5 * Math.sin(FlxAngle.asRadians(_angle)) * 150 + 300, 200);
+			#end
 			if (cooldownTimer.finished)
 			{
 				//cooldownTimer.abort();
@@ -132,14 +134,6 @@ class Enemy extends Entity
 		ScreenState.makeExplosion(Particle.ENEMY, position.x, position.y, 90, Particle.MEDIUM_SPEED, _color, FlxColor.WHITE);
 	}
 	
-	//public var type(get, set): UInt;
-	//
-	//public function get_type()
-	//{
-		//return type;
-	//}
-	
-//	@:setter(type)
 	override public function set_type(Value:UInt):UInt
 	{
 		var _previousType:UInt = type;

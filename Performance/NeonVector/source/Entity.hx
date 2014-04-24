@@ -10,7 +10,7 @@ import flixel.FlxG;
  */
 class Entity extends FlxSprite
 {
-	@:isVar public var type(get, set):UInt;
+	public var type(default, set):UInt = 0;
 	public var radius:Float = 0;
 	public var hitboxRadius:Float = 0;
 	public var moveSpeed:Float = 0;
@@ -21,22 +21,14 @@ class Entity extends FlxSprite
 	private var hitEdgeOfScreen:Bool = false;
 	public var cooldown:Float = 0.075;
 	
-	public function get_type() : UInt
-	{
-		return type;
-	}
-	
-	public function set_type(Value : UInt) : UInt
-	{
-		return type = Value;
-	}
-	
 	public function new(X:Float = 0, Y:Float = 0)
 	{
 		super(X, Y);
 		_position = FlxPoint.get();
 		
+		#if !js
 		blend = SCREEN;
+		#end
 		cooldownTimer = new FlxTimer();
 		cooldownTimer.finished = true;
 	}
@@ -70,7 +62,7 @@ class Entity extends FlxSprite
 		return _wasClamped;
 	}
 	
-	public function get_position():FlxPoint
+	private function get_position():FlxPoint
 	{
 		_position.x = x + radius;
 		_position.y = y + radius;
@@ -78,7 +70,7 @@ class Entity extends FlxSprite
 		return _position;
 	}
 	
-	public function set_position(Value:FlxPoint):FlxPoint
+	private function set_position(Value:FlxPoint):FlxPoint
 	{
 		x = Value.x - radius;
 		y = Value.y - radius;
@@ -86,6 +78,11 @@ class Entity extends FlxSprite
 		_position.x = Value.x;
 		_position.y = Value.y;
 		return _position;
+	}
+	
+	private function set_type(Value:UInt) 
+	{
+		return type = Value;
 	}
 	
 	public static function angleInDegrees(Vector:FlxPoint):Float

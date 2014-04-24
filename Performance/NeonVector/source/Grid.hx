@@ -14,6 +14,7 @@ import flixel.util.FlxSpriteUtil;
  */
 class Grid
 {
+	#if !js
 	public var springs:Array<Spring>;
 	public var points:Array<PointMass>;
 	public var fixedPoints:Array<PointMass>;
@@ -212,5 +213,6 @@ class Grid
 			_pt.y = 0.5 * ((2 * Pt1.y) + t * (( -Pt0.y + Pt2.y) +
 							t * ((2 * Pt0.y - 5 * Pt1.y + 4 * Pt2.y - Pt3.y) + t * (-Pt0.y + 3 * Pt1.y - 3 * Pt2.y + Pt3.y))));
 			return _pt;                        
-	}	
+	}
+	#end
 }

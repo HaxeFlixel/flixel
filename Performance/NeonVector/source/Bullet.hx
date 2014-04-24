@@ -26,7 +26,9 @@ class Bullet extends Entity
 			ScreenState.makeExplosion(Particle.BULLET, position.x, position.y, 20, Particle.LOW_SPEED, 0x33ccff, 0x22bbdd);
 			kill();
 		}
+		#if !js
 		else ScreenState.grid.applyExplosiveForce(position, 0.25 * Math.sqrt(velocity.x * velocity.x + velocity.y * velocity.y), 80);
+		#end
 	}
 	
 	override public function reset(X:Float, Y:Float):Void

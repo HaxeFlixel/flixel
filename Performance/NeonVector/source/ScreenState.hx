@@ -23,7 +23,9 @@ class ScreenState extends FlxState
 {
 
 	private var _fx:FlxSprite;
+	#if !js
 	private var blur:BlurFilter;
+	#end
 	private var _rect:Rectangle;
 	private var _point:Point;
 	private var lastTimeStamp:Int = 0;
@@ -56,7 +58,9 @@ class ScreenState extends FlxState
 		// Neither the grid nor the particles group are added to the FlxState here. Instead, their update() and draw() routines will
 		// be called in a custom order.
 		var _gridRect:Rectangle = new Rectangle(0, 0, FlxG.width, FlxG.height);
+		#if !js
 		grid = new Grid(_gridRect, Std.int(FlxG.width / 20), Std.int(FlxG.height / 20), 8);
+		#end
 		
 		particles = new FlxGroup();
 		for (i in 0...2500) particles.add(new Particle());
@@ -83,12 +87,16 @@ class ScreenState extends FlxState
 		_fx = new FlxSprite();
 		_fx.makeGraphic(FlxG.width, FlxG.height, 0, true);
 		_fx.antialiasing = true;
+		#if !js
 		_fx.blend = SCREEN;
+		#end
 		_rect = new Rectangle(0, 0, FlxG.width, FlxG.height);
 		_point = new Point();
+		#if !js
 		blur = new BlurFilter(8, 8, BitmapFilterQuality.LOW);
+		#end
 		
-		#if !flash
+		#if FLX_RENDER_TILE
 		FlxG.camera.canvas.addChild(FlxSpriteUtil.flashGfxSprite);
 		#end
 	}
@@ -97,7 +105,9 @@ class ScreenState extends FlxState
 	{        
 		GameInput.update();
 		super.update();
+		#if !js
 		grid.update();
+		#end
 		particles.update();
 		
 		cursor.x = FlxG.mouse.x;
@@ -138,7 +148,9 @@ class ScreenState extends FlxState
 	
 	override public function draw():Void
 	{
+		#if !js
 		grid.draw();
+		#end
 		particles.draw();
 
 		#if flash
