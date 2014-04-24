@@ -1,13 +1,15 @@
 1.1.0
 ------------------------------
 * Compatibility with flixel 3.3.0
-* Added 6 new demos:
+* Added 8 new demos:
  * HeatmapPathfinding
  * FlxUICursor
  * FlxWaveSprite
  * FlxTextFormat
  * NeonVector
  * FlxGlitchSprite
+ * FlxAccelerometer
+ * FlxBitmapTextField
 * Added flash gamepad support to GamepadTest and Mode
 * FlxSpine now uses the default timeScale 
 * TexturePackerAtlas: added examples for Sparrow and LibGDX formats
