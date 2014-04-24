@@ -1,6 +1,11 @@
 language: java
 
-before_script:
+env: 
+  - TARGET=flash
+  - TARGET=neko
+  - TARGET=html5
+
+before_install:
   - sudo add-apt-repository ppa:eyecreate/haxe -y
   - sudo apt-get update
   - sudo apt-get install haxe -y
@@ -24,6 +29,4 @@ before_script:
   - haxelib dev flixel-demos .
 
 script:
-  - haxelib run flixel-tools testdemos -flash
-  - haxelib run flixel-tools testdemos -neko
-  - haxelib run flixel-tools testdemos -html5
+  - haxelib run flixel-tools testdemos -$TARGET
