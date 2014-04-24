@@ -974,7 +974,7 @@ class FlxTextFormat implements IFlxDestroyable
 	 * @param	FontColor	(Optional) Set the font  color. By default, inherits from the default format.
 	 * @param	Bold		(Optional) Set the font to bold. The font must support bold. By default, false. 
 	 * @param	Italic		(Optional) Set the font to italics. The font must support italics. Only works in Flash. By default, false.  
-	 * @param	BorderColor	(Optional) Set the border color. By default, no border (The color is TRANSPARENT)
+	 * @param	BorderColor	(Optional) Set the border color. By default, no border (null).
 	 * @param	Start		(Default=-1) The start index of the string where the format will be applied. If not set, the format won't be applied.
 	 * @param	End			(Default=-1) The end index of the string where the format will be applied.
 	 */
