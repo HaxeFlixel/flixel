@@ -286,7 +286,8 @@ class FlxKeyboard implements IFlxInput
 		i = 1;
 		while (i <= 12)
 		{
-			addKey("F" + i, 111 + (i++));
+			addKey("F" + i, 111 + i);
+			i++;
 		}
 		
 		// SPECIAL KEYS + PUNCTUATION
