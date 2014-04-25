@@ -33,7 +33,7 @@ class FlxGTest extends FlxTest
 	#if android
 	@Test function testAndroidNull():Void     { Assert.isNotNull(FlxG.android); }
 	#end
-	#if html5
+	#if js
 	@Test function testHtml5Null():Void       { Assert.isNotNull(FlxG.html5); }
 	#end
 	

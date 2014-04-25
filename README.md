@@ -18,7 +18,7 @@ In case you're looking for resources, help, or just want to interact with the co
 
 - [HaxeFlixel.com](http://www.haxeflixel.com/)
   - [Forums](http://www.haxeflixel.com/forum)
-  - [Documentation](http://www.haxeflixel.com/documentation)
+  - [Docs](http://www.haxeflixel.com/documentation)
   - [API](http://api.haxeflixel.com/)
 - [@HaxeFlixel on Twitter](https://twitter.com/HaxeFlixel)
 - [#haxeflixel IRC channel](http://webchat.freenode.net/?channels=haxeflixel)
@@ -31,14 +31,14 @@ Special thanks go to the community contributors [Werdn](https://github.com/werdn
 
 HaxeFlixel presents substantial enhancements from the original Flixel AS3 code:
 
-- Use of a robust and powerful, opensource language
+- Use of a robust and powerful, open source language
 - Flexible Asset Management System
 - Cross-platform development for Linux, Mac and Windows
 - Texture Atlas and Layer enhancement for cpp targets
 - Integrated and robust Tween System
 - Access to OpenFL native extensions
 - Compile to Mobile and Desktop targets with native code through OpenFL
-- Impressive Native Performance using GPU accelerated drawTiles implimentation in cpp targets
+- Impressive Native Performance using GPU accelerated drawTiles implementation on cpp targets
 - A powerful debugger with a console as well as an advanced logging system
 - A vibrant community that keeps updating the engine and adding new features to it
 
@@ -52,7 +52,7 @@ If you are wanting to contribute code, please review the follwing documentation:
 
 If you have a question or have not contributed on github before, there are friendly people in the community that help out in the [forums](http://haxeflixel.com/documentation/community/).
 
-For using git with github we recommended using a GUI application to manage your changes, for example [SourceTree](http://www.sourcetreeapp.com/).
+For using git with GitHub we recommended using a GUI application to manage your changes, for example [SourceTree](http://www.sourcetreeapp.com/).
 
 ##Runtime Targets
 The current possible targets are:

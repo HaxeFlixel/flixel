@@ -666,14 +666,14 @@ class FlxCamera extends FlxBasic
 			if (_fxFadeIn)
 			{
 				_fxFadeAlpha -= FlxG.elapsed /_fxFadeDuration;
-                if (_fxFadeAlpha <= 0.0)
-                {
-                    _fxFadeAlpha = 0.0;
-                    if (_fxFadeComplete != null)
-                    {
+				if (_fxFadeAlpha <= 0.0)
+				{
+					_fxFadeAlpha = 0.0;
+					if (_fxFadeComplete != null)
+					{
 						_fxFadeComplete();
 					}
-                }
+				}
 			}
 			else
 			{

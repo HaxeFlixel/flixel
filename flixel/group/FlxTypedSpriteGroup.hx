@@ -701,6 +701,20 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		return facing = Value;
 	}
 	
+	override private function set_flipX(Value:Bool):Bool
+	{
+		if (exists && flipX != Value)
+			transformChildren(flipXTransform, Value);
+		return flipX = Value;
+	}
+	
+	override private function set_flipY(Value:Bool):Bool
+	{
+		if (exists && flipY != Value)
+			transformChildren(flipYTransform, Value);
+		return flipY = Value;
+	}
+	
 	override private function set_moves(Value:Bool):Bool
 	{
 		if (exists && moves != Value)
@@ -842,6 +856,8 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	private inline function angleTransform(Sprite:FlxSprite, Angle:Float)						{ Sprite.angle += Angle; }						// addition
 	private inline function alphaTransform(Sprite:FlxSprite, Alpha:Float)						{ Sprite.alpha *= Alpha; }						// multiplication
 	private inline function facingTransform(Sprite:FlxSprite, Facing:Int)						{ Sprite.facing = Facing; }						// set
+	private inline function flipXTransform(Sprite:FlxSprite, FlipX:Bool)						{ Sprite.flipX = FlipX; }						// set
+	private inline function flipYTransform(Sprite:FlxSprite, FlipY:Bool)						{ Sprite.flipY = FlipY; }						// set
 	private inline function movesTransform(Sprite:FlxSprite, Moves:Bool)						{ Sprite.moves = Moves; }						// set
 	private inline function pixelPerfectTransform(Sprite:FlxSprite, PixelPerfect:Bool)			{ Sprite.pixelPerfectRender = PixelPerfect; }	// set
 	private inline function gColorTransform(Sprite:FlxSprite, Color:Int)						{ Sprite.color = Color; }						// set
@@ -884,7 +900,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 * This functionality isn't supported in SpriteGroup
 	 * @return this sprite group
 	 */
-	override public function loadGraphic(Graphic:Dynamic, Animated:Bool = false, Reverse:Bool = false, Width:Int = 0, Height:Int = 0, Unique:Bool = false, ?Key:String):FlxSprite 
+	override public function loadGraphic(Graphic:Dynamic, Animated:Bool = false, Width:Int = 0, Height:Int = 0, Unique:Bool = false, ?Key:String):FlxSprite 
 	{
 		return this;
 	}
@@ -917,7 +933,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 * This functionality isn't supported in SpriteGroup
 	 * @return this sprite group
 	 */
-	override public function loadGraphicFromTexture(Data:Dynamic, Reverse:Bool = false, Unique:Bool = false, ?FrameName:String):FlxSprite 
+	override public function loadGraphicFromTexture(Data:Dynamic, Unique:Bool = false, ?FrameName:String):FlxSprite 
 	{
 		#if !FLX_NO_DEBUG
 		FlxG.log.error("loadGraphicFromTexture() is not supported in FlxSpriteGroups.");

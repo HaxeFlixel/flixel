@@ -1,3 +1,9 @@
+3.3.1
+------------------------------
+* FlxKeyboard: fixed function keys being offset by 1 on cpp (F2-F13)
+* FlxTilemap: fixed possible crash during collision checks
+* FlxG.sound.play(): fixed volume parameter not working
+
 3.3.0
 ------------------------------
 * Added flash gamepad support. This either requires a swf-player-version of 11.8 to be set or FLX_NO_GAMEPAD to be defined.
@@ -10,7 +16,7 @@
 * FlxCamera: 
  * Added static defaultCameras array which is used by FlxBasics when their cameras array has not been set - previously the use of FlxG.cameras.list / all existing cameras was hardcoded
  * Fixed a bug where following a target would prevent you from setting the coordinates of the camera
-* Added pooling for FlxPoint, FlxVector, and FlxRect (FlxPath and FlxTimer also support pooling, but that is handled transparently). Usage: var point = FlxPoint.get(); /* do stuff with point */ point.put(); // recycle point. Instantiating these objects directly via new() is no longer possible to enforce the use of pooling. FlxPoint.weak() should be used instead of get() when passing points into flixel functions, that way they'll be recycled automatically.
+* Added pooling for FlxPoint, FlxVector, and FlxRect. Usage: var point = FlxPoint.get(); /* do stuff with point */ point.put(); // recycle point. FlxPoint.weak() should be used instead of get() when passing points into flixel functions, that way they'll be recycled automatically.
 * Debugger windows:
  * Fixed dragging of overlapping windows
  * Fixed the visibility of windows on native targets (now saving correctly)
@@ -21,6 +27,7 @@
  * openURL(): now adds "http://" to the URL if necessary
  * Added maxElapsed
  * Fixed some variables not being reset in resetGame()
+ * added FlxG.accelerometer for mobile targets
 * FlxSound: 
  * Added loadByteArray()
  * Now has a read-only variable time
@@ -76,12 +83,14 @@
 * FlxSprite:
  * Added support for more texture packer formats: LibGDXData, SparrowData, TexturePackerXMLData
  * Fixed a null error crash in FlxAtlas on cpp targets with haxe 3.1.0+
- * Added flipHorizontally() and flipVertically(), using negative scale
  * setOriginToCenter() -> centerOrigin()
  * Fixed a "jittering"-issue between simple and complex render sprites due to rounding
- * Replaced flipped with flippable (can be set at any time)
+ * Removed flipped as well as the "Reverse" param from loadGraphic() and loadGraphicFromTexture()
+ * Added flipX, flipY and setFacingFlip() - graphics can now be flipped vertically as well
+ * Fixed a bug with flipped graphics + origin on FLX_RENDER_TILE targets
 * FlxPreloader:
- * Small fix that should prevent it from getting stuck 
+ * Spit up FlxPreloader into FlxPreloader and FlxPreloaderBase to make it easier to extend
+ * Small fix that should prevent it from getting stuck
  * Added siteLockURLIndex to control which URL in allowdURLs is used when the site-lock triggers
  * allowedURLs now works with URLs that don't start with "http://"
 * Fixed camera shifting after resizing with StageSizeScaleMode
@@ -90,6 +99,7 @@
  * Added append(), appendByNames(), appendByStringIndices(), appendByIndices() and appendByPrefix()
  * addByStringIndicies() -> addByStringIndices()
  * addByIndicies() -> addByIndices()
+ * Fixed a bug with callback firing every time play() was called instead of only when the frame changes
 * FlxTypedGroup: added forEachOfType() iterator
 * FlxGamepad: 
  * Added anyPressed(), anyJustPressed() and anyJustReleased()
@@ -99,6 +109,13 @@
 * FlxState: active, visible and exists are now respected
 * FlxVector: substractNew() -> subtractNew()
 * FlxGradient: fixed a memory leak in the overlayGradientOn()-functions
+* FlxTimer and FlxPath:
+ * paused -> active
+ * abort() -> cancel()
+ * removed pooling due to potential issues
+ * start() -> new FlxTimer() / FlxPath()
+ * run() -> start()
+* FlxTimer and FlxTween: removed userData 
 
 3.2.2
 ------------------------------

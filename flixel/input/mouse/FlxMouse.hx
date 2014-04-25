@@ -474,6 +474,14 @@ class FlxMouse extends FlxPoint implements IFlxInput
 			cursorContainer.x = _globalScreenPosition.x;
 			cursorContainer.y = _globalScreenPosition.y;
 		}
+		
+		#if js
+		// need to account for scale as the game sprite is not being scaled on html5
+		var scaleMultiplier:Float = FlxG._scaleMode.scale.x;
+		_globalScreenPosition.x /= scaleMultiplier;
+		_globalScreenPosition.y /= scaleMultiplier;
+		#end
+		
 		updateCursor();
 		
 		// Update the buttons

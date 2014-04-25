@@ -61,7 +61,6 @@ class SoundFrontEnd
 	public var volume(default, set):Float = 1;
 	
 	private var _soundCache:Map<String, Sound>;
-	private var _soundTransform:SoundTransform;
 	
 	/**
 	 * Set up and play a looping background soundtrack.
@@ -162,9 +161,6 @@ class SoundFrontEnd
 	{
 		var sound:Sound = null;
 		
-		_soundTransform.volume = (muted ? 0 : 1) * FlxG.sound.volume * Volume;
-		_soundTransform.pan = 0;
-		
 		if (_soundCache.exists(EmbeddedSound))
 		{
 			sound = _soundCache.get(EmbeddedSound);
@@ -175,6 +171,7 @@ class SoundFrontEnd
 			_soundCache.set(EmbeddedSound, sound);
 		}
 		var flixelSound = list.recycle(FlxSound).loadEmbedded(sound, Looped, AutoDestroy, OnComplete);
+		flixelSound.volume = Volume;
 		return flixelSound.play();
 	}
 	
@@ -264,7 +261,6 @@ class SoundFrontEnd
 		
 		list = new FlxTypedGroup<FlxSound>();
 		_soundCache = new Map<String, Sound>();
-		_soundTransform = new SoundTransform();
 	}
 	
 	/**

@@ -47,6 +47,9 @@ import flixel.system.frontEnds.SoundFrontEnd;
 #if android
 import flixel.input.android.FlxAndroidKeys;
 #end
+#if mobile
+import flixel.input.FlxAccelerometer;
+#end
 #if js
 import flixel.system.frontEnds.HTML5FrontEnd;
 #end
@@ -89,7 +92,7 @@ class FlxG
 	 * The HaxeFlixel version, in semantic versioning syntax. Use Std.string()
 	 * on it to get a String formatted like this: "HaxeFlixel MAJOR.MINOR.PATCH-PATCH_VERSION".
 	 */ 
-	public static var VERSION(default, null):FlxVersion = new FlxVersion(3, 3, 0, "dev");
+	public static var VERSION(default, null):FlxVersion = new FlxVersion(3, 4, 0, "dev");
 	
 	/**
 	 * Internal tracker for game object.
@@ -202,6 +205,13 @@ class FlxG
 	public static var android(default, null):FlxAndroidKeys;
 	#end
 	
+	#if mobile
+	/**
+	 * Provides access to the accelerometer data of mobile devices as x/y/z values.
+	 */
+	public static var accelerometer(default, null):FlxAccelerometer;
+	#end
+	
 	#if js
 	/**
 	 * Has some HTML5-specific things like browser detection, browser dimensions etc...
@@ -265,6 +275,7 @@ class FlxG
 	 */ 
 	public static var signals(default, null):SignalFrontEnd = new SignalFrontEnd();
 	
+	@:allow(flixel.input.mouse.FlxMouse)
 	private static var _scaleMode:BaseScaleMode = new RatioScaleMode();
 	
 	/**
@@ -448,6 +459,9 @@ class FlxG
 		android = inputs.add(new FlxAndroidKeys());
 		#end
 		
+		#if mobile
+		accelerometer = new FlxAccelerometer();
+		#end
 		save.bind("flixel");
 		
 		#if !FLX_NO_SOUND_SYSTEM

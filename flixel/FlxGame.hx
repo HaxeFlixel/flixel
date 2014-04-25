@@ -322,7 +322,8 @@ class FlxGame extends Sprite
 		// it means that we need to recreate bitmapdatas of dumped tilesheets
 		stage.addEventListener(Event.RESIZE, onResize);
 		
-		onResize(null); // fixes initial _inputContainer scale
+		// make sure the cursor etc are properly scaled from the start
+		resizeGame(FlxG.stage.stageWidth, FlxG.stage.stageHeight);
 	}
 	
 	private function onFocus(_):Void
@@ -409,18 +410,23 @@ class FlxGame extends Sprite
 	@:allow(flixel.FlxG)
 	private function onResize(_):Void 
 	{
-		var width:Int = Lib.current.stage.stageWidth;
-		var height:Int = Lib.current.stage.stageHeight;
+		var width:Int = FlxG.stage.stageWidth;
+		var height:Int = FlxG.stage.stageHeight;
 		
 		#if FLX_RENDER_TILE
 		FlxG.bitmap.onContext();
 		#end
 		
-		FlxG.resizeGame(width, height);
-		
 		_state.onResize(width, height);
 		FlxG.plugins.onResize(width, height);
 		FlxG.signals.gameResized.dispatch(width, height);
+		
+		resizeGame(width, height);
+	}
+	
+	private function resizeGame(width:Int, height:Int):Void
+	{
+		FlxG.resizeGame(width, height);
 		
 		#if !FLX_NO_DEBUG
 		debugger.onResize(width, height);
@@ -521,7 +527,10 @@ class FlxGame extends Sprite
 		if (_skipSplash || FlxSplash.nextState != null) // already played
 		{
 			_requestedState = cast (Type.createInstance(_initialState, []));
-			_gameJustStarted = true;
+			if (FlxSplash.nextState == null)
+			{
+				_gameJustStarted = true;
+			}
 		}
 		else
 		{

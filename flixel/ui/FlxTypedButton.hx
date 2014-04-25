@@ -82,7 +82,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	{
 		super(X, Y);
 		
-		loadGraphic(GraphicButton, true, false, 80, 20);
+		loadGraphic(GraphicButton, true, 80, 20);
 		
 		onUp = new FlxButtonEvent(OnClick);
 		onDown = new FlxButtonEvent();
@@ -154,7 +154,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		}
 		#end
 		
-		frame = framesData.frames[nextFrame];
+		animation.frameIndex = nextFrame;
 	}
 	
 	/**

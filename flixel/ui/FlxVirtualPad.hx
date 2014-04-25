@@ -155,7 +155,7 @@ class FlxVirtualPad extends FlxSpriteGroup
 	public function createButton(X:Float, Y:Float, Width:Int, Height:Int, Image:Dynamic, ?OnClick:Void->Void):FlxButton
 	{
 		var button:FlxButton = new FlxButton(X, Y);
-		button.loadGraphic(Image, true, false, Width, Height);
+		button.loadGraphic(Image, true, Width, Height);
 		button.solid = false;
 		button.immovable = true;
 		button.scrollFactor.set();
