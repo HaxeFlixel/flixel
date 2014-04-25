@@ -1,3 +1,9 @@
+3.3.1
+------------------------------
+* FlxKeyboard: fixed function keys being offset by 1 on cpp (F2-F13)
+* FlxTilemap: fixed possible crash during collision checks
+* FlxG.sound.play(): fixed volume parameter not working
+
 3.3.0
 ------------------------------
 * Added flash gamepad support. This either requires a swf-player-version of 11.8 to be set or FLX_NO_GAMEPAD to be defined.
