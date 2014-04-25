@@ -10,6 +10,7 @@ import flixel.system.FlxAssets;
 import flixel.system.FlxQuadTree;
 import flixel.system.FlxVersion;
 import flixel.system.frontEnds.BitmapFrontEnd;
+import flixel.system.frontEnds.BmpLogFrontEnd;
 import flixel.system.frontEnds.CameraFrontEnd;
 import flixel.system.frontEnds.ConsoleFrontEnd;
 import flixel.system.frontEnds.DebuggerFrontEnd;
@@ -230,6 +231,10 @@ class FlxG
 	 * Used to add messages to the log window or enable trace() redirection.
 	 */
 	public static var log(default, null):LogFrontEnd = new LogFrontEnd();
+	/**
+	 * Used to add images to the bmpLog window
+	 */
+	public static var bmpLog(default, null):BmpLogFrontEnd = new BmpLogFrontEnd();
 	/**
 	 * Used to add or remove things to / from the watch window.
 	 */

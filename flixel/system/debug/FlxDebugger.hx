@@ -37,6 +37,9 @@ class GraphicStats extends BitmapData {}
 @:bitmap("assets/images/debugger/buttons/watch.png")
 class GraphicWatch extends BitmapData {}
 
+@:bitmap("assets/images/debugger/buttons/bmpLog.png")
+class GraphicBmpLog extends BitmapData {}
+
 @:bitmap("assets/images/debugger/buttons/console.png") 
 class GraphicConsole extends BitmapData {}
 
@@ -67,6 +70,10 @@ class FlxDebugger extends Sprite
 	 * Container for the watch window widget.
 	 */
 	public var watch:Watch;
+	/**
+	 * Container for the bmpLog window widget
+	 */
+	public var bmpLog:BmpLog;
 	/**
 	 * Container for the record, stop and play buttons.
 	 */
@@ -150,6 +157,12 @@ class FlxDebugger extends Sprite
 			watch.destroy();
 			watch = null;
 		}
+		if (bmpLog != null)
+		{
+			removeChild(bmpLog);
+			bmpLog.destroy();
+			bmpLog = null;
+		}
 		if (stats != null)
 		{
 			removeChild(stats);
@@ -204,6 +217,8 @@ class FlxDebugger extends Sprite
 				watch.resize(_screen.x / 4, 68);
 				watch.reposition(_screen.x,_screen.y);
 				stats.reposition(_screen.x, 0);
+				bmpLog.resize(_screen.x / 4, 68);
+				bmpLog.reposition(0,_screen.y - (68*2) - (GUTTER*2));
 			case BIG:
 				console.resize(_screen.x - GUTTER * 2, 35);
 				console.reposition(GUTTER, _screen.y);
@@ -212,6 +227,8 @@ class FlxDebugger extends Sprite
 				watch.resize((_screen.x - GUTTER * 3) / 2, _screen.y / 2);
 				watch.reposition(_screen.x, _screen.y - watch.height - console.height - GUTTER * 1.5);
 				stats.reposition(_screen.x, 0);
+				bmpLog.resize((_screen.x - GUTTER * 3) / 2, _screen.y-(GUTTER*2)-(_screen.y / 2) -(35*2));
+				bmpLog.reposition(0, GUTTER * 1.5);
 			case TOP:
 				console.resize(_screen.x - GUTTER * 2, 35);
 				console.reposition(0, 0);
@@ -219,7 +236,9 @@ class FlxDebugger extends Sprite
 				log.reposition(0,console.height + GUTTER + 15);
 				watch.resize((_screen.x - GUTTER * 3) / 2, _screen.y / 4);
 				watch.reposition(_screen.x,console.height + GUTTER + 15);
-				stats.reposition(_screen.x,_screen.y);
+				stats.reposition(_screen.x, _screen.y);
+				bmpLog.resize((_screen.x - GUTTER * 3) / 2, _screen.y / 4);
+				bmpLog.reposition(0, console.height + (GUTTER*2) + 15 + (_screen.y / 4) + GUTTER);
 			case LEFT:
 				console.resize(_screen.x - GUTTER * 2, 35);
 				console.reposition(GUTTER, _screen.y);
@@ -228,6 +247,8 @@ class FlxDebugger extends Sprite
 				watch.resize(_screen.x / 3, (_screen.y - 15 - GUTTER * 2.5) / 2 - console.height / 2);
 				watch.reposition(0,log.y + log.height + GUTTER);
 				stats.reposition(_screen.x, 0);
+				bmpLog.resize(_screen.x / 3, (_screen.y - 15 - GUTTER * 2.5) / 2 - console.height / 2 - GUTTER);
+				bmpLog.reposition((_screen.x / 3) + GUTTER*2, 0);
 			case RIGHT:
 				console.resize(_screen.x - GUTTER * 2, 35);
 				console.reposition(GUTTER, _screen.y);
@@ -236,6 +257,8 @@ class FlxDebugger extends Sprite
 				watch.resize(_screen.x / 3, (_screen.y - 15 - GUTTER * 2.5) / 2 - console.height / 2);
 				watch.reposition(_screen.x,log.y + log.height + GUTTER);
 				stats.reposition(0, 0);
+				bmpLog.resize(_screen.x / 3, (_screen.y - 15 - GUTTER * 2.5) / 2 - console.height / 2 - GUTTER);
+				bmpLog.reposition(_screen.x - (GUTTER*2) - ((_screen.x / 3)*2), 0);
 			case STANDARD:
 				console.resize(_screen.x - GUTTER * 2, 35);
 				console.reposition(GUTTER, _screen.y);
@@ -244,6 +267,8 @@ class FlxDebugger extends Sprite
 				watch.resize((_screen.x - GUTTER * 3) / 2, _screen.y / 4);
 				watch.reposition(_screen.x,_screen.y - watch.height - console.height - GUTTER * 1.5);
 				stats.reposition(_screen.x, 0);
+				bmpLog.resize((_screen.x - GUTTER * 3) / 2, _screen.y / 4);
+				bmpLog.reposition(0, log.y - GUTTER - bmpLog.height);
 		}
 	}
 	
@@ -319,6 +344,46 @@ class FlxDebugger extends Sprite
 	}
 	
 	/**
+	 * Set the visibility of a system button AND its associated window
+	 * @param	Name one of these: "log","bmpLog","watch","console","stats"
+	 * @param	Visible is it visible or not
+	 */
+	public function setButtonVisibility(Name:String,Visible:Bool):Void
+	{
+		switch(Name)
+		{
+			case "log"		: log.visible = Visible;
+			case "bmpLog"	: bmpLog.visible = Visible;
+			case "watch"	: watch.visible = Visible;
+			case "console"	: console.visible = Visible;
+			case "stats"	: stats.visible = Visible;
+			default: return;
+		}
+		var array:Array<FlxSystemButton>; 
+		for (position in [ButtonAlignment.LEFT, ButtonAlignment.MIDDLE, ButtonAlignment.RIGHT])
+		{
+			switch (position)
+			{
+				case LEFT:
+					array = _leftButtons;
+				case MIDDLE:
+					array = _middleButtons;
+				case RIGHT:
+					array = _rightButtons;
+			}
+			var f:FlxSystemButton = null;
+			for (f in array)
+			{
+				if (f.name == Name)
+				{
+					f.toggled = !Visible;
+					break;
+				}
+			}
+		}
+	}
+	
+	/**
 	 * Create and add a new debugger button.
 	 * 
 	 * @param   Position       Either LEFT, MIDDLE or RIGHT.
@@ -328,9 +393,13 @@ class FlxDebugger extends Sprite
 	 * @param   UpdateLayout   Whether to update the button layout.
 	 * @return  The added button.
 	 */
-	public function addButton(Position:ButtonAlignment, ?Icon:BitmapData, ?UpHandler:Void->Void, ToggleMode:Bool = false, UpdateLayout:Bool = false):FlxSystemButton
+	public function addButton(Position:ButtonAlignment, ?Icon:BitmapData, ?UpHandler:Void->Void, ?Name:String, ToggleMode:Bool = false, UpdateLayout:Bool = false):FlxSystemButton
 	{
 		var button = new FlxSystemButton(Icon, UpHandler, ToggleMode);
+		if (Name != null)
+		{
+			button.name = Name;
+		}
 		
 		var array:Array<FlxSystemButton>; 
 		switch (Position)
@@ -434,18 +503,22 @@ class FlxDebugger extends Sprite
 		
 		addWindow(log = new Log());
 		addWindow(watch = new Watch());
+		addWindow(bmpLog = new BmpLog());
 		addWindow(console = new Console());
 		addWindow(stats = new Stats());
+		
+		bmpLog.visible = false;
 		
 		vcr = new VCR(this);
 		
 		addButton(LEFT, new GraphicFlixel(0, 0), openHomepage);
 		addButton(LEFT, null, openHomepage).addChild(txt);
 		
-		addButton(RIGHT, new GraphicLog(0, 0), log.toggleVisibility, true).toggled = !log.visible; 
-		addButton(RIGHT, new GraphicWatch(0, 0), watch.toggleVisibility, true).toggled = !watch.visible; 
-		addButton(RIGHT, new GraphicConsole(0, 0), console.toggleVisibility, true).toggled = !console.visible; 
-		addButton(RIGHT, new GraphicStats(0, 0), stats.toggleVisibility, true).toggled = !stats.visible; 
+		addButton(RIGHT, new GraphicBmpLog(0, 0), bmpLog.toggleVisibility, "bmpLog", true).toggled = !bmpLog.visible;
+		addButton(RIGHT, new GraphicLog(0, 0), log.toggleVisibility, "log", true).toggled = !log.visible; 
+		addButton(RIGHT, new GraphicWatch(0, 0), watch.toggleVisibility,"watch", true).toggled = !watch.visible; 
+		addButton(RIGHT, new GraphicConsole(0, 0), console.toggleVisibility,"console", true).toggled = !console.visible; 
+		addButton(RIGHT, new GraphicStats(0, 0), stats.toggleVisibility,"stats", true).toggled = !stats.visible; 
 		
 		var drawDebugButton = addButton(RIGHT, new GraphicDrawDebug(0, 0), toggleDrawDebug, true);
 		drawDebugButton.toggled = !FlxG.debugger.drawDebug;
