@@ -970,7 +970,13 @@ class FlxTilemap extends FlxObject
 					column++;
 					continue;
 				}
+				
 				var dataIndex:Int = _data[index];
+				if (dataIndex < 0)
+				{
+					column++;
+					continue;
+				}
 				
 				tile = _tileObjects[dataIndex];
 				tile.width = _scaledTileWidth;
