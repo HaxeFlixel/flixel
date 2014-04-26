@@ -221,12 +221,12 @@ class FlxCollision
 			return false;
 		}
 		
-		#if FLX_RENDER_BLIT
+		#if FLX_RENDER_TILE
+		Target.drawFrame();
+		#end
+		
 		// How deep is pointX/Y within the rect?
 		var test:BitmapData = Target.framePixels;
-		#else
-		var test:BitmapData = Target.getFlxFrameBitmapData();
-		#end
 		
 		var pixelAlpha:Int = 0;  
 		pixelAlpha = FlxColorUtil.getAlpha(test.getPixel32(Math.floor(PointX - Target.x), Math.floor(PointY - Target.y)));
