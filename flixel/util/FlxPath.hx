@@ -124,6 +124,8 @@ class FlxPath implements IFlxDestroyable
 	 */
 	private var _autoRotate:Bool = false;
 	
+	private var _inManager:Bool = false;
+	
 	/**
 	 * Creates a new FlxPath (and calls start() right away if Object != null).
 	 */
@@ -160,9 +162,10 @@ class FlxPath implements IFlxDestroyable
 	
 	public function restart():FlxPath
 	{
-		if (manager != null)
+		if (manager != null && !_inManager)
 		{
 			manager.add(this);
+			_inManager = true;
 		}
 		
 		finished = false;
@@ -434,9 +437,10 @@ class FlxPath implements IFlxDestroyable
 			object.velocity.set(0, 0);
 		}
 		
-		if (manager != null)
+		if (manager != null && _inManager)
 		{
 			manager.remove(this);
+			_inManager = false;
 		}
 	}
 	

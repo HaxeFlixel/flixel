@@ -66,6 +66,8 @@ class FlxTimer implements IFlxDestroyable
 	 */
 	private var _loopsCounter:Int = 0;
 	
+	private var _inManager:Bool = false;
+	
 	/**
 	 * Creates a new timer (and calls start() right away if Time != null).
 	 * 
@@ -99,9 +101,10 @@ class FlxTimer implements IFlxDestroyable
 	 */
 	public function start(Time:Float = 1, ?Callback:FlxTimer->Void, Loops:Int = 1):FlxTimer
 	{
-		if (manager != null)
+		if (manager != null && !_inManager)
 		{
 			manager.add(this);
+			_inManager = true;
 		}
 		
 		active = true;
@@ -140,17 +143,18 @@ class FlxTimer implements IFlxDestroyable
 	public function cancel():Void
 	{
 		finished = true;
-		if (manager != null)
+		if (manager != null && _inManager)
 		{
 			manager.remove(this);
+			_inManager = false;
 		}
 	}
 	
 	/**
 	 * Called by the timer manager plugin to update the timer.
 	 * If time runs out, the loop counter is advanced, the timer reset, and the callback called if it exists.
-	 * If the timer runs out of loops, then the timer calls stop().
-	 * However, callbacks are called AFTER stop() is called.
+	 * If the timer runs out of loops, then the timer calls cancel().
+	 * However, callbacks are called AFTER cancel() is called.
 	 */
 	public function update():Void
 	{
