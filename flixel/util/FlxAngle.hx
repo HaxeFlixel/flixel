@@ -207,20 +207,18 @@ class FlxAngle
 	 * 
 	 * @return	The new angle value, returns the same as the input angle if it was within bounds
 	 */
-	public static function wrapAngle(angle:Float):Int
+	public static function wrapAngle(angle:Float):Float
 	{
-		var result:Int = Std.int(angle);
-		
 		if (angle > 180)
 		{
-			result = -180;
+			angle = -180;
 		}
 		else if (angle < -180)
 		{
-			result = 180;
+			angle = 180;
 		}
 		
-		return result;
+		return angle;
 	}
 	
 	/**
@@ -232,20 +230,18 @@ class FlxAngle
 	 * 
 	 * @return	The new angle value, returns the same as the input angle if it was within bounds
 	 */
-	public static function angleLimit(angle:Int, min:Int, max:Int):Int
+	public static function angleLimit(angle:Float, min:Float, max:Float):Float
 	{
-		var result:Int = angle;
-		
 		if (angle > max)
 		{
-			result = max;
+			angle = max;
 		}
 		else if (angle < min)
 		{
-			result = min;
+			angle = min;
 		}
 		
-		return result;
+		return angle;
 	}
 	
 	/**
