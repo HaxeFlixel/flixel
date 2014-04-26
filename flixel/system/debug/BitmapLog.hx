@@ -1,4 +1,5 @@
 package flixel.system.debug;
+import flixel.util.FlxBitmapUtil;
 import flixel.util.FlxStringUtil;
 
 #if !FLX_NO_DEBUG
@@ -74,6 +75,8 @@ class BitmapLog extends Window
 		// place the handle on top
 		removeChild(_handle);
 		addChild(_handle);
+		
+		removeChild(_shadow);
 	}
 	
 	private function createHeaderUI():Void
@@ -151,6 +154,13 @@ class BitmapLog extends Window
 		}
 	}
 	
+	override private function updateSize():Void
+	{
+		super.updateSize();
+		// account for the footer
+		_background.scaleY = _height - _header.height * 2;
+	}
+	
 	public override function resize(Width:Float, Height:Float):Void
 	{
 		super.resize(Width, Height);
@@ -175,6 +185,10 @@ class BitmapLog extends Window
 		_footerText.y = _height - _footer.height;
 		_footerText.x = _width / 2 - _footerText.textWidth / 2;
 		_footerText.width = _footer.width;
+		if (_footerText.x < 0)
+		{
+			_footerText.x = 0;
+		}
 		
 		var start:Float = (_buttonLeft.x + _buttonLeft.width);
 		var range:Float = _buttonRight.x - start;
@@ -308,7 +322,7 @@ class BitmapLog extends Window
 		
 		var entryName:String = _curEntry.name;
 		var name:String = (entryName == "") ? "" : '"$entryName" | ' ;
-		_footerText.text = name + FlxStringUtil.formatBytes(_curBitmap.width * _curBitmap.height * 4);
+		_footerText.text = name + FlxStringUtil.formatBytes(FlxBitmapUtil.getMemorySize(_curBitmap));
 		
 		resizeTexts();
 	}

@@ -247,4 +247,12 @@ class FlxBitmapUtil
 		return 0;
 		#end
 	}
+	
+	/**
+	 * Returns the amount of bytes a bitmapData occupies in memory.
+	 */
+	public static inline function getMemorySize(bitmapData:BitmapData):Float
+	{
+		return bitmapData.width * bitmapData.height * 4;
+	}
 }
