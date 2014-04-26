@@ -19,7 +19,6 @@ class FlxFrame
 	public var name:String;
 	public var frame:Rectangle;
 	
-//	public var rotated:Bool = false;
 	public var trimmed:Bool = false;
 	
 	public var tileID:Int = -1;
