@@ -29,7 +29,6 @@
 	
 	<set name="BUILD_DIR" value="export" />
 	<classpath name="source" />
-	<assets path="assets" />
 	
 	<!--------------------------------LIBRARIES------------------------------------->
 
@@ -83,7 +82,7 @@
 	<assets path="assets/images" rename="images" />
 	<assets path="assets/data" rename="data" />
 	
-	<assets path="assets/sounds" if="flash" >
+	<assets path="assets/sounds" if="flash">
 		<music path="asplode.mp3" id="Asplode" />
 		<music path="button.mp3" id="Button" />
 		<music path="countdown.mp3" id="Countdown" />
@@ -100,7 +99,7 @@
 		<music path="shoot.mp3" id="Shoot" />
 	</assets>
 	
-	<assets path="assets/sounds" unless="flash" >
+	<assets path="assets/sounds" unless="flash">
 		<sound path="asplode.ogg" id="Asplode" />
 		<sound path="button.ogg" id="Button" />
 		<sound path="countdown.ogg" id="Countdown" />

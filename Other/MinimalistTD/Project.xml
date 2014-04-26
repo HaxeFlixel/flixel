@@ -29,7 +29,6 @@
 	
 	<set name="BUILD_DIR" value="export" />
 	<classpath name="source" />
-	<assets path="assets" />
 	
 	<!--------------------------------LIBRARIES------------------------------------->
 
@@ -80,7 +79,7 @@
 	
 	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
 	
-	<assets path="assets/sounds" if="flash">
+	<assets path="assets/sounds" if="flash" exclude="ogg">
 		<sound path="build.mp3" id="build" />
 		<sound path="deny.mp3" id="deny" />
 		<sound path="enemyhit.mp3" id="enemyhit" />

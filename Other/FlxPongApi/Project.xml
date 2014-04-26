@@ -29,7 +29,6 @@
 	
 	<set name="BUILD_DIR" value="export" />
 	<classpath name="source" />
-	<assets path="assets" />
 	
 	<!--------------------------------LIBRARIES------------------------------------->
 
