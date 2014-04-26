@@ -114,7 +114,7 @@ class NonInlineFlxRandom
 			{
 				result = Math.round(Min + float() * (Max - Min));
 			}
-			while (FlxArrayUtil.indexOf(Excludes, result) >= 0);
+			while (Excludes.indexOf(result) >= 0);
 		}
 		
 		return result;
@@ -156,7 +156,7 @@ class NonInlineFlxRandom
 			{
 				result = Min + float() * (Max - Min);
 			}
-			while (FlxArrayUtil.indexOf(Excludes, result) >= 0);
+			while (Excludes.indexOf(result) >= 0);
 		}
 		
 		return result;

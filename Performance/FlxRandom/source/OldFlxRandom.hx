@@ -95,7 +95,7 @@ class OldFlxRandom
 					result = Math.floor(Max + (Math.random() * (Min + 1 - Max)));
 				}
 			}
-			while (FlxArrayUtil.indexOf(Excludes, result) >= 0);
+			while (Excludes.indexOf(result) >= 0);
 			
 			return result;
 		}
