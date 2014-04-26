@@ -18,9 +18,6 @@ import flixel.interfaces.IFlxDestroyable;
  */
 class FlxPath implements IFlxDestroyable
 {
-	/**
-	 * The PathManager instance.
-	 */
 	public static var manager:PathManager;
 	/**
 	 * Path behavior controls: move from the start of the path to the end then stop.

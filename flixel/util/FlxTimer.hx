@@ -13,9 +13,6 @@ import flixel.system.frontEnds.PluginFrontEnd;
  */
 class FlxTimer implements IFlxDestroyable
 {
-	/**
-	 * The TimerManager instance.
-	 */
 	public static var manager:TimerManager;
 	
 	/**

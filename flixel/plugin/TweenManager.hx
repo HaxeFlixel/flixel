@@ -11,12 +11,11 @@ class TweenManager extends FlxPlugin
 	/**
 	 * A list of all FlxTween objects.
 	 */
-	private var _tweens(default, null):Array<FlxTween>;
+	private var _tweens(default, null):Array<FlxTween> = [];
 	
 	public function new():Void
 	{
 		super();
-		_tweens = new Array<FlxTween>();
 		visible = false; // No draw-calls needed 
 	}
 	
