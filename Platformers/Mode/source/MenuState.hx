@@ -28,10 +28,6 @@ class MenuState extends FlxState
 	 */
 	override public function create():Void
 	{
-		#if debug
-		FlxG.game.debugger.stats.visible = true;
-		#end
-		
 		FlxG.cameras.bgColor = 0xff131c1b;
 		
 		if (FlxG.sound.music != null)
