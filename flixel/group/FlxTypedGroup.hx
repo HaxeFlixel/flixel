@@ -130,7 +130,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		}
 		
 		// Don't bother adding an object twice.
-		if (FlxArrayUtil.indexOf(members, Object) >= 0)
+		if (members.indexOf(Object) >= 0)
 		{
 			return Object;
 		}
@@ -257,7 +257,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		if (members == null)
 			return null;
 		
-		var index:Int = FlxArrayUtil.indexOf(members, Object);
+		var index:Int = members.indexOf(Object);
 		
 		if (index < 0)
 			return null;
@@ -280,7 +280,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 */
 	public function replace(OldObject:T, NewObject:T):T
 	{
-		var index:Int = FlxArrayUtil.indexOf(members, OldObject);
+		var index:Int = members.indexOf(OldObject);
 		
 		if (index < 0)
 			return null;

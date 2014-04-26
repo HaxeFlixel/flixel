@@ -490,7 +490,7 @@ class FlxDebugger extends Sprite
 	
 	private function removeButtonFromArray(Arr:Array<FlxSystemButton>, Button:FlxSystemButton):Void
 	{
-		var index = FlxArrayUtil.indexOf(Arr, Button);
+		var index = Arr.indexOf(Button);
 		if (index != -1)
 		{
 			Arr.splice(index, 1);

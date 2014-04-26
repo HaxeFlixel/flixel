@@ -546,7 +546,7 @@ class FlxPath implements IFlxDestroyable
 	 */
 	public function remove(Node:FlxPoint):FlxPoint
 	{
-		var index:Int = FlxArrayUtil.indexOf(nodes, Node);
+		var index:Int =  nodes.indexOf(Node);
 		if (index >= 0)
 		{
 			return nodes.splice(index, 1)[0];

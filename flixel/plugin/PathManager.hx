@@ -68,10 +68,7 @@ class PathManager extends FlxPlugin
 	 */
 	public function add(Path:FlxPath):Void
 	{
-		if (FlxArrayUtil.indexOf(_paths, Path) < 0) 
-		{
-			_paths.push(Path);
-		}
+		_paths.push(Path);
 	}
 	
 	/**

@@ -462,7 +462,7 @@ class FlxStringUtil
 				
 				if (ColorMap != null)
 				{
-					pixel = FlxArrayUtil.indexOf(ColorMap, pixel);
+					pixel = ColorMap.indexOf(pixel);
 				}
 				else if ((Invert && (pixel > 0)) || (!Invert && (pixel == 0)))
 				{

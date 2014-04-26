@@ -169,7 +169,7 @@ class Watch extends Window
 			
 			if (quickWatch != null)
 			{
-				removeEntry(quickWatch, FlxArrayUtil.indexOf(_watching, quickWatch));
+				removeEntry(quickWatch, _watching.indexOf(quickWatch));
 			}
 			_quickWatchList.remove(QuickWatchName);
 			

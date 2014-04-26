@@ -69,7 +69,8 @@ class ConsoleUtil
 	{
 		for (i in 0...Commands.length)
 		{
-			if (FlxArrayUtil.indexOf(Commands[i].aliases, Alias) != -1) {
+			if (Commands[i].aliases.indexOf(Alias) != -1) 
+			{
 				return Commands[i];
 			}
 		}
