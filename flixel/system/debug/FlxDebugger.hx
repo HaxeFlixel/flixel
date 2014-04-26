@@ -65,30 +65,13 @@ class FlxDebugger extends Sprite
 	 */
 	public static inline var TOP_HEIGHT:Int = 20;
 	
-	/**
-	 * Container for the performance monitor widget.
-	 */
 	public var stats:Stats;
-	/**
-	 * Container for the trace output widget.
-	 */	 
 	public var log:Log;
-	/**
-	 * Container for the watch window widget.
-	 */
 	public var watch:Watch;
-	/**
-	 * Container for the bmpLog window widget
-	 */
 	public var bitmapLog:BitmapLog;
-	/**
-	 * Container for the record, stop and play buttons.
-	 */
 	public var vcr:VCR;
-	/**
-	 * Container for console.
-	 */
 	public var console:Console;
+	
 	/**
 	 * Whether the mouse is currently over one of the debugger windows or not.
 	 */
@@ -288,18 +271,6 @@ class FlxDebugger extends Sprite
 			window.updateBounds(_screenBounds);
 		}
 	}
-	
-	public function onStateSwitch():Void
-	{
-		for (window in _windows)
-		{
-			if (Std.is(window, Tracker))
-			{
-				window.close();
-			}
-		}
-		Tracker.onStateSwitch();
-	}
 
 	/**
 	 * Align an array of debugger buttons, used for the middle and right layouts
@@ -487,6 +458,8 @@ class FlxDebugger extends Sprite
 		
 		addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
 		addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
+		
+		FlxG.signals.stateSwitched.add(Tracker.onStateSwitch);
 	}
 	
 	/**

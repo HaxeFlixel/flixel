@@ -232,7 +232,7 @@ class FlxG
 	 */
 	public static var log(default, null):LogFrontEnd = new LogFrontEnd();
 	/**
-	 * Used to add images to the bmpLog window
+	 * Used to add images to the bitmapLog window
 	 */
 	public static var bitmapLog(default, null):BitmapLogFrontEnd = new BitmapLogFrontEnd();
 	/**

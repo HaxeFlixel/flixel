@@ -6,10 +6,10 @@ import flixel.FlxSprite;
 
 class BitmapLogFrontEnd
 {
-	public inline function add(Data:BitmapData):Void
+	public inline function add(Data:BitmapData, Name:String = ""):Void
 	{
 		#if !FLX_NO_DEBUG
-		FlxG.game.debugger.bitmapLog.add(Data);
+		FlxG.game.debugger.bitmapLog.add(Data, Name);
 		#end
 	}
 	
@@ -32,6 +32,18 @@ class BitmapLogFrontEnd
 		#if !FLX_NO_DEBUG
 		FlxG.game.debugger.bitmapLog.clearAt(Index);
 		#end
+	}
+	
+	/**
+	 * Clears the bitmapLog window and adds the entire cache to it.
+	 */
+	public function viewCache():Void
+	{
+		clear();
+		for (cachedGraphic in FlxG.bitmap._cache)
+		{
+			add(cachedGraphic.bitmap, cachedGraphic.key);
+		}
 	}
 	
 	@:allow(flixel.FlxG)

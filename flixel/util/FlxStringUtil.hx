@@ -157,6 +157,22 @@ class FlxStringUtil
 		return string;
 	}
 	
+	/**
+	 * Takes an amount of bytes and finds the fitting unit. Makes sure that the 
+	 * value is below 1024. Example: formatBytes(123456789); -> 117.74MB
+	 */
+	public static function formatBytes(Bytes:Float, Precision:Int = 2):String
+	{
+		var units:Array<String> = ["Bytes", "kB", "MB", "GB", "TB", "PB"];
+		var curUnit = 0;
+		while (Bytes >= 1024 && curUnit < units.length - 1)
+		{
+			Bytes /= 1024;
+			curUnit++;
+		}
+		return FlxMath.roundDecimal(Bytes, Precision) + units[curUnit];
+	}
+	
 	/** 
 	 * Takes a string and filters out everything but the digits.
 	 * 

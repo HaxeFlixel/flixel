@@ -30,7 +30,6 @@ class ConsoleCommands
 		console.addCommand(["clearHistory", "ch"], clearHistory, "Clears the command history.");
 		
 		console.addCommand(["clearLog", "clear"], FlxG.log.clear, "Clears the log window.");
-		console.addCommand(["clearBitmapLog", "cbl"], FlxG.bitmapLog.clear, "Clears the bitmap log window.");
 		
 		console.addCommand(["resetState", "rs"], resetState, "Resets the current state.");
 		console.addCommand(["switchState", "ss"], switchState, "Switches to a specified state.", "[FlxState]");
@@ -49,6 +48,9 @@ class ConsoleCommands
 		console.addCommand(["track", "t"], track, "Adds a tracker window for the specified object.");
 		
 		console.addCommand(["pause", "p"], pause, "Toggle between paused and unpaused");
+		
+		console.addCommand(["clearBitmapLog", "cbl"], FlxG.bitmapLog.clear, "Clears the bitmapLog window.");
+		console.addCommand(["viewCache", "vc"], FlxG.bitmapLog.viewCache, "Adds the cache to the bitmapLog window");
 		
 		// Default registration
 		console.registerObject("FlxG", FlxG);

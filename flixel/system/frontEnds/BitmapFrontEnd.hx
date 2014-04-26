@@ -14,6 +14,7 @@ import openfl.Assets;
  */
 class BitmapFrontEnd
 {
+	@:allow(flixel.system.frontEnds.BitmapLogFrontEnd)
 	private var _cache:Map<String, CachedGraphics>;
 	
 	public function new()

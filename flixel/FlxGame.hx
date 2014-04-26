@@ -571,15 +571,6 @@ class FlxGame extends Sprite
 		FlxRandom.updateStateSeed();
 		#end
 		
-		#if !FLX_NO_DEBUG
-		// Clear the debugger overlay's Watch window
-		if (debugger != null)
-		{
-			debugger.watch.removeAll();
-			debugger.onStateSwitch();
-		}
-		#end
-		
 		// Destroy the old state (if there is an old state)
 		if (_state != null)
 		{

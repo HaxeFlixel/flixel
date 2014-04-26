@@ -1,4 +1,11 @@
 package flixel.system.debug;
+import flixel.util.FlxStringUtil;
+
+#if !FLX_NO_DEBUG
+import flash.display.Bitmap;
+import flash.display.BitmapData;
+import flash.display.Graphics;
+import flash.display.LineScaleMode;
 import flash.display.Sprite;
 import flash.events.MouseEvent;
 import flash.geom.Matrix;
@@ -6,15 +13,10 @@ import flash.text.TextField;
 import flash.text.TextFormatAlign;
 import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
-
-#if !FLX_NO_DEBUG
-import flash.display.Bitmap;
-import flash.display.BitmapData;
-import flash.geom.Point;
-import flixel.util.FlxArrayUtil;
-import flixel.util.FlxDestroyUtil;
+import flixel.util.FlxSpriteUtil;
 import flixel.system.debug.FlxDebugger;
 
 /**
@@ -24,9 +26,12 @@ class BitmapLog extends Window
 {
 	public var zoom(default, set):Float = 1;
 	
-	private var _canvas:Bitmap;
-	private var _bitmaps:Array<BitmapData> = [];
-	private var _currIndex:Int = 0;
+	private var _canvas(get, never):BitmapData;
+	private var _canvasBitmap:Bitmap;
+	private var _entries:Array<BitmapLogEntry> = [];
+	private var _curIndex:Int = 0;
+	private var _curEntry(get, never):BitmapLogEntry;
+	private var _curBitmap(get, never):BitmapData;
 	private var _point:FlxPoint = FlxPoint.get();
 	private var _lastMousePos:FlxPoint = FlxPoint.get();
 	private var _curMouseOffset:FlxPoint = FlxPoint.get();
@@ -34,26 +39,28 @@ class BitmapLog extends Window
 	private var _buttonLeft:FlxSystemButton;
 	private var _buttonText:FlxSystemButton;
 	private var _buttonRight:FlxSystemButton;
-	private var _bitmapText:TextField;
+	private var _counterText:TextField;
+	private var _dimensionsText:TextField;
 	private var _ui:Sprite;
 	private var _middleMouseDown:Bool = false;
+	private var _footer:Bitmap;
+	private var _footerText:TextField;
 	
-	/**
-	 * Creates a log window object.
-	 */	
 	public function new()
 	{
 		super("bitmapLog", new GraphicBitmapLog(0, 0));
 		
 		minSize.x = 165;
+		minSize.y = Window.HEADER_HEIGHT * 2 + 1;
 		
-		_canvas = new Bitmap(new BitmapData(Std.int(width), Std.int(height - 15), true, FlxColor.TRANSPARENT));
-		_canvas.x = 0;
-		_canvas.y = 15;
+		_canvasBitmap = new Bitmap(new BitmapData(Std.int(width), Std.int(height - 15), true, FlxColor.TRANSPARENT));
+		_canvasBitmap.x = 0;
+		_canvasBitmap.y = 15;
+		addChild(_canvasBitmap);
 		
-		addChild(_canvas);
+		createHeaderUI();
+		createFooterUI();
 		
-		createUI();
 		setVisible(false);
 		
 		addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
@@ -61,25 +68,32 @@ class BitmapLog extends Window
 		addEventListener(MouseEvent.MIDDLE_MOUSE_DOWN, onMiddleDown);
 		addEventListener(MouseEvent.MIDDLE_MOUSE_UP, onMiddleUp);
 		#end
+		
+		FlxG.signals.stateSwitched.add(clear);
+		
+		// place the handle on top
+		removeChild(_handle);
+		addChild(_handle);
 	}
 	
-	private function createUI():Void
+	private function createHeaderUI():Void
 	{
 		_ui = new Sprite();
 		_ui.y = 2;
 		
 		_buttonLeft = new FlxSystemButton(new GraphicArrowLeft(0, 0), previous);
 		
-		_bitmapText = DebuggerUtil.createTextField(20, -3);
-		_bitmapText.text = "(0/0)";
-		_bitmapText.defaultTextFormat.align = TextFormatAlign.CENTER;
+		_dimensionsText = DebuggerUtil.createTextField();
+		
+		_counterText = DebuggerUtil.createTextField(0, -3);
+		_counterText.text = "0/0";
 		
 		// allow clicking on the text to reset the current settings
 		_buttonText = new FlxSystemButton(null, function() {
 			resetSettings();
 			refreshCanvas();
 		});
-		_buttonText.addChild(_bitmapText);
+		_buttonText.addChild(_counterText);
 		
 		_buttonRight = new FlxSystemButton(new GraphicArrowRight(0, 0), next);
 		_buttonRight.x = 60;
@@ -89,6 +103,17 @@ class BitmapLog extends Window
 		_ui.addChild(_buttonRight);
 		
 		addChild(_ui);
+		addChild(_dimensionsText);
+	}
+	
+	private function createFooterUI():Void
+	{
+		_footer = new Bitmap(new BitmapData(1, Window.HEADER_HEIGHT, true, Window.HEADER_COLOR));
+		_footer.alpha = Window.HEADER_ALPHA;
+		addChild(_footer);
+		
+		_footerText = DebuggerUtil.createTextField();
+		addChild(_footerText);
 	}
 	
 	/**
@@ -100,17 +125,19 @@ class BitmapLog extends Window
 		
 		clear();
 		
-		removeChild(_canvas);
-		FlxDestroyUtil.dispose(_canvas.bitmapData);
-		_canvas.bitmapData = null;
-		_canvas = null;
-		_bitmaps = null;
+		removeChild(_canvasBitmap);
+		FlxDestroyUtil.dispose(_canvas);
+		_canvasBitmap.bitmapData = null;
+		_canvasBitmap = null;
+		_entries = null;
 		
 		removeEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
 		#if (!FLX_NO_MOUSE && !FLX_NO_MOUSE_ADVANCED)
 		removeEventListener(MouseEvent.MIDDLE_MOUSE_DOWN, onMiddleDown);
 		removeEventListener(MouseEvent.MIDDLE_MOUSE_UP, onMiddleUp);
 		#end
+		
+		FlxG.signals.stateSwitched.remove(clear);
 	}
 	
 	override public function update():Void
@@ -127,12 +154,31 @@ class BitmapLog extends Window
 	public override function resize(Width:Float, Height:Float):Void
 	{
 		super.resize(Width, Height);
-		var bmp = _canvas.bitmapData;
-		_canvas.bitmapData = null;
-		FlxDestroyUtil.dispose(bmp);
-		_canvas.bitmapData = new BitmapData(Std.int(_width - _canvas.x), Std.int(_height - _canvas.y), true, FlxColor.TRANSPARENT);
-		refreshCanvas(_currIndex);
+		
+		_canvasBitmap.bitmapData = FlxDestroyUtil.dispose(_canvas);
+		_canvasBitmap.bitmapData = new BitmapData(Std.int(_width - _canvasBitmap.x), Std.int(_height - _canvasBitmap.y - _footer.height), true, FlxColor.TRANSPARENT);
+		refreshCanvas(_curIndex);
+		
 		_ui.x = _header.width - _ui.width + 43;
+		
+		_footer.width = _width;
+		_footer.y = _height - _footer.height;
+		
+		resizeTexts();
+	}
+	
+	public function resizeTexts():Void
+	{
+		_dimensionsText.x = _header.width / 2 - _dimensionsText.textWidth / 2;
+		_dimensionsText.visible = (_width > 200);
+		
+		_footerText.y = _height - _footer.height;
+		_footerText.x = _width / 2 - _footerText.textWidth / 2;
+		_footerText.width = _footer.width;
+		
+		var start:Float = (_buttonLeft.x + _buttonLeft.width);
+		var range:Float = _buttonRight.x - start;
+		_buttonText.x = 33 - _counterText.textWidth / 2;
 	}
 	
 	/**
@@ -141,7 +187,7 @@ class BitmapLog extends Window
 	private inline function next():Void
 	{
 		resetSettings();
-		refreshCanvas(_currIndex + 1);
+		refreshCanvas(_curIndex + 1);
 	}
 	
 	/**
@@ -150,7 +196,7 @@ class BitmapLog extends Window
 	private inline function previous():Void 
 	{
 		resetSettings();
-		refreshCanvas(_currIndex - 1);
+		refreshCanvas(_curIndex - 1);
 	}
 	
 	private inline function resetSettings():Void
@@ -162,14 +208,14 @@ class BitmapLog extends Window
 	/**
 	 * Add a BitmapData to the log
 	 */
-	public function add(bmp:BitmapData):Bool
+	public function add(bmp:BitmapData, name:String = ""):Bool
 	{
 		if (bmp == null)
 		{
 			return false;
 		}
 		setVisible(true);
-		_bitmaps.push(bmp.clone());
+		_entries.push({bitmap: bmp.clone(), name: name });
 		return refreshCanvas();
 	}
 	
@@ -181,61 +227,63 @@ class BitmapLog extends Window
 	{
 		if (Index == -1)
 		{
-			Index = _bitmaps.length - 1;
+			Index = _entries.length - 1;
 		}
-		FlxDestroyUtil.dispose(_bitmaps[Index]);
-		_bitmaps[Index] = null;
-		_bitmaps.splice(Index, 1);
+		FlxDestroyUtil.dispose(_entries[Index].bitmap);
+		_entries[Index] = null;
+		_entries.splice(Index, 1);
 		
-		if (_currIndex > _bitmaps.length - 1) 
+		if (_curIndex > _entries.length - 1) 
 		{
-			_currIndex = _bitmaps.length - 1;
+			_curIndex = _entries.length - 1;
 		}
 		
-		refreshCanvas(_currIndex);
+		refreshCanvas(_curIndex);
 	}
 	
 	public function clear():Void
 	{
-		for (i in 0..._bitmaps.length) 
+		for (i in 0..._entries.length) 
 		{
-			FlxDestroyUtil.dispose(_bitmaps[i]);
-			_bitmaps[i] = null;
+			FlxDestroyUtil.dispose(_entries[i].bitmap);
+			_entries[i] = null;
 		}
-		FlxArrayUtil.clearArray(_bitmaps);
-		_canvas.bitmapData.fillRect(_canvas.bitmapData.rect, FlxColor.TRANSPARENT);
-		_bitmapText.text = "(0/0)";
+		_entries = [];
+		_canvas.fillRect(_canvas.rect, FlxColor.TRANSPARENT);
+		_dimensionsText.text = "";
+		_counterText.text = "0/0";
+		_footerText.text = "";
 	}
 	
 	private function refreshCanvas(?Index:Null<Int>):Bool
 	{
-		if (_bitmaps == null || _bitmaps.length <= 0)
+		if (_entries == null || _entries.length <= 0)
 		{
-			_currIndex = 0;
+			_curIndex = 0;
 			return false;
 		}
 		
 		if (Index == null)
 		{
-			Index = _currIndex;
+			Index = _curIndex;
 		}
 		
-		_canvas.bitmapData.fillRect(_canvas.bitmapData.rect, FlxColor.TRANSPARENT);
+		_canvas.fillRect(_canvas.rect, FlxColor.TRANSPARENT);
 		
 		if (Index < 0)
 		{
-			Index = _bitmaps.length - 1;
+			Index = _entries.length - 1;
 		}
-		else if (Index >= _bitmaps.length)
+		else if (Index >= _entries.length)
 		{
 			Index = 0;
 		}
 		
-		var curBitmap:BitmapData = _bitmaps[Index];
+		_curIndex = Index;
 		
 		// find the window center
-		_point.x = (_canvas.width / 2) - (curBitmap.width * zoom / 2);
-		_point.y = (_canvas.height / 2) - (curBitmap.height * zoom / 2);
+		_point.x = (_canvas.width / 2) - (_curBitmap.width * zoom / 2);
+		_point.y = (_canvas.height / 2) - (_curBitmap.height * zoom / 2);
 		
 		_point.addPoint(_curMouseOffset);
 		
@@ -243,16 +291,39 @@ class BitmapLog extends Window
 		_matrix.scale(zoom, zoom);
 		_matrix.translate(_point.x, _point.y);
 		
-		_canvas.bitmapData.draw(curBitmap, _matrix, null, null, _canvas.bitmapData.rect, false);
-		_currIndex = Index;
+		_canvas.draw(_curBitmap, _matrix, null, null, _canvas.rect, false);
 		
-		_bitmapText.text = '(${_currIndex + 1}/${_bitmaps.length})';
+		drawBoundingBox(_curBitmap);
+		_canvas.draw(FlxSpriteUtil.flashGfxSprite, _matrix, null, null, _canvas.rect, false);
+		
+		refreshTexts();
+		
 		return true;
+	}
+	
+	private function refreshTexts():Void
+	{
+		_dimensionsText.text = _curBitmap.width + "x" + _curBitmap.height;
+		_counterText.text = '${_curIndex + 1}/${_entries.length}';
+		
+		var entryName:String = _curEntry.name;
+		var name:String = (entryName == "") ? "" : '"$entryName" | ' ;
+		_footerText.text = name + FlxStringUtil.formatBytes(_curBitmap.width * _curBitmap.height * 4);
+		
+		resizeTexts();
+	}
+	
+	private function drawBoundingBox(bitmap:BitmapData):Void
+	{
+		var gfx:Graphics = FlxSpriteUtil.flashGfx;
+		gfx.clear();
+		gfx.lineStyle(1, FlxColor.RED, 0.75, false, LineScaleMode.NONE);
+		gfx.drawRect(0, 0, bitmap.width, bitmap.height);
 	}
 	
 	private function onMouseWheel(e:MouseEvent):Void
 	{
-		zoom += FlxMath.signOf(e.delta) * 0.25;
+		zoom += FlxMath.signOf(e.delta) * 0.25 * zoom;
 		refreshCanvas();
 	}
 	
@@ -275,5 +346,25 @@ class BitmapLog extends Window
 		}
 		return zoom = Value;
 	}
+	
+	private inline function get__canvas():BitmapData
+	{
+		return _canvasBitmap.bitmapData;
+	}
+	
+	private inline function get__curEntry():BitmapLogEntry
+	{
+		return _entries[_curIndex];
+	}
+	
+	private inline function get__curBitmap():BitmapData
+	{
+		return _entries[_curIndex].bitmap;
+	}
+}
+
+typedef BitmapLogEntry = {
+	bitmap:BitmapData,
+	name:String
 }
 #end

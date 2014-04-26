@@ -375,6 +375,7 @@ class Window extends Sprite
 		}
 		else if (_overHandle)
 		{
+			parent.addChild(this);
 			_resizing = true;
 			_drag.x = _width - mouseX;
 			_drag.y = _height - mouseY;

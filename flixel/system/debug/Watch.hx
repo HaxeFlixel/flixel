@@ -54,6 +54,7 @@ class Watch extends Window
 		editing = false;
 		
 		removeAll();
+		FlxG.signals.stateSwitched.add(removeAll);
 	}
 	
 	/**
@@ -80,6 +81,7 @@ class Watch extends Window
 			_watching = null;
 		}
 		_quickWatchList = null;
+		FlxG.signals.stateSwitched.remove(removeAll);
 		
 		super.destroy();
 	}
