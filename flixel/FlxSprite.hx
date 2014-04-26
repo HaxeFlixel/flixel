@@ -12,6 +12,7 @@ import flixel.FlxG;
 import flixel.system.layer.DrawStackItem;
 import flixel.system.layer.frames.FlxFrame;
 import flixel.system.layer.frames.FlxSpriteFrames;
+import flixel.system.layer.frames.FrameType;
 import flixel.system.layer.Region;
 import flixel.util.FlxAngle;
 import flixel.util.FlxColor;
@@ -1168,25 +1169,7 @@ class FlxSprite extends FlxObject
 		}
 		#end
 		
-		if (frame != null)
-		{
-			if ((framePixels == null) || (framePixels.width != frameWidth) || (framePixels.height != frameHeight))
-			{
-				if (framePixels != null)
-					framePixels.dispose();
-					
-				framePixels = new BitmapData(Std.int(frame.sourceSize.x), Std.int(frame.sourceSize.y));
-			}
-				
-			framePixels.copyPixels(getFlxFrameBitmapData(), _flashRect, _flashPointZero);
-		}
-			
-		if (useColorTransform) 
-		{
-			framePixels.colorTransform(_flashRect, colorTransform);
-		}
-		
-		dirty = false;
+		getFlxFrameBitmapData();
 	}
 	
 	/**
@@ -1219,28 +1202,54 @@ class FlxSprite extends FlxObject
 	 */
 	public inline function getFlxFrameBitmapData():BitmapData
 	{
-		var frameBmd:BitmapData = null;
 		if (frame != null)
 		{
-			if (flipX && flipY)
+			if (!flipX && !flipY && frame.type == FrameType.REGULAR)
 			{
-				frameBmd = frame.getHVReversedBitmap();
-			}
-			else if (flipX)
-			{
-				frameBmd = frame.getHReversedBitmap();
-			}
-			else if (flipY)
-			{
-				frameBmd = frame.getVReversedBitmap();
+				framePixels = frame.paintOnBitmap(framePixels);
 			}
 			else
 			{
-				frameBmd = frame.getBitmap();
+				var frameBmd:BitmapData = null;
+				
+				if (flipX && flipY)
+				{
+					frameBmd = frame.getHVReversedBitmap();
+				}
+				else if (flipX)
+				{
+					frameBmd = frame.getHReversedBitmap();
+				}
+				else if (flipY)
+				{
+					frameBmd = frame.getVReversedBitmap();
+				}
+				else
+				{
+					frameBmd = frame.getBitmap();
+				}
+				
+				if ((framePixels == null) || (framePixels.width != frameWidth) || (framePixels.height != frameHeight))
+				{
+					if (framePixels != null)
+						framePixels.dispose();
+						
+					framePixels = new BitmapData(Std.int(frame.sourceSize.x), Std.int(frame.sourceSize.y));
+				}
+				
+				framePixels.copyPixels(frameBmd, _flashRect, _flashPointZero);
 			}
+			
+			if (useColorTransform) 
+			{
+				framePixels.colorTransform(_flashRect, colorTransform);
+			}
+			
+			dirty = false;
+			
 		}
 		
-		return frameBmd;
+		return framePixels;
 	}
 	
 	/**
