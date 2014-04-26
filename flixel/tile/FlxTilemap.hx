@@ -898,7 +898,7 @@ class FlxTilemap extends FlxObject
 		{
 			return true;
 		}
-		
+
 		return false;
 	}
 	
@@ -1398,12 +1398,14 @@ class FlxTilemap extends FlxObject
 				
 				if ((rx > tileX) && (rx < tileX + _scaledTileWidth))
 				{
-					if (Result != null)
+					if (Result == null)
 					{
-						Result.x = rx;
-						Result.y = ry;
+						Result = FlxPoint.get();
 					}
 					
+					Result.x = rx;
+					Result.y = ry;
+
 					return false;
 				}
 				
