@@ -14,24 +14,8 @@ class FlxAndroidKeyList
 	}
 	
 	private var check:String->Bool;
-	public var BACK		(get, never):Bool;	inline function get_BACK()		{ return check("BACK"); 		}
-	public var MENU		(get, never):Bool;	inline function get_MENU()		{ return check("MENU"); 		}
-	public var ANY(get, never):Bool;
 	
-	private function get_ANY():Bool
-	{
-		for (key in FlxG.keys._keyList)
-		{
-			if (key != null)
-			{
-				if (check(key.name))
-				{
-					return true;
-				}
-			}
-		}
-		
-		return false;
-	}
+	public var BACK(get, never):Bool; inline function get_BACK() { return check("BACK"); }
+	public var MENU(get, never):Bool; inline function get_MENU() { return check("MENU"); }
 	#end
 }
