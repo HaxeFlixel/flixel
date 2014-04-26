@@ -831,7 +831,7 @@ class FlxSprite extends FlxObject
 				var sx:Float = scale.x * _facingHorizontalMult;
 				var sy:Float = scale.y * _facingVerticalMult;
 				
-				if (frame.rotated) // todo: handle different additional angles (since different packers adds different values, e.g. -90 or +90)
+				if (frame.type == FrameType.ROTATED) // todo: handle different additional angles (since different packers adds different values, e.g. -90 or +90)
 				{
 					cos = -_sinAngle;
 					sin = _cosAngle;
