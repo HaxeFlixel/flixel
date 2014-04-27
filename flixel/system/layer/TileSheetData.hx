@@ -190,11 +190,6 @@ class TileSheetData implements IFlxDestroyable
 		tileSheet = null;
 		#end
 		
-		for (spriteData in flxSpriteFrames)
-		{
-			spriteData.destroy();
-		}
-		
 		for (frames in flxSpriteFrames)
 		{
 			frames.destroy();

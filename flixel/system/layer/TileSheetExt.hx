@@ -82,11 +82,6 @@ class TileSheetExt extends Tilesheet implements IFlxDestroyable
 	
 	public function destroy():Void
 	{
-		#if !(flash || js || nme)
-		__bitmap = null;
-		__handle = null;
-		#end
-		
 		tileOrder = null;
 		if (tileIDs != null)
 		{
@@ -97,15 +92,6 @@ class TileSheetExt extends Tilesheet implements IFlxDestroyable
 		}
 		tileIDs = null;
 	}
-	
-	#if !(flash || js || nme)
-	public var nmeBitmap(get, never):BitmapData;
-	
-	private inline function get_nmeBitmap():BitmapData
-	{
-		return __bitmap;
-	}
-	#end
 }
 
 private class RectPointTileID implements IFlxDestroyable
