@@ -55,7 +55,7 @@ class XboxButtonID
 	public static inline var LEFT_ANALOGUE_Y:Int = 1;
 	public static inline var RIGHT_ANALOGUE_X:Int = 2;
 	public static inline var RIGHT_ANALOGUE_Y:Int = 3;
-#else
+#elseif linux
 	/**
 	 * Button IDs (DPAD values are obtained from FlxGamepad.hat)
 	 */
@@ -80,5 +80,36 @@ class XboxButtonID
 	public static inline var LEFT_ANALOGUE_Y:Int = 1;
 	public static inline var RIGHT_ANALOGUE_X:Int = 4;
 	public static inline var RIGHT_ANALOGUE_Y:Int = 3;
+#else // windows
+	/**
+	 * Button IDs (DPAD values are obtained from FlxGamepad.hat)
+	 */
+	public static inline var A:Int = 10;
+	public static inline var B:Int = 11;
+	public static inline var X:Int = 12;
+	public static inline var Y:Int = 13;
+	public static inline var LB:Int = 8;
+	public static inline var RB:Int = 9;
+	public static inline var BACK:Int = 5;
+	public static inline var START:Int = 4;
+	public static inline var LEFT_ANALOGUE:Int = 6;
+	public static inline var RIGHT_ANALOGUE:Int = 7;
+	
+	public static inline var XBOX:Int = 14;
+	
+	/**
+	 * Axis array indicies
+	 */
+	public static inline var LEFT_ANALOGUE_X:Int = 0;
+	public static inline var LEFT_ANALOGUE_Y:Int = 1;
+	public static inline var RIGHT_ANALOGUE_X:Int = 2;
+	public static inline var RIGHT_ANALOGUE_Y:Int = 3;
+	public static inline var LEFT_TRIGGER:Int = 4;
+	public static inline var RIGHT_TRIGGER:Int = 5;
+	
+	public static inline var DPAD_UP:Int = 0;
+	public static inline var DPAD_DOWN:Int = 1;
+	public static inline var DPAD_LEFT:Int = 2;
+	public static inline var DPAD_RIGHT:Int = 3;
 #end
 }
