@@ -4,36 +4,7 @@ package flixel.util;
  * A set of functions for array manipulation.
  */
 class FlxArrayUtil
-{
-	/**
-	 * Function to search for a specified element in an array. This is faster than Lambda.indexOf()
-	 * on the flash target because it uses the the native array indexOf() method.
-	 * 
-	 * @param	array		The array.
-	 * @param	whatToFind	The element you're looking for.
-	 * @param 	fromIndex	The index to start the search from (optional, for optimization).
-	 * @return	The index of the element within the array. -1 if it wasn't found.
-	 */
-	@:generic
-	public static function indexOf<T>(array:Array<T>, whatToFind:T, fromIndex:Int = 0):Int
-	{
-		#if flash
-		return untyped array.indexOf(whatToFind, fromIndex);
-		#else
-		var index:Int = -1;
-		var len:Int = array.length;
-		for (i in fromIndex...len)
-		{
-			if (array[i] == whatToFind)
-			{
-				index = i;
-				break;
-			}
-		}
-		return index;
-		#end
-	}
-	
+{	
 	/**
 	 * Sets the length of an array.
 	 * 
@@ -101,9 +72,11 @@ class FlxArrayUtil
 	@:generic
 	public static inline function fastSplice<T>(array:Array<T>, element:T):Array<T>
 	{
-		var index = indexOf(array, element);
+		var index = array.indexOf(element);
 		if (index != -1)
+		{
 			return swapAndPop(array, index);
+		}
 		return array;
 	}
 	

@@ -240,7 +240,7 @@ class CameraFrontEnd
 				camera.buffer.unlock();
 			}
 			
-			camera.screen.resetFrameBitmapDatas();
+			camera.screen.dirty = true;
 			#end
 		}
 	}

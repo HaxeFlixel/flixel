@@ -171,7 +171,7 @@ class FlxRandom
 				{
 					_intHelper = Math.floor(Min + float() * (Max - Min + 1));
 				}
-				while (FlxArrayUtil.indexOf(Excludes, _intHelper) >= 0);
+				while (Excludes.indexOf(_intHelper) >= 0);
 			}
 		}
 		
@@ -213,7 +213,7 @@ class FlxRandom
 				{
 					_floatHelper = Min + float() * (Max - Min);
 				}
-				while (FlxArrayUtil.indexOf(Excludes, _floatHelper) >= 0);
+				while (Excludes.indexOf(_floatHelper) >= 0);
 			}
 		}
 		

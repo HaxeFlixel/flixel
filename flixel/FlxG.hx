@@ -10,7 +10,7 @@ import flixel.system.FlxAssets;
 import flixel.system.FlxQuadTree;
 import flixel.system.FlxVersion;
 import flixel.system.frontEnds.BitmapFrontEnd;
-import flixel.system.frontEnds.BmpLogFrontEnd;
+import flixel.system.frontEnds.BitmapLogFrontEnd;
 import flixel.system.frontEnds.CameraFrontEnd;
 import flixel.system.frontEnds.ConsoleFrontEnd;
 import flixel.system.frontEnds.DebuggerFrontEnd;
@@ -232,9 +232,9 @@ class FlxG
 	 */
 	public static var log(default, null):LogFrontEnd = new LogFrontEnd();
 	/**
-	 * Used to add images to the bmpLog window
+	 * Used to add images to the bitmapLog window
 	 */
-	public static var bmpLog(default, null):BmpLogFrontEnd = new BmpLogFrontEnd();
+	public static var bitmapLog(default, null):BitmapLogFrontEnd = new BitmapLogFrontEnd();
 	/**
 	 * Used to add or remove things to / from the watch window.
 	 */

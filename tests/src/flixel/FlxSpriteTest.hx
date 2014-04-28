@@ -52,10 +52,10 @@ class FlxSpriteTest extends FlxTest
 		FlxG.state.add(sprite1);
 		FlxG.state.add(sprite2);
 		
-		var sprite1Index:Int = FlxArrayUtil.indexOf(FlxG.state.members, sprite1);
+		var sprite1Index:Int = FlxG.state.members.indexOf(sprite1);
 		Assert.areNotEqual(-1, sprite1Index);
 		
-		var sprite2Index:Int = FlxArrayUtil.indexOf(FlxG.state.members, sprite2);
+		var sprite2Index:Int = FlxG.state.members.indexOf(sprite2);
 		Assert.areNotEqual(-1, sprite2Index);
 	}
 
@@ -64,12 +64,12 @@ class FlxSpriteTest extends FlxTest
 	{
 		FlxG.state.remove(sprite1);
 		
-		var sprite1Index:Int = FlxArrayUtil.indexOf(FlxG.state.members, sprite1);
+		var sprite1Index:Int = FlxG.state.members.indexOf(sprite1);
 		Assert.areEqual(-1, sprite1Index);
 		
 		FlxG.state.add(sprite1);
 		
-		var sprite1Index:Int = FlxArrayUtil.indexOf(FlxG.state.members, sprite1);
+		var sprite1Index:Int = FlxG.state.members.indexOf(sprite1);
 		Assert.areNotEqual(-1, sprite1Index);
 	}
 

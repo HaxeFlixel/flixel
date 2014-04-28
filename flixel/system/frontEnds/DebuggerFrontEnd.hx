@@ -87,7 +87,7 @@ class DebuggerFrontEnd
 	public function track(Object:Dynamic, ?WindowTitle:String):Window
 	{
 		#if !FLX_NO_DEBUG
-		if (Lambda.indexOf(Tracker.objectsBeingTracked, Object) == -1)
+		if (Tracker.objectsBeingTracked.indexOf(Object) == -1)
 		{
 			var profile = Tracker.findProfile(Object);
 			if (profile == null)

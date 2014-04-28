@@ -191,9 +191,9 @@ class FlxKeyboard implements IFlxInput
 	}
 
 	/**
-	 * Get an Array of FlxMapObjects that are in a pressed state
+	 * Get an Array of FlxKey that are in a pressed state
 	 * 
-	 * @return	Array<FlxMapObject> of keys that are currently pressed.
+	 * @return	Array<FlxKey> of keys that are currently pressed.
 	 */
 	public function getIsDown():Array<FlxKey>
 	{

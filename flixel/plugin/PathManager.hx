@@ -7,15 +7,11 @@ import flixel.util.FlxPath;
 
 class PathManager extends FlxPlugin
 {
-	private var _paths:Array<FlxPath>;
+	private var _paths:Array<FlxPath> = [];
 	
-	/**
-	 * Instantiates a new debug path display manager.
-	 */
 	public function new()
 	{
 		super();
-		_paths = new Array<FlxPath>();
 		#if !FLX_NO_DEBUG
 		visible = false; // No draw-calls needed 
 		#end
@@ -72,10 +68,7 @@ class PathManager extends FlxPlugin
 	 */
 	public function add(Path:FlxPath):Void
 	{
-		if (FlxArrayUtil.indexOf(_paths, Path) < 0) 
-		{
-			_paths.push(Path);
-		}
+		_paths.push(Path);
 	}
 	
 	/**

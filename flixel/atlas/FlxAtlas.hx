@@ -214,7 +214,6 @@ class FlxAtlas
 					var texFrame = new TextureAtlasFrame();
 					
 					texFrame.trimmed = false;
-					texFrame.rotated = false;
 					texFrame.name = key;
 					texFrame.sourceSize = FlxPoint.get(node.width, node.height);
 					texFrame.offset = FlxPoint.get(0, 0);

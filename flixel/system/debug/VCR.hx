@@ -10,15 +10,13 @@ import flixel.system.FlxAssets;
 import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxColor;
 import flixel.util.FlxStringUtil;
+import flixel.system.debug.FlxDebugger;
 
 @:bitmap("assets/images/debugger/buttons/open.png")
 private class GraphicOpen extends BitmapData {}
 
 @:bitmap("assets/images/debugger/buttons/pause.png")
 private class GraphicPause extends BitmapData {}
-
-@:bitmap("assets/images/debugger/buttons/play.png")
-private class GraphicPlay extends BitmapData {}
 
 @:bitmap("assets/images/debugger/buttons/record_off.png") 
 private class GraphicRecordOff extends BitmapData {}
@@ -146,7 +144,7 @@ class VCR
 	public inline function onPause():Void
 	{
 		playbackToggleBtn.upHandler = FlxG.vcr.resume;
-		playbackToggleBtn.changeIcon(new GraphicPlay(0, 0));
+		playbackToggleBtn.changeIcon(new GraphicArrowRight(0, 0));
 	}
 
 	/**

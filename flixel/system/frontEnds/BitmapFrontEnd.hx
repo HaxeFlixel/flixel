@@ -14,6 +14,7 @@ import openfl.Assets;
  */
 class BitmapFrontEnd
 {
+	@:allow(flixel.system.frontEnds.BitmapLogFrontEnd)
 	private var _cache:Map<String, CachedGraphics>;
 	
 	public function new()
@@ -32,6 +33,7 @@ class BitmapFrontEnd
 		{
 			var bd:BitmapData = new BitmapData(2, 2, true, FlxColor.WHITE);
 			_whitePixel = new CachedGraphics("whitePixel", bd, true);
+			_whitePixel.persist = true;
 			_whitePixel.tilesheet.addTileRect(new Rectangle(0, 0, 1, 1), new Point(0, 0));
 		}
 		
@@ -369,11 +371,11 @@ class BitmapFrontEnd
 		if ((key != null) && _cache.exists(key))
 		{
 			var obj:CachedGraphics = _cache.get(key);
-			if (inOpenFlAssets(obj.bitmap) == false)
-			{
-				_cache.remove(key);
-				obj.destroy();
-			}
+			#if !nme
+			Assets.cache.bitmapData.remove(key);
+			#end
+			_cache.remove(key);
+			obj.destroy();
 		}
 	}
 	
@@ -392,8 +394,11 @@ class BitmapFrontEnd
 		for (key in _cache.keys())
 		{
 			obj = _cache.get(key);
-			if ((obj != null && !obj.persist) && inOpenFlAssets(obj.bitmap) == false)
+			if (obj != null && !obj.persist)
 			{
+				#if !nme
+				Assets.cache.bitmapData.remove(key);
+				#end
 				_cache.remove(key);
 				obj.destroy();
 				obj = null;
@@ -401,21 +406,24 @@ class BitmapFrontEnd
 		}
 	}
 	
-	public function inOpenFlAssets(bitmap:BitmapData):Bool
+	/**
+	 * Removes all unused graphics from cache,
+	 * but skips graphics which should persist in cache and shouldn't be destroyed on no use.
+	 */
+	public function clearUnused():Void
 	{
-      #if !nme
-		var bitmapDataCache = Assets.cache.bitmapData;
-		if (bitmapDataCache != null)
+		var obj:CachedGraphics;
+		
+		if (_cache != null)
 		{
-			for (bd in bitmapDataCache)
+			for (key in _cache.keys())
 			{
-				if (bd == bitmap)
+				obj = _cache.get(key);
+				if (obj != null && obj.useCount <= 0 && !obj.persist && obj.destroyOnNoUse)
 				{
-					return true;
+					remove(obj.key);
 				}
 			}
 		}
-      #end
-		return false;
 	}
 }

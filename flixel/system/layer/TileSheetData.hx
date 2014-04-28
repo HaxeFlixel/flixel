@@ -5,6 +5,7 @@ import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.interfaces.IFlxDestroyable;
 import flixel.system.layer.frames.FlxFrame;
+import flixel.system.layer.frames.FlxRotatedFrame;
 import flixel.system.layer.frames.FlxSpriteFrames;
 import flixel.system.layer.Region;
 import flixel.system.layer.TileSheetExt;
@@ -35,6 +36,8 @@ class TileSheetData implements IFlxDestroyable
 	
 	private var frameNames:Array<String>;
 	
+	private var framesArr:Array<FlxFrame>;
+	
 	public var bitmap:BitmapData;
 	
 	public function new(Bitmap:BitmapData)
@@ -46,6 +49,7 @@ class TileSheetData implements IFlxDestroyable
 		flxSpriteFrames = new Map<String, FlxSpriteFrames>();
 		flxFrames = new Map<String, FlxFrame>();
 		frameNames = new Array<String>();
+		framesArr = new Array<FlxFrame>();
 	}
 	
 	public inline function getFrame(name:String):FlxFrame
@@ -155,8 +159,6 @@ class TileSheetData implements IFlxDestroyable
 		#end
 		frame.name = key;
 		frame.frame = rect;
-		
-		frame.rotated = false;
 		frame.trimmed = false;
 		frame.sourceSize.set(rect.width, rect.height);
 		frame.offset.set(0, 0);
@@ -164,6 +166,7 @@ class TileSheetData implements IFlxDestroyable
 		frame.center.set(0.5 * rect.width, 0.5 * rect.height);
 		flxFrames.set(key, frame);
 		frameNames.push(key);
+		framesArr.push(frame);
 		return frame;
 	}
 	
@@ -187,24 +190,20 @@ class TileSheetData implements IFlxDestroyable
 		tileSheet = null;
 		#end
 		
-		for (spriteData in flxSpriteFrames)
-		{
-			spriteData.destroy();
-		}
-		
 		for (frames in flxSpriteFrames)
 		{
 			frames.destroy();
 		}
 		flxSpriteFrames = null;
 		
-		for (frame in flxFrames)
+		for (frame in framesArr)
 		{
 			frame.destroy();
 		}
 		flxFrames = null;
 		
 		frameNames = null;
+		framesArr = null;
 	}
 	
 	#if FLX_RENDER_TILE
@@ -255,9 +254,18 @@ class TileSheetData implements IFlxDestroyable
 			return flxFrames.get(key);
 		}
 		
-		var texFrame:FlxFrame = new FlxFrame(this);
+		var texFrame:FlxFrame = null;
+		
+		if (frameData.rotated)
+		{
+			texFrame = new FlxRotatedFrame(this);
+		}
+		else
+		{
+			texFrame = new FlxFrame(this);
+		}
+		
 		texFrame.trimmed = frameData.trimmed;
-		texFrame.rotated = frameData.rotated;
 		texFrame.name = key;
 		texFrame.sourceSize.copyFrom(frameData.sourceSize);
 		texFrame.offset.copyFrom(frameData.offset);
@@ -280,15 +288,16 @@ class TileSheetData implements IFlxDestroyable
 		#end
 		flxFrames.set(key, texFrame);
 		frameNames.push(key);
+		framesArr.push(texFrame);
 		return texFrame;
 	}
 	
 	public function destroyFrameBitmapDatas():Void
 	{
 		var numFrames:Int = frameNames.length;
-		for (i in 0...numFrames)
+		for (frame in framesArr)
 		{
-			flxFrames.get(frameNames[i]).destroyBitmapDatas();
+			frame.destroyBitmapDatas();
 		}
 	}
 }

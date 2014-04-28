@@ -33,7 +33,7 @@ class FlxPool<T:IFlxDestroyable>
 	public function put(obj:T):Void
 	{
 		// we don't want to have the same object in pool twice
-		if (obj != null && FlxArrayUtil.indexOf(_pool, obj) < 0)
+		if (obj != null && _pool.indexOf(obj) < 0)
 		{
 			obj.destroy();
 			_pool.push(obj);

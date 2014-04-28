@@ -15,7 +15,7 @@ class PluginFrontEnd
 	/**
 	 * An array container for plugins.
 	 */
-	public var list(default, null):Array<FlxPlugin>;
+	public var list(default, null):Array<FlxPlugin> = [];
 	
 	/**
 	 * Adds a new plugin to the global plugin array.
@@ -108,15 +108,9 @@ class PluginFrontEnd
 		return results;
 	}
 	
-	/**
-	 * Sets up two plugins: DebugPathDisplay 
-	 * in debugging mode and TimerManager
-	 */
 	@:allow(flixel.FlxG)
 	private function new() 
 	{
-		list = new Array<FlxPlugin>();
-		
 		add(FlxPath.manager = new PathManager());
 		add(FlxTimer.manager = new TimerManager());
 		add(FlxTween.manager = new TweenManager());

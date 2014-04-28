@@ -18,9 +18,6 @@ import flixel.interfaces.IFlxDestroyable;
  */
 class FlxPath implements IFlxDestroyable
 {
-	/**
-	 * The PathManager instance.
-	 */
 	public static var manager:PathManager;
 	/**
 	 * Path behavior controls: move from the start of the path to the end then stop.
@@ -127,6 +124,8 @@ class FlxPath implements IFlxDestroyable
 	 */
 	private var _autoRotate:Bool = false;
 	
+	private var _inManager:Bool = false;
+	
 	/**
 	 * Creates a new FlxPath (and calls start() right away if Object != null).
 	 */
@@ -163,9 +162,10 @@ class FlxPath implements IFlxDestroyable
 	
 	public function restart():FlxPath
 	{
-		if (manager != null)
+		if (manager != null && !_inManager)
 		{
 			manager.add(this);
+			_inManager = true;
 		}
 		
 		finished = false;
@@ -437,9 +437,10 @@ class FlxPath implements IFlxDestroyable
 			object.velocity.set(0, 0);
 		}
 		
-		if (manager != null)
+		if (manager != null && _inManager)
 		{
 			manager.remove(this);
+			_inManager = false;
 		}
 	}
 	
@@ -545,7 +546,7 @@ class FlxPath implements IFlxDestroyable
 	 */
 	public function remove(Node:FlxPoint):FlxPoint
 	{
-		var index:Int = FlxArrayUtil.indexOf(nodes, Node);
+		var index:Int =  nodes.indexOf(Node);
 		if (index >= 0)
 		{
 			return nodes.splice(index, 1)[0];
