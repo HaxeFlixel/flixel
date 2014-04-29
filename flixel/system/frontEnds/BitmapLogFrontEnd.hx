@@ -39,11 +39,13 @@ class BitmapLogFrontEnd
 	 */
 	public function viewCache():Void
 	{
+		#if !FLX_NO_DEBUG
 		clear();
 		for (cachedGraphic in FlxG.bitmap._cache)
 		{
 			add(cachedGraphic.bitmap, cachedGraphic.key);
 		}
+		#end
 	}
 	
 	@:allow(flixel.FlxG)
