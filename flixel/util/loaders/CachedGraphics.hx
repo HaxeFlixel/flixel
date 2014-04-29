@@ -36,9 +36,9 @@ class CachedGraphics
 	public var persist:Bool = false;
 	/**
 	 * Whether we should destroy this CachedGraphics object when useCount become zero.
-	 * Default is false.
+	 * Default is true.
 	 */
-	public var destroyOnNoUse(get, set):Bool;
+	public var destroyOnNoUse(default, set):Bool = true;
 
 	/**
 	 * Whether the BitmapData of this cached object has been dumped or not.
@@ -54,13 +54,9 @@ class CachedGraphics
 	/**
 	 * Usage counter for this CachedGraphics object.
 	 */
-	public var useCount(get, set):Int;
+	public var useCount(default, set):Int = 0;
 
 	private var _tilesheet:TileSheetData;
-
-	private var _useCount:Int = 0;
-
-	private var _destroyOnNoUse:Bool = true;
 
 	public function new(Key:String, Bitmap:BitmapData, Persist:Bool = false)
 	{
@@ -184,33 +180,23 @@ class CachedGraphics
 		return ((assetsClass != null) || (assetsKey != null));
 	}
 
-	private function get_useCount():Int
-	{
-		return _useCount;
-	}
-
 	private function set_useCount(Value:Int):Int
 	{
-		if ((Value <= 0) && _destroyOnNoUse && !persist)
+		if ((Value <= 0) && destroyOnNoUse && !persist)
 		{
 			FlxG.bitmap.remove(key);
 		}
 
-		return _useCount = Value;
-	}
-
-	private function get_destroyOnNoUse():Bool
-	{
-		return _destroyOnNoUse;
+		return useCount = Value;
 	}
 
 	private function set_destroyOnNoUse(Value:Bool):Bool
 	{
-		if (Value && _useCount == 0 && key != null && !persist)
+		if (Value && useCount == 0 && key != null && !persist)
 		{
 			FlxG.bitmap.remove(key);
 		}
 
-		return _destroyOnNoUse = Value;
+		return destroyOnNoUse = Value;
 	}
 }
