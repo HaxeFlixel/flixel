@@ -34,6 +34,7 @@ import flixel.util.FlxRect;
 import flixel.util.FlxTimer;
 #end
 
+import flixel.animation.FlxAnimationController;
 import flixel.util.FlxStringUtil;
 
 class Tracker extends Watch
@@ -117,6 +118,8 @@ class Tracker extends Watch
 			
 			addProfile(new TrackerProfile(FlxPath, ["speed", "angle", "autoCenter", "_nodeIndex", "active", "finished"]));
 			addProfile(new TrackerProfile(FlxTimer, ["time", "loops", "active", "finished", "timeLeft", "elapsedTime", "loopsLeft", "elapsedLoops", "progress"]));
+			
+			addProfile(new TrackerProfile(FlxAnimationController, ["frameIndex", "frameName", "name", "paused", "finished", "frames"]));
 			
 			// Inputs
 			#if !FLX_NO_MOUSE

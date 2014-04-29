@@ -1173,7 +1173,7 @@ class FlxSprite extends FlxObject
 	}
 	
 	/**
-	 * Use this method for creating tileSheet for FlxSprite. Must be called after makeGraphic(), loadGraphic or loadRotatedGraphic().
+	 * Use this method for creating tileSheet for FlxSprite. Must be called after makeGraphic(), loadGraphic() or loadRotatedGraphic().
 	 * If you forget to call it then you will not see this FlxSprite on c++ target
 	 */
 	public function updateFrameData():Void
