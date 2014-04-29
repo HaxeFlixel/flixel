@@ -5,7 +5,7 @@
 	<assets path="assets/sounds" include="*.mp3" if="web" />
 	<assets path="assets/sounds" include="*.ogg" unless="flash" />
 	
-	<set name="html5-backend" value="openfl-bitfive" />
+	<set name="html5-backend" value="openfl-bitfive" unless="html5-backend" />
 	<haxelib name="openfl" />
 	
 	<!-- Allow this setting to be overridden on the command-line -->
