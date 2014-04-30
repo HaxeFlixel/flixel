@@ -366,7 +366,7 @@ class FlxDebugger extends Sprite
 	
 	public function addWindowToggleButton(window:Window, icon:Class<BitmapData>):Void
 	{
-		var button = addButton(RIGHT, Type.createInstance(icon, [0, 0]), window.toggleVisbile, true, true);
+		var button = addButton(RIGHT, Type.createInstance(icon, [0, 0]), window.toggleVisible, true, true);
 		window.toggleButton = button;
 		button.toggled = !window.visible;
 	}
