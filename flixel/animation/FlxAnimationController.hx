@@ -18,7 +18,7 @@ class FlxAnimationController implements IFlxDestroyable
 	/**
 	 * Tell the sprite to change to a specific frame of the _curAnim.
 	 */
-	public var frameIndex(get, set):Int;
+	public var frameIndex(default, set):Int;
 	
 	/**
 	 * Tell the sprite to change to a frame with specific name.
@@ -62,8 +62,6 @@ class FlxAnimationController implements IFlxDestroyable
 	 */
 	@:allow(flixel.animation)
 	private var _curAnim:FlxAnimation;
-	
-	private var _frameIndex:Int = 0;
 	
 	/**
 	 * Internal, store all the _animations that were added to this sprite.
@@ -128,7 +126,6 @@ class FlxAnimationController implements IFlxDestroyable
 	
 	public function destroyAnimations():Void
 	{
-		_frameIndex = 0;
 		clearAnimations();
 		clearPrerotated();
 	}
@@ -634,11 +631,6 @@ class FlxAnimationController implements IFlxDestroyable
 		}
 	}
 	
-	private inline function get_frameIndex():Int
-	{
-		return _frameIndex;
-	}
-	
 	private function set_frameIndex(Frame:Int):Int
 	{
 		if (_sprite.framesData != null)
@@ -652,7 +644,7 @@ class FlxAnimationController implements IFlxDestroyable
 			}
 		}
 		
-		return _frameIndex = Frame;
+		return frameIndex = Frame;
 	}
 	
 	private inline function get_frameName():String
