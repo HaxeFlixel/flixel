@@ -1192,8 +1192,8 @@ class FlxSprite extends FlxObject
 			framesData = cachedGraphics.tilesheet.getSpriteSheetFrames(region, null);
 		}
 		
-		animation.frameIndex = 0;
 		frames = framesData.frames.length;
+		animation.frameIndex = 0;
 		resetSizeFromFrame();
 	}
 	
