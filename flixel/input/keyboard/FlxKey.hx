@@ -79,6 +79,7 @@ class FlxKey
 	public static inline var LEFT          :Int = 37;
 	public static inline var RIGHT         :Int = 39;
 	public static inline var TAB           :Int = 9;
+	public static inline var PRINTSCREEN   :Int = 301;
 	public static inline var F1            :Int = 112;
 	public static inline var F2            :Int = 113;
 	public static inline var F3            :Int = 114;

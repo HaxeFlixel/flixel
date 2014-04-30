@@ -83,6 +83,7 @@ class FlxKeyList
 	public var LEFT          (get, never):Bool; inline function get_LEFT()           { return check(FlxKey.LEFT);           }
 	public var RIGHT         (get, never):Bool; inline function get_RIGHT()          { return check(FlxKey.RIGHT);          }
 	public var TAB           (get, never):Bool; inline function get_TAB()            { return check(FlxKey.TAB);            }
+	public var PRINTSCREEN   (get, never):Bool; inline function get_PRINTSCREEN()    { return check(FlxKey.PRINTSCREEN);    }
 	public var F1            (get, never):Bool; inline function get_F1()             { return check(FlxKey.F1);             }
 	public var F2            (get, never):Bool; inline function get_F2()             { return check(FlxKey.F2);             }
 	public var F3            (get, never):Bool; inline function get_F3()             { return check(FlxKey.F3);             }
