@@ -1,3 +1,18 @@
+3.3.2
+------------------------------
+* Updated the Xbox 360 button IDs to work with OpenFL 1.4.0 on windows
+* FlxBitmapTextField: fixed graphic "corrupting" after state switches
+* Added a bitmapLog window to the debugger to view BitmapData, used via FlxG.bitmapLog
+* Added a way to view the graphics cache via FlxG.bitmapLog.viewCache() or by typing "viewCache" / "vc" into the console
+* CachedGraphics: destroyOnNoUse is now true by default
+* FlxBitmapUtil: added getMemorySize()
+* FlxStringUtil: added formatBytes()
+* FlxTimer: fixed a bug where a timer could be added to the TimerManager more than once
+* FlxTilemap.ray() consistency fix
+* FlxTextField: fix initial height being too small
+* FlxAnimationController: fixed frameIndex not being reset after a graphic is loaded
+* FlxKeyboard: added FlxKey.PRINTSCREEN for native targets
+
 3.3.1
 ------------------------------
 * FlxKeyboard: fixed function keys being offset by 1 on cpp (F2-F13)
