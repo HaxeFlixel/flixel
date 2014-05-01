@@ -690,7 +690,7 @@ class FlxSprite extends FlxObject
 		
 	#if FLX_RENDER_BLIT
 		dirty = true;
-		calcFrame();
+		getFlxFrameBitmapData();
 	#end
 		
 		_halfWidth = frameWidth * 0.5;
