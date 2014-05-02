@@ -575,8 +575,13 @@ class FlxSprite extends FlxObject
 		#if FLX_RENDER_TILE
 		antialiasing = AntiAliasing;
 		#else
+		var key:String = Data.assetName + ":" + Image;
 		var frameBitmapData:BitmapData = getFlxFrameBitmapData();
-		loadRotatedGraphic(frameBitmapData, Rotations, -1, AntiAliasing, AutoBuffer, Data.assetName + ":" + Image);
+		if (FlxG.bitmap.get(key) == null)
+		{
+			frameBitmapData = frameBitmapData.clone();
+		}
+		loadRotatedGraphic(frameBitmapData, Rotations, -1, AntiAliasing, AutoBuffer, key);
 		#end
 		
 		return this;
