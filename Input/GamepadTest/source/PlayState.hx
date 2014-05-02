@@ -166,7 +166,7 @@ class PlayState extends FlxState
 		}
 	}
 	
-	#if (flash || windows)
+	#if (flash || windows || mac)
 	private function updateDpad():Void
 	{
 		var dpadLeft = _gamePad.pressed(XboxButtonID.DPAD_LEFT);
