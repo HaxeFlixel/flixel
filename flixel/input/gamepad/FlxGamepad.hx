@@ -254,20 +254,10 @@ class FlxGamepad implements IFlxDestroyable
 	 */
 	public function pressed(ButtonID:Int):Bool 
 	{
-		#if js
-		var pad:js.html.Gamepad = null,
-			nav:js.html.Navigator = untyped navigator;
-		if (untyped nav.webkitGetGamepads != null) 
-		{ // if browser has webkit gamepads as such
-			pad = untyped nav.webkitGetGamepads().item(id);
-		}
-		return (pad != null) && (Math.round(pad.buttons[ButtonID]) == 1);
-		#else
 		if (buttons[ButtonID] != null)
 		{
 			return (buttons[ButtonID].current > RELEASED);
 		}
-		#end
 		
 		return false;
 	}
@@ -456,9 +446,6 @@ class FlxGamepad implements IFlxDestroyable
 		{
 			axisValue = _device.getControlAt(AxisID).value;
 		}
-		#elseif js
-		// TODO: fix this for html5
-		//axisValue = untyped navigator.webkitGetGamepads().item(id).axes[AxisID];
 		#else
 		axisValue = axis[AxisID];
 		#end
