@@ -489,7 +489,6 @@ class FlxSprite extends FlxObject
 		#end
 		
 		updateFrameData();
-		resetHelpers();
 		
 		if (AutoBuffer)
 		{
@@ -499,6 +498,7 @@ class FlxSprite extends FlxObject
 		}
 		
 		animation.createPrerotated();
+		resetHelpers();
 		return this;
 	}
 	
@@ -1187,6 +1187,8 @@ class FlxSprite extends FlxObject
 		
 		frames = framesData.frames.length;
 		animation.frameIndex = 0;
+		frame = framesData.frames[0];
+		
 		resetSizeFromFrame();
 	}
 	
