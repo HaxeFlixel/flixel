@@ -48,8 +48,6 @@ class XboxButtonID
 
 	/**
 	 * Axis array indicies
-	 * 
-	 * If TRIGGER axis returns value > 0 then LT is being pressed, and if it's < 0 then RT is being pressed
 	 */
 	public static inline var LEFT_ANALOGUE_X:Int = 0;
 	public static inline var LEFT_ANALOGUE_Y:Int = 1;
