@@ -12,6 +12,7 @@
 * FlxTextField: fix initial height being too small
 * FlxAnimationController: fixed frameIndex not being reset after a graphic is loaded
 * FlxKeyboard: added FlxKey.PRINTSCREEN for native targets
+* Allowed changing the HTML5-backend (before including flixel: `<set name="html5-backend" value="new-backend">`)
 
 3.3.1
 ------------------------------
