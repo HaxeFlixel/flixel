@@ -1,3 +1,9 @@
+1.1.1
+------------------------------
+* GamepadTest: now compatible with OpenFL 1.4.0
+* Mode: fixed infinite gun jam
+* FlxAccelerometer: fix orientation
+
 1.1.0
 ------------------------------
 * Compatibility with flixel 3.3.0
