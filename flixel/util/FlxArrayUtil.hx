@@ -5,6 +5,12 @@ package flixel.util;
  */
 class FlxArrayUtil
 {	
+	@:generic
+	public static inline function indexOf<T>(array:Array<T>, whatToFind:T, fromIndex:Int = 0):Int
+	{
+		return array.indexOf(whatToFind, fromIndex);
+	}
+	
 	/**
 	 * Sets the length of an array.
 	 * 
