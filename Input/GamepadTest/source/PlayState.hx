@@ -166,7 +166,6 @@ class PlayState extends FlxState
 		}
 	}
 	
-	#if (flash || windows || mac)
 	private function updateDpad():Void
 	{
 		var dpadLeft = _gamePad.pressed(XboxButtonID.DPAD_LEFT);
@@ -201,59 +200,4 @@ class PlayState extends FlxState
 		_dPad.animation.frameIndex = newIndex;
 		_dPad.alpha = newAlpha;
 	}
-	#else
-	private function updateDpad():Void
-	{
-		if (_gamePad.hat.x != 0 || _gamePad.hat.y != 0)
-		{
-			if (_gamePad.hat.x > 0)
-			{
-				if (_gamePad.hat.y > 0)
-				{
-					_dPad.animation.frameIndex = 6;
-				}
-				else if (_gamePad.hat.y < 0)
-				{
-					_dPad.animation.frameIndex = 5;
-				}
-				else	// gamePad.hat.y == 0
-				{
-					_dPad.animation.frameIndex = 2;
-				}
-			}
-			else if (_gamePad.hat.x < 0)
-			{
-				if (_gamePad.hat.y > 0)
-				{
-					_dPad.animation.frameIndex = 7;
-				}
-				else if (_gamePad.hat.y < 0)
-				{
-					_dPad.animation.frameIndex = 8;
-				}
-				else	// gamePad.hat.y == 0
-				{
-					_dPad.animation.frameIndex = 4;
-				}
-			}
-			else	// gamePad.hat.x == 0
-			{
-				if (_gamePad.hat.y > 0)
-				{
-					_dPad.animation.frameIndex = 3;
-				}
-				else if (_gamePad.hat.y < 0)
-				{
-					_dPad.animation.frameIndex = 1;
-				}
-			}
-			_dPad.alpha = ALPHA_ON;
-		}
-		else
-		{
-			_dPad.animation.frameIndex = 0;
-			_dPad.alpha = ALPHA_OFF;
-		}
-	}
-	#end
 }
