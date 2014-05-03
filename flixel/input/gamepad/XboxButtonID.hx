@@ -72,19 +72,24 @@ class XboxButtonID
 	public static inline var RB:Int = 5;
 	public static inline var BACK:Int = 6;
 	public static inline var START:Int = 7;
-	public static inline var LEFT_ANALOGUE:Int = 8;
-	public static inline var RIGHT_ANALOGUE:Int = 9;
+	public static inline var LEFT_ANALOGUE:Int = 9;
+	public static inline var RIGHT_ANALOGUE:Int = 10;
+	public static inline var XBOX:Int = 8;
 	
 	/**
 	 * Axis array indicies
-	 * 
-	 * If TRIGGER axis returns value > 0 then LT is being pressed, and if it's < 0 then RT is being pressed
 	 */
-	public static inline var TRIGGER:Int = 2;
 	public static inline var LEFT_ANALOGUE_X:Int = 0;
 	public static inline var LEFT_ANALOGUE_Y:Int = 1;
-	public static inline var RIGHT_ANALOGUE_X:Int = 4;
-	public static inline var RIGHT_ANALOGUE_Y:Int = 3;
+	public static inline var RIGHT_ANALOGUE_X:Int = 3;
+	public static inline var RIGHT_ANALOGUE_Y:Int = 4;
+	public static inline var LEFT_TRIGGER:Int = 2;
+	public static inline var RIGHT_TRIGGER:Int = 5;
+
+	public static inline var DPAD_UP:Int = 13;
+	public static inline var DPAD_DOWN:Int = 14;
+	public static inline var DPAD_LEFT:Int = 11;
+	public static inline var DPAD_RIGHT:Int = 12;
 #else // windows
 	/**
 	 * Button IDs (DPAD values are obtained from FlxGamepad.hat)
