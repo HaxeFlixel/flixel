@@ -10,7 +10,7 @@
 
 HaxeFlixel is open source software developed by volunteers, [click here to meet the team!](https://github.com/orgs/HaxeFlixel/members)
 
-If you're a developer and like what we're doing, [read the docs](For Developers) and get involved.
+If you're a developer and like what we're doing, [read the docs](#for-developers) and get involved.
 
 ##Links
 
@@ -44,13 +44,13 @@ HaxeFlixel presents substantial enhancements from the original Flixel AS3 code:
 
 ##For Developers
 
-If you are wanting to contribute code, please review the follwing documentation:
+If you are wanting to contribute code, please review the following documentation:
 
 - [Install development flixel](http://haxeflixel.com/documentation/install-development-flixel/)
 - [Code Contributions](http://haxeflixel.com/documentation/code-contributions)
 - [Code Style](http://haxeflixel.com/documentation/code-style)
 
-If you have a question or have not contributed on github before, there are friendly people in the community that help out in the [forums](http://haxeflixel.com/documentation/community/).
+If you have a question or have not contributed on GitHub before, there are friendly people in the community that help out in the [forums](http://haxeflixel.com/documentation/community/).
 
 For using git with GitHub we recommended using a GUI application to manage your changes, for example [SourceTree](http://www.sourcetreeapp.com/).
 
