@@ -1,6 +1,6 @@
 3.3.2
 ------------------------------
-* Updated the Xbox 360 button IDs to work with OpenFL 1.4.0 on windows
+* Updated the Xbox 360 button IDs to work with OpenFL 1.4.0
 * FlxBitmapTextField: fixed graphic "corrupting" after state switches
 * Added a bitmapLog window to the debugger to view BitmapData, used via FlxG.bitmapLog
 * Added a way to view the graphics cache via FlxG.bitmapLog.viewCache() or by typing "viewCache" / "vc" into the console
