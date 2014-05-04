@@ -178,7 +178,7 @@ class FlxAssets
 	
 	#if (!FLX_NO_SOUND_SYSTEM && !doc)
 	/**
-	 * Sound caching for android target
+	 * Calls FlxG.sound.cache() on all sounds that are embedded.
 	 */
 	@:access(openfl.Assets)
 	@:access(openfl.AssetType)
