@@ -48,15 +48,15 @@ class FlxVelocity
 	 * @param	MaxXSpeed		The maximum speed in pixels per second in which the sprite can move horizontally
 	 * @param	MaxYSpeed		The maximum speed in pixels per second in which the sprite can move vertically
 	 */
-	public static function accelerateTowardsObject(Source:FlxSprite, Dest:FlxSprite, Acceleration:Flloat, MaxXSpeed:Float, MaxYSpeed:Float):Void
+	public static function accelerateTowardsObject(Source:FlxSprite, Dest:FlxSprite, Acceleration:Float, MaxXSpeed:Float, MaxYSpeed:Float):Void
 	{
 		var a:Float = FlxAngle.angleBetween(Source, Dest);
 		
 		Source.velocity.x = 0;
 		Source.velocity.y = 0;
 		
-		Source.acceleration.x = Std.int(Math.cos(a) * Acceleration);
-		Source.acceleration.y = Std.int(Math.sin(a) * Acceleration);
+		Source.acceleration.x = Math.cos(a) * Acceleration;
+		Source.acceleration.y = Math.sin(a) * Acceleration;
 		
 		Source.maxVelocity.x = MaxXSpeed;
 		Source.maxVelocity.y = MaxYSpeed;
@@ -136,8 +136,8 @@ class FlxVelocity
 		Source.velocity.x = 0;
 		Source.velocity.y = 0;
 		
-		Source.acceleration.x = Std.int(Math.cos(a) * Acceleration);
-		Source.acceleration.y = Std.int(Math.sin(a) * Acceleration);
+		Source.acceleration.x = Math.cos(a) * Acceleration;
+		Source.acceleration.y = Math.sin(a) * Acceleration;
 		
 		Source.maxVelocity.x = MaxXSpeed;
 		Source.maxVelocity.y = MaxYSpeed;
@@ -163,8 +163,8 @@ class FlxVelocity
 		Source.velocity.x = 0;
 		Source.velocity.y = 0;
 		
-		Source.acceleration.x = Std.int(Math.cos(a) * Acceleration);
-		Source.acceleration.y = Std.int(Math.sin(a) * Acceleration);
+		Source.acceleration.x = Math.cos(a) * Acceleration;
+		Source.acceleration.y = Math.sin(a) * Acceleration;
 		
 		Source.maxVelocity.x = MaxXSpeed;
 		Source.maxVelocity.y = MaxYSpeed;
@@ -218,8 +218,8 @@ class FlxVelocity
 		Source.velocity.x = 0;
 		Source.velocity.y = 0;
 		
-		Source.acceleration.x = Std.int(Math.cos(a) * Acceleration);
-		Source.acceleration.y = Std.int(Math.sin(a) * Acceleration);
+		Source.acceleration.x = Math.cos(a) * Acceleration;
+		Source.acceleration.y = Math.sin(a) * Acceleration;
 		
 		Source.maxVelocity.x = MaxXSpeed;
 		Source.maxVelocity.y = MaxYSpeed;
@@ -240,8 +240,8 @@ class FlxVelocity
 		
 		var result = FlxPoint.get();
 		
-		result.x = Std.int(Math.cos(a) * Speed);
-		result.y = Std.int(Math.sin(a) * Speed);
+		result.x = Math.cos(a) * Speed;
+		result.y = Math.sin(a) * Speed;
 		
 		return result;
 	}
@@ -276,8 +276,8 @@ class FlxVelocity
 		
 		var result:FlxPoint = FlxPoint.get();
 		
-		result.x = Std.int(Math.cos(a) * Speed);
-		result.y = Std.int(Math.sin(a) * Speed);
+		result.x = Math.cos(a) * Speed;
+		result.y = Math.sin(a) * Speed;
 		
 		return result;
 	}
