@@ -77,9 +77,11 @@ class TexturePackerData implements IFlxDestroyable
 	 */
 	public function destroy():Void
 	{
-		for (frame in frames)
-		{
-			frame = FlxDestroyUtil.destroy(frame);
+		if (frames != null) {
+			for (frame in frames)
+			{	
+				frame = FlxDestroyUtil.destroy(frame);
+			}
 		}
 		frames = null;
 		assetName = null;
