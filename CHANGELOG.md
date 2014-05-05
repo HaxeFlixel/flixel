@@ -20,6 +20,8 @@
 * FlxAnimationController: fixed frameIndex not being reset after a graphic is loaded
 * FlxKeyboard: added FlxKey.PRINTSCREEN for native targets
 * Allowed changing the HTML5-backend (before including flixel: `<set name="html5-backend" value="new-backend">`)
+* FlxSprite: optimization for less BitmapData creation of simple sprites with blitting. Might require an additional dirty = true; when manipulating the BitmapData directly.
+* FlxCollision.pixelPerfectCheck() now works with bitfive
 
 3.3.1
 ------------------------------
