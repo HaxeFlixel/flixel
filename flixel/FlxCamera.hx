@@ -280,7 +280,7 @@ class FlxCamera extends FlxBasic
 	
 #if FLX_RENDER_TILE
 	/**
-	 * Sprite for drawing (instead of _flashBitmap in flash)
+	 * Sprite for drawing (instead of _flashBitmap for blitting)
 	 */
 	public var canvas:Sprite;
 	
