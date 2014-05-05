@@ -53,8 +53,13 @@ class PlayState extends FlxState
 		_scoreDisplay = new FlxText(0, 180, FlxG.width);
 		_scoreDisplay.alignment = "center";
 		_scoreDisplay.color = 0xff868696;
-		_scoreDisplay.size = 24;
 		add(_scoreDisplay);
+		
+		#if mobile
+		_scoreDisplay.text = "Tap to start";
+		#else
+		_scoreDisplay.text = "Press Space to start";
+		#end
 		
 		// Update all-time high score.
 		
@@ -132,16 +137,14 @@ class PlayState extends FlxState
 			_player.x = 5;
 			_player.velocity.x = -_player.velocity.x;
 			_player.flipX = false;
-			Reg.score++;
-			_scoreDisplay.text = Std.string(Reg.score);
+			increaseScore();
 			_bounceLeft.animation.play("flash");
 			_paddleRight.randomize();
 		} else if (_player.x + _player.width > FlxG.width - 5) {
 			_player.x = FlxG.width - _player.width - 5;
 			_player.velocity.x = -_player.velocity.x;
 			_player.flipX = true;
-			Reg.score++;
-			_scoreDisplay.text = Std.string(Reg.score);
+			increaseScore();
 			_bounceRight.animation.play("flash");
 			_paddleLeft.randomize();
 		}
@@ -167,6 +170,13 @@ class PlayState extends FlxState
 	public function randomPaddleY():Int
 	{
 		return FlxRandom.intRanged(Std.int(_bounceLeft.y), Std.int(_bounceLeft.y + _bounceLeft.height - _paddleLeft.height));
+	}
+	
+	private function increaseScore():Void
+	{
+		Reg.score++;
+		_scoreDisplay.text = Std.string(Reg.score);
+		_scoreDisplay.size = 24;
 	}
 	
 	/**
