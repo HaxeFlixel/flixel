@@ -67,6 +67,7 @@ class FlxSpriteFilter
 		}
 		
 		sprite = Sprite;
+		sprite.cachedGraphics.useCount++;
 		backupGraphics = sprite.cachedGraphics;
 		backupRegion = sprite.region;
 		
@@ -106,6 +107,10 @@ class FlxSpriteFilter
 	{
 		filters = null;
 		sprite = null;
+		if (backupGraphics != null)
+		{
+			backupGraphics.useCount--;
+		}
 		backupGraphics = null;
 		backupRegion = null;
 		pixels = null;
@@ -252,5 +257,4 @@ class FlxSpriteFilter
 			applyFilters();
 		}
 	}
-	
 }
