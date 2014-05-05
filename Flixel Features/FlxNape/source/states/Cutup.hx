@@ -194,6 +194,7 @@ class Cutup extends FlxNapeState
 				// force the bitmap to be unique, or same-sized bmp will share one instance
 				cutPhySpr.makeGraphic(Math.ceil(cutBody.bounds.width), Math.ceil(cutBody.bounds.height), 0x00ff0000, true);
 				cutPhySpr.pixels.draw(sprite, new Matrix(1, 0, 0, 1, cutBody.worldCOM.x - cutBody.bounds.x, cutBody.worldCOM.y - cutBody.bounds.y));
+				cutPhySpr.dirty = true;
 				cutPhySpr.origin.set(cutBody.worldCOM.x - cutBody.bounds.x, cutBody.worldCOM.y - cutBody.bounds.y);
 				cutPhySpr.setPosition(cutBody.worldCOM.x - cutPhySpr.origin.x, cutBody.worldCOM.y - cutPhySpr.origin.y);
 				cutPhySpr.angle = cutBody.rotation * FlxAngle.TO_DEG;
