@@ -1,3 +1,10 @@
+3.3.3
+------------------------------
+* FlxSpriteFilter: fixed graphic being destroyed when not used elsewhere
+* FlxBar: fixed a crash
+* TexturePackerData: fixed a crash when destroy() is called more than once
+* FlxVelocity and FlxAngle: removed arbitrary limitation of some parameters being of type Int (now Float)
+
 3.3.2
 ------------------------------
 * Updated the Xbox 360 button IDs to work with OpenFL 1.4.0
