@@ -26,7 +26,6 @@ class PlayState extends FlxState
 	override public function create():Void 
 	{
 		FlxG.cameras.bgColor = FlxColor.BLACK;
-		FlxG.mouse.useSystemCursor = true;
 		
 		// Create the tilemap for the cave
 		_tilemap = new FlxTilemap();
