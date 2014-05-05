@@ -91,7 +91,7 @@ class FlxTileblock extends FlxSprite
 			
 			while (column < widthInTiles)
 			{
-				if ( FlxRandom.float() * total > Empties)
+				if (FlxRandom.float() * total > Empties)
 				{
 					sprite.animation.randomFrame();
 					sprite.drawFrame();
@@ -107,6 +107,7 @@ class FlxTileblock extends FlxSprite
 		}
 		
 		sprite.destroy();
+		dirty = true;
 		return this;
 	}
 }
