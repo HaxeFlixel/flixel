@@ -1132,9 +1132,9 @@ class FlxBar extends FlxSprite
 	}
 	#end
 	
+	#if FLX_RENDER_TILE
 	override public function updateFrameData():Void 
 	{	
-	#if FLX_RENDER_TILE
 		if (cachedGraphics == null || _cachedFrontGraphics == null)
 		{
 			return;
@@ -1222,8 +1222,8 @@ class FlxBar extends FlxSprite
 			
 			_filledBarFrames.push(_cachedFrontGraphics.tilesheet.addTileRect(new Rectangle(frameX, frameY, frameWidth, frameHeight), new Point(0.5 * frameWidth, 0.5 * frameHeight)));
 		}
-	#end
 	}
+	#end
 	
 	#if FLX_RENDER_TILE
 	private inline function setCachedGraphics(value:CachedGraphics):Void
