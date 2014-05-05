@@ -317,6 +317,7 @@ class FlxKeyboard implements IFlxInput
 		addKey("LEFT", 37);
 		addKey("RIGHT", 39);
 		addKey("TAB", 9);
+		addKey("PRINTSCREEN", 301);
 		
 		addKey("NUMPADMULTIPLY", 106);
 		addKey("NUMPADMINUS", 109);

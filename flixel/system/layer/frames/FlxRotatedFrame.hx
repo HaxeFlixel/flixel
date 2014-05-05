@@ -17,7 +17,7 @@ class FlxRotatedFrame extends FlxFrame
 	{
 		var result:BitmapData = null;
 		
-		if (bmd != null && (bmd.width == sourceSize.x && bmd.height != sourceSize.y))
+		if (bmd != null && (bmd.width == sourceSize.x && bmd.height == sourceSize.y))
 		{
 			result = bmd;
 		}

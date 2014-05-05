@@ -123,7 +123,7 @@ class FlxCamera extends FlxBasic
 	#end
 	
 	/**
-	 * The natural background color of the camera. Defaults to FlxG.cameras.bgColor.
+	 * The natural background color of the camera, in AARRGGBB format. Defaults to FlxG.cameras.bgColor.
 	 * NOTE: can be transparent for crazy FX (only works on flash)!
 	 */
 	public var bgColor:Int;
@@ -280,7 +280,7 @@ class FlxCamera extends FlxBasic
 	
 #if FLX_RENDER_TILE
 	/**
-	 * Sprite for drawing (instead of _flashBitmap in flash)
+	 * Sprite for drawing (instead of _flashBitmap for blitting)
 	 */
 	public var canvas:Sprite;
 	

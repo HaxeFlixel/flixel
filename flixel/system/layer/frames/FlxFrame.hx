@@ -15,6 +15,7 @@ class FlxFrame
 {
 	public static var POINT:Point = new Point();
 	public static var MATRIX:Matrix = new Matrix();
+	public static var RECT:Rectangle = new Rectangle();
 	
 	public var name:String;
 	public var frame:Rectangle;
@@ -52,9 +53,20 @@ class FlxFrame
 	{
 		var result:BitmapData = null;
 		
-		if (bmd != null && (bmd.width == sourceSize.x && bmd.height != sourceSize.y))
+		if (bmd != null && (bmd.width == sourceSize.x && bmd.height == sourceSize.y))
 		{
 			result = bmd;
+			
+			var w:Int = bmd.width;
+			var h:Int = bmd.height;
+			
+			if (w > frame.width || h > frame.height)
+			{
+				RECT.x = RECT.y = 0;
+				RECT.width = w;
+				RECT.height = h;
+				bmd.fillRect(RECT, FlxColor.TRANSPARENT);
+			}
 		}
 		else if (bmd != null)
 		{

@@ -25,6 +25,9 @@ class FlxState extends FlxGroup
 	 */
 	public var destroySubStates:Bool = true;
 	
+	/**
+	 * The natural background color the cameras default to. In AARRGGBB format.
+	 */
 	public var bgColor(get, set):Int;
 	
 	/**

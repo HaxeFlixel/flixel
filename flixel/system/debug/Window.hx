@@ -265,11 +265,20 @@ class Window extends Sprite
 		{
 			toggleButton.toggled = !visible;
 		}
+		if (visible)
+		{
+			putOnTop();
+		}
 	}
 	
-	public inline function toggleVisbile():Void
+	public inline function toggleVisible():Void
 	{
-		setVisible(!visible);		
+		setVisible(!visible);
+	}
+	
+	public inline function putOnTop():Void
+	{
+		parent.addChild(this);
 	}
 	
 	private function loadSaveData():Void
@@ -368,14 +377,14 @@ class Window extends Sprite
 	{
 		if (_overHeader)
 		{
-			parent.addChild(this);
+			putOnTop();
 			_dragging = true;
 			_drag.x = mouseX;
 			_drag.y = mouseY;
 		}
 		else if (_overHandle)
 		{
-			parent.addChild(this);
+			putOnTop();
 			_resizing = true;
 			_drag.x = _width - mouseX;
 			_drag.y = _height - mouseY;

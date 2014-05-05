@@ -1,3 +1,28 @@
+3.3.3
+------------------------------
+* FlxSpriteFilter: fixed graphic being destroyed when not used elsewhere
+* FlxBar: fixed a crash
+* TexturePackerData: fixed a crash when destroy() is called more than once
+* FlxVelocity and FlxAngle: removed arbitrary limitation of some parameters being of type Int (now Float)
+
+3.3.2
+------------------------------
+* Updated the Xbox 360 button IDs to work with OpenFL 1.4.0
+* FlxBitmapTextField: fixed graphic "corrupting" after state switches
+* Added a bitmapLog window to the debugger to view BitmapData, used via FlxG.bitmapLog
+* Added a way to view the graphics cache via FlxG.bitmapLog.viewCache() or by typing "viewCache" / "vc" into the console
+* CachedGraphics: destroyOnNoUse is now true by default
+* FlxBitmapUtil: added getMemorySize()
+* FlxStringUtil: added formatBytes()
+* FlxTimer: fixed a bug where a timer could be added to the TimerManager more than once
+* FlxTilemap.ray() consistency fix
+* FlxTextField: fix initial height being too small
+* FlxAnimationController: fixed frameIndex not being reset after a graphic is loaded
+* FlxKeyboard: added FlxKey.PRINTSCREEN for native targets
+* Allowed changing the HTML5-backend (before including flixel: `<set name="html5-backend" value="new-backend">`)
+* FlxSprite: optimization for less BitmapData creation of simple sprites with blitting. Might require an additional dirty = true; when manipulating the BitmapData directly.
+* FlxCollision.pixelPerfectCheck() now works with bitfive
+
 3.3.1
 ------------------------------
 * FlxKeyboard: fixed function keys being offset by 1 on cpp (F2-F13)

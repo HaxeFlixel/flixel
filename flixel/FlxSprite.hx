@@ -489,7 +489,6 @@ class FlxSprite extends FlxObject
 		#end
 		
 		updateFrameData();
-		resetHelpers();
 		
 		if (AutoBuffer)
 		{
@@ -499,6 +498,7 @@ class FlxSprite extends FlxObject
 		}
 		
 		animation.createPrerotated();
+		resetHelpers();
 		return this;
 	}
 	
@@ -575,8 +575,13 @@ class FlxSprite extends FlxObject
 		#if FLX_RENDER_TILE
 		antialiasing = AntiAliasing;
 		#else
+		var key:String = Data.assetName + ":" + Image;
 		var frameBitmapData:BitmapData = getFlxFrameBitmapData();
-		loadRotatedGraphic(frameBitmapData, Rotations, -1, AntiAliasing, AutoBuffer, Data.assetName + ":" + Image);
+		if (FlxG.bitmap.get(key) == null)
+		{
+			frameBitmapData = frameBitmapData.clone();
+		}
+		loadRotatedGraphic(frameBitmapData, Rotations, -1, AntiAliasing, AutoBuffer, key);
 		#end
 		
 		return this;
@@ -689,15 +694,8 @@ class FlxSprite extends FlxObject
 		centerOrigin();
 		
 	#if FLX_RENDER_BLIT
-		if ((framePixels == null) || (framePixels.width != frameWidth) || (framePixels.height != frameHeight))
-		{
-			framePixels = new BitmapData(Std.int(width), Std.int(height));
-		}
-		framePixels.copyPixels(cachedGraphics.bitmap, _flashRect, _flashPointZero);
-		if (useColorTransform) 
-		{
-			framePixels.colorTransform(_flashRect, colorTransform);
-		}
+		dirty = true;
+		getFlxFrameBitmapData();
 	#end
 		
 		_halfWidth = frameWidth * 0.5;
@@ -1173,7 +1171,7 @@ class FlxSprite extends FlxObject
 	}
 	
 	/**
-	 * Use this method for creating tileSheet for FlxSprite. Must be called after makeGraphic(), loadGraphic or loadRotatedGraphic().
+	 * Use this method for creating tileSheet for FlxSprite. Must be called after makeGraphic(), loadGraphic() or loadRotatedGraphic().
 	 * If you forget to call it then you will not see this FlxSprite on c++ target
 	 */
 	public function updateFrameData():Void
@@ -1192,8 +1190,10 @@ class FlxSprite extends FlxObject
 			framesData = cachedGraphics.tilesheet.getSpriteSheetFrames(region, null);
 		}
 		
-		frame = framesData.frames[0];
 		frames = framesData.frames.length;
+		animation.frameIndex = 0;
+		frame = framesData.frames[0];
+		
 		resetSizeFromFrame();
 	}
 	
@@ -1202,7 +1202,7 @@ class FlxSprite extends FlxObject
 	 */
 	public inline function getFlxFrameBitmapData():BitmapData
 	{
-		if (frame != null)
+		if (frame != null && dirty)
 		{
 			if (!flipX && !flipY && frame.type == FrameType.REGULAR)
 			{

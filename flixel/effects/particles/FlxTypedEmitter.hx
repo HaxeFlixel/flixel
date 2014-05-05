@@ -895,9 +895,15 @@ class Bounds<T>
 	public var min:T;
 	public var max:T;
 
-	public function new(min:T, max:Null<T> = null)
+	public function new(min:T, ?max:Null<T>)
+	{
+		set(min, max);
+	}
+	
+	public function set(min:T, ?max:Null<T>):Bounds<T>
 	{
 		this.min = min;
 		this.max = max == null ? min : max;
+		return this;
 	}
 }

@@ -44,7 +44,6 @@ class FlxCollision
 	 */
 	public static function pixelPerfectCheck(Contact:FlxSprite, Target:FlxSprite, AlphaTolerance:Int = 1, ?Camera:FlxCamera):Bool
 	{
-	#if !bitfive // missing BitmapData.getPixels()
 		//if either of the angles are non-zero, consider the angles of the sprites in the pixel check
 		var considerRotation:Bool = (Contact.angle != 0) || (Target.angle != 0);
 		
@@ -168,8 +167,10 @@ class FlxCollision
 		for (i in 0...Math.ceil(overlapPixels / 2)) 
 		{
 			alphaIdx = i << 3;
-			alphaA = pixelsA[alphaIdx];
-			alphaB = pixelsB[alphaIdx];
+			pixelsA.position = pixelsB.position = alphaIdx;
+			alphaA = pixelsA.readUnsignedByte();
+			alphaB = pixelsB.readUnsignedByte();
+			
 			if (alphaA >= AlphaTolerance && alphaB >= AlphaTolerance) 
 			{
 				hit = true;
@@ -177,13 +178,16 @@ class FlxCollision
 			}
 		}
 		
-		if (!hit) {
+		if (!hit) 
+		{
 			// check odd pixels
 			for (i in 0...overlapPixels >> 1) 
 			{
 				alphaIdx = (i << 3) + 4;
-				alphaA = pixelsA[alphaIdx];
-				alphaB = pixelsB[alphaIdx];
+				pixelsA.position = pixelsB.position = alphaIdx;
+				alphaA = pixelsA.readUnsignedByte();
+				alphaB = pixelsB.readUnsignedByte();
+				
 				if (alphaA >= AlphaTolerance && alphaB >= AlphaTolerance) 
 				{
 					hit = true;
@@ -199,9 +203,6 @@ class FlxCollision
 		}
 		
 		return hit;
-	#else
-		return false;
-	#end
 	}
 	
 	/**

@@ -52,6 +52,8 @@ class FlxSpriteFilter
 	
 	public var pixels:BitmapData;
 	
+	private var cachedDestroy:Bool;
+	
 	/**
 	 * Create a new filter for a FlxSprite.
 	 * 
@@ -67,8 +69,13 @@ class FlxSpriteFilter
 		}
 		
 		sprite = Sprite;
+		cachedDestroy = sprite.cachedGraphics.destroyOnNoUse;
+		sprite.cachedGraphics.destroyOnNoUse = false;
 		backupGraphics = sprite.cachedGraphics;
 		backupRegion = sprite.region;
+		
+		frameWidth = sprite.frameWidth;
+		frameHeight = sprite.frameHeight;
 		
 		filters = [];
 		
@@ -106,6 +113,10 @@ class FlxSpriteFilter
 	{
 		filters = null;
 		sprite = null;
+		if (backupGraphics != null)
+		{
+			backupGraphics.destroyOnNoUse = cachedDestroy;
+		}
 		backupGraphics = null;
 		backupRegion = null;
 		pixels = null;
@@ -252,5 +263,4 @@ class FlxSpriteFilter
 			applyFilters();
 		}
 	}
-	
 }

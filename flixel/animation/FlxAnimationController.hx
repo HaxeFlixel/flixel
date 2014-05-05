@@ -18,7 +18,7 @@ class FlxAnimationController implements IFlxDestroyable
 	/**
 	 * Tell the sprite to change to a specific frame of the _curAnim.
 	 */
-	public var frameIndex(default, set):Int = 0;
+	public var frameIndex(default, set):Int = -1;
 	
 	/**
 	 * Tell the sprite to change to a frame with specific name.
