@@ -34,6 +34,8 @@ class PlayState extends FlxState
 	 */
 	override public function create():Void
 	{
+		FlxG.mouse.visible = false;
+		
 		var target:FlxSprite = new FlxSprite(0, 0, GraphicLogo);
 		target.screenCenter();
 		target.y += 10;

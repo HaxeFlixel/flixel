@@ -28,6 +28,8 @@ class PlayState extends FlxState
 	
 	override public function create():Void
 	{
+		FlxG.mouse.visible = false;
+		
 		var _sprite = new FlxSprite(0, 0, GraphicLogo);
 		_sprite.screenCenter();
 		_sprite.y += 10;
