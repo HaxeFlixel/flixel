@@ -3,7 +3,9 @@
 * FlxSpriteFilter: fixed graphic being destroyed when not used elsewhere
 * FlxBar: fixed a crash
 * TexturePackerData: fixed a crash when destroy() is called more than once
+* FlxSprite: fixes for drawFrame() and stamp()
 * FlxVelocity and FlxAngle: removed arbitrary limitation of some parameters being of type Int (now Float)
+* FlxTypedEmitter: added a set() to Bounds<T>
 
 3.3.2
 ------------------------------
