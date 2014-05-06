@@ -829,7 +829,8 @@ class FlxSprite extends FlxObject
 				var sx:Float = scale.x * _facingHorizontalMult;
 				var sy:Float = scale.y * _facingVerticalMult;
 				
-				if (frame.type == FrameType.ROTATED) // todo: handle different additional angles (since different packers adds different values, e.g. -90 or +90)
+				// todo: handle different additional angles (since different packers adds different values, e.g. -90 or +90)
+				if (frame.type == FrameType.ROTATED)
 				{
 					cos = -_sinAngle;
 					sin = _cosAngle;
@@ -911,19 +912,19 @@ class FlxSprite extends FlxObject
 	}
 	
 	/**
-	 * This function draws or stamps one FlxSprite onto another.
+	 * Stamps / draws another FlxSprite onto this FlxSprite. 
 	 * This function is NOT intended to replace draw()!
-	 * @param	Brush		The image you want to use as a brush or stamp or pen or whatever.
-	 * @param	X			The X coordinate of the brush's top left corner on this sprite.
-	 * @param	Y			They Y coordinate of the brush's top left corner on this sprite.
+	 * 
+	 * @param	Brush	The sprite you want to use as a brush or stamp or pen or whatever.
+	 * @param	X		The X coordinate of the brush's top left corner on this sprite.
+	 * @param	Y		They Y coordinate of the brush's top left corner on this sprite.
 	 */
 	public function stamp(Brush:FlxSprite, X:Int = 0, Y:Int = 0):Void
 	{
 		Brush.drawFrame();
 		var bitmapData:BitmapData = Brush.framePixels;
 		
-		//Simple draw
-		if (((Brush.angle == 0) || (Brush.bakedRotationAngle > 0)) && (Brush.scale.x == 1) && (Brush.scale.y == 1) && (Brush.blend == null))
+		if (isSimpleRenderBlit()) // simple render
 		{
 			_flashPoint.x = X + region.startX;
 			_flashPoint.y = Y + region.startY;
@@ -939,30 +940,32 @@ class FlxSprite extends FlxObject
 			dirty = true;
 			calcFrame();
 			#end
-			return;
 		}
-		
-		//Advanced draw
-		_matrix.identity();
-		_matrix.translate(-Brush.origin.x, -Brush.origin.y);
-		_matrix.scale(Brush.scale.x, Brush.scale.y);
-		if (Brush.angle != 0)
+		else // complex render
 		{
-			_matrix.rotate(Brush.angle * FlxAngle.TO_RAD);
+			_matrix.identity();
+			_matrix.translate(-Brush.origin.x, -Brush.origin.y);
+			_matrix.scale(Brush.scale.x, Brush.scale.y);
+			if (Brush.angle != 0)
+			{
+				_matrix.rotate(Brush.angle * FlxAngle.TO_RAD);
+			}
+			_matrix.translate(X + region.startX + Brush.origin.x, Y + region.startY + Brush.origin.y);
+			var brushBlend:BlendMode = Brush.blend;
+			cachedGraphics.bitmap.draw(bitmapData, _matrix, null, brushBlend, null, Brush.antialiasing);
+			resetFrameBitmapDatas();
+			
+			#if FLX_RENDER_BLIT
+			dirty = true;
+			calcFrame();
+			#end
 		}
-		_matrix.translate(X + region.startX + Brush.origin.x, Y + region.startY + Brush.origin.y);
-		var brushBlend:BlendMode = Brush.blend;
-		cachedGraphics.bitmap.draw(bitmapData, _matrix, null, brushBlend, null, Brush.antialiasing);
-		resetFrameBitmapDatas();
-		#if FLX_RENDER_BLIT
-		dirty = true;
-		calcFrame();
-		#end
 	}
 	
 	/**
 	 * Request (or force) that the sprite update the frame before rendering.
 	 * Useful if you are doing procedural generation or other weirdness!
+	 * 
 	 * @param	Force	Force the frame to redraw, even if its not flagged as necessary.
 	 */
 	public inline function drawFrame(Force:Bool = false):Void
@@ -980,6 +983,7 @@ class FlxSprite extends FlxObject
 	
 	/**
 	 * Helper function that adjusts the offset automatically to center the bounding box within the graphic.
+	 * 
 	 * @param	AdjustPosition		Adjusts the actual X and Y position just once to match the offset change. Default is false.
 	 */
 	public function centerOffsets(AdjustPosition:Bool = false):Void
@@ -1004,6 +1008,7 @@ class FlxSprite extends FlxObject
 	
 	/**
 	 * Replaces all pixels with specified Color with NewColor pixels
+	 * 
 	 * @param	Color				Color to replace
 	 * @param	NewColor			New color
 	 * @param	FetchPositions		Whether we need to store positions of pixels which colors were replaced
@@ -1234,9 +1239,7 @@ class FlxSprite extends FlxObject
 				
 				if ((framePixels == null) || (framePixels.width != frameWidth) || (framePixels.height != frameHeight))
 				{
-					if (framePixels != null)
-						framePixels.dispose();
-						
+					FlxDestroyUtil.dispose(framePixels);
 					framePixels = new BitmapData(Std.int(frame.sourceSize.x), Std.int(frame.sourceSize.y));
 				}
 				
@@ -1356,16 +1359,34 @@ class FlxSprite extends FlxObject
 	}
 	
 	/**
-	 * Checks if the Sprite is being rendered in "simple mode" (via copyPixels). True for flash when no angle, bakedRotations, 
-	 * scaling or blend modes are used. This enables the sprite to be rendered much faster if true.
+	 * Returns the result of isSimpleRenderBlit() if FLX_RENDER_BLIT is 
+	 * defined or isSimpleRenderTile() if FLX_RENDER_TILE is defined.
 	 */
 	public function isSimpleRender():Bool
 	{ 
 		#if FLX_RENDER_BLIT
-		return (((angle == 0) || (bakedRotationAngle > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == null) && pixelPerfectRender);
+		return isSimpleRenderBlit();
 		#else
-		return (((angle == 0 && frame.additionalAngle == 0) || (bakedRotationAngle > 0)) && (scale.x == 1) && (scale.y == 1));
+		return isSimpleRenderTile();
 		#end
+	}
+	
+	/**
+	 * Determines the function used for rendering in blitting: copyPixels() for simple sprites, draw() for complex ones. 
+	 * Sprites are considered simple when they have an angle of 0, a scale of 1, don't use blend and pixelPerfectRender is true.
+	 */
+	public function isSimpleRenderBlit():Bool
+	{
+		return ((angle == 0) || (bakedRotationAngle > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == null) && pixelPerfectRender;
+	}
+	
+	/**
+	 * Determines whether or not additional matrix calculations are required to render sprites via drawTiles().
+	 * Sprites are considered simple when they have an angle of 0 and a scale of 1.
+	 */
+	public function isSimpleRenderTile():Bool
+	{
+		return ((angle == 0 && frame.additionalAngle == 0) || (bakedRotationAngle > 0)) && (scale.x == 1) && (scale.y == 1);
 	}
 	
 	/**
@@ -1383,9 +1404,6 @@ class FlxSprite extends FlxObject
 		_facingFlip.set(Direction, {x: FlipX, y: FlipY});
 	}
 	
-	/**
-	 * PROPERTIES
-	 */
 	private function get_pixels():BitmapData
 	{
 		return cachedGraphics.bitmap;
