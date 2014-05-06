@@ -744,7 +744,7 @@ class FlxAnimationController implements IFlxDestroyable
 		return Value;
 	}
 	
-	private inline function get_finished():Bool
+	private function get_finished():Bool
 	{
 		var finished:Bool = true;
 		if (_curAnim != null)

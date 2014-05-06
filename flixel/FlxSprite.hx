@@ -936,6 +936,7 @@ class FlxSprite extends FlxObject
 			resetFrameBitmapDatas();
 			
 			#if FLX_RENDER_BLIT
+			dirty = true;
 			calcFrame();
 			#end
 			return;
@@ -954,6 +955,7 @@ class FlxSprite extends FlxObject
 		cachedGraphics.bitmap.draw(bitmapData, _matrix, null, brushBlend, null, Brush.antialiasing);
 		resetFrameBitmapDatas();
 		#if FLX_RENDER_BLIT
+		dirty = true;
 		calcFrame();
 		#end
 	}
@@ -968,6 +970,7 @@ class FlxSprite extends FlxObject
 		#if FLX_RENDER_BLIT
 		if (Force || dirty)
 		{
+			dirty = true;
 			calcFrame();
 		}
 		#else
