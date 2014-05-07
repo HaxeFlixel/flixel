@@ -58,7 +58,7 @@ class FlxBar extends FlxSprite
 	/**
 	 * If this FlxBar should be killed when its empty
 	 */
-	public var killOnEmpty(default, set):Bool = false;
+	public var killOnEmpty:Bool = false;
 	/**
 	 * The percentage of how full the bar is (a value between 0 and 100)
 	 */
@@ -171,7 +171,7 @@ class FlxBar extends FlxSprite
 		
 		setRange(min, max);
 		
-		createFilledBar(0xff005100, 0xff00F400, border)
+		createFilledBar(0xff005100, 0xff00F400, border);
 		
 		// Make sure the bar is drawn
 		#if FLX_RENDER_BLIT
@@ -287,7 +287,7 @@ class FlxBar extends FlxSprite
 		
 		if (killOnEmpty)
 		{
-			_emptyKill = true;
+			killOnEmpty = true;
 		}
 	}
 	
@@ -814,7 +814,7 @@ class FlxBar extends FlxSprite
 			_filledCallback();
 		}
 		
-		if (_value == _min && _emptyKill)
+		if (_value == _min && killOnEmpty)
 		{
 			kill();
 		}
@@ -1159,12 +1159,6 @@ class FlxBar extends FlxSprite
 			LabelValuePair.weak("%", _pct),
 			LabelValuePair.weak("px/%", pxPerPercent),
 			LabelValuePair.weak("value", _value)]);
-	}
-	
-	private function set_killOnEmpty(value:Bool):Bool
-	{
-		_emptyKill = value;
-		return value;
 	}
 	
 	private function get_stats():Map<String, Dynamic>
