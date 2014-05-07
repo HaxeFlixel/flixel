@@ -773,7 +773,10 @@ class FlxCamera extends FlxBasic
 				deadzone = null;
 		}
 		
-		Offset.putWeak();
+		if (Offset != null)
+		{
+			Offset.putWeak();
+		}
 	}
 	
 	/**
