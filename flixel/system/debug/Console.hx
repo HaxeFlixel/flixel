@@ -71,7 +71,7 @@ class Console extends Window
 	 */	
 	public function new()
 	{	
-		super("console", new GraphicConsole(0, 0), 0, 0, false);
+		super("Console", new GraphicConsole(0, 0), 0, 0, false);
 		
 		commands = new Array<Command>();
 		

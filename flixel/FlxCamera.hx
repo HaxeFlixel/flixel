@@ -773,6 +773,10 @@ class FlxCamera extends FlxBasic
 				deadzone = null;
 		}
 		
+		if (Offset != null)
+		{
+			Offset.putWeak();
+		}
 	}
 	
 	/**
@@ -783,6 +787,7 @@ class FlxCamera extends FlxBasic
 	public inline function focusOn(point:FlxPoint):Void
 	{
 		scroll.set(point.x - width * 0.5, point.y - height * 0.5);
+		point.putWeak();
 	}
 	
 	/**
