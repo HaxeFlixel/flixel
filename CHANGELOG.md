@@ -1,3 +1,8 @@
+3.4.0
+------------------------------
+* FlxArrayUtil: removed indexOf()
+* FlxTilemap: fixed pixelPerfectRender not being respected with FLX_RENDER_TILE
+
 3.3.3
 ------------------------------
 * FlxSpriteFilter: fixed graphic being destroyed when not used elsewhere
