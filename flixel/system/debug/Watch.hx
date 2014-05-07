@@ -36,7 +36,7 @@ class Watch extends Window
 	 */
 	public function new(Closable:Bool = false)
 	{
-		super("watch", new GraphicWatch(0, 0), 0, 0, true, null, Closable);
+		super("Watch", new GraphicWatch(0, 0), 0, 0, true, null, Closable);
 		
 		_names = new Sprite();
 		_names.x = 2;
