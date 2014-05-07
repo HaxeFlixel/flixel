@@ -49,7 +49,7 @@ class BitmapLog extends Window
 	
 	public function new()
 	{
-		super("bitmapLog", new GraphicBitmapLog(0, 0));
+		super("BitmapLog", new GraphicBitmapLog(0, 0));
 		
 		minSize.x = 165;
 		minSize.y = Window.HEADER_HEIGHT * 2 + 1;
