@@ -99,7 +99,7 @@ class Stats extends Window
 	 */
 	public function new()
 	{
-		super("stats", new GraphicStats(0, 0), 0, 0, false);
+		super("Stats", new GraphicStats(0, 0), 0, 0, false);
 		
 		minSize.y = MIN_HEIGHT;
 		resize(INITIAL_WIDTH, MIN_HEIGHT);
