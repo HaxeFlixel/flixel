@@ -10,7 +10,6 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.group.FlxGroup;
 import flixel.group.FlxTypedGroup;
-import flixel.system.FlxCollisionType;
 import flixel.system.layer.DrawStackItem;
 import flixel.system.layer.frames.FlxSpriteFrames;
 import flixel.system.layer.Region;

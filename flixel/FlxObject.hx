@@ -5,7 +5,6 @@ import flixel.FlxBasic;
 import flixel.group.FlxGroup;
 import flixel.group.FlxSpriteGroup;
 import flixel.group.FlxTypedGroup;
-import flixel.system.FlxCollisionType;
 import flixel.tile.FlxTilemap;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;

@@ -2,7 +2,6 @@ package flixel.group;
 
 import flixel.FlxBasic;
 import flixel.FlxG;
-import flixel.system.FlxCollisionType;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxSort;
 

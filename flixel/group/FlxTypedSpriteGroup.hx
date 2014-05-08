@@ -7,7 +7,6 @@ import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxTypedGroup;
-import flixel.system.FlxCollisionType;
 import flixel.system.layer.frames.FlxFrame;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxPoint;
