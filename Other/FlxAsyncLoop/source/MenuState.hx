@@ -12,7 +12,6 @@ import flixel.util.FlxColorUtil;
 import flixel.util.FlxRandom;
 import flixel.util.FlxSpriteUtil;
 
-
 /**
  * A FlxState which can be used for the game's menu.
  */
@@ -46,7 +45,7 @@ class MenuState extends FlxState
 		_loopOne = new FlxAsyncLoop(_maxItems, addItem, 100);
 		
 		// create a fancy progress bar
-		_bar = new FlxBar(0, 0, FlxBar.FILL_LEFT_TO_RIGHT, FlxG.width - 50, 50, null, "", 0, 100, true);
+		_bar = new FlxBar(0, 0, LEFT_TO_RIGHT, FlxG.width - 50, 50, null, "", 0, 100, true);
 		_bar.currentValue = 0;
 		FlxSpriteUtil.screenCenter(_bar);
 		_grpProgress.add(_bar);

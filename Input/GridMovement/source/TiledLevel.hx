@@ -62,7 +62,7 @@ class TiledLevel extends TiledMap
 			var tilemap:FlxTilemap = new FlxTilemap();
 			tilemap.widthInTiles = width;
 			tilemap.heightInTiles = height;
-			tilemap.loadMap(tileLayer.tileArray, processedPath, tileSet.tileWidth, tileSet.tileHeight, 0, 1, 1, 1);
+			tilemap.loadMap(tileLayer.tileArray, processedPath, tileSet.tileWidth, tileSet.tileHeight, OFF, 1, 1, 1);
 			
 			if (tileLayer.properties.contains("nocollide"))
 			{

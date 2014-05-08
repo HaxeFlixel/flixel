@@ -37,7 +37,7 @@ class PlayState extends FlxState
 		
 		_restart = false;
 		
-		add(background.loadMap(Assets.getText("assets/levels/mapCSV_Group1_Map1back.csv"), "assets/art/area02_level_tiles2.png", 16, 16, FlxTilemap.OFF));
+		add(background.loadMap(Assets.getText("assets/levels/mapCSV_Group1_Map1back.csv"), "assets/art/area02_level_tiles2.png", 16, 16));
 		background.scrollFactor.x = background.scrollFactor.y = .5;
 		
 		add(map.loadMap(Assets.getText("assets/levels/mapCSV_Group1_Map1.csv"), "assets/art/area02_level_tiles2.png", 16, 16));

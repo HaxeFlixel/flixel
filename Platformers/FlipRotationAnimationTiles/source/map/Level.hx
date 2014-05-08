@@ -76,7 +76,7 @@ class Level extends TiledMap
 				PATH_TILESETS + tileset.imageSource,	
 				tileset.tileWidth,						// each tileset can have a different tile width or height
 				tileset.tileHeight,
-				FlxTilemap.OFF,							// disable auto map
+				OFF,									// disable auto map
 				tileset.firstGID						// IMPORTANT! set the starting tile id to the first tile id of the tileset
 			);
 			
