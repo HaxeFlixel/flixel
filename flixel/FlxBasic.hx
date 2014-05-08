@@ -46,7 +46,7 @@ class FlxBasic implements IFlxDestroyable
 	/**
 	 * Enum that informs the collision system which type of object this is (to avoid expensive type casting).
 	 */
-	public var collisionType(default, null):FlxCollisionType = FlxCollisionType.NONE;
+	public var collisionType(default, null):FlxCollisionType = NONE;
 	
 	public function new() {}
 	

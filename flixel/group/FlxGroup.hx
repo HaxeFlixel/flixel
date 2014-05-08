@@ -48,14 +48,14 @@ class FlxGroup extends FlxTypedGroup<FlxBasic>
 	private static inline function resolveGroup(ObjectOrGroup:FlxBasic):FlxTypedGroup<FlxBasic>
 	{
 		var group:FlxTypedGroup<FlxBasic> = null;
-		if ((ObjectOrGroup.collisionType == FlxCollisionType.SPRITEGROUP) || 
-		    (ObjectOrGroup.collisionType == FlxCollisionType.GROUP))
+		if ((ObjectOrGroup.collisionType == SPRITEGROUP) || 
+		    (ObjectOrGroup.collisionType == GROUP))
 		{
-			if (ObjectOrGroup.collisionType == FlxCollisionType.GROUP)
+			if (ObjectOrGroup.collisionType == GROUP)
 			{
 				group = cast ObjectOrGroup;
 			}
-			else if (ObjectOrGroup.collisionType == FlxCollisionType.SPRITEGROUP)
+			else if (ObjectOrGroup.collisionType == SPRITEGROUP)
 			{
 				group = cast cast(ObjectOrGroup, FlxSpriteGroup).group;
 			}

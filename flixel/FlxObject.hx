@@ -98,11 +98,11 @@ class FlxObject extends FlxBasic
 		}
 		
 		//If one of the objects is a tilemap, just pass it off.
-		if (Object1.collisionType == FlxCollisionType.TILEMAP)
+		if (Object1.collisionType == TILEMAP)
 		{
 			return cast(Object1, FlxTilemap).overlapsWithCallback(Object2, separateX);
 		}
-		if (Object2.collisionType == FlxCollisionType.TILEMAP)
+		if (Object2.collisionType == TILEMAP)
 		{
 			return cast(Object2, FlxTilemap).overlapsWithCallback(Object1, separateX, true);
 		}
@@ -211,11 +211,11 @@ class FlxObject extends FlxBasic
 		}
 		
 		//If one of the objects is a tilemap, just pass it off.
-		if (Object1.collisionType == FlxCollisionType.TILEMAP)
+		if (Object1.collisionType == TILEMAP)
 		{
 			return cast(Object1, FlxTilemap).overlapsWithCallback(Object2, separateY);
 		}
-		if (Object2.collisionType == FlxCollisionType.TILEMAP)
+		if (Object2.collisionType == TILEMAP)
 		{
 			return cast(Object2, FlxTilemap).overlapsWithCallback(Object1, separateY, true);
 		}
@@ -488,7 +488,7 @@ class FlxObject extends FlxBasic
 	 */
 	private function initVars():Void
 	{
-		collisionType = FlxCollisionType.OBJECT;
+		collisionType = OBJECT;
 		last = FlxPoint.get(x, y);
 		scrollFactor = FlxPoint.get(1, 1);
 		_point = FlxPoint.get();
@@ -603,7 +603,7 @@ class FlxObject extends FlxBasic
 			return FlxGroup.overlaps(overlapsCallback, group, 0, 0, InScreenSpace, Camera);
 		}
 		
-		if (ObjectOrGroup.collisionType == FlxCollisionType.TILEMAP)
+		if (ObjectOrGroup.collisionType == TILEMAP)
 		{
 			//Since tilemap's have to be the caller, not the target, to do proper tile-based collisions,
 			// we redirect the call to the tilemap overlap here.
@@ -651,7 +651,7 @@ class FlxObject extends FlxBasic
 			return FlxGroup.overlaps(overlapsAtCallback, group, X, Y, InScreenSpace, Camera);
 		}
 		
-		if (ObjectOrGroup.collisionType == FlxCollisionType.TILEMAP)
+		if (ObjectOrGroup.collisionType == TILEMAP)
 		{
 			//Since tilemap's have to be the caller, not the target, to do proper tile-based collisions,
 			// we redirect the call to the tilemap overlap here.

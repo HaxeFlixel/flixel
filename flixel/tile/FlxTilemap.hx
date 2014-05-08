@@ -209,7 +209,7 @@ class FlxTilemap extends FlxObject
 	{
 		super();
 		
-		collisionType = FlxCollisionType.TILEMAP;
+		collisionType = TILEMAP;
 		
 		_buffers = new Array<FlxTilemapBuffer>();
 		_flashPoint = new Point();
@@ -864,8 +864,8 @@ class FlxTilemap extends FlxObject
 	
 	private inline function tilemapOverlapsCallback(ObjectOrGroup:FlxBasic, X:Float = 0, Y:Float = 0, InScreenSpace:Bool = false, ?Camera:FlxCamera):Bool
 	{
-		if ((ObjectOrGroup.collisionType == FlxCollisionType.OBJECT) || 
-		    (ObjectOrGroup.collisionType == FlxCollisionType.TILEMAP))
+		if ((ObjectOrGroup.collisionType == OBJECT) || 
+		    (ObjectOrGroup.collisionType == TILEMAP))
 		{
 			return overlapsWithCallback(cast(ObjectOrGroup, FlxObject));
 		}
@@ -904,8 +904,8 @@ class FlxTilemap extends FlxObject
 	
 	private inline function tilemapOverlapsAtCallback(ObjectOrGroup:FlxBasic, X:Float, Y:Float, InScreenSpace:Bool, Camera:FlxCamera):Bool
 	{
-		if (ObjectOrGroup.collisionType == FlxCollisionType.OBJECT || 
-		    ObjectOrGroup.collisionType == FlxCollisionType.TILEMAP)
+		if (ObjectOrGroup.collisionType == OBJECT || 
+		    ObjectOrGroup.collisionType == TILEMAP)
 		{
 			return overlapsWithCallback(cast(ObjectOrGroup, FlxObject), null, false, _point.set(X, Y));
 		}

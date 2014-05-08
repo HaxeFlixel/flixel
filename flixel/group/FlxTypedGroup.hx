@@ -42,7 +42,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		
 		maxSize = Std.int(Math.abs(MaxSize));
 		
-		collisionType = FlxCollisionType.GROUP;
+		collisionType = GROUP;
 	}
 	
 	/**
@@ -320,7 +320,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			
 			if (basic != null)
 			{
-				if (Recurse && basic.collisionType == FlxCollisionType.GROUP)
+				if (Recurse && basic.collisionType == GROUP)
 				{
 					(cast basic).setAll(VariableName, Value, Recurse);
 				}
@@ -353,7 +353,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			
 			if (basic != null)
 			{
-				if (Recurse && (basic.collisionType == FlxCollisionType.GROUP))
+				if (Recurse && (basic.collisionType == GROUP))
 				{
 					(cast(basic, FlxTypedGroup<Dynamic>)).callAll(FunctionName, Args, Recurse);
 				}
