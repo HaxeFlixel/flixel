@@ -9,6 +9,7 @@ import flixel.input.gamepad.FlxGamepad;
 import flixel.input.gamepad.XboxButtonID;
 import flixel.ui.FlxButton;
 import flixel.ui.FlxVirtualPad;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxTimer;
 #if (android && OUYA)
@@ -97,7 +98,7 @@ class Player extends FlxSprite
 		super.destroy();
 		
 		#if android
-		virtualPad = FlxG.safeDestroy(virtualPad);
+		virtualPad = FlxDestroyUtil.destroy(virtualPad);
 		#end
 		
 		_bullets = null;
