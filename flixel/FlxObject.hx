@@ -348,7 +348,7 @@ class FlxObject extends FlxBasic
 	 * Only affects tilesheet rendering and rendering using BitmapData.draw() in blitting.
 	 * (copyPixels() only renders on whole pixels by nature). Causes draw() to be used if false, which is more expensive.
 	 */
-	public var pixelPerfectRender(default, set):Bool = true;
+	public var pixelPerfectRender(default, set):Null<Bool>;
 	/**
 	 * Set the angle of a sprite to rotate it. WARNING: rotating sprites decreases rendering
 	 * performance for this sprite by a factor of 10x (in Flash target)!
@@ -880,7 +880,7 @@ class FlxObject extends FlxBasic
 		var boundingBoxX:Float = x - (Camera.scroll.x * scrollFactor.x); //copied from getScreenXY()
 		var boundingBoxY:Float = y - (Camera.scroll.y * scrollFactor.y);
 		
-		if (pixelPerfectRender)
+		if (isPixelPerfect(Camera))
 		{
 			boundingBoxX = Math.floor(boundingBoxX);
 			boundingBoxY = Math.floor(boundingBoxY);
@@ -950,6 +950,15 @@ class FlxObject extends FlxBasic
 			LabelValuePair.weak("h", height), 
 			LabelValuePair.weak("visible", visible), 
 			LabelValuePair.weak("velocity", velocity)]);
+	}
+
+	/**
+	 * Check if object is rendered pexel perfect on a specific camera.
+	 */
+	public function isPixelPerfect(Camera:FlxCamera = null):Bool
+	{
+		if (Camera == null) Camera = FlxG.camera;
+		return pixelPerfectRender == null ? Camera.pixelPerfect : pixelPerfectRender;
 	}
 	
 		private function set_x(NewX:Float):Float

@@ -1644,8 +1644,8 @@ class FlxTilemap extends FlxObject
 					drawX = _helperPoint.x + (columnIndex % widthInTiles) * _scaledTileWidth;
 					drawY = _helperPoint.y + Math.floor(columnIndex / widthInTiles) * _scaledTileHeight;
 					
-					currDrawData[currIndex++] = pixelPerfectRender ? Math.floor(drawX) : drawX;
-					currDrawData[currIndex++] = pixelPerfectRender ? Math.floor(drawY) : drawY;
+					currDrawData[currIndex++] = isPixelPerfect(Camera) ? Math.floor(drawX) : drawX;
+					currDrawData[currIndex++] = isPixelPerfect(Camera) ? Math.floor(drawY) : drawY;
 					currDrawData[currIndex++] = tileID;
 					
 					// Tilemap tearing hack
