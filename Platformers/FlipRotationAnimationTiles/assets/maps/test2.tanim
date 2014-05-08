@@ -34,7 +34,7 @@
 				<frame id="456" />
 				<frame id="451" />
 				<frame id="453" />
-				<frame id="451" flipHorizontal="true" rotation="90" />
+				<frame id="451" flipX="true" rotation="90" />
 				<frame id="451" rotation="270" />
 			</animation>
 		</tile>
@@ -42,43 +42,43 @@
 			<animation id="bubbles2" speed="1.7">
 				<frame id="452" />
 				<frame id="453" />
-				<frame id="453" flipVertical="true" />
+				<frame id="453" flipY="true" />
 			</animation>
 		</tile>
 		<tile id="501">
 			<animation id="cascade6" speed="5">
 				<frame id="501" />
-				<frame id="503" flipHorizontal="true" />
+				<frame id="503" flipX="true" />
 			</animation>
 		</tile>
 		<tile id="502">
 			<animation id="cascade7" speed="5">
 				<frame id="502" />
-				<frame id="502" flipHorizontal="true" />
+				<frame id="502" flipX="true" />
 			</animation>
 		</tile>
 		<tile id="503">
 			<animation id="cascade8" speed="5">
 				<frame id="503"    />
-				<frame id="501" flipHorizontal="true"   />
+				<frame id="501" flipX="true"   />
 			</animation>
 		</tile>
 		<tile id="533">
 			<animation id="cascade9" speed="5">
 				<frame id="533" />
-				<frame id="535" flipHorizontal="true" />
+				<frame id="535" flipX="true" />
 			</animation>
 		</tile>
 		<tile id="534">
 			<animation id="cascade10" speed="5">
 				<frame id="534" />
-				<frame id="534" flipHorizontal="true" />
+				<frame id="534" flipX="true" />
 			</animation>
 		</tile>
 		<tile id="535">
 			<animation id="cascade11" speed="5">
 				<frame id="535" />
-				<frame id="533" flipHorizontal="true" />
+				<frame id="533" flipX="true" />
 			</animation>
 		</tile>
 		<tile id="565">
@@ -98,7 +98,7 @@
 		<tile id="732">
 			<animation id="torch2" speed="8" randomizeSpeed="3">
 				<frame id="732" />
-				<frame id="732" flipHorizontal="true" />
+				<frame id="732" flipX="true" />
 			</animation>
 		</tile>
 		<tile id="800">
