@@ -743,8 +743,6 @@ class FlxSprite extends FlxObject
 		}
 	#end
 		
-		var simpleRender:Bool = isSimpleRender();
-		
 		for (camera in cameras)
 		{
 			if (!camera.visible || !camera.exists || !isOnScreen(camera))
@@ -768,7 +766,7 @@ class FlxSprite extends FlxObject
 		#end
 			
 #if FLX_RENDER_BLIT
-			if (simpleRender)
+			if (isSimpleRender(camera))
 			{
 				// Floor point to prevent rounding issues
 				_flashPoint.x = Math.ffloor(_point.x);
@@ -790,7 +788,7 @@ class FlxSprite extends FlxObject
 				_point.x += origin.x;
 				_point.y += origin.y;
 				
-				if (isPixelPerfect(camera))
+				if (isPixelPerfectRender(camera))
 				{
 					_point.floor();
 				}
@@ -816,7 +814,7 @@ class FlxSprite extends FlxObject
 			var c:Float = ssy;
 			var d:Float = csy;
 			
-			if (!simpleRender)
+			if (!isSimpleRender(camera))
 			{
 				if (_angleChanged && (bakedRotationAngle <= 0))
 				{
@@ -876,7 +874,7 @@ class FlxSprite extends FlxObject
 			_point.x -= x2;
 			_point.y -= y2;
 			
-			if (isPixelPerfect(camera))
+			if (isPixelPerfectRender(camera))
 			{
 				_point.floor();
 			}
@@ -1362,10 +1360,10 @@ class FlxSprite extends FlxObject
 	 * Returns the result of isSimpleRenderBlit() if FLX_RENDER_BLIT is 
 	 * defined or isSimpleRenderTile() if FLX_RENDER_TILE is defined.
 	 */
-	public function isSimpleRender():Bool
+	public function isSimpleRender(?camera:FlxCamera):Bool
 	{ 
 		#if FLX_RENDER_BLIT
-		return isSimpleRenderBlit();
+		return isSimpleRenderBlit(camera);
 		#else
 		return isSimpleRenderTile();
 		#end
@@ -1375,9 +1373,11 @@ class FlxSprite extends FlxObject
 	 * Determines the function used for rendering in blitting: copyPixels() for simple sprites, draw() for complex ones. 
 	 * Sprites are considered simple when they have an angle of 0, a scale of 1, don't use blend and pixelPerfectRender is true.
 	 */
-	public function isSimpleRenderBlit():Bool
+	public function isSimpleRenderBlit(?camera:FlxCamera):Bool
 	{
-		return ((angle == 0) || (bakedRotationAngle > 0)) && (scale.x == 1) && (scale.y == 1) && (blend == null) && pixelPerfectRender;
+		return ((angle == 0) || (bakedRotationAngle > 0)) && 
+			(scale.x == 1) && (scale.y == 1) && (blend == null) && 
+			(camera != null) && isPixelPerfectRender(camera);
 	}
 	
 	/**
@@ -1386,7 +1386,8 @@ class FlxSprite extends FlxObject
 	 */
 	public function isSimpleRenderTile():Bool
 	{
-		return ((angle == 0 && frame.additionalAngle == 0) || (bakedRotationAngle > 0)) && (scale.x == 1) && (scale.y == 1);
+		return ((angle == 0 && frame.additionalAngle == 0) || (bakedRotationAngle > 0)) && 
+			(scale.x == 1) && (scale.y == 1);
 	}
 	
 	/**

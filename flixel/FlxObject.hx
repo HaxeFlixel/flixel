@@ -788,6 +788,18 @@ class FlxObject extends FlxBasic
 	}
 	
 	/**
+	 * Check if object is rendered pexel perfect on a specific camera.
+	 */
+	public function isPixelPerfectRender(?Camera:FlxCamera):Bool
+	{
+		if (Camera == null)
+		{
+			Camera = FlxG.camera;
+		}
+		return pixelPerfectRender == null ? Camera.pixelPerfectRender : pixelPerfectRender;
+	}
+	
+	/**
 	 * Handy function for checking if this object is touching a particular surface.
 	 * Be sure to check it before calling super.update(), as that will reset the flags.
 	 * 
@@ -880,7 +892,7 @@ class FlxObject extends FlxBasic
 		var boundingBoxX:Float = x - (Camera.scroll.x * scrollFactor.x); //copied from getScreenXY()
 		var boundingBoxY:Float = y - (Camera.scroll.y * scrollFactor.y);
 		
-		if (isPixelPerfect(Camera))
+		if (isPixelPerfectRender(Camera))
 		{
 			boundingBoxX = Math.floor(boundingBoxX);
 			boundingBoxY = Math.floor(boundingBoxY);
@@ -939,7 +951,7 @@ class FlxObject extends FlxBasic
 	#end
 	
 	/**
-	 * Convert object to readable string name.  Useful for debugging, save games, etc.
+	 * Convert object to readable string name. Useful for debugging, save games, etc.
 	 */
 	override public function toString():String
 	{
@@ -951,17 +963,8 @@ class FlxObject extends FlxBasic
 			LabelValuePair.weak("visible", visible), 
 			LabelValuePair.weak("velocity", velocity)]);
 	}
-
-	/**
-	 * Check if object is rendered pexel perfect on a specific camera.
-	 */
-	public function isPixelPerfect(Camera:FlxCamera = null):Bool
-	{
-		if (Camera == null) Camera = FlxG.camera;
-		return pixelPerfectRender == null ? Camera.pixelPerfect : pixelPerfectRender;
-	}
 	
-		private function set_x(NewX:Float):Float
+	private function set_x(NewX:Float):Float
 	{
 		return x = NewX;
 	}

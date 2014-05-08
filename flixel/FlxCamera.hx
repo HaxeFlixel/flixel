@@ -20,9 +20,9 @@ import flixel.util.loaders.CachedGraphics;
 import openfl.display.Tilesheet;
 
 /**
- * The camera class is used to display the game's visuals in the Flash player.
- * By default one camera is created automatically, that is the same size as the Flash player.
- * You can add more cameras or even replace the main camera using utilities in FlxG.
+ * The camera class is used to display the game's visuals.
+ * By default one camera is created automatically, that is the same size as window.
+ * You can add more cameras or even replace the main camera using utilities in FlxG.cameras.
  */
 @:allow(flixel.FlxGame)
 class FlxCamera extends FlxBasic
@@ -91,21 +91,23 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Tells the camera to follow this FlxObject object around.
 	 */
-	public var target:FlxObject = null;
+	public var target:FlxObject;
 	/**
 	 * Used to smoothly track the camera as it follows.
 	 */
 	public var followLerp:Float = 0;
 	/**
-	 * You can assign a "dead zone" to the camera in order to better control its movement. The camera will always keep the focus object inside the dead zone, unless it is bumping up against 
-	 * the bounds rectangle's edges. The deadzone's coordinates are measured from the camera's upper left corner in game pixels. For rapid prototyping, you can use the preset deadzones (e.g. STYLE_PLATFORMER) with follow().
+	 * You can assign a "dead zone" to the camera in order to better control its movement.
+	 * The camera will always keep the focus object inside the dead zone, unless it is bumping up against 
+	 * the bounds rectangle's edges. The deadzone's coordinates are measured from the camera's upper left corner in game pixels.
+	 * For rapid prototyping, you can use the preset deadzones (e.g. STYLE_PLATFORMER) with follow().
 	 */
-	public var deadzone:FlxRect = null;
+	public var deadzone:FlxRect;
 	/**
 	 * The edges of the camera's range, i.e. where to stop scrolling.
 	 * Measured in game pixels and world coordinates.
 	 */
-	public var bounds:FlxRect = null;
+	public var bounds:FlxRect;
 	/**
 	 * Stores the basic parallax scrolling values.
 	 */
@@ -149,10 +151,11 @@ class FlxCamera extends FlxBasic
 	public var flashSprite:Sprite;
 
 	/**
-	 * Whether the camera movement is smooth or locked to pixels.
-	 * Default behavior is per-pixel.
+	 * Whether the positions of the objects rendered on this camera are rounded.
+	 * Default is true. If set on individual objects, they ignore the global camera setting.
+	 * WARNING: setting this to false on blitting targets is very expensive.
 	 */
-	public var pixelPerfect:Bool = true;
+	public var pixelPerfectRender:Bool = true;
 	
 	/**
 	 * How wide the camera display is, in game pixels.

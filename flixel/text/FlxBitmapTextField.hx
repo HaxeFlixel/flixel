@@ -210,7 +210,7 @@ class FlxBitmapTextField extends FlxSprite
 			var x1:Float = 0;
 			var y1:Float = 0;
 			
-			if (!isSimpleRender())
+			if (!isSimpleRender(camera))
 			{
 				if (_angleChanged)
 				{

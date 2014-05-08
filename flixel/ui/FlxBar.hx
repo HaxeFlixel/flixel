@@ -4,6 +4,7 @@ import flash.display.BitmapData;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.FlxBasic;
+import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.system.layer.DrawStackItem;
@@ -938,7 +939,7 @@ class FlxBar extends FlxSprite
 			var x2:Float = 0;
 			var y2:Float = 0;
 
-			if (!isSimpleRender())
+			if (!isSimpleRender(camera))
 			{
 				if (_angleChanged)
 				{
@@ -1035,9 +1036,9 @@ class FlxBar extends FlxSprite
 		return Pixels; // hack
 	}
 	
-	override public function isSimpleRender():Bool
+	override public function isSimpleRender(?camera:FlxCamera):Bool
 	{ 
-		return ((angle == 0) && (scale.x == 1) && (scale.y == 1));
+		return (angle == 0) && (scale.x == 1) && (scale.y == 1);
 	}
 	#end
 	
