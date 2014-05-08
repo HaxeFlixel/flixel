@@ -218,6 +218,8 @@ class Player extends FlxSprite
 				velocity.y = - 0.6 * maxVelocity.y;
 			}
 		}
+		else
+			_jumpTime = -1.0;
 	}
 	
 	private function shoot():Void 
