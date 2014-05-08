@@ -787,7 +787,7 @@ class FlxObject extends FlxBasic
 	}
 	
 	/**
-	 * Check if object is rendered pexel perfect on a specific camera.
+	 * Check if object is rendered pixel perfect on a specific camera.
 	 */
 	public function isPixelPerfectRender(?Camera:FlxCamera):Bool
 	{

@@ -1371,12 +1371,14 @@ class FlxSprite extends FlxObject
 	/**
 	 * Determines the function used for rendering in blitting: copyPixels() for simple sprites, draw() for complex ones. 
 	 * Sprites are considered simple when they have an angle of 0, a scale of 1, don't use blend and pixelPerfectRender is true.
+	 * 
+	 * @param	camera	If a camera is passed its pixelPerfectRender flag is taken into account
 	 */
 	public function isSimpleRenderBlit(?camera:FlxCamera):Bool
 	{
-		return ((angle == 0) || (bakedRotationAngle > 0)) && 
-			(scale.x == 1) && (scale.y == 1) && (blend == null) && 
-			(camera != null) && isPixelPerfectRender(camera);
+		return ((angle == 0) || (bakedRotationAngle > 0))
+			&& (scale.x == 1) && (scale.y == 1) && (blend == null)
+			&& (camera == null) ? pixelPerfectRender != false : isPixelPerfectRender(camera);
 	}
 	
 	/**
@@ -1385,8 +1387,8 @@ class FlxSprite extends FlxObject
 	 */
 	public function isSimpleRenderTile():Bool
 	{
-		return ((angle == 0 && frame.additionalAngle == 0) || (bakedRotationAngle > 0)) && 
-			(scale.x == 1) && (scale.y == 1);
+		return ((angle == 0 && frame.additionalAngle == 0) || (bakedRotationAngle > 0))
+			&& (scale.x == 1) && (scale.y == 1);
 	}
 	
 	/**
