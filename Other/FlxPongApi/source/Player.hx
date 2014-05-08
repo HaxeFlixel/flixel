@@ -1,7 +1,6 @@
 package;
 
 import flixel.FlxG;
-import flixel.system.FlxCollisionType;
 import flixel.util.FlxVelocity;
 
 class Player extends PongSprite
