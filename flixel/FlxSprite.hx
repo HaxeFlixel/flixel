@@ -790,7 +790,7 @@ class FlxSprite extends FlxObject
 				_point.x += origin.x;
 				_point.y += origin.y;
 				
-				if (pixelPerfectRender)
+				if (isPixelPerfect(camera))
 				{
 					_point.floor();
 				}
@@ -876,7 +876,7 @@ class FlxSprite extends FlxObject
 			_point.x -= x2;
 			_point.y -= y2;
 			
-			if (pixelPerfectRender)
+			if (isPixelPerfect(camera))
 			{
 				_point.floor();
 			}

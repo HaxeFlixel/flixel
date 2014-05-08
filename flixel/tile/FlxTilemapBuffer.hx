@@ -47,7 +47,7 @@ class FlxTilemapBuffer
 	 * Only affects tilesheet rendering and rendering using BitmapData.draw() in blitting.
 	 * (copyPixels() only renders on whole pixels by nature). Causes draw() to be used if false, which is more expensive.
 	 */
-	public var pixelPerfectRender:Bool = true;
+	public var pixelPerfectRender:Null<Bool> = true;
 	
 	#if FLX_RENDER_BLIT
 	/**
@@ -113,13 +113,13 @@ class FlxTilemapBuffer
 	 */
 	public function draw(Camera:FlxCamera, FlashPoint:Point, ScaleX:Float = 1.0, ScaleY:Float = 1.0):Void
 	{
-		if (pixelPerfectRender)
+		if (isPixelPerfect(Camera))
 		{
 			FlashPoint.x = Math.floor(FlashPoint.x);
 			FlashPoint.y = Math.floor(FlashPoint.y);
 		}
 		
-		if (pixelPerfectRender && (ScaleX == 1.0 && ScaleY == 1.0))
+		if (isPixelPerfect(Camera) && (ScaleX == 1.0 && ScaleY == 1.0))
 		{
 			Camera.buffer.copyPixels(pixels, _flashRect, FlashPoint, null, null, true);
 		}
@@ -175,5 +175,14 @@ class FlxTilemapBuffer
 		}
 		
 		height = Std.int(rows * TileHeight * ScaleY);
+	}
+
+	/**
+	 * Check if object is rendered pexel perfect on a specific camera.
+	 */
+	public function isPixelPerfect(Camera:FlxCamera = null):Bool
+	{
+		if (Camera == null) Camera = FlxG.camera;
+		return pixelPerfectRender == null ? Camera.pixelPerfect : pixelPerfectRender;
 	}
 }

@@ -147,6 +147,12 @@ class FlxCamera extends FlxBasic
 	 * Uses include 3D projection, advanced display list modification, and more.
 	 */
 	public var flashSprite:Sprite;
+
+	/**
+	 * Whether the camera movement is smooth or locked to pixels.
+	 * Default behavior is per-pixel.
+	 */
+	public var pixelPerfect:Bool = true;
 	
 	/**
 	 * How wide the camera display is, in game pixels.
