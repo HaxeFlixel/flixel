@@ -133,7 +133,7 @@ class FlxBasic implements IFlxDestroyable
 /**
  * Types of collidable objects.
  * 
- * Abstracted from an Int type for fast comparrison code:
+ * Abstracted from an Int type for fast comparison code:
  * http://nadako.tumblr.com/post/64707798715/cool-feature-of-upcoming-haxe-3-2-enum-abstracts
  */
 @:enum
