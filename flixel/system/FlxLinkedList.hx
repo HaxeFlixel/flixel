@@ -8,22 +8,23 @@ import flixel.interfaces.IFlxDestroyable;
  * Useful for optimizing time-critical or highly repetitive tasks!
  * See FlxQuadTree for how to use it, IF YOU DARE.
  */
-class FlxList implements IFlxDestroyable
+class FlxLinkedList implements IFlxDestroyable
 {
 	/**
-	 * Pooling mechanism, when FlxLists are destroyed, they get added to this collection, and when they get recycled they get removed.
+	 * Pooling mechanism, when FlxLinkedLists are destroyed, they get added
+	 * to this collection, and when they get recycled they get removed.
 	 */
 	public static var  _NUM_CACHED_FLX_LIST:Int = 0;
-	private static var _cachedListsHead:FlxList;
+	private static var _cachedListsHead:FlxLinkedList;
 	
 	/**
 	 * Recycle a cached Linked List, or creates a new one if needed.
 	 */
-	public static function recycle():FlxList
+	public static function recycle():FlxLinkedList
 	{
 		if (_cachedListsHead != null)
 		{
-			var cachedList:FlxList = _cachedListsHead;
+			var cachedList:FlxLinkedList = _cachedListsHead;
 			_cachedListsHead = _cachedListsHead.next;
 			_NUM_CACHED_FLX_LIST--;
 			
@@ -32,11 +33,12 @@ class FlxList implements IFlxDestroyable
 			return cachedList;
 		}
 		else
-			return new FlxList();
+			return new FlxLinkedList();
 	}
 	
 	/**
-	 * Clear cached List nodes. You might want to do this when loading new levels (probably not though, no need to clear cache unless you run into memory problems).
+	 * Clear cached List nodes. You might want to do this when loading new levels
+	 * (probably not though, no need to clear cache unless you run into memory problems).
 	 */
 	public static function clearCache():Void 
 	{
@@ -58,7 +60,7 @@ class FlxList implements IFlxDestroyable
 	/**
 	 * Stores a reference to the next link in the list.
 	 */
-	public var next:FlxList;
+	public var next:FlxLinkedList;
 	
 	public var exists:Bool = true;
 	

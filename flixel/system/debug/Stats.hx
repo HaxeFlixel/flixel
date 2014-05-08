@@ -6,7 +6,7 @@ import flash.system.System;
 import flash.text.TextField;
 import flixel.FlxG;
 import flixel.system.debug.FlxDebugger;
-import flixel.system.FlxList;
+import flixel.system.FlxLinkedList;
 import flixel.system.FlxQuadTree;
 import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxColor;
@@ -315,7 +315,7 @@ class Stats extends Window
 								+ drawCallsCount + "\n"
 								#end 
 								+ FlxQuadTree._NUM_CACHED_QUAD_TREES + "\n"
-								+ FlxList._NUM_CACHED_FLX_LIST;
+								+ FlxLinkedList._NUM_CACHED_FLX_LIST;
 	}
 	
 	/**
