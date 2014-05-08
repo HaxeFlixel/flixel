@@ -4,6 +4,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxGroup;
+import flixel.group.FlxTypedGroup;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import flixel.util.FlxRandom;
@@ -23,8 +24,8 @@ class PlayState extends FlxState
 	private var _numCrates:Int = 200;
 	
 	//these are the groups that will hold all of our crates
-	private var _crateStormGroup:FlxGroup;
-	private var _crateStormGroup2:FlxGroup;
+	private var _crateStormGroup:FlxTypedGroup<FlxSprite>;
+	private var _crateStormGroup2:FlxTypedGroup<FlxSprite>;
 	private var _crateStormMegaGroup:FlxGroup;
 	
 	// We'll make a sweet flixel logo to ride the elevator for option #2
@@ -59,7 +60,7 @@ class PlayState extends FlxState
 		// kind of scene, but for this demo I wanted to use regular sprites 
 		// (See ParticlesDemo for an example of an emitter with colliding particles)
 		// We'll need a group to place everything in - this helps a lot with collisions
-		_crateStormGroup = new FlxGroup();
+		_crateStormGroup = new FlxTypedGroup<FlxSprite>();
 		
 		for (i in 0..._numCrates) 
 		{
@@ -85,7 +86,7 @@ class PlayState extends FlxState
 		add(_crateStormGroup);
 		
 		// And another group, this time - Red crates
-		_crateStormGroup2 = new FlxGroup();
+		_crateStormGroup2 = new FlxTypedGroup<FlxSprite>();
 		
 		for (i in 0..._numCrates) 
 		{
@@ -166,39 +167,35 @@ class PlayState extends FlxState
 		}
 		
 		// Run through the groups, and if a crate is off screen, get it back!
-		for (i in 0..._numCrates) 
+		for (crate in _crateStormGroup) 
 		{
-			var a = cast(_crateStormGroup.members[i], FlxSprite);
-			
-			if (a.x < -10)
+			if (crate.x < -10)
 			{
-				a.x = 400;
+				crate.x = 400;
 			}
-			if (a.x > 400)
+			if (crate.x > 400)
 			{
-				a.x = -10;
+				crate.x = -10;
 			}
-			if (a.y > 300)
+			if (crate.y > 300)
 			{
-				a.y = -10;
+				crate.y = -10;
 			}
 		}
 		
-		for (i in 0..._numCrates) 
+		for (crate in _crateStormGroup2) 
 		{
-			var a = cast(_crateStormGroup2.members[i], FlxSprite);
-			
-			if (a.x > 400)
+			if (crate.x > 400)
 			{
-				a.x = -10;
+				crate.x = -10;
 			}
-			if (a.x < -10)
+			if (crate.x < -10)
 			{
-				a.x = 400;
+				crate.x = 400;
 			}
-			if (a.y > 300)
+			if (crate.y > 300)
 			{
-				a.y = -10;
+				crate.y = -10;
 			}
 		}
 		
