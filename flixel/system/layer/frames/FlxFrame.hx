@@ -29,7 +29,7 @@ class FlxFrame
 	public var offset(default, null):FlxPoint;
 	public var center(default, null):FlxPoint;
 	
-	public var type(default, null):FrameType;
+	public var type(default, null):FlxFrameType;
 	
 	private var _bitmapData:BitmapData;
 	private var _hReversedBitmapData:BitmapData;
@@ -46,7 +46,7 @@ class FlxFrame
 		offset = FlxPoint.get();
 		center = FlxPoint.get();
 		
-		type = FrameType.REGULAR;
+		type = REGULAR;
 	}
 	
 	public function paintOnBitmap(bmd:BitmapData = null):BitmapData
@@ -168,4 +168,18 @@ class FlxFrame
 		_vReversedBitmapData = FlxDestroyUtil.dispose(_vReversedBitmapData);
 		_hvReversedBitmapData = FlxDestroyUtil.dispose(_hvReversedBitmapData);
 	}
+}
+
+enum FlxFrameType 
+{
+	REGULAR;
+	ROTATED;
+}
+
+enum FlxFrameCollectionType 
+{
+	SINGLE;
+	SPRITESHEET;
+	ATLAS;
+	FONT;
 }

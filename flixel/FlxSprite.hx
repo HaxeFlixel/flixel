@@ -12,7 +12,6 @@ import flixel.FlxG;
 import flixel.system.layer.DrawStackItem;
 import flixel.system.layer.frames.FlxFrame;
 import flixel.system.layer.frames.FlxSpriteFrames;
-import flixel.system.layer.frames.FrameType;
 import flixel.system.layer.Region;
 import flixel.util.FlxAngle;
 import flixel.util.FlxColor;
@@ -828,7 +827,7 @@ class FlxSprite extends FlxObject
 				var sy:Float = scale.y * _facingVerticalMult;
 				
 				// todo: handle different additional angles (since different packers adds different values, e.g. -90 or +90)
-				if (frame.type == FrameType.ROTATED)
+				if (frame.type == ROTATED)
 				{
 					cos = -_sinAngle;
 					sin = _cosAngle;
@@ -1210,7 +1209,7 @@ class FlxSprite extends FlxObject
 	{
 		if (frame != null && dirty)
 		{
-			if (!flipX && !flipY && frame.type == FrameType.REGULAR)
+			if (!flipX && !flipY && frame.type == REGULAR)
 			{
 				framePixels = frame.paintOnBitmap(framePixels);
 			}

@@ -65,7 +65,7 @@ class FlxVirtualPad extends FlxSpriteGroup
 	 * @param 	DPadMode	The D-Pad mode. FULL for example.
 	 * @param 	ActionMode	The action buttons mode. A_B_C for example.
 	 */
-	public function new(?DPad:DPadMode, ?Action:ActionMode)
+	public function new(?DPad:FlxDPadMode, ?Action:FlxActionMode)
 	{	
 		super();
 		scrollFactor.set();
@@ -173,7 +173,8 @@ class FlxVirtualPad extends FlxSpriteGroup
 	}
 }
 
-enum DPadMode {
+enum FlxDPadMode
+{
 	NONE;
 	UP_DOWN;
 	LEFT_RIGHT;
@@ -181,7 +182,8 @@ enum DPadMode {
 	FULL;
 }
 
-enum ActionMode {
+enum FlxActionMode
+{
 	NONE;
 	A;
 	A_B;
