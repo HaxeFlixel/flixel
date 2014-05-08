@@ -14,6 +14,7 @@ import flixel.system.FlxCollisionType;
 import flixel.system.layer.DrawStackItem;
 import flixel.system.layer.frames.FlxSpriteFrames;
 import flixel.system.layer.Region;
+import flixel.tile.FlxTilemap.FlxTilemapAutoTiling;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
@@ -38,20 +39,6 @@ class GraphicAutoAlt extends BitmapData {}
  */
 class FlxTilemap extends FlxObject
 {
-	/**
-	 * No auto-tiling.
-	 */
-	public static inline var OFF:Int = 0;
-	/**
-	 * Good for levels with thin walls that don'tile need interior corner art.
-	 */
-	public static inline var AUTO:Int = 1;
-	/**
-	 * Better for levels with thick walls that look better with interior corner art.
-	 */
-	public static inline var ALT:Int = 2;
-	
-	
 	/** 
  	 * A helper buffer for calculating number of columns and rows when the game size changed
 	 * We are only using its member functions that's why it is an empty instance
@@ -61,7 +48,7 @@ class FlxTilemap extends FlxObject
 	/**
 	 * Set this flag to use one of the 16-tile binary auto-tile algorithms (OFF, AUTO, or ALT).
 	 */
-	public var auto:Int = OFF;
+	public var auto:FlxTilemapAutoTiling = OFF;
 	/**
 	 * Read-only variable, do NOT recommend changing after the map is loaded!
 	 */
@@ -302,9 +289,9 @@ class FlxTilemap extends FlxObject
 	 * @param	CollideIndex	Initializes all tile objects equal to and after this index as allowCollisions = ANY.  Default value is 1.  Ignored if AutoTile is set.  Can override and customize per-tile-type collision behavior using setTileProperties().
 	 * @return	A reference to this instance of FlxTilemap, for chaining as usual :)
 	 */
-	public function loadMap(MapData:Dynamic, TileGraphic:Dynamic, TileWidth:Int = 0, TileHeight:Int = 0, AutoTile:Int = 0, StartingIndex:Int = 0, DrawIndex:Int = 1, CollideIndex:Int = 1):FlxTilemap
+	public function loadMap(MapData:Dynamic, TileGraphic:Dynamic, TileWidth:Int = 0, TileHeight:Int = 0, ?AutoTile:FlxTilemapAutoTiling, StartingIndex:Int = 0, DrawIndex:Int = 1, CollideIndex:Int = 1):FlxTilemap
 	{
-		auto = AutoTile;
+		auto = (AutoTile == null) ? OFF : AutoTile;
 		_startingIndex = (StartingIndex <= 0) ? 0 : StartingIndex;
 		
 		// Populate data if MapData is a CSV string
@@ -382,7 +369,7 @@ class FlxTilemap extends FlxObject
 		var i:Int;
 		totalTiles = _data.length;
 		
-		if (auto > OFF)
+		if (auto != OFF)
 		{
 			_startingIndex = 1;
 			DrawIndex = 1;
@@ -2267,4 +2254,17 @@ class FlxTilemap extends FlxObject
 			}
 		}
 	}
+}
+
+enum FlxTilemapAutoTiling
+{
+	OFF;
+	/**
+	 * Good for levels with thin walls that don'tile need interior corner art.
+	 */
+	AUTO;
+	/**
+	 * Better for levels with thick walls that look better with interior corner art.
+	 */
+	ALT;
 }
