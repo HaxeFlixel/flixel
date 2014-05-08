@@ -656,6 +656,12 @@ class FlxTilemap extends FlxObject
 	 */
 	override public function draw():Void
 	{
+		// don't try to render a tilemap that isn't loaded yet
+		if (cachedGraphics == null)
+		{
+			return;
+		}
+		
 		var cameras = cameras;
 		var camera:FlxCamera;
 		var buffer:FlxTilemapBuffer;
