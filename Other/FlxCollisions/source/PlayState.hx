@@ -86,14 +86,14 @@ class PlayState extends FlxState
 		// Library label in upper left
 		var tx:FlxText = new FlxText(2, 0, Std.int(FlxG.width / 2), Std.string(FlxG.VERSION));
 		tx.scrollFactor.set(0, 0);
-		tx.setBorderStyle(FlxText.BORDER_SHADOW, 0x233e58);
+		tx.setBorderStyle(SHADOW, 0x233e58);
 		tx.color = 0x778ea1;
 		add(tx);
 		
 		// Instructions
 		tx = new FlxText(2, FlxG.height - 12, FlxG.width, "Interact with ARROWS / WASD, or press ENTER for next demo.");
 		tx.scrollFactor.set(0, 0);
-		tx.setBorderStyle(FlxText.BORDER_SHADOW, 0x233e58);
+		tx.setBorderStyle(SHADOW, 0x233e58);
 		tx.setFormat(null, 8, 0x778ea1, "center");
 		add(tx);
 	}

@@ -69,7 +69,7 @@ class PlayState extends FlxState
 		
 		// A text to display the score
 		_scoreText = new FlxText(0, 4, FlxG.width, "Score: " + 0);
-		_scoreText.setFormat(null, 16, FlxColor.WHITE, "center", FlxText.BORDER_OUTLINE);
+		_scoreText.setFormat(null, 16, FlxColor.WHITE, "center", OUTLINE);
 		add(_scoreText);
 		
 		add(bullets);

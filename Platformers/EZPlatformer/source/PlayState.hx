@@ -102,11 +102,11 @@ class PlayState extends FlxState
 		add(_player);
 		
 		_scoreText = new FlxText(2, 2, 80, "SCORE: " + (_coins.countDead() * 100));
-		_scoreText.setFormat(null, 8, FlxColor.WHITE, null, FlxText.BORDER_NONE, FlxColor.BLACK);
+		_scoreText.setFormat(null, 8, FlxColor.WHITE, null, NONE, FlxColor.BLACK);
 		add(_scoreText);
 		
 		_status = new FlxText(FlxG.width - 160 - 2, 2, 160, "Collect coins.");
-		_status.setFormat(null, 8, FlxColor.WHITE, "right", FlxText.BORDER_NONE, FlxColor.BLACK);
+		_status.setFormat(null, 8, FlxColor.WHITE, "right", NONE, FlxColor.BLACK);
 		
 		if (_justDied)
 		{

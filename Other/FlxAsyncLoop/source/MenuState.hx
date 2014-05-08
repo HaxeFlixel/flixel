@@ -7,6 +7,7 @@ import flixel.FlxState;
 import flixel.group.FlxGroup;
 import flixel.text.FlxText;
 import flixel.ui.FlxBar;
+import flixel.util.FlxColor;
 import flixel.util.FlxColorUtil;
 import flixel.util.FlxRandom;
 import flixel.util.FlxSpriteUtil;
@@ -52,7 +53,7 @@ class MenuState extends FlxState
 		
 		// some text for the bar
 		_barText = new FlxText(0, 0, FlxG.width, "Loading... 0 / " + _maxItems);
-		_barText.setFormat(null, 28, 0xffffff, "center", FlxText.BORDER_OUTLINE, 0x000000);
+		_barText.setFormat(null, 28, FlxColor.WHITE, "center", OUTLINE);
 		FlxSpriteUtil.screenCenter(_barText);
 		_grpProgress.add(_barText);
 		

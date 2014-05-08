@@ -130,7 +130,7 @@ class PlayState extends FlxState
 		add(_player);
 		
 		FlxG.camera.setBounds(0, 0, 640, 640, true);
-		FlxG.camera.follow(_player, FlxCamera.STYLE_PLATFORMER);
+		FlxG.camera.follow(_player, PLATFORMER);
 		
 		// We add the bullets to the scene here,
 		// so they're drawn on top of pretty much everything
@@ -156,7 +156,7 @@ class PlayState extends FlxState
 		// that is, the player score, number of spawners left, etc.
 		// First, we'll create a text field for the current score
 		_score = new FlxText(FlxG.width / 4, 0, Math.floor(FlxG.width / 2));
-		_score.setFormat(null, 16, 0xd8eba2, "center", FlxText.BORDER_OUTLINE_FAST, 0x131c1b);
+		_score.setFormat(null, 16, 0xd8eba2, "center", OUTLINE_FAST, 0x131c1b);
 		_hud.add(_score);
 		
 		if (Reg.scores.length < 2)
@@ -503,7 +503,7 @@ class PlayState extends FlxState
 			
 			var ratio:Float = FlxCamera.defaultZoom / 2;
 			var camera:FlxCamera = new FlxCamera(Math.floor(ratio * (10 + (_spawners.length - 1) * 32)), Math.floor(ratio * 10), 24, 24, ratio);
-			camera.follow(sp, FlxCamera.STYLE_NO_DEAD_ZONE);
+			camera.follow(sp, NO_DEAD_ZONE);
 			FlxG.cameras.add(camera);
 		}
 	}

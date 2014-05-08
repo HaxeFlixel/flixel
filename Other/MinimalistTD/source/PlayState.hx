@@ -222,7 +222,7 @@ class PlayState extends FlxState
 		
 		_centerText = new FlxText( -200, FlxG.height / 2 - 20, FlxG.width, "", 16);
 		_centerText.alignment = "center";
-		_centerText.borderStyle = FlxText.BORDER_SHADOW;
+		_centerText.borderStyle = SHADOW;
 		
 		#if !(cpp || neko || js)
 		_centerText.blend = BlendMode.INVERT;

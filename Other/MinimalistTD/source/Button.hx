@@ -46,14 +46,14 @@ class Button extends FlxButton
 			{
 				#if !mobile // "highlight" doesn't make sense on mobile
 				label.color = FlxColor.WHITE;
-				label.borderStyle = FlxText.BORDER_OUTLINE_FAST;
+				label.borderStyle = OUTLINE_FAST;
 				label.borderColor = FlxColor.BLACK;
 				#end
 			}
 			else 
 			{
 				label.color = FlxColor.BLACK;
-				label.borderStyle = FlxText.BORDER_OUTLINE_FAST;
+				label.borderStyle = OUTLINE_FAST;
 				label.borderColor = FlxColor.WHITE;
 			}
 		}

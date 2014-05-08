@@ -31,8 +31,8 @@ class HUD extends FlxGroup
 		
 		add(new FlxText(x, startY, width, "[W,A,S,D] or arrows to control the orb.")); 
 		
-		add(new FlxText(x, startY + 20, 300, "[H] to change camera style."));
-		addGreenText(txtStyle = new FlxText(x, startY + 33, width, "STYLE_LOCKON"));
+		add(new FlxText(x, startY + 20, 300, "[H] to change follow style."));
+		addGreenText(txtStyle = new FlxText(x, startY + 33, width, "LOCKON"));
 		
 		add(new FlxText(x, startY + 55, width, "[U] or [J] to change lerp."));
 		addGreenText(txtLerp = new FlxText(x, startY + 68, width, "Camera lerp: 0"));

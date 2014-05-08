@@ -76,7 +76,7 @@ class PlayState extends FlxState
 		// add in some text so we know what's happening
 		infoText = new FlxText(2, 0, 400, INFO);
 		infoText.y = FlxG.height - infoText.height;
-		infoText.setBorderStyle(FlxText.BORDER_OUTLINE);
+		infoText.setBorderStyle(OUTLINE);
 		add(infoText);
 		
 		// just need this to get the fps, so we display it outside view range

@@ -100,7 +100,7 @@ class PlayState extends FlxState
 		FlxG.worldDivisions = 8;
 		
 		// We ask the Flixel camera subsystem to follow the player sprite with a slight lag or not(lerp)
-		FlxG.camera.follow(_player, FlxCamera.STYLE_PLATFORMER);
+		FlxG.camera.follow(_player, PLATFORMER);
 	}
 	
 	/**

@@ -42,7 +42,7 @@ class PlayState extends FlxState
 		uiBackground.alpha = 0.85;
 		
 		var title:FlxText = new FlxText(UI_POS_X, 2, UI_WIDTH, "FlxCaveGenerator");
-		title.setFormat(null, 16, FlxColor.BROWN, "center", FlxText.BORDER_OUTLINE_FAST, FlxColor.BLACK);
+		title.setFormat(null, 16, FlxColor.BROWN, "center", OUTLINE_FAST, FlxColor.BLACK);
 		
 		var smoothingSlider:FlxSlider = new FlxSlider(this, "_smoothingIterations", FlxG.width - 180, 50, 0, 15, 150);
 		smoothingSlider.nameLabel.text = "Smoothing Iterations";

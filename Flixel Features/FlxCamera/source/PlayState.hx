@@ -3,6 +3,8 @@ package;
 import flixel.addons.nape.FlxNapeSprite;
 import flixel.addons.nape.FlxNapeState;
 import flixel.util.FlxSpriteUtil;
+import haxe.EnumFlags;
+import haxe.EnumTools;
 import nape.Config;
 import nape.geom.Vec2;
 import nape.phys.Body;
@@ -149,7 +151,7 @@ class PlayState extends FlxNapeState
 		add(hud);
 		
 		FlxG.camera.setBounds(LEVEL_MIN_X , LEVEL_MIN_Y , LEVEL_MAX_X + Math.abs(LEVEL_MIN_X), LEVEL_MAX_Y + Math.abs(LEVEL_MIN_Y), true);
-		FlxG.camera.follow(orb, 0, null, 0);
+		FlxG.camera.follow(orb, LOCKON, null, 0);
 		
 		#if TRUE_ZOOM_OUT
 		hudCam = new FlxCamera(440 + 50, 0 + 45, 200, 180); // +50 + 45 For 1/2 zoom out.
@@ -312,20 +314,18 @@ class PlayState extends FlxNapeState
 	}
 	
 	private function setStyle(i:Int) 
-	{
-		var newCamStyle:Int = FlxG.camera.style + i;
-		newCamStyle < 0 ? newCamStyle += 6 : newCamStyle %= 6;
+	{	
+		var newCamStyleIndex:Int = Type.enumIndex(FlxG.camera.style) + i;
+		newCamStyleIndex < 0 ? newCamStyleIndex += 6 : newCamStyleIndex %= 6;
 		
+		var newCamStyle = Type.createEnumIndex(FlxCameraFollowStyle, newCamStyleIndex);
 		FlxG.camera.follow(orb, newCamStyle, null, FlxG.camera.followLerp);
 		
-		switch (newCamStyle) 
+		hud.updateStyle(Std.string(FlxG.camera.style));
+		
+		if (FlxG.camera.style == SCREEN_BY_SCREEN)
 		{
-			case 0:hud.updateStyle("STYLE_LOCKON");
-			case 1:hud.updateStyle("STYLE_PLATFORMER");
-			case 2:hud.updateStyle("STYLE_TOPDOWN");
-			case 3:hud.updateStyle("STYLE_TOPDOWN_TIGHT");
-			case 4:hud.updateStyle("STYLE_SCREEN_BY_SCREEN"); setZoom(1);
-			case 5:hud.updateStyle("STYLE_NO_DEAD_ZONE");
+			setZoom(1);
 		}
 	}
 }

@@ -48,14 +48,14 @@ class PlayState extends FlxState
 		score = new FlxText(2, 2, 80);
 		score.scrollFactor.set(0, 0); 
 		score.borderColor = 0xff000000;
-		score.borderStyle = FlxText.BORDER_SHADOW;
+		score.borderStyle = SHADOW;
 		score.text = "SCORE: " + (coins.countDead() * 100);
 		add(score);
 		
 		status = new FlxText(FlxG.width - 160 - 2, 2, 160);
 		status.scrollFactor.set(0, 0);
 		status.borderColor = 0xff000000;
-		score.borderStyle = FlxText.BORDER_SHADOW;
+		score.borderStyle = SHADOW;
 		status.alignment = "right";
 		
 		if (youDied == false)
