@@ -37,13 +37,6 @@ class FlxBar extends FlxSprite
 	public static inline var FILL_VERTICAL_INSIDE_OUT:Int = 7;
 	public static inline var FILL_VERTICAL_OUTSIDE_IN:Int = 8;
 	
-	private static inline var FRAMES_POSITION_HORIZONTAL:String = "horizontal";
-	private static inline var FRAMES_POSITION_VERTICAL:String = "vertical";
-	
-	private static inline var BAR_FILLED:Int = 1;
-	private static inline var BAR_GRADIENT:Int = 2;
-	private static inline var BAR_IMAGE:Int = 3;
-	
 	/**
 	 * fixedPosition controls if the FlxBar sprite is at a fixed location on screen, or tracking its parent
 	 */
@@ -85,15 +78,12 @@ class FlxBar extends FlxSprite
 	private var _emptyBarFrameID:Int;
 	private var _filledBarFrames:Array<Float>;
 	
-	private var _framesPosition:String;
-	
 	private var _cachedFrontGraphics:CachedGraphics;
 	private var _frontRegion:Region;
 	#else
 	private var _canvas:BitmapData;
 	#end
 	
-	private var _barType:Int;
 	private var _barWidth:Int;
 	private var _barHeight:Int;
 	
@@ -152,8 +142,6 @@ class FlxBar extends FlxSprite
 		origin.set(frameWidth * 0.5, frameHeight * 0.5);
 		_halfWidth = 0.5 * frameWidth;
 		_halfHeight = 0.5 * frameHeight;
-		
-		_framesPosition = FRAMES_POSITION_HORIZONTAL;
 		#end
 		
 		_filledBarPoint = new Point(0, 0);
@@ -306,8 +294,8 @@ class FlxBar extends FlxSprite
 			return;
 		}
 		
-		this._min = min;
-		this._max = max;
+		_min = min;
+		_max = max;
 		
 		_range = max - min;
 		
@@ -355,8 +343,6 @@ class FlxBar extends FlxSprite
 	 */
 	public function createFilledBar(empty:Int, fill:Int, showBorder:Bool = false, border:Int = 0xffffffff):Void
 	{
-		_barType = BAR_FILLED;
-		
 		#if FLX_RENDER_TILE
 		var emptyA:Int = (empty >> 24) & 255;
 		var emptyRGB:Int = empty & 0x00ffffff;
@@ -371,15 +357,6 @@ class FlxBar extends FlxSprite
 		{
 			emptyKey = emptyKey + "border: " + borderA + "." + borderRGB;
 			filledKey = filledKey + "border: " + borderA + "." + borderRGB;
-		}
-		
-		if (_barWidth >= _barHeight)
-		{
-			_framesPosition = FRAMES_POSITION_HORIZONTAL;
-		}
-		else
-		{
-			_framesPosition = FRAMES_POSITION_VERTICAL;
 		}
 		#end
 		
@@ -459,8 +436,6 @@ class FlxBar extends FlxSprite
 	 */
 	public function createGradientBar(empty:Array<Int>, fill:Array<Int>, chunkSize:Int = 1, rotation:Int = 180, showBorder:Bool = false, border:Int = 0xffffffff):Void
 	{
-		_barType = BAR_GRADIENT;
-		
 		#if FLX_RENDER_TILE
 		var colA:Int;
 		var colRGB:Int;
@@ -492,15 +467,6 @@ class FlxBar extends FlxSprite
 			
 			emptyKey = emptyKey + "border: " + borderA + "." + borderRGB;
 			filledKey = filledKey + "border: " + borderA + "." + borderRGB;
-		}
-		
-		if (_barWidth >= _barHeight)
-		{
-			_framesPosition = FRAMES_POSITION_HORIZONTAL;
-		}
-		else
-		{
-			_framesPosition = FRAMES_POSITION_VERTICAL;
 		}
 		#end
 		
@@ -536,13 +502,13 @@ class FlxBar extends FlxSprite
 			#else
 			if (FlxG.bitmap.checkCache(emptyKey) == false)
 			{
-				var _emptyBar:BitmapData = FlxGradient.createGradientBitmapData(_barWidth, _barHeight, empty, chunkSize, rotation);
+				var _emptyBar = FlxGradient.createGradientBitmapData(_barWidth, _barHeight, empty, chunkSize, rotation);
 				FlxG.bitmap.add(_emptyBar, false, emptyKey);
 			}
 			
 			if (FlxG.bitmap.checkCache(filledKey) == false)
 			{
-				var _filledBar:BitmapData = FlxGradient.createGradientBitmapData(_barWidth, _barHeight, fill, chunkSize, rotation);
+				var _filledBar = FlxGradient.createGradientBitmapData(_barWidth, _barHeight, fill, chunkSize, rotation);
 				FlxG.bitmap.add(_filledBar, false, filledKey);
 			}
 			#end
@@ -620,8 +586,6 @@ class FlxBar extends FlxSprite
 		filledKey += "fillBackground: " + fillBackgroundA + "." + fillBackgroundRGB;
 	#end
 		
-		_barType = BAR_IMAGE;
-		
 		if (empty == null && fill == null)
 		{
 			return;
@@ -643,14 +607,6 @@ class FlxBar extends FlxSprite
 			_barWidth = emptyBitmapData.width;
 			_barHeight = emptyBitmapData.height;
 			
-			if (_barWidth >= _barHeight)
-			{
-				_framesPosition = FRAMES_POSITION_HORIZONTAL;
-			}
-			else
-			{
-				_framesPosition = FRAMES_POSITION_VERTICAL;
-			}
 			// TODO: continue from here
 			if (FlxG.bitmap.checkCache(emptyKey) == false)
 			{
@@ -659,7 +615,7 @@ class FlxBar extends FlxSprite
 			
 			if (FlxG.bitmap.checkCache(filledKey) == false)
 			{
-				var _filledBar:BitmapData = new BitmapData(_barWidth, _barHeight, true, fillBackground);
+				var _filledBar = new BitmapData(_barWidth, _barHeight, true, fillBackground);
 				FlxG.bitmap.add(_filledBar, false, filledKey);
 			}
 		#end
@@ -680,18 +636,9 @@ class FlxBar extends FlxSprite
 			_barWidth = fillBitmapData.width;
 			_barHeight = fillBitmapData.height;
 			
-			if (_barWidth >= _barHeight)
-			{
-				_framesPosition = FRAMES_POSITION_HORIZONTAL;
-			}
-			else
-			{
-				_framesPosition = FRAMES_POSITION_VERTICAL;
-			}
-			
 			if (FlxG.bitmap.checkCache(emptyKey) == false)
 			{
-				var _emptyBar:BitmapData = new BitmapData(_barWidth, _barHeight, true, emptyBackground);
+				var _emptyBar = new BitmapData(_barWidth, _barHeight, true, emptyBackground);
 				FlxG.bitmap.add(_emptyBar, false, emptyKey);
 			}
 			
@@ -716,15 +663,6 @@ class FlxBar extends FlxSprite
 			#else
 			_barWidth = emptyBitmapData.width;
 			_barHeight = emptyBitmapData.height;
-			
-			if (_barWidth >= _barHeight)
-			{
-				_framesPosition = FRAMES_POSITION_HORIZONTAL;
-			}
-			else
-			{
-				_framesPosition = FRAMES_POSITION_VERTICAL;
-			}
 			
 			if (FlxG.bitmap.checkCache(emptyKey) == false)
 			{
