@@ -125,7 +125,7 @@ class Tower extends FlxSprite
 		var firstEnemy:Enemy = null;
 		var enemies:FlxTypedGroup<Enemy> = Reg.PS.enemyGroup;
 		
-		for (enemy in enemies.members)
+		for (enemy in enemies)
 		{
 			if (enemy != null && enemy.alive)
 			{

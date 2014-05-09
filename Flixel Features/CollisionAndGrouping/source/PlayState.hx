@@ -289,11 +289,10 @@ class PlayState extends FlxState
 		_blueGroup = !_blueGroup;
 		_crateStormGroup.visible = _crateStormGroup.exists = !_crateStormGroup.exists;
 		
-		for (i in 0..._numCrates) 
+		for (crate in _crateStormGroup) 
 		{
-			var a = cast(_crateStormGroup.members[i], FlxSprite);
 			// Run through and make them not collide - I'm not sure if this is neccesary
-			a.solid = !a.solid;
+			crate.solid = !crate.solid;
 		}
 		if (_blueGroup && _redGroup) 
 		{
@@ -323,10 +322,9 @@ class PlayState extends FlxState
 		_redGroup = !_redGroup;
 		_crateStormGroup2.visible = _crateStormGroup2.exists = !_crateStormGroup2.exists;
 		
-		for (i in 0..._numCrates) 
+		for (crate in _crateStormGroup2) 
 		{
-			var a = cast(_crateStormGroup2.members[i], FlxSprite);
-			a.solid = !a.solid;
+			crate.solid = !crate.solid;
 		}
 		
 		if (_blueGroup && _redGroup) 

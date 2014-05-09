@@ -32,7 +32,6 @@ import nape.phys.Body;
 
 class Shooter extends FlxGroup
 {
-
 	public static var CB_BULLET:CbType = new CbType();
 	var mouseJoint:DistanceJoint;
 	var impulse = 3000;
@@ -71,11 +70,12 @@ class Shooter extends FlxGroup
 			add(spr);
 		}
 		
-		FlxNapeState.space.listeners.add(new InteractionListener(CbEvent.BEGIN, 
-													 InteractionType.COLLISION, 
-													 Shooter.CB_BULLET,
-													 CbType.ANY_BODY,
-													 onBulletColides));
+		FlxNapeState.space.listeners.add(new InteractionListener(
+			CbEvent.BEGIN, 
+			InteractionType.COLLISION, 
+			Shooter.CB_BULLET,
+			CbType.ANY_BODY,
+			onBulletColides));
 	}
 	
 	function launchProjectile(spr:FlxSprite) 
@@ -83,7 +83,6 @@ class Shooter extends FlxGroup
 		
 		if (disableShooting) 
 			return;
-			
 			
 		var spr:FlxNapeSprite = cast(recycle(FlxNapeSprite), FlxNapeSprite);
 		spr.revive();
@@ -122,8 +121,7 @@ class Shooter extends FlxGroup
 								body.worldPointToLocal(new Vec2(FlxG.mouse.x, FlxG.mouse.y)), 0, 0);
 		
 		mouseJoint.space = FlxNapeState.space;
-	}
-		
+	}	
 	
 	override public function update():Void 
 	{
@@ -214,5 +212,4 @@ class Trail extends FlxEmitter
 			this.emitParticle();
 		}
 	}
-	
 }

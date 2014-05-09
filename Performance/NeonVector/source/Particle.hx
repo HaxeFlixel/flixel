@@ -50,22 +50,21 @@ class Particle extends Entity
 		super.update();
 		if (isGlowing)
 		{
-				var _lifetime:Float = maxLifespan - lifespan;
-				if (_lifetime > 1.25) alpha = 0;
-				else alpha = 0.2 * ((1.25 - _lifetime) / 1.25);
+			var _lifetime:Float = maxLifespan - lifespan;
+			if (_lifetime > 1.25) alpha = 0;
+			else alpha = 0.2 * ((1.25 - _lifetime) / 1.25);
 		}
 		lifespan -= FlxG.elapsed;
-		if(lifespan <= 0 || (velocity.x * velocity.x + velocity.y * velocity.y) < 1) kill();
-		if(!alive) return;
+		if (lifespan <= 0 || (velocity.x * velocity.x + velocity.y * velocity.y) < 1) kill();
+		if (!alive) return;
 		
 		velocity.x = speedDecay * velocity.x;
 		velocity.y = speedDecay * velocity.y;
 		
 		if (type != IGNORE_GRAVITY)
 		{
-			for (i in 0...ScreenState.blackholes.length)
+			for (blackhole in ScreenState.blackholes)
 			{
-				var blackhole:Enemy = cast ScreenState.blackholes.members[i];
 				if (blackhole.alive)
 				{
 					_point.x = blackhole.position.x - position.x;

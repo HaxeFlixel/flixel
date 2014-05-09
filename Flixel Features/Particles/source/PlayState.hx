@@ -194,9 +194,9 @@ class PlayState extends FlxState
 			
 			//Just for the sake of completeness let's go ahead and make this change happen 
 			//to all of the currently emitted particles as well.
-			for (i in 0..._emitter.members.length) 
+			for (particle in _emitter) 
 			{
-				_emitter.members[i].acceleration.y = 200; 
+				particle.acceleration.y = 200; 
 			}
 			
 			topText.text = "Gravity: ON";
@@ -213,9 +213,9 @@ class PlayState extends FlxState
 				_floor.solid = false;
 			}
 			
-			for (i in 0..._emitter.members.length) 
+			for (particle in _emitter) 
 			{
-				_emitter.members[i].acceleration.y = 0;
+				particle.acceleration.y = 0;
 			}
 			
 			topText.text = "Gravity: OFF";

@@ -109,7 +109,7 @@ class PlayState extends FlxState
 		FlxG.overlap(asteroids, _playerShip, asteroidHitsShip);
 		FlxG.collide(asteroids);
 		
-		for (bullet in bullets.members)
+		for (bullet in bullets)
 		{
 			if (bullet.exists)
 			{

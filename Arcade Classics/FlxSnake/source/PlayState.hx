@@ -231,12 +231,7 @@ class PlayState extends FlxState
 		
 		for (i in 0..._headPositions.length)
 		{
-			var segment:FlxObject = cast _snakeBody.members[i];
-			
-			if (segment != null)
-			{
-				segment.setPosition(_headPositions[i].x, _headPositions[i].y);
-			}
+			_snakeBody.members[i].setPosition(_headPositions[i].x, _headPositions[i].y);
 		}
 	}
 }

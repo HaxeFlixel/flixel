@@ -178,7 +178,7 @@ class PlayState extends FlxState
 		toggleHelper(_complexityButton, "Complex", "Simple");
 		
 		// Update the bunnies
-		for (bunny in _bunnies.members)
+		for (bunny in _bunnies)
 		{
 			if (bunny != null)
 			{
@@ -211,7 +211,7 @@ class PlayState extends FlxState
 		toggleHelper(_offScreenButton, "On-Screen", "Off-Screen");
 		
 		// Update the bunnies
-		for (bunny in _bunnies.members)
+		for (bunny in _bunnies)
 		{
 			if (bunny != null)
 			{

@@ -355,7 +355,7 @@ class MenuState extends FlxState
 			_input2.text = " ";
 		}
 		
-		for (g in _allScreens.members) {
+		for (g in _allScreens) {
 			g.visible = false;
 			g.active = false;
 		}

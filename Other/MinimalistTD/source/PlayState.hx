@@ -346,7 +346,7 @@ class PlayState extends FlxState
 				
 				#if !mobile
 				// If the user clicked on a tower, they get the upgrade menu, or the sell menu
-				for (tower in _towerGroup.members)
+				for (tower in _towerGroup)
 				{
 					if (FlxMath.pointInCoordinates(Std.int(FlxG.mouse.x), Std.int(FlxG.mouse.y), Std.int(tower.x), Std.int(tower.y), Std.int(tower.width), Std.int(tower.height)))
 					{
@@ -453,7 +453,8 @@ class PlayState extends FlxState
 		var closestTower:Tower = null;
 		var searchPoint:FlxPoint = FlxPoint.get(X, Y);
 		
-		for (tower in _towerGroup.members) {
+		for (tower in _towerGroup)
+		{
 			var dist:Float = FlxMath.getDistance(searchPoint, tower.getMidpoint());
 			
 			if (dist < minDistance) {
@@ -611,8 +612,7 @@ class PlayState extends FlxState
 			_towerSelected.visible = false;
 			
 			// Remove the indicator for this tower as well
-			
-			for (indicator in towerIndicators.members)
+			for (indicator in towerIndicators)
 			{
 				if (indicator.x == _towerSelected.getMidpoint().x - 1 && indicator.y == _towerSelected.getMidpoint().y - 1) {
 					towerIndicators.remove(indicator, true);
@@ -622,7 +622,6 @@ class PlayState extends FlxState
 			}
 			
 			// If there are no towers, having the tutorial text and sell button is a bit superfluous
-			
 			if (_towerGroup.countLiving() == -1 && _towerGroup.countDead() == -1)
 			{
 				_sellButton.visible = false;
@@ -633,19 +632,15 @@ class PlayState extends FlxState
 			}
 			
 			// Give the player their money back
-			
 			money += _towerSelected.value;
 			
 			// Revert the next tower price
-			
 			towerPrice = Math.ceil(towerPrice / 1.3);
 			
 			// Null out the removed tower
-			
 			_towerSelected = null;
 			
 			// Go back to the general menu
-			
 			toggleMenus(General);
 		}
 		else
@@ -681,7 +676,8 @@ class PlayState extends FlxState
 	 */
 	private function resetCallback(Skip:Bool = false):Void
 	{
-		if (!_guiGroup.visible && !Skip) {
+		if (!_guiGroup.visible && !Skip)
+		{
 			return;
 		}
 		
@@ -697,13 +693,15 @@ class PlayState extends FlxState
 	{
 		// Can't place towers on GUI
 		
-		if (FlxG.mouse.y > FlxG.height - 16) {
+		if (FlxG.mouse.y > FlxG.height - 16)
+		{
 			return;
 		}
 		
 		// Can't buy towers without money
 		
-		if (money < towerPrice) {
+		if (money < towerPrice)
+		{
 			FlxG.sound.play("deny");
 			
 			toggleMenus(General);
@@ -717,8 +715,10 @@ class PlayState extends FlxState
 		
 		// Can't place towers on other towers
 		
-		for (tower in _towerGroup.members) {
-			if (tower.x == xPos && tower.y == yPos) {
+		for (tower in _towerGroup)
+		{
+			if (tower.x == xPos && tower.y == yPos)
+			{
 				FlxG.sound.play("deny");
 				
 				toggleMenus(General);

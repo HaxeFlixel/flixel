@@ -72,7 +72,7 @@ class PlayState extends FlxState
 	{
 		FlxG.collide(tilemap, seekers);
 		
-		for (seeker in seekers.members) 
+		for (seeker in seekers) 
 		{
 			if (!seeker.moving)
 			{

@@ -10,6 +10,7 @@ import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxGroup;
+import flixel.group.FlxTypedGroup;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.util.FlxPoint;
@@ -35,8 +36,8 @@ class ScreenState extends FlxState
 	private var fpsIndex:Int;
 	
 	public static var grid:Grid;
-	public static var blackholes:FlxGroup;
-	private static var particles:FlxGroup;
+	public static var blackholes:FlxTypedGroup<Enemy>;
+	private static var particles:FlxTypedGroup<Particle>;
 	private static var entities:FlxGroup;
 	private static var cursor:FlxSprite;
 	private static var displayText:FlxText;
@@ -45,7 +46,6 @@ class ScreenState extends FlxState
 	
 	override public function create():Void
 	{
-		//FlxG.cameras.bgColor = 0xff131c1b;
 		FlxG.mouse.visible = false;
 		FlxG.fixedTimestep = false;
 		
@@ -62,7 +62,7 @@ class ScreenState extends FlxState
 		grid = new Grid(_gridRect, Std.int(FlxG.width / 20), Std.int(FlxG.height / 20), 8);
 		#end
 		
-		particles = new FlxGroup();
+		particles = new FlxTypedGroup<Particle>();
 		for (i in 0...2500) particles.add(new Particle());
 		
 		entities = new FlxGroup();
@@ -71,7 +71,7 @@ class ScreenState extends FlxState
 		for (i in 0...200) entities.add(new Enemy());
 		add(entities);
 		
-		blackholes = new FlxGroup();
+		blackholes = new FlxTypedGroup<Enemy>();
 		for (i in 0...2) blackholes.add(new Enemy());
 		add(blackholes);
 		
@@ -243,7 +243,7 @@ class ScreenState extends FlxState
 		Particle.index += 1;
 		if (Particle.index >= Particle.max) Particle.index = 0;
 		var _overwritten:Bool = false;
-		var _particle:Particle = cast particles.members[Particle.index];
+		var _particle:Particle = particles.members[Particle.index];
 		if (_particle.exists) _overwritten = true;
 
 		_particle.reset(PositionX, PositionY);
@@ -261,8 +261,8 @@ class ScreenState extends FlxState
 		var _mixedColor:UInt=0;
 		if (BlendColor < 0) 
 		{
-				BlendColor = _mixedColor = Color;
-				_mixColors = false;
+			BlendColor = _mixedColor = Color;
+			_mixColors = false;
 		}
 		for (i in 0...FloatOfParticles)
 		{

@@ -169,7 +169,7 @@ class PlayState extends FlxState
 		// randomize
 		if (FlxG.keys.justReleased.R) 
 		{
-			for (obj in aliens.members) 
+			for (obj in aliens) 
 			{
 				// Don't randomize the player's position
 				if (obj != player)
@@ -257,10 +257,12 @@ class PlayState extends FlxState
 	
 	function updateInfo():Void 
 	{
-		infoText.text = INFO.replace("|objects|", Std.string(aliens.countLiving() + 1)) // + 1 for the player that is not in the group
-							.replace("|alpha|", Std.string(alphaTolerance))
-							.replace("|hits|", Std.string(numCollisions))
-							.replace("|fps|", Std.string(fps.currentFPS));
+		infoText.text = INFO
+			// + 1 for the player that is not in the group
+			.replace("|objects|", Std.string(aliens.countLiving() + 1))
+			.replace("|alpha|", Std.string(alphaTolerance))
+			.replace("|hits|", Std.string(numCollisions))
+			.replace("|fps|", Std.string(fps.currentFPS));
 	}
 	
 	function set_rotate(Value:Bool):Bool
