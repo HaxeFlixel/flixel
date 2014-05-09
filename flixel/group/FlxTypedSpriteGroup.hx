@@ -429,6 +429,16 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	}
 	
 	/**
+	 * Iterate through every member
+	 * 
+	 * @return An iterator
+	 */
+	public inline function iterator(?filter:T->Bool):FlxTypedGroupIterator<T>
+	{
+		return new FlxTypedGroupIterator<T>(members, filter);
+	}
+	
+	/**
 	 * Applies a function to all members
 	 * 
 	 * @param   Function   A function that modifies one element at a time
