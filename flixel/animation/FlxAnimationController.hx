@@ -700,12 +700,7 @@ class FlxAnimationController implements IFlxDestroyable
 	 */
 	private inline function get_curAnim():FlxAnimation
 	{
-		var anim:FlxAnimation = null;
-		if ((_curAnim != null) && (_curAnim.delay > 0) && (_curAnim.looped || !_curAnim.finished))
-		{
-			anim = _curAnim;
-		}
-		return anim;
+		return _curAnim;
 	}
 	
 	/**
@@ -714,13 +709,17 @@ class FlxAnimationController implements IFlxDestroyable
 	 */
 	private inline function set_curAnim(Anim:FlxAnimation):FlxAnimation
 	{
-		if (Anim != null && Anim != _curAnim)
+		if (Anim != _curAnim)
 		{
 			if (_curAnim != null) 
 			{
 				_curAnim.stop();
 			}
-			Anim.play();
+			
+			if (Anim != null)
+			{
+				Anim.play();
+			}
 		}
 		return _curAnim = Anim;
 	}
