@@ -7,6 +7,7 @@ import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxGroup;
+import flixel.group.FlxSpriteGroup;
 import flixel.group.FlxTypedGroup;
 import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
@@ -32,7 +33,6 @@ class PlayState extends FlxState
 	private var _tileMap:FlxTilemap;
 	
 	// Major game object storage
-	private var _decorations:FlxGroup;
 	private var _bullets:FlxTypedGroup<Bullet>;
 	private var _player:Player;
 	private var _enemies:FlxTypedGroup<Enemy>;
@@ -40,11 +40,10 @@ class PlayState extends FlxState
 	private var _enemyBullets:FlxTypedGroup<EnemyBullet>;
 	private var _littleGibs:FlxEmitter;
 	private var _bigGibs:FlxEmitter;
-	private var _hud:FlxGroup;
-	private var _gunjam:FlxGroup;
+	private var _hud:FlxSpriteGroup;
+	private var _gunjam:FlxSpriteGroup;
 	
-	// Meta groups, to help speed up collisions-+
-	
+	// Meta groups, to help speed up collisions
 	private var _objects:FlxGroup;
 	private var _hazards:FlxGroup;
 	
@@ -86,25 +85,11 @@ class PlayState extends FlxState
 		_bigGibs.makeParticles(Reg.SPAWNER_GIBS, 50, 20, true, 0.5);
 		
 		// Then we'll set up the rest of our object groups or pools
-		_decorations = new FlxGroup();
-		_enemies = new FlxTypedGroup<Enemy>();
-		
-		#if flash
-		_enemies.maxSize = 50;
-		#else
-		_enemies.maxSize = 25;
-		#end
+		_enemies = new FlxTypedGroup<Enemy>(50);
 		_spawners = new FlxTypedGroup<Spawner>();
-		_hud = new FlxGroup();
-		_enemyBullets = new FlxTypedGroup<EnemyBullet>();
-		#if flash
-		_enemyBullets.maxSize = 100;
-		#else
-		_enemyBullets.maxSize = 50;
-		#end
-		
-		_bullets = new FlxTypedGroup<Bullet>();
-		_bullets.maxSize = 20;
+		_hud = new FlxSpriteGroup();
+		_enemyBullets = new FlxTypedGroup<EnemyBullet>(100);
+		_bullets = new FlxTypedGroup<Bullet>(20);
 		
 		// Now that we have references to the bullets and metal bits,
 		// we can create the player object.
@@ -122,7 +107,6 @@ class PlayState extends FlxState
 		add(_spawners);
 		add(_littleGibs);
 		add(_bigGibs);
-		add(_decorations);
 		add(_enemies);
 
 		// Then we add the player and set up the scrolling camera,
@@ -156,7 +140,7 @@ class PlayState extends FlxState
 		// that is, the player score, number of spawners left, etc.
 		// First, we'll create a text field for the current score
 		_score = new FlxText(FlxG.width / 4, 0, Math.floor(FlxG.width / 2));
-		_score.setFormat(null, 16, 0xd8eba2, "center", OUTLINE_FAST, 0x131c1b);
+		_score.setFormat(null, 16, 0xd8eba2, "center", OUTLINE, 0x131c1b);
 		_hud.add(_score);
 		
 		if (Reg.scores.length < 2)
@@ -183,19 +167,19 @@ class PlayState extends FlxState
 		_scoreTimer = 0;
 		
 		// Then we create the "gun jammed" notification
-		_gunjam = new FlxGroup();
+		_gunjam = new FlxSpriteGroup();
 		_gunjam.add(new FlxSprite(0, FlxG.height - 22).makeGraphic(FlxG.width, 24, 0xff131c1b));
 		_gunjam.add(new FlxText(0, FlxG.height - 22, FlxG.width, "GUN IS JAMMED").setFormat(null, 16, 0xd8eba2, "center"));
 		_gunjam.visible = false;
 		_hud.add(_gunjam);
 		
-		// After we add all the objects to the HUD, we can go through
-		// and set any property we want on all the objects we added
-		// with this sweet function.  In this case, we want to set
-		// the scroll factors to zero, to make sure the HUD doesn't
-		// wiggle around while we play.
-		_hud.setAll("scrollFactor", FlxPoint.get(0, 0));
-		_hud.setAll("cameras", [FlxG.camera]);
+		// With forEach() we can execute a function on every group member
+		_hud.forEach(function(s:FlxSprite) {
+			// This makes sure the HUD does not move with the camera scroll
+			s.scrollFactor.set(0, 0);
+			// We only want out HUD to display on the main camera
+			s.cameras = [FlxG.camera];
+		});
 		
 		FlxG.sound.playMusic("Mode");
 		
@@ -226,7 +210,6 @@ class PlayState extends FlxState
 	{
 		super.destroy();
 		
-		_decorations = null;
 		_bullets = null;
 		_player = null;
 		_enemies = null;
@@ -237,11 +220,9 @@ class PlayState extends FlxState
 		_hud = null;
 		_gunjam = null;
 		
-		// Meta groups, to help speed up collisions
 		_objects = null;
 		_hazards = null;
 		
-		// HUD/User Interface stuff
 		_score = null;
 		_score2 = null;
 		

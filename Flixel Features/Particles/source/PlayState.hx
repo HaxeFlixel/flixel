@@ -13,9 +13,6 @@ import flixel.util.FlxColor;
 
 class PlayState extends FlxState
 {
-	/**
-	 * Our emmiter
-	 */
 	private var _emitter:FlxEmitter;
 	
 	/**
@@ -115,11 +112,9 @@ class PlayState extends FlxState
 		
 		// Please note that this demo makes the walls themselves not collide, for the sake of simplicity.
 		// Normally you would make the particles have solid = true or false to make them collide or not on creation,
-		// because in a normal environment your particles probably aren't going to change solidity at a mouse 
-		// click. If they did, you would probably be better suited with emitter.setAll("solid", true)
-		// I just don't feel that setAll is applicable here(Since I would still have to toggle the walls anyways)
+		// because in a normal environment your particles probably aren't going to change solidity at a mouse click.
 		
-		// Don't forget to add the group to the state (Like I did :P)
+		// Don't forget to add the group to the state
 		add(_collisionGroup);
 		
 		// Now lets set our emitter free.
