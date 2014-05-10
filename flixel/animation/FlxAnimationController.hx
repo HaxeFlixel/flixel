@@ -166,16 +166,6 @@ class FlxAnimationController implements IFlxDestroyable
 	}
 	
 	/**
-	 * Gets an animation by name
-	 * @param	Name		The name of the animation.
-	 * @return	Animation	FlxAnimation object with the specified name.
-	 */
-	public function get(Name:String):FlxAnimation
-	{
-		return _animations.get(Name);
-	}
-	
-	/**
 	 * Adds a new _animations to the sprite.
 	 * @param	Name		What this animation should be called (e.g. "run").
 	 * @param	Frames		An array of numbers indicating what frames to play in what order (e.g. 1, 2, 3).
@@ -517,7 +507,7 @@ class FlxAnimationController implements IFlxDestroyable
 	
 	/**
   	 * Gets the FlxAnim object with the specified name.
-	*/
+	 */
 	public inline function getByName(Name:String):FlxAnimation
 	{
 		return _animations.get(Name); 
