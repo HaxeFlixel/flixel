@@ -2,6 +2,18 @@
 ------------------------------
 * FlxArrayUtil: removed indexOf()
 * FlxTilemap: fixed pixelPerfectRender not being respected with FLX_RENDER_TILE
+* Changed static inline vars to enums:
+ * FlxCamera follow styles
+ * FlxCamera shake modes
+ * FlxText border styles
+ * FlxTilemap auto-tiling options
+ * FlxBar fill directions
+* FlxCamera: added pixelPerfectRender as a global setting for sprites and tilemaps
+* FlxTypedSpriteGroup: added iterator()
+* FlxTimer, FlxTween, FlxPath: active is now only true when they are active
+* FlxAnimationController:
+ * curAnim does also return animations that have finished now
+ * removed get() 
 
 3.3.3
 ------------------------------
