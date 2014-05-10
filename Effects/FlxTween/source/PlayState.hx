@@ -107,6 +107,10 @@ class PlayState extends FlxState
 		_sprite.loadGraphic(GraphicLogo, true);
 		_sprite.antialiasing = true;
 		
+		// force subpixel rendering for smoother movement 
+		// - important for movement at low speed (like the end of elasticOut)
+		_sprite.pixelPerfectRender = false;
+		
 		// Add a trail effect
 		_trail = new FlxTrail(_sprite, GraphicLogo, 12, 0, 0.4, 0.02);
 		
