@@ -74,7 +74,7 @@ class LogFrontEnd
 			#if !FLX_NO_SOUND_SYSTEM
 			if (Style.errorSound != null)
 			{
-				FlxG.sound.load(FlxAssets.getSound(Style.errorSound).play());
+				FlxG.sound.load(FlxAssets.getSound(Style.errorSound)).play();
 			}
 			#end
 			
