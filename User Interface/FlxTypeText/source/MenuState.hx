@@ -29,7 +29,7 @@ class MenuState extends FlxState
 		// Set a background color
 		FlxG.cameras.bgColor = 0xff131c1b;
 		
-		var square:FlxSprite = new FlxSprite(10, 10);
+		var square = new FlxSprite(10, 10);
 		square.makeGraphic(FlxG.width - 20, FlxG.height - 76, 0xff333333);
 		
 		_typeText = new FlxTypeText(15, 10, FlxG.width - 30, "Hello, and welcome to the FlxTypeText demo. You can press the buttons below and see the different ways to control this class. Enjoy! :)", 16, true);
@@ -50,9 +50,9 @@ class MenuState extends FlxState
 		_status.color = 0x8800AA00;
 		_status.prefix = "Status: ";
 		
-		var effect:FlxSprite = new FlxSprite(10, 10);
-		var bitmapdata:BitmapData = new BitmapData(FlxG.width - 20, FlxG.height - 76, true, 0x88114411);
-		var scanline:BitmapData = new BitmapData(FlxG.width - 20, 1, true, 0x88001100);
+		var effect = new FlxSprite(10, 10);
+		var bitmapdata = new BitmapData(FlxG.width - 20, FlxG.height - 76, true, 0x88114411);
+		var scanline = new BitmapData(FlxG.width - 20, 1, true, 0x88001100);
 		
 		for (i in 0...bitmapdata.height)
 		{
@@ -79,31 +79,27 @@ class MenuState extends FlxState
 		
 		effect.loadGraphic(bitmapdata);
 		
-		var button1:FlxButton = new FlxButton(20, FlxG.height - 60, "Start", startCallback);
-		var button2:FlxButton = new FlxButton(120, FlxG.height - 60, "Pause", pauseCallback);
-		var button3:FlxButton = new FlxButton(220, FlxG.height - 60, "Erase", eraseCallback);
-		var button4:FlxButton = new FlxButton(20, FlxG.height - 30, "Force Start", forceStartCallback);
-		var button5:FlxButton = new FlxButton(120, FlxG.height - 30, "Cursor", cursorCallback);
-		var button6:FlxButton = new FlxButton(220, FlxG.height - 30, "Force Erase", forceEraseCallback);
+		var y:Int = FlxG.height - 53;
+		add(new FlxButton(20, y, "Start", startCallback));
+		add(new FlxButton(120, y, "Pause", pauseCallback));
+		add(new FlxButton(220, y, "Erase", eraseCallback));
+		
+		y += 25;
+		add(new FlxButton(20, y, "Force Start", forceStartCallback));
+		add(new FlxButton(120, y, "Cursor", cursorCallback));
+		add(new FlxButton(220, y, "Force Erase", forceEraseCallback));
 		
 		add(square);
 		add(_typeText);
 		add(_status);
 		add(effect);
 		
-		add(button1);
-		add(button2);
-		add(button3);
-		add(button4);
-		add(button5);
-		add(button6);
-		
 		super.create();
 	}
 	
 	private function startCallback():Void
 	{
-		_typeText.start(0.02, false, false, null, null, onComplete, ["Fully typed"]);
+		_typeText.start(0.02, false, false, null, null, onComplete.bind("Fully typed"));
 	}
 	
 	private function pauseCallback():Void
@@ -113,29 +109,22 @@ class MenuState extends FlxState
 	
 	private function eraseCallback():Void
 	{
-		_typeText.erase(0.01, false, null, null, onComplete, ["Fully erased"]);
+		_typeText.erase(0.01, false, null, null, onComplete.bind("Fully erased"));
 	}
 	
 	private function forceStartCallback():Void
 	{
-		_typeText.start(0.03, true, true, null, null, onComplete, ["Typed, erasing..."]);
+		_typeText.start(0.03, true, true, null, null, onComplete.bind("Typed, erasing..."));
 	}
 	
 	private function cursorCallback():Void
 	{
-		if (_typeText.cursorCharacter == "|")
-		{
-			_typeText.cursorCharacter = "#";
-		}
-		else
-		{
-			_typeText.cursorCharacter = "|";
-		}
+		_typeText.cursorCharacter = (_typeText.cursorCharacter == "|") ? "#" : "|";
 	}
 	
 	private function forceEraseCallback():Void
 	{
-		_typeText.erase(0.02, true, null, null, onComplete, ["Erased"]);
+		_typeText.erase(0.02, true, null, null, onComplete.bind("Erased"));
 	}
 	
 	private function onComplete(Text:String):Void
