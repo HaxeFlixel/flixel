@@ -35,7 +35,7 @@ class LogStyle
 	/**
 	 * A callback function that is called when this LogStyle is used.
 	 */
-	public var callbackFunction:Dynamic;
+	public var callbackFunction:Void->Void;
 	
 	/**
 	 * Create a new LogStyle to be used in conjunction with FlxG.log.advanced()

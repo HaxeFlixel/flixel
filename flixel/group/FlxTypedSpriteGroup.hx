@@ -7,6 +7,8 @@ import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxTypedGroup;
+import flixel.system.FlxAssets.FlxGraphicSource;
+import flixel.system.FlxAssets.FlxTextureSource;
 import flixel.system.layer.frames.FlxFrame;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxPoint;
@@ -910,7 +912,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 * This functionality isn't supported in SpriteGroup
 	 * @return this sprite group
 	 */
-	override public function loadGraphic(Graphic:Dynamic, Animated:Bool = false, Width:Int = 0, Height:Int = 0, Unique:Bool = false, ?Key:String):FlxSprite 
+	override public function loadGraphic(Graphic:FlxGraphicSource, Animated:Bool = false, Width:Int = 0, Height:Int = 0, Unique:Bool = false, ?Key:String):FlxSprite 
 	{
 		return this;
 	}
@@ -919,7 +921,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 * This functionality isn't supported in SpriteGroup
 	 * @return this sprite group
 	 */
-	override public function loadRotatedGraphic(Graphic:Dynamic, Rotations:Int = 16, Frame:Int = -1, AntiAliasing:Bool = false, AutoBuffer:Bool = false, ?Key:String):FlxSprite 
+	override public function loadRotatedGraphic(Graphic:FlxGraphicSource, Rotations:Int = 16, Frame:Int = -1, AntiAliasing:Bool = false, AutoBuffer:Bool = false, ?Key:String):FlxSprite 
 	{
 		#if !FLX_NO_DEBUG
 		FlxG.log.error("loadRotatedGraphic() is not supported in FlxSpriteGroups.");
@@ -943,7 +945,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 * This functionality isn't supported in SpriteGroup
 	 * @return this sprite group
 	 */
-	override public function loadGraphicFromTexture(Data:Dynamic, Unique:Bool = false, ?FrameName:String):FlxSprite 
+	override public function loadGraphicFromTexture(Data:FlxTextureSource, Unique:Bool = false, ?FrameName:String):FlxSprite 
 	{
 		#if !FLX_NO_DEBUG
 		FlxG.log.error("loadGraphicFromTexture() is not supported in FlxSpriteGroups.");

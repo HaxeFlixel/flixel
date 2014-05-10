@@ -83,7 +83,7 @@ class LogFrontEnd
 				FlxG.debugger.visible = true;
 			}
 			
-			if (Style.callbackFunction = null)
+			if (Style.callbackFunction != null)
 			{
 				Style.callbackFunction();
 			}
