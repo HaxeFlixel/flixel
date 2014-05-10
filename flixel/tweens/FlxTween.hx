@@ -325,7 +325,7 @@ class FlxTween implements IFlxDestroyable
 		return manager.add(tween);
 	}
 	
-	public var active:Bool = true;
+	public var active:Bool = false;
 	public var duration:Float = 0;
 	public var ease:EaseFunction;
 	public var complete:CompleteCallback;

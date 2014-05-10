@@ -26,7 +26,7 @@ class FlxTimer implements IFlxDestroyable
 	/**
 	 * Pauses or checks the pause state of the timer.
 	 */
-	public var active:Bool = true;
+	public var active:Bool = false;
 	/**
 	 * Check to see if the timer is finished.
 	 */
@@ -143,6 +143,8 @@ class FlxTimer implements IFlxDestroyable
 	public function cancel():Void
 	{
 		finished = true;
+		active = false;
+		
 		if (manager != null && _inManager)
 		{
 			manager.remove(this);

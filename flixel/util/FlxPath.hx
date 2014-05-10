@@ -83,7 +83,7 @@ class FlxPath implements IFlxDestroyable
 	/**
 	 * Pauses or checks the pause state of the path.
 	 */
-	public var active:Bool = true;
+	public var active:Bool = false;
 	
 	public var onComplete:FlxPath->Void;
 
@@ -431,6 +431,7 @@ class FlxPath implements IFlxDestroyable
 	public function cancel():Void
 	{
 		finished = true;
+		active = false;
 		
 		if (object != null)
 		{
