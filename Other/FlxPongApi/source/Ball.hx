@@ -35,8 +35,8 @@ class Ball extends PongSprite
 		_exhaust = Reg.PS.emitterGroup.recycle(Emitter, [x, y, 2, Reg.med_lite], true);
 		_exhaust.gravity = 0.5;
 		_exhaust.start(false, 4, 0.25);
-		_exhaust.xVelocity = new Bounds( -0.1, 0.1);
-		_exhaust.yVelocity = new Bounds( -0.1, 0.1);
+		_exhaust.xVelocity.set( -0.1, 0.1);
+		_exhaust.yVelocity.set( -0.1, 0.1);
 		_exhaust.setAlpha(0.7, 0.9, 0, 0);
 		
 		_emitter = Reg.PS.emitterGroup.add(new Emitter(Std.int(x), Std.int(y), 1));
