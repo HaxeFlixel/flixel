@@ -620,7 +620,7 @@ class FlxSpriteUtil
 	}
 	
 	/**
-	 * Fade in a sprite.
+	 * Fade in a sprite, tweening alpha to 1.
 	 * 
 	 * @param  sprite 	The object to fade.
 	 * @param  Duration How long the fade will take (in seconds).
@@ -632,22 +632,26 @@ class FlxSpriteUtil
 		{
 			sprite.alpha = 0;
 		}
-		FlxTween.color(sprite, Duration, sprite.color, sprite.color, sprite.alpha, 1, OnComplete != null ? { complete:OnComplete } : null);
+		FlxTween.num(sprite.alpha, 1, Duration, OnComplete != null ? { complete:OnComplete } : null, alphaTween.bind(sprite));
 		return sprite;
 	}
 	
 	/**
-	 * Fade out a sprite.
+	 * Fade out a sprite, tweening alpha to 0.
 	 * 
 	 * @param  sprite 	The object to fade.
 	 * @param  Duration How long the fade will take (in seconds).
 	 * @return The FlxSprite for chaining
 	 */
-	public static inline function fadeOut(sprite:FlxSprite, Duration:Float = 1, ?FadeToBlack:Bool, ?OnComplete:CompleteCallback):FlxSprite
+	public static inline function fadeOut(sprite:FlxSprite, Duration:Float = 1, ?OnComplete:CompleteCallback):FlxSprite
 	{
-		FlxTween.color(sprite, Duration, sprite.color, FadeToBlack ? FlxColor.BLACK : sprite.color, 
-			sprite.alpha, 0, OnComplete != null ? { complete:OnComplete } : null);
+		FlxTween.num(sprite.alpha, 0, Duration, OnComplete != null ? { complete:OnComplete } : null, alphaTween.bind(sprite));
 		return sprite;
+	}
+	
+	private static function alphaTween(sprite:FlxSprite, f:Float):Void
+	{
+		sprite.alpha = f;
 	}
 }
 
