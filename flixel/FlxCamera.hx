@@ -64,15 +64,26 @@ class FlxCamera extends FlxBasic
 	/**
 	 * You can assign a "dead zone" to the camera in order to better control its movement.
 	 * The camera will always keep the focus object inside the dead zone, unless it is bumping up against 
-	 * the bounds rectangle's edges. The deadzone's coordinates are measured from the camera's upper left corner in game pixels.
+	 * the camera bounds. The deadzone's coordinates are measured from the camera's upper left corner in game pixels.
 	 * For rapid prototyping, you can use the preset deadzones (e.g. STYLE_PLATFORMER) with follow().
 	 */
 	public var deadzone:FlxRect;
 	/**
-	 * The edges of the camera's range, i.e. where to stop scrolling.
-	 * Measured in game pixels and world coordinates.
+	 * Lower bound of the cameras scroll on the x axis
 	 */
-	public var bounds:FlxRect;
+	public var minScrollX:Null<Float>;
+	/**
+	 * Upper bound of the cameras scroll on the x axis
+	 */
+	public var maxScrollX:Null<Float>;
+	/**
+	 * Lower bound of the cameras scroll on the y axis
+	 */
+	public var minScrollY:Null<Float>;
+	/**
+	 * Upper bound of the cameras scroll on the y axis
+	 */
+	public var maxScrollY:Null<Float>;
 	/**
 	 * Stores the basic parallax scrolling values.
 	 */
@@ -499,7 +510,6 @@ class FlxCamera extends FlxBasic
 		
 		scroll = FlxDestroyUtil.put(scroll);
 		deadzone = FlxDestroyUtil.put(deadzone);
-		bounds = FlxDestroyUtil.put(bounds);
 		
 		target = null;
 		flashSprite = null;
@@ -525,12 +535,9 @@ class FlxCamera extends FlxBasic
 		}
 		
 		//Make sure we didn't go outside the camera's bounds
-		if (bounds != null)
-		{
-			scroll.x = FlxMath.bound(scroll.x, bounds.left, (bounds.right - width));
-			scroll.y = FlxMath.bound(scroll.y, bounds.top, (bounds.bottom - height));
-		}
-		
+		scroll.x = FlxMath.bound(scroll.x, minScrollX, (maxScrollX != null) ? maxScrollX - width : null);
+		scroll.y = FlxMath.bound(scroll.y, minScrollY, (maxScrollY != null) ? maxScrollY - height : null);
+			
 		updateFlash();
 		updateFade();
 		updateShake();
@@ -875,18 +882,11 @@ class FlxCamera extends FlxBasic
 	 */
 	public function copyFrom(Camera:FlxCamera):FlxCamera
 	{
-		if (Camera.bounds == null)
-		{
-			bounds = null;
-		}
-		else
-		{
-			if (bounds == null)
-			{
-				bounds = FlxRect.get();
-			}
-			bounds.copyFrom(Camera.bounds);
-		}
+		minScrollX = Camera.minScrollX;
+		maxScrollX = Camera.maxScrollX;
+		minScrollY = Camera.minScrollY;
+		maxScrollY = Camera.maxScrollY;
+		
 		target = Camera.target;
 		
 		if (target != null)
@@ -1030,7 +1030,7 @@ class FlxCamera extends FlxBasic
 	}
 	
 	/**
-	 * Specify the boundaries of the level or where the camera is allowed to move.
+	 * Specify the bounding rectangle of where the camera is allowed to move.
 	 * 
 	 * @param	X				The smallest X value of your level (usually 0).
 	 * @param	Y				The smallest Y value of your level (usually 0).
@@ -1040,15 +1040,29 @@ class FlxCamera extends FlxBasic
 	 */
 	public function setBounds(X:Float = 0, Y:Float = 0, Width:Float = 0, Height:Float = 0, UpdateWorld:Bool = false):Void
 	{
-		if (bounds == null)
-		{
-			bounds = FlxRect.get();
-		}
-		bounds.set(X, Y, Width, Height);
 		if (UpdateWorld)
 		{
-			FlxG.worldBounds.copyFrom(bounds);
+			FlxG.worldBounds.set(X, Y, Width, Height);
 		}
+		
+		setIndividualBounds(X, X + Width, Y, Y + Height);
+	}
+	
+	/**
+	 * Specify the individual boundaries of where the camera is allowed to move.
+	 * Setthe boundary of a side to null to leave that side unbounded.
+	 * 
+	 * @param	MinX				The minimum X value the camera can scroll to
+	 * @param	MaxX				The maximum X value the camera can scroll to
+	 * @param	MinY				The minimum Y value the camera can scroll to
+	 * @param	MaxY				The maximum Y value the camera can scroll to
+	 */
+	public function setIndividualBounds(MinX:Null<Float>, MaxX:Null<Float>, MinY:Null<Float>, MaxY:Null<Float>):Void
+	{
+		minScrollX = MinX;
+		maxScrollX = MaxX;
+		minScrollY = MinY;
+		maxScrollY = MaxY;
 		update();
 	}
 	
