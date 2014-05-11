@@ -113,7 +113,7 @@ class PlayState extends FlxState
 		// which will automatically set the boundaries of the world.
 		add(_player);
 		
-		FlxG.camera.setBounds(0, 0, 640, 640, true);
+		FlxG.camera.setScrollBoundsRect(0, 0, 640, 640, true);
 		FlxG.camera.follow(_player, PLATFORMER);
 		
 		// We add the bullets to the scene here,

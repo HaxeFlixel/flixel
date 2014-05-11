@@ -43,7 +43,7 @@ class PlayState extends FlxState
 		add(map.loadMap(Assets.getText("assets/levels/mapCSV_Group1_Map1.csv"), "assets/art/area02_level_tiles2.png", 16, 16));
 		add(ladders.loadMap(Assets.getText("assets/levels/mapCSV_Group1_Ladders.csv"), "assets/art/area02_level_tiles2.png", 16, 16));
 		
-		FlxG.camera.setBounds(0, 0, map.width, map.height);
+		FlxG.camera.setScrollBoundsRect(0, 0, map.width, map.height);
 		FlxG.worldBounds.set(0, 0, map.width, map.height);
 		
 		// Set up the gibs

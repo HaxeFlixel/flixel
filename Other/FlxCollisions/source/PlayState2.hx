@@ -52,7 +52,7 @@ class PlayState2 extends FlxState
 		add(_focus);
 		
 		FlxG.camera.follow(_focus);
-		FlxG.camera.setBounds(0, 0, 640, 480, true);
+		FlxG.camera.setScrollBoundsRect(0, 0, 640, 480, true);
 		
 		// Instructions and stuff
 		var tx:FlxText;

@@ -52,11 +52,11 @@ class Bunny extends FlxSprite
 		
 		if (!PlayState.offScreen)
 		{
-			setBounds();
+			updateBounds();
 		}
 	}
 	
-	private function setBounds():Void
+	private function updateBounds():Void
 	{
 		if (x > (FlxG.width - width))
 		{

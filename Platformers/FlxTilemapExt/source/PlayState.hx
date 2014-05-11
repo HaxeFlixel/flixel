@@ -73,8 +73,7 @@ class PlayState extends FlxState
 		level.setClouds(tempC);
 		
 		// Make the Camera follow the player.
-		// FlxG.camera.follow(_player);
-		FlxG.camera.setBounds(0, 0, 970, 500, true); //Note, the player does weird things when he walks off screen.
+		FlxG.camera.setScrollBoundsRect(0, 0, 970, 500, true);
 		FlxG.camera.follow(_player, PLATFORMER);
 		
 		//HUD

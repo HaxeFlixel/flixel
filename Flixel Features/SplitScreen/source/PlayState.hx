@@ -74,7 +74,7 @@ class PlayState extends FlxState
 	private function createCamera(X:Int, Color:Int, Follow:FlxSprite):Void
 	{
 		var camera:FlxCamera = new FlxCamera(X, 0, _halfWidth, _textY);
-		camera.setBounds(0, 0, _level.width - 8, _textY);
+		camera.setScrollBoundsRect(0, 0, _level.width - 8, _textY);
 		camera.bgColor = Color;
 		camera.follow(Follow);
 		FlxG.cameras.add(camera);

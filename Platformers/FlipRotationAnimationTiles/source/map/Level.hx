@@ -31,7 +31,7 @@ class Level extends TiledMap
 	public var collisionGroup:FlxTypedGroup<FlxObject>;
 	public var characterGroup:FlxTypedGroup<Character>;
 	
-	private var bounds:FlxRect;
+	public var bounds:FlxRect;
 
 	public function new(level:Dynamic, animFile:Dynamic) 
 	{
@@ -135,14 +135,14 @@ class Level extends TiledMap
 		switch(o.type.toLowerCase()) {
 			case "player":
 				var player:Character = new Character(o.name, x, y, "images/chars/"+o.name+".json");
-				player.setBoundsMap(this.getBounds());
+				player.setBoundsMap(bounds);
 				player.controllable = true;
 				FlxG.camera.follow(player);
 				characterGroup.add(player);
 				
 			case "npc":
 				var npc:Character = new Character(o.name, x, y, "images/chars/"+o.name+".json");
-				npc.setBoundsMap(this.getBounds());
+				npc.setBoundsMap(bounds);
 				characterGroup.add(npc);
 				
 			case "collision":
@@ -167,11 +167,6 @@ class Level extends TiledMap
 	public function updateCollisions():Void {
 		FlxG.collide(characterGroup, collisionGroup);
 		FlxG.collide(characterGroup, characterGroup);
-	}
-	
-	public function getBounds():FlxRect 
-	{
-		return bounds;
 	}
 	
 	private inline function isSpecialTile(tile:TiledTile, animations:Dynamic):Bool {

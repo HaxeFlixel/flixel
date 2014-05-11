@@ -35,7 +35,7 @@ class TiledLevel extends TiledMap
 		foregroundTiles = new FlxGroup();
 		backgroundTiles = new FlxGroup();
 		
-		FlxG.camera.setBounds(0, 0, fullWidth, fullHeight, true);
+		FlxG.camera.setScrollBoundsRect(0, 0, fullWidth, fullHeight, true);
 		
 		// Load Tile Maps
 		for (tileLayer in layers)

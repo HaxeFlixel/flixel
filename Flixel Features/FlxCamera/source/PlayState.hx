@@ -150,7 +150,7 @@ class PlayState extends FlxNapeState
 		hud = new HUD();
 		add(hud);
 		
-		FlxG.camera.setBounds(LEVEL_MIN_X , LEVEL_MIN_Y , LEVEL_MAX_X + Math.abs(LEVEL_MIN_X), LEVEL_MAX_Y + Math.abs(LEVEL_MIN_Y), true);
+		FlxG.camera.setScrollBoundsRect(LEVEL_MIN_X , LEVEL_MIN_Y , LEVEL_MAX_X + Math.abs(LEVEL_MIN_X), LEVEL_MAX_Y + Math.abs(LEVEL_MIN_Y), true);
 		FlxG.camera.follow(orb, LOCKON, null, 0);
 		
 		#if TRUE_ZOOM_OUT
@@ -206,7 +206,7 @@ class PlayState extends FlxNapeState
 			#end
 		}
 		
-		FlxG.camera.setBounds(LEVEL_MIN_X - zoomDistDiffX, 
+		FlxG.camera.setScrollBoundsRect(LEVEL_MIN_X - zoomDistDiffX, 
 							   LEVEL_MIN_Y - zoomDistDiffY,
 							   (LEVEL_MAX_X + Math.abs(LEVEL_MIN_X) + zoomDistDiffX * 2),
 							   (LEVEL_MAX_Y + Math.abs(LEVEL_MIN_Y) + zoomDistDiffY * 2),
