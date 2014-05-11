@@ -1008,14 +1008,15 @@ class FlxSprite extends FlxObject
 	}
 	
 	/**
-	 * Replaces all pixels with specified Color with NewColor pixels
+	 * Replaces all pixels with specified Color with NewColor pixels. 
+	 * WARNING: very expensive (especially on big graphics) as it iterates over every single pixel.
 	 * 
 	 * @param	Color				Color to replace
 	 * @param	NewColor			New color
 	 * @param	FetchPositions		Whether we need to store positions of pixels which colors were replaced
 	 * @return	Array replaced pixels positions
 	 */
-	public function replaceColor(Color:Int, NewColor:Int, FetchPositions:Bool = false):Array<FlxPoint>
+	public function replaceColor(Color:UInt, NewColor:Int, FetchPositions:Bool = false):Array<FlxPoint>
 	{
 		var positions:Array<FlxPoint> = null;
 		if (FetchPositions)
@@ -1033,7 +1034,7 @@ class FlxSprite extends FlxObject
 			column = region.startX;
 			while (column < columns)
 			{
-				if (cachedGraphics.bitmap.getPixel32(column, row) == cast Color)
+				if (cachedGraphics.bitmap.getPixel32(column, row) == Color)
 				{
 					cachedGraphics.bitmap.setPixel32(column, row, NewColor);
 					if (FetchPositions)
@@ -1571,16 +1572,19 @@ class FlxSprite extends FlxObject
 	 */
 	private function set_cachedGraphics(Value:CachedGraphics):CachedGraphics
 	{
-		var oldCached:CachedGraphics = cachedGraphics;
-		
-		if ((cachedGraphics != Value) && (Value != null))
+		//If graphics are changing
+		if (cachedGraphics != Value)
 		{
-			Value.useCount++;
-		}
-		
-		if ((oldCached != null) && (oldCached != Value))
-		{
-			oldCached.useCount--;
+			//If new graphic is not null, increase its use count
+			if (Value != null)
+			{
+				Value.useCount++;
+			}
+			//If old graphic is not null, decrease its use count
+			if (cachedGraphics != null)
+			{
+				cachedGraphics.useCount--;
+			}
 		}
 		
 		return cachedGraphics = Value;
