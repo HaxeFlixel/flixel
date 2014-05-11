@@ -534,13 +534,20 @@ class FlxCamera extends FlxBasic
 			updateFollow();
 		}
 		
-		//Make sure we didn't go outside the camera's bounds
-		scroll.x = FlxMath.bound(scroll.x, minScrollX, (maxScrollX != null) ? maxScrollX - width : null);
-		scroll.y = FlxMath.bound(scroll.y, minScrollY, (maxScrollY != null) ? maxScrollY - height : null);
-			
+		updateScroll();	
 		updateFlash();
 		updateFade();
 		updateShake();
+	}
+	
+	/**
+	 * Updates the camera scroll.
+	 */
+	public function updateScroll():Void
+	{
+		//Make sure we didn't go outside the camera's bounds
+		scroll.x = FlxMath.bound(scroll.x, minScrollX, (maxScrollX != null) ? maxScrollX - width : null);
+		scroll.y = FlxMath.bound(scroll.y, minScrollY, (maxScrollY != null) ? maxScrollY - height : null);
 	}
 	
 	private function updateFollow():Void
@@ -1060,6 +1067,7 @@ class FlxCamera extends FlxBasic
 		maxScrollX = MaxX;
 		minScrollY = MinY;
 		maxScrollY = MaxY;
+		updateScroll();
 	}
 	
 	public function setScale(X:Float, Y:Float):Void
