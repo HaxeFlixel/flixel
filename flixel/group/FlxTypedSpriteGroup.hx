@@ -201,12 +201,12 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	
 	override public function update():Void 
 	{
+		group.update();
+		
 		if (moves)
 		{
 			updateMotion();
 		}
-		
-		group.update();
 	}
 	
 	override public function draw():Void 
