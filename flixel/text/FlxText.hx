@@ -75,7 +75,7 @@ class FlxText extends FlxSprite
 	public var alignment(get, set):String;
 	
 	/**
-	 * Use a border style like FlxTextBorderStyle.SHADOW or FlxTextBorderStyle.OUTLINE
+	 * Use a border style
 	 */	
 	public var borderStyle(default, set):FlxTextBorderStyle = NONE;
 	
