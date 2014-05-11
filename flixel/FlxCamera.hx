@@ -1050,7 +1050,7 @@ class FlxCamera extends FlxBasic
 	
 	/**
 	 * Specify the individual boundaries of where the camera is allowed to move.
-	 * Setthe boundary of a side to null to leave that side unbounded.
+	 * Set the boundary of a side to null to leave that side unbounded.
 	 * 
 	 * @param	MinX				The minimum X value the camera can scroll to
 	 * @param	MaxX				The maximum X value the camera can scroll to
