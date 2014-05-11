@@ -1572,16 +1572,19 @@ class FlxSprite extends FlxObject
 	 */
 	private function set_cachedGraphics(Value:CachedGraphics):CachedGraphics
 	{
-		var oldCached:CachedGraphics = cachedGraphics;
-		
-		if ((cachedGraphics != Value) && (Value != null))
+		//If graphics are changing
+		if (cachedGraphics != Value)
 		{
-			Value.useCount++;
-		}
-		
-		if ((oldCached != null) && (oldCached != Value))
-		{
-			oldCached.useCount--;
+			//If new graphic is not null, increase its use count
+			if (Value != null)
+			{
+				Value.useCount++;
+			}
+			//If old graphic is not null, decrease its use count
+			if (cachedGraphics != null)
+			{
+				cachedGraphics.useCount--;
+			}
 		}
 		
 		return cachedGraphics = Value;
