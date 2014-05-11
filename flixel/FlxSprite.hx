@@ -9,6 +9,8 @@ import flash.geom.Rectangle;
 import flixel.animation.FlxAnimationController;
 import flixel.FlxBasic;
 import flixel.FlxG;
+import flixel.system.FlxAssets.FlxGraphicSource;
+import flixel.system.FlxAssets.FlxTextureSource;
 import flixel.system.layer.DrawStackItem;
 import flixel.system.layer.frames.FlxFrame;
 import flixel.system.layer.frames.FlxSpriteFrames;
@@ -189,7 +191,7 @@ class FlxSprite extends FlxObject
 	 * @param	Y				The initial Y position of the sprite.
 	 * @param	SimpleGraphic	The graphic you want to display (OPTIONAL - for simple stuff only, do NOT use for animated images!).
 	 */
-	public function new(X:Float = 0, Y:Float = 0, ?SimpleGraphic:Dynamic)
+	public function new(X:Float = 0, Y:Float = 0, ?SimpleGraphic:FlxGraphicSource)
 	{
 		super(X, Y);
 		
@@ -300,7 +302,7 @@ class FlxSprite extends FlxObject
 	 * @param	Key			Optional, set this parameter if you're loading BitmapData.
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function loadGraphic(Graphic:Dynamic, Animated:Bool = false, Width:Int = 0, Height:Int = 0, Unique:Bool = false, ?Key:String):FlxSprite
+	public function loadGraphic(Graphic:FlxGraphicSource, Animated:Bool = false, Width:Int = 0, Height:Int = 0, Unique:Bool = false, ?Key:String):FlxSprite
 	{
 		bakedRotationAngle = 0;
 		cachedGraphics = FlxG.bitmap.add(Graphic, Unique, Key);
@@ -358,10 +360,10 @@ class FlxSprite extends FlxObject
 	 * @param	Frame			If the Graphic has a single row of square animation frames on it, you can specify which of the frames you want to use here.  Default is -1, or "use whole graphic."
 	 * @param	AntiAliasing	Whether to use high quality rotations when creating the graphic.  Default is false.
 	 * @param	AutoBuffer		Whether to automatically increase the image size to accomodate rotated corners.  Default is false.  Will create frames that are 150% larger on each axis than the original frame or graphic.
-	 * @param	Key			Optional, set this parameter if you're loading BitmapData.
+	 * @param	Key				Optional, set this parameter if you're loading BitmapData.
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function loadRotatedGraphic(Graphic:Dynamic, Rotations:Int = 16, Frame:Int = -1, AntiAliasing:Bool = false, AutoBuffer:Bool = false, ?Key:String):FlxSprite
+	public function loadRotatedGraphic(Graphic:FlxGraphicSource, Rotations:Int = 16, Frame:Int = -1, AntiAliasing:Bool = false, AutoBuffer:Bool = false, ?Key:String):FlxSprite
 	{
 		//Create the brush and canvas
 		var rows:Int = Std.int(Math.sqrt(Rotations));
@@ -507,9 +509,9 @@ class FlxSprite extends FlxObject
 	 * @param	Data		Atlas data holding links to json-data and atlas image
 	 * @param	Unique		Optional, whether the graphic should be a unique instance in the graphics cache.  Default is false.
 	 * @param	FrameName	Default frame to show. If null then will be used first available frame.
-	 * @return This FlxSprite instance (nice for chaining stuff together, if you're into that).
+	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function loadGraphicFromTexture(Data:Dynamic, Unique:Bool = false, ?FrameName:String):FlxSprite
+	public function loadGraphicFromTexture(Data:FlxTextureSource, Unique:Bool = false, ?FrameName:String):FlxSprite
 	{
 		bakedRotationAngle = 0;
 		
@@ -523,8 +525,9 @@ class FlxSprite extends FlxObject
 		}
 		else if (Std.is(Data, TexturePackerData))
 		{
-			cachedGraphics = FlxG.bitmap.add(Data.assetName, Unique);
-			cachedGraphics.data = cast Data;
+			var textureData:TexturePackerData = cast Data;
+			cachedGraphics = FlxG.bitmap.add(textureData.assetName, Unique);
+			cachedGraphics.data = textureData;
 		}
 		else
 		{
@@ -558,7 +561,7 @@ class FlxSprite extends FlxObject
 	 * @param	Rotations		The number of rotation frames the final sprite should have.  For small sprites this can be quite a large number (360 even) without any problems.
 	 * @param	AntiAliasing	Whether to use high quality rotations when creating the graphic.  Default is false.
 	 * @param	AutoBuffer		Whether to automatically increase the image size to accomodate rotated corners.
-	 * @return This FlxSprite instance (nice for chaining stuff together, if you're into that).
+	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
 	public function loadRotatedGraphicFromTexture(Data:Dynamic, Image:String, Rotations:Int = 16, AntiAliasing:Bool = false, AutoBuffer:Bool = false):FlxSprite
 	{
@@ -588,6 +591,7 @@ class FlxSprite extends FlxObject
 	
 	/**
 	 * This function creates a flat colored square image dynamically.
+	 * 
 	 * @param	Width		The width of the sprite you want to generate.
 	 * @param	Height		The height of the sprite you want to generate.
 	 * @param	Color		Specifies the color of the generated block (ARGB format).

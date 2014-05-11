@@ -10,6 +10,7 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.group.FlxGroup;
 import flixel.group.FlxTypedGroup;
+import flixel.system.FlxAssets;
 import flixel.system.layer.DrawStackItem;
 import flixel.system.layer.frames.FlxSpriteFrames;
 import flixel.system.layer.Region;
@@ -288,7 +289,7 @@ class FlxTilemap extends FlxObject
 	 * @param	CollideIndex	Initializes all tile objects equal to and after this index as allowCollisions = ANY.  Default value is 1.  Ignored if AutoTile is set.  Can override and customize per-tile-type collision behavior using setTileProperties().
 	 * @return	A reference to this instance of FlxTilemap, for chaining as usual :)
 	 */
-	public function loadMap(MapData:Dynamic, TileGraphic:Dynamic, TileWidth:Int = 0, TileHeight:Int = 0, ?AutoTile:FlxTilemapAutoTiling, StartingIndex:Int = 0, DrawIndex:Int = 1, CollideIndex:Int = 1):FlxTilemap
+	public function loadMap(MapData:FlxTilemapSource, TileGraphic:FlxGraphicSource, TileWidth:Int = 0, TileHeight:Int = 0, ?AutoTile:FlxTilemapAutoTiling, StartingIndex:Int = 0, DrawIndex:Int = 1, CollideIndex:Int = 1):FlxTilemap
 	{
 		auto = (AutoTile == null) ? OFF : AutoTile;
 		_startingIndex = (StartingIndex <= 0) ? 0 : StartingIndex;
@@ -299,7 +300,7 @@ class FlxTilemap extends FlxObject
 			// Figure out the map dimensions based on the data string
 			_data = new Array<Int>();
 			var columns:Array<String>;
-			var rows:Array<String> = MapData.split("\n");
+			var rows:Array<String> = cast (MapData, String).split("\n");
 			heightInTiles = rows.length;
 			widthInTiles = 0;
 			var row:Int = 0;
@@ -1240,7 +1241,7 @@ class FlxTilemap extends FlxObject
 	 * @param	CallbackFilter		If you only want the callback to go off for certain classes or objects based on a certain class, set that class here.
 	 * @param	Range				If you want this callback to work for a bunch of different tiles, input the range here.  Default value is 1.
 	 */
-	public function setTileProperties(Tile:Int, AllowCollisions:Int = FlxObject.ANY, ?Callback:FlxObject->FlxObject->Void, ?CallbackFilter:Class<Dynamic>, Range:Int = 1):Void
+	public function setTileProperties(Tile:Int, AllowCollisions:Int = FlxObject.ANY, ?Callback:FlxObject->FlxObject->Void, ?CallbackFilter:Class<FlxObject>, Range:Int = 1):Void
 	{
 		if (Range <= 0)
 		{

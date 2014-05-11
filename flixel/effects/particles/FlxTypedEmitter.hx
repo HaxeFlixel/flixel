@@ -6,6 +6,7 @@ import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.group.FlxTypedGroup;
 import flixel.interfaces.IFlxParticle;
+import flixel.system.FlxAssets.FlxGraphicSource;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRandom;
@@ -219,14 +220,14 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 	 * @param	AutoBuffer		Whether to automatically increase the image size to accomodate rotated corners.  Default is false.  Will create frames that are 150% larger on each axis than the original frame or graphic.
 	 * @return	This FlxEmitter instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function makeParticles(Graphics:Dynamic, Quantity:Int = 50, bakedRotationAngles:Int = 16, Multiple:Bool = false, Collide:Float = 0.8, AutoBuffer:Bool = false):FlxTypedEmitter<T>
+	public function makeParticles(Graphics:FlxGraphicSource, Quantity:Int = 50, bakedRotationAngles:Int = 16, Multiple:Bool = false, Collide:Float = 0.8, AutoBuffer:Bool = false):FlxTypedEmitter<T>
 	{
 		maxSize = Quantity;
 		var totalFrames:Int = 1;
 		
 		if (Multiple)
 		{ 
-			var sprite:FlxSprite = new FlxSprite();
+			var sprite = new FlxSprite();
 			sprite.loadGraphic(Graphics, true);
 			totalFrames = sprite.frames;
 			sprite.destroy();

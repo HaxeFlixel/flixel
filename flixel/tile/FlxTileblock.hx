@@ -3,6 +3,7 @@ package flixel.tile;
 import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.system.FlxAssets.FlxGraphicSource;
 import flixel.system.layer.DrawStackItem;
 import flixel.util.FlxAngle;
 import flixel.util.FlxRandom;
@@ -39,7 +40,7 @@ class FlxTileblock extends FlxSprite
 	 * @param	TileHeight		The height of a single tile in the graphic.
 	 * @param	Empties			The number of "empty" tiles to add to the auto-fill algorithm (e.g. 8 tiles + 4 empties = 1/3 of block will be open holes).
 	 */
-	public function loadTiles(TileGraphic:Dynamic, TileWidth:Int = 0, TileHeight:Int = 0, Empties:Int = 0):FlxTileblock
+	public function loadTiles(TileGraphic:FlxGraphicSource, TileWidth:Int = 0, TileHeight:Int = 0, Empties:Int = 0):FlxTileblock
 	{
 		if (TileGraphic == null)
 		{

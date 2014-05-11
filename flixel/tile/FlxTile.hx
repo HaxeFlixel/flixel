@@ -21,7 +21,7 @@ class FlxTile extends FlxObject
 	 * type matching the filter touched it.
 	 * Defaults to null, set through FlxTilemap.setTileProperties().
 	 */
-	public var filter:Class<Dynamic>;
+	public var filter:Class<FlxObject>;
 	/**
 	 * A reference to the tilemap this tile object belongs to.
 	 */
