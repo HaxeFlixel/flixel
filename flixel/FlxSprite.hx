@@ -9,8 +9,8 @@ import flash.geom.Rectangle;
 import flixel.animation.FlxAnimationController;
 import flixel.FlxBasic;
 import flixel.FlxG;
-import flixel.system.FlxAssets.FlxGraphicSource;
-import flixel.system.FlxAssets.FlxTextureSource;
+import flixel.system.FlxAssets.FlxGraphicAsset;
+import flixel.system.FlxAssets.FlxTextureAsset;
 import flixel.system.layer.DrawStackItem;
 import flixel.system.layer.frames.FlxFrame;
 import flixel.system.layer.frames.FlxSpriteFrames;
@@ -191,7 +191,7 @@ class FlxSprite extends FlxObject
 	 * @param	Y				The initial Y position of the sprite.
 	 * @param	SimpleGraphic	The graphic you want to display (OPTIONAL - for simple stuff only, do NOT use for animated images!).
 	 */
-	public function new(X:Float = 0, Y:Float = 0, ?SimpleGraphic:FlxGraphicSource)
+	public function new(X:Float = 0, Y:Float = 0, ?SimpleGraphic:FlxGraphicAsset)
 	{
 		super(X, Y);
 		
@@ -302,7 +302,7 @@ class FlxSprite extends FlxObject
 	 * @param	Key			Optional, set this parameter if you're loading BitmapData.
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function loadGraphic(Graphic:FlxGraphicSource, Animated:Bool = false, Width:Int = 0, Height:Int = 0, Unique:Bool = false, ?Key:String):FlxSprite
+	public function loadGraphic(Graphic:FlxGraphicAsset, Animated:Bool = false, Width:Int = 0, Height:Int = 0, Unique:Bool = false, ?Key:String):FlxSprite
 	{
 		bakedRotationAngle = 0;
 		cachedGraphics = FlxG.bitmap.add(Graphic, Unique, Key);
@@ -363,7 +363,7 @@ class FlxSprite extends FlxObject
 	 * @param	Key				Optional, set this parameter if you're loading BitmapData.
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function loadRotatedGraphic(Graphic:FlxGraphicSource, Rotations:Int = 16, Frame:Int = -1, AntiAliasing:Bool = false, AutoBuffer:Bool = false, ?Key:String):FlxSprite
+	public function loadRotatedGraphic(Graphic:FlxGraphicAsset, Rotations:Int = 16, Frame:Int = -1, AntiAliasing:Bool = false, AutoBuffer:Bool = false, ?Key:String):FlxSprite
 	{
 		//Create the brush and canvas
 		var rows:Int = Std.int(Math.sqrt(Rotations));
@@ -511,7 +511,7 @@ class FlxSprite extends FlxObject
 	 * @param	FrameName	Default frame to show. If null then will be used first available frame.
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function loadGraphicFromTexture(Data:FlxTextureSource, Unique:Bool = false, ?FrameName:String):FlxSprite
+	public function loadGraphicFromTexture(Data:FlxTextureAsset, Unique:Bool = false, ?FrameName:String):FlxSprite
 	{
 		bakedRotationAngle = 0;
 		

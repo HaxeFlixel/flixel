@@ -9,7 +9,7 @@ import flash.net.URLRequest;
 import flash.utils.ByteArray;
 import flixel.FlxBasic;
 import flixel.FlxG;
-import flixel.system.FlxAssets.FlxSoundSource;
+import flixel.system.FlxAssets.FlxSoundAsset;
 import flixel.system.frontEnds.SoundFrontEnd;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxMath;
@@ -266,7 +266,7 @@ class FlxSound extends FlxBasic
 	 * 
 	 * @return	This FlxSound instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function loadEmbedded(EmbeddedSound:FlxSoundSource, Looped:Bool = false, AutoDestroy:Bool = false, ?OnComplete:Void->Void):FlxSound
+	public function loadEmbedded(EmbeddedSound:FlxSoundAsset, Looped:Bool = false, AutoDestroy:Bool = false, ?OnComplete:Void->Void):FlxSound
 	{
 		cleanup(true);
 		

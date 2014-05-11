@@ -5,7 +5,7 @@ import flash.media.Sound;
 import flash.media.SoundTransform;
 import flixel.FlxG;
 import flixel.group.FlxTypedGroup;
-import flixel.system.FlxAssets.FlxSoundSource;
+import flixel.system.FlxAssets.FlxSoundAsset;
 import flixel.system.FlxSound;
 import flixel.util.FlxMath;
 import openfl.Assets;
@@ -70,7 +70,7 @@ class SoundFrontEnd
 	 * @param	Volume		How loud the sound should be, from 0 to 1.
 	 * @param	Looped		Whether to loop this music.
 	 */
-	public function playMusic(Music:FlxSoundSource, Volume:Float = 1, Looped:Bool = true):Void
+	public function playMusic(Music:FlxSoundAsset, Volume:Float = 1, Looped:Bool = true):Void
 	{
 		if (music == null)
 		{
@@ -98,7 +98,7 @@ class SoundFrontEnd
 	 * @param	URL				Load a sound from an external web resource instead.  Only used if EmbeddedSound = null.
 	 * @return	A FlxSound object.
 	 */
-	public function load(?EmbeddedSound:FlxSoundSource, Volume:Float = 1, Looped:Bool = false, AutoDestroy:Bool = false, AutoPlay:Bool = false, ?URL:String, ?OnComplete:Void->Void):FlxSound
+	public function load(?EmbeddedSound:FlxSoundAsset, Volume:Float = 1, Looped:Bool = false, AutoDestroy:Bool = false, AutoPlay:Bool = false, ?URL:String, ?OnComplete:Void->Void):FlxSound
 	{
 		if ((EmbeddedSound == null) && (URL == null))
 		{

@@ -129,7 +129,7 @@ class BitmapFrontEnd
 	 * @param	Key			Force the cache to use a specific Key to index the bitmap.
 	 * @return	The CachedGraphics we just created.
 	 */
-	public inline function add(Graphic:FlxGraphicSource, Unique:Bool = false, ?Key:String):CachedGraphics
+	public inline function add(Graphic:FlxGraphicAsset, Unique:Bool = false, ?Key:String):CachedGraphics
 	{
 		return addWithSpaces(Graphic, 0, 0, 1, 1, Unique, Key);
 	}
@@ -147,7 +147,7 @@ class BitmapFrontEnd
 	 * @param	Key				Force the cache to use a specific Key to index the bitmap.
 	 * @return	The CachedGraphics we just created.
 	 */
-	public function addWithSpaces(Graphic:FlxGraphicSource, FrameWidth:Int, FrameHeight:Int, SpacingX:Int = 1, SpacingY:Int = 1, Unique:Bool = false, ?Key:String):CachedGraphics
+	public function addWithSpaces(Graphic:FlxGraphicAsset, FrameWidth:Int, FrameHeight:Int, SpacingX:Int = 1, SpacingY:Int = 1, Unique:Bool = false, ?Key:String):CachedGraphics
 	{
 		if (Graphic == null)
 		{
