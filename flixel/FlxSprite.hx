@@ -1579,7 +1579,7 @@ class FlxSprite extends FlxObject
 			{
 				Value.useCount++;
 			}
-			//If old graphic is not null, increase its use count
+			//If old graphic is not null, decrease its use count
 			if ((cachedGraphics != null))
 			{
 				cachedGraphics.useCount--;
