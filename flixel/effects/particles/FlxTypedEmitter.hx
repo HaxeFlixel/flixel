@@ -723,7 +723,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 	 * 
 	 * @param	Object		The FlxObject that you want to sync up with.
 	 */
-	public function at(Object:FlxObject):Void
+	public function focusOn(Object:FlxObject):Void
 	{
 		Object.getMidpoint(_point);
 		
