@@ -1275,7 +1275,7 @@ class FlxTilemap extends FlxObject
 			Camera = FlxG.camera;
 		}
 		
-		Camera.setBounds(x + Border * _scaledTileWidth, y + Border * _scaledTileHeight, width - Border * _scaledTileWidth * 2, height - Border * _scaledTileHeight * 2, UpdateWorld);
+		Camera.setScrollBoundsRect(x + Border * _scaledTileWidth, y + Border * _scaledTileHeight, width - Border * _scaledTileWidth * 2, height - Border * _scaledTileHeight * 2, UpdateWorld);
 	}
 	
 	/**

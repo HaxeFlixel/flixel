@@ -1038,18 +1038,18 @@ class FlxCamera extends FlxBasic
 	 * @param	Height			The largest Y value of your level (usually the level height).
 	 * @param	UpdateWorld		Whether the global quad-tree's dimensions should be updated to match (default: false).
 	 */
-	public function setBounds(X:Float = 0, Y:Float = 0, Width:Float = 0, Height:Float = 0, UpdateWorld:Bool = false):Void
+	public function setScrollBoundsRect(X:Float = 0, Y:Float = 0, Width:Float = 0, Height:Float = 0, UpdateWorld:Bool = false):Void
 	{
 		if (UpdateWorld)
 		{
 			FlxG.worldBounds.set(X, Y, Width, Height);
 		}
 		
-		setIndividualBounds(X, X + Width, Y, Y + Height);
+		setScrollBounds(X, X + Width, Y, Y + Height);
 	}
 	
 	/**
-	 * Specify the individual boundaries of where the camera is allowed to move.
+	 * Specify the bounds of where the camera is allowed to move.
 	 * Set the boundary of a side to null to leave that side unbounded.
 	 * 
 	 * @param	MinX				The minimum X value the camera can scroll to
@@ -1057,7 +1057,7 @@ class FlxCamera extends FlxBasic
 	 * @param	MinY				The minimum Y value the camera can scroll to
 	 * @param	MaxY				The maximum Y value the camera can scroll to
 	 */
-	public function setIndividualBounds(MinX:Null<Float>, MaxX:Null<Float>, MinY:Null<Float>, MaxY:Null<Float>):Void
+	public function setScrollBounds(MinX:Null<Float>, MaxX:Null<Float>, MinY:Null<Float>, MaxY:Null<Float>):Void
 	{
 		minScrollX = MinX;
 		maxScrollX = MaxX;
