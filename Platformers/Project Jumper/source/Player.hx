@@ -270,7 +270,7 @@ class Player extends FlxSprite
 		
 		if (_gibs != null)
 		{
-			_gibs.at(this);
+			_gibs.focusOn(this);
 			_gibs.start(true, 2.80);
 		}
 		

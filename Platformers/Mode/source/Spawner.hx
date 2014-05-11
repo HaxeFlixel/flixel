@@ -108,7 +108,7 @@ class Spawner extends FlxSprite
 		FlxG.camera.flash(0xffd8eba2, 0.65, turnOffSlowMo);
 		FlxG.timeScale = 0.35;
 		makeBot();
-		_gibs.at(this);
+		_gibs.focusOn(this);
 		_gibs.start(true,3);
 		Reg.score += 1000;
 	}

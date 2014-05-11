@@ -118,9 +118,9 @@ class Cutup extends FlxNapeState
 		var laser:Laser = new Laser(source.x, source.y, null, length, deg);
 		lasers.add(laser);
 		
-		var sP:Vec2 = Vec2.get(source.x, source.y);
-		var eP:Vec2 = Vec2.get(groundPoint.x, groundPoint.y+1);	// +1 make sure no tiny gap in between groundPoint and groundY 
-		var ray:Ray = Ray.fromSegment(sP, eP);
+		var sP = Vec2.get(source.x, source.y);
+		var eP = Vec2.get(groundPoint.x, groundPoint.y+1);	// +1 make sure no tiny gap in between groundPoint and groundY 
+		var ray = Ray.fromSegment(sP, eP);
 		if (ray.maxDistance > 5) 
 		{
 			var rayResultList:RayResultList = FlxNapeState.space.rayMultiCast(ray);
@@ -146,12 +146,12 @@ class Cutup extends FlxNapeState
 	private function applyCut(orgPhySpr:FlxNapeSprite, sP:Vec2, eP:Vec2):Void 
 	{
 		var orgBody = orgPhySpr.body;
-		var geomPoly:GeomPoly = new GeomPoly(orgBody.shapes.at(0).castPolygon.worldVerts);
+		var geomPoly = new GeomPoly(orgBody.shapes.at(0).castPolygon.worldVerts);
 		var geomPolyList:GeomPolyList = geomPoly.cut(sP, eP, true, true);
 		
 		// Make current FlxNapeSprite graphic (may rotated) a reference BitmapData
-		var bmp:BitmapData = new BitmapData(Math.ceil(orgBody.bounds.width), Math.ceil(orgBody.bounds.height), true, 0x0);
-		var mat:Matrix = new Matrix();
+		var bmp = new BitmapData(Math.ceil(orgBody.bounds.width), Math.ceil(orgBody.bounds.height), true, 0x0);
+		var mat = new Matrix();
 		mat.translate( -orgPhySpr.origin.x, -orgPhySpr.origin.y);
 		mat.rotate(orgPhySpr.angle * FlxAngle.TO_RAD % 360);
 		mat.translate(orgBody.position.x - orgBody.bounds.x, orgBody.position.y - orgBody.bounds.y);
@@ -161,8 +161,8 @@ class Cutup extends FlxNapeState
 		{
 			for (cutGeomPoly in geomPolyList){ 	
 				// Make a new body in world space
-				var cutPoly:Polygon = new Polygon(cutGeomPoly);
-				var cutBody:Body = new Body(BodyType.DYNAMIC);
+				var cutPoly = new Polygon(cutGeomPoly);
+				var cutBody = new Body(BodyType.DYNAMIC);
 				cutBody.setShapeMaterials(Material.steel());
 				cutBody.shapes.add(cutPoly);
 				cutBody.align();
@@ -172,7 +172,7 @@ class Cutup extends FlxNapeState
 				cutBody.space = FlxNapeState.space;
 				
 				// Sprite has ability to do polygon fill to fit new body's vertices
-				var sprite:Sprite = new Sprite();
+				var sprite = new Sprite();
 				sprite.graphics.beginBitmapFill(bmp,
 					new Matrix(1, 0, 0, 1,
 						orgBody.bounds.x - cutBody.position.x, 

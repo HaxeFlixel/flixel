@@ -145,7 +145,7 @@ class Enemy extends EnemyTemplate
 		
 		if (_gibs != null)
 		{
-			_gibs.at(this);
+			_gibs.focusOn(this);
 			_gibs.start(true, 2.80);
 			FlxG.sound.play("assets/sounds/mondead2" + Reg.SoundExtension, 1, false);
 		}

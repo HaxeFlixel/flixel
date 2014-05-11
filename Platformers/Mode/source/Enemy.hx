@@ -214,7 +214,7 @@ class Enemy extends FlxSprite
 			}
 			// Then, position the jets at the center of the Enemy,
 			// and point the jets the opposite way from where we're moving.
-			_jets.at(this);
+			_jets.focusOn(this);
 			_jets.setXSpeed( -velocity.x - 30, -velocity.x + 30);
 			_jets.setYSpeed( -velocity.y - 30, -velocity.y + 30);
 		}
@@ -271,7 +271,7 @@ class Enemy extends FlxSprite
 		
 		FlxSpriteUtil.flicker(this, 0, 0.02, true);
 		_jets.kill();
-		_gibs.at(this);
+		_gibs.focusOn(this);
 		_gibs.start(true, 3, 0, 20);
 		Reg.score += 200;
 	}
