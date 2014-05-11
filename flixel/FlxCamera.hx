@@ -882,10 +882,7 @@ class FlxCamera extends FlxBasic
 	 */
 	public function copyFrom(Camera:FlxCamera):FlxCamera
 	{
-		minScrollX = Camera.minScrollX;
-		maxScrollX = Camera.maxScrollX;
-		minScrollY = Camera.minScrollY;
-		maxScrollY = Camera.maxScrollY;
+		setScrollBounds(Camera.minScrollX, Camera.maxScrollX, Camera.minScrollY, Camera.maxScrollY);
 		
 		target = Camera.target;
 		
@@ -1063,7 +1060,6 @@ class FlxCamera extends FlxBasic
 		maxScrollX = MaxX;
 		minScrollY = MinY;
 		maxScrollY = MaxY;
-		update();
 	}
 	
 	public function setScale(X:Float, Y:Float):Void
