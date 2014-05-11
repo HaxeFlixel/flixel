@@ -89,7 +89,7 @@ class FlxMath
 	 */
 	public static inline function inBounds(Value:Float, Min:Null<Float>, Max:Null<Float>):Bool
 	{
-		return ((Min == null || Value > Min) && (Max == null || Value < Max));
+		return ((Min == null || Value >= Min) && (Max == null || Value <= Max));
 	}
 	
 	/**
