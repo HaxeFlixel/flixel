@@ -232,10 +232,10 @@ private class FileReference
 }
 #end
 
-typedef FlxSoundSource = OneOfThree<String, Sound, Class<Sound>>;
-typedef FlxGraphicSource = OneOfFive<String, Class<Dynamic>, CachedGraphics, TextureRegion, BitmapData>;
-typedef FlxTextureSource = OneOfTwo<TexturePackerData, CachedGraphics>;
-typedef FlxTilemapSource = OneOfTwo<String, Array<Int>>;
+typedef FlxSoundAsset = OneOfThree<String, Sound, Class<Sound>>;
+typedef FlxGraphicAsset = OneOfFive<String, Class<Dynamic>, CachedGraphics, TextureRegion, BitmapData>;
+typedef FlxTextureAsset = OneOfTwo<TexturePackerData, CachedGraphics>;
+typedef FlxTilemapAsset = OneOfTwo<String, Array<Int>>;
 
 private abstract OneOfTwo<T1, T2>(Dynamic) from T1 from T2 to T1 to T2 { }
 private abstract OneOfThree<T1, T2, T3>(Dynamic) from T1 from T2 from T3 to T1 to T2 to T3 {}
