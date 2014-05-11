@@ -43,7 +43,7 @@ class FlxAngle
 	{
 		var sin:Float = 0;
 		var cos:Float = 0;
-		var radians:Float = Angle * -TO_RAD;
+		var radians:Float = Angle * -TO_RAD; // keep the minus cause sprite angle is clockwise and the mathematical rotation is counter-clockwise
 		while (radians < -Math.PI)
 		{
 			radians += Math.PI * 2;
@@ -109,15 +109,13 @@ class FlxAngle
 		}
 		
 		var dx:Float = X - PivotX;
-		// TODO: Uncomment this line if there will be problems
-		//var dy:Float = PivotY + Y; //Y axis is inverted in flash, normally this would be a subtract operation
 		var dy:Float = Y - PivotY;
 		if (point == null)
 		{
 			point = FlxPoint.get();
 		}
-		point.x = PivotX + cos * dx - sin * dy;
-		point.y = PivotY - sin * dx - cos * dy;
+		point.x = cos * dx - sin * dy + PivotX;
+		point.y = sin * dx + cos * dy + PivotY;
 		return point;
 	}
 	

@@ -441,7 +441,7 @@ class MouseEventManager extends FlxPlugin
 	{
 		if (Sprite.angle != 0)
 		{
-			FlxAngle.rotatePoint(Point.x, Point.y, (Sprite.x + Sprite.origin.x), (Sprite.y + Sprite.origin.y), Sprite.angle - 180, Point);	
+			FlxAngle.rotatePoint(Point.x, Point.y, (Sprite.x + Sprite.origin.x), (Sprite.y + Sprite.origin.y), Sprite.angle, Point);	
 		}
 		return Sprite.pixelsOverlapPoint(Point, 0x01, Camera);
 	}
