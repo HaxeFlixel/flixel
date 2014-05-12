@@ -887,4 +887,11 @@ class Bounds<T>
 		this.max = max == null ? min : max;
 		return this;
 	}
+	
+	public function toString():String
+	{
+		return FlxStringUtil.getDebugString([ 
+			LabelValuePair.weak("min", min),
+			LabelValuePair.weak("max", max)]);
+	}
 }
