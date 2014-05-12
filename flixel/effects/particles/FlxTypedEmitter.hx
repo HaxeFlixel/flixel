@@ -10,6 +10,7 @@ import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRandom;
+import flixel.util.FlxStringUtil;
 
 /**
  * FlxTypedEmitter is a lightweight particle emitter.
@@ -32,7 +33,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 	 * Determines whether the emitter is currently emitting particles.
 	 * It is totally safe to directly toggle this.
 	 */
-	public var on:Bool = false;
+	public var emitting:Bool = false;
 	/**
 	 * How often a particle is emitted (if emitter is started with Explode == false).
 	 */
@@ -43,7 +44,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 	 */
 	public var blend:BlendMode;
 	/**
-	 * How much each particle should bounce.  1 = full bounce, 0 = no bounce.
+	 * How much each particle should bounce. 1 = full bounce, 0 = no bounce.
 	 */
 	public var bounce:Float = 0;
 	
@@ -336,11 +337,11 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 	 */
 	override public function update():Void
 	{
-		if (on)
+		if (emitting)
 		{
 			if (_explode)
 			{
-				on = false;
+				emitting = false;
 				_waitForKill = true;
 				
 				var i:Int = 0;
@@ -368,7 +369,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 					
 					if ((_quantity > 0) && (++_counter >= _quantity))
 					{
-						on = false;
+						emitting = false;
 						_waitForKill = true;
 						_quantity = 0;
 					}
@@ -384,7 +385,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 						
 						if ((_quantity > 0) && (++_counter >= _quantity))
 						{
-							on = false;
+							emitting = false;
 							_waitForKill = true;
 							_quantity = 0;
 						}
@@ -411,7 +412,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 	 */
 	override public function kill():Void
 	{
-		on = false;
+		emitting = false;
 		_waitForKill = false;
 		
 		super.kill();
@@ -429,7 +430,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 	{
 		revive();
 		visible = true;
-		on = true;
+		emitting = true;
 		
 		_explode = Explode;
 		life.min = Lifespan;
