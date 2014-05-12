@@ -8,12 +8,26 @@
  * FlxText border styles
  * FlxTilemap auto-tiling options
  * FlxBar fill directions
-* FlxCamera: added pixelPerfectRender as a global setting for sprites and tilemaps
-* FlxTypedSpriteGroup: added iterator()
+* FlxCamera: 
+ * added pixelPerfectRender as a global setting for sprites and tilemaps
+ * bounds -> minScrollX, maxScrollX, minScrollY and maxScrollY (null means unbounded)
+ * setBounds() -> setScrollBoundsRect()
+ * added setScrollBounds()
+* FlxMath: bound() and inBounds() now accept null as values, meaning "unbounded in that direction" 
+* FlxTypedSpriteGroup: 
+ * added iterator()
+ * fixed update() order leading to collision issues with members
 * FlxTimer, FlxTween, FlxPath: active is now only true when they are active
 * FlxAnimationController:
  * curAnim does also return animations that have finished now
  * removed get() 
+* FlxSpriteUtil:
+ * drawLine(): default settings for lineStyle are now thickness 1 and color white
+ * fadeIn() and fadeOut() now tween alpha instead of color
+* FlxTypedEmitter:
+ * Bounds objects are now read-only, use set() on them
+ * at() -> focusOn()
+ * on -> emitting
 
 3.3.3
 ------------------------------
