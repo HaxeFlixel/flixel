@@ -201,7 +201,7 @@ class Enemy extends FlxSprite
 		// Finally, update the jet particles shooting out the back of the ship.
 		if (jetsOn)
 		{
-			if (!_jets.on)
+			if (!_jets.emitting)
 			{
 				// If they're supposed to be on and they're not,
 				// turn em on and play a little sound.
@@ -221,7 +221,7 @@ class Enemy extends FlxSprite
 		// If jets are supposed to be off, just turn em off.
 		else	
 		{
-			_jets.on = false;
+			_jets.emitting = false;
 		}
 		
 		// Finally, update the jet emitter and all its member sprites.
