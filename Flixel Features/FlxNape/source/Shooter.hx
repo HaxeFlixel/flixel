@@ -5,6 +5,7 @@ import flixel.addons.nape.FlxNapeState;
 import flixel.effects.particles.FlxEmitter;
 import flixel.effects.particles.FlxEmitterExt;
 import flixel.FlxSprite;
+import flixel.group.FlxTypedGroup;
 import flixel.plugin.MouseEventManager;
 import flixel.util.FlxAngle;
 import flixel.util.FlxRandom;
@@ -29,8 +30,7 @@ import nape.phys.Body;
  * @author TiagoLr ( ~~~ProG4mr~~~ )
  * @link https://github.com/ProG4mr
  */
-
-class Shooter extends FlxGroup
+class Shooter extends FlxTypedGroup<FlxNapeSprite>
 {
 	public static var CB_BULLET:CbType = new CbType();
 	var mouseJoint:DistanceJoint;
@@ -51,7 +51,6 @@ class Shooter extends FlxGroup
 		FlxG.state.members.insert(0, background);
 		FlxG.state.length++;
 		MouseEventManager.add(background, launchProjectile);
-		//var color = FlxRandom.intRanged(0, FlxRandom.MAX_RANGE);
 		var color = 0x333333;
 		
 		for (i in 0...maxSize)
@@ -83,11 +82,9 @@ class Shooter extends FlxGroup
 		
 		if (disableShooting) 
 			return;
-			
-		var spr:FlxNapeSprite = cast(recycle(FlxNapeSprite), FlxNapeSprite);
-		spr.revive();
 		
-		var trail:Trail = new Trail(Std.int(spr.x), Std.int(spr.y), spr);
+		var spr = recycle(FlxNapeSprite);
+		var trail = new Trail(Std.int(spr.x), Std.int(spr.y), spr);
 		
 		spr.body.position.y = 30;
 		spr.body.position.x = 30 + Std.random(640 - 30);
@@ -136,7 +133,6 @@ class Shooter extends FlxGroup
 				mouseJoint.space = null;
 			}
 		}
-		
 	}
 	
 	public function setSpeed(maxSpeed:Int) 
@@ -169,18 +165,15 @@ class Trail extends FlxEmitter
 		attach = Attach;
 		
 		FlxG.state.add(this);
-		this.xVelocity.max = 0;
-		this.xVelocity.min = 0;
-		this.yVelocity.max = 0;
-		this.yVelocity.min = 0;
-		this.rotation.min = 0;
-		this.rotation.max = 0;
+		xVelocity.set(0, 0);
+		yVelocity.set(0, 0);
+		rotation.set(0, 0);
 		
-		this.setScale(1, 1, 0, 0);
-		this.setAlpha(1, 1, 0, 0);
+		setScale(1, 1, 0, 0);
+		setAlpha(1, 1, 0, 0);
 		
 		start(false, .25, .25, 0, 0);
-		this.on = false;
+		emitting = false;
 	}
 	
 	override public function update():Void
@@ -200,16 +193,16 @@ class Trail extends FlxEmitter
 		
 		if (attach.alive == false)
 		{
-			this.set_x(attach.x);
-			this.set_y(attach.y);
-			this.emitParticle();
+			x = attach.x;
+			y = attach.y;
+			emitParticle();
 			isDying = true;
 		} 
 		else 
 		{
-			this.set_x(attach.x);
-			this.set_y(attach.y);
-			this.emitParticle();
+			x = attach.x;
+			y = attach.y;
+			emitParticle();
 		}
 	}
 }
