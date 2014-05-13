@@ -1,7 +1,6 @@
 package flixel.input;
 
 import flixel.FlxG;
-import flixel.plugin.FlxPlugin;
 import flixel.system.debug.FlxDebugger;
 import flixel.system.FlxAssets;
 import flixel.system.frontEnds.PluginFrontEnd;

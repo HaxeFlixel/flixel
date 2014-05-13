@@ -1,7 +1,6 @@
 package flixel.util;
 
 import flixel.FlxG;
-import flixel.plugin.TimerManager;
 import flixel.system.frontEnds.PluginFrontEnd;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 
@@ -13,7 +12,7 @@ import flixel.util.FlxDestroyUtil.IFlxDestroyable;
  */
 class FlxTimer implements IFlxDestroyable
 {
-	public static var manager:TimerManager;
+	public static var manager:FlxTimerManager;
 	
 	/**
 	 * How much time the timer was set for.
@@ -202,5 +201,90 @@ class FlxTimer implements IFlxDestroyable
 	private inline function get_progress():Float
 	{
 		return (time > 0) ? (_timeCounter / time) : 0;
+	}
+}
+
+/**
+ * A simple manager for tracking and updating game timer objects.
+ */
+class FlxTimerManager extends FlxBasic
+{
+	private var _timers:Array<FlxTimer> = [];
+	
+	/**
+	 * Instantiates a new timer manager.
+	 */
+	public function new()
+	{
+		super();
+		
+		// Don't call draw on this plugin
+		visible = false;
+		
+		FlxG.signals.stateSwitched.add(onStateSwitch);
+	}
+	
+	/**
+	 * Clean up memory.
+	 */
+	override public function destroy():Void
+	{
+		clear();
+		_timers = null;
+		FlxG.signals.stateSwitched.remove(onStateSwitch);
+		super.destroy();
+	}
+	
+	/**
+	 * Called by FlxG.plugins.update() before the game state has been updated.
+	 * Cycles through timers and calls update() on each one.
+	 */
+	override public function update():Void
+	{
+		for (timer in _timers)
+		{
+			if (timer.active && !timer.finished && timer.time > 0)
+			{
+				timer.update();
+			}
+		}
+	}
+	
+	/**
+	 * Add a new timer to the timer manager.
+	 * Called when FlxTimer is started.
+	 * 
+	 * @param	Timer	The FlxTimer you want to add to the manager.
+	 */
+	@:allow(flixel.util.FlxTimer)
+	private function add(Timer:FlxTimer):Void
+	{
+		_timers.push(Timer);
+	}
+	
+	/**
+	 * Remove a timer from the timer manager.
+	 * Called automatically by FlxTimer's stop() function.
+	 * 
+	 * @param	Timer	The FlxTimer you want to remove from the manager.
+	 * @param	ReturnInPool Whether to reset and put Timer into internal _pool.
+	 */
+	@:allow(flixel.util.FlxTimer)
+	private function remove(Timer:FlxTimer):Void
+	{
+		FlxArrayUtil.fastSplice(_timers, Timer);
+	}
+	
+	/**
+	 * Removes all the timers from the timer manager.
+	 */
+	public inline function clear():Void
+	{
+		FlxArrayUtil.clearArray(_timers);
+	}
+	
+	public inline function onStateSwitch():Void
+	{
+		clear();
 	}
 }

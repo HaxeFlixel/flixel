@@ -261,7 +261,7 @@ class FlxG
 	/**
 	 * Contains a list of all plugins and the functions required to add(), remove() them etc.
 	 */
-	public static var plugins(default, null):PluginFrontEnd = new PluginFrontEnd();
+	public static var plugins(default, null):PluginFrontEnd;
 	
 	#if !FLX_NO_SOUND_SYSTEM
 	/**
@@ -467,6 +467,8 @@ class FlxG
 		#if !FLX_NO_SOUND_SYSTEM
 		sound.loadSavedPrefs();
 		#end
+		
+		plugins = new PluginFrontEnd();
 		
 		FlxAssets.init();
 	}

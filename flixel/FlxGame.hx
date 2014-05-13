@@ -418,7 +418,6 @@ class FlxGame extends Sprite
 		#end
 		
 		_state.onResize(width, height);
-		FlxG.plugins.onResize(width, height);
 		FlxG.signals.gameResized.dispatch(width, height);
 		
 		resizeGame(width, height);
@@ -564,7 +563,7 @@ class FlxGame extends Sprite
 		#if !FLX_NO_SOUND_SYSTEM
 		FlxG.sound.destroy();
 		#end
-		FlxG.plugins.onStateSwitch();
+		
 		FlxG.signals.stateSwitched.dispatch();
 		
 		#if FLX_RECORD
