@@ -221,7 +221,7 @@ class FlxTimerManager extends FlxBasic
 		// Don't call draw on this plugin
 		visible = false;
 		
-		FlxG.signals.stateSwitched.add(onStateSwitch);
+		FlxG.signals.stateSwitched.add(clear);
 	}
 	
 	/**
@@ -231,7 +231,7 @@ class FlxTimerManager extends FlxBasic
 	{
 		clear();
 		_timers = null;
-		FlxG.signals.stateSwitched.remove(onStateSwitch);
+		FlxG.signals.stateSwitched.remove(clear);
 		super.destroy();
 	}
 	
@@ -281,10 +281,5 @@ class FlxTimerManager extends FlxBasic
 	public inline function clear():Void
 	{
 		FlxArrayUtil.clearArray(_timers);
-	}
-	
-	public inline function onStateSwitch():Void
-	{
-		clear();
 	}
 }
