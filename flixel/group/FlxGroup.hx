@@ -56,7 +56,7 @@ class FlxGroup extends FlxTypedGroup<FlxBasic>
 			}
 			else if (ObjectOrGroup.collisionType == SPRITEGROUP)
 			{
-				group = cast cast(ObjectOrGroup, FlxSpriteGroup).group;
+				group = cast cast(ObjectOrGroup, FlxTypedSpriteGroup<Dynamic>).group;
 			}
 		}
 		return group;
