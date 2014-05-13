@@ -1,21 +1,15 @@
 package ;
-import flash.display.Sprite;
 import flixel.addons.nape.FlxNapeSprite;
 import flixel.addons.nape.FlxNapeState;
 import flixel.effects.particles.FlxEmitter;
-import flixel.effects.particles.FlxEmitterExt;
+import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxTypedGroup;
-import flixel.plugin.MouseEventManager;
+import flixel.input.mouse.FlxMouseEventManager;
 import flixel.util.FlxAngle;
-import flixel.util.FlxRandom;
-import flixel.util.FlxSpriteUtil;
+import flixel.util.FlxPoint;
 import nape.callbacks.CbEvent;
 import nape.callbacks.CbType;
-import flixel.FlxG;
-import flixel.group.FlxGroup;
-import flixel.util.FlxPoint;
-import flixel.util.FlxMath;
 import nape.callbacks.InteractionCallback;
 import nape.callbacks.InteractionListener;
 import nape.callbacks.InteractionType;
@@ -50,7 +44,7 @@ class Shooter extends FlxTypedGroup<FlxNapeSprite>
 		background.alpha = 1;
 		FlxG.state.members.insert(0, background);
 		FlxG.state.length++;
-		MouseEventManager.add(background, launchProjectile);
+		FlxMouseEventManager.add(background, launchProjectile);
 		var color = 0x333333;
 		
 		for (i in 0...maxSize)
@@ -106,7 +100,7 @@ class Shooter extends FlxTypedGroup<FlxNapeSprite>
 	
 	public inline function registerPhysSprite(spr:FlxNapeSprite)
 	{
-		MouseEventManager.add(spr, createMouseJoint);
+		FlxMouseEventManager.add(spr, createMouseJoint);
 	}
 	
 	function createMouseJoint(spr:FlxSprite) 

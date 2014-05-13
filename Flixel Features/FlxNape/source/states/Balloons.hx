@@ -1,17 +1,12 @@
 package states;
+
 import flash.display.Graphics;
 import flash.geom.Rectangle;
-import flixel.addons.nape.FlxNapeState;
 import flixel.addons.nape.FlxNapeSprite;
+import flixel.addons.nape.FlxNapeState;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.plugin.MouseEventManager;
-import flixel.system.layer.frames.FlxFrame;
 import flixel.text.FlxText;
-import flixel.util.FlxAngle;
-import flixel.util.FlxColor;
-import flixel.util.FlxColorUtil;
-import flixel.util.FlxMath;
 import flixel.util.FlxRandom;
 import flixel.util.FlxSpriteUtil;
 import nape.callbacks.CbEvent;
@@ -25,7 +20,6 @@ import nape.phys.Body;
 import nape.phys.BodyType;
 import nape.phys.Material;
 import nape.shape.Circle;
-import nape.shape.Shape;
 
 /**
  * ...
@@ -66,11 +60,12 @@ class Balloons extends FlxNapeState
 		shooter.setDensity(0.3);
 		add(shooter);
 		
-		FlxNapeState.space.listeners.add(new InteractionListener(CbEvent.BEGIN, 
-													 InteractionType.COLLISION, 
-													 Shooter.CB_BULLET,
-													 Balloons.CB_BALLOON,
-													 onBulletColides));
+		FlxNapeState.space.listeners.add(new InteractionListener(
+			CbEvent.BEGIN, 
+			InteractionType.COLLISION, 
+			Shooter.CB_BULLET,
+			Balloons.CB_BALLOON,
+			onBulletColides));
 	 
 		shooter.registerPhysSprite(box);
 		

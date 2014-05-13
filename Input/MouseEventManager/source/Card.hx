@@ -4,7 +4,7 @@ import flixel.addons.nape.FlxNapeSprite;
 import flixel.addons.nape.FlxNapeState;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.plugin.MouseEventManager;
+import flixel.input.mouse.FlxMouseEventManager;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxRandom;
@@ -47,7 +47,7 @@ class Card extends FlxNapeSprite
 		body.setShapeFilters(new InteractionFilter(2, ~2));
 		
 		// Setup the mouse events
-		MouseEventManager.add(this, onDown, null, onOver, onOut);
+		FlxMouseEventManager.add(this, onDown, null, onOver, onOut);
 	}
 	
 	private function onDown(Sprite:FlxSprite)
@@ -94,8 +94,8 @@ class Card extends FlxNapeSprite
 	
 	override public function destroy():Void 
 	{
-		// Make sure that this object is removed from the MouseEventManager for GC
-		MouseEventManager.remove(this);
+		// Make sure that this object is removed from the FlxMouseEventManager for GC
+		FlxMouseEventManager.remove(this);
 		super.destroy();
 	}
 }

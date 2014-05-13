@@ -1,28 +1,20 @@
 package states;
+
 import flixel.addons.nape.FlxNapeSprite;
 import flixel.addons.nape.FlxNapeState;
-import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup;
-import flixel.plugin.MouseEventManager;
 import flixel.text.FlxText;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRandom;
-import nape.callbacks.CbEvent;
 import nape.callbacks.CbType;
-import nape.callbacks.InteractionCallback;
-import nape.callbacks.InteractionListener;
 import nape.callbacks.InteractionType;
-import flixel.addons.nape.FlxNapeSprite;
 import nape.callbacks.PreCallback;
 import nape.callbacks.PreFlag;
 import nape.callbacks.PreListener;
-import nape.constraint.DistanceJoint;
 import nape.constraint.PivotJoint;
 import nape.constraint.WeldJoint;
-import nape.dynamics.InteractionFilter;
-import nape.dynamics.InteractionGroup;
 import nape.geom.Vec2;
 
 /**
@@ -47,7 +39,7 @@ class Fight extends FlxNapeState
 		shooter = new Shooter();
 		add(shooter);
 		
-		var songoku:Ragdoll = new Ragdoll(100,250);
+		var songoku = new Ragdoll(100,250);
 		songoku.init();
 		songoku.createGraphics("assets/GokuHead.png",
 								"assets/GokuUTorso.png",
@@ -60,7 +52,7 @@ class Fight extends FlxNapeState
 		
 		
 		
-		var vegeta:Ragdoll = new Ragdoll(550, 250);
+		var vegeta = new Ragdoll(550, 250);
 		vegeta.init();
 		vegeta.createGraphics("assets/VegeHead.png",
 								"assets/VegeUTorso.png",
@@ -83,10 +75,7 @@ class Fight extends FlxNapeState
 		}
 		
 		songoku.rLArm.body.applyImpulse(new Vec2(2000, FlxRandom.floatRanged( -2700, -2800)));
-		//songoku.rUArm.body.applyImpulse(new Vec2(1500, -2000));
 		vegeta.lLArm.body.applyImpulse(new Vec2( -2000, FlxRandom.floatRanged( -2700, -2800)));
-		//vegeta.lUArm.body.applyImpulse(new Vec2(-1500, -2000));
-													 
 		
 		var txt:FlxText;
 		txt = new FlxText( -10, 5, 640, "      'R' - reset state, 'G' - toggle physics graphics");
@@ -212,8 +201,6 @@ class Ragdoll extends FlxGroup
 		createBodies();
 		createContactListeners();
 		createJoints();
-		
-		//setPos(startX, startY);
 	}
 	
 	function setPos(x:Float, y:Float)
@@ -306,7 +293,8 @@ class Ragdoll extends FlxGroup
 
 	}
 	
-	function ignoreCollision(cb:PreCallback):PreFlag {
+	function ignoreCollision(cb:PreCallback):PreFlag
+	{
 		return PreFlag.IGNORE;
 	}
 	
@@ -326,7 +314,6 @@ class Ragdoll extends FlxGroup
 		rLArm.loadGraphic(LowerArm);
 		lLArm.loadGraphic(LowerArm); lLArm.scale.x *= -1;
 	}
-	
 	
 	function createJoints() 
 	{
@@ -365,5 +352,4 @@ class Ragdoll extends FlxGroup
 		constrain = new PivotJoint(uTorso.body, head.body, new Vec2(0, -uTorsoSize.y / 2 - neckHeight), new Vec2(0, headRadius));
 		constrain.space = FlxNapeState.space;
 	}
-
 }
