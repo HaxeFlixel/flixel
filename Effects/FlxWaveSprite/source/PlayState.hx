@@ -5,7 +5,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.text.FlxText;
-import flixel.util.FlxMath;
+import flixel.math.FlxMath;
 import flixel.system.FlxAssets;
 using flixel.util.FlxSpriteUtil;
 using StringTools;

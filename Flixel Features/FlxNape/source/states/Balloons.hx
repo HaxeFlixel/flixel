@@ -7,7 +7,7 @@ import flixel.addons.nape.FlxNapeState;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.text.FlxText;
-import flixel.util.FlxRandom;
+import flixel.math.FlxRandom;
 import flixel.util.FlxSpriteUtil;
 import nape.callbacks.CbEvent;
 import nape.callbacks.CbType;

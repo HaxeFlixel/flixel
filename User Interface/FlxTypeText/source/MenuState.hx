@@ -9,7 +9,7 @@ import flixel.FlxState;
 import flixel.group.FlxSpriteGroup;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
-import flixel.util.FlxMath;
+import flixel.math.FlxMath;
 import flixel.addons.text.FlxTypeText;
 import haxe.macro.TypeTools;
 

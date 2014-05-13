@@ -3,7 +3,7 @@ package;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.util.FlxPath;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 
 class Enemy extends FlxSprite 
 {

@@ -3,7 +3,7 @@ package;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.group.FlxGroup;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 import flixel.util.FlxSpriteUtil;
 /**
  * ...

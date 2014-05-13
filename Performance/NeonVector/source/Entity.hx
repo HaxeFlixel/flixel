@@ -1,7 +1,7 @@
 package ;
 import flash.display.BlendMode;
 import flixel.FlxSprite;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 import flixel.util.FlxTimer;
 import flixel.FlxG;
 

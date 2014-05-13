@@ -9,7 +9,7 @@ import flixel.text.FlxText;
 import flixel.ui.FlxBar;
 import flixel.util.FlxColor;
 import flixel.util.FlxColorUtil;
-import flixel.util.FlxRandom;
+import flixel.math.FlxRandom;
 import flixel.util.FlxSpriteUtil;
 
 /**

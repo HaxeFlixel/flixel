@@ -7,7 +7,7 @@ import flixel.FlxSprite;
 import flixel.input.mouse.FlxMouseEventManager;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
-import flixel.util.FlxRandom;
+import flixel.math.FlxRandom;
 import nape.constraint.DistanceJoint;
 import nape.dynamics.InteractionFilter;
 import nape.geom.Vec2;

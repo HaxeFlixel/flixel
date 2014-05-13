@@ -2,7 +2,7 @@ package;
 
 import flixel.effects.particles.FlxParticle;
 import flixel.effects.particles.FlxEmitter;
-import flixel.util.FlxRandom;
+import flixel.math.FlxRandom;
 
 /**
  * A painfully simple emitter class.

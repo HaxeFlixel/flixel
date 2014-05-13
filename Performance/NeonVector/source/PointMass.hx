@@ -1,8 +1,8 @@
 package;
 
 import flixel.FlxG;
-import flixel.util.FlxPoint;
-import flixel.util.FlxVelocity;
+import flixel.math.FlxPoint;
+import flixel.math.FlxVelocity;
 
 /**
  * ...

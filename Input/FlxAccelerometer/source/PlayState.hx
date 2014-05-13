@@ -4,8 +4,8 @@ import flixel.addons.nape.FlxNapeSprite;
 import flixel.addons.nape.FlxNapeState;
 import flixel.FlxG;
 import flixel.text.FlxText;
-import flixel.util.FlxMath;
-import flixel.util.FlxRandom;
+import flixel.math.FlxMath;
+import flixel.math.FlxRandom;
 import nape.geom.Vec2;
 
 class PlayState extends FlxNapeState

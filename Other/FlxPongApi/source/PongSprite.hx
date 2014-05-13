@@ -2,7 +2,7 @@ package;
 
 import flash.display.BitmapData;
 import flixel.FlxSprite;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 
 class PongSprite extends FlxSprite
 {

@@ -3,11 +3,11 @@ package;
 import flixel.effects.particles.FlxTypedEmitter.Bounds;
 import flixel.FlxG;
 import flixel.FlxObject;
-import flixel.util.FlxAngle;
+import flixel.math.FlxAngle;
 import flixel.util.FlxCollision;
-import flixel.util.FlxMath;
-import flixel.util.FlxPoint;
-import flixel.util.FlxVelocity;
+import flixel.math.FlxMath;
+import flixel.math.FlxPoint;
+import flixel.math.FlxVelocity;
 
 class Ball extends PongSprite
 {

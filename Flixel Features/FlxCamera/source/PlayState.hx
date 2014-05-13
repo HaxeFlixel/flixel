@@ -16,7 +16,7 @@ import flash.display.BlendMode;
 import flash.Lib;
 import flixel.FlxCamera;
 import flixel.FlxG;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 import flixel.FlxSprite;
 import HUD;
 import openfl.Assets;

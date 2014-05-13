@@ -14,8 +14,8 @@ import flixel.tile.FlxTilemap;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
 import flixel.util.FlxColor;
-import flixel.util.FlxMath;
-import flixel.util.FlxPoint;
+import flixel.math.FlxMath;
+import flixel.math.FlxPoint;
 
 enum MenuType
 {

@@ -3,7 +3,7 @@ package;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup;
-import flixel.util.FlxRandom;
+import flixel.math.FlxRandom;
 
 /**
  * Class declaration for the squid monster class

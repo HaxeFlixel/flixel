@@ -4,7 +4,7 @@ import flixel.addons.nape.FlxNapeState;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxTypedGroup;
-import flixel.util.FlxRandom;
+import flixel.math.FlxRandom;
 import nape.constraint.DistanceJoint;
 import nape.geom.Vec2;
 import flixel.input.mouse.FlxMouseEventManager;

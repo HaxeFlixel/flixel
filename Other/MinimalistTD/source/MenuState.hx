@@ -5,7 +5,7 @@ import openfl.Assets;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.text.FlxText;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
 import flixel.tile.FlxTilemap;
 

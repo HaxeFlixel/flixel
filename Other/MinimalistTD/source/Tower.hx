@@ -2,9 +2,9 @@ package;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.util.FlxVelocity;
-import flixel.util.FlxMath;
-import flixel.util.FlxPoint;
+import flixel.math.FlxVelocity;
+import flixel.math.FlxMath;
+import flixel.math.FlxPoint;
 import flixel.group.FlxGroup;
 import flixel.group.FlxTypedGroup;
 

@@ -1,6 +1,6 @@
 package;
 
-import flixel.util.FlxMath;
+import flixel.math.FlxMath;
 
 /**
  * @author Masadow

@@ -4,7 +4,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.util.FlxColor;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 import flixel.input.gamepad.FlxGamepad;
 import flixel.input.gamepad.XboxButtonID;
 import flixel.input.gamepad.OUYAButtonID;

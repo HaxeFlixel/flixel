@@ -3,7 +3,7 @@ package;
 import flash.display.BlendMode;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.util.FlxVelocity;
+import flixel.math.FlxVelocity;
 
 class Bullet extends FlxSprite 
 {

@@ -5,8 +5,8 @@ import flash.display.GraphicsPathCommand;
 import flash.geom.Rectangle;
 import flash.Vector;
 import flixel.FlxG;
-import flixel.util.FlxMath;
-import flixel.util.FlxPoint;
+import flixel.math.FlxMath;
+import flixel.math.FlxPoint;
 import flixel.util.FlxSpriteUtil;
 
 /**

@@ -2,8 +2,8 @@ package;
 
 import openfl.Assets;
 import flixel.FlxG;
-import flixel.util.FlxAngle;
-import flixel.util.FlxPoint;
+import flixel.math.FlxAngle;
+import flixel.math.FlxPoint;
 import flixel.FlxSprite;
 
 class EnemyBullet extends FlxSprite

@@ -7,8 +7,8 @@ import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.tile.FlxTilemap;
 import flixel.util.FlxColor;
-import flixel.util.FlxPoint;
-import flixel.util.FlxRect;
+import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
 import flixel.util.FlxStringUtil;
 
 /**

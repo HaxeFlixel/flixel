@@ -1,9 +1,9 @@
 package;
 
 import flixel.FlxSprite;
-import flixel.util.FlxMath;
-import flixel.util.FlxPoint;
-import flixel.util.FlxVector;
+import flixel.math.FlxMath;
+import flixel.math.FlxPoint;
+import flixel.math.FlxVector;
 
 class Seeker extends FlxSprite
 {

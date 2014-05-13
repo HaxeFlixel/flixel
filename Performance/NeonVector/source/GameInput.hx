@@ -1,7 +1,7 @@
 package;
 
 import flixel.FlxG;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 
 /**
  * @author Masadow

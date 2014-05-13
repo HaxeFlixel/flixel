@@ -10,7 +10,7 @@ import flixel.FlxState;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import flixel.util.FlxColor;
-import flixel.util.FlxMath;
+import flixel.math.FlxMath;
 import flixel.system.FlxAssets;
 
 #if flash

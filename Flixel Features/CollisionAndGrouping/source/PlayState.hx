@@ -7,7 +7,7 @@ import flixel.group.FlxGroup;
 import flixel.group.FlxTypedGroup;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
-import flixel.util.FlxRandom;
+import flixel.math.FlxRandom;
 
 class PlayState extends FlxState
 {

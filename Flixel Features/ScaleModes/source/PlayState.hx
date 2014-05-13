@@ -11,7 +11,7 @@ import flixel.system.scaleModes.RelativeScaleMode;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import flixel.util.FlxColor;
-import flixel.util.FlxRandom;
+import flixel.math.FlxRandom;
 
 class PlayState extends FlxState
 {

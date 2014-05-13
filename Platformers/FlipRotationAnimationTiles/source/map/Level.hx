@@ -13,8 +13,8 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.group.FlxTypedGroup;
 import flixel.tile.FlxTilemap;
-import flixel.util.FlxRandom;
-import flixel.util.FlxRect;
+import flixel.math.FlxRandom;
+import flixel.math.FlxRect;
 import flixel.util.FlxSort;
 
 /**

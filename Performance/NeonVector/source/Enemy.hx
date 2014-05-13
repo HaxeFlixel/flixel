@@ -2,9 +2,9 @@ package;
 
 import flash.Lib;
 import flixel.FlxG;
-import flixel.util.FlxAngle;
+import flixel.math.FlxAngle;
 import flixel.util.FlxColor;
-import flixel.util.FlxRandom;
+import flixel.math.FlxRandom;
 
 /**
  * ...

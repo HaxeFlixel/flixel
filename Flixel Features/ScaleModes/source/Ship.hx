@@ -2,8 +2,8 @@ package;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.util.FlxRandom;
-import flixel.util.FlxVelocity;
+import flixel.math.FlxRandom;
+import flixel.math.FlxVelocity;
 
 /**
  * ...

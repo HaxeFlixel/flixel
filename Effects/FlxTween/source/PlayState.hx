@@ -13,7 +13,7 @@ import flixel.tweens.FlxEase.EaseFunction;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxTween.TweenOptions;
 import flixel.util.FlxColor;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 import flixel.util.FlxSpriteUtil;
 import flixel.system.FlxAssets;
 import haxe.EnumTools;

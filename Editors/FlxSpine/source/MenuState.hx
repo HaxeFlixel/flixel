@@ -12,7 +12,7 @@ import flixel.FlxState;
 import flixel.group.FlxGroup;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
-import flixel.util.FlxMath;
+import flixel.math.FlxMath;
 import flixel.addons.editors.spine.FlxSpine;
 import testclasses.GoblinTest;
 import testclasses.SpineBoyTest;

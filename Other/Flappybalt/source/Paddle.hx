@@ -3,7 +3,7 @@ package;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
-import flixel.util.FlxRandom;
+import flixel.math.FlxRandom;
 
 class Paddle extends FlxSprite
 {

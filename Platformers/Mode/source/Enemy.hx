@@ -4,11 +4,11 @@ import flixel.effects.particles.FlxEmitter;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxTypedGroup;
-import flixel.util.FlxAngle;
-import flixel.util.FlxMath;
-import flixel.util.FlxPoint;
+import flixel.math.FlxAngle;
+import flixel.math.FlxMath;
+import flixel.math.FlxPoint;
 import flixel.util.FlxSpriteUtil;
-import flixel.util.FlxVelocity;
+import flixel.math.FlxVelocity;
 
 class Enemy extends FlxSprite
 {

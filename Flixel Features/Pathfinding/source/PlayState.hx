@@ -9,7 +9,7 @@ import flixel.tile.FlxTilemap;
 import flixel.ui.FlxButton;
 import flixel.util.FlxColor;
 import flixel.util.FlxPath;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 import openfl.Assets;
 
 class PlayState extends FlxState

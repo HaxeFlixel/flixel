@@ -10,9 +10,9 @@ import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import flixel.effects.particles.FlxEmitter;
 import flixel.util.FlxCollision;
-import flixel.util.FlxMath;
-import flixel.util.FlxPoint;
-import flixel.util.FlxRandom;
+import flixel.math.FlxMath;
+import flixel.math.FlxPoint;
+import flixel.math.FlxRandom;
 import flixel.util.FlxTimer;
 
 class PlayState extends FlxState

@@ -2,7 +2,7 @@ package;
 
 import flixel.FlxSprite;
 import flixel.FlxG;
-import flixel.util.FlxRandom;
+import flixel.math.FlxRandom;
 
 /**
  * ...

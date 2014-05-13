@@ -12,7 +12,7 @@ import flixel.FlxState;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
-import flixel.util.FlxRandom;
+import flixel.math.FlxRandom;
 import openfl.Assets;
 import flixel.system.FlxAssets;
 

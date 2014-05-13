@@ -9,9 +9,9 @@ import nape.callbacks.InteractionType;
 import nape.geom.Vec2;
 import nape.phys.BodyType;
 import flixel.FlxG;
-import flixel.util.FlxPoint;
-import flixel.util.FlxMath;
-import flixel.util.FlxAngle;
+import flixel.math.FlxPoint;
+import flixel.math.FlxMath;
+import flixel.math.FlxAngle;
 
 /**
  * @author TiagoLr ( ~~~ProG4mr~~~ )
