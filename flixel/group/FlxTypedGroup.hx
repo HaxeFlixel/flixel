@@ -165,13 +165,13 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 * Recycling is designed to help you reuse game objects without always re-allocating or "newing" them.
 	 * It behaves differently depending on whether maxSize equals 0 or is bigger than 0.
 	 * 
-	 * maxSize == 0 / "rotating-recycling" (used by FlxEmitter):
+	 * maxSize > 0 / "rotating-recycling" (used by FlxEmitter):
 	 *   - at capacity:  returns the next object in line, no matter its properties like alive, exists etc.
 	 *   - otherwise:    returns a new object.
 	 * 
-	 * maxSize > 0 / "grow-style-recycling"
-	 *   - at capacity:  tries to find the first object with exists == false, or if none found:
-	 *   - otherwise:    adds a new object to the members array, doubling its size if necessary
+	 * maxSize == 0 / "grow-style-recycling"
+	 *   - tries to find the first object with exists == false
+	 *   - otherwise: adds a new object to the members array
 	 *
 	 * WARNING: If this function needs to create a new object, and no object class was provided, 
 	 * it will return null instead of a valid object!
@@ -222,7 +222,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 				return cast basic;
 			}
 		}
-		// grow-style recycling - grab a basic with extist == false or create a new one
+		// grow-style recycling - grab a basic with extists == false or create a new one
 		else
 		{
 			basic = getFirstAvailable(ObjectClass, Force);
