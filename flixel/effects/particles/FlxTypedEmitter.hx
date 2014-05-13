@@ -1,11 +1,11 @@
 package flixel.effects.particles;
 
 import flash.display.BlendMode;
+import flixel.effects.particles.FlxParticle;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.group.FlxTypedGroup;
-import flixel.interfaces.IFlxParticle;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxPoint;

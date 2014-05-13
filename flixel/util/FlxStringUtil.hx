@@ -5,8 +5,8 @@ import flash.geom.Matrix;
 import flash.Lib;
 import flash.net.URLRequest;
 import flixel.FlxG;
-import flixel.interfaces.IFlxDestroyable;
 import flixel.system.FlxAssets;
+import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 using StringTools;
 
 /**

@@ -1,7 +1,7 @@
 package flixel.system.frontEnds;
 
 import flixel.FlxG;
-import flixel.interfaces.IFlxInput;
+import flixel.input.IFlxInput;
 import flixel.util.FlxStringUtil;
 
 @:allow(flixel.FlxGame)

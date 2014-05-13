@@ -3,11 +3,11 @@ package flixel.util;
 import flash.display.Graphics;
 import flixel.FlxG;
 import flixel.FlxObject;
+import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import flixel.util.FlxPoint;
 import flixel.util.FlxColor;
 import flixel.util.FlxArrayUtil;
 import flixel.plugin.PathManager;
-import flixel.interfaces.IFlxDestroyable;
 
 /**
  * This is a simple path data container.  Basically a list of points that

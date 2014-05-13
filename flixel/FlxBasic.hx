@@ -2,7 +2,7 @@ package flixel;
 
 import flixel.FlxG;
 import flixel.group.FlxTypedGroup;
-import flixel.interfaces.IFlxDestroyable;
+import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import flixel.util.FlxStringUtil;
 
 /**
@@ -144,4 +144,22 @@ abstract FlxCollisionType(Int)
 	var GROUP       = 2;
 	var TILEMAP     = 3;
 	var SPRITEGROUP = 4;
+}
+
+interface IFlxBasic
+{
+	public var ID:Int;
+	public var active(default, set):Bool;
+	public var visible(default, set):Bool;
+	public var alive(default, set):Bool;
+	public var exists(default, set):Bool;
+
+	public function draw():Void;
+	public function update():Void;
+	public function destroy():Void;
+	
+	public function kill():Void;
+	public function revive():Void;
+	
+	public function toString():String;
 }

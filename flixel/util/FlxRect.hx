@@ -2,7 +2,7 @@ package flixel.util;
 
 import flash.geom.Rectangle;
 import flixel.FlxG;
-import flixel.interfaces.IFlxPooled;
+import flixel.util.FlxPool.IFlxPooled;
 import flixel.util.FlxStringUtil;
 
 /**

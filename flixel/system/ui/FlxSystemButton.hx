@@ -4,8 +4,8 @@ import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.Sprite;
 import flash.events.MouseEvent;
-import flixel.interfaces.IFlxDestroyable;
 import flixel.system.FlxAssets;
+import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 
 /**
 * A basic button for the debugger, extends flash.display.Sprite.

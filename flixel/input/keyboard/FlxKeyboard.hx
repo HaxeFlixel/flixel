@@ -5,7 +5,6 @@ import flash.events.KeyboardEvent;
 import flash.Lib;
 import flixel.FlxG;
 import flixel.input.keyboard.FlxKey;
-import flixel.interfaces.IFlxInput;
 import flixel.system.replay.CodeValuePair;
 import flixel.util.FlxArrayUtil;
 

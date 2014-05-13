@@ -2,8 +2,8 @@ package flixel.util;
 
 import flixel.FlxG;
 import flixel.plugin.TimerManager;
-import flixel.interfaces.IFlxDestroyable;
 import flixel.system.frontEnds.PluginFrontEnd;
+import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 
 /**
  * A simple timer class, leveraging the new plugins system.

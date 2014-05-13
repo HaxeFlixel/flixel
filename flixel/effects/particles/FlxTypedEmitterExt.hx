@@ -2,7 +2,7 @@ package flixel.effects.particles;
 
 import flixel.FlxSprite;
 import flixel.util.FlxRandom;
-import flixel.interfaces.IFlxParticle;
+import flixel.effects.particles.FlxParticle;
 
 /**
  * Extended FlxEmitter that emits particles in a circle (instead of a square).

@@ -10,7 +10,6 @@ import flash.text.TextFormatAlign;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
-import flixel.interfaces.IFlxDestroyable;
 import flixel.system.FlxAssets;
 import flixel.text.FlxText.FlxTextBorderStyle;
 import flixel.text.FlxText.FlxTextFormat;

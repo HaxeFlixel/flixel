@@ -1,4 +1,4 @@
-package flixel.interfaces;
+package flixel.input;
 
 @:allow(flixel.system.frontEnds.InputFrontEnd)
 interface IFlxInput 

@@ -11,18 +11,18 @@ import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.Lib;
 import flash.ui.Mouse;
+import flash.Vector;
+import flixel.FlxCamera;
+import flixel.FlxG;
+import flixel.input.IFlxInput;
+import flixel.system.FlxAssets;
+import flixel.system.replay.MouseRecord;
 import flixel.util.FlxDestroyUtil;
+import flixel.util.FlxPoint;
 #if (flash && !FLX_NO_NATIVE_CURSOR)
 import flash.ui.MouseCursor;
 import flash.ui.MouseCursorData;
 #end
-import flash.Vector;
-import flixel.FlxCamera;
-import flixel.FlxG;
-import flixel.interfaces.IFlxInput;
-import flixel.system.FlxAssets;
-import flixel.system.replay.MouseRecord;
-import flixel.util.FlxPoint;
 
 @:bitmap("assets/images/ui/cursor.png")
 private class GraphicCursor extends BitmapData {}

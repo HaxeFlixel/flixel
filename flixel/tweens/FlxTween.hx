@@ -3,7 +3,6 @@ package flixel.tweens;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
-import flixel.interfaces.IFlxDestroyable;
 import flixel.plugin.TweenManager;
 import flixel.tweens.FlxEase.EaseFunction;
 import flixel.tweens.misc.AngleTween;
@@ -16,6 +15,7 @@ import flixel.tweens.motion.LinearMotion;
 import flixel.tweens.motion.LinearPath;
 import flixel.tweens.motion.QuadMotion;
 import flixel.tweens.motion.QuadPath;
+import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import flixel.util.FlxPoint;
 
 @:allow(flixel.plugin.TweenManager)

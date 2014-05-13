@@ -4,7 +4,6 @@ package flixel.input.mouse;
 import flash.events.MouseEvent;
 import flixel.FlxG;
 import flixel.input.FlxSwipe;
-import flixel.interfaces.IFlxDestroyable;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxPoint;
 

@@ -1,7 +1,6 @@
 package flixel.input.gamepad;
 
 import flixel.FlxG;
-import flixel.interfaces.IFlxDestroyable;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxPoint;
 

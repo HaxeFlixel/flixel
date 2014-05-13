@@ -3,7 +3,6 @@ package flixel.effects.particles;
 import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.interfaces.IFlxParticle;
 
 /**
  * This is a simple particle class that extends the default behavior
@@ -94,7 +93,6 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 	public function new()
 	{
 		super();
-		
 		exists = false;
 	}
 	
@@ -194,5 +192,27 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 	 * Triggered whenever this object is launched by a FlxEmitter.
 	 * You can override this to add custom behavior like a sound or AI or something.
 	 */
-	public function onEmit():Void { }	
+	public function onEmit():Void {}	
+}
+
+interface IFlxParticle extends IFlxSprite
+{
+	public var lifespan:Float;
+	public var friction:Float;
+	public var useFading:Bool;
+	public var useScaling:Bool;
+	public var useColoring:Bool;
+	public var maxLifespan:Float;
+	public var startAlpha:Float;
+	public var rangeAlpha:Float;
+	public var startScale:Float;
+	public var rangeScale:Float;
+	public var startRed:Float;
+	public var startGreen:Float;
+	public var startBlue:Float;
+	public var rangeRed:Float;
+	public var rangeGreen:Float;
+	public var rangeBlue:Float;
+	
+	public function onEmit():Void;
 }
