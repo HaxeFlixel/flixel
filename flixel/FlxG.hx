@@ -24,9 +24,9 @@ import flixel.system.scaleModes.BaseScaleMode;
 import flixel.system.scaleModes.RatioScaleMode;
 import flixel.text.pxText.PxBitmapFont;
 import flixel.util.FlxCollision;
-import flixel.util.FlxMath;
-import flixel.util.FlxRandom;
-import flixel.util.FlxRect;
+import flixel.math.FlxMath;
+import flixel.math.FlxRandom;
+import flixel.math.FlxRect;
 import flixel.util.FlxSave;
 
 #if !FLX_NO_TOUCH

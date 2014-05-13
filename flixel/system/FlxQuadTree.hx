@@ -6,7 +6,7 @@ import flixel.group.FlxGroup;
 import flixel.group.FlxSpriteGroup;
 import flixel.group.FlxTypedGroup;
 import flixel.util.FlxDestroyUtil;
-import flixel.util.FlxRect;
+import flixel.math.FlxRect;
 
 /**
  * A fairly generic quad tree structure for rapid overlap checks.

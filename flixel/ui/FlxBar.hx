@@ -10,11 +10,11 @@ import flixel.FlxSprite;
 import flixel.system.layer.DrawStackItem;
 import flixel.system.layer.Region;
 import flixel.ui.FlxBar.FlxBarFillDirection;
-import flixel.util.FlxAngle;
+import flixel.math.FlxAngle;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxGradient;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 import flixel.util.FlxStringUtil;
 import flixel.util.loaders.CachedGraphics;
 

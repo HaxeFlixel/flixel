@@ -29,8 +29,8 @@ import flixel.ui.FlxBar;
 #end
 import flixel.ui.FlxTypedButton.FlxTypedButton;
 import flixel.util.FlxPath;
-import flixel.util.FlxPoint;
-import flixel.util.FlxRect;
+import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
 import flixel.util.FlxTimer;
 #end
 

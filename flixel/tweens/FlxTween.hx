@@ -16,7 +16,7 @@ import flixel.tweens.motion.QuadMotion;
 import flixel.tweens.motion.QuadPath;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 
 class FlxTween implements IFlxDestroyable
 {

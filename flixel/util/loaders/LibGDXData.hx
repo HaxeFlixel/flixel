@@ -2,7 +2,7 @@ package flixel.util.loaders;
 
 import flash.geom.Rectangle;
 import flixel.FlxG;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 import openfl.Assets;
 
 class LibGDXData extends TexturePackerData

@@ -7,7 +7,7 @@ import flixel.FlxG;
 import flixel.group.FlxTypedGroup;
 import flixel.system.FlxAssets.FlxSoundAsset;
 import flixel.system.FlxSound;
-import flixel.util.FlxMath;
+import flixel.math.FlxMath;
 import openfl.Assets;
 
 @:allow(flixel.FlxGame)

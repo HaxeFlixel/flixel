@@ -10,7 +10,7 @@ import flixel.system.FlxLinkedList;
 import flixel.system.FlxQuadTree;
 import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxColor;
-import flixel.util.FlxMath;
+import flixel.math.FlxMath;
 
 @:bitmap("assets/images/debugger/buttons/minimize.png")
 private class GraphicMinimizeButton extends BitmapData {}

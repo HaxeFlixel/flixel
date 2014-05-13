@@ -1,4 +1,4 @@
-package flixel.util;
+package flixel.math;
 
 import flash.geom.Rectangle;
 import flixel.FlxG;

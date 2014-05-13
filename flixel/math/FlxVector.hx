@@ -1,4 +1,5 @@
-package flixel.util;
+package flixel.math;
+import flixel.util.FlxPool;
 
 /**
  * 2-dimensional vector class

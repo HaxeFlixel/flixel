@@ -9,7 +9,7 @@ import flixel.system.layer.frames.FlxSpriteFrames;
 import flixel.system.layer.Region;
 import flixel.system.layer.TileSheetExt;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 import flixel.util.loaders.TextureAtlasFrame;
 import flixel.util.loaders.TexturePackerData;
 

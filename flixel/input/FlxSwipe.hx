@@ -4,9 +4,9 @@ import flixel.FlxG;
 import flixel.system.debug.FlxDebugger;
 import flixel.system.FlxAssets;
 import flixel.system.frontEnds.PluginFrontEnd;
-import flixel.util.FlxAngle;
-import flixel.util.FlxMath;
-import flixel.util.FlxPoint;
+import flixel.math.FlxAngle;
+import flixel.math.FlxMath;
+import flixel.math.FlxPoint;
 import flixel.util.FlxStringUtil;
 
 @:allow(flixel.input.mouse.FlxMouseButton)

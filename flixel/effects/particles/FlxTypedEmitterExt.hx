@@ -1,7 +1,7 @@
 package flixel.effects.particles;
 
 import flixel.FlxSprite;
-import flixel.util.FlxRandom;
+import flixel.math.FlxRandom;
 import flixel.effects.particles.FlxParticle;
 
 /**

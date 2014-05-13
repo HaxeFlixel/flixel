@@ -8,7 +8,7 @@ import flash.text.TextFormat;
 import flixel.FlxG;
 import flixel.system.FlxAssets;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 import flixel.util.FlxStringUtil;
 import openfl.Assets;
 

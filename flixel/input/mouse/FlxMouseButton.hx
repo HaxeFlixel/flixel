@@ -5,7 +5,7 @@ import flash.events.MouseEvent;
 import flixel.FlxG;
 import flixel.input.FlxSwipe;
 import flixel.util.FlxDestroyUtil;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 
 class FlxMouseButton implements IFlxDestroyable
 {

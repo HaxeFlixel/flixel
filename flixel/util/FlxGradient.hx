@@ -9,6 +9,7 @@ import flash.display.SpreadMethod;
 import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
+import flixel.math.FlxAngle;
 
 /**
  * Adds a set of color gradient creation / rendering functions

@@ -3,9 +3,10 @@ package flixel.util;
 import flash.display.Graphics;
 import flixel.FlxG;
 import flixel.FlxObject;
+import flixel.math.FlxAngle;
 import flixel.system.frontEnds.PluginFrontEnd;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
 import flixel.util.FlxArrayUtil;
 

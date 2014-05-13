@@ -6,7 +6,7 @@ import flixel.system.layer.frames.FlxFrame;
 import flixel.system.layer.frames.FlxSpriteFrames;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
-import flixel.util.FlxRandom;
+import flixel.math.FlxRandom;
 
 class FlxAnimationController implements IFlxDestroyable
 {

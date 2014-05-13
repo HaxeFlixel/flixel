@@ -1,7 +1,7 @@
 package flixel.system.frontEnds;
 
 import flixel.FlxG;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 
 #if js
 import js.Browser;

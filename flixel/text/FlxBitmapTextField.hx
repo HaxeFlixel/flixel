@@ -9,7 +9,7 @@ import flixel.system.layer.DrawStackItem;
 import flixel.text.pxText.PxBitmapFont;
 import flixel.text.pxText.PxDefaultFontGenerator;
 import flixel.text.pxText.PxTextAlign;
-import flixel.util.FlxAngle;
+import flixel.math.FlxAngle;
 import flixel.util.FlxDestroyUtil;
 
 /**

@@ -7,7 +7,7 @@ import flixel.system.debug.ConsoleUtil.PathToVariable;
 import flixel.system.debug.FlxDebugger;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxDestroyUtil;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 import flixel.util.FlxStringUtil;
 import haxe.ds.StringMap;
 

@@ -16,9 +16,9 @@ import flixel.system.frontEnds.VCRFrontEnd;
 import flixel.system.layer.TileSheetExt;
 import flixel.system.replay.FlxReplay;
 import flixel.text.pxText.PxBitmapFont;
-import flixel.util.FlxAngle;
+import flixel.math.FlxAngle;
 import flixel.util.FlxColor;
-import flixel.util.FlxRandom;
+import flixel.math.FlxRandom;
 import flixel.util.FlxArrayUtil;
 
 #if !FLX_NO_DEBUG

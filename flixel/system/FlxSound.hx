@@ -12,8 +12,8 @@ import flixel.FlxG;
 import flixel.system.FlxAssets.FlxSoundAsset;
 import flixel.system.frontEnds.SoundFrontEnd;
 import flixel.tweens.FlxTween;
-import flixel.util.FlxMath;
-import flixel.util.FlxPoint;
+import flixel.math.FlxMath;
+import flixel.math.FlxPoint;
 import openfl.Assets;
 #end
 

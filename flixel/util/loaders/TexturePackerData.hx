@@ -4,7 +4,7 @@ import flash.display.BitmapData;
 import flash.geom.Rectangle;
 import flixel.FlxG;
 import flixel.util.FlxDestroyUtil;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 import haxe.Json;
 import openfl.Assets;
 

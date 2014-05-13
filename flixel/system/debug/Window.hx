@@ -14,7 +14,7 @@ import flixel.system.FlxAssets;
 import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
-import flixel.util.FlxMath;
+import flixel.math.FlxMath;
 
 @:bitmap("assets/images/debugger/windowHandle.png")
 private class GraphicWindowHandle extends BitmapData {}

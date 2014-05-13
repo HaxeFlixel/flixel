@@ -2,7 +2,7 @@ package flixel.input.gamepad;
 
 import flixel.FlxG;
 import flixel.util.FlxDestroyUtil;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 
 #if flash
 import flash.ui.GameInputControl;

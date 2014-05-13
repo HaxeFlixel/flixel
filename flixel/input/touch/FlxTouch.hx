@@ -8,7 +8,7 @@ import flixel.FlxObject;
 import flixel.group.FlxTypedGroup;
 import flixel.input.FlxSwipe;
 import flixel.util.FlxDestroyUtil;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 
 /**
  * Helper class, contains and track touch points in your game.

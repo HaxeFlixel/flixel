@@ -12,11 +12,11 @@ import flixel.system.layer.DrawStackItem;
 import flixel.system.layer.TileSheetExt;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
-import flixel.util.FlxMath;
-import flixel.util.FlxPoint;
+import flixel.math.FlxMath;
+import flixel.math.FlxPoint;
 import flixel.util.FlxPool.FlxPool;
-import flixel.util.FlxRandom;
-import flixel.util.FlxRect;
+import flixel.math.FlxRandom;
+import flixel.math.FlxRect;
 import flixel.util.loaders.CachedGraphics;
 import openfl.display.Tilesheet;
 

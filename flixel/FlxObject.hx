@@ -8,11 +8,11 @@ import flixel.group.FlxTypedGroup;
 import flixel.tile.FlxTilemap;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
-import flixel.util.FlxPoint;
-import flixel.util.FlxRect;
+import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxStringUtil;
-import flixel.util.FlxVelocity;
+import flixel.math.FlxVelocity;
 
 /**
  * This is the base class for most of the display objects (FlxSprite, FlxText, etc).

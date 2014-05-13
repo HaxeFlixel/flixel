@@ -8,6 +8,8 @@ import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup;
+import flixel.math.FlxAngle;
+import flixel.math.FlxMath;
 import flixel.tile.FlxTileblock;
 
 /**
