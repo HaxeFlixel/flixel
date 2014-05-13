@@ -1,7 +1,7 @@
 package flixel.system.layer.frames;
 
 import flash.display.BitmapData;
-import flixel.util.FlxAngle;
+import flixel.math.FlxAngle;
 import flixel.util.FlxColor;
 
 class FlxRotatedFrame extends FlxFrame
@@ -10,10 +10,10 @@ class FlxRotatedFrame extends FlxFrame
 	{
 		super(tileSheet);
 		
-		type = FrameType.ROTATED;
+		type = ROTATED;
 	}
 	
-	override public function paintOnBitmap(bmd:BitmapData = null):BitmapData 
+	override public function paintOnBitmap(?bmd:BitmapData):BitmapData 
 	{
 		var result:BitmapData = null;
 		

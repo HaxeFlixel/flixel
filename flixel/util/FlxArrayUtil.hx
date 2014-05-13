@@ -1,4 +1,5 @@
 package flixel.util;
+import flixel.math.FlxRandom;
 
 /**
  * A set of functions for array manipulation.
@@ -131,7 +132,7 @@ class FlxArrayUtil
 			{
 				while (array.length > 0)
 				{
-					var thing:Dynamic = array.pop();
+					var thing:T = array.pop();
 					if (Std.is(thing, Array))
 					{
 						clearArray(array, recursive);

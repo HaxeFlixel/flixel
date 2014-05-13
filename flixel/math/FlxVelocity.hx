@@ -1,4 +1,4 @@
-package flixel.util;
+package flixel.math;
 
 import flixel.FlxG;
 import flixel.FlxSprite;

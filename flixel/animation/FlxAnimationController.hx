@@ -2,11 +2,11 @@ package flixel.animation;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.interfaces.IFlxDestroyable;
 import flixel.system.layer.frames.FlxFrame;
 import flixel.system.layer.frames.FlxSpriteFrames;
 import flixel.util.FlxArrayUtil;
-import flixel.util.FlxRandom;
+import flixel.util.FlxDestroyUtil.IFlxDestroyable;
+import flixel.math.FlxRandom;
 
 class FlxAnimationController implements IFlxDestroyable
 {
@@ -163,16 +163,6 @@ class FlxAnimationController implements IFlxDestroyable
 			}
 		}
 		_curAnim = null;
-	}
-	
-	/**
-	 * Gets an animation by name
-	 * @param	Name		The name of the animation.
-	 * @return	Animation	FlxAnimation object with the specified name.
-	 */
-	public function get(Name:String):FlxAnimation
-	{
-		return _animations.get(Name);
 	}
 	
 	/**
@@ -517,7 +507,7 @@ class FlxAnimationController implements IFlxDestroyable
 	
 	/**
   	 * Gets the FlxAnim object with the specified name.
-	*/
+	 */
 	public inline function getByName(Name:String):FlxAnimation
 	{
 		return _animations.get(Name); 
@@ -700,12 +690,7 @@ class FlxAnimationController implements IFlxDestroyable
 	 */
 	private inline function get_curAnim():FlxAnimation
 	{
-		var anim:FlxAnimation = null;
-		if ((_curAnim != null) && (_curAnim.delay > 0) && (_curAnim.looped || !_curAnim.finished))
-		{
-			anim = _curAnim;
-		}
-		return anim;
+		return _curAnim;
 	}
 	
 	/**
@@ -714,13 +699,17 @@ class FlxAnimationController implements IFlxDestroyable
 	 */
 	private inline function set_curAnim(Anim:FlxAnimation):FlxAnimation
 	{
-		if (Anim != null && Anim != _curAnim)
+		if (Anim != _curAnim)
 		{
 			if (_curAnim != null) 
 			{
 				_curAnim.stop();
 			}
-			Anim.play();
+			
+			if (Anim != null)
+			{
+				Anim.play();
+			}
 		}
 		return _curAnim = Anim;
 	}

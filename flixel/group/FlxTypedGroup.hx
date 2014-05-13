@@ -2,7 +2,6 @@ package flixel.group;
 
 import flixel.FlxBasic;
 import flixel.FlxG;
-import flixel.system.FlxCollisionType;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxSort;
 
@@ -42,7 +41,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		
 		maxSize = Std.int(Math.abs(MaxSize));
 		
-		collisionType = FlxCollisionType.GROUP;
+		collisionType = GROUP;
 	}
 	
 	/**
@@ -166,13 +165,13 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 * Recycling is designed to help you reuse game objects without always re-allocating or "newing" them.
 	 * It behaves differently depending on whether maxSize equals 0 or is bigger than 0.
 	 * 
-	 * maxSize == 0 / "rotating-recycling" (used by FlxEmitter):
+	 * maxSize > 0 / "rotating-recycling" (used by FlxEmitter):
 	 *   - at capacity:  returns the next object in line, no matter its properties like alive, exists etc.
 	 *   - otherwise:    returns a new object.
 	 * 
-	 * maxSize > 0 / "grow-style-recycling"
-	 *   - at capacity:  tries to find the first object with exists == false, or if none found:
-	 *   - otherwise:    adds a new object to the members array, doubling its size if necessary
+	 * maxSize == 0 / "grow-style-recycling"
+	 *   - tries to find the first object with exists == false
+	 *   - otherwise: adds a new object to the members array
 	 *
 	 * WARNING: If this function needs to create a new object, and no object class was provided, 
 	 * it will return null instead of a valid object!
@@ -223,7 +222,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 				return cast basic;
 			}
 		}
-		// grow-style recycling - grab a basic with extist == false or create a new one
+		// grow-style recycling - grab a basic with extists == false or create a new one
 		else
 		{
 			basic = getFirstAvailable(ObjectClass, Force);
@@ -320,7 +319,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			
 			if (basic != null)
 			{
-				if (Recurse && basic.collisionType == FlxCollisionType.GROUP)
+				if (Recurse && basic.collisionType == GROUP)
 				{
 					(cast basic).setAll(VariableName, Value, Recurse);
 				}
@@ -353,7 +352,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			
 			if (basic != null)
 			{
-				if (Recurse && (basic.collisionType == FlxCollisionType.GROUP))
+				if (Recurse && (basic.collisionType == GROUP))
 				{
 					(cast(basic, FlxTypedGroup<Dynamic>)).callAll(FunctionName, Args, Recurse);
 				}
@@ -740,5 +739,40 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		length = members.length;
 		
 		return maxSize;
+	}
+}
+
+/**
+ * Iterator implementation for groups
+ * Support a filter method (used for iteratorAlive, iteratorDead and iteratorExists)
+ * @author Masadow
+ */
+class FlxTypedGroupIterator<T>
+{
+	private var _groupMembers:Array<T>;
+	private var _filter:T->Bool;
+	private var _cursor:Int;
+	private var _length:Int;
+
+	public function new(GroupMembers:Array<T>, ?filter:T->Bool)
+	{
+		_groupMembers = GroupMembers;
+		_filter = filter;
+		_cursor = 0;
+		_length = _groupMembers.length;
+	}
+
+	public function next()
+	{
+		return hasNext() ? _groupMembers[_cursor++] : null;
+	}
+
+	public function hasNext():Bool
+	{
+		while (_cursor < _length && (_groupMembers[_cursor] == null || _filter != null && !_filter(_groupMembers[_cursor])))
+		{
+			_cursor++;
+		}
+		return _cursor < _length;
 	}
 }

@@ -80,7 +80,7 @@ class FlxDebugger extends Sprite
 	/**
 	 * Internal, tracks what debugger window layout user has currently selected.
 	 */
-	private var _layout:DebuggerLayout;
+	private var _layout:FlxDebuggerLayout;
 	/**
 	 * Internal, stores width and height of the Flash Player window.
 	 */
@@ -171,7 +171,7 @@ class FlxDebugger extends Sprite
 	 * 
 	 * @param   Layout   The layout codes can be found in FlxDebugger, for example FlxDebugger.MICRO
 	 */
-	public inline function setLayout(Layout:DebuggerLayout):Void
+	public inline function setLayout(Layout:FlxDebuggerLayout):Void
 	{
 		_layout = Layout;
 		resetLayout();
@@ -317,7 +317,7 @@ class FlxDebugger extends Sprite
 	 * @param   UpdateLayout   Whether to update the button layout.
 	 * @return  The added button.
 	 */
-	public function addButton(Position:ButtonAlignment, ?Icon:BitmapData, ?UpHandler:Void->Void, ToggleMode:Bool = false, UpdateLayout:Bool = false):FlxSystemButton
+	public function addButton(Position:FlxButtonAlignment, ?Icon:BitmapData, ?UpHandler:Void->Void, ToggleMode:Bool = false, UpdateLayout:Bool = false):FlxSystemButton
 	{
 		var button = new FlxSystemButton(Icon, UpHandler, ToggleMode);
 		
@@ -509,13 +509,15 @@ class FlxDebugger extends Sprite
 }
 #end
 
-enum ButtonAlignment {
+enum FlxButtonAlignment
+{
 	LEFT;
 	MIDDLE;
 	RIGHT;
 }
 
-enum DebuggerLayout {
+enum FlxDebuggerLayout
+{
 	STANDARD;
 	MICRO;
 	BIG;

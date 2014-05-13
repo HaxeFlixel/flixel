@@ -1,8 +1,9 @@
-package flixel.util;
+package flixel.math;
 
 import flixel.FlxG;
 import flash.geom.Point;
-import flixel.interfaces.IFlxPooled;
+import flixel.util.FlxPool;
+import flixel.util.FlxPool.IFlxPooled;
 import flixel.util.FlxStringUtil;
 
 /**

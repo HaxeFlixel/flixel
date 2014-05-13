@@ -1,8 +1,8 @@
-package flixel.util;
+package flixel.math;
 
 import flixel.FlxObject;
 import flixel.FlxSprite;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 #if !FLX_NO_TOUCH
 import flixel.input.touch.FlxTouch;
 #end

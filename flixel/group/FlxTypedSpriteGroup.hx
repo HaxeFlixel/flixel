@@ -7,15 +7,17 @@ import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxTypedGroup;
-import flixel.system.FlxCollisionType;
+import flixel.system.FlxAssets.FlxGraphicAsset;
+import flixel.system.FlxAssets.FlxTextureAsset;
 import flixel.system.layer.frames.FlxFrame;
 import flixel.util.FlxDestroyUtil;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 import flixel.util.FlxSort;
 
 /**
- * FlxSpriteGroup is a special FlxGroup that can be treated like 
+ * FlxSpriteGroup is a special FlxSprite that can be treated like 
  * a single sprite even if it's made up of several member sprites.
+ * It shares the FlxTypedGroup API, but it doesn't inherit from it.
  */
 class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 {
@@ -77,7 +79,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 */
 	override private function initVars():Void 
 	{
-		collisionType = FlxCollisionType.SPRITEGROUP;
+		collisionType = SPRITEGROUP;
 		
 		offset = new FlxCallbackPoint(offsetCallback);
 		origin = new FlxCallbackPoint(originCallback);
@@ -201,12 +203,12 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	
 	override public function update():Void 
 	{
+		group.update();
+		
 		if (moves)
 		{
 			updateMotion();
 		}
-		
-		group.update();
 	}
 	
 	override public function draw():Void 
@@ -426,6 +428,16 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	public inline function getRandom(StartIndex:Int = 0, Length:Int = 0):T
 	{
 		return group.getRandom(StartIndex, Length);
+	}
+	
+	/**
+	 * Iterate through every member
+	 * 
+	 * @return An iterator
+	 */
+	public inline function iterator(?filter:T->Bool):FlxTypedGroupIterator<T>
+	{
+		return new FlxTypedGroupIterator<T>(members, filter);
 	}
 	
 	/**
@@ -900,7 +912,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 * This functionality isn't supported in SpriteGroup
 	 * @return this sprite group
 	 */
-	override public function loadGraphic(Graphic:Dynamic, Animated:Bool = false, Width:Int = 0, Height:Int = 0, Unique:Bool = false, ?Key:String):FlxSprite 
+	override public function loadGraphic(Graphic:FlxGraphicAsset, Animated:Bool = false, Width:Int = 0, Height:Int = 0, Unique:Bool = false, ?Key:String):FlxSprite 
 	{
 		return this;
 	}
@@ -909,7 +921,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 * This functionality isn't supported in SpriteGroup
 	 * @return this sprite group
 	 */
-	override public function loadRotatedGraphic(Graphic:Dynamic, Rotations:Int = 16, Frame:Int = -1, AntiAliasing:Bool = false, AutoBuffer:Bool = false, ?Key:String):FlxSprite 
+	override public function loadRotatedGraphic(Graphic:FlxGraphicAsset, Rotations:Int = 16, Frame:Int = -1, AntiAliasing:Bool = false, AutoBuffer:Bool = false, ?Key:String):FlxSprite 
 	{
 		#if !FLX_NO_DEBUG
 		FlxG.log.error("loadRotatedGraphic() is not supported in FlxSpriteGroups.");
@@ -933,7 +945,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 * This functionality isn't supported in SpriteGroup
 	 * @return this sprite group
 	 */
-	override public function loadGraphicFromTexture(Data:Dynamic, Unique:Bool = false, ?FrameName:String):FlxSprite 
+	override public function loadGraphicFromTexture(Data:FlxTextureAsset, Unique:Bool = false, ?FrameName:String):FlxSprite 
 	{
 		#if !FLX_NO_DEBUG
 		FlxG.log.error("loadGraphicFromTexture() is not supported in FlxSpriteGroups.");

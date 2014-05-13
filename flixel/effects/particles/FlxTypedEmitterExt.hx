@@ -1,8 +1,8 @@
 package flixel.effects.particles;
 
 import flixel.FlxSprite;
-import flixel.util.FlxRandom;
-import flixel.interfaces.IFlxParticle;
+import flixel.math.FlxRandom;
+import flixel.effects.particles.FlxParticle;
 
 /**
  * Extended FlxEmitter that emits particles in a circle (instead of a square).
@@ -103,7 +103,7 @@ class FlxTypedEmitterExt<T:(FlxSprite, IFlxParticle)> extends FlxTypedEmitter<T>
 		// This fixes the problem that you can not add two particle explosions in the same frame.
 		if (Explode)
 		{
-			on = false;
+			emitting = false;
 			
 			var i:Int = 0;
 			var l:Int = _quantity;
@@ -128,7 +128,7 @@ class FlxTypedEmitterExt<T:(FlxSprite, IFlxParticle)> extends FlxTypedEmitter<T>
 	 */
 	override public function emitParticle():Void
 	{
-		var particle:T = cast recycle(cast _particleClass);
+		var particle:T = cast recycle(cast particleClass);
 		particle.elasticity = bounce;
 		
 		particle.reset(x - (Std.int(particle.width) >> 1) + FlxRandom.float() * width, y - (Std.int(particle.height) >> 1) + FlxRandom.float() * height);

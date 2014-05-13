@@ -1,4 +1,4 @@
-package flixel.util;
+package flixel.math;
 
 import flash.geom.Rectangle;
 import flixel.FlxG;
@@ -53,15 +53,17 @@ class FlxMath
 	/**
 	 * Bound a number by a minimum and maximum. Ensures that this number is 
 	 * no smaller than the minimum, and no larger than the maximum.
+	 * Leaving a bound null means that side is unbounded.
+	 * 
 	 * @param	Value	Any number.
 	 * @param	Min		Any number.
 	 * @param	Max		Any number.
 	 * @return	The bounded value of the number.
 	 */
-	public static inline function bound(Value:Float, Min:Float, Max:Float):Float
+	public static inline function bound(Value:Float, Min:Null<Float>, Max:Null<Float>):Float
 	{
-		var lowerBound:Float = (Value < Min) ? Min : Value;
-		return (lowerBound > Max) ? Max : lowerBound;
+		var lowerBound:Float = (Min != null && Value < Min) ? Min : Value;
+		return (Max != null && lowerBound > Max) ? Max : lowerBound;
 	}
 	
 	/**
@@ -78,16 +80,16 @@ class FlxMath
 	}
 	
 	/**
-	 * Checks if number is in defined range.
+	 * Checks if number is in defined range. A null bound means that side is unbounded.
 	 *
 	 * @param Value		Number to check.
 	 * @param Min		Lower bound of range.
 	 * @param Max 		Higher bound of range.
 	 * @return Returns true if Value is in range.
 	 */
-	public static inline function inBounds(Value:Float, Min:Float, Max:Float):Bool
+	public static inline function inBounds(Value:Float, Min:Null<Float>, Max:Null<Float>):Bool
 	{
-		return ((Value > Min) && (Value < Max));
+		return ((Min == null || Value >= Min) && (Max == null || Value <= Max));
 	}
 	
 	/**

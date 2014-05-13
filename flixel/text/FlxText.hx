@@ -10,13 +10,13 @@ import flash.text.TextFormatAlign;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
-import flixel.interfaces.IFlxDestroyable;
 import flixel.system.FlxAssets;
+import flixel.text.FlxText.FlxTextBorderStyle;
 import flixel.text.FlxText.FlxTextFormat;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 import flixel.util.loaders.CachedGraphics;
 import openfl.Assets;
 
@@ -26,20 +26,6 @@ import openfl.Assets;
  */
 class FlxText extends FlxSprite
 {
-	public static inline var BORDER_NONE:Int = 0;
-	/**
-	 * A simple shadow to the lower-right
-	 */
-	public static inline var BORDER_SHADOW:Int = 1;
-	/**
-	 * Outline on all 8 sides
-	 */
-	public static inline var BORDER_OUTLINE:Int = 2;
-	/**
-	 * Outline, optimized using only 4 draw calls. (Might not work for narrow and/or 1-pixel fonts)
-	 */
-	public static inline var BORDER_OUTLINE_FAST:Int = 3;
-	
 	/**
 	 * The text being displayed.
 	 */
@@ -88,14 +74,14 @@ class FlxText extends FlxSprite
 	public var alignment(get, set):String;
 	
 	/**
-	 * Use a border style like FlxText.SHADOW or FlxText.OUTLINE
+	 * Use a border style
 	 */	
-	public var borderStyle(default, set):Int = BORDER_NONE;
+	public var borderStyle(default, set):FlxTextBorderStyle = NONE;
 	
 	/**
 	 * The color of the border in 0xRRGGBB format
 	 */	
-	public var borderColor(default, set):Int = 0x000000;
+	public var borderColor(default, set):Int = FlxColor.TRANSPARENT;
 	
 	/**
 	 * The size of the border, in pixels.
@@ -296,17 +282,23 @@ class FlxText extends FlxSprite
 	 * You can use this if you have a lot of text parameters
 	 * to set instead of the individual properties.
 	 * 
-	 * @param	Font		The name of the font face for the text display.
-	 * @param	Size		The size of the font (in pixels essentially).
-	 * @param	Color		The color of the text in traditional flash 0xRRGGBB format.
-	 * @param	Alignment	A string representing the desired alignment ("left,"right" or "center").
-	 * @param	BorderStyle	FlxText.NONE, SHADOW, OUTLINE, or OUTLINE_FAST (use setBorderFormat
-	 * @param	BorderColor Int, color for the border, 0xRRGGBB format
+	 * @param	Font			The name of the font face for the text display.
+	 * @param	Size			The size of the font (in pixels essentially).
+	 * @param	Color			The color of the text in traditional flash 0xRRGGBB format.
+	 * @param	Alignment		A string representing the desired alignment ("left,"right" or "center").
+	 * @param	BorderStyle		NONE, SHADOW, OUTLINE, or OUTLINE_FAST (use setBorderFormat)
+	 * @param	BorderColor 	Int, color for the border, 0xRRGGBB format
 	 * @param	EmbeddedFont	Whether this text field uses embedded fonts or not
 	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function setFormat(?Font:String, Size:Float = 8, Color:Int = 0xffffff, ?Alignment:String, BorderStyle:Int = BORDER_NONE, BorderColor:Int = 0x000000, Embedded:Bool = true):FlxText
+	public function setFormat(?Font:String, Size:Float = 8, Color:Int = FlxColor.WHITE, ?Alignment:String, 
+		?BorderStyle:FlxTextBorderStyle, BorderColor:Int = FlxColor.TRANSPARENT, Embedded:Bool = true):FlxText
 	{
+		if (BorderStyle == null)
+		{
+			BorderStyle = NONE;
+		}
+		
 		if (Embedded)
 		{
 			if (Font == null)
@@ -341,12 +333,12 @@ class FlxText extends FlxSprite
 	/**
 	 * Set border's style (shadow, outline, etc), color, and size all in one go!
 	 * 
-	 * @param	Style outline style - FlxText.NONE, SHADOW, OUTLINE, OUTLINE_FAST
+	 * @param	Style outline style - NONE, SHADOW, OUTLINE, OUTLINE_FAST
 	 * @param	Color outline color in flash 0xRRGGBB format
 	 * @param	Size outline size in pixels
 	 * @param	Quality outline quality - # of iterations to use when drawing. 0:just 1, 1:equal number to BorderSize
 	 */
-	public inline function setBorderStyle(Style:Int, Color:Int = 0x000000, Size:Float = 1, Quality:Float = 1):Void 
+	public inline function setBorderStyle(Style:FlxTextBorderStyle, Color:Int = FlxColor.TRANSPARENT, Size:Float = 1, Quality:Float = 1):Void 
 	{
 		borderStyle = Style;
 		borderColor = Color;
@@ -612,7 +604,7 @@ class FlxText extends FlxSprite
 		return Alignment;
 	}
 	
-	private function set_borderStyle(style:Int):Int
+	private function set_borderStyle(style:FlxTextBorderStyle):FlxTextBorderStyle
 	{		
 		if (style != borderStyle)
 		{
@@ -627,7 +619,7 @@ class FlxText extends FlxSprite
 	{
 		Color &= 0x00ffffff;
 		
-		if (borderColor != Color && borderStyle != BORDER_NONE)
+		if (borderColor != Color && borderStyle != NONE)
 		{
 			dirty = true;
 		}
@@ -638,7 +630,7 @@ class FlxText extends FlxSprite
 	
 	private function set_borderSize(Value:Float):Float
 	{
-		if (Value != borderSize && borderStyle != BORDER_NONE)
+		if (Value != borderSize && borderStyle != NONE)
 		{			
 			dirty = true;
 		}
@@ -654,7 +646,7 @@ class FlxText extends FlxSprite
 		else if (Value > 1)
 			Value = 1;
 		
-		if (Value != borderQuality && borderStyle != BORDER_NONE)
+		if (Value != borderQuality && borderStyle != NONE)
 		{
 			dirty = true;
 		}
@@ -787,7 +779,7 @@ class FlxText extends FlxSprite
 				#end
 			}
 			
-			if (borderStyle != BORDER_NONE)
+			if (borderStyle != NONE)
 			{
 				var iterations:Int = Std.int(borderSize * borderQuality);
 				if (iterations <= 0) 
@@ -796,7 +788,7 @@ class FlxText extends FlxSprite
 				}
 				var delta:Float = (borderSize / iterations);
 				
-				if (borderStyle == BORDER_SHADOW) 
+				if (borderStyle == SHADOW) 
 				{
 					//Render a shadow beneath the text
 					//(do one lower-right offset draw call)
@@ -811,7 +803,7 @@ class FlxText extends FlxSprite
 					_matrix.translate( -shadowOffset.x * borderSize, -shadowOffset.y * borderSize);
 					applyFormats(_formatAdjusted, false);
 				}
-				else if (borderStyle == BORDER_OUTLINE) 
+				else if (borderStyle == OUTLINE) 
 				{
 					//Render an outline around the text
 					//(do 8 offset draw calls)
@@ -842,7 +834,7 @@ class FlxText extends FlxSprite
 					
 					applyFormats(_formatAdjusted, false);
 				}
-				else if (borderStyle == BORDER_OUTLINE_FAST) 
+				else if (borderStyle == OUTLINE_FAST) 
 				{
 					//Render an outline around the text
 					//(do 4 diagonal offset draw calls)
@@ -1006,4 +998,21 @@ class FlxTextFormat implements IFlxDestroyable
 	{
 		format = null;
 	}
+}
+
+enum FlxTextBorderStyle
+{
+	NONE;
+	/**
+	 * A simple shadow to the lower-right
+	 */
+	SHADOW;
+	/**
+	 * Outline on all 8 sides
+	 */
+	OUTLINE;
+	/**
+	 * Outline, optimized using only 4 draw calls. (Might not work for narrow and/or 1-pixel fonts)
+	 */
+	OUTLINE_FAST;
 }

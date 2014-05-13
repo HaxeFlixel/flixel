@@ -2,13 +2,12 @@ package flixel.system.frontEnds;
 
 import flash.display.BitmapData;
 import flixel.FlxG;
+import flixel.system.debug.FlxDebugger;
 import flixel.system.debug.Tracker;
-import flixel.system.debug.FlxDebugger.ButtonAlignment;
-import flixel.system.debug.FlxDebugger.DebuggerLayout;
 import flixel.system.debug.Window;
 import flixel.system.ui.FlxSystemButton;
-import flixel.util.FlxStringUtil;
 import flixel.util.FlxSignal;
+import flixel.util.FlxStringUtil;
 
 class DebuggerFrontEnd
 {	
@@ -41,7 +40,7 @@ class DebuggerFrontEnd
 	 * 
 	 * @param	Layout	The layout codes can be found in FlxDebugger, for example FlxDebugger.MICRO
 	 */
-	public inline function setLayout(Layout:DebuggerLayout):Void
+	public inline function setLayout(Layout:FlxDebuggerLayout):Void
 	{
 		#if !FLX_NO_DEBUG
 		FlxG.game.debugger.setLayout(Layout);
@@ -68,7 +67,7 @@ class DebuggerFrontEnd
 	 * @param   UpdateLayout   Whether to update the button layout.
 	 * @return  The added button.
 	 */
-	public function addButton(Alignment:ButtonAlignment, Icon:BitmapData, UpHandler:Void->Void, ToggleMode:Bool = false, UpdateLayout:Bool = true):FlxSystemButton
+	public function addButton(Alignment:FlxButtonAlignment, Icon:BitmapData, UpHandler:Void->Void, ToggleMode:Bool = false, UpdateLayout:Bool = true):FlxSystemButton
 	{
 		#if !FLX_NO_DEBUG
 		return FlxG.game.debugger.addButton(Alignment, Icon, UpHandler, ToggleMode, UpdateLayout);

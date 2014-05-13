@@ -3,11 +3,12 @@ package flixel.util;
 import flash.display.Graphics;
 import flixel.FlxG;
 import flixel.FlxObject;
-import flixel.util.FlxPoint;
+import flixel.math.FlxAngle;
+import flixel.system.frontEnds.PluginFrontEnd;
+import flixel.util.FlxDestroyUtil.IFlxDestroyable;
+import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
 import flixel.util.FlxArrayUtil;
-import flixel.plugin.PathManager;
-import flixel.interfaces.IFlxDestroyable;
 
 /**
  * This is a simple path data container.  Basically a list of points that
@@ -18,7 +19,7 @@ import flixel.interfaces.IFlxDestroyable;
  */
 class FlxPath implements IFlxDestroyable
 {
-	public static var manager:PathManager;
+	public static var manager:FlxPathManager;
 	/**
 	 * Path behavior controls: move from the start of the path to the end then stop.
 	 */
@@ -83,7 +84,7 @@ class FlxPath implements IFlxDestroyable
 	/**
 	 * Pauses or checks the pause state of the path.
 	 */
-	public var active:Bool = true;
+	public var active:Bool = false;
 	
 	public var onComplete:FlxPath->Void;
 
@@ -431,6 +432,7 @@ class FlxPath implements IFlxDestroyable
 	public function cancel():Void
 	{
 		finished = true;
+		active = false;
 		
 		if (object != null)
 		{
@@ -698,4 +700,91 @@ class FlxPath implements IFlxDestroyable
 		#end
 	}
 	#end
+}
+
+class FlxPathManager extends FlxBasic
+{
+	private var _paths:Array<FlxPath> = [];
+	
+	public function new()
+	{
+		super();
+		#if !FLX_NO_DEBUG
+		visible = false; // No draw-calls needed 
+		#end
+		FlxG.signals.stateSwitched.add(clear);
+	}
+	
+	/**
+	 * Clean up memory.
+	 */
+	override public function destroy():Void
+	{
+		clear();
+		_paths = null;
+		FlxG.signals.stateSwitched.remove(clear);
+		super.destroy();
+	}
+	
+	override public function update():Void
+	{
+		for (path in _paths)
+		{
+			if (path.active)
+			{
+				path.update();
+			}
+		}
+	}
+	
+	#if !FLX_NO_DEBUG
+	/**
+	 * Called by FlxG.plugins.draw() after the game state has been drawn.
+	 * Cycles through cameras and calls drawDebug() on each one.
+	 */
+	override public function draw():Void
+	{
+		super.draw();
+		if (FlxG.debugger.drawDebug)
+		{
+			for (path in _paths)
+			{
+				if ((path != null) && !path.ignoreDrawDebug)
+				{
+					path.drawDebug();
+				}
+			}
+		}
+	}
+	#end
+	
+	/**
+	 * Add a path to the path debug display manager.
+	 * Usually called automatically by FlxPath's constructor.
+	 * 
+	 * @param	Path	The FlxPath you want to add to the manager.
+	 */
+	public function add(Path:FlxPath):Void
+	{
+		_paths.push(Path);
+	}
+	
+	/**
+	 * Remove a path from the path debug display manager.
+	 * Usually called automatically by FlxPath's destroy() function.
+	 * 
+	 * @param	Path	The FlxPath you want to remove from the manager.
+	 */
+	public function remove(Path:FlxPath, ReturnInPool:Bool = true):Void
+	{
+		FlxArrayUtil.fastSplice(_paths, Path);
+	}
+	
+	/**
+	 * Removes all the paths from the path debug display manager.
+	 */
+	public inline function clear():Void
+	{
+		FlxArrayUtil.clearArray(_paths);
+	}
 }

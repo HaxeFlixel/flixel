@@ -10,17 +10,18 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.group.FlxGroup;
 import flixel.group.FlxTypedGroup;
-import flixel.system.FlxCollisionType;
+import flixel.system.FlxAssets;
 import flixel.system.layer.DrawStackItem;
 import flixel.system.layer.frames.FlxSpriteFrames;
 import flixel.system.layer.Region;
+import flixel.tile.FlxTilemap.FlxTilemapAutoTiling;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
-import flixel.util.FlxMath;
-import flixel.util.FlxPoint;
-import flixel.util.FlxRandom;
-import flixel.util.FlxRect;
+import flixel.math.FlxMath;
+import flixel.math.FlxPoint;
+import flixel.math.FlxRandom;
+import flixel.math.FlxRect;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.loaders.CachedGraphics;
 import flixel.util.loaders.TextureRegion;
@@ -38,20 +39,6 @@ class GraphicAutoAlt extends BitmapData {}
  */
 class FlxTilemap extends FlxObject
 {
-	/**
-	 * No auto-tiling.
-	 */
-	public static inline var OFF:Int = 0;
-	/**
-	 * Good for levels with thin walls that don'tile need interior corner art.
-	 */
-	public static inline var AUTO:Int = 1;
-	/**
-	 * Better for levels with thick walls that look better with interior corner art.
-	 */
-	public static inline var ALT:Int = 2;
-	
-	
 	/** 
  	 * A helper buffer for calculating number of columns and rows when the game size changed
 	 * We are only using its member functions that's why it is an empty instance
@@ -61,7 +48,7 @@ class FlxTilemap extends FlxObject
 	/**
 	 * Set this flag to use one of the 16-tile binary auto-tile algorithms (OFF, AUTO, or ALT).
 	 */
-	public var auto:Int = OFF;
+	public var auto:FlxTilemapAutoTiling = OFF;
 	/**
 	 * Read-only variable, do NOT recommend changing after the map is loaded!
 	 */
@@ -209,7 +196,7 @@ class FlxTilemap extends FlxObject
 	{
 		super();
 		
-		collisionType = FlxCollisionType.TILEMAP;
+		collisionType = TILEMAP;
 		
 		_buffers = new Array<FlxTilemapBuffer>();
 		_flashPoint = new Point();
@@ -302,9 +289,9 @@ class FlxTilemap extends FlxObject
 	 * @param	CollideIndex	Initializes all tile objects equal to and after this index as allowCollisions = ANY.  Default value is 1.  Ignored if AutoTile is set.  Can override and customize per-tile-type collision behavior using setTileProperties().
 	 * @return	A reference to this instance of FlxTilemap, for chaining as usual :)
 	 */
-	public function loadMap(MapData:Dynamic, TileGraphic:Dynamic, TileWidth:Int = 0, TileHeight:Int = 0, AutoTile:Int = 0, StartingIndex:Int = 0, DrawIndex:Int = 1, CollideIndex:Int = 1):FlxTilemap
+	public function loadMap(MapData:FlxTilemapAsset, TileGraphic:FlxGraphicAsset, TileWidth:Int = 0, TileHeight:Int = 0, ?AutoTile:FlxTilemapAutoTiling, StartingIndex:Int = 0, DrawIndex:Int = 1, CollideIndex:Int = 1):FlxTilemap
 	{
-		auto = AutoTile;
+		auto = (AutoTile == null) ? OFF : AutoTile;
 		_startingIndex = (StartingIndex <= 0) ? 0 : StartingIndex;
 		
 		// Populate data if MapData is a CSV string
@@ -313,7 +300,7 @@ class FlxTilemap extends FlxObject
 			// Figure out the map dimensions based on the data string
 			_data = new Array<Int>();
 			var columns:Array<String>;
-			var rows:Array<String> = MapData.split("\n");
+			var rows:Array<String> = cast (MapData, String).split("\n");
 			heightInTiles = rows.length;
 			widthInTiles = 0;
 			var row:Int = 0;
@@ -382,7 +369,7 @@ class FlxTilemap extends FlxObject
 		var i:Int;
 		totalTiles = _data.length;
 		
-		if (auto > OFF)
+		if (auto != OFF)
 		{
 			_startingIndex = 1;
 			DrawIndex = 1;
@@ -670,6 +657,12 @@ class FlxTilemap extends FlxObject
 	 */
 	override public function draw():Void
 	{
+		// don't try to render a tilemap that isn't loaded yet
+		if (cachedGraphics == null)
+		{
+			return;
+		}
+		
 		var cameras = cameras;
 		var camera:FlxCamera;
 		var buffer:FlxTilemapBuffer;
@@ -864,8 +857,8 @@ class FlxTilemap extends FlxObject
 	
 	private inline function tilemapOverlapsCallback(ObjectOrGroup:FlxBasic, X:Float = 0, Y:Float = 0, InScreenSpace:Bool = false, ?Camera:FlxCamera):Bool
 	{
-		if ((ObjectOrGroup.collisionType == FlxCollisionType.OBJECT) || 
-		    (ObjectOrGroup.collisionType == FlxCollisionType.TILEMAP))
+		if ((ObjectOrGroup.collisionType == OBJECT) || 
+		    (ObjectOrGroup.collisionType == TILEMAP))
 		{
 			return overlapsWithCallback(cast(ObjectOrGroup, FlxObject));
 		}
@@ -904,8 +897,8 @@ class FlxTilemap extends FlxObject
 	
 	private inline function tilemapOverlapsAtCallback(ObjectOrGroup:FlxBasic, X:Float, Y:Float, InScreenSpace:Bool, Camera:FlxCamera):Bool
 	{
-		if (ObjectOrGroup.collisionType == FlxCollisionType.OBJECT || 
-		    ObjectOrGroup.collisionType == FlxCollisionType.TILEMAP)
+		if (ObjectOrGroup.collisionType == OBJECT || 
+		    ObjectOrGroup.collisionType == TILEMAP)
 		{
 			return overlapsWithCallback(cast(ObjectOrGroup, FlxObject), null, false, _point.set(X, Y));
 		}
@@ -1248,7 +1241,7 @@ class FlxTilemap extends FlxObject
 	 * @param	CallbackFilter		If you only want the callback to go off for certain classes or objects based on a certain class, set that class here.
 	 * @param	Range				If you want this callback to work for a bunch of different tiles, input the range here.  Default value is 1.
 	 */
-	public function setTileProperties(Tile:Int, AllowCollisions:Int = FlxObject.ANY, ?Callback:FlxObject->FlxObject->Void, ?CallbackFilter:Class<Dynamic>, Range:Int = 1):Void
+	public function setTileProperties(Tile:Int, AllowCollisions:Int = FlxObject.ANY, ?Callback:FlxObject->FlxObject->Void, ?CallbackFilter:Class<FlxObject>, Range:Int = 1):Void
 	{
 		if (Range <= 0)
 		{
@@ -1282,7 +1275,7 @@ class FlxTilemap extends FlxObject
 			Camera = FlxG.camera;
 		}
 		
-		Camera.setBounds(x + Border * _scaledTileWidth, y + Border * _scaledTileHeight, width - Border * _scaledTileWidth * 2, height - Border * _scaledTileHeight * 2, UpdateWorld);
+		Camera.setScrollBoundsRect(x + Border * _scaledTileWidth, y + Border * _scaledTileHeight, width - Border * _scaledTileWidth * 2, height - Border * _scaledTileHeight * 2, UpdateWorld);
 	}
 	
 	/**
@@ -1644,8 +1637,8 @@ class FlxTilemap extends FlxObject
 					drawX = _helperPoint.x + (columnIndex % widthInTiles) * _scaledTileWidth;
 					drawY = _helperPoint.y + Math.floor(columnIndex / widthInTiles) * _scaledTileHeight;
 					
-					currDrawData[currIndex++] = pixelPerfectRender ? Math.floor(drawX) : drawX;
-					currDrawData[currIndex++] = pixelPerfectRender ? Math.floor(drawY) : drawY;
+					currDrawData[currIndex++] = isPixelPerfectRender(Camera) ? Math.floor(drawX) : drawX;
+					currDrawData[currIndex++] = isPixelPerfectRender(Camera) ? Math.floor(drawY) : drawY;
 					currDrawData[currIndex++] = tileID;
 					
 					// Tilemap tearing hack
@@ -2184,7 +2177,7 @@ class FlxTilemap extends FlxObject
 			_helperBuffer.updateRows(_tileHeight, heightInTiles, scale.y, camera);
 			
 			// Create a new buffer if the number of columns and rows differs
-			if (buffer == null || _helperBuffer.columns != buffer.columns || _helperBuffer.rows != buffer.rows)			
+			if (buffer == null || _helperBuffer.columns != buffer.columns || _helperBuffer.rows != buffer.rows)
 			{
 				if (buffer != null)
 					buffer.destroy();
@@ -2267,4 +2260,17 @@ class FlxTilemap extends FlxObject
 			}
 		}
 	}
+}
+
+enum FlxTilemapAutoTiling
+{
+	OFF;
+	/**
+	 * Good for levels with thin walls that don'tile need interior corner art.
+	 */
+	AUTO;
+	/**
+	 * Better for levels with thick walls that look better with interior corner art.
+	 */
+	ALT;
 }

@@ -6,7 +6,7 @@ import flash.ui.Mouse;
 import flash.utils.ByteArray;
 import flixel.FlxG;
 import flixel.FlxState;
-import flixel.util.FlxRandom;
+import flixel.math.FlxRandom;
 
 #if flash
 import flash.net.FileReference;

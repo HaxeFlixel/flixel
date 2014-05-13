@@ -4,7 +4,6 @@ import flash.display.BitmapData;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.FlxG;
-import flixel.interfaces.IFlxDestroyable;
 import flixel.util.FlxDestroyUtil;
 import openfl.display.Tilesheet;
 

@@ -5,15 +5,14 @@ import flixel.FlxBasic;
 import flixel.group.FlxGroup;
 import flixel.group.FlxSpriteGroup;
 import flixel.group.FlxTypedGroup;
-import flixel.system.FlxCollisionType;
 import flixel.tile.FlxTilemap;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
-import flixel.util.FlxPoint;
-import flixel.util.FlxRect;
+import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxStringUtil;
-import flixel.util.FlxVelocity;
+import flixel.math.FlxVelocity;
 
 /**
  * This is the base class for most of the display objects (FlxSprite, FlxText, etc).
@@ -98,11 +97,11 @@ class FlxObject extends FlxBasic
 		}
 		
 		//If one of the objects is a tilemap, just pass it off.
-		if (Object1.collisionType == FlxCollisionType.TILEMAP)
+		if (Object1.collisionType == TILEMAP)
 		{
 			return cast(Object1, FlxTilemap).overlapsWithCallback(Object2, separateX);
 		}
-		if (Object2.collisionType == FlxCollisionType.TILEMAP)
+		if (Object2.collisionType == TILEMAP)
 		{
 			return cast(Object2, FlxTilemap).overlapsWithCallback(Object1, separateX, true);
 		}
@@ -211,11 +210,11 @@ class FlxObject extends FlxBasic
 		}
 		
 		//If one of the objects is a tilemap, just pass it off.
-		if (Object1.collisionType == FlxCollisionType.TILEMAP)
+		if (Object1.collisionType == TILEMAP)
 		{
 			return cast(Object1, FlxTilemap).overlapsWithCallback(Object2, separateY);
 		}
-		if (Object2.collisionType == FlxCollisionType.TILEMAP)
+		if (Object2.collisionType == TILEMAP)
 		{
 			return cast(Object2, FlxTilemap).overlapsWithCallback(Object1, separateY, true);
 		}
@@ -348,7 +347,7 @@ class FlxObject extends FlxBasic
 	 * Only affects tilesheet rendering and rendering using BitmapData.draw() in blitting.
 	 * (copyPixels() only renders on whole pixels by nature). Causes draw() to be used if false, which is more expensive.
 	 */
-	public var pixelPerfectRender(default, set):Bool = true;
+	public var pixelPerfectRender(default, set):Null<Bool>;
 	/**
 	 * Set the angle of a sprite to rotate it. WARNING: rotating sprites decreases rendering
 	 * performance for this sprite by a factor of 10x (in Flash target)!
@@ -488,7 +487,7 @@ class FlxObject extends FlxBasic
 	 */
 	private function initVars():Void
 	{
-		collisionType = FlxCollisionType.OBJECT;
+		collisionType = OBJECT;
 		last = FlxPoint.get(x, y);
 		scrollFactor = FlxPoint.get(1, 1);
 		_point = FlxPoint.get();
@@ -603,7 +602,7 @@ class FlxObject extends FlxBasic
 			return FlxGroup.overlaps(overlapsCallback, group, 0, 0, InScreenSpace, Camera);
 		}
 		
-		if (ObjectOrGroup.collisionType == FlxCollisionType.TILEMAP)
+		if (ObjectOrGroup.collisionType == TILEMAP)
 		{
 			//Since tilemap's have to be the caller, not the target, to do proper tile-based collisions,
 			// we redirect the call to the tilemap overlap here.
@@ -651,7 +650,7 @@ class FlxObject extends FlxBasic
 			return FlxGroup.overlaps(overlapsAtCallback, group, X, Y, InScreenSpace, Camera);
 		}
 		
-		if (ObjectOrGroup.collisionType == FlxCollisionType.TILEMAP)
+		if (ObjectOrGroup.collisionType == TILEMAP)
 		{
 			//Since tilemap's have to be the caller, not the target, to do proper tile-based collisions,
 			// we redirect the call to the tilemap overlap here.
@@ -788,6 +787,18 @@ class FlxObject extends FlxBasic
 	}
 	
 	/**
+	 * Check if object is rendered pixel perfect on a specific camera.
+	 */
+	public function isPixelPerfectRender(?Camera:FlxCamera):Bool
+	{
+		if (Camera == null)
+		{
+			Camera = FlxG.camera;
+		}
+		return pixelPerfectRender == null ? Camera.pixelPerfectRender : pixelPerfectRender;
+	}
+	
+	/**
 	 * Handy function for checking if this object is touching a particular surface.
 	 * Be sure to check it before calling super.update(), as that will reset the flags.
 	 * 
@@ -880,7 +891,7 @@ class FlxObject extends FlxBasic
 		var boundingBoxX:Float = x - (Camera.scroll.x * scrollFactor.x); //copied from getScreenXY()
 		var boundingBoxY:Float = y - (Camera.scroll.y * scrollFactor.y);
 		
-		if (pixelPerfectRender)
+		if (isPixelPerfectRender(Camera))
 		{
 			boundingBoxX = Math.floor(boundingBoxX);
 			boundingBoxY = Math.floor(boundingBoxY);
@@ -939,7 +950,7 @@ class FlxObject extends FlxBasic
 	#end
 	
 	/**
-	 * Convert object to readable string name.  Useful for debugging, save games, etc.
+	 * Convert object to readable string name. Useful for debugging, save games, etc.
 	 */
 	override public function toString():String
 	{
@@ -952,7 +963,7 @@ class FlxObject extends FlxBasic
 			LabelValuePair.weak("velocity", velocity)]);
 	}
 	
-		private function set_x(NewX:Float):Float
+	private function set_x(NewX:Float):Float
 	{
 		return x = NewX;
 	}

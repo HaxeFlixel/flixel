@@ -6,9 +6,9 @@ import flash.text.TextField;
 import flash.text.TextFieldType;
 import flash.text.TextFormat;
 import flixel.FlxG;
-import flixel.interfaces.IFlxDestroyable;
 import flixel.system.FlxAssets;
-import flixel.util.FlxPoint;
+import flixel.util.FlxDestroyUtil.IFlxDestroyable;
+import flixel.math.FlxPoint;
 import flixel.util.FlxStringUtil;
 import openfl.Assets;
 

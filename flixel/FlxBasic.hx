@@ -2,8 +2,7 @@ package flixel;
 
 import flixel.FlxG;
 import flixel.group.FlxTypedGroup;
-import flixel.interfaces.IFlxDestroyable;
-import flixel.system.FlxCollisionType;
+import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import flixel.util.FlxStringUtil;
 
 /**
@@ -46,7 +45,7 @@ class FlxBasic implements IFlxDestroyable
 	/**
 	 * Enum that informs the collision system which type of object this is (to avoid expensive type casting).
 	 */
-	public var collisionType(default, null):FlxCollisionType = FlxCollisionType.NONE;
+	public var collisionType(default, null):FlxCollisionType = NONE;
 	
 	public function new() {}
 	
@@ -129,4 +128,38 @@ class FlxBasic implements IFlxDestroyable
 			LabelValuePair.weak("alive", alive),
 			LabelValuePair.weak("exists", exists)]);
 	}
+}
+
+/**
+ * Types of collidable objects.
+ * 
+ * Abstracted from an Int type for fast comparison code:
+ * http://nadako.tumblr.com/post/64707798715/cool-feature-of-upcoming-haxe-3-2-enum-abstracts
+ */
+@:enum
+abstract FlxCollisionType(Int)
+{
+	var NONE        = 0;
+	var OBJECT      = 1;
+	var GROUP       = 2;
+	var TILEMAP     = 3;
+	var SPRITEGROUP = 4;
+}
+
+interface IFlxBasic
+{
+	public var ID:Int;
+	public var active(default, set):Bool;
+	public var visible(default, set):Bool;
+	public var alive(default, set):Bool;
+	public var exists(default, set):Bool;
+
+	public function draw():Void;
+	public function update():Void;
+	public function destroy():Void;
+	
+	public function kill():Void;
+	public function revive():Void;
+	
+	public function toString():String;
 }

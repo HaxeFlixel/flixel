@@ -4,15 +4,17 @@ import flash.display.BitmapData;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.FlxBasic;
+import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.system.layer.DrawStackItem;
 import flixel.system.layer.Region;
-import flixel.util.FlxAngle;
+import flixel.ui.FlxBar.FlxBarFillDirection;
+import flixel.math.FlxAngle;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxGradient;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 import flixel.util.FlxStringUtil;
 import flixel.util.loaders.CachedGraphics;
 
@@ -27,22 +29,6 @@ import flixel.util.loaders.CachedGraphics;
  */
 class FlxBar extends FlxSprite
 {
-	public static inline var FILL_LEFT_TO_RIGHT:Int = 1;
-	public static inline var FILL_RIGHT_TO_LEFT:Int = 2;
-	public static inline var FILL_TOP_TO_BOTTOM:Int = 3;
-	public static inline var FILL_BOTTOM_TO_TOP:Int = 4;
-	public static inline var FILL_HORIZONTAL_INSIDE_OUT:Int = 5;
-	public static inline var FILL_HORIZONTAL_OUTSIDE_IN:Int = 6;
-	public static inline var FILL_VERTICAL_INSIDE_OUT:Int = 7;
-	public static inline var FILL_VERTICAL_OUTSIDE_IN:Int = 8;
-	
-	private static inline var FRAMES_POSITION_HORIZONTAL:String = "horizontal";
-	private static inline var FRAMES_POSITION_VERTICAL:String = "vertical";
-	
-	private static inline var BAR_FILLED:Int = 1;
-	private static inline var BAR_GRADIENT:Int = 2;
-	private static inline var BAR_IMAGE:Int = 3;
-	
 	/**
 	 * fixedPosition controls if the FlxBar sprite is at a fixed location on screen, or tracking its parent
 	 */
@@ -77,14 +63,12 @@ class FlxBar extends FlxSprite
 	private var _filledBarRect:Rectangle;
 	private var _filledBarPoint:Point;
 	
-	private var _fillDirection:Int;
+	private var _fillDirection:FlxBarFillDirection;
 	private var _fillHorizontal:Bool;
 	
 	#if FLX_RENDER_TILE
 	private var _emptyBarFrameID:Int;
 	private var _filledBarFrames:Array<Float>;
-	
-	private var _framesPosition:String;
 	
 	private var _cachedFrontGraphics:CachedGraphics;
 	private var _frontRegion:Region;
@@ -92,7 +76,6 @@ class FlxBar extends FlxSprite
 	private var _canvas:BitmapData;
 	#end
 	
-	private var _barType:Int;
 	private var _barWidth:Int;
 	private var _barHeight:Int;
 	
@@ -125,7 +108,7 @@ class FlxBar extends FlxSprite
 	 * 
 	 * @param	x			The x coordinate location of the resulting bar (in world pixels)
 	 * @param	y			The y coordinate location of the resulting bar (in world pixels)
-	 * @param	direction 	One of the FlxBar.FILL_ constants (such as FILL_LEFT_TO_RIGHT, FILL_TOP_TO_BOTTOM etc)
+	 * @param	direction 	The fill direction, LEFT_TO_RIGHT by default
 	 * @param	width		The width of the bar in pixels
 	 * @param	height		The height of the bar in pixels
 	 * @param	parentRef	A reference to an object in your game that you wish the bar to track
@@ -134,8 +117,13 @@ class FlxBar extends FlxSprite
 	 * @param	max			The maximum value the bar can reach. I.e. for a progress bar this would typically be 100.
 	 * @param	border		Include a 1px border around the bar? (if true it adds +2 to width and height to accommodate it)
 	 */
-	public function new(x:Float = 0, y:Float = 0, direction:Int = FILL_LEFT_TO_RIGHT, width:Int = 100, height:Int = 10, ?parentRef:Dynamic, variable:String = "", min:Float = 0, max:Float = 100, border:Bool = false)
+	public function new(x:Float = 0, y:Float = 0, ?direction:FlxBarFillDirection, width:Int = 100, height:Int = 10, ?parentRef:Dynamic, variable:String = "", min:Float = 0, max:Float = 100, border:Bool = false)
 	{
+		if (direction == null)
+		{
+			direction = LEFT_TO_RIGHT;
+		}
+		
 		_zeroOffset = new Point();
 		
 		super(x, y);
@@ -151,8 +139,6 @@ class FlxBar extends FlxSprite
 		origin.set(frameWidth * 0.5, frameHeight * 0.5);
 		_halfWidth = 0.5 * frameWidth;
 		_halfHeight = 0.5 * frameHeight;
-		
-		_framesPosition = FRAMES_POSITION_HORIZONTAL;
 		#end
 		
 		_filledBarPoint = new Point(0, 0);
@@ -305,8 +291,8 @@ class FlxBar extends FlxSprite
 			return;
 		}
 		
-		this._min = min;
-		this._max = max;
+		_min = min;
+		_max = max;
 		
 		_range = max - min;
 		
@@ -354,8 +340,6 @@ class FlxBar extends FlxSprite
 	 */
 	public function createFilledBar(empty:Int, fill:Int, showBorder:Bool = false, border:Int = 0xffffffff):Void
 	{
-		_barType = BAR_FILLED;
-		
 		#if FLX_RENDER_TILE
 		var emptyA:Int = (empty >> 24) & 255;
 		var emptyRGB:Int = empty & 0x00ffffff;
@@ -370,15 +354,6 @@ class FlxBar extends FlxSprite
 		{
 			emptyKey = emptyKey + "border: " + borderA + "." + borderRGB;
 			filledKey = filledKey + "border: " + borderA + "." + borderRGB;
-		}
-		
-		if (_barWidth >= _barHeight)
-		{
-			_framesPosition = FRAMES_POSITION_HORIZONTAL;
-		}
-		else
-		{
-			_framesPosition = FRAMES_POSITION_VERTICAL;
 		}
 		#end
 		
@@ -458,8 +433,6 @@ class FlxBar extends FlxSprite
 	 */
 	public function createGradientBar(empty:Array<Int>, fill:Array<Int>, chunkSize:Int = 1, rotation:Int = 180, showBorder:Bool = false, border:Int = 0xffffffff):Void
 	{
-		_barType = BAR_GRADIENT;
-		
 		#if FLX_RENDER_TILE
 		var colA:Int;
 		var colRGB:Int;
@@ -491,15 +464,6 @@ class FlxBar extends FlxSprite
 			
 			emptyKey = emptyKey + "border: " + borderA + "." + borderRGB;
 			filledKey = filledKey + "border: " + borderA + "." + borderRGB;
-		}
-		
-		if (_barWidth >= _barHeight)
-		{
-			_framesPosition = FRAMES_POSITION_HORIZONTAL;
-		}
-		else
-		{
-			_framesPosition = FRAMES_POSITION_VERTICAL;
 		}
 		#end
 		
@@ -535,13 +499,13 @@ class FlxBar extends FlxSprite
 			#else
 			if (FlxG.bitmap.checkCache(emptyKey) == false)
 			{
-				var _emptyBar:BitmapData = FlxGradient.createGradientBitmapData(_barWidth, _barHeight, empty, chunkSize, rotation);
+				var _emptyBar = FlxGradient.createGradientBitmapData(_barWidth, _barHeight, empty, chunkSize, rotation);
 				FlxG.bitmap.add(_emptyBar, false, emptyKey);
 			}
 			
 			if (FlxG.bitmap.checkCache(filledKey) == false)
 			{
-				var _filledBar:BitmapData = FlxGradient.createGradientBitmapData(_barWidth, _barHeight, fill, chunkSize, rotation);
+				var _filledBar = FlxGradient.createGradientBitmapData(_barWidth, _barHeight, fill, chunkSize, rotation);
 				FlxG.bitmap.add(_filledBar, false, filledKey);
 			}
 			#end
@@ -619,8 +583,6 @@ class FlxBar extends FlxSprite
 		filledKey += "fillBackground: " + fillBackgroundA + "." + fillBackgroundRGB;
 	#end
 		
-		_barType = BAR_IMAGE;
-		
 		if (empty == null && fill == null)
 		{
 			return;
@@ -642,14 +604,6 @@ class FlxBar extends FlxSprite
 			_barWidth = emptyBitmapData.width;
 			_barHeight = emptyBitmapData.height;
 			
-			if (_barWidth >= _barHeight)
-			{
-				_framesPosition = FRAMES_POSITION_HORIZONTAL;
-			}
-			else
-			{
-				_framesPosition = FRAMES_POSITION_VERTICAL;
-			}
 			// TODO: continue from here
 			if (FlxG.bitmap.checkCache(emptyKey) == false)
 			{
@@ -658,7 +612,7 @@ class FlxBar extends FlxSprite
 			
 			if (FlxG.bitmap.checkCache(filledKey) == false)
 			{
-				var _filledBar:BitmapData = new BitmapData(_barWidth, _barHeight, true, fillBackground);
+				var _filledBar = new BitmapData(_barWidth, _barHeight, true, fillBackground);
 				FlxG.bitmap.add(_filledBar, false, filledKey);
 			}
 		#end
@@ -679,18 +633,9 @@ class FlxBar extends FlxSprite
 			_barWidth = fillBitmapData.width;
 			_barHeight = fillBitmapData.height;
 			
-			if (_barWidth >= _barHeight)
-			{
-				_framesPosition = FRAMES_POSITION_HORIZONTAL;
-			}
-			else
-			{
-				_framesPosition = FRAMES_POSITION_VERTICAL;
-			}
-			
 			if (FlxG.bitmap.checkCache(emptyKey) == false)
 			{
-				var _emptyBar:BitmapData = new BitmapData(_barWidth, _barHeight, true, emptyBackground);
+				var _emptyBar = new BitmapData(_barWidth, _barHeight, true, emptyBackground);
 				FlxG.bitmap.add(_emptyBar, false, emptyKey);
 			}
 			
@@ -715,15 +660,6 @@ class FlxBar extends FlxSprite
 			#else
 			_barWidth = emptyBitmapData.width;
 			_barHeight = emptyBitmapData.height;
-			
-			if (_barWidth >= _barHeight)
-			{
-				_framesPosition = FRAMES_POSITION_HORIZONTAL;
-			}
-			else
-			{
-				_framesPosition = FRAMES_POSITION_VERTICAL;
-			}
 			
 			if (FlxG.bitmap.checkCache(emptyKey) == false)
 			{
@@ -765,19 +701,19 @@ class FlxBar extends FlxSprite
 	/**
 	 * Set the direction from which the health bar will fill-up. Default is from left to right. Change takes effect immediately.
 	 * 
-	 * @param	direction	One of the FlxBar.FILL_ constants (such as FILL_LEFT_TO_RIGHT, FILL_TOP_TO_BOTTOM etc)
+	 * @param	direction	The fill direction, LEFT_TO_RIGHT by default
 	 */
-	public function setFillDirection(direction:Int):Void
+	public function setFillDirection(direction:FlxBarFillDirection):Void
 	{
-		if (direction == FILL_LEFT_TO_RIGHT || direction == FILL_RIGHT_TO_LEFT || direction == FILL_HORIZONTAL_INSIDE_OUT || direction == FILL_HORIZONTAL_OUTSIDE_IN)
+		switch (direction)
 		{
-			_fillDirection = direction;
-			_fillHorizontal = true;
-		}
-		else if (direction == FILL_TOP_TO_BOTTOM || direction == FILL_BOTTOM_TO_TOP || direction == FILL_VERTICAL_INSIDE_OUT || direction == FILL_VERTICAL_OUTSIDE_IN)
-		{
-			_fillDirection = direction;
-			_fillHorizontal = false;
+			case LEFT_TO_RIGHT, RIGHT_TO_LEFT, HORIZONTAL_INSIDE_OUT, HORIZONTAL_OUTSIDE_IN:
+				_fillDirection = direction;
+				_fillHorizontal = true;
+				
+			case TOP_TO_BOTTOM, BOTTOM_TO_TOP, VERTICAL_INSIDE_OUT, VERTICAL_OUTSIDE_IN:
+				_fillDirection = direction;
+				_fillHorizontal = false;
 		}
 		
 		#if FLX_RENDER_TILE
@@ -839,39 +775,34 @@ class FlxBar extends FlxSprite
 		
 		if (percent > 0)
 		{
-			if (_fillDirection == FILL_LEFT_TO_RIGHT || _fillDirection == FILL_TOP_TO_BOTTOM)
+			switch (_fillDirection)
 			{
-				//	Already handled above
-			}
-			else if (_fillDirection == FILL_BOTTOM_TO_TOP)
-			{
-				_filledBarRect.y = _barHeight - _filledBarRect.height;
-				_filledBarPoint.y = _barHeight - _filledBarRect.height;
-			}
-			else if (_fillDirection == FILL_RIGHT_TO_LEFT)
-			{
-				_filledBarRect.x = _barWidth - _filledBarRect.width;
-				_filledBarPoint.x = _barWidth - _filledBarRect.width;
-			}
-			else if (_fillDirection == FILL_HORIZONTAL_INSIDE_OUT)
-			{
-				_filledBarRect.x = Std.int((_barWidth / 2) - (_filledBarRect.width / 2));
-				_filledBarPoint.x = Std.int((_barWidth / 2) - (_filledBarRect.width / 2));
-			}
-			else if (_fillDirection == FILL_HORIZONTAL_OUTSIDE_IN)
-			{
-				_filledBarRect.width = Std.int(100 - percent * pxPerPercent);
-				_filledBarPoint.x = Std.int((_barWidth - _filledBarRect.width) / 2);
-			}
-			else if (_fillDirection == FILL_VERTICAL_INSIDE_OUT)
-			{
-				_filledBarRect.y = Std.int((_barHeight / 2) - (_filledBarRect.height / 2));
-				_filledBarPoint.y = Std.int((_barHeight / 2) - (_filledBarRect.height / 2));
-			}
-			else if (_fillDirection == FILL_VERTICAL_OUTSIDE_IN)
-			{
-				_filledBarRect.height = Std.int(100 - percent * pxPerPercent);
-				_filledBarPoint.y = Std.int((_barHeight - _filledBarRect.height) / 2);
+				case LEFT_TO_RIGHT, TOP_TO_BOTTOM:
+					//	Already handled above
+				
+				case BOTTOM_TO_TOP:
+					_filledBarRect.y = _barHeight - _filledBarRect.height;
+					_filledBarPoint.y = _barHeight - _filledBarRect.height;
+					
+				case RIGHT_TO_LEFT:
+					_filledBarRect.x = _barWidth - _filledBarRect.width;
+					_filledBarPoint.x = _barWidth - _filledBarRect.width;
+					
+				case HORIZONTAL_INSIDE_OUT:
+					_filledBarRect.x = Std.int((_barWidth / 2) - (_filledBarRect.width / 2));
+					_filledBarPoint.x = Std.int((_barWidth / 2) - (_filledBarRect.width / 2));
+				
+				case HORIZONTAL_OUTSIDE_IN:
+					_filledBarRect.width = Std.int(100 - percent * pxPerPercent);
+					_filledBarPoint.x = Std.int((_barWidth - _filledBarRect.width) / 2);
+				
+				case VERTICAL_INSIDE_OUT:
+					_filledBarRect.y = Std.int((_barHeight / 2) - (_filledBarRect.height / 2));
+					_filledBarPoint.y = Std.int((_barHeight / 2) - (_filledBarRect.height / 2));
+					
+				case VERTICAL_OUTSIDE_IN:
+					_filledBarRect.height = Std.int(100 - percent * pxPerPercent);
+					_filledBarPoint.y = Std.int((_barHeight - _filledBarRect.height) / 2);
 			}
 			
 			_canvas.copyPixels(_filledBar, _filledBarRect, _filledBarPoint);
@@ -938,7 +869,7 @@ class FlxBar extends FlxSprite
 			var x2:Float = 0;
 			var y2:Float = 0;
 
-			if (!isSimpleRender())
+			if (!isSimpleRender(camera))
 			{
 				if (_angleChanged)
 				{
@@ -1035,9 +966,9 @@ class FlxBar extends FlxSprite
 		return Pixels; // hack
 	}
 	
-	override public function isSimpleRender():Bool
+	override public function isSimpleRender(?camera:FlxCamera):Bool
 	{ 
-		return ((angle == 0) && (scale.x == 1) && (scale.y == 1));
+		return (angle == 0) && (scale.x == 1) && (scale.y == 1);
 	}
 	#end
 	
@@ -1066,67 +997,53 @@ class FlxBar extends FlxSprite
 			frameX = 0;
 			frameY = 0;
 			
-			if (_fillDirection == FILL_LEFT_TO_RIGHT)
+			switch (_fillDirection)
 			{
-				frameWidth = _barWidth * i / 100;
-				frameHeight = _barHeight;
+				case LEFT_TO_RIGHT:
+					frameWidth = _barWidth * i / 100;
+					frameHeight = _barHeight;
+					_filledBarFrames.push( -_halfWidth + frameWidth * 0.5);
+					
+				case TOP_TO_BOTTOM:
+					frameWidth = _barWidth;
+					frameHeight = _barHeight * i / 100;
+					_filledBarFrames.push(-_halfHeight + frameHeight * 0.5);
 				
-				_filledBarFrames.push(-_halfWidth + frameWidth * 0.5);
-			}
-			else if (_fillDirection == FILL_TOP_TO_BOTTOM)
-			{
-				frameWidth = _barWidth;
-				frameHeight = _barHeight * i / 100;
-				
-				_filledBarFrames.push(-_halfHeight + frameHeight * 0.5);
-			}
-			else if (_fillDirection == FILL_BOTTOM_TO_TOP)
-			{
-				frameWidth = _barWidth;
-				frameHeight = _barHeight * i / 100;
-				frameY += (_barHeight - frameHeight);
-				
-				_filledBarFrames.push(_halfHeight - 0.5 * frameHeight);
-			}
-			else if (_fillDirection == FILL_RIGHT_TO_LEFT)
-			{
-				frameWidth = _barWidth * i / 100;
-				frameHeight = _barHeight;
-				frameX += (_barWidth - frameWidth);
-				
-				_filledBarFrames.push(_halfWidth - 0.5 * frameWidth);
-			}
-			else if (_fillDirection == FILL_HORIZONTAL_INSIDE_OUT)
-			{
-				frameWidth = _barWidth * i / 100;
-				frameHeight = _barHeight;
-				frameX += (0.5 * (_barWidth - frameWidth));
-				
-				_filledBarFrames.push(0);
-			}
-			else if (_fillDirection == FILL_HORIZONTAL_OUTSIDE_IN)
-			{
-				frameWidth = _barWidth * (100 - i) / 100;
-				frameHeight = _barHeight;
-				frameX += 0.5 * (_barWidth - frameWidth);
-				
-				_filledBarFrames.push(0);
-			}
-			else if (_fillDirection == FILL_VERTICAL_INSIDE_OUT)
-			{
-				frameWidth = _barWidth;
-				frameHeight = _barHeight * i / 100;
-				frameY += (0.5 * (_barHeight - frameHeight));
-				
-				_filledBarFrames.push(0);
-			}
-			else if (_fillDirection == FILL_VERTICAL_OUTSIDE_IN)
-			{
-				frameWidth = _barWidth;
-				frameHeight = _barHeight * (100 - i) / 100;
-				frameY += (0.5 * (_barHeight - frameHeight));
-				
-				_filledBarFrames.push(0);
+				case BOTTOM_TO_TOP:
+					frameWidth = _barWidth;
+					frameHeight = _barHeight * i / 100;
+					frameY += (_barHeight - frameHeight);
+					_filledBarFrames.push(_halfHeight - 0.5 * frameHeight);
+					
+				case RIGHT_TO_LEFT:
+					frameWidth = _barWidth * i / 100;
+					frameHeight = _barHeight;
+					frameX += (_barWidth - frameWidth);
+					_filledBarFrames.push(_halfWidth - 0.5 * frameWidth);
+					
+				case HORIZONTAL_INSIDE_OUT:
+					frameWidth = _barWidth * i / 100;
+					frameHeight = _barHeight;
+					frameX += (0.5 * (_barWidth - frameWidth));
+					_filledBarFrames.push(0);
+					
+				case HORIZONTAL_OUTSIDE_IN:
+					frameWidth = _barWidth * (100 - i) / 100;
+					frameHeight = _barHeight;
+					frameX += 0.5 * (_barWidth - frameWidth);
+					_filledBarFrames.push(0);
+					
+				case VERTICAL_INSIDE_OUT:
+					frameWidth = _barWidth;
+					frameHeight = _barHeight * i / 100;
+					frameY += (0.5 * (_barHeight - frameHeight));
+					_filledBarFrames.push(0);
+					
+				case VERTICAL_OUTSIDE_IN:
+					frameWidth = _barWidth;
+					frameHeight = _barHeight * (100 - i) / 100;
+					frameY += (0.5 * (_barHeight - frameHeight));
+					_filledBarFrames.push(0);
 			}
 			
 			_filledBarFrames.push(_cachedFrontGraphics.tilesheet.addTileRect(new Rectangle(frameX, frameY, frameWidth, frameHeight), new Point(0.5 * frameWidth, 0.5 * frameHeight)));
@@ -1212,4 +1129,16 @@ class FlxBar extends FlxSprite
 	{
 		return _value;
 	}
+}
+
+enum FlxBarFillDirection
+{
+	LEFT_TO_RIGHT;
+	RIGHT_TO_LEFT;
+	TOP_TO_BOTTOM;
+	BOTTOM_TO_TOP;
+	HORIZONTAL_INSIDE_OUT;
+	HORIZONTAL_OUTSIDE_IN;
+	VERTICAL_INSIDE_OUT;
+	VERTICAL_OUTSIDE_IN;
 }

@@ -2,7 +2,7 @@
 
 import flixel.FlxSprite;
 import flixel.tweens.FlxTween;
-import flixel.util.FlxRandom;
+import flixel.math.FlxRandom;
 
 /**
  * Tweens from one angle to another.

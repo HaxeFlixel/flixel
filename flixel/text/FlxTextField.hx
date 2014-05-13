@@ -11,7 +11,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.system.FlxAssets;
 import flixel.util.FlxColor;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 import openfl.Assets;
 
 /**
@@ -76,7 +76,7 @@ class FlxTextField extends FlxText
 		return false;
 	}
 	
-	override public function isSimpleRender():Bool
+	override public function isSimpleRender(?camera:FlxCamera):Bool
 	{
 		// This class doesn't support this operation
 		return true;

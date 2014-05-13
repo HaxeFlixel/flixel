@@ -1,7 +1,7 @@
 package flixel.ui;
 
 import flixel.text.FlxText;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 
 /**
  * A simple button class that calls a function when clicked by the mouse.
