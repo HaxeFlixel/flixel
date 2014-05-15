@@ -8,7 +8,7 @@
 	<app preloader="flixel.system.FlxPreloader" />
 	
 	<!--The swf version should be at least 11.2 without FLX_NO_MOUSE_ADVANCED -->
-	<set name="SWF_VERSION" value="11.2" />
+	<set name="SWF_VERSION" value="11.8" />
 	
 	<!--------------------------------WINDOW SETTINGS------------------------------->
 	
@@ -28,9 +28,6 @@
 	
 	<set name="BUILD_DIR" value="export" />
 	<classpath name="source" />
-	
-	<!--You can use rename="newName" to shorten the paths to individual subdirectories!-->
-	<assets path="assets" />
 	
 	<!--------------------------------LIBRARIES------------------------------------->
 	
