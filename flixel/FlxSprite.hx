@@ -41,6 +41,7 @@ class FlxSprite extends FlxObject
 	public var animation:FlxAnimationController;
 	/**
 	 * The actual Flash BitmapData object representing the current display state of the sprite.
+	 * WARNING: can be null in FLX_RENDER_TILE mode unless you call getFlxFrameBitmapData() beforehand.
 	 */
 	public var framePixels:BitmapData;
 	/**
@@ -1208,7 +1209,7 @@ class FlxSprite extends FlxObject
 	}
 	
 	/**
-	 * Retrieves BitmapData of current FlxFrame
+	 * Retrieves BitmapData of current FlxFrame. Updates framePixels.
 	 */
 	public inline function getFlxFrameBitmapData():BitmapData
 	{
@@ -1254,7 +1255,6 @@ class FlxSprite extends FlxObject
 			}
 			
 			dirty = false;
-			
 		}
 		
 		return framePixels;
