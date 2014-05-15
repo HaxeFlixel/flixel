@@ -117,7 +117,7 @@ class Tracker extends Watch
 			addProfile(new TrackerProfile(FlxTween, ["active", "duration", "type", "percent", "finished", 
 			                                         "scale", "backward", "executions", "startDelay", "loopDelay"]));
 			
-			addProfile(new TrackerProfile(FlxPath, ["speed", "angle", "autoCenter", "_nodeIndex", "active", "finished"]));
+			addProfile(new TrackerProfile(FlxPath, ["speed", "angle", "autoCenter", "nodeIndex", "active", "finished"]));
 			addProfile(new TrackerProfile(FlxTimer, ["time", "loops", "active", "finished", "timeLeft", "elapsedTime", "loopsLeft", "elapsedLoops", "progress"]));
 			
 			addProfile(new TrackerProfile(FlxAnimationController, ["frameIndex", "frameName", "name", "paused", "finished", "frames"]));

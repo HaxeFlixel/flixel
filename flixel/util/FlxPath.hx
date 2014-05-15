@@ -106,12 +106,13 @@ class FlxPath implements IFlxDestroyable
 	public var ignoreDrawDebug:Bool = false;
 	#end
 	
+	/**
+	 * Tracks which node of the path this object is currently moving toward.
+	 */
+	public var nodeIndex(default, null):Int = 0;
+	
 	public var finished(default, null):Bool = false;
 	
-	/**
-	 * Internal helper, tracks which node of the path this object is moving toward.
-	 */
-	private var _nodeIndex:Int = 0;
 	/**
 	 * Internal tracker for path behavior flags (like looping, horizontal only, etc).
 	 */
@@ -179,12 +180,12 @@ class FlxPath implements IFlxDestroyable
 		//get starting node
 		if ((_mode == FlxPath.BACKWARD) || (_mode == FlxPath.LOOP_BACKWARD))
 		{
-			_nodeIndex = nodes.length - 1;
+			nodeIndex = nodes.length - 1;
 			_inc = -1;
 		}
 		else
 		{
-			_nodeIndex = 0;
+			nodeIndex = 0;
 			_inc = 1;
 		}
 		
@@ -204,7 +205,7 @@ class FlxPath implements IFlxDestroyable
 		else if (NodeIndex > nodes.length - 1)
 			NodeIndex = nodes.length - 1;
 		
-		_nodeIndex = NodeIndex; 
+		nodeIndex = NodeIndex; 
 		advancePath();
 	} 
 	
@@ -224,7 +225,7 @@ class FlxPath implements IFlxDestroyable
 			_point.x += object.width * 0.5;
 			_point.y += object.height * 0.5;
 		}
-		var node:FlxPoint = nodes[_nodeIndex];
+		var node:FlxPoint = nodes[nodeIndex];
 		var deltaX:Float = node.x - _point.x;
 		var deltaY:Float = node.y - _point.y;
 		
@@ -330,7 +331,7 @@ class FlxPath implements IFlxDestroyable
 	{
 		if (Snap)
 		{
-			var oldNode:FlxPoint = nodes[_nodeIndex];
+			var oldNode:FlxPoint = nodes[nodeIndex];
 			if (oldNode != null)
 			{
 				if ((_mode & FlxPath.VERTICAL_ONLY) == 0)
@@ -349,33 +350,33 @@ class FlxPath implements IFlxDestroyable
 		}
 		
 		var callComplete:Bool = false;
-		_nodeIndex += _inc;
+		nodeIndex += _inc;
 		
 		if ((_mode & FlxPath.BACKWARD) > 0)
 		{
-			if (_nodeIndex < 0)
+			if (nodeIndex < 0)
 			{
-				_nodeIndex = 0;
+				nodeIndex = 0;
 				finished = callComplete = true;
 			}
 		}
 		else if ((_mode & FlxPath.LOOP_FORWARD) > 0)
 		{
-			if (_nodeIndex >= nodes.length)
+			if (nodeIndex >= nodes.length)
 			{
 				callComplete = true;
-				_nodeIndex = 0;
+				nodeIndex = 0;
 			}
 		}
 		else if ((_mode & FlxPath.LOOP_BACKWARD) > 0)
 		{
-			if (_nodeIndex < 0)
+			if (nodeIndex < 0)
 			{
-				_nodeIndex = nodes.length - 1;
+				nodeIndex = nodes.length - 1;
 				callComplete = true;
-				if (_nodeIndex < 0)
+				if (nodeIndex < 0)
 				{
-					_nodeIndex = 0;
+					nodeIndex = 0;
 				}
 			}
 		}
@@ -383,37 +384,37 @@ class FlxPath implements IFlxDestroyable
 		{
 			if (_inc > 0)
 			{
-				if (_nodeIndex >= nodes.length)
+				if (nodeIndex >= nodes.length)
 				{
-					_nodeIndex = nodes.length - 2;
+					nodeIndex = nodes.length - 2;
 					callComplete = true;
-					if (_nodeIndex < 0)
+					if (nodeIndex < 0)
 					{
-						_nodeIndex = 0;
+						nodeIndex = 0;
 					}
 					_inc = -_inc;
 				}
 			}
-			else if (_nodeIndex < 0)
+			else if (nodeIndex < 0)
 			{
-				_nodeIndex = 1;
+				nodeIndex = 1;
 				callComplete = true;
-				if (_nodeIndex >= nodes.length)
+				if (nodeIndex >= nodes.length)
 				{
-					_nodeIndex = nodes.length - 1;
+					nodeIndex = nodes.length - 1;
 				}
-				if (_nodeIndex < 0)
+				if (nodeIndex < 0)
 				{
-					_nodeIndex = 0;
+					nodeIndex = 0;
 				}
 				_inc = -_inc;
 			}
 		}
 		else
 		{
-			if (_nodeIndex >= nodes.length)
+			if (nodeIndex >= nodes.length)
 			{
-				_nodeIndex = nodes.length - 1;
+				nodeIndex = nodes.length - 1;
 				finished = callComplete = true;
 			}
 		}
@@ -423,7 +424,7 @@ class FlxPath implements IFlxDestroyable
 			onComplete(this);
 		}
 
-		return nodes[_nodeIndex];
+		return nodes[nodeIndex];
 	}
 	
 	/**
