@@ -138,6 +138,7 @@ class SoundFrontEnd
 		return Assets.getSound(EmbeddedSound, true);
 	}
 	
+	#if !doc
 	/**
 	 * Calls FlxG.sound.cache() on all sounds that are embedded.
 	 */
@@ -165,6 +166,7 @@ class SoundFrontEnd
 			}
 		}
 	}
+	#end
 	
 	/**
 	 * Plays a sound from an embedded sound. Tries to recycle a cached sound first.
