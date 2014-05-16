@@ -7,6 +7,7 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup;
+import flixel.group.FlxTypedGroup;
 import flixel.math.FlxAngle;
 import flixel.util.FlxDestroyUtil;
 import flixel.math.FlxPoint;
@@ -238,13 +239,13 @@ class FlxMouseEventManager extends FlxBasic
 		}
 	}
 	
-	private static function traverseFlxGroup(Group:FlxGroup, OrderedObjects:Array<ObjectMouseData<Dynamic>>):Void
+	private static function traverseFlxGroup(Group:FlxTypedGroup<Dynamic>, OrderedObjects:Array<ObjectMouseData<Dynamic>>):Void
 	{
 		for (basic in Group.members)
 		{
-			if (Std.is(basic, FlxGroup))
+			if (Std.is(basic, FlxTypedGroup))
 			{
-				traverseFlxGroup(cast(basic, FlxGroup), OrderedObjects);
+				traverseFlxGroup(cast(basic, FlxTypedGroup<Dynamic>), OrderedObjects);
 			}
 			
 			if (Std.is(basic, FlxSprite))
