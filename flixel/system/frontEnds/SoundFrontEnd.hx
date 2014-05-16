@@ -33,17 +33,17 @@ class SoundFrontEnd
 	 * The key codes used to increase volume (see FlxG.keys for the keys available).
 	 * Default keys: + (and numpad +). Set to null to deactivate.
 	 */
-	public var volumeUpKeys:Array<String>;
+	public var volumeUpKeys:Array<String> = ["PLUS", "NUMPADPLUS"];
 	/**
 	 * The keys to decrease volume (see FlxG.keys for the keys available).
 	 * Default keys: - (and numpad -). Set to null to deactivate.
 	 */
-	public var volumeDownKeys:Array<String>;
+	public var volumeDownKeys:Array<String> = ["MINUS", "NUMPADMINUS"];
 	/**
 	 * The keys used to mute / unmute the game (see FlxG.keys for the keys available).
 	 * Default keys: 0 (and numpad 0). Set to null to deactivate.
 	 */
-	public var muteKeys:Array<String>; 
+	public var muteKeys:Array<String> = ["ZERO", "NUMPADZERO"]; 
 	#end
 	
 	/**
@@ -55,13 +55,13 @@ class SoundFrontEnd
 	/**
 	 * A list of all the sounds being played in the game.
 	 */
-	public var list(default, null):FlxTypedGroup<FlxSound>;
+	public var list(default, null):FlxTypedGroup<FlxSound> = new FlxTypedGroup<FlxSound>();
 	/**
 	 * Set this to a number between 0 and 1 to change the global volume.
 	 */
 	public var volume(default, set):Float = 1;
 	
-	private var _soundCache:Map<String, Sound>;
+	private var _soundCache:Map<String, Sound> = new Map<String, Sound>();
 	
 	/**
 	 * Set up and play a looping background soundtrack.
@@ -251,18 +251,7 @@ class SoundFrontEnd
 		}
 	}
 	
-	private function new() 
-	{
-		#if !FLX_NO_KEYBOARD
-		// Assign default values to the keys used by core flixel
-		volumeUpKeys = ["PLUS", "NUMPADPLUS"];
-		volumeDownKeys = ["MINUS", "NUMPADMINUS"];
-		muteKeys = ["ZERO", "NUMPADZERO"]; 
-		#end
-		
-		list = new FlxTypedGroup<FlxSound>();
-		_soundCache = new Map<String, Sound>();
-	}
+	private function new() {}
 	
 	/**
 	 * Called by the game loop to make sure the sounds get updated each frame.
