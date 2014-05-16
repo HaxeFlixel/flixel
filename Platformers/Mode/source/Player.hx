@@ -12,7 +12,7 @@ import flixel.ui.FlxVirtualPad;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxTimer;
-#if (android && OUYA)
+#if android
 import flixel.input.gamepad.OUYAButtonID;
 #end
 
@@ -136,7 +136,7 @@ class Player extends FlxSprite
 		if (FlxG.keys.pressed.LEFT 
 #if !FLX_NO_GAMEPAD
 			 || (#if flash gamepad.pressed(XboxButtonID.DPAD_LEFT) #else gamepad.dpadLeft #end ||
-	#if OUYA
+	#if android
 				 gamepad.getXAxis(OUYAButtonID.LEFT_ANALOGUE_X) < 0) || buttonPressed(virtualPad.buttonLeft)) 
 	#else
 				 gamepad.getXAxis(XboxButtonID.LEFT_ANALOGUE_X) < 0))
@@ -148,7 +148,7 @@ class Player extends FlxSprite
 		else if (FlxG.keys.pressed.RIGHT
 #if !FLX_NO_GAMEPAD
 			 || (#if flash gamepad.pressed(XboxButtonID.DPAD_RIGHT) #else gamepad.dpadRight #end ||
-	#if OUYA
+	#if android
 				 gamepad.getXAxis(OUYAButtonID.LEFT_ANALOGUE_X) > 0) || buttonPressed(virtualPad.buttonRight))
 	#else
 				 gamepad.getXAxis(XboxButtonID.LEFT_ANALOGUE_X) > 0))
@@ -164,7 +164,7 @@ class Player extends FlxSprite
 		if (FlxG.keys.pressed.UP
 #if !FLX_NO_GAMEPAD
 			 || (#if flash gamepad.pressed(XboxButtonID.DPAD_UP) #else gamepad.dpadUp #end ||
-	#if OUYA
+	#if android
 				 gamepad.getYAxis(OUYAButtonID.LEFT_ANALOGUE_Y) < 0) || buttonPressed(virtualPad.buttonUp))
 	#else
 				 gamepad.getYAxis(XboxButtonID.LEFT_ANALOGUE_Y) < 0))
@@ -176,7 +176,7 @@ class Player extends FlxSprite
 		else if (FlxG.keys.pressed.DOWN
 #if !FLX_NO_GAMEPAD
 			 || (#if flash gamepad.pressed(XboxButtonID.DPAD_DOWN) #else gamepad.dpadDown #end ||
-	#if OUYA
+	#if android
 				 gamepad.getYAxis(OUYAButtonID.LEFT_ANALOGUE_Y) > 0) || buttonPressed(virtualPad.buttonDown))
 	#else
 				 gamepad.getYAxis(XboxButtonID.LEFT_ANALOGUE_Y) > 0))
@@ -189,7 +189,7 @@ class Player extends FlxSprite
 		// JUMPING
 		if (FlxG.keys.justPressed.X 
 #if !FLX_NO_GAMEPAD
-	#if OUYA
+	#if android
 			|| gamepad.justPressed(OUYAButtonID.O) || buttonPressed(virtualPad.buttonA))
 	#else
 			|| gamepad.justPressed(XboxButtonID.A))
@@ -241,7 +241,7 @@ class Player extends FlxSprite
 		// SHOOTING
 		if (FlxG.keys.pressed.C
 #if !FLX_NO_GAMEPAD
-	#if OUYA
+	#if android
 			|| gamepad.pressed(OUYAButtonID.U) || buttonPressed(virtualPad.buttonB)) 
 	#else
 			|| gamepad.pressed(XboxButtonID.X))
