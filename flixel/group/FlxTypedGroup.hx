@@ -222,7 +222,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 				return cast basic;
 			}
 		}
-		// grow-style recycling - grab a basic with extists == false or create a new one
+		// grow-style recycling - grab a basic with exists == false or create a new one
 		else
 		{
 			basic = getFirstAvailable(ObjectClass, Force);
