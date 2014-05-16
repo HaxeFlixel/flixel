@@ -37,9 +37,9 @@ class FlxTypedEmitterExt<T:(FlxSprite, IFlxParticle)> extends FlxTypedEmitter<T>
 	 * @param	Y		The Y position of the emitter.
 	 * @param	Size	Optional, specifies a maximum capacity for this emitter.
 	 */
-	public function new(X:Float = 0, Y:Float = 0, Size:Float = 0) 
+	public function new(X:Float = 0, Y:Float = 0, Size:Int = 0) 
 	{
-		super(X, Y, Std.int(Size));
+		super(X, Y, Size);
 		
 		// Set defaults
 		setMotion(0, 0, 0.5, 360, 100, 1.5);
