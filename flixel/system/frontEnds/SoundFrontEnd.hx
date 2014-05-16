@@ -61,8 +61,6 @@ class SoundFrontEnd
 	 */
 	public var volume(default, set):Float = 1;
 	
-	private var _soundCache:Map<String, Sound> = new Map<String, Sound>();
-	
 	/**
 	 * Set up and play a looping background soundtrack.
 	 * 
@@ -134,19 +132,10 @@ class SoundFrontEnd
 	 * @param	EmbeddedSound	Name of sound assets specified in your .xml project file
 	 * @return	Cached Sound object
 	 */
-	public function cache(EmbeddedSound:String):Sound
+	public inline function cache(EmbeddedSound:String):Sound
 	{
-		if (_soundCache.exists(EmbeddedSound))
-		{
-			return _soundCache.get(EmbeddedSound);
-		}
-		else
-		{
-			var sound:Sound = Assets.getSound(EmbeddedSound);
-			_soundCache.set(EmbeddedSound, sound);
-			
-			return sound;
-		}
+		// load the sound into the OpenFL assets cache
+		return Assets.getSound(EmbeddedSound, true);
 	}
 	
 	/**
@@ -160,17 +149,7 @@ class SoundFrontEnd
 	 */
 	public function play(EmbeddedSound:String, Volume:Float = 1, Looped:Bool = false, AutoDestroy:Bool = true, ?OnComplete:Void->Void):FlxSound
 	{
-		var sound:Sound = null;
-		
-		if (_soundCache.exists(EmbeddedSound))
-		{
-			sound = _soundCache.get(EmbeddedSound);
-		}
-		else
-		{
-			sound = Assets.getSound(EmbeddedSound);
-			_soundCache.set(EmbeddedSound, sound);
-		}
+		var sound:Sound = cache(EmbeddedSound);
 		var flixelSound = list.recycle(FlxSound).loadEmbedded(sound, Looped, AutoDestroy, OnComplete);
 		flixelSound.volume = Volume;
 		return flixelSound.play();
