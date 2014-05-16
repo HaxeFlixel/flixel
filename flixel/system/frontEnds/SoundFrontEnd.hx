@@ -139,6 +139,34 @@ class SoundFrontEnd
 	}
 	
 	/**
+	 * Calls FlxG.sound.cache() on all sounds that are embedded.
+	 */
+	@:access(openfl.Assets)
+	@:access(openfl.AssetType)
+	public function cacheAll():Void
+	{
+		Assets.initialize();
+		
+		var defaultLibrary = Assets.libraries.get("default");
+		
+		if (defaultLibrary == null) 
+			return;
+		
+		var types:Map<String, Dynamic> = DefaultAssetLibrary.type;
+		
+		if (types == null) 
+			return;
+		
+		for (key in types.keys())
+		{
+			if (types.get(key) == AssetType.SOUND)
+			{
+				cache(key);
+			}
+		}
+	}
+	
+	/**
 	 * Plays a sound from an embedded sound. Tries to recycle a cached sound first.
 	 * 
 	 * @param	EmbeddedSound	The sound you want to play.
