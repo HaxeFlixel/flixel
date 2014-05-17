@@ -13,7 +13,7 @@ import flixel.math.FlxRect;
  * ...
  * @author Masadow
  */
-class FlxBaseTilemap<Tilemap : FlxBaseTilemap<Tilemap, Tile>, Tile : FlxObject> extends FlxObject
+class FlxBaseTilemap<Tile : FlxObject> extends FlxObject
 {
 	/**
 	 * Set this flag to use one of the 16-tile binary auto-tile algorithms (OFF, AUTO, or ALT).
@@ -83,7 +83,6 @@ class FlxBaseTilemap<Tilemap : FlxBaseTilemap<Tilemap, Tile>, Tile : FlxObject> 
 	
 	/**
 	 * Virtual methods, must be implemented in each renderers
-	 * This listing should be enhanced with macros
 	 */
 	private function updateTile(Index:Int):Void throw "updateTile must be implemented";
 	private function cacheGraphics(TileWidth:Int, TileHeight:Int, TileGraphic:Dynamic):Void throw "cacheGraphics must be implemented";
@@ -126,7 +125,7 @@ class FlxBaseTilemap<Tilemap : FlxBaseTilemap<Tilemap, Tile>, Tile : FlxObject> 
 	 * @param	CollideIndex	Initializes all tile objects equal to and after this index as allowCollisions = ANY.  Default value is 1.  Ignored if AutoTile is set.  Can override and customize per-tile-type collision behavior using setTileProperties().
 	 * @return	A reference to this instance of FlxTilemap, for chaining as usual :)
 	 */
-	public function loadMap(MapData:FlxTilemapAsset, TileGraphic:FlxGraphicAsset, TileWidth:Int = 0, TileHeight:Int = 0, ?AutoTile:FlxTilemapAutoTiling, StartingIndex:Int = 0, DrawIndex:Int = 1, CollideIndex:Int = 1):Tilemap
+	public function loadMap(MapData:FlxTilemapAsset, TileGraphic:FlxGraphicAsset, TileWidth:Int = 0, TileHeight:Int = 0, ?AutoTile:FlxTilemapAutoTiling, StartingIndex:Int = 0, DrawIndex:Int = 1, CollideIndex:Int = 1):FlxBaseTilemap<Tile>
 	{
 		auto = (AutoTile == null) ? OFF : AutoTile;
 		_startingIndex = (StartingIndex <= 0) ? 0 : StartingIndex;
@@ -140,7 +139,7 @@ class FlxBaseTilemap<Tilemap : FlxBaseTilemap<Tilemap, Tile>, Tile : FlxObject> 
 		computeDimensions();
 		updateMap();
 
-		return cast this;
+		return this;
 	}
 	
 	private function loadMapData(MapData:Dynamic)

@@ -36,7 +36,7 @@ class GraphicAutoAlt extends BitmapData {}
  * those values with tiles from the sheet you pass in. It also includes some handy static parsers that can convert
  * arrays or images into strings that can be loaded.
  */
-class FlxTilemap extends FlxBaseTilemap<FlxTilemap, FlxTile>
+class FlxTilemap extends FlxBaseTilemap<FlxTile>
 {
 	/** 
  	 * A helper buffer for calculating number of columns and rows when the game size changed
