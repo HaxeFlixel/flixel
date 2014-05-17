@@ -131,8 +131,8 @@ class FlxBaseTilemap<Tile : FlxObject> extends FlxObject
 		_startingIndex = (StartingIndex <= 0) ? 0 : StartingIndex;
 
 		loadMapData(MapData);
-		doAutoTile(DrawIndex, CollideIndex);
-		doCustomRemap();
+		applyAutoTile(DrawIndex, CollideIndex);
+		applyCustomRemap();
 		randomizeIndices();
 		cacheGraphics(TileWidth, TileHeight, TileGraphic);
 		initTileObjects(DrawIndex, CollideIndex);
@@ -218,7 +218,7 @@ class FlxBaseTilemap<Tile : FlxObject> extends FlxObject
 		totalTiles = _data.length;
 	}
 
-	private function doAutoTile(DrawIndex:Int, CollideIndex:Int):Void	
+	private function applyAutoTile(DrawIndex:Int, CollideIndex:Int):Void	
 	{
 		// Pre-process the map data if it's auto-tiled
 		var i:Int = 0;
@@ -236,7 +236,7 @@ class FlxBaseTilemap<Tile : FlxObject> extends FlxObject
 		}
 	}
 	
-	private function doCustomRemap():Void
+	private function applyCustomRemap():Void
 	{
 		var i:Int = 0;
 
