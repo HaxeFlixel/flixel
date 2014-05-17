@@ -13,56 +13,6 @@ import flixel.util.FlxSort;
 class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 {
 	/**
-	 * Helper function for overlap functions in FlxObject and FlxTilemap.
-	 */
-	@:allow(flixel.FlxObject)
-	@:allow(flixel.tile.FlxTilemap)
-	private static inline function overlaps(Callback:FlxBasic->Float->Float->Bool->FlxCamera->Bool, 
-		Group:FlxTypedGroup<FlxBasic>, X:Float, Y:Float, InScreenSpace:Bool, Camera:FlxCamera):Bool
-	{
-		var result:Bool = false;
-		if (Group != null)
-		{
-			var i = 0;
-			var l = Group.length;
-			var basic:FlxBasic;
-			
-			while (i < l)
-			{
-				basic = cast Group.members[i++];
-				
-				if (basic != null && Callback(basic, X, Y, InScreenSpace, Camera))
-				{
-					result = true;
-					break;
-				}
-			}
-		}
-		return result;
-	}
-	
-	@:allow(flixel.FlxObject)
-	@:allow(flixel.tile.FlxTilemap)
-	@:allow(flixel.system.FlxQuadTree)
-	private static inline function resolveGroup(ObjectOrGroup:FlxBasic):FlxTypedGroup<FlxBasic>
-	{
-		var group:FlxTypedGroup<FlxBasic> = null;
-		if ((ObjectOrGroup.collisionType == SPRITEGROUP) || 
-		    (ObjectOrGroup.collisionType == GROUP))
-		{
-			if (ObjectOrGroup.collisionType == GROUP)
-			{
-				group = cast ObjectOrGroup;
-			}
-			else if (ObjectOrGroup.collisionType == SPRITEGROUP)
-			{
-				group = cast cast(ObjectOrGroup, FlxTypedSpriteGroup<Dynamic>).group;
-			}
-		}
-		return group;
-	}
-	
-	/**
 	 * Array of all the members in this group.
 	 */
 	public var members(default, null):Array<T>;
@@ -91,7 +41,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		
 		maxSize = Std.int(Math.abs(MaxSize));
 		
-		collisionType = GROUP;
+		flixelType = GROUP;
 	}
 	
 	/**
@@ -369,7 +319,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			
 			if (basic != null)
 			{
-				if (Recurse && basic.collisionType == GROUP)
+				if (Recurse && basic.flixelType == GROUP)
 				{
 					(cast basic).setAll(VariableName, Value, Recurse);
 				}
@@ -402,7 +352,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			
 			if (basic != null)
 			{
-				if (Recurse && (basic.collisionType == GROUP))
+				if (Recurse && (basic.flixelType == GROUP))
 				{
 					(cast(basic, FlxTypedGroup<Dynamic>)).callAll(FunctionName, Args, Recurse);
 				}
@@ -789,6 +739,55 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		length = members.length;
 		
 		return maxSize;
+	}
+	
+	/**
+	 * Helper function for overlap functions in FlxObject and FlxTilemap.
+	 */
+	@:allow(flixel.FlxObject)
+	@:allow(flixel.tile.FlxTilemap)
+	private static inline function overlaps(Callback:FlxBasic->Float->Float->Bool->FlxCamera->Bool, 
+		Group:FlxTypedGroup<FlxBasic>, X:Float, Y:Float, InScreenSpace:Bool, Camera:FlxCamera):Bool
+	{
+		var result:Bool = false;
+		if (Group != null)
+		{
+			var i = 0;
+			var l = Group.length;
+			var basic:FlxBasic = null;
+			
+			while (i < l)
+			{
+				basic = Group.members[i++];
+				
+				if (basic != null && Callback(basic, X, Y, InScreenSpace, Camera))
+				{
+					result = true;
+					break;
+				}
+			}
+		}
+		return result;
+	}
+	
+	/**
+	 * Helper function to determine if an FlxBasic object is a group.
+	 */
+	@:allow(flixel.FlxObject)
+	@:allow(flixel.tile.FlxTilemap)
+	@:allow(flixel.system.FlxQuadTree)
+	private static inline function resolveGroup(ObjectOrGroup:FlxBasic):FlxTypedGroup<FlxBasic>
+	{
+		var group:FlxTypedGroup<FlxBasic> = null;
+		if (ObjectOrGroup.flixelType == GROUP)
+		{
+			group = cast ObjectOrGroup;
+		}
+		else if (ObjectOrGroup.flixelType == SPRITEGROUP)
+		{
+			group = cast cast(ObjectOrGroup, FlxTypedSpriteGroup<Dynamic>).group;
+		}
+		return group;
 	}
 }
 
