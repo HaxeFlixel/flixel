@@ -196,7 +196,7 @@ class FlxTilemap extends FlxObject
 	{
 		super();
 		
-		collisionType = TILEMAP;
+		flixelType = TILEMAP;
 		
 		_buffers = new Array<FlxTilemapBuffer>();
 		_flashPoint = new Point();
@@ -857,8 +857,8 @@ class FlxTilemap extends FlxObject
 	
 	private inline function tilemapOverlapsCallback(ObjectOrGroup:FlxBasic, X:Float = 0, Y:Float = 0, InScreenSpace:Bool = false, ?Camera:FlxCamera):Bool
 	{
-		if ((ObjectOrGroup.collisionType == OBJECT) || 
-		    (ObjectOrGroup.collisionType == TILEMAP))
+		if ((ObjectOrGroup.flixelType == OBJECT) || 
+		    (ObjectOrGroup.flixelType == TILEMAP))
 		{
 			return overlapsWithCallback(cast(ObjectOrGroup, FlxObject));
 		}
@@ -897,8 +897,8 @@ class FlxTilemap extends FlxObject
 	
 	private inline function tilemapOverlapsAtCallback(ObjectOrGroup:FlxBasic, X:Float, Y:Float, InScreenSpace:Bool, Camera:FlxCamera):Bool
 	{
-		if (ObjectOrGroup.collisionType == OBJECT || 
-		    ObjectOrGroup.collisionType == TILEMAP)
+		if (ObjectOrGroup.flixelType == OBJECT || 
+		    ObjectOrGroup.flixelType == TILEMAP)
 		{
 			return overlapsWithCallback(cast(ObjectOrGroup, FlxObject), null, false, _point.set(X, Y));
 		}

@@ -97,11 +97,11 @@ class FlxObject extends FlxBasic
 		}
 		
 		//If one of the objects is a tilemap, just pass it off.
-		if (Object1.collisionType == TILEMAP)
+		if (Object1.flixelType == TILEMAP)
 		{
 			return cast(Object1, FlxTilemap).overlapsWithCallback(Object2, separateX);
 		}
-		if (Object2.collisionType == TILEMAP)
+		if (Object2.flixelType == TILEMAP)
 		{
 			return cast(Object2, FlxTilemap).overlapsWithCallback(Object1, separateX, true);
 		}
@@ -210,11 +210,11 @@ class FlxObject extends FlxBasic
 		}
 		
 		//If one of the objects is a tilemap, just pass it off.
-		if (Object1.collisionType == TILEMAP)
+		if (Object1.flixelType == TILEMAP)
 		{
 			return cast(Object1, FlxTilemap).overlapsWithCallback(Object2, separateY);
 		}
-		if (Object2.collisionType == TILEMAP)
+		if (Object2.flixelType == TILEMAP)
 		{
 			return cast(Object2, FlxTilemap).overlapsWithCallback(Object1, separateY, true);
 		}
@@ -474,7 +474,7 @@ class FlxObject extends FlxBasic
 	 */
 	private function initVars():Void
 	{
-		collisionType = OBJECT;
+		flixelType = OBJECT;
 		last = FlxPoint.get(x, y);
 		scrollFactor = FlxPoint.get(1, 1);
 		_point = FlxPoint.get();
@@ -588,7 +588,7 @@ class FlxObject extends FlxBasic
 			return FlxTypedGroup.overlaps(overlapsCallback, group, 0, 0, InScreenSpace, Camera);
 		}
 		
-		if (ObjectOrGroup.collisionType == TILEMAP)
+		if (ObjectOrGroup.flixelType == TILEMAP)
 		{
 			//Since tilemap's have to be the caller, not the target, to do proper tile-based collisions,
 			// we redirect the call to the tilemap overlap here.
@@ -636,7 +636,7 @@ class FlxObject extends FlxBasic
 			return FlxTypedGroup.overlaps(overlapsAtCallback, group, X, Y, InScreenSpace, Camera);
 		}
 		
-		if (ObjectOrGroup.collisionType == TILEMAP)
+		if (ObjectOrGroup.flixelType == TILEMAP)
 		{
 			//Since tilemap's have to be the caller, not the target, to do proper tile-based collisions,
 			// we redirect the call to the tilemap overlap here.
