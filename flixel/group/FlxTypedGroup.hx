@@ -2,6 +2,7 @@ package flixel.group;
 
 import flixel.FlxBasic;
 import flixel.FlxG;
+import flixel.input.Flx2DInput;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxSort;
 
@@ -44,6 +45,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	@:allow(flixel.FlxObject)
 	@:allow(flixel.tile.FlxTilemap)
 	@:allow(flixel.system.FlxQuadTree)
+	@:allow(flixel.input.Flx2DInput)
 	private static inline function resolveGroup(ObjectOrGroup:FlxBasic):FlxTypedGroup<FlxBasic>
 	{
 		var group:FlxTypedGroup<FlxBasic> = null;
