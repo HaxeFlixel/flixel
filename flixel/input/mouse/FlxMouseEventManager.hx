@@ -7,7 +7,6 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup;
-import flixel.group.FlxTypedGroup;
 import flixel.math.FlxAngle;
 import flixel.util.FlxDestroyUtil;
 import flixel.math.FlxPoint;
