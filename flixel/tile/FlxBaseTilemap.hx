@@ -86,8 +86,8 @@ class FlxBaseTilemap<Tilemap : FlxBaseTilemap<Tilemap, Tile>, Tile : FlxObject> 
 	 * This listing should be enhanced with macros
 	 */
 	private function updateTile(Index:Int):Void throw "updateTile must be implemented";
-	private function cacheGraphics(TileWidth : Int, TileHeight : Int, TileGraphic : Dynamic):Void throw "cacheGraphics must be implemented";
-	private function initTileObjects(DrawIndex : Int, CollideIndex : Int):Void throw "initTileObjects must be implemented";
+	private function cacheGraphics(TileWidth:Int, TileHeight:Int, TileGraphic:Dynamic):Void throw "cacheGraphics must be implemented";
+	private function initTileObjects(DrawIndex:Int, CollideIndex:Int):Void throw "initTileObjects must be implemented";
 	private function updateMap():Void throw "updateMap must be implemented";
 	private function computeDimensions():Void throw "computeDimensions must be implemented";
 	public function getTileIndexByCoords(Coord:FlxPoint):Int {throw "getTileIndexByCoords must be implemented"; return 0;}
@@ -143,7 +143,7 @@ class FlxBaseTilemap<Tilemap : FlxBaseTilemap<Tilemap, Tile>, Tile : FlxObject> 
 		return cast this;
 	}
 	
-	private function loadMapData(MapData : Dynamic)
+	private function loadMapData(MapData:Dynamic)
 	{
 		// Populate data if MapData is a CSV string
 		if (Std.is(MapData, String))
@@ -219,7 +219,7 @@ class FlxBaseTilemap<Tilemap : FlxBaseTilemap<Tilemap, Tile>, Tile : FlxObject> 
 		totalTiles = _data.length;
 	}
 
-	private function doAutoTile(DrawIndex : Int, CollideIndex : Int):Void	
+	private function doAutoTile(DrawIndex:Int, CollideIndex:Int):Void	
 	{
 		// Pre-process the map data if it's auto-tiled
 		var i:Int = 0;
