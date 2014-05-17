@@ -25,7 +25,7 @@ If you wish to contribute to our documentation, you can edit the [upgrade docs o
 
 ##For Developers
 
-If you are wanting to contribute code, please review the follwing documentation:
+If you are wanting to contribute code, please review the following documentation:
 
 - [Code Contributions](http://haxeflixel.com/documentation/code-contributions)
 - [Code Style](http://haxeflixel.com/documentation/code-style)
