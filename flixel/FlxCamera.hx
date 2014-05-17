@@ -216,9 +216,9 @@ class FlxCamera extends FlxBasic
 	 */
 	private var _fxFadeDuration:Float = 0;
 	/**
-     * Internal, used to control the "fade" special effect.
-     */
-    private var _fxFadeIn:Bool = false;
+	* Internal, used to control the "fade" special effect.
+	*/
+	private var _fxFadeIn:Bool = false;
 	/**
 	 * Internal, used to control the "fade" special effect.
 	 */
