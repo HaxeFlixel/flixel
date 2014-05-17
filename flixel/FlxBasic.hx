@@ -1,7 +1,5 @@
 package flixel;
 
-import flixel.FlxG;
-import flixel.group.FlxTypedGroup;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import flixel.util.FlxStringUtil;
 
