@@ -141,6 +141,7 @@ class SoundFrontEnd
 	#if !doc
 	/**
 	 * Calls FlxG.sound.cache() on all sounds that are embedded.
+	 * WARNING: can lead to high memory usage.
 	 */
 	@:access(openfl.Assets)
 	@:access(openfl.AssetType)
