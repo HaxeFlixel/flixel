@@ -32,7 +32,7 @@ private class GraphicCursor extends BitmapData {}
  * Automatically accounts for parallax scrolling, etc.
  */
 @:allow(flixel.system.replay.FlxReplay)
-class FlxMouse extends Flx2DInput implements IFlxInput
+class FlxMouse extends FlxPointer implements IFlxInput
 {
 	/**
 	 * Current "delta" value of mouse wheel. If the wheel was just scrolled up, 

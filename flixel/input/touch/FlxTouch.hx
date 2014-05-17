@@ -15,7 +15,7 @@ import flixel.math.FlxPoint;
  * Automatically accounts for parallax scrolling, etc.
  */
 @:allow(flixel.input.touch.FlxTouchManager)
-class FlxTouch extends Flx2DInput implements IFlxDestroyable
+class FlxTouch extends FlxPointer implements IFlxDestroyable
 {	
 #if !FLX_NO_TOUCH
 	/**

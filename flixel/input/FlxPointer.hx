@@ -5,7 +5,7 @@ import flixel.group.FlxTypedGroup;
 import flixel.math.FlxPoint;
 import flixel.util.FlxStringUtil;
 
-class Flx2DInput
+class FlxPointer
 {
 	public var x(default, null):Int = 0;
 	public var y(default, null):Int = 0;
