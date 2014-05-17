@@ -334,15 +334,6 @@ class FlxObject extends FlxBasic
 	@:isVar
 	public var height(get, set):Float;
 	/**
-	 * Gets ot sets the first camera of this object.
-	 */
-	public var camera(get, set):FlxCamera;
-	/**
-	 * This determines on which FlxCameras this object will be drawn. If it is null / has not been
-	 * set, it uses FlxCamera.defaultCameras, which is a reference to FlxG.cameras.list (all cameras) by default.
-	 */
-	public var cameras(get, set):Array<FlxCamera>;
-	/**
 	 * Whether or not the coordinates should be rounded during draw(), true by default (recommended for pixel art). 
 	 * Only affects tilesheet rendering and rendering using BitmapData.draw() in blitting.
 	 * (copyPixels() only renders on whole pixels by nature). Causes draw() to be used if false, which is more expensive.
@@ -458,11 +449,7 @@ class FlxObject extends FlxBasic
 	public var ignoreDrawDebug:Bool = false;
 	#end
 	
-	/**
-	 * Internal private static variables, for performance reasons.
-	 */
 	private var _point:FlxPoint;
-	private var _cameras:Array<FlxCamera>;
 	
 	/**
 	 * @param	X		The X-coordinate of the point in space.
@@ -521,7 +508,6 @@ class FlxObject extends FlxBasic
 		scrollFactor = FlxDestroyUtil.put(scrollFactor);
 		last = FlxDestroyUtil.put(last);
 		_point = FlxDestroyUtil.put(_point);
-		_cameras = null;
 	}
 	
 	/**
@@ -1050,30 +1036,6 @@ class FlxObject extends FlxBasic
 	private function set_immovable(Value:Bool):Bool
 	{
 		return immovable = Value;
-	}
-	
-	private function get_camera():FlxCamera
-	{
-		return (_cameras == null || _cameras.length == 0) ? FlxCamera.defaultCameras[0] : _cameras[0];
-	}
-	
-	private function set_camera(Value:FlxCamera):FlxCamera
-	{
-		if (_cameras == null)
-			_cameras = [Value];
-		else
-			_cameras[0] = Value;
-		return Value;
-	}
-	
-	private function get_cameras():Array<FlxCamera>
-	{
-		return (_cameras == null) ? FlxCamera.defaultCameras : _cameras;
-	}
-	
-	private function set_cameras(Value:Array<FlxCamera>):Array<FlxCamera>
-	{
-		return _cameras = Value;
 	}
 	
 	private function set_pixelPerfectRender(Value:Bool):Bool 
