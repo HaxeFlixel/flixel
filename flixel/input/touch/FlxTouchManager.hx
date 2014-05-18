@@ -172,15 +172,13 @@ class FlxTouchManager implements IFlxInput
 	
 	/**
 	 * Event handler so FlxGame can update touches.
-	 * 
-	 * @param	FlashEvent	A TouchEvent object.
 	 */
 	private function handleTouchBegin(FlashEvent:TouchEvent):Void
 	{
 		var touch:FlxTouch = _touchesCache.get(FlashEvent.touchPointID);
 		if (touch != null)
 		{
-			touch.updatePosition(FlashEvent.stageX, FlashEvent.stageY); 
+			touch.setXY(Std.int(FlashEvent.stageX), Std.int(FlashEvent.stageY)); 
 			
 			if (touch._current > 0) 
 			{
@@ -193,15 +191,13 @@ class FlxTouchManager implements IFlxInput
 		}
 		else
 		{
-			touch = recycle(FlashEvent.stageX, FlashEvent.stageY, FlashEvent.touchPointID);
+			touch = recycle(Std.int(FlashEvent.stageX), Std.int(FlashEvent.stageY), FlashEvent.touchPointID);
 			touch._current = 2;
 		}
 	}
 	
 	/**
 	 * Event handler so FlxGame can update touches.
-	 * 
-	 * @param	FlashEvent	A TouchEvent object.
 	 */
 	private function handleTouchEnd(FlashEvent:TouchEvent):Void
 	{
@@ -222,8 +218,6 @@ class FlxTouchManager implements IFlxInput
 	
 	/**
 	 * Event handler so FlxGame can update touches.
-	 * 
-	 * @param	FlashEvent	A TouchEvent object.
 	 */
 	private function handleTouchMove(FlashEvent:TouchEvent):Void
 	{
@@ -231,7 +225,7 @@ class FlxTouchManager implements IFlxInput
 		
 		if (touch != null)
 		{
-			touch.updatePosition(FlashEvent.stageX, FlashEvent.stageY); 
+			touch.setXY(Std.int(FlashEvent.stageX), Std.int(FlashEvent.stageY)); 
 		}
 	}
 	
@@ -256,7 +250,7 @@ class FlxTouchManager implements IFlxInput
 	 * @param	PointID		id of the touch
 	 * @return	A recycled touch object
 	 */
-	private function recycle(X:Float, Y:Float, PointID:Int):FlxTouch
+	private function recycle(X:Int, Y:Int, PointID:Int):FlxTouch
 	{
 		if (_inactiveTouches.length > 0)
 		{

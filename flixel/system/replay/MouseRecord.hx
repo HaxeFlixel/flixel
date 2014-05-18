@@ -5,16 +5,18 @@ import flixel.math.FlxPoint;
 /**
  * A helper class for the frame records, part of the replay/demo/recording system.
  */
-class MouseRecord extends FlxPoint
+class MouseRecord
 {
+	public var x(default, null):Int;
+	public var y(default, null):Int;
 	/**
 	 * The state of the left mouse button.
 	 */
-	public var button:Int;
+	public var button(default, null):Int;
 	/**
 	 * The state of the mouse wheel.
 	 */
-	public var wheel:Int;
+	public var wheel(default, null):Int;
 	
 	/**
 	 * Instantiate a new mouse input record.
@@ -26,9 +28,8 @@ class MouseRecord extends FlxPoint
 	 */
 	public function new(X:Int, Y:Int, Button:Int, Wheel:Int)
 	{
-		super();
-		set(X, Y);
-		
+		x = X;
+		y = Y;
 		button = Button;
 		wheel = Wheel;
 	}
