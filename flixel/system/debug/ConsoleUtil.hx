@@ -162,7 +162,7 @@ class ConsoleUtil
 	 * @param	propName
 	 * @return
 	 */
-	public static function resolveProperty(obj : Dynamic, propName : String):Dynamic
+	public static function resolveProperty(obj:Dynamic, propName:String):Dynamic
 	{
 		//If array, get indice
 		var arrayIndices = new Array<Int>();
