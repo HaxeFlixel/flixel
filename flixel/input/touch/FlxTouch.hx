@@ -35,13 +35,17 @@ class FlxTouch extends FlxPointer implements IFlxDestroyable
 	
 	private var _justPressedPosition:FlxPoint;
 	private var _justPressedTimeInTicks:Float;
-	
+#end
+
 	public function destroy():Void
 	{
+		#if !FLX_NO_TOUCH
 		_justPressedPosition = FlxDestroyUtil.put(_justPressedPosition);
 		_flashPoint = null;
+		#end
 	}
-	
+
+#if !FLX_NO_TOUCH
 	/**
 	 * Resets the just pressed/just released flags and sets touch to not pressed.
 	 */
