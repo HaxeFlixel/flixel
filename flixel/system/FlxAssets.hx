@@ -177,36 +177,6 @@ class FlxAssets
 		#end
 		return Assets.getSound(id + extension);
 	}
-	
-	#if (!FLX_NO_SOUND_SYSTEM && !doc)
-	/**
-	 * Calls FlxG.sound.cache() on all sounds that are embedded.
-	 */
-	@:access(openfl.Assets)
-	@:access(openfl.AssetType)
-	public static function cacheSounds():Void
-	{
-		Assets.initialize();
-		
-		var defaultLibrary = Assets.libraries.get("default");
-		
-		if (defaultLibrary == null) 
-			return;
-		
-		var types:Map<String, Dynamic> = DefaultAssetLibrary.type;
-		
-		if (types == null) 
-			return;
-		
-		for (key in types.keys())
-		{
-			if (types.get(key) == AssetType.SOUND)
-			{
-				FlxG.sound.cache(key);
-			}
-		}
-	}
-	#end
 #end
 }
 

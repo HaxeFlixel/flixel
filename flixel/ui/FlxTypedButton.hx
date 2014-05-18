@@ -5,10 +5,9 @@ import flash.events.MouseEvent;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.input.touch.FlxTouch;
-import flixel.interfaces.IFlxDestroyable;
 import flixel.system.FlxSound;
 import flixel.util.FlxDestroyUtil;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 
 @:bitmap("assets/images/ui/button.png")
 private class GraphicButton extends BitmapData {}

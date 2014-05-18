@@ -1,7 +1,7 @@
 package flixel.system.frontEnds;
 
 import flixel.FlxG;
-import flixel.interfaces.IFlxInput;
+import flixel.input.IFlxInput;
 import flixel.util.FlxStringUtil;
 
 @:allow(flixel.FlxGame)
@@ -13,7 +13,7 @@ class InputFrontEnd
 	/**
 	 * A read-only list of all inputs.
 	 */
-	public var list(default, null):Array<IFlxInput>;
+	public var list(default, null):Array<IFlxInput> = [];
 	
 	/**
 	 * Add an input to the system
@@ -100,10 +100,7 @@ class InputFrontEnd
 		}
 	}
 	
-	private function new()
-	{
-		list = new Array<IFlxInput>();
-	}
+	private function new() {}
 	
 	/**
 	 * Updates the inputs

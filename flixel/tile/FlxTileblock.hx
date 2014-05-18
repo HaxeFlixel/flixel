@@ -5,8 +5,8 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.system.layer.DrawStackItem;
-import flixel.util.FlxAngle;
-import flixel.util.FlxRandom;
+import flixel.math.FlxAngle;
+import flixel.math.FlxRandom;
 import flixel.util.FlxSpriteUtil;
 
 /**

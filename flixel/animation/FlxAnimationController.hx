@@ -2,11 +2,11 @@ package flixel.animation;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.interfaces.IFlxDestroyable;
 import flixel.system.layer.frames.FlxFrame;
 import flixel.system.layer.frames.FlxSpriteFrames;
 import flixel.util.FlxArrayUtil;
-import flixel.util.FlxRandom;
+import flixel.util.FlxDestroyUtil.IFlxDestroyable;
+import flixel.math.FlxRandom;
 
 class FlxAnimationController implements IFlxDestroyable
 {

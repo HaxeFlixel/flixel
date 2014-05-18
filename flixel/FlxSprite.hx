@@ -15,12 +15,12 @@ import flixel.system.layer.DrawStackItem;
 import flixel.system.layer.frames.FlxFrame;
 import flixel.system.layer.frames.FlxSpriteFrames;
 import flixel.system.layer.Region;
-import flixel.util.FlxAngle;
+import flixel.math.FlxAngle;
 import flixel.util.FlxColor;
 import flixel.util.FlxColorUtil;
 import flixel.util.FlxDestroyUtil;
-import flixel.util.FlxMath;
-import flixel.util.FlxPoint;
+import flixel.math.FlxMath;
+import flixel.math.FlxPoint;
 import flixel.util.loaders.CachedGraphics;
 import flixel.util.loaders.TexturePackerData;
 import flixel.util.loaders.TextureRegion;
@@ -41,6 +41,7 @@ class FlxSprite extends FlxObject
 	public var animation:FlxAnimationController;
 	/**
 	 * The actual Flash BitmapData object representing the current display state of the sprite.
+	 * WARNING: can be null in FLX_RENDER_TILE mode unless you call getFlxFrameBitmapData() beforehand.
 	 */
 	public var framePixels:BitmapData;
 	/**
@@ -1208,7 +1209,7 @@ class FlxSprite extends FlxObject
 	}
 	
 	/**
-	 * Retrieves BitmapData of current FlxFrame
+	 * Retrieves BitmapData of current FlxFrame. Updates framePixels.
 	 */
 	public inline function getFlxFrameBitmapData():BitmapData
 	{
@@ -1254,7 +1255,6 @@ class FlxSprite extends FlxObject
 			}
 			
 			dirty = false;
-			
 		}
 		
 		return framePixels;
@@ -1613,4 +1613,27 @@ class FlxSprite extends FlxObject
 		}
 		return flipY = Value;
 	}
+}
+
+interface IFlxSprite extends IFlxBasic 
+{
+	public var x(default, set):Float;
+	public var y(default, set):Float;
+	public var alpha(default, set):Float;
+	public var angle(default, set):Float;
+	public var facing(default, set):Int;
+	public var moves(default, set):Bool;
+	public var immovable(default, set):Bool;
+	
+	public var offset(default, null):FlxPoint;
+	public var origin(default, null):FlxPoint;
+	public var scale(default, null):FlxPoint;
+	public var velocity(default, null):FlxPoint;
+	public var maxVelocity(default, null):FlxPoint;
+	public var acceleration(default, null):FlxPoint;
+	public var drag(default, null):FlxPoint;
+	public var scrollFactor(default, null):FlxPoint;
+
+	public function reset(X:Float, Y:Float):Void;
+	public function setPosition(X:Float = 0, Y:Float = 0):Void;
 }

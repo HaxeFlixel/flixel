@@ -1,7 +1,7 @@
 package flixel.animation;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.util.FlxRandom;
+import flixel.math.FlxRandom;
 
 /**
  * Just a helper structure for the FlxSprite animation system.

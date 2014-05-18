@@ -3,7 +3,6 @@ package flixel.input.gamepad;
 import flash.Lib;
 import flixel.FlxG;
 import flixel.input.gamepad.FlxGamepad;
-import flixel.interfaces.IFlxInput;
 import flixel.util.FlxDestroyUtil;
 
 #if (cpp || neko)

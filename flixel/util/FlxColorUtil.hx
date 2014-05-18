@@ -1,6 +1,8 @@
 package flixel.util;
 
 import flixel.FlxG;
+import flixel.math.FlxMath;
+import flixel.math.FlxRandom;
 
 /**
  * Class containing a set of functions for color manipulation and color harmony.

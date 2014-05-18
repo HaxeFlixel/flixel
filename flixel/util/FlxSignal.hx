@@ -1,11 +1,9 @@
 package flixel.util;
 
+import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 #if macro
 import haxe.macro.Expr;
 #end
-
-import flixel.interfaces.IFlxSignal;
-import flixel.interfaces.IFlxDestroyable;
 
 typedef FlxSignal = FlxTypedSignal<Void->Void>;
 
@@ -273,4 +271,14 @@ private class FlxSignal4<T1,T2,T3,T4> extends FlxSignalBase<T1->T2->T3->T4->Void
 	{
 		FlxSignalBase.buildDispatch(value1, value2, value3, value4);
 	}
+}
+
+interface IFlxSignal<T> extends IFlxDestroyable
+{
+	public var dispatch:T;
+	public function add(listener:T):Void;
+	public function addOnce(listener:T):Void;
+	public function remove(listener:T):Void;
+	public function removeAll():Void;
+	public function has(listener:T):Bool;
 }

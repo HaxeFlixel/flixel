@@ -6,7 +6,7 @@ import flash.display.Sprite;
 import flash.text.TextField;
 import flash.text.TextFormatAlign;
 import flixel.util.FlxColor;
-import flixel.util.FlxMath;
+import flixel.math.FlxMath;
 
 /**
  * This is a helper function for the stats window to draw a graph with given values.

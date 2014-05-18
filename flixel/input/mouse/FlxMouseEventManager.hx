@@ -1,4 +1,4 @@
-package flixel.plugin;
+package flixel.input.mouse;
 
 import flash.errors.Error;
 import flixel.FlxBasic;
@@ -7,21 +7,22 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup;
-import flixel.util.FlxAngle;
+import flixel.group.FlxTypedGroup;
+import flixel.math.FlxAngle;
 import flixel.util.FlxDestroyUtil;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 
 /**
  * Provides mouse event detection for FlxObjects and FlxSprites (pixel-perfect for those).
  * To use it, initialize the manager and register objects / sprites. 
  * 
- * 		FlxG.plugins.add(new MouseEventManager());
+ * 		FlxG.plugins.add(new FlxMouseEventManager());
  * 		var object = new FlxObject();
- * 		MouseEventManager.add(object, onMouseDown, onMouseUp, onMouseOver, onMouseOut);
+ * 		FlxMouseEventManager.add(object, onMouseDown, onMouseUp, onMouseOver, onMouseOut);
  * 
  * Or simply add a new object and this plugin will initialize itself: 
  * 
- *      MouseEventManager.add(object, onMouseDown, onMouseUp, onMouseOver, onMouseOut);
+ *      FlxMouseEventManager.add(object, onMouseDown, onMouseUp, onMouseOver, onMouseOut);
  * 
  * Also implement the callbacks with the object's type as parameters:
  * 
@@ -32,7 +33,7 @@ import flixel.util.FlxPoint;
  * 
  * @author TiagoLr (~~~ ProG4mr ~~~)
  */
-class MouseEventManager extends FlxPlugin
+class FlxMouseEventManager extends FlxBasic
 {
 	private static var _registeredObjects:Array<ObjectMouseData<FlxObject>>;
 	private static var _mouseOverObjects:Array<ObjectMouseData<FlxObject>>;
@@ -40,16 +41,16 @@ class MouseEventManager extends FlxPlugin
 	private static var _point:FlxPoint;
 	
 	/**
-	 * As alternative you can call MouseEventManager.init().
+	 * As alternative you can call FlxMouseEventManager.init().
 	 */
 	public static inline function init():Void
 	{
-		if (FlxG.plugins.get(MouseEventManager) == null)
-			FlxG.plugins.add(new MouseEventManager());
+		if (FlxG.plugins.get(FlxMouseEventManager) == null)
+			FlxG.plugins.add(new FlxMouseEventManager());
 	}
 	
 	/**
-	 * Adds an object to the MouseEventManager registry. Automatically initializes the plugin.
+	 * Adds an object to the FlxMouseEventManager registry. Automatically initializes the plugin.
 	 *
 	 * @param	OnMouseDown		Callback when mouse is pressed down over this object. Must have Object as argument - e.g. onMouseDown(object:FlxObject).
 	 * @param	OnMouseUp		Callback when mouse is released over this object. Must have Object as argument - e.g. onMouseDown(object:FlxObject).
@@ -234,17 +235,17 @@ class MouseEventManager extends FlxPlugin
 		}
 		else
 		{
-			throw new Error("MouseEventManager , isObjectMouseChildren() : object not found");
+			throw new Error("FlxMouseEventManager , isObjectMouseChildren() : object not found");
 		}
 	}
 	
-	private static function traverseFlxGroup(Group:FlxGroup, OrderedObjects:Array<ObjectMouseData<Dynamic>>):Void
+	private static function traverseFlxGroup(Group:FlxTypedGroup<Dynamic>, OrderedObjects:Array<ObjectMouseData<Dynamic>>):Void
 	{
 		for (basic in Group.members)
 		{
-			if (Std.is(basic, FlxGroup))
+			if (Std.is(basic, FlxTypedGroup))
 			{
-				traverseFlxGroup(cast(basic, FlxGroup), OrderedObjects);
+				traverseFlxGroup(cast(basic, FlxTypedGroup<Dynamic>), OrderedObjects);
 			}
 			
 			if (Std.is(basic, FlxSprite))

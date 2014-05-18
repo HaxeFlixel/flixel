@@ -1,7 +1,7 @@
 package flixel.system;
 
 import flixel.FlxObject;
-import flixel.interfaces.IFlxDestroyable;
+import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 
 /**
  * A miniature linked list class.

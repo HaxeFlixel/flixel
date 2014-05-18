@@ -157,15 +157,15 @@ class FlxState extends FlxGroup
 		
 		if (_requestSubStateReset)
 		{
-			resetSubState();
 			_requestSubStateReset = false;
+			resetSubState();
 		}
 		else if (subState != null)
 		{
 			subState.tryUpdate();
 		}
 	}
-	
+
 	private function get_bgColor():Int
 	{
 		return FlxG.cameras.bgColor;

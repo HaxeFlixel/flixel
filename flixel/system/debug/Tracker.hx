@@ -29,12 +29,13 @@ import flixel.ui.FlxBar;
 #end
 import flixel.ui.FlxTypedButton.FlxTypedButton;
 import flixel.util.FlxPath;
-import flixel.util.FlxPoint;
-import flixel.util.FlxRect;
+import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
 import flixel.util.FlxTimer;
 #end
 
 import flixel.animation.FlxAnimationController;
+import flixel.effects.particles.FlxTypedEmitter;
 import flixel.util.FlxStringUtil;
 
 class Tracker extends Watch
@@ -116,10 +117,12 @@ class Tracker extends Watch
 			addProfile(new TrackerProfile(FlxTween, ["active", "duration", "type", "percent", "finished", 
 			                                         "scale", "backward", "executions", "startDelay", "loopDelay"]));
 			
-			addProfile(new TrackerProfile(FlxPath, ["speed", "angle", "autoCenter", "_nodeIndex", "active", "finished"]));
+			addProfile(new TrackerProfile(FlxPath, ["speed", "angle", "autoCenter", "nodeIndex", "active", "finished"]));
 			addProfile(new TrackerProfile(FlxTimer, ["time", "loops", "active", "finished", "timeLeft", "elapsedTime", "loopsLeft", "elapsedLoops", "progress"]));
 			
 			addProfile(new TrackerProfile(FlxAnimationController, ["frameIndex", "frameName", "name", "paused", "finished", "frames"]));
+			
+			addProfile(new TrackerProfile(FlxTypedEmitter, ["emitting", "frequency", "bounce"], [FlxTypedGroup, FlxRect]));
 			
 			// Inputs
 			#if !FLX_NO_MOUSE

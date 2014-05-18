@@ -1,8 +1,9 @@
-package flixel.util;
+package flixel.math;
 
 import flixel.FlxG;
 import flixel.FlxGame;
 import flixel.system.frontEnds.VCRFrontEnd;
+import flixel.util.FlxColorUtil;
 
 /**
  * A class containing a set of functions for random generation.

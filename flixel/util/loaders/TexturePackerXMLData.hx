@@ -1,19 +1,14 @@
 package flixel.util.loaders;
 
-import flash.display.BitmapData;
 import flash.geom.Rectangle;
 import flixel.FlxG;
-import flixel.interfaces.IFlxDestroyable;
-import flixel.util.FlxPoint;
-import haxe.Json;
-import haxe.xml.Fast;
+import flixel.util.FlxDestroyUtil;
+import flixel.math.FlxPoint;
 import openfl.Assets;
 
 class TexturePackerXMLData extends TexturePackerData implements IFlxDestroyable
 {
 	/**
-	 * Constructor
-	 * 
 	 * @param	Description		Name of the data file with atlas description
 	 * @param	AssetName		Name of the atlas image file
 	 */

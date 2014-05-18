@@ -13,7 +13,7 @@ class CameraFrontEnd
 	 * An array listing FlxCamera objects that are used to draw stuff.
 	 * By default flixel creates one camera the size of the screen.
 	 */
-	public var list(default, null):Array<FlxCamera>;
+	public var list(default, null):Array<FlxCamera> = [];
 	
 	/**
 	 * The current (global, applies to all cameras) bgColor.
@@ -28,7 +28,7 @@ class CameraFrontEnd
 	/**
 	 * Internal helper variable for clearing the cameras each frame.
 	 */
-	private var _cameraRect:Rectangle;
+	private var _cameraRect:Rectangle = new Rectangle();
 	
 	/**
 	 * Add a new camera object to the game.
@@ -163,8 +163,6 @@ class CameraFrontEnd
 	@:allow(flixel.FlxG)
 	private function new() 
 	{
-		_cameraRect = new Rectangle();
-		list = new Array<FlxCamera>();
 		FlxCamera.defaultCameras = list;
 	}
 	

@@ -24,9 +24,9 @@ import flixel.system.scaleModes.BaseScaleMode;
 import flixel.system.scaleModes.RatioScaleMode;
 import flixel.text.pxText.PxBitmapFont;
 import flixel.util.FlxCollision;
-import flixel.util.FlxMath;
-import flixel.util.FlxRandom;
-import flixel.util.FlxRect;
+import flixel.math.FlxMath;
+import flixel.math.FlxRandom;
+import flixel.math.FlxRect;
 import flixel.util.FlxSave;
 
 #if !FLX_NO_TOUCH
@@ -92,7 +92,7 @@ class FlxG
 	 * The HaxeFlixel version, in semantic versioning syntax. Use Std.string()
 	 * on it to get a String formatted like this: "HaxeFlixel MAJOR.MINOR.PATCH-PATCH_VERSION".
 	 */ 
-	public static var VERSION(default, null):FlxVersion = new FlxVersion(3, 4, 0, "dev");
+	public static var VERSION(default, null):FlxVersion = new FlxVersion(4, 0, 0, "dev");
 	
 	/**
 	 * Internal tracker for game object.
@@ -261,7 +261,7 @@ class FlxG
 	/**
 	 * Contains a list of all plugins and the functions required to add(), remove() them etc.
 	 */
-	public static var plugins(default, null):PluginFrontEnd = new PluginFrontEnd();
+	public static var plugins(default, null):PluginFrontEnd;
 	
 	#if !FLX_NO_SOUND_SYSTEM
 	/**
@@ -467,6 +467,8 @@ class FlxG
 		#if !FLX_NO_SOUND_SYSTEM
 		sound.loadSavedPrefs();
 		#end
+		
+		plugins = new PluginFrontEnd();
 		
 		FlxAssets.init();
 	}

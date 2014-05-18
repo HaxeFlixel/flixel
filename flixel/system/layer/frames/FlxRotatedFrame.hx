@@ -1,7 +1,7 @@
 package flixel.system.layer.frames;
 
 import flash.display.BitmapData;
-import flixel.util.FlxAngle;
+import flixel.math.FlxAngle;
 import flixel.util.FlxColor;
 
 class FlxRotatedFrame extends FlxFrame

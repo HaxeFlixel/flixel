@@ -1,8 +1,9 @@
 package flixel.util;
 
+import flixel.util.FlxPool;
+#if !macro
 import flash.display.BitmapData;
-import flixel.interfaces.IFlxDestroyable;
-import flixel.interfaces.IFlxPooled;
+#end
 
 class FlxDestroyUtil
 {
@@ -71,6 +72,7 @@ class FlxDestroyUtil
 		return null;
 	}
 	
+	#if !macro
 	/**
 	 * Checks if a BitmapData object is not null before calling dispose() on it, always returns null.
 	 * 
@@ -83,4 +85,10 @@ class FlxDestroyUtil
 			Bitmap.dispose();
 		return null;
 	}
+	#end
+}
+
+interface IFlxDestroyable
+{
+	public function destroy():Void;
 }

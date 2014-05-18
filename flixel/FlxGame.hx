@@ -16,9 +16,9 @@ import flixel.system.frontEnds.VCRFrontEnd;
 import flixel.system.layer.TileSheetExt;
 import flixel.system.replay.FlxReplay;
 import flixel.text.pxText.PxBitmapFont;
-import flixel.util.FlxAngle;
+import flixel.math.FlxAngle;
 import flixel.util.FlxColor;
-import flixel.util.FlxRandom;
+import flixel.math.FlxRandom;
 import flixel.util.FlxArrayUtil;
 
 #if !FLX_NO_DEBUG
@@ -418,7 +418,6 @@ class FlxGame extends Sprite
 		#end
 		
 		_state.onResize(width, height);
-		FlxG.plugins.onResize(width, height);
 		FlxG.signals.gameResized.dispatch(width, height);
 		
 		resizeGame(width, height);
@@ -564,7 +563,7 @@ class FlxGame extends Sprite
 		#if !FLX_NO_SOUND_SYSTEM
 		FlxG.sound.destroy();
 		#end
-		FlxG.plugins.onStateSwitch();
+		
 		FlxG.signals.stateSwitched.dispatch();
 		
 		#if FLX_RECORD

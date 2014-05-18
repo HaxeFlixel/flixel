@@ -6,7 +6,6 @@ import flash.Lib;
 import flash.ui.Multitouch;
 import flash.ui.MultitouchInputMode;
 import flixel.FlxG;
-import flixel.interfaces.IFlxInput;
 
 /**
  * ...

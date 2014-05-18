@@ -15,8 +15,8 @@ import flash.text.TextFormatAlign;
 import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
-import flixel.util.FlxMath;
-import flixel.util.FlxPoint;
+import flixel.math.FlxMath;
+import flixel.math.FlxPoint;
 import flixel.util.FlxSpriteUtil;
 import flixel.system.debug.FlxDebugger;
 

@@ -1,4 +1,5 @@
 package flixel.util;
+import flixel.math.FlxRandom;
 
 /**
  * A set of functions for array manipulation.

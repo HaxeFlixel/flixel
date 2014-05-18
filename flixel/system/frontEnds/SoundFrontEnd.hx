@@ -7,7 +7,7 @@ import flixel.FlxG;
 import flixel.group.FlxTypedGroup;
 import flixel.system.FlxAssets.FlxSoundAsset;
 import flixel.system.FlxSound;
-import flixel.util.FlxMath;
+import flixel.math.FlxMath;
 import openfl.Assets;
 
 @:allow(flixel.FlxGame)
@@ -33,17 +33,17 @@ class SoundFrontEnd
 	 * The key codes used to increase volume (see FlxG.keys for the keys available).
 	 * Default keys: + (and numpad +). Set to null to deactivate.
 	 */
-	public var volumeUpKeys:Array<String>;
+	public var volumeUpKeys:Array<String> = ["PLUS", "NUMPADPLUS"];
 	/**
 	 * The keys to decrease volume (see FlxG.keys for the keys available).
 	 * Default keys: - (and numpad -). Set to null to deactivate.
 	 */
-	public var volumeDownKeys:Array<String>;
+	public var volumeDownKeys:Array<String> = ["MINUS", "NUMPADMINUS"];
 	/**
 	 * The keys used to mute / unmute the game (see FlxG.keys for the keys available).
 	 * Default keys: 0 (and numpad 0). Set to null to deactivate.
 	 */
-	public var muteKeys:Array<String>; 
+	public var muteKeys:Array<String> = ["ZERO", "NUMPADZERO"]; 
 	#end
 	
 	/**
@@ -55,13 +55,11 @@ class SoundFrontEnd
 	/**
 	 * A list of all the sounds being played in the game.
 	 */
-	public var list(default, null):FlxTypedGroup<FlxSound>;
+	public var list(default, null):FlxTypedGroup<FlxSound> = new FlxTypedGroup<FlxSound>();
 	/**
 	 * Set this to a number between 0 and 1 to change the global volume.
 	 */
 	public var volume(default, set):Float = 1;
-	
-	private var _soundCache:Map<String, Sound>;
 	
 	/**
 	 * Set up and play a looping background soundtrack.
@@ -134,20 +132,42 @@ class SoundFrontEnd
 	 * @param	EmbeddedSound	Name of sound assets specified in your .xml project file
 	 * @return	Cached Sound object
 	 */
-	public function cache(EmbeddedSound:String):Sound
+	public inline function cache(EmbeddedSound:String):Sound
 	{
-		if (_soundCache.exists(EmbeddedSound))
+		// load the sound into the OpenFL assets cache
+		return Assets.getSound(EmbeddedSound, true);
+	}
+	
+	#if !doc
+	/**
+	 * Calls FlxG.sound.cache() on all sounds that are embedded.
+	 * WARNING: can lead to high memory usage.
+	 */
+	@:access(openfl.Assets)
+	@:access(openfl.AssetType)
+	public function cacheAll():Void
+	{
+		Assets.initialize();
+		
+		var defaultLibrary = Assets.libraries.get("default");
+		
+		if (defaultLibrary == null) 
+			return;
+		
+		var types:Map<String, Dynamic> = DefaultAssetLibrary.type;
+		
+		if (types == null) 
+			return;
+		
+		for (key in types.keys())
 		{
-			return _soundCache.get(EmbeddedSound);
-		}
-		else
-		{
-			var sound:Sound = Assets.getSound(EmbeddedSound);
-			_soundCache.set(EmbeddedSound, sound);
-			
-			return sound;
+			if (types.get(key) == AssetType.SOUND)
+			{
+				cache(key);
+			}
 		}
 	}
+	#end
 	
 	/**
 	 * Plays a sound from an embedded sound. Tries to recycle a cached sound first.
@@ -160,17 +180,7 @@ class SoundFrontEnd
 	 */
 	public function play(EmbeddedSound:String, Volume:Float = 1, Looped:Bool = false, AutoDestroy:Bool = true, ?OnComplete:Void->Void):FlxSound
 	{
-		var sound:Sound = null;
-		
-		if (_soundCache.exists(EmbeddedSound))
-		{
-			sound = _soundCache.get(EmbeddedSound);
-		}
-		else
-		{
-			sound = Assets.getSound(EmbeddedSound);
-			_soundCache.set(EmbeddedSound, sound);
-		}
+		var sound:Sound = cache(EmbeddedSound);
 		var flixelSound = list.recycle(FlxSound).loadEmbedded(sound, Looped, AutoDestroy, OnComplete);
 		flixelSound.volume = Volume;
 		return flixelSound.play();
@@ -251,18 +261,7 @@ class SoundFrontEnd
 		}
 	}
 	
-	private function new() 
-	{
-		#if !FLX_NO_KEYBOARD
-		// Assign default values to the keys used by core flixel
-		volumeUpKeys = ["PLUS", "NUMPADPLUS"];
-		volumeDownKeys = ["MINUS", "NUMPADMINUS"];
-		muteKeys = ["ZERO", "NUMPADZERO"]; 
-		#end
-		
-		list = new FlxTypedGroup<FlxSound>();
-		_soundCache = new Map<String, Sound>();
-	}
+	private function new() {}
 	
 	/**
 	 * Called by the game loop to make sure the sounds get updated each frame.
