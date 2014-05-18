@@ -5,7 +5,7 @@ import flixel.FlxBasic;
 import flixel.group.FlxGroup;
 import flixel.group.FlxSpriteGroup;
 import flixel.group.FlxTypedGroup;
-import flixel.tile.FlxTilemap;
+import flixel.tile.FlxBaseTilemap;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.math.FlxPoint;
@@ -99,11 +99,11 @@ class FlxObject extends FlxBasic
 		//If one of the objects is a tilemap, just pass it off.
 		if (Object1.collisionType == TILEMAP)
 		{
-			return cast(Object1, FlxTilemap).overlapsWithCallback(Object2, separateX);
+			return cast(Object1, FlxBaseTilemap<Dynamic>).overlapsWithCallback(Object2, separateX);
 		}
 		if (Object2.collisionType == TILEMAP)
 		{
-			return cast(Object2, FlxTilemap).overlapsWithCallback(Object1, separateX, true);
+			return cast(Object2, FlxBaseTilemap<Dynamic>).overlapsWithCallback(Object1, separateX, true);
 		}
 		
 		//First, get the two object deltas
@@ -212,11 +212,11 @@ class FlxObject extends FlxBasic
 		//If one of the objects is a tilemap, just pass it off.
 		if (Object1.collisionType == TILEMAP)
 		{
-			return cast(Object1, FlxTilemap).overlapsWithCallback(Object2, separateY);
+			return cast(Object1, FlxBaseTilemap<Dynamic>).overlapsWithCallback(Object2, separateY);
 		}
 		if (Object2.collisionType == TILEMAP)
 		{
-			return cast(Object2, FlxTilemap).overlapsWithCallback(Object1, separateY, true);
+			return cast(Object2, FlxBaseTilemap<Dynamic>).overlapsWithCallback(Object1, separateY, true);
 		}
 
 		//First, get the two object deltas
@@ -592,7 +592,7 @@ class FlxObject extends FlxBasic
 		{
 			//Since tilemap's have to be the caller, not the target, to do proper tile-based collisions,
 			// we redirect the call to the tilemap overlap here.
-			return cast(ObjectOrGroup, FlxTilemap).overlaps(this, InScreenSpace, Camera);
+			return cast(ObjectOrGroup, FlxBaseTilemap<Dynamic>).overlaps(this, InScreenSpace, Camera);
 		}
 		
 		var object:FlxObject = cast(ObjectOrGroup, FlxObject);
@@ -642,7 +642,7 @@ class FlxObject extends FlxBasic
 			// we redirect the call to the tilemap overlap here.
 			//However, since this is overlapsAt(), we also have to invent the appropriate position for the tilemap.
 			//So we calculate the offset between the player and the requested position, and subtract that from the tilemap.
-			var tilemap:FlxTilemap = cast(ObjectOrGroup, FlxTilemap);
+			var tilemap:FlxBaseTilemap<Dynamic> = cast(ObjectOrGroup, FlxBaseTilemap<Dynamic>);
 			return tilemap.overlapsAt(tilemap.x - (X - x), tilemap.y - (Y - y), this, InScreenSpace, Camera);
 		}
 		
