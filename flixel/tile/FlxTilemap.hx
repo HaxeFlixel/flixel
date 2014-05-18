@@ -662,7 +662,6 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 				}
 				array.push(point);
 			}
-			
 			i++;
 		}
 		
@@ -764,9 +763,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 						Result = FlxPoint.get();
 					}
 					
-					Result.x = rx;
-					Result.y = ry;
-					
+					Result.set(rx, ry);
 					return false;
 				}
 				
@@ -788,15 +785,12 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 						Result = FlxPoint.get();
 					}
 					
-					Result.x = rx;
-					Result.y = ry;
-
+					Result.set(rx, ry);
 					return false;
 				}
 				
 				return true;
 			}
-			
 			i++;
 		}
 		
@@ -866,13 +860,12 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		#end
 		
 		// TODO: make it better for native targets
-		var pt:Point = new Point(0, 0);
+		var pt = new Point(0, 0);
 		var tileSprite:FlxSprite = new FlxSprite();
 		tileSprite.makeGraphic(_tileWidth, _tileHeight, FlxColor.TRANSPARENT, true);
 		tileSprite.x = X * _tileWidth + x;
 		tileSprite.y = Y * _tileHeight + y;
-		tileSprite.scale.x = scale.x;
-		tileSprite.scale.y = scale.y;
+		tileSprite.scale.copyFrom(scale);
 		
 		if (rect != null) 
 		{
@@ -1165,16 +1158,19 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 */
 	private function set_cachedGraphics(Value:CachedGraphics):CachedGraphics
 	{
-		var oldCached:CachedGraphics = cachedGraphics;
-		
-		if ((cachedGraphics != Value) && (Value != null))
+		//If graphics are changing
+		if (cachedGraphics != Value)
 		{
-			Value.useCount++;
-		}
-		
-		if ((oldCached != null) && (oldCached != Value))
-		{
-			oldCached.useCount--;
+			//If new graphic is not null, increase its use count
+			if (Value != null)
+			{
+				Value.useCount++;
+			}
+			//If old graphic is not null, decrease its use count
+			if (cachedGraphics != null)
+			{
+				cachedGraphics.useCount--;
+			}
 		}
 		
 		return cachedGraphics = Value;

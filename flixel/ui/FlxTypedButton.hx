@@ -198,9 +198,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		for (camera in cameras)
 		{
 			#if !FLX_NO_MOUSE
-			FlxG.mouse.getWorldPosition(camera, _point);
-			
-			if (overlapsPoint(_point, true, camera))
+			if (FlxG.mouse.overlaps(this, camera))
 			{
 				overlapFound = true;
 				updateStatus(true, FlxG.mouse.justPressed, FlxG.mouse.pressed);
@@ -211,9 +209,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 			#if !FLX_NO_TOUCH
 			for (touch in FlxG.touches.list)
 			{
-				touch.getWorldPosition(camera, _point);
-				
-				if (overlapsPoint(_point, true, camera))
+				if (touch.overlaps(this, camera))
 				{
 					overlapFound = true;
 					updateStatus(true, touch.justPressed, touch.pressed, touch);

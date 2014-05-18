@@ -55,7 +55,6 @@ class FlxTile extends FlxObject
 		
 		immovable = true;
 		moves = false;
-		filter = null;
 		
 		tilemap = Tilemap;
 		index = Index;
