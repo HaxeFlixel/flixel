@@ -146,7 +146,7 @@ class Stats extends Window
 		addChild(drawTimeGraph);
 		
 		addChild(_leftTextField = DebuggerUtil.createTextField(gutter, (graphHeight * 2) + 45, LABEL_COLOR, TEXT_SIZE));
-		addChild(_rightTextField = DebuggerUtil.createTextField(gutter + 70, (graphHeight * 2) + 45, FlxColor.WHITE, TEXT_SIZE));
+		addChild(_rightTextField = DebuggerUtil.createTextField(gutter + 70, (graphHeight * 2) + 45, FlxColor.preset.WHITE, TEXT_SIZE));
 		
 		_leftTextField.multiline = _rightTextField.multiline = true;
 		_leftTextField.wordWrap = _rightTextField.wordWrap = true;

@@ -480,9 +480,9 @@ class FlxTilemap extends FlxObject
 		
 		// Create debug tiles for rendering bounding boxes on demand
 		#if (FLX_RENDER_BLIT && !FLX_NO_DEBUG)
-		_debugTileNotSolid = makeDebugTile(FlxColor.BLUE);
-		_debugTilePartial = makeDebugTile(FlxColor.PINK);
-		_debugTileSolid = makeDebugTile(FlxColor.GREEN);
+		_debugTileNotSolid = makeDebugTile(FlxColor.preset.BLUE);
+		_debugTilePartial = makeDebugTile(FlxColor.preset.PINK);
+		_debugTileSolid = makeDebugTile(FlxColor.preset.GREEN);
 		#end
 		
 		_scaledTileWidth = _tileWidth * scale.x;
@@ -621,15 +621,15 @@ class FlxTilemap extends FlxObject
 					{
 						if (tile.allowCollisions <= FlxObject.NONE)
 						{
-							debugColor = FlxColor.BLUE;
+							debugColor = FlxColor.preset.BLUE;
 						}
 						else if (tile.allowCollisions != FlxObject.ANY)
 						{
-							debugColor = FlxColor.PINK;
+							debugColor = FlxColor.preset.PINK;
 						}
 						else
 						{
-							debugColor = FlxColor.GREEN;
+							debugColor = FlxColor.preset.GREEN;
 						}
 						
 						// Copied from makeDebugTile
@@ -1476,7 +1476,7 @@ class FlxTilemap extends FlxObject
 		// TODO: make it better for native targets
 		var pt:Point = new Point(0, 0);
 		var tileSprite:FlxSprite = new FlxSprite();
-		tileSprite.makeGraphic(_tileWidth, _tileHeight, FlxColor.TRANSPARENT, true);
+		tileSprite.makeGraphic(_tileWidth, _tileHeight, FlxColor.preset.TRANSPARENT, true);
 		tileSprite.x = X * _tileWidth + x;
 		tileSprite.y = Y * _tileHeight + y;
 		tileSprite.scale.x = scale.x;

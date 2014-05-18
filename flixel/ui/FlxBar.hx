@@ -132,7 +132,7 @@ class FlxBar extends FlxSprite
 		_barHeight = height;
 		
 		#if FLX_RENDER_BLIT
-		makeGraphic(_barWidth, _barHeight, FlxColor.WHITE, true);
+		makeGraphic(_barWidth, _barHeight, FlxColor.preset.WHITE, true);
 		#else
 		this.width = frameWidth = width;
 		this.height = frameHeight = height;
@@ -144,7 +144,7 @@ class FlxBar extends FlxSprite
 		_filledBarPoint = new Point(0, 0);
 		
 		#if FLX_RENDER_BLIT
- 		_canvas = new BitmapData(width, height, true, FlxColor.TRANSPARENT);
+ 		_canvas = new BitmapData(width, height, true, FlxColor.preset.TRANSPARENT);
 		#end
 		
 		if (parentRef != null)

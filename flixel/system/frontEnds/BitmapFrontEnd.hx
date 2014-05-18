@@ -31,7 +31,7 @@ class BitmapFrontEnd
 	{
 		if (_whitePixel == null)
 		{
-			var bd:BitmapData = new BitmapData(2, 2, true, FlxColor.WHITE);
+			var bd:BitmapData = new BitmapData(2, 2, true, FlxColor.preset.WHITE);
 			_whitePixel = new CachedGraphics("whitePixel", bd, true);
 			_whitePixel.persist = true;
 			_whitePixel.tilesheet.addTileRect(new Rectangle(0, 0, 1, 1), new Point(0, 0));
@@ -273,7 +273,7 @@ class BitmapFrontEnd
 				FrameWidth = (FrameWidth == 0) ? bd.width : FrameWidth;
 				FrameHeight = (FrameHeight == 0) ? bd.height : FrameHeight;
 				
-				var tempBitmap:BitmapData = new BitmapData(bd.width + numHorizontalFrames * SpacingX, bd.height + numVerticalFrames * SpacingY, true, FlxColor.TRANSPARENT);
+				var tempBitmap:BitmapData = new BitmapData(bd.width + numHorizontalFrames * SpacingX, bd.height + numVerticalFrames * SpacingY, true, FlxColor.preset.TRANSPARENT);
 				tempBitmap.lock();
 				var tempRect:Rectangle = new Rectangle(0, 0, FrameWidth, FrameHeight);
 				var tempPoint:Point = new Point();

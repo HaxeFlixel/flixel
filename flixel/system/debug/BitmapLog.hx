@@ -54,7 +54,7 @@ class BitmapLog extends Window
 		minSize.x = 165;
 		minSize.y = Window.HEADER_HEIGHT * 2 + 1;
 		
-		_canvasBitmap = new Bitmap(new BitmapData(Std.int(width), Std.int(height - 15), true, FlxColor.TRANSPARENT));
+		_canvasBitmap = new Bitmap(new BitmapData(Std.int(width), Std.int(height - 15), true, FlxColor.preset.TRANSPARENT));
 		_canvasBitmap.x = 0;
 		_canvasBitmap.y = 15;
 		addChild(_canvasBitmap);
@@ -166,7 +166,7 @@ class BitmapLog extends Window
 		super.resize(Width, Height);
 		
 		_canvasBitmap.bitmapData = FlxDestroyUtil.dispose(_canvas);
-		_canvasBitmap.bitmapData = new BitmapData(Std.int(_width - _canvasBitmap.x), Std.int(_height - _canvasBitmap.y - _footer.height), true, FlxColor.TRANSPARENT);
+		_canvasBitmap.bitmapData = new BitmapData(Std.int(_width - _canvasBitmap.x), Std.int(_height - _canvasBitmap.y - _footer.height), true, FlxColor.preset.TRANSPARENT);
 		refreshCanvas(_curIndex);
 		
 		_ui.x = _header.width - _ui.width + 43;
@@ -263,7 +263,7 @@ class BitmapLog extends Window
 			_entries[i] = null;
 		}
 		_entries = [];
-		_canvas.fillRect(_canvas.rect, FlxColor.TRANSPARENT);
+		_canvas.fillRect(_canvas.rect, FlxColor.preset.TRANSPARENT);
 		_dimensionsText.text = "";
 		_counterText.text = "0/0";
 		_footerText.text = "";
@@ -282,7 +282,7 @@ class BitmapLog extends Window
 			Index = _curIndex;
 		}
 		
-		_canvas.fillRect(_canvas.rect, FlxColor.TRANSPARENT);
+		_canvas.fillRect(_canvas.rect, FlxColor.preset.TRANSPARENT);
 		
 		if (Index < 0)
 		{
@@ -331,7 +331,7 @@ class BitmapLog extends Window
 	{
 		var gfx:Graphics = FlxSpriteUtil.flashGfx;
 		gfx.clear();
-		gfx.lineStyle(1, FlxColor.RED, 0.75, false, LineScaleMode.NONE);
+		gfx.lineStyle(1, FlxColor.preset.RED, 0.75, false, LineScaleMode.NONE);
 		gfx.drawRect(0, 0, bitmap.width, bitmap.height);
 	}
 	

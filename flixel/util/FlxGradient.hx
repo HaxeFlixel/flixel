@@ -166,7 +166,7 @@ class FlxGradient
 			s.graphics.drawRect(0, 0, width, height / chunkSize);
 		}
 		
-		var data:BitmapData = new BitmapData(width, height, true, FlxColor.TRANSPARENT);
+		var data:BitmapData = new BitmapData(width, height, true, FlxColor.preset.TRANSPARENT);
 		
 		if (chunkSize == 1)
 		{
@@ -174,7 +174,7 @@ class FlxGradient
 		}
 		else
 		{
-			var tempBitmap:Bitmap = new Bitmap(new BitmapData(width, Std.int(height / chunkSize), true, FlxColor.TRANSPARENT));
+			var tempBitmap:Bitmap = new Bitmap(new BitmapData(width, Std.int(height / chunkSize), true, FlxColor.preset.TRANSPARENT));
 			tempBitmap.bitmapData.draw(s);
 			tempBitmap.scaleY = chunkSize;
 			

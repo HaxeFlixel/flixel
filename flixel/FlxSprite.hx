@@ -448,7 +448,7 @@ class FlxSprite extends FlxObject
 		}
 		
 		var skipGen:Bool = FlxG.bitmap.checkCache(key);
-		cachedGraphics = FlxG.bitmap.create(Std.int(width) + columns - 1, Std.int(height) + rows - 1, FlxColor.TRANSPARENT, true, key);
+		cachedGraphics = FlxG.bitmap.create(Std.int(width) + columns - 1, Std.int(height) + rows - 1, FlxColor.preset.TRANSPARENT, true, key);
 		bakedRotationAngle = 360 / Rotations;
 		
 		//Generate a new sheet if necessary, then fix up the width and height
@@ -599,7 +599,7 @@ class FlxSprite extends FlxObject
 	 * @param	Key			Optional parameter - specify a string key to identify this graphic in the cache.  Trumps Unique flag.
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function makeGraphic(Width:Int, Height:Int, Color:Int = FlxColor.WHITE, Unique:Bool = false, ?Key:String):FlxSprite
+	public function makeGraphic(Width:Int, Height:Int, Color:FlxColor = FlxColor.preset.WHITE, Unique:Bool = false, ?Key:String):FlxSprite
 	{
 		bakedRotationAngle = 0;
 		cachedGraphics = FlxG.bitmap.create(Width, Height, Color, Unique, Key);

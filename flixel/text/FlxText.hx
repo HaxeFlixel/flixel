@@ -82,7 +82,7 @@ class FlxText extends FlxSprite
 	/**
 	 * The color of the border in 0xRRGGBB format
 	 */	
-	public var borderColor(default, set):Int = FlxColor.TRANSPARENT;
+	public var borderColor(default, set):Int = FlxColor.preset.TRANSPARENT;
 	
 	/**
 	 * The size of the border, in pixels.
@@ -192,7 +192,7 @@ class FlxText extends FlxSprite
 		
 		var key:String = FlxG.bitmap.getUniqueKey("text");
 		var graphicWidth:Int = (FieldWidth <= 0) ? 1 : Std.int(FieldWidth);
-		makeGraphic(graphicWidth, 1, FlxColor.TRANSPARENT, false, key);
+		makeGraphic(graphicWidth, 1, FlxColor.preset.TRANSPARENT, false, key);
 		
 		#if FLX_RENDER_BLIT 
 		calcFrame();
@@ -292,8 +292,8 @@ class FlxText extends FlxSprite
 	 * @param	EmbeddedFont	Whether this text field uses embedded fonts or not
 	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function setFormat(?Font:String, Size:Float = 8, Color:Int = FlxColor.WHITE, ?Alignment:String, 
-		?BorderStyle:FlxTextBorderStyle, BorderColor:Int = FlxColor.TRANSPARENT, Embedded:Bool = true):FlxText
+	public function setFormat(?Font:String, Size:Float = 8, Color:Int = FlxColor.preset.WHITE, ?Alignment:String, 
+		?BorderStyle:FlxTextBorderStyle, BorderColor:Int = 0, Embedded:Bool = true):FlxText
 	{
 		if (BorderStyle == null)
 		{
@@ -339,7 +339,7 @@ class FlxText extends FlxSprite
 	 * @param	Size outline size in pixels
 	 * @param	Quality outline quality - # of iterations to use when drawing. 0:just 1, 1:equal number to BorderSize
 	 */
-	public inline function setBorderStyle(Style:FlxTextBorderStyle, Color:Int = FlxColor.TRANSPARENT, Size:Float = 1, Quality:Float = 1):Void 
+	public inline function setBorderStyle(Style:FlxTextBorderStyle, Color:Int = 0, Size:Float = 1, Quality:Float = 1):Void 
 	{
 		borderStyle = Style;
 		borderColor = Color;
@@ -720,7 +720,7 @@ class FlxText extends FlxSprite
 			var key:String = cachedGraphics.key;
 			FlxG.bitmap.remove(key);
 			
-			makeGraphic(Std.int(newWidth), Std.int(newHeight), FlxColor.TRANSPARENT, false, key);
+			makeGraphic(Std.int(newWidth), Std.int(newHeight), FlxColor.preset.TRANSPARENT, false, key);
 			frameHeight = Std.int(height);
 			_textField.height = height * 1.2;
 			_flashRect.x = 0;
@@ -731,7 +731,7 @@ class FlxText extends FlxSprite
 		// Else just clear the old buffer before redrawing the text
 		else
 		{
-			cachedGraphics.bitmap.fillRect(_flashRect, FlxColor.TRANSPARENT);
+			cachedGraphics.bitmap.fillRect(_flashRect, FlxColor.preset.TRANSPARENT);
 		}
 	}
 	
@@ -992,7 +992,7 @@ class FlxTextFormat implements IFlxDestroyable
 			end = End;
 		}
 		
-		borderColor = BorderColor == null ? FlxColor.TRANSPARENT : BorderColor;
+		borderColor = BorderColor == null ? FlxColor.preset.TRANSPARENT : BorderColor;
 	}
 	
 	public function destroy():Void

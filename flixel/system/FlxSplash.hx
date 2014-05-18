@@ -32,7 +32,7 @@ class FlxSplash extends FlxState
 	override public function create():Void
 	{
 		_cachedBgColor = FlxG.cameras.bgColor;
-		FlxG.cameras.bgColor = FlxColor.BLACK;
+		FlxG.cameras.bgColor = FlxColor.preset.BLACK;
 		
 		// This is required for sound and animation to synch up properly
 		_cachedTimestep = FlxG.fixedTimestep;

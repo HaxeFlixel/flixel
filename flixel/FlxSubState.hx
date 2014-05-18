@@ -34,7 +34,7 @@ class FlxSubState extends FlxState
 	/**
 	 * @param	BGColor		background color for this substate
 	 */
-	public function new(BGColor:Int = FlxColor.TRANSPARENT)
+	public function new(BGColor:FlxColor = 0)
 	{
 		super();
 		closeCallback = null;

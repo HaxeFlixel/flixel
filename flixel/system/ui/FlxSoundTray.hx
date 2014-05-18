@@ -82,7 +82,7 @@ class FlxSoundTray extends Sprite
 		
 		for (i in 0...10)
 		{
-			tmp = new Bitmap(new BitmapData(4, i + 1, false, FlxColor.WHITE));
+			tmp = new Bitmap(new BitmapData(4, i + 1, false, FlxColor.preset.WHITE));
 			tmp.x = bx;
 			tmp.y = by;
 			addChild(tmp);

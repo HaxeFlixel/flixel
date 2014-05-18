@@ -451,7 +451,7 @@ class FlxColorUtil
 	 */
 	public static function HSVtoARGB(H:Float, S:Float, V:Float, Alpha:Int = 255):Int
 	{
-		var result = FlxColor.TRANSPARENT;
+		var result = FlxColor.preset.TRANSPARENT;
 		
 		if (S == 0.0)
 		{

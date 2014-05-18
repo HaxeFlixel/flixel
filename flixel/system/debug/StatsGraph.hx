@@ -79,7 +79,7 @@ class StatsGraph extends Sprite
 	{
 		var gfx = _axis.graphics;
 		gfx.clear();
-		gfx.beginFill(FlxColor.TRANSPARENT);
+		gfx.beginFill(FlxColor.preset.TRANSPARENT);
 		gfx.lineStyle(1, AXIS_COLOR, AXIS_ALPHA); 
 		
 		// y-Axis

@@ -135,7 +135,7 @@ class CameraFrontEnd
 	 * @param	OnComplete	A function you want to run when the fade finishes.
 	 * @param	Force		Force the effect to reset.
 	 */
-	public function fade(Color:Int = FlxColor.BLACK, Duration:Float = 1, FadeIn:Bool = false, ?OnComplete:Void->Void, Force:Bool = false):Void
+	public function fade(Color:Int = FlxColor.preset.BLACK, Duration:Float = 1, FadeIn:Bool = false, ?OnComplete:Void->Void, Force:Bool = false):Void
 	{
 		for (camera in list)
 		{
@@ -268,7 +268,7 @@ class CameraFrontEnd
 	
 	private function get_bgColor():Int
 	{
-		return (FlxG.camera == null) ? FlxColor.BLACK : FlxG.camera.bgColor;
+		return (FlxG.camera == null) ? FlxColor.preset.BLACK : FlxG.camera.bgColor;
 	} 
 	
 	private function set_bgColor(Color:Int):Int

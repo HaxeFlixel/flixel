@@ -137,10 +137,10 @@ class FlxTween implements IFlxDestroyable
 	 * 						loopDelay	Seconds to wait between loops of this tween, 0 by default.
 	 * @return	The added ColorTween object.
 	 */
-	public static function color(?Sprite:FlxSprite, Duration:Float = 1, FromColor:Int, ToColor:Int, FromAlpha:Float = 1, ToAlpha:Float = 1, ?Options:TweenOptions):ColorTween
+	public static function color(?Sprite:FlxSprite, Duration:Float = 1, FromColor:Int, ToColor:Int, ?Options:TweenOptions):ColorTween
 	{
 		var tween = new ColorTween(Options);
-		tween.tween(Duration, FromColor, ToColor, FromAlpha, ToAlpha, Sprite);
+		tween.tween(Duration, FromColor, ToColor, Sprite);
 		return manager.add(tween);
 	}
 	

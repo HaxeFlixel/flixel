@@ -122,7 +122,7 @@ class FlxCollision
 			testMatrix.translate(boundsA.width / 2, boundsA.height / 2);
 			
 			// prepare an empty canvas
-			var testA2:BitmapData = FlxBitmapDataPool.get(Math.floor(boundsA.width), Math.floor(boundsA.height), true, FlxColor.TRANSPARENT, false);
+			var testA2:BitmapData = FlxBitmapDataPool.get(Math.floor(boundsA.width), Math.floor(boundsA.height), true, FlxColor.preset.TRANSPARENT, false);
 			
 			// plot the sprite using the matrix
 			testA2.draw(testA, testMatrix, null, null, null, false);
@@ -134,7 +134,7 @@ class FlxCollision
 			testMatrix.rotate(Target.angle * FlxAngle.TO_RAD);
 			testMatrix.translate(boundsB.width / 2, boundsB.height / 2);
 			
-			var testB2:BitmapData = FlxBitmapDataPool.get(Math.floor(boundsB.width), Math.floor(boundsB.height), true, FlxColor.TRANSPARENT, false);
+			var testB2:BitmapData = FlxBitmapDataPool.get(Math.floor(boundsB.width), Math.floor(boundsB.height), true, FlxColor.preset.TRANSPARENT, false);
 			testB2.draw(testB, testMatrix, null, null, null, false);
 			testB = testB2;
 		}

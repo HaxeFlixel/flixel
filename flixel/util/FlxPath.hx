@@ -658,11 +658,11 @@ class FlxPath implements IFlxDestroyable
 			{
 				if (i == 0)
 				{
-					nodeColor = FlxColor.GREEN;
+					nodeColor = FlxColor.preset.GREEN;
 				}
 				else if (i == l - 1)
 				{
-					nodeColor = FlxColor.RED;
+					nodeColor = FlxColor.preset.RED;
 				}
 			}
 			

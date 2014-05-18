@@ -37,11 +37,11 @@ class PxDefaultFontGenerator
 					
 					if (fontData.substr(i, 1) == "1") 
 					{
-						bd.setPixel32(1 + letterPos * 7 + px, 1 + py, FlxColor.WHITE);
+						bd.setPixel32(1 + letterPos * 7 + px, 1 + py, FlxColor.preset.WHITE);
 					}
 					else 
 					{
-						bd.setPixel32(1 + letterPos * 7 + px, 1 + py, FlxColor.TRANSPARENT);
+						bd.setPixel32(1 + letterPos * 7 + px, 1 + py, FlxColor.preset.TRANSPARENT);
 					}
 				}
 			}

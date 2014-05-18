@@ -106,7 +106,7 @@ class Window extends Sprite
 		_drag = new Point();
 		_resizable = Resizable;
 		
-		_shadow = new Bitmap(new BitmapData(1, 2, true, FlxColor.BLACK));
+		_shadow = new Bitmap(new BitmapData(1, 2, true, FlxColor.preset.BLACK));
 		_background = new Bitmap(new BitmapData(1, 1, true, BG_COLOR));
 		_header = new Bitmap(new BitmapData(1, HEADER_HEIGHT, true, HEADER_COLOR));
 		_background.y = _header.height;

@@ -159,7 +159,7 @@ class FlxCamera extends FlxBasic
 	 * The color tint of the camera display.
 	 * (Internal, help with color transforming the flash bitmap.)
 	 */
-	public var color(default, set):Int = FlxColor.WHITE;
+	public var color(default, set):Int = FlxColor.preset.WHITE;
 	/**
 	 * Whether the camera display is smooth and filtered, or chunky and pixelated.
 	 * Default behavior is chunky-style.
@@ -186,7 +186,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Internal, used to control the "flash" special effect.
 	 */
-	private var _fxFlashColor:Int = FlxColor.TRANSPARENT;
+	private var _fxFlashColor:Int = FlxColor.preset.TRANSPARENT;
 	/**
 	 * Internal, used to control the "flash" special effect.
 	 */
@@ -202,7 +202,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Internal, used to control the "fade" special effect.
 	 */
-	private var _fxFadeColor:Int = FlxColor.TRANSPARENT;
+	private var _fxFadeColor:Int = FlxColor.preset.TRANSPARENT;
 	/**
 	 * Used to calculate the following target current velocity.
 	 */
@@ -457,7 +457,7 @@ class FlxCamera extends FlxBasic
 		_fxShakeOffset = FlxPoint.get();
 		
 		#if FLX_RENDER_BLIT
-		_fill = new BitmapData(width, height, true, FlxColor.TRANSPARENT);
+		_fill = new BitmapData(width, height, true, FlxColor.preset.TRANSPARENT);
 		#else
 		
 		canvas.scrollRect = new Rectangle(0, 0, width, height);
@@ -791,7 +791,7 @@ class FlxCamera extends FlxBasic
 	 * @param	OnComplete	A function you want to run when the flash finishes.
 	 * @param	Force		Force the effect to reset.
 	 */
-	public function flash(Color:Int = FlxColor.WHITE, Duration:Float = 1, ?OnComplete:Void->Void, Force:Bool = false):Void
+	public function flash(Color:Int = FlxColor.preset.WHITE, Duration:Float = 1, ?OnComplete:Void->Void, Force:Bool = false):Void
 	{
 		if (!Force && (_fxFlashAlpha > 0.0))
 		{
@@ -816,7 +816,7 @@ class FlxCamera extends FlxBasic
 	 * @param	OnComplete	A function you want to run when the fade finishes.
 	 * @param	Force		Force the effect to reset.
 	 */
-	public function fade(Color:Int = FlxColor.BLACK, Duration:Float = 1, FadeIn:Bool = false, ?OnComplete:Void->Void, Force:Bool = false):Void
+	public function fade(Color:Int = FlxColor.preset.BLACK, Duration:Float = 1, FadeIn:Bool = false, ?OnComplete:Void->Void, Force:Bool = false):Void
 	{
 		if (!Force && (_fxFadeAlpha > 0.0))
 		{
@@ -1000,7 +1000,7 @@ class FlxCamera extends FlxBasic
 				_flashRect.width = width;
 				_flashRect.height = height;
 				_fill.dispose();
-				_fill = new BitmapData(width, height, true, FlxColor.TRANSPARENT);
+				_fill = new BitmapData(width, height, true, FlxColor.preset.TRANSPARENT);
 			}
 			
 			regen = false;

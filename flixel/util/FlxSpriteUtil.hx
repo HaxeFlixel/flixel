@@ -248,11 +248,11 @@ class FlxSpriteUtil
 		?lineStyle:LineStyle, ?drawStyle:DrawStyle):FlxSprite
 	{
 		if (lineStyle == null)
-			lineStyle = { thickness: 1, color: FlxColor.WHITE };
+			lineStyle = { thickness: 1, color: FlxColor.preset.WHITE };
 		if (lineStyle.thickness == null)
 			lineStyle.thickness = 1;
 		if (lineStyle.color == null)
-			lineStyle.color = FlxColor.WHITE;
+			lineStyle.color = FlxColor.preset.WHITE;
 		
 		beginDraw(0, lineStyle);
 		flashGfx.moveTo(StartX, StartY);
@@ -354,8 +354,9 @@ class FlxSpriteUtil
 	 * @return 	The FlxSprite for chaining
 	 */
 	public static function drawCircle(sprite:FlxSprite, X:Float = - 1, Y:Float = - 1, Radius:Float = -1, 
-		Color:Int = FlxColor.WHITE, ?lineStyle:LineStyle, ?fillStyle:FillStyle, ?drawStyle:DrawStyle):FlxSprite
+		Color:FlxColor = FlxColor.preset.WHITE, ?lineStyle:LineStyle, ?fillStyle:FillStyle, ?drawStyle:DrawStyle):FlxSprite
 	{
+		
 		if ((X == -1) || (Y == -1)) 
 		{
 			var midPoint = sprite.getGraphicMidpoint();
