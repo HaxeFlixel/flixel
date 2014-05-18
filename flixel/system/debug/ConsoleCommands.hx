@@ -37,7 +37,7 @@ class ConsoleCommands
 		
 		console.addCommand(["create", "cr"], create, "Creates a new FlxObject and registers it - by default at the mouse position.", 
 							"[FlxObject] (MousePos = true)", 3, 3);
-		console.addCommand(["set", "s"], set, "Sets a variable within a registered object.", "[Path to function]", 3);
+		console.addCommand(["set", "s"], set, "Sets a variable within a registered object.", "[Path to variable] [Value]", 3);
 		console.addCommand(["call", "c"], call, "Calls a registered function / function within a registered object.", 3, 2);
 		console.addCommand(["fields", "f"], fields, "Lists the fields of a class or instance", "[Class or path to instance] [NumSuperClassesToInclude]", 2);
 		
@@ -135,32 +135,32 @@ class ConsoleCommands
 	}
 	
 	private function create(ClassName:String, MousePos:String = "true", ?Params:Array<String>):Void
-	{	
+	{
 		if (Params == null)
 			Params = [];
-		
+
 		var instance:Dynamic = ConsoleUtil.attemptToCreateInstance(ClassName, FlxObject, Params);
-		if (instance == null) 
+		if (instance == null)
 			return;
-		
+
 		var obj:FlxObject = instance;
-		
-		if (MousePos == "true") 
+
+		if (MousePos == "true")
 		{
 			obj.x = FlxG.game.mouseX;
 			obj.y = FlxG.game.mouseY;
 		}
-		
+
 		FlxG.state.add(instance);
-		
+
 		if (Params.length == 0)
 			ConsoleUtil.log("create: New " + ClassName + " created at X = " + obj.x + " Y = " + obj.y);
 		else
 			ConsoleUtil.log("create: New " + ClassName + " created at X = " + obj.x + " Y = " + obj.y + " with params " + Params);
-		
+
 		_console.objectStack.push(instance);
 		_console.registerObject(Std.string(_console.objectStack.length), instance);
-		
+
 		ConsoleUtil.log("create: " + ClassName + " registered as object '" + _console.objectStack.length + "'");
 	}
 	
@@ -175,24 +175,55 @@ class ConsoleCommands
 		var object:Dynamic = pathToVariable.object;
 		var varName:String = pathToVariable.variableName;
 		var variable:Dynamic = null;
+		var arrayType:Class<Dynamic> = null;
+		var isArray:Bool;
 		
+		//Exclude last brackets from variable name and extract its indice
+		var indice:Null<Int> = -1;
+		var bracketStart = varName.lastIndexOf("[");
+		if (bracketStart != -1)
+		{
+			var bracket = varName.substr(bracketStart + 1);
+			indice = Std.parseInt(bracket.substr(0, bracket.length - 1));
+			if (indice == null)
+			{
+				FlxG.log.error("set: '" +  ObjectAndVariable + "' is bad formatted");
+				return;
+			}
+			varName = varName.substr(0, bracketStart);
+		}
+
 		try
 		{
-			variable = Reflect.getProperty(object, varName);
+			variable = ConsoleUtil.resolveProperty(object, varName);
 		}
 		catch (e:Dynamic)
 		{
 			return;
 		}
-		
+
 		if (variable == null)
 		{
 			FlxG.log.error("set: '" +  ObjectAndVariable + "' could not be found");
 			return;
 		}
 		
+		isArray = Std.is(variable, Array);
+
+		if (!isArray && indice >= 0)
+		{
+			FlxG.log.error("set: '" +  ObjectAndVariable + "' is an invalid array access");
+			return;
+		}
+		
+		if (isArray && variable.length <= indice)
+		{
+			FlxG.log.error("set: '" + varName + ":" + FlxStringUtil.getClassName(variable, true) + "' cannot access indice " + indice);
+			return;
+		}
+		
 		// Prevent from assigning non-boolean values to bools
-		if (Std.is(variable, Bool)) 
+		if (Std.is((isArray ? variable[indice] : variable), Bool))
 		{
 			var oldVal = NewVariableValue;
 			NewVariableValue = ConsoleUtil.parseBool(NewVariableValue);
@@ -205,19 +236,26 @@ class ConsoleCommands
 		}
 		
 		// Prevent turning numbers into NaN
-		if (Std.is(variable, Float) && Math.isNaN(Std.parseFloat(NewVariableValue))) 
+		if (Std.is((isArray ? variable[indice] : variable), Float) && Math.isNaN(Std.parseFloat(NewVariableValue))) 
 		{
 			FlxG.log.error("set: '" + NewVariableValue + "' is not a valid value for number '" + varName + "'");
 			return;
 		}
 		// Prevent setting non "simple" typed properties
-		else if (!Std.is(variable, Float) && !Std.is(variable, Bool) && !Std.is(variable, String))
+		else if (!Std.is((isArray ? variable[indice] : variable), Float) && !Std.is((isArray ? variable[indice] : variable), Bool) && !Std.is((isArray ? variable[indice] : variable), String))
 		{
 			FlxG.log.error("set: '" + varName + ":" + FlxStringUtil.getClassName(variable, true) + "' is not of a simple type (number, bool or string)");
 			return;
 		}
-		
-		Reflect.setProperty(object, varName, NewVariableValue);
+
+		if (isArray)
+		{
+			variable[indice] = NewVariableValue;
+		}
+		else
+		{
+			Reflect.setProperty(object, varName, NewVariableValue);
+		}
 		ConsoleUtil.log("set: " + FlxStringUtil.getClassName(object, true) + "." + varName + " is now " + NewVariableValue);
 		
 		if (WatchName != null)

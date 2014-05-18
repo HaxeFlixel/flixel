@@ -134,30 +134,77 @@ class ConsoleUtil
 			FlxG.log.error("'" + FlxStringUtil.getClassName(Object, true) + "' is not a valid Object");
 			return null;
 		}
-		
+
 		// Searching for property...
 		var l:Int = searchArr.length;
 		var tempObj:Dynamic = Object;
 		var tempVarName:String = "";
 		for (i in 0...l)
 		{
-			tempVarName = searchArr[i];
+			tempVarName = searchArr[i];			
+
 			
-			try 
+			if (i < (l - 1))
 			{
-				if (i < (l - 1))
-				{
-					tempObj = Reflect.getProperty(tempObj, tempVarName);
-				}
-			}
-			catch (e:Dynamic) 
-			{
-				FlxG.log.error("'" + FlxStringUtil.getClassName(tempObj, true) + "' does not have a field '" + tempVarName + "'");
-				return null;
+				tempObj = resolveProperty(tempObj, tempVarName);
+
+				if (tempObj == null)
+					return null;
 			}
 		}
 		
 		return { object: tempObj, variableName: tempVarName };
+	}
+
+	/**
+	 * Resolve properties taking array indices into account.
+	 * @param	obj
+	 * @param	propName
+	 * @return
+	 */
+	public static function resolveProperty(obj : Dynamic, propName : String):Dynamic
+	{
+		//If array, get indice
+		var arrayIndices = new Array<Int>();
+		var arrayIndicesStr = propName.split("[");
+		propName = arrayIndicesStr.shift(); //Remove the leftmost element which the current prop
+		for (indice in arrayIndicesStr)
+		{
+			//Verify format
+			if (indice.charAt(indice.length - 1) != "]")
+			{
+				FlxG.log.error("'" + FlxStringUtil.getClassName(obj, true) + "' does not have a field '" + propName + "'");
+				return null;
+			}
+			//Extract indice
+			var index = Std.parseInt(indice.substr(0, indice.length - 1));
+			if (index == null)
+			{
+				FlxG.log.error("'" + FlxStringUtil.getClassName(obj, true) + "' does not have a field '" + propName + "'");
+				return null;
+			}
+			arrayIndices.push(index);
+		}
+
+		try 
+		{
+			obj = Reflect.getProperty(obj, propName);
+			//Loop through array indice, if any
+			for (indice in arrayIndices)
+			{
+				if (!Std.is(obj, Array) || obj.length <= indice)
+				{
+					FlxG.log.error("'" + FlxStringUtil.getClassName(obj, true) + "' does not have index '" + indice + "' or is not an Array");
+				}
+				obj = obj[indice];
+			}
+		}
+		catch (e:Dynamic) 
+		{
+			FlxG.log.error("'" + FlxStringUtil.getClassName(obj, true) + "' does not have a field '" + propName + "'");
+			return null;
+		}
+		return obj;
 	}
 	
 	/**
