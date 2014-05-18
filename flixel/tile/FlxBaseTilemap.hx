@@ -9,11 +9,7 @@ import flixel.math.FlxPoint;
 import flixel.group.FlxTypedGroup;
 import flixel.math.FlxRect;
 
-/**
- * ...
- * @author Masadow
- */
-class FlxBaseTilemap<Tile : FlxObject> extends FlxObject
+class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 {
 	/**
 	 * Set this flag to use one of the 16-tile binary auto-tile algorithms (OFF, AUTO, or ALT).
@@ -84,23 +80,65 @@ class FlxBaseTilemap<Tile : FlxObject> extends FlxObject
 	/**
 	 * Virtual methods, must be implemented in each renderers
 	 */
-	private function updateTile(Index:Int):Void throw "updateTile must be implemented";
-	private function cacheGraphics(TileWidth:Int, TileHeight:Int, TileGraphic:Dynamic):Void throw "cacheGraphics must be implemented";
-	private function initTileObjects(DrawIndex:Int, CollideIndex:Int):Void throw "initTileObjects must be implemented";
-	private function updateMap():Void throw "updateMap must be implemented";
-	private function computeDimensions():Void throw "computeDimensions must be implemented";
-	public function getTileIndexByCoords(Coord:FlxPoint):Int {throw "getTileIndexByCoords must be implemented"; return 0;}
-	public function getTileCoordsByIndex(Index:Int, Midpoint:Bool = true):FlxPoint { throw "getTileCoordsByIndex must be implemented"; return null;}
-	public function ray(Start:FlxPoint, End:FlxPoint, ?Result:FlxPoint, Resolution:Float = 1):Bool { throw "ray must be implemented"; return false;}
-	public function overlapsWithCallback(Object:FlxObject, ?Callback:FlxObject->FlxObject->Bool, FlipCallbackParams:Bool = false, ?Position:FlxPoint):Bool { throw "overlapsWithCallback must be implemented"; return false;}
-	public function setDirty(Dirty:Bool = true):Void throw "setDirty must be implemented";
+	private function updateTile(Index:Int):Void 
+	{
+		throw "updateTile must be implemented";
+	}
+	
+	private function cacheGraphics(TileWidth:Int, TileHeight:Int, TileGraphic:Dynamic):Void
+	{
+		throw "cacheGraphics must be implemented";
+	}
+	
+	private function initTileObjects(DrawIndex:Int, CollideIndex:Int):Void 
+	{
+		throw "initTileObjects must be implemented";
+	}
+	
+	private function updateMap():Void
+	{
+		throw "updateMap must be implemented";
+	}
+	
+	private function computeDimensions():Void
+	{
+		throw "computeDimensions must be implemented";
+	}
+	
+	public function getTileIndexByCoords(Coord:FlxPoint):Int
+	{
+		throw "getTileIndexByCoords must be implemented";
+		return 0;
+	}
+	
+	public function getTileCoordsByIndex(Index:Int, Midpoint:Bool = true):FlxPoint
+	{ 
+		throw "getTileCoordsByIndex must be implemented";
+		return null;
+	}
+	
+	public function ray(Start:FlxPoint, End:FlxPoint, ?Result:FlxPoint, Resolution:Float = 1):Bool
+	{ 
+		throw "ray must be implemented";
+		return false;
+	}
+	
+	public function overlapsWithCallback(Object:FlxObject, ?Callback:FlxObject->FlxObject->Bool, FlipCallbackParams:Bool = false, ?Position:FlxPoint):Bool
+	{ 
+		throw "overlapsWithCallback must be implemented";
+		return false;
+	}
+	
+	public function setDirty(Dirty:Bool = true):Void
+	{
+		throw "setDirty must be implemented";
+	}
 
 	private function new()
 	{
 		super();
 		
 		collisionType = TILEMAP;
-		
 		immovable = true;
 		moves = false;
 	}
@@ -108,7 +146,6 @@ class FlxBaseTilemap<Tile : FlxObject> extends FlxObject
 	override public function destroy():Void 
 	{
 		_data = null;
-		
 		super.destroy();
 	}
 
@@ -244,13 +281,13 @@ class FlxBaseTilemap<Tile : FlxObject> extends FlxObject
 		{
 			while (i < totalTiles) 
 			{
-				var old_index = _data[i];
-				var new_index = old_index;
-				if (old_index < customTileRemap.length)
+				var oldIndex = _data[i];
+				var newIndex = oldIndex;
+				if (oldIndex < customTileRemap.length)
 				{
-					new_index = customTileRemap[old_index];
+					newIndex = customTileRemap[oldIndex];
 				}
-				_data[i] = new_index;
+				_data[i] = newIndex;
 				i++;
 			}
 		}
@@ -1117,7 +1154,6 @@ class FlxBaseTilemap<Tile : FlxObject> extends FlxObject
 		
 		return Bounds.set(x, y, width, height);
 	}
-
 }
 
 enum FlxTilemapAutoTiling
