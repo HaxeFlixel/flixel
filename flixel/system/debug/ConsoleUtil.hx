@@ -6,6 +6,7 @@ import flixel.system.debug.Console.Command;
 import flixel.system.debug.ConsoleUtil.PathToVariable;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxStringUtil;
+using StringTools;
 
 /** 
  * A set of helper functions used by the console.
@@ -158,9 +159,9 @@ class ConsoleUtil
 
 	/**
 	 * Resolve properties taking array indices into account.
-	 * @param	obj
-	 * @param	propName
-	 * @return
+	 * @param	obj Any object containing the property
+	 * @param	propName Name of the property you want to resolve
+	 * @return The property value, or null.
 	 */
 	public static function resolveProperty(obj:Dynamic, propName:String):Dynamic
 	{
@@ -280,6 +281,72 @@ class ConsoleUtil
 			return false;
 		else
 			return null;
+	}
+	
+	/**
+	 * Attempts to parse a String into a Array<Dynamic>,
+	 * returns an array if succeed, null otherwise.
+	 * 
+	 * @param	s	The String to parse
+	 * @return	The parsed Array<Dynamic>
+	 */
+	public static function parseArray(s:String):Array<Dynamic>
+	{
+		var returnArray = new Array<Dynamic>();
+		//Verify if enclosed with brackets
+		if (s.charAt(0) == "[" && s.charAt(s.length - 1) == "]")
+		{
+			//Manual substr because of nested arrays
+			var values = new Array<String>();
+			s = s.substr(1, s.length - 2); //Remove brackets
+			var value = "";
+			var skipComma = false;
+			for (i in 0...s.length)
+			{
+				var c = s.charAt(i);
+				if (c == "," && !skipComma)
+				{
+					values.push(value);
+					value = "";
+				}
+				else
+					value += c;
+				if (c == "[")
+					skipComma = true;
+				else if (c == "]")
+					skipComma = false;
+			}
+			values.push(value);
+			//Parse values
+			for (value in values)
+			{
+				var parsedValue:Null<Dynamic> = null;
+				value = value.trim();
+				if (parseBool(value) != null)
+					parsedValue = parseBool(value);
+				else if (!Math.isNaN(Std.parseFloat(value)))
+					parsedValue = Std.parseFloat(value);
+				else
+				{
+					//try to parse a string
+					var start = value.indexOf("\"");
+					var end = value.lastIndexOf("\"");
+					if (start != end && start != -1)
+						parsedValue = value.substr(start + 1, end);
+
+					//Try to parse another array
+					if (parsedValue == null)
+						parsedValue = parseArray(value);
+				}
+
+				if (parsedValue != null)
+					returnArray.push(parsedValue);
+				else
+					return null;
+			}
+			return returnArray;
+		}
+		return null;
 	}
 	
 	/**

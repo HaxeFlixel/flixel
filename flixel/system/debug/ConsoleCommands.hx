@@ -176,7 +176,7 @@ class ConsoleCommands
 		var varName:String = pathToVariable.variableName;
 		var variable:Dynamic = null;
 		var arrayType:Class<Dynamic> = null;
-		var isArray:Bool;
+		var isArrayIndex:Bool = false;
 		
 		//Exclude last brackets from variable name and extract its indice
 		var index:Null<Int> = -1;
@@ -191,6 +191,7 @@ class ConsoleCommands
 				return;
 			}
 			varName = varName.substr(0, bracketStart);
+			isArrayIndex = true;
 		}
 
 		try
@@ -208,47 +209,57 @@ class ConsoleCommands
 			return;
 		}
 		
-		isArray = Std.is(variable, Array);
-
-		if (!isArray && index >= 0)
+		if (!isArrayIndex && index >= 0)
 		{
 			FlxG.log.error("set: '" +  ObjectAndVariable + "' is an invalid array access");
 			return;
 		}
-		
-		if (isArray && variable.length <= index)
+
+		if (isArrayIndex && variable.length <= index)
 		{
 			FlxG.log.error("set: '" + varName + ":" + FlxStringUtil.getClassName(variable, true) + "' cannot access indice " + index);
 			return;
 		}
-		
+
+		// Check if we try to set an array
+		if (Std.is((isArrayIndex ? variable[index] : variable), Array))
+		{
+			var arrayValue = ConsoleUtil.parseArray(NewVariableValue);
+			if (arrayValue == null)
+			{
+				FlxG.log.error("set: '" + NewVariableValue + "' is not a valid value for Array '" + varName + "'");
+				return;
+			}
+			NewVariableValue = arrayValue;
+		}
+
 		// Prevent from assigning non-boolean values to bools
-		if (Std.is((isArray ? variable[index] : variable), Bool))
+		if (Std.is((isArrayIndex ? variable[index] : variable), Bool))
 		{
 			var oldVal = NewVariableValue;
 			NewVariableValue = ConsoleUtil.parseBool(NewVariableValue);
-			
+
 			if (NewVariableValue == null)
 			{
 				FlxG.log.error("set: '" + oldVal + "' is not a valid value for Bool '" + varName + "'");
 				return;
 			}
 		}
-		
+
 		// Prevent turning numbers into NaN
-		if (Std.is((isArray ? variable[index] : variable), Float) && Math.isNaN(Std.parseFloat(NewVariableValue))) 
+		if (Std.is((isArrayIndex ? variable[index] : variable), Float) && Math.isNaN(Std.parseFloat(NewVariableValue))) 
 		{
 			FlxG.log.error("set: '" + NewVariableValue + "' is not a valid value for number '" + varName + "'");
 			return;
 		}
 		// Prevent setting non "simple" typed properties
-		else if (!Std.is((isArray ? variable[index] : variable), Float) && !Std.is((isArray ? variable[index] : variable), Bool) && !Std.is((isArray ? variable[index] : variable), String))
+		else if (!Std.is((isArrayIndex ? variable[index] : variable), Float) && !Std.is((isArrayIndex ? variable[index] : variable), Bool) && !Std.is((isArrayIndex ? variable[index] : variable), String) && !Std.is((isArrayIndex ? variable[index] : variable), Array))
 		{
-			FlxG.log.error("set: '" + varName + ":" + FlxStringUtil.getClassName(variable, true) + "' is not of a simple type (number, bool or string)");
+			FlxG.log.error("set: '" + varName + ":" + FlxStringUtil.getClassName((isArrayIndex ? variable[index] : variable), true) + "' is not of a simple type (number, bool, string or array)");
 			return;
 		}
-
-		if (isArray)
+		
+		if (isArrayIndex)
 		{
 			variable[index] = NewVariableValue;
 		}
@@ -256,8 +267,8 @@ class ConsoleCommands
 		{
 			Reflect.setProperty(object, varName, NewVariableValue);
 		}
-		ConsoleUtil.log("set: " + FlxStringUtil.getClassName(object, true) + "." + varName + " is now " + NewVariableValue);
-		
+		ConsoleUtil.log("set: " + FlxStringUtil.getClassName(object, true) + "." + varName + (isArrayIndex ? "[" + index + "]" : "") + " is now " + NewVariableValue);
+
 		if (WatchName != null)
 			FlxG.watch.add(object, varName, WatchName);
 	}
