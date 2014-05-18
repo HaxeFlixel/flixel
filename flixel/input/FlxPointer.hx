@@ -101,7 +101,7 @@ class FlxPointer
 		else 
 		{
 			var point:FlxPoint = toPoint();
-			var result:Bool = cast(ObjectOrGroup, FlxObject).overlapsPoint(point, true, Camera);
+			result = cast(ObjectOrGroup, FlxObject).overlapsPoint(point, true, Camera);
 			point.put();
 		}
 		
