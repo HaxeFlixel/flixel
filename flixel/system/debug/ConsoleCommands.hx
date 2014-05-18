@@ -179,15 +179,15 @@ class ConsoleCommands
 		var isArray:Bool;
 		
 		//Exclude last brackets from variable name and extract its indice
-		var indice:Null<Int> = -1;
+		var index:Null<Int> = -1;
 		var bracketStart = varName.lastIndexOf("[");
 		if (bracketStart != -1)
 		{
 			var bracket = varName.substr(bracketStart + 1);
-			indice = Std.parseInt(bracket.substr(0, bracket.length - 1));
-			if (indice == null)
+			index = Std.parseInt(bracket.substr(0, bracket.length - 1));
+			if (index == null)
 			{
-				FlxG.log.error("set: '" +  ObjectAndVariable + "' is bad formatted");
+				FlxG.log.error("set: '" +  ObjectAndVariable + "' invalid syntax");
 				return;
 			}
 			varName = varName.substr(0, bracketStart);
@@ -210,20 +210,20 @@ class ConsoleCommands
 		
 		isArray = Std.is(variable, Array);
 
-		if (!isArray && indice >= 0)
+		if (!isArray && index >= 0)
 		{
 			FlxG.log.error("set: '" +  ObjectAndVariable + "' is an invalid array access");
 			return;
 		}
 		
-		if (isArray && variable.length <= indice)
+		if (isArray && variable.length <= index)
 		{
-			FlxG.log.error("set: '" + varName + ":" + FlxStringUtil.getClassName(variable, true) + "' cannot access indice " + indice);
+			FlxG.log.error("set: '" + varName + ":" + FlxStringUtil.getClassName(variable, true) + "' cannot access indice " + index);
 			return;
 		}
 		
 		// Prevent from assigning non-boolean values to bools
-		if (Std.is((isArray ? variable[indice] : variable), Bool))
+		if (Std.is((isArray ? variable[index] : variable), Bool))
 		{
 			var oldVal = NewVariableValue;
 			NewVariableValue = ConsoleUtil.parseBool(NewVariableValue);
@@ -236,13 +236,13 @@ class ConsoleCommands
 		}
 		
 		// Prevent turning numbers into NaN
-		if (Std.is((isArray ? variable[indice] : variable), Float) && Math.isNaN(Std.parseFloat(NewVariableValue))) 
+		if (Std.is((isArray ? variable[index] : variable), Float) && Math.isNaN(Std.parseFloat(NewVariableValue))) 
 		{
 			FlxG.log.error("set: '" + NewVariableValue + "' is not a valid value for number '" + varName + "'");
 			return;
 		}
 		// Prevent setting non "simple" typed properties
-		else if (!Std.is((isArray ? variable[indice] : variable), Float) && !Std.is((isArray ? variable[indice] : variable), Bool) && !Std.is((isArray ? variable[indice] : variable), String))
+		else if (!Std.is((isArray ? variable[index] : variable), Float) && !Std.is((isArray ? variable[index] : variable), Bool) && !Std.is((isArray ? variable[index] : variable), String))
 		{
 			FlxG.log.error("set: '" + varName + ":" + FlxStringUtil.getClassName(variable, true) + "' is not of a simple type (number, bool or string)");
 			return;
@@ -250,7 +250,7 @@ class ConsoleCommands
 
 		if (isArray)
 		{
-			variable[indice] = NewVariableValue;
+			variable[index] = NewVariableValue;
 		}
 		else
 		{

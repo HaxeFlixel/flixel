@@ -190,13 +190,13 @@ class ConsoleUtil
 		{
 			obj = Reflect.getProperty(obj, propName);
 			//Loop through array indice, if any
-			for (indice in arrayIndices)
+			for (index in arrayIndices)
 			{
-				if (!Std.is(obj, Array) || obj.length <= indice)
+				if (!Std.is(obj, Array) || obj.length <= index)
 				{
-					FlxG.log.error("'" + FlxStringUtil.getClassName(obj, true) + "' does not have index '" + indice + "' or is not an Array");
+					FlxG.log.error("'" + FlxStringUtil.getClassName(obj, true) + "' does not have index '" + index + "' or is not an Array");
 				}
-				obj = obj[indice];
+				obj = obj[index];
 			}
 		}
 		catch (e:Dynamic) 
