@@ -170,40 +170,36 @@ class PlayState extends FlxState
 	{
 		super.update();
 		
+		// Check for animation toggles
 		if (FlxG.mouse.justPressed)
 		{
-			if (spr1.overlapsPoint(FlxG.mouse, true))
+			if (FlxG.mouse.overlaps(spr1))
 			{
-				isAnimSpr1 = !isAnimSpr1; // Toggle animation.
+				isAnimSpr1 = !isAnimSpr1;
 			}
-			else
-			if (spr2.overlapsPoint(FlxG.mouse, true))
+			else if (FlxG.mouse.overlaps(spr2))
 			{
-				isAnimSpr2 = !isAnimSpr2; // Toggle animation.
+				isAnimSpr2 = !isAnimSpr2;
 				tween2.active = isAnimSpr2;
 			}
-			else
-			if (spr3.overlapsPoint(FlxG.mouse, true))
+			else if (FlxG.mouse.overlaps(spr3))
 			{
-				isAnimSpr3 = !isAnimSpr3; // Toggle animation.
+				isAnimSpr3 = !isAnimSpr3;
 				tween3.active = isAnimSpr3;
 			}
-			else
-			if (spr4.overlapsPoint(FlxG.mouse, true))
+			else if (FlxG.mouse.overlaps(spr4))
 			{
-				isAnimSpr4 = !isAnimSpr4; // Toggle animation.
+				isAnimSpr4 = !isAnimSpr4;
 			}
 			#if flash
-			else
-			if (spr5.overlapsPoint(FlxG.mouse, true))
+			else if (FlxG.mouse.overlaps(spr5))
 			{
-				isAnimSpr5 = !isAnimSpr5; // Toggle animation.
+				isAnimSpr5 = !isAnimSpr5;
 				tween5.active = isAnimSpr5;
 			}
-			else
-			if (spr6.overlapsPoint(FlxG.mouse, true))
+			else if (FlxG.mouse.overlaps(spr6))
 			{
-				isAnimSpr6 = !isAnimSpr6; // Toggle animation.
+				isAnimSpr6 = !isAnimSpr6;
 			} 
 			#end
 		}
