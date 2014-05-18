@@ -2,7 +2,7 @@ package flixel.system;
 
 #if !doc
 #if js
-class FlxPreloaderBase extends NMEPreloader {}
+class FlxBasePreloader extends NMEPreloader {}
 #else
 import flash.events.Event;
 import flash.Lib;
