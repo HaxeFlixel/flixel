@@ -144,7 +144,6 @@ class SoundFrontEnd
 	 * WARNING: can lead to high memory usage.
 	 */
 	@:access(openfl.Assets)
-	@:access(openfl.AssetType)
 	public function cacheAll():Void
 	{
 		Assets.initialize();
@@ -154,7 +153,8 @@ class SoundFrontEnd
 		if (defaultLibrary == null) 
 			return;
 		
-		for (id in defaultLibrary.list(AssetType.SOUND)) {
+		for (id in defaultLibrary.list(AssetType.SOUND)) 
+		{
 			cache(id);
 		}
 	}
