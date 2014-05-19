@@ -62,18 +62,29 @@ class VarTween extends FlxTween
 	
 	override private function update():Void
 	{
-		if (_vars.length < 1)
-		{
-			// We don't initalize() in tween() because otherwise the start values 
-			// will be inaccurate with delays
-			initializeVars();
-		}
+		var delay:Float = (executions > 0) ? loopDelay : startDelay;
 		
-		super.update();
-		var i:Int = _vars.length;
-		while (i-- > 0) 
+		if (_secondsSinceStart < delay)
 		{
-			Reflect.setProperty(_object, _vars[i], (_startValues[i] + _range[i] * scale));
+			// Leave properties alone until delay is over
+			super.update();
+		}
+		else
+		{
+			if (_vars.length < 1)
+			{
+				// We don't initalize() in tween() because otherwise the start values 
+				// will be inaccurate with delays
+				initializeVars();
+			}
+			
+			super.update();
+			
+			var i:Int = _vars.length;
+			while (i-- > 0) 
+			{
+				Reflect.setProperty(_object, _vars[i], (_startValues[i] + _range[i] * scale));
+			}
 		}
 	}
 	
