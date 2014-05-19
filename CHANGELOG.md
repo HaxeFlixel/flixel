@@ -1,4 +1,4 @@
-3.4.0
+4.0.0
 ------------------------------
 * FlxArrayUtil: removed indexOf()
 * FlxTilemap: fixed pixelPerfectRender not being respected with FLX_RENDER_TILE
@@ -28,6 +28,17 @@
  * Bounds objects are now read-only, use set() on them
  * at() -> focusOn()
  * on -> emitting
+* Moved FlxMath, FlxPoint, FlxRect, FlxRect, FlxAngle, FlxVelocity and FlxRandom to flixel.math
+* FlxSubState: fix for calling close() within create()
+* FlxPath: exposed nodeIndex as a read-only property
+* FlxAssets.cacheSounds() -> FlxG.sound.cacheAll()
+* FlxMouse and FlxTouch now extend a new common base class FlxPointer instead of FlxPoint
+ * adds overlaps() to FlxMouse 
+* FlxTilemap:
+ * separated rendering and logic, adding FlxBaseTilemap
+ * added getTileIndexByCoords() and getTileCoordsByIndex()
+ * fixed a bug in overlapsAt()
+* Console: the set command now supports arrays
 
 3.3.3
 ------------------------------
