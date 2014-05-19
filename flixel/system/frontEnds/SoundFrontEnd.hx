@@ -154,17 +154,8 @@ class SoundFrontEnd
 		if (defaultLibrary == null) 
 			return;
 		
-		var types:Map<String, Dynamic> = DefaultAssetLibrary.type;
-		
-		if (types == null) 
-			return;
-		
-		for (key in types.keys())
-		{
-			if (types.get(key) == AssetType.SOUND)
-			{
-				cache(key);
-			}
+		for (id in defaultLibrary.list(AssetType.SOUND)) {
+			cache(id);
 		}
 	}
 	#end
