@@ -9,11 +9,7 @@ import flixel.math.FlxPoint;
 import flixel.group.FlxTypedGroup;
 import flixel.math.FlxRect;
 
-/**
- * ...
- * @author Masadow
- */
-class FlxBaseTilemap<Tile : FlxObject> extends FlxObject
+class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 {
 	/**
 	 * Set this flag to use one of the 16-tile binary auto-tile algorithms (OFF, AUTO, or ALT).
@@ -84,23 +80,65 @@ class FlxBaseTilemap<Tile : FlxObject> extends FlxObject
 	/**
 	 * Virtual methods, must be implemented in each renderers
 	 */
-	private function updateTile(Index:Int):Void throw "updateTile must be implemented";
-	private function cacheGraphics(TileWidth:Int, TileHeight:Int, TileGraphic:Dynamic):Void throw "cacheGraphics must be implemented";
-	private function initTileObjects(DrawIndex:Int, CollideIndex:Int):Void throw "initTileObjects must be implemented";
-	private function updateMap():Void throw "updateMap must be implemented";
-	private function computeDimensions():Void throw "computeDimensions must be implemented";
-	public function getTileIndexByCoords(Coord:FlxPoint):Int {throw "getTileIndexByCoords must be implemented"; return 0;}
-	public function getTileCoordsByIndex(Index:Int, Midpoint:Bool = true):FlxPoint { throw "getTileCoordsByIndex must be implemented"; return null;}
-	public function ray(Start:FlxPoint, End:FlxPoint, ?Result:FlxPoint, Resolution:Float = 1):Bool { throw "ray must be implemented"; return false;}
-	public function overlapsWithCallback(Object:FlxObject, ?Callback:FlxObject->FlxObject->Bool, FlipCallbackParams:Bool = false, ?Position:FlxPoint):Bool { throw "overlapsWithCallback must be implemented"; return false;}
-	public function setDirty(Dirty:Bool = true):Void throw "setDirty must be implemented";
+	private function updateTile(Index:Int):Void 
+	{
+		throw "updateTile must be implemented";
+	}
+	
+	private function cacheGraphics(TileWidth:Int, TileHeight:Int, TileGraphic:Dynamic):Void
+	{
+		throw "cacheGraphics must be implemented";
+	}
+	
+	private function initTileObjects(DrawIndex:Int, CollideIndex:Int):Void 
+	{
+		throw "initTileObjects must be implemented";
+	}
+	
+	private function updateMap():Void
+	{
+		throw "updateMap must be implemented";
+	}
+	
+	private function computeDimensions():Void
+	{
+		throw "computeDimensions must be implemented";
+	}
+	
+	public function getTileIndexByCoords(Coord:FlxPoint):Int
+	{
+		throw "getTileIndexByCoords must be implemented";
+		return 0;
+	}
+	
+	public function getTileCoordsByIndex(Index:Int, Midpoint:Bool = true):FlxPoint
+	{ 
+		throw "getTileCoordsByIndex must be implemented";
+		return null;
+	}
+	
+	public function ray(Start:FlxPoint, End:FlxPoint, ?Result:FlxPoint, Resolution:Float = 1):Bool
+	{ 
+		throw "ray must be implemented";
+		return false;
+	}
+	
+	public function overlapsWithCallback(Object:FlxObject, ?Callback:FlxObject->FlxObject->Bool, FlipCallbackParams:Bool = false, ?Position:FlxPoint):Bool
+	{ 
+		throw "overlapsWithCallback must be implemented";
+		return false;
+	}
+	
+	public function setDirty(Dirty:Bool = true):Void
+	{
+		throw "setDirty must be implemented";
+	}
 
 	private function new()
 	{
 		super();
 		
 		collisionType = TILEMAP;
-		
 		immovable = true;
 		moves = false;
 	}
@@ -108,7 +146,6 @@ class FlxBaseTilemap<Tile : FlxObject> extends FlxObject
 	override public function destroy():Void 
 	{
 		_data = null;
-		
 		super.destroy();
 	}
 
@@ -244,13 +281,13 @@ class FlxBaseTilemap<Tile : FlxObject> extends FlxObject
 		{
 			while (i < totalTiles) 
 			{
-				var old_index = _data[i];
-				var new_index = old_index;
-				if (old_index < customTileRemap.length)
+				var oldIndex = _data[i];
+				var newIndex = oldIndex;
+				if (oldIndex < customTileRemap.length)
 				{
-					new_index = customTileRemap[old_index];
+					newIndex = customTileRemap[oldIndex];
 				}
-				_data[i] = new_index;
+				_data[i] = newIndex;
 				i++;
 			}
 		}
@@ -266,19 +303,19 @@ class FlxBaseTilemap<Tile : FlxObject> extends FlxObject
 			
 			while (i < totalTiles)
 			{
-				var old_index = _data[i];
+				var oldIndex = _data[i];
 				var j = 0;
-				var new_index = old_index;
+				var newIndex = oldIndex;
 				for (rand in _randomIndices) 
 				{
-					if (old_index == rand) 
+					if (oldIndex == rand) 
 					{
 						var k:Int = Std.int(randLambda() * _randomChoices[j].length);
-						new_index = _randomChoices[j][k];
+						newIndex = _randomChoices[j][k];
 					}
 					j++;
 				}
-				_data[i] = new_index;
+				_data[i] = newIndex;
 				i++;
 			}
 		}
@@ -352,11 +389,11 @@ class FlxBaseTilemap<Tile : FlxObject> extends FlxObject
 	 * WARNING: Using this will cause your maps to take longer to load. Be careful using this in very large tilemaps.
 	 * 
 	 * @param	mappings		Array of ints for remapping tiles. Ex: [7,4,12] means "0-->7, 1-->4, 2-->12"
-	 * @param	randomIndices	(optional) Array of ints indicating which tile indices should be randmoized. Ex: [7,4,12] means "replace tile index of 7, 4, or 12 with a randomized value"
-	 * @param	randomChoices	(optional) A list of int-arrays that serve as the corresponding choices to randomly choose from. Ex: indices = [7,4], choices = [[1,2],[3,4,5]], 7 will be replaced by either 1 or 2, 4 will be replaced by 3, 4, or 5.
-	 * @param	randomLambda	(optional) A custom randomizer function, should return value between 0.0 and 1.0. Initialize your random seed before passing this in! If not defined, will default to unseeded Math.random() calls.
+	 * @param	randomIndices	Array of ints indicating which tile indices should be randmoized. Ex: [7,4,12] means "replace tile index of 7, 4, or 12 with a randomized value"
+	 * @param	randomChoices	A list of int-arrays that serve as the corresponding choices to randomly choose from. Ex: indices = [7,4], choices = [[1,2],[3,4,5]], 7 will be replaced by either 1 or 2, 4 will be replaced by 3, 4, or 5.
+	 * @param	randomLambda	A custom randomizer function, should return value between 0.0 and 1.0. Initialize your random seed before passing this in! If not defined, will default to unseeded Math.random() calls.
 	 */
-	public function setCustomTileMappings(mappings:Array<Int>, randomIndices:Array<Int> = null, randomChoices:Array<Array<Int>> = null, randomLambda:Void->Float = null):Void
+	public function setCustomTileMappings(mappings:Array<Int>, ?randomIndices:Array<Int>, ?randomChoices:Array<Array<Int>>, ?randomLambda:Void->Float):Void
 	{
 		customTileRemap = mappings;
 		_randomIndices = randomIndices;
@@ -426,7 +463,6 @@ class FlxBaseTilemap<Tile : FlxObject> extends FlxObject
 				}
 				array.push(i);
 			}
-			
 			i++;
 		}
 		
@@ -504,7 +540,6 @@ class FlxBaseTilemap<Tile : FlxObject> extends FlxObject
 				}
 				column++;
 			}
-			
 			row++;
 		}
 		
@@ -606,11 +641,9 @@ class FlxBaseTilemap<Tile : FlxObject> extends FlxObject
 		// Reset the start and end points to be exact
 		var node:FlxPoint;
 		node = points[points.length-1];
-		node.x = Start.x;
-		node.y = Start.y;
+		node.copyFrom(Start);
 		node = points[0];
-		node.x = End.x;
-		node.y = End.y;
+		node.copyFrom(End);
 
 		// Some simple path cleanup options
 		if (Simplify)
@@ -1093,9 +1126,7 @@ class FlxBaseTilemap<Tile : FlxObject> extends FlxObject
 			Camera = FlxG.camera;
 		}
 		
-		WorldPoint.x = WorldPoint.x - Camera.scroll.x;
-		WorldPoint.y = WorldPoint.y - Camera.scroll.y;
-		getScreenXY(_point, Camera);
+		WorldPoint.subtractPoint(Camera.scroll);
 		
 		var result:Bool =  _tileObjects[_data[getTileIndexByCoords(WorldPoint)]].allowCollisions > 0;
 		WorldPoint.putWeak();
@@ -1117,7 +1148,6 @@ class FlxBaseTilemap<Tile : FlxObject> extends FlxObject
 		
 		return Bounds.set(x, y, width, height);
 	}
-
 }
 
 enum FlxTilemapAutoTiling

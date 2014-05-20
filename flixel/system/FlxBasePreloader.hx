@@ -1,9 +1,8 @@
 package flixel.system;
+
 #if !doc
 #if js
-class FlxPreloaderBase extends NMEPreloader
-{
-}
+class FlxBasePreloader extends NMEPreloader {}
 #else
 import flash.events.Event;
 import flash.Lib;
@@ -19,9 +18,8 @@ import flash.text.TextFormatAlign;
 import flixel.util.FlxColor;
 import flixel.util.FlxStringUtil;
 
-class FlxPreloaderBase extends NMEPreloader
+class FlxBasePreloader extends NMEPreloader
 {	
-	
 	/**
 	 * Add this string to allowedURLs array if you want to be able to test game with enabled site-locking on local machine 
 	 */
@@ -74,10 +72,7 @@ class FlxPreloaderBase extends NMEPreloader
 	/**
 	 * Override this to create your own preloader objects.
 	 */
-	private function create():Void
-	{
-		
-	}
+	private function create():Void {}
 	
 	/**
 	 * This function is called externally to initialize the Preloader.
@@ -203,7 +198,7 @@ class FlxPreloaderBase extends NMEPreloader
 	private function goToMyURL(?e:MouseEvent):Void
 	{
 		//if the chosen URL isn't "local", use FlxG's openURL() function.
-		if (allowedURLs[siteLockURLIndex] != FlxPreloaderBase.LOCAL)
+		if (allowedURLs[siteLockURLIndex] != FlxBasePreloader.LOCAL)
 			FlxG.openURL(allowedURLs[siteLockURLIndex]);
 		else
 			Lib.getURL(new URLRequest(allowedURLs[siteLockURLIndex]));
