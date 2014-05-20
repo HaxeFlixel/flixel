@@ -60,7 +60,7 @@ class FlxAtlas
 		this.name = name;
 		
 		root = new FlxNode(new Rectangle(0, 0, width, height));
-		atlasBitmapData = new BitmapData(width, height, true, FlxColor.preset.TRANSPARENT);
+		atlasBitmapData = new BitmapData(width, height, true, FlxColor.TRANSPARENT);
 		
 		this.borderX = borderX;
 		this.borderY = borderY;
@@ -393,7 +393,7 @@ class FlxAtlas
 		deleteSubtree(root);
 		
 		root = new FlxNode(new Rectangle(0, 0, rootWidth, rootHeight));
-		atlasBitmapData.fillRect(root.rect, FlxColor.preset.TRANSPARENT);
+		atlasBitmapData.fillRect(root.rect, FlxColor.TRANSPARENT);
 		nodes = new Map<String, FlxNode>();
 	}
 	

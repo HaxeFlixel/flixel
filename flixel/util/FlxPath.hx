@@ -92,7 +92,7 @@ class FlxPath implements IFlxDestroyable
 	/**
 	 * Specify a debug display color for the path. Default is white.
 	 */
-	public var debugColor:Int = 0xffffff;
+	public var debugColor:FlxColor = 0xffffff;
 	/**
 	 * Specify a debug display scroll factor for the path.  Default is (1,1).
 	 * NOTE: does not affect world movement!  Object scroll factors take care of that.
@@ -655,16 +655,16 @@ class FlxPath implements IFlxDestroyable
 			{
 				nodeSize *= 2;
 			}
-			var nodeColor:Int = debugColor;
+			var nodeColor:FlxColor = debugColor;
 			if (l > 1)
 			{
 				if (i == 0)
 				{
-					nodeColor = FlxColor.preset.GREEN;
+					nodeColor = FlxColor.GREEN;
 				}
 				else if (i == l - 1)
 				{
-					nodeColor = FlxColor.preset.RED;
+					nodeColor = FlxColor.RED;
 				}
 			}
 			

@@ -896,22 +896,22 @@ class FlxObject extends FlxBasic
 			{
 				if (allowCollisions != ANY)
 				{
-					color = FlxColor.preset.PINK;
+					color = FlxColor.PINK;
 				}
 				if (immovable)
 				{
-					color = FlxColor.preset.GREEN;
+					color = FlxColor.GREEN;
 				}
 				else
 				{
-					color = FlxColor.preset.RED;
+					color = FlxColor.RED;
 				}
 			}
 			
 			// if there's still no color...
 			if (color == null)
 			{
-				color = FlxColor.preset.BLUE;
+				color = FlxColor.BLUE;
 			}
 		}
 		

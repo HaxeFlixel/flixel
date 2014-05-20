@@ -8,15 +8,14 @@ import flash.geom.ColorTransform;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.FlxCamera.FlxCameraShakeDirection;
+import flixel.math.FlxMath;
+import flixel.math.FlxPoint;
+import flixel.math.FlxRandom;
+import flixel.math.FlxRect;
 import flixel.system.layer.DrawStackItem;
 import flixel.system.layer.TileSheetExt;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
-import flixel.math.FlxMath;
-import flixel.math.FlxPoint;
-import flixel.util.FlxPool.FlxPool;
-import flixel.math.FlxRandom;
-import flixel.math.FlxRect;
 import flixel.util.loaders.CachedGraphics;
 import openfl.display.Tilesheet;
 
@@ -104,7 +103,7 @@ class FlxCamera extends FlxBasic
 	 * The natural background color of the camera, in AARRGGBB format. Defaults to FlxG.cameras.bgColor.
 	 * NOTE: can be transparent for crazy FX (only works on flash)!
 	 */
-	public var bgColor:Int;
+	public var bgColor:FlxColor;
 	
 	#if FLX_RENDER_BLIT
 	/**
@@ -159,7 +158,7 @@ class FlxCamera extends FlxBasic
 	 * The color tint of the camera display.
 	 * (Internal, help with color transforming the flash bitmap.)
 	 */
-	public var color(default, set):Int = FlxColor.preset.WHITE;
+	public var color(default, set):Int = FlxColor.WHITE;
 	/**
 	 * Whether the camera display is smooth and filtered, or chunky and pixelated.
 	 * Default behavior is chunky-style.
@@ -186,7 +185,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Internal, used to control the "flash" special effect.
 	 */
-	private var _fxFlashColor:Int = FlxColor.preset.TRANSPARENT;
+	private var _fxFlashColor:FlxColor = FlxColor.TRANSPARENT;
 	/**
 	 * Internal, used to control the "flash" special effect.
 	 */
@@ -202,7 +201,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Internal, used to control the "fade" special effect.
 	 */
-	private var _fxFadeColor:Int = FlxColor.preset.TRANSPARENT;
+	private var _fxFadeColor:FlxColor = FlxColor.TRANSPARENT;
 	/**
 	 * Used to calculate the following target current velocity.
 	 */
@@ -457,7 +456,7 @@ class FlxCamera extends FlxBasic
 		_fxShakeOffset = FlxPoint.get();
 		
 		#if FLX_RENDER_BLIT
-		_fill = new BitmapData(width, height, true, FlxColor.preset.TRANSPARENT);
+		_fill = new BitmapData(width, height, true, FlxColor.TRANSPARENT);
 		#else
 		
 		canvas.scrollRect = new Rectangle(0, 0, width, height);
@@ -791,7 +790,7 @@ class FlxCamera extends FlxBasic
 	 * @param	OnComplete	A function you want to run when the flash finishes.
 	 * @param	Force		Force the effect to reset.
 	 */
-	public function flash(Color:Int = FlxColor.preset.WHITE, Duration:Float = 1, ?OnComplete:Void->Void, Force:Bool = false):Void
+	public function flash(Color:FlxColor = FlxColor.WHITE, Duration:Float = 1, ?OnComplete:Void->Void, Force:Bool = false):Void
 	{
 		if (!Force && (_fxFlashAlpha > 0.0))
 		{
@@ -816,7 +815,7 @@ class FlxCamera extends FlxBasic
 	 * @param	OnComplete	A function you want to run when the fade finishes.
 	 * @param	Force		Force the effect to reset.
 	 */
-	public function fade(Color:Int = FlxColor.preset.BLACK, Duration:Float = 1, FadeIn:Bool = false, ?OnComplete:Void->Void, Force:Bool = false):Void
+	public function fade(Color:FlxColor = FlxColor.BLACK, Duration:Float = 1, FadeIn:Bool = false, ?OnComplete:Void->Void, Force:Bool = false):Void
 	{
 		if (!Force && (_fxFadeAlpha > 0.0))
 		{
@@ -917,7 +916,7 @@ class FlxCamera extends FlxBasic
 	 * @param	Color		The color to fill with in 0xAARRGGBB hex format.
 	 * @param	BlendAlpha	Whether to blend the alpha value or just wipe the previous contents.  Default is true.
 	 */
-	public function fill(Color:Int, BlendAlpha:Bool = true, FxAlpha:Float = 1.0, ?graphics:Graphics):Void
+	public function fill(Color:FlxColor, BlendAlpha:Bool = true, FxAlpha:Float = 1.0, ?graphics:Graphics):Void
 	{
 	#if FLX_RENDER_BLIT
 		if (BlendAlpha)
@@ -1000,7 +999,7 @@ class FlxCamera extends FlxBasic
 				_flashRect.width = width;
 				_flashRect.height = height;
 				_fill.dispose();
-				_fill = new BitmapData(width, height, true, FlxColor.preset.TRANSPARENT);
+				_fill = new BitmapData(width, height, true, FlxColor.TRANSPARENT);
 			}
 			
 			regen = false;
@@ -1181,7 +1180,7 @@ class FlxCamera extends FlxBasic
 		return Angle;
 	}
 	
-	private function set_color(Color:Int):Int
+	private function set_color(Color:FlxColor):Int
 	{
 		color = Color & 0x00ffffff;
 		#if FLX_RENDER_BLIT

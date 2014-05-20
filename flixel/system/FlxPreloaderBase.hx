@@ -166,7 +166,7 @@ class FlxPreloaderBase extends NMEPreloader
 		{
 			if (!isHostUrlAllowed())
 			{
-				var tmp = new Bitmap(new BitmapData(stage.stageWidth, stage.stageHeight, true, FlxColor.preset.WHITE));
+				var tmp = new Bitmap(new BitmapData(stage.stageWidth, stage.stageHeight, true, FlxColor.WHITE));
 				addChild(tmp);
 				
 				var format = new TextFormat();

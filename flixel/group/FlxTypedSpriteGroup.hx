@@ -10,6 +10,7 @@ import flixel.group.FlxTypedGroup;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.system.FlxAssets.FlxTextureAsset;
 import flixel.system.layer.frames.FlxFrame;
+import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.math.FlxPoint;
 import flixel.util.FlxSort;
@@ -227,7 +228,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 * @param	FetchPositions		Whether we need to store positions of pixels which colors were replaced
 	 * @return	Array replaced pixels positions
 	 */
-	override public function replaceColor(Color:Int, NewColor:Int, FetchPositions:Bool = false):Array<FlxPoint> 
+	override public function replaceColor(Color:FlxColor, NewColor:FlxColor, FetchPositions:Bool = false):Array<FlxPoint> 
 	{
 		var positions:Array<FlxPoint> = null;
 		if (FetchPositions)
@@ -872,7 +873,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	private inline function flipYTransform(Sprite:FlxSprite, FlipY:Bool)						{ Sprite.flipY = FlipY; }						// set
 	private inline function movesTransform(Sprite:FlxSprite, Moves:Bool)						{ Sprite.moves = Moves; }						// set
 	private inline function pixelPerfectTransform(Sprite:FlxSprite, PixelPerfect:Bool)			{ Sprite.pixelPerfectRender = PixelPerfect; }	// set
-	private inline function gColorTransform(Sprite:FlxSprite, Color:Int)						{ Sprite.color = Color; }						// set
+	private inline function gColorTransform(Sprite:FlxSprite, Color:FlxColor)						{ Sprite.color = Color; }						// set
 	private inline function blendTransform(Sprite:FlxSprite, Blend:BlendMode)					{ Sprite.blend = Blend; }						// set
 	private inline function immovableTransform(Sprite:FlxSprite, Immovable:Bool)				{ Sprite.immovable = Immovable; }				// set
 	private inline function visibleTransform(Sprite:FlxSprite, Visible:Bool)					{ Sprite.visible = Visible; }					// set
@@ -933,7 +934,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 * This functionality isn't supported in SpriteGroup
 	 * @return this sprite group
 	 */
-	override public function makeGraphic(Width:Int, Height:Int, Color:Int = 0xffffffff, Unique:Bool = false, ?Key:String):FlxSprite 
+	override public function makeGraphic(Width:Int, Height:Int, Color:FlxColor = 0xffffffff, Unique:Bool = false, ?Key:String):FlxSprite 
 	{
 		#if !FLX_NO_DEBUG
 		FlxG.log.error("makeGraphic() is not supported in FlxSpriteGroups.");

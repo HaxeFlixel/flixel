@@ -4,12 +4,10 @@ import flash.display.BitmapData;
 import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
-import flixel.FlxG;
+import flixel.math.FlxPoint;
 import flixel.system.layer.TileSheetData;
-import flixel.math.FlxAngle;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
-import flixel.math.FlxPoint;
 
 class FlxFrame
 {
@@ -65,7 +63,7 @@ class FlxFrame
 				RECT.x = RECT.y = 0;
 				RECT.width = w;
 				RECT.height = h;
-				bmd.fillRect(RECT, FlxColor.preset.TRANSPARENT);
+				bmd.fillRect(RECT, FlxColor.TRANSPARENT);
 			}
 		}
 		else if (bmd != null)
@@ -75,7 +73,7 @@ class FlxFrame
 		
 		if (result == null)
 		{
-			result = new BitmapData(Std.int(sourceSize.x), Std.int(sourceSize.y), true, FlxColor.preset.TRANSPARENT);
+			result = new BitmapData(Std.int(sourceSize.x), Std.int(sourceSize.y), true, FlxColor.TRANSPARENT);
 		}
 		
 		FlxFrame.POINT.x = offset.x;
@@ -108,7 +106,7 @@ class FlxFrame
 		MATRIX.identity();
 		MATRIX.scale( -1, 1);
 		MATRIX.translate(Std.int(sourceSize.x), 0);
-		_hReversedBitmapData = new BitmapData(Std.int(sourceSize.x), Std.int(sourceSize.y), true, FlxColor.preset.TRANSPARENT);
+		_hReversedBitmapData = new BitmapData(Std.int(sourceSize.x), Std.int(sourceSize.y), true, FlxColor.TRANSPARENT);
 		_hReversedBitmapData.draw(normalFrame, MATRIX);
 		
 		return _hReversedBitmapData;
@@ -125,7 +123,7 @@ class FlxFrame
 		MATRIX.identity();
 		MATRIX.scale(1, -1);
 		MATRIX.translate(0, Std.int(sourceSize.y));
-		_vReversedBitmapData = new BitmapData(Std.int(sourceSize.x), Std.int(sourceSize.y), true, FlxColor.preset.TRANSPARENT);
+		_vReversedBitmapData = new BitmapData(Std.int(sourceSize.x), Std.int(sourceSize.y), true, FlxColor.TRANSPARENT);
 		_vReversedBitmapData.draw(normalFrame, MATRIX);
 		
 		return _vReversedBitmapData;
@@ -142,7 +140,7 @@ class FlxFrame
 		MATRIX.identity();
 		MATRIX.scale( -1, -1);
 		MATRIX.translate(Std.int(sourceSize.x), Std.int(sourceSize.y));
-		_hvReversedBitmapData = new BitmapData(Std.int(sourceSize.x), Std.int(sourceSize.y), true, FlxColor.preset.TRANSPARENT);
+		_hvReversedBitmapData = new BitmapData(Std.int(sourceSize.x), Std.int(sourceSize.y), true, FlxColor.TRANSPARENT);
 		_hvReversedBitmapData.draw(normalFrame, MATRIX);
 		
 		return _hvReversedBitmapData;

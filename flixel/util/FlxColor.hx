@@ -1,5 +1,5 @@
 package flixel.util;
-import flixel.tweens.FlxEase.EaseFunction;
+import flixel.math.FlxMath;
 
 /**
  * Class representing a color, based on Int. Provides a variety of methods for creating and converting colors.
@@ -7,13 +7,56 @@ import flixel.tweens.FlxEase.EaseFunction;
  * FlxColor's can be written as Ints. This means you can pass a hex value such as
  * 0xff123456 to a function expecting a FlxColor, and it will automatically become a FlxColor object.
  * Similarly, FlxColors may be treated as Ints.
+ * 
+ * Note that when using properties of a FlxColor other than ARGB, the values are ultimately stored simply as
+ * ARGB values, so repeatedly manipulating HSB/HSL/CMYK values may result in a gradual loss of precision.
  */
 abstract FlxColor(Int) from Int to Int
 {
-	/**
-	 * A collection of preset colors. You may change the values of these colors.
-	 */
-	public static inline var preset = FlxColorPreset;
+	public static inline var RED:FlxColor =				0xffff0000;
+	public static inline var YELLOW:FlxColor =			0xffffff00;
+	public static inline var GREEN:FlxColor =			0xff008000;
+	public static inline var BLUE:FlxColor =			0xff0000ff;
+	public static inline var ORANGE:FlxColor =			0xffff8000;
+	public static inline var PINK:FlxColor =			0xffffc0cb;
+	public static inline var PURPLE:FlxColor =			0xff800080;
+	public static inline var WHITE:FlxColor =			0xffffffff;
+	public static inline var BLACK:FlxColor =			0xff000000;
+	public static inline var GRAY:FlxColor =			0xff808080;
+	public static inline var BROWN:FlxColor =			0xff964B00;
+	public static inline var TRANSPARENT:FlxColor =		0x00000000;
+	public static inline var IVORY:FlxColor =			0xfffffff0;
+	public static inline var BEIGE:FlxColor =			0xfff5f5dc;
+	public static inline var WHEAT:FlxColor =			0xfff5deb3;
+	public static inline var TAN:FlxColor =				0xffd2b48c;
+	public static inline var KHAKI:FlxColor =			0xffc3b091;
+	public static inline var SILVER:FlxColor =			0xffc0c0c0;
+	public static inline var CHARCOAL:FlxColor =		0xff464646;
+	public static inline var NAVY_BLUE:FlxColor =		0xff000080;
+	public static inline var ROYAL_BLUE:FlxColor =		0xff084c9e;
+	public static inline var MEDIUM_BLUE:FlxColor =		0xff0000cd;
+	public static inline var AZURE:FlxColor =			0xff007fff;
+	public static inline var CYAN:FlxColor =			0xff00ffff;
+	public static inline var MAGENTA:FlxColor =			0xffff00ff;
+	public static inline var AQUAMARINE:FlxColor =		0xff7fffd4;
+	public static inline var TEAL:FlxColor =			0xff008080;
+	public static inline var FOREST_GREEN:FlxColor =	0xff228b22;
+	public static inline var OLIVE:FlxColor =			0xff808000;
+	public static inline var CHARTREUSE:FlxColor =		0xff7fff00;
+	public static inline var LIME:FlxColor =			0xffbfff00;
+	public static inline var GOLDEN:FlxColor =			0xffffd700;
+	public static inline var GOLDENROD:FlxColor =		0xffdaa520;
+	public static inline var CORAL:FlxColor =			0xffff7f50;
+	public static inline var SALMON:FlxColor =			0xfffa8072;
+	public static inline var HOT_PINK:FlxColor =		0xfffc0fc0;
+	public static inline var FUCSHIA:FlxColor =			0xffff77ff;
+	public static inline var PUCE:FlxColor =			0xffcc8899;
+	public static inline var MAUVE:FlxColor =			0xffe0b0ff;
+	public static inline var LAVENDER:FlxColor =		0xffb57edc;
+	public static inline var PLUM:FlxColor =			0xff843179;
+	public static inline var INDIGO:FlxColor =			0xff4b0082;
+	public static inline var MAROON:FlxColor =			0xff800000;
+	public static inline var CRIMSON:FlxColor =			0xffdc143c;
 	
 	public var red(get, set):Int;
 	public var blue(get, set):Int;
@@ -24,6 +67,11 @@ abstract FlxColor(Int) from Int to Int
 	public var blueFloat(get, set):Float;
 	public var greenFloat(get, set):Float;
 	public var alphaFloat(get, set):Float;
+	
+	public var cyan(get, set):Float;
+	public var magenta(get, set):Float;
+	public var yellow(get, set):Float;
+	public var black(get, set):Float;
 	
 	/** The hue of the color in degrees (from 0 to 359) **/
 	public var hue(get, set):Float;
@@ -72,6 +120,22 @@ abstract FlxColor(Int) from Int to Int
 	{
 		var color = new FlxColor();
 		return color.setRGBFloat(Red, Green, Blue, Alpha);
+	}
+	
+	/**
+	 * Generate a color from CMYK values (0 to 1)
+	 * 
+	 * @param Cyan		The cyan value of the color from 0 to 1
+	 * @param Magenta	The magenta value of the color from 0 to 1
+	 * @param Yellow	The yellow value of the color from 0 to 1
+	 * @param Black		The black value of the color from 0 to 1
+	 * @param Alpha		How opaque the color should be, from 0 to 1
+	 * @return The color as a FlxColor
+	 */
+	public static inline function fromCMYK(Cyan:Float, Magenta:Float, Yellow:Float, Black:Float, Alpha:Float = 1):FlxColor
+	{
+		var color = new FlxColor();
+		return color.setCMYK(Cyan, Magenta, Yellow, Black, Alpha);
 	}
 	
 	/**
@@ -129,7 +193,7 @@ abstract FlxColor(Int) from Int to Int
 	 * @param 	Factor Value from 0 to 1 representing how much to shift Color1 toward Color2
 	 * @return	The interpolated color
 	 */
-	public static function interpolate(Color1:FlxColor, Color2:FlxColor, Factor:Float):FlxColor
+	public static function interpolate(Color1:FlxColor, Color2:FlxColor, Factor:Float = 0.5):FlxColor
 	{
 		var r:Int = Std.int((Color2.red - Color1.red) * Factor + Color1.red);
 		var g:Int = Std.int((Color2.green - Color1.green) * Factor + Color1.green);
@@ -186,7 +250,7 @@ abstract FlxColor(Int) from Int to Int
 	 * @param	Threshold Control how adjacent the colors will be (default +- 30 degrees)
 	 * @return 	Object containing 3 properties: original (the original color), warmer (the warmer analogous color) and colder (the colder analogous color)
 	 */
-	public inline function getAnalogousHarmony(Color:Int, Threshold:Int = 30):{original:FlxColor, warmer:FlxColor, colder:FlxColor}
+	public inline function getAnalogousHarmony(Threshold:Int = 30):{original:FlxColor, warmer:FlxColor, colder:FlxColor}
 	{
 		var warmer:Int = FlxMath.wrapValue(Std.int(hue), 359 - Threshold, 359);
 		var colder:Int = FlxMath.wrapValue(Std.int(hue), Threshold, 359);
@@ -230,6 +294,15 @@ abstract FlxColor(Int) from Int to Int
 	 */
 	public inline function copy():FlxColor {
 		return fromInt(this);
+	}
+	
+	/**
+	 * Return a 24 bit version of this color (i.e. without an alpha value)
+	 * 
+	 * @return A 24 bit version of this color
+	 */
+	public inline function to24Bit():FlxColor {
+		return this & 0xffffff;
 	}
 	
 	/**
@@ -321,7 +394,7 @@ abstract FlxColor(Int) from Int to Int
 	 * @param Red	The red value of the color from 0 to 1
 	 * @param Green	The green value of the color from 0 to 1
 	 * @param Blue	The green value of the color from 0 to 1
-	 * @param Alpha	How opaque the color should be, from 0 to 1.
+	 * @param Alpha	How opaque the color should be, from 0 to 1
 	 * @return This color
 	 */
 	public inline function setRGBFloat(Red:Float, Green:Float, Blue:Float, Alpha:Float = 1):FlxColor
@@ -329,6 +402,24 @@ abstract FlxColor(Int) from Int to Int
 		redFloat = Red;
 		greenFloat = Green;
 		blueFloat = Blue;
+		alphaFloat = Alpha;
+		return this;
+	}
+	/**
+	 * Set CMYK values as floats (0 to 1)
+	 * 
+	 * @param Cyan		The cyan value of the color from 0 to 1
+	 * @param Magenta	The magenta value of the color from 0 to 1
+	 * @param Yellow	The yellow value of the color from 0 to 1
+	 * @param Black		The black value of the color from 0 to 1
+	 * @param Alpha		How opaque the color should be, from 0 to 1
+	 * @return This color
+	 */
+	public inline function setCMYK(Cyan:Float, Magenta:Float, Yellow:Float, Black:Float, Alpha:Float = 1):FlxColor
+	{
+		redFloat = (1 - Cyan) * (1 - Black);
+		greenFloat = (1 - Magenta) * (1 - Black);
+		blueFloat = (1 - Yellow) * (1 - Black);
 		alphaFloat = Alpha;
 		return this;
 	}
@@ -457,11 +548,48 @@ abstract FlxColor(Int) from Int to Int
 	}
 	private inline function set_alphaFloat(Value:Float):Float
 	{
-		trace(Value);
 		alpha = Math.round(Value * 255);
-		trace(alpha);
 		return Value;
 	}
+	
+	private inline function get_cyan():Float
+	{
+		return (1 - redFloat - black) / brightness;
+	}
+	private inline function get_magenta():Float
+	{
+		return (1 - greenFloat - black) / brightness;
+	}
+	private inline function get_yellow():Float
+	{
+		return (1 - blueFloat - black) / brightness;
+	}
+	private inline function get_black():Float
+	{
+		return 1 - brightness;
+	}
+	
+	private inline function set_cyan(Value:Float):Float
+	{
+		setCMYK(Value, magenta, yellow, black, alphaFloat);
+		return Value;
+	}
+	private inline function set_magenta(Value:Float):Float
+	{
+		setCMYK(cyan, Value, yellow, black, alphaFloat);
+		return Value;
+	}
+	private inline function set_yellow(Value:Float):Float
+	{
+		setCMYK(cyan, magenta, Value, black, alphaFloat);
+		return Value;
+	}
+	private inline function set_black(Value:Float):Float
+	{
+		setCMYK(cyan, magenta, yellow, Value, alphaFloat);
+		return Value;
+	}
+	
 	private function get_hue():Float
 	{
 		var hueRad = Math.atan2(Math.sqrt(3) * (greenFloat - blueFloat), 2 * redFloat - greenFloat - blueFloat);
@@ -485,6 +613,7 @@ abstract FlxColor(Int) from Int to Int
 	{
 		return (maxColor() + minColor()) / 2;
 	}
+	
 	private inline function set_hue(Value:Float):Float
 	{
 		setHSB(Value, saturation, brightness, alphaFloat);
@@ -514,52 +643,4 @@ abstract FlxColor(Int) from Int to Int
 	{
 		return Math.min(redFloat, Math.min(greenFloat, blueFloat));
 	}
-}
-
-class FlxColorPreset
-{
-	public static inline var RED:FlxColor =				0xffff0000;
-	public static inline var YELLOW:FlxColor =			0xffffff00;
-	public static inline var GREEN:FlxColor =			0xff008000;
-	public static inline var BLUE:FlxColor =			0xff0000ff;
-	public static inline var ORANGE:FlxColor =			0xffff8000;
-	public static inline var PINK:FlxColor =			0xffffc0cb;
-	public static inline var PURPLE:FlxColor =			0xff800080;
-	public static inline var WHITE:FlxColor =			0xffffffff;
-	public static inline var BLACK:FlxColor =			0xff000000;
-	public static inline var GRAY:FlxColor =			0xff808080;
-	public static inline var BROWN:FlxColor =			0xff964B00;
-	public static inline var TRANSPARENT:FlxColor =		0x00000000;
-	public static inline var IVORY:FlxColor =			0xfffffff0;
-	public static inline var BEIGE:FlxColor =			0xfff5f5dc;
-	public static inline var WHEAT:FlxColor =			0xfff5deb3;
-	public static inline var TAN:FlxColor =				0xffd2b48c;
-	public static inline var KHAKI:FlxColor =			0xffc3b091;
-	public static inline var SILVER:FlxColor =			0xffc0c0c0;
-	public static inline var CHARCOAL:FlxColor =		0xff464646;
-	public static inline var NAVY_BLUE:FlxColor =		0xff000080;
-	public static inline var ROYAL_BLUE:FlxColor =		0xff084c9e;
-	public static inline var MEDIUM_BLUE:FlxColor =		0xff0000cd;
-	public static inline var AZURE:FlxColor =			0xff007fff;
-	public static inline var CYAN:FlxColor =			0xff00ffff;
-	public static inline var MAGENTA:FlxColor =			0xffff00ff;
-	public static inline var AQUAMARINE:FlxColor =		0xff7fffd4;
-	public static inline var TEAL:FlxColor =			0xff008080;
-	public static inline var FOREST_GREEN:FlxColor =	0xff228b22;
-	public static inline var OLIVE:FlxColor =			0xff808000;
-	public static inline var CHARTREUSE:FlxColor =		0xff7fff00;
-	public static inline var LIME:FlxColor =			0xffbfff00;
-	public static inline var GOLDEN:FlxColor =			0xffffd700;
-	public static inline var GOLDENROD:FlxColor =		0xffdaa520;
-	public static inline var CORAL:FlxColor =			0xffff7f50;
-	public static inline var SALMON:FlxColor =			0xfffa8072;
-	public static inline var HOT_PINK:FlxColor =		0xfffc0fc0;
-	public static inline var FUCSHIA:FlxColor =			0xffff77ff;
-	public static inline var PUCE:FlxColor =			0xffcc8899;
-	public static inline var MAUVE:FlxColor =			0xffe0b0ff;
-	public static inline var LAVENDER:FlxColor =		0xffb57edc;
-	public static inline var PLUM:FlxColor =			0xff843179;
-	public static inline var INDIGO:FlxColor =			0xff4b0082;
-	public static inline var MAROON:FlxColor =			0xff800000;
-	public static inline var CRIMSON:FlxColor =			0xffdc143c;
 }

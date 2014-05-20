@@ -27,7 +27,7 @@ class FlxSubState extends FlxState
 	 */ 
 	private var _parentState:FlxState;
 	
-	private var _bgColor:Int;
+	private var _bgColor:FlxColor;
  
 	private var _created:Bool = false;
 	

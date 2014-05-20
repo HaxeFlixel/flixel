@@ -8,19 +8,14 @@ import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
-import flixel.group.FlxGroup;
-import flixel.group.FlxTypedGroup;
-import flixel.system.FlxAssets;
+import flixel.math.FlxMath;
+import flixel.math.FlxPoint;
 import flixel.system.layer.DrawStackItem;
 import flixel.system.layer.frames.FlxSpriteFrames;
 import flixel.system.layer.Region;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
-import flixel.math.FlxMath;
-import flixel.math.FlxPoint;
-import flixel.math.FlxRandom;
-import flixel.math.FlxRect;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.loaders.CachedGraphics;
 import flixel.util.loaders.TextureRegion;
@@ -266,9 +261,9 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		
 		// Create debug tiles for rendering bounding boxes on demand
 		#if (FLX_RENDER_BLIT && !FLX_NO_DEBUG)
-		_debugTileNotSolid = makeDebugTile(FlxColor.preset.BLUE);
-		_debugTilePartial = makeDebugTile(FlxColor.preset.PINK);
-		_debugTileSolid = makeDebugTile(FlxColor.preset.GREEN);
+		_debugTileNotSolid = makeDebugTile(FlxColor.BLUE);
+		_debugTilePartial = makeDebugTile(FlxColor.PINK);
+		_debugTileSolid = makeDebugTile(FlxColor.GREEN);
 		#end
 	}
 	
@@ -328,7 +323,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		_helperPoint.y = Math.floor((y - Math.floor(Camera.scroll.y) * scrollFactor.y) * 5) / 5 + 0.1;
 		
 		var tileID:Int;
-		var debugColor:Int;
+		var debugColor:FlxColor;
 		var drawX:Float;
 		var drawY:Float;
 	
@@ -388,15 +383,15 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 					{
 						if (tile.allowCollisions <= FlxObject.NONE)
 						{
-							debugColor = FlxColor.preset.BLUE;
+							debugColor = FlxColor.BLUE;
 						}
 						else if (tile.allowCollisions != FlxObject.ANY)
 						{
-							debugColor = FlxColor.preset.PINK;
+							debugColor = FlxColor.PINK;
 						}
 						else
 						{
-							debugColor = FlxColor.preset.GREEN;
+							debugColor = FlxColor.GREEN;
 						}
 						
 						// Copied from makeDebugTile
@@ -868,7 +863,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		// TODO: make it better for native targets
 		var pt:Point = new Point(0, 0);
 		var tileSprite:FlxSprite = new FlxSprite();
-		tileSprite.makeGraphic(_tileWidth, _tileHeight, FlxColor.preset.TRANSPARENT, true);
+		tileSprite.makeGraphic(_tileWidth, _tileHeight, FlxColor.TRANSPARENT, true);
 		tileSprite.x = X * _tileWidth + x;
 		tileSprite.y = Y * _tileHeight + y;
 		tileSprite.scale.x = scale.x;
@@ -1072,7 +1067,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 * Just generates a wireframe box the size of a tile with the specified color.
 	 */
 	#if (FLX_RENDER_BLIT && !FLX_NO_DEBUG)
-	private function makeDebugTile(Color:Int):BitmapData
+	private function makeDebugTile(Color:FlxColor):BitmapData
 	{
 		var debugTile:BitmapData;
 		debugTile = new BitmapData(_tileWidth, _tileHeight, true, 0);

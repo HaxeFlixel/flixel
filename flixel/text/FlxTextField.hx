@@ -200,7 +200,7 @@ class FlxTextField extends FlxText
 			var key:String = cachedGraphics.key;
 			FlxG.bitmap.remove(key);
 			
-			makeGraphic(Std.int(newWidth), Std.int(newHeight), FlxColor.preset.TRANSPARENT, false, key);
+			makeGraphic(Std.int(newWidth), Std.int(newHeight), FlxColor.TRANSPARENT, false, key);
 			frameHeight = Std.int(height);
 			_flashRect.x = 0;
 			_flashRect.y = 0;
@@ -210,7 +210,7 @@ class FlxTextField extends FlxText
 		// Else just clear the old buffer before redrawing the text
 		else
 		{
-			cachedGraphics.bitmap.fillRect(_flashRect, FlxColor.preset.TRANSPARENT);
+			cachedGraphics.bitmap.fillRect(_flashRect, FlxColor.TRANSPARENT);
 		}
 	}
 	
