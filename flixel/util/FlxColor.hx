@@ -291,10 +291,10 @@ abstract FlxColor(Int) from Int to Int
 	}
 	
 	/**
-	 * Create a copy of this FlxColor
+	 * Clone this FlxColor
 	 * @return A copy of this FlxColor
 	 */
-	public inline function copy():FlxColor {
+	public inline function clone():FlxColor {
 		return fromInt(this);
 	}
 	
