@@ -100,7 +100,7 @@ class FlxTilemapBuffer
 	 * @param	Color	What color to fill with, in 0xAARRGGBB hex format.
 	 */
 	#if FLX_RENDER_BLIT
-	public function fill(Color:FlxColor = 0):Void
+	public function fill(Color:FlxColor = FlxColor.TRANSPARENT):Void
 	{
 		pixels.fillRect(_flashRect, Color);
 	}
