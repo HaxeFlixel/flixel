@@ -275,15 +275,15 @@ class DemoState extends FlxState {
 		
 		panel.add(makeSprite(240, 28 + lineHeight * 4, splitComplementHarmony.original));
 		panel.add(makeSprite(262, 28 + lineHeight * 4, splitComplementHarmony.warmer));
-		panel.add(makeSprite(283, 28 + lineHeight * 4, splitComplementHarmony.colder));
+		panel.add(makeSprite(284, 28 + lineHeight * 4, splitComplementHarmony.colder));
 		
 		panel.add(makeSprite(240, 28 + lineHeight * 6, analogousHarmony.original));
 		panel.add(makeSprite(262, 28 + lineHeight * 6, analogousHarmony.warmer));
-		panel.add(makeSprite(283, 28 + lineHeight * 6, analogousHarmony.colder));
+		panel.add(makeSprite(284, 28 + lineHeight * 6, analogousHarmony.colder));
 		
 		panel.add(makeSprite(240, 28 + lineHeight * 8, triadicHarmony.color1));
 		panel.add(makeSprite(262, 28 + lineHeight * 8, triadicHarmony.color2));
-		panel.add(makeSprite(283, 28 + lineHeight * 8, triadicHarmony.color3));
+		panel.add(makeSprite(284, 28 + lineHeight * 8, triadicHarmony.color3));
 		
 		txt = new FlxText(4, 30, FlxG.width - 8, "", 12);
 		txt.wordWrap = true;
