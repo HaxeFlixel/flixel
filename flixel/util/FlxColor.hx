@@ -8,8 +8,10 @@ import flixel.math.FlxMath;
  * 0xff123456 to a function expecting a FlxColor, and it will automatically become a FlxColor object.
  * Similarly, FlxColors may be treated as Ints.
  * 
- * Note that when using properties of a FlxColor other than ARGB, the values are ultimately stored simply as
+ * Note that when using properties of a FlxColor other than ARGB, the values are ultimately stored as
  * ARGB values, so repeatedly manipulating HSB/HSL/CMYK values may result in a gradual loss of precision.
+ * 
+ * @author Joe Williamson (JoeCreates)
  */
 abstract FlxColor(Int) from Int to Int
 {
@@ -240,7 +242,7 @@ abstract FlxColor(Int) from Int to Int
 	 */
 	public inline function getComplementHarmony():FlxColor
 	{		
-		return fromHSB(FlxMath.wrapValue(Std.int(hue), 180, 359), brightness, saturation, alpha);
+		return fromHSB(FlxMath.wrapValue(Std.int(hue), 180, 350), brightness, saturation, alphaFloat);
 	}
 	
 	/**
@@ -250,10 +252,10 @@ abstract FlxColor(Int) from Int to Int
 	 * @param	Threshold Control how adjacent the colors will be (default +- 30 degrees)
 	 * @return 	Object containing 3 properties: original (the original color), warmer (the warmer analogous color) and colder (the colder analogous color)
 	 */
-	public inline function getAnalogousHarmony(Threshold:Int = 30):{original:FlxColor, warmer:FlxColor, colder:FlxColor}
+	public inline function getAnalogousHarmony(Threshold:Int = 30):AnalogousHarmony
 	{
-		var warmer:Int = FlxMath.wrapValue(Std.int(hue), 359 - Threshold, 359);
-		var colder:Int = FlxMath.wrapValue(Std.int(hue), Threshold, 359);
+		var warmer:Int = fromHSB(FlxMath.wrapValue(Std.int(hue), - Threshold, 350), saturation, brightness, alphaFloat);
+		var colder:Int = fromHSB(FlxMath.wrapValue(Std.int(hue), Threshold, 350), saturation, brightness, alphaFloat);
 		
 		return {original: this, warmer: warmer, colder: colder};
 	}
@@ -265,11 +267,11 @@ abstract FlxColor(Int) from Int to Int
 	 * @param	Threshold Control how adjacent the colors will be to the Complement (default +- 30 degrees)
 	 * @return 	Object containing 3 properties: original (the original color), warmer (the warmer analogous color) and colder (the colder analogous color)
 	 */
-	public inline function getSplitComplementHarmony(Threshold:Int = 30):{original:FlxColor, warmer:FlxColor, colder:FlxColor}
+	public inline function getSplitComplementHarmony(Threshold:Int = 30):SplitComplementHarmony
 	{
-		var oppositeHue:Int = FlxMath.wrapValue(Std.int(hue), 180, 359);
-		var warmer:FlxColor = fromHSB(FlxMath.wrapValue(oppositeHue, - Threshold, 359), saturation, brightness, alpha);
-		var colder:FlxColor = fromHSB(FlxMath.wrapValue(oppositeHue, Threshold, 359), saturation, brightness, alpha);
+		var oppositeHue:Int = FlxMath.wrapValue(Std.int(hue), 180, 350);
+		var warmer:FlxColor = fromHSB(FlxMath.wrapValue(oppositeHue, - Threshold, 350), saturation, brightness, alphaFloat);
+		var colder:FlxColor = fromHSB(FlxMath.wrapValue(oppositeHue, Threshold, 350), saturation, brightness, alphaFloat);
 		
 		return {original: this, warmer: warmer, colder: colder};
 	}
@@ -280,10 +282,10 @@ abstract FlxColor(Int) from Int to Int
 	 * 
 	 * @return 	Object containing 3 properties: color1 (the original color), color2 and color3 (the equidistant colors)
 	 */
-	public inline function getTriadicHarmony():{color1:FlxColor, color2:FlxColor, color3:FlxColor}
+	public inline function getTriadicHarmony():TriadicHarmony
 	{
-		var triadic1:FlxColor = fromHSB(FlxMath.wrapValue(Std.int(hue), 120, 359), saturation, brightness, alpha);
-		var triadic2:FlxColor = fromHSB(FlxMath.wrapValue(Std.int(triadic1.hue), 120, 359), saturation, brightness, alpha);
+		var triadic1:FlxColor = fromHSB(FlxMath.wrapValue(Std.int(hue), 120, 359), saturation, brightness, alphaFloat);
+		var triadic2:FlxColor = fromHSB(FlxMath.wrapValue(Std.int(triadic1.hue), 120, 359), saturation, brightness, alphaFloat);
 		
 		return {color1: this, color2: triadic1, color3: triadic2};
 	}
@@ -434,27 +436,9 @@ abstract FlxColor(Int) from Int to Int
 	 */
 	public inline function setHSB(Hue:Float, Saturation:Float, Brightness:Float, Alpha:Float):FlxColor
 	{
-		Hue %= 360;
-		
-		var slice:Int = Std.int(Hue / 60);
-		var hf:Float = Hue / 60 - slice; // Real part of hue slice
-		var aa:Float = Brightness * (1 - Saturation);
-		var bb:Float = Brightness * (1 - Saturation * hf);
-		var cc:Float = Brightness * (1 - Saturation * (1.0 - hf));
-		
-		switch (slice)
-		{
-			case 0: setRGBFloat(Brightness, cc, aa);
-			case 1: setRGBFloat(bb, Brightness, aa);
-			case 2: setRGBFloat(aa, Brightness, cc);
-			case 3: setRGBFloat(aa, bb, Brightness);
-			case 4:	setRGBFloat(cc, aa, Brightness);
-			case 5: setRGBFloat(Brightness, aa, bb);
-			default: setRGBFloat(0, 0, 0);
-		}
-		alphaFloat = Alpha;
-		
-		return this;
+		var chroma =  Brightness * Saturation;
+		var match = Brightness - chroma;
+		return setHSChromaMatch(Hue, Saturation, chroma, match, Alpha);
 	}
 	/**
 	 * Set HSL components.
@@ -467,7 +451,32 @@ abstract FlxColor(Int) from Int to Int
 	 */
 	public inline function setHSL(Hue:Float, Saturation:Float, Lightness:Float, Alpha:Float):FlxColor
 	{
-		return setHSB(Hue, Saturation, 1 - Math.abs(2 * Lightness - 1), Alpha);
+		var chroma =  (1 - Math.abs(2 * Lightness - 1)) * Saturation;
+		var match = Lightness - chroma / 2;
+		return setHSChromaMatch(Hue, Saturation, chroma, match, Alpha);
+	}
+	
+	/**
+	 * Private utility function to perform common operations between setHSB and setHSL
+	 */
+	private inline function setHSChromaMatch(Hue:Float, Saturation:Float, Chroma:Float, Match:Float, Alpha:Float):FlxColor
+	{
+		Hue %= 360;
+		var hueD = Hue / 60;
+		var mid = Chroma * (1 - Math.abs(hueD % 2 - 1)) + Match;
+		Chroma += Match;
+		
+		switch (Std.int(hueD))
+		{
+			case 0: setRGBFloat(Chroma, mid, Match, Alpha);
+			case 1: setRGBFloat(mid, Chroma, Match, Alpha);
+			case 2: setRGBFloat(Match, Chroma, mid, Alpha);
+			case 3: setRGBFloat(Match, mid, Chroma, Alpha);
+			case 4: setRGBFloat(mid, Match, Chroma, Alpha);
+			case 5: setRGBFloat(Chroma, Match, mid, Alpha);
+		}
+		
+		return this;
 	}
 	
 	public function new(Value:Int = 0)
@@ -644,3 +653,7 @@ abstract FlxColor(Int) from Int to Int
 		return Math.min(redFloat, Math.min(greenFloat, blueFloat));
 	}
 }
+
+typedef SplitComplementHarmony  = { original:FlxColor, warmer:FlxColor, colder:FlxColor }
+typedef AnalogousHarmony = { original:FlxColor, warmer:FlxColor, colder:FlxColor }
+typedef TriadicHarmony = { color1:FlxColor, color2:FlxColor, color3:FlxColor }
