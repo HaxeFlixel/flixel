@@ -60,7 +60,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Offset the camera target
 	 */
-	public var targetOffset:FlxPoint;
+	public var targetOffset(default, null):FlxPoint;
 	/**
 	 * Used to smoothly track the camera as it follows.
 	 */
@@ -514,6 +514,7 @@ class FlxCamera extends FlxBasic
 	#end
 		
 		scroll = FlxDestroyUtil.put(scroll);
+		targetOffset = FlxDestroyUtil.put(targetOffset);
 		deadzone = FlxDestroyUtil.put(deadzone);
 		
 		target = null;
