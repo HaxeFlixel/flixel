@@ -252,7 +252,7 @@ abstract FlxColor(Int) from Int to Int
 	 * @param	Threshold Control how adjacent the colors will be (default +- 30 degrees)
 	 * @return 	Object containing 3 properties: original (the original color), warmer (the warmer analogous color) and colder (the colder analogous color)
 	 */
-	public inline function getAnalogousHarmony(Threshold:Int = 30):AnalogousHarmony
+	public inline function getAnalogousHarmony(Threshold:Int = 30):Harmony
 	{
 		var warmer:Int = fromHSB(FlxMath.wrapValue(Std.int(hue), - Threshold, 350), saturation, brightness, alphaFloat);
 		var colder:Int = fromHSB(FlxMath.wrapValue(Std.int(hue), Threshold, 350), saturation, brightness, alphaFloat);
@@ -267,7 +267,7 @@ abstract FlxColor(Int) from Int to Int
 	 * @param	Threshold Control how adjacent the colors will be to the Complement (default +- 30 degrees)
 	 * @return 	Object containing 3 properties: original (the original color), warmer (the warmer analogous color) and colder (the colder analogous color)
 	 */
-	public inline function getSplitComplementHarmony(Threshold:Int = 30):SplitComplementHarmony
+	public inline function getSplitComplementHarmony(Threshold:Int = 30):Harmony
 	{
 		var oppositeHue:Int = FlxMath.wrapValue(Std.int(hue), 180, 350);
 		var warmer:FlxColor = fromHSB(FlxMath.wrapValue(oppositeHue, - Threshold, 350), saturation, brightness, alphaFloat);
@@ -654,6 +654,5 @@ abstract FlxColor(Int) from Int to Int
 	}
 }
 
-typedef SplitComplementHarmony  = { original:FlxColor, warmer:FlxColor, colder:FlxColor }
-typedef AnalogousHarmony = { original:FlxColor, warmer:FlxColor, colder:FlxColor }
+typedef Harmony = { original:FlxColor, warmer:FlxColor, colder:FlxColor }
 typedef TriadicHarmony = { color1:FlxColor, color2:FlxColor, color3:FlxColor }
