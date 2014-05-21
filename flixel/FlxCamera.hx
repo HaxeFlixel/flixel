@@ -58,6 +58,10 @@ class FlxCamera extends FlxBasic
 	 */
 	public var target:FlxObject;
 	/**
+	 * Offset the camera target
+	 */
+	public var targetOffset:FlxPoint;
+	/**
 	 * Used to smoothly track the camera as it follows.
 	 */
 	public var followLerp:Float = 0;
@@ -414,6 +418,7 @@ class FlxCamera extends FlxBasic
 		
 		scroll = FlxPoint.get();
 		followLead = FlxPoint.get();
+		targetOffset = FlxPoint.get();
 		_point = FlxPoint.get();
 		_flashOffset = FlxPoint.get();
 		
@@ -556,13 +561,15 @@ class FlxCamera extends FlxBasic
 		//or doublecheck our deadzone and update accordingly.
 		if (deadzone == null)
 		{
-			focusOn(target.getMidpoint(_point));
+			target.getMidpoint(_point);
+			_point.addPoint(targetOffset);
+			focusOn(_point);
 		}
 		else
 		{
 			var edge:Float;
-			var targetX:Float = target.x;
-			var targetY:Float = target.y;
+			var targetX:Float = target.x + targetOffset.x;
+			var targetY:Float = target.y + targetOffset.y;
 			
 			if (style == SCREEN_BY_SCREEN) 
 			{
@@ -630,7 +637,7 @@ class FlxCamera extends FlxBasic
 			{
 				scroll.x += (_scrollTarget.x - scroll.x) * FlxG.elapsed / (FlxG.elapsed + followLerp * FlxG.elapsed);
 				scroll.y += (_scrollTarget.y - scroll.y) * FlxG.elapsed / (FlxG.elapsed + followLerp * FlxG.elapsed);
-			}	
+			}
 		}
 	}
 	
