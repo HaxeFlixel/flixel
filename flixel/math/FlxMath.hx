@@ -261,7 +261,6 @@ class FlxMath
 	
 	/**
 	 * Adds value to amount and ensures that the result always stays between 0 and max, by wrapping the value around.
-	 * Values must be positive integers, and are passed through Math.abs
 	 * 
 	 * @param 	value 	The value to add the amount to
 	 * @param 	amount 	The amount to add to the value
@@ -272,7 +271,7 @@ class FlxMath
 	{
 		var output:Int = value + amount;
 		
-		if (output > max)
+		if (output >= max)
 		{
 			output %= max;
 		}
