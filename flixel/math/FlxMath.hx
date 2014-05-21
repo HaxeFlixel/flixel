@@ -270,15 +270,19 @@ class FlxMath
 	 */
 	public static function wrapValue(value:Int, amount:Int, max:Int):Int
 	{
-		var diff:Int;
-
-		value = Std.int(Math.abs(value));
-		amount = Std.int(Math.abs(amount));
-		max = Std.int(Math.abs(max));
+		var output:Int = value + amount;
 		
-		diff = (value + amount) % max;
+		if (output > max)
+		{
+			output %= max;
+		}
 		
-		return diff;
+		while (output < 0)
+		{
+			output += max;
+		}
+		
+		return output;
 	}
 	
 	/**
