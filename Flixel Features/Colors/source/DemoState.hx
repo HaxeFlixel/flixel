@@ -264,7 +264,6 @@ class DemoState extends FlxState {
 		
 		var myColor = FlxColor.CRIMSON;
 		var complementHarmony:FlxColor = myColor.getComplementHarmony();
-		trace(complementHarmony.getColorInfo());
 		var splitComplementHarmony:SplitComplementHarmony = myColor.getSplitComplementHarmony();
 		var analogousHarmony:AnalogousHarmony = myColor.getAnalogousHarmony();
 		var triadicHarmony:TriadicHarmony = myColor.getTriadicHarmony();
