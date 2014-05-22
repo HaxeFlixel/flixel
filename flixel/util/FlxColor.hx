@@ -13,7 +13,7 @@ import flixel.math.FlxMath;
  * 
  * @author Joe Williamson (JoeCreates)
  */
-abstract FlxColor(Int) from Int to Int
+abstract FlxColor(Int) from Int to Int from Int to UInt
 {
 	public static inline var RED:FlxColor =           0xffff0000;
 	public static inline var YELLOW:FlxColor =        0xffffff00;
