@@ -26,8 +26,9 @@ import flixel.tweens.FlxTween;
 // TODO: rotateClockwise(): Takes the bitmapData from the given source FlxSprite and rotates it 90 degrees clockwise
 
 /**
- * Some handy functions for FlxSprite manipulation, mostly drawing-related.
- * Some of these work with FlxObject too.
+ * Some handy functions for FlxSprite (FlxObject) manipulation, mostly drawing-related.
+ * Note that stage quality impacts the results of the draw() functions - 
+ * use FlxG.stage.quality = flash.display.StageQuality.BEST; for best results.
  */
 class FlxSpriteUtil
 {
@@ -362,12 +363,12 @@ class FlxSpriteUtil
 		{
 			var midPoint = sprite.getGraphicMidpoint();
 			
-			if (X == -1) {
+			if (X == -1)
 				X = midPoint.x;
-			}
-			if (Y == -1) {
+			if (Y == -1)
 				Y = midPoint.y;
-			}
+			
+			midPoint.put();
 		}
 		
 		if (Radius < 1) 
