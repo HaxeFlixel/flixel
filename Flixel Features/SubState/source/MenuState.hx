@@ -16,14 +16,11 @@ class MenuState extends FlxState
 	private var openTempBtn:FlxButton;
 	private var sprites:MySpriteGroup;
 	
-	private var subStateColor:UInt;
+	private var subStateColor:FlxColor;
 	
 	override public function create():Void
 	{
 		FlxG.cameras.bgColor = FlxColor.WHITE;
-		
-		// This state will use mouse
-		//useMouse = true;
 		
 		// Some test group of sprites, used for showing substate system features
 		sprites = new MySpriteGroup(50);
@@ -44,7 +41,6 @@ class MenuState extends FlxState
 	
 	private function onTempClick():Void
 	{
-		//FlxG.play("Beep");
 		// This is temp substate, it will be destroyed after closing
 		var tempState:SubState = new SubState(subStateColor);
 		tempState.isPersistant = false;

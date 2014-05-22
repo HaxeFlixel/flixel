@@ -96,49 +96,8 @@ class Entity extends FlxSprite
 		return Math.atan2(Vector.y, Vector.x);
 	}
 	
-	public static function Interpolate(Value1:Float, Value2:Float, WeightOfValue2:Float):Float
+	public static function interpolate(Value1:Float, Value2:Float, WeightOfValue2:Float):Float
 	{
 		return (Value1 + (Value2 - Value1) * WeightOfValue2);
-	}
-	
-	public static function InterpolateRGB(ColorA:UInt, ColorB:UInt, WeightOfColorB:Float):UInt
-	{
-		var _r:Int = Std.int(Interpolate(0xff & (ColorA >> 16), 0xff & (ColorB >> 16), WeightOfColorB));
-		var _g:Int = Std.int(Interpolate(0xff & (ColorA >> 8), 0xff & (ColorB >> 8), WeightOfColorB));
-		var _b:Int = Std.int(Interpolate(0xff & ColorA, 0xff & ColorB, WeightOfColorB));
-		
-		return (_r << 16) | (_g << 8) | _b;
-	}
-	
-	/**
-	 * Modified from http://www.therealjoshua.com/code/flex/calico/src/com/flashfactory/calico/utils/ColorMathUtil.as
-	 * Converts Hue, Saturation, Value to RRGGBB format
-	 * 
-	 * @param	Hue Angle between 0-360
-	 * @param	Saturation Float between 0 and 1
-	 * @param	Value Float between 0 and 1
-	 */
-	public static function HSVtoRGB(Hue:Float, Saturation:Float, Value:Float):UInt
-	{
-		var hi:Int = Math.floor(Hue/60) % 6;
-		var f:Float = Hue/60 - Math.floor(Hue/60);
-		var p:Float = (Value * (1 - Saturation));
-		var q:Float = (Value * (1 - f * Saturation));
-		var t:Float = (Value * (1 - (1 - f) * Saturation));
-		
-		var r:Float=0;
-		var g:Float=0;
-		var b:Float=0;
-		switch(hi)
-		{
-			case 0: r = Value;       	g = t;              b = p;
-			case 1: r = q;				g = Value;        	b = p;
-			case 2: r = p;            	g = Value;       	b = t;
-			case 3: r = p;            	g = q;              b = Value;
-			case 4: r = t;				g = p;              b = Value;
-			case 5: r = Value;        	g = p;              b = q;
-		}
-		
-		return Math.round(r * 255) << 16 | Math.round(g * 255) << 8 | Math.round(b * 255);
 	}
 }

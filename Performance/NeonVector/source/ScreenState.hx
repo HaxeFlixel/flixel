@@ -238,7 +238,7 @@ class ScreenState extends FlxState
 		else return false;
 	}
 	
-	public static function makeParticle(Type:UInt, PositionX:Float, PositionY:Float, Angle:Float, Speed:Float, Color:UInt = FlxColor.WHITE, Glowing:Bool = false):Bool
+	public static function makeParticle(Type:UInt, PositionX:Float, PositionY:Float, Angle:Float, Speed:Float, Color:FlxColor = FlxColor.WHITE, Glowing:Bool = false):Bool
 	{
 		Particle.index += 1;
 		if (Particle.index >= Particle.max) Particle.index = 0;
@@ -255,18 +255,21 @@ class ScreenState extends FlxState
 		return _overwritten;
 	}
 	
-	public static function makeExplosion(Type:UInt, PositionX:Float, PositionY:Float, FloatOfParticles:UInt, Speed:Float, Color:UInt = 0xff00ff, BlendColor:Int = -1):Void
+	public static function makeExplosion(Type:UInt, PositionX:Float, PositionY:Float, FloatOfParticles:UInt, Speed:Float, Color:FlxColor = 0xff00ff, BlendColor:FlxColor = -1):Void
 	{
 		var _mixColors:Bool = true;
-		var _mixedColor:UInt=0;
-		if (BlendColor < 0) 
+		var _mixedColor:FlxColor = 0;
+		if (BlendColor != 0) 
 		{
 			BlendColor = _mixedColor = Color;
 			_mixColors = false;
 		}
 		for (i in 0...FloatOfParticles)
 		{
-			if (_mixColors) _mixedColor = Entity.InterpolateRGB(Color, BlendColor, FlxRandom.float());
+			if (_mixColors)
+			{
+				_mixedColor.interpolate(BlendColor, FlxRandom.float());
+			}
 			makeParticle(Type, PositionX, PositionY, 360 * FlxRandom.float(), Speed * (1 - 0.5 * FlxRandom.float()), _mixedColor);
 		}
 	}

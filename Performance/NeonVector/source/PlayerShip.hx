@@ -5,6 +5,7 @@ import flixel.FlxG;
 import flixel.math.FlxAngle;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRandom;
+import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 
 /**
@@ -168,8 +169,8 @@ class PlayerShip extends Entity
 		// Calculate the sideways velocity for the two side streams. The direction is perpendicular to the ship's velocity and the
 		// magnitude varies sinusoidally.
 		var _angle:Float = (45 + 15 * FlxRandom.float()) * Math.sin(0.01 * t);
-		var _sideColor:UInt = 0xc82609; // deep red
-		var _midColor:UInt = 0xffbb1e; // orange-yellow
+		var _sideColor:FlxColor = 0xc82609; // deep red
+		var _midColor:FlxColor = 0xffbb1e; // orange-yellow
 		var _exhaustX:Float = position.x + 20 * _point.x;
 		var _exhaustY:Float = position.y + 20 * _point.y;
 		

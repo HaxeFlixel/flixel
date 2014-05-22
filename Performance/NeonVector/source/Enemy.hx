@@ -20,8 +20,8 @@ class Enemy extends Entity
 	private var enemyPixels:Array<String>;
 	private var pointValue:Int = 10;
 	
-	private var _saveWidth : Int;
-	private var _saveHeight : Int;
+	private var _saveWidth:Int;
+	private var _saveHeight:Int;
 	
 	public function new(X:Float = 0, Y:Float = 0, Type:UInt = 0)
 	{
@@ -79,9 +79,8 @@ class Enemy extends Entity
 			#end
 			if (cooldownTimer.finished)
 			{
-				//cooldownTimer.abort();
 				cooldownTimer.reset(0.02 + 0.08 * FlxRandom.float());
-				var _color:UInt = 0xff00ff;//Entity.HSVtoRGB(5, 0.5, 0.8); // light purple
+				var _color:FlxColor = 0xff00ff; // light purple
 				var _speed:Float = 360 + FlxRandom.float() * 90;
 				var _offsetX:Float = 16 * Math.sin(FlxAngle.asRadians(_angle));
 				var _offsetY:Float = -16 * Math.cos(FlxAngle.asRadians(_angle));
@@ -107,7 +106,7 @@ class Enemy extends Entity
 		if (type == BLACK_HOLE)
 		{
 			var hue:Float = (0.180 * Lib.getTimer()) % 360;
-			var _color:UInt = Entity.HSVtoRGB(hue, 0.25, 1);
+			var _color = FlxColor.fromHSB(hue, 0.25, 1);
 			ScreenState.makeExplosion(Particle.IGNORE_GRAVITY, position.x, position.y, 100, Particle.MEDIUM_SPEED, _color);
 		}
 	}
@@ -120,7 +119,7 @@ class Enemy extends Entity
 		super.kill();
 		GameSound.randomSound(GameSound.sfxExplosion, 0.5);
 		
-		var _color:UInt;
+		var _color:FlxColor;
 		switch (Std.int(6 * FlxRandom.float()))
 		{
 			case 0: _color = 0xff3333;
@@ -207,7 +206,7 @@ class Enemy extends Entity
 			{
 				if (IsBlackHole)
 				{
-					var GravityStrength:Float = FlxG.elapsed * 15 * Entity.Interpolate(60, 0, Math.sqrt(DistanceSquared) / radius);
+					var GravityStrength:Float = FlxG.elapsed * 15 * Entity.interpolate(60, 0, Math.sqrt(DistanceSquared) / radius);
 					Object.velocity.x += GravityStrength * Math.cos(AngleFromCenters);
 					Object.velocity.y += GravityStrength * Math.sin(AngleFromCenters);
 				}

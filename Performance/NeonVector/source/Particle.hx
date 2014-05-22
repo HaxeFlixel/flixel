@@ -25,7 +25,7 @@ class Particle extends Entity
 	
 	public var lifespan:Float;
 	public var lineScale:Float = 0.06;
-	public var lineColor:UInt = FlxColor.WHITE;
+	public var lineColor:FlxColor = FlxColor.WHITE;
 	public var speedDecay:Float = 0.93;
 	public var initialSpeed:Float;
 	public var maxSpeed:Float;
@@ -106,7 +106,9 @@ class Particle extends Entity
 		var _speedRatio:Float = (velocity.x * velocity.x + velocity.y * velocity.y) / Math.pow(initialSpeed, 1.25);
 		if (_speedRatio > _lifespanRatio) _speedRatio = _lifespanRatio;
 		if (_speedRatio > 1) _speedRatio = 1;
-		var _color:UInt = Entity.InterpolateRGB(0x000000, lineColor, _speedRatio);
+		
+		var _color = new FlxColor();
+		_color.interpolate(lineColor, _speedRatio);
 		
 		gfx.lineStyle(3, _color);
 		gfx.moveTo(_startX,_startY);
