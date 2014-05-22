@@ -92,7 +92,7 @@ class FlxKeyboard implements IFlxInput
 		return checkKeyStatus(KeyArray, FlxKey.JUST_RELEASED);
 	}
 	
-		/**
+	/**
 	 * Get the name of the first key which is currently pressed.
 	 * 
 	 * @return	The name of the key or "" if none could be found.
@@ -479,60 +479,10 @@ class FlxKeyboard implements IFlxInput
 		}
 		#end
 		
-		// Everything from on here is only updated if input is enabled
-		if (!enabled) 
+		if (enabled) 
 		{
-			return;
+			updateKeyStates(c, false);
 		}
-		
-		#if !FLX_NO_SOUND_SYSTEM
-		// Sound tray controls
-		// Mute key
-		if (inKeyArray(FlxG.sound.muteKeys, c))
-		{
-			FlxG.sound.muted = !FlxG.sound.muted;
-			
-			if (FlxG.sound.volumeHandler != null)
-			{
-				FlxG.sound.volumeHandler(FlxG.sound.muted ? 0 : FlxG.sound.volume);
-			}
-			
-			#if !FLX_NO_SOUND_TRAY
-			if (FlxG.game.soundTray != null && FlxG.sound.soundTrayEnabled)
-			{
-				FlxG.game.soundTray.show();
-			}
-			#end
-		}
-		// Volume down
-		else if (inKeyArray(FlxG.sound.volumeDownKeys, c))
-		{
-			FlxG.sound.muted = false;
-			FlxG.sound.volume -= 0.1;
-			
-			#if !FLX_NO_SOUND_TRAY
-			if (FlxG.game.soundTray != null && FlxG.sound.soundTrayEnabled)
-			{
-				FlxG.game.soundTray.show();
-			}
-			#end
-		}
-		// Volume up
-		else if (inKeyArray(FlxG.sound.volumeUpKeys, c)) 
-		{
-			FlxG.sound.muted = false;
-			FlxG.sound.volume += 0.1;
-			
-			#if !FLX_NO_SOUND_TRAY
-			if (FlxG.game.soundTray != null && FlxG.sound.soundTrayEnabled)
-			{
-				FlxG.game.soundTray.show();
-			}
-			#end
-		}
-		#end
-		
-		updateKeyStates(c, false);
 	}
 	
 	/**
@@ -546,15 +496,7 @@ class FlxKeyboard implements IFlxInput
 		#if FLX_RECORD
 		if (FlxG.game.replaying && !inKeyArray(FlxG.debugger.toggleKeys, c) && inKeyArray(FlxG.vcr.cancelKeys, c))
 		{
-			if (FlxG.vcr.replayCallback != null)
-			{
-				FlxG.vcr.replayCallback();
-				FlxG.vcr.replayCallback = null;
-			}
-			else
-			{
-				FlxG.vcr.stopReplay();
-			}	
+			FlxG.vcr.cancelReplay();
 		}
 		#end
 		
@@ -567,7 +509,7 @@ class FlxKeyboard implements IFlxInput
 	/**
 	 * A Helper function to check whether an array of keycodes contains 
 	 * a certain key safely (returns false if the array is null).
-	 */
+	 */ 
 	private function inKeyArray(KeyArray:Array<String>, KeyCode:Int):Bool
 	{
 		if (KeyArray == null)
@@ -646,7 +588,7 @@ class FlxKeyboard implements IFlxInput
 	 * this function will return an array indicating
 	 * which keys are pressed and what state they are in.
 	 * 
-	 * @return	An array of key state data.  Null if there is no data.
+	 * @return	An array of key state data. Null if there is no data.
 	 */
 	private function record():Array<CodeValuePair>
 	{

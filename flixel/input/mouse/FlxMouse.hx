@@ -489,8 +489,8 @@ class FlxMouse extends FlxPointer implements IFlxInput
 	 */
 	private inline function onMouseLeave(_):Void
 	{
-		_rightButton.onUp();
-		_middleButton.onUp();
+		_rightButton.onUp(null);
+		_middleButton.onUp(null);
 	}
 	#end
 	

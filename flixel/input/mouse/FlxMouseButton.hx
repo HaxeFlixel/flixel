@@ -72,7 +72,7 @@ class FlxMouseButton implements IFlxDestroyable
 		_justPressedPosition = FlxDestroyUtil.put(_justPressedPosition);
 	}
 	
-	public function onDown(FlashEvent:MouseEvent):Void
+	public function onDown(_):Void
 	{
 		#if !FLX_NO_DEBUG
 		if ((_ID == LEFT) && FlxG.debugger.visible)
@@ -96,15 +96,7 @@ class FlxMouseButton implements IFlxDestroyable
 			{
 				if (key == "MOUSE" || key == "ANY")
 				{
-					if (FlxG.vcr.replayCallback != null)
-					{
-						FlxG.vcr.replayCallback();
-						FlxG.vcr.replayCallback = null;
-					}
-					else
-					{
-						FlxG.vcr.stopReplay();
-					}
+					FlxG.vcr.cancelReplay();
 					break;
 				}
 			}
@@ -122,11 +114,7 @@ class FlxMouseButton implements IFlxDestroyable
 		}
 	}
 	
-	/**
-	 * Internal event handler for input and focus.
-	 * @param FlashEvent Flash mouse event.
-	 */
-	public function onUp(?FlashEvent:MouseEvent):Void
+	public function onUp(_):Void
 	{
 		#if !FLX_NO_DEBUG
 		if ((FlxG.debugger.visible && FlxG.game.debugger.hasMouse) 

@@ -248,7 +248,7 @@ class FlxG
 	/**
 	 * Contains all the functions needed for recording and replaying.
 	 */
-	public static var vcr(default, null):VCRFrontEnd = new VCRFrontEnd();
+	public static var vcr(default, null):VCRFrontEnd;
 	
 	/**
 	 * Contains things related to bimtaps, for example regarding the bitmap cache and the cache itself.
@@ -267,7 +267,7 @@ class FlxG
 	/**
 	 * Contains a list of all sounds and other things to manage or play() sounds.
 	 */
-	public static var sound(default, null):SoundFrontEnd = new SoundFrontEnd();
+	public static var sound(default, null):SoundFrontEnd;
 	#end
 	
 	/**
@@ -464,11 +464,12 @@ class FlxG
 		#end
 		save.bind("flixel");
 		
-		#if !FLX_NO_SOUND_SYSTEM
-		sound.loadSavedPrefs();
-		#end
-		
 		plugins = new PluginFrontEnd();
+		vcr = new VCRFrontEnd();
+		
+		#if !FLX_NO_SOUND_SYSTEM
+		sound = new SoundFrontEnd();
+		#end
 		
 		FlxAssets.init();
 	}

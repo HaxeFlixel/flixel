@@ -24,7 +24,7 @@ class SoundFrontEnd
 	public var muted:Bool = false;
 	/**
 	 * Set this hook to get a callback whenever the volume changes.
-	 * Function should take the form myVolumeHandler(Volume:Number).
+	 * Function should take the form myVolumeHandler(volume:Float).
 	 */
 	public var volumeHandler:Float->Void;
 	
@@ -261,7 +261,48 @@ class SoundFrontEnd
 		}
 	}
 	
-	private function new() {}
+	/**
+	 * Toggles muted, also activating the sound tray.
+	 */ 
+	public function toggleMuted():Void
+	{
+		muted = !muted;
+		
+		if (volumeHandler != null)
+		{
+			volumeHandler(muted ? 0 : volume);
+		}
+		
+		showSoundTray();
+	}
+	
+	/**
+	 * Changes the volume by a certain amount, also activating the sound tray.
+	 */ 
+	public function changeVolume(Amount:Float):Void
+	{
+		muted = false;
+		volume += Amount;
+		showSoundTray();
+	}
+	
+	/**
+	 * Shows the sound tray if it is enabled.
+	 */
+	public function showSoundTray():Void
+	{
+		#if !FLX_NO_SOUND_TRAY
+		if (FlxG.game.soundTray != null && soundTrayEnabled)
+		{
+			FlxG.game.soundTray.show();
+		}
+		#end
+	}
+	
+	private function new()
+	{
+		loadSavedPrefs();
+	}
 	
 	/**
 	 * Called by the game loop to make sure the sounds get updated each frame.
@@ -269,14 +310,17 @@ class SoundFrontEnd
 	private function update():Void
 	{
 		if (music != null && music.active)
-		{
 			music.update();
-		}
 		
 		if (list != null && list.active)
-		{
 			list.update();
-		}
+		
+		if (FlxG.keys.anyJustReleased(muteKeys))
+			toggleMuted();
+		else if (FlxG.keys.anyJustReleased(volumeUpKeys))
+			changeVolume(0.1);
+		else if (FlxG.keys.anyJustReleased(volumeDownKeys))
+			changeVolume(-0.1);
 	}
 	
 	private function onFocusLost():Void
@@ -320,18 +364,10 @@ class SoundFrontEnd
 		{
 			volume = FlxG.save.data.volume;
 		}
-		else 
-		{
-			volume = 0.5; 
-		}
 		
 		if (FlxG.save.data.mute != null)
 		{
 			muted = FlxG.save.data.mute;
-		}
-		else 
-		{
-			muted = false; 
 		}
 	}
 	
