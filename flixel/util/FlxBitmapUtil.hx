@@ -80,8 +80,8 @@ class FlxBitmapUtil
 		var currX:Int = destX;
 		var currY:Int = destY;
 		
-		var sourceColor:Int;
-		var destColor:Int;
+		var sourceColor:FlxColor;
+		var destColor:FlxColor;
 		
 		var sourceRed:Int;
 		var sourceGreen:Int;
@@ -98,7 +98,7 @@ class FlxBitmapUtil
 		var resultBlue:Int;
 		var resultAlpha:Int;
 		
-		var resultColor:Int = 0x0;
+		var resultColor:FlxColor = 0x0;
 		destBitmapData.lock();
 		// iterate througn pixels using following rule:
 		// new redDest = [(redSrc * redMultiplier) + (redDest * (256 - redMultiplier))] / 256; 
@@ -177,7 +177,7 @@ class FlxBitmapUtil
 			var r1:Int, g1:Int, b1:Int;
 			var r2:Int, g2:Int, b2:Int;
 			var alpha1:Int, alpha2:Int;
-			var resultAlpha:Int, resultColor:Int;
+			var resultAlpha:Int, resultColor:FlxColor;
 			var resultR:Int, resultG:Int, resultB:Int;
 			var diffR:Int, diffG:Int, diffB:Int, diffA:Int;
 			var checkAlpha:Bool = true;

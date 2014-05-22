@@ -261,7 +261,6 @@ class FlxMath
 	
 	/**
 	 * Adds value to amount and ensures that the result always stays between 0 and max, by wrapping the value around.
-	 * Values must be positive integers, and are passed through Math.abs
 	 * 
 	 * @param 	value 	The value to add the amount to
 	 * @param 	amount 	The amount to add to the value
@@ -270,15 +269,19 @@ class FlxMath
 	 */
 	public static function wrapValue(value:Int, amount:Int, max:Int):Int
 	{
-		var diff:Int;
-
-		value = Std.int(Math.abs(value));
-		amount = Std.int(Math.abs(amount));
-		max = Std.int(Math.abs(max));
+		var output:Int = value + amount;
 		
-		diff = (value + amount) % max;
+		if (output >= max)
+		{
+			output %= max;
+		}
 		
-		return diff;
+		while (output < 0)
+		{
+			output += max;
+		}
+		
+		return output;
 	}
 	
 	/**

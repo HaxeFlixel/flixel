@@ -9,18 +9,17 @@ import flash.geom.Rectangle;
 import flixel.animation.FlxAnimationController;
 import flixel.FlxBasic;
 import flixel.FlxG;
+import flixel.math.FlxAngle;
+import flixel.math.FlxMath;
+import flixel.math.FlxPoint;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.system.FlxAssets.FlxTextureAsset;
 import flixel.system.layer.DrawStackItem;
 import flixel.system.layer.frames.FlxFrame;
 import flixel.system.layer.frames.FlxSpriteFrames;
 import flixel.system.layer.Region;
-import flixel.math.FlxAngle;
 import flixel.util.FlxColor;
-import flixel.util.FlxColorUtil;
 import flixel.util.FlxDestroyUtil;
-import flixel.math.FlxMath;
-import flixel.math.FlxPoint;
 import flixel.util.loaders.CachedGraphics;
 import flixel.util.loaders.TexturePackerData;
 import flixel.util.loaders.TextureRegion;
@@ -132,7 +131,7 @@ class FlxSprite extends FlxObject
 	 * Tints the whole sprite to a color (0xRRGGBB format) - similar to OpenGL vertex colors. You can use
 	 * 0xAARRGGBB colors, but the alpha value will simply be ignored. To change the opacity use alpha. 
 	 */
-	public var color(default, set):Int = 0xffffff;
+	public var color(default, set):FlxColor = 0xffffff;
 	
 	public var colorTransform(default, null):ColorTransform;
 	
@@ -600,7 +599,7 @@ class FlxSprite extends FlxObject
 	 * @param	Key			Optional parameter - specify a string key to identify this graphic in the cache.  Trumps Unique flag.
 	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function makeGraphic(Width:Int, Height:Int, Color:Int = FlxColor.WHITE, Unique:Bool = false, ?Key:String):FlxSprite
+	public function makeGraphic(Width:Int, Height:Int, Color:FlxColor = FlxColor.WHITE, Unique:Bool = false, ?Key:String):FlxSprite
 	{
 		bakedRotationAngle = 0;
 		cachedGraphics = FlxG.bitmap.create(Width, Height, Color, Unique, Key);
@@ -1017,7 +1016,7 @@ class FlxSprite extends FlxObject
 	 * @param	FetchPositions		Whether we need to store positions of pixels which colors were replaced
 	 * @return	Array replaced pixels positions
 	 */
-	public function replaceColor(Color:UInt, NewColor:Int, FetchPositions:Bool = false):Array<FlxPoint>
+	public function replaceColor(Color:UInt, NewColor:FlxColor, FetchPositions:Bool = false):Array<FlxPoint>
 	{
 		var positions:Array<FlxPoint> = null;
 		if (FetchPositions)
@@ -1067,7 +1066,7 @@ class FlxSprite extends FlxObject
 	 */
 	public function setColorTransform(redMultiplier:Float = 1.0, greenMultiplier:Float = 1.0, blueMultiplier:Float = 1.0, alphaMultiplier:Float = 1.0, redOffset:Float = 0, greenOffset:Float = 0, blueOffset:Float = 0, alphaOffset:Float = 0):Void
 	{
-		color = FlxColorUtil.getColor24(Std.int(redMultiplier * 255), Std.int(greenMultiplier * 255), Std.int(blueMultiplier * 255));
+		color = FlxColor.fromRGBFloat(redMultiplier, greenMultiplier, blueMultiplier).to24Bit();
 		alpha = alphaMultiplier;
 		
 		if (colorTransform == null)
@@ -1096,13 +1095,13 @@ class FlxSprite extends FlxObject
 		{
 			if (colorTransform == null)
 			{
-				colorTransform = new ColorTransform((color >> 16) / 255, (color >> 8 & 0xff) / 255, (color & 0xff) / 255, alpha);
+				colorTransform = new ColorTransform(color.redFloat, color.blueFloat, color.greenFloat, alpha);
 			}
 			else
 			{
-				colorTransform.redMultiplier = (color >> 16) / 255;
-				colorTransform.greenMultiplier = (color >> 8 & 0xff) / 255;
-				colorTransform.blueMultiplier = (color & 0xff) / 255;
+				colorTransform.redMultiplier = color.redFloat;
+				colorTransform.greenMultiplier = color.greenFloat;
+				colorTransform.blueMultiplier = color.blueFloat;
 				colorTransform.alphaMultiplier = alpha;
 			}
 			useColorTransform = true;
@@ -1153,7 +1152,7 @@ class FlxSprite extends FlxObject
 		else // 2. Check pixel at (_flashPoint.x, _flashPoint.y)
 		{
 			var frameData:BitmapData = getFlxFrameBitmapData();
-			var pixelColor:Int = frameData.getPixel32(Std.int(_flashPoint.x), Std.int(_flashPoint.y));
+			var pixelColor:FlxColor = frameData.getPixel32(Std.int(_flashPoint.x), Std.int(_flashPoint.y));
 			var pixelAlpha:Int = (pixelColor >> 24) & 0xFF;
 			return (pixelAlpha * alpha >= Mask);
 		}
@@ -1512,7 +1511,7 @@ class FlxSprite extends FlxObject
 		return alpha;
 	}
 	
-	private function set_color(Color:Int):Int
+	private function set_color(Color:FlxColor):Int
 	{
 		Color &= 0x00ffffff;
 		if (color == Color)

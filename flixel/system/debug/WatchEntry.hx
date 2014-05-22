@@ -6,11 +6,11 @@ import flash.text.TextField;
 import flash.text.TextFieldType;
 import flash.text.TextFormat;
 import flixel.FlxG;
-import flixel.system.FlxAssets;
-import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import flixel.math.FlxPoint;
+import flixel.system.FlxAssets;
+import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import flixel.util.FlxStringUtil;
-import openfl.Assets;
 
 /**
  * Helper class for the debugger overlay's Watch window.
@@ -114,7 +114,7 @@ class WatchEntry implements IFlxDestroyable
 		
 		var fontName:String = FlxAssets.FONT_DEBUGGER;
 		// quickWatch is green, normal watch is white
-		var color:Int = 0xffffff;
+		var color:FlxColor = 0xffffff;
 		if (quickWatch)
 		{
 			color = 0xA5F1ED;

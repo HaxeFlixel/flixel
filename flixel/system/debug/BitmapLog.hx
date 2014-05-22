@@ -1,6 +1,4 @@
 package flixel.system.debug;
-import flixel.util.FlxBitmapUtil;
-import flixel.util.FlxStringUtil;
 
 #if !FLX_NO_DEBUG
 import flash.display.Bitmap;
@@ -19,6 +17,8 @@ import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.util.FlxSpriteUtil;
 import flixel.system.debug.FlxDebugger;
+import flixel.util.FlxBitmapUtil;
+import flixel.util.FlxStringUtil;
 
 /**
  * An output window that lets you paste BitmapData in the debugger overlay.

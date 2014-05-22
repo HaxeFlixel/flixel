@@ -27,14 +27,14 @@ class FlxSubState extends FlxState
 	 */ 
 	private var _parentState:FlxState;
 	
-	private var _bgColor:Int;
+	private var _bgColor:FlxColor;
  
 	private var _created:Bool = false;
 	
 	/**
 	 * @param	BGColor		background color for this substate
 	 */
-	public function new(BGColor:Int = FlxColor.TRANSPARENT)
+	public function new(BGColor:FlxColor = 0)
 	{
 		super();
 		closeCallback = null;

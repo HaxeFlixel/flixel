@@ -8,19 +8,14 @@ import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
-import flixel.group.FlxGroup;
-import flixel.group.FlxTypedGroup;
-import flixel.system.FlxAssets;
+import flixel.math.FlxMath;
+import flixel.math.FlxPoint;
 import flixel.system.layer.DrawStackItem;
 import flixel.system.layer.frames.FlxSpriteFrames;
 import flixel.system.layer.Region;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
-import flixel.math.FlxMath;
-import flixel.math.FlxPoint;
-import flixel.math.FlxRandom;
-import flixel.math.FlxRect;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.loaders.CachedGraphics;
 import flixel.util.loaders.TextureRegion;
@@ -328,7 +323,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		_helperPoint.y = Math.floor((y - Math.floor(Camera.scroll.y) * scrollFactor.y) * 5) / 5 + 0.1;
 		
 		var tileID:Int;
-		var debugColor:Int;
+		var debugColor:FlxColor;
 		var drawX:Float;
 		var drawY:Float;
 	
@@ -1067,7 +1062,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 * Just generates a wireframe box the size of a tile with the specified color.
 	 */
 	#if (FLX_RENDER_BLIT && !FLX_NO_DEBUG)
-	private function makeDebugTile(Color:Int):BitmapData
+	private function makeDebugTile(Color:FlxColor):BitmapData
 	{
 		var debugTile:BitmapData;
 		debugTile = new BitmapData(_tileWidth, _tileHeight, true, 0);

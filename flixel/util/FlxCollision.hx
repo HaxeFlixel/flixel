@@ -228,8 +228,7 @@ class FlxCollision
 		// How deep is pointX/Y within the rect?
 		var test:BitmapData = Target.framePixels;
 		
-		var pixelAlpha:Int = 0;  
-		pixelAlpha = FlxColorUtil.getAlpha(test.getPixel32(Math.floor(PointX - Target.x), Math.floor(PointY - Target.y)));
+		var pixelAlpha = FlxColor.fromInt(test.getPixel32(Math.floor(PointX - Target.x), Math.floor(PointY - Target.y))).alpha;
 		
 		#if FLX_RENDER_TILE
 		pixelAlpha = Std.int(pixelAlpha * Target.alpha);

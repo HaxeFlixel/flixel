@@ -1,6 +1,4 @@
 package flixel.system.debug;
-import flixel.util.FlxDestroyUtil;
-
 #if !FLX_NO_DEBUG
 
 import flash.display.BitmapData;
@@ -20,8 +18,9 @@ import flixel.system.debug.Watch;
 import flixel.system.FlxAssets;
 import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxArrayUtil;
-import flixel.util.FlxColor;
 import flixel.util.FlxStringUtil;
+import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
 
 @:bitmap("assets/images/debugger/flixel.png")
 private class GraphicFlixel extends BitmapData {}
