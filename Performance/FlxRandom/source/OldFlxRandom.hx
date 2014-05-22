@@ -2,7 +2,6 @@ package;
 
 import flixel.math.FlxMath;
 import flixel.util.FlxArrayUtil;
-import flixel.util.FlxColorUtil;
 
 /**
  * This is the old, bad FlxRandom. Boo! Sporadic determinism! Boo!

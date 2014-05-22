@@ -8,7 +8,6 @@ import flixel.group.FlxGroup;
 import flixel.text.FlxText;
 import flixel.ui.FlxBar;
 import flixel.util.FlxColor;
-import flixel.util.FlxColorUtil;
 import flixel.math.FlxRandom;
 import flixel.util.FlxSpriteUtil;
 
@@ -72,7 +71,10 @@ class MenuState extends FlxState
 	public function addItem():Void
 	{	
 		// each iteration of our loop, we just create a 10x10 FlxSprite in a random x, y position and random color
-		_grpFinished.add(new FlxSprite(FlxRandom.intRanged(0, FlxG.width), FlxRandom.intRanged(0, FlxG.height)).makeGraphic(10, 10, FlxColorUtil.getRandomColor(0, 255, 255)));
+		var sprite = new FlxSprite(FlxRandom.intRanged(0, FlxG.width), FlxRandom.intRanged(0, FlxG.height));
+		sprite.makeGraphic(10, 10, FlxRandom.color(0, 255, 255));
+		_grpFinished.add(sprite);
+		
 		// then we update our progress bar and progress bar text
 		_bar.currentValue = (_grpFinished.members.length / _maxItems) * 100;
 		_barText.text = "Loading... " + _grpFinished.members.length + " / " + _maxItems;

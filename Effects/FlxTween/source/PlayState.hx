@@ -216,55 +216,55 @@ class PlayState extends FlxState
 				FlxSpriteUtil.screenCenter(_sprite);
 				
 			case COLOR:
-				_tween = FlxTween.color(_sprite, DURATION, FlxColor.BLACK, FlxColor.BLUE, 1, 0, options);
+				_tween = FlxTween.color(_sprite, DURATION, FlxColor.BLACK, FlxColor.fromRGB(0, 0, 255, 0), options);
 				FlxSpriteUtil.screenCenter(_sprite);
 				
 			case LINEAR_MOTION:
-				_tween = FlxTween.linearMotion(	_sprite,
-												_sprite.x, _sprite.y,
-												_max.x, _sprite.y,
-												DURATION, true, options);
+				_tween = FlxTween.linearMotion(_sprite,
+				                               _sprite.x, _sprite.y,
+				                               _max.x, _sprite.y,
+				                               DURATION, true, options);
 				
 			case LINEAR_PATH:
 				_sprite.y = (_max.y - _sprite.height);
 				var path:Array<FlxPoint> = [FlxPoint.get(_sprite.x, _sprite.y),
-											FlxPoint.get(_sprite.x + (_max.x - _min.x) * 0.5, _min.y),
-											FlxPoint.get(_max.x, _sprite.y)];
+				                            FlxPoint.get(_sprite.x + (_max.x - _min.x) * 0.5, _min.y),
+				                            FlxPoint.get(_max.x, _sprite.y)];
 				_tween = FlxTween.linearPath(_sprite, path, DURATION, true, options);
 				
 			case CIRCULAR_MOTION:
-				_tween = FlxTween.circularMotion(	_sprite,
-													(FlxG.width * 0.5) - (_sprite.width / 2), 
-													(FlxG.height * 0.5) - (_sprite.height / 2),
-													_sprite.width, 359,
-													true, DURATION, true, options);
+				_tween = FlxTween.circularMotion(_sprite,
+				                                 (FlxG.width * 0.5) - (_sprite.width / 2), 
+				                                 (FlxG.height * 0.5) - (_sprite.height / 2),
+				                                 _sprite.width, 359,
+				                                 true, DURATION, true, options);
 				
 			case CUBIC_MOTION:
 				_sprite.y = _min.y;
-				_tween = FlxTween.cubicMotion(	_sprite,
-												_sprite.x, _sprite.y,
-												_sprite.x + (_max.x - _min.x) * 0.25, _max.y,
-												_sprite.x + (_max.x - _min.x) * 0.75, _max.y,
-												_max.x, _sprite.y,
-												DURATION, options);
+				_tween = FlxTween.cubicMotion(_sprite,
+				                              _sprite.x, _sprite.y,
+				                              _sprite.x + (_max.x - _min.x) * 0.25, _max.y,
+				                              _sprite.x + (_max.x - _min.x) * 0.75, _max.y,
+				                              _max.x, _sprite.y,
+				                              DURATION, options);
 					
 			case QUAD_MOTION:
 				var rangeModifier = 100;
-				_tween = FlxTween.quadMotion(	_sprite,
-												_sprite.x, 					// start x
-												_sprite.y + rangeModifier,	// start y
-												_sprite.x + (_max.x - _min.x) * 0.5, // control x
-												_min.y - rangeModifier, 	// control y 
-												_max.x, 					// end x
-												_sprite.y + rangeModifier,	// end y
-												DURATION, true, options);
+				_tween = FlxTween.quadMotion(_sprite,
+				                             _sprite.x,                 // start x
+				                             _sprite.y + rangeModifier, // start y
+				                             _sprite.x + (_max.x - _min.x) * 0.5, // control x
+				                             _min.y - rangeModifier,    // control y 
+				                             _max.x,                    // end x
+				                             _sprite.y + rangeModifier, // end y
+				                             DURATION, true, options);
 	
 			case QUAD_PATH:
 				var path:Array<FlxPoint> = [FlxPoint.get(_sprite.x, _sprite.y),
-											FlxPoint.get(_sprite.x + (_max.x - _min.x) * 0.5, _max.y),
-											FlxPoint.get(_max.x - (_max.x / 2) + (_sprite.width / 2), _sprite.y), 
-											FlxPoint.get(_max.x - (_max.x / 2) + (_sprite.width / 2), _min.y),
-											FlxPoint.get(_max.x, _sprite.y)];
+				                            FlxPoint.get(_sprite.x + (_max.x - _min.x) * 0.5, _max.y),
+				                            FlxPoint.get(_max.x - (_max.x / 2) + (_sprite.width / 2), _sprite.y), 
+				                            FlxPoint.get(_max.x - (_max.x / 2) + (_sprite.width / 2), _min.y),
+				                            FlxPoint.get(_max.x, _sprite.y)];
 				_tween = FlxTween.quadPath(_sprite, path, DURATION, true, options);
 		}
 		
