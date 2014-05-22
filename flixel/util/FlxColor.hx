@@ -13,7 +13,7 @@ import flixel.math.FlxMath;
  * 
  * @author Joe Williamson (JoeCreates)
  */
-abstract FlxColor(Int) from Int to Int from Int to UInt
+abstract FlxColor(Int) from Int from UInt to Int to UInt
 {
 	public static inline var RED:FlxColor =           0xffff0000;
 	public static inline var YELLOW:FlxColor =        0xffffff00;
@@ -699,6 +699,20 @@ abstract FlxColor(Int) from Int to Int from Int to UInt
 	private inline function minColor():Float
 	{
 		return Math.min(redFloat, Math.min(greenFloat, blueFloat));
+	}
+	
+	@:commutative
+	@:op(A == B)
+	private static inline function equal(lhs:FlxColor, rhs:Null<Int>):Bool
+	{
+		return lhs == cast rhs;
+	}
+	
+	@:commutative
+	@:op(A != B)
+	private static inline function notEqual(lhs:FlxColor, rhs:Null<Int>):Bool
+	{
+		return lhs != cast rhs;
 	}
 }
 
