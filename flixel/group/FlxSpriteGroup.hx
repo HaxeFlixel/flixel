@@ -445,40 +445,44 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 * Applies a function to all members
 	 * 
 	 * @param   Function   A function that modifies one element at a time
+	 * @param   Recurse    Whether or not to apply the function to members of subgroups as well
 	 */
-	public inline function forEach(Function:T->Void):Void
+	public inline function forEach(Function:T->Void, Recurse:Bool = false):Void
 	{
-		group.forEach(Function);
+		group.forEach(Function, Recurse);
 	}
 
 	/**
 	 * Applies a function to all alive members
 	 * 
 	 * @param   Function   A function that modifies one element at a time
+	 * @param   Recurse    Whether or not to apply the function to members of subgroups as well
 	 */
-	public inline function forEachAlive(Function:T->Void):Void
+	public inline function forEachAlive(Function:T->Void, Recurse:Bool = false):Void
 	{
-		group.forEachAlive(Function);
+		group.forEachAlive(Function, Recurse);
 	}
 
 	/**
 	 * Applies a function to all dead members
 	 * 
 	 * @param   Function   A function that modifies one element at a time
+	 * @param   Recurse    Whether or not to apply the function to members of subgroups as well
 	 */
-	public inline function forEachDead(Function:T->Void):Void
+	public inline function forEachDead(Function:T->Void, Recurse:Bool = false):Void
 	{
-		group.forEachDead(Function);
+		group.forEachDead(Function, Recurse);
 	}
 
 	/**
 	 * Applies a function to all existing members
 	 * 
 	 * @param   Function   A function that modifies one element at a time
+	 * @param   Recurse    Whether or not to apply the function to members of subgroups as well
 	 */
-	public inline function forEachExists(Function:T->Void):Void
+	public inline function forEachExists(Function:T->Void, Recurse:Bool = false):Void
 	{
-		group.forEachExists(Function);
+		group.forEachExists(Function, Recurse);
 	}
 	
 	/**
@@ -486,10 +490,11 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 * 
 	 * @param   ObjectClass   A class that objects will be checked against before Function is applied, ex: FlxSprite
 	 * @param   Function      A function that modifies one element at a time
+	 * @param   Recurse       Whether or not to apply the function to members of subgroups as well
 	 */
-	public inline function forEachOfType<K>(ObjectClass:Class<K>, Function:K->Void)
+	public inline function forEachOfType<K>(ObjectClass:Class<K>, Function:K->Void, Recurse:Bool = false)
 	{
-		group.forEachOfType(ObjectClass, Function);
+		group.forEachOfType(ObjectClass, Function, Recurse);
 	}
 	
 	/**

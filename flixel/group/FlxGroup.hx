@@ -660,8 +660,6 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	
 	/**
 	 * Iterate through every member
-	 * 
-	 * @return An iterator
 	 */
 	public inline function iterator(?filter:T->Bool):FlxTypedGroupIterator<T>
 	{
@@ -672,8 +670,9 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 * Applies a function to all members
 	 * 
 	 * @param   Function   A function that modifies one element at a time
+	 * @param   Recurse    Whether or not to apply the function to members of subgroups as well
 	 */
-	public function forEach(Function:T->Void)
+	public function forEach(Function:T->Void, Recurse:Bool = false)
 	{
 		var i:Int = 0;
 		var basic:FlxBasic = null;
@@ -683,7 +682,18 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			basic = members[i++];
 			
 			if (basic != null)
+			{
+				if (Recurse)
+				{
+					var group = resolveGroup(basic);
+					if (group != null)
+					{
+						group.forEach(cast Function, Recurse);
+					}
+				}
+				
 				Function(cast basic);
+			}
 		}
 	}
 	
@@ -691,8 +701,9 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 * Applies a function to all alive members
 	 * 
 	 * @param   Function   A function that modifies one element at a time
+	 * @param   Recurse    Whether or not to apply the function to members of subgroups as well
 	 */
-	public function forEachAlive(Function:T->Void)
+	public function forEachAlive(Function:T->Void, Recurse:Bool = false)
 	{
 		var i:Int = 0;
 		var basic:FlxBasic = null;
@@ -702,7 +713,18 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			basic = members[i++];
 			
 			if (basic != null && basic.exists && basic.alive)
+			{
+				if (Recurse)
+				{
+					var group = resolveGroup(basic);
+					if (group != null)
+					{
+						group.forEachAlive(cast Function, Recurse);
+					}
+				}
+				
 				Function(cast basic);
+			}
 		}
 	}
 
@@ -710,8 +732,9 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 * Applies a function to all dead members
 	 * 
 	 * @param   Function   A function that modifies one element at a time
+	 * @param   Recurse    Whether or not to apply the function to members of subgroups as well
 	 */
-	public function forEachDead(Function:T->Void)
+	public function forEachDead(Function:T->Void, Recurse:Bool = false)
 	{
 		var i:Int = 0;
 		var basic:FlxBasic = null;
@@ -721,7 +744,18 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			basic = members[i++];
 			
 			if (basic != null && !basic.alive)
+			{
+				if (Recurse)
+				{
+					var group = resolveGroup(basic);
+					if (group != null)
+					{
+						group.forEachDead(cast Function, Recurse);
+					}
+				}
+				
 				Function(cast basic);
+			}
 		}
 	}
 
@@ -729,8 +763,9 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 * Applies a function to all existing members
 	 * 
 	 * @param   Function   A function that modifies one element at a time
+	 * @param   Recurse    Whether or not to apply the function to members of subgroups as well
 	 */
-	public function forEachExists(Function:T->Void)
+	public function forEachExists(Function:T->Void, Recurse:Bool = false)
 	{
 		var i:Int = 0;
 		var basic:FlxBasic = null;
@@ -740,7 +775,18 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			basic = members[i++];
 			
 			if (basic != null && basic.exists)
+			{
+				if (Recurse)
+				{
+					var group = resolveGroup(basic);
+					if (group != null)
+					{
+						group.forEachExists(cast Function, Recurse);
+					}
+				}
+				
 				Function(cast basic);
+			}
 		}
 	}
 	
@@ -749,8 +795,9 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 * 
 	 * @param   ObjectClass   A class that objects will be checked against before Function is applied, ex: FlxSprite
 	 * @param   Function      A function that modifies one element at a time
+	 * @param   Recurse       Whether or not to apply the function to members of subgroups as well 
 	 */
-	public function forEachOfType<K>(ObjectClass:Class<K>, Function:K->Void)
+	public function forEachOfType<K>(ObjectClass:Class<K>, Function:K->Void, Recurse:Bool = false)
 	{
 		var i:Int = 0;
 		var basic:FlxBasic = null;
@@ -760,7 +807,18 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			basic = members[i++];
 			
 			if (basic != null &&  Std.is(basic, ObjectClass))
+			{
+				if (Recurse)
+				{
+					var group = resolveGroup(basic);
+					if (group != null)
+					{
+						group.forEachOfType(ObjectClass, cast Function, Recurse);
+					}
+				}
+				
 				Function(cast basic);
+			}
 		}
 	}
 	
