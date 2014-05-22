@@ -4,7 +4,6 @@ import flash.display.BlendMode;
 import flixel.util.FlxColor;
 import flixel.effects.particles.FlxEmitter;
 import flixel.effects.particles.FlxParticle;
-import flixel.effects.particles.FlxTypedEmitter.Bounds;
 import flixel.math.FlxRandom;
 
 class EnemyGibs extends FlxEmitter

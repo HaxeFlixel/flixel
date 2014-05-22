@@ -6,12 +6,6 @@ class Button extends FlxButton
 {
 	/**
 	 * Creates a very simple button with a visual style matching the rest of FlxPongApi.
-	 * 
-	 * @param	X
-	 * @param	Y
-	 * @param	Label
-	 * @param	?Callback
-	 * @param	Width
 	 */
 	override public function new(X:Int, Y:Int, Label:String, ?Callback:String->Void, Width:Int = 80)
 	{

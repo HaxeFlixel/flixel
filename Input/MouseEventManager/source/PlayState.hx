@@ -3,7 +3,7 @@ package;
 import flixel.addons.nape.FlxNapeState;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.group.FlxTypedGroup;
+import flixel.group.FlxGroup;
 import flixel.math.FlxRandom;
 import nape.constraint.DistanceJoint;
 import nape.geom.Vec2;

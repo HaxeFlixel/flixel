@@ -14,7 +14,7 @@ import flixel.math.FlxAngle;
 import flixel.util.FlxColor;
 import flixel.math.FlxRandom;
 import flixel.util.FlxCollision;
-import flixel.group.FlxTypedGroup;
+import flixel.group.FlxGroup;
 import openfl.display.FPS;
 
 using StringTools;	// so we can use String.replace() easily, yay!

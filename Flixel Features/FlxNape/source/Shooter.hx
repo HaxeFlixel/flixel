@@ -4,7 +4,7 @@ import flixel.addons.nape.FlxNapeState;
 import flixel.effects.particles.FlxEmitter;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.group.FlxTypedGroup;
+import flixel.group.FlxGroup;
 import flixel.input.mouse.FlxMouseEventManager;
 import flixel.math.FlxAngle;
 import flixel.math.FlxPoint;

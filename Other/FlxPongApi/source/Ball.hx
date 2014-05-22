@@ -1,6 +1,6 @@
 package;
 
-import flixel.effects.particles.FlxTypedEmitter.Bounds;
+import flixel.effects.particles.FlxEmitter.Bounds;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.math.FlxAngle;
