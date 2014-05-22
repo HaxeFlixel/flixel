@@ -1,7 +1,7 @@
 package flixel.input;
 
 import flixel.FlxCamera;
-import flixel.group.FlxTypedGroup;
+import flixel.group.FlxGroup;
 import flixel.math.FlxPoint;
 import flixel.util.FlxStringUtil;
 

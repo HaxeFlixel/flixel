@@ -4,7 +4,7 @@ package flixel.system.frontEnds;
 import flash.media.Sound;
 import flash.media.SoundTransform;
 import flixel.FlxG;
-import flixel.group.FlxTypedGroup;
+import flixel.group.FlxGroup;
 import flixel.system.FlxAssets.FlxSoundAsset;
 import flixel.system.FlxSound;
 import flixel.math.FlxMath;

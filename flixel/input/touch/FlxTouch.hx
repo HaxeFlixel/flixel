@@ -5,10 +5,10 @@ import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
-import flixel.group.FlxTypedGroup;
+import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.FlxSwipe;
-import flixel.util.FlxDestroyUtil;
 import flixel.math.FlxPoint;
+import flixel.util.FlxDestroyUtil;
 
 /**
  * Helper class, contains and track touch points in your game.
