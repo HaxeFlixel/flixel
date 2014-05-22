@@ -13,14 +13,18 @@
  * bounds -> minScrollX, maxScrollX, minScrollY and maxScrollY (null means unbounded)
  * setBounds() -> setScrollBoundsRect()
  * added setScrollBounds()
-* FlxMath: bound() and inBounds() now accept null as values, meaning "unbounded in that direction" 
+ * added targetOffset
+* FlxMath:
+ * bound() and inBounds() now accept null as values, meaning "unbounded in that direction"
+ * wrapValue() now supports negative values
 * FlxTypedSpriteGroup: 
  * added iterator()
  * fixed update() order leading to collision issues with members
 * FlxTimer, FlxTween, FlxPath: active is now only true when they are active
 * FlxAnimationController:
  * curAnim does also return animations that have finished now
- * removed get() 
+ * removed get()
+ * callback: fixed passing old frameIndex value being passed instead of the current one
 * FlxSpriteUtil:
  * drawLine(): default settings for lineStyle are now thickness 1 and color white
  * fadeIn() and fadeOut() now tween alpha instead of color
@@ -39,6 +43,14 @@
  * added getTileIndexByCoords() and getTileCoordsByIndex()
  * fixed a bug in overlapsAt()
 * Console: the set command now supports arrays
+* FlxTween: fixed a bug when tweening the same field with several tweens + startDelay
+* Merged FlxColor and FlxColorUtil into a new FlxColor abstract, interchangable with Int
+* Moved
+ * FlxTypedGroup into FlxGroup.hx
+ * FlxTypedSpriteGroup into FlxSpriteGroup.hx
+ * FlxTypedEmitter into FlxEmitter.hx
+ * FlxTypedEmitterExt into FlxEmitterExt.hx
+ * FlxTypedButton into FlxButton.hx
 
 3.3.3
 ------------------------------
