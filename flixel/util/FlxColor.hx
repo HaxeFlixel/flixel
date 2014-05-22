@@ -15,50 +15,50 @@ import flixel.math.FlxMath;
  */
 abstract FlxColor(Int) from Int to Int
 {
-	public static inline var RED:FlxColor =				0xffff0000;
-	public static inline var YELLOW:FlxColor =			0xffffff00;
-	public static inline var GREEN:FlxColor =			0xff008000;
-	public static inline var BLUE:FlxColor =			0xff0000ff;
-	public static inline var ORANGE:FlxColor =			0xffff8000;
-	public static inline var PINK:FlxColor =			0xffffc0cb;
-	public static inline var PURPLE:FlxColor =			0xff800080;
-	public static inline var WHITE:FlxColor =			0xffffffff;
-	public static inline var BLACK:FlxColor =			0xff000000;
-	public static inline var GRAY:FlxColor =			0xff808080;
-	public static inline var BROWN:FlxColor =			0xff964B00;
-	public static inline var TRANSPARENT:FlxColor =		0x00000000;
-	public static inline var IVORY:FlxColor =			0xfffffff0;
-	public static inline var BEIGE:FlxColor =			0xfff5f5dc;
-	public static inline var WHEAT:FlxColor =			0xfff5deb3;
-	public static inline var TAN:FlxColor =				0xffd2b48c;
-	public static inline var KHAKI:FlxColor =			0xffc3b091;
-	public static inline var SILVER:FlxColor =			0xffc0c0c0;
-	public static inline var CHARCOAL:FlxColor =		0xff464646;
-	public static inline var NAVY_BLUE:FlxColor =		0xff000080;
-	public static inline var ROYAL_BLUE:FlxColor =		0xff084c9e;
-	public static inline var MEDIUM_BLUE:FlxColor =		0xff0000cd;
-	public static inline var AZURE:FlxColor =			0xff007fff;
-	public static inline var CYAN:FlxColor =			0xff00ffff;
-	public static inline var MAGENTA:FlxColor =			0xffff00ff;
-	public static inline var AQUAMARINE:FlxColor =		0xff7fffd4;
-	public static inline var TEAL:FlxColor =			0xff008080;
-	public static inline var FOREST_GREEN:FlxColor =	0xff228b22;
-	public static inline var OLIVE:FlxColor =			0xff808000;
-	public static inline var CHARTREUSE:FlxColor =		0xff7fff00;
-	public static inline var LIME:FlxColor =			0xffbfff00;
-	public static inline var GOLDEN:FlxColor =			0xffffd700;
-	public static inline var GOLDENROD:FlxColor =		0xffdaa520;
-	public static inline var CORAL:FlxColor =			0xffff7f50;
-	public static inline var SALMON:FlxColor =			0xfffa8072;
-	public static inline var HOT_PINK:FlxColor =		0xfffc0fc0;
-	public static inline var FUCSHIA:FlxColor =			0xffff77ff;
-	public static inline var PUCE:FlxColor =			0xffcc8899;
-	public static inline var MAUVE:FlxColor =			0xffe0b0ff;
-	public static inline var LAVENDER:FlxColor =		0xffb57edc;
-	public static inline var PLUM:FlxColor =			0xff843179;
-	public static inline var INDIGO:FlxColor =			0xff4b0082;
-	public static inline var MAROON:FlxColor =			0xff800000;
-	public static inline var CRIMSON:FlxColor =			0xffdc143c;
+	public static inline var RED:FlxColor =           0xffff0000;
+	public static inline var YELLOW:FlxColor =        0xffffff00;
+	public static inline var GREEN:FlxColor =         0xff008000;
+	public static inline var BLUE:FlxColor =          0xff0000ff;
+	public static inline var ORANGE:FlxColor =        0xffff8000;
+	public static inline var PINK:FlxColor =          0xffffc0cb;
+	public static inline var PURPLE:FlxColor =        0xff800080;
+	public static inline var WHITE:FlxColor =         0xffffffff;
+	public static inline var BLACK:FlxColor =         0xff000000;
+	public static inline var GRAY:FlxColor =          0xff808080;
+	public static inline var BROWN:FlxColor =         0xff964B00;
+	public static inline var TRANSPARENT:FlxColor =   0x00000000;
+	public static inline var IVORY:FlxColor =         0xfffffff0;
+	public static inline var BEIGE:FlxColor =         0xfff5f5dc;
+	public static inline var WHEAT:FlxColor =         0xfff5deb3;
+	public static inline var TAN:FlxColor =           0xffd2b48c;
+	public static inline var KHAKI:FlxColor =         0xffc3b091;
+	public static inline var SILVER:FlxColor =        0xffc0c0c0;
+	public static inline var CHARCOAL:FlxColor =      0xff464646;
+	public static inline var NAVY_BLUE:FlxColor =     0xff000080;
+	public static inline var ROYAL_BLUE:FlxColor =    0xff084c9e;
+	public static inline var MEDIUM_BLUE:FlxColor =   0xff0000cd;
+	public static inline var AZURE:FlxColor =         0xff007fff;
+	public static inline var CYAN:FlxColor =          0xff00ffff;
+	public static inline var MAGENTA:FlxColor =       0xffff00ff;
+	public static inline var AQUAMARINE:FlxColor =    0xff7fffd4;
+	public static inline var TEAL:FlxColor =          0xff008080;
+	public static inline var FOREST_GREEN:FlxColor =  0xff228b22;
+	public static inline var OLIVE:FlxColor =         0xff808000;
+	public static inline var CHARTREUSE:FlxColor =    0xff7fff00;
+	public static inline var LIME:FlxColor =          0xffbfff00;
+	public static inline var GOLDEN:FlxColor =        0xffffd700;
+	public static inline var GOLDENROD:FlxColor =     0xffdaa520;
+	public static inline var CORAL:FlxColor =         0xffff7f50;
+	public static inline var SALMON:FlxColor =        0xfffa8072;
+	public static inline var HOT_PINK:FlxColor =      0xfffc0fc0;
+	public static inline var FUCSHIA:FlxColor =       0xffff77ff;
+	public static inline var PUCE:FlxColor =          0xffcc8899;
+	public static inline var MAUVE:FlxColor =         0xffe0b0ff;
+	public static inline var LAVENDER:FlxColor =      0xffb57edc;
+	public static inline var PLUM:FlxColor =          0xff843179;
+	public static inline var INDIGO:FlxColor =        0xff4b0082;
+	public static inline var MAROON:FlxColor =        0xff800000;
+	public static inline var CRIMSON:FlxColor =       0xffdc143c;
 	
 	public var red(get, set):Int;
 	public var blue(get, set):Int;
@@ -100,7 +100,7 @@ abstract FlxColor(Int) from Int to Int
 	 * @param Red	The red value of the color from 0 to 255
 	 * @param Green	The green value of the color from 0 to 255
 	 * @param Blue	The green value of the color from 0 to 255
-	 * @param Alpha	How opaque the color should be, from 0 to 255.
+	 * @param Alpha	How opaque the color should be, from 0 to 255
 	 * @return The color as a FlxColor
 	 */
 	public static inline function fromRGB(Red:Int, Green:Int, Blue:Int, Alpha:Int = 255):FlxColor
@@ -115,7 +115,7 @@ abstract FlxColor(Int) from Int to Int
 	 * @param Red	The red value of the color from 0 to 1
 	 * @param Green	The green value of the color from 0 to 1
 	 * @param Blue	The green value of the color from 0 to 1
-	 * @param Alpha	How opaque the color should be, from 0 to 1.
+	 * @param Alpha	How opaque the color should be, from 0 to 1
 	 * @return The color as a FlxColor
 	 */
 	public static inline function fromRGBFloat(Red:Float, Green:Float, Blue:Float, Alpha:Float = 1):FlxColor
@@ -379,7 +379,7 @@ abstract FlxColor(Int) from Int to Int
 	 * @param Red	The red value of the color from 0 to 255
 	 * @param Green	The green value of the color from 0 to 255
 	 * @param Blue	The green value of the color from 0 to 255
-	 * @param Alpha	How opaque the color should be, from 0 to 255.
+	 * @param Alpha	How opaque the color should be, from 0 to 255
 	 * @return This color
 	 */
 	public inline function setRGB(Red:Int, Green:Int, Blue:Int, Alpha:Int = 255):FlxColor
@@ -446,7 +446,7 @@ abstract FlxColor(Int) from Int to Int
 	 * @param	Hue			A number between 0 and 360, indicating position on a color strip or wheel.
 	 * @param	Saturation	A number between 0 and 1, indicating how colorful or gray the color should be.  0 is gray, 1 is vibrant.
 	 * @param	Lightness	A number between 0 and 1, indicating the lightness of the color
-	 * @param	Alpha		How opaque the color should be, either between 0 and 1 or 0 and 255.
+	 * @param	Alpha		How opaque the color should be, either between 0 and 1 or 0 and 255
 	 * @return	This color
 	 */
 	public inline function setHSL(Hue:Float, Saturation:Float, Lightness:Float, Alpha:Float):FlxColor
