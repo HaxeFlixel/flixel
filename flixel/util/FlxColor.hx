@@ -75,13 +75,21 @@ abstract FlxColor(Int) from Int to Int
 	public var yellow(get, set):Float;
 	public var black(get, set):Float;
 	
-	/** The hue of the color in degrees (from 0 to 359) **/
+	/** 
+	 * The hue of the color in degrees (from 0 to 359)
+	 */
 	public var hue(get, set):Float;
-	/** The saturation of the color (from 0 to 1) **/
+	/**
+	 * The saturation of the color (from 0 to 1)
+	 */
 	public var saturation(get, set):Float;
-	/** The brightness (aka value) of the color (from 0 to 1) **/
+	/**
+	 * The brightness (aka value) of the color (from 0 to 1)
+	 */
 	public var brightness(get, set):Float;
-	/** The lightness of the color (from 0 to 1) **/
+	/**
+	 * The lightness of the color (from 0 to 1)
+	 */
 	public var lightness (get, set):Float;
 	
 	/**
@@ -94,6 +102,7 @@ abstract FlxColor(Int) from Int to Int
 	{
 		return new FlxColor(Value);
 	}
+	
 	/**
 	 * Generate a color from integer RGB values (0 to 255)
 	 * 
@@ -154,6 +163,7 @@ abstract FlxColor(Int) from Int to Int
 		var color = new FlxColor();
 		return color.setHSB(Hue, Saturation, Brightness, Alpha);
 	}
+	
 	/**
 	 * Generate a color from HSL components.
 	 * 
@@ -292,9 +302,11 @@ abstract FlxColor(Int) from Int to Int
 	
 	/**
 	 * Clone this FlxColor
+	 * 
 	 * @return A copy of this FlxColor
 	 */
-	public inline function clone():FlxColor {
+	public inline function clone():FlxColor
+	{
 		return fromInt(this);
 	}
 	
@@ -303,7 +315,8 @@ abstract FlxColor(Int) from Int to Int
 	 * 
 	 * @return A 24 bit version of this color
 	 */
-	public inline function to24Bit():FlxColor {
+	public inline function to24Bit():FlxColor
+	{
 		return this & 0xffffff;
 	}
 	
@@ -322,6 +335,7 @@ abstract FlxColor(Int) from Int to Int
 	
 	/**
 	 * Return a String representation of the color in the format #RRGGBB
+	 * 
 	 * @return	A string of length 7 in the format #RRGGBB
 	 */
 	public inline function toWebString():String
@@ -361,6 +375,7 @@ abstract FlxColor(Int) from Int to Int
 		brightness *= (1 - Factor);
 		return this;
 	}
+	
 	/**
 	 * Lighten this color.
 	 * 
@@ -373,6 +388,7 @@ abstract FlxColor(Int) from Int to Int
 		lightness += (1 - lightness) * Factor;
 		return this;
 	}
+	
 	/**
 	 * Set RGB values as integers (0 to 255)
 	 * 
@@ -390,6 +406,7 @@ abstract FlxColor(Int) from Int to Int
 		alpha = Alpha;
 		return this;
 	}
+	
 	/**
 	 * Set RGB values as floats (0 to 1)
 	 * 
@@ -407,6 +424,7 @@ abstract FlxColor(Int) from Int to Int
 		alphaFloat = Alpha;
 		return this;
 	}
+	
 	/**
 	 * Set CMYK values as floats (0 to 1)
 	 * 
@@ -425,6 +443,7 @@ abstract FlxColor(Int) from Int to Int
 		alphaFloat = Alpha;
 		return this;
 	}
+	
 	/**
 	 * Set HSB (aka HSV) components
 	 * 
@@ -440,6 +459,7 @@ abstract FlxColor(Int) from Int to Int
 		var match = Brightness - chroma;
 		return setHSChromaMatch(Hue, Saturation, chroma, match, Alpha);
 	}
+	
 	/**
 	 * Set HSL components.
 	 * 
@@ -488,73 +508,88 @@ abstract FlxColor(Int) from Int to Int
 	{
 		return (this >> 16) & 0xff;
 	}
+	
 	private inline function get_green():Int
 	{
 		return (this >> 8) & 0xff;
 	}
+	
 	private inline function get_blue():Int
 	{
 		return this & 0xff;
 	}
+	
 	private inline function get_alpha():Int
 	{
 		return (this >> 24) & 0xff;
 	}
+	
 	private inline function get_redFloat():Float
 	{
 		return red / 255;
 	}
+	
 	private inline function get_greenFloat():Float
 	{
 		return green / 255;
 	}
+	
 	private inline function get_blueFloat():Float
 	{
 		return blue / 255;
 	}
+	
 	private inline function get_alphaFloat():Float
 	{
 		return alpha / 255;
 	}
+	
 	private inline function set_red(Value:Int):Int
 	{
 		this &= 0xff00ffff;
 		this |= Value << 16;
 		return Value;
 	}
+	
 	private inline function set_green(Value:Int):Int
 	{
 		this &= 0xffff00ff;
 		this |= Value << 8;
 		return Value;
 	}
+	
 	private inline function set_blue(Value:Int):Int
 	{
 		this &= 0xffffff00;
 		this |= Value;
 		return Value;
 	}
+	
 	private inline function set_alpha(Value:Int):Int
 	{
 		this &= 0x00ffffff;
 		this |= Value << 24;
 		return Value;
 	}
+	
 	private inline function set_redFloat(Value:Float):Float
 	{
 		red = Math.round(Value * 255);
 		return Value;
 	}
+	
 	private inline function set_greenFloat(Value:Float):Float
 	{
 		green = Math.round(Value * 255);
 		return Value;
 	}
+	
 	private inline function set_blueFloat(Value:Float):Float
 	{
 		blue = Math.round(Value * 255);
 		return Value;
 	}
+	
 	private inline function set_alphaFloat(Value:Float):Float
 	{
 		alpha = Math.round(Value * 255);
@@ -565,14 +600,17 @@ abstract FlxColor(Int) from Int to Int
 	{
 		return (1 - redFloat - black) / brightness;
 	}
+	
 	private inline function get_magenta():Float
 	{
 		return (1 - greenFloat - black) / brightness;
 	}
+	
 	private inline function get_yellow():Float
 	{
 		return (1 - blueFloat - black) / brightness;
 	}
+	
 	private inline function get_black():Float
 	{
 		return 1 - brightness;
@@ -583,16 +621,19 @@ abstract FlxColor(Int) from Int to Int
 		setCMYK(Value, magenta, yellow, black, alphaFloat);
 		return Value;
 	}
+	
 	private inline function set_magenta(Value:Float):Float
 	{
 		setCMYK(cyan, Value, yellow, black, alphaFloat);
 		return Value;
 	}
+	
 	private inline function set_yellow(Value:Float):Float
 	{
 		setCMYK(cyan, magenta, Value, black, alphaFloat);
 		return Value;
 	}
+	
 	private inline function set_black(Value:Float):Float
 	{
 		setCMYK(cyan, magenta, yellow, Value, alphaFloat);
@@ -610,14 +651,17 @@ abstract FlxColor(Int) from Int to Int
 			
 		return hue < 0 ? hue + 360 : hue;
 	}
+	
 	private inline function get_brightness():Float
 	{
 		return maxColor();
 	}
+	
 	private inline function get_saturation():Float
 	{
 		return (maxColor() - minColor()) / brightness;
 	}
+	
 	private inline function get_lightness():Float
 	{
 		return (maxColor() + minColor()) / 2;
@@ -628,16 +672,19 @@ abstract FlxColor(Int) from Int to Int
 		setHSB(Value, saturation, brightness, alphaFloat);
 		return Value;
 	}
+	
 	private inline function set_saturation(Value:Float):Float
 	{
 		setHSB(hue, Value, brightness, alphaFloat);
 		return Value;
 	}
+	
 	private inline function set_brightness(Value:Float):Float
 	{
 		setHSB(hue, saturation, Value, alphaFloat);
 		return Value;
 	}
+	
 	private inline function set_lightness(Value:Float):Float
 	{
 		setHSL(hue, saturation, Value, alphaFloat);
@@ -648,11 +695,21 @@ abstract FlxColor(Int) from Int to Int
 	{
 		return Math.max(redFloat, Math.max(greenFloat, blueFloat));
 	}
+	
 	private inline function minColor():Float
 	{
 		return Math.min(redFloat, Math.min(greenFloat, blueFloat));
 	}
 }
 
-typedef Harmony = { original:FlxColor, warmer:FlxColor, colder:FlxColor }
-typedef TriadicHarmony = { color1:FlxColor, color2:FlxColor, color3:FlxColor }
+typedef Harmony = { 
+	original:FlxColor,
+	warmer:FlxColor,
+	colder:FlxColor
+}
+
+typedef TriadicHarmony = {
+	color1:FlxColor,
+	color2:FlxColor,
+	color3:FlxColor
+}

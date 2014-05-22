@@ -1016,7 +1016,7 @@ class FlxSprite extends FlxObject
 	 * @param	FetchPositions		Whether we need to store positions of pixels which colors were replaced
 	 * @return	Array replaced pixels positions
 	 */
-	public function replaceColor(Color:UInt, NewColor:FlxColor, FetchPositions:Bool = false):Array<FlxPoint>
+	public function replaceColor(Color:FlxColor, NewColor:FlxColor, FetchPositions:Bool = false):Array<FlxPoint>
 	{
 		var positions:Array<FlxPoint> = null;
 		if (FetchPositions)
@@ -1034,7 +1034,7 @@ class FlxSprite extends FlxObject
 			column = region.startX;
 			while (column < columns)
 			{
-				if (cachedGraphics.bitmap.getPixel32(column, row) == Color)
+				if (cachedGraphics.bitmap.getPixel32(column, row) == cast Color)
 				{
 					cachedGraphics.bitmap.setPixel32(column, row, NewColor);
 					if (FetchPositions)
@@ -1525,7 +1525,8 @@ class FlxSprite extends FlxObject
 		_red = (color >> 16) / 255;
 		_green = (color >> 8 & 0xff) / 255;
 		_blue = (color & 0xff) / 255;
-		isColored = color < 0xffffff;
+		var c:Int = color;
+		isColored = c < 0xffffff;
 		#end
 		
 		return color;

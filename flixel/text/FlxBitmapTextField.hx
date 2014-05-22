@@ -10,6 +10,7 @@ import flixel.text.pxText.PxBitmapFont;
 import flixel.text.pxText.PxDefaultFontGenerator;
 import flixel.text.pxText.PxTextAlign;
 import flixel.math.FlxAngle;
+import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 
 /**
