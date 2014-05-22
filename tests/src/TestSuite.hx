@@ -1,5 +1,6 @@
 import massive.munit.TestSuite;
 
+import flixel.animation.FlxAnimationControllerTest;
 import flixel.FlxCameraTest;
 import flixel.FlxGTest;
 import flixel.FlxSpriteTest;
@@ -20,6 +21,7 @@ class TestSuite extends massive.munit.TestSuite
 	{
 		super();
 
+		add(flixel.animation.FlxAnimationControllerTest);
 		add(flixel.FlxCameraTest);
 		add(flixel.FlxGTest);
 		add(flixel.FlxSpriteTest);

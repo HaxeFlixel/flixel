@@ -83,7 +83,7 @@ class FlxSpriteTest extends FlxTest
 		Assert.areEqual(StringTools.hex(FlxColor.CRIMSON), "FF" + StringTools.hex(colorSprite.framePixels.getPixel(90, 90)));
 		
 		colorSprite = new FlxSprite();
-		colorSprite.makeGraphic(120,120,FlxColor.CHARTREUSE);
+		colorSprite.makeGraphic(120, 120, FlxColor.CHARTREUSE);
 		Assert.areEqual(StringTools.hex(FlxColor.CHARTREUSE), "FF" + StringTools.hex(colorSprite.framePixels.getPixel(119, 119)));
 	}
 
