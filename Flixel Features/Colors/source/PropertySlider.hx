@@ -1,4 +1,5 @@
 package;
+
 import flixel.group.FlxSpriteGroup;
 import flixel.math.FlxMath;
 import flixel.text.FlxText;
@@ -7,8 +8,8 @@ import flixel.ui.FlxButton;
 /**
  * @author Joe Williamson
  */
-class PropertySlider extends FlxSpriteGroup {
-	
+class PropertySlider extends FlxSpriteGroup
+{
 	public var upSmallButton:FlxButton;
 	public var upBigButton:FlxButton;
 	public var downSmallButton:FlxButton;
@@ -35,7 +36,8 @@ class PropertySlider extends FlxSpriteGroup {
 	public var onChange:PropertySlider->Void;
 	public var updateValue:PropertySlider->Void;
 	
-	public function new(label:String, smallDelta:Float, bigDelta:Float, minValue:Float, maxValue:Float) {
+	public function new(label:String, smallDelta:Float, bigDelta:Float, minValue:Float, maxValue:Float)
+	{
 		super();
 		
 		labelText = new FlxText(0, 0, 0, label, 12);
@@ -79,24 +81,29 @@ class PropertySlider extends FlxSpriteGroup {
 		add(upBigButton);
 	}
 	
-	private function set_value(value:Float):Float {
+	private function set_value(value:Float):Float
+	{
 		this.value = FlxMath.bound(value, minValue, maxValue);
 		valueText.text = Std.string(decimalPlaces > 0 ? FlxMath.roundDecimal(this.value, decimalPlaces) : Math.round(this.value));
 		return value;
 	}
 	
-	private function set_label(name:String):String {
+	private function set_label(name:String):String
+	{
 		labelText.text = name;
 		return name;
 	}
-	private function get_label():String {
+	
+	private function get_label():String
+	{
 		return labelText.text;
 	}
 }
 
-private class Button extends FlxButton {
-	
-	public function new(x:Float, y:Float, txt:String, onClick:Void->Void) {
+private class Button extends FlxButton
+{
+	public function new(x:Float, y:Float, txt:String, onClick:Void->Void)
+	{
 		super(x, y, txt, onClick);
 		makeGraphic(14, 14, 0xffcccccc, true);
 	}

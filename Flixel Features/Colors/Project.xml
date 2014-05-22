@@ -13,8 +13,7 @@
 	<!--------------------------------WINDOW SETTINGS------------------------------->
 	
 	<!--These window settings apply to all targets-->
-	<window width="800" height="500" fps="60" background="#000000" hardware="true" vsync="true" /><!--/-->
-	<!--window width="512" height="288" fps="60" background="#000000" hardware="true" vsync="true" /><!--/-->
+	<window width="800" height="500" fps="60" background="#000000" hardware="true" vsync="true" />
 	
 	<!--Web-specific-->
 	<window if="web"		orientation="portrait"  />
@@ -31,10 +30,6 @@
 	<classpath name="source" />
 	
 	<!--You can use rename="newName" to shorten the paths to individual subdirectories!-->
-	<assets path="assets/images" include="*" type="image" />
-	<assets path="assets/data" include="*" type="data" />
-	<assets path="assets/sounds" include="*" type="sound" />
-	<assets path="assets/music" include="*" type="music" />
 	<assets path="assets">
 		<font path="fonts/Fairfax.ttf" id="fairfax" />
 	</assets>

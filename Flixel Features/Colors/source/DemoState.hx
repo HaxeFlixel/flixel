@@ -4,39 +4,25 @@ package;
 import haxe.macro.Expr;
 import haxe.macro.Context;
 #else
-import flixel.system.scaleModes.RatioScaleMode;
-import flash.geom.Point;
-import flash.geom.Rectangle;
-import flixel.FlxCamera;
 import flixel.FlxG;
-import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxState;
-import flixel.FlxSubState;
-import flixel.group.FlxGroup;
 import flixel.group.FlxSpriteGroup;
 import flixel.group.FlxTypedGroup.FlxTypedGroup;
-import flixel.input.keyboard.FlxKey;
+import flixel.math.FlxMath;
+import flixel.math.FlxRandom;
+import flixel.system.scaleModes.RatioScaleMode;
 import flixel.text.FlxText;
-import flixel.tile.FlxTileblock;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
-import flixel.ui.FlxBar;
 import flixel.ui.FlxButton;
 import flixel.util.FlxColor;
-import flixel.util.FlxGradient;
-import flixel.math.FlxMath;
-import flixel.math.FlxPoint;
-import flixel.math.FlxRandom;
-import flixel.math.FlxRect;
-import flixel.util.FlxSort;
-import flixel.util.FlxSpriteUtil;
 
 /**
  * @author Joe Williamson (JoeCreates)
  */
-class DemoState extends FlxState {
-	
+class DemoState extends FlxState
+{
 	public var creationPanel:DemoPanel;
 	public var manipulationPanel:DemoPanel;
 	public var presetsPanel:DemoPanel;
@@ -53,11 +39,8 @@ class DemoState extends FlxState {
 	
 	public var colorInfoText:FlxText;
 	
-	override public function create():Void {
-		super.create();
-		
-		FlxG.scaleMode = new RatioScaleMode();
-		
+	override public function create():Void
+	{
 		panels = new FlxTypedGroup<DemoPanel>();
 		add(panels);
 		
@@ -74,7 +57,8 @@ class DemoState extends FlxState {
 		harmoniesPanel = new DemoPanel("Harmonies");
 		panels.add(harmoniesPanel);
 		
-		for (panel in panels) {
+		for (panel in panels)
+		{
 			panel.x = (panels.members.indexOf(panel) - currentPanelIndex) * FlxG.width;
 		}
 		
@@ -100,14 +84,14 @@ class DemoState extends FlxState {
 		txt = new FlxText(4, 30, FlxG.width - 8, "", 12);
 		txt.wordWrap = true;
 		txt.font = "fairfax";
-		txt.text =	"FlxColors are interchangeable with Ints, so you may do this:\n\n" +
-					"var myColor:FlxColor = 0xff123456;\n\n" +
-					"Or use static methods (with optional alpha params):\n\n" +
-					"FlxColor.fromRGB(220, 100, 150);\n\n" +
-					"FlxColor.fromRGBFloat(0.8, 0.5, 0.3);\n\n" +
-					"FlxColor.fromHSB(120, 0.6, 0.9);\n\n" +
-					"FlxColor.fromHSL(120, 0.6, 0.9);\n\n" +
-					"FlxColor.fromCMYK(0.8, 0.6, 0.1, 0.5)";
+		txt.text = "FlxColors are interchangeable with Ints, so you may do this:\n\n" +
+		           "var myColor:FlxColor = 0xff123456;\n\n" +
+		           "Or use static methods (with optional alpha params):\n\n" +
+		           "FlxColor.fromRGB(220, 100, 150);\n\n" +
+		           "FlxColor.fromRGBFloat(0.8, 0.5, 0.3);\n\n" +
+		           "FlxColor.fromHSB(120, 0.6, 0.9);\n\n" +
+		           "FlxColor.fromHSL(120, 0.6, 0.9);\n\n" +
+		           "FlxColor.fromCMYK(0.8, 0.6, 0.1, 0.5)";
 		panel.add(txt);
 		
 		var i = 0;
@@ -237,11 +221,11 @@ class DemoState extends FlxState {
 		txt = new FlxText(4, 30, FlxG.width - 8, "", 12);
 		txt.wordWrap = true;
 		txt.font = "fairfax";
-		txt.text = 	"var c1 = FlxColor.CRIMSON;\n" +
-					"var c2 = FlxColor.FOREST_GREEN;\n\n" +
-					"// Interpolate by factor 0.5\nFlxColor.interpolate(c1, c2, 0.5);\n\n" +
-					"FlxColor.gradient(c1, c2, 20); // Returns array of colors\n\n\n\n" +
-					"FlxColor.gradient(c1, c2, 20, FlxEase.quadIn); // Easing";
+		txt.text =  "var c1 = FlxColor.CRIMSON;\n" +
+		            "var c2 = FlxColor.FOREST_GREEN;\n\n" +
+		            "// Interpolate by factor 0.5\nFlxColor.interpolate(c1, c2, 0.5);\n\n" +
+		            "FlxColor.gradient(c1, c2, 20); // Returns array of colors\n\n\n\n" +
+		            "FlxColor.gradient(c1, c2, 20, FlxEase.quadIn); // Easing";
 		panel.add(txt);
 		
 		panel.add(makeSprite(250, 32, c1, 20, 11));
@@ -249,12 +233,14 @@ class DemoState extends FlxState {
 		panel.add(makeSprite(250, 68, FlxColor.interpolate(c1, c2, 0.5)));
 		
 		var i = 0;
-		for (c in FlxColor.gradient(c1, c2, 20)) {
+		for (c in FlxColor.gradient(c1, c2, 20))
+		{
 			panel.add(makeSprite(10 + 17 * i, 120, c, 17, 14));
 			i++;
 		}
 		var i = 0;
-		for (c in FlxColor.gradient(c1, c2, 20, FlxEase.quadIn)) {
+		for (c in FlxColor.gradient(c1, c2, 20, FlxEase.quadIn))
+		{
 			panel.add(makeSprite(10 + 17 * i, 168, c, 17, 14));
 			i++;
 		}
@@ -288,54 +274,58 @@ class DemoState extends FlxState {
 		txt = new FlxText(4, 30, FlxG.width - 8, "", 12);
 		txt.wordWrap = true;
 		txt.font = "fairfax";
-		txt.text = 	"var myColor = FlxColor.CRIMSON;\n\n" +
-					"myColor.getComplementHarmony();\n\n" +
-					"myColor.getSplitComplementHarmony();\n\n" +
-					"myColor.getAnalogousHarmony();\n\n" +
-					"myColor.getTriadicHarmony();\n\n";
+		txt.text =  "var myColor = FlxColor.CRIMSON;\n\n" +
+		            "myColor.getComplementHarmony();\n\n" +
+		            "myColor.getSplitComplementHarmony();\n\n" +
+		            "myColor.getAnalogousHarmony();\n\n" +
+		            "myColor.getTriadicHarmony();\n\n";
 		panel.add(txt);
 		
 	}
 	
-		
-	override public function onFocusLost():Void {
-		trace("blah");
-	}
-	
-	public function makeSprite(x:Int = 0, y:Int = 0, color:FlxColor, width:Int = 20, height:Int = 20):FlxSprite {
+	public function makeSprite(x:Int = 0, y:Int = 0, color:FlxColor, width:Int = 20, height:Int = 20):FlxSprite
+	{
 		var spr = new FlxSprite(x, y);
 		spr.makeGraphic(width, height, color, true);
 		return spr;
 	}
 	
-	public function nextPanel():Void {
+	public function nextPanel():Void
+	{
 		currentPanelIndex = FlxMath.wrapValue(currentPanelIndex, 1, panels.length);
 		changePanel();
 	}
-	public function previousPanel():Void {
+	public function previousPanel():Void
+	{
 		currentPanelIndex = FlxMath.wrapValue(currentPanelIndex, -1, panels.length);
 		changePanel();
 	}
 	
-	public function changePanel():Void {
+	public function changePanel():Void
+	{
 		pageText.text = "Page " + (currentPanelIndex + 1) + " / " + panels.length;
-		for (panel in panels) {
+		for (panel in panels)
+		{
 			FlxTween.tween(panel, {x: (panels.members.indexOf(panel) - currentPanelIndex) * FlxG.width}, 0.7, { ease: FlxEase.expoOut } );
 		}
 	}
 }
 #end
 
-private class Macro {
-	macro public static function makeSlider(x:Expr, y:Expr, value:String, min:Float, max:Float, smallDelta:Float, bigDelta:Float, decimalPlaces:Int = 2):Expr {
+private class Macro
+{
+	macro public static function makeSlider(x:Expr, y:Expr, value:String, min:Float, max:Float, smallDelta:Float, bigDelta:Float, decimalPlaces:Int = 2):Expr
+	{
 		var assignValue:Expr;
-		switch (Context.typeof(macro myColor.$value)) {
+		switch (Context.typeof(macro myColor.$value))
+		{
 			case TAbstract(r, _) if (r.get().name == "Int"):
 				assignValue = macro myColor.$value = Std.int(s.value);
 			default:
 				assignValue = macro myColor.$value = s.value;
 		}
-		return macro {
+		return macro
+		{
 			var slider = new PropertySlider($v { value }, $v { smallDelta }, $v { bigDelta }, $v { min }, $v { max } );
 			sliders.push(slider);
 			slider.setPosition($x, $y);
@@ -346,7 +336,8 @@ private class Macro {
 			slider.onChange = function(s:PropertySlider) {
 				$assignValue;
 				colorSpr.makeGraphic(FlxG.width - 120, 20, myColor, true);
-				for (s in sliders) {
+				for (s in sliders)
+				{
 					s.updateValue(s);
 				}
 			};
