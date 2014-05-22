@@ -143,9 +143,9 @@ class PlayState extends FlxState
 		replaying = false;
 		
 		/**
-		 *Note FlxG.recordReplay will restart the game or state
-		 *This function will trigger a flag in FlxGame
-		 *and let the internal FlxReplay to record input on every frame
+		 * Note FlxG.recordReplay will restart the game or state
+		 * This function will trigger a flag in FlxGame
+		 * and let the internal FlxReplay to record input on every frame
 		 */
 		FlxG.vcr.startRecording(false);
 	}
@@ -163,9 +163,6 @@ class PlayState extends FlxState
 		
 		var save:String = FlxG.vcr.stopRecording();
 		
-		/**
-		 * NOTE "ANY" or other key wont work under debug mode!
-		 */
 		FlxG.vcr.loadReplay(save, new PlayState(), ["ANY", "MOUSE"], 0, start_record);
 	}
 }

@@ -1,7 +1,6 @@
 package;
 
 import flash.display.BitmapData;
-import flash.events.TimerEvent;
 import flash.geom.Matrix;
 import flash.geom.Rectangle;
 import flash.Lib;
@@ -9,13 +8,10 @@ import flash.utils.ByteArray;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
-import flixel.group.FlxGroup;
+import flixel.math.FlxMath;
+import flixel.math.FlxRandom;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
-import flixel.util.FlxBitmapUtil;
-import flixel.math.FlxMath;
-import flixel.math.FlxPoint;
-import flixel.math.FlxRandom;
 
 /**
  * A FlxState which can be used for the game's menu.
