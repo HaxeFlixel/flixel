@@ -12,6 +12,7 @@ import flixel.math.FlxMath;
 import flixel.math.FlxRandom;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
+import flixel.group.FlxGroup;
 
 /**
  * A FlxState which can be used for the game's menu.
