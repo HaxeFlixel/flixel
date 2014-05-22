@@ -1,7 +1,8 @@
 package;
 
 import flixel.FlxG;
-import haxe.Timer;
+import massive.munit.async.AsyncFactory;
+import massive.munit.util.Timer;
 
 class FlxTest
 {
@@ -14,8 +15,9 @@ class FlxTest
 		FlxG.resetGame();
 	}
 	
-	function delay(f:Void->Void)
+	function delay(testCase:Dynamic, factory:AsyncFactory, func:Void->Void, time:Int = 50)
 	{
-		Timer.delay(f, 1000);
+		var resultHandler = factory.createHandler(testCase, func);
+		Timer.delay(resultHandler, time);
 	}
 }
