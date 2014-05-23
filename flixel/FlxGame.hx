@@ -499,13 +499,13 @@ class FlxGame extends Sprite
 			}
 			
 			#if !FLX_NO_DEBUG
-			FlxBasic._VISIBLECOUNT = 0;
+			FlxBasic.visibleCount = 0;
 			#end
 			
 			draw();
 			
 			#if !FLX_NO_DEBUG
-			debugger.stats.visibleObjects(FlxBasic._VISIBLECOUNT);
+			debugger.stats.visibleObjects(FlxBasic.visibleCount);
 			debugger.update();
 			#end
 		}
@@ -641,13 +641,13 @@ class FlxGame extends Sprite
 		
 		#if !FLX_NO_DEBUG
 		// Finally actually step through the game physics
-		FlxBasic._ACTIVECOUNT = 0;
+		FlxBasic.activeCount = 0;
 		#end
 		
 		update();
 		
 		#if !FLX_NO_DEBUG
-		debugger.stats.activeObjects(FlxBasic._ACTIVECOUNT);
+		debugger.stats.activeObjects(FlxBasic.activeCount);
 		#end
 	}
 	

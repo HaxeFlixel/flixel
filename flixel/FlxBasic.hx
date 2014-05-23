@@ -13,8 +13,10 @@ class FlxBasic implements IFlxDestroyable
 	/**
 	 * Static counters for performance tracking.
 	 */
-	public static var _ACTIVECOUNT:Int = 0;
-	public static var _VISIBLECOUNT:Int = 0;
+	@:allow(flixel.FlxGame)
+	private static var activeCount:Int = 0;
+	@:allow(flixel.FlxGame)
+	private static var visibleCount:Int = 0;
 	#end
 	
 	/**
@@ -54,7 +56,7 @@ class FlxBasic implements IFlxDestroyable
 	/**
 	 * Enum that informs the collision system which type of object this is (to avoid expensive type casting).
 	 */
-	public var flixelType(default, null):FlxType = NONE;
+	private var flixelType(default, null):FlxType = NONE;
 	
 	private var _cameras:Array<FlxCamera>;
 	
@@ -97,7 +99,7 @@ class FlxBasic implements IFlxDestroyable
 	public function update():Void 
 	{ 
 		#if !FLX_NO_DEBUG
-		_ACTIVECOUNT++;
+		activeCount++;
 		#end
 	}
 	
@@ -108,7 +110,7 @@ class FlxBasic implements IFlxDestroyable
 	public function draw():Void
 	{
 		#if !FLX_NO_DEBUG
-		_VISIBLECOUNT++;
+		visibleCount++;
 		#end
 	}
 	

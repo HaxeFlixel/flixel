@@ -183,7 +183,7 @@ class FlxTextField extends FlxText
 		#end
 		
 		#if !FLX_NO_DEBUG
-		FlxBasic._VISIBLECOUNT++;
+		FlxBasic.visibleCount++;
 		#end
 	}
 	
