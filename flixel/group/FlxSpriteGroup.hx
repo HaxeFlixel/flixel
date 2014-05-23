@@ -80,7 +80,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 */
 	override private function initVars():Void 
 	{
-		collisionType = SPRITEGROUP;
+		flixelType = SPRITEGROUP;
 		
 		offset = new FlxCallbackPoint(offsetCallback);
 		origin = new FlxCallbackPoint(originCallback);

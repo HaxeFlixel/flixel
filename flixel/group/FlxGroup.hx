@@ -52,14 +52,14 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	private static inline function resolveGroup(ObjectOrGroup:FlxBasic):FlxTypedGroup<FlxBasic>
 	{
 		var group:FlxTypedGroup<FlxBasic> = null;
-		if ((ObjectOrGroup.collisionType == SPRITEGROUP) || 
-		    (ObjectOrGroup.collisionType == GROUP))
+		if ((ObjectOrGroup.flixelType == SPRITEGROUP) || 
+		    (ObjectOrGroup.flixelType == GROUP))
 		{
-			if (ObjectOrGroup.collisionType == GROUP)
+			if (ObjectOrGroup.flixelType == GROUP)
 			{
 				group = cast ObjectOrGroup;
 			}
-			else if (ObjectOrGroup.collisionType == SPRITEGROUP)
+			else if (ObjectOrGroup.flixelType == SPRITEGROUP)
 			{
 				group = cast cast(ObjectOrGroup, FlxTypedSpriteGroup<Dynamic>).group;
 			}
@@ -96,7 +96,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		
 		maxSize = Std.int(Math.abs(MaxSize));
 		
-		collisionType = GROUP;
+		flixelType = GROUP;
 	}
 	
 	/**

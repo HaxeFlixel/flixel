@@ -54,7 +54,7 @@ class FlxBasic implements IFlxDestroyable
 	/**
 	 * Enum that informs the collision system which type of object this is (to avoid expensive type casting).
 	 */
-	public var collisionType(default, null):FlxCollisionType = NONE;
+	public var flixelType(default, null):FlxType = NONE;
 	
 	private var _cameras:Array<FlxCamera>;
 	
@@ -167,13 +167,13 @@ class FlxBasic implements IFlxDestroyable
 }
 
 /**
- * Types of collidable objects.
+ * Types of flixel objects - mainly for collisions.
  * 
  * Abstracted from an Int type for fast comparison code:
  * http://nadako.tumblr.com/post/64707798715/cool-feature-of-upcoming-haxe-3-2-enum-abstracts
  */
 @:enum
-abstract FlxCollisionType(Int)
+abstract FlxType(Int)
 {
 	var NONE        = 0;
 	var OBJECT      = 1;
