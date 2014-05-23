@@ -319,30 +319,6 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	}
 	
 	/**
-	 * Go through and set the specified variable to the specified value on all members of the group.
-	 * 
-	 * @param	VariableName	The string representation of the variable name you want to modify, for example "visible" or "scrollFactor".
-	 * @param	Value			The value you want to assign to that variable.
-	 * @param	Recurse			Default value is true, meaning if setAll() encounters a member that is a group, it will call setAll() on that group rather than modifying its variable.
-	 */
-	public inline function setAll(VariableName:String, Value:Dynamic, Recurse:Bool = true):Void
-	{
-		group.setAll(VariableName, Value, Recurse);
-	}
-	
-	/**
-	 * Go through and call the specified function on all members of the group.
-	 * Currently only works on functions that have no required parameters.
-	 * 
-	 * @param	FunctionName	The string representation of the function you want to call on each object, for example "kill()" or "init()".
-	 * @param	Recurse			Default value is true, meaning if callAll() encounters a member that is a group, it will call callAll() on that group rather than calling the group's function.
-	 */ 
-	public inline function callAll(FunctionName:String, ?Args:Array<Dynamic>, Recurse:Bool = true):Void
-	{
-		group.callAll(FunctionName, Args, Recurse);
-	}
-	
-	/**
 	 * Call this function to retrieve the first object with exists == false in the group.
 	 * This is handy for recycling in general, e.g. respawning enemies.
 	 * 
