@@ -700,45 +700,46 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	{
 		return Math.min(redFloat, Math.min(greenFloat, blueFloat));
 	}
-	
-	
+
+
 	// Int
-	
-    @:op(C < I) 
-    inline static function lt_i(c:FlxColor, i:Int):Bool return c < toFlxColor(i);
-	
-    @:op(I < C) 
-    inline static function lt_i2(i:Int, c:FlxColor):Bool return toFlxColor(i) < c;
-    
-    @:op(C > I) 
-    inline static function gt_i(c:FlxColor, i:Int):Bool return c > toFlxColor(i);
-    
-    @:op(I > C) 
-    inline static function gt_i2(i:Int, c:FlxColor):Bool return toFlxColor(i) > c;
-    
-    @:op(C <= I) 
-    inline static function lte_i(c:FlxColor, i:Int):Bool return c <= toFlxColor(i);
 
-    @:op(I <= C) 
-    inline static function lte_i2(i:Int, c:FlxColor):Bool return toFlxColor(i) <= c;
-    
-	@:op(C >= I) 
-    inline static function gte_i(c:FlxColor, i:Int):Bool return c >= toFlxColor(i);
-	
-	@:op(I >= C) 
-    inline static function gte_i2(i:Int, c:FlxColor):Bool return toFlxColor(i) >= c;
+	@:op(C < I)
+	inline static function lt_i(c:FlxColor, i:Int):Bool return c < toFlxColor(i);
 
-    
+	@:op(I < C)
+	inline static function lt_i2(i:Int, c:FlxColor):Bool return toFlxColor(i) < c;
+
+	@:op(C > I)
+	inline static function gt_i(c:FlxColor, i:Int):Bool return c > toFlxColor(i);
+
+	@:op(I > C)
+	inline static function gt_i2(i:Int, c:FlxColor):Bool return toFlxColor(i) > c;
+
+	@:op(C <= I)
+	inline static function lte_i(c:FlxColor, i:Int):Bool return c <= toFlxColor(i);
+
+	@:op(I <= C)
+	inline static function lte_i2(i:Int, c:FlxColor):Bool return toFlxColor(i) <= c;
+
+	@:op(C >= I)
+	inline static function gte_i(c:FlxColor, i:Int):Bool return c >= toFlxColor(i);
+
+	@:op(I >= C)
+	inline static function gte_i2(i:Int, c:FlxColor):Bool return toFlxColor(i) >= c;
+
+
 	// UInt
-	
-    @:commutative 
-    @:op(A == B) 
-    inline static function eq_ui(c:FlxColor, ui:Null<UInt>):Bool return c == toFlxColor(ui);
 
-    @:commutative 
-    @:op(A != B) 
-    inline static function neq_ui(c:FlxColor, ui:Null<UInt>):Bool return !eq_ui(c, ui);
-    
+	@:commutative
+	@:op(C == U)
+	inline static function eq_ui(c:FlxColor, ui:Null<UInt>):Bool return c == toFlxColor(ui);
+
+	@:commutative
+	@:op(C != U)
+	inline static function neq_ui(c:FlxColor, ui:Null<UInt>):Bool return !eq_ui(c, ui);
+
+
 	inline static function toFlxColor(i:Null<Int>):FlxColor return /*cast*/ i;
 }
 
