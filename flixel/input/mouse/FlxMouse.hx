@@ -404,7 +404,7 @@ class FlxMouse extends FlxPointer implements IFlxInput
 		
 		#if js
 		// need to account for scale as the game sprite is not being scaled on html5
-		var scaleMultiplier:Float = FlxG._scaleMode.scale.x;
+		var scaleMultiplier:Float = FlxG.scaleMode.scale.x;
 		_globalScreenX = Std.int(_globalScreenX / scaleMultiplier);
 		_globalScreenY = Std.int(_globalScreenY / scaleMultiplier);
 		#end

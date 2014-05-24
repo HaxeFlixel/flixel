@@ -143,7 +143,7 @@ class FlxG
 	 * The scale mode the game should use - available policies are FillScaleMode, FixedScaleMode,
 	 * RatioScaleMode, RelativeScaleMode and StageSizeScaleMode.
 	 */
-	public static var scaleMode(default, set):BaseScaleMode;
+	public static var scaleMode(default, set):BaseScaleMode = new RatioScaleMode();
 	/**
 	 * Use this to toggle between fullscreen and normal mode. Works in cpp and flash.
 	 * You can easily toggle fullscreen with eg: FlxG.fullscreen = !FlxG.fullscreen;
@@ -275,15 +275,12 @@ class FlxG
 	 */ 
 	public static var signals(default, null):SignalFrontEnd = new SignalFrontEnd();
 	
-	@:allow(flixel.input.mouse.FlxMouse)
-	private static var _scaleMode:BaseScaleMode = new RatioScaleMode();
-	
 	/**
 	 * Handy helper functions that takes care of all the things to resize the game.
 	 */
 	public static inline function resizeGame(Width:Int, Height:Int):Void
 	{
-		_scaleMode.onMeasure(Width, Height);
+		scaleMode.onMeasure(Width, Height);
 	}
 	
 	/**
@@ -498,7 +495,7 @@ class FlxG
 	
 	private static function set_scaleMode(ScaleMode:BaseScaleMode):BaseScaleMode
 	{
-		_scaleMode = ScaleMode;
+		scaleMode = ScaleMode;
 		game.onResize(null);
 		return ScaleMode;
 	}
