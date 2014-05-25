@@ -13,7 +13,7 @@ import flixel.math.FlxMath;
  * 
  * @author Joe Williamson (JoeCreates)
  */
-abstract FlxColor(Int) from Int from UInt to Int to UInt
+abstract FlxColor(Null<Int>) from Int from UInt to Int to UInt
 {
 	public static inline var RED:FlxColor =           0xffff0000;
 	public static inline var YELLOW:FlxColor =        0xffffff00;
@@ -702,45 +702,77 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	}
 
 
-	// Int
-
 	@:op(C < I)
-	inline static function lt_i(c:FlxColor, i:Int):Bool return c < toFlxColor(i);
+	inline static function colorLessThanInt(c:FlxColor, i:Int):Bool 
+	{
+		return c < i;
+	}
 
 	@:op(I < C)
-	inline static function lt_i2(i:Int, c:FlxColor):Bool return toFlxColor(i) < c;
+	inline static function intLessThanColor(i:Int, c:FlxColor):Bool 
+	{
+		return i < c;
+	}
 
 	@:op(C > I)
-	inline static function gt_i(c:FlxColor, i:Int):Bool return c > toFlxColor(i);
+	inline static function colorGreaterThanInt(c:FlxColor, i:Int):Bool 
+	{
+		return c > i;
+	}
 
 	@:op(I > C)
-	inline static function gt_i2(i:Int, c:FlxColor):Bool return toFlxColor(i) > c;
+	inline static function intGreaterThanColor(i:Int, c:FlxColor):Bool 
+	{
+		return i > c;
+	}
 
 	@:op(C <= I)
-	inline static function lte_i(c:FlxColor, i:Int):Bool return c <= toFlxColor(i);
+	inline static function colorLessThanEqualInt(c:FlxColor, i:Int):Bool 
+	{
+		return c <= i;
+	}
 
 	@:op(I <= C)
-	inline static function lte_i2(i:Int, c:FlxColor):Bool return toFlxColor(i) <= c;
+	inline static function intLessThanEqualColor(i:Int, c:FlxColor):Bool 
+	{
+		return i <= c;
+	}
 
 	@:op(C >= I)
-	inline static function gte_i(c:FlxColor, i:Int):Bool return c >= toFlxColor(i);
+	inline static function colorGreaterThanEqualInt(c:FlxColor, i:Int):Bool 
+	{
+		return c >= i;
+	}
 
 	@:op(I >= C)
-	inline static function gte_i2(i:Int, c:FlxColor):Bool return toFlxColor(i) >= c;
-
-
-	// UInt
-
-	@:commutative
-	@:op(C == U)
-	inline static function eq_ui(c:FlxColor, ui:Null<UInt>):Bool return c == toFlxColor(ui);
+	inline static function intGreaterThanEqualColor(i:Int, c:FlxColor):Bool 
+	{
+		return i >= c;
+	}
 
 	@:commutative
-	@:op(C != U)
-	inline static function neq_ui(c:FlxColor, ui:Null<UInt>):Bool return !eq_ui(c, ui);
+	@:op(C == I)
+	inline static function colorEqualInt(c:FlxColor, i:Null<Int>):Bool 
+	{
+		return toFlxColor(c) == toFlxColor(i);
+	}
+
+	@:commutative
+	@:op(C != I)
+	inline static function colorNotEqualInt(c:FlxColor, i:Null<Int>):Bool 
+	{
+		return toFlxColor(c) != toFlxColor(i);
+	}
 
 
-	inline static function toFlxColor(i:Null<Int>):FlxColor return /*cast*/ i;
+	inline static function toFlxColor(i:Null<Int>):FlxColor
+	{
+		#if flash
+		return i == null ? null : i | 0;	// force conversion to signed int
+		#else
+		return i;
+		#end
+	}
 }
 
 typedef Harmony = { 
