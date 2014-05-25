@@ -24,6 +24,13 @@ class FlxKeyboard implements IFlxInput
 	 * Whether or not keyboard input is currently enabled.
 	 */
 	public var enabled:Bool = true;
+	/**
+	 * List of keys on which preventDefault() is called, useful on HTML5 to stop 
+	 * the browser from scrolling when pressing the up or down key for example.
+	 */
+	#if bitfive
+	public var preventDefaultKeys:Array<String> = ["UP", "DOWN", "LEFT", "RIGHT", "TAB", "SPACE"];
+	#end
 	
 	/**
 	 * Helper class to check if a keys is pressed.
@@ -196,7 +203,7 @@ class FlxKeyboard implements IFlxInput
 	 */
 	public function getIsDown():Array<FlxKey>
 	{
-		var keysDown:Array<FlxKey> = new Array<FlxKey>();
+		var keysDown = new Array<FlxKey>();
 		
 		for (key in _keyList)
 		{
@@ -467,9 +474,10 @@ class FlxKeyboard implements IFlxInput
 	/**
 	 * Event handler so FlxGame can toggle keys.
 	 */
-	private function onKeyUp(FlashEvent:KeyboardEvent):Void
+	private function onKeyUp(event:KeyboardEvent):Void
 	{
-		var c:Int = resolveKeyCode(FlashEvent);
+		var c:Int = resolveKeyCode(event);
+		handlePreventDefault(c, event);
 		
 		// Debugger toggle
 		#if !FLX_NO_DEBUG
@@ -488,9 +496,10 @@ class FlxKeyboard implements IFlxInput
 	/**
 	 * Internal event handler for input and focus.
 	 */
-	private function onKeyDown(FlashEvent:KeyboardEvent):Void
+	private function onKeyDown(event:KeyboardEvent):Void
 	{
-		var c:Int = resolveKeyCode(FlashEvent);
+		var c:Int = resolveKeyCode(event);
+		handlePreventDefault(c, event);
 		
 		// Attempted to cancel the replay?
 		#if FLX_RECORD
@@ -504,6 +513,17 @@ class FlxKeyboard implements IFlxInput
 		{
 			updateKeyStates(c, true);
 		}
+	}
+	
+	private function handlePreventDefault(keyCode:Int, event:KeyboardEvent):Void
+	{
+		#if bitfive
+		var key:FlxKey = _keyList[keyCode];
+		if (key != null && preventDefaultKeys != null && preventDefaultKeys.indexOf(key.name) != -1)
+		{
+			event.preventDefault();
+		}
+		#end
 	}
 	
 	/**
@@ -526,7 +546,6 @@ class FlxKeyboard implements IFlxInput
 				}
 			}
 		}
-		
 		return false;
 	}
 	
