@@ -395,7 +395,7 @@ class FlxGamepadManager implements IFlxInput
 			for (i in 0..._gamepads.length)
 			{
 				var gamepad:FlxGamepad = _gamepads[i];
-				if (gamepad._device == Device)
+				if (gamepad != null && gamepad._device == Device)
 				{
 					removeByID(i);
 				}
