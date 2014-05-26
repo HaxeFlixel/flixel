@@ -96,7 +96,7 @@ class Tracker extends Watch
 			addProfile(new TrackerProfile(FlxRect, ["width", "height"], [FlxPoint]));
 			
 			addProfile(new TrackerProfile(FlxBasic, ["active", "visible", "alive", "exists"]));
-			addProfile(new TrackerProfile(FlxObject, ["velocity", "acceleration", "drag", "angle"],
+			addProfile(new TrackerProfile(FlxObject, ["velocity", "acceleration", "drag", "angle", "immovable"],
 			                                         [FlxRect, FlxBasic]));
 			addProfile(new TrackerProfile(FlxTilemap, ["auto", "widthInTiles", "heightInTiles", "totalTiles", "scaleX", "scaleY"], [FlxObject]));
 			addProfile(new TrackerProfile(FlxSprite, ["frameWidth", "frameHeight", "alpha", "origin", "offset", "scale"], [FlxObject]));

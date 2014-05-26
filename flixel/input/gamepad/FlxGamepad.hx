@@ -19,8 +19,9 @@ class FlxGamepad implements IFlxDestroyable
 	public static inline var PRESSED:Int = 1;
 	public static inline var JUST_PRESSED:Int = 2;
 	
-	public var id:Int;
-	public var buttons:Array<FlxGamepadButton>;
+	public var id(default, null):Int;
+	public var buttons(default, null):Array<FlxGamepadButton>;
+	public var connected(default, null):Bool = true;
 	
 	/**
 	 * Gamepad deadzone. Sets the sensibility. 
@@ -32,8 +33,8 @@ class FlxGamepad implements IFlxDestroyable
 	 * DPAD
 	 */
 	#if !flash
-	public var hat:FlxPoint;
-	public var ball:FlxPoint;
+	public var hat(default, null):FlxPoint;
+	public var ball(default, null):FlxPoint;
 	
 	public var dpadUp(get, null):Bool = false;
 	public var dpadDown(get, null):Bool = false;
@@ -157,6 +158,8 @@ class FlxGamepad implements IFlxDestroyable
 	
 	public function destroy():Void
 	{
+		connected = false;
+		
 		buttons = null;
 		axis = null;
 		

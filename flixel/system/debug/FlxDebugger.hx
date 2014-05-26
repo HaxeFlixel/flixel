@@ -369,7 +369,7 @@ class FlxDebugger extends Sprite
 		window.toggleButton = button;
 		button.toggled = !window.visible;
 	}
-	
+
 	public inline function addWindow(window:Window):Window
 	{
 		_windows.push(window);
