@@ -72,9 +72,20 @@ class FlxGamepadManager implements IFlxInput
 		if (gamepad != null)
 		{
 			FlxDestroyUtil.destroy(gamepad);
-			_gamepads.remove(gamepad);
-			_activeGamepads.remove(gamepad);
+			_gamepads[GamepadID] = null;
+			
+			var i = _activeGamepads.indexOf(gamepad);
+			if (i != -1)
+			{
+				_activeGamepads[i] = null;
+			}
 		}
+		
+		if (lastActive == gamepad)
+			lastActive = null;
+		
+		if (firstActive == gamepad)
+			firstActive = null;
 	}
 	
 	private function createByID(GamepadID:Int):FlxGamepad
@@ -84,7 +95,23 @@ class FlxGamepadManager implements IFlxInput
 		{
 			gamepad = new FlxGamepad(GamepadID, globalDeadZone);
 			_gamepads[GamepadID] = gamepad;
-			_activeGamepads.push(gamepad);
+			
+			//fill the first "empty spot" in the array
+			var nullFound:Bool = false;
+			for (i in 0..._activeGamepads.length)
+			{
+				if (_activeGamepads[i] == null)
+				{
+					_activeGamepads[i] = gamepad;
+					nullFound = true;
+					break;
+				}
+			}
+			
+			if (!nullFound)
+			{
+				_activeGamepads.push(gamepad);
+			}
 			
 			lastActive = gamepad;
 			if (firstActive == null)
@@ -305,6 +332,7 @@ class FlxGamepadManager implements IFlxInput
 		FlxG.stage.addEventListener(JoystickEvent.BUTTON_UP, handleButtonUp);
 		FlxG.stage.addEventListener(JoystickEvent.HAT_MOVE, handleHatMove);
 		FlxG.stage.addEventListener(JoystickEvent.DEVICE_REMOVED, handleDeviceRemoved);
+		FlxG.stage.addEventListener(JoystickEvent.DEVICE_ADDED, handleDeviceAdded);
 		#end
 		
 		#if flash
@@ -419,6 +447,11 @@ class FlxGamepadManager implements IFlxInput
 		gamepad.hat.y = (Math.abs(FlashEvent.y) < gamepad.deadZone) ? 0 : FlashEvent.y;
 	}
 
+	private function handleDeviceAdded(event:JoystickEvent):Void
+	{
+		createByID(event.device);
+	}
+	
 	private function handleDeviceRemoved(event:JoystickEvent):Void
 	{
 		removeByID(event.device);
