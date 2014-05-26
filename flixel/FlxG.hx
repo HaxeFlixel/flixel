@@ -148,7 +148,7 @@ class FlxG
 	 * Use this to toggle between fullscreen and normal mode. Works in cpp and flash.
 	 * You can easily toggle fullscreen with eg: FlxG.fullscreen = !FlxG.fullscreen;
 	 */
-	public static var fullscreen(default, set):Bool = false;
+	public static var fullscreen(get, set):Bool;
 	/**
 	 * The dimensions of the game world, used by the quad tree for collisions and overlap checks.
 	 * Use .set() instead of creating a new object!
@@ -567,18 +567,16 @@ class FlxG
 		return Framerate;
 	}
 	
+	private static function get_fullscreen():Bool
+	{
+		return (stage.displayState == StageDisplayState.FULL_SCREEN 
+			|| stage.displayState == StageDisplayState.FULL_SCREEN_INTERACTIVE);
+	}
+	
 	private static function set_fullscreen(Value:Bool):Bool
 	{
-		if (Value)
-		{
-			stage.displayState = StageDisplayState.FULL_SCREEN;
-		}
-		else
-		{
-			stage.displayState = StageDisplayState.NORMAL;
-		}
-		
-		return fullscreen = Value;
+		stage.displayState = Value ? StageDisplayState.FULL_SCREEN : StageDisplayState.NORMAL;
+		return Value;
 	}
 	
 	private static inline function get_stage():Stage
