@@ -24,7 +24,7 @@ typedef FlxEmitter = FlxTypedEmitter<FlxParticle>;
  * It is easy to use and relatively efficient,
  * relying on FlxGroup's RECYCLE POWERS.
  */
-class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSprite>
+class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 {
 	/**
 	 * Set your own particle class type here. The custom class must extend FlxParticle.
