@@ -143,10 +143,18 @@ class SoundFrontEnd
 	 * Calls FlxG.sound.cache() on all sounds that are embedded.
 	 * WARNING: can lead to high memory usage.
 	 */
+	#if (openfl <= "1.4.0")
 	@:access(openfl.Assets)
 	@:access(openfl.AssetType)
+	#end
 	public function cacheAll():Void
 	{
+		#if (openfl > "1.4.0")
+		for (id in Assets.list(AssetType.SOUND)) 
+		{
+			cache(id);
+		}
+		#else
 		Assets.initialize();
 		
 		var defaultLibrary = Assets.libraries.get("default");
@@ -166,6 +174,7 @@ class SoundFrontEnd
 				cache(key);
 			}
 		}
+		#end
 	}
 	#end
 	
