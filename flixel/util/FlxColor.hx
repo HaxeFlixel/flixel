@@ -364,27 +364,27 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	}
 	
 	/**
-	 * Darken this color.
+	 * Get a darker version of this color.
 	 * 
 	 * @param	Factor Value from 0 to 1 of how much to progress toward black.
 	 * @return 	This color, darkened
 	 */
 	public function darken(Factor:Float = 0.2):FlxColor
 	{
-		FlxMath.bound(Factor, 0, 1);
-		brightness *= (1 - Factor);
+		Factor = FlxMath.bound(Factor, 0, 1);
+		lightness *= (1 - Factor);
 		return this;
 	}
 	
 	/**
-	 * Lighten this color.
+	 * Get a lighter version of this color.
 	 * 
 	 * @param	Factor Value from 0 to 1 of how much to progress toward white.
 	 * @return 	This color, brightened
 	 */
 	public inline function lighten(Factor:Float = 0.2):FlxColor
 	{
-		FlxMath.bound(Factor, 0, 1);
+		Factor = FlxMath.bound(Factor, 0, 1);
 		lightness += (1 - lightness) * Factor;
 		return this;
 	}

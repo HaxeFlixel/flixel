@@ -1095,7 +1095,7 @@ class FlxSprite extends FlxObject
 		{
 			if (colorTransform == null)
 			{
-				colorTransform = new ColorTransform(color.redFloat, color.blueFloat, color.greenFloat, alpha);
+				colorTransform = new ColorTransform(color.redFloat, color.greenFloat, color.blueFloat, alpha);
 			}
 			else
 			{
