@@ -37,9 +37,10 @@ class FlxRandom
 	}
 	
 	/**
-	 * Internal seed used to generate new random numbers.
+	 * Internal seed used to generate new random numbers. Read-only.
+	 * You can retrieve this value if, for example, you want to store the seed that was used to randomly generate a level.
 	 */
-	private static var _internalSeed:Int = 1;
+	public static var internalSeed(default, null):Int = 1;
 	
 	/**
 	 * Constants used in the pseudorandom number generation equation.
