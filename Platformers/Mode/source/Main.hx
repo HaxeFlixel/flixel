@@ -67,20 +67,7 @@ class Main extends Sprite
 		addChild(new FlxGame(gameWidth, gameHeight, initialState, zoom, framerate, framerate, skipSplash, startFullscreen));
 		
 		#if android
-		FlxG.sound.cache("Asplode");
-		FlxG.sound.cache("Button");
-		FlxG.sound.cache("Countdown");
-		FlxG.sound.cache("Enemy");
-		FlxG.sound.cache("Hit");
-		FlxG.sound.cache("Hurt");
-		FlxG.sound.cache("Jam");
-		FlxG.sound.cache("Jet");
-		FlxG.sound.cache("Jump");
-		FlxG.sound.cache("Land");
-		FlxG.sound.cache("MenuHit");
-		FlxG.sound.cache("MenuHit2");
-		FlxG.sound.cache("Mode");
-		FlxG.sound.cache("Shoot");
+		FlxG.sound.cacheAll();
 		#end
 	}
 }

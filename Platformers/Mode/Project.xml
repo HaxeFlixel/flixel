@@ -92,7 +92,6 @@
 		<music path="jam.mp3" id="Jam" />
 		<music path="jet.mp3" id="Jet" />
 		<music path="jump.mp3" id="Jump" />
-		<music path="land.mp3" id="Land" />
 		<music path="menu_hit.mp3" id="MenuHit" />
 		<music path="menu_hit_2.mp3" id="MenuHit2" />
 		<music path="mode.mp3" id="Mode" />
@@ -109,7 +108,6 @@
 		<sound path="jam.ogg" id="Jam" />
 		<sound path="jet.ogg" id="Jet" />
 		<sound path="jump.ogg" id="Jump" />
-		<sound path="land.ogg" id="Land" />
 		<sound path="menu_hit.ogg" id="MenuHit" />
 		<sound path="menu_hit_2.ogg" id="MenuHit2" />
 		<music path="mode.ogg" id="Mode" />

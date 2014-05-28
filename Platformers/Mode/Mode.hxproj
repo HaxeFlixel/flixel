@@ -11,27 +11,29 @@
     <movie version="3" />
     <movie minorVersion="0" />
     <movie platform="NME" />
-    <movie background="131C1B" />
+    <movie background="000000" />
   </output>
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
+    <class path="C:\HaxeToolkit\haxe\lib\flixel\git" />
+    <class path="C:\HaxeToolkit\haxe\lib\lime\0,9,8" />
+    <class path="C:\HaxeToolkit\haxe\lib\openfl\2,0,0-beta,2" />
     <class path="source" />
-    <class path="export\flash\haxe" />
+    <class path="C:\HaxeToolkit\haxe\lib\openfl\2,0,0-beta,2\backends\native" />
+    <class path="export\windows\neko\haxe" />
   </classpaths>
   <!-- Build options -->
   <build>
-    <option directives="FLX_RECORD&#xA;tools=1.4.0&#xA;FLX_NO_DEBUG&#xA;FLX_RENDER_BLIT&#xA;display&#xA;web" />
+    <option directives="flixel=3.3.4&#xA;lime=0.9.8&#xA;openfl=2.0.0-beta.2&#xA;FLX_RECORD&#xA;tools=1.5.1&#xA;FLX_NO_DEBUG&#xA;lime_native&#xA;no-compilation&#xA;NAPE_RELEASE_BUILD&#xA;native&#xA;FLX_NO_TOUCH&#xA;openfl-native&#xA;display&#xA;FLX_RENDER_TILE&#xA;windows&#xA;desktop" />
     <option flashStrict="False" />
     <option noInlineOnDebug="False" />
     <option mainClass="ApplicationMain" />
     <option enabledebug="False" />
-    <option additional="--no-output&#xA;-swf-version 11.8&#xA;#--remap nme:flash" />
+    <option additional="--no-output&#xA;--remap flash:openfl&#xA;#--macro keep(&quot;Main&quot;)" />
   </build>
   <!-- haxelib libraries -->
   <haxelib>
-    <library name="flixel" />
-    <library name="openfl" />
-    <library name="flixel-demos" />
+    <!-- example: <library name="..." /> -->
   </haxelib>
   <!-- Class files to compile (other referenced classes will automatically be included) -->
   <compileTargets>
