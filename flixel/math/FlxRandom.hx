@@ -30,16 +30,17 @@ class FlxRandom
 			NewSeed = MODULUS;
 		}
 		
-		_internalSeed = NewSeed;
+		internalSeed = NewSeed;
 		globalSeed = NewSeed;
 		
 		return globalSeed;
 	}
 	
 	/**
-	 * Internal seed used to generate new random numbers.
+	 * Internal seed used to generate new random numbers. Read-only.
+	 * You can retrieve this value if, for example, you want to store the seed that was used to randomly generate a level.
 	 */
-	private static var _internalSeed:Int = 1;
+	public static var internalSeed(default, null):Int = 1;
 	
 	/**
 	 * Constants used in the pseudorandom number generation equation.
@@ -79,7 +80,7 @@ class FlxRandom
 	@:allow(flixel.FlxGame.switchState)
 	private static inline function updateStateSeed():Int
 	{
-		return _stateSeed = _internalSeed;
+		return _stateSeed = internalSeed;
 	}
 	
 	/**
@@ -438,6 +439,6 @@ class FlxRandom
 	 */
 	private static inline function generate():Int
 	{
-		return _internalSeed = ((_internalSeed * MULTIPLIER) % MODULUS) & MODULUS;
+		return internalSeed = ((internalSeed * MULTIPLIER) % MODULUS) & MODULUS;
 	}
 }
