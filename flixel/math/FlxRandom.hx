@@ -30,7 +30,7 @@ class FlxRandom
 			NewSeed = MODULUS;
 		}
 		
-		_internalSeed = NewSeed;
+		internalSeed = NewSeed;
 		globalSeed = NewSeed;
 		
 		return globalSeed;
@@ -80,7 +80,7 @@ class FlxRandom
 	@:allow(flixel.FlxGame.switchState)
 	private static inline function updateStateSeed():Int
 	{
-		return _stateSeed = _internalSeed;
+		return _stateSeed = internalSeed;
 	}
 	
 	/**
@@ -439,6 +439,6 @@ class FlxRandom
 	 */
 	private static inline function generate():Int
 	{
-		return _internalSeed = ((_internalSeed * MULTIPLIER) % MODULUS) & MODULUS;
+		return internalSeed = ((internalSeed * MULTIPLIER) % MODULUS) & MODULUS;
 	}
 }
