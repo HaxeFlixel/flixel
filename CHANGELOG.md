@@ -52,6 +52,10 @@
  * FlxTypedEmitterExt into FlxEmitterExt.hx
  * FlxTypedButton into FlxButton.hx
 
+3.3.4
+------------------------------
+* Combatibility with OpenFL 2.0.0
+
 3.3.3
 ------------------------------
 * FlxSpriteFilter: fixed graphic being destroyed when not used elsewhere
