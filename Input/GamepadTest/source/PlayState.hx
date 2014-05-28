@@ -65,10 +65,6 @@ class PlayState extends FlxState
 		_backButton = createSprite(199, 79, "assets/Back.png");
 		_startButton = createSprite(306, 79, "assets/Start.png");
 		
-		FlxG.watch.add(FlxG.gamepads, "_gamepads");
-		FlxG.watch.add(FlxG.gamepads, "_activeGamepads");
-		FlxG.watch.add(FlxG.gamepads, "_gamepads.length");
-		
 		_startButton.alpha = ALPHA_OFF;
 		_backButton.alpha = ALPHA_OFF;
 	}
@@ -91,24 +87,17 @@ class PlayState extends FlxState
 	{
 		super.update();
 		
-		for (i in 0...4)
-		{
-			FlxG.watch.addQuick(Std.string(i), FlxG.gamepads.getByID(i));
-		}
-		
 		_gamePad = FlxG.gamepads.lastActive;
 		
-		if (_gamePad == null) {
+		if (_gamePad == null)
+		{
 			return;
 		}
 		
 		#if !FLX_NO_DEBUG
-		//FlxG.watch.addQuick("pressed ID", _gamePad.firstPressedButtonID());
-		//FlxG.watch.addQuick("released ID", _gamePad.firstJustReleasedButtonID());
-		//FlxG.watch.addQuick("justPressed ID", _gamePad.firstJustPressedButtonID());
-		
-		//trace(FlxG.gamepads.getByID(0));
-		
+		FlxG.watch.addQuick("pressed ID", _gamePad.firstPressedButtonID());
+		FlxG.watch.addQuick("released ID", _gamePad.firstJustReleasedButtonID());
+		FlxG.watch.addQuick("justPressed ID", _gamePad.firstJustPressedButtonID());
 		#end
 		
 		if (_gamePad.pressed(GamepadIDs.A))
