@@ -324,12 +324,14 @@ class SoundFrontEnd
 		if (list != null && list.active)
 			list.update();
 		
+		#if !FLX_NO_KEYBOARD
 		if (FlxG.keys.anyJustReleased(muteKeys))
 			toggleMuted();
 		else if (FlxG.keys.anyJustReleased(volumeUpKeys))
 			changeVolume(0.1);
 		else if (FlxG.keys.anyJustReleased(volumeDownKeys))
 			changeVolume(-0.1);
+		#end
 	}
 	
 	private function onFocusLost():Void
