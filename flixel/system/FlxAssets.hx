@@ -176,14 +176,22 @@ class FlxAssets
 		return Assets.getSound(id + extension);
 	}
 	
-	#if (!FLX_NO_SOUND_SYSTEM && !doc)
+#if (!FLX_NO_SOUND_SYSTEM && !doc)
 	/**
 	 * Calls FlxG.sound.cache() on all sounds that are embedded.
 	 */
+	#if (openfl <= "1.4.0")
 	@:access(openfl.Assets)
 	@:access(openfl.AssetType)
+	#end
 	public static function cacheSounds():Void
 	{
+		#if (openfl > "1.4.0")
+		for (id in Assets.list(AssetType.SOUND)) 
+		{
+			FlxG.sound.cache(id);
+		}
+		#else
 		Assets.initialize();
 		
 		var defaultLibrary = Assets.libraries.get("default");
@@ -203,8 +211,9 @@ class FlxAssets
 				FlxG.sound.cache(key);
 			}
 		}
+		#end
 	}
-	#end
+#end
 #end
 }
 
