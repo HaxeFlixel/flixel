@@ -34,7 +34,7 @@ class Card extends FlxNapeSprite
 	public function new(X:Int, Y:Int, OffsetX:Int, OffsetY:Int, Index:Int):Void
 	{
 		super(X + OffsetX * Index, Y + OffsetY * Index);
-		loadGraphic("assets/Deck.png", true, 123, 123);
+		loadGraphic("assets/Deck.png", true, 79, 123);
 		
 		// The card starts out being turned around
 		animation.frameIndex = 54;
