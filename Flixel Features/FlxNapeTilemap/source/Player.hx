@@ -4,9 +4,13 @@ import flixel.addons.nape.FlxNapeSprite;
 import flixel.FlxG;
 import flixel.util.FlxColor;
 import nape.phys.Material;
-class Player extends FlxNapeSprite {
-	var speed:Int = 200;
-	public function new(X:Float, Y:Float) {
+
+class Player extends FlxNapeSprite
+{
+	static inline var speed:Int = 200;
+	
+	public function new(X:Float, Y:Float)
+	{
 		super(X, Y);
 		makeGraphic(16, 16, FlxColor.BLUE);
 		createRectangularBody(16, 16);
@@ -16,25 +20,32 @@ class Player extends FlxNapeSprite {
 	
 	override public function update():Void 
 	{
-		if (FlxG.keys.pressed.A) {
+		if (FlxG.keys.anyPressed(["A", "LEFT"]))
+		{
 			body.velocity.x = -speed;
 		}
-		else if (FlxG.keys.pressed.D) {
+		else if (FlxG.keys.anyPressed(["D", "RIGHT"]))
+		{
 			body.velocity.x = speed;
 		}
-		else {
+		else
+		{
 			body.velocity.x = 0;
 		}
 		
-		if (FlxG.keys.pressed.W) {
+		if (FlxG.keys.anyPressed(["W", "UP"]))
+		{
 			body.velocity.y = -speed;
 		}
-		else if (FlxG.keys.pressed.S) {
+		else if (FlxG.keys.anyPressed(["S", "DOWN"]))
+		{
 			body.velocity.y = speed;
 		}
-		else {
+		else
+		{
 			body.velocity.y = 0;
 		}
+		
 		super.update();
 	}
 }
