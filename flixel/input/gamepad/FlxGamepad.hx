@@ -200,7 +200,7 @@ class FlxGamepad implements IFlxDestroyable
 		{
 			if (buttons[b] != null)
 			{
-				if (buttons[b].current == PRESSED)
+				if (buttons[b].current > RELEASED)
 					return true;
 			}
 		}
