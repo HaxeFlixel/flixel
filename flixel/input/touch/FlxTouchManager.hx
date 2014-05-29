@@ -98,7 +98,7 @@ class FlxTouchManager implements IFlxInputManager
 		
 		for (touch in list)
 		{
-			if (touch._current == 2)
+			if (touch.justPressed)
 			{
 				TouchArray.push(touch);
 			}
@@ -128,7 +128,7 @@ class FlxTouchManager implements IFlxInputManager
 		
 		for (touch in list)
 		{
-			if (touch._current == -1)
+			if (touch.justReleased)
 			{
 				TouchArray.push(touch);
 			}
@@ -149,7 +149,7 @@ class FlxTouchManager implements IFlxInputManager
 		
 		for (touch in list)
 		{
-			touch.deactivate();
+			touch.input.reset();
 			_inactiveTouches.push(touch);
 		}
 		
@@ -179,20 +179,10 @@ class FlxTouchManager implements IFlxInputManager
 		if (touch != null)
 		{
 			touch.setXY(Std.int(FlashEvent.stageX), Std.int(FlashEvent.stageY)); 
-			
-			if (touch._current > 0) 
-			{
-				touch._current = 1;
-			}
-			else 
-			{
-				touch._current = 2;
-			}
 		}
 		else
 		{
 			touch = recycle(Std.int(FlashEvent.stageX), Std.int(FlashEvent.stageY), FlashEvent.touchPointID);
-			touch._current = 2;
 		}
 	}
 	
@@ -205,14 +195,7 @@ class FlxTouchManager implements IFlxInputManager
 		
 		if (touch != null)
 		{
-			if (touch._current > 0) 
-			{
-				touch._current = -1;
-			}
-			else 
-			{
-				touch._current = 0;
-			}
+			touch.input.release();
 		}
 	}
 	
@@ -255,7 +238,7 @@ class FlxTouchManager implements IFlxInputManager
 		if (_inactiveTouches.length > 0)
 		{
 			var touch:FlxTouch = _inactiveTouches.pop();
-			touch.reset(X, Y, PointID);
+			touch.recycle(X, Y, PointID);
 			return add(touch);
 		}
 		
@@ -276,14 +259,14 @@ class FlxTouchManager implements IFlxInputManager
 			touch = list[i];
 			
 			// Touch ended at previous frame
-			if (touch._current == 0)
+			if (touch.released)
 			{
-				touch.deactivate();
+				touch.input.reset();
 				_touchesCache.remove(touch.touchPointID);
 				list.splice(i, 1);
 				_inactiveTouches.push(touch);
 			}
-			else	// Touch is active currently
+			else // Touch is active currently
 			{
 				touch.update();
 			}

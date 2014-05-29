@@ -1,6 +1,7 @@
 package flixel.input.gamepad;
 
 import flixel.FlxG;
+import flixel.input.FlxInput.FlxInputState;
 import flixel.util.FlxDestroyUtil;
 import flixel.math.FlxPoint;
 
@@ -114,21 +115,10 @@ class FlxGamepad implements IFlxDestroyable
 		
 		for (button in buttons)
 		{
-			if (button == null) 
+			if (button != null) 
 			{
-				continue;
+				button.update();
 			}
-			
-			if ((button.last == -1) && (button.current == -1)) 
-			{
-				button.current = 0;
-			}
-			else if ((button.last == 2) && (button.current == 2)) 
-			{
-				button.current = 1;
-			}
-			
-			button.last = button.current;
 		}
 	}
 	
@@ -138,8 +128,7 @@ class FlxGamepad implements IFlxDestroyable
 		{
 			if (button != null)
 			{
-				button.current = 0;
-				button.last = 0;
+				button.reset();
 			}
 		}
 		
@@ -179,7 +168,7 @@ class FlxGamepad implements IFlxDestroyable
 	 * @param	Status		The key state to check for
 	 * @return	Whether the provided button has the specified status
 	 */
-	public function checkStatus(ButtonID:Int, Status:Int):Bool 
+	public function checkStatus(ButtonID:Int, Status:FlxInputState):Bool 
 	{ 
 		if (buttons[ButtonID] != null)
 		{
@@ -200,7 +189,7 @@ class FlxGamepad implements IFlxDestroyable
 		{
 			if (buttons[b] != null)
 			{
-				if (buttons[b].current > RELEASED)
+				if (buttons[b].pressed)
 					return true;
 			}
 		}
@@ -220,7 +209,7 @@ class FlxGamepad implements IFlxDestroyable
 		{
 			if (buttons[b] != null)
 			{
-				if (buttons[b].current == JUST_PRESSED)
+				if (buttons[b].justPressed)
 					return true;
 			}
 		}
@@ -240,7 +229,7 @@ class FlxGamepad implements IFlxDestroyable
 		{
 			if (buttons[b] != null)
 			{
-				if (buttons[b].current == JUST_RELEASED)
+				if (buttons[b].justReleased)
 					return true;
 			}
 		}
@@ -258,9 +247,8 @@ class FlxGamepad implements IFlxDestroyable
 	{
 		if (buttons[ButtonID] != null)
 		{
-			return (buttons[ButtonID].current > RELEASED);
+			return buttons[ButtonID].pressed;
 		}
-		
 		return false;
 	}
 	
@@ -274,9 +262,8 @@ class FlxGamepad implements IFlxDestroyable
 	{ 
 		if (buttons[ButtonID] != null)
 		{
-			return (buttons[ButtonID].current == JUST_PRESSED);
+			return buttons[ButtonID].justPressed;
 		}
-		
 		return false;
 	}
 	
@@ -290,9 +277,8 @@ class FlxGamepad implements IFlxDestroyable
 	{ 
 		if (buttons[ButtonID] != null)
 		{
-			return (buttons[ButtonID].current == JUST_RELEASED);
+			return (buttons[ButtonID].justReleased);
 		}
-		
 		return false;
 	}
 	
@@ -304,12 +290,11 @@ class FlxGamepad implements IFlxDestroyable
 	{
 		for (button in buttons)
 		{
-			if (button != null && button.current > RELEASED)
+			if (button != null && button.released)
 			{
-				return button.id;
+				return button.ID;
 			}
 		}
-		
 		return -1;
 	}
 	
@@ -321,12 +306,11 @@ class FlxGamepad implements IFlxDestroyable
 	{
 		for (button in buttons)
 		{
-			if (button != null && button.current == JUST_PRESSED)
+			if (button != null && button.justPressed)
 			{
-				return button.id;
+				return button.ID;
 			}
 		}
-		
 		return -1;
 	}
 	
@@ -338,12 +322,11 @@ class FlxGamepad implements IFlxDestroyable
 	{
 		for (button in buttons)
 		{
-			if (button != null && button.current == JUST_RELEASED)
+			if (button != null && button.justReleased)
 			{
-				return button.id;
+				return button.ID;
 			}
 		}
-		
 		return -1; 
 	}
 	
@@ -392,12 +375,11 @@ class FlxGamepad implements IFlxDestroyable
 	{
 		for (button in buttons)
 		{
-			if (button != null && button.current > RELEASED)
+			if (button != null && button.pressed)
 			{
 				return true;
 			}
 		}
-		
 		return false;
 	}
 	

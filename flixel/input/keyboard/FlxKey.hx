@@ -3,14 +3,8 @@ package flixel.input.keyboard;
 /**
  * A helper class for keyboard input.
  */
-class FlxKey
+class FlxKey extends FlxInput<String>
 {
-	// Key States
-	public static inline var JUST_RELEASED:Int = -1;
-	public static inline var RELEASED     :Int =  0;
-	public static inline var PRESSED      :Int =  1;
-	public static inline var JUST_PRESSED :Int =  2;
-	
 	// Key Indicies
 	public static inline var A             :Int = 65;
 	public static inline var B             :Int = 66;
@@ -106,22 +100,4 @@ class FlxKey
 	public static inline var NUMPADPLUS    :Int = 107;
 	public static inline var NUMPADPERIOD  :Int = 110;
 	public static inline var NUMPADMULTIPLY:Int = 106;
-	
-	/**
-	 * The name of this key.
-	 */
-	public var name:String;
-	/**
-	 * The current state of this key.
-	 */
-	public var current:Int = RELEASED;
-	/**
-	 * The last state of this key.
-	 */
-	public var last:Int = RELEASED;
-	
-	public function new(Name:String)
-	{
-		name = Name;
-	}
 }

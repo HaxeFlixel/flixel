@@ -6,6 +6,7 @@ import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.input.FlxInput;
 import flixel.input.FlxSwipe;
 import flixel.math.FlxPoint;
 import flixel.util.FlxDestroyUtil;
@@ -22,26 +23,26 @@ class FlxTouch extends FlxPointer implements IFlxDestroyable
 	 * The unique ID of this touch. Example: if there are 3 concurrently active touches 
 	 * (and the device supporst that many), they will have the IDs 0, 1 and 2.
 	 */
-	public var touchPointID(default, null):Int;
+	public var touchPointID(get, never):Int;
 	
+	public var justReleased(get, never):Bool;
+	public var released(get, never):Bool;
 	public var pressed(get, never):Bool;
 	public var justPressed(get, never):Bool;
-	public var justReleased(get, never):Bool;
-	public var isActive(get, never):Bool;
 	
-	private var _current:Int = 0;
-	private var _last:Int = 0;
-	private var _flashPoint:Point;
+	private var input:FlxInput<Int>;
+	private var flashPoint = new Point();
 	
-	private var _justPressedPosition:FlxPoint;
-	private var _justPressedTimeInTicks:Float;
+	private var justPressedPosition = FlxPoint.get();
+	private var justPressedTimeInTicks:Float;
 #end
 
 	public function destroy():Void
 	{
 		#if !FLX_NO_TOUCH
-		_justPressedPosition = FlxDestroyUtil.put(_justPressedPosition);
-		_flashPoint = null;
+		input = null;
+		justPressedPosition = FlxDestroyUtil.put(justPressedPosition);
+		flashPoint = null;
 		#end
 	}
 
@@ -49,17 +50,11 @@ class FlxTouch extends FlxPointer implements IFlxDestroyable
 	/**
 	 * Resets the just pressed/just released flags and sets touch to not pressed.
 	 */
-	public function reset(X:Int, Y:Int, PointID:Int):Void
+	public function recycle(x:Int, y:Int, pointID:Int):Void
 	{
-		setXY(X, Y);
-		touchPointID = PointID;
-		deactivate();
-	}
-	
-	public function deactivate():Void
-	{
-		_current = 0;
-		_last = 0;
+		setXY(x, y);
+		input.ID = pointID;
+		input.reset();
 	}
 	
 	/**
@@ -67,14 +62,12 @@ class FlxTouch extends FlxPointer implements IFlxDestroyable
 	 * @param	Y			stageX touch coordinate
 	 * @param	PointID		touchPointID of the touch
 	 */
-	private function new(X:Int = 0, Y:Int = 0, PointID:Int = 0)
+	private function new(x:Int = 0, y:Int = 0, pointID:Int = 0)
 	{
 		super();
-		_justPressedPosition = FlxPoint.get();
 		
-		_flashPoint = new Point();
-		setXY(X, Y);
-		touchPointID = PointID;
+		input = new FlxInput(pointID);
+		setXY(x, y);
 	}
 	
 	/**
@@ -82,24 +75,16 @@ class FlxTouch extends FlxPointer implements IFlxDestroyable
 	 */
 	private function update():Void
 	{
-		if ((_last == -1) && (_current == -1))
-		{
-			_current = 0;
-		}
-		else if ((_last == 2) && (_current == 2))
-		{
-			_current = 1;
-		}
-		_last = _current;
+		input.update();
 		
 		if (justPressed)
 		{
-			_justPressedPosition.set(screenX, screenY);
-			_justPressedTimeInTicks = FlxG.game.ticks;
+			justPressedPosition.set(screenX, screenY);
+			justPressedTimeInTicks = FlxG.game.ticks;
 		}
 		else if (justReleased)
 		{
-			FlxG.swipes.push(new FlxSwipe(touchPointID, _justPressedPosition, getScreenPosition(), _justPressedTimeInTicks));
+			FlxG.swipes.push(new FlxSwipe(touchPointID, justPressedPosition, getScreenPosition(), justPressedTimeInTicks));
 		}
 	}
 	
@@ -111,18 +96,38 @@ class FlxTouch extends FlxPointer implements IFlxDestroyable
 	 */
 	private function setXY(X:Int, Y:Int):Void
 	{
-		_flashPoint.x = X;
-		_flashPoint.y = Y;
-		_flashPoint = FlxG.game.globalToLocal(_flashPoint);
+		flashPoint.x = X;
+		flashPoint.y = Y;
+		flashPoint = FlxG.game.globalToLocal(flashPoint);
 		
-		_globalScreenX = Std.int(_flashPoint.x);
-		_globalScreenY = Std.int(_flashPoint.y);
+		_globalScreenX = Std.int(flashPoint.x);
+		_globalScreenY = Std.int(flashPoint.y);
 		updatePositions();
 	}
 	
-	private inline function get_pressed()     :Bool { return _current > 0;   }
-	private inline function get_justPressed() :Bool { return _current == 2;  }
-	private inline function get_justReleased():Bool { return _current == -1; }
-	private inline function get_isActive()    :Bool { return _current != 0;  }
+	private inline function get_touchPointID():Int
+	{
+		return input.ID;
+	}
+	
+	private inline function get_justReleased():Bool
+	{
+		return input.justReleased;
+	}
+	
+	private inline function get_released():Bool
+	{
+		return input.released;
+	}
+	
+	private inline function get_pressed():Bool
+	{
+		return input.pressed;
+	}
+	
+	private inline function get_justPressed():Bool
+	{
+		return input.justPressed;
+	}
 #end
 }

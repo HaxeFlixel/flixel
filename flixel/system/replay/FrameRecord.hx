@@ -123,7 +123,7 @@ class FrameRecord
 					{
 						keys = new Array<CodeValuePair>();
 					}
-					keys.push(new CodeValuePair(Std.parseInt(keyPair[0]), Std.parseInt(keyPair[1])));
+					keys.push(new CodeValuePair(Std.parseInt(keyPair[0]), cast Std.parseInt(keyPair[1])));
 				}
 			}
 		}
@@ -134,7 +134,7 @@ class FrameRecord
 			array = mouseData.split(",");
 			if (array.length >= 4)
 			{
-				mouse = new MouseRecord(Std.parseInt(array[0]), Std.parseInt(array[1]), Std.parseInt(array[2]), Std.parseInt(array[3]));
+				mouse = new MouseRecord(Std.parseInt(array[0]), Std.parseInt(array[1]), cast Std.parseInt(array[2]), Std.parseInt(array[3]));
 			}
 		}
 		

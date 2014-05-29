@@ -7,6 +7,7 @@ import flixel.FlxG;
 import flixel.input.keyboard.FlxKey;
 import flixel.system.replay.CodeValuePair;
 import flixel.util.FlxArrayUtil;
+import flixel.input.FlxInput;
 
 /**
  * Keeps track of what keys are pressed and how with handy Bools or strings.
@@ -72,7 +73,7 @@ class FlxKeyboard implements IFlxInputManager
 	 */
 	public inline function anyPressed(KeyArray:Array<String>):Bool
 	{ 
-		return checkKeyStatus(KeyArray, FlxKey.PRESSED);
+		return checkKeyStatus(KeyArray, PRESSED);
 	}
 	
 	/**
@@ -84,7 +85,7 @@ class FlxKeyboard implements IFlxInputManager
 	 */
 	public inline function anyJustPressed(KeyArray:Array<String>):Bool
 	{ 
-		return checkKeyStatus(KeyArray, FlxKey.JUST_PRESSED);
+		return checkKeyStatus(KeyArray, JUST_PRESSED);
 	}
 	
 	/**
@@ -96,7 +97,7 @@ class FlxKeyboard implements IFlxInputManager
 	 */
 	public inline function anyJustReleased(KeyArray:Array<String>):Bool
 	{ 
-		return checkKeyStatus(KeyArray, FlxKey.JUST_RELEASED);
+		return checkKeyStatus(KeyArray, JUST_RELEASED);
 	}
 	
 	/**
@@ -108,9 +109,9 @@ class FlxKeyboard implements IFlxInputManager
 	{
 		for (key in _keyList)
 		{
-			if (key != null && key.current == FlxKey.PRESSED)
+			if (key != null && key.pressed)
 			{
-				return key.name;
+				return key.ID;
 			}
 		}
 		return "";
@@ -125,9 +126,9 @@ class FlxKeyboard implements IFlxInputManager
 	{
 		for (key in _keyList)
 		{
-			if (key != null && key.current == FlxKey.JUST_PRESSED)
+			if (key != null && key.justPressed)
 			{
-				return key.name;
+				return key.ID;
 			}
 		}
 		return "";
@@ -142,9 +143,9 @@ class FlxKeyboard implements IFlxInputManager
 	{
 		for (key in _keyList)
 		{
-			if (key != null && key.current == FlxKey.JUST_RELEASED)
+			if (key != null && key.justReleased)
 			{
-				return key.name;
+				return key.ID;
 			}
 		}
 		return "";
@@ -157,20 +158,12 @@ class FlxKeyboard implements IFlxInputManager
 	 * @param	Status		The key state to check for
 	 * @return	Whether the provided key has the specified status
 	 */
-	public function checkStatus(KeyCode:Int, Status:Int):Bool
+	public function checkStatus(KeyCode:Int, Status:FlxInputState):Bool
 	{
 		var k:FlxKey = _keyList[KeyCode];
 		if (k != null)
 		{
 			if (k.current == Status)
-			{
-				return true;
-			}
-			else if (Status == FlxKey.PRESSED && k.current == FlxKey.JUST_PRESSED)
-			{
-				return true;
-			}
-			else if (Status == FlxKey.RELEASED && k.current == FlxKey.JUST_RELEASED)
 			{
 				return true;
 			}
@@ -199,7 +192,7 @@ class FlxKeyboard implements IFlxInputManager
 	/**
 	 * Get an Array of FlxKey that are in a pressed state
 	 * 
-	 * @return	Array<FlxKey> of keys that are currently pressed.
+	 * @return	Array of keys that are currently pressed.
 	 */
 	public function getIsDown():Array<FlxKey>
 	{
@@ -207,7 +200,7 @@ class FlxKeyboard implements IFlxInputManager
 		
 		for (key in _keyList)
 		{
-			if (key != null && key.current > FlxKey.RELEASED)
+			if (key != null && key.pressed)
 			{
 				keysDown.push(key);
 			}
@@ -233,8 +226,7 @@ class FlxKeyboard implements IFlxInputManager
 		{
 			if (key != null)
 			{
-				key.current = FlxKey.RELEASED;
-				key.last = FlxKey.RELEASED;
+				key.release();
 			}
 		}
 	}
@@ -387,9 +379,9 @@ class FlxKeyboard implements IFlxInputManager
 		Lib.current.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 		Lib.current.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 		
-		pressed = new FlxKeyList(FlxKey.PRESSED);
-		justPressed = new FlxKeyList(FlxKey.JUST_PRESSED);
-		justReleased = new FlxKeyList(FlxKey.JUST_RELEASED);
+		pressed = new FlxKeyList(PRESSED);
+		justPressed = new FlxKeyList(JUST_PRESSED);
+		justReleased = new FlxKeyList(JUST_RELEASED);
 	}
 	
 	/**
@@ -411,21 +403,10 @@ class FlxKeyboard implements IFlxInputManager
 	{
 		for (key in _keyList)
 		{
-			if (key == null) 
+			if (key != null) 
 			{
-				continue;
+				key.update();
 			}
-			
-			if (key.last == FlxKey.JUST_RELEASED && key.current == FlxKey.JUST_RELEASED) 
-			{
-				key.current = FlxKey.RELEASED;
-			}
-			else if (key.last == FlxKey.JUST_PRESSED && key.current == FlxKey.JUST_PRESSED) 
-			{
-				key.current = FlxKey.PRESSED;
-			}
-			
-			key.last = key.current;
 		}
 	}
 	
@@ -436,7 +417,7 @@ class FlxKeyboard implements IFlxInputManager
 	 * @param	Status		The key state to check for
 	 * @return	Whether at least one of the keys has the specified status
 	 */
-	private function checkKeyStatus(KeyArray:Array<String>, Status:Int):Bool
+	private function checkKeyStatus(KeyArray:Array<String>, Status:FlxInputState):Bool
 	{
 		if (KeyArray == null)
 		{
@@ -454,14 +435,6 @@ class FlxKeyboard implements IFlxInputManager
 			if (key != null)
 			{
 				if (key.current == Status)
-				{
-					return true;
-				}
-				else if ((Status == FlxKey.PRESSED) && (key.current == FlxKey.JUST_PRESSED))
-				{
-					return true;
-				}
-				else if ((Status == FlxKey.RELEASED) && (key.current == FlxKey.JUST_RELEASED))
 				{
 					return true;
 				}
@@ -564,31 +537,17 @@ class FlxKeyboard implements IFlxInputManager
 	 */
 	private inline function updateKeyStates(KeyCode:Int, Down:Bool):Void
 	{
-		var obj:FlxKey = _keyList[KeyCode];
+		var key:FlxKey = _keyList[KeyCode];
 		
-		if (obj != null) 
+		if (key != null) 
 		{
-			if (obj.current > FlxKey.RELEASED) 
+			if (Down)
 			{
-				if (Down)
-				{
-					obj.current = FlxKey.PRESSED;
-				}
-				else
-				{
-					obj.current = FlxKey.JUST_RELEASED;
-				}
+				key.press();
 			}
-			else 
+			else
 			{
-				if (Down)
-				{
-					obj.current = FlxKey.JUST_PRESSED;
-				}
-				else
-				{
-					obj.current = FlxKey.RELEASED;
-				}
+				key.release();
 			}
 		}
 	}
@@ -603,7 +562,7 @@ class FlxKeyboard implements IFlxInputManager
 	/** Replay functions **/
 	
 	/**
-	 * If any keys are not "released" (0),
+	 * If any keys are not "released",
 	 * this function will return an array indicating
 	 * which keys are pressed and what state they are in.
 	 * 
@@ -618,7 +577,7 @@ class FlxKeyboard implements IFlxInputManager
 		{
 			var key:FlxKey = _keyList[i++];
 			
-			if (key == null || key.current == FlxKey.RELEASED)
+			if (key == null || key.released)
 			{
 				continue;
 			}

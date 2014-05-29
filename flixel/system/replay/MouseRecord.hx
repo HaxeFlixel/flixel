@@ -1,6 +1,7 @@
 package flixel.system.replay;
 
 import flixel.math.FlxPoint;
+import flixel.input.FlxInput;
 
 /**
  * A helper class for the frame records, part of the replay/demo/recording system.
@@ -12,7 +13,7 @@ class MouseRecord
 	/**
 	 * The state of the left mouse button.
 	 */
-	public var button(default, null):Int;
+	public var button(default, null):FlxInputState;
 	/**
 	 * The state of the mouse wheel.
 	 */
@@ -26,11 +27,11 @@ class MouseRecord
 	 * @param   Button   The state of the left mouse button.
 	 * @param   Wheel    The state of the mouse wheel.
 	 */
-	public function new(X:Int, Y:Int, Button:Int, Wheel:Int)
+	public function new(x:Int, y:Int, button:FlxInputState, wheel:Int)
 	{
-		x = X;
-		y = Y;
-		button = Button;
-		wheel = Wheel;
+		this.x = x;
+		this.y = y;
+		this.button = button;
+		this.wheel = wheel;
 	}
 }
