@@ -4,6 +4,7 @@ import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
 import flixel.input.FlxPointer;
+import flixel.math.FlxRandom;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxSort;
 
@@ -560,7 +561,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			Length = length;
 		}
 		
-		return FlxArrayUtil.getRandom(members, StartIndex, Length);
+		return FlxRandom.getObject(members, StartIndex, Length);
 	}
 	
 	/**

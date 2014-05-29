@@ -90,7 +90,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	/**
 	 * The lightness of the color (from 0 to 1)
 	 */
-	public var lightness (get, set):Float;
+	public var lightness(get, set):Float;
 	
 	/**
 	 * Create a color from the lest significant four bytes of an Int

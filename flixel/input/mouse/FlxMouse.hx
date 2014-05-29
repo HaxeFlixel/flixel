@@ -14,7 +14,7 @@ import flash.ui.Mouse;
 import flash.Vector;
 import flixel.FlxCamera;
 import flixel.FlxG;
-import flixel.input.IFlxInput;
+import flixel.input.IFlxInputManager;
 import flixel.system.FlxAssets;
 import flixel.system.replay.MouseRecord;
 import flixel.util.FlxDestroyUtil;
@@ -32,7 +32,7 @@ private class GraphicCursor extends BitmapData {}
  * Automatically accounts for parallax scrolling, etc.
  */
 @:allow(flixel.system.replay.FlxReplay)
-class FlxMouse extends FlxPointer implements IFlxInput
+class FlxMouse extends FlxPointer implements IFlxInputManager
 {
 	/**
 	 * Current "delta" value of mouse wheel. If the wheel was just scrolled up, 
@@ -404,7 +404,7 @@ class FlxMouse extends FlxPointer implements IFlxInput
 		
 		#if js
 		// need to account for scale as the game sprite is not being scaled on html5
-		var scaleMultiplier:Float = FlxG._scaleMode.scale.x;
+		var scaleMultiplier:Float = FlxG.scaleMode.scale.x;
 		_globalScreenX = Std.int(_globalScreenX / scaleMultiplier);
 		_globalScreenY = Std.int(_globalScreenY / scaleMultiplier);
 		#end
@@ -494,18 +494,18 @@ class FlxMouse extends FlxPointer implements IFlxInput
 	}
 	#end
 	
-	private inline function get_pressed():Bool            { return _leftButton.pressed();        }
-	private inline function get_justPressed():Bool        { return _leftButton.justPressed();    }
-	private inline function get_justReleased():Bool       { return _leftButton.justReleased();   }
+	private inline function get_pressed():Bool            { return _leftButton.pressed;        }
+	private inline function get_justPressed():Bool        { return _leftButton.justPressed;    }
+	private inline function get_justReleased():Bool       { return _leftButton.justReleased;   }
 
 	#if !FLX_NO_MOUSE_ADVANCED
-	private inline function get_pressedRight():Bool       { return _rightButton.pressed();       }
-	private inline function get_justPressedRight():Bool   { return _rightButton.justPressed();   }
-	private inline function get_justReleasedRight():Bool  { return _rightButton.justReleased();  }
+	private inline function get_pressedRight():Bool       { return _rightButton.pressed;       }
+	private inline function get_justPressedRight():Bool   { return _rightButton.justPressed;   }
+	private inline function get_justReleasedRight():Bool  { return _rightButton.justReleased;  }
 	
-	private inline function get_pressedMiddle():Bool      { return _middleButton.pressed();      }
-	private inline function get_justPressedMiddle():Bool  { return _middleButton.justPressed();  }
-	private inline function get_justReleasedMiddle():Bool { return _middleButton.justReleased(); }
+	private inline function get_pressedMiddle():Bool      { return _middleButton.pressed;      }
+	private inline function get_justPressedMiddle():Bool  { return _middleButton.justPressed;  }
+	private inline function get_justReleasedMiddle():Bool { return _middleButton.justReleased; }
 	#end
 	
 	/**
@@ -603,7 +603,7 @@ class FlxMouse extends FlxPointer implements IFlxInput
 	private function record():MouseRecord
 	{
 		if ((_lastX == _globalScreenX) && (_lastY == _globalScreenY) 
-			&& (_leftButton.current == 0) && (_lastWheel == wheel))
+			&& (_leftButton.released) && (_lastWheel == wheel))
 		{
 			return null;
 		}

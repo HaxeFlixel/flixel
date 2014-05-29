@@ -32,6 +32,7 @@
  * Bounds objects are now read-only, use set() on them
  * at() -> focusOn()
  * on -> emitting
+ * fixed type parameter not being respected (T was always FlxSprite)
 * Moved FlxMath, FlxPoint, FlxRect, FlxRect, FlxAngle, FlxVelocity and FlxRandom to flixel.math
 * FlxSubState: fix for calling close() within create()
 * FlxPath: exposed nodeIndex as a read-only property
@@ -51,6 +52,24 @@
  * FlxTypedEmitter into FlxEmitter.hx
  * FlxTypedEmitterExt into FlxEmitterExt.hx
  * FlxTypedButton into FlxButton.hx
+* FlxBitmapUtil -> FlxBitmapDataUtil
+* FlxKeyboard: added preventDefaultKeys for HTML5
+* FlxTypedGroup:
+ * added a recurse param to the forEach() functions
+ * removed callAll() and setAll() - use forEach() instead
+* FlxTextField#new(): fix bug with passing null for the Text argument
+* FlxGamepadManager: better handling of disconnecting and reconnecting gamepads. getByID() can now return null.
+* FlxGamepad:
+ * added a connected flag
+ * fixed a bug that would prevent gamepad buttons from being updated
+* FlxRandom:
+ * exposed internalSeed as a read-only property
+ * removed intRanged() and floatRanged(), int() and float() now provide optional ranges
+* FlxArrayUtil: removed randomness-related functions, please use FlxRandom instead
+
+3.3.4
+------------------------------
+* Combatibility with OpenFL 2.0.0
 
 3.3.3
 ------------------------------

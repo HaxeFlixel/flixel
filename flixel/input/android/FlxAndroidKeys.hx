@@ -5,15 +5,12 @@ import flash.events.KeyboardEvent;
 import flash.Lib;
 import flixel.FlxG;
 import flixel.input.keyboard.FlxKey;
-import flixel.system.replay.CodeValuePair;
-import flixel.util.FlxArrayUtil;
-import haxe.ds.HashMap.HashMap;
-import haxe.Log;
+import flixel.input.FlxInput;
 
 /**
  * Keeps track of Android system key presses (Back/Menu)
  */
-class FlxAndroidKeys implements IFlxInput
+class FlxAndroidKeys implements IFlxInputManager
 {
 	/**
 	 * Whether or not android key input is currently enabled
@@ -64,7 +61,7 @@ class FlxAndroidKeys implements IFlxInput
 	 */
 	public inline function anyPressed(KeyArray:Array<Dynamic>):Bool
 	{
-		return checkKeyStatus(KeyArray, FlxKey.PRESSED);
+		return checkKeyStatus(KeyArray, PRESSED);
 	}
 	
 	/**
@@ -81,7 +78,7 @@ class FlxAndroidKeys implements IFlxInput
 	 */
 	public inline function anyJustPressed(KeyArray:Array<Dynamic>):Bool
 	{
-		return checkKeyStatus(KeyArray, FlxKey.JUST_PRESSED);
+		return checkKeyStatus(KeyArray, JUST_PRESSED);
 	}
 	
 	/**
@@ -98,7 +95,7 @@ class FlxAndroidKeys implements IFlxInput
 	 */
 	public inline function anyJustReleased(KeyArray:Array<Dynamic>):Bool
 	{
-		return checkKeyStatus(KeyArray, FlxKey.JUST_RELEASED);
+		return checkKeyStatus(KeyArray, JUST_RELEASED);
 	}
 	
 	
@@ -116,7 +113,7 @@ class FlxAndroidKeys implements IFlxInput
 	/**
 	 * Get an Array of FlxMapObjects that are in a pressed state
 	 *
-	 * @return	Array<FlxMapObject> of keys that are currently pressed.
+	 * @return	Array of keys that are currently pressed.
 	 */
 	public function getIsDown():Array<FlxKey>
 	{
@@ -124,7 +121,7 @@ class FlxAndroidKeys implements IFlxInput
 		
 		for (key in _keyList)
 		{
-			if (key != null && key.current > FlxKey.RELEASED)
+			if (key != null && key.pressed)
 			{
 				keysDown.push(key);
 			}
@@ -150,8 +147,7 @@ class FlxAndroidKeys implements IFlxInput
 		{
 			if (key != null)
 			{
-				key.current = FlxKey.RELEASED;
-				key.last = FlxKey.RELEASED;
+				key.reset();
 			}
 		}
 	}
@@ -166,8 +162,8 @@ class FlxAndroidKeys implements IFlxInput
 		addKey("BACK", 27);
 		addKey("MENU", 16777234); // wow, really?
 		
-		Lib.current.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
-		Lib.current.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
+		FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+		FlxG.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 		
 		pressed = Reflect.makeVarArgs(anyPressed);
 		justPressed = Reflect.makeVarArgs(anyJustPressed);
@@ -181,7 +177,7 @@ class FlxAndroidKeys implements IFlxInput
 	 * @param	Status		The key state to check for
 	 * @return	Whether at least one of the keys has the specified status
 	 */
-	private function checkKeyStatus(KeyArray:Array<Dynamic>, Status:Int):Bool
+	private function checkKeyStatus(KeyArray:Array<Dynamic>, Status:FlxInputState):Bool
 	{
 		if (KeyArray == null)
 		{
@@ -193,18 +189,10 @@ class FlxAndroidKeys implements IFlxInput
 			// Also make lowercase keys work, like "space" or "sPaCe"
 			key = Std.string(key).toUpperCase();
 			
-			var k:FlxKey = _keyList.get(_keyLookup.get(key));
-			if (k != null)
+			var key:FlxKey = _keyList.get(_keyLookup.get(key));
+			if (key != null)
 			{
-				if (k.current == Status)
-				{
-					return true;
-				}
-				else if (Status == FlxKey.PRESSED && k.current == FlxKey.JUST_PRESSED)
-				{
-					return true;
-				}
-				else if (Status == FlxKey.RELEASED && k.current == FlxKey.JUST_RELEASED)
+				if (key.current == Status)
 				{
 					return true;
 				}
@@ -289,31 +277,17 @@ class FlxAndroidKeys implements IFlxInput
 	 */
 	private inline function updateKeyStates(KeyCode:Int, Down:Bool):Void
 	{
-		var obj:FlxKey = _keyList[KeyCode];
+		var key:FlxKey = _keyList[KeyCode];
 		
-		if (obj != null)
+		if (key != null)
 		{
-			if (obj.current > FlxKey.RELEASED)
+			if (Down)
 			{
-				if (Down)
-				{
-					obj.current = FlxKey.PRESSED;
-				}
-				else
-				{
-					obj.current = FlxKey.JUST_RELEASED;
-				}
+				key.press();
 			}
 			else
 			{
-				if (Down)
-				{
-					obj.current = FlxKey.JUST_PRESSED;
-				}
-				else
-				{
-					obj.current = FlxKey.RELEASED;
-				}
+				key.release();
 			}
 		}
 	}
@@ -332,21 +306,10 @@ class FlxAndroidKeys implements IFlxInput
 	{
 		for (key in _keyList)
 		{
-			if (key == null)
+			if (key != null)
 			{
-				continue;
+				key.update();
 			}
-			
-			if (key.last == FlxKey.JUST_RELEASED && key.current == FlxKey.JUST_RELEASED)
-			{
-				key.current = FlxKey.RELEASED;
-			}
-			else if (key.last == FlxKey.JUST_PRESSED && key.current == FlxKey.JUST_PRESSED)
-			{
-				key.current = FlxKey.PRESSED;
-			}
-			
-			key.last = key.current;
 		}
 	}
 }

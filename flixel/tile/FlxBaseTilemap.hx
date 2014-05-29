@@ -167,6 +167,13 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		auto = (AutoTile == null) ? OFF : AutoTile;
 		_startingIndex = (StartingIndex <= 0) ? 0 : StartingIndex;
 
+		if (auto != OFF)
+		{
+			_startingIndex = 1;
+			DrawIndex = 1;
+			CollideIndex = 1;
+		}
+		
 		loadMapData(MapData);
 		applyAutoTile(DrawIndex, CollideIndex);
 		applyCustomRemap();
@@ -258,14 +265,9 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	private function applyAutoTile(DrawIndex:Int, CollideIndex:Int):Void	
 	{
 		// Pre-process the map data if it's auto-tiled
-		var i:Int = 0;
-		
 		if (auto != OFF)
 		{
-			_startingIndex = 1;
-			DrawIndex = 1;
-			CollideIndex = 1;
-			
+			var i:Int = 0;
 			while (i < totalTiles)
 			{
 				autoTile(i++);
@@ -299,7 +301,9 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 
 		if (_randomIndices != null)
 		{
-			var randLambda:Void->Float = _randomLambda != null ? _randomLambda : FlxRandom.float;
+			var randLambda:Void->Float = _randomLambda != null ? _randomLambda : function() {
+				return FlxRandom.float();
+			};
 			
 			while (i < totalTiles)
 			{

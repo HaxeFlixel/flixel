@@ -24,7 +24,7 @@ typedef FlxEmitter = FlxTypedEmitter<FlxParticle>;
  * It is easy to use and relatively efficient,
  * relying on FlxGroup's RECYCLE POWERS.
  */
-class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSprite>
+class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 {
 	/**
 	 * Set your own particle class type here. The custom class must extend FlxParticle.
@@ -285,7 +285,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 			
 			if (Multiple)
 			{
-				randomFrame = FlxRandom.intRanged(0, totalFrames - 1);
+				randomFrame = FlxRandom.int(0, totalFrames - 1);
 				
 				if (bakedRotationAngles > 0)
 				{
@@ -554,7 +554,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<FlxSpri
 		var particleEndScale:Float = endScale.min;
 		if (endScale.min != endScale.max)
 		{
-			particleEndScale = endScale.min + FlxRandom.intRanged(0, Std.int(endScale.max - endScale.min));
+			particleEndScale = endScale.min + FlxRandom.int(0, Std.int(endScale.max - endScale.min));
 		}
 		
 		if (particleEndScale != particle.startScale)
