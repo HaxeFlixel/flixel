@@ -1,18 +1,17 @@
 package;
 
 import flash.display.Sprite;
-import flash.display.StageAlign;
-import flash.display.StageScaleMode;
 import flash.events.Event;
 import flash.Lib;
 import flixel.FlxGame;
 import flixel.FlxState;
+import generate.GenerateState;
 
 class Main extends Sprite
 {
 	var gameWidth:Int = 640; // Width of the game in pixels (might be less / more in actual pixels depending on your zoom).
 	var gameHeight:Int = 480; // Height of the game in pixels (might be less / more in actual pixels depending on your zoom).
-	var initialState:Class<FlxState> = PlayState; // The FlxState the game starts with.
+	var initialState:Class<FlxState> = GenerateState; // The FlxState the game starts with.
 	var zoom:Float = -1; // If -1, zoom is automatically calculated to fit the window dimensions.
 	var framerate:Int = 60; // How many frames per second the game should run at.
 	var skipSplash:Bool = false; // Whether to skip the flixel splash screen that appears in release mode.
