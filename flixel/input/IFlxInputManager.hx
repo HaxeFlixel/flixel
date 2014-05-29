@@ -1,7 +1,7 @@
 package flixel.input;
 
 @:allow(flixel.system.frontEnds.InputFrontEnd)
-interface IFlxInput 
+interface IFlxInputManager 
 {
 	public function reset():Void;
 	private function update():Void;

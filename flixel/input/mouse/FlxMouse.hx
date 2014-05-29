@@ -14,7 +14,7 @@ import flash.ui.Mouse;
 import flash.Vector;
 import flixel.FlxCamera;
 import flixel.FlxG;
-import flixel.input.IFlxInput;
+import flixel.input.IFlxInputManager;
 import flixel.system.FlxAssets;
 import flixel.system.replay.MouseRecord;
 import flixel.util.FlxDestroyUtil;
@@ -32,7 +32,7 @@ private class GraphicCursor extends BitmapData {}
  * Automatically accounts for parallax scrolling, etc.
  */
 @:allow(flixel.system.replay.FlxReplay)
-class FlxMouse extends FlxPointer implements IFlxInput
+class FlxMouse extends FlxPointer implements IFlxInputManager
 {
 	/**
 	 * Current "delta" value of mouse wheel. If the wheel was just scrolled up, 

@@ -11,7 +11,7 @@ import flixel.FlxG;
  * ...
  * @author Zaphod
  */
-class FlxTouchManager implements IFlxInput
+class FlxTouchManager implements IFlxInputManager
 {
 	/**
 	 * The maximum number of concurrent touch points supported by the current device.

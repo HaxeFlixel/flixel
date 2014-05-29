@@ -13,7 +13,7 @@ import flixel.util.FlxArrayUtil;
  */
 @:allow(flixel.system.replay.FlxReplay)
 @:allow(flixel.input.keyboard.FlxKeyList)
-class FlxKeyboard implements IFlxInput
+class FlxKeyboard implements IFlxInputManager
 {
 	/**
 	 * Total amount of keys.

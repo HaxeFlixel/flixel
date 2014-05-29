@@ -19,7 +19,7 @@ import flash.events.GameInputEvent;
  * Manages gamepad input
  * @author Zaphod
  */
-class FlxGamepadManager implements IFlxInput
+class FlxGamepadManager implements IFlxInputManager
 {
 	/**
 	 * The first accessed gamepad - can be null!

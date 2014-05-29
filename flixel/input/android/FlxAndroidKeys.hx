@@ -13,7 +13,7 @@ import haxe.Log;
 /**
  * Keeps track of Android system key presses (Back/Menu)
  */
-class FlxAndroidKeys implements IFlxInput
+class FlxAndroidKeys implements IFlxInputManager
 {
 	/**
 	 * Whether or not android key input is currently enabled
