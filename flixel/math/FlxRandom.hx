@@ -109,31 +109,15 @@ class FlxRandom
 	}
 	
 	/**
-	 * Returns a pseudorandom number between 0 and 2,147,483,647, inclusive.
-	 */
-	public static inline function int():Int
-	{
-		return generate();
-	}
-	
-	/**
-	 * Returns a pseudorandom number between 0 and 1, inclusive.
-	 */
-	public static inline function float():Float
-	{
-		return generate() / MODULUS;
-	}
-	
-	/**
 	 * Returns a pseudorandom integer between Min and Max, inclusive.
 	 * Will not return a number in the Excludes array, if provided.
 	 * Please note that large Excludes arrays can slow calculations.
 	 * 
 	 * @param   Min        The minimum value that should be returned. 0 by default.
 	 * @param   Max        The maximum value that should be returned. 2,147,483,647 by default.
-	 * @param   Excludes   An optional array of values that should not be returned.
+	 * @param   Excludes   An optional array of values that should not be returned. Optional.
 	 */
-	public static function intRanged(Min:Int = 0, Max:Int = MODULUS, ?Excludes:Array<Int>):Int
+	public static function int(Min:Int = 0, Max:Int = MODULUS, ?Excludes:Array<Int>):Int
 	{
 		if (Min == Max)
 		{
@@ -173,10 +157,10 @@ class FlxRandom
 	 * Please note that large Excludes arrays can slow calculations.
 	 * 
 	 * @param   Min        The minimum value that should be returned. 0 by default.
-	 * @param   Max        The maximum value that should be returned. 33,554,429 by default.
-	 * @param   Excludes   An optional array of values that should not be returned.
+	 * @param   Max        The maximum value that should be returned. 1 by default.
+	 * @param   Excludes   An optional array of values that should not be returned. Optional.
 	 */
-	public static function floatRanged(Min:Float = 0, Max:Float = 1, ?Excludes:Array<Float>):Float
+	public static function float(Min:Float = 0, Max:Float = 1, ?Excludes:Array<Float>):Float
 	{
 		var result:Float = 0;
 		
