@@ -630,11 +630,12 @@ class FlxAnimationController implements IFlxDestroyable
 			if (Frame != frameIndex)
 			{
 				_sprite.frame = _sprite.framesData.frames[Frame];
+				frameIndex = Frame;
 				fireCallback();
 			}
 		}
 		
-		return frameIndex = Frame;
+		return frameIndex;
 	}
 	
 	private inline function get_frameName():String

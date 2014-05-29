@@ -499,13 +499,13 @@ class FlxGame extends Sprite
 			}
 			
 			#if !FLX_NO_DEBUG
-			FlxBasic._VISIBLECOUNT = 0;
+			FlxBasic.visibleCount = 0;
 			#end
 			
 			draw();
 			
 			#if !FLX_NO_DEBUG
-			debugger.stats.visibleObjects(FlxBasic._VISIBLECOUNT);
+			debugger.stats.visibleObjects(FlxBasic.visibleCount);
 			debugger.update();
 			#end
 		}
@@ -641,13 +641,13 @@ class FlxGame extends Sprite
 		
 		#if !FLX_NO_DEBUG
 		// Finally actually step through the game physics
-		FlxBasic._ACTIVECOUNT = 0;
+		FlxBasic.activeCount = 0;
 		#end
 		
 		update();
 		
 		#if !FLX_NO_DEBUG
-		debugger.stats.activeObjects(FlxBasic._ACTIVECOUNT);
+		debugger.stats.activeObjects(FlxBasic.activeCount);
 		#end
 	}
 	
@@ -817,8 +817,8 @@ class FlxGame extends Sprite
 		for (camera in FlxG.cameras.list)
 		{
 			_displayMatrix.identity();
-			_displayMatrix.scale(camera.zoom * FlxG._scaleMode.scale.x, camera.zoom * FlxG._scaleMode.scale.y);
-			_displayMatrix.translate(camera.x * FlxG._scaleMode.scale.x, camera.y * FlxG._scaleMode.scale.y);
+			_displayMatrix.scale(camera.zoom * FlxG.scaleMode.scale.x, camera.zoom * FlxG.scaleMode.scale.y);
+			_displayMatrix.translate(camera.x * FlxG.scaleMode.scale.x, camera.y * FlxG.scaleMode.scale.y);
 			
 			// rotate around center
 			if (camera.angle != 0)

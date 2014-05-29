@@ -4,30 +4,30 @@ import flash.display.BitmapData;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 
-class FlxBitmapUtil
+class FlxBitmapDataUtil
 {
 	public static function merge(sourceBitmapData:BitmapData, sourceRect:Rectangle, destBitmapData:BitmapData, destPoint:Point, redMultiplier:Int, greenMultiplier:Int, blueMultiplier:Int, alphaMultiplier:Int):Void
 	{
 		#if flash
 		destBitmapData.merge(sourceBitmapData, sourceRect, destPoint, redMultiplier, greenMultiplier, blueMultiplier, alphaMultiplier);
 		#else
-		if (	destPoint.x >= destBitmapData.width ||
-				destPoint.y >= destBitmapData.height ||
-				sourceRect.x >= sourceBitmapData.width ||
-				sourceRect.y >= sourceBitmapData.height ||
-				sourceRect.x + sourceRect.width <= 0 ||
-				sourceRect.y + sourceRect.height <= 0)
+		if (destPoint.x >= destBitmapData.width ||
+		    destPoint.y >= destBitmapData.height ||
+		    sourceRect.x >= sourceBitmapData.width ||
+		    sourceRect.y >= sourceBitmapData.height ||
+		    sourceRect.x + sourceRect.width <= 0 ||
+		    sourceRect.y + sourceRect.height <= 0)
 		{
 			return;
 		}
 		
 		// need to cut off sourceRect if it too big...
-		while (	sourceRect.x + sourceRect.width > sourceBitmapData.width ||
-				sourceRect.y + sourceRect.height > sourceBitmapData.height ||
-				sourceRect.x < 0 ||
-				sourceRect.y < 0 ||
-				destPoint.x < 0 ||
-				destPoint.y < 0 )
+		while (sourceRect.x + sourceRect.width > sourceBitmapData.width ||
+		       sourceRect.y + sourceRect.height > sourceBitmapData.height ||
+		       sourceRect.x < 0 ||
+		       sourceRect.y < 0 ||
+		       destPoint.x < 0 ||
+		       destPoint.y < 0 )
 		{
 			if (sourceRect.x + sourceRect.width > sourceBitmapData.width)	sourceRect.width = sourceBitmapData.width - sourceRect.x;
 			if (sourceRect.y + sourceRect.height > sourceBitmapData.height)	sourceRect.height = sourceBitmapData.height - sourceRect.y;
@@ -80,25 +80,15 @@ class FlxBitmapUtil
 		var currX:Int = destX;
 		var currY:Int = destY;
 		
-		var sourceColor:Int;
-		var destColor:Int;
-		
-		var sourceRed:Int;
-		var sourceGreen:Int;
-		var sourceBlue:Int;
-		var sourceAlpha:Int;
-		
-		var destRed:Int;
-		var destGreen:Int;
-		var destBlue:Int;
-		var destAlpha:Int;
+		var sourceColor:FlxColor;
+		var destColor:FlxColor;
 		
 		var resultRed:Int;
 		var resultGreen:Int;
 		var resultBlue:Int;
 		var resultAlpha:Int;
 		
-		var resultColor:Int = 0x0;
+		var resultColor:FlxColor = 0x0;
 		destBitmapData.lock();
 		// iterate througn pixels using following rule:
 		// new redDest = [(redSrc * redMultiplier) + (redDest * (256 - redMultiplier))] / 256; 
@@ -115,25 +105,14 @@ class FlxBitmapUtil
 				sourceColor = sourceBitmapData.getPixel32(sourceX, sourceY);
 				destColor = destBitmapData.getPixel32(currX, currY);
 				
-				// get color components
-				sourceRed = FlxColorUtil.getRed(sourceColor);
-				sourceGreen = FlxColorUtil.getGreen(sourceColor);
-				sourceBlue = FlxColorUtil.getBlue(sourceColor);
-				sourceAlpha = FlxColorUtil.getAlpha(sourceColor);
-				
-				destRed = FlxColorUtil.getRed(destColor);
-				destGreen = FlxColorUtil.getGreen(destColor);
-				destBlue = FlxColorUtil.getBlue(destColor);
-				destAlpha = FlxColorUtil.getAlpha(destColor);
-				
 				// calculate merged color components
-				resultRed = mergeColorComponent(sourceRed, destRed, redMultiplier);
-				resultGreen = mergeColorComponent(sourceGreen, destGreen, greenMultiplier);
-				resultBlue = mergeColorComponent(sourceBlue, destBlue, blueMultiplier);
-				resultAlpha = mergeColorComponent(sourceAlpha, destAlpha, alphaMultiplier);
+				resultRed = mergeColorComponent(sourceColor.red, destColor.red, redMultiplier);
+				resultGreen = mergeColorComponent(sourceColor.green, destColor.green, greenMultiplier);
+				resultBlue = mergeColorComponent(sourceColor.blue, destColor.blue, blueMultiplier);
+				resultAlpha = mergeColorComponent(sourceColor.alpha, destColor.alpha, alphaMultiplier);
 				
 				// calculate merged color
-				resultColor = FlxColorUtil.getColor32(resultAlpha, resultRed, resultGreen, resultBlue);
+				resultColor = FlxColor.fromRGB(resultRed, resultGreen, resultBlue, resultAlpha);
 				
 				// set merged color for current pixel
 				destBitmapData.setPixel32(currX, currY, resultColor);
@@ -177,7 +156,7 @@ class FlxBitmapUtil
 			var r1:Int, g1:Int, b1:Int;
 			var r2:Int, g2:Int, b2:Int;
 			var alpha1:Int, alpha2:Int;
-			var resultAlpha:Int, resultColor:Int;
+			var resultAlpha:Int, resultColor:FlxColor;
 			var resultR:Int, resultG:Int, resultB:Int;
 			var diffR:Int, diffG:Int, diffB:Int, diffA:Int;
 			var checkAlpha:Bool = true;

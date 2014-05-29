@@ -10,7 +10,7 @@
 
 -D FLX_RENDER_BLIT
 
---macro mcover.MCover.coverage(['flixel'], ['../'], null)
+#--macro mcover.MCover.coverage(['flixel'], ['../'], null)
 
 -D doc
 
@@ -31,7 +31,7 @@
 
 -D FLX_RENDER_BLIT
 
---macro mcover.MCover.coverage(['flixel'], ['../'], null)
+#--macro mcover.MCover.coverage(['flixel'], ['../'], null)
 
 -D doc
 -D FLX_RECORD

@@ -6,6 +6,7 @@ import flixel.FlxSprite;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
 import massive.munit.Assert;
+import massive.munit.async.AsyncFactory;
 
 class FlxSpriteTest extends FlxTest
 {
@@ -82,7 +83,7 @@ class FlxSpriteTest extends FlxTest
 		Assert.areEqual(StringTools.hex(FlxColor.CRIMSON), "FF" + StringTools.hex(colorSprite.framePixels.getPixel(90, 90)));
 		
 		colorSprite = new FlxSprite();
-		colorSprite.makeGraphic(120,120,FlxColor.CHARTREUSE);
+		colorSprite.makeGraphic(120, 120, FlxColor.CHARTREUSE);
 		Assert.areEqual(StringTools.hex(FlxColor.CHARTREUSE), "FF" + StringTools.hex(colorSprite.framePixels.getPixel(119, 119)));
 	}
 
@@ -177,8 +178,8 @@ class FlxSpriteTest extends FlxTest
 		Assert.areEqual(positionSprite.y, 545);
 	}
 	
-	@Test
-	function testOverlap():Void
+	@AsyncTest
+	function testOverlap(factory:AsyncFactory):Void
 	{
 		Assert.isTrue(FlxG.overlap(sprite1, sprite2));
 		
@@ -186,7 +187,7 @@ class FlxSpriteTest extends FlxTest
 		sprite1.velocity.x = 2000;
 		sprite2.velocity.x = -2000;
 		
-		delay(function() { 
+		delay(this, factory, function() { 
 			Assert.isFalse(FlxG.overlap(sprite1, sprite2)); 
 		});
 	}

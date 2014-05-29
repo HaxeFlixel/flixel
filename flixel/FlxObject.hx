@@ -4,8 +4,7 @@ import flash.display.Graphics;
 import flixel.FlxBasic;
 import flixel.group.FlxGroup;
 import flixel.group.FlxSpriteGroup;
-import flixel.group.FlxTypedGroup;
-import flixel.tile.FlxTilemap;
+import flixel.tile.FlxBaseTilemap;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.math.FlxPoint;
@@ -24,7 +23,7 @@ class FlxObject extends FlxBasic
 	 * This value dictates the maximum number of pixels two objects have to intersect before collision stops trying to separate them.
 	 * Don't modify this unless your objects are passing through eachother.
 	 */
-	public static var SEPARATE_BIAS:Float = 4;
+	public static var SEPARATE_BIAS:Float	= 4;
 	/**
 	 * Generic value for "left" Used by facing, allowCollisions, and touching.
 	 */
@@ -48,7 +47,7 @@ class FlxObject extends FlxBasic
 	/**
 	 * Special-case constant meaning up, used mainly by allowCollisions and touching.
 	 */
-	public static inline var CEILING:Int= UP;
+	public static inline var CEILING:Int	= UP;
 	/**
 	 * Special-case constant meaning down, used mainly by allowCollisions and touching.
 	 */
@@ -97,13 +96,13 @@ class FlxObject extends FlxBasic
 		}
 		
 		//If one of the objects is a tilemap, just pass it off.
-		if (Object1.collisionType == TILEMAP)
+		if (Object1.flixelType == TILEMAP)
 		{
-			return cast(Object1, FlxTilemap).overlapsWithCallback(Object2, separateX);
+			return cast(Object1, FlxBaseTilemap<Dynamic>).overlapsWithCallback(Object2, separateX);
 		}
-		if (Object2.collisionType == TILEMAP)
+		if (Object2.flixelType == TILEMAP)
 		{
-			return cast(Object2, FlxTilemap).overlapsWithCallback(Object1, separateX, true);
+			return cast(Object2, FlxBaseTilemap<Dynamic>).overlapsWithCallback(Object1, separateX, true);
 		}
 		
 		//First, get the two object deltas
@@ -210,13 +209,13 @@ class FlxObject extends FlxBasic
 		}
 		
 		//If one of the objects is a tilemap, just pass it off.
-		if (Object1.collisionType == TILEMAP)
+		if (Object1.flixelType == TILEMAP)
 		{
-			return cast(Object1, FlxTilemap).overlapsWithCallback(Object2, separateY);
+			return cast(Object1, FlxBaseTilemap<Dynamic>).overlapsWithCallback(Object2, separateY);
 		}
-		if (Object2.collisionType == TILEMAP)
+		if (Object2.flixelType == TILEMAP)
 		{
-			return cast(Object2, FlxTilemap).overlapsWithCallback(Object1, separateY, true);
+			return cast(Object2, FlxBaseTilemap<Dynamic>).overlapsWithCallback(Object1, separateY, true);
 		}
 
 		//First, get the two object deltas
@@ -334,15 +333,6 @@ class FlxObject extends FlxBasic
 	@:isVar
 	public var height(get, set):Float;
 	/**
-	 * Gets ot sets the first camera of this object.
-	 */
-	public var camera(get, set):FlxCamera;
-	/**
-	 * This determines on which FlxCameras this object will be drawn. If it is null / has not been
-	 * set, it uses FlxCamera.defaultCameras, which is a reference to FlxG.cameras.list (all cameras) by default.
-	 */
-	public var cameras(get, set):Array<FlxCamera>;
-	/**
 	 * Whether or not the coordinates should be rounded during draw(), true by default (recommended for pixel art). 
 	 * Only affects tilesheet rendering and rendering using BitmapData.draw() in blitting.
 	 * (copyPixels() only renders on whole pixels by nature). Causes draw() to be used if false, which is more expensive.
@@ -458,11 +448,7 @@ class FlxObject extends FlxBasic
 	public var ignoreDrawDebug:Bool = false;
 	#end
 	
-	/**
-	 * Internal private static variables, for performance reasons.
-	 */
 	private var _point:FlxPoint;
-	private var _cameras:Array<FlxCamera>;
 	
 	/**
 	 * @param	X		The X-coordinate of the point in space.
@@ -487,7 +473,7 @@ class FlxObject extends FlxBasic
 	 */
 	private function initVars():Void
 	{
-		collisionType = OBJECT;
+		flixelType = OBJECT;
 		last = FlxPoint.get(x, y);
 		scrollFactor = FlxPoint.get(1, 1);
 		_point = FlxPoint.get();
@@ -521,7 +507,6 @@ class FlxObject extends FlxBasic
 		scrollFactor = FlxDestroyUtil.put(scrollFactor);
 		last = FlxDestroyUtil.put(last);
 		_point = FlxDestroyUtil.put(_point);
-		_cameras = null;
 	}
 	
 	/**
@@ -596,17 +581,17 @@ class FlxObject extends FlxBasic
 	 */
 	public function overlaps(ObjectOrGroup:FlxBasic, InScreenSpace:Bool = false, ?Camera:FlxCamera):Bool
 	{
-		var group = FlxGroup.resolveGroup(ObjectOrGroup);
+		var group = FlxTypedGroup.resolveGroup(ObjectOrGroup);
 		if (group != null) // if it is a group
 		{
-			return FlxGroup.overlaps(overlapsCallback, group, 0, 0, InScreenSpace, Camera);
+			return FlxTypedGroup.overlaps(overlapsCallback, group, 0, 0, InScreenSpace, Camera);
 		}
 		
-		if (ObjectOrGroup.collisionType == TILEMAP)
+		if (ObjectOrGroup.flixelType == TILEMAP)
 		{
 			//Since tilemap's have to be the caller, not the target, to do proper tile-based collisions,
 			// we redirect the call to the tilemap overlap here.
-			return cast(ObjectOrGroup, FlxTilemap).overlaps(this, InScreenSpace, Camera);
+			return cast(ObjectOrGroup, FlxBaseTilemap<Dynamic>).overlaps(this, InScreenSpace, Camera);
 		}
 		
 		var object:FlxObject = cast(ObjectOrGroup, FlxObject);
@@ -644,19 +629,19 @@ class FlxObject extends FlxBasic
 	 */
 	public function overlapsAt(X:Float, Y:Float, ObjectOrGroup:FlxBasic, InScreenSpace:Bool = false, ?Camera:FlxCamera):Bool
 	{
-		var group = FlxGroup.resolveGroup(ObjectOrGroup);
+		var group = FlxTypedGroup.resolveGroup(ObjectOrGroup);
 		if (group != null) // if it is a group
 		{
-			return FlxGroup.overlaps(overlapsAtCallback, group, X, Y, InScreenSpace, Camera);
+			return FlxTypedGroup.overlaps(overlapsAtCallback, group, X, Y, InScreenSpace, Camera);
 		}
 		
-		if (ObjectOrGroup.collisionType == TILEMAP)
+		if (ObjectOrGroup.flixelType == TILEMAP)
 		{
 			//Since tilemap's have to be the caller, not the target, to do proper tile-based collisions,
 			// we redirect the call to the tilemap overlap here.
 			//However, since this is overlapsAt(), we also have to invent the appropriate position for the tilemap.
 			//So we calculate the offset between the player and the requested position, and subtract that from the tilemap.
-			var tilemap:FlxTilemap = cast(ObjectOrGroup, FlxTilemap);
+			var tilemap:FlxBaseTilemap<Dynamic> = cast(ObjectOrGroup, FlxBaseTilemap<Dynamic>);
 			return tilemap.overlapsAt(tilemap.x - (X - x), tilemap.y - (Y - y), this, InScreenSpace, Camera);
 		}
 		
@@ -1050,30 +1035,6 @@ class FlxObject extends FlxBasic
 	private function set_immovable(Value:Bool):Bool
 	{
 		return immovable = Value;
-	}
-	
-	private function get_camera():FlxCamera
-	{
-		return (_cameras == null || _cameras.length == 0) ? FlxCamera.defaultCameras[0] : _cameras[0];
-	}
-	
-	private function set_camera(Value:FlxCamera):FlxCamera
-	{
-		if (_cameras == null)
-			_cameras = [Value];
-		else
-			_cameras[0] = Value;
-		return Value;
-	}
-	
-	private function get_cameras():Array<FlxCamera>
-	{
-		return (_cameras == null) ? FlxCamera.defaultCameras : _cameras;
-	}
-	
-	private function set_cameras(Value:Array<FlxCamera>):Array<FlxCamera>
-	{
-		return _cameras = Value;
 	}
 	
 	private function set_pixelPerfectRender(Value:Bool):Bool 

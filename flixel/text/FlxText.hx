@@ -291,8 +291,8 @@ class FlxText extends FlxSprite
 	 * @param	EmbeddedFont	Whether this text field uses embedded fonts or not
 	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function setFormat(?Font:String, Size:Float = 8, Color:Int = FlxColor.WHITE, ?Alignment:String, 
-		?BorderStyle:FlxTextBorderStyle, BorderColor:Int = FlxColor.TRANSPARENT, Embedded:Bool = true):FlxText
+	public function setFormat(?Font:String, Size:Float = 8, Color:FlxColor = FlxColor.WHITE, ?Alignment:String, 
+		?BorderStyle:FlxTextBorderStyle, BorderColor:FlxColor = 0, Embedded:Bool = true):FlxText
 	{
 		if (BorderStyle == null)
 		{
@@ -338,7 +338,7 @@ class FlxText extends FlxSprite
 	 * @param	Size outline size in pixels
 	 * @param	Quality outline quality - # of iterations to use when drawing. 0:just 1, 1:equal number to BorderSize
 	 */
-	public inline function setBorderStyle(Style:FlxTextBorderStyle, Color:Int = FlxColor.TRANSPARENT, Size:Float = 1, Quality:Float = 1):Void 
+	public inline function setBorderStyle(Style:FlxTextBorderStyle, Color:FlxColor = 0, Size:Float = 1, Quality:Float = 1):Void 
 	{
 		borderStyle = Style;
 		borderColor = Color;
@@ -490,7 +490,7 @@ class FlxText extends FlxSprite
 	/**
 	 * The color of the text being displayed.
 	 */
-	override private function set_color(Color:Int):Int
+	override private function set_color(Color:FlxColor):Int
 	{
 		Color &= 0x00ffffff;
 		if (_defaultFormat.color == Color)
@@ -615,7 +615,7 @@ class FlxText extends FlxSprite
 		return borderStyle;
 	}
 	
-	private function set_borderColor(Color:Int):Int
+	private function set_borderColor(Color:FlxColor):Int
 	{
 		Color &= 0x00ffffff;
 		
@@ -946,7 +946,7 @@ class FlxTextFormat implements IFlxDestroyable
 	/**
 	 * The border color if FlxText has a shadow or a border
 	 */
-	public var borderColor:Int;
+	public var borderColor:FlxColor;
 	
 	/**
 	 * The start index of the string where the format will be applied
@@ -970,7 +970,7 @@ class FlxTextFormat implements IFlxDestroyable
 	 * @param	Start		(Default=-1) The start index of the string where the format will be applied. If not set, the format won't be applied.
 	 * @param	End			(Default=-1) The end index of the string where the format will be applied.
 	 */
-	public function new(?FontColor:Int, ?Bold:Bool, ?Italic:Bool, ?BorderColor:Int, ?Start:Int = -1, ?End:Int = -1)
+	public function new(?FontColor:FlxColor, ?Bold:Bool, ?Italic:Bool, ?BorderColor:FlxColor, ?Start:Int = -1, ?End:Int = -1)
 	{
 		if (FontColor != null)
 		{

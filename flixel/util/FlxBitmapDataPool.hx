@@ -37,7 +37,7 @@ class FlxBitmapDataPool
 	 * 
 	 * @param ?exactSize	If false a BitmapData with size >= [w, h] may be returned.
 	 */
-	public static function get(w:Int, h:Int, transparent:Bool = true, ?fillColor:Int, ?exactSize:Bool = false):BitmapData 
+	public static function get(w:Int, h:Int, transparent:Bool = true, ?fillColor:FlxColor, ?exactSize:Bool = false):BitmapData 
 	{
 		var res:BitmapData = null;
 		

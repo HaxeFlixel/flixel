@@ -25,7 +25,7 @@ class FlxSplash extends FlxState
 	private var _colors:Array<Int>;
 	private var _functions:Array<Void->Void>;
 	private var _curPart:Int = 0;
-	private var _cachedBgColor:Int;
+	private var _cachedBgColor:FlxColor;
 	private var _cachedTimestep:Bool;
 	private var _cachedAutoPause:Bool;
 	

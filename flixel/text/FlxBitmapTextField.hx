@@ -10,6 +10,7 @@ import flixel.text.pxText.PxBitmapFont;
 import flixel.text.pxText.PxDefaultFontGenerator;
 import flixel.text.pxText.PxTextAlign;
 import flixel.math.FlxAngle;
+import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 
 /**
@@ -23,14 +24,14 @@ class FlxBitmapTextField extends FlxSprite
 {
 	private var _font:PxBitmapFont;
 	private var _text:String = "";
-	private var _textColor:Int = 0x0;
+	private var _textColor:FlxColor = 0x0;
 	private var _useTextColor:Bool = true;
 	private var _outline:Bool = false;
-	private var _outlineColor:Int = 0x0;
+	private var _outlineColor:FlxColor = 0x0;
 	private var _shadow:Bool = false;
-	private var _shadowColor:Int = 0x0;
+	private var _shadowColor:FlxColor = 0x0;
 	private var _background:Bool = false;
-	private var _backgroundColor:Int = 0xFFFFFF;
+	private var _backgroundColor:FlxColor = 0xFFFFFF;
 	private var _alignment:Int = 1;
 	private var _padding:Int = 0;
 	
@@ -294,12 +295,12 @@ class FlxBitmapTextField extends FlxSprite
 			drawItem.position = currIndex;
 			
 			#if !FLX_NO_DEBUG
-			FlxBasic._VISIBLECOUNT++;
+			FlxBasic.visibleCount++;
 			#end
 		}
 	}
 	
-	override private function set_color(Color:Int):Int
+	override private function set_color(Color:FlxColor):Int
 	{
 		super.set_color(Color);
 		_pendingTextChange = true;

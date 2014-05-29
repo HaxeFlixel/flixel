@@ -37,7 +37,7 @@ class FlxTextField extends FlxText
 	{
 		super(X, Y, Width, Text, Size, EmbeddedFont);
 		
-		height = (Text.length <= 0) ? 1 : _textField.textHeight + 4;
+		height = (Text == null || Text.length <= 0) ? 1 : _textField.textHeight + 4;
 		
 		_textField.multiline = false;
 		_textField.wordWrap = false;
@@ -183,7 +183,7 @@ class FlxTextField extends FlxText
 		#end
 		
 		#if !FLX_NO_DEBUG
-		FlxBasic._VISIBLECOUNT++;
+		FlxBasic.visibleCount++;
 		#end
 	}
 	

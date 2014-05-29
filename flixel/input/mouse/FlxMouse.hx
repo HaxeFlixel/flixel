@@ -14,7 +14,7 @@ import flash.ui.Mouse;
 import flash.Vector;
 import flixel.FlxCamera;
 import flixel.FlxG;
-import flixel.input.IFlxInput;
+import flixel.input.IFlxInputManager;
 import flixel.system.FlxAssets;
 import flixel.system.replay.MouseRecord;
 import flixel.util.FlxDestroyUtil;
@@ -32,26 +32,19 @@ private class GraphicCursor extends BitmapData {}
  * Automatically accounts for parallax scrolling, etc.
  */
 @:allow(flixel.system.replay.FlxReplay)
-class FlxMouse extends FlxPoint implements IFlxInput
+class FlxMouse extends FlxPointer implements IFlxInputManager
 {
 	/**
 	 * Current "delta" value of mouse wheel. If the wheel was just scrolled up, 
 	 * it will have a positive value and vice versa. Otherwise the value will be 0.
 	 */
 	public var wheel(default, null):Int = 0;
-	/**
-	 * Current X position of the mouse pointer on the screen.
-	 */
-	public var screenX(default, null):Int = 0;
-	/**
-	 * Current Y position of the mouse pointer on the screen.
-	 */
-	public var screenY(default, null):Int = 0;
+	
 	/**
 	 * A display container for the mouse cursor. It is a child of FlxGame and 
 	 * sits at the right "height". Not used on flash with the native cursor API.
 	 */
-	public var cursorContainer:Sprite;
+	public var cursorContainer(default, null):Sprite;
 	/**
 	 * Used to toggle the visiblity of the mouse cursor - works on both 
 	 * the flixel and the system cursor, depending on which one is active.
@@ -132,8 +125,6 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	private var _lastX:Int = 0;
 	private var _lastY:Int = 0;
 	private var _lastWheel:Int = 0;
-	private var _point:FlxPoint;
-	private var _globalScreenPosition:FlxPoint;
 	
 	//Helper variable for cleaning up memory
 	private var _stage:Stage;
@@ -308,56 +299,10 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	#end
 	
 	/**
-	 * Fetch the world position of the mouse on any given camera. NOTE: FlxG.mouse.x and 
-	 * FlxG.mouse.y store the world position of the mouse cursor on the main camera.
-	 * 
-	 * @param   Camera  If unspecified, FlxG.camera is used instead.
-	 * @param   point   An existing point object to store the results (if you don't want a new one created).
-	 * @return  The mouse's location in world space.
-	 */
-	public function getWorldPosition(?Camera:FlxCamera, ?point:FlxPoint):FlxPoint
-	{
-		if (Camera == null)
-		{
-			Camera = FlxG.camera;
-		}
-		if (point == null)
-		{
-			point = FlxPoint.get();
-		}
-		getScreenPosition(Camera, _point);
-		point.set((_point.x + Camera.scroll.x), (_point.y + Camera.scroll.y));
-		return point;
-	}
-
-	/**
-	 * Fetch the screen position of the mouse on any given camera. NOTE: FlxG.mouse.screenX 
-	 * and Mouse.screenY also store the screen position of the mouse cursor on the main camera.
-	 * 
-	 * @param   Camera  If unspecified, FlxG.camera is used instead.
-	 * @param   point   An existing point object to store the results (if you don't want a new one created).
-	 * @return  The mouse's location in screen space.
-	 */
-	public function getScreenPosition(?Camera:FlxCamera, ?point:FlxPoint):FlxPoint
-	{
-		if (Camera == null)
-		{
-			Camera = FlxG.camera;
-		}
-		if (point == null)
-		{
-			point = FlxPoint.get();
-		}
-		point.x = (_globalScreenPosition.x - Camera.x) / Camera.zoom;
-		point.y = (_globalScreenPosition.y - Camera.y) / Camera.zoom;
-		return point;
-	}
-	
-	/**
 	 * Clean up memory. Internal use only.
 	 */
 	@:noCompletion
-	override public function destroy():Void
+	public function destroy():Void
 	{
 		if (_stage != null)
 		{
@@ -376,9 +321,6 @@ class FlxMouse extends FlxPoint implements IFlxInput
 			_stage.removeEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
 		}
 		
-		_point = FlxDestroyUtil.put(_point);
-		_globalScreenPosition = FlxDestroyUtil.put(_globalScreenPosition);
-		
 		cursorContainer = null;
 		_cursor = null;
 		
@@ -386,25 +328,14 @@ class FlxMouse extends FlxPoint implements IFlxInput
 		_matrix = null;
 		#end
 		
-		_leftButton   = FlxDestroyUtil.destroy(_leftButton);
+		_leftButton = FlxDestroyUtil.destroy(_leftButton);
 		#if !FLX_NO_MOUSE_ADVANCED
 		_middleButton = FlxDestroyUtil.destroy(_middleButton);
-		_rightButton  = FlxDestroyUtil.destroy(_rightButton);
+		_rightButton = FlxDestroyUtil.destroy(_rightButton);
 		#end
 		
 		_cursorBitmapData = FlxDestroyUtil.dispose(_cursorBitmapData);
 		FlxG.signals.gameStarted.remove(onGameStart);
-
-		super.destroy();
-	}
-	
-	/**
-	 * Directly set the underyling screen position variable. WARNING! You should never use
-	 * this unless you are trying to manually dispatch low-level mouse events to the stage.
-	 */
-	public inline function setGlobalScreenPositionUnsafe(X:Float, Y:Float):Void 
-	{
-		_globalScreenPosition.set(X, Y);
 	}
 	
 	/**
@@ -427,13 +358,9 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	private function new(CursorContainer:Sprite)
 	{
 		super();
-		
 		cursorContainer = CursorContainer;
 		cursorContainer.mouseChildren = false;
 		cursorContainer.mouseEnabled = false;
-		
-		_point = FlxPoint.get();
-		_globalScreenPosition = FlxPoint.get();
 		
 		_leftButton = new FlxMouseButton(FlxMouseButton.LEFT);
 		
@@ -465,24 +392,24 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	 */
 	private function update():Void
 	{
-		_globalScreenPosition.x = Math.floor(FlxG.game.mouseX);
-		_globalScreenPosition.y = Math.floor(FlxG.game.mouseY);
+		_globalScreenX = Math.floor(FlxG.game.mouseX);
+		_globalScreenY = Math.floor(FlxG.game.mouseY);
 		
 		//actually position the flixel mouse cursor graphic
 		if (visible)
 		{
-			cursorContainer.x = _globalScreenPosition.x;
-			cursorContainer.y = _globalScreenPosition.y;
+			cursorContainer.x = _globalScreenX;
+			cursorContainer.y = _globalScreenY;
 		}
 		
 		#if js
 		// need to account for scale as the game sprite is not being scaled on html5
-		var scaleMultiplier:Float = FlxG._scaleMode.scale.x;
-		_globalScreenPosition.x /= scaleMultiplier;
-		_globalScreenPosition.y /= scaleMultiplier;
+		var scaleMultiplier:Float = FlxG.scaleMode.scale.x;
+		_globalScreenX = Std.int(_globalScreenX / scaleMultiplier);
+		_globalScreenY = Std.int(_globalScreenY / scaleMultiplier);
 		#end
 		
-		updateCursor();
+		updatePositions();
 		
 		// Update the buttons
 		_leftButton.update();
@@ -539,22 +466,7 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	}
 	
 	/**
-	 * Helper function to update the cursor used by update() and playback().
-	 * Updates the x, y, screenX, and screenY variables based on the default camera.
-	 */
-	private function updateCursor():Void
-	{
-		getScreenPosition(null, _point);
-		screenX = Std.int(_point.x);
-		screenY = Std.int(_point.y);
-		
-		getWorldPosition(null, this);
-	}
-	
-	/**
 	 * Internal event handler for input and focus.
-	 * 
-	 * @param   FlashEvent   Flash mouse event.
 	 */
 	private function onMouseWheel(FlashEvent:MouseEvent):Void
 	{
@@ -574,28 +486,26 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	/**
 	 * We're detecting the mouse leave event to prevent a bug where `pressed` remains true 
 	 * for the middle and right mouse button when pressed and dragged outside the window.
-	 * 
-	 * @param   E   Flash event.
 	 */
-	private inline function onMouseLeave(E:Event):Void
+	private inline function onMouseLeave(_):Void
 	{
-		_rightButton.onUp();
-		_middleButton.onUp();
+		_rightButton.onUp(null);
+		_middleButton.onUp(null);
 	}
 	#end
 	
-	private inline function get_pressed():Bool            { return _leftButton.pressed();        }
-	private inline function get_justPressed():Bool        { return _leftButton.justPressed();    }
-	private inline function get_justReleased():Bool       { return _leftButton.justReleased();   }
+	private inline function get_pressed():Bool            { return _leftButton.pressed;        }
+	private inline function get_justPressed():Bool        { return _leftButton.justPressed;    }
+	private inline function get_justReleased():Bool       { return _leftButton.justReleased;   }
 
 	#if !FLX_NO_MOUSE_ADVANCED
-	private inline function get_pressedRight():Bool       { return _rightButton.pressed();       }
-	private inline function get_justPressedRight():Bool   { return _rightButton.justPressed();   }
-	private inline function get_justReleasedRight():Bool  { return _rightButton.justReleased();  }
+	private inline function get_pressedRight():Bool       { return _rightButton.pressed;       }
+	private inline function get_justPressedRight():Bool   { return _rightButton.justPressed;   }
+	private inline function get_justReleasedRight():Bool  { return _rightButton.justReleased;  }
 	
-	private inline function get_pressedMiddle():Bool      { return _middleButton.pressed();      }
-	private inline function get_justPressedMiddle():Bool  { return _middleButton.justPressed();  }
-	private inline function get_justReleasedMiddle():Bool { return _middleButton.justReleased(); }
+	private inline function get_pressedMiddle():Bool      { return _middleButton.pressed;      }
+	private inline function get_justPressedMiddle():Bool  { return _middleButton.justPressed;  }
+	private inline function get_justReleasedMiddle():Bool { return _middleButton.justReleased; }
 	#end
 	
 	/**
@@ -692,13 +602,13 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	
 	private function record():MouseRecord
 	{
-		if ((_lastX == _globalScreenPosition.x) && (_lastY == _globalScreenPosition.y) 
-			&& (_leftButton.current == 0) && (_lastWheel == wheel))
+		if ((_lastX == _globalScreenX) && (_lastY == _globalScreenY) 
+			&& (_leftButton.released) && (_lastWheel == wheel))
 		{
 			return null;
 		}
-		_lastX = Math.floor(_globalScreenPosition.x);
-		_lastY = Math.floor(_globalScreenPosition.y);
+		_lastX = _globalScreenX;
+		_lastY = _globalScreenY;
 		_lastWheel = wheel;
 		return new MouseRecord(_lastX, _lastY, _leftButton.current, _lastWheel);
 	}
@@ -707,8 +617,9 @@ class FlxMouse extends FlxPoint implements IFlxInput
 	{
 		_leftButton.current = Record.button;
 		wheel = Record.wheel;
-		_globalScreenPosition.copyFrom(Record);
-		updateCursor();
+		_globalScreenX = Record.x;
+		_globalScreenY = Record.y;
+		updatePositions();
 	}
 }
 #end

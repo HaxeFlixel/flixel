@@ -92,7 +92,7 @@ private class FlxSignalHandler<T> implements IFlxDestroyable
 	}
 }
 
-private class FlxSignalBase<T> implements IFlxSignal<T> 
+private class FlxBaseSignal<T> implements IFlxSignal<T> 
 {
 	macro static function buildDispatch(exprs:Array<Expr>):Expr
 	{
@@ -203,7 +203,7 @@ private class FlxSignalBase<T> implements IFlxSignal<T>
 	}
 }
 
-private class FlxSignal0 extends FlxSignalBase<Void->Void>
+private class FlxSignal0 extends FlxBaseSignal<Void->Void>
 {
 	public function new()
 	{
@@ -213,11 +213,11 @@ private class FlxSignal0 extends FlxSignalBase<Void->Void>
 	
 	public function dispatch0():Void
 	{
-		FlxSignalBase.buildDispatch();
+		FlxBaseSignal.buildDispatch();
 	}
 }
 
-private class FlxSignal1<T1> extends FlxSignalBase<T1->Void>
+private class FlxSignal1<T1> extends FlxBaseSignal<T1->Void>
 {
 	public function new()
 	{
@@ -227,11 +227,11 @@ private class FlxSignal1<T1> extends FlxSignalBase<T1->Void>
 	
 	public function dispatch1(value1:T1):Void
 	{
-		FlxSignalBase.buildDispatch(value1);
+		FlxBaseSignal.buildDispatch(value1);
 	}
 }
 
-private class FlxSignal2<T1,T2> extends FlxSignalBase<T1->T2->Void>
+private class FlxSignal2<T1,T2> extends FlxBaseSignal<T1->T2->Void>
 {
 	public function new()
 	{
@@ -241,11 +241,11 @@ private class FlxSignal2<T1,T2> extends FlxSignalBase<T1->T2->Void>
 	
 	public function dispatch2(value1:T1, value2:T2):Void
 	{
-		FlxSignalBase.buildDispatch(value1, value2);
+		FlxBaseSignal.buildDispatch(value1, value2);
 	}
 }
 
-private class FlxSignal3<T1,T2,T3> extends FlxSignalBase<T1->T2->T3->Void>
+private class FlxSignal3<T1,T2,T3> extends FlxBaseSignal<T1->T2->T3->Void>
 {
 	public function new()
 	{
@@ -255,11 +255,11 @@ private class FlxSignal3<T1,T2,T3> extends FlxSignalBase<T1->T2->T3->Void>
 	
 	public function dispatch3(value1:T1, value2:T2, value3:T3):Void
 	{
-		FlxSignalBase.buildDispatch(value1, value2, value3);
+		FlxBaseSignal.buildDispatch(value1, value2, value3);
 	}
 }
 
-private class FlxSignal4<T1,T2,T3,T4> extends FlxSignalBase<T1->T2->T3->T4->Void>
+private class FlxSignal4<T1,T2,T3,T4> extends FlxBaseSignal<T1->T2->T3->T4->Void>
 {
 	public function new()
 	{
@@ -269,7 +269,7 @@ private class FlxSignal4<T1,T2,T3,T4> extends FlxSignalBase<T1->T2->T3->T4->Void
 	
 	public function dispatch4(value1:T1, value2:T2, value3:T3, value4:T4):Void
 	{
-		FlxSignalBase.buildDispatch(value1, value2, value3, value4);
+		FlxBaseSignal.buildDispatch(value1, value2, value3, value4);
 	}
 }
 

@@ -247,7 +247,7 @@ class PxBitmapFont
 	
 	public function preparePixelizerBitmapData(PxBitmapData:BitmapData, PxRects:Array<Rectangle>):BitmapData
 	{
-		var bgColor:Int = PxBitmapData.getPixel(0, 0);
+		var bgColor:FlxColor = PxBitmapData.getPixel(0, 0);
 		var cy:Int = 0;
 		var cx:Int;
 		
@@ -358,7 +358,7 @@ class PxBitmapFont
 	}
 	
 	#if FLX_RENDER_BLIT
-	public function getPreparedGlyphs(PxScale:Float, PxColor:Int, PxUseColorTransform:Bool = true):Array<BitmapData>
+	public function getPreparedGlyphs(PxScale:Float, PxColor:FlxColor, PxUseColorTransform:Bool = true):Array<BitmapData>
 	{
 		var result:Array<BitmapData> = [];
 		
@@ -515,9 +515,9 @@ class PxBitmapFont
 	 * @param	PxOffsetY		Y position of thext output.
 	 */
 	#if FLX_RENDER_BLIT 
-	public function render(PxBitmapData:BitmapData, PxFontData:Array<BitmapData>, PxText:String, PxColor:Int, PxOffsetX:Int, PxOffsetY:Int, PxLetterSpacing:Int):Void 
+	public function render(PxBitmapData:BitmapData, PxFontData:Array<BitmapData>, PxText:String, PxColor:FlxColor, PxOffsetX:Int, PxOffsetY:Int, PxLetterSpacing:Int):Void 
 	#else
-	public function render(DrawData:Array<Float>, PxText:String, PxColor:Int, PxSecondColor:Int, PxAlpha:Float, PxOffsetX:Float, PxOffsetY:Float, PxLetterSpacing:Int, PxScale:Float, PxUseColor:Bool = true):Void 
+	public function render(DrawData:Array<Float>, PxText:String, PxColor:FlxColor, PxSecondColor:FlxColor, PxAlpha:Float, PxOffsetX:Float, PxOffsetY:Float, PxLetterSpacing:Int, PxScale:Float, PxUseColor:Bool = true):Void 
 	#end
 	{
 		#if FLX_RENDER_TILE

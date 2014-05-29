@@ -25,6 +25,8 @@ class PS3ButtonID
 
         public static inline var LEFT_ANALOGUE_X:Int = 0;
         public static inline var LEFT_ANALOGUE_Y:Int = 1;
+        public static inline var RIGHT_ANALOGUE_X:Int = 2;
+        public static inline var RIGHT_ANALOGUE_Y:Int = 3;
         public static inline var TRIANGLE_BUTTON_PRESSURE:Int = 16;
         public static inline var CIRCLE_BUTTON_PRESSURE:Int = 17;
         public static inline var X_BUTTON_PRESSURE:Int = 18;

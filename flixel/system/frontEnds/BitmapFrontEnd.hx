@@ -102,7 +102,7 @@ class BitmapFrontEnd
 	 * @param	Key		Force the cache to use a specific Key to index the bitmap.
 	 * @return	The BitmapData we just created.
 	 */
-	public function create(Width:Int, Height:Int, Color:Int, Unique:Bool = false, ?Key:String):CachedGraphics
+	public function create(Width:Int, Height:Int, Color:FlxColor, Unique:Bool = false, ?Key:String):CachedGraphics
 	{
 		var key:String = Key;
 		if (key == null)
