@@ -50,7 +50,7 @@ class AngleTween extends FlxTween
 		}
 		else 
 		{
-			_range = FlxRandom.floatRanged(180, -180);
+			_range = FlxRandom.float(180, -180);
 		}
 		duration = Duration;
 		sprite = Sprite;

@@ -53,6 +53,7 @@
  * FlxTypedEmitterExt into FlxEmitterExt.hx
  * FlxTypedButton into FlxButton.hx
 * FlxBitmapUtil -> FlxBitmapDataUtil
+* FlxKeyboard: added preventDefaultKeys for HTML5
 * FlxTypedGroup:
  * added a recurse param to the forEach() functions
  * removed callAll() and setAll() - use forEach() instead
@@ -61,7 +62,10 @@
 * FlxGamepad:
  * added a connected flag
  * fixed a bug that would prevent gamepad buttons from being updated
-* FlxRandom: exposed internalSeed as a read-only property
+* FlxRandom:
+ * exposed internalSeed as a read-only property
+ * removed intRanged() and floatRanged(), int() and float() now provide optional ranges
+* FlxArrayUtil: removed randomness-related functions, please use FlxRandom instead
 
 3.3.4
 ------------------------------
