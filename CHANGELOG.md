@@ -53,6 +53,7 @@
  * FlxTypedEmitterExt into FlxEmitterExt.hx
  * FlxTypedButton into FlxButton.hx
 * FlxBitmapUtil -> FlxBitmapDataUtil
+* FlxKeyboard: added preventDefaultKeys for HTML5
 * FlxTypedGroup:
  * added a recurse param to the forEach() functions
  * removed callAll() and setAll() - use forEach() instead
