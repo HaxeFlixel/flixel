@@ -305,6 +305,7 @@ class Player extends FlxSprite
 		super.kill();
 		
 		exists = true;
+		active = false;
 		visible = false;
 		moves = false;
 		velocity.set();

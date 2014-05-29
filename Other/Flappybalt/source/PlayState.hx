@@ -169,7 +169,7 @@ class PlayState extends FlxState
 	
 	public function randomPaddleY():Int
 	{
-		return FlxRandom.intRanged(Std.int(_bounceLeft.y), Std.int(_bounceLeft.y + _bounceLeft.height - _paddleLeft.height));
+		return FlxRandom.int(Std.int(_bounceLeft.y), Std.int(_bounceLeft.y + _bounceLeft.height - _paddleLeft.height));
 	}
 	
 	private function increaseScore():Void

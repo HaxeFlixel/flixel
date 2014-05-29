@@ -202,7 +202,7 @@ class Cutup extends FlxNapeState
 				
 				// apply small random impulse
 				var pulseAgl:Float = FlxRandom.float() * Math.PI * 2;
-				var power:Float = FlxRandom.floatRanged(100, 250);
+				var power:Float = FlxRandom.float(100, 250);
 				cutPhySpr.body.applyImpulse(Vec2.weak(
 					power * Math.cos(pulseAgl), power * Math.sin(pulseAgl)
 				));

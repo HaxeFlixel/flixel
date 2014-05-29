@@ -234,18 +234,18 @@ class MenuState extends FlxState
 	{
 		_display.text = "Randomly generating 10 million integers from 0 to 19, excluding nothing, please wait...";
 		timer = Lib.getTimer();
-		for (i in 0...TENMIL) dummyInt = FlxRandom.intRanged(0, 19);
+		for (i in 0...TENMIL) dummyInt = FlxRandom.int(0, 19);
 		_display.text += "\nDone. Total time " + (Lib.getTimer() - timer) + "ms.";
 		
 		_display.text += "\nRandomly generating 10 million integers from 0 to 19, excluding 5, 10, and 15, please wait...";
 		timer = Lib.getTimer();
-		for (i in 0...TENMIL) dummyInt = FlxRandom.intRanged(0, 19, [5,10,15]);
+		for (i in 0...TENMIL) dummyInt = FlxRandom.int(0, 19, [5,10,15]);
 		_display.text += "\nDone. Total time " + (Lib.getTimer() - timer) + "ms.";
 		
 		var results:Array<Int> = [for (i in 0...20) 0];
 		_display.text += "\nRepeating previous analysis but storing results in an array to track random spread...";
 		timer = Lib.getTimer();
-		for (i in 0...TENMIL) results[FlxRandom.intRanged(0, 19, [5, 10, 15])] ++;
+		for (i in 0...TENMIL) results[FlxRandom.int(0, 19, [5, 10, 15])] ++;
 		_display.text += "\nDone. Total time " + (Lib.getTimer() - timer) + "ms. Displaying results...";
 		
 		createHistogram([for (i in 0...results.length) Std.string(i)], results);
@@ -287,12 +287,12 @@ class MenuState extends FlxState
 	{
 		_display.text = "Randomly generating 10 million floats from 0 to 19, excluding nothing, please wait...";
 		timer = Lib.getTimer();
-		for (i in 0...TENMIL) dummyFloat = FlxRandom.floatRanged(0, 19);
+		for (i in 0...TENMIL) dummyFloat = FlxRandom.float(0, 19);
 		_display.text += "\nDone. Total time " + (Lib.getTimer() - timer) + "ms.";
 		
 		_display.text += "\nRandomly generating 10 million floats from 0 to 19, excluding 5, 10, and 15, please wait...";
 		timer = Lib.getTimer();
-		for (i in 0...TENMIL) dummyFloat = FlxRandom.floatRanged(0, 19, [5, 10, 15]);
+		for (i in 0...TENMIL) dummyFloat = FlxRandom.float(0, 19, [5, 10, 15]);
 		_display.text += "\nDone. Total time " + (Lib.getTimer() - timer) + "ms.";
 		
 		var results:Array<Float> = [for (i in 0...21) 0];
@@ -301,7 +301,7 @@ class MenuState extends FlxState
 		
 		for (i in 0...TENMIL)
 		{
-			dummyFloat = FlxRandom.floatRanged(0, 19, [5, 10, 15]);
+			dummyFloat = FlxRandom.float(0, 19, [5, 10, 15]);
 			
 			if (dummyFloat < 0) {
 				results[0]++;
@@ -377,7 +377,7 @@ class MenuState extends FlxState
 	{
 		var heads:Int = 0;
 		var tails:Int = 0;
-		var weight:Int = FlxRandom.intRanged(0, 100);
+		var weight:Int = FlxRandom.int(0, 100);
 		_display.text = "Flipping a coin with a " + weight + "% chance of heads 10 million times...";
 		timer = Lib.getTimer();
 		for (i in 0...TENMIL) if (FlxRandom.chanceRoll(weight)) heads++ else tails++;
@@ -409,7 +409,7 @@ class MenuState extends FlxState
 	
 	private function weightedPicks():Void
 	{
-		var array:Array<Float> = [for (i in 0...10) FlxRandom.intRanged(0, 99)];
+		var array:Array<Float> = [for (i in 0...10) FlxRandom.int(0, 99)];
 		var results:Array<Int> = [for (i in 0...array.length) 0];
 		
 		_display.text = "Performing 1 million random picks from the array " + array + ".";
@@ -444,7 +444,7 @@ class MenuState extends FlxState
 	private function getObjectsWeighted():Void
 	{
 		var objectArray:Array<Int> = [for (i in 0...10) i];
-		var weightArray:Array<Float> = [for (i in 0...objectArray.length) FlxRandom.intRanged(0, 100)];
+		var weightArray:Array<Float> = [for (i in 0...objectArray.length) FlxRandom.int(0, 100)];
 		var expected:Array<Float> = [];
 		var total:Int = 0;
 		
@@ -465,7 +465,7 @@ class MenuState extends FlxState
 	
 	private function shuffleObj():Void
 	{
-		var array:Array<Int> = [for (i in 0...20) FlxRandom.intRanged(0, 100)];
+		var array:Array<Int> = [for (i in 0...20) FlxRandom.int(0, 100)];
 		_display.text = "Shuffling the array " + array + " one million times...";
 		timer = Lib.getTimer();
 		array = FlxRandom.shuffleArray(array, ONEMIL);
@@ -474,8 +474,8 @@ class MenuState extends FlxState
 	
 	private function randomColors():Void
 	{
-		var min:Int = FlxRandom.intRanged(0, 255);
-		var max:Int = FlxRandom.intRanged(0, 255);
+		var min:Int = FlxRandom.int(0, 255);
+		var max:Int = FlxRandom.int(0, 255);
 		
 		_display.text = "Covering the screen with 307,200 random pixels with min " + min + " and max " + max + "...";
 		dummyBitmapdata = new BitmapData(640, 480, false, 0);
@@ -494,12 +494,12 @@ class MenuState extends FlxState
 	
 	private function randomColorsExt():Void
 	{
-		var minr:Int = FlxRandom.intRanged(0, 255);
-		var maxr:Int = FlxRandom.intRanged(0, 255);
-		var ming:Int = FlxRandom.intRanged(0, 255);
-		var maxg:Int = FlxRandom.intRanged(0, 255);
-		var minb:Int = FlxRandom.intRanged(0, 255);
-		var maxb:Int = FlxRandom.intRanged(0, 255);
+		var minr:Int = FlxRandom.int(0, 255);
+		var maxr:Int = FlxRandom.int(0, 255);
+		var ming:Int = FlxRandom.int(0, 255);
+		var maxg:Int = FlxRandom.int(0, 255);
+		var minb:Int = FlxRandom.int(0, 255);
+		var maxb:Int = FlxRandom.int(0, 255);
 		
 		_display.text = "Covering the screen with 307,200 random pixels using colorExt...";
 		dummyBitmapdata = new BitmapData(640, 480, false, 0);

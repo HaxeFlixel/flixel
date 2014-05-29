@@ -15,7 +15,7 @@ class Emitter extends FlxEmitter
 		setRotation(0, 0);
 		
 		if (PixelSize == 0) {
-			PixelSize = FlxRandom.intRanged(1, 4);
+			PixelSize = FlxRandom.int(1, 4);
 		}
 		
 		for (i in 0...100) {

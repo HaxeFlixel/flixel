@@ -25,7 +25,7 @@ class PlayState extends FlxNapeState
 		
 		for (i in 0...50) 
 		{
-			var box = new Box(FlxRandom.intRanged(0, FlxG.width - 30), FlxRandom.intRanged(0, FlxG.height - 30));
+			var box = new Box(FlxRandom.int(0, FlxG.width - 30), FlxRandom.int(0, FlxG.height - 30));
 			box.body.space = FlxNapeState.space;
 			add(box);
 		}

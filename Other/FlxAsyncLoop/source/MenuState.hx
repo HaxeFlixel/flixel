@@ -71,7 +71,7 @@ class MenuState extends FlxState
 	public function addItem():Void
 	{	
 		// each iteration of our loop, we just create a 10x10 FlxSprite in a random x, y position and random color
-		var sprite = new FlxSprite(FlxRandom.intRanged(0, FlxG.width), FlxRandom.intRanged(0, FlxG.height));
+		var sprite = new FlxSprite(FlxRandom.int(0, FlxG.width), FlxRandom.int(0, FlxG.height));
 		sprite.makeGraphic(10, 10, FlxRandom.color(0, 255, 255));
 		_grpFinished.add(sprite);
 		

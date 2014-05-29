@@ -30,11 +30,11 @@ class Bunny extends FlxSprite
 			speedMultiplier = 5000;
 		}
 		
-		velocity.x = speedMultiplier * FlxRandom.floatRanged( -5, 5);
-		velocity.y = speedMultiplier * FlxRandom.floatRanged( -7.5, 2.5);
+		velocity.x = speedMultiplier * FlxRandom.float( -5, 5);
+		velocity.y = speedMultiplier * FlxRandom.float( -7.5, 2.5);
 		acceleration.y = 5;
-		angle = FlxRandom.floatRanged( -15, 15);
-		angularVelocity = 30 * FlxRandom.floatRanged( -5, 5);
+		angle = FlxRandom.float( -15, 15);
+		angularVelocity = 30 * FlxRandom.float( -5, 5);
 		complex = PlayState.complex;
 		elasticity = 1;
 		
@@ -76,7 +76,7 @@ class Bunny extends FlxSprite
 			
 			if (FlxRandom.chanceRoll()) 
 			{
-				velocity.y -= FlxRandom.floatRanged(3, 7);
+				velocity.y -= FlxRandom.float(3, 7);
 			}
 		}
 		else if (y < 0)
@@ -92,7 +92,7 @@ class Bunny extends FlxSprite
 	{
 		if (Value)
 		{
-			scale.x = scale.y = FlxRandom.floatRanged(0.3, 1.3);
+			scale.x = scale.y = FlxRandom.float(0.3, 1.3);
 		}
 		else 
 		{
