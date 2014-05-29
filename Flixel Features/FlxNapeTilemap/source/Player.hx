@@ -16,6 +16,7 @@ class Player extends FlxNapeSprite
 		createRectangularBody(16, 16);
 		body.allowRotation = false;
 		setBodyMaterial(0, 0, 0);
+		pixelPerfectRender = false;
 	}
 	
 	override public function update():Void 
