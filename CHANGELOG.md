@@ -62,6 +62,7 @@
  * added a connected flag
  * fixed a bug that would prevent gamepad buttons from being updated
 * FlxRandom: exposed internalSeed as a read-only property
+* FlxArrayUtil: removed randomness-related functions, please use FlxRandom instead
 
 3.3.4
 ------------------------------
