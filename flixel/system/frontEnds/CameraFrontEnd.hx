@@ -18,7 +18,7 @@ class CameraFrontEnd
 	/**
 	 * The current (global, applies to all cameras) bgColor.
 	 */
-	public var bgColor(get, set):Int;
+	public var bgColor(get, set):FlxColor;
 	
 	/**
 	 * Allows you to possibly slightly optimize the rendering process IF
@@ -264,12 +264,12 @@ class CameraFrontEnd
 		}
 	}
 	
-	private function get_bgColor():Int
+	private function get_bgColor():FlxColor
 	{
 		return (FlxG.camera == null) ? FlxColor.BLACK : FlxG.camera.bgColor;
 	} 
 	
-	private function set_bgColor(Color:FlxColor):Int
+	private function set_bgColor(Color:FlxColor):FlxColor
 	{
 		for (camera in list)
 		{
