@@ -180,13 +180,13 @@ class FlxRandom
 			
 			if (Excludes == null)
 			{
-				result = Min + float() * (Max - Min);
+				result = Min + (generate() / MODULUS) * (Max - Min);
 			}
 			else
 			{
 				do
 				{
-					result = Min + float() * (Max - Min);
+					result = Min + (generate() / MODULUS) * (Max - Min);
 				}
 				while (Excludes.indexOf(result) >= 0);
 			}
@@ -206,7 +206,7 @@ class FlxRandom
 	 */
 	public static inline function chanceRoll(Chance:Float = 50):Bool
 	{
-		return floatRanged(0, 100) < Chance;
+		return float(0, 100) < Chance;
 	}
 	
 	/**
@@ -240,7 +240,7 @@ class FlxRandom
 			totalWeight += i;
 		}
 		
-		totalWeight = floatRanged(0, totalWeight);
+		totalWeight = float(0, totalWeight);
 		
 		for (i in 0...WeightsArray.length)
 		{
@@ -291,7 +291,7 @@ class FlxRandom
 				EndIndex = Objects.length - 1;
 			}
 			
-			selected = Objects[intRanged(StartIndex, EndIndex)];
+			selected = Objects[int(StartIndex, EndIndex)];
 		}
 		
 		return selected;
@@ -314,8 +314,8 @@ class FlxRandom
 		
 		for (i in 0...HowManyTimes)
 		{
-			var pick1:Int = intRanged(0, Objects.length - 1);
-			var pick2:Int = intRanged(0, Objects.length - 1);
+			var pick1:Int = int(0, Objects.length - 1);
+			var pick2:Int = int(0, Objects.length - 1);
 			
 			tempObject = Objects[pick1];
 			Objects[pick1] = Objects[pick2];
@@ -388,9 +388,9 @@ class FlxRandom
 		Max = Std.int(FlxMath.bound(Max, 0, 255));
 		Alpha = Std.int(FlxMath.bound(Alpha, 0, 255));
 		
-		var red = intRanged(Min, Max);
-		var green = GreyScale ? red : intRanged(Min, Max);
-		var blue = GreyScale ? red : intRanged(Min, Max);
+		var red = int(Min, Max);
+		var green = GreyScale ? red : int(Min, Max);
+		var blue = GreyScale ? red : int(Min, Max);
 		
 		return FlxColor.fromRGB(red, green, blue, Alpha);
 	}
@@ -410,10 +410,10 @@ class FlxRandom
 	 */
 	public static function colorExt(RedMinimum:Int = 0, RedMaximum:Int = 255, GreenMinimum:Int = 0, GreenMaximum:Int = 255, BlueMinimum:Int = 0, BlueMaximum:Int = 255, AlphaMinimum:Int = 255, AlphaMaximum:Int = 255):FlxColor
 	{		
-		var red = intRanged(Std.int(FlxMath.bound(RedMinimum, 0, 255)), Std.int(FlxMath.bound(RedMaximum, 0, 255)));
-		var green = intRanged(Std.int(FlxMath.bound(GreenMinimum, 0, 255)), Std.int(FlxMath.bound(GreenMaximum, 0, 255)));
-		var blue = intRanged(Std.int(FlxMath.bound(BlueMinimum, 0, 255)), Std.int(FlxMath.bound(BlueMaximum, 0, 255)));
-		var alpha = intRanged(Std.int(FlxMath.bound(AlphaMinimum, 0, 255)), Std.int(FlxMath.bound(AlphaMaximum, 0, 255)));
+		var red = int(Std.int(FlxMath.bound(RedMinimum, 0, 255)), Std.int(FlxMath.bound(RedMaximum, 0, 255)));
+		var green = int(Std.int(FlxMath.bound(GreenMinimum, 0, 255)), Std.int(FlxMath.bound(GreenMaximum, 0, 255)));
+		var blue = int(Std.int(FlxMath.bound(BlueMinimum, 0, 255)), Std.int(FlxMath.bound(BlueMaximum, 0, 255)));
+		var alpha = int(Std.int(FlxMath.bound(AlphaMinimum, 0, 255)), Std.int(FlxMath.bound(AlphaMaximum, 0, 255)));
 		
 		return FlxColor.fromRGB(red, green, blue, alpha);
 	}

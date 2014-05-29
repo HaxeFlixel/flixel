@@ -83,8 +83,8 @@ class FlxTypedEmitterExt<T:(FlxSprite, IFlxParticle)> extends FlxTypedEmitter<T>
 	private function setParticleMotion(Particle:T, Angle:Float, Distance:Float, AngleRange:Float = 0, DistanceRange:Float = 0):Void
 	{			
 		//set particle direction and speed
-		var a:Float = FlxRandom.floatRanged(Angle, Angle + AngleRange);
-		var d:Float = FlxRandom.floatRanged(Distance, Distance + DistanceRange);
+		var a:Float = FlxRandom.float(Angle, Angle + AngleRange);
+		var d:Float = FlxRandom.float(Distance, Distance + DistanceRange);
 		
 		Particle.velocity.x = Math.cos(a) * d;
 		Particle.velocity.y = Math.sin(a) * d;
