@@ -1,0 +1,40 @@
+package;
+
+import flixel.addons.nape.FlxNapeSprite;
+import flixel.FlxG;
+import flixel.util.FlxColor;
+import nape.phys.Material;
+class Player extends FlxNapeSprite {
+	var speed:Int = 200;
+	public function new(X:Float, Y:Float) {
+		super(X, Y);
+		makeGraphic(16, 16, FlxColor.BLUE);
+		createRectangularBody(16, 16);
+		body.allowRotation = false;
+		setBodyMaterial(0, 0, 0);
+	}
+	
+	override public function update():Void 
+	{
+		if (FlxG.keys.pressed.A) {
+			body.velocity.x = -speed;
+		}
+		else if (FlxG.keys.pressed.D) {
+			body.velocity.x = speed;
+		}
+		else {
+			body.velocity.x = 0;
+		}
+		
+		if (FlxG.keys.pressed.W) {
+			body.velocity.y = -speed;
+		}
+		else if (FlxG.keys.pressed.S) {
+			body.velocity.y = speed;
+		}
+		else {
+			body.velocity.y = 0;
+		}
+		super.update();
+	}
+}
