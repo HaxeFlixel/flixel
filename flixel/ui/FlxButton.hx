@@ -4,6 +4,7 @@ import flash.display.BitmapData;
 import flash.events.MouseEvent;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.input.FlxInput;
 import flixel.input.touch.FlxTouch;
 import flixel.math.FlxPoint;
 import flixel.system.FlxSound;
@@ -137,7 +138,14 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	 * The properties of this button's onOut event (callback function, sound).
 	 */
 	public var onOut(default, null):FlxButtonEvent;
-
+	
+	public var justReleased(get, never):Bool;
+	public var released(get, never):Bool;
+	public var pressed(get, never):Bool;
+	public var justPressed(get, never):Bool;
+	
+	private var input:FlxInput<Int>;
+	
 	/**
 	 * The touch currently pressing this button, if none, it's null. Needed to check for its release.
 	 */
@@ -176,6 +184,8 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		#if !FLX_NO_MOUSE
 		FlxG.stage.addEventListener(MouseEvent.MOUSE_UP, onUpEventListener);
 		#end
+		
+		input = new FlxInput(0);
 	}
 	
 	/**
@@ -194,6 +204,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		
 		labelAlphas = null;
 		_pressedTouch = null;
+		input = null;
 		
 		#if !FLX_NO_MOUSE
 		FlxG.stage.removeEventListener(MouseEvent.MOUSE_UP, onUpEventListener);
@@ -208,6 +219,8 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	override public function update():Void
 	{
 		super.update();
+		
+		input.update();
 		
 		if (!visible) 
 		{
@@ -374,6 +387,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	private function onUpHandler():Void
 	{
 		status = FlxButton.NORMAL;
+		input.release();
 		_pressedMouse = false;
 		_pressedTouch = null;
 		// Order matters here, because onUp.fire() could cause a state change and destroy this object.
@@ -386,6 +400,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	private function onDownHandler():Void
 	{
 		status = FlxButton.PRESSED;
+		input.press();
 		// Order matters here, because onDown.fire() could cause a state change and destroy this object.
 		onDown.fire();
 	}
@@ -450,6 +465,26 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 			label.y = y + labelOffsets[status].y;			
 		}
 		return y;
+	}
+	
+	private inline function get_justReleased():Bool
+	{
+		return input.justReleased;
+	}
+	
+	private inline function get_released():Bool
+	{
+		return input.released;
+	}
+	
+	private inline function get_pressed():Bool
+	{
+		return input.pressed;
+	}
+	
+	private inline function get_justPressed():Bool
+	{
+		return input.justPressed;
 	}
 }
 
