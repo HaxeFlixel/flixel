@@ -167,7 +167,7 @@ class FlxKeyboard implements IFlxInputManager
 		#if !FLX_NO_DEBUG
 		else
 		{
-			FlxG.log.error("Invalid Key: `" + KeyCode + "`.");
+			throw 'Invalid key code: $KeyCode.';
 		}
 		#end
 		

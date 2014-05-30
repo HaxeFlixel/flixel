@@ -92,7 +92,7 @@ class DebuggerFrontEnd
 			var profile = Tracker.findProfile(Object);
 			if (profile == null)
 			{
-				FlxG.log.error("FlxG.debugger.track(): Could not find a tracking profile for this object of class '" + FlxStringUtil.getClassName(Object, true) + "'."); 
+				throw "Could not find a tracking profile for object of class '" + FlxStringUtil.getClassName(Object, true) + "'."; 
 				return null;
 			}
 			else 

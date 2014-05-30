@@ -885,7 +885,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	override public function loadGraphicFromSprite(Sprite:FlxSprite):FlxSprite 
 	{
 		#if !FLX_NO_DEBUG
-		FlxG.log.error("loadGraphicFromSprite() is not supported in FlxSpriteGroups.");
+		throw "This function is not supported in FlxSpriteGroup";
 		#end
 		return this;
 	}
@@ -906,7 +906,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	override public function loadRotatedGraphic(Graphic:FlxGraphicAsset, Rotations:Int = 16, Frame:Int = -1, AntiAliasing:Bool = false, AutoBuffer:Bool = false, ?Key:String):FlxSprite 
 	{
 		#if !FLX_NO_DEBUG
-		FlxG.log.error("loadRotatedGraphic() is not supported in FlxSpriteGroups.");
+		throw "This function is not supported in FlxSpriteGroup";
 		#end
 		return this;
 	}
@@ -918,7 +918,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	override public function makeGraphic(Width:Int, Height:Int, Color:Int = 0xffffffff, Unique:Bool = false, ?Key:String):FlxSprite 
 	{
 		#if !FLX_NO_DEBUG
-		FlxG.log.error("makeGraphic() is not supported in FlxSpriteGroups.");
+		throw "This function is not supported in FlxSpriteGroup";
 		#end
 		return this;
 	}
@@ -930,7 +930,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	override public function loadGraphicFromTexture(Data:FlxTextureAsset, Unique:Bool = false, ?FrameName:String):FlxSprite 
 	{
 		#if !FLX_NO_DEBUG
-		FlxG.log.error("loadGraphicFromTexture() is not supported in FlxSpriteGroups.");
+		throw "This function is not supported in FlxSpriteGroup";
 		#end
 		return this;
 	}
@@ -942,7 +942,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	override public function loadRotatedGraphicFromTexture(Data:Dynamic, Image:String, Rotations:Int = 16, AntiAliasing:Bool = false, AutoBuffer:Bool = false):FlxSprite 
 	{
 		#if !FLX_NO_DEBUG
-		FlxG.log.error("loadRotatedGraphicFromTexture() is not supported in FlxSpriteGroups.");
+		throw "This function is not supported in FlxSpriteGroup";
 		#end
 		return this;
 	}
