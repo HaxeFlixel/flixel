@@ -22,8 +22,8 @@ class PlayState extends FlxState
 		decoration.moves = false;
 		decoration.solid = false;
 		add(decoration);
-		add(new FlxText(32, 36, 96, "collision").setFormat(null, 16, 0x778ea1, "center"));
-		add(new FlxText(32, 60, 96, "DEMO").setFormat(null, 24, 0x778ea1, "center"));
+		add(new FlxText(32, 36, 96, "collision").setFormat(null, 16, 0x778ea1, CENTER));
+		add(new FlxText(32, 60, 96, "DEMO").setFormat(null, 24, 0x778ea1, CENTER));
 		
 		var path:FlxPath;
 		var sprite:FlxSprite;
@@ -94,7 +94,7 @@ class PlayState extends FlxState
 		tx = new FlxText(2, FlxG.height - 12, FlxG.width, "Interact with ARROWS / WASD, or press ENTER for next demo.");
 		tx.scrollFactor.set(0, 0);
 		tx.setBorderStyle(SHADOW, 0x233e58);
-		tx.setFormat(null, 8, 0x778ea1, "center");
+		tx.setFormat(null, 8, 0x778ea1, CENTER);
 		add(tx);
 	}
 	

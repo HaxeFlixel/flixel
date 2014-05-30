@@ -100,11 +100,11 @@ class PlayState extends FlxState
 		
 		// The texts
 		_bunnyCounter = new FlxText(0, 10, FlxG.width, "Bunnies: " + _changeAmount);
-		_bunnyCounter.setFormat(null, 22, FlxColor.BLACK, "center");
+		_bunnyCounter.setFormat(null, 22, FlxColor.BLACK, CENTER);
 		add(_bunnyCounter);
 		
 		_fpsCounter = new FlxText(0, _bunnyCounter.y + _bunnyCounter.height + 20, FlxG.width, "FPS: " + 30);
-		_fpsCounter.setFormat(null, 22, FlxColor.BLACK, "center");
+		_fpsCounter.setFormat(null, 22, FlxColor.BLACK, CENTER);
 		add(_fpsCounter);
 		
 		_times = [];

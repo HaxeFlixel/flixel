@@ -120,7 +120,7 @@ class PlayState extends FlxState
 		
 		// This is for the text at the top of the screen
 		_topText = new FlxText(0, 2, FlxG.width, "Welcome");
-		_topText.alignment = "center";
+		_topText.alignment = CENTER;
 		add(_topText);
 		
 		// Lets make a bunch of buttons! YEAH!!!

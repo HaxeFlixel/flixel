@@ -71,7 +71,7 @@ class DemoState extends FlxState
 		add(prevButton);
 		
 		pageText = new FlxText(0, FlxG.height - 14, FlxG.width, "Page");
-		pageText.alignment = "center";
+		pageText.alignment = CENTER;
 		add(pageText);
 		changePanel();
 		

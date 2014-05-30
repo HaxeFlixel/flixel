@@ -129,7 +129,7 @@ class PlayState extends FlxState
 		}
 		
 		// Check input and move left
-		if (FlxG.keys.anyPressed(["LEFT", "A"]))
+		if (FlxG.keys.anyPressed([LEFT, A]))
 		{
 			_player.velocity.x = -_playerSpeed;
 			_player.flipX = true;
@@ -147,7 +147,7 @@ class PlayState extends FlxState
 		}
 		
 		// Check input and move right
-		if (FlxG.keys.anyPressed(["RIGHT", "D"]))
+		if (FlxG.keys.anyPressed([RIGHT, D]))
 		{
 			_player.velocity.x = _playerSpeed;
 			_player.flipX = false;
@@ -164,8 +164,7 @@ class PlayState extends FlxState
 			_flagWalking = false;
 		}
 		
-		// Jump! when you hit Z or Space or UP
-		if (FlxG.keys.anyPressed(["Z", "SPACE", "UP", "W"]))
+		if (FlxG.keys.anyPressed([Z, SPACE, UP, W]))
 		{
 			if (_player.isTouching(FlxObject.FLOOR)) 
 			{

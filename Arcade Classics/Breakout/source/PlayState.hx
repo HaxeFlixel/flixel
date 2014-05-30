@@ -123,11 +123,11 @@ class PlayState extends FlxState
 		}
 		#end
 		
-		if (FlxG.keys.anyPressed(["LEFT", "A"]) && _bat.x > 10)
+		if (FlxG.keys.anyPressed([LEFT, A]) && _bat.x > 10)
 		{
 			_bat.velocity.x = - BAT_SPEED;
 		}
-		else if (FlxG.keys.anyPressed(["RIGHT", "D"]) && _bat.x < 270)
+		else if (FlxG.keys.anyPressed([RIGHT, D]) && _bat.x < 270)
 		{
 			_bat.velocity.x = BAT_SPEED;
 		}

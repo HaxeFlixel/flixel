@@ -52,11 +52,11 @@ class PlayState extends FlxState
 		add(textBG);
 		
 		var blueText:FlxText = new FlxText(0, _textY, _halfWidth, "WASD");
-		blueText.setFormat(null, 16, FlxColor.AZURE, "center");
+		blueText.setFormat(null, 16, FlxColor.AZURE, CENTER);
 		add(blueText);
 		
 		var redText:FlxText = new FlxText(_halfWidth, _textY, _halfWidth, "Arrow keys", 16);
-		redText.setFormat(null, 16, FlxColor.RED, "center");
+		redText.setFormat(null, 16, FlxColor.RED, CENTER);
 		add(redText);
 	}
 	

@@ -48,12 +48,12 @@ class GUI extends FlxSpriteGroup
 		if (ShowClickInstructions) 
 		{
 			var instructionText = new FlxText(0, 10, Std.int(_xPos), "Click in this area to create particles", 16);
-			instructionText.alignment = "center";
+			instructionText.alignment = CENTER;
 			add(instructionText);	
 		}
 		
 		var toggleText:FlxText = new FlxText(0, FlxG.height - 30, Std.int(_xPos), "Press space to toggle between demos", 16);
-		toggleText.alignment = "center";
+		toggleText.alignment = CENTER;
 		add(toggleText);
 	}
 	

@@ -54,19 +54,19 @@ class MenuState extends FlxState
 		#end
 		
 		// movement
-		if (FlxG.keys.anyPressed(["W", "UP"]))
+		if (FlxG.keys.anyPressed([W, UP]))
 		{
 			spineSprite.y -= 500 * FlxG.elapsed;
 		}
-		else if (FlxG.keys.anyPressed(["S", "DOWN"]))
+		else if (FlxG.keys.anyPressed([S, DOWN]))
 		{
 			spineSprite.y += 500 * FlxG.elapsed;
 		}
-		else if (FlxG.keys.anyPressed(["D", "RIGHT"]))
+		else if (FlxG.keys.anyPressed([D, RIGHT]))
 		{
 			spineSprite.x += 500 * FlxG.elapsed;
 		}
-		else if (FlxG.keys.anyPressed(["A", "LEFT"]))
+		else if (FlxG.keys.anyPressed([A, LEFT]))
 		{
 			spineSprite.x -= 500 * FlxG.elapsed;
 		}

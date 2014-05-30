@@ -254,13 +254,13 @@ class PlayState extends FlxNapeState
 		super.update();
 		
 		var speed = 20;
-		if (FlxG.keys.anyPressed(["A", "LEFT"]))
+		if (FlxG.keys.anyPressed([A, LEFT]))
 			orb.body.applyImpulse(new Vec2( -speed, 0));
-		if (FlxG.keys.anyPressed(["S", "DOWN"]))
+		if (FlxG.keys.anyPressed([S, DOWN]))
 			orb.body.applyImpulse(new Vec2(0, speed));
-		if (FlxG.keys.anyPressed(["D", "RIGHT"]))
+		if (FlxG.keys.anyPressed([D, RIGHT]))
 			orb.body.applyImpulse(new Vec2(speed, 0));
-		if (FlxG.keys.anyPressed(["W", "UP"]))
+		if (FlxG.keys.anyPressed([W, UP]))
 			orb.body.applyImpulse(new Vec2(0, -speed));
 			
 		if (FlxG.keys.justPressed.Y) 

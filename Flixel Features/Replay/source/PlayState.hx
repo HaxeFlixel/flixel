@@ -60,7 +60,7 @@ class PlayState extends FlxState
 		
 		// Set up UI
 		_hintText =  new FlxText(0, 268, 400);
-		_hintText.setFormat(null, 12, FlxColor.BLACK, "center");
+		_hintText.setFormat(null, 12, FlxColor.BLACK, CENTER);
 		add(_hintText);
 		
 		// Adjust things according to different modes
@@ -76,15 +76,15 @@ class PlayState extends FlxState
 		// Update the player
 		_player.acceleration.x = 0;
 		
-		if (FlxG.keys.anyPressed(["LEFT", "A"]))
+		if (FlxG.keys.anyPressed([LEFT, A]))
 		{
 			_player.acceleration.x -= _player.drag.x;
 		}
-		else if (FlxG.keys.anyPressed(["RIGHT", "D"]))
+		else if (FlxG.keys.anyPressed([RIGHT, D]))
 		{
 			_player.acceleration.x += _player.drag.x;
 		}
-		if (FlxG.keys.anyJustPressed(["UP", "W"]) && (_player.velocity.y == 0))
+		if (FlxG.keys.anyJustPressed([UP, W]) && (_player.velocity.y == 0))
 		{
 			_player.velocity.y = -200;
 		}

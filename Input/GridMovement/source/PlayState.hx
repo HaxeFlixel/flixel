@@ -34,8 +34,8 @@ class PlayState extends FlxState
 		#if !mobile
 		// Set and create Txt Howto
 		_howto = new FlxText(0, 225, FlxG.width);
-		_howto.alignment = "center";
-		_howto.text = "Use the ARROW KEYS to move around.";
+		_howto.alignment = CENTER;
+		_howto.text = "Use the ARROW KEYS or WASD to move around.";
 		_howto.scrollFactor.set(0, 0);
 		add(_howto);
 		#end

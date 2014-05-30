@@ -36,7 +36,7 @@ class VictoryState extends FlxState
 		gibs.start(false, 0, 0.005);
 		
 		var text:FlxText = new FlxText(0, 0, FlxG.width, "VICTORY\n\nSCORE: " + Reg.score, 16);
-		text.alignment = "center";
+		text.alignment = CENTER;
 		text.color = 0xffD8EBA2;
 		FlxSpriteUtil.screenCenter(text, false, true);
 		add(text);
@@ -62,7 +62,7 @@ class VictoryState extends FlxState
 		{
 			_timer += FlxG.elapsed;
 			
-			if ((_timer > 0.35) && ((_timer > 10) || FlxG.keys.anyJustPressed(["X", "C"])))
+			if ((_timer > 0.35) && ((_timer > 10) || FlxG.keys.anyJustPressed([X, C])))
 			{
 				_fading = true;
 				FlxG.sound.play("MenuHit2");

@@ -22,11 +22,11 @@ class Player extends FlxSprite
 	{
 		super.update();
 		
-		if (FlxG.keys.anyPressed(["A", "LEFT"]))
+		if (FlxG.keys.anyPressed([A, LEFT]))
 		{
 			velocity.x = -SPEED;
 		}
-		else if (FlxG.keys.anyPressed(["D", "RIGHT"]))
+		else if (FlxG.keys.anyPressed([D, RIGHT]))
 		{
 			velocity.x = SPEED;
 		}
@@ -35,11 +35,11 @@ class Player extends FlxSprite
 			velocity.x = 0;
 		}
 
-		if (FlxG.keys.anyPressed(["W", "UP"]))
+		if (FlxG.keys.anyPressed([W, UP]))
 		{
 			velocity.y = -SPEED;
 		}
-		else if (FlxG.keys.anyPressed(["S", "DOWN"]))
+		else if (FlxG.keys.anyPressed([S, DOWN]))
 		{
 			velocity.y = SPEED;
 		}

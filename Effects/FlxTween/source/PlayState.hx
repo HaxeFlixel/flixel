@@ -97,7 +97,7 @@ class PlayState extends FlxState
 		_easeInfo.push({ name: "none",         ease: null                 });
 		
 		var title = new FlxText(0, 0, FlxG.width, "FlxTween", 64);
-		title.alignment = "center";
+		title.alignment = CENTER;
 		FlxSpriteUtil.screenCenter(title);
 		title.alpha = 0.15;
 		add(title);

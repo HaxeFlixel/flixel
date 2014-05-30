@@ -71,7 +71,7 @@ class PlayState extends FlxState
 		FlxG.camera.bgColor = 0xFF01355F;
 		
 		var txt:FlxText = new FlxText(0, 10, 640, " Sprite filters - click on each sprite to animate or stop animation. ", 8);
-		txt.alignment = "center";
+		txt.alignment = CENTER;
 		add(txt);
 		
 		#if js
@@ -86,7 +86,7 @@ class PlayState extends FlxState
 		spr1.antialiasing = true;
 		add(spr1);
 		txt1 = new FlxText(spr1.x, spr1.y + 120, 100, "No Filter", 10);
-		txt1.alignment = "center";
+		txt1.alignment = CENTER;
 		add(txt1);
 		
 		#if !js
@@ -94,7 +94,7 @@ class PlayState extends FlxState
 		spr2 = new FlxSprite(FlxG.width * 0.5 - 50, FlxG.height / 2 - 100 - 50, GraphicLogo);
 		add(spr2);
 		txt2 = new FlxText(spr2.x, spr2.y + 120, 100, "Glow", 10);
-		txt2.alignment = "center";
+		txt2.alignment = CENTER;
 		add(txt2);
 		filter2 = new GlowFilter(0xFF0000, 1, 50, 50, 1.5, 1);
 		
@@ -105,7 +105,7 @@ class PlayState extends FlxState
 		spr3 = new FlxSprite(FlxG.width * 0.75 - 50, FlxG.height / 2 - 100 - 50, GraphicLogo);
 		add(spr3);
 		txt3 = new FlxText(spr3.x, spr3.y + 120, 100, "Blur", 10);
-		txt3.alignment = "center";
+		txt3.alignment = CENTER;
 		add(txt3);
 		filter3 = new BlurFilter();
 		
@@ -116,7 +116,7 @@ class PlayState extends FlxState
 		spr4 = new FlxSprite(FlxG.width * 0.25 - 50, FlxG.height / 2 + 100 - 50, GraphicLogo);
 		add(spr4);
 		txt4 = new FlxText(spr4.x, spr4.y + 120, 100, "Drop Shadow", 10); 
-		txt4.alignment = "center";
+		txt4.alignment = CENTER;
 		add(txt4);
 		filter4 = new DropShadowFilter(10, 45, 0, .75, 10, 10, 1, 1);
 		
@@ -132,7 +132,7 @@ class PlayState extends FlxState
 		spr5Filter = new FlxSpriteFilter(spr5, 50, 50);
 		spr5Filter.addFilter(filter5);
 		txt5 = new FlxText(spr5.x + 25, spr5.y + 120 + 15, 100, "Bevel\n( flash only )", 10);
-		txt5.alignment = "center";
+		txt5.alignment = CENTER;
 		add(txt5);
 		
 		// DISPLACEMENT MAP
@@ -145,7 +145,7 @@ class PlayState extends FlxState
 		
 		updateDisplaceFilter();
 		txt6 = new FlxText(spr6.x + 25, spr6.y + 120 + 15, 100, "Displacement\n( flash only )", 10);
-		txt6.alignment = "center";
+		txt6.alignment = CENTER;
 		add(txt6);
 		#end
 		

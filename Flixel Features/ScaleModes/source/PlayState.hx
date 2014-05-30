@@ -38,12 +38,12 @@ class PlayState extends FlxState
 		
 		FlxG.scaleMode = ratio;
 		currentPolicy = new FlxText(0, 10, FlxG.width, "ratio");
-		currentPolicy.alignment = "center";
+		currentPolicy.alignment = CENTER;
 		currentPolicy.size = 16;
 		add(currentPolicy);
 		
 		var info:FlxText = new FlxText(0, FlxG.height - 40, FlxG.width, "press space or click to change the scale mode");
-		info.setFormat(null, 14, FlxColor.WHITE, "center");
+		info.setFormat(null, 14, FlxColor.WHITE, CENTER);
 		info.alpha = 0.75;
 		add(info);
 	}

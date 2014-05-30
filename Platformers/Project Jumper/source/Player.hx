@@ -81,12 +81,12 @@ class Player extends FlxSprite
 			acceleration.y = GRAVITY;
 		}
 		
-		if (FlxG.keys.anyPressed(["LEFT", "A"]))
+		if (FlxG.keys.anyPressed([LEFT, A]))
 		{
 			flipX = true;
 			acceleration.x = -drag.x;
 		}
-		else if (FlxG.keys.anyPressed(["RIGHT", "D"]))
+		else if (FlxG.keys.anyPressed([RIGHT, D]))
 		{
 			flipX = false;
 			acceleration.x = drag.x;				
@@ -101,7 +101,7 @@ class Player extends FlxSprite
 		}
 		
 		// Shooting
-		if (FlxG.keys.anyPressed(["X", "J"]))
+		if (FlxG.keys.anyPressed([X, J]))
 		{
 			//Let's put the shooting code in its own function to keep things organized
 			shoot();  
@@ -161,7 +161,7 @@ class Player extends FlxSprite
 	
 	private function climb():Void
 	{
-		if (FlxG.keys.anyPressed(["UP", "W"]))
+		if (FlxG.keys.anyPressed([UP, W]))
 		{
 			if (_onLadder) 
 			{
@@ -174,7 +174,7 @@ class Player extends FlxSprite
 				velocity.y = - RUN_SPEED;
 			}
 		}
-		else if (FlxG.keys.anyPressed(["DOWN", "S"]))
+		else if (FlxG.keys.anyPressed([DOWN, S]))
 		{
 			if (_onLadder) 
 			{

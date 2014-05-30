@@ -42,7 +42,7 @@ class PlayState extends FlxState
 		uiBackground.alpha = 0.85;
 		
 		var title:FlxText = new FlxText(UI_POS_X, 2, UI_WIDTH, "FlxCaveGenerator");
-		title.setFormat(null, 16, FlxColor.BROWN, "center", OUTLINE_FAST, FlxColor.BLACK);
+		title.setFormat(null, 16, FlxColor.BROWN, CENTER, OUTLINE_FAST, FlxColor.BLACK);
 		
 		var smoothingSlider:FlxSlider = new FlxSlider(this, "_smoothingIterations", FlxG.width - 180, 50, 0, 15, 150);
 		smoothingSlider.nameLabel.text = "Smoothing Iterations";
@@ -53,7 +53,7 @@ class PlayState extends FlxState
 		var generationButton:FlxButton = new FlxButton(FlxG.width - 140, 190, "[R]egenerate", generateCave);
 		
 		_generationTime = new FlxText(UI_POS_X, 220, UI_WIDTH);
-		_generationTime.setFormat(null, 8, FlxColor.BLACK, "center");
+		_generationTime.setFormat(null, 8, FlxColor.BLACK, CENTER);
 		
 		// Add all the stuff in correct order
 		add(_tilemap);

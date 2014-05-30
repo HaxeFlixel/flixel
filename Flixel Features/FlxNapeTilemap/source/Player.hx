@@ -21,11 +21,11 @@ class Player extends FlxNapeSprite
 	
 	override public function update():Void 
 	{
-		if (FlxG.keys.anyPressed(["A", "LEFT"]))
+		if (FlxG.keys.anyPressed([A, LEFT]))
 		{
 			body.velocity.x = -speed;
 		}
-		else if (FlxG.keys.anyPressed(["D", "RIGHT"]))
+		else if (FlxG.keys.anyPressed([D, RIGHT]))
 		{
 			body.velocity.x = speed;
 		}
@@ -34,11 +34,11 @@ class Player extends FlxNapeSprite
 			body.velocity.x = 0;
 		}
 		
-		if (FlxG.keys.anyPressed(["W", "UP"]))
+		if (FlxG.keys.anyPressed([W, UP]))
 		{
 			body.velocity.y = -speed;
 		}
-		else if (FlxG.keys.anyPressed(["S", "DOWN"]))
+		else if (FlxG.keys.anyPressed([S, DOWN]))
 		{
 			body.velocity.y = speed;
 		}

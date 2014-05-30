@@ -19,7 +19,7 @@ class PlayState extends FlxState
 		super.create();
 		
 		var text = new FlxText(0, 60, FlxG.width, "Hello HaxeFlixel Community!");
-		text.setFormat(null, 48, FlxColor.BLACK, "center");
+		text.setFormat(null, 48, FlxColor.BLACK, CENTER);
 		text.setBorderStyle(OUTLINE, FlxColor.WHITE, 2);
 		
 		text.addFormat(new FlxTextFormat(0xE6E600, false, false, 0xFF8000, 6, 8));

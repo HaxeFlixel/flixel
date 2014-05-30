@@ -51,7 +51,7 @@ class PlayState extends FlxState
 		// Current score.
 		
 		_scoreDisplay = new FlxText(0, 180, FlxG.width);
-		_scoreDisplay.alignment = "center";
+		_scoreDisplay.alignment = CENTER;
 		_scoreDisplay.color = 0xff868696;
 		add(_scoreDisplay);
 		
@@ -68,7 +68,7 @@ class PlayState extends FlxState
 		// Display high score.
 		
 		_highScore = new FlxText(0, 40, FlxG.width, "");
-		_highScore.alignment = "center";
+		_highScore.alignment = CENTER;
 		_highScore.color = 0xff868696;
 		add(_highScore);
 		

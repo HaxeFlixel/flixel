@@ -31,11 +31,11 @@ class PlayState extends FlxNapeState
 		}
 		
 		xText = new FlxText(0, 20, FlxG.width, "x", 30);
-		xText.alignment = "center";
+		xText.alignment = CENTER;
 		yText = new FlxText(0, xText.frameHeight + 30, FlxG.width, "y", 30);
-		yText.alignment = "center";
+		yText.alignment = CENTER;
 		zText = new FlxText(0, xText.frameHeight + yText.frameHeight + 40, FlxG.width, "z", 30);
-		zText.alignment = "center";
+		zText.alignment = CENTER;
 		
 		add(xText);
 		add(yText);

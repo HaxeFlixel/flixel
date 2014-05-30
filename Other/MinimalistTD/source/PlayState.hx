@@ -135,7 +135,7 @@ class PlayState extends FlxState
 		_sellButton.visible = false;
 		
 		_tutText = new FlxText(0, height - 10, FlxG.width, "Click on a Tower to Upgrade it!");
-		_tutText.alignment = "center";
+		_tutText.alignment = CENTER;
 		_tutText.visible = false;
 		
 		_guiGroup.add(_towerButton);
@@ -165,7 +165,7 @@ class PlayState extends FlxState
 		
 		var sellMessage:FlxText = new FlxText(0, height + 3, FlxG.width, "Click on a tower to sell it");
 		sellMessage.color = FlxColor.BLACK;
-		sellMessage.alignment = "center";
+		sellMessage.alignment = CENTER;
 		
 		_sellMenu.add(sellMessage);
 		_sellMenu.add(new Button(2, height, "<", sellMenuCancel.bind(false), 10));
@@ -220,7 +220,7 @@ class PlayState extends FlxState
 		// Set up miscellaneous items: center text, buildhelper, and the tower range image
 		
 		_centerText = new FlxText( -200, FlxG.height / 2 - 20, FlxG.width, "", 16);
-		_centerText.alignment = "center";
+		_centerText.alignment = CENTER;
 		_centerText.borderStyle = SHADOW;
 		
 		#if !(cpp || neko || js)

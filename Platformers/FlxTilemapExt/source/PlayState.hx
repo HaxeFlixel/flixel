@@ -80,7 +80,7 @@ class PlayState extends FlxState
 		add(_hud);
 		
 		_levelText = new FlxText(FlxG.width - 100, 0, 100);
-		_levelText.setFormat(null, 8, 0xFFFFFFFF, "right");
+		_levelText.setFormat(null, 8, 0xFFFFFFFF, RIGHT);
 		_levelText.text = "Slope Test";
 		_levelText.scrollFactor.set();
 		_hud.add(_levelText);
@@ -101,15 +101,15 @@ class PlayState extends FlxState
 	{
 		_player.acceleration.x = 0;
 		
-		if (FlxG.keys.anyPressed(["LEFT", "A"]))
+		if (FlxG.keys.anyPressed([LEFT, A]))
 		{
 			_player.acceleration.x = -_player.maxVelocity.x * 4;
 		}
-		if (FlxG.keys.anyPressed(["RIGHT", "D"]))
+		if (FlxG.keys.anyPressed([RIGHT, D]))
 		{
 			_player.acceleration.x = _player.maxVelocity.x * 4;
 		}
-		if (FlxG.keys.anyPressed(["SPACE", "W", "UP"]) && _player.isTouching(FlxObject.FLOOR))
+		if (FlxG.keys.anyPressed([SPACE, W, UP]) && _player.isTouching(FlxObject.FLOOR))
 		{
 			_player.velocity.y = -_player.maxVelocity.y / 2;
 		}

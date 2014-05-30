@@ -38,11 +38,11 @@ class PlayState extends FlxState
 		add(_waveSprite);
 		
 		var _txtInstruct:FlxText = new FlxText(0, 5, FlxG.width, INSTRUCTIONS);
-		_txtInstruct.alignment = "center";
+		_txtInstruct.alignment = CENTER;
 		add(_txtInstruct);
 		
 		_statusText = new FlxText(0, FlxG.height - 15, FlxG.width);
-		_statusText.alignment = "center";
+		_statusText.alignment = CENTER;
 		add(_statusText);
 
 		super.create();

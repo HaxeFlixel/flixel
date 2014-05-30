@@ -55,7 +55,7 @@ class State_CodeTest extends FlxUIState
 		
 		var text = new FlxUIText(0, 150, 350, _tongue.get("$CODE_DESC", "ui"));
 		text.x = (FlxG.width - text.width) / 2;
-		text.alignment = "center";
+		text.alignment = CENTER;
 		add(text);
 		
 		/***Basic Chrome***/

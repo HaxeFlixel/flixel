@@ -102,20 +102,20 @@ class Player extends FlxSprite
 	
 	private function updateKeyboardInput():Void
 	{
-		if (FlxG.keys.anyPressed(["A", "LEFT"]))
+		if (FlxG.keys.anyPressed([A, LEFT]))
 		{
 			moveLeft();
 		}
-		else if (FlxG.keys.anyPressed(["D", "RIGHT"]))
+		else if (FlxG.keys.anyPressed([D, RIGHT]))
 		{
 			moveRight();
 		}
 		
-		if (FlxG.keys.anyPressed(["W", "UP"]))
+		if (FlxG.keys.anyPressed([W, UP]))
 		{
 			moveUp();
 		}
-		else if (FlxG.keys.anyPressed(["S", "DOWN"]))
+		else if (FlxG.keys.anyPressed([S, DOWN]))
 		{
 			moveDown();
 		}

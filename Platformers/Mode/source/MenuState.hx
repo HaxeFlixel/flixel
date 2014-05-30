@@ -136,13 +136,13 @@ class MenuState extends FlxState
 			// the stock ones for now instead.
 			var text:FlxText;
 			text = new FlxText(FlxG.width / 2 - 50, FlxG.height / 3 + 39, 100, "by Adam Atomic");
-			text.alignment = "center";
+			text.alignment = CENTER;
 			text.color = 0x3a5c39;
 			add(text);
 			
 			text = new FlxText(FlxG.width / 2 - 40, FlxG.height / 3 + 119, 80, "X + C TO PLAY");
 			text.color = 0x729954;
-			text.alignment = "center";
+			text.alignment = CENTER;
 			add(text);
 			
 			var flixelButton:FlxButton = new FlxButton(FlxG.width / 2 - 40, FlxG.height / 3 + 54, "flixel.org", onFlixel);

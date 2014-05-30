@@ -46,7 +46,7 @@ class PropertySlider extends FlxSpriteGroup
 		valueText = new FlxText((buttonWidth + buttonSpacing) * 2, labelHeight + 2, valueWidth, "0", 12);
 		valueText.font = "fairfax";
 		valueText.wordWrap = false;
-		valueText.alignment = "center";
+		valueText.alignment = CENTER;
 		add(valueText);
 		
 		onChange = function(slider:PropertySlider):Void {};

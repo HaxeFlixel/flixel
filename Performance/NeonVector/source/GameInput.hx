@@ -27,7 +27,7 @@ class GameInput
 	{
 		//Don't enable aiming with the mouse unless the aiming keys aren't in use and the mouse has moved position
 		if (FlxG.mouse.pressed) aimWithMouse = true;
-		else if (FlxG.keys.anyPressed(["LEFT", "RIGHT", "UP", "DOWN"])) aimWithMouse = false;
+		else if (FlxG.keys.anyPressed([LEFT, RIGHT, UP, DOWN])) aimWithMouse = false;
 		else if ((FlxG.mouse.x == _mouseLast.x) && (FlxG.mouse.y == _mouseLast.y)) aimWithMouse = false;
 		else aimWithMouse = true;
 		

@@ -149,7 +149,7 @@ class PlayState extends FlxState
 		
 		// Then we're going to add a text field to display the label we're storing in the scores array.
 		var t:FlxText = new FlxText(4, 4, FlxG.width - 8, statusMessage);
-		t.alignment = "center";
+		t.alignment = CENTER;
 		add(t);
 	}
 	

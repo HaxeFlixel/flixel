@@ -44,11 +44,11 @@ class PlayState extends FlxState
 		add(_glitch);
 		
 		var txtInst:FlxText = new FlxText(0, 5, FlxG.width, INSTRUCTIONS);
-		txtInst.alignment = "center";
+		txtInst.alignment = CENTER;
 		add(txtInst);
 		
 		_statusText = new FlxText(0, FlxG.height - 15, FlxG.width);
-		_statusText.alignment = "center";
+		_statusText.alignment = CENTER;
 		add(_statusText);
 		
 		super.create();

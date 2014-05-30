@@ -106,7 +106,7 @@ class PlayState extends FlxState
 		add(_scoreText);
 		
 		_status = new FlxText(FlxG.width - 160 - 2, 2, 160, "Collect coins.");
-		_status.setFormat(null, 8, FlxColor.WHITE, "right", NONE, FlxColor.BLACK);
+		_status.setFormat(null, 8, FlxColor.WHITE, RIGHT, NONE, FlxColor.BLACK);
 		
 		if (_justDied)
 		{
@@ -120,17 +120,17 @@ class PlayState extends FlxState
 	{
 		_player.acceleration.x = 0;
 		
-		if (FlxG.keys.anyPressed(["LEFT", "A"]))
+		if (FlxG.keys.anyPressed([LEFT, A]))
 		{
 			_player.acceleration.x = -_player.maxVelocity.x * 4;
 		}
 		
-		if (FlxG.keys.anyPressed(["RIGHT", "D"]))
+		if (FlxG.keys.anyPressed([RIGHT, D]))
 		{
 			_player.acceleration.x = _player.maxVelocity.x * 4;
 		}
 		
-		if (FlxG.keys.anyJustPressed(["SPACE", "UP", "W"]) && _player.isTouching(FlxObject.FLOOR))
+		if (FlxG.keys.anyJustPressed([SPACE, UP, W]) && _player.isTouching(FlxObject.FLOOR))
 		{
 			_player.velocity.y = -_player.maxVelocity.y / 2;
 		}

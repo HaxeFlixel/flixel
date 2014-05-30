@@ -45,7 +45,6 @@ class PlayState3 extends FlxState
 	override public function destroy():Void
 	{
 		super.destroy();
-		
 		_platform = null;
 	}
 	
@@ -61,11 +60,11 @@ class PlayState3 extends FlxState
 		
 		_platform.velocity.x = 0;
 		
-		if (FlxG.keys.anyPressed(["LEFT", "A"]))
+		if (FlxG.keys.anyPressed([LEFT, A]))
 		{
 			_platform.velocity.x -= v;
 		}
-		if (FlxG.keys.anyPressed(["RIGHT", "D"]))
+		if (FlxG.keys.anyPressed([RIGHT, D]))
 		{
 			_platform.velocity.x += v;
 		}

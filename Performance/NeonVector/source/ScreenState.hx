@@ -80,7 +80,7 @@ class ScreenState extends FlxState
 		add(cursor);
 		
 		displayText = new FlxText(0, 0, FlxG.width, "");
-		displayText.setFormat(null, 16, 0xffffff, "right");
+		displayText.setFormat(null, 16, 0xffffff, RIGHT);
 		add(displayText);
 		
 		//These are used to implement the glow effect.
@@ -132,13 +132,13 @@ class ScreenState extends FlxState
 		
 		if (PlayerShip.isGameOver) 
 		{
-			displayText.alignment = "center";
+			displayText.alignment = CENTER;
 			displayText.offset.y = 16 - 0.5 * FlxG.height;
 			displayText.text = "Game Over\n" + "Your Score: " + PlayerShip.score + "\n" + "High Score: " + PlayerShip.highScore;
 		}
 		else 
 		{
-			displayText.alignment = "right";
+			displayText.alignment = RIGHT;
 			displayText.offset.y = 0;
 			displayText.text = "Lives: " + PlayerShip.lives + "\t\tScore: " + PlayerShip.score + "\t\tMultiplier: " 
 					+ PlayerShip.multiplier;

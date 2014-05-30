@@ -89,7 +89,7 @@ class PlayState extends FlxState
 		
 		// I'll just leave this here
 		topText = new FlxText(0, 2, FlxG.width, "Welcome");
-		topText.alignment = "center";
+		topText.alignment = CENTER;
 		add(topText);
 		
 		// Let's setup some walls for our pixels to collide against

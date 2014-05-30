@@ -32,19 +32,19 @@ class PlayerShip extends FlxSprite
 	{
 		angularVelocity = 0;
 		
-		if (FlxG.keys.anyPressed(["A", "LEFT"]))
+		if (FlxG.keys.anyPressed([A, LEFT]))
 		{
 			angularVelocity -= 240;
 		}
 		
-		if (FlxG.keys.anyPressed(["D", "RIGHT"]))
+		if (FlxG.keys.anyPressed([D, RIGHT]))
 		{
 			angularVelocity += 240;
 		}
 		
 		acceleration.set();
 		
-		if (FlxG.keys.anyPressed(["W", "UP"]))
+		if (FlxG.keys.anyPressed([W, UP]))
 		{
 			FlxAngle.rotatePoint(90, 0, 0, 0, angle, acceleration);
 		}

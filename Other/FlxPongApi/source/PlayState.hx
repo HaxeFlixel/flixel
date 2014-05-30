@@ -54,7 +54,7 @@ class PlayState extends FlxState
 		newObstacle();
 		
 		_centerText = new FlxText(0, 0, FlxG.width, "");
-		_centerText.alignment = "center";
+		_centerText.alignment = CENTER;
 		_centerText.color = Reg.med_dark;
 		_centerText.y = Std.int((FlxG.height - _centerText.height) / 2);
 		

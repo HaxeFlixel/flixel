@@ -51,7 +51,7 @@ class MenuState extends FlxState
 		
 		// some text for the bar
 		_barText = new FlxText(0, 0, FlxG.width, "Loading... 0 / " + _maxItems);
-		_barText.setFormat(null, 28, FlxColor.WHITE, "center", OUTLINE);
+		_barText.setFormat(null, 28, FlxColor.WHITE, CENTER, OUTLINE);
 		FlxSpriteUtil.screenCenter(_barText);
 		_grpProgress.add(_barText);
 		

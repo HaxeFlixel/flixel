@@ -41,7 +41,7 @@ class MenuState extends FlxState
 		// Game title
 		
 		var headline:FlxText = new FlxText(0, 40, FlxG.width, "Minimalist TD", 16);
-		headline.alignment = "center";
+		headline.alignment = CENTER;
 		
 		// Credits
 		

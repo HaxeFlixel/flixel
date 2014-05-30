@@ -45,7 +45,7 @@ class MenuState extends FlxState
 		// Add the game text and set some formatting options along with a shadow; you can also
 		// pass in your own font if you have one embedded or it uses Flixel's default one
 		_gameTitle = new FlxText(10, 90, 300, "Revenge of the Eye from Outer Space!");
-		_gameTitle.setFormat(null, 16, FlxColor.WHITE, "center");
+		_gameTitle.setFormat(null, 16, FlxColor.WHITE, CENTER);
 		add(_gameTitle);
 		
 		// Adding the background image 320x240

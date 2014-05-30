@@ -26,7 +26,7 @@ class PlayState extends FlxState
 		
 		// Add top text
 		_infoText = new FlxText (0, FlxG.height - 20, FlxG.width);
-		_infoText.alignment = "center";
+		_infoText.alignment = CENTER;
 		add(_infoText);
 		
 		// Add exlposion emitter
