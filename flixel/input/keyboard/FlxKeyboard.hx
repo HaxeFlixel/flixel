@@ -30,7 +30,7 @@ class FlxKeyboard implements IFlxInputManager
 	 * the browser from scrolling when pressing the up or down key for example.
 	 */
 	#if bitfive
-	public var preventDefaultKeys:Array<String> = ["UP", "DOWN", "LEFT", "RIGHT", "TAB", "SPACE"];
+	public var preventDefaultKeys:Array<FlxKeyName> = [UP, DOWN, LEFT, RIGHT, TAB, SPACE];
 	#end
 	
 	/**
@@ -180,7 +180,7 @@ class FlxKeyboard implements IFlxInputManager
 	 * @param	KeyName		The String name of the key.
 	 * @return	The key code for that key.
 	 */
-	public inline function getKeyCode(KeyName:String):Int
+	public inline function getKeyCode(KeyName:FlxKeyName):Int
 	{
 		return _keyLookup.get(KeyName);
 	}
@@ -483,7 +483,7 @@ class FlxKeyboard implements IFlxInputManager
 	{
 		#if bitfive
 		var key:FlxKey = _keyList[keyCode];
-		if (key != null && preventDefaultKeys != null && preventDefaultKeys.indexOf(key.name) != -1)
+		if (key != null && preventDefaultKeys != null && preventDefaultKeys.indexOf(key.ID) != -1)
 		{
 			event.preventDefault();
 		}
@@ -494,7 +494,7 @@ class FlxKeyboard implements IFlxInputManager
 	 * A Helper function to check whether an array of keycodes contains 
 	 * a certain key safely (returns false if the array is null).
 	 */ 
-	private function inKeyArray(KeyArray:Array<String>, KeyCode:Int):Bool
+	private function inKeyArray(KeyArray:Array<FlxKeyName>, KeyCode:Int):Bool
 	{
 		if (KeyArray == null)
 		{
