@@ -308,6 +308,8 @@ class FlxMouseEventManager extends FlxBasic
 		{
 			clearRegistry();
 		}
+		_registeredObjects = new Array<ObjectMouseData<FlxObject>>();
+		_mouseOverObjects = new Array<ObjectMouseData<FlxObject>>();
 	}
 	
 	override public function destroy():Void
