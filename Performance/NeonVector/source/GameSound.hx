@@ -19,15 +19,12 @@ class GameSound
 			
 	public static function create():Void
 	{
-		//FlxG.playMusic(sfxMusic, 0.0);
-		//FlxG.volume = 0.0;
 		FlxG.sound.playMusic("music/Music.mp3", 0.4);
 		FlxG.sound.volume = 0.5;
 	}
 	
 	public static function randomSound(Sounds:Array<String>, VolumeMultiplier:Float = 1.0):Void
 	{
-		var _seed:Int = Math.floor(Sounds.length * Math.random());
-		FlxG.sound.play(Sounds[_seed], FlxG.sound.volume * VolumeMultiplier, false, false);
+		FlxG.sound.play(FlxRandom.getObject(Sounds), FlxG.sound.volume * VolumeMultiplier, false, false);
 	}
 }
