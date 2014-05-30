@@ -421,6 +421,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	private function onOutHandler():Void
 	{
 		status = FlxButton.NORMAL;
+		input.release();
 		// Order matters here, because onOut.fire() could cause a state change and destroy this object.
 		onOut.fire();
 	}
