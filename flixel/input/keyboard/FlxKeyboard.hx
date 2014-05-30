@@ -30,7 +30,7 @@ class FlxKeyboard implements IFlxInputManager
 	 * the browser from scrolling when pressing the up or down key for example.
 	 */
 	#if bitfive
-	public var preventDefaultKeys:Array<String> = ["UP", "DOWN", "LEFT", "RIGHT", "TAB", "SPACE"];
+	public var preventDefaultKeys:Array<FlxKeyName> = [UP, DOWN, LEFT, RIGHT, TAB, SPACE];
 	#end
 	
 	/**
@@ -61,10 +61,10 @@ class FlxKeyboard implements IFlxInputManager
 	#end
 	
 	/**
-	 * Check to see if at least one key from an array of keys is pressed. See FlxG.keys for the key names, pass them in as Strings.
-	 * Example: FlxG.keys.anyPressed(["UP", "W", "SPACE"]) - having them in an array is handy for configurable keys!
+	 * Check to see if at least one key from an array of keys is pressed.
+	 * Example: FlxG.keys.anyPressed([UP, W, SPACE]) - having them in an array is handy for configurable keys!
 	 * 
-	 * @param	KeyArray 	An array of keys as Strings
+	 * @param	KeyArray 	An array of key names
 	 * @return	Whether at least one of the keys passed in is pressed.
 	 */
 	public inline function anyPressed(KeyArray:Array<FlxKeyName>):Bool
@@ -73,10 +73,10 @@ class FlxKeyboard implements IFlxInputManager
 	}
 	
 	/**
-	 * Check to see if at least one key from an array of keys was just pressed. See FlxG.keys for the key names, pass them in as Strings.
-	 * Example: FlxG.keys.anyJustPressed(["UP", "W", "SPACE"]) - having them in an array is handy for configurable keys!
+	 * Check to see if at least one key from an array of keys was just pressed.
+	 * Example: FlxG.keys.anyJustPressed([UP, W, SPACE]) - having them in an array is handy for configurable keys!
 	 * 
-	 * @param	KeyArray 	An array of keys as Strings
+	 * @param	KeyArray 	An array of key names
 	 * @return	Whether at least one of the keys passed was just pressed.
 	 */
 	public inline function anyJustPressed(KeyArray:Array<FlxKeyName>):Bool
@@ -85,10 +85,10 @@ class FlxKeyboard implements IFlxInputManager
 	}
 	
 	/**
-	 * Check to see if at least one key from an array of keys was just released. See FlxG.keys for the key names, pass them in as Strings.
-	 * Example: FlxG.keys.anyJustReleased(["UP", "W", "SPACE"]) - having them in an array is handy for configurable keys!
+	 * Check to see if at least one key from an array of keys was just released.
+	 * Example: FlxG.keys.anyJustReleased([UP, W, SPACE]) - having them in an array is handy for configurable keys!
 	 * 
-	 * @param	KeyArray 	An array of keys as Strings
+	 * @param	KeyArray 	An array of key names
 	 * @return	Whether at least one of the keys passed was just released.
 	 */
 	public inline function anyJustReleased(KeyArray:Array<FlxKeyName>):Bool
@@ -167,7 +167,7 @@ class FlxKeyboard implements IFlxInputManager
 		#if !FLX_NO_DEBUG
 		else
 		{
-			FlxG.log.error("Invalid Key: `" + KeyCode + "`.");
+			throw 'Invalid key code: $KeyCode.';
 		}
 		#end
 		
@@ -180,7 +180,7 @@ class FlxKeyboard implements IFlxInputManager
 	 * @param	KeyName		The String name of the key.
 	 * @return	The key code for that key.
 	 */
-	public inline function getKeyCode(KeyName:String):Int
+	public inline function getKeyCode(KeyName:FlxKeyName):Int
 	{
 		return _keyLookup.get(KeyName);
 	}
@@ -276,7 +276,7 @@ class FlxKeyboard implements IFlxInputManager
 		addKey(END, 35);
 		addKey(INSERT, 45);
 		
-		// FUNTCION KEYS
+		// FUNCTION KEYS
 		i = 1;
 		while (i <= 12)
 		{
@@ -483,7 +483,7 @@ class FlxKeyboard implements IFlxInputManager
 	{
 		#if bitfive
 		var key:FlxKey = _keyList[keyCode];
-		if (key != null && preventDefaultKeys != null && preventDefaultKeys.indexOf(key.name) != -1)
+		if (key != null && preventDefaultKeys != null && preventDefaultKeys.indexOf(key.ID) != -1)
 		{
 			event.preventDefault();
 		}
@@ -494,7 +494,7 @@ class FlxKeyboard implements IFlxInputManager
 	 * A Helper function to check whether an array of keycodes contains 
 	 * a certain key safely (returns false if the array is null).
 	 */ 
-	private function inKeyArray(KeyArray:Array<String>, KeyCode:Int):Bool
+	private function inKeyArray(KeyArray:Array<FlxKeyName>, KeyCode:Int):Bool
 	{
 		if (KeyArray == null)
 		{

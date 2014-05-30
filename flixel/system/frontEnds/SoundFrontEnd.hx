@@ -9,6 +9,7 @@ import flixel.system.FlxAssets.FlxSoundAsset;
 import flixel.system.FlxSound;
 import flixel.math.FlxMath;
 import openfl.Assets;
+import flixel.input.keyboard.FlxKeyName;
 
 @:allow(flixel.FlxGame)
 @:allow(flixel.FlxG)
@@ -33,17 +34,17 @@ class SoundFrontEnd
 	 * The key codes used to increase volume (see FlxG.keys for the keys available).
 	 * Default keys: + (and numpad +). Set to null to deactivate.
 	 */
-	public var volumeUpKeys:Array<String> = ["PLUS", "NUMPADPLUS"];
+	public var volumeUpKeys:Array<FlxKeyName> = [PLUS, NUMPADPLUS];
 	/**
 	 * The keys to decrease volume (see FlxG.keys for the keys available).
 	 * Default keys: - (and numpad -). Set to null to deactivate.
 	 */
-	public var volumeDownKeys:Array<String> = ["MINUS", "NUMPADMINUS"];
+	public var volumeDownKeys:Array<FlxKeyName> = [MINUS, NUMPADMINUS];
 	/**
 	 * The keys used to mute / unmute the game (see FlxG.keys for the keys available).
 	 * Default keys: 0 (and numpad 0). Set to null to deactivate.
 	 */
-	public var muteKeys:Array<String> = ["ZERO", "NUMPADZERO"]; 
+	public var muteKeys:Array<FlxKeyName> = [ZERO, NUMPADZERO]; 
 	#end
 	
 	/**
