@@ -910,24 +910,19 @@ class FlxText extends FlxSprite
 	#if (flash || js)
 	private function convertTextAlignmentFromString(StrAlign:FlxTextAlign):TextFormatAlign
 	#else
-	private function convertTextAlignmentFromString(StrAlign:FlxTextAlign):FlxTextAlign
+	private function convertTextAlignmentFromString(StrAlign:FlxTextAlign):String
 	#end
 	{
-		if (StrAlign == "right")
+		return switch (StrAlign)
 		{
-			return TextFormatAlign.RIGHT;
-		}
-		else if (StrAlign == "center")
-		{
-			return TextFormatAlign.CENTER;
-		}
-		else if (StrAlign == "justify")
-		{
-			return TextFormatAlign.JUSTIFY;
-		}
-		else
-		{
-			return TextFormatAlign.LEFT;
+			case LEFT:
+				TextFormatAlign.LEFT;
+			case CENTER:
+				TextFormatAlign.CENTER;
+			case RIGHT:
+				TextFormatAlign.RIGHT;
+			case JUSTIFY:
+				TextFormatAlign.JUSTIFY;
 		}
 	}
 	
