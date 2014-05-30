@@ -97,6 +97,21 @@ class FlxMouseEventManager extends FlxBasic
 	}
 
 	/**
+	 * Removes all sprites from the registry.
+	 */
+	public static function removeAll():Void {
+		if (_registeredObjects != null)
+		{
+			for (reg in _registeredObjects)
+			{
+				remove(reg.object);
+			}
+		}
+		_registeredObjects = new Array<ObjectMouseData<FlxObject>>();
+		_mouseOverObjects = new Array<ObjectMouseData<FlxObject>>();
+	}
+
+	/**
 	 * Reorders the registered objects, using the current object drawing order.
 	 * This should be called if you alter the draw/update order of a registered object,
 	 * That is, if you alter the position of a registered object inside its FlxGroup.
