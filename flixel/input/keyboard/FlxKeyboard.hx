@@ -61,10 +61,10 @@ class FlxKeyboard implements IFlxInputManager
 	#end
 	
 	/**
-	 * Check to see if at least one key from an array of keys is pressed. See FlxG.keys for the key names, pass them in as Strings.
-	 * Example: FlxG.keys.anyPressed(["UP", "W", "SPACE"]) - having them in an array is handy for configurable keys!
+	 * Check to see if at least one key from an array of keys is pressed.
+	 * Example: FlxG.keys.anyPressed([UP, W, SPACE]) - having them in an array is handy for configurable keys!
 	 * 
-	 * @param	KeyArray 	An array of keys as Strings
+	 * @param	KeyArray 	An array of key names
 	 * @return	Whether at least one of the keys passed in is pressed.
 	 */
 	public inline function anyPressed(KeyArray:Array<FlxKeyName>):Bool
@@ -73,10 +73,10 @@ class FlxKeyboard implements IFlxInputManager
 	}
 	
 	/**
-	 * Check to see if at least one key from an array of keys was just pressed. See FlxG.keys for the key names, pass them in as Strings.
-	 * Example: FlxG.keys.anyJustPressed(["UP", "W", "SPACE"]) - having them in an array is handy for configurable keys!
+	 * Check to see if at least one key from an array of keys was just pressed.
+	 * Example: FlxG.keys.anyJustPressed([UP, W, SPACE]) - having them in an array is handy for configurable keys!
 	 * 
-	 * @param	KeyArray 	An array of keys as Strings
+	 * @param	KeyArray 	An array of key names
 	 * @return	Whether at least one of the keys passed was just pressed.
 	 */
 	public inline function anyJustPressed(KeyArray:Array<FlxKeyName>):Bool
@@ -85,10 +85,10 @@ class FlxKeyboard implements IFlxInputManager
 	}
 	
 	/**
-	 * Check to see if at least one key from an array of keys was just released. See FlxG.keys for the key names, pass them in as Strings.
-	 * Example: FlxG.keys.anyJustReleased(["UP", "W", "SPACE"]) - having them in an array is handy for configurable keys!
+	 * Check to see if at least one key from an array of keys was just released.
+	 * Example: FlxG.keys.anyJustReleased([UP, W, SPACE]) - having them in an array is handy for configurable keys!
 	 * 
-	 * @param	KeyArray 	An array of keys as Strings
+	 * @param	KeyArray 	An array of key names
 	 * @return	Whether at least one of the keys passed was just released.
 	 */
 	public inline function anyJustReleased(KeyArray:Array<FlxKeyName>):Bool
@@ -276,7 +276,7 @@ class FlxKeyboard implements IFlxInputManager
 		addKey(END, 35);
 		addKey(INSERT, 45);
 		
-		// FUNTCION KEYS
+		// FUNCTION KEYS
 		i = 1;
 		while (i <= 12)
 		{

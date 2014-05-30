@@ -69,9 +69,9 @@ class FlxText extends FlxSprite
 	public var wordWrap(get, set):Bool;
 	
 	/**
-	 * The alignment of the font ("left", "right", or "center").
+	 * The alignment of the font (LEFT, RIGHT, CENTER or JUSTIFY).
 	 */
-	public var alignment(get, set):String;
+	public var alignment(get, set):FlxTextAlign;
 	
 	/**
 	 * Use a border style
@@ -285,13 +285,13 @@ class FlxText extends FlxSprite
 	 * @param	Font			The name of the font face for the text display.
 	 * @param	Size			The size of the font (in pixels essentially).
 	 * @param	Color			The color of the text in traditional flash 0xRRGGBB format.
-	 * @param	Alignment		A string representing the desired alignment ("left,"right" or "center").
+	 * @param	Alignment		The desired alignment
 	 * @param	BorderStyle		NONE, SHADOW, OUTLINE, or OUTLINE_FAST (use setBorderFormat)
 	 * @param	BorderColor 	Int, color for the border, 0xRRGGBB format
 	 * @param	EmbeddedFont	Whether this text field uses embedded fonts or not
 	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function setFormat(?Font:String, Size:Float = 8, Color:FlxColor = FlxColor.WHITE, ?Alignment:String, 
+	public function setFormat(?Font:String, Size:Float = 8, Color:FlxColor = FlxColor.WHITE, ?Alignment:FlxTextAlign, 
 		?BorderStyle:FlxTextBorderStyle, BorderColor:FlxColor = 0, Embedded:Bool = true):FlxText
 	{
 		if (BorderStyle == null)
@@ -590,12 +590,12 @@ class FlxText extends FlxSprite
 		return value;
 	}
 	
-	private inline function get_alignment():String
+	private inline function get_alignment():FlxTextAlign
 	{
 		return cast(_defaultFormat.align, String);
 	}
 	
-	private function set_alignment(Alignment:String):String
+	private function set_alignment(Alignment:FlxTextAlign):FlxTextAlign
 	{
 		_defaultFormat.align = convertTextAlignmentFromString(Alignment);
 		_textField.defaultTextFormat = _defaultFormat;
@@ -908,9 +908,9 @@ class FlxText extends FlxSprite
 	 * Method for converting string to TextFormatAlign
 	 */
 	#if (flash || js)
-	private function convertTextAlignmentFromString(StrAlign:String):TextFormatAlign
+	private function convertTextAlignmentFromString(StrAlign:FlxTextAlign):TextFormatAlign
 	#else
-	private function convertTextAlignmentFromString(StrAlign:String):String
+	private function convertTextAlignmentFromString(StrAlign:FlxTextAlign):FlxTextAlign
 	#end
 	{
 		if (StrAlign == "right")
@@ -1015,4 +1015,13 @@ enum FlxTextBorderStyle
 	 * Outline, optimized using only 4 draw calls. (Might not work for narrow and/or 1-pixel fonts)
 	 */
 	OUTLINE_FAST;
+}
+
+@:enum
+abstract FlxTextAlign(String) from String
+{
+	var LEFT = "left";
+	var CENTER = "center";
+	var RIGHT = "right";
+	var JUSTIFY = "justify";
 }
