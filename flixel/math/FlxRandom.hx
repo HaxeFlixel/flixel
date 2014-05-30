@@ -418,6 +418,11 @@ class FlxRandom
 		return FlxColor.fromRGB(red, green, blue, alpha);
 	}
 	
+	public static function perlinNoise():Array<Float>
+	{
+		// do magic
+	}
+	
 	/**
 	 * Internal method to quickly generate a pseudorandom number. Used only by other functions of this class.
 	 * Also updates the internal seed, which will then be used to generate the next pseudorandom number.
