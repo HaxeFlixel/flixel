@@ -12,7 +12,7 @@ import flixel.text.FlxText;
 import flixel.util.FlxDestroyUtil;
 
 @:bitmap("assets/images/ui/button.png")
-private class GraphicButton extends BitmapData {}
+class GraphicButton extends BitmapData {}
 
 /**
  * A simple button class that calls a function when clicked by the mouse.
@@ -41,10 +41,10 @@ class FlxButton extends FlxTypedButton<FlxText>
 	 * Creates a new FlxButton object with a gray background
 	 * and a callback function on the UI thread.
 	 * 
-	 * @param	X				The X position of the button.
-	 * @param	Y				The Y position of the button.
-	 * @param	Text			The text that you want to appear on the button.
-	 * @param	OnClick			The function to call whenever the button is clicked.
+	 * @param   X          The x position of the button.
+	 * @param   Y          The y position of the button.
+	 * @param   Text       The text that you want to appear on the button.
+	 * @param   OnClick    The function to call whenever the button is clicked.
 	 */
 	public function new(X:Float = 0, Y:Float = 0, ?Text:String, ?OnClick:Void->Void)
 	{
@@ -102,21 +102,21 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	/**
 	 * What offsets the label should have for each status.
 	 */
-	public var labelOffsets:Array<FlxPoint>;
+	public var labelOffsets:Array<FlxPoint> = [FlxPoint.get(), FlxPoint.get(), FlxPoint.get(0, 1)];
 	/**
 	 * What alpha value the label should have for each status. Default is [0.8, 1.0, 0.5].
 	 */
-	public var labelAlphas:Array<Float>;
+	public var labelAlphas:Array<Float> = [0.8, 1.0, 0.5];
+	/**
+	 * What animation should be played for each status.
+	 * Default is ["normal", "highlight", "pressed"].
+	 */
+	public var statusAnimations:Array<String> = ["normal", "highlight", "pressed"];
 	/**
 	 * Whether you can press the button simply by releasing the touch / mouse button over it (default).
 	 * If false, the input has to be pressed while hovering over the button.
 	 */
 	public var allowSwiping:Bool = true;
-	/**
-	 * Whether to allow the HIHGLIGHT frame of the button graphic to be used on mobile 
-	 * (false by default, the NORMAL graphic is used instead then).
-	 */
-	public var allowHighlightOnMobile:Bool = false;
 	/**
 	 * Shows the current state of the button, either FlxButton.NORMAL, 
 	 * FlxButton.HIGHLIGHT or FlxButton.PRESSED.
@@ -158,9 +158,9 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	/**
 	 * Creates a new FlxTypedButton object with a gray background.
 	 * 
-	 * @param	X			The X position of the button.
-	 * @param	Y			The Y position of the button.
-	 * @param	OnClick		The function to call whenever the button is clicked.
+	 * @param   X          The x position of the button.
+	 * @param   Y          The y position of the button.
+	 * @param   OnClick    The function to call whenever the button is clicked.
 	 */
 	public function new(X:Float = 0, Y:Float = 0, ?OnClick:Void->Void)
 	{
@@ -173,9 +173,6 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		onOver = new FlxButtonEvent();
 		onOut = new FlxButtonEvent();
 		
-		labelAlphas = [0.8, 1.0, 0.5];
-		labelOffsets = [FlxPoint.get(), FlxPoint.get(), FlxPoint.get(0, 1)];
-		
 		status = FlxButton.NORMAL;
 		
 		// Since this is a UI element, the default scrollFactor is (0, 0)
@@ -185,7 +182,20 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		FlxG.stage.addEventListener(MouseEvent.MOUSE_UP, onUpEventListener);
 		#end
 		
+		#if mobile // no need for highlight frame on mobile
+		statusAnimation[FlxButton.HIGHLIGHT] = "normal";
+		#end
+		
 		input = new FlxInput(0);
+	}
+	
+	override public function updateFrameData():Void
+	{
+		super.updateFrameData();
+		
+		animation.add("normal", [FlxButton.NORMAL]);
+		animation.add("highlight", [FlxButton.HIGHLIGHT]);
+		animation.add("pressed", [FlxButton.PRESSED]);
 	}
 	
 	/**
@@ -222,28 +232,20 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		
 		input.update();
 		
-		if (!visible) 
+		if (visible) 
 		{
-			return;
+			// Update the button, but only if at least either mouse or touches are enabled
+			#if (!FLX_NO_MOUSE || !FLX_NO_TOUCH)
+			updateButton();
+			#end
+			
+			updateStatusAnimation();
 		}
-		
-		// Update the button, but only if at least either mouse or touches are enabled
-		#if (!FLX_NO_MOUSE || !FLX_NO_TOUCH)
-		updateButton();
-		#end
-		
-		// Pick the appropriate animation frame
-		var nextFrame:Int = status;
-		
-		// "Highlight" doesn't make much sense on mobile devices / touchscreens
-		#if mobile
-		if (!allowHighlightOnMobile && (nextFrame == FlxButton.HIGHLIGHT)) 
-		{
-			nextFrame = FlxButton.NORMAL;
-		}
-		#end
-		
-		animation.frameIndex = nextFrame;
+	}
+	
+	private function updateStatusAnimation():Void
+	{
+		animation.play(statusAnimations[status]);
 	}
 	
 	/**
@@ -372,7 +374,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	 * certain things like opening a new window are only allowed when they are user-initiated.
 	 */
 	#if !FLX_NO_MOUSE
-	private function onUpEventListener(E:MouseEvent):Void
+	private function onUpEventListener(_):Void
 	{
 		if (visible && exists && active && (status == FlxButton.PRESSED))
 		{
@@ -439,7 +441,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	
 	private function set_status(Value:Int):Int
 	{
-		if ((labelAlphas.length > Value) && (label != null)) 
+		if (label != null && labelAlphas.length > Value) 
 		{
 			label.alpha = alpha * labelAlphas[Value];
 		}
