@@ -27,7 +27,7 @@ class Player extends FlxSprite
 	
 	private var _shootTimer = new FlxTimer();
 	private var _jumpPower:Int = 200;
-	private var _aim:Int;
+	private var _aim:Int = FlxObject.RIGHT;
 	private var _gibs:FlxEmitter;
 	private var _bullets:FlxTypedGroup<Bullet>;
 	
@@ -133,29 +133,29 @@ class Player extends FlxSprite
 	private function updateVirtualPadInput():Void
 	{
 		#if android
-		if (buttonPressed(virtualPad.buttonLeft))
+		if (virtualPad.buttonLeft.pressed)
 		{
 			moveLeft();
 		}
-		else if (buttonPressed(virtualPad.buttonRight))
+		else if (virtualPad.buttonRight.pressed)
 		{
 			moveRight();
 		}
 		
-		if (buttonPressed(virtualPad.buttonUp))
+		if (virtualPad.buttonUp.pressed)
 		{
 			moveUp();
 		}
-		else if (buttonPressed(virtualPad.buttonDown))
+		else if (virtualPad.buttonDown.pressed)
 		{
 			moveDown();
 		}
 		
-		if (buttonPressed(virtualPad.buttonA))
+		if (virtualPad.buttonA.justPressed)
 		{
 			jump();
 		}
-		if (buttonPressed(virtualPad.buttonB))
+		if (virtualPad.buttonB.pressed)
 		{
 			shoot();
 		}
@@ -377,10 +377,5 @@ class Player extends FlxSprite
 				velocity.y -= 36;
 			}
 		}
-	}
-	
-	inline function buttonPressed(button:FlxButton):Bool
-	{
-		return button.status == FlxButton.PRESSED;
 	}
 }

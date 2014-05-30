@@ -85,19 +85,19 @@ class Player extends FlxSprite
 		}
 		
 		#if mobile
-		if (_virtualPad.buttonDown.status == FlxButton.PRESSED)
+		if (_virtualPad.buttonDown.pressed)
 		{
 			moveTo(MoveDirection.DOWN);
 		}
-		else if (_virtualPad.buttonUp.status == FlxButton.PRESSED)
+		else if (_virtualPad.buttonUp.pressed)
 		{
 			moveTo(MoveDirection.UP);
 		}
-		else if (_virtualPad.buttonLeft.status == FlxButton.PRESSED)
+		else if (_virtualPad.buttonLeft.pressed)
 		{
 			moveTo(MoveDirection.LEFT);
 		}
-		else if (_virtualPad.buttonRight.status == FlxButton.PRESSED)
+		else if (_virtualPad.buttonRight.pressed)
 		{
 			moveTo(MoveDirection.RIGHT);
 		}
