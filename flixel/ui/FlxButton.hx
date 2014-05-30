@@ -144,6 +144,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	public var pressed(get, never):Bool;
 	public var justPressed(get, never):Bool;
 	
+	// we don't need an ID here, so let's just use Int as the type
 	private var input:FlxInput<Int>;
 	
 	/**
