@@ -174,8 +174,8 @@ class FlxAnimationController implements IFlxDestroyable
 	 */
 	public function add(Name:String, Frames:Array<Int>, FrameRate:Int = 30, Looped:Bool = true):Void
 	{
-		// Since we might splice() this array later, this could lead to 
-		// unexpected results if the user is holding on to reference of the array
+		// Since we might splice() this array later, it could lead 
+		// to unexpected results if the user has a reference to it
 		Frames = Frames.copy();
 		
 		// Check _animations frames
