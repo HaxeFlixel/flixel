@@ -948,6 +948,16 @@ class FlxObject extends FlxBasic
 			LabelValuePair.weak("velocity", velocity)]);
 	}
 	
+	public inline function toPoint():FlxPoint
+	{
+		return FlxPoint.get(x, y);
+	}
+	
+	public inline function toRect():FlxRect
+	{
+		return FlxRect.get(x, y, width, height);
+	}
+	
 	private function set_x(NewX:Float):Float
 	{
 		return x = NewX;
