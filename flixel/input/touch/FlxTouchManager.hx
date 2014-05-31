@@ -184,6 +184,7 @@ class FlxTouchManager implements IFlxInputManager
 		{
 			touch = recycle(Std.int(FlashEvent.stageX), Std.int(FlashEvent.stageY), FlashEvent.touchPointID);
 		}
+		touch.input.press();
 	}
 	
 	/**
