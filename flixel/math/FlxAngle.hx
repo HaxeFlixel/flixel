@@ -30,20 +30,21 @@ class FlxAngle
 	public static var TO_RAD(get, never):Float;
 	
 	/**
-	 * Rotates a point in 2D space around another point by the given angle.
-	 * @param	X		The X coordinate of the point you want to rotate.
-	 * @param	Y		The Y coordinate of the point you want to rotate.
-	 * @param	PivotX	The X coordinate of the point you want to rotate around.
-	 * @param	PivotY	The Y coordinate of the point you want to rotate around.
-	 * @param	Angle	Rotate the point by this many degrees.
-	 * @param	Point	Optional FlxPoint to store the results in.
-	 * @return	A FlxPoint containing the coordinates of the rotated point.
+	 * Rotates a point clockwise in 2D space around another point by the given angle.
+	 * 
+	 * @param   X        The X coordinate of the point you want to rotate.
+	 * @param   Y        The Y coordinate of the point you want to rotate.
+	 * @param   PivotX   The X coordinate of the point you want to rotate around.
+	 * @param   PivotY   The Y coordinate of the point you want to rotate around.
+	 * @param   Angle    Rotate the point by this many degrees.
+	 * @param   Point    Optional FlxPoint to store the results in.
+	 * @return  A FlxPoint containing the coordinates of the rotated point.
 	 */
 	public static inline function rotatePoint(X:Float, Y:Float, PivotX:Float, PivotY:Float, Angle:Float, ?point:FlxPoint):FlxPoint
 	{
 		var sin:Float = 0;
 		var cos:Float = 0;
-		var radians:Float = Angle * -TO_RAD; // keep the minus cause sprite angle is clockwise and the mathematical rotation is counter-clockwise
+		var radians:Float = Angle * TO_RAD;
 		while (radians < -Math.PI)
 		{
 			radians += Math.PI * 2;
