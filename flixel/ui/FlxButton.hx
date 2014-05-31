@@ -183,8 +183,9 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		FlxG.stage.addEventListener(MouseEvent.MOUSE_UP, onUpEventListener);
 		#end
 		
-		#if mobile // no need for highlight frame on mobile
-		statusAnimation[FlxButton.HIGHLIGHT] = "normal";
+		#if FLX_NO_MOUSE // no need for highlight frame without mouse input
+		statusAnimations[FlxButton.HIGHLIGHT] = "normal";
+		labelAlphas[FlxButton.HIGHLIGHT] = 1;
 		#end
 		
 		input = new FlxInput(0);
@@ -194,9 +195,16 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	{
 		super.updateFrameData();
 		
-		animation.add("normal", [FlxButton.NORMAL]);
-		animation.add("highlight", [FlxButton.HIGHLIGHT]);
-		animation.add("pressed", [FlxButton.PRESSED]);
+		setupAnimation("normal", FlxButton.NORMAL);
+		setupAnimation("highlight", FlxButton.HIGHLIGHT);
+		setupAnimation("pressed", FlxButton.PRESSED);
+	}
+	
+	private function setupAnimation(animationName:String, frameIndex:Int):Void
+	{
+		// make sure the animation doesn't contain an invalid frame
+		frameIndex = Std.int(Math.min(frameIndex, animation.frames - 1));
+		animation.add(animationName, [frameIndex]);
 	}
 	
 	/**
