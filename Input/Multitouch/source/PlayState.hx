@@ -5,7 +5,7 @@ import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.util.FlxColor;
 import flixel.math.FlxRandom;
-import flixel.util.FlxSpriteUtil;
+using flixel.util.FlxSpriteUtil;
 
 class PlayState extends FlxState
 {
@@ -21,6 +21,7 @@ class PlayState extends FlxState
 		_inactiveSprites = new Array<TouchSprite>();
 	}
 
+	#if !FLX_NO_TOUCH
 	override public function update():Void
 	{
 		super.update();
@@ -64,6 +65,7 @@ class PlayState extends FlxState
 			}
 		}
 	}
+	#end
 }
 
 class TouchSprite extends FlxSprite
@@ -74,6 +76,6 @@ class TouchSprite extends FlxSprite
 		var size:Int = 70;
 		makeGraphic(size, size, FlxColor.TRANSPARENT);
 		antialiasing = true;
-		FlxSpriteUtil.drawCircle(this);
+		drawCircle();
 	}
 }
