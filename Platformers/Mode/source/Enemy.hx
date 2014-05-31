@@ -159,7 +159,7 @@ class Enemy extends FlxSprite
 		// Set the bot's movement speed and direction
 		// based on angle and whether the jets are on.
 		_thrust = FlxVelocity.computeVelocity(_thrust, (jetsOn ? 90 : 0), drag.x, 60);
-		FlxAngle.rotatePoint(0, _thrust, 0, 0, angle, velocity);
+		FlxAngle.rotatePoint(0, -_thrust, 0, 0, angle, velocity);
 
 		// Shooting - three shots every few seconds
 		if (isOnScreen())

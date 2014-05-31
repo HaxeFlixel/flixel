@@ -58,7 +58,7 @@ class EnemyBullet extends FlxSprite
 		FlxG.sound.play("Enemy", 0.5);
 		
 		super.reset(Location.x - width / 2, Location.y - height / 2);
-		FlxAngle.rotatePoint(0, speed, 0, 0, Angle, _point);
+		FlxAngle.rotatePoint(0, -speed, 0, 0, Angle, _point);
 		velocity.x = _point.x;
 		velocity.y = _point.y;
 		solid = true;
