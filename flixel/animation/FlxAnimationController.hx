@@ -174,25 +174,29 @@ class FlxAnimationController implements IFlxDestroyable
 	 */
 	public function add(Name:String, Frames:Array<Int>, FrameRate:Int = 30, Looped:Bool = true):Void
 	{
-		// Since we might splice() this array later, it could lead 
-		// to unexpected results if the user has a reference to it
-		Frames = Frames.copy();
-		
 		// Check _animations frames
-		var numFrames:Int = Frames.length - 1;
+		var framesToAdd:Array<Int> = Frames;
+		var numFrames:Int = framesToAdd.length - 1;
 		var i:Int = numFrames;
 		while (i >= 0)
 		{
-			if (Frames[i] >= frames)
+			if (framesToAdd[i] >= frames)
 			{
-				Frames.splice(i, 1);
+				// Splicing original Frames array could lead to unexpected results
+				// So we are cloning it (only once) and will use its copy
+				if (framesToAdd == Frames)
+				{
+					framesToAdd = Frames.copy();
+				}
+				
+				framesToAdd.splice(i, 1);
 			}
 			i--;
 		}
 		
-		if (Frames.length > 0)
+		if (framesToAdd.length > 0)
 		{
-			var anim = new FlxAnimation(this, Name, Frames, FrameRate, Looped);
+			var anim = new FlxAnimation(this, Name, framesToAdd, FrameRate, Looped);
 			_animations.set(Name, anim);
 		}
 	}
