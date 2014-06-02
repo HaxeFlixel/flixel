@@ -4,6 +4,10 @@ import flixel.FlxGame;
 import flixel.system.frontEnds.VCRFrontEnd;
 import flixel.util.FlxColor;
 
+#if js
+import haxe.Int64;
+#end
+
 /**
  * A class containing a set of functions for random generation.
  */
@@ -32,19 +36,11 @@ class FlxRandom
 	 * Internal seed used to generate new random numbers. You can retrieve this value if,
 	 * for example, you want to store the seed that was used to randomly generate a level.
 	 */
+	#if !js
 	public static var internalSeed(default, null):Int = 1;
-	
-	/**
-	 * Constants used in the pseudorandom number generation equation.
-	 * These are the constants suggested by the revised MINSTD pseudorandom number generator,
-	 * and they use the full range of possible integer values.
-	 * 
-	 * @see http://en.wikipedia.org/wiki/Linear_congruential_generator
-	 * @see Stephen K. Park and Keith W. Miller and Paul K. Stockmeyer (1988).
-	 *      "Technical Correspondence". Communications of the ACM 36 (7): 105–110.
-	 */
-	private static inline var MULTIPLIER:Int = 48271;
-	private static inline var MODULUS:Int = 2147483647;
+	#else
+	public static var internalSeed(default, null):Float = 0;
+	#end
 	
 	/**
 	 * Internal helper variables.
@@ -119,7 +115,15 @@ class FlxRandom
 	 */
 	public static function int(Min:Int = 0, Max:Int = MODULUS, ?Excludes:Array<Int>):Int
 	{
-		if (Min == Max)
+		if (Min == 0 && Max == MODULUS && Excludes == null)
+		{
+			#if !js
+			return generate();
+			#else
+			return Std.int(generate());
+			#end
+		}
+		else if (Min == Max)
 		{
 			return Min;
 		}
@@ -135,14 +139,15 @@ class FlxRandom
 			
 			if (Excludes == null)
 			{
-				return Math.floor(Min + float() * (Max - Min + 1));
+				return Math.floor(Min + generate() / MODULUS * (Max - Min + 1));
 			}
 			else
 			{
 				var result:Int = 0;
+				
 				do
 				{
-					result = Math.floor(Min + float() * (Max - Min + 1));
+					result = Math.floor(Min + generate() / MODULUS * (Max - Min + 1));
 				}
 				while (Excludes.indexOf(result) >= 0);
 				
@@ -257,28 +262,32 @@ class FlxRandom
 	}
 	
 	/**
-	 * Fetch a random entry from the given array from StartIndex to EndIndex.
-	 * Will return null if random selection is missing, or array has no entries.
+	 * Returns a random object from an array.
 	 * 
-	 * @param   Objects      An array from which to select a random entry.
-	 * @param   StartIndex   Optional index from which to restrict selection. Default value is 0, or the beginning of the array.
-	 * @param   EndIndex     Optional index at which to restrict selection. Ignored if 0, which is the default value.
-	 * @return  The random object that was selected.
+	 * @param   Objects        An array from which to return an object.
+	 * @param   WeightsArray   Optional array of weights which will determine the likelihood of returning a given value from Objects.
+	 * 						   If none is passed, all objects in the Objects array will have an equal likelihood of being returned.
+	 *                         Values in WeightsArray will correspond to objects in Objects exactly.
+	 * @param   StartIndex     Optional index from which to restrict selection. Default value is 0, or the beginning of the Objects array.
+	 * @param   EndIndex       Optional index at which to restrict selection. Ignored if 0, which is the default value.
+	 * @return  A pseudorandomly chosen object from Objects.
 	 */
 	@:generic
-	public static function getObject<T>(Objects:Array<T>, StartIndex:Int = 0, EndIndex:Int = 0):T
+	public static function getObject<T>(Objects:Array<T>, ?WeightsArray:Array<Float>, StartIndex:Int = 0, EndIndex:Int = 0):T
 	{
 		var selected:Null<T> = null;
 		
 		if (Objects.length != 0)
 		{
-			if (StartIndex < 0)
+			if (WeightsArray == null)
 			{
-				StartIndex = 0;
+				WeightsArray = [for (i in 0...Objects.length) 1];
 			}
 			
-			// Swap values if reversed
+			StartIndex = Std.int(FlxMath.bound(StartIndex, 0, Objects.length - 1));
+			EndIndex = Std.int(FlxMath.bound(EndIndex, 0, Objects.length - 1));
 			
+			// Swap values if reversed
 			if (EndIndex < StartIndex)
 			{
 				StartIndex = StartIndex + EndIndex;
@@ -286,12 +295,14 @@ class FlxRandom
 				StartIndex = StartIndex - EndIndex;
 			}
 			
-			if ((EndIndex <= 0) || (EndIndex > Objects.length - 1))
+			
+			if (EndIndex > WeightsArray.length - 1)
 			{
-				EndIndex = Objects.length - 1;
+				EndIndex = WeightsArray.length - 1;
 			}
 			
-			selected = Objects[int(StartIndex, EndIndex)];
+			_arrayFloatHelper = [for (i in StartIndex...EndIndex + 1) WeightsArray[i]];
+			selected = Objects[weightedPick(_arrayFloatHelper)];
 		}
 		
 		return selected;
@@ -323,54 +334,6 @@ class FlxRandom
 		}
 		
 		return Objects;
-	}
-	
-	/**
-	 * Returns a random object from an array between StartIndex and EndIndex with a weighted chance from WeightsArray.
-	 * This function is essentially a combination of weightedPick and getObject.
-	 * 
-	 * @param   Objects        An array from which to return an object.
-	 * @param   WeightsArray   An array of weights which will determine the likelihood of returning a given value from Objects.
-	 *                         Values in WeightsArray will correspond to objects in Objects exactly.
-	 * @param   StartIndex     Optional index from which to restrict selection. Default value is 0, or the beginning of the Objects array.
-	 * @param   EndIndex       Optional index at which to restrict selection. Ignored if 0, which is the default value.
-	 * @return  A pseudorandomly chosen object from Objects.
-	 */
-	@:generic
-	public static function weightedGetObject<T>(Objects:Array<T>, WeightsArray:Array<Float>, StartIndex:Int = 0, EndIndex:Int = 0):T
-	{
-		var selected:Null<T> = null;
-		
-		if (Objects.length != 0)
-		{
-			if (StartIndex < 0)
-			{
-				StartIndex = 0;
-			}
-			
-			// Swap values if reversed
-			if (EndIndex < StartIndex)
-			{
-				StartIndex = StartIndex + EndIndex;
-				EndIndex = StartIndex - EndIndex;
-				StartIndex = StartIndex - EndIndex;
-			}
-			
-			if ((EndIndex <= 0) || (EndIndex > Objects.length - 1))
-			{
-				EndIndex = Objects.length - 1;
-			}
-			
-			if (EndIndex > WeightsArray.length - 1)
-			{
-				EndIndex = WeightsArray.length - 1;
-			}
-			
-			_arrayFloatHelper = [for (i in StartIndex...EndIndex + 1) WeightsArray[i]];
-			selected = Objects[weightedPick(_arrayFloatHelper)];
-		}
-		
-		return selected;
 	}
 	
 	/**
@@ -421,7 +384,21 @@ class FlxRandom
 	public static function perlinNoise():Array<Float>
 	{
 		// do magic
+		
+		return [];
 	}
+	
+	/**
+	 * Constants used in the pseudorandom number generation equation.
+	 * These are the constants suggested by the revised MINSTD pseudorandom number generator,
+	 * and they use the full range of possible integer values.
+	 * 
+	 * @see http://en.wikipedia.org/wiki/Linear_congruential_generator
+	 * @see Stephen K. Park and Keith W. Miller and Paul K. Stockmeyer (1988).
+	 *      "Technical Correspondence". Communications of the ACM 36 (7): 105–110.
+	 */
+	private static inline var MULTIPLIER:Int = 48271;
+	private static inline var MODULUS:Int = 2147483647;
 	
 	/**
 	 * Internal method to quickly generate a pseudorandom number. Used only by other functions of this class.
@@ -429,8 +406,12 @@ class FlxRandom
 	 * 
 	 * @return  A new pseudorandom number.
 	 */
+	#if !js
 	private static inline function generate():Int
+	#else
+	private static inline function generate():Float
+	#end
 	{
-		return internalSeed = ((internalSeed * MULTIPLIER) % MODULUS) & MODULUS;
+		return internalSeed = Std.int(((internalSeed * MULTIPLIER) % MODULUS)) & MODULUS;
 	}
 }
