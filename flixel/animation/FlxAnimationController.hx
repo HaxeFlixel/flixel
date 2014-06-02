@@ -175,20 +175,28 @@ class FlxAnimationController implements IFlxDestroyable
 	public function add(Name:String, Frames:Array<Int>, FrameRate:Int = 30, Looped:Bool = true):Void
 	{
 		// Check _animations frames
-		var numFrames:Int = Frames.length - 1;
+		var framesToAdd:Array<Int> = Frames;
+		var numFrames:Int = framesToAdd.length - 1;
 		var i:Int = numFrames;
 		while (i >= 0)
 		{
-			if (Frames[i] >= frames)
+			if (framesToAdd[i] >= frames)
 			{
-				Frames.splice(i, 1);
+				// Splicing original Frames array could lead to unexpected results
+				// So we are cloning it (only once) and will use its copy
+				if (framesToAdd == Frames)
+				{
+					framesToAdd = Frames.copy();
+				}
+				
+				framesToAdd.splice(i, 1);
 			}
 			i--;
 		}
 		
-		if (Frames.length > 0)
+		if (framesToAdd.length > 0)
 		{
-			var anim:FlxAnimation = new FlxAnimation(this, Name, Frames, FrameRate, Looped);
+			var anim = new FlxAnimation(this, Name, framesToAdd, FrameRate, Looped);
 			_animations.set(Name, anim);
 		}
 	}
@@ -241,7 +249,7 @@ class FlxAnimationController implements IFlxDestroyable
 			
 			if (indices.length > 0)
 			{
-				var anim:FlxAnimation = new FlxAnimation(this, Name, indices, FrameRate, Looped);
+				var anim = new FlxAnimation(this, Name, indices, FrameRate, Looped);
 				_animations.set(Name, anim);
 			}
 		}

@@ -63,6 +63,20 @@ class FlxAnimationControllerTest extends FlxTest
 		Assert.areEqual(0, timesCalled);
 	}
 	
+	@Test
+	function testAddUnmodifiedArray():Void
+	{
+		// 2 is an invalid frame index and will be spliced
+		var animation:Array<Int> = [0, 1, 2];
+		
+		loadSpriteSheet();
+		sprite.animation.add("animation", animation);
+		
+		Assert.areEqual(0, animation[0]);
+		Assert.areEqual(1, animation[1]);
+		Assert.areEqual(2, animation[2]);
+	}
+	
 	function loadSpriteSheet():Void
 	{
 		sprite.loadGraphic(GraphicSpriteSheet, true, 1, 1);
