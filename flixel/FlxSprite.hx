@@ -284,10 +284,12 @@ class FlxSprite extends FlxObject
 			centerOffsets();
 		}
 		
-		updateFrameData();
-		resetHelpers();
 		antialiasing = Sprite.antialiasing;
 		animation.copyFrom(Sprite.animation);
+		
+		updateFrameData();
+		resetHelpers();
+		
 		return this;
 	}
 	
@@ -653,7 +655,8 @@ class FlxSprite extends FlxObject
 	 */
 	public function setGraphicSize(Width:Int = 0, Height:Int = 0):Void
 	{
-		if (Width <= 0 && Height <= 0) {
+		if (Width <= 0 && Height <= 0)
+		{
 			return;
 		}
 		
@@ -661,10 +664,12 @@ class FlxSprite extends FlxObject
 		var newScaleY:Float = Height / frameHeight;
 		scale.set(newScaleX, newScaleY);
 		
-		if (Width <= 0) {
+		if (Width <= 0)
+		{
 			scale.x = newScaleY;
 		}
-		else if (Height <= 0) {
+		else if (Height <= 0)
+		{
 			scale.y = newScaleX;
 		}	
 	}
