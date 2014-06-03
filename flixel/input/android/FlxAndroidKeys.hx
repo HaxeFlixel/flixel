@@ -192,7 +192,7 @@ class FlxAndroidKeys implements IFlxInputManager
 			var key:FlxKey = _keyList.get(_keyLookup.get(key));
 			if (key != null)
 			{
-				if (key.current == Status)
+				if (key.hasStatus(Status))
 				{
 					return true;
 				}

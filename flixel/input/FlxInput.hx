@@ -49,6 +49,21 @@ class FlxInput<T>
 		last = RELEASED;
 	}
 	
+	public function hasStatus(status:FlxInputState):Bool
+	{
+		switch (status)
+		{
+			case JUST_RELEASED:
+				return justReleased;
+			case RELEASED:
+				return released;
+			case PRESSED:
+				return pressed;
+			case JUST_PRESSED:
+				return justPressed;
+		}
+	}
+	
 	private inline function get_justReleased():Bool
 	{
 		return current == JUST_RELEASED;
