@@ -61,7 +61,7 @@ class FlxAndroidKeys implements IFlxInputManager
 	 */
 	public inline function anyPressed(KeyArray:Array<Dynamic>):Bool
 	{
-		return checkKeyStatus(KeyArray, PRESSED);
+		return checkKeyArrayState(KeyArray, PRESSED);
 	}
 	
 	/**
@@ -78,7 +78,7 @@ class FlxAndroidKeys implements IFlxInputManager
 	 */
 	public inline function anyJustPressed(KeyArray:Array<Dynamic>):Bool
 	{
-		return checkKeyStatus(KeyArray, JUST_PRESSED);
+		return checkKeyArrayState(KeyArray, JUST_PRESSED);
 	}
 	
 	/**
@@ -95,7 +95,7 @@ class FlxAndroidKeys implements IFlxInputManager
 	 */
 	public inline function anyJustReleased(KeyArray:Array<Dynamic>):Bool
 	{
-		return checkKeyStatus(KeyArray, JUST_RELEASED);
+		return checkKeyArrayState(KeyArray, JUST_RELEASED);
 	}
 	
 	
@@ -174,10 +174,10 @@ class FlxAndroidKeys implements IFlxInputManager
 	 * Helper function to check the status of an array of keys
 	 * 
 	 * @param	KeyArray	An array of keys as Strings
-	 * @param	Status		The key state to check for
+	 * @param	State		The key state to check for
 	 * @return	Whether at least one of the keys has the specified status
 	 */
-	private function checkKeyStatus(KeyArray:Array<Dynamic>, Status:FlxInputState):Bool
+	private function checkKeyArrayState(KeyArray:Array<Dynamic>, State:FlxInputState):Bool
 	{
 		if (KeyArray == null)
 		{
@@ -192,7 +192,7 @@ class FlxAndroidKeys implements IFlxInputManager
 			var key:FlxKey = _keyList.get(_keyLookup.get(key));
 			if (key != null)
 			{
-				if (key.hasStatus(Status))
+				if (key.hasState(State))
 				{
 					return true;
 				}
