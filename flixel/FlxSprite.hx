@@ -266,11 +266,6 @@ class FlxSprite extends FlxObject
 	 */
 	public function loadGraphicFromSprite(Sprite:FlxSprite):FlxSprite
 	{
-		if (!exists)
-		{
-			FlxG.log.warn("Warning, trying to clone " + Type.getClassName(Type.getClass(this)) + " object that doesn't exist.");
-		}
-		
 		region = Sprite.region.clone();
 		bakedRotationAngle = Sprite.bakedRotationAngle;
 		cachedGraphics = Sprite.cachedGraphics;
@@ -286,8 +281,11 @@ class FlxSprite extends FlxObject
 		
 		updateFrameData();
 		resetHelpers();
+		
 		antialiasing = Sprite.antialiasing;
 		animation.copyFrom(Sprite.animation);
+		
+		graphicLoaded();
 		return this;
 	}
 	
@@ -348,6 +346,7 @@ class FlxSprite extends FlxObject
 		updateFrameData();
 		resetHelpers();
 		
+		graphicLoaded();
 		return this;
 	}
 	
@@ -500,6 +499,8 @@ class FlxSprite extends FlxObject
 		
 		animation.createPrerotated();
 		resetHelpers();
+		
+		graphicLoaded();
 		return this;
 	}
 	
@@ -549,6 +550,8 @@ class FlxSprite extends FlxObject
 		
 		resetSizeFromFrame();
 		centerOrigin();
+		
+		graphicLoaded();
 		return this;
 	}
 	
@@ -586,6 +589,7 @@ class FlxSprite extends FlxObject
 		loadRotatedGraphic(frameBitmapData, Rotations, -1, AntiAliasing, AutoBuffer, key);
 		#end
 		
+		graphicLoaded();
 		return this;
 	}
 	
@@ -611,8 +615,16 @@ class FlxSprite extends FlxObject
 		animation.destroyAnimations();
 		updateFrameData();
 		resetHelpers();
+		
+		graphicLoaded();
 		return this;
 	}
+	
+	/**
+	 * Called whenever a new graphic is loaded for this sprite
+	 * - after loadGraphic(), makeGraphic() etc.
+	 */
+	public function graphicLoaded():Void {}
 	
 	/**
 	 * Resets _flashRect variable used for frame bitmapData calculation
@@ -653,7 +665,8 @@ class FlxSprite extends FlxObject
 	 */
 	public function setGraphicSize(Width:Int = 0, Height:Int = 0):Void
 	{
-		if (Width <= 0 && Height <= 0) {
+		if (Width <= 0 && Height <= 0)
+		{
 			return;
 		}
 		
@@ -661,10 +674,12 @@ class FlxSprite extends FlxObject
 		var newScaleY:Float = Height / frameHeight;
 		scale.set(newScaleX, newScaleY);
 		
-		if (Width <= 0) {
+		if (Width <= 0)
+		{
 			scale.x = newScaleY;
 		}
-		else if (Height <= 0) {
+		else if (Height <= 0)
+		{
 			scale.y = newScaleX;
 		}	
 	}

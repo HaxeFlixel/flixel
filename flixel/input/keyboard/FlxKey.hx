@@ -3,7 +3,7 @@ package flixel.input.keyboard;
 /**
  * A helper class for keyboard input.
  */
-class FlxKey extends FlxInput<String>
+class FlxKey extends FlxInput<FlxKeyName>
 {
 	// Key Indicies
 	public static inline var A             :Int = 65;

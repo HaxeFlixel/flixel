@@ -30,7 +30,7 @@ class FlxKeyboard implements IFlxInputManager
 	 * the browser from scrolling when pressing the up or down key for example.
 	 */
 	#if bitfive
-	public var preventDefaultKeys:Array<String> = ["UP", "DOWN", "LEFT", "RIGHT", "TAB", "SPACE"];
+	public var preventDefaultKeys:Array<FlxKeyName> = [UP, DOWN, LEFT, RIGHT, TAB, SPACE];
 	#end
 	
 	/**
@@ -46,15 +46,11 @@ class FlxKeyboard implements IFlxInputManager
 	 */
 	public var justReleased:FlxKeyList;
 	
-	/**
-	 * An array of FlxKey objects.
-	 */
+	
 	@:allow(flixel.input.android.FlxAndroidKeyList.get_ANY)
 	private var _keyList:Array<FlxKey>;
-	/**
-	 * A map for key lookup.
-	 */
-	private var _keyLookup:Map<String, Int>;
+	
+	private var _keyLookup:Map<FlxKeyName, Int>;
 	/**
 	 * Function and numpad keycodes on native targets are incorrect, 
 	 * this workaround fixes that. Thanks @HaxePunk!
@@ -65,39 +61,39 @@ class FlxKeyboard implements IFlxInputManager
 	#end
 	
 	/**
-	 * Check to see if at least one key from an array of keys is pressed. See FlxG.keys for the key names, pass them in as Strings.
-	 * Example: FlxG.keys.anyPressed(["UP", "W", "SPACE"]) - having them in an array is handy for configurable keys!
+	 * Check to see if at least one key from an array of keys is pressed.
+	 * Example: FlxG.keys.anyPressed([UP, W, SPACE]) - having them in an array is handy for configurable keys!
 	 * 
-	 * @param	KeyArray 	An array of keys as Strings
+	 * @param	KeyArray 	An array of key names
 	 * @return	Whether at least one of the keys passed in is pressed.
 	 */
-	public inline function anyPressed(KeyArray:Array<String>):Bool
+	public inline function anyPressed(KeyArray:Array<FlxKeyName>):Bool
 	{ 
-		return checkKeyStatus(KeyArray, PRESSED);
+		return checkKeyArrayState(KeyArray, PRESSED);
 	}
 	
 	/**
-	 * Check to see if at least one key from an array of keys was just pressed. See FlxG.keys for the key names, pass them in as Strings.
-	 * Example: FlxG.keys.anyJustPressed(["UP", "W", "SPACE"]) - having them in an array is handy for configurable keys!
+	 * Check to see if at least one key from an array of keys was just pressed.
+	 * Example: FlxG.keys.anyJustPressed([UP, W, SPACE]) - having them in an array is handy for configurable keys!
 	 * 
-	 * @param	KeyArray 	An array of keys as Strings
+	 * @param	KeyArray 	An array of key names
 	 * @return	Whether at least one of the keys passed was just pressed.
 	 */
-	public inline function anyJustPressed(KeyArray:Array<String>):Bool
+	public inline function anyJustPressed(KeyArray:Array<FlxKeyName>):Bool
 	{ 
-		return checkKeyStatus(KeyArray, JUST_PRESSED);
+		return checkKeyArrayState(KeyArray, JUST_PRESSED);
 	}
 	
 	/**
-	 * Check to see if at least one key from an array of keys was just released. See FlxG.keys for the key names, pass them in as Strings.
-	 * Example: FlxG.keys.anyJustReleased(["UP", "W", "SPACE"]) - having them in an array is handy for configurable keys!
+	 * Check to see if at least one key from an array of keys was just released.
+	 * Example: FlxG.keys.anyJustReleased([UP, W, SPACE]) - having them in an array is handy for configurable keys!
 	 * 
-	 * @param	KeyArray 	An array of keys as Strings
+	 * @param	KeyArray 	An array of key names
 	 * @return	Whether at least one of the keys passed was just released.
 	 */
-	public inline function anyJustReleased(KeyArray:Array<String>):Bool
+	public inline function anyJustReleased(KeyArray:Array<FlxKeyName>):Bool
 	{ 
-		return checkKeyStatus(KeyArray, JUST_RELEASED);
+		return checkKeyArrayState(KeyArray, JUST_RELEASED);
 	}
 	
 	/**
@@ -105,7 +101,7 @@ class FlxKeyboard implements IFlxInputManager
 	 * 
 	 * @return	The name of the key or "" if none could be found.
 	 */
-	public function firstPressed():String
+	public function firstPressed():FlxKeyName
 	{
 		for (key in _keyList)
 		{
@@ -122,7 +118,7 @@ class FlxKeyboard implements IFlxInputManager
 	 * 
 	 * @return	The name of the key or "" if none could be found.
 	 */
-	public function firstJustPressed():String
+	public function firstJustPressed():FlxKeyName
 	{
 		for (key in _keyList)
 		{
@@ -139,7 +135,7 @@ class FlxKeyboard implements IFlxInputManager
 	 * 
 	 * @return	The name of the key or "" if none could be found.
 	 */
-	public function firstJustReleased():String
+	public function firstJustReleased():FlxKeyName
 	{
 		for (key in _keyList)
 		{
@@ -160,10 +156,10 @@ class FlxKeyboard implements IFlxInputManager
 	 */
 	public function checkStatus(KeyCode:Int, Status:FlxInputState):Bool
 	{
-		var k:FlxKey = _keyList[KeyCode];
-		if (k != null)
+		var key:FlxKey = _keyList[KeyCode];
+		if (key != null)
 		{
-			if (k.current == Status)
+			if (key.hasState(Status))
 			{
 				return true;
 			}
@@ -171,7 +167,7 @@ class FlxKeyboard implements IFlxInputManager
 		#if !FLX_NO_DEBUG
 		else
 		{
-			FlxG.log.error("Invalid Key: `" + KeyCode + "`.");
+			throw 'Invalid key code: $KeyCode.';
 		}
 		#end
 		
@@ -184,7 +180,7 @@ class FlxKeyboard implements IFlxInputManager
 	 * @param	KeyName		The String name of the key.
 	 * @return	The key code for that key.
 	 */
-	public inline function getKeyCode(KeyName:String):Int
+	public inline function getKeyCode(KeyName:FlxKeyName):Int
 	{
 		return _keyLookup.get(KeyName);
 	}
@@ -252,33 +248,33 @@ class FlxKeyboard implements IFlxInputManager
 		
 		// NUMBERS
 		i = 48;
-		addKey("ZERO", i++);
-		addKey("ONE", i++);
-		addKey("TWO", i++);
-		addKey("THREE", i++);
-		addKey("FOUR", i++);
-		addKey("FIVE", i++);
-		addKey("SIX", i++);
-		addKey("SEVEN", i++);
-		addKey("EIGHT", i++);
-		addKey("NINE", i++);
+		addKey(ZERO, i++);
+		addKey(ONE, i++);
+		addKey(TWO, i++);
+		addKey(THREE, i++);
+		addKey(FOUR, i++);
+		addKey(FIVE, i++);
+		addKey(SIX, i++);
+		addKey(SEVEN, i++);
+		addKey(EIGHT, i++);
+		addKey(NINE, i++);
 		i = 96;
-		addKey("NUMPADZERO", i++);
-		addKey("NUMPADONE", i++);
-		addKey("NUMPADTWO", i++);
-		addKey("NUMPADTHREE", i++);
-		addKey("NUMPADFOUR", i++);
-		addKey("NUMPADFIVE", i++);
-		addKey("NUMPADSIX", i++);
-		addKey("NUMPADSEVEN",i++);
-		addKey("NUMPADEIGHT", i++);
-		addKey("NUMPADNINE", i++);
+		addKey(NUMPADZERO, i++);
+		addKey(NUMPADONE, i++);
+		addKey(NUMPADTWO, i++);
+		addKey(NUMPADTHREE, i++);
+		addKey(NUMPADFOUR, i++);
+		addKey(NUMPADFIVE, i++);
+		addKey(NUMPADSIX, i++);
+		addKey(NUMPADSEVEN,i++);
+		addKey(NUMPADEIGHT, i++);
+		addKey(NUMPADNINE, i++);
 		
-		addKey("PAGEUP", 33);
-		addKey("PAGEDOWN", 34);
-		addKey("HOME", 36);
-		addKey("END", 35);
-		addKey("INSERT", 45);
+		addKey(PAGEUP, 33);
+		addKey(PAGEDOWN, 34);
+		addKey(HOME, 36);
+		addKey(END, 35);
+		addKey(INSERT, 45);
 		
 		// FUNCTION KEYS
 		i = 1;
@@ -289,38 +285,38 @@ class FlxKeyboard implements IFlxInputManager
 		}
 		
 		// SPECIAL KEYS + PUNCTUATION
-		addKey("ESCAPE", 27);
-		addKey("MINUS", 189);
-		addKey("PLUS", 187);
-		addKey("DELETE", 46);
-		addKey("BACKSPACE", 8);
-		addKey("LBRACKET", 219);
-		addKey("RBRACKET", 221);
-		addKey("BACKSLASH", 220);
-		addKey("CAPSLOCK", 20);
-		addKey("SEMICOLON", 186);
-		addKey("QUOTE", 222);
-		addKey("ENTER", 13);
-		addKey("SHIFT", 16);
-		addKey("COMMA", 188);
-		addKey("PERIOD",190);
-		addKey("SLASH", 191);
-		addKey("NUMPADSLASH", 191);
-		addKey("GRAVEACCENT", 192);
-		addKey("CONTROL", 17);
-		addKey("ALT", 18);
-		addKey("SPACE", 32);
-		addKey("UP", 38);
-		addKey("DOWN", 40);
-		addKey("LEFT", 37);
-		addKey("RIGHT", 39);
-		addKey("TAB", 9);
-		addKey("PRINTSCREEN", 301);
+		addKey(ESCAPE, 27);
+		addKey(MINUS, 189);
+		addKey(PLUS, 187);
+		addKey(DELETE, 46);
+		addKey(BACKSPACE, 8);
+		addKey(LBRACKET, 219);
+		addKey(RBRACKET, 221);
+		addKey(BACKSLASH, 220);
+		addKey(CAPSLOCK, 20);
+		addKey(SEMICOLON, 186);
+		addKey(QUOTE, 222);
+		addKey(ENTER, 13);
+		addKey(SHIFT, 16);
+		addKey(COMMA, 188);
+		addKey(PERIOD,190);
+		addKey(SLASH, 191);
+		addKey(NUMPADSLASH, 191);
+		addKey(GRAVEACCENT, 192);
+		addKey(CONTROL, 17);
+		addKey(ALT, 18);
+		addKey(SPACE, 32);
+		addKey(UP, 38);
+		addKey(DOWN, 40);
+		addKey(LEFT, 37);
+		addKey(RIGHT, 39);
+		addKey(TAB, 9);
+		addKey(PRINTSCREEN, 301);
 		
-		addKey("NUMPADMULTIPLY", 106);
-		addKey("NUMPADMINUS", 109);
-		addKey("NUMPADPLUS", 107);
-		addKey("NUMPADPERIOD", 110);
+		addKey(NUMPADMULTIPLY, 106);
+		addKey(NUMPADMINUS, 109);
+		addKey(NUMPADPLUS, 107);
+		addKey(NUMPADPERIOD, 110);
 		
 		#if !(flash || js)
 		_nativeCorrection = new Map<String, Int>();
@@ -387,10 +383,10 @@ class FlxKeyboard implements IFlxInputManager
 	/**
 	 * An internal helper function used to build the key array.
 	 * 
-	 * @param	KeyName		String name of the key (e.g. "LEFT" or "A")
+	 * @param	KeyName		Name of the key (e.g. LEFT or A)
 	 * @param	KeyCode		The numeric Flash code for this key.
 	 */
-	private function addKey(KeyName:String, KeyCode:Int):Void
+	private function addKey(KeyName:FlxKeyName, KeyCode:Int):Void
 	{
 		_keyLookup.set(KeyName, KeyCode);
 		_keyList[KeyCode] = new FlxKey(KeyName);
@@ -414,10 +410,10 @@ class FlxKeyboard implements IFlxInputManager
 	 * Helper function to check the status of an array of keys
 	 * 
 	 * @param	KeyArray	An array of keys as Strings
-	 * @param	Status		The key state to check for
+	 * @param	State		The key state to check for
 	 * @return	Whether at least one of the keys has the specified status
 	 */
-	private function checkKeyStatus(KeyArray:Array<String>, Status:FlxInputState):Bool
+	private function checkKeyArrayState(KeyArray:Array<FlxKeyName>, State:FlxInputState):Bool
 	{
 		if (KeyArray == null)
 		{
@@ -426,15 +422,10 @@ class FlxKeyboard implements IFlxInputManager
 		
 		for (code in KeyArray)
 		{
-			var key:FlxKey;
-			
-			// Also make lowercase keys work, like "space" or "sPaCe"
-			code = code.toUpperCase();
-			key = _keyList[_keyLookup.get(code)];
-			
+			var key:FlxKey = _keyList[_keyLookup.get(code)];
 			if (key != null)
 			{
-				if (key.current == Status)
+				if (key.hasState(State))
 				{
 					return true;
 				}
@@ -492,7 +483,7 @@ class FlxKeyboard implements IFlxInputManager
 	{
 		#if bitfive
 		var key:FlxKey = _keyList[keyCode];
-		if (key != null && preventDefaultKeys != null && preventDefaultKeys.indexOf(key.name) != -1)
+		if (key != null && preventDefaultKeys != null && preventDefaultKeys.indexOf(key.ID) != -1)
 		{
 			event.preventDefault();
 		}
@@ -503,7 +494,7 @@ class FlxKeyboard implements IFlxInputManager
 	 * A Helper function to check whether an array of keycodes contains 
 	 * a certain key safely (returns false if the array is null).
 	 */ 
-	private function inKeyArray(KeyArray:Array<String>, KeyCode:Int):Bool
+	private function inKeyArray(KeyArray:Array<FlxKeyName>, KeyCode:Int):Bool
 	{
 		if (KeyArray == null)
 		{

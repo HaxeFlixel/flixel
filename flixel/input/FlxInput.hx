@@ -1,5 +1,4 @@
 package flixel.input;
-import flixel.input.FlxInput.FlxInputState;
 
 class FlxInput<T>
 {
@@ -50,6 +49,21 @@ class FlxInput<T>
 		last = RELEASED;
 	}
 	
+	public function hasState(state:FlxInputState):Bool
+	{
+		switch (state)
+		{
+			case JUST_RELEASED:
+				return justReleased;
+			case RELEASED:
+				return released;
+			case PRESSED:
+				return pressed;
+			case JUST_PRESSED:
+				return justPressed;
+		}
+	}
+	
 	private inline function get_justReleased():Bool
 	{
 		return current == JUST_RELEASED;
@@ -57,12 +71,12 @@ class FlxInput<T>
 	
 	private inline function get_released():Bool
 	{
-		return current == RELEASED;
+		return current == RELEASED || justReleased;
 	}
 	
 	private inline function get_pressed():Bool
 	{
-		return current == PRESSED || current == JUST_PRESSED;
+		return current == PRESSED || justPressed;
 	}
 	
 	private inline function get_justPressed():Bool

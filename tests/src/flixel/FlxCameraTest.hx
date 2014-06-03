@@ -4,6 +4,7 @@ import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.util.FlxColor;
 import massive.munit.Assert;
+import massive.munit.async.AsyncFactory;
 
 class FlxCameraTest extends FlxTest
 {
@@ -24,6 +25,23 @@ class FlxCameraTest extends FlxTest
 	function testDefaultLength():Void
 	{
 		Assert.areEqual(1, FlxG.cameras.list.length);
+	}
+	
+	@Test
+	function testDefaultCameras():Void
+	{
+		Assert.areEqual(FlxG.cameras.list, FlxCamera.defaultCameras);
+	}
+	
+	@AsyncTest
+	function testDefaultCamerasStateSwitch(factory:AsyncFactory):Void
+	{
+		FlxCamera.defaultCameras = [FlxG.camera];
+		FlxG.switchState(new FlxState());
+		
+		delay(this, factory, function() {
+			Assert.areEqual(FlxG.cameras.list, FlxCamera.defaultCameras);
+		});
 	}
 	
 	@Test
