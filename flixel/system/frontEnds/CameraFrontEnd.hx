@@ -109,7 +109,6 @@ class CameraFrontEnd
 		FlxG.camera = add(NewCamera);
 		NewCamera.ID = 0;
 		
-		//Reset default cameras
 		FlxCamera.defaultCameras = list;
 	}
 	

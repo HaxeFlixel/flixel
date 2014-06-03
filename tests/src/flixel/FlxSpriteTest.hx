@@ -13,8 +13,8 @@ class FlxSpriteTest extends FlxTest
 	var sprite1:FlxSprite;
 	var sprite2:FlxSprite;
 	
-	@BeforeClass
-	function beforeClass():Void 
+	@Before
+	function before():Void 
 	{
 		sprite1 = new FlxSprite();
 		sprite1.makeGraphic(100, 80);
@@ -186,6 +186,9 @@ class FlxSpriteTest extends FlxTest
 		//Move the sprites away from eachother
 		sprite1.velocity.x = 2000;
 		sprite2.velocity.x = -2000;
+		
+		FlxG.state.add(sprite1);
+		FlxG.state.add(sprite2);
 		
 		delay(this, factory, function() { 
 			Assert.isFalse(FlxG.overlap(sprite1, sprite2)); 
