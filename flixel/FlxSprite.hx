@@ -266,11 +266,6 @@ class FlxSprite extends FlxObject
 	 */
 	public function loadGraphicFromSprite(Sprite:FlxSprite):FlxSprite
 	{
-		if (!exists)
-		{
-			FlxG.log.warn("Warning, trying to clone " + Type.getClassName(Type.getClass(this)) + " object that doesn't exist.");
-		}
-		
 		region = Sprite.region.clone();
 		bakedRotationAngle = Sprite.bakedRotationAngle;
 		cachedGraphics = Sprite.cachedGraphics;
