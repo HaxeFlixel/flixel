@@ -28,7 +28,13 @@ class FlxRandom
 	private static function set_globalSeed(NewSeed:Int):Int
 	{
 		NewSeed = Std.int(FlxMath.bound(NewSeed, 1, MODULUS));
+		
+		#if !js
 		internalSeed = NewSeed;
+		#else
+		internalSeed = Int64.ofInt(NewSeed);
+		#end
+		
 		return globalSeed = NewSeed;
 	}
 	
@@ -39,7 +45,7 @@ class FlxRandom
 	#if !js
 	public static var internalSeed(default, null):Int = 1;
 	#else
-	public static var internalSeed(default, null):Float = 0;
+	public static var internalSeed(default, null):Int64 = Int64.ofInt(1);
 	#end
 	
 	/**
@@ -120,7 +126,7 @@ class FlxRandom
 			#if !js
 			return generate();
 			#else
-			return Std.int(generate());
+			return Int64.toInt(generate());
 			#end
 		}
 		else if (Min == Max)
@@ -139,7 +145,11 @@ class FlxRandom
 			
 			if (Excludes == null)
 			{
+				#if !js
 				return Math.floor(Min + generate() / MODULUS * (Max - Min + 1));
+				#else
+				return Math.floor(Min + Int64.toInt(generate()) / MODULUS * (Max - Min + 1));
+				#end
 			}
 			else
 			{
@@ -147,7 +157,11 @@ class FlxRandom
 				
 				do
 				{
-					result = Math.floor(Min + generate() / MODULUS * (Max - Min + 1));
+					#if !js
+					return Math.floor(Min + generate() / MODULUS * (Max - Min + 1));
+					#else
+					return Math.floor(Min + Int64.toInt(generate()) / MODULUS * (Max - Min + 1));
+					#end
 				}
 				while (Excludes.indexOf(result) >= 0);
 				
@@ -185,13 +199,21 @@ class FlxRandom
 			
 			if (Excludes == null)
 			{
+				#if !js
 				result = Min + (generate() / MODULUS) * (Max - Min);
+				#else
+				result = Min + (Int64.toInt(generate()) / MODULUS) * (Max - Min);
+				#end
 			}
 			else
 			{
 				do
 				{
+					#if !js
 					result = Min + (generate() / MODULUS) * (Max - Min);
+					#else
+					result = Min + (Int64.toInt(generate()) / MODULUS) * (Max - Min);
+					#end
 				}
 				while (Excludes.indexOf(result) >= 0);
 			}
@@ -408,10 +430,13 @@ class FlxRandom
 	 */
 	#if !js
 	private static inline function generate():Int
-	#else
-	private static inline function generate():Float
-	#end
 	{
-		return internalSeed = Std.int(((internalSeed * MULTIPLIER) % MODULUS)) & MODULUS;
+		return internalSeed = ((internalSeed * MULTIPLIER) % MODULUS) & MODULUS;
 	}
+	#else
+	private static inline function generate():Int64
+	{
+		return internalSeed = Int64.ofInt(((Int64.toInt(internalSeed) * MULTIPLIER) % MODULUS) & MODULUS);
+	}
+	#end
 }
