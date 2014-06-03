@@ -321,18 +321,6 @@ class FlxRandom
 	}
 	
 	/**
-	 * Constants used in the pseudorandom number generation equation.
-	 * These are the constants suggested by the revised MINSTD pseudorandom number generator,
-	 * and they use the full range of possible integer values.
-	 * 
-	 * @see http://en.wikipedia.org/wiki/Linear_congruential_generator
-	 * @see Stephen K. Park and Keith W. Miller and Paul K. Stockmeyer (1988).
-	 *      "Technical Correspondence". Communications of the ACM 36 (7): 105–110.
-	 */
-	private static inline var MULTIPLIER:Int = 48271;
-	private static inline var MODULUS:Int = 2147483647;
-	
-	/**
 	 * The actual internal seed. Stored as a Float value to prevent inaccuracies due to
 	 * integer overflow in the generate() equation.
 	 */
@@ -369,6 +357,18 @@ class FlxRandom
 	}
 	
 	/**
+	 * Constants used in the pseudorandom number generation equation.
+	 * These are the constants suggested by the revised MINSTD pseudorandom number generator,
+	 * and they use the full range of possible integer values.
+	 * 
+	 * @see http://en.wikipedia.org/wiki/Linear_congruential_generator
+	 * @see Stephen K. Park and Keith W. Miller and Paul K. Stockmeyer (1988).
+	 *      "Technical Correspondence". Communications of the ACM 36 (7): 105–110.
+	 */
+	private static inline var MULTIPLIER:Int = 48271;
+	private static inline var MODULUS:Int = 2147483647;
+	
+	/**
 	 * Internal method to quickly generate a pseudorandom number. Used only by other functions of this class.
 	 * Also updates the internal seed, which will then be used to generate the next pseudorandom number.
 	 * 
@@ -376,7 +376,7 @@ class FlxRandom
 	 */
 	private static inline function generate():Float
 	{
-		return internalSeed = internalSeed * MULTIPLIER % MODULUS;
+		return internalSeed = (internalSeed * MULTIPLIER) % MODULUS;
 	}
 	
 	#if FLX_RECORD
