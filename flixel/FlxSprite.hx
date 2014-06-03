@@ -279,12 +279,13 @@ class FlxSprite extends FlxObject
 			centerOffsets();
 		}
 		
-		antialiasing = Sprite.antialiasing;
-		animation.copyFrom(Sprite.animation);
-		
 		updateFrameData();
 		resetHelpers();
 		
+		antialiasing = Sprite.antialiasing;
+		animation.copyFrom(Sprite.animation);
+		
+		graphicLoaded();
 		return this;
 	}
 	
@@ -345,6 +346,7 @@ class FlxSprite extends FlxObject
 		updateFrameData();
 		resetHelpers();
 		
+		graphicLoaded();
 		return this;
 	}
 	
@@ -497,6 +499,8 @@ class FlxSprite extends FlxObject
 		
 		animation.createPrerotated();
 		resetHelpers();
+		
+		graphicLoaded();
 		return this;
 	}
 	
@@ -546,6 +550,8 @@ class FlxSprite extends FlxObject
 		
 		resetSizeFromFrame();
 		centerOrigin();
+		
+		graphicLoaded();
 		return this;
 	}
 	
@@ -583,6 +589,7 @@ class FlxSprite extends FlxObject
 		loadRotatedGraphic(frameBitmapData, Rotations, -1, AntiAliasing, AutoBuffer, key);
 		#end
 		
+		graphicLoaded();
 		return this;
 	}
 	
@@ -608,8 +615,16 @@ class FlxSprite extends FlxObject
 		animation.destroyAnimations();
 		updateFrameData();
 		resetHelpers();
+		
+		graphicLoaded();
 		return this;
 	}
+	
+	/**
+	 * Called whenever a new graphic is loaded for this sprite
+	 * - after loadGraphic(), makeGraphic() etc.
+	 */
+	public function graphicLoaded():Void {}
 	
 	/**
 	 * Resets _flashRect variable used for frame bitmapData calculation

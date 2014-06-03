@@ -1,5 +1,4 @@
 package flixel.input;
-import flixel.input.FlxInput.FlxInputState;
 
 class FlxInput<T>
 {
