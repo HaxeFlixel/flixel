@@ -301,16 +301,6 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	}
 	
 	/**
-	 * Clone this FlxColor
-	 * 
-	 * @return A copy of this FlxColor
-	 */
-	public inline function clone():FlxColor
-	{
-		return fromInt(this);
-	}
-	
-	/**
 	 * Return a 24 bit version of this color (i.e. without an alpha value)
 	 * 
 	 * @return A 24 bit version of this color
