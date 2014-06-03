@@ -14,7 +14,7 @@ import haxe.Int64;
 class FlxRandom
 {
 	/**
-	 * The global random number generator seed (for deterministic behavior in recordings and saves).
+	 * The global base random number generator seed (for deterministic behavior in recordings and saves).
 	 * If you want, you can set the seed with an integer between 1 and 2,147,483,647 inclusive.
 	 * However, FlxG automatically sets this with a new random seed when starting your game.
 	 * Altering this yourself may break recording functionality!
@@ -22,86 +22,16 @@ class FlxRandom
 	public static var globalSeed(default, set):Int = 1;
 	
 	/**
-	 * Internal function to update the internal seed whenever the global seed is reset,
-	 * and keep the global seed's value in range.
-	 */
-	private static function set_globalSeed(NewSeed:Int):Int
-	{
-		NewSeed = Std.int(FlxMath.bound(NewSeed, 1, MODULUS));
-		
-		#if !js
-		internalSeed = NewSeed;
-		#else
-		internalSeed = Int64.ofInt(NewSeed);
-		#end
-		
-		return globalSeed = NewSeed;
-	}
-	
-	/**
-	 * Internal seed used to generate new random numbers. You can retrieve this value if,
+	 * Current seed used to generate new random numbers. You can retrieve this value if,
 	 * for example, you want to store the seed that was used to randomly generate a level.
 	 */
-	#if !js
-	public static var internalSeed(default, null):Int = 1;
-	#else
-	public static var internalSeed(default, null):Int64 = Int64.ofInt(1);
-	#end
-	
-	/**
-	 * Internal helper variables.
-	 */
-	private static var _arrayFloatHelper:Array<Float> = null;
-	
-	#if FLX_RECORD
-	/**
-	 * Internal storage for the seed used to generate the most recent state.
-	 */
-	private static var _stateSeed:Int = 1;
-	/**
-	 * The seed to be used by the recording requested in FlxGame.
-	 */
-	private static var _recordingSeed:Int = 1;
-	
-	/**
-	 * Update the seed that was used to create the most recent state.
-	 * Called by FlxGame, needed for replays.
-	 * 
-	 * @return  The new value of the state seed.
-	 */
-	@:allow(flixel.FlxGame.switchState)
-	private static inline function updateStateSeed():Int
-	{
-		return _stateSeed = internalSeed;
-	}
-	
-	/**
-	 * Used to store the seed for a requested recording. If StandardMode is false, this will also reset the global seed!
-	 * This ensures that the state is created in the same way as just before the recording was requested.
-	 * 
-	 * @param   StandardMode   If true, entire game will be reset, else just the current state will be reset.
-	 */
-	@:allow(flixel.system.frontEnds.VCRFrontEnd.startRecording)
-	private static inline function updateRecordingSeed(StandardMode:Bool = true):Int
-	{
-		return _recordingSeed = globalSeed = StandardMode ? globalSeed : _stateSeed;
-	}
-	
-	/**
-	 * Returns the seed to use for the requested recording.
-	 */
-	@:allow(flixel.FlxGame.step)
-	private static inline function getRecordingSeed():Int
-	{
-		return _recordingSeed;
-	}
-	#end
+	public static var currentSeed(get, set):Int;
 	
 	/**
 	 * Function to easily set the global seed to a new random number.
 	 * Used primarily by FlxG whenever the game is reset.
 	 * Please note that this function is not deterministic!
-	 * Ifyou call it in your game, recording may not work.
+	 * If you call it in your game, recording may not function as expected.
 	 * 
 	 * @return  The new global seed.
 	 */
@@ -117,17 +47,13 @@ class FlxRandom
 	 * 
 	 * @param   Min        The minimum value that should be returned. 0 by default.
 	 * @param   Max        The maximum value that should be returned. 2,147,483,647 by default.
-	 * @param   Excludes   An optional array of values that should not be returned. Optional.
+	 * @param   Excludes   Optional array of values that should not be returned.
 	 */
 	public static function int(Min:Int = 0, Max:Int = MODULUS, ?Excludes:Array<Int>):Int
 	{
 		if (Min == 0 && Max == MODULUS && Excludes == null)
 		{
-			#if !js
-			return generate();
-			#else
-			return Int64.toInt(generate());
-			#end
+			return Std.int(generate());
 		}
 		else if (Min == Max)
 		{
@@ -145,11 +71,7 @@ class FlxRandom
 			
 			if (Excludes == null)
 			{
-				#if !js
 				return Math.floor(Min + generate() / MODULUS * (Max - Min + 1));
-				#else
-				return Math.floor(Min + Int64.toInt(generate()) / MODULUS * (Max - Min + 1));
-				#end
 			}
 			else
 			{
@@ -157,11 +79,7 @@ class FlxRandom
 				
 				do
 				{
-					#if !js
 					return Math.floor(Min + generate() / MODULUS * (Max - Min + 1));
-					#else
-					return Math.floor(Min + Int64.toInt(generate()) / MODULUS * (Max - Min + 1));
-					#end
 				}
 				while (Excludes.indexOf(result) >= 0);
 				
@@ -177,7 +95,7 @@ class FlxRandom
 	 * 
 	 * @param   Min        The minimum value that should be returned. 0 by default.
 	 * @param   Max        The maximum value that should be returned. 1 by default.
-	 * @param   Excludes   An optional array of values that should not be returned. Optional.
+	 * @param   Excludes   Optional array of values that should not be returned.
 	 */
 	public static function float(Min:Float = 0, Max:Float = 1, ?Excludes:Array<Float>):Float
 	{
@@ -199,21 +117,13 @@ class FlxRandom
 			
 			if (Excludes == null)
 			{
-				#if !js
 				result = Min + (generate() / MODULUS) * (Max - Min);
-				#else
-				result = Min + (Int64.toInt(generate()) / MODULUS) * (Max - Min);
-				#end
 			}
 			else
 			{
 				do
 				{
-					#if !js
 					result = Min + (generate() / MODULUS) * (Max - Min);
-					#else
-					result = Min + (Int64.toInt(generate()) / MODULUS) * (Max - Min);
-					#end
 				}
 				while (Excludes.indexOf(result) >= 0);
 			}
@@ -381,7 +291,7 @@ class FlxRandom
 	}
 	
 	/**
-	 * Much like color(), but with much finer control over the output color.
+	 * Much like color(), but with finer control over the output color.
 	 * 
 	 * @param   RedMinimum     The minimum amount of red in the output color, from 0 to 255.
 	 * @param   RedMaximum     The maximum amount of red in the output color, from 0 to 255.
@@ -423,20 +333,94 @@ class FlxRandom
 	private static inline var MODULUS:Int = 2147483647;
 	
 	/**
+	 * The actual internal seed. Stored as a Float value to prevent inaccuracies due to
+	 * integer overflow in the generate() equation.
+	 */
+	private static var internalSeed:Float = 1;
+	
+	/**
+	 * Internal helper variable.
+	 */
+	private static var _arrayFloatHelper:Array<Float> = null;
+	
+	/**
+	 * Internal function to update the internal seed whenever the global seed is reset,
+	 * and keep the global seed's value in range.
+	 */
+	private static inline function set_globalSeed(NewSeed:Int):Int
+	{
+		return globalSeed = currentSeed = Std.int(FlxMath.bound(NewSeed, 1, MODULUS));
+	}
+	
+	/**
+	 * Internal function to return the internal seed as an integer.
+	 */
+	private static inline function get_currentSeed():Int
+	{
+		return Std.int(internalSeed);
+	}
+	
+	/**
+	 * Internal function to set the internal seed to an integer value.
+	 */
+	private static inline function set_currentSeed(NewSeed:Int):Int
+	{
+		return Std.int(internalSeed = NewSeed);
+	}
+	
+	/**
 	 * Internal method to quickly generate a pseudorandom number. Used only by other functions of this class.
 	 * Also updates the internal seed, which will then be used to generate the next pseudorandom number.
 	 * 
 	 * @return  A new pseudorandom number.
 	 */
-	#if !js
-	private static inline function generate():Int
+	private static inline function generate():Float
 	{
-		return internalSeed = ((internalSeed * MULTIPLIER) % MODULUS) & MODULUS;
+		return internalSeed = internalSeed * MULTIPLIER % MODULUS;
 	}
-	#else
-	private static inline function generate():Int64
+	
+	#if FLX_RECORD
+	/**
+	 * Internal storage for the seed used to generate the most recent state.
+	 */
+	private static var _stateSeed:Int = 1;
+	
+	/**
+	 * The seed to be used by the recording requested in FlxGame.
+	 */
+	private static var _recordingSeed:Int = 1;
+	
+	/**
+	 * Update the seed that was used to create the most recent state.
+	 * Called by FlxGame, needed for replays.
+	 * 
+	 * @return  The new value of the state seed.
+	 */
+	@:allow(flixel.FlxGame.switchState)
+	private static inline function updateStateSeed():Int
 	{
-		return internalSeed = Int64.ofInt(((Int64.toInt(internalSeed) * MULTIPLIER) % MODULUS) & MODULUS);
+		return _stateSeed = internalSeed;
+	}
+	
+	/**
+	 * Used to store the seed for a requested recording. If StandardMode is false, this will also reset the global seed!
+	 * This ensures that the state is created in the same way as just before the recording was requested.
+	 * 
+	 * @param   StandardMode   If true, entire game will be reset, else just the current state will be reset.
+	 */
+	@:allow(flixel.system.frontEnds.VCRFrontEnd.startRecording)
+	private static inline function updateRecordingSeed(StandardMode:Bool = true):Int
+	{
+		return _recordingSeed = globalSeed = StandardMode ? globalSeed : _stateSeed;
+	}
+	
+	/**
+	 * Returns the seed to use for the requested recording.
+	 */
+	@:allow(flixel.FlxGame.step)
+	private static inline function getRecordingSeed():Int
+	{
+		return _recordingSeed;
 	}
 	#end
 }
