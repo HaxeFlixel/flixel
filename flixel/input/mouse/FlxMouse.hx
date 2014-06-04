@@ -67,7 +67,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	 */
 	public var justReleased(get, never):Bool;
 
-	#if (!FLX_NO_MOUSE_ADVANCED && flash11_2)
+	#if (!FLX_NO_MOUSE_ADVANCED && (!flash || flash11_2))
 	/**
 	 * Check to see if the right mouse button is pressed.
 	 */
@@ -100,7 +100,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	 */
 	private var _leftButton:FlxMouseButton;
 	
-	#if (!FLX_NO_MOUSE_ADVANCED && flash11_2)
+	#if (!FLX_NO_MOUSE_ADVANCED && (!flash || flash11_2))
 	/**
 	 * The middle mouse button.
 	 */
@@ -302,7 +302,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 			_stage.removeEventListener(MouseEvent.MOUSE_DOWN, _leftButton.onDown);
 			_stage.removeEventListener(MouseEvent.MOUSE_UP, _leftButton.onUp);
 			
-			#if (!FLX_NO_MOUSE_ADVANCED && flash11_2)
+			#if (!FLX_NO_MOUSE_ADVANCED && (!flash || flash11_2))
 			_stage.removeEventListener(untyped MouseEvent.MIDDLE_MOUSE_DOWN, _middleButton.onDown);
 			_stage.removeEventListener(untyped MouseEvent.MIDDLE_MOUSE_UP, _middleButton.onUp);
 			_stage.removeEventListener(untyped MouseEvent.RIGHT_MOUSE_DOWN, _rightButton.onDown);
@@ -322,7 +322,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 		#end
 		
 		_leftButton = FlxDestroyUtil.destroy(_leftButton);
-		#if (!FLX_NO_MOUSE_ADVANCED && flash11_2)
+		#if (!FLX_NO_MOUSE_ADVANCED && (!flash || flash11_2))
 		_middleButton = FlxDestroyUtil.destroy(_middleButton);
 		_rightButton = FlxDestroyUtil.destroy(_rightButton);
 		#end
@@ -338,7 +338,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	{
 		_leftButton.reset();
 		
-		#if (!FLX_NO_MOUSE_ADVANCED && flash11_2)
+		#if (!FLX_NO_MOUSE_ADVANCED && (!flash || flash11_2))
 		_middleButton.reset();
 		_rightButton.reset();
 		#end
@@ -361,7 +361,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 		_stage.addEventListener(MouseEvent.MOUSE_DOWN, _leftButton.onDown);
 		_stage.addEventListener(MouseEvent.MOUSE_UP, _leftButton.onUp);
 		
-		#if (!FLX_NO_MOUSE_ADVANCED && flash11_2)
+		#if (!FLX_NO_MOUSE_ADVANCED && (!flash || flash11_2))
 		_middleButton = new FlxMouseButton(FlxMouseButton.MIDDLE);
 		_rightButton = new FlxMouseButton(FlxMouseButton.RIGHT);
 		
@@ -406,7 +406,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 		
 		// Update the buttons
 		_leftButton.update();
-		#if (!FLX_NO_MOUSE_ADVANCED && flash11_2)
+		#if (!FLX_NO_MOUSE_ADVANCED && (!flash || flash11_2))
 		_middleButton.update();
 		_rightButton.update();
 		#end
@@ -475,7 +475,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 		wheel = FlashEvent.delta;
 	}
 	
-	#if (!FLX_NO_MOUSE_ADVANCED && flash11_2)
+	#if (!FLX_NO_MOUSE_ADVANCED && (!flash || flash11_2))
 	/**
 	 * We're detecting the mouse leave event to prevent a bug where `pressed` remains true 
 	 * for the middle and right mouse button when pressed and dragged outside the window.
@@ -491,7 +491,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	private inline function get_justPressed():Bool        { return _leftButton.justPressed;    }
 	private inline function get_justReleased():Bool       { return _leftButton.justReleased;   }
 
-	#if (!FLX_NO_MOUSE_ADVANCED && flash11_2)
+	#if (!FLX_NO_MOUSE_ADVANCED && (!flash || flash11_2))
 	private inline function get_pressedRight():Bool       { return _rightButton.pressed;       }
 	private inline function get_justPressedRight():Bool   { return _rightButton.justPressed;   }
 	private inline function get_justReleasedRight():Bool  { return _rightButton.justReleased;  }

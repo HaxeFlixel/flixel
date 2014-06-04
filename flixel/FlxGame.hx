@@ -256,22 +256,22 @@ class FlxGame extends Sprite
 		var feature = "[f]";
 		var version = "[v]";
 		var conditional = "[c]";
-		var errorMessage:String = '$feature only supported in Flash Player version $version or higher. '
+		var errorMessage = '$feature only supported in Flash Player version $version or higher. '
 			+ 'Define $conditional to disable this feature or add <set name="SWF_VERSION" value="$version" /> to your Project.xml.';
 		
 		#if (!flash10_2 && !FLX_NO_NATIVE_CURSOR)
 		throw errorMessage
-			.replace('[f]', "Native mouse cursors are")
+			.replace(feature, "Native mouse cursors are")
 			.replace(version, "10.2")
 			.replace(conditional, "FLX_NO_NATIVE_CURSOR");
 		#elseif (!flash11_2 && !FLX_NO_MOUSE_ADVANCED)
 		throw errorMessage
-			.replace('[f]', "Middle and right mouse button events are")
+			.replace(feature, "Middle and right mouse button events are")
 			.replace(version, "11.2")
 			.replace(conditional, "FLX_NO_MOUSE_ADVANCED");
 		#elseif (!flash11_8 && !FLX_NO_GAMEPAD)
 		throw errorMessage
-			.replace('[f]', "Gamepad input is")
+			.replace(feature, "Gamepad input is")
 			.replace(version, "11.8")
 			.replace(conditional, "FLX_NO_GAMEPAD");
 		#end
