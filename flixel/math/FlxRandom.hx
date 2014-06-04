@@ -3,7 +3,10 @@ package flixel.math;
 import flixel.FlxGame;
 import flixel.system.frontEnds.VCRFrontEnd;
 import flixel.util.FlxColor;
+
+#if neko
 import haxe.Int64;
+#end
 
 /**
  * A class containing a set of functions for random generation.
@@ -388,6 +391,11 @@ class FlxRandom
 	#if neko
 	/**
 	 * For some reason, modulus doesn't seem to work on Neko, so generate() uses this instead.
+	 * 
+	 * @param	A	Will be multiplied by B to create the numerator for modulus.
+	 * @param	B	Will be multiplied by A to create the numerator for modulus.
+	 * @param	C	Will be the denominator for modulus.
+	 * @return	A float value representing the result
 	 */
 	private static inline function mod(A:Float, B:Float, C:Float):Float
 	{

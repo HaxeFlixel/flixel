@@ -23,8 +23,8 @@ class StatsGraph extends Sprite
 	public var maxLabel:TextField;
 	public var avgLabel:TextField;
 	
-	public var minValue:Float = FlxMath.MAX_VALUE;
-	public var maxValue:Float = FlxMath.MIN_VALUE;
+	public var minValue:Float = FlxMath.MAX_VALUE_FLOAT;
+	public var maxValue:Float = FlxMath.MIN_VALUE_FLOAT;
 	
 	public var graphColor:FlxColor;
 	
