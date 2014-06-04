@@ -1,4 +1,5 @@
-package ;
+package;
+
 import flixel.addons.nape.FlxNapeSprite;
 import flixel.addons.nape.FlxNapeState;
 import flixel.effects.particles.FlxEmitter;
@@ -6,7 +7,6 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup;
 import flixel.input.mouse.FlxMouseEventManager;
-import flixel.math.FlxAngle;
 import flixel.math.FlxPoint;
 import nape.callbacks.CbEvent;
 import nape.callbacks.CbType;
@@ -82,11 +82,12 @@ class Shooter extends FlxTypedGroup<FlxNapeSprite>
 		
 		spr.body.position.y = 30;
 		spr.body.position.x = 30 + Std.random(640 - 30);
-		var angle = FlxAngle.getAngle(FlxPoint.get(FlxG.mouse.x, FlxG.mouse.y), 
-									  FlxPoint.get(spr.body.position.x, spr.body.position.y));
+		var angle = FlxG.mouse.toPoint()
+			.angleBetween(FlxPoint.get(spr.body.position.x, spr.body.position.y));
 		angle += 90;
-		spr.body.velocity.setxy(impulse * Math.cos(angle * 3.14 / 180),
-								impulse * Math.sin(angle * 3.14 / 180));
+		spr.body.velocity.setxy(
+			impulse * Math.cos(angle * 3.14 / 180),
+			impulse * Math.sin(angle * 3.14 / 180));
 		
 		spr.body.angularVel = 30;				
 	}
@@ -109,7 +110,7 @@ class Shooter extends FlxTypedGroup<FlxNapeSprite>
 		var body:Body = cast(spr, FlxNapeSprite).body;
 		
 		mouseJoint = new DistanceJoint(FlxNapeState.space.world, body, new Vec2(FlxG.mouse.x, FlxG.mouse.y),
-								body.worldPointToLocal(new Vec2(FlxG.mouse.x, FlxG.mouse.y)), 0, 0);
+			body.worldPointToLocal(new Vec2(FlxG.mouse.x, FlxG.mouse.y)), 0, 0);
 		
 		mouseJoint.space = FlxNapeState.space;
 	}	

@@ -159,7 +159,8 @@ class Enemy extends FlxSprite
 		// Set the bot's movement speed and direction
 		// based on angle and whether the jets are on.
 		_thrust = FlxVelocity.computeVelocity(_thrust, (jetsOn ? 90 : 0), drag.x, 60);
-		FlxAngle.rotatePoint(0, -_thrust, 0, 0, angle, velocity);
+		velocity.set(0, -_thrust);
+		velocity.rotate(FlxPoint.weak(0, 0), angle);
 
 		// Shooting - three shots every few seconds
 		if (isOnScreen())
@@ -282,6 +283,6 @@ class Enemy extends FlxSprite
 	 */
 	private function angleTowardPlayer():Float
 	{
-		return FlxAngle.getAngle(getMidpoint(_point), _player.getMidpoint(_playerMidpoint));
+		return getMidpoint(_point).angleBetween(_player.getMidpoint(_playerMidpoint));
 	}
 }

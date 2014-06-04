@@ -176,7 +176,7 @@ class Enemy extends Entity
 	{
 		var CombinedHitBoxRadius:Float = hitboxRadius + Object.hitboxRadius;
 		var IsHitBoxCollision:Bool = (CombinedHitBoxRadius * CombinedHitBoxRadius) >= DistanceSquared;
-		var AngleFromCenters:Float = FlxAngle.asRadians(FlxAngle.getAngle(position, Object.position));
+		var AngleFromCenters:Float = FlxAngle.asRadians(position.angleBetween(Object.position));
 		if (Std.is(Object, Bullet))
 		{
 			if (IsHitBoxCollision) 

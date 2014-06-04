@@ -93,7 +93,7 @@ class SolarSystem extends FlxNapeState
 			
 		for (planet in planets)
 		{
-			var angle = FlxAngle.getAngle(FlxPoint.get(planet.x, planet.y), FlxPoint.get(halfWidth, halfHeight)) - 90;
+			var angle = planet.toPoint().angleBetween(FlxPoint.get(halfWidth, halfHeight)) - 90;
 			var distance = FlxMath.getDistance(FlxPoint.get(planet.x, planet.y), FlxPoint.get(halfWidth, halfHeight));
 			
 			var impulse = gravity * planet.body.mass / (distance * distance);

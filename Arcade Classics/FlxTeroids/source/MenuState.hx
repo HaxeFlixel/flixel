@@ -5,16 +5,10 @@ import flixel.FlxState;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 
-/**
- * ...
- * @author Zaphod
- */
 class MenuState extends FlxState
 {
 	override public function create():Void 
 	{
-		FlxG.mouse.visible = true;
-		
 		var t:FlxText;
 		t = new FlxText(0, FlxG.height / 2 - 20, FlxG.width, "FlxTeroids");
 		t.setFormat(null, 32, FlxColor.WHITE, CENTER, OUTLINE);

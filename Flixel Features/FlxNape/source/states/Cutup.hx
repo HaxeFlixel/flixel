@@ -110,8 +110,8 @@ class Cutup extends FlxNapeState
 	{
 		var source:FlxPoint = ufo.getMidpoint();
 		var mouse:FlxPoint = FlxG.mouse.getWorldPosition();
-		// getAngle return angle with 0 degree point up, but we need the angle start from pointing right
-		var deg:Float = FlxAngle.getAngle(source, mouse)-90;
+		// angleBetween returns angle with 0 degree point up, but we need the angle start from pointing right
+		var deg:Float = source.angleBetween(mouse) - 90;
 		var groundPoint = FlxPoint.get(source.x + (ground-source.y) / Math.tan(deg * FlxAngle.TO_RAD), ground);
 		var length:Float = FlxMath.getDistance(source, groundPoint);
 		

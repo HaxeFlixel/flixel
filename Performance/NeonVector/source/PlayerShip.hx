@@ -139,15 +139,17 @@ class PlayerShip extends Entity
 			Aim.y -= y;
 		}
 		
-		FlxAngle.rotatePoint(Aim.x, Aim.y, 0, 0, RandomSpread, Aim);
+		Aim.rotate(FlxPoint.weak(0, 0), RandomSpread);
 		
 		var Angle:Float = Entity.angleInDegrees(Aim);
-		FlxAngle.rotatePoint(8, -25, 0, 0, Angle + 90, _point);
+		_point.set(8, -25);
+		_point.rotate(FlxPoint.weak(0, 0), Angle + 90);
 		var PositionX:Float = _point.x + position.x;
 		var PositionY:Float = _point.y + position.y;
 		ScreenState.makeBullet(PositionX, PositionY, Angle, bulletSpeed);
 		
-		FlxAngle.rotatePoint(-8, -25, 0, 0, Angle + 90, _point);
+		_point.set( -8, -25);
+		_point.rotate(FlxPoint.weak(0, 0), Angle + 90);
 		PositionX = _point.x + position.x;
 		PositionY = _point.y + position.y;
 		ScreenState.makeBullet(PositionX, PositionY, Angle, bulletSpeed);
