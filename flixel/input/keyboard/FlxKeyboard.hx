@@ -69,7 +69,7 @@ class FlxKeyboard implements IFlxInputManager
 	 */
 	public inline function anyPressed(KeyArray:Array<FlxKeyName>):Bool
 	{ 
-		return checkKeyStatus(KeyArray, PRESSED);
+		return checkKeyArrayState(KeyArray, PRESSED);
 	}
 	
 	/**
@@ -81,7 +81,7 @@ class FlxKeyboard implements IFlxInputManager
 	 */
 	public inline function anyJustPressed(KeyArray:Array<FlxKeyName>):Bool
 	{ 
-		return checkKeyStatus(KeyArray, JUST_PRESSED);
+		return checkKeyArrayState(KeyArray, JUST_PRESSED);
 	}
 	
 	/**
@@ -93,7 +93,7 @@ class FlxKeyboard implements IFlxInputManager
 	 */
 	public inline function anyJustReleased(KeyArray:Array<FlxKeyName>):Bool
 	{ 
-		return checkKeyStatus(KeyArray, JUST_RELEASED);
+		return checkKeyArrayState(KeyArray, JUST_RELEASED);
 	}
 	
 	/**
@@ -156,10 +156,10 @@ class FlxKeyboard implements IFlxInputManager
 	 */
 	public function checkStatus(KeyCode:Int, Status:FlxInputState):Bool
 	{
-		var k:FlxKey = _keyList[KeyCode];
-		if (k != null)
+		var key:FlxKey = _keyList[KeyCode];
+		if (key != null)
 		{
-			if (k.current == Status)
+			if (key.hasState(Status))
 			{
 				return true;
 			}
@@ -410,10 +410,10 @@ class FlxKeyboard implements IFlxInputManager
 	 * Helper function to check the status of an array of keys
 	 * 
 	 * @param	KeyArray	An array of keys as Strings
-	 * @param	Status		The key state to check for
+	 * @param	State		The key state to check for
 	 * @return	Whether at least one of the keys has the specified status
 	 */
-	private function checkKeyStatus(KeyArray:Array<FlxKeyName>, Status:FlxInputState):Bool
+	private function checkKeyArrayState(KeyArray:Array<FlxKeyName>, State:FlxInputState):Bool
 	{
 		if (KeyArray == null)
 		{
@@ -425,7 +425,7 @@ class FlxKeyboard implements IFlxInputManager
 			var key:FlxKey = _keyList[_keyLookup.get(code)];
 			if (key != null)
 			{
-				if (key.current == Status)
+				if (key.hasState(State))
 				{
 					return true;
 				}

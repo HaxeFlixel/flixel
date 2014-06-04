@@ -7,7 +7,9 @@ import flixel.FlxSpriteTest;
 import flixel.FlxStateTest;
 import flixel.group.FlxGroupTest;
 import flixel.math.FlxVectorTest;
+import flixel.tile.FlxTilemapTest;
 import flixel.tweens.FlxTweenTest;
+import flixel.ui.FlxButtonTest;
 import flixel.util.FlxSignalTest;
 import FlxTest;
 
@@ -30,7 +32,9 @@ class TestSuite extends massive.munit.TestSuite
 		add(flixel.FlxStateTest);
 		add(flixel.group.FlxGroupTest);
 		add(flixel.math.FlxVectorTest);
+		add(flixel.tile.FlxTilemapTest);
 		add(flixel.tweens.FlxTweenTest);
+		add(flixel.ui.FlxButtonTest);
 		add(flixel.util.FlxSignalTest);
 		add(FlxTest);
 	}

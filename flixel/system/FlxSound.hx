@@ -316,6 +316,7 @@ class FlxSound extends FlxBasic
 		return this;
 	}
 	
+	#if flash11
 	/**
 	 * One of the main setup functions for sounds, this function loads a sound from a ByteArray.
 	 * 
@@ -342,6 +343,7 @@ class FlxSound extends FlxBasic
 		#end
 		return this;	
 	}
+	#end
 	
 	/**
 	 * Call this function if you want this sound's volume to change

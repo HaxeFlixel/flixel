@@ -19,7 +19,7 @@ import flixel.system.FlxAssets;
 import flixel.system.replay.MouseRecord;
 import flixel.util.FlxDestroyUtil;
 import flixel.math.FlxPoint;
-#if (flash && !FLX_NO_NATIVE_CURSOR)
+#if (flash10_2 && !FLX_NO_NATIVE_CURSOR)
 import flash.ui.MouseCursor;
 import flash.ui.MouseCursorData;
 #end
@@ -67,7 +67,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	 */
 	public var justReleased(get, never):Bool;
 
-	#if !FLX_NO_MOUSE_ADVANCED
+	#if (!FLX_NO_MOUSE_ADVANCED && (!flash || flash11_2))
 	/**
 	 * Check to see if the right mouse button is pressed.
 	 */
@@ -100,7 +100,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	 */
 	private var _leftButton:FlxMouseButton;
 	
-	#if !FLX_NO_MOUSE_ADVANCED
+	#if (!FLX_NO_MOUSE_ADVANCED && (!flash || flash11_2))
 	/**
 	 * The middle mouse button.
 	 */
@@ -132,7 +132,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	/**
 	 * Helper variables for flash native cursors
 	 */
-	#if (flash && !FLX_NO_NATIVE_CURSOR)
+	#if (flash10_2 && !FLX_NO_NATIVE_CURSOR)
 	private var _cursorDefaultName:String = "defaultCursor";
 	private var _currentNativeCursor:String;
 	private var _previousNativeCursor:String;
@@ -148,9 +148,9 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	 * @param   XOffset   The number of pixels between the mouse's screen position and the graphic's top left corner.
 	 * @param   YOffset   The number of pixels between the mouse's screen position and the graphic's top left corner.
 	 */
-	public function load(?Graphic:Dynamic, Scale:Float = 1, XOffset:Int = 0, YOffset:Int = 0):Void
+	public function load(?Graphic:Dynamic, Scale:Float = 1, XOffset:UInt = 0, YOffset:UInt = 0):Void
 	{
-		#if (!flash || FLX_NO_NATIVE_CURSOR)
+		#if (flash10_2 && !FLX_NO_NATIVE_CURSOR)
 		if (_cursor != null)
 		{
 			cursorContainer.removeChild(_cursor);
@@ -184,18 +184,11 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 		_cursor.scaleX = Scale;
 		_cursor.scaleY = Scale;
 		
-		#if (flash && !FLX_NO_NATIVE_CURSOR)
-		if (XOffset < 0 || YOffset < 0)
-		{
-			FlxG.log.warn("Negative offsets aren't supported with native cursor. Abs values will be used instead.");
-			XOffset = 0;
-			YOffset = 0;
-		}
+		#if (flash10_2 && !FLX_NO_NATIVE_CURSOR)
 		
 		if (Scale < 0)
 		{
-			FlxG.log.warn("Negative scale isn't supported with native cursor. Abs value will be used instead.");
-			Scale = 1;
+			throw "Negative scale isn't supported for native cursors.";
 		}
 		
 		var scaledWidth:Int = Std.int(Scale * _cursor.bitmapData.width);
@@ -238,7 +231,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 		}
 	}
 
-	#if (flash && !FLX_NO_NATIVE_CURSOR)
+	#if (flash10_2 && !FLX_NO_NATIVE_CURSOR)
 	/**
 	 * Set a Native cursor that has been registered by Name
 	 * Warning, you need to use registerNativeCursor() before you use it here
@@ -282,7 +275,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 		
 		if (CursorBitmap.width > 32 || CursorBitmap.height > 32)
 		{
-			FlxG.log.warn("Bitmap files used for the cursors should not exceed 32 × 32 pixels, due to an OS limitation.");
+			throw "BitmapData files used for native cursors cannot exceed 32x32 pixels due to an OS limitation.";
 		}
 		
 		var cursorData = new MouseCursorData();
@@ -309,7 +302,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 			_stage.removeEventListener(MouseEvent.MOUSE_DOWN, _leftButton.onDown);
 			_stage.removeEventListener(MouseEvent.MOUSE_UP, _leftButton.onUp);
 			
-			#if !FLX_NO_MOUSE_ADVANCED
+			#if (!FLX_NO_MOUSE_ADVANCED && (!flash || flash11_2))
 			_stage.removeEventListener(untyped MouseEvent.MIDDLE_MOUSE_DOWN, _middleButton.onDown);
 			_stage.removeEventListener(untyped MouseEvent.MIDDLE_MOUSE_UP, _middleButton.onUp);
 			_stage.removeEventListener(untyped MouseEvent.RIGHT_MOUSE_DOWN, _rightButton.onDown);
@@ -324,12 +317,12 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 		cursorContainer = null;
 		_cursor = null;
 		
-		#if (flash && !FLX_NO_NATIVE_CURSOR)
+		#if (flash10_2 && !FLX_NO_NATIVE_CURSOR)
 		_matrix = null;
 		#end
 		
 		_leftButton = FlxDestroyUtil.destroy(_leftButton);
-		#if !FLX_NO_MOUSE_ADVANCED
+		#if (!FLX_NO_MOUSE_ADVANCED && (!flash || flash11_2))
 		_middleButton = FlxDestroyUtil.destroy(_middleButton);
 		_rightButton = FlxDestroyUtil.destroy(_rightButton);
 		#end
@@ -345,7 +338,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	{
 		_leftButton.reset();
 		
-		#if !FLX_NO_MOUSE_ADVANCED
+		#if (!FLX_NO_MOUSE_ADVANCED && (!flash || flash11_2))
 		_middleButton.reset();
 		_rightButton.reset();
 		#end
@@ -368,7 +361,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 		_stage.addEventListener(MouseEvent.MOUSE_DOWN, _leftButton.onDown);
 		_stage.addEventListener(MouseEvent.MOUSE_UP, _leftButton.onUp);
 		
-		#if !FLX_NO_MOUSE_ADVANCED
+		#if (!FLX_NO_MOUSE_ADVANCED && (!flash || flash11_2))
 		_middleButton = new FlxMouseButton(FlxMouseButton.MIDDLE);
 		_rightButton = new FlxMouseButton(FlxMouseButton.RIGHT);
 		
@@ -413,7 +406,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 		
 		// Update the buttons
 		_leftButton.update();
-		#if !FLX_NO_MOUSE_ADVANCED
+		#if (!FLX_NO_MOUSE_ADVANCED && (!flash || flash11_2))
 		_middleButton.update();
 		_rightButton.update();
 		#end
@@ -433,7 +426,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	{
 		reset();
 		
-		#if (!flash || FLX_NO_NATIVE_CURSOR)
+		#if (flash10_2 && !FLX_NO_NATIVE_CURSOR)
 		set_useSystemCursor(useSystemCursor);
 		
 		visible = _visibleWhenFocusLost;
@@ -445,7 +438,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	 */
 	private function onFocusLost():Void
 	{
-		#if (!flash || FLX_NO_NATIVE_CURSOR)
+		#if (flash10_2 && !FLX_NO_NATIVE_CURSOR)
 		_visibleWhenFocusLost = visible;
 		
 		if (visible)
@@ -482,7 +475,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 		wheel = FlashEvent.delta;
 	}
 	
-	#if !FLX_NO_MOUSE_ADVANCED
+	#if (!FLX_NO_MOUSE_ADVANCED && (!flash || flash11_2))
 	/**
 	 * We're detecting the mouse leave event to prevent a bug where `pressed` remains true 
 	 * for the middle and right mouse button when pressed and dragged outside the window.
@@ -498,7 +491,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	private inline function get_justPressed():Bool        { return _leftButton.justPressed;    }
 	private inline function get_justReleased():Bool       { return _leftButton.justReleased;   }
 
-	#if !FLX_NO_MOUSE_ADVANCED
+	#if (!FLX_NO_MOUSE_ADVANCED && (!flash || flash11_2))
 	private inline function get_pressedRight():Bool       { return _rightButton.pressed;       }
 	private inline function get_justPressedRight():Bool   { return _rightButton.justPressed;   }
 	private inline function get_justReleasedRight():Bool  { return _rightButton.justReleased;  }
@@ -513,7 +506,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	 */
 	private function showSystemCursor():Void
 	{
-		#if (flash && !FLX_NO_NATIVE_CURSOR)
+		#if (flash10_2 && !FLX_NO_NATIVE_CURSOR)
 		setNativeCursor(MouseCursor.AUTO);
 		#else
 		Mouse.show();
@@ -526,7 +519,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	 */
 	private function hideSystemCursor():Void
 	{
-		#if (flash && !FLX_NO_NATIVE_CURSOR)
+		#if (flash10_2 && !FLX_NO_NATIVE_CURSOR)
 		if (Mouse.supportsCursor && (_previousNativeCursor != null))
 		{
 			setNativeCursor(_previousNativeCursor);
@@ -574,7 +567,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 				Mouse.hide();
 			}
 			
-			#if (flash && !FLX_NO_NATIVE_CURSOR)
+			#if (flash10_2 && !FLX_NO_NATIVE_CURSOR)
 			if (Mouse.supportsCursor && (_previousNativeCursor != null))
 			{
 				setNativeCursor(_previousNativeCursor);
@@ -587,7 +580,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 			cursorContainer.visible = false;
 			Mouse.hide();
 			
-			#if (flash && !FLX_NO_NATIVE_CURSOR)
+			#if (flash10_2 && !FLX_NO_NATIVE_CURSOR)
 			if (Mouse.supportsCursor)
 			{
 				_previousNativeCursor = _currentNativeCursor;

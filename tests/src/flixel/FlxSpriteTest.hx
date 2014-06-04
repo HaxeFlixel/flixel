@@ -1,6 +1,7 @@
 package flixel;
 
 import flash.display.BitmapData;
+import flixel.animation.FlxAnimation;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.util.FlxArrayUtil;
@@ -13,8 +14,8 @@ class FlxSpriteTest extends FlxTest
 	var sprite1:FlxSprite;
 	var sprite2:FlxSprite;
 	
-	@BeforeClass
-	function beforeClass():Void 
+	@Before
+	function before():Void 
 	{
 		sprite1 = new FlxSprite();
 		sprite1.makeGraphic(100, 80);
@@ -187,8 +188,24 @@ class FlxSpriteTest extends FlxTest
 		sprite1.velocity.x = 2000;
 		sprite2.velocity.x = -2000;
 		
+		FlxG.state.add(sprite1);
+		FlxG.state.add(sprite2);
+		
 		delay(this, factory, function() { 
 			Assert.isFalse(FlxG.overlap(sprite1, sprite2)); 
 		});
+	}
+	
+	@Test
+	function testLoadGraphicFromSpriteCopyAnimations():Void
+	{
+		var graphic = new BitmapData(3, 1);
+		sprite1.loadGraphic(graphic, true, 1, 1);
+		sprite1.animation.add("animation", [0, 1, 2]);
+		
+		sprite2.loadGraphicFromSprite(sprite1);
+		
+		var animation:FlxAnimation = sprite2.animation.getByName("animation");
+		Assert.areEqual(3, animation.numFrames);
 	}
 }

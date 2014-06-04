@@ -461,7 +461,8 @@ class FlxMouseEventManager extends FlxBasic
 	{
 		if (Sprite.angle != 0)
 		{
-			FlxAngle.rotatePoint(Point.x, Point.y, (Sprite.x + Sprite.origin.x), (Sprite.y + Sprite.origin.y), -Sprite.angle, Point);	
+			var pivot = FlxPoint.weak(Sprite.x + Sprite.origin.x, Sprite.y + Sprite.origin.y);
+			Point.rotate(pivot, -Sprite.angle);
 		}
 		return Sprite.pixelsOverlapPoint(Point, 0x01, Camera);
 	}

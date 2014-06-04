@@ -8,12 +8,14 @@
  * FlxText border styles
  * FlxTilemap auto-tiling options
  * FlxBar fill directions
+ * FlxG.html5 browser types
 * FlxCamera: 
  * added pixelPerfectRender as a global setting for sprites and tilemaps
  * bounds -> minScrollX, maxScrollX, minScrollY and maxScrollY (null means unbounded)
  * setBounds() -> setScrollBoundsRect()
  * added setScrollBounds()
  * added targetOffset
+ * fixed defaultCameras not being reset on state switches
 * FlxMath:
  * bound() and inBounds() now accept null as values, meaning "unbounded in that direction"
  * wrapValue() now supports negative values
@@ -25,6 +27,7 @@
  * curAnim does also return animations that have finished now
  * removed get()
  * callback: fixed passing old frameIndex value being passed instead of the current one
+ * add() now makes a copy of the Frames array before calling splice() on it
 * FlxSpriteUtil:
  * drawLine(): default settings for lineStyle are now thickness 1 and color white
  * fadeIn() and fadeOut() now tween alpha instead of color
@@ -43,6 +46,7 @@
  * separated rendering and logic, adding FlxBaseTilemap
  * added getTileIndexByCoords() and getTileCoordsByIndex()
  * fixed a bug in overlapsAt()
+ * loadMap() now throws an error on tile indices with negative values in the map data
 * Console: the set command now supports arrays
 * FlxTween: fixed a bug when tweening the same field with several tweens + startDelay
 * Merged FlxColor and FlxColorUtil into a new FlxColor abstract, interchangable with Int
@@ -53,7 +57,10 @@
  * FlxTypedEmitterExt into FlxEmitterExt.hx
  * FlxTypedButton into FlxButton.hx
 * FlxBitmapUtil -> FlxBitmapDataUtil
-* FlxKeyboard: added preventDefaultKeys for HTML5
+* FlxKeyboard: 
+ * added preventDefaultKeys for HTML5
+ * added an abstract enum for key names (FlxG.keys.anyPressed([A, LEFT]) is now possible)
+ * lowercase key names are no longer allowed ("a", "left")
 * FlxTypedGroup:
  * added a recurse param to the forEach() functions
  * removed callAll() and setAll() - use forEach() instead
@@ -66,6 +73,17 @@
  * exposed internalSeed as a read-only property
  * removed intRanged() and floatRanged(), int() and float() now provide optional ranges
 * FlxArrayUtil: removed randomness-related functions, please use FlxRandom instead
+* FlxText: added an abstract enum for alignment (text.alignment = CENTER; is now possible)
+* FlxTypedButton:
+ * added input-like getters: pressed, justPressed, released and justReleased
+ * now uses animations for statuses instead of setting frameIndex directly for more flexibility (removes allowHighlightOnMobile, adds statusAnimations)
+ * disabling the highlight frame is now tied to #if FLX_NO_MOUSE instead of #if mobile
+ * labelAlphas[FlxButton.HIGHLIGHT] is now 1 for FLX_NO_MOUSE
+* FlxMouseEventManager:
+ * moved from flixel.plugin.MouseEventManager to flixel.input.mouse.FlxMouseEventManager
+ * added removeAll()
+* FlxObject: added toPoint() and toRect()
+* FlxVector: fixed behaviour of set_length() for (0, 0) vectors
 
 3.3.4
 ------------------------------
@@ -216,7 +234,7 @@
  * removed pooling due to potential issues
  * start() -> new FlxTimer() / FlxPath()
  * run() -> start()
-* FlxTimer and FlxTween: removed userData 
+* FlxTimer and FlxTween: removed userData
 
 3.2.2
 ------------------------------

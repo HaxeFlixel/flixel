@@ -191,9 +191,9 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		input = new FlxInput(0);
 	}
 	
-	override public function updateFrameData():Void
+	override public function graphicLoaded():Void
 	{
-		super.updateFrameData();
+		super.graphicLoaded();
 		
 		setupAnimation("normal", FlxButton.NORMAL);
 		setupAnimation("highlight", FlxButton.HIGHLIGHT);
