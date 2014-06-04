@@ -68,20 +68,10 @@ class FlxMath
 	 * @param	Max		Any number.
 	 * @return	The bounded value of the number.
 	 */
-	@:generic
-	public static inline function bound<T:Float>(Value:T, Min:Null<Float>, Max:Null<Float>):T
+	public static inline function bound(Value:Float, Min:Null<Float>, Max:Null<Float>):Float
 	{
-		if (Min != null && Value < Min)
-		{
-			Value = untyped Min;
-		}
-		
-		if (Max != null && Value > Max)
-		{
-			Value = untyped Max;
-		}
-		
-		return Value;
+		var lowerBound:Float = (Min != null && Value < Min) ? Min : Value;
+		return (Max != null && lowerBound > Max) ? Max : lowerBound;
 	}
 	
 	/**
