@@ -65,7 +65,7 @@ class BitmapLog extends Window
 		setVisible(false);
 		
 		addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
-		#if (!FLX_NO_MOUSE && !FLX_NO_MOUSE_ADVANCED)
+		#if (!FLX_NO_MOUSE && !FLX_NO_MOUSE_ADVANCED && flash11_2)
 		addEventListener(MouseEvent.MIDDLE_MOUSE_DOWN, onMiddleDown);
 		addEventListener(MouseEvent.MIDDLE_MOUSE_UP, onMiddleUp);
 		#end
@@ -135,7 +135,7 @@ class BitmapLog extends Window
 		_entries = null;
 		
 		removeEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
-		#if (!FLX_NO_MOUSE && !FLX_NO_MOUSE_ADVANCED)
+		#if (!FLX_NO_MOUSE && !FLX_NO_MOUSE_ADVANCED && flash11_2)
 		removeEventListener(MouseEvent.MIDDLE_MOUSE_DOWN, onMiddleDown);
 		removeEventListener(MouseEvent.MIDDLE_MOUSE_UP, onMiddleUp);
 		#end

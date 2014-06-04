@@ -9,7 +9,7 @@ import flixel.util.FlxDestroyUtil;
 import openfl.events.JoystickEvent;
 #end
 
-#if flash
+#if flash11_8
 import flash.ui.GameInput;
 import flash.ui.GameInputDevice;
 import flash.events.GameInputEvent;
@@ -50,7 +50,7 @@ class FlxGamepadManager implements IFlxInputManager
 	 */
 	private var _activeGamepads:Array<FlxGamepad> = [];
 	
-	#if flash
+	#if flash11_8
 	/**
 	 * GameInput needs to be statically created, otherwise GameInput.numDevices will be zero during construction.
 	 */
@@ -301,7 +301,7 @@ class FlxGamepadManager implements IFlxInputManager
 		lastActive = null;
 		_gamepads = null;
 		
-		#if flash
+		#if flash11_8 
 		// not sure this is needed - can't imagine any use case where FlxGamepadManager would be destroyed
 		_gameInput.removeEventListener(GameInputEvent.DEVICE_ADDED, onDeviceAdded);
 		_gameInput.removeEventListener(GameInputEvent.DEVICE_REMOVED, onDeviceRemoved);
@@ -335,7 +335,7 @@ class FlxGamepadManager implements IFlxInputManager
 		FlxG.stage.addEventListener(JoystickEvent.DEVICE_ADDED, handleDeviceAdded);
 		#end
 		
-		#if flash
+		#if flash11_8
 		_gameInput.addEventListener(GameInputEvent.DEVICE_ADDED, onDeviceAdded);
 		_gameInput.addEventListener(GameInputEvent.DEVICE_REMOVED, onDeviceRemoved);
 		
@@ -346,7 +346,7 @@ class FlxGamepadManager implements IFlxInputManager
 		#end
 	}
 	
-	#if flash
+	#if flash11_8
 	private function onDeviceAdded(Event:GameInputEvent):Void
 	{
 		addGamepad(Event.device);
