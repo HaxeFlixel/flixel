@@ -2,12 +2,7 @@ package flixel.math;
 
 import flixel.FlxGame;
 import flixel.system.frontEnds.VCRFrontEnd;
-import flixel.tweens.FlxEase;
 import flixel.util.FlxColor;
-
-#if neko
-import haxe.Int64;
-#end
 
 /**
  * A class containing a set of functions for random generation.
@@ -364,7 +359,7 @@ class FlxRandom
 	 * @see Stephen K. Park and Keith W. Miller and Paul K. Stockmeyer (1988).
 	 *      "Technical Correspondence". Communications of the ACM 36 (7): 105–110.
 	 */
-	private static inline var MULTIPLIER:Int = 48271;
+	private static inline var MULTIPLIER:Float = 48271.0;
 	private static inline var MODULUS:Int = FlxMath.MAX_VALUE_INT;
 	
 	/**
@@ -375,32 +370,8 @@ class FlxRandom
 	 */
 	private static inline function generate():Float
 	{
-		#if !neko
 		return internalSeed = (internalSeed * MULTIPLIER) % MODULUS;
-		#else
-		var product:Float = internalSeed * MULTIPLIER;
-		return internalSeed = product % MODULUS;
-		//return internalSeed = mod(internalSeed, MULTIPLIER, MODULUS);
-		#end
 	}
-	
-	#if neko
-	/**
-	 * For some reason, modulus doesn't seem to work on Neko, so generate() uses this instead.
-	 * 
-	 * @param	A	Will be multiplied by B to create the numerator for modulus.
-	 * @param	B	Will be multiplied by A to create the numerator for modulus.
-	 * @param	C	Will be the denominator for modulus.
-	 * @return	A float value representing the result of (A * B) % C, as calculated using 64-bit integers.
-	 */
-	private static inline function mod(A:Float, B:Float, C:Float):Float
-	{
-		_result = Int64.mod(Int64.mul(Int64.ofInt(Std.int(A)), Int64.ofInt(Std.int(B))), Int64.ofInt(Std.int(C)));
-		return Int64.getLow(_result) + Int64.getHigh(_result);
-	}
-	
-	private static var _result:Int64;
-	#end
 	
 	#if FLX_RECORD
 	/**

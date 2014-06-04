@@ -67,7 +67,7 @@
  * exposed currentSeed as an external representation of internalSeed
  * removed intRanged() and floatRanged(), int() and float() now provide optional ranges
  * removed weightedGetObject(), getObject() now has an optional weights parameter
- * update random number generation equation to ensure proper results on all platforms
+ * update random number generation equation to ensure proper results on all platforms; may break recordings made in 3.x!
 * FlxArrayUtil: removed randomness-related functions, please use FlxRandom instead
 
 3.3.4
