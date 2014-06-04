@@ -70,10 +70,12 @@ class FlxVirtualPad extends FlxSpriteGroup
 		super();
 		scrollFactor.set();
 		
-		if (DPad == null) {
+		if (DPad == null)
+		{
 			DPad = FULL;
 		}
-		if (Action == null) {
+		if (Action == null)
+		{
 			Action = A_B_C;
 		}
 		
