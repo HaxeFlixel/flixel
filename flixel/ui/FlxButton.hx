@@ -378,6 +378,14 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		#end
 	}
 	
+	public function updateLabel() {
+		if (label != null) // Label positioning
+		{
+			label.x = x + labelOffsets[status].x;
+			label.y = y + labelOffsets[status].y;
+		}
+	}
+	
 	/**
 	 * Using an event listener is necessary for security reasons on flash - 
 	 * certain things like opening a new window are only allowed when they are user-initiated.
@@ -445,7 +453,11 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 			Value.scrollFactor.put();
 			Value.scrollFactor = scrollFactor;
 		}
-		return label = Value;
+		
+		label = Value;
+		updateLabel();
+		
+		return Value;
 	}
 	
 	private function set_status(Value:Int):Int
@@ -460,22 +472,14 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	override private function set_x(Value:Float):Float 
 	{
 		super.set_x(Value);
-		
-		if (label != null) // Label positioning
-		{
-			label.x = x + labelOffsets[status].x;	
-		}
+		updateLabel();
 		return x;
 	}
 	
 	override private function set_y(Value:Float):Float 
 	{	
 		super.set_y(Value);
-		
-		if (label != null) // Label positioning
-		{
-			label.y = y + labelOffsets[status].y;			
-		}
+		updateLabel();
 		return y;
 	}
 	
