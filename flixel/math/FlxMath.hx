@@ -28,6 +28,10 @@ class FlxMath
 	 */
 	public static inline var MAX_VALUE_FLOAT:Float = 1.79e+308;
 	/**
+	 * Minimum value of an integer.
+	 */
+	public static inline var MIN_VALUE_INT:Int = -MAX_VALUE_INT;
+	/**
 	 * Maximum value of an integer.
 	 */
 	public static inline var MAX_VALUE_INT:Int = 0x7FFFFFFF;

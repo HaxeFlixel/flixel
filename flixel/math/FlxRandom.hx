@@ -2,6 +2,7 @@ package flixel.math;
 
 import flixel.FlxGame;
 import flixel.system.frontEnds.VCRFrontEnd;
+import flixel.tweens.FlxEase;
 import flixel.util.FlxColor;
 
 #if neko
@@ -318,13 +319,6 @@ class FlxRandom
 		return FlxColor.fromRGB(red, green, blue, alpha);
 	}
 	
-	public static function perlinNoise():Array<Float>
-	{
-		// do magic
-		
-		return [];
-	}
-	
 	/**
 	 * The actual internal seed. Stored as a Float value to prevent inaccuracies due to
 	 * integer overflow in the generate() equation.
@@ -384,7 +378,9 @@ class FlxRandom
 		#if !neko
 		return internalSeed = (internalSeed * MULTIPLIER) % MODULUS;
 		#else
-		return internalSeed = mod(internalSeed, MULTIPLIER, MODULUS);
+		var product:Float = internalSeed * MULTIPLIER;
+		return internalSeed = product % MODULUS;
+		//return internalSeed = mod(internalSeed, MULTIPLIER, MODULUS);
 		#end
 	}
 	
@@ -395,7 +391,7 @@ class FlxRandom
 	 * @param	A	Will be multiplied by B to create the numerator for modulus.
 	 * @param	B	Will be multiplied by A to create the numerator for modulus.
 	 * @param	C	Will be the denominator for modulus.
-	 * @return	A float value representing the result
+	 * @return	A float value representing the result of (A * B) % C, as calculated using 64-bit integers.
 	 */
 	private static inline function mod(A:Float, B:Float, C:Float):Float
 	{
