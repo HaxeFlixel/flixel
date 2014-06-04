@@ -217,8 +217,8 @@ class FlxRandom
 				WeightsArray = [for (i in 0...Objects.length) 1];
 			}
 			
-			StartIndex = Std.int(FlxMath.bound(StartIndex, 0, Objects.length - 1));
-			EndIndex = Std.int(FlxMath.bound(EndIndex, 0, Objects.length - 1));
+			StartIndex = FlxMath.bound(StartIndex, 0, Objects.length - 1);
+			EndIndex = FlxMath.bound(EndIndex, 0, Objects.length - 1);
 			
 			// Swap values if reversed
 			if (EndIndex < StartIndex)
@@ -280,9 +280,9 @@ class FlxRandom
 	 */
 	public static function color(Min:Int = 0, Max:Int = 255, Alpha:Int = 255, GreyScale:Bool = false):FlxColor
 	{
-		Min = Std.int(FlxMath.bound(Min, 0, 255));
-		Max = Std.int(FlxMath.bound(Max, 0, 255));
-		Alpha = Std.int(FlxMath.bound(Alpha, 0, 255));
+		Min = FlxMath.bound(Min, 0, 255);
+		Max = FlxMath.bound(Max, 0, 255);
+		Alpha = FlxMath.bound(Alpha, 0, 255);
 		
 		var red = int(Min, Max);
 		var green = GreyScale ? red : int(Min, Max);
@@ -306,10 +306,10 @@ class FlxRandom
 	 */
 	public static function colorExt(RedMinimum:Int = 0, RedMaximum:Int = 255, GreenMinimum:Int = 0, GreenMaximum:Int = 255, BlueMinimum:Int = 0, BlueMaximum:Int = 255, AlphaMinimum:Int = 255, AlphaMaximum:Int = 255):FlxColor
 	{		
-		var red = int(Std.int(FlxMath.bound(RedMinimum, 0, 255)), Std.int(FlxMath.bound(RedMaximum, 0, 255)));
-		var green = int(Std.int(FlxMath.bound(GreenMinimum, 0, 255)), Std.int(FlxMath.bound(GreenMaximum, 0, 255)));
-		var blue = int(Std.int(FlxMath.bound(BlueMinimum, 0, 255)), Std.int(FlxMath.bound(BlueMaximum, 0, 255)));
-		var alpha = int(Std.int(FlxMath.bound(AlphaMinimum, 0, 255)), Std.int(FlxMath.bound(AlphaMaximum, 0, 255)));
+		var red = int(FlxMath.bound(RedMinimum, 0, 255), FlxMath.bound(RedMaximum, 0, 255));
+		var green = int(FlxMath.bound(GreenMinimum, 0, 255), FlxMath.bound(GreenMaximum, 0, 255));
+		var blue = int(FlxMath.bound(BlueMinimum, 0, 255), FlxMath.bound(BlueMaximum, 0, 255));
+		var alpha = int(FlxMath.bound(AlphaMinimum, 0, 255), FlxMath.bound(AlphaMaximum, 0, 255));
 		
 		return FlxColor.fromRGB(red, green, blue, alpha);
 	}
@@ -331,7 +331,7 @@ class FlxRandom
 	 */
 	private static inline function set_globalSeed(NewSeed:Int):Int
 	{
-		return globalSeed = currentSeed = Std.int(FlxMath.bound(NewSeed, 1, MODULUS));
+		return globalSeed = currentSeed = FlxMath.bound(NewSeed, 1, MODULUS);
 	}
 	
 	/**
