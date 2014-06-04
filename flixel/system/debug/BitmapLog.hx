@@ -166,8 +166,15 @@ class BitmapLog extends Window
 		super.resize(Width, Height);
 		
 		_canvasBitmap.bitmapData = FlxDestroyUtil.dispose(_canvas);
-		_canvasBitmap.bitmapData = new BitmapData(Std.int(_width - _canvasBitmap.x), Std.int(_height - _canvasBitmap.y - _footer.height), true, FlxColor.TRANSPARENT);
-		refreshCanvas(_curIndex);
+		
+		var newWidth = Std.int(_width - _canvasBitmap.x);
+		var newHeight = Std.int(_height - _canvasBitmap.y - _footer.height);
+		
+		if (newWidth > 0 && newHeight > 0)
+		{
+			_canvasBitmap.bitmapData = new BitmapData(newWidth, newHeight, true, FlxColor.TRANSPARENT);
+			refreshCanvas(_curIndex);
+		}
 		
 		_ui.x = _header.width - _ui.width + 43;
 		
