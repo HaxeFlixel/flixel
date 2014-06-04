@@ -393,7 +393,7 @@ class FlxRandom
 	@:allow(flixel.FlxGame.switchState)
 	private static inline function updateStateSeed():Int
 	{
-		return _stateSeed = internalSeed;
+		return _stateSeed = currentSeed;
 	}
 	
 	/**
