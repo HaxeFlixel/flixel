@@ -266,7 +266,7 @@ class FlxPoint implements IFlxPooled
 	 * @param   Angle   Rotate the point by this many degrees clockwise.
 	 * @return  A FlxPoint containing the coordinates of the rotated point.
 	 */
-	public inline function rotate(Pivot:FlxPoint, Angle:Float):FlxPoint
+	public function rotate(Pivot:FlxPoint, Angle:Float):FlxPoint
 	{
 		var sin:Float = 0;
 		var cos:Float = 0;
@@ -275,7 +275,7 @@ class FlxPoint implements IFlxPooled
 		{
 			radians += Math.PI * 2;
 		}
-		while (radians >  Math.PI)
+		while (radians > Math.PI)
 		{
 			radians = radians - Math.PI * 2;
 		}
@@ -306,7 +306,7 @@ class FlxPoint implements IFlxPooled
 		}
 		
 		radians += Math.PI / 2;
-		if (radians >  Math.PI)
+		if (radians > Math.PI)
 		{
 			radians = radians - Math.PI * 2;
 		}
@@ -350,7 +350,7 @@ class FlxPoint implements IFlxPooled
 	 * @param   point   The other point.
 	 * @return  The angle in degrees, between -180 and 180.
 	 */
-	public inline function angleBetween(point:FlxPoint):Float
+	public function angleBetween(point:FlxPoint):Float
 	{
 		var x:Float = point.x - x;
 		var y:Float = point.y - y;
