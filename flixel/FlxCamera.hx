@@ -807,7 +807,7 @@ class FlxCamera extends FlxBasic
 		_fxFlashColor = Color;
 		if (Duration <= 0)
 		{
-			Duration = FlxMath.MIN_VALUE;
+			Duration = FlxMath.MIN_VALUE_FLOAT;
 		}
 		_fxFlashDuration = Duration;
 		_fxFlashComplete = OnComplete;
@@ -832,7 +832,7 @@ class FlxCamera extends FlxBasic
 		_fxFadeColor = Color;
 		if (Duration <= 0)
 		{
-			Duration = FlxMath.MIN_VALUE;
+			Duration = FlxMath.MIN_VALUE_FLOAT;
 		}
 		
 		_fxFadeIn = FadeIn;
@@ -845,7 +845,7 @@ class FlxCamera extends FlxBasic
 		}
 		else
 		{
-			_fxFadeAlpha = FlxMath.MIN_VALUE;
+			_fxFadeAlpha = FlxMath.MIN_VALUE_FLOAT;
 		}
 	}
 	

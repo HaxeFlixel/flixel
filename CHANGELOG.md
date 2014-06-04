@@ -17,6 +17,7 @@
 * FlxMath:
  * bound() and inBounds() now accept null as values, meaning "unbounded in that direction"
  * wrapValue() now supports negative values
+ * change MIN_VALUE and MAX_VALUE to MIN_VALUE_FLOAT and MAX_VALUE_FLOAT, add MAX_VALUE_INT
 * FlxTypedSpriteGroup: 
  * added iterator()
  * fixed update() order leading to collision issues with members
@@ -63,8 +64,10 @@
  * added a connected flag
  * fixed a bug that would prevent gamepad buttons from being updated
 * FlxRandom:
- * exposed internalSeed as a read-only property
+ * exposed currentSeed as an external representation of internalSeed
  * removed intRanged() and floatRanged(), int() and float() now provide optional ranges
+ * removed weightedGetObject(), getObject() now has an optional weights parameter
+ * update random number generation equation to ensure proper results on all platforms
 * FlxArrayUtil: removed randomness-related functions, please use FlxRandom instead
 
 3.3.4

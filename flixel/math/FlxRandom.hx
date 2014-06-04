@@ -3,10 +3,7 @@ package flixel.math;
 import flixel.FlxGame;
 import flixel.system.frontEnds.VCRFrontEnd;
 import flixel.util.FlxColor;
-
-#if js
 import haxe.Int64;
-#end
 
 /**
  * A class containing a set of functions for random generation.
@@ -49,9 +46,9 @@ class FlxRandom
 	 * @param   Max        The maximum value that should be returned. 2,147,483,647 by default.
 	 * @param   Excludes   Optional array of values that should not be returned.
 	 */
-	public static function int(Min:Int = 0, Max:Int = MODULUS, ?Excludes:Array<Int>):Int
+	public static function int(Min:Int = 0, Max:Int = FlxMath.MAX_VALUE_INT, ?Excludes:Array<Int>):Int
 	{
-		if (Min == 0 && Max == MODULUS && Excludes == null)
+		if (Min == 0 && Max == FlxMath.MAX_VALUE_INT && Excludes == null)
 		{
 			return Std.int(generate());
 		}
@@ -62,6 +59,7 @@ class FlxRandom
 		else
 		{
 			// Swap values if reversed
+			
 			if (Min > Max)
 			{
 				Min = Min + Max;
@@ -101,7 +99,11 @@ class FlxRandom
 	{
 		var result:Float = 0;
 		
-		if (Min == Max)
+		if (Min == 0 && Max == 1 && Excludes == null)
+		{
+			return generate() / MODULUS;
+		}
+		else if (Min == Max)
 		{
 			result = Min;
 		}
@@ -327,7 +329,7 @@ class FlxRandom
 	private static var internalSeed:Float = 1;
 	
 	/**
-	 * Internal helper variable.
+	 * Internal helper variable. Used by getObject().
 	 */
 	private static var _arrayFloatHelper:Array<Float> = null;
 	
@@ -366,7 +368,7 @@ class FlxRandom
 	 *      "Technical Correspondence". Communications of the ACM 36 (7): 105–110.
 	 */
 	private static inline var MULTIPLIER:Int = 48271;
-	private static inline var MODULUS:Int = 2147483647;
+	private static inline var MODULUS:Int = FlxMath.MAX_VALUE_INT;
 	
 	/**
 	 * Internal method to quickly generate a pseudorandom number. Used only by other functions of this class.
@@ -376,8 +378,25 @@ class FlxRandom
 	 */
 	private static inline function generate():Float
 	{
+		#if !neko
 		return internalSeed = (internalSeed * MULTIPLIER) % MODULUS;
+		#else
+		return internalSeed = mod(internalSeed, MULTIPLIER, MODULUS);
+		#end
 	}
+	
+	#if neko
+	/**
+	 * For some reason, modulus doesn't seem to work on Neko, so generate() uses this instead.
+	 */
+	private static inline function mod(A:Float, B:Float, C:Float):Float
+	{
+		_result = Int64.mod(Int64.mul(Int64.ofInt(Std.int(A)), Int64.ofInt(Std.int(B))), Int64.ofInt(Std.int(C)));
+		return Int64.getLow(_result) + Int64.getHigh(_result);
+	}
+	
+	private static var _result:Int64;
+	#end
 	
 	#if FLX_RECORD
 	/**
