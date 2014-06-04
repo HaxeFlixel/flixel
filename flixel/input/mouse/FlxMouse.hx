@@ -148,7 +148,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	 * @param   XOffset   The number of pixels between the mouse's screen position and the graphic's top left corner.
 	 * @param   YOffset   The number of pixels between the mouse's screen position and the graphic's top left corner.
 	 */
-	public function load(?Graphic:Dynamic, Scale:Float = 1, XOffset:Int = 0, YOffset:Int = 0):Void
+	public function load(?Graphic:Dynamic, Scale:Float = 1, XOffset:UInt = 0, YOffset:UInt = 0):Void
 	{
 		#if (flash10_2 && !FLX_NO_NATIVE_CURSOR)
 		if (_cursor != null)
@@ -185,17 +185,10 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 		_cursor.scaleY = Scale;
 		
 		#if (flash10_2 && !FLX_NO_NATIVE_CURSOR)
-		if (XOffset < 0 || YOffset < 0)
-		{
-			FlxG.log.warn("Negative offsets aren't supported with native cursor. Abs values will be used instead.");
-			XOffset = 0;
-			YOffset = 0;
-		}
 		
 		if (Scale < 0)
 		{
-			FlxG.log.warn("Negative scale isn't supported with native cursor. Abs value will be used instead.");
-			Scale = 1;
+			throw "Negative scale isn't supported for native cursors.";
 		}
 		
 		var scaledWidth:Int = Std.int(Scale * _cursor.bitmapData.width);
@@ -282,7 +275,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 		
 		if (CursorBitmap.width > 32 || CursorBitmap.height > 32)
 		{
-			FlxG.log.warn("Bitmap files used for the cursors should not exceed 32 × 32 pixels, due to an OS limitation.");
+			throw "BitmapData files used for native cursors cannot exceed 32x32 pixels due to an OS limitation.";
 		}
 		
 		var cursorData = new MouseCursorData();
