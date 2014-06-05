@@ -251,7 +251,7 @@ class Window extends Sprite
 		}
 		else
 		{
-			maxSize = new Point(FlxMath.MAX_VALUE, FlxMath.MAX_VALUE);
+			maxSize = new Point(FlxMath.MAX_VALUE_FLOAT, FlxMath.MAX_VALUE_FLOAT);
 		}
 	}
 	

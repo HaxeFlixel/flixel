@@ -16,17 +16,25 @@ class FlxMath
 	/**
 	 * Minimum value of a floating point number.
 	 */
-	public static inline var MIN_VALUE:Float = 0.0000000000000001;
+	public static inline var MIN_VALUE_FLOAT:Float = 0.0000000000000001;
 	#else
 	/**
 	 * Minimum value of a floating point number.
 	 */
-	public static inline var MIN_VALUE:Float = 5e-324;
+	public static inline var MIN_VALUE_FLOAT:Float = 5e-324;
 	#end
 	/**
 	 * Maximum value of a floating point number.
 	 */
-	public static inline var MAX_VALUE:Float = 1.79e+308;
+	public static inline var MAX_VALUE_FLOAT:Float = 1.79e+308;
+	/**
+	 * Minimum value of an integer.
+	 */
+	public static inline var MIN_VALUE_INT:Int = -MAX_VALUE_INT;
+	/**
+	 * Maximum value of an integer.
+	 */
+	public static inline var MAX_VALUE_INT:Int = 0x7FFFFFFF;
 	/**
 	 * Approximation of Math.sqrt(2).
 	 */
