@@ -19,7 +19,7 @@ class GitSHA
 		var libraryPath = getLibraryPath(library);
 		var sha = "";
 		
-		if (libraryPath.indexOf('flixel/git') != -1)
+		if (libraryPath.indexOf('$library/git') != -1)
 		{
 			sha = getGitSHA(libraryPath);
 		}
