@@ -378,7 +378,8 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		#end
 	}
 	
-	public function updateLabel() {
+	private function updateLabelPosition()
+	{
 		if (label != null) // Label positioning
 		{
 			label.x = x + labelOffsets[status].x;
@@ -455,7 +456,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		}
 		
 		label = Value;
-		updateLabel();
+		updateLabelPosition();
 		
 		return Value;
 	}
@@ -472,14 +473,14 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	override private function set_x(Value:Float):Float 
 	{
 		super.set_x(Value);
-		updateLabel();
+		updateLabelPosition();
 		return x;
 	}
 	
 	override private function set_y(Value:Float):Float 
 	{	
 		super.set_y(Value);
-		updateLabel();
+		updateLabelPosition();
 		return y;
 	}
 	
