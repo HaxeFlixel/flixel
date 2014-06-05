@@ -331,7 +331,7 @@ class FlxRandom
 	 */
 	private static inline function set_globalSeed(NewSeed:Int):Int
 	{
-		return globalSeed = currentSeed = Std.int(FlxMath.bound(NewSeed, 1, MODULUS));
+		return globalSeed = currentSeed = rangeBound(NewSeed);
 	}
 	
 	/**
@@ -347,7 +347,15 @@ class FlxRandom
 	 */
 	private static inline function set_currentSeed(NewSeed:Int):Int
 	{
-		return Std.int(internalSeed = NewSeed);
+		return Std.int(internalSeed = rangeBound(NewSeed));
+	}
+	
+	/**
+	 * Internal function to ensure an arbitrary value is in the valid range of seed values.
+	 */
+	private static inline function rangeBound(Value:Int):Int
+	{
+		return Std.int(FlxMath.bound(Value, 1, MODULUS - 1));
 	}
 	
 	/**
