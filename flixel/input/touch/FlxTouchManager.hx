@@ -260,7 +260,7 @@ class FlxTouchManager implements IFlxInputManager
 			touch = list[i];
 			
 			// Touch ended at previous frame
-			if (touch.released)
+			if (touch.released && !touch.justReleased)
 			{
 				touch.input.reset();
 				_touchesCache.remove(touch.touchPointID);
