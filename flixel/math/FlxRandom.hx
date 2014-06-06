@@ -446,16 +446,16 @@ class FlxRandom
 }
 
 typedef ColorOptions = {
-	?min:Null<Int>,
-	?max:Null<Int>,
-	?alpha:Null<Int>,
+	?min:Int,
+	?max:Int,
+	?alpha:Int,
 	?greyscale:Bool,
-	?alphamin:Null<Int>,
-	?alphamax:Null<Int>,
-	?redmin:Null<Int>,
-	?redmax:Null<Int>,
-	?greenmin:Null<Int>,
-	?greenmax:Null<Int>,
-	?bluemin:Null<Int>,
-	?bluemax:Null<Int>
+	?alphamin:Int,
+	?alphamax:Int,
+	?redmin:Int,
+	?redmax:Int,
+	?greenmin:Int,
+	?greenmax:Int,
+	?bluemin:Int,
+	?bluemax:Int,
 }
