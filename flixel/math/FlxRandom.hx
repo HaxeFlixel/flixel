@@ -217,11 +217,6 @@ class FlxRandom
 				WeightsArray = [for (i in 0...Objects.length) 1];
 			}
 			
-			if (StartIndex == null)
-			{
-				StartIndex = 0;
-			}
-			
 			if (EndIndex == null)
 			{
 				EndIndex = Objects.length - 1;
