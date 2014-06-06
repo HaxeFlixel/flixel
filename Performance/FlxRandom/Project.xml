@@ -61,9 +61,6 @@
 	<!--haxedef name="FLX_NO_TOUCH" if="desktop" /-->
 	<!--haxedef name="FLX_NO_GAMEPAD" /-->
 	
-	<!--Disable the Flixel core sound tray-->
-	<!--haxedef name="FLX_NO_SOUND_TRAY" /-->
-	
 	<!--Disable the Flixel sound management code-->
 	<!--haxedef name="FLX_NO_SOUND_SYSTEM" /-->
 	
@@ -81,4 +78,3 @@
 	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
 	<haxeflag name="-D" value="swf-script-timeout=65" />
 </project>
-

@@ -43,13 +43,16 @@ class MenuState extends FlxState
 	
 	inline private static function BUTTON_TEXT():Array<String>
 	{
-		return ["Reset Seed", "10m Int", "10m Float", "10m Coin Flips", "10m Weighted Coin Flips",
-					"10m Signs", "1m Weighted Picks", "1m Objects", "1m Weighted Objects", "1m Array Shuffles", "307k Colors",
-					"307k ColorX"];
+		return ["Reset Global Seed", "Get Current Seed", "Generate Integers",
+				"Generate Floats",  "Weighted Coin Flips", "Generate Signs",
+				"Weighted Pick", "Get Array Object", "Weighted Get Array Object",
+				"Shuffle Array", "Generate Colors"];
 	}
 	
 	override public function create():Void
 	{
+		FlxG.camera.bgColor = FlxRandom.color( { max:32 } );
+		
 		var area = new FlxSprite(5, 5);
 		area.makeGraphic(FlxG.width - 200, FlxG.height - 10, 0x88000000);
 		
@@ -67,7 +70,7 @@ class MenuState extends FlxState
 			buttonY += 25;
 		}
 		
-		_display = new FlxText(10, 10, FlxG.width - 210, "Welcome to the FlxRandom demo!\nYour randomly generated seed is: " + FlxRandom.globalSeed);
+		_display = new FlxText(10, 10, FlxG.width - 210, "Welcome to the FlxRandom demo!\nYour randomly generated seed is: " + FlxRandom.globalSeed + "\nFeel free to run some of the tests on the right.\nPlease note that some of these can take quite some time.");
 		
 		_colorTest = new FlxSprite(0, 0);
 		_colorTest.makeGraphic(1, 1, 0);
@@ -106,56 +109,33 @@ class MenuState extends FlxState
 	private function buttonCallback(Label:String):Void
 	{
 		_display.text = "";
-		_colorTest.visible = false;
+		_colorTest.visible = Label == BUTTON_TEXT()[10];
 		_histogram.visible = false;
 		
-		if (Label == BUTTON_TEXT()[0])
+		switch (BUTTON_TEXT().indexOf(Label))
 		{
-			_display.text = "Your new randomly generated seed is: " + FlxRandom.resetGlobalSeed();
-		}
-		else if (Label == BUTTON_TEXT()[1])
-		{
-			_pendingFunction = intRandom;
-		}
-		else if (Label == BUTTON_TEXT()[2])
-		{
-			_pendingFunction = floatRandom;
-		}
-		else if (Label == BUTTON_TEXT()[3])
-		{
-			_pendingFunction = coinFlips;
-		}
-		else if (Label == BUTTON_TEXT()[4])
-		{
-			_pendingFunction = coinFlipsWeighted;
-		}
-		else if (Label == BUTTON_TEXT()[5])
-		{
-			_pendingFunction = randomSigns;
-		}
-		else if (Label == BUTTON_TEXT()[6])
-		{
-			_pendingFunction = weightedPicks;
-		}
-		else if (Label == BUTTON_TEXT()[7])
-		{
-			_pendingFunction = getObjects;
-		}
-		else if (Label == BUTTON_TEXT()[8])
-		{
-			_pendingFunction = getObjectsWeighted;
-		}
-		else if (Label == BUTTON_TEXT()[9])
-		{
-			_pendingFunction = shuffleObj;
-		}
-		else if (Label == BUTTON_TEXT()[10])
-		{
-			_pendingFunction = randomColors;
-		}
-		else if (Label == BUTTON_TEXT()[11])
-		{
-			_pendingFunction = randomColorsExt;
+			case 0:
+				_display.text = "The new global base seed is: " + FlxRandom.resetGlobalSeed();
+			case 1:
+				_display.text = "The current seed is " + FlxRandom.currentSeed;
+			case 2:
+				_pendingFunction = intRandom;
+			case 3:
+				_pendingFunction = floatRandom;
+			case 4:
+				_pendingFunction = coinFlipsWeighted;
+			case 5:
+				_pendingFunction = randomSigns;
+			case 6:
+				_pendingFunction = weightedPicks;
+			case 7:
+				_pendingFunction = getObjects;
+			case 8:
+				_pendingFunction = getObjectsWeighted;
+			case 9:
+				_pendingFunction = shuffleObj;
+			case 10:
+				_pendingFunction = randomColors;
 		}
 		
 		if (_pendingFunction != null)
@@ -166,58 +146,175 @@ class MenuState extends FlxState
 	
 	private function intRandom():Void
 	{
-		_display.text += "\nRandomly generating 10 million integers.";
+		_display.text = "Randomly generated 10 million integers using each of the following methods.";
+		
 		timer = Lib.getTimer();
 		for (i in 0...TENMIL) dummyInt = FlxRandom.int(0, 1024);
-		_display.text += "\nDone. Total time " + (Lib.getTimer() - timer) + "ms.";
+		_display.text += "\nTime: " + (Lib.getTimer() - timer) + "ms using the newest method.";
 		
-		_display.text += "\nRandomly generating 10 million integers without inlining.";
-		timer = Lib.getTimer();
-		for (i in 0...TENMIL) dummyInt = NonInlineFlxRandom.int();
-		_display.text += "\nDone. Total time " + (Lib.getTimer() - timer) + "ms.";
-		
-		_display.text += "\nRandomly generating 10 million integers the old way.";
 		timer = Lib.getTimer();
 		for (i in 0...TENMIL) dummyInt = OldFlxRandom.int();
-		_display.text += "\nDone. Total time " + (Lib.getTimer() - timer) + "ms.";
+		_display.text += "\nTime: " + (Lib.getTimer() - timer) + "ms using the old, non-deterministic FlxRandom.";
 		
-		_display.text += "\nRandomly generating 10 million integers using FlxRandom from 3.3.4.";
 		timer = Lib.getTimer();
 		for (i in 0...TENMIL) dummyInt = FlxRandom_3_3_4.intRanged(0, 1024);
-		_display.text += "\nDone. Total time " + (Lib.getTimer() - timer) + "ms.";
+		_display.text += "\nTime: " + (Lib.getTimer() - timer) + "ms using FlxRandom from 3.3.4.";
 		
-		_display.text += "\nRandomly generating 10 million integers using Math.random().";
+		timer = Lib.getTimer();
+		for (i in 0...TENMIL) dummyInt = NonInlineFlxRandom.int();
+		_display.text += "\nTime: " + (Lib.getTimer() - timer) + "ms using FlxRandom from 3.3.4 without inlining.";
+		
 		timer = Lib.getTimer();
 		for (i in 0...TENMIL) dummyInt = Std.int(Math.random() * 2147483647);
-		_display.text += "\nDone. Total time " + (Lib.getTimer() - timer) + "ms.";
+		_display.text += "\nTime: " + (Lib.getTimer() - timer) + "ms using Math.random().";
 	}
 	
 	private function floatRandom():Void
 	{
-		_display.text += "\nRandomly generating 10 million floats, please wait...";
+		_display.text = "Randomly generated 10 million floats using each of the following methods.";
+		
 		timer = Lib.getTimer();
 		for (i in 0...TENMIL) dummyFloat = FlxRandom.float();
-		_display.text += "\nDone. Total time " + (Lib.getTimer() - timer) + "ms.";
+		_display.text += "\nTime: " + (Lib.getTimer() - timer) + "ms using the newest method.";
 		
-		_display.text += "\nRandomly generating 10 million floats without inlining, please wait...";
-		timer = Lib.getTimer();
-		for (i in 0...TENMIL) dummyFloat = NonInlineFlxRandom.float();
-		_display.text += "\nDone. Total time " + (Lib.getTimer() - timer) + "ms.";
-		
-		_display.text += "\nRandomly generating 10 million floats the old way, please wait...";
 		timer = Lib.getTimer();
 		for (i in 0...TENMIL) dummyFloat = OldFlxRandom.float();
-		_display.text += "\nDone. Total time " + (Lib.getTimer() - timer) + "ms.";
+		_display.text += "\nTime: " + (Lib.getTimer() - timer) + "ms using the old, non-deterministic FlxRandom.";
 		
-		_display.text += "\nRandomly generating 10 million floats using 3.3.4, please wait...";
 		timer = Lib.getTimer();
 		for (i in 0...TENMIL) dummyFloat = FlxRandom_3_3_4.float();
-		_display.text += "\nDone. Total time " + (Lib.getTimer() - timer) + "ms.";
+		_display.text += "\nTime: " + (Lib.getTimer() - timer) + "ms using FlxRandom from 3.3.4.";
 		
-		_display.text += "\nRandomly generating 10 million floats using Math.random(), please wait...";
+		timer = Lib.getTimer();
+		for (i in 0...TENMIL) dummyFloat = NonInlineFlxRandom.float();
+		_display.text += "\nTime: " + (Lib.getTimer() - timer) + "ms using FlxRandom from 3.3.4 without inlining.";
+		
 		timer = Lib.getTimer();
 		for (i in 0...TENMIL) dummyFloat = Math.random();
-		_display.text += "\nDone. Total time " + (Lib.getTimer() - timer) + "ms.";
+		_display.text += "\nTime: " + (Lib.getTimer() - timer) + "ms using Math.random().";
+	}
+	
+	private function coinFlipsWeighted():Void
+	{
+		var heads:Int = 0;
+		var tails:Int = 0;
+		var weight:Int = FlxRandom.int(0, 100);
+		
+		timer = Lib.getTimer();
+		for (i in 0...TENMIL) if (FlxRandom.chanceRoll(weight)) heads++ else tails++;
+		
+		_display.text = "Flipped a coin with a " + weight + "% chance of heads 10 million times. Got " + heads + " heads and " + tails + " tails. Time: " + (Lib.getTimer() - timer) + "ms.";
+		
+		if (heads > tails)
+		{
+			_display.text += "\nHeads wins!";
+		}
+		else
+		{
+			_display.text += "\nTails wins!";
+		}
+		
+		if (weight != 50)
+		{
+			_display.text += " That doesn't seem fair.";
+		}
+	}
+	
+	private function randomSigns():Void
+	{
+		timer = Lib.getTimer();
+		for (i in 0...TENMIL) dummyInt = FlxRandom.sign();
+		_display.text = "Selected 10 million positive or negative signs. Time: " + (Lib.getTimer() - timer) + "ms.";
+	}
+	
+	private function weightedPicks():Void
+	{
+		var array:Array<Float> = [for (i in 0...10) FlxRandom.int(0, 99)];
+		var results:Array<Int> = [for (i in 0...array.length) 0];
+		
+		_display.text = "Performed 1 million random picks from this array:\n" + array;
+		
+		var expectedResults:Array<Float> = [];
+		var arrayTotal:Int = 0;
+		
+		for (i in array) arrayTotal += Std.int(i);
+		for (i in 0...array.length) expectedResults.push(FlxMath.roundDecimal(100 * array[i] / arrayTotal, 2));
+		
+		_display.text += "\nExpected results (in percentages):\n" + expectedResults;
+		
+		timer = Lib.getTimer();
+		for (i in 0...ONEMIL) results[FlxRandom.weightedPick(array)] ++;
+		
+		var percentResults:Array<Float> = [for (i in 0...10) FlxMath.roundDecimal(100 * results[i] / ONEMIL, 2)];
+		
+		_display.text += "\nTime: " + (Lib.getTimer() - timer) + "ms. Actual results (in percentages):\n" + percentResults;
+	}
+	
+	private function getObjects():Void
+	{
+		var array:Array<Int> = [for (i in 0...20) i];
+		var results:Array<Int> = [for (i in 0...20) 0
+		];
+		timer = Lib.getTimer();
+		for (i in 0...ONEMIL) results[FlxRandom.getObject(array)]++;
+		
+		_display.text = "Got a random object from an array of 20 integers 1 million times. Time " + (Lib.getTimer() - timer) + "ms. Displaying results as a histogram.";
+		
+		createHistogram([for (i in 0...results.length) ""+i], results);
+	}
+	
+	private function getObjectsWeighted():Void
+	{
+		var objectArray:Array<Int> = [for (i in 0...10) i];
+		var weightArray:Array<Float> = [for (i in 0...objectArray.length) FlxRandom.int(0, 100)];
+		var expected:Array<Float> = [];
+		var total:Int = 0;
+		
+		for (i in weightArray) total += Std.int(i);
+		for (i in 0...objectArray.length) expected.push(FlxMath.roundDecimal(100 * weightArray[i] / total, 2));
+		
+		_display.text = "Performed one million weighted object picks from this array:\n" + objectArray;
+		_display.text += "\nExpected results (in percentages):\n" + expected;
+		var results:Array<Int> = [for (i in 0...objectArray.length) 0];
+		timer = Lib.getTimer();
+		
+		for (i in 0...ONEMIL) results[FlxRandom.getObject(objectArray, weightArray)] ++;
+		
+		var percentResults:Array<Float> = [for (i in 0...objectArray.length) FlxMath.roundDecimal(100 * results[i] / ONEMIL, 2)];
+		
+		_display.text += "\nDone. Results:\n" + percentResults + "\nTotal time " + (Lib.getTimer() - timer) + "ms. Displaying results...";
+		
+		createHistogram([for (i in 0...results.length) ""+i], results);
+	}
+	
+	private function shuffleObj():Void
+	{
+		var array:Array<Int> = [for (i in 0...20) FlxRandom.int(0, 100)];
+		timer = Lib.getTimer();
+		
+		_display.text = "Shuffled the array " + array + " one million times.";
+		array = FlxRandom.shuffleArray(array, ONEMIL);
+		_display.text += "\nNew array is " + array + ", time: " + (Lib.getTimer() - timer) + "ms.";
+	}
+	
+	private function randomColors():Void
+	{
+		var min:Int = FlxRandom.int(0, 255);
+		var max:Int = FlxRandom.int(0, 255);
+		
+		dummyBitmapdata = new BitmapData(640, 480, false, 0);
+		timer = Lib.getTimer();
+		
+		for (yPos in 0...480) {
+			for (xPos in 0...640) {
+				dummyBitmapdata.setPixel(xPos, yPos, FlxRandom.color({min:min, max:max}));
+			}
+		}
+		
+		_display.text = "Covered the screen with 307,200 random pixels using color(). Time: " + (Lib.getTimer() - timer) + "ms.";
+		
+		_colorTest.pixels = dummyBitmapdata;
+		_colorTest.visible = true;
 	}
 	
 	private function createHistogram(Labels:Array<String>, ?Data:Array<Int>, ?DataFloat:Array<Float>):Void
@@ -250,168 +347,5 @@ class MenuState extends FlxState
 		
 		_histogram.pixels = dummyBitmapdata;
 		_histogram.visible = true;
-	}
-	
-	private function coinFlips():Void
-	{
-		var heads:Int = 0;
-		var tails:Int = 0;
-		_display.text = "Flipping a coin 10 million times...";
-		timer = Lib.getTimer();
-		for (i in 0...TENMIL) if (FlxRandom.chanceRoll()) heads++ else	tails++;
-		
-		_display.text += "\nDone. Got " + heads + " heads and " + tails + " tails. Time: " + (Lib.getTimer() - timer) + "ms.";
-		
-		if (heads > tails)
-		{
-			_display.text += "\nHeads wins!";
-		}
-		else
-		{
-			_display.text += "\nTails wins!";
-		}
-	}
-	
-	private function coinFlipsWeighted():Void
-	{
-		var heads:Int = 0;
-		var tails:Int = 0;
-		var weight:Int = FlxRandom.int(0, 100);
-		_display.text = "Flipping a coin with a " + weight + "% chance of heads 10 million times...";
-		timer = Lib.getTimer();
-		for (i in 0...TENMIL) if (FlxRandom.chanceRoll(weight)) heads++ else tails++;
-		
-		_display.text += "\nDone. Got " + heads + " heads and " + tails + " tails. Time: " + (Lib.getTimer() - timer) + "ms.";
-		
-		if (heads > tails)
-		{
-			_display.text += "\nHeads wins!";
-		}
-		else
-		{
-			_display.text += "\nTails wins!";
-		}
-		
-		if (weight != 50)
-		{
-			_display.text += " That doesn't seem fair.";
-		}
-	}
-	
-	private function randomSigns():Void
-	{
-		_display.text = "Selecting 10 million positive or negative signs...";
-		timer = Lib.getTimer();
-		for (i in 0...TENMIL) dummyInt = FlxRandom.sign();
-		_display.text += "\nDone. Time: " + (Lib.getTimer() - timer) + "ms.";
-	}
-	
-	private function weightedPicks():Void
-	{
-		var array:Array<Float> = [for (i in 0...10) FlxRandom.int(0, 99)];
-		var results:Array<Int> = [for (i in 0...array.length) 0];
-		
-		_display.text = "Performing 1 million random picks from the array " + array + ".";
-		
-		var expectedResults:Array<Float> = [];
-		var arrayTotal:Int = 0;
-		
-		for (i in array) arrayTotal += Std.int(i);
-		for (i in 0...array.length) expectedResults.push(FlxMath.roundDecimal(100 * array[i] / arrayTotal, 2));
-		
-		_display.text += "\nExpected results (in percentages):\n" + expectedResults;
-		timer = Lib.getTimer();
-		
-		for (i in 0...ONEMIL) results[FlxRandom.weightedPick(array)] ++;
-		
-		var percentResults:Array<Float> = [for (i in 0...10) FlxMath.roundDecimal(100 * results[i] / ONEMIL, 2)];
-		
-		_display.text += "\nDone. Time: " + (Lib.getTimer() - timer) + "ms. Results (in percentages): \n" + percentResults;
-	}
-	
-	private function getObjects():Void
-	{
-		var array:Array<Int> = [for (i in 0...20) i];
-		_display.text = "Getting a random object from an array of 20 integers 10 million times...";
-		var results:Array<Int> = [for (i in 0...20) 0];
-		timer = Lib.getTimer();
-		for (i in 0...TENMIL) results[FlxRandom.getObject(array)]++;
-		_display.text += "\nDone. Total time " + (Lib.getTimer() - timer) + "ms. Displaying results...";
-		createHistogram([for (i in 0...results.length) ""+i], results);
-	}
-	
-	private function getObjectsWeighted():Void
-	{
-		var objectArray:Array<Int> = [for (i in 0...10) i];
-		var weightArray:Array<Float> = [for (i in 0...objectArray.length) FlxRandom.int(0, 100)];
-		var expected:Array<Float> = [];
-		var total:Int = 0;
-		
-		for (i in weightArray) total += Std.int(i);
-		for (i in 0...objectArray.length) expected.push(FlxMath.roundDecimal(100 * weightArray[i] / total, 2));
-		
-		_display.text = "Getting one million objects from an array with weighted selection chance...";
-		_display.text += "\nExpected results (in percentages):\n" + expected;
-		var results:Array<Int> = [for (i in 0...objectArray.length) 0];
-		timer = Lib.getTimer();
-		
-		for (i in 0...ONEMIL) results[FlxRandom.getObject(objectArray, weightArray)] ++;
-		
-		var percentResults:Array<Float> = [for (i in 0...objectArray.length) FlxMath.roundDecimal(100 * results[i] / ONEMIL, 2)];
-		_display.text += "\nDone. Results:\n" + percentResults + "\nTotal time " + (Lib.getTimer() - timer) + "ms. Displaying results...";
-		createHistogram([for (i in 0...results.length) ""+i], results);
-	}
-	
-	private function shuffleObj():Void
-	{
-		var array:Array<Int> = [for (i in 0...20) FlxRandom.int(0, 100)];
-		_display.text = "Shuffling the array " + array + " one million times...";
-		timer = Lib.getTimer();
-		array = FlxRandom.shuffleArray(array, ONEMIL);
-		_display.text += "\nDone. New array is " + array + ", time: " + (Lib.getTimer() - timer) + "ms.";
-	}
-	
-	private function randomColors():Void
-	{
-		var min:Int = FlxRandom.int(0, 255);
-		var max:Int = FlxRandom.int(0, 255);
-		
-		_display.text = "Covering the screen with 307,200 random pixels with min " + min + " and max " + max + "...";
-		dummyBitmapdata = new BitmapData(640, 480, false, 0);
-		timer = Lib.getTimer();
-		
-		for (yPos in 0...480) {
-			for (xPos in 0...640) {
-				dummyBitmapdata.setPixel(xPos, yPos, FlxRandom.color(min, max));
-			}
-		}
-		
-		_colorTest.pixels = dummyBitmapdata;
-		_colorTest.visible = true;
-		_display.text += "\nDone, time: " + (Lib.getTimer() - timer) + "ms.";
-	}
-	
-	private function randomColorsExt():Void
-	{
-		var minr:Int = FlxRandom.int(0, 255);
-		var maxr:Int = FlxRandom.int(0, 255);
-		var ming:Int = FlxRandom.int(0, 255);
-		var maxg:Int = FlxRandom.int(0, 255);
-		var minb:Int = FlxRandom.int(0, 255);
-		var maxb:Int = FlxRandom.int(0, 255);
-		
-		_display.text = "Covering the screen with 307,200 random pixels using colorExt...";
-		dummyBitmapdata = new BitmapData(640, 480, false, 0);
-		timer = Lib.getTimer();
-		
-		for (yPos in 0...480) {
-			for (xPos in 0...640) {
-				dummyBitmapdata.setPixel(xPos, yPos, FlxRandom.colorExt(minr, maxr, ming, maxg, minb, maxb));
-			}
-		}
-		
-		_colorTest.pixels = dummyBitmapdata;
-		_colorTest.visible = true;
-		_display.text += "\nDone, time: " + (Lib.getTimer() - timer) + "ms.";
 	}
 }
