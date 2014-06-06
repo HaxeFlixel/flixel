@@ -18,12 +18,6 @@ class FlxRandom
 	public static var globalSeed(default, set):Int = 1;
 	
 	/**
-	 * Current seed used to generate new random numbers. You can retrieve this value if,
-	 * for example, you want to store the seed that was used to randomly generate a level.
-	 */
-	public static var currentSeed(get, set):Int;
-	
-	/**
 	 * Function to easily set the global seed to a new random number.
 	 * Used primarily by FlxG whenever the game is reset.
 	 * Please note that this function is not deterministic!
@@ -33,8 +27,14 @@ class FlxRandom
 	 */
 	public static inline function resetGlobalSeed():Int
 	{
-		return globalSeed = Std.int(Math.random() * MODULUS);
+		return globalSeed = rangeBound(Std.int(Math.random() * FlxMath.MAX_VALUE_INT));
 	}
+	
+	/**
+	 * Current seed used to generate new random numbers. You can retrieve this value if,
+	 * for example, you want to store the seed that was used to randomly generate a level.
+	 */
+	public static var currentSeed(get, set):Int;
 	
 	/**
 	 * Returns a pseudorandom integer between Min and Max, inclusive.
@@ -206,7 +206,7 @@ class FlxRandom
 	 * @return  A pseudorandomly chosen object from Objects.
 	 */
 	@:generic
-	public static function getObject<T>(Objects:Array<T>, ?WeightsArray:Array<Float>, StartIndex:Int = 0, EndIndex:Int = 0):T
+	public static function getObject<T>(Objects:Array<T>, ?WeightsArray:Array<Float>, ?StartIndex:Null<Int>, ?EndIndex:Null<Int>):T
 	{
 		var selected:Null<T> = null;
 		
@@ -217,17 +217,27 @@ class FlxRandom
 				WeightsArray = [for (i in 0...Objects.length) 1];
 			}
 			
+			if (StartIndex == null)
+			{
+				StartIndex = 0;
+			}
+			
+			if (EndIndex == null)
+			{
+				EndIndex = Objects.length - 1;
+			}
+			
 			StartIndex = Std.int(FlxMath.bound(StartIndex, 0, Objects.length - 1));
 			EndIndex = Std.int(FlxMath.bound(EndIndex, 0, Objects.length - 1));
 			
 			// Swap values if reversed
+			
 			if (EndIndex < StartIndex)
 			{
 				StartIndex = StartIndex + EndIndex;
 				EndIndex = StartIndex - EndIndex;
 				StartIndex = StartIndex - EndIndex;
 			}
-			
 			
 			if (EndIndex > WeightsArray.length - 1)
 			{
@@ -272,44 +282,57 @@ class FlxRandom
 	/**
 	 * Returns a random color value in hex ARGB format.
 	 * 
-	 * @param   Min         The lowest value to use for each channel.
-	 * @param   Max         The highest value to use for each channel.
-	 * @param   Alpha       The alpha value of the returning color (default 255 = fully opaque).
-	 * @param   GreyScale   Whether or not to create a color that is strictly a shade of grey. False by default.
-	 * @return  A color value in hex ARGB format.
+	 * @param	Options		An object containing key/value pairs of the following optional parameters:
+	 * 						min			A minimum integer value for red, green, and blue channels. Will be 0 if unused.
+	 * 						max			A maximum integer value for red, green, and blue channels. Will be 255 if unused.
+	 * 						alpha		A single integer value for the generated color's alpha. Will be 255 if unused.
+	 * 						greyscale	A boolean value; if true, generated color will be a shade of grey. Will be false if unused.
+	 * 						alphamin	A minimum integer value for just the alpha channel. Overrides alpha if used.
+	 * 						alphamax	A maximum integer value for just the alpha channel. Overrides alpha if used.
+	 * 						redmin		A minimum integer value for just the red channel. Overrides min if used.
+	 * 						redmax 		A maximum integer value for just the red channel. Overrides max if used.
+	 * 						greenmin	A minimum integer value for just the green channel. Overrides min if used.
+	 * 						greenmax 	A maximum integer value for just the green channel. Overrides max if used.
+	 * 						bluemin		A minimum integer value for just the blue channel. Overrides min if used.
+	 * 						bluemax 	A maximum integer value for just the blue channel. Overrides max if used.
+	 * @return  A color value in FlxColor format.
 	 */
-	public static function color(Min:Int = 0, Max:Int = 255, Alpha:Int = 255, GreyScale:Bool = false):FlxColor
+	public static function color(?Options:ColorOptions):FlxColor
 	{
-		Min = Std.int(FlxMath.bound(Min, 0, 255));
-		Max = Std.int(FlxMath.bound(Max, 0, 255));
-		Alpha = Std.int(FlxMath.bound(Alpha, 0, 255));
+		if (Options == null)
+		{
+			Options = { min: 0, max: 255, alpha: 255 };
+		}
 		
-		var red = int(Min, Max);
-		var green = GreyScale ? red : int(Min, Max);
-		var blue = GreyScale ? red : int(Min, Max);
+		if (Options.min == null)
+		{
+			Options.min = 0;
+		}
 		
-		return FlxColor.fromRGB(red, green, blue, Alpha);
-	}
-	
-	/**
-	 * Much like color(), but with finer control over the output color.
-	 * 
-	 * @param   RedMinimum     The minimum amount of red in the output color, from 0 to 255.
-	 * @param   RedMaximum     The maximum amount of red in the output color, from 0 to 255.
-	 * @param   GreedMinimum   The minimum amount of green in the output color, from 0 to 255.
-	 * @param   GreenMaximum   The maximum amount of green in the output color, from 0 to 255.
-	 * @param   BlueMinimum    The minimum amount of blue in the output color, from 0 to 255.
-	 * @param   BlueMaximum    The maximum amount of blue in the output color, from 0 to 255.
-	 * @param   AlphaMinimum   The minimum alpha value for the output color, from 0 (fully transparent) to 255 (fully opaque).
-	 * @param   AlphaMaximum   The maximum alpha value for the output color, from 0 (fully transparent) to 255 (fully opaque).
-	 * @return  A pseudorandomly generated color within the ranges specified.
-	 */
-	public static function colorExt(RedMinimum:Int = 0, RedMaximum:Int = 255, GreenMinimum:Int = 0, GreenMaximum:Int = 255, BlueMinimum:Int = 0, BlueMaximum:Int = 255, AlphaMinimum:Int = 255, AlphaMaximum:Int = 255):FlxColor
-	{		
-		var red = int(Std.int(FlxMath.bound(RedMinimum, 0, 255)), Std.int(FlxMath.bound(RedMaximum, 0, 255)));
-		var green = int(Std.int(FlxMath.bound(GreenMinimum, 0, 255)), Std.int(FlxMath.bound(GreenMaximum, 0, 255)));
-		var blue = int(Std.int(FlxMath.bound(BlueMinimum, 0, 255)), Std.int(FlxMath.bound(BlueMaximum, 0, 255)));
-		var alpha = int(Std.int(FlxMath.bound(AlphaMinimum, 0, 255)), Std.int(FlxMath.bound(AlphaMaximum, 0, 255)));
+		if (Options.max == null)
+		{
+			Options.max = 255;
+		}
+		
+		if (Options.alpha == null)
+		{
+			Options.alpha = 255;
+		}
+		
+		var alphamin:Int = Options.alphamin != null ? Options.alphamin : Options.alpha;
+		var alphamax:Int = Options.alphamax != null ? Options.alphamax : Options.alpha;
+		var redmin:Int = Options.redmin != null ? Options.redmin : Options.min;
+		var redmax:Int = Options.redmax != null ? Options.redmax : Options.max;
+		var greenmin:Int = Options.greenmin != null ? Options.greenmin : Options.min;
+		var greenmax:Int = Options.greenmax != null ? Options.greenmax : Options.max;
+		var bluemin:Int = Options.bluemin != null ? Options.bluemin : Options.min;
+		var bluemax:Int = Options.bluemax != null ? Options.bluemax : Options.max;
+		var greyscale:Bool = Options.greyscale != null ? Options.greyscale : false;
+		
+		var alpha:Int = int(alphamin, alphamax);
+		var red:Int = greyscale ? int(Options.min, Options.max) : int(redmin, redmax);
+		var blue:Int = greyscale ? red : int(bluemin, bluemax);
+		var green:Int = greyscale ? red : int(greenmin, greenmax);
 		
 		return FlxColor.fromRGB(red, green, blue, alpha);
 	}
@@ -425,4 +448,19 @@ class FlxRandom
 		return _recordingSeed;
 	}
 	#end
+}
+
+typedef ColorOptions = {
+	?min:Null<Int>,
+	?max:Null<Int>,
+	?alpha:Null<Int>,
+	?greyscale:Bool,
+	?alphamin:Null<Int>,
+	?alphamax:Null<Int>,
+	?redmin:Null<Int>,
+	?redmax:Null<Int>,
+	?greenmin:Null<Int>,
+	?greenmax:Null<Int>,
+	?bluemin:Null<Int>,
+	?bluemax:Null<Int>
 }

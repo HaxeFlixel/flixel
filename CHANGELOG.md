@@ -74,6 +74,7 @@
  * exposed currentSeed as an external representation of internalSeed
  * removed intRanged() and floatRanged(), int() and float() now provide optional ranges
  * removed weightedGetObject(), getObject() now has an optional weights parameter
+ * removed colorExt(), color() now accepts a ColorOptions object with a wide array of color settings
  * update random number generation equation to ensure proper results on all platforms; may break recordings made in 3.x!
 * FlxArrayUtil: removed randomness-related functions, please use FlxRandom instead
 * FlxText: added an abstract enum for alignment (text.alignment = CENTER; is now possible)
