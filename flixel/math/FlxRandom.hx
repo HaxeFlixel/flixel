@@ -278,18 +278,18 @@ class FlxRandom
 	 * Returns a random color value in hex ARGB format.
 	 * 
 	 * @param	Options		An object containing key/value pairs of the following optional parameters:
-	 * 						min			A minimum integer value for red, green, and blue channels. Will be 0 if unused.
-	 * 						max			A maximum integer value for red, green, and blue channels. Will be 255 if unused.
-	 * 						alpha		A single integer value for the generated color's alpha. Will be 255 if unused.
-	 * 						greyscale	A boolean value; if true, generated color will be a shade of grey. Will be false if unused.
-	 * 						alphamin	A minimum integer value for just the alpha channel. Overrides alpha if used.
-	 * 						alphamax	A maximum integer value for just the alpha channel. Overrides alpha if used.
-	 * 						redmin		A minimum integer value for just the red channel. Overrides min if used.
-	 * 						redmax 		A maximum integer value for just the red channel. Overrides max if used.
-	 * 						greenmin	A minimum integer value for just the green channel. Overrides min if used.
-	 * 						greenmax 	A maximum integer value for just the green channel. Overrides max if used.
-	 * 						bluemin		A minimum integer value for just the blue channel. Overrides min if used.
-	 * 						bluemax 	A maximum integer value for just the blue channel. Overrides max if used.
+	 * 						min       A minimum integer value for red, green, and blue channels. Will be 0 if unused.
+	 * 						max       A maximum integer value for red, green, and blue channels. Will be 255 if unused.
+	 * 						alpha     A single integer value for the generated color's alpha. Will be 255 if unused.
+	 * 						greyscale A boolean value; if true, generated color will be a shade of grey. Will be false if unused.
+	 * 						alphamin  A minimum integer value for just the alpha channel. Overrides alpha if used.
+	 * 						alphamax  A maximum integer value for just the alpha channel. Overrides alpha if used.
+	 * 						redmin    A minimum integer value for just the red channel. Overrides min if used.
+	 * 						redmax    A maximum integer value for just the red channel. Overrides max if used.
+	 * 						greenmin  A minimum integer value for just the green channel. Overrides min if used.
+	 * 						greenmax  A maximum integer value for just the green channel. Overrides max if used.
+	 * 						bluemin   A minimum integer value for just the blue channel. Overrides min if used.
+	 * 						bluemax   A maximum integer value for just the blue channel. Overrides max if used.
 	 * @return  A color value in FlxColor format.
 	 */
 	public static function color(?Options:ColorOptions):FlxColor
