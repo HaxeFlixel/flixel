@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<project version="2">
+  <!-- Output SWF options -->
+  <output>
+    <movie outputType="Application" />
+    <movie input="" />
+    <movie path="Project.xml" />
+    <movie fps="60" />
+    <movie width="640" />
+    <movie height="480" />
+    <movie version="3" />
+    <movie minorVersion="0" />
+    <movie platform="NME" />
+    <movie background="555555" />
+  </output>
+  <!-- Other classes to be compiled into your SWF -->
+  <classpaths>
+    <class path="C:\Users\Chris\haxe\lib\flixel-ui\git" />
+    <class path="C:\Users\Chris\haxe\lib\flixel\git" />
+    <class path="C:\Users\Chris\haxe\lib\lime\1,0,0" />
+    <class path="C:\Users\Chris\haxe\lib\hscript\git" />
+    <class path="C:\Users\Chris\haxe\lib\firetongue\git" />
+    <class path="C:\Users\Chris\haxe\lib\task\1,0,6" />
+    <class path="C:\Users\Chris\haxe\lib\openfl\2,0,0" />
+    <class path="source" />
+    <class path="C:\Users\Chris\haxe\lib\openfl\2,0,0\backends\flash" />
+    <class path="export\flash\haxe" />
+  </classpaths>
+  <!-- Build options -->
+  <build>
+    <option directives="flixel-ui=1.0.2&#xA;flixel=3.3.4&#xA;lime=1.0.0&#xA;hscript=2.0.1&#xA;firetongue=0.0.1&#xA;task=1.0.6&#xA;openfl=2.0.0&#xA;FLX_NO_FOCUS_LOST_SCREEN&#xA;tools=1.5.4&#xA;FLX_NO_DEBUG&#xA;openfl-flash&#xA;FLX_RENDER_BLIT&#xA;FLX_MOUSE_ADVANCED&#xA;FLX_NO_SOUND_TRAY&#xA;display&#xA;web" />
+    <option flashStrict="False" />
+    <option noInlineOnDebug="False" />
+    <option mainClass="ApplicationMain" />
+    <option enabledebug="False" />
+    <option additional="--no-output&#xA;-swf-version 11.8" />
+  </build>
+  <!-- haxelib libraries -->
+  <haxelib>
+    <!-- example: <library name="..." /> -->
+  </haxelib>
+  <!-- Class files to compile (other referenced classes will automatically be included) -->
+  <compileTargets>
+    <!-- example: <compile path="..." /> -->
+  </compileTargets>
+  <!-- Assets to embed into the output SWF -->
+  <library>
+    <!-- example: <asset path="..." id="..." update="..." glyphs="..." mode="..." place="..." sharepoint="..." /> -->
+  </library>
+  <!-- Paths to exclude from the Project Explorer tree -->
+  <hiddenPaths>
+    <hidden path="obj" />
+  </hiddenPaths>
+  <!-- Executed before build -->
+  <preBuildCommand />
+  <!-- Executed after build -->
+  <postBuildCommand alwaysRun="False" />
+  <!-- Other project options -->
+  <options>
+    <option showHiddenPaths="False" />
+    <option testMovie="Custom" />
+    <option testMovieCommand="" />
+  </options>
+  <!-- Plugin storage -->
+  <storage />
+</project>
