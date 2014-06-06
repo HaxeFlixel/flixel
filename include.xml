@@ -2,8 +2,9 @@
 <project>
 	<icon path="assets/images/logo/HaxeFlixel.svg" />
 	
-	<assets path="assets/sounds" include="*.mp3" if="web" />
-	<assets path="assets/sounds" include="*.ogg" unless="flash" />
+	<assets path="assets/sounds" include="*.ogg" if="html5" />
+	<assets path="assets/sounds" include="*.mp3" if="flash" embed="true" />
+	<assets path="assets/sounds" include="*.ogg" unless="flash || html5" embed="true" />
 	
 	<set name="html5-backend" value="openfl-bitfive" unless="html5-backend" />
 	<haxelib name="openfl" />
