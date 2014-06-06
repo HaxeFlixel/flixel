@@ -39,7 +39,7 @@ class FlxText extends FlxSprite
 	/**
 	 * The font used for this text (assuming that it's using embedded font).
 	 */
-	public var font(get, set):String;
+	public var font(default, set):String;
 	
 	/**
 	 * Whether this text field uses an embedded font (by default) or not. 
@@ -215,6 +215,7 @@ class FlxText extends FlxSprite
 	override public function destroy():Void
 	{
 		_textField = null;
+		font = null;
 		_defaultFormat = null;
 		_formatAdjusted = null;
 		_filters = null;
@@ -505,19 +506,17 @@ class FlxText extends FlxSprite
 		return Color;
 	}
 	
-	private function get_font():String
-	{
-		return _defaultFormat.font;
-	}
-	
 	private function set_font(Font:String):String
 	{
-		_textField.embedFonts = true;
-		_defaultFormat.font = Assets.getFont(Font).fontName;
-		_textField.defaultTextFormat = _defaultFormat;
-		updateFormat(_defaultFormat);
-		dirty = true;
-		return Font;
+		if (Font != null)
+		{
+			_textField.embedFonts = true;
+			_defaultFormat.font = Assets.getFont(Font).fontName;
+			_textField.defaultTextFormat = _defaultFormat;
+			updateFormat(_defaultFormat);
+			dirty = true;
+		}
+		return font = Font;
 	}
 	
 	private inline function get_embedded():Bool
