@@ -171,7 +171,8 @@ class FlxText extends FlxSprite
 		_textField.selectable = false;
 		_textField.multiline = true;
 		_textField.wordWrap = true;
-		_defaultFormat = new TextFormat(FlxAssets.FONT_DEFAULT, Size, 0xffffff);
+		_defaultFormat = new TextFormat(null, Size, 0xffffff);
+		font = FlxAssets.FONT_DEFAULT;
 		_formatAdjusted = new TextFormat();
 		_textField.defaultTextFormat = _defaultFormat;
 		_textField.text = Text;
@@ -302,14 +303,7 @@ class FlxText extends FlxSprite
 		
 		if (Embedded)
 		{
-			if (Font == null)
-			{
-				_defaultFormat.font = FlxAssets.FONT_DEFAULT;
-			}
-			else 
-			{
-				_defaultFormat.font = Assets.getFont(Font).fontName;
-			}
+			font = Font;
 		}
 		else if (Font != null)
 		{
@@ -508,14 +502,26 @@ class FlxText extends FlxSprite
 	
 	private function set_font(Font:String):String
 	{
+		_textField.embedFonts = true;
+		
 		if (Font != null)
 		{
-			_textField.embedFonts = true;
-			_defaultFormat.font = Assets.getFont(Font).fontName;
-			_textField.defaultTextFormat = _defaultFormat;
-			updateFormat(_defaultFormat);
-			dirty = true;
+			var newFontName:String = Font;
+			if (Assets.exists(Font, AssetType.FONT))
+			{
+				newFontName = Assets.getFont(Font).fontName;
+			}
+			
+			_defaultFormat.font = newFontName;
 		}
+		else
+		{
+			_defaultFormat.font = font = FlxAssets.FONT_DEFAULT;
+		}
+		
+		_textField.defaultTextFormat = _defaultFormat;
+		updateFormat(_defaultFormat);
+		dirty = true;
 		return font = Font;
 	}
 	
