@@ -206,7 +206,7 @@ class FlxRandom
 	 * @return  A pseudorandomly chosen object from Objects.
 	 */
 	@:generic
-	public static function getObject<T>(Objects:Array<T>, ?WeightsArray:Array<Float>, ?StartIndex:Null<Int>, ?EndIndex:Null<Int>):T
+	public static function getObject<T>(Objects:Array<T>, ?WeightsArray:Array<Float>, StartIndex:Int = 0, ?EndIndex:Null<Int>):T
 	{
 		var selected:Null<T> = null;
 		
