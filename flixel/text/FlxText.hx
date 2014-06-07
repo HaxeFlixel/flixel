@@ -39,7 +39,7 @@ class FlxText extends FlxSprite
 	/**
 	 * The font used for this text (assuming that it's using embedded font).
 	 */
-	public var font(default, set):String;
+	public var font(get, set):String;
 	
 	/**
 	 * Whether this text field uses an embedded font (by default) or not. 
@@ -138,6 +138,8 @@ class FlxText extends FlxSprite
 	private var _widthInc:Int = 0;
 	private var _heightInc:Int = 0;
 	
+	private var _font:String;
+	
 	/**
 	 * Creates a new FlxText object at the specified position.
 	 * 
@@ -217,7 +219,7 @@ class FlxText extends FlxSprite
 	override public function destroy():Void
 	{
 		_textField = null;
-		font = null;
+		_font = null;
 		_defaultFormat = null;
 		_formatAdjusted = null;
 		_filters = null;
@@ -501,6 +503,11 @@ class FlxText extends FlxSprite
 		return Color;
 	}
 	
+	private inline function get_font():String
+	{
+		return _font;
+	}
+	
 	private function set_font(Font:String):String
 	{
 		_textField.embedFonts = true;
@@ -517,13 +524,13 @@ class FlxText extends FlxSprite
 		}
 		else
 		{
-			_defaultFormat.font = font = FlxAssets.FONT_DEFAULT;
+			_defaultFormat.font = FlxAssets.FONT_DEFAULT;
 		}
 		
 		_textField.defaultTextFormat = _defaultFormat;
 		updateFormat(_defaultFormat);
 		dirty = true;
-		return font = Font;
+		return _font = _defaultFormat.font;
 	}
 	
 	private inline function get_embedded():Bool
