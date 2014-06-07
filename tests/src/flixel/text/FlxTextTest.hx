@@ -1,7 +1,7 @@
 package flixel.text;
 
-import flash.errors.Error;
 import flixel.text.FlxText;
+import helper.TestUtil;
 import massive.munit.Assert;
 
 class FlxTextTest extends FlxTest
@@ -23,14 +23,6 @@ class FlxTextTest extends FlxTest
 	@Test
 	function testDestroy():Void
 	{
-		try
-		{
-			text.destroy();
-			text.destroy();
-		}
-		catch (e:Error)
-		{
-			Assert.fail(e.message);
-		}
+		TestUtil.testDestroy(text);
 	}
 }

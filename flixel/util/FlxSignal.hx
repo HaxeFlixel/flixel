@@ -155,12 +155,7 @@ private class FlxBaseSignal<T> implements IFlxSignal<T>
 	
 	public inline function removeAll():Void 
 	{
-		while (_handlers.length > 0)
-		{
-			var handler = _handlers.pop();
-			handler.destroy();
-			handler = null;
-		}
+		FlxDestroyUtil.destroyArray(_handlers);
 	}
 	
 	public function destroy():Void

@@ -1,7 +1,7 @@
 package flixel.util;
 
-import flixel.FlxState;
 import flixel.util.FlxSignal;
+import helper.TestUtil;
 import massive.munit.Assert;
 
 class FlxSignalTest extends FlxTest
@@ -161,5 +161,11 @@ class FlxSignalTest extends FlxTest
 	{
 		signal0.add(null);
 		Assert.isFalse(signal0.has(null));
+	}
+	
+	@Test
+	function testDestroy():Void
+	{
+		TestUtil.testDestroy(signal0);
 	}
 }

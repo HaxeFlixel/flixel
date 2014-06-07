@@ -4,8 +4,8 @@ import flash.display.BitmapData;
 import flixel.animation.FlxAnimation;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
+import helper.TestUtil;
 import massive.munit.Assert;
 import massive.munit.async.AsyncFactory;
 
@@ -207,5 +207,11 @@ class FlxSpriteTest extends FlxTest
 		
 		var animation:FlxAnimation = sprite2.animation.getByName("animation");
 		Assert.areEqual(3, animation.numFrames);
+	}
+	
+	@Test
+	function testDestroy():Void
+	{
+		TestUtil.testDestroy(sprite1);
 	}
 }

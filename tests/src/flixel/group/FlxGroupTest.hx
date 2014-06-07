@@ -2,6 +2,7 @@ package flixel.group;
 
 import flixel.FlxBasic;
 import flixel.group.FlxGroup;
+import helper.TestUtil;
 import massive.munit.Assert;
 
 class FlxGroupTest extends FlxTest
@@ -89,6 +90,12 @@ class FlxGroupTest extends FlxTest
 		}, true);
 		
 		Assert.areEqual(3, timesCalled);
+	}
+	
+	@Test
+	function testDestroy():Void
+	{
+		TestUtil.testDestroy(group);
 	}
 	
 	function forEachExistsGroupSetup(group:FlxGroup):Void
