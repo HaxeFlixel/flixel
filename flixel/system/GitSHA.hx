@@ -1,5 +1,6 @@
 package flixel.system;
 
+#if macro
 import haxe.io.BytesOutput;
 import haxe.io.Eof;
 import haxe.macro.Context;
@@ -99,3 +100,4 @@ class GitSHA
 		return output;
 	}
 }
+#end

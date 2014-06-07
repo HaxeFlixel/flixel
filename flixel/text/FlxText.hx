@@ -32,7 +32,7 @@ class FlxText extends FlxSprite
 	public var text(get, set):String;
 	
 	/**
-	 * The size of the text being displayed.
+	 * The size of the text being displayed in pixels.
 	 */
 	public var size(get, set):Float;
 	
@@ -141,14 +141,15 @@ class FlxText extends FlxSprite
 	/**
 	 * Creates a new FlxText object at the specified position.
 	 * 
-	 * @param	X				The X position of the text.
-	 * @param	Y				The Y position of the text.
-	 * @param	FieldWidth		The width of the text object. Enables autoSize if <= 0. (height is determined automatically).
-	 * @param	Text			The actual text you would like to display initially.
-	 * @param	Size			The font size for this text object.
-	 * @param	EmbeddedFont	Whether this text field uses embedded fonts or not.
+	 * @param   X              The X position of the text.
+	 * @param   Y              The Y position of the text.
+	 * @param   FieldWidth     The width of the text object. Enables autoSize if <= 0.
+	 *                         (height is determined automatically).
+	 * @param   Text           The actual text you would like to display initially.
+	 * @param   Size           The font size for this text object.
+	 * @param   EmbeddedFont   Whether this text field uses embedded fonts or not.
 	 */
-	public function new(X:Float = 0, Y:Float = 0, FieldWidth:Float = 0, ?Text:String, Size:Int = 8, EmbeddedFont:Bool = true)
+	public function new(X:Float = 0, Y:Float = 0, FieldWidth:Float = 0, ?Text:String, Size:Float = 8, EmbeddedFont:Bool = true)
 	{
 		super(X, Y);
 		
