@@ -186,6 +186,10 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 		alpha = 1.0;
 		scale.x = scale.y = 1.0;
 		color = 0xffffff;
+		if (animation.curAnim != null)
+		{
+			animation.play(animation.curAnim.name, true);
+		}
 	}
 	
 	/**
