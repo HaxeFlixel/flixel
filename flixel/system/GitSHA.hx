@@ -18,12 +18,7 @@ class GitSHA
 		var fields:Array<Field> = Context.getBuildFields();
 		
 		var libraryPath = getLibraryPath(library);
-		var sha = "";
-		
-		if (libraryPath.indexOf('$library/git') != -1)
-		{
-			sha = getGitSHA(libraryPath);
-		}
+		var sha = getGitSHA(libraryPath);
 		
 		fields.push({
 			name: "sha",
@@ -61,6 +56,11 @@ class GitSHA
 		
 		Sys.setCwd(path);
 		var sha = getProcessOutput("git", ["rev-parse", "HEAD"]);
+		var shaRegex = ~/[a-f0-9]{40}/g;
+		if (!shaRegex.match(sha))
+		{
+			sha = "";
+		}
 		
 		Sys.setCwd(oldWd);
 		return sha.substring(0, 10);
