@@ -10,7 +10,7 @@ import flixel.util.FlxColor;
 class FlxRandom
 {
 	/**
-	 * The global random number generator seed (for deterministic behavior in recordings and saves).
+	 * The global base random number generator seed (for deterministic behavior in recordings and saves).
 	 * If you want, you can set the seed with an integer between 1 and 2,147,483,647 inclusive.
 	 * However, FlxG automatically sets this with a new random seed when starting your game.
 	 * Altering this yourself may break recording functionality!
@@ -18,88 +18,16 @@ class FlxRandom
 	public static var globalSeed(default, set):Int = 1;
 	
 	/**
-	 * Internal function to update the internal seed whenever the global seed is reset,
-	 * and keep the global seed's value in range.
-	 */
-	private static function set_globalSeed(NewSeed:Int):Int
-	{
-		NewSeed = Std.int(FlxMath.bound(NewSeed, 1, MODULUS));
-		internalSeed = NewSeed;
-		return globalSeed = NewSeed;
-	}
-	
-	/**
-	 * Internal seed used to generate new random numbers. You can retrieve this value if,
+	 * Current seed used to generate new random numbers. You can retrieve this value if,
 	 * for example, you want to store the seed that was used to randomly generate a level.
 	 */
-	public static var internalSeed(default, null):Int = 1;
-	
-	/**
-	 * Constants used in the pseudorandom number generation equation.
-	 * These are the constants suggested by the revised MINSTD pseudorandom number generator,
-	 * and they use the full range of possible integer values.
-	 * 
-	 * @see http://en.wikipedia.org/wiki/Linear_congruential_generator
-	 * @see Stephen K. Park and Keith W. Miller and Paul K. Stockmeyer (1988).
-	 *      "Technical Correspondence". Communications of the ACM 36 (7): 105–110.
-	 */
-	private static inline var MULTIPLIER:Int = 48271;
-	private static inline var MODULUS:Int = 2147483647;
-	
-	/**
-	 * Internal helper variables.
-	 */
-	private static var _arrayFloatHelper:Array<Float> = null;
-	
-	#if FLX_RECORD
-	/**
-	 * Internal storage for the seed used to generate the most recent state.
-	 */
-	private static var _stateSeed:Int = 1;
-	/**
-	 * The seed to be used by the recording requested in FlxGame.
-	 */
-	private static var _recordingSeed:Int = 1;
-	
-	/**
-	 * Update the seed that was used to create the most recent state.
-	 * Called by FlxGame, needed for replays.
-	 * 
-	 * @return  The new value of the state seed.
-	 */
-	@:allow(flixel.FlxGame.switchState)
-	private static inline function updateStateSeed():Int
-	{
-		return _stateSeed = internalSeed;
-	}
-	
-	/**
-	 * Used to store the seed for a requested recording. If StandardMode is false, this will also reset the global seed!
-	 * This ensures that the state is created in the same way as just before the recording was requested.
-	 * 
-	 * @param   StandardMode   If true, entire game will be reset, else just the current state will be reset.
-	 */
-	@:allow(flixel.system.frontEnds.VCRFrontEnd.startRecording)
-	private static inline function updateRecordingSeed(StandardMode:Bool = true):Int
-	{
-		return _recordingSeed = globalSeed = StandardMode ? globalSeed : _stateSeed;
-	}
-	
-	/**
-	 * Returns the seed to use for the requested recording.
-	 */
-	@:allow(flixel.FlxGame.step)
-	private static inline function getRecordingSeed():Int
-	{
-		return _recordingSeed;
-	}
-	#end
+	public static var currentSeed(get, set):Int;
 	
 	/**
 	 * Function to easily set the global seed to a new random number.
 	 * Used primarily by FlxG whenever the game is reset.
 	 * Please note that this function is not deterministic!
-	 * Ifyou call it in your game, recording may not work.
+	 * If you call it in your game, recording may not function as expected.
 	 * 
 	 * @return  The new global seed.
 	 */
@@ -115,17 +43,22 @@ class FlxRandom
 	 * 
 	 * @param   Min        The minimum value that should be returned. 0 by default.
 	 * @param   Max        The maximum value that should be returned. 2,147,483,647 by default.
-	 * @param   Excludes   An optional array of values that should not be returned. Optional.
+	 * @param   Excludes   Optional array of values that should not be returned.
 	 */
-	public static function int(Min:Int = 0, Max:Int = MODULUS, ?Excludes:Array<Int>):Int
+	public static function int(Min:Int = 0, Max:Int = FlxMath.MAX_VALUE_INT, ?Excludes:Array<Int>):Int
 	{
-		if (Min == Max)
+		if (Min == 0 && Max == FlxMath.MAX_VALUE_INT && Excludes == null)
+		{
+			return Std.int(generate());
+		}
+		else if (Min == Max)
 		{
 			return Min;
 		}
 		else
 		{
 			// Swap values if reversed
+			
 			if (Min > Max)
 			{
 				Min = Min + Max;
@@ -135,14 +68,15 @@ class FlxRandom
 			
 			if (Excludes == null)
 			{
-				return Math.floor(Min + float() * (Max - Min + 1));
+				return Math.floor(Min + generate() / MODULUS * (Max - Min + 1));
 			}
 			else
 			{
 				var result:Int = 0;
+				
 				do
 				{
-					result = Math.floor(Min + float() * (Max - Min + 1));
+					return Math.floor(Min + generate() / MODULUS * (Max - Min + 1));
 				}
 				while (Excludes.indexOf(result) >= 0);
 				
@@ -158,13 +92,17 @@ class FlxRandom
 	 * 
 	 * @param   Min        The minimum value that should be returned. 0 by default.
 	 * @param   Max        The maximum value that should be returned. 1 by default.
-	 * @param   Excludes   An optional array of values that should not be returned. Optional.
+	 * @param   Excludes   Optional array of values that should not be returned.
 	 */
 	public static function float(Min:Float = 0, Max:Float = 1, ?Excludes:Array<Float>):Float
 	{
 		var result:Float = 0;
 		
-		if (Min == Max)
+		if (Min == 0 && Max == 1 && Excludes == null)
+		{
+			return generate() / MODULUS;
+		}
+		else if (Min == Max)
 		{
 			result = Min;
 		}
@@ -257,28 +195,32 @@ class FlxRandom
 	}
 	
 	/**
-	 * Fetch a random entry from the given array from StartIndex to EndIndex.
-	 * Will return null if random selection is missing, or array has no entries.
+	 * Returns a random object from an array.
 	 * 
-	 * @param   Objects      An array from which to select a random entry.
-	 * @param   StartIndex   Optional index from which to restrict selection. Default value is 0, or the beginning of the array.
-	 * @param   EndIndex     Optional index at which to restrict selection. Ignored if 0, which is the default value.
-	 * @return  The random object that was selected.
+	 * @param   Objects        An array from which to return an object.
+	 * @param   WeightsArray   Optional array of weights which will determine the likelihood of returning a given value from Objects.
+	 * 						   If none is passed, all objects in the Objects array will have an equal likelihood of being returned.
+	 *                         Values in WeightsArray will correspond to objects in Objects exactly.
+	 * @param   StartIndex     Optional index from which to restrict selection. Default value is 0, or the beginning of the Objects array.
+	 * @param   EndIndex       Optional index at which to restrict selection. Ignored if 0, which is the default value.
+	 * @return  A pseudorandomly chosen object from Objects.
 	 */
 	@:generic
-	public static function getObject<T>(Objects:Array<T>, StartIndex:Int = 0, EndIndex:Int = 0):T
+	public static function getObject<T>(Objects:Array<T>, ?WeightsArray:Array<Float>, StartIndex:Int = 0, EndIndex:Int = 0):T
 	{
 		var selected:Null<T> = null;
 		
 		if (Objects.length != 0)
 		{
-			if (StartIndex < 0)
+			if (WeightsArray == null)
 			{
-				StartIndex = 0;
+				WeightsArray = [for (i in 0...Objects.length) 1];
 			}
 			
-			// Swap values if reversed
+			StartIndex = Std.int(FlxMath.bound(StartIndex, 0, Objects.length - 1));
+			EndIndex = Std.int(FlxMath.bound(EndIndex, 0, Objects.length - 1));
 			
+			// Swap values if reversed
 			if (EndIndex < StartIndex)
 			{
 				StartIndex = StartIndex + EndIndex;
@@ -286,12 +228,14 @@ class FlxRandom
 				StartIndex = StartIndex - EndIndex;
 			}
 			
-			if ((EndIndex <= 0) || (EndIndex > Objects.length - 1))
+			
+			if (EndIndex > WeightsArray.length - 1)
 			{
-				EndIndex = Objects.length - 1;
+				EndIndex = WeightsArray.length - 1;
 			}
 			
-			selected = Objects[int(StartIndex, EndIndex)];
+			_arrayFloatHelper = [for (i in StartIndex...EndIndex + 1) WeightsArray[i]];
+			selected = Objects[weightedPick(_arrayFloatHelper)];
 		}
 		
 		return selected;
@@ -326,54 +270,6 @@ class FlxRandom
 	}
 	
 	/**
-	 * Returns a random object from an array between StartIndex and EndIndex with a weighted chance from WeightsArray.
-	 * This function is essentially a combination of weightedPick and getObject.
-	 * 
-	 * @param   Objects        An array from which to return an object.
-	 * @param   WeightsArray   An array of weights which will determine the likelihood of returning a given value from Objects.
-	 *                         Values in WeightsArray will correspond to objects in Objects exactly.
-	 * @param   StartIndex     Optional index from which to restrict selection. Default value is 0, or the beginning of the Objects array.
-	 * @param   EndIndex       Optional index at which to restrict selection. Ignored if 0, which is the default value.
-	 * @return  A pseudorandomly chosen object from Objects.
-	 */
-	@:generic
-	public static function weightedGetObject<T>(Objects:Array<T>, WeightsArray:Array<Float>, StartIndex:Int = 0, EndIndex:Int = 0):T
-	{
-		var selected:Null<T> = null;
-		
-		if (Objects.length != 0)
-		{
-			if (StartIndex < 0)
-			{
-				StartIndex = 0;
-			}
-			
-			// Swap values if reversed
-			if (EndIndex < StartIndex)
-			{
-				StartIndex = StartIndex + EndIndex;
-				EndIndex = StartIndex - EndIndex;
-				StartIndex = StartIndex - EndIndex;
-			}
-			
-			if ((EndIndex <= 0) || (EndIndex > Objects.length - 1))
-			{
-				EndIndex = Objects.length - 1;
-			}
-			
-			if (EndIndex > WeightsArray.length - 1)
-			{
-				EndIndex = WeightsArray.length - 1;
-			}
-			
-			_arrayFloatHelper = [for (i in StartIndex...EndIndex + 1) WeightsArray[i]];
-			selected = Objects[weightedPick(_arrayFloatHelper)];
-		}
-		
-		return selected;
-	}
-	
-	/**
 	 * Returns a random color value in hex ARGB format.
 	 * 
 	 * @param   Min         The lowest value to use for each channel.
@@ -396,7 +292,7 @@ class FlxRandom
 	}
 	
 	/**
-	 * Much like color(), but with much finer control over the output color.
+	 * Much like color(), but with finer control over the output color.
 	 * 
 	 * @param   RedMinimum     The minimum amount of red in the output color, from 0 to 255.
 	 * @param   RedMaximum     The maximum amount of red in the output color, from 0 to 255.
@@ -419,13 +315,114 @@ class FlxRandom
 	}
 	
 	/**
+	 * The actual internal seed. Stored as a Float value to prevent inaccuracies due to
+	 * integer overflow in the generate() equation.
+	 */
+	private static var internalSeed:Float = 1;
+	
+	/**
+	 * Internal helper variable. Used by getObject().
+	 */
+	private static var _arrayFloatHelper:Array<Float> = null;
+	
+	/**
+	 * Internal function to update the internal seed whenever the global seed is reset,
+	 * and keep the global seed's value in range.
+	 */
+	private static inline function set_globalSeed(NewSeed:Int):Int
+	{
+		return globalSeed = currentSeed = rangeBound(NewSeed);
+	}
+	
+	/**
+	 * Internal function to return the internal seed as an integer.
+	 */
+	private static inline function get_currentSeed():Int
+	{
+		return Std.int(internalSeed);
+	}
+	
+	/**
+	 * Internal function to set the internal seed to an integer value.
+	 */
+	private static inline function set_currentSeed(NewSeed:Int):Int
+	{
+		return Std.int(internalSeed = rangeBound(NewSeed));
+	}
+	
+	/**
+	 * Internal function to ensure an arbitrary value is in the valid range of seed values.
+	 */
+	private static inline function rangeBound(Value:Int):Int
+	{
+		return Std.int(FlxMath.bound(Value, 1, MODULUS - 1));
+	}
+	
+	/**
+	 * Constants used in the pseudorandom number generation equation.
+	 * These are the constants suggested by the revised MINSTD pseudorandom number generator,
+	 * and they use the full range of possible integer values.
+	 * 
+	 * @see http://en.wikipedia.org/wiki/Linear_congruential_generator
+	 * @see Stephen K. Park and Keith W. Miller and Paul K. Stockmeyer (1988).
+	 *      "Technical Correspondence". Communications of the ACM 36 (7): 105–110.
+	 */
+	private static inline var MULTIPLIER:Float = 48271.0;
+	private static inline var MODULUS:Int = FlxMath.MAX_VALUE_INT;
+	
+	/**
 	 * Internal method to quickly generate a pseudorandom number. Used only by other functions of this class.
 	 * Also updates the internal seed, which will then be used to generate the next pseudorandom number.
 	 * 
 	 * @return  A new pseudorandom number.
 	 */
-	private static inline function generate():Int
+	private static inline function generate():Float
 	{
-		return internalSeed = ((internalSeed * MULTIPLIER) % MODULUS) & MODULUS;
+		return internalSeed = (internalSeed * MULTIPLIER) % MODULUS;
 	}
+	
+	#if FLX_RECORD
+	/**
+	 * Internal storage for the seed used to generate the most recent state.
+	 */
+	private static var _stateSeed:Int = 1;
+	
+	/**
+	 * The seed to be used by the recording requested in FlxGame.
+	 */
+	private static var _recordingSeed:Int = 1;
+	
+	/**
+	 * Update the seed that was used to create the most recent state.
+	 * Called by FlxGame, needed for replays.
+	 * 
+	 * @return  The new value of the state seed.
+	 */
+	@:allow(flixel.FlxGame.switchState)
+	private static inline function updateStateSeed():Int
+	{
+		return _stateSeed = currentSeed;
+	}
+	
+	/**
+	 * Used to store the seed for a requested recording. If StandardMode is false, this will also reset the global seed!
+	 * This ensures that the state is created in the same way as just before the recording was requested.
+	 * 
+	 * @param   StandardMode   If true, entire game will be reset, else just the current state will be reset.
+	 */
+	@:allow(flixel.system.frontEnds.VCRFrontEnd.startRecording)
+	private static inline function updateRecordingSeed(StandardMode:Bool = true):Int
+	{
+		return _recordingSeed = globalSeed = StandardMode ? globalSeed : _stateSeed;
+	}
+	
+	/**
+	 * Returns the seed to use for the requested recording.
+	 */
+	@:allow(flixel.FlxGame.step)
+	private static inline function getRecordingSeed():Int
+	{
+		return _recordingSeed;
+	}
+	#end
 }

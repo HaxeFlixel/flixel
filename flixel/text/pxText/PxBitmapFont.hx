@@ -684,6 +684,11 @@ class PxBitmapFont
 		if (cachedGraphics != value && value != null)
 		{
 			value.useCount++;
+			#if js
+			// temp fix for html5 target
+			// text will dissapear after state reser, if you delete this line
+			value.persist = true;
+			#end
 		}
 		cachedGraphics = value;
 	}

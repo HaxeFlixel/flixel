@@ -3,6 +3,7 @@ package flixel.ui;
 import flash.display.BitmapData;
 import flixel.FlxSprite;
 import flixel.ui.FlxButton;
+import helper.TestUtil;
 import massive.munit.Assert;
 
 class FlxButtonTest
@@ -51,5 +52,11 @@ class FlxButtonTest
 		Assert.isNotNull(button.animation.getByName(normalName));
 		Assert.isNotNull(button.animation.getByName(highlightName));
 		Assert.isNotNull(button.animation.getByName(pressedName));
+	}
+	
+	@Test
+	function testDestroy():Void
+	{
+		TestUtil.testDestroy(button);
 	}
 }

@@ -62,13 +62,14 @@ class FlxTilemapBuffer
 	/**
 	 * Instantiates a new camera-specific buffer for storing the visual tilemap data.
 	 * 
-	 * @param	TileWidth		The width of the tiles in this tilemap.
-	 * @param	TileHeight	The height of the tiles in this tilemap.
-	 * @param	WidthInTiles	How many tiles wide the tilemap is.
-	 * @param	HeightInTiles	How many tiles tall the tilemap is.
-	 * @param	Camera		Which camera this buffer relates to.
+	 * @param   TileWidth       The width of the tiles in this tilemap.
+	 * @param   TileHeight      The height of the tiles in this tilemap.
+	 * @param   WidthInTiles    How many tiles wide the tilemap is.
+	 * @param   HeightInTiles   How many tiles tall the tilemap is.
+	 * @param   Camera          Which camera this buffer relates to.
 	 */
-	public function new(TileWidth:Int, TileHeight:Int, WidthInTiles:Int, HeightInTiles:Int, Camera:FlxCamera = null, ScaleX:Float = 1.0, ScaleY:Float = 1.0)
+	public function new(TileWidth:Int, TileHeight:Int, WidthInTiles:Int, HeightInTiles:Int,
+		?Camera:FlxCamera,ScaleX:Float = 1.0, ScaleY:Float = 1.0)
 	{
 		updateColumns(TileWidth, WidthInTiles, ScaleX, Camera);
 		updateRows(TileHeight, HeightInTiles, ScaleY, Camera);
