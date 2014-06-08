@@ -400,7 +400,7 @@ class FlxBitmapTextField extends FlxSprite
 		}
 		
 		var preparedText:String = (_autoUpperCase) ? _text.toUpperCase() : _text;
-		var calcFieldWidth:Int = Std.int(width);
+		var calcFieldWidth:Int = 0; // Std.int(width);
 		var rows:Array<String> = [];
 		
 		#if FLX_RENDER_BLIT
@@ -577,7 +577,7 @@ class FlxBitmapTextField extends FlxSprite
 			}
 		}
 		
-		var finalWidth:Int = calcFieldWidth + _padding * 2 + (_outline ? 2 : 0);
+		var finalWidth:Int = (_fixedWidth) ? Std.int(width) : calcFieldWidth + _padding * 2 + (_outline ? 2 : 0);
 		
 		#if FLX_RENDER_BLIT
 		var finalHeight:Int = Std.int(_padding * 2 + Math.max(1, (rows.length * fontHeight + (_shadow ? 1 : 0)) + (_outline ? 2 : 0))) + ((rows.length >= 1) ? _lineSpacing * (rows.length - 1) : 0);
