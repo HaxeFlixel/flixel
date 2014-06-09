@@ -229,7 +229,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 					
 					if (curTile < 0)
 					{
-						// anything < 0 should be treated as 0 - allows compatibility with certain map formats
+						// anything < 0 should be treated as 0 for compatibility with certain map formats (ogmo)
 						curTile = 0;
 					}
 					

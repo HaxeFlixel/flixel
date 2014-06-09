@@ -47,7 +47,7 @@
  * separated rendering and logic, adding FlxBaseTilemap
  * added getTileIndexByCoords() and getTileCoordsByIndex()
  * fixed a bug in overlapsAt()
- * loadMap() now throws an error on tile indices with negative values in the map data
+ * loadMap() now treats tile indices with negative values in the map data as 0
  * fixed a crash when trying to create a single-column tilemap
 * Console: the set command now supports arrays
 * FlxTween: fixed a bug when tweening the same field with several tweens + startDelay
@@ -104,6 +104,9 @@
  * getAngle() -> FlxPoint#angleBetween()
 * Added GitSHA macro that includes the SHA of the current commit into FlxVersion for dev builds
 * Flixel sound assets are now being embedded via embed="true"
+* FlxBitmapTextField:
+ * fixed issue with width increasing when the text is updated
+ * fixed text disappearing after state switches on HTML5
 
 3.3.4
 ------------------------------
