@@ -43,6 +43,24 @@ class FlxPoint implements IFlxPooled
 		return point;
 	}
 	
+	/**
+	 * Helper function, just copies the values from the specified Flash point.
+	 * 
+	 * @param	Point	Any Point.
+	 * @return	A reference to itself.
+	 */
+	public static inline function fromFlash(FlashPoint:Point):FlxPoint
+	{
+		return get(FlashPoint.x, FlashPoint.y);
+	}
+	
+	public static inline function fromPolar(length:Float, angle:Float):FlxPoint
+	{
+		var point = get(length, length);
+		point.angle = angle;
+		return point;
+	}
+	
 	public var x(default, set):Float = 0;
 	public var y(default, set):Float = 0;
 	
@@ -178,19 +196,6 @@ class FlxPoint implements IFlxPooled
 		point.x = x;
 		point.y = y;
 		return point;
-	}
-	
-	/**
-	 * Helper function, just copies the values from the specified Flash point.
-	 * 
-	 * @param	Point	Any Point.
-	 * @return	A reference to itself.
-	 */
-	public inline function copyFromFlash(FlashPoint:Point):FlxPoint
-	{
-		x = FlashPoint.x;
-		y = FlashPoint.y;
-		return this;
 	}
 	
 	/**
