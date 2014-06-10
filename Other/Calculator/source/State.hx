@@ -1,5 +1,6 @@
 package;
 
+import flash.display.StageQuality;
 import flixel.addons.ui.FlxUIButton;
 import flixel.addons.ui.FlxUIInputText;
 import flixel.addons.ui.FlxUIText;
@@ -41,7 +42,7 @@ class State extends FlxState
 		super.create();
 		FlxG.cameras.bgColor = 0xff555555;
 		FlxG.scaleMode = new PixelPerfectScaleMode();
-		FlxG.stage.quality = BEST;
+		FlxG.stage.quality = StageQuality.BEST;
 		
 		// Labels
 		var labels:FlxText = new FlxText(10, 10, 0, "Input:\n\nString:\n\nInt:\n\nFloat:\n\nHex:\n\nBinary:");
