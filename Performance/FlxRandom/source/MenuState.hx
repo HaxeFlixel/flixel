@@ -51,7 +51,7 @@ class MenuState extends FlxState
 	
 	override public function create():Void
 	{
-		FlxG.camera.bgColor = FlxRandom.color( { max:32 } );
+		FlxG.camera.bgColor = FlxRandom.color(0, 32);
 		
 		var area = new FlxSprite(5, 5);
 		area.makeGraphic(FlxG.width - 200, FlxG.height - 10, 0x88000000);
@@ -307,7 +307,7 @@ class MenuState extends FlxState
 		
 		for (yPos in 0...480) {
 			for (xPos in 0...640) {
-				dummyBitmapdata.setPixel(xPos, yPos, FlxRandom.color({min:min, max:max}));
+				dummyBitmapdata.setPixel(xPos, yPos, FlxRandom.color(min, max));
 			}
 		}
 		
