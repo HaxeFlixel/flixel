@@ -51,7 +51,7 @@ class FlxSwipe
 	
 	private inline function get_distance():Float
 	{
-		return FlxMath.vectorLength(startPosition.x - endPosition.x, startPosition.y - endPosition.y);
+		return startPosition.distanceTo(endPosition);
 	}
 	
 	private inline function get_angle():Float

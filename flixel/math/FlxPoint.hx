@@ -46,6 +46,9 @@ class FlxPoint implements IFlxPooled
 	public var x(default, set):Float = 0;
 	public var y(default, set):Float = 0;
 	
+	public var length(get, set):Float;
+	public var angle(get, set):Float;
+	
 	private var _weak:Bool = false;
 	private var _inPool:Bool = false;
 	
@@ -204,28 +207,13 @@ class FlxPoint implements IFlxPooled
 	}
 	
 	/**
-	 * Returns true if this point is within the given rectangular block
+	 * Returns true if the given x/y coordinate is within the given rectangular block
 	 * 
-	 * @param	RectX		The X value of the region to test within
-	 * @param	RectY		The Y value of the region to test within
-	 * @param	RectWidth	The width of the region to test within
-	 * @param	RectHeight	The height of the region to test within
-	 * @return	True if the point is within the region, otherwise false
+	 * @param	rect	The FlxRect to test within
 	 */
-	public inline function inCoords(RectX:Float, RectY:Float, RectWidth:Float, RectHeight:Float):Bool
+	public function inRect(rect:FlxRect):Bool
 	{
-		return FlxMath.pointInCoordinates(x, y, RectX, RectY, RectWidth, RectHeight);
-	}
-	
-	/**
-	 * Returns true if this point is within the given rectangular block
-	 * 
-	 * @param	Rect	The FlxRect to test within
-	 * @return	True if pointX/pointY is within the FlxRect, otherwise false
-	 */
-	public inline function inFlxRect(Rect:FlxRect):Bool
-	{
-		return FlxMath.pointInFlxRect(x, y, Rect);
+		return x >= rect.x && x <= rect.right && y >= rect.y && y <= rect.bottom;
 	}
 	
 	/**
@@ -236,7 +224,10 @@ class FlxPoint implements IFlxPooled
 	 */
 	public inline function distanceTo(AnotherPoint:FlxPoint):Float
 	{
-		return FlxMath.getDistance(this, AnotherPoint);
+		AnotherPoint.putWeak();
+		var delta = FlxPoint.get(x - AnotherPoint.x, y - AnotherPoint.y);
+		delta.put();
+		return delta.length;
 	}
 	
 	/**
@@ -387,6 +378,14 @@ class FlxPoint implements IFlxPooled
 	}
 	
 	/**
+	 * Check if this vector has zero length.
+	 */
+	public inline function isZero():Bool
+	{
+		return Math.abs(x) < FlxMath.EPSILON && Math.abs(y) < FlxMath.EPSILON;
+	}
+	
+	/**
 	 * Necessary for IFlxDestroyable.
 	 */
 	public function destroy() {}
@@ -415,6 +414,38 @@ class FlxPoint implements IFlxPooled
 	private function set_y(Value:Float):Float
 	{
 		return y = Value; 
+	}
+	
+	private inline function get_length():Float
+	{
+		return Math.sqrt(x * x + y * y);
+	}
+	
+	private inline function set_length(l:Float):Float
+	{
+		if (!isZero())
+		{
+			var a:Float = angle * FlxAngle.TO_RAD;
+			x = l * Math.cos(a);
+			y = l * Math.sin(a);
+		}
+		return l;
+	}
+	
+	private inline function get_angle():Float
+	{
+		if (isZero()) return 0;
+		
+		return Math.atan2(y, x) * FlxAngle.TO_DEG;
+	}
+	
+	private inline function set_angle(degs:Float):Float
+	{
+		var len:Float = length;
+		
+		x = len * Math.cos(degs * FlxAngle.TO_RAD);
+		y = len * Math.sin(degs * FlxAngle.TO_RAD);
+		return degs;
 	}
 }
 

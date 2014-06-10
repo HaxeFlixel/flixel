@@ -27,7 +27,11 @@ class FlxVelocity
 		
 		if (MaxTime > 0)
 		{
-			var d:Int = FlxMath.distanceBetween(Source, Dest);
+			var p1 = Source.toPoint();
+			var p2 = Dest.toPoint();
+			var d:Float = p1.distanceTo(p2);
+			p1.put();
+			p2.put();
 			
 			//	We know how many pixels we need to move, but how fast?
 			Speed = Std.int(d / (MaxTime / 1000));
@@ -62,115 +66,6 @@ class FlxVelocity
 		Source.maxVelocity.y = MaxYSpeed;
 	}
 	
-	#if !FLX_NO_MOUSE
-	/**
-	 * Move the given FlxSprite towards the mouse pointer coordinates at a steady velocity
-	 * If you specify a maxTime then it will adjust the speed (over-writing what you set) so it arrives at the destination in that number of seconds.
-	 * Timings are approximate due to the way Flash timers work, and irrespective of SWF frame rate. Allow for a variance of +- 50ms.
-	 * The source object doesn't stop moving automatically should it ever reach the destination coordinates.
-	 * 
-	 * @param	Source		The FlxSprite to move
-	 * @param	Speed		The speed it will move, in pixels per second (default is 60 pixels/sec)
-	 * @param	MaxTime		Time given in milliseconds (1000 = 1 sec). If set the speed is adjusted so the source will arrive at destination in the given number of ms
-	 */
-	public static function moveTowardsMouse(Source:FlxSprite, Speed:Float = 60, MaxTime:Int = 0):Void
-	{
-		var a:Float = FlxAngle.angleBetweenMouse(Source);
-		
-		if (MaxTime > 0)
-		{
-			var d:Int = FlxMath.distanceToMouse(Source);
-			
-			//	We know how many pixels we need to move, but how fast?
-			Speed = Std.int(d / (MaxTime / 1000));
-		}
-		
-		Source.velocity.x = Math.cos(a) * Speed;
-		Source.velocity.y = Math.sin(a) * Speed;
-	}
-	#end
-	
-	#if !FLX_NO_TOUCH
-	/**
-	 * Move the given FlxSprite towards a FlxTouch point at a steady velocity
-	 * If you specify a maxTime then it will adjust the speed (over-writing what you set) so it arrives at the destination in that number of seconds.
-	 * Timings are approximate due to the way Flash timers work, and irrespective of SWF frame rate. Allow for a variance of +- 50ms.
-	 * The source object doesn't stop moving automatically should it ever reach the destination coordinates.
-	 * 
-	 * @param	source			The FlxSprite to move
-	 * @param	speed				The speed it will move, in pixels per second (default is 60 pixels/sec)
-	 * @param	maxTime		Time given in milliseconds (1000 = 1 sec). If set the speed is adjusted so the source will arrive at destination in the given number of ms
-	 */
-	public static function moveTowardsTouch(Source:FlxSprite, Touch:FlxTouch, Speed:Float = 60, MaxTime:Int = 0):Void
-	{
-		var a:Float = FlxAngle.angleBetweenTouch(Source, Touch);
-		
-		if (MaxTime > 0)
-		{
-			var d:Int = FlxMath.distanceToTouch(Source, Touch);
-			
-			//	We know how many pixels we need to move, but how fast?
-			Speed = Std.int(d / (MaxTime / 1000));
-		}
-		
-		Source.velocity.x = Math.cos(a) * Speed;
-		Source.velocity.y = Math.sin(a) * Speed;
-	}
-	#end
-	
-	#if !FLX_NO_MOUSE
-	/**
-	 * Sets the x/y acceleration on the source FlxSprite so it will move towards the mouse coordinates at the speed given (in pixels per second)
-	 * You must give a maximum speed value, beyond which the FlxSprite won't go any faster.
-	 * If you don't need acceleration look at moveTowardsMouse() instead.
-	 * 
-	 * @param	Source			The FlxSprite on which the acceleration will be set
-	 * @param	Speed			The speed it will accelerate in pixels per second
-	 * @param	MaxXSpeed		The maximum speed in pixels per second in which the sprite can move horizontally
-	 * @param	MaxYSpeed		The maximum speed in pixels per second in which the sprite can move vertically
-	 */
-	public static function accelerateTowardsMouse(Source:FlxSprite, Acceleration:Float, MaxXSpeed:Float, MaxYSpeed:Float):Void
-	{
-		var a:Float = FlxAngle.angleBetweenMouse(Source);
-		
-		Source.velocity.x = 0;
-		Source.velocity.y = 0;
-		
-		Source.acceleration.x = Math.cos(a) * Acceleration;
-		Source.acceleration.y = Math.sin(a) * Acceleration;
-		
-		Source.maxVelocity.x = MaxXSpeed;
-		Source.maxVelocity.y = MaxYSpeed;
-	}
-	#end
-	
-	#if !FLX_NO_TOUCH
-	/**
-	 * Sets the x/y acceleration on the source FlxSprite so it will move towards a FlxTouch at the speed given (in pixels per second)
-	 * You must give a maximum speed value, beyond which the FlxSprite won't go any faster.
-	 * If you don't need acceleration look at moveTowardsMouse() instead.
-	 * 
-	 * @param	Source			The FlxSprite on which the acceleration will be set
-	 * @param	Touch			The FlxTouch on which to accelerate towards
-	 * @param	Speed			The speed it will accelerate in pixels per second
-	 * @param	MaxXSpeed		The maximum speed in pixels per second in which the sprite can move horizontally
-	 * @param	MaxYSpeed		The maximum speed in pixels per second in which the sprite can move vertically
-	 */
-	public static function accelerateTowardsTouch(Source:FlxSprite, Touch:FlxTouch, Acceleration:Float, MaxXSpeed:Float, MaxYSpeed:Float):Void
-	{
-		var a:Float = FlxAngle.angleBetweenTouch(Source, Touch);
-		
-		Source.velocity.x = 0;
-		Source.velocity.y = 0;
-		
-		Source.acceleration.x = Math.cos(a) * Acceleration;
-		Source.acceleration.y = Math.sin(a) * Acceleration;
-		
-		Source.maxVelocity.x = MaxXSpeed;
-		Source.maxVelocity.y = MaxYSpeed;
-	}
-	#end
-	
 	/**
 	 * Sets the x/y velocity on the source FlxSprite so it will move towards the target coordinates at the speed given (in pixels per second)
 	 * If you specify a maxTime then it will adjust the speed (over-writing what you set) so it arrives at the destination in that number of seconds.
@@ -188,7 +83,9 @@ class FlxVelocity
 		
 		if (MaxTime > 0)
 		{
-			var d:Int = FlxMath.distanceToPoint(Source, Target);
+			var p1 = Source.toPoint();
+			var d:Float = p1.distanceTo(Target);
+			p1.put();
 			
 			//	We know how many pixels we need to move, but how fast?
 			Speed = Std.int(d / (MaxTime / 1000));

@@ -40,6 +40,9 @@ class FlxMath
 	 */
 	public static inline var SQUARE_ROOT_OF_TWO:Float = 1.41421356237;
 	
+	public static inline var EPSILON:Float = 0.0000001;
+	public static inline var EPSILON_SQUARED:Float = EPSILON * EPSILON;
+	
 	/**
 	 * Round a decimal number to have reduced precision (less decimal numbers).
 	 * Ex: roundDecimal(1.2485, 2) -> 1.25
@@ -157,91 +160,6 @@ class FlxMath
 	}
 	
 	/**
-	 * Returns true if the given x/y coordinate is within the given rectangular block
-	 * 
-	 * @param	pointX		The X value to test
-	 * @param	pointY		The Y value to test
-	 * @param	rectX		The X value of the region to test within
-	 * @param	rectY		The Y value of the region to test within
-	 * @param	rectWidth	The width of the region to test within
-	 * @param	rectHeight	The height of the region to test within
-	 * 
-	 * @return	true if pointX/pointY is within the region, otherwise false
-	 */
-	public static function pointInCoordinates(pointX:Float, pointY:Float, rectX:Float, rectY:Float, rectWidth:Float, rectHeight:Float):Bool
-	{
-		if (pointX >= rectX && pointX <= (rectX + rectWidth))
-		{
-			if (pointY >= rectY && pointY <= (rectY + rectHeight))
-			{
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	/**
-	 * Returns true if the given x/y coordinate is within the given rectangular block
-	 * 
-	 * @param	pointX		The X value to test
-	 * @param	pointY		The Y value to test
-	 * @param	rect		The FlxRect to test within
-	 * @return	true if pointX/pointY is within the FlxRect, otherwise false
-	 */
-	public static function pointInFlxRect(pointX:Float, pointY:Float, rect:FlxRect):Bool
-	{
-		if (pointX >= rect.x && pointX <= rect.right && pointY >= rect.y && pointY <= rect.bottom)
-		{
-			return true;
-		}
-		return false;
-	}
-	
-	#if !FLX_NO_MOUSE
-	/**
-	 * Returns true if the mouse world x/y coordinate are within the given rectangular block
-	 * 
-	 * @param	useWorldCoords	If true the world x/y coordinates of the mouse will be used, otherwise screen x/y
-	 * @param	rect			The FlxRect to test within. If this is null for any reason this function always returns true.
-	 * 
-	 * @return	true if mouse is within the FlxRect, otherwise false
-	 */
-	public static function mouseInFlxRect(useWorldCoords:Bool, rect:FlxRect):Bool
-	{
-		if (rect == null)
-		{
-			return true;
-		}
-		
-		if (useWorldCoords)
-		{
-			return pointInFlxRect(Math.floor(FlxG.mouse.x), Math.floor(FlxG.mouse.y), rect);
-		}
-		else
-		{
-			return pointInFlxRect(FlxG.mouse.screenX, FlxG.mouse.screenY, rect);
-		}
-	}
-	#end
-	
-	/**
-	 * Returns true if the given x/y coordinate is within the Rectangle
-	 * 
-	 * @param	pointX		The X value to test
-	 * @param	pointY		The Y value to test
-	 * @param	rect		The Rectangle to test within
-	 * @return	true if pointX/pointY is within the Rectangle, otherwise false
-	 */
-	public static function pointInRectangle(pointX:Float, pointY:Float, rect:Rectangle):Bool
-	{
-		if (pointX >= rect.x && pointX <= rect.right && pointY >= rect.y && pointY <= rect.bottom)
-		{
-			return true;
-		}
-		return false;
-	}
-	
-	/**
 	 * Adds the given amount to the value, but never lets the value
 	 * go over the specified maximum or under the specified minimum.
 	 * 
@@ -293,196 +211,6 @@ class FlxMath
 	}
 	
 	/**
-	 * Finds the dot product value of two vectors
-	 * 
-	 * @param	ax		Vector X
-	 * @param	ay		Vector Y
-	 * @param	bx		Vector X
-	 * @param	by		Vector Y
-	 * 
-	 * @return	Result of the dot product
-	 */
-	public static inline function dotProduct(ax:Float, ay:Float, bx:Float, by:Float):Float
-	{
-		return ax * bx + ay * by;
-	}
-	
-	/**
-	 * Finds the length of the given vector
-	 * 
-	 * @param	dx
-	 * @param	dy
-	 * 
-	 * @return The length
-	 */
-	public static inline function vectorLength(dx:Float, dy:Float):Float
-	{
-		return Math.sqrt(dx * dx + dy * dy);
-	}
-	
-	/**
-	 * Calculate the distance between two points.
-	 * 
-	 * @param 	Point1		A FlxPoint object referring to the first location.
-	 * @param 	Point2		A FlxPoint object referring to the second location.
-	 * @return	The distance between the two points as a floating point Number object.
-	 */
-	public static inline function getDistance(Point1:FlxPoint, Point2:FlxPoint):Float
-	{
-		var dx:Float = Point1.x - Point2.x;
-		var dy:Float = Point1.y - Point2.y;
-		Point1.putWeak();
-		Point2.putWeak();
-		return vectorLength(dx, dy);
-	}
-	
-	/**
-	 * Find the distance (in pixels, rounded) between two FlxSprites, taking their origin into account
-	 * 
-	 * @param	SpriteA		The first FlxSprite
-	 * @param	SpriteB		The second FlxSprite
-	 * @return	Distance between the sprites in pixels
-	 */
-	public static inline function distanceBetween(SpriteA:FlxSprite, SpriteB:FlxSprite):Int
-	{
-		var dx:Float = (SpriteA.x + SpriteA.origin.x) - (SpriteB.x + SpriteB.origin.x);
-		var dy:Float = (SpriteA.y + SpriteA.origin.y) - (SpriteB.y + SpriteB.origin.y);
-		return Std.int(FlxMath.vectorLength(dx, dy));
-	}
-	
-	/**
-	 * Check if the distance between two FlxSprites is within a specified number. 
-	 * A faster algoritm than distanceBetween because the Math.sqrt() is avoided.
-	 *
-	 * @param	SpriteA		The first FlxSprite
-	 * @param	SpriteB		The second FlxSprite
-	 * @param	Distance	The distance to check
-	 * @param	IncludeEqual	If set to true, the function will return true if the calcualted distance is equal to the given Distance
-	 * @return	True if the distance between the sprites is less than the given Distance 
-	 */
-	public static inline function isDistanceWithin(SpriteA:FlxSprite, SpriteB:FlxSprite, Distance:Float, IncludeEqual:Bool = false):Bool
-	{
-		var dx:Float = (SpriteA.x + SpriteA.origin.x) - (SpriteB.x + SpriteB.origin.x);
-		var dy:Float = (SpriteA.y + SpriteA.origin.y) - (SpriteB.y + SpriteB.origin.y);
-		
-		if (IncludeEqual)
-			return dx * dx + dy * dy <= Distance * Distance;
-		else
-			return dx * dx + dy * dy < Distance * Distance;
-	}
-	
-	/**
-	 * Find the distance (in pixels, rounded) from an FlxSprite
-	 * to the given FlxPoint, taking the source origin into account.
-	 * 
-	 * @param	Sprite	The FlxSprite
-	 * @param	Target	The FlxPoint
-	 * @return	Distance in pixels
-	 */
-	public static inline function distanceToPoint(Sprite:FlxSprite, Target:FlxPoint):Int
-	{
-		var dx:Float = (Sprite.x + Sprite.origin.x) - (Target.x);
-		var dy:Float = (Sprite.y + Sprite.origin.y) - (Target.y);
-		Target.putWeak();
-		return Std.int(FlxMath.vectorLength(dx, dy));
-	}
-	
-	/**
-	 * Check if the distance from an FlxSprite to the given
-	 * FlxPoint is within a specified number. 
-	 * A faster algoritm than distanceToPoint because the Math.sqrt() is avoided.
-	 * 
-	 * @param	Sprite	The FlxSprite
-	 * @param	Target	The FlxPoint
-	 * @param	Distance	The distance to check
-	 * @param	IncludeEqual	If set to true, the function will return true if the calcualted distance is equal to the given Distance
-	 * @return	True if the distance between the sprites is less than the given Distance 
-	 */
-	public static inline function isDistanceToPointWithin(Sprite:FlxSprite, Target:FlxPoint, Distance:Float, IncludeEqual:Bool = false):Bool
-	{
-		var dx:Float = (Sprite.x + Sprite.origin.x) - (Target.x);
-		var dy:Float = (Sprite.y + Sprite.origin.y) - (Target.y);
-		
-		Target.putWeak();
-		
-		if (IncludeEqual)
-			return dx * dx + dy * dy <= Distance * Distance;
-		else
-			return dx * dx + dy * dy < Distance * Distance;
-	}
-	
-	#if !FLX_NO_MOUSE
-	/**
-	 * Find the distance (in pixels, rounded) from the object x/y and the mouse x/y
-	 * 
-	 * @param	Sprite	The FlxSprite to test against
-	 * @return	The distance between the given sprite and the mouse coordinates
-	 */
-	public static inline function distanceToMouse(Sprite:FlxSprite):Int
-	{
-		var dx:Float = (Sprite.x + Sprite.origin.x) - FlxG.mouse.screenX;
-		var dy:Float = (Sprite.y + Sprite.origin.y) - FlxG.mouse.screenY;
-		return Std.int(FlxMath.vectorLength(dx, dy));
-	}
-	
-	/**
-	 * Check if the distance from the object x/y and the mouse x/y is within a specified number. 
-	 * A faster algoritm than distanceToMouse because the Math.sqrt() is avoided.
-	 *
-	 * @param	Sprite		The FlxSprite to test against
-	 * @param	Distance	The distance to check
-	 * @param	IncludeEqual	If set to true, the function will return true if the calcualted distance is equal to the given Distance
-	 * @return	True if the distance between the sprites is less than the given Distance 
-	 */
-	public static inline function isDistanceToMouseWithin(Sprite:FlxSprite, Distance:Float, IncludeEqual:Bool = false):Bool
-	{
-		var dx:Float = (Sprite.x + Sprite.origin.x) - FlxG.mouse.screenX;
-		var dy:Float = (Sprite.y + Sprite.origin.y) - FlxG.mouse.screenY;
-		
-		if (IncludeEqual)
-			return dx * dx + dy * dy <= Distance * Distance;
-		else
-			return dx * dx + dy * dy < Distance * Distance;
-	}
-	#end
-	
-	#if !FLX_NO_TOUCH
-	/**
-	 * Find the distance (in pixels, rounded) from the object x/y and the FlxPoint screen x/y
-	 * 
-	 * @param	Sprite	The FlxSprite to test against
-	 * @param	Touch	The FlxTouch to test against
-	 * @return	The distance between the given sprite and the mouse coordinates
-	 */
-	public static inline function distanceToTouch(Sprite:FlxSprite, Touch:FlxTouch):Int
-	{
-		var dx:Float = (Sprite.x + Sprite.origin.x) - Touch.screenX;
-		var dy:Float = (Sprite.y + Sprite.origin.y) - Touch.screenY;
-		return Std.int(FlxMath.vectorLength(dx, dy));
-	}
-	
-	/**
-	 * Check if the distance from the object x/y and the FlxPoint screen x/y is within a specified number. 
-	 * A faster algoritm than distanceToTouch because the Math.sqrt() is avoided.
-	 *
-	 * @param	Sprite	The FlxSprite to test against
-	 * @param	Distance	The distance to check
-	 * @param	IncludeEqual	If set to true, the function will return true if the calcualted distance is equal to the given Distance
-	 * @return	True if the distance between the sprites is less than the given Distance 
-	 */
-	public static inline function isDistanceToTouchWithin(Sprite:FlxSprite, Touch:FlxTouch, Distance:Float, IncludeEqual:Bool = false):Bool
-	{
-		var dx:Float = (Sprite.x + Sprite.origin.x) - Touch.screenX;
-		var dy:Float = (Sprite.y + Sprite.origin.y) - Touch.screenY;
-		
-		if (IncludeEqual)
-			return dx * dx + dy * dy <= Distance * Distance;
-		else
-			return dx * dx + dy * dy < Distance * Distance;
-	}
-	#end
-	
-	/**
 	 * Returns the amount of decimals a Float has
 	 * 
 	 * @param	Number	The floating point number
@@ -501,7 +229,7 @@ class FlxMath
 		return decimals;
 	}
 	
-	public static inline function equal(aValueA:Float, aValueB:Float, aDiff:Float = 0.00001):Bool
+	public static inline function equal(aValueA:Float, aValueB:Float, aDiff:Float = EPSILON):Bool
 	{
 		return (Math.abs(aValueA - aValueB) <= aDiff);
 	}

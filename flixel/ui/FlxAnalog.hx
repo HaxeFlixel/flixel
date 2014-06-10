@@ -295,7 +295,7 @@ class FlxAnalog extends FlxSpriteGroup
 		}
 		#end
 		
-		if (_zone.containsFlxPoint(TouchPoint) || (status == PRESSED))
+		if (TouchPoint.inRect(_zone) || (status == PRESSED))
 		{
 			offAll = false;
 			

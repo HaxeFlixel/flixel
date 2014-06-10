@@ -194,17 +194,6 @@ class FlxRect implements IFlxPooled
 	}
 	
 	/**
-	 * Returns true if this FlxRect contains the FlxPoint
-	 * 
-	 * @param	Point	The FlxPoint to check
-	 * @return	True if the FlxPoint is within this FlxRect, otherwise false
-	 */
-	public inline function containsFlxPoint(Point:FlxPoint):Bool
-	{
-		return FlxMath.pointInFlxRect(Point.x, Point.y, this);
-	}
-	
-	/**
 	 * Add another rectangle to this one by filling in the 
 	 * horizontal and vertical space between the two rectangles.
 	 * 
