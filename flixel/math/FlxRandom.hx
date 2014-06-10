@@ -277,59 +277,23 @@ class FlxRandom
 	/**
 	 * Returns a random color value in hex ARGB format.
 	 * 
-	 * @param	Options		An object containing key/value pairs of the following optional parameters:
-	 * 						min       A minimum integer value for red, green, and blue channels. Will be 0 if unused.
-	 * 						max       A maximum integer value for red, green, and blue channels. Will be 255 if unused.
-	 * 						alpha     A single integer value for the generated color's alpha. Will be 255 if unused.
-	 * 						greyscale A boolean value; if true, generated color will be a shade of grey. Will be false if unused.
-	 * 						alphamin  A minimum integer value for just the alpha channel. Overrides alpha if used.
-	 * 						alphamax  A maximum integer value for just the alpha channel. Overrides alpha if used.
-	 * 						redmin    A minimum integer value for just the red channel. Overrides min if used.
-	 * 						redmax    A maximum integer value for just the red channel. Overrides max if used.
-	 * 						greenmin  A minimum integer value for just the green channel. Overrides min if used.
-	 * 						greenmax  A maximum integer value for just the green channel. Overrides max if used.
-	 * 						bluemin   A minimum integer value for just the blue channel. Overrides min if used.
-	 * 						bluemax   A maximum integer value for just the blue channel. Overrides max if used.
-	 * @return  A color value in FlxColor format.
+	 * @param   Min         The lowest value to use for each channel.
+	 * @param   Max         The highest value to use for each channel.
+	 * @param   Alpha       The alpha value of the returning color (default 255 = fully opaque).
+	 * @param   GreyScale   Whether or not to create a color that is strictly a shade of grey. False by default.
+	 * @return  A color value in hex ARGB format.
 	 */
-	public static function color(?Options:ColorOptions):FlxColor
+	public static function color(Min:Int = 0, Max:Int = 255, Alpha:Int = 255, GreyScale:Bool = false):FlxColor
 	{
-		if (Options == null)
-		{
-			Options = { min: 0, max: 255, alpha: 255 };
-		}
+		Min = Std.int(FlxMath.bound(Min, 0, 255));
+		Max = Std.int(FlxMath.bound(Max, 0, 255));
+		Alpha = Std.int(FlxMath.bound(Alpha, 0, 255));
 		
-		if (Options.min == null)
-		{
-			Options.min = 0;
-		}
+		var red = int(Min, Max);
+		var green = GreyScale ? red : int(Min, Max);
+		var blue = GreyScale ? red : int(Min, Max);
 		
-		if (Options.max == null)
-		{
-			Options.max = 255;
-		}
-		
-		if (Options.alpha == null)
-		{
-			Options.alpha = 255;
-		}
-		
-		var alphamin:Int = Options.alphamin != null ? Options.alphamin : Options.alpha;
-		var alphamax:Int = Options.alphamax != null ? Options.alphamax : Options.alpha;
-		var redmin:Int = Options.redmin != null ? Options.redmin : Options.min;
-		var redmax:Int = Options.redmax != null ? Options.redmax : Options.max;
-		var greenmin:Int = Options.greenmin != null ? Options.greenmin : Options.min;
-		var greenmax:Int = Options.greenmax != null ? Options.greenmax : Options.max;
-		var bluemin:Int = Options.bluemin != null ? Options.bluemin : Options.min;
-		var bluemax:Int = Options.bluemax != null ? Options.bluemax : Options.max;
-		var greyscale:Bool = Options.greyscale != null ? Options.greyscale : false;
-		
-		var alpha:Int = int(alphamin, alphamax);
-		var red:Int = greyscale ? int(Options.min, Options.max) : int(redmin, redmax);
-		var blue:Int = greyscale ? red : int(bluemin, bluemax);
-		var green:Int = greyscale ? red : int(greenmin, greenmax);
-		
-		return FlxColor.fromRGB(red, green, blue, alpha);
+		return FlxColor.fromRGB(red, green, blue, Alpha);
 	}
 	
 	/**
@@ -443,19 +407,4 @@ class FlxRandom
 		return _recordingSeed;
 	}
 	#end
-}
-
-typedef ColorOptions = {
-	?min:Int,
-	?max:Int,
-	?alpha:Int,
-	?greyscale:Bool,
-	?alphamin:Int,
-	?alphamax:Int,
-	?redmin:Int,
-	?redmax:Int,
-	?greenmin:Int,
-	?greenmax:Int,
-	?bluemin:Int,
-	?bluemax:Int,
 }
