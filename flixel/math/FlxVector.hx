@@ -218,35 +218,6 @@ class FlxVector extends FlxPoint
 	}
 	
 	/**
-	 * Rotate the vector for a given angle.
-	 * 
-	 * @param	rads	angle to rotate
-	 * @return	rotated vector
-	 */
-	public inline function rotateByRadians(rads:Float):FlxVector
-	{
-		var s:Float = Math.sin(rads);
-		var c:Float = Math.cos(rads);
-		var tempX:Float = x;
-		
-		x = tempX * c - y * s;
-		y = tempX * s + y * c;
-		
-		return this;
-	}
-	
-	/**
-	 * Rotate the vector for a given angle.
-	 * 
-	 * @param	rads	angle to rotate
-	 * @return	rotated vector
-	 */
-	public inline function rotateByDegrees(degs:Float):FlxVector
-	{
-		return rotateByRadians(degs * FlxAngle.TO_RAD);
-	}
-	
-	/**
 	 * Rotate the vector vector with the values of sine and cosine of the angle of rotation.
 	 * 
 	 * @param	sin	the value of sine of the angle of rotation
