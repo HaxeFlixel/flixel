@@ -113,7 +113,7 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 			// Tinting
 			if (useColoring)
 			{
-				FlxColor.interpolate(startColor, endColor, lifespanRatio);
+				color = FlxColor.interpolate(startColor, endColor, lifespanRatio);
 			}
 			
 			// Simpler bounce/spin behavior for now
