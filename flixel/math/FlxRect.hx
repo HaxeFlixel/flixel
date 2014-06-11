@@ -11,7 +11,7 @@ import flixel.util.FlxStringUtil;
  */
 class FlxRect implements IFlxPooled
 {
-	private static var _pool = new FlxPool<FlxRect>(FlxRect);
+	private static var pool = new FlxPool<FlxRect>(FlxRect);
 	
 	/**
 	 * Recycle or create new FlxRect.
@@ -19,8 +19,8 @@ class FlxRect implements IFlxPooled
 	 */
 	public static inline function get(X:Float = 0, Y:Float = 0, Width:Float = 0, Height:Float = 0):FlxRect
 	{
-		var rect = _pool.get().set(X, Y, Width, Height);
-		rect._inPool = false;
+		var rect = pool.get().set(X, Y, Width, Height);
+		rect.inPool = false;
 		return rect;
 	}
 	
@@ -30,8 +30,8 @@ class FlxRect implements IFlxPooled
 	 */
 	public static inline function weak(X:Float = 0, Y:Float = 0, Width:Float = 0, Height:Float = 0):FlxRect
 	{
-		var rect = _pool.get().set(X, Y, Width, Height);
-		rect._weak = true;
+		var rect = pool.get().set(X, Y, Width, Height);
+		rect.isWeak = true;
 		return rect;
 	}
 	
@@ -60,8 +60,8 @@ class FlxRect implements IFlxPooled
 	 */
 	public var bottom(get, set):Float;
 	
-	private var _weak:Bool = false;
-	private var _inPool:Bool = false;
+	private var isWeak:Bool = false;
+	private var inPool:Bool = false;
 	
 	public function new(X:Float = 0, Y:Float = 0, Width:Float = 0, Height:Float = 0)
 	{
@@ -73,10 +73,10 @@ class FlxRect implements IFlxPooled
 	 */
 	public inline function put():Void
 	{
-		if (!_inPool)
+		if (!inPool)
 		{
-			_inPool = true;
-			_pool.putUnsafe(this);
+			inPool = true;
+			pool.putUnsafe(this);
 		}
 	}
 	
@@ -85,9 +85,9 @@ class FlxRect implements IFlxPooled
 	 */
 	public inline function putWeak():Void
 	{
-		if (_weak)
+		if (isWeak)
 		{
-			_pool.put(this);
+			pool.put(this);
 		}
 	}
 	

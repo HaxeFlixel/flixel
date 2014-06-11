@@ -51,12 +51,12 @@ class FlxSwipe
 	
 	private inline function get_distance():Float
 	{
-		return startPosition.distanceTo(endPosition);
+		return startPosition.getDistance(endPosition);
 	}
 	
 	private inline function get_angle():Float
 	{
-		return startPosition.angleBetween(endPosition); 
+		return startPosition.getAngle(endPosition); 
 	}
 	
 	private inline function get_duration():Float

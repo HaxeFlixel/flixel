@@ -304,7 +304,7 @@ class FlxPath implements IFlxDestroyable
 				object.velocity.x = (_point.x < node.x) ? speed : -speed;
 				object.velocity.y = (_point.y < node.y) ? speed : -speed;
 				
-				angle = _point.angleBetween(node);
+				angle = _point.getAngle(node);
 				
 				object.velocity.set(0, -speed);
 				object.velocity.rotate(FlxPoint.weak(0, 0), angle);

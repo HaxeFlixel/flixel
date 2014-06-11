@@ -6,7 +6,7 @@ import flixel.util.FlxPool;
  */
 class FlxVector extends FlxPoint
 {
-	private static var _pool = new FlxPool<FlxVector>(FlxVector);
+	private static var pool = new FlxPool<FlxVector>(FlxVector);
 	
 	private static var _vector1:FlxVector = new FlxVector();
 	private static var _vector2:FlxVector = new FlxVector();
@@ -15,14 +15,11 @@ class FlxVector extends FlxPoint
 	/**
 	 * Recycle or create new FlxVector.
 	 * Be sure to put() them back into the pool after you're done with them!
-	 * 
-	 * @param	X		The X-coordinate of the point in space.
-	 * @param	Y		The Y-coordinate of the point in space.
 	 */
 	public static inline function get(X:Float = 0, Y:Float = 0):FlxVector
 	{
-		var vector = _pool.get().set(X, Y);
-		vector._inPool = false;
+		var vector = pool.get().set(X, Y);
+		vector.inPool = false;
 		return vector;
 	}
 	
@@ -31,10 +28,10 @@ class FlxVector extends FlxPoint
 	 */
 	override public function put():Void
 	{
-		if (!_inPool)
+		if (!inPool)
 		{
-			_inPool = true;
-			_pool.putUnsafe(this);
+			inPool = true;
+			pool.putUnsafe(this);
 		}
 	}
 	

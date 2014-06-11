@@ -22,11 +22,11 @@ class FlxVelocity
 	public static function moveTowardsPoint(Source:FlxSprite, Target:FlxPoint, Speed:Float = 60, MaxTime:Int = 0):Void
 	{
 		var sourcePoint = Source.toPoint();
-		var angle:Float = sourcePoint.angleBetween(Target) - 90;
+		var angle:Float = sourcePoint.getAngle(Target) - 90;
 		
 		if (MaxTime > 0)
 		{
-			var distance:Float = sourcePoint.distanceTo(Target);
+			var distance:Float = sourcePoint.getDistance(Target);
 			
 			//	We know how many pixels we need to move, but how fast?
 			Speed = Std.int(distance / (MaxTime / 1000));
@@ -53,7 +53,7 @@ class FlxVelocity
 	public static function accelerateTowardsPoint(Source:FlxSprite, Target:FlxPoint, Acceleration:Float, MaxXSpeed:Float, MaxYSpeed:Float):Void
 	{
 		var sourcePoint = Source.toPoint();
-		var angle:Float = sourcePoint.angleBetween(Target) - 90;
+		var angle:Float = sourcePoint.getAngle(Target) - 90;
 		
 		Source.velocity.set();
 		
