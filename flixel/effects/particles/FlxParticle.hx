@@ -3,6 +3,7 @@ package flixel.effects.particles;
 import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.util.FlxColor;
 
 /**
  * This is a simple particle class that extends the default behavior
@@ -62,29 +63,13 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 	 */
 	public var rangeScale:Float;
 	/**
-	 * Start value for particle's red color component
+	 * Start value for particle's color
 	 */
-	public var startRed:Float;
+	public var startColor:FlxColor;
 	/**
-	 * Start value for particle's green color component
+	 * End value for particle's color
 	 */
-	public var startGreen:Float;
-	/**
-	 * Start value for particle's blue color component
-	 */
-	public var startBlue:Float;
-	/**
-	 * Range of red color component change during particle's life
-	 */
-	public var rangeRed:Float;
-	/**
-	 * Range of green color component change during particle's life
-	 */
-	public var rangeGreen:Float;
-	/**
-	 * Range of blue color component change during particle's life
-	 */
-	public var rangeBlue:Float;
+	public var endColor:FlxColor;
 	
 	/**
 	 * Instantiate a new particle. Like FlxSprite, all meaningful creation
@@ -128,11 +113,7 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 			// Tinting
 			if (useColoring)
 			{
-				var redComp:Float = startRed + lifespanRatio * rangeRed;
-				var greenComp:Float = startGreen + lifespanRatio * rangeGreen;
-				var blueComp:Float = startBlue + lifespanRatio * rangeBlue;
-				
-				color = Std.int(255 * redComp) << 16 | Std.int(255 * greenComp) << 8 | Std.int(255 * blueComp);
+				color = FlxColor.interpolate(startColor, endColor, lifespanRatio);
 			}
 			
 			// Simpler bounce/spin behavior for now
@@ -185,7 +166,7 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 		
 		alpha = 1.0;
 		scale.x = scale.y = 1.0;
-		color = 0xffffff;
+		color = FlxColor.WHITE;
 	}
 	
 	/**
@@ -207,12 +188,8 @@ interface IFlxParticle extends IFlxSprite
 	public var rangeAlpha:Float;
 	public var startScale:Float;
 	public var rangeScale:Float;
-	public var startRed:Float;
-	public var startGreen:Float;
-	public var startBlue:Float;
-	public var rangeRed:Float;
-	public var rangeGreen:Float;
-	public var rangeBlue:Float;
+	public var startColor:FlxColor;
+	public var endColor:FlxColor;
 	
 	public function onEmit():Void;
 }

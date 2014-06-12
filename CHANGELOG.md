@@ -37,6 +37,7 @@
  * at() -> focusOn()
  * on -> emitting
  * fixed type parameter not being respected (T was always FlxSprite)
+ * emitters and particles use FlxColor instead of separate red, green, and blue values
 * Moved FlxMath, FlxPoint, FlxRect, FlxRect, FlxAngle, FlxVelocity and FlxRandom to flixel.math
 * FlxSubState: fix for calling close() within create()
 * FlxPath: exposed nodeIndex as a read-only property
