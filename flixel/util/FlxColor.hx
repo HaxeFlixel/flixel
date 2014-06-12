@@ -704,6 +704,13 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	{
 		return lhs != cast rhs;
 	}
+	
+	@:commutative
+	@:op(A - B)
+	private static inline function subtract(lhs:FlxColor, rhs:Null<Int>):FlxColor
+	{
+		return interpolate(lhs, cast rhs);
+	}
 }
 
 typedef Harmony = { 

@@ -20,7 +20,11 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 	 * NOTE: this is a maximum, not a minimum; the object
 	 * could get recycled before its lifespan is up.
 	 */
-	public var lifespan:Float = 0;
+	public var lifespan(default, null):Float = 0;
+	/**
+	 * How long this particle has lived so far.
+	 */
+	public var age(default, null):Float = 0;
 	/**
 	 * Determines how quickly the particles come to rest on the ground.
 	 * Only used if the particle has gravity-like acceleration applied.
@@ -43,17 +47,13 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 	 */
 	public var useColoring:Bool = false;
 	/**
-	 * Helper variable for fading, scaling and coloring particle.
-	 */
-	public var maxLifespan:Float;
-	/**
 	 * Start value for particle's alpha
 	 */
 	public var startAlpha:Float;
 	/**
 	 * Range of alpha change during particle's life
 	 */
-	public var rangeAlpha:Float;
+	public var endAlpha:Float;
 	/**
 	 * Start value for particle's scale.x and scale.y
 	 */
@@ -91,6 +91,7 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 		if (lifespan > 0)
 		{
 			lifespan -= FlxG.elapsed;
+			
 			if (lifespan <= 0)
 			{
 				kill();
@@ -101,7 +102,7 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 			// Fading
 			if (useFading)
 			{
-				alpha = startAlpha + lifespanRatio * rangeAlpha;
+				alpha = startAlpha + lifespanRatio * (endAlpha - startAlpha);
 			}
 			
 			// Changing size
@@ -185,7 +186,7 @@ interface IFlxParticle extends IFlxSprite
 	public var useColoring:Bool;
 	public var maxLifespan:Float;
 	public var startAlpha:Float;
-	public var rangeAlpha:Float;
+	public var endAlpha:Float;
 	public var startScale:Float;
 	public var rangeScale:Float;
 	public var startColor:FlxColor;

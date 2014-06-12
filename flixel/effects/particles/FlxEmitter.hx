@@ -1,17 +1,23 @@
 package flixel.effects.particles;
 
 import flash.display.BlendMode;
-import flixel.effects.particles.FlxParticle;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
+import flixel.effects.particles.FlxParticle;
 import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.math.FlxAngle;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRandom;
+import flixel.math.FlxVelocity;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxStringUtil;
+import flixel.util.helpers.Bounds;
+import flixel.util.helpers.Range;
+import flixel.util.helpers.RangeBounds;
+import flixel.util.helpers.FlxPointRangeBounds;
 
 typedef FlxEmitter = FlxTypedEmitter<FlxParticle>;
 
@@ -33,8 +39,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	 */
 	public var particleClass:Class<T>;
 	/**
-	 * Determines whether the emitter is currently emitting particles.
-	 * It is totally safe to directly toggle this.
+	 * Determines whether the emitter is currently emitting particles. It is totally safe to directly toggle this.
 	 */
 	public var emitting:Bool = false;
 	/**
@@ -42,107 +47,81 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	 */
 	public var frequency:Float = 0.1;
 	/**
-	 * Sets particle's blend mode. null by default.
-	 * Warning: expensive on flash target
+	 * Sets particle's blend mode. null by default. Warning: Expensive on flash target.
 	 */
 	public var blend:BlendMode;
 	/**
 	 * How much each particle should bounce. 1 = full bounce, 0 = no bounce.
 	 */
 	public var bounce:Float = 0;
-	
 	/**
-	 * The width of the emitter. Particles can be randomly generated from anywhere within this box.
+	 * The width of this emitter. Particles can be randomly generated from anywhere within this box.
 	 */
-	public var width(get, set):Float;
+	public var width:Float = 0;
 	/**
-	 * The height of the emitter.  Particles can be randomly generated from anywhere within this box.
+	 * The height of this emitter.  Particles can be randomly generated from anywhere within this box.
 	 */
-	public var height(get, set):Float;
+	public var height:Float = 0;
 	/**
 	 * The x position of this emitter.
 	 */
-	public var x(get, set):Float;
+	public var x:Float = 0;
 	/**
 	 * The y position of this emitter.
 	 */
-	public var y(get, set):Float;
+	public var y:Float = 0;
 	/**
-	 * Sets the acceleration.y member of each particle to this value on launch.
+	 * Shortcut for setting the acceleration.y property of particles launched from this emitter.
 	 */
 	public var gravity(get, set):Float;
 	/**
-	 * The minimum possible angular velocity of a particle. The default value is -360.
-	 * NOTE: rotating particles are more expensive to draw than non-rotating ones!
+	 * Sets the velocity range of particles launched from this emitter.
 	 */
-	public var minRotation(get, set):Float;
+	public var velocity(default, null):FlxPointRangeBounds;
 	/**
-	 * The maximum possible angular velocity of a particle. The default value is 360.
-	 * NOTE: rotating particles are more expensive to draw than non-rotating ones!
+	 * The angular velocity range of particles launched from this emitter.
 	 */
-	public var maxRotation(get, set):Float;
+	public var angularVelocity(default, null):RangeBounds<Float>;
 	/**
-	 * How long each particle lives once it is emitted.
-	 * Set lifespan to 'zero' for particles to live forever.
+	 * The angle range of particles launched from this emitter.
 	 */
-	public var lifespan(get, set):Float;
+	public var angle(default, null):RangeBounds<Float>;
 	/**
-	 * The x position range of the emitter in world space.
+	 * The angle range at which particles will be launched from this emitter.
 	 */
-	public var xPosition(default, null):Bounds<Float>;
+	public var launchAngle(default, null):Bounds<Float>;
 	/**
-	 * The y position range of emitter in world space.
+	 * The distance range for particles launched from this emitter.
 	 */
-	public var yPosition(default, null):Bounds<Float>;
+	public var distance(default, null):Bounds<Float>;
 	/**
-	 * The x velocity range of a particle.
-	 * The default value is (-100,-100).
+	 * The life, or duration, range of particles launched from this emitter.
 	 */
-	public var xVelocity(default, null):Bounds<Float>;
+	public var lifespan(default, null):Bounds<Float>;
 	/**
-	 * The y velocity range of a particle.
-	 * The default value is (100,100).
+	 * Sets scale range of particles launched from this emitter.
 	 */
-	public var yVelocity(default, null):Bounds<Float>;
+	public var scale(default, null):FlxPointRangeBounds;
 	/**
-	 * The minimum and maximum possible angular velocity of a particle.  The default value is (-360, 360).
-	 * NOTE: rotating particles are more expensive to draw than non-rotating ones!
+	 * Sets alpha range of particles launched from this emitter.
 	 */
-	public var rotation(default, null):Bounds<Float>;
-	public var life(default, null):Bounds<Float>;
+	public var alpha(default, null):RangeBounds<Float>;
 	/**
-	 * Sets start scale range (when particle emits)
+	 * Sets color range of particles launched from this emitter.
 	 */
-	public var startScale(default, null):Bounds<Float>;
+	public var color(default, null):RangeBounds<FlxColor>;
 	/**
-	 * Sets end scale range (when particle dies)
+	 * Sets X and Y drag component of particles launched from this emitter.
 	 */
-	public var endScale(default, null):Bounds<Float>;
+	public var drag(default, null):FlxPointRangeBounds;
 	/**
-	 * Sets start alpha range (when particle emits)
+	 * Sets the acceleration range of particles launched from this emitter.
 	 */
-	public var startAlpha(default, null):Bounds<Float>;
+	public var acceleration(default, null):FlxPointRangeBounds;
 	/**
-	 * Sets end alpha range (when particle emits)
+	 * Sets the elasticity, or bounce, range of particles launched from this emitter.
 	 */
-	public var endAlpha(default, null):Bounds<Float>;
-	/**
-	 * Sets start color range (when particle emits)
-	 */
-	public var startColor(default, null):Bounds<FlxColor>;
-	/**
-	 * Sets end color range (when particle emits)
-	 */
-	public var endColor(default, null):Bounds<FlxColor>;
-	/**
-	 * The X and Y drag component of particles launched from the emitter.
-	 */
-	public var particleDrag(default, null):FlxPoint;
-	/**
-	 * Sets the acceleration member of each particle to this value on launch.
-	 */
-	public var acceleration(default, null):FlxPoint;
-	
+	public var elasticity(default, null):RangeBounds<Float>;
 	/**
 	 * Internal helper for deciding how many particles to launch.
 	 */
@@ -180,23 +159,24 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	{
 		super(Size);
 		
-		xPosition = new Bounds<Float>(X, 0);
-		yPosition = new Bounds<Float>(Y, 0);
-		xVelocity = new Bounds<Float>( -100, 100);
-		yVelocity = new Bounds<Float>( -100, 100);
-		rotation = new Bounds<Float>( -360, 360);
-		startScale = new Bounds<Float>(1, 1);
-		endScale = new Bounds<Float>(1, 1);
-		startAlpha = new Bounds<Float>(1.0, 1.0);
-		endAlpha = new Bounds<Float>(1.0, 1.0);
-		startColor = new Bounds<FlxColor>(FlxColor.WHITE, FlxColor.WHITE);
-		endColor = new Bounds<FlxColor>(FlxColor.WHITE, FlxColor.WHITE);
+		x = X;
+		y = Y;
 		
-		acceleration = FlxPoint.get(0, 0);
+		velocity = new FlxPointRangeBounds( -100, 100);
+		angularVelocity = new RangeBounds<Float>( -360, 360);
+		angle = new RangeBounds<Float>(0);
+		launchAngle = null; // this is ignored unless set
+		distance = new Bounds<Float>(0);
+		lifespan = new Bounds<Float>(3);
+		scale = new FlxPointRangeBounds(1, 1);
+		alpha = new RangeBounds<Float>(1);
+		color = new RangeBounds<FlxColor>(FlxColor.WHITE);
+		drag = new FlxPointRangeBounds(0, 0);
+		acceleration = new FlxPointRangeBounds(0, 0);
+		elasticity = new RangeBounds<Float>(0);
+		
 		particleClass = cast FlxParticle;
-		particleDrag = FlxPoint.get();
 		
-		life = new Bounds<Float>(3, 3);
 		exists = false;
 		_point = FlxPoint.get();
 	}
@@ -206,22 +186,21 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	 */
 	override public function destroy():Void
 	{
-		_point = FlxDestroyUtil.put(_point);
-		acceleration = FlxDestroyUtil.put(acceleration);
-		particleDrag = FlxDestroyUtil.put(particleDrag);
-		
-		xPosition = null;
-		yPosition = null;
-		xVelocity = null;
-		yVelocity = null;
-		rotation = null;
-		startScale = null;
-		endScale = null;
-		startAlpha = null;
-		endAlpha = null;
-		startColor = null;
-		endColor = null;
 		blend = null;
+		velocity = null;
+		angularVelocity = null;
+		angle = null;
+		launchAngle = null;
+		distance = null;
+		lifespan = null;
+		scale = null;
+		alpha = null;
+		color = null;
+		drag = null;
+		acceleration = null;
+		elasticity = null;
+		
+		_point = FlxDestroyUtil.put(_point);
 		_point = null;
 		
 		super.destroy();
@@ -236,7 +215,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	 * @param	Multiple		Whether the image in the Graphics param is a single particle or a bunch of particles (if it's a bunch, they need to be square!).
 	 * @param	Collide			Whether the particles should be flagged as not 'dead' (non-colliding particles are higher performance).  0 means no collisions, 0-1 controls scale of particle's bounding box.
 	 * @param	AutoBuffer		Whether to automatically increase the image size to accomodate rotated corners.  Default is false.  Will create frames that are 150% larger on each axis than the original frame or graphic.
-	 * @return	This FlxEmitter instance (nice for chaining stuff together, if you're into that).
+	 * @return	This FlxEmitter instance (nice for chaining stuff together).
 	 */
 	public function makeParticles(Graphics:FlxGraphicAsset, Quantity:Int = 50, bakedRotationAngles:Int = 16, Multiple:Bool = false, Collide:Float = 0.8, AutoBuffer:Bool = false):FlxTypedEmitter<T>
 	{
@@ -308,6 +287,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 			add(particle);
 			i++;
 		}
+		
 		return this;
 	}
 	
@@ -376,7 +356,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		{
 			_timer += FlxG.elapsed;
 			
-			if ((life.max > 0) && (_timer > life.max))
+			if ((lifespan.max > 0) && (_timer > lifespan.max))
 			{
 				kill();
 				return;
@@ -399,21 +379,19 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	
 	/**
 	 * Call this function to start emitting particles.
+	 * 
 	 * @param	Explode			Whether the particles should all burst out at once.
-	 * @param	Lifespan		How long each particle lives once emitted. 0 = forever.
 	 * @param	Frequency		Ignored if Explode is set to true. Frequency is how often to emit a particle. 0 = never emit, 0.1 = 1 particle every 0.1 seconds, 5 = 1 particle every 5 seconds.
-	 * @param	Quantity		How many particles to launch. 0 = "all of the particles".
-	 * @param	LifespanRange	Max amount to add to the particle's lifespan. Leave it to default (zero), if you want to make particle "live" forever (plus you should set Lifespan parameter to zero too).
+	 * @param	Quantity		Ignored if Explode is set to true. How many particles to launch. 0 = "all of the particles".
+	 * @return	This FlxEmitter instance (nice for chaining stuff together).
 	 */
-	public function start(Explode:Bool = true, Lifespan:Float = 0, Frequency:Float = 0.1, Quantity:Int = 0, LifespanRange:Float = 0):Void
+	public function start(Explode:Bool = true, Frequency:Float = 0.1, Quantity:Int = 0, LifespanRange:Float = 0):FlxTypedEmitter<T>
 	{
 		revive();
 		visible = true;
 		emitting = true;
 		
 		_explode = Explode;
-		life.min = Lifespan;
-		life.max = Lifespan + Math.abs(LifespanRange);
 		frequency = Frequency;
 		_quantity += Quantity;
 		
@@ -421,6 +399,8 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		_timer = 0;
 		
 		_waitForKill = false;
+		
+		return this;
 	}
 	
 	/**
@@ -429,77 +409,51 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	public function emitParticle():Void
 	{
 		var particle:T = cast recycle(cast particleClass);
-		particle.elasticity = bounce;
 		
 		particle.reset(x - (Std.int(particle.width) >> 1) + FlxRandom.float() * width, y - (Std.int(particle.height) >> 1) + FlxRandom.float() * height);
 		particle.visible = true;
 		
-		if (life.min != life.max)
+		// Particle velocity/launch angle settings
+		
+		if (launchAngle != null)
 		{
-			particle.lifespan = particle.maxLifespan = life.min + FlxRandom.float() * (life.max - life.min);
+			//FlxVelocity.
 		}
 		else
 		{
-			particle.lifespan = particle.maxLifespan = life.min;
+			particle.velocity.x = FlxRandom.float(velocity.start.min.x, velocity.start.max.x);
+			particle.velocity.y = FlxRandom.float(velocity.start.min.y, velocity.start.max.y);
 		}
 		
-		if (startAlpha.min != startAlpha.max)
-		{
-			particle.startAlpha = startAlpha.min + FlxRandom.float() * (startAlpha.max - startAlpha.min);
-		}
-		else
-		{
-			particle.startAlpha = startAlpha.min;
-		}
-		particle.alpha = particle.startAlpha;
+		// Particle angular velocity settings
 		
-		var particleEndAlpha:Float = endAlpha.min;
-		if (endAlpha.min != endAlpha.max)
-		{
-			particleEndAlpha = endAlpha.min + FlxRandom.float() * (endAlpha.max - endAlpha.min);
-		}
+		particle.useAngularVelocity = angularVelocity.start == angularVelocity.end;
+		particle.angularVelocity = FlxRandom.float(angularVelocity.start.min, angularVelocity.start.max);
+		particle.endAngularVelocity = FlxRandom.float(angularVelocity.end.min, angularVelocity.end.max);
 		
-		if (particleEndAlpha != particle.startAlpha)
-		{
-			particle.useFading = true;
-			particle.rangeAlpha = particleEndAlpha - particle.startAlpha;
-		}
-		else
-		{
-			particle.useFading = false;
-			particle.rangeAlpha = 0;
-		}
+		// Particle angle settings
+		
+		particle.angle = FlxRandom.float(angle.start.min, angle.start.max);
+		
+		// Particle lifespan settings
+		
+		particle.lifespan = FlxRandom.float(lifespan.min, lifespan.max);
+		
+		// Particle alpha settings
+		
+		particle.useFading = alpha.start == alpha.end;
+		particle.alpha = FlxRandom.float(alpha.start.min, alpha.start.max);
+		particle.endAlpha = FlxRandom.float(alpha.end.min, alpha.end.max);
 		
 		// Particle color settings
 		
-		particle.useColoring = false;
+		particle.useColoring = color.start == color.end;
+		particle.color = FlxRandom.color(color.start.min, color.start.max);
+		particle.endColor = FlxRandom.color(color.end.min, color.end.max);
 		
-		if (startColor.min != startColor.max)
-		{
-			particle.startColor = FlxColor.fromRGB(FlxRandom.int(startColor.min.red, startColor.max.red), FlxRandom.int(startColor.min.green, startColor.max.green), FlxRandom.int(startColor.min.blue, startColor.max.blue));
-		}
-		else
-		{
-			particle.startColor = startColor.min;
-		}
 		
-		if (endColor.min != endColor.max)
-		{
-			particle.endColor = FlxColor.fromRGB(FlxRandom.int(endColor.min.red, endColor.max.red), FlxRandom.int(endColor.min.green, endColor.max.green), FlxRandom.int(endColor.min.blue, endColor.max.blue));
-		}
-		else
-		{
-			particle.endColor = endColor.min;
-		}
 		
-		if (particle.startColor != particle.endColor)
-		{
-			particle.useColoring = true;
-		}
 		
-		particle.color = particle.startColor;
-		
-		// End of particle color settings
 		if (startScale.min != startScale.max)
 		{
 			particle.startScale = startScale.min + FlxRandom.float() * (startScale.max - startScale.min);
@@ -555,138 +509,14 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		{
 			particle.angularVelocity = rotation.min;
 		}
+		
 		if (particle.angularVelocity != 0)
 		{
-			particle.angle = FlxRandom.float() * 360 - 180;
+			particle.angle = FlxRandom.float( -180, 180);
 		}
 		
 		particle.drag.set(particleDrag.x, particleDrag.y);
 		particle.onEmit();
-	}
-	
-	/**
-	 * A more compact way of setting the width and height of the emitter.
-	 * 
-	 * @param	Width	The desired width of the emitter (particles are spawned randomly within these dimensions).
-	 * @param	Height	The desired height of the emitter.
-	 */
-	public function setSize(Width:Int, Height:Int):Void
-	{
-		width = Width;
-		height = Height;
-	}
-	
-	/**
-	 * A more compact way of setting the X velocity range of the emitter.
-	 * 
-	 * @param	Min		The minimum value for this range.
-	 * @param	Max		The maximum value for this range.
-	 */
-	public function setXSpeed(Min:Float = 0, Max:Float = 0):Void
-	{
-		if (Max < Min)
-		{
-			Max = Min;
-		}
-		
-		xVelocity.min = Min;
-		xVelocity.max = Max;
-	}
-	
-	/**
-	 * A more compact way of setting the Y velocity range of the emitter.
-	 * 
-	 * @param	Min		The minimum value for this range.
-	 * @param	Max		The maximum value for this range.
-	 */
-	public function setYSpeed(Min:Float = 0, Max:Float = 0):Void
-	{
-		if (Max < Min)
-		{
-			Max = Min;
-		}
-			
-		yVelocity.min = Min;
-		yVelocity.max = Max;
-	}
-	
-	/**
-	 * A more compact way of setting the angular velocity constraints of the emitter.
-	 * 
-	 * @param	Min		The minimum value for this range.
-	 * @param	Max		The maximum value for this range.
-	 */
-	public function setRotation(Min:Float = 0, Max:Float = 0):Void
-	{
-		if (Max < Min)
-		{
-			Max = Min;
-		}
-		
-		rotation.min = Min;
-		rotation.max = Max;
-	}
-	
-	/**
-	 * A more compact way of setting the scale constraints of the emitter.
-	 * 
-	 * @param	StartMin	The minimum value for particle scale at the start (emission).
-	 * @param	StartMax	The maximum value for particle scale at the start (emission).
-	 * @param	EndMin		The minimum value for particle scale at the end (death).
-	 * @param	EndMax		The maximum value for particle scale at the end (death).
-	 */
-	public function setScale(StartMin:Float = 1, StartMax:Float = 1, EndMin:Float = 1, EndMax:Float = 1):Void
-	{
-		if (StartMax < StartMin)
-		{
-			StartMax = StartMin;
-		}
-		
-		if (EndMax < EndMin)
-		{
-			EndMax = EndMin;
-		}
-		
-		startScale.min = StartMin;
-		startScale.max = StartMax;
-		endScale.min = EndMin;
-		endScale.max = EndMax;
-	}
-	
-	/**
-	 * A more compact way of setting the alpha constraints of the emitter.
-	 * 
-	 * @param	StartMin	The minimum value for particle alpha at the start (emission).
-	 * @param	StartMax	The maximum value for particle alpha at the start (emission).
-	 * @param	EndMin		The minimum value for particle alpha at the end (death).
-	 * @param	EndMax		The maximum value for particle alpha at the end (death).
-	 */
-	public function setAlpha(StartMin:Float = 1, StartMax:Float = 1, EndMin:Float = 1, EndMax:Float = 1):Void
-	{
-		if (StartMin < 0)
-		{
-			StartMin = 0;
-		}
-		
-		if (StartMax < StartMin)
-		{
-			StartMax = StartMin;
-		}
-		
-		if (EndMin < 0)
-		{
-			EndMin = 0;
-		}
-		
-		if (EndMax < EndMin)
-		{
-			EndMax = EndMin;
-		}
-		
-		startAlpha.min = StartMin;
-		startAlpha.max = StartMax;
-		endAlpha.min = EndMin;
-		endAlpha.max = EndMax;
 	}
 	
 	/**
@@ -702,59 +532,6 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		y = _point.y - (Std.int(height) >> 1);
 	}
 	
-	/**
-	 * Helper function to set the coordinates of this object.
-	 * Handy since it only requires one line of code.
-	 * 
-	 * @param	X	The new x position
-	 * @param	Y	The new y position
-	 */
-	public inline function setPosition(X:Float = 0, Y:Float = 0):Void
-	{
-		x = X;
-		y = Y;
-	}
-	
-	private inline function get_width():Float
-	{
-		return xPosition.max;
-	}
-	
-	private inline function set_width(Value:Float):Float
-	{
-		return xPosition.max = Value;
-	}
-	
-	private inline function get_height():Float
-	{
-		return yPosition.max;
-	}
-	
-	private inline function set_height(Value:Float):Float
-	{
-		return yPosition.max = Value;
-	}
-	
-	private inline function get_x():Float
-	{
-		return xPosition.min;
-	}
-	
-	private inline function set_x(Value:Float):Float
-	{
-		return xPosition.min = Value;
-	}
-	
-	private inline function get_y():Float
-	{
-		return yPosition.min;
-	}
-	
-	private inline function set_y(Value:Float):Float
-	{
-		return yPosition.min = Value;
-	}
-	
 	private inline function get_gravity():Float
 	{
 		return acceleration.y;
@@ -763,67 +540,5 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	private inline function set_gravity(Value:Float):Float
 	{
 		return acceleration.y = Value;
-	}
-	
-	private inline function get_minRotation():Float
-	{
-		return rotation.min;
-	}
-	
-	private inline function set_minRotation(Value:Float):Float
-	{
-		return rotation.min = Value;
-	}
-	
-	private inline function get_maxRotation():Float
-	{
-		return rotation.max;
-	}
-	
-	private inline function set_maxRotation(Value:Float):Float
-	{
-		return rotation.max = Value;
-	}
-	
-	private inline function get_lifespan():Float
-	{
-		return life.min;
-	}
-	
-	private function set_lifespan(Value:Float):Float
-	{
-		var dl:Float = life.max - life.min;
-		life.min = Value;
-		life.max = Value + dl;
-		
-		return Value;
-	}
-}
-
-/**
- * Helper object for holding bounds of different variables
- */
-class Bounds<T>
-{
-	public var min:T;
-	public var max:T;
-
-	public function new(min:T, ?max:Null<T>)
-	{
-		set(min, max);
-	}
-	
-	public function set(min:T, ?max:Null<T>):Bounds<T>
-	{
-		this.min = min;
-		this.max = max == null ? min : max;
-		return this;
-	}
-	
-	public function toString():String
-	{
-		return FlxStringUtil.getDebugString([ 
-			LabelValuePair.weak("min", min),
-			LabelValuePair.weak("max", max)]);
 	}
 }
