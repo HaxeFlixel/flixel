@@ -234,11 +234,8 @@ class PlayState extends FlxState
 		
 		if (isColorOn) 
 		{
-			// This just transitions from one color to another, but you can set both minimum
-			// and maximum values for both startColor and endColor, if you want.
-			
-			_emitter.startColor.set(FlxColor.RED);
-			_emitter.endColor.set(FlxColor.BLUE);
+			_emitter.startColor.set(FlxColor.RED, FlxColor.PINK);
+			_emitter.endColor.set(FlxColor.BLUE, FlxColor.WHITE);
 			
 			topText.text = "Color: ON";
 		}
