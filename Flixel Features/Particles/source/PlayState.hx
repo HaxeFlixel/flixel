@@ -25,6 +25,7 @@ class PlayState extends FlxState
 	 */
 	private var _collisionButton:FlxButton;
 	private var _gravityButton:FlxButton;
+	private var _colorButton:FlxButton;
 	
 	/**
 	 * Some walls stuff
@@ -38,6 +39,7 @@ class PlayState extends FlxState
 	 */
 	private var isGravityOn:Bool = false;
 	private var isCollisionOn:Bool = false;
+	private var isColorOn:Bool = false;
 	
 	/**
 	 * Just a useful flxText for notifications
@@ -76,7 +78,7 @@ class PlayState extends FlxState
 			_whitePixel.visible = false; 
 			_emitter.add(_whitePixel);
 			_whitePixel = new FlxParticle();
-			_whitePixel.makeGraphic(1, 1, FlxColor.WHITE);
+			_whitePixel.makeGraphic(3, 3, FlxColor.WHITE);
 			_whitePixel.visible = false;
 			_emitter.add(_whitePixel);
 		}
@@ -86,6 +88,8 @@ class PlayState extends FlxState
 		add(_collisionButton);
 		_gravityButton = new FlxButton(82, FlxG.height - 22, "Gravity", onGravityToggle);
 		add(_gravityButton);
+		_colorButton = new FlxButton(162, FlxG.height - 22, "Color", onColorToggle);
+		add(_colorButton);
 		
 		// I'll just leave this here
 		topText = new FlxText(0, 2, FlxG.width, "Welcome");
@@ -219,6 +223,28 @@ class PlayState extends FlxState
 			}
 			
 			topText.text = "Gravity: OFF";
+		}
+		
+		topText.alpha = 1;
+	}
+	
+	private function onColorToggle():Void
+	{
+		isColorOn = !isColorOn;
+		
+		if (isColorOn) 
+		{
+			_emitter.startColor.set(FlxColor.RED, FlxColor.PINK);
+			_emitter.endColor.set(FlxColor.BLUE, FlxColor.WHITE);
+			
+			topText.text = "Color: ON";
+		}
+		else 
+		{
+			_emitter.startColor.set(FlxColor.WHITE);
+			_emitter.endColor.set(FlxColor.WHITE);
+			
+			topText.text = "Color: OFF";
 		}
 		
 		topText.alpha = 1;
