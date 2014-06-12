@@ -76,7 +76,7 @@ class FlxRandom
 				
 				do
 				{
-					return Math.floor(Min + generate() / MODULUS * (Max - Min + 1));
+					result = Math.floor(Min + generate() / MODULUS * (Max - Min + 1));
 				}
 				while (Excludes.indexOf(result) >= 0);
 				
