@@ -3,7 +3,9 @@ package flixel.effects.particles;
 import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
+import flixel.util.helpers.Range;
 
 /**
  * This is a simple particle class that extends the default behavior
@@ -26,50 +28,69 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 	 */
 	public var age(default, null):Float = 0;
 	/**
-	 * Determines how quickly the particles come to rest on the ground.
-	 * Only used if the particle has gravity-like acceleration applied.
+	 * What percentage progress this particle has made of its total life. Essentially just (age / lifespan) on a scale from 0 to 1.
 	 */
-	public var friction:Float = 500;
+	public var percent(default, null):Float = 0;
 	/**
-	 * If this is set to true, particles will slowly fade away by
-	 * decreasing their alpha value based on their lifespan.
-	*/
-	public var useFading:Bool = false;
-	/**
-	 * If this is set to true, particles will slowly decrease in scale
-	 * based on their lifespan.
-	 * WARNING: This severely impacts performance on flash target.
-	*/
-	public var useScaling:Bool = false;
-	/**
-	 * If this is set to true, particles will change their color
-	 * based on their lifespan and start and range color components values.
+	 * Whether or not angularVelocity should be updated each frame.
 	 */
-	public var useColoring:Bool = false;
+	public var useAngularVelocity:Bool = false;
 	/**
-	 * Start value for particle's alpha
+	 * Whether or not scale should be updated each frame.
 	 */
-	public var startAlpha:Float;
+	public var useScale:Bool = false;
 	/**
-	 * Range of alpha change during particle's life
+	 * Whether or not alpha should be updated each frame.
 	 */
-	public var endAlpha:Float;
+	public var useAlpha:Bool = false;
 	/**
-	 * Start value for particle's scale.x and scale.y
+	 * Whether or not color should be updated each frame.
 	 */
-	public var startScale:Float;
+	public var useColor:Bool = false;
 	/**
-	 * Range of scale change during particle's life
+	 * Whether or not drag should be updated each frame.
 	 */
-	public var rangeScale:Float;
+	public var useDrag:Bool = false;
 	/**
-	 * Start value for particle's color
+	 * Whether or not acceleration should be updated each frame.
 	 */
-	public var startColor:FlxColor;
+	public var useAcceleration:Bool = false;
 	/**
-	 * End value for particle's color
+	 * Whether or not elasticity should be updated each frame.
 	 */
-	public var endColor:FlxColor;
+	public var useElasticity:Bool = false;
+	/**
+	 * The range of values for velocity over this particle's lifespan.
+	 */
+	public var velocityRange:Range<Float>;
+	/**
+	 * The range of values for angularVelocity over this particle's lifespan.
+	 */
+	public var angularVelocityRange:Range<Float>;
+	/**
+	 * The range of values for scale over this particle's lifespan.
+	 */
+	public var scaleRange:Range<FlxPoint>;
+	/**
+	 * The range of values for alpha over this particle's lifespan.
+	 */
+	public var alphaRange:Range<Float>;
+	/**
+	 * The range of values for color over this particle's lifespan.
+	 */
+	public var colorRange:Range<FlxColor>;
+	/**
+	 * The range of values for drag over this particle's lifespan.
+	 */
+	public var dragRange:Range<FlxPoint>;
+	/**
+	 * The range of values for acceleration over this particle's lifespan.
+	 */
+	public var accelerationRange:Range<FlxPoint>;
+	/**
+	 * The range of values for elasticity over this particle's lifespan.
+	 */
+	public var elasticityRange:Range<Float>;
 	
 	/**
 	 * Instantiate a new particle. Like FlxSprite, all meaningful creation
@@ -87,71 +108,54 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 	 */
 	override public function update():Void
 	{
-		// Lifespan behavior
-		if (lifespan > 0)
+		if (age < lifespan)
 		{
-			lifespan -= FlxG.elapsed;
+			age += FlxG.elapsed;
 			
-			if (lifespan <= 0)
+			if (age >= lifespan)
 			{
 				kill();
 			}
 			
-			var lifespanRatio:Float = (1 - lifespan / maxLifespan);
+			percent = age / lifespan;
 			
-			// Fading
-			if (useFading)
+			if (useAngularVelocity)
 			{
-				alpha = startAlpha + lifespanRatio * (endAlpha - startAlpha);
+				angularVelocity.x = angularVelocityRange.start.x + angularVelocityRange.range.x * percent;
+				angularVelocity.y = angularVelocityRange.start.y + angularVelocityRange.range.y * percent;
 			}
 			
-			// Changing size
-			if (useScaling)
+			if (useScale)
 			{
-				scale.x = scale.y = startScale + lifespanRatio * rangeScale;
+				scale.x = scaleRange.start.x + scaleRange.range.x * percent;
+				scale.y = scaleRange.start.y + scaleRange.range.y * percent;
 			}
 			
-			// Tinting
-			if (useColoring)
+			if (useAlpha)
 			{
-				color = FlxColor.interpolate(startColor, endColor, lifespanRatio);
+				alpha = alphaRange.start + alphaRange.range * percent;
 			}
 			
-			// Simpler bounce/spin behavior for now
-			if (touching != 0)
+			if (useColor)
 			{
-				if (angularVelocity != 0)
-				{
-					angularVelocity = -angularVelocity;
-				}
+				color = FlxColor.interpolate(colorRange.start, colorRange.end, percent);
 			}
-			// Special behavior for particles with gravity
-			if (acceleration.y > 0)
+			
+			if (useDrag)
 			{
-				if ((touching & FlxObject.FLOOR) != 0)
-				{
-					drag.x = friction;
-					
-					if ((wasTouching & FlxObject.FLOOR) == 0)
-					{
-						if (velocity.y < -elasticity * 10)
-						{
-							if (angularVelocity != 0)
-							{
-								angularVelocity *= -elasticity;
-							}
-						}
-						else
-						{
-							velocity.y = 0;
-							angularVelocity = 0;
-						}
-					}
-				}
-				else
-				{
-					drag.x = 0;
-				}
+				drag.x = dragRange.start.x + dragRange.range.x * percent;
+				drag.y = dragRange.start.y + dragRange.range.y * percent;
+			}
+			
+			if (useAcceleration)
+			{
+				acceleration.x = accelerationRange.start.x + accelerationRange.range.x * percent;
+				acceleration.y = accelerationRange.start.y + accelerationRange.range.y * percent;
+			}
+			
+			if (useElasticity)
+			{
+				elasticity = elasticityRange.start + elasticityRange.range * percent;
 			}
 		}
 		
@@ -180,17 +184,23 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 interface IFlxParticle extends IFlxSprite
 {
 	public var lifespan:Float;
-	public var friction:Float;
-	public var useFading:Bool;
-	public var useScaling:Bool;
-	public var useColoring:Bool;
-	public var maxLifespan:Float;
-	public var startAlpha:Float;
-	public var endAlpha:Float;
-	public var startScale:Float;
-	public var rangeScale:Float;
-	public var startColor:FlxColor;
-	public var endColor:FlxColor;
+	public var age:Float;
+	public var percent:Float;
+	public var useAngularVelocity:Bool;
+	public var useScale:Bool;
+	public var useAlpha:Bool;
+	public var useColor:Bool;
+	public var useDrag:Bool;
+	public var useAcceleration:Bool;
+	public var useElasticity:Bool;
+	public var velocityRange:Range<Float>;
+	public var angularVelocityRange:Range<Float>;
+	public var scaleRange:Range<FlxPoint>;
+	public var alphaRange:Range<Float>;
+	public var colorRange:Range<FlxColor>;
+	public var dragRange:Range<FlxPoint>;
+	public var accelerationRange:Range<FlxPoint>;
+	public var elasticityRange:Range<Float>;
 	
 	public function onEmit():Void;
 }

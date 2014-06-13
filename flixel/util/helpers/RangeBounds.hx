@@ -1,9 +1,11 @@
 package flixel.util.helpers;
 
+import flixel.util.FlxStringUtil;
+
 /**
  * Helper object for holding beginning minimum/maximum and ending minimum/maximum values of different variables.
  */
-class RangeBounds<T:(Float, Int)> extends Range<Bounds<T>>
+class RangeBounds<T> extends Range<Bounds<T>>
 {
 	/**
 	 * Create a new RangeBounds object. Must be typed, e.g. var myRangeBounds = new RangeBounds<Float>(0, 0, 0, 0);
@@ -16,6 +18,8 @@ class RangeBounds<T:(Float, Int)> extends Range<Bounds<T>>
 	 */
 	public function new(startMin:T, ?startMax:Null<T>, ?endMin:Null<T>, ?endMax:Null<T>)
 	{
+		super(null);
+		
 		setAll(startMin, startMax, endMin, endMax);
 	}
 	

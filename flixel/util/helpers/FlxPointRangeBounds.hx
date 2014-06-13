@@ -1,6 +1,7 @@
 package flixel.util.helpers;
 
 import flixel.math.FlxPoint;
+import flixel.util.FlxStringUtil;
 
 /**
  * Helper object for holding beginning minimum/maximum and ending minimum/maximum values of FlxPoints, which have both an x and y component.
@@ -22,6 +23,8 @@ class FlxPointRangeBounds extends Range<Bounds<FlxPoint>>
 	 */
 	public function new(startMinX:Float, startMinY:Float, ?startMaxX:Null<Float>, ?startMaxY:Null<Float>, ?endMinX:Null<Float>, ?endMinY:Null<Float>, ?endMaxX:Null<Float>, ?endMaxY:Null<Float>)
 	{
+		super(null);
+		
 		setAll(startMinX, startMinY, startMaxX, startMaxY, endMinX, endMinY, endMaxX, endMaxY);
 	}
 	

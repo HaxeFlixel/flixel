@@ -1,5 +1,7 @@
 package flixel.util.helpers;
 
+import flixel.util.FlxStringUtil;
+
 /**
  * Helper object for holding bounds of various properties.
  */
@@ -46,24 +48,11 @@ class Bounds<T:(Float, Int)>
 		return range;
 	}
 	
-	@:op("=", true)
-	private inline function assign(Value:T):Bounds<T>
-	{
-		return min = max = Value;
-	}
-	
 	@:commutative
 	@:op(A == B)
 	private static inline function equal<T>(lhs:Bounds<T>, rhs:Bounds<T>):Bool
 	{
 		return lhs.min == rhs.min && lhs.max == rhs.max;
-	}
-	
-	@:commutative
-	@:op(A == B)
-	private static inline function equal<T>(lhs:Bounds<T>, rhs:Bounds<T>):Bool
-	{
-		return lhs.min != rhs.min || lhs.max != rhs.max;
 	}
 	
 	public function toString():String

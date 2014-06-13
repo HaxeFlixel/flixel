@@ -1,9 +1,11 @@
 package flixel.util.helpers;
 
+import flixel.util.FlxStringUtil;
+
 /**
  * Helper object for holding beginning and ending values of various properties.
  */
-class Range<T:(Float, Int)>
+class Range<T>
 {
 	public var start:T;
 	public var end:T;
