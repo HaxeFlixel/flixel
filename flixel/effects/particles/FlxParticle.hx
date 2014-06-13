@@ -181,6 +181,16 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 		alpha = 1.0;
 		scale.x = scale.y = 1.0;
 		color = FlxColor.WHITE;
+		age = 0;
+		visible = true;
+		velocityRange.set(0);
+		angularVelocityRange.set(0);
+		scaleRange.set(FlxPoint.weak());
+		alphaRange.set(1);
+		colorRange.set(FlxColor.WHITE);
+		dragRange.set(FlxPoint.weak());
+		accelerationRange.set(FlxPoint.weak());
+		elasticityRange.set(0);
 	}
 	
 	/**

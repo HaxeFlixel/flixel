@@ -37,6 +37,26 @@ class Range<T>
 		return this;
 	}
 	
+	/**
+	 * Allows simple comparison of two Range objects, so that (range1 == range2) will be true if both contain the same start and end values.
+	 */
+	@:commutative
+	@:op(A == B)
+	private static inline function equal<T>(lhs:Range<T>, rhs:Range<T>):Bool
+	{
+		return lhs.start == rhs.start && lhs.end == rhs.end;
+	}
+	
+	@:commutative
+	@:op(A != B)
+	private static inline function notEqual<T>(lhs:Range<T>, rhs:Range<T>):Bool
+	{
+		return lhs.start != rhs.start || lhs.end != rhs.end;
+	}
+	
+	/**
+	 * Convert object to readable string name. Useful for debugging, save games, etc.
+	 */
 	public function toString():String
 	{
 		return FlxStringUtil.getDebugString([ 

@@ -58,6 +58,9 @@ class FlxPointRangeBounds extends Range<Bounds<FlxPoint>>
 		return this;
 	}
 	
+	/**
+	 * Convert object to readable string name. Useful for debugging, save games, etc.
+	 */
 	override public function toString():String
 	{
 		return FlxStringUtil.getDebugString([ 

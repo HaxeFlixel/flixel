@@ -1,5 +1,6 @@
 package flixel.effects.particles;
 
+import flash.display.BitmapData;
 import flash.display.BlendMode;
 import flixel.FlxG;
 import flixel.FlxObject;
@@ -87,7 +88,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	 */
 	public var ignoreAngularVelocity:Bool = false;
 	/**
-	 * The angle range at which particles will be launched from this emitter.
+	 * The angle range at which particles will be launched from this emitter. Ignored unless launchMode is set to FlxEmitterMode.CIRCLE
 	 */
 	public var launchAngle(default, null):Bounds<Float>;
 	/**
@@ -135,11 +136,11 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	 */
 	private var _counter:Int = 0;
 	/**
-	 * Internal point object, handy for reusing for memory mgmt purposes.
+	 * Internal point object, handy for reusing for memory management purposes.
 	 */
 	private var _point:FlxPoint;
 	/**
-	 * Internal helper for automatic call the kill() method
+	 * Internal helper for automatically calling the kill() method
 	 */
 	private var _waitForKill:Bool = false;
 	
@@ -158,10 +159,10 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		x = X;
 		y = Y;
 		
-		velocity = new FlxPointRangeBounds( -100, 100);
-		angularVelocity = new RangeBounds<Float>( -360, 360);
+		velocity = new FlxPointRangeBounds(-100, -100, 100, 100);
+		angularVelocity = new RangeBounds<Float>(0, 0);
 		angle = new RangeBounds<Float>(0);
-		launchAngle = null; // this is ignored unless set
+		launchAngle = new Bounds<Float>(0);
 		lifespan = new Bounds<Float>(3);
 		scale = new FlxPointRangeBounds(1, 1);
 		alpha = new RangeBounds<Float>(1);
@@ -211,7 +212,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	 * @param	AutoBuffer		Whether to automatically increase the image size to accomodate rotated corners.  Default is false.  Will create frames that are 150% larger on each axis than the original frame or graphic.
 	 * @return	This FlxEmitter instance (nice for chaining stuff together).
 	 */
-	public function makeParticles(Graphics:FlxGraphicAsset, Quantity:Int = 50, bakedRotationAngles:Int = 16, Multiple:Bool = false, Collide:Float = 0.8, AutoBuffer:Bool = false):FlxTypedEmitter<T>
+	public function loadParticles(Graphics:FlxGraphicAsset, Quantity:Int = 50, bakedRotationAngles:Int = 16, Multiple:Bool = false, Collide:Float = 0.8, AutoBuffer:Bool = false):FlxTypedEmitter<T>
 	{
 		maxSize = Quantity;
 		var totalFrames:Int = 1;
@@ -281,6 +282,22 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 			add(particle);
 			i++;
 		}
+		
+		return this;
+	}
+	
+	/**
+	 * Similar to FlxSprite's makeGraphic, this function allows you to quickly make single-color particles.
+	 * 
+	 * @param	Width    The width of the generated particles. Default is 2 pixels.
+	 * @param	Height   The height of the generated particles. Default is 2 pixels.
+	 * @param	Color    The color of the generated particles. Default is white.
+	 * @param	Quantity How many particles to generate. Default is 50.
+	 * @return  This FlxEmitter instance (nice for chaining stuff together).
+	 */
+	public function makeParticles(Width:Int = 2, Height:Int = 2, Color:FlxColor = FlxColor.WHITE, Quantity:Int = 50):FlxTypedEmitter<T>
+	{
+		loadParticles(new BitmapData(Width, Height, false, Color), Quantity);
 		
 		return this;
 	}
@@ -379,7 +396,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	 * @param	Quantity		Ignored if Explode is set to true. How many particles to launch. 0 = "all of the particles".
 	 * @return	This FlxEmitter instance (nice for chaining stuff together).
 	 */
-	public function start(Explode:Bool = true, Frequency:Float = 0.1, Quantity:Int = 0, LifespanRange:Float = 0):FlxTypedEmitter<T>
+	public function start(Explode:Bool = true, Frequency:Float = 0.1, Quantity:Int = 0):FlxTypedEmitter<T>
 	{
 		revive();
 		visible = true;
@@ -405,7 +422,6 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		var particle:T = cast recycle(cast particleClass);
 		
 		particle.reset(FlxRandom.float(x - width / 2, x + width / 2), FlxRandom.float(y - height / 2, y + height / 2));
-		particle.visible = true;
 		
 		// Particle blend settings
 		
@@ -415,7 +431,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		
 		if (launchAngle != null && (velocity == null || launchMode == FlxEmitterMode.CIRCLE))
 		{
-		var launchVelocity:FlxPoint = FlxVelocity.velocityFromAngle(FlxRandom.float(launchAngle.min, launchAngle.max), FlxRandom.float(lifespan.min, lifespan.max));
+			var launchVelocity:FlxPoint = FlxVelocity.velocityFromAngle(FlxRandom.float(launchAngle.min, launchAngle.max), FlxRandom.float(lifespan.min, lifespan.max));
 			particle.velocity.x = launchVelocity.x;
 			particle.velocity.y = launchVelocity.y;
 		}
@@ -451,53 +467,53 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		
 		// Particle scale settings
 		
-		particle.useScale = scale.start == scale.end;
 		particle.scaleRange.start.x = FlxRandom.float(scale.start.min.x, scale.start.max.x);
 		particle.scaleRange.start.y = FlxRandom.float(scale.start.min.y, scale.start.max.y);
 		particle.scaleRange.end.x = FlxRandom.float(scale.end.min.x, scale.end.max.x);
 		particle.scaleRange.end.y = FlxRandom.float(scale.end.min.y, scale.end.max.y);
+		particle.useScale = particle.scaleRange.start != particle.scaleRange.end;
 		particle.scale.x = particle.scaleRange.start.x;
 		particle.scale.y = particle.scaleRange.start.y;
 		
 		// Particle alpha settings
 		
-		particle.useAlpha = alpha.start == alpha.end;
 		particle.alphaRange.start = FlxRandom.float(alpha.start.min, alpha.start.max);
 		particle.alphaRange.end = FlxRandom.float(alpha.end.min, alpha.end.max);
+		particle.useAlpha = particle.alphaRange.start != particle.alphaRange.end;
 		particle.alpha = particle.alphaRange.start;
 		
 		// Particle color settings
 		
-		particle.useColor = color.start == color.end;
 		particle.colorRange.start = FlxRandom.color(color.start.min, color.start.max);
 		particle.colorRange.end = FlxRandom.color(color.end.min, color.end.max);
+		particle.useColor = particle.colorRange.start != particle.colorRange.end;
 		particle.color = particle.colorRange.start;
 		
 		// Particle drag settings
 		
-		particle.useDrag = drag.start == drag.end;
 		particle.dragRange.start.x = FlxRandom.float(drag.start.min.x, drag.start.max.x);
 		particle.dragRange.start.y = FlxRandom.float(drag.start.min.y, drag.start.max.y);
 		particle.dragRange.end.x = FlxRandom.float(drag.end.min.x, drag.end.max.x);
 		particle.dragRange.end.y = FlxRandom.float(drag.end.min.y, drag.end.max.y);
+		particle.useDrag = particle.dragRange.start != particle.dragRange.end;
 		particle.drag.x = particle.dragRange.start.x;
 		particle.drag.y = particle.dragRange.start.y;
 		
 		// Particle acceleration settings
 		
-		particle.useAcceleration = acceleration.start == acceleration.end;
 		particle.accelerationRange.start.x = FlxRandom.float(acceleration.start.min.x, acceleration.start.max.x);
 		particle.accelerationRange.start.y = FlxRandom.float(acceleration.start.min.y, acceleration.start.max.y);
 		particle.accelerationRange.end.x = FlxRandom.float(acceleration.end.min.x, acceleration.end.max.x);
 		particle.accelerationRange.end.y = FlxRandom.float(acceleration.end.min.y, acceleration.end.max.y);
+		particle.useAcceleration = particle.accelerationRange.start != particle.accelerationRange.end;
 		particle.acceleration.x = particle.accelerationRange.start.x;
 		particle.acceleration.y = particle.accelerationRange.start.y;
 		
 		// Particle elasticity settings
 		
-		particle.useElasticity = elasticity.start == elasticity.end;
 		particle.elasticityRange.start = FlxRandom.float(elasticity.start.min, elasticity.start.max);
 		particle.elasticityRange.end = FlxRandom.float(elasticity.end.min, elasticity.end.max);
+		particle.useElasticity = particle.elasticityRange.start != particle.elasticityRange.end;
 		particle.elasticity = particle.elasticityRange.start;
 		
 		particle.onEmit();

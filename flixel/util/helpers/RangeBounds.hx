@@ -46,6 +46,26 @@ class RangeBounds<T> extends Range<Bounds<T>>
 		return this;
 	}
 	
+	/**
+	 * Allows simple comparison of two RangeBounds objects, so that (rangeBounds1 == rangeBounds2) will be true if both contain the same start min and max and end min and max values.
+	 */
+	@:commutative
+	@:op(A == B)
+	private static inline function equal<T>(lhs:RangeBounds<T>, rhs:RangeBounds<T>):Bool
+	{
+		return lhs.start.min == rhs.start.min && lhs.start.max == rhs.start.max && lhs.end.min == rhs.end.min && lhs.end.max == rhs.end.max;
+	}
+	
+	@:commutative
+	@:op(A != B)
+	private static inline function notEqual<T>(lhs:RangeBounds<T>, rhs:RangeBounds<T>):Bool
+	{
+		return lhs.start.min != rhs.start.min || lhs.start.max != rhs.start.max || lhs.end.min != rhs.end.min || lhs.end.max != rhs.end.max;
+	}
+	
+	/**
+	 * Convert object to readable string name. Useful for debugging, save games, etc.
+	 */
 	override public function toString():String
 	{
 		return FlxStringUtil.getDebugString([ 

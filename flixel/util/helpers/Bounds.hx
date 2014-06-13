@@ -36,6 +36,9 @@ class Bounds<T>
 		return this;
 	}
 	
+	/**
+	 * Allows simple comparison of two Bounds objects, so that (bounds1 == bounds2) will be true if both contain the same min and max values.
+	 */
 	@:commutative
 	@:op(A == B)
 	private static inline function equal<T>(lhs:Bounds<T>, rhs:Bounds<T>):Bool
@@ -43,6 +46,16 @@ class Bounds<T>
 		return lhs.min == rhs.min && lhs.max == rhs.max;
 	}
 	
+	@:commutative
+	@:op(A != B)
+	private static inline function notEqual<T>(lhs:Bounds<T>, rhs:Bounds<T>):Bool
+	{
+		return lhs.min != rhs.min || lhs.max != rhs.max;
+	}
+	
+	/**
+	 * Convert object to readable string name. Useful for debugging, save games, etc.
+	 */
 	public function toString():String
 	{
 		return FlxStringUtil.getDebugString([ 
