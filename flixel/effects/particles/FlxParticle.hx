@@ -22,7 +22,7 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 	 * NOTE: this is a maximum, not a minimum; the object
 	 * could get recycled before its lifespan is up.
 	 */
-	public var lifespan(default, null):Float = 0;
+	public var lifespan:Float = 0;
 	/**
 	 * How long this particle has lived so far.
 	 */
@@ -121,19 +121,18 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 			
 			if (useAngularVelocity)
 			{
-				angularVelocity.x = angularVelocityRange.start.x + angularVelocityRange.range.x * percent;
-				angularVelocity.y = angularVelocityRange.start.y + angularVelocityRange.range.y * percent;
+				angularVelocity = angularVelocityRange.start + (angularVelocityRange.end - angularVelocityRange.start) * percent;
 			}
 			
 			if (useScale)
 			{
-				scale.x = scaleRange.start.x + scaleRange.range.x * percent;
-				scale.y = scaleRange.start.y + scaleRange.range.y * percent;
+				scale.x = scaleRange.start.x + (scaleRange.end.x - scaleRange.start.x) * percent;
+				scale.y = scaleRange.start.y + (scaleRange.end.y - scaleRange.start.y) * percent;
 			}
 			
 			if (useAlpha)
 			{
-				alpha = alphaRange.start + alphaRange.range * percent;
+				alpha = alphaRange.start + (alphaRange.end - alphaRange.start) * percent;
 			}
 			
 			if (useColor)
@@ -143,19 +142,19 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 			
 			if (useDrag)
 			{
-				drag.x = dragRange.start.x + dragRange.range.x * percent;
-				drag.y = dragRange.start.y + dragRange.range.y * percent;
+				drag.x = dragRange.start.x + (dragRange.end.x - dragRange.start.x) * percent;
+				drag.y = dragRange.start.y + (dragRange.end.y - dragRange.start.y) * percent;
 			}
 			
 			if (useAcceleration)
 			{
-				acceleration.x = accelerationRange.start.x + accelerationRange.range.x * percent;
-				acceleration.y = accelerationRange.start.y + accelerationRange.range.y * percent;
+				acceleration.x = accelerationRange.start.x + (accelerationRange.end.x - accelerationRange.start.x) * percent;
+				acceleration.y = accelerationRange.start.y + (accelerationRange.end.y - accelerationRange.start.y) * percent;
 			}
 			
 			if (useElasticity)
 			{
-				elasticity = elasticityRange.start + elasticityRange.range * percent;
+				elasticity = elasticityRange.start + (elasticityRange.end - elasticityRange.start) * percent;
 			}
 		}
 		
@@ -184,8 +183,8 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 interface IFlxParticle extends IFlxSprite
 {
 	public var lifespan:Float;
-	public var age:Float;
-	public var percent:Float;
+	public var age(default, null):Float;
+	public var percent(default, null):Float;
 	public var useAngularVelocity:Bool;
 	public var useScale:Bool;
 	public var useAlpha:Bool;

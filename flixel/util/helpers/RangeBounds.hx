@@ -1,6 +1,7 @@
 package flixel.util.helpers;
 
 import flixel.util.FlxStringUtil;
+import flixel.math.FlxPoint;
 
 /**
  * Helper object for holding beginning minimum/maximum and ending minimum/maximum values of different variables.

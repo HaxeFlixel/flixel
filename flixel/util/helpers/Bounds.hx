@@ -1,15 +1,15 @@
 package flixel.util.helpers;
 
 import flixel.util.FlxStringUtil;
+import flixel.math.FlxPoint;
 
 /**
  * Helper object for holding bounds of various properties.
  */
-class Bounds<T:(Float, Int)>
+class Bounds<T>
 {
 	public var min:T;
 	public var max:T;
-	public var range(get, set):T;
 	
 	/**
 	 * Create a new Bounds object. Must be typed, e.g. var myBounds = new Bounds<Float>(0, 0);
@@ -34,18 +34,6 @@ class Bounds<T:(Float, Int)>
 		this.min = min;
 		this.max = max == null ? min : max;
 		return this;
-	}
-	
-	private inline function get_range():T
-	{
-		return (max - min);
-	}
-	
-	private inline function set_range(Value:T):T
-	{
-		max = Value - min;
-		
-		return range;
 	}
 	
 	@:commutative

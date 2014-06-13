@@ -71,10 +71,6 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	 */
 	public var launchMode:FlxEmitterMode = FlxEmitterMode.SQUARE;
 	/**
-	 * Shortcut for setting the acceleration.y property of particles launched from this emitter.
-	 */
-	public var gravity(get, set):Float;
-	/**
 	 * Sets the velocity range of particles launched from this emitter.
 	 */
 	public var velocity(default, null):FlxPointRangeBounds;
@@ -119,7 +115,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	 */
 	public var drag(default, null):FlxPointRangeBounds;
 	/**
-	 * Sets the acceleration range of particles launched from this emitter.
+	 * Sets the acceleration range of particles launched from this emitter. Set acceleration y-values to give particles gravity.
 	 */
 	public var acceleration(default, null):FlxPointRangeBounds;
 	/**
@@ -425,7 +421,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		
 		if (launchAngle != null && distance != null && (velocity == null || launchMode == FlxEmitterMode.CIRCLE))
 		{
-			var launchVelocity:FlxPoint = FlxVelocity.velocityFromAngle(FlxRandom.float(launchAngle.min, launchAngle.max), distance * lifespan);
+			var launchVelocity:FlxPoint = FlxVelocity.velocityFromAngle(FlxRandom.float(launchAngle.min, launchAngle.max), FlxRandom.float(distance.min, distance.max));
 			particle.velocity.x = launchVelocity.x;
 			particle.velocity.y = launchVelocity.y;
 		}
@@ -446,7 +442,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		}
 		else
 		{
-			particle.angularVelocity = (FlxRandom.float(angle.end.min, angle.end.max) - FlxRandom.float(angle.start.min, angle.start.max)) / lifespan;
+		particle.angularVelocity = (FlxRandom.float(angle.end.min, angle.end.max) - FlxRandom.float(angle.start.min, angle.start.max)) / FlxRandom.float(lifespan.min, lifespan.max);
 			particle.useAngularVelocity = false;
 		}
 		
@@ -460,7 +456,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		
 		// Particle scale settings
 		
-		particle.useScaling = scale.start == scale.end;
+		particle.useScale = scale.start == scale.end;
 		particle.scaleRange.start.x = FlxRandom.float(scale.start.min.x, scale.start.max.x);
 		particle.scaleRange.start.y = FlxRandom.float(scale.start.min.y, scale.start.max.y);
 		particle.scaleRange.end.x = FlxRandom.float(scale.end.min.x, scale.end.max.x);
@@ -468,19 +464,19 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		
 		// Particle alpha settings
 		
-		particle.useFading = alpha.start == alpha.end;
+		particle.useAlpha = alpha.start == alpha.end;
 		particle.alphaRange.start = FlxRandom.float(alpha.start.min, alpha.start.max);
 		particle.alphaRange.end = FlxRandom.float(alpha.end.min, alpha.end.max);
 		
 		// Particle color settings
 		
-		particle.useColoring = color.start == color.end;
+		particle.useColor = color.start == color.end;
 		particle.colorRange.start = FlxRandom.color(color.start.min, color.start.max);
 		particle.colorRange.end = FlxRandom.color(color.end.min, color.end.max);
 		
 		// Particle drag settings
 		
-		particle.useDrag = drag.start == drag.min;
+		particle.useDrag = drag.start == drag.end;
 		particle.dragRange.start.x = FlxRandom.float(drag.start.min.x, drag.start.max.x);
 		particle.dragRange.start.y = FlxRandom.float(drag.start.min.y, drag.start.max.y);
 		particle.dragRange.end.x = FlxRandom.float(drag.end.min.x, drag.end.max.x);
@@ -514,16 +510,6 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		
 		x = _point.x - (Std.int(width) >> 1);
 		y = _point.y - (Std.int(height) >> 1);
-	}
-	
-	private inline function get_gravity():Float
-	{
-		return acceleration.y;
-	}
-	
-	private inline function set_gravity(Value:Float):Float
-	{
-		return acceleration.y = Value;
 	}
 }
 

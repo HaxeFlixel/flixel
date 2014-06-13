@@ -1,6 +1,7 @@
 package flixel.util.helpers;
 
 import flixel.util.FlxStringUtil;
+import flixel.math.FlxPoint;
 
 /**
  * Helper object for holding beginning and ending values of various properties.
@@ -9,7 +10,6 @@ class Range<T>
 {
 	public var start:T;
 	public var end:T;
-	public var range(get, set):T;
 	
 	/**
 	 * Create a new Range object. Must be typed, e.g. var myRange = new Range<Float>(0, 0);
@@ -35,18 +35,6 @@ class Range<T>
 		this.end = end == null ? start : end;
 		
 		return this;
-	}
-	
-	private inline function get_range():T
-	{
-		return (end - start);
-	}
-	
-	private inline function set_range(Value:T):T
-	{
-		end = Value - start;
-		
-		return range;
 	}
 	
 	public function toString():String
