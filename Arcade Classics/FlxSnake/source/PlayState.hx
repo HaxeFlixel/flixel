@@ -47,7 +47,7 @@ class PlayState extends FlxState
 		
 		// Start by creating the head of the snake
 		_snakeHead = new FlxSprite(screenMiddleX - _blockSize * 2, screenMiddleY);
-		_snakeHead.makeGraphic(_blockSize - 2, _blockSize - 2, FlxColor.OLIVE);
+		_snakeHead.makeGraphic(_blockSize - 2, _blockSize - 2, FlxColor.LIME);
 		_snakeHead.facing = FlxObject.LEFT;
 		offestSprite(_snakeHead);
 		

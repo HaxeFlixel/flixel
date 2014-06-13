@@ -47,7 +47,7 @@ class PlayState extends FlxState
 		
 		// Create player (a red box)
 		_player = new FlxSprite(70);
-		_player.makeGraphic(8, 10, FlxColor.CRIMSON);
+		_player.makeGraphic(8, 10, FlxColor.RED);
 		
 		// Max velocities on player.  If it's a platformer, Y should be high, like 200.
 		// Otherwise, set them to something like 80.
