@@ -32,6 +32,10 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 	 */
 	public var percent(default, null):Float = 0;
 	/**
+	 * Whether or not velocity should be updated each frame.
+	 */
+	public var useVelocity:Bool = false;
+	/**
 	 * Whether or not angularVelocity should be updated each frame.
 	 */
 	public var useAngularVelocity:Bool = false;
@@ -62,7 +66,7 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 	/**
 	 * The range of values for velocity over this particle's lifespan.
 	 */
-	public var velocityRange:Range<Float>;
+	public var velocityRange:Range<FlxPoint>;
 	/**
 	 * The range of values for angularVelocity over this particle's lifespan.
 	 */
@@ -100,7 +104,7 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 	{
 		super();
 		
-		velocityRange = new Range<Float>(0);
+		velocityRange = new Range<FlxPoint>(FlxPoint.weak());
 		angularVelocityRange = new Range<Float>(0);
 		scaleRange = new Range<FlxPoint>(FlxPoint.weak());
 		alphaRange = new Range<Float>(0);
@@ -128,6 +132,12 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 			}
 			
 			percent = age / lifespan;
+			
+			if (useVelocity)
+			{
+				velocity.x = velocityRange.start.x + (velocityRange.end.x - velocityRange.start.x) * percent;
+				velocity.y = velocityRange.start.y + (velocityRange.end.y - velocityRange.start.y) * percent;
+			}
 			
 			if (useAngularVelocity)
 			{
@@ -183,7 +193,7 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 		color = FlxColor.WHITE;
 		age = 0;
 		visible = true;
-		velocityRange.set(0);
+		velocityRange.set(FlxPoint.weak());
 		angularVelocityRange.set(0);
 		scaleRange.set(FlxPoint.weak());
 		alphaRange.set(1);
@@ -205,6 +215,7 @@ interface IFlxParticle extends IFlxSprite
 	public var lifespan:Float;
 	public var age(default, null):Float;
 	public var percent(default, null):Float;
+	public var useVelocity:Bool;
 	public var useAngularVelocity:Bool;
 	public var useScale:Bool;
 	public var useAlpha:Bool;
@@ -212,7 +223,7 @@ interface IFlxParticle extends IFlxSprite
 	public var useDrag:Bool;
 	public var useAcceleration:Bool;
 	public var useElasticity:Bool;
-	public var velocityRange:Range<Float>;
+	public var velocityRange:Range<FlxPoint>;
 	public var angularVelocityRange:Range<Float>;
 	public var scaleRange:Range<FlxPoint>;
 	public var alphaRange:Range<Float>;

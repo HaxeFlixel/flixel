@@ -8,6 +8,7 @@ import flixel.FlxSprite;
 import flixel.effects.particles.FlxParticle;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxAngle;
+import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRandom;
 import flixel.math.FlxVelocity;
@@ -162,7 +163,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		velocity = new FlxPointRangeBounds(-100, -100, 100, 100);
 		angularVelocity = new RangeBounds<Float>(0, 0);
 		angle = new RangeBounds<Float>(0);
-		launchAngle = new Bounds<Float>(0);
+		launchAngle = new Bounds<Float>(-180, 180);
 		lifespan = new Bounds<Float>(3);
 		scale = new FlxPointRangeBounds(1, 1);
 		alpha = new RangeBounds<Float>(1);
@@ -431,14 +432,20 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		
 		if (launchAngle != null && (velocity == null || launchMode == FlxEmitterMode.CIRCLE))
 		{
-			var launchVelocity:FlxPoint = FlxVelocity.velocityFromAngle(FlxRandom.float(launchAngle.min, launchAngle.max), FlxRandom.float(lifespan.min, lifespan.max));
+			var particleAngle:Float = FlxRandom.float(launchAngle.min, launchAngle.max);
+			var launchVelocity:FlxPoint = FlxVelocity.velocityFromAngle(particleAngle, FlxMath.vectorLength(FlxRandom.float(velocity.start.min.x, velocity.start.max.x), FlxRandom.float(velocity.start.min.y, velocity.start.max.y)));
+			var finalVelocity:FlxPoint = FlxVelocity.velocityFromAngle(particleAngle, FlxMath.vectorLength(FlxRandom.float(velocity.end.min.x, velocity.end.max.x), FlxRandom.float(velocity.end.min.y, velocity.end.max.y)));
 			particle.velocity.x = launchVelocity.x;
 			particle.velocity.y = launchVelocity.y;
+			particle.velocityRange.set(FlxPoint.weak(launchVelocity.x, launchVelocity.y), FlxPoint.weak(finalVelocity.x, finalVelocity.y));
+			particle.useVelocity = particle.velocityRange.start != particle.velocityRange.end;
 		}
 		else
 		{
 			particle.velocity.x = FlxRandom.float(velocity.start.min.x, velocity.start.max.x);
 			particle.velocity.y = FlxRandom.float(velocity.start.min.y, velocity.start.max.y);
+			particle.velocityRange.set(FlxPoint.weak(particle.velocity.x, particle.velocity.y), FlxPoint.weak(FlxRandom.float(velocity.end.min.x, velocity.end.max.x), FlxRandom.float(velocity.end.min.y, velocity.end.max.y)));
+			particle.useVelocity = particle.velocityRange.start != particle.velocityRange.end;
 		}
 		
 		// Particle angular velocity settings
