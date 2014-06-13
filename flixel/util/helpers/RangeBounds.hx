@@ -21,6 +21,9 @@ class RangeBounds<T> extends Range<Bounds<T>>
 	{
 		super(null);
 		
+		start = new Bounds<T>(startMin, startMax);
+		end = new Bounds<T>(endMin, endMax);
+		
 		setAll(startMin, startMax, endMin, endMax);
 	}
 	

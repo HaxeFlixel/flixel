@@ -25,6 +25,9 @@ class FlxPointRangeBounds extends Range<Bounds<FlxPoint>>
 	{
 		super(null);
 		
+		start = new Bounds<FlxPoint>(FlxPoint.weak(startMinX, startMinY), FlxPoint.weak(startMaxX, startMaxY));
+		end = new Bounds<FlxPoint>(FlxPoint.weak(endMinX, endMinY), FlxPoint.weak(endMaxX, endMaxY));
+		
 		setAll(startMinX, startMinY, startMaxX, startMaxY, endMinX, endMinY, endMaxX, endMaxY);
 	}
 	

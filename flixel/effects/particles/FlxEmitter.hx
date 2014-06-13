@@ -439,10 +439,11 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		{
 			particle.angularVelocityRange.start = FlxRandom.float(angularVelocity.start.min, angularVelocity.start.max);
 			particle.angularVelocityRange.end = FlxRandom.float(angularVelocity.end.min, angularVelocity.end.max);
+			particle.angularVelocity = particle.angularVelocityRange.start;
 		}
 		else
 		{
-		particle.angularVelocity = (FlxRandom.float(angle.end.min, angle.end.max) - FlxRandom.float(angle.start.min, angle.start.max)) / FlxRandom.float(lifespan.min, lifespan.max);
+			particle.angularVelocity = (FlxRandom.float(angle.end.min, angle.end.max) - FlxRandom.float(angle.start.min, angle.start.max)) / FlxRandom.float(lifespan.min, lifespan.max);
 			particle.useAngularVelocity = false;
 		}
 		
@@ -461,18 +462,22 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		particle.scaleRange.start.y = FlxRandom.float(scale.start.min.y, scale.start.max.y);
 		particle.scaleRange.end.x = FlxRandom.float(scale.end.min.x, scale.end.max.x);
 		particle.scaleRange.end.y = FlxRandom.float(scale.end.min.y, scale.end.max.y);
+		particle.scale.x = particle.scaleRange.start.x;
+		particle.scale.y = particle.scaleRange.start.y;
 		
 		// Particle alpha settings
 		
 		particle.useAlpha = alpha.start == alpha.end;
 		particle.alphaRange.start = FlxRandom.float(alpha.start.min, alpha.start.max);
 		particle.alphaRange.end = FlxRandom.float(alpha.end.min, alpha.end.max);
+		particle.alpha = particle.alphaRange.start;
 		
 		// Particle color settings
 		
 		particle.useColor = color.start == color.end;
 		particle.colorRange.start = FlxRandom.color(color.start.min, color.start.max);
 		particle.colorRange.end = FlxRandom.color(color.end.min, color.end.max);
+		particle.color = particle.colorRange.start;
 		
 		// Particle drag settings
 		
@@ -481,6 +486,8 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		particle.dragRange.start.y = FlxRandom.float(drag.start.min.y, drag.start.max.y);
 		particle.dragRange.end.x = FlxRandom.float(drag.end.min.x, drag.end.max.x);
 		particle.dragRange.end.y = FlxRandom.float(drag.end.min.y, drag.end.max.y);
+		particle.drag.x = particle.dragRange.start.x;
+		particle.drag.y = particle.dragRange.start.y;
 		
 		// Particle acceleration settings
 		
@@ -489,12 +496,15 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		particle.accelerationRange.start.y = FlxRandom.float(acceleration.start.min.y, acceleration.start.max.y);
 		particle.accelerationRange.end.x = FlxRandom.float(acceleration.end.min.x, acceleration.end.max.x);
 		particle.accelerationRange.end.y = FlxRandom.float(acceleration.end.min.y, acceleration.end.max.y);
+		particle.acceleration.x = particle.accelerationRange.start.x;
+		particle.acceleration.y = particle.accelerationRange.start.y;
 		
 		// Particle elasticity settings
 		
 		particle.useElasticity = elasticity.start == elasticity.end;
 		particle.elasticityRange.start = FlxRandom.float(elasticity.start.min, elasticity.start.max);
 		particle.elasticityRange.end = FlxRandom.float(elasticity.end.min, elasticity.end.max);
+		particle.elasticity = particle.elasticityRange.start;
 		
 		particle.onEmit();
 	}

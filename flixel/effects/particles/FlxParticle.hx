@@ -99,6 +99,16 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 	public function new()
 	{
 		super();
+		
+		velocityRange = new Range<Float>(0);
+		angularVelocityRange = new Range<Float>(0);
+		scaleRange = new Range<FlxPoint>(FlxPoint.weak());
+		alphaRange = new Range<Float>(0);
+		colorRange = new Range<FlxColor>(FlxColor.WHITE);
+		dragRange = new Range<FlxPoint>(FlxPoint.weak());
+		accelerationRange = new Range<FlxPoint>(FlxPoint.weak());
+		elasticityRange = new Range<Float>(0);
+		
 		exists = false;
 	}
 	
