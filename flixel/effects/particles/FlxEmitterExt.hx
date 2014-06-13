@@ -175,7 +175,7 @@ class FlxTypedEmitterExt<T:(FlxSprite, IFlxParticle)> extends FlxTypedEmitter<T>
 		}
 		
 		// particle color settings
-		var startRedComp:Float = particle.startRed = startRed.min;
+		/*var startRedComp:Float = particle.startColor.red = startRed.min;
 		var startGreenComp:Float = particle.startGreen = startGreen.min;
 		var startBlueComp:Float = particle.startBlue = startBlue.min;
 		
@@ -220,7 +220,7 @@ class FlxTypedEmitterExt<T:(FlxSprite, IFlxParticle)> extends FlxTypedEmitter<T>
 		if (particle.rangeRed != 0 || particle.rangeGreen != 0 || particle.rangeBlue != 0)
 		{
 			particle.useColoring = true;
-		}
+		}*/
 		
 		// End of particle color settings
 		if (startScale.min != startScale.max)
