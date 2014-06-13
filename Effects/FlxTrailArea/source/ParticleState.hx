@@ -24,7 +24,8 @@ class ParticleState extends FlxState
 		
 		// Sets up the emitter for the particle explosion
 		_emitter = new FlxEmitter(200, FlxG.height / 2, PARTICLE_AMOUNT);
-		_emitter.setColor(0xff0000, 0x00ff00);
+		_emitter.startColor.set(0xff0000);
+		_emitter.endColor.set(0x00ff00);
 		
 		var particle:FlxParticle;
 		for (i in 0...PARTICLE_AMOUNT)

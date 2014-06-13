@@ -155,74 +155,46 @@ class DemoState extends FlxState
 		//-- Presets --
 		panel = presetsPanel;
 		
-		txt = new FlxText(2, 25, FlxG.width - 4, "The following static preset colors are available on FlxColor:-", 12);
+		txt = new FlxText(2, 25, FlxG.width - 4, "The following static preset colors are available on FlxColor:", 12);
 		txt.font = "fairfax";
 		panel.add(txt);
 		
-		var startX = 2;
-		var startY = 44;
 		var presetHeight = 15;
 		var presetWidth = 100;
-		var maxY = FlxG.height - presetHeight - 15;
+		var maxY = FlxG.height - presetHeight - 65;
+		var startX = FlxG.width / 6;
+		var startY = 100;
 		var currentX = startX;
 		var currentY = startY;
 		
-		Macro.makePresetSprite("RED");
-		Macro.makePresetSprite("YELLOW");
-		Macro.makePresetSprite("GREEN");
-		Macro.makePresetSprite("BLUE");
-		Macro.makePresetSprite("ORANGE");
-		Macro.makePresetSprite("PINK");
-		Macro.makePresetSprite("PURPLE");
-		Macro.makePresetSprite("WHITE");
-		Macro.makePresetSprite("BLACK");
-		Macro.makePresetSprite("GRAY");
-		Macro.makePresetSprite("BROWN");
 		Macro.makePresetSprite("TRANSPARENT");
-		Macro.makePresetSprite("IVORY");
-		Macro.makePresetSprite("BEIGE");
-		Macro.makePresetSprite("WHEAT");
-		Macro.makePresetSprite("TAN");
-		Macro.makePresetSprite("KHAKI");
-		Macro.makePresetSprite("SILVER");
-		Macro.makePresetSprite("CHARCOAL");
-		Macro.makePresetSprite("NAVY_BLUE");
-		Macro.makePresetSprite("ROYAL_BLUE");
-		Macro.makePresetSprite("MEDIUM_BLUE");
-		Macro.makePresetSprite("AZURE");
-		Macro.makePresetSprite("CYAN");
-		Macro.makePresetSprite("MAGENTA");
-		Macro.makePresetSprite("AQUAMARINE");
-		Macro.makePresetSprite("TEAL");
-		Macro.makePresetSprite("FOREST_GREEN");
-		Macro.makePresetSprite("OLIVE");
-		Macro.makePresetSprite("CHARTREUSE");
+		Macro.makePresetSprite("WHITE");
+		Macro.makePresetSprite("GRAY");
+		Macro.makePresetSprite("BLACK");
+		
+		Macro.makePresetSprite("GREEN");
 		Macro.makePresetSprite("LIME");
-		Macro.makePresetSprite("GOLDEN");
-		Macro.makePresetSprite("GOLDENROD");
-		Macro.makePresetSprite("CORAL");
-		Macro.makePresetSprite("SALMON");
-		Macro.makePresetSprite("HOT_PINK");
-		Macro.makePresetSprite("FUCSHIA");
-		Macro.makePresetSprite("PUCE");
-		Macro.makePresetSprite("MAUVE");
-		Macro.makePresetSprite("LAVENDER");
-		Macro.makePresetSprite("PLUM");
-		Macro.makePresetSprite("INDIGO");
-		Macro.makePresetSprite("MAROON");
-		Macro.makePresetSprite("CRIMSON");
+		Macro.makePresetSprite("YELLOW");
+		Macro.makePresetSprite("ORANGE");
+		Macro.makePresetSprite("RED");
+		Macro.makePresetSprite("PURPLE");
+		Macro.makePresetSprite("BLUE");
+		Macro.makePresetSprite("BROWN");
+		Macro.makePresetSprite("PINK");
+		Macro.makePresetSprite("MAGENTA");
+		Macro.makePresetSprite("CYAN");
 		
 		//-- Gradients --
 		panel = gradientsPanel;
 		
-		var c1 = FlxColor.CRIMSON;
-		var c2 = FlxColor.FOREST_GREEN;
+		var c1 = FlxColor.RED;
+		var c2 = FlxColor.GREEN;
 		
 		txt = new FlxText(4, 30, FlxG.width - 8, "", 12);
 		txt.wordWrap = true;
 		txt.font = "fairfax";
-		txt.text =  "var c1 = FlxColor.CRIMSON;\n" +
-		            "var c2 = FlxColor.FOREST_GREEN;\n\n" +
+		txt.text =  "var c1 = FlxColor.RED;\n" +
+		            "var c2 = FlxColor.GREEN;\n\n" +
 		            "// Interpolate by factor 0.5\nFlxColor.interpolate(c1, c2, 0.5);\n\n" +
 		            "FlxColor.gradient(c1, c2, 20); // Returns array of colors\n\n\n\n" +
 		            "FlxColor.gradient(c1, c2, 20, FlxEase.quadIn); // Easing";
@@ -248,7 +220,7 @@ class DemoState extends FlxState
 		//-- Harmonies --
 		panel = harmoniesPanel;
 		
-		var myColor = FlxColor.CRIMSON;
+		var myColor = FlxColor.RED;
 		var complementHarmony:FlxColor = myColor.getComplementHarmony();
 		var splitComplementHarmony:Harmony = myColor.getSplitComplementHarmony();
 		var analogousHarmony:Harmony = myColor.getAnalogousHarmony();
@@ -274,7 +246,7 @@ class DemoState extends FlxState
 		txt = new FlxText(4, 30, FlxG.width - 8, "", 12);
 		txt.wordWrap = true;
 		txt.font = "fairfax";
-		txt.text =  "var myColor = FlxColor.CRIMSON;\n\n" +
+		txt.text =  "var myColor = FlxColor.RED;\n\n" +
 		            "myColor.getComplementHarmony();\n\n" +
 		            "myColor.getSplitComplementHarmony();\n\n" +
 		            "myColor.getAnalogousHarmony();\n\n" +
