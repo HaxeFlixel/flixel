@@ -91,10 +91,6 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	 */
 	public var launchAngle(default, null):Bounds<Float>;
 	/**
-	 * The distance range for particles launched from this emitter.
-	 */
-	public var distance(default, null):Bounds<Float>;
-	/**
 	 * The life, or duration, range of particles launched from this emitter.
 	 */
 	public var lifespan(default, null):Bounds<Float>;
@@ -166,7 +162,6 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		angularVelocity = new RangeBounds<Float>( -360, 360);
 		angle = new RangeBounds<Float>(0);
 		launchAngle = null; // this is ignored unless set
-		distance = null; // same here
 		lifespan = new Bounds<Float>(3);
 		scale = new FlxPointRangeBounds(1, 1);
 		alpha = new RangeBounds<Float>(1);
@@ -191,7 +186,6 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		angularVelocity = null;
 		angle = null;
 		launchAngle = null;
-		distance = null;
 		lifespan = null;
 		scale = null;
 		alpha = null;
@@ -419,9 +413,9 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		
 		// Particle velocity/launch angle settings
 		
-		if (launchAngle != null && distance != null && (velocity == null || launchMode == FlxEmitterMode.CIRCLE))
+		if (launchAngle != null && (velocity == null || launchMode == FlxEmitterMode.CIRCLE))
 		{
-			var launchVelocity:FlxPoint = FlxVelocity.velocityFromAngle(FlxRandom.float(launchAngle.min, launchAngle.max), FlxRandom.float(distance.min, distance.max));
+		var launchVelocity:FlxPoint = FlxVelocity.velocityFromAngle(FlxRandom.float(launchAngle.min, launchAngle.max), FlxRandom.float(lifespan.min, lifespan.max));
 			particle.velocity.x = launchVelocity.x;
 			particle.velocity.y = launchVelocity.y;
 		}
