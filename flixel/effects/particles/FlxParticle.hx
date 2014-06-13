@@ -165,8 +165,12 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 		super.reset(X, Y);
 		
 		alpha = 1.0;
-		scale.x = scale.y = 1.0;
+		scale.set(1, 1);
 		color = FlxColor.WHITE;
+		if (animation.curAnim != null)
+		{
+			animation.curAnim.restart();
+		}
 	}
 	
 	/**
