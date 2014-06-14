@@ -2,7 +2,7 @@ package flixel.input.gamepad;
 
 import flixel.input.FlxInput.FlxInputState;
 import flixel.input.gamepad.FlxGamepad.FlxGamepadDeadZoneMode;
-import flixel.input.gamepad.FlxGamepadAxes;
+import flixel.input.gamepad.FlxGamepadAnalogueStick;
 import flixel.math.FlxPoint;
 import flixel.math.FlxVector;
 import flixel.util.FlxDestroyUtil;
@@ -31,11 +31,11 @@ class FlxGamepad implements IFlxDestroyable
 	 * Less this number the more gamepad is sensible. Should be between 0.0 and 1.0.
 	 */
 	public var deadZone:Float = 0.15;
+	/**
+	 * Which dead zone mode to use for analogue sticks.
+	 */
 	public var deadZoneMode:FlxGamepadDeadZoneMode = INDEPENDANT_AXES;
 	
-	/**
-	 * DPAD
-	 */
 	#if !flash
 	public var hat(default, null):FlxPoint = FlxPoint.get();
 	public var ball(default, null):FlxPoint = FlxPoint.get();
@@ -343,7 +343,7 @@ class FlxGamepad implements IFlxDestroyable
 	/**
 	 * Gets the value of the specified X axis.
 	 */
-	public inline function getXAxis(Axes:FlxGamepadAxes):Float
+	public inline function getXAxis(Axes:FlxGamepadAnalogueStick):Float
 	{
 		return getAnalogueAxisValue(FlxAxes.X, Axes);
 	}
@@ -352,7 +352,7 @@ class FlxGamepad implements IFlxDestroyable
 	 * Gets the value of the specified Y axis - 
 	 * should be used in flash to correct the inverted y axis.
 	 */
-	public function getYAxis(Axes:FlxGamepadAxes):Float
+	public function getYAxis(Axes:FlxGamepadAnalogueStick):Float
 	{
 		var axisValue = getAnalogueAxisValue(FlxAxes.Y, Axes);
 		
@@ -438,7 +438,7 @@ class FlxGamepad implements IFlxDestroyable
 		return axisValue;
 	}
 	
-	private function getAnalogueAxisValue(Axis:FlxAxes, Axes:FlxGamepadAxes):Float
+	private function getAnalogueAxisValue(Axis:FlxAxes, Axes:FlxGamepadAnalogueStick):Float
 	{
 		if (deadZoneMode == CIRCULAR)
 		{

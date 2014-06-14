@@ -1,13 +1,12 @@
 package flixel.input.gamepad;
 
-import flixel.input.gamepad.FlxGamepadAxes;
+import flixel.input.gamepad.FlxGamepadAnalogueStick;
 
 /**
  * Button IDs for Logitech controllers (key codes based on Cordless Rumblepad 2)
  */
 class LogitechButtonID
 {
-	
 #if flash
 	/**
 	 * Placement equivalent to 'X' button on the Xbox 360 controller.
@@ -66,8 +65,8 @@ class LogitechButtonID
 	/**
 	 * Axis array indicies
 	 */
-	public static var LEFT_ANALOGUE_STICK(default, null):FlxGamepadAxes = [FlxAxes.X => 0, FlxAxes.Y => 1];
-	public static var RIGHT_ANALOGUE_STICK(default, null):FlxGamepadAxes = [FlxAxes.X => 2, FlxAxes.Y => 3];
+	public static var LEFT_ANALOGUE_STICK(default, null):FlxGamepadAnalogueStick = [FlxAxes.X => 0, FlxAxes.Y => 1];
+	public static var RIGHT_ANALOGUE_STICK(default, null):FlxGamepadAnalogueStick = [FlxAxes.X => 2, FlxAxes.Y => 3];
 	
 	public static inline var DPAD_UP:Int = 4;
 	public static inline var DPAD_DOWN:Int = 5;
@@ -131,7 +130,7 @@ class LogitechButtonID
 	/**
 	 * Axis array indicies
 	 */
-	public static var LEFT_ANALOGUE_STICK(default, null):FlxGamepadAxes = [FlxAxes.X => 0, FlxAxes.Y => 1];
-	public static var RIGHT_ANALOGUE_STICK(default, null):FlxGamepadAxes = [FlxAxes.X => 2, FlxAxes.Y => 3];
+	public static var LEFT_ANALOGUE_STICK(default, null):FlxGamepadAnalogueStick = [FlxAxes.X => 0, FlxAxes.Y => 1];
+	public static var RIGHT_ANALOGUE_STICK(default, null):FlxGamepadAnalogueStick = [FlxAxes.X => 2, FlxAxes.Y => 3];
 #end
 }

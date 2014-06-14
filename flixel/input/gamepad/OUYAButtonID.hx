@@ -1,6 +1,6 @@
 package flixel.input.gamepad;
 
-import flixel.input.gamepad.FlxGamepadAxes;
+import flixel.input.gamepad.FlxGamepadAnalogueStick;
 
 /**
  * Button IDs for OUYA controllers
@@ -26,8 +26,8 @@ class OUYAButtonID
 	 * 
 	 * If TRIGGER axis returns value > 0 then LT is being pressed, and if it's < 0 then RT is being pressed
 	 */
-	public static var LEFT_ANALOGUE_STICK(default, null):FlxGamepadAxes = [FlxAxes.X => 0, FlxAxes.Y => 1];
-	public static var RIGHT_ANALOGUE_STICK(default, null):FlxGamepadAxes = [FlxAxes.X => 11, FlxAxes.Y => 14];
+	public static var LEFT_ANALOGUE_STICK(default, null):FlxGamepadAnalogueStick = [FlxAxes.X => 0, FlxAxes.Y => 1];
+	public static var RIGHT_ANALOGUE_STICK(default, null):FlxGamepadAnalogueStick = [FlxAxes.X => 11, FlxAxes.Y => 14];
 	public static inline var LEFT_TRIGGER_ANALOG:Int = 17;
 	public static inline var RIGHT_TRIGGER_ANALOG:Int = 18;
 } 
