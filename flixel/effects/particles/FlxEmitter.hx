@@ -9,6 +9,7 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRandom;
 import flixel.system.FlxAssets.FlxGraphicAsset;
+import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxStringUtil;
 
@@ -126,29 +127,13 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	 */
 	public var endAlpha(default, null):Bounds<Float>;
 	/**
-	 * Sets start red color component range (when particle emits)
+	 * Sets start color range (when particle emits)
 	 */
-	public var startRed(default, null):Bounds<Float>;
+	public var startColor(default, null):Bounds<FlxColor>;
 	/**
-	 * Sets start green color component range (when particle emits)
+	 * Sets end color range (when particle emits)
 	 */
-	public var startGreen(default, null):Bounds<Float>;
-	/**
-	 * Sets start blue color component range (when particle emits)
-	 */
-	public var startBlue(default, null):Bounds<Float>;
-	/**
-	 * Sets end red color component range (when particle emits)
-	 */
-	public var endRed(default, null):Bounds<Float>;
-	/**
-	 * Sets end green color component range (when particle emits)
-	 */
-	public var endGreen(default, null):Bounds<Float>;
-	/**
-	 * Sets end blue color component range (when particle emits)
-	 */
-	public var endBlue(default, null):Bounds<Float>;
+	public var endColor(default, null):Bounds<FlxColor>;
 	/**
 	 * The X and Y drag component of particles launched from the emitter.
 	 */
@@ -204,12 +189,8 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		endScale = new Bounds<Float>(1, 1);
 		startAlpha = new Bounds<Float>(1.0, 1.0);
 		endAlpha = new Bounds<Float>(1.0, 1.0);
-		startRed = new Bounds<Float>(1.0, 1.0);
-		startGreen = new Bounds<Float>(1.0, 1.0);
-		startBlue = new Bounds<Float>(1.0, 1.0);
-		endRed = new Bounds<Float>(1.0, 1.0);
-		endGreen = new Bounds<Float>(1.0, 1.0);
-		endBlue = new Bounds<Float>(1.0, 1.0);
+		startColor = new Bounds<FlxColor>(FlxColor.WHITE, FlxColor.WHITE);
+		endColor = new Bounds<FlxColor>(FlxColor.WHITE, FlxColor.WHITE);
 		
 		acceleration = FlxPoint.get(0, 0);
 		particleClass = cast FlxParticle;
@@ -238,12 +219,8 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		endScale = null;
 		startAlpha = null;
 		endAlpha = null;
-		startRed = null;
-		startGreen = null;
-		startBlue = null;
-		endRed = null;
-		endGreen = null;
-		endBlue = null;
+		startColor = null;
+		endColor = null;
 		blend = null;
 		_point = null;
 		
@@ -494,52 +471,34 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		}
 		
 		// Particle color settings
-		var startRedComp:Float = particle.startRed = startRed.min;
-		var startGreenComp:Float = particle.startGreen = startGreen.min;
-		var startBlueComp:Float = particle.startBlue = startBlue.min;
-		
-		var endRedComp:Float = endRed.min;
-		var endGreenComp:Float = endGreen.min;
-		var endBlueComp:Float = endBlue.min;
-		
-		if (startRed.min != startRed.max)
-		{
-			particle.startRed = startRedComp = startRed.min + FlxRandom.float() * (startRed.max - startRed.min);
-		}
-		if (startGreen.min != startGreen.max)
-		{
-			particle.startGreen = startGreenComp = startGreen.min + FlxRandom.float() * (startGreen.max - startGreen.min);
-		}
-		if (startBlue.min != startBlue.max)
-		{
-			particle.startBlue = startBlueComp = startBlue.min + FlxRandom.float() * (startBlue.max - startBlue.min);
-		}
-		
-		if (endRed.min != endRed.max)
-		{
-			endRedComp = endRed.min + FlxRandom.float() * (endRed.max - endRed.min);
-		}
-		
-		if (endGreen.min != endGreen.max)
-		{
-			endGreenComp = endGreen.min + FlxRandom.float() * (endGreen.max - endGreen.min);
-		}
-		
-		if (endBlue.min != endBlue.max)
-		{
-			endBlueComp = endBlue.min + FlxRandom.float() * (endBlue.max - endBlue.min);
-		}
-		
-		particle.rangeRed = endRedComp - startRedComp;
-		particle.rangeGreen = endGreenComp - startGreenComp;
-		particle.rangeBlue = endBlueComp - startBlueComp;
 		
 		particle.useColoring = false;
 		
-		if (particle.rangeRed != 0 || particle.rangeGreen != 0 || particle.rangeBlue != 0)
+		if (startColor.min != startColor.max)
+		{
+			particle.startColor = FlxColor.fromRGB(FlxRandom.int(startColor.min.red, startColor.max.red), FlxRandom.int(startColor.min.green, startColor.max.green), FlxRandom.int(startColor.min.blue, startColor.max.blue));
+		}
+		else
+		{
+			particle.startColor = startColor.min;
+		}
+		
+		if (endColor.min != endColor.max)
+		{
+			particle.endColor = FlxColor.fromRGB(FlxRandom.int(endColor.min.red, endColor.max.red), FlxRandom.int(endColor.min.green, endColor.max.green), FlxRandom.int(endColor.min.blue, endColor.max.blue));
+		}
+		else
+		{
+			particle.endColor = endColor.min;
+		}
+		
+		if (particle.startColor != particle.endColor)
 		{
 			particle.useColoring = true;
 		}
+		
+		particle.color = particle.startColor;
+		
 		// End of particle color settings
 		if (startScale.min != startScale.max)
 		{
@@ -728,35 +687,6 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		startAlpha.max = StartMax;
 		endAlpha.min = EndMin;
 		endAlpha.max = EndMax;
-	}
-	
-	/**
-	 * A more compact way of setting the color constraints of the emitter.
-	 * But it's not so flexible as setting values of each color bounds objects.
-	 * 
-	 * @param	Start		The start particles color at the start (emission).
-	 * @param	EndMin		The end particles color at the end (death).
-	 */
-	public function setColor(Start:Int = 0xffffff, End:Int = 0xffffff):Void
-	{
-		Start &= 0xffffff;
-		End &= 0xffffff;
-		
-		var startRedComp:Float = (Start >> 16 & 0xFF) / 255;
-		var startGreenComp:Float = (Start >> 8 & 0xFF) / 255;
-		var startBlueComp:Float = (Start & 0xFF) / 255;
-		
-		var endRedComp:Float = (End >> 16 & 0xFF) / 255;
-		var endGreenComp:Float = (End >> 8 & 0xFF) / 255;
-		var endBlueComp:Float = (End & 0xFF) / 255;
-		
-		startRed.min = startRed.max = startRedComp;
-		startGreen.min = startGreen.max = startGreenComp;
-		startBlue.min = startBlue.max = startBlueComp;
-		
-		endRed.min = endRed.max = endRedComp;
-		endGreen.min = endGreen.max = endGreenComp;
-		endBlue.min = endBlue.max = endBlueComp;
 	}
 	
 	/**

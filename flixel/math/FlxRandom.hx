@@ -18,12 +18,6 @@ class FlxRandom
 	public static var globalSeed(default, set):Int = 1;
 	
 	/**
-	 * Current seed used to generate new random numbers. You can retrieve this value if,
-	 * for example, you want to store the seed that was used to randomly generate a level.
-	 */
-	public static var currentSeed(get, set):Int;
-	
-	/**
 	 * Function to easily set the global seed to a new random number.
 	 * Used primarily by FlxG whenever the game is reset.
 	 * Please note that this function is not deterministic!
@@ -33,8 +27,14 @@ class FlxRandom
 	 */
 	public static inline function resetGlobalSeed():Int
 	{
-		return globalSeed = Std.int(Math.random() * MODULUS);
+		return globalSeed = rangeBound(Std.int(Math.random() * FlxMath.MAX_VALUE_INT));
 	}
+	
+	/**
+	 * Current seed used to generate new random numbers. You can retrieve this value if,
+	 * for example, you want to store the seed that was used to randomly generate a level.
+	 */
+	public static var currentSeed(get, set):Int;
 	
 	/**
 	 * Returns a pseudorandom integer between Min and Max, inclusive.
@@ -76,7 +76,7 @@ class FlxRandom
 				
 				do
 				{
-					return Math.floor(Min + generate() / MODULUS * (Max - Min + 1));
+					result = Math.floor(Min + generate() / MODULUS * (Max - Min + 1));
 				}
 				while (Excludes.indexOf(result) >= 0);
 				
@@ -206,7 +206,7 @@ class FlxRandom
 	 * @return  A pseudorandomly chosen object from Objects.
 	 */
 	@:generic
-	public static function getObject<T>(Objects:Array<T>, ?WeightsArray:Array<Float>, StartIndex:Int = 0, EndIndex:Int = 0):T
+	public static function getObject<T>(Objects:Array<T>, ?WeightsArray:Array<Float>, StartIndex:Int = 0, ?EndIndex:Null<Int>):T
 	{
 		var selected:Null<T> = null;
 		
@@ -217,17 +217,22 @@ class FlxRandom
 				WeightsArray = [for (i in 0...Objects.length) 1];
 			}
 			
+			if (EndIndex == null)
+			{
+				EndIndex = Objects.length - 1;
+			}
+			
 			StartIndex = Std.int(FlxMath.bound(StartIndex, 0, Objects.length - 1));
 			EndIndex = Std.int(FlxMath.bound(EndIndex, 0, Objects.length - 1));
 			
 			// Swap values if reversed
+			
 			if (EndIndex < StartIndex)
 			{
 				StartIndex = StartIndex + EndIndex;
 				EndIndex = StartIndex - EndIndex;
 				StartIndex = StartIndex - EndIndex;
 			}
-			
 			
 			if (EndIndex > WeightsArray.length - 1)
 			{
@@ -289,29 +294,6 @@ class FlxRandom
 		var blue = GreyScale ? red : int(Min, Max);
 		
 		return FlxColor.fromRGB(red, green, blue, Alpha);
-	}
-	
-	/**
-	 * Much like color(), but with finer control over the output color.
-	 * 
-	 * @param   RedMinimum     The minimum amount of red in the output color, from 0 to 255.
-	 * @param   RedMaximum     The maximum amount of red in the output color, from 0 to 255.
-	 * @param   GreedMinimum   The minimum amount of green in the output color, from 0 to 255.
-	 * @param   GreenMaximum   The maximum amount of green in the output color, from 0 to 255.
-	 * @param   BlueMinimum    The minimum amount of blue in the output color, from 0 to 255.
-	 * @param   BlueMaximum    The maximum amount of blue in the output color, from 0 to 255.
-	 * @param   AlphaMinimum   The minimum alpha value for the output color, from 0 (fully transparent) to 255 (fully opaque).
-	 * @param   AlphaMaximum   The maximum alpha value for the output color, from 0 (fully transparent) to 255 (fully opaque).
-	 * @return  A pseudorandomly generated color within the ranges specified.
-	 */
-	public static function colorExt(RedMinimum:Int = 0, RedMaximum:Int = 255, GreenMinimum:Int = 0, GreenMaximum:Int = 255, BlueMinimum:Int = 0, BlueMaximum:Int = 255, AlphaMinimum:Int = 255, AlphaMaximum:Int = 255):FlxColor
-	{		
-		var red = int(Std.int(FlxMath.bound(RedMinimum, 0, 255)), Std.int(FlxMath.bound(RedMaximum, 0, 255)));
-		var green = int(Std.int(FlxMath.bound(GreenMinimum, 0, 255)), Std.int(FlxMath.bound(GreenMaximum, 0, 255)));
-		var blue = int(Std.int(FlxMath.bound(BlueMinimum, 0, 255)), Std.int(FlxMath.bound(BlueMaximum, 0, 255)));
-		var alpha = int(Std.int(FlxMath.bound(AlphaMinimum, 0, 255)), Std.int(FlxMath.bound(AlphaMaximum, 0, 255)));
-		
-		return FlxColor.fromRGB(red, green, blue, alpha);
 	}
 	
 	/**

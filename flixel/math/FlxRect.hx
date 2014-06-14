@@ -16,14 +16,22 @@ class FlxRect implements IFlxPooled
 	/**
 	 * Recycle or create new FlxRect.
 	 * Be sure to put() them back into the pool after you're done with them!
-	 * 
-	 * @param	X		The X-coordinate of the point in space.
-	 * @param	Y		The Y-coordinate of the point in space.
 	 */
 	public static inline function get(X:Float = 0, Y:Float = 0, Width:Float = 0, Height:Float = 0):FlxRect
 	{
 		var rect = _pool.get().set(X, Y, Width, Height);
 		rect._inPool = false;
+		return rect;
+	}
+	
+	/**
+	 * Recycle or create a new FlxRect which will automatically be released 
+	 * to the pool when passed into a flixel function.
+	 */
+	public static inline function weak(X:Float = 0, Y:Float = 0, Width:Float = 0, Height:Float = 0):FlxRect
+	{
+		var rect = _pool.get().set(X, Y, Width, Height);
+		rect._weak = true;
 		return rect;
 	}
 	
@@ -52,6 +60,7 @@ class FlxRect implements IFlxPooled
 	 */
 	public var bottom(get, set):Float;
 	
+	private var _weak:Bool = false;
 	private var _inPool:Bool = false;
 	
 	public function new(X:Float = 0, Y:Float = 0, Width:Float = 0, Height:Float = 0)
@@ -68,6 +77,17 @@ class FlxRect implements IFlxPooled
 		{
 			_inPool = true;
 			_pool.putUnsafe(this);
+		}
+	}
+	
+	/**
+	 * Add this FlxPoint to the recycling pool if it's a weak reference (allocated via weak()).
+	 */
+	public inline function putWeak():Void
+	{
+		if (_weak)
+		{
+			_pool.put(this);
 		}
 	}
 	
@@ -199,6 +219,30 @@ class FlxRect implements IFlxPooled
 		var maxY:Float = Math.max(bottom, Rect.bottom);
 		
 		return set(minX, minY, maxX - minX, maxY - minY);
+	}
+	
+	/**
+	 * Rounds x, y, width and height using Math.floor()
+	 */
+	public inline function floor():FlxRect
+	{
+		x = Math.floor(x);
+		y = Math.floor(y);
+		width = Math.floor(width);
+		height = Math.floor(height);
+		return this;
+	}
+	
+	/**
+	 * Rounds x, y, width and height using Math.ceil()
+	 */
+	public inline function ceil():FlxRect
+	{
+		x = Math.ceil(x);
+		y = Math.ceil(y);
+		width = Math.ceil(width);
+		height = Math.ceil(height);
+		return this;
 	}
 	
 	/**

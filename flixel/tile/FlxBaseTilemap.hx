@@ -229,7 +229,8 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 					
 					if (curTile < 0)
 					{
-						throw 'Negative values ($curTile) for tile indices are not allowed.';
+						// anything < 0 should be treated as 0 for compatibility with certain map formats (ogmo)
+						curTile = 0;
 					}
 					
 					//if neko, make sure the value was not null, and if it is null,
