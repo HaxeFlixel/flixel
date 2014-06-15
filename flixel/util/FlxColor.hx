@@ -697,7 +697,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 		setHSL(hue, saturation, Value, alphaFloat);
 		return Value;
 	}
-		
+	
 	private inline function maxColor():Float
 	{
 		return Math.max(redFloat, Math.max(greenFloat, blueFloat));
