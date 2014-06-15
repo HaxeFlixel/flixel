@@ -71,7 +71,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	/**
 	 * How particles should be launched. If CIRCLE, particles will use launchAngle and distance. Otherwise, particles will use velocity.x and velocity.y.
 	 */
-	public var launchMode:FlxEmitterMode = FlxEmitterMode.SQUARE;
+	public var launchMode:FlxEmitterMode = FlxEmitterMode.CIRCLE;
 	/**
 	 * Sets the velocity range of particles launched from this emitter.
 	 */
@@ -540,9 +540,8 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	}
 }
 
-@:enum
-abstract FlxEmitterMode(Int) from Int
+enum FlxEmitterMode
 {
-	var SQUARE = 0;
-	var CIRCLE = 1;
+	SQUARE;
+	CIRCLE;
 }

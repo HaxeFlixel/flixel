@@ -73,4 +73,12 @@ class FlxPointRangeBounds extends Range<Bounds<FlxPoint>>
 			LabelValuePair.weak("end.max.x", end.max.x),
 			LabelValuePair.weak("end.max.y", end.max.y)]);
 	}
+	
+	public function destroy():Void
+	{
+		start.min.put();
+		start.max.put();
+		end.min.put();
+		end.max.put();
+	}
 }

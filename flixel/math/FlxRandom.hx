@@ -281,7 +281,7 @@ class FlxRandom
 	 * @param   Max        An optional FlxColor representing the upper bounds for the generated color.
 	 * @param 	Alpha      An optional value for the alpha channel of the generated color.
 	 * @param   GreyScale  Whether or not to create a color that is strictly a shade of grey. False by default.
-	 * @return  A color value in FlxColor format.
+	 * @return  A color value as a FlxColor.
 	 */
 	public static function color(?Min:FlxColor, ?Max:FlxColor, ?Alpha:Null<Int>, GreyScale:Bool = false):FlxColor
 	{
