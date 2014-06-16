@@ -156,7 +156,6 @@ class FlxKeyboard implements IFlxInputManager
 	 */
 	public function checkStatus(KeyCode:FlxKey, Status:FlxInputState):Bool
 	{
-		trace(_keyList);
 		var key:FlxKeyInput = _keyList[KeyCode];
 		if (key != null)
 		{
