@@ -359,7 +359,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 * @param	Factor Value from 0 to 1 of how much to progress toward black.
 	 * @return 	A darkened version of this color
 	 */
-	public function darkened(Factor:Float = 0.2):FlxColor
+	public function getDarkened(Factor:Float = 0.2):FlxColor
 	{
 		Factor = FlxMath.bound(Factor, 0, 1);
 		var output:FlxColor = this;
@@ -373,7 +373,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 * @param	Factor Value from 0 to 1 of how much to progress toward white.
 	 * @return 	A lightened version of this color
 	 */
-	public inline function lightened(Factor:Float = 0.2):FlxColor
+	public inline function getLightened(Factor:Float = 0.2):FlxColor
 	{
 		Factor = FlxMath.bound(Factor, 0, 1);
 		var output:FlxColor = this;
@@ -387,7 +387,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 * 
 	 * @return The inversion of this color
 	 */
-	public inline function inverted():FlxColor
+	public inline function getInverted():FlxColor
 	{
 		var oldAlpha = alpha;
 		var output:FlxColor = FlxColor.WHITE - this;
