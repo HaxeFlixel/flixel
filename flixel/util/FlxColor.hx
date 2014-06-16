@@ -217,6 +217,34 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	}
 	
 	/**
+	 * Multiply the RGB channels of two FlxColors
+	 */
+	@:op(A * B)
+	public static inline function multiply(lhs:FlxColor, rhs:FlxColor):FlxColor
+	{
+		return FlxColor.fromRGBFloat(lhs.redFloat * rhs.redFloat, lhs.greenFloat * rhs.greenFloat, lhs.blueFloat * rhs.blueFloat);
+	}
+	
+	
+	/**
+	 * Add the RGB channels of two FlxColors
+	 */
+	@:op(A + B)
+	public static inline function add(lhs:FlxColor, rhs:FlxColor):FlxColor
+	{
+		return FlxColor.fromRGB(lhs.red + rhs.red, lhs.green + rhs.green, lhs.blue + rhs.blue);
+	}
+	
+	/**
+	 * Subtract the RGB channels of one FlxColor from another
+	 */
+	@:op(A - B)
+	public static inline function subtract(lhs:FlxColor, rhs:FlxColor):FlxColor
+	{
+		return FlxColor.fromRGB(lhs.red - rhs.red, lhs.green - rhs.green, lhs.blue - rhs.blue);
+	}
+	
+	/**
 	 * Returns a Complementary Color Harmony of this color.
 	 * A complementary hue is one directly opposite the color given on the color wheel
 	 * 
@@ -326,30 +354,47 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	}
 	
 	/**
-	 * Get a darker version of this color.
+	 * Get a darkened version of this color
 	 * 
 	 * @param	Factor Value from 0 to 1 of how much to progress toward black.
-	 * @return 	This color, darkened
+	 * @return 	A darkened version of this color
 	 */
-	public function darken(Factor:Float = 0.2):FlxColor
+	public function getDarkened(Factor:Float = 0.2):FlxColor
 	{
 		Factor = FlxMath.bound(Factor, 0, 1);
-		lightness *= (1 - Factor);
-		return this;
+		var output:FlxColor = this;
+		output.lightness *= (1 - Factor);
+		return output;
 	}
 	
 	/**
-	 * Get a lighter version of this color.
+	 * Get a lightened version of this color
 	 * 
 	 * @param	Factor Value from 0 to 1 of how much to progress toward white.
-	 * @return 	This color, brightened
+	 * @return 	A lightened version of this color
 	 */
-	public inline function lighten(Factor:Float = 0.2):FlxColor
+	public inline function getLightened(Factor:Float = 0.2):FlxColor
 	{
 		Factor = FlxMath.bound(Factor, 0, 1);
-		lightness += (1 - lightness) * Factor;
-		return this;
+		var output:FlxColor = this;
+		output.lightness += (1 - lightness) * Factor;
+		return output;
 	}
+	
+	
+	/**
+	 * Get the inversion of this color
+	 * 
+	 * @return The inversion of this color
+	 */
+	public inline function getInverted():FlxColor
+	{
+		var oldAlpha = alpha;
+		var output:FlxColor = FlxColor.WHITE - this;
+		output.alpha = oldAlpha;
+		return output;
+	}
+	
 	
 	/**
 	 * Set RGB values as integers (0 to 255)
@@ -417,7 +462,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 */
 	public inline function setHSB(Hue:Float, Saturation:Float, Brightness:Float, Alpha:Float):FlxColor
 	{
-		var chroma =  Brightness * Saturation;
+		var chroma = Brightness * Saturation;
 		var match = Brightness - chroma;
 		return setHSChromaMatch(Hue, Saturation, chroma, match, Alpha);
 	}
@@ -433,7 +478,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 */
 	public inline function setHSL(Hue:Float, Saturation:Float, Lightness:Float, Alpha:Float):FlxColor
 	{
-		var chroma =  (1 - Math.abs(2 * Lightness - 1)) * Saturation;
+		var chroma = (1 - Math.abs(2 * Lightness - 1)) * Saturation;
 		var match = Lightness - chroma / 2;
 		return setHSChromaMatch(Hue, Saturation, chroma, match, Alpha);
 	}
@@ -509,28 +554,28 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	private inline function set_red(Value:Int):Int
 	{
 		this &= 0xff00ffff;
-		this |= Value << 16;
+		this |= boundChannel(Value) << 16;
 		return Value;
 	}
 	
 	private inline function set_green(Value:Int):Int
 	{
 		this &= 0xffff00ff;
-		this |= Value << 8;
+		this |= boundChannel(Value) << 8;
 		return Value;
 	}
 	
 	private inline function set_blue(Value:Int):Int
 	{
 		this &= 0xffffff00;
-		this |= Value;
+		this |= boundChannel(Value);
 		return Value;
 	}
 	
 	private inline function set_alpha(Value:Int):Int
 	{
 		this &= 0x00ffffff;
-		this |= Value << 24;
+		this |= boundChannel(Value) << 24;
 		return Value;
 	}
 	
@@ -661,6 +706,11 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	private inline function minColor():Float
 	{
 		return Math.min(redFloat, Math.min(greenFloat, blueFloat));
+	}
+	
+	private inline function boundChannel(Value:Int):Int
+	{
+		return Value > 0xff ? 0xff : Value < 0 ? 0 : Value;
 	}
 	
 	@:commutative
