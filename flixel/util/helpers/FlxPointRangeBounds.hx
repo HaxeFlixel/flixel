@@ -1,12 +1,13 @@
 package flixel.util.helpers;
 
 import flixel.math.FlxPoint;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxStringUtil;
 
 /**
  * Helper object for holding beginning minimum/maximum and ending minimum/maximum values of FlxPoints, which have both an x and y component.
  */
-class FlxPointRangeBounds extends Range<Bounds<FlxPoint>>
+class FlxPointRangeBounds extends Range<Bounds<FlxPoint>> implements IFlxDestroyable
 {
 	/**
 	 * Create a new FlxPointRangeBounds object.
@@ -25,8 +26,8 @@ class FlxPointRangeBounds extends Range<Bounds<FlxPoint>>
 	{
 		super(null);
 		
-		start = new Bounds<FlxPoint>(FlxPoint.weak(), FlxPoint.weak());
-		end = new Bounds<FlxPoint>(FlxPoint.weak(), FlxPoint.weak());
+		start = new Bounds<FlxPoint>(FlxPoint.get(), FlxPoint.get());
+		end = new Bounds<FlxPoint>(FlxPoint.get(), FlxPoint.get());
 		
 		setAll(startMinX, startMinY, startMaxX, startMaxY, endMinX, endMinY, endMaxX, endMaxY);
 	}
@@ -76,9 +77,13 @@ class FlxPointRangeBounds extends Range<Bounds<FlxPoint>>
 	
 	public function destroy():Void
 	{
-		start.min.put();
-		start.max.put();
-		end.min.put();
-		end.max.put();
+		FlxDestroyUtil.put(start.min);
+		FlxDestroyUtil.put(start.max);
+		FlxDestroyUtil.put(end.min);
+		FlxDestroyUtil.put(end.max);
+		start.min = null;
+		start.max = null;
+		end.min = null;
+		end.max = null;
 	}
 }

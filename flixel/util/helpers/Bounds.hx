@@ -19,7 +19,8 @@ class Bounds<T>
 	 */
 	public function new(min:T, ?max:Null<T>)
 	{
-		set(min, max);
+		this.min = min;
+		this.max = max;
 	}
 	
 	/**

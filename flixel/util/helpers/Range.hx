@@ -19,7 +19,8 @@ class Range<T>
 	 */
 	public function new(start:T, ?end:Null<T>)
 	{
-		set(start, end);
+		this.start = start;
+		this.end = end;
 	}
 	
 	/**

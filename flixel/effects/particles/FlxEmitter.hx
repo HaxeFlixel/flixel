@@ -121,6 +121,18 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	 */
 	public var elasticity(default, null):RangeBounds<Float>;
 	/**
+	 * Sets the immovable flag for particles launched from this emitter.
+	 */
+	public var immovable:Bool = false;
+	/**
+	 * Sets the useHitbox flag for particles launched from this emitter. If true, the particles' hitbox will be updated to match scale and rotation.
+	 */
+	public var useHitbox:Bool = false;
+	/**
+	 * Sets the allowCollisions value for particles launched from this emitter. Set to NONE by default.
+	 */
+	public var allowCollisions:Int = FlxObject.NONE;
+	/**
 	 * Internal helper for deciding how many particles to launch.
 	 */
 	private var _quantity:Int = 0;
@@ -183,6 +195,11 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	 */
 	override public function destroy():Void
 	{
+		FlxDestroyUtil.destroy(velocity);
+		FlxDestroyUtil.destroy(scale);
+		FlxDestroyUtil.destroy(drag);
+		FlxDestroyUtil.destroy(acceleration);
+		
 		blend = null;
 		velocity = null;
 		angularVelocity = null;
@@ -209,11 +226,10 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	 * @param	Quantity		The number of particles to generate when using the "create from image" option.
 	 * @param	BakedRotations	How many frames of baked rotation to use (boosts performance).  Set to zero to not use baked rotations.
 	 * @param	Multiple		Whether the image in the Graphics param is a single particle or a bunch of particles (if it's a bunch, they need to be square!).
-	 * @param	Collide			Whether the particles should be flagged as not 'dead' (non-colliding particles are higher performance).  0 means no collisions, 0-1 controls scale of particle's bounding box.
 	 * @param	AutoBuffer		Whether to automatically increase the image size to accomodate rotated corners.  Default is false.  Will create frames that are 150% larger on each axis than the original frame or graphic.
 	 * @return	This FlxEmitter instance (nice for chaining stuff together).
 	 */
-	public function loadParticles(Graphics:FlxGraphicAsset, Quantity:Int = 50, bakedRotationAngles:Int = 16, Multiple:Bool = false, Collide:Float = 0.8, AutoBuffer:Bool = false):FlxTypedEmitter<T>
+	public function loadParticles(Graphics:FlxGraphicAsset, Quantity:Int = 50, bakedRotationAngles:Int = 16, Multiple:Bool = false, AutoBuffer:Bool = false):FlxTypedEmitter<T>
 	{
 		maxSize = Quantity;
 		var totalFrames:Int = 1;
@@ -267,16 +283,6 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 				{
 					particle.loadGraphic(Graphics);
 				}
-			}
-			if (Collide > 0)
-			{
-				particle.width *= Collide;
-				particle.height *= Collide;
-				particle.centerOffsets();
-			}
-			else
-			{
-				particle.allowCollisions = FlxObject.NONE;
 			}
 			
 			particle.exists = false;
@@ -430,22 +436,26 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		
 		// Particle velocity/launch angle settings
 		
-		if (launchAngle != null && (velocity == null || launchMode == FlxEmitterMode.CIRCLE))
+		if (launchAngle != null && launchMode == FlxEmitterMode.CIRCLE)
 		{
 			var particleAngle:Float = FlxRandom.float(launchAngle.min, launchAngle.max);
 			var launchVelocity:FlxPoint = FlxVelocity.velocityFromAngle(particleAngle, FlxMath.vectorLength(FlxRandom.float(velocity.start.min.x, velocity.start.max.x), FlxRandom.float(velocity.start.min.y, velocity.start.max.y)));
 			var finalVelocity:FlxPoint = FlxVelocity.velocityFromAngle(particleAngle, FlxMath.vectorLength(FlxRandom.float(velocity.end.min.x, velocity.end.max.x), FlxRandom.float(velocity.end.min.y, velocity.end.max.y)));
 			particle.velocity.x = launchVelocity.x;
 			particle.velocity.y = launchVelocity.y;
-			particle.velocityRange.set(FlxPoint.weak(launchVelocity.x, launchVelocity.y), FlxPoint.weak(finalVelocity.x, finalVelocity.y));
+			particle.velocityRange.start.set(launchVelocity.x, launchVelocity.y);
+			particle.velocityRange.end.set(finalVelocity.x, finalVelocity.y);
 			particle.useVelocity = particle.velocityRange.start != particle.velocityRange.end;
 		}
 		else
 		{
-			particle.velocity.x = FlxRandom.float(velocity.start.min.x, velocity.start.max.x);
-			particle.velocity.y = FlxRandom.float(velocity.start.min.y, velocity.start.max.y);
-			particle.velocityRange.set(FlxPoint.weak(particle.velocity.x, particle.velocity.y), FlxPoint.weak(FlxRandom.float(velocity.end.min.x, velocity.end.max.x), FlxRandom.float(velocity.end.min.y, velocity.end.max.y)));
+			particle.velocityRange.start.x = FlxRandom.float(velocity.start.min.x, velocity.start.max.x);
+			particle.velocityRange.start.y = FlxRandom.float(velocity.start.min.y, velocity.start.max.y);
+			particle.velocityRange.end.x = FlxRandom.float(velocity.end.min.x, velocity.end.max.x);
+			particle.velocityRange.end.y = FlxRandom.float(velocity.end.min.y, velocity.end.max.y);
 			particle.useVelocity = particle.velocityRange.start != particle.velocityRange.end;
+			particle.velocity.x = particle.velocityRange.start.x;
+			particle.velocity.y = particle.velocityRange.start.y;
 		}
 		
 		// Particle angular velocity settings
@@ -522,6 +532,12 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		particle.elasticityRange.end = FlxRandom.float(elasticity.end.min, elasticity.end.max);
 		particle.useElasticity = particle.elasticityRange.start != particle.elasticityRange.end;
 		particle.elasticity = particle.elasticityRange.start;
+		
+		// Particle collision settings
+		
+		particle.immovable = immovable;
+		particle.allowCollisions = allowCollisions;
+		particle.useHitbox = useHitbox;
 		
 		particle.onEmit();
 	}

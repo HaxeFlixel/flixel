@@ -5,6 +5,8 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
+import flixel.util.helpers.FloatRange;
 import flixel.util.helpers.Range;
 
 /**
@@ -64,13 +66,17 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 	 */
 	public var useElasticity:Bool = false;
 	/**
+	 * Whether or not the hitbox should be updated each frame when scaling and/or rotating.
+	 */
+	public var useHitbox:Bool = false;
+	/**
 	 * The range of values for velocity over this particle's lifespan.
 	 */
 	public var velocityRange:Range<FlxPoint>;
 	/**
 	 * The range of values for angularVelocity over this particle's lifespan.
 	 */
-	public var angularVelocityRange:Range<Float>;
+	public var angularVelocityRange:FloatRange;
 	/**
 	 * The range of values for scale over this particle's lifespan.
 	 */
@@ -78,7 +84,7 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 	/**
 	 * The range of values for alpha over this particle's lifespan.
 	 */
-	public var alphaRange:Range<Float>;
+	public var alphaRange:FloatRange;
 	/**
 	 * The range of values for color over this particle's lifespan.
 	 */
@@ -94,7 +100,7 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 	/**
 	 * The range of values for elasticity over this particle's lifespan.
 	 */
-	public var elasticityRange:Range<Float>;
+	public var elasticityRange:FloatRange;
 	
 	/**
 	 * Instantiate a new particle. Like FlxSprite, all meaningful creation
@@ -104,16 +110,42 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 	{
 		super();
 		
-		velocityRange = new Range<FlxPoint>(FlxPoint.weak());
-		angularVelocityRange = new Range<Float>(0);
-		scaleRange = new Range<FlxPoint>(FlxPoint.weak());
-		alphaRange = new Range<Float>(0);
+		velocityRange = new Range<FlxPoint>(FlxPoint.get(), FlxPoint.get());
+		angularVelocityRange = new FloatRange(0);
+		scaleRange = new Range<FlxPoint>(FlxPoint.get(), FlxPoint.get());
+		alphaRange = new FloatRange(0);
 		colorRange = new Range<FlxColor>(FlxColor.WHITE);
-		dragRange = new Range<FlxPoint>(FlxPoint.weak());
-		accelerationRange = new Range<FlxPoint>(FlxPoint.weak());
-		elasticityRange = new Range<Float>(0);
+		dragRange = new Range<FlxPoint>(FlxPoint.get(), FlxPoint.get());
+		accelerationRange = new Range<FlxPoint>(FlxPoint.get(), FlxPoint.get());
+		elasticityRange = new FloatRange(0);
 		
 		exists = false;
+	}
+	
+	/**
+	 * Clean up memory.
+	 */
+	override public function destroy():Void
+	{
+		FlxDestroyUtil.put(velocityRange.start);
+		FlxDestroyUtil.put(velocityRange.end);
+		FlxDestroyUtil.put(scaleRange.start);
+		FlxDestroyUtil.put(scaleRange.end);
+		FlxDestroyUtil.put(dragRange.start);
+		FlxDestroyUtil.put(dragRange.end);
+		FlxDestroyUtil.put(accelerationRange.start);
+		FlxDestroyUtil.put(accelerationRange.end);
+		
+		velocityRange = null;
+		angularVelocityRange = null;
+		scaleRange = null;
+		alphaRange = null;
+		colorRange = null;
+		dragRange = null;
+		accelerationRange = null;
+		elasticityRange = null;
+		
+		super.destroy();
 	}
 	
 	/**
@@ -141,7 +173,7 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 			
 			if (useAngularVelocity)
 			{
-				angularVelocity = angularVelocityRange.start + (angularVelocityRange.end - angularVelocityRange.start) * percent;
+				angularVelocity = angularVelocityRange.progress(percent);
 			}
 			
 			if (useScale)
@@ -152,7 +184,7 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 			
 			if (useAlpha)
 			{
-				alpha = alphaRange.start + (alphaRange.end - alphaRange.start) * percent;
+				alpha = alphaRange.progress(percent);
 			}
 			
 			if (useColor)
@@ -174,14 +206,16 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 			
 			if (useElasticity)
 			{
-				elasticity = elasticityRange.start + (elasticityRange.end - elasticityRange.start) * percent;
+				elasticity = elasticityRange.progress(percent);
+			}
+			
+			if (useHitbox && (useAngularVelocity || useScale))
+			{
+				updateHitbox();
 			}
 		}
 		
-		if (exists && alive)
-		{
-			super.update();
-		}
+		super.update();
 	}
 	
 	override public function reset(X:Float, Y:Float):Void 
@@ -193,13 +227,13 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 		color = FlxColor.WHITE;
 		age = 0;
 		visible = true;
-		velocityRange.set(FlxPoint.weak());
+		velocityRange.set(FlxPoint.get(), FlxPoint.get());
 		angularVelocityRange.set(0);
-		scaleRange.set(FlxPoint.weak());
+		scaleRange.set(FlxPoint.get(), FlxPoint.get());
 		alphaRange.set(1);
 		colorRange.set(FlxColor.WHITE);
-		dragRange.set(FlxPoint.weak());
-		accelerationRange.set(FlxPoint.weak());
+		dragRange.set(FlxPoint.get(), FlxPoint.get());
+		accelerationRange.set(FlxPoint.get(), FlxPoint.get());
 		elasticityRange.set(0);
 	}
 	
@@ -223,14 +257,15 @@ interface IFlxParticle extends IFlxSprite
 	public var useDrag:Bool;
 	public var useAcceleration:Bool;
 	public var useElasticity:Bool;
+	public var useHitbox:Bool;
 	public var velocityRange:Range<FlxPoint>;
-	public var angularVelocityRange:Range<Float>;
+	public var angularVelocityRange:FloatRange;
 	public var scaleRange:Range<FlxPoint>;
-	public var alphaRange:Range<Float>;
+	public var alphaRange:FloatRange;
 	public var colorRange:Range<FlxColor>;
 	public var dragRange:Range<FlxPoint>;
 	public var accelerationRange:Range<FlxPoint>;
-	public var elasticityRange:Range<Float>;
+	public var elasticityRange:FloatRange;
 	
 	public function onEmit():Void;
 }
