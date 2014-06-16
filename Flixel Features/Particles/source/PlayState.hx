@@ -4,6 +4,7 @@ import flash.ui.Mouse;
 import flixel.effects.particles.FlxEmitter;
 import flixel.effects.particles.FlxParticle;
 import flixel.FlxG;
+import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxGroup;
@@ -82,9 +83,10 @@ class PlayState extends FlxState
 		
 		// All we need to do to start using it is give it some particles. makeParticles() makes this easy!
 		
-		_emitter.makeParticles(2, 2, FlxColor.WHITE, 200);
+		_emitter.makeParticles(2, 2, FlxColor.WHITE, 400);
 		
 		// Now let's add the emitter to the state.
+		
 		add(_emitter);
 		
 		// Now let's setup some buttons for messing with the emitter.
@@ -139,26 +141,31 @@ class PlayState extends FlxState
 		topText = new FlxText(0, 2, FlxG.width, "");
 		topText.alignment = CENTER;
 		topText.size = 32;
-		updateText("Welcome to the particles demo!");
 		add(topText);
 		
-		// Let's setup some walls for our particles to collide against
-		_collisionGroup = new FlxGroup();
-		_wall = new FlxSprite(100, FlxG.height / 2 - 50);
-		// Make it darker - easier on the eyes :)
-		_wall.makeGraphic(10, 100, FlxColor.GRAY); 
-		// Set both the visibility AND the solidity to false, in one go
-		_wall.visible = _wall.solid = false;
-		// Lets make sure the pixels don't push out wall away! (though it does look funny)
-		_wall.immovable = true;
-		_collisionGroup.add(_wall);
+		updateText("Welcome to the particles demo!");
 		
-		// Duplicate our wall but this time it's a floor to catch gravity affected particles
-		_floor = new FlxSprite(10, FlxG.height - 33);
-		_floor.makeGraphic(FlxG.width - 20, 10, FlxColor.GRAY);
-		_floor.visible = _floor.solid = false;
+		// Let's setup some walls for our particles to collide against
+		
+		_collisionGroup = new FlxGroup();
+		
+		_floor = new FlxSprite(10, FlxG.height - 88);
+		_floor.makeGraphic(FlxG.width - 20, 20, FlxColor.GRAY);
+		
+		// Kill the floor until we need it
+		_floor.kill();
+		
+		// Lets make sure the pixels don't push our wall away! (though it does look funny)
 		_floor.immovable = true;
+		
+		// Add the floor to its group
 		_collisionGroup.add(_floor);
+		
+		_wall = new FlxSprite(FlxG.width - 30, 10);
+		_wall.makeGraphic(20, Std.int(FlxG.height - _floor.y - 20), FlxColor.GRAY); 
+		_wall.immovable = true;
+		_wall.kill();
+		_collisionGroup.add(_wall);
 		
 		// Please note that this demo makes the walls themselves not collide, for the sake of simplicity.
 		// Normally you would make the particles have solid = true or false to make them collide or not on creation,
@@ -218,7 +225,7 @@ class PlayState extends FlxState
 	{
 		_isLaunchOn = !_isLaunchOn;
 		
-		if (_isLaunchOn)
+		if (_emitter.launchMode == FlxEmitterMode.SQUARE)
 		{
 			_emitter.launchMode = FlxEmitterMode.CIRCLE;
 			
@@ -303,11 +310,33 @@ class PlayState extends FlxState
 	private function onAngleToggle():Void
 	{
 		_isAngleOn = !_isAngleOn;
+		
+		if (_isAngleOn)
+		{
+			_emitter.angle.setAll( -90, 90);
+		}
+		else
+		{
+			_emitter.angle.setAll(0);
+		}
+		
+		updateText("Random initial angle", _isAngleOn);
 	}
 	
 	private function onLifespanToggle():Void
 	{
 		_isLifespanOn = !_isLifespanOn;
+		
+		if (_isLifespanOn)
+		{
+			_emitter.lifespan.set(0.1, 1);
+		}
+		else
+		{
+			_emitter.lifespan.set(3, 3);
+		}
+		
+		updateText("Lifespan range is " + _emitter.lifespan.min + " - " + _emitter.lifespan.max);
 	}
 	
 	private function onScaleToggle():Void
@@ -316,7 +345,7 @@ class PlayState extends FlxState
 		
 		if (_isScaleOn)
 		{
-			_emitter.scale.setAll(1, 1, 1, 1, 2, 2, 4, 4);
+			_emitter.scale.setAll(1, 1, 1, 1, 4, 4, 8, 8);
 		}
 		else
 		{
@@ -329,6 +358,17 @@ class PlayState extends FlxState
 	private function onAlphaToggle():Void
 	{
 		_isAlphaOn = !_isAlphaOn;
+		
+		if (_isAlphaOn)
+		{
+			_emitter.alpha.setAll(1, 1, 0, 0);
+		}
+		else
+		{
+			_emitter.alpha.setAll(1);
+		}
+		
+		updateText("Alpha", _isAlphaOn);
 	}
 	
 	private function onColorToggle():Void
@@ -350,25 +390,87 @@ class PlayState extends FlxState
 	private function onDragToggle():Void
 	{
 		_isDragOn = !_isDragOn;
+		
+		if (_isDragOn)
+		{
+			_emitter.drag.setAll(0, 0, 0, 0, 0, 0, 1, 1);
+		}
+		else
+		{
+			_emitter.drag.setAll(0);
+		}
+		
+		updateText("Drag", _isDragOn);
 	}
 	
 	private function onAccelerationToggle():Void
 	{
 		_isAccelerationOn = !_isAccelerationOn;
+		
+		if (_isAccelerationOn)
+		{
+			_emitter.acceleration.setAll(0, 0, 0, 0, 80, -50, 120, 50);
+		}
+		else
+		{
+			_emitter.acceleration.setAll(0);
+		}
+		
+		updateText("Acceleration", _isAccelerationOn);
 	}
 	
 	private function onElasticityToggle():Void
 	{
 		_isElasticityOn = !_isElasticityOn;
+		
+		if (_isElasticityOn)
+		{
+			_emitter.elasticity.setAll(1, 1, 1, 1);
+		}
+		else
+		{
+			_emitter.elasticity.setAll(0);
+		}
+		
+		updateText("Elasticity", _isElasticityOn);
 	}
 	
 	private function onCollisionToggle():Void
 	{
 		_isCollisionOn = !_isCollisionOn;
+		
+		if (_isCollisionOn)
+		{
+			_wall.revive();
+			_floor.revive();
+			_emitter.allowCollisions = FlxObject.ANY;
+		}
+		else
+		{
+			_wall.kill();
+			_floor.kill();
+			_emitter.allowCollisions = FlxObject.NONE;
+		}
+		
+		updateText("Collisions", _isCollisionOn);
 	}
 	
 	private function onGravityToggle():Void
 	{
 		_isGravityOn = !_isGravityOn;
+		
+		if (_isGravityOn)
+		{
+			_emitter.acceleration.start.min.y = 800;
+			_emitter.acceleration.start.max.y = 1000;
+			_emitter.acceleration.end.min.y = 800;
+			_emitter.acceleration.end.max.y = 1000;
+		}
+		else
+		{
+			_emitter.acceleration.setAll(0);
+		}
+		
+		updateText("Gravity", _isGravityOn);
 	}
 }
