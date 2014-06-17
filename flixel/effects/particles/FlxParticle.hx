@@ -225,8 +225,9 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 		super.reset(X, Y);
 		
 		alpha = 1.0;
-		scale.x = scale.y = 1.0;
+		scale.set(1, 1);
 		color = FlxColor.WHITE;
+<<<<<<< HEAD
 		age = 0;
 		visible = true;
 		velocityRange.set(FlxPoint.get(), FlxPoint.get());
@@ -237,6 +238,12 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 		dragRange.set(FlxPoint.get(), FlxPoint.get());
 		accelerationRange.set(FlxPoint.get(), FlxPoint.get());
 		elasticityRange.set(0);
+=======
+		if (animation.curAnim != null)
+		{
+			animation.curAnim.restart();
+		}
+>>>>>>> aa77785d12cd9a2709948f19dd49b1cc230e55df
 	}
 	
 	/**

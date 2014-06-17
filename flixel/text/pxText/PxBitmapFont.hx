@@ -520,25 +520,6 @@ class PxBitmapFont
 	public function render(DrawData:Array<Float>, PxText:String, PxColor:FlxColor, PxSecondColor:FlxColor, PxAlpha:Float, PxOffsetX:Float, PxOffsetY:Float, PxLetterSpacing:Int, PxScale:Float, PxUseColor:Bool = true):Void 
 	#end
 	{
-		#if FLX_RENDER_TILE
-		var colorMultiplier:Float = 1 / 255;
-		var red:Float = colorMultiplier;
-		var green:Float = colorMultiplier;
-		var blue:Float = colorMultiplier;
-		
-		if (PxUseColor)
-		{
-			red = (PxColor >> 16) * colorMultiplier;
-			green = (PxColor >> 8 & 0xff) * colorMultiplier;
-			blue = (PxColor & 0xff) * colorMultiplier;
-		}
-		
-		PxSecondColor &= 0x00ffffff;
-		red *= (PxSecondColor >> 16);
-		green *= (PxSecondColor >> 8 & 0xff);
-		blue *= (PxSecondColor & 0xff);
-		#end
-		
 		_point.x = PxOffsetX;
 		_point.y = PxOffsetY;
 		
@@ -547,6 +528,11 @@ class PxBitmapFont
 		#else
 		var glyph:PxFontSymbol;
 		var glyphWidth:Int;
+		
+		if (PxUseColor)
+		{
+			PxSecondColor = PxColor * PxSecondColor;
+		}
 		#end
 		
 		for (i in 0...PxText.length) 
@@ -573,9 +559,9 @@ class PxBitmapFont
 				DrawData.push(_point.x + glyph.xoffset * PxScale);	
 				// Y
 				DrawData.push(_point.y + glyph.yoffset * PxScale);	
-				DrawData.push(red);
-				DrawData.push(green);
-				DrawData.push(blue);
+				DrawData.push(PxSecondColor.redFloat);
+				DrawData.push(PxSecondColor.greenFloat);
+				DrawData.push(PxSecondColor.blueFloat);
 				
 				_point.x += glyphWidth * PxScale + PxLetterSpacing;
 				#end

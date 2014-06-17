@@ -37,7 +37,7 @@
  * at() -> focusOn()
  * on -> emitting
  * fixed type parameter not being respected (T was always FlxSprite)
- * emitters and particles use FlxColor instead of separate red, green, and blue values
+ * emitters and particles now use FlxColor instead of separate red, green, and blue values
 * Moved FlxMath, FlxPoint, FlxRect, FlxRect, FlxAngle, FlxVelocity and FlxRandom to flixel.math
 * FlxSubState: fix for calling close() within create()
 * FlxPath: exposed nodeIndex as a read-only property
@@ -52,7 +52,9 @@
  * fixed a crash when trying to create a single-column tilemap
 * Console: the set command now supports arrays
 * FlxTween: fixed a bug when tweening the same field with several tweens + startDelay
-* Merged FlxColor and FlxColorUtil into a new FlxColor abstract, interchangable with Int
+* FlxColor:
+ * FlxColor is now an abstract, interchangable with Int - the FlxColorUtil functions have been merged into it
+ * the color presets have been reduced to a smaller, more useful selection
 * Moved
  * FlxTypedGroup into FlxGroup.hx
  * FlxTypedSpriteGroup into FlxSpriteGroup.hx
@@ -78,6 +80,7 @@
  * removed weightedGetObject(), getObject() now has an optional weights parameter
  * removed colorExt(), try using FlxColor to get finer control over randomly-generated colors
  * updated random number generation equation to avoid inconsistent results across platforms; may break recordings made in 3.x!
+ * fixed a bug that prevented the Excludes array in int() from working
 * FlxArrayUtil: removed randomness-related functions, please use FlxRandom instead
 * FlxText:
  * added an abstract enum for alignment (text.alignment = CENTER; is now possible)
@@ -109,6 +112,7 @@
 * FlxBitmapTextField:
  * fixed issue with width increasing when the text is updated
  * fixed text disappearing after state switches on HTML5
+* FlxRect: added weak(), putWeak(), ceil() and floor()
 
 3.3.4
 ------------------------------
