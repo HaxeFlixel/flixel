@@ -40,6 +40,7 @@ class PlayState extends FlxState
 	private var _elasticityButton:FlxButton;
 	private var _collisionButton:FlxButton;
 	private var _gravityButton:FlxButton;
+	private var _resetButton:FlxButton;
 	
 	/**
 	 * Some walls stuff
@@ -73,6 +74,11 @@ class PlayState extends FlxState
 	private var topText:FlxText;
 	private var _alphaTween:VarTween;
 	
+	/**
+	 * Just a simple flag to see if we should display the welcome message.
+	 */
+	private static var _firstLoad:Bool = true;
+	
 	override public function create():Void
 	{
 		// Here we actually initialize out emitter
@@ -83,7 +89,7 @@ class PlayState extends FlxState
 		
 		// All we need to do to start using it is give it some particles. makeParticles() makes this easy!
 		
-		_emitter.makeParticles(2, 2, FlxColor.WHITE, 400);
+		_emitter.makeParticles(2, 2, FlxColor.WHITE, 200);
 		
 		// Now let's add the emitter to the state.
 		
@@ -136,6 +142,9 @@ class PlayState extends FlxState
 		_gravityButton = new FlxButton(20, FlxG.height - 22, "Gravity", onGravityToggle);
 		add(_gravityButton);
 		
+		_resetButton = new FlxButton(100, FlxG.height - 22, "Reset All", onResetRequest);
+		add(_resetButton);
+		
 		// Provide some feedback on what the user has toggled
 		
 		topText = new FlxText(0, 2, FlxG.width, "");
@@ -143,7 +152,11 @@ class PlayState extends FlxState
 		topText.size = 32;
 		add(topText);
 		
-		updateText("Welcome to the particles demo!");
+		if (_firstLoad)
+		{
+			updateText("Welcome to the particles demo!");
+			_firstLoad = false;
+		}
 		
 		// Let's setup some walls for our particles to collide against
 		
@@ -157,25 +170,26 @@ class PlayState extends FlxState
 		
 		// Lets make sure the pixels don't push our wall away! (though it does look funny)
 		_floor.immovable = true;
+		_floor.solid = true;
+		_floor.elasticity = 0.8;
 		
 		// Add the floor to its group
 		_collisionGroup.add(_floor);
 		
 		_wall = new FlxSprite(FlxG.width - 30, 10);
-		_wall.makeGraphic(20, Std.int(FlxG.height - _floor.y - 20), FlxColor.GRAY); 
+		_wall.makeGraphic(20, Std.int(_floor.y - 20), FlxColor.GRAY); 
 		_wall.immovable = true;
+		_wall.solid = true;
+		_wall.elasticity = 0.8;
 		_wall.kill();
 		_collisionGroup.add(_wall);
-		
-		// Please note that this demo makes the walls themselves not collide, for the sake of simplicity.
-		// Normally you would make the particles have solid = true or false to make them collide or not on creation,
-		// because in a normal environment your particles probably aren't going to change solidity at a mouse click.
 		
 		// Don't forget to add the group to the state
 		add(_collisionGroup);
 		
 		// Now lets set our emitter free.
-		// Params: Explode, Particle Lifespan, Emit rate (in seconds)
+		// Params: Explode, Emit rate (in seconds), Quantity (if ignored, means launch continuously)
+		
 		_emitter.start(false, 0.01);
 	}
 	
@@ -202,7 +216,11 @@ class PlayState extends FlxState
 			_alphaTween.cancel();
 		}
 		
+		// Tweening alpha like this is SUPER SLOW on HTML5, so it's disabled
+		
+		#if !js
 		_alphaTween = FlxTween.tween(topText, { alpha: 0 }, 2);
+		#end
 	}
 	
 	private function onBlendToggle():Void
@@ -377,7 +395,7 @@ class PlayState extends FlxState
 		
 		if (_isColorOn)
 		{
-			_emitter.color.setAll(FlxColor.RED, FlxColor.PINK, FlxColor.BLUE, FlxColor.NAVY_BLUE);
+			_emitter.color.setAll(FlxColor.RED, FlxColor.PINK, FlxColor.BLUE, FlxColor.CYAN);
 		}
 		else
 		{
@@ -393,7 +411,7 @@ class PlayState extends FlxState
 		
 		if (_isDragOn)
 		{
-			_emitter.drag.setAll(0, 0, 0, 0, 0, 0, 1, 1);
+			_emitter.drag.setAll(200, 200, 600, 600);
 		}
 		else
 		{
@@ -409,7 +427,7 @@ class PlayState extends FlxState
 		
 		if (_isAccelerationOn)
 		{
-			_emitter.acceleration.setAll(0, 0, 0, 0, 80, -50, 120, 50);
+			_emitter.acceleration.setAll(0, 0, 0, 0, 200, 200, 400, 400);
 		}
 		else
 		{
@@ -443,13 +461,13 @@ class PlayState extends FlxState
 		{
 			_wall.revive();
 			_floor.revive();
-			_emitter.allowCollisions = FlxObject.ANY;
+			_emitter.solid = true;
 		}
 		else
 		{
 			_wall.kill();
 			_floor.kill();
-			_emitter.allowCollisions = FlxObject.NONE;
+			_emitter.solid = false;
 		}
 		
 		updateText("Collisions", _isCollisionOn);
@@ -472,5 +490,10 @@ class PlayState extends FlxState
 		}
 		
 		updateText("Gravity", _isGravityOn);
+	}
+	
+	private function onResetRequest():Void
+	{
+		FlxG.resetGame();
 	}
 }
