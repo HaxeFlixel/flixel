@@ -157,12 +157,14 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 		if (age < lifespan)
 		{
 			age += FlxG.elapsed;
-			
-			if (age >= lifespan)
-			{
-				kill();
-			}
-			
+		}
+		
+		if (age >= lifespan)
+		{
+			kill();
+		}
+		else
+		{
 			percent = age / lifespan;
 			
 			if (useVelocity)
