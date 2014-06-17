@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg width="128" height="128" viewBox="0 0 8 8" version="1" xmlns="http://www.w3.org/2000/svg">
+<svg width="8" height="8" viewBox="0 0 8 8" version="1" xmlns="http://www.w3.org/2000/svg">
 <path d="M 1 1 H 7 V 7 H 1 z" fill="#00cc33"/>
 <path d="M 0 0 H 2 L 4 1 1 4 0 2 z" fill="#ffcc33"/>
 <path d="M 4 1 L 6 0 H 8 V 2 L 7 4 z" fill="#ff3366"/>

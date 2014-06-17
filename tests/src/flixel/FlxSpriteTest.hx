@@ -4,8 +4,8 @@ import flash.display.BitmapData;
 import flixel.animation.FlxAnimation;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
+import helper.TestUtil;
 import massive.munit.Assert;
 import massive.munit.async.AsyncFactory;
 
@@ -78,14 +78,16 @@ class FlxSpriteTest extends FlxTest
 	@Test
 	function testMakeGraphicColor():Void
 	{
+		var color = FlxColor.RED;
 		var colorSprite = new FlxSprite();
-		colorSprite.makeGraphic(100, 100, FlxColor.CRIMSON);
-		Assert.areEqual(StringTools.hex(FlxColor.CRIMSON), "FF" + StringTools.hex(colorSprite.framePixels.getPixel(0, 0)));
-		Assert.areEqual(StringTools.hex(FlxColor.CRIMSON), "FF" + StringTools.hex(colorSprite.framePixels.getPixel(90, 90)));
+		colorSprite.makeGraphic(100, 100, color);
+		Assert.areEqual(color.to24Bit(), colorSprite.framePixels.getPixel(0, 0));
+		Assert.areEqual(color.to24Bit(), colorSprite.framePixels.getPixel(90, 90));
 		
+		color = FlxColor.GREEN;
 		colorSprite = new FlxSprite();
-		colorSprite.makeGraphic(120, 120, FlxColor.CHARTREUSE);
-		Assert.areEqual(StringTools.hex(FlxColor.CHARTREUSE), "FF" + StringTools.hex(colorSprite.framePixels.getPixel(119, 119)));
+		colorSprite.makeGraphic(120, 120, color);
+		Assert.areEqual(color.to24Bit(), colorSprite.framePixels.getPixel(119, 119));
 	}
 
 	@Test
@@ -207,5 +209,11 @@ class FlxSpriteTest extends FlxTest
 		
 		var animation:FlxAnimation = sprite2.animation.getByName("animation");
 		Assert.areEqual(3, animation.numFrames);
+	}
+	
+	@Test
+	function testDestroy():Void
+	{
+		TestUtil.testDestroy(sprite1);
 	}
 }

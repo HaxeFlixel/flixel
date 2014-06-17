@@ -19,6 +19,7 @@
 * FlxMath:
  * bound() and inBounds() now accept null as values, meaning "unbounded in that direction"
  * wrapValue() now supports negative values
+ * change MIN_VALUE and MAX_VALUE to MIN_VALUE_FLOAT and MAX_VALUE_FLOAT, add MAX_VALUE_INT
 * FlxTypedSpriteGroup: 
  * added iterator()
  * fixed update() order leading to collision issues with members
@@ -36,6 +37,7 @@
  * at() -> focusOn()
  * on -> emitting
  * fixed type parameter not being respected (T was always FlxSprite)
+ * emitters and particles now use FlxColor instead of separate red, green, and blue values
 * Moved FlxMath, FlxPoint, FlxRect, FlxRect, FlxAngle, FlxVelocity and FlxRandom to flixel.math
 * FlxSubState: fix for calling close() within create()
 * FlxPath: exposed nodeIndex as a read-only property
@@ -46,10 +48,13 @@
  * separated rendering and logic, adding FlxBaseTilemap
  * added getTileIndexByCoords() and getTileCoordsByIndex()
  * fixed a bug in overlapsAt()
- * loadMap() now throws an error on tile indices with negative values in the map data
+ * loadMap() now treats tile indices with negative values in the map data as 0
+ * fixed a crash when trying to create a single-column tilemap
 * Console: the set command now supports arrays
 * FlxTween: fixed a bug when tweening the same field with several tweens + startDelay
-* Merged FlxColor and FlxColorUtil into a new FlxColor abstract, interchangable with Int
+* FlxColor:
+ * FlxColor is now an abstract, interchangable with Int - the FlxColorUtil functions have been merged into it
+ * the color presets have been reduced to a smaller, more useful selection
 * Moved
  * FlxTypedGroup into FlxGroup.hx
  * FlxTypedSpriteGroup into FlxSpriteGroup.hx
@@ -70,10 +75,19 @@
  * added a connected flag
  * fixed a bug that would prevent gamepad buttons from being updated
 * FlxRandom:
- * exposed internalSeed as a read-only property
+ * exposed currentSeed as an external representation of internalSeed
  * removed intRanged() and floatRanged(), int() and float() now provide optional ranges
+ * removed weightedGetObject(), getObject() now has an optional weights parameter
+ * removed colorExt(), try using FlxColor to get finer control over randomly-generated colors
+ * updated random number generation equation to avoid inconsistent results across platforms; may break recordings made in 3.x!
+ * fixed a bug that prevented the Excludes array in int() from working
 * FlxArrayUtil: removed randomness-related functions, please use FlxRandom instead
-* FlxText: added an abstract enum for alignment (text.alignment = CENTER; is now possible)
+* FlxText:
+ * added an abstract enum for alignment (text.alignment = CENTER; is now possible)
+ * font now supports font assets not embedded via openfl.Assets (i.e. @:font)
+ * font = null now resets it to the default font
+ * fixed an issue where the value returned by get_font() wouldn't be the same as the one passed into set_font()
+ * set_label() now updates the label position
 * FlxTypedButton:
  * added input-like getters: pressed, justPressed, released and justReleased
  * now uses animations for statuses instead of setting frameIndex directly for more flexibility (removes allowHighlightOnMobile, adds statusAnimations)
@@ -82,8 +96,23 @@
 * FlxMouseEventManager:
  * moved from flixel.plugin.MouseEventManager to flixel.input.mouse.FlxMouseEventManager
  * added removeAll()
+ * fixed inaccurate pixel-perfect sprite overlap checks
 * FlxObject: added toPoint() and toRect()
 * FlxVector: fixed behaviour of set_length() for (0, 0) vectors
+* PS4 / PS3ButtonID: removed the _BUTTON suffix for consistency with other button ID classes
+* FlxSprite: added graphicLoaded() which is called whenever a new graphic is loaded
+* FlxAnalog: changed the default value for scrollFactor to (0, 0) and for moves to false
+* Added some helpful error messages when trying to target older swf versions
+* FlxAngle:
+ * changed rotatePoint() to not invert the y-axis anymore and rotate clockwise (consistent with FlxSprite#angle)
+ * rotatePoint() -> FlxPoint#rotate()
+ * getAngle() -> FlxPoint#angleBetween()
+* Added GitSHA macro that includes the SHA of the current commit into FlxVersion for dev builds
+* Flixel sound assets are now being embedded via embed="true"
+* FlxBitmapTextField:
+ * fixed issue with width increasing when the text is updated
+ * fixed text disappearing after state switches on HTML5
+* FlxRect: added weak(), putWeak(), ceil() and floor()
 
 3.3.4
 ------------------------------

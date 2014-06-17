@@ -4,6 +4,7 @@ import flash.display.BitmapData;
 import flixel.FlxSprite;
 import flixel.util.FlxColor;
 import FlxTest;
+import helper.TestUtil;
 import massive.munit.Assert;
 
 @:bitmap("assets/spritesheet.png")
@@ -75,6 +76,12 @@ class FlxAnimationControllerTest extends FlxTest
 		Assert.areEqual(0, animation[0]);
 		Assert.areEqual(1, animation[1]);
 		Assert.areEqual(2, animation[2]);
+	}
+	
+	@Test
+	function testDestroy():Void
+	{
+		TestUtil.testDestroy(sprite.animation);
 	}
 	
 	function loadSpriteSheet():Void

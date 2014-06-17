@@ -57,8 +57,8 @@ class FlxCollision
 		if (considerRotation)
 		{
 			// find the center of both sprites
-			centerA.setTo(Contact.origin.x, Contact.origin.y);
-			centerB.setTo(Target.origin.x, Target.origin.y);			
+			Contact.origin.copyToFlash(centerA);
+			Target.origin.copyToFlash(centerB);			
 			
 			// now make a bounding box that allows for the sprite to be rotated in 360 degrees
 			boundsA.x = (pointA.x + centerA.x - centerA.length);

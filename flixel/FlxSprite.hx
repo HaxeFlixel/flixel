@@ -768,28 +768,27 @@ class FlxSprite extends FlxObject
 				continue;
 			}
 			
+			_point.x = x - (camera.scroll.x * scrollFactor.x) - (offset.x);
+			_point.y = y - (camera.scroll.y * scrollFactor.y) - (offset.y);
+			
+			if (isPixelPerfectRender(camera))
+			{
+				_point.floor();
+			}
+			
 		#if FLX_RENDER_TILE
 			drawItem = camera.getDrawStackItem(cachedGraphics, isColored, _blendInt, antialiasing);
 			currDrawData = drawItem.drawData;
 			currIndex = drawItem.position;
 			
-			_point.x = x - (camera.scroll.x * scrollFactor.x) - (offset.x);
-			_point.y = y - (camera.scroll.y * scrollFactor.y) - (offset.y);
-			
 			_point.x = (_point.x) + origin.x;
 			_point.y = (_point.y) + origin.y;
-		#else
-			_point.x = x - (camera.scroll.x * scrollFactor.x) - (offset.x);
-			_point.y = y - (camera.scroll.y * scrollFactor.y) - (offset.y);
 		#end
 			
 #if FLX_RENDER_BLIT
 			if (isSimpleRender(camera))
 			{
-				// Floor point to prevent rounding issues
-				_flashPoint.x = Math.ffloor(_point.x);
-				_flashPoint.y = Math.ffloor(_point.y);
-				
+				_point.copyToFlash(_flashPoint);
 				camera.buffer.copyPixels(framePixels, _flashRect, _flashPoint, null, null, true);
 			}
 			else
@@ -805,11 +804,6 @@ class FlxSprite extends FlxObject
 				
 				_point.x += origin.x;
 				_point.y += origin.y;
-				
-				if (isPixelPerfectRender(camera))
-				{
-					_point.floor();
-				}
 				
 				_matrix.translate(_point.x, _point.y);
 				camera.buffer.draw(framePixels, _matrix, null, blend, null, (antialiasing || camera.antialiasing));
@@ -891,11 +885,6 @@ class FlxSprite extends FlxObject
 			
 			_point.x -= x2;
 			_point.y -= y2;
-			
-			if (isPixelPerfectRender(camera))
-			{
-				_point.floor();
-			}
 			
 			currDrawData[currIndex++] = _point.x;
 			currDrawData[currIndex++] = _point.y;

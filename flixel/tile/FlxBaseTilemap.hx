@@ -211,7 +211,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 			{
 				columns = rows[row++].split(",");
 				
-				if (columns.length <= 1)
+				if (columns.length < 1)
 				{
 					heightInTiles = heightInTiles - 1;
 					continue;
@@ -229,7 +229,8 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 					
 					if (curTile < 0)
 					{
-						throw 'Negative values ($curTile) for tile indices are not allowed.';
+						// anything < 0 should be treated as 0 for compatibility with certain map formats (ogmo)
+						curTile = 0;
 					}
 					
 					//if neko, make sure the value was not null, and if it is null,
@@ -595,8 +596,9 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	/**
 	 * Fetches the tilemap data array.
 	 * 
-	 * @param	Simple		If true, returns the data as copy, as a series of 1s and 0s (useful for auto-tiling stuff). Default value is false, meaning it will return the actual data array (NOT a copy).
-	 * @return	An array the size of the tilemap full of integers indicating tile placement.
+	 * @param   Simple   If true, returns the data as copy, as a series of 1s and 0s (useful for auto-tiling stuff).
+	 *                   Default value is false, meaning it will return the actual data array (NOT a copy).
+	 * @return  An array the size of the tilemap full of integers indicating tile placement.
 	 */
 	public function getData(Simple:Bool = false):Array<Int>
 	{
