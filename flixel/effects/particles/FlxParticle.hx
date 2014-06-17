@@ -101,6 +101,10 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 	 * The range of values for elasticity over this particle's lifespan.
 	 */
 	public var elasticityRange:FloatRange;
+	/**
+	 * The amount of change from the previous frame.
+	 */
+	private var _delta:Float = 0;
 	
 	/**
 	 * Instantiate a new particle. Like FlxSprite, all meaningful creation
@@ -149,8 +153,7 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 	}
 	
 	/**
-	 * The particle's main update logic.  Basically it checks to see if it should
-	 * be dead yet, and then has some special bounce behavior if there is some gravity on it.
+	 * The particle's main update logic. Basically updates properties if alive, based on ranged properties.
 	 */
 	override public function update():Void
 	{
@@ -165,28 +168,29 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 		}
 		else
 		{
+			_delta = FlxG.elapsed / lifespan;
 			percent = age / lifespan;
 			
 			if (useVelocity)
 			{
-				velocity.x = velocityRange.start.x + (velocityRange.end.x - velocityRange.start.x) * percent;
-				velocity.y = velocityRange.start.y + (velocityRange.end.y - velocityRange.start.y) * percent;
+				velocity.x += (velocityRange.end.x - velocityRange.start.x) * _delta;
+				velocity.y += (velocityRange.end.y - velocityRange.start.y) * _delta;
 			}
 			
 			if (useAngularVelocity)
 			{
-				angularVelocity = angularVelocityRange.progress(percent);
+				angularVelocity += (angularVelocityRange.end - angularVelocityRange.start) * _delta;
 			}
 			
 			if (useScale)
 			{
-				scale.x = scaleRange.start.x + (scaleRange.end.x - scaleRange.start.x) * percent;
-				scale.y = scaleRange.start.y + (scaleRange.end.y - scaleRange.start.y) * percent;
+				scale.x += (scaleRange.end.x - scaleRange.start.x) * _delta;
+				scale.y += (scaleRange.end.y - scaleRange.start.y) * _delta;
 			}
 			
 			if (useAlpha)
 			{
-				alpha = alphaRange.progress(percent);
+				alpha += (alphaRange.end - alphaRange.start) * _delta;
 			}
 			
 			if (useColor)
@@ -196,19 +200,19 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 			
 			if (useDrag)
 			{
-				drag.x = dragRange.start.x + (dragRange.end.x - dragRange.start.x) * percent;
-				drag.y = dragRange.start.y + (dragRange.end.y - dragRange.start.y) * percent;
+				drag.x += (dragRange.end.x - dragRange.start.x) * _delta;
+				drag.y += (dragRange.end.y - dragRange.start.y) * _delta;
 			}
 			
 			if (useAcceleration)
 			{
-				acceleration.x = accelerationRange.start.x + (accelerationRange.end.x - accelerationRange.start.x) * percent;
-				acceleration.y = accelerationRange.start.y + (accelerationRange.end.y - accelerationRange.start.y) * percent;
+				acceleration.x += (accelerationRange.end.x - accelerationRange.start.x) * _delta;
+				acceleration.y += (accelerationRange.end.y - accelerationRange.start.y) * _delta;
 			}
 			
 			if (useElasticity)
 			{
-				elasticity = elasticityRange.progress(percent);
+				elasticity += (elasticityRange.end - elasticityRange.start) * _delta;
 			}
 			
 			if (useHitbox && (useAngularVelocity || useScale))
@@ -227,7 +231,6 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 		alpha = 1.0;
 		scale.set(1, 1);
 		color = FlxColor.WHITE;
-<<<<<<< HEAD
 		age = 0;
 		visible = true;
 		velocityRange.set(FlxPoint.get(), FlxPoint.get());
@@ -238,12 +241,11 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 		dragRange.set(FlxPoint.get(), FlxPoint.get());
 		accelerationRange.set(FlxPoint.get(), FlxPoint.get());
 		elasticityRange.set(0);
-=======
+		
 		if (animation.curAnim != null)
 		{
 			animation.curAnim.restart();
 		}
->>>>>>> aa77785d12cd9a2709948f19dd49b1cc230e55df
 	}
 	
 	/**

@@ -129,9 +129,13 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	 */
 	public var useHitbox:Bool = false;
 	/**
-	 * Sets the allowCollisions value for particles launched from this emitter. Set to NONE by default.
+	 * Sets the allowCollisions value for particles launched from this emitter. Set to NONE by default. Don't forget to call FlxG.collide() in your update loop!
 	 */
 	public var allowCollisions:Int = FlxObject.NONE;
+	/**
+	 * Shorthand for toggling allowCollisions between ANY (if true) and NONE (if false). Don't forget to call FlxG.collide() in your update loop!
+	 */
+	public var solid(get, set):Bool;
 	/**
 	 * Internal helper for deciding how many particles to launch.
 	 */
@@ -243,13 +247,11 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		}
 		
 		var randomFrame:Int;
-		var particle:T;
-		var pClass:Class<T> = particleClass;
 		var i:Int = 0;
 		
 		while (i < Quantity)
 		{
-			particle = Type.createInstance(pClass, []);
+			var particle:T = Type.createInstance(particleClass, []);
 			
 			if (Multiple)
 			{
@@ -285,7 +287,6 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 				}
 			}
 			
-			particle.exists = false;
 			add(particle);
 			i++;
 		}
@@ -296,15 +297,24 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	/**
 	 * Similar to FlxSprite's makeGraphic, this function allows you to quickly make single-color particles.
 	 * 
-	 * @param	Width    The width of the generated particles. Default is 2 pixels.
-	 * @param	Height   The height of the generated particles. Default is 2 pixels.
-	 * @param	Color    The color of the generated particles. Default is white.
-	 * @param	Quantity How many particles to generate. Default is 50.
+	 * @param	Width           The width of the generated particles. Default is 2 pixels.
+	 * @param	Height          The height of the generated particles. Default is 2 pixels.
+	 * @param	Color           The color of the generated particles. Default is white.
+	 * @param	Quantity        How many particles to generate. Default is 50.
 	 * @return  This FlxEmitter instance (nice for chaining stuff together).
 	 */
 	public function makeParticles(Width:Int = 2, Height:Int = 2, Color:FlxColor = FlxColor.WHITE, Quantity:Int = 50):FlxTypedEmitter<T>
 	{
-		loadParticles(new BitmapData(Width, Height, false, Color), Quantity);
+		var i:Int = 0;
+		
+		while (i < Quantity)
+		{
+			var particle = Type.createInstance(particleClass, []);
+			particle.makeGraphic(Width, Height, Color);
+			add(particle);
+			
+			i++;
+		}
 		
 		return this;
 	}
@@ -536,6 +546,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		// Particle collision settings
 		
 		particle.immovable = immovable;
+		particle.solid = solid;
 		particle.allowCollisions = allowCollisions;
 		particle.useHitbox = useHitbox;
 		
@@ -553,6 +564,24 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		
 		x = _point.x - (Std.int(width) >> 1);
 		y = _point.y - (Std.int(height) >> 1);
+	}
+	
+	private inline function get_solid():Bool
+	{
+		return (allowCollisions & FlxObject.ANY) > FlxObject.NONE;
+	}
+	
+	private function set_solid(Solid:Bool):Bool
+	{
+		if (Solid)
+		{
+			allowCollisions = FlxObject.ANY;
+		}
+		else
+		{
+			allowCollisions = FlxObject.NONE;
+		}
+		return Solid;
 	}
 }
 
