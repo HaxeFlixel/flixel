@@ -6,7 +6,7 @@ import flixel.math.FlxPoint;
 /**
  * Helper object for holding beginning and ending values of various properties.
  */
-class Range<T>
+class FlxRange<T>
 {
 	public var start:T;
 	public var end:T;
@@ -30,7 +30,7 @@ class Range<T>
 	 * @param	end    The new final value of the property.  Optional, will be set equal to start if ignored.
 	 * @return  This Range instance (nice for chaining stuff together).
 	 */
-	public function set(start:T, ?end:Null<T>):Range<T>
+	public function set(start:T, ?end:Null<T>):FlxRange<T>
 	{
 		this.start = start;
 		this.end = end == null ? start : end;
@@ -39,11 +39,14 @@ class Range<T>
 	}
 	
 	/**
-	 * Function to compare two Range objects of the same type.
+	 * Function to compare this FlxRange to another.
+	 * 
+	 * @param	OtherFlxRange  The other FlxRange to compare to this one.
+	 * @return	True if the FlxRanges have the same start and end value, false otherwise.
 	 */
-	public static inline function equal<T>(Range1:Range<T>, Range2:Range<T>):Bool
+	public inline function equals(OtherRange:FlxRange<T>):Bool
 	{
-		return Range1.start == Range2.start && Range1.end == Range2.end;
+		return start == OtherRange.start && end == OtherRange.end;
 	}
 	
 	/**

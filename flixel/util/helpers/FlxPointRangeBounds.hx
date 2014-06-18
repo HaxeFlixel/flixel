@@ -10,8 +10,8 @@ import flixel.util.FlxStringUtil;
  */
 class FlxPointRangeBounds implements IFlxDestroyable
 {
-	public var start:Bounds<FlxPoint>;
-	public var end:Bounds<FlxPoint>;
+	public var start:FlxBounds<FlxPoint>;
+	public var end:FlxBounds<FlxPoint>;
 	
 	/**
 	 * Create a new FlxPointRangeBounds object.
@@ -28,8 +28,8 @@ class FlxPointRangeBounds implements IFlxDestroyable
 	 */
 	public function new(startMinX:Float, ?startMinY:Null<Float>, ?startMaxX:Null<Float>, ?startMaxY:Null<Float>, ?endMinX:Null<Float>, ?endMinY:Null<Float>, ?endMaxX:Null<Float>, ?endMaxY:Null<Float>)
 	{
-		start = new Bounds<FlxPoint>(FlxPoint.get(), FlxPoint.get());
-		end = new Bounds<FlxPoint>(FlxPoint.get(), FlxPoint.get());
+		start = new FlxBounds<FlxPoint>(FlxPoint.get(), FlxPoint.get());
+		end = new FlxBounds<FlxPoint>(FlxPoint.get(), FlxPoint.get());
 		
 		set(startMinX, startMinY, startMaxX, startMaxY, endMinX, endMinY, endMaxX, endMaxY);
 	}
@@ -62,14 +62,17 @@ class FlxPointRangeBounds implements IFlxDestroyable
 	}
 	
 	/**
-	 * Function to compare two FlxPointRangeBounds objects of the same type.
+	 * Function to compare this FlxPointRangeBounds to another.
+	 * 
+	 * @param	OtherFlxPointRangeBounds  The other FlxPointRangeBounds to compare to this one.
+	 * @return	True if the FlxPointRangeBounds have the same min and max value, false otherwise.
 	 */
-	public static inline function equal(FlxPointRangeBounds1:FlxPointRangeBounds, FlxPointRangeBounds2:FlxPointRangeBounds):Bool
+	public inline function equals(OtherFlxPointRangeBounds:FlxPointRangeBounds):Bool
 	{
-		return FlxPoint.equal(FlxPointRangeBounds1.start.min, FlxPointRangeBounds2.start.min) && 
-				FlxPoint.equal(FlxPointRangeBounds1.start.max, FlxPointRangeBounds2.start.max) && 
-				FlxPoint.equal(FlxPointRangeBounds1.end.min, FlxPointRangeBounds2.end.min) && 
-				FlxPoint.equal(FlxPointRangeBounds1.end.max, FlxPointRangeBounds2.end.max);
+		return 	start.min.equals(OtherFlxPointRangeBounds.start.min) &&
+				start.max.equals(OtherFlxPointRangeBounds.start.max) &&
+				end.min.equals(OtherFlxPointRangeBounds.end.min) &&
+				end.max.equals(OtherFlxPointRangeBounds.end.max);
 	}
 	
 	/**

@@ -4,9 +4,9 @@ import flixel.util.FlxStringUtil;
 import flixel.math.FlxPoint;
 
 /**
- * Helper object for holding bounds of various properties.
+ * Helper object for holding minimum and maximum values of various properties.
  */
-class Bounds<T>
+class FlxBounds<T>
 {
 	public var min:T;
 	public var max:T;
@@ -30,7 +30,7 @@ class Bounds<T>
 	 * @param	max  The new maximum value of the property. Optional, will be set equal to min if ignored.
 	 * @return  This Bounds instance (nice for chaining stuff together).
 	 */
-	public function set(min:T, ?max:Null<T>):Bounds<T>
+	public function set(min:T, ?max:Null<T>):FlxBounds<T>
 	{
 		this.min = min;
 		this.max = max == null ? min : max;
@@ -38,11 +38,14 @@ class Bounds<T>
 	}
 	
 	/**
-	 * Function to compare two Bounds objects of the same type.
+	 * Function to compare this FlxBounds to another.
+	 * 
+	 * @param	OtherFlxBounds  The other FlxBounds to compare to this one.
+	 * @return	True if the FlxBounds have the same min and max value, false otherwise.
 	 */
-	public static inline function equal<T>(Bounds1:Bounds<T>, Bounds2:Bounds<T>):Bool
+	public inline function equals(OtherBounds:FlxBounds<T>):Bool
 	{
-		return Bounds1.min == Bounds2.min && Bounds1.max == Bounds2.max;
+		return min == OtherBounds.min && max == OtherBounds.max;
 	}
 	
 	/**

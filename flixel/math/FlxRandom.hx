@@ -275,7 +275,7 @@ class FlxRandom
 	}
 	
 	/**
-	 * Returns a random color value in FlxColor format.
+	 * Returns a random color.
 	 * 
 	 * @param   Min        An optional FlxColor representing the lower bounds for the generated color.
 	 * @param   Max        An optional FlxColor representing the upper bounds for the generated color.

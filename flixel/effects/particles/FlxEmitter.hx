@@ -16,9 +16,9 @@ import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxStringUtil;
-import flixel.util.helpers.Bounds;
-import flixel.util.helpers.Range;
-import flixel.util.helpers.RangeBounds;
+import flixel.util.helpers.FlxBounds;
+import flixel.util.helpers.FlxRange;
+import flixel.util.helpers.FlxRangeBounds;
 import flixel.util.helpers.FlxPointRangeBounds;
 
 typedef FlxEmitter = FlxTypedEmitter<FlxParticle>;
@@ -78,11 +78,11 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	/**
 	 * The angular velocity range of particles launched from this emitter.
 	 */
-	public var angularVelocity(default, null):RangeBounds<Float>;
+	public var angularVelocity(default, null):FlxRangeBounds<Float>;
 	/**
 	 * The angle range of particles launched from this emitter. angle.end is ignored unless ignoreAngularVelocity is set to true.
 	 */
-	public var angle(default, null):RangeBounds<Float>;
+	public var angle(default, null):FlxRangeBounds<Float>;
 	/**
 	 * Set this if you want to specify the beginning and ending value of angle, instead of using angularVelocity.
 	 */
@@ -90,11 +90,11 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	/**
 	 * The angle range at which particles will be launched from this emitter. Ignored unless launchMode is set to FlxEmitterMode.CIRCLE
 	 */
-	public var launchAngle(default, null):Bounds<Float>;
+	public var launchAngle(default, null):FlxBounds<Float>;
 	/**
 	 * The life, or duration, range of particles launched from this emitter.
 	 */
-	public var lifespan(default, null):Bounds<Float>;
+	public var lifespan(default, null):FlxBounds<Float>;
 	/**
 	 * Sets scale range of particles launched from this emitter.
 	 */
@@ -102,11 +102,11 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	/**
 	 * Sets alpha range of particles launched from this emitter.
 	 */
-	public var alpha(default, null):RangeBounds<Float>;
+	public var alpha(default, null):FlxRangeBounds<Float>;
 	/**
 	 * Sets color range of particles launched from this emitter.
 	 */
-	public var color(default, null):RangeBounds<FlxColor>;
+	public var color(default, null):FlxRangeBounds<FlxColor>;
 	/**
 	 * Sets X and Y drag component of particles launched from this emitter.
 	 */
@@ -118,7 +118,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	/**
 	 * Sets the elasticity, or bounce, range of particles launched from this emitter.
 	 */
-	public var elasticity(default, null):RangeBounds<Float>;
+	public var elasticity(default, null):FlxRangeBounds<Float>;
 	/**
 	 * Sets the immovable flag for particles launched from this emitter.
 	 */
@@ -176,16 +176,16 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		y = Y;
 		
 		velocity = new FlxPointRangeBounds(-100, -100, 100, 100);
-		angularVelocity = new RangeBounds<Float>(0, 0);
-		angle = new RangeBounds<Float>(0);
-		launchAngle = new Bounds<Float>(-180, 180);
-		lifespan = new Bounds<Float>(3);
+		angularVelocity = new FlxRangeBounds<Float>(0, 0);
+		angle = new FlxRangeBounds<Float>(0);
+		launchAngle = new FlxBounds<Float>(-180, 180);
+		lifespan = new FlxBounds<Float>(3);
 		scale = new FlxPointRangeBounds(1, 1);
-		alpha = new RangeBounds<Float>(1);
-		color = new RangeBounds<FlxColor>(FlxColor.WHITE, FlxColor.WHITE);
+		alpha = new FlxRangeBounds<Float>(1);
+		color = new FlxRangeBounds<FlxColor>(FlxColor.WHITE, FlxColor.WHITE);
 		drag = new FlxPointRangeBounds(0, 0);
 		acceleration = new FlxPointRangeBounds(0, 0);
-		elasticity = new RangeBounds<Float>(0);
+		elasticity = new FlxRangeBounds<Float>(0);
 		
 		particleClass = cast FlxParticle;
 		
@@ -198,26 +198,20 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	 */
 	override public function destroy():Void
 	{
-		FlxDestroyUtil.destroy(velocity);
-		FlxDestroyUtil.destroy(scale);
-		FlxDestroyUtil.destroy(drag);
-		FlxDestroyUtil.destroy(acceleration);
+		velocity = FlxDestroyUtil.destroy(velocity);
+		scale = FlxDestroyUtil.destroy(scale);
+		drag = FlxDestroyUtil.destroy(drag);
+		acceleration = FlxDestroyUtil.destroy(acceleration);
+		_point = FlxDestroyUtil.put(_point);
 		
 		blend = null;
-		velocity = null;
 		angularVelocity = null;
 		angle = null;
 		launchAngle = null;
 		lifespan = null;
-		scale = null;
 		alpha = null;
 		color = null;
-		drag = null;
-		acceleration = null;
 		elasticity = null;
-		
-		_point = FlxDestroyUtil.put(_point);
-		_point = null;
 		
 		super.destroy();
 	}
@@ -445,7 +439,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		
 		// Particle velocity/launch angle settings
 		
-		particle.useVelocity = FlxPoint.equal(particle.velocityRange.start, particle.velocityRange.end);
+		particle.useVelocity = particle.velocityRange.start.equals(particle.velocityRange.end);
 		
 		if (launchAngle != null && launchMode == FlxEmitterMode.CIRCLE)
 		{
@@ -523,7 +517,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		particle.dragRange.start.y = FlxRandom.float(drag.start.min.y, drag.start.max.y);
 		particle.dragRange.end.x = FlxRandom.float(drag.end.min.x, drag.end.max.x);
 		particle.dragRange.end.y = FlxRandom.float(drag.end.min.y, drag.end.max.y);
-		particle.useDrag = FlxPoint.equal(particle.dragRange.start, particle.dragRange.end);
+		particle.useDrag = particle.dragRange.start.equals(particle.dragRange.end);
 		particle.drag.x = particle.dragRange.start.x;
 		particle.drag.y = particle.dragRange.start.y;
 		
@@ -533,7 +527,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		particle.accelerationRange.start.y = FlxRandom.float(acceleration.start.min.y, acceleration.start.max.y);
 		particle.accelerationRange.end.x = FlxRandom.float(acceleration.end.min.x, acceleration.end.max.x);
 		particle.accelerationRange.end.y = FlxRandom.float(acceleration.end.min.y, acceleration.end.max.y);
-		particle.useAcceleration = FlxPoint.equal(particle.accelerationRange.start, particle.accelerationRange.end);
+		particle.useAcceleration = particle.accelerationRange.start.equals(particle.accelerationRange.end);
 		particle.acceleration.x = particle.accelerationRange.start.x;
 		particle.acceleration.y = particle.accelerationRange.start.y;
 		

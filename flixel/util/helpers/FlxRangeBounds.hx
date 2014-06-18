@@ -4,13 +4,13 @@ import flixel.util.FlxStringUtil;
 import flixel.math.FlxPoint;
 
 /**
- * Helper object for holding beginning minimum/maximum and ending minimum/maximum values of different variables.
+ * Helper object for holding beginning minimum/maximum and ending minimum/maximum values of different properties.
  * It would extend Range<Bounds<T>> but this allows a more practical use of set().
  */
-class RangeBounds<T>
+class FlxRangeBounds<T>
 {
-	public var start:Bounds<T>;
-	public var end:Bounds<T>;
+	public var start:FlxBounds<T>;
+	public var end:FlxBounds<T>;
 	
 	/**
 	 * Create a new RangeBounds object. Must be typed, e.g. var myRangeBounds = new RangeBounds<Float>(0, 0, 0, 0);
@@ -23,8 +23,8 @@ class RangeBounds<T>
 	 */
 	public function new(startMin:T, ?startMax:Null<T>, ?endMin:Null<T>, ?endMax:Null<T>)
 	{
-		start = new Bounds<T>(startMin, startMax == null ? startMin : startMax);
-		end = new Bounds<T>(endMin == null ? startMin : endMin, endMax == null ? start.max : endMax);
+		start = new FlxBounds<T>(startMin, startMax == null ? startMin : startMax);
+		end = new FlxBounds<T>(endMin == null ? startMin : endMin, endMax == null ? start.max : endMax);
 	}
 	
 	/**
@@ -36,7 +36,7 @@ class RangeBounds<T>
 	 * @param   endMax    The maximum possible final value of this property for particles launched from this emitter. Optional, will be set equal to startMax if ignored.
 	 * @return  This RangeBounds instance (nice for chaining stuff together).
 	 */
-	public function set(startMin:T, ?startMax:Null<T>, ?endMin:Null<T>, ?endMax:Null<T>):RangeBounds<T>
+	public function set(startMin:T, ?startMax:Null<T>, ?endMin:Null<T>, ?endMax:Null<T>):FlxRangeBounds<T>
 	{
 		start.min = startMin;
 		start.max = startMax == null ? start.min : startMax;
@@ -47,11 +47,14 @@ class RangeBounds<T>
 	}
 	
 	/**
-	 * Function to compare two RangeBounds objects of the same type.
+	 * Function to compare this FlxRangeBounds to another.
+	 * 
+	 * @param	OtherFlxRangeBounds  The other FlxRangeBounds to compare to this one.
+	 * @return	True if the FlxRangeBounds have the same min and max value, false otherwise.
 	 */
-	public static inline function equal<T>(RangeBounds1:RangeBounds<T>, RangeBounds2:RangeBounds<T>):Bool
+	public inline function equals(OtherRangeBounds:FlxRangeBounds<T>):Bool
 	{
-		return Bounds.equal(RangeBounds1.start, RangeBounds2.start) && Bounds.equal(RangeBounds1.end, RangeBounds2.end);
+		return start.equals(OtherRangeBounds.start) && end.equals(OtherRangeBounds.end);
 	}
 	
 	/**
