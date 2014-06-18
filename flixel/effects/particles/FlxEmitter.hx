@@ -437,7 +437,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	{
 		var particle:T = cast recycle(cast particleClass);
 		
-		particle.reset(FlxRandom.float(x - width / 2, x + width / 2), FlxRandom.float(y - height / 2, y + height / 2));
+		particle.reset(FlxRandom.float(x, x + width), FlxRandom.float(y, y + height));
 		
 		// Particle blend settings
 		
