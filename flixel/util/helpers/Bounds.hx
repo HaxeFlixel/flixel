@@ -20,7 +20,7 @@ class Bounds<T>
 	public function new(min:T, ?max:Null<T>)
 	{
 		this.min = min;
-		this.max = max;
+		this.max = max == null ? min : max;
 	}
 	
 	/**
@@ -38,20 +38,11 @@ class Bounds<T>
 	}
 	
 	/**
-	 * Allows simple comparison of two Bounds objects, so that (bounds1 == bounds2) will be true if both contain the same min and max values.
+	 * Function to compare two Bounds objects of the same type.
 	 */
-	@:commutative
-	@:op(A == B)
-	private static inline function equal<T>(lhs:Bounds<T>, rhs:Bounds<T>):Bool
+	public static inline function equal<T>(Bounds1:Bounds<T>, Bounds2:Bounds<T>):Bool
 	{
-		return lhs.min == rhs.min && lhs.max == rhs.max;
-	}
-	
-	@:commutative
-	@:op(A != B)
-	private static inline function notEqual<T>(lhs:Bounds<T>, rhs:Bounds<T>):Bool
-	{
-		return lhs.min != rhs.min || lhs.max != rhs.max;
+		return Bounds1.min == Bounds2.min && Bounds1.max == Bounds2.max;
 	}
 	
 	/**

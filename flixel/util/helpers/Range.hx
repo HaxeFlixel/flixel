@@ -20,7 +20,7 @@ class Range<T>
 	public function new(start:T, ?end:Null<T>)
 	{
 		this.start = start;
-		this.end = end;
+		this.end = end == null ? start : end;
 	}
 	
 	/**
@@ -39,20 +39,11 @@ class Range<T>
 	}
 	
 	/**
-	 * Allows simple comparison of two Range objects, so that (range1 == range2) will be true if both contain the same start and end values.
+	 * Function to compare two Range objects of the same type.
 	 */
-	@:commutative
-	@:op(A == B)
-	private static inline function equal<T>(lhs:Range<T>, rhs:Range<T>):Bool
+	public static inline function equal<T>(Range1:Range<T>, Range2:Range<T>):Bool
 	{
-		return lhs.start == rhs.start && lhs.end == rhs.end;
-	}
-	
-	@:commutative
-	@:op(A != B)
-	private static inline function notEqual<T>(lhs:Range<T>, rhs:Range<T>):Bool
-	{
-		return lhs.start != rhs.start || lhs.end != rhs.end;
+		return Range1.start == Range2.start && Range1.end == Range2.end;
 	}
 	
 	/**

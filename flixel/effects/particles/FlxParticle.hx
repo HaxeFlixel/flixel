@@ -6,7 +6,6 @@ import flixel.FlxSprite;
 import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
-import flixel.util.helpers.FloatRange;
 import flixel.util.helpers.Range;
 
 /**
@@ -76,7 +75,7 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 	/**
 	 * The range of values for angularVelocity over this particle's lifespan.
 	 */
-	public var angularVelocityRange:FloatRange;
+	public var angularVelocityRange:Range<Float>;
 	/**
 	 * The range of values for scale over this particle's lifespan.
 	 */
@@ -84,7 +83,7 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 	/**
 	 * The range of values for alpha over this particle's lifespan.
 	 */
-	public var alphaRange:FloatRange;
+	public var alphaRange:Range<Float>;
 	/**
 	 * The range of values for color over this particle's lifespan.
 	 */
@@ -100,7 +99,7 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 	/**
 	 * The range of values for elasticity over this particle's lifespan.
 	 */
-	public var elasticityRange:FloatRange;
+	public var elasticityRange:Range<Float>;
 	/**
 	 * The amount of change from the previous frame.
 	 */
@@ -115,13 +114,13 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 		super();
 		
 		velocityRange = new Range<FlxPoint>(FlxPoint.get(), FlxPoint.get());
-		angularVelocityRange = new FloatRange(0);
+		angularVelocityRange = new Range<Float>(0);
 		scaleRange = new Range<FlxPoint>(FlxPoint.get(), FlxPoint.get());
-		alphaRange = new FloatRange(0);
+		alphaRange = new Range<Float>(0);
 		colorRange = new Range<FlxColor>(FlxColor.WHITE);
 		dragRange = new Range<FlxPoint>(FlxPoint.get(), FlxPoint.get());
 		accelerationRange = new Range<FlxPoint>(FlxPoint.get(), FlxPoint.get());
-		elasticityRange = new FloatRange(0);
+		elasticityRange = new Range<Float>(0);
 		
 		exists = false;
 	}
@@ -270,13 +269,13 @@ interface IFlxParticle extends IFlxSprite
 	public var useElasticity:Bool;
 	public var useHitbox:Bool;
 	public var velocityRange:Range<FlxPoint>;
-	public var angularVelocityRange:FloatRange;
+	public var angularVelocityRange:Range<Float>;
 	public var scaleRange:Range<FlxPoint>;
-	public var alphaRange:FloatRange;
+	public var alphaRange:Range<Float>;
 	public var colorRange:Range<FlxColor>;
 	public var dragRange:Range<FlxPoint>;
 	public var accelerationRange:Range<FlxPoint>;
-	public var elasticityRange:FloatRange;
+	public var elasticityRange:Range<Float>;
 	
 	public function onEmit():Void;
 }

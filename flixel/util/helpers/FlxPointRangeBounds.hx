@@ -6,9 +6,13 @@ import flixel.util.FlxStringUtil;
 
 /**
  * Helper object for holding beginning minimum/maximum and ending minimum/maximum values of FlxPoints, which have both an x and y component.
+ * This would extends Range<Bounds<FlxPoint>> but this allows a more practical use of set().
  */
-class FlxPointRangeBounds extends Range<Bounds<FlxPoint>> implements IFlxDestroyable
+class FlxPointRangeBounds implements IFlxDestroyable
 {
+	public var start:Bounds<FlxPoint>;
+	public var end:Bounds<FlxPoint>;
+	
 	/**
 	 * Create a new FlxPointRangeBounds object.
 	 * 
@@ -24,12 +28,10 @@ class FlxPointRangeBounds extends Range<Bounds<FlxPoint>> implements IFlxDestroy
 	 */
 	public function new(startMinX:Float, ?startMinY:Null<Float>, ?startMaxX:Null<Float>, ?startMaxY:Null<Float>, ?endMinX:Null<Float>, ?endMinY:Null<Float>, ?endMaxX:Null<Float>, ?endMaxY:Null<Float>)
 	{
-		super(null);
-		
 		start = new Bounds<FlxPoint>(FlxPoint.get(), FlxPoint.get());
 		end = new Bounds<FlxPoint>(FlxPoint.get(), FlxPoint.get());
 		
-		setAll(startMinX, startMinY, startMaxX, startMaxY, endMinX, endMinY, endMaxX, endMaxY);
+		set(startMinX, startMinY, startMaxX, startMaxY, endMinX, endMinY, endMaxX, endMaxY);
 	}
 	
 	/**
@@ -45,7 +47,7 @@ class FlxPointRangeBounds extends Range<Bounds<FlxPoint>> implements IFlxDestroy
 	 * @param   endMaxY    The maximum possible final value of Y for this property for particles launched from this emitter. Optional, will be set equal to endMinY if ignored.
 	 * @return  This FlxPointRangeBounds instance (nice for chaining stuff together).
 	 */
-	public function setAll(startMinX:Float, ?startMinY:Null<Float>, ?startMaxX:Null<Float>, ?startMaxY:Null<Float>, ?endMinX:Null<Float>, ?endMinY:Null<Float>, ?endMaxX:Null<Float>, ?endMaxY:Null<Float>):FlxPointRangeBounds
+	public function set(startMinX:Float, ?startMinY:Null<Float>, ?startMaxX:Null<Float>, ?startMaxY:Null<Float>, ?endMinX:Null<Float>, ?endMinY:Null<Float>, ?endMaxX:Null<Float>, ?endMaxY:Null<Float>):FlxPointRangeBounds
 	{
 		start.min.x = startMinX;
 		start.min.y = startMinY == null ? start.min.x : startMinY;
@@ -60,9 +62,20 @@ class FlxPointRangeBounds extends Range<Bounds<FlxPoint>> implements IFlxDestroy
 	}
 	
 	/**
+	 * Function to compare two FlxPointRangeBounds objects of the same type.
+	 */
+	public static inline function equal(FlxPointRangeBounds1:FlxPointRangeBounds, FlxPointRangeBounds2:FlxPointRangeBounds):Bool
+	{
+		return FlxPoint.equal(FlxPointRangeBounds1.start.min, FlxPointRangeBounds2.start.min) && 
+				FlxPoint.equal(FlxPointRangeBounds1.start.max, FlxPointRangeBounds2.start.max) && 
+				FlxPoint.equal(FlxPointRangeBounds1.end.min, FlxPointRangeBounds2.end.min) && 
+				FlxPoint.equal(FlxPointRangeBounds1.end.max, FlxPointRangeBounds2.end.max);
+	}
+	
+	/**
 	 * Convert object to readable string name. Useful for debugging, save games, etc.
 	 */
-	override public function toString():String
+	public function toString():String
 	{
 		return FlxStringUtil.getDebugString([ 
 			LabelValuePair.weak("start.min.x", start.min.x),

@@ -36,8 +36,7 @@ typedef FlxEmitter = FlxTypedEmitter<FlxParticle>;
 class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 {
 	/**
-	 * Set your own particle class type here. The custom class must extend FlxParticle.
-	 * Default is FlxParticle.
+	 * Set your own particle class type here. The custom class must extend FlxParticle. Default is FlxParticle.
 	 */
 	public var particleClass:Class<T>;
 	/**
@@ -183,7 +182,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		lifespan = new Bounds<Float>(3);
 		scale = new FlxPointRangeBounds(1, 1);
 		alpha = new RangeBounds<Float>(1);
-		color = new RangeBounds<FlxColor>(FlxColor.WHITE);
+		color = new RangeBounds<FlxColor>(FlxColor.WHITE, FlxColor.WHITE);
 		drag = new FlxPointRangeBounds(0, 0);
 		acceleration = new FlxPointRangeBounds(0, 0);
 		elasticity = new RangeBounds<Float>(0);
@@ -309,7 +308,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		
 		while (i < Quantity)
 		{
-			var particle = Type.createInstance(particleClass, []);
+			var particle:T = Type.createInstance(particleClass, []);
 			particle.makeGraphic(Width, Height, Color);
 			add(particle);
 			
@@ -446,6 +445,8 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		
 		// Particle velocity/launch angle settings
 		
+		particle.useVelocity = FlxPoint.equal(particle.velocityRange.start, particle.velocityRange.end);
+		
 		if (launchAngle != null && launchMode == FlxEmitterMode.CIRCLE)
 		{
 			var particleAngle:Float = FlxRandom.float(launchAngle.min, launchAngle.max);
@@ -455,7 +456,6 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 			particle.velocity.y = launchVelocity.y;
 			particle.velocityRange.start.set(launchVelocity.x, launchVelocity.y);
 			particle.velocityRange.end.set(finalVelocity.x, finalVelocity.y);
-			particle.useVelocity = particle.velocityRange.start != particle.velocityRange.end;
 		}
 		else
 		{
@@ -463,14 +463,13 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 			particle.velocityRange.start.y = FlxRandom.float(velocity.start.min.y, velocity.start.max.y);
 			particle.velocityRange.end.x = FlxRandom.float(velocity.end.min.x, velocity.end.max.x);
 			particle.velocityRange.end.y = FlxRandom.float(velocity.end.min.y, velocity.end.max.y);
-			particle.useVelocity = particle.velocityRange.start != particle.velocityRange.end;
 			particle.velocity.x = particle.velocityRange.start.x;
 			particle.velocity.y = particle.velocityRange.start.y;
 		}
 		
 		// Particle angular velocity settings
 		
-		particle.useAngularVelocity = angularVelocity.start == angularVelocity.end;
+		particle.useAngularVelocity = angularVelocity.start != angularVelocity.end;
 		
 		if (!ignoreAngularVelocity)
 		{
@@ -522,7 +521,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		particle.dragRange.start.y = FlxRandom.float(drag.start.min.y, drag.start.max.y);
 		particle.dragRange.end.x = FlxRandom.float(drag.end.min.x, drag.end.max.x);
 		particle.dragRange.end.y = FlxRandom.float(drag.end.min.y, drag.end.max.y);
-		particle.useDrag = particle.dragRange.start != particle.dragRange.end;
+		particle.useDrag = FlxPoint.equal(particle.dragRange.start, particle.dragRange.end);
 		particle.drag.x = particle.dragRange.start.x;
 		particle.drag.y = particle.dragRange.start.y;
 		
@@ -532,7 +531,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		particle.accelerationRange.start.y = FlxRandom.float(acceleration.start.min.y, acceleration.start.max.y);
 		particle.accelerationRange.end.x = FlxRandom.float(acceleration.end.min.x, acceleration.end.max.x);
 		particle.accelerationRange.end.y = FlxRandom.float(acceleration.end.min.y, acceleration.end.max.y);
-		particle.useAcceleration = particle.accelerationRange.start != particle.accelerationRange.end;
+		particle.useAcceleration = FlxPoint.equal(particle.accelerationRange.start, particle.accelerationRange.end);
 		particle.acceleration.x = particle.accelerationRange.start.x;
 		particle.acceleration.y = particle.accelerationRange.start.y;
 		

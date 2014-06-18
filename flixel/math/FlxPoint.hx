@@ -43,6 +43,14 @@ class FlxPoint implements IFlxPooled
 		return point;
 	}
 	
+	/**
+	 * Function to compare two FlxPoint objects.
+	 */
+	public static inline function equal(FlxPoint1:FlxPoint, FlxPoint2:FlxPoint):Bool
+	{
+		return FlxPoint1.x == FlxPoint2.x && FlxPoint1.y == FlxPoint2.y;
+	}
+	
 	public var x(default, set):Float = 0;
 	public var y(default, set):Float = 0;
 	

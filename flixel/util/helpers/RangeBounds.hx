@@ -5,9 +5,13 @@ import flixel.math.FlxPoint;
 
 /**
  * Helper object for holding beginning minimum/maximum and ending minimum/maximum values of different variables.
+ * It would extend Range<Bounds<T>> but this allows a more practical use of set().
  */
-class RangeBounds<T> extends Range<Bounds<T>>
+class RangeBounds<T>
 {
+	public var start:Bounds<T>;
+	public var end:Bounds<T>;
+	
 	/**
 	 * Create a new RangeBounds object. Must be typed, e.g. var myRangeBounds = new RangeBounds<Float>(0, 0, 0, 0);
 	 * 
@@ -19,12 +23,8 @@ class RangeBounds<T> extends Range<Bounds<T>>
 	 */
 	public function new(startMin:T, ?startMax:Null<T>, ?endMin:Null<T>, ?endMax:Null<T>)
 	{
-		super(null);
-		
-		start = new Bounds<T>(startMin, startMax);
-		end = new Bounds<T>(endMin, endMax);
-		
-		setAll(startMin, startMax, endMin, endMax);
+		start = new Bounds<T>(startMin, startMax == null ? startMin : startMax);
+		end = new Bounds<T>(endMin == null ? startMin : endMin, endMax == null ? start.max : endMax);
 	}
 	
 	/**
@@ -36,7 +36,7 @@ class RangeBounds<T> extends Range<Bounds<T>>
 	 * @param   endMax    The maximum possible final value of this property for particles launched from this emitter. Optional, will be set equal to startMax if ignored.
 	 * @return  This RangeBounds instance (nice for chaining stuff together).
 	 */
-	public function setAll(startMin:T, ?startMax:Null<T>, ?endMin:Null<T>, ?endMax:Null<T>):RangeBounds<T>
+	public function set(startMin:T, ?startMax:Null<T>, ?endMin:Null<T>, ?endMax:Null<T>):RangeBounds<T>
 	{
 		start.min = startMin;
 		start.max = startMax == null ? start.min : startMax;
@@ -47,26 +47,17 @@ class RangeBounds<T> extends Range<Bounds<T>>
 	}
 	
 	/**
-	 * Allows simple comparison of two RangeBounds objects, so that (rangeBounds1 == rangeBounds2) will be true if both contain the same start min and max and end min and max values.
+	 * Function to compare two RangeBounds objects of the same type.
 	 */
-	@:commutative
-	@:op(A == B)
-	private static inline function equal<T>(lhs:RangeBounds<T>, rhs:RangeBounds<T>):Bool
+	public static inline function equal<T>(RangeBounds1:RangeBounds<T>, RangeBounds2:RangeBounds<T>):Bool
 	{
-		return lhs.start.min == rhs.start.min && lhs.start.max == rhs.start.max && lhs.end.min == rhs.end.min && lhs.end.max == rhs.end.max;
-	}
-	
-	@:commutative
-	@:op(A != B)
-	private static inline function notEqual<T>(lhs:RangeBounds<T>, rhs:RangeBounds<T>):Bool
-	{
-		return lhs.start.min != rhs.start.min || lhs.start.max != rhs.start.max || lhs.end.min != rhs.end.min || lhs.end.max != rhs.end.max;
+		return Bounds.equal(RangeBounds1.start, RangeBounds2.start) && Bounds.equal(RangeBounds1.end, RangeBounds2.end);
 	}
 	
 	/**
 	 * Convert object to readable string name. Useful for debugging, save games, etc.
 	 */
-	override public function toString():String
+	public function toString():String
 	{
 		return FlxStringUtil.getDebugString([ 
 			LabelValuePair.weak("start.min", start.min),
