@@ -157,6 +157,10 @@ class PlayState extends FlxState
 			updateText("Welcome to the particles demo!");
 			_firstLoad = false;
 		}
+		else
+		{
+			updateText("Demo reset!");
+		}
 		
 		// Let's setup some walls for our particles to collide against
 		
@@ -260,7 +264,7 @@ class PlayState extends FlxState
 			
 			if (_isDirectionOn)
 			{
-				_emitter.velocity.setAll(200, -100, 200, 100);
+				_emitter.velocity.set(200, -100, 200, 100);
 			}
 			
 			updateText("LaunchMode: SQUARE");
@@ -279,7 +283,7 @@ class PlayState extends FlxState
 			}
 			else
 			{
-				_emitter.velocity.setAll(200, -100, 200, 100);
+				_emitter.velocity.set(200, -100, 200, 100);
 			}
 			
 			updateText("Launching to the right");
@@ -287,7 +291,7 @@ class PlayState extends FlxState
 		else
 		{
 			_emitter.launchAngle.set(-180, 180);
-			_emitter.velocity.setAll( -100, -100, 100, 100);
+			_emitter.velocity.set( -100, -100, 100, 100);
 			
 			updateText("Launching in all directions");
 		}
@@ -299,11 +303,11 @@ class PlayState extends FlxState
 		
 		if (_isVelocityOn)
 		{
-			_emitter.velocity.setAll(50, 40, 60, 80, -400, -600, 400, 600);
+			_emitter.velocity.set(50, 40, 60, 80, -400, -600, 400, 600);
 		}
 		else
 		{
-			_emitter.velocity.setAll( -100, -100, 100, 100);
+			_emitter.velocity.set( -100, -100, 100, 100);
 		}
 		
 		updateText("Emitter velocity scaling", _isVelocityOn);
@@ -315,11 +319,11 @@ class PlayState extends FlxState
 		
 		if (_isAngularVelocityOn)
 		{
-			_emitter.angularVelocity.setAll( -180, 180, -90, 90);
+			_emitter.angularVelocity.set( -180, 180, -90, 90);
 		}
 		else
 		{
-			_emitter.angularVelocity.setAll(0);
+			_emitter.angularVelocity.set(0);
 		}
 		
 		updateText("Angular velocity", _isAngularVelocityOn);
@@ -331,11 +335,11 @@ class PlayState extends FlxState
 		
 		if (_isAngleOn)
 		{
-			_emitter.angle.setAll( -90, 90);
+			_emitter.angle.set( -90, 90);
 		}
 		else
 		{
-			_emitter.angle.setAll(0);
+			_emitter.angle.set(0);
 		}
 		
 		updateText("Random initial angle", _isAngleOn);
@@ -363,11 +367,11 @@ class PlayState extends FlxState
 		
 		if (_isScaleOn)
 		{
-			_emitter.scale.setAll(1, 1, 1, 1, 4, 4, 8, 8);
+			_emitter.scale.set(1, 1, 1, 1, 4, 4, 8, 8);
 		}
 		else
 		{
-			_emitter.scale.setAll(1);
+			_emitter.scale.set(1);
 		}
 		
 		updateText("Scaling", _isScaleOn);
@@ -379,11 +383,11 @@ class PlayState extends FlxState
 		
 		if (_isAlphaOn)
 		{
-			_emitter.alpha.setAll(1, 1, 0, 0);
+			_emitter.alpha.set(1, 1, 0, 0);
 		}
 		else
 		{
-			_emitter.alpha.setAll(1);
+			_emitter.alpha.set(1);
 		}
 		
 		updateText("Alpha", _isAlphaOn);
@@ -395,11 +399,11 @@ class PlayState extends FlxState
 		
 		if (_isColorOn)
 		{
-			_emitter.color.setAll(FlxColor.RED, FlxColor.PINK, FlxColor.BLUE, FlxColor.CYAN);
+			_emitter.color.set(FlxColor.RED, FlxColor.PINK, FlxColor.BLUE, FlxColor.CYAN);
 		}
 		else
 		{
-			_emitter.color.setAll(FlxColor.WHITE);
+			_emitter.color.set(FlxColor.WHITE);
 		}
 		
 		updateText("Color", _isColorOn);
@@ -411,11 +415,11 @@ class PlayState extends FlxState
 		
 		if (_isDragOn)
 		{
-			_emitter.drag.setAll(200, 200, 600, 600);
+			_emitter.drag.set(200, 200, 600, 600);
 		}
 		else
 		{
-			_emitter.drag.setAll(0);
+			_emitter.drag.set(0);
 		}
 		
 		updateText("Drag", _isDragOn);
@@ -427,11 +431,11 @@ class PlayState extends FlxState
 		
 		if (_isAccelerationOn)
 		{
-			_emitter.acceleration.setAll(0, 0, 0, 0, 200, 200, 400, 400);
+			_emitter.acceleration.set(0, 0, 0, 0, 200, 200, 400, 400);
 		}
 		else
 		{
-			_emitter.acceleration.setAll(0);
+			_emitter.acceleration.set(0);
 		}
 		
 		updateText("Acceleration", _isAccelerationOn);
@@ -443,11 +447,11 @@ class PlayState extends FlxState
 		
 		if (_isElasticityOn)
 		{
-			_emitter.elasticity.setAll(1, 1, 1, 1);
+			_emitter.elasticity.set(1, 1, 1, 1);
 		}
 		else
 		{
-			_emitter.elasticity.setAll(0);
+			_emitter.elasticity.set(0);
 		}
 		
 		updateText("Elasticity", _isElasticityOn);
@@ -486,7 +490,7 @@ class PlayState extends FlxState
 		}
 		else
 		{
-			_emitter.acceleration.setAll(0);
+			_emitter.acceleration.set(0);
 		}
 		
 		updateText("Gravity", _isGravityOn);
