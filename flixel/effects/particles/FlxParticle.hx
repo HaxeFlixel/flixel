@@ -19,9 +19,8 @@ import flixel.util.helpers.Range;
 class FlxParticle extends FlxSprite implements IFlxParticle
 {
 	/**
-	 * How long this particle lives before it disappears.
-	 * NOTE: this is a maximum, not a minimum; the object
-	 * could get recycled before its lifespan is up.
+	 * How long this particle lives before it disappears. Set to 0 to never kill() the particle automatically.
+	 * NOTE: this is a maximum, not a minimum; the object could get recycled before its lifespan is up.
 	 */
 	public var lifespan:Float = 0;
 	/**
@@ -115,8 +114,8 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 		
 		velocityRange = new Range<FlxPoint>(FlxPoint.get(), FlxPoint.get());
 		angularVelocityRange = new Range<Float>(0);
-		scaleRange = new Range<FlxPoint>(FlxPoint.get(), FlxPoint.get());
-		alphaRange = new Range<Float>(0);
+		scaleRange = new Range<FlxPoint>(FlxPoint.get(1,1), FlxPoint.get(1,1));
+		alphaRange = new Range<Float>(1, 1);
 		colorRange = new Range<FlxColor>(FlxColor.WHITE);
 		dragRange = new Range<FlxPoint>(FlxPoint.get(), FlxPoint.get());
 		accelerationRange = new Range<FlxPoint>(FlxPoint.get(), FlxPoint.get());
@@ -161,7 +160,7 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 			age += FlxG.elapsed;
 		}
 		
-		if (age >= lifespan)
+		if (age >= lifespan && lifespan != 0)
 		{
 			kill();
 		}
