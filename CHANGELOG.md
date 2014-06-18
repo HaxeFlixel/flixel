@@ -32,12 +32,20 @@
 * FlxSpriteUtil:
  * drawLine(): default settings for lineStyle are now thickness 1 and color white
  * fadeIn() and fadeOut() now tween alpha instead of color
-* FlxTypedEmitter:
- * Bounds objects are now read-only, use set() on them
+* FlxEmitter:
  * at() -> focusOn()
  * on -> emitting
  * fixed type parameter not being respected (T was always FlxSprite)
  * emitters and particles now use FlxColor instead of separate red, green, and blue values
+ * removed FlxEmitterExt, FlxEmitter now has two launch modes: CIRCLE and SQUARE
+ * removed xPosition, yPosition, life, bounce, and various other properties, and property setting convenience functions (see below)
+ * a variety of values can now be set with much greater control, via lifespan.set(), scale.set(), velocity.set() and so on
+ * simplified start() parameters
+* FlxParticle:
+ * maxLifespan -> lifespan, lifespan -> age, percent indicates (age / lifespan)
+ * age counts up (as opposed to lifespan, which counted down)
+ * "use" flags (useAlpha, useVelocity, etc) which FlxEmitter uses to control particle behavior
+ * range properties (velocityRange, alphaRange) which determine particle behavior after launch
 * Moved FlxMath, FlxPoint, FlxRect, FlxRect, FlxAngle, FlxVelocity and FlxRandom to flixel.math
 * FlxSubState: fix for calling close() within create()
 * FlxPath: exposed nodeIndex as a read-only property
@@ -59,7 +67,6 @@
  * FlxTypedGroup into FlxGroup.hx
  * FlxTypedSpriteGroup into FlxSpriteGroup.hx
  * FlxTypedEmitter into FlxEmitter.hx
- * FlxTypedEmitterExt into FlxEmitterExt.hx
  * FlxTypedButton into FlxButton.hx
 * FlxBitmapUtil -> FlxBitmapDataUtil
 * FlxKeyboard: 
