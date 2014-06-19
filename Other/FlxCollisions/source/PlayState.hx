@@ -68,13 +68,13 @@ class PlayState extends FlxState
 		
 		// This is the thing that spews nuts and bolts
 		var dispenser:FlxEmitter = new FlxEmitter(32, 40);
-		dispenser.setSize(8, 40);
-		dispenser.setXSpeed(100, 240);
-		dispenser.setYSpeed( -50, 50);
-		dispenser.gravity = 300;
-		dispenser.bounce = 0.3;
-		dispenser.makeParticles("assets/gibs.png", 100, 16, true);
-		dispenser.start(false, 10, 0.035);
+		dispenser.width = 8;
+		dispenser.height = 40;
+		dispenser.velocity.set(100, -50, 240, 50);
+		dispenser.acceleration.set(0, 300);
+		dispenser.elasticity.set(0.3);
+		dispenser.loadParticles("assets/gibs.png", 100, 16, true);
+		dispenser.start(false, 0.035, 10);
 		add(dispenser);
 		
 		// Basic level structure

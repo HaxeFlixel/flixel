@@ -34,9 +34,8 @@ class PlayState extends FlxState
 		// create the emitter, then we create 50 32x32 sprites and add them to it.
 		var emitter:FlxEmitter = new FlxEmitter(0, FlxG.height + 20, 50);
 		emitter.width = FlxG.width;
-		emitter.gravity = -40;
-		emitter.setXSpeed( -20, 20);
-		emitter.setYSpeed( -75, -25);
+		emitter.acceleration.set(0, -40);
+		emitter.velocity.set( -20, -75, 20, -25);
 		
 		var particle:FlxParticle;
 		var particles:Int = 50;
@@ -50,7 +49,7 @@ class PlayState extends FlxState
 			emitter.add(particle);
 		}
 		
-		emitter.start(false, 0, 0.1);
+		emitter.start(false, 0.1);
 		add(emitter);
 		
 		// Let the player toggle the effect with the space bar.  Effect starts on.

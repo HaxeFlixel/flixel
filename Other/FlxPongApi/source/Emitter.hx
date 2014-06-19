@@ -12,7 +12,6 @@ class Emitter extends FlxEmitter
 	public function new(X:Int, Y:Int, PixelSize:Int = 1, Color:Int = 0)
 	{
 		super(X, Y, 100);
-		setRotation(0, 0);
 		
 		if (PixelSize == 0) {
 			PixelSize = FlxRandom.int(1, 4);

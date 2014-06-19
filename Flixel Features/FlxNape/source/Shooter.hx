@@ -156,18 +156,17 @@ class Trail extends FlxEmitter
 		killTimmer = 0;
 		super(0, 0);
 		
-		makeParticles("assets/shooter.png", 20, 0, false, 0, false);
+		loadParticles("assets/shooter.png", 20, 0);
 		attach = Attach;
 		
 		FlxG.state.add(this);
-		xVelocity.set(0, 0);
-		yVelocity.set(0, 0);
-		rotation.set(0, 0);
 		
-		setScale(1, 1, 0, 0);
-		setAlpha(1, 1, 0, 0);
+		velocity.set(0, 0);
+		angularVelocity.set(0, 0);
+		scale.set(1, 1, 0, 0);
+		alpha.set(1, 1, 0, 0);
 		
-		start(false, .25, .25, 0, 0);
+		start(false, .25);
 		emitting = false;
 	}
 	

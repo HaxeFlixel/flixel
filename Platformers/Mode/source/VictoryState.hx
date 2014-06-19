@@ -26,14 +26,13 @@ class VictoryState extends FlxState
 		
 		// Gibs emitted upon death
 		var gibs:FlxEmitter = new FlxEmitter(0, -50);
-		gibs.setSize(FlxG.width, 0);
-		gibs.setXSpeed();
-		gibs.setYSpeed(0, 100);
-		gibs.setRotation( -360, 360);
-		gibs.gravity = 80;
-		gibs.makeParticles(Reg.SPAWNER_GIBS, 800, 32, true, 0);
+		gibs.width = FlxG.width;
+		gibs.velocity.set(0, 0, 0, 100);
+		gibs.angularVelocity.set( -360, 360);
+		gibs.acceleration.set(0, 80);
+		gibs.loadParticles(Reg.SPAWNER_GIBS, 800, 32, true);
 		add(gibs);
-		gibs.start(false, 0, 0.005);
+		gibs.start(false, 0.005);
 		
 		var text:FlxText = new FlxText(0, 0, FlxG.width, "VICTORY\n\nSCORE: " + Reg.score, 16);
 		text.alignment = CENTER;

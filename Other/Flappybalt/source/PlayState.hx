@@ -121,10 +121,9 @@ class PlayState extends FlxState
 		// A simple emitter to make some feathers when the bird gets spiked.
 		
 		_feathers = new FlxEmitter();
-		_feathers.makeParticles("assets/feather.png", 50, 32);
-		_feathers.setXSpeed( -10, 10);
-		_feathers.setYSpeed( -10, 10);
-		_feathers.gravity = 10;
+		_feathers.loadParticles("assets/feather.png", 50, 32);
+		_feathers.velocity.set( -10, -10, 10, 10);
+		_feathers.acceleration.set(0, 10);
 		add(_feathers);
 	}
 	
@@ -164,7 +163,7 @@ class PlayState extends FlxState
 	{
 		_feathers.x = X;
 		_feathers.y = Y;
-		_feathers.start(true, 2, 0, Amount, 1);
+		_feathers.start(true, 0, Amount);
 	}
 	
 	public function randomPaddleY():Int

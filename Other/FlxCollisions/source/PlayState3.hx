@@ -25,13 +25,13 @@ class PlayState3 extends FlxState
 		
 		// Pour nuts and bolts out of the air
 		var dispenser:FlxEmitter = new FlxEmitter((FlxG.width - 64) / 2, -64);
-		dispenser.gravity = 200;
-		dispenser.setSize(64, 64);
-		dispenser.setXSpeed( -20, 20);
-		dispenser.setYSpeed(50, 100);
-		dispenser.setRotation( -720, 720);
-		dispenser.makeParticles("assets/gibs.png", 300, 16, true, 0.5);
-		dispenser.start(false, 5, 0.025);
+		dispenser.acceleration.set(0, 200);
+		dispenser.width = 64;
+		dispenser.height = 64;
+		dispenser.velocity.set( -20, 50, 20, 100);
+		dispenser.angularVelocity.set( -720, 720);
+		dispenser.loadParticles("assets/gibs.png", 300, 16, true);
+		dispenser.start(false, 0.025, 5);
 		add(dispenser);
 		
 		// Instructions and stuff

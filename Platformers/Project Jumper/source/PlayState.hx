@@ -48,16 +48,14 @@ class PlayState extends FlxState
 		
 		// Set up the gibs
 		_gibs = new FlxEmitter();
-		_gibs.setXSpeed( -150, 150);
-		_gibs.setYSpeed( -200, 0);
-		_gibs.setRotation( -720, 720);
-		_gibs.makeParticles("assets/art/lizgibs.png", 25, 16, true, .5);
+		_gibs.velocity.set( -150, -200, 150, 0);
+		_gibs.angularVelocity.set( -720, 720);
+		_gibs.loadParticles("assets/art/lizgibs.png", 25, 16, true);
 		
 		_mongibs = new FlxEmitter();
-		_mongibs.setXSpeed( -150, 150);
-		_mongibs.setYSpeed( -200, 0);
-		_mongibs.setRotation( -720, 720);
-		_mongibs.makeParticles("assets/art/spikegibs.png", 25, 16, true, .5);
+		_mongibs.velocity.set( -150, -200, 150, 0);
+		_mongibs.angularVelocity.set( -720, 720);
+		_mongibs.loadParticles("assets/art/spikegibs.png", 25, 16, true);
 		
 		// Create the actual group of bullets here
 		_bullets = new FlxGroup();
