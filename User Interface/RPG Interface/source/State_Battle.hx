@@ -59,12 +59,8 @@ class State_Battle extends FlxUIState
 		#end
 	}
 	
-	private override function reloadUI(?e:Event):Void {
-<<<<<<< HEAD
-		super.reloadUI(e);
-=======
+	private override function reloadUI():Void {
 		super.reloadUI();
->>>>>>> 16923dccb29b0c620e9558bd5571438d5d986e68
 		hideFailedUI();
 	}
 	
