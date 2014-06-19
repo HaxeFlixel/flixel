@@ -556,6 +556,14 @@ class FlxBar extends FlxSprite
 			{
 				emptyKey += Type.getClassName(cast(empty, Class<Dynamic>));
 			}
+			else if (Std.is(empty, BitmapData))
+			{
+				emptyKey = FlxG.bitmap.getCacheKeyFor(empty);
+				if (emptyKey == null)
+				{
+					emptyKey = FlxG.bitmap.getUniqueKey("bar_empty");
+				}
+			}
 			else if (Std.is(empty, String))
 			{
 				emptyKey += empty;
@@ -567,6 +575,14 @@ class FlxBar extends FlxSprite
 			if (Std.is(fill, Class))
 			{
 				filledKey += Type.getClassName(cast(fill, Class<Dynamic>));
+			}
+			else if (Std.is(fill, BitmapData))
+			{
+				filledKey = FlxG.bitmap.getCacheKeyFor(fill);
+				if (filledKey == null)
+				{
+					filledKey = FlxG.bitmap.getUniqueKey("bar_filled");
+				}
 			}
 			else if (Std.is(fill, String))
 			{
