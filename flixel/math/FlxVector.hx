@@ -246,7 +246,7 @@ class FlxVector extends FlxPoint
 	 * 
 	 * @return	true - if the vectors are equal
 	 */
-	public inline function equals(v:FlxVector):Bool
+	public inline function equalsVector(v:FlxVector):Bool
 	{
 		return (Math.abs(x - v.x) < EPSILON && Math.abs(y - v.y) < EPSILON);
 	}
