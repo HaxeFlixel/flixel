@@ -1,12 +1,13 @@
-import flixel.addons.ui.FlxUIButton;
+import flash.events.Event;
+import flixel.addons.ui.FlxUI;
+import flixel.addons.ui.FlxUIState;
 import flixel.addons.ui.FlxUITypedButton.FlxUITypedButton;
 import flixel.addons.ui.interfaces.IFlxUIWidget;
-import haxe.xml.Fast;
-import flash.Lib;
 import flixel.FlxG;
 import flixel.addons.ui.FlxUIState;
 import flixel.addons.ui.FlxUI;
 import flash.events.Event;
+
 /**
  * @author Lars Doucet
  */
@@ -59,7 +60,11 @@ class State_Battle extends FlxUIState
 	}
 	
 	private override function reloadUI(?e:Event):Void {
+<<<<<<< HEAD
 		super.reloadUI(e);
+=======
+		super.reloadUI();
+>>>>>>> 16923dccb29b0c620e9558bd5571438d5d986e68
 		hideFailedUI();
 	}
 	

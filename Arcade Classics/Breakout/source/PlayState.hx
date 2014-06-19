@@ -33,12 +33,12 @@ class PlayState extends FlxState
 	{
 		FlxG.mouse.visible = false;
 		
-		_bat = new FlxSprite(180, 220);
-		_bat.makeGraphic(40, 6, FlxColor.PINK);
+		_bat.makeGraphic(40, 6, FlxColor.MAGENTA);
 		_bat.immovable = true;
 		
 		_ball = new FlxSprite(180, 160);
-		_ball.makeGraphic(6, 6, FlxColor.PINK);
+		_ball.makeGraphic(6, 6, FlxColor.MAGENTA);
+		
 		_ball.elasticity = 1;
 		_ball.maxVelocity.set(200, 200);
 		_ball.velocity.y = 200;

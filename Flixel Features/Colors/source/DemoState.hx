@@ -155,15 +155,15 @@ class DemoState extends FlxState
 		//-- Presets --
 		panel = presetsPanel;
 		
-		txt = new FlxText(2, 25, FlxG.width - 4, "The following static preset colors are available on FlxColor:-", 12);
+		txt = new FlxText(2, 25, FlxG.width - 4, "The following static preset colors are available on FlxColor:", 12);
 		txt.font = "fairfax";
 		panel.add(txt);
 		
-		var startX = 2;
-		var startY = 44;
 		var presetHeight = 15;
 		var presetWidth = 100;
-		var maxY = FlxG.height - presetHeight - 15;
+		var maxY = FlxG.height - presetHeight - 65;
+		var startX = FlxG.width / 6;
+		var startY = 100;
 		var currentX = startX;
 		var currentY = startY;
 		
