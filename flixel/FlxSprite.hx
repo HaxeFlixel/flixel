@@ -768,33 +768,31 @@ class FlxSprite extends FlxObject
 				continue;
 			}
 			
-			_point.x = x - (camera.scroll.x * scrollFactor.x) - (offset.x);
-			_point.y = y - (camera.scroll.y * scrollFactor.y) - (offset.y);
-			
-			if (isPixelPerfectRender(camera))
-			{
-				_point.floor();
-			}
+			getScreenXY(_point, camera).subtractPoint(offset);
 			
 		#if FLX_RENDER_TILE
 			drawItem = camera.getDrawStackItem(cachedGraphics, isColored, _blendInt, antialiasing);
 			currDrawData = drawItem.drawData;
 			currIndex = drawItem.position;
 			
-			_point.x = (_point.x) + origin.x;
-			_point.y = (_point.y) + origin.y;
+			if (isPixelPerfectRender(camera))
+			{
+				_point.floor();
+			}
+			
+			_point.addPoint(origin);
 		#end
 			
 #if FLX_RENDER_BLIT
 			if (isSimpleRender(camera))
 			{
-				_point.copyToFlash(_flashPoint);
+				_point.floor().copyToFlash(_flashPoint);
 				camera.buffer.copyPixels(framePixels, _flashRect, _flashPoint, null, null, true);
 			}
 			else
 			{
 				_matrix.identity();
-				_matrix.translate( -origin.x, -origin.y);
+				_matrix.translate(-origin.x, -origin.y);
 				_matrix.scale(scale.x, scale.y);
 				
 				if ((angle != 0) && (bakedRotationAngle <= 0))
@@ -802,8 +800,7 @@ class FlxSprite extends FlxObject
 					_matrix.rotate(angle * FlxAngle.TO_RAD);
 				}
 				
-				_point.x += origin.x;
-				_point.y += origin.y;
+				_point.addPoint(origin).floor();
 				
 				_matrix.translate(_point.x, _point.y);
 				camera.buffer.draw(framePixels, _matrix, null, blend, null, (antialiasing || camera.antialiasing));
