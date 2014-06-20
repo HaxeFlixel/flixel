@@ -1,5 +1,6 @@
 package;
 
+import flixel.input.keyboard.FlxKey;
 import openfl.Assets;
 import flixel.effects.particles.FlxEmitter;
 import flixel.FlxG;
@@ -28,7 +29,7 @@ class Player extends FlxSprite
 	
 	private var _jumpTime:Float = -1;
 	private var _timesJumped:Int = 0;
-	private var _jumpKeys:Array<String>;
+	private var _jumpKeys:Array<FlxKey> = [C, K, SPACE];
 	
 	private var _xgridleft:Int = 0;
 	private var _xgridright:Int = 0;
@@ -62,8 +63,6 @@ class Player extends FlxSprite
 		_gibs = Gibs;
 		// This is so we can look at properties of the playstate's tilemaps
 		_parent = Parent;  
-		
-		_jumpKeys = ["C", "K", "SPACE"];
 	}
 	
 	public override function update():Void
