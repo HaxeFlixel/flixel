@@ -339,6 +339,10 @@ class FlxObject extends FlxBasic
 	 */
 	public var pixelPerfectRender(default, set):Null<Bool>;
 	/**
+	 * Whether or not the position of this object should be rounded before any draw() or collision checking.
+	 */
+	public var pixelPerfectPosition:Bool = true;
+	/**
 	 * Set the angle of a sprite to rotate it. WARNING: rotating sprites decreases rendering
 	 * performance for this sprite by a factor of 10x (in Flash target)!
 	 */
@@ -720,7 +724,14 @@ class FlxObject extends FlxBasic
 		{
 			Camera = FlxG.camera;
 		}
-		return point.set(x - (Camera.scroll.x * scrollFactor.x), y - (Camera.scroll.y * scrollFactor.y));
+		
+		point.set(x, y);
+		if (pixelPerfectPosition)
+		{
+			point.floor();
+		}
+		
+		return point.subtract(Camera.scroll.x * scrollFactor.x, Camera.scroll.y * scrollFactor.y);
 	}
 	
 	/**
