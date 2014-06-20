@@ -1,6 +1,6 @@
 package flixel.input.gamepad;
 
-import flixel.input.gamepad.FlxGamepadAnalogueStick;
+import flixel.input.gamepad.FlxGamepad;
 
 /**
  * Button IDs for PlayStation 4 controllers
@@ -20,11 +20,11 @@ class PS4ButtonID
 	public static inline var START:Int = 9;
 	public static inline var PS:Int = 12;
 	public static inline var TOUCHPAD:Int = 13;
-	public static inline var LEFT_ANALOGUE:Int = 10;
-	public static inline var RIGHT_ANALOGUE:Int = 11;
+	public static inline var LEFT_ANALOG:Int = 10;
+	public static inline var RIGHT_ANALOG:Int = 11;
 	
-	public static var LEFT_ANALOGUE_STICK(default, null):FlxGamepadAnalogueStick = [FlxAxes.X => 0, FlxAxes.Y => 1];
-	public static var RIGHT_ANALOGUE_STICK(default, null):FlxGamepadAnalogueStick = [FlxAxes.X => 2, FlxAxes.Y => 5];
+	public static var LEFT_ANALOG_STICK(default, null):FlxGamepadAnalogStick = [FlxAxes.X => 0, FlxAxes.Y => 1];
+	public static var RIGHT_ANALOG_STICK(default, null):FlxGamepadAnalogStick = [FlxAxes.X => 2, FlxAxes.Y => 5];
 	
 	public static inline var L2_Y:Int = 3;
 	public static inline var R2_Y:Int = 4;

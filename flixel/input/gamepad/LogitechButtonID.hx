@@ -1,6 +1,6 @@
 package flixel.input.gamepad;
 
-import flixel.input.gamepad.FlxGamepadAnalogueStick;
+import flixel.input.gamepad.FlxGamepad;
 
 /**
  * Button IDs for Logitech controllers (key codes based on Cordless Rumblepad 2)
@@ -54,19 +54,19 @@ class LogitechButtonID
 	public static inline var TEN:Int = 17;
 	
 	/**
-	 * Placement equivalent to the 'left analogue' button on the Xbox 360 controller.
+	 * Placement equivalent to the 'left analog' button on the Xbox 360 controller.
 	 */
-	public static inline var LEFT_ANALOGUE:Int = 18;
+	public static inline var LEFT_ANALOG:Int = 18;
 	/**
-	 * Placement equivalent to the 'right analogue' button on the Xbox 360 controller.
+	 * Placement equivalent to the 'right analog' button on the Xbox 360 controller.
 	 */
-	public static inline var RIGHT_ANALOGUE:Int = 19;
+	public static inline var RIGHT_ANALOG:Int = 19;
 	
 	/**
 	 * Axis array indicies
 	 */
-	public static var LEFT_ANALOGUE_STICK(default, null):FlxGamepadAnalogueStick = [FlxAxes.X => 0, FlxAxes.Y => 1];
-	public static var RIGHT_ANALOGUE_STICK(default, null):FlxGamepadAnalogueStick = [FlxAxes.X => 2, FlxAxes.Y => 3];
+	public static var LEFT_ANALOG_STICK(default, null):FlxGamepadAnalogStick = [FlxAxes.X => 0, FlxAxes.Y => 1];
+	public static var RIGHT_ANALOG_STICK(default, null):FlxGamepadAnalogStick = [FlxAxes.X => 2, FlxAxes.Y => 3];
 	
 	public static inline var DPAD_UP:Int = 4;
 	public static inline var DPAD_DOWN:Int = 5;
@@ -119,18 +119,18 @@ class LogitechButtonID
 	public static inline var TEN:Int = 9;
 	
 	/**
-	 * Placement equivalent to the 'left analogue' button on the Xbox 360 controller.
+	 * Placement equivalent to the 'left analog' button on the Xbox 360 controller.
 	 */
-	public static inline var LEFT_ANALOGUE:Int = 10;
+	public static inline var LEFT_ANALOG:Int = 10;
 	/**
-	 * Placement equivalent to the 'right analogue' button on the Xbox 360 controller.
+	 * Placement equivalent to the 'right analog' button on the Xbox 360 controller.
 	 */
-	public static inline var RIGHT_ANALOGUE:Int = 11;
+	public static inline var RIGHT_ANALOG:Int = 11;
 	
 	/**
 	 * Axis array indicies
 	 */
-	public static var LEFT_ANALOGUE_STICK(default, null):FlxGamepadAnalogueStick = [FlxAxes.X => 0, FlxAxes.Y => 1];
-	public static var RIGHT_ANALOGUE_STICK(default, null):FlxGamepadAnalogueStick = [FlxAxes.X => 2, FlxAxes.Y => 3];
+	public static var LEFT_ANALOG_STICK(default, null):FlxGamepadAnalogStick = [FlxAxes.X => 0, FlxAxes.Y => 1];
+	public static var RIGHT_ANALOG_STICK(default, null):FlxGamepadAnalogStick = [FlxAxes.X => 2, FlxAxes.Y => 3];
 #end
 }

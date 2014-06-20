@@ -1,8 +1,6 @@
 package flixel.input.gamepad;
 
 import flixel.input.FlxInput.FlxInputState;
-import flixel.input.gamepad.FlxGamepad.FlxGamepadDeadZoneMode;
-import flixel.input.gamepad.FlxGamepadAnalogueStick;
 import flixel.math.FlxPoint;
 import flixel.math.FlxVector;
 import flixel.util.FlxDestroyUtil;
@@ -32,7 +30,7 @@ class FlxGamepad implements IFlxDestroyable
 	 */
 	public var deadZone:Float = 0.15;
 	/**
-	 * Which dead zone mode to use for analogue sticks.
+	 * Which dead zone mode to use for analog sticks.
 	 */
 	public var deadZoneMode:FlxGamepadDeadZoneMode = INDEPENDANT_AXES;
 	
@@ -328,7 +326,7 @@ class FlxGamepad implements IFlxDestroyable
 	
 	/**
 	 * Gets the value of the specified axis - use this only for things like
-	 * XboxButtonID.LEFT_TRIGGER, use getXAxis() / getYAxis() for analogue sticks!
+	 * XboxButtonID.LEFT_TRIGGER, use getXAxis() / getYAxis() for analog sticks!
 	 */
 	public inline function getAxis(AxisID:Int):Float
 	{
@@ -343,7 +341,7 @@ class FlxGamepad implements IFlxDestroyable
 	/**
 	 * Gets the value of the specified X axis.
 	 */
-	public inline function getXAxis(Axes:FlxGamepadAnalogueStick):Float
+	public inline function getXAxis(Axes:FlxGamepadAnalogStick):Float
 	{
 		return getAnalogueAxisValue(FlxAxes.X, Axes);
 	}
@@ -352,7 +350,7 @@ class FlxGamepad implements IFlxDestroyable
 	 * Gets the value of the specified Y axis - 
 	 * should be used in flash to correct the inverted y axis.
 	 */
-	public function getYAxis(Axes:FlxGamepadAnalogueStick):Float
+	public function getYAxis(Axes:FlxGamepadAnalogStick):Float
 	{
 		var axisValue = getAnalogueAxisValue(FlxAxes.Y, Axes);
 		
@@ -438,7 +436,7 @@ class FlxGamepad implements IFlxDestroyable
 		return axisValue;
 	}
 	
-	private function getAnalogueAxisValue(Axis:FlxAxes, Axes:FlxGamepadAnalogueStick):Float
+	private function getAnalogueAxisValue(Axis:FlxAxes, Axes:FlxGamepadAnalogStick):Float
 	{
 		if (deadZoneMode == CIRCULAR)
 		{
@@ -478,12 +476,20 @@ enum FlxGamepadDeadZoneMode
 {
 	/**
 	 * The value of each axis is compared to the deadzone individually.
-	 * Works better when an analogue stick is used like arrow keys for 4-directional-input.
+	 * Works better when an analog stick is used like arrow keys for 4-directional-input.
 	 */
 	INDEPENDANT_AXES;
 	/**
 	 * X and y are combined against the deadzone combined.
-	 * Works better when an analogue stick is used as a two-dimensional control surface.
+	 * Works better when an analog stick is used as a two-dimensional control surface.
 	 */
 	CIRCULAR;
+}
+
+typedef FlxGamepadAnalogStick = Map<FlxAxes, Int>;
+
+enum FlxAxes
+{
+	X;
+	Y;
 }
