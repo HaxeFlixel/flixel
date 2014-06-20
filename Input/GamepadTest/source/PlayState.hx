@@ -140,16 +140,16 @@ class PlayState extends FlxState
 		else
 			_RB.y = RB_Y;
 		
-		updateAxis(GamepadIDs.LEFT_ANALOGUE_X, GamepadIDs.LEFT_ANALOGUE_Y, _leftStick, LEFT_STICK_POS);
-		updateAxis(GamepadIDs.RIGHT_ANALOGUE_X, GamepadIDs.RIGHT_ANALOGUE_Y, _rightStick, RIGHT_STICK_POS);
+		updateAxis(GamepadIDs.LEFT_ANALOG_STICK, _leftStick, LEFT_STICK_POS);
+		updateAxis(GamepadIDs.RIGHT_ANALOG_STICK, _rightStick, RIGHT_STICK_POS);
 		
 		updateDpad();
 	}
 	
-	private function updateAxis(xID:Int, yID:Int, stickSprite:FlxSprite, stickPosition:FlxPoint):Void
+	private function updateAxis(axes:FlxGamepadAnalogStick, stickSprite:FlxSprite, stickPosition:FlxPoint):Void
 	{
-		var xAxisValue = _gamePad.getXAxis(xID);
-		var yAxisValue = _gamePad.getYAxis(yID);
+		var xAxisValue = _gamePad.getXAxis(axes);
+		var yAxisValue = _gamePad.getYAxis(axes);
 		var angle:Float;
 		
 		if ((xAxisValue != 0) || (yAxisValue != 0))
