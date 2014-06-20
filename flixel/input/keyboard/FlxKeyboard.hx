@@ -404,7 +404,7 @@ class FlxKeyboard implements IFlxInputManager
 		{
 			for (key in KeyArray)
 			{
-				if (key == "ANY" || key == Key)
+				if (key == Key || key == "ANY")
 				{
 					return true;
 				}

@@ -134,7 +134,7 @@ class FlxKeyList
 		return false;
 	}
 	
-	public inline function check(keyCode:Int):Bool
+	private inline function check(keyCode:Int):Bool
 	{
 		return FlxG.keys.checkStatus(keyCode, checkStatus);
 	}
