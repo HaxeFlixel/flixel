@@ -215,7 +215,7 @@ class FlxSound extends FlxBasic
 		{
 			var p1 = toPoint();
 			var p2 = _target.toPoint();
-			radialMultiplier = p1.distanceTo(p2) / _radius;
+			radialMultiplier = p1.getDistance(p2) / _radius;
 			p1.put();
 			p2.put();
 			
