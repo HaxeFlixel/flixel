@@ -179,25 +179,25 @@ class Player extends FlxSprite
 	
 	private function updateXboxGamepadInput(gamepad:FlxGamepad):Void
 	{
-		if (gamepad.getXAxis(XboxButtonID.LEFT_ANALOGUE_STICK) < 0 ||
+		if (gamepad.getXAxis(XboxButtonID.LEFT_ANALOG_STICK) < 0 ||
 			gamepad.pressed(XboxButtonID.DPAD_LEFT))
 		{
 			moveLeft();
 		}
 		else
-		if (gamepad.getXAxis(XboxButtonID.LEFT_ANALOGUE_STICK) > 0 ||
+		if (gamepad.getXAxis(XboxButtonID.LEFT_ANALOG_STICK) > 0 ||
 			gamepad.pressed(XboxButtonID.DPAD_RIGHT))
 		{
 			moveRight();
 		}
 		
-		if (gamepad.getYAxis(XboxButtonID.LEFT_ANALOGUE_STICK) < 0 ||
+		if (gamepad.getYAxis(XboxButtonID.LEFT_ANALOG_STICK) < 0 ||
 			gamepad.pressed(XboxButtonID.DPAD_UP))
 		{
 			moveUp();
 		}
 		else
-		if (gamepad.getYAxis(XboxButtonID.LEFT_ANALOGUE_STICK) > 0 ||
+		if (gamepad.getYAxis(XboxButtonID.LEFT_ANALOG_STICK) > 0 ||
 			gamepad.pressed(XboxButtonID.DPAD_DOWN))
 		{
 			moveDown();
@@ -216,21 +216,21 @@ class Player extends FlxSprite
 	
 	private function updateOUYAGamepadInput(gamepad:FlxGamepad):Void
 	{
-		if (gamepad.getXAxis(OUYAButtonID.LEFT_ANALOGUE_STICK) < 0)
+		if (gamepad.getXAxis(OUYAButtonID.LEFT_ANALOG_STICK) < 0)
 		{
 			moveLeft();
 		}
-		if (gamepad.getXAxis(OUYAButtonID.LEFT_ANALOGUE_STICK) > 0)
+		if (gamepad.getXAxis(OUYAButtonID.LEFT_ANALOG_STICK) > 0)
 		{
 			moveRight();
 		}
 		
-		if (gamepad.getYAxis(OUYAButtonID.LEFT_ANALOGUE_STICK) < 0)
+		if (gamepad.getYAxis(OUYAButtonID.LEFT_ANALOG_STICK) < 0)
 		{
 			moveUp();
 		}
 		
-		if (gamepad.getYAxis(OUYAButtonID.LEFT_ANALOGUE_STICK) > 0)
+		if (gamepad.getYAxis(OUYAButtonID.LEFT_ANALOG_STICK) > 0)
 		{
 			moveDown();
 		}

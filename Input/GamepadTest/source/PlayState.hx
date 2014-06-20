@@ -8,7 +8,6 @@ import flixel.math.FlxPoint;
 import flixel.input.gamepad.FlxGamepad;
 import flixel.input.gamepad.XboxButtonID;
 import flixel.input.gamepad.OUYAButtonID;
-import flixel.input.gamepad.FlxGamepadAnalogueStick;
 
 class PlayState extends FlxState
 {
@@ -141,13 +140,13 @@ class PlayState extends FlxState
 		else
 			_RB.y = RB_Y;
 		
-		updateAxis(GamepadIDs.LEFT_ANALOGUE_STICK, _leftStick, LEFT_STICK_POS);
-		updateAxis(GamepadIDs.RIGHT_ANALOGUE_STICK, _rightStick, RIGHT_STICK_POS);
+		updateAxis(GamepadIDs.LEFT_ANALOG_STICK, _leftStick, LEFT_STICK_POS);
+		updateAxis(GamepadIDs.RIGHT_ANALOG_STICK, _rightStick, RIGHT_STICK_POS);
 		
 		updateDpad();
 	}
 	
-	private function updateAxis(axes:FlxGamepadAnalogueStick, stickSprite:FlxSprite, stickPosition:FlxPoint):Void
+	private function updateAxis(axes:FlxGamepadAnalogStick, stickSprite:FlxSprite, stickPosition:FlxPoint):Void
 	{
 		var xAxisValue = _gamePad.getXAxis(axes);
 		var yAxisValue = _gamePad.getYAxis(axes);
