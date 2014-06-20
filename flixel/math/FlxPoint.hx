@@ -11,6 +11,11 @@ import flixel.util.FlxStringUtil;
  */
 class FlxPoint implements IFlxPooled
 {
+	/**
+	 * Used to account for floating-point inaccuracies in the equals() function.
+	 */
+	public static inline var EPSILON:Float = 0.0000001;
+	
 	private static var _pool = new FlxPool<FlxPoint>(FlxPoint);
 	
 	/**
@@ -394,7 +399,7 @@ class FlxPoint implements IFlxPooled
 	 */
 	public inline function equals(OtherFlxPoint:FlxPoint):Bool
 	{
-		return x == OtherFlxPoint.x && y == OtherFlxPoint.y;
+		return Math.abs(x - OtherFlxPoint.x) < EPSILON && Math.abs(y - OtherFlxPoint.y) < EPSILON;
 	}
 	
 	/**

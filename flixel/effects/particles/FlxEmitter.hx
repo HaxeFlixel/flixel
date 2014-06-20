@@ -124,9 +124,9 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	 */
 	public var immovable:Bool = false;
 	/**
-	 * Sets the useHitbox flag for particles launched from this emitter. If true, the particles' hitbox will be updated to match scale and rotation.
+	 * Sets the autoUpdateHitbox flag for particles launched from this emitter. If true, the particles' hitbox will be updated to match scale.
 	 */
-	public var useHitbox:Bool = false;
+	public var autoUpdateHitbox:Bool = false;
 	/**
 	 * Sets the allowCollisions value for particles launched from this emitter. Set to NONE by default. Don't forget to call FlxG.collide() in your update loop!
 	 */
@@ -543,7 +543,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		particle.immovable = immovable;
 		particle.solid = solid;
 		particle.allowCollisions = allowCollisions;
-		particle.useHitbox = useHitbox;
+		particle.autoUpdateHitbox = autoUpdateHitbox;
 		
 		particle.onEmit();
 	}

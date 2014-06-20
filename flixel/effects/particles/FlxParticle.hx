@@ -64,9 +64,9 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 	 */
 	public var useElasticity:Bool = false;
 	/**
-	 * Whether or not the hitbox should be updated each frame when scaling and/or rotating.
+	 * Whether or not the hitbox should be updated each frame when scaling.
 	 */
-	public var useHitbox:Bool = false;
+	public var autoUpdateHitbox:Bool = false;
 	/**
 	 * The range of values for velocity over this particle's lifespan.
 	 */
@@ -213,7 +213,7 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 				elasticity += (elasticityRange.end - elasticityRange.start) * _delta;
 			}
 			
-			if (useHitbox && (useAngularVelocity || useScale))
+			if (autoUpdateHitbox && useScale)
 			{
 				updateHitbox();
 			}
@@ -266,7 +266,7 @@ interface IFlxParticle extends IFlxSprite
 	public var useDrag:Bool;
 	public var useAcceleration:Bool;
 	public var useElasticity:Bool;
-	public var useHitbox:Bool;
+	public var autoUpdateHitbox:Bool;
 	public var velocityRange:FlxRange<FlxPoint>;
 	public var angularVelocityRange:FlxRange<Float>;
 	public var scaleRange:FlxRange<FlxPoint>;
