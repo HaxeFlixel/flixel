@@ -350,7 +350,7 @@ class Player extends FlxSprite
 		if (_gibs != null)
 		{
 			_gibs.focusOn(this);
-			_gibs.start(true, 5, 0, 50);
+			_gibs.start(true, 0, 50);
 		}
 		
 		new FlxTimer(2, function(_) {

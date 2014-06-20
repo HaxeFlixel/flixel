@@ -39,6 +39,7 @@ class PlayState extends FlxState
 		
 		_ball = new FlxSprite(180, 160);
 		_ball.makeGraphic(6, 6, FlxColor.MAGENTA);
+		
 		_ball.elasticity = 1;
 		_ball.maxVelocity.set(200, 200);
 		_ball.velocity.y = 200;

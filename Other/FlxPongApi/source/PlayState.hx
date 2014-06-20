@@ -40,8 +40,7 @@ class PlayState extends FlxState
 		
 		_debris = new Emitter(FlxG.width, 0, 2, Reg.med_lite);
 		_debris.height = FlxG.height;
-		_debris.setXSpeed(Reg.level * -10, Reg.level * -1);
-		_debris.setYSpeed( -10, 10);
+		_debris.velocity.set(Reg.level * -10, -10, Reg.level * -1, 10);
 		
 		_player = new Player();
 		
@@ -135,7 +134,7 @@ class PlayState extends FlxState
 	public function newEnemy(f:FlxTimer):Void
 	{
 		_centerText.text = "";
-		_debris.setXSpeed(Reg.level * -10, Reg.level * -1);
+		_debris.velocity.set(Reg.level * -10, -10, Reg.level * -1, 10);
 		_enemy.reset(0,0);
 		ball.reset(FlxG.width / 2, FlxG.height / 2);
 		newObstacle();

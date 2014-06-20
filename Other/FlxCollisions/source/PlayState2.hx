@@ -35,13 +35,12 @@ class PlayState2 extends FlxState
 		
 		// Shoot nuts and bolts all over
 		var dispenser:FlxEmitter = new FlxEmitter();
-		dispenser.gravity = 0;
-		dispenser.setSize(640, 480);
-		dispenser.setXSpeed( -100, 100);
-		dispenser.setYSpeed( -100, 100);
-		dispenser.bounce = 0.65;
-		dispenser.makeParticles("assets/gibs.png", 300, 16, true, 0.8);
-		dispenser.start(false, 10, 0.05);
+		dispenser.width = 640;
+		dispenser.height = 480;
+		dispenser.velocity.set( -100, -100, 100, 100);
+		dispenser.elasticity.set(0.65);
+		dispenser.loadParticles("assets/gibs.png", 300, 16, true);
+		dispenser.start(false, 0.05, 10);
 		add(dispenser);
 		
 		// Camera tracker

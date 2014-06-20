@@ -13,7 +13,6 @@ import flixel.util.FlxColor;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRandom;
-import flixel.math.FlxVector;
 
 /**
  * A FlxState which can be used for the actual gameplay.
@@ -29,7 +28,6 @@ class PlayState extends FlxState
 	public var mcguffinSprite:FlxSprite;
 	
 	public var seekers:FlxTypedGroup<Seeker>;
-	private var vec:FlxVector = FlxVector.get();
 	
 	/**
 	 * Function that is called up when to state is created to set it up. 

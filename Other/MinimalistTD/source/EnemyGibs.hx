@@ -18,8 +18,8 @@ class EnemyGibs extends FlxEmitter
 	{
 		super(0, 0, SIZE);
 		
-		setXSpeed( -SPEED, SPEED);
-		setYSpeed( -SPEED, SPEED);
+		velocity.set( -SPEED, -SPEED, SPEED, SPEED);
+		lifespan.set(1, 1);
 		
 		#if !(cpp || neko || js)
 		blend = BlendMode.INVERT;
@@ -57,6 +57,6 @@ class EnemyGibs extends FlxEmitter
 	{
 		x = X;
 		y = Y;
-		start(true, 1, 0, SIZE, 1);
+		start(true, 0, SIZE);
 	}
 }

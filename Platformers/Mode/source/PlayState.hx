@@ -68,21 +68,19 @@ class PlayState extends FlxState
 		// Here we are creating a pool of 100 little metal bits that can be exploded.
 		// We will recycle the crap out of these!
 		_littleGibs = new FlxEmitter();
-		_littleGibs.setXSpeed( -150, 150);
-		_littleGibs.setYSpeed( -200, 0);
-		_littleGibs.setRotation( -720, -720);
-		_littleGibs.gravity = 350;
-		_littleGibs.bounce = 0.5;
-		_littleGibs.makeParticles(Reg.GIBS, 100, 10, true, 0.5);
+		_littleGibs.velocity.set( -150, -200, 150, 0);
+		_littleGibs.angularVelocity.set( -720);
+		_littleGibs.acceleration.set(0, 350);
+		_littleGibs.elasticity.set(0.5);
+		_littleGibs.loadParticles(Reg.GIBS, 100, 10, true);
 		
 		// Next we create a smaller pool of larger metal bits for exploding.
 		_bigGibs = new FlxEmitter();
-		_bigGibs.setXSpeed( -200, 200);
-		_bigGibs.setYSpeed( -300, 0);
-		_bigGibs.setRotation( -720, -720);
-		_bigGibs.gravity = 350;
-		_bigGibs.bounce = 0.35;
-		_bigGibs.makeParticles(Reg.SPAWNER_GIBS, 50, 20, true, 0.5);
+		_bigGibs.velocity.set( -200, -300, 200, 0);
+		_bigGibs.angularVelocity.set( -720, -720);
+		_bigGibs.acceleration.set(0, 350);
+		_bigGibs.elasticity.set(0.35);
+		_bigGibs.loadParticles(Reg.SPAWNER_GIBS, 50, 20, true);
 		
 		// Then we'll set up the rest of our object groups or pools
 		_enemies = new FlxTypedGroup<Enemy>(50);

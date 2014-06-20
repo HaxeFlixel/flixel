@@ -167,11 +167,9 @@ class DemoState extends FlxState
 		var currentX = startX;
 		var currentY = startY;
 		
-		Macro.makePresetSprite("TRANSPARENT");
 		Macro.makePresetSprite("WHITE");
 		Macro.makePresetSprite("GRAY");
 		Macro.makePresetSprite("BLACK");
-		
 		Macro.makePresetSprite("GREEN");
 		Macro.makePresetSprite("LIME");
 		Macro.makePresetSprite("YELLOW");

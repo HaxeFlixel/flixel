@@ -56,11 +56,13 @@ class MenuState extends FlxState
 		
 		// All the bits that blow up when the text smooshes together
 		_gibs = new FlxEmitter(FlxG.width / 2 - 50, FlxG.height / 2 - 10);
-		_gibs.setSize(100, 30);
-		_gibs.setYSpeed( -200, -20);
-		_gibs.setRotation( -720, 720);
-		_gibs.gravity = 100;
-		_gibs.makeParticles(Reg.SPAWNER_GIBS, 650, 32, true, 0);
+		_gibs.width = 100;
+		_gibs.height = 30;
+		_gibs.velocity.set(0, -200, 0, -20);
+		_gibs.angularVelocity.set( -720, 720);
+		_gibs.acceleration.set(0, 100);
+		_gibs.loadParticles(Reg.SPAWNER_GIBS, 650, 32, true);
+		_gibs.lifespan.set(5, 5);
 		add(_gibs);
 		
 		// The letters "mo"

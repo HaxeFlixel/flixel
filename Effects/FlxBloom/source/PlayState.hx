@@ -71,9 +71,8 @@ class PlayState extends FlxState
 		var emitter:FlxEmitter = new FlxEmitter(0, FlxG.height + 8, particles);
 		emitter.width = FlxG.width;
 		emitter.y = FlxG.height + 20;
-		emitter.gravity = -40;
-		emitter.setXSpeed( -20, 20);
-		emitter.setYSpeed( -75, -25);
+		emitter.acceleration.set(0, -40);
+		emitter.velocity.set( -20, -75, 20, -25);
 		var particle:FlxParticle;
 		var colors:Array<Int> = [FlxColor.BLUE, (FlxColor.BLUE | FlxColor.GREEN), FlxColor.GREEN, (FlxColor.GREEN | FlxColor.RED), FlxColor.RED];
 		
@@ -85,7 +84,7 @@ class PlayState extends FlxState
 			emitter.add(particle);
 		}
 		
-		emitter.start(false, 0, 0.1);
+		emitter.start(false, 0.1);
 		add(emitter);
 		#end
 	}
