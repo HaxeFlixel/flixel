@@ -91,43 +91,6 @@ class FlxVector extends FlxPoint
 	}
 	
 	/**
-	 * Returns scaled copy of this vector.
-	 * 
-	 * @param	k - scale coefficient
-	 * @return	scaled vector
-	 */
-	public inline function scaleNew(k:Float):FlxVector
-	{
-		return clone().scale(k);
-	}
-	
-	/**
-	 * Return new vector which equals to sum of this vector and passed v vector.
-	 * 
-	 * @param	v	vector to add
-	 * @return	addition result
-	 */
-	public inline function addNew(v:FlxVector):FlxVector
-	{
-		var nv:FlxVector = clone();
-		nv.addPoint(v);
-		return nv;
-	}
-	
-	/**
-	 * Returns new vector which is result of subtraction of v vector from this vector.
-	 * 
-	 * @param	v	vector to subtract
-	 * @return	subtraction result
-	 */
-	public inline function subtractNew(v:FlxVector):FlxVector
-	{
-		var nv:FlxVector = clone();
-		nv.subtractPoint(v);
-		return clone();
-	}
-	
-	/**
 	 * Dot product between two vectors.
 	 * 
 	 * @param	v	vector to multiply
@@ -253,11 +216,6 @@ class FlxVector extends FlxPoint
 		x *= -1;
 		y *= -1;
 		return this;
-	}
-	
-	public inline function negateNew():FlxVector
-	{
-		return clone().negate();
 	}
 	
 	/**
