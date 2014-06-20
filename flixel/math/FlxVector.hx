@@ -205,16 +205,6 @@ class FlxVector extends FlxPoint
 	}
 	
 	/**
-	 * Checking for equality of vectors.
-	 * 
-	 * @return	true - if the vectors are equal
-	 */
-	public inline function equals(v:FlxVector):Bool
-	{
-		return (Math.abs(x - v.x) < FlxMath.EPSILON && Math.abs(y - v.y) < FlxMath.EPSILON);
-	}
-	
-	/**
 	 * Rotate the vector vector with the values of sine and cosine of the angle of rotation.
 	 * 
 	 * @param	sin	the value of sine of the angle of rotation

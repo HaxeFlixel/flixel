@@ -210,13 +210,10 @@ class BitmapFrontEnd
 			}
 			else if (isBitmap)
 			{
-				if (!Unique)
+				key = getCacheKeyFor(cast Graphic);
+				if (key == null)
 				{
-					key = getCacheKeyFor(cast Graphic);
-					if (key == null)
-					{
-						key = getUniqueKey();
-					}
+					key = getUniqueKey();
 				}
 			}
 			else if (isRegion)

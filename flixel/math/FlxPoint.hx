@@ -11,7 +11,7 @@ import flixel.util.FlxStringUtil;
  */
 class FlxPoint implements IFlxPooled
 {
-	private static var pool = new FlxPool<FlxPoint>(FlxPoint);
+	private static var _pool = new FlxPool<FlxPoint>(FlxPoint);
 	
 	/**
 	 * Recycle or create a new FlxPoint. 
@@ -374,6 +374,17 @@ class FlxPoint implements IFlxPooled
 	public inline function isZero():Bool
 	{
 		return Math.abs(x) < FlxMath.EPSILON && Math.abs(y) < FlxMath.EPSILON;
+	}
+	
+	/*
+	 * Function to compare this FlxPoint to another.
+	 * 
+	 * @param	point  The other FlxPoint to compare to this one.
+	 * @return	True if the FlxPoints have the same x and y value, false otherwise.
+	 */
+	public inline function equals(point:FlxPoint):Bool
+	{
+		return Math.abs(x - point.x) < FlxMath.EPSILON && Math.abs(y - point.y) < FlxMath.EPSILON;
 	}
 	
 	/**
