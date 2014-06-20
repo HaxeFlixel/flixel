@@ -1,4 +1,5 @@
 package flixel.input.keyboard;
+import flixel.math.FlxMath;
 
 #if !FLX_NO_KEYBOARD
 import flash.events.KeyboardEvent;
@@ -30,7 +31,7 @@ class FlxKeyboard implements IFlxInputManager
 	 * the browser from scrolling when pressing the up or down key for example.
 	 */
 	#if bitfive
-	public var preventDefaultKeys:Array<FlxKeyName> = [UP, DOWN, LEFT, RIGHT, TAB, SPACE];
+	public var preventDefaultKeys:Array<FlxKey> = [UP, DOWN, LEFT, RIGHT, TAB, SPACE];
 	#end
 	
 	/**
@@ -48,9 +49,8 @@ class FlxKeyboard implements IFlxInputManager
 	
 	
 	@:allow(flixel.input.android.FlxAndroidKeyList.get_ANY)
-	private var _keyList:Array<FlxKey>;
+	private var _keyList:Array<FlxKeyInput>;
 	
-	private var _keyLookup:Map<FlxKeyName, Int>;
 	/**
 	 * Function and numpad keycodes on native targets are incorrect, 
 	 * this workaround fixes that. Thanks @HaxePunk!
@@ -67,7 +67,7 @@ class FlxKeyboard implements IFlxInputManager
 	 * @param	KeyArray 	An array of key names
 	 * @return	Whether at least one of the keys passed in is pressed.
 	 */
-	public inline function anyPressed(KeyArray:Array<FlxKeyName>):Bool
+	public inline function anyPressed(KeyArray:Array<FlxKey>):Bool
 	{ 
 		return checkKeyArrayState(KeyArray, PRESSED);
 	}
@@ -79,7 +79,7 @@ class FlxKeyboard implements IFlxInputManager
 	 * @param	KeyArray 	An array of key names
 	 * @return	Whether at least one of the keys passed was just pressed.
 	 */
-	public inline function anyJustPressed(KeyArray:Array<FlxKeyName>):Bool
+	public inline function anyJustPressed(KeyArray:Array<FlxKey>):Bool
 	{ 
 		return checkKeyArrayState(KeyArray, JUST_PRESSED);
 	}
@@ -91,17 +91,17 @@ class FlxKeyboard implements IFlxInputManager
 	 * @param	KeyArray 	An array of key names
 	 * @return	Whether at least one of the keys passed was just released.
 	 */
-	public inline function anyJustReleased(KeyArray:Array<FlxKeyName>):Bool
+	public inline function anyJustReleased(KeyArray:Array<FlxKey>):Bool
 	{ 
 		return checkKeyArrayState(KeyArray, JUST_RELEASED);
 	}
 	
 	/**
-	 * Get the name of the first key which is currently pressed.
+	 * Get the first key which is currently pressed.
 	 * 
-	 * @return	The name of the key or "" if none could be found.
+	 * @return	The the first pressed FlxKey
 	 */
-	public function firstPressed():FlxKeyName
+	public function firstPressed():FlxKey
 	{
 		for (key in _keyList)
 		{
@@ -110,7 +110,7 @@ class FlxKeyboard implements IFlxInputManager
 				return key.ID;
 			}
 		}
-		return "";
+		return FlxKey.NONE;
 	}
 	
 	/**
@@ -118,7 +118,7 @@ class FlxKeyboard implements IFlxInputManager
 	 * 
 	 * @return	The name of the key or "" if none could be found.
 	 */
-	public function firstJustPressed():FlxKeyName
+	public function firstJustPressed():FlxKey
 	{
 		for (key in _keyList)
 		{
@@ -135,7 +135,7 @@ class FlxKeyboard implements IFlxInputManager
 	 * 
 	 * @return	The name of the key or "" if none could be found.
 	 */
-	public function firstJustReleased():FlxKeyName
+	public function firstJustReleased():FlxKey
 	{
 		for (key in _keyList)
 		{
@@ -154,9 +154,9 @@ class FlxKeyboard implements IFlxInputManager
 	 * @param	Status		The key state to check for
 	 * @return	Whether the provided key has the specified status
 	 */
-	public function checkStatus(KeyCode:Int, Status:FlxInputState):Bool
+	public function checkStatus(KeyCode:FlxKey, Status:FlxInputState):Bool
 	{
-		var key:FlxKey = _keyList[KeyCode];
+		var key:FlxKeyInput = _keyList[KeyCode];
 		if (key != null)
 		{
 			if (key.hasState(Status))
@@ -173,26 +173,15 @@ class FlxKeyboard implements IFlxInputManager
 		
 		return false;
 	}
-	
-	/**
-	 * Look up the key code for any given string name of the key or button.
-	 * 
-	 * @param	KeyName		The String name of the key.
-	 * @return	The key code for that key.
-	 */
-	public inline function getKeyCode(KeyName:FlxKeyName):Int
-	{
-		return _keyLookup.get(KeyName);
-	}
 
 	/**
 	 * Get an Array of FlxKey that are in a pressed state
 	 * 
 	 * @return	Array of keys that are currently pressed.
 	 */
-	public function getIsDown():Array<FlxKey>
+	public function getIsDown():Array<FlxKeyInput>
 	{
-		var keysDown = new Array<FlxKey>();
+		var keysDown = new Array<FlxKeyInput>();
 		
 		for (key in _keyList)
 		{
@@ -210,7 +199,6 @@ class FlxKeyboard implements IFlxInputManager
 	public function destroy():Void
 	{
 		_keyList = null;
-		_keyLookup = null;
 	}
 	
 	/**
@@ -230,93 +218,17 @@ class FlxKeyboard implements IFlxInputManager
 	@:allow(flixel.FlxG)
 	private function new()
 	{
-		_keyLookup = new Map<String, Int>();
-		
-		_keyList = new Array<FlxKey>();
-		FlxArrayUtil.setLength(_keyList, TOTAL);
-		
-		var i:Int;
-		
-		// LETTERS
-		i = 65;
-		
-		while (i <= 90)
+		_keyList = new Array<FlxKeyInput>();
+		for (code in [8, 9, 13, 16, 17, 19, 20, 27, 45, 46, 144, 145, 219, 220, 221, 222]
+			.concat([for (i in 186...193) i])
+			.concat([for (i in 32...41) i])
+			.concat([for (i in 48...58) i])
+			.concat([for (i in 65...91) i])
+			.concat([for (i in 96...108) i])
+			.concat([for (i in 109...127) i]))
 		{
-			addKey(String.fromCharCode(i), i);
-			i++;
+			_keyList.push(new FlxKeyInput(code));
 		}
-		
-		// NUMBERS
-		i = 48;
-		addKey(ZERO, i++);
-		addKey(ONE, i++);
-		addKey(TWO, i++);
-		addKey(THREE, i++);
-		addKey(FOUR, i++);
-		addKey(FIVE, i++);
-		addKey(SIX, i++);
-		addKey(SEVEN, i++);
-		addKey(EIGHT, i++);
-		addKey(NINE, i++);
-		i = 96;
-		addKey(NUMPADZERO, i++);
-		addKey(NUMPADONE, i++);
-		addKey(NUMPADTWO, i++);
-		addKey(NUMPADTHREE, i++);
-		addKey(NUMPADFOUR, i++);
-		addKey(NUMPADFIVE, i++);
-		addKey(NUMPADSIX, i++);
-		addKey(NUMPADSEVEN,i++);
-		addKey(NUMPADEIGHT, i++);
-		addKey(NUMPADNINE, i++);
-		
-		addKey(PAGEUP, 33);
-		addKey(PAGEDOWN, 34);
-		addKey(HOME, 36);
-		addKey(END, 35);
-		addKey(INSERT, 45);
-		
-		// FUNCTION KEYS
-		i = 1;
-		while (i <= 12)
-		{
-			addKey("F" + i, 111 + i);
-			i++;
-		}
-		
-		// SPECIAL KEYS + PUNCTUATION
-		addKey(ESCAPE, 27);
-		addKey(MINUS, 189);
-		addKey(PLUS, 187);
-		addKey(DELETE, 46);
-		addKey(BACKSPACE, 8);
-		addKey(LBRACKET, 219);
-		addKey(RBRACKET, 221);
-		addKey(BACKSLASH, 220);
-		addKey(CAPSLOCK, 20);
-		addKey(SEMICOLON, 186);
-		addKey(QUOTE, 222);
-		addKey(ENTER, 13);
-		addKey(SHIFT, 16);
-		addKey(COMMA, 188);
-		addKey(PERIOD,190);
-		addKey(SLASH, 191);
-		addKey(NUMPADSLASH, 191);
-		addKey(GRAVEACCENT, 192);
-		addKey(CONTROL, 17);
-		addKey(ALT, 18);
-		addKey(SPACE, 32);
-		addKey(UP, 38);
-		addKey(DOWN, 40);
-		addKey(LEFT, 37);
-		addKey(RIGHT, 39);
-		addKey(TAB, 9);
-		addKey(PRINTSCREEN, 301);
-		
-		addKey(NUMPADMULTIPLY, 106);
-		addKey(NUMPADMINUS, 109);
-		addKey(NUMPADPLUS, 107);
-		addKey(NUMPADPERIOD, 110);
 		
 		#if !(flash || js)
 		_nativeCorrection = new Map<String, Int>();
@@ -324,7 +236,7 @@ class FlxKeyboard implements IFlxInputManager
 		_nativeCorrection.set("0_64", FlxKey.INSERT);
 		_nativeCorrection.set("0_65", FlxKey.END);
 		_nativeCorrection.set("0_67", FlxKey.PAGEDOWN);
-		_nativeCorrection.set("0_69", -1);
+		_nativeCorrection.set("0_69", FlxKey.NONE);
 		_nativeCorrection.set("0_73", FlxKey.PAGEUP);
 		_nativeCorrection.set("0_266", FlxKey.DELETE);
 		_nativeCorrection.set("123_222", FlxKey.LBRACKET);
@@ -381,18 +293,6 @@ class FlxKeyboard implements IFlxInputManager
 	}
 	
 	/**
-	 * An internal helper function used to build the key array.
-	 * 
-	 * @param	KeyName		Name of the key (e.g. LEFT or A)
-	 * @param	KeyCode		The numeric Flash code for this key.
-	 */
-	private function addKey(KeyName:FlxKeyName, KeyCode:Int):Void
-	{
-		_keyLookup.set(KeyName, KeyCode);
-		_keyList[KeyCode] = new FlxKey(KeyName);
-	}
-	
-	/**
 	 * Updates the key states (for tracking just pressed, just released, etc).
 	 */
 	private function update():Void
@@ -413,7 +313,7 @@ class FlxKeyboard implements IFlxInputManager
 	 * @param	State		The key state to check for
 	 * @return	Whether at least one of the keys has the specified status
 	 */
-	private function checkKeyArrayState(KeyArray:Array<FlxKeyName>, State:FlxInputState):Bool
+	private function checkKeyArrayState(KeyArray:Array<FlxKey>, State:FlxInputState):Bool
 	{
 		if (KeyArray == null)
 		{
@@ -422,7 +322,7 @@ class FlxKeyboard implements IFlxInputManager
 		
 		for (code in KeyArray)
 		{
-			var key:FlxKey = _keyList[_keyLookup.get(code)];
+			var key:FlxKeyInput = _keyList[code];
 			if (key != null)
 			{
 				if (key.hasState(State))
@@ -482,7 +382,7 @@ class FlxKeyboard implements IFlxInputManager
 	private function handlePreventDefault(keyCode:Int, event:KeyboardEvent):Void
 	{
 		#if bitfive
-		var key:FlxKey = _keyList[keyCode];
+		var key:FlxKeyInput = _keyList[keyCode];
 		if (key != null && preventDefaultKeys != null && preventDefaultKeys.indexOf(key.ID) != -1)
 		{
 			event.preventDefault();
@@ -494,7 +394,7 @@ class FlxKeyboard implements IFlxInputManager
 	 * A Helper function to check whether an array of keycodes contains 
 	 * a certain key safely (returns false if the array is null).
 	 */ 
-	private function inKeyArray(KeyArray:Array<FlxKeyName>, KeyCode:Int):Bool
+	private function inKeyArray(KeyArray:Array<FlxKey>, Key:FlxKey):Bool
 	{
 		if (KeyArray == null)
 		{
@@ -502,9 +402,9 @@ class FlxKeyboard implements IFlxInputManager
 		}
 		else
 		{
-			for (keyString in KeyArray)
+			for (key in KeyArray)
 			{
-				if (keyString == "ANY" || getKeyCode(keyString) == KeyCode)
+				if (key == "ANY" || key == Key)
 				{
 					return true;
 				}
@@ -528,7 +428,7 @@ class FlxKeyboard implements IFlxInputManager
 	 */
 	private inline function updateKeyStates(KeyCode:Int, Down:Bool):Void
 	{
-		var key:FlxKey = _keyList[KeyCode];
+		var key:FlxKeyInput = _keyList[KeyCode];
 		
 		if (key != null) 
 		{
@@ -566,7 +466,7 @@ class FlxKeyboard implements IFlxInputManager
 		
 		while (i < TOTAL)
 		{
-			var key:FlxKey = _keyList[i++];
+			var key:FlxKeyInput = _keyList[i++];
 			
 			if (key == null || key.released)
 			{
@@ -594,7 +494,7 @@ class FlxKeyboard implements IFlxInputManager
 		var i:Int = 0;
 		var l:Int = Record.length;
 		var o:CodeValuePair;
-		var o2:FlxKey;
+		var o2:FlxKeyInput;
 		
 		while (i < l)
 		{
@@ -604,4 +504,7 @@ class FlxKeyboard implements IFlxInputManager
 		}
 	}
 }
+
+typedef FlxKeyInput = FlxInput<Int>;
+
 #end
