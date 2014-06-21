@@ -275,25 +275,51 @@ class FlxRandom
 	}
 	
 	/**
-	 * Returns a random color value in hex ARGB format.
+	 * Returns a random color.
 	 * 
-	 * @param   Min         The lowest value to use for each channel.
-	 * @param   Max         The highest value to use for each channel.
-	 * @param   Alpha       The alpha value of the returning color (default 255 = fully opaque).
-	 * @param   GreyScale   Whether or not to create a color that is strictly a shade of grey. False by default.
-	 * @return  A color value in hex ARGB format.
+	 * @param   Min        An optional FlxColor representing the lower bounds for the generated color.
+	 * @param   Max        An optional FlxColor representing the upper bounds for the generated color.
+	 * @param 	Alpha      An optional value for the alpha channel of the generated color.
+	 * @param   GreyScale  Whether or not to create a color that is strictly a shade of grey. False by default.
+	 * @return  A color value as a FlxColor.
 	 */
-	public static function color(Min:Int = 0, Max:Int = 255, Alpha:Int = 255, GreyScale:Bool = false):FlxColor
+	public static function color(?Min:FlxColor, ?Max:FlxColor, ?Alpha:Null<Int>, GreyScale:Bool = false):FlxColor
 	{
-		Min = Std.int(FlxMath.bound(Min, 0, 255));
-		Max = Std.int(FlxMath.bound(Max, 0, 255));
-		Alpha = Std.int(FlxMath.bound(Alpha, 0, 255));
+		var red:Int;
+		var green:Int;
+		var blue:Int;
+		var alpha:Int;
 		
-		var red = int(Min, Max);
-		var green = GreyScale ? red : int(Min, Max);
-		var blue = GreyScale ? red : int(Min, Max);
+		if (Min == null && Max == null)
+		{
+			red = int(0, 255);
+			green = int(0, 255);
+			blue = int(0, 255);
+			alpha = Alpha == null ? int(0, 255) : Alpha;
+		}
+		else if (Min == null)
+		{
+			red = int(Min.red, 255);
+			green = GreyScale ? red : int(Min.green, 255);
+			blue = GreyScale ? red : int(Min.blue, 255);
+			alpha = Alpha == null ? int(Min.alpha, 255) : Alpha;
+		}
+		else if (Max == null)
+		{
+			red = int(0, Max.red);
+			green = GreyScale ? red : int(0, Max.green);
+			blue = GreyScale ? red : int(0, Max.blue);
+			alpha = Alpha == null ? int(0, Max.alpha) : Alpha;
+		}
+		else
+		{
+			red = int(Min.red, Max.red);
+			green = GreyScale ? red : int(Min.green, Max.green);
+			blue = GreyScale ? red : int(Min.blue, Max.blue);
+			alpha = Alpha == null ? int(Min.alpha, Max.alpha) : Alpha;
+		}
 		
-		return FlxColor.fromRGB(red, green, blue, Alpha);
+		return FlxColor.fromRGB(red, green, blue, alpha);
 	}
 	
 	/**
