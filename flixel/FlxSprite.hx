@@ -768,7 +768,7 @@ class FlxSprite extends FlxObject
 				continue;
 			}
 			
-			getScreenXY(_point, camera).subtractPoint(offset);
+			getScreenPosition(_point, camera).subtractPoint(offset);
 			
 		#if FLX_RENDER_TILE
 			drawItem = camera.getDrawStackItem(cachedGraphics, isColored, _blendInt, antialiasing);
@@ -1137,7 +1137,7 @@ class FlxSprite extends FlxObject
 		{
 			Camera = FlxG.camera;
 		}
-		getScreenXY(_point, Camera);
+		getScreenPosition(_point, Camera);
 		_point.x = _point.x - offset.x;
 		_point.y = _point.y - offset.y;
 		_flashPoint.x = (point.x - Camera.scroll.x) - _point.x;
@@ -1381,16 +1381,9 @@ class FlxSprite extends FlxObject
 	 */
 	public function isSimpleRenderBlit(?camera:FlxCamera):Bool
 	{
-		var result:Bool = ((angle == 0) || (bakedRotationAngle > 0))
-			&& (scale.x == 1) && (scale.y == 1) && (blend == null);
-		if (camera == null)
-		{
-			result = result && pixelPerfectRender != false;
-		}
-		else
-		{
-			result = result && isPixelPerfectRender(camera);
-		}
+		var result:Bool = (angle == 0 || bakedRotationAngle > 0)
+			&& scale.x == 1 && scale.y == 1 && blend == null;
+		result = result && (camera != null ? isPixelPerfectRender(camera) : pixelPerfectRender);
 		return result;
 	}
 	

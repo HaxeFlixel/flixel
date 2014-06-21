@@ -448,12 +448,16 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 			buffer = _buffers[i++];
 				
 			#if FLX_RENDER_BLIT
+			getScreenPosition(_point, camera).add(buffer.x, buffer.y);
+			buffer.dirty = buffer.dirty || _point.x > 0 || (_point.y > 0) || (_point.x + buffer.width < camera.width) || (_point.y + buffer.height < camera.height);
+			
 			if (buffer.dirty) {
 				drawTilemap(buffer, camera);
 			}
-			getScreenXY(_point, camera).add(buffer.x, buffer.y).copyToFlash(_flashPoint);
+			
+			getScreenPosition(_point, camera).add(buffer.x, buffer.y).copyToFlash(_flashPoint);
 			buffer.draw(camera, _flashPoint, scale.x, scale.y);
-			#else
+			#else			
 			drawTilemap(buffer, camera);
 			#end
 			
@@ -902,7 +906,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	#if FLX_RENDER_BLIT
 		Buffer.fill();
 	#else
-		getScreenXY(_point, Camera).copyToFlash(_helperPoint);
+		getScreenPosition(_point, Camera).copyToFlash(_helperPoint);
 		
 		var tileID:Int;
 		var drawX:Float;
