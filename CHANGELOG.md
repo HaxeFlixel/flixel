@@ -37,7 +37,7 @@
  * on -> emitting
  * fixed type parameter not being respected (T was always FlxSprite)
  * emitters and particles now use FlxColor instead of separate red, green, and blue values
- * removed FlxEmitterExt, FlxEmitter now has two launch modes: CIRCLE and SQUARE
+ * removed FlxEmitterExt, FlxEmitter now has two launch modes: CIRCLE (the new default) and SQUARE
  * removed xPosition, yPosition, life, bounce, and various other properties, and property setting convenience functions (see below)
  * a variety of values can now be set with much greater control, via lifespan.set(), scale.set(), velocity.set() and so on
  * simplified start() parameters
@@ -72,7 +72,7 @@
 * FlxKeyboard: 
  * added preventDefaultKeys for HTML5
  * added an abstract enum for key names (FlxG.keys.anyPressed([A, LEFT]) is now possible)
- * lowercase key names are no longer allowed ("a", "left")
+ * the any-functions now take an Array<FlxKey> instead of Array<String> (string names are still supported)
 * FlxTypedGroup:
  * added a recurse param to the forEach() functions
  * removed callAll() and setAll() - use forEach() instead
@@ -81,6 +81,8 @@
 * FlxGamepad:
  * added a connected flag
  * fixed a bug that would prevent gamepad buttons from being updated
+ * added deadZoneMode, circular deadzones are now supported
+ * getXAxis() and getYAxis() now take FlxGamepadAnalogStick as parameters (for example XboxButtonID.LEFT_ANALOG_STICK)
 * FlxRandom:
  * exposed currentSeed as an external representation of internalSeed
  * removed intRanged() and floatRanged(), int() and float() now provide optional ranges
@@ -120,6 +122,7 @@
  * fixed issue with width increasing when the text is updated
  * fixed text disappearing after state switches on HTML5
 * FlxRect: added weak(), putWeak(), ceil() and floor()
+* Added support for reloading graphics via OpenFL live asset reloading (native targets)
 
 3.3.4
 ------------------------------
