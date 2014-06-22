@@ -44,9 +44,9 @@ class FlxRange<T>
 	 * @param	OtherFlxRange  The other FlxRange to compare to this one.
 	 * @return	True if the FlxRanges have the same start and end value, false otherwise.
 	 */
-	public inline function equals(OtherRange:FlxRange<T>):Bool
+	public inline function equals(OtherFlxRange:FlxRange<T>):Bool
 	{
-		return start == OtherRange.start && end == OtherRange.end;
+		return start == OtherFlxRange.start && end == OtherFlxRange.end;
 	}
 	
 	/**
