@@ -47,7 +47,6 @@ class FlxKeyboard implements IFlxInputManager
 	 */
 	public var justReleased:FlxKeyList;
 	
-	
 	@:allow(flixel.input.android.FlxAndroidKeyList.get_ANY)
 	private var _keyList:Array<FlxKeyInput>;
 	
@@ -219,7 +218,7 @@ class FlxKeyboard implements IFlxInputManager
 	private function new()
 	{
 		_keyList = new Array<FlxKeyInput>();
-		for (code in [8, 9, 13, 16, 17, 19, 20, 27, 45, 46, 144, 145, 219, 220, 221, 222]
+		for (code in [8, 9, 13, 16, 17, 19, 20, 27, 45, 46, 144, 145, 219, 220, 221, 222, 301]
 			.concat([for (i in 186...193) i])
 			.concat([for (i in 32...41) i])
 			.concat([for (i in 48...58) i])
@@ -227,7 +226,7 @@ class FlxKeyboard implements IFlxInputManager
 			.concat([for (i in 96...108) i])
 			.concat([for (i in 109...127) i]))
 		{
-			_keyList.push(new FlxKeyInput(code));
+			_keyList[code] = new FlxKeyInput(code);
 		}
 		
 		#if !(flash || js)
@@ -284,8 +283,8 @@ class FlxKeyboard implements IFlxInputManager
 		_nativeCorrection.set("42_74", FlxKey.NUMPADMULTIPLY);
 		#end
 		
-		Lib.current.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
-		Lib.current.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
+		FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+		FlxG.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 		
 		pressed = new FlxKeyList(PRESSED);
 		justPressed = new FlxKeyList(JUST_PRESSED);
