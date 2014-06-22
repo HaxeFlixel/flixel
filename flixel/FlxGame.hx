@@ -357,7 +357,9 @@ class FlxGame extends Sprite
 		// make sure the cursor etc are properly scaled from the start
 		resizeGame(FlxG.stage.stageWidth, FlxG.stage.stageHeight);
 		
+		#if !bitfive
 		Assets.addEventListener(Event.CHANGE, FlxG.bitmap.onAssetsReload);
+		#end
 	}
 	
 	private function onFocus(_):Void
