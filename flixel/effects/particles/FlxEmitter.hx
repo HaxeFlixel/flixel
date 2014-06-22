@@ -68,7 +68,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	 */
 	public var height:Float = 0;
 	/**
-	 * How particles should be launched. If CIRCLE, particles will use launchAngle and distance. Otherwise, particles will use velocity.x and velocity.y.
+	 * How particles should be launched. If CIRCLE, particles will use launchAngle and velocity. Otherwise, particles will just use velocity.x and velocity.y.
 	 */
 	public var launchMode:FlxEmitterMode = FlxEmitterMode.CIRCLE;
 	/**
@@ -439,7 +439,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		
 		// Particle velocity/launch angle settings
 		
-		particle.useVelocity = particle.velocityRange.start.equals(particle.velocityRange.end);
+		particle.useVelocity = !particle.velocityRange.start.equals(particle.velocityRange.end);
 		
 		if (launchAngle != null && launchMode == FlxEmitterMode.CIRCLE)
 		{
@@ -517,7 +517,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		particle.dragRange.start.y = FlxRandom.float(drag.start.min.y, drag.start.max.y);
 		particle.dragRange.end.x = FlxRandom.float(drag.end.min.x, drag.end.max.x);
 		particle.dragRange.end.y = FlxRandom.float(drag.end.min.y, drag.end.max.y);
-		particle.useDrag = particle.dragRange.start.equals(particle.dragRange.end);
+		particle.useDrag = !particle.dragRange.start.equals(particle.dragRange.end);
 		particle.drag.x = particle.dragRange.start.x;
 		particle.drag.y = particle.dragRange.start.y;
 		
@@ -527,7 +527,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		particle.accelerationRange.start.y = FlxRandom.float(acceleration.start.min.y, acceleration.start.max.y);
 		particle.accelerationRange.end.x = FlxRandom.float(acceleration.end.min.x, acceleration.end.max.x);
 		particle.accelerationRange.end.y = FlxRandom.float(acceleration.end.min.y, acceleration.end.max.y);
-		particle.useAcceleration = particle.accelerationRange.start.equals(particle.accelerationRange.end);
+		particle.useAcceleration = !particle.accelerationRange.start.equals(particle.accelerationRange.end);
 		particle.acceleration.x = particle.accelerationRange.start.x;
 		particle.acceleration.y = particle.accelerationRange.start.y;
 		
