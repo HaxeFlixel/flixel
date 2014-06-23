@@ -8,8 +8,18 @@ import flixel.math.FlxPoint;
  */
 class FlxRange<T>
 {
+	/**
+	 * The beginning value of this property.
+	 */
 	public var start:T;
+	/**
+	 * The ending value of this property.
+	 */
 	public var end:T;
+	/**
+	 * A flag that can be used to toggle the use of this property.
+	 */
+	public var active:Bool = false;
 	
 	/**
 	 * Create a new Range object. Must be typed, e.g. var myRange = new Range<Float>(0, 0);

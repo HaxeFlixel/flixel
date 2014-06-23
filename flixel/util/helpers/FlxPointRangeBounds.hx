@@ -10,8 +10,18 @@ import flixel.util.FlxStringUtil;
  */
 class FlxPointRangeBounds implements IFlxDestroyable
 {
+	/**
+	 * The beginning X and Y values of this property.
+	 */
 	public var start:FlxBounds<FlxPoint>;
+	/**
+	 * The ending X and Y values of this property.
+	 */
 	public var end:FlxBounds<FlxPoint>;
+	/**
+	 * A flag that can be used to toggle the use of this property.
+	 */
+	public var active:Bool = false;
 	
 	/**
 	 * Create a new FlxPointRangeBounds object.

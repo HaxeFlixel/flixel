@@ -32,38 +32,6 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 	 */
 	public var percent(default, null):Float = 0;
 	/**
-	 * Whether or not velocity should be updated each frame.
-	 */
-	public var useVelocity:Bool = false;
-	/**
-	 * Whether or not angularVelocity should be updated each frame.
-	 */
-	public var useAngularVelocity:Bool = false;
-	/**
-	 * Whether or not scale should be updated each frame.
-	 */
-	public var useScale:Bool = false;
-	/**
-	 * Whether or not alpha should be updated each frame.
-	 */
-	public var useAlpha:Bool = false;
-	/**
-	 * Whether or not color should be updated each frame.
-	 */
-	public var useColor:Bool = false;
-	/**
-	 * Whether or not drag should be updated each frame.
-	 */
-	public var useDrag:Bool = false;
-	/**
-	 * Whether or not acceleration should be updated each frame.
-	 */
-	public var useAcceleration:Bool = false;
-	/**
-	 * Whether or not elasticity should be updated each frame.
-	 */
-	public var useElasticity:Bool = false;
-	/**
 	 * Whether or not the hitbox should be updated each frame when scaling.
 	 */
 	public var autoUpdateHitbox:Bool = false;
@@ -169,51 +137,51 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 			_delta = FlxG.elapsed / lifespan;
 			percent = age / lifespan;
 			
-			if (useVelocity)
+			if (velocityRange.active)
 			{
 				velocity.x += (velocityRange.end.x - velocityRange.start.x) * _delta;
 				velocity.y += (velocityRange.end.y - velocityRange.start.y) * _delta;
 			}
 			
-			if (useAngularVelocity)
+			if (angularVelocityRange.active)
 			{
 				angularVelocity += (angularVelocityRange.end - angularVelocityRange.start) * _delta;
 			}
 			
-			if (useScale)
+			if (scaleRange.active)
 			{
 				scale.x += (scaleRange.end.x - scaleRange.start.x) * _delta;
 				scale.y += (scaleRange.end.y - scaleRange.start.y) * _delta;
 			}
 			
-			if (useAlpha)
+			if (alphaRange.active)
 			{
 				alpha += (alphaRange.end - alphaRange.start) * _delta;
 			}
 			
-			if (useColor)
+			if (colorRange.active)
 			{
 				color = FlxColor.interpolate(colorRange.start, colorRange.end, percent);
 			}
 			
-			if (useDrag)
+			if (dragRange.active)
 			{
 				drag.x += (dragRange.end.x - dragRange.start.x) * _delta;
 				drag.y += (dragRange.end.y - dragRange.start.y) * _delta;
 			}
 			
-			if (useAcceleration)
+			if (accelerationRange.active)
 			{
 				acceleration.x += (accelerationRange.end.x - accelerationRange.start.x) * _delta;
 				acceleration.y += (accelerationRange.end.y - accelerationRange.start.y) * _delta;
 			}
 			
-			if (useElasticity)
+			if (elasticityRange.active)
 			{
 				elasticity += (elasticityRange.end - elasticityRange.start) * _delta;
 			}
 			
-			if (autoUpdateHitbox && useScale)
+			if (autoUpdateHitbox && scaleRange.active)
 			{
 				updateHitbox();
 			}
@@ -258,14 +226,6 @@ interface IFlxParticle extends IFlxSprite
 	public var lifespan:Float;
 	public var age(default, null):Float;
 	public var percent(default, null):Float;
-	public var useVelocity:Bool;
-	public var useAngularVelocity:Bool;
-	public var useScale:Bool;
-	public var useAlpha:Bool;
-	public var useColor:Bool;
-	public var useDrag:Bool;
-	public var useAcceleration:Bool;
-	public var useElasticity:Bool;
 	public var autoUpdateHitbox:Bool;
 	public var velocityRange:FlxRange<FlxPoint>;
 	public var angularVelocityRange:FlxRange<Float>;
