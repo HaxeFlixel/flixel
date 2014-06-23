@@ -429,7 +429,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	 */
 	public function emitParticle():Void
 	{
-		var particle:T = cast recycle(cast particleClass);
+		var particle:T = cast recycle(cast particleClass, function() return Type.createInstance(particleClass, []));
 		
 		particle.reset(FlxRandom.float(x, x + width), FlxRandom.float(y, y + height));
 		

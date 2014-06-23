@@ -273,13 +273,13 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 * Recycling is designed to help you reuse game objects without always re-allocating or "newing" them.
 	 * 
 	 * @param	ObjectClass		The class type you want to recycle (e.g. FlxSprite, EvilRobot, etc). Do NOT "new" the class in the parameter!
-	 * @param 	ContructorArgs  An array of arguments passed into a newly object if there aren't any dead members to recycle. 
+	 * @param 	ObjectFactory  A factory function to create a new object if there aren't any dead members to recycle. 
 	 * @param 	Force           Force the object to be an ObjectClass and not a super class of ObjectClass. 
 	 * @return	A reference to the object that was created.  Don't forget to cast it back to the Class you want (e.g. myObject = myGroup.recycle(myObjectClass) as myObjectClass;).
 	 */
-	public inline function recycle(?ObjectClass:Class<T>, ?ContructorArgs:Array<Dynamic>, Force:Bool = false):FlxSprite
+	public inline function recycle(?ObjectClass:Class<T>, ?ObjectFactory:Void->T, Force:Bool = false):T
 	{
-		return group.recycle(ObjectClass, ContructorArgs, Force);
+		return group.recycle(ObjectClass, ObjectFactory, Force);
 	}
 	
 	/**

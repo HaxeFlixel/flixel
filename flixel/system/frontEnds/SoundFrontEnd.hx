@@ -105,7 +105,7 @@ class SoundFrontEnd
 			return null;
 		}
 		
-		var sound:FlxSound = list.recycle(FlxSound);
+		var sound:FlxSound = list.recycle(FlxSound, function() return new FlxSound());
 		
 		if (EmbeddedSound != null)
 		{
@@ -191,7 +191,7 @@ class SoundFrontEnd
 	public function play(EmbeddedSound:String, Volume:Float = 1, Looped:Bool = false, AutoDestroy:Bool = true, ?OnComplete:Void->Void):FlxSound
 	{
 		var sound:Sound = cache(EmbeddedSound);
-		var flixelSound = list.recycle(FlxSound).loadEmbedded(sound, Looped, AutoDestroy, OnComplete);
+		var flixelSound = list.recycle(FlxSound, function() return new FlxSound()).loadEmbedded(sound, Looped, AutoDestroy, OnComplete);
 		flixelSound.volume = Volume;
 		return flixelSound.play();
 	}
