@@ -238,7 +238,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 * @param	Revive			Whether recycled members should automatically be revived (by calling revive() on them)
 	 * @return	A reference to the object that was created.  Don't forget to cast it back to the Class you want (e.g. myObject = myGroup.recycle(myObjectClass) as myObjectClass;).
 	 */
-	public function recycle(?ObjectClass:Class<T>, ?ObjectFactory:Void->T, Force:Bool = false, Revive:Bool = true):T
+	public function recycle(?ObjectClass:Class<T>, ObjectFactory:Void->T, Force:Bool = false, Revive:Bool = true):T
 	{
 		var basic:FlxBasic = null;
 		
