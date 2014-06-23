@@ -1,9 +1,7 @@
 package flixel.util;
 
 import flixel.util.FlxPool;
-#if !macro
 import flash.display.BitmapData;
-#end
 
 class FlxDestroyUtil
 {
@@ -21,9 +19,7 @@ class FlxDestroyUtil
 	}
 	
 	/**
-	 * Completely destroys an Array of destroyable objects:
-	 * 1) Clears the array structure
-	 * 2) Calls FlxDestroyUtil.destroy() on every element
+	 * Destroy every element of an array of IFlxDestroyables
 	 *
 	 * @param	array	An Array of IFlxDestroyable objects
 	 * @return	null
@@ -32,10 +28,7 @@ class FlxDestroyUtil
 	{
 		if (array != null)
 		{
-			while (array.length > 0)
-			{
-				destroy(array.pop());
-			}
+			for (e in array) destroy(e);
 		}
 		return null;
 	}
@@ -64,10 +57,7 @@ class FlxDestroyUtil
 	{
 		if (array != null)
 		{
-			while (array.length > 0)
-			{
-				put(array.pop());
-			}
+			for (e in array) put(e);
 		}
 		return null;
 	}
