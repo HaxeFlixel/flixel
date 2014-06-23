@@ -8,8 +8,18 @@ import flixel.math.FlxPoint;
  */
 class FlxRange<T>
 {
+	/**
+	 * The beginning value of this property.
+	 */
 	public var start:T;
+	/**
+	 * The ending value of this property.
+	 */
 	public var end:T;
+	/**
+	 * A flag that can be used to toggle the use of this property.
+	 */
+	public var active:Bool = false;
 	
 	/**
 	 * Create a new Range object. Must be typed, e.g. var myRange = new Range<Float>(0, 0);
@@ -44,9 +54,9 @@ class FlxRange<T>
 	 * @param	OtherFlxRange  The other FlxRange to compare to this one.
 	 * @return	True if the FlxRanges have the same start and end value, false otherwise.
 	 */
-	public inline function equals(OtherRange:FlxRange<T>):Bool
+	public inline function equals(OtherFlxRange:FlxRange<T>):Bool
 	{
-		return start == OtherRange.start && end == OtherRange.end;
+		return start == OtherFlxRange.start && end == OtherFlxRange.end;
 	}
 	
 	/**

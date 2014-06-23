@@ -44,8 +44,8 @@
 * FlxParticle:
  * maxLifespan -> lifespan, lifespan -> age, percent indicates (age / lifespan)
  * age counts up (as opposed to lifespan, which counted down)
- * "use" flags (useAlpha, useVelocity, etc) which FlxEmitter uses to control particle behavior
  * range properties (velocityRange, alphaRange) which determine particle behavior after launch
+ * "active" flags (alphaRange.active, velocityRange.active, etc) which FlxEmitter uses to control particle behavior
 * Moved FlxMath, FlxPoint, FlxRect, FlxRect, FlxAngle, FlxVelocity and FlxRandom to flixel.math
 * FlxSubState: fix for calling close() within create()
 * FlxPath: exposed nodeIndex as a read-only property
