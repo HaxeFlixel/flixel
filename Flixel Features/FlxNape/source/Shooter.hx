@@ -78,7 +78,7 @@ class Shooter extends FlxTypedGroup<FlxNapeSprite>
 			return;
 		
 		var spr = recycle(FlxNapeSprite);
-		var trail = new Trail(Std.int(spr.x), Std.int(spr.y), spr);
+		var trail = new Trail(spr);
 		
 		spr.body.position.y = 30;
 		spr.body.position.x = 30 + Std.random(640 - 30);
@@ -147,13 +147,10 @@ class Shooter extends FlxTypedGroup<FlxNapeSprite>
 
 class Trail extends FlxEmitter
 {
-	var attach:FlxNapeSprite;
-	var killTimmer:Float;
-	var isDying:Bool;
+	private var attach:FlxNapeSprite;
 	
-	function new(X:Int, Y:Int, Attach:FlxNapeSprite)
+	public function new(Attach:FlxNapeSprite)
 	{
-		killTimmer = 0;
 		super(0, 0);
 		
 		loadParticles("assets/shooter.png", 20, 0);
@@ -162,41 +159,23 @@ class Trail extends FlxEmitter
 		FlxG.state.add(this);
 		
 		velocity.set(0, 0);
-		angularVelocity.set(0, 0);
-		scale.set(1, 1, 0, 0);
-		alpha.set(1, 1, 0, 0);
+		scale.set(1, 1, 1, 1, 0, 0, 0, 0);
+		lifespan.set(0.25);
 		
-		start(false, .25);
-		emitting = false;
+		start(false, FlxG.elapsed);
 	}
 	
 	override public function update():Void
 	{
 		super.update();
 		
-		if (isDying) 
+		if (attach.alive)
 		{
-			killTimmer += FlxG.elapsed;
-			if (killTimmer > 1)
-			{
-				kill();
-				FlxG.state.remove(this);
-			}
-			return;
+			focusOn(attach);
 		}
-		
-		if (attach.alive == false)
+		else
 		{
-			x = attach.x;
-			y = attach.y;
-			emitParticle();
-			isDying = true;
-		} 
-		else 
-		{
-			x = attach.x;
-			y = attach.y;
-			emitParticle();
+			emitting = false;
 		}
 	}
 }
