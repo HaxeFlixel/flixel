@@ -28,7 +28,7 @@ class Bullet extends FlxSprite
 			exists = false;   
 		}
 		
-		if (getScreenXY().x < -64 || getScreenXY().x > FlxG.width + 64) 
+		if (getScreenPosition().x < -64 || getScreenPosition().x > FlxG.width + 64) 
 		{ 
 			// If the bullet makes it 64 pixels off the side of the screen, kill it
 			kill(); 
