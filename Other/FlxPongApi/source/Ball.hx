@@ -31,7 +31,9 @@ class Ball extends PongSprite
 	
 	public function init():Void
 	{
-		_exhaust = Reg.PS.emitterGroup.recycle(Emitter, [x, y, 2, Reg.med_lite], true);
+		_exhaust = Reg.PS.emitterGroup.recycle(Emitter, function() {
+			return new Emitter(x, y, 2, Reg.med_lite);
+		}, true);
 		_exhaust.acceleration.set(0, 0.5);
 		_exhaust.velocity.set( -0.1, -0.1, 0.1, 0.1);
 		_exhaust.alpha.set(0.7, 0.9, 0, 0);

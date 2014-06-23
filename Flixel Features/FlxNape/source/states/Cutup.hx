@@ -188,7 +188,9 @@ class Cutup extends FlxNapeState
 				sprite.graphics.endFill();
 				
 				// don't create the unnecessary default body on construction, it will become a ghost!
-				var cutPhySpr = pieces.recycle(FlxNapeSprite, [0,0,null,false]);
+				var cutPhySpr = pieces.recycle(FlxNapeSprite, function() {
+					return new FlxNapeSprite(0, 0, null, false);
+				});
 				cutPhySpr.reset(0,0);
 				cutPhySpr.body = cutBody;
 				// force the bitmap to be unique, or same-sized bmp will share one instance
