@@ -339,6 +339,10 @@ class FlxObject extends FlxBasic
 	 */
 	public var pixelPerfectRender(default, set):Null<Bool>;
 	/**
+	 * Whether or not the position of this object should be rounded before any draw() or collision checking.
+	 */
+	public var pixelPerfectPosition:Bool = true;
+	/**
 	 * Set the angle of a sprite to rotate it. WARNING: rotating sprites decreases rendering
 	 * performance for this sprite by a factor of 10x (in Flash target)!
 	 */
@@ -605,8 +609,8 @@ class FlxObject extends FlxBasic
 		{
 			Camera = FlxG.camera;
 		}
-		var objectScreenPos:FlxPoint = object.getScreenXY(null, Camera);
-		getScreenXY(_point, Camera);
+		var objectScreenPos:FlxPoint = object.getScreenPosition(null, Camera);
+		getScreenPosition(_point, Camera);
 		return	(objectScreenPos.x + object.width > _point.x) && (objectScreenPos.x < _point.x + width) &&
 				(objectScreenPos.y + object.height > _point.y) && (objectScreenPos.y < _point.y + height);
 	}
@@ -656,8 +660,8 @@ class FlxObject extends FlxBasic
 		{
 			Camera = FlxG.camera;
 		}
-		var objectScreenPos:FlxPoint = object.getScreenXY(null, Camera);
-		getScreenXY(_point, Camera);
+		var objectScreenPos:FlxPoint = object.getScreenPosition(null, Camera);
+		getScreenPosition(_point, Camera);
 		return	(objectScreenPos.x + object.width > _point.x) && (objectScreenPos.x < _point.x + width) &&
 			(objectScreenPos.y + object.height > _point.y) && (objectScreenPos.y < _point.y + height);
 	}
@@ -688,7 +692,7 @@ class FlxObject extends FlxBasic
 		}
 		var X:Float = point.x - Camera.scroll.x;
 		var Y:Float = point.y - Camera.scroll.y;
-		getScreenXY(_point, Camera);
+		getScreenPosition(_point, Camera);
 		point.putWeak();
 		return (X > _point.x) && (X < _point.x + width) && (Y > _point.y) && (Y < _point.y + height);
 	}
@@ -710,7 +714,7 @@ class FlxObject extends FlxBasic
 	 * @param	Point		Takes a FlxPoint object and assigns the post-scrolled X and Y values of this object to it.
 	 * @return	The Point you passed in, or a new Point if you didn't pass one, containing the screen X and Y position of this object.
 	 */
-	public function getScreenXY(?point:FlxPoint, ?Camera:FlxCamera):FlxPoint
+	public function getScreenPosition(?point:FlxPoint, ?Camera:FlxCamera):FlxPoint
 	{
 		if (point == null)
 		{
@@ -720,7 +724,14 @@ class FlxObject extends FlxBasic
 		{
 			Camera = FlxG.camera;
 		}
-		return point.set(x - (Camera.scroll.x * scrollFactor.x), y - (Camera.scroll.y * scrollFactor.y));
+		
+		point.set(x, y);
+		if (pixelPerfectPosition)
+		{
+			point.floor();
+		}
+		
+		return point.subtract(Camera.scroll.x * scrollFactor.x, Camera.scroll.y * scrollFactor.y);
 	}
 	
 	/**
@@ -767,7 +778,7 @@ class FlxObject extends FlxBasic
 		{
 			Camera = FlxG.camera;
 		}
-		getScreenXY(_point, Camera);
+		getScreenPosition(_point, Camera);
 		return (_point.x + width > 0) && (_point.x < Camera.width) && (_point.y + height > 0) && (_point.y < Camera.height);
 	}
 	
