@@ -67,14 +67,6 @@ class FlxPointer
 	}
 	
 	/**
-	 * Returns a FlxPoint with this input's x and y.
-	 */
-	public inline function toPoint():FlxPoint
-	{
-		return FlxPoint.get(x, y);
-	}
-	
-	/**
 	 * Checks to see if some FlxObject overlaps this FlxObject or FlxGroup.
 	 * If the group has a LOT of things in it, it might be faster to use FlxG.overlaps().
 	 * WARNING: Currently tilemaps do NOT support screen space overlap checks!
@@ -123,6 +115,14 @@ class FlxPointer
 		return FlxStringUtil.getDebugString([ 
 			LabelValuePair.weak("x", x),
 			LabelValuePair.weak("y", y)]);
+	}
+	
+	/**
+	 * Returns a FlxPoint with this input's x and y.
+	 */
+	public inline function toPoint():FlxPoint
+	{
+		return FlxPoint.get(x, y);
 	}
 	
 	/**

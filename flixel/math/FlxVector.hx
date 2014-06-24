@@ -6,10 +6,7 @@ import flixel.util.FlxPool;
  */
 class FlxVector extends FlxPoint
 {
-	public static inline var EPSILON:Float = 0.0000001;
-	public static inline var EPSILON_SQUARED:Float = EPSILON * EPSILON;
-	
-	private static var _pool = new FlxPool<FlxVector>(FlxVector);
+	private static var pool = new FlxPool<FlxVector>(FlxVector);
 	
 	private static var _vector1:FlxVector = new FlxVector();
 	private static var _vector2:FlxVector = new FlxVector();
@@ -18,14 +15,11 @@ class FlxVector extends FlxPoint
 	/**
 	 * Recycle or create new FlxVector.
 	 * Be sure to put() them back into the pool after you're done with them!
-	 * 
-	 * @param	X		The X-coordinate of the point in space.
-	 * @param	Y		The Y-coordinate of the point in space.
 	 */
 	public static inline function get(X:Float = 0, Y:Float = 0):FlxVector
 	{
-		var vector = _pool.get().set(X, Y);
-		vector._inPool = false;
+		var vector = pool.get().set(X, Y);
+		vector.inPool = false;
 		return vector;
 	}
 	
@@ -34,10 +28,10 @@ class FlxVector extends FlxPoint
 	 */
 	override public function put():Void
 	{
-		if (!_inPool)
+		if (!inPool)
 		{
-			_inPool = true;
-			_pool.putUnsafe(this);
+			inPool = true;
+			pool.putUnsafe(this);
 		}
 	}
 	
@@ -50,21 +44,9 @@ class FlxVector extends FlxPoint
 	 */
 	public var dy(get, never):Float;
 	/**
-	 * Length of the vector
-	 */
-	public var length(get, set):Float;
-	/**
 	 * length of the vector squared
 	 */
 	public var lengthSquared(get, never):Float;
-	/**
-	 * The angle formed by the vector with the horizontal axis (in degrees)
-	 */
-	public var degrees(get, set):Float;
-	/**
-	 * The angle formed by the vector with the horizontal axis (in radians)
-	 */
-	public var radians(get, set):Float;
 	/**
 	 * The horizontal component of the right normal of the vector
 	 */
@@ -109,43 +91,6 @@ class FlxVector extends FlxPoint
 	}
 	
 	/**
-	 * Returns scaled copy of this vector.
-	 * 
-	 * @param	k - scale coefficient
-	 * @return	scaled vector
-	 */
-	public inline function scaleNew(k:Float):FlxVector
-	{
-		return clone().scale(k);
-	}
-	
-	/**
-	 * Return new vector which equals to sum of this vector and passed v vector.
-	 * 
-	 * @param	v	vector to add
-	 * @return	addition result
-	 */
-	public inline function addNew(v:FlxVector):FlxVector
-	{
-		var nv:FlxVector = clone();
-		nv.addPoint(v);
-		return nv;
-	}
-	
-	/**
-	 * Returns new vector which is result of subtraction of v vector from this vector.
-	 * 
-	 * @param	v	vector to subtract
-	 * @return	subtraction result
-	 */
-	public inline function subtractNew(v:FlxVector):FlxVector
-	{
-		var nv:FlxVector = clone();
-		nv.subtractPoint(v);
-		return clone();
-	}
-	
-	/**
 	 * Dot product between two vectors.
 	 * 
 	 * @param	v	vector to multiply
@@ -176,7 +121,7 @@ class FlxVector extends FlxPoint
 	 */
 	public inline function isPerpendicular(v:FlxVector):Bool
 	{
-		return Math.abs(dotProduct(v)) < EPSILON_SQUARED;
+		return Math.abs(dotProduct(v)) < FlxMath.EPSILON_SQUARED;
 	}
 	
 	/**
@@ -198,26 +143,7 @@ class FlxVector extends FlxPoint
 	 */
 	public inline function isParallel(v:FlxVector):Bool
 	{
-		return Math.abs(crossProductLength(v)) < EPSILON_SQUARED;
-	}
-	
-	/**
-	 * Check if this vector has zero length.
-	 * 
-	 * @return	true - if the vector is zero
-	 */
-	public inline function isZero():Bool
-	{
-		return (Math.abs(x) < EPSILON && Math.abs(y) < EPSILON);
-	}
-	
-	/**
-	 * Vector reset
-	 */
-	public inline function zero():FlxVector
-	{
-		x = y = 0;
-		return this;
+		return Math.abs(crossProductLength(v)) < FlxMath.EPSILON_SQUARED;
 	}
 	
 	/**
@@ -238,36 +164,7 @@ class FlxVector extends FlxPoint
 	 */
 	public inline function isNormalized():Bool
 	{
-		return Math.abs(lengthSquared - 1) < EPSILON_SQUARED;
-	}
-	
-	/**
-	 * Rotate the vector for a given angle.
-	 * 
-	 * @param	rads	angle to rotate
-	 * @return	rotated vector
-	 */
-	public inline function rotateByRadians(rads:Float):FlxVector
-	{
-		var s:Float = Math.sin(rads);
-		var c:Float = Math.cos(rads);
-		var tempX:Float = x;
-		
-		x = tempX * c - y * s;
-		y = tempX * s + y * c;
-		
-		return this;
-	}
-	
-	/**
-	 * Rotate the vector for a given angle.
-	 * 
-	 * @param	rads	angle to rotate
-	 * @return	rotated vector
-	 */
-	public inline function rotateByDegrees(degs:Float):FlxVector
-	{
-		return rotateByRadians(degs * FlxAngle.TO_RAD);
+		return Math.abs(lengthSquared - 1) < FlxMath.EPSILON_SQUARED;
 	}
 	
 	/**
@@ -319,11 +216,6 @@ class FlxVector extends FlxPoint
 		x *= -1;
 		y *= -1;
 		return this;
-	}
-	
-	public inline function negateNew():FlxVector
-	{
-		return clone().negate();
 	}
 	
 	/**
@@ -385,7 +277,7 @@ class FlxVector extends FlxPoint
 	public function ratio(a:FlxVector, b:FlxVector, v:FlxVector):Float
 	{
 		if (isParallel(v)) return Math.NaN;
-		if (lengthSquared < EPSILON_SQUARED || v.lengthSquared < EPSILON_SQUARED) return Math.NaN;
+		if (lengthSquared < FlxMath.EPSILON_SQUARED || v.lengthSquared < FlxMath.EPSILON_SQUARED) return Math.NaN;
 		
 		_vector1 = b.clone(_vector1);
 		_vector1.subtractPoint(a);
@@ -455,39 +347,6 @@ class FlxVector extends FlxPoint
 	}
 	
 	/**
-	 * Get the angle between vectors (in radians).
-	 * 
-	 * @param	v	second vector, which we find the angle
-	 * @return	the angle in radians
-	 */
-	public inline function radiansBetween(v:FlxVector):Float
-	{
-		_vector1 = clone(_vector1);
-		_vector2 = clone(_vector2);
-		
-		if (!isNormalized())
-		{
-			_vector1.normalize();
-		}
-		if (!v.isNormalized())
-		{
-			_vector2.normalize();
-		}
-		return Math.acos(_vector1.dotProduct(_vector2));
-	}
-	
-	/**
-	 * The angle between vectors (in degrees).
-	 * 
-	 * @param	v	second vector, which we find the angle
-	 * @return	the angle in radians
-	 */
-	public inline function degreesBetween(v:FlxVector):Float
-	{
-		return radiansBetween(v) * FlxAngle.TO_DEG;
-	}
-	
-	/**
 	 * The sign of half-plane of point with respect to the vector through the a and b points.
 	 * 
 	 * @param	a	start point of the wall-vector
@@ -503,24 +362,6 @@ class FlxVector extends FlxPoint
 		return Math.round(signFl / Math.abs(signFl));
 	}
 	
-	/**
-	 * The distance between points
-	 */
-	public inline function dist(v:FlxVector):Float
-	{
-		return Math.sqrt(distSquared(v));
-	}
-	
-	/**
-	 * The squared distance between points
-	 */
-	public inline function distSquared(v:FlxVector):Float
-	{
-		var dx:Float = v.x - x;
-		var dy:Float = v.y - y;
-		return (dx * dx + dy * dy);
-	}
-		
 	/**
 	 * Reflect the vector with respect to the normal of the "wall".
 	 * 
@@ -599,52 +440,9 @@ class FlxVector extends FlxPoint
 		return y / length;
 	}
 	
-	private inline function get_length():Float
-	{
-		return Math.sqrt(lengthSquared);
-	}
-	
-	private inline function set_length(l:Float):Float
-	{
-		if (!isZero())
-		{
-			var a:Float = radians;
-			x = l * Math.cos(a);
-			y = l * Math.sin(a);
-		}
-		return l;
-	}
-	
 	private inline function get_lengthSquared():Float
 	{
 		return x * x + y * y;
-	}
-	
-	private inline function get_degrees():Float
-	{
-		return radians * FlxAngle.TO_DEG;
-	}
-	
-	private inline function set_degrees(degs:Float):Float
-	{
-		radians = degs * FlxAngle.TO_RAD;
-		return degs;
-	}
-	
-	private function get_radians():Float
-	{
-		if (isZero()) return 0;
-		
-		return Math.atan2(y, x);
-	}
-	
-	private inline function set_radians(rads:Float):Float
-	{
-		var len:Float = length;
-		
-		x = len * Math.cos(rads);
-		y = len * Math.sin(rads);
-		return rads;
 	}
 	
 	private inline function get_rx():Float

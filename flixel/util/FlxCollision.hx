@@ -10,6 +10,8 @@ import flixel.FlxSprite;
 import flixel.group.FlxGroup;
 import flixel.math.FlxAngle;
 import flixel.math.FlxMath;
+import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
 import flixel.tile.FlxTileblock;
 
 /**
@@ -213,10 +215,13 @@ class FlxCollision
 	 * @param	AlphaTolerance	The alpha tolerance level above which pixels are counted as colliding. Default to 1 (anything that is not fully invisible).
 	 * @return	Boolean True if the x/y point collides with the FlxSprite, false if not
 	 */
-	public static function pixelPerfectPointCheck(PointX:Int, PointY:Int, Target:FlxSprite, AlphaTolerance:Int = 1):Bool
+	public static function pixelPerfectPointCheck(point:FlxPoint, Target:FlxSprite, AlphaTolerance:Int = 1):Bool
 	{
 		// Intersect check
-		if (FlxMath.pointInCoordinates(PointX, PointY, Math.floor(Target.x), Math.floor(Target.y), Std.int(Target.width), Std.int(Target.height)) == false)
+		var targetRect:FlxRect = Target.toRect();
+		targetRect.floor();
+		
+		if (!point.inRect(targetRect))
 		{
 			return false;
 		}
@@ -228,21 +233,17 @@ class FlxCollision
 		// How deep is pointX/Y within the rect?
 		var test:BitmapData = Target.framePixels;
 		
-		var pixelAlpha = FlxColor.fromInt(test.getPixel32(Math.floor(PointX - Target.x), Math.floor(PointY - Target.y))).alpha;
+		var pixelAlpha = FlxColor.fromInt(test.getPixel32(Math.floor(point.x - Target.x), Math.floor(point.y - Target.y))).alpha;
 		
 		#if FLX_RENDER_TILE
 		pixelAlpha = Std.int(pixelAlpha * Target.alpha);
 		#end
 		
+		targetRect.put();
+		point.putWeak();
+		
 		// How deep is pointX/Y within the rect?
-		if (pixelAlpha >= AlphaTolerance)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		return (pixelAlpha >= AlphaTolerance);
 	}
 	
 	/**
