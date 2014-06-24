@@ -224,6 +224,23 @@ class FlxAngle
 	#end
 	
 	/**
+	 * Translate an object's facing to angle
+	 */
+	public static inline function angleFromFacing(Sprite:FlxSprite, AsDegrees:Bool = false):Float
+	{		
+		var degrees = switch (Sprite.facing) 
+		{
+			case FlxObject.LEFT: 180;
+			case FlxObject.RIGHT: 0;
+			case FlxObject.UP: -90;
+			case FlxObject.DOWN: 90;
+			default: 0; //TODO will there be cases like TOP_LEFT?
+		}
+		return AsDegrees ? degrees : asRadians(degrees);
+	}
+	
+	
+	/**
 	 * Convert polar coordinates (radius + angle) to cartesian coordinates (x + y)
 	 * 
 	 * @param	Radius	The radius
