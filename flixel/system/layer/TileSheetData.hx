@@ -206,15 +206,15 @@ class TileSheetData implements IFlxDestroyable
 		framesArr = null;
 	}
 	
-	#if FLX_RENDER_TILE
 	public function onContext(bitmap:BitmapData):Void
 	{
 		this.bitmap = bitmap;
+		#if FLX_RENDER_TILE
 		var newSheet:TileSheetExt = new TileSheetExt(bitmap);
 		newSheet.rebuildFromOld(tileSheet);
 		tileSheet = newSheet;
+		#end
 	}
-	#end
 	
 	/**
 	 * Parses provided TexturePackerData object and returns generated FlxSpriteFrames object
