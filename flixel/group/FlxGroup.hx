@@ -232,19 +232,15 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 * WARNING: If this function needs to create a new object, and no object class was provided, 
 	 * it will return null instead of a valid object!
 	 * 
-	 * @param	ObjectClass		The class type you want to recycle (e.g. FlxSprite, EvilRobot, etc). Do NOT "new" the class in the parameter!
-	 * @param 	ContructorArgs  An array of arguments passed into a newly object if there aren't any dead members to recycle. 
-	 * @param 	Force           Force the object to be an ObjectClass and not a super class of ObjectClass. 
-	 * @param	Revive			Whether recycled members should automatically be revived (by calling revive() on them)
-	 * @return	A reference to the object that was created.  Don't forget to cast it back to the Class you want (e.g. myObject = myGroup.recycle(myObjectClass) as myObjectClass;).
+	 * @param   ObjectClass     The class type you want to recycle (e.g. FlxSprite, EvilRobot, etc).
+	 * @param   ObjectFactory   Optional factory function to create a new object if there aren't any dead members to recycle.
+	 *                          If null, Type.createInstance() is used which requires the class to have no constructor parameters.
+	 * @param   Force           Force the object to be an ObjectClass and not a super class of ObjectClass. 
+	 * @param   Revive          Whether recycled members should automatically be revived (by calling revive() on them)
+	 * @return  A reference to the object that was created.
 	 */
-	public function recycle(?ObjectClass:Class<T>, ?ContructorArgs:Array<Dynamic>, Force:Bool = false, Revive:Bool = true):T
+	public function recycle(?ObjectClass:Class<T>, ?ObjectFactory:Void->T, Force:Bool = false, Revive:Bool = true):T
 	{
-		if (ContructorArgs == null)
-		{
-			ContructorArgs = [];
-		}
-		
 		var basic:FlxBasic = null;
 		
 		// roatated recycling
@@ -253,12 +249,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			// create new instance
 			if (length < maxSize)
 			{
-				if (ObjectClass == null)
-				{
-					return null;
-				}
-				
-				return add(Type.createInstance(ObjectClass, ContructorArgs));
+				return add(recycleCreateObject(ObjectClass, ObjectFactory));
 			}
 			// get the next member if at capacity
 			else
@@ -291,13 +282,25 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 				}
 				return cast basic;
 			}
-			if (ObjectClass == null)
-			{
-				return null;
-			}
 			
-			return add(Type.createInstance(ObjectClass, ContructorArgs));
+			return add(recycleCreateObject(ObjectClass, ObjectFactory));
 		}
+	}
+	
+	private inline function recycleCreateObject(?ObjectClass:Class<T>, ?ObjectFactory:Void->T):T
+	{
+		var object:T = null;
+		
+		if (ObjectFactory != null)
+		{
+			object = ObjectFactory();
+		}
+		else if (ObjectClass != null)
+		{
+			object = Type.createInstance(ObjectClass, []); 
+		}
+		
+		return object;
 	}
 	
 	/**

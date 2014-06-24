@@ -9,8 +9,18 @@ import flixel.math.FlxPoint;
  */
 class FlxRangeBounds<T>
 {
+	/**
+	 * The beginning minimum and maximum values of this property.
+	 */
 	public var start:FlxBounds<T>;
+	/**
+	 * The ending minimum and maximum values of this property.
+	 */
 	public var end:FlxBounds<T>;
+	/**
+	 * A flag that can be used to toggle the use of this property.
+	 */
+	public var active:Bool = false;
 	
 	/**
 	 * Create a new RangeBounds object. Must be typed, e.g. var myRangeBounds = new RangeBounds<Float>(0, 0, 0, 0);

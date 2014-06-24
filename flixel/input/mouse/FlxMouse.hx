@@ -153,7 +153,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 		#if (flash10_2 && !FLX_NO_NATIVE_CURSOR)
 		if (_cursor != null)
 		{
-			cursorContainer.removeChild(_cursor);
+			FlxDestroyUtil.removeChild(cursorContainer, _cursor);
 		}
 		#end
 		
@@ -225,8 +225,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 			}
 			else
 			{
-				cursorContainer.removeChild(_cursor);
-				_cursor = null;
+				_cursor = FlxDestroyUtil.removeChild(cursorContainer, _cursor);
 			}
 		}
 	}

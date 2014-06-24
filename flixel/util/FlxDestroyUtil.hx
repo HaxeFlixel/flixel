@@ -2,6 +2,8 @@ package flixel.util;
 
 import flixel.util.FlxPool;
 import flash.display.BitmapData;
+import flash.display.DisplayObject;
+import flash.display.DisplayObjectContainer;
 
 class FlxDestroyUtil
 {
@@ -69,10 +71,17 @@ class FlxDestroyUtil
 	 * @param	Bitmap	A BitampData to be disposed if not null
 	 * @return 	null
 	 */
-	public static function dispose(Bitmap:BitmapData):BitmapData
+	public static function dispose(bitmapData:BitmapData):BitmapData
 	{
-		if (Bitmap != null)
-			Bitmap.dispose();
+		if (bitmapData != null)
+			bitmapData.dispose();
+		return null;
+	}
+	
+	public static function removeChild<T:DisplayObject>(parent:DisplayObjectContainer, child:T):T
+	{
+		if (parent != null && child != null && parent.contains(child))
+			parent.removeChild(child);
 		return null;
 	}
 	#end

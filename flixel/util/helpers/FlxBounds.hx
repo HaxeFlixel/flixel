@@ -8,8 +8,18 @@ import flixel.math.FlxPoint;
  */
 class FlxBounds<T>
 {
+	/**
+	 * The minimum value of this property.
+	 */
 	public var min:T;
+	/**
+	 * The maximum value of this property.
+	 */
 	public var max:T;
+	/**
+	 * A flag that can be used to toggle the use of this property.
+	 */
+	public var active:Bool = false;
 	
 	/**
 	 * Create a new Bounds object. Must be typed, e.g. var myBounds = new Bounds<Float>(0, 0);
@@ -43,9 +53,9 @@ class FlxBounds<T>
 	 * @param	OtherFlxBounds  The other FlxBounds to compare to this one.
 	 * @return	True if the FlxBounds have the same min and max value, false otherwise.
 	 */
-	public inline function equals(OtherBounds:FlxBounds<T>):Bool
+	public inline function equals(OtherFlxBounds:FlxBounds<T>):Bool
 	{
-		return min == OtherBounds.min && max == OtherBounds.max;
+		return min == OtherFlxBounds.min && max == OtherFlxBounds.max;
 	}
 	
 	/**
