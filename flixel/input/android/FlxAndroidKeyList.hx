@@ -1,12 +1,10 @@
 package flixel.input.android;
 
+#if android
 import flixel.FlxG;
 import flixel.input.FlxInput;
 import flixel.input.FlxInput.FlxInputState;
-
-#if android
 import flixel.input.android.FlxAndroidKeys;
-#end
 
 /**
  * A helper class for keyboard input.
@@ -14,7 +12,6 @@ import flixel.input.android.FlxAndroidKeys;
  */
 class FlxAndroidKeyList
 {
-	#if android
 	private var checkStatus:FlxInputState;
 	
 	public function new(checkStatus:FlxInputState)
@@ -50,5 +47,5 @@ class FlxAndroidKeyList
 	{
 		return FlxG.android.checkStatus(keyCode, checkStatus);
 	}
-	#end
 }
+#end

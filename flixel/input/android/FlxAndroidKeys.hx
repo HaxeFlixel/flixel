@@ -36,7 +36,9 @@ class FlxAndroidKeys implements IFlxInputManager
 	 * Helper class to check if a keys was just released.
 	 */
 	public var justReleased:FlxAndroidKeyList;
-	
+	/**
+	 * Internal storage of input keys.
+	 */
 	@:allow(flixel.input.android.FlxAndroidKeyList.get_ANY)
 	private var _keyList:Array<FlxAndroidKeyInput>;
 	
@@ -266,7 +268,7 @@ class FlxAndroidKeys implements IFlxInputManager
 			event.stopPropagation();
 		}
 		
-		if (enabled) 
+		if (enabled)
 		{
 			updateKeyStates(event.keyCode, false);
 		}
