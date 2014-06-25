@@ -76,7 +76,7 @@ class FlxAndroidKeys implements IFlxInputManager
 	/**
 	 * Get the first key which is currently pressed.
 	 * 
-	 * @return	The first pressed FlxKey
+	 * @return	The first pressed FlxAndroidKey
 	 */
 	public function firstPressed():FlxAndroidKey
 	{
@@ -152,7 +152,7 @@ class FlxAndroidKeys implements IFlxInputManager
 	}
 
 	/**
-	 * Get an Array of FlxKey that are in a pressed state
+	 * Get an Array of FlxAndroidKey that are in a pressed state
 	 * 
 	 * @return	Array of keys that are currently pressed.
 	 */
@@ -198,9 +198,9 @@ class FlxAndroidKeys implements IFlxInputManager
 		_keyList = new Array<FlxAndroidKeyInput>();
 		
 		// BACK button
-		_keyList[27] = new FlxAndroidKeyInput(27);
+		_keyList.push(new FlxAndroidKeyInput(27));
 		// MENU button
-		_keyList[16777234] = new FlxAndroidKeyInput(16777234);
+		_keyList.push(new FlxAndroidKeyInput(16777234));
 		
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
