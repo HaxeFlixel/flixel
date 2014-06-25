@@ -249,7 +249,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			// create new instance
 			if (length < maxSize)
 			{
-				return add(recycleCreateObject(ObjectClass, ObjectFactory));
+				return recycleCreateObject(ObjectClass, ObjectFactory);
 			}
 			// get the next member if at capacity
 			else
@@ -283,7 +283,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 				return cast basic;
 			}
 			
-			return add(recycleCreateObject(ObjectClass, ObjectFactory));
+			return recycleCreateObject(ObjectClass, ObjectFactory);
 		}
 	}
 	
@@ -293,11 +293,11 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		
 		if (ObjectFactory != null)
 		{
-			object = ObjectFactory();
+			add(object = ObjectFactory());
 		}
 		else if (ObjectClass != null)
 		{
-			object = Type.createInstance(ObjectClass, []); 
+			add(object = Type.createInstance(ObjectClass, [])); 
 		}
 		
 		return object;
