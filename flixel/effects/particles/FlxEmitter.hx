@@ -180,7 +180,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		y = Y;
 		
 		velocity = new FlxPointRangeBounds(-100, -100, 100, 100);
-		speed = new FlxRangeBounds<Float>(0, 0);
+		speed = new FlxRangeBounds<Float>(0, 100);
 		angularVelocity = new FlxRangeBounds<Float>(0, 0);
 		angle = new FlxRangeBounds<Float>(0);
 		launchAngle = new FlxBounds<Float>(-180, 180);
