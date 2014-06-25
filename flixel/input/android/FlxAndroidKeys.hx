@@ -9,6 +9,7 @@ import flixel.input.FlxInput;
 /**
  * Keeps track of Android system key presses (Back/Menu)
  */
+@:allow(flixel.input.android.FlxAndroidKeyList)
 class FlxAndroidKeys implements IFlxInputManager
 {
 	/**
@@ -198,9 +199,9 @@ class FlxAndroidKeys implements IFlxInputManager
 		_keyList = new Array<FlxAndroidKeyInput>();
 		
 		// BACK button
-		_keyList.push(new FlxAndroidKeyInput(27));
+		_keyList[27] = new FlxAndroidKeyInput(27);
 		// MENU button
-		_keyList.push(new FlxAndroidKeyInput(16777234));
+		_keyList[16777234] = new FlxAndroidKeyInput(16777234);
 		
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
