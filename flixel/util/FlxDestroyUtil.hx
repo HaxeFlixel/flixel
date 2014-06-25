@@ -16,7 +16,9 @@ class FlxDestroyUtil
 	public static function destroy<T:IFlxDestroyable>(object:Null<IFlxDestroyable>):T
 	{
 		if (object != null)
+		{
 			object.destroy(); 
+		}
 		return null;
 	}
 	
@@ -31,6 +33,7 @@ class FlxDestroyUtil
 		if (array != null)
 		{
 			for (e in array) destroy(e);
+			array.splice(0, array.length);
 		}
 		return null;
 	}
@@ -44,7 +47,9 @@ class FlxDestroyUtil
 	public static function put<T:IFlxPooled>(object:IFlxPooled):T
 	{
 		if (object != null)
+		{
 			object.put();
+		}
 		return null;
 	}
 	
@@ -60,6 +65,7 @@ class FlxDestroyUtil
 		if (array != null)
 		{
 			for (e in array) put(e);
+			array.splice(0, array.length);
 		}
 		return null;
 	}
@@ -74,14 +80,18 @@ class FlxDestroyUtil
 	public static function dispose(bitmapData:BitmapData):BitmapData
 	{
 		if (bitmapData != null)
+		{
 			bitmapData.dispose();
+		}
 		return null;
 	}
 	
 	public static function removeChild<T:DisplayObject>(parent:DisplayObjectContainer, child:T):T
 	{
 		if (parent != null && child != null && parent.contains(child))
+		{
 			parent.removeChild(child);
+		}
 		return null;
 	}
 	#end
