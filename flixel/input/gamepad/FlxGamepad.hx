@@ -1,9 +1,9 @@
 package flixel.input.gamepad;
 
-import flixel.FlxG;
 import flixel.input.FlxInput.FlxInputState;
-import flixel.util.FlxDestroyUtil;
 import flixel.math.FlxPoint;
+import flixel.math.FlxVector;
+import flixel.util.FlxDestroyUtil;
 
 #if flash
 import flash.ui.GameInputControl;
@@ -21,7 +21,7 @@ class FlxGamepad implements IFlxDestroyable
 	public static inline var JUST_PRESSED:Int = 2;
 	
 	public var id(default, null):Int;
-	public var buttons(default, null):Array<FlxGamepadButton>;
+	public var buttons(default, null):Array<FlxGamepadButton> = [];
 	public var connected(default, null):Bool = true;
 	
 	/**
@@ -29,13 +29,14 @@ class FlxGamepad implements IFlxDestroyable
 	 * Less this number the more gamepad is sensible. Should be between 0.0 and 1.0.
 	 */
 	public var deadZone:Float = 0.15;
-	
 	/**
-	 * DPAD
+	 * Which dead zone mode to use for analog sticks.
 	 */
+	public var deadZoneMode:FlxGamepadDeadZoneMode = INDEPENDANT_AXES;
+	
 	#if !flash
-	public var hat(default, null):FlxPoint;
-	public var ball(default, null):FlxPoint;
+	public var hat(default, null):FlxPoint = FlxPoint.get();
+	public var ball(default, null):FlxPoint = FlxPoint.get();
 	
 	public var dpadUp(get, null):Bool = false;
 	public var dpadDown(get, null):Bool = false;
@@ -46,7 +47,7 @@ class FlxGamepad implements IFlxDestroyable
 	/**
 	 * Axis array is read-only, use "getAxis" function for deadZone checking.
 	 */
-	private var axis:Array<Float>;
+	private var axis:Array<Float> = [for (i in 0...6) 0];
 	
 	#if flash
 	private var _device:GameInputDevice; 
@@ -54,19 +55,12 @@ class FlxGamepad implements IFlxDestroyable
 	
 	public function new(ID:Int, GlobalDeadZone:Float = 0) 
 	{
-		buttons = [];
-		axis = [for (i in 0...6) 0];
 		id = ID;
 		
 		if (GlobalDeadZone != 0)
 		{
 			deadZone = GlobalDeadZone;
 		}
-		
-		#if !flash
-		ball = FlxPoint.get();
-		hat = FlxPoint.get();
-		#end
 	}
 	
 	public function getButton(ButtonID:Int):FlxGamepadButton
@@ -331,29 +325,34 @@ class FlxGamepad implements IFlxDestroyable
 	}
 	
 	/**
-	 * Gets the value of the specified axis - DOES NOT WORK WELL ON 
-	 * THE FLASH TARGET, use getXAxis() and getYAxis() instead.
+	 * Gets the value of the specified axis - use this only for things like
+	 * XboxButtonID.LEFT_TRIGGER, use getXAxis() / getYAxis() for analog sticks!
 	 */
 	public inline function getAxis(AxisID:Int):Float
 	{
-		return getAxisValue(AxisID);
+		var axisValue = getAxisValue(AxisID);
+		if (Math.abs(axisValue) > deadZone)
+		{
+			return axisValue;
+		}
+		return 0;
 	}
 	
 	/**
 	 * Gets the value of the specified X axis.
 	 */
-	public inline function getXAxis(AxisID:Int):Float
+	public inline function getXAxis(Axes:FlxGamepadAnalogStick):Float
 	{
-		return getAxisValue(AxisID);
+		return getAnalogueAxisValue(FlxAxes.X, Axes);
 	}
 	
 	/**
 	 * Gets the value of the specified Y axis - 
 	 * should be used in flash to correct the inverted y axis.
 	 */
-	public function getYAxis(AxisID:Int):Float
+	public function getYAxis(Axes:FlxGamepadAnalogStick):Float
 	{
-		var axisValue = getAxisValue(AxisID);
+		var axisValue = getAnalogueAxisValue(FlxAxes.Y, Axes);
 		
 		// the y axis is inverted on the Xbox gamepad in flash for some reason - but not in Chrome!
 		// WARNING: this causes unnecessary string allocations - we should remove this hack when possible.
@@ -434,9 +433,32 @@ class FlxGamepad implements IFlxDestroyable
 		axisValue = axis[AxisID];
 		#end
 		
-		if (Math.abs(axisValue) > deadZone)
+		return axisValue;
+	}
+	
+	private function getAnalogueAxisValue(Axis:FlxAxes, Axes:FlxGamepadAnalogStick):Float
+	{
+		if (deadZoneMode == CIRCULAR)
 		{
-			return axisValue;
+			var xAxis = getAxisValue(Axes.get(FlxAxes.X));
+			var yAxis = getAxisValue(Axes.get(FlxAxes.Y));
+			
+			var vector = FlxVector.get(xAxis, yAxis);
+			var length = vector.length;
+			vector.put();
+			
+			if (length > deadZone)
+			{
+				return (Axis == FlxAxes.X) ? xAxis : yAxis;
+			}
+		}
+		else
+		{
+			var axisValue = getAxisValue(Axes.get(Axis));
+			if (Math.abs(axisValue) > deadZone)
+			{
+				return axisValue;
+			}
 		}
 		
 		return 0;
@@ -448,4 +470,26 @@ class FlxGamepad implements IFlxDestroyable
 	private inline function get_dpadLeft():Bool  { return hat.x < 0; }
 	private inline function get_dpadRight():Bool { return hat.x > 0; }
 	#end
+}
+
+enum FlxGamepadDeadZoneMode
+{
+	/**
+	 * The value of each axis is compared to the deadzone individually.
+	 * Works better when an analog stick is used like arrow keys for 4-directional-input.
+	 */
+	INDEPENDANT_AXES;
+	/**
+	 * X and y are combined against the deadzone combined.
+	 * Works better when an analog stick is used as a two-dimensional control surface.
+	 */
+	CIRCULAR;
+}
+
+typedef FlxGamepadAnalogStick = Map<FlxAxes, Int>;
+
+enum FlxAxes
+{
+	X;
+	Y;
 }

@@ -154,6 +154,8 @@ class FlxTilemapBuffer
 		}
 		
 		width = Std.int(columns * TileWidth * ScaleX);
+		
+		dirty = true;
 	}
 	
 	public function updateRows(TileHeight:Int, HeightInTiles:Int, ScaleY:Float = 1.0, ?Camera:FlxCamera):Void
@@ -175,7 +177,9 @@ class FlxTilemapBuffer
 			rows = HeightInTiles;
 		}
 		
-		height = Std.int(rows * TileHeight * ScaleY);
+		height = Std.int(rows * TileHeight * ScaleY);	
+		
+		dirty = true;
 	}
 
 	/**

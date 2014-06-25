@@ -201,7 +201,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 			// Figure out the map dimensions based on the data string
 			_data = new Array<Int>();
 			var columns:Array<String>;
-			var rows:Array<String> = cast (MapData, String).split("\n");
+			var rows:Array<String> = StringTools.trim(cast (MapData, String)).split("\n");
 			heightInTiles = rows.length;
 			widthInTiles = 0;
 			var row:Int = 0;

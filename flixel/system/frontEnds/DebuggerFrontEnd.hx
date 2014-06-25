@@ -2,7 +2,7 @@ package flixel.system.frontEnds;
 
 import flash.display.BitmapData;
 import flixel.FlxG;
-import flixel.input.keyboard.FlxKeyName;
+import flixel.input.keyboard.FlxKey;
 import flixel.system.debug.Tracker;
 import flixel.system.debug.Window;
 import flixel.system.ui.FlxSystemButton;
@@ -22,7 +22,7 @@ class DebuggerFrontEnd
 	 * The key codes used to toggle the debugger (see FlxG.keys for the keys available).
 	 * Default keys: ` and \. Set to null to deactivate.
 	 */
-	public var toggleKeys:Array<FlxKeyName> = [GRAVEACCENT, BACKSLASH];
+	public var toggleKeys:Array<FlxKey> = [GRAVEACCENT, BACKSLASH];
 	#end
 	
 	/**

@@ -20,6 +20,7 @@ import flixel.math.FlxAngle;
 import flixel.util.FlxColor;
 import flixel.math.FlxRandom;
 import flixel.util.FlxArrayUtil;
+import openfl.Assets;
 using StringTools;
 
 #if !FLX_NO_DEBUG
@@ -355,6 +356,10 @@ class FlxGame extends Sprite
 		
 		// make sure the cursor etc are properly scaled from the start
 		resizeGame(FlxG.stage.stageWidth, FlxG.stage.stageHeight);
+		
+		#if !bitfive
+		Assets.addEventListener(Event.CHANGE, FlxG.bitmap.onAssetsReload);
+		#end
 	}
 	
 	private function onFocus(_):Void
