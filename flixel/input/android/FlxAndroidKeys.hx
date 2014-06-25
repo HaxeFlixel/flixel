@@ -16,12 +16,14 @@ class FlxAndroidKeys implements IFlxInputManager
 	 * Total amount of keys.
 	 */
 	private static inline var TOTAL:Int = 2;
-	
 	/**
 	 * Whether or not android key input is currently enabled
 	 */
 	public var enabled:Bool = true;
-	
+	/**
+	 * Whether or not the back button is allowed to perform its default back action.
+	 */
+	public var preventDefaultBackAction:Bool = false;
 	/**
 	 * Helper class to check if a keys is pressed.
 	 */
@@ -258,6 +260,12 @@ class FlxAndroidKeys implements IFlxInputManager
 	 */
 	private function onKeyUp(event:KeyboardEvent):Void
 	{
+		if (preventDefaultBackAction && event.keyCode == FlxAndroidKey.BACK)
+		{
+			event.stopImmediatePropagation();
+			event.stopPropagation();
+		}
+		
 		if (enabled) 
 		{
 			updateKeyStates(event.keyCode, false);
