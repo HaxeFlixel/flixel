@@ -1,4 +1,5 @@
 package flixel.input.android;
+import flixel.util.FlxArrayUtil;
 
 #if android
 import flash.events.KeyboardEvent;
@@ -40,8 +41,7 @@ class FlxAndroidKeys implements IFlxInputManager
 	/**
 	 * Internal storage of input keys.
 	 */
-	private var _keyList:Map<Int, FlxAndroidKeyInput>;
-	private var _keyIterator:Iterator<FlxAndroidKeyInput>;
+	private var _keyList:Array<FlxAndroidKeyInput>;
 	
 	/**
 	 * Check to see if at least one key from an array of keys is pressed.
@@ -86,7 +86,7 @@ class FlxAndroidKeys implements IFlxInputManager
 	 */
 	public function firstPressed():FlxAndroidKey
 	{
-		for (key in _keyIterator)
+		for (key in _keyList)
 		{
 			if (key != null && key.pressed)
 			{
@@ -103,7 +103,7 @@ class FlxAndroidKeys implements IFlxInputManager
 	 */
 	public function firstJustPressed():FlxAndroidKey
 	{
-		for (key in _keyIterator)
+		for (key in _keyList)
 		{
 			if (key != null && key.justPressed)
 			{
@@ -120,7 +120,7 @@ class FlxAndroidKeys implements IFlxInputManager
 	 */
 	public function firstJustReleased():FlxAndroidKey
 	{
-		for (key in _keyIterator)
+		for (key in _keyList)
 		{
 			if (key != null && key.justReleased)
 			{
@@ -139,7 +139,7 @@ class FlxAndroidKeys implements IFlxInputManager
 	 */
 	public function checkStatus(KeyCode:FlxAndroidKey, Status:FlxInputState):Bool
 	{
-		var key:FlxAndroidKeyInput = _keyList.get(KeyCode);
+		var key:FlxAndroidKeyInput = new FlxAndroidKeyInput(KeyCode);
 		
 		if (key != null)
 		{
@@ -167,7 +167,7 @@ class FlxAndroidKeys implements IFlxInputManager
 	{
 		var keysDown = new Array<FlxAndroidKeyInput>();
 		
-		for (key in _keyIterator)
+		for (key in _keyList)
 		{
 			if (key != null && key.pressed)
 			{
@@ -182,7 +182,7 @@ class FlxAndroidKeys implements IFlxInputManager
 	 */
 	public function destroy():Void
 	{
-		_keyList = FlxDestroyUtil.destroyMap(_keyList);
+		_keyList = FlxDestroyUtil.destroyArray(_keyList);
 	}
 	
 	/**
@@ -190,7 +190,7 @@ class FlxAndroidKeys implements IFlxInputManager
 	 */
 	public function reset():Void
 	{
-		for (key in _keyIterator)
+		for (key in _keyList)
 		{
 			if (key != null)
 			{
@@ -202,15 +202,12 @@ class FlxAndroidKeys implements IFlxInputManager
 	@:allow(flixel.FlxG)
 	private function new()
 	{
-		_keyList = new Map<Int, FlxAndroidKeyInput>();
+		_keyList = new Array<FlxAndroidKeyInput>();
 		
 		// BACK button
-		_keyList.set(27, new FlxAndroidKeyInput(27));
+		_keyList.push(new FlxAndroidKeyInput(27));
 		// MENU button
-		_keyList.set(16777234, new FlxAndroidKeyInput(16777234));
-		
-		// Store iterator to prevent garbage generation.
-		_keyIterator = _keyList.iterator();
+		_keyList.push(new FlxAndroidKeyInput(16777234));
 		
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
@@ -224,7 +221,7 @@ class FlxAndroidKeys implements IFlxInputManager
 	 */
 	private function update():Void
 	{
-		for (key in _keyIterator)
+		for (key in _keyList)
 		{
 			if (key != null) 
 			{
@@ -247,9 +244,11 @@ class FlxAndroidKeys implements IFlxInputManager
 			return false;
 		}
 		
-		for (code in KeyArray)
+		var key:FlxAndroidKeyInput = null;
+		
+		for (checkKey in KeyArray)
 		{
-			var key:FlxAndroidKeyInput = _keyList.get(code);
+			key = getKey(checkKey);
 			
 			if (key != null)
 			{
@@ -319,7 +318,7 @@ class FlxAndroidKeys implements IFlxInputManager
 	 */
 	private inline function updateKeyStates(KeyCode:Int, Down:Bool):Void
 	{
-		var key:FlxAndroidKeyInput = _keyList.get(KeyCode);
+		var key:FlxAndroidKeyInput = getKey(KeyCode);
 		
 		if (key != null) 
 		{
@@ -332,6 +331,23 @@ class FlxAndroidKeys implements IFlxInputManager
 				key.release();
 			}
 		}
+	}
+	
+	/**
+	 * Return a key from the key list, if found. Will return null if not found.
+	 */
+	@:allow(flixel.input.android.FlxAndroidKeyList.get_ANY())
+	private function getKey(KeyCode:Int):FlxAndroidKeyInput
+	{
+		for (key in _keyList)
+		{
+			if (key.ID == KeyCode)
+			{
+				return key;
+			}
+		}
+		
+		return null;
 	}
 	
 	private inline function onFocus():Void {}

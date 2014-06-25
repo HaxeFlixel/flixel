@@ -7,7 +7,7 @@ import flixel.input.FlxSwipe;
 import flixel.util.FlxDestroyUtil;
 import flixel.math.FlxPoint;
 
-class FlxMouseButton extends FlxInput<Int> implements IFlxDestroyable
+class FlxMouseButton extends FlxInput<Int>
 {
 	/**
 	 * These IDs are negative to avoid overlaps with possible touch point IDs.
@@ -37,7 +37,7 @@ class FlxMouseButton extends FlxInput<Int> implements IFlxDestroyable
 		}
 	}
 	
-	public inline function destroy():Void
+	override public inline function destroy():Void
 	{
 		justPressedPosition = FlxDestroyUtil.put(justPressedPosition);
 	}

@@ -123,7 +123,7 @@ class FlxKeyList
 		
 		while (keyCode-- >= 0)
 		{
-			key = FlxG.keys._keyList.get(keyCode);
+			key = FlxG.keys.getKey(keyCode);
 			
 			if (key != null)
 			{

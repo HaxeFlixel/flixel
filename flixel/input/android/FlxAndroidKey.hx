@@ -20,7 +20,7 @@ abstract FlxAndroidKey(Int) from Int to Int
 	var BACK           = 27;
 	
 	@:from
-	public static inline function fromString(s:String)
+	public static inline function fromString(s:String):FlxAndroidKey
 	{
 		s = s.toUpperCase();
 		return keyNameMap.exists(s) ? keyNameMap.get(s) : NONE;
