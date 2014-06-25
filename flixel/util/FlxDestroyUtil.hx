@@ -43,6 +43,22 @@ class FlxDestroyUtil
 	}
 	
 	/**
+	 * Remvoes all elements from an array, always returns null.
+	 * 
+	 * @param   map   A Map to clear.
+	 * @return  null
+	 */
+	public static function destroyMap<T1, T2>(map:Map<T1, T2>):Map<T1, T2>
+	{
+		for (key in map.keys())
+		{
+			map.remove(key);
+		}
+		
+		return null;
+	}
+	
+	/**
 	 * Checks if an object is not null before putting it back into the pool, always returns null.
 	 * 
 	 * @param	object	An IFlxPooled object that will be put back into the pool if it's not null

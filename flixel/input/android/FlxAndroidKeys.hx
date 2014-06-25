@@ -5,6 +5,7 @@ import flash.events.KeyboardEvent;
 import flash.Lib;
 import flixel.FlxG;
 import flixel.input.FlxInput;
+import flixel.util.FlxDestroyUtil;
 
 /**
  * Keeps track of Android system key presses (Back/Menu)
@@ -39,8 +40,8 @@ class FlxAndroidKeys implements IFlxInputManager
 	/**
 	 * Internal storage of input keys.
 	 */
-	@:allow(flixel.input.android.FlxAndroidKeyList.get_ANY)
-	private var _keyList:Array<FlxAndroidKeyInput>;
+	private var _keyList:Map<Int, FlxAndroidKeyInput>;
+	private var _keyIterator:Iterator<FlxAndroidKeyInput>;
 	
 	/**
 	 * Check to see if at least one key from an array of keys is pressed.
@@ -85,7 +86,7 @@ class FlxAndroidKeys implements IFlxInputManager
 	 */
 	public function firstPressed():FlxAndroidKey
 	{
-		for (key in _keyList)
+		for (key in _keyIterator)
 		{
 			if (key != null && key.pressed)
 			{
@@ -102,7 +103,7 @@ class FlxAndroidKeys implements IFlxInputManager
 	 */
 	public function firstJustPressed():FlxAndroidKey
 	{
-		for (key in _keyList)
+		for (key in _keyIterator)
 		{
 			if (key != null && key.justPressed)
 			{
@@ -119,7 +120,7 @@ class FlxAndroidKeys implements IFlxInputManager
 	 */
 	public function firstJustReleased():FlxAndroidKey
 	{
-		for (key in _keyList)
+		for (key in _keyIterator)
 		{
 			if (key != null && key.justReleased)
 			{
@@ -130,15 +131,16 @@ class FlxAndroidKeys implements IFlxInputManager
 	}
 	
 	/**
-	 * Check the status of a single of key
+	 * Check the status of a single of key.
 	 * 
-	 * @param	KeyCode		Index into _keyList array.
-	 * @param	Status		The key state to check for
-	 * @return	Whether the provided key has the specified status
+	 * @param	KeyCode		KeyCode to be checked.
+	 * @param	Status		The key state to check for.
+	 * @return	Whether the provided key has the specified status.
 	 */
 	public function checkStatus(KeyCode:FlxAndroidKey, Status:FlxInputState):Bool
 	{
-		var key:FlxAndroidKeyInput = _keyList[KeyCode];
+		var key:FlxAndroidKeyInput = _keyList.get(KeyCode);
+		
 		if (key != null)
 		{
 			if (key.hasState(Status))
@@ -165,7 +167,7 @@ class FlxAndroidKeys implements IFlxInputManager
 	{
 		var keysDown = new Array<FlxAndroidKeyInput>();
 		
-		for (key in _keyList)
+		for (key in _keyIterator)
 		{
 			if (key != null && key.pressed)
 			{
@@ -180,7 +182,7 @@ class FlxAndroidKeys implements IFlxInputManager
 	 */
 	public function destroy():Void
 	{
-		_keyList = null;
+		_keyList = FlxDestroyUtil.destroyMap(_keyList);
 	}
 	
 	/**
@@ -188,7 +190,7 @@ class FlxAndroidKeys implements IFlxInputManager
 	 */
 	public function reset():Void
 	{
-		for (key in _keyList)
+		for (key in _keyIterator)
 		{
 			if (key != null)
 			{
@@ -200,12 +202,15 @@ class FlxAndroidKeys implements IFlxInputManager
 	@:allow(flixel.FlxG)
 	private function new()
 	{
-		_keyList = new Array<FlxAndroidKeyInput>();
+		_keyList = new Map<Int, FlxAndroidKeyInput>();
 		
 		// BACK button
-		_keyList[27] = new FlxAndroidKeyInput(27);
+		_keyList.set(27, new FlxAndroidKeyInput(27));
 		// MENU button
-		_keyList[16777234] = new FlxAndroidKeyInput(16777234);
+		_keyList.set(16777234, new FlxAndroidKeyInput(16777234));
+		
+		// Store iterator to prevent garbage generation.
+		_keyIterator = _keyList.iterator();
 		
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
@@ -219,7 +224,7 @@ class FlxAndroidKeys implements IFlxInputManager
 	 */
 	private function update():Void
 	{
-		for (key in _keyList)
+		for (key in _keyIterator)
 		{
 			if (key != null) 
 			{
@@ -244,7 +249,8 @@ class FlxAndroidKeys implements IFlxInputManager
 		
 		for (code in KeyArray)
 		{
-			var key:FlxAndroidKeyInput = _keyList[code];
+			var key:FlxAndroidKeyInput = _keyList.get(code);
+			
 			if (key != null)
 			{
 				if (key.hasState(State))
@@ -313,7 +319,7 @@ class FlxAndroidKeys implements IFlxInputManager
 	 */
 	private inline function updateKeyStates(KeyCode:Int, Down:Bool):Void
 	{
-		var key:FlxAndroidKeyInput = _keyList[KeyCode];
+		var key:FlxAndroidKeyInput = _keyList.get(KeyCode);
 		
 		if (key != null) 
 		{
