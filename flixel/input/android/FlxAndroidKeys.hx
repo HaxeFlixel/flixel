@@ -27,15 +27,15 @@ class FlxAndroidKeys implements IFlxInputManager
 	 */
 	public var preventDefaultBackAction:Bool = false;
 	/**
-	 * Helper class to check if a keys is pressed.
+	 * Helper class to check if a key is pressed.
 	 */
 	public var pressed:FlxAndroidKeyList;
 	/**
-	 * Helper class to check if a keys was just pressed.
+	 * Helper class to check if a key was just pressed.
 	 */
 	public var justPressed:FlxAndroidKeyList;
 	/**
-	 * Helper class to check if a keys was just released.
+	 * Helper class to check if a key was just released.
 	 */
 	public var justReleased:FlxAndroidKeyList;
 	/**
@@ -45,7 +45,7 @@ class FlxAndroidKeys implements IFlxInputManager
 	
 	/**
 	 * Check to see if at least one key from an array of keys is pressed.
-	 * Example: FlxG.keys.anyPressed([UP, W, SPACE]) - having them in an array is handy for configurable keys!
+	 * Example: FlxG.android.anyPressed([BACK, MENU]) - having them in an array is handy for configurable keys!
 	 * 
 	 * @param	KeyArray 	An array of key names
 	 * @return	Whether at least one of the keys passed in is pressed.
@@ -57,7 +57,7 @@ class FlxAndroidKeys implements IFlxInputManager
 	
 	/**
 	 * Check to see if at least one key from an array of keys was just pressed.
-	 * Example: FlxG.keys.anyJustPressed([UP, W, SPACE]) - having them in an array is handy for configurable keys!
+	 * Example: FlxG.android.anyJustPressed([BACK, MENU]) - having them in an array is handy for configurable keys!
 	 * 
 	 * @param	KeyArray 	An array of key names
 	 * @return	Whether at least one of the keys passed was just pressed.
@@ -69,7 +69,7 @@ class FlxAndroidKeys implements IFlxInputManager
 	
 	/**
 	 * Check to see if at least one key from an array of keys was just released.
-	 * Example: FlxG.keys.anyJustReleased([UP, W, SPACE]) - having them in an array is handy for configurable keys!
+	 * Example: FlxG.android.anyJustReleased([BACK, MENU]) - having them in an array is handy for configurable keys!
 	 * 
 	 * @param	KeyArray 	An array of key names
 	 * @return	Whether at least one of the keys passed was just released.
@@ -131,7 +131,7 @@ class FlxAndroidKeys implements IFlxInputManager
 	}
 	
 	/**
-	 * Check the status of a single of key.
+	 * Check the status of a single key.
 	 * 
 	 * @param	KeyCode		KeyCode to be checked.
 	 * @param	Status		The key state to check for.
@@ -159,7 +159,7 @@ class FlxAndroidKeys implements IFlxInputManager
 	}
 
 	/**
-	 * Get an Array of FlxAndroidKey that are in a pressed state
+	 * Get an Array of FlxAndroidKeyInputs that are in a pressed state
 	 * 
 	 * @return	Array of keys that are currently pressed.
 	 */
@@ -216,6 +216,7 @@ class FlxAndroidKeys implements IFlxInputManager
 		justPressed = new FlxAndroidKeyList(JUST_PRESSED);
 		justReleased = new FlxAndroidKeyList(JUST_RELEASED);
 	}
+	
 	/**
 	 * Updates the key states (for tracking just pressed, just released, etc).
 	 */
