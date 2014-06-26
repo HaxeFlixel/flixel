@@ -51,7 +51,7 @@ class FlxVelocity
 	{
 		var a:Float = FlxAngle.angleBetween(Source, Dest);
 		
-		setAcceleration(Source, a, Acceleration, MaxSpeed);
+		accelerateFromAngle(Source, a, Acceleration, MaxSpeed);
 	}
 	
 	#if !FLX_NO_MOUSE
@@ -124,7 +124,7 @@ class FlxVelocity
 	{
 		var a:Float = FlxAngle.angleBetweenMouse(Source);
 		
-		setAcceleration(Source, a, Acceleration, MaxSpeed);
+		accelerateFromAngle(Source, a, Acceleration, MaxSpeed);
 	}
 	#end
 	
@@ -143,7 +143,7 @@ class FlxVelocity
 	{
 		var a:Float = FlxAngle.angleBetweenTouch(Source, Touch);
 		
-		setAcceleration(Source, a, Acceleration, MaxSpeed);
+		accelerateFromAngle(Source, a, Acceleration, MaxSpeed);
 	}
 	#end
 	
@@ -190,7 +190,7 @@ class FlxVelocity
 	{
 		var a:Float = FlxAngle.angleBetweenPoint(Source, Target);
 		
-		setAcceleration(Source, a, Acceleration, MaxSpeed);
+		accelerateFromAngle(Source, a, Acceleration, MaxSpeed);
 		
 		Target.putWeak();
 	}
@@ -206,12 +206,7 @@ class FlxVelocity
 	{
 		var a:Float = FlxAngle.asRadians(Angle);
 		
-		var result = FlxPoint.get();
-		
-		result.x = Math.cos(a) * Speed;
-		result.y = Math.sin(a) * Speed;
-		
-		return result;
+		return FlxPoint.get(Math.cos(a) * Speed, Math.sin(a) * Speed);
 	}
 	
 	/**
@@ -224,13 +219,7 @@ class FlxVelocity
 	public static function velocityFromFacing(Parent:FlxSprite, Speed:Float):FlxPoint
 	{
 		var a = FlxAngle.angleFromFacing(Parent);
-		
-		var result:FlxPoint = FlxPoint.get();
-		
-		result.x = Math.cos(a) * Speed;
-		result.y = Math.sin(a) * Speed;
-		
-		return result;
+		return FlxPoint.get(Math.cos(a) * Speed, Math.sin(a) * Speed);
 	}
 	
 	/**
@@ -278,12 +267,14 @@ class FlxVelocity
 		return Velocity;
 	}
 	
-	private static inline function setAcceleration(source:FlxSprite, radians:Float, acceleration:Float, maxSpeed:Float):Void
+	public static inline function accelerateFromAngle(source:FlxSprite, radians:Float, acceleration:Float, maxSpeed:Float, resetVelocity:Bool = true):Void
 	{
 		var sin = Math.sin(radians);
 		var cos = Math.cos(radians);
 		
-		source.velocity.set(0, 0);
+		if(resetVelocity)
+			source.velocity.set(0, 0);
+		
 		source.acceleration.set(cos * acceleration, sin * acceleration);
 		source.maxVelocity.set(cos * maxSpeed, sin * maxSpeed);		
 	}
