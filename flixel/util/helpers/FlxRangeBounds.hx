@@ -31,7 +31,7 @@ class FlxRangeBounds<T>
 	 * @param   endMax    The maximum possible final value of this property for particles launched from this emitter. Optional, will be set equal to startMax if ignored.
 	 * @return  This RangeBounds instance (nice for chaining stuff together).
 	 */
-	public function new(startMin:T, ?startMax:Null<T>, ?endMin:Null<T>, ?endMax:Null<T>)
+	public function new(startMin:T, ?startMax:T, ?endMin:T, ?endMax:T)
 	{
 		start = new FlxBounds<T>(startMin, startMax == null ? startMin : startMax);
 		end = new FlxBounds<T>(endMin == null ? startMin : endMin, endMax == null ? start.max : endMax);
@@ -46,7 +46,7 @@ class FlxRangeBounds<T>
 	 * @param   endMax    The maximum possible final value of this property for particles launched from this emitter. Optional, will be set equal to startMax if ignored.
 	 * @return  This RangeBounds instance (nice for chaining stuff together).
 	 */
-	public function set(startMin:T, ?startMax:Null<T>, ?endMin:Null<T>, ?endMax:Null<T>):FlxRangeBounds<T>
+	public function set(startMin:T, ?startMax:T, ?endMin:T, ?endMax:T):FlxRangeBounds<T>
 	{
 		start.min = startMin;
 		start.max = startMax == null ? start.min : startMax;
