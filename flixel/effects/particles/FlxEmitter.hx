@@ -431,11 +431,13 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	{
 		var particle:T = cast recycle(cast particleClass);
 		
-		particle.reset(FlxRandom.float(x, x + width), FlxRandom.float(y, y + height));
-		
-		// Particle blend settings
+		particle.reset(0, 0); // Position is set later, after size has been calculated
 		
 		particle.blend = blend;
+		particle.immovable = immovable;
+		particle.solid = solid;
+		particle.allowCollisions = allowCollisions;
+		particle.autoUpdateHitbox = autoUpdateHitbox;
 		
 		// Particle velocity/launch angle settings
 		
@@ -464,7 +466,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		}
 		
 		// Particle angular velocity settings
-		
+
 		particle.angularVelocityRange.active = angularVelocity.start != angularVelocity.end;
 		
 		if (!ignoreAngularVelocity)
@@ -493,9 +495,10 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		particle.scaleRange.start.y = FlxRandom.float(scale.start.min.y, scale.start.max.y);
 		particle.scaleRange.end.x = FlxRandom.float(scale.end.min.x, scale.end.max.x);
 		particle.scaleRange.end.y = FlxRandom.float(scale.end.min.y, scale.end.max.y);
-		particle.scaleRange.active = particle.scaleRange.start != particle.scaleRange.end;
+		particle.scaleRange.active = !particle.scaleRange.start.equals(particle.scaleRange.end);
 		particle.scale.x = particle.scaleRange.start.x;
 		particle.scale.y = particle.scaleRange.start.y;
+		if (particle.autoUpdateHitbox) particle.updateHitbox();
 		
 		// Particle alpha settings
 		
@@ -538,12 +541,15 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		particle.elasticityRange.active = particle.elasticityRange.start != particle.elasticityRange.end;
 		particle.elasticity = particle.elasticityRange.start;
 		
-		// Particle collision settings
+		// Set posititon
+		particle.x = FlxRandom.float(x, x + width) - particle.width / 2;
+		particle.y = FlxRandom.float(y, y + height) - particle.height / 2;
 		
-		particle.immovable = immovable;
-		particle.solid = solid;
-		particle.allowCollisions = allowCollisions;
-		particle.autoUpdateHitbox = autoUpdateHitbox;
+		// Restart animation
+		if (particle.animation.curAnim != null)
+		{
+			particle.animation.curAnim.restart();
+		}
 		
 		particle.onEmit();
 	}
