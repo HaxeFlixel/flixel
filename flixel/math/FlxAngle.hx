@@ -234,7 +234,13 @@ class FlxAngle
 			case FlxObject.RIGHT: 0;
 			case FlxObject.UP: -90;
 			case FlxObject.DOWN: 90;
-			default: 0; //TODO will there be cases like TOP_LEFT?
+			
+			case FlxObject.UP & FlxObject.LEFT: -135;
+			case FlxObject.UP & FlxObject.RIGHT: -45;
+			case FlxObject.DOWN & FlxObject.LEFT: 135;
+			case FlxObject.DOWN & FlxObject.RIGHT: 45;
+			
+			default: 0;
 		}
 		return AsDegrees ? degrees : asRadians(degrees);
 	}
