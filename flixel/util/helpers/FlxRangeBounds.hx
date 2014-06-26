@@ -51,7 +51,7 @@ class FlxRangeBounds<T>
 		start.min = startMin;
 		start.max = startMax == null ? start.min : startMax;
 		end.min = endMin == null ? start.min : endMin;
-		end.max = endMax == null ? end.min : endMax;
+		end.max = endMax == null ? (endMin == null ? start.max : end.min) : endMax;
 		
 		return this;
 	}
