@@ -228,16 +228,17 @@ class FlxAngle
 	 */
 	public static inline function angleFromFacing(Sprite:FlxSprite, AsDegrees:Bool = false):Float
 	{		
-		var degrees = 
-			if (Sprite.facing == FlxObject.LEFT) 180;
-			else if (Sprite.facing == FlxObject.RIGHT) 0;
-			else if (Sprite.facing == FlxObject.UP) -90;
-			else if (Sprite.facing == FlxObject.DOWN) 90;			
-			else if (Sprite.facing == FlxObject.UP | FlxObject.LEFT) -135;
-			else if (Sprite.facing == FlxObject.UP | FlxObject.RIGHT) -45;
-			else if (Sprite.facing == FlxObject.DOWN | FlxObject.LEFT) 135;
-			else if (Sprite.facing == FlxObject.DOWN | FlxObject.RIGHT) 45;			
-			else 0;
+		var degrees = switch(Sprite.facing)
+		{
+			case FlxObject.LEFT: 180;
+			case FlxObject.RIGHT: 0;
+			case FlxObject.UP: -90;
+			case FlxObject.DOWN: 90;			
+			case f if (f == FlxObject.UP | FlxObject.LEFT): -135;
+			case f if (f == FlxObject.UP | FlxObject.RIGHT): -45;
+			case f if (f == FlxObject.DOWN | FlxObject.LEFT): 135;
+			case f if (f == FlxObject.DOWN | FlxObject.RIGHT): 45;			
+		}
 		return AsDegrees ? degrees : asRadians(degrees);
 	}
 	
