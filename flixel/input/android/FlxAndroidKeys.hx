@@ -139,7 +139,7 @@ class FlxAndroidKeys implements IFlxInputManager
 	 */
 	public function checkStatus(KeyCode:FlxAndroidKey, Status:FlxInputState):Bool
 	{
-		var key:FlxAndroidKeyInput = new FlxAndroidKeyInput(KeyCode);
+		var key:FlxAndroidKeyInput = getKey(KeyCode);
 		
 		if (key != null)
 		{
