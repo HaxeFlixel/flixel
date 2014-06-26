@@ -233,10 +233,10 @@ class FlxAngle
 			else if (Sprite.facing == FlxObject.RIGHT) 0;
 			else if (Sprite.facing == FlxObject.UP) -90;
 			else if (Sprite.facing == FlxObject.DOWN) 90;			
-			else if (Sprite.facing == FlxObject.UP & FlxObject.LEFT) -135;
-			else if (Sprite.facing == FlxObject.UP & FlxObject.RIGHT) -45;
-			else if (Sprite.facing == FlxObject.DOWN & FlxObject.LEFT) 135;
-			else if (Sprite.facing == FlxObject.DOWN & FlxObject.RIGHT) 45;			
+			else if (Sprite.facing == FlxObject.UP | FlxObject.LEFT) -135;
+			else if (Sprite.facing == FlxObject.UP | FlxObject.RIGHT) -45;
+			else if (Sprite.facing == FlxObject.DOWN | FlxObject.LEFT) 135;
+			else if (Sprite.facing == FlxObject.DOWN | FlxObject.RIGHT) 45;			
 			else 0;
 		return AsDegrees ? degrees : asRadians(degrees);
 	}
