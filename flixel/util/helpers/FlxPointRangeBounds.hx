@@ -65,8 +65,8 @@ class FlxPointRangeBounds implements IFlxDestroyable
 		start.max.y = startMaxY == null ? start.min.y : startMaxY;
 		end.min.x = endMinX == null ? start.min.x : endMinX;
 		end.min.y = endMinY == null ? start.min.y : endMinY;
-		end.max.x = endMaxX == null ? end.min.x : endMaxX;
-		end.max.y = endMaxY == null ? end.min.y : endMaxY;
+		end.max.x = endMaxX == null ? (endMinX == null ? start.max.x : end.min.x) : endMaxX;
+		end.max.y = endMaxY == null ? (endMinY == null ? start.max.y : end.min.y) : endMaxY;
 		
 		return this;
 	}
