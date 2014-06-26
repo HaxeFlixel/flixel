@@ -143,7 +143,7 @@ class InputFrontEnd
 	{
 		for (input in list)
 		{
-			input = FlxDestroyUtil.destroy(input);
+			input = null;
 		}
 	}
 }

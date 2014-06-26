@@ -39,9 +39,13 @@ class FlxAndroidKeys implements IFlxInputManager
 	 */
 	public var justReleased:FlxAndroidKeyList;
 	/**
-	 * Internal storage of input keys.
+	 * Internal storage of input keys as an array, for efficient iteration.
 	 */
-	private var _keyList:Array<FlxAndroidKeyInput>;
+	private var _keyListArray:Array<FlxAndroidKeyInput>;
+	/**
+	 * Internal storage of input keys as a map, for efficient indexing.
+	 */
+	private var _keyListMap:Map<Int, FlxAndroidKeyInput>;
 	
 	/**
 	 * Check to see if at least one key from an array of keys is pressed.
@@ -86,7 +90,7 @@ class FlxAndroidKeys implements IFlxInputManager
 	 */
 	public function firstPressed():FlxAndroidKey
 	{
-		for (key in _keyList)
+		for (key in _keyListArray)
 		{
 			if (key != null && key.pressed)
 			{
@@ -103,7 +107,7 @@ class FlxAndroidKeys implements IFlxInputManager
 	 */
 	public function firstJustPressed():FlxAndroidKey
 	{
-		for (key in _keyList)
+		for (key in _keyListArray)
 		{
 			if (key != null && key.justPressed)
 			{
@@ -120,7 +124,7 @@ class FlxAndroidKeys implements IFlxInputManager
 	 */
 	public function firstJustReleased():FlxAndroidKey
 	{
-		for (key in _keyList)
+		for (key in _keyListArray)
 		{
 			if (key != null && key.justReleased)
 			{
@@ -167,7 +171,7 @@ class FlxAndroidKeys implements IFlxInputManager
 	{
 		var keysDown = new Array<FlxAndroidKeyInput>();
 		
-		for (key in _keyList)
+		for (key in _keyListArray)
 		{
 			if (key != null && key.pressed)
 			{
@@ -182,7 +186,8 @@ class FlxAndroidKeys implements IFlxInputManager
 	 */
 	public function destroy():Void
 	{
-		_keyList = FlxDestroyUtil.destroyArray(_keyList);
+		_keyListArray = null;
+		_keyListMap = null;
 	}
 	
 	/**
@@ -190,7 +195,7 @@ class FlxAndroidKeys implements IFlxInputManager
 	 */
 	public function reset():Void
 	{
-		for (key in _keyList)
+		for (key in _keyListArray)
 		{
 			if (key != null)
 			{
@@ -202,12 +207,17 @@ class FlxAndroidKeys implements IFlxInputManager
 	@:allow(flixel.FlxG)
 	private function new()
 	{
-		_keyList = new Array<FlxAndroidKeyInput>();
+		_keyListArray = new Array<FlxAndroidKeyInput>();
+		_keyListMap = new Map<Int, FlxAndroidKeyInput>();
 		
 		// BACK button
-		_keyList.push(new FlxAndroidKeyInput(27));
+		var back:FlxAndroidKeyInput = new FlxAndroidKeyInput(27);
+		_keyListArray.push(back);
+		_keyListMap.set(back.ID, back);
 		// MENU button
-		_keyList.push(new FlxAndroidKeyInput(16777234));
+		var menu:FlxAndroidKeyInput = new FlxAndroidKeyInput(16777234);
+		_keyListArray.push(menu);
+		_keyListMap.set(menu.ID, menu);
 		
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
@@ -222,7 +232,7 @@ class FlxAndroidKeys implements IFlxInputManager
 	 */
 	private function update():Void
 	{
-		for (key in _keyList)
+		for (key in _keyListArray)
 		{
 			if (key != null) 
 			{
@@ -338,17 +348,9 @@ class FlxAndroidKeys implements IFlxInputManager
 	 * Return a key from the key list, if found. Will return null if not found.
 	 */
 	@:allow(flixel.input.android.FlxAndroidKeyList.get_ANY())
-	private function getKey(KeyCode:Int):FlxAndroidKeyInput
+	private inline function getKey(KeyCode:Int):FlxAndroidKeyInput
 	{
-		for (key in _keyList)
-		{
-			if (key.ID == KeyCode)
-			{
-				return key;
-			}
-		}
-		
-		return null;
+		return _keyListMap.get(KeyCode);
 	}
 	
 	private inline function onFocus():Void {}

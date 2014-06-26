@@ -1,7 +1,7 @@
 package flixel.input;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 
-class FlxInput<T> implements IFlxDestroyable
+class FlxInput<T>
 {
 	public var ID:T;
 	
@@ -83,11 +83,6 @@ class FlxInput<T> implements IFlxDestroyable
 	private inline function get_justPressed():Bool
 	{
 		return current == JUST_PRESSED;
-	}
-	
-	public function destroy():Void
-	{
-		ID = null;
 	}
 }
 
