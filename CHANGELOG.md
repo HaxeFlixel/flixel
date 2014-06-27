@@ -76,6 +76,7 @@
 * FlxTypedGroup:
  * added a recurse param to the forEach() functions
  * removed callAll() and setAll() - use forEach() instead
+ * replaced the parameter array in recycle() with an optional factory method
 * FlxTextField#new(): fix bug with passing null for the Text argument
 * FlxGamepadManager: better handling of disconnecting and reconnecting gamepads. getByID() can now return null.
 * FlxGamepad:
@@ -116,6 +117,7 @@
  * changed rotatePoint() to not invert the y-axis anymore and rotate clockwise (consistent with FlxSprite#angle)
  * rotatePoint() -> FlxPoint#rotate()
  * getAngle() -> FlxPoint#angleBetween()
+ * added angleFromFacing()
 * Added GitSHA macro that includes the SHA of the current commit into FlxVersion for dev builds
 * Flixel sound assets are now being embedded via embed="true"
 * FlxBitmapTextField:
@@ -123,6 +125,7 @@
  * fixed text disappearing after state switches on HTML5
 * FlxRect: added weak(), putWeak(), ceil() and floor()
 * Added support for reloading graphics via OpenFL live asset reloading (native targets)
+* FlxVelocity: accelerateTowards()-functions now only take a single maxSpeed param (instead of x and y)
 
 3.3.4
 ------------------------------
