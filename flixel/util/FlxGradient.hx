@@ -9,6 +9,7 @@ import flash.display.SpreadMethod;
 import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
+import flixel.math.FlxAngle;
 
 /**
  * Adds a set of color gradient creation / rendering functions
@@ -20,7 +21,7 @@ import flash.geom.Rectangle;
  */
 class FlxGradient
 {
-	public static function createGradientMatrix(width:Int, height:Int, colors:Array<Int>, chunkSize:Int = 1, rotation:Int = 90):GradientMatrix
+	public static function createGradientMatrix(width:Int, height:Int, colors:Array<FlxColor>, chunkSize:Int = 1, rotation:Int = 90):GradientMatrix
 	{
 		var gradientMatrix:Matrix = new Matrix();
 		
@@ -28,18 +29,16 @@ class FlxGradient
 		var rot:Float = FlxAngle.asRadians(rotation);
 		
 		//	Last 2 values = horizontal and vertical shift (in pixels)
+		#if !bitfive
 		if (chunkSize == 1)
 		{
-			#if !bitfive
 			gradientMatrix.createGradientBox(width, height, rot, 0, 0);
-			#end
 		}
 		else
 		{
-			#if !bitfive
 			gradientMatrix.createGradientBox(width, height / chunkSize, rot, 0, 0);
-			#end
 		}
+		#end
 		
 		//	Create the alpha and ratio arrays
 		
@@ -47,7 +46,7 @@ class FlxGradient
 		
 		for (ai in 0...colors.length)
 		{
-			alpha.push(FlxColorUtil.getAlphaFloat(colors[ai]));
+			alpha.push(colors[ai].alphaFloat);
 		}
 		
 		var ratio:Array<Int> = new Array();
@@ -75,7 +74,7 @@ class FlxGradient
 		return { matrix: gradientMatrix, alpha: alpha, ratio: ratio };
 	}
 	
-	public static function createGradientArray(width:Int, height:Int, colors:Array<Int>, chunkSize:Int = 1, rotation:Int = 90, interpolate:Bool = true):Array<Int>
+	public static function createGradientArray(width:Int, height:Int, colors:Array<FlxColor>, chunkSize:Int = 1, rotation:Int = 90, interpolate:Bool = true):Array<Int>
 	{
 		var data:BitmapData = createGradientBitmapData(width, height, colors, chunkSize, rotation, interpolate);
 		var result:Array<Int> = new Array();

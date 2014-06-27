@@ -1,8 +1,9 @@
 package flixel.util;
 
+import flixel.util.FlxPool;
 import flash.display.BitmapData;
-import flixel.interfaces.IFlxDestroyable;
-import flixel.interfaces.IFlxPooled;
+import flash.display.DisplayObject;
+import flash.display.DisplayObjectContainer;
 
 class FlxDestroyUtil
 {
@@ -15,14 +16,14 @@ class FlxDestroyUtil
 	public static function destroy<T:IFlxDestroyable>(object:Null<IFlxDestroyable>):T
 	{
 		if (object != null)
+		{
 			object.destroy(); 
+		}
 		return null;
 	}
 	
 	/**
-	 * Completely destroys an Array of destroyable objects:
-	 * 1) Clears the array structure
-	 * 2) Calls FlxDestroyUtil.destroy() on every element
+	 * Destroy every element of an array of IFlxDestroyables
 	 *
 	 * @param	array	An Array of IFlxDestroyable objects
 	 * @return	null
@@ -31,10 +32,8 @@ class FlxDestroyUtil
 	{
 		if (array != null)
 		{
-			while (array.length > 0)
-			{
-				destroy(array.pop());
-			}
+			for (e in array) destroy(e);
+			array.splice(0, array.length);
 		}
 		return null;
 	}
@@ -48,7 +47,9 @@ class FlxDestroyUtil
 	public static function put<T:IFlxPooled>(object:IFlxPooled):T
 	{
 		if (object != null)
+		{
 			object.put();
+		}
 		return null;
 	}
 	
@@ -63,24 +64,40 @@ class FlxDestroyUtil
 	{
 		if (array != null)
 		{
-			while (array.length > 0)
-			{
-				put(array.pop());
-			}
+			for (e in array) put(e);
+			array.splice(0, array.length);
 		}
 		return null;
 	}
 	
+	#if !macro
 	/**
 	 * Checks if a BitmapData object is not null before calling dispose() on it, always returns null.
 	 * 
 	 * @param	Bitmap	A BitampData to be disposed if not null
 	 * @return 	null
 	 */
-	public static function dispose(Bitmap:BitmapData):BitmapData
+	public static function dispose(bitmapData:BitmapData):BitmapData
 	{
-		if (Bitmap != null)
-			Bitmap.dispose();
+		if (bitmapData != null)
+		{
+			bitmapData.dispose();
+		}
 		return null;
 	}
+	
+	public static function removeChild<T:DisplayObject>(parent:DisplayObjectContainer, child:T):T
+	{
+		if (parent != null && child != null && parent.contains(child))
+		{
+			parent.removeChild(child);
+		}
+		return null;
+	}
+	#end
+}
+
+interface IFlxDestroyable
+{
+	public function destroy():Void;
 }

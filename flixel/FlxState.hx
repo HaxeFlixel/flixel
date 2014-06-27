@@ -1,6 +1,7 @@
 package flixel;
 
 import flixel.group.FlxGroup;
+import flixel.util.FlxColor;
 
 /**
  * This is the basic game "state" object - e.g. in a simple game you might have a menu state and a play state.
@@ -28,7 +29,7 @@ class FlxState extends FlxGroup
 	/**
 	 * The natural background color the cameras default to. In AARRGGBB format.
 	 */
-	public var bgColor(get, set):Int;
+	public var bgColor(get, set):FlxColor;
 	
 	/**
 	 * Current substate. Substates also can be nested.
@@ -157,21 +158,21 @@ class FlxState extends FlxGroup
 		
 		if (_requestSubStateReset)
 		{
-			resetSubState();
 			_requestSubStateReset = false;
+			resetSubState();
 		}
 		else if (subState != null)
 		{
 			subState.tryUpdate();
 		}
 	}
-	
-	private function get_bgColor():Int
+
+	private function get_bgColor():FlxColor
 	{
 		return FlxG.cameras.bgColor;
 	}
 
-	private function set_bgColor(Value:Int):Int
+	private function set_bgColor(Value:FlxColor):FlxColor
 	{
 		return FlxG.cameras.bgColor = Value;
 	}

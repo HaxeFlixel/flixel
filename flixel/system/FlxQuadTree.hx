@@ -4,9 +4,8 @@ import flixel.FlxBasic;
 import flixel.FlxObject;
 import flixel.group.FlxGroup;
 import flixel.group.FlxSpriteGroup;
-import flixel.group.FlxTypedGroup;
 import flixel.util.FlxDestroyUtil;
-import flixel.util.FlxRect;
+import flixel.math.FlxRect;
 
 /**
  * A fairly generic quad tree structure for rapid overlap checks.
@@ -372,7 +371,7 @@ class FlxQuadTree extends FlxRect
 	{
 		_list = list;
 		
-		var group = FlxGroup.resolveGroup(ObjectOrGroup);
+		var group = FlxTypedGroup.resolveGroup(ObjectOrGroup);
 		if (group != null)
 		{
 			var i:Int = 0;
@@ -384,7 +383,7 @@ class FlxQuadTree extends FlxRect
 				basic = members[i++];
 				if (basic != null && basic.exists)
 				{
-					group = FlxGroup.resolveGroup(basic);
+					group = FlxTypedGroup.resolveGroup(basic);
 					if (group != null)
 					{
 						add(group, list);

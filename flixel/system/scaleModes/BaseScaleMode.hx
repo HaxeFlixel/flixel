@@ -2,7 +2,7 @@ package flixel.system.scaleModes;
 
 import flixel.FlxCamera;
 import flixel.FlxG;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 
 @:allow(flixel.FlxGame)
 class BaseScaleMode

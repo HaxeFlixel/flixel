@@ -16,10 +16,12 @@ import flixel.system.frontEnds.VCRFrontEnd;
 import flixel.system.layer.TileSheetExt;
 import flixel.system.replay.FlxReplay;
 import flixel.text.pxText.PxBitmapFont;
-import flixel.util.FlxAngle;
+import flixel.math.FlxAngle;
 import flixel.util.FlxColor;
-import flixel.util.FlxRandom;
+import flixel.math.FlxRandom;
 import flixel.util.FlxArrayUtil;
+import openfl.Assets;
+using StringTools;
 
 #if !FLX_NO_DEBUG
 import flixel.system.debug.FlxDebugger;
@@ -243,7 +245,37 @@ class FlxGame extends Sprite
 		// Then get ready to create the game object for real
 		_initialState = (InitialState == null) ? FlxState : InitialState;
 		
+		#if (flash && debug)
+		checkSwfVersion();
+		#end
+		
 		addEventListener(Event.ADDED_TO_STAGE, create);
+	}
+	
+	private function checkSwfVersion():Void
+	{
+		var feature = "[f]";
+		var version = "[v]";
+		var conditional = "[c]";
+		var errorMessage = '$feature only supported in Flash Player version $version or higher. '
+			+ 'Define $conditional to disable this feature or add <set name="SWF_VERSION" value="$version" /> to your Project.xml.';
+		
+		#if (!flash10_2 && !FLX_NO_NATIVE_CURSOR)
+		throw errorMessage
+			.replace(feature, "Native mouse cursors are")
+			.replace(version, "10.2")
+			.replace(conditional, "FLX_NO_NATIVE_CURSOR");
+		#elseif (!flash11_2 && !FLX_NO_MOUSE_ADVANCED)
+		throw errorMessage
+			.replace(feature, "Middle and right mouse button events are")
+			.replace(version, "11.2")
+			.replace(conditional, "FLX_NO_MOUSE_ADVANCED");
+		#elseif (!flash11_8 && !FLX_NO_GAMEPAD)
+		throw errorMessage
+			.replace(feature, "Gamepad input is")
+			.replace(version, "11.8")
+			.replace(conditional, "FLX_NO_GAMEPAD");
+		#end
 	}
 	
 	/**
@@ -324,6 +356,10 @@ class FlxGame extends Sprite
 		
 		// make sure the cursor etc are properly scaled from the start
 		resizeGame(FlxG.stage.stageWidth, FlxG.stage.stageHeight);
+		
+		#if !bitfive
+		Assets.addEventListener(Event.CHANGE, FlxG.bitmap.onAssetsReload);
+		#end
 	}
 	
 	private function onFocus(_):Void
@@ -418,7 +454,6 @@ class FlxGame extends Sprite
 		#end
 		
 		_state.onResize(width, height);
-		FlxG.plugins.onResize(width, height);
 		FlxG.signals.gameResized.dispatch(width, height);
 		
 		resizeGame(width, height);
@@ -500,13 +535,13 @@ class FlxGame extends Sprite
 			}
 			
 			#if !FLX_NO_DEBUG
-			FlxBasic._VISIBLECOUNT = 0;
+			FlxBasic.visibleCount = 0;
 			#end
 			
 			draw();
 			
 			#if !FLX_NO_DEBUG
-			debugger.stats.visibleObjects(FlxBasic._VISIBLECOUNT);
+			debugger.stats.visibleObjects(FlxBasic.visibleCount);
 			debugger.update();
 			#end
 		}
@@ -564,7 +599,7 @@ class FlxGame extends Sprite
 		#if !FLX_NO_SOUND_SYSTEM
 		FlxG.sound.destroy();
 		#end
-		FlxG.plugins.onStateSwitch();
+		
 		FlxG.signals.stateSwitched.dispatch();
 		
 		#if FLX_RECORD
@@ -642,13 +677,13 @@ class FlxGame extends Sprite
 		
 		#if !FLX_NO_DEBUG
 		// Finally actually step through the game physics
-		FlxBasic._ACTIVECOUNT = 0;
+		FlxBasic.activeCount = 0;
 		#end
 		
 		update();
 		
 		#if !FLX_NO_DEBUG
-		debugger.stats.activeObjects(FlxBasic._ACTIVECOUNT);
+		debugger.stats.activeObjects(FlxBasic.activeCount);
 		#end
 	}
 	
@@ -818,8 +853,8 @@ class FlxGame extends Sprite
 		for (camera in FlxG.cameras.list)
 		{
 			_displayMatrix.identity();
-			_displayMatrix.scale(camera.zoom * FlxG._scaleMode.scale.x, camera.zoom * FlxG._scaleMode.scale.y);
-			_displayMatrix.translate(camera.x * FlxG._scaleMode.scale.x, camera.y * FlxG._scaleMode.scale.y);
+			_displayMatrix.scale(camera.zoom * FlxG.scaleMode.scale.x, camera.zoom * FlxG.scaleMode.scale.y);
+			_displayMatrix.translate(camera.x * FlxG.scaleMode.scale.x, camera.y * FlxG.scaleMode.scale.y);
 			
 			// rotate around center
 			if (camera.angle != 0)

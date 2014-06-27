@@ -8,15 +8,14 @@ import flash.geom.ColorTransform;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.FlxCamera.FlxCameraShakeDirection;
+import flixel.math.FlxMath;
+import flixel.math.FlxPoint;
+import flixel.math.FlxRandom;
+import flixel.math.FlxRect;
 import flixel.system.layer.DrawStackItem;
 import flixel.system.layer.TileSheetExt;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
-import flixel.util.FlxMath;
-import flixel.util.FlxPoint;
-import flixel.util.FlxPool.FlxPool;
-import flixel.util.FlxRandom;
-import flixel.util.FlxRect;
 import flixel.util.loaders.CachedGraphics;
 import openfl.display.Tilesheet;
 
@@ -58,21 +57,36 @@ class FlxCamera extends FlxBasic
 	 */
 	public var target:FlxObject;
 	/**
+	 * Offset the camera target
+	 */
+	public var targetOffset(default, null):FlxPoint;
+	/**
 	 * Used to smoothly track the camera as it follows.
 	 */
 	public var followLerp:Float = 0;
 	/**
 	 * You can assign a "dead zone" to the camera in order to better control its movement.
 	 * The camera will always keep the focus object inside the dead zone, unless it is bumping up against 
-	 * the bounds rectangle's edges. The deadzone's coordinates are measured from the camera's upper left corner in game pixels.
-	 * For rapid prototyping, you can use the preset deadzones (e.g. STYLE_PLATFORMER) with follow().
+	 * the camera bounds. The deadzone's coordinates are measured from the camera's upper left corner in game pixels.
+	 * For rapid prototyping, you can use the preset deadzones (e.g. PLATFORMER) with follow().
 	 */
 	public var deadzone:FlxRect;
 	/**
-	 * The edges of the camera's range, i.e. where to stop scrolling.
-	 * Measured in game pixels and world coordinates.
+	 * Lower bound of the cameras scroll on the x axis
 	 */
-	public var bounds:FlxRect;
+	public var minScrollX:Null<Float>;
+	/**
+	 * Upper bound of the cameras scroll on the x axis
+	 */
+	public var maxScrollX:Null<Float>;
+	/**
+	 * Lower bound of the cameras scroll on the y axis
+	 */
+	public var minScrollY:Null<Float>;
+	/**
+	 * Upper bound of the cameras scroll on the y axis
+	 */
+	public var maxScrollY:Null<Float>;
 	/**
 	 * Stores the basic parallax scrolling values.
 	 */
@@ -93,7 +107,7 @@ class FlxCamera extends FlxBasic
 	 * The natural background color of the camera, in AARRGGBB format. Defaults to FlxG.cameras.bgColor.
 	 * NOTE: can be transparent for crazy FX (only works on flash)!
 	 */
-	public var bgColor:Int;
+	public var bgColor:FlxColor;
 	
 	#if FLX_RENDER_BLIT
 	/**
@@ -175,7 +189,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Internal, used to control the "flash" special effect.
 	 */
-	private var _fxFlashColor:Int = FlxColor.TRANSPARENT;
+	private var _fxFlashColor:FlxColor = FlxColor.TRANSPARENT;
 	/**
 	 * Internal, used to control the "flash" special effect.
 	 */
@@ -191,7 +205,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Internal, used to control the "fade" special effect.
 	 */
-	private var _fxFadeColor:Int = FlxColor.TRANSPARENT;
+	private var _fxFadeColor:FlxColor = FlxColor.TRANSPARENT;
 	/**
 	 * Used to calculate the following target current velocity.
 	 */
@@ -205,9 +219,9 @@ class FlxCamera extends FlxBasic
 	 */
 	private var _fxFadeDuration:Float = 0;
 	/**
-     * Internal, used to control the "fade" special effect.
-     */
-    private var _fxFadeIn:Bool = false;
+	* Internal, used to control the "fade" special effect.
+	*/
+	private var _fxFadeIn:Bool = false;
 	/**
 	 * Internal, used to control the "fade" special effect.
 	 */
@@ -403,6 +417,7 @@ class FlxCamera extends FlxBasic
 		
 		scroll = FlxPoint.get();
 		followLead = FlxPoint.get();
+		targetOffset = FlxPoint.get();
 		_point = FlxPoint.get();
 		_flashOffset = FlxPoint.get();
 		
@@ -498,8 +513,8 @@ class FlxCamera extends FlxBasic
 	#end
 		
 		scroll = FlxDestroyUtil.put(scroll);
+		targetOffset = FlxDestroyUtil.put(targetOffset);
 		deadzone = FlxDestroyUtil.put(deadzone);
-		bounds = FlxDestroyUtil.put(bounds);
 		
 		target = null;
 		flashSprite = null;
@@ -524,16 +539,20 @@ class FlxCamera extends FlxBasic
 			updateFollow();
 		}
 		
-		//Make sure we didn't go outside the camera's bounds
-		if (bounds != null)
-		{
-			scroll.x = FlxMath.bound(scroll.x, bounds.left, (bounds.right - width));
-			scroll.y = FlxMath.bound(scroll.y, bounds.top, (bounds.bottom - height));
-		}
-		
+		updateScroll();	
 		updateFlash();
 		updateFade();
 		updateShake();
+	}
+	
+	/**
+	 * Updates the camera scroll.
+	 */
+	public function updateScroll():Void
+	{
+		//Make sure we didn't go outside the camera's bounds
+		scroll.x = FlxMath.bound(scroll.x, minScrollX, (maxScrollX != null) ? maxScrollX - width : null);
+		scroll.y = FlxMath.bound(scroll.y, minScrollY, (maxScrollY != null) ? maxScrollY - height : null);
 	}
 	
 	private function updateFollow():Void
@@ -542,13 +561,15 @@ class FlxCamera extends FlxBasic
 		//or doublecheck our deadzone and update accordingly.
 		if (deadzone == null)
 		{
-			focusOn(target.getMidpoint(_point));
+			target.getMidpoint(_point);
+			_point.addPoint(targetOffset);
+			focusOn(_point);
 		}
 		else
 		{
 			var edge:Float;
-			var targetX:Float = target.x;
-			var targetY:Float = target.y;
+			var targetX:Float = target.x + targetOffset.x;
+			var targetY:Float = target.y + targetOffset.y;
 			
 			if (style == SCREEN_BY_SCREEN) 
 			{
@@ -616,7 +637,7 @@ class FlxCamera extends FlxBasic
 			{
 				scroll.x += (_scrollTarget.x - scroll.x) * FlxG.elapsed / (FlxG.elapsed + followLerp * FlxG.elapsed);
 				scroll.y += (_scrollTarget.y - scroll.y) * FlxG.elapsed / (FlxG.elapsed + followLerp * FlxG.elapsed);
-			}	
+			}
 		}
 	}
 	
@@ -777,7 +798,7 @@ class FlxCamera extends FlxBasic
 	 * @param	OnComplete	A function you want to run when the flash finishes.
 	 * @param	Force		Force the effect to reset.
 	 */
-	public function flash(Color:Int = FlxColor.WHITE, Duration:Float = 1, ?OnComplete:Void->Void, Force:Bool = false):Void
+	public function flash(Color:FlxColor = FlxColor.WHITE, Duration:Float = 1, ?OnComplete:Void->Void, Force:Bool = false):Void
 	{
 		if (!Force && (_fxFlashAlpha > 0.0))
 		{
@@ -786,7 +807,7 @@ class FlxCamera extends FlxBasic
 		_fxFlashColor = Color;
 		if (Duration <= 0)
 		{
-			Duration = FlxMath.MIN_VALUE;
+			Duration = FlxMath.MIN_VALUE_FLOAT;
 		}
 		_fxFlashDuration = Duration;
 		_fxFlashComplete = OnComplete;
@@ -802,7 +823,7 @@ class FlxCamera extends FlxBasic
 	 * @param	OnComplete	A function you want to run when the fade finishes.
 	 * @param	Force		Force the effect to reset.
 	 */
-	public function fade(Color:Int = FlxColor.BLACK, Duration:Float = 1, FadeIn:Bool = false, ?OnComplete:Void->Void, Force:Bool = false):Void
+	public function fade(Color:FlxColor = FlxColor.BLACK, Duration:Float = 1, FadeIn:Bool = false, ?OnComplete:Void->Void, Force:Bool = false):Void
 	{
 		if (!Force && (_fxFadeAlpha > 0.0))
 		{
@@ -811,7 +832,7 @@ class FlxCamera extends FlxBasic
 		_fxFadeColor = Color;
 		if (Duration <= 0)
 		{
-			Duration = FlxMath.MIN_VALUE;
+			Duration = FlxMath.MIN_VALUE_FLOAT;
 		}
 		
 		_fxFadeIn = FadeIn;
@@ -824,7 +845,7 @@ class FlxCamera extends FlxBasic
 		}
 		else
 		{
-			_fxFadeAlpha = FlxMath.MIN_VALUE;
+			_fxFadeAlpha = FlxMath.MIN_VALUE_FLOAT;
 		}
 	}
 	
@@ -875,18 +896,8 @@ class FlxCamera extends FlxBasic
 	 */
 	public function copyFrom(Camera:FlxCamera):FlxCamera
 	{
-		if (Camera.bounds == null)
-		{
-			bounds = null;
-		}
-		else
-		{
-			if (bounds == null)
-			{
-				bounds = FlxRect.get();
-			}
-			bounds.copyFrom(Camera.bounds);
-		}
+		setScrollBounds(Camera.minScrollX, Camera.maxScrollX, Camera.minScrollY, Camera.maxScrollY);
+		
 		target = Camera.target;
 		
 		if (target != null)
@@ -913,7 +924,7 @@ class FlxCamera extends FlxBasic
 	 * @param	Color		The color to fill with in 0xAARRGGBB hex format.
 	 * @param	BlendAlpha	Whether to blend the alpha value or just wipe the previous contents.  Default is true.
 	 */
-	public function fill(Color:Int, BlendAlpha:Bool = true, FxAlpha:Float = 1.0, ?graphics:Graphics):Void
+	public function fill(Color:FlxColor, BlendAlpha:Bool = true, FxAlpha:Float = 1.0, ?graphics:Graphics):Void
 	{
 	#if FLX_RENDER_BLIT
 		if (BlendAlpha)
@@ -1030,7 +1041,7 @@ class FlxCamera extends FlxBasic
 	}
 	
 	/**
-	 * Specify the boundaries of the level or where the camera is allowed to move.
+	 * Specify the bounding rectangle of where the camera is allowed to move.
 	 * 
 	 * @param	X				The smallest X value of your level (usually 0).
 	 * @param	Y				The smallest Y value of your level (usually 0).
@@ -1038,18 +1049,32 @@ class FlxCamera extends FlxBasic
 	 * @param	Height			The largest Y value of your level (usually the level height).
 	 * @param	UpdateWorld		Whether the global quad-tree's dimensions should be updated to match (default: false).
 	 */
-	public function setBounds(X:Float = 0, Y:Float = 0, Width:Float = 0, Height:Float = 0, UpdateWorld:Bool = false):Void
+	public function setScrollBoundsRect(X:Float = 0, Y:Float = 0, Width:Float = 0, Height:Float = 0, UpdateWorld:Bool = false):Void
 	{
-		if (bounds == null)
-		{
-			bounds = FlxRect.get();
-		}
-		bounds.set(X, Y, Width, Height);
 		if (UpdateWorld)
 		{
-			FlxG.worldBounds.copyFrom(bounds);
+			FlxG.worldBounds.set(X, Y, Width, Height);
 		}
-		update();
+		
+		setScrollBounds(X, X + Width, Y, Y + Height);
+	}
+	
+	/**
+	 * Specify the bounds of where the camera is allowed to move.
+	 * Set the boundary of a side to null to leave that side unbounded.
+	 * 
+	 * @param	MinX				The minimum X value the camera can scroll to
+	 * @param	MaxX				The maximum X value the camera can scroll to
+	 * @param	MinY				The minimum Y value the camera can scroll to
+	 * @param	MaxY				The maximum Y value the camera can scroll to
+	 */
+	public function setScrollBounds(MinX:Null<Float>, MaxX:Null<Float>, MinY:Null<Float>, MaxY:Null<Float>):Void
+	{
+		minScrollX = MinX;
+		maxScrollX = MaxX;
+		minScrollY = MinY;
+		maxScrollY = MaxY;
+		updateScroll();
 	}
 	
 	public function setScale(X:Float, Y:Float):Void
@@ -1163,7 +1188,7 @@ class FlxCamera extends FlxBasic
 		return Angle;
 	}
 	
-	private function set_color(Color:Int):Int
+	private function set_color(Color:FlxColor):Int
 	{
 		color = Color & 0x00ffffff;
 		#if FLX_RENDER_BLIT

@@ -13,12 +13,12 @@ class CameraFrontEnd
 	 * An array listing FlxCamera objects that are used to draw stuff.
 	 * By default flixel creates one camera the size of the screen.
 	 */
-	public var list(default, null):Array<FlxCamera>;
+	public var list(default, null):Array<FlxCamera> = [];
 	
 	/**
 	 * The current (global, applies to all cameras) bgColor.
 	 */
-	public var bgColor(get, set):Int;
+	public var bgColor(get, set):FlxColor;
 	
 	/**
 	 * Allows you to possibly slightly optimize the rendering process IF
@@ -28,7 +28,7 @@ class CameraFrontEnd
 	/**
 	 * Internal helper variable for clearing the cameras each frame.
 	 */
-	private var _cameraRect:Rectangle;
+	private var _cameraRect:Rectangle = new Rectangle();
 	
 	/**
 	 * Add a new camera object to the game.
@@ -108,6 +108,8 @@ class CameraFrontEnd
 		
 		FlxG.camera = add(NewCamera);
 		NewCamera.ID = 0;
+		
+		FlxCamera.defaultCameras = list;
 	}
 	
 	/**
@@ -118,7 +120,7 @@ class CameraFrontEnd
 	 * @param	OnComplete	A function you want to run when the flash finishes.
 	 * @param	Force		Force the effect to reset.
 	 */
-	public function flash(Color:Int = 0xffffffff, Duration:Float = 1, ?OnComplete:Void->Void, Force:Bool = false):Void
+	public function flash(Color:FlxColor = 0xffffffff, Duration:Float = 1, ?OnComplete:Void->Void, Force:Bool = false):Void
 	{
 		for (camera in list)
 		{
@@ -135,7 +137,7 @@ class CameraFrontEnd
 	 * @param	OnComplete	A function you want to run when the fade finishes.
 	 * @param	Force		Force the effect to reset.
 	 */
-	public function fade(Color:Int = FlxColor.BLACK, Duration:Float = 1, FadeIn:Bool = false, ?OnComplete:Void->Void, Force:Bool = false):Void
+	public function fade(Color:FlxColor = FlxColor.BLACK, Duration:Float = 1, FadeIn:Bool = false, ?OnComplete:Void->Void, Force:Bool = false):Void
 	{
 		for (camera in list)
 		{
@@ -163,8 +165,6 @@ class CameraFrontEnd
 	@:allow(flixel.FlxG)
 	private function new() 
 	{
-		_cameraRect = new Rectangle();
-		list = new Array<FlxCamera>();
 		FlxCamera.defaultCameras = list;
 	}
 	
@@ -266,12 +266,12 @@ class CameraFrontEnd
 		}
 	}
 	
-	private function get_bgColor():Int
+	private function get_bgColor():FlxColor
 	{
 		return (FlxG.camera == null) ? FlxColor.BLACK : FlxG.camera.bgColor;
 	} 
 	
-	private function set_bgColor(Color:Int):Int
+	private function set_bgColor(Color:FlxColor):FlxColor
 	{
 		for (camera in list)
 		{

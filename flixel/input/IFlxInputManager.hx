@@ -1,0 +1,11 @@
+package flixel.input;
+
+@:allow(flixel.system.frontEnds.InputFrontEnd)
+interface IFlxInputManager 
+{
+	public function reset():Void;
+	private function update():Void;
+	private function onFocus():Void;
+	private function onFocusLost():Void;
+	public function destroy():Void;
+}

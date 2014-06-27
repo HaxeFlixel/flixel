@@ -6,13 +6,12 @@ import flash.Lib;
 import flash.ui.Multitouch;
 import flash.ui.MultitouchInputMode;
 import flixel.FlxG;
-import flixel.interfaces.IFlxInput;
 
 /**
  * ...
  * @author Zaphod
  */
-class FlxTouchManager implements IFlxInput
+class FlxTouchManager implements IFlxInputManager
 {
 	/**
 	 * The maximum number of concurrent touch points supported by the current device.
@@ -99,7 +98,7 @@ class FlxTouchManager implements IFlxInput
 		
 		for (touch in list)
 		{
-			if (touch._current == 2)
+			if (touch.justPressed)
 			{
 				TouchArray.push(touch);
 			}
@@ -129,7 +128,7 @@ class FlxTouchManager implements IFlxInput
 		
 		for (touch in list)
 		{
-			if (touch._current == -1)
+			if (touch.justReleased)
 			{
 				TouchArray.push(touch);
 			}
@@ -150,7 +149,7 @@ class FlxTouchManager implements IFlxInput
 		
 		for (touch in list)
 		{
-			touch.deactivate();
+			touch.input.reset();
 			_inactiveTouches.push(touch);
 		}
 		
@@ -173,36 +172,23 @@ class FlxTouchManager implements IFlxInput
 	
 	/**
 	 * Event handler so FlxGame can update touches.
-	 * 
-	 * @param	FlashEvent	A TouchEvent object.
 	 */
 	private function handleTouchBegin(FlashEvent:TouchEvent):Void
 	{
 		var touch:FlxTouch = _touchesCache.get(FlashEvent.touchPointID);
 		if (touch != null)
 		{
-			touch.updatePosition(FlashEvent.stageX, FlashEvent.stageY); 
-			
-			if (touch._current > 0) 
-			{
-				touch._current = 1;
-			}
-			else 
-			{
-				touch._current = 2;
-			}
+			touch.setXY(Std.int(FlashEvent.stageX), Std.int(FlashEvent.stageY)); 
 		}
 		else
 		{
-			touch = recycle(FlashEvent.stageX, FlashEvent.stageY, FlashEvent.touchPointID);
-			touch._current = 2;
+			touch = recycle(Std.int(FlashEvent.stageX), Std.int(FlashEvent.stageY), FlashEvent.touchPointID);
 		}
+		touch.input.press();
 	}
 	
 	/**
 	 * Event handler so FlxGame can update touches.
-	 * 
-	 * @param	FlashEvent	A TouchEvent object.
 	 */
 	private function handleTouchEnd(FlashEvent:TouchEvent):Void
 	{
@@ -210,21 +196,12 @@ class FlxTouchManager implements IFlxInput
 		
 		if (touch != null)
 		{
-			if (touch._current > 0) 
-			{
-				touch._current = -1;
-			}
-			else 
-			{
-				touch._current = 0;
-			}
+			touch.input.release();
 		}
 	}
 	
 	/**
 	 * Event handler so FlxGame can update touches.
-	 * 
-	 * @param	FlashEvent	A TouchEvent object.
 	 */
 	private function handleTouchMove(FlashEvent:TouchEvent):Void
 	{
@@ -232,7 +209,7 @@ class FlxTouchManager implements IFlxInput
 		
 		if (touch != null)
 		{
-			touch.updatePosition(FlashEvent.stageX, FlashEvent.stageY); 
+			touch.setXY(Std.int(FlashEvent.stageX), Std.int(FlashEvent.stageY)); 
 		}
 	}
 	
@@ -257,12 +234,12 @@ class FlxTouchManager implements IFlxInput
 	 * @param	PointID		id of the touch
 	 * @return	A recycled touch object
 	 */
-	private function recycle(X:Float, Y:Float, PointID:Int):FlxTouch
+	private function recycle(X:Int, Y:Int, PointID:Int):FlxTouch
 	{
 		if (_inactiveTouches.length > 0)
 		{
 			var touch:FlxTouch = _inactiveTouches.pop();
-			touch.reset(X, Y, PointID);
+			touch.recycle(X, Y, PointID);
 			return add(touch);
 		}
 		
@@ -283,14 +260,14 @@ class FlxTouchManager implements IFlxInput
 			touch = list[i];
 			
 			// Touch ended at previous frame
-			if (touch._current == 0)
+			if (touch.released && !touch.justReleased)
 			{
-				touch.deactivate();
+				touch.input.reset();
 				_touchesCache.remove(touch.touchPointID);
 				list.splice(i, 1);
 				_inactiveTouches.push(touch);
 			}
-			else	// Touch is active currently
+			else // Touch is active currently
 			{
 				touch.update();
 			}

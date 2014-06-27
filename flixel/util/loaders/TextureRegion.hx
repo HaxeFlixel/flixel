@@ -1,8 +1,8 @@
 package flixel.util.loaders;
 
 import flash.display.BitmapData;
-import flixel.interfaces.IFlxDestroyable;
 import flixel.system.layer.Region;
+import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 
 class TextureRegion implements IFlxDestroyable
 {

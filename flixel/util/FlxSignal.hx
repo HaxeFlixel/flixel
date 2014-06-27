@@ -2,10 +2,8 @@ package flixel.util;
 
 #if macro
 import haxe.macro.Expr;
-#end
-
-import flixel.interfaces.IFlxSignal;
-import flixel.interfaces.IFlxDestroyable;
+#else
+import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 
 typedef FlxSignal = FlxTypedSignal<Void->Void>;
 
@@ -94,22 +92,8 @@ private class FlxSignalHandler<T> implements IFlxDestroyable
 	}
 }
 
-private class FlxSignalBase<T> implements IFlxSignal<T> 
-{
-	macro static function buildDispatch(exprs:Array<Expr>):Expr
-	{
-		return macro
-		{ 
-			for (handler in _handlers)
-			{
-				handler.listener($a{exprs});
-				
-				if (handler.dispatchOnce)
-					remove(handler.listener);
-			}
-		}
-	}
-	
+private class FlxBaseSignal<T> implements IFlxSignal<T> 
+{	
 	/**
 	 * Typed function reference used to dispatch this signal.
 	 */
@@ -157,12 +141,7 @@ private class FlxSignalBase<T> implements IFlxSignal<T>
 	
 	public inline function removeAll():Void 
 	{
-		while (_handlers.length > 0)
-		{
-			var handler = _handlers.pop();
-			handler.destroy();
-			handler = null;
-		}
+		FlxDestroyUtil.destroyArray(_handlers);
 	}
 	
 	public function destroy():Void
@@ -205,7 +184,7 @@ private class FlxSignalBase<T> implements IFlxSignal<T>
 	}
 }
 
-private class FlxSignal0 extends FlxSignalBase<Void->Void>
+private class FlxSignal0 extends FlxBaseSignal<Void->Void>
 {
 	public function new()
 	{
@@ -215,11 +194,11 @@ private class FlxSignal0 extends FlxSignalBase<Void->Void>
 	
 	public function dispatch0():Void
 	{
-		FlxSignalBase.buildDispatch();
+		Macro.buildDispatch();
 	}
 }
 
-private class FlxSignal1<T1> extends FlxSignalBase<T1->Void>
+private class FlxSignal1<T1> extends FlxBaseSignal<T1->Void>
 {
 	public function new()
 	{
@@ -229,11 +208,11 @@ private class FlxSignal1<T1> extends FlxSignalBase<T1->Void>
 	
 	public function dispatch1(value1:T1):Void
 	{
-		FlxSignalBase.buildDispatch(value1);
+		Macro.buildDispatch(value1);
 	}
 }
 
-private class FlxSignal2<T1,T2> extends FlxSignalBase<T1->T2->Void>
+private class FlxSignal2<T1,T2> extends FlxBaseSignal<T1->T2->Void>
 {
 	public function new()
 	{
@@ -243,11 +222,11 @@ private class FlxSignal2<T1,T2> extends FlxSignalBase<T1->T2->Void>
 	
 	public function dispatch2(value1:T1, value2:T2):Void
 	{
-		FlxSignalBase.buildDispatch(value1, value2);
+		Macro.buildDispatch(value1, value2);
 	}
 }
 
-private class FlxSignal3<T1,T2,T3> extends FlxSignalBase<T1->T2->T3->Void>
+private class FlxSignal3<T1,T2,T3> extends FlxBaseSignal<T1->T2->T3->Void>
 {
 	public function new()
 	{
@@ -257,11 +236,11 @@ private class FlxSignal3<T1,T2,T3> extends FlxSignalBase<T1->T2->T3->Void>
 	
 	public function dispatch3(value1:T1, value2:T2, value3:T3):Void
 	{
-		FlxSignalBase.buildDispatch(value1, value2, value3);
+		Macro.buildDispatch(value1, value2, value3);
 	}
 }
 
-private class FlxSignal4<T1,T2,T3,T4> extends FlxSignalBase<T1->T2->T3->T4->Void>
+private class FlxSignal4<T1,T2,T3,T4> extends FlxBaseSignal<T1->T2->T3->T4->Void>
 {
 	public function new()
 	{
@@ -271,6 +250,35 @@ private class FlxSignal4<T1,T2,T3,T4> extends FlxSignalBase<T1->T2->T3->T4->Void
 	
 	public function dispatch4(value1:T1, value2:T2, value3:T3, value4:T4):Void
 	{
-		FlxSignalBase.buildDispatch(value1, value2, value3, value4);
+		Macro.buildDispatch(value1, value2, value3, value4);
+	}
+}
+
+interface IFlxSignal<T> extends IFlxDestroyable
+{
+	public var dispatch:T;
+	public function add(listener:T):Void;
+	public function addOnce(listener:T):Void;
+	public function remove(listener:T):Void;
+	public function removeAll():Void;
+	public function has(listener:T):Bool;
+}
+
+#end
+
+private class Macro
+{
+	macro public static function buildDispatch(exprs:Array<Expr>):Expr
+	{
+		return macro
+		{ 
+			for (handler in _handlers)
+			{
+				handler.listener($a{exprs});
+				
+				if (handler.dispatchOnce)
+					remove(handler.listener);
+			}
+		}
 	}
 }

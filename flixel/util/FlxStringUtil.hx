@@ -5,8 +5,9 @@ import flash.geom.Matrix;
 import flash.Lib;
 import flash.net.URLRequest;
 import flixel.FlxG;
-import flixel.interfaces.IFlxDestroyable;
+import flixel.math.FlxMath;
 import flixel.system.FlxAssets;
+import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 using StringTools;
 
 /**
@@ -403,7 +404,7 @@ class FlxStringUtil
 	 * @param  	ColorMap  	An array of color values (0xAARRGGBB) in the order they're intended to be assigned as indices
 	 * @return	A comma-separated string containing the level data in a FlxTilemap-friendly format.
 	 */
-	public static function bitmapToCSV(Bitmap:BitmapData, Invert:Bool = false, Scale:Int = 1, ?ColorMap:Array<Int>):String
+	public static function bitmapToCSV(Bitmap:BitmapData, Invert:Bool = false, Scale:Int = 1, ?ColorMap:Array<FlxColor>):String
 	{
 		if (Scale < 1) 
 		{

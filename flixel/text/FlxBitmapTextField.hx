@@ -9,7 +9,8 @@ import flixel.system.layer.DrawStackItem;
 import flixel.text.pxText.PxBitmapFont;
 import flixel.text.pxText.PxDefaultFontGenerator;
 import flixel.text.pxText.PxTextAlign;
-import flixel.util.FlxAngle;
+import flixel.math.FlxAngle;
+import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 
 /**
@@ -23,14 +24,14 @@ class FlxBitmapTextField extends FlxSprite
 {
 	private var _font:PxBitmapFont;
 	private var _text:String = "";
-	private var _textColor:Int = 0x0;
+	private var _textColor:FlxColor = 0x0;
 	private var _useTextColor:Bool = true;
 	private var _outline:Bool = false;
-	private var _outlineColor:Int = 0x0;
+	private var _outlineColor:FlxColor = 0x0;
 	private var _shadow:Bool = false;
-	private var _shadowColor:Int = 0x0;
+	private var _shadowColor:FlxColor = 0x0;
 	private var _background:Bool = false;
-	private var _backgroundColor:Int = 0xFFFFFF;
+	private var _backgroundColor:FlxColor = 0xFFFFFF;
 	private var _alignment:Int = 1;
 	private var _padding:Int = 0;
 	
@@ -294,12 +295,12 @@ class FlxBitmapTextField extends FlxSprite
 			drawItem.position = currIndex;
 			
 			#if !FLX_NO_DEBUG
-			FlxBasic._VISIBLECOUNT++;
+			FlxBasic.visibleCount++;
 			#end
 		}
 	}
 	
-	override private function set_color(Color:Int):Int
+	override private function set_color(Color:FlxColor):Int
 	{
 		super.set_color(Color);
 		_pendingTextChange = true;
@@ -400,7 +401,7 @@ class FlxBitmapTextField extends FlxSprite
 		}
 		
 		var preparedText:String = (_autoUpperCase) ? _text.toUpperCase() : _text;
-		var calcFieldWidth:Int = Std.int(width);
+		var calcFieldWidth:Int = 0; // Std.int(width);
 		var rows:Array<String> = [];
 		
 		#if FLX_RENDER_BLIT
@@ -577,7 +578,7 @@ class FlxBitmapTextField extends FlxSprite
 			}
 		}
 		
-		var finalWidth:Int = calcFieldWidth + _padding * 2 + (_outline ? 2 : 0);
+		var finalWidth:Int = (_fixedWidth) ? Std.int(width) : calcFieldWidth + _padding * 2 + (_outline ? 2 : 0);
 		
 		#if FLX_RENDER_BLIT
 		var finalHeight:Int = Std.int(_padding * 2 + Math.max(1, (rows.length * fontHeight + (_shadow ? 1 : 0)) + (_outline ? 2 : 0))) + ((rows.length >= 1) ? _lineSpacing * (rows.length - 1) : 0);

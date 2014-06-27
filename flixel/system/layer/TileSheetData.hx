@@ -3,13 +3,13 @@ package flixel.system.layer;
 import flash.display.BitmapData;
 import flash.geom.Point;
 import flash.geom.Rectangle;
-import flixel.interfaces.IFlxDestroyable;
 import flixel.system.layer.frames.FlxFrame;
 import flixel.system.layer.frames.FlxRotatedFrame;
 import flixel.system.layer.frames.FlxSpriteFrames;
 import flixel.system.layer.Region;
 import flixel.system.layer.TileSheetExt;
-import flixel.util.FlxPoint;
+import flixel.util.FlxDestroyUtil.IFlxDestroyable;
+import flixel.math.FlxPoint;
 import flixel.util.loaders.TextureAtlasFrame;
 import flixel.util.loaders.TexturePackerData;
 
@@ -206,15 +206,15 @@ class TileSheetData implements IFlxDestroyable
 		framesArr = null;
 	}
 	
-	#if FLX_RENDER_TILE
 	public function onContext(bitmap:BitmapData):Void
 	{
 		this.bitmap = bitmap;
+		#if FLX_RENDER_TILE
 		var newSheet:TileSheetExt = new TileSheetExt(bitmap);
 		newSheet.rebuildFromOld(tileSheet);
 		tileSheet = newSheet;
+		#end
 	}
-	#end
 	
 	/**
 	 * Parses provided TexturePackerData object and returns generated FlxSpriteFrames object

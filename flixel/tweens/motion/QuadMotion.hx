@@ -1,7 +1,7 @@
 ﻿package flixel.tweens.motion;
 
 import flixel.tweens.FlxTween.TweenOptions;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 
 /**
  * Determines motion along a quadratic curve.

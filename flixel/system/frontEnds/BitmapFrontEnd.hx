@@ -8,6 +8,7 @@ import flixel.util.FlxColor;
 import flixel.util.loaders.CachedGraphics;
 import flixel.util.loaders.TextureRegion;
 import openfl.Assets;
+import openfl.events.Event;
 
 /**
  * Internal storage system to prevent graphics from being used repeatedly in memory.
@@ -20,6 +21,22 @@ class BitmapFrontEnd
 	public function new()
 	{
 		clearCache();
+	}
+	
+	public function onAssetsReload(e:Event):Void 
+	{
+		var obj:CachedGraphics;
+		if (_cache != null)
+		{
+			for (key in _cache.keys())
+			{
+				obj = _cache.get(key);
+				if (obj != null && obj.canBeDumped)
+				{
+					obj.onAssetsReload();
+				}
+			}
+		}
 	}
 	
 	#if FLX_RENDER_TILE
@@ -102,7 +119,7 @@ class BitmapFrontEnd
 	 * @param	Key		Force the cache to use a specific Key to index the bitmap.
 	 * @return	The BitmapData we just created.
 	 */
-	public function create(Width:Int, Height:Int, Color:Int, Unique:Bool = false, ?Key:String):CachedGraphics
+	public function create(Width:Int, Height:Int, Color:FlxColor, Unique:Bool = false, ?Key:String):CachedGraphics
 	{
 		var key:String = Key;
 		if (key == null)
@@ -210,13 +227,10 @@ class BitmapFrontEnd
 			}
 			else if (isBitmap)
 			{
-				if (!Unique)
+				key = getCacheKeyFor(cast Graphic);
+				if (key == null)
 				{
-					key = getCacheKeyFor(cast Graphic);
-					if (key == null)
-					{
-						key = getUniqueKey();
-					}
+					key = getUniqueKey();
 				}
 			}
 			else if (isRegion)

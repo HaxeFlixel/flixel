@@ -3,7 +3,7 @@
 import flixel.tweens.FlxTween;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxDestroyUtil;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 
 /**
  * A series of points which will determine a path from the

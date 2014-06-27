@@ -2,12 +2,13 @@ package flixel.system.frontEnds;
 
 import flash.display.BitmapData;
 import flixel.FlxG;
-import flixel.system.debug.FlxDebugger;
+import flixel.input.keyboard.FlxKey;
 import flixel.system.debug.Tracker;
 import flixel.system.debug.Window;
 import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxSignal;
 import flixel.util.FlxStringUtil;
+import flixel.system.debug.FlxDebugger;
 
 class DebuggerFrontEnd
 {	
@@ -21,7 +22,7 @@ class DebuggerFrontEnd
 	 * The key codes used to toggle the debugger (see FlxG.keys for the keys available).
 	 * Default keys: ` and \. Set to null to deactivate.
 	 */
-	public var toggleKeys:Array<String>;
+	public var toggleKeys:Array<FlxKey> = [GRAVEACCENT, BACKSLASH];
 	#end
 	
 	/**
@@ -31,7 +32,7 @@ class DebuggerFrontEnd
 	/**
 	 * Dispatched when drawDebug is changed.
 	 */
-	public var drawDebugChanged(default, null):FlxSignal;
+	public var drawDebugChanged(default, null):FlxSignal = new FlxSignal();
 	
 	public var visible(default, set):Bool = false;
 	
@@ -91,7 +92,7 @@ class DebuggerFrontEnd
 			var profile = Tracker.findProfile(Object);
 			if (profile == null)
 			{
-				FlxG.log.error("FlxG.debugger.track(): Could not find a tracking profile for this object of class '" + FlxStringUtil.getClassName(Object, true) + "'."); 
+				throw "Could not find a tracking profile for object of class '" + FlxStringUtil.getClassName(Object, true) + "'."; 
 				return null;
 			}
 			else 
@@ -134,13 +135,7 @@ class DebuggerFrontEnd
 	}
 	
 	@:allow(flixel.FlxG)
-	private function new() 
-	{
-		#if !FLX_NO_KEYBOARD
-		toggleKeys = ["GRAVEACCENT", "BACKSLASH"];
-		#end
-		drawDebugChanged = new FlxSignal();
-	}
+	private function new() {}
 	
 	private inline function set_drawDebug(Value:Bool):Bool
 	{

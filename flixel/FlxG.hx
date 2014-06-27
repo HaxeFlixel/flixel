@@ -24,9 +24,9 @@ import flixel.system.scaleModes.BaseScaleMode;
 import flixel.system.scaleModes.RatioScaleMode;
 import flixel.text.pxText.PxBitmapFont;
 import flixel.util.FlxCollision;
-import flixel.util.FlxMath;
-import flixel.util.FlxRandom;
-import flixel.util.FlxRect;
+import flixel.math.FlxMath;
+import flixel.math.FlxRandom;
+import flixel.math.FlxRect;
 import flixel.util.FlxSave;
 
 #if !FLX_NO_TOUCH
@@ -90,9 +90,9 @@ class FlxG
 	
 	/**
 	 * The HaxeFlixel version, in semantic versioning syntax. Use Std.string()
-	 * on it to get a String formatted like this: "HaxeFlixel MAJOR.MINOR.PATCH-PATCH_VERSION".
+	 * on it to get a String formatted like this: "HaxeFlixel MAJOR.MINOR.PATCH-COMMIT_SHA".
 	 */ 
-	public static var VERSION(default, null):FlxVersion = new FlxVersion(3, 4, 0, "dev");
+	public static var VERSION(default, null):FlxVersion = new FlxVersion(4, 0, 0);
 	
 	/**
 	 * Internal tracker for game object.
@@ -143,12 +143,12 @@ class FlxG
 	 * The scale mode the game should use - available policies are FillScaleMode, FixedScaleMode,
 	 * RatioScaleMode, RelativeScaleMode and StageSizeScaleMode.
 	 */
-	public static var scaleMode(default, set):BaseScaleMode;
+	public static var scaleMode(default, set):BaseScaleMode = new RatioScaleMode();
 	/**
 	 * Use this to toggle between fullscreen and normal mode. Works in cpp and flash.
 	 * You can easily toggle fullscreen with eg: FlxG.fullscreen = !FlxG.fullscreen;
 	 */
-	public static var fullscreen(default, set):Bool = false;
+	public static var fullscreen(get, set):Bool;
 	/**
 	 * The dimensions of the game world, used by the quad tree for collisions and overlap checks.
 	 * Use .set() instead of creating a new object!
@@ -248,7 +248,7 @@ class FlxG
 	/**
 	 * Contains all the functions needed for recording and replaying.
 	 */
-	public static var vcr(default, null):VCRFrontEnd = new VCRFrontEnd();
+	public static var vcr(default, null):VCRFrontEnd;
 	
 	/**
 	 * Contains things related to bimtaps, for example regarding the bitmap cache and the cache itself.
@@ -261,13 +261,13 @@ class FlxG
 	/**
 	 * Contains a list of all plugins and the functions required to add(), remove() them etc.
 	 */
-	public static var plugins(default, null):PluginFrontEnd = new PluginFrontEnd();
+	public static var plugins(default, null):PluginFrontEnd;
 	
 	#if !FLX_NO_SOUND_SYSTEM
 	/**
 	 * Contains a list of all sounds and other things to manage or play() sounds.
 	 */
-	public static var sound(default, null):SoundFrontEnd = new SoundFrontEnd();
+	public static var sound(default, null):SoundFrontEnd;
 	#end
 	
 	/**
@@ -275,15 +275,12 @@ class FlxG
 	 */ 
 	public static var signals(default, null):SignalFrontEnd = new SignalFrontEnd();
 	
-	@:allow(flixel.input.mouse.FlxMouse)
-	private static var _scaleMode:BaseScaleMode = new RatioScaleMode();
-	
 	/**
 	 * Handy helper functions that takes care of all the things to resize the game.
 	 */
 	public static inline function resizeGame(Width:Int, Height:Int):Void
 	{
-		_scaleMode.onMeasure(Width, Height);
+		scaleMode.onMeasure(Width, Height);
 	}
 	
 	/**
@@ -464,8 +461,11 @@ class FlxG
 		#end
 		save.bind("flixel");
 		
+		plugins = new PluginFrontEnd();
+		vcr = new VCRFrontEnd();
+		
 		#if !FLX_NO_SOUND_SYSTEM
-		sound.loadSavedPrefs();
+		sound = new SoundFrontEnd();
 		#end
 		
 		FlxAssets.init();
@@ -495,7 +495,7 @@ class FlxG
 	
 	private static function set_scaleMode(ScaleMode:BaseScaleMode):BaseScaleMode
 	{
-		_scaleMode = ScaleMode;
+		scaleMode = ScaleMode;
 		game.onResize(null);
 		return ScaleMode;
 	}
@@ -567,18 +567,16 @@ class FlxG
 		return Framerate;
 	}
 	
+	private static function get_fullscreen():Bool
+	{
+		return (stage.displayState == StageDisplayState.FULL_SCREEN 
+			|| stage.displayState == StageDisplayState.FULL_SCREEN_INTERACTIVE);
+	}
+	
 	private static function set_fullscreen(Value:Bool):Bool
 	{
-		if (Value)
-		{
-			stage.displayState = StageDisplayState.FULL_SCREEN;
-		}
-		else
-		{
-			stage.displayState = StageDisplayState.NORMAL;
-		}
-		
-		return fullscreen = Value;
+		stage.displayState = Value ? StageDisplayState.FULL_SCREEN : StageDisplayState.NORMAL;
+		return Value;
 	}
 	
 	private static inline function get_stage():Stage

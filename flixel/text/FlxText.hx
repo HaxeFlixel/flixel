@@ -10,14 +10,13 @@ import flash.text.TextFormatAlign;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
-import flixel.interfaces.IFlxDestroyable;
 import flixel.system.FlxAssets;
 import flixel.text.FlxText.FlxTextBorderStyle;
 import flixel.text.FlxText.FlxTextFormat;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 import flixel.util.loaders.CachedGraphics;
 import openfl.Assets;
 
@@ -33,7 +32,7 @@ class FlxText extends FlxSprite
 	public var text(get, set):String;
 	
 	/**
-	 * The size of the text being displayed.
+	 * The size of the text being displayed in pixels.
 	 */
 	public var size(get, set):Float;
 	
@@ -70,9 +69,9 @@ class FlxText extends FlxSprite
 	public var wordWrap(get, set):Bool;
 	
 	/**
-	 * The alignment of the font ("left", "right", or "center").
+	 * The alignment of the font (LEFT, RIGHT, CENTER or JUSTIFY).
 	 */
-	public var alignment(get, set):String;
+	public var alignment(get, set):FlxTextAlign;
 	
 	/**
 	 * Use a border style
@@ -139,17 +138,20 @@ class FlxText extends FlxSprite
 	private var _widthInc:Int = 0;
 	private var _heightInc:Int = 0;
 	
+	private var _font:String;
+	
 	/**
 	 * Creates a new FlxText object at the specified position.
 	 * 
-	 * @param	X				The X position of the text.
-	 * @param	Y				The Y position of the text.
-	 * @param	FieldWidth		The width of the text object. Enables autoSize if <= 0. (height is determined automatically).
-	 * @param	Text			The actual text you would like to display initially.
-	 * @param	Size			The font size for this text object.
-	 * @param	EmbeddedFont	Whether this text field uses embedded fonts or not.
+	 * @param   X              The X position of the text.
+	 * @param   Y              The Y position of the text.
+	 * @param   FieldWidth     The width of the text object. Enables autoSize if <= 0.
+	 *                         (height is determined automatically).
+	 * @param   Text           The actual text you would like to display initially.
+	 * @param   Size           The font size for this text object.
+	 * @param   EmbeddedFont   Whether this text field uses embedded fonts or not.
 	 */
-	public function new(X:Float = 0, Y:Float = 0, FieldWidth:Float = 0, ?Text:String, Size:Int = 8, EmbeddedFont:Bool = true)
+	public function new(X:Float = 0, Y:Float = 0, FieldWidth:Float = 0, ?Text:String, Size:Float = 8, EmbeddedFont:Bool = true)
 	{
 		super(X, Y);
 		
@@ -172,7 +174,8 @@ class FlxText extends FlxSprite
 		_textField.selectable = false;
 		_textField.multiline = true;
 		_textField.wordWrap = true;
-		_defaultFormat = new TextFormat(FlxAssets.FONT_DEFAULT, Size, 0xffffff);
+		_defaultFormat = new TextFormat(null, Size, 0xffffff);
+		font = FlxAssets.FONT_DEFAULT;
 		_formatAdjusted = new TextFormat();
 		_textField.defaultTextFormat = _defaultFormat;
 		_textField.text = Text;
@@ -216,6 +219,7 @@ class FlxText extends FlxSprite
 	override public function destroy():Void
 	{
 		_textField = null;
+		_font = null;
 		_defaultFormat = null;
 		_formatAdjusted = null;
 		_filters = null;
@@ -286,14 +290,14 @@ class FlxText extends FlxSprite
 	 * @param	Font			The name of the font face for the text display.
 	 * @param	Size			The size of the font (in pixels essentially).
 	 * @param	Color			The color of the text in traditional flash 0xRRGGBB format.
-	 * @param	Alignment		A string representing the desired alignment ("left,"right" or "center").
+	 * @param	Alignment		The desired alignment
 	 * @param	BorderStyle		NONE, SHADOW, OUTLINE, or OUTLINE_FAST (use setBorderFormat)
 	 * @param	BorderColor 	Int, color for the border, 0xRRGGBB format
 	 * @param	EmbeddedFont	Whether this text field uses embedded fonts or not
 	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function setFormat(?Font:String, Size:Float = 8, Color:Int = FlxColor.WHITE, ?Alignment:String, 
-		?BorderStyle:FlxTextBorderStyle, BorderColor:Int = FlxColor.TRANSPARENT, Embedded:Bool = true):FlxText
+	public function setFormat(?Font:String, Size:Float = 8, Color:FlxColor = FlxColor.WHITE, ?Alignment:FlxTextAlign, 
+		?BorderStyle:FlxTextBorderStyle, BorderColor:FlxColor = 0, Embedded:Bool = true):FlxText
 	{
 		if (BorderStyle == null)
 		{
@@ -302,14 +306,7 @@ class FlxText extends FlxSprite
 		
 		if (Embedded)
 		{
-			if (Font == null)
-			{
-				_defaultFormat.font = FlxAssets.FONT_DEFAULT;
-			}
-			else 
-			{
-				_defaultFormat.font = Assets.getFont(Font).fontName;
-			}
+			font = Font;
 		}
 		else if (Font != null)
 		{
@@ -339,7 +336,7 @@ class FlxText extends FlxSprite
 	 * @param	Size outline size in pixels
 	 * @param	Quality outline quality - # of iterations to use when drawing. 0:just 1, 1:equal number to BorderSize
 	 */
-	public inline function setBorderStyle(Style:FlxTextBorderStyle, Color:Int = FlxColor.TRANSPARENT, Size:Float = 1, Quality:Float = 1):Void 
+	public inline function setBorderStyle(Style:FlxTextBorderStyle, Color:FlxColor = 0, Size:Float = 1, Quality:Float = 1):Void 
 	{
 		borderStyle = Style;
 		borderColor = Color;
@@ -491,7 +488,7 @@ class FlxText extends FlxSprite
 	/**
 	 * The color of the text being displayed.
 	 */
-	override private function set_color(Color:Int):Int
+	override private function set_color(Color:FlxColor):Int
 	{
 		Color &= 0x00ffffff;
 		if (_defaultFormat.color == Color)
@@ -506,19 +503,34 @@ class FlxText extends FlxSprite
 		return Color;
 	}
 	
-	private function get_font():String
+	private inline function get_font():String
 	{
-		return _defaultFormat.font;
+		return _font;
 	}
 	
 	private function set_font(Font:String):String
 	{
 		_textField.embedFonts = true;
-		_defaultFormat.font = Assets.getFont(Font).fontName;
+		
+		if (Font != null)
+		{
+			var newFontName:String = Font;
+			if (Assets.exists(Font, AssetType.FONT))
+			{
+				newFontName = Assets.getFont(Font).fontName;
+			}
+			
+			_defaultFormat.font = newFontName;
+		}
+		else
+		{
+			_defaultFormat.font = FlxAssets.FONT_DEFAULT;
+		}
+		
 		_textField.defaultTextFormat = _defaultFormat;
 		updateFormat(_defaultFormat);
 		dirty = true;
-		return Font;
+		return _font = _defaultFormat.font;
 	}
 	
 	private inline function get_embedded():Bool
@@ -591,12 +603,12 @@ class FlxText extends FlxSprite
 		return value;
 	}
 	
-	private inline function get_alignment():String
+	private inline function get_alignment():FlxTextAlign
 	{
 		return cast(_defaultFormat.align, String);
 	}
 	
-	private function set_alignment(Alignment:String):String
+	private function set_alignment(Alignment:FlxTextAlign):FlxTextAlign
 	{
 		_defaultFormat.align = convertTextAlignmentFromString(Alignment);
 		_textField.defaultTextFormat = _defaultFormat;
@@ -616,7 +628,7 @@ class FlxText extends FlxSprite
 		return borderStyle;
 	}
 	
-	private function set_borderColor(Color:Int):Int
+	private function set_borderColor(Color:FlxColor):Int
 	{
 		Color &= 0x00ffffff;
 		
@@ -909,26 +921,21 @@ class FlxText extends FlxSprite
 	 * Method for converting string to TextFormatAlign
 	 */
 	#if (flash || js)
-	private function convertTextAlignmentFromString(StrAlign:String):TextFormatAlign
+	private function convertTextAlignmentFromString(StrAlign:FlxTextAlign):TextFormatAlign
 	#else
-	private function convertTextAlignmentFromString(StrAlign:String):String
+	private function convertTextAlignmentFromString(StrAlign:FlxTextAlign):String
 	#end
 	{
-		if (StrAlign == "right")
+		return switch (StrAlign)
 		{
-			return TextFormatAlign.RIGHT;
-		}
-		else if (StrAlign == "center")
-		{
-			return TextFormatAlign.CENTER;
-		}
-		else if (StrAlign == "justify")
-		{
-			return TextFormatAlign.JUSTIFY;
-		}
-		else
-		{
-			return TextFormatAlign.LEFT;
+			case LEFT:
+				TextFormatAlign.LEFT;
+			case CENTER:
+				TextFormatAlign.CENTER;
+			case RIGHT:
+				TextFormatAlign.RIGHT;
+			case JUSTIFY:
+				TextFormatAlign.JUSTIFY;
 		}
 	}
 	
@@ -947,7 +954,7 @@ class FlxTextFormat implements IFlxDestroyable
 	/**
 	 * The border color if FlxText has a shadow or a border
 	 */
-	public var borderColor:Int;
+	public var borderColor:FlxColor;
 	
 	/**
 	 * The start index of the string where the format will be applied
@@ -971,7 +978,7 @@ class FlxTextFormat implements IFlxDestroyable
 	 * @param	Start		(Default=-1) The start index of the string where the format will be applied. If not set, the format won't be applied.
 	 * @param	End			(Default=-1) The end index of the string where the format will be applied.
 	 */
-	public function new(?FontColor:Int, ?Bold:Bool, ?Italic:Bool, ?BorderColor:Int, ?Start:Int = -1, ?End:Int = -1)
+	public function new(?FontColor:FlxColor, ?Bold:Bool, ?Italic:Bool, ?BorderColor:FlxColor, ?Start:Int = -1, ?End:Int = -1)
 	{
 		if (FontColor != null)
 		{
@@ -1016,4 +1023,13 @@ enum FlxTextBorderStyle
 	 * Outline, optimized using only 4 draw calls. (Might not work for narrow and/or 1-pixel fonts)
 	 */
 	OUTLINE_FAST;
+}
+
+@:enum
+abstract FlxTextAlign(String) from String
+{
+	var LEFT = "left";
+	var CENTER = "center";
+	var RIGHT = "right";
+	var JUSTIFY = "justify";
 }
