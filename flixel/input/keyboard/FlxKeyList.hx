@@ -2,7 +2,8 @@ package flixel.input.keyboard;
 
 import flixel.FlxG;
 import flixel.input.FlxInput;
-import flixel.input.keyboard.FlxKeyboard.FlxKeyInput;
+import flixel.input.keyboard.FlxKeyboard;
+import flixel.input.FlxInput.FlxInputState;
 
 /**
  * A helper class for keyboard input.
@@ -119,9 +120,11 @@ class FlxKeyList
 	{
 		var key:FlxKeyInput = null;
 		var keyCode:Int = FlxKeyboard.TOTAL;
+		
 		while (keyCode-- >= 0)
 		{
-			key = FlxG.keys._keyList[keyCode];
+			key = FlxG.keys.getKey(keyCode);
+			
 			if (key != null)
 			{
 				if (check(keyCode))

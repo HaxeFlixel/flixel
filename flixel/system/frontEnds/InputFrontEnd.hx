@@ -2,6 +2,7 @@ package flixel.system.frontEnds;
 
 import flixel.FlxG;
 import flixel.input.IFlxInputManager;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxStringUtil;
 
 @:allow(flixel.FlxGame)
@@ -138,12 +139,11 @@ class InputFrontEnd
 	/**
 	 * Clean up memory.
 	 */
-	private inline function destroy():Void
+	private function destroy():Void
 	{
 		for (input in list)
 		{
-			input.destroy();
-			input = null;
+			input = FlxDestroyUtil.destroy(input);
 		}
 	}
 }
