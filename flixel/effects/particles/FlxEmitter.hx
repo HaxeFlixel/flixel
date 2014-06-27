@@ -68,13 +68,17 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	 */
 	public var height:Float = 0;
 	/**
-	 * How particles should be launched. If CIRCLE, particles will use launchAngle and velocity. Otherwise, particles will just use velocity.x and velocity.y.
+	 * How particles should be launched. If CIRCLE, particles will use launchAngle and speed. Otherwise, particles will just use velocity.x and velocity.y.
 	 */
 	public var launchMode:FlxEmitterMode = FlxEmitterMode.CIRCLE;
 	/**
-	 * Sets the velocity range of particles launched from this emitter.
+	 * Sets the velocity range of particles launched from this emitter. Only used with FlxEmitterMode.SQUARE.
 	 */
 	public var velocity(default, null):FlxPointRangeBounds;
+	/**
+	 * Set the speed range of particles launched from this emitter. Only used with FlxEmitterMode.CIRCLE.
+	 */
+	public var speed(default, null):FlxRangeBounds<Float>;
 	/**
 	 * The angular velocity range of particles launched from this emitter.
 	 */
@@ -176,6 +180,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		y = Y;
 		
 		velocity = new FlxPointRangeBounds(-100, -100, 100, 100);
+		speed = new FlxRangeBounds<Float>(0, 100);
 		angularVelocity = new FlxRangeBounds<Float>(0, 0);
 		angle = new FlxRangeBounds<Float>(0);
 		launchAngle = new FlxBounds<Float>(-180, 180);
@@ -207,6 +212,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		blend = null;
 		angularVelocity = null;
 		angle = null;
+		speed = null;
 		launchAngle = null;
 		lifespan = null;
 		alpha = null;
@@ -443,16 +449,16 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		
 		particle.velocityRange.active = !particle.velocityRange.start.equals(particle.velocityRange.end);
 		
-		if (launchAngle != null && launchMode == FlxEmitterMode.CIRCLE)
+		if (launchMode == FlxEmitterMode.CIRCLE)
 		{
 			var particleAngle:Float = FlxRandom.float(launchAngle.min, launchAngle.max);
 			// Calculate launch velocity
-			_point = FlxVelocity.velocityFromAngle(particleAngle, FlxMath.vectorLength(FlxRandom.float(velocity.start.min.x, velocity.start.max.x), FlxRandom.float(velocity.start.min.y, velocity.start.max.y)));
+			_point = FlxVelocity.velocityFromAngle(particleAngle, FlxRandom.float(speed.start.min, speed.start.max));
 			particle.velocity.x = _point.x;
 			particle.velocity.y = _point.y;
 			particle.velocityRange.start.set(_point.x, _point.y);
 			// Calculate final velocity
-			_point = FlxVelocity.velocityFromAngle(particleAngle, FlxMath.vectorLength(FlxRandom.float(velocity.end.min.x, velocity.end.max.x), FlxRandom.float(velocity.end.min.y, velocity.end.max.y)));
+			_point = FlxVelocity.velocityFromAngle(particleAngle, FlxRandom.float(speed.end.min, speed.end.max));
 			particle.velocityRange.end.set(_point.x, _point.y);
 		}
 		else
