@@ -72,6 +72,10 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	 */
 	public var launchMode:FlxEmitterMode = FlxEmitterMode.CIRCLE;
 	/**
+	 * Keep the scale ratio of the particle. Uses the x values of the scale.
+	 */
+	public var keepScaleRatio:Bool = false;
+	/**
 	 * Sets the velocity range of particles launched from this emitter. Only used with FlxEmitterMode.SQUARE.
 	 */
 	public var velocity(default, null):FlxPointRangeBounds;
@@ -498,9 +502,9 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		// Particle scale settings
 		
 		particle.scaleRange.start.x = FlxRandom.float(scale.start.min.x, scale.start.max.x);
-		particle.scaleRange.start.y = FlxRandom.float(scale.start.min.y, scale.start.max.y);
+		particle.scaleRange.start.y = keepScaleRatio ? particle.scaleRange.start.x : FlxRandom.float(scale.start.min.y, scale.start.max.y);
 		particle.scaleRange.end.x = FlxRandom.float(scale.end.min.x, scale.end.max.x);
-		particle.scaleRange.end.y = FlxRandom.float(scale.end.min.y, scale.end.max.y);
+		particle.scaleRange.end.y = keepScaleRatio ? particle.scaleRange.end.x : FlxRandom.float(scale.end.min.y, scale.end.max.y);
 		particle.scaleRange.active = !particle.scaleRange.start.equals(particle.scaleRange.end);
 		particle.scale.x = particle.scaleRange.start.x;
 		particle.scale.y = particle.scaleRange.start.y;
