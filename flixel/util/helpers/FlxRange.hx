@@ -27,7 +27,7 @@ class FlxRange<T>
 	 * @param	start  The beginning value of the property.
 	 * @param	end    The ending value of the property. Optional, will be set equal to start if ignored.
 	 */
-	public function new(start:T, ?end:Null<T>)
+	public function new(start:T, ?end:T)
 	{
 		this.start = start;
 		this.end = end == null ? start : end;
@@ -40,7 +40,7 @@ class FlxRange<T>
 	 * @param	end    The new final value of the property.  Optional, will be set equal to start if ignored.
 	 * @return  This Range instance (nice for chaining stuff together).
 	 */
-	public function set(start:T, ?end:Null<T>):FlxRange<T>
+	public function set(start:T, ?end:T):FlxRange<T>
 	{
 		this.start = start;
 		this.end = end == null ? start : end;

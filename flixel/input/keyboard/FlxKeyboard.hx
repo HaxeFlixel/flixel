@@ -8,6 +8,7 @@ import flixel.FlxG;
 import flixel.input.keyboard.FlxKey;
 import flixel.system.replay.CodeValuePair;
 import flixel.util.FlxArrayUtil;
+import flixel.util.FlxDestroyUtil;
 import flixel.input.FlxInput;
 
 /**
@@ -21,7 +22,6 @@ class FlxKeyboard implements IFlxInputManager
 	 * Total amount of keys.
 	 */
 	private static inline var TOTAL:Int = 256;
-	
 	/**
 	 * Whether or not keyboard input is currently enabled.
 	 */
@@ -46,9 +46,14 @@ class FlxKeyboard implements IFlxInputManager
 	 * Helper class to check if a keys was just released.
 	 */
 	public var justReleased:FlxKeyList;
-	
-	@:allow(flixel.input.android.FlxAndroidKeyList.get_ANY)
-	private var _keyList:Array<FlxKeyInput>;
+	/**
+	 * Internal storage of input keys as an array, for efficient iteration.
+	 */
+	private var _keyListArray:Array<FlxKeyInput>;
+	/**
+	 * Internal storage of input keys as a map, for efficient indexing.
+	 */
+	private var _keyListMap:Map<Int, FlxKeyInput>;
 	
 	/**
 	 * Function and numpad keycodes on native targets are incorrect, 
@@ -102,7 +107,7 @@ class FlxKeyboard implements IFlxInputManager
 	 */
 	public function firstPressed():FlxKey
 	{
-		for (key in _keyList)
+		for (key in _keyListArray)
 		{
 			if (key != null && key.pressed)
 			{
@@ -119,7 +124,7 @@ class FlxKeyboard implements IFlxInputManager
 	 */
 	public function firstJustPressed():FlxKey
 	{
-		for (key in _keyList)
+		for (key in _keyListArray)
 		{
 			if (key != null && key.justPressed)
 			{
@@ -136,7 +141,7 @@ class FlxKeyboard implements IFlxInputManager
 	 */
 	public function firstJustReleased():FlxKey
 	{
-		for (key in _keyList)
+		for (key in _keyListArray)
 		{
 			if (key != null && key.justReleased)
 			{
@@ -149,13 +154,14 @@ class FlxKeyboard implements IFlxInputManager
 	/**
 	 * Check the status of a single of key
 	 * 
-	 * @param	KeyCode		Index into _keyList array.
-	 * @param	Status		The key state to check for
-	 * @return	Whether the provided key has the specified status
+	 * @param	KeyCode		KeyCode to be checked.
+	 * @param	Status		The key state to check for.
+	 * @return	Whether the provided key has the specified status.
 	 */
 	public function checkStatus(KeyCode:FlxKey, Status:FlxInputState):Bool
 	{
-		var key:FlxKeyInput = _keyList[KeyCode];
+		var key:FlxKeyInput = getKey(KeyCode);
+		
 		if (key != null)
 		{
 			if (key.hasState(Status))
@@ -182,7 +188,7 @@ class FlxKeyboard implements IFlxInputManager
 	{
 		var keysDown = new Array<FlxKeyInput>();
 		
-		for (key in _keyList)
+		for (key in _keyListArray)
 		{
 			if (key != null && key.pressed)
 			{
@@ -197,7 +203,8 @@ class FlxKeyboard implements IFlxInputManager
 	 */
 	public function destroy():Void
 	{
-		_keyList = null;
+		_keyListArray = null;
+		_keyListMap = null;
 	}
 	
 	/**
@@ -205,7 +212,7 @@ class FlxKeyboard implements IFlxInputManager
 	 */
 	public function reset():Void
 	{
-		for (key in _keyList)
+		for (key in _keyListArray)
 		{
 			if (key != null)
 			{
@@ -217,7 +224,9 @@ class FlxKeyboard implements IFlxInputManager
 	@:allow(flixel.FlxG)
 	private function new()
 	{
-		_keyList = new Array<FlxKeyInput>();
+		_keyListArray = new Array<FlxKeyInput>();
+		_keyListMap = new Map<Int, FlxKeyInput>();
+		
 		for (code in [8, 9, 13, 16, 17, 19, 20, 27, 45, 46, 144, 145, 219, 220, 221, 222, 301]
 			.concat([for (i in 186...193) i])
 			.concat([for (i in 32...41) i])
@@ -226,7 +235,9 @@ class FlxKeyboard implements IFlxInputManager
 			.concat([for (i in 96...108) i])
 			.concat([for (i in 109...127) i]))
 		{
-			_keyList[code] = new FlxKeyInput(code);
+			var input:FlxKeyInput = new FlxKeyInput(code);
+			_keyListArray.push(input);
+			_keyListMap.set(code, input);
 		}
 		
 		#if !(flash || js)
@@ -296,7 +307,7 @@ class FlxKeyboard implements IFlxInputManager
 	 */
 	private function update():Void
 	{
-		for (key in _keyList)
+		for (key in _keyListArray)
 		{
 			if (key != null) 
 			{
@@ -321,7 +332,8 @@ class FlxKeyboard implements IFlxInputManager
 		
 		for (code in KeyArray)
 		{
-			var key:FlxKeyInput = _keyList[code];
+			var key:FlxKeyInput = getKey(code);
+			
 			if (key != null)
 			{
 				if (key.hasState(State))
@@ -381,7 +393,7 @@ class FlxKeyboard implements IFlxInputManager
 	private function handlePreventDefault(keyCode:Int, event:KeyboardEvent):Void
 	{
 		#if bitfive
-		var key:FlxKeyInput = _keyList[keyCode];
+		var key:FlxKeyInput = getKey(keyCode);
 		if (key != null && preventDefaultKeys != null && preventDefaultKeys.indexOf(key.ID) != -1)
 		{
 			event.preventDefault();
@@ -427,7 +439,7 @@ class FlxKeyboard implements IFlxInputManager
 	 */
 	private inline function updateKeyStates(KeyCode:Int, Down:Bool):Void
 	{
-		var key:FlxKeyInput = _keyList[KeyCode];
+		var key:FlxKeyInput = getKey(KeyCode);
 		
 		if (key != null) 
 		{
@@ -449,6 +461,15 @@ class FlxKeyboard implements IFlxInputManager
 		reset();
 	}
 	
+	/**
+	 * Return a key from the key list, if found. Will return null if not found.
+	 */
+	@:allow(flixel.input.keyboard.FlxKeyList.get_ANY)
+	private inline function getKey(KeyCode:Int):FlxKeyInput
+	{
+		return _keyListMap.get(KeyCode);
+	}
+	
 	/** Replay functions **/
 	
 	/**
@@ -461,12 +482,9 @@ class FlxKeyboard implements IFlxInputManager
 	private function record():Array<CodeValuePair>
 	{
 		var data:Array<CodeValuePair> = null;
-		var i:Int = 0;
 		
-		while (i < TOTAL)
+		for (key in _keyListArray)
 		{
-			var key:FlxKeyInput = _keyList[i++];
-			
 			if (key == null || key.released)
 			{
 				continue;
@@ -477,8 +495,9 @@ class FlxKeyboard implements IFlxInputManager
 				data = new Array<CodeValuePair>();
 			}
 			
-			data.push(new CodeValuePair(i - 1, key.current));
+			data.push(new CodeValuePair(key.ID, key.current));
 		}
+		
 		return data;
 	}
 	
@@ -498,7 +517,7 @@ class FlxKeyboard implements IFlxInputManager
 		while (i < l)
 		{
 			o = Record[i++];
-			o2 = _keyList[o.code];
+			o2 = getKey(o.code);
 			o2.current = o.value;
 		}
 	}

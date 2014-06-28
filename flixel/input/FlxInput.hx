@@ -1,4 +1,5 @@
 package flixel.input;
+import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 
 class FlxInput<T>
 {

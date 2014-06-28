@@ -27,7 +27,7 @@ class FlxBounds<T>
 	 * @param	min  The minimum value of the property.
 	 * @param	max  The maximum value of the property. Optional, will be set equal to min if ignored.
 	 */
-	public function new(min:T, ?max:Null<T>)
+	public function new(min:T, ?max:T)
 	{
 		this.min = min;
 		this.max = max == null ? min : max;
@@ -40,7 +40,7 @@ class FlxBounds<T>
 	 * @param	max  The new maximum value of the property. Optional, will be set equal to min if ignored.
 	 * @return  This Bounds instance (nice for chaining stuff together).
 	 */
-	public function set(min:T, ?max:Null<T>):FlxBounds<T>
+	public function set(min:T, ?max:T):FlxBounds<T>
 	{
 		this.min = min;
 		this.max = max == null ? min : max;

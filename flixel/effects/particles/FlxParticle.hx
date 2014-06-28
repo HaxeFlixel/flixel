@@ -152,6 +152,7 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 			{
 				scale.x += (scaleRange.end.x - scaleRange.start.x) * _delta;
 				scale.y += (scaleRange.end.y - scaleRange.start.y) * _delta;
+				if (autoUpdateHitbox) updateHitbox();
 			}
 			
 			if (alphaRange.active)
@@ -180,11 +181,6 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 			{
 				elasticity += (elasticityRange.end - elasticityRange.start) * _delta;
 			}
-			
-			if (autoUpdateHitbox && scaleRange.active)
-			{
-				updateHitbox();
-			}
 		}
 		
 		super.update();
@@ -193,25 +189,8 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 	override public function reset(X:Float, Y:Float):Void 
 	{
 		super.reset(X, Y);
-		
-		alpha = 1.0;
-		scale.set(1, 1);
-		color = FlxColor.WHITE;
 		age = 0;
 		visible = true;
-		velocityRange.set(FlxPoint.get(), FlxPoint.get());
-		angularVelocityRange.set(0);
-		scaleRange.set(FlxPoint.get(), FlxPoint.get());
-		alphaRange.set(1);
-		colorRange.set(FlxColor.WHITE);
-		dragRange.set(FlxPoint.get(), FlxPoint.get());
-		accelerationRange.set(FlxPoint.get(), FlxPoint.get());
-		elasticityRange.set(0);
-		
-		if (animation.curAnim != null)
-		{
-			animation.curAnim.restart();
-		}
 	}
 	
 	/**
