@@ -85,7 +85,7 @@ class FlxSound extends FlxBasic
 	/**
 	 * Whether or not this sound should loop.
 	 */
-	public var loop:Bool = false;
+	public var looped:Bool = false;
 	/**
 	 * Internal tracker for a Flash sound object.
 	 */
@@ -150,7 +150,7 @@ class FlxSound extends FlxBasic
 		_paused = false;
 		_volume = 1.0;
 		_volumeAdjust = 1.0;
-		loop = false;
+		looped = false;
 		_target = null;
 		_radius = 0;
 		_proximityPan = false;
@@ -283,7 +283,7 @@ class FlxSound extends FlxBasic
 		}
 		
 		//NOTE: can't pull ID3 info from embedded sound currently
-		loop = Looped; 
+		looped = Looped; 
 		autoDestroy = AutoDestroy;
 		updateTransform();
 		exists = true;
@@ -307,7 +307,7 @@ class FlxSound extends FlxBasic
 		_sound = new Sound();
 		_sound.addEventListener(Event.ID3, gotID3);
 		_sound.load(new URLRequest(SoundURL));
-		loop = Looped;
+		looped = Looped;
 		autoDestroy = AutoDestroy;
 		updateTransform();
 		exists = true;
@@ -334,7 +334,7 @@ class FlxSound extends FlxBasic
 		_sound = new Sound();
 		_sound.addEventListener(Event.ID3, gotID3);
 		_sound.loadCompressedDataFromByteArray(Bytes, Bytes.length);
-		loop = Looped;
+		looped = Looped;
 		autoDestroy = AutoDestroy;
 		updateTransform();
 		exists = true;
@@ -507,7 +507,7 @@ class FlxSound extends FlxBasic
 	 */
 	private function startSound(Position:Float):Void
 	{
-		var numLoops:Int = (loop && (Position == 0)) ? 9999 : 0;
+		var numLoops:Int = (looped && (Position == 0)) ? 9999 : 0;
 		time = Position;
 		_paused = false;
 		_channel = _sound.play(time, numLoops, _transform);
@@ -535,7 +535,7 @@ class FlxSound extends FlxBasic
 			onComplete();
 		}
 		
-		if (loop)
+		if (looped)
 		{
 			cleanup(false);
 			play();
