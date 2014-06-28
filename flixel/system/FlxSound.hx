@@ -1,6 +1,5 @@
 package flixel.system;
 
-#if !FLX_NO_SOUND_SYSTEM
 import flash.events.Event;
 import flash.media.Sound;
 import flash.media.SoundChannel;
@@ -10,11 +9,13 @@ import flash.utils.ByteArray;
 import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.system.FlxAssets.FlxSoundAsset;
-import flixel.system.frontEnds.SoundFrontEnd;
 import flixel.tweens.FlxTween;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import openfl.Assets;
+
+#if !FLX_NO_SOUND_SYSTEM
+import flixel.system.frontEnds.SoundFrontEnd;
 #end
 
 /**
@@ -22,7 +23,6 @@ import openfl.Assets;
  */
 class FlxSound extends FlxBasic
 {
-	#if !FLX_NO_SOUND_SYSTEM
 	/**
 	 * The X position of this sound in world coordinates.
 	 * Only really matters if you are doing proximity/panning stuff.
@@ -491,7 +491,11 @@ class FlxSound extends FlxBasic
 	 */
 	private function updateTransform():Void
 	{
+		#if !FLX_NO_SOUND_SYSTEM
 		_transform.volume = (FlxG.sound.muted ? 0 : 1) * FlxG.sound.volume * _volume * _volumeAdjust;
+		#else
+		_transform.volume = _volume * _volumeAdjust;
+		#end
 		if (_channel != null)
 		{
 			_channel.soundTransform = _transform;
@@ -585,6 +589,7 @@ class FlxSound extends FlxBasic
 		_sound.removeEventListener(Event.ID3, gotID3);
 	}
 	
+	#if !FLX_NO_SOUND_SYSTEM
 	@:allow(flixel.system.frontEnds.SoundFrontEnd)
 	private function onFocus():Void
 	{
@@ -600,6 +605,7 @@ class FlxSound extends FlxBasic
 		_alreadyPaused = _paused;
 		pause();
 	}
+	#end
 	
 	private inline function get_playing():Bool
 	{
@@ -613,15 +619,7 @@ class FlxSound extends FlxBasic
 	
 	private function set_volume(Volume:Float):Float
 	{
-		_volume = Volume;
-		if (_volume < 0)
-		{
-			_volume = 0;
-		}
-		else if (_volume > 1)
-		{
-			_volume = 1;
-		}
+		_volume = FlxMath.bound(Volume, 0, 1);
 		updateTransform();
 		return Volume;
 	}
@@ -635,5 +633,4 @@ class FlxSound extends FlxBasic
 	{
 		return _transform.pan = pan;
 	}
-	#end
 }
