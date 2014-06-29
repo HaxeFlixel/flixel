@@ -125,7 +125,9 @@
  * fixed text disappearing after state switches on HTML5
 * FlxRect: added weak(), putWeak(), ceil() and floor()
 * Added support for reloading graphics via OpenFL live asset reloading (native targets)
-* FlxSound: Can now be used even if FLX_NO_SOUND_SYSTEM is enabled
+* FlxSound
+  * Can now be used even if FLX_NO_SOUND_SYSTEM is enabled
+  * Looped is exposed as a public variable
 * FlxVelocity: accelerateTowards()-functions now only take a single maxSpeed param (instead of x and y)
 
 3.3.4
