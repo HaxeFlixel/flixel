@@ -91,6 +91,7 @@
  * removed colorExt(), try using FlxColor to get finer control over randomly-generated colors
  * updated random number generation equation to avoid inconsistent results across platforms; may break recordings made in 3.x!
  * fixed a bug that prevented the Excludes array in int() from working
+ * can now create a FlxRandomInstance with its own seed and determinism
 * FlxArrayUtil: removed randomness-related functions, please use FlxRandom instead
 * FlxText:
  * added an abstract enum for alignment (text.alignment = CENTER; is now possible)
