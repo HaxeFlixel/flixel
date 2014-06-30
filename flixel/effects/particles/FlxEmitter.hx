@@ -68,13 +68,21 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	 */
 	public var height:Float = 0;
 	/**
-	 * How particles should be launched. If CIRCLE, particles will use launchAngle and velocity. Otherwise, particles will just use velocity.x and velocity.y.
+	 * How particles should be launched. If CIRCLE, particles will use launchAngle and speed. Otherwise, particles will just use velocity.x and velocity.y.
 	 */
 	public var launchMode:FlxEmitterMode = FlxEmitterMode.CIRCLE;
 	/**
-	 * Sets the velocity range of particles launched from this emitter.
+	 * Keep the scale ratio of the particle. Uses the x values of the scale.
+	 */
+	public var keepScaleRatio:Bool = false;
+	/**
+	 * Sets the velocity range of particles launched from this emitter. Only used with FlxEmitterMode.SQUARE.
 	 */
 	public var velocity(default, null):FlxPointRangeBounds;
+	/**
+	 * Set the speed range of particles launched from this emitter. Only used with FlxEmitterMode.CIRCLE.
+	 */
+	public var speed(default, null):FlxRangeBounds<Float>;
 	/**
 	 * The angular velocity range of particles launched from this emitter.
 	 */
@@ -176,6 +184,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		y = Y;
 		
 		velocity = new FlxPointRangeBounds(-100, -100, 100, 100);
+		speed = new FlxRangeBounds<Float>(0, 100);
 		angularVelocity = new FlxRangeBounds<Float>(0, 0);
 		angle = new FlxRangeBounds<Float>(0);
 		launchAngle = new FlxBounds<Float>(-180, 180);
@@ -207,6 +216,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		blend = null;
 		angularVelocity = null;
 		angle = null;
+		speed = null;
 		launchAngle = null;
 		lifespan = null;
 		alpha = null;
@@ -431,26 +441,28 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	{
 		var particle:T = cast recycle(cast particleClass);
 		
-		particle.reset(FlxRandom.float(x, x + width), FlxRandom.float(y, y + height));
-		
-		// Particle blend settings
+		particle.reset(0, 0); // Position is set later, after size has been calculated
 		
 		particle.blend = blend;
+		particle.immovable = immovable;
+		particle.solid = solid;
+		particle.allowCollisions = allowCollisions;
+		particle.autoUpdateHitbox = autoUpdateHitbox;
 		
 		// Particle velocity/launch angle settings
 		
 		particle.velocityRange.active = !particle.velocityRange.start.equals(particle.velocityRange.end);
 		
-		if (launchAngle != null && launchMode == FlxEmitterMode.CIRCLE)
+		if (launchMode == FlxEmitterMode.CIRCLE)
 		{
 			var particleAngle:Float = FlxRandom.float(launchAngle.min, launchAngle.max);
 			// Calculate launch velocity
-			_point = FlxVelocity.velocityFromAngle(particleAngle, FlxMath.vectorLength(FlxRandom.float(velocity.start.min.x, velocity.start.max.x), FlxRandom.float(velocity.start.min.y, velocity.start.max.y)));
+			_point = FlxVelocity.velocityFromAngle(particleAngle, FlxRandom.float(speed.start.min, speed.start.max));
 			particle.velocity.x = _point.x;
 			particle.velocity.y = _point.y;
 			particle.velocityRange.start.set(_point.x, _point.y);
 			// Calculate final velocity
-			_point = FlxVelocity.velocityFromAngle(particleAngle, FlxMath.vectorLength(FlxRandom.float(velocity.end.min.x, velocity.end.max.x), FlxRandom.float(velocity.end.min.y, velocity.end.max.y)));
+			_point = FlxVelocity.velocityFromAngle(particleAngle, FlxRandom.float(speed.end.min, speed.end.max));
 			particle.velocityRange.end.set(_point.x, _point.y);
 		}
 		else
@@ -464,7 +476,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		}
 		
 		// Particle angular velocity settings
-		
+
 		particle.angularVelocityRange.active = angularVelocity.start != angularVelocity.end;
 		
 		if (!ignoreAngularVelocity)
@@ -490,12 +502,13 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		// Particle scale settings
 		
 		particle.scaleRange.start.x = FlxRandom.float(scale.start.min.x, scale.start.max.x);
-		particle.scaleRange.start.y = FlxRandom.float(scale.start.min.y, scale.start.max.y);
+		particle.scaleRange.start.y = keepScaleRatio ? particle.scaleRange.start.x : FlxRandom.float(scale.start.min.y, scale.start.max.y);
 		particle.scaleRange.end.x = FlxRandom.float(scale.end.min.x, scale.end.max.x);
-		particle.scaleRange.end.y = FlxRandom.float(scale.end.min.y, scale.end.max.y);
-		particle.scaleRange.active = particle.scaleRange.start != particle.scaleRange.end;
+		particle.scaleRange.end.y = keepScaleRatio ? particle.scaleRange.end.x : FlxRandom.float(scale.end.min.y, scale.end.max.y);
+		particle.scaleRange.active = !particle.scaleRange.start.equals(particle.scaleRange.end);
 		particle.scale.x = particle.scaleRange.start.x;
 		particle.scale.y = particle.scaleRange.start.y;
+		if (particle.autoUpdateHitbox) particle.updateHitbox();
 		
 		// Particle alpha settings
 		
@@ -538,12 +551,15 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		particle.elasticityRange.active = particle.elasticityRange.start != particle.elasticityRange.end;
 		particle.elasticity = particle.elasticityRange.start;
 		
-		// Particle collision settings
+		// Set posititon
+		particle.x = FlxRandom.float(x, x + width) - particle.width / 2;
+		particle.y = FlxRandom.float(y, y + height) - particle.height / 2;
 		
-		particle.immovable = immovable;
-		particle.solid = solid;
-		particle.allowCollisions = allowCollisions;
-		particle.autoUpdateHitbox = autoUpdateHitbox;
+		// Restart animation
+		if (particle.animation.curAnim != null)
+		{
+			particle.animation.curAnim.restart();
+		}
 		
 		particle.onEmit();
 	}

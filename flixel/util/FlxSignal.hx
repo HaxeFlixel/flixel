@@ -1,9 +1,9 @@
 package flixel.util;
 
-import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 #if macro
 import haxe.macro.Expr;
-#end
+#else
+import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 
 typedef FlxSignal = FlxTypedSignal<Void->Void>;
 
@@ -93,21 +93,7 @@ private class FlxSignalHandler<T> implements IFlxDestroyable
 }
 
 private class FlxBaseSignal<T> implements IFlxSignal<T> 
-{
-	macro static function buildDispatch(exprs:Array<Expr>):Expr
-	{
-		return macro
-		{ 
-			for (handler in _handlers)
-			{
-				handler.listener($a{exprs});
-				
-				if (handler.dispatchOnce)
-					remove(handler.listener);
-			}
-		}
-	}
-	
+{	
 	/**
 	 * Typed function reference used to dispatch this signal.
 	 */
@@ -208,7 +194,7 @@ private class FlxSignal0 extends FlxBaseSignal<Void->Void>
 	
 	public function dispatch0():Void
 	{
-		FlxBaseSignal.buildDispatch();
+		Macro.buildDispatch();
 	}
 }
 
@@ -222,7 +208,7 @@ private class FlxSignal1<T1> extends FlxBaseSignal<T1->Void>
 	
 	public function dispatch1(value1:T1):Void
 	{
-		FlxBaseSignal.buildDispatch(value1);
+		Macro.buildDispatch(value1);
 	}
 }
 
@@ -236,7 +222,7 @@ private class FlxSignal2<T1,T2> extends FlxBaseSignal<T1->T2->Void>
 	
 	public function dispatch2(value1:T1, value2:T2):Void
 	{
-		FlxBaseSignal.buildDispatch(value1, value2);
+		Macro.buildDispatch(value1, value2);
 	}
 }
 
@@ -250,7 +236,7 @@ private class FlxSignal3<T1,T2,T3> extends FlxBaseSignal<T1->T2->T3->Void>
 	
 	public function dispatch3(value1:T1, value2:T2, value3:T3):Void
 	{
-		FlxBaseSignal.buildDispatch(value1, value2, value3);
+		Macro.buildDispatch(value1, value2, value3);
 	}
 }
 
@@ -264,7 +250,7 @@ private class FlxSignal4<T1,T2,T3,T4> extends FlxBaseSignal<T1->T2->T3->T4->Void
 	
 	public function dispatch4(value1:T1, value2:T2, value3:T3, value4:T4):Void
 	{
-		FlxBaseSignal.buildDispatch(value1, value2, value3, value4);
+		Macro.buildDispatch(value1, value2, value3, value4);
 	}
 }
 
@@ -276,4 +262,23 @@ interface IFlxSignal<T> extends IFlxDestroyable
 	public function remove(listener:T):Void;
 	public function removeAll():Void;
 	public function has(listener:T):Bool;
+}
+
+#end
+
+private class Macro
+{
+	macro public static function buildDispatch(exprs:Array<Expr>):Expr
+	{
+		return macro
+		{ 
+			for (handler in _handlers)
+			{
+				handler.listener($a{exprs});
+				
+				if (handler.dispatchOnce)
+					remove(handler.listener);
+			}
+		}
+	}
 }
