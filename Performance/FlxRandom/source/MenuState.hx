@@ -46,7 +46,7 @@ class MenuState extends FlxState
 		return ["Reset Global Seed", "Get Current Seed", "Generate Integers",
 				"Generate Floats",  "Weighted Coin Flips", "Generate Signs",
 				"Weighted Pick", "Get Array Object", "Weighted Get Array Object",
-				"Shuffle Array", "Generate Colors"];
+				"Shuffle Array", "Generate Colors", "Test Accuracy"];
 	}
 	
 	override public function create():Void
@@ -136,6 +136,8 @@ class MenuState extends FlxState
 				_pendingFunction = shuffleObj;
 			case 10:
 				_pendingFunction = randomColors;
+			case 11:
+				_pendingFunction = verification;
 		}
 		
 		if (_pendingFunction != null)
@@ -299,15 +301,12 @@ class MenuState extends FlxState
 	
 	private function randomColors():Void
 	{
-		var min:Int = FlxRandom.int(0, 255);
-		var max:Int = FlxRandom.int(0, 255);
-		
 		dummyBitmapdata = new BitmapData(640, 480, false, 0);
 		timer = Lib.getTimer();
 		
 		for (yPos in 0...480) {
 			for (xPos in 0...640) {
-				dummyBitmapdata.setPixel(xPos, yPos, FlxRandom.color(min, max));
+				dummyBitmapdata.setPixel(xPos, yPos, FlxRandom.color().to24Bit());
 			}
 		}
 		
@@ -348,4 +347,66 @@ class MenuState extends FlxState
 		_histogram.pixels = dummyBitmapdata;
 		_histogram.visible = true;
 	}
+	
+	/**
+	 * See here: https://github.com/HaxeFlixel/flixel/pull/1148
+	 */
+	private function verification():Void
+	{
+		var status:Bool = true;
+		var int:Int = 0;
+		FlxRandom.globalSeed = 20000000;
+		_display.text = "Global seed set to " + FlxRandom.globalSeed;
+		int = FlxRandom.int();
+		status = status && int == INT_1;
+		_display.text += "\nInt 1: " + int;
+		int = FlxRandom.int();
+		status = status && int == INT_2;
+		_display.text += "\nInt 2: " + int;
+		int = FlxRandom.int();
+		status = status && int == INT_3;
+		_display.text += "\nInt 3: " + int;
+		int = FlxRandom.int();
+		status = status && int == INT_4;
+		_display.text += "\nInt 4: " + int;
+		int = FlxRandom.int();
+		status = status && int == INT_5;
+		_display.text += "\nInt 5: " + int;
+		for (i in 5...99) FlxRandom.int();
+		int = FlxRandom.int();
+		status = status && int == INT_100;
+		_display.text += "\nInt 100: " + int;
+		for (i in 100...999) FlxRandom.int();
+		int = FlxRandom.int();
+		status = status && int == INT_1000;
+		_display.text += "\nInt 1000: " + int;
+		for (i in 1000...99999) FlxRandom.int();
+		int = FlxRandom.int();
+		status = status && int == INT_100000;
+		_display.text += "\nInt 100000: " + int;
+		
+		if (status)
+		{
+			_display.text += "\nTest successful, all results as expected.";
+			#if debug
+			trace("Success");
+			#end
+		}
+		else
+		{
+			_display.text += "\nTest failed. Someone open an issue on github!";
+			#if debug
+			trace("Failure");
+			#end
+		}
+	}
+	
+	private static inline var INT_1:Int = 1199842497;
+	private static inline var INT_2:Int = 2110696744;
+	private static inline var INT_3:Int = 228381356;
+	private static inline var INT_4:Int = 1162875425;
+	private static inline var INT_5:Int = 84591242;
+	private static inline var INT_100:Int = 2086347125;
+	private static inline var INT_1000:Int = 1729281946;
+	private static inline var INT_100000:Int = 1064120637;
 }
