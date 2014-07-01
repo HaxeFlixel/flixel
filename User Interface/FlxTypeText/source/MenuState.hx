@@ -7,6 +7,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxSpriteGroup;
+import flixel.system.FlxAssets;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import flixel.math.FlxMath;
@@ -42,9 +43,10 @@ class MenuState extends FlxState
 		_typeText.autoErase = true;
 		_typeText.waitTime = 2.0;
 		_typeText.setTypingVariation(0.75, true);
-		_typeText.useDefaultSound = true;
 		_typeText.color = 0x8811EE11;
 		_typeText.skipKeys = ["SPACE"];
+		_typeText.sounds = [ FlxG.sound.load(FlxAssets.getSound("assets/type01")),
+		                     FlxG.sound.load(FlxAssets.getSound("assets/type02")) ];
 		
 		_status = new FlxTypeText(15, FlxG.height - 102, FlxG.width - 20, "None", 16);
 		_status.color = 0x8800AA00;
@@ -99,7 +101,7 @@ class MenuState extends FlxState
 	
 	private function startCallback():Void
 	{
-		_typeText.start(0.02, false, false, null, null, onComplete.bind("Fully typed"));
+		_typeText.start(0.02, false, false, null, onComplete.bind("Fully typed"));
 	}
 	
 	private function pauseCallback():Void
@@ -109,12 +111,12 @@ class MenuState extends FlxState
 	
 	private function eraseCallback():Void
 	{
-		_typeText.erase(0.01, false, null, null, onComplete.bind("Fully erased"));
+		_typeText.erase(0.01, false, null, onComplete.bind("Fully erased"));
 	}
 	
 	private function forceStartCallback():Void
 	{
-		_typeText.start(0.03, true, true, null, null, onComplete.bind("Typed, erasing..."));
+		_typeText.start(0.03, true, true, null, onComplete.bind("Typed, erasing..."));
 	}
 	
 	private function cursorCallback():Void
@@ -124,7 +126,7 @@ class MenuState extends FlxState
 	
 	private function forceEraseCallback():Void
 	{
-		_typeText.erase(0.02, true, null, null, onComplete.bind("Erased"));
+		_typeText.erase(0.02, true, null, onComplete.bind("Erased"));
 	}
 	
 	private function onComplete(Text:String):Void
