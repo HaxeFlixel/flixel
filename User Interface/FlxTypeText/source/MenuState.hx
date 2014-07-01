@@ -7,6 +7,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxSpriteGroup;
+import flixel.system.FlxAssets;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import flixel.math.FlxMath;
@@ -44,12 +45,8 @@ class MenuState extends FlxState
 		_typeText.setTypingVariation(0.75, true);
 		_typeText.color = 0x8811EE11;
 		_typeText.skipKeys = ["SPACE"];
-		
-		#if flash
-		_typeText.sounds = [FlxG.sound.load("assets/type01.mp3"), FlxG.sound.load("assets/type02.mp3")];
-		#else
-		_typeText.sounds = [FlxG.sound.load("assets/type01.ogg"), FlxG.sound.load("assets/type02.ogg")];
-		#end
+		_typeText.sounds = [ FlxG.sound.load(FlxAssets.getSound("assets/type01")),
+		                     FlxG.sound.load(FlxAssets.getSound("assets/type02")) ];
 		
 		_status = new FlxTypeText(15, FlxG.height - 102, FlxG.width - 20, "None", 16);
 		_status.color = 0x8800AA00;
