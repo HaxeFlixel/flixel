@@ -107,5 +107,7 @@
 
 	<assets path="assets/images" rename="images" />
 	<assets path="assets/tilemaps" rename="tilemaps" />
+	
+	<icon path="assets/MinimalistTD.svg" />
 </project>
 
