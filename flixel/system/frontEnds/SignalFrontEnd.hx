@@ -14,7 +14,8 @@ class SignalFrontEnd
 	 * Passes the new window width and height to callback functions.
 	 */
 	public var gameResized(default, null):FlxTypedSignal<Int->Int->Void> = new FlxTypedSignal<Int->Int->Void>();
-	public var gameReset(default, null):FlxSignal = new FlxSignal();
+	public var preGameReset(default, null):FlxSignal = new FlxSignal();
+	public var postGameReset(default, null):FlxSignal = new FlxSignal();
 	/**
 	 * Gets dispatched when the game is started (first state after the splash screen).
 	 */
