@@ -247,14 +247,9 @@ class FlxSprite extends FlxObject
 		region = null;
 	}
 	
-	public function clone(?NewSprite:FlxSprite):FlxSprite
+	public function clone():FlxSprite
 	{
-		if (NewSprite == null)
-		{
-			NewSprite = new FlxSprite();
-		}
-		
-		return NewSprite.loadGraphicFromSprite(this);
+		return (new FlxSprite()).loadGraphicFromSprite(this);
 	}
 	
 	/**
