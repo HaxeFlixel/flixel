@@ -53,10 +53,6 @@ class FlxSprite extends FlxObject
 	 */
 	public var dirty:Bool = true;
 	
-	#if FLX_RENDER_TILE
-	public var isColored:Bool = false;
-	#end
-	
 	/**
 	 * Set pixels to any BitmapData object.
 	 * Automatically adjust graphic size and render helpers.
@@ -141,12 +137,10 @@ class FlxSprite extends FlxObject
 	public var useColorTransform(default, null):Bool = false;
 	
 	#if FLX_RENDER_TILE
-	private var _red:Float = 1.0;
-	private var _green:Float = 1.0;
-	private var _blue:Float = 1.0;
 	private var _facingHorizontalMult:Int = 1;
 	private var _facingVerticalMult:Int = 1;
 	private var _blendInt:Int = 0;
+	private var isColored:Bool = false;
 	#end
 	
 	/**
@@ -890,9 +884,9 @@ class FlxSprite extends FlxObject
 			
 			if (isColored)
 			{
-				currDrawData[currIndex++] = _red; 
-				currDrawData[currIndex++] = _green;
-				currDrawData[currIndex++] = _blue;
+				currDrawData[currIndex++] = color.redFloat; 
+				currDrawData[currIndex++] = color.greenFloat;
+				currDrawData[currIndex++] = color.blueFloat;
 			}
 			currDrawData[currIndex++] = (alpha * camera.alpha);
 			drawItem.position = currIndex;
@@ -904,7 +898,9 @@ class FlxSprite extends FlxObject
 		
 		#if !FLX_NO_DEBUG
 		if (FlxG.debugger.drawDebug)
+		{
 			drawDebug();
+		}
 		#end
 	}
 	
@@ -1502,7 +1498,6 @@ class FlxSprite extends FlxObject
 	
 	private function set_color(Color:FlxColor):Int
 	{
-		Color &= 0x00ffffff;
 		if (color == Color)
 		{
 			return Color;
@@ -1511,11 +1506,7 @@ class FlxSprite extends FlxObject
 		updateColorTransform();
 		
 		#if FLX_RENDER_TILE
-		_red = (color >> 16) / 255;
-		_green = (color >> 8 & 0xff) / 255;
-		_blue = (color & 0xff) / 255;
-		var c:Int = color;
-		isColored = c < 0xffffff;
+		isColored = color.to24Bit() != 0xffffff;
 		#end
 		
 		return color;

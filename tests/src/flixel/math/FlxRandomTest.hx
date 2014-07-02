@@ -5,8 +5,7 @@ import flixel.math.FlxRandom;
 
 class FlxRandomTest extends FlxTest
 {
-	@Test
-	// issue 1172
+	@Test // issue 1172
 	function testIntExcludes():Void
 	{
 		for (i in 0...20)
