@@ -553,7 +553,7 @@ class FlxGame extends Sprite
 	 */
 	private inline function resetGame():Void
 	{
-		FlxG.signals.gameReset.dispatch();
+		FlxG.signals.preGameReset.dispatch();
 		
 		#if !FLX_NO_DEBUG
 		_skipSplash = true;
@@ -582,6 +582,8 @@ class FlxGame extends Sprite
 		#end
 		
 		FlxG.reset();
+		
+		FlxG.signals.postGameReset.dispatch();
 	}
 
 	/**
