@@ -732,8 +732,6 @@ class FlxSprite extends FlxObject
 		
 	#if FLX_RENDER_TILE
 		var drawItem:DrawStackItem;
-		var currDrawData:Array<Float>;
-		var currIndex:Int;
 		
 		var cos:Float;
 		var sin:Float;
@@ -759,19 +757,6 @@ class FlxSprite extends FlxObject
 			
 			getScreenPosition(_point, camera).subtractPoint(offset);
 			
-		#if FLX_RENDER_TILE
-			drawItem = camera.getDrawStackItem(cachedGraphics, isColored, _blendInt, antialiasing);
-			currDrawData = drawItem.drawData;
-			currIndex = drawItem.position;
-			
-			if (isPixelPerfectRender(camera))
-			{
-				_point.floor();
-			}
-			
-			_point.addPoint(origin);
-		#end
-			
 #if FLX_RENDER_BLIT
 			if (isSimpleRender(camera))
 			{
@@ -795,6 +780,15 @@ class FlxSprite extends FlxObject
 				camera.buffer.draw(framePixels, _matrix, null, blend, null, (antialiasing || camera.antialiasing));
 			}
 #else
+			drawItem = camera.getDrawStackItem(cachedGraphics, isColored, _blendInt, antialiasing);
+			
+			if (isPixelPerfectRender(camera))
+			{
+				_point.floor();
+			}
+			
+			_point.addPoint(origin);
+			
 			var csx:Float = _facingHorizontalMult;
 			var csy:Float = _facingVerticalMult;
 			var ssy:Float = 0;
@@ -869,27 +863,8 @@ class FlxSprite extends FlxObject
 				y2 = y1 * csy;
 			}
 			
-			_point.x -= x2;
-			_point.y -= y2;
-			
-			currDrawData[currIndex++] = _point.x;
-			currDrawData[currIndex++] = _point.y;
-			
-			currDrawData[currIndex++] = frame.tileID;
-			
-			currDrawData[currIndex++] = a;
-			currDrawData[currIndex++] = -b;
-			currDrawData[currIndex++] = c;
-			currDrawData[currIndex++] = d;
-			
-			if (isColored)
-			{
-				currDrawData[currIndex++] = color.redFloat; 
-				currDrawData[currIndex++] = color.greenFloat;
-				currDrawData[currIndex++] = color.blueFloat;
-			}
-			currDrawData[currIndex++] = (alpha * camera.alpha);
-			drawItem.position = currIndex;
+			_point.subtract(x2, y2);
+			setDrawData(drawItem, camera, a, -b, c, d);
 #end
 			#if !FLX_NO_DEBUG
 			FlxBasic.visibleCount++;
@@ -903,6 +878,15 @@ class FlxSprite extends FlxObject
 		}
 		#end
 	}
+	
+	#if FLX_RENDER_TILE
+	private inline function setDrawData(drawItem:DrawStackItem, camera:FlxCamera, a:Float = 1,
+		b:Float = 0, c:Float = 0, d:Float = 1, ?tileID:Float)
+	{
+		drawItem.setDrawData(_point, (tileID == null) ? frame.tileID : tileID, a, b, c, d,
+			isColored, color, alpha * camera.alpha);
+	}
+	#end
 	
 	/**
 	 * Stamps / draws another FlxSprite onto this FlxSprite. 
