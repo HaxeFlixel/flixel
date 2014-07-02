@@ -315,7 +315,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		if (_randomIndices != null)
 		{
 			var randLambda:Void->Float = _randomLambda != null ? _randomLambda : function() {
-				return FlxRandom.float();
+				return FlxG.random.float();
 			};
 			
 			while (i < totalTiles)

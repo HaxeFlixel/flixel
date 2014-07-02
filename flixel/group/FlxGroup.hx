@@ -564,7 +564,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			Length = length;
 		}
 		
-		return FlxRandom.getObject(members, StartIndex, Length);
+		return FlxG.random.getObject(members, StartIndex, Length);
 	}
 	
 	/**

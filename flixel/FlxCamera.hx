@@ -702,11 +702,11 @@ class FlxCamera extends FlxBasic
 			{
 				if ((_fxShakeDirection == BOTH_AXES) || (_fxShakeDirection == X_AXIS))
 				{
-					_fxShakeOffset.x = (FlxRandom.float() * _fxShakeIntensity * width * 2 - _fxShakeIntensity * width) * zoom;
+					_fxShakeOffset.x = FlxG.random.float( -_fxShakeIntensity * width, _fxShakeIntensity * width) * zoom;
 				}
 				if ((_fxShakeDirection == BOTH_AXES) || (_fxShakeDirection == Y_AXIS))
 				{
-					_fxShakeOffset.y = (FlxRandom.float() * _fxShakeIntensity * height * 2 - _fxShakeIntensity * height) * zoom;
+					_fxShakeOffset.y = FlxG.random.float( -_fxShakeIntensity * height, _fxShakeIntensity * height) * zoom;
 				}
 			}
 			

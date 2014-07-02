@@ -534,7 +534,7 @@ class FlxAnimationController implements IFlxDestroyable
 			_curAnim.stop();
 			_curAnim = null;
 		}
-		frameIndex = FlxRandom.int(0, frames - 1);
+		frameIndex = FlxG.random.int(0, frames - 1);
 	}
 	
 	private inline function fireCallback():Void
