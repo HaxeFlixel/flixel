@@ -85,7 +85,7 @@
  * added deadZoneMode, circular deadzones are now supported
  * getXAxis() and getYAxis() now take FlxGamepadAnalogStick as parameters (for example XboxButtonID.LEFT_ANALOG_STICK)
 * FlxRandom:
- * most FlxRandom functions are now instanced, call FlxG.random instead of FlxRandom
+ * FlxRandom functions are now member functions, call FlxG.random instead of FlxRandom
  * exposed currentSeed as an external representation of internalSeed
  * removed intRanged() and floatRanged(), int() and float() now provide optional ranges
  * removed weightedGetObject(), getObject() now has an optional weights parameter
