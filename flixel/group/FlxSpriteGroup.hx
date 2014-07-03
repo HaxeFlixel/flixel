@@ -6,6 +6,7 @@ import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup;
+import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
 import flixel.math.FlxPoint;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.system.FlxAssets.FlxTextureAsset;
@@ -113,28 +114,19 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	
 	/**
 	 * Recursive cloning method: it will create copy of this group which will hold copies of all sprites
-	 * 
-	 * @param	NewSprite	optional sprite group to copy to
 	 * @return	copy of this sprite group
 	 */
-	override public function clone(?NewSprite:FlxSprite):FlxTypedSpriteGroup<T> 
+	override public function clone():FlxTypedSpriteGroup<T> 
 	{
-		if (NewSprite == null || !Std.is(NewSprite, FlxTypedSpriteGroup))
-		{
-			NewSprite = new FlxTypedSpriteGroup<T>(0, 0, group.maxSize);
-		}
-		
-		var cloned:FlxTypedSpriteGroup<T> = cast NewSprite;
-		cloned.maxSize = group.maxSize;
-		
-		for (sprite in _sprites)
+		var newGroup = new FlxTypedSpriteGroup<T>(x, y, maxSize);
+		for (sprite in group.members)
 		{
 			if (sprite != null)
 			{
-				cloned.add(cast sprite.clone());
+				newGroup.add(cast sprite.clone());
 			}
 		}
-		return cloned;
+		return newGroup;
 	}
 	
 	/**
