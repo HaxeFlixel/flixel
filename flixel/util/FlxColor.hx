@@ -348,7 +348,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 		result += "Alpha: " + alpha + " Red: " + red + " Green: " + green + " Blue: " + blue + "\n";
 		// HSB/HSL info
 		result += "Hue: " + FlxMath.roundDecimal(hue, 2) + " Saturation: " + FlxMath.roundDecimal(saturation, 2) + 
-			" Brightness: " + FlxMath.roundDecimal(brightness, 2) + " Lightnes: " + FlxMath.roundDecimal(lightness, 2);
+			" Brightness: " + FlxMath.roundDecimal(brightness, 2) + " Lightness: " + FlxMath.roundDecimal(lightness, 2);
 		
 		return result;
 	}
@@ -361,10 +361,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 */
 	public function getDarkened(Factor:Float = 0.2):FlxColor
 	{
-		Factor = FlxMath.bound(Factor, 0, 1);
-		var output:FlxColor = this;
-		output.lightness *= (1 - Factor);
-		return output;
+		return interpolate(this, FlxColor.BLACK, Factor);
 	}
 	
 	/**
@@ -375,12 +372,8 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 */
 	public inline function getLightened(Factor:Float = 0.2):FlxColor
 	{
-		Factor = FlxMath.bound(Factor, 0, 1);
-		var output:FlxColor = this;
-		output.lightness += (1 - lightness) * Factor;
-		return output;
+		return interpolate(this, FlxColor.WHITE, Factor);
 	}
-	
 	
 	/**
 	 * Get the inversion of this color
@@ -394,7 +387,6 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 		output.alpha = oldAlpha;
 		return output;
 	}
-	
 	
 	/**
 	 * Set RGB values as integers (0 to 255)
