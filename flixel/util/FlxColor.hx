@@ -177,7 +177,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 * @param 	Factor Value from 0 to 1 representing how much to shift Color1 toward Color2
 	 * @return	The interpolated color
 	 */
-	public static function interpolate(Color1:FlxColor, Color2:FlxColor, Factor:Float = 0.5):FlxColor
+	public static inline function interpolate(Color1:FlxColor, Color2:FlxColor, Factor:Float = 0.5):FlxColor
 	{
 		var r:Int = Std.int((Color2.red - Color1.red) * Factor + Color1.red);
 		var g:Int = Std.int((Color2.green - Color1.green) * Factor + Color1.green);
