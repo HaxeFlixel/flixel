@@ -167,12 +167,12 @@ class FlxState extends FlxGroup
 		}
 	}
 
-	private function get_bgColor():Int
+	private function get_bgColor():FlxColor
 	{
 		return FlxG.cameras.bgColor;
 	}
 
-	private function set_bgColor(Value:Int):Int
+	private function set_bgColor(Value:FlxColor):FlxColor
 	{
 		return FlxG.cameras.bgColor = Value;
 	}

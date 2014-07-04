@@ -6,6 +6,7 @@ import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup;
+import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
 import flixel.math.FlxPoint;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.system.FlxAssets.FlxTextureAsset;
@@ -113,28 +114,19 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	
 	/**
 	 * Recursive cloning method: it will create copy of this group which will hold copies of all sprites
-	 * 
-	 * @param	NewSprite	optional sprite group to copy to
 	 * @return	copy of this sprite group
 	 */
-	override public function clone(?NewSprite:FlxSprite):FlxTypedSpriteGroup<T> 
+	override public function clone():FlxTypedSpriteGroup<T> 
 	{
-		if (NewSprite == null || !Std.is(NewSprite, FlxTypedSpriteGroup))
-		{
-			NewSprite = new FlxTypedSpriteGroup<T>(0, 0, group.maxSize);
-		}
-		
-		var cloned:FlxTypedSpriteGroup<T> = cast NewSprite;
-		cloned.maxSize = group.maxSize;
-		
-		for (sprite in _sprites)
+		var newGroup = new FlxTypedSpriteGroup<T>(x, y, maxSize);
+		for (sprite in group.members)
 		{
 			if (sprite != null)
 			{
-				cloned.add(cast sprite.clone());
+				newGroup.add(cast sprite.clone());
 			}
 		}
-		return cloned;
+		return newGroup;
 	}
 	
 	/**
@@ -273,13 +265,13 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 * Recycling is designed to help you reuse game objects without always re-allocating or "newing" them.
 	 * 
 	 * @param	ObjectClass		The class type you want to recycle (e.g. FlxSprite, EvilRobot, etc). Do NOT "new" the class in the parameter!
-	 * @param 	ContructorArgs  An array of arguments passed into a newly object if there aren't any dead members to recycle. 
+	 * @param 	ObjectFactory  A factory function to create a new object if there aren't any dead members to recycle. 
 	 * @param 	Force           Force the object to be an ObjectClass and not a super class of ObjectClass. 
 	 * @return	A reference to the object that was created.  Don't forget to cast it back to the Class you want (e.g. myObject = myGroup.recycle(myObjectClass) as myObjectClass;).
 	 */
-	public inline function recycle(?ObjectClass:Class<T>, ?ContructorArgs:Array<Dynamic>, Force:Bool = false):FlxSprite
+	public inline function recycle(?ObjectClass:Class<T>, ?ObjectFactory:Void->T, Force:Bool = false):T
 	{
-		return group.recycle(ObjectClass, ContructorArgs, Force);
+		return group.recycle(ObjectClass, ObjectFactory, Force);
 	}
 	
 	/**
@@ -885,7 +877,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	override public function loadGraphicFromSprite(Sprite:FlxSprite):FlxSprite 
 	{
 		#if !FLX_NO_DEBUG
-		FlxG.log.error("loadGraphicFromSprite() is not supported in FlxSpriteGroups.");
+		throw "This function is not supported in FlxSpriteGroup";
 		#end
 		return this;
 	}
@@ -906,7 +898,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	override public function loadRotatedGraphic(Graphic:FlxGraphicAsset, Rotations:Int = 16, Frame:Int = -1, AntiAliasing:Bool = false, AutoBuffer:Bool = false, ?Key:String):FlxSprite 
 	{
 		#if !FLX_NO_DEBUG
-		FlxG.log.error("loadRotatedGraphic() is not supported in FlxSpriteGroups.");
+		throw "This function is not supported in FlxSpriteGroup";
 		#end
 		return this;
 	}
@@ -918,7 +910,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	override public function makeGraphic(Width:Int, Height:Int, Color:Int = 0xffffffff, Unique:Bool = false, ?Key:String):FlxSprite 
 	{
 		#if !FLX_NO_DEBUG
-		FlxG.log.error("makeGraphic() is not supported in FlxSpriteGroups.");
+		throw "This function is not supported in FlxSpriteGroup";
 		#end
 		return this;
 	}
@@ -930,7 +922,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	override public function loadGraphicFromTexture(Data:FlxTextureAsset, Unique:Bool = false, ?FrameName:String):FlxSprite 
 	{
 		#if !FLX_NO_DEBUG
-		FlxG.log.error("loadGraphicFromTexture() is not supported in FlxSpriteGroups.");
+		throw "This function is not supported in FlxSpriteGroup";
 		#end
 		return this;
 	}
@@ -942,7 +934,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	override public function loadRotatedGraphicFromTexture(Data:Dynamic, Image:String, Rotations:Int = 16, AntiAliasing:Bool = false, AutoBuffer:Bool = false):FlxSprite 
 	{
 		#if !FLX_NO_DEBUG
-		FlxG.log.error("loadRotatedGraphicFromTexture() is not supported in FlxSpriteGroups.");
+		throw "This function is not supported in FlxSpriteGroup";
 		#end
 		return this;
 	}

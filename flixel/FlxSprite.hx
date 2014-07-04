@@ -53,10 +53,6 @@ class FlxSprite extends FlxObject
 	 */
 	public var dirty:Bool = true;
 	
-	#if FLX_RENDER_TILE
-	public var isColored:Bool = false;
-	#end
-	
 	/**
 	 * Set pixels to any BitmapData object.
 	 * Automatically adjust graphic size and render helpers.
@@ -141,12 +137,10 @@ class FlxSprite extends FlxObject
 	public var useColorTransform(default, null):Bool = false;
 	
 	#if FLX_RENDER_TILE
-	private var _red:Float = 1.0;
-	private var _green:Float = 1.0;
-	private var _blue:Float = 1.0;
 	private var _facingHorizontalMult:Int = 1;
 	private var _facingVerticalMult:Int = 1;
 	private var _blendInt:Int = 0;
+	private var isColored:Bool = false;
 	#end
 	
 	/**
@@ -247,14 +241,9 @@ class FlxSprite extends FlxObject
 		region = null;
 	}
 	
-	public function clone(?NewSprite:FlxSprite):FlxSprite
+	public function clone():FlxSprite
 	{
-		if (NewSprite == null)
-		{
-			NewSprite = new FlxSprite();
-		}
-		
-		return NewSprite.loadGraphicFromSprite(this);
+		return (new FlxSprite()).loadGraphicFromSprite(this);
 	}
 	
 	/**
@@ -266,11 +255,6 @@ class FlxSprite extends FlxObject
 	 */
 	public function loadGraphicFromSprite(Sprite:FlxSprite):FlxSprite
 	{
-		if (!exists)
-		{
-			FlxG.log.warn("Warning, trying to clone " + Type.getClassName(Type.getClass(this)) + " object that doesn't exist.");
-		}
-		
 		region = Sprite.region.clone();
 		bakedRotationAngle = Sprite.bakedRotationAngle;
 		cachedGraphics = Sprite.cachedGraphics;
@@ -286,8 +270,11 @@ class FlxSprite extends FlxObject
 		
 		updateFrameData();
 		resetHelpers();
+		
 		antialiasing = Sprite.antialiasing;
 		animation.copyFrom(Sprite.animation);
+		
+		graphicLoaded();
 		return this;
 	}
 	
@@ -348,6 +335,7 @@ class FlxSprite extends FlxObject
 		updateFrameData();
 		resetHelpers();
 		
+		graphicLoaded();
 		return this;
 	}
 	
@@ -500,6 +488,8 @@ class FlxSprite extends FlxObject
 		
 		animation.createPrerotated();
 		resetHelpers();
+		
+		graphicLoaded();
 		return this;
 	}
 	
@@ -549,6 +539,8 @@ class FlxSprite extends FlxObject
 		
 		resetSizeFromFrame();
 		centerOrigin();
+		
+		graphicLoaded();
 		return this;
 	}
 	
@@ -586,6 +578,7 @@ class FlxSprite extends FlxObject
 		loadRotatedGraphic(frameBitmapData, Rotations, -1, AntiAliasing, AutoBuffer, key);
 		#end
 		
+		graphicLoaded();
 		return this;
 	}
 	
@@ -611,8 +604,16 @@ class FlxSprite extends FlxObject
 		animation.destroyAnimations();
 		updateFrameData();
 		resetHelpers();
+		
+		graphicLoaded();
 		return this;
 	}
+	
+	/**
+	 * Called whenever a new graphic is loaded for this sprite
+	 * - after loadGraphic(), makeGraphic() etc.
+	 */
+	public function graphicLoaded():Void {}
 	
 	/**
 	 * Resets _flashRect variable used for frame bitmapData calculation
@@ -653,7 +654,8 @@ class FlxSprite extends FlxObject
 	 */
 	public function setGraphicSize(Width:Int = 0, Height:Int = 0):Void
 	{
-		if (Width <= 0 && Height <= 0) {
+		if (Width <= 0 && Height <= 0)
+		{
 			return;
 		}
 		
@@ -661,10 +663,12 @@ class FlxSprite extends FlxObject
 		var newScaleY:Float = Height / frameHeight;
 		scale.set(newScaleX, newScaleY);
 		
-		if (Width <= 0) {
+		if (Width <= 0)
+		{
 			scale.x = newScaleY;
 		}
-		else if (Height <= 0) {
+		else if (Height <= 0)
+		{
 			scale.y = newScaleX;
 		}	
 	}
@@ -728,8 +732,6 @@ class FlxSprite extends FlxObject
 		
 	#if FLX_RENDER_TILE
 		var drawItem:DrawStackItem;
-		var currDrawData:Array<Float>;
-		var currIndex:Int;
 		
 		var cos:Float;
 		var sin:Float;
@@ -753,34 +755,18 @@ class FlxSprite extends FlxObject
 				continue;
 			}
 			
-		#if FLX_RENDER_TILE
-			drawItem = camera.getDrawStackItem(cachedGraphics, isColored, _blendInt, antialiasing);
-			currDrawData = drawItem.drawData;
-			currIndex = drawItem.position;
-			
-			_point.x = x - (camera.scroll.x * scrollFactor.x) - (offset.x);
-			_point.y = y - (camera.scroll.y * scrollFactor.y) - (offset.y);
-			
-			_point.x = (_point.x) + origin.x;
-			_point.y = (_point.y) + origin.y;
-		#else
-			_point.x = x - (camera.scroll.x * scrollFactor.x) - (offset.x);
-			_point.y = y - (camera.scroll.y * scrollFactor.y) - (offset.y);
-		#end
+			getScreenPosition(_point, camera).subtractPoint(offset);
 			
 #if FLX_RENDER_BLIT
 			if (isSimpleRender(camera))
 			{
-				// Floor point to prevent rounding issues
-				_flashPoint.x = Math.ffloor(_point.x);
-				_flashPoint.y = Math.ffloor(_point.y);
-				
+				_point.floor().copyToFlash(_flashPoint);
 				camera.buffer.copyPixels(framePixels, _flashRect, _flashPoint, null, null, true);
 			}
 			else
 			{
 				_matrix.identity();
-				_matrix.translate( -origin.x, -origin.y);
+				_matrix.translate(-origin.x, -origin.y);
 				_matrix.scale(scale.x, scale.y);
 				
 				if ((angle != 0) && (bakedRotationAngle <= 0))
@@ -788,18 +774,21 @@ class FlxSprite extends FlxObject
 					_matrix.rotate(angle * FlxAngle.TO_RAD);
 				}
 				
-				_point.x += origin.x;
-				_point.y += origin.y;
-				
-				if (isPixelPerfectRender(camera))
-				{
-					_point.floor();
-				}
+				_point.addPoint(origin).floor();
 				
 				_matrix.translate(_point.x, _point.y);
 				camera.buffer.draw(framePixels, _matrix, null, blend, null, (antialiasing || camera.antialiasing));
 			}
 #else
+			drawItem = camera.getDrawStackItem(cachedGraphics, isColored, _blendInt, antialiasing);
+			
+			if (isPixelPerfectRender(camera))
+			{
+				_point.floor();
+			}
+			
+			_point.addPoint(origin);
+			
 			var csx:Float = _facingHorizontalMult;
 			var csy:Float = _facingVerticalMult;
 			var ssy:Float = 0;
@@ -874,32 +863,8 @@ class FlxSprite extends FlxObject
 				y2 = y1 * csy;
 			}
 			
-			_point.x -= x2;
-			_point.y -= y2;
-			
-			if (isPixelPerfectRender(camera))
-			{
-				_point.floor();
-			}
-			
-			currDrawData[currIndex++] = _point.x;
-			currDrawData[currIndex++] = _point.y;
-			
-			currDrawData[currIndex++] = frame.tileID;
-			
-			currDrawData[currIndex++] = a;
-			currDrawData[currIndex++] = -b;
-			currDrawData[currIndex++] = c;
-			currDrawData[currIndex++] = d;
-			
-			if (isColored)
-			{
-				currDrawData[currIndex++] = _red; 
-				currDrawData[currIndex++] = _green;
-				currDrawData[currIndex++] = _blue;
-			}
-			currDrawData[currIndex++] = (alpha * camera.alpha);
-			drawItem.position = currIndex;
+			_point.subtract(x2, y2);
+			setDrawData(drawItem, camera, a, -b, c, d);
 #end
 			#if !FLX_NO_DEBUG
 			FlxBasic.visibleCount++;
@@ -908,9 +873,20 @@ class FlxSprite extends FlxObject
 		
 		#if !FLX_NO_DEBUG
 		if (FlxG.debugger.drawDebug)
+		{
 			drawDebug();
+		}
 		#end
 	}
+	
+	#if FLX_RENDER_TILE
+	private inline function setDrawData(drawItem:DrawStackItem, camera:FlxCamera, a:Float = 1,
+		b:Float = 0, c:Float = 0, d:Float = 1, ?tileID:Float)
+	{
+		drawItem.setDrawData(_point, (tileID == null) ? frame.tileID : tileID, a, b, c, d,
+			isColored, color, alpha * camera.alpha);
+	}
+	#end
 	
 	/**
 	 * Stamps / draws another FlxSprite onto this FlxSprite. 
@@ -1136,7 +1112,7 @@ class FlxSprite extends FlxObject
 		{
 			Camera = FlxG.camera;
 		}
-		getScreenXY(_point, Camera);
+		getScreenPosition(_point, Camera);
 		_point.x = _point.x - offset.x;
 		_point.y = _point.y - offset.y;
 		_flashPoint.x = (point.x - Camera.scroll.x) - _point.x;
@@ -1380,16 +1356,9 @@ class FlxSprite extends FlxObject
 	 */
 	public function isSimpleRenderBlit(?camera:FlxCamera):Bool
 	{
-		var result:Bool = ((angle == 0) || (bakedRotationAngle > 0))
-			&& (scale.x == 1) && (scale.y == 1) && (blend == null);
-		if (camera == null)
-		{
-			result = result && pixelPerfectRender != false;
-		}
-		else
-		{
-			result = result && isPixelPerfectRender(camera);
-		}
+		var result:Bool = (angle == 0 || bakedRotationAngle > 0)
+			&& scale.x == 1 && scale.y == 1 && blend == null;
+		result = result && (camera != null ? isPixelPerfectRender(camera) : pixelPerfectRender);
 		return result;
 	}
 	
@@ -1513,7 +1482,6 @@ class FlxSprite extends FlxObject
 	
 	private function set_color(Color:FlxColor):Int
 	{
-		Color &= 0x00ffffff;
 		if (color == Color)
 		{
 			return Color;
@@ -1522,11 +1490,7 @@ class FlxSprite extends FlxObject
 		updateColorTransform();
 		
 		#if FLX_RENDER_TILE
-		_red = (color >> 16) / 255;
-		_green = (color >> 8 & 0xff) / 255;
-		_blue = (color & 0xff) / 255;
-		var c:Int = color;
-		isColored = c < 0xffffff;
+		isColored = color.to24Bit() != 0xffffff;
 		#end
 		
 		return color;

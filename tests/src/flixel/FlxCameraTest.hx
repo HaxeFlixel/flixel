@@ -3,10 +3,20 @@ package flixel;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.util.FlxColor;
+import helper.TestUtil;
 import massive.munit.Assert;
+import massive.munit.async.AsyncFactory;
 
 class FlxCameraTest extends FlxTest
 {
+	var camera:FlxCamera;
+	
+	@Before
+	function before()
+	{
+		camera = new FlxCamera();
+	}
+	
 	@Test
 	function testDefaultBgColor():Void
 	{
@@ -27,14 +37,35 @@ class FlxCameraTest extends FlxTest
 	}
 	
 	@Test
+	function testDefaultCameras():Void
+	{
+		Assert.areEqual(FlxG.cameras.list, FlxCamera.defaultCameras);
+	}
+	
+	@AsyncTest
+	function testDefaultCamerasStateSwitch(factory:AsyncFactory):Void
+	{
+		FlxCamera.defaultCameras = [FlxG.camera];
+		FlxG.switchState(new FlxState());
+		
+		delay(this, factory, function() {
+			Assert.areEqual(FlxG.cameras.list, FlxCamera.defaultCameras);
+		});
+	}
+	
+	@Test
 	function testAddAndRemoveCamera():Void
 	{
-		var camera = new FlxCamera();
-		
 		FlxG.cameras.add(camera);
 		Assert.areEqual(2, FlxG.cameras.list.length);
 		
 		FlxG.cameras.remove(camera);
 		Assert.areEqual(1, FlxG.cameras.list.length);
+	}
+	
+	@Test
+	function testDestroy():Void
+	{
+		TestUtil.testDestroy(camera);
 	}
 }

@@ -15,50 +15,22 @@ import flixel.math.FlxMath;
  */
 abstract FlxColor(Int) from Int from UInt to Int to UInt
 {
-	public static inline var RED:FlxColor =           0xffff0000;
-	public static inline var YELLOW:FlxColor =        0xffffff00;
-	public static inline var GREEN:FlxColor =         0xff008000;
-	public static inline var BLUE:FlxColor =          0xff0000ff;
-	public static inline var ORANGE:FlxColor =        0xffff8000;
-	public static inline var PINK:FlxColor =          0xffffc0cb;
-	public static inline var PURPLE:FlxColor =        0xff800080;
-	public static inline var WHITE:FlxColor =         0xffffffff;
-	public static inline var BLACK:FlxColor =         0xff000000;
-	public static inline var GRAY:FlxColor =          0xff808080;
-	public static inline var BROWN:FlxColor =         0xff964B00;
 	public static inline var TRANSPARENT:FlxColor =   0x00000000;
-	public static inline var IVORY:FlxColor =         0xfffffff0;
-	public static inline var BEIGE:FlxColor =         0xfff5f5dc;
-	public static inline var WHEAT:FlxColor =         0xfff5deb3;
-	public static inline var TAN:FlxColor =           0xffd2b48c;
-	public static inline var KHAKI:FlxColor =         0xffc3b091;
-	public static inline var SILVER:FlxColor =        0xffc0c0c0;
-	public static inline var CHARCOAL:FlxColor =      0xff464646;
-	public static inline var NAVY_BLUE:FlxColor =     0xff000080;
-	public static inline var ROYAL_BLUE:FlxColor =    0xff084c9e;
-	public static inline var MEDIUM_BLUE:FlxColor =   0xff0000cd;
-	public static inline var AZURE:FlxColor =         0xff007fff;
-	public static inline var CYAN:FlxColor =          0xff00ffff;
-	public static inline var MAGENTA:FlxColor =       0xffff00ff;
-	public static inline var AQUAMARINE:FlxColor =    0xff7fffd4;
-	public static inline var TEAL:FlxColor =          0xff008080;
-	public static inline var FOREST_GREEN:FlxColor =  0xff228b22;
-	public static inline var OLIVE:FlxColor =         0xff808000;
-	public static inline var CHARTREUSE:FlxColor =    0xff7fff00;
-	public static inline var LIME:FlxColor =          0xffbfff00;
-	public static inline var GOLDEN:FlxColor =        0xffffd700;
-	public static inline var GOLDENROD:FlxColor =     0xffdaa520;
-	public static inline var CORAL:FlxColor =         0xffff7f50;
-	public static inline var SALMON:FlxColor =        0xfffa8072;
-	public static inline var HOT_PINK:FlxColor =      0xfffc0fc0;
-	public static inline var FUCSHIA:FlxColor =       0xffff77ff;
-	public static inline var PUCE:FlxColor =          0xffcc8899;
-	public static inline var MAUVE:FlxColor =         0xffe0b0ff;
-	public static inline var LAVENDER:FlxColor =      0xffb57edc;
-	public static inline var PLUM:FlxColor =          0xff843179;
-	public static inline var INDIGO:FlxColor =        0xff4b0082;
-	public static inline var MAROON:FlxColor =        0xff800000;
-	public static inline var CRIMSON:FlxColor =       0xffdc143c;
+	public static inline var WHITE:FlxColor =         0xFFFFFFFF;
+	public static inline var GRAY:FlxColor =          0xFF808080;
+	public static inline var BLACK:FlxColor =         0xFF000000;
+	
+	public static inline var GREEN:FlxColor =         0xFF008000;
+	public static inline var LIME:FlxColor =          0xFF00FF00;
+	public static inline var YELLOW:FlxColor =        0xFFFFFF00;
+	public static inline var ORANGE:FlxColor =        0xFFFFA500;
+	public static inline var RED:FlxColor =           0xFFFF0000;
+	public static inline var PURPLE:FlxColor =        0xFF800080;
+	public static inline var BLUE:FlxColor =          0xFF0000FF;
+	public static inline var BROWN:FlxColor =         0xFF8B4513;
+	public static inline var PINK:FlxColor =          0xFFFFC0CB;
+	public static inline var MAGENTA:FlxColor =       0xFFFF00FF;
+	public static inline var CYAN:FlxColor =          0xFF00FFFF;
 	
 	public var red(get, set):Int;
 	public var blue(get, set):Int;
@@ -90,7 +62,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	/**
 	 * The lightness of the color (from 0 to 1)
 	 */
-	public var lightness (get, set):Float;
+	public var lightness(get, set):Float;
 	
 	/**
 	 * Create a color from the lest significant four bytes of an Int
@@ -205,7 +177,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 * @param 	Factor Value from 0 to 1 representing how much to shift Color1 toward Color2
 	 * @return	The interpolated color
 	 */
-	public static function interpolate(Color1:FlxColor, Color2:FlxColor, Factor:Float = 0.5):FlxColor
+	public static inline function interpolate(Color1:FlxColor, Color2:FlxColor, Factor:Float = 0.5):FlxColor
 	{
 		var r:Int = Std.int((Color2.red - Color1.red) * Factor + Color1.red);
 		var g:Int = Std.int((Color2.green - Color1.green) * Factor + Color1.green);
@@ -242,6 +214,34 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 		}
 		
 		return output;
+	}
+	
+	/**
+	 * Multiply the RGB channels of two FlxColors
+	 */
+	@:op(A * B)
+	public static inline function multiply(lhs:FlxColor, rhs:FlxColor):FlxColor
+	{
+		return FlxColor.fromRGBFloat(lhs.redFloat * rhs.redFloat, lhs.greenFloat * rhs.greenFloat, lhs.blueFloat * rhs.blueFloat);
+	}
+	
+	
+	/**
+	 * Add the RGB channels of two FlxColors
+	 */
+	@:op(A + B)
+	public static inline function add(lhs:FlxColor, rhs:FlxColor):FlxColor
+	{
+		return FlxColor.fromRGB(lhs.red + rhs.red, lhs.green + rhs.green, lhs.blue + rhs.blue);
+	}
+	
+	/**
+	 * Subtract the RGB channels of one FlxColor from another
+	 */
+	@:op(A - B)
+	public static inline function subtract(lhs:FlxColor, rhs:FlxColor):FlxColor
+	{
+		return FlxColor.fromRGB(lhs.red - rhs.red, lhs.green - rhs.green, lhs.blue - rhs.blue);
 	}
 	
 	/**
@@ -301,16 +301,6 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	}
 	
 	/**
-	 * Clone this FlxColor
-	 * 
-	 * @return A copy of this FlxColor
-	 */
-	public inline function clone():FlxColor
-	{
-		return fromInt(this);
-	}
-	
-	/**
 	 * Return a 24 bit version of this color (i.e. without an alpha value)
 	 * 
 	 * @return A 24 bit version of this color
@@ -358,35 +348,44 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 		result += "Alpha: " + alpha + " Red: " + red + " Green: " + green + " Blue: " + blue + "\n";
 		// HSB/HSL info
 		result += "Hue: " + FlxMath.roundDecimal(hue, 2) + " Saturation: " + FlxMath.roundDecimal(saturation, 2) + 
-			" Brightness: " + FlxMath.roundDecimal(brightness, 2) + " Lightnes: " + FlxMath.roundDecimal(lightness, 2);
+			" Brightness: " + FlxMath.roundDecimal(brightness, 2) + " Lightness: " + FlxMath.roundDecimal(lightness, 2);
 		
 		return result;
 	}
 	
 	/**
-	 * Get a darker version of this color.
+	 * Get a darkened version of this color
 	 * 
 	 * @param	Factor Value from 0 to 1 of how much to progress toward black.
-	 * @return 	This color, darkened
+	 * @return 	A darkened version of this color
 	 */
-	public function darken(Factor:Float = 0.2):FlxColor
+	public function getDarkened(Factor:Float = 0.2):FlxColor
 	{
-		Factor = FlxMath.bound(Factor, 0, 1);
-		lightness *= (1 - Factor);
-		return this;
+		return interpolate(this, FlxColor.BLACK, Factor);
 	}
 	
 	/**
-	 * Get a lighter version of this color.
+	 * Get a lightened version of this color
 	 * 
 	 * @param	Factor Value from 0 to 1 of how much to progress toward white.
-	 * @return 	This color, brightened
+	 * @return 	A lightened version of this color
 	 */
-	public inline function lighten(Factor:Float = 0.2):FlxColor
+	public inline function getLightened(Factor:Float = 0.2):FlxColor
 	{
-		Factor = FlxMath.bound(Factor, 0, 1);
-		lightness += (1 - lightness) * Factor;
-		return this;
+		return interpolate(this, FlxColor.WHITE, Factor);
+	}
+	
+	/**
+	 * Get the inversion of this color
+	 * 
+	 * @return The inversion of this color
+	 */
+	public inline function getInverted():FlxColor
+	{
+		var oldAlpha = alpha;
+		var output:FlxColor = FlxColor.WHITE - this;
+		output.alpha = oldAlpha;
+		return output;
 	}
 	
 	/**
@@ -455,7 +454,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 */
 	public inline function setHSB(Hue:Float, Saturation:Float, Brightness:Float, Alpha:Float):FlxColor
 	{
-		var chroma =  Brightness * Saturation;
+		var chroma = Brightness * Saturation;
 		var match = Brightness - chroma;
 		return setHSChromaMatch(Hue, Saturation, chroma, match, Alpha);
 	}
@@ -471,7 +470,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 */
 	public inline function setHSL(Hue:Float, Saturation:Float, Lightness:Float, Alpha:Float):FlxColor
 	{
-		var chroma =  (1 - Math.abs(2 * Lightness - 1)) * Saturation;
+		var chroma = (1 - Math.abs(2 * Lightness - 1)) * Saturation;
 		var match = Lightness - chroma / 2;
 		return setHSChromaMatch(Hue, Saturation, chroma, match, Alpha);
 	}
@@ -547,28 +546,28 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	private inline function set_red(Value:Int):Int
 	{
 		this &= 0xff00ffff;
-		this |= Value << 16;
+		this |= boundChannel(Value) << 16;
 		return Value;
 	}
 	
 	private inline function set_green(Value:Int):Int
 	{
 		this &= 0xffff00ff;
-		this |= Value << 8;
+		this |= boundChannel(Value) << 8;
 		return Value;
 	}
 	
 	private inline function set_blue(Value:Int):Int
 	{
 		this &= 0xffffff00;
-		this |= Value;
+		this |= boundChannel(Value);
 		return Value;
 	}
 	
 	private inline function set_alpha(Value:Int):Int
 	{
 		this &= 0x00ffffff;
-		this |= Value << 24;
+		this |= boundChannel(Value) << 24;
 		return Value;
 	}
 	
@@ -699,6 +698,11 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	private inline function minColor():Float
 	{
 		return Math.min(redFloat, Math.min(greenFloat, blueFloat));
+	}
+	
+	private inline function boundChannel(Value:Int):Int
+	{
+		return Value > 0xff ? 0xff : Value < 0 ? 0 : Value;
 	}
 	
 	@:commutative

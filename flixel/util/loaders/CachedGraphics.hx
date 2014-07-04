@@ -85,24 +85,17 @@ class CachedGraphics
 	 */
 	public function undump():Void
 	{
-		#if FLX_RENDER_TILE
-		if (isDumped)
+		var newBitmap:BitmapData = getBitmapFromSystem();
+		if (newBitmap != null)
 		{
-			var newBitmap:BitmapData = getBitmapFromSystem();
-
-			if (newBitmap != null)
+			bitmap = newBitmap;
+			if (_tilesheet != null)
 			{
-				bitmap = newBitmap;
-				if (_tilesheet != null)
-				{
-					// regenerate tilesheet
-					_tilesheet.onContext(newBitmap);
-				}
+				// regenerate tilesheet
+				_tilesheet.onContext(newBitmap);
 			}
-
-			isDumped = false;
 		}
-		#end
+		isDumped = false;
 	}
 
 	/**
@@ -116,6 +109,19 @@ class CachedGraphics
 		{
 			undump();	// restore everything
 			dump();	// and dump bitmapdata again
+		}
+	}
+	
+	public function onAssetsReload():Void
+	{
+		if (!canBeDumped)	return;
+		
+		var dumped:Bool = isDumped;
+		undump();
+		_tilesheet.destroyFrameBitmapDatas();
+		if (dumped)
+		{
+			dump();
 		}
 	}
 
@@ -160,7 +166,7 @@ class CachedGraphics
 		return _tilesheet;
 	}
 
-	private function getBitmapFromSystem():BitmapData
+	public function getBitmapFromSystem():BitmapData
 	{
 		var newBitmap:BitmapData = null;
 		if (assetsClass != null)

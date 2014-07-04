@@ -202,6 +202,7 @@ private class FileReference
 }
 #else
 typedef FlxSoundAsset = OneOfThree<String, Sound, Class<Sound>>;
+// Class<Dynamic> should actually be Class<BitmapData>, but needs to be the former so we can use Std.is() on it
 typedef FlxGraphicAsset = OneOfFive<String, Class<Dynamic>, CachedGraphics, TextureRegion, BitmapData>;
 typedef FlxTextureAsset = OneOfTwo<TexturePackerData, CachedGraphics>;
 typedef FlxTilemapAsset = OneOfTwo<String, Array<Int>>;

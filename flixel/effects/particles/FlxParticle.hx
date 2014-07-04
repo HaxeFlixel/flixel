@@ -3,6 +3,10 @@ package flixel.effects.particles;
 import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.math.FlxPoint;
+import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
+import flixel.util.helpers.FlxRange;
 
 /**
  * This is a simple particle class that extends the default behavior
@@ -15,76 +19,58 @@ import flixel.FlxSprite;
 class FlxParticle extends FlxSprite implements IFlxParticle
 {
 	/**
-	 * How long this particle lives before it disappears.
-	 * NOTE: this is a maximum, not a minimum; the object
-	 * could get recycled before its lifespan is up.
+	 * How long this particle lives before it disappears. Set to 0 to never kill() the particle automatically.
+	 * NOTE: this is a maximum, not a minimum; the object could get recycled before its lifespan is up.
 	 */
 	public var lifespan:Float = 0;
 	/**
-	 * Determines how quickly the particles come to rest on the ground.
-	 * Only used if the particle has gravity-like acceleration applied.
+	 * How long this particle has lived so far.
 	 */
-	public var friction:Float = 500;
+	public var age(default, null):Float = 0;
 	/**
-	 * If this is set to true, particles will slowly fade away by
-	 * decreasing their alpha value based on their lifespan.
-	*/
-	public var useFading:Bool = false;
-	/**
-	 * If this is set to true, particles will slowly decrease in scale
-	 * based on their lifespan.
-	 * WARNING: This severely impacts performance on flash target.
-	*/
-	public var useScaling:Bool = false;
-	/**
-	 * If this is set to true, particles will change their color
-	 * based on their lifespan and start and range color components values.
+	 * What percentage progress this particle has made of its total life. Essentially just (age / lifespan) on a scale from 0 to 1.
 	 */
-	public var useColoring:Bool = false;
+	public var percent(default, null):Float = 0;
 	/**
-	 * Helper variable for fading, scaling and coloring particle.
+	 * Whether or not the hitbox should be updated each frame when scaling.
 	 */
-	public var maxLifespan:Float;
+	public var autoUpdateHitbox:Bool = false;
 	/**
-	 * Start value for particle's alpha
+	 * The range of values for velocity over this particle's lifespan.
 	 */
-	public var startAlpha:Float;
+	public var velocityRange:FlxRange<FlxPoint>;
 	/**
-	 * Range of alpha change during particle's life
+	 * The range of values for angularVelocity over this particle's lifespan.
 	 */
-	public var rangeAlpha:Float;
+	public var angularVelocityRange:FlxRange<Float>;
 	/**
-	 * Start value for particle's scale.x and scale.y
+	 * The range of values for scale over this particle's lifespan.
 	 */
-	public var startScale:Float;
+	public var scaleRange:FlxRange<FlxPoint>;
 	/**
-	 * Range of scale change during particle's life
+	 * The range of values for alpha over this particle's lifespan.
 	 */
-	public var rangeScale:Float;
+	public var alphaRange:FlxRange<Float>;
 	/**
-	 * Start value for particle's red color component
+	 * The range of values for color over this particle's lifespan.
 	 */
-	public var startRed:Float;
+	public var colorRange:FlxRange<FlxColor>;
 	/**
-	 * Start value for particle's green color component
+	 * The range of values for drag over this particle's lifespan.
 	 */
-	public var startGreen:Float;
+	public var dragRange:FlxRange<FlxPoint>;
 	/**
-	 * Start value for particle's blue color component
+	 * The range of values for acceleration over this particle's lifespan.
 	 */
-	public var startBlue:Float;
+	public var accelerationRange:FlxRange<FlxPoint>;
 	/**
-	 * Range of red color component change during particle's life
+	 * The range of values for elasticity over this particle's lifespan.
 	 */
-	public var rangeRed:Float;
+	public var elasticityRange:FlxRange<Float>;
 	/**
-	 * Range of green color component change during particle's life
+	 * The amount of change from the previous frame.
 	 */
-	public var rangeGreen:Float;
-	/**
-	 * Range of blue color component change during particle's life
-	 */
-	public var rangeBlue:Float;
+	private var _delta:Float = 0;
 	
 	/**
 	 * Instantiate a new particle. Like FlxSprite, all meaningful creation
@@ -93,99 +79,118 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 	public function new()
 	{
 		super();
+		
+		velocityRange = new FlxRange<FlxPoint>(FlxPoint.get(), FlxPoint.get());
+		angularVelocityRange = new FlxRange<Float>(0);
+		scaleRange = new FlxRange<FlxPoint>(FlxPoint.get(1,1), FlxPoint.get(1,1));
+		alphaRange = new FlxRange<Float>(1, 1);
+		colorRange = new FlxRange<FlxColor>(FlxColor.WHITE);
+		dragRange = new FlxRange<FlxPoint>(FlxPoint.get(), FlxPoint.get());
+		accelerationRange = new FlxRange<FlxPoint>(FlxPoint.get(), FlxPoint.get());
+		elasticityRange = new FlxRange<Float>(0);
+		
 		exists = false;
 	}
 	
 	/**
-	 * The particle's main update logic.  Basically it checks to see if it should
-	 * be dead yet, and then has some special bounce behavior if there is some gravity on it.
+	 * Clean up memory.
+	 */
+	override public function destroy():Void
+	{
+		FlxDestroyUtil.put(velocityRange.start);
+		FlxDestroyUtil.put(velocityRange.end);
+		FlxDestroyUtil.put(scaleRange.start);
+		FlxDestroyUtil.put(scaleRange.end);
+		FlxDestroyUtil.put(dragRange.start);
+		FlxDestroyUtil.put(dragRange.end);
+		FlxDestroyUtil.put(accelerationRange.start);
+		FlxDestroyUtil.put(accelerationRange.end);
+		
+		velocityRange = null;
+		angularVelocityRange = null;
+		scaleRange = null;
+		alphaRange = null;
+		colorRange = null;
+		dragRange = null;
+		accelerationRange = null;
+		elasticityRange = null;
+		
+		super.destroy();
+	}
+	
+	/**
+	 * The particle's main update logic. Basically updates properties if alive, based on ranged properties.
 	 */
 	override public function update():Void
 	{
-		// Lifespan behavior
-		if (lifespan > 0)
+		if (age < lifespan)
 		{
-			lifespan -= FlxG.elapsed;
-			if (lifespan <= 0)
+			age += FlxG.elapsed;
+		}
+		
+		if (age >= lifespan && lifespan != 0)
+		{
+			kill();
+		}
+		else
+		{
+			_delta = FlxG.elapsed / lifespan;
+			percent = age / lifespan;
+			
+			if (velocityRange.active)
 			{
-				kill();
+				velocity.x += (velocityRange.end.x - velocityRange.start.x) * _delta;
+				velocity.y += (velocityRange.end.y - velocityRange.start.y) * _delta;
 			}
 			
-			var lifespanRatio:Float = (1 - lifespan / maxLifespan);
-			
-			// Fading
-			if (useFading)
+			if (angularVelocityRange.active)
 			{
-				alpha = startAlpha + lifespanRatio * rangeAlpha;
+				angularVelocity += (angularVelocityRange.end - angularVelocityRange.start) * _delta;
 			}
 			
-			// Changing size
-			if (useScaling)
+			if (scaleRange.active)
 			{
-				scale.x = scale.y = startScale + lifespanRatio * rangeScale;
+				scale.x += (scaleRange.end.x - scaleRange.start.x) * _delta;
+				scale.y += (scaleRange.end.y - scaleRange.start.y) * _delta;
+				if (autoUpdateHitbox) updateHitbox();
 			}
 			
-			// Tinting
-			if (useColoring)
+			if (alphaRange.active)
 			{
-				var redComp:Float = startRed + lifespanRatio * rangeRed;
-				var greenComp:Float = startGreen + lifespanRatio * rangeGreen;
-				var blueComp:Float = startBlue + lifespanRatio * rangeBlue;
-				
-				color = Std.int(255 * redComp) << 16 | Std.int(255 * greenComp) << 8 | Std.int(255 * blueComp);
+				alpha += (alphaRange.end - alphaRange.start) * _delta;
 			}
 			
-			// Simpler bounce/spin behavior for now
-			if (touching != 0)
+			if (colorRange.active)
 			{
-				if (angularVelocity != 0)
-				{
-					angularVelocity = -angularVelocity;
-				}
+				color = FlxColor.interpolate(colorRange.start, colorRange.end, percent);
 			}
-			// Special behavior for particles with gravity
-			if (acceleration.y > 0)
+			
+			if (dragRange.active)
 			{
-				if ((touching & FlxObject.FLOOR) != 0)
-				{
-					drag.x = friction;
-					
-					if ((wasTouching & FlxObject.FLOOR) == 0)
-					{
-						if (velocity.y < -elasticity * 10)
-						{
-							if (angularVelocity != 0)
-							{
-								angularVelocity *= -elasticity;
-							}
-						}
-						else
-						{
-							velocity.y = 0;
-							angularVelocity = 0;
-						}
-					}
-				}
-				else
-				{
-					drag.x = 0;
-				}
+				drag.x += (dragRange.end.x - dragRange.start.x) * _delta;
+				drag.y += (dragRange.end.y - dragRange.start.y) * _delta;
+			}
+			
+			if (accelerationRange.active)
+			{
+				acceleration.x += (accelerationRange.end.x - accelerationRange.start.x) * _delta;
+				acceleration.y += (accelerationRange.end.y - accelerationRange.start.y) * _delta;
+			}
+			
+			if (elasticityRange.active)
+			{
+				elasticity += (elasticityRange.end - elasticityRange.start) * _delta;
 			}
 		}
 		
-		if (exists && alive)
-		{
-			super.update();
-		}
+		super.update();
 	}
 	
 	override public function reset(X:Float, Y:Float):Void 
 	{
 		super.reset(X, Y);
-		
-		alpha = 1.0;
-		scale.x = scale.y = 1.0;
-		color = 0xffffff;
+		age = 0;
+		visible = true;
 	}
 	
 	/**
@@ -198,21 +203,17 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 interface IFlxParticle extends IFlxSprite
 {
 	public var lifespan:Float;
-	public var friction:Float;
-	public var useFading:Bool;
-	public var useScaling:Bool;
-	public var useColoring:Bool;
-	public var maxLifespan:Float;
-	public var startAlpha:Float;
-	public var rangeAlpha:Float;
-	public var startScale:Float;
-	public var rangeScale:Float;
-	public var startRed:Float;
-	public var startGreen:Float;
-	public var startBlue:Float;
-	public var rangeRed:Float;
-	public var rangeGreen:Float;
-	public var rangeBlue:Float;
+	public var age(default, null):Float;
+	public var percent(default, null):Float;
+	public var autoUpdateHitbox:Bool;
+	public var velocityRange:FlxRange<FlxPoint>;
+	public var angularVelocityRange:FlxRange<Float>;
+	public var scaleRange:FlxRange<FlxPoint>;
+	public var alphaRange:FlxRange<Float>;
+	public var colorRange:FlxRange<FlxColor>;
+	public var dragRange:FlxRange<FlxPoint>;
+	public var accelerationRange:FlxRange<FlxPoint>;
+	public var elasticityRange:FlxRange<Float>;
 	
 	public function onEmit():Void;
 }

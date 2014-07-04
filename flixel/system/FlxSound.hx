@@ -1,6 +1,5 @@
 package flixel.system;
 
-#if !FLX_NO_SOUND_SYSTEM
 import flash.events.Event;
 import flash.media.Sound;
 import flash.media.SoundChannel;
@@ -10,11 +9,13 @@ import flash.utils.ByteArray;
 import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.system.FlxAssets.FlxSoundAsset;
-import flixel.system.frontEnds.SoundFrontEnd;
 import flixel.tweens.FlxTween;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import openfl.Assets;
+
+#if !FLX_NO_SOUND_SYSTEM
+import flixel.system.frontEnds.SoundFrontEnd;
 #end
 
 /**
@@ -22,7 +23,6 @@ import openfl.Assets;
  */
 class FlxSound extends FlxBasic
 {
-	#if !FLX_NO_SOUND_SYSTEM
 	/**
 	 * The X position of this sound in world coordinates.
 	 * Only really matters if you are doing proximity/panning stuff.
@@ -82,7 +82,10 @@ class FlxSound extends FlxBasic
 	 * The position in runtime of the music playback.
 	 */
 	public var time(default, null):Float;
-
+	/**
+	 * Whether or not this sound should loop.
+	 */
+	public var looped(get, set):Bool;
 	/**
 	 * Internal tracker for a Flash sound object.
 	 */
@@ -108,10 +111,6 @@ class FlxSound extends FlxBasic
 	 */
 	private var _volumeAdjust:Float = 1.0;
 	/**
-	 * Internal tracker for whether the sound is looping or not.
-	 */
-	private var _looped:Bool;
-	/**
 	 * Internal tracker for the sound's "target" (for proximity and panning).
 	 */
 	private var _target:FlxObject;
@@ -127,6 +126,10 @@ class FlxSound extends FlxBasic
 	 * Helper var to prevent the sound from playing after focus was regained when it was already paused.
 	 */
 	private var _alreadyPaused:Bool = false;
+	/**
+	 * Internal tracker for looped state.
+	 */
+	private var _looped:Bool = false;
 	
 	/**
 	 * The FlxSound constructor gets all the variables initialized, but NOT ready to play a sound yet.
@@ -316,6 +319,7 @@ class FlxSound extends FlxBasic
 		return this;
 	}
 	
+	#if flash11
 	/**
 	 * One of the main setup functions for sounds, this function loads a sound from a ByteArray.
 	 * 
@@ -342,6 +346,7 @@ class FlxSound extends FlxBasic
 		#end
 		return this;	
 	}
+	#end
 	
 	/**
 	 * Call this function if you want this sound's volume to change
@@ -490,7 +495,11 @@ class FlxSound extends FlxBasic
 	 */
 	private function updateTransform():Void
 	{
+		#if !FLX_NO_SOUND_SYSTEM
 		_transform.volume = (FlxG.sound.muted ? 0 : 1) * FlxG.sound.volume * _volume * _volumeAdjust;
+		#else
+		_transform.volume = _volume * _volumeAdjust;
+		#end
 		if (_channel != null)
 		{
 			_channel.soundTransform = _transform;
@@ -502,7 +511,8 @@ class FlxSound extends FlxBasic
 	 */
 	private function startSound(Position:Float):Void
 	{
-		var numLoops:Int = (_looped && (Position == 0)) ? 9999 : 0;
+		var numLoops:Int = _looped ? FlxMath.MAX_VALUE_INT : 0;
+		
 		time = Position;
 		_paused = false;
 		_channel = _sound.play(time, numLoops, _transform);
@@ -584,6 +594,7 @@ class FlxSound extends FlxBasic
 		_sound.removeEventListener(Event.ID3, gotID3);
 	}
 	
+	#if !FLX_NO_SOUND_SYSTEM
 	@:allow(flixel.system.frontEnds.SoundFrontEnd)
 	private function onFocus():Void
 	{
@@ -599,6 +610,7 @@ class FlxSound extends FlxBasic
 		_alreadyPaused = _paused;
 		pause();
 	}
+	#end
 	
 	private inline function get_playing():Bool
 	{
@@ -612,15 +624,7 @@ class FlxSound extends FlxBasic
 	
 	private function set_volume(Volume:Float):Float
 	{
-		_volume = Volume;
-		if (_volume < 0)
-		{
-			_volume = 0;
-		}
-		else if (_volume > 1)
-		{
-			_volume = 1;
-		}
+		_volume = FlxMath.bound(Volume, 0, 1);
 		updateTransform();
 		return Volume;
 	}
@@ -634,5 +638,29 @@ class FlxSound extends FlxBasic
 	{
 		return _transform.pan = pan;
 	}
-	#end
+	
+	private inline function get_looped():Bool
+	{
+		return _looped;
+	}
+	
+	private inline function set_looped(loop:Bool):Bool
+	{
+		// If we're going from looping to not looping while playing,
+		// the channel needs to be updated so it won't loop next time.
+		
+		if (!loop && _looped && playing)
+		{
+			_looped = loop;
+			var pos:Float = _channel.position;
+			cleanup(false, false, false);
+			startSound(pos);
+		}
+		else
+		{
+			_looped = loop;
+		}
+		
+		return loop;
+	}
 }
