@@ -78,7 +78,7 @@ class FlxAssets
 				{
 					var extension:String = name.split(".")[1]; // get the string after the dot
 					if (filterExtensions.indexOf(extension) == -1)
-						break;
+						continue;
 				}
 				
 				fileReferences.push(new FileReference(directory + name));
