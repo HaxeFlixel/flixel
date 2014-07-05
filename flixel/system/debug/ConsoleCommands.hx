@@ -282,9 +282,10 @@ class ConsoleCommands
 			return;
 	
 		var fields:Array<String> = [];
+		var isClass:Bool = Std.is(pathToVariable.object, Class);
 		
 		// passed a class -> get static fields
-		if (Std.is(pathToVariable.object, Class) && pathToVariable.variableName == "")
+		if (isClass && pathToVariable.variableName == "")
 		{
 			fields = Type.getClassFields(pathToVariable.object);
 		}
@@ -296,6 +297,14 @@ class ConsoleCommands
 		
 			var cl = Type.getClass(instance);
 			fields = ConsoleUtil.getInstanceFieldsAdvanced(cl, NumSuperClassesToInclude);
+		}
+		
+		var object = isClass ? pathToVariable.object : 
+			Reflect.getProperty(pathToVariable.object, pathToVariable.variableName);
+		
+		for (i in 0...fields.length)
+		{
+			fields[i] += ":" + ConsoleUtil.getTypeName(Reflect.getProperty(object, fields[i]));
 		}
 		
 		ConsoleUtil.log("fields: list of fields for " + ObjectAndVariable);

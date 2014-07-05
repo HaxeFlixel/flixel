@@ -211,6 +211,13 @@ class FlxSpriteTest extends FlxTest
 		Assert.areEqual(3, animation.numFrames);
 	}
 	
+	@Test // issue 1203
+	function testColorWithAlphaComparison():Void
+	{
+		sprite1.color = FlxColor.RED;
+		Assert.areEqual(FlxColor.RED, sprite1.color);
+	}
+	
 	@Test
 	function testDestroy():Void
 	{
