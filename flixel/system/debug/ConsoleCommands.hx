@@ -298,6 +298,14 @@ class ConsoleCommands
 			fields = ConsoleUtil.getInstanceFieldsAdvanced(cl, NumSuperClassesToInclude);
 		}
 		
+		var object = Reflect.getProperty(pathToVariable.object, pathToVariable.variableName);
+		
+		for (i in 0...fields.length)
+		{
+			fields[i] += ":" + ConsoleUtil.getTypeName(Reflect.getProperty(object, fields[i]));
+			
+		}
+		
 		ConsoleUtil.log("fields: list of fields for " + ObjectAndVariable);
 		var output:String = "";
 		for (field in fields)
