@@ -341,7 +341,8 @@ class BitmapLog extends Window
 		var gfx:Graphics = FlxSpriteUtil.flashGfx;
 		gfx.clear();
 		gfx.lineStyle(1, FlxColor.RED, 0.75, false, LineScaleMode.NONE);
-		gfx.drawRect(0, 0, bitmap.width, bitmap.height);
+		var offset = 1 / zoom;
+		gfx.drawRect(-offset, -offset, bitmap.width + offset, bitmap.height + offset);
 	}
 	
 	private function onMouseWheel(e:MouseEvent):Void

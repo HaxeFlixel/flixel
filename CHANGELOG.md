@@ -49,7 +49,9 @@
 * Moved FlxMath, FlxPoint, FlxRect, FlxRect, FlxAngle, FlxVelocity and FlxRandom to flixel.math
 * FlxSubState: fix for calling close() within create()
 * FlxPath: exposed nodeIndex as a read-only property
-* FlxAssets.cacheSounds() -> FlxG.sound.cacheAll()
+* FlxAssets:
+ * cacheSounds() -> FlxG.sound.cacheAll()
+ * fixed the filterExtensions parameter of getFileReferences()
 * FlxMouse and FlxTouch now extend a new common base class FlxPointer instead of FlxPoint
  * adds overlaps() to FlxMouse 
 * FlxTilemap:
@@ -112,7 +114,10 @@
 * FlxObject: added toPoint() and toRect()
 * FlxVector: fixed behaviour of set_length() for (0, 0) vectors
 * PS4 / PS3ButtonID: removed the _BUTTON suffix for consistency with other button ID classes
-* FlxSprite: added graphicLoaded() which is called whenever a new graphic is loaded
+* FlxSprite:
+ * added graphicLoaded() which is called whenever a new graphic is loaded
+ * getScreenXY() -> getScreenPosition()
+ * removed the NewSprite param from clone()
 * FlxAnalog: changed the default value for scrollFactor to (0, 0) and for moves to false
 * Added some helpful error messages when trying to target older swf versions
 * FlxAngle:
@@ -129,8 +134,9 @@
 * Added support for reloading graphics via OpenFL live asset reloading (native targets)
 * FlxSound
   * Can now be used even if FLX_NO_SOUND_SYSTEM is enabled
-  * Looped is exposed as a public variable
+  * looped is exposed as a public variable
 * FlxVelocity: accelerateTowards()-functions now only take a single maxSpeed param (instead of x and y)
+* FlxG.signals: split gameReset into pre/post signals
 
 3.3.4
 ------------------------------
