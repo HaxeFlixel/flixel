@@ -246,11 +246,11 @@ class FlxSprite extends FlxObject
 	 * @param	rect	Rectangle which will be used for clipping frames.
 	 * @return	this 	FlxSprite object
 	 */
-	public function clipRect(rect:Rectangle):FlxSprite
+	public function clipRect(rect:Rectangle, useOriginal:Bool = true):FlxSprite
 	{
 		if (cachedGraphics != null && framesData != null)
 		{
-			framesData = cachedGraphics.tilesheet.clipFrames(this.framesData, rect);
+			framesData = cachedGraphics.tilesheet.clipFrames(this.framesData, rect, useOriginal);
 			frames = framesData.frames.length;
 			animation.frameIndex = 0;
 			frame = framesData.frames[0];			

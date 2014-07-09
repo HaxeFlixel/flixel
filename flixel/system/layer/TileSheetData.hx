@@ -64,12 +64,21 @@ class TileSheetData implements IFlxDestroyable
 	 * @param	clipRect	Rectangle which will be used for clipping frames
 	 * @return	Collection of clipped frames
 	 */
-	public function clipFrames(frames:FlxSpriteFrames, clipRect:Rectangle):FlxSpriteFrames
+	public function clipFrames(frames:FlxSpriteFrames, clipRect:Rectangle, useOriginal:Bool = true):FlxSpriteFrames
 	{
 		// do not allow negative width/height
 		if (clipRect.width < 0 || clipRect.height < 0) 
 		{
 			return null;
+		}
+		
+		if (useOriginal)
+		{
+			var original:FlxSpriteFrames = frames.original;
+			if (original != null)
+			{
+				frames = original;
+			}
 		}
 		
 		var name:String = frames.name;
@@ -139,6 +148,7 @@ class TileSheetData implements IFlxDestroyable
 			}
 		}
 		
+		spriteData.original = frames;
 		flxSpriteFrames.set(name, spriteData);
 		return spriteData;
 	}
