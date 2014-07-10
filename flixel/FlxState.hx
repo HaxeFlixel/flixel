@@ -77,7 +77,6 @@ class FlxState extends FlxGroup
 	public inline function closeSubState():Void
 	{
 		_requestSubStateReset = true;
-		_requestedSubState = null;
 	}
 
 	/**
@@ -100,6 +99,7 @@ class FlxState extends FlxGroup
 		
 		// Assign the requested state (or set it to null)
 		subState = _requestedSubState;
+		_requestedSubState = null;
 		
 		if (subState != null)
 		{
