@@ -254,7 +254,24 @@ class FlxSprite extends FlxObject
 			frames = framesData.frames.length;
 			animation.frameIndex = 0;
 			frame = framesData.frames[0];			
-			resetSizeFromFrame();
+		}
+		
+		return this;
+	}
+	
+	public function unclip():FlxSprite
+	{
+		if (cachedGraphics != null && framesData != null)
+		{
+			var original:FlxSpriteFrames = framesData.original;
+			if (original == null)
+			{
+				return this;
+			}
+			framesData = original;
+			frames = framesData.frames.length;
+			animation.frameIndex = 0;
+			frame = framesData.frames[0];			
 		}
 		
 		return this;
