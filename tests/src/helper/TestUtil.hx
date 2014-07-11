@@ -3,6 +3,7 @@ package helper;
 import flash.errors.Error;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import massive.munit.Assert;
+import flixel.FlxG;
 
 class TestUtil
 {
@@ -17,5 +18,12 @@ class TestUtil
 		{
 			Assert.fail(e.message);
 		}
+	}
+	
+	@:access(flixel)
+	public static function step()
+	{
+		FlxG.state.tryUpdate();
+		FlxG.state.draw();
 	}
 }
