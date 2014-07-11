@@ -4,8 +4,8 @@ import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 
 class FlxSpriteFrames implements IFlxDestroyable
 {
-	public var frames:Array<FlxFrame>;
-	public var framesHash:Map<String, FlxFrame>;
+	public var frames = new Array<FlxFrame>();
+	public var framesHash = new Map<String, FlxFrame>();
 	public var name:String;
 	
 	@:isVar
@@ -14,8 +14,6 @@ class FlxSpriteFrames implements IFlxDestroyable
 	public function new(name:String)
 	{
 		this.name = name;
-		frames = [];
-		framesHash = new Map<String, FlxFrame>();
 	}
 	
 	public function addFrame(frame:FlxFrame):Void

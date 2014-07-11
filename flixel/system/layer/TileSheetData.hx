@@ -3,6 +3,7 @@ package flixel.system.layer;
 import flash.display.BitmapData;
 import flash.geom.Point;
 import flash.geom.Rectangle;
+import flixel.math.FlxRect;
 import flixel.system.layer.frames.FlxFrame;
 import flixel.system.layer.frames.FlxRotatedFrame;
 import flixel.system.layer.frames.FlxSpriteFrames;
@@ -64,7 +65,7 @@ class TileSheetData implements IFlxDestroyable
 	 * @param	clipRect	Rectangle which will be used for clipping frames
 	 * @return	Collection of clipped frames
 	 */
-	public function clipFrames(frames:FlxSpriteFrames, clipRect:Rectangle, useOriginal:Bool = true):FlxSpriteFrames
+	public function clipFrames(frames:FlxSpriteFrames, clipRect:FlxRect, useOriginal:Bool = true):FlxSpriteFrames
 	{
 		// do not allow negative width/height
 		if (clipRect.width < 0 || clipRect.height < 0) 
@@ -108,7 +109,7 @@ class TileSheetData implements IFlxDestroyable
 		for (frame in frames.frames)
 		{
 			frameRect.setTo(0, 0, frame.sourceSize.x, frame.sourceSize.y);
-			newFrameRect = frameRect.intersection(clipRect);
+			newFrameRect = frameRect.intersection(clipRect.copyToFlash());
 			if (newFrameRect.width <= 0 || newFrameRect.height <= 0)
 			{
 				// Empty frame

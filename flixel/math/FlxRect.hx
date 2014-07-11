@@ -173,8 +173,13 @@ class FlxRect implements IFlxPooled
 	 * @param	Point	Any Rectangle.
 	 * @return	A reference to the altered rectangle parameter.
 	 */
-	public inline function copyToFlash(FlashRect:Rectangle):Rectangle
+	public inline function copyToFlash(?FlashRect:Rectangle):Rectangle
 	{
+		if (FlashRect == null)
+		{
+			FlashRect = new Rectangle();
+		}
+		
 		FlashRect.x = x;
 		FlashRect.y = y;
 		FlashRect.width = width;
