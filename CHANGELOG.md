@@ -47,7 +47,9 @@
  * range properties (velocityRange, alphaRange) which determine particle behavior after launch
  * "active" flags (alphaRange.active, velocityRange.active, etc) which FlxEmitter uses to control particle behavior
 * Moved FlxMath, FlxPoint, FlxRect, FlxRect, FlxAngle, FlxVelocity and FlxRandom to flixel.math
-* FlxSubState: fix for calling close() within create()
+* FlxSubState:
+ * fixed calling close() within create()
+ * fixed openSubState() not working when close() is called afterwards on the current substate on the same frame
 * FlxPath: exposed nodeIndex as a read-only property
 * FlxAssets:
  * cacheSounds() -> FlxG.sound.cacheAll()
@@ -60,7 +62,9 @@
  * fixed a bug in overlapsAt()
  * loadMap() now treats tile indices with negative values in the map data as 0
  * fixed a crash when trying to create a single-column tilemap
-* Console: the set command now supports arrays
+* Console:
+ * the set command now supports arrays
+ * the fields command now has type info for the fields
 * FlxTween: fixed a bug when tweening the same field with several tweens + startDelay
 * FlxColor:
  * FlxColor is now an abstract, interchangable with Int - the FlxColorUtil functions have been merged into it
@@ -116,6 +120,7 @@
  * added graphicLoaded() which is called whenever a new graphic is loaded
  * getScreenXY() -> getScreenPosition()
  * removed the NewSprite param from clone()
+ * added clipRect() and unclip()
 * FlxAnalog: changed the default value for scrollFactor to (0, 0) and for moves to false
 * Added some helpful error messages when trying to target older swf versions
 * FlxAngle:
@@ -135,6 +140,7 @@
   * looped is exposed as a public variable
 * FlxVelocity: accelerateTowards()-functions now only take a single maxSpeed param (instead of x and y)
 * FlxG.signals: split gameReset into pre/post signals
+* RatioScaleMode#new(): added a fillScreen option
 
 3.3.4
 ------------------------------
