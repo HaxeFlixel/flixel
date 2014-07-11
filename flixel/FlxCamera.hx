@@ -635,8 +635,8 @@ class FlxCamera extends FlxBasic
 			} 
 			else 
 			{
-				scroll.x += (_scrollTarget.x - scroll.x) * FlxG.elapsed / (FlxG.elapsed + followLerp * FlxG.elapsed);
-				scroll.y += (_scrollTarget.y - scroll.y) * FlxG.elapsed / (FlxG.elapsed + followLerp * FlxG.elapsed);
+				scroll.x += (_scrollTarget.x - scroll.x) / (1 + followLerp);
+				scroll.y += (_scrollTarget.y - scroll.y) / (1 + followLerp);
 			}
 		}
 	}
