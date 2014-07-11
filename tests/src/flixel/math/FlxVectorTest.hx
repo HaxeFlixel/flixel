@@ -6,11 +6,13 @@ import massive.munit.Assert;
 class FlxVectorTest extends FlxTest
 {
 	var vector:FlxVector;
+	var vector2:FlxVector;
 	
 	@Before
 	function before():Void
 	{
 		vector = new FlxVector();
+		vector2 = new FlxVector();
 	}
 	
 	@Test
@@ -42,5 +44,14 @@ class FlxVectorTest extends FlxTest
 		var yIsInRange = (vector.y > 1.999 && vector.y < 2.001);
 		Assert.isTrue(xIsInRange);
 		Assert.isTrue(yIsInRange);
+	}
+	
+	@Test
+	function testDegreesBetween():Void
+	{
+		vector.set(0, 1);
+		vector2.set(1, 0);
+		
+		Assert.areEqual(90, vector.degreesBetween(vector2));
 	}
 }

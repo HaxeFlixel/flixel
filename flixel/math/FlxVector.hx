@@ -462,18 +462,7 @@ class FlxVector extends FlxPoint
 	 */
 	public inline function radiansBetween(v:FlxVector):Float
 	{
-		_vector1 = clone(_vector1);
-		_vector2 = clone(_vector2);
-		
-		if (!isNormalized())
-		{
-			_vector1.normalize();
-		}
-		if (!v.isNormalized())
-		{
-			_vector2.normalize();
-		}
-		return Math.acos(_vector1.dotProduct(_vector2));
+		return Math.acos(dotProduct(v) / (length * v.length));
 	}
 	
 	/**
