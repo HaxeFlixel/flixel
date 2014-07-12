@@ -20,6 +20,7 @@ import flixel.math.FlxAngle;
 import flixel.util.FlxColor;
 import flixel.math.FlxRandom;
 import flixel.util.FlxArrayUtil;
+import flixel.util.FlxDestroyUtil;
 import openfl.Assets;
 using StringTools;
 
@@ -203,8 +204,9 @@ class FlxGame extends Sprite
 	 * On html5, we draw() all our cameras into a bitmap to avoid blurry zooming.
 	 */
 	private var _display:BitmapData;
-	private var _displayMatrix:Matrix;
-	private var _displayColorTransform:ColorTransform;
+	private var _displayBitmap:Bitmap;
+	private var _displayMatrix = new Matrix();
+	private var _displayColorTransform = new ColorTransform();
 	#end
 	
 	/**
@@ -300,18 +302,11 @@ class FlxGame extends Sprite
 		stage.align = StageAlign.TOP_LEFT;
 		stage.frameRate = FlxG.drawFramerate;
 		
-		#if js
-		_display = new BitmapData(Lib.current.stage.stageWidth, Lib.current.stage.stageHeight);
-		_displayMatrix = new Matrix();
-		_displayColorTransform = new ColorTransform();
-		addChild(new Bitmap(_display));
-		#end
-		
 		addChild(_inputContainer);
 		
 		// Creating the debugger overlay
 		#if !FLX_NO_DEBUG
-		debugger = new FlxDebugger(Lib.current.stage.stageWidth, Lib.current.stage.stageHeight);
+		debugger = new FlxDebugger(FlxG.stage.stageWidth, FlxG.stage.stageHeight);
 		addChild(debugger);
 		#end
 		
@@ -462,6 +457,15 @@ class FlxGame extends Sprite
 	private function resizeGame(width:Int, height:Int):Void
 	{
 		FlxG.resizeGame(width, height);
+		
+		#if js
+		FlxDestroyUtil.removeChild(this, _displayBitmap);
+		FlxDestroyUtil.dispose(_display);
+		
+		var index:Int = getChildIndex(_inputContainer);
+		_display = new BitmapData(width, height);
+		addChildAt(_displayBitmap = new Bitmap(_display), index);
+		#end
 		
 		#if !FLX_NO_DEBUG
 		debugger.onResize(width, height);
