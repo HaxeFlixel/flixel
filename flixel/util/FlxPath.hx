@@ -172,7 +172,7 @@ class FlxPath implements IFlxDestroyable
 		
 		finished = false;
 		active = true;
-		if (nodes.length <= 0)
+		if (nodes == null || nodes.length <= 0)
 		{
 			active = false;
 		}
@@ -455,11 +455,7 @@ class FlxPath implements IFlxDestroyable
 	 */
 	public function destroy():Void
 	{
-		// recycle FlxPoints
-		for (point in nodes)
-		{
-			point = FlxDestroyUtil.put(point);
-		}
+		FlxDestroyUtil.putArray(nodes);
 		nodes = null;
 		object = null;
 		onComplete = null;
