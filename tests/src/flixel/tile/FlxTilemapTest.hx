@@ -2,7 +2,6 @@ package flixel.tile;
 
 import flash.errors.ArgumentError;
 import flixel.tile.FlxTilemap;
-import helper.TestUtil;
 import massive.munit.Assert;
 
 class FlxTilemapTest extends FlxTest
@@ -13,6 +12,7 @@ class FlxTilemapTest extends FlxTest
 	function before():Void
 	{
 		tilemap = new FlxTilemap();
+		destroyable = tilemap;
 	}
 	
 	@Test
@@ -30,11 +30,5 @@ class FlxTilemapTest extends FlxTest
 		}
 		
 		Assert.areEqual(1, tilemap.getData()[0]);
-	}
-	
-	@Test
-	function testDestroy():Void
-	{
-		TestUtil.testDestroy(tilemap);
 	}
 }

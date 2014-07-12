@@ -3,7 +3,6 @@ package flixel;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.util.FlxColor;
-import helper.TestUtil;
 import massive.munit.Assert;
 import massive.munit.async.AsyncFactory;
 
@@ -15,6 +14,7 @@ class FlxCameraTest extends FlxTest
 	function before()
 	{
 		camera = new FlxCamera();
+		destroyable = camera;
 	}
 	
 	@Test
@@ -61,11 +61,5 @@ class FlxCameraTest extends FlxTest
 		
 		FlxG.cameras.remove(camera);
 		Assert.areEqual(1, FlxG.cameras.list.length);
-	}
-	
-	@Test
-	function testDestroy():Void
-	{
-		TestUtil.testDestroy(camera);
 	}
 }

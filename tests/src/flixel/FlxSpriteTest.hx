@@ -5,7 +5,6 @@ import flixel.animation.FlxAnimation;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.util.FlxColor;
-import helper.TestUtil;
 import massive.munit.Assert;
 import massive.munit.async.AsyncFactory;
 
@@ -22,6 +21,8 @@ class FlxSpriteTest extends FlxTest
 		
 		sprite2 = new FlxSprite();
 		sprite2.makeGraphic(100, 80);
+		
+		destroyable = sprite1;
 	}
 	
 	@Test
@@ -216,11 +217,5 @@ class FlxSpriteTest extends FlxTest
 	{
 		sprite1.color = FlxColor.RED;
 		Assert.areEqual(FlxColor.RED, sprite1.color);
-	}
-	
-	@Test
-	function testDestroy():Void
-	{
-		TestUtil.testDestroy(sprite1);
 	}
 }

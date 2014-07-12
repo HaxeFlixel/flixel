@@ -1,7 +1,6 @@
 package flixel;
 
 import flixel.FlxG;
-import helper.TestUtil;
 import massive.munit.Assert;
 import massive.munit.async.AsyncFactory;
 
@@ -15,13 +14,15 @@ class FlxSubStateTest extends FlxTest
 	{
 		subState1 = new FlxSubState();
 		subState2 = new FlxSubState();
+		
+		destroyable = subState1;
 	}
 	
 	@Test
 	function testOpenSubState()
 	{
 		FlxG.state.openSubState(subState1);
-		TestUtil.step();
+		step();
 		
 		Assert.areEqual(subState1, FlxG.state.subState);
 	}
@@ -30,18 +31,12 @@ class FlxSubStateTest extends FlxTest
 	function testCloseOpenSameFrame()
 	{
 		FlxG.state.openSubState(subState1);
-		TestUtil.step();
+		step();
 		
 		FlxG.state.openSubState(subState2);
 		subState1.close();
-		TestUtil.step();
+		step();
 		
 		Assert.areEqual(subState2, FlxG.state.subState);
-	}
-	
-	@Test
-	function testDestroy():Void
-	{
-		TestUtil.testDestroy(subState1);
 	}
 }
