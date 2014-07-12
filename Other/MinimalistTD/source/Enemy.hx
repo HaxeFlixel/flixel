@@ -12,11 +12,8 @@ class Enemy extends FlxSprite
 	
 	/**
 	 * Create a new enemy. Used in the menu and playstate.
-	 * 
-	 * @param	X	The X position for the enemy.
-	 * @param	Y	The Y position for the enemy.
 	 */
-	override public function new(X:Int, Y:Int) 
+	override public function new(X:Float, Y:Float) 
 	{
 		super(X, Y, Reg.enemyImage);
 		
@@ -25,11 +22,8 @@ class Enemy extends FlxSprite
 	
 	/**
 	 * Reset this enemy at X,Y and reset their health. Used for object pooling in the PlayState.
-	 * 
-	 * @param	X	The X position for the enemy.
-	 * @param	Y	The Y position for the enemy.
 	 */
-	public function init(X:Int, Y:Int)
+	public function init(X:Float, Y:Float)
 	{
 		reset(X, Y);
 		
@@ -96,10 +90,8 @@ class Enemy extends FlxSprite
 	 * Start this enemy on a path, as represented by an array of FlxPoints. Updates position to the first node
 	 * and then uses FlxPath.start() to set this enemy on the path. Speed is determined by wave number, unless
 	 * in the menu, in which case it's arbitrary.
-	 * 
-	 * @param	Path	The path to follow.
 	 */
-	public function followPath(Path:Array<FlxPoint>):Void
+	public function followPath(Path:Array<FlxPoint>, Speed:Int, ?OnComplete:FlxPath->Void):Void
 	{
 		if (Path == null) {
 			throw("No valid path was passed to the enemy! Does the tilemap provide a valid path from start to finish?");
@@ -108,10 +100,7 @@ class Enemy extends FlxSprite
 		x = Path[0].x;
 		y = Path[0].y;
 		
-		if (Reg.PS != null) {
-			new FlxPath(this, Path, 20 + Reg.PS.wave, 0, true);
-		} else {
-			new FlxPath(this, Path, 50, 0, true);
-		}
+		var path = new FlxPath(this, Path, Speed, 0, true);
+		path.onComplete = OnComplete;
 	}
 }

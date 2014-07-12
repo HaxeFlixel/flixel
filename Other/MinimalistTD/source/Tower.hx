@@ -26,17 +26,11 @@ class Tower extends FlxSprite
 	private var _initialCost:Int = 0;
 	private var _indicator:FlxSprite;
 	
-	private static var HELPER_POINT:FlxPoint = FlxPoint.get();
-	private static var HELPER_POINT_2:FlxPoint = FlxPoint.get();
-	
 	private static inline var COST_INCREASE:Float = 1.5;
 	private static inline var BASE_PRIZE:Int = 10;
 	
 	/**
 	 * Create a new tower at X and Y with default range, fire rate, and damage; create this tower's indicator.
-	 * 
-	 * @param	X		The X position for this tower.
-	 * @param	Y		The Y position for this tower.
 	 */
 	public function new(X:Float, Y:Float, Cost:Int)
 	{
@@ -106,8 +100,9 @@ class Tower extends FlxSprite
 		}
 		
 		var bullet:Bullet = Reg.PS.bulletGroup.recycle(Bullet);
-		getMidpoint(HELPER_POINT);
-		bullet.init(HELPER_POINT.x, HELPER_POINT.y, target, damage);
+		var midpoint = getMidpoint();
+		bullet.init(midpoint.x, midpoint.y, target, damage);
+		midpoint.put();
 		
 		FlxG.sound.play("shoot");
 		
@@ -128,9 +123,7 @@ class Tower extends FlxSprite
 		{
 			if (enemy != null && enemy.alive)
 			{
-				HELPER_POINT.set(x, y);
-				HELPER_POINT_2.set(enemy.x, enemy.y);
-				var distance:Float = FlxMath.getDistance(HELPER_POINT, HELPER_POINT_2);
+				var distance:Float = FlxMath.getDistance(toPoint(), enemy.toPoint());
 				
 				if (distance <= range)
 				{

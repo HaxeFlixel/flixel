@@ -93,10 +93,8 @@ class PlayState extends FlxState
 	private var _speed:Int = 1;
 	private var _waveCounter:Int = 0;
 	
-	private var _enemySpawnX:Int = 25;
-	private var _enemySpawnY:Int = -6;
-	private var _goalX:Int = 245;
-	private var _goalY:Int = 43;
+	private var _enemySpawnPosition = FlxPoint.get(25, -6);
+	private var _goalPosition = FlxPoint.get(245, 43);
 	
 	/**
 	 * Create a new playable game state.
@@ -205,7 +203,7 @@ class PlayState extends FlxState
 		
 		// Set up goal
 		
-		_goal = new FlxSprite(_goalX, _goalY, "images/goal.png");
+		_goal = new FlxSprite(_goalPosition.x, _goalPosition.y, "images/goal.png");
 		
 		_lifeGroup = new FlxGroup();
 		
@@ -826,8 +824,8 @@ class PlayState extends FlxState
 		enemiesToSpawn--;
 		
 		var enemy:Enemy = enemyGroup.recycle(Enemy);
-		enemy.init(_enemySpawnX, _enemySpawnY);
-		enemy.followPath(_map.findPath(FlxPoint.get(_enemySpawnX, _enemySpawnY), FlxPoint.get(_goalX + 5, _goalY + 5)));
+		enemy.init(_enemySpawnPosition.x, _enemySpawnPosition.y);
+		enemy.followPath(_map.findPath(_enemySpawnPosition, _goalPosition.copyTo().add(5, 5)), 20 + Reg.PS.wave);
 		_spawnCounter = 0;
 	}
 	
