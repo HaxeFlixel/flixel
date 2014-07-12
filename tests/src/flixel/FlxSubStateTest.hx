@@ -2,7 +2,6 @@ package flixel;
 
 import flixel.FlxG;
 import massive.munit.Assert;
-import massive.munit.async.AsyncFactory;
 
 class FlxSubStateTest extends FlxTest
 {

@@ -6,7 +6,6 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.util.FlxColor;
 import massive.munit.Assert;
-import massive.munit.async.AsyncFactory;
 
 class FlxSpriteTest extends FlxTest
 {
@@ -182,8 +181,8 @@ class FlxSpriteTest extends FlxTest
 		Assert.areEqual(positionSprite.y, 545);
 	}
 	
-	@AsyncTest
-	function testOverlap(factory:AsyncFactory):Void
+	@Test
+	function testOverlap():Void
 	{
 		Assert.isTrue(FlxG.overlap(sprite1, sprite2));
 		
@@ -194,9 +193,8 @@ class FlxSpriteTest extends FlxTest
 		FlxG.state.add(sprite1);
 		FlxG.state.add(sprite2);
 		
-		delay(this, factory, function() { 
-			Assert.isFalse(FlxG.overlap(sprite1, sprite2)); 
-		});
+		step(60);
+		Assert.isFalse(FlxG.overlap(sprite1, sprite2)); 
 	}
 	
 	@Test

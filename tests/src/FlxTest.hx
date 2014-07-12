@@ -3,33 +3,42 @@ package;
 import flash.errors.Error;
 import flixel.FlxG;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
-import massive.munit.Assert;
 import massive.munit.async.AsyncFactory;
 import massive.munit.util.Timer;
+import massive.munit.Assert;
 
 class FlxTest
 {
+	// approx. amount of ticks at 60 fps
+	static inline var TICKS_PER_FRAME:UInt = 25;
+	static var totalSteps:UInt = 0;
+	
 	var destroyable:IFlxDestroyable;
 	
 	public function new() {}
 	
+	@:access(flixel)
 	@:AfterClass
 	function afterClass():Void
 	{
+		FlxG.game.getTimer = function()
+		{
+			return totalSteps * TICKS_PER_FRAME;
+		}
+		
 		// make sure we have the same starting conditions for each test
 		FlxG.resetGame();
-	}
-	
-	function delay(testCase:Dynamic, factory:AsyncFactory, func:Void->Void, time:Int = 50)
-	{
-		var resultHandler = factory.createHandler(testCase, func);
-		Timer.delay(resultHandler, time);
+		step();
 	}
 	
 	@:access(flixel)
-	function step()
+	function step(steps:UInt = 1)
 	{
-		FlxG.game.step();
+		for (i in 0...steps)
+		{
+			FlxG.game.step();
+			totalSteps++;
+		}
 	}
 	
 	@Test

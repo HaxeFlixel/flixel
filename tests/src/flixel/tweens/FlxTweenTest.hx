@@ -7,23 +7,18 @@ import massive.munit.async.AsyncFactory;
 
 class FlxTweenTest extends FlxTest
 {
-	var value:Int = 0;
+	var value:Int;
 	
-	@AsyncTest
-	function testIssue1104(factory:AsyncFactory):Void
+	function testIssue1104():Void
 	{
 		FlxTween.tween(this, { value:  1000 }, 1);
 		FlxTween.tween(this, { value: -1000 }, 1,  { startDelay: 1 } );
 		
 		// check that there is actually some tweening going on
-		var value1:Int;
+		step(10);
+		var sampleValue = value;
 		
-		Timer.delay(function() {
-			value1 = value;
-		}, 50);
-		
-		delay(this, factory, function() {
-			Assert.areNotEqual(value, value1);
-		}, 100);
+		step(10);
+		Assert.areNotEqual(value, sampleValue);
 	}
 }

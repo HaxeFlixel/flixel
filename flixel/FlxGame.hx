@@ -291,7 +291,7 @@ class FlxGame extends Sprite
 		}
 		removeEventListener(Event.ADDED_TO_STAGE, create);
 		
-		_total = Lib.getTimer();
+		_total = getTimer();
 		
 		#if desktop
 		FlxG.fullscreen = _startFullscreen;
@@ -494,7 +494,7 @@ class FlxGame extends Sprite
 	 */
 	private function onEnterFrame(_):Void
 	{
-		ticks = Lib.getTimer();
+		ticks = getTimer();
 		_elapsedMS = ticks - _total;
 		_total = ticks;
 		
@@ -712,7 +712,7 @@ class FlxGame extends Sprite
 		#if !FLX_NO_DEBUG
 		if (FlxG.debugger.visible)
 		{
-			ticks = Lib.getTimer(); // getTimer() is expensive, only do it if necessary
+			ticks = getTimer(); // Lib.getTimer() is expensive, only do it if necessary
 		}
 		#end
 		
@@ -744,7 +744,7 @@ class FlxGame extends Sprite
 		FlxG.signals.postUpdate.dispatch();
 		
 		#if !FLX_NO_DEBUG
-		debugger.stats.flixelUpdate(Lib.getTimer() - ticks);
+		debugger.stats.flixelUpdate(getTimer() - ticks);
 		#end
 		
 		#if (!FLX_NO_MOUSE || !FLX_NO_TOUCH)
@@ -829,7 +829,7 @@ class FlxGame extends Sprite
 		if (FlxG.debugger.visible)
 		{
 			// getTimer() is expensive, only do it if necessary
-			ticks = Lib.getTimer(); 
+			ticks = getTimer(); 
 		}
 		#end
 		
@@ -880,7 +880,12 @@ class FlxGame extends Sprite
 		FlxG.signals.postDraw.dispatch();
 		
 		#if !FLX_NO_DEBUG
-		debugger.stats.flixelDraw(Lib.getTimer() - ticks);
+		debugger.stats.flixelDraw(getTimer() - ticks);
 		#end
+	}
+	
+	private dynamic function getTimer():Int
+	{
+		return Lib.getTimer();
 	}
 }

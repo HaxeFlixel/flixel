@@ -2,7 +2,6 @@ package flixel;
 
 import flixel.FlxG;
 import massive.munit.Assert;
-import massive.munit.async.AsyncFactory;
 
 class FlxStateTest extends FlxTest
 {
@@ -15,15 +14,14 @@ class FlxStateTest extends FlxTest
 		destroyable = state;
 	}
 	
-	@AsyncTest
-	function testSwitchState(factory:AsyncFactory)
+	@Test
+	function testSwitchState()
 	{
 		Assert.areNotEqual(state, FlxG.state);
 		
 		FlxG.switchState(state);
 		
-		delay(this, factory, function() { 
-			Assert.areEqual(state, FlxG.state); 
-		});
+		step(10);
+		Assert.areEqual(state, FlxG.state); 
 	}
 }

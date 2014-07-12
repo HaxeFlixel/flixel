@@ -19,21 +19,12 @@ import js.Lib;
  */
 class TestMain
 {
-	public static var game:FlxGame;
-
-	public static function addAsync(handler:Void->Void, duration:Int):Void
-	{
-		Timer.delay(function() {
-			handler();
-		}, duration);
-	}
-	
 	static function main(){	new TestMain(); }
 
 	public function new()
 	{
 		// Flixel was not designed for unit testing so we can only have one instance for now.
-		Lib.current.stage.addChild(new FlxGame());
+		Lib.current.stage.addChild(new FlxGame(640, 480, FlxState, 1, 60, 60, true));
 		
 		var suites = new Array<Class<massive.munit.TestSuite>>();
 		suites.push(TestSuite);
