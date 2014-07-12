@@ -9,6 +9,7 @@ class FlxTweenTest extends FlxTest
 {
 	var value:Int;
 	
+	@Test
 	function testIssue1104():Void
 	{
 		FlxTween.tween(this, { value:  1000 }, 1);
