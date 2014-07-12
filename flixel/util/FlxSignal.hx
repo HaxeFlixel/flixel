@@ -196,7 +196,12 @@ private class FlxSignalBase<T> implements IFlxSignal<T>
 	{
 		for (handler in _handlers)
 		{
-			if (handler.listener == listener)
+			if (
+				#if neko // simply comparing the functions doesn't do the trick on neko
+					Reflect.compareMethods(handler.listener, listener)
+				#else
+					handler.listener == listener
+				#end )
 			{
 				return handler; // Listener was already registered.
 			}
