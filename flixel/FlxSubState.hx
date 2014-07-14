@@ -76,7 +76,7 @@ class FlxSubState extends FlxState
 	 */ 
 	public function close():Void
 	{
-		if (_parentState != null) 
+		if (_parentState != null && _parentState.subState == this) 
 		{ 
 			_parentState.closeSubState(); 
 		}
