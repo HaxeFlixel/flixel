@@ -692,7 +692,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	
 	@:commutative
 	@:op(A != B)
-	private static inline function notEqual(lhs:FlxColor, rhs:Null<Int>):Bool
+	private static inline function notEqual(lhs:Null<FlxColor>, rhs:Null<Int>):Bool
 	{
 		return lhs != (rhs:Null<FlxColor>);
 	}
