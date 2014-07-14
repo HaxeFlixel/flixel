@@ -6,6 +6,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.input.FlxInput;
 import flixel.input.touch.FlxTouch;
+import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.system.FlxSound;
 import flixel.text.FlxText;
@@ -117,6 +118,11 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	 * If false, the input has to be pressed while hovering over the button.
 	 */
 	public var allowSwiping:Bool = true;
+	/**
+	 * Maximum distance a touch can have moved to trigger button event handlers.
+	 * If touch moves beyond this limit, onOut is triggered.
+	 */
+	public var maxInputMovement:Null<Float>;
 	/**
 	 * Shows the current state of the button, either FlxButton.NORMAL, 
 	 * FlxButton.HIGHLIGHT or FlxButton.PRESSED.
@@ -314,7 +320,13 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 			{
 				touch.getWorldPosition(camera, _point);
 				
-				if (overlapsPoint(_point, true, camera))
+				// If touch has moved too much, ignore it
+				if (maxInputMovement != null &&
+					FlxMath.getDistance(touch.justPressedPosition, touch.getScreenPosition()) > maxInputMovement)
+				{
+					if (touch == _pressedTouch) _pressedTouch = null;
+				}
+				else if (overlapsPoint(_point, true, camera))
 				{
 					overlapFound = true;
 					updateStatus(true, touch.justPressed, touch.pressed, touch);
@@ -354,7 +366,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 			else if (status == FlxButton.NORMAL)
 			{
 				// Allow "swiping" to press a button (dragging it over the button while pressed)
-				if (allowSwiping && Pressed) 
+				if (allowSwiping && Pressed)
 				{
 					onDownHandler();
 				}

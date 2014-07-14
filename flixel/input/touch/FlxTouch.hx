@@ -33,8 +33,8 @@ class FlxTouch extends FlxPointer implements IFlxDestroyable
 	private var input:FlxInput<Int>;
 	private var flashPoint = new Point();
 	
-	private var justPressedPosition = FlxPoint.get();
-	private var justPressedTimeInTicks:Float;
+	public var justPressedPosition = FlxPoint.get();
+	public var justPressedTimeInTicks:Float;
 #end
 
 	public function destroy():Void
