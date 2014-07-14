@@ -701,11 +701,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 * Multiply the RGB channels of two FlxColors
 	 */
 	@:op(A * B)
-	#if flash
-	public static function multiply(lhs:FlxColor, rhs:FlxColor):FlxColor
-	#else
 	public static function multiply(lhs:Null<FlxColor>, rhs:Null<FlxColor>):FlxColor
-	#end
 	{
 		if (lhs == null && rhs == null)
 		{
@@ -729,11 +725,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 * Add the RGB channels of two FlxColors
 	 */
 	@:op(A + B)
-	#if flash
-	public static function add(lhs:FlxColor, rhs:FlxColor):FlxColor
-	#else
 	public static function add(lhs:Null<FlxColor>, rhs:Null<FlxColor>):FlxColor
-	#end
 	{
 		if (lhs == null && rhs == null)
 		{
@@ -757,11 +749,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 * Subtract the RGB channels of one FlxColor from another
 	 */
 	@:op(A - B)
-	#if flash
-	public static function subtract(lhs:FlxColor, rhs:FlxColor):FlxColor
-	#else
 	public static function subtract(lhs:Null<FlxColor>, rhs:Null<FlxColor>):FlxColor
-	#end
 	{
 		if (lhs == null && rhs == null)
 		{
