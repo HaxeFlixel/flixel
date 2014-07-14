@@ -685,24 +685,16 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	
 	@:commutative
 	@:op(A == B)
-	#if flash
-	private static inline function equal(lhs:FlxColor, rhs:Null<Int>):Bool
-	#else
 	private static inline function equal(lhs:Null<FlxColor>, rhs:Null<Int>):Bool
-	#end
 	{
-		return lhs == cast rhs;
+		return lhs == (rhs:Null<FlxColor>);
 	}
 	
 	@:commutative
 	@:op(A != B)
-	#if flash
 	private static inline function notEqual(lhs:FlxColor, rhs:Null<Int>):Bool
-	#else
-	private static inline function notEqual(lhs:Null<FlxColor>, rhs:Null<Int>):Bool
-	#end
 	{
-		return lhs != cast rhs;
+		return lhs != (rhs:Null<FlxColor>);
 	}
 	
 	/**
