@@ -217,34 +217,6 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	}
 	
 	/**
-	 * Multiply the RGB channels of two FlxColors
-	 */
-	@:op(A * B)
-	public static inline function multiply(lhs:FlxColor, rhs:FlxColor):FlxColor
-	{
-		return FlxColor.fromRGBFloat(lhs.redFloat * rhs.redFloat, lhs.greenFloat * rhs.greenFloat, lhs.blueFloat * rhs.blueFloat);
-	}
-	
-	
-	/**
-	 * Add the RGB channels of two FlxColors
-	 */
-	@:op(A + B)
-	public static inline function add(lhs:FlxColor, rhs:FlxColor):FlxColor
-	{
-		return FlxColor.fromRGB(lhs.red + rhs.red, lhs.green + rhs.green, lhs.blue + rhs.blue);
-	}
-	
-	/**
-	 * Subtract the RGB channels of one FlxColor from another
-	 */
-	@:op(A - B)
-	public static inline function subtract(lhs:FlxColor, rhs:FlxColor):FlxColor
-	{
-		return FlxColor.fromRGB(lhs.red - rhs.red, lhs.green - rhs.green, lhs.blue - rhs.blue);
-	}
-	
-	/**
 	 * Returns a Complementary Color Harmony of this color.
 	 * A complementary hue is one directly opposite the color given on the color wheel
 	 * 
@@ -713,16 +685,88 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	
 	@:commutative
 	@:op(A == B)
-	private static inline function equal(lhs:FlxColor, rhs:Null<Int>):Bool
+	private static inline function equal(lhs:Null<FlxColor>, rhs:Null<Int>):Bool
 	{
-		return lhs == cast rhs;
+		return lhs == (rhs:Null<FlxColor>);
 	}
 	
 	@:commutative
 	@:op(A != B)
-	private static inline function notEqual(lhs:FlxColor, rhs:Null<Int>):Bool
+	private static inline function notEqual(lhs:Null<FlxColor>, rhs:Null<Int>):Bool
 	{
-		return lhs != cast rhs;
+		return lhs != (rhs:Null<FlxColor>);
+	}
+	
+	/**
+	 * Multiply the RGB channels of two FlxColors
+	 */
+	@:op(A * B)
+	public static function multiply(lhs:Null<FlxColor>, rhs:Null<FlxColor>):FlxColor
+	{
+		if (lhs == null && rhs == null)
+		{
+			return FlxColor.BLACK;
+		}
+		else if (lhs != null && rhs == null)
+		{
+			return lhs;
+		}
+		else if (lhs == null && rhs != null)
+		{
+			return rhs;
+		}
+		else
+		{
+			return FlxColor.fromRGBFloat(lhs.redFloat * rhs.redFloat, lhs.greenFloat * rhs.greenFloat, lhs.blueFloat * rhs.blueFloat);
+		}
+	}
+	
+	/**
+	 * Add the RGB channels of two FlxColors
+	 */
+	@:op(A + B)
+	public static function add(lhs:Null<FlxColor>, rhs:Null<FlxColor>):FlxColor
+	{
+		if (lhs == null && rhs == null)
+		{
+			return FlxColor.BLACK;
+		}
+		else if (lhs != null && rhs == null)
+		{
+			return lhs;
+		}
+		else if (lhs == null && rhs != null)
+		{
+			return rhs;
+		}
+		else
+		{
+			return FlxColor.fromRGB(lhs.red + rhs.red, lhs.green + rhs.green, lhs.blue + rhs.blue);
+		}
+	}
+	
+	/**
+	 * Subtract the RGB channels of one FlxColor from another
+	 */
+	@:op(A - B)
+	public static function subtract(lhs:Null<FlxColor>, rhs:Null<FlxColor>):FlxColor
+	{
+		if (lhs == null && rhs == null)
+		{
+			return FlxColor.BLACK;
+		}
+		else if (lhs != null && rhs == null)
+		{
+			return lhs;
+		}
+		else if (lhs == null && rhs != null)
+		{
+			return rhs;
+		}
+		else
+		{
+			return FlxColor.fromRGB(lhs.red - rhs.red, lhs.green - rhs.green, lhs.blue - rhs.blue);
+		}
 	}
 }
 
