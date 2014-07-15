@@ -162,7 +162,7 @@ class FlxCamera extends FlxBasic
 	 * The color tint of the camera display.
 	 * (Internal, help with color transforming the flash bitmap.)
 	 */
-	public var color(default, set):Int = FlxColor.WHITE;
+	public var color(default, set):FlxColor = FlxColor.WHITE;
 	/**
 	 * Whether the camera display is smooth and filtered, or chunky and pixelated.
 	 * Default behavior is chunky-style.
@@ -944,7 +944,7 @@ class FlxCamera extends FlxBasic
 		}
 		// This is temporal fix for camera's color
 		var targetGraphics:Graphics = (graphics == null) ? canvas.graphics : graphics;
-		Color = Color & 0x00ffffff;
+		Color = Color.to24Bit();
 		// end of fix
 		
 		targetGraphics.beginFill(Color, FxAlpha);
@@ -964,7 +964,7 @@ class FlxCamera extends FlxBasic
 		//Draw the "flash" special effect onto the buffer
 		if (_fxFlashAlpha > 0.0)
 		{
-			alphaComponent = (_fxFlashColor >> 24) & 255;
+			alphaComponent = _fxFlashColor.alphaFloat;
 			
 			#if FLX_RENDER_BLIT
 			fill((Std.int(((alphaComponent <= 0) ? 0xff : alphaComponent) * _fxFlashAlpha) << 24) + (_fxFlashColor & 0x00ffffff));
@@ -1158,14 +1158,7 @@ class FlxCamera extends FlxBasic
 	
 	private function set_zoom(Zoom:Float):Float
 	{
-		if (Zoom == 0)
-		{
-			zoom = defaultZoom;
-		}
-		else
-		{
-			zoom = Zoom;
-		}
+		zoom = (Zoom == 0) ? defaultZoom : Zoom;
 		setScale(zoom, zoom);
 		return zoom;
 	}
@@ -1188,23 +1181,28 @@ class FlxCamera extends FlxBasic
 		return Angle;
 	}
 	
-	private function set_color(Color:FlxColor):Int
+	private function set_color(Color:FlxColor):FlxColor
 	{
-		color = Color & 0x00ffffff;
+		color = Color;
+		var colorTransform:ColorTransform;
+		
 		#if FLX_RENDER_BLIT
-		if (_flashBitmap != null)
+		if (_flashBitmap == null)
 		{
-			var colorTransform:ColorTransform = _flashBitmap.transform.colorTransform;
-			colorTransform.redMultiplier = (color >> 16) / 255;
-			colorTransform.greenMultiplier = (color >> 8 & 0xff) / 255;
-			colorTransform.blueMultiplier = (color & 0xff) / 255;
-			_flashBitmap.transform.colorTransform = colorTransform;
+			return Color;
 		}
+		colorTransform = _flashBitmap.transform.colorTransform;
 		#else
-		var colorTransform:ColorTransform = canvas.transform.colorTransform;
-		colorTransform.redMultiplier = (color >> 16) / 255;
-		colorTransform.greenMultiplier = (color >> 8 & 0xff) / 255;
-		colorTransform.blueMultiplier = (color & 0xff) / 255;
+		colorTransform = canvas.transform.colorTransform;
+		#end
+		
+		colorTransform.redMultiplier = color.redFloat;
+		colorTransform.greenMultiplier = color.greenFloat;
+		colorTransform.blueMultiplier = color.blueFloat;
+		
+		#if FLX_RENDER_BLIT
+		_flashBitmap.transform.colorTransform = colorTransform;
+		#else
 		canvas.transform.colorTransform = colorTransform;
 		#end
 		
