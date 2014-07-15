@@ -78,7 +78,7 @@ class FlxPoint implements IFlxPooled
 	{
 		if (_weak)
 		{
-			_pool.put(this);
+			put();
 		}
 	}
 	
