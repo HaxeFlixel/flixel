@@ -16,7 +16,10 @@
 * FlxGamepad:
  * fixed a bug that would prevent buttons from being updated
  * anyPressed() now also works when the button status is justPressed
-* FlxTween: fixed a bug when tweening the same field with several tweens + startDelay 
+* FlxTween: fixed a bug when tweening the same field with several tweens + startDelay
+* FlxSubState:
+ * fixed calling close() within create()
+ * fixed openSubState() not working when close() is called afterwards on the current substate on the same frame
 
 3.3.4
 ------------------------------
