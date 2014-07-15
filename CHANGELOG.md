@@ -1,3 +1,23 @@
+3.3.5
+------------------------------
+* FlxTilemap:
+ * fixed pixelPerfectRender not being respected with FLX_RENDER_TILE
+ * fixed a crash when trying to create a single-column tilemap
+* FlxCamera: fixed defaultCameras not being reset on state switches
+* FlxPoint#putWeak(): fixed an issue which could lead to a single point being allocated more than once when weak() is used
+* FlxVector: fixed radiansBetween() / degreesBetween()
+* FlxTypedSpriteGroup: fixed update() order leading to collision issues with members
+* FlxTypedEmitter: fixed type parameter not being respected (T was always FlxSprite)
+* FlxAssets#getFileReferences(): fixed the filterExtensions parameter
+* FlxBitmapTextField:
+ * fixed issue with width increasing when the text is updated
+ * fixed text disappearing after state switches on HTML5
+* FlxAnalog: changed the default value for scrollFactor to (0, 0) and for moves to false
+* FlxGamepad:
+ * fixed a bug that would prevent buttons from being updated
+ * anyPressed() now also works when the button status is justPressed
+* FlxTween: fixed a bug when tweening the same field with several tweens + startDelay 
+
 3.3.4
 ------------------------------
 * Combatibility with OpenFL 2.0.0
