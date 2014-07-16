@@ -123,6 +123,8 @@
 * FlxVelocity: accelerateTowards()-functions now only take a single maxSpeed param (instead of x and y)
 * FlxG.signals: split gameReset into pre/post signals
 * RatioScaleMode#new(): added a fillScreen option
+* Fixed scale modes not working correctly on HTML5
+* FlxPath: fixed an issue where a velocity would be set even if the object positon matches the current node
 
 3.3.5
 ------------------------------
