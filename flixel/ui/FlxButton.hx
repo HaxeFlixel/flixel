@@ -31,6 +31,10 @@ class FlxButton extends FlxTypedButton<FlxText>
 	 * Used with public variable status, means pressed (usually from mouse click).
 	 */
 	public static inline var PRESSED:Int = 2;
+	/**
+	 * Used with public variable status, means disabled (unable to respond to events).
+   */
+	public static inline var DISABLED:Int = 3;
 	
 	/**
 	 * Shortcut to setting label.text
@@ -102,21 +106,26 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	/**
 	 * What offsets the label should have for each status.
 	 */
-	public var labelOffsets:Array<FlxPoint> = [FlxPoint.get(), FlxPoint.get(), FlxPoint.get(0, 1)];
+	public var labelOffsets:Array<FlxPoint> = [FlxPoint.get(), FlxPoint.get(), FlxPoint.get(0, 1), FlxPoint.get()];
 	/**
-	 * What alpha value the label should have for each status. Default is [0.8, 1.0, 0.5].
+	 * What alpha value the label should have for each status. Default is [0.8, 1.0, 0.5, 0.3].
 	 */
-	public var labelAlphas:Array<Float> = [0.8, 1.0, 0.5];
+	public var labelAlphas:Array<Float> = [0.8, 1.0, 0.5, 0.1];
 	/**
 	 * What animation should be played for each status.
-	 * Default is ["normal", "highlight", "pressed"].
+	 * Default is ["normal", "highlight", "pressed", "disabled"].
 	 */
-	public var statusAnimations:Array<String> = ["normal", "highlight", "pressed"];
+	public var statusAnimations:Array<String> = ["normal", "highlight", "pressed", "disabled"];
 	/**
 	 * Whether you can press the button simply by releasing the touch / mouse button over it (default).
 	 * If false, the input has to be pressed while hovering over the button.
 	 */
 	public var allowSwiping:Bool = true;
+	/**
+	 * Whether the button is able respond to events
+	 * If false, no events will be fired and status will not change.
+	 */
+	public var enabled(default, set):Bool = true;
 	/**
 	 * Shows the current state of the button, either FlxButton.NORMAL, 
 	 * FlxButton.HIGHLIGHT or FlxButton.PRESSED.
@@ -198,6 +207,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		setupAnimation("normal", FlxButton.NORMAL);
 		setupAnimation("highlight", FlxButton.HIGHLIGHT);
 		setupAnimation("pressed", FlxButton.PRESSED);
+		setupAnimation("pressed", FlxButton.DISABLED);
 	}
 	
 	private function setupAnimation(animationName:String, frameIndex:Int):Void
@@ -340,7 +350,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	 */
 	private function updateStatus(Overlap:Bool, JustPressed:Bool, Pressed:Bool, ?Touch:FlxTouch):Void
 	{
-		if (Overlap)
+		if (Overlap && enabled)
 		{
 			if (JustPressed)
 			{
@@ -482,6 +492,19 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		super.set_y(Value);
 		updateLabelPosition();
 		return y;
+	}
+
+	private function set_enabled(Value:Bool):Bool
+	{
+		if(Value)
+		{
+			status = FlxButton.NORMAL;
+		}
+		else
+		{
+			status = FlxButton.DISABLED;
+		}
+		return enabled = Value;
 	}
 	
 	private inline function get_justReleased():Bool
