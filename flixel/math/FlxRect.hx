@@ -87,7 +87,7 @@ class FlxRect implements IFlxPooled
 	{
 		if (_weak)
 		{
-			_pool.put(this);
+			put();
 		}
 	}
 	

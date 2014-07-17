@@ -21,9 +21,10 @@ import flixel.math.FlxAngle;
  */
 class FlxGradient
 {
-	public static function createGradientMatrix(width:Int, height:Int, colors:Array<FlxColor>, chunkSize:Int = 1, rotation:Int = 90):GradientMatrix
+	public static function createGradientMatrix(width:Int, height:Int, colors:Array<FlxColor>, chunkSize:Int = 1,
+		rotation:Int = 90):GradientMatrix
 	{
-		var gradientMatrix:Matrix = new Matrix();
+		var gradientMatrix = new Matrix();
 		
 		//	Rotation (in radians) that the gradient is rotated
 		var rot:Float = FlxAngle.asRadians(rotation);
@@ -41,8 +42,7 @@ class FlxGradient
 		#end
 		
 		//	Create the alpha and ratio arrays
-		
-		var alpha:Array<Float> = new Array();
+		var alpha = new Array<Float>();
 		
 		for (ai in 0...colors.length)
 		{
@@ -74,10 +74,11 @@ class FlxGradient
 		return { matrix: gradientMatrix, alpha: alpha, ratio: ratio };
 	}
 	
-	public static function createGradientArray(width:Int, height:Int, colors:Array<FlxColor>, chunkSize:Int = 1, rotation:Int = 90, interpolate:Bool = true):Array<Int>
+	public static function createGradientArray(width:Int, height:Int, colors:Array<FlxColor>, chunkSize:Int = 1,
+		rotation:Int = 90, interpolate:Bool = true):Array<FlxColor>
 	{
 		var data:BitmapData = createGradientBitmapData(width, height, colors, chunkSize, rotation, interpolate);
-		var result:Array<Int> = new Array();
+		var result = new Array<Int>();
 		
 		for (y in 0...(data.height))
 		{
@@ -88,7 +89,7 @@ class FlxGradient
 	}
 	
 	/**
-	 * Creates an FlxSprite of the given width/height with a colour gradient flowing through it.
+	 * Creates a FlxSprite of the given width/height with a colour gradient flowing through it.
 	 * 
 	 * @param	width		The width of the FlxSprite (and therefore gradient)
 	 * @param	height		The height of the FlxSprite (and therefore gradient)
@@ -96,10 +97,10 @@ class FlxGradient
 	 * @param	chunkSize	If you want a more old-skool looking chunky gradient, increase this value!
 	 * @param	rotation	Angle of the gradient in degrees. 90 = top to bottom, 180 = left to right. Any angle is valid
 	 * @param	interpolate	Interpolate the colours? True uses RGB interpolation, false uses linear RGB
-	 * 
-	 * @return	An FlxSprite containing your gradient (if valid parameters given!)
+	 * @return	A FlxSprite containing your gradient (if valid parameters given!)
 	 */
-	public static function createGradientFlxSprite(width:Int, height:Int, colors:Array<Int>, chunkSize:Int = 1, rotation:Int = 90, interpolate:Bool = true):FlxSprite
+	public static function createGradientFlxSprite(width:Int, height:Int, colors:Array<FlxColor>,
+		chunkSize:Int = 1, rotation:Int = 90, interpolate:Bool = true):FlxSprite
 	{
 		var data:BitmapData = createGradientBitmapData(width, height, colors, chunkSize, rotation, interpolate);
 		var dest:FlxSprite = new FlxSprite();
@@ -107,7 +108,8 @@ class FlxGradient
 		return dest;
 	}
 	
-	public static function createGradientBitmapData(width:Int, height:Int, colors:Array<Int>, chunkSize:Int = 1, rotation:Int = 90, interpolate:Bool = true):BitmapData
+	public static function createGradientBitmapData(width:Int, height:Int, colors:Array<FlxColor>,
+		chunkSize:Int = 1, rotation:Int = 90, interpolate:Bool = true):BitmapData
 	{
 		//	Sanity checks
 		if (width < 1)
@@ -141,7 +143,7 @@ class FlxGradient
 		
 		var gradient:GradientMatrix = createGradientMatrix(width, height, colors, chunkSize, rotation);
 		
-		var s:Shape = new Shape();
+		var s = new Shape();
 		
 		if (interpolate)
 		{
@@ -165,7 +167,7 @@ class FlxGradient
 			s.graphics.drawRect(0, 0, width, height / chunkSize);
 		}
 		
-		var data:BitmapData = new BitmapData(width, height, true, FlxColor.TRANSPARENT);
+		var data = new BitmapData(width, height, true, FlxColor.TRANSPARENT);
 		
 		if (chunkSize == 1)
 		{
@@ -173,11 +175,11 @@ class FlxGradient
 		}
 		else
 		{
-			var tempBitmap:Bitmap = new Bitmap(new BitmapData(width, Std.int(height / chunkSize), true, FlxColor.TRANSPARENT));
+			var tempBitmap = new Bitmap(new BitmapData(width, Std.int(height / chunkSize), true, FlxColor.TRANSPARENT));
 			tempBitmap.bitmapData.draw(s);
 			tempBitmap.scaleY = chunkSize;
 			
-			var sM:Matrix = new Matrix();
+			var sM = new Matrix();
 			sM.scale(tempBitmap.scaleX, tempBitmap.scaleY);
 			
 			data.draw(tempBitmap, sM);
@@ -205,7 +207,8 @@ class FlxGradient
 	 * @param	interpolate	Interpolate the colours? True uses RGB interpolation, false uses linear RGB
 	 * @return	The composited FlxSprite (for chaining, if you need)
 	 */
-	public static function overlayGradientOnFlxSprite(dest:FlxSprite, width:Int, height:Int, colors:Array<Int>, destX:Int = 0, destY:Int = 0, chunkSize:Int = 1, rotation:Int = 90, interpolate:Bool = true):FlxSprite
+	public static function overlayGradientOnFlxSprite(dest:FlxSprite, width:Int, height:Int, colors:Array<FlxColor>, destX:Int = 0,
+		destY:Int = 0, chunkSize:Int = 1, rotation:Int = 90, interpolate:Bool = true):FlxSprite
 	{
 		if (width > dest.width)
 		{
@@ -238,7 +241,8 @@ class FlxGradient
 	 * @param	interpolate	Interpolate the colours? True uses RGB interpolation, false uses linear RGB
 	 * @return	The composited BitmapData
 	 */
-	public static function overlayGradientOnBitmapData(dest:BitmapData, width:Int, height:Int, colors:Array<Int>, destX:Int = 0, destY:Int = 0, chunkSize:Int = 1, rotation:Int = 90, interpolate:Bool = true):BitmapData
+	public static function overlayGradientOnBitmapData(dest:BitmapData, width:Int, height:Int, colors:Array<FlxColor>,
+		destX:Int = 0, destY:Int = 0, chunkSize:Int = 1, rotation:Int = 90, interpolate:Bool = true):BitmapData
 	{
 		if (width > dest.width)
 		{

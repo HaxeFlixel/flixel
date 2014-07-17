@@ -237,7 +237,8 @@ class FlxAngle
 			case f if (f == FlxObject.UP | FlxObject.LEFT): -135;
 			case f if (f == FlxObject.UP | FlxObject.RIGHT): -45;
 			case f if (f == FlxObject.DOWN | FlxObject.LEFT): 135;
-			case f if (f == FlxObject.DOWN | FlxObject.RIGHT): 45;			
+			case f if (f == FlxObject.DOWN | FlxObject.RIGHT): 45;
+			default: 0;
 		}
 		return AsDegrees ? degrees : asRadians(degrees);
 	}

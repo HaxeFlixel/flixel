@@ -181,7 +181,6 @@ class VCRFrontEnd
 	
 	public function cancelReplay():Void
 	{
-		trace("cancel");
 		if (replayCallback != null)
 		{
 			replayCallback();
