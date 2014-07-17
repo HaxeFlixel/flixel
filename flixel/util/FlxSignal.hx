@@ -175,7 +175,7 @@ private class FlxBaseSignal<T> implements IFlxSignal<T>
 	{
 		for (handler in _handlers)
 		{
-			if (handler.listener == listener)
+			if (Reflect.compareMethods(handler.listener, listener))
 			{
 				return handler; // Listener was already registered.
 			}
