@@ -207,7 +207,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		setupAnimation("normal", FlxButton.NORMAL);
 		setupAnimation("highlight", FlxButton.HIGHLIGHT);
 		setupAnimation("pressed", FlxButton.PRESSED);
-		setupAnimation("pressed", FlxButton.DISABLED);
+		setupAnimation("disabled", FlxButton.DISABLED);
 	}
 	
 	private function setupAnimation(animationName:String, frameIndex:Int):Void
