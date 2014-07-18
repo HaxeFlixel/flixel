@@ -5,6 +5,7 @@ import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.math.FlxPoint;
 import flixel.system.layer.DrawStackItem;
 import flixel.text.pxText.PxBitmapFont;
 import flixel.text.pxText.PxDefaultFontGenerator;
@@ -55,6 +56,7 @@ class FlxBitmapTextField extends FlxSprite
 	#else
 	private var _drawData:Array<Float>;
 	private var _bgDrawData:Array<Float>;
+	private var _point2 = FlxPoint.get();
 	#end
 	
 	/**
@@ -167,24 +169,7 @@ class FlxBitmapTextField extends FlxSprite
 		}
 		
 		var bgDrawItem:DrawStackItem = null;
-		var drawItem:DrawStackItem;
-		var currDrawData:Array<Float>;
-		var currIndex:Int;
-		
-		var j:Int = 0;
 		var textLength:Int = Std.int(_drawData.length / 6);
-		var currPosInArr:Int;
-		var currTileID:Float;
-		var currTileX:Float;
-		var currTileY:Float;
-		var currTileRed:Float;
-		var currTileGreen:Float;
-		var currTileBlue:Float;
-		
-		var relativeX:Float;
-		var relativeY:Float;
-		
-		var camID:Int;
 		
 		for (camera in cameras)
 		{
@@ -194,7 +179,7 @@ class FlxBitmapTextField extends FlxSprite
 				// TODO: make it work again
 			}
 			
-			drawItem = camera.getDrawStackItem(cachedGraphics, true, _blendInt, antialiasing);
+			var drawItem = camera.getDrawStackItem(cachedGraphics, true, _blendInt, antialiasing);
 			
 			if (!camera.visible || !camera.exists || !isOnScreen(camera))
 			{
@@ -232,67 +217,39 @@ class FlxBitmapTextField extends FlxSprite
 			
 			if (_background)
 			{
-				currDrawData = bgDrawItem.drawData;
-				currIndex = bgDrawItem.position;
+				var currTileX = _bgDrawData[1] - x1;
+				var currTileY = _bgDrawData[2] - y1;
 				
-				currTileX = _bgDrawData[1] - x1;
-				currTileY = _bgDrawData[2] - y1;
+				var relativeX = (currTileX * csx - currTileY * ssy);
+				var relativeY = (currTileX * ssx + currTileY * csy);
+				_point2.copyFrom(_point).add(relativeX, relativeY);
 				
-				relativeX = (currTileX * csx - currTileY * ssy);
-				relativeY = (currTileX * ssx + currTileY * csy);
-				
-				currDrawData[currIndex++] = _point.x + relativeX;
-				currDrawData[currIndex++] = _point.y + relativeY;
-				
-				currDrawData[currIndex++] = _bgDrawData[0];
-				
-				currDrawData[currIndex++] = csx * width;
-				currDrawData[currIndex++] = ssx * width;
-				currDrawData[currIndex++] = -ssy * height;
-				currDrawData[currIndex++] = csy * height;
-				
-				currDrawData[currIndex++] = _bgDrawData[3];
-				currDrawData[currIndex++] = _bgDrawData[4];
-				currDrawData[currIndex++] = _bgDrawData[5];
-				currDrawData[currIndex++] = alpha;
-				
-				bgDrawItem.position = currIndex;
+				drawItem.setDrawData(_point2, _bgDrawData[0],
+					csx * width, ssx * width, -ssy * width, csy * width,
+					true, FlxColor.fromRGBFloat(_bgDrawData[3], _bgDrawData[4], _bgDrawData[5]), alpha * camera.alpha);
 			}
 			
-			currDrawData = drawItem.drawData;
-			currIndex = drawItem.position;
-			
+			var j:Int = 0;
 			while (j < textLength)
 			{
-				currPosInArr = j * 6;
-				currTileID = _drawData[currPosInArr];
-				currTileX = _drawData[currPosInArr + 1] - x1;
-				currTileY = _drawData[currPosInArr + 2] - y1;
-				currTileRed = _drawData[currPosInArr + 3];
-				currTileGreen = _drawData[currPosInArr + 4];
-				currTileBlue = _drawData[currPosInArr + 5];
+				var currPosInArr = j * 6;
+				var currTileID = _drawData[currPosInArr];
+				var currTileX = _drawData[currPosInArr + 1] - x1;
+				var currTileY = _drawData[currPosInArr + 2] - y1;
+				var currTileRed = _drawData[currPosInArr + 3];
+				var currTileGreen = _drawData[currPosInArr + 4];
+				var currTileBlue = _drawData[currPosInArr + 5];
 				
-				relativeX = (currTileX * csx - currTileY * ssy);
-				relativeY = (currTileX * ssx + currTileY * csy);
+				var relativeX = (currTileX * csx - currTileY * ssy);
+				var relativeY = (currTileX * ssx + currTileY * csy);
+				_point2.copyFrom(_point).add(relativeX, relativeY);
 				
-				currDrawData[currIndex++] = _point.x + relativeX;
-				currDrawData[currIndex++] = _point.y + relativeY;
+				drawItem.setDrawData(_point2, currTileID,
+					csx * _fontScale, ssx * _fontScale, -ssy * _fontScale, csy * _fontScale,
+					true, FlxColor.fromRGBFloat(currTileRed, currTileGreen, currTileBlue), alpha * camera.alpha);
 				
-				currDrawData[currIndex++] = currTileID;
-				
-				currDrawData[currIndex++] = csx * _fontScale;
-				currDrawData[currIndex++] = ssx * _fontScale;
-				currDrawData[currIndex++] = -ssy * _fontScale;
-				currDrawData[currIndex++] = csy * _fontScale;
-				
-				currDrawData[currIndex++] = currTileRed;
-				currDrawData[currIndex++] = currTileGreen;
-				currDrawData[currIndex++] = currTileBlue;
-				currDrawData[currIndex++] = alpha;
 				j++;
 			}
-			
-			drawItem.position = currIndex;
 			
 			#if !FLX_NO_DEBUG
 			FlxBasic.visibleCount++;
