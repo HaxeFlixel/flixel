@@ -84,20 +84,21 @@
  * removed weightedGetObject(), getObject() now has an optional weights parameter
  * removed colorExt(), try using FlxColor to get finer control over randomly-generated colors
  * updated random number generation equation to avoid inconsistent results across platforms; may break recordings made in 3.x!
- * fixed a bug that prevented the Excludes array in int() from working
  * can now create an instance of FlxRandom to create deterministic pseudorandom numbers independently of HaxeFlixel core functions (e.g. particle emitters)
+ * renamed chanceRoll() to bool()
 * FlxArrayUtil: removed randomness-related functions, please use FlxRandom instead
 * FlxText:
  * added an abstract enum for alignment (text.alignment = CENTER; is now possible)
  * font now supports font assets not embedded via openfl.Assets (i.e. @:font)
  * font = null now resets it to the default font
  * fixed an issue where the value returned by get_font() wouldn't be the same as the one passed into set_font()
- * set_label() now updates the label position
+ * added applyMarkup()
 * FlxTypedButton:
  * added input-like getters: pressed, justPressed, released and justReleased
  * now uses animations for statuses instead of setting frameIndex directly for more flexibility (removes allowHighlightOnMobile, adds statusAnimations)
  * disabling the highlight frame is now tied to #if FLX_NO_MOUSE instead of #if mobile
  * labelAlphas[FlxButton.HIGHLIGHT] is now 1 for FLX_NO_MOUSE
+ * set_label() now updates the label position
 * FlxMouseEventManager:
  * moved from flixel.plugin.MouseEventManager to flixel.input.mouse.FlxMouseEventManager
  * added removeAll()
@@ -128,6 +129,7 @@
 * RatioScaleMode#new(): added a fillScreen option
 * Fixed scale modes not working correctly on HTML5
 * FlxPath: fixed an issue where a velocity would be set even if the object positon matches the current node
+* FlxSignal: fixed addOnce() not working on neko
 
 3.3.5
 ------------------------------
