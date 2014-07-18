@@ -254,7 +254,22 @@ class FlxText extends FlxSprite
 	
 	public function formatParse(input:String, formats:Array<FlxTextFormat>, markers:Array<String>):Void
 	{
+		if (formats == null || markers == null)		//if either formats or markers are null
+		{
+			throw "formats and markers may not be null!"
+		}
+		
+		if (formats.length != markers.length)
+		{
+			throw "formats.length must match markers.length!";
+		}
+		
 		clearFormats();		//start with default formatting
+		
+		if (formats.length == 0)
+		{
+			return;			//there's no point in running the big loop
+		}
 		
 		var range_starts:Array<Int> = [];
 		var range_ends:Array<Int> = [];
@@ -267,43 +282,46 @@ class FlxText extends FlxSprite
 		var formatUses:Int;
 		for (marker in markers)
 		{
-			var start:Bool = false;
-			formatUses = 0;
-			if (theText.indexOf(marker) != -1)		//if this marker is present
+			if (marker != null && formats[i] != null)	//if either is null, no point in running this loop
 			{
-				for (charIndex in 0...theText.length)			//inspect each character
+				var start:Bool = false;
+				formatUses = 0;
+				if (theText.indexOf(marker) != -1)		//if this marker is present
 				{
-					var char:String = theText.charAt(charIndex);
-					if (char == marker)							//it's one of the markers
+					for (charIndex in 0...theText.length)			//inspect each character
 					{
-						if (!start)								//we're outside of a format block
-						{ 
-							start = true;						//start a format block
-							range_starts.push(charIndex);
-							if (formatUses == 0)
-							{
-								formatsToApply.push(formats[i]);
+						var char:String = theText.charAt(charIndex);
+						if (char == marker)							//it's one of the markers
+						{
+							if (!start)								//we're outside of a format block
+							{ 
+								start = true;						//start a format block
+								range_starts.push(charIndex);
+								if (formatUses == 0)
+								{
+									formatsToApply.push(formats[i]);
+								}
+								else
+								{
+									formatsToApply.push(formats[i].clone());	//clone the format object if it's used twice (otherwise it doesn't work correctly)
+								}
+								markersToApply.push(markers[i]);
+								formatUses++;
 							}
 							else
 							{
-								formatsToApply.push(formats[i].clone());	//clone the format object if it's used twice (otherwise it doesn't work correctly)
+								start = false;
+								range_ends.push(charIndex);			//end a format block
 							}
-							markersToApply.push(markers[i]);
-							formatUses++;
-						}
-						else
-						{
-							start = false;
-							range_ends.push(charIndex);			//end a format block
 						}
 					}
+					if (start)
+					{
+						range_ends.push(-1);						//we ended with an unclosed block, mark it as infinite
+					}
 				}
-				if (start)
-				{
-					range_ends.push(-1);						//we ended with an unclosed block, mark it as infinite
-				}
+				i++;
 			}
-			i++;
 		}
 		
 		//Remove all of the markers in the string
@@ -361,12 +379,6 @@ class FlxText extends FlxSprite
 		{
 			addFormat(formatsToApply[i], range_starts[i], range_ends[i]);
 		}
-		
-		//Clean up arrays created for this function
-		FlxArrayUtil.clearArray(markersToApply);
-		FlxArrayUtil.clearArray(range_starts);
-		FlxArrayUtil.clearArray(range_ends);
-		FlxArrayUtil.clearArray(formatsToApply);
 	}
 	
 	/**
