@@ -247,7 +247,7 @@ class FlxText extends FlxSprite
 	 * Even works for complex nested formats like this:
 	 * t.text="HEY_BUDDY_@WHAT@_$IS_$_GOING@ON$?$@"; t.formatParse([yellowFormat,greenFormat],["$","@"]);
 	 * 
-	 * @param	input		the input text you want to format
+	 * @param	input		the text you want to format
 	 * @param	formats		the FlxTextFormat's you want to selectively apply
 	 * @param	markers		corresponding marker strings, such as "@" or "$" (rarely used single-characters recommended)
 	 */
