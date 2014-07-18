@@ -240,7 +240,8 @@ class FlxText extends FlxSprite
 	}
 	
 	/**
-	 * Applies formats to text between marker strings, then removes those markers
+	 * Applies formats to text between marker strings, then removes those markers.
+	 * NOTE: This will clear all format ranges and return to the default format
 	 * 
 	 * Usage: t.applyMarkup("show $green text$ between dollar-signs",[new FlxTextFormatMarkerPair(greenFormat,"$")]);
 	 * 
