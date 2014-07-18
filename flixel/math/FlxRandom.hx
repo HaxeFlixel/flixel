@@ -424,7 +424,7 @@ class FlxRandom
 	@:allow(flixel.FlxGame.switchState)
 	private static inline function updateStateSeed():Int
 	{
-		return _stateSeed = currentSeed;
+		return _stateSeed = FlxG.random.currentSeed;
 	}
 	
 	/**
@@ -436,7 +436,7 @@ class FlxRandom
 	@:allow(flixel.system.frontEnds.VCRFrontEnd.startRecording)
 	private static inline function updateRecordingSeed(StandardMode:Bool = true):Int
 	{
-		return _recordingSeed = globalSeed = StandardMode ? globalSeed : _stateSeed;
+		return _recordingSeed = FlxG.random.initialSeed = StandardMode ? FlxG.random.initialSeed : _stateSeed;
 	}
 	
 	/**
