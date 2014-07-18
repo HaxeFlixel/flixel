@@ -78,11 +78,14 @@
  * added deadZoneMode, circular deadzones are now supported
  * getXAxis() and getYAxis() now take FlxGamepadAnalogStick as parameters (for example XboxButtonID.LEFT_ANALOG_STICK)
 * FlxRandom:
+ * FlxRandom functions are now member functions, call FlxG.random instead of FlxRandom
  * exposed currentSeed as an external representation of internalSeed
  * removed intRanged() and floatRanged(), int() and float() now provide optional ranges
  * removed weightedGetObject(), getObject() now has an optional weights parameter
  * removed colorExt(), try using FlxColor to get finer control over randomly-generated colors
  * updated random number generation equation to avoid inconsistent results across platforms; may break recordings made in 3.x!
+ * fixed a bug that prevented the Excludes array in int() from working
+ * can now create an instance of FlxRandom to create deterministic pseudorandom numbers independently of HaxeFlixel core functions (e.g. particle emitters)
 * FlxArrayUtil: removed randomness-related functions, please use FlxRandom instead
 * FlxText:
  * added an abstract enum for alignment (text.alignment = CENTER; is now possible)

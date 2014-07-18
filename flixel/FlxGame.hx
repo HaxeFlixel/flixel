@@ -671,7 +671,7 @@ class FlxGame extends Sprite
 		{
 			_replayRequested = false;
 			_replay.rewind();
-			FlxRandom.globalSeed = _replay.seed;
+			FlxG.random.initialSeed = _replay.seed;
 			
 			#if !FLX_NO_DEBUG
 			debugger.vcr.playingReplay();
