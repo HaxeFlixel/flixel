@@ -240,6 +240,135 @@ class FlxText extends FlxSprite
 	}
 	
 	/**
+	 * Applies formats to text between marker strings, then removes those markers
+	 * 
+	 * Usage: t.text="show $green text$ between dollar-signs"; t.formatParse([greenFormat],["$"]);
+	 * 
+	 * Even works for complex nested formats like this:
+	 * t.text="HEY_BUDDY_@WHAT@_$IS_$_GOING@ON$?$@"; t.formatParse([yellowFormat,greenFormat],["$","@"]);
+	 * 
+	 * @param	formats		the FlxTextFormat's you want to selectively apply
+	 * @param	markers		corresponding marker strings, such as "@" or "$" (rarely used single-characters recommended)
+	 */
+	
+	public function formatParse(formats:Array<FlxTextFormat>, markers:Array<String>):Void
+	{
+		clearFormats();		//start with default formatting
+		
+		var range_starts:Array<Int> = [];
+		var range_ends:Array<Int> = [];
+		var markersToApply:Array<String> = [];
+		var formatsToApply:Array<FlxTextFormat> = [];
+		
+		var theText:String = text;					//so we can process this and trash it as much as we want
+		
+		var i:Int = 0;
+		var formatUses:Int;
+		for (marker in markers)
+		{
+			var start:Bool = false;
+			formatUses = 0;
+			if (theText.indexOf(marker) != -1)		//if this marker is present
+			{
+				for (charIndex in 0...theText.length)			//inspect each character
+				{
+					var char:String = theText.charAt(charIndex);
+					if (char == marker)							//it's one of the markers
+					{
+						if (!start)								//we're outside of a format block
+						{ 
+							start = true;						//start a format block
+							range_starts.push(charIndex);
+							if (formatUses == 0)
+							{
+								formatsToApply.push(formats[i]);
+							}
+							else
+							{
+								formatsToApply.push(formats[i].clone());	//clone the format object if it's used twice (otherwise it doesn't work correctly)
+							}
+							markersToApply.push(markers[i]);
+							formatUses++;
+						}
+						else
+						{
+							start = false;
+							range_ends.push(charIndex);			//end a format block
+						}
+					}
+				}
+				if (start)
+				{
+					range_ends.push(-1);						//we ended with an unclosed block, mark it as infinite
+				}
+			}
+			i++;
+		}
+		
+		//Remove all of the markers in the string
+		for (marker in markers)
+		{
+			while (theText.indexOf(marker) != -1)
+			{
+				theText = StringTools.replace(theText, marker, "");
+			}
+		}
+		
+		//Adjust all the ranges to reflect the removed markers
+		for (i in 0...range_starts.length)
+		{
+			//Consider each range start
+			var delIndex:Int = range_starts[i];
+			
+			var markerLength:Int = markersToApply[i].length;
+			
+			//Any start or end index that is HIGHER than this must be subtracted by one markerLength
+			for (j in 0...range_starts.length)
+			{
+				if (range_starts[j] > delIndex)
+				{
+					range_starts[j] -= markerLength;
+				}
+				if (range_ends[j] > delIndex)
+				{
+					range_ends[j] -= markerLength;
+				}
+			}
+			
+			//Consider each range end
+			delIndex = range_ends[i];
+			
+			//Any start or end index that is HIGHER than this must be subtracted by one markerLength
+			for (j in 0...range_starts.length)
+			{
+				if (range_starts[j] > delIndex)
+				{
+					range_starts[j] -= markerLength;
+				}
+				if (range_ends[j] > delIndex)
+				{
+					range_ends[j] -= markerLength;
+				}
+			}
+		}
+		
+		//Apply the new text
+		text = theText;
+		
+		//Apply each format selectively to the given range
+		for (i in 0...range_starts.length)
+		{
+			addFormat(formatsToApply[i], range_starts[i], range_ends[i]);
+		}
+		
+		//Clean up arrays created for this function
+		FlxArrayUtil.clearArray(markersToApply);
+		FlxArrayUtil.clearArray(range_starts);
+		FlxArrayUtil.clearArray(range_ends);
+		FlxArrayUtil.clearArray(formatsToApply);
+	}
+	
+	/**
 	 * Adds another format to this FlxText
 	 * 
 	 * @param	Format	The format to be added.
@@ -958,6 +1087,11 @@ class FlxTextFormat implements IFlxDestroyable
 		}
 		
 		borderColor = BorderColor == null ? FlxColor.TRANSPARENT : BorderColor;
+	}
+	
+	public function clone():FlxTextFormat
+	{
+		return new FlxTextFormat(format.color, format.bold, format.italic, borderColor, start, end);
 	}
 	
 	public function destroy():Void
