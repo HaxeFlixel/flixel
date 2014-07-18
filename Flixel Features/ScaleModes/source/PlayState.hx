@@ -24,7 +24,7 @@ class PlayState extends FlxState
 		
 		for (i in 0...20)
 		{
-			add(new Ship(FlxRandom.int(50, 100), FlxRandom.int(0, 360)));
+			add(new Ship(FlxG.random.int(50, 100), FlxG.random.int(0, 360)));
 		}
 		
 		currentPolicy = new FlxText(0, 10, FlxG.width, ScaleMode.RATIO_DEFAULT);

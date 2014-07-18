@@ -25,7 +25,7 @@ class Enemy extends Entity
 	
 	public function new(X:Float = 0, Y:Float = 0, Type:UInt = 0)
 	{
-		super(FlxG.width * FlxRandom.float(), FlxG.height * FlxRandom.float());
+		super(FlxG.width * FlxG.random.float(), FlxG.height * FlxG.random.float());
 
 		//enemyPixels = new Array<BitmapData>();
 		enemyPixels = new Array<String>();
@@ -79,9 +79,9 @@ class Enemy extends Entity
 			#end
 			if (cooldownTimer.finished)
 			{
-				cooldownTimer.reset(0.02 + 0.08 * FlxRandom.float());
+				cooldownTimer.reset(0.02 + 0.08 * FlxG.random.float());
 				var _color:FlxColor = 0xff00ff; // light purple
-				var _speed:Float = 360 + FlxRandom.float() * 90;
+				var _speed:Float = 360 + FlxG.random.float() * 90;
 				var _offsetX:Float = 16 * Math.sin(FlxAngle.asRadians(_angle));
 				var _offsetY:Float = -16 * Math.cos(FlxAngle.asRadians(_angle));
 				ScreenState.makeParticle(Particle.ENEMY, position.x + _offsetX, position.y + _offsetY, _angle, _speed, _color);
@@ -120,7 +120,7 @@ class Enemy extends Entity
 		GameSound.randomSound(GameSound.sfxExplosion, 0.5);
 		
 		var _color:FlxColor;
-		switch (Std.int(6 * FlxRandom.float()))
+		switch (Std.int(6 * FlxG.random.float()))
 		{
 			case 0: _color = 0xff3333;
 			case 1: _color = 0x33ff33;
@@ -260,7 +260,7 @@ class Enemy extends Entity
 			//cooldownTimer.abort();
 			//cooldownTimer = FlxTimer.start(1);
 			cooldownTimer.reset(1);
-			Angle = 2 * Math.PI * FlxRandom.float();
+			Angle = 2 * Math.PI * FlxG.random.float();
 			velocity.x = 0;
 			velocity.y = 0;
 			acceleration.x = Acceleration * Math.cos(Angle);
@@ -272,7 +272,7 @@ class Enemy extends Entity
 		//cooldownTimer.abort();
 		//cooldownTimer = FlxTimer.start(1);
 		cooldownTimer.reset(1);
-		Angle = 2 * Math.PI * FlxRandom.float();
+		Angle = 2 * Math.PI * FlxG.random.float();
 		acceleration.x = Acceleration * Math.cos(Angle);
 		acceleration.y = Acceleration * Math.sin(Angle);
 		angularVelocity = 200;

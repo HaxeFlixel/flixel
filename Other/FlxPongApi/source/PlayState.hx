@@ -143,11 +143,11 @@ class PlayState extends FlxState
 	public function newObstacle():Void
 	{
 		var obs:PongSprite = _obstacles.recycle(PongSprite, function() {
-			return new PongSprite(FlxG.width, FlxRandom.int(0, FlxG.height),
-				FlxRandom.int(1, 20), FlxRandom.int(4, 40), Reg.med_dark);
+			return new PongSprite(FlxG.width, FlxG.random.int(0, FlxG.height),
+				FlxG.random.int(1, 20), FlxG.random.int(4, 40), Reg.med_dark);
 		});
-		obs.velocity.x = FlxRandom.float( -100, -1);
-		obs.velocity.y = FlxRandom.float( -10, 10);
+		obs.velocity.x = FlxG.random.float( -100, -1);
+		obs.velocity.y = FlxG.random.float( -10, 10);
 		//obs.moves = false;
 		obs.immovable = true;
 	}

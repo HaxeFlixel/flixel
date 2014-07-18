@@ -25,7 +25,7 @@ class PlayState extends FlxState
 		
 		// Randomly pick room for player to start in
 		var emptyTiles:Array<FlxPoint> = map.getTileCoords(0, false);
-		var randomEmptyTile:FlxPoint = emptyTiles[FlxRandom.int(0, emptyTiles.length)];
+		var randomEmptyTile:FlxPoint = emptyTiles[FlxG.random.int(0, emptyTiles.length)];
 		
 		add(new Player(randomEmptyTile.x, randomEmptyTile.y));
 		

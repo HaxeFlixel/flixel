@@ -32,7 +32,7 @@ class EnemyGibs extends FlxEmitter
 			#if !(cpp || neko || js)
 			p.makeGraphic(2, 2, FlxColor.BLACK);
 			#else
-			if (FlxRandom.chanceRoll())
+			if (FlxG.random.bool())
 			{
 				p.makeGraphic(2, 2, FlxColor.BLACK);
 			}

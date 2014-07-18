@@ -247,7 +247,7 @@ class Balloon extends FlxNapeSprite
 		super(X, Y);
 		loadGraphic("assets/Balloon.png", true, 68, 68);
 		
-		this.animation.frameIndex = FlxRandom.int(0, 6);
+		this.animation.frameIndex = FlxG.random.int(0, 6);
 		
 		antialiasing = true;
 		createCircularBody(25);

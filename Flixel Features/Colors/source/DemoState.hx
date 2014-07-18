@@ -115,7 +115,7 @@ class DemoState extends FlxState
 		txt.font = "fairfax";
 		panel.add(txt);
 		
-		var myColor:FlxColor = FlxRandom.color();
+		var myColor:FlxColor = FlxG.random.color();
 		var colorSpr = makeSprite(60, 46, myColor, FlxG.width - 120, 20);
 		panel.add(colorSpr);
 		

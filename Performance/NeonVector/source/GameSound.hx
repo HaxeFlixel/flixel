@@ -25,6 +25,6 @@ class GameSound
 	
 	public static function randomSound(Sounds:Array<String>, VolumeMultiplier:Float = 1.0):Void
 	{
-		FlxG.sound.play(FlxRandom.getObject(Sounds), FlxG.sound.volume * VolumeMultiplier, false, false);
+		FlxG.sound.play(FlxG.random.getObject(Sounds), FlxG.sound.volume * VolumeMultiplier, false, false);
 	}
 }

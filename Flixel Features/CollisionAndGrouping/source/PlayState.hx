@@ -64,11 +64,11 @@ class PlayState extends FlxState
 		
 		for (i in 0..._numCrates) 
 		{
-			_crate = new FlxSprite((FlxRandom.float() * 200) + 100, 20);
+			_crate = new FlxSprite((FlxG.random.float() * 200) + 100, 20);
 			// This loads in a graphic, and 'bakes' some rotations in so we don't waste resources computing real rotations later
 			_crate.loadRotatedGraphic("assets/crate.png", 16, 0); 
 			// Make it spin a tad
-			_crate.angularVelocity = FlxRandom.float() * 50 - 150; 
+			_crate.angularVelocity = FlxG.random.float() * 50 - 150; 
 			// Gravity
 			_crate.acceleration.y = 300; 
 			// Some wind for good measure
@@ -78,7 +78,7 @@ class PlayState extends FlxState
 			// "      fly  "  "
 			_crate.maxVelocity.x = 200; 
 			// Let's make them all bounce a little bit differently
-			_crate.elasticity = FlxRandom.float(); 
+			_crate.elasticity = FlxG.random.float(); 
 			
 			_crateStormGroup.add(_crate);
 		}
@@ -90,14 +90,14 @@ class PlayState extends FlxState
 		
 		for (i in 0..._numCrates) 
 		{
-			_crate = new FlxSprite((FlxRandom.float() * 200) + 100, 20);
+			_crate = new FlxSprite((FlxG.random.float() * 200) + 100, 20);
 			_crate.loadRotatedGraphic("assets/crate.png", 16, 1);
-			_crate.angularVelocity = FlxRandom.float() * 50-150;
+			_crate.angularVelocity = FlxG.random.float() * 50-150;
 			_crate.acceleration.y = 300;
 			_crate.acceleration.x = 50;
 			_crate.maxVelocity.y = 500;
 			_crate.maxVelocity.x = 200;
-			_crate.elasticity = FlxRandom.float();
+			_crate.elasticity = FlxG.random.float();
 			
 			_crateStormGroup2.add(_crate);
 		}

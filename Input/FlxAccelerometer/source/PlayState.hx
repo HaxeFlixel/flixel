@@ -25,7 +25,7 @@ class PlayState extends FlxNapeState
 		
 		for (i in 0...50) 
 		{
-			var box = new Box(FlxRandom.int(0, FlxG.width - 30), FlxRandom.int(0, FlxG.height - 30));
+			var box = new Box(FlxG.random.int(0, FlxG.width - 30), FlxG.random.int(0, FlxG.height - 30));
 			box.body.space = FlxNapeState.space;
 			add(box);
 		}
@@ -66,7 +66,7 @@ class Box extends FlxNapeSprite
 	public function new(X:Float, Y:Float) 
 	{
 		super(X, Y);
-		makeGraphic(30, 30, FlxRandom.color());
+		makeGraphic(30, 30, FlxG.random.color());
 		createRectangularBody(30, 30);
 		setBodyMaterial(0.5, 0.5, 0.5, 2);
 		body.space = FlxNapeState.space;

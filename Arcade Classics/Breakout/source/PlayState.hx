@@ -180,7 +180,7 @@ class PlayState extends FlxState
 		{
 			// Ball is perfectly in the middle
 			// A little random X to stop it bouncing up!
-			Ball.velocity.x = 2 + FlxRandom.int(0, 8);
+			Ball.velocity.x = 2 + FlxG.random.int(0, 8);
 		}
 	}
 }

@@ -44,7 +44,7 @@ class PlayState extends FlxState
 		for (i in 0...particles)
 		{
 			particle = new FlxParticle();
-			particle.makeGraphic(32, 32, colors[Std.int(FlxRandom.float() * colors.length)]);
+			particle.makeGraphic(32, 32, colors[Std.int(FlxG.random.float() * colors.length)]);
 			particle.exists = false;
 			emitter.add(particle);
 		}

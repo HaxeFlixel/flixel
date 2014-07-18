@@ -85,7 +85,7 @@ class Card extends FlxNapeSprite
 	{
 		// Choose a random card from the first 52 cards on the spritesheet 
 		// - excluding those who have already been picked!
-		animation.frameIndex = FlxRandom.int(0, 51, pickedCards);
+		animation.frameIndex = FlxG.random.int(0, 51, pickedCards);
 		pickedCards.push(animation.frameIndex);
 		
 		// Finish the card animation

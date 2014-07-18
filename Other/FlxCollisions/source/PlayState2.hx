@@ -23,7 +23,7 @@ class PlayState2 extends FlxState
 		
 		for (i in 0...300)
 		{
-			block = new FlxSprite(Math.floor(FlxRandom.float() * 40) * 16, Math.floor(FlxRandom.float() * 30) * 16);
+			block = new FlxSprite(Math.floor(FlxG.random.float() * 40) * 16, Math.floor(FlxG.random.float() * 30) * 16);
 			block.makeGraphic(16, 16, 0xff233e58);
 			block.immovable = true;
 			block.moves = false;

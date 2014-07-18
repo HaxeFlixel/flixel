@@ -419,12 +419,12 @@ class PlayState extends FlxState
 		
 		if (Spawners)
 		{
-			sx = FlxRandom.int(2, rw - 6);
-			sy = FlxRandom.int(2, rw - 6);
+			sx = FlxG.random.int(2, rw - 6);
+			sy = FlxG.random.int(2, rw - 6);
 		}
 		
 		// Then place a bunch of blocks
-		var numBlocks:Int = FlxRandom.int(3, 6);
+		var numBlocks:Int = FlxG.random.int(3, 6);
 		var maxW:Int = 10;
 		var minW:Int = 2;
 		var maxH:Int = 8;
@@ -445,10 +445,10 @@ class PlayState extends FlxState
 			do
 			{
 				// Keep generating different specs if they overlap the spawner
-				bw = FlxRandom.int(minW, maxW);
-				bh = FlxRandom.int(minH, maxH);
-				bx = FlxRandom.int( -1, rw - bw);
-				by = FlxRandom.int( -1, rw - bh);
+				bw = FlxG.random.int(minW, maxW);
+				bh = FlxG.random.int(minH, maxH);
+				bx = FlxG.random.int( -1, rw - bw);
+				by = FlxG.random.int( -1, rw - bh);
 				
 				if (Spawners)
 				{
@@ -502,7 +502,7 @@ class PlayState extends FlxState
 		{
 			for (j in 0...numColsToPush)
 			{
-				randomTile = FlxRandom.int(StartTile, EndTile);
+				randomTile = FlxG.random.int(StartTile, EndTile);
 				
 				currentTileIndex = (xStartIndex + j) + (yStartIndex + i) * MapWidth;
 				_map[currentTileIndex] = randomTile;

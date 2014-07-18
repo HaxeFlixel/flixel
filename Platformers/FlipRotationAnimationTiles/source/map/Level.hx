@@ -94,7 +94,7 @@ class Level extends TiledMap
 						// Right now, a special tile only can have one animation.
 						animData = animations.get(tile.tilesetID)[0];
 						// add some speed randomization to the animation
-						var randomize:Float = FlxRandom.float( -animData.randomizeSpeed, animData.randomizeSpeed);
+						var randomize:Float = FlxG.random.float( -animData.randomizeSpeed, animData.randomizeSpeed);
 						var speed:Float = animData.speed + randomize;
 						
 						specialTile.addAnimation(animData.frames, speed, animData.framesData);

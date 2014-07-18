@@ -130,8 +130,8 @@ class MenuState extends FlxState
 			FlxG.cameras.shake(0.035, 0.5);
 			_title1.color = _title2.color = 0xd8eba2;
 			_gibs.start(true, 5);
-			_title1.angle = FlxRandom.float( -15, 15);
-			_title2.angle = FlxRandom.float( -15, 15);
+			_title1.angle = FlxG.random.float( -15, 15);
+			_title2.angle = FlxG.random.float( -15, 15);
 			
 			// Then we're going to add the text and buttons and things that appear
 			// If we were hip we'd use our own button animations, but we'll just recolor
@@ -231,7 +231,7 @@ class MenuState extends FlxState
 	{
 		if (_attractMode)
 		{
-			FlxG.vcr.loadReplay(FlxRandom.chanceRoll() ? (Assets.getText("data/attract1.fgr")) : (Assets.getText("data/attract2.fgr")), new PlayState(), ["ANY"], 22, onDemoComplete);
+			FlxG.vcr.loadReplay(FlxG.random.bool() ? (Assets.getText("data/attract1.fgr")) : (Assets.getText("data/attract2.fgr")), new PlayState(), ["ANY"], 22, onDemoComplete);
 		}
 		else
 		{

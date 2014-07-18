@@ -4,7 +4,7 @@ import flixel.math.FlxMath;
 import flixel.util.FlxArrayUtil;
 
 /**
- * This is the old, bad FlxRandom. Boo! Sporadic determinism! Boo!
+ * This is the old, bad FlxG.random. Boo! Sporadic determinism! Boo!
  */
 class OldFlxRandom
 {
@@ -13,11 +13,11 @@ class OldFlxRandom
 	 */
 	public static var globalSeed:Float;
 	/**
-	 * Internal helper for <code>FlxRandom.int()</code>
+	 * Internal helper for <code>FlxG.random.int()</code>
 	 */
 	private static var intHelper:Int = 0;
 	/**
-	 * Maximum value returned by <code>FlxRandom.intRanged</code> and <code>FlxRandom.floatRanged</code> by default.
+	 * Maximum value returned by <code>FlxG.random.intRanged</code> and <code>FlxG.random.floatRanged</code> by default.
 	 */
 	static public inline var MAX_RANGE:Int = 0xffffff;
 	

@@ -47,9 +47,9 @@ class Reg
 	public static function genColors():Void
 	{
 		var base:Array<Int> = [];
-		base.push(FlxRandom.int(64, 192)); // red
-		base.push(FlxRandom.int(64, 192)); // green
-		base.push(FlxRandom.int(64, 192)); // blue
+		base.push(FlxG.random.int(64, 192)); // red
+		base.push(FlxG.random.int(64, 192)); // green
+		base.push(FlxG.random.int(64, 192)); // blue
 		
 		// wipe or initiate colorArray
 		
@@ -58,7 +58,7 @@ class Reg
 		// generate four colors
 		
 		for (i in 0...4) {
-			var dist:Int = FlxRandom.int(32 * (i - 2), 24 * (i - 2));
+			var dist:Int = FlxG.random.int(32 * (i - 2), 24 * (i - 2));
 			colorArray.push(255 << 24); // alpha
 			colorArray[i] += base[0] + dist << 16; //red
 			colorArray[i] += base[1] + dist << 8; //green
@@ -71,7 +71,7 @@ class Reg
 	 */
 	public static function randomColor():Int
 	{
-		return colorArray[FlxRandom.int(0, 3)];
+		return colorArray[FlxG.random.int(0, 3)];
 	}
 	
 	/**

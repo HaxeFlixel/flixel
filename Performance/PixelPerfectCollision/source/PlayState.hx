@@ -96,7 +96,7 @@ class PlayState extends FlxState
 	{
 		var alien = aliens.recycle(FlxSprite);
 		alien.loadGraphic("assets/alien.png", true); // load graphics from asset
-		alien.animation.add("dance", [0, 1, 0, 2], FlxRandom.int(6, 10));	// set dance dance interstellar animation
+		alien.animation.add("dance", [0, 1, 0, 2], FlxG.random.int(6, 10));	// set dance dance interstellar animation
 		alien.animation.play("dance");	// dance!
 		randomize(alien);	// set position, angle and alpha to random values
 		return alien;
@@ -112,9 +112,9 @@ class PlayState extends FlxState
 		obj.setPosition(point.x, point.y);
 		point.put(); // recycle point
 		
-		var destX = FlxRandom.int(0, Std.int(FlxG.width - obj.width));
-		var destY = FlxRandom.int(0, Std.int(FlxG.height - obj.height));
-		obj.alpha = FlxRandom.float(0.3, 1.0);
+		var destX = FlxG.random.int(0, Std.int(FlxG.width - obj.width));
+		var destY = FlxG.random.int(0, Std.int(FlxG.height - obj.height));
+		obj.alpha = FlxG.random.float(0.3, 1.0);
 		
 		// Neat tweening effect for new aliens appearing
 		FlxTween.tween(obj, { x: destX, y:destY }, 2, { ease: FlxEase.expoOut });
@@ -278,7 +278,7 @@ class PlayState extends FlxState
 	
 	function randomizeRotation(obj:FlxSprite):Void
 	{
-		obj.angle = FlxRandom.float() * 360;
+		obj.angle = FlxG.random.float() * 360;
 		obj.angularVelocity = 100;
 	}
 	
@@ -294,7 +294,7 @@ class PlayState extends FlxState
 	function getRandomCirclePos():FlxPoint
 	{
 		// choose a random position on our circle, from 1° to 360°
-		var startAngle = FlxRandom.int(1, 360);
+		var startAngle = FlxG.random.int(1, 360);
 		
 		// make sure the radius of our circle is 200 px bigger than the game's width / height (whichever is bigger)
 		var startRadius = (FlxG.width > FlxG.height) ? (FlxG.height + 200) : (FlxG.width + 200);

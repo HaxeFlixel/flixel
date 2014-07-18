@@ -170,8 +170,8 @@ class PlayState extends FlxState
 	private function randomizeFruitPosition(?Object1:FlxObject, ?Object2:FlxObject):Void
 	{
 		// Pick a random place to put the _fruit down
-		_fruit.x = FlxRandom.int(0, Math.floor(FlxG.width / 8) - 1) * 8;
-		_fruit.y = FlxRandom.int(0, Math.floor(FlxG.height / 8) - 1) * 8;
+		_fruit.x = FlxG.random.int(0, Math.floor(FlxG.width / 8) - 1) * 8;
+		_fruit.y = FlxG.random.int(0, Math.floor(FlxG.height / 8) - 1) * 8;
 		
 		// Check that the coordinates we picked aren't already covering the snake, if they are then run this function again
 		FlxG.overlap(_fruit, _snakeBody, randomizeFruitPosition);

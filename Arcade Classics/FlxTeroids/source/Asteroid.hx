@@ -52,7 +52,7 @@ class Asteroid extends FlxSprite
 			mass = 1;
 		}
 		
-		angle = FlxRandom.float() * 360;
+		angle = FlxG.random.float() * 360;
 		
 		if ((X != 0) || (Y != 0))
 		{
@@ -67,38 +67,38 @@ class Asteroid extends FlxSprite
 		
 		var initial_velocity:Int = 100;
 		
-		if (FlxRandom.float() < 0.5)
+		if (FlxG.random.float() < 0.5)
 		{
 			// Appears on the left
-			if (FlxRandom.float() < 0.5)	
+			if (FlxG.random.float() < 0.5)	
 			{
 				x = - 64 + offset.x;
-				velocity.x = initial_velocity / 2 + FlxRandom.float() * initial_velocity;
+				velocity.x = initial_velocity / 2 + FlxG.random.float() * initial_velocity;
 			}
 			else
 			{
 				x = FlxG.width + offset.x;
-				velocity.x = -initial_velocity / 2 - FlxRandom.float() * initial_velocity;
+				velocity.x = -initial_velocity / 2 - FlxG.random.float() * initial_velocity;
 			}
 			
-			y = FlxRandom.float()*(FlxG.height-height);
-			velocity.y = FlxRandom.float() * initial_velocity * 2 - initial_velocity;
+			y = FlxG.random.float()*(FlxG.height-height);
+			velocity.y = FlxG.random.float() * initial_velocity * 2 - initial_velocity;
 		}
 		else
 		{
-			if (FlxRandom.float() < 0.5)
+			if (FlxG.random.float() < 0.5)
 			{
 				y = - 64 + offset.y;
-				velocity.y = initial_velocity / 2 + FlxRandom.float() * initial_velocity;
+				velocity.y = initial_velocity / 2 + FlxG.random.float() * initial_velocity;
 			}
 			else
 			{
 				y = FlxG.height + offset.y;
-				velocity.y = - initial_velocity / 2 + FlxRandom.float() * initial_velocity;
+				velocity.y = - initial_velocity / 2 + FlxG.random.float() * initial_velocity;
 			}
 			
-			x = FlxRandom.float()*(FlxG.width-width);
-			velocity.x = FlxRandom.float() * initial_velocity * 2 - initial_velocity;
+			x = FlxG.random.float()*(FlxG.width-width);
+			velocity.x = FlxG.random.float() * initial_velocity * 2 - initial_velocity;
 		}
 		
 		angularVelocity = (Math.abs(velocity.x) + Math.abs(velocity.y));
@@ -142,14 +142,14 @@ class Asteroid extends FlxSprite
 			initial_velocity *= 3;
 		}
 		
-		var numChunks:Int = Math.floor(2 + FlxRandom.float() * 3);
+		var numChunks:Int = Math.floor(2 + FlxG.random.float() * 3);
 		
 		for (i in 0...numChunks)
 		{
 			var ax:Float = x + width / 2;
 			var ay:Float = y + height / 2;
-			var avx:Float = FlxRandom.float() * initial_velocity * 2 - initial_velocity;
-			var avy:Float = FlxRandom.float() * initial_velocity * 2 - initial_velocity;
+			var avx:Float = FlxG.random.float() * initial_velocity * 2 - initial_velocity;
+			var avy:Float = FlxG.random.float() * initial_velocity * 2 - initial_velocity;
 			
 			var asteroid:Asteroid = PlayState.asteroids.recycle(Asteroid);
 			asteroid.init(Math.floor(ax), Math.floor(ay), avx, avy, size);

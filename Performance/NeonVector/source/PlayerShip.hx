@@ -131,7 +131,7 @@ class PlayerShip extends Entity
 		cooldownTimer.cancel();
 		cooldownTimer.start(cooldown);
 		
-		var RandomSpread:Float = 4.58366236 * (FlxRandom.float() + FlxRandom.float()) - 4.58366236;
+		var RandomSpread:Float = 4.58366236 * (FlxG.random.float() + FlxG.random.float()) - 4.58366236;
 		
 		if (GameInput.aimWithMouse)
 		{
@@ -165,11 +165,11 @@ class PlayerShip extends Entity
 		_point.x = -velocity.x;
 		_point.y = -velocity.y;
 		GameInput.normalize(_point);
-		var _speed:Float = 120 + 60 * FlxRandom.float();
+		var _speed:Float = 120 + 60 * FlxG.random.float();
 		
 		// Calculate the sideways velocity for the two side streams. The direction is perpendicular to the ship's velocity and the
 		// magnitude varies sinusoidally.
-		var _angle:Float = (45 + 15 * FlxRandom.float()) * Math.sin(0.01 * t);
+		var _angle:Float = (45 + 15 * FlxG.random.float()) * Math.sin(0.01 * t);
 		var _sideColor:FlxColor = 0xc82609; // deep red
 		var _midColor:FlxColor = 0xffbb1e; // orange-yellow
 		var _exhaustX:Float = position.x + 20 * _point.x;

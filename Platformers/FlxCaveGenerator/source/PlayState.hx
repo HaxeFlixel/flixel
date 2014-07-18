@@ -113,7 +113,7 @@ class PlayState extends FlxState
 		
 		// Find an empty tile for the player
 		var emptyTiles:Array<FlxPoint> = _tilemap.getTileCoords(0, false);
-		var randomEmptyTile:FlxPoint = emptyTiles[FlxRandom.int(0, emptyTiles.length)];
+		var randomEmptyTile:FlxPoint = emptyTiles[FlxG.random.int(0, emptyTiles.length)];
 		_player.setPosition(randomEmptyTile.x, randomEmptyTile.y);
 	}
 }

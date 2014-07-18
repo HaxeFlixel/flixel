@@ -58,7 +58,7 @@ class Blob extends FlxNapeState
 		
 		add(new FlxSprite(0, 0, "assets/BlobBground.jpg"));
 		
-		startXOffset = FlxRandom.float( -200, 200);	
+		startXOffset = FlxG.random.float( -200, 200);	
 		
 		createWalls(0,-1000,0,0,10, new Material(1,1, 2,1,0.001));
 		FlxNapeState.space.gravity.setxy(0, 500);
@@ -292,7 +292,7 @@ class Twinkle extends FlxNapeSprite
 	
 	function new()
 	{
-		var rand = FlxRandom.int(0, 4);
+		var rand = FlxG.random.int(0, 4);
 		var graphic:String = null;
 		
 		
@@ -305,7 +305,7 @@ class Twinkle extends FlxNapeSprite
 			case 4: graphic = "assets/Twinkle5Y.png"; radius = 5;
 		}
 		
-		super(FlxRandom.float(50, 540), FlxRandom.float(200, 480), graphic);
+		super(FlxG.random.float(50, 540), FlxG.random.float(200, 480), graphic);
 		body.allowRotation = false;
 		
 		createCircularBody(radius);
@@ -332,10 +332,10 @@ class Twinkle extends FlxNapeSprite
 		
 		if (destinationTimer <= 0)
 		{
-			destinationTimer = FlxRandom.float(0.6, 4.6);
+			destinationTimer = FlxG.random.float(0.6, 4.6);
 			
-			var newX = body.position.x + FlxRandom.float( -100, 100);
-			var newY = body.position.y + FlxRandom.float( -100, 100);
+			var newX = body.position.x + FlxG.random.float( -100, 100);
+			var newY = body.position.y + FlxG.random.float( -100, 100);
 			
 			if (newX > 640 - 50) newX = 640 - 50;
 			if (newX < 50) newX = 50;

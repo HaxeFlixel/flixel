@@ -43,7 +43,7 @@ class PlayState extends FlxState
 					add(_touchSprite);
 				}
 				
-				_touchSprite.color = FlxRandom.color();
+				_touchSprite.color = FlxG.random.color();
 				_activeSprites.set(touch.touchPointID, _touchSprite);
 			}
 			else if (touch.justReleased && _activeSprites.exists(touch.touchPointID))

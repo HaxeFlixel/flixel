@@ -34,7 +34,7 @@ class BlurState extends FlxState
 		for (i in 0...PARTICLE_AMOUNT)
 		{
 			particle = new FlxParticle();
-			particle.makeGraphic(32, 32, colors[Std.int(FlxRandom.float() * colors.length)]);
+			particle.makeGraphic(32, 32, colors[Std.int(FlxG.random.float() * colors.length)]);
 			
 			// Add the particle to the trail area so it has a trail
 			trailArea.add(particle);

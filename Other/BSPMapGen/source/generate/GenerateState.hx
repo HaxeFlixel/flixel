@@ -76,7 +76,7 @@ class GenerateState extends FlxState
 				if (leaf.leftChild == null && leaf.rightChild == null) // If not split
 				{
 					// If this leaf is too big, or 75% chance
-					if (leaf.width > Leaf.MAX_SIZE || leaf.height > Leaf.MAX_SIZE || FlxRandom.float() > 0.25)
+					if (leaf.width > Leaf.MAX_SIZE || leaf.height > Leaf.MAX_SIZE || FlxG.random.float() > 0.25)
 					{
 						if (leaf.split()) // split the leaf!
 						{

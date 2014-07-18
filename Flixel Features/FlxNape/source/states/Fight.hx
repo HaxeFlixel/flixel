@@ -74,8 +74,8 @@ class Fight extends FlxNapeState
 			shooter.registerPhysSprite(spr);
 		}
 		
-		songoku.rLArm.body.applyImpulse(new Vec2(2000, FlxRandom.float( -2700, -2800)));
-		vegeta.lLArm.body.applyImpulse(new Vec2( -2000, FlxRandom.float( -2700, -2800)));
+		songoku.rLArm.body.applyImpulse(new Vec2(2000, FlxG.random.float( -2700, -2800)));
+		vegeta.lLArm.body.applyImpulse(new Vec2( -2000, FlxG.random.float( -2700, -2800)));
 		
 		var txt:FlxText;
 		txt = new FlxText( -10, 5, 640, "      'R' - reset state, 'G' - toggle physics graphics");

@@ -233,8 +233,8 @@ class PlayState extends FlxState
 	function updateDisplaceFilter()
 	{
 		#if flash
-		filter6.scaleX = FlxRandom.float( -10, 10);
-		filter6.mapPoint = new Point(0, FlxRandom.float(0, 30));
+		filter6.scaleX = FlxG.random.float( -10, 10);
+		filter6.mapPoint = new Point(0, FlxG.random.float(0, 30));
 		updateFilter(spr6Filter);
 		#end
 	}

@@ -19,8 +19,8 @@ class MySpriteGroup extends FlxTypedGroup<FlxSprite>
 		var sprite:FlxSprite;
 		for (i in 0...numSprites)
 		{
-			sprite = new FlxSprite(FlxRandom.float(0, FlxG.width), FlxRandom.float(0, FlxG.height));
-			sprite.velocity.set(FlxRandom.float(-50, 50), FlxRandom.float(-50, 50));
+			sprite = new FlxSprite(FlxG.random.float(0, FlxG.width), FlxG.random.float(0, FlxG.height));
+			sprite.velocity.set(FlxG.random.float(-50, 50), FlxG.random.float(-50, 50));
 			add(sprite);
 		}
 	}

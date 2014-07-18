@@ -113,9 +113,9 @@ class ScreenState extends FlxState
 		cursor.x = FlxG.mouse.x;
 		cursor.y = FlxG.mouse.y;
 		
-		if (FlxRandom.float() < 1 / inverseSpawnChance) makeEnemy(Enemy.SEEKER);
-		if (FlxRandom.float() < 1 / inverseSpawnChance) makeEnemy(Enemy.WANDERER);
-		if (blackholes.countLiving() < 2) if (FlxRandom.float() < 1 / (inverseSpawnChance * 10)) makeBlackhole();
+		if (FlxG.random.float() < 1 / inverseSpawnChance) makeEnemy(Enemy.SEEKER);
+		if (FlxG.random.float() < 1 / inverseSpawnChance) makeEnemy(Enemy.WANDERER);
+		if (blackholes.countLiving() < 2) if (FlxG.random.float() < 1 / (inverseSpawnChance * 10)) makeBlackhole();
 		if (inverseSpawnChance > 20) inverseSpawnChance -= 0.005;
 		
 		FlxG.overlap(entities, entities, handleCollision);
@@ -268,9 +268,9 @@ class ScreenState extends FlxState
 		{
 			if (_mixColors)
 			{
-				_mixedColor.interpolate(BlendColor, FlxRandom.float());
+				_mixedColor.interpolate(BlendColor, FlxG.random.float());
 			}
-			makeParticle(Type, PositionX, PositionY, 360 * FlxRandom.float(), Speed * (1 - 0.5 * FlxRandom.float()), _mixedColor);
+			makeParticle(Type, PositionX, PositionY, 360 * FlxG.random.float(), Speed * (1 - 0.5 * FlxG.random.float()), _mixedColor);
 		}
 	}
 	
@@ -283,8 +283,8 @@ class ScreenState extends FlxState
 		
 		do
 		{
-			_x = Std.int(FlxRandom.float() * FlxG.width);
-			_y = Std.int(FlxRandom.float() * FlxG.height);
+			_x = Std.int(FlxG.random.float() * FlxG.width);
+			_y = Std.int(FlxG.random.float() * FlxG.height);
 			_xDelta = PlayerShip.instance.position.x - _x;
 			_yDelta = PlayerShip.instance.position.y - _y;
 		} while (_xDelta * _xDelta + _yDelta * _yDelta < MinimumDistanceFromPlayer * MinimumDistanceFromPlayer);

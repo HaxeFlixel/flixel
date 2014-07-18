@@ -72,12 +72,12 @@ class Piramid extends FlxNapeState
 				brick = new FlxNapeSprite();
 				brick.makeGraphic(brickWidth, brickHeight, 0x0);
 				brick.createRectangularBody();
-				brick.loadGraphic("assets/brick" + Std.string(FlxRandom.int(1, 4)) + ".png");
+				brick.loadGraphic("assets/brick" + Std.string(FlxG.random.int(1, 4)) + ".png");
 				brick.antialiasing = true;
 				brick.scale.x = brickWidth / 80;
 				brick.scale.y = brickHeight / 40;
-				if (FlxRandom.chanceRoll()) brick.scale.x *= -1; // add some variety
-				if (FlxRandom.chanceRoll()) brick.scale.y *= -1; // add some variety.
+				if (FlxG.random.bool()) brick.scale.x *= -1; // add some variety
+				if (FlxG.random.bool()) brick.scale.y *= -1; // add some variety.
 				brick.setBodyMaterial(.5, .5, .5, 2);
 				brick.body.position.y = FlxG.height - brickHeight / 2 - brickHeight * i + 2;
 				brick.body.position.x = (FlxG.width / 2 - brickWidth / 2 * (Piramid.levels - i - 1)) + brickWidth * j; 
