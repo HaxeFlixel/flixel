@@ -240,6 +240,140 @@ class FlxText extends FlxSprite
 	}
 	
 	/**
+	 * Applies formats to text between marker strings, then removes those markers.
+	 * NOTE: This will clear all format ranges and return to the default format
+	 * 
+	 * Usage: t.applyMarkup("show $green text$ between dollar-signs",[new FlxTextFormatMarkerPair(greenFormat,"$")]);
+	 * 
+	 * Even works for complex nested formats like this:
+	 * yellow = new FlxTextFormatMarkerPair(yellowFormat,"@");
+	 * green = new FlxTextFormatMarkerPair(greenFormat,"$");
+	 * t.applyMarkup("HEY_BUDDY_@WHAT@_$IS_$_GOING@ON$?$@",[yellow,green]);
+	 * 
+	 * @param	input		the text you want to format
+	 * @param	rules		FlxTextFormat's to selectively apply, paired with marker strings such as "@" or "$"
+	 */
+	
+	public function applyMarkup(input:String, rules:Array<FlxTextFormatMarkerPair>):Void
+	{
+		clearFormats();		//start with default formatting
+		
+		if (rules == null || rules.length == 0)
+		{
+			return;			//there's no point in running the big loop
+		}
+		
+		var range_starts:Array<Int> = [];
+		var range_ends:Array<Int> = [];
+		var markersToApply:Array<String> = [];
+		var formatsToApply:Array<FlxTextFormat> = [];
+		
+		var theText:String = input;					//so we can process this and trash it as much as we want
+		
+		var i:Int = 0;
+		var formatUses:Int;
+		for (rule in rules)
+		{
+			if (rule.marker != null && rule.format != null)	//if either is null, no point in running this loop
+			{
+				var start:Bool = false;
+				formatUses = 0;
+				if (theText.indexOf(rule.marker) != -1)		//if this marker is present
+				{
+					for (charIndex in 0...theText.length)			//inspect each character
+					{
+						var char:String = theText.charAt(charIndex);
+						if (char == rule.marker)							//it's one of the markers
+						{
+							if (!start)								//we're outside of a format block
+							{ 
+								start = true;						//start a format block
+								range_starts.push(charIndex);
+								if (formatUses == 0)
+								{
+									formatsToApply.push(rule.format);
+								}
+								else
+								{
+									formatsToApply.push(rule.format.clone());	//clone the format object if it's used twice (otherwise it doesn't work correctly)
+								}
+								markersToApply.push(rule.marker);
+								formatUses++;
+							}
+							else
+							{
+								start = false;
+								range_ends.push(charIndex);			//end a format block
+							}
+						}
+					}
+					if (start)
+					{
+						range_ends.push(-1);						//we ended with an unclosed block, mark it as infinite
+					}
+				}
+				i++;
+			}
+		}
+		
+		//Remove all of the markers in the string
+		for (rule in rules)
+		{
+			while (theText.indexOf(rule.marker) != -1)
+			{
+				theText = StringTools.replace(theText, rule.marker, "");
+			}
+		}
+		
+		//Adjust all the ranges to reflect the removed markers
+		for (i in 0...range_starts.length)
+		{
+			//Consider each range start
+			var delIndex:Int = range_starts[i];
+			
+			var markerLength:Int = markersToApply[i].length;
+			
+			//Any start or end index that is HIGHER than this must be subtracted by one markerLength
+			for (j in 0...range_starts.length)
+			{
+				if (range_starts[j] > delIndex)
+				{
+					range_starts[j] -= markerLength;
+				}
+				if (range_ends[j] > delIndex)
+				{
+					range_ends[j] -= markerLength;
+				}
+			}
+			
+			//Consider each range end
+			delIndex = range_ends[i];
+			
+			//Any start or end index that is HIGHER than this must be subtracted by one markerLength
+			for (j in 0...range_starts.length)
+			{
+				if (range_starts[j] > delIndex)
+				{
+					range_starts[j] -= markerLength;
+				}
+				if (range_ends[j] > delIndex)
+				{
+					range_ends[j] -= markerLength;
+				}
+			}
+		}
+		
+		//Apply the new text
+		text = theText;
+		
+		//Apply each format selectively to the given range
+		for (i in 0...range_starts.length)
+		{
+			addFormat(formatsToApply[i], range_starts[i], range_ends[i]);
+		}
+	}
+	
+	/**
 	 * Adds another format to this FlxText
 	 * 
 	 * @param	Format	The format to be added.
@@ -960,9 +1094,26 @@ class FlxTextFormat implements IFlxDestroyable
 		borderColor = BorderColor == null ? FlxColor.TRANSPARENT : BorderColor;
 	}
 	
+	public function clone():FlxTextFormat
+	{
+		return new FlxTextFormat(format.color, format.bold, format.italic, borderColor, start, end);
+	}
+	
 	public function destroy():Void
 	{
 		format = null;
+	}
+}
+
+class FlxTextFormatMarkerPair
+{
+	public var format:FlxTextFormat;
+	public var marker:String;
+	
+	public function new(Format:FlxTextFormat, Marker:String)
+	{
+		format = Format;
+		marker = Marker;
 	}
 }
 
