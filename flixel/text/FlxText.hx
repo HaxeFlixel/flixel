@@ -17,6 +17,7 @@ import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.math.FlxPoint;
+import flixel.util.helpers.FlxRange;
 import flixel.util.loaders.CachedGraphics;
 import openfl.Assets;
 
@@ -132,7 +133,7 @@ class FlxText extends FlxSprite
 	/**
 	 * Internal reference to an Array of FlxTextFormat
 	 */
-	private var _formats:Array<FlxTextFormat>;
+	private var _formatRanges:Array<FlxTextFormatRange> = [];
 	
 	private var _filters:Array<BitmapFilter>;
 	private var _widthInc:Int = 0;
@@ -182,8 +183,6 @@ class FlxText extends FlxSprite
 		fieldWidth = FieldWidth;
 		_textField.embedFonts = EmbeddedFont;
 		
-		_formats = new Array<FlxTextFormat>();
-		
 		#if flash
 		_textField.sharpness = 100;
 		#end
@@ -223,18 +222,6 @@ class FlxText extends FlxSprite
 		_defaultFormat = null;
 		_formatAdjusted = null;
 		_filters = null;
-		if (_formats != null)
-		{
-			for (format in _formats)
-			{
-				if (format != null)
-				{
-					format.destroy();
-					format = null;
-				}
-			}
-		}
-		_formats = null;
 		shadowOffset = FlxDestroyUtil.put(shadowOffset);
 		super.destroy();
 	}
@@ -271,13 +258,11 @@ class FlxText extends FlxSprite
 		var formatsToApply:Array<FlxTextFormat> = [];
 		
 		var i:Int = 0;
-		var formatUses:Int;
 		for (rule in rules)
 		{
 			if (rule.marker != null && rule.format != null)
 			{
 				var start:Bool = false;
-				formatUses = 0;
 				if (input.indexOf(rule.marker) != -1)   //if this marker is present
 				{
 					for (charIndex in 0...input.length)   //inspect each character
@@ -289,17 +274,8 @@ class FlxText extends FlxSprite
 							{ 
 								start = true;   //start a format block
 								rangeStarts.push(charIndex);
-								if (formatUses == 0)
-								{
-									formatsToApply.push(rule.format);
-								}
-								else
-								{
-									//clone the format object if it's used twice (otherwise it doesn't work correctly)
-									formatsToApply.push(rule.format.clone());
-								}
+								formatsToApply.push(rule.format);
 								markersToApply.push(rule.marker);
-								formatUses++;
 							}
 							else
 							{
@@ -379,25 +355,39 @@ class FlxText extends FlxSprite
 	 * Adds another format to this FlxText
 	 * 
 	 * @param	Format	The format to be added.
-	 * @param	Start	(Default = -1) The start index of the string where the format will be applied. If greater than -1, this value will override the format.start value.
-	 * @param	End		(Default = -1) The end index of the string where the format will be applied. If greater than -1, this value will override the format.start value.
+	 * @param	Start	(Default = -1) The start index of the string where the format will be applied.
+	 * @param	End		(Default = -1) The end index of the string where the format will be applied.
 	 */
 	public function addFormat(Format:FlxTextFormat, Start:Int = -1, End:Int = -1):Void
 	{
-		Format.start = (Start > -1) ? Start : Format.start;
-		Format.end = (End > -1) ? End : Format.end;
-		_formats.push(Format);
+		_formatRanges.push(new FlxTextFormatRange(Format, Start, End));
 		// sort the array using the start value of the format so we can skip formats that can't be applied to the textField
-		_formats.sort(function(left:FlxTextFormat, right:FlxTextFormat) { return left.start < right.start ? -1 : 1; } );
+		_formatRanges.sort(function(left, right)
+		{ 
+			return left.range.start < right.range.start ? -1 : 1;
+		});
 		dirty = true;
 	}
 	
 	/**
 	 * Removes a specific FlxTextFormat from this text.
+	 * If a range is specified, this only removes the format when it touches that range.
 	 */
-	public inline function removeFormat(Format:FlxTextFormat):Void
+	public inline function removeFormat(Format:FlxTextFormat, ?Start:Int, ?End:Int):Void
 	{
-		FlxArrayUtil.fastSplice(_formats, Format);
+		for (formatRange in _formatRanges)
+		{
+			if (formatRange.format == Format)
+			{
+				if (Start != null && End != null &&
+					(Start > formatRange.range.end || End < formatRange.range.start))
+				{
+					continue;
+				}
+				
+				_formatRanges.remove(formatRange);
+			}
+		}
 		dirty = true;
 	}
 	
@@ -406,15 +396,9 @@ class FlxText extends FlxSprite
 	 */
 	public function clearFormats():Void
 	{
-		for (format in _formats)
-		{
-			format = FlxDestroyUtil.destroy(format);
-		}
-		
-		_formats = [];
+		_formatRanges = [];
 		updateDefaultFormat();
 	}
-	
 	
 	/**
 	 * You can use this if you have a lot of text parameters
@@ -981,23 +965,25 @@ class FlxText extends FlxSprite
 		updateFormat(FormatAdjusted);
 		
 		// Apply other formats
-		for (format in _formats)
+		for (formatRange in _formatRanges)
 		{
-			if (_textField.text.length - 1 < format.start) 
+			if (_textField.text.length - 1 < formatRange.range.start) 
 			{
 				// we can break safely because the array is ordered by the format start value
 				break;
 			}
 			else 
 			{
-				FormatAdjusted.font    = format.format.font;
-				FormatAdjusted.bold    = format.format.bold;
-				FormatAdjusted.italic  = format.format.italic;
-				FormatAdjusted.size    = format.format.size;
-				FormatAdjusted.color   = UseBorderColor ? format.borderColor.to24Bit() : format.format.color;
+				var format:TextFormat  = formatRange.format.format;
+				FormatAdjusted.font    = format.font;
+				FormatAdjusted.bold    = format.bold;
+				FormatAdjusted.italic  = format.italic;
+				FormatAdjusted.size    = format.size;
+				FormatAdjusted.color   = UseBorderColor ? formatRange.format.borderColor.to24Bit() : format.color;
 			}
 			
-			_textField.setTextFormat(FormatAdjusted, format.start, Std.int(Math.min(format.end, _textField.text.length)));
+			_textField.setTextFormat(FormatAdjusted, formatRange.range.start,
+				Std.int(Math.min(formatRange.range.end, _textField.text.length)));
 		}
 	}
 	
@@ -1051,59 +1037,43 @@ class FlxText extends FlxSprite
 	}
 }
 
-class FlxTextFormat implements IFlxDestroyable
+@:allow(flixel)
+class FlxTextFormat
 {
 	/**
 	 * The border color if FlxText has a shadow or a border
 	 */
-	public var borderColor:FlxColor;
+	private var borderColor:FlxColor;
+	private var format(default, null):TextFormat;
 	
 	/**
-	 * The start index of the string where the format will be applied
+	 * @param   FontColor     Set the font  color. By default, inherits from the default format.
+	 * @param   Bold          Set the font to bold. The font must support bold. By default, false. 
+	 * @param   Italic        Set the font to italics. The font must support italics. Only works in Flash. By default, false.  
+	 * @param   BorderColor   Set the border color. By default, no border (null).
 	 */
-	public var start:Int = -1;
-	/**
-	 * The end index of the string where the format will be applied
-	 */
-	public var end:Int = -1;
-	
-	/**
-	 * Internal TextFormat
-	 */
-	public var format(default, null):TextFormat;
-	
-	/**
-	 * @param	FontColor	(Optional) Set the font  color. By default, inherits from the default format.
-	 * @param	Bold		(Optional) Set the font to bold. The font must support bold. By default, false. 
-	 * @param	Italic		(Optional) Set the font to italics. The font must support italics. Only works in Flash. By default, false.  
-	 * @param	BorderColor	(Optional) Set the border color. By default, no border (null).
-	 * @param	Start		(Default=-1) The start index of the string where the format will be applied. If not set, the format won't be applied.
-	 * @param	End			(Default=-1) The end index of the string where the format will be applied.
-	 */
-	public function new(?FontColor:FlxColor, ?Bold:Bool, ?Italic:Bool, ?BorderColor:FlxColor, ?Start:Int = -1, ?End:Int = -1)
+	public function new(?FontColor:FlxColor, ?Bold:Bool, ?Italic:Bool, ?BorderColor:FlxColor)
 	{
 		format = new TextFormat(null, null, FontColor, Bold, Italic);
-		
-		if (Start > -1)
-		{
-			start = Start;
-		}
-		if (End > -1)
-		{
-			end = End;
-		}
-		
 		borderColor = BorderColor == null ? FlxColor.TRANSPARENT : BorderColor;
 	}
 	
 	public function clone():FlxTextFormat
 	{
-		return new FlxTextFormat(format.color, format.bold, format.italic, borderColor, start, end);
+		return new FlxTextFormat(format.color, format.bold, format.italic, borderColor);
 	}
+}
+
+@:allow(flixel)
+private class FlxTextFormatRange
+{
+	public var range(default, null):FlxRange<Int>;
+	public var format(default, null):FlxTextFormat;
 	
-	public function destroy():Void
+	public function new(format:FlxTextFormat, start:Int, end:Int)
 	{
-		format = null;
+		range = new FlxRange<Int>(start, end);
+		this.format = format;
 	}
 }
 
@@ -1112,10 +1082,10 @@ class FlxTextFormatMarkerPair
 	public var format:FlxTextFormat;
 	public var marker:String;
 	
-	public function new(Format:FlxTextFormat, Marker:String)
+	public function new(format:FlxTextFormat, marker:String)
 	{
-		format = Format;
-		marker = Marker;
+		this.format = format;
+		this.marker = marker;
 	}
 }
 
