@@ -242,31 +242,22 @@ class FlxText extends FlxSprite
 	/**
 	 * Applies formats to text between marker strings, then removes those markers
 	 * 
-	 * Usage: t.formatParse("show $green text$ between dollar-signs",[greenFormat],["$"]);
+	 * Usage: t.formatParse("show $green text$ between dollar-signs",[new FormatMarkerPair(greenFormat,"$")]);
 	 * 
 	 * Even works for complex nested formats like this:
-	 * t.formatParse("HEY_BUDDY_@WHAT@_$IS_$_GOING@ON$?$@",[yellowFormat,greenFormat],["$","@"]);
+	 * yellow = new FormatMarkerPair(yellowFormat,"@");
+	 * green = new FormatMarkerPair(greenFormat,"$");
+	 * t.formatParse("HEY_BUDDY_@WHAT@_$IS_$_GOING@ON$?$@",[yellow,green]);
 	 * 
 	 * @param	input		the text you want to format
-	 * @param	formats		the FlxTextFormat's you want to selectively apply
-	 * @param	markers		corresponding marker strings, such as "@" or "$" (rarely used single-characters recommended)
+	 * @param	rules		FlxTextFormat's to selectively apply, paired with marker strings such as "@" or "$"
 	 */
 	
-	public function formatParse(input:String, formats:Array<FlxTextFormat>, markers:Array<String>):Void
+	public function formatParse(input:String, rules:Array<FormatMarkerPair>):Void
 	{
-		if (formats == null || markers == null)		//if either formats or markers are null
-		{
-			throw "formats and markers may not be null!"
-		}
-		
-		if (formats.length != markers.length)
-		{
-			throw "formats.length must match markers.length!";
-		}
-		
 		clearFormats();		//start with default formatting
 		
-		if (formats.length == 0)
+		if (rules == null || rules.length == 0)
 		{
 			return;			//there's no point in running the big loop
 		}
@@ -280,18 +271,18 @@ class FlxText extends FlxSprite
 		
 		var i:Int = 0;
 		var formatUses:Int;
-		for (marker in markers)
+		for (rule in rules)
 		{
-			if (marker != null && formats[i] != null)	//if either is null, no point in running this loop
+			if (rule.marker != null && rule.format != null)	//if either is null, no point in running this loop
 			{
 				var start:Bool = false;
 				formatUses = 0;
-				if (theText.indexOf(marker) != -1)		//if this marker is present
+				if (theText.indexOf(rule.marker) != -1)		//if this marker is present
 				{
 					for (charIndex in 0...theText.length)			//inspect each character
 					{
 						var char:String = theText.charAt(charIndex);
-						if (char == marker)							//it's one of the markers
+						if (char == rule.marker)							//it's one of the markers
 						{
 							if (!start)								//we're outside of a format block
 							{ 
@@ -299,13 +290,13 @@ class FlxText extends FlxSprite
 								range_starts.push(charIndex);
 								if (formatUses == 0)
 								{
-									formatsToApply.push(formats[i]);
+									formatsToApply.push(rule.format);
 								}
 								else
 								{
-									formatsToApply.push(formats[i].clone());	//clone the format object if it's used twice (otherwise it doesn't work correctly)
+									formatsToApply.push(rule.format.clone());	//clone the format object if it's used twice (otherwise it doesn't work correctly)
 								}
-								markersToApply.push(markers[i]);
+								markersToApply.push(rule.marker);
 								formatUses++;
 							}
 							else
@@ -325,11 +316,11 @@ class FlxText extends FlxSprite
 		}
 		
 		//Remove all of the markers in the string
-		for (marker in markers)
+		for (rule in rules)
 		{
-			while (theText.indexOf(marker) != -1)
+			while (theText.indexOf(rule.marker) != -1)
 			{
-				theText = StringTools.replace(theText, marker, "");
+				theText = StringTools.replace(theText, rule.marker, "");
 			}
 		}
 		
@@ -1110,6 +1101,18 @@ class FlxTextFormat implements IFlxDestroyable
 	public function destroy():Void
 	{
 		format = null;
+	}
+}
+
+class FormatMarkerPair
+{
+	public var format:FlxTextFormat;
+	public var marker:String;
+	
+	public function new(Format:FlxTextFormat, Marker:String)
+	{
+		format = Format;
+		marker = Marker;
 	}
 }
 
