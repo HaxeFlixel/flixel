@@ -151,13 +151,13 @@ class FlxRandom
 	/**
 	 * Returns true or false based on the chance value (default 50%). 
 	 * For example if you wanted a player to have a 30.5% chance of getting a bonus,
-	 * call chance(30.5) - true means the chance passed, false means it failed.
+	 * call bool(30.5) - true means the chance passed, false means it failed.
 	 * 
 	 * @param   Chance   The chance of receiving the value.
 	 *                   Should be given as a number between 0 and 100 (effectively 0% to 100%)
 	 * @return  Whether the roll passed or not.
 	 */
-	public inline function chance(Chance:Float = 50):Bool
+	public inline function bool(Chance:Float = 50):Bool
 	{
 		return float(0, 100) < Chance;
 	}
@@ -171,7 +171,7 @@ class FlxRandom
 	 */
 	public inline function sign(Chance:Float = 50):Int
 	{
-		return chance(Chance) ? 1 : -1;
+		return bool(Chance) ? 1 : -1;
 	}
 	
 	/**
