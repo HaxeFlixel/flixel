@@ -5,6 +5,7 @@ import flixel.FlxCameraTest;
 import flixel.FlxGTest;
 import flixel.FlxSpriteTest;
 import flixel.FlxStateTest;
+import flixel.FlxSubStateTest;
 import flixel.group.FlxGroupTest;
 import flixel.math.FlxRandomTest;
 import flixel.math.FlxVectorTest;
@@ -32,6 +33,7 @@ class TestSuite extends massive.munit.TestSuite
 		add(flixel.FlxGTest);
 		add(flixel.FlxSpriteTest);
 		add(flixel.FlxStateTest);
+		add(flixel.FlxSubStateTest);
 		add(flixel.group.FlxGroupTest);
 		add(flixel.math.FlxRandomTest);
 		add(flixel.math.FlxVectorTest);

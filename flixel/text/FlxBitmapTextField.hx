@@ -5,6 +5,7 @@ import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.math.FlxPoint;
 import flixel.system.layer.DrawStackItem;
 import flixel.text.pxText.PxBitmapFont;
 import flixel.text.pxText.PxDefaultFontGenerator;
@@ -55,6 +56,7 @@ class FlxBitmapTextField extends FlxSprite
 	#else
 	private var _drawData:Array<Float>;
 	private var _bgDrawData:Array<Float>;
+	private var _point2 = FlxPoint.get();
 	#end
 	
 	/**
@@ -166,10 +168,19 @@ class FlxBitmapTextField extends FlxSprite
 			updateBitmapData();
 		}
 		
+		var bgDrawItem:DrawStackItem = null;
 		var textLength:Int = Std.int(_drawData.length / 6);
-
+		
 		for (camera in cameras)
 		{
+			if (_background)
+			{
+				bgDrawItem = camera.getDrawStackItem(FlxG.bitmap.whitePixel, true, _blendInt, antialiasing);
+				// TODO: make it work again
+			}
+			
+			var drawItem = camera.getDrawStackItem(cachedGraphics, true, _blendInt, antialiasing);
+			
 			if (!camera.visible || !camera.exists || !isOnScreen(camera))
 			{
 				continue;
@@ -211,38 +222,32 @@ class FlxBitmapTextField extends FlxSprite
 				
 				var relativeX = (currTileX * csx - currTileY * ssy);
 				var relativeY = (currTileX * ssx + currTileY * csy);
+				_point2.copyFrom(_point).add(relativeX, relativeY);
 				
-				_point.set(currTileX, currTileY).add(relativeX, relativeY);
-				
-				var bgDrawItem = camera.getDrawStackItem(FlxG.bitmap.whitePixel, true, _blendInt, antialiasing);
-				bgDrawItem.setDrawData(_point, _bgDrawData[0],
-					csx * width, ssx * width, -ssy * height, csy * height,
-					FlxColor.fromRGBFloat(_bgDrawData[3], _bgDrawData[4], _bgDrawData[5]), alpha * camera.alpha);
+				drawItem.setDrawData(_point2, _bgDrawData[0],
+					csx * width, ssx * width, -ssy * width, csy * width,
+					true, FlxColor.fromRGBFloat(_bgDrawData[3], _bgDrawData[4], _bgDrawData[5]), alpha * camera.alpha);
 			}
 			
-			var j = 0;
+			var j:Int = 0;
 			while (j < textLength)
 			{
-				var drawItem = camera.getDrawStackItem(cachedGraphics, true, _blendInt, antialiasing);
-				
-				drawItem.position = j * 6;
-				
-				var currTileX = _drawData[drawItem.position + 1] - x1;
-				var currTileY = _drawData[drawItem.position + 2] - y1;
+				var currPosInArr = j * 6;
+				var currTileID = _drawData[currPosInArr];
+				var currTileX = _drawData[currPosInArr + 1] - x1;
+				var currTileY = _drawData[currPosInArr + 2] - y1;
+				var currTileRed = _drawData[currPosInArr + 3];
+				var currTileGreen = _drawData[currPosInArr + 4];
+				var currTileBlue = _drawData[currPosInArr + 5];
 				
 				var relativeX = (currTileX * csx - currTileY * ssy);
 				var relativeY = (currTileX * ssx + currTileY * csy);
+				_point2.copyFrom(_point).add(relativeX, relativeY);
 				
-				_point.set(currTileX, currTileY).add(relativeX, relativeY);
-				
-				var red = _drawData[drawItem.position + 3];
-				var green = _drawData[drawItem.position + 4];
-				var blue = _drawData[drawItem.position + 5];
-				
-				drawItem.setDrawData(_point, _drawData[drawItem.position],
+				drawItem.setDrawData(_point2, currTileID,
 					csx * _fontScale, ssx * _fontScale, -ssy * _fontScale, csy * _fontScale,
-					FlxColor.fromRGBFloat(red, green, blue), alpha * camera.alpha);
-
+					true, FlxColor.fromRGBFloat(currTileRed, currTileGreen, currTileBlue), alpha * camera.alpha);
+				
 				j++;
 			}
 			
@@ -256,6 +261,7 @@ class FlxBitmapTextField extends FlxSprite
 	{
 		super.set_color(Color);
 		_pendingTextChange = true;
+		
 		return color;
 	}
 	#end

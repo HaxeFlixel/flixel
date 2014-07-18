@@ -358,7 +358,6 @@ class FlxSpriteUtil
 	public static function drawCircle(sprite:FlxSprite, X:Float = - 1, Y:Float = - 1, Radius:Float = -1, 
 		Color:FlxColor = FlxColor.WHITE, ?lineStyle:LineStyle, ?fillStyle:FillStyle, ?drawStyle:DrawStyle):FlxSprite
 	{
-		
 		if ((X == -1) || (Y == -1)) 
 		{
 			var midPoint = sprite.getGraphicMidpoint();
@@ -529,17 +528,7 @@ class FlxSpriteUtil
 	{
 		if (lineStyle != null)
 		{
-			var color:FlxColor;
-			
-			if (lineStyle.color == null) 
-			{ 
-				color = FlxColor.BLACK;
-			}
-			else 
-			{
-				color = lineStyle.color;
-			}
-			
+			var color = (lineStyle.color == null) ? FlxColor.BLACK : lineStyle.color; 
 			if (lineStyle.pixelHinting == null) { lineStyle.pixelHinting = false; }
 			if (lineStyle.miterLimit == null) 	{ lineStyle.miterLimit = 3; }
 			
@@ -629,7 +618,7 @@ class FlxSpriteUtil
 		{
 			sprite.alpha = 0;
 		}
-		FlxTween.num(sprite.alpha, 1, Duration, OnComplete != null ? { complete:OnComplete } : null, alphaTween.bind(sprite));
+		FlxTween.num(sprite.alpha, 1, Duration, { complete: OnComplete }, alphaTween.bind(sprite));
 		return sprite;
 	}
 	
@@ -642,7 +631,7 @@ class FlxSpriteUtil
 	 */
 	public static inline function fadeOut(sprite:FlxSprite, Duration:Float = 1, ?OnComplete:CompleteCallback):FlxSprite
 	{
-		FlxTween.num(sprite.alpha, 0, Duration, OnComplete != null ? { complete:OnComplete } : null, alphaTween.bind(sprite));
+		FlxTween.num(sprite.alpha, 0, Duration, { complete: OnComplete }, alphaTween.bind(sprite));
 		return sprite;
 	}
 	

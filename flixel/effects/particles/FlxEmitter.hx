@@ -577,6 +577,15 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		y = _point.y - (Std.int(height) >> 1);
 	}
 	
+	/**
+	 * Helper function to set the coordinates of this object.
+ 	 */
+	public inline function setPosition(X:Float = 0, Y:Float = 0):Void
+	{
+		x = X;
+		y = Y;
+	}
+	
 	private inline function get_solid():Bool
 	{
 		return (allowCollisions & FlxObject.ANY) > FlxObject.NONE;

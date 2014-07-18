@@ -361,7 +361,10 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 */
 	public function getDarkened(Factor:Float = 0.2):FlxColor
 	{
-		return interpolate(this, FlxColor.BLACK, Factor);
+		Factor = FlxMath.bound(Factor, 0, 1);
+		var output:FlxColor = this;
+		output.lightness = output.lightness * (1 - Factor);
+		return output;
 	}
 	
 	/**
@@ -372,7 +375,10 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 */
 	public inline function getLightened(Factor:Float = 0.2):FlxColor
 	{
-		return interpolate(this, FlxColor.WHITE, Factor);
+		Factor = FlxMath.bound(Factor, 0, 1);
+		var output:FlxColor = this;
+		output.lightness = output.lightness + (1 - lightness) * Factor;
+		return output;
 	}
 	
 	/**
