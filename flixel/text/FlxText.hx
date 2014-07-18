@@ -247,11 +247,12 @@ class FlxText extends FlxSprite
 	 * Even works for complex nested formats like this:
 	 * t.text="HEY_BUDDY_@WHAT@_$IS_$_GOING@ON$?$@"; t.formatParse([yellowFormat,greenFormat],["$","@"]);
 	 * 
+	 * @param	input		the input text you want to format
 	 * @param	formats		the FlxTextFormat's you want to selectively apply
 	 * @param	markers		corresponding marker strings, such as "@" or "$" (rarely used single-characters recommended)
 	 */
 	
-	public function formatParse(formats:Array<FlxTextFormat>, markers:Array<String>):Void
+	public function formatParse(input:String, formats:Array<FlxTextFormat>, markers:Array<String>):Void
 	{
 		clearFormats();		//start with default formatting
 		
@@ -260,7 +261,7 @@ class FlxText extends FlxSprite
 		var markersToApply:Array<String> = [];
 		var formatsToApply:Array<FlxTextFormat> = [];
 		
-		var theText:String = text;					//so we can process this and trash it as much as we want
+		var theText:String = input;					//so we can process this and trash it as much as we want
 		
 		var i:Int = 0;
 		var formatUses:Int;
