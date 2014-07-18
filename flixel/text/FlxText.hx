@@ -242,18 +242,18 @@ class FlxText extends FlxSprite
 	/**
 	 * Applies formats to text between marker strings, then removes those markers
 	 * 
-	 * Usage: t.formatParse("show $green text$ between dollar-signs",[new FormatMarkerPair(greenFormat,"$")]);
+	 * Usage: t.applyMarkup("show $green text$ between dollar-signs",[new FlxTextFormatMarkerPair(greenFormat,"$")]);
 	 * 
 	 * Even works for complex nested formats like this:
-	 * yellow = new FormatMarkerPair(yellowFormat,"@");
-	 * green = new FormatMarkerPair(greenFormat,"$");
-	 * t.formatParse("HEY_BUDDY_@WHAT@_$IS_$_GOING@ON$?$@",[yellow,green]);
+	 * yellow = new FlxTextFormatMarkerPair(yellowFormat,"@");
+	 * green = new FlxTextFormatMarkerPair(greenFormat,"$");
+	 * t.applyMarkup("HEY_BUDDY_@WHAT@_$IS_$_GOING@ON$?$@",[yellow,green]);
 	 * 
 	 * @param	input		the text you want to format
 	 * @param	rules		FlxTextFormat's to selectively apply, paired with marker strings such as "@" or "$"
 	 */
 	
-	public function formatParse(input:String, rules:Array<FormatMarkerPair>):Void
+	public function applyMarkup(input:String, rules:Array<FlxTextFormatMarkerPair>):Void
 	{
 		clearFormats();		//start with default formatting
 		
@@ -1104,7 +1104,7 @@ class FlxTextFormat implements IFlxDestroyable
 	}
 }
 
-class FormatMarkerPair
+class FlxTextFormatMarkerPair
 {
 	public var format:FlxTextFormat;
 	public var marker:String;
