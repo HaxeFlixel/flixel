@@ -73,7 +73,8 @@ class MenuState extends FlxState
 		_display = new FlxText(10, 10, FlxG.width - 210, "Welcome to the FlxRandom demo!\nYour randomly generated seed is: " + FlxG.random.initialSeed + "\nFeel free to run some of the tests on the right.\nPlease note that some of these can take quite some time.");
 		
 		_colorTest = new FlxSprite(0, 0);
-		_colorTest.makeGraphic(1, 1, 0);
+		_colorTest.makeGraphic(FlxG.width, FlxG.height, 0);
+		_colorTest.visible = false;
 		dummyBitmapdata = new BitmapData(1, 1, false, 0);
 		dummyText = new FlxText(0, 0, 20, "000");
 		
@@ -155,7 +156,7 @@ class MenuState extends FlxState
 		_display.text += "\nTime: " + (Lib.getTimer() - timer) + "ms using the newest method.";
 		
 		timer = Lib.getTimer();
-		for (i in 0...TENMIL) dummyInt = OldFlxRandom.int();
+		for (i in 0...TENMIL) dummyInt = OldFlxRandom.intRanged(0, 1024);
 		_display.text += "\nTime: " + (Lib.getTimer() - timer) + "ms using the old, non-deterministic FlxG.random.";
 		
 		timer = Lib.getTimer();
@@ -163,11 +164,11 @@ class MenuState extends FlxState
 		_display.text += "\nTime: " + (Lib.getTimer() - timer) + "ms using FlxRandom from 3.3.4.";
 		
 		timer = Lib.getTimer();
-		for (i in 0...TENMIL) dummyInt = NonInlineFlxRandom.int();
+		for (i in 0...TENMIL) dummyInt = NonInlineFlxRandom.intRanged(0, 1024);
 		_display.text += "\nTime: " + (Lib.getTimer() - timer) + "ms using FlxRandom from 3.3.4 without inlining.";
 		
 		timer = Lib.getTimer();
-		for (i in 0...TENMIL) dummyInt = Std.int(Math.random() * 2147483647);
+		for (i in 0...TENMIL) dummyInt = Std.int(Math.random() * 1024);
 		_display.text += "\nTime: " + (Lib.getTimer() - timer) + "ms using Math.random().";
 	}
 	
@@ -180,15 +181,15 @@ class MenuState extends FlxState
 		_display.text += "\nTime: " + (Lib.getTimer() - timer) + "ms using the newest method.";
 		
 		timer = Lib.getTimer();
-		for (i in 0...TENMIL) dummyFloat = OldFlxRandom.float();
+		for (i in 0...TENMIL) dummyFloat = OldFlxRandom.floatRanged();
 		_display.text += "\nTime: " + (Lib.getTimer() - timer) + "ms using the old, non-deterministic FlxG.random.";
 		
 		timer = Lib.getTimer();
-		for (i in 0...TENMIL) dummyFloat = FlxRandom_3_3_4.float();
+		for (i in 0...TENMIL) dummyFloat = FlxRandom_3_3_4.floatRanged();
 		_display.text += "\nTime: " + (Lib.getTimer() - timer) + "ms using FlxRandom from 3.3.4.";
 		
 		timer = Lib.getTimer();
-		for (i in 0...TENMIL) dummyFloat = NonInlineFlxRandom.float();
+		for (i in 0...TENMIL) dummyFloat = NonInlineFlxRandom.floatRanged();
 		_display.text += "\nTime: " + (Lib.getTimer() - timer) + "ms using FlxRandom from 3.3.4 without inlining.";
 		
 		timer = Lib.getTimer();
@@ -301,7 +302,7 @@ class MenuState extends FlxState
 	
 	private function randomColors():Void
 	{
-		dummyBitmapdata = new BitmapData(640, 480, false, 0);
+		dummyBitmapdata = new BitmapData(FlxG.width, FlxG.height, false, 0);
 		timer = Lib.getTimer();
 		
 		for (yPos in 0...480) {
@@ -312,7 +313,7 @@ class MenuState extends FlxState
 		
 		_display.text = "Covered the screen with 307,200 random pixels using color(). Time: " + (Lib.getTimer() - timer) + "ms.";
 		
-		_colorTest.pixels = dummyBitmapdata;
+		_colorTest.loadGraphic(dummyBitmapdata);
 		_colorTest.visible = true;
 	}
 	
