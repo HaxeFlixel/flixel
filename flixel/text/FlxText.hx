@@ -241,61 +241,62 @@ class FlxText extends FlxSprite
 	
 	/**
 	 * Applies formats to text between marker strings, then removes those markers.
-	 * NOTE: This will clear all format ranges and return to the default format
+	 * NOTE: This will clear all FlxTextFormats and return to the default format.
 	 * 
-	 * Usage: t.applyMarkup("show $green text$ between dollar-signs",[new FlxTextFormatMarkerPair(greenFormat,"$")]);
+	 * Usage: 
+	 * 
+	 *    t.applyMarkup("show $green text$ between dollar-signs", [new FlxTextFormatMarkerPair(greenFormat, "$")]);
 	 * 
 	 * Even works for complex nested formats like this:
-	 * yellow = new FlxTextFormatMarkerPair(yellowFormat,"@");
-	 * green = new FlxTextFormatMarkerPair(greenFormat,"$");
-	 * t.applyMarkup("HEY_BUDDY_@WHAT@_$IS_$_GOING@ON$?$@",[yellow,green]);
 	 * 
-	 * @param	input		the text you want to format
-	 * @param	rules		FlxTextFormat's to selectively apply, paired with marker strings such as "@" or "$"
+	 *    yellow = new FlxTextFormatMarkerPair(yellowFormat, "@");
+	 *    green = new FlxTextFormatMarkerPair(greenFormat, "$");
+	 *    t.applyMarkup("HEY_BUDDY_@WHAT@_$IS_$_GOING@ON$?$@", [yellow, green]);
+	 * 
+	 * @param   input   The text you want to format
+	 * @param   rules   FlxTextFormats to selectively apply, paired with marker strings such as "@" or "$"
 	 */
-	
 	public function applyMarkup(input:String, rules:Array<FlxTextFormatMarkerPair>):Void
 	{
-		clearFormats();		//start with default formatting
-		
 		if (rules == null || rules.length == 0)
 		{
-			return;			//there's no point in running the big loop
+			return;   //there's no point in running the big loop
 		}
 		
-		var range_starts:Array<Int> = [];
-		var range_ends:Array<Int> = [];
+		clearFormats();   //start with default formatting
+		
+		var rangeStarts:Array<Int> = [];
+		var rangeEnds:Array<Int> = [];
 		var markersToApply:Array<String> = [];
 		var formatsToApply:Array<FlxTextFormat> = [];
-		
-		var theText:String = input;					//so we can process this and trash it as much as we want
 		
 		var i:Int = 0;
 		var formatUses:Int;
 		for (rule in rules)
 		{
-			if (rule.marker != null && rule.format != null)	//if either is null, no point in running this loop
+			if (rule.marker != null && rule.format != null)
 			{
 				var start:Bool = false;
 				formatUses = 0;
-				if (theText.indexOf(rule.marker) != -1)		//if this marker is present
+				if (input.indexOf(rule.marker) != -1)   //if this marker is present
 				{
-					for (charIndex in 0...theText.length)			//inspect each character
+					for (charIndex in 0...input.length)   //inspect each character
 					{
-						var char:String = theText.charAt(charIndex);
-						if (char == rule.marker)							//it's one of the markers
+						var char:String = input.charAt(charIndex);
+						if (char == rule.marker)   //it's one of the markers
 						{
-							if (!start)								//we're outside of a format block
+							if (!start)   //we're outside of a format block
 							{ 
-								start = true;						//start a format block
-								range_starts.push(charIndex);
+								start = true;   //start a format block
+								rangeStarts.push(charIndex);
 								if (formatUses == 0)
 								{
 									formatsToApply.push(rule.format);
 								}
 								else
 								{
-									formatsToApply.push(rule.format.clone());	//clone the format object if it's used twice (otherwise it doesn't work correctly)
+									//clone the format object if it's used twice (otherwise it doesn't work correctly)
+									formatsToApply.push(rule.format.clone());
 								}
 								markersToApply.push(rule.marker);
 								formatUses++;
@@ -303,13 +304,14 @@ class FlxText extends FlxSprite
 							else
 							{
 								start = false;
-								range_ends.push(charIndex);			//end a format block
+								rangeEnds.push(charIndex); //end a format block
 							}
 						}
 					}
 					if (start)
 					{
-						range_ends.push(-1);						//we ended with an unclosed block, mark it as infinite
+						//we ended with an unclosed block, mark it as infinite
+						rangeEnds.push(-1);
 					}
 				}
 				i++;
@@ -319,57 +321,57 @@ class FlxText extends FlxSprite
 		//Remove all of the markers in the string
 		for (rule in rules)
 		{
-			while (theText.indexOf(rule.marker) != -1)
+			while (input.indexOf(rule.marker) != -1)
 			{
-				theText = StringTools.replace(theText, rule.marker, "");
+				input = StringTools.replace(input, rule.marker, "");
 			}
 		}
 		
 		//Adjust all the ranges to reflect the removed markers
-		for (i in 0...range_starts.length)
+		for (i in 0...rangeStarts.length)
 		{
 			//Consider each range start
-			var delIndex:Int = range_starts[i];
+			var delIndex:Int = rangeStarts[i];
 			
 			var markerLength:Int = markersToApply[i].length;
 			
 			//Any start or end index that is HIGHER than this must be subtracted by one markerLength
-			for (j in 0...range_starts.length)
+			for (j in 0...rangeStarts.length)
 			{
-				if (range_starts[j] > delIndex)
+				if (rangeStarts[j] > delIndex)
 				{
-					range_starts[j] -= markerLength;
+					rangeStarts[j] -= markerLength;
 				}
-				if (range_ends[j] > delIndex)
+				if (rangeEnds[j] > delIndex)
 				{
-					range_ends[j] -= markerLength;
+					rangeEnds[j] -= markerLength;
 				}
 			}
 			
 			//Consider each range end
-			delIndex = range_ends[i];
+			delIndex = rangeEnds[i];
 			
 			//Any start or end index that is HIGHER than this must be subtracted by one markerLength
-			for (j in 0...range_starts.length)
+			for (j in 0...rangeStarts.length)
 			{
-				if (range_starts[j] > delIndex)
+				if (rangeStarts[j] > delIndex)
 				{
-					range_starts[j] -= markerLength;
+					rangeStarts[j] -= markerLength;
 				}
-				if (range_ends[j] > delIndex)
+				if (rangeEnds[j] > delIndex)
 				{
-					range_ends[j] -= markerLength;
+					rangeEnds[j] -= markerLength;
 				}
 			}
 		}
 		
 		//Apply the new text
-		text = theText;
+		text = input;
 		
 		//Apply each format selectively to the given range
-		for (i in 0...range_starts.length)
+		for (i in 0...rangeStarts.length)
 		{
-			addFormat(formatsToApply[i], range_starts[i], range_ends[i]);
+			addFormat(formatsToApply[i], rangeStarts[i], rangeEnds[i]);
 		}
 	}
 	

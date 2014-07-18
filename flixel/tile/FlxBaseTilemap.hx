@@ -1172,7 +1172,7 @@ enum FlxTilemapAutoTiling
 {
 	OFF;
 	/**
-	 * Good for levels with thin walls that don'tile need interior corner art.
+	 * Good for levels with thin walls that don't need interior corner art.
 	 */
 	AUTO;
 	/**
