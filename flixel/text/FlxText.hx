@@ -242,10 +242,10 @@ class FlxText extends FlxSprite
 	/**
 	 * Applies formats to text between marker strings, then removes those markers
 	 * 
-	 * Usage: t.text="show $green text$ between dollar-signs"; t.formatParse([greenFormat],["$"]);
+	 * Usage: t.formatParse("show $green text$ between dollar-signs",[greenFormat],["$"]);
 	 * 
 	 * Even works for complex nested formats like this:
-	 * t.text="HEY_BUDDY_@WHAT@_$IS_$_GOING@ON$?$@"; t.formatParse([yellowFormat,greenFormat],["$","@"]);
+	 * t.formatParse("HEY_BUDDY_@WHAT@_$IS_$_GOING@ON$?$@",[yellowFormat,greenFormat],["$","@"]);
 	 * 
 	 * @param	input		the text you want to format
 	 * @param	formats		the FlxTextFormat's you want to selectively apply
