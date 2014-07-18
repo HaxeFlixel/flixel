@@ -10,6 +10,7 @@ import flash.text.TextFormatAlign;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
+import flixel.math.FlxMath;
 import flixel.system.FlxAssets;
 import flixel.text.FlxText.FlxTextBorderStyle;
 import flixel.text.FlxText.FlxTextFormat;
@@ -20,6 +21,7 @@ import flixel.math.FlxPoint;
 import flixel.util.helpers.FlxRange;
 import flixel.util.loaders.CachedGraphics;
 import openfl.Assets;
+using StringTools;
 
 /**
  * Extends FlxSprite to support rendering text. Can tint, fade, rotate and scale just like a sprite. Doesn't really animate 
@@ -254,8 +256,7 @@ class FlxText extends FlxSprite
 		
 		var rangeStarts:Array<Int> = [];
 		var rangeEnds:Array<Int> = [];
-		var markersToApply:Array<String> = [];
-		var formatsToApply:Array<FlxTextFormat> = [];
+		var rulesToApply:Array<FlxTextFormatMarkerPair> = [];
 		
 		var i:Int = 0;
 		for (rule in rules)
@@ -274,8 +275,7 @@ class FlxText extends FlxSprite
 							{ 
 								start = true;   //start a format block
 								rangeStarts.push(charIndex);
-								formatsToApply.push(rule.format);
-								markersToApply.push(rule.marker);
+								rulesToApply.push(rule);
 							}
 							else
 							{
@@ -299,7 +299,7 @@ class FlxText extends FlxSprite
 		{
 			while (input.indexOf(rule.marker) != -1)
 			{
-				input = StringTools.replace(input, rule.marker, "");
+				input = input.replace(rule.marker, "");
 			}
 		}
 		
@@ -309,7 +309,7 @@ class FlxText extends FlxSprite
 			//Consider each range start
 			var delIndex:Int = rangeStarts[i];
 			
-			var markerLength:Int = markersToApply[i].length;
+			var markerLength:Int = rulesToApply[i].marker.length;
 			
 			//Any start or end index that is HIGHER than this must be subtracted by one markerLength
 			for (j in 0...rangeStarts.length)
@@ -347,7 +347,7 @@ class FlxText extends FlxSprite
 		//Apply each format selectively to the given range
 		for (i in 0...rangeStarts.length)
 		{
-			addFormat(formatsToApply[i], rangeStarts[i], rangeEnds[i]);
+			addFormat(rulesToApply[i].format, rangeStarts[i], rangeEnds[i]);
 		}
 	}
 	
@@ -712,10 +712,7 @@ class FlxText extends FlxSprite
 	
 	private function set_borderQuality(Value:Float):Float
 	{
-		if (Value < 0)
-			Value = 0;
-		else if (Value > 1)
-			Value = 1;
+		Value = FlxMath.bound(Value, 0, 1);
 		
 		if (Value != borderQuality && borderStyle != NONE)
 		{
@@ -1056,11 +1053,6 @@ class FlxTextFormat
 	{
 		format = new TextFormat(null, null, FontColor, Bold, Italic);
 		borderColor = BorderColor == null ? FlxColor.TRANSPARENT : BorderColor;
-	}
-	
-	public function clone():FlxTextFormat
-	{
-		return new FlxTextFormat(format.color, format.bold, format.italic, borderColor);
 	}
 }
 
