@@ -19,9 +19,8 @@ class FlxVectorTest extends FlxTest
 	function testZeroVectorSetLength():Void
 	{
 		vector.length = 10;
-		
-		Assert.areEqual(0, vector.x);
-		Assert.areEqual(0, vector.y);
+
+		Assert.isTrue(vector.equals(new FlxVector(0, 0)));
 	}
 	
 	@Test
@@ -29,9 +28,8 @@ class FlxVectorTest extends FlxTest
 	{
 		vector.set(1, 1);
 		vector.length = 0;
-		
-		Assert.areEqual(0, vector.x);
-		Assert.areEqual(0, vector.y);
+
+		Assert.isTrue(vector.equals(new FlxVector(0, 0)));
 	}
 	
 	@Test
@@ -53,5 +51,25 @@ class FlxVectorTest extends FlxTest
 		vector2.set(1, 0);
 		
 		Assert.areEqual(90, vector.degreesBetween(vector2));
+	}
+
+	@Test
+	function testAddNew():Void
+	{
+		vector.set(1, 2);
+		vector2.set(3, 5);
+
+		Assert.isTrue(vector.addNew(vector2).equals(new FlxVector(4, 7)));
+		Assert.isTrue(vector.equals(new FlxVector(1, 2)));
+	}
+
+	@Test
+	function testSubtractNew():Void
+	{
+		vector.set(1, 2);
+		vector2.set(3, 5);
+
+		Assert.isTrue(vector.subtractNew(vector2).equals(new FlxVector(-2, -3)));
+		Assert.isTrue(vector.equals(new FlxVector(1, 2)));
 	}
 }
