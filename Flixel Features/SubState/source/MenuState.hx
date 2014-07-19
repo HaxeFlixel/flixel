@@ -22,6 +22,8 @@ class MenuState extends FlxState
 	{
 		FlxG.cameras.bgColor = FlxColor.WHITE;
 		
+		destroySubStates = false;
+		
 		// Some test group of sprites, used for showing substate system features
 		sprites = new MySpriteGroup(50);
 		add(sprites);
