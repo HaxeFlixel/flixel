@@ -942,6 +942,7 @@ class FlxText extends FlxSprite
 	private inline function applyFormats(FormatAdjusted:TextFormat, UseBorderColor:Bool = false):Void
 	{
 		// Apply the default format
+		copyTextFormat(_defaultFormat, FormatAdjusted);
 		FormatAdjusted.color = UseBorderColor ? borderColor.to24Bit() : _defaultFormat.color;
 		textField.setTextFormat(FormatAdjusted);
 		
