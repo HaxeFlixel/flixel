@@ -105,6 +105,16 @@ class FlxRect implements IFlxPooled
 	}
 	
 	/**
+	 * Shortcut for setting both x and y.
+	 */
+	public inline function setPosition(x:Float, y:Float):FlxRect
+	{
+		this.x = x;
+		this.y = y;
+		return this;
+	}
+	
+	/**
 	 * Fill this rectangle with the data provided.
 	 * 
 	 * @param	X		The X-coordinate of the point in space.

@@ -302,9 +302,8 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	{
 		#if FLX_RENDER_TILE
 		var buffer:FlxTilemapBuffer = null;
-		var l:Int = FlxG.cameras.list.length;
 		
-		for (i in 0...l)
+		for (i in 0...FlxG.cameras.list.length)
 		{
 			if (FlxG.cameras.list[i] == Camera)
 			{
@@ -337,22 +336,8 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		var screenColumns:Int = buffer.columns;
 		
 		// Bound the upper left corner
-		if (screenXInTiles < 0)
-		{
-			screenXInTiles = 0;
-		}
-		if (screenXInTiles > widthInTiles - screenColumns)
-		{
-			screenXInTiles = widthInTiles - screenColumns;
-		}
-		if (screenYInTiles < 0)
-		{
-			screenYInTiles = 0;
-		}
-		if (screenYInTiles > heightInTiles - screenRows)
-		{
-			screenYInTiles = heightInTiles - screenRows;
-		}
+		screenXInTiles = Std.int(FlxMath.bound(screenXInTiles, 0, widthInTiles - screenColumns));
+		screenYInTiles = Std.int(FlxMath.bound(screenYInTiles, 0, heightInTiles - screenRows));
 		
 		var rowIndex:Int = screenYInTiles * widthInTiles + screenXInTiles;
 		_flashPoint.y = 0;
