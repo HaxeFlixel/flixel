@@ -29,11 +29,11 @@ class PlayState extends FlxState
 		add(text1);
 		
 		var text2:FlxText = createText(120);
-		text2.applyMarkup("*Forma*_tted_ $v$§i§!a! apply:Markup():", [
+		text2.applyMarkup("*Forma*_tted_ $v$^i^!a! apply:Markup():", [
 			new FlxTextFormatMarkerPair(format1, "*"),
 			new FlxTextFormatMarkerPair(format2, "_"),
 			new FlxTextFormatMarkerPair(format3, "$"),
-			new FlxTextFormatMarkerPair(format4, "§"),
+			new FlxTextFormatMarkerPair(format4, "^"),
 			new FlxTextFormatMarkerPair(format5, "!"),
 			new FlxTextFormatMarkerPair(format6, ":")]);
 		add(text2);
