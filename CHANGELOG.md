@@ -1,7 +1,6 @@
 4.0.0
 ------------------------------
 * FlxArrayUtil: removed indexOf()
-* FlxTilemap: fixed pixelPerfectRender not being respected with FLX_RENDER_TILE
 * Changed static inline vars to enums:
  * FlxCamera follow styles
  * FlxCamera shake modes
@@ -15,14 +14,11 @@
  * setBounds() -> setScrollBoundsRect()
  * added setScrollBounds()
  * added targetOffset
- * fixed defaultCameras not being reset on state switches
 * FlxMath:
  * bound() and inBounds() now accept null as values, meaning "unbounded in that direction"
  * wrapValue() now supports negative values
  * change MIN_VALUE and MAX_VALUE to MIN_VALUE_FLOAT and MAX_VALUE_FLOAT, add MAX_VALUE_INT
-* FlxTypedSpriteGroup: 
- * added iterator()
- * fixed update() order leading to collision issues with members
+* FlxTypedSpriteGroup: added iterator()
 * FlxTimer, FlxTween, FlxPath: active is now only true when they are active
 * FlxAnimationController:
  * curAnim does also return animations that have finished now
@@ -35,7 +31,6 @@
 * FlxEmitter:
  * at() -> focusOn()
  * on -> emitting
- * fixed type parameter not being respected (T was always FlxSprite)
  * emitters and particles now use FlxColor instead of separate red, green, and blue values
  * removed FlxEmitterExt, FlxEmitter now has two launch modes: CIRCLE (the new default) and SQUARE
  * removed xPosition, yPosition, life, bounce, and various other properties, and property setting convenience functions (see below)
@@ -47,11 +42,8 @@
  * range properties (velocityRange, alphaRange) which determine particle behavior after launch
  * "active" flags (alphaRange.active, velocityRange.active, etc) which FlxEmitter uses to control particle behavior
 * Moved FlxMath, FlxPoint, FlxRect, FlxRect, FlxAngle, FlxVelocity and FlxRandom to flixel.math
-* FlxSubState: fix for calling close() within create()
 * FlxPath: exposed nodeIndex as a read-only property
-* FlxAssets:
- * cacheSounds() -> FlxG.sound.cacheAll()
- * fixed the filterExtensions parameter of getFileReferences()
+* FlxAssets: cacheSounds() -> FlxG.sound.cacheAll()
 * FlxMouse and FlxTouch now extend a new common base class FlxPointer instead of FlxPoint
  * adds overlaps() to FlxMouse 
 * FlxTilemap:
@@ -59,9 +51,9 @@
  * added getTileIndexByCoords() and getTileCoordsByIndex()
  * fixed a bug in overlapsAt()
  * loadMap() now treats tile indices with negative values in the map data as 0
- * fixed a crash when trying to create a single-column tilemap
-* Console: the set command now supports arrays
-* FlxTween: fixed a bug when tweening the same field with several tweens + startDelay
+* Console:
+ * the set command now supports arrays
+ * the fields command now has type info for the fields
 * FlxColor:
  * FlxColor is now an abstract, interchangable with Int - the FlxColorUtil functions have been merged into it
  * the color presets have been reduced to a smaller, more useful selection
@@ -74,7 +66,7 @@
 * FlxKeyboard: 
  * added preventDefaultKeys for HTML5
  * added an abstract enum for key names (FlxG.keys.anyPressed([A, LEFT]) is now possible)
- * the any-functions now take an Array<FlxKey> instead of Array<String> (string names are still supported)
+ * the any-functions now take an Array of FlxKeys instead of Array of Strings (string names are still supported)
 * FlxTypedGroup:
  * added a recurse param to the forEach() functions
  * removed callAll() and setAll() - use forEach() instead
@@ -83,28 +75,30 @@
 * FlxGamepadManager: better handling of disconnecting and reconnecting gamepads. getByID() can now return null.
 * FlxGamepad:
  * added a connected flag
- * fixed a bug that would prevent gamepad buttons from being updated
  * added deadZoneMode, circular deadzones are now supported
  * getXAxis() and getYAxis() now take FlxGamepadAnalogStick as parameters (for example XboxButtonID.LEFT_ANALOG_STICK)
 * FlxRandom:
+ * FlxRandom functions are now member functions, call FlxG.random instead of FlxRandom
  * exposed currentSeed as an external representation of internalSeed
  * removed intRanged() and floatRanged(), int() and float() now provide optional ranges
  * removed weightedGetObject(), getObject() now has an optional weights parameter
  * removed colorExt(), try using FlxColor to get finer control over randomly-generated colors
  * updated random number generation equation to avoid inconsistent results across platforms; may break recordings made in 3.x!
- * fixed a bug that prevented the Excludes array in int() from working
+ * can now create an instance of FlxRandom to create deterministic pseudorandom numbers independently of HaxeFlixel core functions (e.g. particle emitters)
+ * renamed chanceRoll() to bool()
 * FlxArrayUtil: removed randomness-related functions, please use FlxRandom instead
 * FlxText:
  * added an abstract enum for alignment (text.alignment = CENTER; is now possible)
  * font now supports font assets not embedded via openfl.Assets (i.e. @:font)
  * font = null now resets it to the default font
  * fixed an issue where the value returned by get_font() wouldn't be the same as the one passed into set_font()
- * set_label() now updates the label position
+ * added applyMarkup()
 * FlxTypedButton:
  * added input-like getters: pressed, justPressed, released and justReleased
  * now uses animations for statuses instead of setting frameIndex directly for more flexibility (removes allowHighlightOnMobile, adds statusAnimations)
  * disabling the highlight frame is now tied to #if FLX_NO_MOUSE instead of #if mobile
  * labelAlphas[FlxButton.HIGHLIGHT] is now 1 for FLX_NO_MOUSE
+ * set_label() now updates the label position
 * FlxMouseEventManager:
  * moved from flixel.plugin.MouseEventManager to flixel.input.mouse.FlxMouseEventManager
  * added removeAll()
@@ -116,7 +110,7 @@
  * added graphicLoaded() which is called whenever a new graphic is loaded
  * getScreenXY() -> getScreenPosition()
  * removed the NewSprite param from clone()
-* FlxAnalog: changed the default value for scrollFactor to (0, 0) and for moves to false
+ * added clipRect() and unclip()
 * Added some helpful error messages when trying to target older swf versions
 * FlxAngle:
  * changed rotatePoint() to not invert the y-axis anymore and rotate clockwise (consistent with FlxSprite#angle)
@@ -125,9 +119,6 @@
  * added angleFromFacing()
 * Added GitSHA macro that includes the SHA of the current commit into FlxVersion for dev builds
 * Flixel sound assets are now being embedded via embed="true"
-* FlxBitmapTextField:
- * fixed issue with width increasing when the text is updated
- * fixed text disappearing after state switches on HTML5
 * FlxRect: added weak(), putWeak(), ceil() and floor()
 * Added support for reloading graphics via OpenFL live asset reloading (native targets)
 * FlxSound
@@ -135,6 +126,33 @@
   * looped is exposed as a public variable
 * FlxVelocity: accelerateTowards()-functions now only take a single maxSpeed param (instead of x and y)
 * FlxG.signals: split gameReset into pre/post signals
+* RatioScaleMode#new(): added a fillScreen option
+* Fixed scale modes not working correctly on HTML5
+* FlxPath: fixed an issue where a velocity would be set even if the object positon matches the current node
+* FlxSignal: fixed addOnce() not working on neko
+
+3.3.5
+------------------------------
+* FlxTilemap:
+ * fixed pixelPerfectRender not being respected with FLX_RENDER_TILE
+ * fixed a crash when trying to create a single-column tilemap
+* FlxCamera: fixed defaultCameras not being reset on state switches
+* FlxPoint#putWeak(): fixed an issue which could lead to a single point being allocated more than once when weak() is used
+* FlxVector: fixed radiansBetween() / degreesBetween()
+* FlxTypedSpriteGroup: fixed update() order leading to collision issues with members
+* FlxTypedEmitter: fixed type parameter not being respected (T was always FlxSprite)
+* FlxAssets#getFileReferences(): fixed the filterExtensions parameter
+* FlxBitmapTextField:
+ * fixed issue with width increasing when the text is updated
+ * fixed text disappearing after state switches on HTML5
+* FlxAnalog: changed the default value for scrollFactor to (0, 0) and for moves to false
+* FlxGamepad:
+ * fixed a bug that would prevent buttons from being updated
+ * anyPressed() now also works when the button status is justPressed
+* FlxTween: fixed a bug when tweening the same field with several tweens + startDelay
+* FlxSubState:
+ * fixed calling close() within create()
+ * fixed openSubState() not working when close() is called afterwards on the current substate on the same frame
 
 3.3.4
 ------------------------------

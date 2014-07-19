@@ -77,7 +77,7 @@ class FlxMouseButton extends FlxInput<Int> implements IFlxDestroyable
 		press();
 	}
 	
-	public function onUp(_):Void
+	public function onUp(?_):Void
 	{
 		#if !FLX_NO_DEBUG
 		if ((FlxG.debugger.visible && FlxG.game.debugger.hasMouse) 

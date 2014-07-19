@@ -136,7 +136,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	private var _cursorDefaultName:String = "defaultCursor";
 	private var _currentNativeCursor:String;
 	private var _previousNativeCursor:String;
-	private static var _matrix:Matrix = new Matrix();
+	private var _matrix = new Matrix();
 	#end
 	
 	/**
@@ -481,8 +481,8 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	 */
 	private inline function onMouseLeave(_):Void
 	{
-		_rightButton.onUp(null);
-		_middleButton.onUp(null);
+		_rightButton.onUp();
+		_middleButton.onUp();
 	}
 	#end
 	

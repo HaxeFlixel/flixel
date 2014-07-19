@@ -87,7 +87,7 @@ class FlxRect implements IFlxPooled
 	{
 		if (_weak)
 		{
-			_pool.put(this);
+			put();
 		}
 	}
 	
@@ -101,6 +101,16 @@ class FlxRect implements IFlxPooled
 	{
 		width = Width;
 		height = Height;
+		return this;
+	}
+	
+	/**
+	 * Shortcut for setting both x and y.
+	 */
+	public inline function setPosition(x:Float, y:Float):FlxRect
+	{
+		this.x = x;
+		this.y = y;
 		return this;
 	}
 	
@@ -173,8 +183,13 @@ class FlxRect implements IFlxPooled
 	 * @param	Point	Any Rectangle.
 	 * @return	A reference to the altered rectangle parameter.
 	 */
-	public inline function copyToFlash(FlashRect:Rectangle):Rectangle
+	public inline function copyToFlash(?FlashRect:Rectangle):Rectangle
 	{
+		if (FlashRect == null)
+		{
+			FlashRect = new Rectangle();
+		}
+		
 		FlashRect.x = x;
 		FlashRect.y = y;
 		FlashRect.width = width;

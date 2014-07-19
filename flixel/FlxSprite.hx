@@ -12,6 +12,7 @@ import flixel.FlxG;
 import flixel.math.FlxAngle;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.system.FlxAssets.FlxTextureAsset;
 import flixel.system.layer.DrawStackItem;
@@ -243,35 +244,28 @@ class FlxSprite extends FlxObject
 	
 	/**
 	 * Clips sprites frames without changing the size of the sprite.
-	 * @param	rect	Rectangle which will be used for clipping frames.
-	 * @return	this 	FlxSprite object
+	 * 
+	 * @param   rect          Rectangle which will be used for clipping frames.
+	 * @param   useOriginal   Whether the original graphic without clipping should be used.
 	 */
-	public function clipRect(rect:Rectangle, useOriginal:Bool = true):FlxSprite
+	public function clipRect(rect:FlxRect, useOriginal:Bool = true):FlxSprite
 	{
 		if (cachedGraphics != null && framesData != null)
 		{
-			framesData = cachedGraphics.tilesheet.clipFrames(this.framesData, rect, useOriginal);
-			frames = framesData.frames.length;
-			animation.frameIndex = 0;
-			frame = framesData.frames[0];			
+			setFramesData(cachedGraphics.tilesheet.clipFrames(framesData, rect, useOriginal));
 		}
 		
 		return this;
 	}
 	
+	/**
+	 * Resets clipping of the graphic via clipRect().
+	 */
 	public function unclip():FlxSprite
 	{
 		if (cachedGraphics != null && framesData != null)
 		{
-			var original:FlxSpriteFrames = framesData.original;
-			if (original == null)
-			{
-				return this;
-			}
-			framesData = original;
-			frames = framesData.frames.length;
-			animation.frameIndex = 0;
-			frame = framesData.frames[0];			
+			setFramesData(framesData.original);
 		}
 		
 		return this;
@@ -1193,8 +1187,9 @@ class FlxSprite extends FlxObject
 	}
 	
 	/**
-	 * Use this method for creating tileSheet for FlxSprite. Must be called after makeGraphic(), loadGraphic() or loadRotatedGraphic().
-	 * If you forget to call it then you will not see this FlxSprite on c++ target
+	 * Use this method for creating tileSheet for FlxSprite.
+	 * Must be called after makeGraphic(), loadGraphic() or loadRotatedGraphic().
+	 * If you forget to call it then you will not see this FlxSprite on C++ target.
 	 */
 	public function updateFrameData():Void
 	{
@@ -1203,20 +1198,28 @@ class FlxSprite extends FlxObject
 			return;
 		}
 		
-		if ((cachedGraphics.data != null) && (region.tileWidth == 0 && region.tileHeight == 0))
+		if (cachedGraphics.data != null && (region.tileWidth == 0 && region.tileHeight == 0))
 		{
-			framesData = cachedGraphics.tilesheet.getTexturePackerFrames(cachedGraphics.data);
+			setFramesData(cachedGraphics.tilesheet.getTexturePackerFrames(cachedGraphics.data));
 		}
 		else
 		{
-			framesData = cachedGraphics.tilesheet.getSpriteSheetFrames(region, null);
+			setFramesData(cachedGraphics.tilesheet.getSpriteSheetFrames(region, null));
 		}
-		
-		frames = framesData.frames.length;
-		animation.frameIndex = 0;
-		frame = framesData.frames[0];
-		
-		resetSizeFromFrame();
+	}
+	
+	private function setFramesData(newFramesData:FlxSpriteFrames)
+	{
+		if (newFramesData != null)
+		{
+			framesData = newFramesData;
+			
+			frames = framesData.frames.length;
+			animation.frameIndex = 0;
+			frame = framesData.frames[0];
+			
+			resetSizeFromFrame();
+		}
 	}
 	
 	/**

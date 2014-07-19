@@ -453,6 +453,7 @@ class FlxObject extends FlxBasic
 	#end
 	
 	private var _point:FlxPoint;
+	private var _rect:FlxRect;
 	
 	/**
 	 * @param	X		The X-coordinate of the point in space.
@@ -481,6 +482,7 @@ class FlxObject extends FlxBasic
 		last = FlxPoint.get(x, y);
 		scrollFactor = FlxPoint.get(1, 1);
 		_point = FlxPoint.get();
+		_rect = FlxRect.get();
 		
 		initMotionVars();
 	}
@@ -511,6 +513,7 @@ class FlxObject extends FlxBasic
 		scrollFactor = FlxDestroyUtil.put(scrollFactor);
 		last = FlxDestroyUtil.put(last);
 		_point = FlxDestroyUtil.put(_point);
+		_rect = FlxDestroyUtil.put(_rect);
 	}
 	
 	/**
@@ -858,12 +861,17 @@ class FlxObject extends FlxBasic
 		height = Height;
 	}
 	
-	#if !FLX_NO_DEBUG
+#if !FLX_NO_DEBUG
 	public function drawDebug():Void
 	{
-		if (!ignoreDrawDebug)
+		if (ignoreDrawDebug)
 		{
-			for (camera in cameras)
+			return;
+		}
+		
+		for (camera in cameras)
+		{
+			if (camera.visible && camera.exists && isOnScreen(camera))
 			{
 				drawDebugOnCamera(camera);
 			}
@@ -876,27 +884,9 @@ class FlxObject extends FlxBasic
 	 * 
 	 * @param	Camera	Which camera to draw the debug visuals to.
 	 */
-	public function drawDebugOnCamera(Camera:FlxCamera):Void
+	public function drawDebugOnCamera(camera:FlxCamera):Void
 	{
-		if (!Camera.visible || !Camera.exists || !isOnScreen(Camera))
-		{
-			return;
-		}
-		
-		//get bounding box coordinates
-		var boundingBoxX:Float = x - (Camera.scroll.x * scrollFactor.x); //copied from getScreenXY()
-		var boundingBoxY:Float = y - (Camera.scroll.y * scrollFactor.y);
-		
-		if (isPixelPerfectRender(Camera))
-		{
-			boundingBoxX = Math.floor(boundingBoxX);
-			boundingBoxY = Math.floor(boundingBoxY);
-		}
-		
-		#if FLX_RENDER_BLIT
-		var boundingBoxWidth:Int = Std.int(width);
-		var boundingBoxHeight:Int = Std.int(height);
-		#end
+		var rect = getBoundingBox(camera);
 		
 		// Find the color to use
 		var color:Null<Int> = debugBoundingBoxColor;
@@ -904,46 +894,51 @@ class FlxObject extends FlxBasic
 		{
 			if (allowCollisions != FlxObject.NONE)
 			{
-				if (allowCollisions != ANY)
-				{
-					color = FlxColor.PINK;
-				}
-				if (immovable)
-				{
-					color = FlxColor.GREEN;
-				}
-				else
-				{
-					color = FlxColor.RED;
-				}
+				color = immovable ? FlxColor.GREEN : FlxColor.RED;
 			}
-			
-			// if there's still no color...
-			if (color == null)
+			else
 			{
 				color = FlxColor.BLUE;
 			}
 		}
 		
 		//fill static graphics object with square shape
+		var gfx:Graphics = beginDrawDebug(camera);
+		gfx.lineStyle(1, color, 0.5);
+		gfx.drawRect(rect.x, rect.y, rect.width, rect.height);
+		endDrawDebug(camera);
+	}
+
+	private inline function beginDrawDebug(camera:FlxCamera):Graphics
+	{
 		#if FLX_RENDER_BLIT
-		var gfx:Graphics = FlxSpriteUtil.flashGfx;
-		gfx.clear();
-		gfx.moveTo(boundingBoxX, boundingBoxY);
-		gfx.lineStyle(1, color, 0.5);
-		gfx.lineTo(boundingBoxX + boundingBoxWidth, boundingBoxY);
-		gfx.lineTo(boundingBoxX + boundingBoxWidth, boundingBoxY + boundingBoxHeight);
-		gfx.lineTo(boundingBoxX, boundingBoxY + boundingBoxHeight);
-		gfx.lineTo(boundingBoxX, boundingBoxY);
-		//draw graphics shape to camera buffer
-		Camera.buffer.draw(FlxSpriteUtil.flashGfxSprite);
+			FlxSpriteUtil.flashGfx.clear();
+			return FlxSpriteUtil.flashGfx;
 		#else
-		var gfx:Graphics = Camera.debugLayer.graphics;
-		gfx.lineStyle(1, color, 0.5);
-		gfx.drawRect(boundingBoxX, boundingBoxY, width, height);
+			return camera.debugLayer.graphics;
 		#end
 	}
-	#end
+	
+	private inline function endDrawDebug(camera:FlxCamera)
+	{
+		#if FLX_RENDER_BLIT
+			camera.buffer.draw(FlxSpriteUtil.flashGfxSprite);
+		#end
+	}
+#end
+
+	private function getBoundingBox(camera:FlxCamera):FlxRect
+	{
+		getScreenPosition(_point, camera);
+		_rect.set(_point.x, _point.y, width, height);
+		
+		if (isPixelPerfectRender(camera))
+		{
+			_rect.floor();
+		}
+		
+		return _rect;
+	}
 	
 	/**
 	 * Convert object to readable string name. Useful for debugging, save games, etc.
@@ -1032,14 +1027,7 @@ class FlxObject extends FlxBasic
 	
 	private function set_solid(Solid:Bool):Bool
 	{
-		if (Solid)
-		{
-			allowCollisions = ANY;
-		}
-		else
-		{
-			allowCollisions = NONE;
-		}
+		allowCollisions = Solid ? ANY : NONE;
 		return Solid;
 	}
 	

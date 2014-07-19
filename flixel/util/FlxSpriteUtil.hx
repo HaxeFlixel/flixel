@@ -528,17 +528,7 @@ class FlxSpriteUtil
 	{
 		if (lineStyle != null)
 		{
-			var color:FlxColor;
-			
-			if (lineStyle.color == null) 
-			{ 
-				color = FlxColor.BLACK;
-			}
-			else 
-			{
-				color = lineStyle.color;
-			}
-			
+			var color = (lineStyle.color == null) ? FlxColor.BLACK : lineStyle.color; 
 			if (lineStyle.pixelHinting == null) { lineStyle.pixelHinting = false; }
 			if (lineStyle.miterLimit == null) 	{ lineStyle.miterLimit = 3; }
 			

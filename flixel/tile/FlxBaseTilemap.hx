@@ -315,7 +315,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		if (_randomIndices != null)
 		{
 			var randLambda:Void->Float = _randomLambda != null ? _randomLambda : function() {
-				return FlxRandom.float();
+				return FlxG.random.float();
 			};
 			
 			while (i < totalTiles)
@@ -1172,7 +1172,7 @@ enum FlxTilemapAutoTiling
 {
 	OFF;
 	/**
-	 * Good for levels with thin walls that don'tile need interior corner art.
+	 * Good for levels with thin walls that don't need interior corner art.
 	 */
 	AUTO;
 	/**

@@ -78,7 +78,7 @@ class FlxPoint implements IFlxPooled
 	{
 		if (_weak)
 		{
-			_pool.put(this);
+			put();
 		}
 	}
 	
@@ -201,8 +201,13 @@ class FlxPoint implements IFlxPooled
 	 * @param	Point	Any Point.
 	 * @return	A reference to the altered point parameter.
 	 */
-	public inline function copyToFlash(FlashPoint:Point):Point
+	public inline function copyToFlash(?FlashPoint:Point):Point
 	{
+		if (FlashPoint == null)
+		{
+			FlashPoint = new Point();
+		}
+		
 		FlashPoint.x = x;
 		FlashPoint.y = y;
 		return FlashPoint;
