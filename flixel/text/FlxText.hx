@@ -824,7 +824,13 @@ class FlxText extends FlxSprite
 				_formatAdjusted.align = TextFormatAlign.LEFT;
 				textField.setTextFormat(_formatAdjusted);
 				
-				_matrix.translate(Math.floor((width - textField.getLineMetrics(0).width) / 2), 0);
+				#if bitfive
+					var textWidth = textField.textWidth;
+				#else
+					var textWidth = textField.getLineMetrics(0).width;
+				#end
+				
+				_matrix.translate(Math.floor((width - textWidth) / 2), 0);
 			}
 			
 			applyBorderStyle();
