@@ -122,7 +122,9 @@ class TileSheetData implements IFlxDestroyable
 			newFrameRect.x += frame.frame.x;
 			newFrameRect.y += frame.frame.y;
 			
-			newFrameName = getSpriteSheetFrameKey(frame.frame, new Point(0.5 * frame.frame.width, 0.5 * frame.frame.height)) + newFrameRect.toString();
+			var rect = FlxRect.get().copyFromFlash(newFrameRect);
+			newFrameName = getSpriteSheetFrameKey(frame.frame, new Point(0.5 * frame.frame.width, 0.5 * frame.frame.height)) + rect.toString();
+			rect.put();
 			
 			if (flxFrames.exists(newFrameName))
 			{
