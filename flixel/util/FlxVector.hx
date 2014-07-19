@@ -141,7 +141,7 @@ class FlxVector extends FlxPoint
 	{
 		var nv:FlxVector = clone();
 		nv.subtractPoint(v);
-		return clone();
+		return nv;
 	}
 	
 	/**
