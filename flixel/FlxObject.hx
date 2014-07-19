@@ -908,8 +908,7 @@ class FlxObject extends FlxBasic
 		gfx.drawRect(rect.x, rect.y, rect.width, rect.height);
 		endDrawDebug(camera);
 	}
-#end
-	
+
 	private inline function beginDrawDebug(camera:FlxCamera):Graphics
 	{
 		#if FLX_RENDER_BLIT
@@ -926,7 +925,8 @@ class FlxObject extends FlxBasic
 			camera.buffer.draw(FlxSpriteUtil.flashGfxSprite);
 		#end
 	}
-	
+#end
+
 	private function getBoundingBox(camera:FlxCamera):FlxRect
 	{
 		getScreenPosition(_point, camera);
