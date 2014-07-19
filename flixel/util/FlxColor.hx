@@ -363,7 +363,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	{
 		Factor = FlxMath.bound(Factor, 0, 1);
 		var output:FlxColor = this;
-		output.lightness *= (1 - Factor);
+		output.lightness = output.lightness * (1 - Factor);
 		return output;
 	}
 	
@@ -377,7 +377,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	{
 		Factor = FlxMath.bound(Factor, 0, 1);
 		var output:FlxColor = this;
-		output.lightness += (1 - lightness) * Factor;
+		output.lightness = output.lightness + (1 - lightness) * Factor;
 		return output;
 	}
 	
