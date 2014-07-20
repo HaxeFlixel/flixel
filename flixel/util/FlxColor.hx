@@ -34,10 +34,10 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	public static inline var CYAN:FlxColor =          0xFF00FFFF;
 	
 	/**
-	 * An array of {name:String, color:Int} values with the static colors of FlxColor.
-	 * You can add more colors for FlxColor.fromString(String) resolver if you need.
+	 * A Map<String, Int> which values are the static colors of FlxColor.
+	 * You can add more colors for FlxColor.fromString(String) if you need.
 	 */
-	public static var STATIC_COLORS:Array<{name:String, color:Int}> = FlxColorMacros.staticColors();
+	public static var colorLookup:Map<String,Int> = FlxColorMacros.staticColors();
 	
 	public var red(get, set):Int;
 	public var blue(get, set):Int;
@@ -189,11 +189,11 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 		else
 		{
 			str = str.toUpperCase();
-			for (c in STATIC_COLORS)
+			for (key in colorLookup.keys())
 			{
-				if (c.name.toUpperCase() == str)
+				if (key.toUpperCase() == str)
 				{
-					result = new FlxColor(c.color);
+					result = new FlxColor(colorLookup.get(key));
 					break;
 				}
 			}

@@ -9,7 +9,7 @@ class FlxColorMacros
 {
 	/**
 	 * Macro
-	 * @return	An array of {name:String, color:Int} values with the static inline vars of FlxColor
+	 * @return	Returns the the static inline vars of FlxColor as an Array<Expr> for a map.
 	 */
 	public static macro function staticColors():Expr
 	{
@@ -30,13 +30,8 @@ class FlxColorMacros
 								var color = 0;
 								switch(f.expr().expr)
 								{
-									case TCast(_.expr => expr, _):
-										switch(expr)
-										{
-											case TConst(TInt(_ => v)):
-												color = v;
-											default:
-										}
+									case TCast(Context.getTypedExpr(_) => expr, _):
+										color = expr.getValue();
 									default:
 								}
 								values.push({name:f.name, color:color});
@@ -47,6 +42,8 @@ class FlxColorMacros
 			default:
 		}
 		
-		return macro $v{values};
+		var finalExpr = values.map(function(v) return macro $v{v.name} => $v{v.color});
+		
+		return macro $a{finalExpr};
 	}
 }
