@@ -150,6 +150,17 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 		var color = new FlxColor();
 		return color.setHSL(Hue, Saturation, Lightness, Alpha);
 	}
+
+	/** 
+	 * Generates a color from a String name.
+	 * 
+	 * @param Name	The name of the color
+	 * @return The color as a FlxColor
+	 */
+	public static inline function fromName(Name:String):FlxColor
+	{
+		return Reflect.field(FlxColor, Name);
+	}
 	
 	/**
 	 * Get HSB color wheel values in an array which will be 360 elements in size
