@@ -1,5 +1,6 @@
 package flixel.util;
 import flixel.math.FlxMath;
+import flixel.system.macros.FlxColorMacros;
 
 /**
  * Class representing a color, based on Int. Provides a variety of methods for creating and converting colors.
@@ -31,6 +32,12 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	public static inline var PINK:FlxColor =          0xFFFFC0CB;
 	public static inline var MAGENTA:FlxColor =       0xFFFF00FF;
 	public static inline var CYAN:FlxColor =          0xFF00FFFF;
+	
+	/**
+	 * An array of {name:String, color:Int} values with the static colors of FlxColor.
+	 * You can add more colors for FlxColor.fromString(String) resolver if you need.
+	 */
+	public static var STATIC_COLORS:Array<{name:String, color:Int}> = FlxColorMacros.staticColors();
 	
 	public var red(get, set):Int;
 	public var blue(get, set):Int;
@@ -160,6 +167,8 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 * 0xAA4578C2  -> 0xAA4578C2
 	 * #0000FF     -> 0xFF0000FF
 	 * #3F000011   -> 0x3F000011
+	 * GRAY        -> 0xFF808080
+	 * blue        -> 0xFF0000FF
 	 * @param	str 	The string to be parsed
 	 * @return	The color of the parsed string.
 	 */
@@ -175,6 +184,18 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 			if (hexColor.length == 8) 
 			{
 				result.alphaFloat = 1;
+			}
+		}
+		else
+		{
+			str = str.toUpperCase();
+			for (c in STATIC_COLORS)
+			{
+				if (c.name.toUpperCase() == str)
+				{
+					result = new FlxColor(c.color);
+					break;
+				}
 			}
 		}
 		
