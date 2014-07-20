@@ -10,7 +10,6 @@ import flash.geom.Rectangle;
 import flixel.FlxCamera.FlxCameraShakeDirection;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
-import flixel.math.FlxRandom;
 import flixel.math.FlxRect;
 import flixel.system.layer.DrawStackItem;
 import flixel.system.layer.TileSheetExt;
@@ -62,7 +61,8 @@ class FlxCamera extends FlxBasic
 	public var targetOffset(default, null):FlxPoint;
 	/**
 	 * Used to smoothly track the camera as it follows.
-	 * Valid values between 0.0 and 1.0. A value of 1 means no camera easing.
+	 * Valid values between 0.0 and 1.0.
+	 * A value of 1 means no camera easing. A value of 0 means the camera does not move.
 	 */
 	public var followLerp(default, set):Float = 1;
 	/**
