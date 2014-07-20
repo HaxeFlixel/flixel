@@ -35,7 +35,7 @@ class HUD extends FlxGroup
 		addGreenText(txtStyle = new FlxText(x, startY + 33, width, "LOCKON"));
 		
 		add(new FlxText(x, startY + 55, width, "[U] or [J] to change lerp."));
-		addGreenText(txtLerp = new FlxText(x, startY + 68, width, "Camera lerp: 0"));
+		addGreenText(txtLerp = new FlxText(x, startY + 68, width, "Camera lerp: 1"));
 		
 		add(new FlxText(x, startY + 95, width, "[I] or [K] to change lead."));
 		addGreenText(txtLead = new FlxText(x, startY + 108, width, "Camera lead: 0"));
