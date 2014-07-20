@@ -1,24 +1,14 @@
 package;
 
-import flixel.addons.nape.FlxNapeSprite;
-import flixel.addons.nape.FlxNapeState;
-import flixel.util.FlxSpriteUtil;
-import haxe.EnumFlags;
-import haxe.EnumTools;
-import nape.Config;
-import nape.geom.Vec2;
-import nape.phys.Body;
-import nape.phys.BodyType;
-import nape.phys.Material;
-import nape.shape.Polygon;
-import flash.display.BitmapData;
 import flash.display.BlendMode;
 import flash.Lib;
+import flixel.addons.nape.FlxNapeState;
 import flixel.FlxCamera;
 import flixel.FlxG;
-import flixel.math.FlxPoint;
 import flixel.FlxSprite;
+import flixel.util.FlxSpriteUtil;
 import HUD;
+import nape.geom.Vec2;
 import openfl.Assets;
 
 /**

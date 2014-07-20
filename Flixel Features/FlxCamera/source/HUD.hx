@@ -1,8 +1,7 @@
 package;
 
-import flixel.FlxG;
-import flixel.group.FlxGroup;
 import flixel.FlxSprite;
+import flixel.group.FlxGroup;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 
