@@ -161,7 +161,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	}
 	
 	/**
-	 * Parses a String and returns a FlxColor (FlxColor.TRANSPARENT if the string can't be parsed)
+	 * Parses a String and returns a FlxColor or null if the String couldn't be parsed.
 	 * Examples (input -> output in hex):
 	 * 0x00FF00    -> 0xFF00FF00
 	 * 0xAA4578C2  -> 0xAA4578C2
@@ -170,12 +170,12 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 * GRAY        -> 0xFF808080
 	 * blue        -> 0xFF0000FF
 	 * @param	str 	The string to be parsed
-	 * @return	The color of the parsed string.
+	 * @return	A FlxColor or null if the String couldn't be parsed
 	 */
-	public static function fromString(str:String):FlxColor
+	public static function fromString(str:String):Null<FlxColor>
 	{
+		var result:Null<FlxColor> = null;
 		str = StringTools.trim(str);
-		var result = new FlxColor();
 		
 		if (COLOR_REGEX.match(str)) 
 		{
