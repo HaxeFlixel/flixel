@@ -64,6 +64,8 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 */
 	public var lightness(get, set):Float;
 	
+	private static var COLOR_REGEX = ~/^(0x|#)(([A-F0-9]{2}){3,4})$/i;
+	
 	/**
 	 * Create a color from the lest significant four bytes of an Int
 	 * 
@@ -149,6 +151,34 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	{
 		var color = new FlxColor();
 		return color.setHSL(Hue, Saturation, Lightness, Alpha);
+	}
+	
+	/**
+	 * Parses a String and returns a FlxColor (FlxColor.TRANSPARENT if the string can't be parsed)
+	 * Examples (input -> output in hex):
+	 * 0x00FF00    -> 0xFF00FF00
+	 * 0xAA4578C2  -> 0xAA4578C2
+	 * #0000FF     -> 0xFF0000FF
+	 * #3F000011   -> 0x3F000011
+	 * @param	str 	The string to be parsed
+	 * @return	The color of the parsed string.
+	 */
+	public static function fromString(str:String):FlxColor
+	{
+		str = StringTools.trim(str);
+		var result = new FlxColor();
+		
+		if (COLOR_REGEX.match(str)) 
+		{
+			var hexColor:String = "0x"+COLOR_REGEX.matched(2);
+			result = new FlxColor(Std.parseInt(hexColor));
+			if (hexColor.length == 8) 
+			{
+				result.alphaFloat = 1;
+			}
+		}
+		
+		return result;
 	}
 	
 	/**
