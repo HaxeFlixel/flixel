@@ -1,5 +1,6 @@
 package flixel.util;
 import flixel.math.FlxMath;
+import flixel.system.macros.FlxColorMacros;
 
 /**
  * Class representing a color, based on Int. Provides a variety of methods for creating and converting colors.
@@ -32,6 +33,12 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	public static inline var MAGENTA:FlxColor =       0xFFFF00FF;
 	public static inline var CYAN:FlxColor =          0xFF00FFFF;
 	
+	/**
+	 * A Map<String, Int> which values are the static colors of FlxColor.
+	 * You can add more colors for FlxColor.fromString(String) if you need.
+	 */
+	public static var colorLookup:Map<String,Int> = FlxColorMacros.staticColors();
+	
 	public var red(get, set):Int;
 	public var blue(get, set):Int;
 	public var green(get, set):Int;
@@ -63,6 +70,8 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 * The lightness of the color (from 0 to 1)
 	 */
 	public var lightness(get, set):Float;
+	
+	private static var COLOR_REGEX = ~/^(0x|#)(([A-F0-9]{2}){3,4})$/i;
 	
 	/**
 	 * Create a color from the lest significant four bytes of an Int
@@ -149,6 +158,48 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	{
 		var color = new FlxColor();
 		return color.setHSL(Hue, Saturation, Lightness, Alpha);
+	}
+	
+	/**
+	 * Parses a String and returns a FlxColor or null if the String couldn't be parsed.
+	 * Examples (input -> output in hex):
+	 * 0x00FF00    -> 0xFF00FF00
+	 * 0xAA4578C2  -> 0xAA4578C2
+	 * #0000FF     -> 0xFF0000FF
+	 * #3F000011   -> 0x3F000011
+	 * GRAY        -> 0xFF808080
+	 * blue        -> 0xFF0000FF
+	 * @param	str 	The string to be parsed
+	 * @return	A FlxColor or null if the String couldn't be parsed
+	 */
+	public static function fromString(str:String):Null<FlxColor>
+	{
+		var result:Null<FlxColor> = null;
+		str = StringTools.trim(str);
+		
+		if (COLOR_REGEX.match(str)) 
+		{
+			var hexColor:String = "0x"+COLOR_REGEX.matched(2);
+			result = new FlxColor(Std.parseInt(hexColor));
+			if (hexColor.length == 8) 
+			{
+				result.alphaFloat = 1;
+			}
+		}
+		else
+		{
+			str = str.toUpperCase();
+			for (key in colorLookup.keys())
+			{
+				if (key.toUpperCase() == str)
+				{
+					result = new FlxColor(colorLookup.get(key));
+					break;
+				}
+			}
+		}
+		
+		return result;
 	}
 	
 	/**
