@@ -1502,19 +1502,12 @@ class FlxSprite extends FlxObject
 	
 	private function set_alpha(Alpha:Float):Float
 	{
-		if (Alpha > 1)
-		{
-			Alpha = 1;
-		}
-		if (Alpha < 0)
-		{
-			Alpha = 0;
-		}
 		if (Alpha == alpha)
 		{
 			return alpha;
 		}
-		alpha = Alpha;
+		
+		alpha = FlxMath.bound(Alpha, 0, 1);
 		updateColorTransform();
 		return alpha;
 	}
