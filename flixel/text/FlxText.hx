@@ -966,7 +966,7 @@ class FlxText extends FlxSprite
 		}
 	}
 	
-	private function copyTextFormat(from:TextFormat, to:TextFormat, ?withAlign:Bool = true):Void
+	private function copyTextFormat(from:TextFormat, to:TextFormat, withAlign:Bool = true):Void
 	{
 		to.font = from.font;
 		to.bold = from.bold;
