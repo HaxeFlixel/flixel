@@ -942,7 +942,7 @@ class FlxText extends FlxSprite
 	private inline function applyFormats(FormatAdjusted:TextFormat, UseBorderColor:Bool = false):Void
 	{
 		// Apply the default format
-		copyTextFormat(_defaultFormat, FormatAdjusted);
+		copyTextFormat(_defaultFormat, FormatAdjusted, false);
 		FormatAdjusted.color = UseBorderColor ? borderColor.to24Bit() : _defaultFormat.color;
 		textField.setTextFormat(FormatAdjusted);
 		
@@ -957,7 +957,7 @@ class FlxText extends FlxSprite
 			else 
 			{
 				var textFormat:TextFormat = formatRange.format.format;
-				copyTextFormat(textFormat, FormatAdjusted);
+				copyTextFormat(textFormat, FormatAdjusted, false);
 				FormatAdjusted.color = UseBorderColor ? formatRange.format.borderColor.to24Bit() : textFormat.color;
 			}
 			
@@ -966,14 +966,14 @@ class FlxText extends FlxSprite
 		}
 	}
 	
-	private function copyTextFormat(from:TextFormat, to:TextFormat):Void
+	private function copyTextFormat(from:TextFormat, to:TextFormat, ?withAlign:Bool = true):Void
 	{
 		to.font = from.font;
 		to.bold = from.bold;
 		to.italic = from.italic;
 		to.size = from.size;
 		to.color = from.color;
-		to.align = from.align;
+		if(withAlign) to.align = from.align;
 	}
 	
 	/**
