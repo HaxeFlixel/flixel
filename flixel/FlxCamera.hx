@@ -60,11 +60,11 @@ class FlxCamera extends FlxBasic
 	 */
 	public var targetOffset(default, null):FlxPoint;
 	/**
-	 * Used to smoothly track the camera as it follows.
-	 * Valid values between 0.0 and 1.0.
-	 * A value of 1 means no camera easing. A value of 0 means the camera does not move.
+	 * Used to smoothly track the camera as it follows: The percent of the distance to the follow target the camera moves per 1/60 sec.
+	 * Values are bounded between 0.0 and FlxG.updateFrameRate / 60 for consistency acaross framerates.
+	 * The maximum value means no camera easing. A value of 0 means the camera does not move.
 	 */
-	public var followLerp(default, set):Float = 1;
+	public var followLerp(default, set):Float = 60 / FlxG.updateFramerate;
 	/**
 	 * You can assign a "dead zone" to the camera in order to better control its movement.
 	 * The camera will always keep the focus object inside the dead zone, unless it is bumping up against 
@@ -630,8 +630,15 @@ class FlxCamera extends FlxBasic
 				_lastTargetPosition.y = target.y;
 			}
 			
-			scroll.x += (_scrollTarget.x - scroll.x) * followLerp * 60 * FlxG.elapsed;
-			scroll.y += (_scrollTarget.y - scroll.y) * followLerp * 60 * FlxG.elapsed;
+			if (followLerp >= 60 / FlxG.updateFramerate) {
+				// no easing
+				scroll.copyFrom(_scrollTarget);
+			}
+			
+			else {
+				scroll.x += (_scrollTarget.x - scroll.x) * followLerp * FlxG.updateFramerate / 60;
+				scroll.y += (_scrollTarget.y - scroll.y) * followLerp * FlxG.updateFramerate / 60;
+			}
 		}
 	}
 	
@@ -1092,10 +1099,7 @@ class FlxCamera extends FlxBasic
 	
 	private function set_followLerp(Value:Float):Float
 	{
-		if (Value < 0) Value = 0; // lerp is bounded between 0 and 1 inclusive
-		else if (Value > 1) Value = 1;
-		followLerp = Value;
-		return followLerp;
+		return followLerp = FlxMath.bound(Value, 0, 60 / FlxG.updateFramerate);
 	}
 	
 	private function set_width(Value:Int):Int
