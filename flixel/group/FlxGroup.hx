@@ -49,8 +49,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	private static inline function resolveGroup(ObjectOrGroup:FlxBasic):FlxTypedGroup<FlxBasic>
 	{
 		var group:FlxTypedGroup<FlxBasic> = null;
-		if ((ObjectOrGroup.flixelType == SPRITEGROUP) || 
-		    (ObjectOrGroup.flixelType == GROUP))
+		if (ObjectOrGroup != null)
 		{
 			if (ObjectOrGroup.flixelType == GROUP)
 			{
