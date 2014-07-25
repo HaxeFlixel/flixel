@@ -593,7 +593,28 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		
 		super.kill();
 	}
-	
+
+	/**
+	 * Calls revive on the group's members and then on the group itself.
+	 */
+	override public function revive():Void
+	{
+		var i:Int = 0;
+		var basic:FlxBasic = null;
+
+		while (i < length)
+		{
+			basic = members[i++];
+
+			if (basic != null && ! basic.exists)
+			{
+				basic.revive();
+			}
+		}
+
+		super.revive();
+	}
+
 	/**
 	 * Iterate through every member
 	 */
