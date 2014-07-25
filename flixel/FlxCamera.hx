@@ -964,7 +964,7 @@ class FlxCamera extends FlxBasic
 		//Draw the "flash" special effect onto the buffer
 		if (_fxFlashAlpha > 0.0)
 		{
-			alphaComponent = _fxFlashColor.alphaFloat;
+			alphaComponent = _fxFlashColor.alpha;
 			
 			#if FLX_RENDER_BLIT
 			fill((Std.int(((alphaComponent <= 0) ? 0xff : alphaComponent) * _fxFlashAlpha) << 24) + (_fxFlashColor & 0x00ffffff));
@@ -976,7 +976,7 @@ class FlxCamera extends FlxBasic
 		//Draw the "fade" special effect onto the buffer
 		if (_fxFadeAlpha > 0.0)
 		{
-			alphaComponent = (_fxFadeColor >> 24) & 255;
+			alphaComponent = _fxFadeColor.alpha;
 			
 			#if FLX_RENDER_BLIT
 			fill((Std.int(((alphaComponent <= 0) ?0xff : alphaComponent) * _fxFadeAlpha) << 24) + (_fxFadeColor & 0x00ffffff));
