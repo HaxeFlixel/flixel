@@ -44,7 +44,7 @@ class FlxBitmapTextField extends FlxSprite
 	/**
 	 * Specifies the color of the text field background.
 	 */
-	public var backgroundColor(default, set):FlxColor = FlxColor.WHITE;
+	public var backgroundColor(default, set):FlxColor = FlxColor.TRANSPARENT;
 	
 	/**
 	 * Specifies whether the text should have a shadow.
