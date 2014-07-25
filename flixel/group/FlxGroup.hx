@@ -20,8 +20,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	/**
 	 * Helper function for overlap functions in FlxObject and FlxTilemap.
 	 */
-	@:allow(flixel.FlxObject)
-	@:allow(flixel.tile.FlxTilemap)
+	@:allow(flixel)
 	private static inline function overlaps(Callback:FlxBasic->Float->Float->Bool->FlxCamera->Bool, 
 		Group:FlxTypedGroup<FlxBasic>, X:Float, Y:Float, InScreenSpace:Bool, Camera:FlxCamera):Bool
 	{
@@ -46,15 +45,11 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		return result;
 	}
 	
-	@:allow(flixel.FlxObject)
-	@:allow(flixel.tile.FlxTilemap)
-	@:allow(flixel.system.FlxQuadTree)
-	@:allow(flixel.input.FlxPointer)
+	@:allow(flixel)
 	private static inline function resolveGroup(ObjectOrGroup:FlxBasic):FlxTypedGroup<FlxBasic>
 	{
 		var group:FlxTypedGroup<FlxBasic> = null;
-		if ((ObjectOrGroup.flixelType == SPRITEGROUP) || 
-		    (ObjectOrGroup.flixelType == GROUP))
+		if (ObjectOrGroup != null)
 		{
 			if (ObjectOrGroup.flixelType == GROUP)
 			{
@@ -564,7 +559,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			Length = length;
 		}
 		
-		return FlxRandom.getObject(members, StartIndex, Length);
+		return FlxG.random.getObject(members, StartIndex, Length);
 	}
 	
 	/**

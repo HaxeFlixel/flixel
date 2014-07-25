@@ -85,6 +85,7 @@ class FlxSound extends FlxBasic
 	/**
 	 * Whether or not this sound should loop.
 	 */
+	@:isVar
 	public var looped(get, set):Bool;
 	/**
 	 * Internal tracker for a Flash sound object.
@@ -126,10 +127,6 @@ class FlxSound extends FlxBasic
 	 * Helper var to prevent the sound from playing after focus was regained when it was already paused.
 	 */
 	private var _alreadyPaused:Bool = false;
-	/**
-	 * Internal tracker for looped state.
-	 */
-	private var _looped:Bool = false;
 	
 	/**
 	 * The FlxSound constructor gets all the variables initialized, but NOT ready to play a sound yet.
@@ -154,7 +151,7 @@ class FlxSound extends FlxBasic
 		_paused = false;
 		_volume = 1.0;
 		_volumeAdjust = 1.0;
-		_looped = false;
+		looped = false;
 		_target = null;
 		_radius = 0;
 		_proximityPan = false;
@@ -287,7 +284,7 @@ class FlxSound extends FlxBasic
 		}
 		
 		//NOTE: can't pull ID3 info from embedded sound currently
-		_looped = Looped; 
+		looped = Looped; 
 		autoDestroy = AutoDestroy;
 		updateTransform();
 		exists = true;
@@ -311,7 +308,7 @@ class FlxSound extends FlxBasic
 		_sound = new Sound();
 		_sound.addEventListener(Event.ID3, gotID3);
 		_sound.load(new URLRequest(SoundURL));
-		_looped = Looped;
+		looped = Looped;
 		autoDestroy = AutoDestroy;
 		updateTransform();
 		exists = true;
@@ -338,7 +335,7 @@ class FlxSound extends FlxBasic
 		_sound = new Sound();
 		_sound.addEventListener(Event.ID3, gotID3);
 		_sound.loadCompressedDataFromByteArray(Bytes, Bytes.length);
-		_looped = Looped;
+		looped = Looped;
 		autoDestroy = AutoDestroy;
 		updateTransform();
 		exists = true;
@@ -511,7 +508,7 @@ class FlxSound extends FlxBasic
 	 */
 	private function startSound(Position:Float):Void
 	{
-		var numLoops:Int = _looped ? FlxMath.MAX_VALUE_INT : 0;
+		var numLoops:Int = looped && Position == 0 ? FlxMath.MAX_VALUE_INT : 0;
 		
 		time = Position;
 		_paused = false;
@@ -540,7 +537,7 @@ class FlxSound extends FlxBasic
 			onComplete();
 		}
 		
-		if (_looped)
+		if (looped)
 		{
 			cleanup(false);
 			play();
@@ -641,7 +638,7 @@ class FlxSound extends FlxBasic
 	
 	private inline function get_looped():Bool
 	{
-		return _looped;
+		return looped;
 	}
 	
 	private inline function set_looped(loop:Bool):Bool
@@ -649,16 +646,16 @@ class FlxSound extends FlxBasic
 		// If we're going from looping to not looping while playing,
 		// the channel needs to be updated so it won't loop next time.
 		
-		if (!loop && _looped && playing)
+		if (!loop && looped && playing)
 		{
-			_looped = loop;
+			looped = loop;
 			var pos:Float = _channel.position;
 			cleanup(false, false, false);
 			startSound(pos);
 		}
 		else
 		{
-			_looped = loop;
+			looped = loop;
 		}
 		
 		return loop;

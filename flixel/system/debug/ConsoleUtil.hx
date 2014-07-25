@@ -263,7 +263,24 @@ class ConsoleUtil
 				}
 			}
 		}
+		
 		return fields;
+	}
+	
+	public static function getTypeName(v:Dynamic):String
+	{
+		var type = Type.typeof(v);
+		
+		return switch (type)
+		{
+			case TClass(c):
+				FlxStringUtil.getClassName(c, true);
+			case TEnum(e):
+				var name = Type.getEnumName(e);
+				name.substr(name.lastIndexOf(".") + 1);
+			case _:
+				Std.string(type).substr(1);
+		}
 	}
 	
 	/**

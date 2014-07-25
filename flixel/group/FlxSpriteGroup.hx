@@ -7,6 +7,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup;
 import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
+import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.system.FlxAssets.FlxTextureAsset;
@@ -663,14 +664,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	
 	override private function set_alpha(Value:Float):Float 
 	{
-		if (Value > 1)  
-		{
-			Value = 1;
-		}
-		else if (Value < 0)  
-		{
-			Value = 0;
-		}
+		Value = FlxMath.bound(Value, 0, 1);
 		
 		if (exists && alpha != Value)
 		{

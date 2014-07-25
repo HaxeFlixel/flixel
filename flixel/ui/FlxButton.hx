@@ -394,8 +394,8 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	{
 		if (label != null) // Label positioning
 		{
-			label.x = x + labelOffsets[status].x;
-			label.y = y + labelOffsets[status].y;
+			label.x = (pixelPerfectPosition ? Math.floor(x) : x) + labelOffsets[status].x;
+			label.y = (pixelPerfectPosition ? Math.floor(y) : y) + labelOffsets[status].y;
 		}
 	}
 	

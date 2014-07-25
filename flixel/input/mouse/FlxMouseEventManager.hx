@@ -265,12 +265,12 @@ class FlxMouseEventManager extends FlxBasic
 	{
 		for (basic in Group.members)
 		{
-			if (Std.is(basic, FlxTypedGroup))
+			var group = FlxTypedGroup.resolveGroup(basic);
+			if (group != null)
 			{
-				traverseFlxGroup(cast(basic, FlxTypedGroup<Dynamic>), OrderedObjects);
+				traverseFlxGroup(group, OrderedObjects);
 			}
-			
-			if (Std.is(basic, FlxSprite))
+			else if (Std.is(basic, FlxSprite))
 			{
 				var reg = getRegister(cast(basic, FlxSprite));
 				

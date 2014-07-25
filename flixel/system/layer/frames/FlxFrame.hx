@@ -47,7 +47,7 @@ class FlxFrame
 		type = REGULAR;
 	}
 	
-	public function paintOnBitmap(bmd:BitmapData = null):BitmapData
+	public function paintOnBitmap(?bmd:BitmapData):BitmapData
 	{
 		var result:BitmapData = null;
 		

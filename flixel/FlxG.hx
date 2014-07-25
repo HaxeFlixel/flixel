@@ -161,6 +161,11 @@ class FlxG
 	 */
 	public static var save(default, null):FlxSave = new FlxSave();
 	
+	/**
+	 * A FlxRandom object used internally by flixel to generate random numbers.
+	 */
+	public static var random(default, null):FlxRandom = new FlxRandom();
+	
 	#if !FLX_NO_MOUSE
 	/**
 	 * Used for mouse input. e.g.: check if the left mouse button 
@@ -477,7 +482,7 @@ class FlxG
 	private static function reset():Void
 	{
 		PxBitmapFont.clearStorage();
-		FlxRandom.resetGlobalSeed();
+		random.resetInitialSeed();
 		
 		bitmap.clearCache();
 		inputs.reset();

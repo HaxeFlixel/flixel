@@ -4,7 +4,7 @@ package flixel.system;
  * Helper object for semantic versioning.
  * @see   http://semver.org/
  */
-@:build(flixel.system.GitSHA.buildGitSHA("flixel"))
+@:build(flixel.system.macros.FlxGitSHA.buildGitSHA("flixel"))
 class FlxVersion
 {
 	public var major(default, null):Int;
