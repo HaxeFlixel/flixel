@@ -10,7 +10,8 @@ import flixel.util.FlxDestroyUtil;
 class CachedGraphics
 {
 	/**
-	 * The default value for the CachedGraphics persist variable at creation. Determines if CachedGraphics persist through a state change.
+	 * The default value for the CachedGraphics persist variable
+	 * at creation if none is specified in the constructor.
 	 */
 	public static var defaultPersist:Bool = false;
 	/**
@@ -62,11 +63,11 @@ class CachedGraphics
 
 	private var _tilesheet:TileSheetData;
 
-	public function new(Key:String, Bitmap:BitmapData, Persist:Null<Bool> = null)
+	public function new(Key:String, Bitmap:BitmapData, ?Persist:Bool)
 	{
 		key = Key;
 		bitmap = Bitmap;
-		persist = Persist != null ? Persist : defaultPersist;
+		persist = (Persist != null) ? Persist : defaultPersist;
 	}
 
 	/**
