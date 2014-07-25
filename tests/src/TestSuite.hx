@@ -9,6 +9,7 @@ import flixel.FlxSubStateTest;
 import flixel.group.FlxGroupTest;
 import flixel.math.FlxRandomTest;
 import flixel.math.FlxVectorTest;
+import flixel.text.FlxBitmapTextFieldTest;
 import flixel.text.FlxTextTest;
 import flixel.tile.FlxTilemapTest;
 import flixel.tweens.FlxTweenTest;
@@ -37,6 +38,7 @@ class TestSuite extends massive.munit.TestSuite
 		add(flixel.group.FlxGroupTest);
 		add(flixel.math.FlxRandomTest);
 		add(flixel.math.FlxVectorTest);
+		add(flixel.text.FlxBitmapTextFieldTest);
 		add(flixel.text.FlxTextTest);
 		add(flixel.tile.FlxTilemapTest);
 		add(flixel.tweens.FlxTweenTest);
