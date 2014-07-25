@@ -18,11 +18,6 @@ class BitmapFrontEnd
 	@:allow(flixel.system.frontEnds.BitmapLogFrontEnd)
 	private var _cache:Map<String, CachedGraphics>;
 	
-	/**
-	 * The default value for the CachedGraphics persist variable. Determines whether or not CachedGraphics are destroyed on a state change.
-	 */
-	public var persistentCachedGraphics:Bool = false;
-	
 	public function new()
 	{
 		clearCache();

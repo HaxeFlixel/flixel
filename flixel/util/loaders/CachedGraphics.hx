@@ -10,6 +10,10 @@ import flixel.util.FlxDestroyUtil;
 class CachedGraphics
 {
 	/**
+	 * The default value for the CachedGraphics persist variable at creation. Determines if CachedGraphics persist through a state change.
+	 */
+	public static var defaultPersist:Bool = false;
+	/**
 	 * Key in BitmapFrontEnd cache
 	 */
 	public var key:String;
@@ -62,7 +66,7 @@ class CachedGraphics
 	{
 		key = Key;
 		bitmap = Bitmap;
-		persist = Persist != null ? Persist : FlxG.bitmap.persistentCachedGraphics;
+		persist = Persist != null ? Persist : defaultPersist;
 	}
 
 	/**
