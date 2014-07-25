@@ -160,8 +160,6 @@ class FlxBitmapTextField extends FlxSprite
 	 */
 	override public function destroy():Void 
 	{
-		font = null;
-		
 		#if FLX_RENDER_BLIT
 		clearPreparedGlyphs(_preparedTextGlyphs);
 		clearPreparedGlyphs(_preparedShadowGlyphs);
