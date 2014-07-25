@@ -58,11 +58,11 @@ class CachedGraphics
 
 	private var _tilesheet:TileSheetData;
 
-	public function new(Key:String, Bitmap:BitmapData, Persist:Bool = false)
+	public function new(Key:String, Bitmap:BitmapData, Persist:Null<Bool> = null)
 	{
 		key = Key;
 		bitmap = Bitmap;
-		persist = Persist;
+		persist = Persist != null ? Persist : FlxG.bitmap.persistentCachedGraphics;
 	}
 
 	/**
