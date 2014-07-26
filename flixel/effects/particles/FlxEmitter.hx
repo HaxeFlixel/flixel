@@ -84,6 +84,10 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	 */
 	public var speed(default, null):FlxRangeBounds<Float>;
 	/**
+	 * Set the angular acceleration range of particles launched from this emitter.
+	 */
+	public var angularAcceleration(default, null):FlxRangeBounds<Float>;
+	/**
 	 * Set the angular drag range of particles launched from this emitter.
 	 */
 	public var angularDrag(default, null):FlxRangeBounds<Float>;
@@ -96,7 +100,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	 */
 	public var angle(default, null):FlxRangeBounds<Float>;
 	/**
-	 * Set this if you want to specify the beginning and ending value of angle, instead of using angularVelocity.
+	 * Set this if you want to specify the beginning and ending value of angle, instead of using angularVelocity(or angularAcceleration).
 	 */
 	public var ignoreAngularVelocity:Bool = false;
 	/**
@@ -189,6 +193,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		
 		velocity = new FlxPointRangeBounds(-100, -100, 100, 100);
 		speed = new FlxRangeBounds<Float>(0, 100);
+		angularAcceleration = new FlxRangeBounds<Float>(0, 0);
 		angularDrag = new FlxRangeBounds<Float>(0, 0);
 		angularVelocity = new FlxRangeBounds<Float>(0, 0);
 		angle = new FlxRangeBounds<Float>(0);
@@ -219,6 +224,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		_point = FlxDestroyUtil.put(_point);
 		
 		blend = null;
+		angularAcceleration = null;
 		angularDrag = null;
 		angularVelocity = null;
 		angle = null;
@@ -487,6 +493,8 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		
 		if (!ignoreAngularVelocity)
 		{
+			particle.angularAcceleration = FlxG.random.float(angularAcceleration.start.min, angularAcceleration.start.max);
+
 			particle.angularVelocityRange.start = FlxG.random.float(angularVelocity.start.min, angularVelocity.start.max);
 			particle.angularVelocityRange.end = FlxG.random.float(angularVelocity.end.min, angularVelocity.end.max);
 			particle.angularVelocity = particle.angularVelocityRange.start;
