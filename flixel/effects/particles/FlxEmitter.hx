@@ -84,6 +84,10 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	 */
 	public var speed(default, null):FlxRangeBounds<Float>;
 	/**
+	 * Set the angular drag range of particles launched from this emitter.
+	 */
+	public var angularDrag(default, null):FlxRangeBounds<Float>;
+	/**
 	 * The angular velocity range of particles launched from this emitter.
 	 */
 	public var angularVelocity(default, null):FlxRangeBounds<Float>;
@@ -185,6 +189,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		
 		velocity = new FlxPointRangeBounds(-100, -100, 100, 100);
 		speed = new FlxRangeBounds<Float>(0, 100);
+		angularDrag = new FlxRangeBounds<Float>(0, 0);
 		angularVelocity = new FlxRangeBounds<Float>(0, 0);
 		angle = new FlxRangeBounds<Float>(0);
 		launchAngle = new FlxBounds<Float>(-180, 180);
@@ -214,6 +219,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		_point = FlxDestroyUtil.put(_point);
 		
 		blend = null;
+		angularDrag = null;
 		angularVelocity = null;
 		angle = null;
 		speed = null;
@@ -484,6 +490,8 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 			particle.angularVelocityRange.start = FlxG.random.float(angularVelocity.start.min, angularVelocity.start.max);
 			particle.angularVelocityRange.end = FlxG.random.float(angularVelocity.end.min, angularVelocity.end.max);
 			particle.angularVelocity = particle.angularVelocityRange.start;
+
+			particle.angularDrag = FlxG.random.float(angularDrag.start.min, angularDrag.start.max);
 		}
 		else
 		{
