@@ -430,7 +430,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	 */
 	public function start(Explode:Bool = true, Frequency:Float = 0.1, Quantity:Int = 0):FlxTypedEmitter<T>
 	{
-		revive();
+		exists = true;
 		visible = true;
 		emitting = true;
 		
