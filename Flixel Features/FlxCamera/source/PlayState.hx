@@ -1,24 +1,14 @@
 package;
 
-import flixel.addons.nape.FlxNapeSprite;
-import flixel.addons.nape.FlxNapeState;
-import flixel.util.FlxSpriteUtil;
-import haxe.EnumFlags;
-import haxe.EnumTools;
-import nape.Config;
-import nape.geom.Vec2;
-import nape.phys.Body;
-import nape.phys.BodyType;
-import nape.phys.Material;
-import nape.shape.Polygon;
-import flash.display.BitmapData;
 import flash.display.BlendMode;
 import flash.Lib;
+import flixel.addons.nape.FlxNapeState;
 import flixel.FlxCamera;
 import flixel.FlxG;
-import flixel.math.FlxPoint;
 import flixel.FlxSprite;
+import flixel.util.FlxSpriteUtil;
 import HUD;
+import nape.geom.Vec2;
 import openfl.Assets;
 
 /**
@@ -151,7 +141,7 @@ class PlayState extends FlxNapeState
 		add(hud);
 		
 		FlxG.camera.setScrollBoundsRect(LEVEL_MIN_X , LEVEL_MIN_Y , LEVEL_MAX_X + Math.abs(LEVEL_MIN_X), LEVEL_MAX_Y + Math.abs(LEVEL_MIN_Y), true);
-		FlxG.camera.follow(orb, LOCKON, null, 0);
+		FlxG.camera.follow(orb, LOCKON, null, 1);
 		
 		#if TRUE_ZOOM_OUT
 		hudCam = new FlxCamera(440 + 50, 0 + 45, 200, 180); // +50 + 45 For 1/2 zoom out.
@@ -269,9 +259,9 @@ class PlayState extends FlxNapeState
 			setStyle( -1);
 			
 		if (FlxG.keys.justPressed.U)
-			setLerp(.5);
+			setLerp(.1);
 		if (FlxG.keys.justPressed.J)
-			setLerp( -.5);
+			setLerp( -.1);
 			
 		if (FlxG.keys.justPressed.I)
 			setLead(.5);
@@ -306,10 +296,7 @@ class PlayState extends FlxNapeState
 	{
 		var cam = FlxG.camera;
 		cam.followLerp += lerp;
-		
-		if (cam.followLerp < 0)
-			cam.followLerp = 0;
-		
+		cam.followLerp = Math.round(10 * cam.followLerp) / 10; // adding or subtracting .1 causes roundoff errors
 		hud.updateCamLerp(cam.followLerp);
 	}
 	
