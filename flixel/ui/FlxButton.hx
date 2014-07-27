@@ -7,6 +7,7 @@ import flixel.FlxSprite;
 import flixel.input.FlxInput;
 import flixel.input.FlxPointer;
 import flixel.input.IFlxInput;
+import flixel.input.mouse.FlxMouseButton;
 import flixel.input.touch.FlxTouch;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
@@ -120,6 +121,12 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	 * If false, the input has to be pressed while hovering over the button.
 	 */
 	public var allowSwiping:Bool = true;
+#if !FLX_NO_MOUSE
+	/**
+	 * Which mouse buttons can trigger the button - by default only the left mouse button.
+	 */
+	public var mouseButtons:Array<FlxMouseButtonID> = [FlxMouseButtonID.LEFT];
+#end
 	/**
 	 * Maximum distance a pointer can move to still trigger event handlers.
 	 * If it moves beyond this limit, onOut is triggered.
@@ -303,11 +310,14 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		for (camera in cameras)
 		{
 			#if !FLX_NO_MOUSE
-				if (checkInput(FlxG.mouse, FlxG.mouse._leftButton,
-					FlxG.mouse._leftButton.justPressedPosition, camera))
+				for (buttonID in mouseButtons)
 				{
-					overlapFound = true;
-					break;
+					var button = FlxMouseButton.getFromID(buttonID);
+					
+					if (button != null && checkInput(FlxG.mouse, button, button.justPressedPosition, camera))
+					{
+						overlapFound = true;
+					}
 				}
 			#end
 			
@@ -323,7 +333,8 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 			#end
 		}
 		
-		if (status != FlxButton.NORMAL && !overlapFound)
+		if (status != FlxButton.NORMAL &&
+			(!overlapFound || (currentInput != null && currentInput.justReleased)))
 		{
 			onOutHandler();
 		}

@@ -9,6 +9,21 @@ import flixel.math.FlxPoint;
 
 class FlxMouseButton extends FlxInput<Int> implements IFlxDestroyable
 {
+	public static function getFromID(id:FlxMouseButtonID):FlxMouseButton
+	{
+		return switch (id)
+		{
+			case LEFT: FlxG.mouse._leftButton;
+			
+			#if !FLX_NO_MOUSE_ADVANCED
+				case MIDDLE: FlxG.mouse._middleButton;
+				case RIGHT: FlxG.mouse._rightButton;
+			#else
+				case _: return null;
+			#end
+		}
+	}
+	
 	public var justPressedPosition(default, null) = FlxPoint.get();
 	public var justPressedTimeInTicks(default, null):Float = -1;
 	
