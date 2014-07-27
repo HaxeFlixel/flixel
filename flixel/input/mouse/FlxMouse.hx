@@ -31,7 +31,7 @@ private class GraphicCursor extends BitmapData {}
  * This class helps contain and track the mouse pointer in your game.
  * Automatically accounts for parallax scrolling, etc.
  */
-@:allow(flixel.system.replay.FlxReplay)
+@:allow(flixel)
 class FlxMouse extends FlxPointer implements IFlxInputManager
 {
 	/**

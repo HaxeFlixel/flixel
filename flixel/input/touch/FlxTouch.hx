@@ -8,6 +8,7 @@ import flixel.FlxObject;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.FlxInput;
 import flixel.input.FlxSwipe;
+import flixel.input.IFlxInput;
 import flixel.math.FlxPoint;
 import flixel.util.FlxDestroyUtil;
 
@@ -16,7 +17,7 @@ import flixel.util.FlxDestroyUtil;
  * Automatically accounts for parallax scrolling, etc.
  */
 @:allow(flixel.input.touch.FlxTouchManager)
-class FlxTouch extends FlxPointer implements IFlxDestroyable
+class FlxTouch extends FlxPointer implements IFlxDestroyable implements IFlxInput
 {	
 #if !FLX_NO_TOUCH
 	/**
@@ -33,8 +34,8 @@ class FlxTouch extends FlxPointer implements IFlxDestroyable
 	private var input:FlxInput<Int>;
 	private var flashPoint = new Point();
 	
-	public var justPressedPosition = FlxPoint.get();
-	public var justPressedTimeInTicks:Float;
+	public var justPressedPosition(default, null) = FlxPoint.get();
+	public var justPressedTimeInTicks(default, null):Float = -1;
 #end
 
 	public function destroy():Void

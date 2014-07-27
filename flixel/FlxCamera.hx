@@ -10,7 +10,6 @@ import flash.geom.Rectangle;
 import flixel.FlxCamera.FlxCameraShakeDirection;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
-import flixel.math.FlxRandom;
 import flixel.math.FlxRect;
 import flixel.system.layer.DrawStackItem;
 import flixel.system.layer.TileSheetExt;
@@ -184,7 +183,6 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Internal, used to render buffer to screen space.
 	 */
-	@:allow(flixel.system.frontEnds.CameraFrontEnd)
 	private var _flashOffset:FlxPoint;
 	/**
 	 * Internal, used to control the "flash" special effect.
@@ -409,8 +407,6 @@ class FlxCamera extends FlxBasic
 		
 		_scrollTarget = FlxPoint.get();
 		
-		x = X;
-		y = Y;
 		// Use the game dimensions if width / height are <= 0
 		width = (Width <= 0) ? FlxG.width : Width;
 		height = (Height <= 0) ? FlxG.height : Height;
@@ -438,17 +434,15 @@ class FlxCamera extends FlxBasic
 		canvas.y = -height * 0.5;
 		#end
 		
-		#if FLX_RENDER_BLIT
-		color = 0xffffff;
-		#end
+		set_color(FlxColor.WHITE);
 		
 		flashSprite = new Sprite();
-		zoom = Zoom; //sets the scale of flash sprite, which in turn loads flashoffset values
+		set_zoom(Zoom); //sets the scale of flash sprite, which in turn loads flashoffset values
 		
-		_flashOffset.set((width * 0.5 * zoom), (height * 0.5 * zoom));
+		_flashOffset.set(width * 0.5 * zoom, height * 0.5 * zoom);
 		
-		flashSprite.x = x + _flashOffset.x;
-		flashSprite.y = y + _flashOffset.y;
+		x = X;
+		y = Y;
 		
 		#if FLX_RENDER_BLIT
 		flashSprite.addChild(_flashBitmap);
@@ -543,6 +537,8 @@ class FlxCamera extends FlxBasic
 		updateFlash();
 		updateFade();
 		updateShake();
+		
+		updateFlashSpritePosition();
 	}
 	
 	/**
@@ -709,13 +705,15 @@ class FlxCamera extends FlxBasic
 					_fxShakeOffset.y = FlxG.random.float( -_fxShakeIntensity * height, _fxShakeIntensity * height) * zoom;
 				}
 			}
-			
-			// Camera shake fix for target follow.
-			if (target != null)
-			{
-				flashSprite.x = x + _flashOffset.x;
-				flashSprite.y = y + _flashOffset.y;
-			}
+		}
+	}
+	
+	private function updateFlashSpritePosition():Void
+	{
+		if (flashSprite != null)
+		{
+			flashSprite.x = x + _flashOffset.x;
+			flashSprite.y = y + _flashOffset.y;
 		}
 	}
 	
@@ -884,8 +882,7 @@ class FlxCamera extends FlxBasic
 		_fxFlashAlpha = 0.0;
 		_fxFadeAlpha = 0.0;
 		_fxShakeDuration = 0;
-		flashSprite.x = x + _flashOffset.x;
-		flashSprite.y = y + _flashOffset.y;
+		updateFlashSpritePosition();
 	}
 	
 	/**
@@ -1063,10 +1060,10 @@ class FlxCamera extends FlxBasic
 	 * Specify the bounds of where the camera is allowed to move.
 	 * Set the boundary of a side to null to leave that side unbounded.
 	 * 
-	 * @param	MinX				The minimum X value the camera can scroll to
-	 * @param	MaxX				The maximum X value the camera can scroll to
-	 * @param	MinY				The minimum Y value the camera can scroll to
-	 * @param	MaxY				The maximum Y value the camera can scroll to
+	 * @param	MinX	The minimum X value the camera can scroll to
+	 * @param	MaxX	The maximum X value the camera can scroll to
+	 * @param	MinY	The minimum Y value the camera can scroll to
+	 * @param	MaxY	The maximum Y value the camera can scroll to
 	 */
 	public function setScrollBounds(MinX:Null<Float>, MaxX:Null<Float>, MinY:Null<Float>, MaxY:Null<Float>):Void
 	{
@@ -1081,10 +1078,6 @@ class FlxCamera extends FlxBasic
 	{
 		flashSprite.scaleX = X;
 		flashSprite.scaleY = Y;
-		
-		//camera positioning fix from bomski (https://github.com/Beeblerox/HaxeFlixel/issues/66)
-		_flashOffset.x = width * 0.5 * X;
-		_flashOffset.y = height * 0.5 * Y;	
 	}
 	
 	/**
@@ -1220,21 +1213,25 @@ class FlxCamera extends FlxBasic
 	
 	private function set_x(x:Float):Float
 	{
-		if (flashSprite != null)
-		{
-			flashSprite.x = x + _flashOffset.x;
-		}
-		return this.x = x;
+		this.x = x;
+		updateFlashSpritePosition();
+		return x;
 	}
-	
 	
 	private function set_y(y:Float):Float
 	{
+		this.y = y;
+		updateFlashSpritePosition();
+		return y;
+	}
+	
+	override private function set_visible(visible:Bool):Bool
+	{
 		if (flashSprite != null)
 		{
-			flashSprite.y = y + _flashOffset.y;
+			flashSprite.visible = visible;
 		}
-		return this.y = y;
+		return this.visible = visible;
 	}
 }
 
