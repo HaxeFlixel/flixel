@@ -60,9 +60,11 @@ class FlxCamera extends FlxBasic
 	 */
 	public var targetOffset(default, null):FlxPoint;
 	/**
-	 * Used to smoothly track the camera as it follows.
+	 * Used to smoothly track the camera as it follows: The percent of the distance to the follow target the camera moves per 1/60 sec.
+	 * Values are bounded between 0.0 and FlxG.updateFrameRate / 60 for consistency acaross framerates.
+	 * The maximum value means no camera easing. A value of 0 means the camera does not move.
 	 */
-	public var followLerp:Float = 0;
+	public var followLerp(default, set):Float = 60 / FlxG.updateFramerate;
 	/**
 	 * You can assign a "dead zone" to the camera in order to better control its movement.
 	 * The camera will always keep the focus object inside the dead zone, unless it is bumping up against 
@@ -625,14 +627,14 @@ class FlxCamera extends FlxBasic
 				_lastTargetPosition.y = target.y;
 			}
 			
-			if (followLerp == 0) 
-			{
-				scroll.copyFrom(_scrollTarget); // Prevents Camera Jittering with no lerp.
-			} 
-			else 
-			{
-				scroll.x += (_scrollTarget.x - scroll.x) * FlxG.elapsed / (FlxG.elapsed + followLerp * FlxG.elapsed);
-				scroll.y += (_scrollTarget.y - scroll.y) * FlxG.elapsed / (FlxG.elapsed + followLerp * FlxG.elapsed);
+			if (followLerp >= 60 / FlxG.updateFramerate) {
+				// no easing
+				scroll.copyFrom(_scrollTarget);
+			}
+			
+			else {
+				scroll.x += (_scrollTarget.x - scroll.x) * followLerp * FlxG.updateFramerate / 60;
+				scroll.y += (_scrollTarget.y - scroll.y) * followLerp * FlxG.updateFramerate / 60;
 			}
 		}
 	}
@@ -726,7 +728,7 @@ class FlxCamera extends FlxBasic
 	 * @param	Offset	Offset the follow deadzone by a certain amount. Only applicable for PLATFORMER and LOCKON styles.
 	 * @param	Lerp	How much lag the camera should have (can help smooth out the camera movement).
 	 */
-	public function follow(Target:FlxObject, ?Style:FlxCameraFollowStyle, ?Offset:FlxPoint, Lerp:Float = 0):Void
+	public function follow(Target:FlxObject, ?Style:FlxCameraFollowStyle, ?Offset:FlxPoint, Lerp:Float = 1):Void
 	{
 		if (Style == null)
 		{
@@ -1087,6 +1089,11 @@ class FlxCamera extends FlxBasic
 	public inline function getScale():FlxPoint
 	{
 		return _point.set(flashSprite.scaleX, flashSprite.scaleY);
+	}
+	
+	private function set_followLerp(Value:Float):Float
+	{
+		return followLerp = FlxMath.bound(Value, 0, 60 / FlxG.updateFramerate);
 	}
 	
 	private function set_width(Value:Int):Int
