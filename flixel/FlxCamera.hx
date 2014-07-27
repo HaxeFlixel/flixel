@@ -42,12 +42,12 @@ class FlxCamera extends FlxBasic
 	 * The X position of this camera's display.  Zoom does NOT affect this number.
 	 * Measured in pixels from the left side of the flash window.
 	 */
-	public var x:Float;
+	public var x(default, set):Float;
 	/**
 	 * The Y position of this camera's display.  Zoom does NOT affect this number.
 	 * Measured in pixels from the top of the flash window.
 	 */
-	public var y:Float;
+	public var y(default, set):Float;
 	/**
 	 * Tells the camera to use this following style.
 	 */
@@ -1216,6 +1216,25 @@ class FlxCamera extends FlxBasic
 		_flashBitmap.smoothing = Antialiasing;
 		#end
 		return Antialiasing;
+	}
+	
+	private function set_x(x:Float):Float
+	{
+		if (flashSprite != null)
+		{
+			flashSprite.x = x + _flashOffset.x;
+		}
+		return this.x = x;
+	}
+	
+	
+	private function set_y(y:Float):Float
+	{
+		if (flashSprite != null)
+		{
+			flashSprite.y = y + _flashOffset.y;
+		}
+		return this.y = y;
 	}
 }
 
