@@ -1,5 +1,6 @@
 package flixel.input.touch;
 
+#if !FLX_NO_TOUCH
 import flash.geom.Point;
 import flixel.FlxBasic;
 import flixel.FlxCamera;
@@ -19,7 +20,6 @@ import flixel.util.FlxDestroyUtil;
 @:allow(flixel.input.touch.FlxTouchManager)
 class FlxTouch extends FlxPointer implements IFlxDestroyable implements IFlxInput
 {	
-#if !FLX_NO_TOUCH
 	/**
 	 * The unique ID of this touch. Example: if there are 3 concurrently active touches 
 	 * (and the device supporst that many), they will have the IDs 0, 1 and 2.
@@ -36,18 +36,14 @@ class FlxTouch extends FlxPointer implements IFlxDestroyable implements IFlxInpu
 	
 	public var justPressedPosition(default, null) = FlxPoint.get();
 	public var justPressedTimeInTicks(default, null):Float = -1;
-#end
 
 	public function destroy():Void
 	{
-		#if !FLX_NO_TOUCH
 		input = null;
 		justPressedPosition = FlxDestroyUtil.put(justPressedPosition);
 		flashPoint = null;
-		#end
 	}
 
-#if !FLX_NO_TOUCH
 	/**
 	 * Resets the just pressed/just released flags and sets touch to not pressed.
 	 */
@@ -130,5 +126,7 @@ class FlxTouch extends FlxPointer implements IFlxDestroyable implements IFlxInpu
 	{
 		return input.justPressed;
 	}
-#end
 }
+#else
+class FlxTouch {}
+#end
