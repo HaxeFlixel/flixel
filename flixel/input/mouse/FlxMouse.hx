@@ -12,13 +12,12 @@ import flash.geom.Point;
 import flash.Lib;
 import flash.ui.Mouse;
 import flash.Vector;
-import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.input.IFlxInputManager;
+import flixel.input.mouse.FlxMouseButton;
 import flixel.system.FlxAssets;
 import flixel.system.replay.MouseRecord;
 import flixel.util.FlxDestroyUtil;
-import flixel.math.FlxPoint;
 #if (flash10_2 && !FLX_NO_NATIVE_CURSOR)
 import flash.ui.MouseCursor;
 import flash.ui.MouseCursorData;
@@ -354,15 +353,15 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 		cursorContainer.mouseChildren = false;
 		cursorContainer.mouseEnabled = false;
 		
-		_leftButton = new FlxMouseButton(FlxMouseButton.LEFT);
+		_leftButton = new FlxMouseButton(FlxMouseButtonID.LEFT);
 		
 		_stage = Lib.current.stage;
 		_stage.addEventListener(MouseEvent.MOUSE_DOWN, _leftButton.onDown);
 		_stage.addEventListener(MouseEvent.MOUSE_UP, _leftButton.onUp);
 		
 		#if (!FLX_NO_MOUSE_ADVANCED && (!flash || flash11_2))
-		_middleButton = new FlxMouseButton(FlxMouseButton.MIDDLE);
-		_rightButton = new FlxMouseButton(FlxMouseButton.RIGHT);
+		_middleButton = new FlxMouseButton(FlxMouseButtonID.MIDDLE);
+		_rightButton = new FlxMouseButton(FlxMouseButtonID.RIGHT);
 		
 		_stage.addEventListener(untyped MouseEvent.MIDDLE_MOUSE_DOWN, _middleButton.onDown);
 		_stage.addEventListener(untyped MouseEvent.MIDDLE_MOUSE_UP, _middleButton.onUp);
