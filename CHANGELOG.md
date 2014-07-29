@@ -14,6 +14,7 @@
  * setBounds() -> setScrollBoundsRect()
  * added setScrollBounds()
  * added targetOffset
+ * followLerp is now a range taking values from 0 to (60 / FlxG.updateFramerate) - the closer to zero the more lerp!
 * FlxMath:
  * bound() and inBounds() now accept null as values, meaning "unbounded in that direction"
  * wrapValue() now supports negative values
@@ -71,6 +72,7 @@
  * added a recurse param to the forEach() functions
  * removed callAll() and setAll() - use forEach() instead
  * replaced the parameter array in recycle() with an optional factory method
+ * revive() now calls revive() on all members of a group as well
 * FlxTextField#new(): fix bug with passing null for the Text argument
 * FlxGamepadManager: better handling of disconnecting and reconnecting gamepads. getByID() can now return null.
 * FlxGamepad:
@@ -93,18 +95,23 @@
  * font = null now resets it to the default font
  * fixed an issue where the value returned by get_font() wouldn't be the same as the one passed into set_font()
  * added applyMarkup()
+ * fixed issues with borderStyle and FlxTextFormat on native
 * FlxTypedButton:
  * added input-like getters: pressed, justPressed, released and justReleased
  * now uses animations for statuses instead of setting frameIndex directly for more flexibility (removes allowHighlightOnMobile, adds statusAnimations)
  * disabling the highlight frame is now tied to #if FLX_NO_MOUSE instead of #if mobile
  * labelAlphas[FlxButton.HIGHLIGHT] is now 1 for FLX_NO_MOUSE
  * set_label() now updates the label position
+ * added maxInputMovement
 * FlxMouseEventManager:
  * moved from flixel.plugin.MouseEventManager to flixel.input.mouse.FlxMouseEventManager
  * added removeAll()
  * fixed inaccurate pixel-perfect sprite overlap checks
+ * fixed reorder() for sprites within FlxSpriteGroups
 * FlxObject: added toPoint() and toRect()
-* FlxVector: fixed behaviour of set_length() for (0, 0) vectors
+* FlxVector:
+ * fixed behaviour of set_length() for (0, 0) vectors
+ * fixed subtractNew()
 * PS4 / PS3ButtonID: removed the _BUTTON suffix for consistency with other button ID classes
 * FlxSprite:
  * added graphicLoaded() which is called whenever a new graphic is loaded
@@ -130,6 +137,8 @@
 * Fixed scale modes not working correctly on HTML5
 * FlxPath: fixed an issue where a velocity would be set even if the object positon matches the current node
 * FlxSignal: fixed addOnce() not working on neko
+* CachedGraphics: added defaultPersist
+* Fixed a bug with point pooling that could lead to them being recycled when they shouldn't be
 
 3.3.5
 ------------------------------

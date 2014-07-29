@@ -43,7 +43,7 @@ class FlxPoint implements IFlxPooled
 	 */
 	public static inline function weak(X:Float = 0, Y:Float = 0):FlxPoint
 	{
-		var point = _pool.get().set(X, Y);
+		var point = get(X, Y);
 		point._weak = true;
 		return point;
 	}
@@ -67,6 +67,7 @@ class FlxPoint implements IFlxPooled
 		if (!_inPool)
 		{
 			_inPool = true;
+			_weak = false;
 			_pool.putUnsafe(this);
 		}
 	}

@@ -10,6 +10,11 @@ import flixel.util.FlxDestroyUtil;
 class CachedGraphics
 {
 	/**
+	 * The default value for the CachedGraphics persist variable
+	 * at creation if none is specified in the constructor.
+	 */
+	public static var defaultPersist:Bool = false;
+	/**
 	 * Key in BitmapFrontEnd cache
 	 */
 	public var key:String;
@@ -58,11 +63,11 @@ class CachedGraphics
 
 	private var _tilesheet:TileSheetData;
 
-	public function new(Key:String, Bitmap:BitmapData, Persist:Bool = false)
+	public function new(Key:String, Bitmap:BitmapData, ?Persist:Bool)
 	{
 		key = Key;
 		bitmap = Bitmap;
-		persist = Persist;
+		persist = (Persist != null) ? Persist : defaultPersist;
 	}
 
 	/**

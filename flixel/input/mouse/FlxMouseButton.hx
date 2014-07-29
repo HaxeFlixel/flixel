@@ -9,15 +9,23 @@ import flixel.math.FlxPoint;
 
 class FlxMouseButton extends FlxInput<Int> implements IFlxDestroyable
 {
-	/**
-	 * These IDs are negative to avoid overlaps with possible touch point IDs.
-	 */
-	public static inline var LEFT:Int = -1;
-	public static inline var MIDDLE:Int = -2;
-	public static inline var RIGHT:Int = -3;
+	public static function getFromID(id:FlxMouseButtonID):FlxMouseButton
+	{
+		return switch (id)
+		{
+			case LEFT: FlxG.mouse._leftButton;
+			
+			#if !FLX_NO_MOUSE_ADVANCED
+				case MIDDLE: FlxG.mouse._middleButton;
+				case RIGHT: FlxG.mouse._rightButton;
+			#else
+				case _: return null;
+			#end
+		}
+	}
 	
-	private var justPressedPosition = FlxPoint.get();
-	private var justPressedTimeInTicks:Float;
+	public var justPressedPosition(default, null) = FlxPoint.get();
+	public var justPressedTimeInTicks(default, null):Float = -1;
 	
 	/**
 	 * Upates the last and current state of this mouse button.
@@ -45,7 +53,7 @@ class FlxMouseButton extends FlxInput<Int> implements IFlxDestroyable
 	public function onDown(_):Void
 	{
 		#if !FLX_NO_DEBUG
-		if (ID == LEFT && FlxG.debugger.visible)
+		if (ID == FlxMouseButtonID.LEFT && FlxG.debugger.visible)
 		{
 			if (FlxG.game.debugger.hasMouse)
 			{
@@ -89,5 +97,16 @@ class FlxMouseButton extends FlxInput<Int> implements IFlxDestroyable
 
 		release();
 	}
+}
+
+/**
+ * These IDs are negative to avoid overlaps with possible touch point IDs.
+ */
+@:enum
+abstract FlxMouseButtonID(Int) to Int
+{
+	var LEFT   = -1;
+	var MIDDLE = -2;
+	var RIGHT  = -3;
 }
 #end

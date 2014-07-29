@@ -252,16 +252,9 @@ class CameraFrontEnd
 	{
 		for (camera in list)
 		{
-			if ((camera != null) && camera.exists)
+			if (camera != null && camera.exists && camera.active)
 			{
-				if (camera.active)
-				{
-					camera.update();
-				}
-				
-				camera.flashSprite.x = camera.x + camera._flashOffset.x;
-				camera.flashSprite.y = camera.y + camera._flashOffset.y;
-				camera.flashSprite.visible = camera.visible;
+				camera.update();
 			}
 		}
 	}

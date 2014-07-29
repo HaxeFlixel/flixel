@@ -101,4 +101,17 @@ class FlxGroupTest extends FlxTest
 		}
 		group.members[0].exists = true;
 	}
+
+	@Test
+	function testKillAndRevive():Void
+	{
+		group.kill();
+		group.forEach(function(each){
+			Assert.isFalse(each.exists);
+		});
+		group.revive();
+		group.forEach(function(each){
+			Assert.isTrue(each.exists);
+		});
+	}
 }
