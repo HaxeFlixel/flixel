@@ -6,6 +6,7 @@ import flash.Lib;
 import flixel.FlxG;
 import flixel.addons.ui.FlxUIState;
 import flixel.addons.ui.FlxUI;
+import openfl.events.Event;
 /**
  * @author Lars Doucet
  */
@@ -57,8 +58,8 @@ class State_Battle extends FlxUIState
 		#end
 	}
 	
-	private override function reloadUI():Void {
-		super.reloadUI();
+	private override function reloadUI(?e:Event):Void {
+		super.reloadUI(e);
 		hideFailedUI();
 	}
 	
