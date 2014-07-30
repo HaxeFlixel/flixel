@@ -161,6 +161,7 @@ class FlxRandom
 	 * (This uses the Box-Muller transform algorithm for guassian pseudorandom numbers)
 	 * 
 	 * *Normal distribution: 68% values are within 1 standard deviation, 95% are in 2 StdDevs, 99% in 3 StdDevs.
+	 * See this image: https://github.com/HaxeFlixel/flixel-demos/blob/dev/Performance/FlxRandom/normaldistribution.png
 	 * 
 	 * @param	Mean		The Mean around which the normal distribution is centered
 	 * @param	StdDev		Size of the standard deviation
