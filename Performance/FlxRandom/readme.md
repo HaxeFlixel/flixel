@@ -8,7 +8,7 @@ Some tests may take some time to run, please be patient. Note that the 15-second
 
 Note: the "floatNormal" function returns a random floating point number within a normal distribution:
 
-!["Standard deviation diagram" by Mwtoews - Own work, based (in concept) on figure by Jeremy Kemp, on 2005-02-09. Licensed under Creative Commons Attribution 2.5 via Wikimedia Commons - http://commons.wikimedia.org/wiki/File:Standard_deviation_diagram.svg#mediaviewer/File:Standard_deviation_diagram.svg](https://github.com/HaxeFlixel/flixel-demos/blob/dev/Performance/FlxRandom/normaldistribution.png)
+![Standard deviation diagram" by Mwtoews - Own work, based (in concept) on figure by Jeremy Kemp, on 2005-02-09. Licensed under Creative Commons Attribution 2.5 via Wikimedia Commons - http://commons.wikimedia.org/wiki/File:Standard_deviation_diagram.svg#mediaviewer/File:Standard_deviation_diagram.svg](https://github.com/HaxeFlixel/flixel-demos/blob/dev/Performance/FlxRandom/normaldistribution.png)
 
 
 # Benchmarking Data
