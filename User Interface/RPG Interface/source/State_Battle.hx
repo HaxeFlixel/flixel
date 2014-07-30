@@ -4,12 +4,9 @@ import flixel.addons.ui.FlxUIState;
 import flixel.addons.ui.FlxUITypedButton.FlxUITypedButton;
 import flixel.addons.ui.interfaces.IFlxUIWidget;
 import flixel.FlxG;
-<<<<<<< HEAD
 import flixel.addons.ui.FlxUIState;
 import flixel.addons.ui.FlxUI;
 import openfl.events.Event;
-=======
->>>>>>> 6c6d3b0289f7ec463479339069444f62f74313e1
 /**
  * @author Lars Doucet
  */
@@ -62,11 +59,7 @@ class State_Battle extends FlxUIState
 	}
 	
 	private override function reloadUI(?e:Event):Void {
-<<<<<<< HEAD
 		super.reloadUI(e);
-=======
-		super.reloadUI();
->>>>>>> 6c6d3b0289f7ec463479339069444f62f74313e1
 		hideFailedUI();
 	}
 	
