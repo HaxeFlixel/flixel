@@ -44,7 +44,7 @@ class MenuState extends FlxState
 	inline private static function BUTTON_TEXT():Array<String>
 	{
 		return ["Reset Global Seed", "Get Current Seed", "Generate Integers",
-				"Generate Floats",  "Weighted Coin Flips", "Generate Signs",
+				"Generate Floats", "Normal Distribution Floats", "Weighted Coin Flips", "Generate Signs",
 				"Weighted Pick", "Get Array Object", "Weighted Get Array Object",
 				"Shuffle Array", "Generate Colors", "Test Accuracy"];
 	}
@@ -124,20 +124,22 @@ class MenuState extends FlxState
 			case 3:
 				_pendingFunction = floatRandom;
 			case 4:
-				_pendingFunction = coinFlipsWeighted;
+				_pendingFunction = floatNormal;
 			case 5:
-				_pendingFunction = randomSigns;
+				_pendingFunction = coinFlipsWeighted;
 			case 6:
-				_pendingFunction = weightedPicks;
+				_pendingFunction = randomSigns;
 			case 7:
-				_pendingFunction = getObjects;
+				_pendingFunction = weightedPicks;
 			case 8:
-				_pendingFunction = getObjectsWeighted;
+				_pendingFunction = getObjects;
 			case 9:
-				_pendingFunction = shuffleObj;
+				_pendingFunction = getObjectsWeighted;
 			case 10:
-				_pendingFunction = randomColors;
+				_pendingFunction = shuffleObj;
 			case 11:
+				_pendingFunction = randomColors;
+			case 12:
 				_pendingFunction = verification;
 		}
 		
@@ -170,6 +172,78 @@ class MenuState extends FlxState
 		timer = Lib.getTimer();
 		for (i in 0...TENMIL) dummyInt = Std.int(Math.random() * 1024);
 		_display.text += "\nTime: " + (Lib.getTimer() - timer) + "ms using Math.random().";
+	}
+	
+	private function floatNormal():Void
+	{
+		_display.text = "Randomly generated 10 million floats in a normal distribution";
+		
+		timer = Lib.getTimer();
+		for (i in 0...TENMIL) dummyFloat = FlxG.random.floatNormal();
+		_display.text += "\nTime: " + (Lib.getTimer() - timer) + "ms.";
+		
+		var array:Array<Float> = [];
+		
+		var range:Int = 35;
+		
+		for (i in 0...range)
+		{
+			array.push(-1);
+		}
+		
+		var mean:Float = range / 2;
+		var stdev:Float = range / 8;
+		
+		_display.text += "\n\nNow generating 10 million more for display,\nusing (range)=0-"+(range-1)+", (mean)=" + mean + ", and (standard deviation size)= " + stdev;
+		
+		timer = Lib.getTimer();
+		
+		var max:Int = 0;
+		
+		for (i in 0...TENMIL)
+		{
+			dummyFloat = FlxG.random.floatNormal(mean,stdev);
+			
+			var index:Int = Std.int(dummyFloat);
+			
+			if (index < 0)
+			{
+				index = 0;
+			}
+			if (index > array.length - 1)
+			{
+				index = array.length - 1;
+			}
+			array[index]++;
+			if (array[index] > max)
+			{
+				max = Std.int(array[index]);
+			}
+		}
+		
+		for (i in 0...array.length)
+		{
+			array[i] /= max;
+		}
+		
+		_display.text += "\nDistribution looks like:\n";
+		
+		var stars:Float = range;
+		
+		var str:String = "";
+		for (i in 0...array.length)
+		{
+			str += "\n"+i+"\t";
+			var starCount:Float = Std.int(stars * array[i]);
+			for (j in 0...Std.int(starCount))
+			{
+				str += "*";
+			}
+		}
+		
+		_display.text += str + "\n";
+		
+		_display.text += "\nTime: " + (Lib.getTimer() - timer) + "ms.";
 	}
 	
 	private function floatRandom():Void
