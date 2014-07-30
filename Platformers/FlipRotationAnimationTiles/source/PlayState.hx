@@ -12,6 +12,7 @@ class PlayState extends FlxState
 {
 	var level:Level;
 	var player:Character;
+	
 	/**
 	 * Function that is called up when to state is created to set it up. 
 	 */
@@ -30,20 +31,10 @@ class PlayState extends FlxState
 		
 		add(level.collisionGroup);
 		
-		//FlxG.camera.follow(player);
-		FlxG.camera.bounds = level.getBounds();
-		FlxG.worldBounds.copyFrom(level.getBounds());
+		FlxG.camera.setScrollBoundsRect(level.bounds.x, level.bounds.y, level.bounds.width, level.bounds.height);
+		FlxG.worldBounds.copyFrom(level.bounds);
 		
 		super.create();
-	}
-	
-	/**
-	 * Function that is called when this state is destroyed - you might want to 
-	 * consider setting all objects this state uses to null to help garbage collection.
-	 */
-	override public function destroy():Void
-	{
-		super.destroy();
 	}
 
 	/**
@@ -52,7 +43,6 @@ class PlayState extends FlxState
 	override public function update():Void
 	{
 		level.update();
-		
 		super.update();
 	}	
 }

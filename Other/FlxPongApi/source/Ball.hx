@@ -1,13 +1,12 @@
 package;
 
-import flixel.effects.particles.FlxTypedEmitter.Bounds;
 import flixel.FlxG;
 import flixel.FlxObject;
-import flixel.util.FlxAngle;
+import flixel.math.FlxAngle;
 import flixel.util.FlxCollision;
-import flixel.util.FlxMath;
-import flixel.util.FlxPoint;
-import flixel.util.FlxVelocity;
+import flixel.math.FlxMath;
+import flixel.math.FlxPoint;
+import flixel.math.FlxVelocity;
 
 class Ball extends PongSprite
 {
@@ -32,12 +31,12 @@ class Ball extends PongSprite
 	
 	public function init():Void
 	{
-		_exhaust = Reg.PS.emitterGroup.recycle(Emitter, [x, y, 2, Reg.med_lite], true);
-		_exhaust.gravity = 0.5;
-		_exhaust.start(false, 4, 0.25);
-		_exhaust.xVelocity = new Bounds( -0.1, 0.1);
-		_exhaust.yVelocity = new Bounds( -0.1, 0.1);
-		_exhaust.setAlpha(0.7, 0.9, 0, 0);
+		_exhaust = Reg.PS.emitterGroup.recycle(Emitter, function() {
+			return new Emitter(x, y, 2, Reg.med_lite);
+		}, true);
+		_exhaust.acceleration.set(0, 0.5);
+		_exhaust.velocity.set( -0.1, -0.1, 0.1, 0.1);
+		_exhaust.alpha.set(0.7, 0.9, 0, 0);
 		
 		_emitter = Reg.PS.emitterGroup.add(new Emitter(Std.int(x), Std.int(y), 1));
 		_emitter.width = width;

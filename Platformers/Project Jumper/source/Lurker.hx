@@ -3,7 +3,7 @@ package;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.group.FlxGroup;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 import flixel.util.FlxSpriteUtil;
 /**
  * ...
@@ -36,7 +36,8 @@ class Lurker extends EnemyTemplate
 		_bullets = Bullets;
 		_cooldown = 0;
 		
-		loadGraphic("assets/art/lurkmonsta.png", true, true, 16, 17);
+		loadGraphic("assets/art/lurkmonsta.png", true, 16, 17);
+		
 		animation.add("walking", [0, 1], 18, true);
 		animation.add("burning", [2, 3], 18, true);
 		animation.add("wrecked", [4, 5], 18, true);

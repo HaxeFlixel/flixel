@@ -5,7 +5,7 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxState;
-import flixel.group.FlxTypedGroup;
+import flixel.group.FlxGroup;
 import flixel.text.FlxText;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
@@ -43,7 +43,7 @@ class PlayState extends FlxState
 		}
 		
 		// Make sure we don't ever run out of asteroids! :)
-		resetTimer();
+		resetTimer(new FlxTimer());
 		
 		// Create the player ship
 		_playerShip = new PlayerShip();
@@ -69,7 +69,7 @@ class PlayState extends FlxState
 		
 		// A text to display the score
 		_scoreText = new FlxText(0, 4, FlxG.width, "Score: " + 0);
-		_scoreText.setFormat(null, 16, FlxColor.WHITE, "center", FlxText.BORDER_OUTLINE);
+		_scoreText.setFormat(null, 16, FlxColor.WHITE, CENTER, OUTLINE);
 		add(_scoreText);
 		
 		add(bullets);
@@ -109,11 +109,11 @@ class PlayState extends FlxState
 		FlxG.overlap(asteroids, _playerShip, asteroidHitsShip);
 		FlxG.collide(asteroids);
 		
-		for (bullet in bullets.members)
+		for (bullet in bullets)
 		{
 			if (bullet.exists)
 			{
-				FlxSpriteUtil.screenWrap(cast (bullet,FlxSprite));
+				FlxSpriteUtil.screenWrap(bullet);
 			}
 		}
 	}
@@ -123,7 +123,7 @@ class PlayState extends FlxState
 		_score += Amount;
 		_scoreText.text = "Score: " + _score;
 		_scoreText.alpha = 0;
-		FlxTween.tween(_scoreText, { alpha:1 }, 0.5);
+		FlxTween.tween(_scoreText, { alpha: 1 }, 0.5);
 	}
 	
 	private function bulletHitsAsteroid(Object1:FlxObject, Object2:FlxObject):Void
@@ -141,9 +141,9 @@ class PlayState extends FlxState
 		_scoreText.text = "Game Over! Final score: " + _score + " - Press R to retry.";
 	}
 	
-	private function resetTimer(?Timer:FlxTimer):Void
+	private function resetTimer(Timer:FlxTimer):Void
 	{
-		FlxTimer.start(5, resetTimer);
+		Timer.start(5, resetTimer);
 		spawnAsteroid();
 	}
 	

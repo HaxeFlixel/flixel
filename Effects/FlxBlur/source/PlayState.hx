@@ -6,7 +6,7 @@ import flixel.FlxG;
 import flixel.FlxState;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
-import flixel.util.FlxRandom;
+import flixel.math.FlxRandom;
 
 class PlayState extends FlxState
 {
@@ -22,11 +22,11 @@ class PlayState extends FlxState
 		// Title text, nothing crazy here!
 		var text:FlxText;
 		text = new FlxText(FlxG.width / 4, FlxG.height / 2 - 20, Math.floor(FlxG.width / 2), "FlxBlur");
-		text.setFormat(null, 32, FlxColor.WHITE, "center");
+		text.setFormat(null, 32, FlxColor.WHITE, CENTER);
 		add(text);
 		
 		text = new FlxText(FlxG.width / 4, FlxG.height / 2 + 20, Math.floor(FlxG.width / 2), "press space to toggle");
-		text.setFormat(null, 16, FlxColor.BLUE, "center");
+		text.setFormat(null, 16, FlxColor.BLUE, CENTER);
 		add(text);
 		
 		// This is the particle emitter that spews things off the bottom of the screen.
@@ -34,9 +34,8 @@ class PlayState extends FlxState
 		// create the emitter, then we create 50 32x32 sprites and add them to it.
 		var emitter:FlxEmitter = new FlxEmitter(0, FlxG.height + 20, 50);
 		emitter.width = FlxG.width;
-		emitter.gravity = -40;
-		emitter.setXSpeed( -20, 20);
-		emitter.setYSpeed( -75, -25);
+		emitter.acceleration.set(0, -40);
+		emitter.velocity.set( -20, -75, 20, -25);
 		
 		var particle:FlxParticle;
 		var particles:Int = 50;
@@ -45,12 +44,12 @@ class PlayState extends FlxState
 		for (i in 0...particles)
 		{
 			particle = new FlxParticle();
-			particle.makeGraphic(32, 32, colors[Std.int(FlxRandom.float() * colors.length)]);
+			particle.makeGraphic(32, 32, colors[Std.int(FlxG.random.float() * colors.length)]);
 			particle.exists = false;
 			emitter.add(particle);
 		}
 		
-		emitter.start(false, 0, 0.1);
+		emitter.start(false, 0.1);
 		add(emitter);
 		
 		// Let the player toggle the effect with the space bar.  Effect starts on.

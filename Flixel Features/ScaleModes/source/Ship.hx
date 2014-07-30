@@ -2,8 +2,8 @@ package;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.util.FlxRandom;
-import flixel.util.FlxVelocity;
+import flixel.math.FlxRandom;
+import flixel.math.FlxVelocity;
 
 /**
  * ...
@@ -13,7 +13,7 @@ class Ship extends FlxSprite
 {
 	public function new(Velocity:Float, Angle:Float) 
 	{
-		super(FlxRandom.intRanged(0, FlxG.width), FlxRandom.intRanged(0, FlxG.height), "assets/ship.png");
+		super(FlxG.random.int(0, FlxG.width), FlxG.random.int(0, FlxG.height), "assets/ship.png");
 		angle = Angle;
 		velocity = FlxVelocity.velocityFromAngle(Math.floor(Angle + 270), Math.floor(Velocity));
 	}

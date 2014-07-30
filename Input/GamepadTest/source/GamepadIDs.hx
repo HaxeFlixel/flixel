@@ -15,12 +15,10 @@ class GamepadIDs
 	public static inline var Y = #if (OUYA) OUYAButtonID.Y #else XboxButtonID.Y #end;
 	public static inline var LB = #if (OUYA) OUYAButtonID.LB #else XboxButtonID.LB #end;
 	public static inline var RB = #if (OUYA) OUYAButtonID.RB #else XboxButtonID.RB #end;
-	public static inline var START = #if (OUYA) OUYAButtonID.RIGHT_ANALOGUE #else XboxButtonID.START #end; // hax: there's no start button on the OUYA
-	public static inline var SELECT = #if (OUYA) OUYAButtonID.LEFT_ANALOGUE #else XboxButtonID.BACK #end;
-	public static inline var LEFT_ANALOGUE = #if (OUYA) OUYAButtonID.LEFT_ANALOGUE #else XboxButtonID.LEFT_ANALOGUE #end;
-	public static inline var RIGHT_ANALOGUE = #if (OUYA) OUYAButtonID.RIGHT_ANALOGUE #else XboxButtonID.RIGHT_ANALOGUE #end;
-	public static inline var LEFT_ANALOGUE_X = #if (OUYA) OUYAButtonID.LEFT_ANALOGUE_X #else XboxButtonID.LEFT_ANALOGUE_X #end;
-	public static inline var LEFT_ANALOGUE_Y = #if (OUYA) OUYAButtonID.LEFT_ANALOGUE_Y #else XboxButtonID.LEFT_ANALOGUE_Y #end;
-	public static inline var RIGHT_ANALOGUE_X = #if (OUYA) OUYAButtonID.RIGHT_ANALOGUE_X #else XboxButtonID.RIGHT_ANALOGUE_X #end;
-	public static inline var RIGHT_ANALOGUE_Y = #if (OUYA) OUYAButtonID.RIGHT_ANALOGUE_Y #else XboxButtonID.RIGHT_ANALOGUE_Y #end;
+	public static inline var START = #if (OUYA) OUYAButtonID.RIGHT_ANALOG #else XboxButtonID.START #end; // hax: there's no start button on the OUYA
+	public static inline var SELECT = #if (OUYA) OUYAButtonID.LEFT_ANALOG #else XboxButtonID.BACK #end;
+	public static inline var LEFT_ANALOG = #if (OUYA) OUYAButtonID.LEFT_ANALOG #else XboxButtonID.LEFT_ANALOG #end;
+	public static inline var RIGHT_ANALOG = #if (OUYA) OUYAButtonID.RIGHT_ANALOG #else XboxButtonID.RIGHT_ANALOG #end;
+	public static var LEFT_ANALOG_STICK = #if (OUYA) OUYAButtonID.LEFT_ANALOG_STICK #else XboxButtonID.LEFT_ANALOG_STICK #end;
+	public static var RIGHT_ANALOG_STICK = #if (OUYA) OUYAButtonID.RIGHT_ANALOG_STICK #else XboxButtonID.RIGHT_ANALOG_STICK #end;
 }

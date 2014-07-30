@@ -36,11 +36,11 @@ class Player extends FlxSprite
 		// Smooth slidey walking controls
 		acceleration.x = 0;
 		
-		if (FlxG.keys.anyPressed(["LEFT", "A"]))
+		if (FlxG.keys.anyPressed([LEFT, A]))
 		{
 			acceleration.x -= drag.x;
 		}
-		if (FlxG.keys.anyPressed(["RIGHT", "D"]))
+		if (FlxG.keys.anyPressed([RIGHT, D]))
 		{
 			acceleration.x += drag.x;
 		}
@@ -48,7 +48,7 @@ class Player extends FlxSprite
 		if (isTouching(FlxObject.FLOOR))
 		{
 			// Jump controls
-			if (FlxG.keys.anyJustPressed(["UP", "W", "SPACE"]))
+			if (FlxG.keys.anyJustPressed([UP, W, SPACE]))
 			{
 				velocity.y = -acceleration.y*0.51;
 				animation.play("jump");

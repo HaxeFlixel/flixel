@@ -11,26 +11,26 @@
     <movie version="3" />
     <movie minorVersion="0" />
     <movie platform="NME" />
-    <movie background="FFFFFF" />
+    <movie background="000000" />
   </output>
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
     <class path="source" />
-    <class path="export\windows\cpp\haxe" />
+    <class path="export\flash\haxe" />
   </classpaths>
   <!-- Build options -->
   <build>
-    <option directives="tools=1&#xA;HXCPP_STACK_TRACE&#xA;profile_cpp&#xA;openfl_ver=1.0.10&#xA;HXCPP_DEBUG_LINK&#xA;openfl&#xA;display&#xA;windows&#xA;desktop" />
+    <option directives="tools=1.4.0&#xA;FLX_NO_DEBUG&#xA;NAPE_RELEASE_BUILD&#xA;FLX_RENDER_BLIT&#xA;display&#xA;web" />
     <option flashStrict="False" />
+    <option noInlineOnDebug="False" />
     <option mainClass="ApplicationMain" />
     <option enabledebug="False" />
-    <option additional="--no-output&#xA;--macro allowPackage(&quot;flash&quot;)" />
+    <option additional="--no-output&#xA;-swf-version 11.8&#xA;#--remap nme:flash" />
   </build>
   <!-- haxelib libraries -->
   <haxelib>
-    <library name="openfl" />
     <library name="flixel" />
-    <library name="flixel-addons" />
+    <library name="openfl" />
     <library name="spinehx" />
   </haxelib>
   <!-- Class files to compile (other referenced classes will automatically be included) -->

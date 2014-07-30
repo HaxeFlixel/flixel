@@ -8,7 +8,7 @@ import flixel.group.FlxGroup;
 import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
 import flixel.util.FlxColor;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 import openfl.Assets;
 
 class PlayState extends FlxState
@@ -37,27 +37,25 @@ class PlayState extends FlxState
 		
 		_restart = false;
 		
-		add(background.loadMap(Assets.getText("assets/levels/mapCSV_Group1_Map1back.csv"), "assets/art/area02_level_tiles2.png", 16, 16, FlxTilemap.OFF));
+		add(background.loadMap(Assets.getText("assets/levels/mapCSV_Group1_Map1back.csv"), "assets/art/area02_level_tiles2.png", 16, 16));
 		background.scrollFactor.x = background.scrollFactor.y = .5;
 		
 		add(map.loadMap(Assets.getText("assets/levels/mapCSV_Group1_Map1.csv"), "assets/art/area02_level_tiles2.png", 16, 16));
 		add(ladders.loadMap(Assets.getText("assets/levels/mapCSV_Group1_Ladders.csv"), "assets/art/area02_level_tiles2.png", 16, 16));
 		
-		FlxG.camera.setBounds(0, 0, map.width, map.height);
+		FlxG.camera.setScrollBoundsRect(0, 0, map.width, map.height);
 		FlxG.worldBounds.set(0, 0, map.width, map.height);
 		
 		// Set up the gibs
 		_gibs = new FlxEmitter();
-		_gibs.setXSpeed( -150, 150);
-		_gibs.setYSpeed( -200, 0);
-		_gibs.setRotation( -720, 720);
-		_gibs.makeParticles("assets/art/lizgibs.png", 25, 16, true, .5);
+		_gibs.velocity.set( -150, -200, 150, 0);
+		_gibs.angularVelocity.set( -720, 720);
+		_gibs.loadParticles("assets/art/lizgibs.png", 25, 16, true);
 		
 		_mongibs = new FlxEmitter();
-		_mongibs.setXSpeed( -150, 150);
-		_mongibs.setYSpeed( -200, 0);
-		_mongibs.setRotation( -720, 720);
-		_mongibs.makeParticles("assets/art/spikegibs.png", 25, 16, true, .5);
+		_mongibs.velocity.set( -150, -200, 150, 0);
+		_mongibs.angularVelocity.set( -720, 720);
+		_mongibs.loadParticles("assets/art/spikegibs.png", 25, 16, true);
 		
 		// Create the actual group of bullets here
 		_bullets = new FlxGroup();
@@ -98,13 +96,13 @@ class PlayState extends FlxState
 		
 		// HUD - score
 		_score = new FlxText(0, 0, FlxG.width);
-		_score.setFormat(null, 16, FlxColor.YELLOW, "center", FlxText.BORDER_OUTLINE, 0x131c1b);
+		_score.setFormat(null, 16, FlxColor.YELLOW, CENTER, OUTLINE, 0x131c1b);
 		_score.scrollFactor.set(0, 0);
 		add(_score);
 		
 		// Set up the game over text
 		_text1 = new FlxText(0, 30, FlxG.width, "Press R to Restart");
-		_text1.setFormat(null, 40, FlxColor.RED, "center", FlxText.BORDER_OUTLINE, FlxColor.BLACK);
+		_text1.setFormat(null, 40, FlxColor.RED, CENTER, OUTLINE, FlxColor.BLACK);
 		_text1.visible = false;
 		_text1.antialiasing = true;
 		_text1.scrollFactor.set(0, 0);

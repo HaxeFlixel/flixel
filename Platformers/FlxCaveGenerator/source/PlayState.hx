@@ -9,9 +9,9 @@ import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
 import flixel.ui.FlxButton;
 import flixel.util.FlxColor;
-import flixel.util.FlxMath;
-import flixel.util.FlxPoint;
-import flixel.util.FlxRandom;
+import flixel.math.FlxMath;
+import flixel.math.FlxPoint;
+import flixel.math.FlxRandom;
 import flixel.util.FlxSpriteUtil;
 import haxe.Timer;
 
@@ -26,7 +26,6 @@ class PlayState extends FlxState
 	override public function create():Void 
 	{
 		FlxG.cameras.bgColor = FlxColor.BLACK;
-		FlxG.mouse.useSystemCursor = true;
 		
 		// Create the tilemap for the cave
 		_tilemap = new FlxTilemap();
@@ -43,7 +42,7 @@ class PlayState extends FlxState
 		uiBackground.alpha = 0.85;
 		
 		var title:FlxText = new FlxText(UI_POS_X, 2, UI_WIDTH, "FlxCaveGenerator");
-		title.setFormat(null, 16, FlxColor.BROWN, "center", FlxText.BORDER_OUTLINE_FAST, FlxColor.BLACK);
+		title.setFormat(null, 16, FlxColor.BROWN, CENTER, OUTLINE_FAST, FlxColor.BLACK);
 		
 		var smoothingSlider:FlxSlider = new FlxSlider(this, "_smoothingIterations", FlxG.width - 180, 50, 0, 15, 150);
 		smoothingSlider.nameLabel.text = "Smoothing Iterations";
@@ -54,7 +53,7 @@ class PlayState extends FlxState
 		var generationButton:FlxButton = new FlxButton(FlxG.width - 140, 190, "[R]egenerate", generateCave);
 		
 		_generationTime = new FlxText(UI_POS_X, 220, UI_WIDTH);
-		_generationTime.setFormat(null, 8, FlxColor.BLACK, "center");
+		_generationTime.setFormat(null, 8, FlxColor.BLACK, CENTER);
 		
 		// Add all the stuff in correct order
 		add(_tilemap);
@@ -109,12 +108,12 @@ class PlayState extends FlxState
 		_generationTime.alpha = 0;
 		
 		// Loads the cave to the tilemap
-		_tilemap.loadMap(caveData, "assets/caveWallTiles.png", 8, 8, FlxTilemap.AUTO);
+		_tilemap.loadMap(caveData, "assets/caveWallTiles.png", 8, 8, AUTO);
 		_tilemap.updateBuffers();
 		
 		// Find an empty tile for the player
 		var emptyTiles:Array<FlxPoint> = _tilemap.getTileCoords(0, false);
-		var randomEmptyTile:FlxPoint = emptyTiles[FlxRandom.intRanged(0, emptyTiles.length)];
+		var randomEmptyTile:FlxPoint = emptyTiles[FlxG.random.int(0, emptyTiles.length)];
 		_player.setPosition(randomEmptyTile.x, randomEmptyTile.y);
 	}
 }

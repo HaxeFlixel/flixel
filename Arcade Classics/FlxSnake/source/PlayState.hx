@@ -9,8 +9,8 @@ import flixel.group.FlxSpriteGroup;
 import flixel.system.FlxAssets;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
-import flixel.util.FlxPoint;
-import flixel.util.FlxRandom;
+import flixel.math.FlxPoint;
+import flixel.math.FlxRandom;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxTimer;
 
@@ -47,7 +47,8 @@ class PlayState extends FlxState
 		
 		// Start by creating the head of the snake
 		_snakeHead = new FlxSprite(screenMiddleX - _blockSize * 2, screenMiddleY);
-		_snakeHead.makeGraphic(_blockSize - 2, _blockSize - 2, FlxColor.OLIVE);
+		_snakeHead.makeGraphic(_blockSize - 2, _blockSize - 2, FlxColor.LIME);
+		
 		_snakeHead.facing = FlxObject.LEFT;
 		offestSprite(_snakeHead);
 		
@@ -97,7 +98,7 @@ class PlayState extends FlxState
 		// Only continue if we're still alive
 		if (!_snakeHead.alive)
 		{
-			if (FlxG.keys.anyJustReleased(["SPACE", "R"]))
+			if (FlxG.keys.anyJustReleased([SPACE, R]))
 			{
 				FlxG.resetState();
 			}
@@ -114,19 +115,19 @@ class PlayState extends FlxState
 		// WASD / arrow keys to control the snake
 		// Also make sure you can't travel in the opposite direction,
 		// because that causes quick and frustrating deaths!
-		if (FlxG.keys.anyPressed(["UP", "W"]) && _snakeHead.facing != FlxObject.DOWN)
+		if (FlxG.keys.anyPressed([UP, W]) && _snakeHead.facing != FlxObject.DOWN)
 		{
 			_snakeHead.facing = FlxObject.UP;
 		}
-		else if (FlxG.keys.anyPressed(["DOWN", "S"]) && _snakeHead.facing != FlxObject.UP)
+		else if (FlxG.keys.anyPressed([DOWN, S]) && _snakeHead.facing != FlxObject.UP)
 		{
 			_snakeHead.facing = FlxObject.DOWN;
 		}
-		else if (FlxG.keys.anyPressed(["LEFT", "A"]) && _snakeHead.facing != FlxObject.RIGHT)
+		else if (FlxG.keys.anyPressed([LEFT, A]) && _snakeHead.facing != FlxObject.RIGHT)
 		{
 			_snakeHead.facing = FlxObject.LEFT;
 		}
-		else if (FlxG.keys.anyPressed(["RIGHT", "D"]) && _snakeHead.facing != FlxObject.LEFT)
+		else if (FlxG.keys.anyPressed([RIGHT, D]) && _snakeHead.facing != FlxObject.LEFT)
 		{
 			_snakeHead.facing = FlxObject.RIGHT;
 		}
@@ -157,7 +158,7 @@ class PlayState extends FlxState
 		
 		// Our reward - a new segment! :)
 		addSegment();
-		FlxG.sound.load(FlxAssets.getSound("assets/sounds/beep").play());
+		FlxG.sound.load(FlxAssets.getSound("assets/sounds/beep")).play();
 		
 		// Become faster each pickup - set a max speed though!
 		if (_movementIntervall >= MIN_INTERVALL)
@@ -169,8 +170,8 @@ class PlayState extends FlxState
 	private function randomizeFruitPosition(?Object1:FlxObject, ?Object2:FlxObject):Void
 	{
 		// Pick a random place to put the _fruit down
-		_fruit.x = FlxRandom.intRanged(0, Math.floor(FlxG.width / 8) - 1) * 8;
-		_fruit.y = FlxRandom.intRanged(0, Math.floor(FlxG.height / 8) - 1) * 8;
+		_fruit.x = FlxG.random.int(0, Math.floor(FlxG.width / 8) - 1) * 8;
+		_fruit.y = FlxG.random.int(0, Math.floor(FlxG.height / 8) - 1) * 8;
 		
 		// Check that the coordinates we picked aren't already covering the snake, if they are then run this function again
 		FlxG.overlap(_fruit, _snakeBody, randomizeFruitPosition);
@@ -201,7 +202,7 @@ class PlayState extends FlxState
 			return;
 		}
 		
-		FlxTimer.start(_movementIntervall / FlxG.updateFramerate, resetTimer);
+		new FlxTimer(_movementIntervall / FlxG.updateFramerate, resetTimer);
 		moveSnake();
 	}
 	
@@ -231,12 +232,7 @@ class PlayState extends FlxState
 		
 		for (i in 0..._headPositions.length)
 		{
-			var segment:FlxObject = cast _snakeBody.members[i];
-			
-			if (segment != null)
-			{
-				segment.setPosition(_headPositions[i].x, _headPositions[i].y);
-			}
+			_snakeBody.members[i].setPosition(_headPositions[i].x, _headPositions[i].y);
 		}
 	}
 }

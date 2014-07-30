@@ -36,12 +36,12 @@ class PlayState extends FlxUIState
 		_list_blends = ["normal", "darken", "multiply", "lighten", "screen", "overlay", "hardlight", "difference", "add", "subtract", "invert"];
 		
 		var bkg:FlxSprite = new FlxSprite(0, 0);
-		bkg.makeGraphic(FlxG.width,FlxG.height,0xFF808080);
+		bkg.makeGraphic(FlxG.width, FlxG.height, 0xFF808080);
 		add(bkg);
 		
 		var label_alpha:FlxText = new FlxText(2, 2, 50, "Alpha:");
 		label_alpha.color = 0xFFFFFF;
-		label_alpha.setBorderStyle(FlxText.BORDER_OUTLINE_FAST);
+		label_alpha.setBorderStyle(OUTLINE_FAST);
 		add(label_alpha);
 		
 		_step_alpha = new FlxUINumericStepper(40, 2, 0.01, 1.00, 0.00, 1.00, 2);
@@ -86,7 +86,7 @@ class PlayState extends FlxUIState
 			var label:FlxText = new FlxText(top.x, top.y, cast top.width, str);
 			label.y -= label.height;
 			label.color = 0xffffff;
-			label.setBorderStyle(FlxText.BORDER_OUTLINE_FAST);
+			label.setBorderStyle(OUTLINE_FAST);
 			add(label);
 			
 			column++;
@@ -102,20 +102,20 @@ class PlayState extends FlxUIState
 	}
 
 	private function getBlend(str:String):BlendMode {
-		switch(str) {
-			case "normal": return BlendMode.NORMAL;
-			case "darken": return BlendMode.DARKEN;
-			case "multiply": return BlendMode.MULTIPLY;
-			case "lighten": return BlendMode.LIGHTEN;
-			case "screen": return BlendMode.SCREEN;
-			case "overlay": return BlendMode.OVERLAY;
-			case "hardlight": return BlendMode.HARDLIGHT;
-			case "difference": return BlendMode.DIFFERENCE;
-			case "add": return BlendMode.ADD;
-			case "subtract": return BlendMode.SUBTRACT;
-			case "invert": return BlendMode.INVERT;
+		return switch(str) {
+			case "normal": BlendMode.NORMAL;
+			case "darken": BlendMode.DARKEN;
+			case "multiply": BlendMode.MULTIPLY;
+			case "lighten": BlendMode.LIGHTEN;
+			case "screen": BlendMode.SCREEN;
+			case "overlay": BlendMode.OVERLAY;
+			case "hardlight": BlendMode.HARDLIGHT;
+			case "difference": BlendMode.DIFFERENCE;
+			case "add": BlendMode.ADD;
+			case "subtract": BlendMode.SUBTRACT;
+			case "invert": BlendMode.INVERT;
+			case _: BlendMode.NORMAL;
 		}
-		return BlendMode.NORMAL;
 	}
 	
 	public override function getEvent(event:String,sender:IFlxUIWidget,data:Dynamic,?params:Dynamic):Void {

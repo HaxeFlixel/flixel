@@ -3,11 +3,11 @@ package;
 import flixel.addons.nape.FlxNapeState;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.group.FlxTypedGroup;
-import flixel.plugin.MouseEventManager;
-import flixel.util.FlxRandom;
+import flixel.group.FlxGroup;
+import flixel.math.FlxRandom;
 import nape.constraint.DistanceJoint;
 import nape.geom.Vec2;
+import flixel.input.mouse.FlxMouseEventManager;
 
 /**
  * @author TiagoLr (~~~~ ProG4mr ~~~~)
@@ -27,9 +27,9 @@ class PlayState extends FlxNapeState
 		// A table as a background
 		add(new FlxSprite(0, 0, "assets/Table.jpg"));
 		
-		// We need the MouseEventManager plugin for sprite-mouse-interaction
+		// We need the FlxMouseEventManager plugin for sprite-mouse-interaction
 		// Important to set this up before createCards()
-		FlxG.plugins.add(new MouseEventManager());
+		FlxG.plugins.add(new FlxMouseEventManager());
 		
 		// Creating the card group and the cards
 		_cardGroup = new FlxTypedGroup<Card>();

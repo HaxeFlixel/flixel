@@ -28,7 +28,7 @@ class PlayState extends FlxState
 		
 		// Create the tilemap from the levelData we just created
 		_level = new FlxTilemap();
-		_level.loadMap(Assets.getText("assets/level.csv"), GraphicAuto, 0, 0, FlxTilemap.AUTO);
+		_level.loadMap(Assets.getText("assets/level.csv"), GraphicAuto, 0, 0, AUTO);
 		add(_level);
 		
 		_halfWidth = Std.int(FlxG.width / 2);
@@ -43,8 +43,8 @@ class PlayState extends FlxState
 		add(_player2);
 		
 		// Then we setup two cameras to follow each of the two players
-		createCamera(_halfWidth, 0xFFCCCC, _player1);
-		createCamera(0, 0xCCCCFF, _player2);
+		createCamera(_halfWidth, 0xFFFFCCCC, _player1);
+		createCamera(0, 0xFFCCCCFF, _player2);
 		
 		// Some instructions
 		var textBG:FlxSprite = new FlxSprite(0, _textY);
@@ -52,11 +52,11 @@ class PlayState extends FlxState
 		add(textBG);
 		
 		var blueText:FlxText = new FlxText(0, _textY, _halfWidth, "WASD");
-		blueText.setFormat(null, 16, FlxColor.AZURE, "center");
+		blueText.setFormat(null, 16, FlxColor.BLUE, CENTER);
 		add(blueText);
 		
 		var redText:FlxText = new FlxText(_halfWidth, _textY, _halfWidth, "Arrow keys", 16);
-		redText.setFormat(null, 16, FlxColor.RED, "center");
+		redText.setFormat(null, 16, FlxColor.RED, CENTER);
 		add(redText);
 	}
 	
@@ -74,8 +74,8 @@ class PlayState extends FlxState
 	private function createCamera(X:Int, Color:Int, Follow:FlxSprite):Void
 	{
 		var camera:FlxCamera = new FlxCamera(X, 0, _halfWidth, _textY);
-		camera.setBounds(0, 0, _level.width - 8, _textY);
-		camera.color = Color;
+		camera.setScrollBoundsRect(0, 0, _level.width - 8, _textY);
+		camera.bgColor = Color;
 		camera.follow(Follow);
 		FlxG.cameras.add(camera);
 	}

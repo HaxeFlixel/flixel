@@ -6,7 +6,7 @@ import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxGroup;
 import flixel.util.FlxColor;
-import flixel.util.FlxRandom;
+import flixel.math.FlxRandom;
 
 /**
 * Atari 2600 Breakout
@@ -34,11 +34,12 @@ class PlayState extends FlxState
 		FlxG.mouse.visible = false;
 		
 		_bat = new FlxSprite(180, 220);
-		_bat.makeGraphic(40, 6, FlxColor.HOT_PINK);
+		_bat.makeGraphic(40, 6, FlxColor.MAGENTA);
 		_bat.immovable = true;
 		
 		_ball = new FlxSprite(180, 160);
-		_ball.makeGraphic(6, 6, FlxColor.HOT_PINK);
+		_ball.makeGraphic(6, 6, FlxColor.MAGENTA);
+		
 		_ball.elasticity = 1;
 		_ball.maxVelocity.set(200, 200);
 		_ball.velocity.y = 200;
@@ -100,11 +101,34 @@ class PlayState extends FlxState
 		
 		_bat.velocity.x = 0;
 		
-		if (FlxG.keys.anyPressed(["LEFT", "A"]) && _bat.x > 10)
+		#if !FLX_NO_TOUCH
+		// Simple routine to move bat to x position of touch
+		for (touch in FlxG.touches.list)
+		{
+			if (touch.pressed)
+			{
+				if (touch.x > 10 && touch.x < 270)
+				_bat.x = touch.x;
+			}
+		}
+		// Vertical long swipe up or down resets game state
+		for (swipe in FlxG.swipes)
+		{
+			if (swipe.distance > 100)
+			{
+				if ((swipe.angle < 10 && swipe.angle > -10) || (swipe.angle > 170 || swipe.angle < -170))
+				{
+					FlxG.resetState();
+				}
+			}
+		}
+		#end
+		
+		if (FlxG.keys.anyPressed([LEFT, A]) && _bat.x > 10)
 		{
 			_bat.velocity.x = - BAT_SPEED;
 		}
-		else if (FlxG.keys.anyPressed(["RIGHT", "D"]) && _bat.x < 270)
+		else if (FlxG.keys.anyPressed([RIGHT, D]) && _bat.x < 270)
 		{
 			_bat.velocity.x = BAT_SPEED;
 		}
@@ -156,7 +180,7 @@ class PlayState extends FlxState
 		{
 			// Ball is perfectly in the middle
 			// A little random X to stop it bouncing up!
-			Ball.velocity.x = 2 + FlxRandom.intRanged(0, 8);
+			Ball.velocity.x = 2 + FlxG.random.int(0, 8);
 		}
 	}
 }

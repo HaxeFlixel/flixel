@@ -6,7 +6,7 @@ import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxGroup;
 import flixel.text.FlxText;
-import flixel.util.FlxRandom;
+import flixel.math.FlxRandom;
 
 class PlayState2 extends FlxState
 {	
@@ -23,7 +23,7 @@ class PlayState2 extends FlxState
 		
 		for (i in 0...300)
 		{
-			block = new FlxSprite(Math.floor(FlxRandom.float() * 40) * 16, Math.floor(FlxRandom.float() * 30) * 16);
+			block = new FlxSprite(Math.floor(FlxG.random.float() * 40) * 16, Math.floor(FlxG.random.float() * 30) * 16);
 			block.makeGraphic(16, 16, 0xff233e58);
 			block.immovable = true;
 			block.moves = false;
@@ -35,13 +35,12 @@ class PlayState2 extends FlxState
 		
 		// Shoot nuts and bolts all over
 		var dispenser:FlxEmitter = new FlxEmitter();
-		dispenser.gravity = 0;
-		dispenser.setSize(640, 480);
-		dispenser.setXSpeed( -100, 100);
-		dispenser.setYSpeed( -100, 100);
-		dispenser.bounce = 0.65;
-		dispenser.makeParticles("assets/gibs.png", 300, 16, true, 0.8);
-		dispenser.start(false, 10, 0.05);
+		dispenser.width = 640;
+		dispenser.height = 480;
+		dispenser.velocity.set( -100, -100, 100, 100);
+		dispenser.elasticity.set(0.65);
+		dispenser.loadParticles("assets/gibs.png", 300, 16, true);
+		dispenser.start(false, 0.05, 10);
 		add(dispenser);
 		
 		// Camera tracker
@@ -52,7 +51,7 @@ class PlayState2 extends FlxState
 		add(_focus);
 		
 		FlxG.camera.follow(_focus);
-		FlxG.camera.setBounds(0, 0, 640, 480, true);
+		FlxG.camera.setScrollBoundsRect(0, 0, 640, 480, true);
 		
 		// Instructions and stuff
 		var tx:FlxText;
@@ -76,19 +75,19 @@ class PlayState2 extends FlxState
 		_focus.velocity.y = 0;
 		var focusSpeed:Float = 200;
 		
-		if (FlxG.keys.anyPressed(["LEFT", "A"]))
+		if (FlxG.keys.anyPressed([LEFT, A]))
 		{
 			_focus.velocity.x -= focusSpeed;
 		}
-		if (FlxG.keys.anyPressed(["RIGHT", "D"]))
+		if (FlxG.keys.anyPressed([RIGHT, D]))
 		{
 			_focus.velocity.x += focusSpeed;
 		}
-		if (FlxG.keys.anyPressed(["UP", "W"]))
+		if (FlxG.keys.anyPressed([UP, W]))
 		{
 			_focus.velocity.y -= focusSpeed;
 		}
-		if (FlxG.keys.anyPressed(["DOWN", "S"]))
+		if (FlxG.keys.anyPressed([DOWN, S]))
 		{
 			_focus.velocity.y += focusSpeed;
 		}

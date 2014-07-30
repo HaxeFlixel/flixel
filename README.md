@@ -6,68 +6,17 @@
 
 ##About
 
-This is a large set of demos (**currently 47!**) using the HaxeFlixel engine and demonstrating its capabilities. All the ones that are compatible with flash can be found on [haxeflixel.com/demos](http://haxeflixel.com/demos/).
+This is a large set of demos (**currently 57!**) using the HaxeFlixel engine and demonstrating its capabilities. All the ones that are compatible with flash can be found on [haxeflixel.com/demos](http://haxeflixel.com/demos/).
 
 ![](demoSelection.png)
 
-##Contents
+##Installation
 
-* **Arcade Classics**
-  * Breakout
-  * FlxInvaders
-  * FlxSnake
-  * FlxTeroids
-* **Editors**
-  * FlxSpine
-  * TiledEditor 
-* **Effects**
-  * BlendModes  
-  * FlxBloom
-  * FlxBlur
-  * FlxSkewedSprite
-  * FlxSpriteFilters
-  * FlxTrailArea
-  * FlxTween
-  * ParticlesExt
-* **Flixel Features**
-  * CollisionAndGrouping
-  * FlxCamera
-  * FlxNape
-  * Particles
-  * Pathfinding
-  * Replay
-  * ResolutionPolicies
-  * Save
-  * SplitScreen
-  * TexturePackerAtlas
-  * Tilemap
-* **Input**
-  * GridMovement
-  * MouseEventManager
-  * Multitouch *(cpp only)*
-  * GamepadTest
-* **Other**
-  * FlxCollisions
-  * FlxPongAPI
-  * MinimalistTD
-  * FlxAsyncLoop
-  * Flappybalt
-* **Performance**
-  * FlxBunnyMark
-  * FlxRandom
-  * PixelPerfectCollision
-* **Platformers**
-  * EZPlatformer
-  * FlipAnimationRotationTiles
-  * FlxCaveGenerator
-  * FlxTilemapExt
-  * Mode
-  * Project Jumper
-  * Revenge
-* **User Interface**
-  * FileBrowse
-  * FlxTypeText
-  * RPG Interface
+To get the master branch / the release compatible with the latest flixel release, run:
+
+`haxelib install flixel-demos`
+
+You can then use [flixel-tools](https://github.com/HaxeFlixel/flixel-tools) `create` command to create one of the demos in a directory of your choice, or alternatively run them directly from the haxelib directory.
 
 ##For Developers
 

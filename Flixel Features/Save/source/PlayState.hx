@@ -3,11 +3,11 @@ package;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxState;
-import flixel.group.FlxTypedGroup;
+import flixel.group.FlxGroup;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import flixel.util.FlxColor;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 import flixel.util.FlxSave;
 
 class PlayState extends FlxState
@@ -118,16 +118,14 @@ class PlayState extends FlxState
 		// Note something like this needs to be after super.update() that way the button's state has updated to reflect the mouse event
 		if (FlxG.mouse.justPressed) 
 		{
-			for (i in 0...NUM_BOXES) 
+			for (box in _boxGroup) 
 			{
-				var a:FlxButton = cast(_boxGroup.members[i], FlxButton);
-				
-				if (a.status == FlxButton.PRESSED) 
+				if (box.status == FlxButton.PRESSED) 
 				{
 					// The offset is used to make the box stick to the cursor and not snap to the corner
-					dragOffset.set(a.x - FlxG.mouse.x, a.y - FlxG.mouse.y);
+					dragOffset.set(box.x - FlxG.mouse.x, box.y - FlxG.mouse.y);
 					_dragging = true;
-					_dragTarget = a;
+					_dragTarget = box;
 				}
 			}
 		}
@@ -161,9 +159,8 @@ class PlayState extends FlxState
 			// though it's best to make a new type() before setting it, so you know the correct type is kept
 			_gameSave.data.boxPositions = new Array();
 			
-			for (i in 0...NUM_BOXES) 
+			for (box in _boxGroup) 
 			{
-				var box:FlxButton = _boxGroup.members[i];
 				_gameSave.data.boxPositions.push(FlxPoint.get(box.x, box.y));
 			}
 			
@@ -177,9 +174,8 @@ class PlayState extends FlxState
 			var tempCount:Int = 0;
 			
 			// For each button in the group boxGroup - I'm sure you see why I like this already
-			for (i in 0...NUM_BOXES) 
+			for (box in _boxGroup) 
 			{
-				var box:FlxButton = _boxGroup.members[i], FlxButton;
 				_gameSave.data.boxPositions[tempCount] = FlxPoint.get(box.x, box.y);
 				tempCount++;
 			}
@@ -208,9 +204,8 @@ class PlayState extends FlxState
 			// variables though, so you're safe to use them - just your IDE won't highlight recognize and highlight the variables
 			var tempCount:Int = 0;
 			
-			for (i in 0...NUM_BOXES) 
+			for (box in _boxGroup) 
 			{
-				var box:FlxButton = _boxGroup.members[i];
 				box.x = _gameSave.data.boxPositions[tempCount].x;
 				box.y = _gameSave.data.boxPositions[tempCount].y;
 				tempCount++;

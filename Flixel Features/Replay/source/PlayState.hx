@@ -6,7 +6,7 @@ import flixel.FlxState;
 import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
 import flixel.util.FlxColor;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 import openfl.Assets;
 
 class PlayState extends FlxState
@@ -40,7 +40,7 @@ class PlayState extends FlxState
 		
 		// Set up the TILEMAP
 		_tilemap = new FlxTilemap();
-		_tilemap.loadMap(Assets.getText("assets/simpleMap.csv"), "assets/tiles.png", 25, 25, FlxTilemap.AUTO);
+		_tilemap.loadMap(Assets.getText("assets/simpleMap.csv"), "assets/tiles.png", 25, 25, AUTO);
 		add(_tilemap);
 		_tilemap.y -= 15;
 		
@@ -60,7 +60,7 @@ class PlayState extends FlxState
 		
 		// Set up UI
 		_hintText =  new FlxText(0, 268, 400);
-		_hintText.setFormat(null, 12, FlxColor.BLACK, "center");
+		_hintText.setFormat(null, 12, FlxColor.BLACK, CENTER);
 		add(_hintText);
 		
 		// Adjust things according to different modes
@@ -76,15 +76,15 @@ class PlayState extends FlxState
 		// Update the player
 		_player.acceleration.x = 0;
 		
-		if (FlxG.keys.anyPressed(["LEFT", "A"]))
+		if (FlxG.keys.anyPressed([LEFT, A]))
 		{
 			_player.acceleration.x -= _player.drag.x;
 		}
-		else if (FlxG.keys.anyPressed(["RIGHT", "D"]))
+		else if (FlxG.keys.anyPressed([RIGHT, D]))
 		{
 			_player.acceleration.x += _player.drag.x;
 		}
-		if (FlxG.keys.anyJustPressed(["UP", "W"]) && (_player.velocity.y == 0))
+		if (FlxG.keys.anyJustPressed([UP, W]) && (_player.velocity.y == 0))
 		{
 			_player.velocity.y = -200;
 		}
@@ -143,9 +143,9 @@ class PlayState extends FlxState
 		replaying = false;
 		
 		/**
-		 *Note FlxG.recordReplay will restart the game or state
-		 *This function will trigger a flag in FlxGame
-		 *and let the internal FlxReplay to record input on every frame
+		 * Note FlxG.recordReplay will restart the game or state
+		 * This function will trigger a flag in FlxGame
+		 * and let the internal FlxReplay to record input on every frame
 		 */
 		FlxG.vcr.startRecording(false);
 	}
@@ -163,9 +163,6 @@ class PlayState extends FlxState
 		
 		var save:String = FlxG.vcr.stopRecording();
 		
-		/**
-		 * NOTE "ANY" or other key wont work under debug mode!
-		 */
 		FlxG.vcr.loadReplay(save, new PlayState(), ["ANY", "MOUSE"], 0, start_record);
 	}
 }

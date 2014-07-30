@@ -43,7 +43,7 @@ class EndState extends FlxState
 		
 		// Add some text to the stage as we did earlier
 		_gameTitle = new FlxText(10, 90, 300, "And so the journey begins!!");
-		_gameTitle.setFormat(null, 16, FlxColor.WHITE, "center");
+		_gameTitle.setFormat(null, 16, FlxColor.WHITE, CENTER);
 		add(_gameTitle);
 		
 		// Add a button which will take us back to the main menu state

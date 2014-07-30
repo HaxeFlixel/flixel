@@ -1,4 +1,5 @@
-package ;
+package;
+
 import flixel.addons.nape.FlxNapeSprite;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -7,10 +8,8 @@ import openfl.Assets;
 /**
  * @author TiagoLr ( ~~~ProG4mr~~~ )
  */
-
 class Orb extends FlxNapeSprite
 {
-
 	public var shadow:FlxSprite;
 	
 	public function new ()
@@ -34,5 +33,4 @@ class Orb extends FlxNapeSprite
 		shadow.x = Math.round(x);
 		shadow.y = Math.round(y);
 	}
-	
 }

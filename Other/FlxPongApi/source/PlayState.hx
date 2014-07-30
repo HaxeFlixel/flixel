@@ -5,14 +5,14 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxGroup;
-import flixel.group.FlxTypedGroup.FlxTypedGroup;
+import flixel.group.FlxGroup;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import flixel.effects.particles.FlxEmitter;
 import flixel.util.FlxCollision;
-import flixel.util.FlxMath;
-import flixel.util.FlxPoint;
-import flixel.util.FlxRandom;
+import flixel.math.FlxMath;
+import flixel.math.FlxPoint;
+import flixel.math.FlxRandom;
 import flixel.util.FlxTimer;
 
 class PlayState extends FlxState
@@ -40,8 +40,7 @@ class PlayState extends FlxState
 		
 		_debris = new Emitter(FlxG.width, 0, 2, Reg.med_lite);
 		_debris.height = FlxG.height;
-		_debris.setXSpeed(Reg.level * -10, Reg.level * -1);
-		_debris.setYSpeed( -10, 10);
+		_debris.velocity.set(Reg.level * -10, -10, Reg.level * -1, 10);
 		
 		_player = new Player();
 		
@@ -54,7 +53,7 @@ class PlayState extends FlxState
 		newObstacle();
 		
 		_centerText = new FlxText(0, 0, FlxG.width, "");
-		_centerText.alignment = "center";
+		_centerText.alignment = CENTER;
 		_centerText.color = Reg.med_dark;
 		_centerText.y = Std.int((FlxG.height - _centerText.height) / 2);
 		
@@ -118,14 +117,14 @@ class PlayState extends FlxState
 				
 				FlxGameJolt.addScore(Std.string(Reg.level - 1) + " enemies destroyed", Reg.level - 1, 20599);
 				
-				FlxTimer.start(4, newEnemy, 1);
+				new FlxTimer(4, newEnemy, 1);
 			}
 			
 			if (ball.x < 0) {
 				ball.kill();
 				_player.kill();
 				_centerText.text = "Aww! You lost. You got as far as level " + Reg.level + " though, so there's that.";
-				FlxTimer.start(4, endGame, 1);
+				new FlxTimer(4, endGame, 1);
 			}
 		}
 		
@@ -135,7 +134,7 @@ class PlayState extends FlxState
 	public function newEnemy(f:FlxTimer):Void
 	{
 		_centerText.text = "";
-		_debris.setXSpeed(Reg.level * -10, Reg.level * -1);
+		_debris.velocity.set(Reg.level * -10, -10, Reg.level * -1, 10);
 		_enemy.reset(0,0);
 		ball.reset(FlxG.width / 2, FlxG.height / 2);
 		newObstacle();
@@ -143,9 +142,12 @@ class PlayState extends FlxState
 	
 	public function newObstacle():Void
 	{
-		var obs:PongSprite = _obstacles.recycle(PongSprite, [FlxG.width, FlxRandom.intRanged(0, FlxG.height), FlxRandom.intRanged(1, 20), FlxRandom.intRanged(4, 40), Reg.med_dark]);
-		obs.velocity.x = FlxRandom.floatRanged( -100, -1);
-		obs.velocity.y = FlxRandom.floatRanged( -10, 10);
+		var obs:PongSprite = _obstacles.recycle(PongSprite, function() {
+			return new PongSprite(FlxG.width, FlxG.random.int(0, FlxG.height),
+				FlxG.random.int(1, 20), FlxG.random.int(4, 40), Reg.med_dark);
+		});
+		obs.velocity.x = FlxG.random.float( -100, -1);
+		obs.velocity.y = FlxG.random.float( -10, 10);
 		//obs.moves = false;
 		obs.immovable = true;
 	}

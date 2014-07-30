@@ -67,7 +67,7 @@ class PlayState extends FlxState
 		 */
 		
 		// Initializes the map using the generated string, the tile images, and the tile size
-		_collisionMap.loadMap(Assets.getText("assets/default_auto.txt"), "assets/auto_tiles.png", TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
+		_collisionMap.loadMap(Assets.getText("assets/default_auto.txt"), "assets/auto_tiles.png", TILE_WIDTH, TILE_HEIGHT, AUTO);
 		add(_collisionMap);
 		
 		_highlightBox = new FlxSprite(0, 0);
@@ -92,7 +92,7 @@ class PlayState extends FlxState
 	private function setupPlayer():Void
 	{
 		_player = new FlxSprite(64, 220);
-		_player.loadGraphic("assets/spaceman.png", true, true, 16);
+		_player.loadGraphic("assets/spaceman.png", true, 16);
 		
 		// Bounding box tweaks
 		_player.setSize(14, 14);
@@ -139,17 +139,17 @@ class PlayState extends FlxState
 		// MOVEMENT
 		_player.acceleration.x = 0;
 		
-		if (FlxG.keys.anyPressed(["LEFT", "A"]))
+		if (FlxG.keys.anyPressed([LEFT, A]))
 		{
-			_player.facing = FlxObject.LEFT;
+			_player.flipX = true;
 			_player.acceleration.x -= _player.drag.x;
 		}
-		else if (FlxG.keys.anyPressed(["RIGHT", "D"]))
+		else if (FlxG.keys.anyPressed([RIGHT, D]))
 		{
-			_player.facing = FlxObject.RIGHT;
+			_player.flipX = false;
 			_player.acceleration.x += _player.drag.x;
 		}
-		if (FlxG.keys.anyJustPressed(["UP", "W"]) && _player.velocity.y == 0)
+		if (FlxG.keys.anyJustPressed([UP, W]) && _player.velocity.y == 0)
 		{
 			_player.y -= 1;
 			_player.velocity.y = -200;
@@ -174,19 +174,19 @@ class PlayState extends FlxState
 	{
 		switch (_collisionMap.auto)
 		{
-			case FlxTilemap.AUTO:
+			case AUTO:
 				_collisionMap.loadMap(FlxStringUtil.arrayToCSV(_collisionMap.getData(true), _collisionMap.widthInTiles),
-					"assets/alt_tiles.png", TILE_WIDTH, TILE_HEIGHT, FlxTilemap.ALT);
+					"assets/alt_tiles.png", TILE_WIDTH, TILE_HEIGHT, ALT);
 				_autoAltButton.label.text = "ALT";
-					
-			case FlxTilemap.ALT:
+			
+			case ALT:
 				_collisionMap.loadMap(FlxStringUtil.arrayToCSV(_collisionMap.getData(true), _collisionMap.widthInTiles),
-					"assets/empty_tiles.png", TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
+					"assets/empty_tiles.png", TILE_WIDTH, TILE_HEIGHT, OFF);
 				_autoAltButton.label.text = "OFF";
-					
-			case FlxTilemap.OFF:
+			
+			case OFF:
 				_collisionMap.loadMap(FlxStringUtil.arrayToCSV(_collisionMap.getData(true), _collisionMap.widthInTiles),
-					"assets/auto_tiles.png", TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
+					"assets/auto_tiles.png", TILE_WIDTH, TILE_HEIGHT, AUTO);
 				_autoAltButton.label.text = "AUTO";
 		}
 	}
@@ -195,16 +195,16 @@ class PlayState extends FlxState
 	{
 		switch (_collisionMap.auto)
 		{
-			case FlxTilemap.AUTO:
-				_collisionMap.loadMap(Assets.getText("assets/default_auto.txt"), "assets/auto_tiles.png", TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
+			case AUTO:
+				_collisionMap.loadMap(Assets.getText("assets/default_auto.txt"), "assets/auto_tiles.png", TILE_WIDTH, TILE_HEIGHT, AUTO);
 				_player.setPosition(64, 220);
 				
-			case FlxTilemap.ALT:
-				_collisionMap.loadMap(Assets.getText("assets/default_alt.txt"), "assets/alt_tiles.png", TILE_WIDTH, TILE_HEIGHT, FlxTilemap.ALT);
+			case ALT:
+				_collisionMap.loadMap(Assets.getText("assets/default_alt.txt"), "assets/alt_tiles.png", TILE_WIDTH, TILE_HEIGHT, ALT);
 				_player.setPosition(64, 128);
 				
-			case FlxTilemap.OFF:
-				_collisionMap.loadMap(Assets.getText("assets/default_empty.txt"), "assets/empty_tiles.png", TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
+			case OFF:
+				_collisionMap.loadMap(Assets.getText("assets/default_empty.txt"), "assets/empty_tiles.png", TILE_WIDTH, TILE_HEIGHT, OFF);
 				_player.setPosition(64, 64);
 		}
 	}

@@ -1,79 +1,68 @@
-package ;
+package;
 
-import flash.display.StageAlign;
-import flash.display.StageScaleMode;
 import flash.display.Sprite;
 import flash.events.Event;
-import flash.events.KeyboardEvent;
 import flash.Lib;
-import flash.ui.Keyboard;
 import flixel.FlxGame;
- 
-/**
- * sbatista
- * @author 
- */
+import flixel.FlxState;
+import flixel.system.FlxSplash;
 
 class Main extends Sprite 
 {
+	var gameWidth:Int = 640; // Width of the game in pixels (might be less / more in actual pixels depending on your zoom).
+	var gameHeight:Int = 480; // Height of the game in pixels (might be less / more in actual pixels depending on your zoom).
+	var initialState:Class<FlxState> = FlxSplash; // The FlxState the game starts with.
+	var zoom:Float = -1; // If -1, zoom is automatically calculated to fit the window dimensions.
+	var framerate:Int = 60; // How many frames per second the game should run at.
+	var skipSplash:Bool = false; // Whether to skip the flixel splash screen that appears in release mode.
+	var startFullscreen:Bool = false; // Whether to start the game in fullscreen on desktop targets
 	
-	public function new () 
+	// You can pretty much ignore everything from here on - your code should go in your states.
+	
+	public static function main():Void
+	{	
+		Lib.current.addChild(new Main());
+	}
+	
+	public function new() 
 	{
 		super();
 		
 		if (stage != null) 
+		{
 			init();
+		}
 		else 
+		{
 			addEventListener(Event.ADDED_TO_STAGE, init);
+		}
 	}
 	
-	private function init(?e:Event = null):Void 
+	private function init(?E:Event):Void 
 	{
-		if (hasEventListener(Event.ADDED_TO_STAGE)) 
+		if (hasEventListener(Event.ADDED_TO_STAGE))
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 		}
 		
-		initialize();
-		
-		var game:FlxGame = new ProjectClass();
-		addChild(game);
-		
-		#if (cpp || neko)
-		Lib.current.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUP);
-		#end
-		
-		// Profile code - disable <haxedef name="profile_cpp" if="target_cpp" /> before ship
-		#if (profile_cpp && !neko)
-		cpp.vm.Profiler.start("perf.txt");
-		#end
+		setupGame();
 	}
 	
-	#if (cpp || neko)
-	private function onKeyUP(e:KeyboardEvent):Void 
+	private function setupGame():Void
 	{
-		if (e.keyCode == Keyboard.ESCAPE) 
+		var stageWidth:Int = Lib.current.stage.stageWidth;
+		var stageHeight:Int = Lib.current.stage.stageHeight;
+
+		if (zoom == -1)
 		{
-			// Profiling code - disable <haxedef name="profile_cpp" if="target_cpp" /> before ship
-			#if (profile_cpp && !neko)
-			cpp.vm.Profiler.stop();
-			#end
-			
-			Lib.exit();
+			var ratioX:Float = stageWidth / gameWidth;
+			var ratioY:Float = stageHeight / gameHeight;
+			zoom = Math.min(ratioX, ratioY);
+			gameWidth = Math.ceil(stageWidth / zoom);
+			gameHeight = Math.ceil(stageHeight / zoom);
 		}
+
+		FlxSplash.nextState = MenuState;
+		addChild(new FlxGame(gameWidth, gameHeight, initialState, zoom, framerate, framerate, skipSplash, startFullscreen));
 	}
-	#end
-	
-	private function initialize():Void 
-	{
-		Lib.current.stage.align = StageAlign.TOP_LEFT;
-		Lib.current.stage.scaleMode = StageScaleMode.NO_SCALE;
-	}
-	
-	// Entry point
-	public static function main() 
-	{
-		Lib.current.addChild(new Main());
-	}
-	
 }

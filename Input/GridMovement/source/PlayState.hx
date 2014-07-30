@@ -17,6 +17,7 @@ class PlayState extends FlxState
 	override public function create():Void
 	{
 		FlxG.mouse.visible = false;
+		bgColor = 0xFF18A068;
 		
 		// Load the level's tilemaps
 		_level = new TiledLevel("assets/data/map.tmx");
@@ -30,12 +31,14 @@ class PlayState extends FlxState
 		// Load player and objects of the Tiled map
 		_level.loadObjects(this);
 		
+		#if !mobile
 		// Set and create Txt Howto
 		_howto = new FlxText(0, 225, FlxG.width);
-		_howto.alignment = "center";
-		_howto.text = "Use the ARROW KEYS to move around.";
+		_howto.alignment = CENTER;
+		_howto.text = "Use the ARROW KEYS or WASD to move around.";
 		_howto.scrollFactor.set(0, 0);
 		add(_howto);
+		#end
 	}
 	
 	override public function update():Void

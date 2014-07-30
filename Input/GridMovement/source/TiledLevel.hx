@@ -1,17 +1,14 @@
 package;
 
-import haxe.io.Path;
-
-import flixel.FlxG;
-import flixel.FlxObject;
-import flixel.FlxSprite;
-import flixel.group.FlxGroup;
-import flixel.tile.FlxTilemap;
-
 import flixel.addons.editors.tiled.TiledMap;
 import flixel.addons.editors.tiled.TiledObject;
 import flixel.addons.editors.tiled.TiledObjectGroup;
 import flixel.addons.editors.tiled.TiledTileSet;
+import flixel.FlxG;
+import flixel.FlxObject;
+import flixel.group.FlxGroup;
+import flixel.tile.FlxTilemap;
+import haxe.io.Path;
 
 /**
  * ...
@@ -36,7 +33,7 @@ class TiledLevel extends TiledMap
 		foregroundTiles = new FlxGroup();
 		backgroundTiles = new FlxGroup();
 		
-		FlxG.camera.setBounds(0, 0, fullWidth, fullHeight, true);
+		FlxG.camera.setScrollBoundsRect(0, 0, fullWidth, fullHeight, true);
 		
 		// Load Tile Maps
 		for (tileLayer in layers)
@@ -65,7 +62,7 @@ class TiledLevel extends TiledMap
 			var tilemap:FlxTilemap = new FlxTilemap();
 			tilemap.widthInTiles = width;
 			tilemap.heightInTiles = height;
-			tilemap.loadMap(tileLayer.tileArray, processedPath, tileSet.tileWidth, tileSet.tileHeight, 0, 1, 1, 1);
+			tilemap.loadMap(tileLayer.tileArray, processedPath, tileSet.tileWidth, tileSet.tileHeight, OFF, tileSet.firstGID, 1, 1);
 			
 			if (tileLayer.properties.contains("nocollide"))
 			{
@@ -122,7 +119,10 @@ class TiledLevel extends TiledMap
 			{
 				// IMPORTANT: Always collide the map with objects, not the other way around. 
 				//			  This prevents odd collision errors (collision separation code off by 1 px).
-				return FlxG.overlap(map, obj, notifyCallback, processCallback != null ? processCallback : FlxObject.separate);
+				if(FlxG.overlap(map, obj, notifyCallback, processCallback != null ? processCallback : FlxObject.separate))
+				{
+					return true;
+				}
 			}
 		}
 		return false;

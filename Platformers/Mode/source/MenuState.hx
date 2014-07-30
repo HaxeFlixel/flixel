@@ -4,7 +4,7 @@ import flixel.FlxG;
 import flixel.FlxState;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
-import flixel.util.FlxRandom;
+import flixel.math.FlxRandom;
 import flixel.util.FlxSave;
 import flixel.util.FlxStringUtil;
 import flixel.effects.particles.FlxEmitter;
@@ -28,10 +28,6 @@ class MenuState extends FlxState
 	 */
 	override public function create():Void
 	{
-		#if debug
-		FlxG.game.debugger.stats.visible = true;
-		#end
-		
 		FlxG.cameras.bgColor = 0xff131c1b;
 		
 		if (FlxG.sound.music != null)
@@ -60,11 +56,13 @@ class MenuState extends FlxState
 		
 		// All the bits that blow up when the text smooshes together
 		_gibs = new FlxEmitter(FlxG.width / 2 - 50, FlxG.height / 2 - 10);
-		_gibs.setSize(100, 30);
-		_gibs.setYSpeed( -200, -20);
-		_gibs.setRotation( -720, 720);
-		_gibs.gravity = 100;
-		_gibs.makeParticles(Reg.SPAWNER_GIBS, 650, 32, true, 0);
+		_gibs.width = 100;
+		_gibs.height = 30;
+		_gibs.velocity.set(0, -200, 0, -20);
+		_gibs.angularVelocity.set( -720, 720);
+		_gibs.acceleration.set(0, 100);
+		_gibs.loadParticles(Reg.SPAWNER_GIBS, 650, 32, true);
+		_gibs.lifespan.set(5, 5);
 		add(_gibs);
 		
 		// The letters "mo"
@@ -132,21 +130,21 @@ class MenuState extends FlxState
 			FlxG.cameras.shake(0.035, 0.5);
 			_title1.color = _title2.color = 0xd8eba2;
 			_gibs.start(true, 5);
-			_title1.angle = FlxRandom.floatRanged( -15, 15);
-			_title2.angle = FlxRandom.floatRanged( -15, 15);
+			_title1.angle = FlxG.random.float( -15, 15);
+			_title2.angle = FlxG.random.float( -15, 15);
 			
 			// Then we're going to add the text and buttons and things that appear
 			// If we were hip we'd use our own button animations, but we'll just recolor
 			// the stock ones for now instead.
 			var text:FlxText;
 			text = new FlxText(FlxG.width / 2 - 50, FlxG.height / 3 + 39, 100, "by Adam Atomic");
-			text.alignment = "center";
+			text.alignment = CENTER;
 			text.color = 0x3a5c39;
 			add(text);
 			
 			text = new FlxText(FlxG.width / 2 - 40, FlxG.height / 3 + 119, 80, "X + C TO PLAY");
 			text.color = 0x729954;
-			text.alignment = "center";
+			text.alignment = CENTER;
 			add(text);
 			
 			var flixelButton:FlxButton = new FlxButton(FlxG.width / 2 - 40, FlxG.height / 3 + 54, "flixel.org", onFlixel);
@@ -233,7 +231,7 @@ class MenuState extends FlxState
 	{
 		if (_attractMode)
 		{
-			FlxG.vcr.loadReplay(FlxRandom.chanceRoll() ? (Assets.getText("data/attract1.fgr")) : (Assets.getText("data/attract2.fgr")), new PlayState(), ["ANY"], 22, onDemoComplete);
+			FlxG.vcr.loadReplay(FlxG.random.bool() ? (Assets.getText("data/attract1.fgr")) : (Assets.getText("data/attract2.fgr")), new PlayState(), ["ANY"], 22, onDemoComplete);
 		}
 		else
 		{

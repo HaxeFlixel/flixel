@@ -3,12 +3,12 @@ package;
 import flixel.effects.particles.FlxEmitter;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.group.FlxTypedGroup;
-import flixel.util.FlxAngle;
-import flixel.util.FlxMath;
-import flixel.util.FlxPoint;
+import flixel.group.FlxGroup;
+import flixel.math.FlxAngle;
+import flixel.math.FlxMath;
+import flixel.math.FlxPoint;
 import flixel.util.FlxSpriteUtil;
-import flixel.util.FlxVelocity;
+import flixel.math.FlxVelocity;
 
 class Enemy extends FlxSprite
 {
@@ -74,8 +74,7 @@ class Enemy extends FlxSprite
 		// Here we are setting up the jet particles
 		// that shoot out the back of the ship.
 		_jets = new FlxEmitter();
-		_jets.setRotation();
-		_jets.makeParticles(Reg.JET, 15, 0, false, 0);
+		_jets.loadParticles(Reg.JET, 15, 0, false);
 		
 		// These parameters help control the ship's
 		// speed and direction during the update() loop.
@@ -85,6 +84,7 @@ class Enemy extends FlxSprite
 		_thrust = 0;
 		_playerMidpoint = FlxPoint.get();
 	}
+	
 	/**
 	 * Each time an Enemy is recycled (in this game, by the Spawner object)
 	 * we call init() on it afterward.  That allows us to set critical parameters
@@ -158,7 +158,8 @@ class Enemy extends FlxSprite
 		// Set the bot's movement speed and direction
 		// based on angle and whether the jets are on.
 		_thrust = FlxVelocity.computeVelocity(_thrust, (jetsOn ? 90 : 0), drag.x, 60);
-		FlxAngle.rotatePoint(0, _thrust, 0, 0, angle, velocity);
+		velocity.set(0, -_thrust);
+		velocity.rotate(FlxPoint.weak(0, 0), angle);
 
 		// Shooting - three shots every few seconds
 		if (isOnScreen())
@@ -200,11 +201,11 @@ class Enemy extends FlxSprite
 		// Finally, update the jet particles shooting out the back of the ship.
 		if (jetsOn)
 		{
-			if (!_jets.on)
+			if (!_jets.emitting)
 			{
 				// If they're supposed to be on and they're not,
 				// turn em on and play a little sound.
-				_jets.start(false, 0.5, 0.01);
+				_jets.start(false, 0.01);
 				
 				if (isOnScreen())
 				{
@@ -213,14 +214,14 @@ class Enemy extends FlxSprite
 			}
 			// Then, position the jets at the center of the Enemy,
 			// and point the jets the opposite way from where we're moving.
-			_jets.at(this);
-			_jets.setXSpeed( -velocity.x-30,-velocity.x+30);
-			_jets.setYSpeed( -velocity.y-30,-velocity.y+30);
+			_jets.focusOn(this);
+			_jets.launchAngle.set(angle - 270);
+			_jets.velocity.set(-velocity.x - 30, -velocity.y - 30, -velocity.x + 30, -velocity.y + 30);
 		}
 		// If jets are supposed to be off, just turn em off.
 		else	
 		{
-			_jets.on = false;
+			_jets.kill();
 		}
 		
 		// Finally, update the jet emitter and all its member sprites.
@@ -270,8 +271,8 @@ class Enemy extends FlxSprite
 		
 		FlxSpriteUtil.flicker(this, 0, 0.02, true);
 		_jets.kill();
-		_gibs.at(this);
-		_gibs.start(true, 3, 0, 20);
+		_gibs.focusOn(this);
+		_gibs.start(true, 0, 20);
 		Reg.score += 200;
 	}
 	
@@ -281,6 +282,6 @@ class Enemy extends FlxSprite
 	 */
 	private function angleTowardPlayer():Float
 	{
-		return FlxAngle.getAngle(getMidpoint(_point), _player.getMidpoint(_playerMidpoint));
+		return getMidpoint(_point).angleBetween(_player.getMidpoint(_playerMidpoint));
 	}
 }

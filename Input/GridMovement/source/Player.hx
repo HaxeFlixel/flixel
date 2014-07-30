@@ -2,6 +2,8 @@ package;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.ui.FlxButton;
+import flixel.ui.FlxVirtualPad;
 
 /**
  * ...
@@ -37,6 +39,10 @@ class Player extends FlxSprite
 	 */ 
 	private var moveDirection:MoveDirection;
 	
+	#if mobile
+	private var _virtualPad:FlxVirtualPad;
+	#end
+	
 	public function new(X:Int, Y:Int)
 	{
 		// X,Y: Starting coordinates
@@ -44,6 +50,12 @@ class Player extends FlxSprite
 		
 		// Make the player graphic.
 		makeGraphic(TILE_SIZE, TILE_SIZE, 0xffc04040);
+		
+		#if mobile
+		_virtualPad = new FlxVirtualPad(FULL, NONE);
+		_virtualPad.alpha = 0.5;
+		FlxG.state.add(_virtualPad);
+		#end
 	}
 	
 	override public function update():Void
@@ -53,7 +65,7 @@ class Player extends FlxSprite
 		// Move the player to the next block
 		if (moveToNextTile)
 		{
-			switch(moveDirection)
+			switch (moveDirection)
 			{
 				case UP:
 					y -= MOVEMENT_SPEED;
@@ -72,23 +84,42 @@ class Player extends FlxSprite
 			moveToNextTile = false;
 		}
 		
-		// Check for WASD or arrow key presses and move accordingly
-		if (FlxG.keys.anyPressed(["DOWN", "S"]))
+		#if mobile
+		if (_virtualPad.buttonDown.pressed)
 		{
 			moveTo(MoveDirection.DOWN);
 		}
-		else if (FlxG.keys.anyPressed(["UP", "W"]))
+		else if (_virtualPad.buttonUp.pressed)
 		{
 			moveTo(MoveDirection.UP);
 		}
-		else if (FlxG.keys.anyPressed(["LEFT", "A"]))
+		else if (_virtualPad.buttonLeft.pressed)
 		{
 			moveTo(MoveDirection.LEFT);
 		}
-		else if (FlxG.keys.anyPressed(["RIGHT", "D"]))
+		else if (_virtualPad.buttonRight.pressed)
 		{
 			moveTo(MoveDirection.RIGHT);
 		}
+		#else
+		// Check for WASD or arrow key presses and move accordingly
+		if (FlxG.keys.anyPressed([DOWN, S]))
+		{
+			moveTo(MoveDirection.DOWN);
+		}
+		else if (FlxG.keys.anyPressed([UP, W]))
+		{
+			moveTo(MoveDirection.UP);
+		}
+		else if (FlxG.keys.anyPressed([LEFT, A]))
+		{
+			moveTo(MoveDirection.LEFT);
+		}
+		else if (FlxG.keys.anyPressed([RIGHT, D]))
+		{
+			moveTo(MoveDirection.RIGHT);
+		}
+		#end
 	}
 	
 	public function moveTo(Direction:MoveDirection):Void

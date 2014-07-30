@@ -1,21 +1,13 @@
 ﻿package;
 
-import flash.display.Sprite;
-import flash.display.StageAlign;
-import flash.display.StageScaleMode;
-import flash.events.Event;
-import flash.events.KeyboardEvent;
-import flash.Lib;
-import flash.ui.Keyboard;
+import openfl.display.Sprite;
+import openfl.events.Event;
+import openfl.Lib;
 import flixel.FlxGame;
 
-/**
- * @author Joshua Granick
- */
 class Main extends Sprite 
 {
-	// Entry point
-	public static function main():Void
+	static public function main():Void
 	{	
 		Lib.current.addChild(new Main());
 	}
@@ -41,15 +33,6 @@ class Main extends Sprite
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 		}
 		
-		initialize();
-		
-		var game:FlxGame = new GameClass();
-		addChild(game);
-	}
-	
-	private function initialize():Void 
-	{
-		Lib.current.stage.align = StageAlign.TOP_LEFT;
-		Lib.current.stage.scaleMode = StageScaleMode.NO_SCALE;
+		addChild(new FlxGame(640, 480, PlayState));
 	}
 }

@@ -113,7 +113,7 @@ class MenuState extends FlxState
 			FlxG.sound.play("assets/sounds/menu" + Reg.SoundExtension, 1, false);
 		}
 		
-		if (FlxG.keys.anyJustPressed(["SPACE", "ENTER", "C"]))
+		if (FlxG.keys.anyJustPressed([SPACE, ENTER, C]))
 		{
 			switch (_option) 
 			{

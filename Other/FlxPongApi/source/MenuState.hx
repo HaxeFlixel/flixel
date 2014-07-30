@@ -77,11 +77,11 @@ class MenuState extends FlxState
 		
 		var info:FlxText = new FlxText(0, FlxG.height - 14, FlxG.width, "FlxPong is a demo of HaxeFlixel & FlxGameJolt, which interacts with the GameJolt API.");
 		info.color = Reg.med_lite;
-		info.alignment = "center";
+		info.alignment = CENTER;
 		
 		var ver:FlxText = new FlxText(0, 0, FlxG.width, Reg.VERSION);
 		ver.color = Reg.med_lite;
-		ver.alignment = "right";
+		ver.alignment = RIGHT;
 		
 		add(em);
 		add(_connection);
@@ -94,7 +94,7 @@ class MenuState extends FlxState
 		
 		var title:FlxText = new FlxText(0, 20, FlxG.width, "FlxPong!", 16);
 		title.color = Reg.med_dark;
-		title.alignment = "center";
+		title.alignment = CENTER;
 		
 		var play:Button = new Button(0, 50, "Play!", playCallback);
 		Reg.quarterX(play, 2);
@@ -224,7 +224,7 @@ class MenuState extends FlxState
 		_loginGroup = new FlxGroup();
 		
 		var instruct:FlxText = new FlxText(0, 50, FlxG.width, "Log in to GameJolt to get trophies and stuff:");
-		instruct.alignment = "center";
+		instruct.alignment = CENTER;
 		instruct.color = Reg.med_dark;
 		
 		var word1:FlxText = new FlxText(0, 70, 60, "Username:");
@@ -355,7 +355,7 @@ class MenuState extends FlxState
 			_input2.text = " ";
 		}
 		
-		for (g in _allScreens.members) {
+		for (g in _allScreens) {
 			g.visible = false;
 			g.active = false;
 		}

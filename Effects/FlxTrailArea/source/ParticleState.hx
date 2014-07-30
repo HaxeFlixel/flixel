@@ -24,7 +24,7 @@ class ParticleState extends FlxState
 		
 		// Sets up the emitter for the particle explosion
 		_emitter = new FlxEmitter(200, FlxG.height / 2, PARTICLE_AMOUNT);
-		_emitter.setColor(0xff0000, 0x00ff00);
+		_emitter.color.set(0xff0000, 0x00ff00);
 		
 		var particle:FlxParticle;
 		for (i in 0...PARTICLE_AMOUNT)
@@ -43,7 +43,9 @@ class ParticleState extends FlxState
 		add(new GUI(trailArea, startEmitter));
 		
 		// Start the emitter with a small delay to avoid the initial laggieness on startup
-		FlxTimer.start(0.5, function(T:FlxTimer) { _emitter.start(true, 1, 0, 0, 0.5); });
+		new FlxTimer(0.5, function(_) { 
+			_emitter.start(true, 0.5); 
+		});
 		
 		super.create();
 	}
@@ -87,13 +89,15 @@ class ParticleState extends FlxState
 		{
 			// If this was called from a FlxSlider, we set the position to the screen center
 			if (Value != null) {
-				_emitter.setPosition(200, FlxG.height / 2);
+				_emitter.x = 200;
+				_emitter.y = FlxG.height / 2;
 			}
 			else {
-				_emitter.setPosition(FlxG.mouse.x, FlxG.mouse.y);
+				_emitter.x = FlxG.mouse.x;
+				_emitter.y = FlxG.mouse.y;
 			}
 			
-			_emitter.start(true, 1, 0, 0, 0.5);
+			_emitter.start(true);
 		}
 	}
 }

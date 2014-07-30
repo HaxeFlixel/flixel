@@ -4,8 +4,8 @@
     "license": "MIT",
     "tags": ["game", "openfl", "flash", "neko", "cpp", "android", "ios", "demo", "cross"],
     "description": "Demo Projects for HaxeFlixel",
-    "version": "1.0.2",
-    "releasenote": "Compatibility with flixel 3.2.0 and two new demos. See the CHANGELOG.md for more details.",
+    "version": "1.1.1",
+    "releasenote": "Fixed the GamepadTest demo for OpenFL 1.4.0. See the CHANGELOG.md for more details.",
     "contributors": [ "haxeflixel" ],
     "dependencies": { "flixel": "" }
 }

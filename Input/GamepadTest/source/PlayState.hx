@@ -4,7 +4,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.util.FlxColor;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 import flixel.input.gamepad.FlxGamepad;
 import flixel.input.gamepad.XboxButtonID;
 import flixel.input.gamepad.OUYAButtonID;
@@ -53,7 +53,7 @@ class PlayState extends FlxState
 		_rightStick = createSprite(RIGHT_STICK_POS.x, RIGHT_STICK_POS.y, "assets/Stick.png");
 		
 		_dPad = new FlxSprite(144, 126);
-		_dPad.loadGraphic("assets/DPad.png", true, false, 87, 87);
+		_dPad.loadGraphic("assets/DPad.png", true, 87, 87);
 		_dPad.alpha = ALPHA_OFF;
 		add(_dPad);
 		
@@ -89,7 +89,8 @@ class PlayState extends FlxState
 		
 		_gamePad = FlxG.gamepads.lastActive;
 		
-		if (_gamePad == null) {
+		if (_gamePad == null)
+		{
 			return;
 		}
 		
@@ -139,16 +140,16 @@ class PlayState extends FlxState
 		else
 			_RB.y = RB_Y;
 		
-		updateAxis(GamepadIDs.LEFT_ANALOGUE_X, GamepadIDs.LEFT_ANALOGUE_Y, _leftStick, LEFT_STICK_POS);
-		updateAxis(GamepadIDs.RIGHT_ANALOGUE_X, GamepadIDs.RIGHT_ANALOGUE_Y, _rightStick, RIGHT_STICK_POS);
+		updateAxis(GamepadIDs.LEFT_ANALOG_STICK, _leftStick, LEFT_STICK_POS);
+		updateAxis(GamepadIDs.RIGHT_ANALOG_STICK, _rightStick, RIGHT_STICK_POS);
 		
 		updateDpad();
 	}
 	
-	private function updateAxis(xID:Int, yID:Int, stickSprite:FlxSprite, stickPosition:FlxPoint):Void
+	private function updateAxis(axes:FlxGamepadAnalogStick, stickSprite:FlxSprite, stickPosition:FlxPoint):Void
 	{
-		var xAxisValue = _gamePad.getXAxis(xID);
-		var yAxisValue = _gamePad.getYAxis(yID);
+		var xAxisValue = _gamePad.getXAxis(axes);
+		var yAxisValue = _gamePad.getYAxis(axes);
 		var angle:Float;
 		
 		if ((xAxisValue != 0) || (yAxisValue != 0))
@@ -166,7 +167,6 @@ class PlayState extends FlxState
 		}
 	}
 	
-	#if flash
 	private function updateDpad():Void
 	{
 		var dpadLeft = _gamePad.pressed(XboxButtonID.DPAD_LEFT);
@@ -201,59 +201,4 @@ class PlayState extends FlxState
 		_dPad.animation.frameIndex = newIndex;
 		_dPad.alpha = newAlpha;
 	}
-	#else
-	private function updateDpad():Void
-	{
-		if (_gamePad.hat.x != 0 || _gamePad.hat.y != 0)
-		{
-			if (_gamePad.hat.x > 0)
-			{
-				if (_gamePad.hat.y > 0)
-				{
-					_dPad.animation.frameIndex = 6;
-				}
-				else if (_gamePad.hat.y < 0)
-				{
-					_dPad.animation.frameIndex = 5;
-				}
-				else	// gamePad.hat.y == 0
-				{
-					_dPad.animation.frameIndex = 2;
-				}
-			}
-			else if (_gamePad.hat.x < 0)
-			{
-				if (_gamePad.hat.y > 0)
-				{
-					_dPad.animation.frameIndex = 7;
-				}
-				else if (_gamePad.hat.y < 0)
-				{
-					_dPad.animation.frameIndex = 8;
-				}
-				else	// gamePad.hat.y == 0
-				{
-					_dPad.animation.frameIndex = 4;
-				}
-			}
-			else	// gamePad.hat.x == 0
-			{
-				if (_gamePad.hat.y > 0)
-				{
-					_dPad.animation.frameIndex = 3;
-				}
-				else if (_gamePad.hat.y < 0)
-				{
-					_dPad.animation.frameIndex = 1;
-				}
-			}
-			_dPad.alpha = ALPHA_ON;
-		}
-		else
-		{
-			_dPad.animation.frameIndex = 0;
-			_dPad.alpha = ALPHA_OFF;
-		}
-	}
-	#end
 }

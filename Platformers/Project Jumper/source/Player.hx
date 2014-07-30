@@ -1,5 +1,6 @@
 package;
 
+import flixel.input.keyboard.FlxKey;
 import openfl.Assets;
 import flixel.effects.particles.FlxEmitter;
 import flixel.FlxG;
@@ -28,7 +29,7 @@ class Player extends FlxSprite
 	
 	private var _jumpTime:Float = -1;
 	private var _timesJumped:Int = 0;
-	private var _jumpKeys:Array<String>;
+	private var _jumpKeys:Array<FlxKey> = [C, K, SPACE];
 	
 	private var _xgridleft:Int = 0;
 	private var _xgridright:Int = 0;
@@ -45,7 +46,8 @@ class Player extends FlxSprite
 		_bullets = Bullets;
 		
 		//Set up the graphics
-		loadGraphic("assets/art/lizardhead3.png", true, true, 16, 20);  
+		loadGraphic("assets/art/lizardhead3.png", true, 16, 20);
+		
 		animation.add("walking", [0, 1, 2, 3], 12, true);
 		animation.add("idle", [3]);
 		animation.add("jump", [2]);
@@ -61,8 +63,6 @@ class Player extends FlxSprite
 		_gibs = Gibs;
 		// This is so we can look at properties of the playstate's tilemaps
 		_parent = Parent;  
-		
-		_jumpKeys = ["C", "K", "SPACE"];
 	}
 	
 	public override function update():Void
@@ -80,14 +80,14 @@ class Player extends FlxSprite
 			acceleration.y = GRAVITY;
 		}
 		
-		if (FlxG.keys.anyPressed(["LEFT", "A"]))
+		if (FlxG.keys.anyPressed([LEFT, A]))
 		{
-			facing = FlxObject.LEFT; 
+			flipX = true;
 			acceleration.x = -drag.x;
 		}
-		else if (FlxG.keys.anyPressed(["RIGHT", "D"]))
+		else if (FlxG.keys.anyPressed([RIGHT, D]))
 		{
-			facing = FlxObject.RIGHT;
+			flipX = false;
 			acceleration.x = drag.x;				
 		}
 		
@@ -100,7 +100,7 @@ class Player extends FlxSprite
 		}
 		
 		// Shooting
-		if (FlxG.keys.anyPressed(["X", "J"]))
+		if (FlxG.keys.anyPressed([X, J]))
 		{
 			//Let's put the shooting code in its own function to keep things organized
 			shoot();  
@@ -160,7 +160,7 @@ class Player extends FlxSprite
 	
 	private function climb():Void
 	{
-		if (FlxG.keys.anyPressed(["UP", "W"]))
+		if (FlxG.keys.anyPressed([UP, W]))
 		{
 			if (_onLadder) 
 			{
@@ -173,7 +173,7 @@ class Player extends FlxSprite
 				velocity.y = - RUN_SPEED;
 			}
 		}
-		else if (FlxG.keys.anyPressed(["DOWN", "S"]))
+		else if (FlxG.keys.anyPressed([DOWN, S]))
 		{
 			if (_onLadder) 
 			{
@@ -217,6 +217,8 @@ class Player extends FlxSprite
 				velocity.y = - 0.6 * maxVelocity.y;
 			}
 		}
+		else
+			_jumpTime = -1.0;
 	}
 	
 	private function shoot():Void 
@@ -233,7 +235,7 @@ class Player extends FlxSprite
 			
 			if (_blt != null)
 			{
-				if (facing == FlxObject.LEFT)
+				if (flipX)
 				{
 					// nudge it a little to the side so it doesn't emerge from the middle of helmutguy
 					bulletX -= Math.floor(_blt.width - 8); 
@@ -267,7 +269,7 @@ class Player extends FlxSprite
 		
 		if (_gibs != null)
 		{
-			_gibs.at(this);
+			_gibs.focusOn(this);
 			_gibs.start(true, 2.80);
 		}
 		

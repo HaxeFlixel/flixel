@@ -47,7 +47,7 @@ class PlayState extends FlxState
 		
 		// Create player (a red box)
 		_player = new FlxSprite(70);
-		_player.makeGraphic(8, 10, FlxColor.CRIMSON);
+		_player.makeGraphic(8, 10, FlxColor.RED);
 		
 		// Max velocities on player.  If it's a platformer, Y should be high, like 200.
 		// Otherwise, set them to something like 80.
@@ -73,15 +73,14 @@ class PlayState extends FlxState
 		level.setClouds(tempC);
 		
 		// Make the Camera follow the player.
-		// FlxG.camera.follow(_player);
-		FlxG.camera.setBounds(0, 0, 970, 500, true); //Note, the player does weird things when he walks off screen.
-		FlxG.camera.follow(_player, FlxCamera.STYLE_PLATFORMER);
+		FlxG.camera.setScrollBoundsRect(0, 0, 970, 500, true);
+		FlxG.camera.follow(_player, PLATFORMER);
 		
 		//HUD
 		add(_hud);
 		
 		_levelText = new FlxText(FlxG.width - 100, 0, 100);
-		_levelText.setFormat(null, 8, 0xFFFFFFFF, "right");
+		_levelText.setFormat(null, 8, 0xFFFFFFFF, RIGHT);
 		_levelText.text = "Slope Test";
 		_levelText.scrollFactor.set();
 		_hud.add(_levelText);
@@ -102,15 +101,15 @@ class PlayState extends FlxState
 	{
 		_player.acceleration.x = 0;
 		
-		if (FlxG.keys.anyPressed(["LEFT", "A"]))
+		if (FlxG.keys.anyPressed([LEFT, A]))
 		{
 			_player.acceleration.x = -_player.maxVelocity.x * 4;
 		}
-		if (FlxG.keys.anyPressed(["RIGHT", "D"]))
+		if (FlxG.keys.anyPressed([RIGHT, D]))
 		{
 			_player.acceleration.x = _player.maxVelocity.x * 4;
 		}
-		if (FlxG.keys.anyPressed(["SPACE", "W", "UP"]) && _player.isTouching(FlxObject.FLOOR))
+		if (FlxG.keys.anyPressed([SPACE, W, UP]) && _player.isTouching(FlxObject.FLOOR))
 		{
 			_player.velocity.y = -_player.maxVelocity.y / 2;
 		}

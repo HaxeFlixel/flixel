@@ -8,7 +8,7 @@ import flixel.FlxState;
 import flixel.group.FlxGroup;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
-import flixel.util.FlxRandom;
+import flixel.math.FlxRandom;
 import flixel.util.FlxSave;
 
 class PlayState extends FlxState
@@ -51,10 +51,15 @@ class PlayState extends FlxState
 		// Current score.
 		
 		_scoreDisplay = new FlxText(0, 180, FlxG.width);
-		_scoreDisplay.alignment = "center";
+		_scoreDisplay.alignment = CENTER;
 		_scoreDisplay.color = 0xff868696;
-		_scoreDisplay.size = 24;
 		add(_scoreDisplay);
+		
+		#if mobile
+		_scoreDisplay.text = "Tap to start";
+		#else
+		_scoreDisplay.text = "Press Space to start";
+		#end
 		
 		// Update all-time high score.
 		
@@ -63,7 +68,7 @@ class PlayState extends FlxState
 		// Display high score.
 		
 		_highScore = new FlxText(0, 40, FlxG.width, "");
-		_highScore.alignment = "center";
+		_highScore.alignment = CENTER;
 		_highScore.color = 0xff868696;
 		add(_highScore);
 		
@@ -73,14 +78,14 @@ class PlayState extends FlxState
 		// The left bounce panel. Drawn via code in Reg to fit screen height.
 		
 		_bounceLeft = new FlxSprite(1, 17);
-		_bounceLeft.loadGraphic(Reg.getBounceImage(FlxG.height - 34), true, false, 4, FlxG.height - 34);
+		_bounceLeft.loadGraphic(Reg.getBounceImage(FlxG.height - 34), true, 4, FlxG.height - 34);
 		_bounceLeft.animation.add("flash", [1,0], 8, false);
 		add(_bounceLeft);
 		
 		// The right bounce panel.
 		
 		_bounceRight = new FlxSprite(FlxG.width - 5, 17);
-		_bounceRight.loadGraphic(Reg.getBounceImage(FlxG.height - 34), true, false, 4, FlxG.height - 34);
+		_bounceRight.loadGraphic(Reg.getBounceImage(FlxG.height - 34), true, 4, FlxG.height - 34);
 		_bounceRight.animation.add("flash", [1,0], 8, false);
 		add(_bounceRight);
 		
@@ -116,10 +121,9 @@ class PlayState extends FlxState
 		// A simple emitter to make some feathers when the bird gets spiked.
 		
 		_feathers = new FlxEmitter();
-		_feathers.makeParticles("assets/feather.png", 50, 32);
-		_feathers.setXSpeed( -10, 10);
-		_feathers.setYSpeed( -10, 10);
-		_feathers.gravity = 10;
+		_feathers.loadParticles("assets/feather.png", 50, 32);
+		_feathers.velocity.set( -10, -10, 10, 10);
+		_feathers.acceleration.set(0, 10);
 		add(_feathers);
 	}
 	
@@ -131,17 +135,15 @@ class PlayState extends FlxState
 		} else if (_player.x < 5) {
 			_player.x = 5;
 			_player.velocity.x = -_player.velocity.x;
-			_player.facing = FlxObject.RIGHT;
-			Reg.score++;
-			_scoreDisplay.text = Std.string(Reg.score);
+			_player.flipX = false;
+			increaseScore();
 			_bounceLeft.animation.play("flash");
 			_paddleRight.randomize();
 		} else if (_player.x + _player.width > FlxG.width - 5) {
 			_player.x = FlxG.width - _player.width - 5;
 			_player.velocity.x = -_player.velocity.x;
-			_player.facing = FlxObject.LEFT;
-			Reg.score++;
-			_scoreDisplay.text = Std.string(Reg.score);
+			_player.flipX = true;
+			increaseScore();
 			_bounceRight.animation.play("flash");
 			_paddleLeft.randomize();
 		}
@@ -161,12 +163,19 @@ class PlayState extends FlxState
 	{
 		_feathers.x = X;
 		_feathers.y = Y;
-		_feathers.start(true, 2, 0, Amount, 1);
+		_feathers.start(true, 0, Amount);
 	}
 	
 	public function randomPaddleY():Int
 	{
-		return FlxRandom.intRanged(Std.int(_bounceLeft.y), Std.int(_bounceLeft.y + _bounceLeft.height - _paddleLeft.height));
+		return FlxG.random.int(Std.int(_bounceLeft.y), Std.int(_bounceLeft.y + _bounceLeft.height - _paddleLeft.height));
+	}
+	
+	private function increaseScore():Void
+	{
+		Reg.score++;
+		_scoreDisplay.text = Std.string(Reg.score);
+		_scoreDisplay.size = 24;
 	}
 	
 	/**

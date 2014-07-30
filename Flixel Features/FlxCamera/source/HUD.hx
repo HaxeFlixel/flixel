@@ -1,14 +1,13 @@
-package ;
-import flixel.FlxG;
-import flixel.group.FlxGroup;
+package;
+
 import flixel.FlxSprite;
+import flixel.group.FlxGroup;
 import flixel.text.FlxText;
-//import pgr.gconsole.GameConsole;
+import flixel.util.FlxColor;
 
 /**
  * @author TiagoLr ( ~~~ProG4mr~~~ )
  */
-
 class HUD extends FlxGroup
 {
 	private var txtStyle:FlxText;
@@ -21,28 +20,33 @@ class HUD extends FlxGroup
 	{
 		super();
 		
-		background = new FlxSprite(10000 - 50, -175, null);
-		background.makeGraphic(300, 360, 0xFF000000);
+		background = new FlxSprite(10000 -50, -175);
+		background.makeGraphic(300, 360, FlxColor.BLACK);
 		add(background);
 		
-		add(new FlxText(10010, 10, 200 - 10, "Use [W,A,S,D] to control the orb.\n\n[Y] or [H] to change camera style.\n\n\n\n[U] or [J] to change lerp.\n\n\n\n[I] or [K] to change lead.\n\n\n\n[O] or [L] to change zoom.")); 
+		var x:Int = 10006;
+		var startY:Int = 10;
+		var width:Int = 300;
 		
-		txtStyle = new FlxText(10010, 10 + 30 + 3, 190,  "STYLE_LOCKON");
-		txtStyle.setFormat(null, 11, 0x55FF55, "left");
-		add(txtStyle);
+		add(new FlxText(x, startY, width, "[W,A,S,D] or arrows to control the orb.")); 
 		
-		txtLerp = new FlxText(10010, 50 + 30, 300,  "Camera lerp: 0");
-		txtLerp.setFormat(null, 11, 0x55FF55, "left");
-		add(txtLerp);
+		add(new FlxText(x, startY + 20, 300, "[H] to change follow style."));
+		addGreenText(txtStyle = new FlxText(x, startY + 33, width, "LOCKON"));
 		
-		txtLead = new FlxText(10010, 90 + 30, 300,  "Camera lead: 0");
-		txtLead.setFormat(null, 11, 0x55FF55, "left");
-		add(txtLead);
-
-		txtZoom = new FlxText(10010, 130 + 30, 300,  "Camera zoom: 1");
-		txtZoom.setFormat(null, 11, 0x55FF55, "left");
-		add(txtZoom);
+		add(new FlxText(x, startY + 55, width, "[U] or [J] to change lerp."));
+		addGreenText(txtLerp = new FlxText(x, startY + 68, width, "Camera lerp: 1"));
 		
+		add(new FlxText(x, startY + 95, width, "[I] or [K] to change lead."));
+		addGreenText(txtLead = new FlxText(x, startY + 108, width, "Camera lead: 0"));
+		
+		add(new FlxText(x, startY + 135, width, "[O] or [L] to change zoom."));
+		addGreenText(txtZoom = new FlxText(x, startY + 148, width, "Camera zoom: 1"));
+	}
+	
+	private function addGreenText(text:FlxText)
+	{
+		text.setFormat(null, 11, 0x55FF55);
+		add(text);
 	}
 	
 	public function updateStyle(string:String) 
@@ -62,8 +66,6 @@ class HUD extends FlxGroup
 	
 	public function updateZoom(zoom:Float) 
 	{
-		//GameConsole.log("zoom  " + zoom);
 		txtZoom.text = "Camera Zoom: " + Math.floor(zoom * 10) / 10;
 	}
-	
 }

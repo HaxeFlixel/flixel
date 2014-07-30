@@ -4,8 +4,8 @@ import flash.display.BlendMode;
 import flixel.util.FlxColor;
 import flixel.effects.particles.FlxEmitter;
 import flixel.effects.particles.FlxParticle;
-import flixel.effects.particles.FlxTypedEmitter.Bounds;
-import flixel.util.FlxRandom;
+import flixel.math.FlxRandom;
+import flixel.FlxG;
 
 class EnemyGibs extends FlxEmitter
 {
@@ -19,8 +19,8 @@ class EnemyGibs extends FlxEmitter
 	{
 		super(0, 0, SIZE);
 		
-		setXSpeed( -SPEED, SPEED);
-		setYSpeed( -SPEED, SPEED);
+		velocity.set( -SPEED, -SPEED, SPEED, SPEED);
+		lifespan.set(1, 1);
 		
 		#if !(cpp || neko || js)
 		blend = BlendMode.INVERT;
@@ -33,7 +33,7 @@ class EnemyGibs extends FlxEmitter
 			#if !(cpp || neko || js)
 			p.makeGraphic(2, 2, FlxColor.BLACK);
 			#else
-			if (FlxRandom.chanceRoll())
+			if (FlxG.random.bool())
 			{
 				p.makeGraphic(2, 2, FlxColor.BLACK);
 			}
@@ -58,6 +58,6 @@ class EnemyGibs extends FlxEmitter
 	{
 		x = X;
 		y = Y;
-		start(true, 1, 0, SIZE, 1);
+		start(true, 0, SIZE);
 	}
 }

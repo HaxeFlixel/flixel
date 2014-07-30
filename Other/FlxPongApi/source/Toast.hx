@@ -46,11 +46,11 @@ class Toast extends FlxSpriteGroup
 		var bg:PongSprite = new PongSprite(0, 0, WIDTH, HEIGHT, Reg.dark);
 		var top:FlxText = new FlxText(0, -2, WIDTH, "Trophy Get!");
 		top.color = Reg.med_lite;
-		top.alignment = "center";
+		top.alignment = CENTER;
 		var img:FlxSprite = new FlxSprite(Math.round((WIDTH - 75) / 2), 16, bd);
 		var bottom:FlxText = new FlxText(0, HEIGHT - 23, WIDTH - 1, _name);
 		bottom.color = Reg.lite;
-		bottom.alignment = "center";
+		bottom.alignment = CENTER;
 		
 		add(bg);
 		add(img);
@@ -58,7 +58,7 @@ class Toast extends FlxSpriteGroup
 		add(bottom);
 		
 		FlxTween.linearMotion(this, this.x, this.y, this.x - WIDTH - 10, this.y, 1);
-		FlxTimer.start(6, removeThis, 1);
+		new FlxTimer(6, removeThis, 1);
 	}
 	
 	private function removeThis(t:FlxTimer):Void

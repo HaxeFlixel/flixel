@@ -2,7 +2,7 @@ package;
 
 import flixel.FlxSprite;
 import flixel.FlxG;
-import flixel.util.FlxRandom;
+import flixel.math.FlxRandom;
 
 /**
  * ...
@@ -30,11 +30,11 @@ class Bunny extends FlxSprite
 			speedMultiplier = 5000;
 		}
 		
-		velocity.x = speedMultiplier * FlxRandom.floatRanged( -5, 5);
-		velocity.y = speedMultiplier * FlxRandom.floatRanged( -7.5, 2.5);
+		velocity.x = speedMultiplier * FlxG.random.float( -5, 5);
+		velocity.y = speedMultiplier * FlxG.random.float( -7.5, 2.5);
 		acceleration.y = 5;
-		angle = FlxRandom.floatRanged( -15, 15);
-		angularVelocity = 30 * FlxRandom.floatRanged( -5, 5);
+		angle = FlxG.random.float( -15, 15);
+		angularVelocity = 30 * FlxG.random.float( -5, 5);
 		complex = PlayState.complex;
 		elasticity = 1;
 		
@@ -52,11 +52,11 @@ class Bunny extends FlxSprite
 		
 		if (!PlayState.offScreen)
 		{
-			setBounds();
+			updateBounds();
 		}
 	}
 	
-	private function setBounds():Void
+	private function updateBounds():Void
 	{
 		if (x > (FlxG.width - width))
 		{
@@ -74,9 +74,9 @@ class Bunny extends FlxSprite
 			velocity.y *= -0.8;
 			y = (FlxG.height - height);
 			
-			if (FlxRandom.chanceRoll()) 
+			if (FlxG.random.bool()) 
 			{
-				velocity.y -= FlxRandom.floatRanged(3, 7);
+				velocity.y -= FlxG.random.float(3, 7);
 			}
 		}
 		else if (y < 0)
@@ -92,7 +92,7 @@ class Bunny extends FlxSprite
 	{
 		if (Value)
 		{
-			scale.x = scale.y = FlxRandom.floatRanged(0.3, 1.3);
+			scale.x = scale.y = FlxG.random.float(0.3, 1.3);
 		}
 		else 
 		{

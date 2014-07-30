@@ -13,9 +13,10 @@ import flixel.tweens.FlxEase.EaseFunction;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxTween.TweenOptions;
 import flixel.util.FlxColor;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 import flixel.util.FlxSpriteUtil;
 import flixel.system.FlxAssets;
+import haxe.EnumTools;
 
 /**
  * Tweening demo.
@@ -31,25 +32,12 @@ class PlayState extends FlxState
 	 */
 	private static inline var DURATION:Float = 1;
 
-	/**
-	 * The tween types
-	 */
-	private static inline var TWEEN				:Int = 0;
-	private static inline var ANGLE				:Int = 1;
-	private static inline var COLOR				:Int = 2;
-	private static inline var LINEAR_MOTION		:Int = 3;
-	private static inline var LINEAR_PATH		:Int = 4;
-	private static inline var CIRCULAR_MOTION	:Int = 5;
-	private static inline var CUBIC_MOTION		:Int = 6;
-	private static inline var QUAD_MOTION		:Int = 7;
-	private static inline var QUAD_PATH			:Int = 8;
-
 	private var _easeInfo:Array<EaseInfo>;
 	
 	private var _currentEaseIndex:Int = 0;
 	private var _currentEaseType:String = "quad";
 	private var _currentEaseDirection:String = "In";
-	private var _currentTweenIndex:Int = TWEEN; // Start with tween() tween, it's used most commonly.
+	private var _currentTween:TweenType = TWEEN; // Start with tween() tween, it's used most commonly.
 	
 	private var _tween:FlxTween;
 	private var _sprite:FlxSprite;
@@ -109,7 +97,7 @@ class PlayState extends FlxState
 		_easeInfo.push({ name: "none",         ease: null                 });
 		
 		var title = new FlxText(0, 0, FlxG.width, "FlxTween", 64);
-		title.alignment = "center";
+		title.alignment = CENTER;
 		FlxSpriteUtil.screenCenter(title);
 		title.alpha = 0.15;
 		add(title);
@@ -117,7 +105,11 @@ class PlayState extends FlxState
 		// Create the sprite to tween (flixel logo)
 		_sprite = new FlxSprite();
 		_sprite.loadGraphic(GraphicLogo, true);
-		_sprite.antialiasing = true; // subpixel-rendering for smoother movement
+		_sprite.antialiasing = true;
+		
+		// force subpixel rendering for smoother movement 
+		// - important for movement at low speed (like the end of elasticOut)
+		_sprite.pixelPerfectRender = false;
 		
 		// Add a trail effect
 		_trail = new FlxTrail(_sprite, GraphicLogo, 12, 0, 0.4, 0.02);
@@ -193,7 +185,7 @@ class PlayState extends FlxState
 		FlxG.watch.add(this, "_currentEaseIndex");
 		FlxG.watch.add(this, "_currentEaseType");
 		FlxG.watch.add(this, "_currentEaseDirection");
-		FlxG.watch.add(this, "_currentTweenIndex");
+		FlxG.watch.add(this, "_currentTween");
 		#end
 	}
 
@@ -209,11 +201,12 @@ class PlayState extends FlxState
 		_sprite.alpha = 0.8; // Lowered alpha looks neat
 		
 		// Cancel the old tween
-		if (_tween != null) {
+		if (_tween != null)
+		{
 			_tween.cancel();
 		}
 		
-		switch (_currentTweenIndex)
+		switch (_currentTween)
 		{
 			case TWEEN:
 				_tween = FlxTween.tween(_sprite, { x: _max.x, angle: 180 }, DURATION, options);
@@ -223,55 +216,55 @@ class PlayState extends FlxState
 				FlxSpriteUtil.screenCenter(_sprite);
 				
 			case COLOR:
-				_tween = FlxTween.color(_sprite, DURATION, FlxColor.BLACK, FlxColor.BLUE, 1, 0, options);
+				_tween = FlxTween.color(_sprite, DURATION, FlxColor.BLACK, FlxColor.fromRGB(0, 0, 255, 0), options);
 				FlxSpriteUtil.screenCenter(_sprite);
 				
 			case LINEAR_MOTION:
-				_tween = FlxTween.linearMotion(	_sprite,
-												_sprite.x, _sprite.y,
-												_max.x, _sprite.y,
-												DURATION, true, options);
+				_tween = FlxTween.linearMotion(_sprite,
+				                               _sprite.x, _sprite.y,
+				                               _max.x, _sprite.y,
+				                               DURATION, true, options);
 				
 			case LINEAR_PATH:
 				_sprite.y = (_max.y - _sprite.height);
 				var path:Array<FlxPoint> = [FlxPoint.get(_sprite.x, _sprite.y),
-											FlxPoint.get(_sprite.x + (_max.x - _min.x) * 0.5, _min.y),
-											FlxPoint.get(_max.x, _sprite.y)];
+				                            FlxPoint.get(_sprite.x + (_max.x - _min.x) * 0.5, _min.y),
+				                            FlxPoint.get(_max.x, _sprite.y)];
 				_tween = FlxTween.linearPath(_sprite, path, DURATION, true, options);
 				
 			case CIRCULAR_MOTION:
-				_tween = FlxTween.circularMotion(	_sprite,
-													(FlxG.width * 0.5) - (_sprite.width / 2), 
-													(FlxG.height * 0.5) - (_sprite.height / 2),
-													_sprite.width, 359,
-													true, DURATION, true, options);
+				_tween = FlxTween.circularMotion(_sprite,
+				                                 (FlxG.width * 0.5) - (_sprite.width / 2), 
+				                                 (FlxG.height * 0.5) - (_sprite.height / 2),
+				                                 _sprite.width, 359,
+				                                 true, DURATION, true, options);
 				
 			case CUBIC_MOTION:
 				_sprite.y = _min.y;
-				_tween = FlxTween.cubicMotion(	_sprite,
-												_sprite.x, _sprite.y,
-												_sprite.x + (_max.x - _min.x) * 0.25, _max.y,
-												_sprite.x + (_max.x - _min.x) * 0.75, _max.y,
-												_max.x, _sprite.y,
-												DURATION, options);
+				_tween = FlxTween.cubicMotion(_sprite,
+				                              _sprite.x, _sprite.y,
+				                              _sprite.x + (_max.x - _min.x) * 0.25, _max.y,
+				                              _sprite.x + (_max.x - _min.x) * 0.75, _max.y,
+				                              _max.x, _sprite.y,
+				                              DURATION, options);
 					
 			case QUAD_MOTION:
 				var rangeModifier = 100;
-				_tween = FlxTween.quadMotion(	_sprite,
-												_sprite.x, 					// start x
-												_sprite.y + rangeModifier,	// start y
-												_sprite.x + (_max.x - _min.x) * 0.5, // control x
-												_min.y - rangeModifier, 	// control y 
-												_max.x, 					// end x
-												_sprite.y + rangeModifier,	// end y
-												DURATION, true, options);
+				_tween = FlxTween.quadMotion(_sprite,
+				                             _sprite.x,                 // start x
+				                             _sprite.y + rangeModifier, // start y
+				                             _sprite.x + (_max.x - _min.x) * 0.5, // control x
+				                             _min.y - rangeModifier,    // control y 
+				                             _max.x,                    // end x
+				                             _sprite.y + rangeModifier, // end y
+				                             DURATION, true, options);
 	
 			case QUAD_PATH:
 				var path:Array<FlxPoint> = [FlxPoint.get(_sprite.x, _sprite.y),
-											FlxPoint.get(_sprite.x + (_max.x - _min.x) * 0.5, _max.y),
-											FlxPoint.get(_max.x - (_max.x / 2) + (_sprite.width / 2), _sprite.y), 
-											FlxPoint.get(_max.x - (_max.x / 2) + (_sprite.width / 2), _min.y),
-											FlxPoint.get(_max.x, _sprite.y)];
+				                            FlxPoint.get(_sprite.x + (_max.x - _min.x) * 0.5, _max.y),
+				                            FlxPoint.get(_max.x - (_max.x / 2) + (_sprite.width / 2), _sprite.y), 
+				                            FlxPoint.get(_max.x - (_max.x / 2) + (_sprite.width / 2), _min.y),
+				                            FlxPoint.get(_max.x, _sprite.y)];
 				_tween = FlxTween.quadPath(_sprite, path, DURATION, true, options);
 		}
 		
@@ -320,7 +313,7 @@ class PlayState extends FlxState
 	
 	private function onTweenChange(ID:String):Void
 	{
-		_currentTweenIndex = Std.parseInt(ID);
+		_currentTween = EnumTools.createByIndex(TweenType, Std.parseInt(ID));
 		startTween();
 	}
 	
@@ -334,4 +327,17 @@ class PlayState extends FlxState
 typedef EaseInfo = {
 	name:String,
 	ease:EaseFunction
+}
+
+enum TweenType
+{
+	TWEEN;
+	ANGLE;
+	COLOR;
+	LINEAR_MOTION;
+	LINEAR_PATH;
+	CIRCULAR_MOTION;
+	CUBIC_MOTION;
+	QUAD_MOTION;
+	QUAD_PATH;
 }

@@ -1,7 +1,7 @@
 package;
 
 import flixel.util.FlxArrayUtil;
-import flixel.util.FlxColorUtil;
+import flixel.util.FlxColor;
 
 /**
  * Identical to the FlxRandom class in HaxeFlixel, but with no inlining, for speed comparison.
@@ -114,7 +114,7 @@ class NonInlineFlxRandom
 			{
 				result = Math.round(Min + float() * (Max - Min));
 			}
-			while (FlxArrayUtil.indexOf(Excludes, result) >= 0);
+			while (Excludes.indexOf(result) >= 0);
 		}
 		
 		return result;
@@ -156,7 +156,7 @@ class NonInlineFlxRandom
 			{
 				result = Min + float() * (Max - Min);
 			}
-			while (FlxArrayUtil.indexOf(Excludes, result) >= 0);
+			while (Excludes.indexOf(result) >= 0);
 		}
 		
 		return result;
@@ -331,13 +331,13 @@ class NonInlineFlxRandom
 	 * @param	Alpha	The alpha value of the returning color (default 255 = fully opaque).
 	 * @return 	A color value in hex ARGB format.
 	 */
-	public static function color(Min:Int = 0, Max:Int = 255, Alpha:Int = 255):Int
+	public static function color(Min:Int = 0, Max:Int = 255, Alpha:Int = 255):FlxColor
 	{
 		var red:Int = intRanged(Min, Max);
 		var green:Int = intRanged(Min, Max);
 		var blue:Int = intRanged(Min, Max);
 		
-		return FlxColorUtil.makeFromARGB(Alpha, red, green, blue);
+		return FlxColor.fromRGB(Alpha, red, green, blue);
 	}
 	
 	/**

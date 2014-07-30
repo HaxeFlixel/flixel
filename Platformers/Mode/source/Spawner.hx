@@ -3,8 +3,8 @@ package;
 import flixel.effects.particles.FlxEmitter;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.group.FlxTypedGroup;
-import flixel.util.FlxRandom;
+import flixel.group.FlxGroup;
+import flixel.math.FlxRandom;
 import flixel.util.FlxSpriteUtil;
 
 class Spawner extends FlxSprite
@@ -26,7 +26,7 @@ class Spawner extends FlxSprite
 		_botBullets = BotBullets;
 		_botGibs = BotGibs;
 		_player = ThePlayer;
-		_timer = FlxRandom.floatRanged(0, 20);
+		_timer = FlxG.random.float(0, 20);
 		_open = false;
 		health = 8;
 
@@ -108,7 +108,7 @@ class Spawner extends FlxSprite
 		FlxG.camera.flash(0xffd8eba2, 0.65, turnOffSlowMo);
 		FlxG.timeScale = 0.35;
 		makeBot();
-		_gibs.at(this);
+		_gibs.focusOn(this);
 		_gibs.start(true,3);
 		Reg.score += 1000;
 	}

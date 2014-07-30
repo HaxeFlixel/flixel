@@ -69,18 +69,18 @@ class TileAnims
 					};
 					for (frame in animation.nodes.frame) {
 						data.frames.push(Std.parseInt(frame.att.id) + firstGID);
-						if (frame.has.flipHorizontal || frame.has.flipVertical || frame.has.rotation) {
+						if (frame.has.flipX || frame.has.flipY || frame.has.rotation) {
 							var params:AnimParams = {
-								flipHorizontal: false,
-								flipVertical: false,
+								flipX: false,
+								flipY: false,
 								rotate: FlxTileSpecial.ROTATE_0
 							};
 							
-							if (frame.has.flipHorizontal && frame.att.flipHorizontal == "true") {
-								params.flipHorizontal = true;
+							if (frame.has.flipX && frame.att.flipX == "true") {
+								params.flipX = true;
 							}
-							if (frame.has.flipVertical && frame.att.flipVertical == "true") {
-								params.flipVertical = true;
+							if (frame.has.flipY && frame.att.flipY == "true") {
+								params.flipY = true;
 							}
 							if (frame.has.rotation) {
 								var rotation:Int = Std.parseInt(frame.att.rotation);

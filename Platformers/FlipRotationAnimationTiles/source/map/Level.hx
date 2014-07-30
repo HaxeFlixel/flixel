@@ -11,10 +11,10 @@ import flixel.addons.tile.FlxTilemapExt;
 import flixel.addons.tile.FlxTileSpecial;
 import flixel.FlxG;
 import flixel.FlxObject;
-import flixel.group.FlxTypedGroup;
+import flixel.group.FlxGroup;
 import flixel.tile.FlxTilemap;
-import flixel.util.FlxRandom;
-import flixel.util.FlxRect;
+import flixel.math.FlxRandom;
+import flixel.math.FlxRect;
 import flixel.util.FlxSort;
 
 /**
@@ -31,7 +31,7 @@ class Level extends TiledMap
 	public var collisionGroup:FlxTypedGroup<FlxObject>;
 	public var characterGroup:FlxTypedGroup<Character>;
 	
-	private var bounds:FlxRect;
+	public var bounds:FlxRect;
 
 	public function new(level:Dynamic, animFile:Dynamic) 
 	{
@@ -76,7 +76,7 @@ class Level extends TiledMap
 				PATH_TILESETS + tileset.imageSource,	
 				tileset.tileWidth,						// each tileset can have a different tile width or height
 				tileset.tileHeight,
-				FlxTilemap.OFF,							// disable auto map
+				OFF,									// disable auto map
 				tileset.firstGID						// IMPORTANT! set the starting tile id to the first tile id of the tileset
 			);
 			
@@ -94,7 +94,7 @@ class Level extends TiledMap
 						// Right now, a special tile only can have one animation.
 						animData = animations.get(tile.tilesetID)[0];
 						// add some speed randomization to the animation
-						var randomize:Float = FlxRandom.floatRanged( -animData.randomizeSpeed, animData.randomizeSpeed);
+						var randomize:Float = FlxG.random.float( -animData.randomizeSpeed, animData.randomizeSpeed);
 						var speed:Float = animData.speed + randomize;
 						
 						specialTile.addAnimation(animData.frames, speed, animData.framesData);
@@ -135,14 +135,14 @@ class Level extends TiledMap
 		switch(o.type.toLowerCase()) {
 			case "player":
 				var player:Character = new Character(o.name, x, y, "images/chars/"+o.name+".json");
-				player.setBoundsMap(this.getBounds());
+				player.setBoundsMap(bounds);
 				player.controllable = true;
 				FlxG.camera.follow(player);
 				characterGroup.add(player);
 				
 			case "npc":
 				var npc:Character = new Character(o.name, x, y, "images/chars/"+o.name+".json");
-				npc.setBoundsMap(this.getBounds());
+				npc.setBoundsMap(bounds);
 				characterGroup.add(npc);
 				
 			case "collision":
@@ -167,11 +167,6 @@ class Level extends TiledMap
 	public function updateCollisions():Void {
 		FlxG.collide(characterGroup, collisionGroup);
 		FlxG.collide(characterGroup, characterGroup);
-	}
-	
-	public function getBounds():FlxRect 
-	{
-		return bounds;
 	}
 	
 	private inline function isSpecialTile(tile:TiledTile, animations:Dynamic):Bool {

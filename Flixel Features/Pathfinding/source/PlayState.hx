@@ -9,7 +9,7 @@ import flixel.tile.FlxTilemap;
 import flixel.ui.FlxButton;
 import flixel.util.FlxColor;
 import flixel.util.FlxPath;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 import openfl.Assets;
 
 class PlayState extends FlxState
@@ -130,6 +130,8 @@ class PlayState extends FlxState
 		
 		var legends:FlxText = new FlxText(textX, 140, textWidth, "Legends:\nRed: Unit\nYellow: Goal\nBlue: Wall\nWhite: Path");
 		add(legends);
+		
+		path = new FlxPath();
 	}
 	
 	override public function destroy():Void
@@ -193,7 +195,7 @@ class PlayState extends FlxState
 		// Tell unit to follow path
 		if (pathPoints != null) 
 		{
-			path = FlxPath.start(_unit, pathPoints);
+			path.start(_unit, pathPoints);
 			_action = ACTION_GO;
 			_instructions.text = INSTRUCTION_1;
 		}
@@ -207,7 +209,7 @@ class PlayState extends FlxState
 	{
 		// Stop unit and destroy unit path
 		_action = ACTION_IDLE;
-		path.abort();
+		path.cancel();
 		_unit.velocity.x = _unit.velocity.y = 0;
 	}
 	

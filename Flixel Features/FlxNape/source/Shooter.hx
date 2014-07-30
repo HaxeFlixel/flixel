@@ -1,20 +1,15 @@
-package ;
-import flash.display.Sprite;
+package;
+
 import flixel.addons.nape.FlxNapeSprite;
 import flixel.addons.nape.FlxNapeState;
 import flixel.effects.particles.FlxEmitter;
-import flixel.effects.particles.FlxEmitterExt;
+import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.plugin.MouseEventManager;
-import flixel.util.FlxAngle;
-import flixel.util.FlxRandom;
-import flixel.util.FlxSpriteUtil;
+import flixel.group.FlxGroup;
+import flixel.input.mouse.FlxMouseEventManager;
+import flixel.math.FlxPoint;
 import nape.callbacks.CbEvent;
 import nape.callbacks.CbType;
-import flixel.FlxG;
-import flixel.group.FlxGroup;
-import flixel.util.FlxPoint;
-import flixel.util.FlxMath;
 import nape.callbacks.InteractionCallback;
 import nape.callbacks.InteractionListener;
 import nape.callbacks.InteractionType;
@@ -29,10 +24,8 @@ import nape.phys.Body;
  * @author TiagoLr ( ~~~ProG4mr~~~ )
  * @link https://github.com/ProG4mr
  */
-
-class Shooter extends FlxGroup
+class Shooter extends FlxTypedGroup<FlxNapeSprite>
 {
-
 	public static var CB_BULLET:CbType = new CbType();
 	var mouseJoint:DistanceJoint;
 	var impulse = 3000;
@@ -51,8 +44,7 @@ class Shooter extends FlxGroup
 		background.alpha = 1;
 		FlxG.state.members.insert(0, background);
 		FlxG.state.length++;
-		MouseEventManager.add(background, launchProjectile);
-		//var color = FlxRandom.intRanged(0, FlxRandom.MAX_RANGE);
+		FlxMouseEventManager.add(background, launchProjectile);
 		var color = 0x333333;
 		
 		for (i in 0...maxSize)
@@ -71,11 +63,12 @@ class Shooter extends FlxGroup
 			add(spr);
 		}
 		
-		FlxNapeState.space.listeners.add(new InteractionListener(CbEvent.BEGIN, 
-													 InteractionType.COLLISION, 
-													 Shooter.CB_BULLET,
-													 CbType.ANY_BODY,
-													 onBulletColides));
+		FlxNapeState.space.listeners.add(new InteractionListener(
+			CbEvent.BEGIN, 
+			InteractionType.COLLISION, 
+			Shooter.CB_BULLET,
+			CbType.ANY_BODY,
+			onBulletColides));
 	}
 	
 	function launchProjectile(spr:FlxSprite) 
@@ -83,20 +76,18 @@ class Shooter extends FlxGroup
 		
 		if (disableShooting) 
 			return;
-			
-			
-		var spr:FlxNapeSprite = cast(recycle(FlxNapeSprite), FlxNapeSprite);
-		spr.revive();
 		
-		var trail:Trail = new Trail(Std.int(spr.x), Std.int(spr.y), spr);
+		var spr = recycle(FlxNapeSprite);
+		var trail = new Trail(spr);
 		
 		spr.body.position.y = 30;
 		spr.body.position.x = 30 + Std.random(640 - 30);
-		var angle = FlxAngle.getAngle(FlxPoint.get(FlxG.mouse.x, FlxG.mouse.y), 
-									  FlxPoint.get(spr.body.position.x, spr.body.position.y));
+		var angle = FlxG.mouse.toPoint()
+			.angleBetween(FlxPoint.get(spr.body.position.x, spr.body.position.y));
 		angle += 90;
-		spr.body.velocity.setxy(impulse * Math.cos(angle * 3.14 / 180),
-								impulse * Math.sin(angle * 3.14 / 180));
+		spr.body.velocity.setxy(
+			impulse * Math.cos(angle * 3.14 / 180),
+			impulse * Math.sin(angle * 3.14 / 180));
 		
 		spr.body.angularVel = 30;				
 	}
@@ -110,7 +101,7 @@ class Shooter extends FlxGroup
 	
 	public inline function registerPhysSprite(spr:FlxNapeSprite)
 	{
-		MouseEventManager.add(spr, createMouseJoint);
+		FlxMouseEventManager.add(spr, createMouseJoint);
 	}
 	
 	function createMouseJoint(spr:FlxSprite) 
@@ -119,11 +110,10 @@ class Shooter extends FlxGroup
 		var body:Body = cast(spr, FlxNapeSprite).body;
 		
 		mouseJoint = new DistanceJoint(FlxNapeState.space.world, body, new Vec2(FlxG.mouse.x, FlxG.mouse.y),
-								body.worldPointToLocal(new Vec2(FlxG.mouse.x, FlxG.mouse.y)), 0, 0);
+			body.worldPointToLocal(new Vec2(FlxG.mouse.x, FlxG.mouse.y)), 0, 0);
 		
 		mouseJoint.space = FlxNapeState.space;
-	}
-		
+	}	
 	
 	override public function update():Void 
 	{
@@ -138,7 +128,6 @@ class Shooter extends FlxGroup
 				mouseJoint.space = null;
 			}
 		}
-		
 	}
 	
 	public function setSpeed(maxSpeed:Int) 
@@ -158,61 +147,35 @@ class Shooter extends FlxGroup
 
 class Trail extends FlxEmitter
 {
-	var attach:FlxNapeSprite;
-	var killTimmer:Float;
-	var isDying:Bool;
+	private var attach:FlxNapeSprite;
 	
-	function new(X:Int, Y:Int, Attach:FlxNapeSprite)
+	public function new(Attach:FlxNapeSprite)
 	{
-		killTimmer = 0;
 		super(0, 0);
 		
-		makeParticles("assets/shooter.png", 20, 0, false, 0, false);
+		loadParticles("assets/shooter.png", 20, 0);
 		attach = Attach;
 		
 		FlxG.state.add(this);
-		this.xVelocity.max = 0;
-		this.xVelocity.min = 0;
-		this.yVelocity.max = 0;
-		this.yVelocity.min = 0;
-		this.rotation.min = 0;
-		this.rotation.max = 0;
 		
-		this.setScale(1, 1, 0, 0);
-		this.setAlpha(1, 1, 0, 0);
+		velocity.set(0, 0);
+		scale.set(1, 1, 1, 1, 0, 0, 0, 0);
+		lifespan.set(0.25);
 		
-		start(false, .25, .25, 0, 0);
-		this.on = false;
+		start(false, FlxG.elapsed);
 	}
 	
 	override public function update():Void
 	{
 		super.update();
 		
-		if (isDying) 
+		if (attach.alive)
 		{
-			killTimmer += FlxG.elapsed;
-			if (killTimmer > 1)
-			{
-				kill();
-				FlxG.state.remove(this);
-			}
-			return;
+			focusOn(attach);
 		}
-		
-		if (attach.alive == false)
+		else
 		{
-			this.set_x(attach.x);
-			this.set_y(attach.y);
-			this.emitParticle();
-			isDying = true;
-		} 
-		else 
-		{
-			this.set_x(attach.x);
-			this.set_y(attach.y);
-			this.emitParticle();
+			emitting = false;
 		}
 	}
-	
 }

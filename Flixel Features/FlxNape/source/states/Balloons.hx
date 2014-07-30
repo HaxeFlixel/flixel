@@ -1,18 +1,13 @@
 package states;
+
 import flash.display.Graphics;
 import flash.geom.Rectangle;
-import flixel.addons.nape.FlxNapeState;
 import flixel.addons.nape.FlxNapeSprite;
+import flixel.addons.nape.FlxNapeState;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.plugin.MouseEventManager;
-import flixel.system.layer.frames.FlxFrame;
 import flixel.text.FlxText;
-import flixel.util.FlxAngle;
-import flixel.util.FlxColor;
-import flixel.util.FlxColorUtil;
-import flixel.util.FlxMath;
-import flixel.util.FlxRandom;
+import flixel.math.FlxRandom;
 import flixel.util.FlxSpriteUtil;
 import nape.callbacks.CbEvent;
 import nape.callbacks.CbType;
@@ -25,7 +20,6 @@ import nape.phys.Body;
 import nape.phys.BodyType;
 import nape.phys.Material;
 import nape.shape.Circle;
-import nape.shape.Shape;
 
 /**
  * ...
@@ -66,11 +60,12 @@ class Balloons extends FlxNapeState
 		shooter.setDensity(0.3);
 		add(shooter);
 		
-		FlxNapeState.space.listeners.add(new InteractionListener(CbEvent.BEGIN, 
-													 InteractionType.COLLISION, 
-													 Shooter.CB_BULLET,
-													 Balloons.CB_BALLOON,
-													 onBulletColides));
+		FlxNapeState.space.listeners.add(new InteractionListener(
+			CbEvent.BEGIN, 
+			InteractionType.COLLISION, 
+			Shooter.CB_BULLET,
+			Balloons.CB_BALLOON,
+			onBulletColides));
 	 
 		shooter.registerPhysSprite(box);
 		
@@ -166,9 +161,9 @@ class Balloons extends FlxNapeState
 			FlxG.resetState();
 			
 		if (FlxG.keys.justPressed.LEFT)
-			FlxPhysicsDemo.prevState();
+			Main.prevState();
 		if (FlxG.keys.justPressed.RIGHT)
-			FlxPhysicsDemo.nextState();
+			Main.nextState();
 			
 		if (FlxG.keys.pressed.W)
 			box.body.position.y -= 10;
@@ -180,13 +175,11 @@ class Balloons extends FlxNapeState
 			box.body.position.x += 10;
 		// end 
 	}
-	
 }
 
 // Set of connected bodies to form a rope.
 class Wire
 {
-	
 	public var joints:Array<DistanceJoint>; 		// Used to draw the wire.
 	
 	public function new(body1:Body, body2:Body, anchor1:Vec2, anchor2:Vec2, maxDist:Float, segments:Int)
@@ -228,7 +221,6 @@ class Wire
 		distJoint.frequency = 5;
 		distJoint.space = FlxNapeState.space;
 		joints.push(distJoint);
-		
 	}
 	
 	public function draw()
@@ -238,7 +230,6 @@ class Wire
 		var gfx:Graphics = FlxSpriteUtil.flashGfxSprite.graphics;
 		gfx.lineStyle(1, 0x0);
 		
-		
 		for (joint in joints)
 		{
 			from = joint.body1.localPointToWorld(joint.anchor1);
@@ -246,7 +237,6 @@ class Wire
 			gfx.moveTo(from.x, from.y); 
 			gfx.lineTo(to.x, to.y);
 		}
-		
 	}
 }
 
@@ -255,9 +245,9 @@ class Balloon extends FlxNapeSprite
 	public function new(X:Int, Y:Int)
 	{
 		super(X, Y);
-		loadGraphic("assets/Balloon.png", true, false, 68, 68);
+		loadGraphic("assets/Balloon.png", true, 68, 68);
 		
-		this.animation.frameIndex = FlxRandom.intRanged(0, 6);
+		this.animation.frameIndex = FlxG.random.int(0, 6);
 		
 		antialiasing = true;
 		createCircularBody(25);
@@ -277,6 +267,6 @@ class Balloon extends FlxNapeSprite
 	public function onCollide() 
 	{
 		body.shapes.pop();
-		this.animation.frameIndex += 7;
+		animation.frameIndex += 7;
 	}
 }

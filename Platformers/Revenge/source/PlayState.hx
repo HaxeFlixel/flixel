@@ -7,8 +7,8 @@ import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.tile.FlxTilemap;
 import flixel.util.FlxColor;
-import flixel.util.FlxPoint;
-import flixel.util.FlxRect;
+import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
 import flixel.util.FlxStringUtil;
 
 /**
@@ -65,8 +65,7 @@ class PlayState extends FlxState
 		// does an auto tiling for you if you want it. This is *OFF* by default and you have to set it by setting the
 		// map.auto to either FlxTilemap.AUTO(for platform friendly tiling) or FlxTilemap.ALT(for the alternate top down tiling)
 		_map = new FlxTilemap();
-		_map.auto = FlxTilemap.AUTO;
-		_map.loadMap(FlxStringUtil.imageToCSV("assets/map.png"), "assets/tileset.png", 10, 10, FlxTilemap.AUTO);
+		_map.loadMap(FlxStringUtil.imageToCSV("assets/map.png"), "assets/tileset.png", 10, 10, AUTO);
 		add(_map);
 		
 		// Adding the exit door with which we will check an overlap later for the player
@@ -75,7 +74,7 @@ class PlayState extends FlxState
 		
 		// Creating the player sprite, loading the sprite sheet and adding animations
 		_player = new FlxSprite(240, 200);
-		_player.loadGraphic("assets/aye.png", true, true, 32, 32);
+		_player.loadGraphic("assets/aye.png", true, 32, 32);
 		_player.animation.add("idle", [0]);
 		_player.animation.add("walk", [1, 2, 3, 4, 5, 6], 6, true);
 		_player.animation.add("down", [7]);
@@ -100,7 +99,7 @@ class PlayState extends FlxState
 		FlxG.worldDivisions = 8;
 		
 		// We ask the Flixel camera subsystem to follow the player sprite with a slight lag or not(lerp)
-		FlxG.camera.follow(_player, FlxCamera.STYLE_PLATFORMER);
+		FlxG.camera.follow(_player, PLATFORMER);
 	}
 	
 	/**
@@ -130,10 +129,10 @@ class PlayState extends FlxState
 		}
 		
 		// Check input and move left
-		if (FlxG.keys.anyPressed(["LEFT", "A"]))
+		if (FlxG.keys.anyPressed([LEFT, A]))
 		{
 			_player.velocity.x = -_playerSpeed;
-			_player.facing = FlxObject.LEFT;
+			_player.flipX = true;
 			
 			// If the player is actually moving right and if he is not jumping/falling then you do the walk animaiton
 			if (_player.isTouching(FlxObject.FLOOR) && !_player.isTouching(FlxObject.WALL)) 
@@ -148,10 +147,10 @@ class PlayState extends FlxState
 		}
 		
 		// Check input and move right
-		if (FlxG.keys.anyPressed(["RIGHT", "D"]))
+		if (FlxG.keys.anyPressed([RIGHT, D]))
 		{
 			_player.velocity.x = _playerSpeed;
-			_player.facing = FlxObject.RIGHT;
+			_player.flipX = false;
 			
 			// If the player is actually moving right and if he is not jumping/falling then you do the walk animaiton
 			if (_player.isTouching(FlxObject.FLOOR) && !_player.isTouching(FlxObject.WALL)) 
@@ -165,8 +164,7 @@ class PlayState extends FlxState
 			_flagWalking = false;
 		}
 		
-		// Jump! when you hit Z or Space or UP
-		if (FlxG.keys.anyPressed(["Z", "SPACE", "UP", "W"]))
+		if (FlxG.keys.anyPressed([Z, SPACE, UP, W]))
 		{
 			if (_player.isTouching(FlxObject.FLOOR)) 
 			{

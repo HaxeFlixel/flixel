@@ -7,14 +7,14 @@ import flixel.FlxState;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
-import flixel.util.FlxRect;
-import flixel.util.FlxPoint;
-import flixel.util.FlxVector;
-import flixel.util.FlxAngle;
+import flixel.math.FlxRect;
+import flixel.math.FlxPoint;
+import flixel.math.FlxVector;
+import flixel.math.FlxAngle;
 import flixel.util.FlxColor;
-import flixel.util.FlxRandom;
+import flixel.math.FlxRandom;
 import flixel.util.FlxCollision;
-import flixel.group.FlxTypedGroup;
+import flixel.group.FlxGroup;
 import openfl.display.FPS;
 
 using StringTools;	// so we can use String.replace() easily, yay!
@@ -64,21 +64,6 @@ class PlayState extends FlxState
 	{	
 		super.create();
 		
-		// test FlxVector - to make sure it compiles
-		var vector = FlxVector.get(10,15);
-		trace(vector.toString());
-		vector.put();
-		
-		// test FlxVector recycling - to make sure it compiles
-		var vector = FlxVector.get(10,15);
-		trace(vector.toString());
-		vector.put();
-		
-		// test FlxRect recycling - to make sure it compiles
-		var rect = FlxRect.get(10,15, 50, 50);
-		trace(rect.toString());
-		rect.put();
-		
 		// the group containing all the objects
 		add(aliens = new FlxTypedGroup<FlxSprite>());
 		
@@ -91,7 +76,7 @@ class PlayState extends FlxState
 		// add in some text so we know what's happening
 		infoText = new FlxText(2, 0, 400, INFO);
 		infoText.y = FlxG.height - infoText.height;
-		infoText.setBorderStyle(FlxText.BORDER_OUTLINE);
+		infoText.setBorderStyle(OUTLINE);
 		add(infoText);
 		
 		// just need this to get the fps, so we display it outside view range
@@ -111,7 +96,7 @@ class PlayState extends FlxState
 	{
 		var alien = aliens.recycle(FlxSprite);
 		alien.loadGraphic("assets/alien.png", true); // load graphics from asset
-		alien.animation.add("dance", [0, 1, 0, 2], FlxRandom.intRanged(6, 10));	// set dance dance interstellar animation
+		alien.animation.add("dance", [0, 1, 0, 2], FlxG.random.int(6, 10));	// set dance dance interstellar animation
 		alien.animation.play("dance");	// dance!
 		randomize(alien);	// set position, angle and alpha to random values
 		return alien;
@@ -127,9 +112,9 @@ class PlayState extends FlxState
 		obj.setPosition(point.x, point.y);
 		point.put(); // recycle point
 		
-		var destX = FlxRandom.intRanged(0, Std.int(FlxG.width - obj.width));
-		var destY = FlxRandom.intRanged(0, Std.int(FlxG.height - obj.height));
-		obj.alpha = FlxRandom.floatRanged(0.3, 1.0);
+		var destX = FlxG.random.int(0, Std.int(FlxG.width - obj.width));
+		var destY = FlxG.random.int(0, Std.int(FlxG.height - obj.height));
+		obj.alpha = FlxG.random.float(0.3, 1.0);
 		
 		// Neat tweening effect for new aliens appearing
 		FlxTween.tween(obj, { x: destX, y:destY }, 2, { ease: FlxEase.expoOut });
@@ -184,7 +169,7 @@ class PlayState extends FlxState
 		// randomize
 		if (FlxG.keys.justReleased.R) 
 		{
-			for (obj in aliens.members) 
+			for (obj in aliens) 
 			{
 				// Don't randomize the player's position
 				if (obj != player)
@@ -272,10 +257,12 @@ class PlayState extends FlxState
 	
 	function updateInfo():Void 
 	{
-		infoText.text = INFO.replace("|objects|", Std.string(aliens.countLiving() + 1)) // + 1 for the player that is not in the group
-							.replace("|alpha|", Std.string(alphaTolerance))
-							.replace("|hits|", Std.string(numCollisions))
-							.replace("|fps|", Std.string(fps.text.substr(5)));
+		infoText.text = INFO
+			// + 1 for the player that is not in the group
+			.replace("|objects|", Std.string(aliens.countLiving() + 1))
+			.replace("|alpha|", Std.string(alphaTolerance))
+			.replace("|hits|", Std.string(numCollisions))
+			.replace("|fps|", Std.string(fps.currentFPS));
 	}
 	
 	function set_rotate(Value:Bool):Bool
@@ -291,7 +278,7 @@ class PlayState extends FlxState
 	
 	function randomizeRotation(obj:FlxSprite):Void
 	{
-		obj.angle = FlxRandom.float() * 360;
+		obj.angle = FlxG.random.float() * 360;
 		obj.angularVelocity = 100;
 	}
 	
@@ -307,7 +294,7 @@ class PlayState extends FlxState
 	function getRandomCirclePos():FlxPoint
 	{
 		// choose a random position on our circle, from 1° to 360°
-		var startAngle = FlxRandom.intRanged(1, 360);
+		var startAngle = FlxG.random.int(1, 360);
 		
 		// make sure the radius of our circle is 200 px bigger than the game's width / height (whichever is bigger)
 		var startRadius = (FlxG.width > FlxG.height) ? (FlxG.height + 200) : (FlxG.width + 200);

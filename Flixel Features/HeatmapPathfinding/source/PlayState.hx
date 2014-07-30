@@ -5,15 +5,14 @@ import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxGroup;
-import flixel.group.FlxTypedGroup.FlxTypedGroup;
+import flixel.group.FlxGroup;
 import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
 import flixel.ui.FlxButton;
 import flixel.util.FlxColor;
-import flixel.util.FlxMath;
-import flixel.util.FlxPoint;
-import flixel.util.FlxRandom;
-import flixel.util.FlxVector;
+import flixel.math.FlxMath;
+import flixel.math.FlxPoint;
+import flixel.math.FlxRandom;
 
 /**
  * A FlxState which can be used for the actual gameplay.
@@ -29,7 +28,6 @@ class PlayState extends FlxState
 	public var mcguffinSprite:FlxSprite;
 	
 	public var seekers:FlxTypedGroup<Seeker>;
-	private var vec:FlxVector = FlxVector.get();
 	
 	/**
 	 * Function that is called up when to state is created to set it up. 
@@ -72,10 +70,8 @@ class PlayState extends FlxState
 	{
 		FlxG.collide(tilemap, seekers);
 		
-		var seeker:Seeker;
-		for (basic in seekers.members) 
+		for (seeker in seekers) 
 		{
-			seeker = cast basic;
 			if (!seeker.moving)
 			{
 				var tx:Int = Std.int((seeker.x-seeker.offset.x) / 16);

@@ -4,9 +4,10 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxGroup;
+import flixel.group.FlxGroup;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
-import flixel.util.FlxRandom;
+import flixel.math.FlxRandom;
 
 class PlayState extends FlxState
 {
@@ -23,8 +24,8 @@ class PlayState extends FlxState
 	private var _numCrates:Int = 200;
 	
 	//these are the groups that will hold all of our crates
-	private var _crateStormGroup:FlxGroup;
-	private var _crateStormGroup2:FlxGroup;
+	private var _crateStormGroup:FlxTypedGroup<FlxSprite>;
+	private var _crateStormGroup2:FlxTypedGroup<FlxSprite>;
 	private var _crateStormMegaGroup:FlxGroup;
 	
 	// We'll make a sweet flixel logo to ride the elevator for option #2
@@ -59,15 +60,15 @@ class PlayState extends FlxState
 		// kind of scene, but for this demo I wanted to use regular sprites 
 		// (See ParticlesDemo for an example of an emitter with colliding particles)
 		// We'll need a group to place everything in - this helps a lot with collisions
-		_crateStormGroup = new FlxGroup();
+		_crateStormGroup = new FlxTypedGroup<FlxSprite>();
 		
 		for (i in 0..._numCrates) 
 		{
-			_crate = new FlxSprite((FlxRandom.float() * 200) + 100, 20);
+			_crate = new FlxSprite((FlxG.random.float() * 200) + 100, 20);
 			// This loads in a graphic, and 'bakes' some rotations in so we don't waste resources computing real rotations later
 			_crate.loadRotatedGraphic("assets/crate.png", 16, 0); 
 			// Make it spin a tad
-			_crate.angularVelocity = FlxRandom.float() * 50 - 150; 
+			_crate.angularVelocity = FlxG.random.float() * 50 - 150; 
 			// Gravity
 			_crate.acceleration.y = 300; 
 			// Some wind for good measure
@@ -77,7 +78,7 @@ class PlayState extends FlxState
 			// "      fly  "  "
 			_crate.maxVelocity.x = 200; 
 			// Let's make them all bounce a little bit differently
-			_crate.elasticity = FlxRandom.float(); 
+			_crate.elasticity = FlxG.random.float(); 
 			
 			_crateStormGroup.add(_crate);
 		}
@@ -85,18 +86,18 @@ class PlayState extends FlxState
 		add(_crateStormGroup);
 		
 		// And another group, this time - Red crates
-		_crateStormGroup2 = new FlxGroup();
+		_crateStormGroup2 = new FlxTypedGroup<FlxSprite>();
 		
 		for (i in 0..._numCrates) 
 		{
-			_crate = new FlxSprite((FlxRandom.float() * 200) + 100, 20);
+			_crate = new FlxSprite((FlxG.random.float() * 200) + 100, 20);
 			_crate.loadRotatedGraphic("assets/crate.png", 16, 1);
-			_crate.angularVelocity = FlxRandom.float() * 50-150;
+			_crate.angularVelocity = FlxG.random.float() * 50-150;
 			_crate.acceleration.y = 300;
 			_crate.acceleration.x = 50;
 			_crate.maxVelocity.y = 500;
 			_crate.maxVelocity.x = 200;
-			_crate.elasticity = FlxRandom.float();
+			_crate.elasticity = FlxG.random.float();
 			
 			_crateStormGroup2.add(_crate);
 		}
@@ -119,7 +120,7 @@ class PlayState extends FlxState
 		
 		// This is for the text at the top of the screen
 		_topText = new FlxText(0, 2, FlxG.width, "Welcome");
-		_topText.alignment = "center";
+		_topText.alignment = CENTER;
 		add(_topText);
 		
 		// Lets make a bunch of buttons! YEAH!!!
@@ -166,39 +167,35 @@ class PlayState extends FlxState
 		}
 		
 		// Run through the groups, and if a crate is off screen, get it back!
-		for (i in 0..._numCrates) 
+		for (crate in _crateStormGroup) 
 		{
-			var a = cast(_crateStormGroup.members[i], FlxSprite);
-			
-			if (a.x < -10)
+			if (crate.x < -10)
 			{
-				a.x = 400;
+				crate.x = 400;
 			}
-			if (a.x > 400)
+			if (crate.x > 400)
 			{
-				a.x = -10;
+				crate.x = -10;
 			}
-			if (a.y > 300)
+			if (crate.y > 300)
 			{
-				a.y = -10;
+				crate.y = -10;
 			}
 		}
 		
-		for (i in 0..._numCrates) 
+		for (crate in _crateStormGroup2) 
 		{
-			var a = cast(_crateStormGroup2.members[i], FlxSprite);
-			
-			if (a.x > 400)
+			if (crate.x > 400)
 			{
-				a.x = -10;
+				crate.x = -10;
 			}
-			if (a.x < -10)
+			if (crate.x < -10)
 			{
-				a.x = 400;
+				crate.x = 400;
 			}
-			if (a.y > 300)
+			if (crate.y > 300)
 			{
-				a.y = -10;
+				crate.y = -10;
 			}
 		}
 		
@@ -292,11 +289,10 @@ class PlayState extends FlxState
 		_blueGroup = !_blueGroup;
 		_crateStormGroup.visible = _crateStormGroup.exists = !_crateStormGroup.exists;
 		
-		for (i in 0..._numCrates) 
+		for (crate in _crateStormGroup) 
 		{
-			var a = cast(_crateStormGroup.members[i], FlxSprite);
 			// Run through and make them not collide - I'm not sure if this is neccesary
-			a.solid = !a.solid;
+			crate.solid = !crate.solid;
 		}
 		if (_blueGroup && _redGroup) 
 		{
@@ -326,10 +322,9 @@ class PlayState extends FlxState
 		_redGroup = !_redGroup;
 		_crateStormGroup2.visible = _crateStormGroup2.exists = !_crateStormGroup2.exists;
 		
-		for (i in 0..._numCrates) 
+		for (crate in _crateStormGroup2) 
 		{
-			var a = cast(_crateStormGroup2.members[i], FlxSprite);
-			a.solid = !a.solid;
+			crate.solid = !crate.solid;
 		}
 		
 		if (_blueGroup && _redGroup) 

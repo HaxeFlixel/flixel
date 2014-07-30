@@ -31,7 +31,7 @@ class PlayState extends FlxState
 		FlxG.cameras.bgColor = 0xffaaaaaa;
 		
 		_level = new FlxTilemap();
-		_level.loadMap(Assets.getText("assets/level.csv"), GraphicAuto, 0, 0, FlxTilemap.AUTO);
+		_level.loadMap(Assets.getText("assets/level.csv"), GraphicAuto, 0, 0, AUTO);
 		add(_level);
 		
 		// Create the _level _exit
@@ -95,18 +95,18 @@ class PlayState extends FlxState
 		
 		// Create _player
 		_player = new FlxSprite(FlxG.width / 2 - 5);
-		_player.makeGraphic(8, 8, FlxColor.CRIMSON);
+		_player.makeGraphic(8, 8, FlxColor.RED);
 		_player.maxVelocity.set(80, 200);
 		_player.acceleration.y = 200;
 		_player.drag.x = _player.maxVelocity.x * 4;
 		add(_player);
 		
 		_scoreText = new FlxText(2, 2, 80, "SCORE: " + (_coins.countDead() * 100));
-		_scoreText.setFormat(null, 8, FlxColor.WHITE, null, FlxText.BORDER_NONE, FlxColor.BLACK);
+		_scoreText.setFormat(null, 8, FlxColor.WHITE, null, NONE, FlxColor.BLACK);
 		add(_scoreText);
 		
 		_status = new FlxText(FlxG.width - 160 - 2, 2, 160, "Collect coins.");
-		_status.setFormat(null, 8, FlxColor.WHITE, "right", FlxText.BORDER_NONE, FlxColor.BLACK);
+		_status.setFormat(null, 8, FlxColor.WHITE, RIGHT, NONE, FlxColor.BLACK);
 		
 		if (_justDied)
 		{
@@ -120,17 +120,17 @@ class PlayState extends FlxState
 	{
 		_player.acceleration.x = 0;
 		
-		if (FlxG.keys.anyPressed(["LEFT", "A"]))
+		if (FlxG.keys.anyPressed([LEFT, A]))
 		{
 			_player.acceleration.x = -_player.maxVelocity.x * 4;
 		}
 		
-		if (FlxG.keys.anyPressed(["RIGHT", "D"]))
+		if (FlxG.keys.anyPressed([RIGHT, D]))
 		{
 			_player.acceleration.x = _player.maxVelocity.x * 4;
 		}
 		
-		if (FlxG.keys.anyJustPressed(["SPACE", "UP", "W"]) && _player.isTouching(FlxObject.FLOOR))
+		if (FlxG.keys.anyJustPressed([SPACE, UP, W]) && _player.isTouching(FlxObject.FLOOR))
 		{
 			_player.velocity.y = -_player.maxVelocity.y / 2;
 		}

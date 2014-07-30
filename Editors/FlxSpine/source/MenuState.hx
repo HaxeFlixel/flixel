@@ -1,4 +1,4 @@
-package ;
+package;
 
 import flash.display.BitmapData;
 import flash.display.Sprite;
@@ -12,7 +12,7 @@ import flixel.FlxState;
 import flixel.group.FlxGroup;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
-import flixel.util.FlxMath;
+import flixel.math.FlxMath;
 import flixel.addons.editors.spine.FlxSpine;
 import testclasses.GoblinTest;
 import testclasses.SpineBoyTest;
@@ -37,8 +37,12 @@ class MenuState extends FlxState
 		spineSprite = cast new SpineBoyTest(FlxSpine.readSkeletonData("spineboy", "assets"), 300, 420);
 		add(spineSprite);
 		
-		var instructions = new FlxText(0, 0, 250, "Space: Toggle Debug Display\nMove: Arrows", 12);
+		var instructions = new FlxText(0, 0, 250, "Space: Toggle Debug Display\nMove: Arrows / WASD\nLeft mouse: Jump", 12);
+		instructions.ignoreDrawDebug = true;
 		add(instructions);
+		
+		//spineSprite.flipX = true;
+		spineSprite.flipY = true;
 	}
 	
 	override public function update():Void
@@ -50,19 +54,19 @@ class MenuState extends FlxState
 		#end
 		
 		// movement
-		if (FlxG.keys.pressed.UP)
+		if (FlxG.keys.anyPressed([W, UP]))
 		{
 			spineSprite.y -= 500 * FlxG.elapsed;
 		}
-		else if (FlxG.keys.pressed.DOWN)
+		else if (FlxG.keys.anyPressed([S, DOWN]))
 		{
 			spineSprite.y += 500 * FlxG.elapsed;
 		}
-		if (FlxG.keys.pressed.RIGHT)
+		else if (FlxG.keys.anyPressed([D, RIGHT]))
 		{
 			spineSprite.x += 500 * FlxG.elapsed;
 		}
-		else if (FlxG.keys.pressed.LEFT)
+		else if (FlxG.keys.anyPressed([A, LEFT]))
 		{
 			spineSprite.x -= 500 * FlxG.elapsed;
 		}

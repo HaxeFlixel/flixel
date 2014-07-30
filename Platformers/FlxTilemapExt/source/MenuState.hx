@@ -14,11 +14,11 @@ class MenuState extends FlxState
 		
 		var text:FlxText;
 		text = new FlxText(FlxG.width / 2 - 100, FlxG.height / 3 - 30, 200, "Slope Demo");
-		text.setFormat(null, 20, 0xFFFFFFFF, "center");
+		text.setFormat(null, 20, 0xFFFFFFFF, CENTER);
 		add(text);
 		
 		text = new FlxText(FlxG.width / 2 - 50, FlxG.height / 3, 200, "by Peter Christiansen");
-		text.setFormat(null, 8, 0xFFFFFFFF, "center");
+		text.setFormat(null, 8, 0xFFFFFFFF, CENTER);
 		add(text);
 		
 		var startButton:FlxButton = new FlxButton(FlxG.width / 2 - 40, FlxG.height / 3 + 64, "Play", onPlay);

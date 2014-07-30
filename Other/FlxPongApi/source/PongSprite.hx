@@ -2,18 +2,17 @@ package;
 
 import flash.display.BitmapData;
 import flixel.FlxSprite;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 
 class PongSprite extends FlxSprite
 {
-	//public var color:Int;
 	public var secondColor:Int;
 	public var minVelocity:FlxPoint;
 	
 	static public inline var SOLID:Int = 0;
 	static public inline var GRADIENT:Int = 1;
 	
-	public function new(X:Int, Y:Int, Width:Int, Height:Int, Color:Int, Style:Int = SOLID, ?SecondColor:Int)
+	public function new(X:Float, Y:Float, Width:Int, Height:Int, Color:Int, Style:Int = SOLID, ?SecondColor:Int)
 	{
 		var Graphic:BitmapData = new BitmapData(Width, Height, false, Color);
 		

@@ -4,16 +4,15 @@ import flixel.effects.particles.FlxEmitter;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
-import flixel.group.FlxTypedGroup;
 import flixel.input.gamepad.FlxGamepad;
+import flixel.input.gamepad.OUYAButtonID;
 import flixel.input.gamepad.XboxButtonID;
 import flixel.ui.FlxButton;
 import flixel.ui.FlxVirtualPad;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxTimer;
-#if (android && OUYA)
-import flixel.input.gamepad.OUYAButtonID;
-#end
+import flixel.group.FlxGroup;
 
 class Player extends FlxSprite
 {
@@ -26,27 +25,11 @@ class Player extends FlxSprite
 	public var isReadyToJump:Bool = true;
 	public var flickering:Bool = false;
 	
-	private var _shootCounter:Float = 0;
+	private var _shootTimer = new FlxTimer();
 	private var _jumpPower:Int = 200;
-	private var _aim:Int;
-	private var _restart:Float = 0;
+	private var _aim:Int = FlxObject.RIGHT;
 	private var _gibs:FlxEmitter;
 	private var _bullets:FlxTypedGroup<Bullet>;
-	
-	// Internal private: accessor to first active gamepad
-	#if !FLX_NO_GAMEPAD
-	private var gamepad(get, never):FlxGamepad;
-	private function get_gamepad():FlxGamepad 
-	{
-		var gamepad:FlxGamepad = FlxG.gamepads.lastActive;
-		if (gamepad == null)
-		{
-			// Make sure we don't get a crash on neko when no gamepad is active
-			gamepad = FlxG.gamepads.getByID(0);
-		}
-		return gamepad;
-	}
-	#end
 	
 	/**
 	 * This is the player object class.  Most of the comments I would put in here
@@ -57,7 +40,10 @@ class Player extends FlxSprite
 	{
 		super(X, Y);
 		
-		loadGraphic(Reg.SPACEMAN, true, true, 8);
+		loadGraphic(Reg.SPACEMAN, true, 8);
+		
+		setFacingFlip(FlxObject.LEFT, true, false);
+		setFacingFlip(FlxObject.RIGHT, false, false);
 		
 		// Bounding box tweaks
 		width = 6;
@@ -94,7 +80,7 @@ class Player extends FlxSprite
 		super.destroy();
 		
 		#if android
-		virtualPad = FlxG.safeDestroy(virtualPad);
+		virtualPad = FlxDestroyUtil.destroy(virtualPad);
 		#end
 		
 		_bullets = null;
@@ -103,99 +89,165 @@ class Player extends FlxSprite
 	
 	override public function update():Void
 	{
-		if(_shootCounter > 0)
-			_shootCounter -= FlxG.elapsed;
-		
-		// Game restart timer
-		if (!alive)
-		{
-			_restart += FlxG.elapsed;
-			
-			if (_restart > 2)
-			{
-				FlxG.resetState();
-			}
-			
-			return;
-		}
-		
-		// Make a little noise if you just touched the floor
-		if (justTouched(FlxObject.FLOOR) && (velocity.y > 50))
-		{
-			FlxG.sound.play("Land");
-		}
-		
 		acceleration.x = 0;
 		
-		// INPUT
+		updateKeyboardInput();
+		updateGamepadInput();
+		updateVirtualPadInput();
 		
-		if (FlxG.keys.pressed.LEFT 
-#if !FLX_NO_GAMEPAD
-			 || (#if flash gamepad.pressed(XboxButtonID.DPAD_LEFT) #else gamepad.dpadLeft #end ||
-	#if OUYA
-				 gamepad.getXAxis(OUYAButtonID.LEFT_ANALOGUE_X) < 0) || buttonPressed(virtualPad.buttonLeft)) 
-	#else
-				 gamepad.getXAxis(XboxButtonID.LEFT_ANALOGUE_X) < 0))
-	#end
-#else) #end
+		updateAnimation();
+		
+        super.update();
+	}
+	
+	private function updateKeyboardInput():Void
+	{
+		if (FlxG.keys.anyPressed([A, LEFT]))
 		{
 			moveLeft();
 		}
-		else if (FlxG.keys.pressed.RIGHT
-#if !FLX_NO_GAMEPAD
-			 || (#if flash gamepad.pressed(XboxButtonID.DPAD_RIGHT) #else gamepad.dpadRight #end ||
-	#if OUYA
-				 gamepad.getXAxis(OUYAButtonID.LEFT_ANALOGUE_X) > 0) || buttonPressed(virtualPad.buttonRight))
-	#else
-				 gamepad.getXAxis(XboxButtonID.LEFT_ANALOGUE_X) > 0))
-	#end
-#else) #end
+		else if (FlxG.keys.anyPressed([D, RIGHT]))
 		{
 			moveRight();
 		}
 		
-		_aim = facing;
-		
-		// AIMING
-		if (FlxG.keys.pressed.UP
-#if !FLX_NO_GAMEPAD
-			 || (#if flash gamepad.pressed(XboxButtonID.DPAD_UP) #else gamepad.dpadUp #end ||
-	#if OUYA
-				 gamepad.getYAxis(OUYAButtonID.LEFT_ANALOGUE_Y) < 0) || buttonPressed(virtualPad.buttonUp))
-	#else
-				 gamepad.getYAxis(XboxButtonID.LEFT_ANALOGUE_Y) < 0))
-	#end
-#else) #end
+		if (FlxG.keys.anyPressed([W, UP]))
 		{
 			moveUp();
 		}
-		else if (FlxG.keys.pressed.DOWN
-#if !FLX_NO_GAMEPAD
-			 || (#if flash gamepad.pressed(XboxButtonID.DPAD_DOWN) #else gamepad.dpadDown #end ||
-	#if OUYA
-				 gamepad.getYAxis(OUYAButtonID.LEFT_ANALOGUE_Y) > 0) || buttonPressed(virtualPad.buttonDown))
-	#else
-				 gamepad.getYAxis(XboxButtonID.LEFT_ANALOGUE_Y) > 0))
-	#end
-#else) #end
+		else if (FlxG.keys.anyPressed([S, DOWN]))
 		{
 			moveDown();
 		}
 		
-		// JUMPING
-		if (FlxG.keys.justPressed.X 
-#if !FLX_NO_GAMEPAD
-	#if OUYA
-			|| gamepad.justPressed(OUYAButtonID.O) || buttonPressed(virtualPad.buttonA))
-	#else
-			|| gamepad.justPressed(XboxButtonID.A))
-	#end
-#else) #end
+		if (FlxG.keys.pressed.X)
+		{
+			jump();
+		}
+		if (FlxG.keys.pressed.C)
+		{
+			shoot();
+		}
+	}
+	
+	private function updateVirtualPadInput():Void
+	{
+		#if android
+		if (virtualPad.buttonLeft.pressed)
+		{
+			moveLeft();
+		}
+		else if (virtualPad.buttonRight.pressed)
+		{
+			moveRight();
+		}
+		
+		if (virtualPad.buttonUp.pressed)
+		{
+			moveUp();
+		}
+		else if (virtualPad.buttonDown.pressed)
+		{
+			moveDown();
+		}
+		
+		if (virtualPad.buttonA.justPressed)
+		{
+			jump();
+		}
+		if (virtualPad.buttonB.pressed)
+		{
+			shoot();
+		}
+		#end
+	}
+	
+	private function updateGamepadInput():Void
+	{
+		#if !FLX_NO_GAMEPAD
+		var gamepad:FlxGamepad = FlxG.gamepads.lastActive;
+		if (gamepad != null)
+		{
+			#if android
+			updateOUYAGamepadInput(gamepad);
+			#else
+			updateXboxGamepadInput(gamepad);
+			#end
+		}
+		#end
+	}
+	
+	private function updateXboxGamepadInput(gamepad:FlxGamepad):Void
+	{
+		if (gamepad.getXAxis(XboxButtonID.LEFT_ANALOG_STICK) < 0 ||
+			gamepad.pressed(XboxButtonID.DPAD_LEFT))
+		{
+			moveLeft();
+		}
+		else
+		if (gamepad.getXAxis(XboxButtonID.LEFT_ANALOG_STICK) > 0 ||
+			gamepad.pressed(XboxButtonID.DPAD_RIGHT))
+		{
+			moveRight();
+		}
+		
+		if (gamepad.getYAxis(XboxButtonID.LEFT_ANALOG_STICK) < 0 ||
+			gamepad.pressed(XboxButtonID.DPAD_UP))
+		{
+			moveUp();
+		}
+		else
+		if (gamepad.getYAxis(XboxButtonID.LEFT_ANALOG_STICK) > 0 ||
+			gamepad.pressed(XboxButtonID.DPAD_DOWN))
+		{
+			moveDown();
+		}
+		
+		if (gamepad.justPressed(XboxButtonID.A))
 		{
 			jump();
 		}
 		
-		// ANIMATION
+		if (gamepad.pressed(XboxButtonID.X))
+		{
+			shoot();
+		}
+	}
+	
+	private function updateOUYAGamepadInput(gamepad:FlxGamepad):Void
+	{
+		if (gamepad.getXAxis(OUYAButtonID.LEFT_ANALOG_STICK) < 0)
+		{
+			moveLeft();
+		}
+		if (gamepad.getXAxis(OUYAButtonID.LEFT_ANALOG_STICK) > 0)
+		{
+			moveRight();
+		}
+		
+		if (gamepad.getYAxis(OUYAButtonID.LEFT_ANALOG_STICK) < 0)
+		{
+			moveUp();
+		}
+		
+		if (gamepad.getYAxis(OUYAButtonID.LEFT_ANALOG_STICK) > 0)
+		{
+			moveDown();
+		}
+		
+		if (gamepad.justPressed(OUYAButtonID.O))
+		{
+			jump();
+		}
+		
+		if (gamepad.pressed(OUYAButtonID.U))
+		{
+			shoot();
+		}
+	}
+	
+	private function updateAnimation():Void
+	{
 		if (velocity.y != 0)
 		{
 			if (_aim == FlxObject.UP) 
@@ -233,21 +285,6 @@ class Player extends FlxSprite
 				animation.play("run");
 			}
 		}
-		
-		// SHOOTING
-		if (FlxG.keys.pressed.C
-#if !FLX_NO_GAMEPAD
-	#if OUYA
-			|| gamepad.pressed(OUYAButtonID.U) || buttonPressed(virtualPad.buttonB)) 
-	#else
-			|| gamepad.pressed(XboxButtonID.X))
-	#end
-#else) #end
-		{
-			shoot();
-		}
-		
-        super.update();
 	}
 	
 	override public function hurt(Damage:Float):Void
@@ -282,8 +319,9 @@ class Player extends FlxSprite
 	
 	private function flicker(Duration:Float):Void
 	{
-		FlxSpriteUtil.flicker(this, Duration, 0.02, true);
-		FlxTimer.start(Duration, function f(T:FlxTimer) { flickering = false; });
+		FlxSpriteUtil.flicker(this, Duration, 0.02, true, true, function(_) {
+			flickering = false;
+		});
 		flickering = true;
 	}
 	
@@ -301,7 +339,9 @@ class Player extends FlxSprite
 		super.kill();
 		
 		exists = true;
+		active = false;
 		visible = false;
+		moves = false;
 		velocity.set();
 		acceleration.set();
 		FlxG.camera.shake(0.005, 0.35);
@@ -309,20 +349,24 @@ class Player extends FlxSprite
 		
 		if (_gibs != null)
 		{
-			_gibs.at(this);
-			_gibs.start(true, 5, 0, 50);
+			_gibs.focusOn(this);
+			_gibs.start(true, 0, 50);
 		}
+		
+		new FlxTimer(2, function(_) {
+			FlxG.resetState();
+		});
 	}
 	
 	function moveLeft():Void
 	{
-		facing = FlxObject.LEFT;
+		facing = _aim = FlxObject.LEFT;
 		acceleration.x -= drag.x;
 	}
 	
 	function moveRight():Void
 	{
-		facing = FlxObject.RIGHT;
+		facing = _aim = FlxObject.RIGHT;
 		acceleration.x += drag.x;
 	}
 	
@@ -347,11 +391,11 @@ class Player extends FlxSprite
 	
 	function shoot():Void
 	{
-		if (_shootCounter > 0)
+		if (_shootTimer.active)
 		{
 			return;
 		}
-		_shootCounter = SHOOT_RATE;
+		_shootTimer.start(SHOOT_RATE);
 		
 		if (flickering)
 		{
@@ -367,10 +411,5 @@ class Player extends FlxSprite
 				velocity.y -= 36;
 			}
 		}
-	}
-	
-	inline function buttonPressed(button:FlxButton):Bool
-	{
-		return button.status == FlxButton.PRESSED;
 	}
 }

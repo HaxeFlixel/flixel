@@ -2,7 +2,7 @@ package;
 
 import flixel.FlxG;
 import flixel.tweens.FlxTween;
-import flixel.util.FlxVelocity;
+import flixel.math.FlxVelocity;
 
 class Enemy extends PongSprite
 {

@@ -3,8 +3,8 @@ import flash.geom.Rectangle;
 import flixel.addons.display.FlxExtendedSprite;
 import flixel.FlxObject;
 import flixel.FlxSprite;
-import flixel.util.FlxMath;
-import flixel.util.FlxRect;
+import flixel.math.FlxMath;
+import flixel.math.FlxRect;
 import flixel.FlxG;
 import haxe.io.Path;
 import haxe.Json;
@@ -14,8 +14,8 @@ import openfl.Assets;
  * ...
  * @author MrCdK
  */
-class Character extends FlxExtendedSprite {
-	
+class Character extends FlxExtendedSprite
+{
 	public var collisionMap:FlxRect;
 	public var maxBounds:FlxRect;
 	
@@ -25,37 +25,45 @@ class Character extends FlxExtendedSprite {
 	
 	public var name:String = "";
 	
-	public function new(Name:String, X:Float = 0, Y:Float = 0, ?JsonPath:String, ?SimpleGraphic:Dynamic) {
+	public function new(Name:String, X:Float = 0, Y:Float = 0, ?JsonPath:String, ?SimpleGraphic:Dynamic)
+	{
 		super(X, Y, SimpleGraphic);
-		this.name = Name;
+		name = Name;
 		
 		parseJson(JsonPath);
 
-		this.facing = FlxObject.DOWN;
+		facing = FlxObject.DOWN;
 
-		this.drag.x = this.maxVelocity.x * 4;
-		this.drag.y = this.maxVelocity.y * 4;
+		drag.x = maxVelocity.x * 4;
+		drag.y = maxVelocity.y * 4;
 	}
 	
 	override public function update():Void 
 	{
-		if (controllable) {
-			this.acceleration.x = 0;
-			this.acceleration.y = 0;
-			if (FlxG.keys.anyPressed(["RIGHT", "D"])) {
-				this.acceleration.x = this.drag.x;
-				this.facing = FlxObject.RIGHT;
-			} else if (FlxG.keys.anyPressed(["LEFT", "A"])) {
-				this.acceleration.x = -this.drag.x;
-				this.facing = FlxObject.LEFT;
+		if (controllable)
+		{
+			acceleration.set(0, 0);
+			
+			if (FlxG.keys.anyPressed([RIGHT, D]))
+			{
+				acceleration.x = drag.x;
+				facing = FlxObject.RIGHT;
+			}
+			else if (FlxG.keys.anyPressed([LEFT, A]))
+			{
+				acceleration.x = -drag.x;
+				facing = FlxObject.LEFT;
 			}
 			
-			if (FlxG.keys.anyPressed(["UP", "W"])) {
-				this.acceleration.y = -this.drag.y;
-				this.facing = FlxObject.UP;
-			} else if (FlxG.keys.anyPressed(["DOWN", "S"])) {
-				this.acceleration.y = this.drag.y;
-				this.facing = FlxObject.DOWN;
+			if (FlxG.keys.anyPressed([UP, W]))
+			{
+				acceleration.y = -drag.y;
+				facing = FlxObject.UP;
+			}
+			else if (FlxG.keys.anyPressed([DOWN, S]))
+			{
+				acceleration.y = drag.y;
+				facing = FlxObject.DOWN;
 			}
 		}
 		checkBoundsMap();
@@ -63,8 +71,9 @@ class Character extends FlxExtendedSprite {
 		super.update();
 	}
 	
-	public function setBoundsMap(boundsMap:FlxRect) {
-		this.maxBounds = boundsMap;
+	public function setBoundsMap(boundsMap:FlxRect)
+	{
+		maxBounds = boundsMap;
 	}
 	
 	/**
@@ -72,7 +81,8 @@ class Character extends FlxExtendedSprite {
 	*/
 	private function checkBoundsMap():Void
 	{
-		if (maxBounds == null) {
+		if (maxBounds == null)
+		{
 			return;
 		}
 		
@@ -99,23 +109,30 @@ class Character extends FlxExtendedSprite {
 		}
 	}
 	
-	private function resolveAnimation() {
+	private function resolveAnimation()
+	{
 		anim = "idle_";
 		
-		if (velocity.x != 0 || velocity.y != 0) {
+		if (velocity.x != 0 || velocity.y != 0)
+		{
 			anim = "walking_";
-			if (velocity.x > 0) {
+			if (velocity.x > 0)
+			{
 				facing = FlxObject.RIGHT;
-			} else if (velocity.x < 0) {
+			} else if (velocity.x < 0)
+			{
 				facing = FlxObject.LEFT;
 			}
-			if (velocity.y > 0) {
+			if (velocity.y > 0)
+			{
 				facing = FlxObject.DOWN;
-			} else if (velocity.y < 0) {
+			} else if (velocity.y < 0)
+			{
 				facing = FlxObject.UP;
 			}			
 		}
-		switch(facing) {
+		switch (facing)
+		{
 			case FlxObject.UP:
 				anim += "up";
 				
@@ -132,16 +149,18 @@ class Character extends FlxExtendedSprite {
 				anim += "down";
 		}			
 		
-		
-		if (animation.name != anim) {
+		if (animation.name != anim)
+		{
 			animation.play(anim);
 		}
 	}
 	
-	private function parseJson(file:String) {
+	private function parseJson(file:String)
+	{
 		var filePath:Path = new Path(file);
 		var fileStr:String = Assets.getText(file);
-		if (fileStr == null) {
+		if (fileStr == null)
+		{
 			throw 'The file {$file} doesn\'t exists!';
 		}
 		
@@ -151,7 +170,7 @@ class Character extends FlxExtendedSprite {
 		var texture:String = filePath.dir + "/" + json.sprite.texture;
 		var frameWidth:Int = Std.int(json.sprite.framewidth);
 		var frameHeight:Int = Std.int(json.sprite.frameheight);
-		this.loadGraphic(texture, true, false, frameWidth, frameHeight);
+		this.loadGraphic(texture, true, frameWidth, frameHeight);
 		
 		// velocity
 		var maxX:Float = json.velocity.max_x;
@@ -181,11 +200,14 @@ class Character extends FlxExtendedSprite {
 		var v_run:Int = json.animations.velocities.running;
 		
 		var tmp:Int;
-		for (dir in Reflect.fields(json.animations.frames)) {
+		for (dir in Reflect.fields(json.animations.frames))
+		{
 			var d = Reflect.field(json.animations.frames, dir);
-			for (type in Reflect.fields(d)) {
+			for (type in Reflect.fields(d))
+			{
 				var t = Reflect.field(d, type);
-				switch(type) {
+				switch(type)
+				{
 					case "def":
 						tmp = v_def;
 						
@@ -203,8 +225,6 @@ class Character extends FlxExtendedSprite {
 				}
 				animation.add(type + "_" + dir, t, tmp, true);
 			}
-			
 		}
-		
 	}
 }

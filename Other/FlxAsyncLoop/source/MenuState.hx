@@ -7,10 +7,9 @@ import flixel.FlxState;
 import flixel.group.FlxGroup;
 import flixel.text.FlxText;
 import flixel.ui.FlxBar;
-import flixel.util.FlxColorUtil;
-import flixel.util.FlxRandom;
+import flixel.util.FlxColor;
+import flixel.math.FlxRandom;
 import flixel.util.FlxSpriteUtil;
-
 
 /**
  * A FlxState which can be used for the game's menu.
@@ -45,14 +44,14 @@ class MenuState extends FlxState
 		_loopOne = new FlxAsyncLoop(_maxItems, addItem, 100);
 		
 		// create a fancy progress bar
-		_bar = new FlxBar(0, 0, FlxBar.FILL_LEFT_TO_RIGHT, FlxG.width - 50, 50, null, "", 0, 100, true);
+		_bar = new FlxBar(0, 0, LEFT_TO_RIGHT, FlxG.width - 50, 50, null, "", 0, 100, true);
 		_bar.currentValue = 0;
 		FlxSpriteUtil.screenCenter(_bar);
 		_grpProgress.add(_bar);
 		
 		// some text for the bar
 		_barText = new FlxText(0, 0, FlxG.width, "Loading... 0 / " + _maxItems);
-		_barText.setFormat(null, 28, 0xffffff, "center", FlxText.BORDER_OUTLINE, 0x000000);
+		_barText.setFormat(null, 28, FlxColor.WHITE, CENTER, OUTLINE);
 		FlxSpriteUtil.screenCenter(_barText);
 		_grpProgress.add(_barText);
 		
@@ -72,7 +71,10 @@ class MenuState extends FlxState
 	public function addItem():Void
 	{	
 		// each iteration of our loop, we just create a 10x10 FlxSprite in a random x, y position and random color
-		_grpFinished.add(new FlxSprite(FlxRandom.intRanged(0, FlxG.width), FlxRandom.intRanged(0, FlxG.height)).makeGraphic(10, 10, FlxColorUtil.getRandomColor(0, 255, 255)));
+		var sprite = new FlxSprite(FlxG.random.int(0, FlxG.width), FlxG.random.int(0, FlxG.height));
+		sprite.makeGraphic(10, 10, FlxG.random.color(0, 255, 255));
+		_grpFinished.add(sprite);
+		
 		// then we update our progress bar and progress bar text
 		_bar.currentValue = (_grpFinished.members.length / _maxItems) * 100;
 		_barText.text = "Loading... " + _grpFinished.members.length + " / " + _maxItems;

@@ -7,7 +7,7 @@ import flixel.FlxState;
 import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
 import flixel.util.FlxPath;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 import flixel.util.FlxStringUtil;
 
 class PlayState extends FlxState
@@ -22,8 +22,8 @@ class PlayState extends FlxState
 		decoration.moves = false;
 		decoration.solid = false;
 		add(decoration);
-		add(new FlxText(32, 36, 96, "collision").setFormat(null, 16, 0x778ea1, "center"));
-		add(new FlxText(32, 60, 96, "DEMO").setFormat(null, 24, 0x778ea1, "center"));
+		add(new FlxText(32, 36, 96, "collision").setFormat(null, 16, 0x778ea1, CENTER));
+		add(new FlxText(32, 60, 96, "DEMO").setFormat(null, 24, 0x778ea1, CENTER));
 		
 		var path:FlxPath;
 		var sprite:FlxSprite;
@@ -34,7 +34,7 @@ class PlayState extends FlxState
 		sprite.immovable = true;
 		destination = sprite.getMidpoint();
 		destination.y += 112;
-		path = FlxPath.start(sprite, [sprite.getMidpoint(),destination], 40, FlxPath.YOYO);
+		path = new FlxPath(sprite, [sprite.getMidpoint(), destination], 40, FlxPath.YOYO);
 		add(sprite);
 		
 		// Create the side-to-side pusher object and put it on a different path
@@ -42,7 +42,7 @@ class PlayState extends FlxState
 		sprite.immovable = true;
 		destination = sprite.getMidpoint();
 		destination.x += 56;
-		var path:FlxPath = FlxPath.start(sprite, [sprite.getMidpoint(),destination], 40, FlxPath.YOYO);
+		var path = new FlxPath(sprite, [sprite.getMidpoint(), destination], 40, FlxPath.YOYO);
 		add(sprite);
 		
 		// Then add the player, its own class with its own logic
@@ -68,37 +68,33 @@ class PlayState extends FlxState
 		
 		// This is the thing that spews nuts and bolts
 		var dispenser:FlxEmitter = new FlxEmitter(32, 40);
-		dispenser.setSize(8, 40);
-		dispenser.setXSpeed(100, 240);
-		dispenser.setYSpeed( -50, 50);
-		dispenser.gravity = 300;
-		dispenser.bounce = 0.3;
-		dispenser.makeParticles("assets/gibs.png", 100, 16, true);
-		dispenser.start(false, 10, 0.035);
+		dispenser.width = 8;
+		dispenser.height = 40;
+		dispenser.velocity.set(100, -50, 240, 50);
+		dispenser.acceleration.set(0, 300);
+		dispenser.elasticity.set(0.3);
+		dispenser.loadParticles("assets/gibs.png", 100, 16, true);
+		dispenser.start(false, 0.035, 10);
 		add(dispenser);
 		
 		// Basic level structure
 		var level:FlxTilemap = new FlxTilemap();
-		level.loadMap(FlxStringUtil.imageToCSV("assets/map.png", false, 2), "assets/tiles.png", 0, 0, FlxTilemap.ALT);
+		level.loadMap(FlxStringUtil.imageToCSV("assets/map.png", false, 2), "assets/tiles.png", 0, 0, ALT);
 		level.follow();
 		add(level);
 		
 		// Library label in upper left
-		var tx:FlxText;
-		tx = new FlxText(2, 0, Std.int(FlxG.width / 2), Std.string(FlxG.VERSION));
-		tx.scrollFactor.x = tx.scrollFactor.y = 0;
+		var tx:FlxText = new FlxText(2, 0, Std.int(FlxG.width / 2), Std.string(FlxG.VERSION));
+		tx.scrollFactor.set(0, 0);
+		tx.setBorderStyle(SHADOW, 0x233e58);
 		tx.color = 0x778ea1;
-		//tx.shadow = 0x233e58;
-		//tx.useShadow = true;
 		add(tx);
 		
 		// Instructions
 		tx = new FlxText(2, FlxG.height - 12, FlxG.width, "Interact with ARROWS / WASD, or press ENTER for next demo.");
-		tx.scrollFactor.x = tx.scrollFactor.y = 0;
-		tx.color = 0x778ea1;
-		//tx.shadow = 0x233e58;
-		//tx.useShadow = true;
-		tx.alignment = "center";
+		tx.scrollFactor.set(0, 0);
+		tx.setBorderStyle(SHADOW, 0x233e58);
+		tx.setFormat(null, 8, 0x778ea1, CENTER);
 		add(tx);
 	}
 	

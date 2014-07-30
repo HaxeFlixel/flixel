@@ -2,8 +2,8 @@ package;
 
 import openfl.Assets;
 import flixel.FlxG;
-import flixel.util.FlxAngle;
-import flixel.util.FlxPoint;
+import flixel.math.FlxAngle;
+import flixel.math.FlxPoint;
 import flixel.FlxSprite;
 
 class EnemyBullet extends FlxSprite
@@ -42,8 +42,7 @@ class EnemyBullet extends FlxSprite
 		{
 			return;
 		}
-		velocity.x = 0;
-		velocity.y = 0;
+		velocity.set();
 		if (isOnScreen())
 		{
 			FlxG.sound.play("Jump");
@@ -58,7 +57,8 @@ class EnemyBullet extends FlxSprite
 		FlxG.sound.play("Enemy", 0.5);
 		
 		super.reset(Location.x - width / 2, Location.y - height / 2);
-		FlxAngle.rotatePoint(0, speed, 0, 0, Angle, _point);
+		_point.set(0, -speed);
+		_point.rotate(FlxPoint.weak(0, 0), Angle);
 		velocity.x = _point.x;
 		velocity.y = _point.y;
 		solid = true;

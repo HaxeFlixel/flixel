@@ -3,7 +3,7 @@ package;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup;
-import flixel.util.FlxRandom;
+import flixel.math.FlxRandom;
 
 /**
  * Class declaration for the squid monster class
@@ -38,7 +38,7 @@ class Alien extends FlxSprite
 		// We want to play them in the order 1, 2, 3, 1 (but of course this stuff is 0-index).
 		// To avoid a weird, annoying appearance the framerate is randomized a little bit
 		// to a value between 6 and 10 (6+4) frames per second.
-		this.animation.add("Default", [0, 1, 0, 2], Math.floor(6 + FlxRandom.float() * 4));
+		this.animation.add("Default", [0, 1, 0, 2], Math.floor(6 + FlxG.random.float() * 4));
 
 		// Now that the animation is set up, it's very easy to play it back!
 		this.animation.play("Default");
@@ -91,6 +91,6 @@ class Alien extends FlxSprite
 	 */
 	private function resetShotClock():Void
 	{
-		_shotClock = 1 + FlxRandom.float() * 10;
+		_shotClock = 1 + FlxG.random.float() * 10;
 	}
 }

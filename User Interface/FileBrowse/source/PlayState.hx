@@ -10,7 +10,7 @@ import flixel.FlxState;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import flixel.util.FlxColor;
-import flixel.util.FlxMath;
+import flixel.math.FlxMath;
 import flixel.system.FlxAssets;
 
 #if flash
@@ -60,11 +60,11 @@ class PlayState extends FlxState
 		
 		var bw:Float = _button.width + 15;
 		_text = new FlxText(bw, gutter, Std.int(FlxG.width - bw - 5), "Click the button to load a PNG or JPG!");
-		_text.setFormat(null, 16, FlxColor.WHITE, "left");
+		_text.setFormat(null, 16, FlxColor.WHITE, LEFT);
 		add(_text);
 		
 		_scaleText = new FlxText(FlxG.width - 100, FlxG.height - 20, 100, 100);
-		_scaleText.setFormat(null, 16, FlxColor.WHITE, "right");
+		_scaleText.setFormat(null, 16, FlxColor.WHITE, RIGHT);
 		add(_scaleText);
 		
 		_showImage(new GraphicLogo(0, 0));
@@ -84,7 +84,7 @@ class PlayState extends FlxState
 		}
 		
 		// Reset to a scale of x1
-		if (FlxG.keys.anyPressed(["R", "SPACE", "ONE"]))
+		if (FlxG.keys.anyPressed([R, SPACE, ONE]))
 		{
 			_updateScale(1);
 		}

@@ -6,7 +6,7 @@ import flixel.effects.particles.FlxParticle;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.util.FlxColor;
-import flixel.util.FlxRandom;
+import flixel.math.FlxRandom;
 
 /**
  * The state showing a remake of the FlxBlur demo
@@ -24,9 +24,8 @@ class BlurState extends FlxState
 		// This just sets up an emitter at the bottom of the screen
 		var emitter = new FlxEmitter(0, FlxG.height + 20, 50);
 		emitter.width = FlxG.width - 200;
-		emitter.gravity = -40;
-		emitter.setXSpeed( -20, 20);
-		emitter.setYSpeed( -75, -25);
+		emitter.acceleration.set(0, -40);
+		emitter.velocity.set( -20, -75, 20, -25);
 		
 		var colors:Array<Int> = [FlxColor.BLUE, (FlxColor.BLUE | FlxColor.GREEN), 
 								FlxColor.GREEN, (FlxColor.GREEN | FlxColor.RED), FlxColor.RED];
@@ -35,7 +34,7 @@ class BlurState extends FlxState
 		for (i in 0...PARTICLE_AMOUNT)
 		{
 			particle = new FlxParticle();
-			particle.makeGraphic(32, 32, colors[Std.int(FlxRandom.float() * colors.length)]);
+			particle.makeGraphic(32, 32, colors[Std.int(FlxG.random.float() * colors.length)]);
 			
 			// Add the particle to the trail area so it has a trail
 			trailArea.add(particle);
@@ -48,7 +47,7 @@ class BlurState extends FlxState
 		add(new GUI(trailArea, null, false));
 		
 		// Start the emitter
-		emitter.start(false, 0, 0.1);
+		emitter.start(false, 0.1);
 		
 		super.create();
 	}

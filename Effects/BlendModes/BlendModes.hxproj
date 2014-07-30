@@ -5,13 +5,13 @@
     <movie outputType="Application" />
     <movie input="" />
     <movie path="Project.xml" />
-    <movie fps="60" />
-    <movie width="640" />
-    <movie height="480" />
+    <movie fps="30" />
+    <movie width="1024" />
+    <movie height="768" />
     <movie version="3" />
     <movie minorVersion="0" />
     <movie platform="NME" />
-    <movie background="808080" />
+    <movie background="FFFFFF" />
     <movie preferredSDK="Haxe 3.0.0;3.0.0;" />
   </output>
   <!-- Other classes to be compiled into your SWF -->
@@ -21,20 +21,19 @@
   </classpaths>
   <!-- Build options -->
   <build>
-    <option directives="tools=1.1.6&#xA;FLX_NO_DEBUG&#xA;display&#xA;web" />
+    <option directives="FLX_BMP_DEBUG&#xA;tools=1.4.0&#xA;FLX_NO_DEBUG&#xA;FLX_RENDER_BLIT&#xA;display&#xA;web" />
     <option flashStrict="False" />
     <option noInlineOnDebug="False" />
     <option mainClass="ApplicationMain" />
     <option enabledebug="True" />
-    <option additional="--no-output&#xA;-swf-version 11.2&#xA;#--remap nme:flash" />
+    <option additional="--no-output&#xA;-swf-version 11.8&#xA;#--remap nme:flash" />
   </build>
   <!-- haxelib libraries -->
   <haxelib>
-    <library name="openfl" />
     <library name="flixel" />
     <library name="openfl" />
-    <library name="flixel-addons" />
     <library name="flixel-ui" />
+    <library name="flixel-addons" />
   </haxelib>
   <!-- Class files to compile (other referenced classes will automatically be included) -->
   <compileTargets>

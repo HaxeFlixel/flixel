@@ -4,10 +4,10 @@ import flixel.addons.nape.FlxNapeSprite;
 import flixel.addons.nape.FlxNapeState;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.plugin.MouseEventManager;
+import flixel.input.mouse.FlxMouseEventManager;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
-import flixel.util.FlxRandom;
+import flixel.math.FlxRandom;
 import nape.constraint.DistanceJoint;
 import nape.dynamics.InteractionFilter;
 import nape.geom.Vec2;
@@ -34,7 +34,7 @@ class Card extends FlxNapeSprite
 	public function new(X:Int, Y:Int, OffsetX:Int, OffsetY:Int, Index:Int):Void
 	{
 		super(X + OffsetX * Index, Y + OffsetY * Index);
-		loadGraphic("assets/Deck.png", true, false, 123, 123);
+		loadGraphic("assets/Deck.png", true, 79, 123);
 		
 		// The card starts out being turned around
 		animation.frameIndex = 54;
@@ -47,7 +47,7 @@ class Card extends FlxNapeSprite
 		body.setShapeFilters(new InteractionFilter(2, ~2));
 		
 		// Setup the mouse events
-		MouseEventManager.add(this, onDown, null, onOver, onOut);
+		FlxMouseEventManager.add(this, onDown, null, onOver, onOut);
 	}
 	
 	private function onDown(Sprite:FlxSprite)
@@ -85,10 +85,17 @@ class Card extends FlxNapeSprite
 	{
 		// Choose a random card from the first 52 cards on the spritesheet 
 		// - excluding those who have already been picked!
-		animation.frameIndex = FlxRandom.intRanged(0, 51, pickedCards);
+		animation.frameIndex = FlxG.random.int(0, 51, pickedCards);
 		pickedCards.push(animation.frameIndex);
 		
 		// Finish the card animation
 		FlxTween.tween(scale, { x: 1 }, TURNING_TIME / 2);
+	}
+	
+	override public function destroy():Void 
+	{
+		// Make sure that this object is removed from the FlxMouseEventManager for GC
+		FlxMouseEventManager.remove(this);
+		super.destroy();
 	}
 }

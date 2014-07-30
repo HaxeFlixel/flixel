@@ -8,7 +8,7 @@ import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
-import flixel.util.FlxRandom;
+import flixel.math.FlxRandom;
 
 class PlayState extends FlxState
 {
@@ -38,11 +38,11 @@ class PlayState extends FlxState
 		// Title text, nothing crazy here!
 		var text:FlxText;
 		text = new FlxText(FlxG.width / 4, FlxG.height / 2 - 20, Math.floor(FlxG.width / 2), "FlxBloom");
-		text.setFormat(null, 32, FlxColor.WHITE, "center");
+		text.setFormat(null, 32, FlxColor.WHITE, CENTER);
 		add(text);
 		
 		text = new FlxText(FlxG.width / 4, FlxG.height / 2 + 20, Math.floor(FlxG.width / 2), "press space to toggle");
-		text.setFormat(null, 16, FlxColor.BLUE, "center");
+		text.setFormat(null, 16, FlxColor.BLUE, CENTER);
 		add(text);
 		
 		// This is the sprite we're going to use to help with the light bloom effect
@@ -71,21 +71,20 @@ class PlayState extends FlxState
 		var emitter:FlxEmitter = new FlxEmitter(0, FlxG.height + 8, particles);
 		emitter.width = FlxG.width;
 		emitter.y = FlxG.height + 20;
-		emitter.gravity = -40;
-		emitter.setXSpeed( -20, 20);
-		emitter.setYSpeed( -75, -25);
+		emitter.acceleration.set(0, -40);
+		emitter.velocity.set( -20, -75, 20, -25);
 		var particle:FlxParticle;
 		var colors:Array<Int> = [FlxColor.BLUE, (FlxColor.BLUE | FlxColor.GREEN), FlxColor.GREEN, (FlxColor.GREEN | FlxColor.RED), FlxColor.RED];
 		
 		for (i in 0...particles)
 		{
 			particle = new FlxParticle();
-			particle.makeGraphic(32, 32, colors[Std.int(FlxRandom.float() * colors.length)]);
+			particle.makeGraphic(32, 32, colors[Std.int(FlxG.random.float() * colors.length)]);
 			particle.exists = false;
 			emitter.add(particle);
 		}
 		
-		emitter.start(false, 0, 0.1);
+		emitter.start(false, 0.1);
 		add(emitter);
 		#end
 	}
