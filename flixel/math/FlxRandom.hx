@@ -153,50 +153,35 @@ class FlxRandom
 	private var _hasFloatNormalSpare:Bool = false;
 	private var _floatNormalRand1:Float = 0;
 	private var _floatNormalRand2:Float = 0;
+	private var _twoPI:Float = Math.PI * 2;
 	
 	/**
-	 * Returns a pseudorandom float value in a statistical normal distribution between Min and Max, inclusive.
+	 * Returns a pseudorandom float value in a statistical normal distribution centered on Mean with a standard deviation size of StdDev.
 	 * (This uses the Box-Muller transform algorithm for guassian pseudorandom numbers)
 	 * 
-	 * @param   Min        The minimum value that should be returned. 0 by default.
-	 * @param   Max        The maximum value that should be returned. 1 by default.
-	 * @param   Excludes   Optional array of values that should not be returned.
+	 * *Normal distribution: 68% values are within 1 standard deviation, 95% are in 2 StdDevs, 99% in 3 StdDevs.
+	 * 
+	 * @param	Mean		The Mean around which the normal distribution is centered
+	 * @param	StdDev		Size of the standard deviation
 	 */
-	public function floatNormal(Min:Float = 0, Max:Float = 1):Float
+	public function floatNormal(Mean:Float=0,StdDev:Float=1):Float
 	{
-		if (Min == Max)
-		{
-			return Min;
-		}
-		
-		var result:Float = 0;
-		
 		if (_hasFloatNormalSpare)
 		{
 			_hasFloatNormalSpare = false;
-			result = Math.sqrt(_floatNormalRand1) * Math.sin(_floatNormalRand2);
-		}
-		else
-		{
-			_hasFloatNormalSpare = true;
-			
-			_floatNormalRand1 = generate() / MODULUS;
-			_floatNormalRand1 = -2 * Math.log(_floatNormalRand1);
-			_floatNormalRand2 = (generate() / MODULUS) * Math.PI * 2;
-			
-			result = Math.sqrt(_floatNormalRand1) * Math.cos(_floatNormalRand2);
+			return _floatNormalRand2;
 		}
 		
-		//right now result is a value between -1 and 1
+		_hasFloatNormalSpare = true;
 		
-		result = (result * 0.5) + 0.5;	//shift result to 0.0-1.0
+		var theta:Float = 2 * Math.PI * (generate()/MODULUS);
+		var rho:Float = Math.sqrt( -2 * Math.log(1 - (generate()/MODULUS)) );
+		var scale:Float = StdDev * rho;
 		
-		if(!(Min == 0 && Max == 1))		//shift result to whatever the range is, if it's not 0.0-1.0
-		{
-			result = Min + (result) * (Max - Min);
-		}
+		_floatNormalRand1 = Mean + scale * Math.cos(theta);
+		_floatNormalRand2 = Mean + scale * Math.sin(theta);
 		
-		return result;
+		return _floatNormalRand1;
 	}
 	
 	/**
