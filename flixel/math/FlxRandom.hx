@@ -154,6 +154,7 @@ class FlxRandom
 	private var _floatNormalRand1:Float = 0;
 	private var _floatNormalRand2:Float = 0;
 	private var _twoPI:Float = Math.PI * 2;
+	private var _floatNormalRho:Float = 0;
 	
 	/**
 	 * Returns a pseudorandom float value in a statistical normal distribution centered on Mean with a standard deviation size of StdDev.
@@ -166,22 +167,24 @@ class FlxRandom
 	 */
 	public function floatNormal(Mean:Float=0,StdDev:Float=1):Float
 	{
+		
 		if (_hasFloatNormalSpare)
 		{
 			_hasFloatNormalSpare = false;
-			return _floatNormalRand2;
+			var scale:Float = StdDev * _floatNormalRho;
+			return Mean + scale * _floatNormalRand2;
 		}
 		
 		_hasFloatNormalSpare = true;
 		
 		var theta:Float = _twoPI * (generate()/MODULUS);
-		var rho:Float = Math.sqrt( -2 * Math.log(1 - (generate()/MODULUS)) );
-		var scale:Float = StdDev * rho;
+		_floatNormalRho = Math.sqrt( -2 * Math.log(1 - (generate()/MODULUS)) );
+		var scale:Float = StdDev * _floatNormalRho;
 		
-		_floatNormalRand1 = Mean + scale * Math.cos(theta);
-		_floatNormalRand2 = Mean + scale * Math.sin(theta);
+		_floatNormalRand1 = Math.cos(theta);
+		_floatNormalRand2 = Math.sin(theta);
 		
-		return _floatNormalRand1;
+		return Mean + scale * _floatNormalRand1;
 	}
 	
 	/**
