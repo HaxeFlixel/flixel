@@ -1,10 +1,11 @@
 package flixel.system.frontEnds;
+import flixel.input.keyboard.FlxKey;
 
 #if !FLX_NO_SOUND_SYSTEM
 import flash.media.Sound;
 import flash.media.SoundTransform;
 import flixel.FlxG;
-import flixel.group.FlxTypedGroup;
+import flixel.group.FlxGroup;
 import flixel.system.FlxAssets.FlxSoundAsset;
 import flixel.system.FlxSound;
 import flixel.math.FlxMath;
@@ -24,7 +25,7 @@ class SoundFrontEnd
 	public var muted:Bool = false;
 	/**
 	 * Set this hook to get a callback whenever the volume changes.
-	 * Function should take the form myVolumeHandler(Volume:Number).
+	 * Function should take the form myVolumeHandler(volume:Float).
 	 */
 	public var volumeHandler:Float->Void;
 	
@@ -33,17 +34,17 @@ class SoundFrontEnd
 	 * The key codes used to increase volume (see FlxG.keys for the keys available).
 	 * Default keys: + (and numpad +). Set to null to deactivate.
 	 */
-	public var volumeUpKeys:Array<String> = ["PLUS", "NUMPADPLUS"];
+	public var volumeUpKeys:Array<FlxKey> = [PLUS, NUMPADPLUS];
 	/**
 	 * The keys to decrease volume (see FlxG.keys for the keys available).
 	 * Default keys: - (and numpad -). Set to null to deactivate.
 	 */
-	public var volumeDownKeys:Array<String> = ["MINUS", "NUMPADMINUS"];
+	public var volumeDownKeys:Array<FlxKey> = [MINUS, NUMPADMINUS];
 	/**
 	 * The keys used to mute / unmute the game (see FlxG.keys for the keys available).
 	 * Default keys: 0 (and numpad 0). Set to null to deactivate.
 	 */
-	public var muteKeys:Array<String> = ["ZERO", "NUMPADZERO"]; 
+	public var muteKeys:Array<FlxKey> = [ZERO, NUMPADZERO]; 
 	#end
 	
 	/**
@@ -143,10 +144,18 @@ class SoundFrontEnd
 	 * Calls FlxG.sound.cache() on all sounds that are embedded.
 	 * WARNING: can lead to high memory usage.
 	 */
+	#if (openfl <= "1.4.0")
 	@:access(openfl.Assets)
 	@:access(openfl.AssetType)
+	#end
 	public function cacheAll():Void
 	{
+		#if (openfl > "1.4.0")
+		for (id in Assets.list(AssetType.SOUND)) 
+		{
+			cache(id);
+		}
+		#else
 		Assets.initialize();
 		
 		var defaultLibrary = Assets.libraries.get("default");
@@ -166,6 +175,7 @@ class SoundFrontEnd
 				cache(key);
 			}
 		}
+		#end
 	}
 	#end
 	
@@ -261,7 +271,48 @@ class SoundFrontEnd
 		}
 	}
 	
-	private function new() {}
+	/**
+	 * Toggles muted, also activating the sound tray.
+	 */ 
+	public function toggleMuted():Void
+	{
+		muted = !muted;
+		
+		if (volumeHandler != null)
+		{
+			volumeHandler(muted ? 0 : volume);
+		}
+		
+		showSoundTray();
+	}
+	
+	/**
+	 * Changes the volume by a certain amount, also activating the sound tray.
+	 */ 
+	public function changeVolume(Amount:Float):Void
+	{
+		muted = false;
+		volume += Amount;
+		showSoundTray();
+	}
+	
+	/**
+	 * Shows the sound tray if it is enabled.
+	 */
+	public function showSoundTray():Void
+	{
+		#if !FLX_NO_SOUND_TRAY
+		if (FlxG.game.soundTray != null && soundTrayEnabled)
+		{
+			FlxG.game.soundTray.show();
+		}
+		#end
+	}
+	
+	private function new()
+	{
+		loadSavedPrefs();
+	}
 	
 	/**
 	 * Called by the game loop to make sure the sounds get updated each frame.
@@ -269,14 +320,19 @@ class SoundFrontEnd
 	private function update():Void
 	{
 		if (music != null && music.active)
-		{
 			music.update();
-		}
 		
 		if (list != null && list.active)
-		{
 			list.update();
-		}
+		
+		#if !FLX_NO_KEYBOARD
+		if (FlxG.keys.anyJustReleased(muteKeys))
+			toggleMuted();
+		else if (FlxG.keys.anyJustReleased(volumeUpKeys))
+			changeVolume(0.1);
+		else if (FlxG.keys.anyJustReleased(volumeDownKeys))
+			changeVolume(-0.1);
+		#end
 	}
 	
 	private function onFocusLost():Void
@@ -320,18 +376,10 @@ class SoundFrontEnd
 		{
 			volume = FlxG.save.data.volume;
 		}
-		else 
-		{
-			volume = 0.5; 
-		}
 		
 		if (FlxG.save.data.mute != null)
 		{
 			muted = FlxG.save.data.mute;
-		}
-		else 
-		{
-			muted = false; 
 		}
 	}
 	

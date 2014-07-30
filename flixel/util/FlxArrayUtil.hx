@@ -1,5 +1,4 @@
 package flixel.util;
-import flixel.math.FlxRandom;
 
 /**
  * A set of functions for array manipulation.
@@ -30,35 +29,6 @@ class FlxArrayUtil
 			}
 			#end
 		}
-	}
-	
-	/**
-	 * Deprecated; please use FlxRandom.shuffleArray() instead.
-	 * Shuffles the entries in an array into a new random order.
-	 * 
-	 * @param	Objects			An array to shuffle.
-	 * @param	HowManyTimes	How many swaps to perform during the shuffle operation.  A good rule of thumb is 2-4 times the number of objects in the list.
-	 * @return	The newly shuffled array.
-	 */
-	@:generic
-	public static inline function shuffle<T>(Objects:Array<T>, HowManyTimes:Int):Array<T>
-	{
-		return FlxRandom.shuffleArray(Objects, HowManyTimes);
-	}
-	
-	/**
-	 * Deprecated; please use FlxRandom.getObject() instead.
-	 * Fetch a random entry from the given array from StartIndex to EndIndex.
-	 * 
-	 * @param	Objects			An array from which to select a random entry.
-	 * @param	StartIndex		Optional index from which to restrict selection. Default value is 0, or the beginning of the array.
-	 * @param	EndIndex		Optional index at which to restrict selection. Ignored if 0, which is the default value.
-	 * @return	The random object that was selected.
-	 */
-	@:generic
-	public static inline function getRandom<T>(Objects:Array<T>, StartIndex:Int = 0, EndIndex:Int = 0):T
-	{
-		return FlxRandom.getObject(Objects, StartIndex, EndIndex);
 	}
 	
 	/**

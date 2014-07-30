@@ -11,6 +11,11 @@ import flixel.util.FlxStringUtil;
  */
 class FlxPoint implements IFlxPooled
 {
+	/**
+	 * Used to account for floating-point inaccuracies in the equals() function.
+	 */
+	public static inline var EPSILON:Float = 0.0000001;
+	
 	private static var _pool = new FlxPool<FlxPoint>(FlxPoint);
 	
 	/**
@@ -38,7 +43,7 @@ class FlxPoint implements IFlxPooled
 	 */
 	public static inline function weak(X:Float = 0, Y:Float = 0):FlxPoint
 	{
-		var point = _pool.get().set(X, Y);
+		var point = get(X, Y);
 		point._weak = true;
 		return point;
 	}
@@ -62,6 +67,7 @@ class FlxPoint implements IFlxPooled
 		if (!_inPool)
 		{
 			_inPool = true;
+			_weak = false;
 			_pool.putUnsafe(this);
 		}
 	}
@@ -73,7 +79,7 @@ class FlxPoint implements IFlxPooled
 	{
 		if (_weak)
 		{
-			_pool.put(this);
+			put();
 		}
 	}
 	
@@ -196,8 +202,13 @@ class FlxPoint implements IFlxPooled
 	 * @param	Point	Any Point.
 	 * @return	A reference to the altered point parameter.
 	 */
-	public inline function copyToFlash(FlashPoint:Point):Point
+	public inline function copyToFlash(?FlashPoint:Point):Point
 	{
+		if (FlashPoint == null)
+		{
+			FlashPoint = new Point();
+		}
+		
 		FlashPoint.x = x;
 		FlashPoint.y = y;
 		return FlashPoint;
@@ -257,6 +268,144 @@ class FlxPoint implements IFlxPooled
 		x = Math.ceil(x);
 		y = Math.ceil(y);
 		return this;
+	}
+	
+	/**
+	 * Rotates this point clockwise in 2D space around another point by the given angle.
+	 * 
+	 * @param   Pivot   The pivot you want to rotate this point around
+	 * @param   Angle   Rotate the point by this many degrees clockwise.
+	 * @return  A FlxPoint containing the coordinates of the rotated point.
+	 */
+	public function rotate(Pivot:FlxPoint, Angle:Float):FlxPoint
+	{
+		var sin:Float = 0;
+		var cos:Float = 0;
+		var radians:Float = Angle * FlxAngle.TO_RAD;
+		while (radians < -Math.PI)
+		{
+			radians += Math.PI * 2;
+		}
+		while (radians > Math.PI)
+		{
+			radians = radians - Math.PI * 2;
+		}
+		
+		if (radians < 0)
+		{
+			sin = 1.27323954 * radians + .405284735 * radians * radians;
+			if (sin < 0)
+			{
+				sin = .225 * (sin *-sin - sin) + sin;
+			}
+			else
+			{
+				sin = .225 * (sin * sin - sin) + sin;
+			}
+		}
+		else
+		{
+			sin = 1.27323954 * radians - 0.405284735 * radians * radians;
+			if (sin < 0)
+			{
+				sin = .225 * (sin *-sin - sin) + sin;
+			}
+			else
+			{
+				sin = .225 * (sin * sin - sin) + sin;
+			}
+		}
+		
+		radians += Math.PI / 2;
+		if (radians > Math.PI)
+		{
+			radians = radians - Math.PI * 2;
+		}
+		if (radians < 0)
+		{
+			cos = 1.27323954 * radians + 0.405284735 * radians * radians;
+			if (cos < 0)
+			{
+				cos = .225 * (cos *-cos - cos) + cos;
+			}
+			else
+			{
+				cos = .225 * (cos * cos - cos) + cos;
+			}
+		}
+		else
+		{
+			cos = 1.27323954 * radians - 0.405284735 * radians * radians;
+			if (cos < 0)
+			{
+				cos = .225 * (cos *-cos - cos) + cos;
+			}
+			else
+			{
+				cos = .225 * (cos * cos - cos) + cos;
+			}
+		}
+		
+		var dx:Float = x - Pivot.x;
+		var dy:Float = y - Pivot.y;
+		x = cos * dx - sin * dy + Pivot.x;
+		y = sin * dx + cos * dy + Pivot.y;
+		
+		Pivot.putWeak();
+		return this;
+	}
+	
+	/**
+	 * Calculates the angle between this and another point. 0 degrees points straight up.
+	 * 
+	 * @param   point   The other point.
+	 * @return  The angle in degrees, between -180 and 180.
+	 */
+	public function angleBetween(point:FlxPoint):Float
+	{
+		var x:Float = point.x - x;
+		var y:Float = point.y - y;
+		var angle:Float = 0;
+		
+		if ((x != 0) || (y != 0))
+		{
+			var c1:Float = Math.PI * 0.25;
+			var c2:Float = 3 * c1;
+			var ay:Float = (y < 0) ? -y : y;
+			
+			if (x >= 0)
+			{
+				angle = c1 - c1 * ((x - ay) / (x + ay));
+			}
+			else
+			{
+				angle = c2 - c1 * ((x + ay) / (ay - x));
+			}
+			angle = ((y < 0) ? - angle : angle) * FlxAngle.TO_DEG;
+			
+			if (angle > 90)
+			{
+				angle = angle - 270;
+			}
+			else
+			{
+				angle += 90;
+			}
+		}
+		
+		point.putWeak();
+		return angle;
+	}
+	
+	/**
+	 * Function to compare this FlxPoint to another.
+	 * 
+	 * @param	OtherFlxPoint  The other FlxPoint to compare to this one.
+	 * @return	True if the FlxPoints have the same x and y value, false otherwise.
+	 */
+	public inline function equals(OtherFlxPoint:FlxPoint):Bool
+	{
+		return Math.abs(x - OtherFlxPoint.x) < EPSILON && Math.abs(y - OtherFlxPoint.y) < EPSILON;
 	}
 	
 	/**

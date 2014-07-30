@@ -1,6 +1,4 @@
 package flixel.system.debug;
-import flixel.util.FlxDestroyUtil;
-
 #if !FLX_NO_DEBUG
 
 import flash.display.BitmapData;
@@ -20,8 +18,9 @@ import flixel.system.debug.Watch;
 import flixel.system.FlxAssets;
 import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxArrayUtil;
-import flixel.util.FlxColor;
 import flixel.util.FlxStringUtil;
+import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
 
 @:bitmap("assets/images/debugger/flixel.png")
 private class GraphicFlixel extends BitmapData {}
@@ -370,7 +369,7 @@ class FlxDebugger extends Sprite
 		window.toggleButton = button;
 		button.toggled = !window.visible;
 	}
-	
+
 	public inline function addWindow(window:Window):Window
 	{
 		_windows.push(window);
@@ -437,7 +436,7 @@ class FlxDebugger extends Sprite
 		vcr = new VCR(this);
 		
 		addButton(LEFT, new GraphicFlixel(0, 0), openHomepage);
-		addButton(LEFT, null, openHomepage).addChild(txt);
+		addButton(LEFT, null, openGitHub).addChild(txt);
 		
 		addWindowToggleButton(bitmapLog, GraphicBitmapLog);
 		addWindowToggleButton(log, GraphicLog);
@@ -505,6 +504,16 @@ class FlxDebugger extends Sprite
 	private inline function openHomepage():Void
 	{
 		FlxG.openURL("http://www.haxeflixel.com");
+	}
+	
+	private inline function openGitHub():Void
+	{
+		var url = "https://github.com/HaxeFlixel/flixel";
+		if (FlxVersion.sha != "")
+		{
+			url += '/commit/${FlxVersion.sha}';
+		}
+		FlxG.openURL(url);
 	}
 }
 #end

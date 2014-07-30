@@ -1,18 +1,13 @@
 package flixel.text;
 
 import flash.display.BitmapData;
-import flash.text.TextField;
-import flash.text.TextFieldAutoSize;
-import flash.text.TextFieldType;
-import flash.text.TextFormatAlign;
 import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.system.FlxAssets;
-import flixel.util.FlxColor;
+import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
-import openfl.Assets;
+import flixel.util.FlxColor;
 
 /**
  * Extends FlxText for better support rendering text on cpp target.
@@ -37,10 +32,10 @@ class FlxTextField extends FlxText
 	{
 		super(X, Y, Width, Text, Size, EmbeddedFont);
 		
-		height = (Text.length <= 0) ? 1 : _textField.textHeight + 4;
+		height = (Text == null || Text.length <= 0) ? 1 : textField.textHeight + 4;
 		
-		_textField.multiline = false;
-		_textField.wordWrap = false;
+		textField.multiline = false;
+		textField.wordWrap = false;
 		
 		if (Camera == null)
 		{
@@ -56,9 +51,9 @@ class FlxTextField extends FlxText
 	 */
 	override public function destroy():Void
 	{
-		if (_textField.parent != null)
+		if (textField.parent != null)
 		{
-			_textField.parent.removeChild(_textField);
+			textField.parent.removeChild(textField);
 		}
 		
 		_camera = null;
@@ -100,17 +95,8 @@ class FlxTextField extends FlxText
 	
 	override private function set_alpha(Alpha:Float):Float
 	{
-		if (Alpha > 1)
-		{
-			Alpha = 1;
-		}
-		if (Alpha < 0)
-		{
-			Alpha = 0;
-		}
-		
-		alpha = Alpha;
-		_textField.alpha = alpha;
+		alpha = FlxMath.bound(Alpha, 0, 1);
+		textField.alpha = alpha;
 		
 		return Alpha;
 	}
@@ -118,13 +104,13 @@ class FlxTextField extends FlxText
 	override private function set_height(Height:Float):Float
 	{
 		Height = super.set_height(Height);
-		if (_textField != null)	_textField.height = Height;
+		if (textField != null)	textField.height = Height;
 		return Height;
 	}
 	
 	override private function set_visible(Value:Bool):Bool
 	{
-		_textField.visible = Value;
+		textField.visible = Value;
 		return super.set_visible(Value);
 	}
 	
@@ -153,37 +139,37 @@ class FlxTextField extends FlxText
 		if (!_addedToDisplay)
 		{
 			#if FLX_RENDER_TILE
-			_camera.canvas.addChild(_textField);
+			_camera.canvas.addChild(textField);
 			#else
-			_camera.flashSprite.addChild(_textField);
+			_camera.flashSprite.addChild(textField);
 			#end
 			
 			_addedToDisplay = true;
-			updateFormat(_defaultFormat);
+			updateDefaultFormat();
 		}
 		
 		if (!_camera.visible || !_camera.exists || !isOnScreen(_camera))
 		{
-			_textField.visible = false;
+			textField.visible = false;
 		}
 		else
 		{
-			_textField.visible = true;
+			textField.visible = true;
 		}
 		
 		_point.x = x - (_camera.scroll.x * scrollFactor.x) - (offset.x);
 		_point.y = y - (_camera.scroll.y * scrollFactor.y) - (offset.y);
 		
 		#if FLX_RENDER_TILE
-		_textField.x = _point.x;
-		_textField.y = _point.y;
+		textField.x = _point.x;
+		textField.y = _point.y;
 		#else
-		_textField.x = _point.x - FlxG.camera.width * 0.5;
-		_textField.y = _point.y - FlxG.camera.height * 0.5;
+		textField.x = _point.x - FlxG.camera.width * 0.5;
+		textField.y = _point.y - FlxG.camera.height * 0.5;
 		#end
 		
 		#if !FLX_NO_DEBUG
-		FlxBasic._VISIBLECOUNT++;
+		FlxBasic.visibleCount++;
 		#end
 	}
 	
@@ -192,8 +178,8 @@ class FlxTextField extends FlxText
 		var oldWidth:Float = cachedGraphics.bitmap.width;
 		var oldHeight:Float = cachedGraphics.bitmap.height;
 		
-		var newWidth:Float = _textField.width + _widthInc;
-		var newHeight:Float = _textField.height + _heightInc;
+		var newWidth:Float = textField.width + _widthInc;
+		var newHeight:Float = textField.height + _heightInc;
 		
 		if ((oldWidth != newWidth) || (oldHeight != newHeight))
 		{
@@ -226,9 +212,9 @@ class FlxTextField extends FlxText
 			if (Value != null)
 			{
 				#if FLX_RENDER_TILE
-				Value.canvas.addChild(_textField);
+				Value.canvas.addChild(textField);
 				#else
-				Value.flashSprite.addChild(_textField);
+				Value.flashSprite.addChild(textField);
 				#end
 				
 				_addedToDisplay = true;
@@ -237,7 +223,7 @@ class FlxTextField extends FlxText
 			{
 				if (_camera != null)
 				{
-					_textField.parent.removeChild(_textField);
+					textField.parent.removeChild(textField);
 				}
 				
 				_addedToDisplay = false;

@@ -16,17 +16,25 @@ class FlxMath
 	/**
 	 * Minimum value of a floating point number.
 	 */
-	public static inline var MIN_VALUE:Float = 0.0000000000000001;
+	public static inline var MIN_VALUE_FLOAT:Float = 0.0000000000000001;
 	#else
 	/**
 	 * Minimum value of a floating point number.
 	 */
-	public static inline var MIN_VALUE:Float = 5e-324;
+	public static inline var MIN_VALUE_FLOAT:Float = 5e-324;
 	#end
 	/**
 	 * Maximum value of a floating point number.
 	 */
-	public static inline var MAX_VALUE:Float = 1.79e+308;
+	public static inline var MAX_VALUE_FLOAT:Float = 1.79e+308;
+	/**
+	 * Minimum value of an integer.
+	 */
+	public static inline var MIN_VALUE_INT:Int = -MAX_VALUE_INT;
+	/**
+	 * Maximum value of an integer.
+	 */
+	public static inline var MAX_VALUE_INT:Int = 0x7FFFFFFF;
 	/**
 	 * Approximation of Math.sqrt(2).
 	 */
@@ -60,7 +68,7 @@ class FlxMath
 	 * @param	Max		Any number.
 	 * @return	The bounded value of the number.
 	 */
-	public static inline function bound(Value:Float, Min:Null<Float>, Max:Null<Float>):Float
+	public static inline function bound(Value:Float, ?Min:Float, ?Max:Float):Float
 	{
 		var lowerBound:Float = (Min != null && Value < Min) ? Min : Value;
 		return (Max != null && lowerBound > Max) ? Max : lowerBound;
@@ -261,7 +269,6 @@ class FlxMath
 	
 	/**
 	 * Adds value to amount and ensures that the result always stays between 0 and max, by wrapping the value around.
-	 * Values must be positive integers, and are passed through Math.abs
 	 * 
 	 * @param 	value 	The value to add the amount to
 	 * @param 	amount 	The amount to add to the value
@@ -270,15 +277,19 @@ class FlxMath
 	 */
 	public static function wrapValue(value:Int, amount:Int, max:Int):Int
 	{
-		var diff:Int;
-
-		value = Std.int(Math.abs(value));
-		amount = Std.int(Math.abs(amount));
-		max = Std.int(Math.abs(max));
+		var output:Int = value + amount;
 		
-		diff = (value + amount) % max;
+		if (output >= max)
+		{
+			output %= max;
+		}
 		
-		return diff;
+		while (output < 0)
+		{
+			output += max;
+		}
+		
+		return output;
 	}
 	
 	/**

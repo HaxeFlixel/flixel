@@ -4,12 +4,10 @@ import flash.display.BitmapData;
 import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
-import flixel.FlxG;
+import flixel.math.FlxPoint;
 import flixel.system.layer.TileSheetData;
-import flixel.math.FlxAngle;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
-import flixel.math.FlxPoint;
 
 class FlxFrame
 {
@@ -49,7 +47,7 @@ class FlxFrame
 		type = REGULAR;
 	}
 	
-	public function paintOnBitmap(bmd:BitmapData = null):BitmapData
+	public function paintOnBitmap(?bmd:BitmapData):BitmapData
 	{
 		var result:BitmapData = null;
 		

@@ -22,12 +22,12 @@ import flixel.system.FlxAssets;
 import flixel.tweens.FlxTween;
 
 // TODO: pad(): Pad the sprite out with empty pixels left/right/above/below it
-// TODO: flip(): Flip image data horizontally / vertically without changing the angle (mirror / reverse)
 // TODO: rotateClockwise(): Takes the bitmapData from the given source FlxSprite and rotates it 90 degrees clockwise
 
 /**
- * Some handy functions for FlxSprite manipulation, mostly drawing-related.
- * Some of these work with FlxObject too.
+ * Some handy functions for FlxSprite (FlxObject) manipulation, mostly drawing-related.
+ * Note that stage quality impacts the results of the draw() functions - 
+ * use FlxG.stage.quality = flash.display.StageQuality.BEST; for best results.
  */
 class FlxSpriteUtil
 {
@@ -277,7 +277,7 @@ class FlxSpriteUtil
 	 * @param	drawStyle	A DrawStyle typdef containing the params of BitmapData.draw()
 	 * @return 	The FlxSprite for chaining
 	 */
-	public static function drawRect(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, Color:Int, 
+	public static function drawRect(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, Color:FlxColor, 
 		?lineStyle:LineStyle, ?fillStyle:FillStyle, ?drawStyle:DrawStyle):FlxSprite
 	{
 		beginDraw(Color, lineStyle, fillStyle);
@@ -303,7 +303,7 @@ class FlxSpriteUtil
 	 * @return 	The FlxSprite for chaining
 	 */
 	public static function drawRoundRect(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, EllipseWidth:Float,
-		EllipseHeight:Float, Color:Int, ?lineStyle:LineStyle, ?fillStyle:FillStyle, ?drawStyle:DrawStyle):FlxSprite
+		EllipseHeight:Float, Color:FlxColor, ?lineStyle:LineStyle, ?fillStyle:FillStyle, ?drawStyle:DrawStyle):FlxSprite
 	{
 		beginDraw(Color, lineStyle, fillStyle);
 		flashGfx.drawRoundRect(X, Y, Width, Height, EllipseWidth, EllipseHeight);
@@ -332,7 +332,7 @@ class FlxSpriteUtil
 	 * @return 	The FlxSprite for chaining
 	 */
 	public static function drawRoundRectComplex(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, 
-		TopLeftRadius:Float, TopRightRadius:Float, BottomLeftRadius:Float, BottomRightRadius:Float, Color:Int, 
+		TopLeftRadius:Float, TopRightRadius:Float, BottomLeftRadius:Float, BottomRightRadius:Float, Color:FlxColor, 
 		?lineStyle:LineStyle, ?fillStyle:FillStyle, ?drawStyle:DrawStyle):FlxSprite
 	{
 		beginDraw(Color, lineStyle, fillStyle);
@@ -356,18 +356,18 @@ class FlxSpriteUtil
 	 * @return 	The FlxSprite for chaining
 	 */
 	public static function drawCircle(sprite:FlxSprite, X:Float = - 1, Y:Float = - 1, Radius:Float = -1, 
-		Color:Int = FlxColor.WHITE, ?lineStyle:LineStyle, ?fillStyle:FillStyle, ?drawStyle:DrawStyle):FlxSprite
+		Color:FlxColor = FlxColor.WHITE, ?lineStyle:LineStyle, ?fillStyle:FillStyle, ?drawStyle:DrawStyle):FlxSprite
 	{
 		if ((X == -1) || (Y == -1)) 
 		{
 			var midPoint = sprite.getGraphicMidpoint();
 			
-			if (X == -1) {
+			if (X == -1)
 				X = midPoint.x;
-			}
-			if (Y == -1) {
+			if (Y == -1)
 				Y = midPoint.y;
-			}
+			
+			midPoint.put();
 		}
 		
 		if (Radius < 1) 
@@ -396,7 +396,7 @@ class FlxSpriteUtil
 	 * @param	drawStyle	A DrawStyle typdef containing the params of BitmapData.draw()
 	 * @return 	The FlxSprite for chaining
 	 */
-	public static function drawEllipse(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, Color:Int, 
+	public static function drawEllipse(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, Color:FlxColor, 
 		?lineStyle:LineStyle, ?fillStyle:FillStyle, ?drawStyle:DrawStyle):FlxSprite
 	{
 		beginDraw(Color, lineStyle, fillStyle);
@@ -418,7 +418,7 @@ class FlxSpriteUtil
 	 * @param	drawStyle	A DrawStyle typdef containing the params of BitmapData.draw()
 	 * @return 	The FlxSprite for chaining
 	 */
-	public static function drawTriangle(sprite:FlxSprite, X:Float, Y:Float, Height:Float, Color:Int, 
+	public static function drawTriangle(sprite:FlxSprite, X:Float, Y:Float, Height:Float, Color:FlxColor, 
 		?lineStyle:LineStyle, ?fillStyle:FillStyle, ?drawStyle:DrawStyle):FlxSprite
 	{
 		beginDraw(Color, lineStyle, fillStyle);
@@ -441,7 +441,7 @@ class FlxSpriteUtil
 	 * @param	drawStyle	A DrawStyle typdef containing the params of BitmapData.draw()
 	 * @return 	The FlxSprite for chaining
 	 */
-	public static function drawPolygon(sprite:FlxSprite, Vertices:Array<FlxPoint>, Color:Int, ?lineStyle:LineStyle, 
+	public static function drawPolygon(sprite:FlxSprite, Vertices:Array<FlxPoint>, Color:FlxColor, ?lineStyle:LineStyle, 
 		?fillStyle:FillStyle, ?drawStyle:DrawStyle):FlxSprite
 	{
 		beginDraw(Color, lineStyle, fillStyle);
@@ -463,7 +463,7 @@ class FlxSpriteUtil
 	 * @param	fillStyle	A FillStyle typedef containing the params of Graphics.fillStyle()
 	 */
 	@:noUsing
-	public static inline function beginDraw(Color:Int, ?lineStyle:LineStyle, ?fillStyle:FillStyle):Void
+	public static inline function beginDraw(Color:FlxColor, ?lineStyle:LineStyle, ?fillStyle:FillStyle):Void
 	{
 		flashGfx.clear();
 		setLineStyle(lineStyle);
@@ -471,13 +471,10 @@ class FlxSpriteUtil
 		if ((fillStyle != null) && (fillStyle.hasFill)) 
 		{
 			//use the fillStyle for color information
-			flashGfx.beginFill(FlxColorUtil.ARGBtoRGB(fillStyle.color), FlxColorUtil.getAlphaFloat(fillStyle.color));
+			Color = fillStyle.color;
 		}
-		else 
-		{
-			//fillStyle is not defined, use color for fill information instead
-			flashGfx.beginFill(FlxColorUtil.ARGBtoRGB(Color), FlxColorUtil.getAlphaFloat(Color));
-		}
+		
+		flashGfx.beginFill(Color.to24Bit(), Color.alphaFloat);
 	}
 	
 	/**
@@ -531,27 +528,14 @@ class FlxSpriteUtil
 	{
 		if (lineStyle != null)
 		{
-			var color:Int; 
-			var alpha:Float;
-			
-			if (lineStyle.color == null) 
-			{ 
-				color = 0;
-				alpha = 1;
-			}
-			else 
-			{
-				color = FlxColorUtil.ARGBtoRGB(lineStyle.color);
-				alpha = FlxColorUtil.getAlphaFloat(lineStyle.color);
-			}
-			
+			var color = (lineStyle.color == null) ? FlxColor.BLACK : lineStyle.color; 
 			if (lineStyle.pixelHinting == null) { lineStyle.pixelHinting = false; }
 			if (lineStyle.miterLimit == null) 	{ lineStyle.miterLimit = 3; }
 			
 			flashGfx.lineStyle(
-				lineStyle.thickness, 
-				color, 
-				alpha,
+				lineStyle.thickness,
+				color.to24Bit(), 
+				color.alphaFloat,
 				lineStyle.pixelHinting,
 				lineStyle.scaleMode,
 				lineStyle.capsStyle,
@@ -567,7 +551,7 @@ class FlxSpriteUtil
 	 * @param	Color	The color with which to fill the graphic, format 0xAARRGGBB.
 	 * @return 	The FlxSprite for chaining
 	 */
-	public static function fill(sprite:FlxSprite, Color:Int):FlxSprite
+	public static function fill(sprite:FlxSprite, Color:FlxColor):FlxSprite
 	{
 		sprite.pixels.fillRect(sprite.pixels.rect, Color);
 		
@@ -634,7 +618,7 @@ class FlxSpriteUtil
 		{
 			sprite.alpha = 0;
 		}
-		FlxTween.num(sprite.alpha, 1, Duration, OnComplete != null ? { complete:OnComplete } : null, alphaTween.bind(sprite));
+		FlxTween.num(sprite.alpha, 1, Duration, { complete: OnComplete }, alphaTween.bind(sprite));
 		return sprite;
 	}
 	
@@ -647,7 +631,7 @@ class FlxSpriteUtil
 	 */
 	public static inline function fadeOut(sprite:FlxSprite, Duration:Float = 1, ?OnComplete:CompleteCallback):FlxSprite
 	{
-		FlxTween.num(sprite.alpha, 0, Duration, OnComplete != null ? { complete:OnComplete } : null, alphaTween.bind(sprite));
+		FlxTween.num(sprite.alpha, 0, Duration, { complete: OnComplete }, alphaTween.bind(sprite));
 		return sprite;
 	}
 	
@@ -659,7 +643,7 @@ class FlxSpriteUtil
 
 typedef LineStyle = {
 	?thickness:Float,
-	?color:Int,
+	?color:FlxColor,
 	?pixelHinting:Bool,
 	?scaleMode:LineScaleMode,
 	?capsStyle:CapsStyle,
@@ -669,7 +653,7 @@ typedef LineStyle = {
 
 typedef FillStyle = {
 	?hasFill:Bool,
-	?color:Int,
+	?color:FlxColor,
 	?alpha:Float
 }
 

@@ -8,19 +8,14 @@ import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
-import flixel.group.FlxGroup;
-import flixel.group.FlxTypedGroup;
-import flixel.system.FlxAssets;
+import flixel.math.FlxMath;
+import flixel.math.FlxPoint;
 import flixel.system.layer.DrawStackItem;
 import flixel.system.layer.frames.FlxSpriteFrames;
 import flixel.system.layer.Region;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
-import flixel.math.FlxMath;
-import flixel.math.FlxPoint;
-import flixel.math.FlxRandom;
-import flixel.math.FlxRect;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.loaders.CachedGraphics;
 import flixel.util.loaders.TextureRegion;
@@ -307,9 +302,8 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	{
 		#if FLX_RENDER_TILE
 		var buffer:FlxTilemapBuffer = null;
-		var l:Int = FlxG.cameras.list.length;
 		
-		for (i in 0...l)
+		for (i in 0...FlxG.cameras.list.length)
 		{
 			if (FlxG.cameras.list[i] == Camera)
 			{
@@ -328,7 +322,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		_helperPoint.y = Math.floor((y - Math.floor(Camera.scroll.y) * scrollFactor.y) * 5) / 5 + 0.1;
 		
 		var tileID:Int;
-		var debugColor:Int;
+		var debugColor:FlxColor;
 		var drawX:Float;
 		var drawY:Float;
 	
@@ -342,22 +336,8 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		var screenColumns:Int = buffer.columns;
 		
 		// Bound the upper left corner
-		if (screenXInTiles < 0)
-		{
-			screenXInTiles = 0;
-		}
-		if (screenXInTiles > widthInTiles - screenColumns)
-		{
-			screenXInTiles = widthInTiles - screenColumns;
-		}
-		if (screenYInTiles < 0)
-		{
-			screenYInTiles = 0;
-		}
-		if (screenYInTiles > heightInTiles - screenRows)
-		{
-			screenYInTiles = heightInTiles - screenRows;
-		}
+		screenXInTiles = Std.int(FlxMath.bound(screenXInTiles, 0, widthInTiles - screenColumns));
+		screenYInTiles = Std.int(FlxMath.bound(screenYInTiles, 0, heightInTiles - screenRows));
 		
 		var rowIndex:Int = screenYInTiles * widthInTiles + screenXInTiles;
 		_flashPoint.y = 0;
@@ -451,32 +431,24 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 			}
 			
 			buffer = _buffers[i++];
-			buffer.dirty = true;
+				
 			#if FLX_RENDER_BLIT
-			if (!buffer.dirty)
-			{
-				// Copied from getScreenXY()
-				_point.x = x - (camera.scroll.x * scrollFactor.x) + buffer.x; 
-				_point.y = y - (camera.scroll.y * scrollFactor.y) + buffer.y;
-				buffer.dirty = (_point.x > 0) || (_point.y > 0) || (_point.x + buffer.width < camera.width) || (_point.y + buffer.height < camera.height);
-			}
+			getScreenPosition(_point, camera).add(buffer.x, buffer.y);
+			buffer.dirty = buffer.dirty || _point.x > 0 || (_point.y > 0) || (_point.x + buffer.width < camera.width) || (_point.y + buffer.height < camera.height);
 			
 			if (buffer.dirty)
 			{
 				drawTilemap(buffer, camera);
-				buffer.dirty = false;
 			}
 			
-			// Copied from getScreenXY()
-			_flashPoint.x = x - (camera.scroll.x * scrollFactor.x) + buffer.x; 
-			_flashPoint.y = y - (camera.scroll.y * scrollFactor.y) + buffer.y;
+			getScreenPosition(_point, camera).add(buffer.x, buffer.y).copyToFlash(_flashPoint);
 			buffer.draw(camera, _flashPoint, scale.x, scale.y);
-			#else
+			#else			
 			drawTilemap(buffer, camera);
 			#end
 			
 			#if !FLX_NO_DEBUG
-			FlxBasic._VISIBLECOUNT++;
+			FlxBasic.visibleCount++;
 			#end
 		}
 		
@@ -615,7 +587,9 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 
 	override public function getTileIndexByCoords(Coord:FlxPoint):Int
 	{
-		return Std.int((Coord.y - y) / _scaledTileHeight) * widthInTiles + Std.int((Coord.x - x) / _scaledTileWidth);
+		var result = Std.int((Coord.y - y) / _scaledTileHeight) * widthInTiles + Std.int((Coord.x - x) / _scaledTileWidth);
+		Coord.putWeak();
+		return result;
 	}
 	
 	override public function getTileCoordsByIndex(Index:Int, Midpoint:Bool = true):FlxPoint
@@ -662,7 +636,6 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 				}
 				array.push(point);
 			}
-			
 			i++;
 		}
 		
@@ -764,9 +737,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 						Result = FlxPoint.get();
 					}
 					
-					Result.x = rx;
-					Result.y = ry;
-					
+					Result.set(rx, ry);
 					return false;
 				}
 				
@@ -788,15 +759,12 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 						Result = FlxPoint.get();
 					}
 					
-					Result.x = rx;
-					Result.y = ry;
-
+					Result.set(rx, ry);
 					return false;
 				}
 				
 				return true;
 			}
-			
 			i++;
 		}
 		
@@ -866,13 +834,12 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		#end
 		
 		// TODO: make it better for native targets
-		var pt:Point = new Point(0, 0);
+		var pt = new Point(0, 0);
 		var tileSprite:FlxSprite = new FlxSprite();
 		tileSprite.makeGraphic(_tileWidth, _tileHeight, FlxColor.TRANSPARENT, true);
 		tileSprite.x = X * _tileWidth + x;
 		tileSprite.y = Y * _tileHeight + y;
-		tileSprite.scale.x = scale.x;
-		tileSprite.scale.y = scale.y;
+		tileSprite.scale.copyFrom(scale);
 		
 		if (rect != null) 
 		{
@@ -925,8 +892,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	#if FLX_RENDER_BLIT
 		Buffer.fill();
 	#else
-		_helperPoint.x = x - Camera.scroll.x * scrollFactor.x; //copied from getScreenXY()
-		_helperPoint.y = y - Camera.scroll.y * scrollFactor.y;
+		getScreenPosition(_point, Camera).copyToFlash(_helperPoint);
 		
 		var tileID:Int;
 		var drawX:Float;
@@ -934,10 +900,6 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		
 		var hackScaleX:Float = tileScaleHack * scale.x;
 		var hackScaleY:Float = tileScaleHack * scale.y;
-		
-		var drawItem:DrawStackItem = Camera.getDrawStackItem(cachedGraphics, false, 0);
-		var currDrawData:Array<Float> = drawItem.drawData;
-		var currIndex:Int = drawItem.position;
 	#end
 		
 		// Copy tile images into the tile buffer
@@ -1029,19 +991,11 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 					drawX = _helperPoint.x + (columnIndex % widthInTiles) * _scaledTileWidth;
 					drawY = _helperPoint.y + Math.floor(columnIndex / widthInTiles) * _scaledTileHeight;
 					
-					currDrawData[currIndex++] = isPixelPerfectRender(Camera) ? Math.floor(drawX) : drawX;
-					currDrawData[currIndex++] = isPixelPerfectRender(Camera) ? Math.floor(drawY) : drawY;
-					currDrawData[currIndex++] = tileID;
+					_point.x = isPixelPerfectRender(Camera) ? Math.floor(drawX) : drawX;
+					_point.y = isPixelPerfectRender(Camera) ? Math.floor(drawY) : drawY;
 					
-					// Tilemap tearing hack
-					currDrawData[currIndex++] = hackScaleX; 
-					currDrawData[currIndex++] = 0;
-					currDrawData[currIndex++] = 0;
-					// Tilemap tearing hack
-					currDrawData[currIndex++] = hackScaleY; 
-					
-					// Alpha
-					currDrawData[currIndex++] = 1.0; 
+					var drawItem:DrawStackItem = Camera.getDrawStackItem(cachedGraphics, false, 0);
+					drawItem.setDrawData(_point, tileID, hackScaleX, 0, 0, hackScaleY);
 				}
 				#end
 				
@@ -1059,12 +1013,10 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 			row++;
 		}
 		
-		#if FLX_RENDER_TILE
-		drawItem.position = currIndex;
-		#end
-		
 		Buffer.x = screenXInTiles * _scaledTileWidth;
 		Buffer.y = screenYInTiles * _scaledTileHeight;
+		
+		Buffer.dirty = false;
 	}
 	
 	/**
@@ -1072,7 +1024,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 * Just generates a wireframe box the size of a tile with the specified color.
 	 */
 	#if (FLX_RENDER_BLIT && !FLX_NO_DEBUG)
-	private function makeDebugTile(Color:Int):BitmapData
+	private function makeDebugTile(Color:FlxColor):BitmapData
 	{
 		var debugTile:BitmapData;
 		debugTile = new BitmapData(_tileWidth, _tileHeight, true, 0);
@@ -1165,16 +1117,19 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 */
 	private function set_cachedGraphics(Value:CachedGraphics):CachedGraphics
 	{
-		var oldCached:CachedGraphics = cachedGraphics;
-		
-		if ((cachedGraphics != Value) && (Value != null))
+		//If graphics are changing
+		if (cachedGraphics != Value)
 		{
-			Value.useCount++;
-		}
-		
-		if ((oldCached != null) && (oldCached != Value))
-		{
-			oldCached.useCount--;
+			//If new graphic is not null, increase its use count
+			if (Value != null)
+			{
+				Value.useCount++;
+			}
+			//If old graphic is not null, decrease its use count
+			if (cachedGraphics != null)
+			{
+				cachedGraphics.useCount--;
+			}
 		}
 		
 		return cachedGraphics = Value;

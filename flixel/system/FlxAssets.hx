@@ -80,7 +80,7 @@ class FlxAssets
 				{
 					var extension:String = name.split(".")[1]; // get the string after the dot
 					if (filterExtensions.indexOf(extension) == -1)
-						break;
+						continue;
 				}
 				
 				fileReferences.push(new FileReference(directory + name));
@@ -200,13 +200,14 @@ private class FileReference
 		this.documentation = "\"" + value + "\" (auto generated).";
 	}
 }
-#end
-
+#else
 typedef FlxSoundAsset = OneOfThree<String, Sound, Class<Sound>>;
+// Class<Dynamic> should actually be Class<BitmapData>, but needs to be the former so we can use Std.is() on it
 typedef FlxGraphicAsset = OneOfFive<String, Class<Dynamic>, CachedGraphics, TextureRegion, BitmapData>;
 typedef FlxTextureAsset = OneOfTwo<TexturePackerData, CachedGraphics>;
 typedef FlxTilemapAsset = OneOfTwo<String, Array<Int>>;
 
 private abstract OneOfTwo<T1, T2>(Dynamic) from T1 from T2 to T1 to T2 { }
 private abstract OneOfThree<T1, T2, T3>(Dynamic) from T1 from T2 from T3 to T1 to T2 to T3 {}
-private abstract OneOfFive<T1, T2, T3, T4, T5>(Dynamic) from T1 from T2 from T3 from T4 from T5 to T1 to T2 to T3 to T4 to T5 {}
+private abstract OneOfFive<T1, T2, T3, T4, T5>(Dynamic) from T1 from T2 from T3 from T4 from T5 to T1 to T2 to T3 to T4 to T5 { }
+#end

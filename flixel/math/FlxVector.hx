@@ -142,7 +142,7 @@ class FlxVector extends FlxPoint
 	{
 		var nv:FlxVector = clone();
 		nv.subtractPoint(v);
-		return clone();
+		return nv;
 	}
 	
 	/**
@@ -239,16 +239,6 @@ class FlxVector extends FlxPoint
 	public inline function isNormalized():Bool
 	{
 		return Math.abs(lengthSquared - 1) < EPSILON_SQUARED;
-	}
-	
-	/**
-	 * Checking for equality of vectors.
-	 * 
-	 * @return	true - if the vectors are equal
-	 */
-	public inline function equals(v:FlxVector):Bool
-	{
-		return (Math.abs(x - v.x) < EPSILON && Math.abs(y - v.y) < EPSILON);
 	}
 	
 	/**
@@ -472,18 +462,7 @@ class FlxVector extends FlxPoint
 	 */
 	public inline function radiansBetween(v:FlxVector):Float
 	{
-		_vector1 = clone(_vector1);
-		_vector2 = clone(_vector2);
-		
-		if (!isNormalized())
-		{
-			_vector1.normalize();
-		}
-		if (!v.isNormalized())
-		{
-			_vector2.normalize();
-		}
-		return Math.acos(_vector1.dotProduct(_vector2));
+		return Math.acos(dotProduct(v) / (length * v.length));
 	}
 	
 	/**
@@ -616,9 +595,12 @@ class FlxVector extends FlxPoint
 	
 	private inline function set_length(l:Float):Float
 	{
-		var a:Float = radians;
-		x = l * Math.cos(a);
-		y = l * Math.sin(a);
+		if (!isZero())
+		{
+			var a:Float = radians;
+			x = l * Math.cos(a);
+			y = l * Math.sin(a);
+		}
 		return l;
 	}
 	

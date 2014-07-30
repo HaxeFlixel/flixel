@@ -10,11 +10,11 @@ import flash.geom.Rectangle;
 import flash.text.TextField;
 import flash.text.TextFormat;
 import flixel.FlxG;
+import flixel.math.FlxMath;
 import flixel.system.FlxAssets;
 import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
-import flixel.math.FlxMath;
 
 @:bitmap("assets/images/debugger/windowHandle.png")
 private class GraphicWindowHandle extends BitmapData {}
@@ -30,9 +30,9 @@ class Window extends Sprite
 	/**
 	 * The background color of the window.
 	 */
-	public static inline var BG_COLOR:Int = 0xDD5F5F5F;
+	public static inline var BG_COLOR:FlxColor = 0xDD5F5F5F;
 	
-	public static inline var HEADER_COLOR:Int = 0xBB000000;
+	public static inline var HEADER_COLOR:FlxColor = 0xBB000000;
 	public static inline var HEADER_ALPHA:Float = 0.8;
 	public static inline var HEADER_HEIGHT:Int = 15;
 	
@@ -251,7 +251,7 @@ class Window extends Sprite
 		}
 		else
 		{
-			maxSize = new Point(FlxMath.MAX_VALUE, FlxMath.MAX_VALUE);
+			maxSize = new Point(FlxMath.MAX_VALUE_FLOAT, FlxMath.MAX_VALUE_FLOAT);
 		}
 	}
 	

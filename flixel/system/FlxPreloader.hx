@@ -10,7 +10,7 @@ import flash.text.Font;
 import flash.text.TextField;
 import flash.text.TextFormat;
 import flixel.FlxG;
-import flixel.system.FlxPreloaderBase;
+import flixel.system.FlxBasePreloader;
 
 @:font("assets/fonts/nokiafc22.ttf")
 class PreloaderFont extends Font {}
@@ -26,7 +26,7 @@ private class GraphicLogoCorners extends BitmapData {}
  * You can make your own style of Preloader by overriding FlxPreloaderBase and using this class as an example.
  * To use your Preloader, simply change Project.xml to say: <app preloader="class.path.MyPreloader" />
  */
-class FlxPreloader extends FlxPreloaderBase
+class FlxPreloader extends FlxBasePreloader
 {
 	#if !js
 	

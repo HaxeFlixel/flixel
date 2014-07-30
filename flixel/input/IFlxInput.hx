@@ -1,11 +1,9 @@
 package flixel.input;
 
-@:allow(flixel.system.frontEnds.InputFrontEnd)
-interface IFlxInput 
+interface IFlxInput
 {
-	public function reset():Void;
-	private function update():Void;
-	private function onFocus():Void;
-	private function onFocusLost():Void;
-	public function destroy():Void;
+	public var justReleased(get, never):Bool;
+	public var released(get, never):Bool;
+	public var pressed(get, never):Bool;
+	public var justPressed(get, never):Bool;
 }

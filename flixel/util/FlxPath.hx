@@ -13,7 +13,7 @@ import flixel.util.FlxArrayUtil;
 /**
  * This is a simple path data container.  Basically a list of points that
  * a FlxObject can follow.  Also has code for drawing debug visuals.
- * FlxTilemap.findPath() returns a path object, but you can
+ * FlxTilemap.findPath() returns a path usable by FlxPath, but you can
  * also just make your own, using the add() functions below
  * or by creating your own array of points.
  */
@@ -92,7 +92,7 @@ class FlxPath implements IFlxDestroyable
 	/**
 	 * Specify a debug display color for the path. Default is white.
 	 */
-	public var debugColor:Int = 0xffffff;
+	public var debugColor:FlxColor = 0xffffff;
 	/**
 	 * Specify a debug display scroll factor for the path.  Default is (1,1).
 	 * NOTE: does not affect world movement!  Object scroll factors take care of that.
@@ -172,7 +172,7 @@ class FlxPath implements IFlxDestroyable
 		
 		finished = false;
 		active = true;
-		if (nodes.length <= 0)
+		if (nodes == null || nodes.length <= 0)
 		{
 			active = false;
 		}
@@ -222,8 +222,7 @@ class FlxPath implements IFlxDestroyable
 		_point.y = object.y;
 		if (autoCenter)
 		{
-			_point.x += object.width * 0.5;
-			_point.y += object.height * 0.5;
+			_point.add(object.width * 0.5, object.height * 0.5);
 		}
 		var node:FlxPoint = nodes[nodeIndex];
 		var deltaX:Float = node.x - _point.x;
@@ -263,48 +262,16 @@ class FlxPath implements IFlxDestroyable
 			
 			if (autoCenter)
 			{
-				_point.x += object.width * 0.5;
-				_point.y += object.height * 0.5;
+				_point.add(object.width * 0.5, object.height * 0.5);
 			}
 			
-			if (horizontalOnly || (_point.y == node.y))
+			if (!_point.equals(node))
 			{
-				object.velocity.x = (_point.x < node.x) ? speed : -speed;
-				if (object.velocity.x < 0)
-				{
-					angle = -90;
-				}
-				else
-				{
-					angle = 90;
-				}
-				if (!horizontalOnly)
-				{
-					object.velocity.y = 0;
-				}
-			}
-			else if (verticalOnly || (_point.x == node.x))
-			{
-				object.velocity.y = (_point.y < node.y) ? speed : -speed;
-				if (object.velocity.y < 0)
-				{
-					angle = 0;
-				}
-				else
-				{
-					angle = 180;
-				}
-				if (!verticalOnly)
-				{
-					object.velocity.x = 0;
-				}
+				calculateVelocity(node, horizontalOnly, verticalOnly);
 			}
 			else
 			{
-				object.velocity.x = (_point.x < node.x) ? speed : -speed;
-				object.velocity.y = (_point.y < node.y) ? speed : -speed;
-				angle = FlxAngle.getAngle(_point, node);
-				FlxAngle.rotatePoint(0, speed, 0, 0, angle, object.velocity);
+				object.velocity.set();
 			}
 			
 			//then set object rotation if necessary
@@ -319,6 +286,40 @@ class FlxPath implements IFlxDestroyable
 			{
 				cancel();
 			}
+		}
+	}
+	
+	private function calculateVelocity(node:FlxPoint, horizontalOnly:Bool, verticalOnly:Bool):Void
+	{
+		if (horizontalOnly || _point.y == node.y)
+		{
+			object.velocity.x = (_point.x < node.x) ? speed : -speed;
+			angle = (object.velocity.x < 0) ? -90 : 90;
+			
+			if (!horizontalOnly)
+			{
+				object.velocity.y = 0;
+			}
+		}
+		else if (verticalOnly || _point.x == node.x)
+		{
+			object.velocity.y = (_point.y < node.y) ? speed : -speed;
+			angle = (object.velocity.y < 0) ? 0 : 180;
+			
+			if (!verticalOnly)
+			{
+				object.velocity.x = 0;
+			}
+		}
+		else
+		{
+			object.velocity.x = (_point.x < node.x) ? speed : -speed;
+			object.velocity.y = (_point.y < node.y) ? speed : -speed;
+			
+			angle = _point.angleBetween(node);
+			
+			object.velocity.set(0, -speed);
+			object.velocity.rotate(FlxPoint.weak(0, 0), angle);
 		}
 	}
 	
@@ -452,11 +453,7 @@ class FlxPath implements IFlxDestroyable
 	 */
 	public function destroy():Void
 	{
-		// recycle FlxPoints
-		for (point in nodes)
-		{
-			point = FlxDestroyUtil.put(point);
-		}
+		FlxDestroyUtil.putArray(nodes);
 		nodes = null;
 		object = null;
 		onComplete = null;
@@ -655,7 +652,7 @@ class FlxPath implements IFlxDestroyable
 			{
 				nodeSize *= 2;
 			}
-			var nodeColor:Int = debugColor;
+			var nodeColor:FlxColor = debugColor;
 			if (l > 1)
 			{
 				if (i == 0)

@@ -5,8 +5,8 @@ import flash.display.Shape;
 import flash.display.Sprite;
 import flash.text.TextField;
 import flash.text.TextFormatAlign;
-import flixel.util.FlxColor;
 import flixel.math.FlxMath;
+import flixel.util.FlxColor;
 
 /**
  * This is a helper function for the stats window to draw a graph with given values.
@@ -14,7 +14,7 @@ import flixel.math.FlxMath;
 #if !FLX_NO_DEBUG
 class StatsGraph extends Sprite
 {
-	private static inline var AXIS_COLOR:Int = 0xffffff;
+	private static inline var AXIS_COLOR:FlxColor = 0xffffff;
 	private static inline var AXIS_ALPHA:Float = 0.5;
 	private static inline var HISTORY_MAX:Int = 30;
 	
@@ -23,10 +23,10 @@ class StatsGraph extends Sprite
 	public var maxLabel:TextField;
 	public var avgLabel:TextField;
 	
-	public var minValue:Float = FlxMath.MAX_VALUE;
-	public var maxValue:Float = FlxMath.MIN_VALUE;
+	public var minValue:Float = FlxMath.MAX_VALUE_FLOAT;
+	public var maxValue:Float = FlxMath.MIN_VALUE_FLOAT;
 	
-	public var graphColor:Int;
+	public var graphColor:FlxColor;
 	
 	public var history:Array<Float>;
 	
@@ -37,7 +37,7 @@ class StatsGraph extends Sprite
 	private var _labelWidth:Int;
 	private var _label:String;
 	
-	public function new(X:Int, Y:Int, Width:Int, Height:Int, GraphColor:Int, Unit:String, LabelWidth:Int = 45, ?Label:String)
+	public function new(X:Int, Y:Int, Width:Int, Height:Int, GraphColor:FlxColor, Unit:String, LabelWidth:Int = 45, ?Label:String)
 	{
 		super();
 		x = X;

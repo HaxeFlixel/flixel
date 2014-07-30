@@ -1,1 +1,1 @@
-haxelib run munit test -coverage
+haxelib run munit test

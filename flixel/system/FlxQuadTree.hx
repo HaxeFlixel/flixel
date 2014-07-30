@@ -4,7 +4,6 @@ import flixel.FlxBasic;
 import flixel.FlxObject;
 import flixel.group.FlxGroup;
 import flixel.group.FlxSpriteGroup;
-import flixel.group.FlxTypedGroup;
 import flixel.util.FlxDestroyUtil;
 import flixel.math.FlxRect;
 

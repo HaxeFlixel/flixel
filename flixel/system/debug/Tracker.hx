@@ -13,7 +13,7 @@ import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.FlxSubState;
 import flixel.group.FlxSpriteGroup;
-import flixel.group.FlxTypedGroup.FlxTypedGroup;
+import flixel.group.FlxGroup;
 import flixel.input.gamepad.FlxGamepad;
 import flixel.input.mouse.FlxMouse;
 import flixel.input.touch.FlxTouch;
@@ -27,7 +27,7 @@ import flixel.tweens.FlxTween;
 #if !bitfive
 import flixel.ui.FlxBar;
 #end
-import flixel.ui.FlxTypedButton.FlxTypedButton;
+import flixel.ui.FlxButton;
 import flixel.util.FlxPath;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
@@ -35,7 +35,7 @@ import flixel.util.FlxTimer;
 #end
 
 import flixel.animation.FlxAnimationController;
-import flixel.effects.particles.FlxTypedEmitter;
+import flixel.effects.particles.FlxEmitter;
 import flixel.util.FlxStringUtil;
 
 class Tracker extends Watch
@@ -96,7 +96,7 @@ class Tracker extends Watch
 			addProfile(new TrackerProfile(FlxRect, ["width", "height"], [FlxPoint]));
 			
 			addProfile(new TrackerProfile(FlxBasic, ["active", "visible", "alive", "exists"]));
-			addProfile(new TrackerProfile(FlxObject, ["velocity", "acceleration", "drag", "angle"],
+			addProfile(new TrackerProfile(FlxObject, ["velocity", "acceleration", "drag", "angle", "immovable"],
 			                                         [FlxRect, FlxBasic]));
 			addProfile(new TrackerProfile(FlxTilemap, ["auto", "widthInTiles", "heightInTiles", "totalTiles", "scaleX", "scaleY"], [FlxObject]));
 			addProfile(new TrackerProfile(FlxSprite, ["frameWidth", "frameHeight", "alpha", "origin", "offset", "scale"], [FlxObject]));

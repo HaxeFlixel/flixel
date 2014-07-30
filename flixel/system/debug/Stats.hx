@@ -11,6 +11,7 @@ import flixel.system.FlxQuadTree;
 import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxColor;
 import flixel.math.FlxMath;
+import flixel.util.FlxColor;
 
 @:bitmap("assets/images/debugger/buttons/minimize.png")
 private class GraphicMinimizeButton extends BitmapData {}
@@ -40,12 +41,12 @@ class Stats extends Window
 	 */
 	private static inline var MIN_HEIGHT:Int = #if !FLX_RENDER_TILE 180 #else 195 #end;
 	
-	private static inline var FPS_COLOR:Int = 0xff96ff00;
-	private static inline var MEMORY_COLOR:Int = 0xff009cff;
-	private static inline var DRAW_TIME_COLOR:Int = 0xffb70000;
-	private static inline var UPDATE_TIME_COLOR:Int = 0xffdcd400;
+	private static inline var FPS_COLOR:FlxColor = 0xff96ff00;
+	private static inline var MEMORY_COLOR:FlxColor = 0xff009cff;
+	private static inline var DRAW_TIME_COLOR:FlxColor = 0xffb70000;
+	private static inline var UPDATE_TIME_COLOR:FlxColor = 0xffdcd400;
 	
-	public static inline var LABEL_COLOR:Int = 0xaaffffff;
+	public static inline var LABEL_COLOR:FlxColor = 0xaaffffff;
 	public static inline var TEXT_SIZE:Int = 11;
 	public static inline var DECIMALS:Int = 1;
 	

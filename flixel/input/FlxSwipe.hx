@@ -56,7 +56,7 @@ class FlxSwipe
 	
 	private inline function get_angle():Float
 	{
-		return FlxAngle.getAngle(startPosition, endPosition); 
+		return startPosition.angleBetween(endPosition); 
 	}
 	
 	private inline function get_duration():Float

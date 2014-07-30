@@ -8,10 +8,6 @@ import flixel.system.layer.DrawStackItem;
 import flixel.FlxG;
 import flixel.util.FlxColor;
 
-/**
- * The main "game object" class, the sprite is a FlxObject
- * with a bunch of graphics options and abilities, like animation and stamping.
- */
 class FlxBGSprite extends FlxSprite
 {
 	public function new()
@@ -27,8 +23,6 @@ class FlxBGSprite extends FlxSprite
 	override public function draw():Void
 	{
 		var drawItem:DrawStackItem;
-		var currDrawData:Array<Float>;
-		var currIndex:Int;
 		
 		for (camera in cameras)
 		{
@@ -38,38 +32,14 @@ class FlxBGSprite extends FlxSprite
 			}
 			
 			drawItem = camera.getDrawStackItem(cachedGraphics, isColored, _blendInt);
-			currDrawData = drawItem.drawData;
-			currIndex = drawItem.position;
 			
 			_point.x = camera.width * 0.5;
 			_point.y = camera.height * 0.5;
 			
-			var csx:Float = camera.width;
-			var ssy:Float = 0;
-			var ssx:Float = 0;
-			var csy:Float = camera.height;
-			
-			currDrawData[currIndex++] = _point.x;
-			currDrawData[currIndex++] = _point.y;
-			
-			currDrawData[currIndex++] = frame.tileID;
-			
-			currDrawData[currIndex++] = csx;
-			currDrawData[currIndex++] = ssx;
-			currDrawData[currIndex++] = -ssy;
-			currDrawData[currIndex++] = csy;
-			
-			if (isColored)
-			{
-				currDrawData[currIndex++] = _red; 
-				currDrawData[currIndex++] = _green;
-				currDrawData[currIndex++] = _blue;
-			}
-			currDrawData[currIndex++] = alpha;
-			drawItem.position = currIndex;
+			setDrawData(drawItem, camera, camera.width, 0, 0, camera.height);
 			
 			#if !FLX_NO_DEBUG
-			FlxBasic._VISIBLECOUNT++;
+			FlxBasic.visibleCount++;
 			#end
 		}
 	}

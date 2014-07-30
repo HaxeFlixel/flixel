@@ -1,6 +1,4 @@
 package flixel.system.debug;
-import flixel.util.FlxBitmapUtil;
-import flixel.util.FlxStringUtil;
 
 #if !FLX_NO_DEBUG
 import flash.display.Bitmap;
@@ -19,6 +17,8 @@ import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.util.FlxSpriteUtil;
 import flixel.system.debug.FlxDebugger;
+import flixel.util.FlxStringUtil;
+using flixel.util.FlxBitmapDataUtil;
 
 /**
  * An output window that lets you paste BitmapData in the debugger overlay.
@@ -64,11 +64,13 @@ class BitmapLog extends Window
 		
 		setVisible(false);
 		
+	#if !FLX_NO_MOUSE
 		addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
-		#if (!FLX_NO_MOUSE && !FLX_NO_MOUSE_ADVANCED)
+		#if (!FLX_NO_MOUSE_ADVANCED && (!flash || flash11_2))
 		addEventListener(MouseEvent.MIDDLE_MOUSE_DOWN, onMiddleDown);
 		addEventListener(MouseEvent.MIDDLE_MOUSE_UP, onMiddleUp);
 		#end
+	#end
 		
 		FlxG.signals.stateSwitched.add(clear);
 		
@@ -135,7 +137,7 @@ class BitmapLog extends Window
 		_entries = null;
 		
 		removeEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
-		#if (!FLX_NO_MOUSE && !FLX_NO_MOUSE_ADVANCED)
+		#if (!FLX_NO_MOUSE && !FLX_NO_MOUSE_ADVANCED && flash11_2)
 		removeEventListener(MouseEvent.MIDDLE_MOUSE_DOWN, onMiddleDown);
 		removeEventListener(MouseEvent.MIDDLE_MOUSE_UP, onMiddleUp);
 		#end
@@ -166,8 +168,15 @@ class BitmapLog extends Window
 		super.resize(Width, Height);
 		
 		_canvasBitmap.bitmapData = FlxDestroyUtil.dispose(_canvas);
-		_canvasBitmap.bitmapData = new BitmapData(Std.int(_width - _canvasBitmap.x), Std.int(_height - _canvasBitmap.y - _footer.height), true, FlxColor.TRANSPARENT);
-		refreshCanvas(_curIndex);
+		
+		var newWidth = Std.int(_width - _canvasBitmap.x);
+		var newHeight = Std.int(_height - _canvasBitmap.y - _footer.height);
+		
+		if (newWidth > 0 && newHeight > 0)
+		{
+			_canvasBitmap.bitmapData = new BitmapData(newWidth, newHeight, true, FlxColor.TRANSPARENT);
+			refreshCanvas(_curIndex);
+		}
 		
 		_ui.x = _header.width - _ui.width + 43;
 		
@@ -322,7 +331,7 @@ class BitmapLog extends Window
 		
 		var entryName:String = _curEntry.name;
 		var name:String = (entryName == "") ? "" : '"$entryName" | ' ;
-		_footerText.text = name + FlxStringUtil.formatBytes(FlxBitmapUtil.getMemorySize(_curBitmap));
+		_footerText.text = name + FlxStringUtil.formatBytes(_curBitmap.getMemorySize());
 		
 		resizeTexts();
 	}
@@ -332,7 +341,8 @@ class BitmapLog extends Window
 		var gfx:Graphics = FlxSpriteUtil.flashGfx;
 		gfx.clear();
 		gfx.lineStyle(1, FlxColor.RED, 0.75, false, LineScaleMode.NONE);
-		gfx.drawRect(0, 0, bitmap.width, bitmap.height);
+		var offset = 1 / zoom;
+		gfx.drawRect(-offset, -offset, bitmap.width + offset, bitmap.height + offset);
 	}
 	
 	private function onMouseWheel(e:MouseEvent):Void

@@ -30,143 +30,6 @@ class FlxAngle
 	public static var TO_RAD(get, never):Float;
 	
 	/**
-	 * Rotates a point in 2D space around another point by the given angle.
-	 * @param	X		The X coordinate of the point you want to rotate.
-	 * @param	Y		The Y coordinate of the point you want to rotate.
-	 * @param	PivotX	The X coordinate of the point you want to rotate around.
-	 * @param	PivotY	The Y coordinate of the point you want to rotate around.
-	 * @param	Angle	Rotate the point by this many degrees.
-	 * @param	Point	Optional FlxPoint to store the results in.
-	 * @return	A FlxPoint containing the coordinates of the rotated point.
-	 */
-	public static inline function rotatePoint(X:Float, Y:Float, PivotX:Float, PivotY:Float, Angle:Float, ?point:FlxPoint):FlxPoint
-	{
-		var sin:Float = 0;
-		var cos:Float = 0;
-		var radians:Float = Angle * -TO_RAD;
-		while (radians < -Math.PI)
-		{
-			radians += Math.PI * 2;
-		}
-		while (radians >  Math.PI)
-		{
-			radians = radians - Math.PI * 2;
-		}
-		
-		if (radians < 0)
-		{
-			sin = 1.27323954 * radians + .405284735 * radians * radians;
-			if (sin < 0)
-			{
-				sin = .225 * (sin *-sin - sin) + sin;
-			}
-			else
-			{
-				sin = .225 * (sin * sin - sin) + sin;
-			}
-		}
-		else
-		{
-			sin = 1.27323954 * radians - 0.405284735 * radians * radians;
-			if (sin < 0)
-			{
-				sin = .225 * (sin *-sin - sin) + sin;
-			}
-			else
-			{
-				sin = .225 * (sin * sin - sin) + sin;
-			}
-		}
-		
-		radians += Math.PI / 2;
-		if (radians >  Math.PI)
-		{
-			radians = radians - Math.PI * 2;
-		}
-		if (radians < 0)
-		{
-			cos = 1.27323954 * radians + 0.405284735 * radians * radians;
-			if (cos < 0)
-			{
-				cos = .225 * (cos *-cos - cos) + cos;
-			}
-			else
-			{
-				cos = .225 * (cos * cos - cos) + cos;
-			}
-		}
-		else
-		{
-			cos = 1.27323954 * radians - 0.405284735 * radians * radians;
-			if (cos < 0)
-			{
-				cos = .225 * (cos *-cos - cos) + cos;
-			}
-			else
-			{
-				cos = .225 * (cos * cos - cos) + cos;
-			}
-		}
-		
-		var dx:Float = X - PivotX;
-		// TODO: Uncomment this line if there will be problems
-		//var dy:Float = PivotY + Y; //Y axis is inverted in flash, normally this would be a subtract operation
-		var dy:Float = Y - PivotY;
-		if (point == null)
-		{
-			point = FlxPoint.get();
-		}
-		point.x = PivotX + cos * dx - sin * dy;
-		point.y = PivotY - sin * dx - cos * dy;
-		return point;
-	}
-	
-	/**
-	 * Calculates the angle between two points.  0 degrees points straight up.
-	 * 
-	 * @param	Point1		The X coordinate of the point.
-	 * @param	Point2		The Y coordinate of the point.
-	 * @return	The angle in degrees, between -180 and 180.
-	 */
-	public static inline function getAngle(Point1:FlxPoint, Point2:FlxPoint):Float
-	{
-		var x:Float = Point2.x - Point1.x;
-		var y:Float = Point2.y - Point1.y;
-		var angle:Float = 0;
-		
-		if ((x != 0) || (y != 0))
-		{
-			var c1:Float = Math.PI * 0.25;
-			var c2:Float = 3 * c1;
-			var ay:Float = (y < 0) ? -y : y;
-			
-			if (x >= 0)
-			{
-				angle = c1 - c1 * ((x - ay) / (x + ay));
-			}
-			else
-			{
-				angle = c2 - c1 * ((x + ay) / (ay - x));
-			}
-			angle = ((y < 0) ? - angle : angle) * TO_DEG;
-			
-			if (angle > 90)
-			{
-				angle = angle - 270;
-			}
-			else
-			{
-				angle += 90;
-			}
-		}
-		
-		Point1.putWeak();
-		Point2.putWeak();
-		
-		return angle;
-	}
-	
-	/**
 	 * Generate a sine and cosine table simultaneously and extremely quickly. Based on research by Franky of scene.at
 	 * 
 	 * The parameters allow you to specify the length, amplitude and frequency of the wave. Once you have called this function
@@ -323,7 +186,7 @@ class FlxAngle
 		if (Object == null)
 			return 0;
 		
-		var p:FlxPoint = Object.getScreenXY();
+		var p:FlxPoint = Object.getScreenPosition();
 		
 		var dx:Float = FlxG.mouse.screenX - p.x;
 		var dy:Float = FlxG.mouse.screenY - p.y;
@@ -348,7 +211,7 @@ class FlxAngle
 	public static inline function angleBetweenTouch(Object:FlxObject, Touch:FlxTouch, AsDegrees:Bool = false):Float
 	{
 		//	In order to get the angle between the object and mouse, we need the objects screen coordinates (rather than world coordinates)
-		var p:FlxPoint = Object.getScreenXY();
+		var p:FlxPoint = Object.getScreenPosition();
 		
 		var dx:Float = Touch.screenX - p.x;
 		var dy:Float = Touch.screenY - p.y;
@@ -359,6 +222,27 @@ class FlxAngle
 			return Math.atan2(dy, dx);
 	}
 	#end
+	
+	/**
+	 * Translate an object's facing to angle
+	 */
+	public static inline function angleFromFacing(Sprite:FlxSprite, AsDegrees:Bool = false):Float
+	{		
+		var degrees = switch(Sprite.facing)
+		{
+			case FlxObject.LEFT: 180;
+			case FlxObject.RIGHT: 0;
+			case FlxObject.UP: -90;
+			case FlxObject.DOWN: 90;			
+			case f if (f == FlxObject.UP | FlxObject.LEFT): -135;
+			case f if (f == FlxObject.UP | FlxObject.RIGHT): -45;
+			case f if (f == FlxObject.DOWN | FlxObject.LEFT): 135;
+			case f if (f == FlxObject.DOWN | FlxObject.RIGHT): 45;
+			default: 0;
+		}
+		return AsDegrees ? degrees : asRadians(degrees);
+	}
+	
 	
 	/**
 	 * Convert polar coordinates (radius + angle) to cartesian coordinates (x + y)

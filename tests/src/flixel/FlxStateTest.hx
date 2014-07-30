@@ -1,19 +1,27 @@
 package flixel;
 
 import flixel.FlxG;
-import helper.TestState;
 import massive.munit.Assert;
 
 class FlxStateTest extends FlxTest
 {
-	@Test
-	function testSwitchState():Void
+	var state:FlxState;
+	
+	@Before
+	function before()
 	{
-		Assert.isFalse(Std.is(FlxG.state, TestState));
-		FlxG.switchState(new TestState());
+		state = new FlxState();
+		destroyable = state;
+	}
+	
+	@Test
+	function testSwitchState()
+	{
+		Assert.areNotEqual(state, FlxG.state);
 		
-		delay(function() { 
-			Assert.isTrue(Std.is(FlxG.state, TestState)); 
-		});
+		FlxG.switchState(state);
+		
+		step(10);
+		Assert.areEqual(state, FlxG.state); 
 	}
 }

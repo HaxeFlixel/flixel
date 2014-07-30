@@ -7,75 +7,53 @@ import flixel.input.FlxSwipe;
 import flixel.util.FlxDestroyUtil;
 import flixel.math.FlxPoint;
 
-class FlxMouseButton implements IFlxDestroyable
+class FlxMouseButton extends FlxInput<Int> implements IFlxDestroyable
 {
-	/**
-	 * These IDs are negative to avoid overlaps with possible touch point IDs.
-	 */
-	public static inline var LEFT  :Int = -1;
-	public static inline var MIDDLE:Int = -2;
-	public static inline var RIGHT :Int = -3;
-	
-	public static inline var FAST_PRESS_RELEASE:Int = -2;
-	public static inline var JUST_RELEASED:Int = -1;
-	public static inline var RELEASED:Int = 0;
-	public static inline var PRESSED:Int = 1;
-	public static inline var JUST_PRESSED:Int = 2;
-
-	public var current:Int = RELEASED;
-	public var last:Int = RELEASED;
-	
-	private var _ID:Int;
-	
-	private var _justPressedPosition:FlxPoint;
-	private var _justPressedTimeInTicks:Float;
-	
-	public function new(ID:Int)
+	public static function getFromID(id:FlxMouseButtonID):FlxMouseButton
 	{
-		_ID = ID;
-		_justPressedPosition = FlxPoint.get();
+		return switch (id)
+		{
+			case LEFT: FlxG.mouse._leftButton;
+			
+			#if !FLX_NO_MOUSE_ADVANCED
+				case MIDDLE: FlxG.mouse._middleButton;
+				case RIGHT: FlxG.mouse._rightButton;
+			#else
+				case _: return null;
+			#end
+		}
 	}
+	
+	public var justPressedPosition(default, null) = FlxPoint.get();
+	public var justPressedTimeInTicks(default, null):Float = -1;
 	
 	/**
 	 * Upates the last and current state of this mouse button.
 	 */
-	public function update():Void
+	override public function update():Void
 	{
-		if (last == JUST_RELEASED && current == JUST_RELEASED)
-		{
-			current = RELEASED;
-		}
-		else if (last == JUST_PRESSED && current == JUST_PRESSED)
-		{
-			current = PRESSED;
-		}
-		else if (last == FAST_PRESS_RELEASE && current == FAST_PRESS_RELEASE)
-		{
-			current = RELEASED;
-		}
+		super.update();
 		
-		last = current;
-		
-		if (justPressed())
+		if (justPressed)
 		{
-			_justPressedPosition.set(FlxG.mouse.screenX, FlxG.mouse.screenY);
-			_justPressedTimeInTicks = FlxG.game.ticks;
+			justPressedPosition.set(FlxG.mouse.screenX, FlxG.mouse.screenY);
+			justPressedTimeInTicks = FlxG.game.ticks;
 		}
-		else if (justReleased())
+		else if (justReleased)
 		{
-			FlxG.swipes.push(new FlxSwipe(_ID, _justPressedPosition, FlxG.mouse.getScreenPosition(), _justPressedTimeInTicks));
+			FlxG.swipes.push(new FlxSwipe(ID, justPressedPosition, FlxG.mouse.getScreenPosition(), justPressedTimeInTicks));
 		}
 	}
 	
 	public inline function destroy():Void
 	{
-		_justPressedPosition = FlxDestroyUtil.put(_justPressedPosition);
+		justPressedPosition = FlxDestroyUtil.put(justPressedPosition);
 	}
 	
-	public function onDown(FlashEvent:MouseEvent):Void
+	public function onDown(_):Void
 	{
 		#if !FLX_NO_DEBUG
-		if ((_ID == LEFT) && FlxG.debugger.visible)
+		if (ID == FlxMouseButtonID.LEFT && FlxG.debugger.visible)
 		{
 			if (FlxG.game.debugger.hasMouse)
 			{
@@ -96,15 +74,7 @@ class FlxMouseButton implements IFlxDestroyable
 			{
 				if (key == "MOUSE" || key == "ANY")
 				{
-					if (FlxG.vcr.replayCallback != null)
-					{
-						FlxG.vcr.replayCallback();
-						FlxG.vcr.replayCallback = null;
-					}
-					else
-					{
-						FlxG.vcr.stopReplay();
-					}
+					FlxG.vcr.cancelReplay();
 					break;
 				}
 			}
@@ -112,21 +82,10 @@ class FlxMouseButton implements IFlxDestroyable
 		}
 		#end
 		
-		if (current > RELEASED) 
-		{
-			current = PRESSED;
-		}
-		else 
-		{
-			current = JUST_PRESSED;
-		}
+		press();
 	}
 	
-	/**
-	 * Internal event handler for input and focus.
-	 * @param FlashEvent Flash mouse event.
-	 */
-	public function onUp(?FlashEvent:MouseEvent):Void
+	public function onUp(?_):Void
 	{
 		#if !FLX_NO_DEBUG
 		if ((FlxG.debugger.visible && FlxG.game.debugger.hasMouse) 
@@ -136,45 +95,18 @@ class FlxMouseButton implements IFlxDestroyable
 		}
 		#end
 
-		if (current == JUST_PRESSED)
-		{
-			current = FAST_PRESS_RELEASE;
-		}
-		else if (current > RELEASED)
-		{
-			current = JUST_RELEASED;
-		}
-		else
-		{
-			current = RELEASED;
-		}
+		release();
 	}
-	
-	/**
-	 * Resets the just pressed/just released flags and sets mouse to not pressed.
-	 */
-	public inline function reset():Void
-	{
-		current = RELEASED;
-		last = RELEASED;
-	}
-	
-	/**
-	 * Check to see if the button is pressed.
-	 * @return 	Whether the button is pressed.
-	 */
-	public inline function pressed():Bool { return current > RELEASED; }
+}
 
-	/**
-	 * Check to see if the button was just pressed.
-	 * @return 	Whether the button was just pressed.
-	 */
-	public inline function justPressed():Bool { return (current == JUST_PRESSED || current == FAST_PRESS_RELEASE); }
-
-	/**
-	 * Check to see if the button was just released.
-	 * @return 	Whether the button was just released.
-	 */
-	public inline function justReleased():Bool { return (current == JUST_RELEASED || current == FAST_PRESS_RELEASE); }
+/**
+ * These IDs are negative to avoid overlaps with possible touch point IDs.
+ */
+@:enum
+abstract FlxMouseButtonID(Int) to Int
+{
+	var LEFT   = -1;
+	var MIDDLE = -2;
+	var RIGHT  = -3;
 }
 #end
