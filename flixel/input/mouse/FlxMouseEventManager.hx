@@ -11,6 +11,7 @@ import flixel.math.FlxAngle;
 import flixel.util.FlxDestroyUtil;
 import flixel.math.FlxPoint;
 import flixel.input.mouse.FlxMouseButton;
+import flixel.group.FlxSpriteGroup;
 
 /**
  * Provides mouse event detection for FlxObjects and FlxSprites (pixel-perfect for those).
@@ -68,6 +69,11 @@ class FlxMouseEventManager extends FlxBasic
 	public static function add<T:FlxObject>(Object:T, ?OnMouseDown:T->Void, ?OnMouseUp:T->Void, ?OnMouseOver:T->Void,
 		?OnMouseOut:T->Void, MouseChildren = false, MouseEnabled = true, PixelPerfect = true, ?MouseButtons:Array<FlxMouseButtonID>):T
 	{
+		if (Std.is(Object, FlxTypedSpriteGroup))
+		{
+			throw "FlxSpriteGroups are not supported by FlxMouseEventManager";
+		}
+		
 		init(); // MEManager is initialized and added to plugins if it was not there already.
 		
 		var newReg = new ObjectMouseData<T>(Object, OnMouseDown, OnMouseUp, OnMouseOver,
