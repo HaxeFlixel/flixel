@@ -174,7 +174,7 @@ class FlxRandom
 		
 		_hasFloatNormalSpare = true;
 		
-		var theta:Float = 2 * Math.PI * (generate()/MODULUS);
+		var theta:Float = _twoPI * (generate()/MODULUS);
 		var rho:Float = Math.sqrt( -2 * Math.log(1 - (generate()/MODULUS)) );
 		var scale:Float = StdDev * rho;
 		
