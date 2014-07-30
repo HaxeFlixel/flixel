@@ -14,6 +14,9 @@ import flixel.system.FlxAssets.FlxTextureAsset;
 import flixel.system.layer.frames.FlxFrame;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSort;
+#if !FLX_NO_DEBUG
+	import flixel.math.FlxRect;
+#end
 
 typedef FlxSpriteGroup = FlxTypedSpriteGroup<FlxSprite>;
 
@@ -93,6 +96,11 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		scrollFactor.set(1, 1);
 	 	
 		initMotionVars();
+		#if !FLX_NO_DEBUG
+			//initialize these to avoid a null error if drawDebug() is called
+			_point = FlxPoint.get();
+			_rect = FlxRect.get();
+		#end
 	}
 	
 	/**
