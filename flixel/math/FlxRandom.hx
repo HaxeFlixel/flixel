@@ -148,6 +148,46 @@ class FlxRandom
 		return result;
 	}
 	
+	
+	//helper variables for floatNormal -- it produces TWO random values with each call so we have to store some state outside the function
+	private var _hasFloatNormalSpare:Bool = false;
+	private var _floatNormalRand1:Float = 0;
+	private var _floatNormalRand2:Float = 0;
+	private var _twoPI:Float = Math.PI * 2;
+	private var _floatNormalRho:Float = 0;
+	
+	/**
+	 * Returns a pseudorandom float value in a statistical normal distribution centered on Mean with a standard deviation size of StdDev.
+	 * (This uses the Box-Muller transform algorithm for guassian pseudorandom numbers)
+	 * 
+	 * *Normal distribution: 68% values are within 1 standard deviation, 95% are in 2 StdDevs, 99% in 3 StdDevs.
+	 * See this image: https://github.com/HaxeFlixel/flixel-demos/blob/dev/Performance/FlxRandom/normaldistribution.png
+	 * 
+	 * @param	Mean		The Mean around which the normal distribution is centered
+	 * @param	StdDev		Size of the standard deviation
+	 */
+	public function floatNormal(Mean:Float=0,StdDev:Float=1):Float
+	{
+		
+		if (_hasFloatNormalSpare)
+		{
+			_hasFloatNormalSpare = false;
+			var scale:Float = StdDev * _floatNormalRho;
+			return Mean + scale * _floatNormalRand2;
+		}
+		
+		_hasFloatNormalSpare = true;
+		
+		var theta:Float = _twoPI * (generate()/MODULUS);
+		_floatNormalRho = Math.sqrt( -2 * Math.log(1 - (generate()/MODULUS)) );
+		var scale:Float = StdDev * _floatNormalRho;
+		
+		_floatNormalRand1 = Math.cos(theta);
+		_floatNormalRand2 = Math.sin(theta);
+		
+		return Mean + scale * _floatNormalRand1;
+	}
+	
 	/**
 	 * Returns true or false based on the chance value (default 50%). 
 	 * For example if you wanted a player to have a 30.5% chance of getting a bonus,
