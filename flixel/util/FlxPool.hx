@@ -9,27 +9,28 @@ import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 @:generic
 class FlxPool<T:IFlxDestroyable>
 {
-	private var _pool:Array<T>;
+	public var length(get, never):Int;
+	
+	private var _pool:Array<T> = [];
 	private var _class:Class<T>;
 	
 	/**
 	 * Objects aren't actually removed from the array in order to improve performance.
 	 * _count keeps track of the valid, accessible pool objects.
 	 */
-	private var _count:Int;
-
-	public var length(get, never):Int;
+	private var _count:Int = 0;
 	
 	public function new(classObj:Class<T>) 
 	{
-		_pool = [];
 		_class = classObj;
-		_count = 0;
 	}
 	
 	public function get():T
 	{
-		if (_count == 0) return Type.createInstance(_class, []);
+		if (_count == 0)
+		{
+			return Type.createInstance(_class, []);
+		}
 		return _pool[--_count];
 	}
 	
@@ -59,7 +60,10 @@ class FlxPool<T:IFlxDestroyable>
 	
 	public function preAllocate(numObjects:Int):Void
 	{
-		while (numObjects-- > 0) _pool[_count++] = Type.createInstance(_class, []);
+		while (numObjects-- > 0)
+		{
+			_pool[_count++] = Type.createInstance(_class, []);
+		}
 	}
 	
 	public function clear():Array<T>
