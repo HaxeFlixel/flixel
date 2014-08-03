@@ -453,7 +453,7 @@ class FlxObject extends FlxBasic
 	#end
 	
 	private var _point:FlxPoint = FlxPoint.get();
-	private var _rect:FlxRect = FlxPoint.get();
+	private var _rect:FlxRect = FlxRect.get();
 	
 	/**
 	 * @param	X		The X-coordinate of the point in space.

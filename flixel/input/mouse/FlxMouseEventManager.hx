@@ -270,7 +270,7 @@ class FlxMouseEventManager extends FlxBasic
 	 */
 	public static function setObjectMouseButtons<T:FlxObject>(object:T, mouseButtons:Array<FlxMouseButtonID>):Void
 	{
-		var reg = getRegister(Object);
+		var reg = getRegister(object);
 		
 		if (reg != null)
 		{
