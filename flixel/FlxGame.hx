@@ -21,7 +21,7 @@ import flixel.util.FlxAngle;
 import flixel.util.FlxColor;
 import flixel.util.FlxRandom;
 
-#if cpp
+#if (cpp || neko)
 import openfl.display.OpenGLView;
 #end
 
@@ -241,7 +241,7 @@ class FlxGame extends Sprite
 		// Super high priority init stuff
 		_inputContainer = new Sprite();
 		
-		#if cpp
+		#if (cpp || neko)
 		// Init shader container
 		if (OpenGLView.isSupported)
 			postProcessLayer = new Sprite();
@@ -296,7 +296,7 @@ class FlxGame extends Sprite
 		
 		addChild(_inputContainer);
 		
-		#if cpp
+		#if (cpp || neko)
 		if (OpenGLView.isSupported)
 			addChild(postProcessLayer);
 		#end
@@ -467,7 +467,7 @@ class FlxGame extends Sprite
 		_inputContainer.scaleX = 1 / FlxG.game.scaleX;
 		_inputContainer.scaleY = 1 / FlxG.game.scaleY;
 		
-		#if cpp
+		#if (cpp || neko)
 		if (postProcesses != null)
 		{
 			for (p in postProcesses)
@@ -808,7 +808,7 @@ class FlxGame extends Sprite
 		#end
 	}
 	
-	#if cpp
+	#if (cpp || neko)
 	public function addPostProcess(postProcess:PostProcess):Void 
 	{
 		if (OpenGLView.isSupported)
@@ -853,10 +853,10 @@ class FlxGame extends Sprite
 		TileSheetExt._DRAWCALLS = 0;
 		#end
 		
-		#if cpp
+		#if (cpp || neko)
 		if (postProcesses != null)
         {
-            for(postProcess in postProcesses)
+            for (postProcess in postProcesses)
             {
                 postProcess.capture();
             }
