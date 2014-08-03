@@ -12,31 +12,39 @@ class FlxPool<T:IFlxDestroyable>
 	private var _pool:Array<T>;
 	private var _class:Class<T>;
 	
+	/**
+	 * Objects aren't actually removed from the array in order to improve performance.
+	 * _count keeps track of the valid, accessible pool objects.
+	 */
+	private var _count:Int;
+
 	public var length(get, never):Int;
 	
 	public function new(classObj:Class<T>) 
 	{
 		_pool = [];
 		_class = classObj;
+		_count = 0;
 	}
 	
 	public function get():T
 	{
-		var obj:T = _pool.pop();
-		if (obj == null) 
-		{
-			obj = Type.createInstance(_class, []);
-		}
-		return obj;
+		if (_count == 0) return Type.createInstance(_class, []);
+		return _pool[--_count];
 	}
 	
 	public function put(obj:T):Void
 	{
-		// we don't want to have the same object in pool twice
-		if (obj != null && _pool.indexOf(obj) < 0)
+		// we don't want to have the same object in the accessible pool twice (ok to have multiple in the inaccessible zone)
+		if (obj != null)
 		{
-			obj.destroy();
-			_pool.push(obj);
+			var i:Int = _pool.indexOf(obj);
+			// if the object's spot in the pool was overwritten, or if it's at or past _count (in the inaccessible zone)
+			if (i == -1 || i >= _count)
+			{
+				obj.destroy();
+				_pool[_count++] = obj;
+			}
 		}
 	}
 	
@@ -45,20 +53,18 @@ class FlxPool<T:IFlxDestroyable>
 		if (obj != null)
 		{
 			obj.destroy();
-			_pool.push(obj);
+			_pool[_count++] = obj;
 		}
 	}
 	
 	public function preAllocate(numObjects:Int):Void
 	{
-		for (i in 0...numObjects)
-		{
-			_pool.push(Type.createInstance(_class, []));
-		}
+		while (numObjects-- > 0) _pool[_count++] = Type.createInstance(_class, []);
 	}
 	
 	public function clear():Array<T>
 	{
+		_count = 0;
 		var oldPool = _pool;
 		_pool = [];
 		return oldPool;
@@ -66,7 +72,7 @@ class FlxPool<T:IFlxDestroyable>
 	
 	private inline function get_length():Int
 	{
-		return _pool.length;
+		return _count;
 	}
 }
 
