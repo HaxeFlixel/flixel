@@ -4,15 +4,15 @@ import flixel.system.FlxAssets;
 import flixel.text.FlxBitmapTextField;
 import flixel.text.pxText.PxBitmapFont;
 import flixel.text.pxText.PxTextAlign;
-import flixel.ui.FlxTypedButton;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
+import flixel.ui.FlxButton;
 
 /**
  * A button with a bitmap text field for the label
  */
 class PxButton extends FlxTypedButton<FlxBitmapTextField>
 {
-	public function new(X:Float = 0, Y:Float = 0, ?Label:String, ?OnClick:Dynamic)
+	public function new(X:Float = 0, Y:Float = 0, ?Label:String, ?OnClick:Void->Void)
 	{
 		super(X, Y, OnClick);
 		

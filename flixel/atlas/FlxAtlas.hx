@@ -5,7 +5,7 @@ import flash.geom.Rectangle;
 import flixel.FlxG;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 import flixel.util.loaders.CachedGraphics;
 import flixel.util.loaders.TexturePackerData;
 import flixel.util.loaders.TextureAtlasFrame;
@@ -214,7 +214,6 @@ class FlxAtlas
 					var texFrame = new TextureAtlasFrame();
 					
 					texFrame.trimmed = false;
-					texFrame.rotated = false;
 					texFrame.name = key;
 					texFrame.sourceSize = FlxPoint.get(node.width, node.height);
 					texFrame.offset = FlxPoint.get(0, 0);

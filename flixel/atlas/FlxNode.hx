@@ -2,7 +2,7 @@ package flixel.atlas;
 
 import flash.geom.Point;
 import flash.geom.Rectangle;
-import flixel.interfaces.IFlxDestroyable;
+import flixel.util.FlxDestroyUtil;
 
 /**
  * Atlas Node holds BitmapData and it's position on Atlas

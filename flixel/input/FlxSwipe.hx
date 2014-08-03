@@ -1,13 +1,12 @@
 package flixel.input;
 
 import flixel.FlxG;
-import flixel.plugin.FlxPlugin;
 import flixel.system.debug.FlxDebugger;
 import flixel.system.FlxAssets;
 import flixel.system.frontEnds.PluginFrontEnd;
-import flixel.util.FlxAngle;
-import flixel.util.FlxMath;
-import flixel.util.FlxPoint;
+import flixel.math.FlxAngle;
+import flixel.math.FlxMath;
+import flixel.math.FlxPoint;
 import flixel.util.FlxStringUtil;
 
 @:allow(flixel.input.mouse.FlxMouseButton)
@@ -57,7 +56,7 @@ class FlxSwipe
 	
 	private inline function get_angle():Float
 	{
-		return FlxAngle.getAngle(startPosition, endPosition); 
+		return startPosition.angleBetween(endPosition); 
 	}
 	
 	private inline function get_duration():Float

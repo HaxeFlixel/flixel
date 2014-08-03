@@ -2,13 +2,13 @@ package flixel.system.frontEnds;
 
 import flash.display.BitmapData;
 import flixel.FlxG;
+import flixel.input.keyboard.FlxKey;
 import flixel.system.debug.Tracker;
-import flixel.system.debug.FlxDebugger.ButtonAlignment;
-import flixel.system.debug.FlxDebugger.DebuggerLayout;
 import flixel.system.debug.Window;
 import flixel.system.ui.FlxSystemButton;
-import flixel.util.FlxStringUtil;
 import flixel.util.FlxSignal;
+import flixel.util.FlxStringUtil;
+import flixel.system.debug.FlxDebugger;
 
 class DebuggerFrontEnd
 {	
@@ -22,7 +22,7 @@ class DebuggerFrontEnd
 	 * The key codes used to toggle the debugger (see FlxG.keys for the keys available).
 	 * Default keys: ` and \. Set to null to deactivate.
 	 */
-	public var toggleKeys:Array<String>;
+	public var toggleKeys:Array<FlxKey> = [GRAVEACCENT, BACKSLASH];
 	#end
 	
 	/**
@@ -32,7 +32,7 @@ class DebuggerFrontEnd
 	/**
 	 * Dispatched when drawDebug is changed.
 	 */
-	public var drawDebugChanged(default, null):FlxSignal;
+	public var drawDebugChanged(default, null):FlxSignal = new FlxSignal();
 	
 	public var visible(default, set):Bool = false;
 	
@@ -41,7 +41,7 @@ class DebuggerFrontEnd
 	 * 
 	 * @param	Layout	The layout codes can be found in FlxDebugger, for example FlxDebugger.MICRO
 	 */
-	public inline function setLayout(Layout:DebuggerLayout):Void
+	public inline function setLayout(Layout:FlxDebuggerLayout):Void
 	{
 		#if !FLX_NO_DEBUG
 		FlxG.game.debugger.setLayout(Layout);
@@ -68,7 +68,7 @@ class DebuggerFrontEnd
 	 * @param   UpdateLayout   Whether to update the button layout.
 	 * @return  The added button.
 	 */
-	public function addButton(Alignment:ButtonAlignment, Icon:BitmapData, UpHandler:Void->Void, ToggleMode:Bool = false, UpdateLayout:Bool = true):FlxSystemButton
+	public function addButton(Alignment:FlxButtonAlignment, Icon:BitmapData, UpHandler:Void->Void, ToggleMode:Bool = false, UpdateLayout:Bool = true):FlxSystemButton
 	{
 		#if !FLX_NO_DEBUG
 		return FlxG.game.debugger.addButton(Alignment, Icon, UpHandler, ToggleMode, UpdateLayout);
@@ -87,12 +87,12 @@ class DebuggerFrontEnd
 	public function track(Object:Dynamic, ?WindowTitle:String):Window
 	{
 		#if !FLX_NO_DEBUG
-		if (Lambda.indexOf(Tracker.objectsBeingTracked, Object) == -1)
+		if (Tracker.objectsBeingTracked.indexOf(Object) == -1)
 		{
 			var profile = Tracker.findProfile(Object);
 			if (profile == null)
 			{
-				FlxG.log.error("FlxG.debugger.track(): Could not find a tracking profile for this object of class '" + FlxStringUtil.getClassName(Object, true) + "'."); 
+				throw "Could not find a tracking profile for object of class '" + FlxStringUtil.getClassName(Object, true) + "'."; 
 				return null;
 			}
 			else 
@@ -135,13 +135,7 @@ class DebuggerFrontEnd
 	}
 	
 	@:allow(flixel.FlxG)
-	private function new() 
-	{
-		#if !FLX_NO_KEYBOARD
-		toggleKeys = ["GRAVEACCENT", "BACKSLASH"];
-		#end
-		drawDebugChanged = new FlxSignal();
-	}
+	private function new() {}
 	
 	private inline function set_drawDebug(Value:Bool):Bool
 	{

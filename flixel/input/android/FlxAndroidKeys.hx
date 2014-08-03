@@ -1,131 +1,179 @@
 package flixel.input.android;
+import flixel.util.FlxArrayUtil;
 
 #if android
 import flash.events.KeyboardEvent;
 import flash.Lib;
 import flixel.FlxG;
-import flixel.interfaces.IFlxInput;
-import flixel.input.keyboard.FlxKey;
-import flixel.system.replay.CodeValuePair;
-import flixel.util.FlxArrayUtil;
-import haxe.ds.HashMap.HashMap;
-import haxe.Log;
+import flixel.input.FlxInput;
+import flixel.util.FlxDestroyUtil;
 
 /**
  * Keeps track of Android system key presses (Back/Menu)
  */
-class FlxAndroidKeys implements IFlxInput
+@:allow(flixel.input.android.FlxAndroidKeyList)
+class FlxAndroidKeys implements IFlxInputManager
 {
-	/**
-	 * Whether or not android key input is currently enabled
-	 */
-	public var enabled:Bool = true;
-	
 	/**
 	 * Total amount of keys.
 	 */
 	private static inline var TOTAL:Int = 2;
-	
 	/**
-	 * A map for key lookup.
+	 * Whether or not android key input is currently enabled
 	 */
-	private var _keyLookup:Map<String, Int>;
-	
+	public var enabled:Bool = true;
 	/**
-	 * And array of FlxKey objects.
+	 * Whether or not the back button is allowed to perform its default back action.
 	 */
-	@:allow(flixel.input.keyboard.FlxAndroidKeyList.get_ANY)
-	private var _keyList:Map<Int, FlxKey>;
-	
 	public var preventDefaultBackAction:Bool = false;
-	
 	/**
-	 * An internal helper function used to build the key array.
-	 *
-	 * @param	KeyName		String name of the key (e.g. "BACK" or "MENU")
-	 * @param	KeyCode		The numeric code for this key.
+	 * Helper class to check if a key is pressed.
 	 */
-	private function addKey(KeyName:String, KeyCode:Int):Void
-	{
-		_keyLookup.set(KeyName, KeyCode);
-		_keyList.set(KeyCode, new FlxKey(KeyName));
-	}
-	
+	public var pressed:FlxAndroidKeyList;
 	/**
-	 * Check to see if a key, or one key from a list of mutliple keys is pressed. Pass them in as Strings.
-	 * Example: .pressed("BACK", "MENU")
+	 * Helper class to check if a key was just pressed.
 	 */
-	public var pressed:Dynamic;
+	public var justPressed:FlxAndroidKeyList;
+	/**
+	 * Helper class to check if a key was just released.
+	 */
+	public var justReleased:FlxAndroidKeyList;
+	/**
+	 * Internal storage of input keys as an array, for efficient iteration.
+	 */
+	private var _keyListArray:Array<FlxAndroidKeyInput>;
+	/**
+	 * Internal storage of input keys as a map, for efficient indexing.
+	 */
+	private var _keyListMap:Map<Int, FlxAndroidKeyInput>;
 	
 	/**
-	 * Check to see if at least one key from an array of keys is pressed. Pass them in as Strings.
-	 * Example: .anyPressed(["BACK", "MENU"])
-	 * @param	KeyArray 	An array of keys as Strings
+	 * Check to see if at least one key from an array of keys is pressed.
+	 * Example: FlxG.android.anyPressed([BACK, MENU]) - having them in an array is handy for configurable keys!
+	 * 
+	 * @param	KeyArray 	An array of key names
 	 * @return	Whether at least one of the keys passed in is pressed.
 	 */
-	public inline function anyPressed(KeyArray:Array<Dynamic>):Bool
-	{
-		return checkKeyStatus(KeyArray, FlxKey.PRESSED);
+	public inline function anyPressed(KeyArray:Array<FlxAndroidKey>):Bool
+	{ 
+		return checkKeyArrayState(KeyArray, PRESSED);
 	}
 	
 	/**
-	 * Check to see if a key, or one key from a list of mutliple keys was just pressed. Pass them in as Strings.
-	 * Example: .justPressed("BACK", "MENU")
-	 */
-	public var justPressed:Dynamic;
-	
-	/**
-	 * Check to see if at least one key from an array of keys was just pressed. Pass them in as Strings.
-	 * Example: .anyJustPressed(["BACK", "MENU"])
-	 * @param	KeyArray 	An array of keys as Strings
+	 * Check to see if at least one key from an array of keys was just pressed.
+	 * Example: FlxG.android.anyJustPressed([BACK, MENU]) - having them in an array is handy for configurable keys!
+	 * 
+	 * @param	KeyArray 	An array of key names
 	 * @return	Whether at least one of the keys passed was just pressed.
 	 */
-	public inline function anyJustPressed(KeyArray:Array<Dynamic>):Bool
-	{
-		return checkKeyStatus(KeyArray, FlxKey.JUST_PRESSED);
+	public inline function anyJustPressed(KeyArray:Array<FlxAndroidKey>):Bool
+	{ 
+		return checkKeyArrayState(KeyArray, JUST_PRESSED);
 	}
 	
 	/**
-	 * Check to see if a key, or one key from a list of mutliple keys was just released. Pass them in as Strings.
-	 * Example: .justReleased("BACK", "MENU")
-	 */
-	public var justReleased:Dynamic;
-	
-	/**
-	 * Check to see if at least one key from an array of keys was just released. Pass them in as Strings.
-	 * Example: .anyJustReleased(["BACK", "MENU"])
-	 * @param	KeyArray 	An array of keys as Strings
+	 * Check to see if at least one key from an array of keys was just released.
+	 * Example: FlxG.android.anyJustReleased([BACK, MENU]) - having them in an array is handy for configurable keys!
+	 * 
+	 * @param	KeyArray 	An array of key names
 	 * @return	Whether at least one of the keys passed was just released.
 	 */
-	public inline function anyJustReleased(KeyArray:Array<Dynamic>):Bool
-	{
-		return checkKeyStatus(KeyArray, FlxKey.JUST_RELEASED);
+	public inline function anyJustReleased(KeyArray:Array<FlxAndroidKey>):Bool
+	{ 
+		return checkKeyArrayState(KeyArray, JUST_RELEASED);
 	}
 	
+	/**
+	 * Get the first key which is currently pressed.
+	 * 
+	 * @return	The first pressed FlxAndroidKey
+	 */
+	public function firstPressed():FlxAndroidKey
+	{
+		for (key in _keyListArray)
+		{
+			if (key != null && key.pressed)
+			{
+				return key.ID;
+			}
+		}
+		return FlxAndroidKey.NONE;
+	}
 	
 	/**
-	 * Look up the key code for any given string name of the key or button.
-	 *
-	 * @param	KeyName		The String name of the key.
-	 * @return	The key code for that key.
+	 * Get the name of the first key which has just been pressed.
+	 * 
+	 * @return	The name of the key or "" if none could be found.
 	 */
-	public inline function getKeyCode(KeyName:String):Int
+	public function firstJustPressed():FlxAndroidKey
 	{
-		return _keyLookup.get(KeyName);
+		for (key in _keyListArray)
+		{
+			if (key != null && key.justPressed)
+			{
+				return key.ID;
+			}
+		}
+		return "";
+	}
+	
+	/**
+	 * Get the name of the first key which has just been released.
+	 * 
+	 * @return	The name of the key or "" if none could be found.
+	 */
+	public function firstJustReleased():FlxAndroidKey
+	{
+		for (key in _keyListArray)
+		{
+			if (key != null && key.justReleased)
+			{
+				return key.ID;
+			}
+		}
+		return "";
+	}
+	
+	/**
+	 * Check the status of a single key.
+	 * 
+	 * @param	KeyCode		KeyCode to be checked.
+	 * @param	Status		The key state to check for.
+	 * @return	Whether the provided key has the specified status.
+	 */
+	public function checkStatus(KeyCode:FlxAndroidKey, Status:FlxInputState):Bool
+	{
+		var key:FlxAndroidKeyInput = getKey(KeyCode);
+		
+		if (key != null)
+		{
+			if (key.hasState(Status))
+			{
+				return true;
+			}
+		}
+		#if !FLX_NO_DEBUG
+		else
+		{
+			throw 'Invalid key code: $KeyCode.';
+		}
+		#end
+		
+		return false;
 	}
 
 	/**
-	 * Get an Array of FlxMapObjects that are in a pressed state
-	 *
-	 * @return	Array<FlxMapObject> of keys that are currently pressed.
+	 * Get an Array of FlxAndroidKeyInputs that are in a pressed state
+	 * 
+	 * @return	Array of keys that are currently pressed.
 	 */
-	public function getIsDown():Array<FlxKey>
+	public function getIsDown():Array<FlxAndroidKeyInput>
 	{
-		var keysDown:Array<FlxKey> = new Array<FlxKey>();
+		var keysDown = new Array<FlxAndroidKeyInput>();
 		
-		for (key in _keyList)
+		for (key in _keyListArray)
 		{
-			if (key != null && key.current > FlxKey.RELEASED)
+			if (key != null && key.pressed)
 			{
 				keysDown.push(key);
 			}
@@ -138,8 +186,8 @@ class FlxAndroidKeys implements IFlxInput
 	 */
 	public function destroy():Void
 	{
-		_keyList = null;
-		_keyLookup = null;
+		_keyListArray = null;
+		_keyListMap = null;
 	}
 	
 	/**
@@ -147,12 +195,11 @@ class FlxAndroidKeys implements IFlxInput
 	 */
 	public function reset():Void
 	{
-		for (key in _keyList)
+		for (key in _keyListArray)
 		{
 			if (key != null)
 			{
-				key.current = FlxKey.RELEASED;
-				key.last = FlxKey.RELEASED;
+				key.release();
 			}
 		}
 	}
@@ -160,52 +207,63 @@ class FlxAndroidKeys implements IFlxInput
 	@:allow(flixel.FlxG)
 	private function new()
 	{
-		_keyLookup = new Map<String, Int>();
+		_keyListArray = new Array<FlxAndroidKeyInput>();
+		_keyListMap = new Map<Int, FlxAndroidKeyInput>();
 		
-		_keyList = new Map<Int, FlxKey>();
+		// BACK button
+		var back:FlxAndroidKeyInput = new FlxAndroidKeyInput(27);
+		_keyListArray.push(back);
+		_keyListMap.set(back.ID, back);
+		// MENU button
+		var menu:FlxAndroidKeyInput = new FlxAndroidKeyInput(16777234);
+		_keyListArray.push(menu);
+		_keyListMap.set(menu.ID, menu);
 		
-		addKey("BACK", 27);
-		addKey("MENU", 16777234); // wow, really?
+		FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+		FlxG.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 		
-		Lib.current.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
-		Lib.current.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
-		
-		pressed = Reflect.makeVarArgs(anyPressed);
-		justPressed = Reflect.makeVarArgs(anyJustPressed);
-		justReleased = Reflect.makeVarArgs(anyJustReleased);
+		pressed = new FlxAndroidKeyList(PRESSED);
+		justPressed = new FlxAndroidKeyList(JUST_PRESSED);
+		justReleased = new FlxAndroidKeyList(JUST_RELEASED);
+	}
+	
+	/**
+	 * Updates the key states (for tracking just pressed, just released, etc).
+	 */
+	private function update():Void
+	{
+		for (key in _keyListArray)
+		{
+			if (key != null) 
+			{
+				key.update();
+			}
+		}
 	}
 	
 	/**
 	 * Helper function to check the status of an array of keys
 	 * 
 	 * @param	KeyArray	An array of keys as Strings
-	 * @param	Status		The key state to check for
+	 * @param	State		The key state to check for
 	 * @return	Whether at least one of the keys has the specified status
 	 */
-	private function checkKeyStatus(KeyArray:Array<Dynamic>, Status:Int):Bool
+	private function checkKeyArrayState(KeyArray:Array<FlxAndroidKey>, State:FlxInputState):Bool
 	{
 		if (KeyArray == null)
 		{
 			return false;
 		}
 		
-		for (key in KeyArray)
+		var key:FlxAndroidKeyInput = null;
+		
+		for (checkKey in KeyArray)
 		{
-			// Also make lowercase keys work, like "space" or "sPaCe"
-			key = Std.string(key).toUpperCase();
+			key = getKey(checkKey);
 			
-			var k:FlxKey = _keyList.get(_keyLookup.get(key));
-			if (k != null)
+			if (key != null)
 			{
-				if (k.current == Status)
-				{
-					return true;
-				}
-				else if (Status == FlxKey.PRESSED && k.current == FlxKey.JUST_PRESSED)
-				{
-					return true;
-				}
-				else if (Status == FlxKey.RELEASED && k.current == FlxKey.JUST_RELEASED)
+				if (key.hasState(State))
 				{
 					return true;
 				}
@@ -217,55 +275,37 @@ class FlxAndroidKeys implements IFlxInput
 	
 	/**
 	 * Event handler so FlxGame can toggle keys.
-	 *
-	 * @param	FlashEvent	A KeyboardEvent object.
 	 */
-	private function onKeyUp(FlashEvent:KeyboardEvent):Void
+	private function onKeyUp(event:KeyboardEvent):Void
 	{
-		var c:Int = FlashEvent.keyCode;
-		
-		if (preventDefaultBackAction && c == getKeyCode("BACK"))
+		if (preventDefaultBackAction && event.keyCode == FlxAndroidKey.BACK)
 		{
-			
-			FlashEvent.stopImmediatePropagation();
-			FlashEvent.stopPropagation();
-		}
-
-		// Everything from on here is only updated if input is enabled
-		if (!enabled)
-		{
-			return;
-		}
-		
-		updateKeyStates(c, false);
-	}
-	
-	/**
-	 * Internal event handler for input and focus.
-	 *
-	 * @param	FlashEvent	Flash keyboard event.
-	 */
-	private function onKeyDown(FlashEvent:KeyboardEvent):Void
-	{
-		var c:Int = FlashEvent.keyCode;
-		
-		if (preventDefaultBackAction && c == getKeyCode("BACK"))
-		{
-			FlashEvent.stopImmediatePropagation();
-			FlashEvent.stopPropagation();
+			event.stopImmediatePropagation();
+			event.stopPropagation();
 		}
 		
 		if (enabled)
 		{
-			updateKeyStates(c, true);
+			updateKeyStates(event.keyCode, false);
 		}
 	}
 	
 	/**
-	 * A Helper function to check whether an array of keycodes contains
-	 * a certain key safely (returns false if the array is null).
+	 * Internal event handler for input and focus.
 	 */
-	private function inKeyArray(KeyArray:Array<String>, KeyCode:Int):Bool
+	private function onKeyDown(event:KeyboardEvent):Void
+	{
+		if (enabled) 
+		{
+			updateKeyStates(event.keyCode, true);
+		}
+	}
+	
+	/**
+	 * A Helper function to check whether an array of keycodes contains 
+	 * a certain key safely (returns false if the array is null).
+	 */ 
+	private function inKeyArray(KeyArray:Array<FlxAndroidKey>, Key:FlxAndroidKey):Bool
 	{
 		if (KeyArray == null)
 		{
@@ -273,15 +313,14 @@ class FlxAndroidKeys implements IFlxInput
 		}
 		else
 		{
-			for (keyString in KeyArray)
+			for (key in KeyArray)
 			{
-				if (keyString == "ANY" || getKeyCode(keyString) == KeyCode)
+				if (key == Key || key == "ANY")
 				{
 					return true;
 				}
 			}
 		}
-		
 		return false;
 	}
 	
@@ -290,33 +329,28 @@ class FlxAndroidKeys implements IFlxInput
 	 */
 	private inline function updateKeyStates(KeyCode:Int, Down:Bool):Void
 	{
-		var obj:FlxKey = _keyList[KeyCode];
+		var key:FlxAndroidKeyInput = getKey(KeyCode);
 		
-		if (obj != null)
+		if (key != null) 
 		{
-			if (obj.current > FlxKey.RELEASED)
+			if (Down)
 			{
-				if (Down)
-				{
-					obj.current = FlxKey.PRESSED;
-				}
-				else
-				{
-					obj.current = FlxKey.JUST_RELEASED;
-				}
+				key.press();
 			}
 			else
 			{
-				if (Down)
-				{
-					obj.current = FlxKey.JUST_PRESSED;
-				}
-				else
-				{
-					obj.current = FlxKey.RELEASED;
-				}
+				key.release();
 			}
 		}
+	}
+	
+	/**
+	 * Return a key from the key list, if found. Will return null if not found.
+	 */
+	@:allow(flixel.input.android.FlxAndroidKeyList.get_ANY())
+	private inline function getKey(KeyCode:Int):FlxAndroidKeyInput
+	{
+		return _keyListMap.get(KeyCode);
 	}
 	
 	private inline function onFocus():Void {}
@@ -325,30 +359,7 @@ class FlxAndroidKeys implements IFlxInput
 	{
 		reset();
 	}
-	
-	/**
-	 * Updates the key states (for tracking just pressed, just released, etc).
-	 */
-	private function update():Void
-	{
-		for (key in _keyList)
-		{
-			if (key == null)
-			{
-				continue;
-			}
-			
-			if (key.last == FlxKey.JUST_RELEASED && key.current == FlxKey.JUST_RELEASED)
-			{
-				key.current = FlxKey.RELEASED;
-			}
-			else if (key.last == FlxKey.JUST_PRESSED && key.current == FlxKey.JUST_PRESSED)
-			{
-				key.current = FlxKey.PRESSED;
-			}
-			
-			key.last = key.current;
-		}
-	}
 }
+
+typedef FlxAndroidKeyInput = FlxInput<Int>;
 #end

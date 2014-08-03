@@ -7,10 +7,10 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;
 import flixel.input.touch.FlxTouch;
-import flixel.util.FlxAngle;
+import flixel.math.FlxAngle;
 import flixel.util.FlxDestroyUtil;
-import flixel.util.FlxPoint;
-import flixel.util.FlxRect;
+import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
 
 @:bitmap("assets/images/ui/analog/base.png")
 private class GraphicBase extends BitmapData {}
@@ -66,7 +66,7 @@ class FlxAnalog extends FlxSpriteGroup
 	/**
 	 * A list of analogs that are currently active.
 	 */ 
-	private static var _analogs:Array<FlxAnalog>;
+	private static var _analogs:Array<FlxAnalog> = [];
 	
 	#if !FLX_NO_TOUCH
 	/**
@@ -76,13 +76,13 @@ class FlxAnalog extends FlxSpriteGroup
 	/**
 	 * Helper array for checking touches
 	 */ 
-	private var _tempTouches:Array<FlxTouch>;
+	private var _tempTouches:Array<FlxTouch> = [];
 	#end
 	
 	/**
 	 * The area which the joystick will react.
 	 */
-	private var _zone:FlxRect;
+	private var _zone:FlxRect = FlxRect.get();
 	
 	/**
 	 * The radius in which the stick can move.
@@ -103,25 +103,15 @@ class FlxAnalog extends FlxSpriteGroup
  	 * @param	radius	The radius where the thumb can move. If 0, the background will be use as radius.
  	 * @param	ease	The duration of the easing. The value must be between 0 and 1.
 	 */
-	public function new(X:Float, Y:Float, Radius:Float = 0, Ease:Float = 0.25)
+	public function new(X:Float = 0, Y:Float = 0, Radius:Float = 0, Ease:Float = 0.25)
 	{
-		_zone = FlxRect.get();
-		
 		super();
 		
 		_radius = Radius;
 		_ease = Ease;
 		
-		if (_analogs == null)
-		{
-			_analogs = new Array<FlxAnalog>();
-		}
 		_analogs.push(this);
 		
-		acceleration = FlxPoint.get();
-		#if !FLX_NO_TOUCH
-		_tempTouches = [];
-		#end
 		_point = FlxPoint.get();
 		
 		createBase();
@@ -129,6 +119,9 @@ class FlxAnalog extends FlxSpriteGroup
 		
 		x = X;
 		y = Y;
+		
+		scrollFactor.set();
+		moves = false;
 	}
 	
 	/**
@@ -193,7 +186,7 @@ class FlxAnalog extends FlxSpriteGroup
 		
 		_zone = FlxDestroyUtil.put(_zone);
 		
-		_analogs = null;
+		_analogs.remove(this);
 		onUp = null;
 		onDown = null;
 		onOver = null;
@@ -380,8 +373,6 @@ class FlxAnalog extends FlxSpriteGroup
 	
 	/**
 	 * Returns the angle in degrees.
-	 * 
-	 * @return	The angle.
 	 */
 	public function getAngle():Float
 	{

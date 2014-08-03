@@ -16,16 +16,18 @@ import flixel.effects.FlxFlicker;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
+import flixel.math.FlxMath;
+import flixel.math.FlxPoint;
 import flixel.system.FlxAssets;
 import flixel.tweens.FlxTween;
 
 // TODO: pad(): Pad the sprite out with empty pixels left/right/above/below it
-// TODO: flip(): Flip image data horizontally / vertically without changing the angle (mirror / reverse)
 // TODO: rotateClockwise(): Takes the bitmapData from the given source FlxSprite and rotates it 90 degrees clockwise
 
 /**
- * Some handy functions for FlxSprite manipulation, mostly drawing-related.
- * Some of these work with FlxObject too.
+ * Some handy functions for FlxSprite (FlxObject) manipulation, mostly drawing-related.
+ * Note that stage quality impacts the results of the draw() functions - 
+ * use FlxG.stage.quality = flash.display.StageQuality.BEST; for best results.
  */
 class FlxSpriteUtil
 {
@@ -185,7 +187,8 @@ class FlxSpriteUtil
 	 * @param	verticalSpacing		The amount of pixels between each sprite vertically (default 0)
 	 * @param	spaceFromBounds		If set to true the h/v spacing values will be added to the width/height of the sprite, if false it will ignore this
 	 */
-	public static function space(objects:Array<FlxObject>, startX:Int, startY:Int, horizontalSpacing:Int = 0, verticalSpacing:Int = 0, spaceFromBounds:Bool = false):Void
+	public static function space(objects:Array<FlxObject>, startX:Int, startY:Int, horizontalSpacing:Int = 0, 
+		verticalSpacing:Int = 0, spaceFromBounds:Bool = false):Void
 	{
 		var prevWidth:Int = 0;
 		var prevHeight:Int = 0;
@@ -239,14 +242,20 @@ class FlxSpriteUtil
 	 * @param	StartY		Y coordinate of the line's start point.
 	 * @param	EndX		X coordinate of the line's end point.
 	 * @param	EndY		Y coordinate of the line's end point.
-	 * @param	Color		The line's color.
-	 * @param	Thickness	How thick the line is in pixels (default value is 1).
 	 * @param	lineStyle	A LineStyle typedef containing the params of Graphics.lineStyle()
 	 * @param	drawStyle	A DrawStyle typdef containing the params of BitmapData.draw()
 	 * @return 	The FlxSprite for chaining
 	 */
-	public static function drawLine(sprite:FlxSprite, StartX:Float, StartY:Float, EndX:Float, EndY:Float, ?lineStyle:LineStyle, ?drawStyle:DrawStyle):FlxSprite
+	public static function drawLine(sprite:FlxSprite, StartX:Float, StartY:Float, EndX:Float, EndY:Float, 
+		?lineStyle:LineStyle, ?drawStyle:DrawStyle):FlxSprite
 	{
+		if (lineStyle == null)
+			lineStyle = { thickness: 1, color: FlxColor.WHITE };
+		if (lineStyle.thickness == null)
+			lineStyle.thickness = 1;
+		if (lineStyle.color == null)
+			lineStyle.color = FlxColor.WHITE;
+		
 		beginDraw(0, lineStyle);
 		flashGfx.moveTo(StartX, StartY);
 		flashGfx.lineTo(EndX, EndY);
@@ -268,7 +277,8 @@ class FlxSpriteUtil
 	 * @param	drawStyle	A DrawStyle typdef containing the params of BitmapData.draw()
 	 * @return 	The FlxSprite for chaining
 	 */
-	public static function drawRect(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, Color:Int, ?lineStyle:LineStyle, ?fillStyle:FillStyle, ?drawStyle:DrawStyle):FlxSprite
+	public static function drawRect(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, Color:FlxColor, 
+		?lineStyle:LineStyle, ?fillStyle:FillStyle, ?drawStyle:DrawStyle):FlxSprite
 	{
 		beginDraw(Color, lineStyle, fillStyle);
 		flashGfx.drawRect(X, Y, Width, Height);
@@ -292,7 +302,8 @@ class FlxSpriteUtil
 	 * @param	drawStyle		A DrawStyle typdef containing the params of BitmapData.draw()
 	 * @return 	The FlxSprite for chaining
 	 */
-	public static function drawRoundRect(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, EllipseWidth:Float, EllipseHeight:Float, Color:Int, ?lineStyle:LineStyle, ?fillStyle:FillStyle, ?drawStyle:DrawStyle):FlxSprite
+	public static function drawRoundRect(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, EllipseWidth:Float,
+		EllipseHeight:Float, Color:FlxColor, ?lineStyle:LineStyle, ?fillStyle:FillStyle, ?drawStyle:DrawStyle):FlxSprite
 	{
 		beginDraw(Color, lineStyle, fillStyle);
 		flashGfx.drawRoundRect(X, Y, Width, Height, EllipseWidth, EllipseHeight);
@@ -320,7 +331,9 @@ class FlxSpriteUtil
 	 * @param	drawStyle			A DrawStyle typdef containing the params of BitmapData.draw()
 	 * @return 	The FlxSprite for chaining
 	 */
-	public static function drawRoundRectComplex(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, TopLeftRadius:Float, TopRightRadius:Float, BottomLeftRadius:Float, BottomRightRadius:Float, Color:Int, ?lineStyle:LineStyle, ?fillStyle:FillStyle, ?drawStyle:DrawStyle):FlxSprite
+	public static function drawRoundRectComplex(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, 
+		TopLeftRadius:Float, TopRightRadius:Float, BottomLeftRadius:Float, BottomRightRadius:Float, Color:FlxColor, 
+		?lineStyle:LineStyle, ?fillStyle:FillStyle, ?drawStyle:DrawStyle):FlxSprite
 	{
 		beginDraw(Color, lineStyle, fillStyle);
 		flashGfx.drawRoundRectComplex(X, Y, Width, Height, TopLeftRadius, TopRightRadius, BottomLeftRadius, BottomRightRadius);
@@ -342,18 +355,19 @@ class FlxSpriteUtil
 	 * @param	drawStyle	A DrawStyle typdef containing the params of BitmapData.draw()
 	 * @return 	The FlxSprite for chaining
 	 */
-	public static function drawCircle(sprite:FlxSprite, X:Float = - 1, Y:Float = - 1, Radius:Float = -1, Color:Int = FlxColor.WHITE, ?lineStyle:LineStyle, ?fillStyle:FillStyle, ?drawStyle:DrawStyle):FlxSprite
+	public static function drawCircle(sprite:FlxSprite, X:Float = - 1, Y:Float = - 1, Radius:Float = -1, 
+		Color:FlxColor = FlxColor.WHITE, ?lineStyle:LineStyle, ?fillStyle:FillStyle, ?drawStyle:DrawStyle):FlxSprite
 	{
 		if ((X == -1) || (Y == -1)) 
 		{
 			var midPoint = sprite.getGraphicMidpoint();
 			
-			if (X == -1) {
+			if (X == -1)
 				X = midPoint.x;
-			}
-			if (Y == -1) {
+			if (Y == -1)
 				Y = midPoint.y;
-			}
+			
+			midPoint.put();
 		}
 		
 		if (Radius < 1) 
@@ -382,7 +396,8 @@ class FlxSpriteUtil
 	 * @param	drawStyle	A DrawStyle typdef containing the params of BitmapData.draw()
 	 * @return 	The FlxSprite for chaining
 	 */
-	public static function drawEllipse(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, Color:Int, ?lineStyle:LineStyle, ?fillStyle:FillStyle, ?drawStyle:DrawStyle):FlxSprite
+	public static function drawEllipse(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, Color:FlxColor, 
+		?lineStyle:LineStyle, ?fillStyle:FillStyle, ?drawStyle:DrawStyle):FlxSprite
 	{
 		beginDraw(Color, lineStyle, fillStyle);
 		flashGfx.drawEllipse(X, Y, Width, Height);
@@ -403,7 +418,8 @@ class FlxSpriteUtil
 	 * @param	drawStyle	A DrawStyle typdef containing the params of BitmapData.draw()
 	 * @return 	The FlxSprite for chaining
 	 */
-	public static function drawTriangle(sprite:FlxSprite, X:Float, Y:Float, Height:Float, Color:Int, ?lineStyle:LineStyle, ?fillStyle:FillStyle, ?drawStyle:DrawStyle):FlxSprite
+	public static function drawTriangle(sprite:FlxSprite, X:Float, Y:Float, Height:Float, Color:FlxColor, 
+		?lineStyle:LineStyle, ?fillStyle:FillStyle, ?drawStyle:DrawStyle):FlxSprite
 	{
 		beginDraw(Color, lineStyle, fillStyle);
 		flashGfx.moveTo(X + Height / 2, Y);
@@ -425,7 +441,8 @@ class FlxSpriteUtil
 	 * @param	drawStyle	A DrawStyle typdef containing the params of BitmapData.draw()
 	 * @return 	The FlxSprite for chaining
 	 */
-	public static function drawPolygon(sprite:FlxSprite, Vertices:Array<FlxPoint>, Color:Int, ?lineStyle:LineStyle, ?fillStyle:FillStyle, ?drawStyle:DrawStyle):FlxSprite
+	public static function drawPolygon(sprite:FlxSprite, Vertices:Array<FlxPoint>, Color:FlxColor, ?lineStyle:LineStyle, 
+		?fillStyle:FillStyle, ?drawStyle:DrawStyle):FlxSprite
 	{
 		beginDraw(Color, lineStyle, fillStyle);
 		var p:FlxPoint = Vertices.shift();
@@ -446,7 +463,7 @@ class FlxSpriteUtil
 	 * @param	fillStyle	A FillStyle typedef containing the params of Graphics.fillStyle()
 	 */
 	@:noUsing
-	public static inline function beginDraw(Color:Int, ?lineStyle:LineStyle, ?fillStyle:FillStyle):Void
+	public static inline function beginDraw(Color:FlxColor, ?lineStyle:LineStyle, ?fillStyle:FillStyle):Void
 	{
 		flashGfx.clear();
 		setLineStyle(lineStyle);
@@ -454,13 +471,10 @@ class FlxSpriteUtil
 		if ((fillStyle != null) && (fillStyle.hasFill)) 
 		{
 			//use the fillStyle for color information
-			flashGfx.beginFill(FlxColorUtil.ARGBtoRGB(fillStyle.color), FlxColorUtil.getAlphaFloat(fillStyle.color));
+			Color = fillStyle.color;
 		}
-		else 
-		{
-			//fillStyle is not defined, use color for fill information instead
-			flashGfx.beginFill(FlxColorUtil.ARGBtoRGB(Color), FlxColorUtil.getAlphaFloat(Color));
-		}
+		
+		flashGfx.beginFill(Color.to24Bit(), Color.alphaFloat);
 	}
 	
 	/**
@@ -497,7 +511,7 @@ class FlxSpriteUtil
 		}
 		
 		sprite.pixels.draw(flashGfxSprite, drawStyle.matrix, drawStyle.colorTransform, 
-							drawStyle.blendMode, drawStyle.clipRect, drawStyle.smoothing);
+			drawStyle.blendMode, drawStyle.clipRect, drawStyle.smoothing);
 		sprite.dirty = true;
 		sprite.resetFrameBitmapDatas();
 		return sprite;
@@ -514,31 +528,19 @@ class FlxSpriteUtil
 	{
 		if (lineStyle != null)
 		{
-			var color:Int; 
-			var alpha:Float;
-			
-			if (lineStyle.color == null) 
-			{ 
-				color = 0;
-				alpha = 1;
-			}
-			else 
-			{
-				color = FlxColorUtil.ARGBtoRGB(lineStyle.color);
-				alpha = FlxColorUtil.getAlphaFloat(lineStyle.color);
-			}
-			
+			var color = (lineStyle.color == null) ? FlxColor.BLACK : lineStyle.color; 
 			if (lineStyle.pixelHinting == null) { lineStyle.pixelHinting = false; }
 			if (lineStyle.miterLimit == null) 	{ lineStyle.miterLimit = 3; }
 			
-			flashGfx.lineStyle(lineStyle.thickness, 
-								color, 
-								alpha,
-								lineStyle.pixelHinting,
-								lineStyle.scaleMode,
-								lineStyle.capsStyle,
-								lineStyle.jointStyle,
-								lineStyle.miterLimit);
+			flashGfx.lineStyle(
+				lineStyle.thickness,
+				color.to24Bit(), 
+				color.alphaFloat,
+				lineStyle.pixelHinting,
+				lineStyle.scaleMode,
+				lineStyle.capsStyle,
+				lineStyle.jointStyle,
+				lineStyle.miterLimit);
 		}
 	}
 	
@@ -549,7 +551,7 @@ class FlxSpriteUtil
 	 * @param	Color	The color with which to fill the graphic, format 0xAARRGGBB.
 	 * @return 	The FlxSprite for chaining
 	 */
-	public static function fill(sprite:FlxSprite, Color:Int):FlxSprite
+	public static function fill(sprite:FlxSprite, Color:FlxColor):FlxSprite
 	{
 		sprite.pixels.fillRect(sprite.pixels.rect, Color);
 		
@@ -574,7 +576,8 @@ class FlxSpriteUtil
 	 * @param	ProgressCallback	An optional callback that will be triggered when visibility is toggled.
 	 * @return	The FlxObject for chaining
 	 */
-	public static inline function flicker(Object:FlxObject, Duration:Float = 1, Interval:Float = 0.04, EndVisibility:Bool = true, ForceRestart:Bool = true, ?CompletionCallback:FlxFlicker->Void, ?ProgressCallback:FlxFlicker->Void):FlxObject
+	public static inline function flicker(Object:FlxObject, Duration:Float = 1, Interval:Float = 0.04, EndVisibility:Bool = true, 
+		ForceRestart:Bool = true, ?CompletionCallback:FlxFlicker->Void, ?ProgressCallback:FlxFlicker->Void):FlxObject
 	{
 		FlxFlicker.flicker(Object, Duration, Interval, EndVisibility, ForceRestart, CompletionCallback, ProgressCallback);
 		return Object;
@@ -603,38 +606,44 @@ class FlxSpriteUtil
 	}
 	
 	/**
-	 * Fade in a sprite.
+	 * Fade in a sprite, tweening alpha to 1.
 	 * 
 	 * @param  sprite 	The object to fade.
 	 * @param  Duration How long the fade will take (in seconds).
 	 * @return The FlxSprite for chaining
 	 */
-	public static inline function fadeIn(sprite:FlxSprite, Duration:Float, ?ResetAlpha:Bool, ?OnComplete:CompleteCallback):FlxSprite
+	public static inline function fadeIn(sprite:FlxSprite, Duration:Float = 1, ?ResetAlpha:Bool, ?OnComplete:CompleteCallback):FlxSprite
 	{
-		if (ResetAlpha) {
+		if (ResetAlpha) 
+		{
 			sprite.alpha = 0;
 		}
-		FlxTween.color(sprite, Duration, sprite.color, sprite.color, sprite.alpha, 1, OnComplete != null ? { complete:OnComplete } : null);
+		FlxTween.num(sprite.alpha, 1, Duration, { complete: OnComplete }, alphaTween.bind(sprite));
 		return sprite;
 	}
 	
 	/**
-	 * Fade out a sprite.
+	 * Fade out a sprite, tweening alpha to 0.
 	 * 
 	 * @param  sprite 	The object to fade.
 	 * @param  Duration How long the fade will take (in seconds).
 	 * @return The FlxSprite for chaining
 	 */
-	public static inline function fadeOut(sprite:FlxSprite, Duration:Float, ?FadeToBlack:Bool, ?OnComplete:CompleteCallback):FlxSprite
+	public static inline function fadeOut(sprite:FlxSprite, Duration:Float = 1, ?OnComplete:CompleteCallback):FlxSprite
 	{
-		FlxTween.color(sprite, Duration, sprite.color, FadeToBlack ? FlxColor.BLACK : sprite.color, sprite.alpha, 0, OnComplete != null ? { complete:OnComplete } : null);
+		FlxTween.num(sprite.alpha, 0, Duration, { complete: OnComplete }, alphaTween.bind(sprite));
 		return sprite;
+	}
+	
+	private static function alphaTween(sprite:FlxSprite, f:Float):Void
+	{
+		sprite.alpha = f;
 	}
 }
 
 typedef LineStyle = {
 	?thickness:Float,
-	?color:Int,
+	?color:FlxColor,
 	?pixelHinting:Bool,
 	?scaleMode:LineScaleMode,
 	?capsStyle:CapsStyle,
@@ -644,7 +653,7 @@ typedef LineStyle = {
 
 typedef FillStyle = {
 	?hasFill:Bool,
-	?color:Int,
+	?color:FlxColor,
 	?alpha:Float
 }
 

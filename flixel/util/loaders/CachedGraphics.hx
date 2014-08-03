@@ -10,6 +10,11 @@ import flixel.util.FlxDestroyUtil;
 class CachedGraphics
 {
 	/**
+	 * The default value for the CachedGraphics persist variable
+	 * at creation if none is specified in the constructor.
+	 */
+	public static var defaultPersist:Bool = false;
+	/**
 	 * Key in BitmapFrontEnd cache
 	 */
 	public var key:String;
@@ -29,17 +34,17 @@ class CachedGraphics
 	 * TexturePackerData associated with the BitmapData
 	 */
 	public var data:TexturePackerData;
-	
+
 	/**
 	 * Whether this cached object should stay in cache after state changes or not.
 	 */
 	public var persist:Bool = false;
 	/**
 	 * Whether we should destroy this CachedGraphics object when useCount become zero.
-	 * Default is false.
+	 * Default is true.
 	 */
-	public var destroyOnNoUse(default, set):Bool = false;
-	
+	public var destroyOnNoUse(default, set):Bool = true;
+
 	/**
 	 * Whether the BitmapData of this cached object has been dumped or not.
 	 */
@@ -48,25 +53,25 @@ class CachedGraphics
 	 * Whether the BitmapData of this cached object can be dumped for decreased memory usage.
 	 */
 	public var canBeDumped(get, never):Bool;
-	
+
 	public var tilesheet(get, null):TileSheetData;
-	
+
 	/**
 	 * Usage counter for this CachedGraphics object.
 	 */
 	public var useCount(default, set):Int = 0;
-	
+
 	private var _tilesheet:TileSheetData;
-	
-	public function new(Key:String, Bitmap:BitmapData, Persist:Bool = false)
+
+	public function new(Key:String, Bitmap:BitmapData, ?Persist:Bool)
 	{
 		key = Key;
 		bitmap = Bitmap;
-		persist = Persist;
+		persist = (Persist != null) ? Persist : defaultPersist;
 	}
-	
+
 	/**
-	 * Dumps bits of bitmapdata = less memory, but you can't read / write pixels on it anymore 
+	 * Dumps bits of bitmapdata = less memory, but you can't read / write pixels on it anymore
 	 * (but you can call onContext() method which will restore it again)
 	 */
 	public function dump():Void
@@ -79,32 +84,25 @@ class CachedGraphics
 		}
 		#end
 	}
-	
+
 	/**
 	 * Undumps bits of bitmapdata - regenerates it and regenerate tilesheet data for this object
 	 */
 	public function undump():Void
 	{
-		#if FLX_RENDER_TILE
-		if (isDumped)
+		var newBitmap:BitmapData = getBitmapFromSystem();
+		if (newBitmap != null)
 		{
-			var newBitmap:BitmapData = getBitmapFromSystem();
-			
-			if (newBitmap != null)
+			bitmap = newBitmap;
+			if (_tilesheet != null)
 			{
-				bitmap = newBitmap;
-				if (_tilesheet != null)
-				{
-					// regenerate tilesheet
-					_tilesheet.onContext(newBitmap);
-				}
+				// regenerate tilesheet
+				_tilesheet.onContext(newBitmap);
 			}
-			
-			isDumped = false;
 		}
-		#end
+		isDumped = false;
 	}
-	
+
 	/**
 	 * Use this method to restore cached bitmapdata (if it's possible).
 	 * It's called automatically when the RESIZE event occurs.
@@ -119,11 +117,24 @@ class CachedGraphics
 		}
 	}
 	
+	public function onAssetsReload():Void
+	{
+		if (!canBeDumped)	return;
+		
+		var dumped:Bool = isDumped;
+		undump();
+		_tilesheet.destroyFrameBitmapDatas();
+		if (dumped)
+		{
+			dump();
+		}
+	}
+
 	public function getRegionForFrame(FrameName:String):TextureRegion
 	{
 		var region:TextureRegion = new TextureRegion(this);
 		var frame:FlxFrame = tilesheet.getFrame(FrameName);
-		
+
 		if (frame != null)
 		{
 			region.region.startX = Std.int(frame.frame.x);
@@ -131,10 +142,10 @@ class CachedGraphics
 			region.region.width = Std.int(frame.frame.width);
 			region.region.height = Std.int(frame.frame.height);
 		}
-		
+
 		return region;
 	}
-	
+
 	public function destroy():Void
 	{
 		bitmap = FlxDestroyUtil.dispose(bitmap);
@@ -144,23 +155,23 @@ class CachedGraphics
 		assetsKey = null;
 		assetsClass = null;
 	}
-	
-	private function get_tilesheet():TileSheetData 
+
+	private function get_tilesheet():TileSheetData
 	{
-		if (_tilesheet == null) 
+		if (_tilesheet == null)
 		{
-			if (isDumped) 
+			if (isDumped)
 			{
 				onContext();
 			}
-			
+
 			_tilesheet = new TileSheetData(bitmap);
 		}
-		
+
 		return _tilesheet;
 	}
-	
-	private function getBitmapFromSystem():BitmapData
+
+	public function getBitmapFromSystem():BitmapData
 	{
 		var newBitmap:BitmapData = null;
 		if (assetsClass != null)
@@ -171,32 +182,32 @@ class CachedGraphics
 		{
 			newBitmap = FlxAssets.getBitmapData(assetsKey);
 		}
-		
+
 		return newBitmap;
 	}
-	
+
 	private inline function get_canBeDumped():Bool
 	{
 		return ((assetsClass != null) || (assetsKey != null));
 	}
-	
+
 	private function set_useCount(Value:Int):Int
 	{
 		if ((Value <= 0) && destroyOnNoUse && !persist)
 		{
 			FlxG.bitmap.remove(key);
 		}
-		
+
 		return useCount = Value;
 	}
-	
+
 	private function set_destroyOnNoUse(Value:Bool):Bool
 	{
 		if (Value && useCount == 0 && key != null && !persist)
 		{
 			FlxG.bitmap.remove(key);
 		}
-		
+
 		return destroyOnNoUse = Value;
 	}
 }

@@ -1,39 +1,21 @@
 package flixel.tweens.misc;
 
 import flixel.tweens.FlxTween;
-import flixel.tweens.FlxEase;
 import flixel.util.FlxArrayUtil;
-import flixel.util.FlxPool;
 
 /**
  * Tweens multiple numeric public properties of an Object simultaneously.
  */
 class VarTween extends FlxTween
 {
-	@:isVar 
-	@:allow(flixel.tweens.FlxTween)
-	private static var _pool(get, null):FlxPool<VarTween>;
-	
-	/**
-	 * Only allocate the pool if needed.
-	 */
-	private static function get__pool()
-	{
-		if (_pool == null)
-		{
-			_pool = new FlxPool<VarTween>(VarTween);
-		}
-		return _pool;
-	}
-	
 	private var _object:Dynamic;
 	private var _properties:Dynamic;
 	private var _vars:Array<String>;
-	private var _start:Array<Float>;
+	private var _startValues:Array<Float>;
 	private var _range:Array<Float>;
 	
 	/**
-	 * Clean up references and pool this object for recycling.
+	 * Clean up references
 	 */
 	override public function destroy():Void 
 	{
@@ -42,19 +24,13 @@ class VarTween extends FlxTween
 		_properties = null;
 	}
 	
-	/**
-	 * This function is called when tween is created, or recycled.
-	 *
-	 * @param	complete	Optional completion callback.
-	 * @param	type		Tween type.
-	 * @param	Eease		Optional easer function.
-	 */
-	override public function init(Complete:CompleteCallback, TweenType:Int, UsePooling:Bool)
+	private function new(Options:TweenOptions)
 	{
-		FlxArrayUtil.setLength(_vars, 0);
-		FlxArrayUtil.setLength(_start, 0);
-		FlxArrayUtil.setLength(_range, 0);
-		return super.init(Complete, TweenType, UsePooling);
+		super(Options);
+		
+		_vars = [];
+		_startValues = [];
+		_range = [];
 	}
 	
 	/**
@@ -63,9 +39,8 @@ class VarTween extends FlxTween
 	 * @param	object		The object containing the properties.
 	 * @param	properties	An object containing key/value pairs of properties and target values.
 	 * @param	duration	Duration of the tween.
-	 * @param	ease		Optional easer function.
 	 */
-	public function tween(object:Dynamic, properties:Dynamic, duration:Float, ?ease:EaseFunction):VarTween
+	public function tween(object:Dynamic, properties:Dynamic, duration:Float):VarTween
 	{
 		#if !FLX_NO_DEBUG
 		if (object == null)
@@ -81,40 +56,36 @@ class VarTween extends FlxTween
 		_object = object;
 		_properties = properties;
 		this.duration = duration;
-		this.ease = ease;
 		start();
 		return this;
 	}
 	
-	override public function update():Void
+	override private function update():Void
 	{
-		if (_vars.length < 1)
-		{
-			// We don't initalize() in tween() because otherwise the start values 
-			// will be inaccurate with delays
-			initializeVars();
-		}
+		var delay:Float = (executions > 0) ? loopDelay : startDelay;
 		
-		super.update();
-		var i:Int = _vars.length;
-		while (i-- > 0) 
+		if (_secondsSinceStart < delay)
 		{
-			Reflect.setProperty(_object, _vars[i], (_start[i] + _range[i] * scale));
+			// Leave properties alone until delay is over
+			super.update();
 		}
-	}
-	
-	override inline public function put():Void
-	{
-		if (!_inPool)
-			_pool.putUnsafe(this);
-	}
-	
-	private function new()
-	{
-		super();
-		_vars = new Array<String>();
-		_start = new Array<Float>();
-		_range = new Array<Float>();
+		else
+		{
+			if (_vars.length < 1)
+			{
+				// We don't initalize() in tween() because otherwise the start values 
+				// will be inaccurate with delays
+				initializeVars();
+			}
+			
+			super.update();
+			
+			var i:Int = _vars.length;
+			while (i-- > 0) 
+			{
+				Reflect.setProperty(_object, _vars[i], (_startValues[i] + _range[i] * scale));
+			}
+		}
 	}
 	
 	private function initializeVars():Void
@@ -145,7 +116,7 @@ class VarTween extends FlxTween
 				throw "The property \"" + p + "\" is not numeric.";
 			}
 			_vars.push(p);
-			_start.push(a);
+			_startValues.push(a);
 			_range.push(Reflect.getProperty(_properties, p) - a);
 		}
 	}

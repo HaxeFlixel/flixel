@@ -1,6 +1,6 @@
 package flixel.util;
 
-import flixel.interfaces.IFlxDestroyable;
+import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 
 /**
  * A generic container that facilitates pooling and recycling of objects.
@@ -33,7 +33,7 @@ class FlxPool<T:IFlxDestroyable>
 	public function put(obj:T):Void
 	{
 		// we don't want to have the same object in pool twice
-		if (obj != null && FlxArrayUtil.indexOf(_pool, obj) < 0)
+		if (obj != null && _pool.indexOf(obj) < 0)
 		{
 			obj.destroy();
 			_pool.push(obj);
@@ -68,4 +68,10 @@ class FlxPool<T:IFlxDestroyable>
 	{
 		return _pool.length;
 	}
+}
+
+interface IFlxPooled extends IFlxDestroyable
+{
+	public function put():Void;
+	private var _inPool:Bool;
 }

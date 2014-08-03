@@ -33,7 +33,7 @@ class FlxGTest extends FlxTest
 	#if android
 	@Test function testAndroidNull():Void     { Assert.isNotNull(FlxG.android); }
 	#end
-	#if html5
+	#if js
 	@Test function testHtml5Null():Void       { Assert.isNotNull(FlxG.html5); }
 	#end
 	
@@ -52,7 +52,7 @@ class FlxGTest extends FlxTest
 	@Test function testSoundNull():Void       { Assert.isNotNull(FlxG.sound); }
 	#end
 	
-	@Test function testScaleModeNull():Void   { Assert.isNotNull(FlxG._scaleMode); }
+	@Test function testScaleModeNull():Void   { Assert.isNotNull(FlxG.scaleMode); }
 	
 	@Test
 	function testDefaultWidth():Void

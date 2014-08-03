@@ -6,7 +6,7 @@ import flash.text.TextField;
 import flash.text.TextFormat;
 import flixel.FlxG;
 import flixel.system.debug.FlxDebugger;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 import flixel.util.FlxStringUtil;
 import haxe.ds.StringMap;
 
@@ -26,7 +26,7 @@ class Log extends Window
 	 */	
 	public function new()
 	{
-		super("log", new GraphicLog(0, 0));
+		super("Log", new GraphicLog(0, 0));
 		
 		_text = new TextField();
 		_text.x = 2;

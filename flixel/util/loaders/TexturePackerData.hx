@@ -3,8 +3,8 @@ package flixel.util.loaders;
 import flash.display.BitmapData;
 import flash.geom.Rectangle;
 import flixel.FlxG;
-import flixel.interfaces.IFlxDestroyable;
-import flixel.util.FlxPoint;
+import flixel.util.FlxDestroyUtil;
+import flixel.math.FlxPoint;
 import haxe.Json;
 import openfl.Assets;
 
@@ -77,12 +77,9 @@ class TexturePackerData implements IFlxDestroyable
 	 */
 	public function destroy():Void
 	{
-		for (frame in frames)
-		{
-			frame = FlxDestroyUtil.destroy(frame);
-		}
-		frames = null;
+		frames = FlxDestroyUtil.destroyArray(frames);
 		assetName = null;
+		description = null;
 		asset = null;
 	}
 }

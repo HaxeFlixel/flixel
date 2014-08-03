@@ -13,12 +13,12 @@ class CameraFrontEnd
 	 * An array listing FlxCamera objects that are used to draw stuff.
 	 * By default flixel creates one camera the size of the screen.
 	 */
-	public var list(default, null):Array<FlxCamera>;
+	public var list(default, null):Array<FlxCamera> = [];
 	
 	/**
 	 * The current (global, applies to all cameras) bgColor.
 	 */
-	public var bgColor(get, set):Int;
+	public var bgColor(get, set):FlxColor;
 	
 	/**
 	 * Allows you to possibly slightly optimize the rendering process IF
@@ -28,7 +28,7 @@ class CameraFrontEnd
 	/**
 	 * Internal helper variable for clearing the cameras each frame.
 	 */
-	private var _cameraRect:Rectangle;
+	private var _cameraRect:Rectangle = new Rectangle();
 	
 	/**
 	 * Add a new camera object to the game.
@@ -108,6 +108,8 @@ class CameraFrontEnd
 		
 		FlxG.camera = add(NewCamera);
 		NewCamera.ID = 0;
+		
+		FlxCamera.defaultCameras = list;
 	}
 	
 	/**
@@ -118,7 +120,7 @@ class CameraFrontEnd
 	 * @param	OnComplete	A function you want to run when the flash finishes.
 	 * @param	Force		Force the effect to reset.
 	 */
-	public function flash(Color:Int = 0xffffffff, Duration:Float = 1, ?OnComplete:Void->Void, Force:Bool = false):Void
+	public function flash(Color:FlxColor = 0xffffffff, Duration:Float = 1, ?OnComplete:Void->Void, Force:Bool = false):Void
 	{
 		for (camera in list)
 		{
@@ -135,7 +137,7 @@ class CameraFrontEnd
 	 * @param	OnComplete	A function you want to run when the fade finishes.
 	 * @param	Force		Force the effect to reset.
 	 */
-	public function fade(Color:Int = 0xff000000, Duration:Float = 1, FadeIn:Bool = false, ?OnComplete:Void->Void, Force:Bool = false):Void
+	public function fade(Color:FlxColor = FlxColor.BLACK, Duration:Float = 1, FadeIn:Bool = false, ?OnComplete:Void->Void, Force:Bool = false):Void
 	{
 		for (camera in list)
 		{
@@ -150,9 +152,9 @@ class CameraFrontEnd
 	 * @param	Duration	The length in seconds that the shaking effect should last.
 	 * @param	OnComplete	A function you want to run when the shake effect finishes.
 	 * @param	Force		Force the effect to reset (default = true, unlike flash() and fade()!).
-	 * @param	Direction	Whether to shake on both axes, just up and down, or just side to side (use class constants SHAKE_BOTH_AXES, SHAKE_VERTICAL_ONLY, or SHAKE_HORIZONTAL_ONLY).  Default value is SHAKE_BOTH_AXES (0).
+	 * @param	Direction	Whether to shake on both axes, just up and down, or just side to side. Default value is BOTH_AXES.
 	 */
-	public function shake(Intensity:Float = 0.05, Duration:Float = 0.5, ?OnComplete:Void->Void, Force:Bool = true, Direction:Int = 0):Void
+	public function shake(Intensity:Float = 0.05, Duration:Float = 0.5, ?OnComplete:Void->Void, Force:Bool = true, ?Direction:FlxCameraShakeDirection):Void
 	{
 		for (camera in list)
 		{
@@ -163,8 +165,6 @@ class CameraFrontEnd
 	@:allow(flixel.FlxG)
 	private function new() 
 	{
-		_cameraRect = new Rectangle();
-		list = new Array<FlxCamera>();
 		FlxCamera.defaultCameras = list;
 	}
 	
@@ -240,7 +240,7 @@ class CameraFrontEnd
 				camera.buffer.unlock();
 			}
 			
-			camera.screen.resetFrameBitmapDatas();
+			camera.screen.dirty = true;
 			#end
 		}
 	}
@@ -252,26 +252,19 @@ class CameraFrontEnd
 	{
 		for (camera in list)
 		{
-			if ((camera != null) && camera.exists)
+			if (camera != null && camera.exists && camera.active)
 			{
-				if (camera.active)
-				{
-					camera.update();
-				}
-				
-				camera.flashSprite.x = camera.x + camera._flashOffset.x;
-				camera.flashSprite.y = camera.y + camera._flashOffset.y;
-				camera.flashSprite.visible = camera.visible;
+				camera.update();
 			}
 		}
 	}
 	
-	private function get_bgColor():Int
+	private function get_bgColor():FlxColor
 	{
 		return (FlxG.camera == null) ? FlxColor.BLACK : FlxG.camera.bgColor;
 	} 
 	
-	private function set_bgColor(Color:Int):Int
+	private function set_bgColor(Color:FlxColor):FlxColor
 	{
 		for (camera in list)
 		{

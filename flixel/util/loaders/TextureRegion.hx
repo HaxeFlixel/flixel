@@ -2,8 +2,9 @@ package flixel.util.loaders;
 
 import flash.display.BitmapData;
 import flixel.system.layer.Region;
+import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 
-class TextureRegion
+class TextureRegion implements IFlxDestroyable
 {
 	public var data:CachedGraphics;
 	public var region:Region;
@@ -18,7 +19,7 @@ class TextureRegion
 		region = new Region(startX, startY, tileWidth, tileHeight, spacingX, spacingY, width, height);
 	}
 	
-	public function clone():TextureRegion 
+	public inline function clone():TextureRegion 
 	{
 		return new TextureRegion(data, region.startX, region.startY, region.tileWidth, region.tileHeight, region.spacingX, region.spacingY, region.width, region.height);
 	}

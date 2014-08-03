@@ -1,34 +1,16 @@
 package flixel.system;
 #if !doc
-
 import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.BlendMode;
 import flash.display.Graphics;
 import flash.display.Sprite;
-import flash.display.StageAlign;
-import flash.display.StageScaleMode;
-import flash.events.Event;
-import flash.events.MouseEvent;
 import flash.Lib;
-import flash.net.URLRequest;
 import flash.text.Font;
 import flash.text.TextField;
 import flash.text.TextFormat;
-import flash.text.TextFormatAlign;
 import flixel.FlxG;
-import flixel.util.FlxColor;
-import flixel.util.FlxStringUtil;
-
-#if (js || debug)
-class FlxPreloader extends NMEPreloader
-{	
-	public function new()
-	{
-		super();
-	}
-}
-#else
+import flixel.system.FlxBasePreloader;
 
 @:font("assets/fonts/nokiafc22.ttf")
 class PreloaderFont extends Font {}
@@ -40,87 +22,43 @@ private class GraphicLogoLight extends BitmapData {}
 private class GraphicLogoCorners extends BitmapData {}
 
 /**
- * This class handles the 8-bit style preloader.
+ * This is the Default HaxeFlixel Themed Preloader 
+ * You can make your own style of Preloader by overriding FlxPreloaderBase and using this class as an example.
+ * To use your Preloader, simply change Project.xml to say: <app preloader="class.path.MyPreloader" />
  */
-class FlxPreloader extends NMEPreloader
-{	
-	/**
-	 * Add this string to allowedURLs array if you want to be able to test game with enabled site-locking on local machine 
-	 */
-	public static inline var LOCAL:String = "local";
-	
-	/**
-	 * Change this if you want the flixel logo to show for more or less time.  Default value is 1 second. Don't go lower or you'll jam the preloader.
-	 */
-	public var minDisplayTime:Float = 1;
-	
-	/**
-	 * List of allowed URLs for built-in site-locking.
-	 * Set it in FlxPreloader's subclass constructor as: allowedURLs = ['http://adamatomic.com/canabalt/', FlxPreloader.LOCAL];
-	 */
-	public var allowedURLs:Array<String>;
-
-	/**
-	* The index of the site in the allowedURLs array on which to site-lock.
-	* Defaults to 0.
-	*/
-	public var siteLockURLIndex:Int = 0;
+class FlxPreloader extends FlxBasePreloader
+{
+	#if !js
 	
 	private static var BlendModeScreen = BlendMode.SCREEN;
 	private static var BlendModeOverlay = BlendMode.OVERLAY;
-
-	/**
-	 * Useful for storing "real" stage width if you're scaling your preloader graphics.
-	 */
-	private var _width:Int;
-	/**
-	 * Useful for storing "real" stage height if you're scaling your preloader graphics.
-	 */
-	private var _height:Int;
 	
-	private var _init:Bool = false;
 	private var _buffer:Sprite;
 	private var _bmpBar:Bitmap;
 	private var _text:TextField;
 	private var _logo:Sprite;
 	private var _logoGlow:Sprite;
-	private var _min:Int = 0;
-	private var _percent:Float;
-	private var _urlChecked:Bool = false;
-	private var _loaded:Bool = false;
 	
-	public function new()
+	/**
+	 * Initialize your preloader here.
+	 */
+	override public function new(MinDisplayTime:Float = 0, ?AllowedURLs:Array<String>):Void
 	{
-		super();
-		removeChild(outline);
-		removeChild(progress);
+		super(MinDisplayTime, AllowedURLs);
 		
-		allowedURLs = [];
+		// super(0, ["test.com", FlxPreloaderBase.LOCAL]); // example of site-locking
 		
-		addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-	}
-	
-	private function onAddedToStage(e:Event):Void 
-	{
-		removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+		// super(10); // example of long delay (10 seconds)
 		
-		Lib.current.stage.scaleMode = StageScaleMode.NO_SCALE;
-		Lib.current.stage.align = StageAlign.TOP_LEFT;
-		
-		addEventListener(Event.ENTER_FRAME, onEnterFrame);
-		create();
 	}
 	
 	/**
-	 * Override this to create your own preloader objects.
-	 * Highly recommended you also override update()!
+	 * This class is called as soon as the FlxPreloaderBase has finished Initalizing.
+	 * Override it to draw all your graphics and things - make sure you also override update
+	 * Make sure you call super.create()
 	 */
-	private function create():Void
+	override private function create():Void
 	{
-		#if FLX_NO_DEBUG
-		_min = Std.int(minDisplayTime * 1000);
-		#end
-		
 		_buffer = new Sprite();
 		_buffer.scaleX = _buffer.scaleY = 2;
 		addChild(_buffer);
@@ -181,8 +119,14 @@ class FlxPreloader extends NMEPreloader
 		bitmap.blendMode = BlendModeOverlay;
 		bitmap.alpha = 0.25;
 		_buffer.addChild(bitmap);
+		
+		super.create();
 	}
 	
+	/**
+	 * This function simply draws the HaxeFlixel logo.
+	 * @param	graph
+	 */
 	private function drawLogo(graph:Graphics):Void
 	{
 		// draw green area
@@ -239,9 +183,12 @@ class FlxPreloader extends NMEPreloader
 		graph.endFill();
 	}
 	
-	private function destroy():Void
+	/**
+	 * Cleanup your objects!
+	 * Make sure you call super.destroy()!
+	 */
+	override private function destroy():Void
 	{
-		removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 		if (_buffer != null)	
 		{
 			removeChild(_buffer);
@@ -251,140 +198,14 @@ class FlxPreloader extends NMEPreloader
 		_text = null;
 		_logo = null;
 		_logoGlow = null;
+		super.destroy();
 	}
-
-	override public function onUpdate(bytesLoaded:Int, bytesTotal:Int):Void 
-	{
-		#if !(desktop || mobile)
-		//in case there is a problem with reading the bytesTotal (Gzipped swf)
-		if (root.loaderInfo.bytesTotal == 0) 
-		{
-			//To avoid "stucking" the preloader use X (=bytesTotal) like so: Actual file size > X > 0.
-			//Attention! use the actual file size (minus a few KB) for better accuracy on Chrome.
-			var bytesTotal:Int = 50000; 
-			_percent = (bytesTotal != 0) ? bytesLoaded / bytesTotal : 0;
-		}
-		else //Continue regulary
-		{
-			_percent = (bytesTotal != 0) ? bytesLoaded / bytesTotal : 0;
-		}
-		#end
-	}
-	
-	private function onEnterFrame(event:Event):Void
-	{
-		if (_loaded)
-			return;
-		if (!_init)
-		{
-			if ((Lib.current.stage.stageWidth <= 0) || (Lib.current.stage.stageHeight <= 0))
-			{
-				return;
-			}
-			create();
-			_init = true;
-		}
-		
-		checkSiteLock();
-		
-		graphics.clear();
-		var time:Int = Lib.getTimer();
-		
-		if ((_percent >= 1) && (time > _min))
-		{
-			_loaded = true;
-			super.onLoaded();
-		}
-		else
-		{
-			var percent:Float = _percent;
-			if ((_min > 0) && (percent > time/_min))
-			{
-				percent = time / _min;
-			}
-			update(percent);
-		}
-	}
-	
-	private function checkSiteLock():Void
-	{
-		#if flash
-		if (!_urlChecked && (allowedURLs != null))
-		{
-			if (!isHostUrlAllowed())
-			{
-				var tmp = new Bitmap(new BitmapData(stage.stageWidth, stage.stageHeight, true, FlxColor.WHITE));
-				addChild(tmp);
-				
-				var format = new TextFormat();
-				format.color = 0x000000;
-				format.size = 16;
-				format.align = TextFormatAlign.CENTER;
-				format.bold = true;
-				format.font = "system";
-				
-				var textField = new TextField();
-				textField.width = tmp.width - 16;
-				textField.height = tmp.height - 16;
-				textField.y = 8;
-				textField.multiline = true;
-				textField.wordWrap = true;
-				textField.defaultTextFormat = format;
-				textField.text = "Hi there!  It looks like somebody copied this game without my permission.  Just click anywhere, or copy-paste this URL into your browser.\n\n" + allowedURLs[0] + "\n\nto play the game at my site.  Thanks, and have fun!";
-				addChild(textField);
-				
-				textField.addEventListener(MouseEvent.CLICK, goToMyURL);
-				tmp.addEventListener(MouseEvent.CLICK, goToMyURL);
-				
-				removeEventListener(Event.ENTER_FRAME, onEnterFrame);
-			}
-			else
-			{
-				_urlChecked = true;
-			}
-		}
-		#end
-	}
-	
-	#if flash
-	private function goToMyURL(?e:MouseEvent):Void
-	{
-		//if the chosen URL isn't "local", use FlxG's openURL() function.
-		if (allowedURLs[siteLockURLIndex] != FlxPreloader.LOCAL)
-			FlxG.openURL(allowedURLs[siteLockURLIndex]);
-		else
-			Lib.getURL(new URLRequest(allowedURLs[siteLockURLIndex]));
-	}
-	
-	private function isHostUrlAllowed():Bool
-	{
-		if (allowedURLs.length == 0)
-		{
-			return true;
-		}
-		
-		var homeDomain:String = FlxStringUtil.getDomain(loaderInfo.loaderURL);
-		for (allowedURL in allowedURLs)
-		{
-			if (FlxStringUtil.getDomain(allowedURL) == homeDomain)
-			{
-				return true;
-			}
-			else if ((allowedURL == LOCAL) && (homeDomain == LOCAL))
-			{
-				return true;
-			}
-		}
-		return false;
-	}
-	#end
 	
 	/**
-	 * Override this function to manually update the preloader.
-	 * 
-	 * @param	Percent		How much of the program has loaded.
+	 * Update is called every frame, passing the current percent loaded. Use this to change your loading bar or whatever.
+	 * @param	Percent	The percentage that the project is loaded
 	 */
-	private function update(Percent:Float):Void
+	override public function update(Percent:Float):Void
 	{
 		_bmpBar.scaleX = Percent * (_width - 8);
 		_text.text = Std.string(FlxG.VERSION) + " " + Std.int(Percent * 100) + "%";
@@ -424,6 +245,7 @@ class FlxPreloader extends NMEPreloader
 			_buffer.alpha = 1 - (Percent - 0.9) / 0.1;
 		}
 	}
+	
+	#end
 }
-#end
 #end

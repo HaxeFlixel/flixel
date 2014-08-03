@@ -5,7 +5,6 @@ import flash.text.TextField;
 import flash.text.TextFormat;
 import flixel.system.FlxAssets;
 import flixel.util.FlxColor;
-import flixel.util.FlxColorUtil;
 
 #if flash
 import flash.text.AntiAliasType;
@@ -19,11 +18,11 @@ class DebuggerUtil
 	 *
 	 * @param	X		Textfield x position.
 	 * @param	Y		Textfield y position.
-	 * @param	Color	Textfield color, 0xAARRGGBB.
+	 * @param	Color	Textfield color.
 	 * @param	Size	Textfield size.
 	 * @return	New label text field at specified position and format.
 	 */
-	public static function createTextField(X:Float = 0, Y:Float = 0, Color:Int = FlxColor.WHITE, Size:Int = 12):TextField
+	public static function createTextField(X:Float = 0, Y:Float = 0, Color:FlxColor = FlxColor.WHITE, Size:Int = 12):TextField
 	{
 		var tf:TextField = new TextField();
 		tf.x = X;
@@ -36,8 +35,8 @@ class DebuggerUtil
 		tf.antiAliasType = AntiAliasType.NORMAL;
 		tf.gridFitType = GridFitType.PIXEL;
 		#end
-		tf.defaultTextFormat = new TextFormat(FlxAssets.FONT_DEBUGGER, Size, FlxColorUtil.ARGBtoRGB(Color));
-		tf.alpha = FlxColorUtil.getAlphaFloat(Color);
+		tf.defaultTextFormat = new TextFormat(FlxAssets.FONT_DEBUGGER, Size, Color.to24Bit());
+		tf.alpha = Color.alphaFloat;
 		return tf;
 	}
 }

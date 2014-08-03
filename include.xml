@@ -2,10 +2,11 @@
 <project>
 	<icon path="assets/images/logo/HaxeFlixel.svg" />
 	
-	<assets path="assets/sounds" include="*.mp3" if="web" />
-	<assets path="assets/sounds" include="*.ogg" unless="flash" />
+	<assets path="assets/sounds" include="*.ogg" if="html5" />
+	<assets path="assets/sounds" include="*.mp3" if="flash" embed="true" />
+	<assets path="assets/sounds" include="*.ogg" unless="flash || html5" embed="true" />
 	
-	<set name="html5-backend" value="openfl-bitfive" />
+	<set name="html5-backend" value="openfl-bitfive" unless="html5-backend" />
 	<haxelib name="openfl" />
 	
 	<!-- Allow this setting to be overridden on the command-line -->
@@ -14,4 +15,15 @@
 	
 	<haxedef name="FLX_RENDER_BLIT" if="FLX_RENDER_BLIT" />
 	<haxedef name="FLX_RENDER_TILE" if="FLX_RENDER_TILE" />
+	
+	<section if="setup">
+		<haxelib name="systools"/>
+		<haxelib name="openfl-bitfive"/>
+		<haxelib name="flixel-addons"/>
+		<haxelib name="flixel-ui"/>
+		<haxelib name="flixel-demos"/>
+		<haxelib name="flixel-tools"/>
+		<haxelib name="flixel-templates"/>
+	</section>
+	
 </project>

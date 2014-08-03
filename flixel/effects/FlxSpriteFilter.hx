@@ -52,6 +52,8 @@ class FlxSpriteFilter
 	
 	public var pixels:BitmapData;
 	
+	private var cachedDestroy:Bool;
+	
 	/**
 	 * Create a new filter for a FlxSprite.
 	 * 
@@ -67,8 +69,13 @@ class FlxSpriteFilter
 		}
 		
 		sprite = Sprite;
+		cachedDestroy = sprite.cachedGraphics.destroyOnNoUse;
+		sprite.cachedGraphics.destroyOnNoUse = false;
 		backupGraphics = sprite.cachedGraphics;
 		backupRegion = sprite.region;
+		
+		frameWidth = sprite.frameWidth;
+		frameHeight = sprite.frameHeight;
 		
 		filters = [];
 		
@@ -106,6 +113,10 @@ class FlxSpriteFilter
 	{
 		filters = null;
 		sprite = null;
+		if (backupGraphics != null)
+		{
+			backupGraphics.destroyOnNoUse = cachedDestroy;
+		}
 		backupGraphics = null;
 		backupRegion = null;
 		pixels = null;
@@ -140,7 +151,7 @@ class FlxSpriteFilter
 		
 		var cached:CachedGraphics = FlxG.bitmap.add(pixels);
 		var textureReg:TextureRegion = new TextureRegion(cached, 0, 0, width, height, 1, 1, pixels.width, pixels.height);
-		sprite.loadGraphic(textureReg, sprite.frames > 1, sprite.flipped > 0, width, height);
+		sprite.loadGraphic(textureReg, sprite.frames > 1, width, height);
 	}
 	
 	private function regenBitmapData(fill:Bool = true):Void
@@ -252,5 +263,4 @@ class FlxSpriteFilter
 			applyFilters();
 		}
 	}
-	
 }

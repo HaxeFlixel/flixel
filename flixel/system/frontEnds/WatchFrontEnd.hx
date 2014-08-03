@@ -85,5 +85,5 @@ class WatchFrontEnd
 	 * Just needed to create an instance.
 	 */
 	@:allow(flixel.FlxG)
-	public function new() { }
+	public function new() {}
 }

@@ -3,33 +3,33 @@ package flixel.system;
 /**
  * Helper object for semantic versioning.
  * @see   http://semver.org/
- */  
+ */
+@:build(flixel.system.macros.FlxGitSHA.buildGitSHA("flixel"))
 class FlxVersion
 {
 	public var major(default, null):Int;
 	public var minor(default, null):Int;
 	public var patch(default, null):Int;
-	public var patchVersion(default, null):String;
 	
-	public function new(Major:Int, Minor:Int, Patch:Int, PatchVersion:String = "") 
+	public function new(Major:Int, Minor:Int, Patch:Int) 
 	{
 		major = Major;
 		minor = Minor;
 		patch = Patch;
-		patchVersion = PatchVersion;
 	}
 	
 	/**
-	 * Formats the version in the format "HaxeFlixel MAJOR.MINOR.PATCH-PATCH_VERSION", 
-	 * e.g. HaxeFlixel 3.0.4
+	 * Formats the version in the format "HaxeFlixel MAJOR.MINOR.PATCH-COMMIT_SHA", 
+	 * e.g. HaxeFlixel 3.0.4.
+	 * If this is a dev version, the git sha is included.
 	 */
 	public function toString():String
 	{
-		var patchVer = "";
-		if ((patchVersion != null) && (patchVersion != ""))
+		var sha = FlxVersion.sha;
+		if (sha != "")
 		{
-			patchVer = '-$patchVersion';
+			sha = '@$sha';
 		}
-		return "HaxeFlixel " + major + "." + minor + "." + patch + patchVer;
+		return 'HaxeFlixel $major.$minor.$patch$sha';
 	}
 }

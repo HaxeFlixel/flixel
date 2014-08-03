@@ -1,15 +1,15 @@
 package flixel.effects;
 
 import flixel.FlxObject;
+import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import flixel.util.FlxPool;
 import flixel.util.FlxTimer;
-import flixel.interfaces.IFlxDestroyable;
 
 /**
-* The retro flickering effect with callbacks.
-* You can use this as a mixin in any FlxObject subclass or by calling the static functions.
-* @author pixelomatic
-*/
+ * The retro flickering effect with callbacks.
+ * You can use this as a mixin in any FlxObject subclass or by calling the static functions.
+ * @author pixelomatic
+ */
 class FlxFlicker implements IFlxDestroyable
 {
 	private static var _pool:FlxPool<FlxFlicker> = new FlxPool<FlxFlicker>(FlxFlicker);
@@ -56,18 +56,18 @@ class FlxFlicker implements IFlxDestroyable
 	}
 	
 	/**
-	* Returns whether the object is flickering or not.
-	* @param  Object The object to test.
-	*/
+	 * Returns whether the object is flickering or not.
+	 * @param  Object The object to test.
+	 */
 	public static function isFlickering(Object:FlxObject):Bool
 	{
 		return _boundObjects.exists(Object);
 	}
 	
 	/**
-	* Stops flickering of the object. Also it will make the object visible.
-	* @param  Object The object to stop flickering.
-	*/
+	 * Stops flickering of the object. Also it will make the object visible.
+	 * @param  Object The object to stop flickering.
+	 */
 	public static function stopFlickering(Object:FlxObject):Void
 	{
 		var boundFlicker:FlxFlicker = _boundObjects[Object];
@@ -113,8 +113,8 @@ class FlxFlicker implements IFlxDestroyable
 	public var interval(default, null):Float;
 	
 	/**
-	* Nullifies the references to prepare object for reuse and avoid memory leaks.
-	*/
+	 * Nullifies the references to prepare object for reuse and avoid memory leaks.
+	 */
 	public function destroy():Void
 	{
 		object = null;
@@ -124,14 +124,14 @@ class FlxFlicker implements IFlxDestroyable
 	}
 	
 	/**
-	* Starts flickering behavior.
-	* @param  Object
-	* @param  Duration
-	* @param  Interval
-	* @param  EndVisibility
-	* @param  ?CompletionCallback
-	* @param  ?ProgressCallback
-	*/
+	 * Starts flickering behavior.
+	 * @param  Object
+	 * @param  Duration
+	 * @param  Interval
+	 * @param  EndVisibility
+	 * @param  ?CompletionCallback
+	 * @param  ?ProgressCallback
+	 */
 	private function start(Object:FlxObject, Duration:Float, Interval:Float, EndVisibility:Bool, ?CompletionCallback:FlxFlicker->Void, ?ProgressCallback:FlxFlicker->Void):Void
 	{
 		object = Object;
@@ -140,22 +140,22 @@ class FlxFlicker implements IFlxDestroyable
 		completionCallback = CompletionCallback;
 		progressCallback = ProgressCallback;
 		endVisibility = EndVisibility;
-		timer = FlxTimer.start(interval, flickerProgress, Std.int(duration / interval));
+		timer = new FlxTimer(interval, flickerProgress, Std.int(duration / interval));
 	}
 	
 	/**
-	* Prematurely ends flickering.
-	*/
+	 * Prematurely ends flickering.
+	 */
 	private function stop():Void
 	{
-		timer.abort();
+		timer.cancel();
 		object.visible = true;
 		release();
 	}
 	
 	/**
-	* Unbinds the object from flicker and releases it into pool for reuse.
-	*/
+	 * Unbinds the object from flicker and releases it into pool for reuse.
+	 */
 	private function release():Void
 	{
 		_boundObjects.remove(object);
@@ -163,8 +163,8 @@ class FlxFlicker implements IFlxDestroyable
 	}
 	
 	/**
-	* Just a helper function for flicker() to update object's visibility.
-	*/
+	 * Just a helper function for flicker() to update object's visibility.
+	 */
 	private function flickerProgress(Timer:FlxTimer):Void
 	{
 		object.visible = !object.visible;
@@ -186,7 +186,7 @@ class FlxFlicker implements IFlxDestroyable
 	}
 	
 	/**
-	* Internal constructor. Use static methods.
-	*/
+	 * Internal constructor. Use static methods.
+	 */
 	private function new() {}
 }

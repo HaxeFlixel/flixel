@@ -10,7 +10,8 @@
 
 -D FLX_RENDER_BLIT
 
---macro mcover.MCover.coverage(['flixel'], ['../'], null)
+--macro openfl.Lib.includeBackend('flash')
+#--macro mcover.MCover.coverage(['flixel'], ['../'], null)
 
 -D doc
 
@@ -31,7 +32,8 @@
 
 -D FLX_RENDER_BLIT
 
---macro mcover.MCover.coverage(['flixel'], ['../'], null)
+--macro openfl.Lib.includeBackend('flash')
+#--macro mcover.MCover.coverage(['flixel'], ['../'], null)
 
 -D doc
 -D FLX_RECORD

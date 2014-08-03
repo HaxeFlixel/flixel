@@ -65,15 +65,17 @@ class FlxVirtualPad extends FlxSpriteGroup
 	 * @param 	DPadMode	The D-Pad mode. FULL for example.
 	 * @param 	ActionMode	The action buttons mode. A_B_C for example.
 	 */
-	public function new(?DPad:DPadMode, ?Action:ActionMode)
+	public function new(?DPad:FlxDPadMode, ?Action:FlxActionMode)
 	{	
 		super();
 		scrollFactor.set();
 		
-		if (DPad == null) {
+		if (DPad == null)
+		{
 			DPad = FULL;
 		}
-		if (Action == null) {
+		if (Action == null)
+		{
 			Action = A_B_C;
 		}
 		
@@ -152,10 +154,10 @@ class FlxVirtualPad extends FlxSpriteGroup
 	 * @param 	Callback	The callback for the button.
 	 * @return	The button
 	 */
-	public function createButton(X:Float, Y:Float, Width:Int, Height:Int, Image:Dynamic, ?OnClick:Void->Void):FlxButton
+	public function createButton(X:Float, Y:Float, Width:Int, Height:Int, Graphic:FlxGraphicAsset, ?OnClick:Void->Void):FlxButton
 	{
-		var button:FlxButton = new FlxButton(X, Y);
-		button.loadGraphic(Image, true, false, Width, Height);
+		var button = new FlxButton(X, Y);
+		button.loadGraphic(Graphic, true, Width, Height);
 		button.solid = false;
 		button.immovable = true;
 		button.scrollFactor.set();
@@ -173,7 +175,8 @@ class FlxVirtualPad extends FlxSpriteGroup
 	}
 }
 
-enum DPadMode {
+enum FlxDPadMode
+{
 	NONE;
 	UP_DOWN;
 	LEFT_RIGHT;
@@ -181,7 +184,8 @@ enum DPadMode {
 	FULL;
 }
 
-enum ActionMode {
+enum FlxActionMode
+{
 	NONE;
 	A;
 	A_B;

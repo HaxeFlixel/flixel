@@ -1,47 +1,35 @@
 package flixel.input.gamepad;
 
-class FlxGamepadButton
+import flixel.input.FlxInput;
+
+class FlxGamepadButton extends FlxInput<Int>
 {
-	public var id:Int;
-	public var current:Int;
-	public var last:Int;
+	#if flash
+	private var _pressed:Bool = false;
 	
-	public function new(ID:Int, Current:Int = 0, Last:Int = 0)
+	override public function release():Void
 	{
-		id = ID;
-		current = Current;
-		last = Last;
+		// simulate button onUp event which does not exist on flash
+		if (!_pressed)
+		{
+			return;
+		}
+		_pressed = false;
+		
+		super.release();
 	}
 	
-	public function reset():Void
-	{
-		current = 0;
-		last = 0;
-	}
 	
-	public function release():Void
+	override public function press():Void
 	{
-		last = current;
-		if (current > 0) 
+		// simulate button onDown event which does not exist on flash
+		if (_pressed)
 		{
-			current = -1;
+			return;
 		}
-		else 
-		{
-			current = 0;
-		}
+		_pressed = true;
+		
+		super.press();
 	}
-	
-	public function press():Void
-	{
-		last = current;
-		if (current > 0)
-		{
-			current = 1;
-		}
-		else 
-		{
-			current = 2;
-		}
-	}
+	#end
 }

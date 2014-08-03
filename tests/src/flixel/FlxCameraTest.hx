@@ -7,6 +7,15 @@ import massive.munit.Assert;
 
 class FlxCameraTest extends FlxTest
 {
+	var camera:FlxCamera;
+	
+	@Before
+	function before()
+	{
+		camera = new FlxCamera();
+		destroyable = camera;
+	}
+	
 	@Test
 	function testDefaultBgColor():Void
 	{
@@ -27,10 +36,24 @@ class FlxCameraTest extends FlxTest
 	}
 	
 	@Test
+	function testDefaultCameras():Void
+	{
+		Assert.areEqual(FlxG.cameras.list, FlxCamera.defaultCameras);
+	}
+	
+	@Test
+	function testDefaultCamerasStateSwitch():Void
+	{
+		FlxCamera.defaultCameras = [FlxG.camera];
+		FlxG.switchState(new FlxState());
+		
+		step();
+		Assert.areEqual(FlxG.cameras.list, FlxCamera.defaultCameras);
+	}
+	
+	@Test
 	function testAddAndRemoveCamera():Void
 	{
-		var camera = new FlxCamera();
-		
 		FlxG.cameras.add(camera);
 		Assert.areEqual(2, FlxG.cameras.list.length);
 		

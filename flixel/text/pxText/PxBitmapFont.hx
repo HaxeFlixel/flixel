@@ -247,7 +247,7 @@ class PxBitmapFont
 	
 	public function preparePixelizerBitmapData(PxBitmapData:BitmapData, PxRects:Array<Rectangle>):BitmapData
 	{
-		var bgColor:Int = PxBitmapData.getPixel(0, 0);
+		var bgColor:FlxColor = PxBitmapData.getPixel(0, 0);
 		var cy:Int = 0;
 		var cx:Int;
 		
@@ -358,7 +358,7 @@ class PxBitmapFont
 	}
 	
 	#if FLX_RENDER_BLIT
-	public function getPreparedGlyphs(PxScale:Float, PxColor:Int, PxUseColorTransform:Bool = true):Array<BitmapData>
+	public function getPreparedGlyphs(PxScale:Float, PxColor:FlxColor, PxUseColorTransform:Bool = true):Array<BitmapData>
 	{
 		var result:Array<BitmapData> = [];
 		
@@ -515,30 +515,11 @@ class PxBitmapFont
 	 * @param	PxOffsetY		Y position of thext output.
 	 */
 	#if FLX_RENDER_BLIT 
-	public function render(PxBitmapData:BitmapData, PxFontData:Array<BitmapData>, PxText:String, PxColor:Int, PxOffsetX:Int, PxOffsetY:Int, PxLetterSpacing:Int):Void 
+	public function render(PxBitmapData:BitmapData, PxFontData:Array<BitmapData>, PxText:String, PxColor:FlxColor, PxOffsetX:Int, PxOffsetY:Int, PxLetterSpacing:Int):Void 
 	#else
-	public function render(DrawData:Array<Float>, PxText:String, PxColor:Int, PxSecondColor:Int, PxAlpha:Float, PxOffsetX:Float, PxOffsetY:Float, PxLetterSpacing:Int, PxScale:Float, PxUseColor:Bool = true):Void 
+	public function render(DrawData:Array<Float>, PxText:String, PxColor:FlxColor, PxSecondColor:FlxColor, PxAlpha:Float, PxOffsetX:Float, PxOffsetY:Float, PxLetterSpacing:Int, PxScale:Float, PxUseColor:Bool = true):Void 
 	#end
 	{
-		#if FLX_RENDER_TILE
-		var colorMultiplier:Float = 1 / 255;
-		var red:Float = colorMultiplier;
-		var green:Float = colorMultiplier;
-		var blue:Float = colorMultiplier;
-		
-		if (PxUseColor)
-		{
-			red = (PxColor >> 16) * colorMultiplier;
-			green = (PxColor >> 8 & 0xff) * colorMultiplier;
-			blue = (PxColor & 0xff) * colorMultiplier;
-		}
-		
-		PxSecondColor &= 0x00ffffff;
-		red *= (PxSecondColor >> 16);
-		green *= (PxSecondColor >> 8 & 0xff);
-		blue *= (PxSecondColor & 0xff);
-		#end
-		
 		_point.x = PxOffsetX;
 		_point.y = PxOffsetY;
 		
@@ -547,6 +528,11 @@ class PxBitmapFont
 		#else
 		var glyph:PxFontSymbol;
 		var glyphWidth:Int;
+		
+		if (PxUseColor)
+		{
+			PxSecondColor = PxColor * PxSecondColor;
+		}
 		#end
 		
 		for (i in 0...PxText.length) 
@@ -573,9 +559,9 @@ class PxBitmapFont
 				DrawData.push(_point.x + glyph.xoffset * PxScale);	
 				// Y
 				DrawData.push(_point.y + glyph.yoffset * PxScale);	
-				DrawData.push(red);
-				DrawData.push(green);
-				DrawData.push(blue);
+				DrawData.push(PxSecondColor.redFloat);
+				DrawData.push(PxSecondColor.greenFloat);
+				DrawData.push(PxSecondColor.blueFloat);
 				
 				_point.x += glyphWidth * PxScale + PxLetterSpacing;
 				#end
@@ -684,6 +670,11 @@ class PxBitmapFont
 		if (cachedGraphics != value && value != null)
 		{
 			value.useCount++;
+			#if js
+			// temp fix for html5 target
+			// text will dissapear after state reser, if you delete this line
+			value.persist = true;
+			#end
 		}
 		cachedGraphics = value;
 	}

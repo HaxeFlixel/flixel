@@ -3,14 +3,13 @@ package flixel.input.gamepad;
 import flash.Lib;
 import flixel.FlxG;
 import flixel.input.gamepad.FlxGamepad;
-import flixel.interfaces.IFlxInput;
 import flixel.util.FlxDestroyUtil;
 
 #if (cpp || neko)
 import openfl.events.JoystickEvent;
 #end
 
-#if flash
+#if flash11_8
 import flash.ui.GameInput;
 import flash.ui.GameInputDevice;
 import flash.events.GameInputEvent;
@@ -20,19 +19,19 @@ import flash.events.GameInputEvent;
  * Manages gamepad input
  * @author Zaphod
  */
-class FlxGamepadManager implements IFlxInput
+class FlxGamepadManager implements IFlxInputManager
 {
 	/**
-	 * First accessed gamepad
+	 * The first accessed gamepad - can be null!
 	 */
 	public var firstActive:FlxGamepad;
 	/**
-	 * Last accessed gamepad
+	 * The last accessed gamepad - can be null!
 	 */
 	public var lastActive:FlxGamepad;
 	
 	/**
-	 * A counter for the number of active Joysticks
+	 * A counter for the number of active gamepads
 	 */
 	public var numActiveGamepads(get, null):Int;
 	
@@ -43,22 +42,76 @@ class FlxGamepadManager implements IFlxInput
 	public var globalDeadZone(default, set):Float = 0;
 	
 	/**
-	 * Storage for all connected joysticks
+	 * Stores all gamepads - can have null entries, but index matches event.device
 	 */
-	private var _gamepads:Map<Int, FlxGamepad>;
+	private var _gamepads:Array<FlxGamepad> = [];
+	/**
+	 * Stores all gamepads - no null entries, but index does *not* match event.device
+	 */
+	private var _activeGamepads:Array<FlxGamepad> = [];
 	
-	#if flash
-	private var _gameInput:GameInput;
+	#if flash11_8
+	/**
+	 * GameInput needs to be statically created, otherwise GameInput.numDevices will be zero during construction.
+	 */
+	private static var _gameInput:GameInput = new GameInput();
 	#end
 	
-	public function getByID(GamepadID:Int):FlxGamepad
+	/**
+	 * Returns a FlxGamepad with the specified ID or null if none was found.
+	 * E.g. if there are 4 gamepads connected, they will have the IDs 0-3.
+	 */
+	public inline function getByID(GamepadID:Int):FlxGamepad
 	{
-		var gamepad:FlxGamepad = _gamepads.get(GamepadID);
+		return _activeGamepads[GamepadID];
+	}
+	
+	private function removeByID(GamepadID:Int):Void
+	{
+		var gamepad:FlxGamepad = _gamepads[GamepadID];
+		if (gamepad != null)
+		{
+			FlxDestroyUtil.destroy(gamepad);
+			_gamepads[GamepadID] = null;
+			
+			var i = _activeGamepads.indexOf(gamepad);
+			if (i != -1)
+			{
+				_activeGamepads[i] = null;
+			}
+		}
 		
+		if (lastActive == gamepad)
+			lastActive = null;
+		
+		if (firstActive == gamepad)
+			firstActive = null;
+	}
+	
+	private function createByID(GamepadID:Int):FlxGamepad
+	{
+		var gamepad:FlxGamepad = _gamepads[GamepadID];
 		if (gamepad == null)
 		{
 			gamepad = new FlxGamepad(GamepadID, globalDeadZone);
-			_gamepads.set(GamepadID, gamepad);
+			_gamepads[GamepadID] = gamepad;
+			
+			//fill the first "empty spot" in the array
+			var nullFound:Bool = false;
+			for (i in 0..._activeGamepads.length)
+			{
+				if (_activeGamepads[i] == null)
+				{
+					_activeGamepads[i] = gamepad;
+					nullFound = true;
+					break;
+				}
+			}
+			
+			if (!nullFound)
+			{
+				_activeGamepads.push(gamepad);
+			}
 			
 			lastActive = gamepad;
 			if (firstActive == null)
@@ -66,7 +119,6 @@ class FlxGamepadManager implements IFlxInput
 				firstActive = gamepad;
 			}
 		}
-		
 		return gamepad;
 	}
 	
@@ -249,8 +301,10 @@ class FlxGamepadManager implements IFlxInput
 		lastActive = null;
 		_gamepads = null;
 		
-		#if flash
-		_gameInput = null;
+		#if flash11_8 
+		// not sure this is needed - can't imagine any use case where FlxGamepadManager would be destroyed
+		_gameInput.removeEventListener(GameInputEvent.DEVICE_ADDED, onDeviceAdded);
+		_gameInput.removeEventListener(GameInputEvent.DEVICE_REMOVED, onDeviceRemoved);
 		#end
 	}
 	
@@ -261,25 +315,27 @@ class FlxGamepadManager implements IFlxInput
 	{
 		for (gamepad in _gamepads)
 		{
-			gamepad.reset();
+			if (gamepad != null)
+			{
+				gamepad.reset();
+			}
 		}
 	}
 	
 	@:allow(flixel.FlxG)
 	private function new() 
 	{
-		_gamepads = new Map<Int, FlxGamepad>();
-		
 		#if (cpp || neko)
-		Lib.current.stage.addEventListener(JoystickEvent.AXIS_MOVE, handleAxisMove);
-		Lib.current.stage.addEventListener(JoystickEvent.BALL_MOVE, handleBallMove);
-		Lib.current.stage.addEventListener(JoystickEvent.BUTTON_DOWN, handleButtonDown);
-		Lib.current.stage.addEventListener(JoystickEvent.BUTTON_UP, handleButtonUp);
-		Lib.current.stage.addEventListener(JoystickEvent.HAT_MOVE, handleHatMove);
+		FlxG.stage.addEventListener(JoystickEvent.AXIS_MOVE, handleAxisMove);
+		FlxG.stage.addEventListener(JoystickEvent.BALL_MOVE, handleBallMove);
+		FlxG.stage.addEventListener(JoystickEvent.BUTTON_DOWN, handleButtonDown);
+		FlxG.stage.addEventListener(JoystickEvent.BUTTON_UP, handleButtonUp);
+		FlxG.stage.addEventListener(JoystickEvent.HAT_MOVE, handleHatMove);
+		FlxG.stage.addEventListener(JoystickEvent.DEVICE_REMOVED, handleDeviceRemoved);
+		FlxG.stage.addEventListener(JoystickEvent.DEVICE_ADDED, handleDeviceAdded);
 		#end
 		
-		#if flash
-		_gameInput = new GameInput();
+		#if flash11_8
 		_gameInput.addEventListener(GameInputEvent.DEVICE_ADDED, onDeviceAdded);
 		_gameInput.addEventListener(GameInputEvent.DEVICE_REMOVED, onDeviceRemoved);
 		
@@ -290,7 +346,7 @@ class FlxGamepadManager implements IFlxInput
 		#end
 	}
 	
-	#if flash
+	#if flash11_8
 	private function onDeviceAdded(Event:GameInputEvent):Void
 	{
 		addGamepad(Event.device);
@@ -314,7 +370,6 @@ class FlxGamepadManager implements IFlxInput
 				}
 			}
 		}
-		
 		return -1;
 	}
 	
@@ -327,7 +382,7 @@ class FlxGamepadManager implements IFlxInput
 			
 			if (id >= 0)
 			{
-				var gamepad:FlxGamepad = getByID(id);
+				var gamepad:FlxGamepad = createByID(id);
 				gamepad._device = Device;
 			}
 		}
@@ -337,13 +392,13 @@ class FlxGamepadManager implements IFlxInput
 	{
 		if (Device != null)
 		{
-			var id:Int = findGamepadIndex(Device);
-			
-			if (id >= 0)
+			for (i in 0..._gamepads.length)
 			{
-				var gamepad:FlxGamepad = _gamepads.get(id);
-				gamepad = FlxDestroyUtil.destroy(gamepad);
-				_gamepads.remove(id);
+				var gamepad:FlxGamepad = _gamepads[i];
+				if (gamepad != null && gamepad._device == Device)
+				{
+					removeByID(i);
+				}
 			}
 		}
 	}
@@ -352,7 +407,7 @@ class FlxGamepadManager implements IFlxInput
 	#if (cpp || neko)
 	private function handleButtonDown(FlashEvent:JoystickEvent):Void
 	{
-		var gamepad:FlxGamepad = getByID(FlashEvent.device);
+		var gamepad:FlxGamepad = createByID(FlashEvent.device);
 		var button:FlxGamepadButton = gamepad.getButton(FlashEvent.id);
 		
 		if (button != null) 
@@ -363,7 +418,7 @@ class FlxGamepadManager implements IFlxInput
 	
 	private function handleButtonUp(FlashEvent:JoystickEvent):Void
 	{
-		var gamepad:FlxGamepad = getByID(FlashEvent.device);
+		var gamepad:FlxGamepad = createByID(FlashEvent.device);
 		var button:FlxGamepadButton = gamepad.getButton(FlashEvent.id);
 		
 		if (button != null) 
@@ -374,22 +429,32 @@ class FlxGamepadManager implements IFlxInput
 	
 	private function handleAxisMove(FlashEvent:JoystickEvent):Void
 	{
-		var gamepad:FlxGamepad = getByID(FlashEvent.device);
+		var gamepad:FlxGamepad = createByID(FlashEvent.device);
 		gamepad.axis = FlashEvent.axis;
 	}
 	
 	private function handleBallMove(FlashEvent:JoystickEvent):Void
 	{
-		var gamepad:FlxGamepad = getByID(FlashEvent.device);
+		var gamepad:FlxGamepad = createByID(FlashEvent.device);
 		gamepad.ball.x = (Math.abs(FlashEvent.x) < gamepad.deadZone) ? 0 : FlashEvent.x;
 		gamepad.ball.y = (Math.abs(FlashEvent.y) < gamepad.deadZone) ? 0 : FlashEvent.y;
 	}
 	
 	private function handleHatMove(FlashEvent:JoystickEvent):Void
 	{
-		var gamepad:FlxGamepad = getByID(FlashEvent.device);
+		var gamepad:FlxGamepad = createByID(FlashEvent.device);
 		gamepad.hat.x = (Math.abs(FlashEvent.x) < gamepad.deadZone) ? 0 : FlashEvent.x;
 		gamepad.hat.y = (Math.abs(FlashEvent.y) < gamepad.deadZone) ? 0 : FlashEvent.y;
+	}
+
+	private function handleDeviceAdded(event:JoystickEvent):Void
+	{
+		createByID(event.device);
+	}
+	
+	private function handleDeviceRemoved(event:JoystickEvent):Void
+	{
+		removeByID(event.device);
 	}
 	#end
 	
@@ -400,7 +465,10 @@ class FlxGamepadManager implements IFlxInput
 	{
 		for (gamepad in _gamepads)
 		{
-			gamepad.update();
+			if (gamepad != null)
+			{
+				gamepad.update();
+			}
 		}
 	}
 	
@@ -414,12 +482,13 @@ class FlxGamepadManager implements IFlxInput
 	private function get_numActiveGamepads():Int
 	{
 		var count = 0;
-		
 		for (gamepad in _gamepads)
 		{
-			count++;
+			if (gamepad != null)
+			{
+				count++;
+			}
 		}
-		
 		return count;
 	}
 	
@@ -432,12 +501,13 @@ class FlxGamepadManager implements IFlxInput
 	private function set_globalDeadZone(DeadZone:Float):Float
 	{
 		globalDeadZone = DeadZone;
-		
 		for (gamepad in _gamepads)
 		{
-			gamepad.deadZone = DeadZone;
+			if (gamepad != null)
+			{
+				gamepad.deadZone = DeadZone;
+			}
 		}
-		
 		return globalDeadZone;
 	}
 }

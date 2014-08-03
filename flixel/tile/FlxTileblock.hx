@@ -3,9 +3,10 @@ package flixel.tile;
 import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.system.layer.DrawStackItem;
-import flixel.util.FlxAngle;
-import flixel.util.FlxRandom;
+import flixel.math.FlxAngle;
+import flixel.math.FlxRandom;
 import flixel.util.FlxSpriteUtil;
 
 /**
@@ -39,7 +40,7 @@ class FlxTileblock extends FlxSprite
 	 * @param	TileHeight		The height of a single tile in the graphic.
 	 * @param	Empties			The number of "empty" tiles to add to the auto-fill algorithm (e.g. 8 tiles + 4 empties = 1/3 of block will be open holes).
 	 */
-	public function loadTiles(TileGraphic:Dynamic, TileWidth:Int = 0, TileHeight:Int = 0, Empties:Int = 0):FlxTileblock
+	public function loadTiles(TileGraphic:FlxGraphicAsset, TileWidth:Int = 0, TileHeight:Int = 0, Empties:Int = 0):FlxTileblock
 	{
 		if (TileGraphic == null)
 		{
@@ -47,7 +48,7 @@ class FlxTileblock extends FlxSprite
 		}
 		
 		// First create a tile brush
-		var sprite:FlxSprite = new FlxSprite().loadGraphic(TileGraphic, true, false, TileWidth, TileHeight);
+		var sprite:FlxSprite = new FlxSprite().loadGraphic(TileGraphic, true, TileWidth, TileHeight);
 		var spriteWidth:Int = Std.int(sprite.width);
 		var spriteHeight:Int = Std.int(sprite.height);
 		var total:Int = sprite.frames + Empties;
@@ -91,7 +92,7 @@ class FlxTileblock extends FlxSprite
 			
 			while (column < widthInTiles)
 			{
-				if ( FlxRandom.float() * total > Empties)
+				if (FlxG.random.float() * total > Empties)
 				{
 					sprite.animation.randomFrame();
 					sprite.drawFrame();
@@ -107,6 +108,7 @@ class FlxTileblock extends FlxSprite
 		}
 		
 		sprite.destroy();
+		dirty = true;
 		return this;
 	}
 }

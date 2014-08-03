@@ -6,7 +6,8 @@ import flash.ui.Mouse;
 import flash.utils.ByteArray;
 import flixel.FlxG;
 import flixel.FlxState;
-import flixel.util.FlxRandom;
+import flixel.input.keyboard.FlxKey;
+import flixel.math.FlxRandom;
 
 #if flash
 import flash.net.FileReference;
@@ -26,10 +27,10 @@ class VCRFrontEnd
 	 */
 	public var replayCallback:Void->Void;
 	/**
-	 * The key codes used to toggle the debugger (via flash.ui.Keyboard). 
-	 * "0" means "any key". Handy for skipping cutscenes or getting out of attract modes!
+	 * The keys used to toggle the debugger. "MOUSE" to cancel with the mouse.
+	 * Handy for skipping cutscenes or getting out of attract modes!
 	 */
-	public var cancelKeys:Array<String>;
+	public var cancelKeys:Array<FlxKey>;
 	/**
 	 * Helps time out a replay if necessary.
 	 */
@@ -111,7 +112,7 @@ class VCRFrontEnd
 	 * @param	Timeout		Optional parameter: set a time limit for the replay. CancelKeys will override this if pressed.
 	 * @param	Callback	Optional parameter: if set, called when the replay finishes. Running to the end, CancelKeys, and Timeout will all trigger Callback(), but only once, and CancelKeys and Timeout will NOT call FlxG.stopReplay() if Callback is set!
 	 */
-	public function loadReplay(Data:String, ?State:FlxState, ?CancelKeys:Array<String>, ?Timeout:Float = 0, ?Callback:Void->Void):Void
+	public function loadReplay(Data:String, ?State:FlxState, ?CancelKeys:Array<FlxKey>, ?Timeout:Float = 0, ?Callback:Void->Void):Void
 	{
 		FlxG.game._replay.load(Data);
 		
@@ -176,6 +177,19 @@ class VCRFrontEnd
 		#if !FLX_NO_KEYBOARD
 		FlxG.keys.enabled = true;
 		#end
+	}
+	
+	public function cancelReplay():Void
+	{
+		if (replayCallback != null)
+		{
+			replayCallback();
+			replayCallback = null;
+		}
+		else
+		{
+			stopReplay();
+		}
 	}
 	
 	/**
@@ -262,7 +276,7 @@ class VCRFrontEnd
 	 * Called when a file is picked from the file dialog.
 	 * Attempts to load the file and registers file loading event handlers.
 	 */
-	private function onOpenSelect(?E:Event):Void
+	private function onOpenSelect(_):Void
 	{
 		#if flash
 		_file.removeEventListener(Event.SELECT, onOpenSelect);
@@ -278,7 +292,7 @@ class VCRFrontEnd
 	 * Called when a file is opened successfully.
 	 * If there's stuff inside, then the contents are loaded into a new replay.
 	 */
-	private function onOpenComplete(?E:Event):Void
+	private function onOpenComplete(_):Void
 	{
 		#if flash
 		_file.removeEventListener(Event.COMPLETE, onOpenComplete);
@@ -305,7 +319,7 @@ class VCRFrontEnd
 	/**
 	 * Called if the open file dialog is canceled.
 	 */
-	private function onOpenCancel(?E:Event):Void
+	private function onOpenCancel(_):Void
 	{
 		#if flash
 		_file.removeEventListener(Event.SELECT, onOpenSelect);
@@ -317,7 +331,7 @@ class VCRFrontEnd
 	/**
 	 * Called if there is a file open error.
 	 */
-	private function onOpenError(?E:Event):Void
+	private function onOpenError(_):Void
 	{
 		#if flash
 		_file.removeEventListener(Event.COMPLETE, onOpenComplete);
@@ -330,11 +344,11 @@ class VCRFrontEnd
 	/**
 	 * Called when the file is saved successfully.
 	 */
-	private function onSaveComplete(?E:Event):Void
+	private function onSaveComplete(_):Void
 	{
 		#if flash
 		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
-		_file.removeEventListener(Event.CANCEL,onSaveCancel);
+		_file.removeEventListener(Event.CANCEL, onSaveCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 		_file = null;
 		FlxG.log.notice("Successfully saved flixel gameplay record.");
@@ -344,7 +358,7 @@ class VCRFrontEnd
 	/**
 	 * Called when the save file dialog is cancelled.
 	 */
-	private function onSaveCancel(?E:Event):Void
+	private function onSaveCancel(_):Void
 	{
 		#if flash
 		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
@@ -357,7 +371,7 @@ class VCRFrontEnd
 	/**
 	 * Called if there is an error while saving the gameplay recording.
 	 */
-	private function onSaveError(?E:Event):Void
+	private function onSaveError(_):Void
 	{
 		#if flash
 		_file.removeEventListener(Event.COMPLETE, onSaveComplete);

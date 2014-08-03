@@ -10,6 +10,7 @@ import flixel.system.FlxAssets;
 import flixel.system.FlxQuadTree;
 import flixel.system.FlxVersion;
 import flixel.system.frontEnds.BitmapFrontEnd;
+import flixel.system.frontEnds.BitmapLogFrontEnd;
 import flixel.system.frontEnds.CameraFrontEnd;
 import flixel.system.frontEnds.ConsoleFrontEnd;
 import flixel.system.frontEnds.DebuggerFrontEnd;
@@ -23,9 +24,9 @@ import flixel.system.scaleModes.BaseScaleMode;
 import flixel.system.scaleModes.RatioScaleMode;
 import flixel.text.pxText.PxBitmapFont;
 import flixel.util.FlxCollision;
-import flixel.util.FlxMath;
-import flixel.util.FlxRandom;
-import flixel.util.FlxRect;
+import flixel.math.FlxMath;
+import flixel.math.FlxRandom;
+import flixel.math.FlxRect;
 import flixel.util.FlxSave;
 
 #if !FLX_NO_TOUCH
@@ -45,6 +46,9 @@ import flixel.system.frontEnds.SoundFrontEnd;
 #end
 #if android
 import flixel.input.android.FlxAndroidKeys;
+#end
+#if mobile
+import flixel.input.FlxAccelerometer;
 #end
 #if js
 import flixel.system.frontEnds.HTML5FrontEnd;
@@ -77,7 +81,7 @@ class FlxG
 	 * How many times the quad tree should divide the world on each axis. Generally, sparse collisions can have fewer divisons,
 	 * while denser collision activity usually profits from more. Default value is 6.
 	 */
-	public static var worldDivisions:Int;
+	public static var worldDivisions:Int = 6;
 	/**
 	 * By default this just refers to the first entry in the FlxG.cameras.list 
 	 * array but you can do what you like with it.
@@ -86,9 +90,9 @@ class FlxG
 	
 	/**
 	 * The HaxeFlixel version, in semantic versioning syntax. Use Std.string()
-	 * on it to get a String formatted like this: "HaxeFlixel MAJOR.MINOR.PATCH-PATCH_VERSION".
+	 * on it to get a String formatted like this: "HaxeFlixel MAJOR.MINOR.PATCH-COMMIT_SHA".
 	 */ 
-	public static var VERSION(default, null):FlxVersion = new FlxVersion(3, 3, 0, "dev");
+	public static var VERSION(default, null):FlxVersion = new FlxVersion(4, 0, 0);
 	
 	/**
 	 * Internal tracker for game object.
@@ -139,12 +143,12 @@ class FlxG
 	 * The scale mode the game should use - available policies are FillScaleMode, FixedScaleMode,
 	 * RatioScaleMode, RelativeScaleMode and StageSizeScaleMode.
 	 */
-	public static var scaleMode(default, set):BaseScaleMode;
+	public static var scaleMode(default, set):BaseScaleMode = new RatioScaleMode();
 	/**
 	 * Use this to toggle between fullscreen and normal mode. Works in cpp and flash.
 	 * You can easily toggle fullscreen with eg: FlxG.fullscreen = !FlxG.fullscreen;
 	 */
-	public static var fullscreen(default, set):Bool = false;
+	public static var fullscreen(get, set):Bool;
 	/**
 	 * The dimensions of the game world, used by the quad tree for collisions and overlap checks.
 	 * Use .set() instead of creating a new object!
@@ -156,6 +160,11 @@ class FlxG
 	 * the history of the console window, but no reason you can't use it for your own stuff too!
 	 */
 	public static var save(default, null):FlxSave = new FlxSave();
+	
+	/**
+	 * A FlxRandom object used internally by flixel to generate random numbers.
+	 */
+	public static var random(default, null):FlxRandom = new FlxRandom();
 	
 	#if !FLX_NO_MOUSE
 	/**
@@ -201,6 +210,13 @@ class FlxG
 	public static var android(default, null):FlxAndroidKeys;
 	#end
 	
+	#if mobile
+	/**
+	 * Provides access to the accelerometer data of mobile devices as x/y/z values.
+	 */
+	public static var accelerometer(default, null):FlxAccelerometer;
+	#end
+	
 	#if js
 	/**
 	 * Has some HTML5-specific things like browser detection, browser dimensions etc...
@@ -221,6 +237,10 @@ class FlxG
 	 */
 	public static var log(default, null):LogFrontEnd = new LogFrontEnd();
 	/**
+	 * Used to add images to the bitmapLog window
+	 */
+	public static var bitmapLog(default, null):BitmapLogFrontEnd = new BitmapLogFrontEnd();
+	/**
 	 * Used to add or remove things to / from the watch window.
 	 */
 	public static var watch(default, null):WatchFrontEnd = new WatchFrontEnd();
@@ -233,7 +253,7 @@ class FlxG
 	/**
 	 * Contains all the functions needed for recording and replaying.
 	 */
-	public static var vcr(default, null):VCRFrontEnd = new VCRFrontEnd();
+	public static var vcr(default, null):VCRFrontEnd;
 	
 	/**
 	 * Contains things related to bimtaps, for example regarding the bitmap cache and the cache itself.
@@ -246,13 +266,13 @@ class FlxG
 	/**
 	 * Contains a list of all plugins and the functions required to add(), remove() them etc.
 	 */
-	public static var plugins(default, null):PluginFrontEnd = new PluginFrontEnd();
+	public static var plugins(default, null):PluginFrontEnd;
 	
 	#if !FLX_NO_SOUND_SYSTEM
 	/**
 	 * Contains a list of all sounds and other things to manage or play() sounds.
 	 */
-	public static var sound(default, null):SoundFrontEnd = new SoundFrontEnd();
+	public static var sound(default, null):SoundFrontEnd;
 	#end
 	
 	/**
@@ -260,14 +280,12 @@ class FlxG
 	 */ 
 	public static var signals(default, null):SignalFrontEnd = new SignalFrontEnd();
 	
-	private static var _scaleMode:BaseScaleMode = new RatioScaleMode();
-	
 	/**
 	 * Handy helper functions that takes care of all the things to resize the game.
 	 */
 	public static inline function resizeGame(Width:Int, Height:Int):Void
 	{
-		_scaleMode.onMeasure(Width, Height);
+		scaleMode.onMeasure(Width, Height);
 	}
 	
 	/**
@@ -414,10 +432,7 @@ class FlxG
 	 * Called by FlxGame to set up FlxG during FlxGame's constructor.
 	 */
 	private static function init(Game:FlxGame, Width:Int, Height:Int, Zoom:Float):Void
-	{	
-		// TODO: check this later on real device
-		//FlxAssets.cacheSounds();
-		
+	{
 		game = Game;
 		width = Std.int(Math.abs(Width));
 		height = Std.int(Math.abs(Height));
@@ -446,10 +461,16 @@ class FlxG
 		android = inputs.add(new FlxAndroidKeys());
 		#end
 		
+		#if mobile
+		accelerometer = new FlxAccelerometer();
+		#end
 		save.bind("flixel");
 		
+		plugins = new PluginFrontEnd();
+		vcr = new VCRFrontEnd();
+		
 		#if !FLX_NO_SOUND_SYSTEM
-		sound.loadSavedPrefs();
+		sound = new SoundFrontEnd();
 		#end
 		
 		FlxAssets.init();
@@ -461,22 +482,25 @@ class FlxG
 	private static function reset():Void
 	{
 		PxBitmapFont.clearStorage();
-		FlxRandom.resetGlobalSeed();
+		random.resetInitialSeed();
 		
 		bitmap.clearCache();
 		inputs.reset();
 		#if !FLX_NO_SOUND_SYSTEM
 		sound.destroy(true);
 		#end
+		autoPause = true;
+		fixedTimestep = true;
 		timeScale = 1.0;
 		elapsed = 0;
+		maxElapsed = 0.1;
 		worldBounds.set( -10, -10, width + 20, height + 20);
-		worldDivisions = 6;
+		worldDivisions = 6;	
 	}
 	
 	private static function set_scaleMode(ScaleMode:BaseScaleMode):BaseScaleMode
 	{
-		_scaleMode = ScaleMode;
+		scaleMode = ScaleMode;
 		game.onResize(null);
 		return ScaleMode;
 	}
@@ -548,18 +572,16 @@ class FlxG
 		return Framerate;
 	}
 	
+	private static function get_fullscreen():Bool
+	{
+		return (stage.displayState == StageDisplayState.FULL_SCREEN 
+			|| stage.displayState == StageDisplayState.FULL_SCREEN_INTERACTIVE);
+	}
+	
 	private static function set_fullscreen(Value:Bool):Bool
 	{
-		if (Value)
-		{
-			stage.displayState = StageDisplayState.FULL_SCREEN;
-		}
-		else
-		{
-			stage.displayState = StageDisplayState.NORMAL;
-		}
-		
-		return fullscreen = Value;
+		stage.displayState = Value ? StageDisplayState.FULL_SCREEN : StageDisplayState.NORMAL;
+		return Value;
 	}
 	
 	private static inline function get_stage():Stage

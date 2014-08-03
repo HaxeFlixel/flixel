@@ -27,14 +27,14 @@ class FlxSubState extends FlxState
 	 */ 
 	private var _parentState:FlxState;
 	
-	private var _bgColor:Int;
+	private var _bgColor:FlxColor;
  
 	private var _created:Bool = false;
 	
 	/**
 	 * @param	BGColor		background color for this substate
 	 */
-	public function new(BGColor:Int = FlxColor.TRANSPARENT)
+	public function new(BGColor:FlxColor = 0)
 	{
 		super();
 		closeCallback = null;
@@ -49,7 +49,7 @@ class FlxSubState extends FlxState
 	{
 		//Draw background
 		#if FLX_RENDER_BLIT
-		for (camera in FlxG.cameras.list)
+		for (camera in cameras)
 		{
 			camera.fill(bgColor);
 		}
@@ -76,7 +76,7 @@ class FlxSubState extends FlxState
 	 */ 
 	public function close():Void
 	{
-		if (_parentState != null) 
+		if (_parentState != null && _parentState.subState == this) 
 		{ 
 			_parentState.closeSubState(); 
 		}

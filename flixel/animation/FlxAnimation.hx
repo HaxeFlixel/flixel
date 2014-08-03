@@ -1,7 +1,7 @@
 package flixel.animation;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.util.FlxRandom;
+import flixel.math.FlxRandom;
 
 /**
  * Just a helper structure for the FlxSprite animation system.
@@ -105,7 +105,7 @@ class FlxAnimation extends FlxBaseAnimation
 		
 		if (Frame < 0)
 		{
-			curFrame = FlxRandom.intRanged(0, numFrames - 1);
+			curFrame = FlxG.random.int(0, numFrames - 1);
 		}
 		else if (numFrames > Frame)
 		{
@@ -180,7 +180,7 @@ class FlxAnimation extends FlxBaseAnimation
 		}
 		else
 		{
-			curFrame = FlxRandom.intRanged(0, numFrames - 1);
+			curFrame = FlxG.random.int(0, numFrames - 1);
 		}
 		
 		curIndex = _frames[curFrame];

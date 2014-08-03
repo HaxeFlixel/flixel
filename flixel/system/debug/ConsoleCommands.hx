@@ -37,7 +37,7 @@ class ConsoleCommands
 		
 		console.addCommand(["create", "cr"], create, "Creates a new FlxObject and registers it - by default at the mouse position.", 
 							"[FlxObject] (MousePos = true)", 3, 3);
-		console.addCommand(["set", "s"], set, "Sets a variable within a registered object.", "[Path to function]", 3);
+		console.addCommand(["set", "s"], set, "Sets a variable within a registered object.", "[Path to variable] [Value]", 3);
 		console.addCommand(["call", "c"], call, "Calls a registered function / function within a registered object.", 3, 2);
 		console.addCommand(["fields", "f"], fields, "Lists the fields of a class or instance", "[Class or path to instance] [NumSuperClassesToInclude]", 2);
 		
@@ -48,6 +48,9 @@ class ConsoleCommands
 		console.addCommand(["track", "t"], track, "Adds a tracker window for the specified object.");
 		
 		console.addCommand(["pause", "p"], pause, "Toggle between paused and unpaused");
+		
+		console.addCommand(["clearBitmapLog", "cbl"], FlxG.bitmapLog.clear, "Clears the bitmapLog window.");
+		console.addCommand(["viewCache", "vc"], FlxG.bitmapLog.viewCache, "Adds the cache to the bitmapLog window");
 		
 		// Default registration
 		console.registerObject("FlxG", FlxG);
@@ -132,32 +135,32 @@ class ConsoleCommands
 	}
 	
 	private function create(ClassName:String, MousePos:String = "true", ?Params:Array<String>):Void
-	{	
+	{
 		if (Params == null)
 			Params = [];
-		
+
 		var instance:Dynamic = ConsoleUtil.attemptToCreateInstance(ClassName, FlxObject, Params);
-		if (instance == null) 
+		if (instance == null)
 			return;
-		
+
 		var obj:FlxObject = instance;
-		
-		if (MousePos == "true") 
+
+		if (MousePos == "true")
 		{
 			obj.x = FlxG.game.mouseX;
 			obj.y = FlxG.game.mouseY;
 		}
-		
+
 		FlxG.state.add(instance);
-		
+
 		if (Params.length == 0)
 			ConsoleUtil.log("create: New " + ClassName + " created at X = " + obj.x + " Y = " + obj.y);
 		else
 			ConsoleUtil.log("create: New " + ClassName + " created at X = " + obj.x + " Y = " + obj.y + " with params " + Params);
-		
+
 		_console.objectStack.push(instance);
 		_console.registerObject(Std.string(_console.objectStack.length), instance);
-		
+
 		ConsoleUtil.log("create: " + ClassName + " registered as object '" + _console.objectStack.length + "'");
 	}
 	
@@ -172,51 +175,100 @@ class ConsoleCommands
 		var object:Dynamic = pathToVariable.object;
 		var varName:String = pathToVariable.variableName;
 		var variable:Dynamic = null;
+		var arrayType:Class<Dynamic> = null;
+		var isArrayIndex:Bool = false;
 		
+		//Exclude last brackets from variable name and extract its indice
+		var index:Null<Int> = -1;
+		var bracketStart = varName.lastIndexOf("[");
+		if (bracketStart != -1)
+		{
+			var bracket = varName.substr(bracketStart + 1);
+			index = Std.parseInt(bracket.substr(0, bracket.length - 1));
+			if (index == null)
+			{
+				FlxG.log.error("set: '" +  ObjectAndVariable + "' invalid syntax");
+				return;
+			}
+			varName = varName.substr(0, bracketStart);
+			isArrayIndex = true;
+		}
+
 		try
 		{
-			variable = Reflect.getProperty(object, varName);
+			variable = ConsoleUtil.resolveProperty(object, varName);
 		}
 		catch (e:Dynamic)
 		{
 			return;
 		}
-		
+
 		if (variable == null)
 		{
 			FlxG.log.error("set: '" +  ObjectAndVariable + "' could not be found");
 			return;
 		}
 		
+		if (!isArrayIndex && index >= 0)
+		{
+			FlxG.log.error("set: '" +  ObjectAndVariable + "' is an invalid array access");
+			return;
+		}
+
+		if (isArrayIndex && variable.length <= index)
+		{
+			FlxG.log.error("set: '" + varName + ":" + FlxStringUtil.getClassName(variable, true) + "' cannot access indice " + index);
+			return;
+		}
+
+		// Check if we try to set an array
+		if (Std.is((isArrayIndex ? variable[index] : variable), Array))
+		{
+			var arrayValue = ConsoleUtil.parseArray(NewVariableValue);
+			if (arrayValue == null)
+			{
+				FlxG.log.error("set: '" + NewVariableValue + "' is not a valid value for Array '" + varName + "'");
+				return;
+			}
+			NewVariableValue = arrayValue;
+		}
+
 		// Prevent from assigning non-boolean values to bools
-		if (Std.is(variable, Bool)) 
+		if (Std.is((isArrayIndex ? variable[index] : variable), Bool))
 		{
 			var oldVal = NewVariableValue;
 			NewVariableValue = ConsoleUtil.parseBool(NewVariableValue);
-			
+
 			if (NewVariableValue == null)
 			{
 				FlxG.log.error("set: '" + oldVal + "' is not a valid value for Bool '" + varName + "'");
 				return;
 			}
 		}
-		
+
 		// Prevent turning numbers into NaN
-		if (Std.is(variable, Float) && Math.isNaN(Std.parseFloat(NewVariableValue))) 
+		if (Std.is((isArrayIndex ? variable[index] : variable), Float) && Math.isNaN(Std.parseFloat(NewVariableValue))) 
 		{
 			FlxG.log.error("set: '" + NewVariableValue + "' is not a valid value for number '" + varName + "'");
 			return;
 		}
 		// Prevent setting non "simple" typed properties
-		else if (!Std.is(variable, Float) && !Std.is(variable, Bool) && !Std.is(variable, String))
+		else if (!Std.is((isArrayIndex ? variable[index] : variable), Float) && !Std.is((isArrayIndex ? variable[index] : variable), Bool) && !Std.is((isArrayIndex ? variable[index] : variable), String) && !Std.is((isArrayIndex ? variable[index] : variable), Array))
 		{
-			FlxG.log.error("set: '" + varName + ":" + FlxStringUtil.getClassName(variable, true) + "' is not of a simple type (number, bool or string)");
+			FlxG.log.error("set: '" + varName + ":" + FlxStringUtil.getClassName((isArrayIndex ? variable[index] : variable), true) + "' is not of a simple type (number, bool, string or array)");
 			return;
 		}
 		
-		Reflect.setProperty(object, varName, NewVariableValue);
-		ConsoleUtil.log("set: " + FlxStringUtil.getClassName(object, true) + "." + varName + " is now " + NewVariableValue);
-		
+		if (isArrayIndex)
+		{
+			variable[index] = NewVariableValue;
+		}
+		else
+		{
+			Reflect.setProperty(object, varName, NewVariableValue);
+		}
+		ConsoleUtil.log("set: " + FlxStringUtil.getClassName(object, true) + "." + varName + (isArrayIndex ? "[" + index + "]" : "") + " is now " + NewVariableValue);
+
 		if (WatchName != null)
 			FlxG.watch.add(object, varName, WatchName);
 	}
@@ -230,9 +282,10 @@ class ConsoleCommands
 			return;
 	
 		var fields:Array<String> = [];
+		var isClass:Bool = Std.is(pathToVariable.object, Class);
 		
 		// passed a class -> get static fields
-		if (Std.is(pathToVariable.object, Class) && pathToVariable.variableName == "")
+		if (isClass && pathToVariable.variableName == "")
 		{
 			fields = Type.getClassFields(pathToVariable.object);
 		}
@@ -244,6 +297,14 @@ class ConsoleCommands
 		
 			var cl = Type.getClass(instance);
 			fields = ConsoleUtil.getInstanceFieldsAdvanced(cl, NumSuperClassesToInclude);
+		}
+		
+		var object = isClass ? pathToVariable.object : 
+			Reflect.getProperty(pathToVariable.object, pathToVariable.variableName);
+		
+		for (i in 0...fields.length)
+		{
+			fields[i] += ":" + ConsoleUtil.getTypeName(Reflect.getProperty(object, fields[i]));
 		}
 		
 		ConsoleUtil.log("fields: list of fields for " + ObjectAndVariable);

@@ -6,6 +6,7 @@ import flixel.system.debug.Console.Command;
 import flixel.system.debug.ConsoleUtil.PathToVariable;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxStringUtil;
+using StringTools;
 
 /** 
  * A set of helper functions used by the console.
@@ -69,7 +70,8 @@ class ConsoleUtil
 	{
 		for (i in 0...Commands.length)
 		{
-			if (FlxArrayUtil.indexOf(Commands[i].aliases, Alias) != -1) {
+			if (Commands[i].aliases.indexOf(Alias) != -1) 
+			{
 				return Commands[i];
 			}
 		}
@@ -133,30 +135,77 @@ class ConsoleUtil
 			FlxG.log.error("'" + FlxStringUtil.getClassName(Object, true) + "' is not a valid Object");
 			return null;
 		}
-		
+
 		// Searching for property...
 		var l:Int = searchArr.length;
 		var tempObj:Dynamic = Object;
 		var tempVarName:String = "";
 		for (i in 0...l)
 		{
-			tempVarName = searchArr[i];
+			tempVarName = searchArr[i];			
+
 			
-			try 
+			if (i < (l - 1))
 			{
-				if (i < (l - 1))
-				{
-					tempObj = Reflect.getProperty(tempObj, tempVarName);
-				}
-			}
-			catch (e:Dynamic) 
-			{
-				FlxG.log.error("'" + FlxStringUtil.getClassName(tempObj, true) + "' does not have a field '" + tempVarName + "'");
-				return null;
+				tempObj = resolveProperty(tempObj, tempVarName);
+
+				if (tempObj == null)
+					return null;
 			}
 		}
 		
 		return { object: tempObj, variableName: tempVarName };
+	}
+
+	/**
+	 * Resolve properties taking array indices into account.
+	 * @param	obj Any object containing the property
+	 * @param	propName Name of the property you want to resolve
+	 * @return The property value, or null.
+	 */
+	public static function resolveProperty(obj:Dynamic, propName:String):Dynamic
+	{
+		//If array, get indice
+		var arrayIndices = new Array<Int>();
+		var arrayIndicesStr = propName.split("[");
+		propName = arrayIndicesStr.shift(); //Remove the leftmost element which the current prop
+		for (indice in arrayIndicesStr)
+		{
+			//Verify format
+			if (indice.charAt(indice.length - 1) != "]")
+			{
+				FlxG.log.error("'" + FlxStringUtil.getClassName(obj, true) + "' does not have a field '" + propName + "'");
+				return null;
+			}
+			//Extract indice
+			var index = Std.parseInt(indice.substr(0, indice.length - 1));
+			if (index == null)
+			{
+				FlxG.log.error("'" + FlxStringUtil.getClassName(obj, true) + "' does not have a field '" + propName + "'");
+				return null;
+			}
+			arrayIndices.push(index);
+		}
+
+		try 
+		{
+			obj = Reflect.getProperty(obj, propName);
+			//Loop through array indice, if any
+			for (index in arrayIndices)
+			{
+				if (!Std.is(obj, Array) || obj.length <= index)
+				{
+					FlxG.log.error("'" + FlxStringUtil.getClassName(obj, true) + "' does not have index '" + index + "' or is not an Array");
+				}
+				obj = obj[index];
+			}
+		}
+		catch (e:Dynamic) 
+		{
+			FlxG.log.error("'" + FlxStringUtil.getClassName(obj, true) + "' does not have a field '" + propName + "'");
+			return null;
+		}
+		return obj;
 	}
 	
 	/**
@@ -214,7 +263,24 @@ class ConsoleUtil
 				}
 			}
 		}
+		
 		return fields;
+	}
+	
+	public static function getTypeName(v:Dynamic):String
+	{
+		var type = Type.typeof(v);
+		
+		return switch (type)
+		{
+			case TClass(c):
+				FlxStringUtil.getClassName(c, true);
+			case TEnum(e):
+				var name = Type.getEnumName(e);
+				name.substr(name.lastIndexOf(".") + 1);
+			case _:
+				Std.string(type).substr(1);
+		}
 	}
 	
 	/**
@@ -232,6 +298,72 @@ class ConsoleUtil
 			return false;
 		else
 			return null;
+	}
+	
+	/**
+	 * Attempts to parse a String into a Array<Dynamic>,
+	 * returns an array if succeed, null otherwise.
+	 * 
+	 * @param	s	The String to parse
+	 * @return	The parsed Array<Dynamic>
+	 */
+	public static function parseArray(s:String):Array<Dynamic>
+	{
+		var returnArray = new Array<Dynamic>();
+		//Verify if enclosed with brackets
+		if (s.charAt(0) == "[" && s.charAt(s.length - 1) == "]")
+		{
+			//Manual substr because of nested arrays
+			var values = new Array<String>();
+			s = s.substr(1, s.length - 2); //Remove brackets
+			var value = "";
+			var skipComma = false;
+			for (i in 0...s.length)
+			{
+				var c = s.charAt(i);
+				if (c == "," && !skipComma)
+				{
+					values.push(value);
+					value = "";
+				}
+				else
+					value += c;
+				if (c == "[")
+					skipComma = true;
+				else if (c == "]")
+					skipComma = false;
+			}
+			values.push(value);
+			//Parse values
+			for (value in values)
+			{
+				var parsedValue:Null<Dynamic> = null;
+				value = value.trim();
+				if (parseBool(value) != null)
+					parsedValue = parseBool(value);
+				else if (!Math.isNaN(Std.parseFloat(value)))
+					parsedValue = Std.parseFloat(value);
+				else
+				{
+					//try to parse a string
+					var start = value.indexOf("\"");
+					var end = value.lastIndexOf("\"");
+					if (start != end && start != -1)
+						parsedValue = value.substr(start + 1, end);
+
+					//Try to parse another array
+					if (parsedValue == null)
+						parsedValue = parseArray(value);
+				}
+
+				if (parsedValue != null)
+					returnArray.push(parsedValue);
+				else
+					return null;
+			}
+			return returnArray;
+		}
+		return null;
 	}
 	
 	/**

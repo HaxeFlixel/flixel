@@ -2,7 +2,7 @@ package flixel.system.scaleModes;
 
 import flixel.FlxCamera;
 import flixel.FlxG;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 
 @:allow(flixel.FlxGame)
 class BaseScaleMode
@@ -12,7 +12,7 @@ class BaseScaleMode
 	public var scale(default, null):FlxPoint;
 	public var offset(default, null):FlxPoint;
 	
-	private static var zoom:FlxPoint = FlxPoint.get();
+	private static var zoom = FlxPoint.get();
 	
 	public function new()
 	{
@@ -50,8 +50,7 @@ class BaseScaleMode
 		
 		if (FlxG.camera != null) 
 		{
-			zoom.x = FlxG.camera.getScale().x;
-			zoom.y = FlxG.camera.getScale().y;
+			zoom.copyFrom(FlxG.camera.getScale());
 		}
 		
 		scale.x /= zoom.x;

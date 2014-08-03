@@ -1,17 +1,15 @@
 package flixel.system.replay;
 
-/**
- * ...
- * @author Zaphod
- */
+import flixel.input.FlxInput.FlxInputState;
+
 class CodeValuePair
 {
 	public var code:Int;
-	public var value:Int;
+	public var value:FlxInputState;
 	
-	public function new(Code:Int = 0, Value:Int = 0)
+	public function new(code:Int, value:FlxInputState)
 	{
-		code = Code;
-		value = Value;
+		this.code = code;
+		this.value = value;
 	}	
 }

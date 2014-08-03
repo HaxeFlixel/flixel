@@ -1,9 +1,9 @@
 package flixel.input.gamepad;
 
-import flixel.FlxG;
-import flixel.interfaces.IFlxDestroyable;
+import flixel.input.FlxInput.FlxInputState;
+import flixel.math.FlxPoint;
+import flixel.math.FlxVector;
 import flixel.util.FlxDestroyUtil;
-import flixel.util.FlxPoint;
 
 #if flash
 import flash.ui.GameInputControl;
@@ -20,21 +20,23 @@ class FlxGamepad implements IFlxDestroyable
 	public static inline var PRESSED:Int = 1;
 	public static inline var JUST_PRESSED:Int = 2;
 	
-	public var id:Int;
-	public var buttons:Map<Int, FlxGamepadButton>;
+	public var id(default, null):Int;
+	public var buttons(default, null):Array<FlxGamepadButton> = [];
+	public var connected(default, null):Bool = true;
 	
 	/**
 	 * Gamepad deadzone. Sets the sensibility. 
 	 * Less this number the more gamepad is sensible. Should be between 0.0 and 1.0.
 	 */
 	public var deadZone:Float = 0.15;
-	
 	/**
-	 * DPAD
+	 * Which dead zone mode to use for analog sticks.
 	 */
+	public var deadZoneMode:FlxGamepadDeadZoneMode = INDEPENDANT_AXES;
+	
 	#if !flash
-	public var hat:FlxPoint;
-	public var ball:FlxPoint;
+	public var hat(default, null):FlxPoint = FlxPoint.get();
+	public var ball(default, null):FlxPoint = FlxPoint.get();
 	
 	public var dpadUp(get, null):Bool = false;
 	public var dpadDown(get, null):Bool = false;
@@ -45,7 +47,7 @@ class FlxGamepad implements IFlxDestroyable
 	/**
 	 * Axis array is read-only, use "getAxis" function for deadZone checking.
 	 */
-	private var axis:Array<Float>;
+	private var axis:Array<Float> = [for (i in 0...6) 0];
 	
 	#if flash
 	private var _device:GameInputDevice; 
@@ -53,29 +55,22 @@ class FlxGamepad implements IFlxDestroyable
 	
 	public function new(ID:Int, GlobalDeadZone:Float = 0) 
 	{
-		buttons = new Map<Int, FlxGamepadButton>();
-		axis = [for (i in 0...6) 0];
 		id = ID;
 		
 		if (GlobalDeadZone != 0)
 		{
 			deadZone = GlobalDeadZone;
 		}
-		
-		#if !flash
-		ball = FlxPoint.get();
-		hat = FlxPoint.get();
-		#end
 	}
 	
 	public function getButton(ButtonID:Int):FlxGamepadButton
 	{
-		var gamepadButton:FlxGamepadButton = buttons.get(ButtonID);
+		var gamepadButton:FlxGamepadButton = buttons[ButtonID];
 		
 		if (gamepadButton == null)
 		{
 			gamepadButton = new FlxGamepadButton(ButtonID);
-			buttons.set(ButtonID, gamepadButton);
+			buttons[ButtonID] = gamepadButton;
 		}
 		
 		return gamepadButton;
@@ -114,16 +109,10 @@ class FlxGamepad implements IFlxDestroyable
 		
 		for (button in buttons)
 		{
-			if ((button.last == -1) && (button.current == -1)) 
+			if (button != null) 
 			{
-				button.current = 0;
+				button.update();
 			}
-			else if ((button.last == 2) && (button.current == 2)) 
-			{
-				button.current = 1;
-			}
-			
-			button.last = button.current;
 		}
 	}
 	
@@ -131,8 +120,10 @@ class FlxGamepad implements IFlxDestroyable
 	{
 		for (button in buttons)
 		{
-			button.current = 0;
-			button.last = 0;
+			if (button != null)
+			{
+				button.reset();
+			}
 		}
 		
 		var numAxis:Int = axis.length;
@@ -150,6 +141,8 @@ class FlxGamepad implements IFlxDestroyable
 	
 	public function destroy():Void
 	{
+		connected = false;
+		
 		buttons = null;
 		axis = null;
 		
@@ -169,11 +162,11 @@ class FlxGamepad implements IFlxDestroyable
 	 * @param	Status		The key state to check for
 	 * @return	Whether the provided button has the specified status
 	 */
-	public function checkStatus(ButtonID:Int, Status:Int):Bool 
+	public function checkStatus(ButtonID:Int, Status:FlxInputState):Bool 
 	{ 
-		if (buttons.exists(ButtonID))
+		if (buttons[ButtonID] != null)
 		{
-			return (buttons.get(ButtonID).current == Status);
+			return (buttons[ButtonID].current == Status);
 		}
 		return false;
 	}
@@ -181,16 +174,16 @@ class FlxGamepad implements IFlxDestroyable
 	/**
 	 * Check if at least one button from an array of button IDs is pressed.
 	 * 
-	 * @param	ButtonArray	An array of button IDs
+	 * @param	ButtonIDArray	An array of button IDs
 	 * @return	Whether at least one of the buttons is pressed
 	 */
-	public function anyPressed(ButtonArray:Array<Int>):Bool
+	public function anyPressed(ButtonIDArray:Array<Int>):Bool
 	{
-		for (b in ButtonArray)
+		for (b in ButtonIDArray)
 		{
-			if (buttons.exists(b))
+			if (buttons[b] != null)
 			{
-				if (buttons.get(b).current == PRESSED)
+				if (buttons[b].pressed)
 					return true;
 			}
 		}
@@ -204,13 +197,13 @@ class FlxGamepad implements IFlxDestroyable
 	 * @param	ButtonArray	An array of button IDs
 	 * @return	Whether at least one of the buttons was just pressed
 	 */
-	public function anyJustPressed(ButtonArray:Array<Int>):Bool
+	public function anyJustPressed(ButtonIDArray:Array<Int>):Bool
 	{
-		for (b in ButtonArray)
+		for (b in ButtonIDArray)
 		{
-			if (buttons.exists(b))
+			if (buttons[b] != null)
 			{
-				if (buttons.get(b).current == JUST_PRESSED)
+				if (buttons[b].justPressed)
 					return true;
 			}
 		}
@@ -224,13 +217,13 @@ class FlxGamepad implements IFlxDestroyable
 	 * @param	ButtonArray	An array of button IDs
 	 * @return	Whether at least one of the buttons was just released
 	 */
-	public function anyJustReleased(ButtonArray:Array<Int>):Bool
+	public function anyJustReleased(ButtonIDArray:Array<Int>):Bool
 	{
-		for (b in ButtonArray)
+		for (b in ButtonIDArray)
 		{
-			if (buttons.exists(b))
+			if (buttons[b] != null)
 			{
-				if (buttons.get(b).current == JUST_RELEASED)
+				if (buttons[b].justReleased)
 					return true;
 			}
 		}
@@ -246,20 +239,10 @@ class FlxGamepad implements IFlxDestroyable
 	 */
 	public function pressed(ButtonID:Int):Bool 
 	{
-		#if js
-		var pad:js.html.Gamepad = null,
-			nav:js.html.Navigator = untyped navigator;
-		if (untyped nav.webkitGetGamepads != null) { // if browser has webkit gamepads as such
-			pad = untyped nav.webkitGetGamepads().item(id);
-		}
-		return (pad != null) && (Math.round(pad.buttons[ButtonID]) == 1);
-		#else
-		if (buttons.exists(ButtonID))
+		if (buttons[ButtonID] != null)
 		{
-			return (buttons.get(ButtonID).current > RELEASED);
+			return buttons[ButtonID].pressed;
 		}
-		#end
-		
 		return false;
 	}
 	
@@ -271,11 +254,10 @@ class FlxGamepad implements IFlxDestroyable
 	 */
 	public function justPressed(ButtonID:Int):Bool 
 	{ 
-		if (buttons.exists(ButtonID))
+		if (buttons[ButtonID] != null)
 		{
-			return (buttons.get(ButtonID).current == JUST_PRESSED);
+			return buttons[ButtonID].justPressed;
 		}
-		
 		return false;
 	}
 	
@@ -287,11 +269,10 @@ class FlxGamepad implements IFlxDestroyable
 	 */
 	public function justReleased(ButtonID:Int):Bool 
 	{ 
-		if (buttons.exists(ButtonID))
+		if (buttons[ButtonID] != null)
 		{
-			return (buttons.get(ButtonID).current == JUST_RELEASED);
+			return (buttons[ButtonID].justReleased);
 		}
-		
 		return false;
 	}
 	
@@ -303,12 +284,11 @@ class FlxGamepad implements IFlxDestroyable
 	{
 		for (button in buttons)
 		{
-			if (button.current > RELEASED)
+			if (button != null && button.released)
 			{
-				return button.id;
+				return button.ID;
 			}
 		}
-		
 		return -1;
 	}
 	
@@ -320,12 +300,11 @@ class FlxGamepad implements IFlxDestroyable
 	{
 		for (button in buttons)
 		{
-			if (button.current == JUST_PRESSED)
+			if (button != null && button.justPressed)
 			{
-				return button.id;
+				return button.ID;
 			}
 		}
-		
 		return -1;
 	}
 	
@@ -337,41 +316,46 @@ class FlxGamepad implements IFlxDestroyable
 	{
 		for (button in buttons)
 		{
-			if (button.current == JUST_RELEASED)
+			if (button != null && button.justReleased)
 			{
-				return button.id;
+				return button.ID;
 			}
 		}
-		
 		return -1; 
 	}
 	
 	/**
-	 * Gets the value of the specified axis - DOES NOT WORK WELL ON 
-	 * THE FLASH TARGET, use getXAxis() and getYAxis() instead.
+	 * Gets the value of the specified axis - use this only for things like
+	 * XboxButtonID.LEFT_TRIGGER, use getXAxis() / getYAxis() for analog sticks!
 	 */
 	public inline function getAxis(AxisID:Int):Float
 	{
-		return getAxisValue(AxisID);
+		var axisValue = getAxisValue(AxisID);
+		if (Math.abs(axisValue) > deadZone)
+		{
+			return axisValue;
+		}
+		return 0;
 	}
 	
 	/**
 	 * Gets the value of the specified X axis.
 	 */
-	public inline function getXAxis(AxisID:Int):Float
+	public inline function getXAxis(Axes:FlxGamepadAnalogStick):Float
 	{
-		return getAxisValue(AxisID);
+		return getAnalogueAxisValue(FlxAxes.X, Axes);
 	}
 	
 	/**
 	 * Gets the value of the specified Y axis - 
 	 * should be used in flash to correct the inverted y axis.
 	 */
-	public function getYAxis(AxisID:Int):Float
+	public function getYAxis(Axes:FlxGamepadAnalogStick):Float
 	{
-		var axisValue = getAxisValue(AxisID);
+		var axisValue = getAnalogueAxisValue(FlxAxes.Y, Axes);
 		
 		// the y axis is inverted on the Xbox gamepad in flash for some reason - but not in Chrome!
+		// WARNING: this causes unnecessary string allocations - we should remove this hack when possible.
 		#if flash
 		if ((_device != null) && _device.enabled && (_device.name.indexOf("Xbox") != -1) && 
 		   (Capabilities.manufacturer != "Google Pepper"))
@@ -382,7 +366,7 @@ class FlxGamepad implements IFlxDestroyable
 		
 		return axisValue;
 	}
-	
+
 	/**
 	 * Check to see if any buttons are pressed right now.
 	 */
@@ -390,12 +374,11 @@ class FlxGamepad implements IFlxDestroyable
 	{
 		for (button in buttons)
 		{
-			if (button.current > RELEASED)
+			if (button != null && button.pressed)
 			{
 				return true;
 			}
 		}
-		
 		return false;
 	}
 	
@@ -446,16 +429,36 @@ class FlxGamepad implements IFlxDestroyable
 		{
 			axisValue = _device.getControlAt(AxisID).value;
 		}
-		#elseif js
-		// TODO: fix this for html5
-		//axisValue = untyped navigator.webkitGetGamepads().item(id).axes[AxisID];
 		#else
 		axisValue = axis[AxisID];
 		#end
 		
-		if (Math.abs(axisValue) > deadZone)
+		return axisValue;
+	}
+	
+	private function getAnalogueAxisValue(Axis:FlxAxes, Axes:FlxGamepadAnalogStick):Float
+	{
+		if (deadZoneMode == CIRCULAR)
 		{
-			return axisValue;
+			var xAxis = getAxisValue(Axes.get(FlxAxes.X));
+			var yAxis = getAxisValue(Axes.get(FlxAxes.Y));
+			
+			var vector = FlxVector.get(xAxis, yAxis);
+			var length = vector.length;
+			vector.put();
+			
+			if (length > deadZone)
+			{
+				return (Axis == FlxAxes.X) ? xAxis : yAxis;
+			}
+		}
+		else
+		{
+			var axisValue = getAxisValue(Axes.get(Axis));
+			if (Math.abs(axisValue) > deadZone)
+			{
+				return axisValue;
+			}
 		}
 		
 		return 0;
@@ -467,4 +470,26 @@ class FlxGamepad implements IFlxDestroyable
 	private inline function get_dpadLeft():Bool  { return hat.x < 0; }
 	private inline function get_dpadRight():Bool { return hat.x > 0; }
 	#end
+}
+
+enum FlxGamepadDeadZoneMode
+{
+	/**
+	 * The value of each axis is compared to the deadzone individually.
+	 * Works better when an analog stick is used like arrow keys for 4-directional-input.
+	 */
+	INDEPENDANT_AXES;
+	/**
+	 * X and y are combined against the deadzone combined.
+	 * Works better when an analog stick is used as a two-dimensional control surface.
+	 */
+	CIRCULAR;
+}
+
+typedef FlxGamepadAnalogStick = Map<FlxAxes, Int>;
+
+enum FlxAxes
+{
+	X;
+	Y;
 }

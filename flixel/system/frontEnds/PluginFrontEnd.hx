@@ -1,9 +1,5 @@
 package flixel.system.frontEnds;
 
-import flixel.plugin.FlxPlugin;
-import flixel.plugin.PathManager;
-import flixel.plugin.TimerManager;
-import flixel.plugin.TweenManager;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxPath;
 import flixel.util.FlxStringUtil;
@@ -15,7 +11,7 @@ class PluginFrontEnd
 	/**
 	 * An array container for plugins.
 	 */
-	public var list(default, null):Array<FlxPlugin>;
+	public var list(default, null):Array<FlxBasic> = [];
 	
 	/**
 	 * Adds a new plugin to the global plugin array.
@@ -24,7 +20,7 @@ class PluginFrontEnd
 	 * @return	The same FlxPlugin-based plugin you passed in.
 	 */
 	@:generic
-	public function add<T:FlxPlugin>(Plugin:T):T
+	public function add<T:FlxBasic>(Plugin:T):T
 	{
 		// Don't add repeats
 		for (plugin in list)
@@ -46,7 +42,7 @@ class PluginFrontEnd
 	 * @param	ClassType	The class name of the plugin you want to retrieve. See the FlxPath or FlxTimer constructors for example usage.
 	 * @return	The plugin object, or null if no matching plugin was found.
 	 */
-	public function get(ClassType:Class<FlxPlugin>):FlxPlugin
+	public function get(ClassType:Class<FlxBasic>):FlxBasic
 	{
 		for (plugin in list)
 		{
@@ -65,7 +61,7 @@ class PluginFrontEnd
 	 * @param	Plugin	The plugin instance you want to remove.
 	 * @return	The same FlxPlugin-based plugin you passed in.
 	 */
-	public function remove(Plugin:FlxPlugin):FlxPlugin
+	public function remove(Plugin:FlxBasic):FlxBasic
 	{
 		// Don't add repeats
 		var i:Int = list.length - 1;
@@ -89,7 +85,7 @@ class PluginFrontEnd
 	 * @param	ClassType	The class name of the plugin type you want removed from the array.
 	 * @return	Whether or not at least one instance of this plugin type was removed.
 	 */
-	public function removeType(ClassType:Class<FlxPlugin>):Bool
+	public function removeType(ClassType:Class<FlxBasic>):Bool
 	{
 		// Don't add repeats
 		var results:Bool = false;
@@ -108,18 +104,12 @@ class PluginFrontEnd
 		return results;
 	}
 	
-	/**
-	 * Sets up two plugins: DebugPathDisplay 
-	 * in debugging mode and TimerManager
-	 */
 	@:allow(flixel.FlxG)
 	private function new() 
 	{
-		list = new Array<FlxPlugin>();
-		
-		add(FlxPath.manager = new PathManager());
-		add(FlxTimer.manager = new TimerManager());
-		add(FlxTween.manager = new TweenManager());
+		add(FlxPath.manager = new FlxPathManager());
+		add(FlxTimer.manager = new FlxTimerManager());
+		add(FlxTween.manager = new FlxTweenManager());
 	}
 	
 	/**
@@ -146,36 +136,6 @@ class PluginFrontEnd
 			if (plugin.exists && plugin.visible)
 			{
 				plugin.draw();
-			}
-		}
-	}
-	
-	/**
-	 * Used by the game object to call onStateSwitch() on all the plugins.
-	 */
-	private inline function onStateSwitch():Void
-	{
-		for (plugin in list)
-		{
-			if (plugin.exists)
-			{
-				plugin.onStateSwitch();
-			}
-		}
-	}
-	
-	/**
-	 * Used by the game object to call onResize() on all the plugins.
-	 * @param 	Width	The new window width
-	 * @param 	Height	The new window Height
-	 */
-	private inline function onResize(Width:Int, Height:Int):Void
-	{
-		for (plugin in list)
-		{
-			if (plugin.exists)
-			{
-				plugin.onResize(Width, Height);
 			}
 		}
 	}

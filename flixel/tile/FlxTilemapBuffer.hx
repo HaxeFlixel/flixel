@@ -47,7 +47,7 @@ class FlxTilemapBuffer
 	 * Only affects tilesheet rendering and rendering using BitmapData.draw() in blitting.
 	 * (copyPixels() only renders on whole pixels by nature). Causes draw() to be used if false, which is more expensive.
 	 */
-	public var pixelPerfectRender:Bool = true;
+	public var pixelPerfectRender:Null<Bool>;
 	
 	#if FLX_RENDER_BLIT
 	/**
@@ -62,13 +62,14 @@ class FlxTilemapBuffer
 	/**
 	 * Instantiates a new camera-specific buffer for storing the visual tilemap data.
 	 * 
-	 * @param	TileWidth		The width of the tiles in this tilemap.
-	 * @param	TileHeight	The height of the tiles in this tilemap.
-	 * @param	WidthInTiles	How many tiles wide the tilemap is.
-	 * @param	HeightInTiles	How many tiles tall the tilemap is.
-	 * @param	Camera		Which camera this buffer relates to.
+	 * @param   TileWidth       The width of the tiles in this tilemap.
+	 * @param   TileHeight      The height of the tiles in this tilemap.
+	 * @param   WidthInTiles    How many tiles wide the tilemap is.
+	 * @param   HeightInTiles   How many tiles tall the tilemap is.
+	 * @param   Camera          Which camera this buffer relates to.
 	 */
-	public function new(TileWidth:Int, TileHeight:Int, WidthInTiles:Int, HeightInTiles:Int, Camera:FlxCamera = null, ScaleX:Float = 1.0, ScaleY:Float = 1.0)
+	public function new(TileWidth:Int, TileHeight:Int, WidthInTiles:Int, HeightInTiles:Int,
+		?Camera:FlxCamera,ScaleX:Float = 1.0, ScaleY:Float = 1.0)
 	{
 		updateColumns(TileWidth, WidthInTiles, ScaleX, Camera);
 		updateRows(TileHeight, HeightInTiles, ScaleY, Camera);
@@ -100,7 +101,7 @@ class FlxTilemapBuffer
 	 * @param	Color	What color to fill with, in 0xAARRGGBB hex format.
 	 */
 	#if FLX_RENDER_BLIT
-	public function fill(Color:Int = FlxColor.TRANSPARENT):Void
+	public function fill(Color:FlxColor = FlxColor.TRANSPARENT):Void
 	{
 		pixels.fillRect(_flashRect, Color);
 	}
@@ -113,13 +114,13 @@ class FlxTilemapBuffer
 	 */
 	public function draw(Camera:FlxCamera, FlashPoint:Point, ScaleX:Float = 1.0, ScaleY:Float = 1.0):Void
 	{
-		if (pixelPerfectRender)
+		if (isPixelPerfectRender(Camera))
 		{
 			FlashPoint.x = Math.floor(FlashPoint.x);
 			FlashPoint.y = Math.floor(FlashPoint.y);
 		}
 		
-		if (pixelPerfectRender && (ScaleX == 1.0 && ScaleY == 1.0))
+		if (isPixelPerfectRender(Camera) && (ScaleX == 1.0 && ScaleY == 1.0))
 		{
 			Camera.buffer.copyPixels(pixels, _flashRect, FlashPoint, null, null, true);
 		}
@@ -153,6 +154,8 @@ class FlxTilemapBuffer
 		}
 		
 		width = Std.int(columns * TileWidth * ScaleX);
+		
+		dirty = true;
 	}
 	
 	public function updateRows(TileHeight:Int, HeightInTiles:Int, ScaleY:Float = 1.0, ?Camera:FlxCamera):Void
@@ -174,6 +177,20 @@ class FlxTilemapBuffer
 			rows = HeightInTiles;
 		}
 		
-		height = Std.int(rows * TileHeight * ScaleY);
+		height = Std.int(rows * TileHeight * ScaleY);	
+		
+		dirty = true;
+	}
+
+	/**
+	 * Check if object is rendered pixel perfect on a specific camera.
+	 */
+	public function isPixelPerfectRender(?Camera:FlxCamera):Bool
+	{
+		if (Camera == null)
+		{
+			Camera = FlxG.camera;
+		}
+		return pixelPerfectRender == null ? Camera.pixelPerfectRender : pixelPerfectRender;
 	}
 }

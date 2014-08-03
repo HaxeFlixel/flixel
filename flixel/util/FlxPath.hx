@@ -3,25 +3,23 @@ package flixel.util;
 import flash.display.Graphics;
 import flixel.FlxG;
 import flixel.FlxObject;
-import flixel.util.FlxPoint;
+import flixel.math.FlxAngle;
+import flixel.system.frontEnds.PluginFrontEnd;
+import flixel.util.FlxDestroyUtil.IFlxDestroyable;
+import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
 import flixel.util.FlxArrayUtil;
-import flixel.plugin.PathManager;
-import flixel.interfaces.IFlxDestroyable;
 
 /**
  * This is a simple path data container.  Basically a list of points that
  * a FlxObject can follow.  Also has code for drawing debug visuals.
- * FlxTilemap.findPath() returns a path object, but you can
+ * FlxTilemap.findPath() returns a path usable by FlxPath, but you can
  * also just make your own, using the add() functions below
  * or by creating your own array of points.
  */
 class FlxPath implements IFlxDestroyable
 {
-	/**
-	 * The PathManager instance.
-	 */
-	public static var manager:PathManager;
+	public static var manager:FlxPathManager;
 	/**
 	 * Path behavior controls: move from the start of the path to the end then stop.
 	 */
@@ -52,33 +50,9 @@ class FlxPath implements IFlxDestroyable
 	public static inline var VERTICAL_ONLY:Int = 0x100000;
 	
 	/**
-	 * A pool that contains FlxPaths for recycling.
-	 */
-	@:allow(flixel.plugin.PathManager)
-	private static var _pool = new FlxPool<FlxPath>(FlxPath);
-	
-	/**
 	 * Internal helper for keeping new variable instantiations under control.
 	 */
 	private static var _point:FlxPoint = FlxPoint.get();
-	
-	/**
-	 * Call this function to give this object a path to follow.
-	 * If the path does not have at least one node in it, this function
-	 * will log a warning message and return.
-	 * 
-	 * @param	Object		The Object which will follow this path
-	 * @param	Nodes		Array of points which will construct path.
-	 * @param	Speed		How fast to travel along the path in pixels per second.
-	 * @param	Mode		Optional, controls the behavior of the object following the path using the path behavior constants.  Can use multiple flags at once, for example PATH_YOYO|PATH_HORIZONTAL_ONLY will make an object move back and forth along the X axis of the path only.
-	 * @param	AutoRotate	Automatically point the object toward the next node.  Assumes the graphic is pointing upward.  Default behavior is false, or no automatic rotation.
-	 */
-	public static function start(Object:FlxObject, Nodes:Array<FlxPoint>, Speed:Float = 100, Mode:Int = FlxPath.FORWARD, AutoRotate:Bool = false):FlxPath
-	{
-		var path:FlxPath = _pool.get();
-		path.run(Object, Nodes, Speed, Mode, AutoRotate);
-		return path;
-	}
 	
 	/**
 	 * The list of FlxPoints that make up the path data.
@@ -110,7 +84,7 @@ class FlxPath implements IFlxDestroyable
 	/**
 	 * Pauses or checks the pause state of the path.
 	 */
-	public var paused:Bool = false;
+	public var active:Bool = false;
 	
 	public var onComplete:FlxPath->Void;
 
@@ -118,7 +92,7 @@ class FlxPath implements IFlxDestroyable
 	/**
 	 * Specify a debug display color for the path. Default is white.
 	 */
-	public var debugColor:Int = 0xffffff;
+	public var debugColor:FlxColor = 0xffffff;
 	/**
 	 * Specify a debug display scroll factor for the path.  Default is (1,1).
 	 * NOTE: does not affect world movement!  Object scroll factors take care of that.
@@ -132,12 +106,13 @@ class FlxPath implements IFlxDestroyable
 	public var ignoreDrawDebug:Bool = false;
 	#end
 	
+	/**
+	 * Tracks which node of the path this object is currently moving toward.
+	 */
+	public var nodeIndex(default, null):Int = 0;
+	
 	public var finished(default, null):Bool = false;
 	
-	/**
-	 * Internal helper, tracks which node of the path this object is moving toward.
-	 */
-	private var _nodeIndex:Int = 0;
 	/**
 	 * Internal tracker for path behavior flags (like looping, horizontal only, etc).
 	 */
@@ -151,6 +126,19 @@ class FlxPath implements IFlxDestroyable
 	 */
 	private var _autoRotate:Bool = false;
 	
+	private var _inManager:Bool = false;
+	
+	/**
+	 * Creates a new FlxPath (and calls start() right away if Object != null).
+	 */
+	public function new(?Object:FlxObject, ?Nodes:Array<FlxPoint>, Speed:Float = 100, Mode:Int = FlxPath.FORWARD, AutoRotate:Bool = false) 
+	{
+		if (Object != null)
+		{
+			start(Object, Nodes, Speed, Mode, AutoRotate);
+		}
+	}
+	
 	public function reset():FlxPath
 	{
 		#if !FLX_NO_DEBUG
@@ -163,7 +151,7 @@ class FlxPath implements IFlxDestroyable
 		return this;
 	}
 	
-	public function run(Object:FlxObject, Nodes:Array<FlxPoint>, Speed:Float = 100, Mode:Int = FlxPath.FORWARD, AutoRotate:Bool = false):FlxPath
+	public function start(Object:FlxObject, Nodes:Array<FlxPoint>, Speed:Float = 100, Mode:Int = FlxPath.FORWARD, AutoRotate:Bool = false):FlxPath
 	{
 		object = Object;
 		nodes = Nodes;
@@ -176,27 +164,28 @@ class FlxPath implements IFlxDestroyable
 	
 	public function restart():FlxPath
 	{
-		if (manager != null)
+		if (manager != null && !_inManager)
 		{
 			manager.add(this);
+			_inManager = true;
 		}
 		
 		finished = false;
-		paused = false;
-		if (nodes.length <= 0)
+		active = true;
+		if (nodes == null || nodes.length <= 0)
 		{
-			paused = true;
+			active = false;
 		}
 		
 		//get starting node
 		if ((_mode == FlxPath.BACKWARD) || (_mode == FlxPath.LOOP_BACKWARD))
 		{
-			_nodeIndex = nodes.length - 1;
+			nodeIndex = nodes.length - 1;
 			_inc = -1;
 		}
 		else
 		{
-			_nodeIndex = 0;
+			nodeIndex = 0;
 			_inc = 1;
 		}
 		
@@ -216,7 +205,7 @@ class FlxPath implements IFlxDestroyable
 		else if (NodeIndex > nodes.length - 1)
 			NodeIndex = nodes.length - 1;
 		
-		_nodeIndex = NodeIndex; 
+		nodeIndex = NodeIndex; 
 		advancePath();
 	} 
 	
@@ -233,10 +222,9 @@ class FlxPath implements IFlxDestroyable
 		_point.y = object.y;
 		if (autoCenter)
 		{
-			_point.x += object.width * 0.5;
-			_point.y += object.height * 0.5;
+			_point.add(object.width * 0.5, object.height * 0.5);
 		}
-		var node:FlxPoint = nodes[_nodeIndex];
+		var node:FlxPoint = nodes[nodeIndex];
 		var deltaX:Float = node.x - _point.x;
 		var deltaY:Float = node.y - _point.y;
 		
@@ -274,48 +262,16 @@ class FlxPath implements IFlxDestroyable
 			
 			if (autoCenter)
 			{
-				_point.x += object.width * 0.5;
-				_point.y += object.height * 0.5;
+				_point.add(object.width * 0.5, object.height * 0.5);
 			}
 			
-			if (horizontalOnly || (_point.y == node.y))
+			if (!_point.equals(node))
 			{
-				object.velocity.x = (_point.x < node.x) ? speed : -speed;
-				if (object.velocity.x < 0)
-				{
-					angle = -90;
-				}
-				else
-				{
-					angle = 90;
-				}
-				if (!horizontalOnly)
-				{
-					object.velocity.y = 0;
-				}
-			}
-			else if (verticalOnly || (_point.x == node.x))
-			{
-				object.velocity.y = (_point.y < node.y) ? speed : -speed;
-				if (object.velocity.y < 0)
-				{
-					angle = 0;
-				}
-				else
-				{
-					angle = 180;
-				}
-				if (!verticalOnly)
-				{
-					object.velocity.x = 0;
-				}
+				calculateVelocity(node, horizontalOnly, verticalOnly);
 			}
 			else
 			{
-				object.velocity.x = (_point.x < node.x) ? speed : -speed;
-				object.velocity.y = (_point.y < node.y) ? speed : -speed;
-				angle = FlxAngle.getAngle(_point, node);
-				FlxAngle.rotatePoint(0, speed, 0, 0, angle, object.velocity);
+				object.velocity.set();
 			}
 			
 			//then set object rotation if necessary
@@ -328,8 +284,42 @@ class FlxPath implements IFlxDestroyable
 			
 			if (finished)
 			{
-				abort();
+				cancel();
 			}
+		}
+	}
+	
+	private function calculateVelocity(node:FlxPoint, horizontalOnly:Bool, verticalOnly:Bool):Void
+	{
+		if (horizontalOnly || _point.y == node.y)
+		{
+			object.velocity.x = (_point.x < node.x) ? speed : -speed;
+			angle = (object.velocity.x < 0) ? -90 : 90;
+			
+			if (!horizontalOnly)
+			{
+				object.velocity.y = 0;
+			}
+		}
+		else if (verticalOnly || _point.x == node.x)
+		{
+			object.velocity.y = (_point.y < node.y) ? speed : -speed;
+			angle = (object.velocity.y < 0) ? 0 : 180;
+			
+			if (!verticalOnly)
+			{
+				object.velocity.x = 0;
+			}
+		}
+		else
+		{
+			object.velocity.x = (_point.x < node.x) ? speed : -speed;
+			object.velocity.y = (_point.y < node.y) ? speed : -speed;
+			
+			angle = _point.angleBetween(node);
+			
+			object.velocity.set(0, -speed);
+			object.velocity.rotate(FlxPoint.weak(0, 0), angle);
 		}
 	}
 	
@@ -342,7 +332,7 @@ class FlxPath implements IFlxDestroyable
 	{
 		if (Snap)
 		{
-			var oldNode:FlxPoint = nodes[_nodeIndex];
+			var oldNode:FlxPoint = nodes[nodeIndex];
 			if (oldNode != null)
 			{
 				if ((_mode & FlxPath.VERTICAL_ONLY) == 0)
@@ -361,33 +351,33 @@ class FlxPath implements IFlxDestroyable
 		}
 		
 		var callComplete:Bool = false;
-		_nodeIndex += _inc;
+		nodeIndex += _inc;
 		
 		if ((_mode & FlxPath.BACKWARD) > 0)
 		{
-			if (_nodeIndex < 0)
+			if (nodeIndex < 0)
 			{
-				_nodeIndex = 0;
+				nodeIndex = 0;
 				finished = callComplete = true;
 			}
 		}
 		else if ((_mode & FlxPath.LOOP_FORWARD) > 0)
 		{
-			if (_nodeIndex >= nodes.length)
+			if (nodeIndex >= nodes.length)
 			{
 				callComplete = true;
-				_nodeIndex = 0;
+				nodeIndex = 0;
 			}
 		}
 		else if ((_mode & FlxPath.LOOP_BACKWARD) > 0)
 		{
-			if (_nodeIndex < 0)
+			if (nodeIndex < 0)
 			{
-				_nodeIndex = nodes.length - 1;
+				nodeIndex = nodes.length - 1;
 				callComplete = true;
-				if (_nodeIndex < 0)
+				if (nodeIndex < 0)
 				{
-					_nodeIndex = 0;
+					nodeIndex = 0;
 				}
 			}
 		}
@@ -395,37 +385,37 @@ class FlxPath implements IFlxDestroyable
 		{
 			if (_inc > 0)
 			{
-				if (_nodeIndex >= nodes.length)
+				if (nodeIndex >= nodes.length)
 				{
-					_nodeIndex = nodes.length - 2;
+					nodeIndex = nodes.length - 2;
 					callComplete = true;
-					if (_nodeIndex < 0)
+					if (nodeIndex < 0)
 					{
-						_nodeIndex = 0;
+						nodeIndex = 0;
 					}
 					_inc = -_inc;
 				}
 			}
-			else if (_nodeIndex < 0)
+			else if (nodeIndex < 0)
 			{
-				_nodeIndex = 1;
+				nodeIndex = 1;
 				callComplete = true;
-				if (_nodeIndex >= nodes.length)
+				if (nodeIndex >= nodes.length)
 				{
-					_nodeIndex = nodes.length - 1;
+					nodeIndex = nodes.length - 1;
 				}
-				if (_nodeIndex < 0)
+				if (nodeIndex < 0)
 				{
-					_nodeIndex = 0;
+					nodeIndex = 0;
 				}
 				_inc = -_inc;
 			}
 		}
 		else
 		{
-			if (_nodeIndex >= nodes.length)
+			if (nodeIndex >= nodes.length)
 			{
-				_nodeIndex = nodes.length - 1;
+				nodeIndex = nodes.length - 1;
 				finished = callComplete = true;
 			}
 		}
@@ -435,26 +425,26 @@ class FlxPath implements IFlxDestroyable
 			onComplete(this);
 		}
 
-		return nodes[_nodeIndex];
+		return nodes[nodeIndex];
 	}
 	
 	/**
 	 * Stops path movement and removes this path it from the path manager.
 	 */
-	public function abort():Void
+	public function cancel():Void
 	{
 		finished = true;
+		active = false;
 		
 		if (object != null)
 		{
-			object.velocity.x = 0;
-			object.velocity.y = 0;
+			object.velocity.set(0, 0);
 		}
 		
-		if (manager != null)
+		if (manager != null && _inManager)
 		{
 			manager.remove(this);
-			_pool.put(this);
+			_inManager = false;
 		}
 	}
 	
@@ -463,11 +453,7 @@ class FlxPath implements IFlxDestroyable
 	 */
 	public function destroy():Void
 	{
-		// recycle FlxPoints
-		for (point in nodes)
-		{
-			point = FlxDestroyUtil.put(point);
-		}
+		FlxDestroyUtil.putArray(nodes);
 		nodes = null;
 		object = null;
 		onComplete = null;
@@ -560,7 +546,7 @@ class FlxPath implements IFlxDestroyable
 	 */
 	public function remove(Node:FlxPoint):FlxPoint
 	{
-		var index:Int = FlxArrayUtil.indexOf(nodes, Node);
+		var index:Int =  nodes.indexOf(Node);
 		if (index >= 0)
 		{
 			return nodes.splice(index, 1)[0];
@@ -666,7 +652,7 @@ class FlxPath implements IFlxDestroyable
 			{
 				nodeSize *= 2;
 			}
-			var nodeColor:Int = debugColor;
+			var nodeColor:FlxColor = debugColor;
 			if (l > 1)
 			{
 				if (i == 0)
@@ -712,6 +698,91 @@ class FlxPath implements IFlxDestroyable
 		#end
 	}
 	#end
+}
+
+class FlxPathManager extends FlxBasic
+{
+	private var _paths:Array<FlxPath> = [];
 	
-	private function new() {}
+	public function new()
+	{
+		super();
+		#if !FLX_NO_DEBUG
+		visible = false; // No draw-calls needed 
+		#end
+		FlxG.signals.stateSwitched.add(clear);
+	}
+	
+	/**
+	 * Clean up memory.
+	 */
+	override public function destroy():Void
+	{
+		clear();
+		_paths = null;
+		FlxG.signals.stateSwitched.remove(clear);
+		super.destroy();
+	}
+	
+	override public function update():Void
+	{
+		for (path in _paths)
+		{
+			if (path.active)
+			{
+				path.update();
+			}
+		}
+	}
+	
+	#if !FLX_NO_DEBUG
+	/**
+	 * Called by FlxG.plugins.draw() after the game state has been drawn.
+	 * Cycles through cameras and calls drawDebug() on each one.
+	 */
+	override public function draw():Void
+	{
+		super.draw();
+		if (FlxG.debugger.drawDebug)
+		{
+			for (path in _paths)
+			{
+				if ((path != null) && !path.ignoreDrawDebug)
+				{
+					path.drawDebug();
+				}
+			}
+		}
+	}
+	#end
+	
+	/**
+	 * Add a path to the path debug display manager.
+	 * Usually called automatically by FlxPath's constructor.
+	 * 
+	 * @param	Path	The FlxPath you want to add to the manager.
+	 */
+	public function add(Path:FlxPath):Void
+	{
+		_paths.push(Path);
+	}
+	
+	/**
+	 * Remove a path from the path debug display manager.
+	 * Usually called automatically by FlxPath's destroy() function.
+	 * 
+	 * @param	Path	The FlxPath you want to remove from the manager.
+	 */
+	public function remove(Path:FlxPath, ReturnInPool:Bool = true):Void
+	{
+		FlxArrayUtil.fastSplice(_paths, Path);
+	}
+	
+	/**
+	 * Removes all the paths from the path debug display manager.
+	 */
+	public inline function clear():Void
+	{
+		FlxArrayUtil.clearArray(_paths);
+	}
 }

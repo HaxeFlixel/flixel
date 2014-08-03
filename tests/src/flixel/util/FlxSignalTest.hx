@@ -1,6 +1,5 @@
 package flixel.util;
 
-import flixel.FlxState;
 import flixel.util.FlxSignal;
 import massive.munit.Assert;
 
@@ -40,6 +39,8 @@ class FlxSignalTest extends FlxTest
 		
 		flag = false;
 		counter = 0;
+		
+		destroyable = signal0;
 	}
 	
 	@Test

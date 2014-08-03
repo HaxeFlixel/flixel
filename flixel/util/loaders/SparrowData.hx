@@ -1,15 +1,12 @@
 package flixel.util.loaders;
 
-import flash.display.BitmapData;
 import flash.geom.Rectangle;
 import flixel.FlxG;
-import flixel.interfaces.IFlxDestroyable;
-import flixel.util.FlxPoint;
-import haxe.Json;
+import flixel.math.FlxPoint;
 import haxe.xml.Fast;
 import openfl.Assets;
 
-class SparrowData extends TexturePackerData implements IFlxDestroyable
+class SparrowData extends TexturePackerData
 {
 	/**
 	 * Constructor

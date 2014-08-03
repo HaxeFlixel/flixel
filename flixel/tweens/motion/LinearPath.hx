@@ -1,12 +1,9 @@
 package flixel.tweens.motion;
 
-import flixel.FlxG;
-import flixel.tweens.FlxEase.EaseFunction;
-import flixel.tweens.FlxTween.CompleteCallback;
+import flixel.tweens.FlxTween.TweenOptions;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxDestroyUtil;
-import flixel.util.FlxPoint;
-import flixel.util.FlxPool;
+import flixel.math.FlxPoint;
 
 /**
  * Determines linear motion along a set of points.
@@ -14,60 +11,30 @@ import flixel.util.FlxPool;
 class LinearPath extends Motion
 {
 	/**
-	 * A pool that contains LinearPaths for recycling.
-	 */
-	@:isVar 
-	@:allow(flixel.tweens.FlxTween)
-	private static var _pool(get, null):FlxPool<LinearPath>;
-	
-	/**
-	 * Only allocate the pool if needed.
-	 */
-	private static function get__pool():FlxPool<LinearPath>
-	{
-		if (_pool == null)
-		{
-			_pool = new FlxPool<LinearPath>(LinearPath);
-		}
-		return _pool;
-	}
-	
-	/**
 	 * The full length of the path.
 	 */
-	public var distance(default, null):Float;
+	public var distance(default, null):Float = 0;
 
 	public var points:Array<FlxPoint>;
 	
 	// Path information.
 	private var _pointD:Array<Float>;
 	private var _pointT:Array<Float>;
-	private var _speed:Float;
-	private var _index:Int;
+	private var _speed:Float = 0;
+	private var _index:Int = 0;
 
 	// Line information.
 	private var _last:FlxPoint;
 	private var _prevPoint:FlxPoint;
 	private var _nextPoint:FlxPoint;
 	
-	/**
-	 * This function is called when tween is created, or recycled.
-	 *
-	 * @param	complete	Optional completion callback.
-	 * @param	type		Tween type.
-	 * @param	Eease		Optional easer function.
-	 */
-	override public function init(Complete:CompleteCallback, TweenType:Int, UsePooling:Bool)
+	private function new(Options:TweenOptions)
 	{
-		FlxArrayUtil.setLength(points, 0);
-		FlxArrayUtil.setLength(_pointD, 1);
-		FlxArrayUtil.setLength(_pointT, 1);
+		super(Options);
 		
-		_pointD[0] = _pointT[0] = 0;
-		
-		distance = _speed = _index = 0;
-		
-		return super.init(Complete, TweenType, UsePooling);
+		points = [];
+		_pointD = [0];
+		_pointT = [0];
 	}
 	
 	override public function destroy():Void 
@@ -88,9 +55,8 @@ class LinearPath extends Motion
 	 * 
 	 * @param	DurationOrSpeed		Duration or speed of the movement.
 	 * @param	UseDuration			Whether to use the previous param as duration or speed.
-	 * @param	Ease				Optional easer function.
 	 */
-	public function setMotion(DurationOrSpeed:Float, UseDuration:Bool = true, ?Ease:EaseFunction):LinearPath
+	public function setMotion(DurationOrSpeed:Float, UseDuration:Bool = true):LinearPath
 	{
 		updatePath();
 		
@@ -105,7 +71,6 @@ class LinearPath extends Motion
 			_speed = DurationOrSpeed;
 		}
 		
-		this.ease = Ease;
 		start();
 		return this;
 	}
@@ -130,14 +95,14 @@ class LinearPath extends Motion
 		return points[index % points.length];
 	}
 
-	override public function start():LinearPath
+	override private function start():LinearPath
 	{
 		_index = (backward) ? (points.length - 1) : 0;
 		super.start();
 		return this;
 	}
 
-	override public function update():Void
+	override private function update():Void
 	{
 		super.update();
 		var td:Float;
@@ -194,20 +159,6 @@ class LinearPath extends Motion
 		}
 		
 		super.postUpdate();
-	}
-	
-	override inline public function put():Void
-	{
-		if (!_inPool)
-			_pool.putUnsafe(this);
-	}
-	
-	private function new()
-	{
-		super();
-		points = new Array<FlxPoint>();
-		_pointD = new Array<Float>();
-		_pointT = new Array<Float>();
 	}
 
 	/**

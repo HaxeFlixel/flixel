@@ -4,22 +4,20 @@ import flash.display.BitmapData;
 import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
-import flixel.FlxG;
+import flixel.math.FlxPoint;
 import flixel.system.layer.TileSheetData;
-import flixel.util.FlxAngle;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
-import flixel.util.FlxPoint;
 
 class FlxFrame
 {
 	public static var POINT:Point = new Point();
 	public static var MATRIX:Matrix = new Matrix();
+	public static var RECT:Rectangle = new Rectangle();
 	
 	public var name:String;
 	public var frame:Rectangle;
 	
-	public var rotated:Bool = false;
 	public var trimmed:Bool = false;
 	
 	public var tileID:Int = -1;
@@ -28,6 +26,8 @@ class FlxFrame
 	public var sourceSize(default, null):FlxPoint;
 	public var offset(default, null):FlxPoint;
 	public var center(default, null):FlxPoint;
+	
+	public var type(default, null):FlxFrameType;
 	
 	private var _bitmapData:BitmapData;
 	private var _hReversedBitmapData:BitmapData;
@@ -43,6 +43,44 @@ class FlxFrame
 		sourceSize = FlxPoint.get();
 		offset = FlxPoint.get();
 		center = FlxPoint.get();
+		
+		type = REGULAR;
+	}
+	
+	public function paintOnBitmap(?bmd:BitmapData):BitmapData
+	{
+		var result:BitmapData = null;
+		
+		if (bmd != null && (bmd.width == sourceSize.x && bmd.height == sourceSize.y))
+		{
+			result = bmd;
+			
+			var w:Int = bmd.width;
+			var h:Int = bmd.height;
+			
+			if (w > frame.width || h > frame.height)
+			{
+				RECT.x = RECT.y = 0;
+				RECT.width = w;
+				RECT.height = h;
+				bmd.fillRect(RECT, FlxColor.TRANSPARENT);
+			}
+		}
+		else if (bmd != null)
+		{
+			bmd.dispose();
+		}
+		
+		if (result == null)
+		{
+			result = new BitmapData(Std.int(sourceSize.x), Std.int(sourceSize.y), true, FlxColor.TRANSPARENT);
+		}
+		
+		FlxFrame.POINT.x = offset.x;
+		FlxFrame.POINT.y = offset.y;
+		result.copyPixels(_tileSheet.bitmap, frame, FlxFrame.POINT);
+		
+		return result;
 	}
 	
 	public function getBitmap():BitmapData
@@ -52,28 +90,7 @@ class FlxFrame
 			return _bitmapData;
 		}
 		
-		_bitmapData = new BitmapData(Std.int(sourceSize.x), Std.int(sourceSize.y), true, FlxColor.TRANSPARENT);
-		
-		if (rotated)
-		{
-			var temp:BitmapData = new BitmapData(Std.int(frame.width), Std.int(frame.height), true, FlxColor.TRANSPARENT);
-			FlxFrame.POINT.x = FlxFrame.POINT.y = 0;
-			temp.copyPixels(_tileSheet.bitmap, frame, FlxFrame.POINT);
-			
-			MATRIX.identity();
-			MATRIX.translate( -0.5 * frame.width, -0.5 * frame.height);
-			MATRIX.rotate(-90.0 * FlxAngle.TO_RAD);
-			MATRIX.translate(offset.x + 0.5 * frame.height, offset.y + 0.5 * frame.width);
-			
-			_bitmapData.draw(temp, MATRIX);
-			temp.dispose();
-		}
-		else
-		{
-			FlxFrame.POINT.x = offset.x;
-			FlxFrame.POINT.y = offset.y;
-			_bitmapData.copyPixels(_tileSheet.bitmap, frame, FlxFrame.POINT);
-		}
+		_bitmapData = paintOnBitmap();
 		
 		return _bitmapData;
 	}
@@ -149,4 +166,18 @@ class FlxFrame
 		_vReversedBitmapData = FlxDestroyUtil.dispose(_vReversedBitmapData);
 		_hvReversedBitmapData = FlxDestroyUtil.dispose(_hvReversedBitmapData);
 	}
+}
+
+enum FlxFrameType 
+{
+	REGULAR;
+	ROTATED;
+}
+
+enum FlxFrameCollectionType 
+{
+	SINGLE;
+	SPRITESHEET;
+	ATLAS;
+	FONT;
 }

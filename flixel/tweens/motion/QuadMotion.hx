@@ -1,9 +1,7 @@
 ﻿package flixel.tweens.motion;
 
-import flixel.util.FlxPool;
-import flixel.util.FlxPoint;
-import flixel.tweens.FlxEase.EaseFunction;
-import flixel.tweens.FlxTween.CompleteCallback;
+import flixel.tweens.FlxTween.TweenOptions;
+import flixel.math.FlxPoint;
 
 /**
  * Determines motion along a quadratic curve.
@@ -11,52 +9,18 @@ import flixel.tweens.FlxTween.CompleteCallback;
 class QuadMotion extends Motion
 {
 	/**
-	 * A pool that contains QuadMotions for recycling.
-	 */
-	@:isVar 
-	@:allow(flixel.tweens.FlxTween)
-	private static var _pool(get, null):FlxPool<QuadMotion>;
-	
-	/**
-	 * Only allocate the pool if needed.
-	 */
-	private static function get__pool():FlxPool<QuadMotion>
-	{
-		if (_pool == null)
-		{
-			_pool = new FlxPool<QuadMotion>(QuadMotion);
-		}
-		return _pool;
-	}
-	
-	/**
 	 * The distance of the entire curve.
 	 */
 	public var distance(get, never):Float;
 	
 	// Curve information.
-	private var _distance:Float;
-	private var _fromX:Float;
-	private var _fromY:Float;
-	private var _toX:Float;
-	private var _toY:Float;
-	private var _controlX:Float;
-	private var _controlY:Float;
-	
-	/**
-	 * This function is called when tween is created, or recycled.
-	 *
-	 * @param	complete	Optional completion callback.
-	 * @param	type		Tween type.
-	 * @param	Eease		Optional easer function.
-	 */
-	override public function init(Complete:CompleteCallback, TweenType:Int, UsePooling:Bool)
-	{
-		_distance = -1;
-		_fromX = _fromY = _toX = _toY = 0;
-		_controlX = _controlY = 0;
-		return super.init(Complete, TweenType, UsePooling);
-	}
+	private var _distance:Float = -1;
+	private var _fromX:Float = 0;
+	private var _fromY:Float = 0;
+	private var _toX:Float = 0;
+	private var _toY:Float = 0;
+	private var _controlX:Float = 0;
+	private var _controlY:Float = 0;
 	
 	/**
 	 * Starts moving along the curve.
@@ -69,9 +33,8 @@ class QuadMotion extends Motion
 	 * @param	ToY				Y finish.
 	 * @param	DurationOrSpeed	Duration or speed of the movement.
 	 * @param	UseDuration		Duration of the movement.
-	 * @param	Ease			Optional easer function.
 	 */
-	public function setMotion(FromX:Float, FromY:Float, ControlX:Float, ControlY:Float, ToX:Float, ToY:Float, DurationOrSpeed:Float, UseDuration:Bool = true, ?Ease:EaseFunction):QuadMotion
+	public function setMotion(FromX:Float, FromY:Float, ControlX:Float, ControlY:Float, ToX:Float, ToY:Float, DurationOrSpeed:Float, UseDuration:Bool = true):QuadMotion
 	{
 		_distance = -1;
 		x = _fromX = FromX;
@@ -90,13 +53,12 @@ class QuadMotion extends Motion
 			duration = distance / DurationOrSpeed;
 		}
 		
-		this.ease = Ease;
 		start();
 		
 		return this;
 	}
 	
-	override public function update():Void
+	override private function update():Void
 	{
 		super.update();
 		x = _fromX * (1 - scale) * (1 - scale) + _controlX * 2 * (1 - scale) * scale + _toX * scale * scale;
@@ -105,12 +67,6 @@ class QuadMotion extends Motion
 		{
 			postUpdate();
 		}
-	}
-	
-	override inline public function put():Void
-	{
-		if (!_inPool)
-			_pool.putUnsafe(this);
 	}
 	
 	private function get_distance():Float

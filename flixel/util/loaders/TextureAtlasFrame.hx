@@ -1,8 +1,8 @@
 package flixel.util.loaders;
 
 import flash.geom.Rectangle;
-import flixel.interfaces.IFlxDestroyable;
-import flixel.util.FlxPoint;
+import flixel.util.FlxDestroyUtil.IFlxDestroyable;
+import flixel.math.FlxPoint;
 
 class TextureAtlasFrame implements IFlxDestroyable
 {

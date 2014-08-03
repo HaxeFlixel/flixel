@@ -3,12 +3,14 @@ package flixel.system.layer;
 import flash.display.BitmapData;
 import flash.geom.Point;
 import flash.geom.Rectangle;
-import flixel.interfaces.IFlxDestroyable;
+import flixel.math.FlxRect;
 import flixel.system.layer.frames.FlxFrame;
+import flixel.system.layer.frames.FlxRotatedFrame;
 import flixel.system.layer.frames.FlxSpriteFrames;
 import flixel.system.layer.Region;
 import flixel.system.layer.TileSheetExt;
-import flixel.util.FlxPoint;
+import flixel.util.FlxDestroyUtil.IFlxDestroyable;
+import flixel.math.FlxPoint;
 import flixel.util.loaders.TextureAtlasFrame;
 import flixel.util.loaders.TexturePackerData;
 
@@ -23,15 +25,19 @@ class TileSheetData implements IFlxDestroyable
 	
 	/**
 	 * Storage for all groups of FlxFrames.
+	 * WARNING: accessing Map data structure causes string allocations - avoid doing every frame.
 	 */
 	private var flxSpriteFrames:Map<String, FlxSpriteFrames>;
 	
 	/**
 	 * Storage for all FlxFrames in this TileSheetData object.
+	 * WARNING: accessing Map data structure causes string allocations - avoid doing every frame.
 	 */
 	private var flxFrames:Map<String, FlxFrame>;
 	
 	private var frameNames:Array<String>;
+	
+	private var framesArr:Array<FlxFrame>;
 	
 	public var bitmap:BitmapData;
 	
@@ -44,11 +50,110 @@ class TileSheetData implements IFlxDestroyable
 		flxSpriteFrames = new Map<String, FlxSpriteFrames>();
 		flxFrames = new Map<String, FlxFrame>();
 		frameNames = new Array<String>();
+		framesArr = new Array<FlxFrame>();
 	}
 	
 	public inline function getFrame(name:String):FlxFrame
 	{
 		return flxFrames.get(name);
+	}
+	
+	/**
+	 * Clips all frames in provided frames collection.
+	 * 
+	 * @param	frames		Collection of frames to clip
+	 * @param	clipRect	Rectangle which will be used for clipping frames
+	 * @return	Collection of clipped frames
+	 */
+	public function clipFrames(frames:FlxSpriteFrames, clipRect:FlxRect, useOriginal:Bool = true):FlxSpriteFrames
+	{
+		// do not allow negative width/height
+		if (clipRect.width < 0 || clipRect.height < 0) 
+		{
+			return null;
+		}
+		
+		if (useOriginal)
+		{
+			var original:FlxSpriteFrames = frames.original;
+			if (original != null)
+			{
+				frames = original;
+			}
+		}
+		
+		var name:String = frames.name;
+		
+		if (!flxSpriteFrames.exists(name))
+		{
+			return null;
+		}
+		
+		name = name + clipRect.toString();
+		
+		if (flxSpriteFrames.exists(name))
+		{
+			return flxSpriteFrames.get(name);
+		}
+		
+		var spriteData:FlxSpriteFrames = new FlxSpriteFrames(name);
+		
+		var frame:FlxFrame;
+		var newFrame:FlxFrame;
+		
+		var frameRect:Rectangle = new Rectangle();
+		var newFrameRect:Rectangle;
+		
+		var newFrameName:String;
+		
+		for (frame in frames.frames)
+		{
+			frameRect.setTo(0, 0, frame.sourceSize.x, frame.sourceSize.y);
+			newFrameRect = frameRect.intersection(clipRect.copyToFlash());
+			if (newFrameRect.width <= 0 || newFrameRect.height <= 0)
+			{
+				// Empty frame
+				continue;
+			}
+			
+			var offsetX:Float = newFrameRect.x + frame.offset.x;
+			var offsetY:Float = newFrameRect.y + frame.offset.y;
+			
+			newFrameRect.x += frame.frame.x;
+			newFrameRect.y += frame.frame.y;
+			
+			var rect = FlxRect.get().copyFromFlash(newFrameRect);
+			newFrameName = getSpriteSheetFrameKey(frame.frame, new Point(0.5 * frame.frame.width, 0.5 * frame.frame.height)) + rect.toString();
+			rect.put();
+			
+			if (flxFrames.exists(newFrameName))
+			{
+				newFrame = flxFrames.get(newFrameName);
+			}
+			else
+			{
+				newFrame = new FlxFrame(this);
+				newFrame.trimmed = (frameRect.width != newFrameRect.width || frameRect.height != newFrameRect.height);
+				newFrame.sourceSize.set(frame.sourceSize.x, frame.sourceSize.y);
+				newFrame.offset.set(offsetX, offsetY);
+				newFrame.frame = newFrameRect;
+				newFrame.center.set(newFrameRect.width * 0.5 + newFrame.offset.x, newFrameRect.height * 0.5 + newFrame.offset.y);
+				newFrame.additionalAngle = 0;
+				newFrame.name = newFrameName;
+				
+				#if FLX_RENDER_TILE
+				newFrame.tileID = addTileRect(newFrame.frame, new Point(0.5 * newFrameRect.width, 0.5 * newFrameRect.height));
+				#end
+				flxFrames.set(newFrameName, newFrame);
+				frameNames.push(newFrameName);
+				framesArr.push(newFrame);
+				spriteData.addFrame(newFrame);
+			}
+		}
+		
+		spriteData.original = frames;
+		flxSpriteFrames.set(name, spriteData);
+		return spriteData;
 	}
 	
 	public function getSpriteSheetFrames(region:Region, ?origin:Point):FlxSpriteFrames
@@ -153,8 +258,6 @@ class TileSheetData implements IFlxDestroyable
 		#end
 		frame.name = key;
 		frame.frame = rect;
-		
-		frame.rotated = false;
 		frame.trimmed = false;
 		frame.sourceSize.set(rect.width, rect.height);
 		frame.offset.set(0, 0);
@@ -162,6 +265,7 @@ class TileSheetData implements IFlxDestroyable
 		frame.center.set(0.5 * rect.width, 0.5 * rect.height);
 		flxFrames.set(key, frame);
 		frameNames.push(key);
+		framesArr.push(frame);
 		return frame;
 	}
 	
@@ -185,35 +289,31 @@ class TileSheetData implements IFlxDestroyable
 		tileSheet = null;
 		#end
 		
-		for (spriteData in flxSpriteFrames)
-		{
-			spriteData.destroy();
-		}
-		
 		for (frames in flxSpriteFrames)
 		{
 			frames.destroy();
 		}
 		flxSpriteFrames = null;
 		
-		for (frame in flxFrames)
+		for (frame in framesArr)
 		{
 			frame.destroy();
 		}
 		flxFrames = null;
 		
 		frameNames = null;
+		framesArr = null;
 	}
 	
-	#if FLX_RENDER_TILE
 	public function onContext(bitmap:BitmapData):Void
 	{
 		this.bitmap = bitmap;
+		#if FLX_RENDER_TILE
 		var newSheet:TileSheetExt = new TileSheetExt(bitmap);
 		newSheet.rebuildFromOld(tileSheet);
 		tileSheet = newSheet;
+		#end
 	}
-	#end
 	
 	/**
 	 * Parses provided TexturePackerData object and returns generated FlxSpriteFrames object
@@ -253,9 +353,18 @@ class TileSheetData implements IFlxDestroyable
 			return flxFrames.get(key);
 		}
 		
-		var texFrame:FlxFrame = new FlxFrame(this);
+		var texFrame:FlxFrame = null;
+		
+		if (frameData.rotated)
+		{
+			texFrame = new FlxRotatedFrame(this);
+		}
+		else
+		{
+			texFrame = new FlxFrame(this);
+		}
+		
 		texFrame.trimmed = frameData.trimmed;
-		texFrame.rotated = frameData.rotated;
 		texFrame.name = key;
 		texFrame.sourceSize.copyFrom(frameData.sourceSize);
 		texFrame.offset.copyFrom(frameData.offset);
@@ -278,15 +387,16 @@ class TileSheetData implements IFlxDestroyable
 		#end
 		flxFrames.set(key, texFrame);
 		frameNames.push(key);
+		framesArr.push(texFrame);
 		return texFrame;
 	}
 	
 	public function destroyFrameBitmapDatas():Void
 	{
 		var numFrames:Int = frameNames.length;
-		for (i in 0...numFrames)
+		for (frame in framesArr)
 		{
-			flxFrames.get(frameNames[i]).destroyBitmapDatas();
+			frame.destroyBitmapDatas();
 		}
 	}
 }

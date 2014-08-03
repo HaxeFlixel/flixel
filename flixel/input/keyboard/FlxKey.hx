@@ -1,126 +1,211 @@
 package flixel.input.keyboard;
 
 /**
- * A helper class for keyboard input.
+ * Maps enum values and strings to integer keycodes.
  */
-class FlxKey
+@:enum
+abstract FlxKey(Int) from Int to Int
 {
-	// Key States
-	public static inline var JUST_RELEASED:Int = -1;
-	public static inline var RELEASED     :Int =  0;
-	public static inline var PRESSED      :Int =  1;
-	public static inline var JUST_PRESSED :Int =  2;
+	public static var keyNameMap:Map<String, FlxKey> = [
+		"ANY" =>            ANY,
+		"A" =>              A,
+		"B" =>              B,
+		"C" =>              C,
+		"D" =>              D,
+		"E" =>              E,
+		"F" =>              F,
+		"G" =>              G,
+		"H" =>              H,
+		"I" =>              I,
+		"J" =>              J,
+		"K" =>              K,
+		"L" =>              L,
+		"M" =>              M,
+		"N" =>              N,
+		"O" =>              O,
+		"P" =>              P,
+		"Q" =>              Q,
+		"R" =>              R,
+		"S" =>              S,
+		"T" =>              T,
+		"U" =>              U,
+		"V" =>              V,
+		"W" =>              W,
+		"X" =>              X,
+		"Y" =>              Y,
+		"Z" =>              Z,
+		"ZERO" =>           ZERO,
+		"ONE" =>            ONE,
+		"TWO" =>            TWO,
+		"THREE" =>          THREE,
+		"FOUR" =>           FOUR,
+		"FIVE" =>           FIVE,
+		"SIX" =>            SIX,
+		"SEVEN" =>          SEVEN,
+		"EIGHT" =>          EIGHT,
+		"NINE" =>           NINE,
+		"PAGEUP" =>         PAGEUP,
+		"PAGEDOWN" =>       PAGEDOWN,
+		"HOME" =>           HOME,
+		"END" =>            END,
+		"INSERT" =>         INSERT,
+		"ESCAPE" =>         ESCAPE,
+		"MINUS" =>          MINUS,
+		"PLUS" =>           PLUS,
+		"DELETE" =>         DELETE,
+		"BACKSPACE" =>      BACKSPACE,
+		"LBRACKET" =>       LBRACKET,
+		"RBRACKET" =>       RBRACKET,
+		"BACKSLASH" =>      BACKSLASH,
+		"CAPSLOCK" =>       CAPSLOCK,
+		"SEMICOLON" =>      SEMICOLON,
+		"QUOTE" =>          QUOTE,
+		"ENTER" =>          ENTER,
+		"SHIFT" =>          SHIFT,
+		"COMMA" =>          COMMA,
+		"PERIOD" =>         PERIOD,
+		"SLASH" =>          SLASH,
+		"NUMPADSLASH" =>    NUMPADSLASH,
+		"GRAVEACCENT" =>    GRAVEACCENT,
+		"CONTROL" =>        CONTROL,
+		"ALT" =>            ALT,
+		"SPACE" =>          SPACE,
+		"UP" =>             UP,
+		"DOWN" =>           DOWN,
+		"LEFT" =>           LEFT,
+		"RIGHT" =>          RIGHT,
+		"TAB" =>            TAB,
+		"PRINTSCREEN" =>    PRINTSCREEN,
+		"F1" =>             F1,
+		"F2" =>             F2,
+		"F3" =>             F3,
+		"F4" =>             F4,
+		"F5" =>             F5,
+		"F6" =>             F6,
+		"F7" =>             F7,
+		"F8" =>             F8,
+		"F9" =>             F9,
+		"F10" =>            F10,
+		"F11" =>            F11,
+		"F12" =>            F12,
+		"NUMPADZERO" =>     NUMPADZERO,
+		"NUMPADONE" =>      NUMPADONE,
+		"NUMPADTWO" =>      NUMPADTWO,
+		"NUMPADTHREE" =>    NUMPADTHREE,
+		"NUMPADFOUR" =>     NUMPADFOUR,
+		"NUMPADFIVE" =>     NUMPADFIVE,
+		"NUMPADSIX" =>      NUMPADSIX,
+		"NUMPADSEVEN" =>    NUMPADSEVEN,
+		"NUMPADEIGHT" =>    NUMPADEIGHT,
+		"NUMPADNINE" =>     NUMPADNINE,
+		"NUMPADMINUS" =>    NUMPADMINUS,
+		"NUMPADPLUS" =>     NUMPADPLUS,
+		"NUMPADPERIOD" =>   NUMPADPERIOD,
+		"NUMPADMULTIPLY" => NUMPADMULTIPLY
+	];
 	
 	// Key Indicies
-	public static inline var A             :Int = 65;
-	public static inline var B             :Int = 66;
-	public static inline var C             :Int = 67;
-	public static inline var D             :Int = 68;
-	public static inline var E             :Int = 69;
-	public static inline var F             :Int = 70;
-	public static inline var G             :Int = 71;
-	public static inline var H             :Int = 72;
-	public static inline var I             :Int = 73;
-	public static inline var J             :Int = 74;
-	public static inline var K             :Int = 75;
-	public static inline var L             :Int = 76;
-	public static inline var M             :Int = 77;
-	public static inline var N             :Int = 78;
-	public static inline var O             :Int = 79;
-	public static inline var P             :Int = 80;
-	public static inline var Q             :Int = 81;
-	public static inline var R             :Int = 82;
-	public static inline var S             :Int = 83;
-	public static inline var T             :Int = 84;
-	public static inline var U             :Int = 85;
-	public static inline var V             :Int = 86;
-	public static inline var W             :Int = 87;
-	public static inline var X             :Int = 88;
-	public static inline var Y             :Int = 89;
-	public static inline var Z             :Int = 90;
-	public static inline var ZERO          :Int = 48;
-	public static inline var ONE           :Int = 49;
-	public static inline var TWO           :Int = 50;
-	public static inline var THREE         :Int = 51;
-	public static inline var FOUR          :Int = 52;
-	public static inline var FIVE          :Int = 53;
-	public static inline var SIX           :Int = 54;
-	public static inline var SEVEN         :Int = 55;
-	public static inline var EIGHT         :Int = 56;
-	public static inline var NINE          :Int = 57;
-	public static inline var PAGEUP        :Int = 33;
-	public static inline var PAGEDOWN      :Int = 34;
-	public static inline var HOME          :Int = 36;
-	public static inline var END           :Int = 35;
-	public static inline var INSERT        :Int = 45;
-	public static inline var ESCAPE        :Int = 27;
-	public static inline var MINUS         :Int = 189;
-	public static inline var PLUS          :Int = 187;
-	public static inline var DELETE        :Int = 46;
-	public static inline var BACKSPACE     :Int = 8;
-	public static inline var LBRACKET      :Int = 219;
-	public static inline var RBRACKET      :Int = 221;
-	public static inline var BACKSLASH     :Int = 220;
-	public static inline var CAPSLOCK      :Int = 20;
-	public static inline var SEMICOLON     :Int = 186;
-	public static inline var QUOTE         :Int = 222;
-	public static inline var ENTER         :Int = 13;
-	public static inline var SHIFT         :Int = 16;
-	public static inline var COMMA         :Int = 188;
-	public static inline var PERIOD        :Int = 190;
-	public static inline var SLASH         :Int = 191;
-	public static inline var NUMPADSLASH   :Int = 191;
-	public static inline var GRAVEACCENT   :Int = 192;
-	public static inline var CONTROL       :Int = 17;
-	public static inline var ALT           :Int = 18;
-	public static inline var SPACE         :Int = 32;
-	public static inline var UP            :Int = 38;
-	public static inline var DOWN          :Int = 40;
-	public static inline var LEFT          :Int = 37;
-	public static inline var RIGHT         :Int = 39;
-	public static inline var TAB           :Int = 9;
-	public static inline var F1            :Int = 112;
-	public static inline var F2            :Int = 113;
-	public static inline var F3            :Int = 114;
-	public static inline var F4            :Int = 115;
-	public static inline var F5            :Int = 116;
-	public static inline var F6            :Int = 117;
-	public static inline var F7            :Int = 118;
-	public static inline var F8            :Int = 119;
-	public static inline var F9            :Int = 120;
-	public static inline var F10           :Int = 121;
-	public static inline var F11           :Int = 122;
-	public static inline var F12           :Int = 123;
-	public static inline var NUMPADZERO    :Int = 96;
-	public static inline var NUMPADONE     :Int = 97;
-	public static inline var NUMPADTWO     :Int = 98;
-	public static inline var NUMPADTHREE   :Int = 99;
-	public static inline var NUMPADFOUR    :Int = 100;
-	public static inline var NUMPADFIVE    :Int = 101;
-	public static inline var NUMPADSIX     :Int = 102;
-	public static inline var NUMPADSEVEN   :Int = 103;
-	public static inline var NUMPADEIGHT   :Int = 104;
-	public static inline var NUMPADNINE    :Int = 105;
-	public static inline var NUMPADMINUS   :Int = 109;
-	public static inline var NUMPADPLUS    :Int = 107;
-	public static inline var NUMPADPERIOD  :Int = 110;
-	public static inline var NUMPADMULTIPLY:Int = 106;
+	var ANY            = -2;
+	var NONE           = -1;
+	var A              = 65;
+	var B              = 66;
+	var C              = 67;
+	var D              = 68;
+	var E              = 69;
+	var F              = 70;
+	var G              = 71;
+	var H              = 72;
+	var I              = 73;
+	var J              = 74;
+	var K              = 75;
+	var L              = 76;
+	var M              = 77;
+	var N              = 78;
+	var O              = 79;
+	var P              = 80;
+	var Q              = 81;
+	var R              = 82;
+	var S              = 83;
+	var T              = 84;
+	var U              = 85;
+	var V              = 86;
+	var W              = 87;
+	var X              = 88;
+	var Y              = 89;
+	var Z              = 90;
+	var ZERO           = 48;
+	var ONE            = 49;
+	var TWO            = 50;
+	var THREE          = 51;
+	var FOUR           = 52;
+	var FIVE           = 53;
+	var SIX            = 54;
+	var SEVEN          = 55;
+	var EIGHT          = 56;
+	var NINE           = 57;
+	var PAGEUP         = 33;
+	var PAGEDOWN       = 34;
+	var HOME           = 36;
+	var END            = 35;
+	var INSERT         = 45;
+	var ESCAPE         = 27;
+	var MINUS          = 189;
+	var PLUS           = 187;
+	var DELETE         = 46;
+	var BACKSPACE      = 8;
+	var LBRACKET       = 219;
+	var RBRACKET       = 221;
+	var BACKSLASH      = 220;
+	var CAPSLOCK       = 20;
+	var SEMICOLON      = 186;
+	var QUOTE          = 222;
+	var ENTER          = 13;
+	var SHIFT          = 16;
+	var COMMA          = 188;
+	var PERIOD         = 190;
+	var SLASH          = 191;
+	var NUMPADSLASH    = 191;
+	var GRAVEACCENT    = 192;
+	var CONTROL        = 17;
+	var ALT            = 18;
+	var SPACE          = 32;
+	var UP             = 38;
+	var DOWN           = 40;
+	var LEFT           = 37;
+	var RIGHT          = 39;
+	var TAB            = 9;
+	var PRINTSCREEN    = 301;
+	var F1             = 112;
+	var F2             = 113;
+	var F3             = 114;
+	var F4             = 115;
+	var F5             = 116;
+	var F6             = 117;
+	var F7             = 118;
+	var F8             = 119;
+	var F9             = 120;
+	var F10            = 121;
+	var F11            = 122;
+	var F12            = 123;
+	var NUMPADZERO     = 96;
+	var NUMPADONE      = 97;
+	var NUMPADTWO      = 98;
+	var NUMPADTHREE    = 99;
+	var NUMPADFOUR     = 100;
+	var NUMPADFIVE     = 101;
+	var NUMPADSIX      = 102;
+	var NUMPADSEVEN    = 103;
+	var NUMPADEIGHT    = 104;
+	var NUMPADNINE     = 105;
+	var NUMPADMINUS    = 109;
+	var NUMPADPLUS     = 107;
+	var NUMPADPERIOD   = 110;
+	var NUMPADMULTIPLY = 106;
 	
-	/**
-	 * The name of this key.
-	 */
-	public var name:String;
-	/**
-	 * The current state of this key.
-	 */
-	public var current:Int = RELEASED;
-	/**
-	 * The last state of this key.
-	 */
-	public var last:Int = RELEASED;
-	
-	public function new(Name:String)
+	@:from
+	public static inline function fromString(s:String)
 	{
-		name = Name;
+		s = s.toUpperCase();
+		return keyNameMap.exists(s) ? keyNameMap.get(s) : NONE;
 	}
 }

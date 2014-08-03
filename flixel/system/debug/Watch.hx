@@ -7,7 +7,7 @@ import flixel.system.debug.ConsoleUtil.PathToVariable;
 import flixel.system.debug.FlxDebugger;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxDestroyUtil;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 import flixel.util.FlxStringUtil;
 import haxe.ds.StringMap;
 
@@ -36,7 +36,7 @@ class Watch extends Window
 	 */
 	public function new(Closable:Bool = false)
 	{
-		super("watch", new GraphicWatch(0, 0), 0, 0, true, null, Closable);
+		super("Watch", new GraphicWatch(0, 0), 0, 0, true, null, Closable);
 		
 		_names = new Sprite();
 		_names.x = 2;
@@ -54,6 +54,7 @@ class Watch extends Window
 		editing = false;
 		
 		removeAll();
+		FlxG.signals.stateSwitched.add(removeAll);
 	}
 	
 	/**
@@ -80,6 +81,7 @@ class Watch extends Window
 			_watching = null;
 		}
 		_quickWatchList = null;
+		FlxG.signals.stateSwitched.remove(removeAll);
 		
 		super.destroy();
 	}
@@ -167,7 +169,7 @@ class Watch extends Window
 			
 			if (quickWatch != null)
 			{
-				removeEntry(quickWatch, FlxArrayUtil.indexOf(_watching, quickWatch));
+				removeEntry(quickWatch, _watching.indexOf(quickWatch));
 			}
 			_quickWatchList.remove(QuickWatchName);
 			

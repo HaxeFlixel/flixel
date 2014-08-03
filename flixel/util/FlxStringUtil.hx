@@ -5,8 +5,9 @@ import flash.geom.Matrix;
 import flash.Lib;
 import flash.net.URLRequest;
 import flixel.FlxG;
-import flixel.interfaces.IFlxDestroyable;
+import flixel.math.FlxMath;
 import flixel.system.FlxAssets;
+import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 using StringTools;
 
 /**
@@ -155,6 +156,22 @@ class FlxStringUtil
 			}
 		}
 		return string;
+	}
+	
+	/**
+	 * Takes an amount of bytes and finds the fitting unit. Makes sure that the 
+	 * value is below 1024. Example: formatBytes(123456789); -> 117.74MB
+	 */
+	public static function formatBytes(Bytes:Float, Precision:Int = 2):String
+	{
+		var units:Array<String> = ["Bytes", "kB", "MB", "GB", "TB", "PB"];
+		var curUnit = 0;
+		while (Bytes >= 1024 && curUnit < units.length - 1)
+		{
+			Bytes /= 1024;
+			curUnit++;
+		}
+		return FlxMath.roundDecimal(Bytes, Precision) + units[curUnit];
 	}
 	
 	/** 
@@ -387,7 +404,7 @@ class FlxStringUtil
 	 * @param  	ColorMap  	An array of color values (0xAARRGGBB) in the order they're intended to be assigned as indices
 	 * @return	A comma-separated string containing the level data in a FlxTilemap-friendly format.
 	 */
-	public static function bitmapToCSV(Bitmap:BitmapData, Invert:Bool = false, Scale:Int = 1, ?ColorMap:Array<Int>):String
+	public static function bitmapToCSV(Bitmap:BitmapData, Invert:Bool = false, Scale:Int = 1, ?ColorMap:Array<FlxColor>):String
 	{
 		if (Scale < 1) 
 		{
@@ -446,7 +463,7 @@ class FlxStringUtil
 				
 				if (ColorMap != null)
 				{
-					pixel = FlxArrayUtil.indexOf(ColorMap, pixel);
+					pixel = ColorMap.indexOf(pixel);
 				}
 				else if ((Invert && (pixel > 0)) || (!Invert && (pixel == 0)))
 				{

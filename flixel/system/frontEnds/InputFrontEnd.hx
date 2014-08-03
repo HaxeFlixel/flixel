@@ -1,7 +1,8 @@
 package flixel.system.frontEnds;
 
 import flixel.FlxG;
-import flixel.interfaces.IFlxInput;
+import flixel.input.IFlxInputManager;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxStringUtil;
 
 @:allow(flixel.FlxGame)
@@ -13,7 +14,7 @@ class InputFrontEnd
 	/**
 	 * A read-only list of all inputs.
 	 */
-	public var list(default, null):Array<IFlxInput>;
+	public var list(default, null):Array<IFlxInputManager> = [];
 	
 	/**
 	 * Add an input to the system
@@ -22,7 +23,7 @@ class InputFrontEnd
 	 * @return	The input
 	 */
 	@:generic
-	public function add<T:IFlxInput>(Input:T):T
+	public function add<T:IFlxInputManager>(Input:T):T
 	{
 		// Don't add repeats
 		for (input in list)
@@ -45,7 +46,7 @@ class InputFrontEnd
 	 */
 	
 	@:generic
-	public function remove<T:IFlxInput>(Input:T):Bool
+	public function remove<T:IFlxInputManager>(Input:T):Bool
 	{
 		var i:Int = 0;
 		for (input in list)
@@ -69,7 +70,7 @@ class InputFrontEnd
 	 */
 	
 	@:generic
-	public function replace<T:IFlxInput>(Old:T,New:T):T
+	public function replace<T:IFlxInputManager>(Old:T,New:T):T
 	{
 		var i:Int = 0;
 		var success:Bool = false;
@@ -100,10 +101,7 @@ class InputFrontEnd
 		}
 	}
 	
-	private function new()
-	{
-		list = new Array<IFlxInput>();
-	}
+	private function new() {}
 	
 	/**
 	 * Updates the inputs
@@ -141,12 +139,11 @@ class InputFrontEnd
 	/**
 	 * Clean up memory.
 	 */
-	private inline function destroy():Void
+	private function destroy():Void
 	{
 		for (input in list)
 		{
-			input.destroy();
-			input = null;
+			input = FlxDestroyUtil.destroy(input);
 		}
 	}
 }

@@ -1,9 +1,6 @@
 package flixel;
 
-import flixel.FlxG;
-import flixel.group.FlxTypedGroup;
-import flixel.interfaces.IFlxDestroyable;
-import flixel.system.FlxCollisionType;
+import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import flixel.util.FlxStringUtil;
 
 /**
@@ -16,8 +13,10 @@ class FlxBasic implements IFlxDestroyable
 	/**
 	 * Static counters for performance tracking.
 	 */
-	public static var _ACTIVECOUNT:Int = 0;
-	public static var _VISIBLECOUNT:Int = 0;
+	@:allow(flixel.FlxGame)
+	private static var activeCount:Int = 0;
+	@:allow(flixel.FlxGame)
+	private static var visibleCount:Int = 0;
 	#end
 	
 	/**
@@ -43,10 +42,23 @@ class FlxBasic implements IFlxDestroyable
 	 * Cannot be set, use destroy() and revive().
 	 */
 	public var exists(default, set):Bool = true;
+	
+	/**
+	 * Gets ot sets the first camera of this object.
+	 */
+	public var camera(get, set):FlxCamera;
+	/**
+	 * This determines on which FlxCameras this object will be drawn. If it is null / has not been
+	 * set, it uses FlxCamera.defaultCameras, which is a reference to FlxG.cameras.list (all cameras) by default.
+	 */
+	public var cameras(get, set):Array<FlxCamera>;
+	
 	/**
 	 * Enum that informs the collision system which type of object this is (to avoid expensive type casting).
 	 */
-	public var collisionType(default, null):FlxCollisionType = FlxCollisionType.NONE;
+	private var flixelType(default, null):FlxType = NONE;
+	
+	private var _cameras:Array<FlxCamera>;
 	
 	public function new() {}
 	
@@ -57,6 +69,7 @@ class FlxBasic implements IFlxDestroyable
 	public function destroy():Void 
 	{
 		exists = false;
+		_cameras = null;
 	}
 	
 	/**
@@ -86,7 +99,7 @@ class FlxBasic implements IFlxDestroyable
 	public function update():Void 
 	{ 
 		#if !FLX_NO_DEBUG
-		_ACTIVECOUNT++;
+		activeCount++;
 		#end
 	}
 	
@@ -97,8 +110,17 @@ class FlxBasic implements IFlxDestroyable
 	public function draw():Void
 	{
 		#if !FLX_NO_DEBUG
-		_VISIBLECOUNT++;
+		visibleCount++;
 		#end
+	}
+	
+	public function toString():String
+	{
+		return FlxStringUtil.getDebugString([
+			LabelValuePair.weak("active", active),
+			LabelValuePair.weak("visible", visible),
+			LabelValuePair.weak("alive", alive),
+			LabelValuePair.weak("exists", exists)]);
 	}
 	
 	private function set_visible(Value:Bool):Bool
@@ -121,12 +143,61 @@ class FlxBasic implements IFlxDestroyable
 		return alive = Value;
 	}
 	
-	public function toString():String
+	private function get_camera():FlxCamera
 	{
-		return FlxStringUtil.getDebugString([
-			LabelValuePair.weak("active", active),
-			LabelValuePair.weak("visible", visible),
-			LabelValuePair.weak("alive", alive),
-			LabelValuePair.weak("exists", exists)]);
+		return (_cameras == null || _cameras.length == 0) ? FlxCamera.defaultCameras[0] : _cameras[0];
 	}
+	
+	private function set_camera(Value:FlxCamera):FlxCamera
+	{
+		if (_cameras == null)
+			_cameras = [Value];
+		else
+			_cameras[0] = Value;
+		return Value;
+	}
+	
+	private function get_cameras():Array<FlxCamera>
+	{
+		return (_cameras == null) ? FlxCamera.defaultCameras : _cameras;
+	}
+	
+	private function set_cameras(Value:Array<FlxCamera>):Array<FlxCamera>
+	{
+		return _cameras = Value;
+	}
+}
+
+/**
+ * Types of flixel objects - mainly for collisions.
+ * 
+ * Abstracted from an Int type for fast comparison code:
+ * http://nadako.tumblr.com/post/64707798715/cool-feature-of-upcoming-haxe-3-2-enum-abstracts
+ */
+@:enum
+abstract FlxType(Int)
+{
+	var NONE        = 0;
+	var OBJECT      = 1;
+	var GROUP       = 2;
+	var TILEMAP     = 3;
+	var SPRITEGROUP = 4;
+}
+
+interface IFlxBasic
+{
+	public var ID:Int;
+	public var active(default, set):Bool;
+	public var visible(default, set):Bool;
+	public var alive(default, set):Bool;
+	public var exists(default, set):Bool;
+
+	public function draw():Void;
+	public function update():Void;
+	public function destroy():Void;
+	
+	public function kill():Void;
+	public function revive():Void;
+	
+	public function toString():String;
 }

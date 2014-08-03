@@ -8,17 +8,35 @@ import flixel.util.FlxColor;
 import flixel.util.loaders.CachedGraphics;
 import flixel.util.loaders.TextureRegion;
 import openfl.Assets;
+import openfl.events.Event;
 
 /**
  * Internal storage system to prevent graphics from being used repeatedly in memory.
  */
 class BitmapFrontEnd
 {
+	@:allow(flixel.system.frontEnds.BitmapLogFrontEnd)
 	private var _cache:Map<String, CachedGraphics>;
 	
 	public function new()
 	{
 		clearCache();
+	}
+	
+	public function onAssetsReload(e:Event):Void 
+	{
+		var obj:CachedGraphics;
+		if (_cache != null)
+		{
+			for (key in _cache.keys())
+			{
+				obj = _cache.get(key);
+				if (obj != null && obj.canBeDumped)
+				{
+					obj.onAssetsReload();
+				}
+			}
+		}
 	}
 	
 	#if FLX_RENDER_TILE
@@ -32,6 +50,7 @@ class BitmapFrontEnd
 		{
 			var bd:BitmapData = new BitmapData(2, 2, true, FlxColor.WHITE);
 			_whitePixel = new CachedGraphics("whitePixel", bd, true);
+			_whitePixel.persist = true;
 			_whitePixel.tilesheet.addTileRect(new Rectangle(0, 0, 1, 1), new Point(0, 0));
 		}
 		
@@ -100,7 +119,7 @@ class BitmapFrontEnd
 	 * @param	Key		Force the cache to use a specific Key to index the bitmap.
 	 * @return	The BitmapData we just created.
 	 */
-	public function create(Width:Int, Height:Int, Color:Int, Unique:Bool = false, ?Key:String):CachedGraphics
+	public function create(Width:Int, Height:Int, Color:FlxColor, Unique:Bool = false, ?Key:String):CachedGraphics
 	{
 		var key:String = Key;
 		if (key == null)
@@ -127,7 +146,7 @@ class BitmapFrontEnd
 	 * @param	Key			Force the cache to use a specific Key to index the bitmap.
 	 * @return	The CachedGraphics we just created.
 	 */
-	public inline function add(Graphic:Dynamic, Unique:Bool = false, ?Key:String):CachedGraphics
+	public inline function add(Graphic:FlxGraphicAsset, Unique:Bool = false, ?Key:String):CachedGraphics
 	{
 		return addWithSpaces(Graphic, 0, 0, 1, 1, Unique, Key);
 	}
@@ -145,7 +164,7 @@ class BitmapFrontEnd
 	 * @param	Key				Force the cache to use a specific Key to index the bitmap.
 	 * @return	The CachedGraphics we just created.
 	 */
-	public function addWithSpaces(Graphic:Dynamic, FrameWidth:Int, FrameHeight:Int, SpacingX:Int = 1, SpacingY:Int = 1, Unique:Bool = false, ?Key:String):CachedGraphics
+	public function addWithSpaces(Graphic:FlxGraphicAsset, FrameWidth:Int, FrameHeight:Int, SpacingX:Int = 1, SpacingY:Int = 1, Unique:Bool = false, ?Key:String):CachedGraphics
 	{
 		if (Graphic == null)
 		{
@@ -208,13 +227,10 @@ class BitmapFrontEnd
 			}
 			else if (isBitmap)
 			{
-				if (!Unique)
+				key = getCacheKeyFor(cast Graphic);
+				if (key == null)
 				{
-					key = getCacheKeyFor(cast Graphic);
-					if (key == null)
-					{
-						key = getUniqueKey();
-					}
+					key = getUniqueKey();
 				}
 			}
 			else if (isRegion)
@@ -369,11 +385,11 @@ class BitmapFrontEnd
 		if ((key != null) && _cache.exists(key))
 		{
 			var obj:CachedGraphics = _cache.get(key);
-			if (inOpenFlAssets(obj.bitmap) == false)
-			{
-				_cache.remove(key);
-				obj.destroy();
-			}
+			#if !nme
+			Assets.cache.bitmapData.remove(key);
+			#end
+			_cache.remove(key);
+			obj.destroy();
 		}
 	}
 	
@@ -392,8 +408,11 @@ class BitmapFrontEnd
 		for (key in _cache.keys())
 		{
 			obj = _cache.get(key);
-			if ((obj != null && !obj.persist) && inOpenFlAssets(obj.bitmap) == false)
+			if (obj != null && !obj.persist)
 			{
+				#if !nme
+				Assets.cache.bitmapData.remove(key);
+				#end
 				_cache.remove(key);
 				obj.destroy();
 				obj = null;
@@ -401,21 +420,24 @@ class BitmapFrontEnd
 		}
 	}
 	
-	public function inOpenFlAssets(bitmap:BitmapData):Bool
+	/**
+	 * Removes all unused graphics from cache,
+	 * but skips graphics which should persist in cache and shouldn't be destroyed on no use.
+	 */
+	public function clearUnused():Void
 	{
-      #if !nme
-		var bitmapDataCache = Assets.cache.bitmapData;
-		if (bitmapDataCache != null)
+		var obj:CachedGraphics;
+		
+		if (_cache != null)
 		{
-			for (bd in bitmapDataCache)
+			for (key in _cache.keys())
 			{
-				if (bd == bitmap)
+				obj = _cache.get(key);
+				if (obj != null && obj.useCount <= 0 && !obj.persist && obj.destroyOnNoUse)
 				{
-					return true;
+					remove(obj.key);
 				}
 			}
 		}
-      #end
-		return false;
 	}
 }

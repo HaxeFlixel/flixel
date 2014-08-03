@@ -17,9 +17,13 @@ import flixel.effects.postprocess.PostProcess;
 import flixel.system.layer.TileSheetExt;
 import flixel.system.replay.FlxReplay;
 import flixel.text.pxText.PxBitmapFont;
-import flixel.util.FlxAngle;
+import flixel.math.FlxAngle;
 import flixel.util.FlxColor;
-import flixel.util.FlxRandom;
+import flixel.math.FlxRandom;
+import flixel.util.FlxArrayUtil;
+import flixel.util.FlxDestroyUtil;
+import openfl.Assets;
+using StringTools;
 
 #if (cpp || neko)
 import openfl.display.OpenGLView;
@@ -205,8 +209,9 @@ class FlxGame extends Sprite
 	 * On html5, we draw() all our cameras into a bitmap to avoid blurry zooming.
 	 */
 	private var _display:BitmapData;
-	private var _displayMatrix:Matrix;
-	private var _displayColorTransform:ColorTransform;
+	private var _displayBitmap:Bitmap;
+	private var _displayMatrix = new Matrix();
+	private var _displayColorTransform = new ColorTransform();
 	#end
 	/**
 	 * Sprite for postprocessing effects
@@ -262,7 +267,37 @@ class FlxGame extends Sprite
 		// Then get ready to create the game object for real
 		_initialState = (InitialState == null) ? FlxState : InitialState;
 		
+		#if (flash && debug)
+		checkSwfVersion();
+		#end
+		
 		addEventListener(Event.ADDED_TO_STAGE, create);
+	}
+	
+	private function checkSwfVersion():Void
+	{
+		var feature = "[f]";
+		var version = "[v]";
+		var conditional = "[c]";
+		var errorMessage = '$feature only supported in Flash Player version $version or higher. '
+			+ 'Define $conditional to disable this feature or add <set name="SWF_VERSION" value="$version" /> to your Project.xml.';
+		
+		#if (!flash10_2 && !FLX_NO_NATIVE_CURSOR)
+		throw errorMessage
+			.replace(feature, "Native mouse cursors are")
+			.replace(version, "10.2")
+			.replace(conditional, "FLX_NO_NATIVE_CURSOR");
+		#elseif (!flash11_2 && !FLX_NO_MOUSE_ADVANCED)
+		throw errorMessage
+			.replace(feature, "Middle and right mouse button events are")
+			.replace(version, "11.2")
+			.replace(conditional, "FLX_NO_MOUSE_ADVANCED");
+		#elseif (!flash11_8 && !FLX_NO_GAMEPAD)
+		throw errorMessage
+			.replace(feature, "Gamepad input is")
+			.replace(version, "11.8")
+			.replace(conditional, "FLX_NO_GAMEPAD");
+		#end
 	}
 	
 	/**
@@ -276,7 +311,7 @@ class FlxGame extends Sprite
 		}
 		removeEventListener(Event.ADDED_TO_STAGE, create);
 		
-		_total = Lib.getTimer();
+		_total = getTimer();
 		
 		#if desktop
 		FlxG.fullscreen = _startFullscreen;
@@ -287,13 +322,6 @@ class FlxGame extends Sprite
 		stage.align = StageAlign.TOP_LEFT;
 		stage.frameRate = FlxG.drawFramerate;
 		
-		#if js
-		_display = new BitmapData(Lib.current.stage.stageWidth, Lib.current.stage.stageHeight);
-		_displayMatrix = new Matrix();
-		_displayColorTransform = new ColorTransform();
-		addChild(new Bitmap(_display));
-		#end
-		
 		addChild(_inputContainer);
 		
 		#if (cpp || neko)
@@ -303,7 +331,7 @@ class FlxGame extends Sprite
 		
 		// Creating the debugger overlay
 		#if !FLX_NO_DEBUG
-		debugger = new FlxDebugger(Lib.current.stage.stageWidth, Lib.current.stage.stageHeight);
+		debugger = new FlxDebugger(FlxG.stage.stageWidth, FlxG.stage.stageHeight);
 		addChild(debugger);
 		#end
 		
@@ -346,7 +374,12 @@ class FlxGame extends Sprite
 		// it means that we need to recreate bitmapdatas of dumped tilesheets
 		stage.addEventListener(Event.RESIZE, onResize);
 		
-		onResize(null); // fixes initial _inputContainer scale
+		// make sure the cursor etc are properly scaled from the start
+		resizeGame(FlxG.stage.stageWidth, FlxG.stage.stageHeight);
+		
+		#if !bitfive
+		Assets.addEventListener(Event.CHANGE, FlxG.bitmap.onAssetsReload);
+		#end
 	}
 	
 	private function onFocus(_):Void
@@ -433,18 +466,31 @@ class FlxGame extends Sprite
 	@:allow(flixel.FlxG)
 	private function onResize(_):Void 
 	{
-		var width:Int = Lib.current.stage.stageWidth;
-		var height:Int = Lib.current.stage.stageHeight;
+		var width:Int = FlxG.stage.stageWidth;
+		var height:Int = FlxG.stage.stageHeight;
 		
 		#if FLX_RENDER_TILE
 		FlxG.bitmap.onContext();
 		#end
 		
+		_state.onResize(width, height);
+		FlxG.signals.gameResized.dispatch(width, height);
+		
+		resizeGame(width, height);
+	}
+	
+	private function resizeGame(width:Int, height:Int):Void
+	{
 		FlxG.resizeGame(width, height);
 		
-		_state.onResize(width, height);
-		FlxG.plugins.onResize(width, height);
-		FlxG.signals.gameResized.dispatch(width, height);
+		#if js
+		FlxDestroyUtil.removeChild(this, _displayBitmap);
+		FlxDestroyUtil.dispose(_display);
+		
+		var index:Int = getChildIndex(_inputContainer);
+		_display = new BitmapData(width, height);
+		addChildAt(_displayBitmap = new Bitmap(_display), index);
+		#end
 		
 		#if !FLX_NO_DEBUG
 		debugger.onResize(width, height);
@@ -483,7 +529,7 @@ class FlxGame extends Sprite
 	 */
 	private function onEnterFrame(_):Void
 	{
-		ticks = Lib.getTimer();
+		ticks = getTimer();
 		_elapsedMS = ticks - _total;
 		_total = ticks;
 		
@@ -528,13 +574,13 @@ class FlxGame extends Sprite
 			}
 			
 			#if !FLX_NO_DEBUG
-			FlxBasic._VISIBLECOUNT = 0;
+			FlxBasic.visibleCount = 0;
 			#end
 			
 			draw();
 			
 			#if !FLX_NO_DEBUG
-			debugger.stats.visibleObjects(FlxBasic._VISIBLECOUNT);
+			debugger.stats.visibleObjects(FlxBasic.visibleCount);
 			debugger.update();
 			#end
 		}
@@ -546,7 +592,7 @@ class FlxGame extends Sprite
 	 */
 	private inline function resetGame():Void
 	{
-		FlxG.signals.gameReset.dispatch();
+		FlxG.signals.preGameReset.dispatch();
 		
 		#if !FLX_NO_DEBUG
 		_skipSplash = true;
@@ -555,7 +601,10 @@ class FlxGame extends Sprite
 		if (_skipSplash || FlxSplash.nextState != null) // already played
 		{
 			_requestedState = cast (Type.createInstance(_initialState, []));
-			_gameJustStarted = true;
+			if (FlxSplash.nextState == null)
+			{
+				_gameJustStarted = true;
+			}
 		}
 		else
 		{
@@ -572,6 +621,8 @@ class FlxGame extends Sprite
 		#end
 		
 		FlxG.reset();
+		
+		FlxG.signals.postGameReset.dispatch();
 	}
 
 	/**
@@ -589,20 +640,11 @@ class FlxGame extends Sprite
 		#if !FLX_NO_SOUND_SYSTEM
 		FlxG.sound.destroy();
 		#end
-		FlxG.plugins.onStateSwitch();
+		
 		FlxG.signals.stateSwitched.dispatch();
 		
 		#if FLX_RECORD
 		FlxRandom.updateStateSeed();
-		#end
-		
-		#if !FLX_NO_DEBUG
-		// Clear the debugger overlay's Watch window
-		if (debugger != null)
-		{
-			debugger.watch.removeAll();
-			debugger.onStateSwitch();
-		}
 		#end
 		
 		// Destroy the old state (if there is an old state)
@@ -664,7 +706,7 @@ class FlxGame extends Sprite
 		{
 			_replayRequested = false;
 			_replay.rewind();
-			FlxRandom.globalSeed = _replay.seed;
+			FlxG.random.initialSeed = _replay.seed;
 			
 			#if !FLX_NO_DEBUG
 			debugger.vcr.playingReplay();
@@ -676,13 +718,13 @@ class FlxGame extends Sprite
 		
 		#if !FLX_NO_DEBUG
 		// Finally actually step through the game physics
-		FlxBasic._ACTIVECOUNT = 0;
+		FlxBasic.activeCount = 0;
 		#end
 		
 		update();
 		
 		#if !FLX_NO_DEBUG
-		debugger.stats.activeObjects(FlxBasic._ACTIVECOUNT);
+		debugger.stats.activeObjects(FlxBasic.activeCount);
 		#end
 	}
 	
@@ -705,7 +747,7 @@ class FlxGame extends Sprite
 		#if !FLX_NO_DEBUG
 		if (FlxG.debugger.visible)
 		{
-			ticks = Lib.getTimer(); // getTimer() is expensive, only do it if necessary
+			ticks = getTimer(); // Lib.getTimer() is expensive, only do it if necessary
 		}
 		#end
 		
@@ -737,7 +779,7 @@ class FlxGame extends Sprite
 		FlxG.signals.postUpdate.dispatch();
 		
 		#if !FLX_NO_DEBUG
-		debugger.stats.flixelUpdate(Lib.getTimer() - ticks);
+		debugger.stats.flixelUpdate(getTimer() - ticks);
 		#end
 		
 		#if (!FLX_NO_MOUSE || !FLX_NO_TOUCH)
@@ -745,7 +787,7 @@ class FlxGame extends Sprite
 		{
 			swipe = null;
 		}
-		FlxG.swipes = [];
+		FlxArrayUtil.clearArray(FlxG.swipes);
 		#end
 	}
 	
@@ -843,7 +885,7 @@ class FlxGame extends Sprite
 		if (FlxG.debugger.visible)
 		{
 			// getTimer() is expensive, only do it if necessary
-			ticks = Lib.getTimer(); 
+			ticks = getTimer(); 
 		}
 		#end
 		
@@ -883,8 +925,8 @@ class FlxGame extends Sprite
 		for (camera in FlxG.cameras.list)
 		{
 			_displayMatrix.identity();
-			_displayMatrix.scale(camera.zoom * FlxG._scaleMode.scale.x, camera.zoom * FlxG._scaleMode.scale.y);
-			_displayMatrix.translate(camera.x * FlxG._scaleMode.scale.x, camera.y * FlxG._scaleMode.scale.y);
+			_displayMatrix.scale(camera.zoom * FlxG.scaleMode.scale.x, camera.zoom * FlxG.scaleMode.scale.y);
+			_displayMatrix.translate(camera.x * FlxG.scaleMode.scale.x, camera.y * FlxG.scaleMode.scale.y);
 			
 			// rotate around center
 			if (camera.angle != 0)
@@ -904,7 +946,12 @@ class FlxGame extends Sprite
 		FlxG.signals.postDraw.dispatch();
 		
 		#if !FLX_NO_DEBUG
-		debugger.stats.flixelDraw(Lib.getTimer() - ticks);
+		debugger.stats.flixelDraw(getTimer() - ticks);
 		#end
+	}
+	
+	private dynamic function getTimer():Int
+	{
+		return Lib.getTimer();
 	}
 }
