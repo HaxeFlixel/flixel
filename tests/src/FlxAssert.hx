@@ -20,7 +20,9 @@ class FlxAssert
 			fail();
 		if (expected != null && actual == null)
 			fail();
-			
+		if (expected.length != actual.length)
+			fail();
+		
 		for (i in 0...expected.length)
 		{
 			if (expected[i] != actual[i])
