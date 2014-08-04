@@ -15,6 +15,8 @@ import flixel.text.FlxTextTest;
 import flixel.tile.FlxTilemapTest;
 import flixel.tweens.FlxTweenTest;
 import flixel.ui.FlxButtonTest;
+import flixel.util.FlxColorTest;
+import flixel.util.FlxPoolTest;
 import flixel.util.FlxSignalTest;
 import FlxTest;
 
@@ -45,6 +47,8 @@ class TestSuite extends massive.munit.TestSuite
 		add(flixel.tile.FlxTilemapTest);
 		add(flixel.tweens.FlxTweenTest);
 		add(flixel.ui.FlxButtonTest);
+		add(flixel.util.FlxColorTest);
+		add(flixel.util.FlxPoolTest);
 		add(flixel.util.FlxSignalTest);
 		add(FlxTest);
 	}
