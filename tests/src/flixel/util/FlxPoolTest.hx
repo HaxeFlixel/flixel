@@ -69,14 +69,7 @@ class FlxPoolTest extends FlxTest
 		// ppool.put(pt4); // 32154|
 		
 		var old = ppool.clear();
-		var expected = [pt3, pt2, pt1, pt5, pt1];
 		
-		var bool = true;
-		for (i in 0...expected.length)
-		{
-			bool = bool && (expected[i] == old[i]);
-		}
-		
-		Assert.isTrue(bool);
+		FlxAssert.arraysAreEqual([pt3, pt2, pt1, pt5, pt1], old);
 	}
 }

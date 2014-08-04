@@ -75,9 +75,7 @@ class FlxAnimationControllerTest extends FlxTest
 		loadSpriteSheet();
 		sprite.animation.add("animation", animation);
 		
-		Assert.areEqual(0, animation[0]);
-		Assert.areEqual(1, animation[1]);
-		Assert.areEqual(2, animation[2]);
+		FlxAssert.arraysAreEqual([0, 1, 2], animation);
 	}
 	
 	function loadSpriteSheet():Void
