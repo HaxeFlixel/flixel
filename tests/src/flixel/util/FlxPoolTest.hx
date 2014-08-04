@@ -6,7 +6,6 @@ import massive.munit.Assert;
 
 class FlxPoolTest extends FlxTest
 {
-
 	var ppool:FlxPool<FlxPoint>;
 	
 	@Before

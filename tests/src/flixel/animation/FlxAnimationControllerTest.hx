@@ -38,7 +38,8 @@ class FlxAnimationControllerTest extends FlxTest
 	{
 		var timesCalled:Int = 0;
 		var callbackFrameIndex:Int = -1;
-		sprite.animation.callback = function(s:String, n:Int, i:Int) {
+		sprite.animation.callback = function(s:String, n:Int, i:Int)
+		{
 			timesCalled++;
 			callbackFrameIndex = i;
 		};
@@ -53,7 +54,8 @@ class FlxAnimationControllerTest extends FlxTest
 	function testCallbackNoFrameIndexChange():Void
 	{
 		var timesCalled:Int = 0;
-		sprite.animation.callback = function(s:String, n:Int, i:Int) {
+		sprite.animation.callback = function(s:String, n:Int, i:Int)
+		{
 			timesCalled++;
 		};
 		
