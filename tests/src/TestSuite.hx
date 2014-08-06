@@ -19,6 +19,7 @@ import flixel.util.FlxColorTest;
 import flixel.util.FlxPoolTest;
 import flixel.util.FlxSignalTest;
 import flixel.util.FlxStringUtilTest;
+import flixel.util.FlxTimerTest;
 import FlxTest;
 
 /**
@@ -52,6 +53,7 @@ class TestSuite extends massive.munit.TestSuite
 		add(flixel.util.FlxPoolTest);
 		add(flixel.util.FlxSignalTest);
 		add(flixel.util.FlxStringUtilTest);
+		add(flixel.util.FlxTimerTest);
 		add(FlxTest);
 	}
 }
