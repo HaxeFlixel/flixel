@@ -20,7 +20,6 @@ import flixel.util.FlxDestroyUtil;
 import flixel.util.helpers.FlxRange;
 import flixel.util.loaders.CachedGraphics;
 import openfl.Assets;
-import pgr.dconsole.DC;
 using StringTools;
 
 /**
