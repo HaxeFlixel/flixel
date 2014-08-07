@@ -20,6 +20,7 @@ import flixel.util.FlxDestroyUtil;
 import flixel.util.helpers.FlxRange;
 import flixel.util.loaders.CachedGraphics;
 import openfl.Assets;
+import pgr.dconsole.DC;
 using StringTools;
 
 /**
@@ -829,14 +830,13 @@ class FlxText extends FlxSprite
 				#else
 					var textWidth = textField.getLineMetrics(0).width;
 				#end
-				
-				_matrix.translate(Math.floor((width - textWidth) / 2), 0);
+				if (textField.textWidth <= textField.width)
+					_matrix.translate(Math.floor((width - textWidth) / 2), 0);
 			}
 			
 			applyBorderStyle();
 			applyFormats(_formatAdjusted, false);
 
-			//Actually draw the text onto the buffer
 			cachedGraphics.bitmap.draw(textField, _matrix);
 		}
 		
@@ -973,8 +973,7 @@ class FlxText extends FlxSprite
 		to.italic = from.italic;
 		to.size = from.size;
 		to.color = from.color;
-		if (withAlign)
-			to.align = from.align;
+		if(withAlign) to.align = from.align;
 	}
 	
 	/**
