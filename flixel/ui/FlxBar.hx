@@ -30,7 +30,7 @@ import flixel.util.loaders.CachedGraphics;
 class FlxBar extends FlxSprite
 {
 	/**
-	 * fixedPosition controls if the FlxBar sprite is at a fixed location on screen, or tracking its parent
+	 * fixedPosition controls if the FlxBar sprite is at a fixed location in game, or tracking its parent
 	 */
 	public var fixedPosition:Bool = true;
 	/**
