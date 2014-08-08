@@ -1,4 +1,5 @@
 package flixel.util;
+
 import flixel.math.FlxMath;
 import flixel.system.macros.FlxColorMacros;
 
@@ -275,7 +276,6 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	{
 		return FlxColor.fromRGBFloat(lhs.redFloat * rhs.redFloat, lhs.greenFloat * rhs.greenFloat, lhs.blueFloat * rhs.blueFloat);
 	}
-	
 	
 	/**
 	 * Add the RGB channels of two FlxColors

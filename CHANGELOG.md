@@ -88,6 +88,7 @@
  * updated random number generation equation to avoid inconsistent results across platforms; may break recordings made in 3.x!
  * can now create an instance of FlxRandom to create deterministic pseudorandom numbers independently of HaxeFlixel core functions (e.g. particle emitters)
  * renamed chanceRoll() to bool()
+ * added floatNormal()
 * FlxArrayUtil: removed randomness-related functions, please use FlxRandom instead
 * FlxText:
  * added an abstract enum for alignment (text.alignment = CENTER; is now possible)
@@ -103,11 +104,13 @@
  * labelAlphas[FlxButton.HIGHLIGHT] is now 1 for FLX_NO_MOUSE
  * set_label() now updates the label position
  * added maxInputMovement
+ * added mouseButtons to control which mouse buttons can trigger the button
 * FlxMouseEventManager:
  * moved from flixel.plugin.MouseEventManager to flixel.input.mouse.FlxMouseEventManager
  * added removeAll()
  * fixed inaccurate pixel-perfect sprite overlap checks
  * fixed reorder() for sprites within FlxSpriteGroups
+ * now supports all mouse buttons (mouseButtons parameter in add() / setObjectMouseButtons())
 * FlxObject: added toPoint() and toRect()
 * FlxVector:
  * fixed behaviour of set_length() for (0, 0) vectors
@@ -138,7 +141,9 @@
 * FlxPath: fixed an issue where a velocity would be set even if the object positon matches the current node
 * FlxSignal: fixed addOnce() not working on neko
 * CachedGraphics: added defaultPersist
-* Fixed a bug with point pooling that could lead to them being recycled when they shouldn't be
+* FlxPool:
+ * Fixed a bug with point / rect pooling that could lead to them being recycled when they shouldn't be
+ * improved pooling performance
 
 3.3.5
 ------------------------------

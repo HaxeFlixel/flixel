@@ -452,8 +452,8 @@ class FlxObject extends FlxBasic
 	public var ignoreDrawDebug:Bool = false;
 	#end
 	
-	private var _point:FlxPoint;
-	private var _rect:FlxRect;
+	private var _point:FlxPoint = FlxPoint.get();
+	private var _rect:FlxRect = FlxRect.get();
 	
 	/**
 	 * @param	X		The X-coordinate of the point in space.
@@ -481,8 +481,6 @@ class FlxObject extends FlxBasic
 		flixelType = OBJECT;
 		last = FlxPoint.get(x, y);
 		scrollFactor = FlxPoint.get(1, 1);
-		_point = FlxPoint.get();
-		_rect = FlxRect.get();
 		
 		initMotionVars();
 	}

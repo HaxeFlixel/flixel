@@ -160,15 +160,14 @@ class FlxRandom
 	 * Returns a pseudorandom float value in a statistical normal distribution centered on Mean with a standard deviation size of StdDev.
 	 * (This uses the Box-Muller transform algorithm for guassian pseudorandom numbers)
 	 * 
-	 * *Normal distribution: 68% values are within 1 standard deviation, 95% are in 2 StdDevs, 99% in 3 StdDevs.
+	 * Normal distribution: 68% values are within 1 standard deviation, 95% are in 2 StdDevs, 99% in 3 StdDevs.
 	 * See this image: https://github.com/HaxeFlixel/flixel-demos/blob/dev/Performance/FlxRandom/normaldistribution.png
 	 * 
 	 * @param	Mean		The Mean around which the normal distribution is centered
 	 * @param	StdDev		Size of the standard deviation
 	 */
-	public function floatNormal(Mean:Float=0,StdDev:Float=1):Float
+	public function floatNormal(Mean:Float = 0, StdDev:Float = 1):Float
 	{
-		
 		if (_hasFloatNormalSpare)
 		{
 			_hasFloatNormalSpare = false;
@@ -178,8 +177,8 @@ class FlxRandom
 		
 		_hasFloatNormalSpare = true;
 		
-		var theta:Float = _twoPI * (generate()/MODULUS);
-		_floatNormalRho = Math.sqrt( -2 * Math.log(1 - (generate()/MODULUS)) );
+		var theta:Float = _twoPI * (generate() / MODULUS);
+		_floatNormalRho = Math.sqrt( -2 * Math.log(1 - (generate() / MODULUS)));
 		var scale:Float = StdDev * _floatNormalRho;
 		
 		_floatNormalRand1 = Math.cos(theta);

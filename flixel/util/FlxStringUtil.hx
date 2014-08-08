@@ -400,8 +400,8 @@ class FlxStringUtil
 	 * 
 	 * @param	Bitmap		A Flash BitmapData object, preferably black and white.
 	 * @param	Invert		Load white pixels as solid instead.
-	 * @param	Scale		Default is 1.  Scale of 2 means each pixel forms a 2x2 block of tiles, and so on.
-	 * @param  	ColorMap  	An array of color values (0xAARRGGBB) in the order they're intended to be assigned as indices
+	 * @param	Scale		Default is 1. Scale of 2 means each pixel forms a 2x2 block of tiles, and so on.
+	 * @param	ColorMap	An array of color values (alpha values are ignored) in the order they're intended to be assigned as indices
 	 * @return	A comma-separated string containing the level data in a FlxTilemap-friendly format.
 	 */
 	public static function bitmapToCSV(Bitmap:BitmapData, Invert:Bool = false, Scale:Int = 1, ?ColorMap:Array<FlxColor>):String
@@ -442,6 +442,14 @@ class FlxStringUtil
 			mtx.scale(Scale, Scale);
 			Bitmap.draw(bd, mtx);
 			#end
+		}
+		
+		if (ColorMap != null)
+		{
+			for (i in 0...ColorMap.length)
+			{
+				ColorMap[i] = ColorMap[i].to24Bit();
+			}
 		}
 		
 		// Walk image and export pixel values
@@ -507,9 +515,10 @@ class FlxStringUtil
 	 * @param	ImageFile	An embedded graphic, preferably black and white.
 	 * @param	Invert		Load white pixels as solid instead.
 	 * @param	Scale		Default is 1.  Scale of 2 means each pixel forms a 2x2 block of tiles, and so on.
+	 * @param	ColorMap	An array of color values (alpha values are ignored) in the order they're intended to be assigned as indices
 	 * @return	A comma-separated string containing the level data in a FlxTilemap-friendly format.
 	 */
-	public static function imageToCSV(ImageFile:Dynamic, Invert:Bool = false, Scale:Int = 1):String
+	public static function imageToCSV(ImageFile:Dynamic, Invert:Bool = false, Scale:Int = 1, ?ColorMap:Array<FlxColor>):String
 	{
 		var tempBitmapData:BitmapData;
 		
@@ -522,7 +531,7 @@ class FlxStringUtil
 			tempBitmapData = (Type.createInstance(ImageFile, [])).bitmapData;
 		}
 		
-		return bitmapToCSV(tempBitmapData, Invert, Scale);
+		return bitmapToCSV(tempBitmapData, Invert, Scale, ColorMap);
 	}
 	
 	/**
