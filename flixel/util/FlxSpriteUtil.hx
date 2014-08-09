@@ -256,9 +256,42 @@ class FlxSpriteUtil
 		if (lineStyle.color == null)
 			lineStyle.color = FlxColor.WHITE;
 		
-		beginDraw(0, lineStyle);
+		beginDraw(lineStyle);
 		flashGfx.moveTo(StartX, StartY);
 		flashGfx.lineTo(EndX, EndY);
+		endDraw(sprite, drawStyle);
+		return sprite;
+	}
+	
+	/**
+	 * This function draws a curve on a FlxSprite from position X1,Y1
+	 * to anchor position X2,Y2 using control points X3,Y3 with the specified color.
+	 * 
+	 * @param	sprite		The FlxSprite to manipulate
+	 * @param	StartX		X coordinate of the curve's start point.
+	 * @param	StartY		Y coordinate of the curve's start point.
+	 * @param	EndX		X coordinate of the curve's end/anchor point.
+	 * @param	EndY		Y coordinate of the curve's end/anchor point.
+	 * @param	ControlX	X coordinate of the curve's control point.
+	 * @param	ControlY	Y coordinate of the curve's control point.
+	 * @param	lineStyle	A LineStyle typedef containing the params of Graphics.lineStyle()
+	 * @param	fillStyle	A FillStyle typedef containing the params of Graphics.fillStyle(). Using this will draw a line from start to end to complete the figure.
+	 * @param	drawStyle	A DrawStyle typdef containing the params of BitmapData.draw()
+	 * @return 	The FlxSprite for chaining
+	 */
+	public static function drawCurve(sprite:FlxSprite, StartX:Float, StartY:Float, EndX:Float, EndY:Float, ControlX:Float, ControlY:Float, 
+		?lineStyle:LineStyle, ?fillStyle:FillStyle, ?drawStyle:DrawStyle):FlxSprite
+	{
+		if (lineStyle == null)
+			lineStyle = { thickness: 1, color: FlxColor.WHITE };
+		if (lineStyle.thickness == null)
+			lineStyle.thickness = 1;
+		if (lineStyle.color == null)
+			lineStyle.color = FlxColor.WHITE;
+		
+		beginDraw(lineStyle, fillStyle);
+		flashGfx.moveTo(StartX, StartY);
+		flashGfx.curveTo(EndX, EndY, ControlX, ControlY);
 		endDraw(sprite, drawStyle);
 		return sprite;
 	}
@@ -280,7 +313,12 @@ class FlxSpriteUtil
 	public static function drawRect(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, Color:FlxColor, 
 		?lineStyle:LineStyle, ?fillStyle:FillStyle, ?drawStyle:DrawStyle):FlxSprite
 	{
-		beginDraw(Color, lineStyle, fillStyle);
+		if (fillStyle == null)
+		{
+			fillStyle = { hasFill: true, color: Color, alpha: 1 };
+		}
+		
+		beginDraw(lineStyle, fillStyle);
 		flashGfx.drawRect(X, Y, Width, Height);
 		endDraw(sprite, drawStyle);
 		return sprite;
@@ -305,7 +343,12 @@ class FlxSpriteUtil
 	public static function drawRoundRect(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, EllipseWidth:Float,
 		EllipseHeight:Float, Color:FlxColor, ?lineStyle:LineStyle, ?fillStyle:FillStyle, ?drawStyle:DrawStyle):FlxSprite
 	{
-		beginDraw(Color, lineStyle, fillStyle);
+		if (fillStyle == null)
+		{
+			fillStyle = { hasFill: true, color: Color, alpha: 1 };
+		}
+		
+		beginDraw(lineStyle, fillStyle);
 		flashGfx.drawRoundRect(X, Y, Width, Height, EllipseWidth, EllipseHeight);
 		endDraw(sprite, drawStyle);
 		return sprite;
@@ -335,7 +378,12 @@ class FlxSpriteUtil
 		TopLeftRadius:Float, TopRightRadius:Float, BottomLeftRadius:Float, BottomRightRadius:Float, Color:FlxColor, 
 		?lineStyle:LineStyle, ?fillStyle:FillStyle, ?drawStyle:DrawStyle):FlxSprite
 	{
-		beginDraw(Color, lineStyle, fillStyle);
+		if (fillStyle == null)
+		{
+			fillStyle = { hasFill: true, color: Color, alpha: 1 };
+		}
+		
+		beginDraw(lineStyle, fillStyle);
 		flashGfx.drawRoundRectComplex(X, Y, Width, Height, TopLeftRadius, TopRightRadius, BottomLeftRadius, BottomRightRadius);
 		endDraw(sprite, drawStyle);
 		return sprite;
@@ -356,7 +404,7 @@ class FlxSpriteUtil
 	 * @return 	The FlxSprite for chaining
 	 */
 	public static function drawCircle(sprite:FlxSprite, X:Float = - 1, Y:Float = - 1, Radius:Float = -1, 
-		Color:FlxColor = FlxColor.WHITE, ?lineStyle:LineStyle, ?fillStyle:FillStyle, ?drawStyle:DrawStyle):FlxSprite
+		Color:FlxColor, ?lineStyle:LineStyle, ?fillStyle:FillStyle, ?drawStyle:DrawStyle):FlxSprite
 	{
 		if ((X == -1) || (Y == -1)) 
 		{
@@ -376,7 +424,12 @@ class FlxSpriteUtil
 			Radius = (minVal / 2);
 		}
 		
-		beginDraw(Color, lineStyle, fillStyle);
+		if (fillStyle == null)
+		{
+			fillStyle = { hasFill: true, color: Color, alpha: 1 };
+		}
+		
+		beginDraw(lineStyle, fillStyle);
 		flashGfx.drawCircle(X, Y, Radius);
 		endDraw(sprite, drawStyle);
 		return sprite;
@@ -399,7 +452,12 @@ class FlxSpriteUtil
 	public static function drawEllipse(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, Color:FlxColor, 
 		?lineStyle:LineStyle, ?fillStyle:FillStyle, ?drawStyle:DrawStyle):FlxSprite
 	{
-		beginDraw(Color, lineStyle, fillStyle);
+		if (fillStyle == null)
+		{
+			fillStyle = { hasFill: true, color: Color, alpha: 1 };
+		}
+		
+		beginDraw(lineStyle, fillStyle);
 		flashGfx.drawEllipse(X, Y, Width, Height);
 		endDraw(sprite, drawStyle);
 		return sprite;
@@ -421,7 +479,12 @@ class FlxSpriteUtil
 	public static function drawTriangle(sprite:FlxSprite, X:Float, Y:Float, Height:Float, Color:FlxColor, 
 		?lineStyle:LineStyle, ?fillStyle:FillStyle, ?drawStyle:DrawStyle):FlxSprite
 	{
-		beginDraw(Color, lineStyle, fillStyle);
+		if (fillStyle == null)
+		{
+			fillStyle = { hasFill: true, color: Color, alpha: 1 };
+		}
+		
+		beginDraw(lineStyle, fillStyle);
 		flashGfx.moveTo(X + Height / 2, Y);
 		flashGfx.lineTo(X + Height, Height + Y);
 		flashGfx.lineTo(X, Height + Y);
@@ -444,7 +507,12 @@ class FlxSpriteUtil
 	public static function drawPolygon(sprite:FlxSprite, Vertices:Array<FlxPoint>, Color:FlxColor, ?lineStyle:LineStyle, 
 		?fillStyle:FillStyle, ?drawStyle:DrawStyle):FlxSprite
 	{
-		beginDraw(Color, lineStyle, fillStyle);
+		if (fillStyle == null)
+		{
+			fillStyle = { hasFill: true, color: Color, alpha: 1 };
+		}
+		
+		beginDraw(lineStyle, fillStyle);
 		var p:FlxPoint = Vertices.shift();
 		flashGfx.moveTo(p.x, p.y);
 		for (p in Vertices)
@@ -463,7 +531,7 @@ class FlxSpriteUtil
 	 * @param	fillStyle	A FillStyle typedef containing the params of Graphics.fillStyle()
 	 */
 	@:noUsing
-	public static inline function beginDraw(Color:FlxColor, ?lineStyle:LineStyle, ?fillStyle:FillStyle):Void
+	public static inline function beginDraw(?lineStyle:LineStyle, ?fillStyle:FillStyle):Void
 	{
 		flashGfx.clear();
 		setLineStyle(lineStyle);
@@ -471,10 +539,8 @@ class FlxSpriteUtil
 		if ((fillStyle != null) && (fillStyle.hasFill)) 
 		{
 			//use the fillStyle for color information
-			Color = fillStyle.color;
+			flashGfx.beginFill(fillStyle.color.to24Bit(), fillStyle.alpha);
 		}
-		
-		flashGfx.beginFill(Color.to24Bit(), Color.alphaFloat);
 	}
 	
 	/**
