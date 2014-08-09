@@ -6,7 +6,7 @@ package flixel.input.keyboard;
 @:enum
 abstract FlxKey(Int) from Int to Int
 {
-	public static var keyNameMap:Map<String, FlxKey> = [
+	public static var fromStringMap:Map<String, FlxKey> = [
 		"ANY" =>            ANY,
 		"A" =>              A,
 		"B" =>              B,
@@ -102,6 +102,104 @@ abstract FlxKey(Int) from Int to Int
 		"NUMPADPLUS" =>     NUMPADPLUS,
 		"NUMPADPERIOD" =>   NUMPADPERIOD,
 		"NUMPADMULTIPLY" => NUMPADMULTIPLY
+	];
+	
+	public static var toStringMap:Map<FlxKey, String> = [
+		ANY =>            "ANY",
+		A =>              "A",
+		B =>              "B",
+		C =>              "C",
+		D =>              "D",
+		E =>              "E",
+		F =>              "F",
+		G =>              "G",
+		H =>              "H",
+		I =>              "I",
+		J =>              "J",
+		K =>              "K",
+		L =>              "L",
+		M =>              "M",
+		N =>              "N",
+		O =>              "O",
+		P =>              "P",
+		Q =>              "Q",
+		R =>              "R",
+		S =>              "S",
+		T =>              "T",
+		U =>              "U",
+		V =>              "V",
+		W =>              "W",
+		X =>              "X",
+		Y =>              "Y",
+		Z =>              "Z",
+		ZERO =>           "ZERO",
+		ONE =>            "ONE",
+		TWO =>            "TWO",
+		THREE =>          "THREE",
+		FOUR =>           "FOUR",
+		FIVE =>           "FIVE",
+		SIX =>            "SIX",
+		SEVEN =>          "SEVEN",
+		EIGHT =>          "EIGHT",
+		NINE =>           "NINE",
+		PAGEUP =>         "PAGEUP",
+		PAGEDOWN =>       "PAGEDOWN",
+		HOME =>           "HOME",
+		END =>            "END",
+		INSERT =>         "INSERT",
+		ESCAPE =>         "ESCAPE",
+		MINUS =>          "MINUS",
+		PLUS =>           "PLUS",
+		DELETE =>         "DELETE",
+		BACKSPACE =>      "BACKSPACE",
+		LBRACKET =>       "LBRACKET",
+		RBRACKET =>       "RBRACKET",
+		BACKSLASH =>      "BACKSLASH",
+		CAPSLOCK =>       "CAPSLOCK",
+		SEMICOLON =>      "SEMICOLON",
+		QUOTE =>          "QUOTE",
+		ENTER =>          "ENTER",
+		SHIFT =>          "SHIFT",
+		COMMA =>          "COMMA",
+		PERIOD =>         "PERIOD",
+		SLASH =>          "SLASH",
+		NUMPADSLASH =>    "NUMPADSLASH",
+		GRAVEACCENT =>    "GRAVEACCENT",
+		CONTROL =>        "CONTROL",
+		ALT =>            "ALT",
+		SPACE =>          "SPACE",
+		UP =>             "UP",
+		DOWN =>           "DOWN",
+		LEFT =>           "LEFT",
+		RIGHT =>          "RIGHT",
+		TAB =>            "TAB",
+		PRINTSCREEN =>    "PRINTSCREEN",
+		F1 =>             "F1",
+		F2 =>             "F2",
+		F3 =>             "F3",
+		F4 =>             "F4",
+		F5 =>             "F5",
+		F6 =>             "F6",
+		F7 =>             "F7",
+		F8 =>             "F8",
+		F9 =>             "F9",
+		F10 =>            "F10",
+		F11 =>            "F11",
+		F12 =>            "F12",
+		NUMPADZERO =>     "NUMPADZERO",
+		NUMPADONE =>      "NUMPADONE",
+		NUMPADTWO =>      "NUMPADTWO",
+		NUMPADTHREE =>    "NUMPADTHREE",
+		NUMPADFOUR =>     "NUMPADFOUR",
+		NUMPADFIVE =>     "NUMPADFIVE",
+		NUMPADSIX =>      "NUMPADSIX",
+		NUMPADSEVEN =>    "NUMPADSEVEN",
+		NUMPADEIGHT =>    "NUMPADEIGHT",
+		NUMPADNINE =>     "NUMPADNINE",
+		NUMPADMINUS =>    "NUMPADMINUS",
+		NUMPADPLUS =>     "NUMPADPLUS",
+		NUMPADPERIOD =>   "NUMPADPERIOD",
+		NUMPADMULTIPLY => "NUMPADMULTIPLY"
 	];
 	
 	// Key Indicies
@@ -206,6 +304,12 @@ abstract FlxKey(Int) from Int to Int
 	public static inline function fromString(s:String)
 	{
 		s = s.toUpperCase();
-		return keyNameMap.exists(s) ? keyNameMap.get(s) : NONE;
+		return fromStringMap.exists(s) ? fromStringMap.get(s) : NONE;
+	}
+	
+	@:to
+	public inline function toString():String
+	{
+		return toStringMap.get(this);
 	}
 }
