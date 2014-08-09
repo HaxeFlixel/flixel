@@ -11,7 +11,6 @@ class FlxEmitterTest extends FlxTest
 	function before():Void
 	{
 		emitter = new FlxEmitter();
-
 		destroyable = emitter;
 	}
 
@@ -21,11 +20,17 @@ class FlxEmitterTest extends FlxTest
 		emitter.makeParticles(1, 1, 1);
 		// precondition
 		Assert.isFalse(emitter.exists);
-		emitter.forEach(function(each){Assert.isFalse(each.exists);});
+		emitter.forEach(function(each)
+		{
+			Assert.isFalse(each.exists);
+		});
 		// exercise
 		emitter.start();
 		// verify
 		Assert.isTrue(emitter.exists);
-		emitter.forEach(function(each){Assert.isFalse(each.exists);});
+		emitter.forEach(function(each)
+		{
+			Assert.isFalse(each.exists);
+		});
 	}
 }

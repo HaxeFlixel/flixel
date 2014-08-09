@@ -9,34 +9,43 @@ import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 @:generic
 class FlxPool<T:IFlxDestroyable>
 {
-	private var _pool:Array<T>;
+	public var length(get, never):Int;
+	
+	private var _pool:Array<T> = [];
 	private var _class:Class<T>;
 	
-	public var length(get, never):Int;
+	/**
+	 * Objects aren't actually removed from the array in order to improve performance.
+	 * _count keeps track of the valid, accessible pool objects.
+	 */
+	private var _count:Int = 0;
 	
 	public function new(classObj:Class<T>) 
 	{
-		_pool = [];
 		_class = classObj;
 	}
 	
 	public function get():T
 	{
-		var obj:T = _pool.pop();
-		if (obj == null) 
+		if (_count == 0)
 		{
-			obj = Type.createInstance(_class, []);
+			return Type.createInstance(_class, []);
 		}
-		return obj;
+		return _pool[--_count];
 	}
 	
 	public function put(obj:T):Void
 	{
-		// we don't want to have the same object in pool twice
-		if (obj != null && _pool.indexOf(obj) < 0)
+		// we don't want to have the same object in the accessible pool twice (ok to have multiple in the inaccessible zone)
+		if (obj != null)
 		{
-			obj.destroy();
-			_pool.push(obj);
+			var i:Int = _pool.indexOf(obj);
+			// if the object's spot in the pool was overwritten, or if it's at or past _count (in the inaccessible zone)
+			if (i == -1 || i >= _count)
+			{
+				obj.destroy();
+				_pool[_count++] = obj;
+			}
 		}
 	}
 	
@@ -45,20 +54,21 @@ class FlxPool<T:IFlxDestroyable>
 		if (obj != null)
 		{
 			obj.destroy();
-			_pool.push(obj);
+			_pool[_count++] = obj;
 		}
 	}
 	
 	public function preAllocate(numObjects:Int):Void
 	{
-		for (i in 0...numObjects)
+		while (numObjects-- > 0)
 		{
-			_pool.push(Type.createInstance(_class, []));
+			_pool[_count++] = Type.createInstance(_class, []);
 		}
 	}
 	
 	public function clear():Array<T>
 	{
+		_count = 0;
 		var oldPool = _pool;
 		_pool = [];
 		return oldPool;
@@ -66,7 +76,7 @@ class FlxPool<T:IFlxDestroyable>
 	
 	private inline function get_length():Int
 	{
-		return _pool.length;
+		return _count;
 	}
 }
 

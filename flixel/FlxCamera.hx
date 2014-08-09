@@ -571,7 +571,7 @@ class FlxCamera extends FlxBasic
 			
 			if (style == SCREEN_BY_SCREEN) 
 			{
-				if (targetX > (scroll.x + width))
+				if (targetX >= (scroll.x + width))
 				{
 					_scrollTarget.x += width;
 				}
@@ -580,7 +580,7 @@ class FlxCamera extends FlxBasic
 					_scrollTarget.x -= width;
 				}
 
-				if (targetY > (scroll.y + height))
+				if (targetY >= (scroll.y + height))
 				{
 					_scrollTarget.y += height;
 				}
