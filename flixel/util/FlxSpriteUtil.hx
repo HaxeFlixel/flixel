@@ -256,7 +256,7 @@ class FlxSpriteUtil
 		if (lineStyle.color == null)
 			lineStyle.color = FlxColor.WHITE;
 		
-		beginDraw(lineStyle);
+		beginDraw(0x0, lineStyle);
 		flashGfx.moveTo(StartX, StartY);
 		flashGfx.lineTo(EndX, EndY);
 		endDraw(sprite, drawStyle);
@@ -274,13 +274,13 @@ class FlxSpriteUtil
 	 * @param	EndY		Y coordinate of the curve's end/anchor point.
 	 * @param	ControlX	X coordinate of the curve's control point.
 	 * @param	ControlY	Y coordinate of the curve's control point.
+	 * @param	Color		The ARGB color to fill this curve with. FlxColor.TRANSPARENT (0x0) means no fill. Filling a curve draws a line from End to Start to complete the figure.
 	 * @param	lineStyle	A LineStyle typedef containing the params of Graphics.lineStyle()
-	 * @param	fillStyle	A FillStyle typedef containing the params of Graphics.fillStyle(). Using this will draw a line from start to end to complete the figure.
 	 * @param	drawStyle	A DrawStyle typdef containing the params of BitmapData.draw()
 	 * @return 	The FlxSprite for chaining
 	 */
 	public static function drawCurve(sprite:FlxSprite, StartX:Float, StartY:Float, EndX:Float, EndY:Float, ControlX:Float, ControlY:Float, 
-		?lineStyle:LineStyle, ?fillStyle:FillStyle, ?drawStyle:DrawStyle):FlxSprite
+		Color:FlxColor = FlxColor.TRANSPARENT, ?lineStyle:LineStyle, ?drawStyle:DrawStyle):FlxSprite
 	{
 		if (lineStyle == null)
 			lineStyle = { thickness: 1, color: FlxColor.WHITE };
@@ -289,7 +289,7 @@ class FlxSpriteUtil
 		if (lineStyle.color == null)
 			lineStyle.color = FlxColor.WHITE;
 		
-		beginDraw(lineStyle, fillStyle);
+		beginDraw(Color, lineStyle);
 		flashGfx.moveTo(StartX, StartY);
 		flashGfx.curveTo(EndX, EndY, ControlX, ControlY);
 		endDraw(sprite, drawStyle);
@@ -304,21 +304,15 @@ class FlxSpriteUtil
 	 * @param	Y			Y coordinate of the rectangle's start point.
 	 * @param	Width		Width of the rectangle
 	 * @param	Height		Height of the rectangle
-	 * @param	Color		The rectangle's color.
+	 * @param	Color		The ARGB color to fill this rectangle with. FlxColor.TRANSPARENT (0x0) means no fill.
 	 * @param	lineStyle	A LineStyle typedef containing the params of Graphics.lineStyle()
-	 * @param	fillStyle	A FillStyle typedef containing the params of Graphics.fillStyle()
 	 * @param	drawStyle	A DrawStyle typdef containing the params of BitmapData.draw()
 	 * @return 	The FlxSprite for chaining
 	 */
-	public static function drawRect(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, Color:FlxColor, 
-		?lineStyle:LineStyle, ?fillStyle:FillStyle, ?drawStyle:DrawStyle):FlxSprite
+	public static function drawRect(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float,
+		Color:FlxColor = FlxColor.WHITE, ?lineStyle:LineStyle, ?drawStyle:DrawStyle):FlxSprite
 	{
-		if (fillStyle == null)
-		{
-			fillStyle = { hasFill: true, color: Color, alpha: 1 };
-		}
-		
-		beginDraw(lineStyle, fillStyle);
+		beginDraw(Color, lineStyle);
 		flashGfx.drawRect(X, Y, Width, Height);
 		endDraw(sprite, drawStyle);
 		return sprite;
@@ -334,21 +328,15 @@ class FlxSpriteUtil
 	 * @param	Height			Height of the rectangle
 	 * @param	EllipseWidth	The width of the ellipse used to draw the rounded corners
 	 * @param	EllipseHeight	The height of the ellipse used to draw the rounded corners
-	 * @param	Color			The rectangle's color.
+	 * @param	Color			The ARGB color to fill this rectangle with. FlxColor.TRANSPARENT (0x0) means no fill.
 	 * @param	lineStyle		A LineStyle typedef containing the params of Graphics.lineStyle()
-	 * @param	fillStyle		A FillStyle typedef containing the params of Graphics.fillStyle()
 	 * @param	drawStyle		A DrawStyle typdef containing the params of BitmapData.draw()
 	 * @return 	The FlxSprite for chaining
 	 */
 	public static function drawRoundRect(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, EllipseWidth:Float,
-		EllipseHeight:Float, Color:FlxColor, ?lineStyle:LineStyle, ?fillStyle:FillStyle, ?drawStyle:DrawStyle):FlxSprite
+		EllipseHeight:Float, Color:FlxColor = FlxColor.WHITE, ?lineStyle:LineStyle, ?drawStyle:DrawStyle):FlxSprite
 	{
-		if (fillStyle == null)
-		{
-			fillStyle = { hasFill: true, color: Color, alpha: 1 };
-		}
-		
-		beginDraw(lineStyle, fillStyle);
+		beginDraw(Color, lineStyle);
 		flashGfx.drawRoundRect(X, Y, Width, Height, EllipseWidth, EllipseHeight);
 		endDraw(sprite, drawStyle);
 		return sprite;
@@ -368,22 +356,16 @@ class FlxSpriteUtil
 	 * @param	TopRightRadius		The radius of the top right corner of the rectangle
 	 * @param	BottomLeftRadius	The radius of the bottom left corner of the rectangle
 	 * @param	BottomRightRadius	The radius of the bottom right corner of the rectangle
-	 * @param	Color				The rectangle's color.
+	 * @param	Color				The ARGB color to fill this rectangle with. FlxColor.TRANSPARENT (0x0) means no fill.
 	 * @param	lineStyle			A LineStyle typedef containing the params of Graphics.lineStyle()
-	 * @param	fillStyle			A FillStyle typedef containing the params of Graphics.fillStyle()
 	 * @param	drawStyle			A DrawStyle typdef containing the params of BitmapData.draw()
 	 * @return 	The FlxSprite for chaining
 	 */
 	public static function drawRoundRectComplex(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, 
-		TopLeftRadius:Float, TopRightRadius:Float, BottomLeftRadius:Float, BottomRightRadius:Float, Color:FlxColor, 
-		?lineStyle:LineStyle, ?fillStyle:FillStyle, ?drawStyle:DrawStyle):FlxSprite
+		TopLeftRadius:Float, TopRightRadius:Float, BottomLeftRadius:Float, BottomRightRadius:Float,
+		Color:FlxColor = FlxColor.WHITE, ?lineStyle:LineStyle, ?drawStyle:DrawStyle):FlxSprite
 	{
-		if (fillStyle == null)
-		{
-			fillStyle = { hasFill: true, color: Color, alpha: 1 };
-		}
-		
-		beginDraw(lineStyle, fillStyle);
+		beginDraw(Color, lineStyle);
 		flashGfx.drawRoundRectComplex(X, Y, Width, Height, TopLeftRadius, TopRightRadius, BottomLeftRadius, BottomRightRadius);
 		endDraw(sprite, drawStyle);
 		return sprite;
@@ -397,14 +379,13 @@ class FlxSpriteUtil
 	 * @param	X 			X coordinate of the circle's center (automatically centered on the sprite if -1)
 	 * @param	Y 			Y coordinate of the circle's center (automatically centered on the sprite if -1)
 	 * @param	Radius 		Radius of the circle (makes sure the circle fully fits on the sprite's graphic if < 1, assuming and and y are centered)
-	 * @param	Color 		Color of the circle
+	 * @param	Color 		The ARGB color to fill this circle with. FlxColor.TRANSPARENT (0x0) means no fill.
 	 * @param	lineStyle	A LineStyle typedef containing the params of Graphics.lineStyle()
-	 * @param	fillStyle	A FillStyle typedef containing the params of Graphics.fillStyle()
 	 * @param	drawStyle	A DrawStyle typdef containing the params of BitmapData.draw()
 	 * @return 	The FlxSprite for chaining
 	 */
 	public static function drawCircle(sprite:FlxSprite, X:Float = - 1, Y:Float = - 1, Radius:Float = -1, 
-		Color:FlxColor, ?lineStyle:LineStyle, ?fillStyle:FillStyle, ?drawStyle:DrawStyle):FlxSprite
+		Color:FlxColor = FlxColor.WHITE, ?lineStyle:LineStyle, ?drawStyle:DrawStyle):FlxSprite
 	{
 		if ((X == -1) || (Y == -1)) 
 		{
@@ -424,12 +405,7 @@ class FlxSpriteUtil
 			Radius = (minVal / 2);
 		}
 		
-		if (fillStyle == null)
-		{
-			fillStyle = { hasFill: true, color: Color, alpha: 1 };
-		}
-		
-		beginDraw(lineStyle, fillStyle);
+		beginDraw(Color, lineStyle);
 		flashGfx.drawCircle(X, Y, Radius);
 		endDraw(sprite, drawStyle);
 		return sprite;
@@ -443,21 +419,15 @@ class FlxSpriteUtil
 	 * @param	Y			Y coordinate of the ellipse's start point.
 	 * @param	Width		Width of the ellipse
 	 * @param	Height		Height of the ellipse
-	 * @param	Color		The ellipse's color.
+	 * @param	Color		The ARGB color to fill this ellipse with. FlxColor.TRANSPARENT (0x0) means no fill.
 	 * @param	lineStyle	A LineStyle typedef containing the params of Graphics.lineStyle()
-	 * @param	fillStyle	A FillStyle typedef containing the params of Graphics.fillStyle()
 	 * @param	drawStyle	A DrawStyle typdef containing the params of BitmapData.draw()
 	 * @return 	The FlxSprite for chaining
 	 */
-	public static function drawEllipse(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, Color:FlxColor, 
-		?lineStyle:LineStyle, ?fillStyle:FillStyle, ?drawStyle:DrawStyle):FlxSprite
+	public static function drawEllipse(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, 
+		Color:FlxColor = FlxColor.WHITE, ?lineStyle:LineStyle, ?drawStyle:DrawStyle):FlxSprite
 	{
-		if (fillStyle == null)
-		{
-			fillStyle = { hasFill: true, color: Color, alpha: 1 };
-		}
-		
-		beginDraw(lineStyle, fillStyle);
+		beginDraw(Color, lineStyle);
 		flashGfx.drawEllipse(X, Y, Width, Height);
 		endDraw(sprite, drawStyle);
 		return sprite;
@@ -470,21 +440,15 @@ class FlxSpriteUtil
 	 * @param	X			X position of the triangle
 	 * @param	Y			Y position of the triangle
 	 * @param	Height		Height of the triangle
-	 * @param	Color		Color of the triangle
+	 * @param	Color		The ARGB color to fill this triangle with. FlxColor.TRANSPARENT (0x0) means no fill.
 	 * @param	lineStyle	A LineStyle typedef containing the params of Graphics.lineStyle()
-	 * @param	fillStyle	A FillStyle typedef containing the params of Graphics.fillStyle()
 	 * @param	drawStyle	A DrawStyle typdef containing the params of BitmapData.draw()
 	 * @return 	The FlxSprite for chaining
 	 */
-	public static function drawTriangle(sprite:FlxSprite, X:Float, Y:Float, Height:Float, Color:FlxColor, 
-		?lineStyle:LineStyle, ?fillStyle:FillStyle, ?drawStyle:DrawStyle):FlxSprite
+	public static function drawTriangle(sprite:FlxSprite, X:Float, Y:Float, Height:Float, 
+		Color:FlxColor = FlxColor.WHITE, ?lineStyle:LineStyle, ?drawStyle:DrawStyle):FlxSprite
 	{
-		if (fillStyle == null)
-		{
-			fillStyle = { hasFill: true, color: Color, alpha: 1 };
-		}
-		
-		beginDraw(lineStyle, fillStyle);
+		beginDraw(Color, lineStyle);
 		flashGfx.moveTo(X + Height / 2, Y);
 		flashGfx.lineTo(X + Height, Height + Y);
 		flashGfx.lineTo(X, Height + Y);
@@ -498,21 +462,15 @@ class FlxSpriteUtil
 	 * 
 	 * @param	sprite		The FlxSprite to manipulate
 	 * @param	Vertices	Array of Vertices to use for drawing the polygon
-	 * @param	Color		Color of the polygon
+	 * @param	Color		The ARGB color to fill this polygon with. FlxColor.TRANSPARENT (0x0) means no fill.
 	 * @param	lineStyle	A LineStyle typedef containing the params of Graphics.lineStyle()
-	 * @param	fillStyle	A FillStyle typedef containing the params of Graphics.fillStyle();
 	 * @param	drawStyle	A DrawStyle typdef containing the params of BitmapData.draw()
 	 * @return 	The FlxSprite for chaining
 	 */
-	public static function drawPolygon(sprite:FlxSprite, Vertices:Array<FlxPoint>, Color:FlxColor, ?lineStyle:LineStyle, 
-		?fillStyle:FillStyle, ?drawStyle:DrawStyle):FlxSprite
+	public static function drawPolygon(sprite:FlxSprite, Vertices:Array<FlxPoint>, 
+		Color:FlxColor = FlxColor.WHITE, ?lineStyle:LineStyle, ?drawStyle:DrawStyle):FlxSprite
 	{
-		if (fillStyle == null)
-		{
-			fillStyle = { hasFill: true, color: Color, alpha: 1 };
-		}
-		
-		beginDraw(lineStyle, fillStyle);
+		beginDraw(Color, lineStyle);
 		var p:FlxPoint = Vertices.shift();
 		flashGfx.moveTo(p.x, p.y);
 		for (p in Vertices)
@@ -526,20 +484,18 @@ class FlxSpriteUtil
 	/**
 	 * Helper function that the drawing functions use at the start to set the color and lineStyle.
 	 * 
-	 * @param	Color		The color to use for drawing
+	 * @param	Color		The ARGB color to use for drawing
 	 * @param	lineStyle	A LineStyle typedef containing the params of Graphics.lineStyle()
-	 * @param	fillStyle	A FillStyle typedef containing the params of Graphics.fillStyle()
 	 */
 	@:noUsing
-	public static inline function beginDraw(?lineStyle:LineStyle, ?fillStyle:FillStyle):Void
+	public static inline function beginDraw(Color:FlxColor, ?lineStyle:LineStyle):Void
 	{
 		flashGfx.clear();
 		setLineStyle(lineStyle);
 		
-		if ((fillStyle != null) && (fillStyle.hasFill)) 
+		if (Color != FlxColor.TRANSPARENT) 
 		{
-			//use the fillStyle for color information
-			flashGfx.beginFill(fillStyle.color.to24Bit(), fillStyle.alpha);
+			flashGfx.beginFill(Color.to24Bit(), Color.alphaFloat);
 		}
 	}
 	
@@ -595,6 +551,7 @@ class FlxSpriteUtil
 		if (lineStyle != null)
 		{
 			var color = (lineStyle.color == null) ? FlxColor.BLACK : lineStyle.color; 
+			if (lineStyle.thickness == null) { lineStyle.thickness = 1; }
 			if (lineStyle.pixelHinting == null) { lineStyle.pixelHinting = false; }
 			if (lineStyle.miterLimit == null) 	{ lineStyle.miterLimit = 3; }
 			
@@ -715,12 +672,6 @@ typedef LineStyle = {
 	?capsStyle:CapsStyle,
 	?jointStyle:JointStyle,
 	?miterLimit:Float
-}
-
-typedef FillStyle = {
-	?hasFill:Bool,
-	?color:FlxColor,
-	?alpha:Float
 }
 
 typedef DrawStyle = {
