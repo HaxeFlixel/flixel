@@ -346,7 +346,12 @@ class FlxQuadTree extends FlxRect
 		
 		exists = false;
 		
-		_checked = FlxDestroyUtil.destroy(_checked);
+		/**
+		*     Not deleting _checked makes it faster, since it doesn't have to create a new array every frame,
+		*     but it won't get deleted until you actually close the game, and the system cleanes it up.
+		*     Could possibly make a function to delete it, which should be used when a state is being destroyed.
+		*/
+		//_checked = FlxDestroyUtil.destroy(_checked);
 		
 		// Deposit this tree into the linked list for reusal.
 		next = _cachedTreesHead;
@@ -369,8 +374,10 @@ class FlxQuadTree extends FlxRect
 		_notifyCallback = NotifyCallback;
 		_processingCallback = ProcessCallback;
 		
-		if(_singleOverlap = SingleOverlap)
+		if(SingleOverlap)
 		{
+			// To avoid confusion
+			_singleOverlap = SingleOverlap;
 			// Maximize the _checked array, so that it won't have to resize itself during overlap checking
 			var max : Int;
 			var group = FlxGroup.resolveGroup(ObjectOrGroup2 == null ? ObjectOrGroup1 : ObjectOrGroup2);
