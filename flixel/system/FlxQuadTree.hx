@@ -697,7 +697,7 @@ class FlxQuadTree extends FlxRect
 			checkObject = _iterator.object;
 			
 			//This is where in case of singleOverlap, we check if the checkObject was already checked with _object
-			if (_object == checkObject || !checkObject.exists || checkObject.allowCollisions <= 0 || (_singleOverlap && _checked.search(checkObject)))
+			if (_object == checkObject || !checkObject.exists || checkObject.allowCollisions <= 0)
 			{
 				_iterator = _iterator.next;
 				continue;
@@ -718,12 +718,15 @@ class FlxQuadTree extends FlxRect
 				(_objectHullY < _checkObjectHullY + _checkObjectHullHeight))
 			{
 				//Execute callback functions if they exist
-				if (_processingCallback == null || _processingCallback(_object, checkObject))
-				{
-					overlapProcessed = true;
-					if (_notifyCallback != null)
+				if (!_singleOverlap || !_checked.search(checkObject))
 					{
-						_notifyCallback(_object, checkObject);
+					if (_processingCallback == null || _processingCallback(_object, checkObject))
+					{
+						overlapProcessed = true;
+						if (_notifyCallback != null)
+						{
+							_notifyCallback(_object, checkObject);
+						}
 					}
 				}
 			}
