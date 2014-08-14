@@ -227,7 +227,10 @@ class FlxQuadTree extends FlxRect
 	public static function recycle(X:Float, Y:Float, Width:Float, Height:Float, ?Parent:FlxQuadTree):FlxQuadTree
 	{
 		if (_checked == null)
+		{
 			_checked = new SearchArray();
+			FlxG.signals.stateSwitched.addOnce(function() {  _checked = FlxDestroyUtil.destroy(_checked); });
+		}
 			
 		if (_cachedTreesHead != null)
 		{
@@ -376,7 +379,6 @@ class FlxQuadTree extends FlxRect
 		
 		if(SingleOverlap)
 		{
-			// To avoid confusion
 			_singleOverlap = SingleOverlap;
 			// Maximize the _checked array, so that it won't have to resize itself during overlap checking
 			var max : Int;
