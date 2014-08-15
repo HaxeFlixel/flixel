@@ -55,7 +55,7 @@ class FlxTween implements IFlxDestroyable
 	 * @param	Duration	Duration of the tween in seconds.
 	 * @param	Options		An object containing key/value pairs of the following optional parameters:
 	 * 						type		Tween type.
-     * 						onStart		Optional start callback function.
+	 * 						onStart		Optional start callback function.
 	 * 						onComplete	Optional completion callback function.
 	 * 						ease		Optional easer function.
 	 *  					startDelay	Seconds to wait until starting this tween, 0 by default.
@@ -338,7 +338,7 @@ class FlxTween implements IFlxDestroyable
 	public var active:Bool = false;
 	public var duration:Float = 0;
 	public var ease:EaseFunction;
-    public var onComplete:CompleteCallback;
+	public var onComplete:CompleteCallback;
 	public var onStart:StartCallback;
 	
 	public var type(default, set):Int;
@@ -364,7 +364,7 @@ class FlxTween implements IFlxDestroyable
 	public var loopDelay(default, set):Float = 0;
 	
 	private var _secondsSinceStart:Float = 0;
-    private var _delayToUse:Float = 0;
+	private var _delayToUse:Float = 0;
 	private var _running:Bool = false;
 
 	/**
@@ -376,7 +376,7 @@ class FlxTween implements IFlxDestroyable
 		
 		type = Options.type;
 		onStart = Options.onStart;
-        onComplete = Options.onComplete;
+		onComplete = Options.onComplete;
 		ease = Options.ease;
 		setDelays(Options.startDelay, Options.loopDelay);
 	}
@@ -395,7 +395,7 @@ class FlxTween implements IFlxDestroyable
 	public function destroy():Void
 	{
 		onStart = null;
-        onComplete = null;
+		onComplete = null;
 		ease = null;
 	}
 
@@ -403,10 +403,10 @@ class FlxTween implements IFlxDestroyable
 	{
 		_secondsSinceStart += FlxG.elapsed;
 		var delay:Float = (executions > 0) ? loopDelay : startDelay;
-        if (_secondsSinceStart < delay)
-        {
-            return;
-        }
+		if (_secondsSinceStart < delay)
+		{
+			return;
+		}
 		scale = Math.max((_secondsSinceStart - delay), 0) / duration;
 		if (ease != null)
 		{
@@ -416,11 +416,11 @@ class FlxTween implements IFlxDestroyable
 		{
 			scale = 1 - scale;
 		}
-        if (_secondsSinceStart > delay && _running == false) {
-            _running = true;
-            if (onStart != null) 
-                onStart(this);
-        }
+		if (_secondsSinceStart > delay && _running == false) {
+			_running = true;
+			if (onStart != null) 
+				onStart(this);
+		}
 		if (_secondsSinceStart >= duration + delay)
 		{
 			scale = (backward) ? 0 : 1;
@@ -441,7 +441,7 @@ class FlxTween implements IFlxDestroyable
 			return this;
 		}
 		active = true;
-        _running = false;
+		_running = false;
 		finished = false;
 		return this;
 	}
@@ -453,7 +453,7 @@ class FlxTween implements IFlxDestroyable
 	public function cancel():Void
 	{
 		active = false;
-        _running = false;
+		_running = false;
 		finished = true;
 		manager.remove(this);
 	}
@@ -470,12 +470,12 @@ class FlxTween implements IFlxDestroyable
 			case FlxTween.PERSIST:
 				_secondsSinceStart = duration + startDelay;
 				active = false;
-                _running = false;
+				_running = false;
 				finished = true;
 				
 			case FlxTween.ONESHOT:
 				active = false;
-                _running = false;
+				_running = false;
 				finished = true;
 				_secondsSinceStart = duration + startDelay;
 				manager.remove(this);
@@ -572,7 +572,7 @@ typedef StartCallback = FlxTween->Void;
 typedef TweenOptions = {
 	?type:Null<Int>,
 	?ease:EaseFunction,
-    ?onComplete:CompleteCallback,
+	?onComplete:CompleteCallback,
 	?onStart:StartCallback,
 	?startDelay:Null<Float>,
 	?loopDelay:Null<Float>,
