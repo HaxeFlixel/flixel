@@ -538,10 +538,14 @@ class FlxSpriteUtil
 	{
 		if (lineStyle != null)
 		{
-			var color = (lineStyle.color == null) ? FlxColor.BLACK : lineStyle.color; 
-			if (lineStyle.thickness == null) { lineStyle.thickness = 1; }
-			if (lineStyle.pixelHinting == null) { lineStyle.pixelHinting = false; }
-			if (lineStyle.miterLimit == null) 	{ lineStyle.miterLimit = 3; }
+			var color = (lineStyle.color == null) ? FlxColor.BLACK : lineStyle.color;
+
+			if (lineStyle.thickness == null)
+				lineStyle.thickness = 1;
+			if (lineStyle.pixelHinting == null)
+				lineStyle.pixelHinting = false;
+			if (lineStyle.miterLimit == null)
+				lineStyle.miterLimit = 3;
 			
 			flashGfx.lineStyle(
 				lineStyle.thickness,
@@ -557,11 +561,11 @@ class FlxSpriteUtil
 	
 	/**
 	 * Helper function for the default line styles of drawLine() and drawCurve()
-	 * @param	lineStyle The (optional) lineStyle typedef
-	 * @return
+	 * 
+	 * @param   lineStyle   The lineStyle typedef
 	 */
-	public static inline function getDefaultLineStyle(?lineStyle:LineStyle):LineStyle {
-		
+	public static inline function getDefaultLineStyle(?lineStyle:LineStyle):LineStyle
+	{
 		if (lineStyle == null)
 			lineStyle = { thickness: 1, color: FlxColor.WHITE };
 		if (lineStyle.thickness == null)
