@@ -650,7 +650,7 @@ class FlxSpriteUtil
 		{
 			sprite.alpha = 0;
 		}
-		FlxTween.num(sprite.alpha, 1, Duration, { complete: OnComplete }, alphaTween.bind(sprite));
+		FlxTween.num(sprite.alpha, 1, Duration, { onComplete: OnComplete }, alphaTween.bind(sprite));
 		return sprite;
 	}
 	
@@ -663,7 +663,7 @@ class FlxSpriteUtil
 	 */
 	public static inline function fadeOut(sprite:FlxSprite, Duration:Float = 1, ?OnComplete:CompleteCallback):FlxSprite
 	{
-		FlxTween.num(sprite.alpha, 0, Duration, { complete: OnComplete }, alphaTween.bind(sprite));
+		FlxTween.num(sprite.alpha, 0, Duration, { onComplete: OnComplete }, alphaTween.bind(sprite));
 		return sprite;
 	}
 	
