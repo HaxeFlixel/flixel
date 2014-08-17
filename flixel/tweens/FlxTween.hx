@@ -130,8 +130,6 @@ class FlxTween implements IFlxDestroyable
 	 * @param	Duration	Duration of the tween in seconds.
 	 * @param	FromColor	Start color.
 	 * @param	ToColor		End color.
-	 * @param	FromAlpha	Start alpha.
-	 * @param	ToAlpha		End alpha.
 	 * @param	Options		An object containing key/value pairs of the following optional parameters:
 	 * 						type		Tween type.
 	 * 						onStart		Optional start callback function.
