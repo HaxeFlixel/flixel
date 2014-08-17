@@ -13,7 +13,7 @@ import flixel.tweens.FlxEase.EaseFunction;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxTween.TweenOptions;
 import flixel.util.FlxColor;
-import flixel.util.FlxPoint;
+import flixel.math.FlxPoint;
 import flixel.util.FlxSpriteUtil;
 import flixel.system.FlxAssets;
 
@@ -199,7 +199,7 @@ class PlayState extends FlxState
 
 	private function startTween():Void
 	{
-		var options:TweenOptions = { type: FlxTween.PINGPONG, ease: _currentEase }
+		var options:TweenOptions = { type: FlxTween.PINGPONG, ease: _currentEase };
 		
 		FlxSpriteUtil.screenCenter(_sprite);
 		_sprite.x = _min.x;
@@ -223,7 +223,10 @@ class PlayState extends FlxState
 				FlxSpriteUtil.screenCenter(_sprite);
 				
 			case COLOR:
-				_tween = FlxTween.color(_sprite, DURATION, FlxColor.BLACK, FlxColor.BLUE, 1, 0, options);
+                var fromColor = FlxColor.BLACK;
+                fromColor.alpha = 0;
+                var toColor = FlxColor.BLUE;
+				_tween = FlxTween.color(_sprite, DURATION, fromColor, toColor, options);
 				FlxSpriteUtil.screenCenter(_sprite);
 				
 			case LINEAR_MOTION:

@@ -781,7 +781,7 @@ class PlayState extends FlxState
 			_centerText.text = "Game Over! :(";
 		}
 		
-		FlxTween.tween(_centerText, { x: 0 }, 2, { ease: FlxEase.expoOut, complete: hideText });
+		FlxTween.tween(_centerText, { x: 0 }, 2, { ease: FlxEase.expoOut, onComplete: hideText });
 		
 		_waveText.text = "Wave: " + wave;
 		_waveText.size = 16;

@@ -249,6 +249,6 @@ class Laser extends FlxSprite
 		scale.set(Length / pixels.width, 1);
 		origin.set(0, pixels.height/2);
 		
-		FlxTween.tween(this, { alpha: 0 }, 0.4, { complete: function(t:FlxTween) { kill(); }, ease: FlxEase.quadOut } );
+		FlxTween.tween(this, { alpha: 0 }, 0.4, { onComplete: function(t:FlxTween) { kill(); }, ease: FlxEase.quadOut } );
 	}
 }

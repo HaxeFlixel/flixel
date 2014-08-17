@@ -56,7 +56,7 @@ class Card extends FlxNapeSprite
 		if (!_turned)
 		{
 			_turned = true;
-			FlxTween.tween(scale, { x: 0 }, TURNING_TIME / 2, { complete: pickCard });
+			FlxTween.tween(scale, { x: 0 }, TURNING_TIME / 2, { onComplete: pickCard });
 		}
 		
 		var body:Body = cast(Sprite, FlxNapeSprite).body;
