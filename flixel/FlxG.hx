@@ -299,10 +299,28 @@ class FlxG
 	/**
 	 * Switch from the current game state to the one specified here.
 	 */
+	#if flixel_addons
+	public static function switchState(State:FlxState):Void
+	{
+		//If we're using flixel-addon's FlxTransitionState, then do a transition
+		if(Std.is(state,flixel.addons.transition.FlxTransitionState))
+		{
+			var fts:flixel.addons.transition.FlxTransitionState = cast state;
+			if (fts._transIn != null && fts._transIn.type != NONE && !fts.transOutFinished)
+			{
+				fts.transitionToState(State);
+				return;
+			}
+		}
+		//Otherwise do the switch normally
+		game._requestedState = State;
+	}
+	#else
 	public static inline function switchState(State:FlxState):Void
 	{
 		game._requestedState = State; 
 	}
+	#end
 	
 	/**
 	 * Request a reset of the current game state.
