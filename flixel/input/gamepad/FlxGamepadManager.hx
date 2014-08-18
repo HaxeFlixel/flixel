@@ -2,6 +2,7 @@ package flixel.input.gamepad;
 
 import flash.Lib;
 import flixel.FlxG;
+import flixel.input.FlxInput.FlxInputState;
 import flixel.input.gamepad.FlxGamepad;
 import flixel.util.FlxDestroyUtil;
 
@@ -188,7 +189,7 @@ class FlxGamepadManager implements IFlxInputManager
 	{
 		for (gamepad in _gamepads)
 		{
-			if ((gamepad != null) && gamepad.anyInput())
+			if (gamepad != null && gamepad.anyInput())
 			{
 				return gamepad;
 			}
@@ -198,13 +199,13 @@ class FlxGamepadManager implements IFlxInputManager
 	}
 	
 	/**
-	 * Check to see if any button was pressed on any Gamepad
+	 * Whether any buttons have the specified input state on any gamepad.
 	 */
-	public function anyButton():Bool
+	public function anyButton(state:FlxInputState = PRESSED):Bool
 	{
 		for (gamepad in _gamepads)
 		{
-			if ((gamepad != null) && gamepad.anyButton())
+			if (gamepad != null && gamepad.anyButton(state))
 			{
 				return true;
 			}
@@ -214,13 +215,13 @@ class FlxGamepadManager implements IFlxInputManager
 	}
 	
 	/**
-	 * Check to see if any buttons are pressed right or Axis, Ball and Hat Moved on any Gamepad
+	 * Check to see if any buttons are pressed right or Axis, Ball and Hat Moved on any gamepad.
 	 */
 	public function anyInput():Bool
 	{
 		for (gamepad in _gamepads)
 		{
-			if ((gamepad != null) && gamepad.anyInput())
+			if (gamepad != null && gamepad.anyInput())
 			{
 				return true;
 			}

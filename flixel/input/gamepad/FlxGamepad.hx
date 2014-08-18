@@ -368,13 +368,13 @@ class FlxGamepad implements IFlxDestroyable
 	}
 
 	/**
-	 * Check to see if any buttons are pressed right now.
+	 * Whether any buttons have the specified input state.
 	 */
-	public function anyButton():Bool
+	public function anyButton(state:FlxInputState = PRESSED):Bool
 	{
 		for (button in buttons)
 		{
-			if (button != null && button.pressed)
+			if (button != null && button.hasState(state))
 			{
 				return true;
 			}
