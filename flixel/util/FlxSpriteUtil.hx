@@ -375,14 +375,14 @@ class FlxSpriteUtil
 	public static function drawCircle(sprite:FlxSprite, X:Float = - 1, Y:Float = - 1, Radius:Float = -1, 
 		FillColor:FlxColor = FlxColor.WHITE, ?lineStyle:LineStyle, ?drawStyle:DrawStyle):FlxSprite
 	{
-		if ((X == -1) || (Y == -1)) 
+		if (X == -1 || Y == -1) 
 		{
 			var midPoint = sprite.getGraphicMidpoint();
 			
 			if (X == -1)
-				X = midPoint.x;
+				X = midPoint.x - sprite.x;
 			if (Y == -1)
-				Y = midPoint.y;
+				Y = midPoint.y - sprite.y;
 			
 			midPoint.put();
 		}
