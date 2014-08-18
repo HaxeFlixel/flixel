@@ -145,8 +145,8 @@
  * Fixed a bug with point / rect pooling that could lead to them being recycled when they shouldn't be
  * improved pooling performance
 * FlxTween
- * `complete` callback parameter in `options` is now called `onComplete`
- * Added `onStart` callback parameter in `options`
+ * `complete` callback parameter in `options` is now called `onComplete`. Its type, `CompleteCallback`, is now called `TweenCallback`.
+ * Added `onStart` and `onUpdate` callback parameters in `options`
 
 3.3.5
 ------------------------------
