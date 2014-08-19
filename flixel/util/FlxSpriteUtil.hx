@@ -673,6 +673,12 @@ class FlxSpriteUtil
 	}
 }
 
+typedef FillStyle = {
+	?hasFill:Bool,
+	?color:FlxColor,
+	?alpha:Float
+}
+
 typedef LineStyle = {
 	?thickness:Float,
 	?color:FlxColor,
