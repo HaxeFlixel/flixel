@@ -306,7 +306,7 @@ class FlxG
 		if(Std.is(state,flixel.addons.transition.FlxTransitionState))
 		{
 			var fts:flixel.addons.transition.FlxTransitionState = cast state;
-			if (fts._transIn != null && fts._transIn.type != NONE && !fts.transOutFinished)
+			if (fts.hasTransIn && !fts.transOutFinished)
 			{
 				fts.transitionToState(State);
 				return;
