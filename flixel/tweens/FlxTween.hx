@@ -424,7 +424,8 @@ class FlxTween implements IFlxDestroyable
 		{
 			scale = 1 - scale;
 		}
-		if (_secondsSinceStart > delay && _running == false) {
+		if (_secondsSinceStart > delay && _running == false)
+		{
 			_running = true;
 			if (onStart != null) 
 				onStart(this);
@@ -433,7 +434,8 @@ class FlxTween implements IFlxDestroyable
 		{
 			scale = (backward) ? 0 : 1;
 			finished = true;
-		} else 
+		}
+		else 
 		{
 			if (onUpdate != null)
 				onUpdate(this);
