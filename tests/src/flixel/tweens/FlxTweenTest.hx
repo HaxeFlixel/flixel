@@ -52,4 +52,15 @@ class FlxTweenTest extends FlxTest
 		step(10);
 		Assert.isTrue(resumeSuccesful);
 	}
+	
+	@Test
+	function testScaleIsValidWithStartDelay()
+	{
+		FlxTween.num(0, 1, 0.2, { startDelay: 0.1 }, function (f:Float)
+		{
+			Assert.isNotNaN(f);
+			Assert.isNotNull(f);
+		});
+		step();
+	}
 }
