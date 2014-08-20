@@ -644,13 +644,13 @@ class FlxSpriteUtil
 	 * @param  Duration How long the fade will take (in seconds).
 	 * @return The FlxSprite for chaining
 	 */
-	public static inline function fadeIn(sprite:FlxSprite, Duration:Float = 1, ?ResetAlpha:Bool, ?OnComplete:CompleteCallback):FlxSprite
+	public static inline function fadeIn(sprite:FlxSprite, Duration:Float = 1, ?ResetAlpha:Bool, ?OnComplete:TweenCallback):FlxSprite
 	{
 		if (ResetAlpha) 
 		{
 			sprite.alpha = 0;
 		}
-		FlxTween.num(sprite.alpha, 1, Duration, { complete: OnComplete }, alphaTween.bind(sprite));
+		FlxTween.num(sprite.alpha, 1, Duration, { onComplete: OnComplete }, alphaTween.bind(sprite));
 		return sprite;
 	}
 	
@@ -661,9 +661,9 @@ class FlxSpriteUtil
 	 * @param  Duration How long the fade will take (in seconds).
 	 * @return The FlxSprite for chaining
 	 */
-	public static inline function fadeOut(sprite:FlxSprite, Duration:Float = 1, ?OnComplete:CompleteCallback):FlxSprite
+	public static inline function fadeOut(sprite:FlxSprite, Duration:Float = 1, ?OnComplete:TweenCallback):FlxSprite
 	{
-		FlxTween.num(sprite.alpha, 0, Duration, { complete: OnComplete }, alphaTween.bind(sprite));
+		FlxTween.num(sprite.alpha, 0, Duration, { onComplete: OnComplete }, alphaTween.bind(sprite));
 		return sprite;
 	}
 	

@@ -48,14 +48,16 @@ class FlxTween implements IFlxDestroyable
 	
 	/**
 	 * Tweens numeric public properties of an Object. Shorthand for creating a VarTween, starting it and adding it to the TweenManager.
-	 * Example: FlxTween.tween(Object, { x: 500, y: 350 }, 2.0, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT });
+	 * Example: FlxTween.tween(Object, { x: 500, y: 350 }, 2.0, { ease: easeFunction, onStart: onStart, onUpdate: onUpdate, onComplete: onComplete, type: FlxTween.ONESHOT });
 	 * 
 	 * @param	Object		The object containing the properties to tween.
 	 * @param	Values		An object containing key/value pairs of properties and target values.
 	 * @param	Duration	Duration of the tween in seconds.
 	 * @param	Options		An object containing key/value pairs of the following optional parameters:
 	 * 						type		Tween type.
-	 * 						complete	Optional completion callback function.
+	 * 						onStart		Optional start callback function.
+	 * 						onUpdate	Optional update callback function.
+	 * 						onComplete	Optional completion callback function.
 	 * 						ease		Optional easer function.
 	 *  					startDelay	Seconds to wait until starting this tween, 0 by default.
 	 * 						loopDelay	Seconds to wait between loops of this tween, 0 by default.
@@ -74,14 +76,16 @@ class FlxTween implements IFlxDestroyable
 	 * 
 	 * Example: 
 	 *    private function tweenFunction(s:FlxSprite, v:Float) { s.alpha = v; }
-	 *    FlxTween.num(1, 0, 2.0, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT }, tweenFunction.bind(mySprite));
+	 *    FlxTween.num(1, 0, 2.0, { ease: easeFunction, onStart: onStart, onUpdate: onUpdate, onComplete: onComplete, type: FlxTween.ONESHOT }, tweenFunction.bind(mySprite));
 	 * 
 	 * @param	FromValue	Start value.
 	 * @param	ToValue		End value.
 	 * @param	Duration	Duration of the tween.
 	 * @param	Options		An object containing key/value pairs of the following optional parameters:
 	 * 						type		Tween type.
-	 * 						complete	Optional completion callback function.
+	 * 						onStart		Optional start callback function.
+	 * 						onUpdate	Optional update callback function.
+	 * 						onComplete	Optional completion callback function.
 	 * 						ease		Optional easer function.
 	 *  					startDelay	Seconds to wait until starting this tween, 0 by default.
 	 * 						loopDelay	Seconds to wait between loops of this tween, 0 by default.
@@ -98,7 +102,7 @@ class FlxTween implements IFlxDestroyable
 	
 	/**
 	 * Tweens numeric value which represents angle. Shorthand for creating a AngleTween object, starting it and adding it to the TweenManager.
-	 * Example: FlxTween.angle(Sprite, -90, 90, 2.0, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT });
+	 * Example: FlxTween.angle(Sprite, -90, 90, 2.0, { ease: easeFunction, onStart: onStart, onUpdate: onUpdate, onComplete: onComplete, type: FlxTween.ONESHOT });
 	 * 
 	 * @param	Sprite		Optional Sprite whose angle should be tweened.
 	 * @param	FromAngle	Start angle.
@@ -106,7 +110,9 @@ class FlxTween implements IFlxDestroyable
 	 * @param	Duration	Duration of the tween.
 	 * @param	Options		An object containing key/value pairs of the following optional parameters:
 	 * 						type		Tween type.
-	 * 						complete	Optional completion callback function.
+	 * 						onStart		Optional start callback function.
+	 * 						onUpdate	Optional update callback function.
+	 * 						onComplete	Optional completion callback function.
 	 * 						ease		Optional easer function.
 	 *  					startDelay	Seconds to wait until starting this tween, 0 by default.
 	 * 						loopDelay	Seconds to wait between loops of this tween, 0 by default.
@@ -121,17 +127,17 @@ class FlxTween implements IFlxDestroyable
 	
 	/**
 	 * Tweens numeric value which represents color. Shorthand for creating a ColorTween object, starting it and adding it to a TweenPlugin.
-	 * Example: FlxTween.color(Sprite, 2.0, 0x000000, 0xffffff, 0.0, 1.0, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT });
+	 * Example: FlxTween.color(Sprite, 2.0, 0x000000, 0xffffff, 0.0, 1.0, { ease: easeFunction, onStart: onStart, onUpdate: onUpdate, onComplete: onComplete, type: FlxTween.ONESHOT });
 	 * 
 	 * @param	Sprite		Optional Sprite whose color should be tweened.
 	 * @param	Duration	Duration of the tween in seconds.
 	 * @param	FromColor	Start color.
 	 * @param	ToColor		End color.
-	 * @param	FromAlpha	Start alpha.
-	 * @param	ToAlpha		End alpha.
 	 * @param	Options		An object containing key/value pairs of the following optional parameters:
 	 * 						type		Tween type.
-	 * 						complete	Optional completion callback function.
+	 * 						onStart		Optional start callback function.
+	 * 						onUpdate	Optional update callback function.
+	 * 						onComplete	Optional completion callback function.
 	 * 						ease		Optional easer function.
 	 *  					startDelay	Seconds to wait until starting this tween, 0 by default.
 	 * 						loopDelay	Seconds to wait between loops of this tween, 0 by default.
@@ -146,7 +152,7 @@ class FlxTween implements IFlxDestroyable
 	
 	/**
 	 * Create a new LinearMotion tween.
-	 * Example: FlxTween.linearMotion(Object, 0, 0, 500, 20, 5, false, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT });
+	 * Example: FlxTween.linearMotion(Object, 0, 0, 500, 20, 5, false, { ease: easeFunction, onStart: onStart, onUpdate: onUpdate, onComplete: onComplete, type: FlxTween.ONESHOT });
 	 * 
 	 * @param	Object			The object to move (FlxObject or FlxSpriteGroup)
 	 * @param	FromX			X start.
@@ -157,7 +163,9 @@ class FlxTween implements IFlxDestroyable
 	 * @param	UseDuration		Whether to use the previous param as duration or speed.
 	 * @param	Options			An object containing key/value pairs of the following optional parameters:
 	 * 							type		Tween type.
-	 * 							complete	Optional completion callback function.
+	 * 							onStart		Optional start callback function.
+	 * 							onUpdate	Optional update callback function.
+	 * 							onComplete	Optional completion callback function.
 	 * 							ease		Optional easer function.
 	 *  						startDelay	Seconds to wait until starting this tween, 0 by default.
 	 * 							loopDelay	Seconds to wait between loops of this tween, 0 by default.
@@ -173,7 +181,7 @@ class FlxTween implements IFlxDestroyable
 	
 	/**
 	 * Create a new QuadMotion tween.
-	 * Example: FlxTween.quadMotion(Object, 0, 100, 300, 500, 100, 2, 5, false, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT });
+	 * Example: FlxTween.quadMotion(Object, 0, 100, 300, 500, 100, 2, 5, false, { ease: easeFunction, onStart: onStart, onUpdate: onUpdate, onComplete: onComplete, type: FlxTween.ONESHOT });
 	 * 
 	 * @param	Object			The object to move (FlxObject or FlxSpriteGroup)
 	 * @param	FromX			X start.
@@ -186,7 +194,9 @@ class FlxTween implements IFlxDestroyable
 	 * @param	UseDuration		Whether to use the previous param as duration or speed.
 	 * @param	Options			An object containing key/value pairs of the following optional parameters:
 	 * 							type		Tween type.
-	 * 							complete	Optional completion callback function.
+	 * 							onStart		Optional start callback function.
+	 * 							onUpdate	Optional update callback function.
+	 * 							onComplete	Optional completion callback function.
 	 * 							ease		Optional easer function.
 	 *  						startDelay	Seconds to wait until starting this tween, 0 by default.
 	 * 							loopDelay	Seconds to wait between loops of this tween, 0 by default.
@@ -202,7 +212,7 @@ class FlxTween implements IFlxDestroyable
 	
 	/**
 	 * Create a new CubicMotion tween.
-	 * Example: FlxTween.cubicMotion(_sprite, 0, 0, 500, 100, 400, 200, 100, 100, 2, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT });
+	 * Example: FlxTween.cubicMotion(_sprite, 0, 0, 500, 100, 400, 200, 100, 100, 2, { ease: easeFunction, onStart: onStart, onUpdate: onUpdate, onComplete: onComplete, type: FlxTween.ONESHOT });
 	 * 
 	 * @param	Object 		The object to move (FlxObject or FlxSpriteGroup)
 	 * @param	FromX		X start.
@@ -216,7 +226,9 @@ class FlxTween implements IFlxDestroyable
 	 * @param	Duration	Duration of the movement in seconds.
 	 * @param	Options		An object containing key/value pairs of the following optional parameters:
 	 * 						type		Tween type.
-	 * 						complete	Optional completion callback function.
+	 * 						onStart		Optional start callback function.
+	 * 						onUpdate	Optional update callback function.
+	 * 						onComplete	Optional completion callback function.
 	 * 						ease		Optional easer function.
 	 *  					startDelay	Seconds to wait until starting this tween, 0 by default.
 	 * 						loopDelay	Seconds to wait between loops of this tween, 0 by default.
@@ -232,7 +244,7 @@ class FlxTween implements IFlxDestroyable
 	
 	/**
 	 * Create a new CircularMotion tween.
-	 * Example: FlxTween.circularMotion(Object, 250, 250, 50, 0, true, 2, true { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT });
+	 * Example: FlxTween.circularMotion(Object, 250, 250, 50, 0, true, 2, true { ease: easeFunction, onStart: onStart, onUpdate: onUpdate, onComplete: onComplete, type: FlxTween.ONESHOT });
 	 * 
 	 * @param	Object			The object to move (FlxObject or FlxSpriteGroup)
 	 * @param	CenterX			X position of the circle's center.
@@ -245,7 +257,8 @@ class FlxTween implements IFlxDestroyable
 	 * @param	Eease			Optional easer function.
 	 * @param	Options			An object containing key/value pairs of the following optional parameters:
 	 * 							type		Tween type.
-	 * 							complete	Optional completion callback function.
+	 *	 						onStart		Optional start callback function.
+	 * 							onComplete	Optional completion callback function.
 	 * 							ease		Optional easer function.
 	 *  						startDelay	Seconds to wait until starting this tween, 0 by default.
 	 * 							loopDelay	Seconds to wait between loops of this tween, 0 by default.
@@ -261,7 +274,7 @@ class FlxTween implements IFlxDestroyable
 	
 	/**
 	 * Create a new LinearPath tween.
-	 * Example: FlxTween.linearPath(Object, [FlxPoint.get(0, 0), FlxPoint.get(100, 100)], 2, true, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT });
+	 * Example: FlxTween.linearPath(Object, [FlxPoint.get(0, 0), FlxPoint.get(100, 100)], 2, true, { ease: easeFunction, onStart: onStart, onUpdate: onUpdate, onComplete: onComplete, type: FlxTween.ONESHOT });
 	 * 
 	 * @param	Object 			The object to move (FlxObject or FlxSpriteGroup)
 	 * @param	Points			An array of at least 2 FlxPoints defining the path
@@ -269,7 +282,8 @@ class FlxTween implements IFlxDestroyable
 	 * @param	UseDuration		Whether to use the previous param as duration or speed.
 	 * @param	Options			An object containing key/value pairs of the following optional parameters:
 	 * 							type		Tween type.
-	 * 							complete	Optional completion callback function.
+	 *	 						onStart		Optional start callback function.
+	 * 							onComplete	Optional completion callback function.
 	 * 							ease		Optional easer function.
 	 * 							startDelay	Seconds to wait until starting this tween, 0 by default.
 	 * 							loopDelay	Seconds to wait between loops of this tween, 0 by default.
@@ -294,7 +308,7 @@ class FlxTween implements IFlxDestroyable
 	
 	/**
 	 * Create a new QuadPath tween.
-	 * Example: FlxTween.quadPath(Object, [FlxPoint.get(0, 0), FlxPoint.get(200, 200), FlxPoint.get(400, 0)], 2, true, { ease: easeFunction, complete: onComplete, type: FlxTween.ONESHOT });
+	 * Example: FlxTween.quadPath(Object, [FlxPoint.get(0, 0), FlxPoint.get(200, 200), FlxPoint.get(400, 0)], 2, true, { ease: easeFunction, onStart: onStart, onUpdate: onUpdate, onComplete: onComplete, type: FlxTween.ONESHOT });
 	 * 
 	 * @param	Object			The object to move (FlxObject or FlxSpriteGroup)
 	 * @param	Points			An array of at least 3 FlxPoints defining the path
@@ -302,7 +316,8 @@ class FlxTween implements IFlxDestroyable
 	 * @param	UseDuration		Whether to use the previous param as duration or speed.
 	 * @param	Options			An object containing key/value pairs of the following optional parameters:
 	 * 							type		Tween type.
-	 * 							complete	Optional completion callback function.
+	 *	 						onStart		Optional start callback function.
+	 * 							onComplete	Optional completion callback function.
 	 * 							ease		Optional easer function.
 	 * 							startDelay	Seconds to wait until starting this tween, 0 by default.
 	 * 							loopDelay	Seconds to wait between loops of this tween, 0 by default.
@@ -328,7 +343,9 @@ class FlxTween implements IFlxDestroyable
 	public var active:Bool = false;
 	public var duration:Float = 0;
 	public var ease:EaseFunction;
-	public var complete:CompleteCallback;
+	public var onStart:TweenCallback;
+	public var onUpdate:TweenCallback;
+	public var onComplete:TweenCallback;
 	
 	public var type(default, set):Int;
 	public var percent(get, set):Float;
@@ -354,6 +371,7 @@ class FlxTween implements IFlxDestroyable
 	
 	private var _secondsSinceStart:Float = 0;
 	private var _delayToUse:Float = 0;
+	private var _running:Bool = false;
 
 	/**
 	 * This function is called when tween is created, or recycled.
@@ -363,7 +381,9 @@ class FlxTween implements IFlxDestroyable
 		Options = resolveTweenOptions(Options);
 		
 		type = Options.type;
-		complete = Options.complete;
+		onStart = Options.onStart;
+		onUpdate = Options.onUpdate;
+		onComplete = Options.onComplete;
 		ease = Options.ease;
 		setDelays(Options.startDelay, Options.loopDelay);
 	}
@@ -381,7 +401,9 @@ class FlxTween implements IFlxDestroyable
 	
 	public function destroy():Void
 	{
-		complete = null;
+		onStart = null;
+		onUpdate = null;
+		onComplete = null;
 		ease = null;
 	}
 
@@ -389,6 +411,10 @@ class FlxTween implements IFlxDestroyable
 	{
 		_secondsSinceStart += FlxG.elapsed;
 		var delay:Float = (executions > 0) ? loopDelay : startDelay;
+		if (_secondsSinceStart < delay)
+		{
+			return;
+		}
 		scale = Math.max((_secondsSinceStart - delay), 0) / duration;
 		if (ease != null)
 		{
@@ -398,10 +424,19 @@ class FlxTween implements IFlxDestroyable
 		{
 			scale = 1 - scale;
 		}
+		if (_secondsSinceStart > delay && _running == false) {
+			_running = true;
+			if (onStart != null) 
+				onStart(this);
+		}
 		if (_secondsSinceStart >= duration + delay)
 		{
 			scale = (backward) ? 0 : 1;
 			finished = true;
+		} else 
+		{
+			if (onUpdate != null)
+				onUpdate(this);
 		}
 	}
 
@@ -418,6 +453,7 @@ class FlxTween implements IFlxDestroyable
 			return this;
 		}
 		active = true;
+		_running = false;
 		finished = false;
 		return this;
 	}
@@ -429,6 +465,7 @@ class FlxTween implements IFlxDestroyable
 	public function cancel():Void
 	{
 		active = false;
+		_running = false;
 		finished = true;
 		manager.remove(this);
 	}
@@ -437,18 +474,20 @@ class FlxTween implements IFlxDestroyable
 	{
 		executions++;
 		
-		if (complete != null) 
-			complete(this);
+		if (onComplete != null) 
+			onComplete(this);
 		
 		switch (type & ~ FlxTween.BACKWARD)
 		{
 			case FlxTween.PERSIST:
 				_secondsSinceStart = duration + startDelay;
 				active = false;
+				_running = false;
 				finished = true;
 				
 			case FlxTween.ONESHOT:
 				active = false;
+				_running = false;
 				finished = true;
 				_secondsSinceStart = duration + startDelay;
 				manager.remove(this);
@@ -539,12 +578,14 @@ class FlxTween implements IFlxDestroyable
 	}
 }
 
-typedef CompleteCallback = FlxTween->Void;
+typedef TweenCallback = FlxTween->Void;
 
 typedef TweenOptions = {
 	?type:Null<Int>,
 	?ease:EaseFunction,
-	?complete:CompleteCallback,
+	?onStart:TweenCallback,
+	?onUpdate:TweenCallback,
+	?onComplete:TweenCallback,
 	?startDelay:Null<Float>,
 	?loopDelay:Null<Float>,
 }
