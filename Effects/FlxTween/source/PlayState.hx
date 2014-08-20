@@ -191,7 +191,7 @@ class PlayState extends FlxState
 
 	private function startTween():Void
 	{
-		var options:TweenOptions = { type: FlxTween.PINGPONG, ease: _currentEase }
+		var options:TweenOptions = { type: FlxTween.PINGPONG, ease: _currentEase };
 		
 		FlxSpriteUtil.screenCenter(_sprite);
 		_sprite.x = _min.x;
@@ -303,7 +303,8 @@ class PlayState extends FlxState
 			}
 		}
 		
-		if (!foundEase) {
+		if (!foundEase)
+		{
 			_currentEaseIndex = _easeInfo.length - 1; // last entry is "none"
 		}
 		
@@ -324,7 +325,8 @@ class PlayState extends FlxState
 	}
 }
 
-typedef EaseInfo = {
+typedef EaseInfo =
+{
 	name:String,
 	ease:EaseFunction
 }
