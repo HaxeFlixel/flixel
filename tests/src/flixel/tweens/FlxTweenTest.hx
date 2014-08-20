@@ -1,16 +1,15 @@
 package flixel.tweens;
 
 import flixel.tweens.FlxTween;
-import haxe.Timer;
+import flixel.util.FlxTimer;
 import massive.munit.Assert;
-import massive.munit.async.AsyncFactory;
 
 class FlxTweenTest extends FlxTest
 {
 	var value:Int;
 	
 	@Test
-	function testIssue1104():Void
+	function testIssue1104()
 	{
 		FlxTween.tween(this, { value:  1000 }, 1);
 		FlxTween.tween(this, { value: -1000 }, 1,  { startDelay: 1 } );
@@ -21,5 +20,36 @@ class FlxTweenTest extends FlxTest
 		
 		step(10);
 		Assert.areNotEqual(value, sampleValue);
+	}
+	
+	@Test
+	function testPauseLoopingTweenInOnComplete()
+	{
+		var tweenActive:Bool = false;
+		
+		var tween = FlxTween.tween(this, { value: 50 }, 0.05, { type: FlxTween.LOOPING, onComplete:
+			function (tween:FlxTween)
+			{
+				tween.active = false;
+				new FlxTimer(0.05, function(_)
+				{
+					tweenActive = tween.active;
+				});
+			}
+		} );
+		
+		step(10);
+		Assert.isFalse(tweenActive);
+		
+		var resumeSuccesful:Bool = false;
+		
+		tween.active = true;
+		tween.onComplete = function (_)
+		{
+			resumeSuccesful = true;
+		};
+		
+		step(10);
+		Assert.isTrue(resumeSuccesful);
 	}
 }

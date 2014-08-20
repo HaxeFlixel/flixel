@@ -340,7 +340,7 @@ class FlxTween implements IFlxDestroyable
 		return manager.add(tween);
 	}
 	
-	public var active:Bool = false;
+	public var active(default, set):Bool = false;
 	public var duration:Float = 0;
 	public var ease:EaseFunction;
 	public var onStart:TweenCallback;
@@ -372,6 +372,7 @@ class FlxTween implements IFlxDestroyable
 	private var _secondsSinceStart:Float = 0;
 	private var _delayToUse:Float = 0;
 	private var _running:Bool = false;
+	private var _waitingForRestart:Bool = false;
 
 	/**
 	 * This function is called when tween is created, or recycled.
@@ -447,6 +448,7 @@ class FlxTween implements IFlxDestroyable
 	 */
 	private function start():FlxTween
 	{
+		_waitingForRestart = false;
 		_secondsSinceStart = 0;
 		_delayToUse = (executions > 0) ? loopDelay : startDelay;
 		if (duration == 0)
@@ -501,7 +503,7 @@ class FlxTween implements IFlxDestroyable
 				{
 					scale = ease(scale);
 				}
-				start();
+				restart();
 				
 			case FlxTween.PINGPONG:
 				_secondsSinceStart = (_secondsSinceStart - _delayToUse) % duration + _delayToUse;
@@ -515,7 +517,23 @@ class FlxTween implements IFlxDestroyable
 				{
 					scale = 1 - scale;
 				}
-				start();
+				restart();
+		}
+	}
+	
+	/**
+	 * In case the tween.active was set to false in onComplete(),
+	 * the tween should not be restarted yet.
+	 */
+	private function restart():Void
+	{
+		if (active)
+		{
+			start();
+		}
+		else
+		{
+			_waitingForRestart = true;
 		}
 	}
 	
@@ -577,6 +595,16 @@ class FlxTween implements IFlxDestroyable
 		
 		backward = (value & FlxTween.BACKWARD) > 0;
 		return type = value;
+	}
+	
+	private function set_active(active:Bool):Bool
+	{
+		this.active = active;
+		
+		if (_waitingForRestart)
+			restart();
+		
+		return active;
 	}
 }
 
