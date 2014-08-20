@@ -29,6 +29,8 @@
 * FlxSpriteUtil:
  * drawLine(): default settings for lineStyle are now thickness 1 and color white
  * fadeIn() and fadeOut() now tween alpha instead of color
+ * added drawCurve()
+ * removed FillStyle, the same functionality is now covered by FillColor
 * FlxEmitter:
  * at() -> focusOn()
  * on -> emitting
@@ -74,7 +76,9 @@
  * replaced the parameter array in recycle() with an optional factory method
  * revive() now calls revive() on all members of a group as well
 * FlxTextField#new(): fix bug with passing null for the Text argument
-* FlxGamepadManager: better handling of disconnecting and reconnecting gamepads. getByID() can now return null.
+* FlxGamepadManager: 
+ * better handling of disconnecting and reconnecting gamepads. getByID() can now return null.
+ * now supported on HTML5 with openfl-bitfive
 * FlxGamepad:
  * added a connected flag
  * added deadZoneMode, circular deadzones are now supported
@@ -145,8 +149,11 @@
  * Fixed a bug with point / rect pooling that could lead to them being recycled when they shouldn't be
  * improved pooling performance
 * FlxTween
- * `complete` callback parameter in `options` is now called `onComplete`. Its type, `CompleteCallback`, is now called `TweenCallback`.
- * Added `onStart` and `onUpdate` callback parameters in `options`
+ * complete callback parameter in options is now called onComplete. Its type, CompleteCallback, is now called TweenCallback.
+ * Added onStart and onUpdate callback parameters in options
+ * fixed active = false; not doing anything during onComplete() of LOOPING or PINGPONG tweens
+* FlxTimer: timers with a time of 0 can now be started
+* FlxSwipe: duration now uses seconds instead of milliseconds
 
 3.3.5
 ------------------------------
