@@ -25,7 +25,7 @@ class FlxBasic implements IFlxDestroyable
 	private static var counter : Int = 0;
 	
 	/**
-	 * Used for fast sorting.
+	 * Unique ID for every FlxObject. You can change it, but don't use overlap with SingleOverlap then.
 	 */
 	public var ID:Int = -1;
 	/**
