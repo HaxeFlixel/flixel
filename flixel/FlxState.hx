@@ -127,7 +127,26 @@ class FlxState extends FlxGroup
 		}
 		super.destroy();
 	}
-
+	
+	/**
+	 * Checked by FlxG.switchState to see if a transition is required before switching states
+	 * @return
+	 */
+	public function isTransitionNeeded():Bool
+	{
+		//override in your subclass to enable this functionality
+		return false;
+	}
+	
+	/**
+	 * Perform a visual transition, and when it's complete, call FlxG.switchState
+	 * @param	State
+	 */
+	public function transitionToState(State:FlxState):Void
+	{
+		//override in your subclass to enable this functionality
+	}
+	
 	/**
 	 * This method is called after application losts its focus.
 	 * Can be useful if you using third part libraries, such as tweening engines.
