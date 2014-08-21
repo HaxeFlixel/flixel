@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<data>
+	
+	<definition id="outline" outline="0x000000"/>
+	<definition id="background" outline="0x000000" width="25"/>
+	
+	<sprite id="back" width="100%" height="100%" color="0xAA0000"/>
+	
+	<text id="welcome" use_def="outline" text="STATE A"/>
+	
+	<button id="transition" label="TRANSITION!" y="-50" width="150" height="50">
+		<anchor x="center" x-flush="center" y="bottom" y-flush="bottom"/>
+	</button>
+	
+	<text id="in" use_def="outline" text="IN:" x="30" y="30"/>
+	
+	<text id="in_duration_text" use_def="outline" text="DURATION:" x="35" y="in.bottom+10"/>
+	<numeric_stepper id="in_duration" step="0.1" value="0" min="0.1" max="3.0" decimals="1" x="-10">
+		 <anchor x="in_duration_text.right" x-flush="left" y="in_duration_text.top" y-flush="top"/>
+		 <text use_def="background"/>
+		 <param type="string" value="in_duration"/>
+	</numeric_stepper>
+	
+	<text id="in_type_text" use_def="outline" text="TYPE:" x="35" y="in_duration.bottom+10"/>
+	<radio_group id="in_type" x="5" y="5">
+		<anchor x="in_type_text.left" x-flush="left" y="in_type_text.bottom" y-flush="top"/>
+		<param type="string" value="in_type"/>
+		
+		<!--actual radio button elements-->
+		<radio id="none" label="NONE"/>
+		<radio id="fade" label="FADE"/>
+		<radio id="tiles" label="TILES"/>
+	</radio_group>
+	
+	<text id="in_tile_text" use_def="outline" text="TILE:" x="95" y="in_duration.bottom+10"/>
+	<radio_group id="in_tile" x="5" y="5">
+		<anchor x="in_tile_text.left" x-flush="left" y="in_tile_text.bottom" y-flush="top"/>
+		<param type="string" value="in_tile"/>
+		
+		<!--actual radio button elements-->
+		<radio id="diamond" label="DIAMOND"/>
+		<radio id="circle" label="CIRCLE"/>
+		<radio id="square" label="SQUARE"/>
+	</radio_group>
+	
+	<text id="in_color_text" use_def="outline" text="COLOR:" x="165" y="in_duration.bottom+10"/>
+	<radio_group id="in_color" x="5" y="5">
+		<anchor x="in_color_text.left" x-flush="left" y="in_color_text.bottom" y-flush="top"/>
+		<param type="string" value="in_color"/>
+		
+		<!--actual radio button elements-->
+		<radio id="black" label="BLACK"/>
+		<radio id="white" label="WHITE"/>
+		<radio id="blue" label="BLUE"/>
+		<radio id="green" label="GREEN"/>
+		<radio id="red" label="RED"/>
+	</radio_group>
+	
+	<text id="in_dir_text" use_def="outline" text="DIRECTION:" x="225" y="in_duration.bottom+10"/>
+	<radio_group id="in_dir" x="5" y="5">
+		<anchor x="in_dir_text.left" x-flush="left" y="in_dir_text.bottom" y-flush="top"/>
+		<param type="string" value="in_dir"/>
+		
+		<!--actual radio button elements-->
+		<radio id="center" label="CENTER"/>
+		<radio id="n" label="N"/>
+		<radio id="s" label="S"/>
+		<radio id="w" label="W"/>
+		<radio id="e" label="E"/>
+		<radio id="nw" label="NW"/>
+		<radio id="ne" label="NE"/>
+		<radio id="sw" label="SW"/>
+		<radio id="se" label="SE"/>
+	</radio_group>
+	
+	<text id="out" use_def="outline" text="OUT:" x="350" y="30"/>
+	
+	<text id="out_duration_text" use_def="outline" text="DURATION:" x="350" y="out.bottom+10"/>
+	<numeric_stepper id="out_duration" step="0.1" value="0" min="0.1" max="3.0" decimals="1" x="-10">
+		 <anchor x="out_duration_text.right" x-flush="left" y="out_duration_text.top" y-flush="top"/>
+		 <text use_def="background"/>
+		 <param type="string" value="out_duration"/>
+	</numeric_stepper>
+	
+	<text id="out_type_text" use_def="outline" text="TYPE:" x="385" y="out_duration.bottom+10"/>
+	<radio_group id="out_type" x="5" y="5">
+		<anchor x="out_type_text.left" x-flush="left" y="out_type_text.bottom" y-flush="top"/>
+		<param type="string" value="out_type"/>
+		
+		<!--actual radio button elements-->
+		<radio id="none" label="NONE"/>
+		<radio id="fade" label="FADE"/>
+		<radio id="tiles" label="TILES"/>
+	</radio_group>
+	
+	<text id="out_tile_text" use_def="outline" text="TILE:" x="445" y="out_duration.bottom+10"/>
+	<radio_group id="out_tile" x="5" y="5">
+		<anchor x="out_tile_text.left" x-flush="left" y="out_tile_text.bottom" y-flush="top"/>
+		<param type="string" value="out_tile"/>
+		
+		<!--actual radio button elements-->
+		<radio id="diamond" label="DIAMOND"/>
+		<radio id="circle" label="CIRCLE"/>
+		<radio id="square" label="SQUARE"/>
+	</radio_group>
+	
+	<text id="out_color_text" use_def="outline" text="COLOR:" x="515" y="out_duration.bottom+10"/>
+	<radio_group id="out_color" x="5" y="5">
+		<anchor x="out_color_text.left" x-flush="left" y="out_color_text.bottom" y-flush="top"/>
+		<param type="string" value="out_color"/>
+		
+		<!--actual radio button elements-->
+		<radio id="black" label="BLACK"/>
+		<radio id="white" label="WHITE"/>
+		<radio id="blue" label="BLUE"/>
+		<radio id="green" label="GREEN"/>
+		<radio id="red" label="RED"/>
+	</radio_group>
+	
+	<text id="out_dir_text" use_def="outline" text="DIRECTION:" x="575" y="out_duration.bottom+10"/>
+	<radio_group id="out_dir" x="5" y="5">
+		<anchor x="out_dir_text.left" x-flush="left" y="out_dir_text.bottom" y-flush="top"/>
+		<param type="string" value="out_dir"/>
+		
+		<!--actual radio button elements-->
+		<radio id="center" label="CENTER"/>
+		<radio id="n" label="N"/>
+		<radio id="s" label="S"/>
+		<radio id="w" label="W"/>
+		<radio id="e" label="E"/>
+		<radio id="nw" label="NW"/>
+		<radio id="ne" label="NE"/>
+		<radio id="sw" label="SW"/>
+		<radio id="se" label="SE"/>
+	</radio_group>
+</data>

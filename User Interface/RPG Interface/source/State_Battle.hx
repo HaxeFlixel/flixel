@@ -16,7 +16,7 @@ class State_Battle extends FlxUIState
 
 	override public function create() 
 	{
-		_xml_id = "state_battle";		
+		_xml_id = "state_battle";
 		super.create();
 		hideFailedUI();
 	}
