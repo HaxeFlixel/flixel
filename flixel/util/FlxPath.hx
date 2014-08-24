@@ -128,6 +128,8 @@ class FlxPath implements IFlxDestroyable
 	
 	private var _inManager:Bool = false;
 	
+	private var _wasObjectImmovable:Bool;
+	
 	/**
 	 * Creates a new FlxPath (and calls start() right away if Object != null).
 	 */
@@ -189,7 +191,9 @@ class FlxPath implements IFlxDestroyable
 			_inc = 1;
 		}
 		
+		_wasObjectImmovable = object.immovable;
 		object.immovable = true;
+		
 		return this;
 	}
 	
@@ -358,7 +362,8 @@ class FlxPath implements IFlxDestroyable
 			if (nodeIndex < 0)
 			{
 				nodeIndex = 0;
-				finished = callComplete = true;
+				callComplete = true;
+				onEnd();
 			}
 		}
 		else if ((_mode & FlxPath.LOOP_FORWARD) > 0)
@@ -416,7 +421,8 @@ class FlxPath implements IFlxDestroyable
 			if (nodeIndex >= nodes.length)
 			{
 				nodeIndex = nodes.length - 1;
-				finished = callComplete = true;
+				callComplete = true;
+				onEnd();
 			}
 		}
 		
@@ -433,8 +439,7 @@ class FlxPath implements IFlxDestroyable
 	 */
 	public function cancel():Void
 	{
-		finished = true;
-		active = false;
+		onEnd();
 		
 		if (object != null)
 		{
@@ -446,6 +451,16 @@ class FlxPath implements IFlxDestroyable
 			manager.remove(this);
 			_inManager = false;
 		}
+	}
+	
+	/**
+	 * Called when the path ends, either by completing normally or via cancel().
+	 */
+	private function onEnd():Void
+	{
+		finished = true;
+		active = false;
+		object.immovable = _wasObjectImmovable;
 	}
 	
 	/**

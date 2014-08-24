@@ -468,9 +468,7 @@ class FlxTween implements IFlxDestroyable
 	 */
 	public function cancel():Void
 	{
-		active = false;
-		_running = false;
-		finished = true;
+		onEnd();
 		manager.remove(this);
 	}
 	
@@ -481,44 +479,50 @@ class FlxTween implements IFlxDestroyable
 		if (onComplete != null) 
 			onComplete(this);
 		
-		switch (type & ~ FlxTween.BACKWARD)
+		var type = type & ~ FlxTween.BACKWARD;
+		
+		if (type == FlxTween.PERSIST || type == FlxTween.ONESHOT)
 		{
-			case FlxTween.PERSIST:
-				_secondsSinceStart = duration + startDelay;
-				active = false;
-				_running = false;
-				finished = true;
-				
-			case FlxTween.ONESHOT:
-				active = false;
-				_running = false;
-				finished = true;
-				_secondsSinceStart = duration + startDelay;
+			onEnd();
+			_secondsSinceStart = duration + startDelay;
+			
+			if (type == FlxTween.ONESHOT)
+			{
 				manager.remove(this);
-				
-			case FlxTween.LOOPING:
-				_secondsSinceStart = (_secondsSinceStart - _delayToUse) % duration + _delayToUse;
-				scale = Math.max((_secondsSinceStart - _delayToUse), 0) / duration;
-				if ((ease != null) && (scale > 0) && (scale < 1))
-				{
-					scale = ease(scale);
-				}
-				restart();
-				
-			case FlxTween.PINGPONG:
-				_secondsSinceStart = (_secondsSinceStart - _delayToUse) % duration + _delayToUse;
-				scale = Math.max((_secondsSinceStart - _delayToUse), 0) / duration;
-				if ((ease != null) && (scale > 0) && (scale < 1))
-				{
-					scale = ease(scale);
-				}
+			}
+		}
+		
+		if (type == FlxTween.LOOPING || type == FlxTween.PINGPONG)
+		{
+			_secondsSinceStart = (_secondsSinceStart - _delayToUse) % duration + _delayToUse;
+			scale = Math.max((_secondsSinceStart - _delayToUse), 0) / duration;
+			
+			if (ease != null && scale > 0 && scale < 1)
+			{
+				scale = ease(scale);
+			}
+			
+			if (type == FlxTween.PINGPONG)
+			{
 				backward = !backward;
 				if (backward)
 				{
 					scale = 1 - scale;
 				}
-				restart();
+			}
+			
+			restart();
 		}
+	}
+	
+	/**
+	 * Called when the tween ends, either via finish() or cancel().
+	 */
+	private function onEnd():Void
+	{
+		active = false;
+		_running = false;
+		finished = true;
 	}
 	
 	/**
