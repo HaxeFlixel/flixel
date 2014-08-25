@@ -1,8 +1,9 @@
 package;
 
-import flixel.addons.nape.FlxNapeState;
+import flixel.addons.nape.FlxNapeSpace;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.FlxState;
 import flixel.group.FlxGroup;
 import flixel.math.FlxRandom;
 import nape.constraint.DistanceJoint;
@@ -13,7 +14,7 @@ import flixel.input.mouse.FlxMouseEventManager;
  * @author TiagoLr (~~~~ ProG4mr ~~~~)
  * Improvements by @author Gama11
  */
-class PlayState extends FlxNapeState
+class PlayState extends FlxState
 {
 	public static var cardJoint:DistanceJoint;
 	
@@ -22,7 +23,7 @@ class PlayState extends FlxNapeState
 	
 	override public function create():Void 
 	{
-		super.create();
+		FlxNapeSpace.init();
 		
 		// A table as a background
 		add(new FlxSprite(0, 0, "assets/Table.jpg"));
@@ -36,8 +37,7 @@ class PlayState extends FlxNapeState
 		createCards();
 		add(_cardGroup);
 
-		napeDebugEnabled = false;
-		createWalls();
+		FlxNapeSpace.createWalls();
 		
 		_fan = new FlxSprite(340, -280, "assets/Fan.png");
 		_fan.antialiasing = true;

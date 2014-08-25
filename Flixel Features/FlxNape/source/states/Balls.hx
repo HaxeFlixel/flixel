@@ -26,9 +26,9 @@ class Balls extends FlxNapeState
 		super.create();
 		
 		// Sets gravity.
-		FlxNapeState.space.gravity.setxy(0, 1500);
-		//FlxNapeState.space.worldLinearDrag = 0;
-		//FlxNapeState.space.worldAngularDrag = 0;
+		FlxNapeSpace.space.gravity.setxy(0, 1500);
+		//FlxNapeSpace.space.worldLinearDrag = 0;
+		//FlxNapeSpace.space.worldAngularDrag = 0;
 
 		createWalls( -2000, -2000, 1640, 480);
 		createBalls();
@@ -56,16 +56,16 @@ class Balls extends FlxNapeState
 			ball.body.position.x = (FlxG.width / 2 - radius * (numBalls - i - 1)) + (radius + 3) * i; 
 			add(ball);
 			
-			constraint = new DistanceJoint(FlxNapeState.space.world, ball.body, new Vec2(ball.body.position.x , 100), new Vec2(0, -radius), 0, 250);
-			constraint.space = FlxNapeState.space;
+			constraint = new DistanceJoint(FlxNapeSpace.space.world, ball.body, new Vec2(ball.body.position.x , 100), new Vec2(0, -radius), 0, 250);
+			constraint.space = FlxNapeSpace.space;
 			
 			if (i != 0 && i != numBalls - 1) 
 			{
-				constraint2 = new PivotJoint(FlxNapeState.space.world, ball.body, new Vec2(ball.body.position.x , ball.body.position.y + radius), new Vec2(0, 0));
+				constraint2 = new PivotJoint(FlxNapeSpace.space.world, ball.body, new Vec2(ball.body.position.x , ball.body.position.y + radius), new Vec2(0, 0));
 				constraint2.stiff = false;
 				constraint2.maxForce = 250;
 				constraint2.damping = 100;
-				constraint2.space = FlxNapeState.space;
+				constraint2.space = FlxNapeSpace.space;
 			}
 			
 			

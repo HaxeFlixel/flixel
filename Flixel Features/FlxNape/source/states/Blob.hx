@@ -1,39 +1,31 @@
 package states;
+
 import flash.display.Graphics;
-import flash.display.Sprite;
 import flash.geom.Rectangle;
+import flixel.addons.nape.FlxNapeSpace;
 import flixel.addons.nape.FlxNapeSprite;
-import flixel.addons.nape.FlxNapeState;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.text.FlxText;
-import flixel.math.FlxAngle;
-import flixel.util.FlxColor;
-import flixel.math.FlxMath;
-import flixel.math.FlxPoint;
-import flixel.math.FlxRandom;
-import flixel.util.FlxSpriteUtil;
+import flixel.FlxState;
 import flixel.group.FlxGroup;
-import nape.callbacks.CbEvent;
+import flixel.math.FlxAngle;
+import flixel.text.FlxText;
+import flixel.util.FlxColor;
+import flixel.util.FlxSpriteUtil;
 import nape.callbacks.CbType;
-import nape.callbacks.InteractionCallback;
-import nape.callbacks.InteractionListener;
-import nape.callbacks.InteractionType;
 import nape.constraint.DistanceJoint;
 import nape.constraint.WeldJoint;
 import nape.dynamics.InteractionFilter;
 import nape.geom.Vec2;
 import nape.phys.Body;
-import nape.phys.BodyType;
 import nape.phys.Material;
-import nape.shape.Circle;
 
 /**
  * ...
  * @author TiagoLr (~~~ ProG4mr ~~~)
  * @link https://github.com/ProG4mr
  */
-class Blob extends FlxNapeState
+class Blob extends BaseState
 {
 	static var CIRCLE_RADIUS = 20;
 	static var NUM_CIRCLES = 15;
@@ -55,19 +47,18 @@ class Blob extends FlxNapeState
 	override public function create():Void 
 	{
 		super.create();
+		FlxNapeSpace.init();
 		
 		add(new FlxSprite(0, 0, "assets/BlobBground.jpg"));
 		
 		startXOffset = FlxG.random.float( -200, 200);	
 		
-		createWalls(0,-1000,0,0,10, new Material(1,1, 2,1,0.001));
-		FlxNapeState.space.gravity.setxy(0, 500);
+		FlxNapeSpace.createWalls(0,-1000,0,0,10, new Material(1,1, 2,1,0.001));
+		FlxNapeSpace.space.gravity.setxy(0, 500);
 		
 		shooter = new Shooter();
-		//shooter.disableShooting = true;
 		add(shooter);														 
 		
-		napeDebugEnabled = false;
 		createBlob();
 		
 		for (i in 0...NUM_TWINKLES)
@@ -137,7 +128,7 @@ class Blob extends FlxNapeState
 			//constrain.damping = 1;
 			constrain.frequency = 7;
 			constrain.stiff = false;
-			constrain.space = FlxNapeState.space;
+			constrain.space = FlxNapeSpace.space;
 			
 			
 		}
@@ -194,17 +185,6 @@ class Blob extends FlxNapeState
 		// Copies generated graphics to blob sprite.
 		blob.pixels.fillRect(new Rectangle(0, 0, 640, 480), 0x0);
 		FlxSpriteUtil.updateSpriteGraphic(blob);
-		// ~
-		
-		if (FlxG.keys.justPressed.G)
-			napeDebugEnabled = !napeDebugEnabled;
-		if (FlxG.keys.justPressed.R)
-			FlxG.resetState();
-		if (FlxG.keys.justPressed.LEFT) 
-			Main.prevState();
-		if (FlxG.keys.justPressed.RIGHT)
-			Main.nextState();
-			
 		
 		// Positions Eyes in the middle of the blob, using the median x and y values of the blob.
 		var medX:Float = 0;
@@ -222,17 +202,14 @@ class Blob extends FlxNapeState
 		medY /= 4;
 		
 		leftEye.setPos(medX - 28, medY - 10);
-		rightEye.setPos(medX + 28, medY - 10);
-			
+		rightEye.setPos(medX + 28, medY - 10);	
 	}
-
 }
 
 class Eye extends FlxGroup
 {
 	var outerEye:FlxSprite;
 	var innerEye:FlxSprite;
-	
 	
 	var eyeRadius:Float = 15;
 	var x:Float = 0;
@@ -255,8 +232,6 @@ class Eye extends FlxGroup
 		innerEye.offset.x = outerEye.width / 2;
 		innerEye.offset.y = outerEye.height / 2;
 		add(innerEye);
-		
-		
 	}
 	
 	public function setPos(X:Float, Y:Float)
@@ -276,17 +251,15 @@ class Eye extends FlxGroup
 		
 		//if (distance.length > eyeRadius / 2)
 		distance = (distance.unit()).mul(eyeRadius / 2);
-			
+		
 		innerEye.x = Math.floor(x + distance.x);
 		innerEye.y = Math.floor(y + distance.y);
-		
 	}
 }
 
 class Twinkle extends FlxNapeSprite
 {
-	
-	var destinationTimer:Float			= 0;
+	var destinationTimer:Float = 0;
 	var radius:Float;
 	var destinationJoint:DistanceJoint;
 	
@@ -294,7 +267,6 @@ class Twinkle extends FlxNapeSprite
 	{
 		var rand = FlxG.random.int(0, 4);
 		var graphic:String = null;
-		
 		
 		switch (rand)
 		{
@@ -313,7 +285,7 @@ class Twinkle extends FlxNapeSprite
 		setBodyMaterial(1, 0.2, 0.4, 250); 		// set stupid high density to be less afected by blob weight.
 		body.gravMass = 0; 						// cancels gravity for this object.
 		
-		destinationJoint = new DistanceJoint(FlxNapeState.space.world, body, new Vec2(body.position.x, body.position.y),
+		destinationJoint = new DistanceJoint(FlxNapeSpace.space.world, body, new Vec2(body.position.x, body.position.y),
 								body.localCOM, 0, 0);
 		
 		//constrain.active = false; <- default is true
@@ -321,9 +293,8 @@ class Twinkle extends FlxNapeSprite
 		//destinationJoint.damping = 0;
 		destinationJoint.frequency = .22 + radius * 2 / 100;
 		
-		 destinationJoint.anchor1 = new Vec2(body.position.x, body.position.y);
-		 destinationJoint.space = FlxNapeState.space;		 
-
+		destinationJoint.anchor1 = new Vec2(body.position.x, body.position.y);
+		destinationJoint.space = FlxNapeSpace.space;		 
 	}
 	
 	override public function update():Void 
@@ -348,6 +319,4 @@ class Twinkle extends FlxNapeSprite
 		
 		destinationTimer -= FlxG.elapsed;
 	}
-
-	
 }

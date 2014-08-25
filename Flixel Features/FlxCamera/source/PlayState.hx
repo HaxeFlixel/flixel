@@ -2,20 +2,19 @@ package;
 
 import flash.display.BlendMode;
 import flash.Lib;
-import flixel.addons.nape.FlxNapeState;
+import flixel.addons.nape.FlxNapeSpace;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.FlxState;
 import flixel.util.FlxSpriteUtil;
-import HUD;
 import nape.geom.Vec2;
 import openfl.Assets;
 
 /**
  * @author TiagoLr ( ~~~ProG4mr~~~ )
  */
-
-class PlayState extends FlxNapeState
+class PlayState extends FlxState
 {
 	// Demo arena boundaries
 	static var LEVEL_MIN_X;
@@ -34,6 +33,8 @@ class PlayState extends FlxNapeState
 
 	override public function create():Void 
 	{	
+		FlxNapeSpace.init();
+		
 		LEVEL_MIN_X = -Lib.current.stage.stageWidth / 2;
 		LEVEL_MAX_X = Lib.current.stage.stageWidth * 1.5;
 		LEVEL_MIN_Y = -Lib.current.stage.stageHeight / 2;
@@ -49,11 +50,11 @@ class PlayState extends FlxNapeState
 		firstUpdate = true;
 		#end
 		
-		velocityIterations = 5;
-		positionIterations = 5;
+		FlxNapeSpace.velocityIterations = 5;
+		FlxNapeSpace.positionIterations = 5;
 		
 		createFloor();
-		createWalls(LEVEL_MIN_X, LEVEL_MIN_Y, LEVEL_MAX_X, LEVEL_MAX_Y);
+		FlxNapeSpace.createWalls(LEVEL_MIN_X, LEVEL_MIN_Y, LEVEL_MAX_X, LEVEL_MAX_Y);
 		// Walls border.
 		add(new FlxSprite( -FlxG.width / 2, -FlxG.height / 2, Assets.getBitmapData("assets/Border.png")));
 		

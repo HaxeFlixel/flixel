@@ -1,18 +1,19 @@
 package;
 
-import flixel.addons.nape.FlxNapeState;
+import flixel.addons.nape.FlxNapeSpace;
 import flixel.addons.nape.FlxNapeTilemap;
+import flixel.FlxState;
 import nape.geom.Vec2;
 import openfl.Assets;
 
-class PlayState extends FlxNapeState
+class PlayState extends FlxState
 {
 	var tilemap:FlxNapeTilemap;
 	var player:Player;
 	
 	override public function create():Void
 	{
-		super.create();
+		FlxNapeSpace.init();
 		
 		tilemap = new FlxNapeTilemap();
 		tilemap.loadMap(Assets.getText("assets/data/map.txt"), Assets.getBitmapData("assets/images/spritesheet.png"), 16, 16, null, 0, 0);
@@ -42,6 +43,6 @@ class PlayState extends FlxNapeState
 		add(tilemap);
 		add(player = new Player(50, 50));
 		
-		napeDebugEnabled = true;
+		FlxNapeSpace.drawDebug = true;
 	}
 }

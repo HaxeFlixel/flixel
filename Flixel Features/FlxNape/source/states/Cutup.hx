@@ -4,9 +4,10 @@ import flash.display.BitmapData;
 import flash.display.Sprite;
 import flash.geom.Matrix;
 import flixel.addons.nape.FlxNapeSprite;
-import flixel.addons.nape.FlxNapeState;
+import flixel.addons.nape.FlxNapeSpace;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.FlxState;
 import flixel.group.FlxGroup;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
@@ -31,9 +32,8 @@ import openfl.display.FPS;
  * ...
  * @author Henry.T
  */
-class Cutup extends FlxNapeState
+class Cutup extends BaseState
 {
-	var fps:FPS;
 	var ufo:UFO;
 	var pieces:FlxTypedGroup<FlxNapeSprite>;
 	var lasers:FlxTypedGroup<Laser>;
@@ -43,10 +43,10 @@ class Cutup extends FlxNapeState
 	override public function create():Void
 	{
 		super.create();
-		napeDebugEnabled = false;
+		FlxNapeSpace.init();
 		
 		ground = FlxG.height - 100;
-		createWalls(0, 0, FlxG.width, ground);
+		FlxNapeSpace.createWalls(0, 0, FlxG.width, ground);
 		
 		add(new FlxSprite(0, 0, "assets/cutup/cutupbg.jpg"));
 		
@@ -73,37 +73,18 @@ class Cutup extends FlxNapeState
 		txt = new FlxText( -10, 20, 640, "      'LEFT' & 'RIGHT' - switch demo");
 		add(txt);
 		
-		if (FlxNapeState.space.gravity.y != 500)
-			FlxNapeState.space.gravity.setxy(0, 500);
-			
-		FlxG.addChildBelowMouse(fps = new FPS(FlxG.width - 60, 5, FlxColor.WHITE));
+		if (FlxNapeSpace.space.gravity.y != 500)
+			FlxNapeSpace.space.gravity.setxy(0, 500);
 	}
 	
 	override public function update():Void 
 	{
 		super.update();
 		// won't count the default Body added by Nape itself
-		pieceCntTxt.text = "Toatal Pieces:  " + (FlxNapeState.space.bodies.length-1);
+		pieceCntTxt.text = "Toatal Pieces:  " + (FlxNapeSpace.space.bodies.length-1);
 		
-		if (FlxG.keys.justPressed.G)
-			napeDebugEnabled = !napeDebugEnabled;
-		
-		if (FlxG.keys.justPressed.R)
-			FlxG.resetState();
-		
-		if (FlxG.keys.justPressed.LEFT)
-			Main.prevState();
-		if (FlxG.keys.justPressed.RIGHT)
-			Main.nextState();
-			
 		if (FlxG.mouse.justPressed && (FlxG.mouse.y > ufo.getMidpoint().y))
 			shootLaser();
-	}
-	
-	override public function destroy():Void 
-	{
-		super.destroy();
-		FlxG.removeChild(fps);
 	}
 	
 	private function shootLaser() 
@@ -123,7 +104,7 @@ class Cutup extends FlxNapeState
 		var ray = Ray.fromSegment(sP, eP);
 		if (ray.maxDistance > 5) 
 		{
-			var rayResultList:RayResultList = FlxNapeState.space.rayMultiCast(ray);
+			var rayResultList:RayResultList = FlxNapeSpace.space.rayMultiCast(ray);
 			for (rayResult in rayResultList) 
 			{
 				var orgBody:Body = rayResult.shape.body;
@@ -169,7 +150,7 @@ class Cutup extends FlxNapeState
 				// too small piece cause problem when creating BitmapData
 				if (cutBody.bounds.width < 2 && cutBody.bounds.height < 2)
 					continue;
-				cutBody.space = FlxNapeState.space;
+				cutBody.space = FlxNapeSpace.space;
 				
 				// Sprite has ability to do polygon fill to fit new body's vertices
 				var sprite = new Sprite();

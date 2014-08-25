@@ -1,7 +1,7 @@
 package;
 
 import flixel.addons.nape.FlxNapeSprite;
-import flixel.addons.nape.FlxNapeState;
+import flixel.addons.nape.FlxNapeSpace;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.input.mouse.FlxMouseEventManager;
@@ -61,15 +61,14 @@ class Card extends FlxNapeSprite
 		
 		var body:Body = cast(Sprite, FlxNapeSprite).body;
 		
-		PlayState.cardJoint = new DistanceJoint(FlxNapeState.space.world, body, Vec2.weak(FlxG.mouse.x, FlxG.mouse.y),
-						body.worldPointToLocal(Vec2.weak(FlxG.mouse.x, FlxG.mouse.y)), 0, 0);
-						
+		PlayState.cardJoint = new DistanceJoint(FlxNapeSpace.space.world, body, Vec2.weak(FlxG.mouse.x, FlxG.mouse.y),
+			body.worldPointToLocal(Vec2.weak(FlxG.mouse.x, FlxG.mouse.y)), 0, 0);
+		
 		PlayState.cardJoint.stiff = false;
 		PlayState.cardJoint.damping = 1;
 		PlayState.cardJoint.frequency = 2;
-		PlayState.cardJoint.space = FlxNapeState.space;
+		PlayState.cardJoint.space = FlxNapeSpace.space;
 	}
-	
 	
 	private function onOver(Sprite:FlxSprite) 
 	{
