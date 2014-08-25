@@ -15,7 +15,7 @@ class FlxMouseButton extends FlxInput<Int> implements IFlxDestroyable
 		{
 			case LEFT: FlxG.mouse._leftButton;
 			
-			#if !FLX_NO_MOUSE_ADVANCED
+			#if (!FLX_NO_MOUSE_ADVANCED && (!flash || flash11_2))
 				case MIDDLE: FlxG.mouse._middleButton;
 				case RIGHT: FlxG.mouse._rightButton;
 			#else
