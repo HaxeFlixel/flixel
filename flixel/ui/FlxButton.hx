@@ -333,6 +333,13 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 			#end
 		}
 		
+		#if !FLX_NO_TOUCH // there's only a mouse event listener for onUp
+			if (currentInput != null && currentInput.justReleased && Std.is(currentInput, FlxTouch))
+			{
+				onUpHandler();
+			}
+		#end
+		
 		if (status != FlxButton.NORMAL &&
 			(!overlapFound || (currentInput != null && currentInput.justReleased)))
 		{

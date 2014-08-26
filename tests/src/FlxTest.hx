@@ -2,6 +2,7 @@ package;
 
 import flash.errors.Error;
 import flixel.FlxG;
+import flixel.tweens.FlxTween;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import massive.munit.async.AsyncFactory;
 import massive.munit.util.Timer;
@@ -18,8 +19,8 @@ class FlxTest
 	public function new() {}
 	
 	@:access(flixel)
-	@:AfterClass
-	function afterClass():Void
+	@AfterClass
+	function afterClass()
 	{
 		FlxG.game.getTimer = function()
 		{

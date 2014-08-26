@@ -19,6 +19,7 @@ class Motion extends FlxTween
 	public var y:Float = 0;
 	
 	private var _object:FlxObject;
+	private var _wasObjectImmovable:Bool;
 	
 	override public function destroy():Void 
 	{
@@ -29,6 +30,7 @@ class Motion extends FlxTween
 	public function setObject(object:FlxObject):Motion
 	{
 		_object = object;
+		_wasObjectImmovable = _object.immovable;
 		_object.immovable = true;
 		return this;
 	}
@@ -37,6 +39,12 @@ class Motion extends FlxTween
 	{
 		super.update(elapsed);
 		postUpdate();
+	}
+	
+	override private function onEnd():Void
+	{
+		_object.immovable = _wasObjectImmovable;
+		super.onEnd();
 	}
 	
 	private function postUpdate():Void
