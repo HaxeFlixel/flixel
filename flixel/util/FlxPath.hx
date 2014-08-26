@@ -219,7 +219,7 @@ class FlxPath implements IFlxDestroyable
 	 * The first half of the function decides if the object can advance to the next node in the path,
 	 * while the second half handles actually picking a velocity toward the next node.
 	 */
-	public function update():Void
+	public function update(elapsed:Float):Void
 	{
 		//first check if we need to be pointing at the next node yet
 		_point.x = object.x;
@@ -237,21 +237,21 @@ class FlxPath implements IFlxDestroyable
 		
 		if (horizontalOnly)
 		{
-			if (((deltaX > 0) ? deltaX : -deltaX) < speed * FlxG.elapsed)
+			if (((deltaX > 0) ? deltaX : -deltaX) < speed * elapsed)
 			{
 				node = advancePath();
 			}
 		}
 		else if (verticalOnly)
 		{
-			if (((deltaY > 0) ? deltaY : -deltaY) < speed * FlxG.elapsed)
+			if (((deltaY > 0) ? deltaY : -deltaY) < speed * elapsed)
 			{
 				node = advancePath();
 			}
 		}
 		else
 		{
-			if (Math.sqrt(deltaX * deltaX + deltaY * deltaY) < speed * FlxG.elapsed)
+			if (Math.sqrt(deltaX * deltaX + deltaY * deltaY) < speed * elapsed)
 			{
 				node = advancePath();
 			}
@@ -739,13 +739,13 @@ class FlxPathManager extends FlxBasic
 		super.destroy();
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		for (path in _paths)
 		{
 			if (path.active)
 			{
-				path.update();
+				path.update(elapsed);
 			}
 		}
 	}

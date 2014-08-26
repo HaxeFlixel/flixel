@@ -125,7 +125,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	/**
 	 * Automatically goes through and calls update on everything you added.
 	 */
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		var i:Int = 0;
 		var basic:FlxBasic = null;
@@ -136,7 +136,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			
 			if (basic != null && basic.exists && basic.active)
 			{
-				basic.update();
+				basic.update(elapsed);
 			}
 		}
 	}

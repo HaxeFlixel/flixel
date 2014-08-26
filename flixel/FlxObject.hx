@@ -518,11 +518,11 @@ class FlxObject extends FlxBasic
 	 * Override this function to update your class's position and appearance.
 	 * This is where most of your game rules and behavioral code will go.
 	 */
-	override public function update():Void 
+	override public function update(elapsed:Float):Void 
 	{
 		#if !FLX_NO_DEBUG
 		// this just increments FlxBasic._ACTIVECOUNT, no need to waste a function call on release
-		super.update();
+		super.update(elapsed);
 		#end
 		
 		last.x = x;
@@ -530,7 +530,7 @@ class FlxObject extends FlxBasic
 		
 		if (moves)
 		{
-			updateMotion();
+			updateMotion(elapsed);
 		}
 		
 		wasTouching = touching;
@@ -541,24 +541,22 @@ class FlxObject extends FlxBasic
 	 * Internal function for updating the position and speed of this object. Useful for cases when you need to update this but are buried down in too many supers.
 	 * Does a slightly fancier-than-normal integration to help with higher fidelity framerate-independenct motion.
 	 */
-	private inline function updateMotion():Void
+	private function updateMotion(elapsed:Float):Void
 	{
-		var dt:Float = FlxG.elapsed;
-		
-		var velocityDelta = 0.5 * (FlxVelocity.computeVelocity(angularVelocity, angularAcceleration, angularDrag, maxAngular) - angularVelocity);
+		var velocityDelta = 0.5 * (FlxVelocity.computeVelocity(angularVelocity, angularAcceleration, angularDrag, maxAngular, elapsed) - angularVelocity);
 		angularVelocity += velocityDelta; 
-		angle += angularVelocity * dt;
+		angle += angularVelocity * elapsed;
 		angularVelocity += velocityDelta;
 		
-		velocityDelta = 0.5 * (FlxVelocity.computeVelocity(velocity.x, acceleration.x, drag.x, maxVelocity.x) - velocity.x);
+		velocityDelta = 0.5 * (FlxVelocity.computeVelocity(velocity.x, acceleration.x, drag.x, maxVelocity.x, elapsed) - velocity.x);
 		velocity.x += velocityDelta;
-		var delta = velocity.x * dt;
+		var delta = velocity.x * elapsed;
 		velocity.x += velocityDelta;
 		x += delta;
 		
-		velocityDelta = 0.5 * (FlxVelocity.computeVelocity(velocity.y, acceleration.y, drag.y, maxVelocity.y) - velocity.y);
+		velocityDelta = 0.5 * (FlxVelocity.computeVelocity(velocity.y, acceleration.y, drag.y, maxVelocity.y, elapsed) - velocity.y);
 		velocity.y += velocityDelta;
-		delta = velocity.y * dt;
+		delta = velocity.y * elapsed;
 		velocity.y += velocityDelta;
 		y += delta;
 	}

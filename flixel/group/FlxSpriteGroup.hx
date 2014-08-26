@@ -195,13 +195,13 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		return result;
 	}
 	
-	override public function update():Void 
+	override public function update(elapsed:Float):Void 
 	{
-		group.update();
+		group.update(elapsed);
 		
 		if (moves)
 		{
-			updateMotion();
+			updateMotion(elapsed);
 		}
 	}
 	

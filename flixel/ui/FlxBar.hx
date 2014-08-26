@@ -829,7 +829,7 @@ class FlxBar extends FlxSprite
 		#end
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		if (_parent != null)
 		{
@@ -846,7 +846,7 @@ class FlxBar extends FlxSprite
 			}
 		}
 		
-		super.update();
+		super.update(elapsed);
 	}
 	
 	#if FLX_RENDER_TILE
