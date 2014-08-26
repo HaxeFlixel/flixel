@@ -378,7 +378,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 				}
 				else
 				{
-					_timer += FlxG.elapsed;
+					_timer += elapsed;
 					
 					while (_timer > frequency)
 					{
