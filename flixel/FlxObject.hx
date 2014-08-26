@@ -543,22 +543,20 @@ class FlxObject extends FlxBasic
 	 */
 	private function updateMotion(elapsed:Float):Void
 	{
-		var dt:Float = elapsed;
-		
 		var velocityDelta = 0.5 * (FlxVelocity.computeVelocity(angularVelocity, angularAcceleration, angularDrag, maxAngular, elapsed) - angularVelocity);
 		angularVelocity += velocityDelta; 
-		angle += angularVelocity * dt;
+		angle += angularVelocity * elapsed;
 		angularVelocity += velocityDelta;
 		
 		velocityDelta = 0.5 * (FlxVelocity.computeVelocity(velocity.x, acceleration.x, drag.x, maxVelocity.x, elapsed) - velocity.x);
 		velocity.x += velocityDelta;
-		var delta = velocity.x * dt;
+		var delta = velocity.x * elapsed;
 		velocity.x += velocityDelta;
 		x += delta;
 		
 		velocityDelta = 0.5 * (FlxVelocity.computeVelocity(velocity.y, acceleration.y, drag.y, maxVelocity.y, elapsed) - velocity.y);
 		velocity.y += velocityDelta;
-		delta = velocity.y * dt;
+		delta = velocity.y * elapsed;
 		velocity.y += velocityDelta;
 		y += delta;
 	}
