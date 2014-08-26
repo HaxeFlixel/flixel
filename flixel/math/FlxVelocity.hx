@@ -232,12 +232,8 @@ class FlxVelocity
 	 * @param	Elapsed			The amount of time passed in to the latest udpate cycle (FlxG.elapsed by default)
 	 * @return	The altered Velocity value.
 	 */
-	public static function computeVelocity(Velocity:Float, Acceleration:Float, Drag:Float, Max:Float, Elapsed:Null<Float>=null):Float
+	public static function computeVelocity(Velocity:Float, Acceleration:Float, Drag:Float, Max:Float, Elapsed:Float):Float
 	{
-		if (Elapsed == null)
-		{
-			Elapsed = FlxG.elapsed;
-		}
 		if (Acceleration != 0)
 		{
 			Velocity += Acceleration * Elapsed;
