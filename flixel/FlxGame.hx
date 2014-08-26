@@ -734,13 +734,13 @@ class FlxGame extends Sprite
 		updateInput();
 		
 		#if !FLX_NO_SOUND_SYSTEM
-		FlxG.sound.update();
+		FlxG.sound.update(FlxG.elapsed);
 		#end
-		FlxG.plugins.update();
+		FlxG.plugins.update(FlxG.elapsed);
 		
-		_state.tryUpdate();
+		_state.tryUpdate(FlxG.elapsed);
 		
-		FlxG.cameras.update();
+		FlxG.cameras.update(FlxG.elapsed);
 		FlxG.signals.postUpdate.dispatch();
 		
 		#if !FLX_NO_DEBUG

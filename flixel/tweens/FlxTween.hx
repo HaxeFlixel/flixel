@@ -408,9 +408,9 @@ class FlxTween implements IFlxDestroyable
 		ease = null;
 	}
 
-	private function update():Void
+	private function update(elapsed:Float):Void
 	{
-		_secondsSinceStart += FlxG.elapsed;
+		_secondsSinceStart += elapsed;
 		var delay:Float = (executions > 0) ? loopDelay : startDelay;
 		if (_secondsSinceStart < delay)
 		{
@@ -641,7 +641,7 @@ class FlxTweenManager extends FlxBasic
 		FlxG.signals.stateSwitched.remove(clear);
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		// process finished tweens after iterating through main list, since finish() can manipulate FlxTween.list
 		var finishedTweens:Array<FlxTween> = null;
@@ -650,7 +650,7 @@ class FlxTweenManager extends FlxBasic
 		{
 			if (tween.active)
 			{
-				tween.update();
+				tween.update(elapsed);
 				if (tween.finished)
 				{
 					if (finishedTweens == null)

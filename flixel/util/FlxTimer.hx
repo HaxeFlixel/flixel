@@ -159,9 +159,9 @@ class FlxTimer implements IFlxDestroyable
 	 * If the timer runs out of loops, then the timer calls cancel().
 	 * However, callbacks are called AFTER cancel() is called.
 	 */
-	public function update():Void
+	public function update(elapsed:Float):Void
 	{
-		_timeCounter += FlxG.elapsed;
+		_timeCounter += elapsed;
 		
 		while ((_timeCounter >= time) && active && !finished)
 		{
@@ -241,13 +241,13 @@ class FlxTimerManager extends FlxBasic
 	 * Called by FlxG.plugins.update() before the game state has been updated.
 	 * Cycles through timers and calls update() on each one.
 	 */
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		for (timer in _timers)
 		{
 			if (timer.active && !timer.finished && timer.time >= 0)
 			{
-				timer.update();
+				timer.update(elapsed);
 			}
 		}
 	}

@@ -527,7 +527,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Updates the camera scroll as well as special effects like screen-shake or fades.
 	 */
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		// follow the target, if there is one
 		if (target != null)
@@ -536,9 +536,9 @@ class FlxCamera extends FlxBasic
 		}
 		
 		updateScroll();	
-		updateFlash();
-		updateFade();
-		updateShake();
+		updateFlash(elapsed);
+		updateFade(elapsed);
+		updateShake(elapsed);
 		
 		updateFlashSpritePosition();
 	}
@@ -639,12 +639,12 @@ class FlxCamera extends FlxBasic
 		}
 	}
 	
-	private function updateFlash():Void
+	private function updateFlash(elapsed:Float):Void
 	{
 		//Update the "flash" special effect
 		if (_fxFlashAlpha > 0.0)
 		{
-			_fxFlashAlpha -= FlxG.elapsed / _fxFlashDuration;
+			_fxFlashAlpha -= elapsed / _fxFlashDuration;
 			if ((_fxFlashAlpha <= 0) && (_fxFlashComplete != null))
 			{
 				_fxFlashComplete();
@@ -652,13 +652,13 @@ class FlxCamera extends FlxBasic
 		}
 	}
 	
-	private function updateFade():Void
+	private function updateFade(elapsed:Float):Void
 	{
 		if ((_fxFadeAlpha > 0.0) && (_fxFadeAlpha < 1.0))
 		{
 			if (_fxFadeIn)
 			{
-				_fxFadeAlpha -= FlxG.elapsed /_fxFadeDuration;
+				_fxFadeAlpha -= elapsed /_fxFadeDuration;
 				if (_fxFadeAlpha <= 0.0)
 				{
 					_fxFadeAlpha = 0.0;
@@ -670,7 +670,7 @@ class FlxCamera extends FlxBasic
 			}
 			else
 			{
-				_fxFadeAlpha += FlxG.elapsed / _fxFadeDuration;
+				_fxFadeAlpha += elapsed / _fxFadeDuration;
 				if (_fxFadeAlpha >= 1.0)
 				{
 					_fxFadeAlpha = 1.0;
@@ -683,11 +683,11 @@ class FlxCamera extends FlxBasic
 		}
 	}
 	
-	private function updateShake():Void
+	private function updateShake(elapsed:Float):Void
 	{
 		if (_fxShakeDuration > 0)
 		{
-			_fxShakeDuration -= FlxG.elapsed;
+			_fxShakeDuration -= elapsed;
 			if (_fxShakeDuration <= 0)
 			{
 				_fxShakeOffset.set();

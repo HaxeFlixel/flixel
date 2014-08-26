@@ -149,11 +149,11 @@ class FlxState extends FlxGroup
 	public function onResize(Width:Int, Height:Int):Void {}
 	
 	@:allow(flixel.FlxGame)
-	private function tryUpdate():Void
+	private function tryUpdate(elapsed:Float):Void
 	{
 		if (persistentUpdate || (subState == null))
 		{
-			update();
+			update(elapsed);
 		}
 		
 		if (_requestSubStateReset)
@@ -163,7 +163,7 @@ class FlxState extends FlxGroup
 		}
 		else if (subState != null)
 		{
-			subState.tryUpdate();
+			subState.tryUpdate(elapsed);
 		}
 	}
 

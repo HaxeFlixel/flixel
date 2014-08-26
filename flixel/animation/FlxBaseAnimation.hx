@@ -49,7 +49,7 @@ class FlxBaseAnimation implements IFlxDestroyable
 		name = null;
 	}
 	
-	public function update():Void {}
+	public function update(elapsed:Float):Void {}
 	
 	public function clone(Parent:FlxAnimationController):FlxBaseAnimation
 	{

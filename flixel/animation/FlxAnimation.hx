@@ -128,11 +128,11 @@ class FlxAnimation extends FlxBaseAnimation
 		paused = true;
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		if (delay > 0 && (looped || !finished) && !paused)
 		{
-			_frameTimer += FlxG.elapsed;
+			_frameTimer += elapsed;
 			while (_frameTimer > delay)
 			{
 				_frameTimer = _frameTimer - delay;

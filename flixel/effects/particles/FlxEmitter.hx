@@ -337,7 +337,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	/**
 	 * Called automatically by the game loop, decides when to launch particles and when to "die".
 	 */
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		if (emitting)
 		{
@@ -397,7 +397,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		}
 		else if (_waitForKill)
 		{
-			_timer += FlxG.elapsed;
+			_timer += elapsed;
 			
 			if ((lifespan.max > 0) && (_timer > lifespan.max))
 			{
@@ -406,7 +406,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 			}
 		}
 		
-		super.update();
+		super.update(elapsed);
 	}
 	
 	/**

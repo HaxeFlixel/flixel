@@ -33,9 +33,9 @@ class Motion extends FlxTween
 		return this;
 	}
 	
-	override private function update():Void 
+	override private function update(elapsed:Float):Void 
 	{
-		super.update();
+		super.update(elapsed);
 		postUpdate();
 	}
 	

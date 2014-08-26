@@ -121,11 +121,11 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 	/**
 	 * The particle's main update logic. Basically updates properties if alive, based on ranged properties.
 	 */
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		if (age < lifespan)
 		{
-			age += FlxG.elapsed;
+			age += elapsed;
 		}
 		
 		if (age >= lifespan && lifespan != 0)
@@ -134,7 +134,7 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 		}
 		else
 		{
-			_delta = FlxG.elapsed / lifespan;
+			_delta = elapsed / lifespan;
 			percent = age / lifespan;
 			
 			if (velocityRange.active)
@@ -183,7 +183,7 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 			}
 		}
 		
-		super.update();
+		super.update(elapsed);
 	}
 	
 	override public function reset(X:Float, Y:Float):Void 

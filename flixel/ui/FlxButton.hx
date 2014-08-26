@@ -247,9 +247,9 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	/**
 	 * Called by the game loop automatically, handles mouseover and click detection.
 	 */
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
-		super.update();
+		super.update(elapsed);
 		
 		input.update();
 		
