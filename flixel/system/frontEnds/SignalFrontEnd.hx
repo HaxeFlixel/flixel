@@ -9,7 +9,6 @@ class SignalFrontEnd
 	 * Gets dispatched when a state change occurs.
 	 */
 	public var stateSwitched(default, null):FlxSignal = new FlxSignal();
-	public var preStateCreation(default, null):FlxSignal = new FlxSignal();
 	/**
 	 * Gets dispatched when the game is resized. 
 	 * Passes the new window width and height to callback functions.
