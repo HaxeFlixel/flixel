@@ -229,7 +229,7 @@ class FlxVelocity
 	 * @param	Acceleration		Rate at which the velocity is changing.
 	 * @param	Drag			Really kind of a deceleration, this is how much the velocity changes if Acceleration is not set.
 	 * @param	Max				An absolute value cap for the velocity (0 for no cap).
-	 * @param	Elapsed			The amount of time passed in to the latest udpate cycle (FlxG.elapsed by default)
+	 * @param	Elapsed			The amount of time passed in to the latest update cycle
 	 * @return	The altered Velocity value.
 	 */
 	public static function computeVelocity(Velocity:Float, Acceleration:Float, Drag:Float, Max:Float, Elapsed:Float):Float
