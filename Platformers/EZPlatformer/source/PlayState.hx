@@ -116,7 +116,7 @@ class PlayState extends FlxState
 		add(_status);
 	}
 	
-	override public function update():Void 
+	override public function update(elapsed:Float):Void 
 	{
 		_player.acceleration.x = 0;
 		
@@ -135,7 +135,7 @@ class PlayState extends FlxState
 			_player.velocity.y = -_player.maxVelocity.y / 2;
 		}
 		
-		super.update();
+		super.update(elapsed);
 		
 		FlxG.overlap(_coins, _player, getCoin);
 		FlxG.collide(_level, _player);

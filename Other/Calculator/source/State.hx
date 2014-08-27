@@ -148,9 +148,9 @@ class State extends FlxState
 	}
 	
 	/** Update script **/
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
-		super.update();
+		super.update(elapsed);
 		
 		// Setup parser and expression output
 		var parser = new Parser();

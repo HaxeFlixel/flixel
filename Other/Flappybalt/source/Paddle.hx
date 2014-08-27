@@ -32,15 +32,15 @@ class Paddle extends FlxSprite
 			velocity.y = SPEED;
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
-		if (((velocity.y < 0) && (y <= targetY + SPEED * FlxG.elapsed)) ||
-			((velocity.y > 0) && (y >= targetY - SPEED * FlxG.elapsed)))
+		if (((velocity.y < 0) && (y <= targetY + SPEED * elapsed)) ||
+			((velocity.y > 0) && (y >= targetY - SPEED * elapsed)))
 		{
 			velocity.y = 0;
 			y = targetY;
 		}
 		
-		super.update();
+		super.update(elapsed);
 	}
 }

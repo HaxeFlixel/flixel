@@ -197,9 +197,9 @@ class PlayState extends FlxState
 		_emitter.start(false, 0.01);
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
-		super.update();
+		super.update(elapsed);
 		
 		FlxG.collide(_emitter, _collisionGroup);
 	}

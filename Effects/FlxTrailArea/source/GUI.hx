@@ -67,9 +67,9 @@ class GUI extends FlxSpriteGroup
 		_curY += 50;
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
-		super.update();
+		super.update(elapsed);
 		
 		if (FlxG.keys.justReleased.R) {
 			FlxG.resetState();

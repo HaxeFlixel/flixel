@@ -56,9 +56,9 @@ class Enemy extends Entity
 		exists = false;
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
-		super.update();
+		super.update(elapsed);
 		
 		if (!alive) return;
 		
@@ -68,7 +68,7 @@ class Enemy extends Entity
 		}
 		else
 		{
-			alpha += FlxG.elapsed;
+			alpha += elapsed;
 		}
 		
 		if (type == BLACK_HOLE)
@@ -172,7 +172,7 @@ class Enemy extends Entity
 		return Value;
 	}
 	
-	override public function collidesWith(Object:Entity, DistanceSquared:Float):Void
+	override public function collidesWith(elapsed:Float, Object:Entity, DistanceSquared:Float):Void
 	{
 		var CombinedHitBoxRadius:Float = hitboxRadius + Object.hitboxRadius;
 		var IsHitBoxCollision:Bool = (CombinedHitBoxRadius * CombinedHitBoxRadius) >= DistanceSquared;
@@ -188,8 +188,8 @@ class Enemy extends Entity
 			{
 				if (type == BLACK_HOLE)
 				{
-					Object.velocity.x -= FlxG.elapsed * 1100 * Math.cos(AngleFromCenters);
-					Object.velocity.y -= FlxG.elapsed * 1100 * Math.sin(AngleFromCenters);
+					Object.velocity.x -= elapsed * 1100 * Math.cos(AngleFromCenters);
+					Object.velocity.y -= elapsed * 1100 * Math.sin(AngleFromCenters);
 				}
 			}
 		}
@@ -206,7 +206,7 @@ class Enemy extends Entity
 			{
 				if (IsBlackHole)
 				{
-					var GravityStrength:Float = FlxG.elapsed * 15 * Entity.interpolate(60, 0, Math.sqrt(DistanceSquared) / radius);
+					var GravityStrength:Float = elapsed * 15 * Entity.interpolate(60, 0, Math.sqrt(DistanceSquared) / radius);
 					Object.velocity.x += GravityStrength * Math.cos(AngleFromCenters);
 					Object.velocity.y += GravityStrength * Math.sin(AngleFromCenters);
 				}
@@ -214,8 +214,8 @@ class Enemy extends Entity
 				{
 					var XDistance:Float = position.x - Object.position.x;
 					var YDistance:Float = position.y - Object.position.y;
-					velocity.x += FlxG.elapsed * 18000 * XDistance / (DistanceSquared + 1);
-					velocity.y += FlxG.elapsed * 18000 * YDistance / (DistanceSquared + 1);
+					velocity.x += elapsed * 18000 * XDistance / (DistanceSquared + 1);
+					velocity.y += elapsed * 18000 * YDistance / (DistanceSquared + 1);
 				}
 			}
 		}

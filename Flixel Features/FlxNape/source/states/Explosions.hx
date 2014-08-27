@@ -63,9 +63,9 @@ class Explosions extends FlxNapeState
 		}
 	}
 	
-	override public function update():Void 
+	override public function update(elapsed:Float):Void 
 	{	
-		super.update();
+		super.update(elapsed);
 		
 		if (FlxG.keys.justPressed.G)
 			napeDebugEnabled = false;
@@ -137,15 +137,15 @@ class Explosion extends FlxSprite
 		buildingSprites = parent.buildingSprites.copy();
 	}
 	
-	override public function update():Void 
+	override public function update(elapsed:Float):Void 
 	{
-		super.update();
-		this.scale.x *= 1 + FlxG.elapsed * 10;
-		this.scale.y *= 1 + FlxG.elapsed * 10;
+		super.update(elapsed);
+		this.scale.x *= 1 + elapsed * 10;
+		this.scale.y *= 1 + elapsed * 10;
 		
 		if (this.width * scale.x >= 300) 
 		{
-			alpha -= 2 * FlxG.elapsed;
+			alpha -= 2 * elapsed;
 		}
 		
 		if (alpha <= 0)
@@ -154,7 +154,6 @@ class Explosion extends FlxSprite
 		}
 		
 		applyGravity();
-		
 	}
 	
 	private function applyGravity():Void 

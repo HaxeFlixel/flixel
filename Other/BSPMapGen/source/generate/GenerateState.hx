@@ -138,9 +138,9 @@ class GenerateState extends FlxState
 		mapData.fillRect(roomRect, FlxColor.WHITE);
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
-		super.update();
+		super.update(elapsed);
 		
 		if (FlxG.keys.justReleased.G)
 		{

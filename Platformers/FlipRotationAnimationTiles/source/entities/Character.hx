@@ -38,7 +38,7 @@ class Character extends FlxExtendedSprite
 		drag.y = maxVelocity.y * 4;
 	}
 	
-	override public function update():Void 
+	override public function update(elapsed:Float):Void 
 	{
 		if (controllable)
 		{
@@ -68,7 +68,7 @@ class Character extends FlxExtendedSprite
 		}
 		checkBoundsMap();
 		resolveAnimation();
-		super.update();
+		super.update(elapsed);
 	}
 	
 	public function setBoundsMap(boundsMap:FlxRect)

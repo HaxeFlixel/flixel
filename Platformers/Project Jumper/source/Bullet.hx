@@ -19,7 +19,7 @@ class Bullet extends FlxSprite
 		exists = false; 
 	}
 	
-	override public function update():Void 
+	override public function update(elapsed:Float):Void 
 	{
 		// Finished refers to animation, only included here in case I add animation later
 		if (!alive && animation.finished) 
@@ -40,7 +40,7 @@ class Bullet extends FlxSprite
 		}
 		else
 		{
-			super.update();
+			super.update(elapsed);
 		}
 	}
 	

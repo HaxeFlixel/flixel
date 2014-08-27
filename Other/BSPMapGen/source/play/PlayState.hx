@@ -33,9 +33,9 @@ class PlayState extends FlxState
 		add(new FlxButton(gutter, gutter, "Back (Space)", back));
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
-		super.update();
+		super.update(elapsed);
 		FlxG.collide(player, map);
 		
 		if (FlxG.keys.justReleased.SPACE)

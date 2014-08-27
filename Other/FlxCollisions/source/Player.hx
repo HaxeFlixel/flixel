@@ -31,7 +31,7 @@ class Player extends FlxSprite
 		animation.add("jump", [4], 0, false);
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		// Smooth slidey walking controls
 		acceleration.x = 0;
@@ -76,6 +76,6 @@ class Player extends FlxSprite
 			animation.play("flail");
 		}
 		
-        super.update();
+        super.update(elapsed);
 	}
 }

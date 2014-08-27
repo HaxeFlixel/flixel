@@ -35,8 +35,8 @@ class SaveSlot extends FlxUI
 		id = U.xml_str(data.x,"id");
 	}
 	
-	public override function update():Void {
-		super.update();
+	public override function update(elapsed:Float):Void {
+		super.update(elapsed);
 	}
 	
 	public override function getEvent(id:String, sender:IFlxUIWidget, data:Dynamic, ?params:Array<Dynamic>):Void {

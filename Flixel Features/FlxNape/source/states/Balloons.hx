@@ -128,9 +128,9 @@ class Balloons extends FlxNapeState
 		
 	}
 	
-	override public function update():Void 
+	override public function update(elapsed:Float):Void 
 	{
-		super.update();
+		super.update(elapsed);
 		
 		for (b in listBalloons)
 		{

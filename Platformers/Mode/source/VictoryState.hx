@@ -55,11 +55,11 @@ class VictoryState extends FlxState
 	/**
 	 * Function that is called once every frame.
 	 */
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		if (!_fading)
 		{
-			_timer += FlxG.elapsed;
+			_timer += elapsed;
 			
 			if ((_timer > 0.35) && ((_timer > 10) || FlxG.keys.anyJustPressed([X, C])))
 			{
@@ -69,7 +69,7 @@ class VictoryState extends FlxState
 			}
 		}
 		
-		super.update();
+		super.update(elapsed);
 	}
 	
 	private function onPlay():Void 

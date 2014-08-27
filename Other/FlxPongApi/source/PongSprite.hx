@@ -24,7 +24,7 @@ class PongSprite extends FlxSprite
 		super(X, Y, Graphic);
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		if (minVelocity != null) {
 			if (Math.abs(velocity.x) < minVelocity.x) {
@@ -39,7 +39,7 @@ class PongSprite extends FlxSprite
 			}
 		}
 		
-		super.update();
+		super.update(elapsed);
 	}
 	
 	public function fillWithGradient(Bd:BitmapData, Color:Int, SecondColor:Int):Void

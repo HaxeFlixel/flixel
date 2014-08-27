@@ -30,7 +30,7 @@ class PlayerShip extends FlxSprite
 		centerOffsets();
 	}
 	
-	override public function update():Void 
+	override public function update(elapsed:Float):Void 
 	{
 		angularVelocity = 0;
 		
@@ -67,6 +67,6 @@ class PlayerShip extends FlxSprite
 		
 		FlxSpriteUtil.screenWrap(this);
 		
-		super.update();
+		super.update(elapsed);
 	}
 }

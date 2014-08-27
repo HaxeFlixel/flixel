@@ -276,7 +276,7 @@ class PlayState extends FlxState
 		_enemyText.visible = false;
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		// Update enemies left indicator
 		
@@ -432,7 +432,7 @@ class PlayState extends FlxState
 			}
 		}
 		
-		super.update();
+		super.update(elapsed);
 	} // End update
 	
 	#if mobile

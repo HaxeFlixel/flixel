@@ -69,7 +69,7 @@ class PlayState extends FlxState
 		generateCave();
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		// Keyboard shortcut
 		if (FlxG.keys.justReleased.R)
@@ -88,7 +88,7 @@ class PlayState extends FlxState
 		// Make sure the player can't leave the screen area
 		FlxSpriteUtil.screenWrap(_player);
 		
-		super.update();
+		super.update(elapsed);
 	}
 	
 	private function generateCave():Void

@@ -50,7 +50,7 @@ class Alien extends FlxSprite
 	/**
 	 * Basic game loop is BACK y'all
 	 */
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		// If alien has moved too far to the left, reverse direction and increase speed!
 		if (x < _originalX - 8)
@@ -71,7 +71,7 @@ class Alien extends FlxSprite
 		if (y > FlxG.height * 0.35)
 		{
 			// Only count down if on the bottom two-thirds of the screen
-			_shotClock -= FlxG.elapsed; 
+			_shotClock -= elapsed; 
 		}
 		
 		if (_shotClock <= 0)
@@ -83,7 +83,7 @@ class Alien extends FlxSprite
 			bullet.velocity.y = 65;
 		}
 		
-		super.update();
+		super.update(elapsed);
 	}
 	
 	/**

@@ -65,7 +65,7 @@ class Player extends FlxSprite
 		_parent = Parent;  
 	}
 	
-	public override function update():Void
+	public override function update(elapsed:Float):Void
 	{
 		// Reset to 0 when no button is pushed
 		acceleration.x = 0; 
@@ -91,7 +91,7 @@ class Player extends FlxSprite
 			acceleration.x = drag.x;				
 		}
 		
-		jump();
+		jump(elapsed);
 		
 		// Can only climb when not jumping
 		if (_jumpTime < 0)
@@ -120,7 +120,7 @@ class Player extends FlxSprite
 			animation.play("jump"); 
 		}
 		
-		_cooldown += FlxG.elapsed;
+		_cooldown += elapsed;
 		
 		// Don't let helmuguy walk off the edge of the map
 		if (x <= 0)
@@ -155,7 +155,7 @@ class Player extends FlxSprite
 			_timesJumped = 0;  
 		}
 		
-		super.update();
+		super.update(elapsed);
 	}
 	
 	private function climb():Void
@@ -188,7 +188,7 @@ class Player extends FlxSprite
 		}
 	}
 	
-	private function jump():Void
+	private function jump(elapsed:Float):Void
 	{
 		if (FlxG.keys.anyJustPressed(_jumpKeys))
 		{
@@ -205,7 +205,7 @@ class Player extends FlxSprite
 		if ((FlxG.keys.anyPressed(_jumpKeys)) && (_jumpTime >= 0)) 
 		{
 			climbing = false;
-			_jumpTime += FlxG.elapsed;
+			_jumpTime += elapsed;
 			
 			// You can't jump for more than 0.25 seconds
 			if (_jumpTime > 0.25)

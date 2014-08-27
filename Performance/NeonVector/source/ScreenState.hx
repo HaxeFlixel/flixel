@@ -10,7 +10,6 @@ import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxGroup;
-import flixel.group.FlxGroup;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.math.FlxPoint;
@@ -101,14 +100,14 @@ class ScreenState extends FlxState
 		#end
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{        
-		GameInput.update();
-		super.update();
+		GameInput.update(elapsed);
+		super.update(elapsed);
 		#if !js
-		grid.update();
+		grid.update(elapsed);
 		#end
-		particles.update();
+		particles.update(elapsed);
 		
 		cursor.x = FlxG.mouse.x;
 		cursor.y = FlxG.mouse.y;
@@ -118,8 +117,8 @@ class ScreenState extends FlxState
 		if (blackholes.countLiving() < 2) if (FlxG.random.float() < 1 / (inverseSpawnChance * 10)) makeBlackhole();
 		if (inverseSpawnChance > 20) inverseSpawnChance -= 0.005;
 		
-		FlxG.overlap(entities, entities, handleCollision);
-		FlxG.overlap(blackholes, entities, handleCollision);
+		FlxG.overlap(entities, entities, handleCollision.bind(elapsed));
+		FlxG.overlap(blackholes, entities, handleCollision.bind(elapsed));
 		
 		// Calculate average framerate over the past 10 frames.
 		if (fpsIndex + 1 >= fpsBuffer.length) fpsIndex = 0;
@@ -127,7 +126,7 @@ class ScreenState extends FlxState
 		fpsBuffer[fpsIndex] = Lib.getTimer() - lastTimeStamp;
 		var _timeTotalInMilliseconds:Int = 0;
 		for (i in 0...fpsBuffer.length)
-				_timeTotalInMilliseconds += fpsBuffer[i];
+			_timeTotalInMilliseconds += fpsBuffer[i];
 		lastTimeStamp = Lib.getTimer();
 		
 		if (PlayerShip.isGameOver) 
@@ -172,7 +171,7 @@ class ScreenState extends FlxState
 		#end
 	}
 	
-	public function handleCollision(Object1:FlxObject, Object2:FlxObject):Void
+	public function handleCollision(elapsed:Float, Object1:FlxObject, Object2:FlxObject):Void
 	{
 		var DistanceSquared:Float = 0;
 		var Collided:Bool = false;
@@ -187,8 +186,8 @@ class ScreenState extends FlxState
 				else Collided = false;
 		}
 		if (!Collided) return;
-		cast(Object1, Entity).collidesWith(cast(Object2, Entity), DistanceSquared);
-		cast(Object2, Entity).collidesWith(cast(Object1, Entity), DistanceSquared);
+		cast(Object1, Entity).collidesWith(elapsed, cast(Object2, Entity), DistanceSquared);
+		cast(Object2, Entity).collidesWith(elapsed, cast(Object1, Entity), DistanceSquared);
 	}
 	
 	public static function reset():Void

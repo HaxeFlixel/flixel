@@ -37,11 +37,11 @@ class Enemy extends FlxSprite
 	/**
 	 * The alpha of the enmy is dependent on health.
 	 */
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		alpha = health / maxHealth; 
 		
-		super.update();
+		super.update(elapsed);
 	}
 	
 	/**

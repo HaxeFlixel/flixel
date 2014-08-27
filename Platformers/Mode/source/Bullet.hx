@@ -27,7 +27,7 @@ class Bullet extends FlxSprite
 		_speed = 360;
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		if (!alive)
 		{
@@ -40,7 +40,7 @@ class Bullet extends FlxSprite
 		{
 			kill();
 		}
-		super.update();
+		super.update(elapsed);
 	}
 	
 	override public function kill():Void

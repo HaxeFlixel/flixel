@@ -63,9 +63,9 @@ class ParticleState extends FlxState
 	/**
 	 * Function that is called once every frame.
 	 */
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
-		super.update();
+		super.update(elapsed);
 		
 		// This starts the emitter at the mouse position
 		if (FlxG.mouse.x <= (FlxG.width - GUI.WIDTH)) 

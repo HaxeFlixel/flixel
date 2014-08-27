@@ -140,7 +140,7 @@ class PlayState extends FlxState
 		FlxG.cameras.flash();
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		// This is just to make the text at the top fade out
 		if (_topText.alpha > 0) 
@@ -199,7 +199,7 @@ class PlayState extends FlxState
 			}
 		}
 		
-		super.update();
+		super.update(elapsed);
 		
 		// Here we call our simple collide() function, what this does is checks to see if there is a collision
 		// between the two objects specified, But if you pass in a group then it checks the group against the object,

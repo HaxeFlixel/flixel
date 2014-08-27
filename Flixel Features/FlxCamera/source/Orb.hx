@@ -20,9 +20,9 @@ class Orb extends FlxNapeSprite
 		setDrag(0.98, 1);
 	}
 	
-	override public function update():Void 
+	override public function update(elapsed:Float):Void 
 	{
-		super.update();
+		super.update(elapsed);
 		
 		if (FlxG.camera.target != null && FlxG.camera.followLead.x == 0) // target check is used for debug purposes.
 		{

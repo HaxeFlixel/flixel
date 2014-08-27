@@ -85,9 +85,9 @@ class PlayState extends FlxState
 		resetTimer();
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
-		super.update();
+		super.update(elapsed);
 		
 		// Just a little fading effect for the score text
 		if (_scoreText.alpha < 1)

@@ -83,9 +83,9 @@ class PlayState extends FlxState
 		return button;
 	}
 	
-	override public function update():Void 
+	override public function update(elapsed:Float):Void 
 	{
-		super.update();
+		super.update(elapsed);
 		
 		_gamePad = FlxG.gamepads.lastActive;
 		

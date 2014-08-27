@@ -87,7 +87,7 @@ class Player extends FlxSprite
 		_gibs = null;
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		acceleration.x = 0;
 		
@@ -95,9 +95,9 @@ class Player extends FlxSprite
 		updateGamepadInput();
 		updateVirtualPadInput();
 		
-		updateAnimation();
+		updateAnimations();
 		
-        super.update();
+        super.update(elapsed);
 	}
 	
 	private function updateKeyboardInput():Void
@@ -246,7 +246,7 @@ class Player extends FlxSprite
 		}
 	}
 	
-	private function updateAnimation():Void
+	private function updateAnimations():Void
 	{
 		if (velocity.y != 0)
 		{

@@ -79,9 +79,9 @@ class Cutup extends FlxNapeState
 		FlxG.addChildBelowMouse(fps = new FPS(FlxG.width - 60, 5, FlxColor.WHITE));
 	}
 	
-	override public function update():Void 
+	override public function update(elapsed:Float):Void 
 	{
-		super.update();
+		super.update(elapsed);
 		// won't count the default Body added by Nape itself
 		pieceCntTxt.text = "Toatal Pieces:  " + (FlxNapeState.space.bodies.length-1);
 		
@@ -230,7 +230,7 @@ class UFO extends FlxSprite
 		FlxTween.quadPath(this, path, 5, true, { type: FlxTween.LOOPING } );
 	}
 
-	override public function update()
+	override public function update(elapsed:Float)
 	{
 		// after super.update() x and last.x become the same
 		if (x > last.x)
@@ -238,7 +238,7 @@ class UFO extends FlxSprite
 		else
 			flipX = true;
 		
-		super.update();
+		super.update(elapsed);
 	}
 }
 

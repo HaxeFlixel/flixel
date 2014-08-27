@@ -104,7 +104,7 @@ class PlayState extends FlxState
 		add(_topText);
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		// This is just to make the text at the top fade out
 		if (_topText.alpha > 0) 
@@ -112,7 +112,7 @@ class PlayState extends FlxState
 			_topText.alpha -= .005;
 		}
 		
-		super.update();
+		super.update(elapsed);
 		
 		// If you've clicked, lets see if you clicked on a button
 		// Note something like this needs to be after super.update() that way the button's state has updated to reflect the mouse event

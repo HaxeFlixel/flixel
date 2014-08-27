@@ -82,9 +82,9 @@ class SolarSystem extends FlxNapeState
 		add(sun);
 	}
 	
-	override public function update():Void 
+	override public function update(elapsed:Float):Void 
 	{	
-		super.update();
+		super.update(elapsed);
 		
 		if (FlxG.keys.justPressed.G)
 			napeDebugEnabled = false;
@@ -98,7 +98,7 @@ class SolarSystem extends FlxNapeState
 			
 			var impulse = gravity * planet.body.mass / (distance * distance);
 			var force:Vec2 = new Vec2((planet.x - halfWidth) * -impulse, (planet.y - halfHeight) * -impulse);
-			force.muleq(FlxG.elapsed);
+			force.muleq(elapsed);
 			planet.body.applyImpulse(force);
 			
 		}

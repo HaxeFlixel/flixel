@@ -231,7 +231,7 @@ class PlayState extends FlxNapeState
 		}
 	}
 	
-	override public function update():Void 
+	override public function update(elapsed:Float):Void 
 	{	
 		#if TRUE_ZOOM_OUT
 		if (firstUpdate) // For 1/2 zoom out.
@@ -241,7 +241,7 @@ class PlayState extends FlxNapeState
 		}
 		#end
 
-		super.update();
+		super.update(elapsed);
 		
 		var speed = 20;
 		if (FlxG.keys.anyPressed([A, LEFT]))

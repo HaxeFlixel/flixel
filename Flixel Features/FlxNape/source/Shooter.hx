@@ -115,9 +115,9 @@ class Shooter extends FlxTypedGroup<FlxNapeSprite>
 		mouseJoint.space = FlxNapeState.space;
 	}	
 	
-	override public function update():Void 
+	override public function update(elapsed:Float):Void 
 	{
-		super.update();
+		super.update(elapsed);
 		
 		if (mouseJoint != null) 
 		{
@@ -165,9 +165,9 @@ class Trail extends FlxEmitter
 		start(false, FlxG.elapsed);
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
-		super.update();
+		super.update(elapsed);
 		
 		if (attach.alive)
 		{

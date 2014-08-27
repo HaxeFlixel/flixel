@@ -66,12 +66,12 @@ class MenuState extends FlxState
 		persistantSubState = null;
 	}
 
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		// We need to deactivate these buttons if there is _substate and this state is keeps updating
 		//openPersistantBtn.active = (_subState == null);
 		//openTempBtn.active = (_subState == null);
 		
-		super.update();
+		super.update(elapsed);
 	}	
 }

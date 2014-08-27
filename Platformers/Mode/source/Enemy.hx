@@ -125,7 +125,7 @@ class Enemy extends FlxSprite
 	 * This is the main flixel update function or loop function.
 	 * Most of the enemy's logic or behavior is in this function here.
 	 */
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		// Then, rotate toward that angle.
 		// We could rotate instantly toward the player by simply calling:
@@ -147,7 +147,7 @@ class Enemy extends FlxSprite
 		}
 
 		// Figure out if we want the jets on or not.
-		_timer += FlxG.elapsed;
+		_timer += elapsed;
 		
 		if (_timer > 8)
 		{
@@ -157,7 +157,7 @@ class Enemy extends FlxSprite
 		
 		// Set the bot's movement speed and direction
 		// based on angle and whether the jets are on.
-		_thrust = FlxVelocity.computeVelocity(_thrust, (jetsOn ? 90 : 0), drag.x, 60);
+		_thrust = FlxVelocity.computeVelocity(_thrust, (jetsOn ? 90 : 0), drag.x, 60, elapsed);
 		velocity.set(0, -_thrust);
 		velocity.rotate(FlxPoint.weak(0, 0), angle);
 
@@ -166,7 +166,7 @@ class Enemy extends FlxSprite
 		{
 			var shoot:Bool = false;
 			var os:Float = _shotClock;
-			_shotClock += FlxG.elapsed;
+			_shotClock += elapsed;
 			
 			if ((os < 4.0) && (_shotClock >= 4.0))
 			{
@@ -196,7 +196,7 @@ class Enemy extends FlxSprite
 		
 		// Then call FlxSprite's update() function, to automate
 		// our motion and animation and stuff.
-		super.update();
+		super.update(elapsed);
 		
 		// Finally, update the jet particles shooting out the back of the ship.
 		if (jetsOn)
@@ -225,7 +225,7 @@ class Enemy extends FlxSprite
 		}
 		
 		// Finally, update the jet emitter and all its member sprites.
-		_jets.update();
+		_jets.update(elapsed);
 	}
 	
 	/**

@@ -43,14 +43,14 @@ class PlayerShip extends Entity
 		UserSettings.load();
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
-		super.update();
+		super.update(elapsed);
 		
 		if (multiplier > 1)
 		{
 			// update the multiplier timer
-			if ((multiplierTimeLeft -= FlxG.elapsed) <= 0)
+			if ((multiplierTimeLeft -= elapsed) <= 0)
 			{
 				multiplierTimeLeft = MULTIPLIER_EXPIRY_TIME;
 				resetMultiplier();

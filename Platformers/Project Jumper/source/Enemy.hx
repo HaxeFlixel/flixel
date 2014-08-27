@@ -46,11 +46,11 @@ class Enemy extends EnemyTemplate
 		
 	}
 	
-	public override function update():Void
+	public override function update(elapsed:Float):Void
 	{
 		if (!alive)
 		{
-			_spawntimer += FlxG.elapsed;
+			_spawntimer += elapsed;
 			
 			if (_spawntimer >= SPAWNTIME)
 			{
@@ -105,7 +105,7 @@ class Enemy extends EnemyTemplate
 			animation.play("walking");
 		}
 		
-		super.update();
+		super.update(elapsed);
 	}
 	
 	override public function reset(X:Float, Y:Float):Void 

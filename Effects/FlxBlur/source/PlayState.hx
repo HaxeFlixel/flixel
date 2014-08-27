@@ -56,7 +56,7 @@ class PlayState extends FlxState
 		_enabled = true;
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		if (FlxG.keys.justPressed.SPACE)
 		{
@@ -75,6 +75,6 @@ class PlayState extends FlxState
 			FlxG.cameras.bgColor = FlxColor.BLACK;
 		}
 		
-		super.update();
+		super.update(elapsed);
 	}
 }

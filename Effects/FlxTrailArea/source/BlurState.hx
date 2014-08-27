@@ -52,9 +52,9 @@ class BlurState extends FlxState
 		super.create();
 	}
 	
-	override public function update():Void 
+	override public function update(elapsed:Float):Void 
 	{
-		super.update();
+		super.update(elapsed);
 		
 		// Toggle states
 		if (FlxG.keys.justReleased.SPACE) {

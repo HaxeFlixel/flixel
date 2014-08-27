@@ -14,7 +14,7 @@ class Player extends FlxSprite
 		animation.add("flap",[1,0,1,2],12,false);
 	}
 	
-	override public function update()
+	override public function update(elapsed:Float)
 	{
 		#if !FLX_NO_KEYBOARD
 		if (FlxG.keys.justPressed.SPACE) {
@@ -31,7 +31,7 @@ class Player extends FlxSprite
 			animation.play("flap", true);
 		}
 		
-		super.update();
+		super.update(elapsed);
 	}
 	
 	override public function kill():Void

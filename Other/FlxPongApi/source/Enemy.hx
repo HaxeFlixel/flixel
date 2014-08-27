@@ -21,7 +21,7 @@ class Enemy extends PongSprite
 		_emitter.height = height;
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		acceleration.x = acceleration.y = 0;
 		
@@ -33,7 +33,7 @@ class Enemy extends PongSprite
 			velocity.y = Reg.level;
 		}
 		
-		super.update();
+		super.update(elapsed);
 	}
 	
 	override public function reset(X:Float, Y:Float):Void

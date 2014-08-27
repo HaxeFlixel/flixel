@@ -106,7 +106,7 @@ class Asteroid extends FlxSprite
 		return this;
 	}
 	
-	override public function update():Void 
+	override public function update(elapsed:Float):Void 
 	{
 		if (justTouched(FlxObject.ANY))
 		{
@@ -115,7 +115,7 @@ class Asteroid extends FlxSprite
 		
 		FlxSpriteUtil.screenWrap(this);
 		
-		super.update();
+		super.update(elapsed);
 	}
 	
 	override public function kill():Void 

@@ -18,7 +18,7 @@ class Ship extends FlxSprite
 		velocity = FlxVelocity.velocityFromAngle(Math.floor(Angle + 270), Math.floor(Velocity));
 	}
 	
-	override public function update():Void 
+	override public function update(elapsed:Float):Void 
 	{
 		if (velocity.y > 0)
 		{
@@ -42,6 +42,6 @@ class Ship extends FlxSprite
 				x = FlxG.width + width;
 		}
 		
-		super.update();
+		super.update(elapsed);
 	}
 }

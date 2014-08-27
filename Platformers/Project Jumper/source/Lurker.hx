@@ -52,7 +52,7 @@ class Lurker extends EnemyTemplate
 		width = 10;
 	}
 	
-	override public function update():Void 
+	override public function update(elapsed:Float):Void 
 	{
 		if (touching == FlxObject.DOWN)
 		{
@@ -110,7 +110,7 @@ class Lurker extends EnemyTemplate
 			maxVelocity.y = JUMP_SPEED * 4;
 			acceleration.y = GRAVITY * 3;
 			velocity.x = 0;
-			_burntimer += FlxG.elapsed;
+			_burntimer += elapsed;
 			
 			if (_burntimer >= BURNTIME)
 			{
@@ -121,7 +121,7 @@ class Lurker extends EnemyTemplate
 				acceleration.y = 0;
 			}
 			
-			_spawntimer += FlxG.elapsed;
+			_spawntimer += elapsed;
 			
 			if (_spawntimer >= SPAWNTIME)
 			{
@@ -129,8 +129,8 @@ class Lurker extends EnemyTemplate
 			}
 		}
 		
-		_cooldown += FlxG.elapsed;
-		super.update();
+		_cooldown += elapsed;
+		super.update(elapsed);
 	}
 	
 	override public function reset(X:Float, Y:Float):Void 

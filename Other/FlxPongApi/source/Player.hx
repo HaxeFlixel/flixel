@@ -23,10 +23,10 @@ class Player extends PongSprite
 		_emitter.height = height;
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		FlxVelocity.accelerateTowardsPoint(this, FlxPoint.weak(x, 10), 10, 10);
-		super.update();
+		super.update(elapsed);
 	}
 	
 	override public function kill():Void

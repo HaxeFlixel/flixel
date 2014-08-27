@@ -152,9 +152,9 @@ class Blob extends FlxNapeState
 		add(rightEye);
 	}
 	
-	override public function update():Void 
+	override public function update(elapsed:Float):Void 
 	{
-		super.update();
+		super.update(elapsed);
 		
 		//###### Draws blob outline
 		var gfx:Graphics = FlxSpriteUtil.flashGfxSprite.graphics;
@@ -265,9 +265,9 @@ class Eye extends FlxGroup
 		y = Y;
 	}
 	
-	override public function update()
+	override public function update(elapsed:Float)
 	{
-		super.update();
+		super.update(elapsed);
 		
 		var distance:Vec2 = new Vec2(FlxG.mouse.screenX - x, FlxG.mouse.screenY - y);
 		
@@ -295,7 +295,6 @@ class Twinkle extends FlxNapeSprite
 		var rand = FlxG.random.int(0, 4);
 		var graphic:String = null;
 		
-		
 		switch (rand)
 		{
 			case 0: graphic = "assets/Twinkle10Y.png"; radius = 10;
@@ -321,14 +320,13 @@ class Twinkle extends FlxNapeSprite
 		//destinationJoint.damping = 0;
 		destinationJoint.frequency = .22 + radius * 2 / 100;
 		
-		 destinationJoint.anchor1 = new Vec2(body.position.x, body.position.y);
-		 destinationJoint.space = FlxNapeState.space;		 
-
+		destinationJoint.anchor1 = new Vec2(body.position.x, body.position.y);
+		destinationJoint.space = FlxNapeState.space;		 
 	}
 	
-	override public function update():Void 
+	override public function update(elapsed:Float):Void 
 	{
-		super.update();
+		super.update(elapsed);
 		
 		if (destinationTimer <= 0)
 		{
@@ -346,8 +344,6 @@ class Twinkle extends FlxNapeSprite
 			destinationJoint.anchor1 = new Vec2(newX, newY);
 		}
 		
-		destinationTimer -= FlxG.elapsed;
+		destinationTimer -= elapsed;
 	}
-
-	
 }

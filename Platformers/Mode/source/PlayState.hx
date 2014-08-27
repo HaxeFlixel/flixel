@@ -233,12 +233,12 @@ class PlayState extends FlxState
 	/**
 	 * Function that is called once every frame.
 	 */
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		// Save off the current score and update the game state
 		var oldScore:Int = Reg.score;
 		
-		super.update();
+		super.update(elapsed);
 		
 		// Collisions with environment
 		FlxG.collide(_tileMap, _objects);
@@ -262,7 +262,7 @@ class PlayState extends FlxState
 				_jamTimer = 0;
 			}
 			
-			_jamTimer -= FlxG.elapsed;
+			_jamTimer -= elapsed;
 			
 			if (_jamTimer < 0)
 			{
@@ -278,7 +278,7 @@ class PlayState extends FlxState
 				_scoreTimer = 2;
 			}
 			
-			_scoreTimer -= FlxG.elapsed;
+			_scoreTimer -= elapsed;
 			
 			if (_scoreTimer < 0)
 			{

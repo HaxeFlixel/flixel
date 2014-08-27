@@ -87,9 +87,9 @@ class Piramid extends FlxNapeState
 		}
 	}
 
-	override public function update():Void 
+	override public function update(elapsed:Float):Void 
 	{	
-		super.update();
+		super.update(elapsed);
 		
 		if (FlxG.mouse.justPressed && FlxNapeState.space.gravity.y == 0)
 			FlxNapeState.space.gravity.setxy(0, 500);

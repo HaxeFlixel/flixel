@@ -69,7 +69,7 @@ class PlayState extends FlxState
 		super.create();
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		FlxG.collide(_tilemap, _player);
 		
@@ -115,7 +115,7 @@ class PlayState extends FlxState
 		_cursor.x = FlxG.mouse.screenX;
 		_cursor.y = FlxG.mouse.screenY;
 		
-		super.update();
+		super.update(elapsed);
 	}
 	
 	/**

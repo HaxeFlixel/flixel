@@ -20,12 +20,12 @@ class PlayState extends FlxState
 		add(emitter);
 	}
 
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		if (FlxG.mouse.pressed)
 		{
 			emitter.setPosition(FlxG.mouse.x, FlxG.mouse.y);
 		}
-		super.update();
+		super.update(elapsed);
 	}	
 }

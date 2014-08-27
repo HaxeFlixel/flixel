@@ -33,7 +33,7 @@ class Entity extends FlxSprite
 		cooldownTimer.finished = true;
 	}
 	
-	public function collidesWith(Object:Entity, Distance:Float):Void {}
+	public function collidesWith(elapsed:Float, Object:Entity, Distance:Float):Void {}
 	
 	public function clampToScreen():Bool
 	{

@@ -60,9 +60,9 @@ class SubState extends FlxSubState
 		}
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
-		super.update();
+		super.update(elapsed);
 		
 		if (testSprite.x > FlxG.width)
 		{

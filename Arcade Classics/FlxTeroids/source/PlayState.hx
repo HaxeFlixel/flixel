@@ -84,7 +84,7 @@ class PlayState extends FlxState
 		asteroids = null;
 	}
 	
-	override public function update():Void 
+	override public function update(elapsed:Float):Void 
 	{
 		// Escape to the menu
 		if (FlxG.keys.pressed.ESCAPE)
@@ -92,7 +92,7 @@ class PlayState extends FlxState
 			FlxG.switchState(new MenuState());
 		}
 
-		super.update();
+		super.update(elapsed);
 		
 		// Don't continue in case we lost
 		if (!_playerShip.alive)
