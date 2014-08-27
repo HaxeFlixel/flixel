@@ -43,11 +43,11 @@ class Seeker extends FlxSprite
 		moving = false;
 	}
 	
-	public override function update():Void 
+	public override function update(elapsed:Float):Void 
 	{
 		var oldx:Float = vec.x;
 		var oldy:Float = vec.y;
-		super.update();
+		super.update(elapsed);
 		vec.x = dest.x - x;
 		vec.y = dest.y - y;
 		

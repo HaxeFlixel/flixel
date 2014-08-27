@@ -31,8 +31,8 @@ class State_TestMenu extends FlxUIState
 		}
 	}
 	
-	public override function update():Void {
-		super.update();
+	public override function update(elapsed:Float):Void {
+		super.update(elapsed);
 	}
 	
 }

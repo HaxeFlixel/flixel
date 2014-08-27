@@ -45,16 +45,16 @@ class Particle extends Entity
 		alpha = 1;
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
-		super.update();
+		super.update(elapsed);
 		if (isGlowing)
 		{
 			var _lifetime:Float = maxLifespan - lifespan;
 			if (_lifetime > 1.25) alpha = 0;
 			else alpha = 0.2 * ((1.25 - _lifetime) / 1.25);
 		}
-		lifespan -= FlxG.elapsed;
+		lifespan -= elapsed;
 		if (lifespan <= 0 || (velocity.x * velocity.x + velocity.y * velocity.y) < 1) kill();
 		if (!alive) return;
 		
@@ -72,14 +72,14 @@ class Particle extends Entity
 					
 					_point = GameInput.normalize(_point);
 					var _distance:Float = GameInput.lengthBeforeNormalize;
-					velocity.x += FlxG.elapsed * 600 * (10000 / (_distance * _distance + 10000)) * _point.x;
-					velocity.y += FlxG.elapsed * 600 * (10000 / (_distance * _distance + 10000)) * _point.y;
+					velocity.x += elapsed * 600 * (10000 / (_distance * _distance + 10000)) * _point.x;
+					velocity.y += elapsed * 600 * (10000 / (_distance * _distance + 10000)) * _point.y;
 					
 					// add tangential acceleration for nearby particles
 					if (_distance < 400)
 					{
-						velocity.x += FlxG.elapsed * 3000 * (100 / (_distance * _distance + 100)) * _point.y;
-						velocity.y -= FlxG.elapsed * 3000 * (100 / (_distance * _distance + 100)) * _point.x;
+						velocity.x += elapsed * 3000 * (100 / (_distance * _distance + 100)) * _point.y;
+						velocity.y -= elapsed * 3000 * (100 / (_distance * _distance + 100)) * _point.x;
 					}
 				}
 			}

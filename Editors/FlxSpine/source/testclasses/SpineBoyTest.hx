@@ -21,7 +21,7 @@ class SpineBoyTest extends FlxSpine
 		state.setAnimationByName("walk", true);
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		if (state.getAnimation().getName() == "walk") 
 		{
@@ -41,6 +41,6 @@ class SpineBoyTest extends FlxSpine
 			state.addAnimationByNameSimple("walk", true);
 		}
 		
-		super.update();
+		super.update(elapsed);
 	}
 }

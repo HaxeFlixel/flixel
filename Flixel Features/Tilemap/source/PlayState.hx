@@ -111,7 +111,7 @@ class PlayState extends FlxState
 		add(_player);
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		// Tilemaps can be collided just like any other FlxObject, and flixel
 		// automatically collides each individual tile with the object.
@@ -129,7 +129,7 @@ class PlayState extends FlxState
 		}
 		
 		updatePlayer();
-		super.update();
+		super.update(elapsed);
 	}
 	
 	private function updatePlayer():Void

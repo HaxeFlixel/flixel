@@ -106,13 +106,13 @@ class Grid
 		//springs = springList.concat();
 	}
 	
-	public function update():Void
+	public function update(elapsed:Float):Void
 	{
 		if (FlxG.keys.justPressed.P) useDrawPath = !useDrawPath;
 		if (FlxG.keys.justPressed.U) renderGrid = !renderGrid;
 		
-		for (spring in springs) spring.update();
-		for (mass in points) mass.update();
+		for (spring in springs) spring.update(elapsed);
+		for (mass in points) mass.update(elapsed);
 		
 		if (useDrawPath)
 		{

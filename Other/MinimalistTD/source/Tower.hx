@@ -48,7 +48,7 @@ class Tower extends FlxSprite
 	 * by slowly increasing its alpha; once the shootCounter has reached the required level, a bullet is
 	 * shot.
 	 */
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{	
 		if (getNearestEnemy() == null)
 		{
@@ -67,7 +67,7 @@ class Tower extends FlxSprite
 			}
 		}
 		
-		super.update();
+		super.update(elapsed);
 	}
 	
 	/**

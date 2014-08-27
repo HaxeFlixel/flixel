@@ -5,17 +5,11 @@ import flixel.FlxG;
 import flixel.FlxState;
 import map.Level;
 
-/**
- * A FlxState which can be used for the actual gameplay.
- */
 class PlayState extends FlxState
 {
 	var level:Level;
 	var player:Character;
 	
-	/**
-	 * Function that is called up when to state is created to set it up. 
-	 */
 	override public function create():Void
 	{
 		FlxG.mouse.visible = false;
@@ -37,12 +31,9 @@ class PlayState extends FlxState
 		super.create();
 	}
 
-	/**
-	 * Function that is called once every frame.
-	 */
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
-		level.update();
-		super.update();
+		level.update(elapsed);
+		super.update(elapsed);
 	}	
 }

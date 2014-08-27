@@ -68,7 +68,7 @@ class PlayState2 extends FlxState
 		_focus = null;
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		// Camera controls
 		_focus.velocity.x = 0;
@@ -92,7 +92,7 @@ class PlayState2 extends FlxState
 			_focus.velocity.y += focusSpeed;
 		}
 		
-		super.update();
+		super.update(elapsed);
 		
 		FlxG.collide();
 		

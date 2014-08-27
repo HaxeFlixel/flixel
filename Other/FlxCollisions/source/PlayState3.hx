@@ -48,7 +48,7 @@ class PlayState3 extends FlxState
 		_platform = null;
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		// Platform controls
 		var v:Float = 50;
@@ -69,7 +69,7 @@ class PlayState3 extends FlxState
 			_platform.velocity.x += v;
 		}
 		
-		super.update();
+		super.update(elapsed);
 		
 		FlxG.collide();
 		

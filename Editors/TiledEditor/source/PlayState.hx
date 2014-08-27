@@ -66,7 +66,7 @@ class PlayState extends FlxState
 		add(status);
 	}
 	
-	override public function update():Void 
+	override public function update(elapsed:Float):Void 
 	{
 		player.acceleration.x = 0;
 		if (FlxG.keys.pressed.LEFT)
@@ -81,7 +81,7 @@ class PlayState extends FlxState
 		{
 			player.velocity.y = -player.maxVelocity.y / 2;
 		}
-		super.update();
+		super.update(elapsed);
 		
 		FlxG.overlap(coins, player, getCoin);
 		

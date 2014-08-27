@@ -166,9 +166,9 @@ class PlayState extends FlxState
 		#end
 	}
 	
-	override public function update():Void 
+	override public function update(elapsed:Float):Void 
 	{
-		super.update();
+		super.update(elapsed);
 		
 		// Check for animation toggles
 		if (FlxG.mouse.justPressed)
@@ -206,7 +206,7 @@ class PlayState extends FlxState
 		
 		if (isAnimSpr1)
 		{
-			spr1.angle += 45 * FlxG.elapsed;
+			spr1.angle += 45 * elapsed;
 		}
 		if (isAnimSpr2)
 		{
@@ -218,7 +218,7 @@ class PlayState extends FlxState
 		}
 		if (isAnimSpr4)
 		{
-			updateDropShadowFilter();
+			updateDropShadowFilter(elapsed);
 		}
 		if (isAnimSpr5)
 		{
@@ -239,10 +239,10 @@ class PlayState extends FlxState
 		#end
 	}
 	
-	function updateDropShadowFilter()
+	function updateDropShadowFilter(elapsed:Float)
 	{
 		#if !js
-		filter4.angle -= 360 * FlxG.elapsed;
+		filter4.angle -= 360 * elapsed;
 		updateFilter(spr4Filter);
 		#end
 	}

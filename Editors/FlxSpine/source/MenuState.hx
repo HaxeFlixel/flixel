@@ -45,7 +45,7 @@ class MenuState extends FlxState
 		spineSprite.flipY = true;
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		// toggle debug display
 		#if !FLX_NO_DEBUG
@@ -56,19 +56,19 @@ class MenuState extends FlxState
 		// movement
 		if (FlxG.keys.anyPressed([W, UP]))
 		{
-			spineSprite.y -= 500 * FlxG.elapsed;
+			spineSprite.y -= 500 * elapsed;
 		}
 		else if (FlxG.keys.anyPressed([S, DOWN]))
 		{
-			spineSprite.y += 500 * FlxG.elapsed;
+			spineSprite.y += 500 * elapsed;
 		}
 		else if (FlxG.keys.anyPressed([D, RIGHT]))
 		{
-			spineSprite.x += 500 * FlxG.elapsed;
+			spineSprite.x += 500 * elapsed;
 		}
 		else if (FlxG.keys.anyPressed([A, LEFT]))
 		{
-			spineSprite.x -= 500 * FlxG.elapsed;
+			spineSprite.x -= 500 * elapsed;
 		}
 		
 		// NOT YET SUPPORTED
@@ -76,11 +76,11 @@ class MenuState extends FlxState
 		// origin movement
 		if ( FlxG.keys.justPressed("F") )
 		{
-			spineSprite.origin.x += 500 * FlxG.elapsed;
+			spineSprite.origin.x += 500 * elapsed;
 		}
 		if ( FlxG.keys.justPressed("G") )
 		{
-			spineSprite.origin.x -= 500 * FlxG.elapsed;
+			spineSprite.origin.x -= 500 * elapsed;
 		}
 		
 		// rotation
@@ -106,6 +106,6 @@ class MenuState extends FlxState
 		}
 		*/
 		
-		super.update();
+		super.update(elapsed);
 	}
 }

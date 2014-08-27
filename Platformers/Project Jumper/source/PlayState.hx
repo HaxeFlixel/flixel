@@ -116,7 +116,7 @@ class PlayState extends FlxState
 		#end
 	}
 	
-	override public function update():Void 
+	override public function update(elapsed:Float):Void 
 	{
 		FlxG.collide(player, map);
 		FlxG.collide(_enemies, map);
@@ -124,7 +124,7 @@ class PlayState extends FlxState
 		FlxG.collide(_bullets, map);
 		FlxG.collide(_badbullets, map);
 		
-		super.update();
+		super.update(elapsed);
 		
 		_score.text = '$' + Std.string(Reg.score);
 		

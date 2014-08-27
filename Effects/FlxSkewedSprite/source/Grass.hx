@@ -26,11 +26,11 @@ class Grass extends FlxSkewedSprite
 		skew.x = StartSkew;
 	}
 	
-	override public function update():Void 
+	override public function update(elapsed:Float):Void 
 	{
-		super.update();
+		super.update(elapsed);
 		
-		skew.x += _skewDirection * skewSpeed * FlxG.elapsed;
+		skew.x += _skewDirection * skewSpeed * elapsed;
 		
 		if (skew.x > maxSkew)
 		{

@@ -155,7 +155,7 @@ class Level extends TiledMap
 		}
 	}
 	
-	public function update():Void {
+	public function update(elapsed:Float):Void {
 		updateCollisions();
 		updateEventsOrder();
 	}

@@ -22,9 +22,9 @@ class PlayState extends FlxState
 	}
 
 	#if !FLX_NO_TOUCH
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
-		super.update();
+		super.update(elapsed);
 		
 		for (touch in FlxG.touches.list)
 		{

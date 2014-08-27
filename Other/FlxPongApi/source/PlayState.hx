@@ -91,7 +91,7 @@ class PlayState extends FlxState
 		_enemy.init();
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		#if !FLX_NO_KEYBOARD
 		if (FlxG.keys.justPressed.P) {
@@ -128,7 +128,7 @@ class PlayState extends FlxState
 			}
 		}
 		
-		super.update();
+		super.update(elapsed);
 	}
 	
 	public function newEnemy(f:FlxTimer):Void

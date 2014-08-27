@@ -106,7 +106,7 @@ class PlayState extends FlxState
 	 * We override the update funtion to update the player position, do collision checks and check input to move
 	 * the player around each frame.
 	 */
-	override public function update():Void 
+	override public function update(elapsed:Float):Void 
 	{
 		// Checks collision with player and the map
 		FlxG.collide(_player, _map);
@@ -174,7 +174,7 @@ class PlayState extends FlxState
 		}
 		
 		// Update everything else!! yes you need to do this! :P
-		super.update();
+		super.update(elapsed);
 	}
 	
 	private function onOverlap(Obj1:FlxObject, Obj2:FlxObject):Void 

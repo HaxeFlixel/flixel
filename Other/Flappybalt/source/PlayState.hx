@@ -127,7 +127,7 @@ class PlayState extends FlxState
 		add(_feathers);
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		if (FlxG.pixelPerfectOverlap(_player, _spikeBottom) || FlxG.pixelPerfectOverlap(_player, _spikeTop) 
 				|| FlxG.pixelPerfectOverlap(_player, _paddleLeft) || FlxG.pixelPerfectOverlap(_player, _paddleRight)) {
@@ -156,7 +156,7 @@ class PlayState extends FlxState
 		}
 		#end
 		
-		super.update();
+		super.update(elapsed);
 	}
 	
 	public function launchFeathers(X:Float, Y:Float, Amount:Int):Void

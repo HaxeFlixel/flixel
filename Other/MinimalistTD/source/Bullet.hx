@@ -45,7 +45,7 @@ class Bullet extends FlxSprite
 		damage = Damage;
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		// This bullet missed its target and flew off-screen; no reason to keep it around.
 		
@@ -61,6 +61,6 @@ class Bullet extends FlxSprite
 			FlxVelocity.moveTowardsObject(this, _target, 200);
 		}
 		
-		super.update();
+		super.update(elapsed);
 	}
 }

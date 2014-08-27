@@ -129,9 +129,9 @@ class PlayState extends FlxState
 	/**
 	 * Here's where the fun happens! \o/.
 	 */
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{			
-		super.update();
+		super.update(elapsed);
 		
 		handleInput();
 		checkCollisions();

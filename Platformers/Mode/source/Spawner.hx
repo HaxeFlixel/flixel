@@ -45,9 +45,9 @@ class Spawner extends FlxSprite
 		_player = null;
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
-		_timer += FlxG.elapsed;
+		_timer += elapsed;
 		var limit:Int = 20;
 		
 		if (isOnScreen())
@@ -76,7 +76,7 @@ class Spawner extends FlxSprite
 			}
 		}
 		
-		super.update();
+		super.update(elapsed);
 	}
 	
 	override public function hurt(Damage:Float):Void

@@ -23,7 +23,7 @@ class GameInput
 		_mouseLast = FlxPoint.get();
 	}
 	
-	public static function update():Void
+	public static function update(elapsed:Float):Void
 	{
 		//Don't enable aiming with the mouse unless the aiming keys aren't in use and the mouse has moved position
 		if (FlxG.mouse.pressed) aimWithMouse = true;

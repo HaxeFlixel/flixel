@@ -95,9 +95,9 @@ class PlayState extends FlxState
 		add(_bricks);
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
-		super.update();
+		super.update(elapsed);
 		
 		_bat.velocity.x = 0;
 		

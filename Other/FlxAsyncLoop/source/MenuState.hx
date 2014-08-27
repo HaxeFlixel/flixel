@@ -84,7 +84,7 @@ class MenuState extends FlxState
 	/**
 	 * Function that is called once every frame.
 	 */
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		// If my loop hasn't started yet, start it
 		if (!_loopOne.started)
@@ -107,7 +107,7 @@ class MenuState extends FlxState
 			}
 		}
 		
-		super.update();
+		super.update(elapsed);
 	}
 	
 }

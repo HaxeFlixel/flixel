@@ -57,7 +57,7 @@ class PlayState extends FlxState
 	/**
 	 * Function that is called once every frame.
 	 */
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		#if !FLX_NO_KEYBOARD
 		if (FlxG.keys.justReleased.SPACE)
@@ -90,7 +90,7 @@ class PlayState extends FlxState
 		boundValues();
 		updateStatusText();
 		
-		super.update();
+		super.update(elapsed);
 	}
 	
 	private function boundValues():Void

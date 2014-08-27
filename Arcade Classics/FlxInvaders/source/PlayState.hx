@@ -156,7 +156,7 @@ class PlayState extends FlxState
 	/**
 	 * This is the main game loop function, where all the logic is done.
 	 */
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{	
 		// Space invaders doesn't really even use collisions, we're just checking for overlaps between
 		// the bullets flying around and the shields and player and stuff.
@@ -167,7 +167,7 @@ class PlayState extends FlxState
 		// to the state earlier (i.e. all of everything) will not get automatically updated
 		// if you forget to call this function.  This is basically saying "state, call update
 		// right now on all of the objects that were added."
-		super.update();
+		super.update(elapsed);
 		
 		// Now that everything has been updated, we are going to check and see if there
 		// is a game over yet.  There are two ways to get a game over - player dies,

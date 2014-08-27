@@ -54,10 +54,10 @@ class PlayState extends FlxState
 		add(tf2);
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		tf.text = "mouseX = " + Math.floor(FlxG.mouse.x) + "\n" + "mouseY = " + Math.floor(FlxG.mouse.y);
 		
-		super.update();	
+		super.update(elapsed);	
 	}	
 }

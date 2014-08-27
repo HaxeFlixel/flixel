@@ -36,7 +36,7 @@ class Player extends FlxSprite
 		animation.add("jump", [4]);
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		// MOVEMENT
 		acceleration.x = 0;
@@ -71,6 +71,6 @@ class Player extends FlxSprite
 			animation.play("run");
 		}
 		
-        super.update();
+        super.update(elapsed);
 	}
 }

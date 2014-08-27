@@ -18,9 +18,9 @@ class Player extends FlxSprite
 		centerOffsets();
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
-		super.update();
+		super.update(elapsed);
 		
 		if (FlxG.keys.anyPressed([A, LEFT]))
 		{

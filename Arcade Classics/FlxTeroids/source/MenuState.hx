@@ -19,7 +19,7 @@ class MenuState extends FlxState
 		add(t);
 	}
 	
-	override public function update():Void 
+	override public function update(elapsed:Float):Void 
 	{
 		if (FlxG.keys.justReleased.SPACE)
 		{

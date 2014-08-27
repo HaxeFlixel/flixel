@@ -22,7 +22,7 @@ class Spring
 		targetLength = 0.95 * FlxMath.getDistance(end1.position, end2.position);
 	}
 	
-	public function update():Void
+	public function update(elapsed:Float):Void
 	{
 		var _x:Float = end1.position.x - end2.position.x;
 		var _y:Float = end1.position.y - end2.position.y;

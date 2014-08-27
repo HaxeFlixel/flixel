@@ -43,14 +43,14 @@ class Ball extends PongSprite
 		_emitter.height = height;
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		FlxG.collide(this, Reg.PS.collidables, ballBounce);
 		
 		_exhaust.x = x;
 		_exhaust.y = y;
 		
-		super.update();
+		super.update(elapsed);
 	}
 	
 	private function ballBounce(BallObject:FlxObject, CollidedWith:FlxObject):Void

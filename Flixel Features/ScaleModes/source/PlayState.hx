@@ -38,7 +38,7 @@ class PlayState extends FlxState
 		add(info);
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		if (FlxG.keys.justPressed.SPACE || FlxG.mouse.justPressed)
 		{
@@ -46,7 +46,7 @@ class PlayState extends FlxState
 			setScaleMode(scaleModes[scaleModeIndex]);
 		}
 		
-		super.update();
+		super.update(elapsed);
 	}
 	
 	private function setScaleMode(scaleMode:ScaleMode)

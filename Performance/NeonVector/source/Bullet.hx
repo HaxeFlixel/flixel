@@ -16,9 +16,9 @@ class Bullet extends Entity
 		kill();
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
-		super.update();
+		super.update(elapsed);
 		
 		angle = Entity.angleInDegrees(velocity);
 		if (!isOnScreen())

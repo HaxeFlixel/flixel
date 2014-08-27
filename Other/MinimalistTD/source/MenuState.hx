@@ -70,7 +70,7 @@ class MenuState extends FlxState
 		FlxG.switchState(new PlayState());
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		// Begin the game on a P keypress.
 		if (FlxG.keys.justReleased.P)
@@ -78,7 +78,7 @@ class MenuState extends FlxState
 			startGame();
 		}
 		
-		super.update();
+		super.update(elapsed);
 	}
 	
 	/**

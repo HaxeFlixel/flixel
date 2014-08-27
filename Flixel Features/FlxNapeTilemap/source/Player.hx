@@ -19,7 +19,7 @@ class Player extends FlxNapeSprite
 		pixelPerfectRender = false;
 	}
 	
-	override public function update():Void 
+	override public function update(elapsed:Float):Void 
 	{
 		if (FlxG.keys.anyPressed([A, LEFT]))
 		{
@@ -47,6 +47,6 @@ class Player extends FlxNapeSprite
 			body.velocity.y = 0;
 		}
 		
-		super.update();
+		super.update(elapsed);
 	}
 }

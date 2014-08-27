@@ -19,7 +19,7 @@ class EnemyBullet extends FlxSprite
 		speed = 120;
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		if (!alive)
 		{
@@ -33,7 +33,7 @@ class EnemyBullet extends FlxSprite
 			kill();
 		}
 
-        super.update();
+        super.update(elapsed);
 	}
 	
 	override public function kill():Void

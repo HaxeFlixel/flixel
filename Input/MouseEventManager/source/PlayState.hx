@@ -72,9 +72,9 @@ class PlayState extends FlxState
 		_fan = null;
 	}
 	
-	override public function update():Void 
+	override public function update(elapsed:Float):Void 
 	{
-		super.update();
+		super.update(elapsed);
 		
 		if (cardJoint != null)
 		{

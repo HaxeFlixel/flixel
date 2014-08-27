@@ -70,7 +70,7 @@ class PlayState extends FlxState
 		_showImage(new GraphicLogo(0, 0));
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		if (FlxG.mouse.wheel != 0)
 		{
@@ -107,7 +107,7 @@ class PlayState extends FlxState
 			_updateScale(5);
 		}
 		
-		super.update();
+		super.update(elapsed);
 	}
 	
 	private function _updateScale(NewScale:Float):Void

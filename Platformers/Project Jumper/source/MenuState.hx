@@ -71,7 +71,7 @@ class MenuState extends FlxState
 		super.create();
 	}
 	
-	override public function update():Void 
+	override public function update(elapsed:Float):Void 
 	{
 		if (FlxG.mouse.wheel != 0)
 		{
@@ -127,7 +127,7 @@ class MenuState extends FlxState
 			}
 		}
 		
-		super.update();
+		super.update(elapsed);
 	}
 	
 	private function startGame():Void

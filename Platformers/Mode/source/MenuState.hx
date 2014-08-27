@@ -112,9 +112,9 @@ class MenuState extends FlxState
 	/**
 	 * Function that is called once every frame.
 	 */
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
-		super.update();
+		super.update(elapsed);
 		
 		if (_title2.x > _title1.x + _title1.width - 4)
 		{
@@ -165,7 +165,7 @@ class MenuState extends FlxState
 
 		// X + C were pressed, fade out and change to play state.
 		// OR, if we sat on the menu too long, launch the attract mode instead!
-		_timer += FlxG.elapsed;
+		_timer += elapsed;
 		
 		if (_timer >= 10) //go into demo mode if no buttons are pressed for 10 seconds
 		{

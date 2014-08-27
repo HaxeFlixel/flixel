@@ -26,7 +26,7 @@ class GoblinTest extends FlxSpine
 		skeleton.updateWorldTransform();
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		
 /*		var x:Float = skeleton.getX() + 160 * deltaTime * (skeleton.getFlipX() ? -1 : 1);
@@ -43,7 +43,7 @@ class GoblinTest extends FlxSpine
 			 
 		}
 		
-		super.update();
+		super.update(elapsed);
 	}
 	
 }

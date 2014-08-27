@@ -80,7 +80,7 @@ class PlayState extends FlxState
 		FlxG.cameras.add(camera);
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		// Collide everything
 		FlxG.collide();
@@ -121,6 +121,6 @@ class PlayState extends FlxState
 			_player2.velocity.y -= _player2.maxVelocity.y/1.5;
 		}
 		
-		super.update();	
+		super.update(elapsed);	
 	}
 }

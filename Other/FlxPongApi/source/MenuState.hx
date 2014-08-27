@@ -301,9 +301,9 @@ class MenuState extends FlxState
 		super.create();
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
-		_mainMenuTime += FlxG.elapsed;
+		_mainMenuTime += elapsed;
 		
 		#if !FLX_NO_KEYBOARD
 		if (FlxG.keys.justPressed.ENTER && _loginGroup.visible)
@@ -312,7 +312,7 @@ class MenuState extends FlxState
 		}
 		#end
 		
-		super.update();
+		super.update(elapsed);
 	}
 	
 	#if debug
