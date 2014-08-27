@@ -1,13 +1,13 @@
 package;
 
 import flixel.addons.nape.FlxNapeSprite;
-import flixel.addons.nape.FlxNapeState;
+import flixel.addons.nape.FlxNapeSpace;
 import flixel.effects.particles.FlxEmitter;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.group.FlxGroup;
 import flixel.input.mouse.FlxMouseEventManager;
 import flixel.math.FlxPoint;
+import flixel.group.FlxGroup;
 import nape.callbacks.CbEvent;
 import nape.callbacks.CbType;
 import nape.callbacks.InteractionCallback;
@@ -63,7 +63,7 @@ class Shooter extends FlxTypedGroup<FlxNapeSprite>
 			add(spr);
 		}
 		
-		FlxNapeState.space.listeners.add(new InteractionListener(
+		FlxNapeSpace.space.listeners.add(new InteractionListener(
 			CbEvent.BEGIN, 
 			InteractionType.COLLISION, 
 			Shooter.CB_BULLET,
@@ -73,7 +73,6 @@ class Shooter extends FlxTypedGroup<FlxNapeSprite>
 	
 	function launchProjectile(spr:FlxSprite) 
 	{
-		
 		if (disableShooting) 
 			return;
 		
@@ -106,13 +105,12 @@ class Shooter extends FlxTypedGroup<FlxNapeSprite>
 	
 	function createMouseJoint(spr:FlxSprite) 
 	{
-		
 		var body:Body = cast(spr, FlxNapeSprite).body;
 		
-		mouseJoint = new DistanceJoint(FlxNapeState.space.world, body, new Vec2(FlxG.mouse.x, FlxG.mouse.y),
+		mouseJoint = new DistanceJoint(FlxNapeSpace.space.world, body, new Vec2(FlxG.mouse.x, FlxG.mouse.y),
 			body.worldPointToLocal(new Vec2(FlxG.mouse.x, FlxG.mouse.y)), 0, 0);
 		
-		mouseJoint.space = FlxNapeState.space;
+		mouseJoint.space = FlxNapeSpace.space;
 	}	
 	
 	override public function update(elapsed:Float):Void 

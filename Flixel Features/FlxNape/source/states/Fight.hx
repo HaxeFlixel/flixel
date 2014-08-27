@@ -1,9 +1,10 @@
 package states;
 
 import flixel.addons.nape.FlxNapeSprite;
-import flixel.addons.nape.FlxNapeState;
+import flixel.addons.nape.FlxNapeSpace;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.FlxState;
 import flixel.group.FlxGroup;
 import flixel.text.FlxText;
 import flixel.math.FlxPoint;
@@ -21,18 +22,16 @@ import nape.geom.Vec2;
  * @author TiagoLr (~~~ ProG4mr ~~~)
  * @link https://github.com/ProG4mr
  */
-class Fight extends FlxNapeState
+class Fight extends BaseState
 {
 	var shooter:Shooter;
 	
 	override public function create():Void 
 	{
-		super.create();
+		FlxNapeSpace.init();
 		
-		createWalls(0,-300,FlxG.width, FlxG.height - 30);
-		FlxNapeState.space.gravity.setxy(0, 400);
-		
-		napeDebugEnabled = false;
+		FlxNapeSpace.createWalls(0,-300,FlxG.width, FlxG.height - 30);
+		FlxNapeSpace.space.gravity.setxy(0, 400);
 		
 		add(new FlxSprite(0, 0, "assets/dbzbg.jpg"));
 		
@@ -49,8 +48,6 @@ class Fight extends FlxNapeState
 								"assets/GokuULeg.png",
 								"assets/GokuLLeg.png");
 		add(songoku);
-		
-		
 		
 		var vegeta = new Ragdoll(550, 250);
 		vegeta.init();
@@ -82,22 +79,6 @@ class Fight extends FlxNapeState
 		add(txt);
 		txt = new FlxText( -10, 20, 640, "      'LEFT' & 'RIGHT' - switch demo");
 		add(txt);
-	}
-	
-	override public function update(elapsed:Float):Void 
-	{	
-		super.update(elapsed);
-		
-		if (FlxG.keys.justPressed.G)
-			napeDebugEnabled = !napeDebugEnabled;
-			
-		if (FlxG.keys.justPressed.R)
-			FlxG.resetState();
-			
-		if (FlxG.keys.justPressed.LEFT)
-			Main.prevState();
-		if (FlxG.keys.justPressed.RIGHT)
-			Main.nextState();
 	}
 }
 
@@ -270,26 +251,26 @@ class Ragdoll extends FlxGroup
 		var listener;
 		// lower left leg ignores upper left leg 
 		listener = new PreListener(InteractionType.COLLISION, group1, group3, ignoreCollision, 0, true);
-		listener.space = FlxNapeState.space;
+		listener.space = FlxNapeSpace.space;
 		// lower right leg ignores upper right leg
 		listener = new PreListener(InteractionType.COLLISION, group2, group4, ignoreCollision, 0, true);
-		listener.space = FlxNapeState.space;
+		listener.space = FlxNapeSpace.space;
 		// upper left legs ignores lower torso 
 		listener = new PreListener(InteractionType.COLLISION, group3, group5, ignoreCollision, 0, true);
-		listener.space = FlxNapeState.space;
+		listener.space = FlxNapeSpace.space;
 		// upper rigth legs ignores lower torso 
 		listener = new PreListener(InteractionType.COLLISION, group4, group5, ignoreCollision, 0, true);
-		listener.space = FlxNapeState.space;
+		listener.space = FlxNapeSpace.space;
 		// upper torso ignores upper arms 
 		listener = new PreListener(InteractionType.COLLISION, group6, group7, ignoreCollision, 0, true);
-		listener.space = FlxNapeState.space;
+		listener.space = FlxNapeSpace.space;
 		// upper arms ignores lower arms | upper torso | lower torso
 		listener = new PreListener(InteractionType.COLLISION, group7, group8, ignoreCollision, 0, true);
-		listener.space = FlxNapeState.space;
+		listener.space = FlxNapeSpace.space;
 		listener = new PreListener(InteractionType.COLLISION, group7, group6, ignoreCollision, 0, true);
-		listener.space = FlxNapeState.space;
+		listener.space = FlxNapeSpace.space;
 		listener = new PreListener(InteractionType.COLLISION, group7, group5, ignoreCollision, 0, true);
-		listener.space = FlxNapeState.space;
+		listener.space = FlxNapeSpace.space;
 
 	}
 	
@@ -322,34 +303,34 @@ class Ragdoll extends FlxGroup
 		
 		// lower legs with upper legs.
 		constrain = new PivotJoint(lLLeg.body, lULeg.body, new Vec2(0, -llegSize.y / 2 + 3), new Vec2(0, ulegSize.y / 2 - 3));
-		constrain.space = FlxNapeState.space;
+		constrain.space = FlxNapeSpace.space;
 		constrain = new PivotJoint(rLLeg.body, rULeg.body, new Vec2(0, -llegSize.y / 2 + 3), new Vec2(0, ulegSize.y / 2 - 3));
-		constrain.space = FlxNapeState.space;
+		constrain.space = FlxNapeSpace.space;
 		
 		// Lower Arms with upper arms.
 		constrain = new PivotJoint(lLArm.body, lUArm.body, new Vec2(0, -larmSize.y / 2 + 3), new Vec2(0, uarmSize.y / 2 - 3));
-		constrain.space = FlxNapeState.space;
+		constrain.space = FlxNapeSpace.space;
 		constrain = new PivotJoint(rLArm.body, rUArm.body, new Vec2(0, -larmSize.y / 2 + 3), new Vec2(0, uarmSize.y / 2 - 3));
-		constrain.space = FlxNapeState.space;
+		constrain.space = FlxNapeSpace.space;
 		
 		// Upper legs with lower torso.
 		constrain = new PivotJoint(lULeg.body, lTorso.body, new Vec2(0, -ulegSize.y / 2 + 3), new Vec2( -lTorsoSize.x / 2  + ulegSize.x / 2, lTorsoSize.y / 2 - 6));
-		constrain.space = FlxNapeState.space;
+		constrain.space = FlxNapeSpace.space;
 		constrain = new PivotJoint(rULeg.body, lTorso.body, new Vec2(0, -ulegSize.y / 2 + 3), new Vec2(lTorsoSize.x / 2  - ulegSize.x / 2, lTorsoSize.y / 2 - 6));
-		constrain.space = FlxNapeState.space;
+		constrain.space = FlxNapeSpace.space;
 		
 		// Upper torso with mid lower.
 		constrain = new PivotJoint(uTorso.body, lTorso.body, new Vec2(0, uTorsoSize.y / 2 + torsoOffset), new Vec2(0, -lTorsoSize.y / 2 - torsoOffset));
-		constrain.space = FlxNapeState.space;
+		constrain.space = FlxNapeSpace.space;
 		
 		// Upper arms with Upper torso.
 		constrain = new PivotJoint(lUArm.body, uTorso.body, new Vec2(uarmSize.x / 2 - 3, -uarmSize.y / 2 + 3), new Vec2( -uTorsoSize.x / 2 + 3, -uTorsoSize.y / 2 + 3));
-		constrain.space = FlxNapeState.space;
+		constrain.space = FlxNapeSpace.space;
 		constrain = new PivotJoint(rUArm.body, uTorso.body, new Vec2( -uarmSize.x / 2 + 3, -uarmSize.y / 2 + 3), new Vec2(uTorsoSize.x / 2 - 3, -uTorsoSize.y / 2 + 3));
-		constrain.space = FlxNapeState.space;
+		constrain.space = FlxNapeSpace.space;
 		
 		// Neck with upper torso.
 		constrain = new PivotJoint(uTorso.body, head.body, new Vec2(0, -uTorsoSize.y / 2 - neckHeight), new Vec2(0, headRadius));
-		constrain.space = FlxNapeState.space;
+		constrain.space = FlxNapeSpace.space;
 	}
 }

@@ -22,7 +22,7 @@ class Pixelizer extends FlxNapeState
 		super.create();
 		
 		// Sets gravity.
-		//FlxNapeState.space.gravity.setxy(0, 1500);
+		//FlxNapeSpace.space.gravity.setxy(0, 1500);
 
 		createWalls( -2000, -2000, 1640, 480);
 		createPixels();

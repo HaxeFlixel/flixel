@@ -1,14 +1,15 @@
 package;
 
 import flixel.addons.nape.FlxNapeSprite;
-import flixel.addons.nape.FlxNapeState;
+import flixel.addons.nape.FlxNapeSpace;
 import flixel.FlxG;
+import flixel.FlxState;
 import flixel.text.FlxText;
 import flixel.math.FlxMath;
 import flixel.math.FlxRandom;
 import nape.geom.Vec2;
 
-class PlayState extends FlxNapeState
+class PlayState extends FlxState
 {
 	private static inline var GRAVITY_FACTOR:Int = 5000; 
 	
@@ -18,15 +19,15 @@ class PlayState extends FlxNapeState
 	
 	override public function create():Void
 	{
-		super.create();
+		FlxNapeSpace.init();
 		
-		createWalls();
-		FlxNapeState.space.gravity = Vec2.get(0, GRAVITY_FACTOR);
+		FlxNapeSpace.createWalls();
+		FlxNapeSpace.space.gravity = Vec2.get(0, GRAVITY_FACTOR);
 		
 		for (i in 0...50) 
 		{
 			var box = new Box(FlxG.random.int(0, FlxG.width - 30), FlxG.random.int(0, FlxG.height - 30));
-			box.body.space = FlxNapeState.space;
+			box.body.space = FlxNapeSpace.space;
 			add(box);
 		}
 		
@@ -40,6 +41,11 @@ class PlayState extends FlxNapeState
 		add(xText);
 		add(yText);
 		add(zText);
+		
+		#if !mobile
+		xText.text = "FlxG.accelerometer is only available on mobile targets!";
+		yText.text = zText.text = "";
+		#end
 	}
 	
 	override public function update(elapsed:Float):Void
@@ -55,7 +61,7 @@ class PlayState extends FlxNapeState
 			zText.text = "z: " + FlxMath.roundDecimal(FlxG.accelerometer.z, 1);
 			
 			//Inverting the x axis to align the device and the screen coordinates
-			FlxNapeState.space.gravity.setxy(-FlxG.accelerometer.x * GRAVITY_FACTOR, FlxG.accelerometer.y * GRAVITY_FACTOR);
+			FlxNapeSpace.space.gravity.setxy(-FlxG.accelerometer.x * GRAVITY_FACTOR, FlxG.accelerometer.y * GRAVITY_FACTOR);
 		}
 		#end
 	}	
@@ -69,7 +75,7 @@ class Box extends FlxNapeSprite
 		makeGraphic(30, 30, FlxG.random.color());
 		createRectangularBody(30, 30);
 		setBodyMaterial(0.5, 0.5, 0.5, 2);
-		body.space = FlxNapeState.space;
+		body.space = FlxNapeSpace.space;
 		physicsEnabled = true;
 	}
 }

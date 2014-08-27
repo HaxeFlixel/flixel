@@ -3,9 +3,10 @@ package states;
 import flash.display.Graphics;
 import flash.geom.Rectangle;
 import flixel.addons.nape.FlxNapeSprite;
-import flixel.addons.nape.FlxNapeState;
+import flixel.addons.nape.FlxNapeSpace;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.FlxState;
 import flixel.text.FlxText;
 import flixel.math.FlxRandom;
 import flixel.util.FlxSpriteUtil;
@@ -26,13 +27,12 @@ import nape.shape.Circle;
  * @author TiagoLr (~~~ ProG4mr ~~~)
  * @link https://github.com/ProG4mr
  */
-class Balloons extends FlxNapeState
+class Balloons extends BaseState
 {
 	private inline static var WIRE_MAX_LENGTH = 200;
 	private inline static var NUM_BALLOONS = 7;
 	private inline static var NUM_SEGMENTS = 10;
 	public static var CB_BALLOON:CbType = new CbType();
-	
 	
 	var listBalloons:Array<Balloon>;
 	private var shooter:Shooter;
@@ -43,14 +43,12 @@ class Balloons extends FlxNapeState
 	override public function create():Void 
 	{
 		super.create();
+		FlxNapeSpace.init();
 		
 		add(new FlxSprite(0, 0, "assets/BalloonsBground.jpg"));
 		
-		// Sets gravity.
-		FlxNapeState.space.gravity.setxy(0, 500);
-		napeDebugEnabled = false;
-		
-		createWalls();
+		FlxNapeSpace.space.gravity.setxy(0, 500);
+		FlxNapeSpace.createWalls();
 		
 		createBalloons();
 		createBox();
@@ -60,7 +58,7 @@ class Balloons extends FlxNapeState
 		shooter.setDensity(0.3);
 		add(shooter);
 		
-		FlxNapeState.space.listeners.add(new InteractionListener(
+		FlxNapeSpace.space.listeners.add(new InteractionListener(
 			CbEvent.BEGIN, 
 			InteractionType.COLLISION, 
 			Shooter.CB_BULLET,
@@ -123,9 +121,7 @@ class Balloons extends FlxNapeState
 		
 			var wire:Wire = new Wire(box.body, b.body, yOffsetBox.add(box.body.localCOM), yOffsetB.add(b.body.localCOM), WIRE_MAX_LENGTH, NUM_SEGMENTS);
 			wires.push(wire);
-			
 		}
-		
 	}
 	
 	override public function update(elapsed:Float):Void 
@@ -153,18 +149,6 @@ class Balloons extends FlxNapeState
 		wiresSprite.pixels.fillRect(new Rectangle(0, 0, 640, 480), 0x0);
 		FlxSpriteUtil.updateSpriteGraphic(wiresSprite);
 		
-		// Input handling
-		if (FlxG.keys.justPressed.G)
-			napeDebugEnabled = !napeDebugEnabled;
-			
-		if (FlxG.keys.justPressed.R)
-			FlxG.resetState();
-			
-		if (FlxG.keys.justPressed.LEFT)
-			Main.prevState();
-		if (FlxG.keys.justPressed.RIGHT)
-			Main.nextState();
-			
 		if (FlxG.keys.pressed.W)
 			box.body.position.y -= 10;
 		if (FlxG.keys.pressed.A)
@@ -173,7 +157,6 @@ class Balloons extends FlxNapeState
 			box.body.position.y += 10;
 		if (FlxG.keys.pressed.D)
 			box.body.position.x += 10;
-		// end 
 	}
 }
 
@@ -204,13 +187,13 @@ class Wire
 			
 			circle = new Body(BodyType.DYNAMIC, startPos);
 			circle.shapes.add(new Circle(5));
-			circle.space = FlxNapeState.space;
+			circle.space = FlxNapeSpace.space;
 			circle.shapes.at(0).filter.collisionGroup = 2; 					// Belongs to group 2.
 			circle.shapes.at(0).filter.collisionMask = ~2; 					// Ignores group 2.
 			
 			distJoint = new DistanceJoint(body1, circle, anchor1, circle.localCOM, 0, maxDist / segments);
 			distJoint.frequency = 5;
-			distJoint.space = FlxNapeState.space;
+			distJoint.space = FlxNapeSpace.space;
 			
 			body1 = circle;
 			anchor1 = body1.localCOM;
@@ -219,7 +202,7 @@ class Wire
 		
 		distJoint = new DistanceJoint(body1, body2, body1.localCOM, anchor2, 0, maxDist / segments); 		// body1 is the last circle at this point
 		distJoint.frequency = 5;
-		distJoint.space = FlxNapeState.space;
+		distJoint.space = FlxNapeSpace.space;
 		joints.push(distJoint);
 	}
 	

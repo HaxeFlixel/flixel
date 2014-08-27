@@ -29,9 +29,9 @@ class SolarSystem extends FlxNapeState
 	{	
 		super.create();
 		
-		FlxNapeState.space.worldAngularDrag = 0;
-		FlxNapeState.space.worldLinearDrag = 0;
-		FlxNapeState.space.gravity = new Vec2(0, 0);
+		FlxNapeSpace.space.worldAngularDrag = 0;
+		FlxNapeSpace.space.worldLinearDrag = 0;
+		FlxNapeSpace.space.gravity = new Vec2(0, 0);
 		
 		createWalls();
 		

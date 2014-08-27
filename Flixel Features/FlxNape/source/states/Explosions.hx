@@ -27,7 +27,7 @@ class Explosions extends FlxNapeState
 		super.create();
 		
 		// Sets gravity.
-		FlxNapeState.space.gravity.setxy(0, 500);
+		FlxNapeSpace.space.gravity.setxy(0, 500);
 		
 		//createWalls( -2000, 0, 1640, FlxG.height);
 		createWalls();

@@ -1,9 +1,10 @@
 package states;
 
 import flixel.addons.nape.FlxNapeSprite;
-import flixel.addons.nape.FlxNapeState;
+import flixel.addons.nape.FlxNapeSpace;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.FlxState;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.math.FlxRandom;
@@ -13,18 +14,16 @@ import openfl.display.FPS;
  * @author TiagoLr ( ~~~ProG4mr~~~ )
  * @link https://github.com/ProG4mr
  */
-class Piramid extends FlxNapeState
+class Piramid extends BaseState
 {	
 	private var shooter:Shooter;
 	private static var levels;
 	var bricks:Array<FlxNapeSprite>;
-	var fps:FPS;
 	
 	override public function create():Void 
 	{	
 		super.create();
-		
-		napeDebugEnabled = false;
+		FlxNapeSpace.init();
 		
 		add(new FlxSprite(0, 0, "assets/piramidbg.jpg"));
 
@@ -34,7 +33,7 @@ class Piramid extends FlxNapeState
 		shooter = new Shooter();
 		add(shooter);	
 		
-		createWalls( -2000, -2000, 1640, 480);
+		FlxNapeSpace.createWalls( -2000, -2000, 1640, 480);
 		createBricks();
 		
 		var txt:FlxText = new FlxText(FlxG.width - 100, 30, 100, "Bricks: " + bricks.length);
@@ -45,14 +44,6 @@ class Piramid extends FlxNapeState
 		txt = new FlxText( -10, 40, 640, "      Press 'Q' or 'W' to increase/decrease bricks");
 		txt.color = 0;
 		add(txt);
-		
-		FlxG.addChildBelowMouse(fps = new FPS(FlxG.width - 60, 5, FlxColor.WHITE));
-	}
-	
-	override public function destroy():Void 
-	{
-		super.destroy();
-		FlxG.removeChild(fps);
 	}
 	
 	private function createBricks() 
@@ -62,8 +53,6 @@ class Piramid extends FlxNapeState
 		
 		var brickHeight:Int = Std.int(8 * 40 / Piramid.levels); // magic number!
 		var brickWidth:Int = brickHeight * 2;
-		
-		
 		
 		for (i in 0...levels)
 		{
@@ -91,21 +80,9 @@ class Piramid extends FlxNapeState
 	{	
 		super.update(elapsed);
 		
-		if (FlxG.mouse.justPressed && FlxNapeState.space.gravity.y == 0)
-			FlxNapeState.space.gravity.setxy(0, 500);
+		if (FlxG.mouse.justPressed && FlxNapeSpace.space.gravity.y == 0)
+			FlxNapeSpace.space.gravity.setxy(0, 500);
 		
-		if (FlxG.keys.justPressed.G)
-		{
-			napeDebugEnabled = !napeDebugEnabled;
-		}
-		
-		if (FlxG.keys.justPressed.R)
-			FlxG.resetState();
-			
-		if (FlxG.keys.justPressed.LEFT)
-			Main.prevState();
-		if (FlxG.keys.justPressed.RIGHT)
-			Main.nextState();
 		if (FlxG.keys.justPressed.Q)
 		{
 			Piramid.levels++;
