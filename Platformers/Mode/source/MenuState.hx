@@ -147,7 +147,7 @@ class MenuState extends FlxState
 			text.alignment = CENTER;
 			add(text);
 			
-			var flixelButton:FlxButton = new FlxButton(FlxG.width / 2 - 40, FlxG.height / 3 + 54, "flixel.org", onFlixel);
+			var flixelButton:FlxButton = new FlxButton(FlxG.width / 2 - 40, FlxG.height / 3 + 54, "haxeflixel.com", onFlixel);
 			flixelButton.color = 0xff729954;
 			flixelButton.label.color = 0xffd8eba2;
 			add(flixelButton);
@@ -208,7 +208,7 @@ class MenuState extends FlxState
 	
 	private function onFlixel():Void
 	{
-		FlxG.openURL("http://flixel.org");
+		FlxG.openURL("http://haxeflixel.com");
 	}
 	
 	private function onDanny():Void
