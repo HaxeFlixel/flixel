@@ -106,7 +106,7 @@ class FlxState extends FlxGroup
 			//Reset the input so things like "justPressed" won't interfere
 			if (!persistentUpdate)
 			{
-				FlxG.inputs.reset();
+				FlxG.inputs.onStateSwitch();
 			}
 			
 			if (!subState._created)

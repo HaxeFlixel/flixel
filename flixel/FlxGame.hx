@@ -601,7 +601,7 @@ class FlxGame extends Sprite
 		PxBitmapFont.clearStorage();
 		FlxG.bitmap.clearCache();
 		FlxG.cameras.reset();
-		FlxG.inputs.reset();
+		FlxG.inputs.onStateSwitch();
 		#if !FLX_NO_SOUND_SYSTEM
 		FlxG.sound.destroy();
 		#end
