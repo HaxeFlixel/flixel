@@ -14,12 +14,6 @@ import flash.system.Capabilities;
 @:allow(flixel.input.gamepad)
 class FlxGamepad implements IFlxDestroyable
 {
-	// Button States (mirrors Key States in FlxKey.hx)
-	public static inline var JUST_RELEASED:Int = -1;
-	public static inline var RELEASED:Int = 0;
-	public static inline var PRESSED:Int = 1;
-	public static inline var JUST_PRESSED:Int = 2;
-	
 	public var id(default, null):Int;
 	public var buttons(default, null):Array<FlxGamepadButton> = [];
 	public var connected(default, null):Bool = true;
