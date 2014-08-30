@@ -9,10 +9,6 @@ import massive.munit.client.SummaryReportClient;
 import massive.munit.TestRunner;
 import massive.munit.util.Timer;
 
-#if js
-import js.Lib;
-#end
-
 /**
  * Auto generated Test Application.
  * Refer to munit command line tool for more information (haxelib run munit)

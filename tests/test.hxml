@@ -1,4 +1,5 @@
 ## Flash
+
 -main TestMain
 -cp src
 
@@ -10,102 +11,16 @@
 
 --macro openfl.Lib.includeBackend('flash')
 --macro flixel.system.macros.FlxConditionals.run()
-#--macro mcover.MCover.coverage(['flixel'], ['../'], null)
 
 -D doc
 
 -swf-version 11.8
 -swf bin/as3_test.swf
 
+#-cmd haxelib run lime build html5
 --next
 
-## Flash with conditionals
--main TestMain
--cp src
+## HTML5
 
--lib munit
--lib hamcrest
--lib flixel
--lib openfl
--lib mcover
-
---macro openfl.Lib.includeBackend('flash')
---macro flixel.system.macros.FlxConditionals.run()
-#--macro mcover.MCover.coverage(['flixel'], ['../'], null)
-
--D doc
--D FLX_RECORD
--D FLX_NO_MOUSE_ADVANCED
--D FLX_NO_NATIVE_CURSOR
--D FLX_NO_MOUSE
--D FLX_NO_KEYBOARD
--D FLX_NO_TOUCH
--D FLX_NO_GAMEPAD
--D FLX_NO_SOUND_TRAY
--D FLX_NO_SOUND_SYSTEM
--D FLX_NO_FOCUS_LOST_SCREEN
--D FLX_NO_DEBUG
-
--swf-version 11.8
--swf bin/as3_test.swf
-
-## Neko
-
-#--macro allowPackage("flash")
-#
-#-main TestMain
-#-cp src
-#
-#-lib munit
-#-lib hamcrest
-#-lib flixel
-#-lib openfl
-#-lib mcover
-#
-#--macro mcover.MCover.coverage(['flixel'], ['../'], null)
-#
-#-D doc
-#
-## openfl stuff
-#-D lime_native
-#-D no-compilation
-#-D windows
-#-D desktop
-#
-#-neko bin/neko_test.n
-
-#--next
-
-# ## JavaScript
-# -main TestMain
-# -lib munit
-# -lib hamcrest
-
-# -lib flixel
-# -lib openfl
-
-# -cp src
-
-# -D doc
-# --remap flash:flash 
-
-# -cp test
-# -js bin/js_test.js
-
-# --next
-
-# ## CPP
-# -main TestMain
-# -lib munit
-# -lib hamcrest
-# -lib flixel
-# -lib openfl
-
-# -cp src
-
-# -D doc
-# --remap flash:flash 
-# #-D HXCPP_M64
-# -cpp bin/cpp_test
-
-
+#-js bin/html5/bin/TestMain.js
+#--no-output

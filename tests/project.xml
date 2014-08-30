@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	<meta title="FlixelUnitTests" version="1.0.0" />
+	<app file="TestMain" main="TestMain" />
+	
+	<source path="src" />
+	
+	<haxelib name="flixel" />
+	<haxelib name="munit" />
+	<haxelib name="hamcrest" />
+</project>

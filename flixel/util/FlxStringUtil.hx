@@ -417,7 +417,7 @@ class FlxStringUtil
 			var bd:BitmapData = Bitmap;
 			Bitmap = new BitmapData(Bitmap.width * Scale, Bitmap.height * Scale);
 			
-			#if js
+			#if !flash
 			var bdW:Int = bd.width;
 			var bdH:Int = bd.height;
 			var pCol:Int = 0;

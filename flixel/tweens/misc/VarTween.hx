@@ -106,7 +106,7 @@ class VarTween extends FlxTween
 		{
 			if (Reflect.getProperty(_object, p) == null)
 			{
-				throw "The Object does not have the property \"" + p + "\", or it is not accessible.";
+				throw 'The Object does not have the property "$p"';
 			}
 			
 			var a:Dynamic = Reflect.getProperty(_object, p);

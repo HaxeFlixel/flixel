@@ -489,22 +489,26 @@ class FlxCamera extends FlxBasic
 		_fill = FlxDestroyUtil.dispose(_fill);
 	#else
 		#if !FLX_NO_DEBUG
-		flashSprite.removeChild(debugLayer);
+		FlxDestroyUtil.removeChild(flashSprite, debugLayer);
 		debugLayer = null;
 		#end
 		
-		flashSprite.removeChild(canvas);
-		var canvasNumChildren:Int = canvas.numChildren;
-		for (i in 0...(canvasNumChildren))
+		FlxDestroyUtil.removeChild(flashSprite, canvas);
+		if (canvas != null)
 		{
-			canvas.removeChildAt(0);
+			for (i in 0...canvas.numChildren)
+			{
+				canvas.removeChildAt(0);
+			}
+			canvas = null;
 		}
-		canvas = null;
 		
-		clearDrawStack();
-		
-		_headOfDrawStack.dispose();
-		_headOfDrawStack = null;
+		if (_headOfDrawStack != null)
+		{
+			clearDrawStack();
+			_headOfDrawStack.dispose();
+			_headOfDrawStack = null;
+		}
 		_currentStackItem = null;
 	#end
 		
