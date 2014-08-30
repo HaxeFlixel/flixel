@@ -3,7 +3,6 @@ package flixel.animation;
 import flash.display.BitmapData;
 import flixel.FlxSprite;
 import flixel.util.FlxColor;
-import FlxTest;
 import massive.munit.Assert;
 
 @:bitmap("assets/spritesheet.png")
@@ -17,6 +16,8 @@ class FlxAnimationControllerTest extends FlxTest
 	function before():Void
 	{
 		sprite = new FlxSprite();
+		FlxG.state.add(sprite);
+		
 		destroyable = sprite;
 	}
 	
@@ -78,8 +79,36 @@ class FlxAnimationControllerTest extends FlxTest
 		FlxAssert.arraysAreEqual([0, 1, 2], animation);
 	}
 	
+	@Test // issue 1284
+	function testFinishedInCallback():Void
+	{
+		var animation:Array<Int> = [1, 0];
+		loadSpriteSheet();
+		
+		sprite.animation.callback = function(s:String, n:Int, i:Int)
+		{
+			if (i == 0) // last frame
+			{
+				Assert.isTrue(sprite.animation.curAnim.finished);
+				Assert.isTrue(sprite.animation.finished);
+			}
+		};
+		
+		sprite.animation.add("animation", animation, 30, false);
+		sprite.animation.play("animation");
+		finishAnimation();
+	}
+	
 	function loadSpriteSheet():Void
 	{
 		sprite.loadGraphic(GraphicSpriteSheet, true, 1, 1);
+	}
+	
+	function finishAnimation():Void
+	{
+		while (!sprite.animation.finished)
+		{
+			step();
+		}
 	}
 }

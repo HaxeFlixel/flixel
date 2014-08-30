@@ -135,7 +135,7 @@ class FlxAnimation extends FlxBaseAnimation
 			_frameTimer += elapsed;
 			while (_frameTimer > delay)
 			{
-				_frameTimer = _frameTimer - delay;
+				_frameTimer -= delay;
 				if (looped && (curFrame == numFrames - 1))
 				{
 					curFrame = 0;
@@ -168,7 +168,7 @@ class FlxAnimation extends FlxBaseAnimation
 	{
 		if (Frame >= 0)
 		{
-			if (!looped && Frame >= numFrames)
+			if (!looped && Frame >= (numFrames - 1))
 			{
 				finished = true;
 				curFrame = numFrames - 1;
