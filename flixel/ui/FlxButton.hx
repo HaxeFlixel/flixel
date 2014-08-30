@@ -256,7 +256,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		if (visible) 
 		{
 			// Update the button, but only if at least either mouse or touches are enabled
-			#if (!FLX_NO_MOUSE || !FLX_NO_TOUCH)
+			#if FLX_POINTER_INPUT
 				updateButton();
 			#end
 			

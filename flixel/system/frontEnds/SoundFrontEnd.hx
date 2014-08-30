@@ -301,7 +301,7 @@ class SoundFrontEnd
 	 */
 	public function showSoundTray():Void
 	{
-		#if !FLX_NO_SOUND_TRAY
+		#if FLX_SOUND_TRAY
 		if (FlxG.game.soundTray != null && soundTrayEnabled)
 		{
 			FlxG.game.soundTray.show();

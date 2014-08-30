@@ -127,7 +127,7 @@ class Tracker extends Watch
 			// Inputs
 			#if !FLX_NO_MOUSE
 			addProfile(new TrackerProfile(FlxMouse, ["screenX", "screenY", "wheel", "visible", "useSystemCursor", "pressed", "justPressed", 
-			                                         "justReleased" #if !FLX_NO_MOUSE_ADVANCED , "pressedMiddle", "justPressedMiddle", 
+			                                         "justReleased" #if FLX_MOUSE_ADVANCED , "pressedMiddle", "justPressedMiddle", 
 			                                         "justReleasedMiddle", "pressedRight", "justPressedRight", "justReleasedRight" #end], [FlxPoint]));
 			#end
 			#if !FLX_NO_TOUCH 
@@ -137,7 +137,7 @@ class Tracker extends Watch
 			addProfile(new TrackerProfile(FlxGamepad, ["id", "deadZone", "hat", "ball", "dpadUp", "dpadDown", "dpadLeft", "dpadRight"]));
 			#end
 			
-			#if (!FLX_NO_MOUSE || !FLX_NO_TOUCH)
+			#if FLX_POINTER_INPUT
 			addProfile(new TrackerProfile(FlxSwipe, ["ID", "startPosition", "endPosition", "distance", "angle", "duration"]));
 			#end
 			

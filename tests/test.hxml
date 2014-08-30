@@ -8,9 +8,8 @@
 -lib openfl
 -lib mcover
 
--D FLX_RENDER_BLIT
-
 --macro openfl.Lib.includeBackend('flash')
+--macro flixel.system.macros.FlxConditionals.run()
 #--macro mcover.MCover.coverage(['flixel'], ['../'], null)
 
 -D doc
@@ -30,9 +29,8 @@
 -lib openfl
 -lib mcover
 
--D FLX_RENDER_BLIT
-
 --macro openfl.Lib.includeBackend('flash')
+--macro flixel.system.macros.FlxConditionals.run()
 #--macro mcover.MCover.coverage(['flixel'], ['../'], null)
 
 -D doc

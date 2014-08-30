@@ -53,7 +53,7 @@ import flixel.input.FlxAccelerometer;
 #if js
 import flixel.system.frontEnds.HTML5FrontEnd;
 #end
-#if (!FLX_NO_MOUSE || !FLX_NO_TOUCH)
+#if FLX_POINTER_INPUT
 import flixel.input.FlxSwipe;
 #end
 
@@ -181,7 +181,7 @@ class FlxG
 	public static var touches(default, null):FlxTouchManager;
 	#end
 	
-	#if (!FLX_NO_MOUSE || !FLX_NO_TOUCH)
+	#if FLX_POINTER_INPUT
 	/**
 	 * Contains all "swipes" from both mouse and touch input that have just ended.
 	 */
