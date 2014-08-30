@@ -66,7 +66,7 @@ class BitmapLog extends Window
 		
 	#if !FLX_NO_MOUSE
 		addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
-		#if FLX_NATIVE_CURSOR
+		#if FLX_MOUSE_ADVANCED
 		addEventListener(MouseEvent.MIDDLE_MOUSE_DOWN, onMiddleDown);
 		addEventListener(MouseEvent.MIDDLE_MOUSE_UP, onMiddleUp);
 		#end
