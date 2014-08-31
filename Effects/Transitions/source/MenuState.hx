@@ -2,6 +2,9 @@ package;
 
 import flash.display.BitmapData;
 import flixel.addons.transition.FlxTransitionableState;
+import flixel.addons.transition.FlxTransitionSprite.GraphicTransTileCircle;
+import flixel.addons.transition.FlxTransitionSprite.GraphicTransTileDiamond;
+import flixel.addons.transition.FlxTransitionSprite.GraphicTransTileSquare;
 import flixel.addons.transition.TransitionData;
 import flixel.addons.ui.FlxUIButton;
 import flixel.addons.ui.FlxUINumericStepper;
@@ -10,22 +13,16 @@ import flixel.addons.ui.FlxUIState;
 import flixel.addons.ui.FlxUIText;
 import flixel.addons.ui.FlxUITypedButton;
 import flixel.FlxG;
-import flixel.FlxSprite;
-import flixel.FlxState;
 import flixel.math.FlxPoint;
-import flixel.system.FlxAssets.FlxGraphicAsset;
-import flixel.text.FlxText;
-import flixel.ui.FlxButton;
 import flixel.util.FlxColor;
-import flixel.addons.transition.FlxTransitionSprite.GraphicTransTileCircle;
-import flixel.addons.transition.FlxTransitionSprite.GraphicTransTileDiamond;
-import flixel.addons.transition.FlxTransitionSprite.GraphicTransTileSquare;
 
 /**
  * A FlxState which can be used for the game's menu.
  */
 class MenuState extends FlxUIState
 {
+	static var initialized:Bool = false;
+	
 	/**
 	 * Function that is called up when to state is created to set it up. 
 	 */
@@ -39,9 +36,9 @@ class MenuState extends FlxUIState
 	
 	private function init():Void
 	{
-		if (Reg.init == false)
+		if (initialized == false)
 		{
-			Reg.init = true;
+			initialized = true;
 			
 			//If this is the first time we've run the program, we initialize the TransitionData
 			
@@ -164,24 +161,22 @@ class MenuState extends FlxUIState
 	
 	private function getDefaultAssetStr(c:Class<BitmapData>):String
 	{
-		switch(c)
+		return switch(c)
 		{
-			case GraphicTransTileCircle: return "circle";
-			case GraphicTransTileDiamond: return "diamond";
-			case GraphicTransTileSquare: return "square";
+			case GraphicTransTileCircle: "circle";
+			case GraphicTransTileSquare: "square";
+			case GraphicTransTileDiamond, _: "diamond";
 		}
-		return "diamond";
 	}
 	
 	private function getDefaultAsset(str):Class<BitmapData>
 	{
-		switch(str)
+		return switch(str)
 		{
-			case "diamond": return GraphicTransTileDiamond;
-			case "circle": return GraphicTransTileCircle;
-			case "square": return GraphicTransTileSquare;
+			case "circle": GraphicTransTileCircle;
+			case "square": GraphicTransTileSquare;
+			case "diamond", _: GraphicTransTileDiamond;
 		}
-		return GraphicTransTileDiamond;
 	}
 	
 	private function getDirection(ix:Int, iy:Int):String
@@ -250,21 +245,4 @@ class MenuState extends FlxUIState
 				matchUI();
 		}
 	}
-	
-	/**
-	 * Function that is called when this state is destroyed - you might want to 
-	 * consider setting all objects this state uses to null to help garbage collection.
-	 */
-	override public function destroy():Void
-	{
-		super.destroy();
-	}
-
-	/**
-	 * Function that is called once every frame.
-	 */
-	override public function update():Void
-	{
-		super.update();
-	}	
 }
