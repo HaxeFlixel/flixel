@@ -2,7 +2,7 @@
 <project>
 	<icon path="assets/images/logo/HaxeFlixel.svg" />
 	
-	<assets path="assets/sounds" include="*.ogg" if="html5" />
+	<assets path="assets/sounds" include="*.ogg" if="html5" unless="unit-test" />
 	<assets path="assets/sounds" include="*.mp3" if="flash" embed="true" />
 	<assets path="assets/sounds" include="*.ogg" unless="flash || html5" embed="true" />
 	

@@ -53,7 +53,7 @@ class TestMain
 			#elseif js
 				js.Lib.eval("testResult(" + successful + ");");
 			#elseif sys
-				Sys.exit(0);
+				Sys.exit(successful ? 0 : 1);
 			#end
 		}
 		// if run from outside browser can get error which we can ignore

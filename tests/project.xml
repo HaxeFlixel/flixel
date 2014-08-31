@@ -5,7 +5,10 @@
 	
 	<source path="src" />
 	
-	<haxelib name="flixel" />
+	<set name="no-custom-backend" />
+	<set name="unit-test" />
+	
 	<haxelib name="munit" />
+	<haxelib name="flixel" />
 	<haxelib name="hamcrest" />
 </project>

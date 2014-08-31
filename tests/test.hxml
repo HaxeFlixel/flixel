@@ -7,7 +7,6 @@
 -lib hamcrest
 -lib flixel
 -lib openfl
--lib mcover
 
 --macro openfl.Lib.includeBackend('flash')
 --macro flixel.system.macros.FlxConditionals.run()
@@ -17,10 +16,10 @@
 -swf-version 11.8
 -swf bin/as3_test.swf
 
-#-cmd haxelib run lime build html5
+-cmd haxelib run lime build html5
 --next
 
 ## HTML5
 
-#-js bin/html5/bin/TestMain.js
-#--no-output
+-js bin/html5/bin/TestMain.js
+--no-output
