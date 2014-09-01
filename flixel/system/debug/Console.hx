@@ -109,7 +109,7 @@ class Console extends Window
 		addChild(_input);
 		
 		_input.addEventListener(FocusEvent.FOCUS_IN, onFocus);
-		_input.addEventListener(FocusEvent.FOCUS_OUT, onFIntereocusLost);
+		_input.addEventListener(FocusEvent.FOCUS_OUT, onFocusLost);
 		_input.addEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
 		
 		#if (cpp || neko) // workaround for broken TextField focus on native
