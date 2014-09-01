@@ -121,7 +121,6 @@ class Console extends Window
 		{
 			stageMouseDown = true;
 		});
-		//FlxG.stage.add
 		#end
 		
 		// Install commands

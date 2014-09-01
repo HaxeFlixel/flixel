@@ -409,10 +409,13 @@ class ConsoleCommands
 		_watchingMouse = !_watchingMouse;
 	}
 	
-	private function track(ObjectAndVariable):Void
+	private function track(ObjectAndVariable:String):Void
 	{
-		var pathToVariable:PathToVariable = ConsoleUtil.resolveObjectAndVariableFromMap(ObjectAndVariable, _console.registeredObjects);
-		FlxG.debugger.track(Reflect.getProperty(pathToVariable.object, pathToVariable.variableName));
+		if (ObjectAndVariable != null)
+		{
+			var pathToVariable:PathToVariable = ConsoleUtil.resolveObjectAndVariableFromMap(ObjectAndVariable, _console.registeredObjects);
+			FlxG.debugger.track(Reflect.getProperty(pathToVariable.object, pathToVariable.variableName));
+		}
 	}
 	
 	private function pause():Void
