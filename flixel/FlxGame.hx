@@ -39,8 +39,7 @@ import flixel.system.ui.FlxFocusLostScreen;
  * It is basically only used to create your game object in the first place,
  * after that FlxG and FlxState have all the useful stuff you actually need.
  */
-@:allow(flixel.FlxG)
-@:allow(flixel.system.frontEnds.VCRFrontEnd)
+@:allow(flixel)
 class FlxGame extends Sprite
 {
 	/**

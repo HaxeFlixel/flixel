@@ -1,11 +1,10 @@
 package flixel.system.debug;
 
 #if !FLX_NO_DEBUG
-import flash.errors.ArgumentError;
 import flash.events.Event;
 import flash.events.FocusEvent;
 import flash.events.KeyboardEvent;
-import flash.geom.Rectangle;
+import flash.events.MouseEvent;
 import flash.text.TextField;
 import flash.text.TextFieldType;
 import flash.text.TextFormat;
@@ -13,8 +12,6 @@ import flash.ui.Keyboard;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.system.debug.FlxDebugger;
-import flixel.util.FlxArrayUtil;
-import flixel.util.FlxStringUtil;
 
 /**
  * A powerful console for the flixel debugger screen with supports custom commands, registering 
@@ -66,6 +63,11 @@ class Console extends Window
 	 */
 	private var _input:TextField;
 	
+	#if (cpp || neko)
+	private var inputMouseDown:Bool = false;
+	private var stageMouseDown:Bool = false;
+	#end
+	
 	/**
 	 * Creates a new console window object.
 	 */	
@@ -107,8 +109,20 @@ class Console extends Window
 		addChild(_input);
 		
 		_input.addEventListener(FocusEvent.FOCUS_IN, onFocus);
-		_input.addEventListener(FocusEvent.FOCUS_OUT, onFocusLost);
+		_input.addEventListener(FocusEvent.FOCUS_OUT, onFIntereocusLost);
 		_input.addEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
+		
+		#if (cpp || neko) // workaround for broken TextField focus on native
+		_input.addEventListener(MouseEvent.MOUSE_DOWN, function(_)
+		{
+			inputMouseDown = true;
+		});
+		FlxG.stage.addEventListener(MouseEvent.MOUSE_DOWN, function(_)
+		{
+			stageMouseDown = true;
+		});
+		//FlxG.stage.add
+		#end
 		
 		// Install commands
 		#if !FLX_NO_DEBUG
@@ -116,7 +130,24 @@ class Console extends Window
 		#end
 	}
 	
-	private function onFocus(e:FocusEvent):Void
+	#if (cpp || neko)
+	override public function update():Void
+	{
+		super.update();
+		
+		if (FlxG.stage.focus == _input && stageMouseDown && !inputMouseDown)
+		{
+			FlxG.stage.focus = null;
+			// setting focus to null will trigger a focus lost event, let's undo that
+			FlxG.game.onFocus(null);
+		}
+		
+		stageMouseDown = false;
+		inputMouseDown = false;
+	}
+	#end
+	
+	private function onFocus(_):Void
 	{
 		#if !FLX_NO_DEBUG
 		#if flash 
@@ -135,7 +166,7 @@ class Console extends Window
 		#end
 	}
 	
-	private function onFocusLost(e:FocusEvent):Void
+	private function onFocusLost(_):Void
 	{
 		#if !FLX_NO_DEBUG
 		#if flash
@@ -258,7 +289,7 @@ class Console extends Window
 	private inline function getPreviousCommand():String
 	{
 		if (_historyIndex > 0)
-			_historyIndex --;
+			_historyIndex--;
 		
 		return cmdHistory[_historyIndex];
 	}
@@ -266,7 +297,7 @@ class Console extends Window
 	private inline function getNextCommand():String
 	{
 		if (_historyIndex < cmdHistory.length)
-			_historyIndex ++;
+			_historyIndex++;
 		
 		if (cmdHistory[_historyIndex] != null)
 			return cmdHistory[_historyIndex];
@@ -350,7 +381,8 @@ class Console extends Window
 }
 #end
 
-typedef Command = {
+typedef Command =
+{
 	aliases:Array<String>,
 	processFunction:Dynamic,
 	?help:String,
