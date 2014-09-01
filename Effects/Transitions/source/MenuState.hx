@@ -50,7 +50,7 @@ class MenuState extends FlxUIState
 			FlxTransitionableState.defaultTransOut.tileData = { asset:GraphicTransTileDiamond, width:32, height:32 };
 			
 			//Of course, this state has already been constructed, so we need to set a transOut value for it right now:
-			_transOut = FlxTransitionableState.defaultTransOut;
+			transOut = FlxTransitionableState.defaultTransOut;
 		}
 		
 		//Now we just have the UI synchronize with the starting values:
@@ -86,8 +86,8 @@ class MenuState extends FlxUIState
 		FlxTransitionableState.defaultTransOut.duration = out_duration.value;
 		FlxTransitionableState.defaultTransOut.tileData.asset = getDefaultAsset(out_tile.selectedId);
 		
-		_transIn = FlxTransitionableState.defaultTransIn;
-		_transOut = FlxTransitionableState.defaultTransOut;
+		transIn = FlxTransitionableState.defaultTransIn;
+		transOut = FlxTransitionableState.defaultTransOut;
 		
 		if (matchData)
 		{
