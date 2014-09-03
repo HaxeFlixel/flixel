@@ -43,6 +43,9 @@ private class Uniform {
  */
 class PostProcess extends OpenGLView
 {
+	private var screenWidth:Int;
+	private var screenHeight:Int;
+
 	/**
 	 * Create a new PostProcess object
 	 * @param fragmentShader  A glsl file in your assets path
@@ -131,8 +134,10 @@ class PostProcess extends OpenGLView
 		if (texture != null) GL.deleteTexture(texture);
 		if (renderbuffer != null) GL.deleteRenderbuffer(renderbuffer);
 
-		createTexture(FlxG.width, FlxG.height);
-		createRenderbuffer(FlxG.width, FlxG.height);
+		this.screenWidth = FlxG.stage.stageWidth;
+		this.screenHeight = FlxG.stage.stageHeight;
+		createTexture(screenWidth, screenHeight);
+		createRenderbuffer(screenWidth, screenHeight);
 		
 		GL.bindFramebuffer(GL.FRAMEBUFFER, null);
 	}
@@ -184,7 +189,7 @@ class PostProcess extends OpenGLView
 		time += FlxG.elapsed;
 		
 		GL.bindFramebuffer(GL.FRAMEBUFFER, renderTo);
-		GL.viewport(0, 0, FlxG.width, FlxG.height);
+		GL.viewport(0, 0, screenWidth, screenHeight);
 		
 		shader.bind();
 
@@ -201,7 +206,7 @@ class PostProcess extends OpenGLView
 
 		GL.uniform1i(imageUniform, 0);
 		GL.uniform1f(timeUniform, time);
-		GL.uniform2f(resolutionUniform, FlxG.width, FlxG.height);
+		GL.uniform2f(resolutionUniform, screenWidth, screenHeight);
 
 		//for (u in uniforms) GL.uniform1f(u.id, u.value);
 		var it = uniforms.iterator();
