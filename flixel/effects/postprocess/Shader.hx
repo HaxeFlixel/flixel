@@ -1,5 +1,6 @@
 package flixel.effects.postprocess;
 
+#if FLX_POST_PROCESS
 import openfl.gl.*;
 
 /**
@@ -88,3 +89,4 @@ typedef ShaderSource =
 	var src:String;
 	var fragment:Bool;
 }
+#end
