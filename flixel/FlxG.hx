@@ -459,6 +459,7 @@ class FlxG
 		#end
 	}
 	
+	#if FLX_POST_PROCESS
 	private static function chainPostProcesses():Void
 	{
 		var postProcesses = game.postProcesses;
@@ -472,6 +473,7 @@ class FlxG
 			postProcesses[postProcesses.length - 1].to = null;
 		}
 	}
+	#end
 	
 	/**
 	 * Opens a web page, by default a new tab or window. If the URL does not 
