@@ -10,6 +10,7 @@ import flash.events.FocusEvent;
 import flash.geom.ColorTransform;
 import flash.geom.Matrix;
 import flash.Lib;
+import flixel.effects.postprocess.PostProcess;
 import flixel.math.FlxAngle;
 import flixel.math.FlxRandom;
 import flixel.system.FlxSplash;
@@ -20,6 +21,10 @@ import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import openfl.Assets;
+
+#if FLX_POST_PROCESS
+import openfl.display.OpenGLView;
+#end
 
 #if !FLX_NO_DEBUG
 import flixel.system.debug.FlxDebugger;
@@ -205,6 +210,17 @@ class FlxGame extends Sprite
 	private var _displayColorTransform = new ColorTransform();
 	#end
 	
+	#if FLX_POST_PROCESS
+	/**
+	 * Sprite for postprocessing effects
+	 */
+	private var postProcessLayer:Sprite = new Sprite();
+	/**
+	 * Post process effects active on the postProcessLayer
+	 */
+	private var postProcesses:Array<PostProcess> = [];
+	#end
+	
 	/**
 	 * Instantiate a new game object.
 	 * 
@@ -269,6 +285,11 @@ class FlxGame extends Sprite
 		stage.frameRate = FlxG.drawFramerate;
 		
 		addChild(_inputContainer);
+		
+		#if FLX_POST_PROCESS
+		if (OpenGLView.isSupported)
+			addChild(postProcessLayer);
+		#end
 		
 		// Creating the debugger overlay
 		#if !FLX_NO_DEBUG
@@ -453,6 +474,13 @@ class FlxGame extends Sprite
 		
 		_inputContainer.scaleX = 1 / FlxG.game.scaleX;
 		_inputContainer.scaleY = 1 / FlxG.game.scaleY;
+		
+		#if FLX_POST_PROCESS
+		for (postProcess in postProcesses)
+		{
+			postProcess.rebuild();
+		}
+		#end
 	}
 	
 	/**
@@ -699,6 +727,13 @@ class FlxGame extends Sprite
 		
 		updateInput();
 		
+		#if FLX_POST_PROCESS
+		for (postProcess in postProcesses)
+		{
+			postProcess.update(FlxG.elapsed);
+		}
+		#end
+		
 		#if !FLX_NO_SOUND_SYSTEM
 		FlxG.sound.update(FlxG.elapsed);
 		#end
@@ -803,6 +838,13 @@ class FlxGame extends Sprite
 		
 		#if FLX_RENDER_TILE
 		TileSheetExt._DRAWCALLS = 0;
+		#end
+		
+		#if FLX_POST_PROCESS
+		for (postProcess in postProcesses)
+		{
+			postProcess.capture();
+		}
 		#end
 		
 		FlxG.cameras.lock();

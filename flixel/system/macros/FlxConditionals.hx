@@ -21,6 +21,7 @@ class FlxConditionals
 	static inline var FLX_OPENFL_JOYSTICK_API = "FLX_OPENFL_JOYSTICK_API";
 	static inline var FLX_SOUND_TRAY = "FLX_SOUND_TRAY";
 	static inline var FLX_POINTER_INPUT = "FLX_POINTER_INPUT";
+	static inline var FLX_POST_PROCESS = "FLX_POST_PROCESS";
 	
 	/**
 	 * User-defined conditionals
@@ -56,6 +57,7 @@ class FlxConditionals
 		abortIfDefined(FLX_OPENFL_JOYSTICK_API);
 		abortIfDefined(FLX_SOUND_TRAY);
 		abortIfDefined(FLX_POINTER_INPUT);
+		abortIfDefined(FLX_POST_PROCESS);
 	}
 	
 	private static function abortIfDefined(conditional:String)
@@ -116,6 +118,11 @@ class FlxConditionals
 		if (!defined(FLX_NO_GAMEPAD) && defined("bitfive"))
 		{
 			Compiler.define("bitfive_gamepads");
+		}
+		
+		if (defined("cpp") || defined("neko"))
+		{
+			Compiler.define(FLX_POST_PROCESS);
 		}
 	}
 	

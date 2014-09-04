@@ -5,7 +5,11 @@ import flash.display.Stage;
 import flash.display.StageDisplayState;
 import flash.Lib;
 import flash.net.URLRequest;
+import flixel.effects.postprocess.PostProcess;
 import flixel.FlxBasic;
+import flixel.math.FlxMath;
+import flixel.math.FlxRandom;
+import flixel.math.FlxRect;
 import flixel.system.FlxAssets;
 import flixel.system.FlxQuadTree;
 import flixel.system.FlxVersion;
@@ -24,10 +28,9 @@ import flixel.system.scaleModes.BaseScaleMode;
 import flixel.system.scaleModes.RatioScaleMode;
 import flixel.text.pxText.PxBitmapFont;
 import flixel.util.FlxCollision;
-import flixel.math.FlxMath;
-import flixel.math.FlxRandom;
-import flixel.math.FlxRect;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSave;
+import openfl.display.OpenGLView;
 
 #if !FLX_NO_TOUCH
 import flixel.input.touch.FlxTouchManager;
@@ -422,6 +425,33 @@ class FlxG
 			game.removeChild(Child);
 		}
 		return Child;
+	}
+	
+	public static function addPostProcess(postProcess:PostProcess):PostProcess 
+	{
+		#if FLX_POST_PROCESS
+		if (OpenGLView.isSupported)
+		{
+			game.postProcessLayer.addChild(postProcess);
+			game.postProcesses.push(postProcess);
+		}
+		else
+		{
+			FlxG.log.error("Shaders are not supported on this platform.");
+		}
+		#end
+		
+		return postProcess;
+	}
+	
+	public static function removePostProcess(postProcess:PostProcess):Bool
+	{
+		#if FLX_POST_PROCESS
+		FlxDestroyUtil.removeChild(game.postProcessLayer, postProcess);
+		return game.postProcesses.remove(postProcess);
+		#else
+		return false;
+		#end
 	}
 	
 	/**
