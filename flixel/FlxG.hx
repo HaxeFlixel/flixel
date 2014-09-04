@@ -424,8 +424,17 @@ class FlxG
 		#if FLX_POST_PROCESS
 		if (OpenGLView.isSupported)
 		{
+			var postProcesses = game.postProcesses;
+			
+			// chaining
+			var length = postProcesses.length;
+			if (length > 0)
+			{
+				postProcesses[length - 1].to = postProcess;
+			}
+			
 			game.postProcessLayer.addChild(postProcess);
-			game.postProcesses.push(postProcess);
+			postProcesses.push(postProcess);
 		}
 		else
 		{
@@ -436,14 +445,32 @@ class FlxG
 		return postProcess;
 	}
 	
-	public static function removePostProcess(postProcess:PostProcess):Bool
+	public static function removePostProcess(postProcess:PostProcess):Void
 	{
 		#if FLX_POST_PROCESS
-		FlxDestroyUtil.removeChild(game.postProcessLayer, postProcess);
-		return game.postProcesses.remove(postProcess);
-		#else
-		return false;
+		var postProcesses = game.postProcesses;
+		if (postProcesses.remove(postProcess))
+		{
+			chainPostProcesses();
+			postProcess.to = null;
+			
+			FlxDestroyUtil.removeChild(game.postProcessLayer, postProcess);
+		}
 		#end
+	}
+	
+	private static function chainPostProcesses():Void
+	{
+		var postProcesses = game.postProcesses;
+		
+		if (postProcesses.length > 0)
+		{
+			for (i in 0...postProcesses.length - 1)
+			{
+				postProcesses[i].to = postProcesses[i + 1];
+			}
+			postProcesses[postProcesses.length - 1].to = null;
+		}
 	}
 	
 	/**

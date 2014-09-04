@@ -728,9 +728,9 @@ class FlxGame extends Sprite
 		updateInput();
 		
 		#if FLX_POST_PROCESS
-		for (postProcess in postProcesses)
+		if (postProcesses[0] != null)
 		{
-			postProcess.update(FlxG.elapsed);
+			postProcesses[0].update(FlxG.elapsed);
 		}
 		#end
 		
@@ -841,9 +841,9 @@ class FlxGame extends Sprite
 		#end
 		
 		#if FLX_POST_PROCESS
-		for (postProcess in postProcesses)
+		if (postProcesses[0] != null)
 		{
-			postProcess.capture();
+			postProcesses[0].capture();
 		}
 		#end
 		
