@@ -26,6 +26,7 @@
  * removed get()
  * callback: fixed passing old frameIndex value being passed instead of the current one
  * add() now makes a copy of the Frames array before calling splice() on it
+ * fixed finished not being true during the last animation frame in the callback
 * FlxSpriteUtil:
  * drawLine(): default settings for lineStyle are now thickness 1 and color white
  * fadeIn() and fadeOut() now tween alpha instead of color
@@ -57,6 +58,7 @@
 * Console:
  * the set command now supports arrays
  * the fields command now has type info for the fields
+ * fixed focus on native
 * FlxColor:
  * FlxColor is now an abstract, interchangable with Int - the FlxColorUtil functions have been merged into it
  * the color presets have been reduced to a smaller, more useful selection
@@ -79,10 +81,12 @@
 * FlxGamepadManager: 
  * better handling of disconnecting and reconnecting gamepads. getByID() can now return null.
  * now supported on HTML5 with openfl-bitfive
+ * anyButton() now has a state argument
 * FlxGamepad:
  * added a connected flag
  * added deadZoneMode, circular deadzones are now supported
  * getXAxis() and getYAxis() now take FlxGamepadAnalogStick as parameters (for example XboxButtonID.LEFT_ANALOG_STICK)
+ * anyButton() now has a state argument
 * FlxRandom:
  * FlxRandom functions are now member functions, call FlxG.random instead of FlxRandom
  * exposed currentSeed as an external representation of internalSeed
@@ -152,8 +156,15 @@
  * complete callback parameter in options is now called onComplete. Its type, CompleteCallback, is now called TweenCallback.
  * Added onStart and onUpdate callback parameters in options
  * fixed active = false; not doing anything during onComplete() of LOOPING or PINGPONG tweens
-* FlxTimer: timers with a time of 0 can now be started
+* FlxTimer:
+ * timers with a time of 0 can now be started
+ * complete was renamed to onComplete
 * FlxSwipe: duration now uses seconds instead of milliseconds
+* FlxPath and motion tweens now restore the original immovable value of FlxObjects after completion
+* FlxAssets#getFileReferences(): now ignores invisible files
+* The function signature of update() was changed to update(elapsed:Float). The elapsed argument should be used instead of FlxG.elapsed.
+* FlxG.inputs: added resetOnStateSwitch
+* Added support for post-processing shaders on native targets via FlxG.addPostProcess() / removePostProcess() and flixel.effects.postprocess
 
 3.3.5
 ------------------------------
