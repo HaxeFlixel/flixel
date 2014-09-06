@@ -11,6 +11,7 @@ import flixel.input.mouse.FlxMouseButton;
 import flixel.input.touch.FlxTouch;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
+import flixel.system.FlxAssets;
 import flixel.system.FlxSound;
 import flixel.text.FlxText;
 import flixel.util.FlxDestroyUtil;
@@ -179,7 +180,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	{
 		super(X, Y);
 		
-		loadGraphic(GraphicButton, true, 80, 20);
+		loadGraphic(FlxAssets.DEFAULT_BUTTON_GRAPHIC, true, 80, 20);
 		
 		onUp = new FlxButtonEvent(OnClick);
 		onDown = new FlxButtonEvent();

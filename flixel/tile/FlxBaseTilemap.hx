@@ -10,6 +10,8 @@ import flixel.system.FlxAssets;
 import flixel.group.FlxGroup;
 import openfl.Assets;
 
+// TODO: implement methods like setRect(), clearRect(), shiftTiles() from HaxePunk
+
 class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 {
 	/**
@@ -28,6 +30,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * Read-only variable, do NOT recommend changing after the map is loaded!
 	 */
 	public var totalTiles:Int = 0;
+	
 	/**
 	 * Set this to create your own image index remapper, so you can create your own tile layouts.
 	 * Mostly useful in combination with the auto-tilers.
@@ -86,7 +89,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		throw "updateTile must be implemented";
 	}
 	
-	private function cacheGraphics(TileWidth:Int, TileHeight:Int, TileGraphic:Dynamic):Void
+	private function cacheGraphics(TileWidth:Int, TileHeight:Int, TileGraphic:FlxGraphicAsset):Void
 	{
 		throw "cacheGraphics must be implemented";
 	}
@@ -287,21 +290,18 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		// Pre-process the map data if it's auto-tiled
 		if (auto != OFF)
 		{
-			var i:Int = 0;
-			while (i < totalTiles)
+			for (i in 0...totalTiles)
 			{
-				autoTile(i++);
+				autoTile(i);
 			}
 		}
 	}
 	
 	private function applyCustomRemap():Void
 	{
-		var i:Int = 0;
-
 		if (customTileRemap != null) 
 		{
-			while (i < totalTiles) 
+			for (i in 0...totalTiles) 
 			{
 				var oldIndex = _data[i];
 				var newIndex = oldIndex;
@@ -310,22 +310,19 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 					newIndex = customTileRemap[oldIndex];
 				}
 				_data[i] = newIndex;
-				i++;
 			}
 		}
 	}
 	
 	private function randomizeIndices():Void
 	{
-		var i:Int = 0;
-
 		if (_randomIndices != null)
 		{
 			var randLambda:Void->Float = _randomLambda != null ? _randomLambda : function() {
 				return FlxG.random.float();
 			};
 			
-			while (i < totalTiles)
+			for (i in 0...totalTiles)
 			{
 				var oldIndex = _data[i];
 				var j = 0;
@@ -340,7 +337,6 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 					j++;
 				}
 				_data[i] = newIndex;
-				i++;
 			}
 		}
 	}
@@ -474,10 +470,9 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	public function getTileInstances(Index:Int):Array<Int>
 	{
 		var array:Array<Int> = null;
-		var i:Int = 0;
 		var l:Int = widthInTiles * heightInTiles;
 		
-		while (i < l)
+		for (i in 0...l)
 		{
 			if (_data[i] == Index)
 			{
@@ -487,7 +482,6 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 				}
 				array.push(i);
 			}
-			i++;
 		}
 		
 		return array;
@@ -588,12 +582,11 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		}
 		
 		var tile:Tile;
-		var i:Int = Tile;
 		var l:Int = Tile + Range;
 		
-		while (i < l)
+		for (i in Tile...l)
 		{
-			tile = _tileObjects[i++];
+			tile = _tileObjects[i];
 			tile.allowCollisions = AllowCollisions;
 			(cast tile).callbackFunction = Callback;
 			(cast tile).filter = CallbackFilter;
@@ -614,15 +607,13 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 			return _data;
 		}
 		
-		var i:Int = 0;
 		var l:Int = _data.length;
 		var data:Array<Int> = new Array();
 		FlxArrayUtil.setLength(data, l);
 		
-		while (i < l)
+		for (i in 0...l)
 		{
 			data[i] = (_tileObjects[_data[i]].allowCollisions > 0) ? 1 : 0;
-			i++;
 		}
 		
 		return data;
@@ -994,10 +985,9 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		var deltaNext:Float;
 		var last:FlxPoint = Points[0];
 		var node:FlxPoint;
-		var i:Int = 1;
 		var l:Int = Points.length - 1;
 		
-		while (i < l)
+		for (i in 1...l)
 		{
 			node = Points[i];
 			deltaPrevious = (node.x - last.x)/(node.y - last.y);
@@ -1011,8 +1001,6 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 			{
 				last = node;
 			}
-			
-			i++;
 		}
 	}
 

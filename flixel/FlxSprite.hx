@@ -9,21 +9,18 @@ import flash.geom.Rectangle;
 import flixel.animation.FlxAnimationController;
 import flixel.FlxBasic;
 import flixel.FlxG;
+import flixel.graphics.FlxGraphic;
+import flixel.graphics.frames.FlxFrame;
+import flixel.graphics.frames.FlxFramesCollection;
 import flixel.math.FlxAngle;
 import flixel.math.FlxMath;
+import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxGraphicAsset;
-import flixel.system.FlxAssets.FlxTextureAsset;
 import flixel.system.layer.DrawStackItem;
-import flixel.system.layer.frames.FlxFrame;
-import flixel.system.layer.frames.FlxSpriteFrames;
-import flixel.system.layer.Region;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
-import flixel.util.loaders.CachedGraphics;
-import flixel.util.loaders.TexturePackerData;
-import flixel.util.loaders.TextureRegion;
 import openfl.display.Tilesheet;
 
 @:bitmap("assets/images/logo/default.png")
@@ -74,13 +71,12 @@ class FlxSprite extends FlxObject
 	/**
 	 * The total number of frames in this image.  WARNING: assumes each row in the sprite sheet is full!
 	 */
-	public var frames(default, null):Int = 0;
+	public var numFrames(default, null):Int = 0;
 	/**
 	 * Rendering variables.
 	 */
-	public var region(default, null):Region;
-	public var framesData(default, null):FlxSpriteFrames;
-	public var cachedGraphics(default, set):CachedGraphics;
+	public var frames(default, set):FlxFramesCollection;
+	public var graphic(default, set):FlxGraphic;
 	/**
 	 * The minimum angle (out of 360°) for which a new baked rotation exists. Example: 90 means there 
 	 * are 4 baked rotations in the spritesheet. 0 if this sprite does not have any baked rotations.
@@ -163,7 +159,7 @@ class FlxSprite extends FlxObject
 	/**
 	 * Internal, helps with animation, caching and drawing.
 	 */
-	private var _matrix:Matrix;
+	private var _matrix:FlxMatrix;
 	/**
 	 * These vars are being used for rendering in some of FlxSprite subclasses (FlxTileblock, FlxBar, 
 	 * FlxBitmapFont and FlxBitmapTextField) and for checks if the sprite is in camera's view.
@@ -209,7 +205,7 @@ class FlxSprite extends FlxObject
 		offset = FlxPoint.get();
 		origin = FlxPoint.get();
 		scale = FlxPoint.get(1, 1);
-		_matrix = new Matrix();
+		_matrix = new FlxMatrix();
 	}
 	
 	/**
@@ -518,95 +514,6 @@ class FlxSprite extends FlxObject
 		
 		animation.createPrerotated();
 		resetHelpers();
-		
-		graphicLoaded();
-		return this;
-	}
-	
-	/**
-	 * Loads TexturePacker atlas.
-	 * 
-	 * @param	Data		Atlas data holding links to json-data and atlas image
-	 * @param	Unique		Optional, whether the graphic should be a unique instance in the graphics cache.  Default is false.
-	 * @param	FrameName	Default frame to show. If null then will be used first available frame.
-	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
-	 */
-	public function loadGraphicFromTexture(Data:FlxTextureAsset, Unique:Bool = false, ?FrameName:String):FlxSprite
-	{
-		bakedRotationAngle = 0;
-		
-		if (Std.is(Data, CachedGraphics))
-		{
-			cachedGraphics = cast Data;
-			if (cachedGraphics.data == null)
-			{
-				return null;
-			}
-		}
-		else if (Std.is(Data, TexturePackerData))
-		{
-			var textureData:TexturePackerData = cast Data;
-			cachedGraphics = FlxG.bitmap.add(textureData.assetName, Unique);
-			cachedGraphics.data = textureData;
-		}
-		else
-		{
-			return null;
-		}
-		
-		region = new Region();
-		region.width = cachedGraphics.bitmap.width;
-		region.height = cachedGraphics.bitmap.height;
-		
-		animation.destroyAnimations();
-		updateFrameData();
-		resetHelpers();
-		
-		if (FrameName != null)
-		{
-			animation.frameName = FrameName;
-		}
-		
-		resetSizeFromFrame();
-		centerOrigin();
-		
-		graphicLoaded();
-		return this;
-	}
-	
-	/**
-	 * Creates a pre-rotated sprite sheet from provided image in atlas.
-	 * This can make a huge difference in graphical performance on flash target!
-	 * 
-	 * @param	Data			Atlas data holding links to json-data and atlas image
-	 * @param	Image			The image from atlas you want to rotate and stamp.
-	 * @param	Rotations		The number of rotation frames the final sprite should have.  For small sprites this can be quite a large number (360 even) without any problems.
-	 * @param	AntiAliasing	Whether to use high quality rotations when creating the graphic.  Default is false.
-	 * @param	AutoBuffer		Whether to automatically increase the image size to accomodate rotated corners.
-	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
-	 */
-	public function loadRotatedGraphicFromTexture(Data:Dynamic, Image:String, Rotations:Int = 16, AntiAliasing:Bool = false, AutoBuffer:Bool = false):FlxSprite
-	{
-		var temp = loadGraphicFromTexture(Data);
-		
-		if (temp == null)
-		{
-			return null;
-		}
-		
-		animation.frameName = Image;
-		
-		#if FLX_RENDER_TILE
-		antialiasing = AntiAliasing;
-		#else
-		var key:String = Data.assetName + ":" + Image;
-		var frameBitmapData:BitmapData = getFlxFrameBitmapData();
-		if (FlxG.bitmap.get(key) == null)
-		{
-			frameBitmapData = frameBitmapData.clone();
-		}
-		loadRotatedGraphic(frameBitmapData, Rotations, -1, AntiAliasing, AutoBuffer, key);
-		#end
 		
 		graphicLoaded();
 		return this;
@@ -1216,20 +1123,6 @@ class FlxSprite extends FlxObject
 		}
 	}
 	
-	private function setFramesData(newFramesData:FlxSpriteFrames)
-	{
-		if (newFramesData != null)
-		{
-			framesData = newFramesData;
-			
-			frames = framesData.frames.length;
-			animation.frameIndex = 0;
-			frame = framesData.frames[0];
-			
-			resetSizeFromFrame();
-		}
-	}
-	
 	/**
 	 * Retrieves BitmapData of current FlxFrame. Updates framePixels.
 	 */
@@ -1571,27 +1464,92 @@ class FlxSprite extends FlxObject
 	}
 	
 	/**
-	 * Internal function for setting cachedGraphics property for this object. 
-	 * It changes cachedGraphics' useCount also for better memory tracking.
+	 * Internal function for setting graphic property for this object. 
+	 * It changes graphics' useCount also for better memory tracking.
 	 */
-	private function set_cachedGraphics(Value:CachedGraphics):CachedGraphics
+	private function set_graphic(Value:FlxGraphic):FlxGraphic
 	{
-		//If graphics are changing
-		if (cachedGraphics != Value)
+		var oldGraphic:FlxGraphic = graphic;
+		
+		if ((graphic != Value) && (Value != null))
 		{
-			//If new graphic is not null, increase its use count
-			if (Value != null)
-			{
-				Value.useCount++;
-			}
-			//If old graphic is not null, decrease its use count
-			if (cachedGraphics != null)
-			{
-				cachedGraphics.useCount--;
-			}
+			Value.useCount++;
 		}
 		
-		return cachedGraphics = Value;
+		if ((oldGraphic != null) && (oldGraphic != Value))
+		{
+			oldGraphic.useCount--;
+		}
+		
+		return graphic = Value;
+	}
+	
+	private function get_clipRect():FlxRect
+	{
+		return _clipRect;
+	}
+	
+	private function set_clipRect(rect:FlxRect):FlxRect
+	{
+		if (frames != null)
+		{
+			var anim:FlxAnimationController = animation;
+			animation = null;
+			
+			if (rect != null)
+			{
+				frames = ClippedFrames.clip(frames, rect);
+				_clipRect = rect.copyTo(new FlxRect());
+			}
+			else
+			{
+				if (frames.type == FrameCollectionType.CLIPPED)
+				{
+					frames = cast(frames, ClippedFrames).original;
+				}
+				
+				_clipRect = null;
+			}
+			
+			frame = frames.frames[anim.frameIndex];
+			animation = anim;
+		}
+		
+		return rect;
+	}
+	
+	/**
+	 * Frames setter. Used by "loadGraphic" methods, but you can load generated frames yourself 
+	 * (this should be even faster since engine doesn't need to do bunch of additional stuff).
+	 * 
+	 * @param	Frames	frames to load into this sprite.
+	 * @return	loaded frames.
+	 */
+	private function set_frames(Frames:FlxFramesCollection):FlxFramesCollection
+	{
+		if (Frames != null)
+		{
+			graphic = Frames.parent;
+			frames = Frames;
+			frame = frames.getByIndex(0);
+			numFrames = frames.numFrames;
+			resetHelpers();
+			bakedRotationAngle = 0;
+		}
+		else
+		{
+			frames = null;
+			frame = null;
+			graphic = null;
+		}
+		
+		_clipRect = null;
+		
+		if (animation != null)
+		{
+			animation.destroyAnimations();
+		}
+		return Frames;
 	}
 	
 	private function set_flipX(Value:Bool):Bool

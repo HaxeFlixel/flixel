@@ -31,12 +31,15 @@ class FlxBGSprite extends FlxSprite
 				continue;
 			}
 			
-			drawItem = camera.getDrawStackItem(cachedGraphics, isColored, _blendInt);
+			drawItem = camera.getDrawStackItem(graphic, isColored, _blendInt);
 			
-			_point.x = camera.width * 0.5;
-			_point.y = camera.height * 0.5;
+			var scaledWidth:Float = camera.width * camera.totalScaleX;
+			var scaleHeight:Float = camera.height * camera.totalScaleY;
 			
-			setDrawData(drawItem, camera, camera.width, 0, 0, camera.height);
+			_point.x = 0.5 * scaledWidth;
+			_point.y = 0.5 * scaleHeight;
+			
+			drawItem.setDrawData(_point, frame.tileID, scaledWidth, 0, 0, scaleHeight, isColored, color, alpha * camera.alpha);
 			
 			#if !FLX_NO_DEBUG
 			FlxBasic.visibleCount++;

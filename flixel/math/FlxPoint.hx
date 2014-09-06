@@ -11,6 +11,9 @@ import flixel.util.FlxStringUtil;
  */
 class FlxPoint implements IFlxPooled
 {
+	public static var FLX_POINT:FlxPoint = new FlxPoint();
+	public static var POINT:Point = new Point();
+	
 	/**
 	 * Used to account for floating-point inaccuracies in the equals() function.
 	 */
@@ -202,7 +205,7 @@ class FlxPoint implements IFlxPooled
 	 * @param	Point	Any Point.
 	 * @return	A reference to the altered point parameter.
 	 */
-	public inline function copyToFlash(?FlashPoint:Point):Point
+	public inline function copyToFlash(FlashPoint:Point):Point
 	{
 		if (FlashPoint == null)
 		{

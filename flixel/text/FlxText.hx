@@ -1,7 +1,6 @@
 package flixel.text;
 
 import flash.display.BitmapData;
-import flash.filters.BitmapFilter;
 import flash.geom.ColorTransform;
 import flash.text.TextField;
 import flash.text.TextFieldAutoSize;
@@ -10,6 +9,7 @@ import flash.text.TextFormatAlign;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
+import flixel.graphics.FlxGraphic;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.system.FlxAssets;
@@ -18,9 +18,11 @@ import flixel.text.FlxText.FlxTextFormat;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.helpers.FlxRange;
-import flixel.util.loaders.CachedGraphics;
 import openfl.Assets;
 using StringTools;
+
+// TODO: think about filters and text (since this class overrides calcFrame() method with custom behavior)
+// TODO: change calcFrame() method for it
 
 /**
  * Extends FlxSprite to support rendering text. Can tint, fade, rotate and scale just like a sprite. Doesn't really animate 
@@ -132,10 +134,6 @@ class FlxText extends FlxSprite
 	 */
 	private var _formatRanges:Array<FlxTextFormatRange> = [];
 	
-	private var _filters:Array<BitmapFilter>;
-	private var _widthInc:Int = 0;
-	private var _heightInc:Int = 0;
-	
 	private var _font:String;
 	
 	/**
@@ -152,8 +150,6 @@ class FlxText extends FlxSprite
 	public function new(X:Float = 0, Y:Float = 0, FieldWidth:Float = 0, ?Text:String, Size:Float = 8, EmbeddedFont:Bool = true)
 	{
 		super(X, Y);
-		
-		_filters = [];
 		
 		var setTextEmpty:Bool = false;
 		if (Text == null || Text == "")
@@ -218,7 +214,6 @@ class FlxText extends FlxSprite
 		_font = null;
 		_defaultFormat = null;
 		_formatAdjusted = null;
-		_filters = null;
 		shadowOffset = FlxDestroyUtil.put(shadowOffset);
 		super.destroy();
 	}
@@ -411,10 +406,7 @@ class FlxText extends FlxSprite
 	public function setFormat(?Font:String, Size:Float = 8, Color:FlxColor = FlxColor.WHITE, ?Alignment:FlxTextAlign, 
 		?BorderStyle:FlxTextBorderStyle, BorderColor:FlxColor = FlxColor.TRANSPARENT, Embedded:Bool = true):FlxText
 	{
-		if (BorderStyle == null)
-		{
-			BorderStyle = NONE;
-		}
+		BorderStyle = (BorderStyle == null) ? NONE : BorderStyle;
 		
 		if (Embedded)
 		{
@@ -449,42 +441,6 @@ class FlxText extends FlxSprite
 		borderColor = Color;
 		borderSize = Size;
 		borderQuality = Quality;
-	}
-	
-	public inline function addFilter(filter:BitmapFilter, widthInc:Int = 0, heightInc:Int = 0):Void
-	{
-		_filters.push(filter);
-		_widthInc = widthInc;
-		_heightInc = heightInc;
-		dirty = true;
-	}
-	
-	public function removeFilter(filter:BitmapFilter):Void
-	{
-		var removed:Bool = _filters.remove(filter);
-		if (removed)
-		{
-			dirty = true;
-		}
-	}
-	
-	public function clearFilters():Void
-	{
-		if (_filters.length > 0)
-		{
-			dirty = true;
-		}
-		_filters = [];
-	}
-	
-	override public function updateFrameData():Void
-	{
-		if (cachedGraphics != null)
-		{
-			framesData = cachedGraphics.tilesheet.getSpriteSheetFrames(region);
-			frame = framesData.frames[0];
-			frames = 1;
-		}
 	}
 	
 	private function set_fieldWidth(value:Float):Float
@@ -538,10 +494,7 @@ class FlxText extends FlxSprite
 		var ot:String = textField.text;
 		textField.text = Text;
 		
-		if (textField.text != ot)
-		{
-			dirty = true;
-		}
+		dirty = (textField.text != ot) || dirty;
 		
 		return textField.text;
 	}
@@ -713,19 +666,20 @@ class FlxText extends FlxSprite
 		{
 			dirty = true;
 		}
+		
 		borderQuality = Value;
 		
 		return Value;
 	}
 	
-	override private function set_cachedGraphics(Value:CachedGraphics):CachedGraphics 
+	override private function set_graphic(Value:FlxGraphic):FlxGraphic 
 	{
-		var cached:CachedGraphics = super.set_cachedGraphics(Value);
+		var graph:FlxGraphic = super.set_graphic(Value);
 		
 		if (Value != null)
 			Value.destroyOnNoUse = true;
 		
-		return cached;
+		return graph;
 	}
 	
 	override private function updateColorTransform():Void
@@ -757,12 +711,12 @@ class FlxText extends FlxSprite
 	
 	private function regenGraphics():Void
 	{
-		var oldWidth:Float = cachedGraphics.bitmap.width;
-		var oldHeight:Float = cachedGraphics.bitmap.height;
+		var oldWidth:Int = graphic.width;
+		var oldHeight:Int = graphic.height;
 		
-		var newWidth:Float = textField.width + _widthInc;
+		var newWidth:Float = textField.width;
 		// Account for 2px gutter on top and bottom (that's why there is "+ 4")
-		var newHeight:Float = textField.textHeight + _heightInc + 4;
+		var newHeight:Float = textField.textHeight + 4;
 		
 		// prevent text height from shrinking on flash if text == ""
 		if (textField.textHeight == 0) 
@@ -773,9 +727,8 @@ class FlxText extends FlxSprite
 		if (oldWidth != newWidth || oldHeight != newHeight)
 		{
 			// Need to generate a new buffer to store the text graphic
-			height = newHeight - _heightInc;
-			var key:String = cachedGraphics.key;
-			FlxG.bitmap.remove(key);
+			height = newHeight;
+			var key:String = FlxG.bitmap.getUniqueKey("text");
 			
 			makeGraphic(Std.int(newWidth), Std.int(newHeight), FlxColor.TRANSPARENT, false, key);
 			frameHeight = Std.int(height);
@@ -787,7 +740,7 @@ class FlxText extends FlxSprite
 		}
 		else // Else just clear the old buffer before redrawing the text
 		{
-			cachedGraphics.bitmap.fillRect(_flashRect, FlxColor.TRANSPARENT);
+			graphic.bitmap.fillRect(_flashRect, FlxColor.TRANSPARENT);
 		}
 	}
 	
@@ -803,11 +756,6 @@ class FlxText extends FlxSprite
 			return;
 		}
 		
-		if (_filters != null)
-		{
-			textField.filters = _filters;
-		}
-		
 		regenGraphics();
 		
 		if (textField != null && textField.text != null && textField.text.length > 0)
@@ -816,7 +764,6 @@ class FlxText extends FlxSprite
 			copyTextFormat(_defaultFormat, _formatAdjusted);
 			
 			_matrix.identity();
-			_matrix.translate(Std.int(0.5 * _widthInc), Std.int(0.5 * _heightInc));
 			
 			// If it's a single, centered line of text, we center it ourselves so it doesn't blur to hell
 			if (_defaultFormat.align == TextFormatAlign.CENTER && textField.numLines == 1)
@@ -836,10 +783,8 @@ class FlxText extends FlxSprite
 			applyBorderStyle();
 			applyFormats(_formatAdjusted, false);
 
-			cachedGraphics.bitmap.draw(textField, _matrix);
+			graphic.bitmap.draw(textField, _matrix);
 		}
-		
-		dirty = false;
 		
 		#if FLX_RENDER_TILE
 		if (!RunOnCpp)
@@ -848,19 +793,8 @@ class FlxText extends FlxSprite
 		}
 		#end
 		
-		//Finally, update the visible pixels
-		if (framePixels == null || framePixels.width != cachedGraphics.bitmap.width || framePixels.height != cachedGraphics.bitmap.height)
-		{
-			framePixels = FlxDestroyUtil.dispose(framePixels);
-			framePixels = new BitmapData(cachedGraphics.bitmap.width, cachedGraphics.bitmap.height, true, 0);
-		}
-		
-		framePixels.copyPixels(cachedGraphics.bitmap, _flashRect, _flashPointZero);
-		
-		if (useColorTransform) 
-		{
-			framePixels.colorTransform(_flashRect, colorTransform);
-		}
+		dirty = true;
+		getFlxFrameBitmapData();
 	}
 	
 	private function applyBorderStyle():Void
@@ -870,7 +804,7 @@ class FlxText extends FlxSprite
 		{ 
 			iterations = 1;
 		}
-		var delta:Float = (borderSize / iterations);
+		var delta:Float = borderSize / iterations;
 		
 		switch (borderStyle)
 		{
@@ -935,7 +869,7 @@ class FlxText extends FlxSprite
 	private inline function copyTextWithOffset(x:Float, y:Float)
 	{
 		_matrix.translate(x, y);
-		cachedGraphics.bitmap.draw(textField, _matrix);
+		graphic.bitmap.draw(textField, _matrix);
 	}
 	
 	private inline function applyFormats(FormatAdjusted:TextFormat, UseBorderColor:Bool = false):Void

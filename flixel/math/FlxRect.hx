@@ -11,6 +11,10 @@ import flixel.util.FlxStringUtil;
  */
 class FlxRect implements IFlxPooled
 {
+	public static var FLX_RECT:FlxRect = new FlxRect();
+	
+	public static var RECT:Rectangle = new Rectangle();
+	
 	private static var _pool = new FlxPool<FlxRect>(FlxRect);
 	
 	/**
@@ -276,6 +280,43 @@ class FlxRect implements IFlxPooled
 			LabelValuePair.weak("y", y),
 			LabelValuePair.weak("w", width),
 			LabelValuePair.weak("h", height)]);
+	}
+	
+	/**
+	 * Checks if this rectangle's properties are equal to properties of provided rect.
+	 * 
+	 * @param	rect	Rectangle to check equality to.
+	 * @return	Whether both rectangles are equal.
+	 */
+	public inline function equals(rect:FlxRect):Bool
+	{
+		return (this.x == rect.x && this.y == rect.y && this.width == rect.width && this.height == rect.height);
+	}
+	
+	/**
+	 * Returns the area of intersection with specified rectangle. 
+	 * If the rectangles do not intersect, this method returns an empty rectangle.
+	 * 
+	 * @param	rect	Rectangle to check intersection againist.
+	 * @return	The area of intersection of two rectangles.
+	 */
+	public function intersection(rect:FlxRect):FlxRect
+	{
+		var x0:Float = x < rect.x ? rect.x : x;
+		var x1:Float = right > rect.right ? rect.right : right;
+		if (x1 <= x0) 
+		{	
+			return new FlxRect();	
+		}
+		
+		var y0:Float = y < rect.y ? rect.y : y;
+		var y1:Float = bottom > rect.bottom ? rect.bottom : bottom;
+		if (y1 <= y0) 
+		{	
+			return new FlxRect();	
+		}
+		
+		return new FlxRect(x0, y0, x1 - x0, y1 - y0);
 	}
 	
 	private inline function get_left():Float

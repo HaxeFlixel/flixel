@@ -84,7 +84,7 @@ class FlxTextField extends FlxText
 	override private function get_pixels():BitmapData
 	{
 		calcFrame(true);
-		return cachedGraphics.bitmap;
+		return graphic.bitmap;
 	}
 	
 	override private function set_pixels(Pixels:BitmapData):BitmapData
@@ -164,8 +164,8 @@ class FlxTextField extends FlxText
 		textField.x = _point.x;
 		textField.y = _point.y;
 		#else
-		textField.x = _point.x - FlxG.camera.width * 0.5;
-		textField.y = _point.y - FlxG.camera.height * 0.5;
+		textField.x = (_point.x - 0.5 * _camera.width) * _camera.totalScaleX;
+		textField.y = (_point.y - 0.5 * _camera.height) * _camera.totalScaleY;
 		#end
 		
 		#if !FLX_NO_DEBUG
@@ -175,15 +175,15 @@ class FlxTextField extends FlxText
 	
 	override private function regenGraphics():Void
 	{
-		var oldWidth:Float = cachedGraphics.bitmap.width;
-		var oldHeight:Float = cachedGraphics.bitmap.height;
+		var oldWidth:Float = graphic.width;
+		var oldHeight:Float = graphic.height;
 		
 		var newWidth:Float = textField.width + _widthInc;
 		var newHeight:Float = textField.height + _heightInc;
 		
 		if ((oldWidth != newWidth) || (oldHeight != newHeight))
 		{
-			var key:String = cachedGraphics.key;
+			var key:String = graphic.key;
 			FlxG.bitmap.remove(key);
 			
 			makeGraphic(Std.int(newWidth), Std.int(newHeight), FlxColor.TRANSPARENT, false, key);
@@ -196,7 +196,7 @@ class FlxTextField extends FlxText
 		// Else just clear the old buffer before redrawing the text
 		else
 		{
-			cachedGraphics.bitmap.fillRect(_flashRect, FlxColor.TRANSPARENT);
+			graphic.bitmap.fillRect(_flashRect, FlxColor.TRANSPARENT);
 		}
 	}
 	

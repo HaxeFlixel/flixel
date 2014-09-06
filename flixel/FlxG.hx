@@ -16,7 +16,6 @@ import flixel.system.FlxVersion;
 import flixel.system.frontEnds.*;
 import flixel.system.scaleModes.BaseScaleMode;
 import flixel.system.scaleModes.RatioScaleMode;
-import flixel.text.pxText.PxBitmapFont;
 import flixel.util.FlxCollision;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSave;
@@ -544,7 +543,6 @@ class FlxG
 	 */
 	private static function reset():Void
 	{
-		PxBitmapFont.clearStorage();
 		random.resetInitialSeed();
 		
 		bitmap.clearCache();

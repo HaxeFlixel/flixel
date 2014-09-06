@@ -3,6 +3,13 @@ package flixel.util;
 import flash.display.BitmapData;
 import flash.geom.Point;
 import flash.geom.Rectangle;
+import flixel.math.FlxAngle;
+import flixel.math.FlxMatrix;
+import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
+import openfl.geom.Matrix;
+
+// TODO: document this class and all public methods
 
 class FlxBitmapDataUtil
 {
@@ -233,5 +240,159 @@ class FlxBitmapDataUtil
 	public static inline function getMemorySize(bitmapData:BitmapData):Float
 	{
 		return bitmapData.width * bitmapData.height * 4;
+	}
+	
+	/**
+	 * Replaces all bitmapData's pixels with specified color with newColor pixels. 
+	 * WARNING: very expensive (especially on big graphics) as it iterates over every single pixel.
+	 * 
+	 * @param	bitmapData			BitmapData to change
+	 * @param	color				Color to replace
+	 * @param	newColor			New color
+	 * @param	fetchPositions		Whether we need to store positions of pixels which colors were replaced
+	 * @return	Array replaced pixels positions
+	 */
+	public static function replaceColor(bitmapData:BitmapData, color:FlxColor, newColor:FlxColor, fetchPositions:Bool = false):Array<FlxPoint>
+	{
+		var positions:Array<FlxPoint> = null;
+		if (fetchPositions)
+		{
+			positions = new Array<FlxPoint>();
+		}
+		
+		var row:Int = 0;
+		var column:Int = 0;
+		var rows:Int = bitmapData.height;
+		var columns:Int = bitmapData.width;
+		var changed:Bool = false;
+		bitmapData.lock();
+		while (row < rows)
+		{
+			column = 0;
+			while (column < columns)
+			{
+				if (bitmapData.getPixel32(column, row) == cast color)
+				{
+					bitmapData.setPixel32(column, row, newColor);
+					changed = true;
+					if (fetchPositions)
+					{
+						positions.push(FlxPoint.get(column, row));
+					}
+				}
+				column++;
+			}
+			row++;
+		}
+		bitmapData.unlock();
+		
+		if (changed && positions == null)
+		{
+			positions = new Array<FlxPoint>();
+		}
+		
+		return positions;
+	}
+	
+	/**
+	 * Gets image without spaces between tiles and generates new one with spaces.
+	 * @param	bitmapData	original image without spaces between tiles.
+	 * @param	frameSize	the size of tile in spritesheet.
+	 * @param	spacing		spaces between tiles to add.
+	 * @param	region		region of image to use as a source graphics for spritesheet. Default value is null, which means that whole image will be used.
+	 * @return	Image for spritesheet with inserted spaces between tiles.
+	 */
+	public static function addSpacing(bitmapData:BitmapData, frameSize:FlxPoint, spacing:FlxPoint, region:FlxRect = null):BitmapData
+	{
+		if (region == null)
+		{
+			region = new FlxRect(0, 0, bitmapData.width, bitmapData.height);
+		}
+		
+		var frameWidth:Int = Std.int(frameSize.x);
+		var frameHeight:Int = Std.int(frameSize.y);
+		
+		var numHorizontalFrames:Int = Std.int(region.width / frameWidth);
+		var numVerticalFrames:Int = Std.int(region.height / frameHeight);
+		
+		var result:BitmapData = new BitmapData(
+						Std.int(region.width + (numHorizontalFrames - 1) * spacing.x), 
+						Std.int(region.height + (numVerticalFrames - 1) * spacing.y), 
+						true, 
+						FlxColor.TRANSPARENT);
+		
+		result.lock();
+		var tempRect:Rectangle = new Rectangle(0, 0, frameWidth, frameHeight);
+		var tempPoint:Point = new Point();
+		
+		for (i in 0...(numHorizontalFrames))
+		{
+			tempPoint.x = i * (frameWidth + spacing.x);
+			tempRect.x = i * frameWidth + region.x;
+			
+			for (j in 0...(numVerticalFrames))
+			{
+				tempPoint.y = j * (frameHeight + spacing.y);
+				tempRect.y = j * frameHeight + region.y;
+				result.copyPixels(bitmapData, tempRect, tempPoint);
+			}
+		}
+		result.unlock();
+		return result;
+	}
+	
+	/**
+	 * Generates BitmapData with prerotated brush stamped on it
+	 * 
+	 * @param	brush			The image you want to rotate and stamp.
+	 * @param	rotations		The number of rotation frames the final sprite should have. For small sprites this can be quite a large number (360 even) without any problems.
+	 * @param	antiAliasing	Whether to use high quality rotations when creating the graphic.  Default is false.
+	 * @param	autoBuffer		Whether to automatically increase the image size to accomodate rotated corners.  Default is false.  Will create frames that are 150% larger on each axis than the original frame or graphic.
+	 * @return	Created BitmapData with stamped prerotations on it.
+	 */
+	public static function generateRotations(brush:BitmapData, rotations:Int = 16, antiAliasing:Bool = false, autoBuffer:Bool = false):BitmapData
+	{
+		var brushWidth:Int = brush.width;
+		var brushHeight:Int = brush.height;
+		var max:Int = (brushHeight > brushWidth) ? brushHeight : brushWidth;
+		max = (autoBuffer) ? Std.int(max * 1.5) : max;
+		
+		var rows:Int = Std.int(Math.sqrt(rotations));
+		var columns:Int = Math.ceil(rotations / rows);
+		var bakedRotationAngle:Float = 360 / rotations;
+		
+		var width:Int = max * columns;
+		var height:Int = max * rows;
+		
+		var result:BitmapData = new BitmapData(width, height);
+		
+		var row:Int = 0;
+		var column:Int = 0;
+		var bakedAngle:Float = 0;
+		var halfBrushWidth:Int = Std.int(brushWidth * 0.5);
+		var halfBrushHeight:Int = Std.int(brushHeight * 0.5);
+		var midpointX:Int = Std.int(max * 0.5);
+		var midpointY:Int = Std.int(max * 0.5);
+		
+		var matrix:Matrix = FlxMatrix.MATRIX;
+		
+		while (row < rows)
+		{
+			column = 0;
+			while (column < columns)
+			{
+				matrix.identity();
+				matrix.translate( -halfBrushWidth, -halfBrushHeight);
+				matrix.rotate(bakedAngle * FlxAngle.TO_RAD);
+				matrix.translate(max * column + midpointX, midpointY);
+				bakedAngle += bakedRotationAngle;
+				result.draw(brush, matrix, null, null, null, antiAliasing);
+				column++;
+			}
+			midpointY += max;
+			row++;
+		}
+		
+		return result;
 	}
 }

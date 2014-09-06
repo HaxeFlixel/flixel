@@ -2,8 +2,7 @@ package flixel.animation;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.system.layer.frames.FlxFrame;
-import flixel.system.layer.frames.FlxSpriteFrames;
+import flixel.graphics.frames.FlxFrame;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import flixel.math.FlxRandom;
@@ -70,7 +69,9 @@ class FlxAnimationController implements IFlxDestroyable
 	/**
 	 * Internal helper constants used for _animations's frame sorting.
 	 */
+	@:allow(flixel.graphics.frames)
 	private static var prefixLength:Int = 0;
+	@:allow(flixel.graphics.frames)
 	private static var postfixLength:Int = 0;
 	
 	private var _prerotated:FlxPrerotatedAnimation;
@@ -242,7 +243,7 @@ class FlxAnimationController implements IFlxDestroyable
 	 */
 	public function addByNames(Name:String, FrameNames:Array<String>, FrameRate:Int = 30, Looped:Bool = true):Void
 	{
-		if (_sprite.cachedGraphics != null && _sprite.cachedGraphics.data != null)
+		if (_sprite.frames != null)
 		{
 			var indices:Array<Int> = new Array<Int>();
 			byNamesHelper(indices, FrameNames); // finds frames and appends them to the blank array
@@ -272,7 +273,7 @@ class FlxAnimationController implements IFlxDestroyable
 			return;
 		}
 		
-		if (_sprite.cachedGraphics != null && _sprite.cachedGraphics.data != null)
+		if (_sprite.frames != null)
 		{
 			byNamesHelper(anim._frames, FrameNames); // finds frames and appends them to the existing array
 		}
@@ -289,7 +290,7 @@ class FlxAnimationController implements IFlxDestroyable
 	 */
 	public function addByStringIndices(Name:String, Prefix:String, Indices:Array<String>, Postfix:String, FrameRate:Int = 30, Looped:Bool = true):Void
 	{
-		if (_sprite.cachedGraphics != null && _sprite.cachedGraphics.data != null)
+		if (_sprite.frames != null)
 		{
 			var frameIndices:Array<Int> = new Array<Int>();
 			byStringIndicesHelper(frameIndices, Prefix, Indices, Postfix); // finds frames and appends them to the blank array
@@ -321,7 +322,7 @@ class FlxAnimationController implements IFlxDestroyable
 			return;
 		}
 		
-		if (_sprite.cachedGraphics != null && _sprite.cachedGraphics.data != null)
+		if (_sprite.frames != null)
 		{
 			byStringIndicesHelper(anim._frames, Prefix, Indices, Postfix); // finds frames and appends them to the existing array
 		}
@@ -338,7 +339,7 @@ class FlxAnimationController implements IFlxDestroyable
 	 */
 	public function addByIndices(Name:String, Prefix:String, Indices:Array<Int>, Postfix:String, FrameRate:Int = 30, Looped:Bool = true):Void
 	{
-		if (_sprite.cachedGraphics != null && _sprite.cachedGraphics.data != null)
+		if (_sprite.frames != null)
 		{
 			var frameIndices:Array<Int> = new Array<Int>();
 			byIndicesHelper(frameIndices, Prefix, Indices, Postfix); // finds frames and appends them to the blank array
@@ -370,7 +371,7 @@ class FlxAnimationController implements IFlxDestroyable
 			return;
 		}
 		
-		if (_sprite.cachedGraphics != null && _sprite.cachedGraphics.data != null)
+		if (_sprite.frames != null)
 		{
 			byIndicesHelper(anim._frames, Prefix, Indices, Postfix); // finds frames and appends them to the existing array
 		}
@@ -385,7 +386,7 @@ class FlxAnimationController implements IFlxDestroyable
 	private function findSpriteFrame(Prefix:String, Index:Int, Postfix:String):Int
 	{
 		var numFrames:Int = frames;
-		var flxFrames:Array<FlxFrame> = _sprite.framesData.frames;
+		var flxFrames:Array<FlxFrame> = _sprite.frames.frames;
 		for (i in 0...numFrames)
 		{
 			var name:String = flxFrames[i].name;
@@ -411,7 +412,7 @@ class FlxAnimationController implements IFlxDestroyable
 	*/
 	public function addByPrefix(Name:String, Prefix:String, FrameRate:Int = 30, Looped:Bool = true):Void
 	{
-		if (_sprite.cachedGraphics != null && _sprite.cachedGraphics.data != null)
+		if (_sprite.frames != null)
 		{
 			var animFrames:Array<FlxFrame> = new Array<FlxFrame>();
 			findByPrefix(animFrames, Prefix); // adds valid frames to animFrames
@@ -447,7 +448,7 @@ class FlxAnimationController implements IFlxDestroyable
 			return;
 		}
 		
-		if (_sprite.cachedGraphics != null && _sprite.cachedGraphics.data != null)
+		if (_sprite.frames != null)
 		{
 			var animFrames:Array<FlxFrame> = new Array<FlxFrame>();
 			findByPrefix(animFrames, Prefix); // adds valid frames to animFrames
@@ -463,12 +464,13 @@ class FlxAnimationController implements IFlxDestroyable
 	 * Plays an existing _animations (e.g. "run").
 	 * If you call an _animations that is already playing it will be ignored.
 	 * 
-	 * @param   AnimName   The string name of the _animations you want to play.
-	 * @param   Force      Whether to force the _animations to restart.
-	 * @param   Frame      The frame number in _animations you want to start from (0 by default).
-	 *                     If you pass negative value then it will start from random frame
+	 * @param	AnimName	The string name of the _animations you want to play.
+	 * @param	Force		Whether to force the _animations to restart.
+	 * @param	Reverse		Whether to play animation backwards or not.
+	 * @param	Frame		The frame number in _animations you want to start from (0 by default).
+	 *                     	If you pass negative value then it will start from random frame
 	 */
-	public function play(AnimName:String, Force:Bool = false, Frame:Int = 0):Void
+	public function play(AnimName:String, Force:Bool = false, Reverse:Bool = false, Frame:Int = 0):Void
 	{
 		if (AnimName == null)
 		{
@@ -490,7 +492,7 @@ class FlxAnimationController implements IFlxDestroyable
 			_curAnim.stop();
 		}
 		_curAnim = _animations.get(AnimName);
-		_curAnim.play(Force, Frame);
+		_curAnim.play(Force, Reverse, Frame);
 	}
 	
 	/**
@@ -556,9 +558,9 @@ class FlxAnimationController implements IFlxDestroyable
 		for (i in 0...l)
 		{
 			var name:String = FrameNames[i];
-			if (_sprite.framesData.framesHash.exists(name))
+			if (_sprite.frames.framesHash.exists(name))
 			{
-				var frameToAdd:FlxFrame = _sprite.framesData.framesHash.get(name);
+				var frameToAdd:FlxFrame = _sprite.frames.framesHash.get(name);
 				AddTo.push(getFrameIndex(frameToAdd));
 			}
 		}
@@ -573,9 +575,9 @@ class FlxAnimationController implements IFlxDestroyable
 		for (i in 0...l)
 		{
 			var name:String = Prefix + Indices[i] + Postfix;
-			if (_sprite.framesData.framesHash.exists(name))
+			if (_sprite.frames.framesHash.exists(name))
 			{
-				var frameToAdd:FlxFrame = _sprite.framesData.framesHash.get(name);
+				var frameToAdd:FlxFrame = _sprite.frames.framesHash.get(name);
 				AddTo.push(getFrameIndex(frameToAdd));
 			}
 		}
@@ -621,25 +623,25 @@ class FlxAnimationController implements IFlxDestroyable
 	 */
 	private function findByPrefix(AnimFrames:Array<FlxFrame>, Prefix:String):Void
 	{
-		var l:Int = _sprite.framesData.frames.length;
+		var l:Int = _sprite.frames.frames.length;
 		for (i in 0...l)
 		{
-			if (StringTools.startsWith(_sprite.framesData.frames[i].name, Prefix))
+			if (StringTools.startsWith(_sprite.frames.frames[i].name, Prefix))
 			{
-				AnimFrames.push(_sprite.framesData.frames[i]);
+				AnimFrames.push(_sprite.frames.frames[i]);
 			}
 		}
 	}
 	
 	private function set_frameIndex(Frame:Int):Int
 	{
-		if (_sprite.framesData != null)
+		if (_sprite.frames != null)
 		{
 			Frame = Frame % frames;
 			
 			if (Frame != frameIndex)
 			{
-				_sprite.frame = _sprite.framesData.frames[Frame];
+				_sprite.frame = _sprite.frames.frames[Frame];
 				frameIndex = Frame;
 				fireCallback();
 			}
@@ -655,7 +657,7 @@ class FlxAnimationController implements IFlxDestroyable
 	
 	private function set_frameName(Value:String):String
 	{
-		if (_sprite.framesData != null && _sprite.framesData.framesHash.exists(Value))
+		if (_sprite.frames != null && _sprite.frames.framesHash.exists(Value))
 		{
 			if (_curAnim != null)
 			{
@@ -663,7 +665,7 @@ class FlxAnimationController implements IFlxDestroyable
 				_curAnim = null;
 			}
 			
-			var frame = _sprite.framesData.framesHash.get(Value);
+			var frame = _sprite.frames.framesHash.get(Value);
 			if (frame != null)
 			{
 				frameIndex = getFrameIndex(frame);
@@ -766,7 +768,7 @@ class FlxAnimationController implements IFlxDestroyable
 	
 	private inline function get_frames():Int
 	{
-		return _sprite.frames;
+		return _sprite.numFrames;
 	}
 	
 	/**
@@ -776,13 +778,14 @@ class FlxAnimationController implements IFlxDestroyable
 	 */
 	public inline function getFrameIndex(Frame:FlxFrame):Int
 	{
-		return _sprite.framesData.frames.indexOf(Frame);
+		return _sprite.frames.frames.indexOf(Frame);
 	}
 	
 	/**
 	 * Helper frame sorting function used by addAnimationByPrefixFromTexture() method
 	 */
-	static function frameSortFunction(frame1:FlxFrame, frame2:FlxFrame):Int
+	@:allow(flixel.graphics.frames)
+	private static function frameSortFunction(frame1:FlxFrame, frame2:FlxFrame):Int
 	{
 		var name1:String = frame1.name;
 		var name2:String = frame2.name;
