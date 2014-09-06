@@ -96,7 +96,7 @@ class FlxBasic implements IFlxDestroyable
 	 * Override this function to update your class's position and appearance.
 	 * This is where most of your game rules and behavioral code will go.
 	 */
-	public function update():Void 
+	public function update(elapsed:Float):Void 
 	{ 
 		#if !FLX_NO_DEBUG
 		activeCount++;
@@ -193,7 +193,7 @@ interface IFlxBasic
 	public var exists(default, set):Bool;
 
 	public function draw():Void;
-	public function update():Void;
+	public function update(elapsed:Float):Void;
 	public function destroy():Void;
 	
 	public function kill():Void;

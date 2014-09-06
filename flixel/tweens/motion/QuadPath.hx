@@ -104,9 +104,9 @@ class QuadPath extends Motion
 		return this;
 	}
 	
-	override private function update():Void
+	override private function update(elapsed:Float):Void
 	{
-		super.update();
+		super.update(elapsed);
 		var td:Float;
 		var tt:Float;
 		

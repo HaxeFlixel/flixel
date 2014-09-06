@@ -248,13 +248,13 @@ class CameraFrontEnd
 	/**
 	 * Called by the game object to update the cameras and their tracking/special effects logic.
 	 */
-	private inline function update():Void
+	private inline function update(elapsed:Float):Void
 	{
 		for (camera in list)
 		{
 			if (camera != null && camera.exists && camera.active)
 			{
-				camera.update();
+				camera.update(elapsed);
 			}
 		}
 	}

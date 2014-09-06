@@ -8,6 +8,7 @@ import flixel.tile.FlxBaseTilemap.FlxTilemapAutoTiling;
 import flixel.util.FlxArrayUtil;
 import flixel.system.FlxAssets;
 import flixel.group.FlxGroup;
+import openfl.Assets;
 
 class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 {
@@ -152,7 +153,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	/**
 	 * Load the tilemap with string data and a tile graphic.
 	 * 
-	 * @param   MapData         A string of comma and line-return delineated indices indicating what order the tiles should go in,
+	 * @param   MapData         A csv-formatted string indicating what order the tiles should go in (or the path to that file),
 	 *                          or an Array<Int>. In the latter case YOU MUST SET widthInTiles and heightInTyles manually BEFORE CALLING loadMap()!
 	 * @param   TileGraphic     All the tiles you want to use, arranged in a strip corresponding to the numbers in MapData.
 	 * @param   TileWidth       The width of your tiles (e.g. 8) - defaults to height of the tile graphic if unspecified.
@@ -198,6 +199,12 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		// Populate data if MapData is a CSV string
 		if (Std.is(MapData, String))
 		{
+			// path to map data file?
+			if (Assets.exists(MapData))
+			{
+				MapData = Assets.getText(MapData);
+			}
+			
 			// Figure out the map dimensions based on the data string
 			_data = new Array<Int>();
 			var columns:Array<String>;

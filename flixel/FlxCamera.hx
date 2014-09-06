@@ -489,22 +489,26 @@ class FlxCamera extends FlxBasic
 		_fill = FlxDestroyUtil.dispose(_fill);
 	#else
 		#if !FLX_NO_DEBUG
-		flashSprite.removeChild(debugLayer);
+		FlxDestroyUtil.removeChild(flashSprite, debugLayer);
 		debugLayer = null;
 		#end
 		
-		flashSprite.removeChild(canvas);
-		var canvasNumChildren:Int = canvas.numChildren;
-		for (i in 0...(canvasNumChildren))
+		FlxDestroyUtil.removeChild(flashSprite, canvas);
+		if (canvas != null)
 		{
-			canvas.removeChildAt(0);
+			for (i in 0...canvas.numChildren)
+			{
+				canvas.removeChildAt(0);
+			}
+			canvas = null;
 		}
-		canvas = null;
 		
-		clearDrawStack();
-		
-		_headOfDrawStack.dispose();
-		_headOfDrawStack = null;
+		if (_headOfDrawStack != null)
+		{
+			clearDrawStack();
+			_headOfDrawStack.dispose();
+			_headOfDrawStack = null;
+		}
 		_currentStackItem = null;
 	#end
 		
@@ -527,7 +531,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Updates the camera scroll as well as special effects like screen-shake or fades.
 	 */
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		// follow the target, if there is one
 		if (target != null)
@@ -536,9 +540,9 @@ class FlxCamera extends FlxBasic
 		}
 		
 		updateScroll();	
-		updateFlash();
-		updateFade();
-		updateShake();
+		updateFlash(elapsed);
+		updateFade(elapsed);
+		updateShake(elapsed);
 		
 		updateFlashSpritePosition();
 	}
@@ -571,7 +575,7 @@ class FlxCamera extends FlxBasic
 			
 			if (style == SCREEN_BY_SCREEN) 
 			{
-				if (targetX > (scroll.x + width))
+				if (targetX >= (scroll.x + width))
 				{
 					_scrollTarget.x += width;
 				}
@@ -580,7 +584,7 @@ class FlxCamera extends FlxBasic
 					_scrollTarget.x -= width;
 				}
 
-				if (targetY > (scroll.y + height))
+				if (targetY >= (scroll.y + height))
 				{
 					_scrollTarget.y += height;
 				}
@@ -639,12 +643,12 @@ class FlxCamera extends FlxBasic
 		}
 	}
 	
-	private function updateFlash():Void
+	private function updateFlash(elapsed:Float):Void
 	{
 		//Update the "flash" special effect
 		if (_fxFlashAlpha > 0.0)
 		{
-			_fxFlashAlpha -= FlxG.elapsed / _fxFlashDuration;
+			_fxFlashAlpha -= elapsed / _fxFlashDuration;
 			if ((_fxFlashAlpha <= 0) && (_fxFlashComplete != null))
 			{
 				_fxFlashComplete();
@@ -652,13 +656,13 @@ class FlxCamera extends FlxBasic
 		}
 	}
 	
-	private function updateFade():Void
+	private function updateFade(elapsed:Float):Void
 	{
 		if ((_fxFadeAlpha > 0.0) && (_fxFadeAlpha < 1.0))
 		{
 			if (_fxFadeIn)
 			{
-				_fxFadeAlpha -= FlxG.elapsed /_fxFadeDuration;
+				_fxFadeAlpha -= elapsed /_fxFadeDuration;
 				if (_fxFadeAlpha <= 0.0)
 				{
 					_fxFadeAlpha = 0.0;
@@ -670,7 +674,7 @@ class FlxCamera extends FlxBasic
 			}
 			else
 			{
-				_fxFadeAlpha += FlxG.elapsed / _fxFadeDuration;
+				_fxFadeAlpha += elapsed / _fxFadeDuration;
 				if (_fxFadeAlpha >= 1.0)
 				{
 					_fxFadeAlpha = 1.0;
@@ -683,11 +687,11 @@ class FlxCamera extends FlxBasic
 		}
 	}
 	
-	private function updateShake():Void
+	private function updateShake(elapsed:Float):Void
 	{
 		if (_fxShakeDuration > 0)
 		{
-			_fxShakeDuration -= FlxG.elapsed;
+			_fxShakeDuration -= elapsed;
 			if (_fxShakeDuration <= 0)
 			{
 				_fxShakeOffset.set();

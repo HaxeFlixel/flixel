@@ -90,6 +90,9 @@ class ConsoleUtil
 	@:generic
 	public static function attemptToCreateInstance<T>(ClassName:String, type:Class<T>, ?Params:Array<String>):Dynamic
 	{
+		if (ClassName == null)
+			return null;
+		
 		if (Params == null)
 			Params = [];
 		
@@ -102,7 +105,7 @@ class ConsoleUtil
 		
 		var instance:Dynamic = Type.createInstance(obj, Params);
 		
-		if (!Std.is(instance, type)) 
+		if (!Std.is(instance, type))
 		{
 			FlxG.log.error(ClassName + "' is not a " + Type.getClassName(type));
 			return null;

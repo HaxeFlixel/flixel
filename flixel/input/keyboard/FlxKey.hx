@@ -208,4 +208,17 @@ abstract FlxKey(Int) from Int to Int
 		s = s.toUpperCase();
 		return keyNameMap.exists(s) ? keyNameMap.get(s) : NONE;
 	}
+	
+	@:to
+	public static function toString(i:Int):String
+	{
+		for (key in keyNameMap.keys())
+		{
+			if (i == keyNameMap.get(key))
+			{
+				return key;
+			}
+		}
+		return "NONE";
+	}
 }

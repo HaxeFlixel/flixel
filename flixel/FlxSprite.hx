@@ -739,10 +739,18 @@ class FlxSprite extends FlxObject
 		_halfHeight = frameHeight * 0.5;
 	}
 	
-	override public function update():Void 
+	override public function update(elapsed:Float):Void 
 	{
-		super.update();
-		animation.update();
+		super.update(elapsed);
+		updateAnimation(elapsed);
+	}
+	
+	/**
+	 * This is separated out so it can be easily overriden
+	 */
+	private function updateAnimation(elapsed:Float):Void
+	{
+		animation.update(elapsed);
 	}
 	
 	/**

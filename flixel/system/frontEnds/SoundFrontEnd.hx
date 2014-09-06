@@ -301,7 +301,7 @@ class SoundFrontEnd
 	 */
 	public function showSoundTray():Void
 	{
-		#if !FLX_NO_SOUND_TRAY
+		#if FLX_SOUND_TRAY
 		if (FlxG.game.soundTray != null && soundTrayEnabled)
 		{
 			FlxG.game.soundTray.show();
@@ -317,13 +317,13 @@ class SoundFrontEnd
 	/**
 	 * Called by the game loop to make sure the sounds get updated each frame.
 	 */
-	private function update():Void
+	private function update(elapsed:Float):Void
 	{
 		if (music != null && music.active)
-			music.update();
+			music.update(elapsed);
 		
 		if (list != null && list.active)
-			list.update();
+			list.update(elapsed);
 		
 		#if !FLX_NO_KEYBOARD
 		if (FlxG.keys.anyJustReleased(muteKeys))

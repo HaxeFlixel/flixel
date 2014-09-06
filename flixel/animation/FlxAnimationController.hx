@@ -81,11 +81,11 @@ class FlxAnimationController implements IFlxDestroyable
 		_animations = new Map<String, FlxAnimation>();
 	}
 	
-	public function update():Void
+	public function update(elapsed:Float):Void
 	{
 		if (_curAnim != null)
 		{
-			_curAnim.update();
+			_curAnim.update(elapsed);
 		}
 		else if (_prerotated != null)
 		{

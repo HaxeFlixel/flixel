@@ -64,16 +64,11 @@ class FlxMouseEventManager extends FlxBasic
 	 * @param   MouseChildren   If true, other objects overlaped by this will still receive mouse events.
 	 * @param   MouseEnabled    If true, this object will receive mouse events.
 	 * @param   PixelPerfect    If true, the collision check will be pixel-perfect. Only works for FlxSprites.
-	 * @param   MouseButtons    The mouse buttons that can trigger the callback. Left only by default.
+	 * @param   MouseButtons    The mouse buttons that can trigger callbacks. Left only by default.
 	 */
 	public static function add<T:FlxObject>(Object:T, ?OnMouseDown:T->Void, ?OnMouseUp:T->Void, ?OnMouseOver:T->Void,
 		?OnMouseOut:T->Void, MouseChildren = false, MouseEnabled = true, PixelPerfect = true, ?MouseButtons:Array<FlxMouseButtonID>):T
 	{
-		if (Std.is(Object, FlxTypedSpriteGroup))
-		{
-			throw "FlxSpriteGroups are not supported by FlxMouseEventManager";
-		}
-		
 		init(); // MEManager is initialized and added to plugins if it was not there already.
 		
 		var newReg = new ObjectMouseData<T>(Object, OnMouseDown, OnMouseUp, OnMouseOver,
@@ -270,6 +265,19 @@ class FlxMouseEventManager extends FlxBasic
 		}
 	}
 	
+	/**
+	 * @param   MouseButtons    The mouse buttons that can trigger callbacks. Left only by default.
+	 */
+	public static function setObjectMouseButtons<T:FlxObject>(object:T, mouseButtons:Array<FlxMouseButtonID>):Void
+	{
+		var reg = getRegister(object);
+		
+		if (reg != null)
+		{
+			reg.mouseButtons = mouseButtons;
+		}
+	}
+	
 	private static function traverseFlxGroup(Group:FlxTypedGroup<Dynamic>, OrderedObjects:Array<ObjectMouseData<Dynamic>>):Void
 	{
 		for (basic in Group.members)
@@ -279,9 +287,9 @@ class FlxMouseEventManager extends FlxBasic
 			{
 				traverseFlxGroup(group, OrderedObjects);
 			}
-			else if (Std.is(basic, FlxSprite))
+			if (Std.is(basic, FlxObject))
 			{
-				var reg = getRegister(cast(basic, FlxSprite));
+				var reg = getRegister(cast basic);
 				
 				if (reg != null)
 				{
@@ -328,9 +336,9 @@ class FlxMouseEventManager extends FlxBasic
 		super.destroy();
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
-		super.update();
+		super.update(elapsed);
 		
 		var currentOverObjects = new Array<ObjectMouseData<FlxObject>>();
 		

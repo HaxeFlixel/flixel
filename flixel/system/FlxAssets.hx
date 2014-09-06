@@ -76,6 +76,10 @@ class FlxAssets
 		{
 			if (!FileSystem.isDirectory(directory + name))
 			{
+				// ignore invisible files
+				if (name.startsWith("."))
+					continue;
+				
 				if (filterExtensions != null)
 				{
 					var extension:String = name.split(".")[1]; // get the string after the dot

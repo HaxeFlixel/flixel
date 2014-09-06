@@ -30,7 +30,8 @@ import flixel.util.loaders.CachedGraphics;
 class FlxBar extends FlxSprite
 {
 	/**
-	 * fixedPosition controls if the FlxBar sprite is at a fixed location on screen, or tracking its parent
+	 * If false, the bar is tracking its parent
+	 * (the position is synchronized with the parent's position).
 	 */
 	public var fixedPosition:Bool = true;
 	/**
@@ -828,7 +829,7 @@ class FlxBar extends FlxSprite
 		#end
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		if (_parent != null)
 		{
@@ -845,7 +846,7 @@ class FlxBar extends FlxSprite
 			}
 		}
 		
-		super.update();
+		super.update(elapsed);
 	}
 	
 	#if FLX_RENDER_TILE
