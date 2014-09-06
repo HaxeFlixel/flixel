@@ -1180,7 +1180,7 @@ class FlxCamera extends FlxBasic
 			if (canvas != null)
 			{
 				var rect:Rectangle = canvas.scrollRect;
-				rect.height = Value;
+				rect.height = Value * totalScaleY;
 				canvas.scrollRect = rect;
 				
 				_flashOffset.y = 0.5 * height * totalScaleY;

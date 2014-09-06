@@ -927,6 +927,12 @@ class FlxObject extends FlxBasic
 	{
 		getScreenPosition(_point, camera);
 		_rect.set(_point.x, _point.y, width, height);
+		#if FLX_RENDER_TILE
+		_rect.x *= camera.totalScaleX;
+		_rect.y *= camera.totalScaleY;
+		_rect.width *= camera.totalScaleX;
+		_rect.height *= camera.totalScaleY;
+		#end
 		
 		if (isPixelPerfectRender(camera))
 		{

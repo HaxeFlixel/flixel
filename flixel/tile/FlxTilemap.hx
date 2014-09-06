@@ -967,6 +967,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 					_point.y = isPixelPerfectRender(Camera) ? Math.floor(drawY) : drawY;
 					
 					var drawItem:DrawStackItem = Camera.getDrawStackItem(graphic, false, 0);
+					// TODO: handle rotated frames (use prepareFrameMatrix() method)
 					drawItem.setDrawData(_point, frame.tileID, hackScaleX, 0, 0, hackScaleY);
 				#end
 				}

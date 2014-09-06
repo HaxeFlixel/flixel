@@ -6,6 +6,7 @@ import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxFrame;
+import flixel.graphics.frames.FlxFramesCollection;
 import flixel.group.FlxGroup;
 import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
 import flixel.math.FlxMath;
@@ -958,10 +959,13 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	/**
 	 * This functionality isn't supported in SpriteGroup
 	 */
-	override private inline function updateColorTransform():Void {}
+	override function set_frames(Frames:FlxFramesCollection):FlxFramesCollection 
+	{
+		return Frames;
+	}
 	
 	/**
 	 * This functionality isn't supported in SpriteGroup
 	 */
-	override public inline function updateFrameData():Void {}
+	override private inline function updateColorTransform():Void {}
 }

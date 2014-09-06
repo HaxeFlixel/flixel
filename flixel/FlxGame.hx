@@ -434,15 +434,17 @@ class FlxGame extends Sprite
 		FlxG.bitmap.onContext();
 		#end
 		
-		_state.onResize(width, height);
-		FlxG.signals.gameResized.dispatch(width, height);
-		
 		resizeGame(width, height);
 	}
 	
 	private function resizeGame(width:Int, height:Int):Void
 	{
 		FlxG.resizeGame(width, height);
+		
+		_state.onResize(width, height);
+		FlxG.signals.gameResized.dispatch(width, height);
+		
+		FlxG.cameras.resize();
 		
 		#if js
 		FlxDestroyUtil.removeChild(this, _displayBitmap);
@@ -471,8 +473,8 @@ class FlxGame extends Sprite
 		}
 		#end
 		
-		_inputContainer.scaleX = 1 / FlxG.game.scaleX;
-		_inputContainer.scaleY = 1 / FlxG.game.scaleY;
+		_inputContainer.scaleX = 1;
+		_inputContainer.scaleY = 1;
 		
 		#if FLX_POST_PROCESS
 		for (postProcess in postProcesses)
