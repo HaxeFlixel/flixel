@@ -1,5 +1,3 @@
-#version 120
-
 #ifdef GL_ES
     precision mediump float;
 #endif
@@ -8,7 +6,7 @@ varying vec2 vTexCoord;
 uniform vec2 uResolution;
 uniform sampler2D uImage0;
 
-uniform float scale = 1.0;
+const float scale = 1.0;
 
 void main()
 {
