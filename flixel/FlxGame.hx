@@ -12,7 +12,10 @@ import flash.geom.Matrix;
 import flash.Lib;
 import flixel.effects.postprocess.PostProcess;
 import flixel.math.FlxAngle;
+import flixel.math.FlxMatrix;
+import flixel.math.FlxPoint;
 import flixel.math.FlxRandom;
+import flixel.math.FlxRect;
 import flixel.system.FlxSplash;
 import flixel.system.layer.TileSheetExt;
 import flixel.system.replay.FlxReplay;
@@ -20,6 +23,8 @@ import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import openfl.Assets;
+import openfl.geom.Point;
+import openfl.geom.Rectangle;
 
 #if FLX_POST_PROCESS
 import openfl.display.OpenGLView;
@@ -255,10 +260,26 @@ class FlxGame extends Sprite
 		_replay = new FlxReplay();
 		#end
 		
+		// init static vars here, or there could be some null errors
+		// due to some specifics of how hxcpp works
+		// (the order of code execution)
+		initStaticVars();
+		
 		// Then get ready to create the game object for real
 		_initialState = (InitialState == null) ? FlxState : InitialState;
 		
 		addEventListener(Event.ADDED_TO_STAGE, create);
+	}
+	
+	private function initStaticVars():Void
+	{
+		FlxPoint.POINT = new Point();
+		FlxPoint.FLX_POINT = new FlxPoint();
+		
+		FlxRect.RECT = new Rectangle();
+		FlxRect.FLX_RECT = new FlxRect();
+		
+		FlxMatrix.MATRIX = new FlxMatrix();
 	}
 	
 	/**
