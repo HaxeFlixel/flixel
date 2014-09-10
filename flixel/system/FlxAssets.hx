@@ -220,7 +220,7 @@ typedef FlxSoundAsset = OneOfThree<String, Sound, Class<Sound>>;
 // Class<Dynamic> should actually be Class<BitmapData>, but needs to be the former so we can use Std.is() on it
 typedef FlxGraphicAsset = OneOfFive<String, Class<Dynamic>, CachedGraphics, TextureRegion, BitmapData>;
 typedef FlxTextureAsset = OneOfTwo<TexturePackerData, CachedGraphics>;
-typedef FlxTilemapAsset = OneOfTwo<String, Array<Int>>;
+typedef FlxTilemapAsset = OneOfTwo<String, Array<Array<Int>>>;
 
 private abstract OneOfTwo<T1, T2>(Dynamic) from T1 from T2 to T1 to T2 { }
 private abstract OneOfThree<T1, T2, T3>(Dynamic) from T1 from T2 from T3 to T1 to T2 to T3 {}

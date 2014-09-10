@@ -4,7 +4,6 @@ import flixel.FlxObject;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRandom;
 import flixel.math.FlxRect;
-import flixel.tile.FlxBaseTilemap.FlxTilemapAutoTiling;
 import flixel.util.FlxArrayUtil;
 import flixel.system.FlxAssets;
 import flixel.group.FlxGroup;
@@ -16,18 +15,13 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * Set this flag to use one of the 16-tile binary auto-tile algorithms (OFF, AUTO, or ALT).
 	 */
 	public var auto:FlxTilemapAutoTiling = OFF;
-	/**
-	 * Read-only variable, do NOT recommend changing after the map is loaded!
-	 */
-	public var widthInTiles:Int = 0;
-	/**
-	 * Read-only variable, do NOT recommend changing after the map is loaded!
-	 */
-	public var heightInTiles:Int = 0;
-	/**
-	 * Read-only variable, do NOT recommend changing after the map is loaded!
-	 */
-	public var totalTiles:Int = 0;
+	
+	public var widthInTiles(default, null):Int = 0;
+	
+	public var heightInTiles(default, null):Int = 0;
+	
+	public var totalTiles(default, null):Int = 0;
+	
 	/**
 	 * Set this to create your own image index remapper, so you can create your own tile layouts.
 	 * Mostly useful in combination with the auto-tilers.
@@ -154,7 +148,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * Load the tilemap with string data and a tile graphic.
 	 * 
 	 * @param   MapData         A csv-formatted string indicating what order the tiles should go in (or the path to that file),
-	 *                          or an Array<Int>. In the latter case YOU MUST SET widthInTiles and heightInTyles manually BEFORE CALLING loadMap()!
+	 *                          or an Array<Array<Int>>.
 	 * @param   TileGraphic     All the tiles you want to use, arranged in a strip corresponding to the numbers in MapData.
 	 * @param   TileWidth       The width of your tiles (e.g. 8) - defaults to height of the tile graphic if unspecified.
 	 * @param   TileHeight      The height of your tiles (e.g. 8) - defaults to width if unspecified.
@@ -267,16 +261,17 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 				}
 			}
 		}
-		// Data is already set up as an Array<Int>
-		// DON'T FORGET TO SET 'widthInTiles' and 'heightInTiles' manually BEFORE CALLING loadMap() if you pass an Array<Int>!
-		else if (Std.is(MapData, Array))
+		else if (Std.is(MapData, Array)) // Data is already set up as an array
 		{
-			_data = cast MapData; // need to cast this to make sure it works in js, can't call copy() on a Dynamic
-			_data = _data.copy(); // make a copy to make sure we don't mess with the original array, which might be used for something!
+			var array2D:Array<Array<Int>> = cast MapData;
+			
+			widthInTiles = array2D[0].length;
+			heightInTiles = array2D.length;
+			_data = FlxArrayUtil.flatten2DArray(array2D);
 		}
 		else
 		{
-			throw "Unexpected MapData format '" + Type.typeof(MapData) + "' passed into loadMap. Map data must be CSV string or Array<Int>.";
+			throw "Unexpected MapData format '" + Type.typeof(MapData) + "' passed into loadMap. Map data must be CSV string or Array<Array<Int>>.";
 		}
 
 		totalTiles = _data.length;
