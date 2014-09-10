@@ -591,6 +591,11 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		var i:Int = Tile;
 		var l:Int = Tile + Range;
 		
+		if (l>_tileObjects.length) 
+		{
+			throw 'Cannot access tile with index $l maximum possible is ${_tileObjects.length} probale error is in Tile=$Tile and Range=$Range parameters';
+		}
+		
 		while (i < l)
 		{
 			tile = _tileObjects[i++];
