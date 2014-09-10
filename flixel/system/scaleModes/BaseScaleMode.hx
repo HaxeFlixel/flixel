@@ -7,6 +7,9 @@ import flixel.math.FlxPoint;
 @:allow(flixel.FlxGame)
 class BaseScaleMode
 {
+	public static var gWidth:Int;
+	public static var gHeight:Int;
+	
 	public var deviceSize(default, null):FlxPoint;
 	public var gameSize(default, null):FlxPoint;
 	public var scale(default, null):FlxPoint;
@@ -24,6 +27,9 @@ class BaseScaleMode
 	
 	public function onMeasure(Width:Int, Height:Int):Void
 	{
+		FlxG.width = BaseScaleMode.gWidth;
+		FlxG.height = BaseScaleMode.gHeight;
+		
 		updateGameSize(Width, Height);
 		updateDeviceSize(Width, Height);
 		updateScaleOffset();
