@@ -134,7 +134,12 @@ class FlxGradient
 		var interpolationMethod = interpolate ? InterpolationMethod.RGB : InterpolationMethod.LINEAR_RGB;
 
 		#if !bitfive
-			shape.graphics.beginGradientFill(GradientType.LINEAR, colors, gradient.alpha, gradient.ratio,
+			var uintColors:Array<UInt> = new Array<UInt>();
+			for (ai in 0...colors.length)
+			{
+				uintColors.push(colors[ai].to24Bit());
+			}
+			shape.graphics.beginGradientFill(GradientType.LINEAR, uintColors, gradient.alpha, gradient.ratio,		
 				gradient.matrix, SpreadMethod.PAD, interpolationMethod, 0);
 		#end
 		
