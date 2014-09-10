@@ -51,10 +51,6 @@ class FlxAssets
 		if (!directory.endsWith("/"))
 			directory += "/";
 			
-		#if ios
-			directory = "../" + directory;
-		#end
-		
 		var fileReferences:Array<FileReference> = getFileReferences(directory, subDirectories, filterExtensions);
 		
 		var fields:Array<Field> = Context.getBuildFields();
@@ -66,13 +62,7 @@ class FlxAssets
 				name: fileRef.name,
 				doc: fileRef.documentation,
 				access: [Access.APublic, Access.AStatic, Access.AInline],
-				kind: FieldType.FVar(macro:String, macro $v{
-					#if ios	
-						fileRef.value.substr(directory.length)
-					#else
-						fileRef.value
-					#end
-				}),
+				kind: FieldType.FVar(macro:String, macro $v{ fileRef.value }),
 				pos: Context.currentPos()
 			});
 		}
@@ -82,10 +72,11 @@ class FlxAssets
 	private static function getFileReferences(directory:String, subDirectories:Bool = false, ?filterExtensions:Array<String>):Array<FileReference>
 	{
 		var fileReferences:Array<FileReference> = [];
-		var directoryInfo = FileSystem.readDirectory(directory);
+		var resolvedPath = #if ios Context.resolvePath(directory) #else directory #end;
+		var directoryInfo = FileSystem.readDirectory(resolvedPath);
 		for (name in directoryInfo)
 		{
-			if (!FileSystem.isDirectory(directory + name))
+			if (!FileSystem.isDirectory(resolvedPath + name))
 			{
 				// ignore invisible files
 				if (name.startsWith("."))
