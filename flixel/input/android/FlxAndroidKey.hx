@@ -5,7 +5,7 @@ package flixel.input.android;
  * Maps enum values and strings to integer keycodes.
  */
 @:enum
-abstract FlxAndroidKey(FlxBaseKey) from Int to Int
+abstract FlxAndroidKey(Int) from Int to Int
 {
 	public static var keyNameMap:Map<String, FlxAndroidKey> = [
 		"ANY" =>  ANY,
