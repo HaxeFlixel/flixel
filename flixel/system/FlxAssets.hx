@@ -50,10 +50,15 @@ class FlxAssets
 	{
 		if (!directory.endsWith("/"))
 			directory += "/";
+			
+		#if ios
+			directory = "../" + directory;
+		#end
 		
 		var fileReferences:Array<FileReference> = getFileReferences(directory, subDirectories, filterExtensions);
 		
 		var fields:Array<Field> = Context.getBuildFields();
+			
 		for (fileRef in fileReferences)
 		{
 			// create new field based on file references!
@@ -61,7 +66,13 @@ class FlxAssets
 				name: fileRef.name,
 				doc: fileRef.documentation,
 				access: [Access.APublic, Access.AStatic, Access.AInline],
-				kind: FieldType.FVar(macro:String, macro $v{fileRef.value}),
+				kind: FieldType.FVar(macro:String, macro $v{
+					#if ios	
+						fileRef.value.substr(directory.length)
+					#else
+						fileRef.value
+					#end
+				}),
 				pos: Context.currentPos()
 			});
 		}
