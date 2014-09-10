@@ -355,7 +355,7 @@ class FlxSprite extends FlxObject
 			key += ":" + Frame;
 			
 			var full:BitmapData = brush;
-			brush = new BitmapData(brushSize, brushSize);
+			brush = new BitmapData(brushSize, brushSize, true, FlxColor.TRANSPARENT);
 			_flashRect.setTo(Frame * brushSize, 0, brushSize, brushSize);
 			brush.copyPixels(full, _flashRect, _flashPointZero);
 		}

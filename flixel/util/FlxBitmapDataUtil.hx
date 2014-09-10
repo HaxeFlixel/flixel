@@ -7,6 +7,7 @@ import flixel.math.FlxAngle;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
+import flixel.util.FlxColor;
 import openfl.geom.Matrix;
 
 // TODO: document this class and all public methods
@@ -364,7 +365,7 @@ class FlxBitmapDataUtil
 		var width:Int = max * columns;
 		var height:Int = max * rows;
 		
-		var result:BitmapData = new BitmapData(width, height);
+		var result:BitmapData = new BitmapData(width, height, true, FlxColor.TRANSPARENT);
 		
 		var row:Int = 0;
 		var column:Int = 0;
