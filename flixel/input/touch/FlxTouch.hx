@@ -1,5 +1,6 @@
 package flixel.input.touch;
 
+#if !FLX_NO_TOUCH
 import flash.geom.Point;
 import flixel.FlxBasic;
 import flixel.FlxCamera;
@@ -8,6 +9,7 @@ import flixel.FlxObject;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.FlxInput;
 import flixel.input.FlxSwipe;
+import flixel.input.IFlxInput;
 import flixel.math.FlxPoint;
 import flixel.util.FlxDestroyUtil;
 
@@ -16,9 +18,8 @@ import flixel.util.FlxDestroyUtil;
  * Automatically accounts for parallax scrolling, etc.
  */
 @:allow(flixel.input.touch.FlxTouchManager)
-class FlxTouch extends FlxPointer implements IFlxDestroyable
+class FlxTouch extends FlxPointer implements IFlxDestroyable implements IFlxInput
 {	
-#if !FLX_NO_TOUCH
 	/**
 	 * The unique ID of this touch. Example: if there are 3 concurrently active touches 
 	 * (and the device supporst that many), they will have the IDs 0, 1 and 2.
@@ -33,20 +34,16 @@ class FlxTouch extends FlxPointer implements IFlxDestroyable
 	private var input:FlxInput<Int>;
 	private var flashPoint = new Point();
 	
-	private var justPressedPosition = FlxPoint.get();
-	private var justPressedTimeInTicks:Float;
-#end
+	public var justPressedPosition(default, null) = FlxPoint.get();
+	public var justPressedTimeInTicks(default, null):Float = -1;
 
 	public function destroy():Void
 	{
-		#if !FLX_NO_TOUCH
 		input = null;
 		justPressedPosition = FlxDestroyUtil.put(justPressedPosition);
 		flashPoint = null;
-		#end
 	}
 
-#if !FLX_NO_TOUCH
 	/**
 	 * Resets the just pressed/just released flags and sets touch to not pressed.
 	 */
@@ -82,10 +79,12 @@ class FlxTouch extends FlxPointer implements IFlxDestroyable
 			justPressedPosition.set(screenX, screenY);
 			justPressedTimeInTicks = FlxG.game.ticks;
 		}
+		#if FLX_POINTER_INPUT
 		else if (justReleased)
 		{
 			FlxG.swipes.push(new FlxSwipe(touchPointID, justPressedPosition, getScreenPosition(), justPressedTimeInTicks));
 		}
+		#end
 	}
 	
 	/**
@@ -129,5 +128,7 @@ class FlxTouch extends FlxPointer implements IFlxDestroyable
 	{
 		return input.justPressed;
 	}
-#end
 }
+#else
+class FlxTouch {}
+#end

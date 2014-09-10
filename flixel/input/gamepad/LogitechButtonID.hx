@@ -72,7 +72,7 @@ class LogitechButtonID
 	public static inline var DPAD_DOWN:Int = 5;
 	public static inline var DPAD_LEFT:Int = 6;
 	public static inline var DPAD_RIGHT:Int = 7;
-#else
+#else // native and html5
 	/**
 	 * Placement equivalent to 'X' button on the Xbox 360 controller.
 	 */
@@ -131,6 +131,6 @@ class LogitechButtonID
 	 * Axis array indicies
 	 */
 	public static var LEFT_ANALOG_STICK(default, null):FlxGamepadAnalogStick = [FlxAxes.X => 0, FlxAxes.Y => 1];
-	public static var RIGHT_ANALOG_STICK(default, null):FlxGamepadAnalogStick = [FlxAxes.X => 2, FlxAxes.Y => 3];
+	public static var RIGHT_ANALOG_STICK(default, null):FlxGamepadAnalogStick = [FlxAxes.X => 2, FlxAxes.Y => #if js 5 #else 3 #end];
 #end
 }

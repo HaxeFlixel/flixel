@@ -21,7 +21,7 @@ class FlxGTest extends FlxTest
 	#if !FLX_NO_TOUCH
 	@Test function testTouchNull():Void       { Assert.isNotNull(FlxG.touches); }
 	#end
-	#if (!FLX_NO_MOUSE || !FLX_NO_TOUCH)
+	#if FLX_POINTER_INPUT
 	@Test function testSwipesNull():Void      { Assert.isNotNull(FlxG.swipes); }
 	#end
 	#if !FLX_NO_KEYBOARD

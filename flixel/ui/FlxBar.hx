@@ -30,7 +30,8 @@ import flixel.util.loaders.CachedGraphics;
 class FlxBar extends FlxSprite
 {
 	/**
-	 * fixedPosition controls if the FlxBar sprite is at a fixed location on screen, or tracking its parent
+	 * If false, the bar is tracking its parent
+	 * (the position is synchronized with the parent's position).
 	 */
 	public var fixedPosition:Bool = true;
 	/**
@@ -828,7 +829,7 @@ class FlxBar extends FlxSprite
 		#end
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		if (_parent != null)
 		{
@@ -845,7 +846,7 @@ class FlxBar extends FlxSprite
 			}
 		}
 		
-		super.update();
+		super.update(elapsed);
 	}
 	
 	#if FLX_RENDER_TILE
@@ -857,9 +858,6 @@ class FlxBar extends FlxSprite
 		}
 		
 		var percentFrame:Int = 2 * (Math.floor(percent) - 1);
-		
-		var currDrawData:Array<Float>;
-		var currIndex:Int;
 		var drawItem:DrawStackItem;
 		
 		for (camera in cameras)
@@ -869,9 +867,6 @@ class FlxBar extends FlxSprite
 				continue;
 			}
 			drawItem = camera.getDrawStackItem(cachedGraphics, isColored, _blendInt, antialiasing);
-			
-			currDrawData = drawItem.drawData;
-			currIndex = drawItem.position;
 			
 			_point.x = x - (camera.scroll.x * scrollFactor.x) - (offset.x) + origin.x;
 			_point.y = y - (camera.scroll.y * scrollFactor.y) - (offset.y) + origin.y;
@@ -907,31 +902,11 @@ class FlxBar extends FlxSprite
 			}
 
 			// Draw empty bar
-			currDrawData[currIndex++] = _point.x - x2;
-			currDrawData[currIndex++] = _point.y - y2;
-			
-			currDrawData[currIndex++] = _emptyBarFrameID;
-			
-			currDrawData[currIndex++] = csx;
-			currDrawData[currIndex++] = -ssx;
-			currDrawData[currIndex++] = ssy;
-			currDrawData[currIndex++] = csy;
-
-			if (isColored)
-			{
-				currDrawData[currIndex++] = _red;
-				currDrawData[currIndex++] = _green;
-				currDrawData[currIndex++] = _blue;
-			}
-			currDrawData[currIndex++] = alpha;
-			
-			drawItem.position = currIndex;
+			_point.subtract(x2, y2);
+			drawItem.setDrawData(_point, _emptyBarFrameID, csx, -ssx, ssy, csy, isColored, color, alpha * camera.alpha);
 			
 			// Draw filled bar
 			drawItem = camera.getDrawStackItem(_cachedFrontGraphics, isColored, _blendInt, antialiasing);
-			
-			currDrawData = drawItem.drawData;
-			currIndex = drawItem.position;
 			
 			if (percentFrame >= 0)
 			{
@@ -950,26 +925,9 @@ class FlxBar extends FlxSprite
 				var relativeX:Float = (currTileX * csx + currTileY * ssy);
 				var relativeY:Float = (-currTileX * ssx + currTileY * csy);
 				
-				currDrawData[currIndex++] = _point.x + relativeX;
-				currDrawData[currIndex++] = _point.y + relativeY;
-				
-				currDrawData[currIndex++] = _filledBarFrames[percentFrame + 1];
-				
-				currDrawData[currIndex++] = csx;
-				currDrawData[currIndex++] = -ssx;
-				currDrawData[currIndex++] = ssy;
-				currDrawData[currIndex++] = csy;
-				
-				if (isColored)
-				{
-					currDrawData[currIndex++] = _red; 
-					currDrawData[currIndex++] = _green;
-					currDrawData[currIndex++] = _blue;
-				}
-				currDrawData[currIndex++] = alpha;
+				_point.add(relativeX, relativeY);
+				drawItem.setDrawData(_point, _filledBarFrames[percentFrame + 1], csx, -ssx, ssy, csy);
 			}
-			
-			drawItem.position = currIndex;
 			
 			#if !FLX_NO_DEBUG
 			FlxBasic.visibleCount++;

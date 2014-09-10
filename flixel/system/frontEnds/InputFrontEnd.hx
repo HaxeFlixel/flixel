@@ -2,18 +2,22 @@ package flixel.system.frontEnds;
 
 import flixel.FlxG;
 import flixel.input.IFlxInputManager;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxStringUtil;
 
-@:allow(flixel.FlxGame)
-@:allow(flixel.FlxG)
-@:allow(flixel.system.replay.FlxReplay)
-@:allow(flixel.system.frontEnds.VCRFrontEnd)
+@:allow(flixel)
 class InputFrontEnd
 {
 	/**
 	 * A read-only list of all inputs.
 	 */
 	public var list(default, null):Array<IFlxInputManager> = [];
+	
+	/**
+	 * Whether inputs are reset on state switches.
+	 * Disable if you need persistent input states across states.
+	 */
+	public var resetOnStateSwitch:Bool = true;
 	
 	/**
 	 * Add an input to the system
@@ -43,7 +47,6 @@ class InputFrontEnd
 	 * @param	Input	The input to remove
 	 * @return	Bool indicating whether it was removed or not
 	 */
-	
 	@:generic
 	public function remove<T:IFlxInputManager>(Input:T):Bool
 	{
@@ -67,7 +70,6 @@ class InputFrontEnd
 	 * @param	New 	The new input to put in its place
 	 * @return	If successful returns New. Otherwise returns null.
 	 */
-	
 	@:generic
 	public function replace<T:IFlxInputManager>(Old:T,New:T):T
 	{
@@ -75,7 +77,8 @@ class InputFrontEnd
 		var success:Bool = false;
 		for (input in list)
 		{
-			if (input == Old) {
+			if (input == Old)
+			{
 				list[i] = New;			//Replace Old with New
 				success = true;
 				break;
@@ -83,15 +86,13 @@ class InputFrontEnd
 			i++;
 		}
 		
-		if (success) {
+		if (success)
+		{
 			return New;
 		}
 		return null;
 	}
 	
-	/**
-	 * Resets the inputs.
-	 */
 	public function reset():Void
 	{
 		for (input in list)
@@ -102,9 +103,6 @@ class InputFrontEnd
 	
 	private function new() {}
 	
-	/**
-	 * Updates the inputs
-	 */
 	private inline function update():Void
 	{
 		for (input in list)
@@ -113,9 +111,6 @@ class InputFrontEnd
 		}
 	}
 	
-	/**
-	 * Updates the inputs from FlxGame Focus
-	 */
 	private inline function onFocus():Void
 	{
 		for (input in list)
@@ -124,9 +119,6 @@ class InputFrontEnd
 		}
 	}
 	
-	/**
-	 * Updates the inputs from FlxGame FocusLost
-	 */	
 	private inline function onFocusLost():Void
 	{
 		for (input in list)
@@ -135,15 +127,19 @@ class InputFrontEnd
 		}
 	}
 	
-	/**
-	 * Clean up memory.
-	 */
-	private inline function destroy():Void
+	private function onStateSwitch():Void
+	{
+		if (resetOnStateSwitch)
+		{
+			reset();
+		}
+	}
+	
+	private function destroy():Void
 	{
 		for (input in list)
 		{
-			input.destroy();
-			input = null;
+			input = FlxDestroyUtil.destroy(input);
 		}
 	}
 }

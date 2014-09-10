@@ -12,29 +12,44 @@ class FlxRandom
 	/**
 	 * The global base random number generator seed (for deterministic behavior in recordings and saves).
 	 * If you want, you can set the seed with an integer between 1 and 2,147,483,647 inclusive.
-	 * However, FlxG automatically sets this with a new random seed when starting your game.
 	 * Altering this yourself may break recording functionality!
 	 */
-	public static var globalSeed(default, set):Int = 1;
-	
-	/**
-	 * Function to easily set the global seed to a new random number.
-	 * Used primarily by FlxG whenever the game is reset.
-	 * Please note that this function is not deterministic!
-	 * If you call it in your game, recording may not function as expected.
-	 * 
-	 * @return  The new global seed.
-	 */
-	public static inline function resetGlobalSeed():Int
-	{
-		return globalSeed = rangeBound(Std.int(Math.random() * FlxMath.MAX_VALUE_INT));
-	}
+	public var initialSeed(default, set):Int = 1;
 	
 	/**
 	 * Current seed used to generate new random numbers. You can retrieve this value if,
 	 * for example, you want to store the seed that was used to randomly generate a level.
 	 */
-	public static var currentSeed(get, set):Int;
+	public var currentSeed(get, set):Int;
+	
+	/**
+	 * Create a new FlxRandom object.
+	 * 
+	 * @param	InitialSeed  The first seed of this FlxRandom object. If ignored, a random seed will be generated.
+	 */
+	public function new(?InitialSeed:Int)
+	{
+		if (InitialSeed != null)
+		{
+			initialSeed = InitialSeed;
+		}
+		else
+		{
+			resetInitialSeed();
+		}
+	}
+	
+	/**
+	 * Function to easily set the global seed to a new random number.
+	 * Please note that this function is not deterministic!
+	 * If you call it in your game, recording may not function as expected.
+	 * 
+	 * @return  The new initial seed.
+	 */
+	public inline function resetInitialSeed():Int
+	{
+		return initialSeed = rangeBound(Std.int(Math.random() * FlxMath.MAX_VALUE_INT));
+	}
 	
 	/**
 	 * Returns a pseudorandom integer between Min and Max, inclusive.
@@ -45,7 +60,7 @@ class FlxRandom
 	 * @param   Max        The maximum value that should be returned. 2,147,483,647 by default.
 	 * @param   Excludes   Optional array of values that should not be returned.
 	 */
-	public static function int(Min:Int = 0, Max:Int = FlxMath.MAX_VALUE_INT, ?Excludes:Array<Int>):Int
+	public function int(Min:Int = 0, Max:Int = FlxMath.MAX_VALUE_INT, ?Excludes:Array<Int>):Int
 	{
 		if (Min == 0 && Max == FlxMath.MAX_VALUE_INT && Excludes == null)
 		{
@@ -94,7 +109,7 @@ class FlxRandom
 	 * @param   Max        The maximum value that should be returned. 1 by default.
 	 * @param   Excludes   Optional array of values that should not be returned.
 	 */
-	public static function float(Min:Float = 0, Max:Float = 1, ?Excludes:Array<Float>):Float
+	public function float(Min:Float = 0, Max:Float = 1, ?Excludes:Array<Float>):Float
 	{
 		var result:Float = 0;
 		
@@ -133,16 +148,55 @@ class FlxRandom
 		return result;
 	}
 	
+	
+	//helper variables for floatNormal -- it produces TWO random values with each call so we have to store some state outside the function
+	private var _hasFloatNormalSpare:Bool = false;
+	private var _floatNormalRand1:Float = 0;
+	private var _floatNormalRand2:Float = 0;
+	private var _twoPI:Float = Math.PI * 2;
+	private var _floatNormalRho:Float = 0;
+	
+	/**
+	 * Returns a pseudorandom float value in a statistical normal distribution centered on Mean with a standard deviation size of StdDev.
+	 * (This uses the Box-Muller transform algorithm for guassian pseudorandom numbers)
+	 * 
+	 * Normal distribution: 68% values are within 1 standard deviation, 95% are in 2 StdDevs, 99% in 3 StdDevs.
+	 * See this image: https://github.com/HaxeFlixel/flixel-demos/blob/dev/Performance/FlxRandom/normaldistribution.png
+	 * 
+	 * @param	Mean		The Mean around which the normal distribution is centered
+	 * @param	StdDev		Size of the standard deviation
+	 */
+	public function floatNormal(Mean:Float = 0, StdDev:Float = 1):Float
+	{
+		if (_hasFloatNormalSpare)
+		{
+			_hasFloatNormalSpare = false;
+			var scale:Float = StdDev * _floatNormalRho;
+			return Mean + scale * _floatNormalRand2;
+		}
+		
+		_hasFloatNormalSpare = true;
+		
+		var theta:Float = _twoPI * (generate() / MODULUS);
+		_floatNormalRho = Math.sqrt( -2 * Math.log(1 - (generate() / MODULUS)));
+		var scale:Float = StdDev * _floatNormalRho;
+		
+		_floatNormalRand1 = Math.cos(theta);
+		_floatNormalRand2 = Math.sin(theta);
+		
+		return Mean + scale * _floatNormalRand1;
+	}
+	
 	/**
 	 * Returns true or false based on the chance value (default 50%). 
-	 * For example if you wanted a player to have a 30% chance of getting a bonus,
-	 * call chanceRoll(30) - true means the chance passed, false means it failed.
+	 * For example if you wanted a player to have a 30.5% chance of getting a bonus,
+	 * call bool(30.5) - true means the chance passed, false means it failed.
 	 * 
 	 * @param   Chance   The chance of receiving the value.
 	 *                   Should be given as a number between 0 and 100 (effectively 0% to 100%)
 	 * @return  Whether the roll passed or not.
 	 */
-	public static inline function chanceRoll(Chance:Float = 50):Bool
+	public inline function bool(Chance:Float = 50):Bool
 	{
 		return float(0, 100) < Chance;
 	}
@@ -154,9 +208,9 @@ class FlxRandom
 	 *                   Should be given as a number between 0 and 100 (effectively 0% to 100%)
 	 * @return  1 or -1
 	 */
-	public static inline function sign(Chance:Float = 50):Int
+	public inline function sign(Chance:Float = 50):Int
 	{
-		return chanceRoll(Chance) ? 1 : -1;
+		return bool(Chance) ? 1 : -1;
 	}
 	
 	/**
@@ -168,7 +222,7 @@ class FlxRandom
 	 * @param   WeightsArray   An array of weights.
 	 * @return  A value between 0 and (SelectionArray.length - 1), with a probability equivalent to the values in SelectionArray.
 	 */
-	public static function weightedPick(WeightsArray:Array<Float>):Int
+	public function weightedPick(WeightsArray:Array<Float>):Int
 	{
 		var totalWeight:Float = 0;
 		var pick:Int = 0;
@@ -206,7 +260,7 @@ class FlxRandom
 	 * @return  A pseudorandomly chosen object from Objects.
 	 */
 	@:generic
-	public static function getObject<T>(Objects:Array<T>, ?WeightsArray:Array<Float>, StartIndex:Int = 0, ?EndIndex:Null<Int>):T
+	public function getObject<T>(Objects:Array<T>, ?WeightsArray:Array<Float>, StartIndex:Int = 0, ?EndIndex:Null<Int>):T
 	{
 		var selected:Null<T> = null;
 		
@@ -255,7 +309,7 @@ class FlxRandom
 	 * @return  The newly shuffled array.
 	 */
 	@:generic
-	public static function shuffleArray<T>(Objects:Array<T>, HowManyTimes:Int):Array<T>
+	public function shuffleArray<T>(Objects:Array<T>, HowManyTimes:Int):Array<T>
 	{
 		HowManyTimes = Std.int(Math.max(HowManyTimes, 0));
 		
@@ -283,7 +337,7 @@ class FlxRandom
 	 * @param   GreyScale  Whether or not to create a color that is strictly a shade of grey. False by default.
 	 * @return  A color value as a FlxColor.
 	 */
-	public static function color(?Min:FlxColor, ?Max:FlxColor, ?Alpha:Null<Int>, GreyScale:Bool = false):FlxColor
+	public function color(?Min:FlxColor, ?Max:FlxColor, ?Alpha:Null<Int>, GreyScale:Bool = false):FlxColor
 	{
 		var red:Int;
 		var green:Int;
@@ -323,48 +377,59 @@ class FlxRandom
 	}
 	
 	/**
-	 * The actual internal seed. Stored as a Float value to prevent inaccuracies due to
-	 * integer overflow in the generate() equation.
+	 * Internal method to quickly generate a pseudorandom number. Used only by other functions of this class.
+	 * Also updates the internal seed, which will then be used to generate the next pseudorandom number.
+	 * 
+	 * @return  A new pseudorandom number.
 	 */
-	private static var internalSeed:Float = 1;
-	
-	/**
-	 * Internal helper variable. Used by getObject().
-	 */
-	private static var _arrayFloatHelper:Array<Float> = null;
-	
-	/**
-	 * Internal function to update the internal seed whenever the global seed is reset,
-	 * and keep the global seed's value in range.
-	 */
-	private static inline function set_globalSeed(NewSeed:Int):Int
+	private inline function generate():Float
 	{
-		return globalSeed = currentSeed = rangeBound(NewSeed);
+		return internalSeed = (internalSeed * MULTIPLIER) % MODULUS;
 	}
 	
 	/**
-	 * Internal function to return the internal seed as an integer.
+	 * The actual internal seed. Stored as a Float value to prevent inaccuracies due to
+	 * integer overflow in the generate() equation.
 	 */
-	private static inline function get_currentSeed():Int
+	private var internalSeed:Float = 1;
+	
+	/**
+	 * Internal function to update the current seed whenever the initial seed is reset,
+	 * and keep the initial seed's value in range.
+	 */
+	private inline function set_initialSeed(NewSeed:Int):Int
+	{
+		return initialSeed = currentSeed = rangeBound(NewSeed);
+	}
+	
+	/**
+	 * Returns the internal seed as an integer.
+	 */
+	private inline function get_currentSeed():Int
 	{
 		return Std.int(internalSeed);
 	}
 	
 	/**
-	 * Internal function to set the internal seed to an integer value.
+	 * Sets the internal seed to an integer value.
 	 */
-	private static inline function set_currentSeed(NewSeed:Int):Int
+	private inline function set_currentSeed(NewSeed:Int):Int
 	{
 		return Std.int(internalSeed = rangeBound(NewSeed));
 	}
 	
 	/**
-	 * Internal function to ensure an arbitrary value is in the valid range of seed values.
+	 * Internal shared function to ensure an arbitrary value is in the valid range of seed values.
 	 */
 	private static inline function rangeBound(Value:Int):Int
 	{
 		return Std.int(FlxMath.bound(Value, 1, MODULUS - 1));
 	}
+	
+	/**
+	 * Internal shared helper variable. Used by getObject().
+	 */
+	private static var _arrayFloatHelper:Array<Float> = null;
 	
 	/**
 	 * Constants used in the pseudorandom number generation equation.
@@ -377,17 +442,6 @@ class FlxRandom
 	 */
 	private static inline var MULTIPLIER:Float = 48271.0;
 	private static inline var MODULUS:Int = FlxMath.MAX_VALUE_INT;
-	
-	/**
-	 * Internal method to quickly generate a pseudorandom number. Used only by other functions of this class.
-	 * Also updates the internal seed, which will then be used to generate the next pseudorandom number.
-	 * 
-	 * @return  A new pseudorandom number.
-	 */
-	private static inline function generate():Float
-	{
-		return internalSeed = (internalSeed * MULTIPLIER) % MODULUS;
-	}
 	
 	#if FLX_RECORD
 	/**
@@ -409,7 +463,7 @@ class FlxRandom
 	@:allow(flixel.FlxGame.switchState)
 	private static inline function updateStateSeed():Int
 	{
-		return _stateSeed = currentSeed;
+		return _stateSeed = FlxG.random.currentSeed;
 	}
 	
 	/**
@@ -421,7 +475,7 @@ class FlxRandom
 	@:allow(flixel.system.frontEnds.VCRFrontEnd.startRecording)
 	private static inline function updateRecordingSeed(StandardMode:Bool = true):Int
 	{
-		return _recordingSeed = globalSeed = StandardMode ? globalSeed : _stateSeed;
+		return _recordingSeed = FlxG.random.initialSeed = StandardMode ? FlxG.random.initialSeed : _stateSeed;
 	}
 	
 	/**

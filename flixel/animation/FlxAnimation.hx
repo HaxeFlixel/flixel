@@ -105,7 +105,7 @@ class FlxAnimation extends FlxBaseAnimation
 		
 		if (Frame < 0)
 		{
-			curFrame = FlxRandom.int(0, numFrames - 1);
+			curFrame = FlxG.random.int(0, numFrames - 1);
 		}
 		else if (numFrames > Frame)
 		{
@@ -128,14 +128,14 @@ class FlxAnimation extends FlxBaseAnimation
 		paused = true;
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		if (delay > 0 && (looped || !finished) && !paused)
 		{
-			_frameTimer += FlxG.elapsed;
+			_frameTimer += elapsed;
 			while (_frameTimer > delay)
 			{
-				_frameTimer = _frameTimer - delay;
+				_frameTimer -= delay;
 				if (looped && (curFrame == numFrames - 1))
 				{
 					curFrame = 0;
@@ -168,7 +168,7 @@ class FlxAnimation extends FlxBaseAnimation
 	{
 		if (Frame >= 0)
 		{
-			if (!looped && Frame >= numFrames)
+			if (!looped && Frame >= (numFrames - 1))
 			{
 				finished = true;
 				curFrame = numFrames - 1;
@@ -180,7 +180,7 @@ class FlxAnimation extends FlxBaseAnimation
 		}
 		else
 		{
-			curFrame = FlxRandom.int(0, numFrames - 1);
+			curFrame = FlxG.random.int(0, numFrames - 1);
 		}
 		
 		curIndex = _frames[curFrame];

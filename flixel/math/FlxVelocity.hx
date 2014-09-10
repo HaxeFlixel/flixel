@@ -44,22 +44,14 @@ class FlxVelocity
 	 * 
 	 * @param	Source			The FlxSprite on which the acceleration will be set
 	 * @param	Dest			The FlxSprite where the source object will move towards
-	 * @param	Speed			The speed it will accelerate in pixels per second
-	 * @param	MaxXSpeed		The maximum speed in pixels per second in which the sprite can move horizontally
-	 * @param	MaxYSpeed		The maximum speed in pixels per second in which the sprite can move vertically
+	 * @param	Acceleration	The speed it will accelerate in pixels per second
+	 * @param	MaxSpeed		The maximum speed in pixels per second in which the sprite can move 
 	 */
-	public static function accelerateTowardsObject(Source:FlxSprite, Dest:FlxSprite, Acceleration:Float, MaxXSpeed:Float, MaxYSpeed:Float):Void
+	public static function accelerateTowardsObject(Source:FlxSprite, Dest:FlxSprite, Acceleration:Float, MaxSpeed:Float):Void
 	{
 		var a:Float = FlxAngle.angleBetween(Source, Dest);
 		
-		Source.velocity.x = 0;
-		Source.velocity.y = 0;
-		
-		Source.acceleration.x = Math.cos(a) * Acceleration;
-		Source.acceleration.y = Math.sin(a) * Acceleration;
-		
-		Source.maxVelocity.x = MaxXSpeed;
-		Source.maxVelocity.y = MaxYSpeed;
+		accelerateFromAngle(Source, a, Acceleration, MaxSpeed);
 	}
 	
 	#if !FLX_NO_MOUSE
@@ -125,22 +117,14 @@ class FlxVelocity
 	 * If you don't need acceleration look at moveTowardsMouse() instead.
 	 * 
 	 * @param	Source			The FlxSprite on which the acceleration will be set
-	 * @param	Speed			The speed it will accelerate in pixels per second
-	 * @param	MaxXSpeed		The maximum speed in pixels per second in which the sprite can move horizontally
-	 * @param	MaxYSpeed		The maximum speed in pixels per second in which the sprite can move vertically
+	 * @param	Acceleration			The speed it will accelerate in pixels per second
+	 * @param	MaxSpeed		The maximum speed in pixels per second in which the sprite can move 
 	 */
-	public static function accelerateTowardsMouse(Source:FlxSprite, Acceleration:Float, MaxXSpeed:Float, MaxYSpeed:Float):Void
+	public static function accelerateTowardsMouse(Source:FlxSprite, Acceleration:Float, MaxSpeed:Float):Void
 	{
 		var a:Float = FlxAngle.angleBetweenMouse(Source);
 		
-		Source.velocity.x = 0;
-		Source.velocity.y = 0;
-		
-		Source.acceleration.x = Math.cos(a) * Acceleration;
-		Source.acceleration.y = Math.sin(a) * Acceleration;
-		
-		Source.maxVelocity.x = MaxXSpeed;
-		Source.maxVelocity.y = MaxYSpeed;
+		accelerateFromAngle(Source, a, Acceleration, MaxSpeed);
 	}
 	#end
 	
@@ -152,22 +136,14 @@ class FlxVelocity
 	 * 
 	 * @param	Source			The FlxSprite on which the acceleration will be set
 	 * @param	Touch			The FlxTouch on which to accelerate towards
-	 * @param	Speed			The speed it will accelerate in pixels per second
-	 * @param	MaxXSpeed		The maximum speed in pixels per second in which the sprite can move horizontally
-	 * @param	MaxYSpeed		The maximum speed in pixels per second in which the sprite can move vertically
+	 * @param	Acceleration	The speed it will accelerate in pixels per second
+	 * @param	MaxSpeed		The maximum speed in pixels per second in which the sprite can move
 	 */
-	public static function accelerateTowardsTouch(Source:FlxSprite, Touch:FlxTouch, Acceleration:Float, MaxXSpeed:Float, MaxYSpeed:Float):Void
+	public static function accelerateTowardsTouch(Source:FlxSprite, Touch:FlxTouch, Acceleration:Float, MaxSpeed:Float):Void
 	{
 		var a:Float = FlxAngle.angleBetweenTouch(Source, Touch);
 		
-		Source.velocity.x = 0;
-		Source.velocity.y = 0;
-		
-		Source.acceleration.x = Math.cos(a) * Acceleration;
-		Source.acceleration.y = Math.sin(a) * Acceleration;
-		
-		Source.maxVelocity.x = MaxXSpeed;
-		Source.maxVelocity.y = MaxYSpeed;
+		accelerateFromAngle(Source, a, Acceleration, MaxSpeed);
 	}
 	#end
 	
@@ -207,22 +183,14 @@ class FlxVelocity
 	 * 
 	 * @param	Source			The FlxSprite on which the acceleration will be set
 	 * @param	Target			The FlxPoint coordinates to move the source FlxSprite towards
-	 * @param	Speed			The speed it will accelerate in pixels per second
-	 * @param	MaxXSpeed		The maximum speed in pixels per second in which the sprite can move horizontally
-	 * @param	MaxYSpeed		The maximum speed in pixels per second in which the sprite can move vertically
+	 * @param	Acceleration	The speed it will accelerate in pixels per second
+	 * @param	MaxSpeed		The maximum speed in pixels per second in which the sprite can move
 	 */
-	public static function accelerateTowardsPoint(Source:FlxSprite, Target:FlxPoint, Acceleration:Float, MaxXSpeed:Float, MaxYSpeed:Float):Void
+	public static function accelerateTowardsPoint(Source:FlxSprite, Target:FlxPoint, Acceleration:Float, MaxSpeed:Float):Void
 	{
 		var a:Float = FlxAngle.angleBetweenPoint(Source, Target);
 		
-		Source.velocity.x = 0;
-		Source.velocity.y = 0;
-		
-		Source.acceleration.x = Math.cos(a) * Acceleration;
-		Source.acceleration.y = Math.sin(a) * Acceleration;
-		
-		Source.maxVelocity.x = MaxXSpeed;
-		Source.maxVelocity.y = MaxYSpeed;
+		accelerateFromAngle(Source, a, Acceleration, MaxSpeed);
 		
 		Target.putWeak();
 	}
@@ -238,12 +206,7 @@ class FlxVelocity
 	{
 		var a:Float = FlxAngle.asRadians(Angle);
 		
-		var result = FlxPoint.get();
-		
-		result.x = Math.cos(a) * Speed;
-		result.y = Math.sin(a) * Speed;
-		
-		return result;
+		return FlxPoint.get(Math.cos(a) * Speed, Math.sin(a) * Speed);
 	}
 	
 	/**
@@ -255,31 +218,8 @@ class FlxVelocity
 	 */
 	public static function velocityFromFacing(Parent:FlxSprite, Speed:Float):FlxPoint
 	{
-		var a:Float = 0;
-		
-		if (Parent.facing == FlxObject.LEFT)
-		{
-			a = FlxAngle.asRadians(180);
-		}
-		else if (Parent.facing == FlxObject.RIGHT)
-		{
-			a = FlxAngle.asRadians(0);
-		}
-		else if (Parent.facing == FlxObject.UP)
-		{
-			a = FlxAngle.asRadians( -90);
-		}
-		else if (Parent.facing == FlxObject.DOWN)
-		{
-			a = FlxAngle.asRadians(90);
-		}
-		
-		var result:FlxPoint = FlxPoint.get();
-		
-		result.x = Math.cos(a) * Speed;
-		result.y = Math.sin(a) * Speed;
-		
-		return result;
+		var a = FlxAngle.angleFromFacing(Parent);
+		return FlxPoint.get(Math.cos(a) * Speed, Math.sin(a) * Speed);
 	}
 	
 	/**
@@ -289,17 +229,18 @@ class FlxVelocity
 	 * @param	Acceleration		Rate at which the velocity is changing.
 	 * @param	Drag			Really kind of a deceleration, this is how much the velocity changes if Acceleration is not set.
 	 * @param	Max				An absolute value cap for the velocity (0 for no cap).
+	 * @param	Elapsed			The amount of time passed in to the latest update cycle
 	 * @return	The altered Velocity value.
 	 */
-	public static function computeVelocity(Velocity:Float, Acceleration:Float, Drag:Float, Max:Float):Float
+	public static function computeVelocity(Velocity:Float, Acceleration:Float, Drag:Float, Max:Float, Elapsed:Float):Float
 	{
 		if (Acceleration != 0)
 		{
-			Velocity += Acceleration * FlxG.elapsed;
+			Velocity += Acceleration * Elapsed;
 		}
 		else if (Drag != 0)
 		{
-			var drag:Float = Drag * FlxG.elapsed;
+			var drag:Float = Drag * Elapsed;
 			if (Velocity - drag > 0)
 			{
 				Velocity = Velocity - drag;
@@ -325,5 +266,17 @@ class FlxVelocity
 			}
 		}
 		return Velocity;
+	}
+	
+	public static inline function accelerateFromAngle(source:FlxSprite, radians:Float, acceleration:Float, maxSpeed:Float, resetVelocity:Bool = true):Void
+	{
+		var sin = Math.sin(radians);
+		var cos = Math.cos(radians);
+		
+		if(resetVelocity)
+			source.velocity.set(0, 0);
+		
+		source.acceleration.set(cos * acceleration, sin * acceleration);
+		source.maxVelocity.set(cos * maxSpeed, sin * maxSpeed);		
 	}
 }

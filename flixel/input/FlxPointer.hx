@@ -19,8 +19,8 @@ class FlxPointer
  	public function new() {}
 	
 	/**
-	 * Fetch the world position of the input on any given camera.
-	 * NOTE: x and y also store the world position of the point on the main camera.
+	 * Fetch the world position of the pointer on any given camera.
+	 * NOTE: x and y also store the world position of the pointer on the main camera.
 	 * 
 	 * @param 	Camera	If unspecified, first/main global camera is used instead.
 	 * @param 	point	An existing point object to store the results (if you don't want a new one created). 
@@ -44,8 +44,8 @@ class FlxPointer
 	}
 	
 	/**
-	 * Fetch the screen position of the touch on any given camera.
-	 * NOTE: Touch.screenX and Touch.screenY also store the screen position of the touch point on the main camera.
+	 * Fetch the screen position of the pointer on any given camera.
+	 * NOTE: screenX and screenY also store the screen position of the pointer on the main camera.
 	 * 
 	 * @param 	Camera	If unspecified, first/main global camera is used instead.
 	 * @param 	point		An existing point object to store the results (if you don't want a new one created). 

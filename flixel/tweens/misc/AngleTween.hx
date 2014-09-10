@@ -50,7 +50,7 @@ class AngleTween extends FlxTween
 		}
 		else 
 		{
-			_range = FlxRandom.float(180, -180);
+			_range = FlxG.random.float(180, -180);
 		}
 		duration = Duration;
 		sprite = Sprite;
@@ -58,9 +58,9 @@ class AngleTween extends FlxTween
 		return this;
 	}
 	
-	override private function update():Void
+	override private function update(elapsed:Float):Void
 	{
-		super.update();
+		super.update(elapsed);
 		
 		angle = (_start + _range * scale) % 360;
 		

@@ -60,14 +60,14 @@ class VarTween extends FlxTween
 		return this;
 	}
 	
-	override private function update():Void
+	override private function update(elapsed:Float):Void
 	{
 		var delay:Float = (executions > 0) ? loopDelay : startDelay;
 		
 		if (_secondsSinceStart < delay)
 		{
 			// Leave properties alone until delay is over
-			super.update();
+			super.update(elapsed);
 		}
 		else
 		{
@@ -78,7 +78,7 @@ class VarTween extends FlxTween
 				initializeVars();
 			}
 			
-			super.update();
+			super.update(elapsed);
 			
 			var i:Int = _vars.length;
 			while (i-- > 0) 
@@ -106,7 +106,7 @@ class VarTween extends FlxTween
 		{
 			if (Reflect.getProperty(_object, p) == null)
 			{
-				throw "The Object does not have the property \"" + p + "\", or it is not accessible.";
+				throw 'The Object does not have the property "$p"';
 			}
 			
 			var a:Dynamic = Reflect.getProperty(_object, p);

@@ -13,7 +13,7 @@ import flixel.util.FlxArrayUtil;
 /**
  * This is a simple path data container.  Basically a list of points that
  * a FlxObject can follow.  Also has code for drawing debug visuals.
- * FlxTilemap.findPath() returns a path object, but you can
+ * FlxTilemap.findPath() returns a path usable by FlxPath, but you can
  * also just make your own, using the add() functions below
  * or by creating your own array of points.
  */
@@ -128,6 +128,8 @@ class FlxPath implements IFlxDestroyable
 	
 	private var _inManager:Bool = false;
 	
+	private var _wasObjectImmovable:Bool;
+	
 	/**
 	 * Creates a new FlxPath (and calls start() right away if Object != null).
 	 */
@@ -172,7 +174,7 @@ class FlxPath implements IFlxDestroyable
 		
 		finished = false;
 		active = true;
-		if (nodes.length <= 0)
+		if (nodes == null || nodes.length <= 0)
 		{
 			active = false;
 		}
@@ -189,7 +191,9 @@ class FlxPath implements IFlxDestroyable
 			_inc = 1;
 		}
 		
+		_wasObjectImmovable = object.immovable;
 		object.immovable = true;
+		
 		return this;
 	}
 	
@@ -215,15 +219,14 @@ class FlxPath implements IFlxDestroyable
 	 * The first half of the function decides if the object can advance to the next node in the path,
 	 * while the second half handles actually picking a velocity toward the next node.
 	 */
-	public function update():Void
+	public function update(elapsed:Float):Void
 	{
 		//first check if we need to be pointing at the next node yet
 		_point.x = object.x;
 		_point.y = object.y;
 		if (autoCenter)
 		{
-			_point.x += object.width * 0.5;
-			_point.y += object.height * 0.5;
+			_point.add(object.width * 0.5, object.height * 0.5);
 		}
 		var node:FlxPoint = nodes[nodeIndex];
 		var deltaX:Float = node.x - _point.x;
@@ -234,21 +237,21 @@ class FlxPath implements IFlxDestroyable
 		
 		if (horizontalOnly)
 		{
-			if (((deltaX > 0) ? deltaX : -deltaX) < speed * FlxG.elapsed)
+			if (((deltaX > 0) ? deltaX : -deltaX) < speed * elapsed)
 			{
 				node = advancePath();
 			}
 		}
 		else if (verticalOnly)
 		{
-			if (((deltaY > 0) ? deltaY : -deltaY) < speed * FlxG.elapsed)
+			if (((deltaY > 0) ? deltaY : -deltaY) < speed * elapsed)
 			{
 				node = advancePath();
 			}
 		}
 		else
 		{
-			if (Math.sqrt(deltaX * deltaX + deltaY * deltaY) < speed * FlxG.elapsed)
+			if (Math.sqrt(deltaX * deltaX + deltaY * deltaY) < speed * elapsed)
 			{
 				node = advancePath();
 			}
@@ -263,51 +266,16 @@ class FlxPath implements IFlxDestroyable
 			
 			if (autoCenter)
 			{
-				_point.x += object.width * 0.5;
-				_point.y += object.height * 0.5;
+				_point.add(object.width * 0.5, object.height * 0.5);
 			}
 			
-			if (horizontalOnly || (_point.y == node.y))
+			if (!_point.equals(node))
 			{
-				object.velocity.x = (_point.x < node.x) ? speed : -speed;
-				if (object.velocity.x < 0)
-				{
-					angle = -90;
-				}
-				else
-				{
-					angle = 90;
-				}
-				if (!horizontalOnly)
-				{
-					object.velocity.y = 0;
-				}
-			}
-			else if (verticalOnly || (_point.x == node.x))
-			{
-				object.velocity.y = (_point.y < node.y) ? speed : -speed;
-				if (object.velocity.y < 0)
-				{
-					angle = 0;
-				}
-				else
-				{
-					angle = 180;
-				}
-				if (!verticalOnly)
-				{
-					object.velocity.x = 0;
-				}
+				calculateVelocity(node, horizontalOnly, verticalOnly);
 			}
 			else
 			{
-				object.velocity.x = (_point.x < node.x) ? speed : -speed;
-				object.velocity.y = (_point.y < node.y) ? speed : -speed;
-				
-				angle = _point.angleBetween(node);
-				
-				object.velocity.set(0, -speed);
-				object.velocity.rotate(FlxPoint.weak(0, 0), angle);
+				object.velocity.set();
 			}
 			
 			//then set object rotation if necessary
@@ -322,6 +290,40 @@ class FlxPath implements IFlxDestroyable
 			{
 				cancel();
 			}
+		}
+	}
+	
+	private function calculateVelocity(node:FlxPoint, horizontalOnly:Bool, verticalOnly:Bool):Void
+	{
+		if (horizontalOnly || _point.y == node.y)
+		{
+			object.velocity.x = (_point.x < node.x) ? speed : -speed;
+			angle = (object.velocity.x < 0) ? -90 : 90;
+			
+			if (!horizontalOnly)
+			{
+				object.velocity.y = 0;
+			}
+		}
+		else if (verticalOnly || _point.x == node.x)
+		{
+			object.velocity.y = (_point.y < node.y) ? speed : -speed;
+			angle = (object.velocity.y < 0) ? 0 : 180;
+			
+			if (!verticalOnly)
+			{
+				object.velocity.x = 0;
+			}
+		}
+		else
+		{
+			object.velocity.x = (_point.x < node.x) ? speed : -speed;
+			object.velocity.y = (_point.y < node.y) ? speed : -speed;
+			
+			angle = _point.angleBetween(node);
+			
+			object.velocity.set(0, -speed);
+			object.velocity.rotate(FlxPoint.weak(0, 0), angle);
 		}
 	}
 	
@@ -360,7 +362,8 @@ class FlxPath implements IFlxDestroyable
 			if (nodeIndex < 0)
 			{
 				nodeIndex = 0;
-				finished = callComplete = true;
+				callComplete = true;
+				onEnd();
 			}
 		}
 		else if ((_mode & FlxPath.LOOP_FORWARD) > 0)
@@ -418,7 +421,8 @@ class FlxPath implements IFlxDestroyable
 			if (nodeIndex >= nodes.length)
 			{
 				nodeIndex = nodes.length - 1;
-				finished = callComplete = true;
+				callComplete = true;
+				onEnd();
 			}
 		}
 		
@@ -435,8 +439,7 @@ class FlxPath implements IFlxDestroyable
 	 */
 	public function cancel():Void
 	{
-		finished = true;
-		active = false;
+		onEnd();
 		
 		if (object != null)
 		{
@@ -451,15 +454,21 @@ class FlxPath implements IFlxDestroyable
 	}
 	
 	/**
+	 * Called when the path ends, either by completing normally or via cancel().
+	 */
+	private function onEnd():Void
+	{
+		finished = true;
+		active = false;
+		object.immovable = _wasObjectImmovable;
+	}
+	
+	/**
 	 * Clean up memory.
 	 */
 	public function destroy():Void
 	{
-		// recycle FlxPoints
-		for (point in nodes)
-		{
-			point = FlxDestroyUtil.put(point);
-		}
+		FlxDestroyUtil.putArray(nodes);
 		nodes = null;
 		object = null;
 		onComplete = null;
@@ -730,13 +739,13 @@ class FlxPathManager extends FlxBasic
 		super.destroy();
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		for (path in _paths)
 		{
 			if (path.active)
 			{
-				path.update();
+				path.update(elapsed);
 			}
 		}
 	}

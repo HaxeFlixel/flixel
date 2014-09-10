@@ -5,9 +5,7 @@ import flixel.animation.FlxAnimation;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.util.FlxColor;
-import helper.TestUtil;
 import massive.munit.Assert;
-import massive.munit.async.AsyncFactory;
 
 class FlxSpriteTest extends FlxTest
 {
@@ -22,6 +20,8 @@ class FlxSpriteTest extends FlxTest
 		
 		sprite2 = new FlxSprite();
 		sprite2.makeGraphic(100, 80);
+		
+		destroyable = sprite1;
 	}
 	
 	@Test
@@ -81,13 +81,13 @@ class FlxSpriteTest extends FlxTest
 		var color = FlxColor.RED;
 		var colorSprite = new FlxSprite();
 		colorSprite.makeGraphic(100, 100, color);
-		Assert.areEqual(color.to24Bit(), colorSprite.framePixels.getPixel(0, 0));
-		Assert.areEqual(color.to24Bit(), colorSprite.framePixels.getPixel(90, 90));
+		Assert.areEqual(color.to24Bit(), colorSprite.pixels.getPixel(0, 0));
+		Assert.areEqual(color.to24Bit(), colorSprite.pixels.getPixel(90, 90));
 		
 		color = FlxColor.GREEN;
 		colorSprite = new FlxSprite();
 		colorSprite.makeGraphic(120, 120, color);
-		Assert.areEqual(color.to24Bit(), colorSprite.framePixels.getPixel(119, 119));
+		Assert.areEqual(color.to24Bit(), colorSprite.pixels.getPixel(119, 119));
 	}
 
 	@Test
@@ -181,8 +181,8 @@ class FlxSpriteTest extends FlxTest
 		Assert.areEqual(positionSprite.y, 545);
 	}
 	
-	@AsyncTest
-	function testOverlap(factory:AsyncFactory):Void
+	@Test
+	function testOverlap():Void
 	{
 		Assert.isTrue(FlxG.overlap(sprite1, sprite2));
 		
@@ -193,9 +193,8 @@ class FlxSpriteTest extends FlxTest
 		FlxG.state.add(sprite1);
 		FlxG.state.add(sprite2);
 		
-		delay(this, factory, function() { 
-			Assert.isFalse(FlxG.overlap(sprite1, sprite2)); 
-		});
+		step(60);
+		Assert.isFalse(FlxG.overlap(sprite1, sprite2)); 
 	}
 	
 	@Test
@@ -211,9 +210,10 @@ class FlxSpriteTest extends FlxTest
 		Assert.areEqual(3, animation.numFrames);
 	}
 	
-	@Test
-	function testDestroy():Void
+	@Test // issue 1203
+	function testColorWithAlphaComparison():Void
 	{
-		TestUtil.testDestroy(sprite1);
+		sprite1.color = FlxColor.RED;
+		Assert.areEqual(FlxColor.RED, sprite1.color);
 	}
 }

@@ -2,7 +2,6 @@ package flixel.group;
 
 import flixel.FlxBasic;
 import flixel.group.FlxGroup;
-import helper.TestUtil;
 import massive.munit.Assert;
 
 class FlxGroupTest extends FlxTest
@@ -15,6 +14,8 @@ class FlxGroupTest extends FlxTest
 	{
 		group = makeGroup();
 		group.add(subGroup = makeGroup());
+		
+		destroyable = group;
 	}
 	
 	function makeGroup():FlxGroup
@@ -30,7 +31,8 @@ class FlxGroupTest extends FlxTest
 	@Test
 	function testForEachRecurseFalse():Void
 	{
-		group.forEach(function(b:FlxBasic) {
+		group.forEach(function(b:FlxBasic)
+		{
 			b.exists = false;
 		}, false);
 		
@@ -48,7 +50,8 @@ class FlxGroupTest extends FlxTest
 	@Test
 	function testForEachRecurseTrue():Void
 	{
-		group.forEach(function(b:FlxBasic) {
+		group.forEach(function(b:FlxBasic)
+		{
 			b.exists = false;
 		}, true);
 		
@@ -70,7 +73,8 @@ class FlxGroupTest extends FlxTest
 		forEachExistsGroupSetup(subGroup);
 		
 		var timesCalled:Int = 0;
-		group.forEachExists(function(b:FlxBasic) {
+		group.forEachExists(function(b:FlxBasic)
+		{
 			timesCalled++;
 		}, false);
 		
@@ -85,17 +89,12 @@ class FlxGroupTest extends FlxTest
 		subGroup.exists = true;
 		
 		var timesCalled:Int = 0;
-		group.forEachExists(function(b:FlxBasic) {
+		group.forEachExists(function(b:FlxBasic)
+		{
 			timesCalled++;
 		}, true);
 		
 		Assert.areEqual(3, timesCalled);
-	}
-	
-	@Test
-	function testDestroy():Void
-	{
-		TestUtil.testDestroy(group);
 	}
 	
 	function forEachExistsGroupSetup(group:FlxGroup):Void
@@ -105,5 +104,20 @@ class FlxGroupTest extends FlxTest
 			basic.exists = false;
 		}
 		group.members[0].exists = true;
+	}
+
+	@Test
+	function testKillAndRevive():Void
+	{
+		group.kill();
+		group.forEach(function(each)
+		{
+			Assert.isFalse(each.exists);
+		});
+		group.revive();
+		group.forEach(function(each)
+		{
+			Assert.isTrue(each.exists);
+		});
 	}
 }

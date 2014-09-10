@@ -9,31 +9,18 @@ import massive.munit.client.SummaryReportClient;
 import massive.munit.TestRunner;
 import massive.munit.util.Timer;
 
-#if js
-import js.Lib;
-#end
-
 /**
  * Auto generated Test Application.
  * Refer to munit command line tool for more information (haxelib run munit)
  */
 class TestMain
 {
-	public static var game:FlxGame;
-
-	public static function addAsync(handler:Void->Void, duration:Int):Void
-	{
-		Timer.delay(function() {
-			handler();
-		}, duration);
-	}
-	
 	static function main(){	new TestMain(); }
 
 	public function new()
 	{
 		// Flixel was not designed for unit testing so we can only have one instance for now.
-		Lib.current.stage.addChild(new FlxGame());
+		Lib.current.stage.addChild(new FlxGame(640, 480, FlxState, 1, 60, 60, true));
 		
 		var suites = new Array<Class<massive.munit.TestSuite>>();
 		suites.push(TestSuite);
@@ -66,7 +53,7 @@ class TestMain
 			#elseif js
 				js.Lib.eval("testResult(" + successful + ");");
 			#elseif sys
-				Sys.exit(0);
+				Sys.exit(successful ? 0 : 1);
 			#end
 		}
 		// if run from outside browser can get error which we can ignore

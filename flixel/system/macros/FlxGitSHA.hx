@@ -1,4 +1,4 @@
-package flixel.system;
+package flixel.system.macros;
 
 #if macro
 import haxe.io.BytesOutput;
@@ -11,7 +11,7 @@ using StringTools;
 /**
  * Heavily inspired by HaxePunk's HaxeLibInfo.hx
  */ 
-class GitSHA
+class FlxGitSHA
 {
 	public static function buildGitSHA(library:String):Array<Field>
 	{

@@ -5,28 +5,20 @@ import flash.display.Stage;
 import flash.display.StageDisplayState;
 import flash.Lib;
 import flash.net.URLRequest;
+import flixel.effects.postprocess.PostProcess;
 import flixel.FlxBasic;
+import flixel.math.FlxMath;
+import flixel.math.FlxRandom;
+import flixel.math.FlxRect;
 import flixel.system.FlxAssets;
 import flixel.system.FlxQuadTree;
 import flixel.system.FlxVersion;
-import flixel.system.frontEnds.BitmapFrontEnd;
-import flixel.system.frontEnds.BitmapLogFrontEnd;
-import flixel.system.frontEnds.CameraFrontEnd;
-import flixel.system.frontEnds.ConsoleFrontEnd;
-import flixel.system.frontEnds.DebuggerFrontEnd;
-import flixel.system.frontEnds.InputFrontEnd;
-import flixel.system.frontEnds.LogFrontEnd;
-import flixel.system.frontEnds.PluginFrontEnd;
-import flixel.system.frontEnds.SignalFrontEnd;
-import flixel.system.frontEnds.VCRFrontEnd;
-import flixel.system.frontEnds.WatchFrontEnd;
+import flixel.system.frontEnds.*;
 import flixel.system.scaleModes.BaseScaleMode;
 import flixel.system.scaleModes.RatioScaleMode;
 import flixel.text.pxText.PxBitmapFont;
 import flixel.util.FlxCollision;
-import flixel.math.FlxMath;
-import flixel.math.FlxRandom;
-import flixel.math.FlxRect;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSave;
 
 #if !FLX_NO_TOUCH
@@ -53,8 +45,11 @@ import flixel.input.FlxAccelerometer;
 #if js
 import flixel.system.frontEnds.HTML5FrontEnd;
 #end
-#if (!FLX_NO_MOUSE || !FLX_NO_TOUCH)
+#if FLX_POINTER_INPUT
 import flixel.input.FlxSwipe;
+#end
+#if FLX_POST_PROCESS
+import openfl.display.OpenGLView;
 #end
 
 /**
@@ -161,6 +156,11 @@ class FlxG
 	 */
 	public static var save(default, null):FlxSave = new FlxSave();
 	
+	/**
+	 * A FlxRandom object used internally by flixel to generate random numbers.
+	 */
+	public static var random(default, null):FlxRandom = new FlxRandom();
+	
 	#if !FLX_NO_MOUSE
 	/**
 	 * Used for mouse input. e.g.: check if the left mouse button 
@@ -176,7 +176,7 @@ class FlxG
 	public static var touches(default, null):FlxTouchManager;
 	#end
 	
-	#if (!FLX_NO_MOUSE || !FLX_NO_TOUCH)
+	#if FLX_POINTER_INPUT
 	/**
 	 * Contains all "swipes" from both mouse and touch input that have just ended.
 	 */
@@ -294,9 +294,21 @@ class FlxG
 	/**
 	 * Switch from the current game state to the one specified here.
 	 */
+	
 	public static inline function switchState(State:FlxState):Void
 	{
-		game._requestedState = State; 
+		//If a transition is required
+		if (game._state.isTransitionNeeded())
+		{
+			//Do the transition and exit early
+			game._state.transitionToState(State);
+			return;
+		}
+		//Otherwise do the switch normally
+		else
+		{
+			game._requestedState = State; 
+		}
 	}
 	
 	/**
@@ -407,6 +419,62 @@ class FlxG
 		return Child;
 	}
 	
+	public static function addPostProcess(postProcess:PostProcess):PostProcess 
+	{
+		#if FLX_POST_PROCESS
+		if (OpenGLView.isSupported)
+		{
+			var postProcesses = game.postProcesses;
+			
+			// chaining
+			var length = postProcesses.length;
+			if (length > 0)
+			{
+				postProcesses[length - 1].to = postProcess;
+			}
+			
+			game.postProcessLayer.addChild(postProcess);
+			postProcesses.push(postProcess);
+		}
+		else
+		{
+			FlxG.log.error("Shaders are not supported on this platform.");
+		}
+		#end
+		
+		return postProcess;
+	}
+	
+	public static function removePostProcess(postProcess:PostProcess):Void
+	{
+		#if FLX_POST_PROCESS
+		var postProcesses = game.postProcesses;
+		if (postProcesses.remove(postProcess))
+		{
+			chainPostProcesses();
+			postProcess.to = null;
+			
+			FlxDestroyUtil.removeChild(game.postProcessLayer, postProcess);
+		}
+		#end
+	}
+	
+	#if FLX_POST_PROCESS
+	private static function chainPostProcesses():Void
+	{
+		var postProcesses = game.postProcesses;
+		
+		if (postProcesses.length > 0)
+		{
+			for (i in 0...postProcesses.length - 1)
+			{
+				postProcesses[i].to = postProcesses[i + 1];
+			}
+			postProcesses[postProcesses.length - 1].to = null;
+		}
+	}
+	#end
+	
 	/**
 	 * Opens a web page, by default a new tab or window. If the URL does not 
 	 * already start with "http://" or "https://", it gets added automatically.
@@ -477,7 +545,7 @@ class FlxG
 	private static function reset():Void
 	{
 		PxBitmapFont.clearStorage();
-		FlxRandom.resetGlobalSeed();
+		random.resetInitialSeed();
 		
 		bitmap.clearCache();
 		inputs.reset();

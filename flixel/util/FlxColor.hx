@@ -1,5 +1,7 @@
 package flixel.util;
+
 import flixel.math.FlxMath;
+import flixel.system.macros.FlxColorMacros;
 
 /**
  * Class representing a color, based on Int. Provides a variety of methods for creating and converting colors.
@@ -32,6 +34,12 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	public static inline var MAGENTA:FlxColor =       0xFFFF00FF;
 	public static inline var CYAN:FlxColor =          0xFF00FFFF;
 	
+	/**
+	 * A Map<String, Int> which values are the static colors of FlxColor.
+	 * You can add more colors for FlxColor.fromString(String) if you need.
+	 */
+	public static var colorLookup:Map<String,Int> = FlxColorMacros.staticColors();
+	
 	public var red(get, set):Int;
 	public var blue(get, set):Int;
 	public var green(get, set):Int;
@@ -63,6 +71,8 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 * The lightness of the color (from 0 to 1)
 	 */
 	public var lightness(get, set):Float;
+	
+	private static var COLOR_REGEX = ~/^(0x|#)(([A-F0-9]{2}){3,4})$/i;
 	
 	/**
 	 * Create a color from the lest significant four bytes of an Int
@@ -152,6 +162,48 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	}
 	
 	/**
+	 * Parses a String and returns a FlxColor or null if the String couldn't be parsed.
+	 * Examples (input -> output in hex):
+	 * 0x00FF00    -> 0xFF00FF00
+	 * 0xAA4578C2  -> 0xAA4578C2
+	 * #0000FF     -> 0xFF0000FF
+	 * #3F000011   -> 0x3F000011
+	 * GRAY        -> 0xFF808080
+	 * blue        -> 0xFF0000FF
+	 * @param	str 	The string to be parsed
+	 * @return	A FlxColor or null if the String couldn't be parsed
+	 */
+	public static function fromString(str:String):Null<FlxColor>
+	{
+		var result:Null<FlxColor> = null;
+		str = StringTools.trim(str);
+		
+		if (COLOR_REGEX.match(str)) 
+		{
+			var hexColor:String = "0x"+COLOR_REGEX.matched(2);
+			result = new FlxColor(Std.parseInt(hexColor));
+			if (hexColor.length == 8) 
+			{
+				result.alphaFloat = 1;
+			}
+		}
+		else
+		{
+			str = str.toUpperCase();
+			for (key in colorLookup.keys())
+			{
+				if (key.toUpperCase() == str)
+				{
+					result = new FlxColor(colorLookup.get(key));
+					break;
+				}
+			}
+		}
+		
+		return result;
+	}
+	
+	/**
 	 * Get HSB color wheel values in an array which will be 360 elements in size
 	 * 
 	 * @param	Alpha Alpha value for each color of the color wheel, between 0 (transparent) and 255 (opaque)
@@ -177,7 +229,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 * @param 	Factor Value from 0 to 1 representing how much to shift Color1 toward Color2
 	 * @return	The interpolated color
 	 */
-	public static function interpolate(Color1:FlxColor, Color2:FlxColor, Factor:Float = 0.5):FlxColor
+	public static inline function interpolate(Color1:FlxColor, Color2:FlxColor, Factor:Float = 0.5):FlxColor
 	{
 		var r:Int = Std.int((Color2.red - Color1.red) * Factor + Color1.red);
 		var g:Int = Std.int((Color2.green - Color1.green) * Factor + Color1.green);
@@ -224,7 +276,6 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	{
 		return FlxColor.fromRGBFloat(lhs.redFloat * rhs.redFloat, lhs.greenFloat * rhs.greenFloat, lhs.blueFloat * rhs.blueFloat);
 	}
-	
 	
 	/**
 	 * Add the RGB channels of two FlxColors
@@ -348,7 +399,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 		result += "Alpha: " + alpha + " Red: " + red + " Green: " + green + " Blue: " + blue + "\n";
 		// HSB/HSL info
 		result += "Hue: " + FlxMath.roundDecimal(hue, 2) + " Saturation: " + FlxMath.roundDecimal(saturation, 2) + 
-			" Brightness: " + FlxMath.roundDecimal(brightness, 2) + " Lightnes: " + FlxMath.roundDecimal(lightness, 2);
+			" Brightness: " + FlxMath.roundDecimal(brightness, 2) + " Lightness: " + FlxMath.roundDecimal(lightness, 2);
 		
 		return result;
 	}
@@ -363,7 +414,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	{
 		Factor = FlxMath.bound(Factor, 0, 1);
 		var output:FlxColor = this;
-		output.lightness *= (1 - Factor);
+		output.lightness = output.lightness * (1 - Factor);
 		return output;
 	}
 	
@@ -377,10 +428,9 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	{
 		Factor = FlxMath.bound(Factor, 0, 1);
 		var output:FlxColor = this;
-		output.lightness += (1 - lightness) * Factor;
+		output.lightness = output.lightness + (1 - lightness) * Factor;
 		return output;
 	}
-	
 	
 	/**
 	 * Get the inversion of this color
@@ -394,7 +444,6 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 		output.alpha = oldAlpha;
 		return output;
 	}
-	
 	
 	/**
 	 * Set RGB values as integers (0 to 255)
@@ -715,16 +764,16 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	
 	@:commutative
 	@:op(A == B)
-	private static inline function equal(lhs:FlxColor, rhs:Null<Int>):Bool
+	private static inline function equal(lhs:Null<FlxColor>, rhs:Null<Int>):Bool
 	{
-		return lhs == cast rhs;
+		return lhs == (rhs:Null<FlxColor>);
 	}
 	
 	@:commutative
 	@:op(A != B)
-	private static inline function notEqual(lhs:FlxColor, rhs:Null<Int>):Bool
+	private static inline function notEqual(lhs:Null<FlxColor>, rhs:Null<Int>):Bool
 	{
-		return lhs != cast rhs;
+		return lhs != (rhs:Null<FlxColor>);
 	}
 }
 

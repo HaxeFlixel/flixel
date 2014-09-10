@@ -20,8 +20,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	/**
 	 * Helper function for overlap functions in FlxObject and FlxTilemap.
 	 */
-	@:allow(flixel.FlxObject)
-	@:allow(flixel.tile.FlxTilemap)
+	@:allow(flixel)
 	private static inline function overlaps(Callback:FlxBasic->Float->Float->Bool->FlxCamera->Bool, 
 		Group:FlxTypedGroup<FlxBasic>, X:Float, Y:Float, InScreenSpace:Bool, Camera:FlxCamera):Bool
 	{
@@ -46,15 +45,11 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		return result;
 	}
 	
-	@:allow(flixel.FlxObject)
-	@:allow(flixel.tile.FlxTilemap)
-	@:allow(flixel.system.FlxQuadTree)
-	@:allow(flixel.input.FlxPointer)
+	@:allow(flixel)
 	private static inline function resolveGroup(ObjectOrGroup:FlxBasic):FlxTypedGroup<FlxBasic>
 	{
 		var group:FlxTypedGroup<FlxBasic> = null;
-		if ((ObjectOrGroup.flixelType == SPRITEGROUP) || 
-		    (ObjectOrGroup.flixelType == GROUP))
+		if (ObjectOrGroup != null)
 		{
 			if (ObjectOrGroup.flixelType == GROUP)
 			{
@@ -130,7 +125,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	/**
 	 * Automatically goes through and calls update on everything you added.
 	 */
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		var i:Int = 0;
 		var basic:FlxBasic = null;
@@ -141,7 +136,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			
 			if (basic != null && basic.exists && basic.active)
 			{
-				basic.update();
+				basic.update(elapsed);
 			}
 		}
 	}
@@ -564,7 +559,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			Length = length;
 		}
 		
-		return FlxRandom.getObject(members, StartIndex, Length);
+		return FlxG.random.getObject(members, StartIndex, Length);
 	}
 	
 	/**
@@ -598,7 +593,28 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		
 		super.kill();
 	}
-	
+
+	/**
+	 * Calls revive on the group's members and then on the group itself.
+	 */
+	override public function revive():Void
+	{
+		var i:Int = 0;
+		var basic:FlxBasic = null;
+
+		while (i < length)
+		{
+			basic = members[i++];
+
+			if (basic != null && ! basic.exists)
+			{
+				basic.revive();
+			}
+		}
+
+		super.revive();
+	}
+
 	/**
 	 * Iterate through every member
 	 */

@@ -1,21 +1,15 @@
 package flixel.input.android;
 
-import flixel.FlxG;
+#if android
+import flixel.input.FlxBaseKeyList;
 
 /**
- * A helper class for android input.
+ * A helper class for Android key input (back button and menu button).
+ * Provides optimized key checking using direct array access.
  */
-class FlxAndroidKeyList
+class FlxAndroidKeyList extends FlxBaseKeyList
 {
-	#if !FLX_NO_KEYBOARD
-	public function new(CheckFunction:String->Bool)
-	{
-		check = CheckFunction;
-	}
-	
-	private var check:String->Bool;
-	
-	public var BACK(get, never):Bool; inline function get_BACK() { return check("BACK"); }
-	public var MENU(get, never):Bool; inline function get_MENU() { return check("MENU"); }
-	#end
+	public var BACK(get, never):Bool; inline function get_BACK() { return check(FlxAndroidKey.BACK); }
+	public var MENU(get, never):Bool; inline function get_MENU() { return check(FlxAndroidKey.MENU); }
 }
+#end

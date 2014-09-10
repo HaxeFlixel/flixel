@@ -203,7 +203,7 @@ class FlxAnalog extends FlxSpriteGroup
 	/**
 	 * Update the behavior. 
 	 */
-	override public function update():Void 
+	override public function update(elapsed:Float):Void 
 	{
 		#if !FLX_NO_TOUCH
 		var touch:FlxTouch = null;
@@ -278,7 +278,7 @@ class FlxAnalog extends FlxSpriteGroup
 		_tempTouches.splice(0, _tempTouches.length);
 		#end
 		
-		super.update();
+		super.update(elapsed);
 	}
 	
 	private function updateAnalog(TouchPoint:FlxPoint, Pressed:Bool, JustPressed:Bool, JustReleased:Bool, ?Touch:FlxTouch):Bool

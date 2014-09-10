@@ -6,6 +6,8 @@ import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup;
+import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
+import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.system.FlxAssets.FlxTextureAsset;
@@ -113,28 +115,19 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	
 	/**
 	 * Recursive cloning method: it will create copy of this group which will hold copies of all sprites
-	 * 
-	 * @param	NewSprite	optional sprite group to copy to
 	 * @return	copy of this sprite group
 	 */
-	override public function clone(?NewSprite:FlxSprite):FlxTypedSpriteGroup<T> 
+	override public function clone():FlxTypedSpriteGroup<T> 
 	{
-		if (NewSprite == null || !Std.is(NewSprite, FlxTypedSpriteGroup))
-		{
-			NewSprite = new FlxTypedSpriteGroup<T>(0, 0, group.maxSize);
-		}
-		
-		var cloned:FlxTypedSpriteGroup<T> = cast NewSprite;
-		cloned.maxSize = group.maxSize;
-		
-		for (sprite in _sprites)
+		var newGroup = new FlxTypedSpriteGroup<T>(x, y, maxSize);
+		for (sprite in group.members)
 		{
 			if (sprite != null)
 			{
-				cloned.add(cast sprite.clone());
+				newGroup.add(cast sprite.clone());
 			}
 		}
-		return cloned;
+		return newGroup;
 	}
 	
 	/**
@@ -202,13 +195,13 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		return result;
 	}
 	
-	override public function update():Void 
+	override public function update(elapsed:Float):Void 
 	{
-		group.update();
+		group.update(elapsed);
 		
 		if (moves)
 		{
-			updateMotion();
+			updateMotion(elapsed);
 		}
 	}
 	
@@ -671,14 +664,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	
 	override private function set_alpha(Value:Float):Float 
 	{
-		if (Value > 1)  
-		{
-			Value = 1;
-		}
-		else if (Value < 0)  
-		{
-			Value = 0;
-		}
+		Value = FlxMath.bound(Value, 0, 1);
 		
 		if (exists && alpha != Value)
 		{

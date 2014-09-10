@@ -90,6 +90,9 @@ class ConsoleUtil
 	@:generic
 	public static function attemptToCreateInstance<T>(ClassName:String, type:Class<T>, ?Params:Array<String>):Dynamic
 	{
+		if (ClassName == null)
+			return null;
+		
 		if (Params == null)
 			Params = [];
 		
@@ -102,7 +105,7 @@ class ConsoleUtil
 		
 		var instance:Dynamic = Type.createInstance(obj, Params);
 		
-		if (!Std.is(instance, type)) 
+		if (!Std.is(instance, type))
 		{
 			FlxG.log.error(ClassName + "' is not a " + Type.getClassName(type));
 			return null;
@@ -263,7 +266,24 @@ class ConsoleUtil
 				}
 			}
 		}
+		
 		return fields;
+	}
+	
+	public static function getTypeName(v:Dynamic):String
+	{
+		var type = Type.typeof(v);
+		
+		return switch (type)
+		{
+			case TClass(c):
+				FlxStringUtil.getClassName(c, true);
+			case TEnum(e):
+				var name = Type.getEnumName(e);
+				name.substr(name.lastIndexOf(".") + 1);
+			case _:
+				Std.string(type).substr(1);
+		}
 	}
 	
 	/**

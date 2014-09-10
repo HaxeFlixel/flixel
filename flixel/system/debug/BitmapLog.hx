@@ -66,7 +66,7 @@ class BitmapLog extends Window
 		
 	#if !FLX_NO_MOUSE
 		addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
-		#if (!FLX_NO_MOUSE_ADVANCED && (!flash || flash11_2))
+		#if FLX_MOUSE_ADVANCED
 		addEventListener(MouseEvent.MIDDLE_MOUSE_DOWN, onMiddleDown);
 		addEventListener(MouseEvent.MIDDLE_MOUSE_UP, onMiddleUp);
 		#end
@@ -137,7 +137,7 @@ class BitmapLog extends Window
 		_entries = null;
 		
 		removeEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
-		#if (!FLX_NO_MOUSE && !FLX_NO_MOUSE_ADVANCED && flash11_2)
+		#if FLX_MOUSE_ADVANCED
 		removeEventListener(MouseEvent.MIDDLE_MOUSE_DOWN, onMiddleDown);
 		removeEventListener(MouseEvent.MIDDLE_MOUSE_UP, onMiddleUp);
 		#end
@@ -341,7 +341,8 @@ class BitmapLog extends Window
 		var gfx:Graphics = FlxSpriteUtil.flashGfx;
 		gfx.clear();
 		gfx.lineStyle(1, FlxColor.RED, 0.75, false, LineScaleMode.NONE);
-		gfx.drawRect(0, 0, bitmap.width, bitmap.height);
+		var offset = 1 / zoom;
+		gfx.drawRect(-offset, -offset, bitmap.width + offset, bitmap.height + offset);
 	}
 	
 	private function onMouseWheel(e:MouseEvent):Void

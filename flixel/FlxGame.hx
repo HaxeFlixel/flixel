@@ -9,25 +9,28 @@ import flash.events.Event;
 import flash.events.FocusEvent;
 import flash.geom.ColorTransform;
 import flash.geom.Matrix;
-import flash.geom.Rectangle;
 import flash.Lib;
+import flixel.effects.postprocess.PostProcess;
+import flixel.math.FlxAngle;
+import flixel.math.FlxRandom;
 import flixel.system.FlxSplash;
-import flixel.system.frontEnds.VCRFrontEnd;
 import flixel.system.layer.TileSheetExt;
 import flixel.system.replay.FlxReplay;
 import flixel.text.pxText.PxBitmapFont;
-import flixel.math.FlxAngle;
-import flixel.util.FlxColor;
-import flixel.math.FlxRandom;
 import flixel.util.FlxArrayUtil;
+import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
 import openfl.Assets;
-using StringTools;
+
+#if FLX_POST_PROCESS
+import openfl.display.OpenGLView;
+#end
 
 #if !FLX_NO_DEBUG
 import flixel.system.debug.FlxDebugger;
 #end
 
-#if !(FLX_NO_SOUND_TRAY || FLX_NO_SOUND_SYSTEM)
+#if FLX_SOUND_TRAY
 import flixel.system.ui.FlxSoundTray;
 #end
 
@@ -41,8 +44,7 @@ import flixel.system.ui.FlxFocusLostScreen;
  * It is basically only used to create your game object in the first place,
  * after that FlxG and FlxState have all the useful stuff you actually need.
  */
-@:allow(flixel.FlxG)
-@:allow(flixel.system.frontEnds.VCRFrontEnd)
+@:allow(flixel)
 class FlxGame extends Sprite
 {
 	/**
@@ -61,7 +63,7 @@ class FlxGame extends Sprite
 	public var recording(default, null):Bool = false;
 	#end
 	
-	#if !(FLX_NO_SOUND_TRAY || FLX_NO_SOUND_SYSTEM)
+	#if FLX_SOUND_TRAY
 	/**
 	 * The sound tray display container (see createSoundTray()).
 	 */
@@ -148,7 +150,7 @@ class FlxGame extends Sprite
 	@:allow(flixel.system.frontEnds.CameraFrontEnd)
 	private var _inputContainer:Sprite;
 	
-	#if !(FLX_NO_SOUND_TRAY || FLX_NO_SOUND_SYSTEM)
+	#if FLX_SOUND_TRAY
 	/**
 	 * Change this after calling super() in the FlxGame constructor to use a customized sound tray based on FlxSoundTray.
 	 */
@@ -203,8 +205,20 @@ class FlxGame extends Sprite
 	 * On html5, we draw() all our cameras into a bitmap to avoid blurry zooming.
 	 */
 	private var _display:BitmapData;
-	private var _displayMatrix:Matrix;
-	private var _displayColorTransform:ColorTransform;
+	private var _displayBitmap:Bitmap;
+	private var _displayMatrix = new Matrix();
+	private var _displayColorTransform = new ColorTransform();
+	#end
+	
+	#if FLX_POST_PROCESS
+	/**
+	 * Sprite for postprocessing effects
+	 */
+	private var postProcessLayer:Sprite = new Sprite();
+	/**
+	 * Post process effects active on the postProcessLayer
+	 */
+	private var postProcesses:Array<PostProcess> = [];
 	#end
 	
 	/**
@@ -245,37 +259,7 @@ class FlxGame extends Sprite
 		// Then get ready to create the game object for real
 		_initialState = (InitialState == null) ? FlxState : InitialState;
 		
-		#if (flash && debug)
-		checkSwfVersion();
-		#end
-		
 		addEventListener(Event.ADDED_TO_STAGE, create);
-	}
-	
-	private function checkSwfVersion():Void
-	{
-		var feature = "[f]";
-		var version = "[v]";
-		var conditional = "[c]";
-		var errorMessage = '$feature only supported in Flash Player version $version or higher. '
-			+ 'Define $conditional to disable this feature or add <set name="SWF_VERSION" value="$version" /> to your Project.xml.';
-		
-		#if (!flash10_2 && !FLX_NO_NATIVE_CURSOR)
-		throw errorMessage
-			.replace(feature, "Native mouse cursors are")
-			.replace(version, "10.2")
-			.replace(conditional, "FLX_NO_NATIVE_CURSOR");
-		#elseif (!flash11_2 && !FLX_NO_MOUSE_ADVANCED)
-		throw errorMessage
-			.replace(feature, "Middle and right mouse button events are")
-			.replace(version, "11.2")
-			.replace(conditional, "FLX_NO_MOUSE_ADVANCED");
-		#elseif (!flash11_8 && !FLX_NO_GAMEPAD)
-		throw errorMessage
-			.replace(feature, "Gamepad input is")
-			.replace(version, "11.8")
-			.replace(conditional, "FLX_NO_GAMEPAD");
-		#end
 	}
 	
 	/**
@@ -289,7 +273,7 @@ class FlxGame extends Sprite
 		}
 		removeEventListener(Event.ADDED_TO_STAGE, create);
 		
-		_total = Lib.getTimer();
+		_total = getTimer();
 		
 		#if desktop
 		FlxG.fullscreen = _startFullscreen;
@@ -300,25 +284,23 @@ class FlxGame extends Sprite
 		stage.align = StageAlign.TOP_LEFT;
 		stage.frameRate = FlxG.drawFramerate;
 		
-		#if js
-		_display = new BitmapData(Lib.current.stage.stageWidth, Lib.current.stage.stageHeight);
-		_displayMatrix = new Matrix();
-		_displayColorTransform = new ColorTransform();
-		addChild(new Bitmap(_display));
-		#end
-		
 		addChild(_inputContainer);
+		
+		#if FLX_POST_PROCESS
+		if (OpenGLView.isSupported)
+			addChild(postProcessLayer);
+		#end
 		
 		// Creating the debugger overlay
 		#if !FLX_NO_DEBUG
-		debugger = new FlxDebugger(Lib.current.stage.stageWidth, Lib.current.stage.stageHeight);
+		debugger = new FlxDebugger(FlxG.stage.stageWidth, FlxG.stage.stageHeight);
 		addChild(debugger);
 		#end
 		
 		// No need for overlays on mobile.
 		#if !mobile
 		// Volume display tab
-		#if !(FLX_NO_SOUND_TRAY || FLX_NO_SOUND_SYSTEM)
+		#if FLX_SOUND_TRAY
 		soundTray = Type.createInstance(_customSoundTray, []);
 		addChild(soundTray);
 		#end
@@ -463,6 +445,15 @@ class FlxGame extends Sprite
 	{
 		FlxG.resizeGame(width, height);
 		
+		#if js
+		FlxDestroyUtil.removeChild(this, _displayBitmap);
+		FlxDestroyUtil.dispose(_display);
+		
+		var index:Int = getChildIndex(_inputContainer);
+		_display = new BitmapData(width, height);
+		addChildAt(_displayBitmap = new Bitmap(_display), index);
+		#end
+		
 		#if !FLX_NO_DEBUG
 		debugger.onResize(width, height);
 		#end
@@ -474,7 +465,7 @@ class FlxGame extends Sprite
 		}
 		#end
 		
-		#if (!FLX_NO_SOUND_TRAY && !FLX_NO_SOUND_SYSTEM)
+		#if FLX_SOUND_TRAY
 		if (soundTray != null)
 		{
 			soundTray.screenCenter();
@@ -483,6 +474,13 @@ class FlxGame extends Sprite
 		
 		_inputContainer.scaleX = 1 / FlxG.game.scaleX;
 		_inputContainer.scaleY = 1 / FlxG.game.scaleY;
+		
+		#if FLX_POST_PROCESS
+		for (postProcess in postProcesses)
+		{
+			postProcess.rebuild();
+		}
+		#end
 	}
 	
 	/**
@@ -490,11 +488,11 @@ class FlxGame extends Sprite
 	 */
 	private function onEnterFrame(_):Void
 	{
-		ticks = Lib.getTimer();
+		ticks = getTimer();
 		_elapsedMS = ticks - _total;
 		_total = ticks;
 		
-		#if !(FLX_NO_SOUND_TRAY || FLX_NO_SOUND_SYSTEM)
+		#if FLX_SOUND_TRAY
 		if (soundTray != null && soundTray.active)
 		{
 			soundTray.update(_elapsedMS);
@@ -553,7 +551,7 @@ class FlxGame extends Sprite
 	 */
 	private inline function resetGame():Void
 	{
-		FlxG.signals.gameReset.dispatch();
+		FlxG.signals.preGameReset.dispatch();
 		
 		#if !FLX_NO_DEBUG
 		_skipSplash = true;
@@ -582,6 +580,8 @@ class FlxGame extends Sprite
 		#end
 		
 		FlxG.reset();
+		
+		FlxG.signals.postGameReset.dispatch();
 	}
 
 	/**
@@ -595,7 +595,7 @@ class FlxGame extends Sprite
 		PxBitmapFont.clearStorage();
 		FlxG.bitmap.clearCache();
 		FlxG.cameras.reset();
-		FlxG.inputs.reset();
+		FlxG.inputs.onStateSwitch();
 		#if !FLX_NO_SOUND_SYSTEM
 		FlxG.sound.destroy();
 		#end
@@ -665,7 +665,7 @@ class FlxGame extends Sprite
 		{
 			_replayRequested = false;
 			_replay.rewind();
-			FlxRandom.globalSeed = _replay.seed;
+			FlxG.random.initialSeed = _replay.seed;
 			
 			#if !FLX_NO_DEBUG
 			debugger.vcr.playingReplay();
@@ -706,7 +706,7 @@ class FlxGame extends Sprite
 		#if !FLX_NO_DEBUG
 		if (FlxG.debugger.visible)
 		{
-			ticks = Lib.getTimer(); // getTimer() is expensive, only do it if necessary
+			ticks = getTimer(); // Lib.getTimer() is expensive, only do it if necessary
 		}
 		#end
 		
@@ -727,21 +727,28 @@ class FlxGame extends Sprite
 		
 		updateInput();
 		
-		#if !FLX_NO_SOUND_SYSTEM
-		FlxG.sound.update();
+		#if FLX_POST_PROCESS
+		if (postProcesses[0] != null)
+		{
+			postProcesses[0].update(FlxG.elapsed);
+		}
 		#end
-		FlxG.plugins.update();
 		
-		_state.tryUpdate();
+		#if !FLX_NO_SOUND_SYSTEM
+		FlxG.sound.update(FlxG.elapsed);
+		#end
+		FlxG.plugins.update(FlxG.elapsed);
 		
-		FlxG.cameras.update();
+		_state.tryUpdate(FlxG.elapsed);
+		
+		FlxG.cameras.update(FlxG.elapsed);
 		FlxG.signals.postUpdate.dispatch();
 		
 		#if !FLX_NO_DEBUG
-		debugger.stats.flixelUpdate(Lib.getTimer() - ticks);
+		debugger.stats.flixelUpdate(getTimer() - ticks);
 		#end
 		
-		#if (!FLX_NO_MOUSE || !FLX_NO_TOUCH)
+		#if FLX_POINTER_INPUT
 		for (swipe in FlxG.swipes)
 		{
 			swipe = null;
@@ -823,7 +830,7 @@ class FlxGame extends Sprite
 		if (FlxG.debugger.visible)
 		{
 			// getTimer() is expensive, only do it if necessary
-			ticks = Lib.getTimer(); 
+			ticks = getTimer(); 
 		}
 		#end
 		
@@ -831,6 +838,13 @@ class FlxGame extends Sprite
 		
 		#if FLX_RENDER_TILE
 		TileSheetExt._DRAWCALLS = 0;
+		#end
+		
+		#if FLX_POST_PROCESS
+		if (postProcesses[0] != null)
+		{
+			postProcesses[0].capture();
+		}
 		#end
 		
 		FlxG.cameras.lock();
@@ -874,7 +888,12 @@ class FlxGame extends Sprite
 		FlxG.signals.postDraw.dispatch();
 		
 		#if !FLX_NO_DEBUG
-		debugger.stats.flixelDraw(Lib.getTimer() - ticks);
+		debugger.stats.flixelDraw(getTimer() - ticks);
 		#end
+	}
+	
+	private dynamic function getTimer():Int
+	{
+		return Lib.getTimer();
 	}
 }

@@ -77,7 +77,6 @@ class FlxState extends FlxGroup
 	public inline function closeSubState():Void
 	{
 		_requestSubStateReset = true;
-		_requestedSubState = null;
 	}
 
 	/**
@@ -100,13 +99,14 @@ class FlxState extends FlxGroup
 		
 		// Assign the requested state (or set it to null)
 		subState = _requestedSubState;
+		_requestedSubState = null;
 		
 		if (subState != null)
 		{
 			//Reset the input so things like "justPressed" won't interfere
 			if (!persistentUpdate)
 			{
-				FlxG.inputs.reset();
+				FlxG.inputs.onStateSwitch();
 			}
 			
 			if (!subState._created)
@@ -127,7 +127,26 @@ class FlxState extends FlxGroup
 		}
 		super.destroy();
 	}
-
+	
+	/**
+	 * Checked by FlxG.switchState to see if a transition is required before switching states
+	 * @return
+	 */
+	public function isTransitionNeeded():Bool
+	{
+		//override in your subclass to enable this functionality
+		return false;
+	}
+	
+	/**
+	 * Perform a visual transition, and when it's complete, call FlxG.switchState
+	 * @param	State
+	 */
+	public function transitionToState(State:FlxState):Void
+	{
+		//override in your subclass to enable this functionality
+	}
+	
 	/**
 	 * This method is called after application losts its focus.
 	 * Can be useful if you using third part libraries, such as tweening engines.
@@ -149,11 +168,11 @@ class FlxState extends FlxGroup
 	public function onResize(Width:Int, Height:Int):Void {}
 	
 	@:allow(flixel.FlxGame)
-	private function tryUpdate():Void
+	private function tryUpdate(elapsed:Float):Void
 	{
 		if (persistentUpdate || (subState == null))
 		{
-			update();
+			update(elapsed);
 		}
 		
 		if (_requestSubStateReset)
@@ -163,7 +182,7 @@ class FlxState extends FlxGroup
 		}
 		else if (subState != null)
 		{
-			subState.tryUpdate();
+			subState.tryUpdate(elapsed);
 		}
 	}
 

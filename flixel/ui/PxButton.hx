@@ -55,13 +55,13 @@ class PxButton extends FlxTypedButton<FlxBitmapTextField>
 		}
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
-		super.update();
+		super.update(elapsed);
 		
 		if (label != null)
 		{
-			label.update();
+			label.update(elapsed);
 		}
 	}
 }

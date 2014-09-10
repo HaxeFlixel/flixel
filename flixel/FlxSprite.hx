@@ -12,6 +12,7 @@ import flixel.FlxG;
 import flixel.math.FlxAngle;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.system.FlxAssets.FlxTextureAsset;
 import flixel.system.layer.DrawStackItem;
@@ -52,10 +53,6 @@ class FlxSprite extends FlxObject
 	 * NOTE: Rarely if ever necessary, most sprite operations will flip this flag automatically.
 	 */
 	public var dirty:Bool = true;
-	
-	#if FLX_RENDER_TILE
-	public var isColored:Bool = false;
-	#end
 	
 	/**
 	 * Set pixels to any BitmapData object.
@@ -141,12 +138,10 @@ class FlxSprite extends FlxObject
 	public var useColorTransform(default, null):Bool = false;
 	
 	#if FLX_RENDER_TILE
-	private var _red:Float = 1.0;
-	private var _green:Float = 1.0;
-	private var _blue:Float = 1.0;
 	private var _facingHorizontalMult:Int = 1;
 	private var _facingVerticalMult:Int = 1;
 	private var _blendInt:Int = 0;
+	private var isColored:Bool = false;
 	#end
 	
 	/**
@@ -247,14 +242,38 @@ class FlxSprite extends FlxObject
 		region = null;
 	}
 	
-	public function clone(?NewSprite:FlxSprite):FlxSprite
+	/**
+	 * Clips sprites frames without changing the size of the sprite.
+	 * 
+	 * @param   rect          Rectangle which will be used for clipping frames.
+	 * @param   useOriginal   Whether the original graphic without clipping should be used.
+	 */
+	public function clipRect(rect:FlxRect, useOriginal:Bool = true):FlxSprite
 	{
-		if (NewSprite == null)
+		if (cachedGraphics != null && framesData != null)
 		{
-			NewSprite = new FlxSprite();
+			setFramesData(cachedGraphics.tilesheet.clipFrames(framesData, rect, useOriginal));
 		}
 		
-		return NewSprite.loadGraphicFromSprite(this);
+		return this;
+	}
+	
+	/**
+	 * Resets clipping of the graphic via clipRect().
+	 */
+	public function unclip():FlxSprite
+	{
+		if (cachedGraphics != null && framesData != null)
+		{
+			setFramesData(framesData.original);
+		}
+		
+		return this;
+	}
+	
+	public function clone():FlxSprite
+	{
+		return (new FlxSprite()).loadGraphicFromSprite(this);
 	}
 	
 	/**
@@ -720,10 +739,18 @@ class FlxSprite extends FlxObject
 		_halfHeight = frameHeight * 0.5;
 	}
 	
-	override public function update():Void 
+	override public function update(elapsed:Float):Void 
 	{
-		super.update();
-		animation.update();
+		super.update(elapsed);
+		updateAnimation(elapsed);
+	}
+	
+	/**
+	 * This is separated out so it can be easily overriden
+	 */
+	private function updateAnimation(elapsed:Float):Void
+	{
+		animation.update(elapsed);
 	}
 	
 	/**
@@ -743,8 +770,6 @@ class FlxSprite extends FlxObject
 		
 	#if FLX_RENDER_TILE
 		var drawItem:DrawStackItem;
-		var currDrawData:Array<Float>;
-		var currIndex:Int;
 		
 		var cos:Float;
 		var sin:Float;
@@ -770,19 +795,6 @@ class FlxSprite extends FlxObject
 			
 			getScreenPosition(_point, camera).subtractPoint(offset);
 			
-		#if FLX_RENDER_TILE
-			drawItem = camera.getDrawStackItem(cachedGraphics, isColored, _blendInt, antialiasing);
-			currDrawData = drawItem.drawData;
-			currIndex = drawItem.position;
-			
-			if (isPixelPerfectRender(camera))
-			{
-				_point.floor();
-			}
-			
-			_point.addPoint(origin);
-		#end
-			
 #if FLX_RENDER_BLIT
 			if (isSimpleRender(camera))
 			{
@@ -806,6 +818,15 @@ class FlxSprite extends FlxObject
 				camera.buffer.draw(framePixels, _matrix, null, blend, null, (antialiasing || camera.antialiasing));
 			}
 #else
+			drawItem = camera.getDrawStackItem(cachedGraphics, isColored, _blendInt, antialiasing);
+			
+			if (isPixelPerfectRender(camera))
+			{
+				_point.floor();
+			}
+			
+			_point.addPoint(origin);
+			
 			var csx:Float = _facingHorizontalMult;
 			var csy:Float = _facingVerticalMult;
 			var ssy:Float = 0;
@@ -880,27 +901,8 @@ class FlxSprite extends FlxObject
 				y2 = y1 * csy;
 			}
 			
-			_point.x -= x2;
-			_point.y -= y2;
-			
-			currDrawData[currIndex++] = _point.x;
-			currDrawData[currIndex++] = _point.y;
-			
-			currDrawData[currIndex++] = frame.tileID;
-			
-			currDrawData[currIndex++] = a;
-			currDrawData[currIndex++] = -b;
-			currDrawData[currIndex++] = c;
-			currDrawData[currIndex++] = d;
-			
-			if (isColored)
-			{
-				currDrawData[currIndex++] = _red; 
-				currDrawData[currIndex++] = _green;
-				currDrawData[currIndex++] = _blue;
-			}
-			currDrawData[currIndex++] = (alpha * camera.alpha);
-			drawItem.position = currIndex;
+			_point.subtract(x2, y2);
+			setDrawData(drawItem, camera, a, -b, c, d);
 #end
 			#if !FLX_NO_DEBUG
 			FlxBasic.visibleCount++;
@@ -909,9 +911,20 @@ class FlxSprite extends FlxObject
 		
 		#if !FLX_NO_DEBUG
 		if (FlxG.debugger.drawDebug)
+		{
 			drawDebug();
+		}
 		#end
 	}
+	
+	#if FLX_RENDER_TILE
+	private inline function setDrawData(drawItem:DrawStackItem, camera:FlxCamera, a:Float = 1,
+		b:Float = 0, c:Float = 0, d:Float = 1, ?tileID:Float)
+	{
+		drawItem.setDrawData(_point, (tileID == null) ? frame.tileID : tileID, a, b, c, d,
+			isColored, color, alpha * camera.alpha);
+	}
+	#end
 	
 	/**
 	 * Stamps / draws another FlxSprite onto this FlxSprite. 
@@ -1182,8 +1195,9 @@ class FlxSprite extends FlxObject
 	}
 	
 	/**
-	 * Use this method for creating tileSheet for FlxSprite. Must be called after makeGraphic(), loadGraphic() or loadRotatedGraphic().
-	 * If you forget to call it then you will not see this FlxSprite on c++ target
+	 * Use this method for creating tileSheet for FlxSprite.
+	 * Must be called after makeGraphic(), loadGraphic() or loadRotatedGraphic().
+	 * If you forget to call it then you will not see this FlxSprite on C++ target.
 	 */
 	public function updateFrameData():Void
 	{
@@ -1192,20 +1206,28 @@ class FlxSprite extends FlxObject
 			return;
 		}
 		
-		if ((cachedGraphics.data != null) && (region.tileWidth == 0 && region.tileHeight == 0))
+		if (cachedGraphics.data != null && (region.tileWidth == 0 && region.tileHeight == 0))
 		{
-			framesData = cachedGraphics.tilesheet.getTexturePackerFrames(cachedGraphics.data);
+			setFramesData(cachedGraphics.tilesheet.getTexturePackerFrames(cachedGraphics.data));
 		}
 		else
 		{
-			framesData = cachedGraphics.tilesheet.getSpriteSheetFrames(region, null);
+			setFramesData(cachedGraphics.tilesheet.getSpriteSheetFrames(region, null));
 		}
-		
-		frames = framesData.frames.length;
-		animation.frameIndex = 0;
-		frame = framesData.frames[0];
-		
-		resetSizeFromFrame();
+	}
+	
+	private function setFramesData(newFramesData:FlxSpriteFrames)
+	{
+		if (newFramesData != null)
+		{
+			framesData = newFramesData;
+			
+			frames = framesData.frames.length;
+			animation.frameIndex = 0;
+			frame = framesData.frames[0];
+			
+			resetSizeFromFrame();
+		}
 	}
 	
 	/**
@@ -1488,26 +1510,18 @@ class FlxSprite extends FlxObject
 	
 	private function set_alpha(Alpha:Float):Float
 	{
-		if (Alpha > 1)
-		{
-			Alpha = 1;
-		}
-		if (Alpha < 0)
-		{
-			Alpha = 0;
-		}
 		if (Alpha == alpha)
 		{
 			return alpha;
 		}
-		alpha = Alpha;
+		
+		alpha = FlxMath.bound(Alpha, 0, 1);
 		updateColorTransform();
 		return alpha;
 	}
 	
 	private function set_color(Color:FlxColor):Int
 	{
-		Color &= 0x00ffffff;
 		if (color == Color)
 		{
 			return Color;
@@ -1516,11 +1530,7 @@ class FlxSprite extends FlxObject
 		updateColorTransform();
 		
 		#if FLX_RENDER_TILE
-		_red = (color >> 16) / 255;
-		_green = (color >> 8 & 0xff) / 255;
-		_blue = (color & 0xff) / 255;
-		var c:Int = color;
-		isColored = c < 0xffffff;
+		isColored = color.to24Bit() != 0xffffff;
 		#end
 		
 		return color;

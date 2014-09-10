@@ -1,7 +1,6 @@
 package flixel.text;
 
 import flixel.text.FlxText;
-import helper.TestUtil;
 import massive.munit.Assert;
 
 class FlxTextTest extends FlxTest
@@ -12,17 +11,12 @@ class FlxTextTest extends FlxTest
 	function before():Void
 	{
 		text = new FlxText();
+		destroyable = text;
 	}
 	
 	@Test
 	function testFontDefaultValue():Void
 	{
 		Assert.areEqual(text.font, "Nokia Cellphone FC Small");
-	}
-	
-	@Test
-	function testDestroy():Void
-	{
-		TestUtil.testDestroy(text);
 	}
 }
