@@ -44,7 +44,7 @@ class FlxAssets
 	 * 
 	 * @param   directory          The directory to scan for files
 	 * @param   subDirectories     Whether to include subdirectories
-	 * @param   filterExtensions   Example: [jpg, png, gif] will only add files with that extension. Null means: all extensions
+	 * @param   filterExtensions   Example: ["jpg", "png", "gif"] will only add files with that extension. Null means: all extensions
 	 */
 	macro public static function buildFileReferences(directory:String = "assets/", subDirectories:Bool = false, ?filterExtensions:Array<String>):Array<Field>
 	{
