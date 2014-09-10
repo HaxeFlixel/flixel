@@ -575,10 +575,10 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * This callback function, if present, is triggered by calls to overlap() or overlapsWithCallback().
 	 * 
 	 * @param	Tile				The tile or tiles you want to adjust.
-	 * @param	AllowCollisions		Modify the tile or tiles to only allow collisions from certain directions, use FlxObject constants NONE, ANY, LEFT, RIGHT, etc.  Default is "ANY".
+	 * @param	AllowCollisions		Modify the tile or tiles to only allow collisions from certain directions, use FlxObject constants NONE, ANY, LEFT, RIGHT, etc. Default is "ANY".
 	 * @param	Callback			The function to trigger, e.g. lavaCallback(Tile:FlxTile, Object:FlxObject).
 	 * @param	CallbackFilter		If you only want the callback to go off for certain classes or objects based on a certain class, set that class here.
-	 * @param	Range				If you want this callback to work for a bunch of different tiles, input the range here.  Default value is 1.
+	 * @param	Range				If you want this callback to work for a bunch of different tiles, input the range here. Default value is 1.
 	 */
 	public function setTileProperties(Tile:Int, AllowCollisions:Int = FlxObject.ANY, ?Callback:FlxObject->FlxObject->Void, ?CallbackFilter:Class<FlxObject>, Range:Int = 1):Void
 	{
@@ -591,9 +591,10 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		var i:Int = Tile;
 		var l:Int = Tile + Range;
 		
-		if (l>_tileObjects.length) 
+		var maxIndex = _tileObjects.length;
+		if (l > maxIndex) 
 		{
-			throw 'Cannot access tile with index $l maximum possible is ${_tileObjects.length} probale error is in Tile=$Tile and Range=$Range parameters';
+			throw 'Index $l exceeds the maximum tile index of $maxIndex. Please verfiy the Tile ($Tile) and Range ($Range) parameters.';
 		}
 		
 		while (i < l)
