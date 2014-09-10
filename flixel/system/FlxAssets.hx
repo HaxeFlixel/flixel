@@ -11,11 +11,9 @@ import flash.display.Graphics;
 import flash.media.Sound;
 import flash.text.Font;
 import flixel.FlxG;
-import flixel.util.loaders.CachedGraphics;
-import flixel.util.loaders.TexturePackerData;
-import flixel.util.loaders.TextureRegion;
 import openfl.Assets;
 
+/** Fonts **/
 @:font("assets/fonts/nokiafc22.ttf")
 private class FontDefault extends Font {}
 #if !FLX_NO_DEBUG
@@ -44,17 +42,13 @@ class FlxAssets
 	 * 
 	 * @param   directory          The directory to scan for files
 	 * @param   subDirectories     Whether to include subdirectories
-	 * @param   filterExtensions   Example: ["jpg", "png", "gif"] will only add files with that extension. Null means: all extensions
+	 * @param   filterExtensions   Example: [jpg, png, gif] will only add files with that extension. Null means: all extensions
 	 */
 	macro public static function buildFileReferences(directory:String = "assets/", subDirectories:Bool = false, ?filterExtensions:Array<String>):Array<Field>
 	{
 		if (!directory.endsWith("/"))
 			directory += "/";
 			
-		#if ios
-			directory = "../" + directory;
-		#end
-		
 		var fileReferences:Array<FileReference> = getFileReferences(directory, subDirectories, filterExtensions);
 		
 		var fields:Array<Field> = Context.getBuildFields();
@@ -67,11 +61,7 @@ class FlxAssets
 				doc: fileRef.documentation,
 				access: [Access.APublic, Access.AStatic, Access.AInline],
 				kind: FieldType.FVar(macro:String, macro $v{
-					#if ios	
-						fileRef.value.substr(directory.length)
-					#else
-						fileRef.value
-					#end
+					fileRef.value
 				}),
 				pos: Context.currentPos()
 			});
@@ -82,15 +72,14 @@ class FlxAssets
 	private static function getFileReferences(directory:String, subDirectories:Bool = false, ?filterExtensions:Array<String>):Array<FileReference>
 	{
 		var fileReferences:Array<FileReference> = [];
-		var directoryInfo = FileSystem.readDirectory(directory);
+		
+		var resolvedPath = #if ios Context.resolvePath(directory) #else directory #end;
+		
+		var directoryInfo = FileSystem.readDirectory(resolvedPath);
 		for (name in directoryInfo)
 		{
-			if (!FileSystem.isDirectory(directory + name))
+			if (!FileSystem.isDirectory(resolvedPath + name))
 			{
-				// ignore invisible files
-				if (name.startsWith("."))
-					continue;
-				
 				if (filterExtensions != null)
 				{
 					var extension:String = name.split(".")[1]; // get the string after the dot
@@ -192,6 +181,45 @@ class FlxAssets
 		#end
 		return Assets.getSound(id + extension);
 	}
+	
+#if (!FLX_NO_SOUND_SYSTEM && !doc)
+	/**
+	 * Calls FlxG.sound.cache() on all sounds that are embedded.
+	 */
+	#if (openfl <= "1.4.0")
+	@:access(openfl.Assets)
+	@:access(openfl.AssetType)
+	#end
+	public static function cacheSounds():Void
+	{
+		#if (openfl > "1.4.0")
+		for (id in Assets.list(AssetType.SOUND)) 
+		{
+			FlxG.sound.cache(id);
+		}
+		#else
+		Assets.initialize();
+		
+		var defaultLibrary = Assets.libraries.get("default");
+		
+		if (defaultLibrary == null) 
+			return;
+		
+		var types:Map<String, Dynamic> = DefaultAssetLibrary.type;
+		
+		if (types == null) 
+			return;
+		
+		for (key in types.keys())
+		{
+			if (types.get(key) == AssetType.SOUND)
+			{
+				FlxG.sound.cache(key);
+			}
+		}
+		#end
+	}
+#end
 #end
 }
 
@@ -215,14 +243,4 @@ private class FileReference
 		this.documentation = "\"" + value + "\" (auto generated).";
 	}
 }
-#else
-typedef FlxSoundAsset = OneOfThree<String, Sound, Class<Sound>>;
-// Class<Dynamic> should actually be Class<BitmapData>, but needs to be the former so we can use Std.is() on it
-typedef FlxGraphicAsset = OneOfFive<String, Class<Dynamic>, CachedGraphics, TextureRegion, BitmapData>;
-typedef FlxTextureAsset = OneOfTwo<TexturePackerData, CachedGraphics>;
-typedef FlxTilemapAsset = OneOfTwo<String, Array<Int>>;
-
-private abstract OneOfTwo<T1, T2>(Dynamic) from T1 from T2 to T1 to T2 { }
-private abstract OneOfThree<T1, T2, T3>(Dynamic) from T1 from T2 from T3 to T1 to T2 to T3 {}
-private abstract OneOfFive<T1, T2, T3, T4, T5>(Dynamic) from T1 from T2 from T3 from T4 from T5 to T1 to T2 to T3 to T4 to T5 { }
 #end
