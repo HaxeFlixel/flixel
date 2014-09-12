@@ -149,7 +149,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	 */
 	public function load(?Graphic:Dynamic, Scale:Float = 1, XOffset:UInt = 0, YOffset:UInt = 0):Void
 	{
-		#if FLX_NATIVE_CURSOR
+		#if !FLX_NATIVE_CURSOR
 		if (_cursor != null)
 		{
 			FlxDestroyUtil.removeChild(cursorContainer, _cursor);
@@ -423,7 +423,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	{
 		reset();
 		
-		#if FLX_NATIVE_CURSOR
+		#if !FLX_NATIVE_CURSOR
 		set_useSystemCursor(useSystemCursor);
 		
 		visible = _visibleWhenFocusLost;
@@ -435,7 +435,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	 */
 	private function onFocusLost():Void
 	{
-		#if FLX_NATIVE_CURSOR
+		#if !FLX_NATIVE_CURSOR
 		_visibleWhenFocusLost = visible;
 		
 		if (visible)
