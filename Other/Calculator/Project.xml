@@ -19,7 +19,6 @@
 	<haxelib name="firetongue" />
 
 	<!--<haxedef name="FLX_RECORD" />-->
-	<haxedef name="no-inline" if="neko" />
 	<!--<haxedef name="FLX_NO_NATIVE_CURSOR" />-->
 	<haxedef name="FLX_NO_FOCUS_LOST_SCREEN" />
 	<haxedef name="FLX_NO_DEBUG" unless="debug" />
