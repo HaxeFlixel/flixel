@@ -95,7 +95,7 @@ class FlxConditionals
 			Compiler.define(FLX_MOUSE_ADVANCED);
 		}
 		
-		if (!defined(FLX_NO_MOUSE) && !defined(FLX_NATIVE_CURSOR) && defined("flash10_2"))
+		if (!defined(FLX_NO_MOUSE) && !defined(FLX_NO_NATIVE_CURSOR) && defined("flash10_2"))
 		{
 			Compiler.define(FLX_NATIVE_CURSOR);
 		}
