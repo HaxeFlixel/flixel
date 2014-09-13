@@ -30,17 +30,14 @@ class FlxKeyboard extends FlxKeyManager<FlxKey, FlxKeyList>
 			preventDefaultKeys = [FlxKey.UP, FlxKey.DOWN, FlxKey.LEFT, FlxKey.RIGHT, FlxKey.TAB, FlxKey.SPACE];
 		#end
 		
-		for (code in [8, 9, 13, 16, 17, 19, 20, 27, 45, 46, 144, 145, 219, 220, 221, 222, 301]
-			.concat([for (i in 186...193) i])
-			.concat([for (i in 32...41) i])
-			.concat([for (i in 48...58) i])
-			.concat([for (i in 65...91) i])
-			.concat([for (i in 96...108) i])
-			.concat([for (i in 109...127) i]))
+		for (code in FlxKey.keyNameMap)
 		{
-			var input:FlxKeyInput = new FlxKeyInput(code);
-			_keyListArray.push(input);
-			_keyListMap.set(code, input);
+			if (code != FlxKey.ANY && code != FlxKey.NONE)
+			{
+				var input = new FlxKeyInput(code);
+				_keyListArray.push(input);
+				_keyListMap.set(code, input);
+			}
 		}
 		
 		#if !(flash || js)
