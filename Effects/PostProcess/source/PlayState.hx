@@ -12,6 +12,7 @@ class PlayState extends FlxState
 {
 	var shaderNames:Array<String> = [
 		"blur",
+		"tiltshift",
 		"deuteranopia",
 		"grain",
 		"grayscale",
