@@ -1024,7 +1024,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 					_point.x = isPixelPerfectRender(Camera) ? Math.floor(drawX) : drawX;
 					_point.y = isPixelPerfectRender(Camera) ? Math.floor(drawY) : drawY;
 					
-					var drawItem:DrawStackItem = Camera.getDrawStackItem(cachedGraphics, isColored, 0);
+					var drawItem:DrawStackItem = Camera.getDrawStackItem(cachedGraphics, isColored, _blendInt);
 					drawItem.setDrawData(_point, tileID, hackScaleX, 0, 0, hackScaleY, isColored, color, alpha);
 				}
 				#end
