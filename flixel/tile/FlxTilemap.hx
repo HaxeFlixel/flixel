@@ -19,6 +19,9 @@ import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.loaders.CachedGraphics;
 import flixel.util.loaders.TextureRegion;
+import openfl.display.BlendMode;
+import openfl.display.Tilesheet;
+import openfl.geom.ColorTransform;
 
 @:bitmap("assets/images/tile/autotiles.png")
 class GraphicAuto extends BitmapData {}
@@ -56,6 +59,24 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	public var region(default, null):Region;
 	public var framesData(default, null):FlxSpriteFrames;
 	public var cachedGraphics(default, set):CachedGraphics;
+	
+	/**
+	 * Tints the whole sprite to a color (0xRRGGBB format) - similar to OpenGL vertex colors. You can use
+	 * 0xAARRGGBB colors, but the alpha value will simply be ignored. To change the opacity use alpha. 
+	 */
+	public var color(default, set):FlxColor = 0xffffff;
+	
+	/**
+	 * Set alpha to a number between 0 and 1 to change the opacity of the sprite.
+	 */
+	public var alpha(default, set):Float = 1.0;
+	
+	public var colorTransform(default, null):ColorTransform;
+	
+	/**
+	 * Blending modes, just like Photoshop or whatever, e.g. "multiply", "screen", etc.
+	 */
+	public var blend(default, set):BlendMode = null;
 	
 	/**
 	 * Rendering helper, minimize new object instantiation on repetitive methods.
@@ -115,6 +136,8 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 * Internal representation of rectangles (actually id of rectangle in tileSheet), one for each tile in the entire tilemap, used to speed up drawing.
 	 */
 	private var _rectIDs:Array<Int>;
+	
+	private var _blendInt:Int = 0;
 	#end
 	
 	
@@ -131,6 +154,8 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		#if FLX_RENDER_TILE
 		_helperPoint = new Point();
 		#end
+		
+		colorTransform = new ColorTransform();
 		
 		scale = new FlxCallbackPoint(setScaleXCallback, setScaleYCallback, setScaleXYCallback);
 		scale.set(1, 1);
@@ -192,6 +217,9 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		
 		// need to destroy FlxCallbackPoints
 		scale = FlxDestroyUtil.destroy(scale);
+		
+		colorTransform = null;
+		blend = null;
 		
 		FlxG.signals.gameResized.remove(onGameResize);
 		
@@ -902,6 +930,8 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		var hackScaleY:Float = tileScaleHack * scale.y;
 	#end
 		
+		var isColored:Bool = ((alpha != 1) || (color != 0xffffff));
+		
 		// Copy tile images into the tile buffer
 		_point.x = (Camera.scroll.x * scrollFactor.x) - x; //modified from getScreenXY()
 		_point.y = (Camera.scroll.y * scrollFactor.y) - y;
@@ -994,8 +1024,8 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 					_point.x = isPixelPerfectRender(Camera) ? Math.floor(drawX) : drawX;
 					_point.y = isPixelPerfectRender(Camera) ? Math.floor(drawY) : drawY;
 					
-					var drawItem:DrawStackItem = Camera.getDrawStackItem(cachedGraphics, false, 0);
-					drawItem.setDrawData(_point, tileID, hackScaleX, 0, 0, hackScaleY);
+					var drawItem:DrawStackItem = Camera.getDrawStackItem(cachedGraphics, isColored, 0);
+					drawItem.setDrawData(_point, tileID, hackScaleX, 0, 0, hackScaleY, isColored, color, alpha);
 				}
 				#end
 				
@@ -1015,6 +1045,14 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		
 		Buffer.x = screenXInTiles * _scaledTileWidth;
 		Buffer.y = screenYInTiles * _scaledTileHeight;
+		
+		#if FLX_RENDER_BLIT
+		if (isColored)
+		{
+			Buffer.colorTransform(colorTransform);
+		}
+		Buffer.blend = blend;
+		#end
 		
 		Buffer.dirty = false;
 	}
@@ -1146,6 +1184,83 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		}
 		
 		return pixelPerfectRender = Value;
+	}
+	
+	private function set_alpha(Alpha:Float):Float
+	{
+		alpha = FlxMath.bound(Alpha, 0, 1);
+		updateColorTransform();
+		return alpha;
+	}
+	
+	private function set_color(Color:FlxColor):Int
+	{
+		if (color == Color)
+		{
+			return Color;
+		}
+		color = Color;
+		updateColorTransform();
+		
+		return color;
+	}
+	
+	private function updateColorTransform():Void
+	{
+		if ((alpha != 1) || (color != 0xffffff))
+		{
+			colorTransform.redMultiplier = color.redFloat;
+			colorTransform.greenMultiplier = color.greenFloat;
+			colorTransform.blueMultiplier = color.blueFloat;
+			colorTransform.alphaMultiplier = alpha;
+		}
+		else
+		{
+			colorTransform.redMultiplier = 1;
+			colorTransform.greenMultiplier = 1;
+			colorTransform.blueMultiplier = 1;
+			colorTransform.alphaMultiplier = 1;
+		}
+		
+		#if FLX_RENDER_BLIT
+		for (buffer in _buffers)
+		{
+			buffer.dirty = true;
+		}
+		#end
+	}
+	
+	private function set_blend(Value:BlendMode):BlendMode 
+	{
+		#if FLX_RENDER_TILE
+		if (Value != null)
+		{
+			switch (Value)
+			{
+				case BlendMode.ADD:
+					_blendInt = Tilesheet.TILE_BLEND_ADD;
+				#if !flash
+				case BlendMode.MULTIPLY:
+					_blendInt = Tilesheet.TILE_BLEND_MULTIPLY;
+				case BlendMode.SCREEN:
+					_blendInt = Tilesheet.TILE_BLEND_SCREEN;
+				#end
+				default:
+					_blendInt = Tilesheet.TILE_BLEND_NORMAL;
+			}
+		}
+		else
+		{
+			_blendInt = 0;
+		}
+		#else
+		for (buffer in _buffers)
+		{
+			buffer.dirty = true;
+		}
+		#end	
+		
+		return blend = Value;
 	}
 	
 	private function setScaleXYCallback(Scale:FlxPoint):Void

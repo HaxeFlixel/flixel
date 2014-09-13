@@ -7,6 +7,8 @@ import flash.geom.Rectangle;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.util.FlxColor;
+import openfl.display.BlendMode;
+import openfl.geom.ColorTransform;
 
 /**
  * A helper object to keep tilemap drawing performance decent across the new multi-camera system.
@@ -55,6 +57,8 @@ class FlxTilemapBuffer
 	 */ 
 	public var pixels(default, null):BitmapData;
 	
+	public var blend:BlendMode;
+	
 	private var _flashRect:Rectangle;
 	private var _matrix:Matrix;
 	#end
@@ -90,6 +94,7 @@ class FlxTilemapBuffer
 	{
 		#if FLX_RENDER_BLIT
 		pixels = null;
+		blend = null;
 		_matrix = null;
 		#end
 	}
@@ -120,7 +125,7 @@ class FlxTilemapBuffer
 			FlashPoint.y = Math.floor(FlashPoint.y);
 		}
 		
-		if (isPixelPerfectRender(Camera) && (ScaleX == 1.0 && ScaleY == 1.0))
+		if (isPixelPerfectRender(Camera) && (ScaleX == 1.0 && ScaleY == 1.0) && blend == null)
 		{
 			Camera.buffer.copyPixels(pixels, _flashRect, FlashPoint, null, null, true);
 		}
@@ -129,8 +134,13 @@ class FlxTilemapBuffer
 			_matrix.identity();
 			_matrix.scale(ScaleX, ScaleY);
 			_matrix.translate(FlashPoint.x, FlashPoint.y);
-			Camera.buffer.draw(pixels, _matrix);
+			Camera.buffer.draw(pixels, _matrix, null, blend);
 		}
+	}
+	
+	public function colorTransform(Transform:ColorTransform):Void
+	{
+		pixels.colorTransform(_flashRect, Transform);
 	}
 	#end
 	
