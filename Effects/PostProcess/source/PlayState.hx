@@ -39,6 +39,12 @@ class PlayState extends FlxState
 			createCheckbox(x, y, shaderNames[i], fragmentShaders[i]);
 			y += 25;
 		}
+		
+		// some shaders have properties that can be manipulated at runtime
+		var blurShader = fragmentShaders[0];
+		blurShader.setUniform("diry", 1);
+		blurShader.setUniform("dirx", 1);
+		blurShader.setUniform("radius", 1);
 	}
 	
 	function createCheckbox(x:Float, y:Float, name:String, shader:PostProcess)
