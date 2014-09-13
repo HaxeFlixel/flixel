@@ -92,7 +92,14 @@ class PostProcess extends OpenGLView
 		else
 		{
 			var id:Int = shader.uniform(uniform);
-			if (id != -1) uniforms.set(uniform, new Uniform(id, value));
+			if (id != -1)
+			{
+				uniforms.set(uniform, new Uniform(id, value));
+			}
+			else
+			{
+				throw 'Uniform with name "$uniform" could not be found.';
+			}
 		}
 	}
 
