@@ -218,6 +218,7 @@ class ScreenState extends FlxState
 			_enemy.type = Type;
 			_enemy.position = getSpawnPosition(_enemy.position, MinimumDistanceFromPlayer);
 			_enemy.reset(_enemy.position.x, _enemy.position.y);
+			GameSound.randomSound(GameSound.sfxSpawn);
 			return true;
 		}
 		else return false;

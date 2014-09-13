@@ -24,12 +24,12 @@
   </classpaths>
   <!-- Build options -->
   <build>
-    <option directives="flixel=3.3.5&#xA;lime=1.0.1&#xA;openfl=2.0.1&#xA;FLX_RECORD&#xA;tools=1.5.7&#xA;openfl-flash&#xA;FLX_RENDER_BLIT&#xA;display&#xA;bitfive_gamepads&#xA;web" />
+    <option directives="flixel=3.3.5&#xA;lime=1.0.1&#xA;openfl=2.0.1&#xA;FLX_RECORD&#xA;tools=1.5.7&#xA;openfl-flash&#xA;display&#xA;web" />
     <option flashStrict="False" />
     <option noInlineOnDebug="False" />
     <option mainClass="ApplicationMain" />
     <option enabledebug="False" />
-    <option additional="--no-output &#xA;-swf-version 11.8&#xA;-debug " />
+    <option additional="--no-output &#xA;--macro flixel.system.macros.FlxConditionals.run()&#xA;-swf-version 11.8&#xA;-debug " />
   </build>
   <!-- haxelib libraries -->
   <haxelib>
