@@ -1,7 +1,8 @@
 package flixel.effects.postprocess;
 
-#if FLX_POST_PROCESS
 import flash.geom.Rectangle;
+
+#if FLX_POST_PROCESS
 import flixel.FlxG;
 import openfl.Assets;
 import openfl.display.OpenGLView;
@@ -275,6 +276,18 @@ void main() {
 #else
 class PostProcess
 {
-	public function new(fragmentShader:String) {}
+	public function new(shader:String)
+	{
+		FlxG.log.error("Post processing is only supported on cpp and neko");
+	}
+	
+	public function enable(?to:PostProcess) {}
+	public function capture() {}
+	public function rebuild() {}
+	public function update(elapsed:Float) {}
+	public function render(rect:Rectangle) {}
+	public function setUniform(uniform:String, value:Float) {}
+	public var to(never, set):PostProcess;
+	public function set_to(value:PostProcess):PostProcess { return null; }
 }
 #end
