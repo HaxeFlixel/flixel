@@ -49,6 +49,7 @@ class FlxConditionals
 		FLX_NO_SOUND_TRAY,
 		FLX_NO_FOCUS_LOST_SCREEN,
 		FLX_NO_DEBUG,
+		FLX_NO_GAMEPAD,
 		FLX_RECORD];
 	
 	public static function run()
