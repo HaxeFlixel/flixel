@@ -245,10 +245,8 @@ class FlxRect implements IFlxPooled
 	 */
 	public inline function equals(rect:FlxRect):Bool
 	{
-		return Math.abs(x - rect.x) < FlxMath.EPSILON
-			&& Math.abs(y - rect.y) < FlxMath.EPSILON
-			&& Math.abs(width - rect.width) < FlxMath.EPSILON
-			&& Math.abs(height - rect.height) < FlxMath.EPSILON;
+		return FlxMath.equal(x, rect.x) && FlxMath.equal(y, rect.y)
+			&& FlxMath.equal(width, rect.width) && FlxMath.equal(height, rect.height);
 	}
 	
 	/**

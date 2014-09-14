@@ -400,8 +400,7 @@ class FlxPoint implements IFlxPooled
 	 */
 	public inline function equals(point:FlxPoint):Bool
 	{
-		return Math.abs(x - point.x) < FlxMath.EPSILON
-			&& Math.abs(y - point.y) < FlxMath.EPSILON;
+		return FlxMath.equal(x, point.x) && FlxMath.equal(y, point.y);
 	}
 	
 	/**

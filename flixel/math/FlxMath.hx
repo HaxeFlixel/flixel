@@ -507,7 +507,7 @@ class FlxMath
 	
 	public static inline function equal(aValueA:Float, aValueB:Float, aDiff:Float = EPSILON):Bool
 	{
-		return (Math.abs(aValueA - aValueB) <= aDiff);
+		return Math.abs(aValueA - aValueB) <= aDiff;
 	}
 	
 	/**
