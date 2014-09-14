@@ -1,7 +1,9 @@
 package flixel.system;
 
 #if !doc
-#if js
+#if (openfl >= "3.0.0-alpha")
+class FlxBasePreloader extends openfl.display.Preloader {}
+#elseif js
 class FlxBasePreloader extends NMEPreloader {}
 #else
 import flash.events.Event;
