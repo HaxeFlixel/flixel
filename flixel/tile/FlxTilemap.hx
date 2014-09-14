@@ -173,30 +173,8 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		var i:Int = 0;
 		var l:Int;
 		
-		if (_tileObjects != null)
-		{
-			l = _tileObjects.length;
-			
-			for (i in 0...l)
-			{
-				_tileObjects[i].destroy();
-			}
-			
-			_tileObjects = null;
-		}
-		
-		if (_buffers != null)
-		{
-			i = 0;
-			l = _buffers.length;
-			
-			for (i in 0...l)
-			{
-				_buffers[i].destroy();
-			}
-			
-			_buffers = null;
-		}
+		FlxDestroyUtil.destroyArray(_tileObjects);
+		FlxDestroyUtil.destroyArray(_buffers);
 		
 		#if FLX_RENDER_BLIT
 		_rects = null;

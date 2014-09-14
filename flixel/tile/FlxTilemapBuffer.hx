@@ -7,6 +7,7 @@ import flash.geom.Rectangle;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import openfl.display.BlendMode;
 import openfl.geom.ColorTransform;
 
@@ -14,7 +15,7 @@ import openfl.geom.ColorTransform;
  * A helper object to keep tilemap drawing performance decent across the new multi-camera system.
  * Pretty much don't even have to think about this class unless you are doing some crazy hacking.
  */
-class FlxTilemapBuffer
+class FlxTilemapBuffer implements IFlxDestroyable
 {
 	/**
 	 * The current X position of the buffer.
