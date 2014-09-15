@@ -148,14 +148,14 @@ class FlxState extends FlxGroup
 	}
 	
 	/**
-	 * This method is called after application losts its focus.
-	 * Can be useful if you using third part libraries, such as tweening engines.
+	 * This method is called after the game loses focus.
+	 * Can be useful for third party libraries, such as tweening engines.
 	 */
 	public function onFocusLost():Void {}
 
 	/**
-	 * This method is called after application gets focus.
-	 * Can be useful if you using third part libraries, such as tweening engines.
+	 * This method is called after application receives focus.
+	 * Can be useful for thrid party libraries, such as tweening engines.
 	 */
 	public function onFocus():Void {}
 
