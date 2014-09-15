@@ -65,7 +65,7 @@ class FlxState extends FlxGroup
 		}
 	}
 	
-	public inline function openSubState(SubState:FlxSubState):Void
+	public function openSubState(SubState:FlxSubState):Void
 	{
 		_requestSubStateReset = true;
 		_requestedSubState = SubState;
@@ -74,7 +74,7 @@ class FlxState extends FlxGroup
 	/**
 	 * Closes the substate of this state, if one exists.
 	 */
-	public inline function closeSubState():Void
+	public function closeSubState():Void
 	{
 		_requestSubStateReset = true;
 	}
