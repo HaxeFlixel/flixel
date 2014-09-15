@@ -188,7 +188,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 		#if FLX_NATIVE_CURSOR
 		if (XOffset < 0 || YOffset < 0)
 		{
-			throw "Negative offsets aren't supported for native cursors.");
+			throw "Negative offsets aren't supported for native cursors.";
 		}
 		
 		if (Scale < 0)
