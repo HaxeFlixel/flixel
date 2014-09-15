@@ -96,6 +96,27 @@ class FlxAssets
 				fileReferences = fileReferences.concat(getFileReferences(directory + name + "/", true, filterExtensions));
 			}
 		}
+		
+		// any duplicate names?
+		if (subDirectories)
+		{
+			for (fileReference in fileReferences)
+			{
+				var duplicates = fileReferences.filter(function(ref)
+				{
+					return ref != fileReference && ref.name == fileReference.name;
+				});
+				
+				if (duplicates != null)
+				{
+					for (i in 0...duplicates.length)
+					{
+						duplicates[i].name += "_" + (i + 2); 
+					}
+				}
+			}
+		}
+		
 		return fileReferences;
 	}
 #else
