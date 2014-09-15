@@ -14,7 +14,7 @@ class FlxAssetsTest extends FlxTest
 	@Test
 	function testFileReferencesDuplicateFileName()
 	{
-		Assert.isNotNull(DuplicateFileName.file__txt);
+		Assert.isNotNull(DuplicateFileName.file__txt_1);
 		Assert.isNotNull(DuplicateFileName.file__txt_2);
 	}
 }
