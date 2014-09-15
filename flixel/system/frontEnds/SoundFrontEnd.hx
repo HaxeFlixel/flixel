@@ -188,12 +188,15 @@ class SoundFrontEnd
 	 * @param	AutoDestroy		Whether to destroy this sound when it finishes playing.  Leave this value set to "false" if you want to re-use this FlxSound instance.
 	 * @return	The FlxSound object.
 	 */
-	public function play(EmbeddedSound:String, Volume:Float = 1, Looped:Bool = false, AutoDestroy:Bool = true, ?OnComplete:Void->Void):FlxSound
+	public function play(EmbeddedSound:FlxSoundAsset, Volume:Float = 1, Looped:Bool = false, AutoDestroy:Bool = true, ?OnComplete:Void->Void):FlxSound
 	{
-		var sound:Sound = cache(EmbeddedSound);
-		var flixelSound = list.recycle(FlxSound).loadEmbedded(sound, Looped, AutoDestroy, OnComplete);
-		flixelSound.volume = Volume;
-		return flixelSound.play();
+		if (Std.is(EmbeddedSound, String))
+		{
+			EmbeddedSound = cache(EmbeddedSound);
+		}
+		var sound = list.recycle(FlxSound).loadEmbedded(EmbeddedSound, Looped, AutoDestroy, OnComplete);
+		sound.volume = Volume;
+		return sound.play();
 	}
 	
 	/**
@@ -301,7 +304,7 @@ class SoundFrontEnd
 	 */
 	public function showSoundTray():Void
 	{
-		#if !FLX_NO_SOUND_TRAY
+		#if FLX_SOUND_TRAY
 		if (FlxG.game.soundTray != null && soundTrayEnabled)
 		{
 			FlxG.game.soundTray.show();
@@ -317,13 +320,13 @@ class SoundFrontEnd
 	/**
 	 * Called by the game loop to make sure the sounds get updated each frame.
 	 */
-	private function update():Void
+	private function update(elapsed:Float):Void
 	{
 		if (music != null && music.active)
-			music.update();
+			music.update(elapsed);
 		
 		if (list != null && list.active)
-			list.update();
+			list.update(elapsed);
 		
 		#if !FLX_NO_KEYBOARD
 		if (FlxG.keys.anyJustReleased(muteKeys))

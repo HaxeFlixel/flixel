@@ -58,9 +58,9 @@ class AngleTween extends FlxTween
 		return this;
 	}
 	
-	override private function update():Void
+	override private function update(elapsed:Float):Void
 	{
-		super.update();
+		super.update(elapsed);
 		
 		angle = (_start + _range * scale) % 360;
 		

@@ -8,6 +8,7 @@ import flixel.tile.FlxBaseTilemap.FlxTilemapAutoTiling;
 import flixel.util.FlxArrayUtil;
 import flixel.system.FlxAssets;
 import flixel.group.FlxGroup;
+import openfl.Assets;
 
 class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 {
@@ -152,7 +153,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	/**
 	 * Load the tilemap with string data and a tile graphic.
 	 * 
-	 * @param   MapData         A string of comma and line-return delineated indices indicating what order the tiles should go in,
+	 * @param   MapData         A csv-formatted string indicating what order the tiles should go in (or the path to that file),
 	 *                          or an Array<Int>. In the latter case YOU MUST SET widthInTiles and heightInTyles manually BEFORE CALLING loadMap()!
 	 * @param   TileGraphic     All the tiles you want to use, arranged in a strip corresponding to the numbers in MapData.
 	 * @param   TileWidth       The width of your tiles (e.g. 8) - defaults to height of the tile graphic if unspecified.
@@ -198,6 +199,12 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		// Populate data if MapData is a CSV string
 		if (Std.is(MapData, String))
 		{
+			// path to map data file?
+			if (Assets.exists(MapData))
+			{
+				MapData = Assets.getText(MapData);
+			}
+			
 			// Figure out the map dimensions based on the data string
 			_data = new Array<Int>();
 			var columns:Array<String>;
@@ -568,10 +575,10 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * This callback function, if present, is triggered by calls to overlap() or overlapsWithCallback().
 	 * 
 	 * @param	Tile				The tile or tiles you want to adjust.
-	 * @param	AllowCollisions		Modify the tile or tiles to only allow collisions from certain directions, use FlxObject constants NONE, ANY, LEFT, RIGHT, etc.  Default is "ANY".
+	 * @param	AllowCollisions		Modify the tile or tiles to only allow collisions from certain directions, use FlxObject constants NONE, ANY, LEFT, RIGHT, etc. Default is "ANY".
 	 * @param	Callback			The function to trigger, e.g. lavaCallback(Tile:FlxTile, Object:FlxObject).
 	 * @param	CallbackFilter		If you only want the callback to go off for certain classes or objects based on a certain class, set that class here.
-	 * @param	Range				If you want this callback to work for a bunch of different tiles, input the range here.  Default value is 1.
+	 * @param	Range				If you want this callback to work for a bunch of different tiles, input the range here. Default value is 1.
 	 */
 	public function setTileProperties(Tile:Int, AllowCollisions:Int = FlxObject.ANY, ?Callback:FlxObject->FlxObject->Void, ?CallbackFilter:Class<FlxObject>, Range:Int = 1):Void
 	{
@@ -583,6 +590,12 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		var tile:Tile;
 		var i:Int = Tile;
 		var l:Int = Tile + Range;
+		
+		var maxIndex = _tileObjects.length;
+		if (l > maxIndex) 
+		{
+			throw 'Index $l exceeds the maximum tile index of $maxIndex. Please verfiy the Tile ($Tile) and Range ($Range) parameters.';
+		}
 		
 		while (i < l)
 		{

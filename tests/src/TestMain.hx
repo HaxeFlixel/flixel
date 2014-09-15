@@ -9,10 +9,6 @@ import massive.munit.client.SummaryReportClient;
 import massive.munit.TestRunner;
 import massive.munit.util.Timer;
 
-#if js
-import js.Lib;
-#end
-
 /**
  * Auto generated Test Application.
  * Refer to munit command line tool for more information (haxelib run munit)
@@ -57,7 +53,7 @@ class TestMain
 			#elseif js
 				js.Lib.eval("testResult(" + successful + ");");
 			#elseif sys
-				Sys.exit(0);
+				Sys.exit(successful ? 0 : 1);
 			#end
 		}
 		// if run from outside browser can get error which we can ignore

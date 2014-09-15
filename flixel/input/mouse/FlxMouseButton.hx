@@ -15,7 +15,7 @@ class FlxMouseButton extends FlxInput<Int> implements IFlxDestroyable
 		{
 			case LEFT: FlxG.mouse._leftButton;
 			
-			#if !FLX_NO_MOUSE_ADVANCED
+			#if FLX_MOUSE_ADVANCED
 				case MIDDLE: FlxG.mouse._middleButton;
 				case RIGHT: FlxG.mouse._rightButton;
 			#else
@@ -39,10 +39,12 @@ class FlxMouseButton extends FlxInput<Int> implements IFlxDestroyable
 			justPressedPosition.set(FlxG.mouse.screenX, FlxG.mouse.screenY);
 			justPressedTimeInTicks = FlxG.game.ticks;
 		}
+		#if FLX_POINTER_INPUT
 		else if (justReleased)
 		{
 			FlxG.swipes.push(new FlxSwipe(ID, justPressedPosition, FlxG.mouse.getScreenPosition(), justPressedTimeInTicks));
 		}
+		#end
 	}
 	
 	public inline function destroy():Void

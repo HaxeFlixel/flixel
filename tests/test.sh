@@ -1,3 +1,5 @@
 #!/bin/bash
 
-haxelib run munit test -coverage
+haxelib run lime test neko
+haxelib run lime test cpp
+haxelib run munit test

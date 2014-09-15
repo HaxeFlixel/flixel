@@ -128,6 +128,8 @@ class FlxPath implements IFlxDestroyable
 	
 	private var _inManager:Bool = false;
 	
+	private var _wasObjectImmovable:Bool;
+	
 	/**
 	 * Creates a new FlxPath (and calls start() right away if Object != null).
 	 */
@@ -189,7 +191,9 @@ class FlxPath implements IFlxDestroyable
 			_inc = 1;
 		}
 		
+		_wasObjectImmovable = object.immovable;
 		object.immovable = true;
+		
 		return this;
 	}
 	
@@ -215,7 +219,7 @@ class FlxPath implements IFlxDestroyable
 	 * The first half of the function decides if the object can advance to the next node in the path,
 	 * while the second half handles actually picking a velocity toward the next node.
 	 */
-	public function update():Void
+	public function update(elapsed:Float):Void
 	{
 		//first check if we need to be pointing at the next node yet
 		_point.x = object.x;
@@ -233,21 +237,21 @@ class FlxPath implements IFlxDestroyable
 		
 		if (horizontalOnly)
 		{
-			if (((deltaX > 0) ? deltaX : -deltaX) < speed * FlxG.elapsed)
+			if (((deltaX > 0) ? deltaX : -deltaX) < speed * elapsed)
 			{
 				node = advancePath();
 			}
 		}
 		else if (verticalOnly)
 		{
-			if (((deltaY > 0) ? deltaY : -deltaY) < speed * FlxG.elapsed)
+			if (((deltaY > 0) ? deltaY : -deltaY) < speed * elapsed)
 			{
 				node = advancePath();
 			}
 		}
 		else
 		{
-			if (Math.sqrt(deltaX * deltaX + deltaY * deltaY) < speed * FlxG.elapsed)
+			if (Math.sqrt(deltaX * deltaX + deltaY * deltaY) < speed * elapsed)
 			{
 				node = advancePath();
 			}
@@ -358,7 +362,8 @@ class FlxPath implements IFlxDestroyable
 			if (nodeIndex < 0)
 			{
 				nodeIndex = 0;
-				finished = callComplete = true;
+				callComplete = true;
+				onEnd();
 			}
 		}
 		else if ((_mode & FlxPath.LOOP_FORWARD) > 0)
@@ -416,7 +421,8 @@ class FlxPath implements IFlxDestroyable
 			if (nodeIndex >= nodes.length)
 			{
 				nodeIndex = nodes.length - 1;
-				finished = callComplete = true;
+				callComplete = true;
+				onEnd();
 			}
 		}
 		
@@ -433,8 +439,7 @@ class FlxPath implements IFlxDestroyable
 	 */
 	public function cancel():Void
 	{
-		finished = true;
-		active = false;
+		onEnd();
 		
 		if (object != null)
 		{
@@ -446,6 +451,16 @@ class FlxPath implements IFlxDestroyable
 			manager.remove(this);
 			_inManager = false;
 		}
+	}
+	
+	/**
+	 * Called when the path ends, either by completing normally or via cancel().
+	 */
+	private function onEnd():Void
+	{
+		finished = true;
+		active = false;
+		object.immovable = _wasObjectImmovable;
 	}
 	
 	/**
@@ -724,13 +739,13 @@ class FlxPathManager extends FlxBasic
 		super.destroy();
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
 		for (path in _paths)
 		{
 			if (path.active)
 			{
-				path.update();
+				path.update(elapsed);
 			}
 		}
 	}

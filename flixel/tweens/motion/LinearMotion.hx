@@ -52,9 +52,9 @@ class LinearMotion extends Motion
 		return this;
 	}
 
-	override private function update():Void
+	override private function update(elapsed:Float):Void
 	{
-		super.update();
+		super.update(elapsed);
 		x = _fromX + _moveX * scale;
 		y = _fromY + _moveY * scale;
 		

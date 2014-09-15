@@ -115,13 +115,13 @@ class PluginFrontEnd
 	/**
 	 * Used by the game object to call update() on all the plugins.
 	 */
-	private inline function update():Void
+	private inline function update(elapsed:Float):Void
 	{
 		for (plugin in list)
 		{
 			if (plugin.exists && plugin.active)
 			{
-				plugin.update();
+				plugin.update(elapsed);
 			}
 		}
 	}

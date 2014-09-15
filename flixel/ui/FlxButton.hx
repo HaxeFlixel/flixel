@@ -247,16 +247,16 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	/**
 	 * Called by the game loop automatically, handles mouseover and click detection.
 	 */
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
-		super.update();
+		super.update(elapsed);
 		
 		input.update();
 		
 		if (visible) 
 		{
 			// Update the button, but only if at least either mouse or touches are enabled
-			#if (!FLX_NO_MOUSE || !FLX_NO_TOUCH)
+			#if FLX_POINTER_INPUT
 				updateButton();
 			#end
 			
@@ -332,6 +332,13 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 				}
 			#end
 		}
+		
+		#if !FLX_NO_TOUCH // there's only a mouse event listener for onUp
+			if (currentInput != null && currentInput.justReleased && Std.is(currentInput, FlxTouch))
+			{
+				onUpHandler();
+			}
+		#end
 		
 		if (status != FlxButton.NORMAL &&
 			(!overlapFound || (currentInput != null && currentInput.justReleased)))

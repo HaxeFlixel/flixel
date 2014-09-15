@@ -81,13 +81,13 @@ class FlxSpriteTest extends FlxTest
 		var color = FlxColor.RED;
 		var colorSprite = new FlxSprite();
 		colorSprite.makeGraphic(100, 100, color);
-		Assert.areEqual(color.to24Bit(), colorSprite.framePixels.getPixel(0, 0));
-		Assert.areEqual(color.to24Bit(), colorSprite.framePixels.getPixel(90, 90));
+		Assert.areEqual(color.to24Bit(), colorSprite.pixels.getPixel(0, 0));
+		Assert.areEqual(color.to24Bit(), colorSprite.pixels.getPixel(90, 90));
 		
 		color = FlxColor.GREEN;
 		colorSprite = new FlxSprite();
 		colorSprite.makeGraphic(120, 120, color);
-		Assert.areEqual(color.to24Bit(), colorSprite.framePixels.getPixel(119, 119));
+		Assert.areEqual(color.to24Bit(), colorSprite.pixels.getPixel(119, 119));
 	}
 
 	@Test

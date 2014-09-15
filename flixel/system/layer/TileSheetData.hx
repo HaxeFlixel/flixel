@@ -108,7 +108,11 @@ class TileSheetData implements IFlxDestroyable
 		
 		for (frame in frames.frames)
 		{
-			frameRect.setTo(0, 0, frame.sourceSize.x, frame.sourceSize.y);
+			frameRect.x = 0;
+			frameRect.y = 0;
+			frameRect.width = frame.sourceSize.x;
+			frameRect.height = frame.sourceSize.y;
+			
 			newFrameRect = frameRect.intersection(clipRect.copyToFlash());
 			if (newFrameRect.width <= 0 || newFrameRect.height <= 0)
 			{

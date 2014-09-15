@@ -229,17 +229,18 @@ class FlxVelocity
 	 * @param	Acceleration		Rate at which the velocity is changing.
 	 * @param	Drag			Really kind of a deceleration, this is how much the velocity changes if Acceleration is not set.
 	 * @param	Max				An absolute value cap for the velocity (0 for no cap).
+	 * @param	Elapsed			The amount of time passed in to the latest update cycle
 	 * @return	The altered Velocity value.
 	 */
-	public static function computeVelocity(Velocity:Float, Acceleration:Float, Drag:Float, Max:Float):Float
+	public static function computeVelocity(Velocity:Float, Acceleration:Float, Drag:Float, Max:Float, Elapsed:Float):Float
 	{
 		if (Acceleration != 0)
 		{
-			Velocity += Acceleration * FlxG.elapsed;
+			Velocity += Acceleration * Elapsed;
 		}
 		else if (Drag != 0)
 		{
-			var drag:Float = Drag * FlxG.elapsed;
+			var drag:Float = Drag * Elapsed;
 			if (Velocity - drag > 0)
 			{
 				Velocity = Velocity - drag;
