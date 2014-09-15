@@ -7,6 +7,7 @@ import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.system.layer.DrawStackItem;
 import flixel.math.FlxAngle;
 import flixel.math.FlxRandom;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
 
 /**
@@ -15,6 +16,8 @@ import flixel.util.FlxSpriteUtil;
  */
 class FlxTileblock extends FlxSprite
 {
+	private var tileSprite:FlxSprite;
+	
 	/**
 	 * Creates a new FlxBlock object with the specified position and size.
 	 * 
@@ -30,6 +33,11 @@ class FlxTileblock extends FlxSprite
 		active = false;
 		immovable = true;
 		moves = false;
+	}
+	
+	override public function destroy():Void {
+		tileSprite = FlxDestroyUtil.destroy(tileSprite);
+		super.destroy();
 	}
 	
 	/**
@@ -48,21 +56,21 @@ class FlxTileblock extends FlxSprite
 		}
 		
 		// First create a tile brush
-		var sprite:FlxSprite = new FlxSprite().loadGraphic(TileGraphic, true, TileWidth, TileHeight);
-		var spriteWidth:Int = Std.int(sprite.width);
-		var spriteHeight:Int = Std.int(sprite.height);
-		var total:Int = sprite.frames + Empties;
+		tileSprite = new FlxSprite().loadGraphic(TileGraphic, true, TileWidth, TileHeight);
+		var spriteWidth:Int = Std.int(tileSprite.width);
+		var spriteHeight:Int = Std.int(tileSprite.height);
+		var total:Int = tileSprite.frames + Empties;
 		
 		// Then prep the "canvas" as it were (just doublechecking that the size is on tile boundaries)
 		var regen:Bool = false;
 		
-		if (width % sprite.width != 0)
+		if (width % tileSprite.width != 0)
 		{
 			width = Std.int((width / spriteWidth + 1)) * spriteWidth;
 			regen = true;
 		}
 		
-		if (height % sprite.height != 0)
+		if (height % tileSprite.height != 0)
 		{
 			height = Std.int((height / spriteHeight + 1)) * spriteHeight;
 			regen = true;
@@ -94,9 +102,9 @@ class FlxTileblock extends FlxSprite
 			{
 				if (FlxG.random.float() * total > Empties)
 				{
-					sprite.animation.randomFrame();
-					sprite.drawFrame();
-					stamp(sprite, destinationX, destinationY);
+					tileSprite.animation.randomFrame();
+					tileSprite.drawFrame();
+					stamp(tileSprite, destinationX, destinationY);
 				}
 				
 				destinationX += spriteWidth;
@@ -107,8 +115,13 @@ class FlxTileblock extends FlxSprite
 			row++;
 		}
 		
-		sprite.destroy();
 		dirty = true;
 		return this;
+	}
+	
+	public function setTile(x:Int, y:Int, index:Int):Void {
+		tileSprite.animation.frameIndex = index;
+		stamp(tileSprite, x * Std.int(tileSprite.width), y * Std.int(tileSprite.height));
+		dirty = true;
 	}
 }
