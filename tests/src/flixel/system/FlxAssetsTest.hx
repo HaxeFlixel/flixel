@@ -14,8 +14,6 @@ class FlxAssetsTest extends FlxTest
 	@Test
 	function testFileReferencesDuplicateFileName()
 	{
-		var assets:Dynamic = DuplicateFileName;
-		
 		Assert.isNotNull(DuplicateFileName.file__txt);
 		Assert.isNotNull(DuplicateFileName.file__txt_2);
 	}
