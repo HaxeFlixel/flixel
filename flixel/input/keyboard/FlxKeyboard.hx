@@ -30,7 +30,7 @@ class FlxKeyboard extends FlxKeyManager<FlxKey, FlxKeyList>
 			preventDefaultKeys = [FlxKey.UP, FlxKey.DOWN, FlxKey.LEFT, FlxKey.RIGHT, FlxKey.TAB, FlxKey.SPACE];
 		#end
 		
-		for (code in FlxKey.keyNameMap)
+		for (code in FlxKey.fromStringMap)
 		{
 			if (code != FlxKey.ANY && code != FlxKey.NONE)
 			{

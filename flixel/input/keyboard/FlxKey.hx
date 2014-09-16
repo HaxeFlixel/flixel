@@ -312,17 +312,4 @@ abstract FlxKey(Int) from Int to Int
 	{
 		return toStringMap.get(this);
 	}
-	
-	@:to
-	public static function toString(i:Int):String
-	{
-		for (key in keyNameMap.keys())
-		{
-			if (i == keyNameMap.get(key))
-			{
-				return key;
-			}
-		}
-		return "NONE";
-	}
 }
