@@ -75,13 +75,22 @@ class FilterFrames extends FlxFramesCollection
 	
 	private function genFrames():Void
 	{
+		var canvas:BitmapData;
+		var graph:FlxGraphic;
+		var region:FlxRect;
+		var filterFrame:FlxFilterFrame;
+		
+		#if FLX_RENDER_TILE
+		var flashRect:Rectangle;
+		#end
+	
 		for (frame in sourceFrames.frames)
 		{
-			var canvas:BitmapData = new BitmapData(Std.int(frame.sourceSize.x + widthInc), Std.int(frame.sourceSize.y + heightInc), true, FlxColor.TRANSPARENT);
-			var graph:FlxGraphic = FlxGraphic.createNonCached(canvas);
-			var region:FlxRect = new FlxRect(0, 0, graph.width, graph.height);
+			canvas = new BitmapData(Std.int(frame.sourceSize.x + widthInc), Std.int(frame.sourceSize.y + heightInc), true, FlxColor.TRANSPARENT);
+			graph = FlxGraphic.createNonCached(canvas);
+			region = new FlxRect(0, 0, graph.width, graph.height);
 			
-			var filterFrame:FlxFilterFrame = new FlxFilterFrame(graph, frame, this);
+			filterFrame = new FlxFilterFrame(graph, frame, this);
 			
 			filterFrame.frame = region;
 			filterFrame.sourceSize.set(region.width, region.height);
@@ -92,7 +101,7 @@ class FilterFrames extends FlxFramesCollection
 			filterFrame.paintOnBitmap(filterFrame.parent.bitmap);
 			
 			#if FLX_RENDER_TILE
-			var flashRect:Rectangle = region.copyToFlash(new Rectangle());
+			flashRect = region.copyToFlash(new Rectangle());
 			filterFrame.tileID = graph.tilesheet.addTileRect(flashRect, new Point(0.5 * region.width, 0.5 * region.height));
 			#end
 			

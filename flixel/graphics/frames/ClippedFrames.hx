@@ -52,7 +52,7 @@ class ClippedFrames extends FlxFramesCollection
 			helperRect.set(0, 0, frameWidth, frameHeight);
 			clippedRect1.set(frame.offset.x, frame.offset.y, frame.frame.width, frame.frame.height);
 			
-			var rotated:Bool = (frame.type == FrameType.ROTATED);
+			rotated = (frame.type == FrameType.ROTATED);
 			angle = 0;
 			
 			if (rotated)
@@ -168,5 +168,4 @@ class ClippedFrames extends FlxFramesCollection
 		clipRect = null;
 		original = null;
 	}
-	
 }

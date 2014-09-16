@@ -240,6 +240,7 @@ class FlxGraphic
 	}
 	
 	// TODO: document it...
+	// TODO: maybe rename it...
 	/**
 	 * 
 	 * 

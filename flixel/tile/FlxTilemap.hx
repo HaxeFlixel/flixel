@@ -15,6 +15,7 @@ import flixel.graphics.frames.FrameType;
 import flixel.graphics.frames.ImageFrame;
 import flixel.graphics.frames.TileFrames;
 import flixel.math.FlxMath;
+import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.system.FlxAssets.FlxTilemapAsset;
@@ -25,6 +26,7 @@ import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
 import openfl.display.BlendMode;
+import openfl.display.Tilesheet;
 import openfl.geom.ColorTransform;
 
 @:bitmap("assets/images/tile/autotiles.png")
@@ -136,6 +138,8 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	private var _helperPoint:Point;
 	
 	private var _blendInt:Int = 0;
+	
+	private var _matrix:FlxMatrix;
 	#end
 	
 	/**
@@ -151,6 +155,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		
 		#if FLX_RENDER_TILE
 		_helperPoint = new Point();
+		_matrix = new FlxMatrix();
 		#end
 		
 		colorTransform = new ColorTransform();
@@ -195,6 +200,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		#end
 		#else
 		_helperPoint = null;
+		_matrix = null;
 		#end
 		
 		frames = null;
@@ -908,6 +914,8 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		
 		var hackScaleX:Float = tileScaleHack * scaleX;
 		var hackScaleY:Float = tileScaleHack * scaleY;
+		
+		var drawItem:DrawStackItem;
 	#end
 	
 		var isColored:Bool = ((alpha != 1) || (color != 0xffffff));
@@ -994,9 +1002,17 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 					_point.x = isPixelPerfectRender(Camera) ? Math.floor(drawX) : drawX;
 					_point.y = isPixelPerfectRender(Camera) ? Math.floor(drawY) : drawY;
 					
-					var drawItem:DrawStackItem = Camera.getDrawStackItem(graphic, isColored, _blendInt);
-					// TODO: handle rotated frames (use prepareFrameMatrix() method)
-					drawItem.setDrawData(_point, frame.tileID, hackScaleX, 0, 0, hackScaleY, isColored, color, alpha);
+					_matrix.identity();
+					
+					if (frame.angle != 0)
+					{
+						frame.prepareFrameMatrix(_matrix);
+					}
+					
+					_matrix.scale(hackScaleX, hackScaleY);
+					
+					drawItem = Camera.getDrawStackItem(graphic, isColored, _blendInt);
+					drawItem.setMatrixDrawData(_point, frame.tileID, _matrix, isColored, color, alpha);
 				#end
 				}
 				

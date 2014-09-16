@@ -47,14 +47,21 @@ class AtlasFrames extends FlxFramesCollection
 		frames = new AtlasFrames(graphic);
 		var data:Dynamic = Json.parse(Description);
 		
+		var rotated:Bool;
+		var name:String;
+		var sourceSize:FlxPoint;
+		var offset:FlxPoint;
+		var angle:Float;
+		var frameRect:FlxRect;
+		
 		for (frame in Lambda.array(data.frames))
 		{
-			var rotated:Bool = frame.rotated;
-			var name:String = frame.filename;
-			var sourceSize:FlxPoint = FlxPoint.get(frame.sourceSize.w, frame.sourceSize.h);
-			var offset:FlxPoint = FlxPoint.get(frame.spriteSourceSize.x, frame.spriteSourceSize.y);
-			var angle:Float = 0;
-			var frameRect:FlxRect = null;
+			rotated = frame.rotated;
+			name = frame.filename;
+			sourceSize = FlxPoint.get(frame.sourceSize.w, frame.sourceSize.h);
+			offset = FlxPoint.get(frame.spriteSourceSize.x, frame.spriteSourceSize.y);
+			angle = 0;
+			frameRect = null;
 			
 			if (rotated)
 			{
@@ -109,13 +116,20 @@ class AtlasFrames extends FlxFramesCollection
 		var size:Array<Int> = [];
 		var tempString:String;
 		
+		var name:String;
+		var rotated:Bool;
+		var angle:Float;
+		var rect:FlxRect;
+		var sourceSize:FlxPoint;
+		var offset:FlxPoint;
+		
 		for (i in 0...numImages)
 		{
 			curIndex = i * numElementsPerImage;
 			
-			var name:String = lines[curIndex++];
-			var rotated:Bool = (lines[curIndex++].indexOf("true") >= 0);
-			var angle:Float = 0;
+			name = lines[curIndex++];
+			rotated = (lines[curIndex++].indexOf("true") >= 0);
+			angle = 0;
 			
 			tempString = lines[curIndex++];
 			size = getDimensions(tempString, size);
@@ -129,8 +143,7 @@ class AtlasFrames extends FlxFramesCollection
 			imageWidth = size[0];
 			imageHeight = size[1];
 			
-			var rect:FlxRect = null;
-			
+			rect = null;
 			if (rotated)
 			{
 				rect = new FlxRect(imageX, imageY, imageHeight, imageWidth);
@@ -144,12 +157,12 @@ class AtlasFrames extends FlxFramesCollection
 			tempString = lines[curIndex++];
 			size = getDimensions(tempString, size);
 			
-			var sourceSize:FlxPoint = FlxPoint.get(size[0], size[1]);
+			sourceSize = FlxPoint.get(size[0], size[1]);
 			
 			tempString = lines[curIndex++];
 			size = getDimensions(tempString, size);
 			
-			var offset:FlxPoint = FlxPoint.get(size[0], size[1]);
+			offset = FlxPoint.get(size[0], size[1]);
 			frames.addAtlasFrame(rect, sourceSize, offset, name, angle);
 		}
 		
@@ -197,25 +210,33 @@ class AtlasFrames extends FlxFramesCollection
 		
 		var data:Fast = new haxe.xml.Fast(Xml.parse(Description).firstElement());
 		
+		var angle:Float;
+		var name:String;
+		var trimmed:Bool;
+		var rect:FlxRect;
+		var size:Rectangle;
+		var offset:FlxPoint;
+		var sourceSize:FlxPoint;
+		
 		for (texture in data.nodes.SubTexture)
 		{
-			var angle:Float = 0;
-			var name:String = texture.att.name;
-			var trimmed:Bool = texture.has.frameX;
+			angle = 0;
+			name = texture.att.name;
+			trimmed = texture.has.frameX;
 			
-			var rect:FlxRect = new FlxRect(
+			rect = new FlxRect(
 				Std.parseFloat(texture.att.x), Std.parseFloat(texture.att.y),
 				Std.parseFloat(texture.att.width), Std.parseFloat(texture.att.height));
 			
-			var size:Rectangle = if (trimmed)
+			size = if (trimmed)
 					new Rectangle(
 						Std.parseInt(texture.att.frameX), Std.parseInt(texture.att.frameY),
 						Std.parseInt(texture.att.frameWidth), Std.parseInt(texture.att.frameHeight));
 				else 
 					new Rectangle(0, 0, rect.width, rect.height);
 					
-			var offset:FlxPoint = FlxPoint.get(-size.left, -size.top);
-			var sourceSize:FlxPoint = FlxPoint.get(size.width, size.height);
+			offset = FlxPoint.get(-size.left, -size.top);
+			sourceSize = FlxPoint.get(size.width, size.height);
 			
 			frames.addAtlasFrame(rect, sourceSize, offset, name, angle);
 		}
@@ -248,22 +269,29 @@ class AtlasFrames extends FlxFramesCollection
 		var xml = Xml.parse(Description);
 		var root = xml.firstElement();
 		
+		var rotated:Bool;
+		var angle:Float;
+		var name:String;
+		var offset:FlxPoint;
+		var rect:FlxRect;
+		var sourceSize:FlxPoint;
+		
 		for (sprite in root.elements())
 		{
 			// trimmed images aren't supported yet for this type of atlas
-			var rotated:Bool = (sprite.exists("r") && sprite.get("r") == "y");
-			var angle:Float = (rotated) ? -90 : 0;
-			var name:String = sprite.get("n");
-			var offset:FlxPoint = FlxPoint.get(0, 0);
+			rotated = (sprite.exists("r") && sprite.get("r") == "y");
+			angle = (rotated) ? -90 : 0;
+			name = sprite.get("n");
+			offset = FlxPoint.get(0, 0);
 			
-			var rect:FlxRect = new FlxRect(	
-											Std.parseInt(sprite.get("x")),
-											Std.parseInt(sprite.get("y")),
-											Std.parseInt(sprite.get("w")),
-											Std.parseInt(sprite.get("h"))
-										);
+			rect = new FlxRect(	
+									Std.parseInt(sprite.get("x")),
+									Std.parseInt(sprite.get("y")),
+									Std.parseInt(sprite.get("w")),
+									Std.parseInt(sprite.get("h"))
+								);
 			
-			var sourceSize:FlxPoint = FlxPoint.get(rect.width, rect.height);
+			sourceSize = FlxPoint.get(rect.width, rect.height);
 			
 			frames.addAtlasFrame(rect, sourceSize, offset, name, angle);
 		}
