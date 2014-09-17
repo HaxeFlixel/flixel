@@ -187,6 +187,19 @@ class FlxQuadTree extends FlxRect
 	private static var _checkObjectHullHeight:Float;
 	
 	/**
+	 * True, if an overlap should only be checked once between two objects.
+	 */
+	private static var _singleOverlap : Bool;
+	/**
+	 * Internal, helper for the overlap checking.
+	 */
+	private static var _checked:SearchArray;
+	/**
+	 * Internal, functionally the same as overlapProcessed, with singleOverlap, the result has to be stored globally.
+	 */
+	private static var _result : Bool;
+	
+	/**
 	 * Pooling mechanism, turn FlxQuadTree into a linked list, when FlxQuadTrees are destroyed, they get added to the list, and when they get recycled they get removed.
 	 */
 	public static  var _NUM_CACHED_QUAD_TREES:Int = 0;
@@ -213,6 +226,12 @@ class FlxQuadTree extends FlxRect
 	 */
 	public static function recycle(X:Float, Y:Float, Width:Float, Height:Float, ?Parent:FlxQuadTree):FlxQuadTree
 	{
+		if (_checked == null)
+		{
+			_checked = new SearchArray();
+			FlxG.signals.stateSwitched.addOnce(function() {  _checked = FlxDestroyUtil.destroy(_checked); });
+		}
+			
 		if (_cachedTreesHead != null)
 		{
 			var cachedTree:FlxQuadTree = _cachedTreesHead;
@@ -254,7 +273,8 @@ class FlxQuadTree extends FlxRect
 		{
 			var iterator:FlxLinkedList;
 			var ot:FlxLinkedList;
-			if (Parent._headA.object != null)
+			//A little optimization in case of _singleOvelap
+			if (Parent._headA.object != null && (!_singleOverlap || _useBothLists))
 			{
 				iterator = Parent._headA;
 				while (iterator != null)
@@ -329,6 +349,13 @@ class FlxQuadTree extends FlxRect
 		
 		exists = false;
 		
+		/**
+		*     Not deleting _checked makes it faster, since it doesn't have to create a new array every frame,
+		*     but it won't get deleted until you actually close the game, and the system cleanes it up.
+		*     Could possibly make a function to delete it, which should be used when a state is being destroyed.
+		*/
+		//_checked = FlxDestroyUtil.destroy(_checked);
+		
 		// Deposit this tree into the linked list for reusal.
 		next = _cachedTreesHead;
 		_cachedTreesHead = this;
@@ -343,10 +370,29 @@ class FlxQuadTree extends FlxRect
 	 * @param ObjectOrGroup2	Any object that is or extends FlxObject or FlxGroup.  If null, the first parameter will be checked against itself.
 	 * @param NotifyCallback	A function with the form myFunction(Object1:FlxObject,Object2:FlxObject):void that is called whenever two objects are found to overlap in world space, and either no ProcessCallback is specified, or the ProcessCallback returns true. 
 	 * @param ProcessCallback	A function with the form myFunction(Object1:FlxObject,Object2:FlxObject):Boolean that is called whenever two objects are found to overlap in world space.  The NotifyCallback is only called if this function returns true.  See FlxObject.separate(). 
+	 * @param SingleOverlap		Wether an overlap should be only checked between two objects or not. (Uses extra memory)
 	 */
-	public function load(ObjectOrGroup1:FlxBasic, ObjectOrGroup2:FlxBasic = null, NotifyCallback:FlxObject->FlxObject->Void = null, ProcessCallback:FlxObject->FlxObject->Bool = null):Void
+	public function load(ObjectOrGroup1:FlxBasic, ObjectOrGroup2:FlxBasic = null, NotifyCallback:FlxObject->FlxObject->Void = null, ProcessCallback:FlxObject->FlxObject->Bool = null, SingleOverlap = true):Void
 	{
-		add(ObjectOrGroup1, A_LIST);
+		_notifyCallback = NotifyCallback;
+		_processingCallback = ProcessCallback;
+		
+		if(SingleOverlap)
+		{
+			_singleOverlap = SingleOverlap;
+			// Maximize the _checked array, so that it won't have to resize itself during overlap checking
+			var max : Int;
+			var group = FlxGroup.resolveGroup(ObjectOrGroup2 == null ? ObjectOrGroup1 : ObjectOrGroup2);
+			if (group == null)
+				max = 1;
+			else
+				max = group.members.length;
+				
+			_checked.maximize(max);
+			
+			_result = false;
+		}
+		
 		if (ObjectOrGroup2 != null)
 		{
 			add(ObjectOrGroup2, B_LIST);
@@ -356,8 +402,7 @@ class FlxQuadTree extends FlxRect
 		{
 			_useBothLists = false;
 		}
-		_notifyCallback = NotifyCallback;
-		_processingCallback = ProcessCallback;
+		add(ObjectOrGroup1, A_LIST);
 	}
 	
 	/**
@@ -397,6 +442,10 @@ class FlxQuadTree extends FlxRect
 							_objectTopEdge = _object.y;
 							_objectRightEdge = _object.x + _object.width;
 							_objectBottomEdge = _object.y + _object.height;
+							
+							//If we add a new object to the A_LIST, we have to reset the _checked array.
+							if (_singleOverlap && _list == A_LIST)
+								_checked.reset();
 							addObject();
 						}
 					}
@@ -412,6 +461,10 @@ class FlxQuadTree extends FlxRect
 				_objectTopEdge = _object.y;
 				_objectRightEdge = _object.x + _object.width;
 				_objectBottomEdge = _object.y + _object.height;
+				
+				//If we add a new object to the A_LIST, we have to reset the _checked array.
+				if (_singleOverlap && _list == A_LIST)
+					_checked.reset();
 				addObject();
 			}
 		}
@@ -517,13 +570,24 @@ class FlxQuadTree extends FlxRect
 		var ot:FlxLinkedList;
 		if (_list == A_LIST)
 		{
-			if (_tailA.object != null)
+			if (_headA.object != null)
 			{
-				ot = _tailA;
-				_tailA = FlxLinkedList.recycle();
-				ot.next = _tailA;
+				ot = FlxLinkedList.recycle();
+				ot.next = _headA;
+				_headA = ot;
 			}
-			_tailA.object = _object;
+			_headA.object = _object;
+			
+			// When using singleOverlap, the overlaps are right when a new object is added to the A_LIST
+			if (_singleOverlap)
+			{
+				if(_useBothLists)
+					_iterator = _headB;
+				else
+					_iterator = _headA.next;
+				if (_object != null && _object.exists && _object.allowCollisions > 0 && _iterator != null && _iterator.object != null && overlapNode())
+					_result = true;
+			}
 		}
 		else
 		{
@@ -564,51 +628,59 @@ class FlxQuadTree extends FlxRect
 	 */
 	public function execute():Bool
 	{
-		var overlapProcessed:Bool = false;
-		var iterator:FlxLinkedList;
-		
-		if (_headA.object != null)
+		//If we used singleOverlap, we already did the checking, so we just return the result
+		if (_singleOverlap)
 		{
-			iterator = _headA;
-			while (iterator != null)
+			return _result;
+		}
+		else
+		{
+			var overlapProcessed:Bool = false;
+			var iterator:FlxLinkedList;
+			
+			if (_headA.object != null)
 			{
-				_object = iterator.object;
-				if (_useBothLists)
+				iterator = _headA;
+				while (iterator != null)
 				{
-					_iterator = _headB;
+					_object = iterator.object;
+					if (_useBothLists)
+					{
+						_iterator = _headB;
+					}
+					else
+					{
+						_iterator = iterator.next;
+					}
+					if (_object != null && _object.exists && _object.allowCollisions > 0 && 
+						_iterator != null && _iterator.object != null && overlapNode())
+					{
+						overlapProcessed = true;
+					}
+					iterator = iterator.next;
 				}
-				else
-				{
-					_iterator = iterator.next;
-				}
-				if (_object != null && _object.exists && _object.allowCollisions > 0 && 
-					_iterator != null && _iterator.object != null && overlapNode())
-				{
-					overlapProcessed = true;
-				}
-				iterator = iterator.next;
 			}
+			
+			//Advance through the tree by calling overlap on each child
+			if ((_northWestTree != null) && _northWestTree.execute())
+			{
+				overlapProcessed = true;
+			}
+			if ((_northEastTree != null) && _northEastTree.execute())
+			{
+				overlapProcessed = true;
+			}
+			if ((_southEastTree != null) && _southEastTree.execute())
+			{
+				overlapProcessed = true;
+			}
+			if ((_southWestTree != null) && _southWestTree.execute())
+			{
+				overlapProcessed = true;
+			}
+			
+			return overlapProcessed;
 		}
-		
-		//Advance through the tree by calling overlap on each child
-		if ((_northWestTree != null) && _northWestTree.execute())
-		{
-			overlapProcessed = true;
-		}
-		if ((_northEastTree != null) && _northEastTree.execute())
-		{
-			overlapProcessed = true;
-		}
-		if ((_southEastTree != null) && _southEastTree.execute())
-		{
-			overlapProcessed = true;
-		}
-		if ((_southWestTree != null) && _southWestTree.execute())
-		{
-			overlapProcessed = true;
-		}
-		
-		return overlapProcessed;
 	}
 	
 	/**
@@ -632,6 +704,8 @@ class FlxQuadTree extends FlxRect
 		while (_iterator != null)
 		{
 			checkObject = _iterator.object;
+			
+			//This is where in case of singleOverlap, we check if the checkObject was already checked with _object
 			if (_object == checkObject || !checkObject.exists || checkObject.allowCollisions <= 0)
 			{
 				_iterator = _iterator.next;
@@ -653,12 +727,15 @@ class FlxQuadTree extends FlxRect
 				(_objectHullY < _checkObjectHullY + _checkObjectHullHeight))
 			{
 				//Execute callback functions if they exist
-				if (_processingCallback == null || _processingCallback(_object, checkObject))
-				{
-					overlapProcessed = true;
-					if (_notifyCallback != null)
+				if (!_singleOverlap || !_checked.search(checkObject))
 					{
-						_notifyCallback(_object, checkObject);
+					if (_processingCallback == null || _processingCallback(_object, checkObject))
+					{
+						overlapProcessed = true;
+						if (_notifyCallback != null)
+						{
+							_notifyCallback(_object, checkObject);
+						}
 					}
 				}
 			}
@@ -669,5 +746,73 @@ class FlxQuadTree extends FlxRect
 		}
 		
 		return overlapProcessed;
+	}
+}	
+
+	/**
+	* Custom array, utilizing binary search and insertion, and easily resettable
+	*/
+class SearchArray implements IFlxDestroyable
+{
+	var array:Array<FlxObject> = new Array<FlxObject>();
+	var length = 0;
+	
+	/**
+	 * This function searches for a specific FlxObject using it's custom ID.
+	 * If it is not found, it inserts it into the right place.
+	 * If it's already in the array, nothing changes.
+	 * Returns true if the object was already in the array.
+	 * @param	obj				The FlxObject we search for.
+	 * @return	Wether the object was already in the array or not.
+	 */
+	public inline function search(obj : FlxObject) : Bool
+	{
+		var min = 0;
+		var max = length - 1;
+		var middle : Int;
+		var result = false;
+		while (min <= max)
+			{
+				middle = Math.floor((min + max) / 2);
+				var checkObject : FlxObject = array[middle];
+				if (checkObject.ID > obj.ID)
+					max = middle - 1;
+				else if (checkObject.ID < obj.ID)
+					min = middle + 1;
+				else
+				{
+					result = true;
+					break;
+				}
+			}
+		if (!result)
+		{
+			for (i in 0...length - min)
+				array[length - i] = array[length - i - 1];
+			array[min] = obj;
+			length++;
+		}
+		return result;
+	}
+	
+	/**
+	 *	Resets the array. To the outside, this instance of SearchArray will look like it's completely new.
+	 */
+	public inline function reset() 
+	{
+		length = 0;
+	}
+	
+	/**
+	 *	Maximizies the size of the array, so that it should never have to resize itself again.
+	 */
+	public inline function maximize(max : Int)
+	{
+		array[max - 1] = null;
+	}
+	
+	public function destroy()
+	{
+		array = null;
 	}
 }

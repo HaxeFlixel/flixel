@@ -330,9 +330,10 @@ class FlxG
 	 * @param	ObjectOrGroup2	The second object or group you want to check.  If it is the same as the first, flixel knows to just do a comparison within that group.
 	 * @param	NotifyCallback	A function with two FlxObject parameters - e.g. myOverlapFunction(Object1:FlxObject,Object2:FlxObject) - that is called if those two objects overlap.
 	 * @param	ProcessCallback	A function with two FlxObject parameters - e.g. myOverlapFunction(Object1:FlxObject,Object2:FlxObject) - that is called if those two objects overlap.  If a ProcessCallback is provided, then NotifyCallback will only be called if ProcessCallback returns true for those objects!
+	 * @param	SingleOverlap	Only use it if it's important that the functions above are only called once. (Uses extra memory)
 	 * @return	Whether any overlaps were detected.
 	 */
-	public static function overlap(?ObjectOrGroup1:FlxBasic, ?ObjectOrGroup2:FlxBasic, ?NotifyCallback:Dynamic->Dynamic->Void, ?ProcessCallback:Dynamic->Dynamic->Bool):Bool
+	public static function overlap(?ObjectOrGroup1:FlxBasic, ?ObjectOrGroup2:FlxBasic, ?NotifyCallback:Dynamic->Dynamic->Void, ?ProcessCallback:Dynamic->Dynamic->Bool, SingleOverlap = false ):Bool
 	{
 		if (ObjectOrGroup1 == null)
 		{
@@ -344,7 +345,7 @@ class FlxG
 		}
 		FlxQuadTree.divisions = worldDivisions;
 		var quadTree:FlxQuadTree = FlxQuadTree.recycle(worldBounds.x, worldBounds.y, worldBounds.width, worldBounds.height);
-		quadTree.load(ObjectOrGroup1, ObjectOrGroup2, NotifyCallback, ProcessCallback);
+		quadTree.load(ObjectOrGroup1, ObjectOrGroup2, NotifyCallback, ProcessCallback,SingleOverlap);
 		var result:Bool = quadTree.execute();
 		quadTree.destroy();
 		return result;

@@ -20,8 +20,12 @@ class FlxBasic implements IFlxDestroyable
 	#end
 	
 	/**
-	 * IDs seem like they could be pretty useful, huh?
-	 * They're not actually used for anything yet though.
+	 * Counter for the ID generation.
+	 */
+	private static var counter : Int = 0;
+	
+	/**
+	 * Unique ID for every FlxObject. You can change it, but don't use overlap with SingleOverlap then.
 	 */
 	public var ID:Int = -1;
 	/**
@@ -60,7 +64,10 @@ class FlxBasic implements IFlxDestroyable
 	
 	private var _cameras:Array<FlxCamera>;
 	
-	public function new() {}
+	/**
+	 * Generate a uniqe ID for every FlxBasic (as long as counter doesn't overflow).
+	 */
+	public function new() { ID = counter++; }
 	
 	/**
 	 * WARNING: This will remove this object entirely. Use kill() if you want to disable it temporarily only and revive() it later.
