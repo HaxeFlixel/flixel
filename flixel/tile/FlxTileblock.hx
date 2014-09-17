@@ -35,7 +35,8 @@ class FlxTileblock extends FlxSprite
 		moves = false;
 	}
 	
-	override public function destroy():Void {
+	override public function destroy():Void
+	{
 		tileSprite = FlxDestroyUtil.destroy(tileSprite);
 		super.destroy();
 	}
