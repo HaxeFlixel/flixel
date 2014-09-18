@@ -790,6 +790,7 @@ class FlxObject extends FlxBasic
 		{
 			Camera = FlxG.camera;
 		}
+		
 		return pixelPerfectRender == null ? Camera.pixelPerfectRender : pixelPerfectRender;
 	}
 	

@@ -53,7 +53,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	/**
 	 * Helper variable for non-flash targets. Adjust it's value if you'll see tilemap tearing (empty pixels between tiles). To something like 1.02 or 1.03
 	 */
-	public var tileScaleHack:Float = 1.01;
+	public var tileScaleHack:Float = 1.00;
 	
 	/**
 	 * Changes the size of this tilemap. Default is (1, 1). 
@@ -903,6 +903,9 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		_helperPoint.x *= Camera.totalScaleX;
 		_helperPoint.y *= Camera.totalScaleY;
 		
+		_helperPoint.x = isPixelPerfectRender(Camera) ? Math.floor(_helperPoint.x) : _helperPoint.x;
+		_helperPoint.y = isPixelPerfectRender(Camera) ? Math.floor(_helperPoint.y) : _helperPoint.y;
+		
 		var drawX:Float;
 		var drawY:Float;
 		
@@ -999,8 +1002,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 					drawX = _helperPoint.x + (columnIndex % widthInTiles) * scaledWidth + frame.center.x * scaleX;
 					drawY = _helperPoint.y + Math.floor(columnIndex / widthInTiles) * scaledHeight + frame.center.y * scaleY;
 					
-					_point.x = isPixelPerfectRender(Camera) ? Math.floor(drawX) : drawX;
-					_point.y = isPixelPerfectRender(Camera) ? Math.floor(drawY) : drawY;
+					_point.set(drawX, drawY);
 					
 					_matrix.identity();
 					
