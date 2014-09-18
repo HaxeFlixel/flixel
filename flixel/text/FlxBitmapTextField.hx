@@ -17,6 +17,8 @@ import flixel.text.FlxText.FlxTextBorderStyle;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 
+// TODO: make pixels accessible in tile render mode also...
+
 /**
  * Extends FlxSprite to support rendering text.
  * Can tint, fade, rotate and scale just like a sprite.
