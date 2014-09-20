@@ -634,7 +634,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	
 	override public function getTileCoordsByIndex(Index:Int, Midpoint:Bool = true):FlxPoint
 	{
-		var point = FlxPoint.get(x + Std.int(Index % widthInTiles) * _scaledTileWidth, y + Std.int(Index / widthInTiles) * _scaledTileHeight);
+		var point = FlxPoint.get(x + (Index % widthInTiles) * _scaledTileWidth, y + Std.int(Index / widthInTiles) * _scaledTileHeight);
 		if (Midpoint)
 		{
 			point.x += _scaledTileWidth * 0.5;
@@ -661,7 +661,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		{
 			if (_data[i] == Index)
 			{
-				point = FlxPoint.get(x + Std.int(i % widthInTiles) * _scaledTileWidth, y + Std.int(i / widthInTiles) * _scaledTileHeight);
+				point = FlxPoint.get(x + (i % widthInTiles) * _scaledTileWidth, y + Std.int(i / widthInTiles) * _scaledTileHeight);
 				
 				if (Midpoint)
 				{

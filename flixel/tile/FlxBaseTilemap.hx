@@ -10,8 +10,6 @@ import flixel.system.FlxAssets;
 import flixel.group.FlxGroup;
 import openfl.Assets;
 
-// TODO: implement methods like setRect(), clearRect(), shiftTiles() from HaxePunk
-
 class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 {
 	/**
@@ -366,7 +364,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 			_data[Index] += 2;
 		}
 		// DOWN
-		if ((Std.int(Index+widthInTiles) >= totalTiles) || (_data[Index+widthInTiles] > 0)) 
+		if ((Index+widthInTiles >= totalTiles) || (_data[Index+widthInTiles] > 0)) 
 		{
 			_data[Index] += 4;
 		}
@@ -380,7 +378,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		if ((auto == ALT) && (_data[Index] == 15))
 		{
 			// BOTTOM LEFT OPEN
-			if ((Index % widthInTiles > 0) && (Std.int(Index+widthInTiles) < totalTiles) && (_data[Index+widthInTiles-1] <= 0))
+			if ((Index % widthInTiles > 0) && (Index+widthInTiles < totalTiles) && (_data[Index+widthInTiles-1] <= 0))
 			{
 				_data[Index] = 1;
 			}
@@ -395,13 +393,21 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 				_data[Index] = 4;
 			}
 			// BOTTOM RIGHT OPEN
-			if ((Index % widthInTiles < widthInTiles - 1) && (Std.int(Index + widthInTiles) < totalTiles) && (_data[Index + widthInTiles + 1] <= 0))
+			if ((Index % widthInTiles < widthInTiles - 1) && (Index + widthInTiles < totalTiles) && (_data[Index + widthInTiles + 1] <= 0))
 			{
 				_data[Index] = 8;
 			}
 		}
 		
 		_data[Index] += 1;
+	}
+	
+	/**
+	 * Just calculates index of a tile with specified column and row
+	 */
+	public inline function getTileIndex(Column:Int, Row:Int):Int
+	{
+		return Row * widthInTiles + Column;
 	}
 
 	/**
@@ -430,13 +436,13 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	/**
 	 * Check the value of a particular tile.
 	 * 
-	 * @param	X		The X coordinate of the tile (in tiles, not pixels).
-	 * @param	Y		The Y coordinate of the tile (in tiles, not pixels).
+	 * @param	Column		The X coordinate of the tile (in tiles, not pixels).
+	 * @param	Row			The Y coordinate of the tile (in tiles, not pixels).
 	 * @return	An integer containing the value of the tile at this spot in the array.
 	 */
-	public function getTile(X:Int, Y:Int):Int
+	public function getTile(Column:Int, Row:Int):Int
 	{
-		return _data[Y * widthInTiles + X];
+		return _data[getTileIndex(Column, Row)];
 	}
 
 	/**
@@ -503,7 +509,39 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 			return false;
 		}
 		
-		return setTileByIndex(Y * widthInTiles + X, Tile, UpdateGraphics);
+		return setTileByIndex(getTileIndex(X, Y), Tile, UpdateGraphics);
+	}
+	
+	/**
+	 * Sets a rectangular region of tiles to the index.
+	 * @param	Column		First tile column.
+	 * @param	Row			First tile row.
+	 * @param	Width		Width in tiles.
+	 * @param	Height		Height in tiles.
+	 * @param	Index		Tile index.
+	 * @param	UpdateGraphics	Whether the graphical representation of this tile should change.
+	 */
+	public function setRect(Column:Int, Row:Int, Width:Int = 1, Height:Int = 1, Index:Int = 0, UpdateGraphics:Bool = true):Void
+	{
+		var endX:Int = Width - Column;
+		var endY:Int = Height - Row;
+		
+		endX = (endX > widthInTiles) ? widthInTiles : endX;
+		endY = (endY > heightInTiles) ? heightInTiles : endY;
+		
+		Width = endX - Column;
+		Height = endY - Row;
+		
+		if (Width <= 0 || Height <= 0)
+			return;
+		
+		for (i in Column...Width)
+		{
+			for (j in Row...Height)
+			{
+				setTile(Column, Row, Index, UpdateGraphics);
+			}
+		}
 	}
 
 	/**
@@ -552,7 +590,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 			{
 				if ((row >= 0) && (row < heightInTiles) && (column >= 0) && (column < widthInTiles))
 				{
-					i = row * widthInTiles + column;
+					i = getTileIndex(column, row);
 					autoTile(i);
 					updateTile(i);
 				}
@@ -703,7 +741,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		// Create a distance-based representation of the tilemap.
 		// All walls are flagged as -2, all open areas as -1.
 		var mapSize:Int = widthInTiles * heightInTiles;
-		var distances:Array<Int> = new Array<Int>(/*mapSize*/);
+		var distances:Array<Int> = new Array<Int>();
 		FlxArrayUtil.setLength(distances, mapSize);
 		var i:Int = 0;
 		
@@ -743,7 +781,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 			{
 				currentIndex = current[i++];
 				
-				if (currentIndex == Std.int(EndIndex))
+				if (currentIndex == EndIndex)
 				{
 					foundEnd = true;
 					if (StopOnEnd)
