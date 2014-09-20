@@ -65,7 +65,6 @@ class FlxKeyList extends FlxBaseKeyList
 	public var COMMA         (get, never):Bool; inline function get_COMMA()          { return check(FlxKey.COMMA);          }
 	public var PERIOD        (get, never):Bool; inline function get_PERIOD()         { return check(FlxKey.PERIOD);         }
 	public var SLASH         (get, never):Bool; inline function get_SLASH()          { return check(FlxKey.SLASH);          }
-	public var NUMPADSLASH   (get, never):Bool; inline function get_NUMPADSLASH()    { return check(FlxKey.NUMPADSLASH);    }
 	public var GRAVEACCENT   (get, never):Bool; inline function get_GRAVEACCENT()    { return check(FlxKey.GRAVEACCENT);    }
 	public var CONTROL       (get, never):Bool; inline function get_CONTROL()        { return check(FlxKey.CONTROL);        }
 	public var ALT           (get, never):Bool; inline function get_ALT()            { return check(FlxKey.ALT);            }
