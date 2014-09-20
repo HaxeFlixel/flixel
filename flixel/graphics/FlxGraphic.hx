@@ -32,11 +32,20 @@ class FlxGraphic
 	 * 
 	 * @param	Source	openfl.Assets key string. For example: "assets/image.png".
 	 * @param	Unique	Ensures that the bitmap data uses a new slot in the cache. If true, then BitmapData for this FlxGraphic will be cloned, which means extra memory.
-	 * @param	Key	Force the cache to use a specific Key to index the bitmap.
+	 * @param	Key		Force the cache to use a specific Key to index the bitmap.
+	 * @param	Cache	Whether to use graphic caching or not. Default value is true, which means automatic caching.
 	 * @return	Cached FlxGraphic object we just created.
 	 */
-	public static function fromAssetKey(Source:String, Unique:Bool = false, ?Key:String):FlxGraphic
+	public static function fromAssetKey(Source:String, Unique:Bool = false, ?Key:String, Cache:Bool = true):FlxGraphic
 	{
+		var bitmap:BitmapData = null;
+		
+		if (!Cache)
+		{
+			bitmap = FlxAssets.getBitmapData(Source);
+			return createGraphic(bitmap, Key, Unique, Cache);
+		}
+		
 		var key:String = FlxG.bitmap.generateKey(Source, Key, Unique);
 		var graphic:FlxGraphic = FlxG.bitmap.get(key);
 		if (graphic != null)
@@ -44,7 +53,7 @@ class FlxGraphic
 			return graphic;
 		}
 		
-		var bitmap:BitmapData = FlxAssets.getBitmapData(Source);
+		bitmap = FlxAssets.getBitmapData(Source);
 		graphic = createGraphic(bitmap, key, Unique);
 		graphic.assetsKey = Source;
 		return graphic;
@@ -56,10 +65,18 @@ class FlxGraphic
 	 * @param	Source	Class<BitmapData> to create BitmapData for FlxGraphic from.
 	 * @param	Unique	Ensures that the bitmap data uses a new slot in the cache. If true, then BitmapData for this FlxGraphic will be cloned, which means extra memory.
 	 * @param	Key	Force the cache to use a specific Key to index the bitmap.
-	 * @return	Cached FlxGraphic object we just created.
+	 * @param	Cache	Whether to use graphic caching or not. Default value is true, which means automatic caching.
+	 * @return	FlxGraphic object we just created.
 	 */
-	public static function fromClass(Source:Class<BitmapData>, Unique:Bool = false, ?Key:String):FlxGraphic
+	public static function fromClass(Source:Class<BitmapData>, Unique:Bool = false, ?Key:String, Cache:Bool = true):FlxGraphic
 	{
+		var bitmap:BitmapData = null;
+		if (!Cache)
+		{
+			bitmap = FlxAssets.getBitmapFromClass(Source);
+			return createGraphic(bitmap, Key, Unique, Cache);
+		}
+		
 		var key:String = FlxG.bitmap.getKeyForClass(Source);
 		key = FlxG.bitmap.generateKey(key, Key, Unique);
 		var graphic:FlxGraphic = FlxG.bitmap.get(key);
@@ -68,7 +85,7 @@ class FlxGraphic
 			return graphic;
 		}
 		
-		var bitmap:BitmapData = FlxAssets.getBitmapFromClass(Source);
+		bitmap = FlxAssets.getBitmapFromClass(Source);
 		graphic = createGraphic(bitmap, key, Unique);
 		graphic.assetsClass = Source;
 		return graphic;
@@ -80,10 +97,16 @@ class FlxGraphic
 	 * @param	BitmapData for FlxGraphic object to use.
 	 * @param	Unique	Ensures that the bitmap data uses a new slot in the cache. If true, then BitmapData for this FlxGraphic will be cloned, which means extra memory.
 	 * @param	Key	Force the cache to use a specific Key to index the bitmap.
-	 * @return	Cached FlxGraphic object we just created.
+	 * @param	Cache	Whether to use graphic caching or not. Default value is true, which means automatic caching.
+	 * @return	FlxGraphic object we just created.
 	 */
-	public static function fromBitmapData(Source:BitmapData, Unique:Bool = false, ?Key:String):FlxGraphic
+	public static function fromBitmapData(Source:BitmapData, Unique:Bool = false, ?Key:String, Cache:Bool = true):FlxGraphic
 	{
+		if (!Cache)
+		{
+			return createGraphic(Source, Key, Unique, Cache);
+		}
+		
 		var key:String = FlxG.bitmap.findKeyForBitmap(Source);
 		
 		var assetKey:String = null;
@@ -228,28 +251,26 @@ class FlxGraphic
 	 * @param	Bitmap	BitmapData to use as a graphic source for new FlxGraphic.
 	 * @param	Key		Key to use as a cache key for created FlxGraphic.
 	 * @param	Unique	Whether new FlxGraphic object uses unique BitmapData or not. If true, then specified BitmapData will be cloned.
-	 * @return	Created and cached FlxGraphic object.
+	 * @param	Cache	Whether to use graphic caching or not. Default value is true, which means automatic caching.
+	 * @return	Created FlxGraphic object.
 	 */
-	private static function createGraphic(Bitmap:BitmapData, Key:String, Unique:Bool = false):FlxGraphic
+	private static function createGraphic(Bitmap:BitmapData, Key:String, Unique:Bool = false, Cache:Bool = false):FlxGraphic
 	{
 		Bitmap = FlxGraphic.getBitmap(Bitmap, Unique);
-		var graphic:FlxGraphic = new FlxGraphic(Key, Bitmap);
-		graphic.unique = Unique;
-		FlxG.bitmap.addGraphic(graphic);
+		var graphic:FlxGraphic = null;
+		
+		if (Cache)
+		{
+			graphic = new FlxGraphic(Key, Bitmap);
+			graphic.unique = Unique;
+			FlxG.bitmap.addGraphic(graphic);
+		}
+		else
+		{
+			graphic = new FlxGraphic(null, Bitmap);
+		}
+		
 		return graphic;
-	}
-	
-	// TODO: document it...
-	// TODO: maybe rename it...
-	/**
-	 * 
-	 * 
-	 * @param	Bitmap
-	 * @return
-	 */
-	public static function createNonCached(Bitmap:BitmapData):FlxGraphic
-	{
-		return new FlxGraphic(null, Bitmap);
 	}
 	
 	/**

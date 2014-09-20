@@ -87,7 +87,7 @@ class FilterFrames extends FlxFramesCollection
 		for (frame in sourceFrames.frames)
 		{
 			canvas = new BitmapData(Std.int(frame.sourceSize.x + widthInc), Std.int(frame.sourceSize.y + heightInc), true, FlxColor.TRANSPARENT);
-			graph = FlxGraphic.createNonCached(canvas);
+			graph = FlxGraphic.fromBitmapData(canvas, false, null, false);
 			region = new FlxRect(0, 0, graph.width, graph.height);
 			
 			filterFrame = new FlxFilterFrame(graph, frame, this);
