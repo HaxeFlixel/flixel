@@ -1105,8 +1105,6 @@ class FlxCamera extends FlxBasic
 		
 		totalScaleX = scaleX * FlxG.scaleMode.scale.x;
 		totalScaleY = scaleY * FlxG.scaleMode.scale.y;
-		
-		// TODO: handle blit and tile render modes differently
 	#if FLX_RENDER_BLIT
 		flashSprite.scaleX = totalScaleX;
 		flashSprite.scaleY = totalScaleY;
