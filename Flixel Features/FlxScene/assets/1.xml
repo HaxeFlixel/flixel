@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scene width="1000" height="1000" bgColor="gray" name="First Level" description="Demo" version="1.0">
+
+	<!-- Get these values using FlxScene.const("id") -->
+	<constants>
+		<const id="lives" type="Int" value="3" />
+		<const id="precise" type="Float" value="61.75848" />
+		<const id="raining" type="Bool" value="false" />
+		<const id="boss_name" type="String" value="Hades" />
+	</constants>
+
+	<!-- FlxText, FlxButton -->
+	<layer id="hud">
+		<text text="FlxScene" x="10" y="10" color="black" size="20" />
+
+		<!-- More FlxText properties -->
+		<!-- You can also use FlxSprite properties, e.g. 'alpha' -->
+		<text id="welcome_text" text="FlxText" x="300" y="100" angle="30" size="40" font="font.ttf" color="black" alignment="left" borderStyle="outline" borderColor="red" borderSize="2" wordWrap="false" />
+
+		<button id="reset_state" text="Reset State" alignBottom="10" alignRight="10" />
+
+		<!-- Alignment properties (parameter: margin)
+		alignBottom, alignRight, alignHorizontal, alignVertical -->
+	</layer>
+
+	<!-- Custom FlxSprite (entity) and FlxSprite -->
+	<layer id="monsters">
+		<!-- Class must be inside a package -->
+		<entity type="entities.Monster" id="specificMonster" />
+		<entity type="entities.Monster" x="100" y="300" />
+		<entity type="entities.Monster" x="300" y="300" />
+
+		<!-- More properties -->
+		<sprite graphics="block.png" x="0" y="0" scaleX="1.0" scaleY="1.0" angle="0" alpha="0.2" color="blue" flipX="false" flipY="false" originX="0" originY="0" offsetX="0" offsetY="0" visible="true" scrollFactorX="1" scrollFactorY="1" solid="true" immovable="false" width="0" height="0" />
+	</layer>
+
+	<layer id="second_layer">
+		<!-- More entities here ... -->
+		<!-- You can spawn this layer later ... -->
+	</layer>
+
+	<!-- Also supported:
+	<backgrounds>
+		<sprite graphics="sky.png" />
+		<backdrop graphics="mountains.png" repeatX="true" repeatY="false" scrollFactorX="0.5" scrollFactorY="0.5" x="0" y="200" />
+	</backgrounds> -->
+
+	<!-- Also supported:
+	<terrain>
+		<tilemap graphics="tilemap.png" tileWidth="16" tileHeight="16">0, 1, 0, 2, 2, 3, 1, 2, 4, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3</tilemap>
+		<tile id="2" collision="0x0010" />
+		<tile id="4" collision="0x0001" />
+	</terrain> -->
+
+</scene>
