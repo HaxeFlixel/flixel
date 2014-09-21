@@ -6,7 +6,8 @@ import flixel.FlxState;
 import flixel.group.FlxGroup;
 import flixel.ui.FlxButton;
 
-// You must import all entities that will be spawned
+// Make sure that classes that are only referenced via 
+// xml are actually compiled by importing them
 import entities.Monster;
 
 class PlayState extends FlxState
@@ -47,7 +48,7 @@ class PlayState extends FlxState
 
 		// <button id="reset_state" text="Reset State" alignBottom="10" alignRight="10" />
 		var resetButton:FlxButton = _scene.object("reset_state");
-		resetButton.onDown.callback = resetStateCallback;
+		resetButton.onDown.callback = FlxG.resetState;
 
 		// Constants (Int, Bool, Float, String)
 		/*
@@ -76,11 +77,6 @@ class PlayState extends FlxState
 		_hudGroup = new FlxGroup();
 		add(_hudGroup);
 	}
-	
-	override public function destroy():Void
-	{
-		super.destroy();
-	}
 
 	override public function update(elapsed:Float):Void
 	{
@@ -89,9 +85,4 @@ class PlayState extends FlxState
 		_specificMonster.x = FlxG.mouse.x;
 		_specificMonster.y = FlxG.mouse.y;
 	}
-
-	private function resetStateCallback():Void
-	{
-		FlxG.resetState();
-	}	
 }
