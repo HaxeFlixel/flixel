@@ -30,6 +30,9 @@ import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import openfl.display.Tilesheet;
 
+@:bitmap("assets/images/logo/default.png")
+private class GraphicDefault extends BitmapData {}
+
 // TODO: add updateSizeFromFrame bool which will tell sprite whether to update it's size to frame's size (when frame setter is called) or not (usefull for sprites with adjusted hitbox)
 // And don't forget about sprites with clipped frames: what i should do with their size in this case?
 
@@ -879,7 +882,7 @@ class FlxSprite extends FlxObject
 	{
 		if (frame == null)	
 		{
-			loadGraphic(FlxAssets.DEFAULT_SPRITE_GRAPHIC);
+			loadGraphic(FlxGraphic.fromClass(GraphicDefault));
 		}
 		
 		#if FLX_RENDER_TILE
