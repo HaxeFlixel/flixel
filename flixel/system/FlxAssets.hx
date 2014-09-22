@@ -100,6 +100,8 @@ class FlxAssets
 	public static var FONT_DEFAULT:String = "Nokia Cellphone FC Small";
 	public static var FONT_DEBUGGER:String = "Arial";
 	
+	// TODO: make it back to class
+	
 	public static var DEFAULT_BUTTON_GRAPHIC:String = "assets/images/ui/button.png";
 	
 	public static var DEFAULT_SPRITE_GRAPHIC:String = "assets/images/logo/default.png";

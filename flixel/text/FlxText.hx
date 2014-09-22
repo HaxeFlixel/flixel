@@ -21,8 +21,7 @@ import flixel.util.helpers.FlxRange;
 import openfl.Assets;
 using StringTools;
 
-// TODO: think about filters and text (since this class overrides calcFrame() method with custom behavior)
-// TODO: change calcFrame() method for it
+// TODO: think about filters and text
 
 /**
  * Extends FlxSprite to support rendering text. Can tint, fade, rotate and scale just like a sprite. Doesn't really animate 
@@ -135,6 +134,11 @@ class FlxText extends FlxSprite
 	private var _formatRanges:Array<FlxTextFormatRange> = [];
 	
 	private var _font:String;
+	
+	/**
+	 * Helper boolean which tells whether to update graphic of this text object or not.
+	 */
+	private var _regen:Bool = true;
 	
 	/**
 	 * Creates a new FlxText object at the specified position.
@@ -356,7 +360,7 @@ class FlxText extends FlxSprite
 		{ 
 			return left.range.start < right.range.start ? -1 : 1;
 		});
-		dirty = true;
+		_regen = true;
 	}
 	
 	/**
@@ -378,7 +382,7 @@ class FlxText extends FlxSprite
 				_formatRanges.remove(formatRange);
 			}
 		}
-		dirty = true;
+		_regen = true;
 	}
 	
 	/**
@@ -457,7 +461,7 @@ class FlxText extends FlxSprite
 				textField.width = value;
 			}
 			
-			dirty = true;
+			_regen = true;
 		}
 		
 		return value;
@@ -473,7 +477,7 @@ class FlxText extends FlxSprite
 		if (textField != null)
 		{
 			textField.autoSize = (value) ? TextFieldAutoSize.LEFT : TextFieldAutoSize.NONE;
-			dirty = true;
+			_regen = true;
 		}
 		
 		return value;
@@ -494,7 +498,7 @@ class FlxText extends FlxSprite
 		var ot:String = textField.text;
 		textField.text = Text;
 		
-		dirty = (textField.text != ot) || dirty;
+		_regen = (textField.text != ot) || _regen;
 		
 		return textField.text;
 	}
@@ -609,7 +613,7 @@ class FlxText extends FlxSprite
 		if (textField.wordWrap != value)
 		{
 			textField.wordWrap = value;
-			dirty = true;
+			_regen = true;
 		}
 		return value;
 	}
@@ -631,7 +635,7 @@ class FlxText extends FlxSprite
 		if (style != borderStyle)
 		{
 			borderStyle = style;
-			dirty = true;
+			_regen = true;
 		}
 		
 		return borderStyle;
@@ -641,7 +645,7 @@ class FlxText extends FlxSprite
 	{
 		if (borderColor.to24Bit() != Color.to24Bit() && borderStyle != NONE)
 		{
-			dirty = true;
+			_regen = true;
 		}
 		borderColor = Color;
 		return Color;
@@ -651,7 +655,7 @@ class FlxText extends FlxSprite
 	{
 		if (Value != borderSize && borderStyle != NONE)
 		{			
-			dirty = true;
+			_regen = true;
 		}
 		borderSize = Value;
 		
@@ -664,7 +668,7 @@ class FlxText extends FlxSprite
 		
 		if (Value != borderQuality && borderStyle != NONE)
 		{
-			dirty = true;
+			_regen = true;
 		}
 		
 		borderQuality = Value;
@@ -711,6 +715,9 @@ class FlxText extends FlxSprite
 	
 	private function regenGraphics():Void
 	{
+		if (textField == null || _regen == false)
+			return;
+		
 		var oldWidth:Int = graphic.width;
 		var oldHeight:Int = graphic.height;
 		
@@ -742,21 +749,6 @@ class FlxText extends FlxSprite
 		{
 			graphic.bitmap.fillRect(_flashRect, FlxColor.TRANSPARENT);
 		}
-	}
-	
-	/**
-	 * Internal function to update the current animation frame.
-	 * 
-	 * @param	RunOnCpp	Whether the frame should also be recalculated if we're on a non-flash target
-	 */
-	override private function calcFrame(RunOnCpp:Bool = false):Void
-	{
-		if (textField == null)
-		{
-			return;
-		}
-		
-		regenGraphics();
 		
 		if (textField != null && textField.text != null && textField.text.length > 0)
 		{
@@ -786,15 +778,32 @@ class FlxText extends FlxSprite
 			graphic.bitmap.draw(textField, _matrix);
 		}
 		
-		#if FLX_RENDER_TILE
-		if (!RunOnCpp)
-		{
-			return;
-		}
-		#end
-		
+		_regen = false;
 		dirty = true;
-		getFlxFrameBitmapData();
+	}
+	
+	override public function draw():Void 
+	{
+		if (_regen)
+			regenGraphics();
+		
+		super.draw();
+	}
+	
+	/**
+	 * Internal function to update the current animation frame.
+	 * 
+	 * @param	RunOnCpp	Whether the frame should also be recalculated if we're on a non-flash target
+	 */
+	override private function calcFrame(RunOnCpp:Bool = false):Void
+	{
+		if (textField == null)
+			return;
+		
+		if (_regen)
+			regenGraphics();
+		
+		super.calcFrame();
 	}
 	
 	private function applyBorderStyle():Void
@@ -942,7 +951,7 @@ class FlxText extends FlxSprite
 	{
 		textField.defaultTextFormat = _defaultFormat;
 		textField.setTextFormat(_defaultFormat);
-		dirty = true;
+		_regen = true;
 	}
 }
 

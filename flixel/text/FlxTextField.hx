@@ -77,10 +77,6 @@ class FlxTextField extends FlxText
 		return true;
 	}
 	
-	/**
-	 * Set pixels to any BitmapData object.
-	 * Automatically adjust graphic size and render helpers.
-	 */
 	override private function get_pixels():BitmapData
 	{
 		calcFrame(true);
@@ -163,41 +159,17 @@ class FlxTextField extends FlxText
 		#if FLX_RENDER_TILE
 		textField.x = _point.x;
 		textField.y = _point.y;
+		
+		textField.scaleX = _camera.totalScaleX;
+		textField.scaleY = _camera.totalScaleY;
 		#else
-		textField.x = (_point.x - 0.5 * _camera.width) * _camera.totalScaleX;
-		textField.y = (_point.y - 0.5 * _camera.height) * _camera.totalScaleY;
+		textField.x = (_point.x - 0.5 * _camera.width);
+		textField.y = (_point.y - 0.5 * _camera.height);
 		#end
 		
 		#if !FLX_NO_DEBUG
 		FlxBasic.visibleCount++;
 		#end
-	}
-	
-	override private function regenGraphics():Void
-	{
-		var oldWidth:Float = graphic.width;
-		var oldHeight:Float = graphic.height;
-		
-		var newWidth:Float = textField.width + _widthInc;
-		var newHeight:Float = textField.height + _heightInc;
-		
-		if ((oldWidth != newWidth) || (oldHeight != newHeight))
-		{
-			var key:String = graphic.key;
-			FlxG.bitmap.remove(key);
-			
-			makeGraphic(Std.int(newWidth), Std.int(newHeight), FlxColor.TRANSPARENT, false, key);
-			frameHeight = Std.int(height);
-			_flashRect.x = 0;
-			_flashRect.y = 0;
-			_flashRect.width = newWidth;
-			_flashRect.height = newHeight;
-		}
-		// Else just clear the old buffer before redrawing the text
-		else
-		{
-			graphic.bitmap.fillRect(_flashRect, FlxColor.TRANSPARENT);
-		}
 	}
 	
 	override private function get_camera():FlxCamera 
