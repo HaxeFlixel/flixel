@@ -1,24 +1,13 @@
 package flixel.input.keyboard;
 
-import flixel.FlxG;
-import flixel.input.FlxInput;
-import flixel.input.keyboard.FlxKeyboard;
-import flixel.input.FlxInput.FlxInputState;
+import flixel.input.FlxBaseKeyList;
 
 /**
  * A helper class for keyboard input.
  * Provides optimized key checking using direct array access.
  */
-class FlxKeyList
+class FlxKeyList extends FlxBaseKeyList
 {
-	#if !FLX_NO_KEYBOARD
-	private var checkStatus:FlxInputState;
-	
-	public function new(checkStatus:FlxInputState)
-	{
-		this.checkStatus = checkStatus;
-	}
-	
 	public var A             (get, never):Bool; inline function get_A()              { return check(FlxKey.A);              }
 	public var B             (get, never):Bool; inline function get_B()              { return check(FlxKey.B);              }
 	public var C             (get, never):Bool; inline function get_C()              { return check(FlxKey.C);              }
@@ -76,7 +65,6 @@ class FlxKeyList
 	public var COMMA         (get, never):Bool; inline function get_COMMA()          { return check(FlxKey.COMMA);          }
 	public var PERIOD        (get, never):Bool; inline function get_PERIOD()         { return check(FlxKey.PERIOD);         }
 	public var SLASH         (get, never):Bool; inline function get_SLASH()          { return check(FlxKey.SLASH);          }
-	public var NUMPADSLASH   (get, never):Bool; inline function get_NUMPADSLASH()    { return check(FlxKey.NUMPADSLASH);    }
 	public var GRAVEACCENT   (get, never):Bool; inline function get_GRAVEACCENT()    { return check(FlxKey.GRAVEACCENT);    }
 	public var CONTROL       (get, never):Bool; inline function get_CONTROL()        { return check(FlxKey.CONTROL);        }
 	public var ALT           (get, never):Bool; inline function get_ALT()            { return check(FlxKey.ALT);            }
@@ -113,33 +101,4 @@ class FlxKeyList
 	public var NUMPADPLUS    (get, never):Bool; inline function get_NUMPADPLUS()     { return check(FlxKey.NUMPADPLUS);     }
 	public var NUMPADPERIOD  (get, never):Bool; inline function get_NUMPADPERIOD()   { return check(FlxKey.NUMPADPERIOD);   }
 	public var NUMPADMULTIPLY(get, never):Bool; inline function get_NUMPADMULTIPLY() { return check(FlxKey.NUMPADMULTIPLY); }
-	
-	public var ANY(get, never):Bool; 
-	
-	private function get_ANY():Bool
-	{
-		var key:FlxKeyInput = null;
-		var keyCode:Int = FlxKeyboard.TOTAL;
-		
-		while (keyCode-- >= 0)
-		{
-			key = FlxG.keys.getKey(keyCode);
-			
-			if (key != null)
-			{
-				if (check(keyCode))
-				{
-					return true;
-				}
-			}
-		}
-		
-		return false;
-	}
-	
-	private inline function check(keyCode:Int):Bool
-	{
-		return FlxG.keys.checkStatus(keyCode, checkStatus);
-	}
-	#end
 }

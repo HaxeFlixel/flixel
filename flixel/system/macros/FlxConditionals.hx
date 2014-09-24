@@ -33,10 +33,28 @@ class FlxConditionals
 	static inline var FLX_NO_TOUCH = "FLX_NO_TOUCH";
 	static inline var FLX_NO_SOUND_SYSTEM = "FLX_NO_SOUND_SYSTEM";
 	static inline var FLX_NO_SOUND_TRAY = "FLX_NO_SOUND_TRAY";
+	static inline var FLX_NO_FOCUS_LOST_SCREEN = "FLX_NO_FOCUS_LOST_SCREEN";
+	static inline var FLX_NO_DEBUG = "FLX_NO_DEBUG";
+	static inline var FLX_RECORD = "FLX_RECORD";
+	
+	static var USER_DEFINABLE:Array<String> = [
+		FLX_RENDER_BLIT,
+		FLX_RENDER_TILE,
+		FLX_NO_MOUSE,
+		FLX_NO_MOUSE_ADVANCED,
+		FLX_NO_NATIVE_CURSOR,
+		FLX_NO_SOUND_SYSTEM,
+		FLX_NO_TOUCH,
+		FLX_NO_SOUND_SYSTEM,
+		FLX_NO_SOUND_TRAY,
+		FLX_NO_FOCUS_LOST_SCREEN,
+		FLX_NO_DEBUG,
+		FLX_NO_GAMEPAD,
+		FLX_RECORD];
 	
 	public static function run()
 	{
-		checkIllegalConditionals();
+		checkConditionals();
 		defineConditionals();
 		
 		if (defined("flash"))
@@ -45,7 +63,7 @@ class FlxConditionals
 		}
 	}
 	
-	private static function checkIllegalConditionals()
+	private static function checkConditionals()
 	{
 		if (defined(FLX_RENDER_BLIT) && defined(FLX_RENDER_TILE))
 		{
@@ -58,6 +76,18 @@ class FlxConditionals
 		abortIfDefined(FLX_SOUND_TRAY);
 		abortIfDefined(FLX_POINTER_INPUT);
 		abortIfDefined(FLX_POST_PROCESS);
+		
+		#if (haxe_ver >= "3.2")
+			var defines = Context.getDefines();
+			for (define in defines.keys())
+			{
+				if (define.startsWith("FLX_") && USER_DEFINABLE.indexOf(define) == -1)
+				{
+					Context.warning('"$define" is not a valid flixel-conditional.', Context.currentPos());
+				}
+			}
+		#end
+		
 	}
 	
 	private static function abortIfDefined(conditional:String)
@@ -95,7 +125,7 @@ class FlxConditionals
 			Compiler.define(FLX_MOUSE_ADVANCED);
 		}
 		
-		if (!defined(FLX_NO_MOUSE) && !defined(FLX_NATIVE_CURSOR) && defined("flash10_2"))
+		if (!defined(FLX_NO_MOUSE) && !defined(FLX_NO_NATIVE_CURSOR) && defined("flash10_2"))
 		{
 			Compiler.define(FLX_NATIVE_CURSOR);
 		}

@@ -371,7 +371,6 @@ class FlxGame extends Sprite
 		
 		if (!FlxG.autoPause) 
 		{
-			_state.onFocus();
 			return;
 		}
 		
@@ -407,7 +406,6 @@ class FlxGame extends Sprite
 		
 		if (!FlxG.autoPause) 
 		{
-			_state.onFocusLost();
 			return;
 		}
 		

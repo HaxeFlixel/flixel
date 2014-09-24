@@ -11,6 +11,7 @@ import flixel.system.layer.DrawStackItem;
 import flixel.math.FlxAngle;
 import flixel.math.FlxRandom;
 import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
 import openfl.geom.Point;
 
@@ -20,6 +21,8 @@ import openfl.geom.Point;
  */
 class FlxTileblock extends FlxSprite
 {
+	private var tileSprite:FlxSprite;
+	
 	/**
 	 * Creates a new FlxBlock object with the specified position and size.
 	 * 
@@ -37,6 +40,12 @@ class FlxTileblock extends FlxSprite
 		moves = false;
 	}
 	
+	override public function destroy():Void
+	{
+		tileSprite = FlxDestroyUtil.destroy(tileSprite);
+		super.destroy();
+	}
+	
 	/**
 	 * Fills the block with a randomly arranged selection of frames.
 	 * 
@@ -52,11 +61,11 @@ class FlxTileblock extends FlxSprite
 		}
 		
 		// First create a tile brush
-		var sprite:FlxSprite = new FlxSprite();
-		sprite.frames = tileFrames;
-		var spriteWidth:Int = Std.int(sprite.width);
-		var spriteHeight:Int = Std.int(sprite.height);
-		var total:Int = sprite.numFrames + empties;
+		tileSprite = (tileSprite == null) ? new FlxSprite() : tileSprite;
+		tileSprite.frames = tileFrames;
+		var spriteWidth:Int = Std.int(tileSprite.width);
+		var spriteHeight:Int = Std.int(tileSprite.height);
+		var total:Int = tileSprite.numFrames + empties;
 		
 		// Then prep the "canvas" as it were (just doublechecking that the size is on tile boundaries)
 		var regen:Bool = false;
@@ -99,9 +108,9 @@ class FlxTileblock extends FlxSprite
 			{
 				if (FlxG.random.float() * total > empties)
 				{
-					sprite.animation.randomFrame();
-					sprite.drawFrame();
-					stamp(sprite, destinationX, destinationY);
+					tileSprite.animation.randomFrame();
+					tileSprite.drawFrame();
+					stamp(tileSprite, destinationX, destinationY);
 				}
 				
 				destinationX += spriteWidth;
@@ -112,7 +121,6 @@ class FlxTileblock extends FlxSprite
 			row++;
 		}
 		
-		sprite.destroy();
 		dirty = true;
 		return this;
 	}
@@ -149,5 +157,12 @@ class FlxTileblock extends FlxSprite
 		
 		var tileFrames:TileFrames = TileFrames.fromGraphic(graphic, new FlxPoint(TileWidth, TileHeight));
 		return this.loadFrames(tileFrames, Empties);
+	}
+	
+	public function setTile(x:Int, y:Int, index:Int):Void 
+	{
+		tileSprite.animation.frameIndex = index;
+		stamp(tileSprite, x * Std.int(tileSprite.width), y * Std.int(tileSprite.height));
+		dirty = true;
 	}
 }
