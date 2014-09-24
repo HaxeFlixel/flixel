@@ -622,7 +622,8 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		var tile:Tile;
 		var l:Int = Tile + Range;
 		
-		if (l > _tileObjects.length)
+		var maxIndex = _tileObjects.length;
+		if (l > maxIndex)
 		{
 			throw 'Index $l exceeds the maximum tile index of $maxIndex. Please verfiy the Tile ($Tile) and Range ($Range) parameters.';
 		}
