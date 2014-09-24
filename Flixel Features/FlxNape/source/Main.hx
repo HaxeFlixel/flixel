@@ -18,6 +18,8 @@ class Main extends Sprite
 	var framerate:Int = 60; // How many frames per second the game should run at.
 	var skipSplash:Bool = false; // Whether to skip the flixel splash screen that appears in release mode.
 	var startFullscreen:Bool = false; // Whether to start the game in fullscreen on desktop targets
+
+	private static inline var statesNumber:Int = 6; // Number of states available in the demo
 	
 	// You can pretty much ignore everything from here on - your code should go in your states.
 	
@@ -73,14 +75,14 @@ class Main extends Sprite
 	public static function nextState()
 	{
 		currentState++;
-		currentState %= 5;
+		currentState %= statesNumber;
 		changeState();
 	}
 	
 	public static function prevState()
 	{
-		currentState--;
-		currentState < 0 ? currentState = 4 : null;
+		currentState += (statesNumber - 1);
+		currentState %= statesNumber;
 		changeState();
 	}
 	
@@ -93,6 +95,7 @@ class Main extends Sprite
 			case 2: FlxG.switchState(new Blob());
 			case 3: FlxG.switchState(new Fight());
 			case 4: FlxG.switchState(new Cutup());
+			case 5: FlxG.switchState(new SolarSystem());
 		}
 	}
 }

@@ -1,6 +1,6 @@
 package states;
 import flixel.addons.nape.FlxNapeSprite;
-import flixel.addons.nape.FlxNapeState;
+import flixel.addons.nape.FlxNapeSpace;
 import nape.callbacks.CbEvent;
 import nape.callbacks.CbType;
 import nape.callbacks.InteractionCallback;
@@ -12,28 +12,35 @@ import flixel.FlxG;
 import flixel.math.FlxPoint;
 import flixel.math.FlxMath;
 import flixel.math.FlxAngle;
+import flixel.FlxState;
 
 /**
  * @author TiagoLr ( ~~~ProG4mr~~~ )
  */
-class SolarSystem extends FlxNapeState
+class SolarSystem extends BaseState
 {
 	private var shooter:Shooter;
 	private var planets:Array<FlxNapeSprite>;
-	private static var halfWidth:Int = Std.int(FlxG.width / 2);
-	private static var halfHeight:Int = Std.int(FlxG.height / 2);
+	private static var halfWidth:Int;
+	private static var halfHeight:Int;
 	private static var gravity:Int = Std.int(5e4);
+
 	private var sun:FlxNapeSprite;
 	
 	override public function create():Void 
 	{	
 		super.create();
+
+		halfWidth = Std.int(FlxG.width / 2);
+		halfHeight = Std.int(FlxG.height / 2);
+
+		FlxNapeSpace.init();
 		
 		FlxNapeSpace.space.worldAngularDrag = 0;
 		FlxNapeSpace.space.worldLinearDrag = 0;
 		FlxNapeSpace.space.gravity = new Vec2(0, 0);
 		
-		createWalls();
+		FlxNapeSpace.createWalls();
 		
 		createSolarSystem();
 		
@@ -85,11 +92,6 @@ class SolarSystem extends FlxNapeState
 	override public function update(elapsed:Float):Void 
 	{	
 		super.update(elapsed);
-		
-		if (FlxG.keys.justPressed.G)
-			napeDebugEnabled = false;
-		if (FlxG.keys.justPressed.R)
-			FlxG.resetState();
 			
 		for (planet in planets)
 		{
@@ -114,13 +116,6 @@ class SolarSystem extends FlxNapeState
 			
 		if (FlxG.keys.justPressed.D)
 			planets[0].body.applyImpulse(new Vec2(10, 0));
-			
-		
-		if (FlxG.keys.justPressed.LEFT)
-			FlxPhysicsDemo.prevState();
-		if (FlxG.keys.justPressed.RIGHT)
-			FlxPhysicsDemo.nextState();
-		
 		
 	}
 	
