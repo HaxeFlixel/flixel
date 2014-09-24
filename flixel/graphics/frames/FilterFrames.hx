@@ -124,7 +124,7 @@ class FilterFrames extends FlxFramesCollection
 		if (filter != null)
 		{
 			filters.push(filter);
-			destroyBitmaps();
+			regenBitmaps();
 		}
 	}
 	
@@ -142,7 +142,7 @@ class FilterFrames extends FlxFramesCollection
 		
 		if (filters.remove(filter))
 		{
-			destroyBitmaps();
+			regenBitmaps();
 		}
 	}
 	
@@ -161,10 +161,10 @@ class FilterFrames extends FlxFramesCollection
 			filters.pop();
 		}
 		
-		destroyBitmaps();
+		regenBitmaps();
 	}
 	
-	override public function destroyBitmaps():Void
+	private function regenBitmaps():Void
 	{
 		for (frame in frames)
 		{
@@ -188,7 +188,11 @@ class FilterFrames extends FlxFramesCollection
 	
 	private function set_filters(value:Array<BitmapFilter>):Array<BitmapFilter>
 	{
-		destroyBitmaps();
-		return filters = value;
+		filters = value;
+		
+		if (value != null)
+			regenBitmaps();
+		
+		return filters;
 	}
 }

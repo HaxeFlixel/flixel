@@ -36,6 +36,8 @@ private class GraphicDefault extends BitmapData {}
 // TODO: add updateSizeFromFrame bool which will tell sprite whether to update it's size to frame's size (when frame setter is called) or not (usefull for sprites with adjusted hitbox)
 // And don't forget about sprites with clipped frames: what i should do with their size in this case?
 
+// TODO: add option to "center origin" or create special subclass for it
+
 /**
  * The main "game object" class, the sprite is a FlxObject
  * with a bunch of graphics options and abilities, like animation and stamping.
@@ -902,39 +904,32 @@ class FlxSprite extends FlxObject
 	{
 		if (frame != null && dirty)
 		{
-			if (!flipX && !flipY && frame.type == FrameType.REGULAR)
+			var frameBmd:BitmapData = null;
+			
+			if (flipX && flipY)
 			{
-				framePixels = frame.paintOnBitmap(framePixels);
+				frameBmd = frame.getHVReversedBitmap();
+			}
+			else if (flipX)
+			{
+				frameBmd = frame.getHReversedBitmap();
+			}
+			else if (flipY)
+			{
+				frameBmd = frame.getVReversedBitmap();
 			}
 			else
 			{
-				var frameBmd:BitmapData = null;
-				
-				if (flipX && flipY)
-				{
-					frameBmd = frame.getHVReversedBitmap();
-				}
-				else if (flipX)
-				{
-					frameBmd = frame.getHReversedBitmap();
-				}
-				else if (flipY)
-				{
-					frameBmd = frame.getVReversedBitmap();
-				}
-				else
-				{
-					frameBmd = frame.getBitmap();
-				}
-				
-				if ((framePixels == null) || (framePixels.width != frameWidth) || (framePixels.height != frameHeight))
-				{
-					FlxDestroyUtil.dispose(framePixels);
-					framePixels = new BitmapData(Std.int(frame.sourceSize.x), Std.int(frame.sourceSize.y));
-				}
-				
-				framePixels.copyPixels(frameBmd, _flashRect, _flashPointZero);
+				frameBmd = frame.getBitmap();
 			}
+			
+			if ((framePixels == null) || (framePixels.width != frameWidth) || (framePixels.height != frameHeight))
+			{
+				FlxDestroyUtil.dispose(framePixels);
+				framePixels = new BitmapData(Std.int(frame.sourceSize.x), Std.int(frame.sourceSize.y));
+			}
+			
+			framePixels.copyPixels(frameBmd, _flashRect, _flashPointZero);
 			
 			if (useColorTransform) 
 			{
