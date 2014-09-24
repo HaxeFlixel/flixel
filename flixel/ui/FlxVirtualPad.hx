@@ -1,5 +1,6 @@
 package flixel.ui;
 
+import flixel.graphics.FlxGraphic;
 import flash.display.BitmapData;
 import flixel.FlxG;
 import flixel.group.FlxSpriteGroup;
@@ -88,39 +89,39 @@ class FlxVirtualPad extends FlxSpriteGroup
 		switch (DPad)
 		{
 			case UP_DOWN:
-				dPad.add(add(buttonUp = createButton(0, FlxG.height - 85, 44, 45, GraphicUp)));
-				dPad.add(add(buttonDown = createButton(0, FlxG.height - 45, 44, 45, GraphicDown)));
+				dPad.add(add(buttonUp = createButton(0, FlxG.height - 85, 44, 45, FlxGraphic.fromClass(GraphicUp))));
+				dPad.add(add(buttonDown = createButton(0, FlxG.height - 45, 44, 45, FlxGraphic.fromClass(GraphicDown))));
 			case LEFT_RIGHT:
-				dPad.add(add(buttonLeft = createButton(0, FlxG.height - 45, 44, 45, GraphicLeft)));
-				dPad.add(add(buttonRight = createButton(42, FlxG.height - 45, 44, 45, GraphicRight)));
+				dPad.add(add(buttonLeft = createButton(0, FlxG.height - 45, 44, 45, FlxGraphic.fromClass(GraphicLeft))));
+				dPad.add(add(buttonRight = createButton(42, FlxG.height - 45, 44, 45, FlxGraphic.fromClass(GraphicRight))));
 			case UP_LEFT_RIGHT:
-				dPad.add(add(buttonUp = createButton(35, FlxG.height - 81, 44, 45, GraphicUp)));
-				dPad.add(add(buttonLeft = createButton(0, FlxG.height - 45, 44, 45, GraphicDown)));
-				dPad.add(add(buttonRight = createButton(69, FlxG.height - 45, 44, 45, GraphicRight)));
+				dPad.add(add(buttonUp = createButton(35, FlxG.height - 81, 44, 45, FlxGraphic.fromClass(GraphicUp))));
+				dPad.add(add(buttonLeft = createButton(0, FlxG.height - 45, 44, 45, FlxGraphic.fromClass(GraphicDown))));
+				dPad.add(add(buttonRight = createButton(69, FlxG.height - 45, 44, 45, FlxGraphic.fromClass(GraphicRight))));
 			case FULL:
-				dPad.add(add(buttonUp = createButton(35, FlxG.height - 116, 44, 45, GraphicUp)));	
-				dPad.add(add(buttonLeft = createButton(0, FlxG.height - 81, 44, 45, GraphicLeft)));
-				dPad.add(add(buttonRight = createButton(69, FlxG.height - 81, 44, 45, GraphicRight)));	
-				dPad.add(add(buttonDown = createButton(35, FlxG.height - 45, 44, 45, GraphicDown)));
+				dPad.add(add(buttonUp = createButton(35, FlxG.height - 116, 44, 45, FlxGraphic.fromClass(GraphicUp))));
+				dPad.add(add(buttonLeft = createButton(0, FlxG.height - 81, 44, 45, FlxGraphic.fromClass(GraphicLeft))));
+				dPad.add(add(buttonRight = createButton(69, FlxG.height - 81, 44, 45, FlxGraphic.fromClass(GraphicRight))));
+				dPad.add(add(buttonDown = createButton(35, FlxG.height - 45, 44, 45, FlxGraphic.fromClass(GraphicDown))));
 			case NONE: // do nothing
 		}
 		
 		switch (Action)
 		{
 			case A:
-				actions.add(add(buttonA = createButton(FlxG.width - 44, FlxG.height - 45, 44, 45, GraphicA)));
+				actions.add(add(buttonA = createButton(FlxG.width - 44, FlxG.height - 45, 44, 45, FlxGraphic.fromClass(GraphicA))));
 			case A_B:
-				actions.add(add(buttonA = createButton(FlxG.width - 44, FlxG.height - 45, 44, 45, GraphicA)));
-				actions.add(add(buttonB = createButton(FlxG.width - 86, FlxG.height - 45, 44, 45, GraphicB)));
+				actions.add(add(buttonA = createButton(FlxG.width - 44, FlxG.height - 45, 44, 45, FlxGraphic.fromClass(GraphicA))));
+				actions.add(add(buttonB = createButton(FlxG.width - 86, FlxG.height - 45, 44, 45, FlxGraphic.fromClass(GraphicB))));
 			case A_B_C:
-				actions.add(add(buttonA = createButton(FlxG.width - 128, FlxG.height - 45, 44, 45, GraphicA)));
-				actions.add(add(buttonB = createButton(FlxG.width - 86, FlxG.height - 45, 44, 45, GraphicB)));
-				actions.add(add(buttonC = createButton(FlxG.width - 44, FlxG.height - 45, 44, 45, GraphicC)));
+				actions.add(add(buttonA = createButton(FlxG.width - 128, FlxG.height - 45, 44, 45, FlxGraphic.fromClass(GraphicA))));
+				actions.add(add(buttonB = createButton(FlxG.width - 86, FlxG.height - 45, 44, 45, FlxGraphic.fromClass(GraphicB))));
+				actions.add(add(buttonC = createButton(FlxG.width - 44, FlxG.height - 45, 44, 45, FlxGraphic.fromClass(GraphicC))));
 			case A_B_X_Y:
-				actions.add(add(buttonY = createButton(FlxG.width - 86, FlxG.height - 85, 44, 45, GraphicY)));
-				actions.add(add(buttonX = createButton(FlxG.width - 44, FlxG.height - 85, 44, 45, GraphicX)));
-				actions.add(add(buttonB = createButton(FlxG.width - 86, FlxG.height - 45, 44, 45, GraphicB)));
-				actions.add(add(buttonA = createButton(FlxG.width - 44, FlxG.height - 45, 44, 45, GraphicA)));
+				actions.add(add(buttonY = createButton(FlxG.width - 86, FlxG.height - 85, 44, 45, FlxGraphic.fromClass(GraphicY))));
+				actions.add(add(buttonX = createButton(FlxG.width - 44, FlxG.height - 85, 44, 45, FlxGraphic.fromClass(GraphicX))));
+				actions.add(add(buttonB = createButton(FlxG.width - 86, FlxG.height - 45, 44, 45, FlxGraphic.fromClass(GraphicB))));
+				actions.add(add(buttonA = createButton(FlxG.width - 44, FlxG.height - 45, 44, 45, FlxGraphic.fromClass(GraphicA))));
 			case NONE: // do nothing
 		}
 	}
