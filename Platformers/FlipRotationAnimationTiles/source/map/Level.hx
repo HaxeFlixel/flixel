@@ -88,7 +88,7 @@ class Level extends TiledMap
 			for (i in 0...layer.tiles.length) { 
 				tile = layer.tiles[i];
 				if (tile != null && isSpecialTile(tile, animations)) {
-					specialTile = new FlxTileSpecial(tile.tilesetID, tile.isFlipHorizontally, tile.isFlipVertically, tile.rotate, tilemap.frames);
+					specialTile = new FlxTileSpecial(tile.tilesetID, tile.isFlipHorizontally, tile.isFlipVertically, tile.rotate);
 					// add animations if exists
 					if (animations.exists(tile.tilesetID)) {
 						// Right now, a special tile only can have one animation.
