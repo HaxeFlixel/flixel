@@ -5,10 +5,11 @@ import flash.filters.BlurFilter;
 import flash.filters.DropShadowFilter;
 import flash.filters.GlowFilter;
 import flash.geom.Point;
-import flixel.effects.FlxSpriteFilter;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
+import flixel.graphics.FlxGraphic;
+import flixel.graphics.frames.FilterFrames;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
@@ -56,11 +57,11 @@ class PlayState extends FlxState
 	var isAnimSpr5:Bool;
 	var isAnimSpr6:Bool;
 	
-	var spr2Filter:FlxSpriteFilter;
-	var spr3Filter:FlxSpriteFilter;
-	var spr4Filter:FlxSpriteFilter;
-	var spr5Filter:FlxSpriteFilter;
-	var spr6Filter:FlxSpriteFilter;
+	var spr2Filter:FilterFrames;
+	var spr3Filter:FilterFrames;
+	var spr4Filter:FilterFrames;
+	var spr5Filter:FilterFrames;
+	var spr6Filter:FilterFrames;
 	
 	var tween2:FlxTween;
 	var tween3:FlxTween;
@@ -82,7 +83,7 @@ class PlayState extends FlxState
 		// SPRITES
 		
 		// NO FILTER
-		spr1 = new FlxSprite(FlxG.width * 0.25 - 50, FlxG.height / 2 - 100 - 50, GraphicLogo); 
+		spr1 = new FlxSprite(FlxG.width * 0.25 - 50, FlxG.height / 2 - 100 - 50, FlxGraphic.fromClass(GraphicLogo)); 
 		spr1.antialiasing = true;
 		add(spr1);
 		txt1 = new FlxText(spr1.x, spr1.y + 120, 100, "No Filter", 10);
@@ -91,57 +92,62 @@ class PlayState extends FlxState
 		
 		#if !js
 		// GLOW
-		spr2 = new FlxSprite(FlxG.width * 0.5 - 50, FlxG.height / 2 - 100 - 50, GraphicLogo);
+		spr2 = new FlxSprite(FlxG.width * 0.5 - 50, FlxG.height / 2 - 100 - 50, FlxGraphic.fromClass(GraphicLogo));
 		add(spr2);
 		txt2 = new FlxText(spr2.x, spr2.y + 120, 100, "Glow", 10);
 		txt2.alignment = CENTER;
 		add(txt2);
 		filter2 = new GlowFilter(0xFF0000, 1, 50, 50, 1.5, 1);
 		
-		spr2Filter = new FlxSpriteFilter(spr2, 50, 50);
-		spr2Filter.addFilter(filter2);
+		spr2Filter = FilterFrames.fromFrames(spr2.frames, 50, 50);
+		updateFilter(spr2, spr2Filter);
 		
 		// BLUR
-		spr3 = new FlxSprite(FlxG.width * 0.75 - 50, FlxG.height / 2 - 100 - 50, GraphicLogo);
+		spr3 = new FlxSprite(FlxG.width * 0.75 - 50, FlxG.height / 2 - 100 - 50, FlxGraphic.fromClass(GraphicLogo));
 		add(spr3);
 		txt3 = new FlxText(spr3.x, spr3.y + 120, 100, "Blur", 10);
 		txt3.alignment = CENTER;
 		add(txt3);
 		filter3 = new BlurFilter();
 		
-		spr3Filter = new FlxSpriteFilter(spr3, 50, 50);
+		spr3Filter = FilterFrames.fromFrames(spr3.frames, 50, 50);
 		spr3Filter.addFilter(filter3);
+		updateFilter(spr3, spr3Filter);
 		
 		// DROP SHADOW
-		spr4 = new FlxSprite(FlxG.width * 0.25 - 50, FlxG.height / 2 + 100 - 50, GraphicLogo);
+		spr4 = new FlxSprite(FlxG.width * 0.25 - 50, FlxG.height / 2 + 100 - 50, FlxGraphic.fromClass(GraphicLogo));
 		add(spr4);
 		txt4 = new FlxText(spr4.x, spr4.y + 120, 100, "Drop Shadow", 10); 
 		txt4.alignment = CENTER;
 		add(txt4);
 		filter4 = new DropShadowFilter(10, 45, 0, .75, 10, 10, 1, 1);
 		
-		spr4Filter = new FlxSpriteFilter(spr4, 50, 50);
+		spr4Filter = FilterFrames.fromFrames(spr4.frames, 50, 50);
 		spr4Filter.addFilter(filter4);
+		updateFilter(spr4, spr4Filter);
 		#end
 		
 		#if flash
 		// BEVEL
-		spr5 = new FlxSprite(FlxG.width * 0.5 - 50, FlxG.height / 2 + 100 - 50, GraphicLogo);
+		spr5 = new FlxSprite(FlxG.width * 0.5 - 50, FlxG.height / 2 + 100 - 50, FlxGraphic.fromClass(GraphicLogo));
 		add(spr5);
 		filter5 = new BevelFilter(6);
-		spr5Filter = new FlxSpriteFilter(spr5, 50, 50);
+		spr5Filter = FilterFrames.fromFrames(spr5.frames, 50, 50);
 		spr5Filter.addFilter(filter5);
+		updateFilter(spr5, spr5Filter);
+		
 		txt5 = new FlxText(spr5.x + 25, spr5.y + 120 + 15, 100, "Bevel\n( flash only )", 10);
 		txt5.alignment = CENTER;
 		add(txt5);
 		
 		// DISPLACEMENT MAP
-		spr6 = new FlxSprite(FlxG.width * 0.75 - 50, FlxG.height / 2 + 100 - 50, GraphicLogo);
+		spr6 = new FlxSprite(FlxG.width * 0.75 - 50, FlxG.height / 2 + 100 - 50, FlxGraphic.fromClass(GraphicLogo));
 		add(spr6);
 		filter6 = (new DisplacementMapFilter(Assets.getBitmapData("assets/StaticMap.png"), 
 						new Point(0, 0), 1, 1, 15, 1, DisplacementMapFilterMode.COLOR, 1, 0));
-		spr6Filter = new FlxSpriteFilter(spr6, 50, 50);
+		spr6Filter = FilterFrames.fromFrames(spr6.frames, 50, 50);
 		spr6Filter.addFilter(filter6);
+		updateFilter(spr6, spr6Filter);
 		
 		updateDisplaceFilter();
 		txt6 = new FlxText(spr6.x + 25, spr6.y + 120 + 15, 100, "Displacement\n( flash only )", 10);
@@ -210,11 +216,11 @@ class PlayState extends FlxState
 		}
 		if (isAnimSpr2)
 		{
-			updateFilter(spr2Filter);
+			updateFilter(spr2, spr2Filter);
 		}
 		if (isAnimSpr3)
 		{
-			updateFilter(spr3Filter);
+			updateFilter(spr3, spr3Filter);
 		}
 		if (isAnimSpr4)
 		{
@@ -222,7 +228,7 @@ class PlayState extends FlxState
 		}
 		if (isAnimSpr5)
 		{
-			updateFilter(spr5Filter);
+			updateFilter(spr5, spr5Filter);
 		}
 		if (isAnimSpr6)
 		{
@@ -235,7 +241,7 @@ class PlayState extends FlxState
 		#if flash
 		filter6.scaleX = FlxG.random.float( -10, 10);
 		filter6.mapPoint = new Point(0, FlxG.random.float(0, 30));
-		updateFilter(spr6Filter);
+		updateFilter(spr6, spr6Filter);
 		#end
 	}
 	
@@ -243,12 +249,13 @@ class PlayState extends FlxState
 	{
 		#if !js
 		filter4.angle -= 360 * elapsed;
-		updateFilter(spr4Filter);
+		updateFilter(spr4, spr4Filter);
 		#end
 	}
 	
-	function updateFilter(sprFilter:FlxSpriteFilter)
+	function updateFilter(spr:FlxSprite, sprFilter:FilterFrames)
 	{
-		sprFilter.applyFilters();
+		sprFilter.filters = sprFilter.filters;
+		sprFilter.applyToSprite(spr);
 	}
 }
