@@ -13,8 +13,10 @@ import flixel.addons.ui.FlxUIState;
 import flixel.addons.ui.FlxUIText;
 import flixel.addons.ui.FlxUITypedButton;
 import flixel.FlxG;
+import flixel.graphics.FlxGraphic;
 import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
+import flixel.system.FlxAssets.FlxGraphicAsset;
 
 /**
  * A FlxState which can be used for the game's menu.
@@ -46,8 +48,8 @@ class MenuState extends FlxUIState
 			//FlxTransitionableStates will use those values if their own transIn/transOut states are null
 			FlxTransitionableState.defaultTransIn = new TransitionData();
 			FlxTransitionableState.defaultTransOut = new TransitionData();
-			FlxTransitionableState.defaultTransIn.tileData = { asset:GraphicTransTileDiamond, width:32, height:32 };
-			FlxTransitionableState.defaultTransOut.tileData = { asset:GraphicTransTileDiamond, width:32, height:32 };
+			FlxTransitionableState.defaultTransIn.tileData = { asset:FlxGraphic.fromClass(GraphicTransTileDiamond), width:32, height:32 };
+			FlxTransitionableState.defaultTransOut.tileData = { asset:FlxGraphic.fromClass(GraphicTransTileDiamond), width:32, height:32 };
 			
 			//Of course, this state has already been constructed, so we need to set a transOut value for it right now:
 			transOut = FlxTransitionableState.defaultTransOut;
@@ -116,7 +118,7 @@ class MenuState extends FlxUIState
 		if (FlxTransitionableState.defaultTransIn.type == TILES)
 		{
 			in_tile_text.visible = in_tile.visible = true;
-			var intileasset:Class<BitmapData> = cast FlxTransitionableState.defaultTransIn.tileData.asset;
+			var intileasset:FlxGraphic = cast FlxTransitionableState.defaultTransIn.tileData.asset;
 			in_tile.selectedId = getDefaultAssetStr(intileasset);
 		}
 		else
@@ -139,7 +141,7 @@ class MenuState extends FlxUIState
 		if (FlxTransitionableState.defaultTransOut.type == TILES)
 		{
 			out_tile_text.visible = out_tile.visible = true;
-			var outtileasset:Class<BitmapData> = cast FlxTransitionableState.defaultTransOut.tileData.asset;
+			var outtileasset:FlxGraphic = cast FlxTransitionableState.defaultTransOut.tileData.asset;
 			out_tile.selectedId = getDefaultAssetStr(outtileasset);
 		}
 		else
@@ -159,9 +161,9 @@ class MenuState extends FlxUIState
 		
 	}
 	
-	private function getDefaultAssetStr(c:Class<BitmapData>):String
+	private function getDefaultAssetStr(c:FlxGraphic):String
 	{
-		return switch(c)
+		return switch(c.assetsClass)
 		{
 			case GraphicTransTileCircle: "circle";
 			case GraphicTransTileSquare: "square";
@@ -169,13 +171,13 @@ class MenuState extends FlxUIState
 		}
 	}
 	
-	private function getDefaultAsset(str):Class<BitmapData>
+	private function getDefaultAsset(str):FlxGraphic
 	{
 		return switch(str)
 		{
-			case "circle": GraphicTransTileCircle;
-			case "square": GraphicTransTileSquare;
-			case "diamond", _: GraphicTransTileDiamond;
+			case "circle": FlxGraphic.fromClass(GraphicTransTileCircle);
+			case "square": FlxGraphic.fromClass(GraphicTransTileSquare);
+			case "diamond", _: FlxGraphic.fromClass(GraphicTransTileDiamond);
 		}
 	}
 	
