@@ -254,7 +254,7 @@ class FlxGraphic
 	 * @param	Cache	Whether to use graphic caching or not. Default value is true, which means automatic caching.
 	 * @return	Created FlxGraphic object.
 	 */
-	private static function createGraphic(Bitmap:BitmapData, Key:String, Unique:Bool = false, Cache:Bool = false):FlxGraphic
+	private static function createGraphic(Bitmap:BitmapData, Key:String, Unique:Bool = false, Cache:Bool = true):FlxGraphic
 	{
 		Bitmap = FlxGraphic.getBitmap(Bitmap, Unique);
 		var graphic:FlxGraphic = null;
