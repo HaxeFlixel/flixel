@@ -255,7 +255,6 @@ class PlayState extends FlxState
 	
 	function updateFilter(spr:FlxSprite, sprFilter:FilterFrames)
 	{
-		sprFilter.filters = sprFilter.filters;
-		sprFilter.applyToSprite(spr);
+		sprFilter.applyToSprite(spr, false, true);
 	}
 }
