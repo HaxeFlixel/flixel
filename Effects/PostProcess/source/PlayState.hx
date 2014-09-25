@@ -6,6 +6,7 @@ import flixel.addons.ui.FlxUICheckBox;
 import flixel.effects.postprocess.PostProcess;
 import flixel.FlxG;
 import flixel.FlxState;
+import flixel.graphics.FlxGraphic;
 import flixel.system.FlxAssets;
 
 class PlayState extends FlxState
@@ -26,7 +27,7 @@ class PlayState extends FlxState
 	
 	override public function create():Void
 	{
-		var backdrop = new FlxBackdrop(GraphicLogo);
+		var backdrop = new FlxBackdrop(FlxGraphic.fromClass(GraphicLogo));
 		backdrop.velocity.set(150, 150);
 		add(backdrop);
 		
