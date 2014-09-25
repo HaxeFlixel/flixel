@@ -3,6 +3,7 @@ package flixel.graphics.frames;
 import flash.display.BitmapData;
 import flash.geom.Point;
 import flash.geom.Rectangle;
+import flixel.FlxSprite;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.system.layer.TileSheetExt;
@@ -71,6 +72,21 @@ class FilterFrames extends FlxFramesCollection
 		filters = [];
 		
 		genFrames();
+	}
+	
+	/**
+	 * Just helper method which "centers" sprite offsets
+	 * 
+	 * @param	spr					sprite to apply this frame collection.
+	 * @param	saveAnimations		whether to save sprite's animations or not.
+	 */
+	public function applyToSprite(spr:FlxSprite, saveAnimations:Bool = false):Void
+	{
+		var w:Float = spr.width;
+		var h:Float = spr.height;
+		spr.setFrames(this, saveAnimations);
+		spr.offset.set(0.5 * widthInc, 0.5 * heightInc);
+		spr.setSize(w, h);
 	}
 	
 	private function genFrames():Void
