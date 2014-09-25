@@ -533,6 +533,11 @@ class FlxSprite extends FlxObject
 	 */
 	override public function draw():Void
 	{
+		if (frame == null)
+		{
+			loadGraphic(FlxGraphic.fromClass(GraphicDefault));
+		}
+		
 		if (alpha == 0 || frame.type == FrameType.EMPTY)
 		{
 			return;
