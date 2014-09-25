@@ -5,6 +5,7 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxState;
+import flixel.graphics.FlxGraphic;
 import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
 import flixel.util.FlxColor;
@@ -28,7 +29,7 @@ class PlayState extends FlxState
 		
 		// Create the tilemap from the levelData we just created
 		_level = new FlxTilemap();
-		_level.loadMap(Assets.getText("assets/level.csv"), GraphicAuto, 0, 0, AUTO);
+		_level.loadMap(Assets.getText("assets/level.csv"), FlxGraphic.fromClass(GraphicAuto), 0, 0, AUTO);
 		add(_level);
 		
 		_halfWidth = Std.int(FlxG.width / 2);
