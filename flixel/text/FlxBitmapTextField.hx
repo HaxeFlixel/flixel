@@ -1,7 +1,6 @@
 package flixel.text;
 
 import flash.display.BitmapData;
-import flixel.addons.api.FlxGameJolt;
 import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.FlxG;
@@ -327,10 +326,19 @@ class FlxBitmapTextField extends FlxSprite
 		var bAlpha:Float = borderColor.alphaFloat * alpha;
 		var bColor:FlxColor = FlxColor.fromRGBFloat(borderRed, borderGreen, borderBlue);
 		
-		var textRed:Float = textColor.redFloat * color.redFloat;
-		var textGreen:Float = textColor.greenFloat * color.greenFloat;
-		var textBlue:Float = textColor.blueFloat * color.blueFloat;
-		var tAlpha:Float = textColor.alpha * alpha;
+		var textRed:Float = color.redFloat;
+		var textGreen:Float = color.greenFloat;
+		var textBlue:Float = color.blueFloat;
+		var tAlpha:Float = alpha;
+		
+		if (useTextColor)
+		{
+			textRed *= textColor.redFloat;
+			textGreen *= textColor.greenFloat;
+			textBlue *= textColor.blueFloat;
+			tAlpha *= textColor.alpha;		
+		}
+		
 		var tColor:FlxColor = FlxColor.fromRGBFloat(textRed, textGreen, textBlue); 
 		
 		var alphaToUse:Float = 0;
