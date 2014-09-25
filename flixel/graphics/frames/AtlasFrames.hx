@@ -4,6 +4,7 @@ import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import haxe.xml.Fast;
+import openfl.Assets;
 
 import flash.display.BitmapData;
 import flash.geom.Rectangle;
@@ -30,6 +31,7 @@ class AtlasFrames extends FlxFramesCollection
 	 * Parsing method for TexturePacker atlases in json format.
 	 * @param	Source			the image source (can be FlxGraphic, String, or BitmapData).
 	 * @param	Description		contents of json file with atlas description. You can get it with Assets.getText(path/to/description.json).
+	 * 							Or you can just pass path to json file in assets directory.
 	 * @return	Newly created AtlasFrames collection
 	 */
 	public static function texturePackerJSON(Source:FlxGraphicAsset, Description:String):AtlasFrames
@@ -45,6 +47,12 @@ class AtlasFrames extends FlxFramesCollection
 		if ((graphic == null) || (Description == null)) return null;
 		
 		frames = new AtlasFrames(graphic);
+		
+		if (Assets.exists(Description))
+		{
+			Description = Assets.getText(Description);
+		}
+		
 		var data:Dynamic = Json.parse(Description);
 		
 		var rotated:Bool;
@@ -83,7 +91,8 @@ class AtlasFrames extends FlxFramesCollection
 	 * Parsing method for LibGDX atlases.
 	 * 
 	 * @param	Source			the image source (can be FlxGraphic, String or BitmapData).
-	 * @param	Description		contents of the file with atlas description. You can get it with Assets.getText(path/to/description/file)
+	 * @param	Description		contents of the file with atlas description. You can get it with Assets.getText(path/to/description/file).
+	 * 							Or you can just pass path to description file in assets directory.
 	 * @return	Newly created AtlasFrames collection
 	 */
 	public static function libGDX(Source:FlxGraphicAsset, Description:String):AtlasFrames
@@ -99,6 +108,11 @@ class AtlasFrames extends FlxFramesCollection
 		if ((graphic == null) || (Description == null)) return null;
 		
 		frames = new AtlasFrames(graphic);
+		
+		if (Assets.exists(Description))
+		{
+			Description = Assets.getText(Description);
+		}
 		
 		var pack:String = StringTools.trim(Description);
 		var lines:Array<String> = pack.split("\n");
@@ -192,6 +206,7 @@ class AtlasFrames extends FlxFramesCollection
 	 * 
 	 * @param	Source			the image source (can be FlxGraphic, String or BitmapData).
 	 * @param	Description		contents of xml file with atlas description. You can get it with Assets.getText(path/to/description.xml)
+	 * 							Or you can just pass path to xml file in assets directory.
 	 * @return	Newly created AtlasFrames collection.
 	 */
 	public static function sparrow(Source:FlxGraphicAsset, Description:String):AtlasFrames
@@ -207,6 +222,11 @@ class AtlasFrames extends FlxFramesCollection
 		if ((graphic == null) || (Description == null)) return null;
 		
 		frames = new AtlasFrames(graphic);
+		
+		if (Assets.exists(Description))
+		{
+			Description = Assets.getText(Description);
+		}
 		
 		var data:Fast = new haxe.xml.Fast(Xml.parse(Description).firstElement());
 		
@@ -250,6 +270,7 @@ class AtlasFrames extends FlxFramesCollection
 	 * 
 	 * @param	Source			the image source (can be FlxGraphic, String or BitmapData).
 	 * @param	Description		contents of xml file with atlas description. You can get it with Assets.getText(path/to/description.xml)
+	 * 							Or you can just pass path to xml file in assets directory.
 	 * @return	Newly created AtlasFrames collection.
 	 */
 	public static function texturePackerXML(Source:FlxGraphicAsset, Description:String):AtlasFrames
@@ -265,6 +286,11 @@ class AtlasFrames extends FlxFramesCollection
 		if ((graphic == null) || (Description == null)) return null;
 		
 		frames = new AtlasFrames(graphic);
+		
+		if (Assets.exists(Description))
+		{
+			Description = Assets.getText(Description);
+		}
 		
 		var xml = Xml.parse(Description);
 		var root = xml.firstElement();
