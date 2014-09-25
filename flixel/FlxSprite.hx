@@ -909,34 +909,39 @@ class FlxSprite extends FlxObject
 	{
 		if (frame != null && dirty)
 		{
-			var frameBmd:BitmapData = null;
-			
-			if (flipX && flipY)
+			if (!flipX && !flipY && frame.type == FrameType.REGULAR)
 			{
-				frameBmd = frame.getHVReversedBitmap();
-			}
-			else if (flipX)
-			{
-				frameBmd = frame.getHReversedBitmap();
-			}
-			else if (flipY)
-			{
-				frameBmd = frame.getVReversedBitmap();
+				framePixels = frame.paintOnBitmap(framePixels);
 			}
 			else
 			{
-				frameBmd = frame.getBitmap();
+				var frameBmd:BitmapData = null;
+				if (flipX && flipY)
+				{
+					frameBmd = frame.getHVReversedBitmap();
+				}
+				else if (flipX)
+				{
+					frameBmd = frame.getHReversedBitmap();
+				}
+				else if (flipY)
+				{
+					frameBmd = frame.getVReversedBitmap();
+				}
+				else
+				{
+					frameBmd = frame.getBitmap();
+				}
+				if ((framePixels == null) || (framePixels.width != frameWidth) || (framePixels.height != frameHeight))
+				{
+					FlxDestroyUtil.dispose(framePixels);
+					framePixels = new BitmapData(Std.int(frame.sourceSize.x), Std.int(frame.sourceSize.y));
+				}
+				
+				framePixels.copyPixels(frameBmd, _flashRect, _flashPointZero);
 			}
 			
-			if ((framePixels == null) || (framePixels.width != frameWidth) || (framePixels.height != frameHeight))
-			{
-				FlxDestroyUtil.dispose(framePixels);
-				framePixels = new BitmapData(Std.int(frame.sourceSize.x), Std.int(frame.sourceSize.y));
-			}
-			
-			framePixels.copyPixels(frameBmd, _flashRect, _flashPointZero);
-			
-			if (useColorTransform) 
+			if (useColorTransform)
 			{
 				framePixels.colorTransform(_flashRect, colorTransform);
 			}
