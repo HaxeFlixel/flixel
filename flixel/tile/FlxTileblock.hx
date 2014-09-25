@@ -156,7 +156,7 @@ class FlxTileblock extends FlxSprite
 			TileHeight = (TileHeight > graph.height) ? graph.height : TileHeight;
 		}
 		
-		var tileFrames:TileFrames = TileFrames.fromGraphic(graphic, new FlxPoint(TileWidth, TileHeight));
+		var tileFrames:TileFrames = TileFrames.fromGraphic(graph, new FlxPoint(TileWidth, TileHeight));
 		return this.loadFrames(tileFrames, Empties);
 	}
 	
