@@ -45,7 +45,7 @@ class MenuState extends FlxState
 		
 		// create a fancy progress bar
 		_bar = new FlxBar(0, 0, LEFT_TO_RIGHT, FlxG.width - 50, 50, null, "", 0, 100, true);
-		_bar.currentValue = 0;
+		_bar.value = 0;
 		FlxSpriteUtil.screenCenter(_bar);
 		_grpProgress.add(_bar);
 		
@@ -76,7 +76,7 @@ class MenuState extends FlxState
 		_grpFinished.add(sprite);
 		
 		// then we update our progress bar and progress bar text
-		_bar.currentValue = (_grpFinished.members.length / _maxItems) * 100;
+		_bar.value = (_grpFinished.members.length / _maxItems) * 100;
 		_barText.text = "Loading... " + _grpFinished.members.length + " / " + _maxItems;
 		FlxSpriteUtil.screenCenter(_barText);
 	}
