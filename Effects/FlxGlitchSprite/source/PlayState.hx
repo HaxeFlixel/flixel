@@ -4,6 +4,7 @@ import flixel.addons.effects.FlxGlitchSprite;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
+import flixel.graphics.FlxGraphic;
 import flixel.text.FlxText;
 import flixel.math.FlxMath;
 import flixel.system.FlxAssets;
@@ -36,7 +37,7 @@ class PlayState extends FlxState
 	{
 		FlxG.mouse.visible = false;
 		
-		var target:FlxSprite = new FlxSprite(0, 0, GraphicLogo);
+		var target:FlxSprite = new FlxSprite(0, 0, FlxGraphic.fromClass(GraphicLogo));
 		target.screenCenter();
 		target.y += 10;
 		
