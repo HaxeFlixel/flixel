@@ -79,9 +79,15 @@ class FilterFrames extends FlxFramesCollection
 	 * 
 	 * @param	spr					sprite to apply this frame collection.
 	 * @param	saveAnimations		whether to save sprite's animations or not.
+	 * @param	updateFrames		whether to regenerate frame bitmapdatas or not.
 	 */
-	public function applyToSprite(spr:FlxSprite, saveAnimations:Bool = false):Void
+	public function applyToSprite(spr:FlxSprite, saveAnimations:Bool = false, updateFrames:Bool = false):Void
 	{
+		if (updateFrames)
+		{
+			set_filters(filters);
+		}
+		
 		var w:Float = spr.width;
 		var h:Float = spr.height;
 		spr.setFrames(this, saveAnimations);
