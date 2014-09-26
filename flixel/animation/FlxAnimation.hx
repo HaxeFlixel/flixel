@@ -172,7 +172,11 @@ class FlxAnimation extends FlxBaseAnimation
 					{
 						curFrame = (reverse) ? (curFrame - 1) : (curFrame + 1);
 					}
-				}	
+				}
+				else
+				{
+					curFrame = (reverse) ? (curFrame - 1) : (curFrame + 1);
+				}
 			}
 		}
 	}
