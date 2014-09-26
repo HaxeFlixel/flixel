@@ -602,6 +602,12 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		y = Y;
 	}
 	
+	public inline function setSize(Width:Float, Height:Float):Void
+	{
+		width = Width;
+		height = Height;
+	}
+	
 	private inline function get_solid():Bool
 	{
 		return (allowCollisions & FlxObject.ANY) > FlxObject.NONE;
