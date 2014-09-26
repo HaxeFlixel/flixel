@@ -79,7 +79,9 @@ class CachedGraphics
 		#if (FLX_RENDER_TILE && !flash)
 		if (canBeDumped)
 		{
+			#if ((openfl < "3") && !openfl_next)
 			bitmap.dumpBits();
+			#end
 			isDumped = true;
 		}
 		#end
