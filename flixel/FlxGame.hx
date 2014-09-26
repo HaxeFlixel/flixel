@@ -368,6 +368,7 @@ class FlxGame extends Sprite
 		
 		_lostFocus = false;
 		FlxG.signals.focusGained.dispatch();
+		_state.onFocus();
 		
 		if (!FlxG.autoPause) 
 		{
@@ -403,6 +404,7 @@ class FlxGame extends Sprite
 		
 		_lostFocus = true;
 		FlxG.signals.focusLost.dispatch();
+		_state.onFocusLost();
 		
 		if (!FlxG.autoPause) 
 		{
