@@ -585,14 +585,17 @@ class FlxBitmapTextField extends FlxSprite
 	 */
 	public function getStringWidth(str:String):Float
 	{
-		var spaceWidth:Float = font.spaceWidth * size;
-		var tabWidth:Float = spaceWidth * numSpacesInTab;
+		var spaceWidth:Float = Math.ceil(font.spaceWidth * size);
+		var tabWidth:Float = Math.ceil(spaceWidth * numSpacesInTab);
 		
 		var lineLength:Int = str.length;	// lenght of the current line
-		var lineWidth:Float = Math.abs(font.minOffsetX) * size;
+		var lineWidth:Float = Math.ceil(Math.abs(font.minOffsetX) * size);
 		
 		var char:String; 					// current character in word
 		var charWidth:Float = 0;			// the width of current character
+		
+		var widthPlusOffset:Int = 0;
+		var glyphFrame:GlyphFrame;
 		
 		for (c in 0...lineLength)
 		{
@@ -608,7 +611,24 @@ class FlxBitmapTextField extends FlxSprite
 			}
 			else
 			{
-				charWidth = (font.glyphs.exists(char)) ? font.glyphs.get(char).xAdvance * size : 0;
+				if (font.glyphs.exists(char))
+				{
+					glyphFrame = font.glyphs.get(char);
+					charWidth = Math.ceil(glyphFrame.xAdvance * size);
+					
+					if (c == (lineLength - 1))
+					{
+						widthPlusOffset = Math.ceil((glyphFrame.offset.x + glyphFrame.frame.width) * size);
+						if (widthPlusOffset > charWidth)
+						{
+							charWidth = widthPlusOffset;
+						}
+					}
+				}
+				else
+				{
+					charWidth = 0;
+				}
 			}
 			
 			lineWidth += (charWidth + letterSpacing);
