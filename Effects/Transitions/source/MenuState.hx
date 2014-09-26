@@ -16,7 +16,6 @@ import flixel.FlxG;
 import flixel.graphics.FlxGraphic;
 import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
-import flixel.system.FlxAssets.FlxGraphicAsset;
 
 /**
  * A FlxState which can be used for the game's menu.
@@ -48,8 +47,13 @@ class MenuState extends FlxUIState
 			//FlxTransitionableStates will use those values if their own transIn/transOut states are null
 			FlxTransitionableState.defaultTransIn = new TransitionData();
 			FlxTransitionableState.defaultTransOut = new TransitionData();
-			FlxTransitionableState.defaultTransIn.tileData = { asset:FlxGraphic.fromClass(GraphicTransTileDiamond), width:32, height:32 };
-			FlxTransitionableState.defaultTransOut.tileData = { asset:FlxGraphic.fromClass(GraphicTransTileDiamond), width:32, height:32 };
+			
+			var diamond:FlxGraphic = FlxGraphic.fromClass(GraphicTransTileDiamond);
+			diamond.persist = true;
+			diamond.destroyOnNoUse = false;
+			
+			FlxTransitionableState.defaultTransIn.tileData = { asset:diamond, width:32, height:32 };
+			FlxTransitionableState.defaultTransOut.tileData = { asset:diamond, width:32, height:32 };
 			
 			//Of course, this state has already been constructed, so we need to set a transOut value for it right now:
 			transOut = FlxTransitionableState.defaultTransOut;
@@ -148,6 +152,7 @@ class MenuState extends FlxUIState
 		{
 			out_tile_text.visible = out_tile.visible = false;
 		}
+		
 		out_color.selectedId = switch(FlxTransitionableState.defaultTransOut.color)
 		{
 			case FlxColor.RED: "red";
@@ -157,8 +162,8 @@ class MenuState extends FlxUIState
 			case FlxColor.GREEN: "green";
 			case _: "black";
 		}
-		out_dir.selectedId = getDirection(cast FlxTransitionableState.defaultTransOut.direction.x, cast FlxTransitionableState.defaultTransOut.direction.y);
 		
+		out_dir.selectedId = getDirection(cast FlxTransitionableState.defaultTransOut.direction.x, cast FlxTransitionableState.defaultTransOut.direction.y);
 	}
 	
 	private function getDefaultAssetStr(c:FlxGraphic):String
@@ -173,12 +178,17 @@ class MenuState extends FlxUIState
 	
 	private function getDefaultAsset(str):FlxGraphic
 	{
-		return switch(str)
+		var graphicClass:Class<Dynamic> = switch(str)
 		{
-			case "circle": FlxGraphic.fromClass(GraphicTransTileCircle);
-			case "square": FlxGraphic.fromClass(GraphicTransTileSquare);
-			case "diamond", _: FlxGraphic.fromClass(GraphicTransTileDiamond);
+			case "circle": GraphicTransTileCircle;
+			case "square": GraphicTransTileSquare;
+			case "diamond", _: GraphicTransTileDiamond;
 		}
+		
+		var graphic:FlxGraphic = FlxGraphic.fromClass(cast graphicClass);
+		graphic.persist = true;
+		graphic.destroyOnNoUse = false;
+		return graphic;
 	}
 	
 	private function getDirection(ix:Int, iy:Int):String
