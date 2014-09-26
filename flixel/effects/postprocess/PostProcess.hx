@@ -179,6 +179,7 @@ class PostProcess extends OpenGLView
 	/**
 	 * Renders to a framebuffer or the screen every frame
 	 */
+	#if ((openfl < "3") && !openfl_next)	
 	override public function render(rect:Rectangle)
 	{
 		GL.bindFramebuffer(GL.FRAMEBUFFER, renderTo);
@@ -225,6 +226,7 @@ class PostProcess extends OpenGLView
 			trace("INVALID_FRAMEBUFFER_OPERATION!!");
 		}
 	}
+	#end
 
 	private var framebuffer:GLFramebuffer;
 	private var renderbuffer:GLRenderbuffer;
