@@ -68,13 +68,14 @@ class PlayState extends FlxState
 		
 		// This is the thing that spews nuts and bolts
 		var dispenser:FlxEmitter = new FlxEmitter(32, 40);
-		dispenser.width = 8;
-		dispenser.height = 40;
+		dispenser.setSize(8, 40);
 		dispenser.velocity.set(100, -50, 240, 50);
-		dispenser.acceleration.set(0, 300);
+		dispenser.acceleration.set(300);
 		dispenser.elasticity.set(0.3);
 		dispenser.loadParticles("assets/gibs.png", 100, 16, true);
-		dispenser.start(false, 0.035, 10);
+		dispenser.solid = true;
+		dispenser.lifespan.set(10);
+		dispenser.start(false, 0.035, 0);
 		add(dispenser);
 		
 		// Basic level structure
@@ -100,13 +101,13 @@ class PlayState extends FlxState
 	
 	override public function update(elapsed:Float):Void
 	{
-		super.update(elapsed);
-		
 		FlxG.collide();
 		
 		if (FlxG.keys.justReleased.ENTER)
 		{
 			FlxG.switchState(new PlayState2());
 		}
+		
+		super.update(elapsed);
 	}
 }
