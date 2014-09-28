@@ -214,6 +214,7 @@ class FlxImage extends FlxObject
 		scale = FlxPoint.get(1, 1);
 		_halfSize = FlxPoint.get();
 		_matrix = new FlxMatrix();
+		colorTransform = new ColorTransform(1, 1, 1, 1, 0, 0, 0, 0);
 	}
 	
 	/**
@@ -672,21 +673,14 @@ class FlxImage extends FlxObject
 		color = FlxColor.fromRGBFloat(redMultiplier, greenMultiplier, blueMultiplier).to24Bit();
 		alpha = alphaMultiplier;
 		
-		if (colorTransform == null)
-		{
-			colorTransform = new ColorTransform();
-		}
-		else
-		{
-			colorTransform.redMultiplier = redMultiplier;
-			colorTransform.greenMultiplier = greenMultiplier;
-			colorTransform.blueMultiplier = blueMultiplier;
-			colorTransform.alphaMultiplier = alphaMultiplier;
-			colorTransform.redOffset = redOffset;
-			colorTransform.greenOffset = greenOffset;
-			colorTransform.blueOffset = blueOffset;
-			colorTransform.alphaOffset = alphaOffset;
-		}
+		colorTransform.redMultiplier = redMultiplier;
+		colorTransform.greenMultiplier = greenMultiplier;
+		colorTransform.blueMultiplier = blueMultiplier;
+		colorTransform.alphaMultiplier = alphaMultiplier;
+		colorTransform.redOffset = redOffset;
+		colorTransform.greenOffset = greenOffset;
+		colorTransform.blueOffset = blueOffset;
+		colorTransform.alphaOffset = alphaOffset;
 		
 		useColorTransform = ((alpha != 1) || (color != 0xffffff) || (redOffset != 0) || (greenOffset != 0) || (blueOffset != 0) || (alphaOffset != 0));
 		dirty = true;
@@ -696,31 +690,20 @@ class FlxImage extends FlxObject
 	{
 		if ((alpha != 1) || (color != 0xffffff))
 		{
-			if (colorTransform == null)
-			{
-				colorTransform = new ColorTransform(color.redFloat, color.greenFloat, color.blueFloat, alpha);
-			}
-			else
-			{
-				colorTransform.redMultiplier = color.redFloat;
-				colorTransform.greenMultiplier = color.greenFloat;
-				colorTransform.blueMultiplier = color.blueFloat;
-				colorTransform.alphaMultiplier = alpha;
-			}
+			colorTransform.redMultiplier = color.redFloat;
+			colorTransform.greenMultiplier = color.greenFloat;
+			colorTransform.blueMultiplier = color.blueFloat;
 			useColorTransform = true;
 		}
 		else
 		{
-			if (colorTransform != null)
-			{
-				colorTransform.redMultiplier = 1;
-				colorTransform.greenMultiplier = 1;
-				colorTransform.blueMultiplier = 1;
-				colorTransform.alphaMultiplier = 1;
-			}
-			
+			colorTransform.redMultiplier = 1;
+			colorTransform.greenMultiplier = 1;
+			colorTransform.blueMultiplier = 1;
+			colorTransform.alphaMultiplier = 1;
 			useColorTransform = false;
 		}
+		colorTransform.alphaMultiplier = alpha;
 		dirty = true;
 	}
 	
