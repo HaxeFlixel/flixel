@@ -529,7 +529,7 @@ class FlxMath
 	/**
 	* Hyperbolic sine.
 	*/
-	public static inline function sinH(f:Float):Float
+	public static inline function sinh(f:Float):Float
 	{
 		return (Math.exp(f) - Math.exp(-f)) / 2;
 	}
