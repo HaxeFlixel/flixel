@@ -532,6 +532,6 @@ class FlxMath
 	public static inline function sinH(f:Float):Float
 	{
 		return (Math.exp(f) - Math.exp(-f)) / 2;
-	};
+	}
 	
 }
