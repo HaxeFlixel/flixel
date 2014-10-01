@@ -525,4 +525,13 @@ class FlxMath
 	{
 		return signOf(f1) == signOf(f2);
 	}
+	
+	/**
+	* Hyperbolic sine.
+	*/
+	public static inline function sinh(f:Float):Float
+	{
+		return (Math.exp(f) - Math.exp(-f)) / 2;
+	}
+	
 }
