@@ -97,29 +97,6 @@ class FlxAssets
 			}
 		}
 		
-		// any duplicate names?
-		if (subDirectories)
-		{
-			var toBeCheckd = fileReferences.copy();
-			
-			for (fileReference in toBeCheckd)
-			{
-				var duplicates = fileReferences.filter(function(ref)
-				{
-					return ref.name == fileReference.name;
-				});
-				
-				if (duplicates != null && duplicates.length > 1)
-				{
-					for (i in 0...duplicates.length)
-					{
-						duplicates[i].name += "_" + (i + 1); 
-						toBeCheckd.remove(duplicates[i]);
-					}
-				}
-			}
-		}
-		
 		return fileReferences;
 	}
 #else
