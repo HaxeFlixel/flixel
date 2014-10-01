@@ -19,6 +19,7 @@
  * `bound()` and `inBounds()` now accept `null` as values, meaning "unbounded in that direction"
  * `wrapValue()` now supports negative values
  * changed `MIN_VALUE` and `MAX_VALUE` to `MIN_VALUE_FLOAT` and `MAX_VALUE_FLOAT`, added `MAX_VALUE_INT`
+ * added `sinh()`
 * `FlxTypedSpriteGroup`: added `iterator()`
 * `FlxTimer`, `FlxTween`, `FlxPath`: `active` is now only true when they are active
 * `FlxAnimationController`:
@@ -50,6 +51,7 @@
 * `FlxAssets`:
  * `cacheSounds()` -> `FlxG.sound.cacheAll()`
  * `getFileReferences()` now ignores invisible files
+ * fixed some iOS issues
 * `FlxMouse` and `FlxTouch` now extend a new common base class `FlxPointer` instead of `FlxPoint`
  * adds `overlaps()` to `FlxMouse` 
 * `FlxTilemap`:
@@ -57,6 +59,8 @@
  * added `getTileIndexByCoords()` and `getTileCoordsByIndex()`
  * fixed a bug in `overlapsAt()`
  * `loadMap()` now treats tile indices with negative values in the map data as 0
+ * added `blend`, `alpha` and `color`
+* `FlxTileblock`: added `setTile()` and `tileSprite`
 * `Console`:
  * the `set` command now supports arrays
  * the `fields` command now has type info for the fields
@@ -166,6 +170,8 @@
 * The signature of `update()` was changed to `update(elapsed:Float)`. The `elapsed` argument should be used instead of `FlxG.elapsed`.
 * `FlxG.inputs`: added `resetOnStateSwitch`
 * Added support for post-processing shaders on native targets via `FlxG.addPostProcess()` / `removePostProcess()` and `flixel.effects.postprocess`
+* `FlxG.android`: `preventDefaultBackAction` has been replaced by `preventDefaultKeys`
+* `FlxState`: `onFocus()` and `onFocusLost()` no longer require `FlxG.autoPause` to be false 
 
 3.3.5
 ------------------------------
