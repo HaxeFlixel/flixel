@@ -5,6 +5,7 @@ import flash.geom.Rectangle;
 import flash.ui.Keyboard;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.graphics.FlxGraphic;
 import flixel.group.FlxSpriteGroup;
 import flixel.input.touch.FlxTouch;
 import flixel.math.FlxAngle;
@@ -131,7 +132,7 @@ class FlxAnalog extends FlxSpriteGroup
 	private function createBase():Void
 	{
 		base = new FlxSprite(x, y);
-		base.loadGraphic(GraphicBase);
+		base.loadGraphic(FlxGraphic.fromClass(GraphicBase));
 		base.x += -base.width * 0.5;
 		base.y += -base.height * 0.5;
 		base.scrollFactor.set();
@@ -151,7 +152,7 @@ class FlxAnalog extends FlxSpriteGroup
 	private function createThumb():Void 
 	{
 		thumb = new FlxSprite(x, y);
-		thumb.loadGraphic(GraphicThumb);
+		thumb.loadGraphic(FlxGraphic.fromClass(GraphicThumb));
 		thumb.scrollFactor.set();
 		thumb.solid = false;
 		
