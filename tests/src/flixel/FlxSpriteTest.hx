@@ -47,33 +47,6 @@ class FlxSpriteTest extends FlxTest
 		Assert.isTrue(sprite2.alive);
 		Assert.isTrue(sprite2.exists);
 	}
-	
-	@Test
-	function testAddToState():Void 
-	{
-		FlxG.state.add(sprite1);
-		FlxG.state.add(sprite2);
-		
-		var sprite1Index:Int = FlxG.state.members.indexOf(sprite1);
-		Assert.areNotEqual(-1, sprite1Index);
-		
-		var sprite2Index:Int = FlxG.state.members.indexOf(sprite2);
-		Assert.areNotEqual(-1, sprite2Index);
-	}
-
-	@Test
-	function testRemoveFromState():Void 
-	{
-		FlxG.state.remove(sprite1);
-		
-		var sprite1Index:Int = FlxG.state.members.indexOf(sprite1);
-		Assert.areEqual(-1, sprite1Index);
-		
-		FlxG.state.add(sprite1);
-		
-		var sprite1Index:Int = FlxG.state.members.indexOf(sprite1);
-		Assert.areNotEqual(-1, sprite1Index);
-	}
 
 	@Test
 	function testMakeGraphicColor():Void
@@ -144,57 +117,6 @@ class FlxSpriteTest extends FlxTest
 		
 		Assert.areEqual(233, sizeSprite.width);
 		Assert.areEqual(333, sizeSprite.height);
-	}
-	
-	@Test
-	function testXAfterAddingToState():Void
-	{
-		var xSprite = new FlxSprite(33, 445);
-		FlxG.state.add(xSprite);
-		
-		Assert.areEqual(xSprite.x, 33);
-	}
-	
-	@Test
-	function testYAfterAddingToState():Void
-	{
-		var ySprite = new FlxSprite(433, 444);
-		FlxG.state.add(ySprite);
-		
-		Assert.areEqual(ySprite.y, 444);
-	}
-	
-	@Test
-	function testSetPositionAfterAddingToState()
-	{
-		var positionSprite = new FlxSprite(433,444);
-		FlxG.state.add(positionSprite);
-		
-		positionSprite.setPosition(333, 332);
-		
-		Assert.areEqual(positionSprite.x, 333);
-		Assert.areEqual(positionSprite.y, 332);
-		
-		positionSprite.setPosition(453, 545);
-		
-		Assert.areEqual(positionSprite.x, 453);
-		Assert.areEqual(positionSprite.y, 545);
-	}
-	
-	@Test
-	function testOverlap():Void
-	{
-		Assert.isTrue(FlxG.overlap(sprite1, sprite2));
-		
-		//Move the sprites away from eachother
-		sprite1.velocity.x = 2000;
-		sprite2.velocity.x = -2000;
-		
-		FlxG.state.add(sprite1);
-		FlxG.state.add(sprite2);
-		
-		step(60);
-		Assert.isFalse(FlxG.overlap(sprite1, sprite2)); 
 	}
 	
 	@Test

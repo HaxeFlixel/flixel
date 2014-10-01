@@ -70,13 +70,13 @@ class FlxTileblock extends FlxSprite
 		// Then prep the "canvas" as it were (just doublechecking that the size is on tile boundaries)
 		var regen:Bool = false;
 		
-		if (width % spriteWidth != 0)
+		if (width % tileSprite.width != 0)
 		{
 			width = Std.int((width / spriteWidth + 1)) * spriteWidth;
 			regen = true;
 		}
 		
-		if (height % spriteHeight != 0)
+		if (height % tileSprite.height != 0)
 		{
 			height = Std.int((height / spriteHeight + 1)) * spriteHeight;
 			regen = true;

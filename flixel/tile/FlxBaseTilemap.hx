@@ -28,7 +28,6 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * Read-only variable, do NOT recommend changing after the map is loaded!
 	 */
 	public var totalTiles:Int = 0;
-	
 	/**
 	 * Set this to create your own image index remapper, so you can create your own tile layouts.
 	 * Mostly useful in combination with the auto-tilers.
@@ -87,7 +86,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		throw "updateTile must be implemented";
 	}
 	
-	private function cacheGraphics(TileWidth:Int, TileHeight:Int, TileGraphic:FlxGraphicAsset):Void
+	private function cacheGraphics(TileWidth:Int, TileHeight:Int, TileGraphic:Dynamic):Void
 	{
 		throw "cacheGraphics must be implemented";
 	}
@@ -288,18 +287,21 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		// Pre-process the map data if it's auto-tiled
 		if (auto != OFF)
 		{
-			for (i in 0...totalTiles)
+			var i:Int = 0;
+			while (i < totalTiles)
 			{
-				autoTile(i);
+				autoTile(i++);
 			}
 		}
 	}
 	
 	private function applyCustomRemap():Void
 	{
+		var i:Int = 0;
+
 		if (customTileRemap != null) 
 		{
-			for (i in 0...totalTiles) 
+			while (i < totalTiles) 
 			{
 				var oldIndex = _data[i];
 				var newIndex = oldIndex;
@@ -308,19 +310,22 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 					newIndex = customTileRemap[oldIndex];
 				}
 				_data[i] = newIndex;
+				i++;
 			}
 		}
 	}
 	
 	private function randomizeIndices():Void
 	{
+		var i:Int = 0;
+
 		if (_randomIndices != null)
 		{
 			var randLambda:Void->Float = _randomLambda != null ? _randomLambda : function() {
 				return FlxG.random.float();
 			};
 			
-			for (i in 0...totalTiles)
+			while (i < totalTiles)
 			{
 				var oldIndex = _data[i];
 				var j = 0;
@@ -335,6 +340,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 					j++;
 				}
 				_data[i] = newIndex;
+				i++;
 			}
 		}
 	}
@@ -364,7 +370,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 			_data[Index] += 2;
 		}
 		// DOWN
-		if ((Index+widthInTiles >= totalTiles) || (_data[Index+widthInTiles] > 0)) 
+		if ((Std.int(Index+widthInTiles) >= totalTiles) || (_data[Index+widthInTiles] > 0)) 
 		{
 			_data[Index] += 4;
 		}
@@ -378,7 +384,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		if ((auto == ALT) && (_data[Index] == 15))
 		{
 			// BOTTOM LEFT OPEN
-			if ((Index % widthInTiles > 0) && (Index+widthInTiles < totalTiles) && (_data[Index+widthInTiles-1] <= 0))
+			if ((Index % widthInTiles > 0) && (Std.int(Index+widthInTiles) < totalTiles) && (_data[Index+widthInTiles-1] <= 0))
 			{
 				_data[Index] = 1;
 			}
@@ -393,21 +399,13 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 				_data[Index] = 4;
 			}
 			// BOTTOM RIGHT OPEN
-			if ((Index % widthInTiles < widthInTiles - 1) && (Index + widthInTiles < totalTiles) && (_data[Index + widthInTiles + 1] <= 0))
+			if ((Index % widthInTiles < widthInTiles - 1) && (Std.int(Index + widthInTiles) < totalTiles) && (_data[Index + widthInTiles + 1] <= 0))
 			{
 				_data[Index] = 8;
 			}
 		}
 		
 		_data[Index] += 1;
-	}
-	
-	/**
-	 * Just calculates index of a tile with specified column and row
-	 */
-	public inline function getTileIndex(Column:Int, Row:Int):Int
-	{
-		return Row * widthInTiles + Column;
 	}
 
 	/**
@@ -436,13 +434,13 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	/**
 	 * Check the value of a particular tile.
 	 * 
-	 * @param	Column		The X coordinate of the tile (in tiles, not pixels).
-	 * @param	Row			The Y coordinate of the tile (in tiles, not pixels).
+	 * @param	X		The X coordinate of the tile (in tiles, not pixels).
+	 * @param	Y		The Y coordinate of the tile (in tiles, not pixels).
 	 * @return	An integer containing the value of the tile at this spot in the array.
 	 */
-	public function getTile(Column:Int, Row:Int):Int
+	public function getTile(X:Int, Y:Int):Int
 	{
-		return _data[getTileIndex(Column, Row)];
+		return _data[Y * widthInTiles + X];
 	}
 
 	/**
@@ -476,9 +474,10 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	public function getTileInstances(Index:Int):Array<Int>
 	{
 		var array:Array<Int> = null;
+		var i:Int = 0;
 		var l:Int = widthInTiles * heightInTiles;
 		
-		for (i in 0...l)
+		while (i < l)
 		{
 			if (_data[i] == Index)
 			{
@@ -488,6 +487,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 				}
 				array.push(i);
 			}
+			i++;
 		}
 		
 		return array;
@@ -509,39 +509,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 			return false;
 		}
 		
-		return setTileByIndex(getTileIndex(X, Y), Tile, UpdateGraphics);
-	}
-	
-	/**
-	 * Sets a rectangular region of tiles to the index.
-	 * @param	Column		First tile column.
-	 * @param	Row			First tile row.
-	 * @param	Width		Width in tiles.
-	 * @param	Height		Height in tiles.
-	 * @param	Index		Tile index.
-	 * @param	UpdateGraphics	Whether the graphical representation of this tile should change.
-	 */
-	public function setRect(Column:Int, Row:Int, Width:Int = 1, Height:Int = 1, Index:Int = 0, UpdateGraphics:Bool = true):Void
-	{
-		var endX:Int = Width - Column;
-		var endY:Int = Height - Row;
-		
-		endX = (endX > widthInTiles) ? widthInTiles : endX;
-		endY = (endY > heightInTiles) ? heightInTiles : endY;
-		
-		Width = endX - Column;
-		Height = endY - Row;
-		
-		if (Width <= 0 || Height <= 0)
-			return;
-		
-		for (i in Column...Width)
-		{
-			for (j in Row...Height)
-			{
-				setTile(Column, Row, Index, UpdateGraphics);
-			}
-		}
+		return setTileByIndex(Y * widthInTiles + X, Tile, UpdateGraphics);
 	}
 
 	/**
@@ -590,7 +558,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 			{
 				if ((row >= 0) && (row < heightInTiles) && (column >= 0) && (column < widthInTiles))
 				{
-					i = getTileIndex(column, row);
+					i = row * widthInTiles + column;
 					autoTile(i);
 					updateTile(i);
 				}
@@ -620,17 +588,18 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		}
 		
 		var tile:Tile;
+		var i:Int = Tile;
 		var l:Int = Tile + Range;
 		
 		var maxIndex = _tileObjects.length;
-		if (l > maxIndex)
+		if (l > maxIndex) 
 		{
 			throw 'Index $l exceeds the maximum tile index of $maxIndex. Please verfiy the Tile ($Tile) and Range ($Range) parameters.';
 		}
 		
-		for (i in Tile...l)
+		while (i < l)
 		{
-			tile = _tileObjects[i];
+			tile = _tileObjects[i++];
 			tile.allowCollisions = AllowCollisions;
 			(cast tile).callbackFunction = Callback;
 			(cast tile).filter = CallbackFilter;
@@ -651,13 +620,15 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 			return _data;
 		}
 		
+		var i:Int = 0;
 		var l:Int = _data.length;
 		var data:Array<Int> = new Array();
 		FlxArrayUtil.setLength(data, l);
 		
-		for (i in 0...l)
+		while (i < l)
 		{
 			data[i] = (_tileObjects[_data[i]].allowCollisions > 0) ? 1 : 0;
+			i++;
 		}
 		
 		return data;
@@ -747,7 +718,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		// Create a distance-based representation of the tilemap.
 		// All walls are flagged as -2, all open areas as -1.
 		var mapSize:Int = widthInTiles * heightInTiles;
-		var distances:Array<Int> = new Array<Int>();
+		var distances:Array<Int> = new Array<Int>(/*mapSize*/);
 		FlxArrayUtil.setLength(distances, mapSize);
 		var i:Int = 0;
 		
@@ -787,7 +758,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 			{
 				currentIndex = current[i++];
 				
-				if (currentIndex == EndIndex)
+				if (currentIndex == Std.int(EndIndex))
 				{
 					foundEnd = true;
 					if (StopOnEnd)
@@ -1029,9 +1000,10 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		var deltaNext:Float;
 		var last:FlxPoint = Points[0];
 		var node:FlxPoint;
+		var i:Int = 1;
 		var l:Int = Points.length - 1;
 		
-		for (i in 1...l)
+		while (i < l)
 		{
 			node = Points[i];
 			deltaPrevious = (node.x - last.x)/(node.y - last.y);
@@ -1045,6 +1017,8 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 			{
 				last = node;
 			}
+			
+			i++;
 		}
 	}
 

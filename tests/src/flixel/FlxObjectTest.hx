@@ -1,0 +1,121 @@
+package flixel;
+
+import flixel.FlxObject;
+import flixel.math.FlxPoint;
+import flixel.tile.FlxTilemap;
+import massive.munit.Assert;
+
+class FlxObjectTest extends FlxTest
+{
+	var object1:FlxObject;
+	var object2:FlxObject;
+	var tilemap:FlxTilemap;
+	
+	@Before
+	function before()
+	{
+		object1 = new FlxObject();
+		object2 = new FlxObject();
+		tilemap = new FlxTilemap();
+	}
+	
+		@Test
+	function testXAfterAddingToState():Void
+	{
+		var object = new FlxObject(33, 445);
+		FlxG.state.add(object);
+		
+		Assert.areEqual(object.x, 33);
+	}
+	
+	@Test
+	function testYAfterAddingToState():Void
+	{
+		var object = new FlxSprite(433, 444);
+		FlxG.state.add(object);
+		
+		Assert.areEqual(object.y, 444);
+	}
+	
+	@Test
+	function testSetPositionAfterAddingToState()
+	{
+		var object = new FlxSprite(433, 444);
+		FlxG.state.add(object);
+		
+		object.setPosition(333, 332);
+		
+		Assert.areEqual(object.x, 333);
+		Assert.areEqual(object.y, 332);
+		
+		object.setPosition(453, 545);
+		
+		Assert.areEqual(object.x, 453);
+		Assert.areEqual(object.y, 545);
+	}
+	
+	@Test
+	function testOverlap():Void
+	{
+		var object1 = new FlxObject(0, 0, 10, 10);
+		var object2 = new FlxObject(0, 0, 10, 10);
+		FlxG.state.add(object1);
+		FlxG.state.add(object2);
+		step();
+		
+		Assert.isTrue(FlxG.overlap(object1, object2));
+		
+		//Move the objects away from eachother
+		object1.velocity.x = 2000;
+		object2.velocity.x = -2000;
+		
+		step(60);
+		Assert.isFalse(FlxG.overlap(object1, object2)); 
+	}
+	
+	@Test
+	function testVelocityCollidingWithObject()
+	{
+		object2.setSize(100, 10);
+		velocityColldingWith(object2);
+	}
+	
+	@Test
+	function testVelocityCollidingWithTilemap()
+	{
+		tilemap.loadMap("1, 1, 1, 1, 1, 1, 1", GraphicAuto);
+		velocityColldingWith(tilemap);
+	}
+	
+	function velocityColldingWith(ground:FlxObject)
+	{
+		FlxG.switchState(new CollisionState());
+		
+		ground.setPosition(0, 10);
+		object1.setSize(10, 10);
+		object1.x = 50;
+		
+		step();
+		
+		FlxG.state.add(object1);
+		FlxG.state.add(ground);
+		
+		object1.velocity.set(100, 0);
+		
+		var lastPos = object1.toPoint();
+		step(60, function()
+		{
+			Assert.isTrue(lastPos.x < object1.x);
+			Assert.isTrue(lastPos.y == object1.y);
+		});
+	}
+}
+
+class CollisionState extends FlxState
+{
+	override public function update(elapsed:Float)
+	{
+		super.update(elapsed);
+		FlxG.collide(); // collide everything
+	}
+}

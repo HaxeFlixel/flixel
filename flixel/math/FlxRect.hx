@@ -242,6 +242,18 @@ class FlxRect implements IFlxPooled
 	}
 	
 	/**
+	 * Function to compare this rectangle to another.
+	 * 
+	 * @param   rect  The other rectangle to compare to this one.
+	 * @return  Whether the rectangles are the same.
+	 */
+	public inline function equals(rect:FlxRect):Bool
+	{
+		return FlxMath.equal(x, rect.x) && FlxMath.equal(y, rect.y)
+			&& FlxMath.equal(width, rect.width) && FlxMath.equal(height, rect.height);
+	}
+	
+	/**
 	 * Rounds x, y, width and height using Math.floor()
 	 */
 	public inline function floor():FlxRect

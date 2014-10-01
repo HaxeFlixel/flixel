@@ -400,9 +400,9 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		}
 	}
 	
-	private function updateLabelAlpha():Void
+	private function updateLabelAlpha()
 	{
-		if (label != null && labelAlphas.length > status)
+		if (label != null && labelAlphas.length > status) 
 		{
 			label.alpha = alpha * labelAlphas[status];
 		}
