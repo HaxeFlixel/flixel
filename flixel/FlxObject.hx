@@ -757,12 +757,12 @@ class FlxObject extends FlxBasic
 	 */
 	public function reset(X:Float, Y:Float):Void
 	{
-		revive();
 		touching = NONE;
 		wasTouching = NONE;
 		setPosition(X, Y);
 		last.set(x, y);
 		velocity.set();
+		revive();
 	}
 	
 	/**
