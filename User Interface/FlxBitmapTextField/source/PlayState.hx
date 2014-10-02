@@ -24,7 +24,7 @@ class PlayState extends FlxState
 		
 		var textBytes = Assets.getText("assets/NavTitle.fnt");
 		var XMLData = Xml.parse(textBytes);
-		var font2:BitmapFont = FlxBitmapFont.fromAngelCode(Assets.getBitmapData("assets/NavTitle.png"), XMLData);
+		var font2:FlxBitmapFont = FlxBitmapFont.fromAngelCode(Assets.getBitmapData("assets/NavTitle.png"), XMLData);
 		
 		tf = new FlxBitmapTextField(font);
 		tf.text = "Hello World!\nand this is\nmultiline!!!";
