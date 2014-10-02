@@ -42,6 +42,18 @@ class FlxPathTest extends FlxTest
 		Assert.isFalse(object.immovable);
 	}
 	
+	@Test
+	function testCancelNoCallback()
+	{
+		startPath();
+		path.onComplete = function (_)
+		{
+			Assert.fail("Callback called");
+		};
+		path.cancel();
+		step();
+	}
+	
 	function finishPath()
 	{
 		while (!path.finished)
