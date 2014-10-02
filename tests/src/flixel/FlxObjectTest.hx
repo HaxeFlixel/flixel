@@ -109,6 +109,16 @@ class FlxObjectTest extends FlxTest
 			Assert.isTrue(lastPos.y == object1.y);
 		});
 	}
+	
+	@Test // #1313
+	function testSetVariablesInReviveOverride()
+	{
+		object1 = new OverridenReviveObject();
+		object1.reset(0, 0);
+		
+		Assert.isTrue(FlxPoint.get(10, 10).equals(object1.toPoint()));
+		Assert.isTrue(FlxPoint.get(10, 10).equals(object1.velocity));
+	}
 }
 
 class CollisionState extends FlxState
@@ -117,5 +127,15 @@ class CollisionState extends FlxState
 	{
 		super.update(elapsed);
 		FlxG.collide(); // collide everything
+	}
+}
+
+class OverridenReviveObject extends FlxObject
+{
+	override public function revive()
+	{
+		super.revive();
+		velocity.set(10, 10);
+		setPosition(10, 10);
 	}
 }
