@@ -464,13 +464,13 @@ class FlxAnimationController implements IFlxDestroyable
 	 * Plays an existing _animations (e.g. "run").
 	 * If you call an _animations that is already playing it will be ignored.
 	 * 
-	 * @param	AnimName	The string name of the _animations you want to play.
-	 * @param	Force		Whether to force the _animations to restart.
-	 * @param	Reverse		Whether to play animation backwards or not.
-	 * @param	Frame		The frame number in _animations you want to start from (0 by default).
-	 *                     	If you pass negative value then it will start from random frame
+	 * @param	AnimName		The string name of the _animations you want to play.
+	 * @param	Force			Whether to force the _animations to restart.
+	 * @param	Reversed		Whether to play animation backwards or not.
+	 * @param	Frame			The frame number in _animations you want to start from (0 by default).
+	 *                     		If you pass negative value then it will start from random frame
 	 */
-	public function play(AnimName:String, Force:Bool = false, Reverse:Bool = false, Frame:Int = 0):Void
+	public function play(AnimName:String, Force:Bool = false, Reversed:Bool = false, Frame:Int = 0):Void
 	{
 		if (AnimName == null)
 		{
@@ -492,7 +492,7 @@ class FlxAnimationController implements IFlxDestroyable
 			_curAnim.stop();
 		}
 		_curAnim = _animations.get(AnimName);
-		_curAnim.play(Force, Reverse, Frame);
+		_curAnim.play(Force, Reversed, Frame);
 	}
 	
 	/**

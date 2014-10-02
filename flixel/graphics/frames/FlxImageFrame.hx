@@ -2,9 +2,9 @@ package flixel.graphics.frames;
 
 import flash.geom.Point;
 import flash.geom.Rectangle;
+import flixel.graphics.frames.FlxFramesCollection.FlxFrameCollectionType;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxGraphicAsset;
-import flixel.system.layer.TileSheetExt;
 import flixel.util.FlxDestroyUtil;
 import flixel.math.FlxPoint;
 import flixel.graphics.FlxGraphic;
@@ -13,7 +13,7 @@ import flixel.graphics.FlxGraphic;
  * Single-frame collection.
  * Could be useful for non-animated sprites.
  */
-class ImageFrame extends FlxFramesCollection
+class FlxImageFrame extends FlxFramesCollection
 {
 	/**
 	 * Single frame of this frame collection.
@@ -23,7 +23,7 @@ class ImageFrame extends FlxFramesCollection
 	
 	private function new(parent:FlxGraphic) 
 	{
-		super(parent, FrameCollectionType.IMAGE);
+		super(parent, FlxFrameCollectionType.IMAGE);
 	}
 	
 	/**
@@ -32,18 +32,18 @@ class ImageFrame extends FlxFramesCollection
 	 * @param	source	FlxFrame to generate ImageFrame from.
 	 * @return	Created ImageFrame object.
 	 */
-	public static function fromFrame(source:FlxFrame):ImageFrame
+	public static function fromFrame(source:FlxFrame):FlxImageFrame
 	{
 		var graphic:FlxGraphic = source.parent;
 		var rect:FlxRect = source.frame;
 		
-		var imageFrame:ImageFrame = ImageFrame.findFrame(graphic, rect);
+		var imageFrame:FlxImageFrame = FlxImageFrame.findFrame(graphic, rect);
 		if (imageFrame != null)
 		{
 			return imageFrame;
 		}
 		
-		imageFrame = new ImageFrame(graphic);
+		imageFrame = new FlxImageFrame(graphic);
 		imageFrame.frame = imageFrame.addSpriteSheetFrame(rect.copyTo(new FlxRect()));
 		return imageFrame;
 	}
@@ -54,7 +54,7 @@ class ImageFrame extends FlxFramesCollection
 	 * @param	source	image graphic for ImageFrame. It could be String, BitmapData or FlxGraphic.
 	 * @return	Newly created ImageFrame object for specified graphic.
 	 */
-	public static function fromImage(source:FlxGraphicAsset):ImageFrame
+	public static function fromImage(source:FlxGraphicAsset):FlxImageFrame
 	{
 		return fromRectangle(source, null);
 	}
@@ -66,7 +66,7 @@ class ImageFrame extends FlxFramesCollection
 	 * @param	region	region of image to create ImageFrame for.
 	 * @return	Newly created ImageFrame object for specified region of FlxGraphic object.
 	 */
-	public static function fromGraphic(graphic:FlxGraphic, region:FlxRect = null):ImageFrame
+	public static function fromGraphic(graphic:FlxGraphic, region:FlxRect = null):FlxImageFrame
 	{
 		if (graphic == null)	return null;
 		
@@ -75,18 +75,18 @@ class ImageFrame extends FlxFramesCollection
 		
 		if (checkRegion == null)
 		{
-			checkRegion = FlxRect.FLX_RECT;
+			checkRegion = FlxRect.flxRect;
 			checkRegion.set(0, 0, graphic.width, graphic.height);
 		}
 		
-		var imageFrame:ImageFrame = ImageFrame.findFrame(graphic, checkRegion);
+		var imageFrame:FlxImageFrame = FlxImageFrame.findFrame(graphic, checkRegion);
 		if (imageFrame != null)
 		{
 			return imageFrame;
 		}
 		
 		// or create it, if there is no such object
-		imageFrame = new ImageFrame(graphic);
+		imageFrame = new FlxImageFrame(graphic);
 		
 		if (region == null)
 		{
@@ -116,7 +116,7 @@ class ImageFrame extends FlxFramesCollection
 	 * @param	region	region of image to create ImageFrame for.
 	 * @return	Newly created ImageFrame object for specified region of image.
 	 */
-	public static function fromRectangle(source:FlxGraphicAsset, region:FlxRect = null):ImageFrame
+	public static function fromRectangle(source:FlxGraphicAsset, region:FlxRect = null):FlxImageFrame
 	{
 		var graphic:FlxGraphic = FlxG.bitmap.add(source, false);
 		return fromGraphic(graphic, region);
@@ -129,10 +129,10 @@ class ImageFrame extends FlxFramesCollection
 	 * @param	frameRect	ImageFrame object should have frame with the same position and dimensions as specified with this argument.
 	 * @return	ImageFrame object which corresponds to specified rectangle. Could be null if there is no such ImageFrame.
 	 */
-	public static function findFrame(graphic:FlxGraphic, frameRect:FlxRect):ImageFrame
+	public static function findFrame(graphic:FlxGraphic, frameRect:FlxRect):FlxImageFrame
 	{
-		var imageFrames:Array<ImageFrame> = cast graphic.getFramesCollections(FrameCollectionType.IMAGE);
-		var imageFrame:ImageFrame;
+		var imageFrames:Array<FlxImageFrame> = cast graphic.getFramesCollections(FlxFrameCollectionType.IMAGE);
+		var imageFrame:FlxImageFrame;
 		for (imageFrame in imageFrames)
 		{
 			if (imageFrame.equals(frameRect))

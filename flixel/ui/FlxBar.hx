@@ -8,13 +8,12 @@ import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.FlxGraphic;
-import flixel.graphics.frames.BarFrames;
+import flixel.graphics.frames.FlxBarFrames;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.frames.FlxFramesCollection;
-import flixel.graphics.frames.FrameType;
-import flixel.graphics.frames.ImageFrame;
+import flixel.graphics.frames.FlxImageFrame;
+import flixel.graphics.tile.FlxDrawStackItem;
 import flixel.system.FlxAssets.FlxGraphicAsset;
-import flixel.system.layer.DrawStackItem;
 import flixel.ui.FlxBar.FlxBarFillDirection;
 import flixel.math.FlxAngle;
 import flixel.util.FlxColor;
@@ -102,13 +101,12 @@ class FlxBar extends FlxSprite
 	 * It is recommended to use this property in tile render mode
 	 * (altrough it will work in blit render mode also).
 	 */
-	public var frontFrames(get, set):BarFrames;
+	public var frontFrames(get, set):FlxBarFrames;
 	
 	/**
 	 * The direction from which the health bar will fill-up. Default is from left to right. Change takes effect immediately.
 	 */
-	@:isVar
-	public var fillDirection(get, set):FlxBarFillDirection;	
+	public var fillDirection(default, set):FlxBarFillDirection;	
 	private var _fillHorizontal:Bool;
 	
 	#if FLX_RENDER_TILE
@@ -414,7 +412,7 @@ class FlxBar extends FlxSprite
 			FlxG.bitmap.add(filledBar, false, filledKey);
 		}
 		
-		frontFrames = BarFrames.fromGraphic(FlxG.bitmap.get(filledKey), fillDirection);
+		frontFrames = FlxBarFrames.fromGraphic(FlxG.bitmap.get(filledKey), fillDirection);
 	#else
 		if (showBorder)
 		{
@@ -573,7 +571,7 @@ class FlxBar extends FlxSprite
 			FlxG.bitmap.add(filledBar, false, filledKey);
 		}
 		
-		frontFrames = BarFrames.fromGraphic(FlxG.bitmap.get(filledKey), fillDirection);
+		frontFrames = FlxBarFrames.fromGraphic(FlxG.bitmap.get(filledKey), fillDirection);
 		#else
 		if (showBorder)
 		{
@@ -664,7 +662,7 @@ class FlxBar extends FlxSprite
 			var filledGraphic:FlxGraphic = FlxG.bitmap.add(fill);
 		
 			#if FLX_RENDER_TILE
-			frontFrames = BarFrames.fromGraphic(filledGraphic, fillDirection);
+			frontFrames = FlxBarFrames.fromGraphic(filledGraphic, fillDirection);
 			#else
 			_filledBar = filledGraphic.bitmap.clone();
 			
@@ -685,11 +683,6 @@ class FlxBar extends FlxSprite
 		}
 		
 		return this;
-	}
-	
-	private function get_fillDirection():FlxBarFillDirection
-	{
-		return fillDirection;
 	}
 	
 	private function set_fillDirection(direction:FlxBarFillDirection):FlxBarFillDirection
@@ -835,9 +828,9 @@ class FlxBar extends FlxSprite
 			return;
 		}
 		
-		if (percent > 0 && _frontFrame.type != FrameType.EMPTY)
+		if (percent > 0 && _frontFrame.type != FlxFrameType.EMPTY)
 		{
-			var drawItem:DrawStackItem;
+			var drawItem:FlxDrawStackItem;
 			
 			var ox:Float = origin.x;
 			if (_facingHorizontalMult != 1)
@@ -863,7 +856,7 @@ class FlxBar extends FlxSprite
 				
 				_matrix.identity();
 				
-				if (_frontFrame.angle != 0)
+				if (_frontFrame.angle != FlxFrameAngle.ANGLE_0)
 				{
 					// handle rotated frames
 					_frontFrame.prepareFrameMatrix(_matrix);
@@ -905,7 +898,7 @@ class FlxBar extends FlxSprite
 		return Pixels; // hack
 	}
 	#end
-		
+	
 	override public function toString():String
 	{
 		return FlxStringUtil.getDebugString([ 
@@ -971,19 +964,19 @@ class FlxBar extends FlxSprite
 		return value;
 	}
 	
-	private function get_frontFrames():BarFrames
+	private function get_frontFrames():FlxBarFrames
 	{
 		#if FLX_RENDER_TILE
 		if (_front != null && _front.frames != null)
 		{
-			return cast(_front.frames, BarFrames);
+			return cast(_front.frames, FlxBarFrames);
 		}
 		#end
 		
 		return null;
 	}
 	
-	private function set_frontFrames(value:BarFrames):BarFrames
+	private function set_frontFrames(value:FlxBarFrames):FlxBarFrames
 	{
 		#if FLX_RENDER_TILE
 		if (_front != null)

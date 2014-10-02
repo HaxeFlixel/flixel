@@ -5,6 +5,7 @@ import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.FlxG;
+import flixel.graphics.frames.FlxFrame.FlxFrameType;
 import flixel.math.FlxAngle;
 import flixel.math.FlxRect;
 import flixel.util.FlxColor;
@@ -26,13 +27,13 @@ class FlxFilterFrame extends FlxFrame
 	/**
 	 * Frames collection which this frame belongs to.
 	 */
-	public var filterFrames(default, null):FilterFrames;
+	public var filterFrames(default, null):FlxFilterFrames;
 	
-	public function new(parent:FlxGraphic, sourceFrame:FlxFrame, filterFrames:FilterFrames)
+	public function new(parent:FlxGraphic, sourceFrame:FlxFrame, filterFrames:FlxFilterFrames)
 	{
 		super(parent);
 		
-		type = FrameType.FILTER;
+		type = FlxFrameType.FILTER;
 		this.sourceFrame = sourceFrame;
 		this.filterFrames = filterFrames;
 	}
@@ -44,7 +45,7 @@ class FlxFilterFrame extends FlxFrame
 		if (bmd != null && (bmd.width == sourceSize.x && bmd.height == sourceSize.y))
 		{
 			result = bmd;
-			var rect:Rectangle = FlxRect.RECT;
+			var rect:Rectangle = FlxRect.rect;
 			rect.setTo(0, 0, bmd.width, bmd.height);
 			bmd.fillRect(rect, FlxColor.TRANSPARENT);
 		}
@@ -58,10 +59,10 @@ class FlxFilterFrame extends FlxFrame
 			result = new BitmapData(Std.int(sourceSize.x), Std.int(sourceSize.y), true, FlxColor.TRANSPARENT);
 		}
 		
-		var point:Point = FlxPoint.POINT;
+		var point:Point = FlxPoint.point;
 		point.setTo(0.5 * filterFrames.widthInc, 0.5 * filterFrames.heightInc);
 		
-		var rect:Rectangle = FlxRect.RECT;
+		var rect:Rectangle = FlxRect.rect;
 		rect.setTo(0, 0, sourceFrame.sourceSize.x, sourceFrame.sourceSize.y);
 		
 		result.copyPixels(sourceFrame.getBitmap(), rect, point);

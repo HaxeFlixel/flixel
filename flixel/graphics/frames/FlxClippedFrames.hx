@@ -2,6 +2,8 @@ package flixel.graphics.frames;
 
 import flash.geom.Rectangle;
 import flixel.graphics.FlxGraphic;
+import flixel.graphics.frames.FlxFrame.FlxFrameType;
+import flixel.graphics.frames.FlxFramesCollection.FlxFrameCollectionType;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 
@@ -10,7 +12,7 @@ import flixel.math.FlxRect;
 /**
  * Collection of clipped frames, which is used for clipping sprites.
  */
-class ClippedFrames extends FlxFramesCollection
+class FlxClippedFrames extends FlxFramesCollection
 {
 	/**
 	 * Clipping rectangle for this frame collection.
@@ -23,7 +25,7 @@ class ClippedFrames extends FlxFramesCollection
 	
 	private function new(original:FlxFramesCollection, clipRect:FlxRect)
 	{
-		super(original.parent, FrameCollectionType.CLIPPED);
+		super(original.parent, FlxFrameCollectionType.CLIPPED);
 		
 		this.original = original;
 		this.clipRect = clipRect;
@@ -42,7 +44,7 @@ class ClippedFrames extends FlxFramesCollection
 		var x:Float, y:Float, w:Float, h:Float;
 		
 		var rotated:Bool;
-		var angle:Float = 0;
+		var angle:Int = 0;
 		
 		for (frame in original.frames)
 		{
@@ -52,7 +54,7 @@ class ClippedFrames extends FlxFramesCollection
 			helperRect.set(0, 0, frameWidth, frameHeight);
 			clippedRect1.set(frame.offset.x, frame.offset.y, frame.frame.width, frame.frame.height);
 			
-			rotated = (frame.type == FrameType.ROTATED);
+			rotated = (frame.type == FlxFrameType.ROTATED);
 			angle = 0;
 			
 			if (rotated)
@@ -115,20 +117,20 @@ class ClippedFrames extends FlxFramesCollection
 	 * @param	clipRect		Clipping rectangle which will be applied to frames.
 	 * @return	Clipped version of frames.
 	 */
-	public static function clip(frames:FlxFramesCollection, clipRect:FlxRect):ClippedFrames
+	public static function clip(frames:FlxFramesCollection, clipRect:FlxRect):FlxClippedFrames
 	{
-		if (frames.type == FrameCollectionType.CLIPPED)
+		if (frames.type == FlxFrameCollectionType.CLIPPED)
 		{
-			frames = cast(frames, ClippedFrames).original;
+			frames = cast(frames, FlxClippedFrames).original;
 		}
 		
-		var clippedFrames:ClippedFrames = ClippedFrames.findFrame(frames, clipRect);
+		var clippedFrames:FlxClippedFrames = FlxClippedFrames.findFrame(frames, clipRect);
 		if (clippedFrames != null)
 		{
 			return clippedFrames;
 		}
 		
-		return new ClippedFrames(frames, clipRect);
+		return new FlxClippedFrames(frames, clipRect);
 	}
 	
 	/**
@@ -138,10 +140,10 @@ class ClippedFrames extends FlxFramesCollection
 	 * @param	clipRect		Clipping rectangle.
 	 * @return	ClippedFrames object which corresponds to specified arguments. Could be null if there is no such ClippedFrames object.
 	 */
-	public static function findFrame(frames:FlxFramesCollection, clipRect:FlxRect):ClippedFrames
+	public static function findFrame(frames:FlxFramesCollection, clipRect:FlxRect):FlxClippedFrames
 	{
-		var clippedFramesArr:Array<ClippedFrames> = cast frames.parent.getFramesCollections(FrameCollectionType.CLIPPED);
-		var clippedFrames:ClippedFrames;
+		var clippedFramesArr:Array<FlxClippedFrames> = cast frames.parent.getFramesCollections(FlxFrameCollectionType.CLIPPED);
+		var clippedFrames:FlxClippedFrames;
 		
 		for (clippedFrames in clippedFramesArr)
 		{

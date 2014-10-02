@@ -4,9 +4,9 @@ import flash.display.BitmapData;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.FlxSprite;
+import flixel.graphics.frames.FlxFramesCollection.FlxFrameCollectionType;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxGraphicAsset;
-import flixel.system.layer.TileSheetExt;
 import flixel.util.FlxBitmapDataUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
@@ -19,7 +19,7 @@ import openfl.filters.BitmapFilter;
  * WARNING: this frame collection doesn't use caching, so be carefull or you will "leak" out memory very fast.
  * You should destroy frames collections of this type manually.
  */
-class FilterFrames extends FlxFramesCollection
+class FlxFilterFrames extends FlxFramesCollection
 {
 	/**
 	 * Generates new frames collection from specified frames.
@@ -29,9 +29,9 @@ class FilterFrames extends FlxFramesCollection
 	 * @param	heightInc	how much frames should expend vertically.
 	 * @return	New frames collection which you can apply filters to.
 	 */
-	public static function fromFrames(frames:FlxFramesCollection, widthInc:Int = 0, heightInc:Int = 0):FilterFrames
+	public static inline function fromFrames(frames:FlxFramesCollection, widthInc:Int = 0, heightInc:Int = 0):FlxFilterFrames
 	{
-		return new FilterFrames(frames, widthInc, heightInc);
+		return new FlxFilterFrames(frames, widthInc, heightInc);
 	}
 	
 	/**
@@ -56,7 +56,7 @@ class FilterFrames extends FlxFramesCollection
 	
 	private function new(sourceFrames:FlxFramesCollection, widthInc:Int = 0, heightInc:Int = 0)
 	{
-		super(null, FrameCollectionType.FILTER);
+		super(null, FlxFrameCollectionType.FILTER);
 		
 		this.sourceFrames = sourceFrames;
 		
@@ -118,7 +118,6 @@ class FilterFrames extends FlxFramesCollection
 			filterFrame.sourceSize.set(region.width, region.height);
 			filterFrame.offset.set(0, 0);
 			filterFrame.center.set(0.5 * region.width, 0.5 * region.height);
-			filterFrame.angle = 0;
 			
 			filterFrame.paintOnBitmap(filterFrame.parent.bitmap);
 			

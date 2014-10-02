@@ -46,7 +46,7 @@ class FlxAnimation extends FlxBaseAnimation
 	/**
 	 * Whether or not this animation is being played backwards.
 	 */
-	public var reverse(default, null):Bool = false;
+	public var reversed:Bool = false;
 	
 	/**
 	 * A list of frames stored as int objects
@@ -87,16 +87,16 @@ class FlxAnimation extends FlxBaseAnimation
 	/**
 	 * Starts this animation playback.
 	 * 
-	 * @param	Force		Whether to force this animation to restart.
-	 * @param	Reverse		Whether to play animation backwards or not.
-	 * @param	Frame		The frame number in this animation you want to start from (0 by default).
-	 *                     	If you pass negative value then it will start from random frame.
-	 * 						If you set Reverse to true then Frame value will be "reversed" (Frame = numFrames - 1 - Frame),
-	 * 						so Frame value will mean frame index from the animation end in this case.
+	 * @param	Force			Whether to force this animation to restart.
+	 * @param	Reversed		Whether to play animation backwards or not.
+	 * @param	Frame			The frame number in this animation you want to start from (0 by default).
+	 *                    	 	If you pass negative value then it will start from random frame.
+	 * 							If you set Reverse to true then Frame value will be "reversed" (Frame = numFrames - 1 - Frame),
+	 * 							so Frame value will mean frame index from the animation end in this case.
 	 */
-	public function play(Force:Bool = false, Reverse:Bool = false, Frame:Int = 0):Void
+	public function play(Force:Bool = false, Reversed:Bool = false, Frame:Int = 0):Void
 	{
-		if (!Force && (looped || !finished) && reverse == Reverse)
+		if (!Force && (looped || !finished) && reversed == Reversed)
 		{
 			paused = false;
 			finished = false;
@@ -104,7 +104,7 @@ class FlxAnimation extends FlxBaseAnimation
 			return;
 		}
 		
-		reverse = Reverse;
+		reversed = Reversed;
 		paused = false;
 		_frameTimer = 0;
 		
@@ -115,12 +115,12 @@ class FlxAnimation extends FlxBaseAnimation
 			// bound frame value
 			Frame = (Frame > numFramesMinusOne) ? numFramesMinusOne : Frame;
 			// "reverse" frame value
-			Frame = (reverse) ? (numFramesMinusOne - Frame) : Frame;
+			Frame = (reversed) ? (numFramesMinusOne - Frame) : Frame;
 		}
 		
-		if ((delay <= 0) 								// non-positive fps
-			|| (Frame == numFramesMinusOne && !reverse) // normal animation
-			|| (Frame == 0 && reverse))					// reversed animation
+		if ((delay <= 0) 									// non-positive fps
+			|| (Frame == numFramesMinusOne && !reversed) 	// normal animation
+			|| (Frame == 0 && reversed))					// reversed animation
 		{
 			finished = true;
 		}
@@ -141,7 +141,7 @@ class FlxAnimation extends FlxBaseAnimation
 	
 	public function restart():Void
 	{
-		play(true, reverse);
+		play(true, reversed);
 	}
 	
 	public function stop():Void
@@ -162,20 +162,20 @@ class FlxAnimation extends FlxBaseAnimation
 				if (looped)
 				{
 					var numFramesMinusOne:Int = numFrames - 1;
-					var tempFrame:Int = (reverse) ? (numFramesMinusOne - curFrame) : curFrame;
+					var tempFrame:Int = (reversed) ? (numFramesMinusOne - curFrame) : curFrame;
 					
 					if (tempFrame == numFramesMinusOne)
 					{
-						curFrame = (reverse) ? numFramesMinusOne : 0;
+						curFrame = (reversed) ? numFramesMinusOne : 0;
 					}
 					else
 					{
-						curFrame = (reverse) ? (curFrame - 1) : (curFrame + 1);
+						curFrame = (reversed) ? (curFrame - 1) : (curFrame + 1);
 					}
 				}
 				else
 				{
-					curFrame = (reverse) ? (curFrame - 1) : (curFrame + 1);
+					curFrame = (reversed) ? (curFrame - 1) : (curFrame + 1);
 				}
 			}
 		}
@@ -201,14 +201,14 @@ class FlxAnimation extends FlxBaseAnimation
 	{
 		var numFramesMinusOne:Int = numFrames - 1;
 		// "reverse" frame value (if there is such need)
-		var tempFrame:Int = (reverse) ? (numFramesMinusOne - Frame ) : Frame;
+		var tempFrame:Int = (reversed) ? (numFramesMinusOne - Frame ) : Frame;
 		
 		if (tempFrame >= 0)
 		{
 			if (!looped && tempFrame >= numFramesMinusOne)
 			{
 				finished = true;
-				curFrame = (reverse) ? 0 : numFramesMinusOne;
+				curFrame = (reversed) ? 0 : numFramesMinusOne;
 			}
 			else
 			{

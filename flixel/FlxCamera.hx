@@ -9,11 +9,11 @@ import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.FlxCamera.FlxCameraShakeDirection;
 import flixel.graphics.FlxGraphic;
+import flixel.graphics.tile.FlxDrawStackItem;
+import flixel.graphics.tile.FlxTilesheet;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
-import flixel.system.layer.DrawStackItem;
-import flixel.system.layer.TileSheetExt;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import openfl.display.Tilesheet;
@@ -304,20 +304,20 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Currently used draw stack item
 	 */
-	private var _currentStackItem:DrawStackItem;
+	private var _currentStackItem:FlxDrawStackItem;
 	/**
 	 * Pointer to head of stack with draw items
 	 */
-	private var _headOfDrawStack:DrawStackItem;
+	private var _headOfDrawStack:FlxDrawStackItem;
 	/**
 	 * Draw stack items that can be reused
 	 */
-	private static var _storageHead:DrawStackItem;
+	private static var _storageHead:FlxDrawStackItem;
 	
 	@:noCompletion
-	public function getDrawStackItem(ObjGraphics:FlxGraphic, ObjColored:Bool, ObjBlending:Int, ObjAntialiasing:Bool = false):DrawStackItem
+	public function getDrawStackItem(ObjGraphics:FlxGraphic, ObjColored:Bool, ObjBlending:Int, ObjAntialiasing:Bool = false):FlxDrawStackItem
 	{
-		var itemToReturn:DrawStackItem = null;
+		var itemToReturn:FlxDrawStackItem = null;
 		if (_currentStackItem.initialized == false)
 		{
 			_headOfDrawStack = _currentStackItem;
@@ -337,17 +337,17 @@ class FlxCamera extends FlxBasic
 		
 		if (itemToReturn == null)
 		{
-			var newItem:DrawStackItem = null;
+			var newItem:FlxDrawStackItem = null;
 			if (_storageHead != null)
 			{
 				newItem = _storageHead;
-				var newHead:DrawStackItem = FlxCamera._storageHead.next;
+				var newHead:FlxDrawStackItem = FlxCamera._storageHead.next;
 				newItem.next = null;
 				FlxCamera._storageHead = newHead;
 			}
 			else
 			{
-				newItem = new DrawStackItem();
+				newItem = new FlxDrawStackItem();
 			}
 			
 			newItem.graphics = ObjGraphics;
@@ -366,11 +366,11 @@ class FlxCamera extends FlxBasic
 	@:allow(flixel.system.frontEnds.CameraFrontEnd)
 	private function clearDrawStack():Void
 	{	
-		var currItem:DrawStackItem = _headOfDrawStack.next;
+		var currItem:FlxDrawStackItem = _headOfDrawStack.next;
 		while (currItem != null)
 		{
 			currItem.reset();
-			var newStorageHead:DrawStackItem = currItem;
+			var newStorageHead:FlxDrawStackItem = currItem;
 			currItem = currItem.next;
 			if (_storageHead == null)
 			{
@@ -392,7 +392,7 @@ class FlxCamera extends FlxBasic
 	@:allow(flixel.system.frontEnds.CameraFrontEnd)
 	private function render():Void
 	{
-		var currItem:DrawStackItem = _headOfDrawStack;
+		var currItem:FlxDrawStackItem = _headOfDrawStack;
 		while (currItem != null)
 		{
 			var data:Array<Float> = currItem.drawData;
@@ -408,7 +408,7 @@ class FlxCamera extends FlxBasic
 				}
 				tempFlags |= currItem.blending;
 				currItem.graphics.tilesheet.drawTiles(canvas.graphics, data, (antialiasing || currItem.antialiasing), tempFlags, position);
-				TileSheetExt._DRAWCALLS++;
+				FlxTilesheet._DRAWCALLS++;
 			}
 			currItem = currItem.next;
 		}
@@ -484,7 +484,7 @@ class FlxCamera extends FlxBasic
 		flashSprite.addChild(debugLayer);
 		#end
 		
-		_currentStackItem = new DrawStackItem();
+		_currentStackItem = new FlxDrawStackItem();
 		_headOfDrawStack = _currentStackItem;
 		#end
 		

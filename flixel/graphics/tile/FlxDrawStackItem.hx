@@ -1,16 +1,16 @@
-package flixel.system.layer;
+package flixel.graphics.tile;
 
 import flixel.graphics.FlxGraphic;
 import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
 import openfl.geom.Matrix;
 
-class DrawStackItem
+class FlxDrawStackItem
 {
 	public var graphics:FlxGraphic;
 	public var drawData:Array<Float> = [];
 	public var position:Int = 0;
-	public var next:DrawStackItem;
+	public var next:FlxDrawStackItem;
 	
 	public var colored:Bool = false;
 	public var blending:Int = 0;
@@ -36,13 +36,7 @@ class DrawStackItem
 		next = null;
 	}
 	
-	public inline function setMatrixDrawData(coordinate:FlxPoint, ID:Float, matrix:Matrix,
-		isColored:Bool = false, color:FlxColor = FlxColor.WHITE, alpha:Float = 1):Void
-	{
-		setDrawData(coordinate, ID, matrix.a, matrix.b, matrix.c, matrix.d, isColored, color, alpha);
-	}
-	
-	public inline function setDrawData(coordinate:FlxPoint, ID:Float, a:Float, b:Float, c:Float, d:Float,
+	public inline function setDrawData(coordinate:FlxPoint, ID:Float, matrix:Matrix,
 		isColored:Bool = false, color:FlxColor = FlxColor.WHITE, alpha:Float = 1):Void
 	{
 		drawData[position++] = coordinate.x;
@@ -50,10 +44,10 @@ class DrawStackItem
 		
 		drawData[position++] = ID;
 		
-		drawData[position++] = a;
-		drawData[position++] = b;
-		drawData[position++] = c;
-		drawData[position++] = d;
+		drawData[position++] = matrix.a;
+		drawData[position++] = matrix.b;
+		drawData[position++] = matrix.c;
+		drawData[position++] = matrix.d;
 		
 		if (isColored)
 		{

@@ -1,4 +1,4 @@
-package flixel.system.layer;
+package flixel.graphics.tile;
 
 import flash.display.BitmapData;
 import flash.geom.Point;
@@ -7,7 +7,7 @@ import flixel.FlxG;
 import flixel.util.FlxDestroyUtil;
 import openfl.display.Tilesheet;
 
-class TileSheetExt extends Tilesheet implements IFlxDestroyable
+class FlxTilesheet extends Tilesheet implements IFlxDestroyable
 {
 	/**
 	 * Tracks total number of drawTiles() calls made each frame.
@@ -15,16 +15,16 @@ class TileSheetExt extends Tilesheet implements IFlxDestroyable
 	public static var _DRAWCALLS:Int = 0;
 	
 	/**
-	 * Creates new TileSheetExt object and adds all tiles from specified tilesheet onto it.
-	 * And it destroys old TileSheetExt to free some memory.
+	 * Creates new FlxTilesheet object and adds all tiles from specified tilesheet onto it.
+	 * And it destroys old FlxTilesheet to free some memory.
 	 * 
-	 * @param	old		Tilesheet to rebuild new TileSheetExt from.
-	 * @param	bitmap	BitmapData to use for new TileSheetExt.
-	 * @return	New TileSheetExt object with the same tile as in the old TileSheetExt.
+	 * @param	old		Tilesheet to rebuild new FlxTilesheet from.
+	 * @param	bitmap	BitmapData to use for new FlxTilesheet.
+	 * @return	New FlxTilesheet object with the same tile as in the old FlxTilesheet.
 	 */
-	public static function rebuildFromOld(old:TileSheetExt, bitmap:BitmapData):TileSheetExt
+	public static function rebuildFromOld(old:FlxTilesheet, bitmap:BitmapData):FlxTilesheet
 	{
-		var newSheet:TileSheetExt = new TileSheetExt(bitmap);
+		var newSheet:FlxTilesheet = new FlxTilesheet(bitmap);
 		
 		for (i in 0...(old.tileOrder.length))
 		{

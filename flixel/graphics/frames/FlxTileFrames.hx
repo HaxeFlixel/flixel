@@ -6,10 +6,8 @@ import flash.geom.Rectangle;
 import flixel.animation.FlxAnimationController;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.frames.FlxFramesCollection;
-import flixel.graphics.frames.FrameCollectionType;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxGraphicAsset;
-import flixel.system.layer.TileSheetExt;
 import flixel.math.FlxPoint;
 import flixel.graphics.FlxGraphic;
 import flixel.util.FlxBitmapDataUtil;
@@ -17,7 +15,7 @@ import flixel.util.FlxBitmapDataUtil;
 /**
  * Spritesheet frame collection. It is used for tilemaps and animated sprites. 
  */
-class TileFrames extends FlxFramesCollection
+class FlxTileFrames extends FlxFramesCollection
 {
 	/**
 	 * Atlas frame from which this frame collection had been generated.
@@ -43,7 +41,7 @@ class TileFrames extends FlxFramesCollection
 	
 	private function new(parent:FlxGraphic) 
 	{
-		super(parent, FrameCollectionType.TILES);
+		super(parent, FlxFrameCollectionType.TILES);
 	}
 	
 	/**
@@ -58,7 +56,7 @@ class TileFrames extends FlxFramesCollection
 	 * 							whole image will be used for spritesheet generation
 	 * @return	Newly created spritesheet
 	 */
-	public static function fromBitmapWithSpacings(source:FlxGraphicAsset, tileSize:FlxPoint, tileSpacing:FlxPoint, region:FlxRect = null):TileFrames
+	public static function fromBitmapWithSpacings(source:FlxGraphicAsset, tileSize:FlxPoint, tileSpacing:FlxPoint, region:FlxRect = null):FlxTileFrames
 	{
 		var graphic:FlxGraphic = FlxG.bitmap.add(source, false);
 		if (graphic == null) return null;
@@ -71,7 +69,7 @@ class TileFrames extends FlxFramesCollection
 			result = FlxG.bitmap.add(bitmap, false, key);
 		}
 		
-		return TileFrames.fromRectangle(result, tileSize, null, tileSpacing);
+		return FlxTileFrames.fromRectangle(result, tileSize, null, tileSpacing);
 	}
 	
 	/**
@@ -83,11 +81,11 @@ class TileFrames extends FlxFramesCollection
 	 * @param	tileSpacing		offsets between frames in spritesheet. Default value is null, which means no offsets between tiles
 	 * @return	Newly created spritesheet frame collection.
 	 */
-	public static function fromFrame(frame:FlxFrame, tileSize:FlxPoint, tileSpacing:FlxPoint = null):TileFrames
+	public static function fromFrame(frame:FlxFrame, tileSize:FlxPoint, tileSpacing:FlxPoint = null):FlxTileFrames
 	{
 		var graphic:FlxGraphic = frame.parent;
 		// find TileFrames object, if there is one already
-		var tileFrames:TileFrames = TileFrames.findFrame(graphic, tileSize, null, frame, tileSpacing);
+		var tileFrames:FlxTileFrames = FlxTileFrames.findFrame(graphic, tileSize, null, frame, tileSpacing);
 		if (tileFrames != null)
 		{
 			return tileFrames;
@@ -96,7 +94,7 @@ class TileFrames extends FlxFramesCollection
 		// or create it, if there is no such object
 		tileSpacing = (tileSpacing != null) ? tileSpacing : new FlxPoint();
 		
-		tileFrames = new TileFrames(graphic);
+		tileFrames = new FlxTileFrames(graphic);
 		tileFrames.atlasFrame = frame;
 		tileFrames.region = frame.frame;
 		tileFrames.tileSize = tileSize;
@@ -124,8 +122,8 @@ class TileFrames extends FlxFramesCollection
 		
 		var x:Float, y:Float, w:Float, h:Float;
 		
-		var rotated:Bool = (frame.type == FrameType.ROTATED);
-		var angle:Float = 0;
+		var rotated:Bool = (frame.type == FlxFrameType.ROTATED);
+		var angle:Int = 0;
 		
 		if (rotated)
 		{
@@ -194,7 +192,7 @@ class TileFrames extends FlxFramesCollection
 	 * @param	Frames	Array of frames to generate tile frames from. They all should have the same source size and parent graphic. If not then null will be returned.
 	 * @return	Generated collection of frames.
 	 */
-	public static function fromFrames(Frames:Array<FlxFrame>):TileFrames
+	public static function fromFrames(Frames:Array<FlxFrame>):FlxTileFrames
 	{
 		var firstFrame:FlxFrame = Frames[0];
 		var graphic:FlxGraphic = firstFrame.parent;
@@ -208,7 +206,7 @@ class TileFrames extends FlxFramesCollection
 			}
 		}
 		
-		var tileFrames:TileFrames = new TileFrames(graphic);
+		var tileFrames:FlxTileFrames = new FlxTileFrames(graphic);
 		
 		tileFrames.region = null;
 		tileFrames.atlasFrame = null;
@@ -238,7 +236,7 @@ class TileFrames extends FlxFramesCollection
 	 * @param	Prefix	Common beginning of image names in atlas (e.g. "tiles-")
 	 * @return	Generated tile frames collection.
 	 */
-	public static function fromAtlasByPrefix(Frames:AtlasFrames, Prefix:String):TileFrames
+	public static function fromAtlasByPrefix(Frames:FlxAtlasFrames, Prefix:String):FlxTileFrames
 	{
 		var framesToAdd:Array<FlxFrame> = new Array<FlxFrame>();
 		
@@ -260,7 +258,7 @@ class TileFrames extends FlxFramesCollection
 			FlxAnimationController.postfixLength = postFix.length;
 			framesToAdd.sort(FlxAnimationController.frameSortFunction);
 			
-			return TileFrames.fromFrames(framesToAdd);
+			return FlxTileFrames.fromFrames(framesToAdd);
 		}
 		
 		return null;
@@ -276,10 +274,10 @@ class TileFrames extends FlxFramesCollection
 	 * @param	tileSpacing		offsets between frames in spritesheet. Default value is null, which means no offsets between tiles
 	 * @return	Newly created spritesheet frame collection.
 	 */
-	public static function fromGraphic(graphic:FlxGraphic, tileSize:FlxPoint, region:FlxRect = null, tileSpacing:FlxPoint = null):TileFrames
+	public static function fromGraphic(graphic:FlxGraphic, tileSize:FlxPoint, region:FlxRect = null, tileSpacing:FlxPoint = null):FlxTileFrames
 	{
 		// find TileFrames object, if there is one already
-		var tileFrames:TileFrames = TileFrames.findFrame(graphic, tileSize, region, null, tileSpacing);
+		var tileFrames:FlxTileFrames = FlxTileFrames.findFrame(graphic, tileSize, region, null, tileSpacing);
 		if (tileFrames != null)
 		{
 			return tileFrames;
@@ -305,7 +303,7 @@ class TileFrames extends FlxFramesCollection
 		
 		tileSpacing = (tileSpacing != null) ? tileSpacing : new FlxPoint();
 		
-		tileFrames = new TileFrames(graphic);
+		tileFrames = new FlxTileFrames(graphic);
 		tileFrames.region = region;
 		tileFrames.atlasFrame = null;
 		tileFrames.tileSize = tileSize;
@@ -356,7 +354,7 @@ class TileFrames extends FlxFramesCollection
 	 * @param	tileSpacing		offsets between frames in spritesheet. Default value is null, which means no offsets between tiles
 	 * @return	Newly created spritesheet frame collection
 	 */
-	public static function fromRectangle(source:FlxGraphicAsset, tileSize:FlxPoint, region:FlxRect = null, tileSpacing:FlxPoint = null):TileFrames
+	public static function fromRectangle(source:FlxGraphicAsset, tileSize:FlxPoint, region:FlxRect = null, tileSpacing:FlxPoint = null):FlxTileFrames
 	{
 		var graphic:FlxGraphic = FlxG.bitmap.add(source, false);
 		if (graphic == null)	return null;
@@ -373,10 +371,10 @@ class TileFrames extends FlxFramesCollection
 	 * @param	tileSpacing		Spaces between tiles in spritesheet.
 	 * @return	ImageFrame object which corresponds to specified arguments. Could be null if there is no such TileFrames.
 	 */
-	public static function findFrame(graphic:FlxGraphic, tileSize:FlxPoint, region:FlxRect = null, atlasFrame:FlxFrame = null, tileSpacing:FlxPoint = null):TileFrames
+	public static function findFrame(graphic:FlxGraphic, tileSize:FlxPoint, region:FlxRect = null, atlasFrame:FlxFrame = null, tileSpacing:FlxPoint = null):FlxTileFrames
 	{
-		var tileFrames:Array<TileFrames> = cast graphic.getFramesCollections(FrameCollectionType.TILES);
-		var sheet:TileFrames;
+		var tileFrames:Array<FlxTileFrames> = cast graphic.getFramesCollections(FlxFrameCollectionType.TILES);
+		var sheet:FlxTileFrames;
 		
 		for (sheet in tileFrames)
 		{
@@ -406,13 +404,13 @@ class TileFrames extends FlxFramesCollection
 		
 		if (region == null)
 		{
-			region = FlxRect.FLX_RECT;
+			region = FlxRect.flxRect;
 			region.set(0, 0, parent.width, parent.height);
 		}
 		
 		if (tileSpacing == null)
 		{
-			tileSpacing = FlxPoint.FLX_POINT;
+			tileSpacing = FlxPoint.flxPoint;
 			tileSpacing.set(0, 0);
 		}
 		

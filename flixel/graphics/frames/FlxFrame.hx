@@ -30,7 +30,7 @@ class FlxFrame implements IFlxDestroyable
 	 * Rotation angle of this frame. 
 	 * Required for packed atlas images.
 	 */
-	public var angle:Float = 0;
+	public var angle:FlxFrameAngle;
 	
 	/**
 	 * Original (uncropped) image size.
@@ -49,7 +49,7 @@ class FlxFrame implements IFlxDestroyable
 	/**
 	 * The type of this frame.
 	 */
-	public var type(default, null):FrameType;
+	public var type(default, null):FlxFrameType;
 	
 	/**
 	 * Frame bitmapDatas.
@@ -63,13 +63,13 @@ class FlxFrame implements IFlxDestroyable
 	public function new(parent:FlxGraphic)
 	{
 		this.parent = parent;
-		angle = 0;
 		
 		sourceSize = FlxPoint.get();
 		offset = FlxPoint.get();
 		center = FlxPoint.get();
 		
-		type = FrameType.REGULAR;
+		type = FlxFrameType.REGULAR;
+		angle = FlxFrameAngle.ANGLE_0;
 	}
 	
 	/**
@@ -103,7 +103,7 @@ class FlxFrame implements IFlxDestroyable
 			
 			if (w > frame.width || h > frame.height)
 			{
-				var rect:Rectangle = FlxRect.RECT;
+				var rect:Rectangle = FlxRect.rect;
 				rect.setTo(0, 0, w, h);
 				bmd.fillRect(rect, FlxColor.TRANSPARENT);
 			}
@@ -118,8 +118,8 @@ class FlxFrame implements IFlxDestroyable
 			result = new BitmapData(Std.int(sourceSize.x), Std.int(sourceSize.y), true, FlxColor.TRANSPARENT);
 		}
 		
-		offset.copyToFlash(FlxPoint.POINT);
-		result.copyPixels(parent.bitmap, frame.copyToFlash(FlxRect.RECT), FlxPoint.POINT);
+		offset.copyToFlash(FlxPoint.point);
+		result.copyPixels(parent.bitmap, frame.copyToFlash(FlxRect.rect), FlxPoint.point);
 		return result;
 	}
 	
@@ -217,4 +217,26 @@ class FlxFrame implements IFlxDestroyable
 		center = FlxDestroyUtil.put(center);
 		destroyBitmaps();
 	}
+}
+
+/**
+ * Just enumeration of all types of frames.
+ * Added for faster type detection with less usage of casting.
+ */
+@:enum
+abstract FlxFrameType(Int) 
+{
+	var REGULAR		= 0;
+	var ROTATED		= 1;
+	var EMPTY		= 2;
+	var GLYPH		= 3;
+	var FILTER		= 4;
+}
+
+@:enum
+abstract FlxFrameAngle(Int) from Int to Int
+{
+	var ANGLE_0			= 0;
+	var ANGLE_90		= 90;
+	var ANGLE_NEG_90	= -90;
 }

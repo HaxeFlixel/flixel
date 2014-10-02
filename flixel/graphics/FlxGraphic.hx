@@ -3,15 +3,15 @@ package flixel.graphics;
 import flash.display.BitmapData;
 import flixel.FlxG;
 import flixel.graphics.frames.FlxEmptyFrame;
+import flixel.graphics.tile.FlxTilesheet;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets;
-import flixel.graphics.frames.AtlasFrames;
+import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.frames.FlxFramesCollection;
-import flixel.graphics.frames.FrameCollectionType;
-import flixel.graphics.frames.ImageFrame;
-import flixel.system.layer.TileSheetExt;
+import flixel.graphics.frames.FlxImageFrame;
+import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import openfl.geom.Rectangle;
 
@@ -158,7 +158,7 @@ class FlxGraphic
 		
 		var bitmap:BitmapData = Source.getBitmap().clone();
 		graphic = createGraphic(bitmap, key, Unique);
-		var image:ImageFrame = ImageFrame.fromGraphic(graphic);
+		var image:FlxImageFrame = FlxImageFrame.fromGraphic(graphic);
 		image.getByIndex(0).name = Source.name;
 		return graphic;
 	}
@@ -212,7 +212,7 @@ class FlxGraphic
 	 * @param	Key		Force the cache to use a specific Key to index the bitmap.
 	 * @return	The FlxGraphic object we just created.
 	 */
-	public static function createRectangle(Width:Int, Height:Int, Color:Int, Unique:Bool = false, ?Key:String):FlxGraphic
+	public static function fromRectangle(Width:Int, Height:Int, Color:FlxColor, Unique:Bool = false, ?Key:String):FlxGraphic
 	{
 		var systemKey:String = Width + "x" + Height + ":" + Color;
 		var key:String = FlxG.bitmap.generateKey(systemKey, Key, Unique);
@@ -327,7 +327,7 @@ class FlxGraphic
 	/**
 	 * Tilesheet for this graphic object. It is used only for FLX_RENDER_TILE mode
 	 */
-	public var tilesheet(get, null):TileSheetExt;
+	public var tilesheet(get, null):FlxTilesheet;
 	#end
 	
 	/**
@@ -338,25 +338,25 @@ class FlxGraphic
 	/**
 	 * ImageFrame object for the whole bitmap
 	 */
-	public var imageFrame(get, null):ImageFrame;
+	public var imageFrame(get, null):FlxImageFrame;
 	
 	/**
 	 * Atlas frames for this graphic.
 	 * You should fill it yourself with one of the AtlasFrames static methods
 	 * (like texturePackerJSON(), texturePackerXML(), sparrow(), libGDX()).
 	 */
-	public var atlasFrames:AtlasFrames;
+	public var atlasFrames:FlxAtlasFrames;
 	
 	/**
 	 * Storage for all available frame collection of all types for this graphic object.
 	 */
-	private var frameCollections:Map<FrameCollectionType, Array<Dynamic>>;
+	private var frameCollections:Map<FlxFrameCollectionType, Array<Dynamic>>;
 	
 	/**
 	 * All types of frames collection which had been added to this graphic object.
 	 * It helps to avoid map iteration, which produces a lot of garbage.
 	 */
-	private var frameCollectionTypes:Array<FrameCollectionType>;
+	private var frameCollectionTypes:Array<FlxFrameCollectionType>;
 	
 	/**
 	 * Shows whether this object unique in cache or not.
@@ -370,14 +370,14 @@ class FlxGraphic
 	 * Internal var holding ImageFrame for the whole bitmap of this graphic.
 	 * Use public imageFrame var to access/generate it.
 	 */
-	private var _imageFrame:ImageFrame;
+	private var _imageFrame:FlxImageFrame;
 	
 	#if FLX_RENDER_TILE
 	/**
 	 * Internal var holding Tilesheet for bitmap of this graphic.
 	 * It is used only in FLX_RENDER_TILE mode
 	 */
-	private var _tilesheet:TileSheetExt;
+	private var _tilesheet:FlxTilesheet;
 	#end
 	
 	private var _useCount:Int = 0;
@@ -399,8 +399,8 @@ class FlxGraphic
 		width = bitmap.width;
 		height = bitmap.height;
 		
-		frameCollections = new Map<FrameCollectionType, Array<Dynamic>>();
-		frameCollectionTypes = new Array<FrameCollectionType>();
+		frameCollections = new Map<FlxFrameCollectionType, Array<Dynamic>>();
+		frameCollectionTypes = new Array<FlxFrameCollectionType>();
 	}
 	
 	/**
@@ -430,7 +430,7 @@ class FlxGraphic
 			#if (FLX_RENDER_TILE && !flash && !nme)
 			if (_tilesheet != null)
 			{
-				_tilesheet = TileSheetExt.rebuildFromOld(_tilesheet, bitmap);
+				_tilesheet = FlxTilesheet.rebuildFromOld(_tilesheet, bitmap);
 			}
 			#end
 		}
@@ -485,7 +485,7 @@ class FlxGraphic
 		atlasFrames = null;
 		
 		var collections:Array<FlxFramesCollection>;
-		var collectionType:FrameCollectionType;
+		var collectionType:FlxFrameCollectionType;
 		for (collectionType in frameCollectionTypes)
 		{
 			collections = cast frameCollections.get(collectionType);
@@ -499,11 +499,11 @@ class FlxGraphic
 	/**
 	 * Forces BitmapData regeneration for all frames in this graphic object.
 	 */
-	public inline function resetFrameBitmaps():Void
+	public function resetFrameBitmaps():Void
 	{
 		var collections:Array<FlxFramesCollection>;
 		var collection:FlxFramesCollection;
-		var collectionType:FrameCollectionType;
+		var collectionType:FlxFrameCollectionType;
 		for (collectionType in frameCollectionTypes)
 		{
 			collections = cast frameCollections.get(collectionType);
@@ -534,7 +534,7 @@ class FlxGraphic
 	 * @param	type	The type of frames collections to search for.
 	 * @return	Array of available frames collections of specified type for this object.
 	 */
-	public inline function getFramesCollections(type:FrameCollectionType):Array<Dynamic>
+	public inline function getFramesCollections(type:FlxFrameCollectionType):Array<Dynamic>
 	{
 		var collections:Array<Dynamic> = frameCollections.get(type);
 		if (collections == null)
@@ -564,7 +564,7 @@ class FlxGraphic
 	/**
 	 * Tilesheet getter. Generates new one (and regenerates) if there is no tilesheet for this graphic yet.
 	 */
-	private function get_tilesheet():TileSheetExt
+	private function get_tilesheet():FlxTilesheet
 	{
 		if (_tilesheet == null)
 		{
@@ -572,7 +572,7 @@ class FlxGraphic
 			
 			if (dumped)	undump();
 			
-			_tilesheet = new TileSheetExt(bitmap);
+			_tilesheet = new FlxTilesheet(bitmap);
 			
 			if (dumped)	dump();
 		}
@@ -635,11 +635,11 @@ class FlxGraphic
 		return _destroyOnNoUse = Value;
 	}
 	
-	private function get_imageFrame():ImageFrame
+	private function get_imageFrame():FlxImageFrame
 	{
 		if (_imageFrame == null)
 		{
-			_imageFrame = ImageFrame.fromRectangle(this, new FlxRect(0, 0, bitmap.width, bitmap.height));
+			_imageFrame = FlxImageFrame.fromRectangle(this, new FlxRect(0, 0, bitmap.width, bitmap.height));
 		}
 		
 		return _imageFrame;

@@ -11,9 +11,9 @@ import flixel.util.FlxStringUtil;
  */
 class FlxRect implements IFlxPooled
 {
-	public static var FLX_RECT:FlxRect = new FlxRect();
+	public static var flxRect:FlxRect = new FlxRect();
 	
-	public static var RECT:Rectangle = new Rectangle();
+	public static var rect:Rectangle = new Rectangle();
 	
 	private static var _pool = new FlxPool<FlxRect>(FlxRect);
 	

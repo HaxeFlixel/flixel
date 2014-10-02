@@ -1,10 +1,10 @@
-package flixel.atlas;
+package flixel.graphics.atlas;
 
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.graphics.FlxGraphic;
-import flixel.graphics.frames.ImageFrame;
-import flixel.graphics.frames.TileFrames;
+import flixel.graphics.frames.FlxImageFrame;
+import flixel.graphics.frames.FlxTileFrames;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 
 /**
@@ -125,7 +125,7 @@ class FlxNode implements IFlxDestroyable
 	 * @param	region			Region of node to use as a source of graphic. Default value is null, which means that the whole node will be used for it.
 	 * @return	Created TileFrames object for this node
 	 */
-	public function getTileFrames(tileSize:Point, tileSpacing:Point = null, region:Rectangle = null):TileFrames
+	public function getTileFrames(tileSize:Point, tileSpacing:Point = null, region:Rectangle = null):FlxTileFrames
 	{
 		var graphic:FlxGraphic = FlxG.bitmap.add(atlas.atlasBitmapData, false, atlas.name);
 		
@@ -134,17 +134,17 @@ class FlxNode implements IFlxDestroyable
 			region = contentRect;
 		}
 		
-		return TileFrames.fromRectangle(graphic, tileSize, region, tileSpacing);
+		return FlxTileFrames.fromRectangle(graphic, tileSize, region, tileSpacing);
 	}
 	
 	/**
 	 * Generates ImageFrame object for this node.
 	 * @return	ImageFrame for whole node
 	 */
-	public function getImageFrame():ImageFrame
+	public function getImageFrame():FlxImageFrame
 	{
 		var graphic:FlxGraphic = FlxG.bitmap.add(atlas.atlasBitmapData, false, atlas.name);
-		return ImageFrame.fromRectangle(graphic, contentRect);
+		return FlxImageFrame.fromRectangle(graphic, contentRect);
 	}
 	
 	private inline function get_isEmpty():Bool

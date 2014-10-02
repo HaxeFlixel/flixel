@@ -4,8 +4,8 @@ package flixel.system;
 import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.FlxSprite;
-import flixel.system.layer.DrawStackItem;
 import flixel.FlxG;
+import flixel.graphics.tile.FlxDrawStackItem;
 import flixel.util.FlxColor;
 
 class FlxBGSprite extends FlxSprite
@@ -22,7 +22,7 @@ class FlxBGSprite extends FlxSprite
 	 */
 	override public function draw():Void
 	{
-		var drawItem:DrawStackItem;
+		var drawItem:FlxDrawStackItem;
 		
 		for (camera in cameras)
 		{
@@ -39,7 +39,9 @@ class FlxBGSprite extends FlxSprite
 			_point.x = 0.5 * scaledWidth;
 			_point.y = 0.5 * scaleHeight;
 			
-			drawItem.setDrawData(_point, frame.tileID, scaledWidth, 0, 0, scaleHeight, isColored, color, alpha * camera.alpha);
+			_matrix.setTo(scaledWidth, 0, 0, scaleHeight, 0, 0);
+			
+			drawItem.setDrawData(_point, frame.tileID, _matrix, isColored, color, alpha * camera.alpha);
 			
 			#if !FLX_NO_DEBUG
 			FlxBasic.visibleCount++;

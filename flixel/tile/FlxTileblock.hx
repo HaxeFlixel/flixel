@@ -4,10 +4,9 @@ import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.FlxGraphic;
-import flixel.graphics.frames.TileFrames;
+import flixel.graphics.frames.FlxTileFrames;
 import flixel.math.FlxPoint;
 import flixel.system.FlxAssets.FlxGraphicAsset;
-import flixel.system.layer.DrawStackItem;
 import flixel.math.FlxAngle;
 import flixel.math.FlxRandom;
 import flixel.util.FlxColor;
@@ -53,7 +52,7 @@ class FlxTileblock extends FlxSprite
 	 * @param	Empties			The number of "empty" tiles to add to the auto-fill algorithm (e.g. 8 tiles + 4 empties = 1/3 of block will be open holes).
 	 * @return	This tile block.
 	 */
-	public function loadFrames(tileFrames:TileFrames, empties:Int = 0):FlxTileblock
+	public function loadFrames(tileFrames:FlxTileFrames, empties:Int = 0):FlxTileblock
 	{
 		if (tileFrames == null)
 		{
@@ -156,7 +155,7 @@ class FlxTileblock extends FlxSprite
 			TileHeight = (TileHeight > graph.height) ? graph.height : TileHeight;
 		}
 		
-		var tileFrames:TileFrames = TileFrames.fromGraphic(graph, new FlxPoint(TileWidth, TileHeight));
+		var tileFrames:FlxTileFrames = FlxTileFrames.fromGraphic(graph, new FlxPoint(TileWidth, TileHeight));
 		return this.loadFrames(tileFrames, Empties);
 	}
 	

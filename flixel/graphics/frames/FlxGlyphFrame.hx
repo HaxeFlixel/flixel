@@ -2,6 +2,7 @@ package flixel.graphics.frames;
 
 import flash.display.BitmapData;
 import flixel.graphics.FlxGraphic;
+import flixel.graphics.frames.FlxFrame.FlxFrameType;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.util.FlxColor;
@@ -9,7 +10,7 @@ import flixel.util.FlxColor;
 /**
  * Just a special frame for handling bitmap fonts
  */
-class GlyphFrame extends FlxFrame
+class FlxGlyphFrame extends FlxFrame
 {
 	/**
 	 * How much to jump after drawing this glyph.
@@ -19,7 +20,7 @@ class GlyphFrame extends FlxFrame
 	public function new(parent:FlxGraphic) 
 	{
 		super(parent);
-		type = FrameType.GLYPH;
+		type = FlxFrameType.GLYPH;
 	}
 	
 	override public function paintOnBitmap(bmd:BitmapData = null):BitmapData
@@ -45,8 +46,8 @@ class GlyphFrame extends FlxFrame
 			result = new BitmapData(Std.int(sourceSize.x), Std.int(sourceSize.y), true, FlxColor.TRANSPARENT);
 		}
 		
-		FlxPoint.POINT.setTo(0, 0);
-		result.copyPixels(parent.bitmap, frame.copyToFlash(FlxRect.RECT), FlxPoint.POINT);
+		FlxPoint.point.setTo(0, 0);
+		result.copyPixels(parent.bitmap, frame.copyToFlash(FlxRect.rect), FlxPoint.point);
 		
 		return result;
 	}

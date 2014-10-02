@@ -3,8 +3,8 @@ package flixel.graphics.frames;
 import flash.display.BitmapData;
 import flash.geom.Point;
 import flash.geom.Rectangle;
+import flixel.graphics.frames.FlxFrame.FlxFrameAngle;
 import flixel.math.FlxRect;
-import flixel.system.layer.TileSheetExt;
 import flixel.util.FlxDestroyUtil;
 import flixel.math.FlxPoint;
 import flixel.graphics.FlxGraphic;
@@ -41,9 +41,9 @@ class FlxFramesCollection implements IFlxDestroyable
 	 * Type of this frame collection.
 	 * Used for faster type detection (less casting)
 	 */
-	public var type(default, null):FrameCollectionType;
+	public var type(default, null):FlxFrameCollectionType;
 	
-	public function new(parent:FlxGraphic, type:FrameCollectionType = null)
+	public function new(parent:FlxGraphic, type:FlxFrameCollectionType = null)
 	{
 		this.parent = parent;
 		this.type = type;
@@ -165,12 +165,12 @@ class FlxFramesCollection implements IFlxDestroyable
 	  * @param	angle			rotation of packed image (can be 0, 90, -90).
 	  * @return	Newly created and added frame object.
 	  */
-	public function addAtlasFrame(frame:FlxRect, sourceSize:FlxPoint, offset:FlxPoint, name:String = null, angle:Float = 0):FlxFrame
+	public function addAtlasFrame(frame:FlxRect, sourceSize:FlxPoint, offset:FlxPoint, name:String = null, angle:FlxFrameAngle = 0):FlxFrame
 	{
 		var texFrame:FlxFrame = null;
-		if (angle != 0)
+		if (angle != FlxFrameAngle.ANGLE_0)
 		{
-			texFrame = new FlxRotatedFrame(parent);
+			texFrame = new FlxRotatedFrame(parent, angle);
 		}
 		else
 		{
@@ -181,12 +181,11 @@ class FlxFramesCollection implements IFlxDestroyable
 		texFrame.sourceSize.set(sourceSize.x, sourceSize.y);
 		texFrame.offset.set(offset.x, offset.y);
 		texFrame.frame = frame;
-		texFrame.angle = angle;
 		
 		sourceSize.put();
 		offset.put();
 		
-		if (angle != 0)
+		if (angle != FlxFrameAngle.ANGLE_0)
 		{
 			texFrame.center.set(frame.height * 0.5 + texFrame.offset.x, frame.width * 0.5 + texFrame.offset.y);
 		}
@@ -222,4 +221,20 @@ class FlxFramesCollection implements IFlxDestroyable
 	{
 		return frames.length;
 	}
+}
+
+/**
+ * Just enumeration of all types of frame collections.
+ * Added for faster type detection with less usage of casting.
+ */
+enum FlxFrameCollectionType 
+{
+	IMAGE;
+	TILES;
+	ATLAS;
+	FONT;
+	BAR(type:flixel.ui.FlxBar.FlxBarFillDirection);
+	CLIPPED;
+	USER(type:String);
+	FILTER;
 }

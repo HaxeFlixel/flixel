@@ -5,11 +5,11 @@ import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.graphics.frames.BitmapFont;
-import flixel.graphics.frames.GlyphFrame;
+import flixel.graphics.frames.FlxBitmapFont;
+import flixel.graphics.frames.FlxGlyphFrame;
+import flixel.graphics.tile.FlxDrawStackItem;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
-import flixel.system.layer.DrawStackItem;
 import flixel.text.FlxText.FlxTextAlign;
 import flixel.math.FlxAngle;
 import flixel.text.FlxText.FlxTextBorderStyle;
@@ -28,13 +28,11 @@ class FlxBitmapTextField extends FlxSprite
 	/**
 	 * Font for text rendering.
 	 */
-	@:isVar
-	public var font(default, set):BitmapFont;
+	public var font(default, set):FlxBitmapFont;
 	
 	/**
 	 * Text to display.
 	 */
-	@:isVar
 	public var text(default, set):String = "";
 	
 	/**
@@ -50,51 +48,43 @@ class FlxBitmapTextField extends FlxSprite
 	 * Specifies how the text field should align text.
 	 * JUSTIFY alignment isn't supported.
 	 */
-	@:isVar
 	public var alignment(default, set):FlxTextAlign = FlxTextAlign.LEFT;
 	
 	/**
 	 * The distance to add between lines.
 	 */
-	@:isVar
 	public var lineSpacing(default, set):Int = 0;
 	
 	/**
 	 * The distance to add between letters.
 	 */
-	@:isVar
 	public var letterSpacing(default, set):Int = 0;
 	
 	/**
 	 * Whether to convert text to upper case or not.
 	 */
-	@:isVar
 	public var autoUpperCase(default, set):Bool = false;
 	
 	/**
 	 * A Boolean value that indicates whether the text field has word wrap.
 	 */
-	@:isVar
 	public var wordWrap(default, set):Bool = true;
 	
 	/**
 	 * Whether word wrapping algorithm should wrap lines by words or by single character.
 	 * Default value is true.
 	 */
-	@:isVar 
 	public var wrapByWord(default, set):Bool = true;
 	
 	/**
 	 * Whether this text field have fixed width or not.
 	 * Default value if true.
 	 */
-	@:isVar
 	public var autoSize(default, set):Bool = true;
 	
 	/**
 	 * Number of pixels between text and text field border
 	 */
-	@:isVar
 	public var padding(default, set):Int = 0;
 	
 	/**
@@ -115,7 +105,6 @@ class FlxBitmapTextField extends FlxSprite
 	/**
 	 * Number of space characters in one tab.
 	 */
-	@:isVar
 	public var numSpacesInTab(default, set):Int = 4;
 	private var _tabSpaces:String = "    ";
 	
@@ -123,13 +112,11 @@ class FlxBitmapTextField extends FlxSprite
 	 * The color of the text in 0xAARRGGBB format.
 	 * Result color of text will be multiplication of textColor and color.
 	 */
-	@:isVar
 	public var textColor(default, set):FlxColor = 0xFFFFFFFF;
 	
 	/**
 	 * Whether to use textColor while rendering or not.
 	 */
-	@:isVar
 	public var useTextColor(default, set):Bool = false;
 	
 	/**
@@ -163,31 +150,26 @@ class FlxBitmapTextField extends FlxSprite
 	/**
 	 * Specifies whether the text should have background
 	 */
-	@:isVar
 	public var background(default, set):Bool = false;
 	
 	/**
 	 * Specifies the color of background
 	 */
-	@:isVar
 	public var backgroundColor(default, set):FlxColor = FlxColor.TRANSPARENT;
 	
 	/**
 	 * Specifies whether the text field will break into multiple lines or not on overflow.
 	 */
-	@:isVar
 	public var multiLine(default, set):Bool = true;
 	
 	/**
 	 * Reflects how many lines have this text field.
 	 */
-	@:isVar
 	public var numLines(get, null):Int = 0;
 	
 	/**
 	 * The "size" of the font.
 	 */
-	@:isVar
 	public var size(default, set):Float = 1;
 	
 	private var _pendingTextChange:Bool = true;
@@ -211,7 +193,7 @@ class FlxBitmapTextField extends FlxSprite
 	 * Constructs a new text field component.
 	 * @param 	font	Optional parameter for component's font prop
 	 */
-	public function new(?font:BitmapFont) 
+	public function new(?font:FlxBitmapFont) 
 	{
 		super();
 		
@@ -220,7 +202,7 @@ class FlxBitmapTextField extends FlxSprite
 		
 		if (font == null)
 		{
-			font = BitmapFont.getDefault();
+			font = FlxBitmapFont.getDefaultFont();
 		}
 		
 		this.font = font;
@@ -343,7 +325,7 @@ class FlxBitmapTextField extends FlxSprite
 		
 		var alphaToUse:Float = 0;
 		
-		var drawItem:DrawStackItem;
+		var drawItem:FlxDrawStackItem;
 		var tileID:Float = -1;
 		var currTileX:Float = 0;
 		var currTileY:Float = 0;
@@ -415,7 +397,7 @@ class FlxBitmapTextField extends FlxSprite
 			{
 				drawItem = camera.getDrawStackItem(FlxG.bitmap.whitePixel.parent, true, _blendInt, antialiasing);
 				tileID = FlxG.bitmap.whitePixel.tileID;
-				drawItem.setMatrixDrawData(_point, tileID, _bgMatrix, true, backgroundColor.to24Bit(), bgAlpha * camera.alpha);
+				drawItem.setDrawData(_point, tileID, _bgMatrix, true, backgroundColor.to24Bit(), bgAlpha * camera.alpha);
 			}
 			
 			drawItem = camera.getDrawStackItem(font.parent, true, _blendInt, antialiasing);
@@ -435,7 +417,7 @@ class FlxBitmapTextField extends FlxSprite
 				_matrix.transformFlxPoint(_tilePoint);
 				_tilePoint.addPoint(_point);
 				
-				drawItem.setMatrixDrawData(_tilePoint, tileID, _tileMatrix, true, bColor, alphaToUse);
+				drawItem.setDrawData(_tilePoint, tileID, _tileMatrix, true, bColor, alphaToUse);
 			}
 			
 			alphaToUse = tAlpha * camera.alpha;
@@ -453,7 +435,7 @@ class FlxBitmapTextField extends FlxSprite
 				_matrix.transformFlxPoint(_tilePoint);
 				_tilePoint.addPoint(_point);
 				
-				drawItem.setMatrixDrawData(_tilePoint, tileID, _tileMatrix, true, tColor, alphaToUse);
+				drawItem.setDrawData(_tilePoint, tileID, _tileMatrix, true, tColor, alphaToUse);
 			}
 			
 			#if !FLX_NO_DEBUG
@@ -595,7 +577,7 @@ class FlxBitmapTextField extends FlxSprite
 		var charWidth:Float = 0;			// the width of current character
 		
 		var widthPlusOffset:Int = 0;
-		var glyphFrame:GlyphFrame;
+		var glyphFrame:FlxGlyphFrame;
 		
 		for (c in 0...lineLength)
 		{
@@ -1209,7 +1191,7 @@ class FlxBitmapTextField extends FlxSprite
 		#if FLX_RENDER_BLIT
 		var glyph:BitmapGlyph;
 		#else
-		var glyph:GlyphFrame;
+		var glyph:FlxGlyphFrame;
 		
 		var isFrontText:Bool = glyphs;
 		var drawData:Array<Float> = (isFrontText) ? _textDrawData : _borderDrawData;
@@ -1325,7 +1307,7 @@ class FlxBitmapTextField extends FlxSprite
 		return value;
 	}
 	
-	private function set_font(value:BitmapFont):BitmapFont 
+	private function set_font(value:FlxBitmapFont):FlxBitmapFont 
 	{
 		if (font != value)
 		{

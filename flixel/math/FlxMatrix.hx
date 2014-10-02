@@ -15,15 +15,6 @@ class FlxMatrix extends Matrix
 	public static var MATRIX:FlxMatrix = new FlxMatrix();
 	
 	/**
-	 * Matrix constructor, just initializes matrix coefficients.
-	 * Nothing fancy.
-	 */
-	public function new(a:Float = 1, b:Float = 0, c:Float = 0, d:Float = 1, tx:Float = 0, ty:Float = 0) 
-	{  
-		super(a, b, c, d, tx, ty);
-	}
-	
-	/**
 	 * Applies tranformation of this matrix to specified point
 	 * @param	point	FlxPoint to transform
 	 * @return	transformed point

@@ -1,17 +1,16 @@
-package flixel.atlas;
+package flixel.graphics.atlas;
 
 import flash.display.BitmapData;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.FlxG;
 import flixel.graphics.FlxGraphic;
-import flixel.graphics.frames.AtlasFrames;
+import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.graphics.frames.TileFrames;
 import flixel.util.FlxBitmapDataUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.math.FlxPoint;
-import flixel.atlas.FlxNode;
 import flixel.system.FlxAssets;
 import flixel.system.frontEnds.BitmapFrontEnd;
 
@@ -199,14 +198,14 @@ class FlxAtlas implements IFlxDestroyable
 	 * It caches graphic of this atlas and generates AtlasFrames if it is not exist yet.
 	 * @return AtlasFrames for this atlas
 	 */
-	public function getAtlasFrames():AtlasFrames
+	public function getAtlasFrames():FlxAtlasFrames
 	{
 		var graphic:FlxGraphic = FlxG.bitmap.add(this.atlasBitmapData, false, name);
 		
-		var atlasFrames:AtlasFrames = null;
+		var atlasFrames:FlxAtlasFrames = null;
 		if (graphic.atlasFrames == null)
 		{
-			graphic.atlasFrames = atlasFrames = new AtlasFrames(graphic);
+			graphic.atlasFrames = atlasFrames = new FlxAtlasFrames(graphic);
 		}
 		
 		var node:FlxNode;

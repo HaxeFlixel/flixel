@@ -11,15 +11,14 @@ import flixel.FlxObject;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.frames.FlxFramesCollection;
-import flixel.graphics.frames.FrameType;
-import flixel.graphics.frames.ImageFrame;
-import flixel.graphics.frames.TileFrames;
+import flixel.graphics.frames.FlxImageFrame;
+import flixel.graphics.frames.FlxTileFrames;
+import flixel.graphics.tile.FlxDrawStackItem;
 import flixel.math.FlxMath;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.system.FlxAssets.FlxTilemapAsset;
-import flixel.system.layer.DrawStackItem;
 import flixel.tile.FlxBaseTilemap.FlxTilemapAutoTiling;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
@@ -241,8 +240,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 *                          Can override and customize per-tile-type collision behavior using setTileProperties().
 	 * @return  A reference to this instance of FlxTilemap, for chaining as usual :)
 	 */
-	public function loadMapFrames(	MapData:FlxTilemapAsset, TileFrames:TileFrames, ?AutoTile:FlxTilemapAutoTiling, 
-									StartingIndex:Int = 0, DrawIndex:Int = 1, CollideIndex:Int = 1):FlxTilemap
+	public function loadMapFrames(MapData:FlxTilemapAsset, TileFrames:FlxTileFrames, ?AutoTile:FlxTilemapAutoTiling, StartingIndex:Int = 0, DrawIndex:Int = 1, CollideIndex:Int = 1):FlxTilemap
 	{
 		auto = (AutoTile == null) ? OFF : AutoTile;
 		_startingIndex = (StartingIndex <= 0) ? 0 : StartingIndex;
@@ -269,7 +267,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		?AutoTile:FlxTilemapAutoTiling, StartingIndex:Int = 0, DrawIndex:Int = 1, CollideIndex:Int = 1):FlxTilemap
 	{
 		cacheGraphics(TileWidth, TileHeight, TileGraphic);
-		var mapFrames:TileFrames = TileFrames.fromGraphic(graphic, new FlxPoint(_tileWidth, _tileHeight));
+		var mapFrames:FlxTileFrames = FlxTileFrames.fromGraphic(graphic, new FlxPoint(_tileWidth, _tileHeight));
 		return loadMapFrames(MapData, mapFrames, AutoTile, StartingIndex, DrawIndex, CollideIndex);
 	}
 	
@@ -829,9 +827,9 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		tileSprite.x = X * _tileWidth + x;
 		tileSprite.y = Y * _tileHeight + y;
 		
-		if ((tile != null) && !tile.visible)
+		if (tile != null && tile.visible)
 		{
-			var image:ImageFrame = ImageFrame.fromFrame(tile.frame);
+			var image:FlxImageFrame = FlxImageFrame.fromFrame(tile.frame);
 			tileSprite.frames = image;
 		}
 		else
@@ -890,7 +888,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		var hackScaleX:Float = tileScaleHack * scaleX;
 		var hackScaleY:Float = tileScaleHack * scaleY;
 		
-		var drawItem:DrawStackItem;
+		var drawItem:FlxDrawStackItem;
 	#end
 	
 		var isColored:Bool = ((alpha != 1) || (color != 0xffffff));
@@ -941,7 +939,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 			{
 				tile = _tileObjects[_data[columnIndex]];
 				
-				if (tile != null && tile.visible && tile.frame.type != FrameType.EMPTY)
+				if (tile != null && tile.visible && tile.frame.type != FlxFrameType.EMPTY)
 				{
 					frame = tile.frame;
 					
@@ -978,7 +976,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 					
 					_matrix.identity();
 					
-					if (frame.angle != 0)
+					if (frame.angle != FlxFrameAngle.ANGLE_0)
 					{
 						frame.prepareFrameMatrix(_matrix);
 					}
@@ -986,7 +984,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 					_matrix.scale(hackScaleX, hackScaleY);
 					
 					drawItem = Camera.getDrawStackItem(graphic, isColored, _blendInt);
-					drawItem.setMatrixDrawData(_point, frame.tileID, _matrix, isColored, color, alpha);
+					drawItem.setDrawData(_point, frame.tileID, _matrix, isColored, color, alpha);
 				#end
 				}
 				

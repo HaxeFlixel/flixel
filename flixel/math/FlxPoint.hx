@@ -11,8 +11,8 @@ import flixel.util.FlxStringUtil;
  */
 class FlxPoint implements IFlxPooled
 {
-	public static var FLX_POINT:FlxPoint = new FlxPoint();
-	public static var POINT:Point = new Point();
+	public static var flxPoint:FlxPoint = new FlxPoint();
+	public static var point:Point = new Point();
 	
 	private static var _pool = new FlxPool<FlxPoint>(FlxPoint);
 	

@@ -4,7 +4,6 @@ import flash.display.BitmapData;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxRect;
-import flixel.system.layer.TileSheetExt;
 import flixel.util.FlxColor;
 import openfl.geom.Rectangle;
 
@@ -17,7 +16,7 @@ class FlxEmptyFrame extends FlxFrame
 	public function new(parent:FlxGraphic) 
 	{
 		super(parent);
-		type = FrameType.EMPTY;
+		type = FlxFrameType.EMPTY;
 		#if FLX_RENDER_TILE
 		tileID = -1;
 		#end
@@ -41,7 +40,7 @@ class FlxEmptyFrame extends FlxFrame
 			return new BitmapData(Std.int(sourceSize.x), Std.int(sourceSize.y), true, FlxColor.TRANSPARENT);
 		}
 		
-		var rect:Rectangle = FlxRect.RECT;
+		var rect:Rectangle = FlxRect.rect;
 		rect.setTo(0, 0, result.width, result.height);
 		bmd.fillRect(rect, FlxColor.TRANSPARENT);
 		

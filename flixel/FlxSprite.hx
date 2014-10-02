@@ -10,13 +10,12 @@ import flixel.animation.FlxAnimationController;
 import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.graphics.FlxGraphic;
-import flixel.graphics.frames.ClippedFrames;
+import flixel.graphics.frames.FlxClippedFrames;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.frames.FlxFramesCollection;
-import flixel.graphics.frames.FrameCollectionType;
-import flixel.graphics.frames.FrameType;
-import flixel.graphics.frames.ImageFrame;
-import flixel.graphics.frames.TileFrames;
+import flixel.graphics.frames.FlxImageFrame;
+import flixel.graphics.frames.FlxTileFrames;
+import flixel.graphics.tile.FlxDrawStackItem;
 import flixel.math.FlxAngle;
 import flixel.math.FlxMath;
 import flixel.math.FlxMatrix;
@@ -24,7 +23,6 @@ import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets;
 import flixel.system.FlxAssets.FlxGraphicAsset;
-import flixel.system.layer.DrawStackItem;
 import flixel.util.FlxBitmapDataUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
@@ -323,7 +321,7 @@ class FlxSprite extends FlxObject
 		
 		if (Animated)
 		{
-			frames = TileFrames.fromGraphic(graph, new FlxPoint(Width, Height));
+			frames = FlxTileFrames.fromGraphic(graph, new FlxPoint(Width, Height));
 		}
 		else
 		{
@@ -379,7 +377,7 @@ class FlxSprite extends FlxObject
 		var max:Int = (brush.height > brush.width) ? brush.height : brush.width;
 		max = (AutoBuffer) ? Std.int(max * 1.5) : max;
 		
-		frames = TileFrames.fromGraphic(tempGraph, new FlxPoint(max, max));
+		frames = FlxTileFrames.fromGraphic(tempGraph, new FlxPoint(max, max));
 		
 		if (AutoBuffer)
 		{
@@ -539,7 +537,7 @@ class FlxSprite extends FlxObject
 			loadGraphic(FlxGraphic.fromClass(GraphicDefault));
 		}
 		
-		if (alpha == 0 || frame.type == FrameType.EMPTY)
+		if (alpha == 0 || frame.type == FlxFrameType.EMPTY)
 		{
 			return;
 		}
@@ -550,7 +548,7 @@ class FlxSprite extends FlxObject
 		}
 		
 	#if FLX_RENDER_TILE
-		var drawItem:DrawStackItem;
+		var drawItem:FlxDrawStackItem;
 		
 		var ox:Float = origin.x;
 		if (_facingHorizontalMult != 1)
@@ -600,7 +598,7 @@ class FlxSprite extends FlxObject
 			
 			_matrix.identity();
 			
-			if (frame.angle != 0)
+			if (frame.angle != FlxFrameAngle.ANGLE_0)
 			{
 				// handle rotated frames
 				frame.prepareFrameMatrix(_matrix);
@@ -656,10 +654,9 @@ class FlxSprite extends FlxObject
 	}
 	
 	#if FLX_RENDER_TILE
-	private inline function setDrawData(drawItem:DrawStackItem, camera:FlxCamera, matrix:Matrix, ?tileID:Float)
+	private inline function setDrawData(drawItem:FlxDrawStackItem, camera:FlxCamera, matrix:Matrix, ?tileID:Float)
 	{
-		drawItem.setMatrixDrawData(_point, (tileID == null) ? frame.tileID : tileID, matrix,
-			isColored, color, alpha * camera.alpha);
+		drawItem.setDrawData(_point, (tileID == null) ? frame.tileID : tileID, matrix, isColored, color, alpha * camera.alpha);
 	}
 	#end
 	
@@ -893,7 +890,7 @@ class FlxSprite extends FlxObject
 	{
 		if (frame != null && dirty)
 		{
-			if (!flipX && !flipY && frame.type == FrameType.REGULAR)
+			if (!flipX && !flipY && frame.type == FlxFrameType.REGULAR)
 			{
 				framePixels = frame.paintOnBitmap(framePixels);
 			}
@@ -1069,7 +1066,7 @@ class FlxSprite extends FlxObject
 	 */
 	public function isSimpleRenderTile():Bool
 	{
-		return ((angle == 0 && frame.angle == 0) || (bakedRotationAngle > 0));
+		return ((angle == 0 && frame.angle == FlxFrameAngle.ANGLE_0) || (bakedRotationAngle > 0));
 	}
 	
 	/**
@@ -1261,14 +1258,14 @@ class FlxSprite extends FlxObject
 			
 			if (rect != null)
 			{
-				frames = ClippedFrames.clip(frames, rect);
+				frames = FlxClippedFrames.clip(frames, rect);
 				_clipRect = rect.copyTo(new FlxRect());
 			}
 			else
 			{
-				if (frames.type == FrameCollectionType.CLIPPED)
+				if (frames.type == FlxFrameCollectionType.CLIPPED)
 				{
-					frames = cast(frames, ClippedFrames).original;
+					frames = cast(frames, FlxClippedFrames).original;
 				}
 				
 				_clipRect = null;

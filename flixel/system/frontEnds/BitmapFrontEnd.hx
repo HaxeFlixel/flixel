@@ -5,7 +5,7 @@ import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.frames.FlxFramesCollection;
-import flixel.graphics.frames.ImageFrame;
+import flixel.graphics.frames.FlxImageFrame;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets;
@@ -154,9 +154,9 @@ class BitmapFrontEnd
 	 * @param	Key		Force the cache to use a specific Key to index the bitmap.
 	 * @return	The BitmapData we just created.
 	 */
-	public function create(Width:Int, Height:Int, Color:Int, Unique:Bool = false, ?Key:String):FlxGraphic
+	public function create(Width:Int, Height:Int, Color:FlxColor, Unique:Bool = false, ?Key:String):FlxGraphic
 	{
-		return FlxGraphic.createRectangle(Width, Height, Color, Unique, Key);
+		return FlxGraphic.fromRectangle(Width, Height, Color, Unique, Key);
 	}
 	
 	/**
@@ -251,7 +251,7 @@ class BitmapFrontEnd
 	 * @param	unique		Whether generated key should be unique or not.
 	 * @return	Created key.
 	 */
-	public inline function generateKey(systemKey:String, userKey:String, unique:Bool = false):String
+	public function generateKey(systemKey:String, userKey:String, unique:Bool = false):String
 	{
 		var key:String = userKey;
 		if (key == null)
