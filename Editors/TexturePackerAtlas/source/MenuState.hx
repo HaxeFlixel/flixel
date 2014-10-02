@@ -4,7 +4,7 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxState;
-import flixel.graphics.frames.AtlasFrames;
+import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.graphics.frames.FlxFrame;
 import flixel.util.FlxSpriteUtil;
 import openfl.Assets;
@@ -14,7 +14,7 @@ class MenuState extends FlxState
 	override public function create():Void
 	{
 		// TexturePackerData is a helper class to store links to atlas image and atlas data files
-		var tex1:AtlasFrames = AtlasFrames.texturePackerJSON("assets/test-trim-rotation.png", Assets.getText("assets/test-trim-rotation.json"));
+		var tex1:FlxAtlasFrames = FlxAtlasFrames.fromTexturePackerJson("assets/test-trim-rotation.png", Assets.getText("assets/test-trim-rotation.json"));
 		// Create some sprite
 		var x1 = new FlxSprite(20, 20);
 		// and loading atlas in it finally
@@ -26,10 +26,10 @@ class MenuState extends FlxState
 		add(x1);
 		
 		// Let's create some more atlases (just for testing of rotation and trim support)
-		var tex2:AtlasFrames = AtlasFrames.texturePackerJSON("assets/test-rotation.png", Assets.getText("assets/test-rotation.json"));
-		var tex3:AtlasFrames = AtlasFrames.texturePackerJSON("assets/test-trim.png", Assets.getText("assets/test-trim.json"));
-		var tex4:AtlasFrames = AtlasFrames.texturePackerJSON("assets/test.png", Assets.getText("assets/test.json"));
-		var tex5:AtlasFrames = AtlasFrames.texturePackerJSON("assets/anim-trim.png", Assets.getText("assets/anim-trim.json"));
+		var tex2:FlxAtlasFrames = FlxAtlasFrames.fromTexturePackerJson("assets/test-rotation.png", Assets.getText("assets/test-rotation.json"));
+		var tex3:FlxAtlasFrames = FlxAtlasFrames.fromTexturePackerJson("assets/test-trim.png", Assets.getText("assets/test-trim.json"));
+		var tex4:FlxAtlasFrames = FlxAtlasFrames.fromTexturePackerJson("assets/test.png", Assets.getText("assets/test.json"));
+		var tex5:FlxAtlasFrames = FlxAtlasFrames.fromTexturePackerJson("assets/anim-trim.png", Assets.getText("assets/anim-trim.json"));
 		
 		// You can provide first frame to show (see last parameter in loadImageFromTexture() method)
 		// Plus you can generate reversed sprites which is useful for animating character in games
@@ -97,7 +97,7 @@ class MenuState extends FlxState
 		x7.angle = 45;
 		add(x7);
 		
-		var tex6:AtlasFrames = AtlasFrames.sparrow("assets/sparrow/atlas.png", Assets.getText("assets/sparrow/atlas.xml"));
+		var tex6:FlxAtlasFrames = FlxAtlasFrames.fromSparrow("assets/sparrow/atlas.png", Assets.getText("assets/sparrow/atlas.xml"));
 		
 		var x8 = new FlxSprite(500, 200);
 		x8.frames = tex6;
@@ -105,7 +105,7 @@ class MenuState extends FlxState
 		x8.animation.play("walk");
 		add(x8);
 		
-		var tex7:AtlasFrames = AtlasFrames.libGDX("assets/libgdx/test-me.png", Assets.getText("assets/libgdx/test-me.pack"));
+		var tex7:FlxAtlasFrames = FlxAtlasFrames.fromLibGdx("assets/libgdx/test-me.png", Assets.getText("assets/libgdx/test-me.pack"));
 		
 		var x9 = new FlxSprite(400, -50);
 		x9.frames = tex7;

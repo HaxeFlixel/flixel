@@ -2,7 +2,7 @@ package;
 
 import flixel.FlxG;
 import flixel.FlxState;
-import flixel.graphics.frames.BitmapFont;
+import flixel.graphics.frames.FlxBitmapFont;
 import flixel.text.FlxBitmapTextField;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
@@ -20,11 +20,11 @@ class PlayState extends FlxState
 		FlxG.camera.bgColor = FlxColor.WHITE;
 		
 		var letters:String = " !\"#$%&'()*+,-./" + "0123456789:;<=>?" + "@ABCDEFGHIJKLMNO" + "PQRSTUVWXYZ[]^_" + "abcdefghijklmno" + "pqrstuvwxyz{|}~\\";
-		var font:BitmapFont = BitmapFont.fromXNA(Assets.getBitmapData("assets/fontData10pt.png"), letters);
+		var font:FlxBitmapFont = FlxBitmapFont.fromXNA(Assets.getBitmapData("assets/fontData10pt.png"), letters);
 		
 		var textBytes = Assets.getText("assets/NavTitle.fnt");
 		var XMLData = Xml.parse(textBytes);
-		var font2:BitmapFont = BitmapFont.fromAngelCode(Assets.getBitmapData("assets/NavTitle.png"), XMLData);
+		var font2:BitmapFont = FlxBitmapFont.fromAngelCode(Assets.getBitmapData("assets/NavTitle.png"), XMLData);
 		
 		tf = new FlxBitmapTextField(font);
 		tf.text = "Hello World!\nand this is\nmultiline!!!";

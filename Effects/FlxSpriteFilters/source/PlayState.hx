@@ -9,7 +9,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.graphics.FlxGraphic;
-import flixel.graphics.frames.FilterFrames;
+import flixel.graphics.frames.FlxFilterFrames;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
@@ -57,11 +57,11 @@ class PlayState extends FlxState
 	var isAnimSpr5:Bool;
 	var isAnimSpr6:Bool;
 	
-	var spr2Filter:FilterFrames;
-	var spr3Filter:FilterFrames;
-	var spr4Filter:FilterFrames;
-	var spr5Filter:FilterFrames;
-	var spr6Filter:FilterFrames;
+	var spr2Filter:FlxFilterFrames;
+	var spr3Filter:FlxFilterFrames;
+	var spr4Filter:FlxFilterFrames;
+	var spr5Filter:FlxFilterFrames;
+	var spr6Filter:FlxFilterFrames;
 	
 	var tween2:FlxTween;
 	var tween3:FlxTween;
@@ -99,7 +99,7 @@ class PlayState extends FlxState
 		add(txt2);
 		filter2 = new GlowFilter(0xFF0000, 1, 50, 50, 1.5, 1);
 		
-		spr2Filter = FilterFrames.fromFrames(spr2.frames, 50, 50);
+		spr2Filter = FlxFilterFrames.fromFrames(spr2.frames, 50, 50);
 		updateFilter(spr2, spr2Filter);
 		
 		// BLUR
@@ -110,7 +110,7 @@ class PlayState extends FlxState
 		add(txt3);
 		filter3 = new BlurFilter();
 		
-		spr3Filter = FilterFrames.fromFrames(spr3.frames, 50, 50);
+		spr3Filter = FlxFilterFrames.fromFrames(spr3.frames, 50, 50);
 		spr3Filter.addFilter(filter3);
 		updateFilter(spr3, spr3Filter);
 		
@@ -122,7 +122,7 @@ class PlayState extends FlxState
 		add(txt4);
 		filter4 = new DropShadowFilter(10, 45, 0, .75, 10, 10, 1, 1);
 		
-		spr4Filter = FilterFrames.fromFrames(spr4.frames, 50, 50);
+		spr4Filter = FlxFilterFrames.fromFrames(spr4.frames, 50, 50);
 		spr4Filter.addFilter(filter4);
 		updateFilter(spr4, spr4Filter);
 		#end
@@ -132,7 +132,7 @@ class PlayState extends FlxState
 		spr5 = new FlxSprite(FlxG.width * 0.5 - 50, FlxG.height / 2 + 100 - 50, FlxGraphic.fromClass(GraphicLogo));
 		add(spr5);
 		filter5 = new BevelFilter(6);
-		spr5Filter = FilterFrames.fromFrames(spr5.frames, 50, 50);
+		spr5Filter = FlxFilterFrames.fromFrames(spr5.frames, 50, 50);
 		spr5Filter.addFilter(filter5);
 		updateFilter(spr5, spr5Filter);
 		
@@ -145,7 +145,7 @@ class PlayState extends FlxState
 		add(spr6);
 		filter6 = (new DisplacementMapFilter(Assets.getBitmapData("assets/StaticMap.png"), 
 						new Point(0, 0), 1, 1, 15, 1, DisplacementMapFilterMode.COLOR, 1, 0));
-		spr6Filter = FilterFrames.fromFrames(spr6.frames, 50, 50);
+		spr6Filter = FlxFilterFrames.fromFrames(spr6.frames, 50, 50);
 		spr6Filter.addFilter(filter6);
 		updateFilter(spr6, spr6Filter);
 		
@@ -253,7 +253,7 @@ class PlayState extends FlxState
 		#end
 	}
 	
-	function updateFilter(spr:FlxSprite, sprFilter:FilterFrames)
+	function updateFilter(spr:FlxSprite, sprFilter:FlxFilterFrames)
 	{
 		sprFilter.applyToSprite(spr, false, true);
 	}
