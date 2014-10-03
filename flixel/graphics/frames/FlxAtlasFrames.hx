@@ -314,6 +314,62 @@ class FlxAtlasFrames extends FlxFramesCollection
 	}
 	
 	/**
+	 * Parsing method for Sprite Sheet Packer atlases (http://spritesheetpacker.codeplex.com/).
+	 * 
+	 * @param	Source			the image source (can be FlxGraphic, String or BitmapData).
+	 * @param	Description		contents of the file with atlas description. You can get it with Assets.getText(path/to/description/file).
+	 * 							Or you can just pass path to description file in assets directory.
+	 * @return	Newly created AtlasFrames collection
+	 */
+	public static function fromSpriteSheetPacker(Source:FlxGraphicAsset, Description:String):FlxAtlasFrames
+	{
+		var graphic:FlxGraphic = FlxG.bitmap.add(Source);
+		if (graphic == null)	return null;
+		
+		// No need to parse data again
+		var frames:FlxAtlasFrames = FlxAtlasFrames.findFrame(graphic);
+		if (frames != null)
+			return frames;
+		
+		if ((graphic == null) || (Description == null)) return null;
+		
+		frames = new FlxAtlasFrames(graphic);
+		
+		if (Assets.exists(Description))
+		{
+			Description = Assets.getText(Description);
+		}
+		
+		var pack:String = StringTools.trim(Description);
+		var lines:Array<String> = pack.split("\n");
+		var numImages:Int = lines.length;
+		
+		var name:String;
+		var angle:FlxFrameAngle = FlxFrameAngle.ANGLE_0;
+		var rect:FlxRect;
+		var sourceSize:FlxPoint;
+		var offset:FlxPoint;
+		
+		var currImageData:Array<String>;
+		var currImageRegion:Array<String>;
+		
+		for (i in 0...numImages)
+		{
+			currImageData = lines[i].split("=");
+			name = StringTools.trim(currImageData[0]);
+			currImageRegion = StringTools.trim(currImageData[1]).split(" ");
+			
+			rect = new FlxRect(Std.parseInt(currImageRegion[0]), Std.parseInt(currImageRegion[1]), Std.parseInt(currImageRegion[2]), Std.parseInt(currImageRegion[3]));
+			sourceSize = new FlxPoint(rect.width, rect.height);
+			offset = new FlxPoint();
+			
+			frames.addAtlasFrame(rect, sourceSize, offset, name, angle);
+		}
+		
+		return frames;
+	}
+	
+	/**
 	 * Return AtlasFrame of the specified FlxGraphic object.
 	 * 
 	 * @param	graphic	FlxGraphic object to find AtlasFrames collection for.
