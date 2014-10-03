@@ -113,6 +113,13 @@ class MenuState extends FlxState
 		x9.scale.set(0.5, 0.5);
 		add(x9);
 		
+		var tex8:FlxAtlasFrames = FlxAtlasFrames.fromSpriteSheetPacker("assets/spritesheetpacker/1.png", "assets/spritesheetpacker/1.txt");
+		
+		var x10 = new FlxSprite();
+		x10.frames = tex8;
+		x10.animation.frameName = "wabbit_alpha";
+		add(x10);
+		
 		// Remove atlas bitmaps from memory (useful for targets with hardware acceleration: cpp only atm).
 		FlxG.bitmap.dumpCache();
 	}
