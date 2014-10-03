@@ -334,7 +334,7 @@ class FlxBitmapFont extends FlxFramesCollection
 	 * @param	spacing		Spaces between characters in the font set. Default is null which means no spaces.
 	 * @return	Generated bitmap font object.
 	 */
-	public static function fromMonospace(source:FlxGraphicAsset, letters:String = null, charSize:Point, region:Rectangle = null, spacing:Point = null):FlxBitmapFont
+	public static function fromMonospace(source:FlxGraphicAsset, letters:String = null, charSize:FlxPoint, region:FlxRect = null, spacing:Point = null):FlxBitmapFont
 	{
 		var graphic:FlxGraphic = FlxG.bitmap.add(source, false);
 		if (graphic == null)	return null;
@@ -347,7 +347,7 @@ class FlxBitmapFont extends FlxFramesCollection
 		
 		if (graphic == null) return null;
 		
-		region = (region == null) ? graphic.bitmap.rect : region;
+		region = (region == null) ? FlxRect.flxRect.copyFromFlash(graphic.bitmap.rect) : region;
 		
 		if (region.width == 0 || region.right > graphic.bitmap.width)
 		{
