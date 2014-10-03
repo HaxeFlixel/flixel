@@ -200,7 +200,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 	}
 	
 	/**
-	 * Parsing method for Sparrow texture atlases.
+	 * Parsing method for Sparrow texture atlases (they can be generated with Shoebox http://renderhjs.net/shoebox/ for example).
 	 * 
 	 * @param	Source			the image source (can be FlxGraphic, String or BitmapData).
 	 * @param	Description		contents of xml file with atlas description. You can get it with Assets.getText(path/to/description.xml)
