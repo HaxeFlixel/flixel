@@ -83,6 +83,10 @@ class FlxSound extends FlxBasic
 	 */
 	public var time(default, null):Float;
 	/**
+	 * The sound group this sound belongs to
+	 */
+	public var group(default, set):FlxSoundGroup;
+	/**
 	 * Whether or not this sound should loop.
 	 */
 	@:isVar
@@ -490,10 +494,12 @@ class FlxSound extends FlxBasic
 	/**
 	 * Call after adjusting the volume to update the sound channel's settings.
 	 */
-	private function updateTransform():Void
+	public function updateTransform():Void
 	{
 		#if !FLX_NO_SOUND_SYSTEM
-		_transform.volume = (FlxG.sound.muted ? 0 : 1) * FlxG.sound.volume * _volume * _volumeAdjust;
+		_transform.volume = (FlxG.sound.muted ? 0 : 1) *
+		                    (group != null ? group.volume : 1) *
+							FlxG.sound.volume * _volume * _volumeAdjust;
 		#else
 		_transform.volume = _volume * _volumeAdjust;
 		#end
@@ -608,6 +614,30 @@ class FlxSound extends FlxBasic
 		pause();
 	}
 	#end
+	
+	private function set_group(group:FlxSoundGroup):FlxSoundGroup
+	{	
+		if (this.group != group)
+		{
+			var oldGroup:FlxSoundGroup = this.group;
+			
+			// New group must be set before removing sound to prevent infinite recursion
+			this.group = group;
+			
+			if (oldGroup != null)
+			{
+				oldGroup.remove(this);
+			}
+			
+			if (group != null)
+			{
+				group.add(this);
+			}
+			
+			updateTransform();
+		}
+		return group;
+	}
 	
 	private inline function get_playing():Bool
 	{

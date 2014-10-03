@@ -1,5 +1,6 @@
 package flixel.system.frontEnds;
 import flixel.input.keyboard.FlxKey;
+import flixel.system.FlxSoundGroup;
 
 #if !FLX_NO_SOUND_SYSTEM
 import flash.media.Sound;
@@ -63,13 +64,19 @@ class SoundFrontEnd
 	public var volume(default, set):Float = 1;
 	
 	/**
+	 * Collection of sound groups to which sounds may be added
+	 */
+	private var groups:Map<String, FlxSoundGroup> = new Map<String, FlxSoundGroup>();
+	
+	/**
 	 * Set up and play a looping background soundtrack.
 	 * 
 	 * @param	Music		The sound file you want to loop in the background.
 	 * @param	Volume		How loud the sound should be, from 0 to 1.
 	 * @param	Looped		Whether to loop this music.
+	 * @param	GroupName   The name of the sound group to which this music belongs.
 	 */
-	public function playMusic(Music:FlxSoundAsset, Volume:Float = 1, Looped:Bool = true):Void
+	public function playMusic(Music:FlxSoundAsset, Volume:Float = 1, Looped:Bool = true, ?GroupName:String):Void
 	{
 		if (music == null)
 		{
@@ -83,6 +90,7 @@ class SoundFrontEnd
 		music.loadEmbedded(Music, Looped);
 		music.volume = Volume;
 		music.persist = true;
+		music.group = getGroup(GroupName);
 		music.play();
 	}
 	
@@ -92,12 +100,13 @@ class SoundFrontEnd
 	 * @param	EmbeddedSound	The embedded sound resource you want to play.  To stream, use the optional URL parameter instead.
 	 * @param	Volume			How loud to play it (0 to 1).
 	 * @param	Looped			Whether to loop this sound.
+	 * @param	GroupName       The name of the sound group to which this sound belongs
 	 * @param	AutoDestroy		Whether to destroy this sound when it finishes playing.  Leave this value set to "false" if you want to re-use this FlxSound instance.
 	 * @param	AutoPlay		Whether to play the sound.
 	 * @param	URL				Load a sound from an external web resource instead.  Only used if EmbeddedSound = null.
 	 * @return	A FlxSound object.
 	 */
-	public function load(?EmbeddedSound:FlxSoundAsset, Volume:Float = 1, Looped:Bool = false, AutoDestroy:Bool = false, AutoPlay:Bool = false, ?URL:String, ?OnComplete:Void->Void):FlxSound
+	public function load(?EmbeddedSound:FlxSoundAsset, Volume:Float = 1, Looped:Bool = false, ?GroupName:String, AutoDestroy:Bool = false, AutoPlay:Bool = false, ?URL:String, ?OnComplete:Void->Void):FlxSound
 	{
 		if ((EmbeddedSound == null) && (URL == null))
 		{
@@ -122,6 +131,8 @@ class SoundFrontEnd
 		{
 			sound.play();
 		}
+		
+		sound.group = getGroup(GroupName);
 		
 		return sound;
 	}
@@ -185,16 +196,18 @@ class SoundFrontEnd
 	 * @param	EmbeddedSound	The sound you want to play.
 	 * @param	Volume			How loud to play it (0 to 1).
 	 * @param	Looped			Whether to loop this sound.
+	 * @param	GroupName       The name of the sound group to which this sound belongs
 	 * @param	AutoDestroy		Whether to destroy this sound when it finishes playing.  Leave this value set to "false" if you want to re-use this FlxSound instance.
 	 * @return	The FlxSound object.
 	 */
-	public function play(EmbeddedSound:FlxSoundAsset, Volume:Float = 1, Looped:Bool = false, AutoDestroy:Bool = true, ?OnComplete:Void->Void):FlxSound
+	public function play(EmbeddedSound:FlxSoundAsset, Volume:Float = 1, Looped:Bool = false, ?GroupName:String, AutoDestroy:Bool = true, ?OnComplete:Void->Void):FlxSound
 	{
 		if (Std.is(EmbeddedSound, String))
 		{
 			EmbeddedSound = cache(EmbeddedSound);
 		}
 		var sound = list.recycle(FlxSound).loadEmbedded(EmbeddedSound, Looped, AutoDestroy, OnComplete);
+		sound.group = getGroup(GroupName);
 		sound.volume = Volume;
 		return sound.play();
 	}
@@ -203,15 +216,16 @@ class SoundFrontEnd
 	 * Creates a new sound object from a URL.
 	 * NOTE: Just calls FlxG.loadSound() with AutoPlay == true.
 	 * 
-	 * @param	URL		The URL of the sound you want to play.
-	 * @param	Volume	How loud to play it (0 to 1).
-	 * @param	Looped	Whether or not to loop this sound.
+	 * @param	URL		   The URL of the sound you want to play.
+	 * @param	Volume	   How loud to play it (0 to 1).
+	 * @param	Looped	   Whether or not to loop this sound.
+	 * @param	GroupName  The name of the sound group to which the sound belongs.
 	 * @param	AutoDestroy		Whether to destroy this sound when it finishes playing.  Leave this value set to "false" if you want to re-use this FlxSound instance.
 	 * @return	A FlxSound object.
 	 */
-	public inline function stream(URL:String, Volume:Float = 1, Looped:Bool = false, AutoDestroy:Bool = true, ?OnComplete:Void->Void):FlxSound
+	public inline function stream(URL:String, Volume:Float = 1, Looped:Bool = false, ?GroupName:String, AutoDestroy:Bool = true, ?OnComplete:Void->Void):FlxSound
 	{
-		return load(null, Volume, Looped, AutoDestroy, true, URL, OnComplete);
+		return load(null, Volume, Looped, GroupName, AutoDestroy, true, URL, OnComplete);
 	}
 	
 	/**
@@ -310,6 +324,46 @@ class SoundFrontEnd
 			FlxG.game.soundTray.show();
 		}
 		#end
+	}
+	
+	/**
+	 * Add a new sound group
+	 * @param	name          The name of the group
+	 * @param	volume        The initial volume of the group
+	 * @return The new sound group
+	 */
+	public function addGroup(name:String, volume:Float = 1):FlxSoundGroup
+	{
+		var group:FlxSoundGroup = new FlxSoundGroup(name, volume);
+		groups.set(name, group);
+		return group;
+	}
+	
+	/**
+	 * Get a named FlxSoundGroup instance
+	 * @param	name   The name of the group to get
+	 * @return The sound group
+	 */
+	public function getGroup(name:String):FlxSoundGroup
+	{
+		return groups.get(name);
+	}
+	
+	/**
+	 * Delete a sound group
+	 * @param	name   The name fo the group to delete
+	 * @return	True if group was succesfully deleted, false otherwise
+	 */
+	public function deleteGroup(name:String):Bool
+	{
+		if (groups.exists(name))
+		{
+			for (sound in groups.get(name).sounds)
+			{
+				sound.group = null;
+			}
+		}
+		return groups.remove(name);
 	}
 	
 	private function new()
