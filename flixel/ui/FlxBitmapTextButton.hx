@@ -11,7 +11,7 @@ import flixel.ui.FlxButton;
 /**
  * A button with a bitmap text field for the label
  */
-class BitmapTextButton extends FlxTypedButton<FlxBitmapTextField>
+class FlxBitmapTextButton extends FlxTypedButton<FlxBitmapTextField>
 {
 	public function new(X:Float = 0, Y:Float = 0, ?Label:String, ?OnClick:Void->Void)
 	{
