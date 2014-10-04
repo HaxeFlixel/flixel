@@ -26,4 +26,15 @@ class FlxTimerTest extends FlxTest
 		
 		Assert.isTrue(calledBack);
 	}
+	
+	@Test
+	function testCancelNoCallback()
+	{
+		timer.start(0.01, function(_)
+		{
+			Assert.fail("Callback called");
+		});
+		timer.cancel();
+		step();
+	}
 }

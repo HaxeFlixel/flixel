@@ -170,11 +170,9 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	{
 		_flashPoint = null;
 		_flashRect = null;
-		var i:Int = 0;
-		var l:Int;
 		
-		FlxDestroyUtil.destroyArray(_tileObjects);
-		FlxDestroyUtil.destroyArray(_buffers);
+		_tileObjects = FlxDestroyUtil.destroyArray(_tileObjects);
+		_buffers = FlxDestroyUtil.destroyArray(_buffers);
 		
 		#if FLX_RENDER_BLIT
 		_rects = null;
@@ -197,7 +195,6 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		scale = FlxDestroyUtil.destroy(scale);
 		
 		colorTransform = null;
-		blend = null;
 		
 		FlxG.signals.gameResized.remove(onGameResize);
 		
@@ -868,23 +865,8 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 */
 	public function updateBuffers():Void
 	{
-		var i:Int = 0;
-		var l:Int;
-		
-		if (_buffers != null)
-		{
-			i = 0;
-			l = _buffers.length;
-			
-			for (i in 0...l)
-			{
-				_buffers[i].destroy();
-			}
-			
-			_buffers = null;
-		}
-		
-		_buffers = new Array<FlxTilemapBuffer>();
+		_buffers = FlxDestroyUtil.destroyArray(_buffers);
+		_buffers = [];
 	}
 	
 	/**
@@ -1201,10 +1183,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		}
 		
 		#if FLX_RENDER_BLIT
-		for (buffer in _buffers)
-		{
-			buffer.dirty = true;
-		}
+		setDirty();
 		#end
 	}
 	
@@ -1232,10 +1211,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 			_blendInt = 0;
 		}
 		#else
-		for (buffer in _buffers)
-		{
-			buffer.dirty = true;
-		}
+		setDirty();
 		#end	
 		
 		return blend = Value;

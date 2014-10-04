@@ -96,6 +96,7 @@ class FlxAssets
 				fileReferences = fileReferences.concat(getFileReferences(directory + name + "/", true, filterExtensions));
 			}
 		}
+		
 		return fileReferences;
 	}
 #else

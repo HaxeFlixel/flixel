@@ -89,7 +89,7 @@ class FlxKeyboard extends FlxKeyManager<FlxKey, FlxKeyList>
 			
 			_nativeCorrection.set("43_75", FlxKey.NUMPADPLUS);
 			_nativeCorrection.set("45_77", FlxKey.NUMPADMINUS);
-			_nativeCorrection.set("47_79", FlxKey.NUMPADSLASH);
+			_nativeCorrection.set("47_79", FlxKey.SLASH);
 			_nativeCorrection.set("46_78", FlxKey.NUMPADPERIOD);
 			_nativeCorrection.set("42_74", FlxKey.NUMPADMULTIPLY);
 		#end
