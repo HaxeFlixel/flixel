@@ -499,7 +499,7 @@ class FlxSound extends FlxBasic
 		#if !FLX_NO_SOUND_SYSTEM
 		_transform.volume = (FlxG.sound.muted ? 0 : 1) *
 		                    (group != null ? group.volume : 1) *
-							FlxG.sound.volume * _volume * _volumeAdjust;
+	                        FlxG.sound.volume * _volume * _volumeAdjust;
 		#else
 		_transform.volume = _volume * _volumeAdjust;
 		#end
