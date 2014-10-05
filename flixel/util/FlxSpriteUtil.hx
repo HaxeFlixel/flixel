@@ -465,8 +465,8 @@ class FlxSpriteUtil
 		{
 			flashGfx.lineTo(p.x, p.y);
 		}
-		Vertices.unshift(p);
 		endDraw(sprite, drawStyle);
+		Vertices.unshift(p);
 		return sprite;
 	}
 
