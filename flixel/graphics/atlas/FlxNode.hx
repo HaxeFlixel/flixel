@@ -5,6 +5,8 @@ import flash.geom.Rectangle;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxImageFrame;
 import flixel.graphics.frames.FlxTileFrames;
+import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 
 /**
@@ -69,7 +71,7 @@ class FlxNode implements IFlxDestroyable
 	/**
 	 * Helper rectangle object, showing actual size and position of image on atlas bitmapdata
 	 */
-	public var contentRect(get, null):Rectangle;
+	public var contentRect(get, null):FlxRect;
 	/**
 	 * The width of image in in this node (node.width - atlas.borderX)
 	 */
@@ -79,7 +81,7 @@ class FlxNode implements IFlxDestroyable
 	 */
 	public var contentHeight(get, null):Int;
 	
-	private var _contentRect:Rectangle;
+	private var _contentRect:FlxRect;
 	
 	/**
 	 * Node constructot
@@ -125,7 +127,7 @@ class FlxNode implements IFlxDestroyable
 	 * @param	region			Region of node to use as a source of graphic. Default value is null, which means that the whole node will be used for it.
 	 * @return	Created TileFrames object for this node
 	 */
-	public function getTileFrames(tileSize:Point, tileSpacing:Point = null, region:Rectangle = null):FlxTileFrames
+	public function getTileFrames(tileSize:FlxPoint, tileSpacing:FlxPoint = null, region:FlxRect = null):FlxTileFrames
 	{
 		var graphic:FlxGraphic = FlxG.bitmap.add(atlas.atlasBitmapData, false, atlas.name);
 		
@@ -182,11 +184,11 @@ class FlxNode implements IFlxDestroyable
 		return Std.int(rect.height - atlas.borderY);
 	}
 	
-	private inline function get_contentRect():Rectangle
+	private inline function get_contentRect():FlxRect
 	{
 		if (_contentRect == null)
 		{
-			_contentRect = new Rectangle(x, y, contentWidth, contentHeight);
+			_contentRect = new FlxRect(x, y, contentWidth, contentHeight);
 		}
 		
 		return _contentRect;

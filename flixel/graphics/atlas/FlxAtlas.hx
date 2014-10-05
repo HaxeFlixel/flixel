@@ -6,7 +6,8 @@ import flash.geom.Rectangle;
 import flixel.FlxG;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxAtlasFrames;
-import flixel.graphics.frames.TileFrames;
+import flixel.graphics.frames.FlxTileFrames;
+import flixel.math.FlxRect;
 import flixel.util.FlxBitmapDataUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
@@ -168,7 +169,7 @@ class FlxAtlas implements IFlxDestroyable
 	 * @param	region			Region of source image to use as a source graphic
 	 * @return	Generated TileFrames for added node
 	 */
-	public function addNodeWithSpacings(Graphic:FlxGraphicSource, ?Key:String, tileSize:Point, tileSpacing:Point, region:Rectangle = null):TileFrames
+	public function addNodeWithSpacings(Graphic:FlxGraphicSource, ?Key:String, tileSize:FlxPoint, tileSpacing:FlxPoint, region:FlxRect = null):FlxTileFrames
 	{
 		var key:String = FlxAssets.resolveKey(Graphic, Key);
 		
@@ -215,7 +216,7 @@ class FlxAtlas implements IFlxDestroyable
 			// if the node is filled and AtlasFrames does not contain image of the node, then we should add it
 			if (node.filled && !atlasFrames.framesHash.exists(key))
 			{
-				var frame:Rectangle = new Rectangle(node.x, node.y, node.width - borderX, node.height - borderY);
+				var frame:FlxRect = new FlxRect(node.x, node.y, node.width - borderX, node.height - borderY);
 				var sourceSize:FlxPoint = FlxPoint.get(node.width - borderX, node.height - borderY);
 				var offset:FlxPoint = FlxPoint.get(0, 0);
 				
