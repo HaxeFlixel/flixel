@@ -9,7 +9,7 @@ class FlxRayData {
 	public var ray:FlxRay;
 	
 	/**
-	 * distance along ray that the intersection occurred at.
+	 * distance along ray that the intersection occurred at divided by the length of the ray (so start is always 0<=start<=1 if the ray is not inFinite )
 	 */
 	public var start:Float;
 	public var end:Float;
