@@ -170,7 +170,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @return  A reference to this instance of FlxTilemap, for chaining as usual :)
 	 */
 	public function loadMap(MapData:FlxTilemapAsset, TileGraphic:FlxTilemapGraphicAsset, TileWidth:Int = 0, TileHeight:Int = 0, 
-		?AutoTile:FlxTilemapAutoTiling, StartingIndex:Int = 0, DrawIndex:Int = 1, CollideIndex:Int = 1):FlxBaseTilemap<Tile>
+		?AutoTile:FlxTilemapAutoTiling, StartingIndex:Int = 0, DrawIndex:Int = 1, CollideIndex:Int = 1)
 	{
 		auto = (AutoTile == null) ? OFF : AutoTile;
 		_startingIndex = (StartingIndex <= 0) ? 0 : StartingIndex;

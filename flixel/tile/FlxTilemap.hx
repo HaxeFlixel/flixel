@@ -222,28 +222,6 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		return value;
 	}
 	
-	override public function loadMap(MapData:FlxTilemapAsset, TileGraphic:FlxTilemapGraphicAsset, TileWidth:Int = 0, TileHeight:Int = 0, 
-		?AutoTile:FlxTilemapAutoTiling, StartingIndex:Int = 0, DrawIndex:Int = 1, CollideIndex:Int = 1):FlxTilemap
-	{
-		auto = (AutoTile == null) ? OFF : AutoTile;
-		_startingIndex = (StartingIndex <= 0) ? 0 : StartingIndex;
-
-		if (auto != OFF)
-		{
-			_startingIndex = 1;
-			DrawIndex = 1;
-			CollideIndex = 1;
-		}
-		
-		loadMapData(MapData);
-		applyAutoTile(DrawIndex, CollideIndex);
-		applyCustomRemap();
-		randomizeIndices();
-		cacheGraphics(TileWidth, TileHeight, TileGraphic);
-		
-		return this;
-	}
-	
 	override private function cacheGraphics(TileWidth:Int, TileHeight:Int, TileGraphic:FlxTilemapGraphicAsset):Void 
 	{
 		if (Std.is(TileGraphic, FlxTileFrames))
