@@ -237,12 +237,7 @@ class FlxGraphic
 	 */
 	private static inline function getBitmap(Bitmap:BitmapData, Unique:Bool = false):BitmapData
 	{
-		if (Unique)
-		{
-			Bitmap = Bitmap.clone();
-		}
-		
-		return Bitmap;
+		return Unique ? Bitmap.clone() : Bitmap;
 	}
 	
 	/**

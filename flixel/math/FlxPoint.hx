@@ -5,6 +5,7 @@ import flash.geom.Point;
 import flixel.util.FlxPool;
 import flixel.util.FlxPool.IFlxPooled;
 import flixel.util.FlxStringUtil;
+import openfl.geom.Matrix;
 
 /**
  * Stores a 2D floating point coordinate.
@@ -419,6 +420,19 @@ class FlxPoint implements IFlxPooled
 		return FlxStringUtil.getDebugString([ 
 			LabelValuePair.weak("x", x),
 			LabelValuePair.weak("y", y)]);
+	}
+	
+	/**
+	 * Applies tranformation matrix to this point
+	 * @param	matrix	tranformation matrix
+	 * @return	transformed point
+	 */
+	public inline function transform(matrix:Matrix):FlxPoint
+	{
+		var x1:Float = x * matrix.a + y * matrix.c + matrix.tx;
+		var y1:Float = x * matrix.b + y * matrix.d + matrix.ty;
+		
+		return set(x1, y1);
 	}
 	
 	/**

@@ -414,7 +414,7 @@ class FlxBitmapTextField extends FlxSprite
 				currTileY = _borderDrawData[dataPos + 2];
 				
 				_tilePoint.set(currTileX, currTileY);
-				_matrix.transformFlxPoint(_tilePoint);
+				_tilePoint.transform(_matrix);
 				_tilePoint.addPoint(_point);
 				
 				drawItem.setDrawData(_tilePoint, tileID, _tileMatrix, true, bColor, alphaToUse);
@@ -432,7 +432,7 @@ class FlxBitmapTextField extends FlxSprite
 				currTileY = _textDrawData[dataPos + 2];
 				
 				_tilePoint.set(currTileX, currTileY);
-				_matrix.transformFlxPoint(_tilePoint);
+				_tilePoint.transform(_matrix);
 				_tilePoint.addPoint(_point);
 				
 				drawItem.setDrawData(_tilePoint, tileID, _tileMatrix, true, tColor, alphaToUse);

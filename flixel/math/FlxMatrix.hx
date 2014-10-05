@@ -15,19 +15,6 @@ class FlxMatrix extends Matrix
 	public static var MATRIX:FlxMatrix = new FlxMatrix();
 	
 	/**
-	 * Applies tranformation of this matrix to specified point
-	 * @param	point	FlxPoint to transform
-	 * @return	transformed point
-	 */
-	public inline function transformFlxPoint(point:FlxPoint):FlxPoint
-	{
-		var x:Float = point.x * a + point.y * c + tx;
-		var y:Float = point.x * b + point.y * d + ty;
-		
-		return point.set(x, y);
-	}
-	
-	/**
 	 * Rotates this matrix, but takes the values of sine and cosine,
 	 * so it might be usefull when you rotate multiple matrices by the same angle
 	 * @param	cos	The cosine value for rotation angle
