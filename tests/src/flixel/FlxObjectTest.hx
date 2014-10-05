@@ -1,6 +1,7 @@
 package flixel;
 
 import flixel.FlxObject;
+import flixel.graphics.FlxGraphic;
 import flixel.math.FlxPoint;
 import flixel.tile.FlxTilemap;
 import massive.munit.Assert;
@@ -83,7 +84,7 @@ class FlxObjectTest extends FlxTest
 	@Test
 	function testVelocityCollidingWithTilemap()
 	{
-		tilemap.loadMap("1, 1, 1, 1, 1, 1, 1", GraphicAuto);
+		tilemap.loadMap("1, 1, 1, 1, 1, 1, 1", FlxGraphic.fromClass(GraphicAuto));
 		velocityColldingWith(tilemap);
 	}
 	
