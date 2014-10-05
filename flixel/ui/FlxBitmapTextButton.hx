@@ -2,6 +2,7 @@ package flixel.ui;
 
 import flixel.system.FlxAssets;
 import flixel.text.FlxBitmapTextField;
+import flixel.text.FlxText.FlxTextAlign;
 import flixel.text.pxText.PxBitmapFont;
 import flixel.text.pxText.PxTextAlign;
 import flixel.math.FlxPoint;
@@ -10,7 +11,7 @@ import flixel.ui.FlxButton;
 /**
  * A button with a bitmap text field for the label
  */
-class PxButton extends FlxTypedButton<FlxBitmapTextField>
+class FlxBitmapTextButton extends FlxTypedButton<FlxBitmapTextField>
 {
 	public function new(X:Float = 0, Y:Float = 0, ?Label:String, ?OnClick:Void->Void)
 	{
@@ -18,19 +19,13 @@ class PxButton extends FlxTypedButton<FlxBitmapTextField>
 		
 		if (Label != null)
 		{
-			// TODO: redo this
-			if (PxBitmapFont.fetch("nokiafc22") == null)
-			{
-				PxBitmapFont.store("nokiafc22", new PxBitmapFont().loadPixelizer(FlxAssets.getBitmapData("assets/data/fontData11pt.png"), " !\"#$%&'()*+,-./" + "0123456789:;<=>?" + "@ABCDEFGHIJKLMNO" + "PQRSTUVWXYZ[]^_" + "abcdefghijklmno" + "pqrstuvwxyz{|}~\\`"));
-			}
-			
-			label = new FlxBitmapTextField(PxBitmapFont.fetch("nokiafc22"));
+			label = new FlxBitmapTextField();
 			label.width = 80;
 			label.text = Label;
 			label.fontScale = 0.7 * 10 / 11;
-			label.color = 0x333333;
-			label.useTextColor = false;
-			label.alignment = PxTextAlign.CENTER;
+			label.color = 0xFF333333;
+			label.useTextColor = true;
+			label.alignment = FlxTextAlign.CENTER;
 			
 			for (offset in labelOffsets)
 			{

@@ -1,4 +1,5 @@
 package flixel.system;
+
 #if !doc
 import flash.display.Bitmap;
 import flash.display.BitmapData;
@@ -28,7 +29,7 @@ private class GraphicLogoCorners extends BitmapData {}
  */
 class FlxPreloader extends FlxBasePreloader
 {
-	#if !js
+	#if (!js && (openfl < "3.0.0-alpha"))
 	
 	private static var BlendModeScreen = BlendMode.SCREEN;
 	private static var BlendModeOverlay = BlendMode.OVERLAY;

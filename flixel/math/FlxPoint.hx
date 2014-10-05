@@ -5,16 +5,15 @@ import flash.geom.Point;
 import flixel.util.FlxPool;
 import flixel.util.FlxPool.IFlxPooled;
 import flixel.util.FlxStringUtil;
+import openfl.geom.Matrix;
 
 /**
  * Stores a 2D floating point coordinate.
  */
 class FlxPoint implements IFlxPooled
 {
-	/**
-	 * Used to account for floating-point inaccuracies in the equals() function.
-	 */
-	public static inline var EPSILON:Float = 0.0000001;
+	public static var flxPoint:FlxPoint = new FlxPoint();
+	public static var point:Point = new Point();
 	
 	private static var _pool = new FlxPool<FlxPoint>(FlxPoint);
 	
@@ -202,7 +201,7 @@ class FlxPoint implements IFlxPooled
 	 * @param	Point	Any Point.
 	 * @return	A reference to the altered point parameter.
 	 */
-	public inline function copyToFlash(?FlashPoint:Point):Point
+	public inline function copyToFlash(FlashPoint:Point):Point
 	{
 		if (FlashPoint == null)
 		{
@@ -400,12 +399,12 @@ class FlxPoint implements IFlxPooled
 	/**
 	 * Function to compare this FlxPoint to another.
 	 * 
-	 * @param	OtherFlxPoint  The other FlxPoint to compare to this one.
+	 * @param	point  The other FlxPoint to compare to this one.
 	 * @return	True if the FlxPoints have the same x and y value, false otherwise.
 	 */
-	public inline function equals(OtherFlxPoint:FlxPoint):Bool
+	public inline function equals(point:FlxPoint):Bool
 	{
-		return Math.abs(x - OtherFlxPoint.x) < EPSILON && Math.abs(y - OtherFlxPoint.y) < EPSILON;
+		return FlxMath.equal(x, point.x) && FlxMath.equal(y, point.y);
 	}
 	
 	/**
@@ -421,6 +420,19 @@ class FlxPoint implements IFlxPooled
 		return FlxStringUtil.getDebugString([ 
 			LabelValuePair.weak("x", x),
 			LabelValuePair.weak("y", y)]);
+	}
+	
+	/**
+	 * Applies tranformation matrix to this point
+	 * @param	matrix	tranformation matrix
+	 * @return	transformed point
+	 */
+	public inline function transform(matrix:Matrix):FlxPoint
+	{
+		var x1:Float = x * matrix.a + y * matrix.c + matrix.tx;
+		var y1:Float = x * matrix.b + y * matrix.d + matrix.ty;
+		
+		return set(x1, y1);
 	}
 	
 	/**

@@ -11,16 +11,20 @@ import flash.geom.ColorTransform;
 import flash.geom.Matrix;
 import flash.Lib;
 import flixel.effects.postprocess.PostProcess;
+import flixel.graphics.tile.FlxTilesheet;
 import flixel.math.FlxAngle;
+import flixel.math.FlxMatrix;
+import flixel.math.FlxPoint;
 import flixel.math.FlxRandom;
+import flixel.math.FlxRect;
 import flixel.system.FlxSplash;
-import flixel.system.layer.TileSheetExt;
 import flixel.system.replay.FlxReplay;
-import flixel.text.pxText.PxBitmapFont;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import openfl.Assets;
+import openfl.geom.Point;
+import openfl.geom.Rectangle;
 
 #if FLX_POST_PROCESS
 import openfl.display.OpenGLView;
@@ -364,10 +368,10 @@ class FlxGame extends Sprite
 		
 		_lostFocus = false;
 		FlxG.signals.focusGained.dispatch();
+		_state.onFocus();
 		
 		if (!FlxG.autoPause) 
 		{
-			_state.onFocus();
 			return;
 		}
 		
@@ -400,10 +404,10 @@ class FlxGame extends Sprite
 		
 		_lostFocus = true;
 		FlxG.signals.focusLost.dispatch();
+		_state.onFocusLost();
 		
 		if (!FlxG.autoPause) 
 		{
-			_state.onFocusLost();
 			return;
 		}
 		
@@ -435,15 +439,17 @@ class FlxGame extends Sprite
 		FlxG.bitmap.onContext();
 		#end
 		
-		_state.onResize(width, height);
-		FlxG.signals.gameResized.dispatch(width, height);
-		
 		resizeGame(width, height);
 	}
 	
 	private function resizeGame(width:Int, height:Int):Void
 	{
 		FlxG.resizeGame(width, height);
+		
+		_state.onResize(width, height);
+		FlxG.signals.gameResized.dispatch(width, height);
+		
+		FlxG.cameras.resize();
 		
 		#if js
 		FlxDestroyUtil.removeChild(this, _displayBitmap);
@@ -471,9 +477,6 @@ class FlxGame extends Sprite
 			soundTray.screenCenter();
 		}
 		#end
-		
-		_inputContainer.scaleX = 1 / FlxG.game.scaleX;
-		_inputContainer.scaleY = 1 / FlxG.game.scaleY;
 		
 		#if FLX_POST_PROCESS
 		for (postProcess in postProcesses)
@@ -592,7 +595,6 @@ class FlxGame extends Sprite
 	private function switchState():Void
 	{ 
 		// Basic reset stuff
-		PxBitmapFont.clearStorage();
 		FlxG.bitmap.clearCache();
 		FlxG.cameras.reset();
 		FlxG.inputs.onStateSwitch();
@@ -837,7 +839,7 @@ class FlxGame extends Sprite
 		FlxG.signals.preDraw.dispatch();
 		
 		#if FLX_RENDER_TILE
-		TileSheetExt._DRAWCALLS = 0;
+		FlxTilesheet._DRAWCALLS = 0;
 		#end
 		
 		#if FLX_POST_PROCESS
@@ -857,7 +859,7 @@ class FlxGame extends Sprite
 		FlxG.cameras.render();
 		
 		#if !FLX_NO_DEBUG
-		debugger.stats.drawCalls(TileSheetExt._DRAWCALLS);
+		debugger.stats.drawCalls(FlxTilesheet._DRAWCALLS);
 		#end
 		#end
 		

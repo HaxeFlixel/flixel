@@ -188,12 +188,15 @@ class SoundFrontEnd
 	 * @param	AutoDestroy		Whether to destroy this sound when it finishes playing.  Leave this value set to "false" if you want to re-use this FlxSound instance.
 	 * @return	The FlxSound object.
 	 */
-	public function play(EmbeddedSound:String, Volume:Float = 1, Looped:Bool = false, AutoDestroy:Bool = true, ?OnComplete:Void->Void):FlxSound
+	public function play(EmbeddedSound:FlxSoundAsset, Volume:Float = 1, Looped:Bool = false, AutoDestroy:Bool = true, ?OnComplete:Void->Void):FlxSound
 	{
-		var sound:Sound = cache(EmbeddedSound);
-		var flixelSound = list.recycle(FlxSound).loadEmbedded(sound, Looped, AutoDestroy, OnComplete);
-		flixelSound.volume = Volume;
-		return flixelSound.play();
+		if (Std.is(EmbeddedSound, String))
+		{
+			EmbeddedSound = cache(EmbeddedSound);
+		}
+		var sound = list.recycle(FlxSound).loadEmbedded(EmbeddedSound, Looped, AutoDestroy, OnComplete);
+		sound.volume = Volume;
+		return sound.play();
 	}
 	
 	/**

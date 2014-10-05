@@ -33,11 +33,13 @@ class FlxTest
 	}
 	
 	@:access(flixel)
-	function step(steps:UInt = 1)
+	function step(steps:UInt = 1, ?callback:Void->Void)
 	{
 		for (i in 0...steps)
 		{
 			FlxG.game.step();
+			if (callback != null)
+				callback();
 			totalSteps++;
 		}
 	}

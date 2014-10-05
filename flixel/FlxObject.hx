@@ -757,12 +757,12 @@ class FlxObject extends FlxBasic
 	 */
 	public function reset(X:Float, Y:Float):Void
 	{
-		revive();
 		touching = NONE;
 		wasTouching = NONE;
 		setPosition(X, Y);
 		last.set(x, y);
 		velocity.set();
+		revive();
 	}
 	
 	/**
@@ -790,6 +790,7 @@ class FlxObject extends FlxBasic
 		{
 			Camera = FlxG.camera;
 		}
+		
 		return pixelPerfectRender == null ? Camera.pixelPerfectRender : pixelPerfectRender;
 	}
 	
@@ -927,6 +928,12 @@ class FlxObject extends FlxBasic
 	{
 		getScreenPosition(_point, camera);
 		_rect.set(_point.x, _point.y, width, height);
+		#if FLX_RENDER_TILE
+		_rect.x *= camera.totalScaleX;
+		_rect.y *= camera.totalScaleY;
+		_rect.width *= camera.totalScaleX;
+		_rect.height *= camera.totalScaleY;
+		#end
 		
 		if (isPixelPerfectRender(camera))
 		{

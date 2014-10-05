@@ -145,11 +145,13 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	 * @param   Graphic   The image you want to use for the cursor.
 	 * @param   Scale     Change the size of the cursor.
 	 * @param   XOffset   The number of pixels between the mouse's screen position and the graphic's top left corner.
+	 *                    Has to be positive when using native cursors.
 	 * @param   YOffset   The number of pixels between the mouse's screen position and the graphic's top left corner.
+	 *                    Has to be positive when using native cursors.
 	 */
-	public function load(?Graphic:Dynamic, Scale:Float = 1, XOffset:UInt = 0, YOffset:UInt = 0):Void
+	public function load(?Graphic:Dynamic, Scale:Float = 1, XOffset:Int = 0, YOffset:Int = 0):Void
 	{
-		#if FLX_NATIVE_CURSOR
+		#if !FLX_NATIVE_CURSOR
 		if (_cursor != null)
 		{
 			FlxDestroyUtil.removeChild(cursorContainer, _cursor);
@@ -184,6 +186,11 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 		_cursor.scaleY = Scale;
 		
 		#if FLX_NATIVE_CURSOR
+		if (XOffset < 0 || YOffset < 0)
+		{
+			throw "Negative offsets aren't supported for native cursors.";
+		}
+		
 		if (Scale < 0)
 		{
 			throw "Negative scale isn't supported for native cursors.";
@@ -423,7 +430,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	{
 		reset();
 		
-		#if FLX_NATIVE_CURSOR
+		#if !FLX_NATIVE_CURSOR
 		set_useSystemCursor(useSystemCursor);
 		
 		visible = _visibleWhenFocusLost;
@@ -435,7 +442,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	 */
 	private function onFocusLost():Void
 	{
-		#if FLX_NATIVE_CURSOR
+		#if !FLX_NATIVE_CURSOR
 		_visibleWhenFocusLost = visible;
 		
 		if (visible)

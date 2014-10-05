@@ -39,6 +39,10 @@ class FlxMath
 	 * Approximation of Math.sqrt(2).
 	 */
 	public static inline var SQUARE_ROOT_OF_TWO:Float = 1.41421356237;
+	/**
+	 * Used to account for floating-point inaccuracies.
+	 */
+	public static inline var EPSILON:Float = 0.0000001;
 	
 	/**
 	 * Round a decimal number to have reduced precision (less decimal numbers).
@@ -501,9 +505,9 @@ class FlxMath
 		return decimals;
 	}
 	
-	public static inline function equal(aValueA:Float, aValueB:Float, aDiff:Float = 0.00001):Bool
+	public static inline function equal(aValueA:Float, aValueB:Float, aDiff:Float = EPSILON):Bool
 	{
-		return (Math.abs(aValueA - aValueB) <= aDiff);
+		return Math.abs(aValueA - aValueB) <= aDiff;
 	}
 	
 	/**
@@ -520,5 +524,13 @@ class FlxMath
 	public static inline function sameSign(f1:Float, f2:Float):Bool
 	{
 		return signOf(f1) == signOf(f2);
+	}
+	
+	/**
+	 * Hyperbolic sine.
+	 */
+	public static inline function sinh(f:Float):Float
+	{
+		return (Math.exp(f) - Math.exp(-f)) / 2;
 	}
 }

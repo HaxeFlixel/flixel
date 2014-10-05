@@ -12,5 +12,5 @@ class FlxAssetsTest extends FlxTest
 	}
 }
 
-@:build(flixel.system.FlxAssets.buildFileReferences("assets/FlxAssets/invisibleFile", true))
+@:build(flixel.system.FlxAssets.buildFileReferences("assets/FlxAssets/invisibleFile"))
 class InvisibleFile {}

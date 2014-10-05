@@ -7,12 +7,15 @@ import flixel.math.FlxPoint;
 @:allow(flixel.FlxGame)
 class BaseScaleMode
 {
+	public static var gWidth:Int;
+	public static var gHeight:Int;
+	
 	public var deviceSize(default, null):FlxPoint;
 	public var gameSize(default, null):FlxPoint;
 	public var scale(default, null):FlxPoint;
 	public var offset(default, null):FlxPoint;
 	
-	private static var zoom = FlxPoint.get();
+	private static var zoom:FlxPoint = FlxPoint.get();
 	
 	public function new()
 	{
@@ -24,10 +27,12 @@ class BaseScaleMode
 	
 	public function onMeasure(Width:Int, Height:Int):Void
 	{
+		FlxG.width = BaseScaleMode.gWidth;
+		FlxG.height = BaseScaleMode.gHeight;
+		
 		updateGameSize(Width, Height);
 		updateDeviceSize(Width, Height);
 		updateScaleOffset();
-		updateGameScale();
 		updateGamePosition();
 	}
 	
@@ -50,7 +55,7 @@ class BaseScaleMode
 		
 		if (FlxG.camera != null) 
 		{
-			zoom.copyFrom(FlxG.camera.getScale());
+			zoom.set(FlxG.camera.scaleX, FlxG.camera.scaleY);
 		}
 		
 		scale.x /= zoom.x;
@@ -58,14 +63,6 @@ class BaseScaleMode
 		
 		offset.x = Math.ceil((deviceSize.x - gameSize.x) * 0.5);
 		offset.y = Math.ceil((deviceSize.y - gameSize.y) * 0.5);
-	}
-	
-	private function updateGameScale():Void
-	{
-		#if !js
-		FlxG.game.scaleX = scale.x;
-		FlxG.game.scaleY = scale.y;
-		#end
 	}
 	
 	private function updateGamePosition():Void

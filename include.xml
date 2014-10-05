@@ -7,7 +7,7 @@
 	<assets path="assets/sounds" include="*.ogg" unless="flash || html5" embed="true" />
 	
 	<set name="html5-backend" value="openfl-bitfive" unless="html5-backend" />
-	<haxelib name="openfl" />
+	<haxelib name="openfl" unless="create" />
 	
 	<haxeflag name="--macro" value="flixel.system.macros.FlxConditionals.run()" />
 	
@@ -19,5 +19,17 @@
 		<haxelib name="flixel-demos"/>
 		<haxelib name="flixel-tools"/>
 		<haxelib name="flixel-templates"/>
+	</section>
+	
+	<section if="create">
+		<sample path="${haxelib:flixel-demos}/Arcade Classics" />
+		<sample path="${haxelib:flixel-demos}/Editors" />
+		<sample path="${haxelib:flixel-demos}/Effects" />
+		<sample path="${haxelib:flixel-demos}/Flixel Features" />
+		<sample path="${haxelib:flixel-demos}/Input" />
+		<sample path="${haxelib:flixel-demos}/Other" />
+		<sample path="${haxelib:flixel-demos}/Performance" />
+		<sample path="${haxelib:flixel-demos}/Platformers" />
+		<sample path="${haxelib:flixel-demos}/User Interface" />
 	</section>
 </project>

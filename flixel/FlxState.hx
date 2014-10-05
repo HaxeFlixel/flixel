@@ -65,7 +65,7 @@ class FlxState extends FlxGroup
 		}
 	}
 	
-	public inline function openSubState(SubState:FlxSubState):Void
+	public function openSubState(SubState:FlxSubState):Void
 	{
 		_requestSubStateReset = true;
 		_requestedSubState = SubState;
@@ -74,7 +74,7 @@ class FlxState extends FlxGroup
 	/**
 	 * Closes the substate of this state, if one exists.
 	 */
-	public inline function closeSubState():Void
+	public function closeSubState():Void
 	{
 		_requestSubStateReset = true;
 	}
@@ -148,14 +148,14 @@ class FlxState extends FlxGroup
 	}
 	
 	/**
-	 * This method is called after application losts its focus.
-	 * Can be useful if you using third part libraries, such as tweening engines.
+	 * This method is called after the game loses focus.
+	 * Can be useful for third party libraries, such as tweening engines.
 	 */
 	public function onFocusLost():Void {}
 
 	/**
-	 * This method is called after application gets focus.
-	 * Can be useful if you using third part libraries, such as tweening engines.
+	 * This method is called after the game receives focus.
+	 * Can be useful for third party libraries, such as tweening engines.
 	 */
 	public function onFocus():Void {}
 

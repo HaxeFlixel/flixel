@@ -1,7 +1,6 @@
 package flixel.animation;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.math.FlxRandom;
 
 /**
  * Just a helper structure for the FlxSprite animation system.
@@ -44,6 +43,10 @@ class FlxAnimation extends FlxBaseAnimation
 	 */
 	public var looped:Bool = true;
 	
+	/**
+	 * Whether or not this animation is being played backwards.
+	 */
+	public var reversed:Bool = false;
 	
 	/**
 	 * A list of frames stored as int objects
@@ -81,9 +84,19 @@ class FlxAnimation extends FlxBaseAnimation
 		super.destroy();
 	}
 	
-	public function play(Force:Bool = false, Frame:Int = 0):Void
+	/**
+	 * Starts this animation playback.
+	 * 
+	 * @param	Force			Whether to force this animation to restart.
+	 * @param	Reversed		Whether to play animation backwards or not.
+	 * @param	Frame			The frame number in this animation you want to start from (0 by default).
+	 *                    	 	If you pass negative value then it will start from random frame.
+	 * 							If you set Reverse to true then Frame value will be "reversed" (Frame = numFrames - 1 - Frame),
+	 * 							so Frame value will mean frame index from the animation end in this case.
+	 */
+	public function play(Force:Bool = false, Reversed:Bool = false, Frame:Int = 0):Void
 	{
-		if (!Force && (looped || !finished))
+		if (!Force && (looped || !finished) && reversed == Reversed)
 		{
 			paused = false;
 			finished = false;
@@ -91,10 +104,23 @@ class FlxAnimation extends FlxBaseAnimation
 			return;
 		}
 		
+		reversed = Reversed;
 		paused = false;
 		_frameTimer = 0;
 		
-		if ((delay <= 0) || (Frame == (numFrames - 1)))
+		var numFramesMinusOne:Int = numFrames - 1;
+		
+		if (Frame >= 0)
+		{
+			// bound frame value
+			Frame = (Frame > numFramesMinusOne) ? numFramesMinusOne : Frame;
+			// "reverse" frame value
+			Frame = (reversed) ? (numFramesMinusOne - Frame) : Frame;
+		}
+		
+		if ((delay <= 0) 									// non-positive fps
+			|| (Frame == numFramesMinusOne && !reversed) 	// normal animation
+			|| (Frame == 0 && reversed))					// reversed animation
 		{
 			finished = true;
 		}
@@ -105,21 +131,17 @@ class FlxAnimation extends FlxBaseAnimation
 		
 		if (Frame < 0)
 		{
-			curFrame = FlxG.random.int(0, numFrames - 1);
-		}
-		else if (numFrames > Frame)
-		{
-			curFrame = Frame;
+			curFrame = FlxG.random.int(0, numFramesMinusOne);
 		}
 		else
 		{
-			curFrame = 0;
+			curFrame = Frame;
 		}
 	}
 	
 	public function restart():Void
 	{
-		play(true);
+		play(true, reversed);
 	}
 	
 	public function stop():Void
@@ -136,13 +158,24 @@ class FlxAnimation extends FlxBaseAnimation
 			while (_frameTimer > delay)
 			{
 				_frameTimer -= delay;
-				if (looped && (curFrame == numFrames - 1))
+				
+				if (looped)
 				{
-					curFrame = 0;
+					var numFramesMinusOne:Int = numFrames - 1;
+					var tempFrame:Int = (reversed) ? (numFramesMinusOne - curFrame) : curFrame;
+					
+					if (tempFrame == numFramesMinusOne)
+					{
+						curFrame = (reversed) ? numFramesMinusOne : 0;
+					}
+					else
+					{
+						curFrame = (reversed) ? (curFrame - 1) : (curFrame + 1);
+					}
 				}
 				else
 				{
-					curFrame++;
+					curFrame = (reversed) ? (curFrame - 1) : (curFrame + 1);
 				}
 			}
 		}
@@ -166,12 +199,16 @@ class FlxAnimation extends FlxBaseAnimation
 	
 	private function set_curFrame(Frame:Int):Int
 	{
-		if (Frame >= 0)
+		var numFramesMinusOne:Int = numFrames - 1;
+		// "reverse" frame value (if there is such need)
+		var tempFrame:Int = (reversed) ? (numFramesMinusOne - Frame ) : Frame;
+		
+		if (tempFrame >= 0)
 		{
-			if (!looped && Frame >= (numFrames - 1))
+			if (!looped && tempFrame >= numFramesMinusOne)
 			{
 				finished = true;
-				curFrame = numFrames - 1;
+				curFrame = (reversed) ? 0 : numFramesMinusOne;
 			}
 			else
 			{
@@ -180,7 +217,7 @@ class FlxAnimation extends FlxBaseAnimation
 		}
 		else
 		{
-			curFrame = FlxG.random.int(0, numFrames - 1);
+			curFrame = FlxG.random.int(0, numFramesMinusOne);
 		}
 		
 		curIndex = _frames[curFrame];

@@ -4,6 +4,7 @@ import flash.display.BitmapData;
 import flash.events.MouseEvent;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.graphics.FlxGraphic;
 import flixel.input.FlxInput;
 import flixel.input.FlxPointer;
 import flixel.input.IFlxInput;
@@ -11,6 +12,7 @@ import flixel.input.mouse.FlxMouseButton;
 import flixel.input.touch.FlxTouch;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
+import flixel.system.FlxAssets;
 import flixel.system.FlxSound;
 import flixel.text.FlxText;
 import flixel.util.FlxDestroyUtil;
@@ -109,6 +111,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	public var labelOffsets:Array<FlxPoint> = [FlxPoint.get(), FlxPoint.get(), FlxPoint.get(0, 1)];
 	/**
 	 * What alpha value the label should have for each status. Default is [0.8, 1.0, 0.5].
+	 * Multiplied with the button's alpha.
 	 */
 	public var labelAlphas:Array<Float> = [0.8, 1.0, 0.5];
 	/**
@@ -179,7 +182,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	{
 		super(X, Y);
 		
-		loadGraphic(GraphicButton, true, 80, 20);
+		loadGraphic(FlxGraphic.fromClass(GraphicButton), true, 80, 20);
 		
 		onUp = new FlxButtonEvent(OnClick);
 		onDown = new FlxButtonEvent();
@@ -397,6 +400,14 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		}
 	}
 	
+	private function updateLabelAlpha()
+	{
+		if (label != null && labelAlphas.length > status) 
+		{
+			label.alpha = alpha * labelAlphas[status];
+		}
+	}
+	
 	/**
 	 * Using an event listener is necessary for security reasons on flash - 
 	 * certain things like opening a new window are only allowed when they are user-initiated.
@@ -472,11 +483,16 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	
 	private function set_status(Value:Int):Int
 	{
-		if (label != null && labelAlphas.length > Value) 
-		{
-			label.alpha = alpha * labelAlphas[Value];
-		}
-		return status = Value;
+		status = Value;
+		updateLabelAlpha();
+		return status;
+	}
+	
+	override private function set_alpha(Value:Float):Float
+	{
+		super.set_alpha(Value);
+		updateLabelAlpha();
+		return alpha;
 	}
 	
 	override private function set_x(Value:Float):Float 
