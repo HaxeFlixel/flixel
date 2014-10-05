@@ -83,6 +83,19 @@ class FlxVector extends FlxPoint
 	public var ly(get, never):Float;
 	
 	/**
+	 * Adds another vector to this vector.
+	 * 
+	 * @param	Vector 		The other vector
+	 * @return	This vector.
+	 */
+	public function addVector(Vector : FlxVector) : FlxVector
+	{
+		this.x += Vector.x;
+		this.y += Vector.y;
+		return this;
+	}
+	
+	/**
 	 * Set the coordinates of this point object.
 	 * 
 	 * @param	X		The X-coordinate of the point in space.

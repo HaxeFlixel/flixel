@@ -24,6 +24,7 @@ import flixel.util.FlxDestroyUtil;
 import flixel.util.loaders.CachedGraphics;
 import flixel.util.loaders.TexturePackerData;
 import flixel.util.loaders.TextureRegion;
+import flixel.hitbox.IFlxHitbox;
 import openfl.display.Tilesheet;
 
 @:bitmap("assets/images/logo/default.png")
@@ -136,6 +137,8 @@ class FlxSprite extends FlxObject
 	 * Whether or not to use a colorTransform set via setColorTransform.
 	 */
 	public var useColorTransform(default, null):Bool = false;
+	
+	public var hitbox : IFlxHitbox;
 	
 	#if FLX_RENDER_TILE
 	private var _facingHorizontalMult:Int = 1;
