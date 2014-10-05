@@ -79,6 +79,6 @@ abstract ScaleMode(String) to String
 	var RATIO_DEFAULT = "ratio";
 	var RATIO_FILL_SCREEN = "ratio (screenfill)";
 	var FIXED = "fixed";
-	var RELATIVE = "relatvive 75%";
+	var RELATIVE = "relative 75%";
 	var FILL = "fill";
 }

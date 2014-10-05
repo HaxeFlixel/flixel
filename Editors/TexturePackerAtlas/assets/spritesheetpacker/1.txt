@@ -1,0 +1,3 @@
+grass = 149 0 32 32
+pirate = 0 0 148 256
+wabbit_alpha = 149 33 26 37

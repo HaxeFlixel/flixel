@@ -4,6 +4,7 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxState;
+import flixel.graphics.FlxGraphic;
 import flixel.group.FlxGroup;
 import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
@@ -31,7 +32,7 @@ class PlayState extends FlxState
 		FlxG.cameras.bgColor = 0xffaaaaaa;
 		
 		_level = new FlxTilemap();
-		_level.loadMap(Assets.getText("assets/level.csv"), GraphicAuto, 0, 0, AUTO);
+		_level.loadMap(Assets.getText("assets/level.csv"), FlxGraphic.fromClass(GraphicAuto), 0, 0, AUTO);
 		add(_level);
 		
 		// Create the _level _exit
