@@ -70,4 +70,15 @@ class FlxTweenTest extends FlxTest
 		});
 		step();
 	}
+	
+	@Test
+	function testCancelNoCallback()
+	{
+		var tween = FlxTween.tween(this, { value: 100 }, 0.01, { onComplete: function (_)
+		{
+			Assert.fail("Callback called");
+		}});
+		tween.cancel();
+		step();
+	}
 }

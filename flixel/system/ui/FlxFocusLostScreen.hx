@@ -31,8 +31,8 @@ class FlxFocusLostScreen extends Sprite
 	{
 		var gfx:Graphics = graphics;
 		
-		var screenWidth:Int = Std.int(FlxCamera.defaultZoom * FlxG.width * FlxG.game.scaleX);
-		var screenHeight:Int = Std.int(FlxCamera.defaultZoom * FlxG.height * FlxG.game.scaleY);
+		var screenWidth:Int = Std.int(FlxG.stage.stageWidth);
+		var screenHeight:Int = Std.int(FlxG.stage.stageHeight);
 		
 		// Draw transparent black backdrop
 		gfx.clear();
@@ -52,7 +52,7 @@ class FlxFocusLostScreen extends Sprite
 		gfx.lineTo(halfWidth - helper, halfHeight - helper);
 		gfx.endFill();
 		
-		scaleX = 1 / FlxG.game.scaleX;
-		scaleY = 1 / FlxG.game.scaleY;
+		this.x = -FlxG.scaleMode.offset.x;
+		this.y = -FlxG.scaleMode.offset.y;
 	}
 }

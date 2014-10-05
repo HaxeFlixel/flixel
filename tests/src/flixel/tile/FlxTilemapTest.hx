@@ -1,6 +1,7 @@
 package flixel.tile;
 
 import flash.errors.ArgumentError;
+import flixel.graphics.FlxGraphic;
 import flixel.tile.FlxTilemap;
 import massive.munit.Assert;
 
@@ -18,7 +19,7 @@ class FlxTilemapTest extends FlxTest
 	@Test
 	function test1x1Map():Void
 	{
-		tilemap.loadMap("1", GraphicAuto, 8, 8);
+		tilemap.loadMap("1", FlxGraphic.fromClass(GraphicAuto), 8, 8);
 		
 		try
 		{

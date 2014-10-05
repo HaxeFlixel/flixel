@@ -16,7 +16,6 @@ import flixel.system.FlxVersion;
 import flixel.system.frontEnds.*;
 import flixel.system.scaleModes.BaseScaleMode;
 import flixel.system.scaleModes.RatioScaleMode;
-import flixel.text.pxText.PxBitmapFont;
 import flixel.util.FlxCollision;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSave;
@@ -127,12 +126,12 @@ class FlxG
 	/**
 	 * The width of the screen in game pixels. Read-only, use resizeGame() to change.
 	 */
-	@:allow(flixel.system.scaleModes.StageSizeScaleMode) 
+	@:allow(flixel.system.scaleModes) 
 	public static var width(default, null):Int;
 	/**
 	 * The height of the screen in game pixels. Read-only, use resizeGame() to change.
 	 */
-	@:allow(flixel.system.scaleModes.StageSizeScaleMode)
+	@:allow(flixel.system.scaleModes)
 	public static var height(default, null):Int;
 	/**
 	 * The scale mode the game should use - available policies are FillScaleMode, FixedScaleMode,
@@ -499,6 +498,10 @@ class FlxG
 		game = Game;
 		width = Std.int(Math.abs(Width));
 		height = Std.int(Math.abs(Height));
+		
+		BaseScaleMode.gWidth = width;
+		BaseScaleMode.gHeight = height;
+		
 		FlxCamera.defaultZoom = Zoom;
 		
 		resizeGame(stage.stageWidth, stage.stageHeight);
@@ -544,7 +547,6 @@ class FlxG
 	 */
 	private static function reset():Void
 	{
-		PxBitmapFont.clearStorage();
 		random.resetInitialSeed();
 		
 		bitmap.clearCache();

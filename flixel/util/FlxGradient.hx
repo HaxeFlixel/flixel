@@ -115,20 +115,6 @@ class FlxGradient
 			height = 1;
 		}
 		
-		#if FLX_RENDER_TILE
-			var key:String = "Gradient: " + width + " x " + height + ", colors: [";
-			for (color in colors)
-			{
-				key += color.to24Bit() + "_" + color.alpha + ", ";
-			}
-			key += "], chunkSize: " + chunkSize + ", rotation: " + rotation;
-			
-			if (FlxG.bitmap.checkCache(key))
-			{
-				return FlxG.bitmap.get(key).bitmap;
-			}
-		#end
-		
 		var gradient:GradientMatrix = createGradientMatrix(width, height, colors, chunkSize, rotation);
 		var shape = new Shape();
 		var interpolationMethod = interpolate ? InterpolationMethod.RGB : InterpolationMethod.LINEAR_RGB;
@@ -157,10 +143,6 @@ class FlxGradient
 			
 			data.draw(tempBitmap, sM);
 		}
-		
-		#if FLX_RENDER_TILE
-		FlxG.bitmap.add(data, false, key);
-		#end
 		
 		return data;
 	}

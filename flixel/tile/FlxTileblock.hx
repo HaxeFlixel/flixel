@@ -3,12 +3,16 @@ package flixel.tile;
 import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.graphics.FlxGraphic;
+import flixel.graphics.frames.FlxTileFrames;
+import flixel.math.FlxPoint;
 import flixel.system.FlxAssets.FlxGraphicAsset;
-import flixel.system.layer.DrawStackItem;
 import flixel.math.FlxAngle;
 import flixel.math.FlxRandom;
+import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
+import openfl.geom.Point;
 
 /**
  * This is a basic "environment object" class, used to create simple walls and floors.
@@ -29,7 +33,7 @@ class FlxTileblock extends FlxSprite
 	public function new(X:Int, Y:Int, Width:Int, Height:Int)
 	{
 		super(X, Y);
-		makeGraphic(Width, Height, 0, true);
+		makeGraphic(Width, Height, FlxColor.TRANSPARENT, true);
 		active = false;
 		immovable = true;
 		moves = false;
@@ -42,25 +46,25 @@ class FlxTileblock extends FlxSprite
 	}
 	
 	/**
-	 * Fills the block with a randomly arranged selection of graphics from the image provided.
+	 * Fills the block with a randomly arranged selection of frames.
 	 * 
-	 * @param	TileGraphic 	The graphic class that contains the tiles that should fill this block.
-	 * @param	TileWidth		The width of a single tile in the graphic.
-	 * @param	TileHeight		The height of a single tile in the graphic.
+	 * @param	TileFrames		The frames that should fill this block.
 	 * @param	Empties			The number of "empty" tiles to add to the auto-fill algorithm (e.g. 8 tiles + 4 empties = 1/3 of block will be open holes).
+	 * @return	This tile block.
 	 */
-	public function loadTiles(TileGraphic:FlxGraphicAsset, TileWidth:Int = 0, TileHeight:Int = 0, Empties:Int = 0):FlxTileblock
+	public function loadFrames(tileFrames:FlxTileFrames, empties:Int = 0):FlxTileblock
 	{
-		if (TileGraphic == null)
+		if (tileFrames == null)
 		{
 			return this;
 		}
 		
 		// First create a tile brush
-		tileSprite = new FlxSprite().loadGraphic(TileGraphic, true, TileWidth, TileHeight);
+		tileSprite = (tileSprite == null) ? new FlxSprite() : tileSprite;
+		tileSprite.frames = tileFrames;
 		var spriteWidth:Int = Std.int(tileSprite.width);
 		var spriteHeight:Int = Std.int(tileSprite.height);
-		var total:Int = tileSprite.frames + Empties;
+		var total:Int = tileSprite.numFrames + empties;
 		
 		// Then prep the "canvas" as it were (just doublechecking that the size is on tile boundaries)
 		var regen:Bool = false;
@@ -101,7 +105,7 @@ class FlxTileblock extends FlxSprite
 			
 			while (column < widthInTiles)
 			{
-				if (FlxG.random.float() * total > Empties)
+				if (FlxG.random.float() * total > empties)
 				{
 					tileSprite.animation.randomFrame();
 					tileSprite.drawFrame();
@@ -116,11 +120,47 @@ class FlxTileblock extends FlxSprite
 			row++;
 		}
 		
+		frame.destroyBitmaps();
 		dirty = true;
 		return this;
 	}
 	
-	public function setTile(x:Int, y:Int, index:Int):Void {
+	/**
+	 * Fills the block with a randomly arranged selection of graphics from the image provided.
+	 * 
+	 * @param	TileGraphic 	The graphic class that contains the tiles that should fill this block.
+	 * @param	TileWidth		The width of a single tile in the graphic.
+	 * @param	TileHeight		The height of a single tile in the graphic.
+	 * @param	Empties			The number of "empty" tiles to add to the auto-fill algorithm (e.g. 8 tiles + 4 empties = 1/3 of block will be open holes).
+	 * @return	This tile block.
+	 */
+	public function loadTiles(TileGraphic:FlxGraphicAsset, TileWidth:Int = 0, TileHeight:Int = 0, Empties:Int = 0):FlxTileblock
+	{
+		if (TileGraphic == null)
+		{
+			return this;
+		}
+		
+		var graph:FlxGraphic = FlxG.bitmap.add(TileGraphic);
+		
+		if (TileWidth == 0)
+		{
+			TileWidth = graph.height;
+			TileWidth = (TileWidth > graph.width) ? graph.width : TileWidth;
+		}
+		
+		if (TileHeight == 0)
+		{
+			TileHeight = TileWidth;
+			TileHeight = (TileHeight > graph.height) ? graph.height : TileHeight;
+		}
+		
+		var tileFrames:FlxTileFrames = FlxTileFrames.fromGraphic(graph, new FlxPoint(TileWidth, TileHeight));
+		return this.loadFrames(tileFrames, Empties);
+	}
+	
+	public function setTile(x:Int, y:Int, index:Int):Void 
+	{
 		tileSprite.animation.frameIndex = index;
 		stamp(tileSprite, x * Std.int(tileSprite.width), y * Std.int(tileSprite.height));
 		dirty = true;

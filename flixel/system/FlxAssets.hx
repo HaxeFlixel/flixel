@@ -11,9 +11,8 @@ import flash.display.Graphics;
 import flash.media.Sound;
 import flash.text.Font;
 import flixel.FlxG;
-import flixel.util.loaders.CachedGraphics;
-import flixel.util.loaders.TexturePackerData;
-import flixel.util.loaders.TextureRegion;
+import flixel.graphics.FlxGraphic;
+import flixel.graphics.frames.FlxTileFrames;
 import openfl.Assets;
 
 @:font("assets/fonts/nokiafc22.ttf")
@@ -97,29 +96,6 @@ class FlxAssets
 			}
 		}
 		
-		// any duplicate names?
-		if (subDirectories)
-		{
-			var toBeCheckd = fileReferences.copy();
-			
-			for (fileReference in toBeCheckd)
-			{
-				var duplicates = fileReferences.filter(function(ref)
-				{
-					return ref.name == fileReference.name;
-				});
-				
-				if (duplicates != null && duplicates.length > 1)
-				{
-					for (i in 0...duplicates.length)
-					{
-						duplicates[i].name += "_" + (i + 1); 
-						toBeCheckd.remove(duplicates[i]);
-					}
-				}
-			}
-		}
-		
 		return fileReferences;
 	}
 #else
@@ -197,6 +173,80 @@ class FlxAssets
 		return Assets.getBitmapData(id, false);
 	}
 	
+	/**
+	 * Generates BitmapData from specified class. Less typing.
+	 * 
+	 * @param	source	BitmapData class to generate BitmapData object from.
+	 * @return	Newly instantiated BitmapData object.
+	 */
+	public static inline function getBitmapFromClass(source:Class<Dynamic>):BitmapData
+	{
+		var bitmap:BitmapData = Type.createInstance(source, [0, 0]);
+		return bitmap;
+	}
+	
+	/**
+	 * Takes Dynamic object as a input and tries to convert it to BitmapData:
+	 * 1) if the input is BitmapData, then it will return this BitmapData;
+	 * 2) if the input is Class<BitmapData>, then it will create BitmapData from this class;
+	 * 3) if the input is String, then it will get BitmapData from openfl.Assets;
+	 * 4) it will return null in any other case.
+	 * 
+	 * @param	Graphic	input data to get BitmapData object for.
+	 * @return	BitmapData for specified Dynamic object.
+	 */
+	public static function resolveBitmapData(Graphic:FlxGraphicSource):BitmapData
+	{
+		if (Std.is(Graphic, BitmapData))
+		{
+			return cast(Graphic, BitmapData);
+		}
+		else if (Std.is(Graphic, Class))
+		{
+			return FlxAssets.getBitmapFromClass(cast Graphic);
+		}
+		else if (Std.is(Graphic, String))
+		{
+			return FlxAssets.getBitmapData(Graphic);
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * Takes Dynamic object as a input and tries to find appropriate key String for its BitmapData:
+	 * 1) if the input is BitmapData, then it will return second (optional) argument (the Key);
+	 * 2) if the input is Class<BitmapData>, then it will return the name of this class;
+	 * 3) if the input is String, then it will return it;
+	 * 4) it will return null in any other case.
+	 * 
+	 * @param	Graphic	input data to get string key for.
+	 * @param	Key	optional key string.
+	 * @return	Key String for specified Graphic object.
+	 */
+	public static function resolveKey(Graphic:FlxGraphicSource, ?Key:String):String
+	{
+		if (Key != null)
+		{
+			return Key;
+		}
+		
+		if (Std.is(Graphic, BitmapData))
+		{
+			return Key;
+		}
+		else if (Std.is(Graphic, Class))
+		{
+			return FlxG.bitmap.getKeyForClass(cast Graphic);
+		}
+		else if (Std.is(Graphic, String))
+		{
+			return Graphic;
+		}
+		
+		return null;
+	}
+	
 	public static inline function getSound(id:String):Sound
 	{
 		var extension = "";
@@ -232,12 +282,13 @@ private class FileReference
 }
 #else
 typedef FlxSoundAsset = OneOfThree<String, Sound, Class<Sound>>;
-// Class<Dynamic> should actually be Class<BitmapData>, but needs to be the former so we can use Std.is() on it
-typedef FlxGraphicAsset = OneOfFive<String, Class<Dynamic>, CachedGraphics, TextureRegion, BitmapData>;
-typedef FlxTextureAsset = OneOfTwo<TexturePackerData, CachedGraphics>;
+typedef FlxGraphicAsset = OneOfThree<FlxGraphic, BitmapData, String>;
+typedef FlxGraphicSource = OneOfThree<BitmapData, Class<Dynamic>, String>;
+typedef FlxTilemapGraphicAsset = OneOfFour<FlxTileFrames, FlxGraphic, BitmapData, String>;
 typedef FlxTilemapAsset = OneOfTwo<String, Array<Int>>;
 
 private abstract OneOfTwo<T1, T2>(Dynamic) from T1 from T2 to T1 to T2 { }
 private abstract OneOfThree<T1, T2, T3>(Dynamic) from T1 from T2 from T3 to T1 to T2 to T3 {}
+private abstract OneOfFour<T1, T2, T3, T4>(Dynamic) from T1 from T2 from T3 from T4 to T1 to T2 to T3 to T4 { }
 private abstract OneOfFive<T1, T2, T3, T4, T5>(Dynamic) from T1 from T2 from T3 from T4 from T5 to T1 to T2 to T3 to T4 to T5 { }
 #end
