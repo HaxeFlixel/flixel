@@ -252,7 +252,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 			return;
 		}
 		
-		graphic = FlxG.bitmap.add(cast TileGraphic);
+		var graph:FlxGraphic = FlxG.bitmap.add(cast TileGraphic);
 		// Figure out the size of the tiles
 		_tileWidth = TileWidth;
 		
@@ -267,6 +267,8 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		{
 			_tileHeight = _tileWidth;
 		}
+		
+		frames = FlxTileFrames.fromGraphic(graph, new FlxPoint(_tileWidth, _tileHeight));
 	}
 	
 	override private function initTileObjects(DrawIndex:Int, CollideIndex:Int):Void 
