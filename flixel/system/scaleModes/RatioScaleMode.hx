@@ -7,8 +7,8 @@ class RatioScaleMode extends BaseScaleMode
 	private var fillScreen:Bool;
 	
 	/**
-	 * @param   fillScreen   Whether to cut the excess side to fill the
-	 *                       screen or always display everything.
+	 * @param fillScreen Whether to cut the excess side to fill the
+	 * screen or always display everything.
 	 */
 	public function new(fillScreen:Bool = false)
 	{

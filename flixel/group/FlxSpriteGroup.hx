@@ -5,13 +5,13 @@ import flash.display.BlendMode;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.graphics.frames.FlxFrame;
+import flixel.graphics.frames.FlxFramesCollection;
 import flixel.group.FlxGroup;
 import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.system.FlxAssets.FlxGraphicAsset;
-import flixel.system.FlxAssets.FlxTextureAsset;
-import flixel.system.layer.frames.FlxFrame;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSort;
 
@@ -911,30 +911,6 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	
 	/**
 	 * This functionality isn't supported in SpriteGroup
-	 * @return this sprite group
-	 */
-	override public function loadGraphicFromTexture(Data:FlxTextureAsset, Unique:Bool = false, ?FrameName:String):FlxSprite 
-	{
-		#if !FLX_NO_DEBUG
-		throw "This function is not supported in FlxSpriteGroup";
-		#end
-		return this;
-	}
-	
-	/**
-	 * This functionality isn't supported in SpriteGroup
-	 * @return this sprite group
-	 */
-	override public function loadRotatedGraphicFromTexture(Data:Dynamic, Image:String, Rotations:Int = 16, AntiAliasing:Bool = false, AutoBuffer:Bool = false):FlxSprite 
-	{
-		#if !FLX_NO_DEBUG
-		throw "This function is not supported in FlxSpriteGroup";
-		#end
-		return this;
-	}
-	
-	/**
-	 * This functionality isn't supported in SpriteGroup
 	 * @return the BitmapData passed in as parameter
 	 */
 	override private function set_pixels(Value:BitmapData):BitmapData 
@@ -983,10 +959,13 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	/**
 	 * This functionality isn't supported in SpriteGroup
 	 */
-	override private inline function updateColorTransform():Void {}
+	override function set_frames(Frames:FlxFramesCollection):FlxFramesCollection 
+	{
+		return Frames;
+	}
 	
 	/**
 	 * This functionality isn't supported in SpriteGroup
 	 */
-	override public inline function updateFrameData():Void {}
+	override private inline function updateColorTransform():Void {}
 }

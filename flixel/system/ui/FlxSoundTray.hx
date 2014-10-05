@@ -160,10 +160,10 @@ class FlxSoundTray extends Sprite
 	
 	public function screenCenter():Void
 	{
-		scaleX = _defaultScale / FlxG.game.scaleX;
-		scaleY = _defaultScale / FlxG.game.scaleY;
+		scaleX = _defaultScale;
+		scaleY = _defaultScale;
 		
-		x = (0.5 * (Lib.current.stage.stageWidth - _width * _defaultScale) - FlxG.game.x) / FlxG.game.scaleX;
+		x = (0.5 * (Lib.current.stage.stageWidth - _width * _defaultScale) - FlxG.game.x);
 	}
 }
 #end

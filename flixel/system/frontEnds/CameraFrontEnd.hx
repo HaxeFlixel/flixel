@@ -259,6 +259,17 @@ class CameraFrontEnd
 		}
 	}
 	
+	/**
+	 * Resizes and moves cameras when the game resizes (onResize signal).
+	 */
+	private function resize():Void
+	{
+		for (camera in list)
+		{
+			camera.setScale(camera.scaleX, camera.scaleY);
+		}
+	}
+	
 	private function get_bgColor():FlxColor
 	{
 		return (FlxG.camera == null) ? FlxColor.BLACK : FlxG.camera.bgColor;
