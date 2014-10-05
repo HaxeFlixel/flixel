@@ -1,0 +1,1 @@
+Simple demo, showing how you can combine several images in one atlas and use it as a source of graphics for sprites and atlases.
