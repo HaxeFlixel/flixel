@@ -7,13 +7,7 @@ import flixel.hitbox.FlxOverlapData;
 
 class FlxOverlap2D {
 	
-	//TODO: Cleanup in every function
-	//TODO: Don't forget calling updateTransformed in another function
-	
-	@:noCompletion public function new()
-	{
-        throw "FlxOverlap2D is a static class. No instances can be created.";
-    }
+
 	/**
 	 * Check a circle against a polygon
 	 * 
