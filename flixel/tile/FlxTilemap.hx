@@ -258,7 +258,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		
 		if (_tileWidth <= 0)
 		{
-			_tileWidth = graphic.height;
+			_tileWidth = graph.height;
 		}
 		
 		_tileHeight = TileHeight;
