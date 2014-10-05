@@ -19,6 +19,7 @@ import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.system.FlxAssets.FlxTilemapAsset;
+import flixel.system.FlxAssets.FlxTilemapGraphicAsset;
 import flixel.tile.FlxBaseTilemap.FlxTilemapAutoTiling;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
@@ -221,26 +222,8 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		return value;
 	}
 	
-	/**
-	 * Load the tilemap with string data and a tile graphic.
-	 * 
-	 * @param   MapData         A string of comma and line-return delineated indices indicating what order the tiles should go in,
-	 *                          or an Array<Int>. In the latter case YOU MUST SET widthInTiles and heightInTyles manually BEFORE CALLING loadMap()!
-	 * @param   TileGraphic     All the tiles you want to use, arranged in a strip corresponding to the numbers in MapData.
-	 * @param   TileWidth       The width of your tiles (e.g. 8) - defaults to height of the tile graphic if unspecified.
-	 * @param   TileHeight      The height of your tiles (e.g. 8) - defaults to width if unspecified.
-	 * @param   AutoTile        Whether to load the map using an automatic tile placement algorithm (requires 16 tiles!).
-	 *                          Setting this to either AUTO or ALT will override any values you put for StartingIndex, DrawIndex, or CollideIndex.
-	 * @param   StartingIndex   Used to sort of insert empty tiles in front of the provided graphic.
-	 *                          Default is 0, usually safest ot leave it at that.  Ignored if AutoTile is set.
-	 * @param   DrawIndex       Initializes all tile objects equal to and after this index as visible.
-	 *                          Default value is 1. Ignored if AutoTile is set.
-	 * @param   CollideIndex    Initializes all tile objects equal to and after this index as allowCollisions = ANY.
-	 *                          Default value is 1.  Ignored if AutoTile is set.  
-	 *                          Can override and customize per-tile-type collision behavior using setTileProperties().
-	 * @return  A reference to this instance of FlxTilemap, for chaining as usual :)
-	 */
-	public function loadMapFrames(MapData:FlxTilemapAsset, TileFrames:FlxTileFrames, ?AutoTile:FlxTilemapAutoTiling, StartingIndex:Int = 0, DrawIndex:Int = 1, CollideIndex:Int = 1):FlxTilemap
+	override public function loadMap(MapData:FlxTilemapAsset, TileGraphic:FlxTilemapGraphicAsset, TileWidth:Int = 0, TileHeight:Int = 0, 
+		?AutoTile:FlxTilemapAutoTiling, StartingIndex:Int = 0, DrawIndex:Int = 1, CollideIndex:Int = 1):FlxTilemap
 	{
 		auto = (AutoTile == null) ? OFF : AutoTile;
 		_startingIndex = (StartingIndex <= 0) ? 0 : StartingIndex;
@@ -252,28 +235,24 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 			CollideIndex = 1;
 		}
 		
-		_drawIndex = DrawIndex;
-		_collideIndex = CollideIndex;
-		
 		loadMapData(MapData);
 		applyAutoTile(DrawIndex, CollideIndex);
 		applyCustomRemap();
 		randomizeIndices();
-		frames = TileFrames;
+		cacheGraphics(TileWidth, TileHeight, TileGraphic);
+		
 		return this;
 	}
 	
-	override public function loadMap(MapData:FlxTilemapAsset, TileGraphic:FlxGraphicAsset, TileWidth:Int = 0, TileHeight:Int = 0, 
-		?AutoTile:FlxTilemapAutoTiling, StartingIndex:Int = 0, DrawIndex:Int = 1, CollideIndex:Int = 1):FlxTilemap
+	override private function cacheGraphics(TileWidth:Int, TileHeight:Int, TileGraphic:FlxTilemapGraphicAsset):Void 
 	{
-		cacheGraphics(TileWidth, TileHeight, TileGraphic);
-		var mapFrames:FlxTileFrames = FlxTileFrames.fromGraphic(graphic, new FlxPoint(_tileWidth, _tileHeight));
-		return loadMapFrames(MapData, mapFrames, AutoTile, StartingIndex, DrawIndex, CollideIndex);
-	}
-	
-	override private function cacheGraphics(TileWidth:Int, TileHeight:Int, TileGraphic:FlxGraphicAsset):Void 
-	{
-		graphic = FlxG.bitmap.add(TileGraphic);
+		if (Std.is(TileGraphic, FlxTileFrames))
+		{
+			frames = cast(TileGraphic, FlxTileFrames);
+			return;
+		}
+		
+		graphic = FlxG.bitmap.add(cast TileGraphic);
 		// Figure out the size of the tiles
 		_tileWidth = TileWidth;
 		
