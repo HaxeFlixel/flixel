@@ -7,10 +7,6 @@ import flixel.system.FlxLinkedList;
 
 class FlxOverlap {
 	
-	@:noCompletion public function new()
-	{
-        throw "FlxOverlap is a static class. No instances can be created.";
-    }
 	
 	public static var listA : FlxLinkedList = null;
 	public static var listB : FlxLinkedList = null;
