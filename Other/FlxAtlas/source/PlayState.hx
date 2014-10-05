@@ -1,21 +1,13 @@
 package;
 
 import flash.display.BitmapData;
-import flash.Lib;
-import flixel.addons.ui.FlxSlider;
-import flixel.graphics.atlas.FlxAtlas;
-import flixel.graphics.atlas.FlxNode;
-import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
+import flixel.graphics.atlas.FlxAtlas;
+import flixel.graphics.atlas.FlxNode;
 import flixel.graphics.frames.FlxTileFrames;
-import flixel.input.FlxPointer;
 import flixel.math.FlxPoint;
-import flixel.text.FlxText;
-import flixel.tile.FlxTileblock;
 import flixel.tile.FlxTilemap;
-import flixel.ui.FlxButton;
-import flixel.util.FlxColor;
 import openfl.Assets;
 
 /**
@@ -35,12 +27,12 @@ class PlayState extends FlxState
 		var playerNode:FlxNode = createNodeAndDisposeBitmap("assets/lizardhead3.png", atlas);
 		
 		// now we can create some helper object which can be loaded in sprites and tilemaps
-		var tileSize:FlxPoint = new FlxPoint(16, 16);
+		var tileSize = FlxPoint.get(16, 16);
 		var tileFrames:FlxTileFrames = tilesNode.getTileFrames(tileSize);
 		
 		// lets try load this object in newly created tilemap
 		var tilemap:FlxTilemap = new FlxTilemap();
-		tilemap.loadMapFrames(Assets.getText("assets/mapCSV_Group1_Map1.csv"), tileFrames);
+		tilemap.loadMap("assets/mapCSV_Group1_Map1.csv", tileFrames);
 		add(tilemap);
 		
 		// lets try this feature on sprites also
@@ -52,7 +44,7 @@ class PlayState extends FlxState
 		add(monster);
 		
 		// why not animate some sprite?
-		var playerSize:FlxPoint = new FlxPoint(16, 20);
+		var playerSize = FlxPoint.get(16, 20);
 		var playerFrames:FlxTileFrames = playerNode.getTileFrames(playerSize);
 		
 		var player:FlxSprite = new FlxSprite(100, 0);
