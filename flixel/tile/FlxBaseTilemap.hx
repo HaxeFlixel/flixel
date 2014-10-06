@@ -78,6 +78,9 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 */
 	private var _data:Array<Int>;
 	
+	private var _drawIndex:Int = 0;
+	private var _collideIndex:Int = 0;
+	
 	/**
 	 * Virtual methods, must be implemented in each renderers
 	 */
@@ -91,7 +94,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		throw "cacheGraphics must be implemented";
 	}
 	
-	private function initTileObjects(DrawIndex:Int, CollideIndex:Int):Void 
+	private function initTileObjects():Void 
 	{
 		throw "initTileObjects must be implemented";
 	}
@@ -183,15 +186,24 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		}
 		
 		loadMapData(MapData);
-		applyAutoTile(DrawIndex, CollideIndex);
+		
+		_drawIndex = DrawIndex;
+		_collideIndex = CollideIndex;
+		
+		applyAutoTile();
 		applyCustomRemap();
 		randomizeIndices();
 		cacheGraphics(TileWidth, TileHeight, TileGraphic);
-		initTileObjects(DrawIndex, CollideIndex);
+		postGraphicLoad();
+		
+		return this;
+	}
+	
+	private function postGraphicLoad()
+	{
+		initTileObjects();
 		computeDimensions();
 		updateMap();
-
-		return this;
 	}
 	
 	private function loadMapData(MapData:FlxTilemapAsset)
@@ -282,7 +294,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		totalTiles = _data.length;
 	}
 
-	private function applyAutoTile(DrawIndex:Int, CollideIndex:Int):Void	
+	private function applyAutoTile():Void	
 	{
 		// Pre-process the map data if it's auto-tiled
 		if (auto != OFF)

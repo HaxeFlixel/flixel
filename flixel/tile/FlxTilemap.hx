@@ -109,9 +109,6 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	private var _scaledTileWidth:Float = 0;
 	private var _scaledTileHeight:Float = 0;
 	
-	private var _drawIndex:Int = 0;
-	private var _collideIndex:Int = 0;
-	
 	#if (FLX_RENDER_BLIT && !FLX_NO_DEBUG)
 	/**
 	 * Internal, used for rendering the debug bounding box display.
@@ -214,9 +211,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 			_tileHeight = Std.int(value.frames[0].sourceSize.y);
 			_flashRect.setTo(0, 0, _tileWidth, _tileHeight);
 			graphic = value.parent;
-			initTileObjects(_drawIndex, _collideIndex);
-			computeDimensions();
-			updateMap();
+			postGraphicLoad();
 		}
 		
 		return value;
@@ -249,7 +244,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		frames = FlxTileFrames.fromGraphic(graph, new FlxPoint(_tileWidth, _tileHeight));
 	}
 	
-	override private function initTileObjects(DrawIndex:Int, CollideIndex:Int):Void 
+	override private function initTileObjects():Void 
 	{
 		_tileObjects = FlxDestroyUtil.destroyArray(_tileObjects);
 		// Create some tile objects that we'll use for overlap checks (one for each tile)
@@ -260,7 +255,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		
 		for (i in 0...length)
 		{
-			_tileObjects[i] = new FlxTile(this, i, _tileWidth, _tileHeight, (i >= DrawIndex), (i >= CollideIndex) ? allowCollisions : FlxObject.NONE);
+			_tileObjects[i] = new FlxTile(this, i, _tileWidth, _tileHeight, (i >= _drawIndex), (i >= _collideIndex) ? allowCollisions : FlxObject.NONE);
 		}
 		
 		// Create debug tiles for rendering bounding boxes on demand
