@@ -674,44 +674,6 @@ class FlxSpriteUtil
 	{
 		sprite.alpha = f;
 	}
-	
-	/**
-	 * Helper method which makes it possible to use FlxFrames as graphic source for sprite's loadRotatedGraphic() method 
-	 * (since it accepts only FlxGraphic, BitmapData and String types).
-	 * 
-	 * @param	sprite			Sprite to load graphic into. Could be null (then new FlxSprite will be instantiated).
-	 * @param	frame			Frame to load into specified sprite.
-	 * @param	rotations		The number of rotation frames the final sprite should have.  For small sprites this can be quite a large number (360 even) without any problems.
-	 * @param	antiAliasing	Whether to use high quality rotations when creating the graphic.  Default is false.
-	 * @param	autoBuffer		Whether to automatically increase the image size to accomodate rotated corners.  Default is false.  Will create frames that are 150% larger on each axis than the original frame or graphic.
-	 * @return	FlxSprite with loaded rotated graphic in it.
-	 */
-	public static function loadRotatedFrame(sprite:FlxSprite, frame:FlxFrame, rotations:Int = 16, antiAliasing:Bool = false, autoBuffer:Bool = false):FlxSprite
-	{
-		var key:String = frame.parent.key;
-		if (frame.name != null)
-		{
-			key += ":" + frame.name;
-		}
-		else
-		{
-			key += ":" + frame.frame.toString();
-		}
-		
-		var graphic:FlxGraphic = FlxG.bitmap.get(key);
-		if (graphic == null)
-		{
-			graphic = FlxGraphic.fromBitmapData(frame.getBitmap().clone(), false, key);
-		}
-		
-		if (sprite == null)
-		{
-			sprite = new FlxSprite();
-		}
-		
-		sprite.loadRotatedGraphic(graphic, rotations, -1, antiAliasing, autoBuffer);
-		return sprite;
-	}
 }
 
 typedef LineStyle = {

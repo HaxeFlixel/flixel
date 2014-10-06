@@ -37,7 +37,6 @@
  * `fadeIn()` and `fadeOut()` now tween `alpha` instead of `color`
  * added `drawCurve()`
  * removed `FillStyle`, the same functionality is now covered by `FillColor`
- * added `loadRotatedFrame()` method which allows you to generate prerotated image from given frame and load it in `FlxSprite`
 * `FlxEmitter`:
  * `at()` -> `focusOn()`
  * `on` -> `emitting`
@@ -152,6 +151,7 @@
  * renamed `cachedGraphics` property to `graphic`
  * added `setFrames()` method which allows you to save animations which already exists in this sprite
  * `colorTransform` is always instantiated
+ * added `loadRotatedFrame()` method which allows you to generate prerotated image from given frame and load it
 * Added some helpful error messages when trying to target older swf versions
 * `FlxAngle`:
  * changed `rotatePoint()` to not invert the y-axis anymore and rotate clockwise (consistent with `FlxSprite#angle`)
