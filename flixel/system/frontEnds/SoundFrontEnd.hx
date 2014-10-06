@@ -67,6 +67,14 @@ class SoundFrontEnd
 	 * Collection of sound groups to which sounds may be added
 	 */
 	private var groups:Map<String, FlxSoundGroup> = new Map<String, FlxSoundGroup>();
+	/**
+	 * Default group in which to put music
+	 */
+	public var defaultMusicGroup:String;
+	/**
+	 * Default group in which to put sounds
+	 */
+	public var defaultSoundGroup:String;
 	
 	/**
 	 * Set up and play a looping background soundtrack.
@@ -90,7 +98,8 @@ class SoundFrontEnd
 		music.loadEmbedded(Music, Looped);
 		music.volume = Volume;
 		music.persist = true;
-		music.group = getGroup(GroupName);
+		music.group = getGroup(GroupName != null ? GroupName : defaultMusicGroup);
+		
 		music.play();
 	}
 	
@@ -132,7 +141,7 @@ class SoundFrontEnd
 			sound.play();
 		}
 		
-		sound.group = getGroup(GroupName);
+		sound.group = getGroup(GroupName != null ? GroupName : defaultSoundGroup);
 		
 		return sound;
 	}
@@ -207,7 +216,8 @@ class SoundFrontEnd
 			EmbeddedSound = cache(EmbeddedSound);
 		}
 		var sound = list.recycle(FlxSound).loadEmbedded(EmbeddedSound, Looped, AutoDestroy, OnComplete);
-		sound.group = getGroup(GroupName);
+		
+		sound.group = getGroup(GroupName != null ? GroupName : defaultSoundGroup);
 		sound.volume = Volume;
 		return sound.play();
 	}
