@@ -12,6 +12,7 @@ import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxGraphicAsset;
+import flixel.util.FlxBitmapDataUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
@@ -316,13 +317,15 @@ class FlxBitmapFont extends FlxFramesCollection
 		point.x = point.y = 0;
 		var bgColor32:Int = bmd.getPixel32(0, 0);
 		#if !bitfive
-		// TODO: make it work on html5 target
-		bmd.threshold(bmd, bmd.rect, point, "==", bgColor32, 0x00000000, 0xFFFFFFFF, true);
+		bmd.threshold(bmd, bmd.rect, point, "==", bgColor32, FlxColor.TRANSPARENT, FlxColor.WHITE, true);
 		
 		if (glyphBGColor != FlxColor.TRANSPARENT)
 		{
 			bmd.threshold(bmd, bmd.rect, point, "==", glyphBGColor, FlxColor.TRANSPARENT, FlxColor.WHITE, true);
 		}
+		#else
+		FlxBitmapDataUtil.replaceColor(bmd, bgColor32, FlxColor.TRANSPARENT);
+		FlxBitmapDataUtil.replaceColor(bmd, glyphBGColor, FlxColor.TRANSPARENT);
 		#end
 		
 		return font;
