@@ -282,7 +282,9 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		_debugRect = new Rectangle(0, 0, _tileWidth, _tileHeight);
 		#end
 		
-		for (i in 0...totalTiles)
+		var numTiles:Int = _tileObjects.length;
+		
+		for (i in 0...numTiles)
 		{
 			updateTile(i);
 		}
@@ -749,21 +751,6 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	}
 	
 	/**
-	 * Use this method for creating tileSheet for FlxTilemap. Must be called after loadMap() method.
-	 * If you forget to call it then you will not see this FlxTilemap on c++ target
-	 */
-	public function updateTiles():Void
-	{
-		if (graphic != null && _tileWidth >= 1 && _tileHeight >= 1)
-		{
-			for (i in 0...totalTiles)
-			{
-				updateTile(i);
-			}
-		}
-	}
-	
-	/**
 	 * Change a particular tile to FlxSprite. Or just copy the graphic if you dont want any changes to mapdata itself.
 	 * 
 	 * @link http://forums.flixel.org/index.php/topic,5398.0.html
@@ -996,18 +983,18 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	/**
 	 * Internal function used in setTileByIndex() and the constructor to update the map.
 	 * 
-	 * @param	Index		The index of the tile you want to update.
+	 * @param	Index		The index of the tile object in _tileObjects internal array you want to update.
 	 */
 	override private function updateTile(Index:Int):Void
 	{
-		var tile:FlxTile = _tileObjects[_data[Index]];
+		var tile:FlxTile = _tileObjects[Index];
 		
 		if ((tile == null) || !tile.visible)
 		{
 			return;
 		}
 		
-		tile.frame = frames.frames[_data[Index] - _startingIndex];
+		tile.frame = frames.frames[Index - _startingIndex];
 	}
 	
 	private inline function createBuffer(camera:FlxCamera):FlxTilemapBuffer

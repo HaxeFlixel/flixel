@@ -551,7 +551,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		
 		if (auto == OFF)
 		{
-			updateTile(Index);
+			updateTile(_data[Index]);
 			return ok;
 		}
 		
@@ -572,7 +572,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 				{
 					i = row * widthInTiles + column;
 					autoTile(i);
-					updateTile(i);
+					updateTile(_data[i]);
 				}
 				column++;
 			}
