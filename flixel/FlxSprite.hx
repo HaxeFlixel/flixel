@@ -1292,10 +1292,10 @@ class FlxSprite extends FlxObject
 			graphic = Frames.parent;
 			frames = Frames;
 			frame = frames.getByIndex(0);
-			animation.frameIndex = 0;
 			numFrames = frames.numFrames;
 			resetHelpers();
 			bakedRotationAngle = 0;
+			animation.frameIndex = 0;
 		}
 		else
 		{
