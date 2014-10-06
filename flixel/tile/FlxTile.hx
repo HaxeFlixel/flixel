@@ -1,6 +1,7 @@
 package flixel.tile;
 
 import flixel.FlxObject;
+import flixel.graphics.frames.FlxFrame;
 
 /**
  * A simple helper object for FlxTilemap that helps expand collision opportunities and control.
@@ -40,6 +41,11 @@ class FlxTile extends FlxObject
 	public var mapIndex:Int = 0;
 	
 	/**
+	 * Frame graphic for this tile.
+	 */
+	public var frame:FlxFrame;
+	
+	/**
 	 * Instantiate this new tile object.  This is usually called from FlxTilemap.loadMap().
 	 * 
 	 * @param 	Tilemap			A reference to the tilemap object creating the tile.
@@ -69,6 +75,7 @@ class FlxTile extends FlxObject
 	{
 		callbackFunction = null;
 		tilemap = null;
+		frame = null;
 		
 		super.destroy();
 	}

@@ -1,107 +1,60 @@
 package flixel.math;
+import flash.geom.Matrix;
 
-//A copy of flash Matrix, only with the needed feature.
-class FlxMatrix {
-
-    public var a:Float;
-    public var b:Float;
-    public var c:Float;
-    public var d:Float;
-    public var tx:Float;
-    public var ty:Float;
-
-    public function new(a:Float = 1, b:Float = 0, c:Float = 0, d:Float = 1, tx:Float = 0, ty:Float = 0) {
-
-        this.a = a;
-        this.b = b;
-        this.c = c;
-        this.d = d;
-        this.tx = tx;
-        this.ty = ty;
-
-    } //new
-
-    public function identity() {
-
-        a = 1;
-        b = 0;
-        c = 0;
-        d = 1;
-        tx = 0;
-        ty = 0;
-
-    } //identity
-
-    public function translate (x:Float, y:Float):Void {
-
-        tx += x;
-        ty += y;
-
-    } //translate
-
-    public function compose( Position: FlxPoint, Rotation:Float, Scale:FlxPoint ) {
-		
-        identity();
-
-        scale( Scale.x, Scale.y );
-        rotate( Rotation );
-        makeTranslation( Position.x, Position.y );
-
-    } //compose
-
-    public function makeTranslation( X:Float, Y:Float ) : Void {
-
-        tx += X;
-        ty += Y;
-
-    } //makeTranslation
-
-    public function rotate (angle:Float):Void {
-
-		angle = angle * Math.PI / 180;
-		
-        var cos = Math.cos (angle);
-        var sin = Math.sin (angle);
-
-        var a1 = a * cos - b * sin;
-            b = a * sin + b * cos;
-            a = a1;
-
-        var c1 = c * cos - d * sin;
-            d = c * sin + d * cos;
-            c = c1;
-
-        var tx1 = tx * cos - ty * sin;
-            ty = tx * sin + ty * cos;
-            tx = tx1;
-
-    } //rotate
-
-    public function scale (x:Float, y:Float):Void {
-
-        a *= x;
-        b *= y;
-
-        c *= x;
-        d *= y;
-
-        tx *= x;
-        ty *= y;
-
-    } //scale
-
-    public function toString ():String {
-
-        return "(a=" + a + ", b=" + b + ", c=" + c + ", d=" + d + ", tx=" + tx + ", ty=" + ty + ")";
-
-    } //toString
+/**
+ * Helper class for making fast matrix calculations for rendering.
+ * It mostly copies Matrix class, but with some additions for
+ * faster rotation by 90 degrees.
+ */
+class FlxMatrix extends Matrix
+{
+	/**
+	 * Helper object, which you can use without instantiation of
+	 * additional objects.
+	 */
+	public static var MATRIX:FlxMatrix = new FlxMatrix();
 	
-	public function transformPoint (Point : FlxPoint) : FlxPoint {
-		var x1 = Point.x;
-		Point.x = Point.x * a + Point.y * b + tx;
-		Point.y = x1 * c + Point.y * d + ty;
+	/**
+	 * Rotates this matrix, but takes the values of sine and cosine,
+	 * so it might be usefull when you rotate multiple matrices by the same angle
+	 * @param	cos	The cosine value for rotation angle
+	 * @param	sin	The sine value for rotation angle
+	 * @return	this transformed matrix
+	 */
+	public inline function rotateWithTrig(cos:Float, sin:Float):FlxMatrix
+	{
+		var a1:Float = a * cos - b * sin;
+		b = a * sin + b * cos;
+		a = a1;
 		
-		return Point;
+		var c1:Float = c * cos - d * sin;
+		d = c * sin + d * cos;
+		c = c1;
+		
+		var tx1:Float = tx * cos - ty * sin;
+		ty = tx * sin + ty * cos;
+		tx = tx1;
+		
+		return this;
 	}
-
-} //Matrix
+	
+	/**
+	 * Adds 90 degrees to rotation of this matrix
+	 * @return	rotated matrix
+	 */
+	public inline function rotateByPositive90():FlxMatrix
+	{
+		this.setTo( -b, a, -d, c, -ty, tx);
+		return this;
+	}
+	
+	/**
+	 * Substract 90 degrees from rotation of this matrix
+	 * @return	rotated matrix
+	 */
+	public inline function rotateByNegative90():FlxMatrix
+	{
+		this.setTo(b, -a, d, -c, ty, -tx);
+		return this;
+	}
+}

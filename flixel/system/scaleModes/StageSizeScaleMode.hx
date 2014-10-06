@@ -9,7 +9,7 @@ class StageSizeScaleMode extends BaseScaleMode
 		FlxG.width = Width;
 		FlxG.height = Height;
 		
-		FlxG.game.scaleX = FlxG.game.scaleY = 1;
+		scale.set(1, 1);
 		FlxG.game.x = FlxG.game.y = 0;
 		
 		if (FlxG.camera != null)

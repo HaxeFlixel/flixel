@@ -11,6 +11,10 @@ import flixel.util.FlxStringUtil;
  */
 class FlxRect implements IFlxPooled
 {
+	public static var flxRect:FlxRect = new FlxRect();
+	
+	public static var rect:Rectangle = new Rectangle();
+	
 	private static var _pool = new FlxPool<FlxRect>(FlxRect);
 	
 	/**
@@ -238,18 +242,6 @@ class FlxRect implements IFlxPooled
 	}
 	
 	/**
-	 * Function to compare this rectangle to another.
-	 * 
-	 * @param   rect  The other rectangle to compare to this one.
-	 * @return  Whether the rectangles are the same.
-	 */
-	public inline function equals(rect:FlxRect):Bool
-	{
-		return FlxMath.equal(x, rect.x) && FlxMath.equal(y, rect.y)
-			&& FlxMath.equal(width, rect.width) && FlxMath.equal(height, rect.height);
-	}
-	
-	/**
 	 * Rounds x, y, width and height using Math.floor()
 	 */
 	public inline function floor():FlxRect
@@ -288,6 +280,44 @@ class FlxRect implements IFlxPooled
 			LabelValuePair.weak("y", y),
 			LabelValuePair.weak("w", width),
 			LabelValuePair.weak("h", height)]);
+	}
+	
+	/**
+	 * Checks if this rectangle's properties are equal to properties of provided rect.
+	 * 
+	 * @param	rect	Rectangle to check equality to.
+	 * @return	Whether both rectangles are equal.
+	 */
+	public inline function equals(rect:FlxRect):Bool
+	{
+		return FlxMath.equal(x, rect.x) && FlxMath.equal(y, rect.y)
+			&& FlxMath.equal(width, rect.width) && FlxMath.equal(height, rect.height);
+	}
+	
+	/**
+	 * Returns the area of intersection with specified rectangle. 
+	 * If the rectangles do not intersect, this method returns an empty rectangle.
+	 * 
+	 * @param	rect	Rectangle to check intersection againist.
+	 * @return	The area of intersection of two rectangles.
+	 */
+	public function intersection(rect:FlxRect):FlxRect
+	{
+		var x0:Float = x < rect.x ? rect.x : x;
+		var x1:Float = right > rect.right ? rect.right : right;
+		if (x1 <= x0) 
+		{	
+			return new FlxRect();	
+		}
+		
+		var y0:Float = y < rect.y ? rect.y : y;
+		var y1:Float = bottom > rect.bottom ? rect.bottom : bottom;
+		if (y1 <= y0) 
+		{	
+			return new FlxRect();	
+		}
+		
+		return new FlxRect(x0, y0, x1 - x0, y1 - y0);
 	}
 	
 	private inline function get_left():Float

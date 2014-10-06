@@ -257,7 +257,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		{ 
 			var sprite = new FlxSprite();
 			sprite.loadGraphic(Graphics, true);
-			totalFrames = sprite.frames;
+			totalFrames = sprite.numFrames;
 			sprite.destroy();
 		}
 		
@@ -600,6 +600,12 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	{
 		x = X;
 		y = Y;
+	}
+	
+	public inline function setSize(Width:Float, Height:Float):Void
+	{
+		width = Width;
+		height = Height;
 	}
 	
 	private inline function get_solid():Bool
