@@ -65,7 +65,7 @@ class PlayState extends FlxState
 		var yPos = FlxG.height - atlas.height - 70;
 		add(new FlxText(10, yPos, 0, 'myAtlas (${atlas.width}x${atlas.height}):', 16));
 		
-		var atlasBmd = atlas.atlasBitmapData.clone();
+		var atlasBmd = atlas.bitmapData.clone();
 		var atlasSprite = new FlxSprite(20, yPos + 40, atlasBmd);
 		atlasSprite.drawRect(0, 0, atlasSprite.width - 1, atlasSprite.height - 1,
 			FlxColor.TRANSPARENT, { thickness: 1, color: FlxColor.RED } );
