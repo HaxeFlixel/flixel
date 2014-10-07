@@ -285,7 +285,7 @@ typedef FlxSoundAsset = OneOfThree<String, Sound, Class<Sound>>;
 typedef FlxGraphicAsset = OneOfThree<FlxGraphic, BitmapData, String>;
 typedef FlxGraphicSource = OneOfThree<BitmapData, Class<Dynamic>, String>;
 typedef FlxTilemapGraphicAsset = OneOfFour<FlxTileFrames, FlxGraphic, BitmapData, String>;
-typedef FlxTilemapAsset = OneOfTwo<String, Array<Int>>;
+typedef FlxTilemapAsset = OneOfThree<String, Array<Int>, Array<Array<Int>>>;
 
 private abstract OneOfTwo<T1, T2>(Dynamic) from T1 from T2 to T1 to T2 { }
 private abstract OneOfThree<T1, T2, T3>(Dynamic) from T1 from T2 from T3 to T1 to T2 to T3 {}
