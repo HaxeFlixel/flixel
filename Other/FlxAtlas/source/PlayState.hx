@@ -26,6 +26,10 @@ class PlayState extends FlxState
 		var monsterNode:FlxNode = createNodeAndDisposeBitmap("assets/lurkmonsta.png", atlas);
 		var playerNode:FlxNode = createNodeAndDisposeBitmap("assets/lizardhead3.png", atlas);
 		
+		// we need to finalize atlas to be able to get frame data from it.
+		// plus it will reduce the size of atlas canvas.
+		atlas.finalize();
+		
 		// now we can create some helper object which can be loaded in sprites and tilemaps
 		var tileSize = FlxPoint.get(16, 16);
 		var tileFrames:FlxTileFrames = tilesNode.getTileFrames(tileSize);
