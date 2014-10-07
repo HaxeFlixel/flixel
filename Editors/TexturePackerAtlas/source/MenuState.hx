@@ -6,7 +6,6 @@ import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.graphics.frames.FlxFrame;
-import flixel.util.FlxSpriteUtil;
 import openfl.Assets;
 
 class MenuState extends FlxState
@@ -43,7 +42,7 @@ class MenuState extends FlxState
 		// You can load rotated image from atlas. It is very useful for flash target where drawing rotated graphics is very expensive
 		var x2 = new FlxSprite(20, 200);
 		var frameToPrerotate:FlxFrame = tex2.getByName("100px-1,202,0,200-Scythescraper.png");
-		FlxSpriteUtil.loadRotatedFrame(x2, frameToPrerotate, 72, true, true);
+		x2.loadRotatedFrame(frameToPrerotate, 72, true, true);
 		x2.color = 0xff0000;
 		x2.angularVelocity = 50;
 		add(x2);
