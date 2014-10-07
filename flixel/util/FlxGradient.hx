@@ -30,9 +30,7 @@ class FlxGradient
 		var rot:Float = FlxAngle.asRadians(rotation);
 		
 		//	Last 2 values = horizontal and vertical shift (in pixels)
-		#if !bitfive
-			gradientMatrix.createGradientBox(width, height / chunkSize, rot, 0, 0);
-		#end
+		gradientMatrix.createGradientBox(width, height / chunkSize, rot, 0, 0);
 		
 		//	Create the alpha and ratio arrays
 		var alpha = new Array<Float>();
@@ -118,11 +116,9 @@ class FlxGradient
 		var gradient:GradientMatrix = createGradientMatrix(width, height, colors, chunkSize, rotation);
 		var shape = new Shape();
 		var interpolationMethod = interpolate ? InterpolationMethod.RGB : InterpolationMethod.LINEAR_RGB;
-
-		#if !bitfive
-			shape.graphics.beginGradientFill(GradientType.LINEAR, colors, gradient.alpha, gradient.ratio,
-				gradient.matrix, SpreadMethod.PAD, interpolationMethod, 0);
-		#end
+		
+		shape.graphics.beginGradientFill(GradientType.LINEAR, colors, gradient.alpha, gradient.ratio,
+			gradient.matrix, SpreadMethod.PAD, interpolationMethod, 0);
 		
 		shape.graphics.drawRect(0, 0, width, height / chunkSize);
 		
