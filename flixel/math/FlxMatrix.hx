@@ -14,6 +14,13 @@ class FlxMatrix extends Matrix
 	 */
 	public static var MATRIX:FlxMatrix = new FlxMatrix();
 	
+	#if flash
+	public function new()
+	{
+		super();
+	}
+	#end
+	
 	/**
 	 * Rotates this matrix, but takes the values of sine and cosine,
 	 * so it might be usefull when you rotate multiple matrices by the same angle
