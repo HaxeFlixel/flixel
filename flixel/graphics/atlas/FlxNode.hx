@@ -132,7 +132,7 @@ class FlxNode implements IFlxDestroyable
 		if (!atlas.finalized)
 			throw "You can't get tile frames from atlas which isn't finalized.";
 		
-		var graphic:FlxGraphic = FlxG.bitmap.add(atlas.atlasBitmapData, false, atlas.name);
+		var graphic:FlxGraphic = FlxG.bitmap.add(atlas.bitmapData, false, atlas.name);
 		
 		if (region == null)
 			region = contentRect;
@@ -149,7 +149,7 @@ class FlxNode implements IFlxDestroyable
 		if (!atlas.finalized)
 			throw "You can't get image frame from atlas which isn't finalized.";
 		
-		var graphic:FlxGraphic = FlxG.bitmap.add(atlas.atlasBitmapData, false, atlas.name);
+		var graphic:FlxGraphic = FlxG.bitmap.add(atlas.bitmapData, false, atlas.name);
 		return FlxImageFrame.fromRectangle(graphic, contentRect);
 	}
 	

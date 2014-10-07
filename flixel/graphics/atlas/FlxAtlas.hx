@@ -38,7 +38,7 @@ class FlxAtlas implements IFlxDestroyable
 	/**
 	 * BitmapData of this atlas, combines all images in big one
 	 */
-	public var atlasBitmapData:BitmapData;
+	public var bitmapData:BitmapData;
 	
 	/**
 	 * Offsets between nodes on x axis
@@ -78,7 +78,7 @@ class FlxAtlas implements IFlxDestroyable
 		this.name = name;
 		
 		root = new FlxNode(new Rectangle(0, 0, width, height), this);
-		atlasBitmapData = new BitmapData(width, height, true, FlxColor.TRANSPARENT);
+		bitmapData = new BitmapData(width, height, true, FlxColor.TRANSPARENT);
 		
 		this.width = width;
 		this.height = height;
@@ -150,7 +150,7 @@ class FlxAtlas implements IFlxDestroyable
 			nodeToInsert.left = firstChild;
 			nodeToInsert.right = secondChild;
 			
-			atlasBitmapData.copyPixels(data, data.rect, firstGrandChild.point);
+			bitmapData.copyPixels(data, data.rect, firstGrandChild.point);
 			
 			nodes.set(key, firstGrandChild);
 			
@@ -197,6 +197,7 @@ class FlxAtlas implements IFlxDestroyable
 		if (node == null) 
 			return null;
 		
+		// todo: fix this, since this will throw error
 		return node.getTileFrames(tileSize, tileSpacing);
 	}
 	
@@ -210,7 +211,7 @@ class FlxAtlas implements IFlxDestroyable
 		if (!finalized)
 			throw "FlxAtlas isn't finalized. Please call finalize() on your atlas and then you can get atlas frames.";
 		
-		var graphic:FlxGraphic = FlxG.bitmap.add(this.atlasBitmapData, false, name);
+		var graphic:FlxGraphic = FlxG.bitmap.add(this.bitmapData, false, name);
 		
 		var atlasFrames:FlxAtlasFrames = null;
 		if (graphic.atlasFrames == null)
@@ -393,7 +394,7 @@ class FlxAtlas implements IFlxDestroyable
 		_tempStorage = null;
 		deleteSubtree(root);
 		root = null;
-		atlasBitmapData = FlxDestroyUtil.dispose(atlasBitmapData);
+		bitmapData = FlxDestroyUtil.dispose(bitmapData);
 		nodes = null;
 	}
 	
@@ -409,7 +410,7 @@ class FlxAtlas implements IFlxDestroyable
 		deleteSubtree(root);
 		
 		root = new FlxNode(new Rectangle(0, 0, rootWidth, rootHeight), this);
-		atlasBitmapData.fillRect(root.rect, FlxColor.TRANSPARENT);
+		bitmapData.fillRect(root.rect, FlxColor.TRANSPARENT);
 		
 		var graphic:FlxGraphic = FlxG.bitmap.get(name);
 		graphic.atlasFrames = FlxDestroyUtil.destroy(graphic.atlasFrames);
@@ -442,9 +443,9 @@ class FlxAtlas implements IFlxDestroyable
 			var finalHeight:Int = Std.int(contentRect.height);
 			
 			var finalBD:BitmapData = new BitmapData(finalWidth, finalHeight, true, FlxColor.TRANSPARENT);
-			finalBD.copyPixels(atlasBitmapData, finalBD.rect, new Point());
-			atlasBitmapData.dispose();
-			atlasBitmapData = finalBD;
+			finalBD.copyPixels(bitmapData, finalBD.rect, new Point());
+			bitmapData.dispose();
+			bitmapData = finalBD;
 			width = finalWidth;
 			height = finalHeight;
 		}
