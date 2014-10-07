@@ -6,7 +6,7 @@ class FlxHitboxList implements IFlxHitbox
 {
 	
 	//TODO : Implement bounding box
-	public var transformedBoundingBox : FlxRect;
+	public var transformedBoundingBox(get,null) : FlxRect;
 	public var parent : FlxSprite;
 	public var members : Array<IFlxHitbox>;
 	
@@ -16,39 +16,32 @@ class FlxHitboxList implements IFlxHitbox
 		this.members = hitboxes;
 	}
 	
-	public function test (hitbox : IFlxHitbox, overlapData:FlxOverlapData = null, updateTransforms : Bool = true) : Bool
+	public function test (hitbox : IFlxHitbox, overlapData:FlxOverlapData = null) : Bool
 	{
-		return hitbox.testHitboxList(this, true, overlapData, updateTransforms);
+		return hitbox.testHitboxList(this, true, overlapData);
 	}
 	
-	public function testCircle (circle : FlxCircle, flip : Bool = false, overlapData:FlxOverlapData = null, updateTransforms : Bool = true) : Bool
+	public function testCircle (circle : FlxCircle, flip : Bool = false, overlapData:FlxOverlapData = null) : Bool
 	{
-		return FlxOverlap2D.testCircleVsHitboxList(circle, this, flip, overlapData, updateTransforms);
+		return FlxOverlap2D.testCircleVsHitboxList(circle, this, flip, overlapData);
 	}
 	
-	public function testPolygon (polygon : FlxPolygon, flip : Bool = false, overlapData:FlxOverlapData = null, updateTransforms : Bool = true) : Bool
+	public function testPolygon (polygon : FlxPolygon, flip : Bool = false, overlapData:FlxOverlapData = null) : Bool
 	{
-		return FlxOverlap2D.testPolygonVsHitboxList(polygon, this, flip, overlapData, updateTransforms);
+		return FlxOverlap2D.testPolygonVsHitboxList(polygon, this, flip, overlapData);
 	}
 	
-	public function testHitboxList (hitboxList : FlxHitboxList, flip : Bool = false, overlapData:FlxOverlapData = null, updateTransforms : Bool = true) : Bool
+	public function testHitboxList (hitboxList : FlxHitboxList, flip : Bool = false, overlapData:FlxOverlapData = null) : Bool
 	{
-		return FlxOverlap2D.testHitboxLists(this, hitboxList, flip, overlapData, updateTransforms);
+		return FlxOverlap2D.testHitboxLists(this, hitboxList, flip, overlapData);
 	}
-	public function testRay (ray : FlxRay, rayData : FlxRayData = null, updateTransform : Bool = true) : Bool
+	public function testRay (ray : FlxRay, rayData : FlxRayData = null) : Bool
 	{
-		return FlxOverlap2D.rayHitboxList(ray, this, rayData, updateTransform);
+		return FlxOverlap2D.rayHitboxList(ray, this, rayData);
 	}
 	
-	public function updateTransformed() : Void
+	public function get_transformedBoundingBox()
 	{
-		for (hitbox in members)
-		{
-			if (hitbox != this)
-			{
-				hitbox.parent = parent;
-				hitbox.updateTransformed();
-			}
-		}
+		return transformedBoundingBox;
 	}
 }

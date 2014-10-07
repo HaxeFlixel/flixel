@@ -50,17 +50,12 @@ class FlxOverlap {
 			var spriteA : FlxSprite = cast listAIterator.object;
 			if (spriteA != null && spriteA.hitbox != null)
 			{
-				spriteA.hitbox.updateTransformed();
 				while (listBIterator != null)
 				{
 					var spriteB : FlxSprite = cast listBIterator.object;
 					if (spriteB != null && spriteB.hitbox != null)
 					{
-						if (listAIterator == listA)
-						{
-							spriteB.hitbox.updateTransformed();
-						}
-						if (spriteA.hitbox.test(spriteB.hitbox, overlapData, false))
+						if (spriteA.hitbox.test(spriteB.hitbox, overlapData))
 						{
 							if ((ProcessCallback == null || ProcessCallback(overlapData)) && NotifyCallback != null)
 								NotifyCallback(overlapData);
@@ -114,7 +109,7 @@ class FlxOverlap {
 			var sprite : FlxSprite = cast listIterator.object;
 			if (sprite != null && sprite.hitbox != null)
 			{
-				if (sprite.hitbox.testRay(ray, tempRay, false))
+				if (sprite.hitbox.testRay(ray, tempRay))
 				{
 					if (rayData == null)
 						return true;

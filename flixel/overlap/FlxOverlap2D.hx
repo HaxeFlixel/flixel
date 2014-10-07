@@ -25,7 +25,7 @@ class FlxOverlap2D {
 	 * @param	updateTransforms 	Wether the hitboxes transformed parameters should be updated or not.
 	 * @return	Whether any overlaps were detected.
 	 */
-	public static function testCircleVsPolygon (circle : FlxCircle, polygon : FlxPolygon, flip : Bool, overlapData : FlxOverlapData = null, updateTransforms : Bool = true) : Bool
+	public static function testCircleVsPolygon (circle : FlxCircle, polygon : FlxPolygon, flip : Bool, overlapData : FlxOverlapData = null) : Bool
 	{
 	    var test1 : Float;
         var test2 : Float;
@@ -43,22 +43,8 @@ class FlxOverlap2D {
         var distance : Float = 0xFFFFFFFF;
         var testDistance : Float = 0x3FFFFFFF;
 		
-		if (updateTransforms)
-		{
-			circle.updateTransformed();
-			polygon.updateTransformed();
-		}
-		
         _vectorOffset.set( -circle.transformedX, -circle.transformedY);
         vectors = polygon.transformedVertices;
-        
-        if (vectors.length == 2) 
-		{
-            var temp = FlxVector.get(-(vectors[1].y - vectors[0].y), vectors[1].x - vectors[0].x);
-            temp.truncate(0.0000000001);
-            vectors.push( vectors[1].clone().addVector(temp) );
-			temp.put();
-        }
         
         for (i in 0 ... vectors.length) 
 		{
@@ -180,14 +166,8 @@ class FlxOverlap2D {
         return true;
 	}
 	
-	public static function testCircles(circle1:FlxCircle, circle2:FlxCircle, overlapData : FlxOverlapData = null, updateTransforms : Bool = true): Bool {
-		
-		if (updateTransforms)
-		{
-			circle1.updateTransformed();
-			circle2.updateTransformed();
-		}
-		
+	public static function testCircles(circle1:FlxCircle, circle2:FlxCircle, overlapData : FlxOverlapData = null): Bool 
+	{
         var totalRadius : Float = circle1.transformedRadius + circle2.transformedRadius;
         var distanceSquared : Float = (circle1.transformedX - circle2.transformedX) * (circle1.transformedX - circle2.transformedX) + (circle1.transformedY - circle2.transformedY) * (circle1.transformedY - circle2.transformedY); //find the distance between the two circles using Pythagorean theorem. No square roots for optimization
         
@@ -208,20 +188,14 @@ class FlxOverlap2D {
         return false;
     }
 	
-	public static function testPolygons(polygon1:FlxPolygon, polygon2:FlxPolygon, flip:Bool = false, overlapData:FlxOverlapData = null, updateTransforms : Bool = true):Bool
+	public static function testPolygons(polygon1:FlxPolygon, polygon2:FlxPolygon, flip:Bool = false, overlapData:FlxOverlapData = null):Bool
 	{
-		if (updateTransforms)
-		{
-			polygon1.updateTransformed();
-			polygon2.updateTransformed();
-		}
-		
 		var tempOverlap1 = new FlxOverlapData();
 		var tempOverlap2 = new FlxOverlapData();
 		
-		var result1 = checkPolygons(polygon1, polygon2, flip, tempOverlap1,false);
+		var result1 = checkPolygons(polygon1, polygon2, flip, tempOverlap1);
 		if(!result1) return false;
-		var result2 = checkPolygons(polygon2, polygon1, !flip, tempOverlap2,false);
+		var result2 = checkPolygons(polygon2, polygon1, !flip, tempOverlap2);
 		if (!result2) return false;
 		
 		if (overlapData != null)
@@ -240,8 +214,8 @@ class FlxOverlap2D {
 		return true;
 	}
 	
-	public static function checkPolygons(polygon1:FlxPolygon, polygon2:FlxPolygon, flip : Bool, overlapData:FlxOverlapData = null, updateTransforms : Bool = true):Bool {
-
+	public static function checkPolygons(polygon1:FlxPolygon, polygon2:FlxPolygon, flip : Bool, overlapData:FlxOverlapData = null):Bool 
+	{
         var test1 : Float;
         var test2 : Float;
         var testNum : Float;
@@ -254,27 +228,8 @@ class FlxOverlap2D {
         var vectors2:Array<FlxVector>;
         var shortestDistance : Float = 0x3FFFFFFF;
 		
-		if (updateTransforms)
-		{
-			polygon1.updateTransformed();
-			polygon2.updateTransformed();
-		}
-		
         vectors1 = polygon1.transformedVertices;
         vectors2 = polygon2.transformedVertices;
-		
-        if(vectors1.length == 2) {
-            var temp = FlxVector.get(-(vectors1[1].y - vectors1[0].y), vectors1[1].x - vectors1[0].x);
-            temp.truncate(0.0000000001);
-            vectors1.push(vectors1[1].addVector(temp));
-			temp.put();
-        }
-        if(vectors2.length == 2) {
-            var temp = FlxVector.get(-(vectors2[1].y - vectors2[0].y), vectors2[1].x - vectors2[0].x);
-            temp.truncate(0.0000000001);
-            vectors2.push(vectors2[1].addVector(temp));
-			temp.put();
-        }
         
         for (i in 0 ... vectors1.length) 
 		{
@@ -342,17 +297,11 @@ class FlxOverlap2D {
         return true;
     }
 	
-	public static function testCircleVsHitboxList (circle : FlxCircle, hitboxList : FlxHitboxList, flip : Bool, overlapData : FlxOverlapData = null, updateTransforms : Bool = true) : Bool
+	public static function testCircleVsHitboxList (circle : FlxCircle, hitboxList : FlxHitboxList, flip : Bool, overlapData : FlxOverlapData = null) : Bool
 	{
-		if (updateTransforms)
-		{
-			circle.updateTransformed();
-			hitboxList.updateTransformed();
-		}
-		
 		for (hitbox in hitboxList.members)
 		{
-			if (hitbox != hitboxList && circle.test(hitbox, overlapData, false))
+			if (hitbox != hitboxList && circle.test(hitbox, overlapData))
 			{
 				if (overlapData != null && flip)
 				{
@@ -367,17 +316,11 @@ class FlxOverlap2D {
 		return false;
 	}
 	
-	public static function testPolygonVsHitboxList (polygon : FlxPolygon, hitboxList : FlxHitboxList, flip : Bool, overlapData : FlxOverlapData = null, updateTransforms : Bool = true) : Bool
+	public static function testPolygonVsHitboxList (polygon : FlxPolygon, hitboxList : FlxHitboxList, flip : Bool, overlapData : FlxOverlapData = null) : Bool
 	{
-		if (updateTransforms)
-		{
-			polygon.updateTransformed();
-			hitboxList.updateTransformed();
-		}
-		
 		for (hitbox in hitboxList.members)
 		{
-			if (hitbox != hitboxList && polygon.test(hitbox, overlapData, false))
+			if (hitbox != hitboxList && polygon.test(hitbox, overlapData))
 			{
 				if (overlapData != null && flip)
 				{
@@ -392,17 +335,11 @@ class FlxOverlap2D {
 		return false;
 	}
 	
-	public static function testHitboxLists (hitboxList1 : FlxHitboxList, hitboxList2 : FlxHitboxList, flip : Bool, overlapData : FlxOverlapData = null, updateTransforms : Bool = true) : Bool
+	public static function testHitboxLists (hitboxList1 : FlxHitboxList, hitboxList2 : FlxHitboxList, flip : Bool, overlapData : FlxOverlapData = null) : Bool
 	{
-		if (updateTransforms)
-		{
-			hitboxList1.updateTransformed();
-			hitboxList2.updateTransformed();
-		}
-		
 		for (hitbox in hitboxList2.members)
 		{
-			if (hitbox != hitboxList1 && hitboxList1.test(hitbox, overlapData, false))
+			if (hitbox != hitboxList1 && hitboxList1.test(hitbox, overlapData))
 			{
 				if (overlapData != null && flip)
 				{
@@ -425,11 +362,8 @@ class FlxOverlap2D {
 		return ((rect1.x + rect1.width > rect2.x) && (rect1.x < rect2.x + rect2.width) && (rect1.y + rect1.height > rect2.y) && (rect1.y < rect2.y + rect2.height));
 	}
 	
-	public static function rayCircle(ray:FlxRay, circle:FlxCircle, rayData : FlxRayData = null, updateTransform : Bool = true):Bool
+	public static function rayCircle(ray:FlxRay, circle:FlxCircle, rayData : FlxRayData = null):Bool
 	{
-		if (updateTransform)
-			circle.updateTransformed();
-		
 		_delta.set(ray.end.x - ray.start.x, ray.end.y - ray.start.y);
 		_ray2circle.set(ray.start.x - circle.transformedX, ray.start.y - circle.transformedY);
 		
@@ -461,11 +395,8 @@ class FlxOverlap2D {
 		return false;
 	}
 	
-	public static function rayPolygon(ray:FlxRay, polygon:FlxPolygon, rayData : FlxRayData = null, updateTransform : Bool = true):Bool
+	public static function rayPolygon(ray:FlxRay, polygon:FlxPolygon, rayData : FlxRayData = null):Bool
 	{
-		if (updateTransform)
-			polygon.updateTransformed();
-		
 		_delta.set(ray.end.x - ray.start.x, ray.end.y - ray.start.y);
 		var vertices = polygon.transformedVertices;
 		
@@ -512,11 +443,8 @@ class FlxOverlap2D {
 		return false;
 	}
 	
-	public static function rayHitboxList(ray : FlxRay, hitboxList : FlxHitboxList, rayData : FlxRayData = null, updateTransform = true) : Bool
-	{
-		if (updateTransform)
-			hitboxList.updateTransformed();
-			
+	public static function rayHitboxList(ray : FlxRay, hitboxList : FlxHitboxList, rayData : FlxRayData = null) : Bool
+	{	
 		var result = false;
 		
 		var tempRayData : FlxRayData = null;
@@ -528,7 +456,7 @@ class FlxOverlap2D {
 		
 		for (hitbox in hitboxList.members)
 		{
-			if (hitbox != hitboxList && hitbox.testRay(ray, tempRayData, false) && tempRayData.start < rayData.start) 
+			if (hitbox != hitboxList && hitbox.testRay(ray, tempRayData) && tempRayData.start < rayData.start) 
 			{
 				rayData.start = tempRayData.start;
 				rayData.hitbox = tempRayData.hitbox;
