@@ -574,6 +574,12 @@ class FlxVector extends FlxPoint
 		return vec;
 	}
 	
+	public inline function addVector(vec : FlxVector) : FlxVector
+	{
+		addPoint(vec);
+		return this;
+	}
+	
 	private inline function get_dx():Float
 	{
 		if (isZero()) return 0;

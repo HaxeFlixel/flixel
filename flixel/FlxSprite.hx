@@ -21,6 +21,7 @@ import flixel.math.FlxMath;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
+import flixel.overlap.IFlxHitbox;
 import flixel.system.FlxAssets;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.util.FlxBitmapDataUtil;
@@ -149,6 +150,8 @@ class FlxSprite extends FlxObject
 	 * Set clipRect to null to discard graphic frame clipping 
 	 */
 	public var clipRect(default, set):FlxRect;
+	
+	public var hitbox : IFlxHitbox;
 	
 	private var _clipRect:FlxRect;
 	
