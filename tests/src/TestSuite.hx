@@ -21,6 +21,7 @@ import flixel.tweens.FlxTweenTest;
 import flixel.tweens.motion.LinearMotionTest;
 import flixel.ui.FlxButtonTest;
 import flixel.util.FlxColorTest;
+import flixel.util.FlxGradientTest;
 import flixel.util.FlxPathTest;
 import flixel.util.FlxPoolTest;
 import flixel.util.FlxSignalTest;
@@ -63,6 +64,7 @@ class TestSuite extends massive.munit.TestSuite
 		add(flixel.tweens.motion.LinearMotionTest);
 		add(flixel.ui.FlxButtonTest);
 		add(flixel.util.FlxColorTest);
+		add(flixel.util.FlxGradientTest);
 		add(flixel.util.FlxPathTest);
 		add(flixel.util.FlxPoolTest);
 		add(flixel.util.FlxSignalTest);

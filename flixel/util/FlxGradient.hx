@@ -56,7 +56,7 @@ class FlxGradient
 			
 			ratio.push(0);
 			
-			for (ri in 0...colors.length)
+			for (ri in 1...(colors.length - 1))
 			{
 				ratio.push(ri * spread);
 			}
