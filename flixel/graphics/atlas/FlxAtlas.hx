@@ -58,6 +58,8 @@ class FlxAtlas implements IFlxDestroyable
 	 */
 	public var height(default, null):Int;
 	
+	public var finalized(default, null):Bool = false;
+	
 	/**
 	 * Internal storage for building atlas from queue
 	 */
@@ -94,22 +96,22 @@ class FlxAtlas implements IFlxDestroyable
 	{
 		var key:String = FlxAssets.resolveKey(Graphic, Key);
 		
-		if (key == null) return null;
+		if (key == null) 
+			return null;
 		
 		if (hasNodeWithName(key) == true)
-		{
 			return nodes.get(key);
-		}
+		
+		if (finalized)
+			throw "You can't add images to finalized atlas.";
 		
 		var data:BitmapData = FlxAssets.resolveBitmapData(Graphic);
 		
-		if (data == null)	return null;
+		if (data == null)	
+			return null;
 		
 		if (root.canPlace(data.width, data.height) == false)
-		{
-			// There is no place for image
-			return null;
-		}
+			return null; // There is no place for image
 		
 		var insertWidth:Int = (data.width == width) ? data.width : data.width + borderX;
 		var insertHeight:Int = (data.height == height) ? data.height : data.height + borderY;
@@ -173,23 +175,27 @@ class FlxAtlas implements IFlxDestroyable
 	{
 		var key:String = FlxAssets.resolveKey(Graphic, Key);
 		
-		if (key == null) return null;
+		if (key == null) 
+			return null;
 		
 		key = FlxG.bitmap.getKeyWithSpacings(key, tileSize, tileSpacing, region);
 		
 		if (hasNodeWithName(key) == true)
-		{
 			return nodes.get(key).getTileFrames(tileSize, tileSpacing);
-		}
+		
+		if (finalized)
+			throw "You can't add images to finalized atlas.";
 		
 		var data:BitmapData = FlxAssets.resolveBitmapData(Graphic);
 		
-		if (data == null) return null;
+		if (data == null) 
+			return null;
 		
 		var nodeData:BitmapData = FlxBitmapDataUtil.addSpacing(data, tileSize, tileSpacing, region);
 		var node:FlxNode = addNode(nodeData, key);
 		
-		if (node == null) return null;
+		if (node == null) 
+			return null;
 		
 		return node.getTileFrames(tileSize, tileSpacing);
 	}
@@ -201,13 +207,14 @@ class FlxAtlas implements IFlxDestroyable
 	 */
 	public function getAtlasFrames():FlxAtlasFrames
 	{
+		if (!finalized)
+			throw "FlxAtlas isn't finalized. Please call finalize() on your atlas and then you can get atlas frames.";
+		
 		var graphic:FlxGraphic = FlxG.bitmap.add(this.atlasBitmapData, false, name);
 		
 		var atlasFrames:FlxAtlasFrames = null;
 		if (graphic.atlasFrames == null)
-		{
 			graphic.atlasFrames = atlasFrames = new FlxAtlasFrames(graphic);
-		}
 		
 		var node:FlxNode;
 		for (key in nodes.keys())
@@ -245,9 +252,7 @@ class FlxAtlas implements IFlxDestroyable
 	public function getNode(key:String):FlxNode
 	{
 		if (hasNodeWithName(key) == true)
-		{
 			return nodes.get(key);
-		}
 		
 		return null;
 	}
@@ -261,13 +266,14 @@ class FlxAtlas implements IFlxDestroyable
 	 */
 	public function addNodes(bitmaps:Array<BitmapData>, keys:Array<String>):Bool
 	{
+		if (finalized)
+			throw "You can't add images to finalized atlas.";
+		
 		var numKeys:Int = keys.length;
 		var numBitmaps:Int = bitmaps.length;
 		
 		if (numBitmaps != numKeys)
-		{
 			return false;
-		}
 		
 		var sortedBitmaps:Array<BitmapData> = bitmaps.slice(0, bitmaps.length);
 		sortedBitmaps.sort(bitmapSorter);
@@ -326,7 +332,12 @@ class FlxAtlas implements IFlxDestroyable
 	 */
 	public function createQueue():FlxAtlas
 	{
-		if (_tempStorage != null)	_tempStorage = null;
+		if (finalized)
+			throw "You can't add images to finalized atlas.";
+		
+		if (_tempStorage != null)	
+			_tempStorage = null;
+		
 		_tempStorage = new Array<TempAtlasObj>();
 		return this;
 	}
@@ -338,10 +349,11 @@ class FlxAtlas implements IFlxDestroyable
 	 */
 	public function addToQueue(data:BitmapData, key:String):FlxAtlas
 	{
+		if (finalized)
+			throw "You can't add images to finalized atlas.";
+		
 		if (_tempStorage == null)
-		{
 			_tempStorage = new Array<TempAtlasObj>();
-		}
 		
 		_tempStorage.push({ bmd: data, keyStr: key });
 		return this;
@@ -352,6 +364,9 @@ class FlxAtlas implements IFlxDestroyable
 	 */
 	public function generateFromQueue():FlxAtlas
 	{
+		if (finalized)
+			throw "You can't add images to finalized atlas.";
+		
 		if (_tempStorage != null)
 		{
 			var bitmaps:Array<BitmapData> = new Array<BitmapData>();
@@ -387,6 +402,8 @@ class FlxAtlas implements IFlxDestroyable
 	 */
 	public function clear():Void
 	{
+		finalized = false;
+		
 		var rootWidth:Int = root.width;
 		var rootHeight:Int = root.height;
 		deleteSubtree(root);
@@ -397,6 +414,40 @@ class FlxAtlas implements IFlxDestroyable
 		var graphic:FlxGraphic = FlxG.bitmap.get(name);
 		graphic.atlasFrames = FlxDestroyUtil.destroy(graphic.atlasFrames);
 		nodes = new Map<String, FlxNode>();
+	}
+	
+	/**
+	 * Let you get frame data for this atlas,
+	 * but won't let you to add any new image to it.
+	 * 
+	 * @param	trim	whether to trim this atlas' BitmapData or not.
+	 */
+	public function finalize(trim:Bool = true):Void
+	{
+		if (finalized)
+			return;
+		
+		finalized = true;
+		
+		if (trim)
+		{
+			var contentRect:FlxRect = new FlxRect();
+			
+			for (node in nodes)
+			{
+				contentRect.union(node.contentRect);
+			}
+			
+			var finalWidth:Int = Std.int(contentRect.width);
+			var finalHeight:Int = Std.int(contentRect.height);
+			
+			var finalBD:BitmapData = new BitmapData(finalWidth, finalHeight, true, FlxColor.TRANSPARENT);
+			finalBD.copyPixels(atlasBitmapData, finalBD.rect, new Point());
+			atlasBitmapData.dispose();
+			atlasBitmapData = finalBD;
+			width = finalWidth;
+			height = finalHeight;
+		}
 	}
 	
 	private function deleteSubtree(node:FlxNode):Void

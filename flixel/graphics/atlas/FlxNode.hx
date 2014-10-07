@@ -129,12 +129,13 @@ class FlxNode implements IFlxDestroyable
 	 */
 	public function getTileFrames(tileSize:FlxPoint, tileSpacing:FlxPoint = null, region:FlxRect = null):FlxTileFrames
 	{
+		if (!atlas.finalized)
+			throw "You can't get tile frames from atlas which isn't finalized.";
+		
 		var graphic:FlxGraphic = FlxG.bitmap.add(atlas.atlasBitmapData, false, atlas.name);
 		
 		if (region == null)
-		{
 			region = contentRect;
-		}
 		
 		return FlxTileFrames.fromRectangle(graphic, tileSize, region, tileSpacing);
 	}
@@ -145,6 +146,9 @@ class FlxNode implements IFlxDestroyable
 	 */
 	public function getImageFrame():FlxImageFrame
 	{
+		if (!atlas.finalized)
+			throw "You can't get image frame from atlas which isn't finalized.";
+		
 		var graphic:FlxGraphic = FlxG.bitmap.add(atlas.atlasBitmapData, false, atlas.name);
 		return FlxImageFrame.fromRectangle(graphic, contentRect);
 	}
@@ -187,9 +191,7 @@ class FlxNode implements IFlxDestroyable
 	private inline function get_contentRect():FlxRect
 	{
 		if (_contentRect == null)
-		{
 			_contentRect = new FlxRect(x, y, contentWidth, contentHeight);
-		}
 		
 		return _contentRect;
 	}
