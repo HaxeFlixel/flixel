@@ -556,6 +556,12 @@ class FlxVector extends FlxPoint
 		return !Math.isNaN(x) && !Math.isNaN(y) && Math.isFinite(x) && Math.isFinite(y); 
 	}
 	
+	public inline function addVector(vector : FlxVector) : FlxVector
+	{
+		addPoint(vector);
+		return this;
+	}
+	
 	/**
 	 * Copies this vector.
 	 * 

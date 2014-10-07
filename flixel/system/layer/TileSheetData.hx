@@ -1,0 +1,406 @@
+package flixel.system.layer;
+
+import flash.display.BitmapData;
+import flash.geom.Point;
+import flash.geom.Rectangle;
+import flixel.math.FlxRect;
+import flixel.system.layer.frames.FlxFrame;
+import flixel.system.layer.frames.FlxRotatedFrame;
+import flixel.system.layer.frames.FlxSpriteFrames;
+import flixel.system.layer.Region;
+import flixel.system.layer.TileSheetExt;
+import flixel.util.FlxDestroyUtil.IFlxDestroyable;
+import flixel.math.FlxPoint;
+import flixel.util.loaders.TextureAtlasFrame;
+import flixel.util.loaders.TexturePackerData;
+
+/**
+ * Object of this class holds information about single Tilesheet
+ */
+class TileSheetData implements IFlxDestroyable
+{
+	#if FLX_RENDER_TILE
+	public var tileSheet:TileSheetExt;
+	#end
+	
+	/**
+	 * Storage for all groups of FlxFrames.
+	 * WARNING: accessing Map data structure causes string allocations - avoid doing every frame.
+	 */
+	private var flxSpriteFrames:Map<String, FlxSpriteFrames>;
+	
+	/**
+	 * Storage for all FlxFrames in this TileSheetData object.
+	 * WARNING: accessing Map data structure causes string allocations - avoid doing every frame.
+	 */
+	private var flxFrames:Map<String, FlxFrame>;
+	
+	private var frameNames:Array<String>;
+	
+	private var framesArr:Array<FlxFrame>;
+	
+	public var bitmap:BitmapData;
+	
+	public function new(Bitmap:BitmapData)
+	{
+		bitmap = Bitmap;
+		#if FLX_RENDER_TILE
+		tileSheet = new TileSheetExt(bitmap);
+		#end
+		flxSpriteFrames = new Map<String, FlxSpriteFrames>();
+		flxFrames = new Map<String, FlxFrame>();
+		frameNames = new Array<String>();
+		framesArr = new Array<FlxFrame>();
+	}
+	
+	public inline function getFrame(name:String):FlxFrame
+	{
+		return flxFrames.get(name);
+	}
+	
+	/**
+	 * Clips all frames in provided frames collection.
+	 * 
+	 * @param	frames		Collection of frames to clip
+	 * @param	clipRect	Rectangle which will be used for clipping frames
+	 * @return	Collection of clipped frames
+	 */
+	public function clipFrames(frames:FlxSpriteFrames, clipRect:FlxRect, useOriginal:Bool = true):FlxSpriteFrames
+	{
+		// do not allow negative width/height
+		if (clipRect.width < 0 || clipRect.height < 0) 
+		{
+			return null;
+		}
+		
+		if (useOriginal)
+		{
+			var original:FlxSpriteFrames = frames.original;
+			if (original != null)
+			{
+				frames = original;
+			}
+		}
+		
+		var name:String = frames.name;
+		
+		if (!flxSpriteFrames.exists(name))
+		{
+			return null;
+		}
+		
+		name = name + clipRect.toString();
+		
+		if (flxSpriteFrames.exists(name))
+		{
+			return flxSpriteFrames.get(name);
+		}
+		
+		var spriteData:FlxSpriteFrames = new FlxSpriteFrames(name);
+		
+		var frame:FlxFrame;
+		var newFrame:FlxFrame;
+		
+		var frameRect:Rectangle = new Rectangle();
+		var newFrameRect:Rectangle;
+		
+		var newFrameName:String;
+		
+		for (frame in frames.frames)
+		{
+			frameRect.x = 0;
+			frameRect.y = 0;
+			frameRect.width = frame.sourceSize.x;
+			frameRect.height = frame.sourceSize.y;
+			
+			newFrameRect = frameRect.intersection(clipRect.copyToFlash());
+			if (newFrameRect.width <= 0 || newFrameRect.height <= 0)
+			{
+				// Empty frame
+				continue;
+			}
+			
+			var offsetX:Float = newFrameRect.x + frame.offset.x;
+			var offsetY:Float = newFrameRect.y + frame.offset.y;
+			
+			newFrameRect.x += frame.frame.x;
+			newFrameRect.y += frame.frame.y;
+			
+			var rect = FlxRect.get().copyFromFlash(newFrameRect);
+			newFrameName = getSpriteSheetFrameKey(frame.frame, new Point(0.5 * frame.frame.width, 0.5 * frame.frame.height)) + rect.toString();
+			rect.put();
+			
+			if (flxFrames.exists(newFrameName))
+			{
+				newFrame = flxFrames.get(newFrameName);
+			}
+			else
+			{
+				newFrame = new FlxFrame(this);
+				newFrame.trimmed = (frameRect.width != newFrameRect.width || frameRect.height != newFrameRect.height);
+				newFrame.sourceSize.set(frame.sourceSize.x, frame.sourceSize.y);
+				newFrame.offset.set(offsetX, offsetY);
+				newFrame.frame = newFrameRect;
+				newFrame.center.set(newFrameRect.width * 0.5 + newFrame.offset.x, newFrameRect.height * 0.5 + newFrame.offset.y);
+				newFrame.additionalAngle = 0;
+				newFrame.name = newFrameName;
+				
+				#if FLX_RENDER_TILE
+				newFrame.tileID = addTileRect(newFrame.frame, new Point(0.5 * newFrameRect.width, 0.5 * newFrameRect.height));
+				#end
+				flxFrames.set(newFrameName, newFrame);
+				frameNames.push(newFrameName);
+				framesArr.push(newFrame);
+				spriteData.addFrame(newFrame);
+			}
+		}
+		
+		spriteData.original = frames;
+		flxSpriteFrames.set(name, spriteData);
+		return spriteData;
+	}
+	
+	public function getSpriteSheetFrames(region:Region, ?origin:Point):FlxSpriteFrames
+	{
+		var bitmapWidth:Int = region.width;
+		var bitmapHeight:Int = region.height;
+		
+		var startX:Int = region.startX;
+		var startY:Int = region.startY;
+		
+		var endX:Int = startX + bitmapWidth;
+		var endY:Int = startY + bitmapHeight;
+		
+		var xSpacing:Int = region.spacingX;
+		var ySpacing:Int = region.spacingY;
+		
+		var width:Int = (region.tileWidth == 0) ? bitmapWidth : region.tileWidth;
+		var height:Int = (region.tileHeight == 0) ? bitmapHeight : region.tileHeight;
+		
+		var pointX:Float = 0.5 * width;
+		var pointY:Float = 0.5 * height;
+		
+		if (origin != null)
+		{
+			pointX = origin.x;
+			pointY = origin.y;
+		}
+		
+		var key:String = getKeyForSpriteSheetFrames(width, height, startX, startY, endX, endY, xSpacing, ySpacing, pointX, pointY);
+		if (flxSpriteFrames.exists(key))
+		{
+			return flxSpriteFrames.get(key);
+		}
+		
+		var numRows:Int = region.numRows;
+		var numCols:Int = region.numCols;
+		
+		var tempPoint:Point = origin;
+		if (origin == null)
+		{
+			tempPoint = new Point(pointX, pointY);
+		}
+		
+		var spriteData:FlxSpriteFrames = new FlxSpriteFrames(key);
+		
+		var frame:FlxFrame;
+		var tempRect:Rectangle;
+		
+		var spacedWidth:Int = width + xSpacing;
+		var spacedHeight:Int = height + ySpacing;
+		
+		for (j in 0...(numRows))
+		{
+			for (i in 0...(numCols))
+			{
+				tempRect = new Rectangle(startX + i * spacedWidth, startY + j * spacedHeight, width, height);
+				frame = addSpriteSheetFrame(tempRect, tempPoint);
+				spriteData.addFrame(frame);
+			}
+		}
+		
+		flxSpriteFrames.set(key, spriteData);
+		return spriteData;
+	}
+	
+	/**
+	 * Hashing Functionality - TODO: use numbers as keys!
+	 * 
+	 * http://stackoverflow.com/questions/892618/create-a-hashcode-of-two-numbers
+	 * http://stackoverflow.com/questions/299304/why-does-javas-hashcode-in-string-use-31-as-a-multiplier
+	 */
+	public inline function getSpriteSheetFrameKey(rect:Rectangle, point:Point):String
+	{
+		return rect.x + "_" + rect.y + "_" + rect.width + "_" + rect.height + "_" + point.x + "_" + point.y;
+	}
+	
+	public inline function getKeyForSpriteSheetFrames(width:Int, height:Int, startX:Int, startY:Int, endX:Int, endY:Int, xSpacing:Int, ySpacing:Int, pointX:Float, pointY:Float):String
+	{
+		return width + "_" + height + "_" + startX + "_" + startY + "_" + endX + "_" + endY + "_" + xSpacing + "_" + ySpacing + "_" + pointX + "_" + pointY;
+	}
+	
+	public function containsSpriteSheetFrames(width:Int, height:Int, startX:Int, startY:Int, endX:Int, endY:Int, xSpacing:Int, ySpacing:Int, pointX:Float, pointY:Float):Bool
+	{
+		var key = getKeyForSpriteSheetFrames(width, height, startX, startY, endX, endY, xSpacing, ySpacing, pointX, pointY);
+		return flxSpriteFrames.exists(key);
+	}
+	
+	/**
+	 * Adds new FlxFrame to this TileSheetData object
+	 */
+	public function addSpriteSheetFrame(rect:Rectangle, point:Point):FlxFrame
+	{
+		var key:String = getSpriteSheetFrameKey(rect, point);
+		if (containsFrame(key))
+		{
+			return flxFrames.get(key);
+		}
+		
+		var frame:FlxFrame = new FlxFrame(this);
+		#if FLX_RENDER_TILE
+		frame.tileID = addTileRect(rect, point);
+		#end
+		frame.name = key;
+		frame.frame = rect;
+		frame.trimmed = false;
+		frame.sourceSize.set(rect.width, rect.height);
+		frame.offset.set(0, 0);
+		
+		frame.center.set(0.5 * rect.width, 0.5 * rect.height);
+		flxFrames.set(key, frame);
+		frameNames.push(key);
+		framesArr.push(frame);
+		return frame;
+	}
+	
+	public inline function containsFrame(key:String):Bool
+	{
+		return flxFrames.exists(key);
+	}
+	
+	#if FLX_RENDER_TILE
+	public inline function addTileRect(tileRect:Rectangle, ?point:Point):Int
+	{
+		return tileSheet.addTileRectID(tileRect, point);
+	}
+	#end
+	
+	public function destroy():Void
+	{
+		bitmap = null;
+		#if FLX_RENDER_TILE
+		tileSheet.destroy();
+		tileSheet = null;
+		#end
+		
+		for (frames in flxSpriteFrames)
+		{
+			frames.destroy();
+		}
+		flxSpriteFrames = null;
+		
+		for (frame in framesArr)
+		{
+			frame.destroy();
+		}
+		flxFrames = null;
+		
+		frameNames = null;
+		framesArr = null;
+	}
+	
+	public function onContext(bitmap:BitmapData):Void
+	{
+		this.bitmap = bitmap;
+		#if FLX_RENDER_TILE
+		var newSheet:TileSheetExt = new TileSheetExt(bitmap);
+		newSheet.rebuildFromOld(tileSheet);
+		tileSheet = newSheet;
+		#end
+	}
+	
+	/**
+	 * Parses provided TexturePackerData object and returns generated FlxSpriteFrames object
+	 */
+	public function getTexturePackerFrames(data:TexturePackerData, startX:Int = 0, startY:Int = 0):FlxSpriteFrames
+	{
+		// No need to parse data again
+		if (flxSpriteFrames.exists(data.assetName))	
+		{
+			return flxSpriteFrames.get(data.assetName);
+		}
+		
+		data.parseData();
+		
+		var frame:FlxFrame;
+		var packerFrames:FlxSpriteFrames = new FlxSpriteFrames(data.assetName);
+		
+		var l:Int = data.frames.length;
+		for (i in 0...l)
+		{
+			frame = addTexturePackerFrame(data.frames[i], startX, startY);
+			packerFrames.addFrame(frame);
+		}
+		
+		flxSpriteFrames.set(data.assetName, packerFrames);
+		return packerFrames;
+	}
+	
+	/**
+	 * Parses frame TexturePacker data object and returns it
+	 */
+	private function addTexturePackerFrame(frameData:TextureAtlasFrame, startX:Int = 0, startY:Int = 0):FlxFrame
+	{
+		var key:String = frameData.name;
+		if (containsFrame(key))
+		{
+			return flxFrames.get(key);
+		}
+		
+		var texFrame:FlxFrame = null;
+		
+		if (frameData.rotated)
+		{
+			texFrame = new FlxRotatedFrame(this);
+		}
+		else
+		{
+			texFrame = new FlxFrame(this);
+		}
+		
+		texFrame.trimmed = frameData.trimmed;
+		texFrame.name = key;
+		texFrame.sourceSize.copyFrom(frameData.sourceSize);
+		texFrame.offset.copyFrom(frameData.offset);
+		texFrame.center.set(0, 0);
+		texFrame.frame = frameData.frame.clone();
+		
+		if (frameData.rotated)
+		{
+			texFrame.center.set(texFrame.frame.height * 0.5 + texFrame.offset.x, texFrame.frame.width * 0.5 + texFrame.offset.y);
+		}
+		else
+		{
+			texFrame.center.set(texFrame.frame.width * 0.5 + texFrame.offset.x, texFrame.frame.height * 0.5 + texFrame.offset.y);
+		}
+		
+		texFrame.additionalAngle = frameData.additionalAngle;
+		
+		#if FLX_RENDER_TILE
+		texFrame.tileID = addTileRect(texFrame.frame, new Point(0.5 * texFrame.frame.width, 0.5 * texFrame.frame.height));
+		#end
+		flxFrames.set(key, texFrame);
+		frameNames.push(key);
+		framesArr.push(texFrame);
+		return texFrame;
+	}
+	
+	public function destroyFrameBitmapDatas():Void
+	{
+		var numFrames:Int = frameNames.length;
+		for (frame in framesArr)
+		{
+			frame.destroyBitmapDatas();
+		}
+	}
+}
