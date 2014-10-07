@@ -414,10 +414,10 @@ class FlxSprite extends FlxObject
 			key += ":" + Frame.frame.toString();
 		}
 		
-		var graph:FlxGraphic = FlxG.bitmap.get(key);
-		if (graph == null)
+		var graphic:FlxGraphic = FlxG.bitmap.get(key);
+		if (graphic == null)
 		{
-			graph = FlxGraphic.fromBitmapData(Frame.getBitmap().clone(), false, key);
+			graphic = FlxGraphic.fromBitmapData(Frame.getBitmap().clone(), false, key);
 		}
 		
 		return loadRotatedGraphic(graphic, Rotations, -1, AntiAliasing, AutoBuffer);
