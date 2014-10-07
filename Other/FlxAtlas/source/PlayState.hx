@@ -1,14 +1,18 @@
 package;
 
 import flash.display.BitmapData;
+import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.graphics.atlas.FlxAtlas;
 import flixel.graphics.atlas.FlxNode;
 import flixel.graphics.frames.FlxTileFrames;
 import flixel.math.FlxPoint;
+import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
+import flixel.util.FlxColor;
 import openfl.Assets;
+using flixel.util.FlxSpriteUtil;
 
 /**
  * ...
@@ -18,23 +22,23 @@ class PlayState extends FlxState
 {
 	override public function create():Void
 	{
-		// lets create atlas
+		// let's create an atlas
 		var atlas:FlxAtlas = new FlxAtlas("myAtlas", 512, 512);
 		
-		// and add nodes (images) on it
+		// and add nodes (images) to it
 		var tilesNode:FlxNode = createNodeAndDisposeBitmap("assets/area02_level_tiles2.png", atlas);
 		var monsterNode:FlxNode = createNodeAndDisposeBitmap("assets/lurkmonsta.png", atlas);
 		var playerNode:FlxNode = createNodeAndDisposeBitmap("assets/lizardhead3.png", atlas);
 		
-		// we need to finalize atlas to be able to get frame data from it.
-		// plus it will reduce the size of atlas canvas.
+		// we need to finalize the atlas to be able to get frame data from it.
+		// plus it will optimize the size of atlas canvas.
 		atlas.finalize();
 		
 		// now we can create some helper object which can be loaded in sprites and tilemaps
 		var tileSize = FlxPoint.get(16, 16);
 		var tileFrames:FlxTileFrames = tilesNode.getTileFrames(tileSize);
 		
-		// lets try load this object in newly created tilemap
+		// let's try load this object in newly created tilemap
 		var tilemap:FlxTilemap = new FlxTilemap();
 		tilemap.loadMap("assets/mapCSV_Group1_Map1.csv", tileFrames);
 		add(tilemap);
@@ -56,6 +60,16 @@ class PlayState extends FlxState
 		player.animation.add("walking", [0, 1, 2, 3], 12, true);
 		player.animation.play("walking");
 		add(player);
+		
+		// display the generated atlas (you could also view the cache via "viewCache" / "vc" in the console)
+		var yPos = FlxG.height - atlas.height - 70;
+		add(new FlxText(10, yPos, 0, 'myAtlas (${atlas.width}x${atlas.height}):', 16));
+		
+		var atlasBmd = atlas.atlasBitmapData.clone();
+		var atlasSprite = new FlxSprite(20, yPos + 40, atlasBmd);
+		atlasSprite.drawRect(0, 0, atlasSprite.width - 1, atlasSprite.height - 1,
+			FlxColor.TRANSPARENT, { thickness: 1, color: FlxColor.RED } );
+		add(atlasSprite);
 	}
 	
 	/**
