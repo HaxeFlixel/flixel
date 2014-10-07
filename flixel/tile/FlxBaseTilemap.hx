@@ -19,11 +19,11 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	/**
 	 * Read-only variable, do NOT recommend changing after the map is loaded!
 	 */
-	public var widthInTiles(default, null):Int = 0;
+	public var widthInTiles:Int = 0;
 	/**
 	 * Read-only variable, do NOT recommend changing after the map is loaded!
 	 */
-	public var heightInTiles(default, null):Int = 0;
+	public var heightInTiles:Int = 0;
 	/**
 	 * Read-only variable, do NOT recommend changing after the map is loaded!
 	 */
@@ -154,7 +154,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	}
 
 	/**
-	 * Load the tilemap with string data and a tile graphic.
+	 * LoadLoad the tilemap with string data and a tile graphic.
 	 * 
 	 * @param   MapData         A csv-formatted string indicating what order the tiles should go in (or the path to that file),
 	 *                          or an Array<Array<Int>>, or an Array<Int>. In the latter case YOU MUST SET widthInTiles and heightInTyles manually BEFORE CALLING loadMap()!
