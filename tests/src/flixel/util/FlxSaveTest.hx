@@ -39,7 +39,7 @@ class FlxSaveTest extends FlxTest
 		Assert.areEqual(1, save.data.value);
 	}
 	
-	@Test
+	@Test // #1302
 	function testErase()
 	{
 		save.data.int = 1;
