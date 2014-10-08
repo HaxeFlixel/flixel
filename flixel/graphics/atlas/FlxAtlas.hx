@@ -55,7 +55,7 @@ class FlxAtlas implements IFlxDestroyable
 	/**
 	 * Whether the size of this atlas should be the power of 2 or not.
 	 */
-	public var powerOf2(default, null):Bool = false;
+	public var powerOfTwo(default, null):Bool = false;
 	
 	private var _bitmapData:BitmapData;
 	
@@ -67,16 +67,16 @@ class FlxAtlas implements IFlxDestroyable
 	/**
 	 * Atlas constructor
 	 * @param	name		the name of this atlas. It will be used for caching bitmapdata of this atlas.
-	 * @param	powerOf2	whether the size of this atlas should be the power of 2 or not.
+	 * @param	powerOfTwo	whether the size of this atlas should be the power of 2 or not.
 	 * @param	border		gap between nodes to insert.
 	 */
-	public function new(name:String, powerOf2:Bool = false, border:Int = 1) 
+	public function new(name:String, powerOfTwo:Bool = false, border:Int = 1) 
 	{
 		nodes = new Map<String, FlxNode>();
 		this.name = name;
 		
 		root = new FlxNode(new FlxRect(0, 0, 1, 1), this);
-		this.powerOf2 = powerOf2;
+		this.powerOfTwo = powerOfTwo;
 		this.border = border;
 	}
 	
@@ -209,7 +209,7 @@ class FlxAtlas implements IFlxDestroyable
 		var addBottomWidth:Int = Std.int(Math.max(root.width, insertWidth));
 		var addBottomHeight:Int = root.height + insertHeight;
 		
-		if (powerOf2)
+		if (powerOfTwo)
 		{
 			addRightWidth = getNextPowerOf2(addRightWidth);
 			addRightHeight = getNextPowerOf2(addRightHeight);
