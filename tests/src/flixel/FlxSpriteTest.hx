@@ -157,9 +157,8 @@ class FlxSpriteTest extends FlxTest
 	@Test
 	function testLoadRotatedFrame()
 	{
-		var atlas = new FlxAtlas("atlas", 10, 10);
+		var atlas = new FlxAtlas("atlas");
 		atlas.addNode(new BitmapData(1, 1), "node");
-		atlas.finalize();
 		sprite1.loadRotatedFrame(atlas.getAtlasFrames().getByName("node"));
 		assert1x1GraphicLoaded();
 	}

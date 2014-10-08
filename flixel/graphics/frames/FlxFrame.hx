@@ -81,7 +81,7 @@ class FlxFrame implements IFlxDestroyable
 	 */
 	public function prepareFrameMatrix(mat:FlxMatrix):FlxMatrix
 	{
-		return mat;
+		return mat; // to be overriden in subclasses
 	}
 	
 	/**
