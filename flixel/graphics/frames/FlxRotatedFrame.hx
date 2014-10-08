@@ -64,7 +64,7 @@ class FlxRotatedFrame extends FlxFrame
 		FlxPoint.point.setTo(0, 0);
 		temp.copyPixels(parent.bitmap, frame.copyToFlash(FlxRect.rect), FlxPoint.point);
 		
-		var matrix:Matrix = FlxMatrix.MATRIX;
+		var matrix:Matrix = FlxMatrix.matrix;
 		matrix.identity();
 		matrix.translate( -0.5 * frame.width, -0.5 * frame.height);
 		matrix.rotate(angle * FlxAngle.TO_RAD);

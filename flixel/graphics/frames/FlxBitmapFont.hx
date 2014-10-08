@@ -501,7 +501,7 @@ class BitmapGlyphCollection implements IFlxDestroyable
 	
 	private function prepareGlyphs():Void
 	{
-		var matrix:Matrix = FlxMatrix.MATRIX;
+		var matrix:Matrix = FlxMatrix.matrix;
 		matrix.identity();
 		matrix.scale(scale, scale);
 		

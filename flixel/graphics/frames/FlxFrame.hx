@@ -147,7 +147,7 @@ class FlxFrame implements IFlxDestroyable
 		}
 		
 		var normalFrame:BitmapData = getBitmap();
-		var matrix:Matrix = FlxMatrix.MATRIX;
+		var matrix:Matrix = FlxMatrix.matrix;
 		matrix.identity();
 		matrix.scale( -1, 1);
 		matrix.translate(Std.int(sourceSize.x), 0);
@@ -167,7 +167,7 @@ class FlxFrame implements IFlxDestroyable
 		}
 		
 		var normalFrame:BitmapData = getBitmap();
-		var matrix:Matrix = FlxMatrix.MATRIX;
+		var matrix:Matrix = FlxMatrix.matrix;
 		matrix.identity();
 		matrix.scale(1, -1);
 		matrix.translate(0, Std.int(sourceSize.y));
@@ -187,7 +187,7 @@ class FlxFrame implements IFlxDestroyable
 		}
 		
 		var normalFrame:BitmapData = getBitmap();
-		var matrix:Matrix = FlxMatrix.MATRIX;
+		var matrix:Matrix = FlxMatrix.matrix;
 		matrix.identity();
 		matrix.scale( -1, -1);
 		matrix.translate(Std.int(sourceSize.x), Std.int(sourceSize.y));
