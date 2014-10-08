@@ -22,17 +22,14 @@ class PlayState extends FlxState
 {
 	override public function create():Void
 	{
-		// let's create an atlas
-		var atlas:FlxAtlas = new FlxAtlas("myAtlas", 512, 512);
+		// let's create an atlas.
+		// they change size automatically
+		var atlas:FlxAtlas = new FlxAtlas("myAtlas");
 		
 		// and add nodes (images) to it
 		var tilesNode:FlxNode = createNodeAndDisposeBitmap("assets/area02_level_tiles2.png", atlas);
 		var monsterNode:FlxNode = createNodeAndDisposeBitmap("assets/lurkmonsta.png", atlas);
 		var playerNode:FlxNode = createNodeAndDisposeBitmap("assets/lizardhead3.png", atlas);
-		
-		// we need to finalize the atlas to be able to get frame data from it.
-		// plus it will optimize the size of atlas canvas.
-		atlas.finalize();
 		
 		// now we can create some helper object which can be loaded in sprites and tilemaps
 		var tileSize = FlxPoint.get(16, 16);
