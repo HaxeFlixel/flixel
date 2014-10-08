@@ -24,6 +24,7 @@ import flixel.util.FlxColorTest;
 import flixel.util.FlxGradientTest;
 import flixel.util.FlxPathTest;
 import flixel.util.FlxPoolTest;
+import flixel.util.FlxSaveTest;
 import flixel.util.FlxSignalTest;
 import flixel.util.FlxSpriteUtilTest;
 import flixel.util.FlxStringUtilTest;
@@ -67,6 +68,7 @@ class TestSuite extends massive.munit.TestSuite
 		add(flixel.util.FlxGradientTest);
 		add(flixel.util.FlxPathTest);
 		add(flixel.util.FlxPoolTest);
+		add(flixel.util.FlxSaveTest);
 		add(flixel.util.FlxSignalTest);
 		add(flixel.util.FlxSpriteUtilTest);
 		add(flixel.util.FlxStringUtilTest);
