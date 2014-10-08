@@ -9,6 +9,7 @@ import flixel.FlxSpriteTest;
 import flixel.FlxStateTest;
 import flixel.FlxSubStateTest;
 import flixel.group.FlxGroupTest;
+import flixel.math.FlxMatrixTest;
 import flixel.math.FlxPointTest;
 import flixel.math.FlxRandomTest;
 import flixel.math.FlxRectTest;
@@ -53,6 +54,7 @@ class TestSuite extends massive.munit.TestSuite
 		add(flixel.FlxStateTest);
 		add(flixel.FlxSubStateTest);
 		add(flixel.group.FlxGroupTest);
+		add(flixel.math.FlxMatrixTest);
 		add(flixel.math.FlxPointTest);
 		add(flixel.math.FlxRandomTest);
 		add(flixel.math.FlxRectTest);
