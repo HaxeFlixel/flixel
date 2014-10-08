@@ -48,11 +48,11 @@ class FlxAtlas implements IFlxDestroyable
 	/**
 	 * Total width of atlas
 	 */
-	public var width(default, null):Int = 1; // TODO: add getter
+	public var width(get, null):Int;
 	/**
 	 * Total height of atlas
 	 */
-	public var height(default, null):Int = 1; // TODO: add getter
+	public var height(get, null):Int;
 	
 	/**
 	 * Whether the size of this atlas should be the power of 2 or not.
@@ -77,7 +77,7 @@ class FlxAtlas implements IFlxDestroyable
 		nodes = new Map<String, FlxNode>();
 		this.name = name;
 		
-		root = new FlxNode(new FlxRect(0, 0, width, height), this);
+		root = new FlxNode(new FlxRect(0, 0, 1, 1), this);
 		this.powerOf2 = powerOf2;
 		this.border = border;
 	}
@@ -111,12 +111,14 @@ class FlxAtlas implements IFlxDestroyable
 		var insertHeight:Int = data.height + border;
 		
 		var nodeToInsert:FlxNode = findNodeToInsert(insertWidth, insertHeight);
+		
+		// TODO: convert this block of code into private method 
 		if (nodeToInsert != null)
 		{
-			var firstChild:FlxNode;
-			var secondChild:FlxNode;
-			var firstGrandChild:FlxNode;
-			var secondGrandChild:FlxNode;
+			var firstChild:FlxNode = null;
+			var secondChild:FlxNode = null;
+			var firstGrandChild:FlxNode = null;
+			var secondGrandChild:FlxNode = null;
 			
 			var dw:Int = nodeToInsert.width - insertWidth;
 			var dh:Int = nodeToInsert.height - insertHeight;
@@ -124,18 +126,34 @@ class FlxAtlas implements IFlxDestroyable
 			if (dw > dh) // divide horizontally
 			{
 				firstChild = new FlxNode(new FlxRect(nodeToInsert.x, nodeToInsert.y, insertWidth, nodeToInsert.height), this);
-				secondChild = new FlxNode(new FlxRect(nodeToInsert.x + insertWidth, nodeToInsert.y, nodeToInsert.width - insertWidth, nodeToInsert.height), this);
+				
+				if (nodeToInsert.width - insertWidth > 0)
+				{
+					secondChild = new FlxNode(new FlxRect(nodeToInsert.x + insertWidth, nodeToInsert.y, nodeToInsert.width - insertWidth, nodeToInsert.height), this);
+				}
 				
 				firstGrandChild = new FlxNode(new FlxRect(firstChild.x, firstChild.y, insertWidth, insertHeight), this, true, key);
-				secondGrandChild = new FlxNode(new FlxRect(firstChild.x, firstChild.y + insertHeight, insertWidth, firstChild.height - insertHeight), this);
+				
+				if (firstChild.height - insertHeight > 0)
+				{
+					secondGrandChild = new FlxNode(new FlxRect(firstChild.x, firstChild.y + insertHeight, insertWidth, firstChild.height - insertHeight), this);
+				}
 			}
 			else // divide vertically
 			{
 				firstChild = new FlxNode(new FlxRect(nodeToInsert.x, nodeToInsert.y, nodeToInsert.width, insertHeight), this);
-				secondChild = new FlxNode(new FlxRect(nodeToInsert.x, nodeToInsert.y + insertHeight, nodeToInsert.width, nodeToInsert.height - insertHeight), this);
+				
+				if (nodeToInsert.height - insertHeight > 0)
+				{
+					secondChild = new FlxNode(new FlxRect(nodeToInsert.x, nodeToInsert.y + insertHeight, nodeToInsert.width, nodeToInsert.height - insertHeight), this);
+				}
 				
 				firstGrandChild = new FlxNode(new FlxRect(firstChild.x, firstChild.y, insertWidth, insertHeight), this, true, key);
-				secondGrandChild = new FlxNode(new FlxRect(firstChild.x + insertWidth, firstChild.y, firstChild.width - insertWidth, insertHeight), this);
+				
+				if (firstChild.width - insertWidth > 0)
+				{
+					secondGrandChild = new FlxNode(new FlxRect(firstChild.x + insertWidth, firstChild.y, firstChild.width - insertWidth, insertHeight), this);
+				}
 			}
 			
 			firstChild.left = firstGrandChild;
@@ -169,12 +187,16 @@ class FlxAtlas implements IFlxDestroyable
 			// TODO: call resize here...
 			_bitmapData = new BitmapData(insertWidth, insertHeight, true, FlxColor.TRANSPARENT);
 			_bitmapData.copyPixels(data, data.rect, root.left.point);
-			width = insertWidth;
-			height = insertHeight;
 			// end of todo
 			nodes.set(key, root.left);
 			return root.left;
 		}
+		
+		// TODO: use these vars...
+		var firstChild:FlxNode = null;
+		var secondChild:FlxNode = null;
+		var firstGrandChild:FlxNode = null;
+		var secondGrandChild:FlxNode = null;
 		
 		// helpers for makinkg decision on how to insert new node
 		var addRightWidth:Int = root.width + insertWidth;
@@ -184,19 +206,19 @@ class FlxAtlas implements IFlxDestroyable
 		var addBottomHeight:Int = root.height + insertHeight;
 		var addBottomArea:Int = addBottomWidth * addBottomHeight;
 		var temp:FlxNode;
+		var dataNode:FlxNode = null;
 		
 		if (expand)
 		{
 			temp = root;
-			root = new FlxNode(new FlxRect(0, 0, temp.width, temp.height), this, false);
+			root = new FlxNode(new FlxRect(0, 0, temp.width, temp.height), this);
 			root.left = temp;
-			root.right = null; // just to be sure :)
+			root.right = null; // just to be sure ;)
 		}
 		
 		if (root.right == null)
 		{
 			// TODO: check everything here...
-			// TODO: remove false from FlxNode constructor calls...
 			// TODO: maybe change node's rect constructor argument from Rectangle to FlxRect...
 			
 			// decide how to insert new node
@@ -204,55 +226,57 @@ class FlxAtlas implements IFlxDestroyable
 			{
 				// add node to the right
 				root.right = new FlxNode(new FlxRect(root.left.width, 0, insertWidth, insertHeight), this, true, key);
+				dataNode = root.right;
 				
-				width = root.width = addRightWidth; // TODO: remove atlas width
-				height = root.height = addRightHeight; // TODO: remove atlas height
+				root.width = addRightWidth; // TODO: remove atlas width
+				root.height = addRightHeight; // TODO: remove atlas height
 				
 				// add empty node if there is empty space in atlas
 				if (root.right.height > root.left.height)
 				{
 					temp = root.left;
-					root.left = new FlxNode(new FlxRect(0, 0, temp.width, addRightHeight), this, false);
+					root.left = new FlxNode(new FlxRect(0, 0, temp.width, addRightHeight), this);
 					root.left.left = temp;
-					root.left.right = new FlxNode(new FlxRect(0, temp.height, temp.width, addRightHeight - temp.height), this, false);
+					root.left.right = new FlxNode(new FlxRect(0, temp.height, temp.width, addRightHeight - temp.height), this);
 				}
 				else if (root.right.height < root.left.height)
 				{
 					temp = root.right;
-					root.right = new FlxNode(new FlxRect(temp.x, 0, temp.width, addRightHeight), this, false);
+					root.right = new FlxNode(new FlxRect(temp.x, 0, temp.width, addRightHeight), this);
 					root.right.left = temp;
-					root.right.right = new FlxNode(new FlxRect(temp.x, temp.height, temp.width, addRightHeight - temp.height), this, false);
+					root.right.right = new FlxNode(new FlxRect(temp.x, temp.height, temp.width, addRightHeight - temp.height), this);
 				}
 			}
 			else
 			{
 				// add node at the bottom
 				root.right = new FlxNode(new FlxRect(0, root.left.height, insertWidth, insertHeight), this, true, key);
+				dataNode = root.right;
 				
-				width = root.width = addBottomWidth;
-				height = root.height = addBottomHeight;
+				root.width = addBottomWidth;
+				root.height = addBottomHeight;
 				
 				// add empty node if there is empty space in atlas
 				if (root.right.width > root.left.width)
 				{
 					temp = root.left;
-					root.left = new FlxNode(new FlxRect(0, 0, addBottomWidth, temp.height), this, false);
+					root.left = new FlxNode(new FlxRect(0, 0, addBottomWidth, temp.height), this);
 					root.left.left = temp;
-					root.left.right = new FlxNode(new FlxRect(temp.width, 0, addBottomWidth - temp.width, temp.height), this, false);
+					root.left.right = new FlxNode(new FlxRect(temp.width, 0, addBottomWidth - temp.width, temp.height), this);
 				}
 				else if (root.right.width < root.left.width)
 				{
 					temp = root.right;
-					root.right = new FlxNode(new FlxRect(0, temp.y, addBottomWidth, addBottomHeight - temp.height), this, false);
+					root.right = new FlxNode(new FlxRect(0, temp.y, addBottomWidth, addBottomHeight - temp.height), this);
 					root.right.left = temp;
-					root.right.right = new FlxNode(new FlxRect(temp.width, temp.y, addBottomWidth - temp.width, temp.height), this, false);
+					root.right.right = new FlxNode(new FlxRect(temp.width, temp.y, addBottomWidth - temp.width, temp.height), this);
 				}
 			}
 			
 			// TODO: call resize here...
 			
 			// TODO: check this line...
-			_bitmapData.copyPixels(data, data.rect, root.right.point);
+			_bitmapData.copyPixels(data, data.rect, dataNode.point);
 			// end of todo...
 			
 			// TODO: wrap existing nodes and add new one...
@@ -298,7 +322,6 @@ class FlxAtlas implements IFlxDestroyable
 		if (node == null) 
 			return null;
 		
-		// todo: fix this, since this will throw error
 		return node.getTileFrames(tileSize, tileSpacing);
 	}
 	
