@@ -15,8 +15,6 @@ import flixel.math.FlxPoint;
 import flixel.system.FlxAssets;
 import flixel.system.frontEnds.BitmapFrontEnd;
 
-// TODO: generate json file for atlas
-
 /**
  * Class for packing multiple images in big one and generating frame data for each of them 
  * so you can easily load regions of atlas in sprites and tilemaps as a source of graphic
@@ -90,8 +88,6 @@ class FlxAtlas implements IFlxDestroyable
 	 */
 	public function addNode(Graphic:FlxGraphicSource, ?Key:String):FlxNode
 	{
-		// TODO: use addNodeToAtlasFrames() here...
-		
 		var key:String = FlxAssets.resolveKey(Graphic, Key);
 		
 		if (key == null) 
@@ -180,6 +176,7 @@ class FlxAtlas implements IFlxDestroyable
 			
 			bitmapData.copyPixels(data, data.rect, firstGrandChild.point);
 			nodes.set(key, firstGrandChild);
+			addNodeToAtlasFrames(firstGrandChild);
 			return firstGrandChild;
 		}
 		
@@ -201,6 +198,7 @@ class FlxAtlas implements IFlxDestroyable
 			root.width = insertWidth;
 			root.height = insertHeight;
 			nodes.set(key, root.left);
+			addNodeToAtlasFrames(root.left);
 			return root.left;
 		}
 		
@@ -281,8 +279,9 @@ class FlxAtlas implements IFlxDestroyable
 			newBitmapData.copyPixels(data, data.rect, dataNode.point);
 			bitmapData = newBitmapData;
 			
-			nodes.set(key, root.right);
-			return root.right;
+			nodes.set(key, dataNode);
+			addNodeToAtlasFrames(dataNode);
+			return dataNode;
 		}
 		
 		return null;
@@ -349,29 +348,27 @@ class FlxAtlas implements IFlxDestroyable
 		if (graphic.atlasFrames == null)
 			graphic.atlasFrames = atlasFrames = new FlxAtlasFrames(graphic);
 		
-		// TODO: use addNodeToAtlasFrames() here...
-			
-		var node:FlxNode;
-		for (key in nodes.keys())
-		{
-			node = nodes.get(key);
-			// if the node is filled and AtlasFrames does not contain image of the node, then we should add it
-			if (node.filled && !atlasFrames.framesHash.exists(key))
-			{
-				var frame:FlxRect = new FlxRect(node.x, node.y, node.width - border, node.height - border);
-				var sourceSize:FlxPoint = FlxPoint.get(node.width - border, node.height - border);
-				var offset:FlxPoint = FlxPoint.get(0, 0);
-				
-				atlasFrames.addAtlasFrame(frame, sourceSize, offset, node.key, 0); 
-			}
-		}
+		for (node in nodes)
+			addNodeToAtlasFrames(node);
 		
 		return graphic.atlasFrames;
 	}
 	
 	private function addNodeToAtlasFrames(node:FlxNode):Void
 	{
-		// TODO: implement it...
+		var graphic:FlxGraphic = FlxG.bitmap.get(name);
+		if (graphic == null || graphic.atlasFrames == null)
+			return;
+		
+		var atlasFrames:FlxAtlasFrames = graphic.atlasFrames;
+		
+		if (node.filled && !atlasFrames.framesHash.exists(node.key))
+		{
+			var frame:FlxRect = new FlxRect(node.x, node.y, node.width - border, node.height - border);
+			var sourceSize:FlxPoint = FlxPoint.get(node.width - border, node.height - border);
+			var offset:FlxPoint = FlxPoint.get(0, 0);
+			atlasFrames.addAtlasFrame(frame, sourceSize, offset, node.key, 0); 
+		}
 	}
 	
 	/**
@@ -529,6 +526,20 @@ class FlxAtlas implements IFlxDestroyable
 		FlxG.bitmap.remove(name);
 		_bitmapData = null;
 		nodes = new Map<String, FlxNode>();
+	}
+	
+	/**
+	 * Returns atlas data in Spritesheet packer format, where each image represented by line:
+	 * "imageName = image.x image.y image.width image.height"
+	 */
+	public function getSpriteSheetPackerData():String
+	{
+		var data:String = "";
+		for (node in nodes)
+		{
+			data += node.key + " = " + node.x + " " + node.y + " " + node.contentWidth + " " + node.contentHeight + "\n";
+		}
+		return data;
 	}
 	
 	private function deleteSubtree(node:FlxNode):Void
