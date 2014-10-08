@@ -173,10 +173,15 @@ class FlxAtlas implements IFlxDestroyable
 		
 		// TODO: continue from here...
 		
-		return increaseAtlas(data, key, true);
+		var temp:FlxNode = root;
+		root = new FlxNode(new FlxRect(0, 0, temp.width, temp.height), this);
+		root.left = temp;
+		root.right = null; // just to be sure ;)
+		
+		return increaseAtlas(data, key);
 	}
 	
-	private function increaseAtlas(data:BitmapData, key:String, expand:Bool = false):FlxNode
+	private function increaseAtlas(data:BitmapData, key:String):FlxNode
 	{
 		var insertWidth:Int = data.width + border;
 		var insertHeight:Int = data.height + border;
@@ -185,10 +190,15 @@ class FlxAtlas implements IFlxDestroyable
 		{
 			root.left = new FlxNode(new FlxRect(0, 0, insertWidth, insertHeight), this, true, key);
 			// TODO: call resize here...
-			_bitmapData = new BitmapData(insertWidth, insertHeight, true, FlxColor.TRANSPARENT);
-			_bitmapData.copyPixels(data, data.rect, root.left.point);
+			var newBitmapData = new BitmapData(insertWidth, insertHeight, true, FlxColor.TRANSPARENT);
+			newBitmapData.copyPixels(data, data.rect, root.left.point);
+			bitmapData = newBitmapData;
 			// end of todo
 			nodes.set(key, root.left);
+			
+			root.width = insertWidth;
+			root.height = insertHeight;
+			
 			return root.left;
 		}
 		
@@ -208,18 +218,9 @@ class FlxAtlas implements IFlxDestroyable
 		var temp:FlxNode;
 		var dataNode:FlxNode = null;
 		
-		if (expand)
-		{
-			temp = root;
-			root = new FlxNode(new FlxRect(0, 0, temp.width, temp.height), this);
-			root.left = temp;
-			root.right = null; // just to be sure ;)
-		}
-		
 		if (root.right == null)
 		{
 			// TODO: check everything here...
-			// TODO: maybe change node's rect constructor argument from Rectangle to FlxRect...
 			
 			// decide how to insert new node
 			if (addBottomArea >= addRightArea)
@@ -275,8 +276,14 @@ class FlxAtlas implements IFlxDestroyable
 			
 			// TODO: call resize here...
 			
+			var newBitmapData = new BitmapData(root.width, root.height, true, FlxColor.TRANSPARENT);
+			newBitmapData.copyPixels(_bitmapData, _bitmapData.rect, root.point);
+			newBitmapData.copyPixels(data, data.rect, dataNode.point);
+			
+			bitmapData = newBitmapData;
+			
 			// TODO: check this line...
-			_bitmapData.copyPixels(data, data.rect, dataNode.point);
+			
 			// end of todo...
 			
 			// TODO: wrap existing nodes and add new one...
