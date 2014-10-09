@@ -51,8 +51,8 @@ class FlxMacroUtil
 			
 		return macro $a{finalExpr};
 	}
-    
-    /**
+	
+	/**
 	 * Generate a sine and cosine table during compilation
 	 * 
 	 * The parameters allow you to specify the length, amplitude and frequency of the wave. 
