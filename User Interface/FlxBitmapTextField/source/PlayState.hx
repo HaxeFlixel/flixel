@@ -51,7 +51,7 @@ class PlayState extends FlxState
 		tf2.text = "Hello World!\nand this is\nmultiline!!!";
 		tf2.borderStyle = FlxTextBorderStyle.SHADOW;
 		tf2.borderColor = 0xffff0000;
-		tf2.width = 610;
+		tf2.fieldWidth = 0;
 		tf2.alignment = FlxTextAlign.CENTER;
 		tf2.lineSpacing = 5;
 		tf2.padding = 20;
@@ -59,7 +59,6 @@ class PlayState extends FlxState
 		tf2.autoUpperCase = true;
 		tf2.multiLine = true;
 		tf2.wordWrap = false;
-		tf2.autoSize = true;
 		add(tf2);
 		
 		var tf3:FlxBitmapTextField = new FlxBitmapTextField(fontMonospace);
