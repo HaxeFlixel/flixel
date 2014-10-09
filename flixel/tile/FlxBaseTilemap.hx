@@ -147,8 +147,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	/**
 	 * Load the tilemap with string data and a tile graphic.
 	 * 
-	 * @param   MapData         A csv-formatted string indicating what order the tiles should go in (or the path to that file),
-	 *                          or an Array<Array<Int>>.
+	 * @param   MapData         A csv-formatted string indicating what order the tiles should go in (or the path to that file)
 	 * @param   TileGraphic     All the tiles you want to use, arranged in a strip corresponding to the numbers in MapData.
 	 * @param   TileWidth       The width of your tiles (e.g. 8) - defaults to height of the tile graphic if unspecified.
 	 * @param   TileHeight      The height of your tiles (e.g. 8) - defaults to width if unspecified.
@@ -163,9 +162,146 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 *                          Can override and customize per-tile-type collision behavior using setTileProperties().
 	 * @return  A reference to this instance of FlxTilemap, for chaining as usual :)
 	 */
-	public function loadMap(MapData:FlxTilemapAsset, TileGraphic:FlxTilemapGraphicAsset, TileWidth:Int = 0, TileHeight:Int = 0, 
-		?AutoTile:FlxTilemapAutoTiling, StartingIndex:Int = 0, DrawIndex:Int = 1, CollideIndex:Int = 1):FlxBaseTilemap<Tile>
+	public function loadMapFromCSV(MapData:String, TileGraphic:FlxTilemapGraphicAsset, TileWidth:Int = 0, TileHeight:Int = 0, 
+		?AutoTile:FlxTilemapAutoTiling, StartingIndex:Int = 0, DrawIndex:Int = 1, CollideIndex:Int = 1)
 	{
+		// path to map data file?
+		if (Assets.exists(MapData))
+		{
+			MapData = Assets.getText(MapData);
+		}
+		
+		// Figure out the map dimensions based on the data string
+		_data = new Array<Int>();
+		var columns:Array<String>;
+		var rows:Array<String> = StringTools.trim(cast (MapData, String)).split("\n");
+		heightInTiles = rows.length;
+		widthInTiles = 0;
+		var row:Int = 0;
+		var column:Int;
+		
+		while (row < heightInTiles)
+		{
+			columns = rows[row++].split(",");
+			
+			if (columns.length < 1)
+			{
+				heightInTiles = heightInTiles - 1;
+				continue;
+			}
+			if (widthInTiles == 0)
+			{
+				widthInTiles = columns.length;
+			}
+			column = 0;
+			
+			while (column < widthInTiles)
+			{
+				//the current tile to be added:
+				var curTile:Int = Std.parseInt(columns[column]);
+				
+				if (curTile < 0)
+				{
+					// anything < 0 should be treated as 0 for compatibility with certain map formats (ogmo)
+					curTile = 0;
+				}
+				
+				//if neko, make sure the value was not null, and if it is null,
+				//make sure it is the last in the row (used to ignore commas)
+				#if neko
+				if (curTile != null)
+				{
+					_data.push(curTile);	
+					column++;
+				}
+				else if (column == columns.length - 1)
+				{
+					//if value was a comma, decrease the width by one
+					widthInTiles--;
+				}
+				else
+				{
+					//if a non-int value was passed not at the end, warn the user
+					throw "Value passed wan NaN";
+				}
+				#else
+				//if not neko, dont worry about the comma
+				_data.push(curTile);	
+				column++;
+				#end
+				
+			}
+		}
+		
+		loadMapHelper(TileGraphic, TileWidth, TileHeight, AutoTile, StartingIndex, DrawIndex, CollideIndex);
+		return this;
+	}
+	
+	/**
+	 * Load the tilemap with string data and a tile graphic.
+	 * 
+	 * @param   MapData         An array containing the tile indices
+	 * @param   WidthInTiles    The width of the tilemap in tiles
+	 * @param   HeightInTiles   The height of the tilemap in tiles
+	 * @param   TileGraphic     All the tiles you want to use, arranged in a strip corresponding to the numbers in MapData.
+	 * @param   TileWidth       The width of your tiles (e.g. 8) - defaults to height of the tile graphic if unspecified.
+	 * @param   TileHeight      The height of your tiles (e.g. 8) - defaults to width if unspecified.
+	 * @param   AutoTile        Whether to load the map using an automatic tile placement algorithm (requires 16 tiles!).
+	 *                          Setting this to either AUTO or ALT will override any values you put for StartingIndex, DrawIndex, or CollideIndex.
+	 * @param   StartingIndex   Used to sort of insert empty tiles in front of the provided graphic.
+	 *                          Default is 0, usually safest ot leave it at that.  Ignored if AutoTile is set.
+	 * @param   DrawIndex       Initializes all tile objects equal to and after this index as visible.
+	 *                          Default value is 1. Ignored if AutoTile is set.
+	 * @param   CollideIndex    Initializes all tile objects equal to and after this index as allowCollisions = ANY.
+	 *                          Default value is 1.  Ignored if AutoTile is set.  
+	 *                          Can override and customize per-tile-type collision behavior using setTileProperties().
+	 * @return  A reference to this instance of FlxTilemap, for chaining as usual :)
+	 */
+	public function loadMapFromArray(MapData:Array<Int>, WidthInTiles:Int, HeightInTiles:Int, TileGraphic:FlxTilemapGraphicAsset,
+		TileWidth:Int = 0, TileHeight:Int = 0, ?AutoTile:FlxTilemapAutoTiling, StartingIndex:Int = 0, DrawIndex:Int = 1, CollideIndex:Int = 1)
+	{
+		widthInTiles = WidthInTiles;
+		heightInTiles = HeightInTiles;
+		_data = cast MapData; // need to cast this to make sure it works in js, can't call copy() on a Dynamic
+		_data = _data.copy(); // make a copy to make sure we don't mess with the original array, which might be used for something!
+		
+		loadMapHelper(TileGraphic, TileWidth, TileHeight, AutoTile, StartingIndex, DrawIndex, CollideIndex);
+		return this;
+	}
+	
+	/**
+	 * Load the tilemap with string data and a tile graphic.
+	 * 
+	 * @param   MapData         A 2D array containing the tile indices. The length of the inner arrays should be consistent.
+	 * @param   TileGraphic     All the tiles you want to use, arranged in a strip corresponding to the numbers in MapData.
+	 * @param   TileWidth       The width of your tiles (e.g. 8) - defaults to height of the tile graphic if unspecified.
+	 * @param   TileHeight      The height of your tiles (e.g. 8) - defaults to width if unspecified.
+	 * @param   AutoTile        Whether to load the map using an automatic tile placement algorithm (requires 16 tiles!).
+	 *                          Setting this to either AUTO or ALT will override any values you put for StartingIndex, DrawIndex, or CollideIndex.
+	 * @param   StartingIndex   Used to sort of insert empty tiles in front of the provided graphic.
+	 *                          Default is 0, usually safest ot leave it at that.  Ignored if AutoTile is set.
+	 * @param   DrawIndex       Initializes all tile objects equal to and after this index as visible.
+	 *                          Default value is 1. Ignored if AutoTile is set.
+	 * @param   CollideIndex    Initializes all tile objects equal to and after this index as allowCollisions = ANY.
+	 *                          Default value is 1.  Ignored if AutoTile is set.  
+	 *                          Can override and customize per-tile-type collision behavior using setTileProperties().
+	 * @return  A reference to this instance of FlxTilemap, for chaining as usual :)
+	 */
+	public function loadMapFrom2DArray(MapData:Array<Array<Int>>, TileGraphic:FlxTilemapGraphicAsset, TileWidth:Int = 0, TileHeight:Int = 0,
+		?AutoTile:FlxTilemapAutoTiling, StartingIndex:Int = 0, DrawIndex:Int = 1, CollideIndex:Int = 1)
+	{
+		widthInTiles = MapData[0].length;
+		heightInTiles = MapData.length;
+		_data = FlxArrayUtil.flatten2DArray(MapData);
+		
+		loadMapHelper(TileGraphic, TileWidth, TileHeight, AutoTile, StartingIndex, DrawIndex, CollideIndex);
+		return this;
+	}
+	
+	private function loadMapHelper(TileGraphic:FlxTilemapGraphicAsset, TileWidth:Int = 0, TileHeight:Int = 0, ?AutoTile:FlxTilemapAutoTiling,
+		StartingIndex:Int = 0, DrawIndex:Int = 1, CollideIndex:Int = 1)
+	{
+		totalTiles = _data.length;
 		auto = (AutoTile == null) ? OFF : AutoTile;
 		_startingIndex = (StartingIndex <= 0) ? 0 : StartingIndex;
 
@@ -176,7 +312,6 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 			CollideIndex = 1;
 		}
 		
-		loadMapData(MapData);
 		applyAutoTile(DrawIndex, CollideIndex);
 		applyCustomRemap();
 		randomizeIndices();
@@ -184,97 +319,6 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		initTileObjects(DrawIndex, CollideIndex);
 		computeDimensions();
 		updateMap();
-
-		return this;
-	}
-	
-	private function loadMapData(MapData:FlxTilemapAsset)
-	{
-		// Populate data if MapData is a CSV string
-		if (Std.is(MapData, String))
-		{
-			// path to map data file?
-			if (Assets.exists(MapData))
-			{
-				MapData = Assets.getText(MapData);
-			}
-			
-			// Figure out the map dimensions based on the data string
-			_data = new Array<Int>();
-			var columns:Array<String>;
-			var rows:Array<String> = StringTools.trim(cast (MapData, String)).split("\n");
-			heightInTiles = rows.length;
-			widthInTiles = 0;
-			var row:Int = 0;
-			var column:Int;
-			
-			while (row < heightInTiles)
-			{
-				columns = rows[row++].split(",");
-				
-				if (columns.length < 1)
-				{
-					heightInTiles = heightInTiles - 1;
-					continue;
-				}
-				if (widthInTiles == 0)
-				{
-					widthInTiles = columns.length;
-				}
-				column = 0;
-				
-				while (column < widthInTiles)
-				{
-					//the current tile to be added:
-					var curTile:Int = Std.parseInt(columns[column]);
-					
-					if (curTile < 0)
-					{
-						// anything < 0 should be treated as 0 for compatibility with certain map formats (ogmo)
-						curTile = 0;
-					}
-					
-					//if neko, make sure the value was not null, and if it is null,
-					//make sure it is the last in the row (used to ignore commas)
-					#if neko
-					if (curTile != null)
-					{
-						_data.push(curTile);	
-						column++;
-					}
-					else if (column == columns.length - 1)
-					{
-						//if value was a comma, decrease the width by one
-						widthInTiles--;
-					}
-					else
-					{
-						//if a non-int value was passed not at the end, warn the user
-						throw "Value passed wan NaN";
-					}
-					#else
-					//if not neko, dont worry about the comma
-					_data.push(curTile);	
-					column++;
-					#end
-					
-				}
-			}
-		}
-		else if (Std.is(MapData, Array)) // Data is already set up as an array
-		{
-			var array2D:Array<Array<Int>> = cast MapData;
-			
-			widthInTiles = array2D[0].length;
-			heightInTiles = array2D.length;
-			_data = FlxArrayUtil.flatten2DArray(array2D);
-		}
-		else
-		{
-			throw "Unexpected MapData format '" + Type.typeof(MapData) + "' passed into loadMap. Map data must be CSV string or Array<Array<Int>>.";
-		}
-
-		totalTiles = _data.length;
 	}
 
 	private function applyAutoTile(DrawIndex:Int, CollideIndex:Int):Void	
