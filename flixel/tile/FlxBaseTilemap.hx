@@ -72,6 +72,9 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 */
 	private var _data:Array<Int>;
 	
+	private var _drawIndex:Int = 0;
+	private var _collideIndex:Int = 0;
+	
 	/**
 	 * Virtual methods, must be implemented in each renderers
 	 */
@@ -85,7 +88,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		throw "cacheGraphics must be implemented";
 	}
 	
-	private function initTileObjects(DrawIndex:Int, CollideIndex:Int):Void 
+	private function initTileObjects():Void 
 	{
 		throw "initTileObjects must be implemented";
 	}
@@ -162,7 +165,11 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 *                          Can override and customize per-tile-type collision behavior using setTileProperties().
 	 * @return  A reference to this instance of FlxTilemap, for chaining as usual :)
 	 */
+<<<<<<< HEAD
 	public function loadMapFromCSV(MapData:String, TileGraphic:FlxTilemapGraphicAsset, TileWidth:Int = 0, TileHeight:Int = 0, 
+=======
+	public function loadMap(MapData:FlxTilemapAsset, TileGraphic:FlxTilemapGraphicAsset, TileWidth:Int = 0, TileHeight:Int = 0, 
+>>>>>>> dev
 		?AutoTile:FlxTilemapAutoTiling, StartingIndex:Int = 0, DrawIndex:Int = 1, CollideIndex:Int = 1)
 	{
 		// path to map data file?
@@ -171,6 +178,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 			MapData = Assets.getText(MapData);
 		}
 		
+<<<<<<< HEAD
 		// Figure out the map dimensions based on the data string
 		_data = new Array<Int>();
 		var columns:Array<String>;
@@ -181,6 +189,33 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		var column:Int;
 		
 		while (row < heightInTiles)
+=======
+		loadMapData(MapData);
+		
+		_drawIndex = DrawIndex;
+		_collideIndex = CollideIndex;
+		
+		applyAutoTile();
+		applyCustomRemap();
+		randomizeIndices();
+		cacheGraphics(TileWidth, TileHeight, TileGraphic);
+		postGraphicLoad();
+		
+		return this;
+	}
+	
+	private function postGraphicLoad()
+	{
+		initTileObjects();
+		computeDimensions();
+		updateMap();
+	}
+	
+	private function loadMapData(MapData:FlxTilemapAsset)
+	{
+		// Populate data if MapData is a CSV string
+		if (Std.is(MapData, String))
+>>>>>>> dev
 		{
 			columns = rows[row++].split(",");
 			
@@ -321,7 +356,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		updateMap();
 	}
 
-	private function applyAutoTile(DrawIndex:Int, CollideIndex:Int):Void	
+	private function applyAutoTile():Void	
 	{
 		// Pre-process the map data if it's auto-tiled
 		if (auto != OFF)
@@ -578,7 +613,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		
 		if (auto == OFF)
 		{
-			updateTile(Index);
+			updateTile(_data[Index]);
 			return ok;
 		}
 		
@@ -599,7 +634,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 				{
 					i = row * widthInTiles + column;
 					autoTile(i);
-					updateTile(i);
+					updateTile(_data[i]);
 				}
 				column++;
 			}

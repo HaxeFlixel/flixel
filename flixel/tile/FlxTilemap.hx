@@ -109,9 +109,6 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	private var _scaledTileWidth:Float = 0;
 	private var _scaledTileHeight:Float = 0;
 	
-	private var _drawIndex:Int = 0;
-	private var _collideIndex:Int = 0;
-	
 	#if (FLX_RENDER_BLIT && !FLX_NO_DEBUG)
 	/**
 	 * Internal, used for rendering the debug bounding box display.
@@ -214,34 +211,10 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 			_tileHeight = Std.int(value.frames[0].sourceSize.y);
 			_flashRect.setTo(0, 0, _tileWidth, _tileHeight);
 			graphic = value.parent;
-			initTileObjects(_drawIndex, _collideIndex);
-			computeDimensions();
-			updateMap();
+			postGraphicLoad();
 		}
 		
 		return value;
-	}
-	
-	override public function loadMap(MapData:FlxTilemapAsset, TileGraphic:FlxTilemapGraphicAsset, TileWidth:Int = 0, TileHeight:Int = 0, 
-		?AutoTile:FlxTilemapAutoTiling, StartingIndex:Int = 0, DrawIndex:Int = 1, CollideIndex:Int = 1):FlxTilemap
-	{
-		auto = (AutoTile == null) ? OFF : AutoTile;
-		_startingIndex = (StartingIndex <= 0) ? 0 : StartingIndex;
-
-		if (auto != OFF)
-		{
-			_startingIndex = 1;
-			DrawIndex = 1;
-			CollideIndex = 1;
-		}
-		
-		loadMapData(MapData);
-		applyAutoTile(DrawIndex, CollideIndex);
-		applyCustomRemap();
-		randomizeIndices();
-		cacheGraphics(TileWidth, TileHeight, TileGraphic);
-		
-		return this;
 	}
 	
 	override private function cacheGraphics(TileWidth:Int, TileHeight:Int, TileGraphic:FlxTilemapGraphicAsset):Void 
@@ -258,7 +231,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		
 		if (_tileWidth <= 0)
 		{
-			_tileWidth = graphic.height;
+			_tileWidth = graph.height;
 		}
 		
 		_tileHeight = TileHeight;
@@ -271,7 +244,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		frames = FlxTileFrames.fromGraphic(graph, new FlxPoint(_tileWidth, _tileHeight));
 	}
 	
-	override private function initTileObjects(DrawIndex:Int, CollideIndex:Int):Void 
+	override private function initTileObjects():Void 
 	{
 		_tileObjects = FlxDestroyUtil.destroyArray(_tileObjects);
 		// Create some tile objects that we'll use for overlap checks (one for each tile)
@@ -282,7 +255,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		
 		for (i in 0...length)
 		{
-			_tileObjects[i] = new FlxTile(this, i, _tileWidth, _tileHeight, (i >= DrawIndex), (i >= CollideIndex) ? allowCollisions : FlxObject.NONE);
+			_tileObjects[i] = new FlxTile(this, i, _tileWidth, _tileHeight, (i >= _drawIndex), (i >= _collideIndex) ? allowCollisions : FlxObject.NONE);
 		}
 		
 		// Create debug tiles for rendering bounding boxes on demand
@@ -309,7 +282,9 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		_debugRect = new Rectangle(0, 0, _tileWidth, _tileHeight);
 		#end
 		
-		for (i in 0...totalTiles)
+		var numTiles:Int = _tileObjects.length;
+		
+		for (i in 0...numTiles)
 		{
 			updateTile(i);
 		}
@@ -776,21 +751,6 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	}
 	
 	/**
-	 * Use this method for creating tileSheet for FlxTilemap. Must be called after loadMap() method.
-	 * If you forget to call it then you will not see this FlxTilemap on c++ target
-	 */
-	public function updateTiles():Void
-	{
-		if (graphic != null && _tileWidth >= 1 && _tileHeight >= 1)
-		{
-			for (i in 0...totalTiles)
-			{
-				updateTile(i);
-			}
-		}
-	}
-	
-	/**
 	 * Change a particular tile to FlxSprite. Or just copy the graphic if you dont want any changes to mapdata itself.
 	 * 
 	 * @link http://forums.flixel.org/index.php/topic,5398.0.html
@@ -1023,18 +983,18 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	/**
 	 * Internal function used in setTileByIndex() and the constructor to update the map.
 	 * 
-	 * @param	Index		The index of the tile you want to update.
+	 * @param	Index		The index of the tile object in _tileObjects internal array you want to update.
 	 */
 	override private function updateTile(Index:Int):Void
 	{
-		var tile:FlxTile = _tileObjects[_data[Index]];
+		var tile:FlxTile = _tileObjects[Index];
 		
 		if ((tile == null) || !tile.visible)
 		{
 			return;
 		}
 		
-		tile.frame = frames.frames[_data[Index] - _startingIndex];
+		tile.frame = frames.frames[Index - _startingIndex];
 	}
 	
 	private inline function createBuffer(camera:FlxCamera):FlxTilemapBuffer

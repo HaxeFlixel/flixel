@@ -28,6 +28,10 @@
  * `callback`: fixed old `frameIndex` value being passed instead of the current one
  * `add()` now makes a copy of the `Frames` array before calling `splice()` on it
  * fixed `finished` not being true during the last animation frame in the `callback`
+ * added `Reversed` argument in `play()` method, which allows you to set animation's playback direction
+* `FlxAnimation`:
+ * added `reversed` var which allows you to play animation backwards
+ * second argument of `play()` method is `Reversed` now
 * `FlxSpriteUtil`:
  * `drawLine()`: default settings for `lineStyle` are now thickness 1 and color white
  * `fadeIn()` and `fadeOut()` now tween `alpha` instead of `color`
@@ -60,7 +64,13 @@
  * fixed a bug in `overlapsAt()`
  * `loadMap()` now treats tile indices with negative values in the map data as 0
  * added `blend`, `alpha` and `color`
-* `FlxTileblock`: added `setTile()` and `tileSprite`
+ * added `frames` property, so you can change tilemap's graphic without reloading map
+ * `loadMap()` accepts `FlxGraphic`, `String`, `FlxTileFrames` or `BitmapData` as `TileGraphic` now
+* `FlxBaseTilemap`: added `setRect()` method which allows you to set a rectangular region of tiles to the provided index
+* `FlxTile`: added `frame` variable which holds tile's "graphic"
+* `FlxTileblock`: 
+ * added `setTile()` and `tileSprite`
+ * added `loadFrames()` method which allows you to use frames collection as a source of graphic
 * `Console`:
  * the `set` command now supports arrays
  * the `fields` command now has type info for the fields
@@ -135,6 +145,13 @@
  * `getScreenXY()` -> `getScreenPosition()`
  * removed the `NewSprite` argument from `clone()`
  * added `clipRect()` and `unclip()`
+ * renamed `frames` property to `numFrames`
+ * added `frames` property which reflects sprite's current frames collection
+ * removed `loadGraphicFromTexture()`, `loadRotatedGraphicFromTexture()` methods
+ * renamed `cachedGraphics` property to `graphic`
+ * added `setFrames()` method which allows you to save animations which already exists in this sprite
+ * `colorTransform` is always instantiated
+ * added `loadRotatedFrame()` method which allows you to generate prerotated image from given frame and load it
 * Added some helpful error messages when trying to target older swf versions
 * `FlxAngle`:
  * changed `rotatePoint()` to not invert the y-axis anymore and rotate clockwise (consistent with `FlxSprite#angle`)
@@ -172,6 +189,26 @@
 * Added support for post-processing shaders on native targets via `FlxG.addPostProcess()` / `removePostProcess()` and `flixel.effects.postprocess`
 * `FlxG.android`: `preventDefaultBackAction` has been replaced by `preventDefaultKeys`
 * `FlxState`: `onFocus()` and `onFocusLost()` no longer require `FlxG.autoPause` to be false 
+* Moved `FlxAtlas` and `FlxNode` in `flixel.graphics.atlas` package
+* Added `addNodeWithSpacings()` in `FlxAtlas`
+* Added `getTileFrames()` and `getImageFrame` in `FlxNode` which generate frames collections for this node
+* Changed game scaling behavior on native targets: it doesn't scale game sprite, but scales tiles instead
+* Changed game scaling behavior on flash target: it scales camera's sprite now
+* Renamed `CachedGraphics` class to `FlxGraphic` and moved it in `flixel.graphics` package
+* Added static methods to `FlxGraphic` class for generation of objects of this type from various sources: `fromAssetKey()`, `fromClass()`, `fromBitmapData()`
+* Added new conception of frames collections instead of regions, which required a lot of typing to get simple spritesheet from image region
+* Added `FlxImageFrame` frames collection which contains single frame
+* Added `FlxTileFrames` frames collection which contains frames for spritesheet, which can be generated from image region or frame (including rotated and trimmed frames)
+* Added `FlxAtlasFrames` frames collection instead of various texture atlas loaders (like `SparrowData` and `TexturePackerData`). It contains various static methods for parsing atlas files
+* Added `FlxBarFrames` which is used by `FlxBar` class on native targets
+* Rewrote `PxBitmapFont` class and renamed it to `FlxBitmapFont`. It supports (can parse) AngelCode, XNA and Monospace bitmap fonts now
+* Rewrote `FlxBitmapTextField` class
+* Added `FlxFilterFrames` frames collection instead of `FlxSpriteFilter` (see filters demo)
+* Changed `FlxGraphicAsset` from `OneOfFive<String, Class<Dynamic>, CachedGraphics, TextureRegion, BitmapData>` to `OneOfThree<FlxGraphic, BitmapData, String>` which means that graphic loading methods (in all classes) accept only these three types of objects
+* `FlxBitmapDataUtil`:
+ * added `replaceColor()` method which is used by `FlxSprite`'s `replaceColor()` method
+ * added `addSpacing()` method which takes BitmapData and generates new one with spaces between frames
+ * added `generateRotations()` method which generates new BitmapData with prerotated given BitmapData object (this functionality is moved from `FlxSprite`)
 
 3.3.5
 ------------------------------

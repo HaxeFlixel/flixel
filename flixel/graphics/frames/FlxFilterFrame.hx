@@ -29,7 +29,8 @@ class FlxFilterFrame extends FlxFrame
 	 */
 	public var filterFrames(default, null):FlxFilterFrames;
 	
-	public function new(parent:FlxGraphic, sourceFrame:FlxFrame, filterFrames:FlxFilterFrames)
+	@:allow(flixel)
+	private function new(parent:FlxGraphic, sourceFrame:FlxFrame, filterFrames:FlxFilterFrames)
 	{
 		super(parent);
 		

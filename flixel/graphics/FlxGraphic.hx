@@ -275,7 +275,7 @@ class FlxGraphic
 	/**
 	 * Cached BitmapData object
 	 */
-	public var bitmap:BitmapData;
+	public var bitmap(default, set):BitmapData;
 	
 	/**
 	 * The width of cached BitmapData.
@@ -388,14 +388,14 @@ class FlxGraphic
 	private function new(Key:String, Bitmap:BitmapData, ?Persist:Bool)
 	{
 		key = Key;
-		bitmap = Bitmap;
 		persist = (Persist != null) ? Persist : defaultPersist;
 		
-		width = bitmap.width;
-		height = bitmap.height;
+		width = Bitmap.width;
+		height = Bitmap.height;
 		
 		frameCollections = new Map<FlxFrameCollectionType, Array<Dynamic>>();
 		frameCollectionTypes = new Array<FlxFrameCollectionType>();
+		bitmap = Bitmap;
 	}
 	
 	/**
@@ -422,14 +422,7 @@ class FlxGraphic
 		if (newBitmap != null)
 		{
 			bitmap = newBitmap;
-			#if (FLX_RENDER_TILE && !flash && !nme)
-			if (_tilesheet != null)
-			{
-				_tilesheet = FlxTilesheet.rebuildFromOld(_tilesheet, bitmap);
-			}
-			#end
 		}
-		
 		isDumped = false;
 	}
 	
@@ -453,15 +446,14 @@ class FlxGraphic
 	 */
 	public function onAssetsReload():Void
 	{
-		if (!canBeDumped)	return;
+		if (!canBeDumped)
+			return;
 		
 		var dumped:Bool = isDumped;
 		undump();
 		resetFrameBitmaps();
 		if (dumped)
-		{
 			dump();
-		}
 	}
 	
 	/**
@@ -565,11 +557,13 @@ class FlxGraphic
 		{
 			var dumped:Bool = isDumped;
 			
-			if (dumped)	undump();
+			if (dumped)	
+				undump();
 			
 			_tilesheet = new FlxTilesheet(bitmap);
 			
-			if (dumped)	dump();
+			if (dumped)	
+				dump();
 		}
 		
 		return _tilesheet;
@@ -638,5 +632,22 @@ class FlxGraphic
 		}
 		
 		return _imageFrame;
+	}
+	
+	private function set_bitmap(value:BitmapData):BitmapData
+	{
+		if (value != null)
+		{
+			bitmap = value;
+			#if (FLX_RENDER_TILE && !flash && !nme)
+			if (_tilesheet != null)
+			{
+				_tilesheet = FlxTilesheet.rebuildFromOld(_tilesheet, bitmap);
+			}
+			#end
+			resetFrameBitmaps();
+		}
+		
+		return value;
 	}
 }

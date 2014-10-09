@@ -375,7 +375,7 @@ class FlxBitmapDataUtil
 		var midpointX:Int = Std.int(max * 0.5);
 		var midpointY:Int = Std.int(max * 0.5);
 		
-		var matrix:Matrix = FlxMatrix.MATRIX;
+		var matrix:Matrix = FlxMatrix.matrix;
 		
 		while (row < rows)
 		{

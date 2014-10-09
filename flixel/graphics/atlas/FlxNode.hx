@@ -1,6 +1,5 @@
 package flixel.graphics.atlas;
 
-import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxImageFrame;
@@ -28,11 +27,7 @@ class FlxNode implements IFlxDestroyable
 	/**
 	 * Region of atlas which this node holds, includes spacings between nodes
 	 */
-	public var rect:Rectangle;
-	/**
-	 * Position of upper left corner of this node on atlas bitmapdata
-	 */
-	public var point:Point;
+	public var rect:FlxRect;
 	/**
 	 * The "name" of this node. You can get access to this node with it:
 	 * atlas.getNode(key);
@@ -41,7 +36,7 @@ class FlxNode implements IFlxDestroyable
 	/**
 	 * Logical flag showing whether this node have image in it or not
 	 */
-	public var filled:Bool;
+	public var filled(default, null):Bool;
 	/**
 	 * Atlas object, which contains this node
 	 */
@@ -58,11 +53,11 @@ class FlxNode implements IFlxDestroyable
 	/**
 	 * The width of this node.
 	 */
-	public var width(get, null):Int;
+	public var width(get, set):Int;
 	/**
 	 * The height of this node.
 	 */
-	public var height(get, null):Int;
+	public var height(get, set):Int;
 	/**
 	 * Logical flag, showing whether this node have any child nodes or image in it
 	 */
@@ -73,11 +68,11 @@ class FlxNode implements IFlxDestroyable
 	 */
 	public var contentRect(get, null):FlxRect;
 	/**
-	 * The width of image in in this node (node.width - atlas.borderX)
+	 * The width of image in in this node (node.width - atlas.border)
 	 */
 	public var contentWidth(get, null):Int;
 	/**
-	 * The height of image in in this node (node.height - atlas.borderY)
+	 * The height of image in in this node (node.height - atlas.border)
 	 */
 	public var contentHeight(get, null):Int;
 	
@@ -90,13 +85,12 @@ class FlxNode implements IFlxDestroyable
 	 * @param	filled	whether this node contains image or not
 	 * @param	key		the name of image in this node, and the name of this node
 	 */
-	public function new(rect:Rectangle, atlas:FlxAtlas, filled:Bool = false, key:String = "") 
+	public function new(rect:FlxRect, atlas:FlxAtlas, filled:Bool = false, key:String = "") 
 	{
 		this.filled = filled;
 		this.left = null;
 		this.right = null;
 		this.rect = rect;
-		point = new Point(rect.x, rect.y);
 		this.key = key;
 		this.atlas = atlas;
 	}
@@ -107,7 +101,6 @@ class FlxNode implements IFlxDestroyable
 		left = null;
 		right = null;
 		rect = null;
-		point = null;
 		atlas = null;
 		_contentRect = null;
 	}
@@ -129,12 +122,10 @@ class FlxNode implements IFlxDestroyable
 	 */
 	public function getTileFrames(tileSize:FlxPoint, tileSpacing:FlxPoint = null, region:FlxRect = null):FlxTileFrames
 	{
-		var graphic:FlxGraphic = FlxG.bitmap.add(atlas.atlasBitmapData, false, atlas.name);
+		var graphic:FlxGraphic = FlxG.bitmap.add(atlas.bitmapData, false, atlas.name);
 		
 		if (region == null)
-		{
 			region = contentRect;
-		}
 		
 		return FlxTileFrames.fromRectangle(graphic, tileSize, region, tileSpacing);
 	}
@@ -145,7 +136,7 @@ class FlxNode implements IFlxDestroyable
 	 */
 	public function getImageFrame():FlxImageFrame
 	{
-		var graphic:FlxGraphic = FlxG.bitmap.add(atlas.atlasBitmapData, false, atlas.name);
+		var graphic:FlxGraphic = FlxG.bitmap.add(atlas.bitmapData, false, atlas.name);
 		return FlxImageFrame.fromRectangle(graphic, contentRect);
 	}
 	
@@ -169,27 +160,37 @@ class FlxNode implements IFlxDestroyable
 		return Std.int(rect.width);
 	}
 	
+	private function set_width(value:Int):Int
+	{
+		rect.width = value;
+		return value;
+	}
+	
 	private inline function get_height():Int
 	{
 		return Std.int(rect.height);
 	}
 	
+	private function set_height(value:Int):Int
+	{
+		rect.height = value;
+		return value;
+	}
+	
 	private inline function get_contentWidth():Int
 	{
-		return Std.int(rect.width - atlas.borderX);
+		return Std.int(rect.width - atlas.border);
 	}
 	
 	private inline function get_contentHeight():Int
 	{
-		return Std.int(rect.height - atlas.borderY);
+		return Std.int(rect.height - atlas.border);
 	}
 	
 	private inline function get_contentRect():FlxRect
 	{
 		if (_contentRect == null)
-		{
 			_contentRect = new FlxRect(x, y, contentWidth, contentHeight);
-		}
 		
 		return _contentRect;
 	}
