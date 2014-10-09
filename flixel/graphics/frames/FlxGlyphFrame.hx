@@ -17,10 +17,13 @@ class FlxGlyphFrame extends FlxFrame
 	 */
 	public var xAdvance:Int = 0;
 	
+	public var charCode:Int;
+	
 	@:allow(flixel)
-	private function new(parent:FlxGraphic) 
+	private function new(parent:FlxGraphic, charCode:Int) 
 	{
 		super(parent);
+		this.charCode = charCode;
 		type = FlxFrameType.GLYPH;
 	}
 	

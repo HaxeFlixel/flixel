@@ -60,8 +60,7 @@ class FlxBitmapFont extends FlxFramesCollection
 	 */
 	public var spaceWidth:Int = 0;
 	
-	// TODO: change it to Map<Int, FlxGlyphFrame>
-	public var glyphs:Map<String, FlxGlyphFrame>;
+	public var glyphs:Map<Int, FlxGlyphFrame>;
 	
 	/**
 	 * Creates a new bitmap font using specified bitmap data and letter input.
@@ -71,7 +70,7 @@ class FlxBitmapFont extends FlxFramesCollection
 		super(parent, FlxFrameCollectionType.FONT);
 		parent.persist = true;
 		parent.destroyOnNoUse = false;
-		glyphs = new Map<String, FlxGlyphFrame>();
+		glyphs = new Map<Int, FlxGlyphFrame>();
 	}
 	
 	override public function destroy():Void 
@@ -167,6 +166,8 @@ class FlxBitmapFont extends FlxFramesCollection
 		var frameHeight:Int;
 		var offset:FlxPoint;
 		var glyph:String;
+		var charCode:Int;
+		var spaceCharCode:Int = " ".charCodeAt(0);
 		var xOffset:Int, yOffset:Int, xAdvance:Int;
 		var glyphWidth:Int, glyphHeight:Int;
 		
@@ -191,6 +192,7 @@ class FlxBitmapFont extends FlxFramesCollection
 			
 			font.minOffsetX = (font.minOffsetX > xOffset) ? xOffset : font.minOffsetX;
 			
+			charCode = -1;
 			glyph = null;
 			
 			if (char.has.letter)
@@ -199,27 +201,32 @@ class FlxBitmapFont extends FlxFramesCollection
 			}
 			else if (char.has.id)
 			{
-				glyph = String.fromCharCode(Std.parseInt(char.att.id));
+				charCode = Std.parseInt(char.att.id);
 			}
 			
-			if (glyph == null) 
+			if (charCode == -1 && glyph == null) 
 			{
 				throw 'Invalid font xml data!';
 			}
 			
-			glyph = switch(glyph) 
+			if (glyph != null)
 			{
-				case "space": ' ';
-				case "&quot;": '"';
-				case "&amp;": '&';
-				case "&gt;": '>';
-				case "&lt;": '<';
-				default: glyph;
+				glyph = switch(glyph) 
+				{
+					case "space": ' ';
+					case "&quot;": '"';
+					case "&amp;": '&';
+					case "&gt;": '>';
+					case "&lt;": '<';
+					default: glyph;
+				}
+				
+				charCode = glyph.charCodeAt(0);
 			}
 			
-			font.addGlyphFrame(glyph, frame, offset, xAdvance);
+			font.addGlyphFrame(charCode, frame, offset, xAdvance);
 			
-			if (glyph == ' ')
+			if (charCode == spaceCharCode)
 			{
 				font.spaceWidth = xAdvance;
 			}
@@ -258,7 +265,8 @@ class FlxBitmapFont extends FlxFramesCollection
 		var cy:Int = 0;
 		var cx:Int;
 		var letterIdx:Int = 0;
-		var glyph:String;
+		var charCode:Int;
+		var spaceCharCode:Int = " ".charCodeAt(0);
 		var numLetters:Int = letters.length;
 		var rect:FlxRect;
 		var offset:FlxPoint;
@@ -284,7 +292,7 @@ class FlxBitmapFont extends FlxFramesCollection
 					var gw:Int = gx - cx;
 					var gh:Int = gy - cy;
 					
-					glyph = letters.charAt(letterIdx);
+					charCode = letters.charCodeAt(letterIdx);
 					
 					rect = new FlxRect(cx, cy, gw, gh);
 					
@@ -292,9 +300,9 @@ class FlxBitmapFont extends FlxFramesCollection
 					
 					xAdvance = gw;
 					
-					font.addGlyphFrame(glyph, rect, offset, xAdvance);
+					font.addGlyphFrame(charCode, rect, offset, xAdvance);
 					
-					if (glyph == ' ')
+					if (charCode == spaceCharCode)
 					{
 						font.spaceWidth = xAdvance;
 					}
@@ -408,7 +416,7 @@ class FlxBitmapFont extends FlxFramesCollection
 			{
 				charRect = new FlxRect(startX + i * spacedWidth, startY + j * spacedHeight, charWidth, charHeight);
 				offset = FlxPoint.get(0, 0);
-				font.addGlyphFrame(letters.charAt(letterIndex), charRect, offset, xAdvance);
+				font.addGlyphFrame(letters.charCodeAt(letterIndex), charRect, offset, xAdvance);
 				
 				letterIndex++;
 				
@@ -425,17 +433,16 @@ class FlxBitmapFont extends FlxFramesCollection
 	/**
 	 * Internal method which creates and add glyph frames into this font.
 	 * 
-	 * @param	glyph			Letter for glyph frame.
+	 * @param	charCode		Char code for glyph frame.
 	 * @param	frame			Glyph area from source image.	
 	 * @param	offset			Offset before rendering this glyph.
 	 * @param	xAdvance		How much cursor will jump after this glyph.
 	 */
-	private function addGlyphFrame(glyph:String, frame:FlxRect, offset:FlxPoint, xAdvance:Int):Void
+	private function addGlyphFrame(charCode:Int, frame:FlxRect, offset:FlxPoint, xAdvance:Int):Void
 	{
-		if (frame.width == 0 || frame.height == 0 || glyphs.get(glyph) != null)	return;
+		if (frame.width == 0 || frame.height == 0 || glyphs.get(charCode) != null)	return;
 		
-		var glyphFrame:FlxGlyphFrame = new FlxGlyphFrame(parent);
-		glyphFrame.name = glyph;
+		var glyphFrame:FlxGlyphFrame = new FlxGlyphFrame(parent, charCode);
 		glyphFrame.sourceSize.set(frame.width, frame.height);
 		glyphFrame.offset.copyFrom(offset);
 		glyphFrame.xAdvance = xAdvance;
@@ -450,8 +457,7 @@ class FlxBitmapFont extends FlxFramesCollection
 		#end
 		
 		frames.push(glyphFrame);
-		framesHash.set(glyph, glyphFrame);
-		glyphs.set(glyph, glyphFrame);
+		glyphs.set(charCode, glyphFrame);
 	}
 	
 	public static inline function findFont(graphic:FlxGraphic):FlxBitmapFont
@@ -481,7 +487,7 @@ class BitmapGlyphCollection implements IFlxDestroyable
 {
 	public var minOffsetX:Float = 0;
 	
-	public var glyphMap:Map<String, BitmapGlyph>;
+	public var charCodeMap:Map<Int, BitmapGlyph>;
 	
 	public var glyphs:Array<BitmapGlyph>;
 	
@@ -495,7 +501,7 @@ class BitmapGlyphCollection implements IFlxDestroyable
 	
 	public function new(font:FlxBitmapFont, scale:Float, color:FlxColor, useColor:Bool = true)
 	{
-		glyphMap = new Map<String, BitmapGlyph>();
+		charCodeMap = new Map<Int, BitmapGlyph>();
 		glyphs = new Array<BitmapGlyph>();
 		this.font = font;
 		this.scale = scale;
@@ -555,17 +561,17 @@ class BitmapGlyphCollection implements IFlxDestroyable
 			offsetY = Math.ceil(glyph.offset.y * scale);
 			xAdvance = Math.ceil(glyph.xAdvance * scale);
 			
-			preparedGlyph = new BitmapGlyph(glyph.name, preparedBD, offsetX, offsetY, xAdvance);
+			preparedGlyph = new BitmapGlyph(glyph.charCode, preparedBD, offsetX, offsetY, xAdvance);
 			
 			glyphs.push(preparedGlyph);
-			glyphMap.set(preparedGlyph.glyph, preparedGlyph);
+			charCodeMap.set(preparedGlyph.charCode, preparedGlyph);
 		}
 	}
 	
 	public function destroy():Void
 	{
 		glyphs = FlxDestroyUtil.destroyArray(glyphs);
-		glyphMap = null;
+		charCodeMap = null;
 		font = null;
 	}
 }
@@ -576,7 +582,7 @@ class BitmapGlyphCollection implements IFlxDestroyable
  */
 class BitmapGlyph implements IFlxDestroyable
 {
-	public var glyph:String;
+	public var charCode:Int;
 	
 	public var bitmap:BitmapData;
 	
@@ -588,9 +594,9 @@ class BitmapGlyph implements IFlxDestroyable
 	
 	public var rect:Rectangle;
 	
-	public function new(glyph:String, bmd:BitmapData, offsetX:Int = 0, offsetY:Int = 0, xAdvance:Int = 0)
+	public function new(charCode:Int, bmd:BitmapData, offsetX:Int = 0, offsetY:Int = 0, xAdvance:Int = 0)
 	{
-		this.glyph = glyph;
+		this.charCode = charCode;
 		this.bitmap = bmd;
 		this.offsetX = offsetX;
 		this.offsetY = offsetY;
@@ -601,6 +607,5 @@ class BitmapGlyph implements IFlxDestroyable
 	public function destroy():Void
 	{
 		bitmap = FlxDestroyUtil.dispose(bitmap);
-		glyph = null;
 	}
 }

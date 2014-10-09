@@ -587,6 +587,7 @@ class FlxBitmapTextField extends FlxSprite
 		var lineWidth:Float = Math.ceil(Math.abs(font.minOffsetX) * size);
 		
 		var char:String; 					// current character in word
+		var charCode:Int;
 		var charWidth:Float = 0;			// the width of current character
 		
 		var widthPlusOffset:Int = 0;
@@ -595,6 +596,7 @@ class FlxBitmapTextField extends FlxSprite
 		for (c in 0...lineLength)
 		{
 			char = str.charAt(c);
+			charCode = char.charCodeAt(0);
 			
 			if (char == ' ')
 			{
@@ -606,9 +608,9 @@ class FlxBitmapTextField extends FlxSprite
 			}
 			else
 			{
-				if (font.glyphs.exists(char))
+				if (font.glyphs.exists(charCode))
 				{
-					glyphFrame = font.glyphs.get(char);
+					glyphFrame = font.glyphs.get(charCode);
 					charWidth = Math.ceil(glyphFrame.xAdvance * size);
 					
 					if (c == (lineLength - 1))
@@ -648,6 +650,7 @@ class FlxBitmapTextField extends FlxSprite
 		
 		var c:Int;					// char index
 		var char:String; 			// current character in word
+		var charCode:Int;
 		var charWidth:Float = 0;	// the width of current character
 		
 		var subLine:String;			// current subline to assemble
@@ -668,6 +671,7 @@ class FlxBitmapTextField extends FlxSprite
 			while (c < lineLength)
 			{
 				char = line.charAt(c);
+				charCode = char.charCodeAt(0);
 				
 				if (char == ' ')
 				{
@@ -679,7 +683,7 @@ class FlxBitmapTextField extends FlxSprite
 				}
 				else
 				{
-					charWidth = (font.glyphs.exists(char)) ? font.glyphs.get(char).xAdvance * size : 0;
+					charWidth = (font.glyphs.exists(charCode)) ? font.glyphs.get(charCode).xAdvance * size : 0;
 				}
 				charWidth += letterSpacing;
 				
@@ -817,6 +821,7 @@ class FlxBitmapTextField extends FlxSprite
 		var isSpaceWord:Bool = false; 		// whether current word consists of spaces or not
 		
 		var char:String; 					// current character in word
+		var charCode:Int;
 		var charWidth:Float = 0;			// the width of current character
 		
 		var subLines:Array<String> = [];	// helper array for subdividing lines
@@ -846,6 +851,7 @@ class FlxBitmapTextField extends FlxSprite
 				for (c in 0...wordLength)
 				{
 					char = word.charAt(c);
+					charCode = char.charCodeAt(0);
 					
 					if (char == ' ')
 					{
@@ -857,7 +863,7 @@ class FlxBitmapTextField extends FlxSprite
 					}
 					else
 					{
-						charWidth = (font.glyphs.exists(char)) ? font.glyphs.get(char).xAdvance * size : 0;
+						charWidth = (font.glyphs.exists(charCode)) ? font.glyphs.get(charCode).xAdvance * size : 0;
 					}
 					
 					wordWidth += charWidth;
@@ -922,6 +928,7 @@ class FlxBitmapTextField extends FlxSprite
 		var isSpaceWord:Bool = false; 		// whether current word consists of spaces or not
 		
 		var char:String; 					// current character in word
+		var charCode:Int;
 		var c:Int;							// char index
 		var charWidth:Float = 0;			// the width of current character
 		
@@ -953,6 +960,7 @@ class FlxBitmapTextField extends FlxSprite
 				while (c < wordLength)
 				{
 					char = word.charAt(c);
+					charCode = char.charCodeAt(0);
 					
 					if (char == ' ')
 					{
@@ -964,7 +972,7 @@ class FlxBitmapTextField extends FlxSprite
 					}
 					else
 					{
-						charWidth = (font.glyphs.exists(char)) ? font.glyphs.get(char).xAdvance * size : 0;
+						charWidth = (font.glyphs.exists(charCode)) ? font.glyphs.get(charCode).xAdvance * size : 0;
 					}
 					
 					if (subLineWidth + charWidth > width - 2 * padding)
@@ -1211,6 +1219,7 @@ class FlxBitmapTextField extends FlxSprite
 		var pos:Int = drawData.length;
 		#end
 		var char:String;
+		var charCode:Int;
 		var curX:Int = startX;
 		var curY:Int = startY;
 		
@@ -1222,6 +1231,7 @@ class FlxBitmapTextField extends FlxSprite
 		for (i in 0...lineLength)
 		{
 			char = line.charAt(i);
+			charCode = char.charCodeAt(0);
 			
 			if (char == ' ')
 			{
@@ -1234,7 +1244,7 @@ class FlxBitmapTextField extends FlxSprite
 			else
 			{
 				#if FLX_RENDER_BLIT
-				glyph = glyphs.glyphMap.get(char);
+				glyph = glyphs.charCodeMap.get(charCode);
 				if (glyph != null)
 				{
 					_flashPoint.x = curX + glyph.offsetX;
@@ -1243,7 +1253,7 @@ class FlxBitmapTextField extends FlxSprite
 					curX += glyph.xAdvance;
 				}
 				#else
-				glyph = font.glyphs.get(char);
+				glyph = font.glyphs.get(charCode);
 				if (glyph != null)
 				{
 					_flashPoint.x = curX + (glyph.offset.x + 0.5 * glyph.frame.width) * size - origin.x;
