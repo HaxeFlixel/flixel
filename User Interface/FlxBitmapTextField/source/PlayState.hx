@@ -21,15 +21,15 @@ class PlayState extends FlxState
 		FlxG.camera.bgColor = FlxColor.WHITE;
 		
 		var letters:String = " !\"#$%&'()*+,-./" + "0123456789:;<=>?" + "@ABCDEFGHIJKLMNO" + "PQRSTUVWXYZ[]^_" + "abcdefghijklmno" + "pqrstuvwxyz{|}~\\";
-		var fontXNA:FlxBitmapFont = FlxBitmapFont.fromXNA(Assets.getBitmapData("assets/fontData10pt.png"), letters);
+		var fontXNA:FlxBitmapFont = FlxBitmapFont.fromXNA("assets/fontData10pt.png", letters);
 		
 		var textBytes = Assets.getText("assets/NavTitle.fnt");
 		var XMLData = Xml.parse(textBytes);
-		var fontAngelCode:FlxBitmapFont = FlxBitmapFont.fromAngelCode(Assets.getBitmapData("assets/NavTitle.png"), XMLData);
+		var fontAngelCode:FlxBitmapFont = FlxBitmapFont.fromAngelCode("assets/NavTitle.png", XMLData);
 		
 		var monospaceLetters:String = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789?!().,";
 		var charSize:FlxPoint = FlxPoint.get(48, 50);
-		var fontMonospace:FlxBitmapFont = FlxBitmapFont.fromMonospace(Assets.getBitmapData("assets/260.png"), monospaceLetters, charSize);
+		var fontMonospace:FlxBitmapFont = FlxBitmapFont.fromMonospace("assets/260.png", monospaceLetters, charSize);
 		
 		tf = new FlxBitmapTextField(fontXNA);
 		tf.text = "Hello World!\nand this is\nmultiline!!!";
