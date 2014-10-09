@@ -163,6 +163,7 @@ class FlxBitmapFont extends FlxFramesCollection
 		
 		var glyphFrame:FlxGlyphFrame;
 		var frame:FlxRect;
+		var frameHeight:Int;
 		var offset:FlxPoint;
 		var glyph:String;
 		var xOffset:Int, yOffset:Int, xAdvance:Int;
@@ -176,11 +177,14 @@ class FlxBitmapFont extends FlxFramesCollection
 			frame.x = Std.parseInt(char.att.x);
 			frame.y = Std.parseInt(char.att.y);
 			frame.width = Std.parseInt(char.att.width);
-			frame.height = Std.parseInt(char.att.height);
+			frameHeight = Std.parseInt(char.att.height);
+			frame.height = frameHeight;
 			
 			xOffset = char.has.xoffset ? Std.parseInt(char.att.xoffset) : 0;
 			yOffset = char.has.yoffset ? Std.parseInt(char.att.yoffset) : 0;
 			xAdvance = char.has.xadvance ? Std.parseInt(char.att.xadvance) : 0;
+			
+			font.lineHeight = (font.lineHeight > frameHeight + yOffset) ? font.lineHeight : frameHeight + yOffset;
 			
 			offset = FlxPoint.get(xOffset, yOffset);
 			
@@ -427,7 +431,7 @@ class FlxBitmapFont extends FlxFramesCollection
 	 */
 	private function addGlyphFrame(glyph:String, frame:FlxRect, offset:FlxPoint, xAdvance:Int):Void
 	{
-		if (frame.width == 0 || frame.height == 0)	return;
+		if (frame.width == 0 || frame.height == 0 || glyphs.get(glyph) != null)	return;
 		
 		var glyphFrame:FlxGlyphFrame = new FlxGlyphFrame(parent);
 		glyphFrame.name = glyph;
