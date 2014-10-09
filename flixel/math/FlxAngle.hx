@@ -3,6 +3,7 @@ package flixel.math;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.math.FlxPoint;
+import flixel.system.macros.FlxMacroUtil;
 #if !FLX_NO_TOUCH
 import flixel.input.touch.FlxTouch;
 #end
@@ -15,11 +16,11 @@ class FlxAngle
 	/**
 	 * Use this to access the cos-table generated via sinCosGenerator().
 	 */
-	public static var cosTable:Array<Float> = new Array<Float>();
+	public static var cosTable(get, never):Array<Float>;
 	/**
 	 * Use this to access the sin-table generated via sinCosGenerator().
 	 */
-	public static var sinTable:Array<Float> = new Array<Float>();
+	public static var sinTable(get, never):Array<Float>;
 	/**
 	 * Convert radians to degrees by multiplying it with this value.
 	 */
@@ -28,38 +29,18 @@ class FlxAngle
 	 * Convert degrees to radians by multiplying it with this value.
 	 */
 	public static var TO_RAD(get, never):Float;
-	
 	/**
-	 * Generate a sine and cosine table simultaneously and extremely quickly. Based on research by Franky of scene.at
-	 * 
-	 * The parameters allow you to specify the length, amplitude and frequency of the wave. Once you have called this function
-	 * you should get the results via sinTable and cosTable. This generator is fast enough to be used in real-time.
-	 * 
-	 * @param length 		The length of the wave
-	 * @param sinAmplitude 	The amplitude to apply to the sine table (default 1.0) if you need values between say -+ 125 then give 125 as the value
-	 * @param cosAmplitude 	The amplitude to apply to the cosine table (default 1.0) if you need values between say -+ 125 then give 125 as the value
-	 * @param frequency 	The frequency of the sine and cosine table data
-	 * @return	Returns the sine table
-	 * @see getSinTable
-	 * @see getCosTable
+	 * Contains the sine and cosine tables generated via sinCosGenerator()
 	 */
-	public static function sinCosGenerator(length:Int, sinAmplitude:Float = 1.0, cosAmplitude:Float = 1.0, frequency:Float = 1.0):Void
+	public static var sincos : Dynamic = FlxMacroUtil.sinCosGenerator(360);
+	
+	private static function get_cosTable():Array<Float>
 	{
-		var sin:Float = sinAmplitude;
-		var cos:Float = cosAmplitude;
-		var frq:Float = frequency * Math.PI / length;
-		
-		cosTable = new Array();
-		sinTable = new Array();
-		
-		for (c in 0...length)
-		{
-			cos -= sin * frq;
-			sin += cos * frq;
-			
-			cosTable[c] = cos;
-			sinTable[c] = sin;
-		}
+		return sincos.cos;
+	}
+	private static function get_sinTable():Array<Float>
+	{
+		return sincos.sin;
 	}
 	
 	/**
