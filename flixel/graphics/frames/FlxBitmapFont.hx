@@ -186,8 +186,6 @@ class FlxBitmapFont extends FlxFramesCollection
 			yOffset = char.has.yoffset ? Std.parseInt(char.att.yoffset) : 0;
 			xAdvance = char.has.xadvance ? Std.parseInt(char.att.xadvance) : 0;
 			
-		//	font.lineHeight = (font.lineHeight > frameHeight + yOffset) ? font.lineHeight : frameHeight + yOffset;
-			
 			offset = FlxPoint.get(xOffset, yOffset);
 			
 			font.minOffsetX = (font.minOffsetX > xOffset) ? xOffset : font.minOffsetX;
@@ -229,6 +227,10 @@ class FlxBitmapFont extends FlxFramesCollection
 			if (charCode == spaceCharCode)
 			{
 				font.spaceWidth = xAdvance;
+			}
+			else
+			{
+				font.lineHeight = (font.lineHeight > frameHeight + yOffset) ? font.lineHeight : frameHeight + yOffset;
 			}
 		}
 		
