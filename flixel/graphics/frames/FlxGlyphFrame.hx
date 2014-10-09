@@ -17,7 +17,8 @@ class FlxGlyphFrame extends FlxFrame
 	 */
 	public var xAdvance:Int = 0;
 	
-	public function new(parent:FlxGraphic) 
+	@:allow(flixel)
+	private function new(parent:FlxGraphic) 
 	{
 		super(parent);
 		type = FlxFrameType.GLYPH;

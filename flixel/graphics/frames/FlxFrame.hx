@@ -60,7 +60,8 @@ class FlxFrame implements IFlxDestroyable
 	private var _vReversedBitmapData:BitmapData;
 	private var _hvReversedBitmapData:BitmapData;
 	
-	public function new(parent:FlxGraphic)
+	@:allow(flixel)
+	private function new(parent:FlxGraphic)
 	{
 		this.parent = parent;
 		

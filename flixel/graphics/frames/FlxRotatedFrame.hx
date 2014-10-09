@@ -15,7 +15,8 @@ import openfl.geom.Matrix;
  */
 class FlxRotatedFrame extends FlxFrame
 {
-	public function new(parent:FlxGraphic, angle:Int) 
+	@:allow(flixel)
+	private function new(parent:FlxGraphic, angle:Int) 
 	{
 		super(parent);
 		type = FlxFrameType.ROTATED;
