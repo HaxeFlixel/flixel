@@ -8,19 +8,16 @@ import flixel.system.macros.FlxMacroUtil;
 import flixel.input.touch.FlxTouch;
 #end
 
+typedef FlxSinCos = {
+    cos: Array<Float>,
+    sin: Array<Float>
+};
+
 /**
  * A set of functions related to angle calculations.
  */
 class FlxAngle
 {
-	/**
-	 * Use this to access the cos-table generated via sinCosGenerator().
-	 */
-	public static var cosTable(get, never):Array<Float>;
-	/**
-	 * Use this to access the sin-table generated via sinCosGenerator().
-	 */
-	public static var sinTable(get, never):Array<Float>;
 	/**
 	 * Convert radians to degrees by multiplying it with this value.
 	 */
@@ -32,16 +29,7 @@ class FlxAngle
 	/**
 	 * Contains the sine and cosine tables generated via sinCosGenerator()
 	 */
-	public static var sincos : Dynamic = FlxMacroUtil.sinCosGenerator(360);
-	
-	private static function get_cosTable():Array<Float>
-	{
-		return sincos.cos;
-	}
-	private static function get_sinTable():Array<Float>
-	{
-		return sincos.sin;
-	}
+	public static var sincos : FlxSinCos = FlxMacroUtil.sinCosGenerator(360);
 	
 	/**
 	 * Keeps an angle value between -180 and +180
