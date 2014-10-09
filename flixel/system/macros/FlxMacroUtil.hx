@@ -74,12 +74,12 @@ class FlxMacroUtil
 		};
 		
 		for (c in 0...length) {
-            var radian = c * frequency * Math.PI / 180;
+			var radian = c * frequency * Math.PI / 180;
 			sincos.cos.push(Math.cos(radian) * cosAmplitude);
 			sincos.sin.push(Math.sin(radian) * sinAmplitude);
 		}
-
+		
 		return Context.makeExpr(sincos, Context.currentPos());
 	}
-
+	
 }
