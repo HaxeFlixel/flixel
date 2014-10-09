@@ -60,6 +60,7 @@ class FlxBitmapFont extends FlxFramesCollection
 	 */
 	public var spaceWidth:Int = 0;
 	
+	// TODO: change it to Map<Int, FlxGlyphFrame>
 	public var glyphs:Map<String, FlxGlyphFrame>;
 	
 	/**
@@ -184,7 +185,7 @@ class FlxBitmapFont extends FlxFramesCollection
 			yOffset = char.has.yoffset ? Std.parseInt(char.att.yoffset) : 0;
 			xAdvance = char.has.xadvance ? Std.parseInt(char.att.xadvance) : 0;
 			
-			font.lineHeight = (font.lineHeight > frameHeight + yOffset) ? font.lineHeight : frameHeight + yOffset;
+		//	font.lineHeight = (font.lineHeight > frameHeight + yOffset) ? font.lineHeight : frameHeight + yOffset;
 			
 			offset = FlxPoint.get(xOffset, yOffset);
 			

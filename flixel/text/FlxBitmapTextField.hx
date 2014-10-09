@@ -172,6 +172,12 @@ class FlxBitmapTextField extends FlxSprite
 	 */
 	public var size(default, set):Float = 1;
 	
+	/**
+	 * The width of the TextField object used for bitmap generation for this FlxText object.
+	 * Use it when you want to change the visible width of text. Enables autoSize if <= 0.
+	 */
+	public var fieldWidth(get, set):Float;
+	
 	private var _pendingTextChange:Bool = true;
 	private var _pendingGraphicChange:Bool = true;
 	
@@ -1279,17 +1285,28 @@ class FlxBitmapTextField extends FlxSprite
 	/**
 	 * Sets the width of the text field. If the text does not fit, it will spread on multiple lines.
 	 */
-	override private function set_width(value:Float):Float
+	private function set_fieldWidth(value:Float):Float
 	{
 		value = Std.int(value);
 		value = Math.max(1, value);
 		
 		if (value != width)
 		{
+			if (value <= 0)
+			{
+				autoSize = true;
+				wordWrap = false;
+			}
+			
 			_pendingTextChange = true;
 		}
 		
-		return super.set_width(value);
+		return width = value;
+	}
+	
+	private function get_fieldWidth():Float
+	{
+		return width;
 	}
 	
 	private function set_alignment(value:FlxTextAlign):FlxTextAlign 
