@@ -690,23 +690,12 @@ class FlxText extends FlxSprite
 	{
 		if (alpha != 1)
 		{
-			if (colorTransform == null)
-			{
-				colorTransform = new ColorTransform(1, 1, 1, alpha);
-			}
-			else
-			{
-				colorTransform.alphaMultiplier = alpha;
-			}
+			colorTransform.alphaMultiplier = alpha;
 			useColorTransform = true;
 		}
 		else
 		{
-			if (colorTransform != null)
-			{
-				colorTransform.alphaMultiplier = 1;
-			}
-			
+			colorTransform.alphaMultiplier = 1;
 			useColorTransform = false;
 		}
 		
