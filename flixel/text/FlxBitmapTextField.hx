@@ -442,6 +442,13 @@ class FlxBitmapTextField extends FlxSprite
 			FlxBasic.visibleCount++;
 			#end
 		}
+		
+		#if !FLX_NO_DEBUG
+		if (FlxG.debugger.drawDebug)
+		{
+			drawDebug();
+		}
+		#end
 	}
 	
 	override private function set_color(Color:FlxColor):FlxColor
