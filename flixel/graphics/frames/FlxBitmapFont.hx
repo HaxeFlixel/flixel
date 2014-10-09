@@ -521,6 +521,10 @@ class BitmapGlyphCollection implements IFlxDestroyable
 		
 		spaceWidth = font.spaceWidth * scale;
 		
+		#if js
+		var rect:Rectangle = FlxRect.rect;
+		#end
+		
 		for (frame in font.frames)
 		{
 			glyph = cast(frame, FlxGlyphFrame);
@@ -533,7 +537,14 @@ class BitmapGlyphCollection implements IFlxDestroyable
 			bdHeight = (bdHeight > 0) ? bdHeight : 1;
 			
 			preparedBD = new BitmapData(bdWidth, bdHeight, true, FlxColor.TRANSPARENT);
+			
+			#if js
+			preparedBD.draw(glyphBD, matrix);
+			rect.setTo(0, 0, bdWidth, bdHeight);
+			preparedBD.colorTransform(rect, colorTransform);
+			#else
 			preparedBD.draw(glyphBD, matrix, colorTransform);
+			#end
 			
 			offsetX = Math.ceil(glyph.offset.x * scale);
 			offsetY = Math.ceil(glyph.offset.y * scale);
