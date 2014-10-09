@@ -13,7 +13,7 @@ import openfl.geom.Rectangle;
  */
 class FlxEmptyFrame extends FlxFrame
 {
-	@:allow
+	@:allow(flixel)
 	private function new(parent:FlxGraphic) 
 	{
 		super(parent);
