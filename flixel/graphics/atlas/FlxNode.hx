@@ -1,6 +1,5 @@
 package flixel.graphics.atlas;
 
-import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxImageFrame;
@@ -29,10 +28,6 @@ class FlxNode implements IFlxDestroyable
 	 * Region of atlas which this node holds, includes spacings between nodes
 	 */
 	public var rect:FlxRect;
-	/**
-	 * Position of upper left corner of this node on atlas bitmapdata
-	 */
-	public var point:Point;
 	/**
 	 * The "name" of this node. You can get access to this node with it:
 	 * atlas.getNode(key);
@@ -96,7 +91,6 @@ class FlxNode implements IFlxDestroyable
 		this.left = null;
 		this.right = null;
 		this.rect = rect;
-		point = new Point(rect.x, rect.y);
 		this.key = key;
 		this.atlas = atlas;
 	}
@@ -107,7 +101,6 @@ class FlxNode implements IFlxDestroyable
 		left = null;
 		right = null;
 		rect = null;
-		point = null;
 		atlas = null;
 		_contentRect = null;
 	}

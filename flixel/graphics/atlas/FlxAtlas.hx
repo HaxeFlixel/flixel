@@ -174,7 +174,9 @@ class FlxAtlas implements IFlxDestroyable
 			nodeToInsert.left = firstChild;
 			nodeToInsert.right = secondChild;
 			
-			bitmapData.copyPixels(data, data.rect, firstGrandChild.point);
+			var point:Point = FlxPoint.point;
+			point.setTo(firstGrandChild.x, firstGrandChild.y);
+			bitmapData.copyPixels(data, data.rect, point);
 			nodes.set(key, firstGrandChild);
 			addNodeToAtlasFrames(firstGrandChild);
 			return firstGrandChild;
@@ -187,13 +189,15 @@ class FlxAtlas implements IFlxDestroyable
 	{
 		var insertWidth:Int = data.width + border;
 		var insertHeight:Int = data.height + border;
+		var point:Point = FlxPoint.point;
+		point.setTo(0, 0);
 		var newBitmapData:BitmapData;
 		
 		if (root.left == null)
 		{
 			root.left = new FlxNode(new FlxRect(0, 0, insertWidth, insertHeight), this, true, key);
 			newBitmapData = new BitmapData(insertWidth, insertHeight, true, FlxColor.TRANSPARENT);
-			newBitmapData.copyPixels(data, data.rect, root.left.point);
+			newBitmapData.copyPixels(data, data.rect, point);
 			bitmapData = newBitmapData;
 			root.width = insertWidth;
 			root.height = insertHeight;
@@ -275,8 +279,9 @@ class FlxAtlas implements IFlxDestroyable
 			}
 			
 			newBitmapData = new BitmapData(root.width, root.height, true, FlxColor.TRANSPARENT);
-			newBitmapData.copyPixels(_bitmapData, _bitmapData.rect, root.point);
-			newBitmapData.copyPixels(data, data.rect, dataNode.point);
+			newBitmapData.copyPixels(_bitmapData, _bitmapData.rect, point);
+			point.setTo(dataNode.x, dataNode.y);
+			newBitmapData.copyPixels(data, data.rect, point);
 			bitmapData = newBitmapData;
 			
 			nodes.set(key, dataNode);
