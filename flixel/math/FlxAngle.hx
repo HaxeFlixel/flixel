@@ -9,8 +9,8 @@ import flixel.input.touch.FlxTouch;
 #end
 
 typedef FlxSinCos = {
-    cos: Array<Float>,
-    sin: Array<Float>
+    var cos: Array<Float>;
+    var sin: Array<Float>;
 };
 
 /**
