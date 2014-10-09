@@ -19,7 +19,7 @@ class FlxTilemapTest extends FlxTest
 	@Test
 	function test1x1Map()
 	{
-		tilemap.loadMap("1", FlxGraphic.fromClass(GraphicAuto), 8, 8);
+		tilemap.loadMapFromCSV("1", FlxGraphic.fromClass(GraphicAuto), 8, 8);
 		
 		try
 		{
@@ -36,11 +36,8 @@ class FlxTilemapTest extends FlxTest
 	@Test
 	function testLoadMapArray()
 	{
-		tilemap.widthInTiles = 3;
-		tilemap.heightInTiles = 2;
 		var mapData = [0, 1, 0, 1, 1, 1];
-		
-		tilemap.loadMap(mapData, FlxGraphic.fromClass(GraphicAuto), 8, 8);
+		tilemap.loadMapFromArray(mapData, 3, 2, FlxGraphic.fromClass(GraphicAuto), 8, 8);
 		
 		Assert.areEqual(3, tilemap.widthInTiles);
 		Assert.areEqual(2, tilemap.heightInTiles);
@@ -53,8 +50,7 @@ class FlxTilemapTest extends FlxTest
 		var mapData = [
 			[0, 1, 0],
 			[1, 1, 1]];
-		
-		tilemap.loadMap(mapData, GraphicAuto, 8, 8);
+		tilemap.loadMapFrom2DArray(mapData, FlxGraphic.fromClass(GraphicAuto), 8, 8);
 		
 		Assert.areEqual(3, tilemap.widthInTiles);
 		Assert.areEqual(2, tilemap.heightInTiles);
