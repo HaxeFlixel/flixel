@@ -390,9 +390,6 @@ class FlxGraphic
 		key = Key;
 		persist = (Persist != null) ? Persist : defaultPersist;
 		
-		width = Bitmap.width;
-		height = Bitmap.height;
-		
 		frameCollections = new Map<FlxFrameCollectionType, Array<Dynamic>>();
 		frameCollectionTypes = new Array<FlxFrameCollectionType>();
 		bitmap = Bitmap;
@@ -639,6 +636,8 @@ class FlxGraphic
 		if (value != null)
 		{
 			bitmap = value;
+			width = bitmap.width;
+			height = bitmap.height;
 			#if (FLX_RENDER_TILE && !flash && !nme)
 			if (_tilesheet != null)
 			{
