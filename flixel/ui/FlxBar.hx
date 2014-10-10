@@ -782,7 +782,7 @@ class FlxBar extends FlxSprite
 					_filledBarPoint.y = Std.int((barHeight - _filledBarRect.height) / 2);
 			}
 			
-			pixels.copyPixels(_filledBar, _filledBarRect, _filledBarPoint);
+			pixels.copyPixels(_filledBar, _filledBarRect, _filledBarPoint, null, null, true);
 		}
 		
 		frame.destroyBitmaps();
