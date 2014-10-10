@@ -54,7 +54,7 @@ class FlxSprite extends FlxObject
 	/**
 	 * Controls whether the object is smoothed when rotated, affects performance.
 	 */
-	public var antialiasing:Bool = false;
+	public var antialiasing(default, set):Bool = false;
 	/**
 	 * Set this flag to true to force the sprite to update during the draw() call.
 	 * NOTE: Rarely if ever necessary, most sprite operations will flip this flag automatically.
@@ -1363,6 +1363,11 @@ class FlxSprite extends FlxObject
 			dirty = true;
 		}
 		return flipY = Value;
+	}
+	
+	private function set_antialiasing(value:Bool):Bool
+	{
+		return antialiasing = value;
 	}
 }
 
