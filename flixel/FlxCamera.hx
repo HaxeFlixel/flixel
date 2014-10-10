@@ -150,7 +150,7 @@ class FlxCamera extends FlxBasic
 	 * Uses include 3D projection, advanced display list modification, and more.
 	 */
 	public var flashSprite:Sprite;
-
+	
 	/**
 	 * Whether the positions of the objects rendered on this camera are rounded.
 	 * Default is true. If set on individual objects, they ignore the global camera setting.
@@ -286,6 +286,12 @@ class FlxCamera extends FlxBasic
 	 */
 	private var _flashBitmap:Bitmap;
 	#end
+	
+	// TODO: document it...
+	/**
+	 * 
+	 */
+	private var scrollRect:Sprite;
 	
 #if FLX_RENDER_TILE
 	/**
@@ -452,21 +458,26 @@ class FlxCamera extends FlxBasic
 		
 		#if FLX_RENDER_BLIT
 		_flashBitmap = new Bitmap(buffer);
-		_flashBitmap.x = -width * 0.5;
-		_flashBitmap.y = -height * 0.5;
+	//	_flashBitmap.x = -width * 0.5;
+	//	_flashBitmap.y = -height * 0.5;
 		#else
 		canvas = new Sprite();
-		canvas.scrollRect = new Rectangle(0, 0, width, height);
 		#end
 		
 		set_color(FlxColor.WHITE);
 		
 		flashSprite = new Sprite();
 		
+		scrollRect = new Sprite();
+		scrollRect.scrollRect = new Rectangle(0, 0, width, height);
+		scrollRect.x = -width * 0.5;
+		scrollRect.y = -height * 0.5;
+		flashSprite.addChild(scrollRect);
+		
 		#if FLX_RENDER_BLIT
-		flashSprite.addChild(_flashBitmap);
+		scrollRect.addChild(_flashBitmap);
 		#else
-		flashSprite.addChild(canvas);
+		scrollRect.addChild(canvas);
 		#end
 		_flashRect = new Rectangle(0, 0, width, height);
 		_flashPoint = new Point();
@@ -481,7 +492,7 @@ class FlxCamera extends FlxBasic
 		
 		#if !FLX_NO_DEBUG
 		debugLayer = new Sprite();
-		flashSprite.addChild(debugLayer);
+		scrollRect.addChild(debugLayer);
 		#end
 		
 		_currentStackItem = new FlxDrawStackItem();
@@ -501,17 +512,20 @@ class FlxCamera extends FlxBasic
 	override public function destroy():Void
 	{
 	#if FLX_RENDER_BLIT
+		FlxDestroyUtil.removeChild(scrollRect, _flashBitmap);
 		screen = FlxDestroyUtil.destroy(screen);
 		buffer = null;
 		_flashBitmap = null;
 		_fill = FlxDestroyUtil.dispose(_fill);
 	#else
+		FlxDestroyUtil.removeChild(flashSprite, scrollRect);
+		
 		#if !FLX_NO_DEBUG
-		FlxDestroyUtil.removeChild(flashSprite, debugLayer);
+		FlxDestroyUtil.removeChild(scrollRect, debugLayer);
 		debugLayer = null;
 		#end
 		
-		FlxDestroyUtil.removeChild(flashSprite, canvas);
+		FlxDestroyUtil.removeChild(scrollRect, canvas);
 		if (canvas != null)
 		{
 			for (i in 0...canvas.numChildren)
@@ -534,6 +548,7 @@ class FlxCamera extends FlxBasic
 		targetOffset = FlxDestroyUtil.put(targetOffset);
 		deadzone = FlxDestroyUtil.put(deadzone);
 		
+		scrollRect = null;
 		target = null;
 		flashSprite = null;
 		_flashRect = null;
@@ -969,7 +984,7 @@ class FlxCamera extends FlxBasic
 		// end of fix
 		
 		targetGraphics.beginFill(Color, FxAlpha);
-		targetGraphics.drawRect(0, 0, width * totalScaleX, height * totalScaleY);
+		targetGraphics.drawRect(-1, -1, width * totalScaleX + 2, height * totalScaleY + 2);
 		targetGraphics.endFill();
 	#end
 	}
@@ -1008,8 +1023,16 @@ class FlxCamera extends FlxBasic
 		
 		if ((_fxShakeOffset.x != 0) || (_fxShakeOffset.y != 0))
 		{
-			flashSprite.x += _fxShakeOffset.x * FlxG.scaleMode.scale.x;
-			flashSprite.y += _fxShakeOffset.y * FlxG.scaleMode.scale.y;
+			var shakeX:Float = _fxShakeOffset.x * FlxG.scaleMode.scale.x;
+			var shakeY:Float = _fxShakeOffset.y * FlxG.scaleMode.scale.y;
+			
+			#if FLX_RENDER_BLIT
+			_flashBitmap.x = shakeX;
+			_flashBitmap.y = shakeY;
+			#else
+			canvas.x = shakeX;
+			canvas.y = shakeY;
+			#end
 		}
 	}
 	
@@ -1109,17 +1132,17 @@ class FlxCamera extends FlxBasic
 		flashSprite.scaleX = totalScaleX;
 		flashSprite.scaleY = totalScaleY;
 	#else
-		canvas.x = -width * 0.5 * totalScaleX;
-		canvas.y = -height * 0.5 * totalScaleY;
-		var rect:Rectangle = canvas.scrollRect;
+		scrollRect.x = -width * 0.5 * totalScaleX;
+		scrollRect.y = -height * 0.5 * totalScaleY;
+		var rect:Rectangle = scrollRect.scrollRect;
 		rect.width = width * totalScaleX;
 		rect.height = height * totalScaleY;
-		canvas.scrollRect = rect;
+		scrollRect.scrollRect = rect;
 		
-		#if !FLX_NO_DEBUG
+		/*#if !FLX_NO_DEBUG
 		debugLayer.x = canvas.x;
 		debugLayer.y = canvas.y;
-		#end
+		#end*/
 	#end
 	
 		//camera positioning fix from bomski (https://github.com/Beeblerox/HaxeFlixel/issues/66)
@@ -1142,20 +1165,20 @@ class FlxCamera extends FlxBasic
 			{
 				regen = (Value != buffer.width);
 				_flashOffset.x = 0.5 * width * totalScaleX;
-				_flashBitmap.x = -0.5 * width;
+				scrollRect.x = -0.5 * width;
 			}
 			#else
 			if (canvas != null)
 			{
-				var rect:Rectangle = canvas.scrollRect;
+				var rect:Rectangle = scrollRect.scrollRect;
 				rect.width = Value * totalScaleX;
-				canvas.scrollRect = rect;
+				scrollRect.scrollRect = rect;
 				
 				_flashOffset.x = 0.5 * width * totalScaleX;
-				canvas.x = -_flashOffset.x;
-				#if !FLX_NO_DEBUG
+				scrollRect.x = -_flashOffset.x;
+				/*#if !FLX_NO_DEBUG
 				debugLayer.x = canvas.x;
-				#end
+				#end*/
 			}
 			#end
 		}
@@ -1172,20 +1195,20 @@ class FlxCamera extends FlxBasic
 			{
 				regen = (Value != buffer.height);
 				_flashOffset.y = 0.5 * height * totalScaleY;
-				_flashBitmap.y = -0.5 * height;
+				scrollRect.y = -0.5 * height;
 			}
 			#else
 			if (canvas != null)
 			{
-				var rect:Rectangle = canvas.scrollRect;
+				var rect:Rectangle = scrollRect.scrollRect;
 				rect.height = Value * totalScaleY;
-				canvas.scrollRect = rect;
+				scrollRect.scrollRect = rect;
 				
 				_flashOffset.y = 0.5 * height * totalScaleY;
-				canvas.y = -_flashOffset.y;
-				#if !FLX_NO_DEBUG
+				scrollRect.y = -_flashOffset.y;
+				/*#if !FLX_NO_DEBUG
 				debugLayer.y = canvas.y;
-				#end
+				#end*/
 			}
 			#end
 		}
