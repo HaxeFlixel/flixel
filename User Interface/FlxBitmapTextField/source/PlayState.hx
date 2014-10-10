@@ -4,15 +4,15 @@ import flixel.FlxG;
 import flixel.FlxState;
 import flixel.graphics.frames.FlxBitmapFont;
 import flixel.math.FlxPoint;
-import flixel.text.FlxBitmapTextField;
+import flixel.text.FlxBitmapText;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import openfl.Assets;
 
 class PlayState extends FlxState
 {
-	private var tf:FlxBitmapTextField;
-	private var tf2:FlxBitmapTextField;
+	private var tf:FlxBitmapText;
+	private var tf2:FlxBitmapText;
 	
 	override public function create():Void
 	{
@@ -31,7 +31,7 @@ class PlayState extends FlxState
 		var charSize:FlxPoint = FlxPoint.get(48, 50);
 		var fontMonospace:FlxBitmapFont = FlxBitmapFont.fromMonospace("assets/260.png", monospaceLetters, charSize);
 		
-		tf = new FlxBitmapTextField(fontXNA);
+		tf = new FlxBitmapText(fontXNA);
 		tf.text = "Hello World!\nand this is\nmultiline!!!";
 		tf.textColor = 0xff000000;
 		tf.useTextColor = true;
@@ -45,7 +45,7 @@ class PlayState extends FlxState
 		add(tf);
 		
 	
-		tf2 = new FlxBitmapTextField(fontAngelCode);
+		tf2 = new FlxBitmapText(fontAngelCode);
 		tf2.y = 100;
 		tf2.useTextColor = false;
 		tf2.text = "Hello World!\nand this is\nmultiline!!!";
@@ -61,7 +61,7 @@ class PlayState extends FlxState
 		tf2.wordWrap = false;
 		add(tf2);
 		
-		var tf3:FlxBitmapTextField = new FlxBitmapTextField(fontMonospace);
+		var tf3:FlxBitmapText = new FlxBitmapText(fontMonospace);
 		tf3.y = 300;
 		tf3.autoUpperCase = true;
 		tf3.text = "Robocop rules!!!";
