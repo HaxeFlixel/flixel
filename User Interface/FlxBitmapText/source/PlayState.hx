@@ -44,7 +44,6 @@ class PlayState extends FlxState
 		tf.backgroundColor = 0xff00ff00;
 		add(tf);
 		
-	
 		tf2 = new FlxBitmapText(fontAngelCode);
 		tf2.y = 100;
 		tf2.useTextColor = false;
