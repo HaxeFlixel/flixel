@@ -54,6 +54,11 @@ class FlxConditionals
 	
 	public static function run()
 	{
+		#if (haxe_ver < "3.1.1")
+			Context.fatalError('The minimum required Haxe version for HaxeFlixel is 3.1.1. '
+				+ 'Please install a newer version.', Context.currentPos());
+		#end
+		
 		checkConditionals();
 		defineConditionals();
 		
