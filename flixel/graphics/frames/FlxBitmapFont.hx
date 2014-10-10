@@ -474,9 +474,9 @@ class FlxBitmapFont extends FlxFramesCollection
 	}
 	
 	#if FLX_RENDER_BLIT
-	public inline function prepareGlyphs(scale:Float, color:FlxColor, useColor:Bool = true):BitmapGlyphCollection
+	public inline function prepareGlyphs(scale:Float, color:FlxColor, useColor:Bool = true, antialiasing:Bool = true):BitmapGlyphCollection
 	{
-		return new BitmapGlyphCollection(this, scale, color, useColor);
+		return new BitmapGlyphCollection(this, scale, color, useColor, antialiasing);
 	}
 	#end
 }
@@ -501,7 +501,7 @@ class BitmapGlyphCollection implements IFlxDestroyable
 	
 	public var font:FlxBitmapFont;
 	
-	public function new(font:FlxBitmapFont, scale:Float, color:FlxColor, useColor:Bool = true)
+	public function new(font:FlxBitmapFont, scale:Float, color:FlxColor, useColor:Bool = true, antialiasing:Bool = true)
 	{
 		charCodeMap = new Map<Int, BitmapGlyph>();
 		glyphs = new Array<BitmapGlyph>();
@@ -509,10 +509,10 @@ class BitmapGlyphCollection implements IFlxDestroyable
 		this.scale = scale;
 		this.color = (useColor) ? color : FlxColor.WHITE;
 		this.minOffsetX = font.minOffsetX * scale;
-		prepareGlyphs();
+		prepareGlyphs(antialiasing);
 	}
 	
-	private function prepareGlyphs():Void
+	private function prepareGlyphs(antialiasing:Bool = true):Void
 	{
 		var matrix:Matrix = FlxMatrix.matrix;
 		matrix.identity();
@@ -552,11 +552,11 @@ class BitmapGlyphCollection implements IFlxDestroyable
 			preparedBD = new BitmapData(bdWidth, bdHeight, true, FlxColor.TRANSPARENT);
 			
 			#if js
-			preparedBD.draw(glyphBD, matrix);
+			preparedBD.draw(glyphBD, matrix, null, null, null, antialiasing);
 			rect.setTo(0, 0, bdWidth, bdHeight);
 			preparedBD.colorTransform(rect, colorTransform);
 			#else
-			preparedBD.draw(glyphBD, matrix, colorTransform);
+			preparedBD.draw(glyphBD, matrix, colorTransform, null, null, antialiasing);
 			#end
 			
 			offsetX = Math.ceil(glyph.offset.x * scale);

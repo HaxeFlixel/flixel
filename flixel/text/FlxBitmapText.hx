@@ -17,7 +17,7 @@ import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 
 // TODO: make pixels accessible in tile render mode also...
-// TODO: add smoothing prop (like in my bitmapFont lib)
+// TODO: add fieldWidth var which will be used for text wrapping, etc...
 
 /**
  * Extends FlxSprite to support rendering text.
@@ -1579,12 +1579,25 @@ class FlxBitmapText extends FlxSprite
 		return font.lineHeight * size;
 	}
 	
+	override private function set_antialiasing(value:Bool):Bool 
+	{
+		#if FLX_RENDER_BLIT
+		if (antialiasing != value)
+		{
+			_pendingTextGlyphsChange = true;
+			_pendingBorderGlyphsChange = true;
+		}
+		#end
+		
+		return super.set_antialiasing(value);
+	}
+	
 	private function updateTextGlyphs():Void
 	{
 		#if FLX_RENDER_BLIT
 		if (font == null)	return;
 		textGlyphs = FlxDestroyUtil.destroy(textGlyphs);
-		textGlyphs = font.prepareGlyphs(size, textColor, useTextColor);
+		textGlyphs = font.prepareGlyphs(size, textColor, useTextColor, antialiasing);
 		_pendingGraphicChange = true;
 		#end
 		_pendingTextGlyphsChange = false;
@@ -1596,7 +1609,7 @@ class FlxBitmapText extends FlxSprite
 		if (font != null && (borderGlyphs == null || borderColor != borderGlyphs.color || size != borderGlyphs.scale || font != borderGlyphs.font))
 		{
 			borderGlyphs = FlxDestroyUtil.destroy(borderGlyphs);
-			borderGlyphs = font.prepareGlyphs(size, borderColor);
+			borderGlyphs = font.prepareGlyphs(size, borderColor, true, antialiasing);
 			_pendingGraphicChange = true;
 		}
 		#end
