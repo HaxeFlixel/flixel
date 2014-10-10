@@ -187,7 +187,7 @@ class FlxSprite extends FlxObject
 	
 	/**
 	 * These vars are being used for rendering in some of FlxSprite subclasses (FlxTileblock, FlxBar, 
-	 * FlxBitmapFont and FlxBitmapTextField) and for checks if the sprite is in camera's view.
+	 * and FlxBitmapText) and for checks if the sprite is in camera's view.
 	 */
 	private var _sinAngle:Float = 0;
 	private var _cosAngle:Float = 1;

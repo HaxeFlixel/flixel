@@ -1,7 +1,7 @@
 package flixel.ui;
 
 import flixel.system.FlxAssets;
-import flixel.text.FlxBitmapTextField;
+import flixel.text.FlxBitmapText;
 import flixel.text.FlxText.FlxTextAlign;
 import flixel.text.pxText.PxBitmapFont;
 import flixel.text.pxText.PxTextAlign;
@@ -11,7 +11,7 @@ import flixel.ui.FlxButton;
 /**
  * A button with a bitmap text field for the label
  */
-class FlxBitmapTextButton extends FlxTypedButton<FlxBitmapTextField>
+class FlxBitmapTextButton extends FlxTypedButton<FlxBitmapText>
 {
 	public function new(X:Float = 0, Y:Float = 0, ?Label:String, ?OnClick:Void->Void)
 	{
@@ -19,7 +19,7 @@ class FlxBitmapTextButton extends FlxTypedButton<FlxBitmapTextField>
 		
 		if (Label != null)
 		{
-			label = new FlxBitmapTextField();
+			label = new FlxBitmapText();
 			label.width = 80;
 			label.text = Label;
 			label.fontScale = 0.7 * 10 / 11;

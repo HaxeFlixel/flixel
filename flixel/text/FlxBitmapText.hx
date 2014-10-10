@@ -17,13 +17,14 @@ import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 
 // TODO: make pixels accessible in tile render mode also...
+// TODO: add smoothing prop (like in my bitmapFont lib)
 
 /**
  * Extends FlxSprite to support rendering text.
  * Can tint, fade, rotate and scale just like a sprite.
  * Doesn't really animate though, as far as I know.
  */
-class FlxBitmapTextField extends FlxSprite
+class FlxBitmapText extends FlxSprite
 {
 	/**
 	 * Font for text rendering.
