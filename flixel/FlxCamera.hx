@@ -267,6 +267,15 @@ class FlxCamera extends FlxBasic
 	 * Internal, used to control the "shake" special effect.
 	 */
 	private var _fxShakeOffset:FlxPoint;
+	
+	// TODO: document it
+	/**
+	 * 
+	 */
+	private var _fxShakeScroll:Bool = false;
+	
+	private var _fxPrevShakeOffset:FlxPoint;
+	
 	/**
 	 * Internal, used to control the "shake" special effect.
 	 */
@@ -483,6 +492,7 @@ class FlxCamera extends FlxBasic
 		_flashPoint = new Point();
 		
 		_fxShakeOffset = FlxPoint.get();
+		_fxPrevShakeOffset = FlxPoint.get();
 		
 		#if FLX_RENDER_BLIT
 		_fill = new BitmapData(width, height, true, FlxColor.TRANSPARENT);
@@ -557,6 +567,7 @@ class FlxCamera extends FlxBasic
 		_fxFadeComplete = null;
 		_fxShakeComplete = null;
 		_fxShakeOffset = null;
+		_fxPrevShakeOffset = null;
 		
 		super.destroy();
 	}
@@ -727,6 +738,7 @@ class FlxCamera extends FlxBasic
 			_fxShakeDuration -= elapsed;
 			if (_fxShakeDuration <= 0)
 			{
+				_fxPrevShakeOffset.copyFrom(_fxShakeOffset);
 				_fxShakeOffset.set();
 				if (_fxShakeComplete != null)
 				{
@@ -895,7 +907,7 @@ class FlxCamera extends FlxBasic
 	 * @param	Force		Force the effect to reset (default = true, unlike flash() and fade()!).
 	 * @param	Direction	Whether to shake on both axes, just up and down, or just side to side. Default value is BOTH_AXES.
 	 */
-	public function shake(Intensity:Float = 0.05, Duration:Float = 0.5, ?OnComplete:Void->Void, Force:Bool = true, ?Direction:FlxCameraShakeDirection):Void
+	public function shake(Intensity:Float = 0.05, Duration:Float = 0.5, ?OnComplete:Void->Void, Force:Bool = true, ?Direction:FlxCameraShakeDirection, ShakeScroll:Bool = false):Void
 	{
 		if (Direction == null)
 		{
@@ -910,7 +922,15 @@ class FlxCamera extends FlxBasic
 		_fxShakeDuration = Duration;
 		_fxShakeComplete = OnComplete;
 		_fxShakeDirection = Direction;
+		
+		if (_fxShakeScroll)
+		{
+			scroll.subtractPoint(_fxPrevShakeOffset);
+		}
+		
+		_fxShakeScroll = ShakeScroll;
 		_fxShakeOffset.set();
+		_fxPrevShakeOffset.set();
 	}
 	
 	/**
@@ -1022,17 +1042,24 @@ class FlxCamera extends FlxBasic
 		}
 		
 		if ((_fxShakeOffset.x != 0) || (_fxShakeOffset.y != 0))
-		{
-			var shakeX:Float = _fxShakeOffset.x * FlxG.scaleMode.scale.x;
-			var shakeY:Float = _fxShakeOffset.y * FlxG.scaleMode.scale.y;
-			
-			#if FLX_RENDER_BLIT
-			_flashBitmap.x = shakeX;
-			_flashBitmap.y = shakeY;
-			#else
-			canvas.x = shakeX;
-			canvas.y = shakeY;
-			#end
+		{		
+			if (_fxShakeScroll)
+			{
+				scroll.subtractPoint(_fxPrevShakeOffset);
+				scroll.addPoint(_fxShakeOffset);
+			}
+			else
+			{
+				var shakeX:Float = _fxShakeOffset.x * FlxG.scaleMode.scale.x;
+				var shakeY:Float = _fxShakeOffset.y * FlxG.scaleMode.scale.y;
+				#if FLX_RENDER_BLIT
+				_flashBitmap.x = shakeX;
+				_flashBitmap.y = shakeY;
+				#else
+				canvas.x = shakeX;
+				canvas.y = shakeY;
+				#end
+			}			
 		}
 	}
 	
