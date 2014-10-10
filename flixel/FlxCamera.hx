@@ -268,12 +268,14 @@ class FlxCamera extends FlxBasic
 	 */
 	private var _fxShakeOffset:FlxPoint;
 	
-	// TODO: document it
 	/**
-	 * 
+	 * Internal var, used for making decision what to shake: sprite position or scroll.
 	 */
 	private var _fxShakeScroll:Bool = false;
 	
+	/**
+	 * Internal var, used for tracking value of _fxShakeOffset on previous step.
+	 */
 	private var _fxPrevShakeOffset:FlxPoint;
 	
 	/**
@@ -296,9 +298,8 @@ class FlxCamera extends FlxBasic
 	private var _flashBitmap:Bitmap;
 	#end
 	
-	// TODO: document it...
 	/**
-	 * 
+	 * Internal, used for correct trimming of camera viewport
 	 */
 	private var scrollRect:Sprite;
 	
@@ -467,8 +468,6 @@ class FlxCamera extends FlxBasic
 		
 		#if FLX_RENDER_BLIT
 		_flashBitmap = new Bitmap(buffer);
-	//	_flashBitmap.x = -width * 0.5;
-	//	_flashBitmap.y = -height * 0.5;
 		#else
 		canvas = new Sprite();
 		#end
@@ -583,7 +582,7 @@ class FlxCamera extends FlxBasic
 			updateFollow();
 		}
 		
-		updateScroll();	
+		updateScroll();
 		updateFlash(elapsed);
 		updateFade(elapsed);
 		updateShake(elapsed);
@@ -906,6 +905,7 @@ class FlxCamera extends FlxBasic
 	 * @param	OnComplete	A function you want to run when the shake effect finishes.
 	 * @param	Force		Force the effect to reset (default = true, unlike flash() and fade()!).
 	 * @param	Direction	Whether to shake on both axes, just up and down, or just side to side. Default value is BOTH_AXES.
+	 * @param	ShakeScroll	Whether to shake camera's sprite or camera's scroll. Default value is false, which means sprite position shaking.
 	 */
 	public function shake(Intensity:Float = 0.05, Duration:Float = 0.5, ?OnComplete:Void->Void, Force:Bool = true, ?Direction:FlxCameraShakeDirection, ShakeScroll:Bool = false):Void
 	{
@@ -1045,8 +1045,7 @@ class FlxCamera extends FlxBasic
 		{		
 			if (_fxShakeScroll)
 			{
-				scroll.subtractPoint(_fxPrevShakeOffset);
-				scroll.addPoint(_fxShakeOffset);
+				scroll.subtractPoint(_fxPrevShakeOffset).addPoint(_fxShakeOffset);
 			}
 			else
 			{
@@ -1165,11 +1164,6 @@ class FlxCamera extends FlxBasic
 		rect.width = width * totalScaleX;
 		rect.height = height * totalScaleY;
 		scrollRect.scrollRect = rect;
-		
-		/*#if !FLX_NO_DEBUG
-		debugLayer.x = canvas.x;
-		debugLayer.y = canvas.y;
-		#end*/
 	#end
 	
 		//camera positioning fix from bomski (https://github.com/Beeblerox/HaxeFlixel/issues/66)
@@ -1203,9 +1197,6 @@ class FlxCamera extends FlxBasic
 				
 				_flashOffset.x = 0.5 * width * totalScaleX;
 				scrollRect.x = -_flashOffset.x;
-				/*#if !FLX_NO_DEBUG
-				debugLayer.x = canvas.x;
-				#end*/
 			}
 			#end
 		}
@@ -1233,9 +1224,6 @@ class FlxCamera extends FlxBasic
 				
 				_flashOffset.y = 0.5 * height * totalScaleY;
 				scrollRect.y = -_flashOffset.y;
-				/*#if !FLX_NO_DEBUG
-				debugLayer.y = canvas.y;
-				#end*/
 			}
 			#end
 		}

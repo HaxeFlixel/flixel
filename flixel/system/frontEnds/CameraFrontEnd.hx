@@ -153,7 +153,7 @@ class CameraFrontEnd
 	 * @param	OnComplete	A function you want to run when the shake effect finishes.
 	 * @param	Force		Force the effect to reset (default = true, unlike flash() and fade()!).
 	 * @param	Direction	Whether to shake on both axes, just up and down, or just side to side. Default value is BOTH_AXES.
-	 * @param	ShakeOffset
+	 * @param	ShakeOffset	Whether to shake camera's sprite or camera's scroll. Default value is false, which means sprite position shaking.
 	 */
 	public function shake(Intensity:Float = 0.05, Duration:Float = 0.5, ?OnComplete:Void->Void, Force:Bool = true, ?Direction:FlxCameraShakeDirection, ShakeOffset:Bool = false):Void
 	{
