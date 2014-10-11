@@ -177,7 +177,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		// Figure out the map dimensions based on the data string
 		_data = new Array<Int>();
 		var columns:Array<String>;
-		var rows:Array<String> = StringTools.trim(cast (MapData, String)).split("\n");
+		var rows:Array<String> = StringTools.trim(MapData).split("\n");
 		heightInTiles = rows.length;
 		widthInTiles = 0;
 		var row:Int = 0;
@@ -265,8 +265,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	{
 		widthInTiles = WidthInTiles;
 		heightInTiles = HeightInTiles;
-		_data = cast MapData; // need to cast this to make sure it works in js, can't call copy() on a Dynamic
-		_data = _data.copy(); // make a copy to make sure we don't mess with the original array, which might be used for something!
+		_data = MapData.copy(); // make a copy to make sure we don't mess with the original array, which might be used for something!
 		
 		loadMapHelper(TileGraphic, TileWidth, TileHeight, AutoTile, StartingIndex, DrawIndex, CollideIndex);
 		return this;
