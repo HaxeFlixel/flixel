@@ -18,6 +18,10 @@ import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import haxe.xml.Fast;
 
+// TODO: angel code format docs
+
+// TODO: copy letters from old FlxBitmapFont (by photonstorm)
+
 /**
  * Holds information and bitmap glyphs for a bitmap font.
  */
@@ -155,7 +159,7 @@ class FlxBitmapFont extends FlxFramesCollection
 		
 		var fast:Fast = new Fast(Data.firstElement());
 		
-		font.lineHeight = Std.parseInt(fast.node.common.att.lineHeight);
+		font.lineHeight = Std.parseInt(fast.node.common.att.lineHeight); // how much to move the cursor when going to the next line.
 		font.size = Std.parseInt(fast.node.info.att.size);
 		font.fontName = Std.string(fast.node.info.att.face);
 		font.bold = (Std.parseInt(fast.node.info.att.bold) != 0);
@@ -176,15 +180,15 @@ class FlxBitmapFont extends FlxFramesCollection
 		for (char in chars.nodes.char)
 		{
 			frame = new FlxRect();
-			frame.x = Std.parseInt(char.att.x);
-			frame.y = Std.parseInt(char.att.y);
-			frame.width = Std.parseInt(char.att.width);
+			frame.x = Std.parseInt(char.att.x); // X position within the bitmap image file.
+			frame.y = Std.parseInt(char.att.y); // Y position within the bitmap image file.
+			frame.width = Std.parseInt(char.att.width); // Width of the character in the image file.
 			frameHeight = Std.parseInt(char.att.height);
-			frame.height = frameHeight;
+			frame.height = frameHeight; // Height of the character in the image file.
 			
-			xOffset = char.has.xoffset ? Std.parseInt(char.att.xoffset) : 0;
-			yOffset = char.has.yoffset ? Std.parseInt(char.att.yoffset) : 0;
-			xAdvance = char.has.xadvance ? Std.parseInt(char.att.xadvance) : 0;
+			xOffset = char.has.xoffset ? Std.parseInt(char.att.xoffset) : 0; // Number of pixels to move right before drawing this character.
+			yOffset = char.has.yoffset ? Std.parseInt(char.att.yoffset) : 0; //  Number of pixels to move down before drawing this character.
+			xAdvance = char.has.xadvance ? Std.parseInt(char.att.xadvance) : 0; //  Number of pixels to jump right after drawing this character.
 			
 			offset = FlxPoint.get(xOffset, yOffset);
 			
@@ -193,11 +197,11 @@ class FlxBitmapFont extends FlxFramesCollection
 			charCode = -1;
 			glyph = null;
 			
-			if (char.has.letter)
+			if (char.has.letter) // The ASCII value of the character this line is describing. Helpful for debugging
 			{
 				glyph = char.att.letter;
 			}
-			else if (char.has.id)
+			else if (char.has.id) // The character number in the ASCII table.
 			{
 				charCode = Std.parseInt(char.att.id);
 			}
