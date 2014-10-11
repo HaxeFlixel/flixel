@@ -17,7 +17,6 @@ import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 
 // TODO: make pixels accessible in tile render mode also...
-// TODO: add fieldWidth var which will be used for text wrapping, etc...
 
 /**
  * Extends FlxSprite to support rendering text.
@@ -179,6 +178,8 @@ class FlxBitmapText extends FlxSprite
 	 */
 	public var fieldWidth(get, set):Float;
 	
+	private var _fieldWidth:Float;
+	
 	private var _pendingTextChange:Bool = true;
 	private var _pendingGraphicChange:Bool = true;
 	
@@ -204,7 +205,7 @@ class FlxBitmapText extends FlxSprite
 	{
 		super();
 		
-		width = 2;
+		fieldWidth = width = 2;
 		alpha = 1;
 		
 		if (font == null)
@@ -540,7 +541,7 @@ class FlxBitmapText extends FlxSprite
 	 */
 	private function computeTextSize():Void 
 	{
-		var txtWidth:Int = Math.ceil(width);
+		var txtWidth:Int = Math.ceil(_fieldWidth);
 		var txtHeight:Int = Math.ceil(textHeight) + 2 * padding;
 		// need to calculate it here
 		var maxWidth:Int = Math.ceil(textWidth);
@@ -688,7 +689,7 @@ class FlxBitmapText extends FlxSprite
 				}
 				charWidth += letterSpacing;
 				
-				if (subLineWidth + charWidth > width - 2 * padding)
+				if (subLineWidth + charWidth > _fieldWidth - 2 * padding)
 				{
 					subLine += char;
 					newLines.push(subLine);
@@ -872,7 +873,7 @@ class FlxBitmapText extends FlxSprite
 				
 				wordWidth += ((wordLength - 1) * letterSpacing);
 				
-				if (subLineWidth + wordWidth > width - 2 * padding)
+				if (subLineWidth + wordWidth > _fieldWidth - 2 * padding)
 				{
 					if (isSpaceWord)
 					{
@@ -976,7 +977,7 @@ class FlxBitmapText extends FlxSprite
 						charWidth = (font.glyphs.exists(charCode)) ? font.glyphs.get(charCode).xAdvance * size : 0;
 					}
 					
-					if (subLineWidth + charWidth > width - 2 * padding)
+					if (subLineWidth + charWidth > _fieldWidth - 2 * padding)
 					{
 						if (isSpaceWord) // new line ends with space / tab char, so we push it to sublines array, skip all the rest spaces and start another line
 						{
@@ -1045,7 +1046,7 @@ class FlxBitmapText extends FlxSprite
 			pixels.fillRect(graphic.bitmap.rect, colorForFill);
 		}
 		#else
-		width = frameWidth;
+		_fieldWidth = width = frameWidth;
 		height = frameHeight;
 		
 		origin.x = frameWidth * 0.5;
@@ -1293,6 +1294,11 @@ class FlxBitmapText extends FlxSprite
 		_pendingGraphicChange = true;
 	}
 	
+	private function get_fieldWidth():Float
+	{
+		return _fieldWidth;
+	}
+	
 	/**
 	 * Sets the width of the text field. If the text does not fit, it will spread on multiple lines.
 	 */
@@ -1301,7 +1307,7 @@ class FlxBitmapText extends FlxSprite
 		value = Std.int(value);
 		value = Math.max(1, value);
 		
-		if (value != width)
+		if (value != _fieldWidth)
 		{
 			if (value <= 0)
 			{
@@ -1312,12 +1318,7 @@ class FlxBitmapText extends FlxSprite
 			_pendingTextChange = true;
 		}
 		
-		return width = value;
-	}
-	
-	private function get_fieldWidth():Float
-	{
-		return width;
+		return _fieldWidth = value;
 	}
 	
 	private function set_alignment(value:FlxTextAlign):FlxTextAlign 
