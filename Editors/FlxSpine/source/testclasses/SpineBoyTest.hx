@@ -1,7 +1,7 @@
 package  testclasses;
 import flixel.FlxG;
 import flixel.addons.editors.spine.FlxSpine;
-import spinehx.SkeletonData;
+import spinehaxe.SkeletonData;
 
 /**
  * ...
@@ -18,27 +18,28 @@ class SpineBoyTest extends FlxSpine
 		stateData.setMixByName("jump", "walk", 0.4);
 		stateData.setMixByName("jump", "jump", 0.2);
 		
-		state.setAnimationByName("walk", true);
+		state.setAnimationByName(0, "walk", true);
 	}
 	
 	override public function update(elapsed:Float):Void
 	{
-		if (state.getAnimation().getName() == "walk") 
+		var anim = state.getCurrent(0);
+		
+		if (anim.toString() == "walk") 
 		{
 			// After one second, change the current animation. Mixing is done by AnimationState for you.
-			if (state.getTime() > 2) 
-				state.setAnimationByName("jump", false);
+			if (anim.time > 2) 
+				state.setAnimationByName(0, "jump", false);
 		} 
 		else 
 		{
-			if (state.getTime() > 1) 
-				state.setAnimationByName("walk", true);
+			if (anim.time > 1) 
+				state.setAnimationByName(0, "walk", true);
 		}
 		
 		if (FlxG.mouse.justPressed)
 		{
-			state.setAnimationByName("jump", false);
-			state.addAnimationByNameSimple("walk", true);
+			state.setAnimationByName(0, "jump", false);
 		}
 		
 		super.update(elapsed);
