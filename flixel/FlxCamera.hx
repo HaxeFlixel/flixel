@@ -737,7 +737,6 @@ class FlxCamera extends FlxBasic
 			_fxShakeDuration -= elapsed;
 			if (_fxShakeDuration <= 0)
 			{
-				_fxPrevShakeOffset.copyFrom(_fxShakeOffset);
 				_fxShakeOffset.set();
 				if (_fxShakeComplete != null)
 				{
@@ -1048,6 +1047,7 @@ class FlxCamera extends FlxBasic
 			if (_fxShakeScroll)
 			{
 				scroll.subtractPoint(_fxPrevShakeOffset).addPoint(_fxShakeOffset);
+				_fxPrevShakeOffset.copyFrom(_fxShakeOffset);
 			}
 			else
 			{
@@ -1061,6 +1061,11 @@ class FlxCamera extends FlxBasic
 				canvas.y = shakeY;
 				#end
 			}			
+		}
+		else if (_fxShakeScroll)
+		{
+			scroll.subtractPoint(_fxPrevShakeOffset);
+			_fxPrevShakeOffset.set();
 		}
 	}
 	
