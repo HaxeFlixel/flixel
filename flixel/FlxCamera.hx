@@ -497,8 +497,6 @@ class FlxCamera extends FlxBasic
 		_fill = new BitmapData(width, height, true, FlxColor.TRANSPARENT);
 		#else
 		
-		canvas.scrollRect = new Rectangle(0, 0, width, height);
-		
 		#if !FLX_NO_DEBUG
 		debugLayer = new Sprite();
 		scrollRect.addChild(debugLayer);
