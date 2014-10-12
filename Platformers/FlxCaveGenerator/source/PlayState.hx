@@ -108,7 +108,7 @@ class PlayState extends FlxState
 		_generationTime.alpha = 0;
 		
 		// Loads the cave to the tilemap
-		_tilemap.loadMap(caveData, "assets/caveWallTiles.png", 8, 8, AUTO);
+		_tilemap.loadMapFromCSV(caveData, "assets/caveWallTiles.png", 8, 8, AUTO);
 		_tilemap.updateBuffers();
 		
 		// Find an empty tile for the player

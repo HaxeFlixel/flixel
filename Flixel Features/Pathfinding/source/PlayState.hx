@@ -84,7 +84,7 @@ class PlayState extends FlxState
 	{
 		// Load _datamap to _map and add to PlayState
 		_map = new FlxTilemap();
-		_map.loadMap(Assets.getText("assets/pathfinding_map.txt"), "assets/tiles.png", TILE_WIDTH, TILE_HEIGHT, 0, 1);
+		_map.loadMapFromCSV(Assets.getText("assets/pathfinding_map.txt"), "assets/tiles.png", TILE_WIDTH, TILE_HEIGHT, 0, 1);
 		add(_map);
 		
 		// Add a visual seperation between map and GUI

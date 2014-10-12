@@ -205,13 +205,8 @@ class PlayState extends FlxState
 			}
 		}
 		
-		tilemap.widthInTiles = tw;
-		tilemap.heightInTiles = th;
-		distmap.widthInTiles = tw;
-		distmap.heightInTiles = th;
-		
-		tilemap.loadMap(arr, "assets/images/tileset.png", 1, 1);
-		distmap.loadMap(arr2, "assets/images/heat.png", 1, 1);
+		tilemap.loadMapFromArray(arr, tw, th, "assets/images/tileset.png", 1, 1);
+		distmap.loadMapFromArray(arr2, tw, th, "assets/images/heat.png", 1, 1);
 		add(distmap);
 		
 		tilemap.setTileProperties(0, FlxObject.NONE);

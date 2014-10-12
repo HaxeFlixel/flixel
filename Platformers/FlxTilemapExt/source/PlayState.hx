@@ -60,7 +60,7 @@ class PlayState extends FlxState
 		add(_player);
 		
 		// Load in the Level and Define Arrays for different slope types
-		add(level.loadMap(Assets.getText("assets/slopemap.txt"), "assets/colortiles.png", 10, 10));
+		add(level.loadMapFromCSV(Assets.getText("assets/slopemap.txt"), "assets/colortiles.png", 10, 10));
 		
 		var tempFL:Array<Int> = [5, 13, 21];
 		var tempFR:Array<Int> = [6, 14, 22];

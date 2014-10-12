@@ -37,7 +37,7 @@ class PlayState extends FlxState
 		
 		// let's try load this object in newly created tilemap
 		var tilemap:FlxTilemap = new FlxTilemap();
-		tilemap.loadMap("assets/mapCSV_Group1_Map1.csv", tileFrames);
+		tilemap.loadMapFromCSV("assets/mapCSV_Group1_Map1.csv", tileFrames);
 		add(tilemap);
 		
 		// lets try this feature on sprites also

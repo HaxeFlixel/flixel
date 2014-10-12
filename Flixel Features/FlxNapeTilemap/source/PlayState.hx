@@ -16,7 +16,7 @@ class PlayState extends FlxState
 		FlxNapeSpace.init();
 		
 		tilemap = new FlxNapeTilemap();
-		tilemap.loadMap(Assets.getText("assets/data/map.txt"), Assets.getBitmapData("assets/images/spritesheet.png"), 16, 16, null, 0, 0);
+		tilemap.loadMapFromCSV("assets/data/map.txt", "assets/images/spritesheet.png", 16, 16, null, 0, 0);
 		//Set all tiles with index 1 as blocks
 		tilemap.setupTileIndices([1]);
 		

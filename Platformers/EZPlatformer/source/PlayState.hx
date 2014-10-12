@@ -32,7 +32,7 @@ class PlayState extends FlxState
 		FlxG.cameras.bgColor = 0xffaaaaaa;
 		
 		_level = new FlxTilemap();
-		_level.loadMap(Assets.getText("assets/level.csv"), FlxGraphic.fromClass(GraphicAuto), 0, 0, AUTO);
+		_level.loadMapFromCSV(Assets.getText("assets/level.csv"), FlxGraphic.fromClass(GraphicAuto), 0, 0, AUTO);
 		add(_level);
 		
 		// Create the _level _exit

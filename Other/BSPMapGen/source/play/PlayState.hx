@@ -20,7 +20,7 @@ class PlayState extends FlxState
 	{
 		map = new FlxTilemap();
 		var csvData:String = FlxStringUtil.bitmapToCSV(GenerateState.mapData);
-		map.loadMap(csvData, "assets/images/tiles.png", TILE_SIZE, TILE_SIZE, AUTO);
+		map.loadMapFromCSV(csvData, "assets/images/tiles.png", TILE_SIZE, TILE_SIZE, AUTO);
 		add(map);
 		
 		// Randomly pick room for player to start in

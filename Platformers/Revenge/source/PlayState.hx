@@ -65,7 +65,7 @@ class PlayState extends FlxState
 		// does an auto tiling for you if you want it. This is *OFF* by default and you have to set it by setting the
 		// map.auto to either FlxTilemap.AUTO(for platform friendly tiling) or FlxTilemap.ALT(for the alternate top down tiling)
 		_map = new FlxTilemap();
-		_map.loadMap(FlxStringUtil.imageToCSV("assets/map.png"), "assets/tileset.png", 10, 10, AUTO);
+		_map.loadMapFromCSV(FlxStringUtil.imageToCSV("assets/map.png"), "assets/tileset.png", 10, 10, AUTO);
 		add(_map);
 		
 		// Adding the exit door with which we will check an overlap later for the player

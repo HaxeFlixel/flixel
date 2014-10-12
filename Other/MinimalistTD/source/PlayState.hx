@@ -110,7 +110,7 @@ class PlayState extends FlxState
 		// Create map
 		
 		_map = new FlxTilemap();
-		_map.loadMap(Assets.getText("tilemaps/play_tilemap.csv"), Reg.tileImage);
+		_map.loadMapFromCSV(Assets.getText("tilemaps/play_tilemap.csv"), Reg.tileImage);
 		
 		bulletGroup = new FlxTypedGroup<Bullet>();
 		emitterGroup = new FlxTypedGroup<EnemyGibs>();

@@ -67,7 +67,7 @@ class PlayState extends FlxState
 		 */
 		
 		// Initializes the map using the generated string, the tile images, and the tile size
-		_collisionMap.loadMap(Assets.getText("assets/default_auto.txt"), "assets/auto_tiles.png", TILE_WIDTH, TILE_HEIGHT, AUTO);
+		_collisionMap.loadMapFromCSV(Assets.getText("assets/default_auto.txt"), "assets/auto_tiles.png", TILE_WIDTH, TILE_HEIGHT, AUTO);
 		add(_collisionMap);
 		
 		_highlightBox = new FlxSprite(0, 0);
@@ -175,17 +175,17 @@ class PlayState extends FlxState
 		switch (_collisionMap.auto)
 		{
 			case AUTO:
-				_collisionMap.loadMap(FlxStringUtil.arrayToCSV(_collisionMap.getData(true), _collisionMap.widthInTiles),
+				_collisionMap.loadMapFromCSV(FlxStringUtil.arrayToCSV(_collisionMap.getData(true), _collisionMap.widthInTiles),
 					"assets/alt_tiles.png", TILE_WIDTH, TILE_HEIGHT, ALT);
 				_autoAltButton.label.text = "ALT";
 			
 			case ALT:
-				_collisionMap.loadMap(FlxStringUtil.arrayToCSV(_collisionMap.getData(true), _collisionMap.widthInTiles),
+				_collisionMap.loadMapFromCSV(FlxStringUtil.arrayToCSV(_collisionMap.getData(true), _collisionMap.widthInTiles),
 					"assets/empty_tiles.png", TILE_WIDTH, TILE_HEIGHT, OFF);
 				_autoAltButton.label.text = "OFF";
 			
 			case OFF:
-				_collisionMap.loadMap(FlxStringUtil.arrayToCSV(_collisionMap.getData(true), _collisionMap.widthInTiles),
+				_collisionMap.loadMapFromCSV(FlxStringUtil.arrayToCSV(_collisionMap.getData(true), _collisionMap.widthInTiles),
 					"assets/auto_tiles.png", TILE_WIDTH, TILE_HEIGHT, AUTO);
 				_autoAltButton.label.text = "AUTO";
 		}
@@ -196,15 +196,15 @@ class PlayState extends FlxState
 		switch (_collisionMap.auto)
 		{
 			case AUTO:
-				_collisionMap.loadMap(Assets.getText("assets/default_auto.txt"), "assets/auto_tiles.png", TILE_WIDTH, TILE_HEIGHT, AUTO);
+				_collisionMap.loadMapFromCSV(Assets.getText("assets/default_auto.txt"), "assets/auto_tiles.png", TILE_WIDTH, TILE_HEIGHT, AUTO);
 				_player.setPosition(64, 220);
 				
 			case ALT:
-				_collisionMap.loadMap(Assets.getText("assets/default_alt.txt"), "assets/alt_tiles.png", TILE_WIDTH, TILE_HEIGHT, ALT);
+				_collisionMap.loadMapFromCSV(Assets.getText("assets/default_alt.txt"), "assets/alt_tiles.png", TILE_WIDTH, TILE_HEIGHT, ALT);
 				_player.setPosition(64, 128);
 				
 			case OFF:
-				_collisionMap.loadMap(Assets.getText("assets/default_empty.txt"), "assets/empty_tiles.png", TILE_WIDTH, TILE_HEIGHT, OFF);
+				_collisionMap.loadMapFromCSV(Assets.getText("assets/default_empty.txt"), "assets/empty_tiles.png", TILE_WIDTH, TILE_HEIGHT, OFF);
 				_player.setPosition(64, 64);
 		}
 	}

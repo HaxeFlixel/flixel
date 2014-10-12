@@ -80,7 +80,7 @@ class PlayState extends FlxState
 		
 		// Basic level structure
 		var level:FlxTilemap = new FlxTilemap();
-		level.loadMap(FlxStringUtil.imageToCSV("assets/map.png", false, 2), "assets/tiles.png", 0, 0, ALT);
+		level.loadMapFromCSV(FlxStringUtil.imageToCSV("assets/map.png", false, 2), "assets/tiles.png", 0, 0, ALT);
 		level.follow();
 		add(level);
 		

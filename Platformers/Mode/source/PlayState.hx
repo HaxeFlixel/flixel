@@ -403,7 +403,7 @@ class PlayState extends FlxState
 		
 		_tileMap = new FlxTilemap();
 		_tileMap.tileScaleHack = 1.05;
-		_tileMap.loadMap(FlxStringUtil.arrayToCSV(_map, MAP_WIDTH_IN_TILES), Reg.IMG_TILES, 8, 8);
+		_tileMap.loadMapFromArray(_map, MAP_WIDTH_IN_TILES, MAP_HEIGHT_IN_TILES, Reg.IMG_TILES, 8, 8);
 		add(_tileMap);
 	}
 	

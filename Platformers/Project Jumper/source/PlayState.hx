@@ -37,11 +37,11 @@ class PlayState extends FlxState
 		
 		_restart = false;
 		
-		add(background.loadMap(Assets.getText("assets/levels/mapCSV_Group1_Map1back.csv"), "assets/art/area02_level_tiles2.png", 16, 16));
+		add(background.loadMapFromCSV(Assets.getText("assets/levels/mapCSV_Group1_Map1back.csv"), "assets/art/area02_level_tiles2.png", 16, 16));
 		background.scrollFactor.x = background.scrollFactor.y = .5;
 		
-		add(map.loadMap(Assets.getText("assets/levels/mapCSV_Group1_Map1.csv"), "assets/art/area02_level_tiles2.png", 16, 16));
-		add(ladders.loadMap(Assets.getText("assets/levels/mapCSV_Group1_Ladders.csv"), "assets/art/area02_level_tiles2.png", 16, 16));
+		add(map.loadMapFromCSV(Assets.getText("assets/levels/mapCSV_Group1_Map1.csv"), "assets/art/area02_level_tiles2.png", 16, 16));
+		add(ladders.loadMapFromCSV(Assets.getText("assets/levels/mapCSV_Group1_Ladders.csv"), "assets/art/area02_level_tiles2.png", 16, 16));
 		
 		FlxG.camera.setScrollBoundsRect(0, 0, map.width, map.height);
 		FlxG.worldBounds.set(0, 0, map.width, map.height);
