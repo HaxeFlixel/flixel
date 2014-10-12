@@ -66,6 +66,8 @@
  * added `blend`, `alpha` and `color`
  * added `frames` property, so you can change tilemap's graphic without reloading map
  * `loadMap()` accepts `FlxGraphic`, `String`, `FlxTileFrames` or `BitmapData` as `TileGraphic` now
+ * `loadMap()` has been split into `loadMapFromCSV()` and `loadMapFromArray()`
+ * added `loadMapFrom2DArray()`
 * `FlxBaseTilemap`: added `setRect()` method which allows you to set a rectangular region of tiles to the provided index
 * `FlxTile`: added `frame` variable which holds tile's "graphic"
 * `FlxTileblock`: 
@@ -88,6 +90,7 @@
  * added `preventDefaultKeys` for HTML5
  * added an `abstract` enum for key names (`FlxG.keys.anyPressed([A, LEFT])` is now possible)
  * the any-functions now take an Array of `FlxKey`s instead of Array of Strings (string names are still supported)
+ * removed `FlxKey.NUMPADSLASH` (`SLASH` has the same keycode)
 * `FlxTypedGroup`:
  * added a `recurse` argument to the `forEach()` functions
  * removed `callAll()` and `setAll()` - use `forEach()` instead
@@ -202,13 +205,15 @@
 * Added `FlxAtlasFrames` frames collection instead of various texture atlas loaders (like `SparrowData` and `TexturePackerData`). It contains various static methods for parsing atlas files
 * Added `FlxBarFrames` which is used by `FlxBar` class on native targets
 * Rewrote `PxBitmapFont` class and renamed it to `FlxBitmapFont`. It supports (can parse) AngelCode, XNA and Monospace bitmap fonts now
-* Rewrote `FlxBitmapTextField` class
+* Rewrote `FlxBitmapTextField` class and renamed it to `FlxBitmapText`
 * Added `FlxFilterFrames` frames collection instead of `FlxSpriteFilter` (see filters demo)
 * Changed `FlxGraphicAsset` from `OneOfFive<String, Class<Dynamic>, CachedGraphics, TextureRegion, BitmapData>` to `OneOfThree<FlxGraphic, BitmapData, String>` which means that graphic loading methods (in all classes) accept only these three types of objects
 * `FlxBitmapDataUtil`:
  * added `replaceColor()` method which is used by `FlxSprite`'s `replaceColor()` method
  * added `addSpacing()` method which takes BitmapData and generates new one with spaces between frames
  * added `generateRotations()` method which generates new BitmapData with prerotated given BitmapData object (this functionality is moved from `FlxSprite`)
+* `FlxSave`: fix `data` still having the deleted properties after `erase()`
+* `FlxGradient`: now supported with bitfive
 
 3.3.5
 ------------------------------
