@@ -84,7 +84,7 @@ class FlxObjectTest extends FlxTest
 	@Test
 	function testVelocityCollidingWithTilemap()
 	{
-		tilemap.loadMap("1, 1, 1, 1, 1, 1, 1", FlxGraphic.fromClass(GraphicAuto));
+		tilemap.loadMapFromCSV("1, 1, 1, 1, 1, 1, 1", FlxGraphic.fromClass(GraphicAuto));
 		velocityColldingWith(tilemap);
 	}
 	
