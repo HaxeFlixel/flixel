@@ -17,7 +17,7 @@ before_install:
   - haxelib -notimeout install lime-tools
   - haxelib -notimeout run lime install openfl
   - haxelib -notimeout install systools
-  - haxelib -notimeout install spinehx
+  - haxelib git spinehaxe https://github.com/bendmorris/spinehaxe
   - haxelib -notimeout install nape
   - haxelib -notimeout install task
   - haxelib -notimeout install hscript
