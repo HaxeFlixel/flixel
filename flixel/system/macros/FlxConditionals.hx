@@ -56,7 +56,7 @@ class FlxConditionals
 	{
 		#if (haxe_ver < "3.1.1")
 			Context.fatalError('The minimum required Haxe version for HaxeFlixel is 3.1.1. '
-				+ 'Please install a newer version.', Context.currentPos());
+				+ 'Please install a newer version.', FlxMacroUtil.here());
 		#end
 		
 		checkConditionals();
@@ -72,7 +72,7 @@ class FlxConditionals
 	{
 		if (defined(FLX_RENDER_BLIT) && defined(FLX_RENDER_TILE))
 		{
-			Context.fatalError('Cannot define both $FLX_RENDER_BLIT and $FLX_RENDER_TILE.', Context.currentPos());
+			Context.fatalError('You cannot define both $FLX_RENDER_BLIT and $FLX_RENDER_TILE.', FlxMacroUtil.here());
 		}
 		
 		abortIfDefined(FLX_MOUSE_ADVANCED);
@@ -88,7 +88,7 @@ class FlxConditionals
 			{
 				if (define.startsWith("FLX_") && USER_DEFINABLE.indexOf(define) == -1)
 				{
-					Context.warning('"$define" is not a valid flixel-conditional.', Context.currentPos());
+					Context.warning('"$define" is not a valid flixel conditional.', FlxMacroUtil.here());
 				}
 			}
 		#end
@@ -99,7 +99,7 @@ class FlxConditionals
 	{
 		if (defined(conditional))
 		{
-			Context.fatalError('$conditional can only be defined by flixel.', Context.currentPos());
+			Context.fatalError('$conditional can only be defined by flixel.', FlxMacroUtil.here());
 		}
 	}
 	
@@ -179,7 +179,7 @@ class FlxConditionals
 				.replace("[feature]", feature)
 				.replace("[version]", version)
 				.replace("[conditional]", conditional),
-				Context.currentPos());
+				FlxMacroUtil.here());
 		}
 	}
 	
