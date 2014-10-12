@@ -18,10 +18,6 @@ import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import haxe.xml.Fast;
 
-// TODO: angel code format docs
-
-// TODO: copy letters from old FlxBitmapFont (by photonstorm)
-
 /**
  * Holds information and bitmap glyphs for a bitmap font.
  */

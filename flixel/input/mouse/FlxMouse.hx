@@ -389,22 +389,19 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	 */
 	private function update():Void
 	{
-		_globalScreenX = Math.floor(FlxG.game.mouseX);
-		_globalScreenY = Math.floor(FlxG.game.mouseY);
+		_globalScreenX = Math.floor(FlxG.game.mouseX / FlxG.scaleMode.scale.x);
+		_globalScreenY = Math.floor(FlxG.game.mouseY / FlxG.scaleMode.scale.y);
 		
 		//actually position the flixel mouse cursor graphic
 		if (visible)
 		{
 			cursorContainer.x = _globalScreenX;
 			cursorContainer.y = _globalScreenY;
+			#if FLX_RENDER_TILE
+			cursorContainer.x *= FlxG.scaleMode.scale.x;
+			cursorContainer.y *= FlxG.scaleMode.scale.y;
+			#end
 		}
-		
-		#if js
-		// need to account for scale as the game sprite is not being scaled on html5
-		var scaleMultiplier:Float = FlxG.scaleMode.scale.x;
-		_globalScreenX = Std.int(_globalScreenX / scaleMultiplier);
-		_globalScreenY = Std.int(_globalScreenY / scaleMultiplier);
-		#end
 		
 		updatePositions();
 		

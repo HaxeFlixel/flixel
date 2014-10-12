@@ -15,6 +15,8 @@ import flixel.math.FlxPoint;
 import flixel.system.FlxAssets;
 import flixel.system.frontEnds.BitmapFrontEnd;
 
+// TODO: add maxsize vars
+
 /**
  * Class for packing multiple images in big one and generating frame data for each of them 
  * so you can easily load regions of atlas in sprites and tilemaps as a source of graphic
@@ -195,6 +197,7 @@ class FlxAtlas implements IFlxDestroyable
 		
 		if (root.left == null)
 		{
+			// TODO: use powerOfTwo var here...
 			root.left = new FlxNode(new FlxRect(0, 0, insertWidth, insertHeight), this, true, key);
 			newBitmapData = new BitmapData(insertWidth, insertHeight, true, FlxColor.TRANSPARENT);
 			newBitmapData.copyPixels(data, data.rect, point);
