@@ -9,15 +9,10 @@ import flixel.graphics.FlxGraphic;
 import flixel.group.FlxSpriteGroup;
 import flixel.input.touch.FlxTouch;
 import flixel.math.FlxAngle;
+import flixel.system.FlxAssets;
 import flixel.util.FlxDestroyUtil;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
-
-@:bitmap("assets/images/ui/analog/base.png")
-private class GraphicBase extends BitmapData {}
-
-@:bitmap("assets/images/ui/analog/thumb.png")
-private class GraphicThumb extends BitmapData {}
 
 /**
  * A virtual thumbstick - useful for input on mobile devices.
@@ -132,7 +127,9 @@ class FlxAnalog extends FlxSpriteGroup
 	private function createBase():Void
 	{
 		base = new FlxSprite(x, y);
-		base.loadGraphic(FlxGraphic.fromClass(GraphicBase));
+		base.frames = FlxAssets.getOnScreenFrames();
+		base.animation.frameName = "base";
+		base.resetSizeFromFrame();
 		base.x += -base.width * 0.5;
 		base.y += -base.height * 0.5;
 		base.scrollFactor.set();
@@ -152,7 +149,9 @@ class FlxAnalog extends FlxSpriteGroup
 	private function createThumb():Void 
 	{
 		thumb = new FlxSprite(x, y);
-		thumb.loadGraphic(FlxGraphic.fromClass(GraphicThumb));
+		thumb.frames = FlxAssets.getOnScreenFrames();
+		thumb.animation.frameName = "thumb";
+		thumb.resetSizeFromFrame();
 		thumb.scrollFactor.set();
 		thumb.solid = false;
 		

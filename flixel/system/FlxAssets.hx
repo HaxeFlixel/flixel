@@ -1,4 +1,5 @@
 package flixel.system;
+import flixel.graphics.frames.FlxAtlasFrames;
 
 #if macro
 import haxe.macro.Context;
@@ -14,6 +15,7 @@ import flixel.FlxG;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxTileFrames;
 import openfl.Assets;
+import openfl.utils.ByteArray;
 
 @:font("assets/fonts/nokiafc22.ttf")
 private class FontDefault extends Font {}
@@ -23,7 +25,13 @@ private class FontDebugger extends Font {}
 #end
 
 @:bitmap("assets/images/logo/logo.png")
-class GraphicLogo extends BitmapData {}
+class GraphicLogo extends BitmapData { }
+
+@:bitmap("assets/images/ui/onscreen.png")
+class GraphicOnScreen extends BitmapData { }
+
+@:file("assets/images/ui/onscreen.txt")
+class OnScreenData extends ByteArray {  }
 #end
 
 class FlxAssets
@@ -256,6 +264,12 @@ class FlxAssets
 		extension = ".ogg";
 		#end
 		return Assets.getSound(id + extension);
+	}
+	
+	public static function getOnScreenFrames():FlxAtlasFrames
+	{
+		var graphic:FlxGraphic = FlxGraphic.fromClass(GraphicOnScreen);
+		return FlxAtlasFrames.fromSpriteSheetPacker(graphic, Std.string(new OnScreenData()));
 	}
 #end
 }
