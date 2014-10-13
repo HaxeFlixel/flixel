@@ -1,5 +1,4 @@
 package flixel.system;
-import flixel.graphics.frames.FlxAtlasFrames;
 
 #if macro
 import haxe.macro.Context;
@@ -13,6 +12,7 @@ import flash.media.Sound;
 import flash.text.Font;
 import flixel.FlxG;
 import flixel.graphics.FlxGraphic;
+import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.graphics.frames.FlxTileFrames;
 import openfl.Assets;
 import openfl.utils.ByteArray;
@@ -28,10 +28,10 @@ private class FontDebugger extends Font {}
 class GraphicLogo extends BitmapData { }
 
 @:bitmap("assets/images/ui/onscreen.png")
-class GraphicOnScreen extends BitmapData { }
+class GraphicVirtualInput extends BitmapData { }
 
 @:file("assets/images/ui/onscreen.txt")
-class OnScreenData extends ByteArray {  }
+class VirtualInputData extends ByteArray {  }
 #end
 
 class FlxAssets
@@ -266,10 +266,10 @@ class FlxAssets
 		return Assets.getSound(id + extension);
 	}
 	
-	public static function getOnScreenFrames():FlxAtlasFrames
+	public static function getVirtualInputFrames():FlxAtlasFrames
 	{
-		var graphic:FlxGraphic = FlxGraphic.fromClass(GraphicOnScreen);
-		return FlxAtlasFrames.fromSpriteSheetPacker(graphic, Std.string(new OnScreenData()));
+		var graphic:FlxGraphic = FlxGraphic.fromClass(GraphicVirtualInput);
+		return FlxAtlasFrames.fromSpriteSheetPacker(graphic, Std.string(new VirtualInputData()));
 	}
 #end
 }

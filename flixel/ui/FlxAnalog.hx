@@ -127,7 +127,7 @@ class FlxAnalog extends FlxSpriteGroup
 	private function createBase():Void
 	{
 		base = new FlxSprite(x, y);
-		base.frames = FlxAssets.getOnScreenFrames();
+		base.frames = FlxAssets.getVirtualInputFrames();
 		base.animation.frameName = "base";
 		base.resetSizeFromFrame();
 		base.x += -base.width * 0.5;
@@ -149,7 +149,7 @@ class FlxAnalog extends FlxSpriteGroup
 	private function createThumb():Void 
 	{
 		thumb = new FlxSprite(x, y);
-		thumb.frames = FlxAssets.getOnScreenFrames();
+		thumb.frames = FlxAssets.getVirtualInputFrames();
 		thumb.animation.frameName = "thumb";
 		thumb.resetSizeFromFrame();
 		thumb.scrollFactor.set();
