@@ -80,19 +80,26 @@ class FlxButton extends FlxTypedButton<FlxText> implements IFlxInput
 	
 	private inline function initLabel(Text:String):Void 
 	{
-		label = new FlxText(x + labelOffsets[NORMAL].x, y + labelOffsets[NORMAL].y, 80, Text);
-		label.setFormat(null, 8, 0x333333, "center");
-		label.alpha = labelAlphas[status];
+		if (Text != null)
+		{
+			label = new FlxText(x + labelOffsets[NORMAL].x, y + labelOffsets[NORMAL].y, 80, Text);
+			label.setFormat(null, 8, 0x333333, "center");
+			label.alpha = labelAlphas[status];
+		}
 	}
 	
 	private inline function get_text():String 
 	{
-		return label.text;
+		return (label != null) ? label.text : null;
 	}
 	
 	private inline function set_text(Text:String):String 
 	{
-		return label.text = Text;
+		if (label == null)
+		{
+			initLabel(Text);
+		}
+		return Text;
 	}
 }
 
