@@ -27,10 +27,10 @@ private class FontDebugger extends Font {}
 @:bitmap("assets/images/logo/logo.png")
 class GraphicLogo extends BitmapData { }
 
-@:bitmap("assets/images/ui/onscreen.png")
+@:bitmap("assets/images/ui/virtual-input.png")
 class GraphicVirtualInput extends BitmapData { }
 
-@:file("assets/images/ui/onscreen.txt")
+@:file("assets/images/ui/virtual-input.txt")
 class VirtualInputData extends ByteArray {  }
 #end
 
