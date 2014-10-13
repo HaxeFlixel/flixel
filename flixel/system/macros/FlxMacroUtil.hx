@@ -50,36 +50,5 @@ class FlxMacroUtil
 			finalExpr = values.map(function(v) return macro $v{v.value} => $v{v.name});
 			
 		return macro $a{finalExpr};
-	}
-	
-	/**
-	 * Generate a sine and cosine table during compilation
-	 * 
-	 * The parameters allow you to specify the length, amplitude and frequency of the wave. 
-	 * You have to call this function with constant parameters and either use it on your own or assign it to FlxAngle.sincos
-	 * 
-	 * @param length 		The length of the wave
-	 * @param sinAmplitude 	The amplitude to apply to the sine table (default 1.0) if you need values between say -+ 125 then give 125 as the value
-	 * @param cosAmplitude 	The amplitude to apply to the cosine table (default 1.0) if you need values between say -+ 125 then give 125 as the value
-	 * @param frequency 	The frequency of the sine and cosine table data
-	 * @return	Returns the cosine/sine table in a Dynamic
-	 * @see getSinTable
-	 * @see getCosTable
-	 */
-	public static macro function sinCosGenerator(length:Int, sinAmplitude:Float = 1.0, cosAmplitude:Float = 1.0, frequency:Float = 1.0):Expr
-	{
-		var sincos = {
-			cos: new Array<Float>(),
-			sin: new Array<Float>()
-		};
-		
-		for (c in 0...length) {
-			var radian = c * frequency * Math.PI / 180;
-			sincos.cos.push(Math.cos(radian) * cosAmplitude);
-			sincos.sin.push(Math.sin(radian) * sinAmplitude);
-		}
-		
-		return Context.makeExpr(sincos, Context.currentPos());
-	}
-	
+	}	
 }

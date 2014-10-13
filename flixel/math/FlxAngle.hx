@@ -1,11 +1,15 @@
 package flixel.math;
+import haxe.macro.Context;
+import haxe.macro.Expr;
 
+#if !macro
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.math.FlxPoint;
 import flixel.system.macros.FlxMacroUtil;
 #if !FLX_NO_TOUCH
 import flixel.input.touch.FlxTouch;
+#end
 #end
 
 typedef FlxSinCos = {
@@ -18,6 +22,36 @@ typedef FlxSinCos = {
  */
 class FlxAngle
 {
+
+	/**
+	 * Generate a sine and cosine table during compilation
+	 * 
+	 * The parameters allow you to specify the length, amplitude and frequency of the wave. 
+	 * You have to call this function with constant parameters and either use it on your own or assign it to FlxAngle.sincos
+	 * 
+	 * @param length 		The length of the wave
+	 * @param sinAmplitude 	The amplitude to apply to the sine table (default 1.0) if you need values between say -+ 125 then give 125 as the value
+	 * @param cosAmplitude 	The amplitude to apply to the cosine table (default 1.0) if you need values between say -+ 125 then give 125 as the value
+	 * @param frequency 	The frequency of the sine and cosine table data
+	 * @return	Returns the cosine/sine table in a FlxSinCos
+	 */
+	public static macro function sinCosGenerator(length:Int = 360, sinAmplitude:Float = 1.0, cosAmplitude:Float = 1.0, frequency:Float = 1.0):Expr
+	{
+		var sincos = {
+			cos: new Array<Float>(),
+			sin: new Array<Float>()
+		};
+		
+		for (c in 0...length) {
+			var radian = c * frequency * Math.PI / 180;
+			sincos.cos.push(Math.cos(radian) * cosAmplitude);
+			sincos.sin.push(Math.sin(radian) * sinAmplitude);
+		}
+		
+		return Context.makeExpr(sincos, Context.currentPos());
+	}
+
+	#if !macro
 	/**
 	 * Convert radians to degrees by multiplying it with this value.
 	 */
@@ -26,10 +60,6 @@ class FlxAngle
 	 * Convert degrees to radians by multiplying it with this value.
 	 */
 	public static var TO_RAD(get, never):Float;
-	/**
-	 * Contains the sine and cosine tables generated via sinCosGenerator()
-	 */
-	public static var sincos : FlxSinCos = FlxMacroUtil.sinCosGenerator(360);
 	
 	/**
 	 * Keeps an angle value between -180 and +180
@@ -264,4 +294,5 @@ class FlxAngle
 	{
 		return Math.PI / 180;
 	}
+	#end
 }
