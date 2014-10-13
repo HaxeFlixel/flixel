@@ -219,6 +219,7 @@ class FlxAtlas implements IFlxDestroyable
 			{
 				root.width = rootWidth;
 				root.height = rootHeight;
+				bitmapData = new BitmapData(root.width, root.height, true, FlxColor.TRANSPARENT);
 				return tryInsert(data, key);
 			}
 			else
