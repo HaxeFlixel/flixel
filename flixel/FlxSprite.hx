@@ -287,7 +287,6 @@ class FlxSprite extends FlxObject
 		}
 		antialiasing = Sprite.antialiasing;
 		animation.copyFrom(Sprite.animation);
-		graphicLoaded();
 		clipRect = Sprite.clipRect;
 		return this;
 	}
@@ -328,7 +327,6 @@ class FlxSprite extends FlxObject
 			frames = graph.imageFrame;
 		}
 		
-		graphicLoaded();
 		return this;
 	}
 	
@@ -388,7 +386,6 @@ class FlxSprite extends FlxObject
 		
 		bakedRotationAngle = 360 / Rotations;
 		animation.createPrerotated();
-		graphicLoaded();
 		return this;
 	}
 	
@@ -1315,6 +1312,11 @@ class FlxSprite extends FlxObject
 	 */
 	private function set_frames(Frames:FlxFramesCollection):FlxFramesCollection
 	{
+		if (animation != null)
+		{
+			animation.destroyAnimations();
+		}
+		
 		if (Frames != null)
 		{
 			graphic = Frames.parent;
@@ -1324,6 +1326,7 @@ class FlxSprite extends FlxObject
 			resetHelpers();
 			bakedRotationAngle = 0;
 			animation.frameIndex = 0;
+			graphicLoaded();
 		}
 		else
 		{
@@ -1333,11 +1336,6 @@ class FlxSprite extends FlxObject
 		}
 		
 		_clipRect = null;
-		
-		if (animation != null)
-		{
-			animation.destroyAnimations();
-		}
 		return Frames;
 	}
 	
