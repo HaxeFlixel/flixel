@@ -15,8 +15,6 @@ import flixel.math.FlxPoint;
 import flixel.system.FlxAssets;
 import flixel.system.frontEnds.BitmapFrontEnd;
 
-// TODO: add maxsize vars
-
 /**
  * Class for packing multiple images in big one and generating frame data for each of them 
  * so you can easily load regions of atlas in sprites and tilemaps as a source of graphic
@@ -54,6 +52,10 @@ class FlxAtlas implements IFlxDestroyable
 	 */
 	public var height(get, null):Int;
 	
+	public var maxWidth(default, set):Int = 0;
+	
+	public var maxHeight(default, set):Int = 0;
+	
 	/**
 	 * Whether the size of this atlas should be the power of 2 or not.
 	 */
@@ -72,7 +74,7 @@ class FlxAtlas implements IFlxDestroyable
 	 * @param	powerOfTwo	whether the size of this atlas should be the power of 2 or not.
 	 * @param	border		gap between nodes to insert.
 	 */
-	public function new(name:String, powerOfTwo:Bool = false, border:Int = 1) 
+	public function new(name:String, powerOfTwo:Bool = false, border:Int = 1, maxWidth:Int = 0, maxHeight:Int = 0)
 	{
 		nodes = new Map<String, FlxNode>();
 		this.name = name;
@@ -80,6 +82,8 @@ class FlxAtlas implements IFlxDestroyable
 		root = new FlxNode(new FlxRect(0, 0, 1, 1), this);
 		this.powerOfTwo = powerOfTwo;
 		this.border = border;
+		this.maxWidth = maxWidth;
+		this.maxHeight = maxHeight;
 	}
 	
 	/**
@@ -197,16 +201,38 @@ class FlxAtlas implements IFlxDestroyable
 		
 		if (root.left == null)
 		{
-			// TODO: use powerOfTwo var here...
-			root.left = new FlxNode(new FlxRect(0, 0, insertWidth, insertHeight), this, true, key);
-			newBitmapData = new BitmapData(insertWidth, insertHeight, true, FlxColor.TRANSPARENT);
-			newBitmapData.copyPixels(data, data.rect, point);
-			bitmapData = newBitmapData;
-			root.width = insertWidth;
-			root.height = insertHeight;
-			nodes.set(key, root.left);
-			addNodeToAtlasFrames(root.left);
-			return root.left;
+			var rootWidth:Int = insertWidth;
+			var rootHeight:Int = insertHeight;
+			
+			if (powerOfTwo)
+			{
+				rootWidth = getNextPowerOf2(rootWidth);
+				rootHeight = getNextPowerOf2(rootHeight);
+			}
+			
+			if ((maxWidth > 0 && rootWidth > maxWidth) || (maxHeight > 0 && rootHeight > maxHeight))
+			{
+				return null;
+			}
+			
+			if (rootWidth > insertWidth || rootHeight > insertHeight)
+			{
+				root.width = rootWidth;
+				root.height = rootHeight;
+				return tryInsert(data, key);
+			}
+			else
+			{
+				root.left = new FlxNode(new FlxRect(0, 0, insertWidth, insertHeight), this, true, key);
+				newBitmapData = new BitmapData(insertWidth, insertHeight, true, FlxColor.TRANSPARENT);
+				newBitmapData.copyPixels(data, data.rect, point);
+				bitmapData = newBitmapData;
+				root.width = insertWidth;
+				root.height = insertHeight;
+				nodes.set(key, root.left);
+				addNodeToAtlasFrames(root.left);
+				return root.left;
+			}
 		}
 		
 		// helpers for makinkg decision on how to insert new node
@@ -228,6 +254,33 @@ class FlxAtlas implements IFlxDestroyable
 		var addBottomArea:Int = addBottomWidth * addBottomHeight;
 		var temp:FlxNode;
 		var dataNode:FlxNode = null;
+		
+		// checks for the max size
+		var canExpandRight:Bool = true;
+		var canExpandBottom:Bool = true;
+		
+		if ((maxWidth > 0 && addRightWidth > maxWidth) || (maxHeight > 0 && addRightHeight > maxHeight))
+		{
+			canExpandRight = false;
+		}
+		
+		if ((maxWidth > 0 && addBottomWidth > maxWidth) || (maxHeight > 0 && addBottomHeight > maxHeight))
+		{
+			canExpandBottom = false;
+		}
+		
+		if (canExpandRight == false && canExpandBottom == false)
+		{
+			return null; // can't expand in any direction
+		}
+		else if (canExpandRight == false && canExpandBottom == true)
+		{
+			addRightArea = addBottomArea + 1; // can't expand to the right
+		}
+		else if (canExpandRight == true && canExpandBottom == false)
+		{
+			addBottomArea = addRightArea + 1; // can't expand to the bottom
+		}
 		
 		if (root.right == null)
 		{
@@ -286,7 +339,6 @@ class FlxAtlas implements IFlxDestroyable
 			point.setTo(dataNode.x, dataNode.y);
 			newBitmapData.copyPixels(data, data.rect, point);
 			bitmapData = newBitmapData;
-			
 			nodes.set(key, dataNode);
 			addNodeToAtlasFrames(dataNode);
 			return dataNode;
@@ -365,7 +417,7 @@ class FlxAtlas implements IFlxDestroyable
 	private function addNodeToAtlasFrames(node:FlxNode):Void
 	{
 		var graphic:FlxGraphic = FlxG.bitmap.get(name);
-		if (graphic == null || graphic.atlasFrames == null)
+		if (graphic == null || graphic.atlasFrames == null || node == null)
 			return;
 		
 		var atlasFrames:FlxAtlasFrames = graphic.atlasFrames;
@@ -640,6 +692,18 @@ class FlxAtlas implements IFlxDestroyable
 		}
 		
 		return _bitmapData = value;
+	}
+	
+	private function set_maxWidth(value:Int):Int
+	{
+		maxWidth = (value > maxWidth) ? value : maxWidth;
+		return maxWidth;
+	}
+	
+	private function set_maxHeight(value:Int):Int
+	{
+		maxHeight = (value > maxHeight) ? value : maxHeight;
+		return maxHeight;
 	}
 }
 
