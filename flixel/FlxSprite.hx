@@ -287,6 +287,7 @@ class FlxSprite extends FlxObject
 		}
 		antialiasing = Sprite.antialiasing;
 		animation.copyFrom(Sprite.animation);
+		graphicLoaded();
 		clipRect = Sprite.clipRect;
 		return this;
 	}
