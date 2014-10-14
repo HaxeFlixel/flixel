@@ -1,5 +1,6 @@
 package flixel.tile;
 
+import flash.display.BitmapData;
 import flash.errors.ArgumentError;
 import flixel.graphics.FlxGraphic;
 import flixel.tile.FlxTilemap;
@@ -19,7 +20,7 @@ class FlxTilemapTest extends FlxTest
 	@Test
 	function test1x1Map()
 	{
-		tilemap.loadMapFromCSV("1", FlxGraphic.fromClass(GraphicAuto), 8, 8);
+		tilemap.loadMapFromCSV("1", getBitmapData(), 8, 8);
 		
 		try
 		{
@@ -37,7 +38,7 @@ class FlxTilemapTest extends FlxTest
 	function testLoadMapArray()
 	{
 		var mapData = [0, 1, 0, 1, 1, 1];
-		tilemap.loadMapFromArray(mapData, 3, 2, FlxGraphic.fromClass(GraphicAuto), 8, 8);
+		tilemap.loadMapFromArray(mapData, 3, 2, getBitmapData(), 8, 8);
 		
 		Assert.areEqual(3, tilemap.widthInTiles);
 		Assert.areEqual(2, tilemap.heightInTiles);
@@ -50,10 +51,15 @@ class FlxTilemapTest extends FlxTest
 		var mapData = [
 			[0, 1, 0],
 			[1, 1, 1]];
-		tilemap.loadMapFrom2DArray(mapData, FlxGraphic.fromClass(GraphicAuto), 8, 8);
+		tilemap.loadMapFrom2DArray(mapData, getBitmapData(), 8, 8);
 		
 		Assert.areEqual(3, tilemap.widthInTiles);
 		Assert.areEqual(2, tilemap.heightInTiles);
 		FlxAssert.arraysAreEqual([0, 1, 0, 1, 1, 1], tilemap.getData());
+	}
+	
+	function getBitmapData()
+	{
+		return new BitmapData(16, 8);
 	}
 }

@@ -8,7 +8,8 @@ import massive.munit.Assert;
 class FlxButtonTest extends FlxTest
 {
 	var button:FlxButton;
-	
+
+#if !js // assets (including the FlxButton default one) don't work in openfl-html5 tests
 	@Before
 	function before():Void
 	{
@@ -53,4 +54,5 @@ class FlxButtonTest extends FlxTest
 		Assert.isNotNull(button.animation.getByName(highlightName));
 		Assert.isNotNull(button.animation.getByName(pressedName));
 	}
+#end
 }

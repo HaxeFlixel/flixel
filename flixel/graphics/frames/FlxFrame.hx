@@ -12,6 +12,7 @@ import flixel.util.FlxDestroyUtil;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.graphics.FlxGraphic;
+import flixel.util.FlxStringUtil;
 
 /**
  * Base class for all frame types
@@ -217,6 +218,12 @@ class FlxFrame implements IFlxDestroyable
 		offset = FlxDestroyUtil.put(offset);
 		center = FlxDestroyUtil.put(center);
 		destroyBitmaps();
+	}
+	
+	public function toString():String
+	{
+		return FlxStringUtil.getDebugString([
+			LabelValuePair.weak("name", name)]);
 	}
 }
 

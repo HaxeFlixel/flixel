@@ -8,6 +8,7 @@ import flixel.math.FlxRect;
 import flixel.util.FlxDestroyUtil;
 import flixel.math.FlxPoint;
 import flixel.graphics.FlxGraphic;
+import flixel.util.FlxStringUtil;
 
 /**
  * Base class for all frame collections
@@ -215,6 +216,13 @@ class FlxFramesCollection implements IFlxDestroyable
 		{
 			frame.destroyBitmaps();
 		}
+	}
+	
+	public function toString():String
+	{
+		return FlxStringUtil.getDebugString([
+			LabelValuePair.weak("frames", frames),
+			LabelValuePair.weak("type", type)]);
 	}
 	
 	private inline function get_numFrames():Int
