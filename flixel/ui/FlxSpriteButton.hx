@@ -8,6 +8,8 @@ import flixel.ui.FlxButton.FlxTypedButton;
  */
 class FlxSpriteButton extends FlxTypedButton<FlxSprite> implements IFlxInput
 {
+	// TODO: update size of label (when it's required) and make it automated
+	
 	/**
 	 * Creates a new FlxButton object with a gray background
 	 * and a callback function on the UI thread.

@@ -76,6 +76,8 @@ class FlxNode implements IFlxDestroyable
 	 */
 	public var contentHeight(get, null):Int;
 	
+	public var rotated(default, null):Bool;
+	
 	private var _contentRect:FlxRect;
 	
 	/**
@@ -85,7 +87,7 @@ class FlxNode implements IFlxDestroyable
 	 * @param	filled	whether this node contains image or not
 	 * @param	key		the name of image in this node, and the name of this node
 	 */
-	public function new(rect:FlxRect, atlas:FlxAtlas, filled:Bool = false, key:String = "") 
+	public function new(rect:FlxRect, atlas:FlxAtlas, filled:Bool = false, key:String = "", rotated:Bool = false) 
 	{
 		this.filled = filled;
 		this.left = null;
@@ -93,6 +95,7 @@ class FlxNode implements IFlxDestroyable
 		this.rect = rect;
 		this.key = key;
 		this.atlas = atlas;
+		this.rotated = rotated;
 	}
 	
 	public inline function destroy():Void
