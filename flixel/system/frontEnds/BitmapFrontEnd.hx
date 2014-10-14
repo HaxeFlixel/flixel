@@ -315,10 +315,20 @@ class BitmapFrontEnd
 	}
 	
 	/**
+	 * Totally removes specified FlxGraphic object.
+	 * @param	FlxGraphic object you want to remove and destroy.
+	 */
+	public function remove(graphic:FlxGraphic):Void
+	{
+		if (graphic != null)
+			removeByKey(graphic.key);
+	}
+	
+	/**
 	 * Totally removes FlxGraphic object with specified key.
 	 * @param	key	the key for cached FlxGraphic object.
 	 */
-	public function remove(key:String):Void
+	public function removeByKey(key:String):Void
 	{
 		if ((key != null) && _cache.exists(key))
 		{
@@ -328,6 +338,14 @@ class BitmapFrontEnd
 			#end
 			_cache.remove(key);
 			obj.destroy();
+		}
+	}
+	
+	public function removeIfNoUse(graphic:FlxGraphic):Void
+	{
+		if (graphic != null && graphic.useCount == 0)
+		{
+			remove(graphic);
 		}
 	}
 	
@@ -349,12 +367,7 @@ class BitmapFrontEnd
 			obj = _cache.get(key);
 			if (obj != null && !obj.persist)
 			{
-				#if !nme
-				Assets.cache.bitmapData.remove(key);
-				#end
-				_cache.remove(key);
-				obj.destroy();
-				obj = null;
+				removeByKey(obj.key);
 			}
 		}
 	}
@@ -374,7 +387,7 @@ class BitmapFrontEnd
 				obj = _cache.get(key);
 				if (obj != null && obj.useCount <= 0 && !obj.persist && obj.destroyOnNoUse)
 				{
-					remove(obj.key);
+					removeByKey(obj.key);
 				}
 			}
 		}

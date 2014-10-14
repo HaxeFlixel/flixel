@@ -600,7 +600,7 @@ class FlxGraphic
 	{
 		if ((Value <= 0) && _destroyOnNoUse && !persist)
 		{
-			FlxG.bitmap.remove(key);
+			FlxG.bitmap.remove(this);
 		}
 		
 		return _useCount = Value;
@@ -615,7 +615,7 @@ class FlxGraphic
 	{
 		if (Value && _useCount <= 0 && key != null && !persist)
 		{
-			FlxG.bitmap.remove(key);
+			FlxG.bitmap.remove(this);
 		}
 		
 		return _destroyOnNoUse = Value;

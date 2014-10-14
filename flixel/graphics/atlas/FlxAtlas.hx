@@ -568,7 +568,7 @@ class FlxAtlas implements IFlxDestroyable
 	 */
 	public function destroy():Void
 	{
-		FlxG.bitmap.remove(name);
+		FlxG.bitmap.removeIfNoUse(FlxG.bitmap.get(name));
 		_tempStorage = null;
 		deleteSubtree(root);
 		root = null;
@@ -584,7 +584,7 @@ class FlxAtlas implements IFlxDestroyable
 	{
 		deleteSubtree(root);
 		root = new FlxNode(new FlxRect(0, 0, 1, 1), this);
-		FlxG.bitmap.remove(name);
+		FlxG.bitmap.removeByKey(name);
 		_bitmapData = null;
 		nodes = new Map<String, FlxNode>();
 	}

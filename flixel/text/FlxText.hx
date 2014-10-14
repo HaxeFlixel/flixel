@@ -678,11 +678,9 @@ class FlxText extends FlxSprite
 	
 	override private function set_graphic(Value:FlxGraphic):FlxGraphic 
 	{
+		var oldGraphic:FlxGraphic = graphic;
 		var graph:FlxGraphic = super.set_graphic(Value);
-		
-		if (Value != null)
-			Value.destroyOnNoUse = true;
-		
+		FlxG.bitmap.removeIfNoUse(oldGraphic);
 		return graph;
 	}
 	

@@ -1020,7 +1020,7 @@ class FlxCamera extends FlxBasic
 		{
 			if (width != buffer.width || height != buffer.height)
 			{
-				FlxG.bitmap.remove(screen.graphic.key);
+				var oldBuffer:FlxGraphic = screen.graphic;
 				buffer = new BitmapData(width, height, true, 0);
 				screen.pixels = buffer;
 				screen.origin.set();
@@ -1029,6 +1029,7 @@ class FlxCamera extends FlxBasic
 				_flashRect.height = height;
 				_fill.dispose();
 				_fill = new BitmapData(width, height, true, FlxColor.TRANSPARENT);
+				FlxG.bitmap.removeIfNoUse(oldBuffer);
 			}
 			
 			regen = false;
