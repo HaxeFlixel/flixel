@@ -168,6 +168,11 @@ class FlxFramesCollection implements IFlxDestroyable
 	  */
 	public function addAtlasFrame(frame:FlxRect, sourceSize:FlxPoint, offset:FlxPoint, name:String = null, angle:FlxFrameAngle = 0):FlxFrame
 	{
+		if (name != null && framesHash.exists(name))
+		{
+			return framesHash.get(name);
+		}
+		
 		var texFrame:FlxFrame = null;
 		if (angle != FlxFrameAngle.ANGLE_0)
 		{

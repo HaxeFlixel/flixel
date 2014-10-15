@@ -518,7 +518,10 @@ class FlxAtlas implements IFlxDestroyable
 		
 		var atlasFrames:FlxAtlasFrames = null;
 		if (graphic.atlasFrames == null)
-			graphic.atlasFrames = atlasFrames = new FlxAtlasFrames(graphic);
+		{
+			graphic.atlasFrames = new FlxAtlasFrames(graphic);
+			atlasFrames = graphic.atlasFrames;
+		}
 		
 		for (node in nodes)
 			addNodeToAtlasFrames(node);
@@ -539,8 +542,8 @@ class FlxAtlas implements IFlxDestroyable
 			var frame:FlxRect = new FlxRect(node.x, node.y, node.width - border, node.height - border);
 			var sourceSize:FlxPoint = node.rotated ? FlxPoint.get(node.height - border, node.width - border) : FlxPoint.get(node.width - border, node.height - border);
 			var offset:FlxPoint = FlxPoint.get(0, 0);
-			var angle:FlxFrameAngle = node.rotated ? FlxFrameAngle.ANGLE_NEG_90 : 0;
-			atlasFrames.addAtlasFrame(frame, sourceSize, offset, node.key, 0); 
+			var angle:FlxFrameAngle = node.rotated ? FlxFrameAngle.ANGLE_NEG_90 : FlxFrameAngle.ANGLE_0;
+			atlasFrames.addAtlasFrame(frame, sourceSize, offset, node.key, angle);
 		}
 	}
 	

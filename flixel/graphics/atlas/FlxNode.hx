@@ -2,6 +2,7 @@ package flixel.graphics.atlas;
 
 import flash.geom.Rectangle;
 import flixel.graphics.FlxGraphic;
+import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.frames.FlxImageFrame;
 import flixel.graphics.frames.FlxTileFrames;
 import flixel.math.FlxPoint;
@@ -120,17 +121,19 @@ class FlxNode implements IFlxDestroyable
 	 * Generates TileFrames object for this node
 	 * @param	tileSize		The size of tile in spritesheet
 	 * @param	tileSpacing		Offsets between tiles in spritesheet
-	 * @param	region			Region of node to use as a source of graphic. Default value is null, which means that the whole node will be used for it.
 	 * @return	Created TileFrames object for this node
 	 */
-	public function getTileFrames(tileSize:FlxPoint, tileSpacing:FlxPoint = null, region:FlxRect = null):FlxTileFrames
+	public function getTileFrames(tileSize:FlxPoint, tileSpacing:FlxPoint = null):FlxTileFrames
 	{
 		var graphic:FlxGraphic = FlxG.bitmap.add(atlas.bitmapData, false, atlas.name);
+		var frame:FlxFrame = atlas.getAtlasFrames().getByName(key);
 		
-		if (region == null)
-			region = contentRect;
+		if (frame != null)
+		{
+			return FlxTileFrames.fromFrame(frame, tileSize, tileSpacing);
+		}
 		
-		return FlxTileFrames.fromRectangle(graphic, tileSize, region, tileSpacing);
+		return null;
 	}
 	
 	/**
@@ -140,7 +143,15 @@ class FlxNode implements IFlxDestroyable
 	public function getImageFrame():FlxImageFrame
 	{
 		var graphic:FlxGraphic = FlxG.bitmap.add(atlas.bitmapData, false, atlas.name);
-		return FlxImageFrame.fromRectangle(graphic, contentRect);
+		var frame = atlas.getAtlasFrames().getByName(key);
+		
+		if (frame != null)
+		{
+			return FlxImageFrame.fromFrame(frame);
+		}
+		
+		// TODO: maybe remove contentRect property?
+		return null;
 	}
 	
 	private inline function get_isEmpty():Bool
