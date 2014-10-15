@@ -714,7 +714,7 @@ class FlxAtlas implements IFlxDestroyable
 		var data:String = "";
 		for (node in nodes)
 		{
-			data += node.key + " = " + node.x + " " + node.y + " " + node.contentWidth + " " + node.contentHeight + "\n";
+			data += node.key + " = " + node.x + " " + node.y + " " + (node.width - border) + " " + (node.height - border) + "\n";
 		}
 		return data;
 	}

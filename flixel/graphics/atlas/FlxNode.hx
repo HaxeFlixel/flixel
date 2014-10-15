@@ -64,22 +64,7 @@ class FlxNode implements IFlxDestroyable
 	 */
 	public var isEmpty(get, null):Bool;
 	
-	/**
-	 * Helper rectangle object, showing actual size and position of image on atlas bitmapdata
-	 */
-	public var contentRect(get, null):FlxRect;
-	/**
-	 * The width of image in in this node (node.width - atlas.border)
-	 */
-	public var contentWidth(get, null):Int;
-	/**
-	 * The height of image in in this node (node.height - atlas.border)
-	 */
-	public var contentHeight(get, null):Int;
-	
 	public var rotated(default, null):Bool;
-	
-	private var _contentRect:FlxRect;
 	
 	/**
 	 * Node constructot
@@ -106,7 +91,6 @@ class FlxNode implements IFlxDestroyable
 		right = null;
 		rect = null;
 		atlas = null;
-		_contentRect = null;
 	}
 	
 	/**
@@ -150,7 +134,6 @@ class FlxNode implements IFlxDestroyable
 			return FlxImageFrame.fromFrame(frame);
 		}
 		
-		// TODO: maybe remove contentRect property?
 		return null;
 	}
 	
@@ -189,23 +172,5 @@ class FlxNode implements IFlxDestroyable
 	{
 		rect.height = value;
 		return value;
-	}
-	
-	private inline function get_contentWidth():Int
-	{
-		return Std.int(rect.width - atlas.border);
-	}
-	
-	private inline function get_contentHeight():Int
-	{
-		return Std.int(rect.height - atlas.border);
-	}
-	
-	private inline function get_contentRect():FlxRect
-	{
-		if (_contentRect == null)
-			_contentRect = new FlxRect(x, y, contentWidth, contentHeight);
-		
-		return _contentRect;
 	}
 }
