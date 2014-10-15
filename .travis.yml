@@ -6,7 +6,7 @@ env:
   - TARGET=html5
   - TARGET=munit
   
- matrix:
+matrix:
   allow_failures:
     - env: "TARGET=html5"
 
