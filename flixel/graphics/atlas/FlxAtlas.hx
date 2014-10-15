@@ -106,7 +106,10 @@ class FlxAtlas implements IFlxDestroyable
 		var key:String = FlxAssets.resolveKey(Graphic, Key);
 		
 		if (key == null) 
+		{
+			throw "addNode can't find the key for specified bitmapdata. Please provide not null value as a Key argument.";
 			return null;
+		}
 		
 		if (hasNodeWithName(key) == true)
 			return nodes.get(key);
@@ -114,7 +117,10 @@ class FlxAtlas implements IFlxDestroyable
 		var data:BitmapData = FlxAssets.resolveBitmapData(Graphic);
 		
 		if (data == null)	
+		{
+			throw "addNode can't find bitmapdata with specified key: " + Graphic + ". Please provide valid value.";
 			return null;
+		}
 		
 		// check if we can add nodes right into root
 		if (root.left == null)
@@ -274,7 +280,6 @@ class FlxAtlas implements IFlxDestroyable
 			
 			if ((maxWidth > 0 && rootWidth > maxWidth) || (maxHeight > 0 && rootHeight > maxHeight))
 			{
-				// TODO: throw error with info (here and in other places where we can return null)...
 				throw "Can't insert node " + key + " with the size of (" + data.width + "; " + data.height + ") in atlas " + name + " with the max size of (" + maxWidth + "; " + maxHeight + ") and powerOfTwo: " + powerOfTwo;
 				return null;
 			}
@@ -303,23 +308,35 @@ class FlxAtlas implements IFlxDestroyable
 			var addBottomWidth:Int = Std.int(Math.max(root.width, insertWidth));
 			var addBottomHeight:Int = root.height + insertHeight;
 			
-			var addRightWidthRotate:Int = rotate ? (root.width + insertHeight) : addRightWidth;
-			var addRightHeightRotate:Int = rotate ? Std.int(Math.max(root.height, insertWidth)) : addRightHeight;
+			var addRightWidthRotate:Int = addRightWidth;
+			var addRightHeightRotate:Int = addRightHeight;
 			
-			var addBottomWidthRotate:Int = rotate ? Std.int(Math.max(root.width, insertHeight)) : addBottomWidth;
-			var addBottomHeightRotate:Int = rotate ? (root.height + insertWidth) : addBottomHeight;
+			var addBottomWidthRotate:Int = addBottomWidth;
+			var addBottomHeightRotate:Int = addBottomHeight;
+			
+			if (rotate)
+			{
+				addRightWidthRotate = root.width + insertHeight;
+				addRightHeightRotate = Std.int(Math.max(root.height, insertWidth));
+				
+				addBottomWidthRotate = Std.int(Math.max(root.width, insertHeight));
+				addBottomHeightRotate = root.height + insertWidth;
+			}
 			
 			if (powerOfTwo)
 			{
-				addRightWidth = getNextPowerOf2(addRightWidth);
-				addRightHeight = getNextPowerOf2(addRightHeight);
-				addBottomWidth = getNextPowerOf2(addBottomWidth);
-				addBottomHeight = getNextPowerOf2(addBottomHeight);
+				addRightWidthRotate = addRightWidth = getNextPowerOf2(addRightWidth);
+				addRightHeightRotate = addRightHeight = getNextPowerOf2(addRightHeight);
+				addBottomWidthRotate = addBottomWidth = getNextPowerOf2(addBottomWidth);
+				addBottomHeightRotate = addBottomHeight = getNextPowerOf2(addBottomHeight);
 				
-				addRightWidthRotate = rotate ? getNextPowerOf2(addRightWidthRotate) : addRightWidth;
-				addRightHeightRotate = rotate ? getNextPowerOf2(addRightHeightRotate) : addRightHeight;
-				addBottomWidthRotate = rotate ? getNextPowerOf2(addBottomWidthRotate) : addBottomWidth;
-				addBottomHeightRotate = rotate ? getNextPowerOf2(addBottomHeightRotate) : addBottomHeight;
+				if (rotate)
+				{
+					addRightWidthRotate = getNextPowerOf2(addRightWidthRotate);
+					addRightHeightRotate = getNextPowerOf2(addRightHeightRotate);
+					addBottomWidthRotate = getNextPowerOf2(addBottomWidthRotate);
+					addBottomHeightRotate = getNextPowerOf2(addBottomHeightRotate);
+				}
 			}
 			
 			// checks for the max size
@@ -341,8 +358,11 @@ class FlxAtlas implements IFlxDestroyable
 			if ((maxWidth > 0 && addBottomWidthRotate > maxWidth) || (maxHeight > 0 && addBottomHeightRotate > maxHeight))
 				canExpandBottomRotate = false;
 			
-			if (canExpandRight == false && canExpandBottom == false && canExpandRightRotate == false && canExpandBottomRotate == false)
+			if (!canExpandRight && !canExpandBottom && !canExpandRightRotate && !canExpandBottomRotate)
+			{
+				throw "Can't insert node " + key + " with the size of (" + data.width + "; " + data.height + ") in atlas " + name + " with the max size of (" + maxWidth + "; " + maxHeight + ") and powerOfTwo: " + powerOfTwo;
 				return null; // can't expand in any direction
+			}
 			
 			// calculate area of result atlas for various cases
 			// the case with less area will be chosen
@@ -486,7 +506,10 @@ class FlxAtlas implements IFlxDestroyable
 		var key:String = FlxAssets.resolveKey(Graphic, Key);
 		
 		if (key == null) 
+		{
+			throw "addNodeWithSpacings can't find the key for specified bitmapdata. Please provide not null value as a Key argument.";
 			return null;
+		}
 		
 		key = FlxG.bitmap.getKeyWithSpacings(key, tileSize, tileSpacing, region);
 		
@@ -496,13 +519,19 @@ class FlxAtlas implements IFlxDestroyable
 		var data:BitmapData = FlxAssets.resolveBitmapData(Graphic);
 		
 		if (data == null) 
+		{
+			throw "addNodeWithSpacings can't find bitmapdata with specified key: " + Graphic + ". Please provide valid value.";
 			return null;
+		}
 		
 		var nodeData:BitmapData = FlxBitmapDataUtil.addSpacing(data, tileSize, tileSpacing, region);
 		var node:FlxNode = addNode(nodeData, key);
 		
 		if (node == null) 
+		{
+			throw "addNodeWithSpacings can't insert provided image: " + Graphic + ") in atlas. It's probably too big.";
 			return null;
+		}
 		
 		return node.getTileFrames(tileSize, tileSpacing);
 	}
@@ -580,7 +609,10 @@ class FlxAtlas implements IFlxDestroyable
 		var numBitmaps:Int = bitmaps.length;
 		
 		if (numBitmaps != numKeys)
+		{
+			throw "The number of bitmaps (" + numBitmaps + ") should be equal to number of keys (" + numKeys + ")";
 			return null;
+		}
 		
 		var sortedBitmaps:Array<BitmapData> = bitmaps.slice(0, bitmaps.length);
 		sortedBitmaps.sort(bitmapSorter);
