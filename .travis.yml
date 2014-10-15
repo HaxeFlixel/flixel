@@ -8,7 +8,7 @@ env:
   
  matrix:
   allow_failures:
-      - TARGET=html5
+    - env: "TARGET=html5"
 
 before_install:
   - sudo add-apt-repository ppa:eyecreate/haxe -y
