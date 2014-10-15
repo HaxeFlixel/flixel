@@ -15,7 +15,6 @@ before_install:
   - haxelib -notimeout setup ~/haxelib 
   - haxelib -notimeout install munit
   - haxelib -notimeout install lime
-  - haxelib -notimeout install lime-tools
   - haxelib -notimeout run lime install openfl
   - haxelib -notimeout install systools
   - haxelib git spinehaxe https://github.com/bendmorris/spinehaxe
