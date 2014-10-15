@@ -370,7 +370,7 @@ class FlxAtlas implements IFlxDestroyable
 			var addBottomArea:Int = addBottomWidth * addBottomHeight;
 			
 			var addRightAreaRotate:Int = addRightWidthRotate * addRightHeightRotate;
-			var addBottomAreaRotate:Int = addBottomWidthRotate * addBottomHeightRotate;	
+			var addBottomAreaRotate:Int = addBottomWidthRotate * addBottomHeightRotate;
 			
 			var rotateRight:Bool = false;
 			var rotateBottom:Bool = false;
@@ -385,7 +385,7 @@ class FlxAtlas implements IFlxDestroyable
 				rotateRight = true;
 			}
 			
-			if ((canExpandBottom && canExpandBottomRotate && addBottomArea > addBottomAreaRotate) || (!canExpandRight && canExpandBottomRotate))
+			if ((canExpandBottom && canExpandBottomRotate && addBottomArea > addBottomAreaRotate) || (!canExpandBottom && canExpandBottomRotate))
 			{
 				addBottomArea = addBottomAreaRotate;
 				addBottomWidth = addBottomWidthRotate;
@@ -892,7 +892,7 @@ class FlxAtlas implements IFlxDestroyable
 				var temp:FlxNode = root;
 				root = new FlxNode(new FlxRect(0, 0, nextWidth, nextHeight), this);
 				
-				if (root.left != null) // this means that atlas isn't empty and we need to resize it's bitmapdata
+				if (temp.left != null) // this means that atlas isn't empty and we need to resize it's bitmapdata
 				{
 					divideNode(root, temp.width, temp.height, needToDivideHorizontally(root, temp.width, temp.height));
 					root.left.left = temp;
