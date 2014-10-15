@@ -18,6 +18,9 @@ import flixel.system.FlxAssets;
 import flixel.system.frontEnds.BitmapFrontEnd;
 import openfl.geom.Matrix;
 
+// TODO: maybe add "square" option - atlas should have width equal to height
+// TODO: maybe add min size option
+
 /**
  * Class for packing multiple images in big one and generating frame data for each of them 
  * so you can easily load regions of atlas in sprites and tilemaps as a source of graphic
@@ -82,7 +85,7 @@ class FlxAtlas implements IFlxDestroyable
 	 * @param	maxWidth	max width of atlas
 	 * @param	maxHeight	max height of atlas
 	 */
-	public function new(name:String, powerOfTwo:Bool = false, border:Int = 1, rotate:Bool = false, maxWidth:Int = 4096, maxHeight:Int = 4096)
+	public function new(name:String, powerOfTwo:Bool = false, border:Int = 1, rotate:Bool = false, maxWidth:Int = 1024, maxHeight:Int = 1024)
 	{
 		nodes = new Map<String, FlxNode>();
 		this.name = name;
