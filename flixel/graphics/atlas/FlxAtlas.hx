@@ -18,9 +18,6 @@ import flixel.system.FlxAssets;
 import flixel.system.frontEnds.BitmapFrontEnd;
 import openfl.geom.Matrix;
 
-// TODO: maybe add size setter
-// TODO: maybe add min size option
-
 /**
  * Class for packing multiple images in big one and generating frame data for each of them 
  * so you can easily load regions of atlas in sprites and tilemaps as a source of graphic
@@ -56,11 +53,11 @@ class FlxAtlas implements IFlxDestroyable
 	/**
 	 * Total width of atlas
 	 */
-	public var width(get, null):Int;
+	public var width(get, null):Int; // TODO: implement setter (it will change size only if value is bigger than current size and doesn't conflict with power of two property value)
 	/**
 	 * Total height of atlas
 	 */
-	public var height(get, null):Int;
+	public var height(get, null):Int; // TODO: implement setter
 	
 	public var minWidth(default, null):Int = 0; // TODO: implement setter
 	
