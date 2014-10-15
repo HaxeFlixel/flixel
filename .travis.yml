@@ -5,6 +5,10 @@ env:
   - TARGET=neko
   - TARGET=html5
   - TARGET=munit
+  
+ matrix:
+  allow_failures:
+      - TARGET=html5
 
 before_install:
   - sudo add-apt-repository ppa:eyecreate/haxe -y
