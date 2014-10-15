@@ -14,8 +14,8 @@ before_install:
   - mkdir ~/haxelib
   - haxelib -notimeout setup ~/haxelib 
   - haxelib -notimeout install munit
-  - haxelib -notimeout install lime
-  - haxelib -notimeout run lime install openfl
+  - haxelib -notimeout install lime > /dev/null
+  - haxelib -notimeout run lime install openfl > /dev/null
   - haxelib -notimeout install systools
   - haxelib git spinehaxe https://github.com/bendmorris/spinehaxe
   - haxelib -notimeout install nape
