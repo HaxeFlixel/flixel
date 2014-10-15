@@ -82,7 +82,7 @@ class FlxAtlas implements IFlxDestroyable
 	 * @param	maxWidth	max width of atlas
 	 * @param	maxHeight	max height of atlas
 	 */
-	public function new(name:String, powerOfTwo:Bool = false, border:Int = 1, rotate:Bool = false, maxWidth:Int = 0, maxHeight:Int = 0)
+	public function new(name:String, powerOfTwo:Bool = false, border:Int = 1, rotate:Bool = false, maxWidth:Int = 4096, maxHeight:Int = 4096)
 	{
 		nodes = new Map<String, FlxNode>();
 		this.name = name;
