@@ -53,13 +53,14 @@ class FlxAtlas implements IFlxDestroyable
 	/**
 	 * Total width of atlas
 	 */
-	public var width(get, null):Int; // TODO: implement setter (it will change size only if value is bigger than current size and doesn't conflict with power of two property value)
+	public var width(get, null):Int; // TODO: implement setter (it will change size only if value is bigger than current size and not bigger than max size and doesn't conflict with power of two property value)
+	
 	/**
 	 * Total height of atlas
 	 */
 	public var height(get, null):Int; // TODO: implement setter
 	
-	public var minWidth(default, null):Int = 0; // TODO: implement setter
+	public var minWidth(default, null):Int = 0; // TODO: implement setter (plus setMinSize() method). It will change atlas size if it's empty. Min size shouldn't be bigger than maxSize.
 	
 	public var minHeight(default, null):Int = 0; // TODO: implement setter
 	
@@ -877,6 +878,7 @@ class FlxAtlas implements IFlxDestroyable
 	
 	private function set_maxWidth(value:Int):Int
 	{
+		// TODO: maxSize shouldn't be less than current atlas size
 		maxWidth = (value > maxWidth) ? value : maxWidth;
 		return maxWidth;
 	}
