@@ -64,7 +64,7 @@ class FlxAtlas implements IFlxDestroyable
 	/**
 	 * Whether the size of this atlas should be the power of 2 or not.
 	 */
-	public var powerOfTwo(default, null):Bool = false; // TODO: add setter for this property
+	public var powerOfTwo(default, set):Bool = false;
 	
 	private var _bitmapData:BitmapData;
 	
@@ -614,33 +614,41 @@ class FlxAtlas implements IFlxDestroyable
 			return null;
 		}
 		
-		var sortedBitmaps:Array<BitmapData> = bitmaps.slice(0, bitmaps.length);
-		sortedBitmaps.sort(bitmapSorter);
-		
-		var node:FlxNode;
-		var result:Bool = true;
-		var index:Int;
+		_tempStorage = new Array<TempAtlasObj>();
 		for (i in 0...(numBitmaps))
 		{
-			index = bitmaps.indexOf(sortedBitmaps[i]);
-			node = addNode(sortedBitmaps[i], keys[index]);
+			_tempStorage.push({ bmd: bitmaps[i], keyStr: keys[i] });
 		}
 		
+		addFromAtlasObjects(_tempStorage);
 		return this;
+	}
+	
+	private function addFromAtlasObjects(objects:Array<TempAtlasObj>):Void
+	{
+		objects.sort(bitmapSorter);
+		var numBitmaps:Int = objects.length;
+		
+		for (i in 0...(numBitmaps))
+		{
+			addNode(objects[i].bmd, objects[i].keyStr);
+		}
+		
+		_tempStorage = null;
 	}
 	
 	/**
 	 * Internal method for sorting bitmaps
 	 */
-	private function bitmapSorter(bmd1:BitmapData, bmd2:BitmapData):Int
+	private function bitmapSorter(obj1:TempAtlasObj, obj2:TempAtlasObj):Int
 	{
-		if (bmd2.width == bmd1.width)
+		if (obj2.bmd.width == obj1.bmd.width)
 		{
-			if (bmd2.height == bmd1.height)
+			if (obj2.bmd.height == obj1.bmd.height)
 			{
 				return 0;
 			}
-			else if (bmd2.height > bmd1.height)
+			else if (obj2.bmd.height > obj1.bmd.height)
 			{
 				return 1;
 			}
@@ -650,7 +658,7 @@ class FlxAtlas implements IFlxDestroyable
 			}
 		}
 		
-		if (bmd2.width > bmd1.width)
+		if (obj2.bmd.width > obj1.bmd.width)
 		{
 			return 1;
 		}
@@ -667,9 +675,6 @@ class FlxAtlas implements IFlxDestroyable
 	 */
 	public function createQueue():FlxAtlas
 	{
-		if (_tempStorage != null)	
-			_tempStorage = null;
-		
 		_tempStorage = new Array<TempAtlasObj>();
 		return this;
 	}
@@ -682,7 +687,9 @@ class FlxAtlas implements IFlxDestroyable
 	public function addToQueue(data:BitmapData, key:String):FlxAtlas
 	{
 		if (_tempStorage == null)
+		{
 			_tempStorage = new Array<TempAtlasObj>();
+		}
 		
 		_tempStorage.push({ bmd: data, keyStr: key });
 		return this;
@@ -695,15 +702,7 @@ class FlxAtlas implements IFlxDestroyable
 	{
 		if (_tempStorage != null)
 		{
-			var bitmaps:Array<BitmapData> = new Array<BitmapData>();
-			var keys:Array<String> = new Array<String>();
-			for (obj in _tempStorage)
-			{
-				bitmaps.push(obj.bmd);
-				keys.push(obj.keyStr);
-			}
-			addNodes(bitmaps, keys);
-			_tempStorage = null;
+			addFromAtlasObjects(_tempStorage);
 		}
 		
 		return this;
@@ -737,17 +736,37 @@ class FlxAtlas implements IFlxDestroyable
 	}
 	
 	/**
-	 * Returns atlas data in Spritesheet packer format, where each image represented by line:
-	 * "imageName = image.x image.y image.width image.height"
+	 * Returns atlas data in LibGdx packer format.
 	 */
-	// TODO: reimplement it, since spritesheetpacker doesn't support image rotation
-	public function getSpriteSheetPackerData():String
+	public function getLibGdxData():String
 	{
-		var data:String = "";
+		var data:String = "\n";
+		data += name + "\n";
+		data += "format: RGBA8888\n";
+		data += "filter: Linear,Linear\n";
+		data += "repeat: none\n";
+		
 		for (node in nodes)
 		{
-			data += node.key + " = " + node.x + " " + node.y + " " + (node.width - border) + " " + (node.height - border) + "\n";
+			data += node.key + "\n";
+			data += "  rotate: " + node.rotated + "\n";
+			data += "  xy: " + node.x + ", " + node.y + "\n";
+			
+			if (rotate)
+			{
+				data += "size: " + node.height + ", " + node.width + "\n";
+				data += "orig: " + node.height + ", " + node.width + "\n";
+			}
+			else
+			{
+				data += "size: " + node.width + ", " + node.height + "\n";
+				data += "orig: " + node.width + ", " + node.height + "\n";
+			}
+			
+			data += "  offset: 0, 0\n";
+			data += "  index: -1\n";
 		}
+		
 		return data;
 	}
 	
@@ -853,6 +872,35 @@ class FlxAtlas implements IFlxDestroyable
 	{
 		maxHeight = (value > maxHeight) ? value : maxHeight;
 		return maxHeight;
+	}
+	
+	private function set_powerOfTwo(value:Bool):Bool
+	{
+		if (value != powerOfTwo && value == true)
+		{
+			var nextWidth:Int = getNextPowerOf2(root.width);
+			var nextHeight:Int = getNextPowerOf2(root.height);
+			
+			if (nextWidth != root.width || nextHeight != root.height) // need to resize atlas
+			{
+				if ((maxWidth > 0 && nextWidth > maxWidth) || (maxHeight > 0 && nextHeight > maxHeight))
+				{
+					throw "Can't set powerOfTwo property to true, since it requires to increase atlas size which is bigger that max size";
+					return false;
+				}
+				
+				var temp:FlxNode = root;
+				root = new FlxNode(new FlxRect(0, 0, nextWidth, nextHeight), this);
+				
+				if (root.left != null) // this means that atlas isn't empty and we need to resize it's bitmapdata
+				{
+					divideNode(root, temp.width, temp.height, needToDivideHorizontally(root, temp.width, temp.height));
+					root.left.left = temp;
+				}
+			}
+		}
+		
+		return powerOfTwo = value;
 	}
 }
 
