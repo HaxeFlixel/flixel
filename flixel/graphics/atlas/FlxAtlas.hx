@@ -18,7 +18,7 @@ import flixel.system.FlxAssets;
 import flixel.system.frontEnds.BitmapFrontEnd;
 import openfl.geom.Matrix;
 
-// TODO: maybe add "square" option - atlas should have width equal to height
+// TODO: maybe add size setter
 // TODO: maybe add min size option
 
 /**
@@ -27,6 +27,10 @@ import openfl.geom.Matrix;
  */
 class FlxAtlas implements IFlxDestroyable
 {	
+	public static var atlasMinSize:FlxPoint = new FlxPoint(256, 256);
+	
+	public static var atlasMaxSize:FlxPoint = new FlxPoint(1024, 1024);
+	
 	/**
 	 * Root node of atlas
 	 */
@@ -58,6 +62,10 @@ class FlxAtlas implements IFlxDestroyable
 	 */
 	public var height(get, null):Int;
 	
+	public var minWidth(default, null):Int = 0; // TODO: implement setter
+	
+	public var minHeight(default, null):Int = 0; // TODO: implement setter
+	
 	public var maxWidth(default, set):Int = 0;
 	
 	public var maxHeight(default, set):Int = 0;
@@ -82,20 +90,25 @@ class FlxAtlas implements IFlxDestroyable
 	 * @param	powerOfTwo	whether the size of this atlas should be the power of 2 or not.
 	 * @param	border		gap between nodes to insert.
 	 * @param	rotate		whether to rotate added images for less atlas size
-	 * @param	maxWidth	max width of atlas
-	 * @param	maxHeight	max height of atlas
+	 * @param	minSize		max size of atlas
+	 * @param	minSize		min size of atlas
 	 */
-	public function new(name:String, powerOfTwo:Bool = false, border:Int = 1, rotate:Bool = false, maxWidth:Int = 1024, maxHeight:Int = 1024)
+	public function new(name:String, powerOfTwo:Bool = false, border:Int = 1, rotate:Bool = false, minSize:FlxPoint = null, maxSize:FlxPoint = null)
 	{
 		nodes = new Map<String, FlxNode>();
 		this.name = name;
 		
-		root = new FlxNode(new FlxRect(0, 0, 1, 1), this);
 		this.powerOfTwo = powerOfTwo;
 		this.border = border;
-		this.maxWidth = maxWidth;
-		this.maxHeight = maxHeight;
+		
+		this.minWidth = (minSize != null) ? Std.int(minSize.x) : Std.int(atlasMinSize.x);
+		this.minHeight = (minSize != null) ? Std.int(minSize.y) : Std.int(atlasMinSize.y);
+		
+		this.maxWidth = (maxSize != null) ? Std.int(maxSize.x) : Std.int(atlasMaxSize.x);
+		this.maxHeight = (maxSize != null) ? Std.int(maxSize.y) : Std.int(atlasMaxSize.y);
+		
 		this.rotate = rotate;
+		root = new FlxNode(new FlxRect(0, 0, minWidth, minHeight), this);
 	}
 	
 	/**
@@ -732,7 +745,7 @@ class FlxAtlas implements IFlxDestroyable
 	public function clear():Void
 	{
 		deleteSubtree(root);
-		root = new FlxNode(new FlxRect(0, 0, 1, 1), this);
+		root = new FlxNode(new FlxRect(0, 0, minWidth, minHeight), this);
 		FlxG.bitmap.removeByKey(name);
 		_bitmapData = null;
 		nodes = new Map<String, FlxNode>();
