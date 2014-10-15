@@ -41,7 +41,7 @@ class PlayState extends FlxState
 		
 		// let's load these frames into tilemap:
 		var tilemap:FlxTilemap = new FlxTilemap();
-		tilemap.loadMapFromCSV(Assets.getText("assets/mapCSV_Group1_Map1.csv"), tileFrames);
+		tilemap.loadMapFromCSV("assets/mapCSV_Group1_Map1.csv", tileFrames);
 		add(tilemap);
 		
 		// you can load tile frames in sprites with frames setter:
