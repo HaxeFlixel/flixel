@@ -2,36 +2,35 @@
 <project version="2">
   <!-- Output SWF options -->
   <output>
-    <movie outputType="Application" />
+    <movie outputType="CustomBuild" />
     <movie input="" />
     <movie path="Project.xml" />
     <movie fps="60" />
     <movie width="640" />
     <movie height="480" />
-    <movie version="3" />
+    <movie version="1" />
     <movie minorVersion="0" />
-    <movie platform="NME" />
+    <movie platform="Lime" />
     <movie background="000000" />
     <movie preferredSDK="Haxe 3.0.0;3.0.0;" />
   </output>
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
-    <class path="c:\HaxeToolkit\haxe\lib\flixel\3,4,1" />
-    <class path="c:\HaxeToolkit\haxe\lib\lime\1,0,1" />
-    <class path="c:\HaxeToolkit\haxe\lib\openfl\2,0,1" />
-    <class path="c:\HaxeToolkit\haxe\lib\flixel-addons\1,0,0" />
+    <class path="C:\HaxeToolkit\haxe\lib\flixel-addons\git" />
+    <class path="C:\HaxeToolkit\haxe\lib\openfl\2,1,0" />
+    <class path="C:\HaxeToolkit\haxe\lib\flixel\git" />
+    <class path="C:\HaxeToolkit\haxe\lib\lime\2,0,0-alpha" />
     <class path="source" />
-    <class path="c:\HaxeToolkit\haxe\lib\openfl\2,0,1\backends\native" />
-    <class path="export\windows\neko\haxe" />
+    <class path="export\flash\haxe" />
   </classpaths>
   <!-- Build options -->
   <build>
-    <option directives="flixel-addons=1.0.0&#xA;openfl=2.0.1&#xA;flixel=3.4.1&#xA;lime=1.0.1&#xA;tools=1.5.7&#xA;FLX_NO_MOUSE_ADVANCED&#xA;lime_native&#xA;no-compilation&#xA;native&#xA;openfl-native&#xA;display&#xA;FLX_RENDER_TILE&#xA;windows&#xA;desktop" />
+    <option directives="flixel-addons=1.1.0&#xA;openfl=2.1.0&#xA;flixel=3.3.5&#xA;lime=2.0.0-alpha&#xA;tools=2.0.0-alpha&#xA;FLX_NO_MOUSE_ADVANCED&#xA;no-compilation&#xA;openfl-flash&#xA;web" />
     <option flashStrict="False" />
     <option noInlineOnDebug="False" />
     <option mainClass="ApplicationMain" />
     <option enabledebug="True" />
-    <option additional="--no-output&#xA;--remap flash:openfl&#xA;--macro keep(&quot;Main&quot;)" />
+    <option additional="--macro flixel.system.macros.FlxConditionals.run()&#xA;-swf-version 11.8" />
   </build>
   <!-- haxelib libraries -->
   <haxelib>
@@ -41,16 +40,12 @@
   <compileTargets>
     <compile path="Source\TestDrawRect.hx" />
   </compileTargets>
-  <!-- Assets to embed into the output SWF -->
-  <library>
-    <!-- example: <asset path="..." id="..." update="..." glyphs="..." mode="..." place="..." sharepoint="..." /> -->
-  </library>
   <!-- Paths to exclude from the Project Explorer tree -->
   <hiddenPaths>
     <hidden path="obj" />
   </hiddenPaths>
   <!-- Executed before build -->
-  <preBuildCommand />
+  <preBuildCommand>"$(CompilerPath)/haxelib" run lime build "$(OutputFile)" $(TargetBuild) -$(BuildConfig) -Dfdb</preBuildCommand>
   <!-- Executed after build -->
   <postBuildCommand alwaysRun="False" />
   <!-- Other project options -->

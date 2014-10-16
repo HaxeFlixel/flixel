@@ -2,38 +2,39 @@
 <project version="2">
   <!-- Output SWF options -->
   <output>
-    <movie outputType="Application" />
+    <movie outputType="CustomBuild" />
     <movie input="" />
     <movie path="Project.xml" />
-    <movie fps="30" />
+    <movie fps="60" />
     <movie width="1024" />
     <movie height="768" />
-    <movie version="3" />
+    <movie version="1" />
     <movie minorVersion="0" />
-    <movie platform="NME" />
-    <movie background="FFFFFF" />
+    <movie platform="Lime" />
+    <movie background="000000" />
     <movie preferredSDK="Haxe 3.0.0;3.0.0;" />
   </output>
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
+    <class path="C:\HaxeToolkit\haxe\lib\flixel-ui\git" />
+    <class path="C:\HaxeToolkit\haxe\lib\openfl\2,1,0" />
+    <class path="C:\HaxeToolkit\haxe\lib\flixel\git" />
+    <class path="C:\HaxeToolkit\haxe\lib\lime\2,0,0-alpha" />
     <class path="source" />
     <class path="export\flash\haxe" />
   </classpaths>
   <!-- Build options -->
   <build>
-    <option directives="FLX_BMP_DEBUG&#xA;tools=1.4.0&#xA;FLX_NO_DEBUG&#xA;FLX_RENDER_BLIT&#xA;display&#xA;web" />
+    <option directives="flixel-ui=1.0.2&#xA;openfl=2.1.0&#xA;flixel=3.3.5&#xA;lime=2.0.0-alpha&#xA;tools=2.0.0-alpha&#xA;FLX_NO_DEBUG&#xA;no-compilation&#xA;NAPE_RELEASE_BUILD&#xA;openfl-flash&#xA;web" />
     <option flashStrict="False" />
     <option noInlineOnDebug="False" />
     <option mainClass="ApplicationMain" />
     <option enabledebug="True" />
-    <option additional="--no-output&#xA;-swf-version 11.8&#xA;#--remap nme:flash" />
+    <option additional="--macro flixel.system.macros.FlxConditionals.run()&#xA;-swf-version 11.8" />
   </build>
   <!-- haxelib libraries -->
   <haxelib>
-    <library name="flixel" />
-    <library name="openfl" />
-    <library name="flixel-ui" />
-    <library name="flixel-addons" />
+    <!-- example: <library name="..." /> -->
   </haxelib>
   <!-- Class files to compile (other referenced classes will automatically be included) -->
   <compileTargets>
@@ -42,10 +43,6 @@
     <compile path="source\flixel\src\org\flixel\FlxTilemap.hx" />
     <compile path="source\game\actors\Player.hx" />
   </compileTargets>
-  <!-- Assets to embed into the output SWF -->
-  <library>
-    <!-- example: <asset path="..." id="..." update="..." glyphs="..." mode="..." place="..." sharepoint="..." /> -->
-  </library>
   <!-- Paths to exclude from the Project Explorer tree -->
   <hiddenPaths>
     <hidden path="tools" />
@@ -63,7 +60,7 @@
     <hidden path="obj" />
   </hiddenPaths>
   <!-- Executed before build -->
-  <preBuildCommand />
+  <preBuildCommand>"$(CompilerPath)/haxelib" run lime build "$(OutputFile)" $(TargetBuild) -$(BuildConfig) -Dfdb</preBuildCommand>
   <!-- Executed after build -->
   <postBuildCommand alwaysRun="False" />
   <!-- Other project options -->
