@@ -24,8 +24,14 @@ import openfl.geom.Matrix;
  */
 class FlxAtlas implements IFlxDestroyable
 {	
-	public static var atlasMinSize:FlxPoint = new FlxPoint(256, 256);
+	/**
+	 * Default minimum size for atlases.
+	 */
+	public static var atlasMinSize:FlxPoint = new FlxPoint(128, 128);
 	
+	/**
+	 * Default maximum size for atlases
+	 */
 	public static var atlasMaxSize:FlxPoint = new FlxPoint(1024, 1024);
 	
 	/**
@@ -62,14 +68,27 @@ class FlxAtlas implements IFlxDestroyable
 	@:isVar
 	public var height(get, set):Int;
 	
-	public var minWidth(default, set):Int = 256;
+	/**
+	 * Minimum width for this atlas.
+	 */
+	public var minWidth(default, set):Int = 128;
+	/**
+	 * Minimum height for this atlas
+	 */
+	public var minHeight(default, set):Int = 128;
 	
-	public var minHeight(default, set):Int = 256;
-	
+	/**
+	 * Maximum width for this atlas.
+	 */
 	public var maxWidth(default, set):Int = 1024;
-	
+	/**
+	 * Maximum height for this atlas.
+	 */
 	public var maxHeight(default, set):Int = 1024;
 	
+	/**
+	 * Whether to allow image rotation for packing in atlas.
+	 */
 	public var rotate(default, null):Bool = false;
 	
 	/**
@@ -105,8 +124,8 @@ class FlxAtlas implements IFlxDestroyable
 		
 		this.minWidth = Std.int(minSize.x);
 		this.minHeight = Std.int(minSize.y);
-		this.maxWidth = Std.int(maxSize.x);
-		this.maxHeight = Std.int(maxSize.y);
+		this.maxWidth = (maxSize.x > minSize.x) ? Std.int(maxSize.x) : minWidth;
+		this.maxHeight = (maxSize.y > minSize.x) ? Std.int(maxSize.y) : minHeight;
 		this.rotate = rotate;
 		
 		initRoot();
@@ -122,9 +141,6 @@ class FlxAtlas implements IFlxDestroyable
 			rootWidth = getNextPowerOf2(rootWidth);
 			rootHeight = getNextPowerOf2(rootHeight);
 		}
-		
-		width = rootWidth;
-		height = rootHeight;
 		
 		root = new FlxNode(new FlxRect(0, 0, rootWidth, rootHeight), this);
 	}
@@ -843,15 +859,20 @@ class FlxAtlas implements IFlxDestroyable
 		// Current node
 		var current:FlxNode = root;
 		
+		var emptyNodes:Array<FlxNode> = new Array<FlxNode>();
+		
 		var canPlaceRight:Bool = false;
 		var canPlaceLeft:Bool = false;
+		
+		var looping:Bool = true;
+		
 		// Main loop
-		while (true)
+		while (looping)
 		{
 			// Look into current node
 			if (current.isEmpty && current.canPlace(insertWidth, insertHeight))
 			{
-				return current;
+				emptyNodes.push(current);
 			}
 			// Move to next node
 			canPlaceRight = (current.right != null && current.right.canPlace(insertWidth, insertHeight));
@@ -879,12 +900,27 @@ class FlxAtlas implements IFlxDestroyable
 				else
 				{
 					// Stack is empty. End of loop
-					return null;
+					looping = false;
 				}
 			}
 		}
 		
-		return null;
+		var result:FlxNode = null;
+		var minArea:Int = maxWidth * maxHeight;
+		var nodeArea:Int;
+		
+		for (node in emptyNodes)
+		{
+			nodeArea = node.width * node.height;
+			
+			if (nodeArea < minArea)
+			{
+				minArea = nodeArea;
+				result = node;
+			}
+		}
+		
+		return result;
 	}
 	
 	private function get_bitmapData():BitmapData
