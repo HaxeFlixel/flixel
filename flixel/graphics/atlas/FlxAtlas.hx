@@ -210,13 +210,23 @@ class FlxAtlas implements IFlxDestroyable
 		var rotateNode:Bool = false;
 		var nodeToInsert:FlxNode = findNodeToInsert(insertWidth, insertHeight);
 		
-		if (nodeToInsert == null && allowRotation)
+		if (allowRotation)
 		{
-			nodeToInsert = findNodeToInsert(insertHeight, insertWidth);
-			rotateNode = true;
-			var temp:Int = insertWidth;
-			insertWidth = insertHeight;
-			insertHeight = temp;
+			var nodeToInsertWithRotation = findNodeToInsert(insertHeight, insertWidth);
+			
+			if (nodeToInsertWithRotation != null)
+			{
+				var nodeWithRotationArea:Int = nodeToInsertWithRotation.width * nodeToInsertWithRotation.height;
+				
+				if (nodeToInsert == null || (nodeToInsert != null && nodeToInsert.width * nodeToInsert.height > nodeWithRotationArea))
+				{
+					nodeToInsert = nodeToInsertWithRotation;
+					rotateNode = true;
+					var temp:Int = insertWidth;
+					insertWidth = insertHeight;
+					insertHeight = temp;
+				}
+			}
 		}
 		
 		if (nodeToInsert != null)
