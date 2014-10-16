@@ -53,20 +53,22 @@ class FlxAtlas implements IFlxDestroyable
 	/**
 	 * Total width of atlas
 	 */
-	public var width(get, null):Int; // TODO: implement setter (it will change size only if value is bigger than current size and not bigger than max size and doesn't conflict with power of two property value)
+	@:isVar
+	public var width(get, set):Int;
 	
 	/**
 	 * Total height of atlas
 	 */
-	public var height(get, null):Int; // TODO: implement setter
+	@:isVar
+	public var height(get, set):Int;
 	
-	public var minWidth(default, null):Int = 0; // TODO: implement setter (plus setMinSize() method). It will change atlas size if it's empty. Min size shouldn't be bigger than maxSize.
+	public var minWidth(default, set):Int = 256;
 	
-	public var minHeight(default, null):Int = 0; // TODO: implement setter
+	public var minHeight(default, set):Int = 256;
 	
-	public var maxWidth(default, set):Int = 0;
+	public var maxWidth(default, set):Int = 1024;
 	
-	public var maxHeight(default, set):Int = 0;
+	public var maxHeight(default, set):Int = 1024;
 	
 	public var rotate(default, null):Bool = false;
 	
@@ -88,25 +90,43 @@ class FlxAtlas implements IFlxDestroyable
 	 * @param	powerOfTwo	whether the size of this atlas should be the power of 2 or not.
 	 * @param	border		gap between nodes to insert.
 	 * @param	rotate		whether to rotate added images for less atlas size
-	 * @param	minSize		max size of atlas
 	 * @param	minSize		min size of atlas
+	 * @param	maxSize		max size of atlas
 	 */
 	public function new(name:String, powerOfTwo:Bool = false, border:Int = 1, rotate:Bool = false, minSize:FlxPoint = null, maxSize:FlxPoint = null)
 	{
 		nodes = new Map<String, FlxNode>();
 		this.name = name;
-		
 		this.powerOfTwo = powerOfTwo;
 		this.border = border;
 		
-		this.minWidth = (minSize != null) ? Std.int(minSize.x) : Std.int(atlasMinSize.x);
-		this.minHeight = (minSize != null) ? Std.int(minSize.y) : Std.int(atlasMinSize.y);
+		minSize = (minSize != null) ? minSize : atlasMinSize;
+		maxSize = (maxSize != null) ? maxSize : atlasMaxSize;
 		
-		this.maxWidth = (maxSize != null) ? Std.int(maxSize.x) : Std.int(atlasMaxSize.x);
-		this.maxHeight = (maxSize != null) ? Std.int(maxSize.y) : Std.int(atlasMaxSize.y);
-		
+		this.minWidth = Std.int(minSize.x);
+		this.minHeight = Std.int(minSize.y);
+		this.maxWidth = Std.int(maxSize.x);
+		this.maxHeight = Std.int(maxSize.y);
 		this.rotate = rotate;
-		root = new FlxNode(new FlxRect(0, 0, minWidth, minHeight), this);
+		
+		initRoot();
+	}
+	
+	private function initRoot():Void
+	{
+		var rootWidth:Int = minWidth;
+		var rootHeight:Int = minHeight;
+		
+		if (powerOfTwo)
+		{
+			rootWidth = getNextPowerOf2(rootWidth);
+			rootHeight = getNextPowerOf2(rootHeight);
+		}
+		
+		width = rootWidth;
+		height = rootHeight;
+		
+		root = new FlxNode(new FlxRect(0, 0, rootWidth, rootHeight), this);
 	}
 	
 	/**
@@ -121,7 +141,9 @@ class FlxAtlas implements IFlxDestroyable
 		
 		if (key == null) 
 		{
+			#if !FLX_NO_DEBUG
 			throw "addNode can't find the key for specified bitmapdata. Please provide not null value as a Key argument.";
+			#end
 			return null;
 		}
 		
@@ -132,7 +154,9 @@ class FlxAtlas implements IFlxDestroyable
 		
 		if (data == null)	
 		{
+			#if !FLX_NO_DEBUG
 			throw "addNode can't find bitmapdata with specified key: " + Graphic + ". Please provide valid value.";
+			#end
 			return null;
 		}
 		
@@ -292,9 +316,20 @@ class FlxAtlas implements IFlxDestroyable
 				rootHeight = getNextPowerOf2(rootHeight);
 			}
 			
+			rootWidth = (minWidth > rootWidth) ? minWidth : rootWidth;
+			rootHeight = (minHeight > rootHeight) ? minHeight : rootHeight;
+			
+			if (powerOfTwo)
+			{
+				rootWidth = getNextPowerOf2(rootWidth);
+				rootHeight = getNextPowerOf2(rootHeight);
+			}
+			
 			if ((maxWidth > 0 && rootWidth > maxWidth) || (maxHeight > 0 && rootHeight > maxHeight))
 			{
+				#if !FLX_NO_DEBUG
 				throw "Can't insert node " + key + " with the size of (" + data.width + "; " + data.height + ") in atlas " + name + " with the max size of (" + maxWidth + "; " + maxHeight + ") and powerOfTwo: " + powerOfTwo;
+				#end
 				return null;
 			}
 			
@@ -374,7 +409,9 @@ class FlxAtlas implements IFlxDestroyable
 			
 			if (!canExpandRight && !canExpandBottom && !canExpandRightRotate && !canExpandBottomRotate)
 			{
+				#if !FLX_NO_DEBUG
 				throw "Can't insert node " + key + " with the size of (" + data.width + "; " + data.height + ") in atlas " + name + " with the max size of (" + maxWidth + "; " + maxHeight + ") and powerOfTwo: " + powerOfTwo;
+				#end
 				return null; // can't expand in any direction
 			}
 			
@@ -433,18 +470,9 @@ class FlxAtlas implements IFlxDestroyable
 					insertNodeHeight = insertWidth;
 				}
 				
-				root = new FlxNode(new FlxRect(0, 0, temp.width + insertNodeWidth, Math.max(temp.height, insertNodeHeight)), this);
-				divideNode(root, temp.width, temp.height, true);
-				root.left.left = temp;
+				expandRoot(temp.width + insertNodeWidth, Math.max(temp.height, insertNodeHeight), true);
 				dataNode = divideNode(root.right, insertNodeWidth, insertNodeHeight, true, data, key, rotateRight);
-				
-				if (addRightWidth > root.width || addRightHeight > root.height)
-				{
-					temp = root;
-					root = new FlxNode(new FlxRect(0, 0, addRightWidth, addRightHeight), this);
-					divideNode(root, temp.width, temp.height, needToDivideHorizontally(root, temp.width, temp.height));
-					root.left.left = temp;
-				}
+				expandRoot(addRightWidth, addRightHeight, false, true);
 			}
 			else // add node at the bottom
 			{
@@ -454,24 +482,29 @@ class FlxAtlas implements IFlxDestroyable
 					insertNodeHeight = insertWidth;
 				}
 				
-				root = new FlxNode(new FlxRect(0, 0, Math.max(temp.width, insertNodeWidth), temp.height + insertNodeHeight), this);
-				divideNode(root, temp.width, temp.height, false);
-				root.left.left = temp;
+				expandRoot(Math.max(temp.width, insertNodeWidth), temp.height + insertNodeHeight, false);
 				dataNode = divideNode(root.right, insertNodeWidth, insertNodeHeight, true, data, key, rotateBottom);
-				
-				if (addBottomWidth > root.width || addBottomHeight > root.height)
-				{
-					temp = root;
-					root = new FlxNode(new FlxRect(0, 0, addBottomWidth, addBottomHeight), this);
-					divideNode(root, temp.width, temp.height, needToDivideHorizontally(root, temp.width, temp.height));
-					root.left.left = temp;
-				}
+				expandRoot(addBottomWidth, addBottomHeight, false, true);
 			}
 			
 			return dataNode;
 		}
 		
 		return null;
+	}
+	
+	private function expandRoot(newWidth:Float, newHeight:Float, divideHorizontally:Bool, decideHowToDivide:Bool = false):Void
+	{
+		if (newWidth> root.width || newHeight > root.height)
+		{
+			var temp:FlxNode = root;
+			root = new FlxNode(new FlxRect(0, 0, newWidth, newHeight), this);
+			
+			divideHorizontally = decideHowToDivide ? needToDivideHorizontally(root, temp.width, temp.height) : divideHorizontally;
+			
+			divideNode(root, temp.width, temp.height, divideHorizontally);
+			root.left.left = temp;
+		}
 	}
 	
 	private function expandBitmapData():Void
@@ -521,7 +554,9 @@ class FlxAtlas implements IFlxDestroyable
 		
 		if (key == null) 
 		{
+			#if !FLX_NO_DEBUG
 			throw "addNodeWithSpacings can't find the key for specified bitmapdata. Please provide not null value as a Key argument.";
+			#end
 			return null;
 		}
 		
@@ -534,7 +569,9 @@ class FlxAtlas implements IFlxDestroyable
 		
 		if (data == null) 
 		{
+			#if !FLX_NO_DEBUG
 			throw "addNodeWithSpacings can't find bitmapdata with specified key: " + Graphic + ". Please provide valid value.";
+			#end
 			return null;
 		}
 		
@@ -543,7 +580,9 @@ class FlxAtlas implements IFlxDestroyable
 		
 		if (node == null) 
 		{
+			#if !FLX_NO_DEBUG
 			throw "addNodeWithSpacings can't insert provided image: " + Graphic + ") in atlas. It's probably too big.";
+			#end
 			return null;
 		}
 		
@@ -624,7 +663,9 @@ class FlxAtlas implements IFlxDestroyable
 		
 		if (numBitmaps != numKeys)
 		{
+			#if !FLX_NO_DEBUG
 			throw "The number of bitmaps (" + numBitmaps + ") should be equal to number of keys (" + numKeys + ")";
+			#end
 			return null;
 		}
 		
@@ -743,7 +784,7 @@ class FlxAtlas implements IFlxDestroyable
 	public function clear():Void
 	{
 		deleteSubtree(root);
-		root = new FlxNode(new FlxRect(0, 0, minWidth, minHeight), this);
+		initRoot();
 		FlxG.bitmap.removeByKey(name);
 		_bitmapData = null;
 		nodes = new Map<String, FlxNode>();
@@ -846,16 +887,6 @@ class FlxAtlas implements IFlxDestroyable
 		return null;
 	}
 	
-	private inline function get_width():Int
-	{
-		return root.width;
-	}
-	
-	private inline function get_height():Int
-	{
-		return root.height;
-	}
-	
 	private function get_bitmapData():BitmapData
 	{
 		return _bitmapData;
@@ -876,16 +907,115 @@ class FlxAtlas implements IFlxDestroyable
 		return _bitmapData = value;
 	}
 	
+	private function set_minWidth(value:Int):Int
+	{
+		if (value <= maxWidth)
+		{
+			minWidth = value;
+			
+			if (value > width)
+			{
+				width = value;
+			}
+		}
+		
+		return minWidth;
+	}
+	
+	private function set_minHeight(value:Int):Int
+	{
+		if (value <= maxHeight)
+		{
+			minHeight = value;
+			
+			if (value > height)
+			{
+				height = value;
+			}
+		}
+		
+		return minHeight;
+	}
+	
+	private function get_width():Int
+	{
+		if (root != null)
+		{
+			return root.width;
+		}
+		
+		return 0;
+	}
+	
+	private function set_width(value:Int):Int
+	{
+		if (value > get_width())
+		{
+			if (powerOfTwo)
+			{
+				value = getNextPowerOf2(value);
+			}
+			
+			if (value <= maxWidth)
+			{
+				if (root != null && root.width < value)
+				{
+					expandRoot(value, root.height, needToDivideHorizontally(root, root.width, root.height));
+				}
+			}
+		}
+		
+		return value;
+	}
+	
+	private function get_height():Int
+	{
+		if (root != null)
+		{
+			return root.height;
+		}
+		
+		return 0;
+	}
+	
+	private function set_height(value:Int):Int
+	{
+		if (value > get_height())
+		{
+			if (powerOfTwo)
+			{
+				value = getNextPowerOf2(value);
+			}
+			
+			if (value <= maxHeight)
+			{
+				if (root != null && root.height < value)
+				{
+					expandRoot(root.width, value, needToDivideHorizontally(root, root.width, root.height));
+				}
+			}
+		}
+		
+		return value;
+	}
+	
 	private function set_maxWidth(value:Int):Int
 	{
-		// TODO: maxSize shouldn't be less than current atlas size
-		maxWidth = (value > maxWidth) ? value : maxWidth;
+		if (value >= minWidth && (root == null || value >= width))
+		{
+			maxWidth = value;
+		}
+		
 		return maxWidth;
 	}
 	
 	private function set_maxHeight(value:Int):Int
 	{
-		maxHeight = (value > maxHeight) ? value : maxHeight;
+		if (value >= minHeight && (root == null || value >= height))
+		{
+			maxHeight = value;
+		}
+		
 		return maxHeight;
 	}
 	
@@ -900,7 +1030,9 @@ class FlxAtlas implements IFlxDestroyable
 			{
 				if ((maxWidth > 0 && nextWidth > maxWidth) || (maxHeight > 0 && nextHeight > maxHeight))
 				{
+					#if !FLX_NO_DEBUG
 					throw "Can't set powerOfTwo property to true, since it requires to increase atlas size which is bigger that max size";
+					#end
 					return false;
 				}
 				
