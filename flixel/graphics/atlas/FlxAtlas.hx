@@ -27,12 +27,12 @@ class FlxAtlas implements IFlxDestroyable
 	/**
 	 * Default minimum size for atlases.
 	 */
-	public static var atlasMinSize:FlxPoint = new FlxPoint(128, 128);
+	public static var defaultMinSize:FlxPoint = new FlxPoint(128, 128);
 	
 	/**
 	 * Default maximum size for atlases
 	 */
-	public static var atlasMaxSize:FlxPoint = new FlxPoint(1024, 1024);
+	public static var defaultMaxSize:FlxPoint = new FlxPoint(1024, 1024);
 	
 	/**
 	 * Root node of atlas
@@ -89,7 +89,7 @@ class FlxAtlas implements IFlxDestroyable
 	/**
 	 * Whether to allow image rotation for packing in atlas.
 	 */
-	public var rotate(default, null):Bool = false;
+	public var allowRotation(default, null):Bool = false;
 	
 	/**
 	 * Whether the size of this atlas should be the power of 2 or not.
@@ -119,14 +119,14 @@ class FlxAtlas implements IFlxDestroyable
 		this.powerOfTwo = powerOfTwo;
 		this.border = border;
 		
-		minSize = (minSize != null) ? minSize : atlasMinSize;
-		maxSize = (maxSize != null) ? maxSize : atlasMaxSize;
+		minSize = (minSize != null) ? minSize : defaultMinSize;
+		maxSize = (maxSize != null) ? maxSize : defaultMaxSize;
 		
 		this.minWidth = Std.int(minSize.x);
 		this.minHeight = Std.int(minSize.y);
 		this.maxWidth = (maxSize.x > minSize.x) ? Std.int(maxSize.x) : minWidth;
 		this.maxHeight = (maxSize.y > minSize.x) ? Std.int(maxSize.y) : minHeight;
-		this.rotate = rotate;
+		this.allowRotation = rotate;
 		
 		initRoot();
 	}
@@ -210,7 +210,7 @@ class FlxAtlas implements IFlxDestroyable
 		var rotateNode:Bool = false;
 		var nodeToInsert:FlxNode = findNodeToInsert(insertWidth, insertHeight);
 		
-		if (nodeToInsert == null && rotate)
+		if (nodeToInsert == null && allowRotation)
 		{
 			nodeToInsert = findNodeToInsert(insertHeight, insertWidth);
 			rotateNode = true;
@@ -379,7 +379,7 @@ class FlxAtlas implements IFlxDestroyable
 			var addBottomWidthRotate:Int = addBottomWidth;
 			var addBottomHeightRotate:Int = addBottomHeight;
 			
-			if (rotate)
+			if (allowRotation)
 			{
 				addRightWidthRotate = root.width + insertHeight;
 				addRightHeightRotate = Std.int(Math.max(root.height, insertWidth));
@@ -395,7 +395,7 @@ class FlxAtlas implements IFlxDestroyable
 				addBottomWidthRotate = addBottomWidth = getNextPowerOf2(addBottomWidth);
 				addBottomHeightRotate = addBottomHeight = getNextPowerOf2(addBottomHeight);
 				
-				if (rotate)
+				if (allowRotation)
 				{
 					addRightWidthRotate = getNextPowerOf2(addRightWidthRotate);
 					addRightHeightRotate = getNextPowerOf2(addRightHeightRotate);
@@ -408,8 +408,8 @@ class FlxAtlas implements IFlxDestroyable
 			var canExpandRight:Bool = true;
 			var canExpandBottom:Bool = true;
 			
-			var canExpandRightRotate:Bool = rotate;
-			var canExpandBottomRotate:Bool = rotate;
+			var canExpandRightRotate:Bool = allowRotation;
+			var canExpandBottomRotate:Bool = allowRotation;
 			
 			if ((maxWidth > 0 && addRightWidth > maxWidth) || (maxHeight > 0 && addRightHeight > maxHeight))
 				canExpandRight = false;
@@ -823,7 +823,7 @@ class FlxAtlas implements IFlxDestroyable
 			data += "  rotate: " + node.rotated + "\n";
 			data += "  xy: " + node.x + ", " + node.y + "\n";
 			
-			if (rotate)
+			if (allowRotation)
 			{
 				data += "size: " + node.height + ", " + node.width + "\n";
 				data += "orig: " + node.height + ", " + node.width + "\n";
