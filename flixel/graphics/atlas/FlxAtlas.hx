@@ -735,7 +735,7 @@ class FlxAtlas implements IFlxDestroyable
 			return obj2.bmd.height - obj1.bmd.height;
 		}
 		
-		return obj2.bmd.width > obj1.bmd.width;
+		return obj2.bmd.width - obj1.bmd.width;
 	}
 	
 	/**
@@ -867,13 +867,23 @@ class FlxAtlas implements IFlxDestroyable
 		
 		var looping:Bool = true;
 		
+		var result:FlxNode = null;
+		var minArea:Int = maxWidth * maxHeight + 1;
+		var nodeArea:Int;
+		
 		// Main loop
 		while (looping)
 		{
 			// Look into current node
 			if (current.isEmpty && current.canPlace(insertWidth, insertHeight))
 			{
-				emptyNodes.push(current);
+				nodeArea = current.width * current.height;
+				
+				if (nodeArea < minArea)
+				{
+					minArea = nodeArea;
+					result = current;
+				}
 			}
 			// Move to next node
 			canPlaceRight = (current.right != null && current.right.canPlace(insertWidth, insertHeight));
@@ -903,21 +913,6 @@ class FlxAtlas implements IFlxDestroyable
 					// Stack is empty. End of loop
 					looping = false;
 				}
-			}
-		}
-		
-		var result:FlxNode = null;
-		var minArea:Int = maxWidth * maxHeight;
-		var nodeArea:Int;
-		
-		for (node in emptyNodes)
-		{
-			nodeArea = node.width * node.height;
-			
-			if (nodeArea < minArea)
-			{
-				minArea = nodeArea;
-				result = node;
 			}
 		}
 		
