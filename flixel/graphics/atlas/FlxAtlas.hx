@@ -732,26 +732,10 @@ class FlxAtlas implements IFlxDestroyable
 		
 		if (obj2.bmd.width == obj1.bmd.width)
 		{
-			if (obj2.bmd.height == obj1.bmd.height)
-			{
-				return 0;
-			}
-			else if (obj2.bmd.height > obj1.bmd.height)
-			{
-				return 1;
-			}
-			else
-			{
-				return -1;
-			}
+			return obj2.bmd.height - obj1.bmd.height;
 		}
 		
-		if (obj2.bmd.width > obj1.bmd.width)
-		{
-			return 1;
-		}
-		
-		return -1;
+		return obj2.bmd.width > obj1.bmd.width;
 	}
 	
 	/**
