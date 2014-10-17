@@ -723,6 +723,25 @@ class FlxAtlas implements IFlxDestroyable
 	 */
 	private function bitmapSorter(obj1:TempAtlasObj, obj2:TempAtlasObj):Int
 	{
+		if (allowRotation)
+		{
+			var area1:Int = obj1.bmd.width * obj1.bmd.height;
+			var area2:Int = obj2.bmd.width * obj2.bmd.height;
+			
+			if (area2 == area1)
+			{
+				return 0;
+			}
+			else if (area2 > area1)
+			{
+				return 1;
+			}
+			else
+			{
+				return -1;
+			}
+		}
+		
 		if (obj2.bmd.width == obj1.bmd.width)
 		{
 			if (obj2.bmd.height == obj1.bmd.height)
