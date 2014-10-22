@@ -45,6 +45,14 @@ class FlxTileFrames extends FlxFramesCollection
 	}
 	
 	/**
+	 * Gets frame by its "position" in spritesheet
+	 */
+	public inline function getByTilePosition(column:Int, row:Int):FlxFrame
+	{
+		return frames[row * numCols + column];
+	}
+	
+	/**
 	 * Gets source bitmapdata, generates new bitmapdata with spaces between frames (if there is no such bitmapdata in the cache already) 
 	 * and creates TileFrames collection.
 	 * 
