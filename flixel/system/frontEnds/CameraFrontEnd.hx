@@ -266,7 +266,7 @@ class CameraFrontEnd
 	{
 		for (camera in list)
 		{
-			camera.setScale(camera.scaleX, camera.scaleY);
+			camera.onResize();
 		}
 	}
 	

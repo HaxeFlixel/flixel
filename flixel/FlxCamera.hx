@@ -490,6 +490,7 @@ class FlxCamera extends FlxBasic
 		
 		zoom = Zoom; //sets the scale of flash sprite, which in turn loads flashoffset values
 		
+		updateFlashOffset();	
 		updateFlashSpritePosition();
 		
 		bgColor = FlxG.cameras.bgColor;
@@ -739,6 +740,12 @@ class FlxCamera extends FlxBasic
 			flashSprite.x = x * FlxG.scaleMode.scale.x + _flashOffset.x;
 			flashSprite.y = y * FlxG.scaleMode.scale.y + _flashOffset.y;
 		}
+	}
+	
+	private function updateFlashOffset():Void
+	{
+		_flashOffset.x = width * 0.5 * totalScaleX;
+		_flashOffset.y = height * 0.5 * totalScaleY;
 	}
 	
 	/**
@@ -1122,10 +1129,12 @@ class FlxCamera extends FlxBasic
 		debugLayer.y = canvas.y;
 		#end
 	#end
+	}
 	
-		//camera positioning fix from bomski (https://github.com/Beeblerox/HaxeFlixel/issues/66)
-		_flashOffset.x = width * 0.5 * totalScaleX;
-		_flashOffset.y = height * 0.5 * totalScaleY;
+	public function onResize():Void
+	{
+		setScale(scaleX, scaleY);
+		updateFlashOffset();
 	}
 	
 	private function set_followLerp(Value:Float):Float
@@ -1142,7 +1151,7 @@ class FlxCamera extends FlxBasic
 			if (_flashBitmap != null)
 			{
 				regen = (Value != buffer.width);
-				_flashOffset.x = 0.5 * width * totalScaleX;
+				updateFlashOffset();
 				_flashBitmap.x = -0.5 * width;
 			}
 			#else
@@ -1152,7 +1161,7 @@ class FlxCamera extends FlxBasic
 				rect.width = Value * totalScaleX;
 				canvas.scrollRect = rect;
 				
-				_flashOffset.x = 0.5 * width * totalScaleX;
+				updateFlashOffset();
 				canvas.x = -_flashOffset.x;
 				#if !FLX_NO_DEBUG
 				debugLayer.x = canvas.x;
@@ -1172,7 +1181,7 @@ class FlxCamera extends FlxBasic
 			if (_flashBitmap != null)
 			{
 				regen = (Value != buffer.height);
-				_flashOffset.y = 0.5 * height * totalScaleY;
+				updateFlashOffset();
 				_flashBitmap.y = -0.5 * height;
 			}
 			#else
@@ -1182,7 +1191,7 @@ class FlxCamera extends FlxBasic
 				rect.height = Value * totalScaleY;
 				canvas.scrollRect = rect;
 				
-				_flashOffset.y = 0.5 * height * totalScaleY;
+				updateFlashOffset();
 				canvas.y = -_flashOffset.y;
 				#if !FLX_NO_DEBUG
 				debugLayer.y = canvas.y;
