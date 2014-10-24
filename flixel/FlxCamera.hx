@@ -18,6 +18,9 @@ import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import openfl.display.Tilesheet;
 
+// TODO: add mask rect to camera
+// TODO: add initial zoom property to camera
+
 /**
  * The camera class is used to display the game's visuals.
  * By default one camera is created automatically, that is the same size as window.
@@ -1151,7 +1154,7 @@ class FlxCamera extends FlxBasic
 			if (_flashBitmap != null)
 			{
 				regen = (Value != buffer.width);
-				updateFlashOffset();
+				updateFlashOffset(); // TODO: use camera's initial zoom here...
 				_flashBitmap.x = -0.5 * width;
 			}
 			#else
@@ -1161,7 +1164,7 @@ class FlxCamera extends FlxBasic
 				rect.width = Value * totalScaleX;
 				canvas.scrollRect = rect;
 				
-				updateFlashOffset();
+				updateFlashOffset();  // TODO: use camera's initial zoom here...
 				canvas.x = -_flashOffset.x;
 				#if !FLX_NO_DEBUG
 				debugLayer.x = canvas.x;
@@ -1181,7 +1184,7 @@ class FlxCamera extends FlxBasic
 			if (_flashBitmap != null)
 			{
 				regen = (Value != buffer.height);
-				updateFlashOffset();
+				updateFlashOffset(); // TODO: use camera's initial zoom here...
 				_flashBitmap.y = -0.5 * height;
 			}
 			#else
@@ -1191,7 +1194,7 @@ class FlxCamera extends FlxBasic
 				rect.height = Value * totalScaleY;
 				canvas.scrollRect = rect;
 				
-				updateFlashOffset();
+				updateFlashOffset(); // TODO: use camera's initial zoom here...
 				canvas.y = -_flashOffset.y;
 				#if !FLX_NO_DEBUG
 				debugLayer.y = canvas.y;
