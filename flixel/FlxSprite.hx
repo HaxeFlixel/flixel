@@ -1144,7 +1144,7 @@ class FlxSprite extends FlxObject
 		#if !FLX_NO_DEBUG
 		if (graphic == null)
 		{
-			throw "FlxSprite object doesn't have any graphic! Please load graphic or call makeGraphic() on the sprite before trying to retrieve its graphic."
+			throw "FlxSprite object doesn't have any graphic! Please load graphic or call makeGraphic() on the sprite before trying to retrieve its graphic.";
 		}
 		#end
 		return graphic.bitmap;
