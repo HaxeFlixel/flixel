@@ -9,6 +9,7 @@ import flixel.ui.FlxButton.FlxTypedButton;
 class FlxSpriteButton extends FlxTypedButton<FlxSprite> implements IFlxInput
 {
 	// TODO: update size of label (when it's required) and make it automated
+	// TODO: center label position
 	
 	/**
 	 * Creates a new FlxButton object with a gray background
@@ -30,4 +31,9 @@ class FlxSpriteButton extends FlxTypedButton<FlxSprite> implements IFlxInput
 		
 		label = Label;
 	}
+	
+	// TODO: add graphic loading methods which will bake button's and label's graphic onto atlas 
+	
+	// TODO: add method for generating text graphic for label sprite
+	
 }
