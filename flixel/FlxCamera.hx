@@ -279,6 +279,8 @@ class FlxCamera extends FlxBasic
 	 */
 	private var _point:FlxPoint;
 	
+	private var _initialZoom:Float = 1;
+	
 	#if FLX_RENDER_BLIT
 	/**
 	 * Internal helper variable for doing better wipes/fills between renders.
@@ -492,6 +494,8 @@ class FlxCamera extends FlxBasic
 		#end
 		
 		zoom = Zoom; //sets the scale of flash sprite, which in turn loads flashoffset values
+		
+		_initialZoom = zoom;
 		
 		updateFlashOffset();	
 		updateFlashSpritePosition();
@@ -1116,9 +1120,10 @@ class FlxCamera extends FlxBasic
 		
 		totalScaleX = scaleX * FlxG.scaleMode.scale.x;
 		totalScaleY = scaleY * FlxG.scaleMode.scale.y;
+		
 	#if FLX_RENDER_BLIT
-		flashSprite.scaleX = totalScaleX;
-		flashSprite.scaleY = totalScaleY;
+		flashSprite.scaleX = totalScaleX / FlxCamera.defaultZoom;
+		flashSprite.scaleY = totalScaleY / FlxCamera.defaultZoom;
 	#else
 		canvas.x = -width * 0.5 * totalScaleX;
 		canvas.y = -height * 0.5 * totalScaleY;
@@ -1126,7 +1131,6 @@ class FlxCamera extends FlxBasic
 		rect.width = width * totalScaleX;
 		rect.height = height * totalScaleY;
 		canvas.scrollRect = rect;
-		
 		#if !FLX_NO_DEBUG
 		debugLayer.x = canvas.x;
 		debugLayer.y = canvas.y;
