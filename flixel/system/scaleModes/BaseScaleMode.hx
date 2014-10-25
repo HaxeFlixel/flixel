@@ -50,16 +50,9 @@ class BaseScaleMode
 	{
 		scale.x = gameSize.x / (FlxG.width * FlxG.initialZoom);
 		scale.y = gameSize.y / (FlxG.height * FlxG.initialZoom);
-		/*
-		zoom.set(FlxCamera.defaultZoom, FlxCamera.defaultZoom);
 		
-		if (FlxG.camera != null) 
-		{
-			zoom.set(FlxG.camera.scaleX, FlxG.camera.scaleY);
-		}
-		*/
-		offset.x = Math.ceil((deviceSize.x - gameSize.x/* * zoom.x*/) * 0.5);
-		offset.y = Math.ceil((deviceSize.y - gameSize.y/* * zoom.y*/) * 0.5);
+		offset.x = Math.ceil((deviceSize.x - gameSize.x) * 0.5);
+		offset.y = Math.ceil((deviceSize.y - gameSize.y) * 0.5);
 	}
 	
 	private function updateGamePosition():Void

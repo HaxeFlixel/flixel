@@ -279,6 +279,9 @@ class FlxCamera extends FlxBasic
 	 */
 	private var _point:FlxPoint;
 	
+	/**
+	 * Camera's initial zoom value. Used for camera's scale handling.
+	 */
 	private var _initialZoom:Float = 1;
 	
 	#if FLX_RENDER_BLIT
@@ -1158,7 +1161,7 @@ class FlxCamera extends FlxBasic
 			if (_flashBitmap != null)
 			{
 				regen = (Value != buffer.width);
-				updateFlashOffset(); // TODO: use camera's initial zoom here...
+				updateFlashOffset();
 				_flashBitmap.x = -0.5 * width;
 			}
 			#else
@@ -1168,7 +1171,7 @@ class FlxCamera extends FlxBasic
 				rect.width = Value * totalScaleX;
 				canvas.scrollRect = rect;
 				
-				updateFlashOffset();  // TODO: use camera's initial zoom here...
+				updateFlashOffset();
 				canvas.x = -_flashOffset.x;
 				#if !FLX_NO_DEBUG
 				debugLayer.x = canvas.x;
@@ -1188,7 +1191,7 @@ class FlxCamera extends FlxBasic
 			if (_flashBitmap != null)
 			{
 				regen = (Value != buffer.height);
-				updateFlashOffset(); // TODO: use camera's initial zoom here...
+				updateFlashOffset();
 				_flashBitmap.y = -0.5 * height;
 			}
 			#else
@@ -1198,7 +1201,7 @@ class FlxCamera extends FlxBasic
 				rect.height = Value * totalScaleY;
 				canvas.scrollRect = rect;
 				
-				updateFlashOffset(); // TODO: use camera's initial zoom here...
+				updateFlashOffset();
 				canvas.y = -_flashOffset.y;
 				#if !FLX_NO_DEBUG
 				debugLayer.y = canvas.y;
