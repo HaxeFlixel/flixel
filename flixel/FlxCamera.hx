@@ -1122,8 +1122,8 @@ class FlxCamera extends FlxBasic
 		totalScaleY = scaleY * FlxG.scaleMode.scale.y;
 		
 	#if FLX_RENDER_BLIT
-		flashSprite.scaleX = totalScaleX / FlxCamera.defaultZoom;
-		flashSprite.scaleY = totalScaleY / FlxCamera.defaultZoom;
+		flashSprite.scaleX = totalScaleX / _initialZoom;
+		flashSprite.scaleY = totalScaleY / _initialZoom;
 	#else
 		canvas.x = -width * 0.5 * totalScaleX;
 		canvas.y = -height * 0.5 * totalScaleY;
