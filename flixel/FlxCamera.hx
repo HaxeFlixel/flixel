@@ -751,8 +751,8 @@ class FlxCamera extends FlxBasic
 	
 	private function updateFlashOffset():Void
 	{
-		_flashOffset.x = width * 0.5 * totalScaleX;
-		_flashOffset.y = height * 0.5 * totalScaleY;
+		_flashOffset.x = width * 0.5 * FlxG.scaleMode.scale.x * _initialZoom;
+		_flashOffset.y = height * 0.5 * FlxG.scaleMode.scale.y * _initialZoom;
 	}
 	
 	/**
@@ -1122,8 +1122,8 @@ class FlxCamera extends FlxBasic
 		totalScaleY = scaleY * FlxG.scaleMode.scale.y;
 		
 	#if FLX_RENDER_BLIT
-		flashSprite.scaleX = totalScaleX / _initialZoom;
-		flashSprite.scaleY = totalScaleY / _initialZoom;
+		flashSprite.scaleX = totalScaleX;
+		flashSprite.scaleY = totalScaleY;
 	#else
 		canvas.x = -width * 0.5 * totalScaleX;
 		canvas.y = -height * 0.5 * totalScaleY;
