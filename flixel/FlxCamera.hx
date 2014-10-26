@@ -18,9 +18,6 @@ import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import openfl.display.Tilesheet;
 
-// TODO: add mask rect to camera
-// TODO: add initial zoom property to camera
-
 /**
  * The camera class is used to display the game's visuals.
  * By default one camera is created automatically, that is the same size as window.
@@ -164,11 +161,11 @@ class FlxCamera extends FlxBasic
 	/**
 	 * How wide the camera display is, in game pixels.
 	 */
-	public var width(default, set):Int;
+	public var width(default, set):Int = 0;
 	/**
 	 * How tall the camera display is, in game pixels.
 	 */
-	public var height(default, set):Int;
+	public var height(default, set):Int = 0;
 	/**
 	 * The zoom level of this camera. 1 = 1:1, 2 = 2x zoom, etc.
 	 * Indicates how far the camera is zoomed in.
@@ -294,6 +291,11 @@ class FlxCamera extends FlxBasic
 	 */
 	private var _flashBitmap:Bitmap;
 	#end
+	
+	/**
+	 * Internal sprite, used for correct trimming of camera viewport.
+	 */
+	private var _scrollRect:Sprite;
 	
 #if FLX_RENDER_TILE
 	/**
@@ -437,6 +439,11 @@ class FlxCamera extends FlxBasic
 		super();
 		
 		_scrollTarget = FlxPoint.get();
+		scroll = FlxPoint.get();
+		followLead = FlxPoint.get();
+		targetOffset = FlxPoint.get();
+		_point = FlxPoint.get();
+		_flashOffset = FlxPoint.get();
 		
 		x = X;
 		y = Y;
@@ -444,12 +451,6 @@ class FlxCamera extends FlxBasic
 		// Use the game dimensions if width / height are <= 0
 		width = (Width <= 0) ? FlxG.width : Width;
 		height = (Height <= 0) ? FlxG.height : Height;
-		
-		scroll = FlxPoint.get();
-		followLead = FlxPoint.get();
-		targetOffset = FlxPoint.get();
-		_point = FlxPoint.get();
-		_flashOffset = FlxPoint.get();
 		
 		#if FLX_RENDER_BLIT
 		screen = new FlxSprite();
@@ -460,21 +461,21 @@ class FlxCamera extends FlxBasic
 		
 		#if FLX_RENDER_BLIT
 		_flashBitmap = new Bitmap(buffer);
-		_flashBitmap.x = -width * 0.5;
-		_flashBitmap.y = -height * 0.5;
 		#else
 		canvas = new Sprite();
-		canvas.scrollRect = new Rectangle(0, 0, width, height);
 		#end
 		
 		set_color(FlxColor.WHITE);
 		
 		flashSprite = new Sprite();
 		
+		_scrollRect = new Sprite();
+		flashSprite.addChild(_scrollRect);
+		
 		#if FLX_RENDER_BLIT
-		flashSprite.addChild(_flashBitmap);
+		_scrollRect.addChild(_flashBitmap);
 		#else
-		flashSprite.addChild(canvas);
+		_scrollRect.addChild(canvas);
 		#end
 		_flashRect = new Rectangle(0, 0, width, height);
 		_flashPoint = new Point();
@@ -485,11 +486,9 @@ class FlxCamera extends FlxBasic
 		_fill = new BitmapData(width, height, true, FlxColor.TRANSPARENT);
 		#else
 		
-		canvas.scrollRect = new Rectangle(0, 0, width, height);
-		
 		#if !FLX_NO_DEBUG
 		debugLayer = new Sprite();
-		flashSprite.addChild(debugLayer);
+		_scrollRect.addChild(debugLayer);
 		#end
 		
 		_currentStackItem = new FlxDrawStackItem();
@@ -500,8 +499,12 @@ class FlxCamera extends FlxBasic
 		
 		_initialZoom = zoom;
 		
+		_scrollRect.scrollRect = new Rectangle();
+		
+		updateScrollRect();
 		updateFlashOffset();	
 		updateFlashSpritePosition();
+		updateInternalSpritePositions();
 		
 		bgColor = FlxG.cameras.bgColor;
 	}
@@ -511,18 +514,21 @@ class FlxCamera extends FlxBasic
 	 */
 	override public function destroy():Void
 	{
+		FlxDestroyUtil.removeChild(flashSprite, _scrollRect);
+		
 	#if FLX_RENDER_BLIT
+		FlxDestroyUtil.removeChild(_scrollRect, _flashBitmap);
 		screen = FlxDestroyUtil.destroy(screen);
 		buffer = null;
 		_flashBitmap = null;
 		_fill = FlxDestroyUtil.dispose(_fill);
 	#else
 		#if !FLX_NO_DEBUG
-		FlxDestroyUtil.removeChild(flashSprite, debugLayer);
+		FlxDestroyUtil.removeChild(_scrollRect, debugLayer);
 		debugLayer = null;
 		#end
 		
-		FlxDestroyUtil.removeChild(flashSprite, canvas);
+		FlxDestroyUtil.removeChild(_scrollRect, canvas);
 		if (canvas != null)
 		{
 			for (i in 0...canvas.numChildren)
@@ -547,6 +553,7 @@ class FlxCamera extends FlxBasic
 		
 		target = null;
 		flashSprite = null;
+		_scrollRect = null;
 		_flashRect = null;
 		_flashPoint = null;
 		_fxFlashComplete = null;
@@ -756,6 +763,48 @@ class FlxCamera extends FlxBasic
 	{
 		_flashOffset.x = width * 0.5 * FlxG.scaleMode.scale.x * _initialZoom;
 		_flashOffset.y = height * 0.5 * FlxG.scaleMode.scale.y * _initialZoom;
+	}
+	
+	private function updateScrollRect():Void
+	{
+		var rect:Rectangle = (_scrollRect != null) ? _scrollRect.scrollRect : null;
+		
+		if (rect != null)
+		{
+			rect.x = rect.y = 0;
+			rect.width = width * _initialZoom * FlxG.scaleMode.scale.x;
+			rect.height = height * _initialZoom * FlxG.scaleMode.scale.y;
+			_scrollRect.scrollRect = rect;
+			_scrollRect.x = -0.5 * rect.width;
+			_scrollRect.y = -0.5 * rect.height;
+		}
+	}
+	
+	function updateInternalSpritePositions():Void
+	{
+		#if FLX_RENDER_BLIT
+		if (_flashBitmap != null)
+		{
+			regen = regen || (width != buffer.width) || (height != buffer.height);
+			
+			_flashBitmap.x = -0.5 * width * (scaleX - _initialZoom) * FlxG.scaleMode.scale.x;
+			_flashBitmap.y = -0.5 * height * (scaleY - _initialZoom) * FlxG.scaleMode.scale.y;
+		}
+		#else
+		if (canvas != null)
+		{
+			canvas.x = -0.5 * width * (scaleX - _initialZoom) * FlxG.scaleMode.scale.x;
+			canvas.y = -0.5 * height * (scaleY - _initialZoom) * FlxG.scaleMode.scale.y;
+			
+			#if !FLX_NO_DEBUG
+			if (debugLayer != null)
+			{
+				debugLayer.x = canvas.x;
+				debugLayer.y = canvas.y;
+			}
+			#end
+		}
+		#end
 	}
 	
 	/**
@@ -986,7 +1035,9 @@ class FlxCamera extends FlxBasic
 		// end of fix
 		
 		targetGraphics.beginFill(Color, FxAlpha);
-		targetGraphics.drawRect(0, 0, width * totalScaleX, height * totalScaleY);
+		// i'm drawing rect with these parameters to avoid light lines at the top and left of the camera,
+		// which could appear while cameras fading
+		targetGraphics.drawRect(-1, -1, width * totalScaleX + 2, height * totalScaleY + 2);
 		targetGraphics.endFill();
 	#end
 	}
@@ -1124,27 +1175,20 @@ class FlxCamera extends FlxBasic
 		totalScaleX = scaleX * FlxG.scaleMode.scale.x;
 		totalScaleY = scaleY * FlxG.scaleMode.scale.y;
 		
-	#if FLX_RENDER_BLIT
-		flashSprite.scaleX = totalScaleX;
-		flashSprite.scaleY = totalScaleY;
-	#else
-		canvas.x = -width * 0.5 * totalScaleX;
-		canvas.y = -height * 0.5 * totalScaleY;
-		var rect:Rectangle = canvas.scrollRect;
-		rect.width = width * totalScaleX;
-		rect.height = height * totalScaleY;
-		canvas.scrollRect = rect;
-		#if !FLX_NO_DEBUG
-		debugLayer.x = canvas.x;
-		debugLayer.y = canvas.y;
+		#if FLX_RENDER_BLIT
+		_flashBitmap.scaleX = totalScaleX;
+		_flashBitmap.scaleY = totalScaleY;
 		#end
-	#end
+		
+		updateFlashSpritePosition();
+		updateScrollRect();
+		updateInternalSpritePositions();
 	}
 	
 	public function onResize():Void
 	{
-		setScale(scaleX, scaleY);
 		updateFlashOffset();
+		setScale(scaleX, scaleY);
 	}
 	
 	private function set_followLerp(Value:Float):Float
@@ -1157,27 +1201,10 @@ class FlxCamera extends FlxBasic
 		if (Value > 0)
 		{
 			width = Value; 
-			#if FLX_RENDER_BLIT
-			if (_flashBitmap != null)
-			{
-				regen = (Value != buffer.width);
-				updateFlashOffset();
-				_flashBitmap.x = -0.5 * width;
-			}
-			#else
-			if (canvas != null)
-			{
-				var rect:Rectangle = canvas.scrollRect;
-				rect.width = Value * totalScaleX;
-				canvas.scrollRect = rect;
-				
-				updateFlashOffset();
-				canvas.x = -_flashOffset.x;
-				#if !FLX_NO_DEBUG
-				debugLayer.x = canvas.x;
-				#end
-			}
-			#end
+			
+			updateFlashOffset();
+			updateScrollRect();
+			updateInternalSpritePositions();
 		}
 		return Value;
 	}
@@ -1187,27 +1214,10 @@ class FlxCamera extends FlxBasic
 		if (Value > 0)
 		{
 			height = Value;
-			#if FLX_RENDER_BLIT
-			if (_flashBitmap != null)
-			{
-				regen = (Value != buffer.height);
-				updateFlashOffset();
-				_flashBitmap.y = -0.5 * height;
-			}
-			#else
-			if (canvas != null)
-			{
-				var rect:Rectangle = canvas.scrollRect;
-				rect.height = Value * totalScaleY;
-				canvas.scrollRect = rect;
-				
-				updateFlashOffset();
-				canvas.y = -_flashOffset.y;
-				#if !FLX_NO_DEBUG
-				debugLayer.y = canvas.y;
-				#end
-			}
-			#end
+			
+			updateFlashOffset();
+			updateScrollRect();
+			updateInternalSpritePositions();
 		}
 		return Value;
 	}
