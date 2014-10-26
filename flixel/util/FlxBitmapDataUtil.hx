@@ -251,9 +251,10 @@ class FlxBitmapDataUtil
 	 * @param	color				Color to replace
 	 * @param	newColor			New color
 	 * @param	fetchPositions		Whether we need to store positions of pixels which colors were replaced
+	 * @param	rect				area to apply color replacement. Optional, uses whole image area if the rect is null
 	 * @return	Array replaced pixels positions
 	 */
-	public static function replaceColor(bitmapData:BitmapData, color:FlxColor, newColor:FlxColor, fetchPositions:Bool = false):Array<FlxPoint>
+	public static function replaceColor(bitmapData:BitmapData, color:FlxColor, newColor:FlxColor, fetchPositions:Bool = false, rect:FlxRect = null):Array<FlxPoint>
 	{
 		var positions:Array<FlxPoint> = null;
 		if (fetchPositions)
@@ -261,10 +262,26 @@ class FlxBitmapDataUtil
 			positions = new Array<FlxPoint>();
 		}
 		
+		var startX:Int = 0;
+		var startY:Int = 0;
+		var columns:Int = bitmapData.width;
+		var rows:Int = bitmapData.height;
+		
+		if (rect != null)
+		{
+			startX = Std.int(rect.x);
+			startY = Std.int(rect.y);
+			columns = Std.int(rect.width);
+			rows = Std.int(rect.height);
+		}
+		
+		columns = Std.int(Math.max(columns, bitmapData.width));
+		rows = Std.int(Math.max(rows, bitmapData.height));
+		
 		var row:Int = 0;
 		var column:Int = 0;
-		var rows:Int = bitmapData.height;
-		var columns:Int = bitmapData.width;
+		var x:Int, y:Int;
+		
 		var changed:Bool = false;
 		bitmapData.lock();
 		while (row < rows)
@@ -272,13 +289,15 @@ class FlxBitmapDataUtil
 			column = 0;
 			while (column < columns)
 			{
-				if (bitmapData.getPixel32(column, row) == cast color)
+				x = startX + column;
+				y = startY + row;
+				if (bitmapData.getPixel32(x, y) == cast color)
 				{
-					bitmapData.setPixel32(column, row, newColor);
+					bitmapData.setPixel32(x, y, newColor);
 					changed = true;
 					if (fetchPositions)
 					{
-						positions.push(FlxPoint.get(column, row));
+						positions.push(FlxPoint.get(x, y));
 					}
 				}
 				column++;
