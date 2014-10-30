@@ -368,7 +368,7 @@ class FlxGame extends Sprite
 		
 		#if mobile
 		// just check if device orientation has been changed
-		onResize();
+		onResize(_);
 		#end
 		
 		_lostFocus = false;
