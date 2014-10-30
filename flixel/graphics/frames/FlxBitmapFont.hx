@@ -18,6 +18,9 @@ import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import haxe.xml.Fast;
 
+// TODO: make it possible to load font from atlas frame (for better batching)
+// but it will make code more complicated
+
 /**
  * Holds information and bitmap glyphs for a bitmap font.
  */
