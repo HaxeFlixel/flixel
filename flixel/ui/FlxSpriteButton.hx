@@ -39,15 +39,6 @@ class FlxSpriteButton extends FlxTypedButton<FlxSprite> implements IFlxInput
 		label = Label;
 	}
 	
-	override private function updateLabelPosition():Void
-	{
-		if (label != null) // Label positioning
-		{
-			label.x = (pixelPerfectPosition ? Math.floor(x) : x) + labelOffsets[status].x;
-			label.y = (pixelPerfectPosition ? Math.floor(y) : y) + labelOffsets[status].y;
-		}
-	}
-	
 	/**
 	 * Generates text graphic for button's label.
 	 * 
