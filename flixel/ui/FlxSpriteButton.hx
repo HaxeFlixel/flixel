@@ -1,16 +1,23 @@
 package flixel.ui;
 
+import flixel.FlxSprite;
+import flixel.graphics.atlas.FlxAtlas;
+import flixel.graphics.atlas.FlxNode;
+import flixel.graphics.FlxGraphic;
+import flixel.graphics.frames.FlxImageFrame;
+import flixel.graphics.frames.FlxTileFrames;
 import flixel.input.IFlxInput;
+import flixel.math.FlxPoint;
+import flixel.text.FlxText;
 import flixel.ui.FlxButton.FlxTypedButton;
+import flixel.util.FlxDestroyUtil;
+import openfl.display.BitmapData;
 
 /**
  * A simple button class that calls a function when clicked by the mouse.
  */
 class FlxSpriteButton extends FlxTypedButton<FlxSprite> implements IFlxInput
 {
-	// TODO: update size of label (when it's required) and make it automated
-	// TODO: center label position
-	
 	/**
 	 * Creates a new FlxButton object with a gray background
 	 * and a callback function on the UI thread.
@@ -32,8 +39,81 @@ class FlxSpriteButton extends FlxTypedButton<FlxSprite> implements IFlxInput
 		label = Label;
 	}
 	
-	// TODO: add graphic loading methods which will bake button's and label's graphic onto atlas 
+	override private function updateLabelPosition():Void
+	{
+		if (label != null) // Label positioning
+		{
+			label.x = (pixelPerfectPosition ? Math.floor(x) : x) + labelOffsets[status].x;
+			label.y = (pixelPerfectPosition ? Math.floor(y) : y) + labelOffsets[status].y;
+		}
+	}
 	
-	// TODO: add method for generating text graphic for label sprite
+	/**
+	 * Generates text graphic for button's label.
+	 * 
+	 * @param	Text	text for button's label
+	 * @param	font	font name for button's label
+	 * @param	size	font size for button's label
+	 * @param	color	text color for button's label
+	 * @param	align	text align for button's label
+	 * @return	this button with generated text graphic.
+	 */
+	public function createTextLabel(Text:String, font:String = null, size:Int = 8, color:Int = 0x333333, align:String = "center"):FlxSpriteButton
+	{
+		if (Text != null)
+		{
+			var text:FlxText = new FlxText(0, 0, frameWidth, Text);
+			text.setFormat(font, size, color, align);
+			text.alpha = labelAlphas[status];
+			text.drawFrame(true);
+			var labelBitmap:BitmapData = text.graphic.bitmap.clone();
+			var labelKey:String = text.graphic.key;
+			text.destroy();
+			
+			if (label == null)
+			{
+				label = new FlxSprite();
+			}
+			
+			var labelGraphic:FlxGraphic = FlxG.bitmap.add(labelBitmap, false, labelKey);
+			label.frames = FlxImageFrame.fromGraphic(labelGraphic);
+		}
+		
+		return this;
+	}
 	
+	/**
+	 * Stamps button's graphic and label onto specified atlas object and loads graphic from this atlas.
+	 * This method assumes that you're using whole image for button's graphic and image has no spaces between frames.
+	 * And it assumes that label is a single frame sprite.
+	 * 
+	 * @param	atlas	atlas to stamp graphic to.
+	 * @return	true - if both button's graphic and label's graphic are stamped on atlas successfully, false - in other case.
+	 */
+	public function stampOnAtlas(atlas:FlxAtlas):Bool
+	{
+		var buttonNode:FlxNode = atlas.addNode(graphic.bitmap, graphic.key);
+		var result:Bool = (buttonNode != null);
+		
+		if (buttonNode != null)
+		{
+			var buttonFrames:FlxTileFrames = cast frames;
+			var tileSize:FlxPoint = new FlxPoint(buttonFrames.tileSize.x, buttonFrames.tileSize.y);
+			var tileFrames:FlxTileFrames = buttonNode.getTileFrames(tileSize);
+			this.frames = tileFrames;
+		}
+		
+		if (label != null)
+		{
+			var labelNode:FlxNode = atlas.addNode(label.graphic.bitmap, label.graphic.key);
+			result = result && (labelNode != null);
+			
+			if (labelNode != null)
+			{
+				label.frames = labelNode.getImageFrame();
+			}
+		}
+		
+		return result;
+	}
 }
