@@ -231,6 +231,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 		var angle:Int;
 		var name:String;
 		var trimmed:Bool;
+		var rotated:Bool;
 		var rect:FlxRect;
 		var size:Rectangle;
 		var offset:FlxPoint;
@@ -238,9 +239,10 @@ class FlxAtlasFrames extends FlxFramesCollection
 		
 		for (texture in data.nodes.SubTexture)
 		{
-			angle = FlxFrameAngle.ANGLE_0;
 			name = texture.att.name;
 			trimmed = texture.has.frameX;
+			rotated = (texture.has.rotated && texture.att.rotated == "true") ? true : false;
+			
 			rect = new FlxRect(Std.parseFloat(texture.att.x), Std.parseFloat(texture.att.y), Std.parseFloat(texture.att.width), Std.parseFloat(texture.att.height));
 			
 			size = if (trimmed)
@@ -252,8 +254,16 @@ class FlxAtlasFrames extends FlxFramesCollection
 				new Rectangle(0, 0, rect.width, rect.height);
 			}
 			
+			angle = (rotated) ? FlxFrameAngle.ANGLE_NEG_90 : FlxFrameAngle.ANGLE_0;
+			
 			offset = FlxPoint.get(-size.left, -size.top);
 			sourceSize = FlxPoint.get(size.width, size.height);
+			
+			if (rotated && !trimmed)
+			{
+				sourceSize.set(size.height, size.width);
+			}
+			
 			frames.addAtlasFrame(rect, sourceSize, offset, name, angle);
 		}
 		
@@ -261,8 +271,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 	}
 	
 	/**
-	 * Parsing method for TexturePacker atlases in xml format
-	 * (trimmed images aren't supported yet for this type of atlas).
+	 * Parsing method for TexturePacker atlases in generic xml format
 	 * 
 	 * @param	Source			the image source (can be FlxGraphic, String or BitmapData).
 	 * @param	Description		contents of xml file with atlas description. You can get it with Assets.getText(path/to/description.xml)
@@ -292,6 +301,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 		var root = xml.firstElement();
 		
 		var rotated:Bool;
+		var trimmed:Bool;
 		var angle:FlxFrameAngle;
 		var name:String;
 		var offset:FlxPoint;
@@ -300,13 +310,20 @@ class FlxAtlasFrames extends FlxFramesCollection
 		
 		for (sprite in root.elements())
 		{
-			// trimmed images aren't supported yet for this type of atlas
+			trimmed = (sprite.exists("oX") || sprite.exists("oY"));
 			rotated = (sprite.exists("r") && sprite.get("r") == "y");
 			angle = (rotated) ? FlxFrameAngle.ANGLE_NEG_90 : FlxFrameAngle.ANGLE_0;
 			name = sprite.get("n");
 			offset = FlxPoint.get(0, 0);
 			rect = new FlxRect(Std.parseInt(sprite.get("x")), Std.parseInt(sprite.get("y")), Std.parseInt(sprite.get("w")), Std.parseInt(sprite.get("h")));
 			sourceSize = FlxPoint.get(rect.width, rect.height);
+			
+			if (trimmed)
+			{
+				offset.set(Std.parseInt(sprite.get("oX")), Std.parseInt(sprite.get("oY")));
+				sourceSize.set(Std.parseInt(sprite.get("oW")), Std.parseInt(sprite.get("oH")));
+			}
+			
 			frames.addAtlasFrame(rect, sourceSize, offset, name, angle);
 		}
 		
