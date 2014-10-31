@@ -31,6 +31,7 @@ class FlxConditionals
 	static inline var FLX_NO_NATIVE_CURSOR = "FLX_NO_NATIVE_CURSOR";
 	static inline var FLX_NO_MOUSE = "FLX_NO_MOUSE";
 	static inline var FLX_NO_TOUCH = "FLX_NO_TOUCH";
+	static inline var FLX_NO_KEYBOARD = "FLX_NO_KEYBOARD";
 	static inline var FLX_NO_SOUND_SYSTEM = "FLX_NO_SOUND_SYSTEM";
 	static inline var FLX_NO_SOUND_TRAY = "FLX_NO_SOUND_TRAY";
 	static inline var FLX_NO_FOCUS_LOST_SCREEN = "FLX_NO_FOCUS_LOST_SCREEN";
@@ -50,6 +51,7 @@ class FlxConditionals
 		FLX_NO_FOCUS_LOST_SCREEN,
 		FLX_NO_DEBUG,
 		FLX_NO_GAMEPAD,
+		FLX_NO_KEYBOARD,
 		FLX_RECORD];
 	
 	public static function run()
