@@ -260,6 +260,7 @@ class FlxBitmapText extends FlxSprite
 	public function forceGraphicUpdate():Void
 	{
 		_pendingGraphicChange = true;
+		update(0);
 	}
 	
 	inline private function checkPendingChanges():Void
