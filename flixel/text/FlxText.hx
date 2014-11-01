@@ -10,6 +10,7 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.graphics.FlxGraphic;
+import flixel.graphics.frames.FlxFramesCollection;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.system.FlxAssets;
@@ -220,6 +221,15 @@ class FlxText extends FlxSprite
 		_formatAdjusted = null;
 		shadowOffset = FlxDestroyUtil.put(shadowOffset);
 		super.destroy();
+	}
+	
+	/**
+	 * Generates text graphic. It can generate new graphic object.
+	 */
+	public function forceGraphicRegen():Void
+	{
+		_regen = true;
+		drawFrame();
 	}
 	
 	/**
@@ -940,6 +950,13 @@ class FlxText extends FlxSprite
 		textField.defaultTextFormat = _defaultFormat;
 		textField.setTextFormat(_defaultFormat);
 		_regen = true;
+	}
+	
+	override function set_frames(Frames:FlxFramesCollection):FlxFramesCollection 
+	{
+		super.set_frames(Frames);
+		_regen = false;
+		return Frames;
 	}
 }
 
