@@ -493,6 +493,8 @@ class FlxText extends FlxSprite
 			}
 			else
 			{
+				autoSize = false;
+				wordWrap = true;
 				textField.width = value;
 			}
 			
