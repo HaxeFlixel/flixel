@@ -541,15 +541,12 @@ class FlxBitmapText extends FlxSprite
 	 */
 	private function computeTextSize():Void 
 	{
-		var txtWidth:Int = Math.ceil(_fieldWidth);
+		var txtWidth:Int = Math.ceil(textWidth);
 		var txtHeight:Int = Math.ceil(textHeight) + 2 * padding;
-		// need to calculate it here
-		var maxWidth:Int = Math.ceil(textWidth);
 		
 		if (autoSize)
 		{
-			maxWidth = maxWidth + 2 * padding;
-			txtWidth = (maxWidth > frameWidth) ? maxWidth : frameWidth;
+			txtWidth += 2 * padding;
 		}
 		
 		frameWidth = txtWidth;
