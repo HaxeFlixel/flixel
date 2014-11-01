@@ -9,6 +9,8 @@ import flash.text.TextFormatAlign;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
+import flixel.graphics.atlas.FlxAtlas;
+import flixel.graphics.atlas.FlxNode;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFramesCollection;
 import flixel.math.FlxMath;
@@ -230,6 +232,30 @@ class FlxText extends FlxSprite
 	{
 		_regen = true;
 		drawFrame();
+	}
+	
+	/**
+	 * Stamps text onto specified atlas object and loads graphic from this atlas.
+	 * 
+	 * @param	atlas	atlas to stamp graphic to.
+	 * @return	true - if text's graphic is stamped on atlas successfully, false - in other case.
+	 */
+	public function stampOnAtlas(atlas:FlxAtlas):Bool
+	{
+		if (_regen)
+		{
+			regenGraphics();
+		}
+		
+		var node:FlxNode = atlas.addNode(graphic.bitmap, graphic.key);
+		var result:Bool = (node != null);
+		
+		if (node != null)
+		{
+			frames = node.getImageFrame();
+		}
+		
+		return result;
 	}
 	
 	/**

@@ -88,6 +88,7 @@ class FlxButton extends FlxTypedButton<FlxText> implements IFlxInput
 			label = new FlxText(x + labelOffsets[NORMAL].x, y + labelOffsets[NORMAL].y, 80, Text);
 			label.setFormat(null, 8, 0x333333, "center");
 			label.alpha = labelAlphas[status];
+			label.forceGraphicRegen();
 		}
 	}
 	
