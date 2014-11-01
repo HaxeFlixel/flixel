@@ -227,7 +227,7 @@ class FlxText extends FlxSprite
 	
 	override public function drawFrame(Force:Bool = false):Void 
 	{
-		_regen = true;
+		_regen = _regen || Force;
 		super.drawFrame(Force);
 	}
 	

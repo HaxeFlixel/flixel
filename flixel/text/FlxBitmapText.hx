@@ -257,10 +257,13 @@ class FlxBitmapText extends FlxSprite
 	/**
 	 * Forces graphic regeneration for this text field.
 	 */
-	public function forceGraphicUpdate():Void
+	override public function drawFrame(Force:Bool = false):Void 
 	{
-		_pendingGraphicChange = true;
+		_pendingGraphicChange = _pendingGraphicChange || Force;
 		update(0);
+		#if FLX_RENDER_BLIT
+		super.drawFrame(Force);
+		#end
 	}
 	
 	inline private function checkPendingChanges():Void
