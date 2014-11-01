@@ -236,6 +236,8 @@ class FlxText extends FlxSprite
 	
 	/**
 	 * Stamps text onto specified atlas object and loads graphic from this atlas.
+	 * WARNING: Changing text after stamping it on the atlas will break the atlas, 
+	 * so do it only for static texts and only after making all the text customizing (like size, align, color, etc.)
 	 * 
 	 * @param	atlas	atlas to stamp graphic to.
 	 * @return	true - if text's graphic is stamped on atlas successfully, false - in other case.
