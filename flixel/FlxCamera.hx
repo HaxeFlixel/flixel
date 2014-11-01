@@ -279,7 +279,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Camera's initial zoom value. Used for camera's scale handling.
 	 */
-	private var _initialZoom:Float = 1;
+	public var initialZoom(default, null):Float = 1;
 	
 	#if FLX_RENDER_BLIT
 	/**
@@ -497,7 +497,7 @@ class FlxCamera extends FlxBasic
 		
 		zoom = Zoom; //sets the scale of flash sprite, which in turn loads flashoffset values
 		
-		_initialZoom = zoom;
+		initialZoom = zoom;
 		
 		_scrollRect.scrollRect = new Rectangle();
 		
@@ -761,8 +761,8 @@ class FlxCamera extends FlxBasic
 	
 	private function updateFlashOffset():Void
 	{
-		_flashOffset.x = width * 0.5 * FlxG.scaleMode.scale.x * _initialZoom;
-		_flashOffset.y = height * 0.5 * FlxG.scaleMode.scale.y * _initialZoom;
+		_flashOffset.x = width * 0.5 * FlxG.scaleMode.scale.x * initialZoom;
+		_flashOffset.y = height * 0.5 * FlxG.scaleMode.scale.y * initialZoom;
 	}
 	
 	private function updateScrollRect():Void
@@ -772,8 +772,8 @@ class FlxCamera extends FlxBasic
 		if (rect != null)
 		{
 			rect.x = rect.y = 0;
-			rect.width = width * _initialZoom * FlxG.scaleMode.scale.x;
-			rect.height = height * _initialZoom * FlxG.scaleMode.scale.y;
+			rect.width = width * initialZoom * FlxG.scaleMode.scale.x;
+			rect.height = height * initialZoom * FlxG.scaleMode.scale.y;
 			_scrollRect.scrollRect = rect;
 			_scrollRect.x = -0.5 * rect.width;
 			_scrollRect.y = -0.5 * rect.height;
@@ -787,14 +787,14 @@ class FlxCamera extends FlxBasic
 		{
 			regen = regen || (width != buffer.width) || (height != buffer.height);
 			
-			_flashBitmap.x = -0.5 * width * (scaleX - _initialZoom) * FlxG.scaleMode.scale.x;
-			_flashBitmap.y = -0.5 * height * (scaleY - _initialZoom) * FlxG.scaleMode.scale.y;
+			_flashBitmap.x = -0.5 * width * (scaleX - initialZoom) * FlxG.scaleMode.scale.x;
+			_flashBitmap.y = -0.5 * height * (scaleY - initialZoom) * FlxG.scaleMode.scale.y;
 		}
 		#else
 		if (canvas != null)
 		{
-			canvas.x = -0.5 * width * (scaleX - _initialZoom) * FlxG.scaleMode.scale.x;
-			canvas.y = -0.5 * height * (scaleY - _initialZoom) * FlxG.scaleMode.scale.y;
+			canvas.x = -0.5 * width * (scaleX - initialZoom) * FlxG.scaleMode.scale.x;
+			canvas.y = -0.5 * height * (scaleY - initialZoom) * FlxG.scaleMode.scale.y;
 			
 			#if !FLX_NO_DEBUG
 			if (debugLayer != null)

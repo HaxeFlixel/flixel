@@ -61,8 +61,10 @@ class FlxPointer
 		{
 			point = FlxPoint.get();
 		}
-		point.x = (_globalScreenX - Camera.x) / Camera.zoom;
-		point.y = (_globalScreenY - Camera.y) / Camera.zoom;
+		
+		point.x = (_globalScreenX - Camera.x + 0.5 * Camera.width * (Camera.zoom - Camera.initialZoom)) / Camera.zoom;
+		point.y = (_globalScreenY - Camera.y + 0.5 * Camera.height * (Camera.zoom - Camera.initialZoom)) / Camera.zoom;
+		
 		return point;
 	}
 	
