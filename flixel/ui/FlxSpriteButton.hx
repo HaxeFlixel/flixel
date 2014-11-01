@@ -72,39 +72,4 @@ class FlxSpriteButton extends FlxTypedButton<FlxSprite> implements IFlxInput
 		
 		return this;
 	}
-	
-	/**
-	 * Stamps button's graphic and label onto specified atlas object and loads graphic from this atlas.
-	 * This method assumes that you're using whole image for button's graphic and image has no spaces between frames.
-	 * And it assumes that label is a single frame sprite.
-	 * 
-	 * @param	atlas	atlas to stamp graphic to.
-	 * @return	true - if both button's graphic and label's graphic are stamped on atlas successfully, false - in other case.
-	 */
-	public function stampOnAtlas(atlas:FlxAtlas):Bool
-	{
-		var buttonNode:FlxNode = atlas.addNode(graphic.bitmap, graphic.key);
-		var result:Bool = (buttonNode != null);
-		
-		if (buttonNode != null)
-		{
-			var buttonFrames:FlxTileFrames = cast frames;
-			var tileSize:FlxPoint = new FlxPoint(buttonFrames.tileSize.x, buttonFrames.tileSize.y);
-			var tileFrames:FlxTileFrames = buttonNode.getTileFrames(tileSize);
-			this.frames = tileFrames;
-		}
-		
-		if (label != null)
-		{
-			var labelNode:FlxNode = atlas.addNode(label.graphic.bitmap, label.graphic.key);
-			result = result && (labelNode != null);
-			
-			if (labelNode != null)
-			{
-				label.frames = labelNode.getImageFrame();
-			}
-		}
-		
-		return result;
-	}
 }
