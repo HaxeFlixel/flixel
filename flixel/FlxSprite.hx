@@ -744,7 +744,7 @@ class FlxSprite extends FlxObject
 	 * 
 	 * @param	Force	Force the frame to redraw, even if its not flagged as necessary.
 	 */
-	public inline function drawFrame(Force:Bool = false):Void
+	public function drawFrame(Force:Bool = false):Void
 	{
 		#if FLX_RENDER_BLIT
 		if (Force || dirty)

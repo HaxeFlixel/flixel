@@ -225,13 +225,10 @@ class FlxText extends FlxSprite
 		super.destroy();
 	}
 	
-	/**
-	 * Generates text graphic. It can generate new graphic object.
-	 */
-	public function forceGraphicRegen():Void
+	override public function drawFrame(Force:Bool = false):Void 
 	{
 		_regen = true;
-		drawFrame();
+		super.drawFrame(Force);
 	}
 	
 	/**
