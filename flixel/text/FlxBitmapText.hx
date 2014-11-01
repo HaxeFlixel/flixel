@@ -260,7 +260,7 @@ class FlxBitmapText extends FlxSprite
 	override public function drawFrame(Force:Bool = false):Void 
 	{
 		_pendingGraphicChange = _pendingGraphicChange || Force;
-		update(0);
+		checkPendingChanges();
 		#if FLX_RENDER_BLIT
 		super.drawFrame(Force);
 		#end
@@ -290,12 +290,6 @@ class FlxBitmapText extends FlxSprite
 		{
 			updateGraphic();
 		}
-	}
-	
-	override public function update(elapsed:Float):Void 
-	{
-		checkPendingChanges();
-		super.update(elapsed);
 	}
 	
 	#if FLX_RENDER_BLIT
