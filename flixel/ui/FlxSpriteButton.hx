@@ -33,7 +33,7 @@ class FlxSpriteButton extends FlxTypedButton<FlxSprite> implements IFlxInput
 		
 		for (point in labelOffsets)
 		{
-			point.set(point.x - 1, point.y + 3);
+			point.set(point.x - 1, point.y + 4);
 		}
 		
 		label = Label;
