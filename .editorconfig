@@ -6,8 +6,4 @@ root = true
 [*]
 charset = utf-8
 tab_width   = 4
-indent_size = 2
 indent_style = tab
-
-#[CHANGELOG.md]
-#indent_size = 8
