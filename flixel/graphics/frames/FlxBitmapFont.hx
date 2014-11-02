@@ -11,12 +11,14 @@ import flixel.graphics.frames.FlxFramesCollection;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
+import flixel.system.FlxAssets.FlxAngelCodeSource;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.util.FlxBitmapDataUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import haxe.xml.Fast;
+import openfl.Assets;
 
 // TODO: make it possible to load font from atlas frame (for better batching)
 // but it will make code more complicated
@@ -140,11 +142,10 @@ class FlxBitmapFont extends FlxFramesCollection
 	 * Loads font data in AngelCode's format.
 	 * 
 	 * @param	Source		Font image source.
-	 * @param	Data		XML font data.
+	 * @param	Data		Font data. It could be Xml, or String, which could be parsed to Xml, or String path to font data file.
 	 * @return	Generated bitmap font object.
 	 */
-	// TODO: make it possible to pass string as Data argument (data or path to data file)
-	public static function fromAngelCode(Source:FlxGraphicAsset, Data:Xml):FlxBitmapFont
+	public static function fromAngelCode(Source:FlxGraphicAsset, Data:FlxAngelCodeSource):FlxBitmapFont
 	{
 		var graphic:FlxGraphic = FlxG.bitmap.add(Source, false);
 		if (graphic == null)	return null;
@@ -153,11 +154,33 @@ class FlxBitmapFont extends FlxFramesCollection
 		if (font != null)
 			return font;
 		
-		if ((graphic == null) || (Data == null)) return null;
+		var fontData:Xml = null;
+			
+		if (Data != null)
+		{
+			if (Std.is(Data, Xml))
+			{
+				fontData = cast Data;
+			}
+			else // Data is String
+			{
+				var data:String = Std.string(Data);
+				
+				if (Assets.exists(data))
+				{
+					data = Assets.getText(data);
+				}
+				
+				fontData = Xml.parse(data);
+			}
+		}
+		
+		
+		if ((graphic == null) || (fontData == null)) return null;
 		
 		font = new FlxBitmapFont(graphic);
 		
-		var fast:Fast = new Fast(Data.firstElement());
+		var fast:Fast = new Fast(fontData.firstElement());
 		
 		font.lineHeight = Std.parseInt(fast.node.common.att.lineHeight); // how much to move the cursor when going to the next line.
 		font.size = Std.parseInt(fast.node.info.att.size);
