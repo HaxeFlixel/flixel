@@ -14,6 +14,8 @@
  * `setBounds()` -> `setScrollBoundsRect()`
  * added `setScrollBounds()`
  * added `targetOffset`
+ * added `scrollRect` sprite which crops camera's view when the camera is scaled
+ * camera is scaled from its center, not from the top left corner
  * `followLerp` is now a range taking values from 0 to (60 / `FlxG.updateFramerate`) - the closer to zero the more lerp!
 * `FlxMath`:
  * `bound()` and `inBounds()` now accept `null` as values, meaning "unbounded in that direction"
@@ -58,6 +60,7 @@
  * fixed some iOS issues
 * `FlxMouse` and `FlxTouch` now extend a new common base class `FlxPointer` instead of `FlxPoint`
  * adds `overlaps()` to `FlxMouse` 
+ * `FlxPointer` takes camera's scale into consideration in `getScreenPosition()` method
 * `FlxTilemap`:
  * separated rendering and logic, adding `FlxBaseTilemap`
  * added `getTileIndexByCoords()` and `getTileCoordsByIndex()`
@@ -124,6 +127,7 @@
  * fixed an issue where the value returned by `get_font()` wouldn't be the same as the one passed into `set_font()`
  * added `applyMarkup()`
  * fixed issues with `borderStyle` and `FlxTextFormat` on native
+ * added `stampOnAtlas()` method, which stamps text graphic on provided atlas and loads result node's graphic into this text object
 * `FlxTypedButton`:
  * added input-like getters: `pressed`, `justPressed`, `released` and `justReleased`
  * now uses animations for statuses instead of setting `frameIndex` directly for more flexibility (removes `allowHighlightOnMobile`, adds `statusAnimations`)
@@ -155,6 +159,8 @@
  * added `setFrames()` method which allows you to save animations which already exists in this sprite
  * `colorTransform` is always instantiated
  * added `loadRotatedFrame()` method which allows you to generate prerotated image from given frame and load it
+ * added error message then trying to get pixels and graphic is null
+ * made `drawFrame()` method not inlined, so it can be redefined in subclasses. For example, you can use it in `FlxText` now if you need to force immediate graphic regeneration.
 * Added some helpful error messages when trying to target older swf versions
 * `FlxAngle`:
  * changed `rotatePoint()` to not invert the y-axis anymore and rotate clockwise (consistent with `FlxSprite#angle`)
@@ -195,10 +201,17 @@
 * Moved `FlxAtlas` and `FlxNode` in `flixel.graphics.atlas` package
 * Added `addNodeWithSpacings()` in `FlxAtlas`
 * Added `getTileFrames()` and `getImageFrame` in `FlxNode` which generate frames collections for this node
+* Rewrote big part of `FlxAtlas`:
+ * added `minWidth`, `minHeight` properties which sets minimum size of atlas canvas
+ * added `maxWidth`, `maxHeight` properties which sets maximum size of atlas canvas
+ * so the atlas can be expanded while new images are added in the atlas. It starts from minimum size and grows up to maximum size (if there is no free space to hold new images)
+ * added `powerOfTwo` property, which forces atlas size to be the power of two number (if true)
+ * added `allowRotation` property, which is settable only in atlas constructor and tells whether new image added in the atlas could be rotated to fit in existing empty atlas nodes
 * Changed game scaling behavior on native targets: it doesn't scale game sprite, but scales tiles instead
 * Changed game scaling behavior on flash target: it scales camera's sprite now
 * Renamed `CachedGraphics` class to `FlxGraphic` and moved it in `flixel.graphics` package
 * Added static methods to `FlxGraphic` class for generation of objects of this type from various sources: `fromAssetKey()`, `fromClass()`, `fromBitmapData()`
+* `FlxGraphic`'s `bitmap` property is now settable, changing it will lead to regeneration of graphic's tilesheet. `FlxAtlas` uses this feature, since it could increase its size and therefore change its bitmapdata canvas
 * Added new conception of frames collections instead of regions, which required a lot of typing to get simple spritesheet from image region
 * Added `FlxImageFrame` frames collection which contains single frame
 * Added `FlxTileFrames` frames collection which contains frames for spritesheet, which can be generated from image region or frame (including rotated and trimmed frames)
@@ -214,6 +227,11 @@
  * added `generateRotations()` method which generates new BitmapData with prerotated given BitmapData object (this functionality is moved from `FlxSprite`)
 * `FlxSave`: fix `data` still having the deleted properties after `erase()`
 * `FlxGradient`: now supported with bitfive
+* `FlxAnalog` and `FlxVirtualPad` have their own atlas with default graphic, so they propduce less drawcalls
+* `FlxButton`:
+ * don't initialize its label when the label's text passed in the constructor is null
+ * added `stampOnAtlas()` method which stamps button's label graphic and button's graphic on the provided atlas and then loads result nodes into button and label. This helps reduce number of drawcalls on native targets
+* Added `FlxSpriteButton` which is button which label is a simple `FlxSprite`. It have useful `createTextLabel()` method, which generates sprite with text graphic
 
 3.3.5
 ------------------------------
