@@ -143,6 +143,7 @@ class FlxBitmapFont extends FlxFramesCollection
 	 * @param	Data		XML font data.
 	 * @return	Generated bitmap font object.
 	 */
+	// TODO: make it possible to pass string as Data argument (data or path to data file)
 	public static function fromAngelCode(Source:FlxGraphicAsset, Data:Xml):FlxBitmapFont
 	{
 		var graphic:FlxGraphic = FlxG.bitmap.add(Source, false);
@@ -359,7 +360,7 @@ class FlxBitmapFont extends FlxFramesCollection
 	 * @param	spacing		Spaces between characters in the font set. Default is null which means no spaces.
 	 * @return	Generated bitmap font object.
 	 */
-	public static function fromMonospace(source:FlxGraphicAsset, letters:String = null, charSize:FlxPoint, region:FlxRect = null, spacing:Point = null):FlxBitmapFont
+	public static function fromMonospace(source:FlxGraphicAsset, letters:String = null, charSize:FlxPoint, region:FlxRect = null, spacing:FlxPoint = null):FlxBitmapFont
 	{
 		var graphic:FlxGraphic = FlxG.bitmap.add(source, false);
 		if (graphic == null)	return null;
@@ -384,7 +385,7 @@ class FlxBitmapFont extends FlxFramesCollection
 			region.height = graphic.bitmap.height - region.y;
 		}
 		
-		spacing = (spacing == null) ? new Point(0, 0) : spacing;
+		spacing = (spacing == null) ? new FlxPoint(0, 0) : spacing;
 		
 		var bitmapWidth:Int = Std.int(region.width);
 		var bitmapHeight:Int = Std.int(region.height);
