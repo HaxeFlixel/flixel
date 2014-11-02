@@ -295,6 +295,7 @@ private class FileReference
 	}
 }
 #else
+typedef FlxAngelCodeSource = OneOfTwo<Xml, String>;
 typedef FlxSoundAsset = OneOfThree<String, Sound, Class<Sound>>;
 typedef FlxGraphicAsset = OneOfThree<FlxGraphic, BitmapData, String>;
 typedef FlxGraphicSource = OneOfThree<BitmapData, Class<Dynamic>, String>;

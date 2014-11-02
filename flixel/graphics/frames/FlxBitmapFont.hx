@@ -155,7 +155,7 @@ class FlxBitmapFont extends FlxFramesCollection
 			return font;
 		
 		var fontData:Xml = null;
-			
+		
 		if (Data != null)
 		{
 			if (Std.is(Data, Xml))
@@ -174,7 +174,6 @@ class FlxBitmapFont extends FlxFramesCollection
 				fontData = Xml.parse(data);
 			}
 		}
-		
 		
 		if ((graphic == null) || (fontData == null)) return null;
 		
