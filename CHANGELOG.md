@@ -59,8 +59,7 @@
  * `getFileReferences()` now ignores invisible files
  * fixed some iOS issues
 * `FlxMouse` and `FlxTouch` now extend a new common base class `FlxPointer` instead of `FlxPoint`
- * adds `overlaps()` to `FlxMouse` 
- * `FlxPointer` takes camera's scale into consideration in `getScreenPosition()` method
+ * adds `overlaps()` to `FlxMouse`
 * `FlxTilemap`:
  * separated rendering and logic, adding `FlxBaseTilemap`
  * added `getTileIndexByCoords()` and `getTileCoordsByIndex()`
@@ -136,6 +135,8 @@
  * `set_label()` now updates the label position
  * added `maxInputMovement`
  * added `mouseButtons` to control which mouse buttons can trigger the button
+ * don't initialize label when the label's text passed in the constructor is null
+ * added `stampOnAtlas()` method which stamps button's label graphic and button's graphic on the provided atlas and then loads result nodes into button and label. This helps reduce number of drawcalls on native targets
 * `FlxMouseEventManager`:
  * moved from `flixel.plugin.MouseEventManager` to `flixel.input.mouse.FlxMouseEventManager`
  * added `removeAll()`
@@ -228,9 +229,6 @@
 * `FlxSave`: fix `data` still having the deleted properties after `erase()`
 * `FlxGradient`: now supported with bitfive
 * `FlxAnalog` and `FlxVirtualPad` have their own atlas with default graphic, so they propduce less drawcalls
-* `FlxButton`:
- * don't initialize its label when the label's text passed in the constructor is null
- * added `stampOnAtlas()` method which stamps button's label graphic and button's graphic on the provided atlas and then loads result nodes into button and label. This helps reduce number of drawcalls on native targets
 * Added `FlxSpriteButton` which is button which label is a simple `FlxSprite`. It have useful `createTextLabel()` method, which generates sprite with text graphic
 
 3.3.5
