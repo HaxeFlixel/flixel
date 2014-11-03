@@ -17,6 +17,7 @@ import flixel.graphics.tile.FlxDrawStackItem;
 import flixel.math.FlxMath;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.system.FlxAssets.FlxTilemapGraphicAsset;
 import flixel.tile.FlxBaseTilemap.FlxTilemapAutoTiling;
@@ -764,19 +765,20 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		
 		var tile:FlxTile = _tileObjects[_data[rowIndex]];
 		var tileSprite:FlxSprite = new FlxSprite();
+		var image:FlxImageFrame;
 		tileSprite.x = X * _tileWidth + x;
 		tileSprite.y = Y * _tileHeight + y;
 		
 		if (tile != null && tile.visible)
 		{
-			var image:FlxImageFrame = FlxImageFrame.fromFrame(tile.frame);
-			tileSprite.frames = image;
+			image = FlxImageFrame.fromFrame(tile.frame);	
 		}
 		else
 		{
-			tileSprite.makeGraphic(_tileWidth, _tileHeight, FlxColor.TRANSPARENT, true);
+			image = FlxImageFrame.fromEmptyFrame(graphic, new FlxRect(_tileWidth, _tileHeight));
 		}
 		
+		tileSprite.frames = image;
 		tileSprite.scale.copyFrom(scale);
 		tileSprite.dirty = true;
 
