@@ -758,23 +758,32 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 * @param	X				The X coordinate of the tile (in tiles, not pixels).
 	 * @param	Y				The Y coordinate of the tile (in tiles, not pixels).
 	 * @param	NewTile			New tile to the mapdata. Use -1 if you dont want any changes. Default = 0 (empty)
-	 * @param	SpriteFactory	Method for converting FlxTile to FlxSprite. If null then will be used default FlxTilemap.tileToSprite() method.
+	 * @param	SpriteFactory	Method for converting FlxTile to FlxSprite. If null then will be used defaultTileToSprite() method.
 	 * @return	FlxSprite.
 	 */
-	public function tileToFlxSprite(X:Int, Y:Int, NewTile:Int = 0, SpriteFactory:FlxTile->FlxSprite = null):FlxSprite
+	public function tileToSprite(X:Int, Y:Int, NewTile:Int = 0, SpriteFactory:FlxImageFrame->Float->Float->FlxTilemap->FlxSprite = null):FlxSprite
 	{
 		if (SpriteFactory == null)
 		{
-			SpriteFactory = tileToSprite;
+			SpriteFactory = defaultTileToSprite;
 		}
 		
 		var rowIndex:Int = X + (Y * widthInTiles);
-		
 		var tile:FlxTile = _tileObjects[_data[rowIndex]];
-		var tileSprite:FlxSprite = SpriteFactory(tile);
-		tileSprite.x = X * _tileWidth * scale.x + x;
-		tileSprite.y = Y * _tileHeight * scale.y + y;
-		tileSprite.scale.copyFrom(scale);
+		var image:FlxImageFrame = null;
+		
+		if (tile != null && tile.visible)
+		{
+			image = FlxImageFrame.fromFrame(tile.frame);	
+		}
+		else
+		{
+			image = FlxImageFrame.fromEmptyFrame(graphic, FlxRect.get(0, 0, _tileWidth, _tileHeight));
+		}
+		
+		var tileX:Float = X * _tileWidth * scale.x + x;
+		var tileY:Float = Y * _tileHeight * scale.y + y;
+		var tileSprite:FlxSprite = SpriteFactory(image, tileX, tileY, this);
 		
 		if (NewTile >= 0) 
 		{
@@ -1175,24 +1184,19 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	/**
 	 * Default method for generating FlxSprite from FlxTile
 	 * 
-	 * @param	Tile	tile to generate sprite from
-	 * @return	New FlxSprite with graphic of specified tile
+	 * @param	Image		image frame to use for sprite frames
+	 * @param	X			sprite x coordinate
+	 * @param	Y			sprite y coordinate
+	 * @param	Tilemap		tilemap to copy properties from (alpha, scale, blend)
+	 * @return	New FlxSprite with specified graphic
 	 */
-	private function tileToSprite(Tile:FlxTile):FlxSprite
+	private function defaultTileToSprite(Image:FlxImageFrame, X:Float, Y:Float, Tilemap:FlxTilemap):FlxSprite
 	{
-		var tileSprite:FlxSprite = new FlxSprite();
-		var image:FlxImageFrame = null;
-		
-		if (Tile != null && Tile.visible)
-		{
-			image = FlxImageFrame.fromFrame(Tile.frame);	
-		}
-		else if (Tile != null)
-		{
-			image = FlxImageFrame.fromEmptyFrame(Tile.tilemap.graphic, new FlxRect(0, 0, Tile.width, Tile.height));
-		}
-		
-		tileSprite.frames = image;
+		var tileSprite:FlxSprite = new FlxSprite(X, Y);
+		tileSprite.frames = Image;
+		tileSprite.scale.copyFrom(Tilemap.scale);
+		tileSprite.alpha = Tilemap.alpha;
+		tileSprite.blend = Tilemap.blend;
 		return tileSprite;
 	}
 }
