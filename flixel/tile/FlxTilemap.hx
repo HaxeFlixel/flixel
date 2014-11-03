@@ -783,7 +783,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		
 		var tileX:Float = X * _tileWidth * scale.x + x;
 		var tileY:Float = Y * _tileHeight * scale.y + y;
-		var tileSprite:FlxSprite = SpriteFactory({graphic: image, x: tileX, y: tileY, scaleX: scale.x, scaleY: scale.y, alpha: alpha, blend: blend});
+		var tileSprite:FlxSprite = SpriteFactory({graphic: image, x: tileX, y: tileY, scale: FlxPoint.get().copyFrom(scale), alpha: alpha, blend: blend});
 		
 		if (NewTile >= 0) 
 		{
@@ -1191,8 +1191,8 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	{
 		var tileSprite:FlxSprite = new FlxSprite(TileProperties.x, TileProperties.y);
 		tileSprite.frames = TileProperties.graphic;
-		tileSprite.scale.x = TileProperties.scaleX;
-		tileSprite.scale.y = TileProperties.scaleY;
+		tileSprite.scale.copyFrom(TileProperties.scale);
+		FlxDestroyUtil.put(TileProperties.scale);
 		tileSprite.alpha = TileProperties.alpha;
 		tileSprite.blend = TileProperties.blend;
 		return tileSprite;
@@ -1204,8 +1204,7 @@ typedef FlxTileProperties =
    graphic:FlxImageFrame,
    x:Float,
    y:Float,
-   scaleX:Float,
-   scaleY:Float,
+   scale:FlxPoint,
    alpha:Float,
    blend:BlendMode
 }
