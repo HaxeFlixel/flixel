@@ -721,6 +721,22 @@ class FlxText extends FlxSprite
 		return graph;
 	}
 	
+	override private function get_width():Float 
+	{
+		if (_regen)
+			regenGraphics();
+		
+		return super.get_width();
+	}
+	
+	override private function get_height():Float 
+	{
+		if (_regen)
+			regenGraphics();
+		
+		return super.get_height();
+	}
+	
 	override private function updateColorTransform():Void
 	{
 		if (alpha != 1)

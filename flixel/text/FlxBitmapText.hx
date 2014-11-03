@@ -1588,6 +1588,18 @@ class FlxBitmapText extends FlxSprite
 		return super.set_antialiasing(value);
 	}
 	
+	override private function get_width():Float 
+	{
+		checkPendingChanges();
+		return super.get_width();
+	}
+	
+	override private function get_height():Float 
+	{
+		checkPendingChanges();
+		return super.get_height();
+	}
+	
 	private function updateTextGlyphs():Void
 	{
 		#if FLX_RENDER_BLIT
