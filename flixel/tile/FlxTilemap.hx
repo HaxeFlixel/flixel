@@ -8,6 +8,7 @@ import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
+import flixel.FlxSprite;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.frames.FlxFramesCollection;
@@ -754,34 +755,28 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 * Change a particular tile to FlxSprite. Or just copy the graphic if you dont want any changes to mapdata itself.
 	 * 
 	 * @link http://forums.flixel.org/index.php/topic,5398.0.html
-	 * @param	X		The X coordinate of the tile (in tiles, not pixels).
-	 * @param	Y		The Y coordinate of the tile (in tiles, not pixels).
-	 * @param	NewTile	New tile to the mapdata. Use -1 if you dont want any changes. Default = 0 (empty)
+	 * @param	X				The X coordinate of the tile (in tiles, not pixels).
+	 * @param	Y				The Y coordinate of the tile (in tiles, not pixels).
+	 * @param	NewTile			New tile to the mapdata. Use -1 if you dont want any changes. Default = 0 (empty)
+	 * @param	SpriteFactory	Method for converting FlxTile to FlxSprite. If null then will be used default FlxTilemap.tileToSprite() method.
 	 * @return	FlxSprite.
 	 */
-	public function tileToFlxSprite(X:Int, Y:Int, NewTile:Int = 0):FlxSprite
+	public function tileToFlxSprite(X:Int, Y:Int, NewTile:Int = 0, SpriteFactory:FlxTile->FlxSprite = null):FlxSprite
 	{
+		if (SpriteFactory == null)
+		{
+			SpriteFactory = FlxTilemap.tileToSprite;
+		}
+		
 		var rowIndex:Int = X + (Y * widthInTiles);
 		
 		var tile:FlxTile = _tileObjects[_data[rowIndex]];
-		var tileSprite:FlxSprite = new FlxSprite();
-		var image:FlxImageFrame;
-		tileSprite.x = X * _tileWidth + x;
-		tileSprite.y = Y * _tileHeight + y;
+		var tileSprite:FlxSprite = SpriteFactory(tile);
 		
-		if (tile != null && tile.visible)
-		{
-			image = FlxImageFrame.fromFrame(tile.frame);	
-		}
-		else
-		{
-			image = FlxImageFrame.fromEmptyFrame(graphic, new FlxRect(_tileWidth, _tileHeight));
-		}
-		
-		tileSprite.frames = image;
+		tileSprite.x = X * _tileWidth * scale.x + x;
+		tileSprite.y = Y * _tileHeight * scale.y + y;
 		tileSprite.scale.copyFrom(scale);
-		tileSprite.dirty = true;
-
+		
 		if (NewTile >= 0) 
 		{
 			setTile(X, Y, NewTile);
@@ -1176,5 +1171,29 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 				}
 			}
 		}
+	}
+	
+	/**
+	 * Default method for generating FlxSprite from FlxTile
+	 * 
+	 * @param	Tile	tile to generate sprite from
+	 * @return	New FlxSprite with graphic of specified tile
+	 */
+	private static function tileToSprite(Tile:FlxTile):FlxSprite
+	{
+		var tileSprite:FlxSprite = new FlxSprite();
+		var image:FlxImageFrame = null;
+		
+		if (Tile != null && Tile.visible)
+		{
+			image = FlxImageFrame.fromFrame(Tile.frame);	
+		}
+		else if (Tile != null)
+		{
+			image = FlxImageFrame.fromEmptyFrame(Tile.tilemap.graphic, new FlxRect(0, 0, Tile.width, Tile.height));
+		}
+		
+		tileSprite.frames = image;
+		return tileSprite;
 	}
 }
