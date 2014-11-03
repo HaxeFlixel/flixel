@@ -127,6 +127,7 @@
  * added `applyMarkup()`
  * fixed issues with `borderStyle` and `FlxTextFormat` on native
  * added `stampOnAtlas()` method, which stamps text graphic on provided atlas and loads result node's graphic into this text object
+ * retrieving text dimensions (`width` and `height`) could run text graphic regeneration (if the text properties has been changed and these changes lead to text dimensions changes). So you'll get the right values
 * `FlxTypedButton`:
  * added input-like getters: `pressed`, `justPressed`, `released` and `justReleased`
  * now uses animations for statuses instead of setting `frameIndex` directly for more flexibility (removes `allowHighlightOnMobile`, adds `statusAnimations`)
