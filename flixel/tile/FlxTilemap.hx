@@ -765,14 +765,13 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	{
 		if (SpriteFactory == null)
 		{
-			SpriteFactory = FlxTilemap.tileToSprite;
+			SpriteFactory = tileToSprite;
 		}
 		
 		var rowIndex:Int = X + (Y * widthInTiles);
 		
 		var tile:FlxTile = _tileObjects[_data[rowIndex]];
 		var tileSprite:FlxSprite = SpriteFactory(tile);
-		
 		tileSprite.x = X * _tileWidth * scale.x + x;
 		tileSprite.y = Y * _tileHeight * scale.y + y;
 		tileSprite.scale.copyFrom(scale);
@@ -1179,7 +1178,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 * @param	Tile	tile to generate sprite from
 	 * @return	New FlxSprite with graphic of specified tile
 	 */
-	private static function tileToSprite(Tile:FlxTile):FlxSprite
+	private function tileToSprite(Tile:FlxTile):FlxSprite
 	{
 		var tileSprite:FlxSprite = new FlxSprite();
 		var image:FlxImageFrame = null;
