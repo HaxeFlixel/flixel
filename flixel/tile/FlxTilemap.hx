@@ -761,7 +761,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 * @param	SpriteFactory	Method for converting FlxTile to FlxSprite. If null then will be used defaultTileToSprite() method.
 	 * @return	FlxSprite.
 	 */
-	public function tileToSprite(X:Int, Y:Int, NewTile:Int = 0, SpriteFactory:FlxImageFrame->Float->Float->FlxTilemap->FlxSprite = null):FlxSprite
+	public function tileToSprite(X:Int, Y:Int, NewTile:Int = 0, ?SpriteFactory:FlxTileProperties->FlxSprite):FlxSprite
 	{
 		if (SpriteFactory == null)
 		{
@@ -783,7 +783,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		
 		var tileX:Float = X * _tileWidth * scale.x + x;
 		var tileY:Float = Y * _tileHeight * scale.y + y;
-		var tileSprite:FlxSprite = SpriteFactory(image, tileX, tileY, this);
+		var tileSprite:FlxSprite = SpriteFactory({graphic: image, x: tileX, y: tileY, scale: scale, alpha: alpha, blend: blend});
 		
 		if (NewTile >= 0) 
 		{
@@ -1184,19 +1184,26 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	/**
 	 * Default method for generating FlxSprite from FlxTile
 	 * 
-	 * @param	Image		image frame to use for sprite frames
-	 * @param	X			sprite x coordinate
-	 * @param	Y			sprite y coordinate
-	 * @param	Tilemap		tilemap to copy properties from (alpha, scale, blend)
+	 * @param	TileProperties	properties for new sprite
 	 * @return	New FlxSprite with specified graphic
 	 */
-	private function defaultTileToSprite(Image:FlxImageFrame, X:Float, Y:Float, Tilemap:FlxTilemap):FlxSprite
+	private function defaultTileToSprite(TileProperties:FlxTileProperties):FlxSprite
 	{
-		var tileSprite:FlxSprite = new FlxSprite(X, Y);
-		tileSprite.frames = Image;
-		tileSprite.scale.copyFrom(Tilemap.scale);
-		tileSprite.alpha = Tilemap.alpha;
-		tileSprite.blend = Tilemap.blend;
+		var tileSprite:FlxSprite = new FlxSprite(TileProperties.x, TileProperties.y);
+		tileSprite.frames = TileProperties.graphic;
+		tileSprite.scale.copyFrom(TileProperties.scale);
+		tileSprite.alpha = TileProperties.alpha;
+		tileSprite.blend = TileProperties.blend;
 		return tileSprite;
 	}
+}
+
+typedef FlxTileProperties =
+{
+   graphic:FlxImageFrame,
+   x:Float,
+   y:Float,
+   scale:FlxPoint,
+   alpha:Float,
+   blend:BlendMode
 }
