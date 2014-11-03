@@ -312,8 +312,8 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		}
 		
 		// Copied from getScreenXY()
-		_helperPoint.x = Math.floor((x - Math.floor(Camera.scroll.x) * scrollFactor.x) * 5) / 5 + 0.1;
-		_helperPoint.y = Math.floor((y - Math.floor(Camera.scroll.y) * scrollFactor.y) * 5) / 5 + 0.1;
+		_helperPoint.x = x - Camera.scroll.x * scrollFactor.x;
+		_helperPoint.y = y - Camera.scroll.y * scrollFactor.y;
 		
 		_helperPoint.x *= Camera.totalScaleX;
 		_helperPoint.y *= Camera.totalScaleY;
