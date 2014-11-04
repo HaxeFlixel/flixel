@@ -808,13 +808,13 @@ class FlxText extends FlxSprite
 				#else
 					var textWidth = textField.getLineMetrics(0).width;
 				#end
-				if (textField.textWidth <= textField.width)
-					_matrix.translate(Math.floor((fieldWidth - textWidth) / 2), 0);
+				if (textWidth <= textField.width)
+					_matrix.translate(Math.floor((textField.width - textWidth) / 2), 0);
 			}
 			
 			applyBorderStyle();
 			applyFormats(_formatAdjusted, false);
-
+			
 			graphic.bitmap.draw(textField, _matrix);
 		}
 		
