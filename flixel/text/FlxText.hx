@@ -844,7 +844,7 @@ class FlxText extends FlxSprite
 		if (_regen)
 			regenGraphics();
 		
-		super.calcFrame();
+		super.calcFrame(RunOnCpp);
 	}
 	
 	private function applyBorderStyle():Void
