@@ -809,7 +809,7 @@ class FlxText extends FlxSprite
 					var textWidth = textField.getLineMetrics(0).width;
 				#end
 				if (textField.textWidth <= textField.width)
-					_matrix.translate(Math.floor((width - textWidth) / 2), 0);
+					_matrix.translate(Math.floor((fieldWidth - textWidth) / 2), 0);
 			}
 			
 			applyBorderStyle();
