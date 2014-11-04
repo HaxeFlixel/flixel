@@ -205,7 +205,7 @@ class FlxText extends FlxSprite
 		#else
 		if (Text != "")
 		{
-			calcFrame();
+			regenGraphics();
 		}
 		#end
 		
@@ -841,6 +841,11 @@ class FlxText extends FlxSprite
 		if (textField == null)
 			return;
 		
+		#if FLX_RENDER_TILE
+		if (!RunOnCpp)
+			return;
+		#end
+			
 		if (_regen)
 			regenGraphics();
 		
