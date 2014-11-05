@@ -98,6 +98,7 @@ class FlxTimer implements IFlxDestroyable
 	 * Starts the timer and adds the timer to the timer manager.
 	 * 
 	 * @param	Time		How many seconds it takes for the timer to go off.
+	 * 						If 0 then timer will fire OnComplete callback only once at the first call of update method (which means that Loops argument will be ignored).
 	 * @param	OnComplete	Optional, triggered whenever the time runs out, once for each loop.
 	 * 						Callback should be formed "onTimer(Timer:FlxTimer);"
 	 * @param	Loops		How many times the timer should go off. 0 means "looping forever".
