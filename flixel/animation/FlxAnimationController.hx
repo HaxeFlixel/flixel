@@ -207,7 +207,7 @@ class FlxAnimationController implements IFlxDestroyable
 	 * 
 	 * @param	Name	The name of animation to remove.
 	 */
-	private function remove(Name:String):Void
+	public function remove(Name:String):Void
 	{
 		var anim:FlxAnimation = _animations.get(Name);
 		if (anim != null)
