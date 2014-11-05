@@ -203,6 +203,21 @@ class FlxAnimationController implements IFlxDestroyable
 	}
 	
 	/**
+	 * Removes (and destroys) animation from _animations Map.
+	 * 
+	 * @param	Name	The name of animation to remove.
+	 */
+	private function remove(Name:String):Void
+	{
+		var anim:FlxAnimation = _animations.get(Name);
+		if (anim != null)
+		{
+			_animations.remove(Name);
+			anim.destroy();
+		}
+	}
+	
+	/**
 	 * Adds to an existing _animations in the sprite by appending the specified frames to the existing frames.
 	 * Use this method when the indices of the frames in the atlas are already known.
 	 * The animation must already exist in order to append frames to it. FrameRate and Looped are unchanged.
