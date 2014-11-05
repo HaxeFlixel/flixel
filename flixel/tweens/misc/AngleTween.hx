@@ -41,6 +41,10 @@ class AngleTween extends FlxTween
 		_range = ToAngle - angle;
 		duration = Duration;
 		sprite = Sprite;
+		if (sprite != null)
+		{
+			sprite.angle = angle % 360;
+		}
 		start();
 		return this;
 	}
@@ -53,7 +57,6 @@ class AngleTween extends FlxTween
 		if (sprite != null)
 		{
 			var spriteAngle:Float = angle % 360;
-			spriteAngle += (spriteAngle < 0) ? 360 : 0;
 			sprite.angle = spriteAngle;
 		}
 	}
