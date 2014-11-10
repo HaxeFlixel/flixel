@@ -552,7 +552,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		
 		for (sprite in _sprites)
 		{
-			if ((sprite != null) && sprite.exists)
+			if ((sprite != null) /*&& sprite.exists*/)
 			{
 				Function(cast sprite, Value);
 			}
