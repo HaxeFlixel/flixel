@@ -1,5 +1,6 @@
 package flixel.input.mouse;
 
+#if !FLX_NO_MOUSE
 import flash.errors.Error;
 import flixel.FlxBasic;
 import flixel.FlxCamera;
@@ -520,3 +521,4 @@ private class ObjectMouseData<T:FlxObject>
 		this.mouseButtons = (mouseButtons == null) ? [FlxMouseButtonID.LEFT] : mouseButtons;
 	}
 }
+#end
