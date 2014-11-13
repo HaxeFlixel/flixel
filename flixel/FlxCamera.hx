@@ -343,7 +343,32 @@ class FlxCamera extends FlxBasic
 	@:noCompletion
 	public function getDrawTilesItem(ObjGraphics:FlxGraphic, ObjColored:Bool, ObjBlending:Int, ObjAntialiasing:Bool = false):FlxDrawTilesItem
 	{
+	//	_currentStackItem = new FlxDrawTilesItem();
+	//	_headOfDrawStack = _currentStackItem;
+		
 		var itemToReturn:FlxDrawTilesItem = null;
+		
+		// TODO: continue from here...
+		
+		if (_currentStackItem != null && _currentStackItem.type == FlxDrawItemType.TILES)
+		{
+			// current item is for tile drawing
+			// now we need to if it have the same texture and smoothing
+			// if not then we need to create or get from pool new item
+		}
+		else if (_currentStackItem == null)
+		{
+			// current item is null 
+			// this means that we need to create or get from pool new item
+			// plus we need to set up head of draw stack
+		}
+		else
+		{
+			// current item isn't null, but not for tile drawing
+			// this means that we need to create or get from pool new item
+		}
+		
+		
 		if (_currentStackItem.initialized == false)
 		{
 			_headOfDrawStack = _currentStackItem;
@@ -399,6 +424,28 @@ class FlxCamera extends FlxBasic
 	@:allow(flixel.system.frontEnds.CameraFrontEnd)
 	private function clearDrawStack():Void
 	{	
+		// TODO: rework this method
+		
+		var currItem:FlxDrawBaseItem = _headTiles;
+		// TODO: reset all tile draw items
+		while (currItem != null)
+		{
+			
+		}
+		
+		currItem = _headTriangles;
+		// TODO: reset all triangle draw items
+		while (currItem != null)
+		{
+			
+		}
+		
+		_currentStackItem = null;
+		_headOfDrawStack = null;
+		_headTiles = null;
+		_headTriangles = null;
+		
+		/*
 		var currItem:FlxDrawBaseItem = _headOfDrawStack.next;
 		while (currItem != null)
 		{
@@ -420,6 +467,7 @@ class FlxCamera extends FlxBasic
 		_headOfDrawStack.reset();
 		_headOfDrawStack.next = null;
 		_currentStackItem = _headOfDrawStack;
+		*/
 	}
 	
 	@:allow(flixel.system.frontEnds.CameraFrontEnd)
@@ -500,8 +548,10 @@ class FlxCamera extends FlxBasic
 		_scrollRect.addChild(debugLayer);
 		#end
 		
-		_currentStackItem = new FlxDrawTilesItem();
-		_headOfDrawStack = _currentStackItem;
+		// TODO: remove these lines later
+	//	_currentStackItem = new FlxDrawTilesItem();
+	//	_headOfDrawStack = _currentStackItem;
+		
 		#end
 		
 		zoom = Zoom; //sets the scale of flash sprite, which in turn loads flashoffset values
