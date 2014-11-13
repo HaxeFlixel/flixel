@@ -11,6 +11,7 @@ import flixel.FlxCamera.FlxCameraShakeDirection;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.tile.FlxDrawBaseItem;
 import flixel.graphics.tile.FlxDrawTilesItem;
+import flixel.graphics.tile.FlxDrawTrianglesItem;
 import flixel.graphics.tile.FlxTilesheet;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
@@ -320,17 +321,24 @@ class FlxCamera extends FlxBasic
 	 * Pointer to head of stack with draw items
 	 */
 	private var _headOfDrawStack:FlxDrawBaseItem;
-	
+	/**
+	 * Last draw tiles item
+	 */
 	private var _headTiles:FlxDrawTilesItem;
-	
-//	private var _headTriangles:FlxDrawTrianglesItem;
+	/**
+	 * Last draw triangles item
+	 */
+	private var _headTriangles:FlxDrawTrianglesItem;
 	
 	/**
-	 * Draw stack items that can be reused
+	 * Draw tiles stack items that can be reused
 	 */
 	private static var _storageTilesHead:FlxDrawTilesItem;
 	
-	//private static var _storageTrianglesHead:FlxDrawTrianglesItem;
+	/**
+	 * Draw triangles stack items that can be reused
+	 */
+	private static var _storageTrianglesHead:FlxDrawTrianglesItem;
 	
 	@:noCompletion
 	public function getDrawTilesItem(ObjGraphics:FlxGraphic, ObjColored:Bool, ObjBlending:Int, ObjAntialiasing:Bool = false):FlxDrawTilesItem
@@ -379,6 +387,13 @@ class FlxCamera extends FlxBasic
 		
 		itemToReturn.initialized = true;
 		return itemToReturn;
+	}
+	
+	@:noCompletion
+	public function getDrawTrianglesItem(ObjGraphics:FlxGraphic, ObjAntialiasing:Bool = false):FlxDrawTrianglesItem
+	{
+		// TODO: implement it...
+		return null;
 	}
 	
 	@:allow(flixel.system.frontEnds.CameraFrontEnd)
