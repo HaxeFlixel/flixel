@@ -9,7 +9,8 @@ import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.FlxCamera.FlxCameraShakeDirection;
 import flixel.graphics.FlxGraphic;
-import flixel.graphics.tile.FlxDrawStackItem;
+import flixel.graphics.tile.FlxDrawBaseItem;
+import flixel.graphics.tile.FlxDrawTilesItem;
 import flixel.graphics.tile.FlxTilesheet;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
@@ -314,20 +315,27 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Currently used draw stack item
 	 */
-	private var _currentStackItem:FlxDrawStackItem;
+	private var _currentStackItem:FlxDrawBaseItem;
 	/**
 	 * Pointer to head of stack with draw items
 	 */
-	private var _headOfDrawStack:FlxDrawStackItem;
+	private var _headOfDrawStack:FlxDrawBaseItem;
+	
+	private var _headTiles:FlxDrawTilesItem;
+	
+//	private var _headTriangles:FlxDrawTrianglesItem;
+	
 	/**
 	 * Draw stack items that can be reused
 	 */
-	private static var _storageHead:FlxDrawStackItem;
+	private static var _storageTilesHead:FlxDrawTilesItem;
+	
+	//private static var _storageTrianglesHead:FlxDrawTrianglesItem;
 	
 	@:noCompletion
-	public function getDrawStackItem(ObjGraphics:FlxGraphic, ObjColored:Bool, ObjBlending:Int, ObjAntialiasing:Bool = false):FlxDrawStackItem
+	public function getDrawTilesItem(ObjGraphics:FlxGraphic, ObjColored:Bool, ObjBlending:Int, ObjAntialiasing:Bool = false):FlxDrawTilesItem
 	{
-		var itemToReturn:FlxDrawStackItem = null;
+		var itemToReturn:FlxDrawTilesItem = null;
 		if (_currentStackItem.initialized == false)
 		{
 			_headOfDrawStack = _currentStackItem;
@@ -347,17 +355,17 @@ class FlxCamera extends FlxBasic
 		
 		if (itemToReturn == null)
 		{
-			var newItem:FlxDrawStackItem = null;
-			if (_storageHead != null)
+			var newItem:FlxDrawTilesItem = null;
+			if (_storageTilesHead != null)
 			{
-				newItem = _storageHead;
-				var newHead:FlxDrawStackItem = FlxCamera._storageHead.next;
+				newItem = _storageTilesHead;
+				var newHead:FlxDrawBaseItem = FlxCamera._storageTilesHead.next;
 				newItem.next = null;
-				FlxCamera._storageHead = newHead;
+				FlxCamera._storageTilesHead = newHead;
 			}
 			else
 			{
-				newItem = new FlxDrawStackItem();
+				newItem = new FlxDrawTilesItem();
 			}
 			
 			newItem.graphics = ObjGraphics;
@@ -376,21 +384,21 @@ class FlxCamera extends FlxBasic
 	@:allow(flixel.system.frontEnds.CameraFrontEnd)
 	private function clearDrawStack():Void
 	{	
-		var currItem:FlxDrawStackItem = _headOfDrawStack.next;
+		var currItem:FlxDrawBaseItem = _headOfDrawStack.next;
 		while (currItem != null)
 		{
 			currItem.reset();
-			var newStorageHead:FlxDrawStackItem = currItem;
+			var newStorageHead:FlxDrawTilesItem = currItem;
 			currItem = currItem.next;
-			if (_storageHead == null)
+			if (_storageTilesHead == null)
 			{
-				FlxCamera._storageHead = newStorageHead;
+				FlxCamera._storageTilesHead = newStorageHead;
 				newStorageHead.next = null;
 			}
 			else
 			{
-				newStorageHead.next = FlxCamera._storageHead;
-				FlxCamera._storageHead = newStorageHead;
+				newStorageHead.next = FlxCamera._storageTilesHead;
+				FlxCamera._storageTilesHead = newStorageHead;
 			}
 		}
 		
@@ -402,24 +410,10 @@ class FlxCamera extends FlxBasic
 	@:allow(flixel.system.frontEnds.CameraFrontEnd)
 	private function render():Void
 	{
-		var currItem:FlxDrawStackItem = _headOfDrawStack;
+		var currItem:FlxDrawBaseItem = _headOfDrawStack;
 		while (currItem != null)
 		{
-			var data:Array<Float> = currItem.drawData;
-			var dataLen:Int = data.length;
-			var position:Int = currItem.position;
-			if (position > 0)
-			{
-				var tempFlags:Int = Tilesheet.TILE_TRANS_2x2;
-				tempFlags |= Tilesheet.TILE_ALPHA;
-				if (currItem.colored)
-				{
-					tempFlags |= Tilesheet.TILE_RGB;
-				}
-				tempFlags |= currItem.blending;
-				currItem.graphics.tilesheet.drawTiles(canvas.graphics, data, (antialiasing || currItem.antialiasing), tempFlags, position);
-				FlxTilesheet._DRAWCALLS++;
-			}
+			currItem.render(this);
 			currItem = currItem.next;
 		}
 	}
@@ -491,7 +485,7 @@ class FlxCamera extends FlxBasic
 		_scrollRect.addChild(debugLayer);
 		#end
 		
-		_currentStackItem = new FlxDrawStackItem();
+		_currentStackItem = new FlxDrawTilesItem();
 		_headOfDrawStack = _currentStackItem;
 		#end
 		

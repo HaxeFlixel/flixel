@@ -7,7 +7,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxBitmapFont;
 import flixel.graphics.frames.FlxGlyphFrame;
-import flixel.graphics.tile.FlxDrawStackItem;
+import flixel.graphics.tile.FlxDrawTilesItem;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.text.FlxText.FlxTextAlign;
@@ -331,7 +331,7 @@ class FlxBitmapText extends FlxSprite
 		
 		var alphaToUse:Float = 0;
 		
-		var drawItem:FlxDrawStackItem;
+		var drawItem:FlxDrawTilesItem;
 		var tileID:Float = -1;
 		var currTileX:Float = 0;
 		var currTileY:Float = 0;
@@ -401,12 +401,12 @@ class FlxBitmapText extends FlxSprite
 			
 			if (background)
 			{
-				drawItem = camera.getDrawStackItem(FlxG.bitmap.whitePixel.parent, true, _blendInt, antialiasing);
+				drawItem = camera.getDrawTilesItem(FlxG.bitmap.whitePixel.parent, true, _blendInt, antialiasing);
 				tileID = FlxG.bitmap.whitePixel.tileID;
 				drawItem.setDrawData(_point, tileID, _bgMatrix, true, backgroundColor.to24Bit(), bgAlpha * camera.alpha);
 			}
 			
-			drawItem = camera.getDrawStackItem(font.parent, true, _blendInt, antialiasing);
+			drawItem = camera.getDrawTilesItem(font.parent, true, _blendInt, antialiasing);
 			
 			alphaToUse = bAlpha * camera.alpha;
 			

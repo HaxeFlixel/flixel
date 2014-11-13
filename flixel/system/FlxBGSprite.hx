@@ -5,7 +5,7 @@ import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.FlxSprite;
 import flixel.FlxG;
-import flixel.graphics.tile.FlxDrawStackItem;
+import flixel.graphics.tile.FlxDrawTilesItem;
 import flixel.util.FlxColor;
 
 class FlxBGSprite extends FlxSprite
@@ -22,7 +22,7 @@ class FlxBGSprite extends FlxSprite
 	 */
 	override public function draw():Void
 	{
-		var drawItem:FlxDrawStackItem;
+		var drawItem:FlxDrawTilesItem;
 		
 		for (camera in cameras)
 		{
@@ -31,7 +31,7 @@ class FlxBGSprite extends FlxSprite
 				continue;
 			}
 			
-			drawItem = camera.getDrawStackItem(graphic, isColored, _blendInt);
+			drawItem = camera.getDrawTilesItem(graphic, isColored, _blendInt);
 			
 			var scaledWidth:Float = camera.width * camera.totalScaleX;
 			var scaleHeight:Float = camera.height * camera.totalScaleY;
