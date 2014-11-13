@@ -97,6 +97,10 @@ class FlxSprite extends FlxObject
 	 */
 	public var alpha(default, set):Float = 1.0;
 	/**
+	 * Used in sprite groups when group.alpha is set to 0.
+	 */
+	public var oldAlpha(default, set):Float = 1.0;
+	/**
 	 * Set facing using FlxObject.LEFT, RIGHT, UP, and DOWN to take advantage 
 	 * of flipped sprites and/or just track player orientation more easily.
 	 */
@@ -1206,6 +1210,12 @@ class FlxSprite extends FlxObject
 	{
 		alpha = FlxMath.bound(Alpha, 0, 1);
 		updateColorTransform();
+		return alpha;
+	}
+	
+	private function set_oldAlpha(Alpha:Float):Float
+	{
+		oldAlpha = FlxMath.bound(Alpha, 0, 1);
 		return alpha;
 	}
 	
