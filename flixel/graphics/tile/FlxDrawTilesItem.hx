@@ -8,7 +8,7 @@ import flixel.util.FlxColor;
 import openfl.display.Tilesheet;
 import openfl.geom.Matrix;
 
-class FlxDrawTilesItem extends FlxDrawBaseItem
+class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 {
 	public var drawData:Array<Float> = [];
 	public var position:Int = 0;

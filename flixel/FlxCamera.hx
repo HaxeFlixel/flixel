@@ -316,11 +316,11 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Currently used draw stack item
 	 */
-	private var _currentStackItem:FlxDrawBaseItem;
+	private var _currentDrawItem:FlxDrawBaseItem<Dynamic>;
 	/**
 	 * Pointer to head of stack with draw items
 	 */
-	private var _headOfDrawStack:FlxDrawBaseItem;
+	private var _headOfDrawStack:FlxDrawBaseItem<Dynamic>;
 	/**
 	 * Last draw tiles item
 	 */
@@ -348,69 +348,47 @@ class FlxCamera extends FlxBasic
 		
 		var itemToReturn:FlxDrawTilesItem = null;
 		
-		// TODO: continue from here...
-		
-		if (_currentStackItem != null && _currentStackItem.type == FlxDrawItemType.TILES)
-		{
-			// current item is for tile drawing
-			// now we need to if it have the same texture and smoothing
-			// if not then we need to create or get from pool new item
+		if (_currentDrawItem != null && _currentDrawItem.type == FlxDrawItemType.TILES 
+			&& _headTiles.graphics == ObjGraphics 
+			&& _headTiles.colored == ObjColored 
+			&& _headTiles.blending == ObjBlending 
+			&& _headTiles.antialiasing == ObjAntialiasing)
+		{	
+			return _headTiles;
 		}
-		else if (_currentStackItem == null)
+		
+		if (_storageTilesHead != null)
 		{
-			// current item is null 
-			// this means that we need to create or get from pool new item
-			// plus we need to set up head of draw stack
+			itemToReturn = _storageTilesHead;
+			var newHead:FlxDrawTilesItem = _storageTilesHead.nextTyped;
+			itemToReturn.reset();
+			_storageTilesHead = newHead;
 		}
 		else
 		{
-			// current item isn't null, but not for tile drawing
-			// this means that we need to create or get from pool new item
+			itemToReturn = new FlxDrawTilesItem();
 		}
 		
+		itemToReturn.graphics = ObjGraphics;
+		itemToReturn.antialiasing = ObjAntialiasing;
+		itemToReturn.colored = ObjColored;
+		itemToReturn.blending = ObjBlending;
 		
-		if (_currentStackItem.initialized == false)
+		itemToReturn.nextTyped = _headTiles;
+		_headTiles = itemToReturn;
+		
+		if (_headOfDrawStack == null)
 		{
-			_headOfDrawStack = _currentStackItem;
-			_currentStackItem.graphics = ObjGraphics;
-			_currentStackItem.antialiasing = ObjAntialiasing;
-			_currentStackItem.colored = ObjColored;
-			_currentStackItem.blending = ObjBlending;
-			itemToReturn = _currentStackItem;
-		}
-		else if (_currentStackItem.graphics == ObjGraphics 
-			&& _currentStackItem.colored == ObjColored 
-			&& _currentStackItem.blending == ObjBlending 
-			&& _currentStackItem.antialiasing == ObjAntialiasing)
-		{
-			itemToReturn = _currentStackItem;
+			_headOfDrawStack = itemToReturn;
 		}
 		
-		if (itemToReturn == null)
+		if (_currentDrawItem != null)
 		{
-			var newItem:FlxDrawTilesItem = null;
-			if (_storageTilesHead != null)
-			{
-				newItem = _storageTilesHead;
-				var newHead:FlxDrawBaseItem = FlxCamera._storageTilesHead.next;
-				newItem.next = null;
-				FlxCamera._storageTilesHead = newHead;
-			}
-			else
-			{
-				newItem = new FlxDrawTilesItem();
-			}
-			
-			newItem.graphics = ObjGraphics;
-			newItem.antialiasing = ObjAntialiasing;
-			newItem.colored = ObjColored;
-			newItem.blending = ObjBlending;
-			_currentStackItem.next = newItem;
-			_currentStackItem = newItem;
-			itemToReturn = _currentStackItem;
+			_currentDrawItem.next = itemToReturn;
 		}
 		
-		itemToReturn.initialized = true;
+		_currentDrawItem = itemToReturn;
+		
 		return itemToReturn;
 	}
 	
@@ -421,59 +399,50 @@ class FlxCamera extends FlxBasic
 		return null;
 	}
 	
+	@:noCompletion
+	public function getNewDrawTrianglesItem(ObjGraphics:FlxGraphic, ObjAntialiasing:Bool = false):FlxDrawTrianglesItem
+	{
+		// TODO: implement it...
+		return null;
+	}
+	
 	@:allow(flixel.system.frontEnds.CameraFrontEnd)
 	private function clearDrawStack():Void
 	{	
-		// TODO: rework this method
+		var currTiles:FlxDrawTilesItem = _headTiles;
+		var newTilesHead:FlxDrawTilesItem;
 		
-		var currItem:FlxDrawBaseItem = _headTiles;
-		// TODO: reset all tile draw items
-		while (currItem != null)
+		while (currTiles != null)
 		{
-			
+			newTilesHead = currTiles.nextTyped;
+			currTiles.reset();
+			currTiles.nextTyped = _storageTilesHead;
+			_storageTilesHead = currTiles;
+			currTiles = newTilesHead;
 		}
 		
-		currItem = _headTriangles;
-		// TODO: reset all triangle draw items
-		while (currItem != null)
+		var currTriangles:FlxDrawTrianglesItem = _headTriangles;
+		var newTrianglesHead:FlxDrawTrianglesItem;
+		
+		while (currTriangles != null)
 		{
-			
+			newTrianglesHead = currTriangles.nextTyped;
+			currTriangles.reset();
+			currTriangles.nextTyped = _storageTrianglesHead;
+			_storageTrianglesHead = currTriangles;
+			currTriangles = newTrianglesHead;
 		}
 		
-		_currentStackItem = null;
+		_currentDrawItem = null;
 		_headOfDrawStack = null;
 		_headTiles = null;
 		_headTriangles = null;
-		
-		/*
-		var currItem:FlxDrawBaseItem = _headOfDrawStack.next;
-		while (currItem != null)
-		{
-			currItem.reset();
-			var newStorageHead:FlxDrawTilesItem = currItem;
-			currItem = currItem.next;
-			if (_storageTilesHead == null)
-			{
-				FlxCamera._storageTilesHead = newStorageHead;
-				newStorageHead.next = null;
-			}
-			else
-			{
-				newStorageHead.next = FlxCamera._storageTilesHead;
-				FlxCamera._storageTilesHead = newStorageHead;
-			}
-		}
-		
-		_headOfDrawStack.reset();
-		_headOfDrawStack.next = null;
-		_currentStackItem = _headOfDrawStack;
-		*/
 	}
 	
 	@:allow(flixel.system.frontEnds.CameraFrontEnd)
 	private function render():Void
 	{
-		var currItem:FlxDrawBaseItem = _headOfDrawStack;
+		var currItem:FlxDrawBaseItem<Dynamic> = _headOfDrawStack;
 		while (currItem != null)
 		{
 			currItem.render(this);
@@ -539,20 +508,15 @@ class FlxCamera extends FlxBasic
 		
 		_fxShakeOffset = FlxPoint.get();
 		
-		#if FLX_RENDER_BLIT
+	#if FLX_RENDER_BLIT
 		_fill = new BitmapData(width, height, true, FlxColor.TRANSPARENT);
-		#else
+	#else
 		
 		#if !FLX_NO_DEBUG
 		debugLayer = new Sprite();
 		_scrollRect.addChild(debugLayer);
-		#end
-		
-		// TODO: remove these lines later
-	//	_currentStackItem = new FlxDrawTilesItem();
-	//	_headOfDrawStack = _currentStackItem;
-		
-		#end
+		#end	
+	#end
 		
 		zoom = Zoom; //sets the scale of flash sprite, which in turn loads flashoffset values
 		
@@ -600,10 +564,7 @@ class FlxCamera extends FlxBasic
 		if (_headOfDrawStack != null)
 		{
 			clearDrawStack();
-			_headOfDrawStack.dispose();
-			_headOfDrawStack = null;
 		}
-		_currentStackItem = null;
 	#end
 		
 		scroll = FlxDestroyUtil.put(scroll);

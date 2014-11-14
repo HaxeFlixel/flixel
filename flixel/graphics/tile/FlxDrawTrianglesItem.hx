@@ -9,7 +9,7 @@ import openfl.display.TriangleCulling;
  * ...
  * @author Zaphod
  */
-class FlxDrawTrianglesItem extends FlxDrawBaseItem
+class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 {
 	public var vertices:Vector<Float>;
 	public var indices:Vector<Int>;

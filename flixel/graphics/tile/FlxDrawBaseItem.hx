@@ -5,12 +5,13 @@ import flixel.FlxCamera;
  * ...
  * @author Zaphod
  */
-class FlxDrawBaseItem
+class FlxDrawBaseItem<T>
 {
-	public var next:FlxDrawBaseItem;
+	public var nextTyped:T;
+	
+	public var next:FlxDrawBaseItem<T>;
 	
 	public var graphics:FlxGraphic;
-	public var initialized:Bool = false;
 	public var antialiasing:Bool = false;
 	
 	public var type:FlxDrawItemType;
@@ -21,7 +22,8 @@ class FlxDrawBaseItem
 	{
 		graphics = null;
 		antialiasing = false;
-		initialized = false;
+		nextTyped = null;
+		next = null;
 	}
 	
 	public function dispose():Void
@@ -29,6 +31,7 @@ class FlxDrawBaseItem
 		graphics = null;
 		next = null;
 		type = null;
+		nextTyped = null;
 	}
 	
 	public function render(camera:FlxCamera):Void {  }
