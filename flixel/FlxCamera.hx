@@ -343,9 +343,6 @@ class FlxCamera extends FlxBasic
 	@:noCompletion
 	public function getDrawTilesItem(ObjGraphics:FlxGraphic, ObjColored:Bool, ObjBlending:Int, ObjAntialiasing:Bool = false):FlxDrawTilesItem
 	{
-	//	_currentStackItem = new FlxDrawTilesItem();
-	//	_headOfDrawStack = _currentStackItem;
-		
 		var itemToReturn:FlxDrawTilesItem = null;
 		
 		if (_currentDrawItem != null && _currentDrawItem.type == FlxDrawItemType.TILES 
@@ -395,15 +392,54 @@ class FlxCamera extends FlxBasic
 	@:noCompletion
 	public function getDrawTrianglesItem(ObjGraphics:FlxGraphic, ObjAntialiasing:Bool = false):FlxDrawTrianglesItem
 	{
-		// TODO: implement it...
-		return null;
+		var itemToReturn:FlxDrawTrianglesItem = null;
+		
+		if (_currentDrawItem != null && _currentDrawItem.type == FlxDrawItemType.TRIANGLES 
+			&& _headTiles.graphics == ObjGraphics 
+			&& _headTiles.antialiasing == ObjAntialiasing)
+		{	
+			return _headTriangles;
+		}
+		
+		return getNewDrawTrianglesItem(ObjGraphics, ObjAntialiasing);
 	}
 	
 	@:noCompletion
 	public function getNewDrawTrianglesItem(ObjGraphics:FlxGraphic, ObjAntialiasing:Bool = false):FlxDrawTrianglesItem
 	{
-		// TODO: implement it...
-		return null;
+		var itemToReturn:FlxDrawTrianglesItem = null;
+		
+		if (_storageTrianglesHead != null)
+		{
+			itemToReturn = _storageTrianglesHead;
+			var newHead:FlxDrawTrianglesItem = _storageTrianglesHead.nextTyped;
+			itemToReturn.reset();
+			_storageTrianglesHead = newHead;
+		}
+		else
+		{
+			itemToReturn = new FlxDrawTrianglesItem();
+		}
+		
+		itemToReturn.graphics = ObjGraphics;
+		itemToReturn.antialiasing = ObjAntialiasing;
+		
+		itemToReturn.nextTyped = _headTriangles;
+		_headTriangles = itemToReturn;
+		
+		if (_headOfDrawStack == null)
+		{
+			_headOfDrawStack = itemToReturn;
+		}
+		
+		if (_currentDrawItem != null)
+		{
+			_currentDrawItem.next = itemToReturn;
+		}
+		
+		_currentDrawItem = itemToReturn;
+		
+		return itemToReturn;
 	}
 	
 	@:allow(flixel.system.frontEnds.CameraFrontEnd)

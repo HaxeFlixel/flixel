@@ -15,6 +15,10 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 	public var indices:Vector<Int>;
 	public var uvt:Vector<Float>;
 	
+	public var numVertices(get, null):Int;
+	
+	public var numTriangles(get, null):Int;
+	
 	public function new() 
 	{
 		super();
@@ -48,5 +52,15 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		vertices = null;
 		indices = null;
 		uvt = null;
+	}
+	
+	private function get_numVertices():Int
+	{
+		return Std.int(vertices.length / 2);
+	}
+	
+	private function get_numTriangles():Int
+	{
+		return Std.int(indices.length / 3);
 	}
 }
