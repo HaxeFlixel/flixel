@@ -28,6 +28,11 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 	override public function render(camera:FlxCamera):Void 
 	{
 		#if FLX_RENDER_TILE
+		if (numTriangles <= 0)
+		{
+			return;
+		}
+		
 		camera.canvas.graphics.beginBitmapFill(graphics.bitmap, null, true, (camera.antialiasing || antialiasing));
 		camera.canvas.graphics.drawTriangles(vertices, indices, uvt, TriangleCulling.NONE);
 		camera.canvas.graphics.endFill();
