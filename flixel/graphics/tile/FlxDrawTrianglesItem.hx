@@ -36,6 +36,7 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		camera.canvas.graphics.beginBitmapFill(graphics.bitmap, null, true, (camera.antialiasing || antialiasing));
 		camera.canvas.graphics.drawTriangles(vertices, indices, uvt, TriangleCulling.NONE);
 		camera.canvas.graphics.endFill();
+		FlxTilesheet._DRAWCALLS++;
 		#end
 	}
 	
