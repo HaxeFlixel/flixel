@@ -31,7 +31,7 @@ class FlxAnimation extends FlxBaseAnimation
 	/**
 	 * Whether the current animation has finished.
 	 */
-	public var finished:Bool = true;
+	public var finished(default, set):Bool = true;
 	
 	/**
 	 * Whether the current animation gets updated or not.
@@ -227,5 +227,17 @@ class FlxAnimation extends FlxBaseAnimation
 	private inline function get_numFrames():Int
 	{
 		return _frames.length;
+	}
+	
+	private function set_finished(value:Bool):Bool
+	{
+		finished = value;
+		
+		if (value)
+		{
+			parent.fireFinishCallback(name);
+		}
+		
+		return value;
 	}
 }

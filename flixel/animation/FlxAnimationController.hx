@@ -52,6 +52,12 @@ class FlxAnimationController implements IFlxDestroyable
 	public var callback:String->Int->Int->Void;
 	
 	/**
+	 * If assigned, will be called each time the current animation finishes.
+	 * A function that has 1 parameter: a string name - animation name.
+	 */
+	public var finishCallback:String->Void;
+	
+	/**
 	 * Internal, reference to owner sprite.
 	 */
 	private var _sprite:FlxSprite;
@@ -561,6 +567,15 @@ class FlxAnimationController implements IFlxDestroyable
 			var name:String = (_curAnim != null) ? (_curAnim.name) : null;
 			var number:Int = (_curAnim != null) ? (_curAnim.curFrame) : frameIndex;
 			callback(name, number, frameIndex);
+		}
+	}
+	
+	@:allow(flixel.animation)
+	private inline function fireFinishCallback(name:String = null):Void
+	{
+		if (finishCallback != null)
+		{
+			finishCallback(name);
 		}
 	}
 	
