@@ -343,7 +343,7 @@ class BitmapFrontEnd
 	
 	public function removeIfNoUse(graphic:FlxGraphic):Void
 	{
-		if (graphic != null && graphic.useCount == 0)
+		if (graphic != null && graphic.useCount == 0 && !graphic.persist)
 		{
 			remove(graphic);
 		}
