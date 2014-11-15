@@ -848,7 +848,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	private inline function solidTransform(Sprite:FlxSprite, Solid:Bool)						{ Sprite.solid = Solid; }						// set
 	private inline function aliveTransform(Sprite:FlxSprite, Alive:Bool)						{ Sprite.alive = Alive; }						// set
 	private inline function existsTransform(Sprite:FlxSprite, Exists:Bool)						{ Sprite.exists = Exists; }						// set
-	private inline function camerasTransform(Sprite:FlxSprite, Cameras:Array<FlxCamera>)		{ Sprite.cameras = Cameras; }						// set
+	private inline function camerasTransform(Sprite:FlxSprite, Cameras:Array<FlxCamera>)		{ Sprite.cameras = Cameras; }					// set
 
 	private inline function offsetTransform(Sprite:FlxSprite, Offset:FlxPoint)					{ Sprite.offset.copyFrom(Offset); }				// set
 	private inline function originTransform(Sprite:FlxSprite, Origin:FlxPoint)					{ Sprite.origin.copyFrom(Origin); }				// set
