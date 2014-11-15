@@ -63,6 +63,7 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 	
 	override public function render(camera:FlxCamera):Void
 	{
+		#if FLX_RENDER_TILE
 		var dataLen:Int = drawData.length;
 		
 		if (position > 0)
@@ -79,6 +80,7 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 			graphics.tilesheet.drawTiles(camera.canvas.graphics, drawData, (camera.antialiasing || antialiasing), tempFlags, position);
 			FlxTilesheet._DRAWCALLS++;
 		}
+		#end
 	}
 	
 	private function get_numTiles():Int
