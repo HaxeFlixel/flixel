@@ -16,6 +16,10 @@ class FlxDrawBaseItem<T>
 	
 	public var type:FlxDrawItemType;
 	
+	public var numVertices(get, never):Int;
+	
+	public var numTriangles(get, never):Int;
+	
 	public function new() {  }
 	
 	public function reset():Void
@@ -35,6 +39,16 @@ class FlxDrawBaseItem<T>
 	}
 	
 	public function render(camera:FlxCamera):Void {  }
+	
+	private function get_numVertices():Int
+	{
+		return 0;
+	}
+	
+	private function get_numTriangles():Int
+	{
+		return 0;
+	}
 }
 
 enum FlxDrawItemType 

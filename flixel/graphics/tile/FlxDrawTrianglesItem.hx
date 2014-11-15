@@ -15,10 +15,6 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 	public var indices:Vector<Int>;
 	public var uvt:Vector<Float>;
 	
-	public var numVertices(get, null):Int;
-	
-	public var numTriangles(get, null):Int;
-	
 	public function new() 
 	{
 		super();
@@ -39,7 +35,6 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 	override public function reset():Void 
 	{
 		super.reset();
-		
 		vertices.splice(0, vertices.length);
 		indices.splice(0, indices.length);
 		uvt.splice(0, uvt.length);
@@ -54,12 +49,12 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		uvt = null;
 	}
 	
-	private function get_numVertices():Int
+	override private function get_numVertices():Int
 	{
 		return Std.int(vertices.length / 2);
 	}
 	
-	private function get_numTriangles():Int
+	override private function get_numTriangles():Int
 	{
 		return Std.int(indices.length / 3);
 	}

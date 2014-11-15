@@ -16,6 +16,8 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 	public var colored:Bool = false;
 	public var blending:Int = 0;
 	
+	public var numTiles(get, never):Int;
+	
 	public function new() 
 	{
 		super();
@@ -78,4 +80,26 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 			FlxTilesheet._DRAWCALLS++;
 		}
 	}
+	
+	private function get_numTiles():Int
+	{
+		var elementsPerTile:Int = 8; // x, y, id, trans (4 elements) and alpha
+		if (colored)
+		{
+			elementsPerTile += 3;	// r, g, b
+		}
+		
+		return Std.int(position / elementsPerTile);
+	}
+	
+	override private function get_numVertices():Int
+	{
+		return 4 * numTiles;
+	}
+	
+	override private function get_numTriangles():Int
+	{
+		return 2 * numTiles;
+	}
+	
 }
