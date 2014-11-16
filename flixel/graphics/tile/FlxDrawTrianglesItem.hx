@@ -2,6 +2,8 @@ package flixel.graphics.tile;
 
 import flixel.FlxCamera;
 import flixel.graphics.tile.FlxDrawBaseItem.FlxDrawItemType;
+import flixel.util.FlxColor;
+import openfl.display.Graphics;
 import openfl.Vector;
 import openfl.display.TriangleCulling;
 
@@ -36,6 +38,16 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		camera.canvas.graphics.beginBitmapFill(graphics.bitmap, null, true, (camera.antialiasing || antialiasing));
 		camera.canvas.graphics.drawTriangles(vertices, indices, uvt, TriangleCulling.NONE);
 		camera.canvas.graphics.endFill();
+		
+		#if !FLX_NO_DEBUG
+		if (FlxG.debugger.drawDebug)
+		{
+			var gfx:Graphics = camera.debugLayer.graphics;
+			gfx.lineStyle(1, FlxColor.BLUE, 0.5);
+			gfx.drawTriangles(vertices, indices);
+		}
+		#end
+		
 		FlxTilesheet._DRAWCALLS++;
 		#end
 	}
