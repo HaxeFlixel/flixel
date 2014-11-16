@@ -256,7 +256,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		var sprite:FlxSprite = cast Sprite;
 		sprite.x += x;
 		sprite.y += y;
-		sprite.alpha *= alpha;
+		alphaMultTransform(sprite, alpha);
 		sprite.scrollFactor.copyFrom(scrollFactor);
 		sprite.cameras = _cameras; // _cameras instead of cameras because get_cameras() will not return null
 		return group.add(Sprite);
@@ -284,6 +284,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 */
 	public function remove(Object:T, Splice:Bool = false):T
 	{
+		alphaDivTransform(Object, alpha);
 		return group.remove(Object, Splice);
 	}
 	
@@ -668,8 +669,9 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		
 		if (exists && alpha != Value)
 		{
-			var factor:Float = (alpha > 0) ? Value / alpha : 0;
-			transformChildren(alphaTransform, factor);
+			if (alpha == 0) transformChildren(alphaDivTransform, alpha);
+			var factor:Float = (alpha > 0) ? Value / alpha : Value;
+			transformChildren(alphaMultTransform, factor);
 		}
 		return alpha = Value;
 	}
@@ -834,7 +836,8 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	private inline function xTransform(Sprite:FlxSprite, X:Float)								{ Sprite.x += X; }								// addition
 	private inline function yTransform(Sprite:FlxSprite, Y:Float)								{ Sprite.y += Y; }								// addition
 	private inline function angleTransform(Sprite:FlxSprite, Angle:Float)						{ Sprite.angle += Angle; }						// addition
-	private inline function alphaTransform(Sprite:FlxSprite, Alpha:Float)						{ Sprite.alpha *= Alpha; }						// multiplication
+	private inline function alphaMultTransform(Sprite:FlxSprite, Alpha:Float)					{ if (Alpha == 0) Sprite.oldAlpha = Sprite.alpha; Sprite.alpha *= Alpha; }						// multiplication
+	private inline function alphaDivTransform(Sprite:FlxSprite, Alpha:Float)					{ if (Alpha == 0) Sprite.alpha = Sprite.oldAlpha;  else Sprite.alpha /= Alpha; }				// division
 	private inline function facingTransform(Sprite:FlxSprite, Facing:Int)						{ Sprite.facing = Facing; }						// set
 	private inline function flipXTransform(Sprite:FlxSprite, FlipX:Bool)						{ Sprite.flipX = FlipX; }						// set
 	private inline function flipYTransform(Sprite:FlxSprite, FlipY:Bool)						{ Sprite.flipY = FlipY; }						// set
