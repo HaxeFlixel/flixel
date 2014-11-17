@@ -158,17 +158,11 @@ class FlxText extends FlxSprite
 	{
 		super(X, Y);
 		
-		var setTextEmpty:Bool = false;
 		if (Text == null || Text == "")
 		{
 			// empty texts have a textHeight of 0, need to
 			// prevent initialiazing with "" before the first calcFrame() call
-			#if flash
 			Text = " ";
-			#else
-			Text = "";
-			#end
-			setTextEmpty = true;
 		}
 		
 		textField = new TextField();
@@ -192,22 +186,8 @@ class FlxText extends FlxSprite
 		allowCollisions = FlxObject.NONE;
 		moves = false;
 		
-		var key:String = FlxG.bitmap.getUniqueKey("text");
-		var graphicWidth:Int = (FieldWidth <= 0) ? 1 : Std.int(FieldWidth);
-		makeGraphic(graphicWidth, 1, FlxColor.TRANSPARENT, false, key);
-		
-		#if FLX_RENDER_BLIT 
+		_regen = true;
 		calcFrame();
-		if (setTextEmpty)
-		{
-			text = "";
-		}
-		#else
-		if (Text != "")
-		{
-			regenGraphics();
-		}
-		#end
 		
 		shadowOffset = FlxPoint.get(1, 1);
 	}
@@ -758,8 +738,14 @@ class FlxText extends FlxSprite
 		if (textField == null || _regen == false)
 			return;
 		
-		var oldWidth:Int = graphic.width;
-		var oldHeight:Int = graphic.height;
+		var oldWidth:Int = 0;
+		var oldHeight:Int = 0;
+		
+		if (graphic != null)
+		{
+			oldWidth = graphic.width;
+			oldHeight = graphic.height;
+		}
 		
 		var newWidth:Float = textField.width;
 		// Account for 2px gutter on top and bottom (that's why there is "+ 4")
