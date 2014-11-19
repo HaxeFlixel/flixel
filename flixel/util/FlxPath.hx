@@ -664,7 +664,7 @@ class FlxPath implements IFlxDestroyable
 			node = nodes[i];
 			
 			//find the screen position of the node on this camera
-			_point.x = node.x - (Camera.scroll.x * debugScrollX); //copied from getScreenXY()
+			_point.x = node.x - (Camera.scroll.x * debugScrollX); //copied from getScreenPosition()
 			_point.y = node.y - (Camera.scroll.y * debugScrollY);
 			
 			//decide what color this node should be
@@ -706,7 +706,7 @@ class FlxPath implements IFlxDestroyable
 			//then draw a line to the next node
 			gfx.moveTo(_point.x, _point.y);
 			gfx.lineStyle(1, debugColor, linealpha);
-			_point.x = nextNode.x - (Camera.scroll.x * debugScrollX); //copied from getScreenXY()
+			_point.x = nextNode.x - (Camera.scroll.x * debugScrollX); //copied from getScreenPosition()
 			_point.y = nextNode.y - (Camera.scroll.y * debugScrollY);
 			gfx.lineTo(_point.x, _point.y);
 

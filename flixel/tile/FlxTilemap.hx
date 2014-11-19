@@ -312,7 +312,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 			return;
 		}
 		
-		// Copied from getScreenXY()
+		// Copied from getScreenPosition()
 		_helperPoint.x = x - Camera.scroll.x * scrollFactor.x;
 		_helperPoint.y = y - Camera.scroll.y * scrollFactor.y;
 		
@@ -327,7 +327,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		var rectHeight:Float = _scaledTileHeight * Camera.totalScaleY;
 	
 		// Copy tile images into the tile buffer
-		// Modified from getScreenXY()
+		// Modified from getScreenPosition()
 		_point.x = (Camera.scroll.x * scrollFactor.x) - x; 
 		_point.y = (Camera.scroll.y * scrollFactor.y) - y;
 		var screenXInTiles:Int = Math.floor(_point.x / _scaledTileWidth);
@@ -625,7 +625,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	/**
 	 * Call this function to lock the automatic camera to the map's edges.
 	 * 
-	 * @param	Camera			Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
+	 * @param	Camera			Specify which game camera you want.  If null getScreenPosition() will just grab the first global camera.
 	 * @param	Border			Adjusts the camera follow boundary by whatever number of tiles you specify here.  Handy for blocking off deadends that are offscreen, etc.  Use a negative number to add padding instead of hiding the edges.
 	 * @param	UpdateWorld		Whether to update the collision system's world size, default value is true.
 	 */
@@ -839,7 +839,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		var isColored:Bool = ((alpha != 1) || (color != 0xffffff));
 		
 		// Copy tile images into the tile buffer
-		_point.x = (Camera.scroll.x * scrollFactor.x) - x; //modified from getScreenXY()
+		_point.x = (Camera.scroll.x * scrollFactor.x) - x; //modified from getScreenPosition()
 		_point.y = (Camera.scroll.y * scrollFactor.y) - y;
 		
 		var screenXInTiles:Int = Math.floor(_point.x / _scaledTileWidth);

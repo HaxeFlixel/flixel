@@ -860,7 +860,7 @@ class FlxSprite extends FlxObject
 	 * 
 	 * @param	Point		The point in world space you want to check.
 	 * @param	Mask		Used in the pixel hit test to determine what counts as solid.
-	 * @param	Camera		Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
+	 * @param	Camera		Specify which game camera you want.  If null getScreenPosition() will just grab the first global camera.
 	 * @return	Whether or not the point overlaps this object.
 	 */
 	public function pixelsOverlapPoint(point:FlxPoint, Mask:Int = 0xFF, ?Camera:FlxCamera):Bool
@@ -991,7 +991,7 @@ class FlxSprite extends FlxObject
 	 * Check and see if this object is currently on screen. Differs from FlxObject's implementation
 	 * in that it takes the actual graphic into account, not just the hitbox or bounding box or whatever.
 	 * 
-	 * @param	Camera		Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
+	 * @param	Camera		Specify which game camera you want.  If null getScreenPosition() will just grab the first global camera.
 	 * @return	Whether the object is on screen or not.
 	 */
 	override public function isOnScreen(?Camera:FlxCamera):Bool
