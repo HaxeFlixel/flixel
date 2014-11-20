@@ -371,12 +371,23 @@ class BitmapFrontEnd
 		if ((key != null) && _cache.exists(key))
 		{
 			var obj:CachedGraphics = _cache.get(key);
-			#if !nme
-			Assets.cache.bitmapData.remove(key);
-			#end
+			removeFromOpenFLCache(key);
 			_cache.remove(key);
 			obj.destroy();
 		}
+	}
+	
+	private function removeFromOpenFLCache(key:String):Void
+	{
+		#if nme
+			return;
+		#end
+		
+		#if (openfl <= "2.1.5")
+			Assets.cache.bitmapData.remove(key);
+		#else
+			Assets.cache.removeBitmapData(key);
+		#end
 	}
 	
 	/**
@@ -396,9 +407,7 @@ class BitmapFrontEnd
 			obj = _cache.get(key);
 			if (obj != null && !obj.persist)
 			{
-				#if !nme
-				Assets.cache.bitmapData.remove(key);
-				#end
+				removeFromOpenFLCache(key);
 				_cache.remove(key);
 				obj.destroy();
 				obj = null;
