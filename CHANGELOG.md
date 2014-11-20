@@ -232,6 +232,11 @@
 * `FlxAnalog` and `FlxVirtualPad` have their own atlas with default graphic, so they propduce less drawcalls
 * Added `FlxSpriteButton` which is button which label is a simple `FlxSprite`. It have useful `createTextLabel()` method, which generates sprite with text graphic
 
+3.3.6
+------------------------------
+* Compatibility fix for OpenFL 2.1.6
+
+
 3.3.5
 ------------------------------
 * FlxTilemap:
