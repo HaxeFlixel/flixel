@@ -23,11 +23,6 @@ import openfl.display.JointStyle;
 class DemoState extends FlxState
 {
 
-	public function new() 
-	{
-		super();
-	}
-	
 	public override function create():Void
 	{
 		super.create();
