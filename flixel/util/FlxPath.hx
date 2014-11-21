@@ -157,12 +157,6 @@ class FlxPath implements IFlxDestroyable
 	{
 		object = Object;
 		nodes = Nodes;
-		#if !FLX_NO_DEBUG
-		if (Speed == 0)
-		{
-			throw "The speed of FlxPath should be non-zero!";
-		}
-		#end
 		speed = Math.abs(Speed);
 		_mode = Mode;
 		_autoRotate = AutoRotate;
