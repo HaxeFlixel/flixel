@@ -20,9 +20,10 @@ import flixel.util.FlxStringUtil;
 class FlxFrame implements IFlxDestroyable
 {
 	/**
-	 * Sorting function for Array<FlxFrame>#sort().
+	 * Sorting function for Array<FlxFrame>#sort(),
+	 * e.g. "tiles-001.png", "tiles-003.png", "tiles-002.png".
 	 */
-	public static function sort(frame1:FlxFrame, frame2:FlxFrame, prefixLength:Int, postfixLength:Int):Int
+	public static function sortByName(frame1:FlxFrame, frame2:FlxFrame, prefixLength:Int, postfixLength:Int):Int
 	{
 		var name1:String = frame1.name;
 		var name2:String = frame2.name;
