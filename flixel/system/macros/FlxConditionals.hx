@@ -38,6 +38,12 @@ class FlxConditionals
 	static inline var FLX_NO_DEBUG = "FLX_NO_DEBUG";
 	static inline var FLX_RECORD = "FLX_RECORD";
 	
+	/**
+	 * Mostly internal, makes sure that flixel can be built with pure haxe
+	 * (as opposed to lime-tools). Needed for API doc generation and unit tests.
+	 */
+	static inline var FLX_HAXE_BUILD = "FLX_HAXE_BUILD";
+	
 	static var USER_DEFINABLE:Array<String> = [
 		FLX_RENDER_BLIT,
 		FLX_RENDER_TILE,
@@ -52,7 +58,8 @@ class FlxConditionals
 		FLX_NO_DEBUG,
 		FLX_NO_GAMEPAD,
 		FLX_NO_KEYBOARD,
-		FLX_RECORD];
+		FLX_RECORD,
+		FLX_HAXE_BUILD];
 	
 	public static function run()
 	{

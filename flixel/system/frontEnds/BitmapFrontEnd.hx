@@ -345,7 +345,7 @@ class BitmapFrontEnd
 			return;
 		#end
 		
-		#if ((openfl >= "2.1.6") || doc)
+		#if ((openfl >= "2.1.6") || FLX_HAXE_BUILD)
 			Assets.cache.removeBitmapData(key);
 		#else
 			Assets.cache.bitmapData.remove(key);

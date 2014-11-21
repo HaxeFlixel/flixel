@@ -1,6 +1,6 @@
 package flixel.system;
 
-#if !doc
+#if !FLX_HAXE_BUILD
 #if (openfl >= "3.0.0-alpha")
 class FlxBasePreloader extends openfl.display.Preloader {}
 #elseif js

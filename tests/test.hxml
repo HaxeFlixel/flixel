@@ -11,7 +11,7 @@
 
 --macro flixel.system.macros.FlxConditionals.run()
 
--D doc
+-D FLX_HAXE_BUILD
 -D openfl-flash
 
 -swf-version 11.8

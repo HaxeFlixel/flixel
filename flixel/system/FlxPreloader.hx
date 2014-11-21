@@ -1,6 +1,6 @@
 package flixel.system;
 
-#if !doc
+#if !FLX_HAXE_BUILD
 import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.BlendMode;
