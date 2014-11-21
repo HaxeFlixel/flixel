@@ -72,13 +72,6 @@ class FlxAnimationController implements IFlxDestroyable
 	 * Internal, store all the _animations that were added to this sprite.
 	 */
 	private var _animations(default, null):Map<String, FlxAnimation>;
-	/**
-	 * Internal helper constants used for _animations's frame sorting.
-	 */
-	@:allow(flixel.graphics.frames)
-	private static var prefixLength:Int = 0;
-	@:allow(flixel.graphics.frames)
-	private static var postfixLength:Int = 0;
 	
 	private var _prerotated:FlxPrerotatedAnimation;
 	
@@ -633,7 +626,7 @@ class FlxAnimationController implements IFlxDestroyable
 		var name:String = AnimFrames[0].name;
 		var postIndex:Int = name.indexOf(".", Prefix.length);
 		var postFix:String = name.substring(postIndex == -1 ? name.length : postIndex, name.length);
-		AnimFrames.sort(FlxFrame.sort.bind(_, _, prefixLength, postfixLength));
+		AnimFrames.sort(FlxFrame.sort.bind(_, _, Prefix.length, postFix.length));
 		
 		for (animFrame in AnimFrames)
 		{
