@@ -78,7 +78,7 @@ class FlxBarFrames extends FlxFramesCollection
 	}
 	
 	/**
-	 * Generates BarFrames collection from provided frame. Can be usefull for images packed into atlases.
+	 * Generates BarFrames collection from provided frame. Can be useful for images packed into atlases.
 	 * It can generate BarFrames from rotated and cropped frames also, which is important for devices with small amount of memory.
 	 * 
 	 * @param	frame			frame, containg FlxBar image.

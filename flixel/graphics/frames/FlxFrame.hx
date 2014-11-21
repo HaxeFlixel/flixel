@@ -19,6 +19,20 @@ import flixel.util.FlxStringUtil;
  */
 class FlxFrame implements IFlxDestroyable
 {
+	/**
+	 * Sorting function for Array<FlxFrame>#sort().
+	 */
+	public static function sort(frame1:FlxFrame, frame2:FlxFrame, prefixLength:Int, postfixLength:Int):Int
+	{
+		var name1:String = frame1.name;
+		var name2:String = frame2.name;
+		
+		var num1:Int = Std.parseInt(name1.substring(prefixLength, name1.length - postfixLength));
+		var num2:Int = Std.parseInt(name2.substring(prefixLength, name2.length - postfixLength));
+		
+		return num1 - num2;
+	}
+	
 	public var name:String;
 	/**
 	 * Region of image to render

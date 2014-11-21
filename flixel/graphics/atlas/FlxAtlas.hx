@@ -565,7 +565,7 @@ class FlxAtlas implements IFlxDestroyable
 	
 	/**
 	 * Generates new bitmapdata with spaces between tiles, adds this bitmapdata to this atlas, 
-	 * generates TileFrames object for added node and returns it. Could be usefull for tilemaps.
+	 * generates TileFrames object for added node and returns it. Could be useful for tilemaps.
 	 * 
 	 * @param	Graphic			Source image for node, where spaces will be inserted (could be BitmapData, String or Class<Dynamic>).
 	 * @param	Key			Optional key for image

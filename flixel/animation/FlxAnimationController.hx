@@ -584,13 +584,11 @@ class FlxAnimationController implements IFlxDestroyable
 	 */
 	private function byNamesHelper(AddTo:Array<Int>, FrameNames:Array<String>):Void
 	{
-		var l:Int = FrameNames.length;
-		for (i in 0...l)
+		for (frameName in FrameNames)
 		{
-			var name:String = FrameNames[i];
-			if (_sprite.frames.framesHash.exists(name))
+			if (_sprite.frames.framesHash.exists(frameName))
 			{
-				var frameToAdd:FlxFrame = _sprite.frames.framesHash.get(name);
+				var frameToAdd:FlxFrame = _sprite.frames.framesHash.get(frameName);
 				AddTo.push(getFrameIndex(frameToAdd));
 			}
 		}
@@ -601,10 +599,9 @@ class FlxAnimationController implements IFlxDestroyable
 	 */
 	private function byStringIndicesHelper(AddTo:Array<Int>, Prefix:String, Indices:Array<String>, Postfix:String):Void
 	{
-		var l:Int = Indices.length;
-		for (i in 0...l)
+		for (index in Indices)
 		{
-			var name:String = Prefix + Indices[i] + Postfix;
+			var name:String = Prefix + index + Postfix;
 			if (_sprite.frames.framesHash.exists(name))
 			{
 				var frameToAdd:FlxFrame = _sprite.frames.framesHash.get(name);
@@ -618,10 +615,9 @@ class FlxAnimationController implements IFlxDestroyable
 	 */
 	private function byIndicesHelper(AddTo:Array<Int>, Prefix:String, Indices:Array<Int>, Postfix:String):Void
 	{
-		var l:Int = Indices.length;
-		for (i in 0...l)
+		for (index in Indices)
 		{
-			var indexToAdd:Int = findSpriteFrame(Prefix, Indices[i], Postfix);
+			var indexToAdd:Int = findSpriteFrame(Prefix, index, Postfix);
 			if (indexToAdd != -1) 
 			{
 				AddTo.push(indexToAdd);
@@ -637,14 +633,11 @@ class FlxAnimationController implements IFlxDestroyable
 		var name:String = AnimFrames[0].name;
 		var postIndex:Int = name.indexOf(".", Prefix.length);
 		var postFix:String = name.substring(postIndex == -1 ? name.length : postIndex, name.length);
-		FlxAnimationController.prefixLength = Prefix.length;
-		FlxAnimationController.postfixLength = postFix.length;
-		AnimFrames.sort(FlxAnimationController.frameSortFunction);
+		AnimFrames.sort(FlxFrame.sort.bind(_, _, prefixLength, postfixLength));
 		
-		var l:Int = AnimFrames.length;
-		for (i in 0...l)
+		for (animFrame in AnimFrames)
 		{
-			AddTo.push(getFrameIndex(AnimFrames[i]));
+			AddTo.push(getFrameIndex(animFrame));
 		}
 	}
 	
@@ -653,12 +646,11 @@ class FlxAnimationController implements IFlxDestroyable
 	 */
 	private function findByPrefix(AnimFrames:Array<FlxFrame>, Prefix:String):Void
 	{
-		var l:Int = _sprite.frames.frames.length;
-		for (i in 0...l)
+		for (frame in _sprite.frames.frames)
 		{
-			if (StringTools.startsWith(_sprite.frames.frames[i].name, Prefix))
+			if (StringTools.startsWith(frame.name, Prefix))
 			{
-				AnimFrames.push(_sprite.frames.frames[i]);
+				AnimFrames.push(frame);
 			}
 		}
 	}
@@ -805,29 +797,5 @@ class FlxAnimationController implements IFlxDestroyable
 	public inline function getFrameIndex(Frame:FlxFrame):Int
 	{
 		return _sprite.frames.frames.indexOf(Frame);
-	}
-	
-	/**
-	 * Helper frame sorting function used by addAnimationByPrefixFromTexture() method
-	 */
-	@:allow(flixel.graphics.frames)
-	private static function frameSortFunction(frame1:FlxFrame, frame2:FlxFrame):Int
-	{
-		var name1:String = frame1.name;
-		var name2:String = frame2.name;
-		
-		var num1:Int = Std.parseInt(name1.substring(prefixLength, name1.length - postfixLength));
-		var num2:Int = Std.parseInt(name2.substring(prefixLength, name2.length - postfixLength));
-		
-		if (num1 > num2)
-		{
-			return 1;
-		}
-		else if (num2 > num1)
-		{
-			return -1;
-		}
-		
-		return 0;
 	}
 }

@@ -21,7 +21,7 @@ class FlxMatrix extends Matrix
 	
 	/**
 	 * Rotates this matrix, but takes the values of sine and cosine,
-	 * so it might be usefull when you rotate multiple matrices by the same angle
+	 * so it might be useful when you rotate multiple matrices by the same angle
 	 * @param	cos	The cosine value for rotation angle
 	 * @param	sin	The sine value for rotation angle
 	 * @return	this transformed matrix

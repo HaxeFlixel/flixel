@@ -31,7 +31,7 @@ import openfl.display.Tilesheet;
 @:bitmap("assets/images/logo/default.png")
 private class GraphicDefault extends BitmapData {}
 
-// TODO: add updateSizeFromFrame bool which will tell sprite whether to update it's size to frame's size (when frame setter is called) or not (usefull for sprites with adjusted hitbox)
+// TODO: add updateSizeFromFrame bool which will tell sprite whether to update it's size to frame's size (when frame setter is called) or not (useful for sprites with adjusted hitbox)
 // And don't forget about sprites with clipped frames: what i should do with their size in this case?
 
 // TODO: add option to "center origin" or create special subclass for it

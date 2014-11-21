@@ -81,7 +81,7 @@ class FlxTileFrames extends FlxFramesCollection
 	}
 	
 	/**
-	 * Generates spritesheet frame collection from provided frame. Can be usefull for spritesheets packed into atlases.
+	 * Generates spritesheet frame collection from provided frame. Can be useful for spritesheets packed into atlases.
 	 * It can generate spritesheets from rotated and cropped frames also, which is important for devices with small amount of memory.
 	 * 
 	 * @param	frame			frame, containg spritesheet image
@@ -237,8 +237,9 @@ class FlxTileFrames extends FlxFramesCollection
 	}
 	
 	/**
-	 * Creates new TileFrames collection from atlas frames, which have common beginnings of name (e.g. "tiles-") and differ in indices (e.g. "001", "002", etc.)
-	 * This method is similar to FlxAnimationController's addByPrefix() method.
+	 * Creates new TileFrames collection from atlas frames which begin with
+	 * a common name (e.g. "tiles-") and differ in indices (e.g. "001", "002", etc.).
+	 * This method is similar to FlxAnimationController's addByPrefix().
 	 * 
 	 * @param	Frames	Collection of atlas frames to generate tiles from.
 	 * @param	Prefix	Common beginning of image names in atlas (e.g. "tiles-")
@@ -246,7 +247,7 @@ class FlxTileFrames extends FlxFramesCollection
 	 */
 	public static function fromAtlasByPrefix(Frames:FlxAtlasFrames, Prefix:String):FlxTileFrames
 	{
-		var framesToAdd:Array<FlxFrame> = new Array<FlxFrame>();
+		var framesToAdd = new Array<FlxFrame>();
 		
 		for (frame in Frames.frames)
 		{
@@ -262,10 +263,7 @@ class FlxTileFrames extends FlxFramesCollection
 			var postIndex:Int = name.indexOf(".", Prefix.length);
 			var postFix:String = name.substring(postIndex == -1 ? name.length : postIndex, name.length);
 			
-			FlxAnimationController.prefixLength = Prefix.length;
-			FlxAnimationController.postfixLength = postFix.length;
-			framesToAdd.sort(FlxAnimationController.frameSortFunction);
-			
+			framesToAdd.sort(FlxFrame.sort.bind(_, _, Prefix.length, postFix.length));
 			return FlxTileFrames.fromFrames(framesToAdd);
 		}
 		

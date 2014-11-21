@@ -9,7 +9,7 @@ import openfl.geom.Rectangle;
 
 /**
  * Empty frame, doing a lot less stuff than regular frame.
- * Usefull for tilemaps (and possibly other classes, which have similar rendering methods).
+ * useful for tilemaps (and possibly other classes, which have similar rendering methods).
  */
 class FlxEmptyFrame extends FlxFrame
 {
