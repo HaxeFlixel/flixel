@@ -345,10 +345,10 @@ class BitmapFrontEnd
 			return;
 		#end
 		
-		#if (openfl <= "2.1.5")
-			Assets.cache.bitmapData.remove(key);
-		#else
+		#if ((openfl >= "2.1.6") || doc)
 			Assets.cache.removeBitmapData(key);
+		#else
+			Assets.cache.bitmapData.remove(key);
 		#end
 	}
 	
