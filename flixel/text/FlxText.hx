@@ -35,7 +35,7 @@ class FlxText extends FlxSprite
 	/**
 	 * The text being displayed.
 	 */
-	public var text(get, set):String;
+	public var text(default, set):String = "";
 	
 	/**
 	 * The size of the text being displayed in pixels.
@@ -162,7 +162,12 @@ class FlxText extends FlxSprite
 		{
 			// empty texts have a textHeight of 0, need to
 			// prevent initialiazing with "" before the first calcFrame() call
+			text = "";
 			Text = " ";
+		}
+		else
+		{
+			text = Text;
 		}
 		
 		textField = new TextField();
@@ -505,19 +510,16 @@ class FlxText extends FlxSprite
 		return (textField != null) ? (textField.autoSize != TextFieldAutoSize.NONE) : false;
 	}
 	
-	private inline function get_text():String
-	{
-		return textField.text;
-	}
-	
 	private function set_text(Text:String):String
 	{
-		var ot:String = textField.text;
-		textField.text = Text;
-		
-		_regen = (textField.text != ot) || _regen;
-		
-		return textField.text;
+		text = Text;
+		if (textField != null)
+		{
+			var ot:String = textField.text;
+			textField.text = Text;
+			_regen = (textField.text != ot) || _regen;
+		}
+		return Text;
 	}
 	
 	private inline function get_size():Float
