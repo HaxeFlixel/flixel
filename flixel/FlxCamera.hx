@@ -395,8 +395,8 @@ class FlxCamera extends FlxBasic
 		var itemToReturn:FlxDrawTrianglesItem = null;
 		
 		if (_currentDrawItem != null && _currentDrawItem.type == FlxDrawItemType.TRIANGLES 
-			&& _headTiles.graphics == ObjGraphics 
-			&& _headTiles.antialiasing == ObjAntialiasing)
+			&& _headTriangles.graphics == ObjGraphics 
+			&& _headTriangles.antialiasing == ObjAntialiasing)
 		{	
 			return _headTriangles;
 		}
