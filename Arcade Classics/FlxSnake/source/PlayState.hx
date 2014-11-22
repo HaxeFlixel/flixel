@@ -202,7 +202,7 @@ class PlayState extends FlxState
 			return;
 		}
 		
-		new FlxTimer(_movementIntervall / FlxG.updateFramerate, resetTimer);
+		new FlxTimer().start(_movementIntervall / FlxG.updateFramerate, resetTimer);
 		moveSnake();
 	}
 	
