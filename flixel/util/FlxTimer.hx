@@ -68,23 +68,9 @@ class FlxTimer implements IFlxDestroyable
 	private var _inManager:Bool = false;
 	
 	/**
-	 * Creates a new timer (and calls start() right away if Time != null).
-	 * 
-	 * @param	Time		How many seconds it takes for the timer to go off.
-	 * 						If null then timer will fire OnComplete callback only once at the first call of update method (which means that Loops argument will be ignored).
-	 * @param	OnComplete	Optional, triggered whenever the time runs out, once for each loop.
-	 * 						Callback should be formed "onTimer(Timer:FlxTimer);"
-	 * @param	Loops		How many times the timer should go off. 0 means "looping forever".
+	 * Creates a new timer.
 	 */
-	public function new(?Time:Null<Float>, ?OnComplete:FlxTimer->Void, Loops:Int = 1)
-	{
-		if (Time == null)
-		{
-			Time = 0;
-		}
-		
-		start(Time, OnComplete, Loops);
-	}
+	public function new() {}
 	
 	/**
 	 * Clean up memory.
@@ -166,16 +152,6 @@ class FlxTimer implements IFlxDestroyable
 	public function update(elapsed:Float):Void
 	{
 		_timeCounter += elapsed;
-		
-		if (time == 0)
-		{
-			if (onComplete != null)
-			{
-				onComplete(this);
-			}
-			
-			cancel();
-		}
 		
 		while ((_timeCounter >= time) && active && !finished)
 		{

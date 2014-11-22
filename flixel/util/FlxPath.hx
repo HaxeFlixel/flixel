@@ -131,15 +131,9 @@ class FlxPath implements IFlxDestroyable
 	private var _wasObjectImmovable:Bool;
 	
 	/**
-	 * Creates a new FlxPath (and calls start() right away if Object != null).
+	 * Creates a new FlxPath.
 	 */
-	public function new(?Object:FlxObject, ?Nodes:Array<FlxPoint>, Speed:Float = 100, Mode:Int = FlxPath.FORWARD, AutoRotate:Bool = false) 
-	{
-		if (Object != null)
-		{
-			start(Object, Nodes, Speed, Mode, AutoRotate);
-		}
-	}
+	public function new() {}
 	
 	public function reset():FlxPath
 	{
