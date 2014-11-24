@@ -78,7 +78,10 @@ class FlxStrip extends FlxSprite
 		var idx:Vector<Int>;
 		var uvt:Vector<Float>;
 		
-		var numVertices:Int = Std.int(vertices.length / 2);
+		var num1:Int = Std.int(vertices.length / 2);
+		var num2:Int = Std.int(uvs.length / 2);
+		
+		var numVertices:Int = num1 > num2 ? num2 : num1;
 		var numTris:Int = Std.int(indices.length / 3);
 		
 		#if FLX_RENDER_TILE
