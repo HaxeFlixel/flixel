@@ -15,7 +15,7 @@ import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.frames.FlxFramesCollection;
 import flixel.graphics.frames.FlxImageFrame;
 import flixel.graphics.frames.FlxTileFrames;
-import flixel.graphics.tile.FlxDrawStackItem;
+import flixel.graphics.tile.FlxDrawTilesItem;
 import flixel.math.FlxAngle;
 import flixel.math.FlxMath;
 import flixel.math.FlxMatrix;
@@ -574,7 +574,7 @@ class FlxSprite extends FlxObject
 		}
 		
 	#if FLX_RENDER_TILE
-		var drawItem:FlxDrawStackItem;
+		var drawItem:FlxDrawTilesItem;
 		
 		var ox:Float = origin.x;
 		if (_facingHorizontalMult != 1)
@@ -620,7 +620,7 @@ class FlxSprite extends FlxObject
 				camera.buffer.draw(framePixels, _matrix, null, blend, null, (antialiasing || camera.antialiasing));
 			}
 #else
-			drawItem = camera.getDrawStackItem(frame.parent, isColored, _blendInt, antialiasing);
+			drawItem = camera.getDrawTilesItem(frame.parent, isColored, _blendInt, antialiasing);
 			
 			_matrix.identity();
 			
@@ -680,7 +680,7 @@ class FlxSprite extends FlxObject
 	}
 	
 	#if FLX_RENDER_TILE
-	private inline function setDrawData(drawItem:FlxDrawStackItem, camera:FlxCamera, matrix:Matrix, ?tileID:Float)
+	private inline function setDrawData(drawItem:FlxDrawTilesItem, camera:FlxCamera, matrix:Matrix, ?tileID:Float)
 	{
 		drawItem.setDrawData(_point, (tileID == null) ? frame.tileID : tileID, matrix, isColored, color, alpha * camera.alpha);
 	}

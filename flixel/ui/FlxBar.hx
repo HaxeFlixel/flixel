@@ -12,7 +12,7 @@ import flixel.graphics.frames.FlxBarFrames;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.frames.FlxFramesCollection;
 import flixel.graphics.frames.FlxImageFrame;
-import flixel.graphics.tile.FlxDrawStackItem;
+import flixel.graphics.tile.FlxDrawTilesItem;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.ui.FlxBar.FlxBarFillDirection;
 import flixel.math.FlxAngle;
@@ -830,7 +830,7 @@ class FlxBar extends FlxSprite
 		
 		if (percent > 0 && _frontFrame.type != FlxFrameType.EMPTY)
 		{
-			var drawItem:FlxDrawStackItem;
+			var drawItem:FlxDrawTilesItem;
 			
 			var ox:Float = origin.x;
 			if (_facingHorizontalMult != 1)
@@ -852,7 +852,7 @@ class FlxBar extends FlxSprite
 				
 				getScreenPosition(_point, camera).subtractPoint(offset);
 				
-				drawItem = camera.getDrawStackItem(_front.graphic, isColored, _blendInt, antialiasing);
+				drawItem = camera.getDrawTilesItem(_front.graphic, isColored, _blendInt, antialiasing);
 				
 				_matrix.identity();
 				

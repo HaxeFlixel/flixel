@@ -14,7 +14,7 @@ import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.frames.FlxFramesCollection;
 import flixel.graphics.frames.FlxImageFrame;
 import flixel.graphics.frames.FlxTileFrames;
-import flixel.graphics.tile.FlxDrawStackItem;
+import flixel.graphics.tile.FlxDrawTilesItem;
 import flixel.math.FlxMath;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
@@ -833,7 +833,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		var hackScaleX:Float = tileScaleHack * scaleX;
 		var hackScaleY:Float = tileScaleHack * scaleY;
 		
-		var drawItem:FlxDrawStackItem;
+		var drawItem:FlxDrawTilesItem;
 	#end
 	
 		var isColored:Bool = ((alpha != 1) || (color != 0xffffff));
@@ -928,7 +928,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 					
 					_matrix.scale(hackScaleX, hackScaleY);
 					
-					drawItem = Camera.getDrawStackItem(graphic, isColored, _blendInt);
+					drawItem = Camera.getDrawTilesItem(graphic, isColored, _blendInt);
 					drawItem.setDrawData(_point, frame.tileID, _matrix, isColored, color, alpha);
 				#end
 				}
