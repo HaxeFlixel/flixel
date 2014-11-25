@@ -1,6 +1,7 @@
 package flixel;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.tile.FlxDrawTrianglesItem;
+import flixel.math.FlxMath;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.util.FlxColor;
@@ -81,7 +82,7 @@ class FlxStrip extends FlxSprite
 		var num1:Int = Std.int(vertices.length / 2);
 		var num2:Int = Std.int(uvs.length / 2);
 		
-		var numVertices:Int = num1 > num2 ? num2 : num1;
+		var numVertices:Int = FlxMath.minInt(num1, num2);
 		var numTris:Int = Std.int(indices.length / 3);
 		
 		#if FLX_RENDER_TILE
