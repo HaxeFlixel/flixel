@@ -9,25 +9,52 @@ import openfl.display.Graphics;
 import openfl.display.Sprite;
 import openfl.Vector;
 
-// TODO: document this class
-
 /**
+ * A very basic rendering component which uses drawTriangles.
+ * You have access to vertices, indices and uvs vectors which are used as data storages for rendering.
+ * The whole FlxGraphic object is used as a texture for this sprite.
+ * Use these links for more info about drawTriangles method:
+ * http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/display/Graphics.html#drawTriangles%28%29
+ * http://help.adobe.com/en_US/as3/dev/WS84753F1C-5ABE-40b1-A2E4-07D7349976C4.html
+ * http://www.flashandmath.com/advanced/p10triangles/index.html
  * 
+ * WARNING: This class is EXTREMELY slow on flash target!
  */
 class FlxStrip extends FlxSprite
 {
+	/**
+	 * A Vector of Floats where each pair of numbers is treated as a coordinate location (an x, y pair).
+	 */
 	public var vertices:Vector<Float>;
+	
+	/**
+	 * A Vector of integers or indexes, where every three indexes define a triangle.
+	 */
 	public var indices:Vector<Int>;
+	/**
+	 * A Vector of normalized coordinates used to apply texture mapping.
+	 */
 	public var uvs:Vector<Float>;
 	
 	#if FLX_RENDER_BLIT
+	/**
+	 * Internal var, used for rendering in blit render mode (as a Graphic object source)
+	 */
 	private var sprite:Sprite;
+	/**
+	 * Internal var, used for rendering in blit render mode (since data for rendering may be modified by the engine)
+	 */
+	private var drawVertices:Vector<Float>;
 	#end
 	
+	/**
+	 * Internal helper var, which helps to calculate bounding box for sprite and detect if the sprite is visible on the screen.
+	 */
 	private var bounds:FlxRect;
+	/**
+	 * Internal var, which represents camera's view port.
+	 */
 	private var cameraBounds:FlxRect;
-	
-	private var drawVertices:Vector<Float>;
 	
 	public function new(X:Float = 0, Y:Float = 0, ?SimpleGraphic:FlxGraphicAsset)
 	{
@@ -35,6 +62,7 @@ class FlxStrip extends FlxSprite
 		
 		#if FLX_RENDER_BLIT
 		sprite = new Sprite();
+		drawVertices = new Vector<Float>();
 		#end
 		
 		bounds = new FlxRect();
@@ -43,21 +71,18 @@ class FlxStrip extends FlxSprite
 		vertices = new Vector<Float>();
 		indices = new Vector<Int>();
 		uvs = new Vector<Float>();
-		
-		drawVertices = new Vector<Float>();
 	}
 	
 	override public function destroy():Void 
 	{
 		#if FLX_RENDER_BLIT
 		sprite = null;
+		drawVertices = null;
 		#end
 		
 		vertices = null;
 		indices = null;
 		uvs = null;
-		
-		drawVertices = null;
 		
 		bounds = null;
 		cameraBounds = null;
