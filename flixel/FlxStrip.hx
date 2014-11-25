@@ -79,8 +79,8 @@ class FlxStrip extends FlxSprite
 		var idx:Vector<Int>;
 		var uvt:Vector<Float>;
 		
-		var num1:Int = Std.int(vertices.length / 2);
-		var num2:Int = Std.int(uvs.length / 2);
+		var num1:Int = 2 * Std.int(vertices.length / 2);
+		var num2:Int = 2 * Std.int(uvs.length / 2);
 		
 		var numVertices:Int = FlxMath.minInt(num1, num2);
 		var numTris:Int = Std.int(indices.length / 3);
@@ -115,9 +115,10 @@ class FlxStrip extends FlxSprite
 			vs.splice(0, vs.length);
 			#end
 			
-			for (i in 0...numVertices)
+			var i:Int = 0;
+			while (i < numVertices)
 			{
-				tempX = _point.x + vertices[2 * i]; tempY = _point.y + vertices[2 * i + 1];
+				tempX = _point.x + vertices[i]; tempY = _point.y + vertices[i + 1];
 				pushVertex(tempX, tempY, camera, vs);
 				
 				if (i == 0)
@@ -128,6 +129,8 @@ class FlxStrip extends FlxSprite
 				{
 					inflateBounds(tempX, tempY);
 				}
+				
+				i += 2;
 			}
 			
 			var vis:Bool = cameraBounds.overlaps(bounds);
@@ -141,8 +144,7 @@ class FlxStrip extends FlxSprite
 			#if FLX_RENDER_TILE
 				for (i in 0...numVertices)
 				{
-					uvt.push(uvs[2 * i]);
-					uvt.push(uvs[2 * i + 1]);
+					uvt.push(uvs[i]);
 				}
 				
 				for (i in 0...indices.length)
