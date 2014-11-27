@@ -13,18 +13,30 @@ import openfl.display.TriangleCulling;
  */
 class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 {
+	#if flash
 	public var vertices:Vector<Float>;
 	public var indices:Vector<Int>;
 	public var uvt:Vector<Float>;
+	#else
+	public var vertices:Array<Float>;
+	public var indices:Array<Int>;
+	public var uvt:Array<Float>;
+	#end
 	
 	public function new() 
 	{
 		super();
 		type = FlxDrawItemType.TRIANGLES;
 		
+		#if flash
 		vertices = new Vector<Float>();
 		indices = new Vector<Int>();
 		uvt = new Vector<Float>();
+		#else
+		vertices = new Array<Float>();
+		indices = new Array<Int>();
+		uvt = new Array<Float>();
+		#end
 	}
 	
 	override public function render(camera:FlxCamera):Void 
@@ -38,7 +50,6 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		camera.canvas.graphics.beginBitmapFill(graphics.bitmap, null, true, (camera.antialiasing || antialiasing));
 		camera.canvas.graphics.drawTriangles(vertices, indices, uvt, TriangleCulling.NONE);
 		camera.canvas.graphics.endFill();
-		
 		#if !FLX_NO_DEBUG
 		if (FlxG.debugger.drawDebug)
 		{

@@ -25,16 +25,15 @@ class FlxStrip extends FlxSprite
 	/**
 	 * A Vector of Floats where each pair of numbers is treated as a coordinate location (an x, y pair).
 	 */
-	public var vertices:Vector<Float>;
-	
+	public var vertices:#if flash Vector #else Array #end<Float>;
 	/**
 	 * A Vector of integers or indexes, where every three indexes define a triangle.
 	 */
-	public var indices:Vector<Int>;
+	public var indices:#if flash Vector #else Array #end<Int>;
 	/**
 	 * A Vector of normalized coordinates used to apply texture mapping.
 	 */
-	public var uvs:Vector<Float>;
+	public var uvs:#if flash Vector #else Array #end<Float>;
 	
 	#if FLX_RENDER_BLIT
 	/**
@@ -68,9 +67,9 @@ class FlxStrip extends FlxSprite
 		bounds = new FlxRect();
 		cameraBounds = new FlxRect();
 		
-		vertices = new Vector<Float>();
-		indices = new Vector<Int>();
-		uvs = new Vector<Float>();
+		vertices = new #if flash Vector #else Array #end<Float>();
+		indices = new #if flash Vector #else Array #end<Int>();
+		uvs = new #if flash Vector #else Array #end<Float>();
 	}
 	
 	override public function destroy():Void 
@@ -100,9 +99,15 @@ class FlxStrip extends FlxSprite
 		var graph:FlxGraphic = null;
 		var tempX:Float, tempY:Float;
 		
+		#if flash
 		var vs:Vector<Float>;
 		var idx:Vector<Int>;
 		var uvt:Vector<Float>;
+		#else
+		var vs:Array<Float>;
+		var idx:Array<Int>;
+		var uvt:Array<Float>;
+		#end
 		
 		var num1:Int = 2 * Std.int(vertices.length / 2);
 		var num2:Int = 2 * Std.int(uvs.length / 2);
@@ -131,7 +136,7 @@ class FlxStrip extends FlxSprite
 			vs = drawItem.vertices;
 			idx = drawItem.indices;
 			uvt = drawItem.uvt;
-			prevNumberOfVertices = Std.int(vs.length / 2);
+			prevNumberOfVertices = drawItem.numVertices;
 			#else
 			vs = drawVertices;
 			idx = indices;
@@ -158,10 +163,13 @@ class FlxStrip extends FlxSprite
 			}
 			
 			var vis:Bool = cameraBounds.overlaps(bounds);
-			
 			if (!vis)
 			{
+				#if flash
 				vs.length = vs.length - numVertices;
+				#else
+				vs.splice(vs.length - numVertices, numVertices);
+				#end
 			}
 			else
 			{
@@ -196,7 +204,7 @@ class FlxStrip extends FlxSprite
 		}
 	}
 	
-	private inline function pushVertex(vx:Float, vy:Float, camera:FlxCamera, vs:Vector<Float>):Void
+	private inline function pushVertex(vx:Float, vy:Float, camera:FlxCamera, vs:#if flash Vector #else Array #end<Float>):Void
 	{
 		#if FLX_RENDER_TILE
 		vx *= camera.totalScaleX;
