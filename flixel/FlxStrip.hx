@@ -108,7 +108,6 @@ class FlxStrip extends FlxSprite
 		var num2:Int = 2 * Std.int(uvs.length / 2);
 		
 		var numVertices:Int = FlxMath.minInt(num1, num2);
-		var numTris:Int = Std.int(indices.length / 3);
 		
 		#if FLX_RENDER_TILE
 		var drawItem:FlxDrawTrianglesItem;
@@ -162,7 +161,7 @@ class FlxStrip extends FlxSprite
 			
 			if (!vis)
 			{
-				vs.splice(vs.length - numVertices * 2, numVertices * 2);
+				vs.length = vs.length - numVertices;
 			}
 			else
 			{
