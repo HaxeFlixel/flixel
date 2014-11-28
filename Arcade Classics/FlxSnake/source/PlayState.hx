@@ -210,7 +210,7 @@ class PlayState extends FlxState
 	{	
 		_headPositions.unshift(FlxPoint.get(_snakeHead.x, _snakeHead.y));
 		
-		if (_headPositions.length >= _snakeBody.members.length)
+		if (_headPositions.length > _snakeBody.members.length)
 		{
 			_headPositions.pop();
 		}
