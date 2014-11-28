@@ -18,6 +18,7 @@ import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
+import openfl.display.BlendMode;
 import openfl.display.Tilesheet;
 
 /**
@@ -390,22 +391,24 @@ class FlxCamera extends FlxBasic
 	}
 	
 	@:noCompletion
-	public function getDrawTrianglesItem(ObjGraphics:FlxGraphic, ObjAntialiasing:Bool = false):FlxDrawTrianglesItem
+	public function getDrawTrianglesItem(ObjGraphics:FlxGraphic, ObjAntialiasing:Bool = false, ObjColored:Bool = false, ObjBlending:Int = 0):FlxDrawTrianglesItem
 	{
 		var itemToReturn:FlxDrawTrianglesItem = null;
 		
 		if (_currentDrawItem != null && _currentDrawItem.type == FlxDrawItemType.TRIANGLES 
 			&& _headTriangles.graphics == ObjGraphics 
-			&& _headTriangles.antialiasing == ObjAntialiasing)
+			&& _headTriangles.antialiasing == ObjAntialiasing
+			&& _headTriangles.colored == ObjColored
+			&& _headTriangles.blending == ObjBlending)
 		{	
 			return _headTriangles;
 		}
 		
-		return getNewDrawTrianglesItem(ObjGraphics, ObjAntialiasing);
+		return getNewDrawTrianglesItem(ObjGraphics, ObjAntialiasing, ObjColored, ObjBlending);
 	}
 	
 	@:noCompletion
-	public function getNewDrawTrianglesItem(ObjGraphics:FlxGraphic, ObjAntialiasing:Bool = false):FlxDrawTrianglesItem
+	public function getNewDrawTrianglesItem(ObjGraphics:FlxGraphic, ObjAntialiasing:Bool = false, ObjColored:Bool = false, ObjBlending:Int = 0):FlxDrawTrianglesItem
 	{
 		var itemToReturn:FlxDrawTrianglesItem = null;
 		
@@ -423,6 +426,8 @@ class FlxCamera extends FlxBasic
 		
 		itemToReturn.graphics = ObjGraphics;
 		itemToReturn.antialiasing = ObjAntialiasing;
+		itemToReturn.colored = ObjColored;
+		itemToReturn.blending = ObjBlending;
 		
 		itemToReturn.nextTyped = _headTriangles;
 		_headTriangles = itemToReturn;

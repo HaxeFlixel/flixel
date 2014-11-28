@@ -35,6 +35,8 @@ class FlxStrip extends FlxSprite
 	 */
 	public var uvs:DrawData<Float>;
 	
+	public var colors:DrawData<Int>;
+	
 	#if FLX_RENDER_BLIT
 	/**
 	 * Internal var, used for rendering in blit render mode (as a Graphic object source)
@@ -70,6 +72,7 @@ class FlxStrip extends FlxSprite
 		vertices = new #if flash Vector #else Array #end<Float>();
 		indices = new #if flash Vector #else Array #end<Int>();
 		uvs = new #if flash Vector #else Array #end<Float>();
+		colors = new #if flash Vector #else Array #end<Int>();
 	}
 	
 	override public function destroy():Void 
@@ -82,6 +85,7 @@ class FlxStrip extends FlxSprite
 		vertices = null;
 		indices = null;
 		uvs = null;
+		colors = null;
 		
 		bounds = null;
 		cameraBounds = null;
@@ -110,6 +114,10 @@ class FlxStrip extends FlxSprite
 		var drawItem:FlxDrawTrianglesItem;
 		var prevNumberOfVertices:Int;
 		var prevIndicesLength:Int;
+		var prevColorsLength:Int;
+		var numberOfVertices:Int = Std.int(verticesLength / 2);
+		var numColors:Int = colors.length;
+		var cols:DrawData<Int>;
 		#end
 		var prevVerticesLength:Int;
 		
@@ -125,13 +133,15 @@ class FlxStrip extends FlxSprite
 			cameraBounds.set(0, 0, camera.width, camera.height);
 			
 			#if FLX_RENDER_TILE
-			drawItem = camera.getDrawTrianglesItem(graphic, antialiasing);
+			drawItem = camera.getDrawTrianglesItem(graphic, antialiasing, numColors > 0, _blendInt);
 			
 			vs = drawItem.vertices;
 			idx = drawItem.indices;
 			uvt = drawItem.uvt;
+			cols = drawItem.colors;
 			prevVerticesLength = vs.length;
 			prevIndicesLength = idx.length;
+			prevColorsLength = cols.length;
 			prevNumberOfVertices = drawItem.numVertices;
 			#else
 			vs = drawVertices;
@@ -183,6 +193,11 @@ class FlxStrip extends FlxSprite
 				for (i in 0...indices.length)
 				{
 					idx[prevIndicesLength + i] = indices[i] + prevNumberOfVertices;
+				}
+				
+				for (i in 0...numberOfVertices)
+				{
+					cols[prevColorsLength + i] = colors[i];
 				}
 			#else
 				sprite.graphics.clear();

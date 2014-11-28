@@ -13,9 +13,6 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 	public var drawData:Array<Float> = [];
 	public var position:Int = 0;
 	
-	public var colored:Bool = false;
-	public var blending:Int = 0;
-	
 	public var numTiles(get, never):Int;
 	
 	public function new() 

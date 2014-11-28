@@ -18,6 +18,7 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 	public var vertices:DrawData<Float>;
 	public var indices:DrawData<Int>;
 	public var uvt:DrawData<Float>;
+	public var colors:DrawData<Int>;
 	
 	public function new() 
 	{
@@ -28,10 +29,12 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		vertices = new Vector<Float>();
 		indices = new Vector<Int>();
 		uvt = new Vector<Float>();
+		colors = new Vector<Int>();
 		#else
 		vertices = new Array<Float>();
 		indices = new Array<Int>();
 		uvt = new Array<Float>();
+		colors = new Array<Int>();
 		#end
 	}
 	
@@ -44,7 +47,11 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		}
 		
 		camera.canvas.graphics.beginBitmapFill(graphics.bitmap, null, true, (camera.antialiasing || antialiasing));
+		#if flash
 		camera.canvas.graphics.drawTriangles(vertices, indices, uvt, TriangleCulling.NONE);
+		#else
+		camera.canvas.graphics.drawTriangles(vertices, indices, uvt, TriangleCulling.NONE, (colors.length == 0) ? null : colors, blending);
+		#end
 		camera.canvas.graphics.endFill();
 		#if !FLX_NO_DEBUG
 		if (FlxG.debugger.drawDebug)
@@ -65,6 +72,7 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		vertices.splice(0, vertices.length);
 		indices.splice(0, indices.length);
 		uvt.splice(0, uvt.length);
+		colors.splice(0, colors.length);
 	}
 	
 	override public function dispose():Void 
@@ -74,6 +82,7 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		vertices = null;
 		indices = null;
 		uvt = null;
+		colors = null;
 	}
 	
 	override private function get_numVertices():Int
