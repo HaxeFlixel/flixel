@@ -103,15 +103,15 @@ class FlxStrip extends FlxSprite
 		var idx:DrawData<Int>;
 		var uvt:DrawData<Float>;
 		
-		var num1:Int = 2 * Std.int(vertices.length / 2);
-		var num2:Int = 2 * Std.int(uvs.length / 2);
-		
-		var numVertices:Int = FlxMath.minInt(num1, num2);
+		var verticesLength:Int = vertices.length;
+		var UVsLength:Int = uvs.length;
 		
 		#if FLX_RENDER_TILE
 		var drawItem:FlxDrawTrianglesItem;
 		var prevNumberOfVertices:Int;
+		var prevIndicesLength:Int;
 		#end
+		var prevVerticesLength:Int;
 		
 		for (camera in cameras)
 		{
@@ -130,16 +130,20 @@ class FlxStrip extends FlxSprite
 			vs = drawItem.vertices;
 			idx = drawItem.indices;
 			uvt = drawItem.uvt;
+			prevVerticesLength = vs.length;
+			prevIndicesLength = idx.length;
 			prevNumberOfVertices = drawItem.numVertices;
 			#else
 			vs = drawVertices;
 			idx = indices;
 			uvt = uvs;
 			vs.splice(0, vs.length);
+			prevVerticesLength = 0;
 			#end
 			
 			var i:Int = 0;
-			while (i < numVertices)
+			var currentVertexPosition:Int = prevVerticesLength;
+			while (i < verticesLength)
 			{
 				tempX = _point.x + vertices[i]; tempY = _point.y + vertices[i + 1];
 				
@@ -148,8 +152,8 @@ class FlxStrip extends FlxSprite
 				tempY *= camera.totalScaleY;
 				#end
 				
-				vs.push(tempX);
-				vs.push(tempY);
+				vs[currentVertexPosition++] = tempX;
+				vs[currentVertexPosition++] = tempY;
 				
 				if (i == 0)
 				{
@@ -166,19 +170,19 @@ class FlxStrip extends FlxSprite
 			var vis:Bool = cameraBounds.overlaps(bounds);
 			if (!vis)
 			{
-				vs.splice(vs.length - numVertices, numVertices);
+				vs.splice(vs.length - verticesLength, verticesLength);
 			}
 			else
 			{
 			#if FLX_RENDER_TILE
-				for (i in 0...numVertices)
+				for (i in 0...verticesLength)
 				{
-					uvt.push(uvs[i]);
+					uvt[prevVerticesLength + i] = uvs[i];
 				}
 				
 				for (i in 0...indices.length)
 				{
-					idx.push(indices[i] + prevNumberOfVertices);
+					idx[prevIndicesLength + i] = indices[i] + prevNumberOfVertices;
 				}
 			#else
 				sprite.graphics.clear();
