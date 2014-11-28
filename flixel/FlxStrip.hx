@@ -25,15 +25,15 @@ class FlxStrip extends FlxSprite
 	/**
 	 * A Vector of Floats where each pair of numbers is treated as a coordinate location (an x, y pair).
 	 */
-	public var vertices:#if flash Vector #else Array #end<Float>;
+	public var vertices:DrawData<Float>;
 	/**
 	 * A Vector of integers or indexes, where every three indexes define a triangle.
 	 */
-	public var indices:#if flash Vector #else Array #end<Int>;
+	public var indices:DrawData<Int>;
 	/**
 	 * A Vector of normalized coordinates used to apply texture mapping.
 	 */
-	public var uvs:#if flash Vector #else Array #end<Float>;
+	public var uvs:DrawData<Float>;
 	
 	#if FLX_RENDER_BLIT
 	/**
@@ -99,15 +99,9 @@ class FlxStrip extends FlxSprite
 		var graph:FlxGraphic = null;
 		var tempX:Float, tempY:Float;
 		
-		#if flash
-		var vs:Vector<Float>;
-		var idx:Vector<Int>;
-		var uvt:Vector<Float>;
-		#else
-		var vs:Array<Float>;
-		var idx:Array<Int>;
-		var uvt:Array<Float>;
-		#end
+		var vs:DrawData<Float>;
+		var idx:DrawData<Int>;
+		var uvt:DrawData<Float>;
 		
 		var num1:Int = 2 * Std.int(vertices.length / 2);
 		var num2:Int = 2 * Std.int(uvs.length / 2);
@@ -148,7 +142,14 @@ class FlxStrip extends FlxSprite
 			while (i < numVertices)
 			{
 				tempX = _point.x + vertices[i]; tempY = _point.y + vertices[i + 1];
-				pushVertex(tempX, tempY, camera, vs);
+				
+				#if FLX_RENDER_TILE
+				tempX *= camera.totalScaleX;
+				tempY *= camera.totalScaleY;
+				#end
+				
+				vs.push(tempX);
+				vs.push(tempY);
 				
 				if (i == 0)
 				{
@@ -165,11 +166,7 @@ class FlxStrip extends FlxSprite
 			var vis:Bool = cameraBounds.overlaps(bounds);
 			if (!vis)
 			{
-				#if flash
-				vs.length = vs.length - numVertices;
-				#else
 				vs.splice(vs.length - numVertices, numVertices);
-				#end
 			}
 			else
 			{
@@ -202,17 +199,6 @@ class FlxStrip extends FlxSprite
 			#end
 			}
 		}
-	}
-	
-	private inline function pushVertex(vx:Float, vy:Float, camera:FlxCamera, vs:#if flash Vector #else Array #end<Float>):Void
-	{
-		#if FLX_RENDER_TILE
-		vx *= camera.totalScaleX;
-		vy *= camera.totalScaleY;
-		#end
-		
-		vs.push(vx);
-		vs.push(vy);
 	}
 	
 	private function inflateBounds(x:Float, y:Float):Void 

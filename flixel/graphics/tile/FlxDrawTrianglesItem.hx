@@ -7,21 +7,17 @@ import openfl.display.Graphics;
 import openfl.Vector;
 import openfl.display.TriangleCulling;
 
+typedef DrawData<T> = #if flash Vector<T> #else Array<T> #end;
+
 /**
  * ...
  * @author Zaphod
  */
 class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 {
-	#if flash
-	public var vertices:Vector<Float>;
-	public var indices:Vector<Int>;
-	public var uvt:Vector<Float>;
-	#else
-	public var vertices:Array<Float>;
-	public var indices:Array<Int>;
-	public var uvt:Array<Float>;
-	#end
+	public var vertices:DrawData<Float>;
+	public var indices:DrawData<Int>;
+	public var uvt:DrawData<Float>;
 	
 	public function new() 
 	{
