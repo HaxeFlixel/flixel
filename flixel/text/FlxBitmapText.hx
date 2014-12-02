@@ -415,7 +415,7 @@ class FlxBitmapText extends FlxSprite
 			{
 				dataPos = j * 3;
 				
-				currFrame = _borderDrawData[dataPos];
+				currFrame = font.glyphs.get(_borderDrawData[dataPos]);
 				
 				currTileX = _borderDrawData[dataPos + 1];
 				currTileY = _borderDrawData[dataPos + 2];
@@ -433,7 +433,7 @@ class FlxBitmapText extends FlxSprite
 			{
 				dataPos = j * 3;
 				
-				currFrame = _textDrawData[dataPos];
+				currFrame = font.glyphs.get(_textDrawData[dataPos]);
 				
 				currTileX = _textDrawData[dataPos + 1];
 				currTileY = _textDrawData[dataPos + 2];
@@ -442,7 +442,7 @@ class FlxBitmapText extends FlxSprite
 				_tilePoint.transform(_matrix);
 				_tilePoint.addPoint(_point);
 				
-				drawItem.setDrawData(_tilePoint, currFrame, _tileMatrix, true, tColor, alphaToUse);
+				drawItem.setDrawData(_tilePoint, currFrame.frame, currFrame.origin, _tileMatrix, true, tColor, alphaToUse);
 			}
 			
 			#if !FLX_NO_DEBUG
@@ -1257,7 +1257,7 @@ class FlxBitmapText extends FlxSprite
 					_flashPoint.x = curX + (glyph.offset.x + 0.5 * glyph.frame.width) * size - origin.x;
 					_flashPoint.y = curY + (glyph.offset.y + 0.5 * glyph.frame.height) * size - origin.y;
 					
-					drawData[pos++] = glyph.tileID;
+					drawData[pos++] = charCode;
 					drawData[pos++] = _flashPoint.x;
 					drawData[pos++] = _flashPoint.y;
 					curX += Math.ceil(glyph.xAdvance * size);
