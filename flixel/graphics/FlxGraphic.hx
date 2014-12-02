@@ -3,7 +3,6 @@ package flixel.graphics;
 import flash.display.BitmapData;
 import flixel.FlxG;
 import flixel.graphics.frames.FlxEmptyFrame;
-import flixel.graphics.tile.FlxTilesheet;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets;
@@ -13,6 +12,7 @@ import flixel.graphics.frames.FlxFramesCollection;
 import flixel.graphics.frames.FlxImageFrame;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
+import openfl.display.Tilesheet;
 import openfl.geom.Rectangle;
 
 /**
@@ -322,7 +322,7 @@ class FlxGraphic
 	/**
 	 * Tilesheet for this graphic object. It is used only for FLX_RENDER_TILE mode
 	 */
-	public var tilesheet(get, null):FlxTilesheet;
+	public var tilesheet(get, null):Tilesheet;
 	#end
 	
 	/**
@@ -372,7 +372,7 @@ class FlxGraphic
 	 * Internal var holding Tilesheet for bitmap of this graphic.
 	 * It is used only in FLX_RENDER_TILE mode
 	 */
-	private var _tilesheet:FlxTilesheet;
+	private var _tilesheet:Tilesheet;
 	#end
 	
 	private var _useCount:Int = 0;
@@ -460,7 +460,7 @@ class FlxGraphic
 	{
 		bitmap = FlxDestroyUtil.dispose(bitmap);
 		#if FLX_RENDER_TILE
-		_tilesheet = FlxDestroyUtil.destroy(_tilesheet);
+		_tilesheet = null;
 		#end
 		key = null;
 		assetsKey = null;
@@ -548,7 +548,7 @@ class FlxGraphic
 	/**
 	 * Tilesheet getter. Generates new one (and regenerates) if there is no tilesheet for this graphic yet.
 	 */
-	private function get_tilesheet():FlxTilesheet
+	private function get_tilesheet():Tilesheet
 	{
 		if (_tilesheet == null)
 		{
@@ -557,7 +557,7 @@ class FlxGraphic
 			if (dumped)	
 				undump();
 			
-			_tilesheet = new FlxTilesheet(bitmap);
+			_tilesheet = new Tilesheet(bitmap);
 			
 			if (dumped)	
 				dump();
@@ -641,7 +641,7 @@ class FlxGraphic
 			#if (FLX_RENDER_TILE && !flash && !nme)
 			if (_tilesheet != null)
 			{
-				_tilesheet = FlxTilesheet.rebuildFromOld(_tilesheet, bitmap);
+				_tilesheet = new Tilesheet(bitmap);
 			}
 			#end
 			resetFrameBitmaps();

@@ -40,6 +40,8 @@ class FlxFrame implements IFlxDestroyable
 	 */
 	public var frame:FlxRect;
 	
+	public var origin(default, null):FlxPoint;
+	
 	public var parent:FlxGraphic;
 	public var tileID:Int = -1;
 	/**
@@ -80,6 +82,8 @@ class FlxFrame implements IFlxDestroyable
 	private function new(parent:FlxGraphic)
 	{
 		this.parent = parent;
+		
+		origin = FlxPoint.get();
 		
 		sourceSize = FlxPoint.get();
 		offset = FlxPoint.get();
@@ -229,6 +233,7 @@ class FlxFrame implements IFlxDestroyable
 		name = null;
 		frame = null;
 		parent = null;
+		origin = FlxDestroyUtil.put(origin);
 		sourceSize = FlxDestroyUtil.put(sourceSize);
 		offset = FlxDestroyUtil.put(offset);
 		center = FlxDestroyUtil.put(center);

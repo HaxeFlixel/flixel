@@ -475,14 +475,10 @@ class FlxBitmapFont extends FlxFramesCollection
 		glyphFrame.offset.copyFrom(offset);
 		glyphFrame.xAdvance = xAdvance;
 		glyphFrame.frame = frame;
-		glyphFrame.center.set(0.5 * frame.width, 0.5 * frame.height);
+		glyphFrame.origin.set(0.5 * frame.width, 0.5 * frame.height);
+		glyphFrame.center.copyFrom(glyphFrame.origin);
 		
 		offset.put();
-		
-		#if FLX_RENDER_TILE
-		var flashRect:Rectangle = frame.copyToFlash(new Rectangle());
-		glyphFrame.tileID = parent.tilesheet.addTileRect(flashRect, new Point(0.5 * frame.width, 0.5 * frame.height));
-		#end
 		
 		frames.push(glyphFrame);
 		glyphs.set(charCode, glyphFrame);

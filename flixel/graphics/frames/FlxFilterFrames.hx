@@ -115,16 +115,12 @@ class FlxFilterFrames extends FlxFramesCollection
 			filterFrame = new FlxFilterFrame(graph, frame, this);
 			
 			filterFrame.frame = region;
+			filterFrame.origin.set(0.5 * region.width, 0.5 * region.height);
 			filterFrame.sourceSize.set(region.width, region.height);
 			filterFrame.offset.set(0, 0);
-			filterFrame.center.set(0.5 * region.width, 0.5 * region.height);
+			filterFrame.center.copyFrom(filterFrame.origin);
 			
 			filterFrame.paintOnBitmap(filterFrame.parent.bitmap);
-			
-			#if FLX_RENDER_TILE
-			flashRect = region.copyToFlash(new Rectangle());
-			filterFrame.tileID = graph.tilesheet.addTileRect(flashRect, new Point(0.5 * region.width, 0.5 * region.height));
-			#end
 			
 			frames.push(filterFrame);
 			if (frame.name != null)
