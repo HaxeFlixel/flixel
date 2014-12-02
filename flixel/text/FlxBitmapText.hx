@@ -333,7 +333,7 @@ class FlxBitmapText extends FlxSprite
 		var alphaToUse:Float = 0;
 		
 		var drawItem:FlxDrawTilesItem;
-		var currFrame:FlxFrame = -1;
+		var currFrame:FlxFrame = null;
 		var currTileX:Float = 0;
 		var currTileY:Float = 0;
 		var sx:Float = scale.x * _facingHorizontalMult;
@@ -415,7 +415,7 @@ class FlxBitmapText extends FlxSprite
 			{
 				dataPos = j * 3;
 				
-				currFrame = font.glyphs.get(_borderDrawData[dataPos]);
+				currFrame = font.glyphs.get(Std.int(_borderDrawData[dataPos]));
 				
 				currTileX = _borderDrawData[dataPos + 1];
 				currTileY = _borderDrawData[dataPos + 2];
@@ -433,7 +433,7 @@ class FlxBitmapText extends FlxSprite
 			{
 				dataPos = j * 3;
 				
-				currFrame = font.glyphs.get(_textDrawData[dataPos]);
+				currFrame = font.glyphs.get(Std.int(_textDrawData[dataPos]));
 				
 				currTileX = _textDrawData[dataPos + 1];
 				currTileY = _textDrawData[dataPos + 2];
