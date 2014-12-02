@@ -1180,7 +1180,7 @@ class FlxBitmapText extends FlxSprite
 				{
 					ox += Std.int((frameWidth - lineWidth) / 2) - padding;
 				}
-				if (alignment == FlxTextAlign.RIGHT) 
+				else if (alignment == FlxTextAlign.RIGHT) 
 				{
 					ox += (frameWidth - Std.int(lineWidth)) - padding;
 				}
