@@ -6,6 +6,7 @@ import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxBitmapFont;
+import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.frames.FlxGlyphFrame;
 import flixel.graphics.tile.FlxDrawTilesItem;
 import flixel.math.FlxMatrix;
@@ -332,7 +333,7 @@ class FlxBitmapText extends FlxSprite
 		var alphaToUse:Float = 0;
 		
 		var drawItem:FlxDrawTilesItem;
-		var tileID:Float = -1;
+		var currFrame:FlxFrame = -1;
 		var currTileX:Float = 0;
 		var currTileY:Float = 0;
 		var sx:Float = scale.x * _facingHorizontalMult;
@@ -402,8 +403,8 @@ class FlxBitmapText extends FlxSprite
 			if (background)
 			{
 				drawItem = camera.getDrawTilesItem(FlxG.bitmap.whitePixel.parent, true, _blendInt, antialiasing);
-				tileID = FlxG.bitmap.whitePixel.tileID;
-				drawItem.setDrawData(_point, tileID, _bgMatrix, true, backgroundColor.to24Bit(), bgAlpha * camera.alpha);
+				currFrame = FlxG.bitmap.whitePixel;
+				drawItem.setDrawData(_point, currFrame.frame, currFrame.origin, _bgMatrix, true, backgroundColor.to24Bit(), bgAlpha * camera.alpha);
 			}
 			
 			drawItem = camera.getDrawTilesItem(font.parent, true, _blendInt, antialiasing);
@@ -414,7 +415,7 @@ class FlxBitmapText extends FlxSprite
 			{
 				dataPos = j * 3;
 				
-				tileID = _borderDrawData[dataPos];
+				currFrame = _borderDrawData[dataPos];
 				
 				currTileX = _borderDrawData[dataPos + 1];
 				currTileY = _borderDrawData[dataPos + 2];
@@ -423,7 +424,7 @@ class FlxBitmapText extends FlxSprite
 				_tilePoint.transform(_matrix);
 				_tilePoint.addPoint(_point);
 				
-				drawItem.setDrawData(_tilePoint, tileID, _tileMatrix, true, bColor, alphaToUse);
+				drawItem.setDrawData(_tilePoint, currFrame.frame, currFrame.origin, _tileMatrix, true, bColor, alphaToUse);
 			}
 			
 			alphaToUse = tAlpha * camera.alpha;
@@ -432,7 +433,7 @@ class FlxBitmapText extends FlxSprite
 			{
 				dataPos = j * 3;
 				
-				tileID = _textDrawData[dataPos];
+				currFrame = _textDrawData[dataPos];
 				
 				currTileX = _textDrawData[dataPos + 1];
 				currTileY = _textDrawData[dataPos + 2];
@@ -441,7 +442,7 @@ class FlxBitmapText extends FlxSprite
 				_tilePoint.transform(_matrix);
 				_tilePoint.addPoint(_point);
 				
-				drawItem.setDrawData(_tilePoint, tileID, _tileMatrix, true, tColor, alphaToUse);
+				drawItem.setDrawData(_tilePoint, currFrame, _tileMatrix, true, tColor, alphaToUse);
 			}
 			
 			#if !FLX_NO_DEBUG

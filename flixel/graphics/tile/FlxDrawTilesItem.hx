@@ -4,6 +4,7 @@ import flixel.FlxCamera;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.tile.FlxDrawBaseItem.FlxDrawItemType;
 import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
 import flixel.util.FlxColor;
 import openfl.display.Tilesheet;
 import openfl.geom.Matrix;
@@ -33,13 +34,18 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 		drawData = null;
 	}
 	
-	public inline function setDrawData(coordinate:FlxPoint, ID:Float, matrix:Matrix,
+	public inline function setDrawData(coordinate:FlxPoint, rect:FlxRect, origin:FlxPoint, matrix:Matrix,
 		isColored:Bool = false, color:FlxColor = FlxColor.WHITE, alpha:Float = 1):Void
 	{
 		drawData[position++] = coordinate.x;
 		drawData[position++] = coordinate.y;
 		
-		drawData[position++] = ID;
+		drawData[position++] = rect.x;
+		drawData[position++] = rect.y;
+		drawData[position++] = rect.width;
+		drawData[position++] = rect.height;
+		drawData[position++] = origin.x;
+		drawData[position++] = origin.y;
 		
 		drawData[position++] = matrix.a;
 		drawData[position++] = matrix.b;
@@ -65,8 +71,7 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 		
 		if (position > 0)
 		{
-			var tempFlags:Int = Tilesheet.TILE_TRANS_2x2;
-			tempFlags |= Tilesheet.TILE_ALPHA;
+			var tempFlags:Int = Tilesheet.TILE_TRANS_2x2 | Tilesheet.TILE_RECT | Tilesheet.TILE_ORIGIN | Tilesheet.TILE_ALPHA;
 			
 			if (colored)
 			{

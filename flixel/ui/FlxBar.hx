@@ -888,7 +888,7 @@ class FlxBar extends FlxSprite
 				
 				_point.subtract(_matrix.tx, _matrix.ty);
 				
-				setDrawData(drawItem, camera, _matrix, _frontFrame.tileID);
+				setDrawData(drawItem, _frontFrame.frame, _frontFrame.origin, camera, _matrix);
 			}
 		}
 	}

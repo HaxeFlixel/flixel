@@ -668,7 +668,7 @@ class FlxSprite extends FlxObject
 			
 			_point.subtract(_matrix.tx, _matrix.ty);
 			
-			setDrawData(drawItem, camera, _matrix);
+			setDrawData(drawItem, frame.frame, frame.origin, camera, _matrix);
 #end
 			#if !FLX_NO_DEBUG
 			FlxBasic.visibleCount++;
@@ -684,9 +684,9 @@ class FlxSprite extends FlxObject
 	}
 	
 	#if FLX_RENDER_TILE
-	private inline function setDrawData(drawItem:FlxDrawTilesItem, camera:FlxCamera, matrix:Matrix, ?tileID:Float)
+	private inline function setDrawData(drawItem:FlxDrawTilesItem, rect:FlxRect, origin:FlxPoint, camera:FlxCamera, matrix:Matrix)
 	{
-		drawItem.setDrawData(_point, (tileID == null) ? frame.tileID : tileID, matrix, isColored, color, alpha * camera.alpha);
+		drawItem.setDrawData(_point, rect, origin, matrix, isColored, color, alpha * camera.alpha);
 	}
 	#end
 	
