@@ -195,9 +195,12 @@ class FlxStrip extends FlxSprite
 					idx[prevIndicesLength + i] = indices[i] + prevNumberOfVertices;
 				}
 				
-				for (i in 0...numberOfVertices)
+				if (numColors > 0)
 				{
-					cols[prevColorsLength + i] = colors[i];
+					for (i in 0...numberOfVertices)
+					{
+						cols[prevColorsLength + i] = colors[i];
+					}
 				}
 			#else
 				sprite.graphics.clear();
