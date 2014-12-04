@@ -1,9 +1,12 @@
 package;
 
 import flixel.addons.nape.FlxNapeSpace;
+import flixel.FlxG;
+import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.FlxStrip;
 import flixel.graphics.tile.FlxDrawTrianglesItem.DrawData;
+import flixel.util.FlxColor;
 import nape.geom.AABB;
 import nape.geom.MarchingSquares;
 import nape.geom.Vec2;

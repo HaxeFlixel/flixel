@@ -25,8 +25,16 @@ class PlayState extends FlxState
 	private var bodyList:BodyList = null;
 	private var terrain:Terrain;
 	private var bomb:Sprite;
+	private var hand:PivotJoint;
 	
 	override public function create():Void
+	{
+		init();
+		
+		super.create();
+	}
+	
+	private function init():Void 
 	{
 		FlxNapeSpace.init();
 		
@@ -36,13 +44,12 @@ class PlayState extends FlxState
 		
 		FlxNapeSpace.drawDebug = true;
 		
-		init();
+		hand = new PivotJoint(FlxNapeSpace.space.world, null, Vec2.weak(), Vec2.weak());
+		hand.active = false;
+		hand.stiff = false;
+		hand.maxForce = 1e5;
+		hand.space = FlxNapeSpace.space;
 		
-		super.create();
-	}
-	
-	private function init():Void 
-	{
 		var w:Int = FlxG.width;
 		var h:Int = FlxG.height;
 		
@@ -76,36 +83,47 @@ class PlayState extends FlxState
 	
 	override public function update(elapsed:Float):Void 
 	{
-		// TODO: add ability to drag created dynamic bodies (like in original nape demo)
 		if (FlxG.mouse.justPressed)
 		{
 			var mp = Vec2.get(FlxG.mouse.x, FlxG.mouse.y);
 			
 			bodyList = FlxNapeSpace.space.bodiesUnderPoint(mp, null, bodyList);
 			
-			var isTerrain:Bool = true;
-			for (body in bodyList) {
-				if (body.isDynamic())
+			for (body in bodyList) 
+			{
+                if (body.isDynamic()) 
 				{
-					isTerrain = false;
-					break;
-				}
-			}
-			
-			if (!bodyList.empty() && isTerrain)
+                    hand.body2 = body;
+                    hand.anchor2 = body.worldPointToLocal(mp, true);
+                    hand.active = true;
+                    break;
+                }
+            }
+
+            if (bodyList.empty()) 
 			{
-				explosion(mp);
-			}
-			else if (bodyList.empty())
+                createObject(mp);
+            }
+            else if (!hand.active) 
 			{
-				createObject(mp);
-			}
+                explosion(mp);
+            }
+
+            // recycle nodes.
+            bodyList.clear();
 			
 			mp.dispose();
-			
-			// recycle nodes.
-            bodyList.clear();
 		}
+		else if (FlxG.mouse.justReleased)
+		{
+			hand.active = false;
+		}
+		
+		if (hand.active) 
+		{
+            hand.anchor1.setxy(FlxG.mouse.x, FlxG.mouse.y);
+            hand.body2.angularVel *= 0.9;
+        }
 		
 		super.update(elapsed);
 	}
