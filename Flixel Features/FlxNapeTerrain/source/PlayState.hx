@@ -52,8 +52,9 @@ class PlayState extends FlxState
 		
 		// Create initial terrain state, invalidating the whole screen.
 		terrain = new Terrain(bit, 30, 5);
-		terrain.invalidate(new AABB(0, 0, w, h), FlxNapeSpace.space);
-		add(terrain.strip);
+		terrain.invalidate(new AABB(0, 0, w, h), this);
+		
+		add(terrain.megaStrip);
 		
 		// Create bomb sprite for destruction
 		bomb = new Sprite();
@@ -70,10 +71,7 @@ class PlayState extends FlxState
 		var region = AABB.fromRect(bomb.getBounds(bomb));
 		region.x += pos.x;
 		region.y += pos.y;
-		
-		// TODO: optimize it (don't invalidate the whole terrain, just a bit of it - like in original nape demo)
-	//	terrain.invalidate(region, FlxNapeSpace.space);
-		terrain.invalidate(new AABB(0, 0, FlxG.width, FlxG.height), FlxNapeSpace.space);
+		terrain.invalidate(region, this);
 	}
 	
 	override public function update(elapsed:Float):Void 

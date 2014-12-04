@@ -1,6 +1,9 @@
 package;
 
+import flixel.addons.nape.FlxNapeSpace;
+import flixel.FlxState;
 import flixel.FlxStrip;
+import flixel.graphics.tile.FlxDrawTrianglesItem.DrawData;
 import nape.geom.AABB;
 import nape.geom.MarchingSquares;
 import nape.geom.Vec2;
@@ -24,8 +27,9 @@ class Terrain #if flash implements nape.geom.IsoFunction #end
 	public var bitmap:BitmapData;
 	public var isoGranularity:Vec2;
 	public var isoQuality:Int = 8;
-	// TODO: store several strips (one for each cell)
-	public var strip:FlxStrip;
+	
+	private var strips:Array<FlxStrip>;
+	public var megaStrip:FlxStrip;
 	
 	public function new(bitmap:BitmapData, cellSize:Float, subSize:Float) 
 	{
@@ -34,17 +38,22 @@ class Terrain #if flash implements nape.geom.IsoFunction #end
 		this.subSize = subSize;
 		
 		cells = [];
+		strips = [];
 		width = Math.ceil(bitmap.width / cellSize);
 		height = Math.ceil(bitmap.height / cellSize);
-		for (i in 0...(width * height)) cells.push(null);
+		for (i in 0...(width * height)) 
+		{
+			cells.push(null);
+			strips.push(new FlxStrip(0, 0, "assets/Patagonia30.jpg"));
+		}
+		
+		megaStrip = new FlxStrip(0, 0, "assets/Patagonia30.jpg");
 		
 		isoBounds = new AABB(0, 0, cellSize, cellSize);
 		isoGranularity = Vec2.get(subSize, subSize);
-		
-		strip = new FlxStrip(0, 0, "assets/Patagonia30.jpg");
 	}
 	
-	public function invalidate(region:AABB, space:Space) 
+	public function invalidate(region:AABB, state:FlxState) 
 	{
 		// compute effected cells.
 		var x0 = Std.int(region.min.x / cellSize); if (x0 < 0) x0 = 0;
@@ -52,8 +61,22 @@ class Terrain #if flash implements nape.geom.IsoFunction #end
 		var x1 = Std.int(region.max.x / cellSize); if (x1 >= width) x1 = width - 1;
 		var y1 = Std.int(region.max.y / cellSize); if (y1 >= height) y1 = height - 1;
 		
-		var sweepContexts:Array<org.poly2tri.SweepContext> = [];
 		var points:Array<org.poly2tri.Point> = [];
+		var sweep:org.poly2tri.Sweep;
+		var i:Int = 0;
+		
+		var context:org.poly2tri.SweepContext;
+		var triangle:org.poly2tri.Triangle;
+		var pl:Array<org.poly2tri.Point>;
+		
+		var strip:FlxStrip;
+		var vertices:DrawData<Float>;
+		var ids:DrawData<Int>;
+		var uvs:DrawData<Float>;
+		
+		var x_1:Float, y_1:Float, x_2:Float, y_2:Float, x_3:Float, y_3:Float;
+		var maxX:Float, maxY:Float;
+		var u:Float, v:Float;
 		
 		for (y in y0...(y1 + 1)) 
 		{
@@ -76,7 +99,18 @@ class Terrain #if flash implements nape.geom.IsoFunction #end
 					isoQuality
 				);
 				
-				if (polys.empty()) continue;
+				strip = strips[y * width + x];
+				
+				if (polys.empty()) 
+				{
+					if (strip != null)
+					{
+						strip.destroy();
+						strips[y * width + x] = null;
+					}
+					
+					continue;
+				}
 				
 				if (b == null) 
 				{
@@ -101,7 +135,18 @@ class Terrain #if flash implements nape.geom.IsoFunction #end
 				// Recycle list nodes
 				polys.clear();
 				
-				b.space = space;
+				b.space = FlxNapeSpace.space;
+				
+				strip = strips[y * width + x];
+				vertices = strip.vertices;
+				ids = strip.indices;
+				uvs = strip.uvs;
+				
+				vertices.splice(0, vertices.length);
+				ids.splice(0, ids.length);
+				uvs.splice(0, uvs.length);
+				
+				i = 0;
 				
 				for (shape in b.shapes)
 				{
@@ -118,90 +163,103 @@ class Terrain #if flash implements nape.geom.IsoFunction #end
 						}
 						
 						context.addPolyline(points);
-						sweepContexts.push(context);
+						sweep = new org.poly2tri.Sweep(context);
+						sweep.triangulate();
+						
+						for (triangle in context.triangles)
+						{
+							pl = triangle.points;
+							
+							vertices.push(x_1 = pl[0].x);
+							vertices.push(y_1 = pl[0].y);
+							
+							ids.push(i++);
+							
+							vertices.push(x_2 = pl[1].x);
+							vertices.push(y_2 = pl[1].y);
+							
+							ids.push(i++);
+							
+							vertices.push(x_3 = pl[2].x);
+							vertices.push(y_3 = pl[2].y);
+							
+							ids.push(i++);
+							
+							maxX = Math.max(x_1, Math.max(x_2, x_3));
+							maxY = Math.max(y_1, Math.max(y_2, y_3));
+							
+							u = (pl[0].x % cellSize) / cellSize;
+							v = (pl[0].y % cellSize) / cellSize;
+							
+							u = (u == 0 && pl[0].x == maxX) ? 1 : u;
+							v = (v == 0 && pl[0].y == maxY) ? 1 : v;
+							
+							uvs.push(u);
+							uvs.push(v);
+							
+							u = (pl[1].x % cellSize) / cellSize;
+							v = (pl[1].y % cellSize) / cellSize;
+							
+							u = (u == 0 && pl[1].x == maxX) ? 1 : u;
+							v = (v == 0 && pl[1].y == maxY) ? 1 : v;
+							
+							uvs.push(u);
+							uvs.push(v);
+							
+							u = (pl[2].x % cellSize) / cellSize;
+							v = (pl[2].y % cellSize) / cellSize;
+							
+							u = (u == 0 && pl[2].x == maxX) ? 1 : u;
+							v = (v == 0 && pl[2].y == maxY) ? 1 : v;
+							
+							uvs.push(u);
+							uvs.push(v);
+						}
 					}
 				}
 			}
 		}
 		
-		var vertices = strip.vertices;
-		var ids = strip.indices;
-		var uvs = strip.uvs;
+		vertices = megaStrip.vertices;
+		ids = megaStrip.indices;
+		uvs = megaStrip.uvs;
 		
 		vertices.splice(0, vertices.length);
 		ids.splice(0, ids.length);
 		uvs.splice(0, uvs.length);
 		
-		var context:org.poly2tri.SweepContext;
-		var triangle:org.poly2tri.Triangle;
-		var pl:Array<org.poly2tri.Point>;
-		var sweep:org.poly2tri.Sweep;
-		var i:Int = 0;
+		var verticesPos:Int = 0;
+		var prevIndicesLength:Int = 0;
+		var UVsPos:Int = 0;
 		
-		for (context in sweepContexts)
+		// join the data of all strips in the megaStrip data
+		for (strip in strips)
 		{
-			sweep = new org.poly2tri.Sweep(context);
-			sweep.triangulate();
-			
-			var x1:Float, y1:Float, x2:Float, y2:Float, x3:Float, y3:Float;
-			var maxX:Float, maxY:Float;
-			var u:Float, v:Float;
-			
-			for (triangle in context.triangles)
+			if (strip != null)
 			{
-				pl = triangle.points;
+				for (i in 0...strip.vertices.length)
+				{
+					vertices[verticesPos++] = strip.vertices[i];
+				}
 				
-				vertices.push(x1 = pl[0].x);
-				vertices.push(y1 = pl[0].y);
+				for (i in 0...strip.indices.length)
+				{
+					ids.push(strip.indices[i] + prevIndicesLength);
+				}
+				prevIndicesLength += strip.indices.length;
 				
-				ids.push(i++);
-				
-				vertices.push(x2 = pl[1].x);
-				vertices.push(y2 = pl[1].y);
-				
-				ids.push(i++);
-				
-				vertices.push(x3 = pl[2].x);
-				vertices.push(y3 = pl[2].y);
-				
-				ids.push(i++);
-				
-				maxX = Math.max(x1, Math.max(x2, x3));
-				maxY = Math.max(y1, Math.max(y2, y3));
-				
-				u = (pl[0].x % cellSize) / cellSize;
-				v = (pl[0].y % cellSize) / cellSize;
-				
-				u = (u == 0 && pl[0].x == maxX) ? 1 : u;
-				v = (v == 0 && pl[0].y == maxY) ? 1 : v;
-				
-				uvs.push(u);
-				uvs.push(v);
-				
-				u = (pl[1].x % cellSize) / cellSize;
-				v = (pl[1].y % cellSize) / cellSize;
-				
-				u = (u == 0 && pl[1].x == maxX) ? 1 : u;
-				v = (v == 0 && pl[1].y == maxY) ? 1 : v;
-				
-				uvs.push(u);
-				uvs.push(v);
-				
-				u = (pl[2].x % cellSize) / cellSize;
-				v = (pl[2].y % cellSize) / cellSize;
-				
-				u = (u == 0 && pl[2].x == maxX) ? 1 : u;
-				v = (v == 0 && pl[2].y == maxY) ? 1 : v;
-				
-				uvs.push(u);
-				uvs.push(v);
+				for (i in 0...strip.uvs.length)
+				{
+					uvs[UVsPos++] = strip.uvs[i];
+				}
 			}
 		}
 	}
-	 
+	
 	//iso-function for terrain, computed as a linearly-interpolated
 	//alpha threshold from bitmap.
-	public function iso(x:Float,y:Float):Float {
+	public function iso(x:Float, y:Float):Float 
+	{
 		var ix = Std.int(x); if(ix<0) ix = 0; else if(ix>=bitmap.width) ix = bitmap.width -1;
 		var iy = Std.int(y); if(iy<0) iy = 0; else if(iy>=bitmap.height) iy = bitmap.height-1;
 		var fx = x - ix; if(fx<0) fx = 0; else if(fx>1) fx = 1;
