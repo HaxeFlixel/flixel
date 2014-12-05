@@ -4,7 +4,13 @@ import flixel.addons.nape.FlxNapeSpace;
 import flixel.addons.nape.FlxNapeSprite;
 import flixel.addons.nape.FlxNapeTilemap;
 import flixel.FlxG;
+import flixel.FlxSprite;
 import flixel.FlxState;
+import flixel.graphics.frames.FlxImageFrame;
+import flixel.graphics.frames.FlxTileFrames;
+import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
+import flixel.util.FlxColor;
 import nape.constraint.PivotJoint;
 import nape.geom.AABB;
 import nape.geom.Vec2;
@@ -54,8 +60,12 @@ class PlayState extends FlxState
 		var h:Int = FlxG.height;
 		
 		// Initialise terrain bitmap.
-		var bit = new BitmapData(w, h, true, 0);
+		#if flash
+		var bit = new BitmapData(w, h, true, 0x00000000);
 		bit.perlinNoise(200, 200, 2, 0x3ed, false, true, BitmapDataChannel.ALPHA, false);
+		#else
+		var bit = Assets.getBitmapData("assets/terrain.png");
+		#end
 		
 		// Create initial terrain state, invalidating the whole screen.
 		terrain = new Terrain(bit, 30, 5);
@@ -71,11 +81,32 @@ class PlayState extends FlxState
 	
 	function explosion(pos:Vec2) 
 	{
+		var region = AABB.fromRect(bomb.getBounds(bomb));
 		// Erase bomb graphic out of terrain.
+		#if flash
 		terrain.bitmap.draw(bomb, new Matrix(1, 0, 0, 1, pos.x, pos.y), null, BlendMode.ERASE);
+		#else
+		var radius:Int = Std.int(region.width / 2);
+		var radiusSquared:Int = radius * radius;
+		var dx:Int, dy:Int;
+		
+		for (x in 0...(2 * radius))
+		{
+			for (y in 0...(2 * radius))
+			{
+				dx = radius - x;
+				dy = radius - y;
+				if ((dx * dx + dy * dy) > radiusSquared)
+				{
+					continue;
+				}
+				
+				terrain.bitmap.setPixel32(Std.int(pos.x + dx), Std.int(pos.y + dy), FlxColor.TRANSPARENT);
+			}
+		}
+		#end
 		
 		// Invalidate region of terrain effected.
-		var region = AABB.fromRect(bomb.getBounds(bomb));
 		region.x += pos.x;
 		region.y += pos.y;
 		terrain.invalidate(region, this);

@@ -267,14 +267,14 @@ class Terrain #if flash implements nape.geom.IsoFunction #end
 		var iy = Std.int(y); if(iy<0) iy = 0; else if(iy>=bitmap.height) iy = bitmap.height-1;
 		var fx = x - ix; if(fx<0) fx = 0; else if(fx>1) fx = 1;
 		var fy = y - iy; if(fy<0) fy = 0; else if(fy>1) fy = 1;
-		var gx = 1-fx;
-		var gy = 1-fy;
-		 
-		var a00 = bitmap.getPixel32(ix,iy)>>>24;
-		var a01 = bitmap.getPixel32(ix,iy+1)>>>24;
-		var a10 = bitmap.getPixel32(ix+1,iy)>>>24;
-		var a11 = bitmap.getPixel32(ix+1,iy+1)>>>24;
-		 
+		var gx = 1 - fx;
+		var gy = 1 - fy;
+		
+		var a00 = (bitmap.getPixel32(ix, iy) >> 24) & 0xff;
+		var a01 = (bitmap.getPixel32(ix, iy + 1) >> 24) & 0xff;
+		var a10 = (bitmap.getPixel32(ix + 1, iy) >> 24) & 0xff;
+		var a11 = (bitmap.getPixel32(ix + 1, iy + 1) >> 24) & 0xff;
+		
 		var ret = gx * gy * a00 + fx * gy * a10 + gx * fy * a01 + fx * fy * a11;
 		return 0x80 - ret;
 	}
