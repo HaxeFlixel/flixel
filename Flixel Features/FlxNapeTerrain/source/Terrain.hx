@@ -13,7 +13,9 @@ import nape.geom.Vec2;
 import nape.phys.BodyType;
 import nape.shape.Polygon;
 import nape.space.Space;
+import openfl.Assets;
 import openfl.display.BitmapData;
+import openfl.display.Sprite;
 import nape.phys.Body;
 
 class Terrain #if flash implements nape.geom.IsoFunction #end 
@@ -32,7 +34,11 @@ class Terrain #if flash implements nape.geom.IsoFunction #end
 	public var isoQuality:Int = 8;
 	
 	private var strips:Array<FlxStrip>;
-	public var megaStrip:FlxStrip;
+	private var megaStrip:FlxStrip;
+	
+	public var sprite:FlxSprite;
+	
+	private var flashSprite:Sprite;
 	
 	public function new(bitmap:BitmapData, cellSize:Float, subSize:Float) 
 	{
@@ -54,6 +60,13 @@ class Terrain #if flash implements nape.geom.IsoFunction #end
 		
 		isoBounds = new AABB(0, 0, cellSize, cellSize);
 		isoGranularity = Vec2.get(subSize, subSize);
+		
+		#if FLX_RENDER_BLIT
+		sprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.TRANSPARENT);
+		flashSprite = new Sprite();
+		#else
+		sprite = megaStrip;
+		#end
 	}
 	
 	public function invalidate(region:AABB, state:FlxState) 
@@ -257,6 +270,18 @@ class Terrain #if flash implements nape.geom.IsoFunction #end
 				}
 			}
 		}
+		
+		#if FLX_RENDER_BLIT
+		flashSprite.graphics.clear();
+		flashSprite.graphics.beginBitmapFill(Assets.getBitmapData("assets/Patagonia30.jpg"), null, false, true);
+		flashSprite.graphics.drawTriangles(vertices, ids, uvs);
+		flashSprite.graphics.endFill();
+		
+		var pixels:BitmapData = sprite.pixels;
+		pixels.fillRect(pixels.rect, FlxColor.TRANSPARENT);
+		pixels.draw(flashSprite);
+		sprite.pixels = pixels;
+		#end
 	}
 	
 	//iso-function for terrain, computed as a linearly-interpolated

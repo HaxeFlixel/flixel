@@ -71,7 +71,7 @@ class PlayState extends FlxState
 		terrain = new Terrain(bit, 30, 5);
 		terrain.invalidate(new AABB(0, 0, w, h), this);
 		
-		add(terrain.megaStrip);
+		add(terrain.sprite);
 		
 		// Create bomb sprite for destruction
 		bomb = new Sprite();
