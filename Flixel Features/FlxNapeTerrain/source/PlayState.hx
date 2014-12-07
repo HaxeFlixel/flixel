@@ -87,12 +87,15 @@ class PlayState extends FlxState
 		terrain.bitmap.draw(bomb, new Matrix(1, 0, 0, 1, pos.x, pos.y), null, BlendMode.ERASE);
 		#else
 		var radius:Int = Std.int(region.width / 2);
+		var diameter:Int = 2 * radius;
 		var radiusSquared:Int = radius * radius;
+		var centerX:Int = Std.int(pos.x);
+		var centerY:Int = Std.int(pos.y);
 		var dx:Int, dy:Int;
 		
-		for (x in 0...(2 * radius))
+		for (x in 0...diameter)
 		{
-			for (y in 0...(2 * radius))
+			for (y in 0...diameter)
 			{
 				dx = radius - x;
 				dy = radius - y;
@@ -100,8 +103,7 @@ class PlayState extends FlxState
 				{
 					continue;
 				}
-				
-				terrain.bitmap.setPixel32(Std.int(pos.x + dx), Std.int(pos.y + dy), FlxColor.TRANSPARENT);
+				terrain.bitmap.setPixel32(centerX + dx, centerY + dy, FlxColor.TRANSPARENT);
 			}
 		}
 		#end

@@ -38,7 +38,11 @@ class Terrain #if flash implements nape.geom.IsoFunction #end
 	
 	public var sprite:FlxSprite;
 	
+	#if FLX_RENDER_BLIT
 	private var flashSprite:Sprite;
+	#end
+	
+	private var graphicPath:String = "assets/Patagonia30.jpg";
 	
 	public function new(bitmap:BitmapData, cellSize:Float, subSize:Float) 
 	{
@@ -53,10 +57,10 @@ class Terrain #if flash implements nape.geom.IsoFunction #end
 		for (i in 0...(width * height)) 
 		{
 			cells.push(null);
-			strips.push(new FlxStrip(0, 0, "assets/Patagonia30.jpg"));
+			strips.push(new FlxStrip(0, 0, graphicPath));
 		}
 		
-		megaStrip = new FlxStrip(0, 0, "assets/Patagonia30.jpg");
+		megaStrip = new FlxStrip(0, 0, graphicPath);
 		
 		isoBounds = new AABB(0, 0, cellSize, cellSize);
 		isoGranularity = Vec2.get(subSize, subSize);
@@ -273,7 +277,7 @@ class Terrain #if flash implements nape.geom.IsoFunction #end
 		
 		#if FLX_RENDER_BLIT
 		flashSprite.graphics.clear();
-		flashSprite.graphics.beginBitmapFill(Assets.getBitmapData("assets/Patagonia30.jpg"), null, false, true);
+		flashSprite.graphics.beginBitmapFill(Assets.getBitmapData(graphicPath), null, false, true);
 		flashSprite.graphics.drawTriangles(vertices, ids, uvs);
 		flashSprite.graphics.endFill();
 		
@@ -288,10 +292,10 @@ class Terrain #if flash implements nape.geom.IsoFunction #end
 	//alpha threshold from bitmap.
 	public function iso(x:Float, y:Float):Float 
 	{
-		var ix = Std.int(x); if(ix<0) ix = 0; else if(ix>=bitmap.width) ix = bitmap.width -1;
-		var iy = Std.int(y); if(iy<0) iy = 0; else if(iy>=bitmap.height) iy = bitmap.height-1;
-		var fx = x - ix; if(fx<0) fx = 0; else if(fx>1) fx = 1;
-		var fy = y - iy; if(fy<0) fy = 0; else if(fy>1) fy = 1;
+		var ix = Std.int(x); if (ix < 0) ix = 0; else if (ix >= bitmap.width) ix = bitmap.width -1;
+		var iy = Std.int(y); if (iy < 0) iy = 0; else if (iy >= bitmap.height) iy = bitmap.height-1;
+		var fx = x - ix; if (fx < 0) fx = 0; else if (fx > 1) fx = 1;
+		var fy = y - iy; if (fy < 0) fy = 0; else if (fy > 1) fy = 1;
 		var gx = 1 - fx;
 		var gy = 1 - fy;
 		
