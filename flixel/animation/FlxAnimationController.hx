@@ -123,7 +123,7 @@ class FlxAnimationController implements IFlxDestroyable
 		destroyAnimations();
 		Controller = (Controller != null) ? Controller : this;
 		_prerotated = new FlxPrerotatedAnimation(Controller, Controller._sprite.bakedRotationAngle);
-                _prerotated.angle = _sprite.angle;
+		_prerotated.angle = _sprite.angle;
 	}
 	
 	public function destroyAnimations():Void
