@@ -1231,14 +1231,14 @@ class FlxSprite extends FlxObject
 	
 	override private function set_angle(Value:Float):Float
 	{
-			var newAngle = (angle != Value);
-			var ret = super.set_angle(Value);
-			if (newAngle)
-			{
-					_angleChanged = true;
-					animation.update(0);
-			}
-			return ret;
+		var newAngle = (angle != Value);
+		var ret = super.set_angle(Value);
+		if (newAngle)
+		{
+			_angleChanged = true;
+			animation.update(0);
+		}
+		return ret;
 	}
 	
 	private function set_blend(Value:BlendMode):BlendMode 
