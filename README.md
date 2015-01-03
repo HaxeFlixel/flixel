@@ -10,7 +10,7 @@
 
 [Click here to get started making games with HaxeFlixel.](http://haxeflixel.com/documentation/getting-started/)
 
-HaxeFlixel is open source software developed by volunteers, [click here to meet the team!](https://github.com/orgs/HaxeFlixel/members)
+HaxeFlixel is open source software developed by volunteers, [click here to meet the team!](https://github.com/orgs/HaxeFlixel/people)
 
 If you're a developer and like what we're doing, [read the docs](#for-developers) and get involved.
 
