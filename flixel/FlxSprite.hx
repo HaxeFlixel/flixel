@@ -28,7 +28,7 @@ import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import openfl.display.Tilesheet;
 
-@:bitmap("assets/images/logo/default.png")
+@:keep @:bitmap("assets/images/logo/default.png")
 private class GraphicDefault extends BitmapData {}
 
 // TODO: add updateSizeFromFrame bool which will tell sprite whether to update it's size to frame's size (when frame setter is called) or not (useful for sprites with adjusted hitbox)
