@@ -277,12 +277,18 @@ private class Macro
 	{
 		return macro
 		{ 
+			var pendingRemove = [];
 			for (handler in _handlers)
 			{
 				handler.listener($a{exprs});
 				
 				if (handler.dispatchOnce)
-					remove(handler.listener);
+					pendingRemove.push(handler);
+			}
+			
+			for (handler in pendingRemove)
+			{
+				remove(handler.listener);
 			}
 		}
 	}
