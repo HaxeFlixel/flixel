@@ -29,9 +29,6 @@
 	<set name="BUILD_DIR" value="export" />
 	<classpath name="source" />
 	
-	<!--You can use rename="newName" to shorten the paths to individual subdirectories!-->
-	<assets path="assets"/>
-	
 	<!--------------------------------LIBRARIES------------------------------------->
 	
 	<haxelib name="flixel" />

@@ -353,7 +353,7 @@ class Player extends FlxSprite
 			_gibs.start(true, 0, 50);
 		}
 		
-		new FlxTimer(2, function(_) {
+		new FlxTimer().start(2, function(_) {
 			FlxG.resetState();
 		});
 	}

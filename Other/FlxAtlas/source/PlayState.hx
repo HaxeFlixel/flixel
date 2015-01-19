@@ -79,7 +79,7 @@ class PlayState extends FlxState
 	{
 		var bitmap:BitmapData = Assets.getBitmapData(source);
 		var node:FlxNode = atlas.addNode(bitmap, source);
-		Assets.cache.bitmapData.remove(source);
+		Assets.cache.removeBitmapData(source);
 		bitmap.dispose();
 		return node;
 	}

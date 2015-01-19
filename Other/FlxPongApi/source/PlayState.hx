@@ -117,14 +117,14 @@ class PlayState extends FlxState
 				
 				FlxGameJolt.addScore(Std.string(Reg.level - 1) + " enemies destroyed", Reg.level - 1, 20599);
 				
-				new FlxTimer(4, newEnemy, 1);
+				new FlxTimer().start(4, newEnemy, 1);
 			}
 			
 			if (ball.x < 0) {
 				ball.kill();
 				_player.kill();
 				_centerText.text = "Aww! You lost. You got as far as level " + Reg.level + " though, so there's that.";
-				new FlxTimer(4, endGame, 1);
+				new FlxTimer().start(4, endGame, 1);
 			}
 		}
 		

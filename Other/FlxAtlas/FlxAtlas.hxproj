@@ -17,14 +17,14 @@
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
     <class path="C:\HaxeToolkit\haxe\lib\flixel\git" />
-    <class path="C:\HaxeToolkit\haxe\lib\openfl\2,1,0" />
-    <class path="C:\HaxeToolkit\haxe\lib\lime\2,0,0-alpha" />
+    <class path="C:\HaxeToolkit\haxe\lib\openfl\2,1,6" />
+    <class path="C:\HaxeToolkit\haxe\lib\lime\2,0,0" />
     <class path="source" />
     <class path="export\flash\haxe" />
   </classpaths>
   <!-- Build options -->
   <build>
-    <option directives="flixel=3.3.5&#xA;openfl=2.1.0&#xA;lime=2.0.0-alpha&#xA;tools=2.0.0-alpha&#xA;FLX_NO_DEBUG&#xA;no-compilation&#xA;NAPE_RELEASE_BUILD&#xA;openfl-flash&#xA;web" />
+    <option directives="flixel=3.3.6&#xA;openfl=2.1.6&#xA;lime=2.0.0&#xA;tools=2.0.0&#xA;FLX_NO_DEBUG&#xA;no-compilation&#xA;NAPE_RELEASE_BUILD&#xA;openfl-flash&#xA;web" />
     <option flashStrict="False" />
     <option noInlineOnDebug="False" />
     <option mainClass="ApplicationMain" />

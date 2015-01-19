@@ -43,8 +43,12 @@ class PlayState extends FlxState
 		var bgWidth:Int = Math.ceil(FlxG.width / bgSize) * bgSize;
 		var bgHeight:Int = Math.ceil(FlxG.height / bgSize) * bgSize;
 		
+		#if FLX_RENDER_BLIT
 		var bg:FlxTileblock = new FlxTileblock(0, 0, bgWidth, bgHeight);
 		bg.loadTiles("assets/grass.png");
+		#else
+		var bg:Background = new Background();
+		#end
 		add(bg);
 		
 		// Create the bunnies

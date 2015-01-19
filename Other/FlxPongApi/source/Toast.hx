@@ -58,7 +58,7 @@ class Toast extends FlxSpriteGroup
 		add(bottom);
 		
 		FlxTween.linearMotion(this, this.x, this.y, this.x - WIDTH - 10, this.y, 1);
-		new FlxTimer(6, removeThis, 1);
+		new FlxTimer().start(6, removeThis, 1);
 	}
 	
 	private function removeThis(t:FlxTimer):Void
