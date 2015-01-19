@@ -30,9 +30,7 @@
 	<classpath name="source" />
 	
 	<!--You can use rename="newName" to shorten the paths to individual subdirectories!-->
-	<assets path="assets">
-		<font path="fonts/Fairfax.ttf" id="fairfax" />
-	</assets>
+	<assets path="assets"/>
 	
 	<!--------------------------------LIBRARIES------------------------------------->
 	
