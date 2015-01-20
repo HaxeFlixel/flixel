@@ -248,12 +248,14 @@ class PlayState extends FlxState
 		// Check to see if the player scored any points this frame
 		var scoreChanged:Bool = oldScore != Reg.score;
 		
+		#if !FLX_NO_KEYBOARD
 		// Jammed message
 		if (FlxG.keys.justPressed.C && _player.flickering)
 		{
 			_jamTimer = 1;
 			_gunjam.visible = true;
 		}
+		#end
 		
 		if (_jamTimer > 0)
 		{
@@ -329,10 +331,12 @@ class PlayState extends FlxState
 		}
 		
 		// Escape to the main menu
+		#if !FLX_NO_KEYBOARD
 		if (FlxG.keys.pressed.ESCAPE)
 		{
 			FlxG.switchState(new MenuState());
 		}
+		#end
 	}
 	
 	/**

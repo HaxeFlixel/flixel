@@ -147,17 +147,27 @@ class MenuState extends FlxState
 			text.alignment = CENTER;
 			add(text);
 			
-			var flixelButton:FlxButton = new FlxButton(FlxG.width / 2 - 40, FlxG.height / 3 + 54, "haxeflixel.com", onFlixel);
+			var flixelButton:FlxButton = new FlxButton(FlxG.width / 2 - 40, FlxG.height / 3 + 54, "haxeflixel.com", function()
+			{
+				FlxG.openURL("http://haxeflixel.com");
+			});
 			flixelButton.color = 0xff729954;
 			flixelButton.label.color = 0xffd8eba2;
 			add(flixelButton);
 			
-			var dannyButton:FlxButton = new FlxButton(flixelButton.x, flixelButton.y + 22, "music: dannyB", onDanny);
+			var dannyButton:FlxButton = new FlxButton(flixelButton.x, flixelButton.y + 22, "music: dannyB", function()
+			{
+				FlxG.openURL("http://dbsoundworks.com");
+			});
 			dannyButton.color = flixelButton.color;
 			dannyButton.label.color = flixelButton.label.color;
 			add(dannyButton);
 			
-			_playButton = new FlxButton(flixelButton.x, flixelButton.y + 62, "CLICK HERE", onPlay);
+			_playButton = new FlxButton(flixelButton.x, flixelButton.y + 62, "CLICK HERE", function()
+			{
+				onFade();
+				FlxG.sound.play("MenuHit2");
+			});
 			_playButton.color = flixelButton.color;
 			_playButton.label.color = flixelButton.label.color;
 			add(_playButton);
@@ -172,6 +182,7 @@ class MenuState extends FlxState
 			_attractMode = true;
 		}
 		
+		#if !FLX_NO_KEYBOARD
 		if (!_fading)
 		{
 			if  ((FlxG.keys.pressed.X && FlxG.keys.pressed.C) || _attractMode)
@@ -188,6 +199,7 @@ class MenuState extends FlxState
 				_attractMode = true;
 			}
 		}
+		#end
 		
 		#if (!FLX_NO_GAMEPAD && (cpp || neko || js))
 		if (FlxG.gamepads.anyButton())
@@ -202,26 +214,6 @@ class MenuState extends FlxState
 		#end
 	}
 	
-	// These are all "event handlers", or "callbacks".
-	// These first three are just called when the
-	// corresponding buttons are pressed with the mouse.
-	
-	private function onFlixel():Void
-	{
-		FlxG.openURL("http://haxeflixel.com");
-	}
-	
-	private function onDanny():Void
-	{
-		FlxG.openURL("http://dbsoundworks.com");
-	}
-	
-	private function onPlay():Void
-	{
-		onFade();
-		FlxG.sound.play("MenuHit2");
-	}
-	
 	/**
 	 * This function is passed to FlxG.fade() when we are ready to go to the next game state.
 	 * When FlxG.fade() finishes, it will call this, which in turn will either load
@@ -231,7 +223,9 @@ class MenuState extends FlxState
 	{
 		if (_attractMode)
 		{
-			FlxG.vcr.loadReplay(FlxG.random.bool() ? (Assets.getText("data/attract1.fgr")) : (Assets.getText("data/attract2.fgr")), new PlayState(), ["ANY"], 22, onDemoComplete);
+			FlxG.vcr.loadReplay(
+				Assets.getText('data/attract${FlxG.random.int(1, 2)}.fgr'),
+				new PlayState(), ["ANY"], 22, onDemoComplete);
 		}
 		else
 		{

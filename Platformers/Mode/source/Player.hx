@@ -102,6 +102,7 @@ class Player extends FlxSprite
 	
 	private function updateKeyboardInput():Void
 	{
+		#if !FLX_NO_KEYBOARD
 		if (FlxG.keys.anyPressed([A, LEFT]))
 		{
 			moveLeft();
@@ -128,6 +129,7 @@ class Player extends FlxSprite
 		{
 			shoot();
 		}
+		#end
 	}
 	
 	private function updateVirtualPadInput():Void
