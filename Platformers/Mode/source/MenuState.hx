@@ -163,11 +163,7 @@ class MenuState extends FlxState
 			dannyButton.label.color = flixelButton.label.color;
 			add(dannyButton);
 			
-			_playButton = new FlxButton(flixelButton.x, flixelButton.y + 62, "CLICK HERE", function()
-			{
-				onFade();
-				FlxG.sound.play("MenuHit2");
-			});
+			_playButton = new FlxButton(flixelButton.x, flixelButton.y + 62, "CLICK HERE", onPlay);
 			_playButton.color = flixelButton.color;
 			_playButton.label.color = flixelButton.label.color;
 			add(_playButton);
@@ -212,6 +208,12 @@ class MenuState extends FlxState
 				onPlay();
 		}
 		#end
+	}
+	
+	function onPlay()
+	{
+		onFade();
+		FlxG.sound.play("MenuHit2");
 	}
 	
 	/**
