@@ -244,7 +244,7 @@ class MenuState extends FlxUIState
 		{
 			case FlxUITypedButton.CLICK_EVENT:
 				var butt:FlxUIButton = cast sender;
-				if (butt.id == "transition")
+				if (butt.name == "transition")
 				{
 					matchUI();
 					transition();
