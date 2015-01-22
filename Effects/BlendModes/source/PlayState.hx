@@ -4,7 +4,7 @@ import flixel.addons.ui.FlxUIDropDownMenu;
 import flixel.addons.ui.FlxUINumericStepper;
 import flixel.addons.ui.FlxUIState;
 import flixel.addons.ui.interfaces.IFlxUIWidget;
-import flixel.addons.ui.StrIdLabel;
+import flixel.addons.ui.StrNameLabel;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
