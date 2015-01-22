@@ -29,13 +29,13 @@ class State_CodeTest extends FlxUIState
 		makeStuffByHand();
 	}
 	
-	public override function getRequest(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Dynamic {
+	public override function getRequest(event:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Dynamic {
 		return null;
 	}	
 	
-	public override function getEvent(id:String, target:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void {
+	public override function getEvent(event:String, target:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void {
 		if (params != null) {
-			switch(id) {
+			switch(event) {
 				case "click_button":
 					switch(cast(params[0], String)) {
 						case "back": FlxG.switchState(new State_Title());
@@ -106,10 +106,10 @@ class State_CodeTest extends FlxUIState
 		//This one is particularly unwieldy to create by hand
 				
 		//Define the tabs:
-		var tabs = [{ id:"tab_1", label:_tongue.get("$MENU_TAB_1", "ui") },
-					 { id:"tab_2", label:_tongue.get("$MENU_TAB_2", "ui") },
-					 { id:"tab_3", label:_tongue.get("$MENU_TAB_3", "ui") },
-					 { id:"tab_4", label:_tongue.get("$MENU_TAB_4", "ui") }];
+		var tabs = [{ name:"tab_1", label:_tongue.get("$MENU_TAB_1", "ui") },
+					 { name:"tab_2", label:_tongue.get("$MENU_TAB_2", "ui") },
+					 { name:"tab_3", label:_tongue.get("$MENU_TAB_3", "ui") },
+					 { name:"tab_4", label:_tongue.get("$MENU_TAB_4", "ui") }];
 		
 		//Make the tab menu itself:
 		var tab_menu = new FlxUITabMenu(null, tabs, true);
@@ -129,7 +129,7 @@ class State_CodeTest extends FlxUIState
 				_tongue.get("$MENU_BLUE_FISH", "ui")]);
 			
 			var tab_group_1:FlxUI = new FlxUI(null, tab_menu, null, _tongue);
-			tab_group_1.id = "tab_1";
+			tab_group_1.name = "tab_1";
 			tab_group_1.add(tabs_radio_1);
 		
 			/***TAB GROUP 2***/
@@ -137,7 +137,7 @@ class State_CodeTest extends FlxUIState
 			var tabs_check_2 = new FlxUICheckBox(10, 40, null, null, _tongue.get("$MENU_THING_2", "ui"), 100, ["thing 2"]);
 			
 			var tab_group_2:FlxUI = new FlxUI(null, tab_menu, null, _tongue);
-			tab_group_2.id = "tab_2";
+			tab_group_2.name = "tab_2";
 			tab_group_2.add(tabs_check_1);
 			tab_group_2.add(tabs_check_2);
 		
@@ -160,7 +160,7 @@ class State_CodeTest extends FlxUIState
 			W = 96;
 		}		
 		back_btn.loadGraphicSlice9(null, W, 0, null);
-		back_btn.id = "start";
+		back_btn.name = "start";
 		back_btn.x = (FlxG.width - back_btn.width) / 2;
 		
 		add(back_btn);

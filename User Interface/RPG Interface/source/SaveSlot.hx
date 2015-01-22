@@ -25,22 +25,22 @@ class SaveSlot extends FlxUI
 		}
 		loadStuff(data, _ptr);
 		valid = true;
-		FlxG.log.add("SaveSlot(" + id + "" + _ptr + ")");
+		FlxG.log.add("SaveSlot(" + name + "" + _ptr + ")");
 
 		init();
 	}
 
 	public function loadStuff(data:Fast, _ptr:Dynamic):Void {
 		load(data);
-		id = U.xml_str(data.x,"id");
+		name = U.xml_name(data.x);
 	}
 	
 	public override function update(elapsed:Float):Void {
 		super.update(elapsed);
 	}
 	
-	public override function getEvent(id:String, sender:IFlxUIWidget, data:Dynamic, ?params:Array<Dynamic>):Void {
-		super.getEvent(id, sender, data);
+	public override function getEvent(event:String, sender:IFlxUIWidget, data:Dynamic, ?params:Array<Dynamic>):Void {
+		super.getEvent(event, sender, data);
 		if (Std.is(data, String)) {
 			var str:String = cast(data, String);
 			switch(str) {
@@ -58,11 +58,11 @@ class SaveSlot extends FlxUI
 	}
 
 	function onPlus() : Void {
-		FlxG.log.add("press plus " + id);
+		FlxG.log.add("press plus " + name);
 	}
 
 	function onPress() : Void {
-		FlxG.log.add("press " + id);
+		FlxG.log.add("press " + name);
 	}
 
 	function cleanSlot() : Void {

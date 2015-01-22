@@ -9,6 +9,7 @@ import flixel.FlxG;
 import flixel.addons.ui.FlxUIState;
 import flixel.addons.ui.FlxUIRadioGroup;
 import flixel.addons.ui.FlxUIInputText;
+import flixel.addons.ui.FlxInputText;
 import flixel.text.FlxText;
 import firetongue.FireTongue;
 import openfl.Assets;
