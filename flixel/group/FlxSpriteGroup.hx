@@ -282,9 +282,14 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 * @param	Splice	Whether the object should be cut from the array entirely or not.
 	 * @return	The removed object.
 	 */
-	public function remove(Object:T, Splice:Bool = false):T
+	public function remove(Sprite:T, Splice:Bool = false):T
 	{
-		return group.remove(Object, Splice);
+		var sprite:FlxSprite = cast Sprite;
+		sprite.x -= x;
+		sprite.y -= y;
+		// alpha
+		sprite.cameras = null;
+		return group.remove(Sprite, Splice);
 	}
 	
 	/**
