@@ -868,10 +868,7 @@ class FlxObject extends FlxBasic
 		
 		for (camera in cameras)
 		{
-			if (camera.visible && camera.exists && isOnScreen(camera))
-			{
-				drawDebugOnCamera(camera);
-			}
+			drawDebugOnCamera(camera);
 		}
 	}
 	
@@ -883,6 +880,11 @@ class FlxObject extends FlxBasic
 	 */
 	public function drawDebugOnCamera(camera:FlxCamera):Void
 	{
+		if (!camera.visible || !camera.exists || !isOnScreen(camera))
+		{
+			return;
+		}
+		
 		var rect = getBoundingBox(camera);
 		
 		// Find the color to use

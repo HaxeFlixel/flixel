@@ -150,7 +150,7 @@ class FlxSave implements IFlxDestroyable
 			return false;
 		}
 		_sharedObject.clear();
-		data = _sharedObject.data;
+		data = {};
 		return true;
 	}
 	

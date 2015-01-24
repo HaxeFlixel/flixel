@@ -46,7 +46,7 @@ class FlxSaveTest extends FlxTest
 		save.erase();
 		
 		Assert.isNotNull(save.data);
-		Assert.isNull(save.data.value);
+		Assert.isNull(save.data.int);
 	}
 	
 	@Test
