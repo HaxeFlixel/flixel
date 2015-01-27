@@ -208,12 +208,7 @@ class FlxBitmapText extends FlxSprite
 		fieldWidth = width = 2;
 		alpha = 1;
 		
-		if (font == null)
-		{
-			font = FlxBitmapFont.getDefaultFont();
-		}
-		
-		this.font = font;
+		this.font = (font == null) ? FlxBitmapFont.getDefaultFont() : font;
 		
 		shadowOffset = FlxPoint.get(1, 1);
 		
@@ -545,6 +540,10 @@ class FlxBitmapText extends FlxSprite
 		if (autoSize)
 		{
 			txtWidth += 2 * padding;
+		}
+		else
+		{
+			txtWidth = Math.ceil(fieldWidth);
 		}
 		
 		frameWidth = txtWidth;
@@ -1291,7 +1290,7 @@ class FlxBitmapText extends FlxSprite
 	
 	private function get_fieldWidth():Float
 	{
-		return _fieldWidth;
+		return (autoSize) ? textWidth : _fieldWidth;
 	}
 	
 	/**
