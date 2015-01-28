@@ -813,8 +813,6 @@ class FlxBitmapText extends FlxSprite
 	 */
 	private function wrapLineByWord(words:Array<String>, newLines:Array<String>):Void
 	{
-		// TODO: continue from here...
-		
 		var numWords:Int = words.length;	// number of words in the current line
 		var w:Int;							// word index in the current line
 		var word:String;					// current word to process
@@ -823,7 +821,6 @@ class FlxBitmapText extends FlxSprite
 		
 		var isSpaceWord:Bool = false; 		// whether current word consists of spaces or not
 		
-		var char:String; 					// current character in word
 		var charCode:Int;
 		var charWidth:Float = 0;			// the width of current character
 		
@@ -847,20 +844,20 @@ class FlxBitmapText extends FlxSprite
 			{
 				wordWidth = 0;
 				word = words[w];
-				wordLength = word.length;
+				wordLength = Utf8.length(word);
 				
-				isSpaceWord = (word.charAt(0) == ' ' || word.charAt(0) == '\t');
+				charCode = Utf8.charCodeAt(word, 0);
+				isSpaceWord = (charCode == FlxBitmapFont.spaceCode || charCode == FlxBitmapFont.tabCode);
 				
 				for (c in 0...wordLength)
 				{
-					char = word.charAt(c);
-					charCode = char.charCodeAt(0);
+					charCode = Utf8.charCodeAt(word, c);
 					
-					if (char == ' ')
+					if (charCode == FlxBitmapFont.spaceCode)
 					{
 						charWidth = spaceWidth;
 					}
-					else if (char == '\t')
+					else if (charCode == FlxBitmapFont.tabCode)
 					{
 						charWidth = tabWidth;
 					}
@@ -923,6 +920,8 @@ class FlxBitmapText extends FlxSprite
 	 */
 	private function wrapLineByCharacter(words:Array<String>, newLines:Array<String>):Void
 	{
+		// TODO: continue from here...
+		
 		var numWords:Int = words.length;	// number of words in the current line
 		var w:Int;							// word index in the current line
 		var word:String;					// current word to process
