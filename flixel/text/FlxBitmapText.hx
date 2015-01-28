@@ -579,6 +579,8 @@ class FlxBitmapText extends FlxSprite
 		var spaceWidth:Float = Math.ceil(font.spaceWidth * size);
 		var tabWidth:Float = Math.ceil(spaceWidth * numSpacesInTab);
 		
+		// TODO: continue from here...
+		
 		var lineLength:Int = str.length;	// lenght of the current line
 		var lineWidth:Float = Math.ceil(Math.abs(font.minOffsetX) * size);
 		
