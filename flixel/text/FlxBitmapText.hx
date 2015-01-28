@@ -1215,8 +1215,6 @@ class FlxBitmapText extends FlxSprite
 	private function blitLine(line:String, glyphs:Bool, startX:Int, startY:Int):Void
 	#end
 	{
-		// TODO: continue from here...
-		
 		#if FLX_RENDER_BLIT
 		var glyph:BitmapGlyph;
 		#else
@@ -1226,7 +1224,6 @@ class FlxBitmapText extends FlxSprite
 		var drawData:Array<Float> = (isFrontText) ? _textDrawData : _borderDrawData;
 		var pos:Int = drawData.length;
 		#end
-		var char:String;
 		var charCode:Int;
 		var curX:Int = startX;
 		var curY:Int = startY;
@@ -1234,18 +1231,17 @@ class FlxBitmapText extends FlxSprite
 		var spaceWidth:Int = Std.int(font.spaceWidth * size);
 		var tabWidth:Int = Std.int(spaceWidth * numSpacesInTab);
 		
-		var lineLength:Int = line.length;
+		var lineLength:Int = Utf8.length(line);
 		
 		for (i in 0...lineLength)
 		{
-			char = line.charAt(i);
-			charCode = char.charCodeAt(0);
+			charCode = Utf8.charCodeAt(line, i);
 			
-			if (char == ' ')
+			if (charCode == FlxBitmapFont.spaceCode)
 			{
 				curX += spaceWidth;
 			}
-			else if (char == '\t')
+			else if (charCode == FlxBitmapFont.tabCode)
 			{
 				curX += tabWidth;
 			}
