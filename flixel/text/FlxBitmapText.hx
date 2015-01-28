@@ -15,6 +15,7 @@ import flixel.math.FlxAngle;
 import flixel.text.FlxText.FlxTextBorderStyle;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
+import haxe.Utf8;
 
 // TODO: make pixels accessible in tile render mode also...
 
@@ -579,28 +580,24 @@ class FlxBitmapText extends FlxSprite
 		var spaceWidth:Float = Math.ceil(font.spaceWidth * size);
 		var tabWidth:Float = Math.ceil(spaceWidth * numSpacesInTab);
 		
-		// TODO: continue from here...
-		
-		var lineLength:Int = str.length;	// lenght of the current line
+		var lineLength:Int = Utf8.length(str);	// lenght of the current line
 		var lineWidth:Float = Math.ceil(Math.abs(font.minOffsetX) * size);
 		
-		var char:String; 					// current character in word
-		var charCode:Int;
-		var charWidth:Float = 0;			// the width of current character
+		var charCode:Int;						// current character in word
+		var charWidth:Float = 0;				// the width of current character
 		
 		var widthPlusOffset:Int = 0;
 		var glyphFrame:FlxGlyphFrame;
 		
 		for (c in 0...lineLength)
 		{
-			char = str.charAt(c);
-			charCode = char.charCodeAt(0);
+			charCode = Utf8.charCodeAt(str, c);
 			
-			if (char == ' ')
+			if (charCode == FlxBitmapFont.spaceCode)
 			{
 				charWidth = spaceWidth;
 			}
-			else if (char == '\t')
+			else if (charCode == FlxBitmapFont.tabCode)
 			{
 				charWidth = tabWidth;
 			}
@@ -642,6 +639,8 @@ class FlxBitmapText extends FlxSprite
 	 */
 	private function cutLines():Void 
 	{
+		// TODO: continue from here...
+		
 		var newLines:Array<String> = [];
 		
 		var lineLength:Int;			// lenght of the current line
