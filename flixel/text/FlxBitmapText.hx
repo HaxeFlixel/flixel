@@ -639,18 +639,15 @@ class FlxBitmapText extends FlxSprite
 	 */
 	private function cutLines():Void 
 	{
-		// TODO: continue from here...
-		
 		var newLines:Array<String> = [];
 		
 		var lineLength:Int;			// lenght of the current line
 		
 		var c:Int;					// char index
-		var char:String; 			// current character in word
-		var charCode:Int;
+		var charCode:Int;			// code for the current character in word
 		var charWidth:Float = 0;	// the width of current character
 		
-		var subLine:String;			// current subline to assemble
+		var subLine:Utf8;			// current subline to assemble
 		var subLineWidth:Float;		// the width of current subline
 		
 		var spaceWidth:Float = font.spaceWidth * size;
@@ -660,21 +657,20 @@ class FlxBitmapText extends FlxSprite
 		
 		for (line in _lines)
 		{
-			lineLength = line.length;
-			subLine = "";
+			lineLength = Utf8.length(line);
+			subLine = new Utf8();
 			subLineWidth = startX;
 			
 			c = 0;
 			while (c < lineLength)
 			{
-				char = line.charAt(c);
-				charCode = char.charCodeAt(0);
+				charCode = Utf8.charCodeAt(line, c);
 				
-				if (char == ' ')
+				if (charCode == FlxBitmapFont.spaceCode)
 				{
 					charWidth = spaceWidth;
 				}
-				else if (char == '\t')
+				else if (charCode == FlxBitmapFont.tabCode)
 				{
 					charWidth = tabWidth;
 				}
@@ -686,15 +682,15 @@ class FlxBitmapText extends FlxSprite
 				
 				if (subLineWidth + charWidth > _fieldWidth - 2 * padding)
 				{
-					subLine += char;
-					newLines.push(subLine);
-					subLine = "";
+					subLine.addChar(charCode);
+					newLines.push(subLine.toString());
+					subLine = new Utf8();
 					subLineWidth = startX;
 					c = lineLength;
 				}
 				else
 				{
-					subLine += char;
+					subLine.addChar(charCode);
 					subLineWidth += charWidth;
 				}
 				
@@ -742,6 +738,8 @@ class FlxBitmapText extends FlxSprite
 	 */
 	private function splitLineIntoWords(line:String, words:Array<String>):Void
 	{
+		// TODO: continue from here...
+		
 		var word:String = "";				// current word to process
 		var isSpaceWord:Bool = false; 		// whether current word consists of spaces or not
 		var lineLength:Int = line.length;	// lenght of the current line
