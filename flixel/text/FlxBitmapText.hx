@@ -920,8 +920,6 @@ class FlxBitmapText extends FlxSprite
 	 */
 	private function wrapLineByCharacter(words:Array<String>, newLines:Array<String>):Void
 	{
-		// TODO: continue from here...
-		
 		var numWords:Int = words.length;	// number of words in the current line
 		var w:Int;							// word index in the current line
 		var word:String;					// current word to process
@@ -929,7 +927,6 @@ class FlxBitmapText extends FlxSprite
 		
 		var isSpaceWord:Bool = false; 		// whether current word consists of spaces or not
 		
-		var char:String; 					// current character in word
 		var charCode:Int;
 		var c:Int;							// char index
 		var charWidth:Float = 0;			// the width of current character
@@ -937,6 +934,7 @@ class FlxBitmapText extends FlxSprite
 		var subLines:Array<String> = [];	// helper array for subdividing lines
 		
 		var subLine:String;					// current subline to assemble
+		var subLineUtf8:Utf8;
 		var subLineWidth:Float;				// the width of current subline
 		
 		var spaceWidth:Float = font.spaceWidth * size;
@@ -948,27 +946,27 @@ class FlxBitmapText extends FlxSprite
 		{
 			w = 0;
 			subLineWidth = startX;
-			subLine = "";
+			subLineUtf8 = new Utf8();
 			
 			while (w < numWords)
 			{
 				word = words[w];
-				wordLength = word.length;
+				wordLength = Utf8.length(word);
 				
-				isSpaceWord = (word.charAt(0) == ' ' || word.charAt(0) == '\t');
+				charCode = Utf8.charCodeAt(word, 0);
+				isSpaceWord = (charCode == FlxBitmapFont.spaceCode || charCode == FlxBitmapFont.tabCode);
 				
 				c = 0;
 				
 				while (c < wordLength)
 				{
-					char = word.charAt(c);
-					charCode = char.charCodeAt(0);
+					charCode = Utf8.charCodeAt(word, c);
 					
-					if (char == ' ')
+					if (charCode == FlxBitmapFont.spaceCode)
 					{
 						charWidth = spaceWidth;
 					}
-					else if (char == '\t')
+					else if (charCode == FlxBitmapFont.tabCode)
 					{
 						charWidth = tabWidth;
 					}
@@ -979,28 +977,32 @@ class FlxBitmapText extends FlxSprite
 					
 					if (subLineWidth + charWidth > _fieldWidth - 2 * padding)
 					{
+						subLine = subLineUtf8.toString();
+						
 						if (isSpaceWord) // new line ends with space / tab char, so we push it to sublines array, skip all the rest spaces and start another line
 						{
 							subLines.push(subLine);
 							c = wordLength;
-							subLine = "";
+							subLineUtf8 = new Utf8();
 							subLineWidth = startX;
 						}
 						else if (subLine != "") // new line isn't empty so we should add it to sublines array and start another one
 						{
 							subLines.push(subLine);
-							subLine = char;
+							subLineUtf8 = new Utf8();
+							subLineUtf8.addChar(charCode);
 							subLineWidth = startX + charWidth + letterSpacing;
 						}
 						else	// the line is too tight to hold even one glyph
 						{
-							subLine = char;
+							subLineUtf8 = new Utf8();
+							subLineUtf8.addChar(charCode);
 							subLineWidth = startX + charWidth + letterSpacing;
 						}
 					}
 					else
 					{
-						subLine += char;
+						subLineUtf8.addChar(charCode);
 						subLineWidth += (charWidth + letterSpacing);
 					}
 					
@@ -1009,6 +1011,8 @@ class FlxBitmapText extends FlxSprite
 				
 				w++;
 			}
+			
+			subLine = subLineUtf8.toString();
 			
 			if (subLine != "")
 			{
@@ -1211,6 +1215,8 @@ class FlxBitmapText extends FlxSprite
 	private function blitLine(line:String, glyphs:Bool, startX:Int, startY:Int):Void
 	#end
 	{
+		// TODO: continue from here...
+		
 		#if FLX_RENDER_BLIT
 		var glyph:BitmapGlyph;
 		#else
