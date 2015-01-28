@@ -738,21 +738,25 @@ class FlxBitmapText extends FlxSprite
 	 */
 	private function splitLineIntoWords(line:String, words:Array<String>):Void
 	{
-		// TODO: continue from here...
-		
 		var word:String = "";				// current word to process
+		var wordUtf8:Utf8 = new Utf8();		
 		var isSpaceWord:Bool = false; 		// whether current word consists of spaces or not
-		var lineLength:Int = line.length;	// lenght of the current line
+		var lineLength:Int = Utf8.length(line);	// lenght of the current line
+		
+		var hyphenCode:Int = Utf8.charCodeAt('-', 0);
 		
 		var c:Int = 0;						// char index on the line
-		var char:String; 					// current character in word
+		var charCode:Int; 					// code for the current character in word
+		var charUtf8:Utf8;
 		
 		while (c < lineLength)
 		{
-			char = line.charAt(c);
-			switch(char)
+			charCode = Utf8.charCodeAt(line, c);
+			word = wordUtf8.toString();
+			
+			switch(charCode)
 			{
-				case ' ', '\t': {
+				case FlxBitmapFont.spaceCode, FlxBitmapFont.tabCode: {
 					if (!isSpaceWord)
 					{
 						isSpaceWord = true;
@@ -760,43 +764,45 @@ class FlxBitmapText extends FlxSprite
 						if (word != "")
 						{
 							words.push(word);
-							word = "";
+							wordUtf8 = new Utf8();
 						}
 					}
 					
-					word += char;
+					wordUtf8.addChar(charCode);
 				}
-				case '-': {
+				case hyphenCode: {
 					if (isSpaceWord && word != "")
 					{
 						isSpaceWord = false;
 						words.push(word);
-						words.push(char);
+						words.push('-');
 					}
 					else if (isSpaceWord == false)
 					{
-						words.push(word + char);
+						charUtf8 = new Utf8();
+						charUtf8.addChar(charCode);
+						words.push(word + charUtf8.toString());
 					}
 					
-					word = "";
+					wordUtf8 = new Utf8();
 				}
 				default: {
 					if (isSpaceWord && word != "")
 					{
 						isSpaceWord = false;
 						words.push(word);
-						word = "";
+						wordUtf8 = new Utf8();
 					}
 					
-					word += char;
+					wordUtf8.addChar(charCode);
 				}
 			}
 			
 			c++;
 		}
 		
+		word = wordUtf8.toString();
 		if (word != "") words.push(word);
-		
 	}
 	
 	/**
@@ -807,6 +813,8 @@ class FlxBitmapText extends FlxSprite
 	 */
 	private function wrapLineByWord(words:Array<String>, newLines:Array<String>):Void
 	{
+		// TODO: continue from here...
+		
 		var numWords:Int = words.length;	// number of words in the current line
 		var w:Int;							// word index in the current line
 		var word:String;					// current word to process
