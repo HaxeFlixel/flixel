@@ -754,48 +754,48 @@ class FlxBitmapText extends FlxSprite
 			charCode = Utf8.charCodeAt(line, c);
 			word = wordUtf8.toString();
 			
-			switch(charCode)
+			if (charCode == FlxBitmapFont.spaceCode || charCode == FlxBitmapFont.tabCode)
 			{
-				case FlxBitmapFont.spaceCode, FlxBitmapFont.tabCode: {
-					if (!isSpaceWord)
-					{
-						isSpaceWord = true;
-						
-						if (word != "")
-						{
-							words.push(word);
-							wordUtf8 = new Utf8();
-						}
-					}
+				if (!isSpaceWord)
+				{
+					isSpaceWord = true;
 					
-					wordUtf8.addChar(charCode);
-				}
-				case hyphenCode: {
-					if (isSpaceWord && word != "")
+					if (word != "")
 					{
-						isSpaceWord = false;
-						words.push(word);
-						words.push('-');
-					}
-					else if (isSpaceWord == false)
-					{
-						charUtf8 = new Utf8();
-						charUtf8.addChar(charCode);
-						words.push(word + charUtf8.toString());
-					}
-					
-					wordUtf8 = new Utf8();
-				}
-				default: {
-					if (isSpaceWord && word != "")
-					{
-						isSpaceWord = false;
 						words.push(word);
 						wordUtf8 = new Utf8();
 					}
-					
-					wordUtf8.addChar(charCode);
 				}
+				
+				wordUtf8.addChar(charCode);
+			}
+			else if (charCode == hyphenCode)
+			{
+				if (isSpaceWord && word != "")
+				{
+					isSpaceWord = false;
+					words.push(word);
+					words.push('-');
+				}
+				else if (isSpaceWord == false)
+				{
+					charUtf8 = new Utf8();
+					charUtf8.addChar(charCode);
+					words.push(word + charUtf8.toString());
+				}
+				
+				wordUtf8 = new Utf8();
+			}
+			else
+			{
+				if (isSpaceWord && word != "")
+				{
+					isSpaceWord = false;
+					words.push(word);
+					wordUtf8 = new Utf8();
+				}
+				
+				wordUtf8.addChar(charCode);
 			}
 			
 			c++;
