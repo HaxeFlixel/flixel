@@ -39,6 +39,7 @@ class FlxBitmapText extends FlxSprite
 	/**
 	 * Helper array which contains actual strings for rendering.
 	 */
+	// TODO: switch it to Array<Array<Int>> (for optimizations - i.e. less Utf8 usage)
 	private var _lines:Array<String> = [];
 	/**
 	 * Helper array which contains width of each displayed lines.
