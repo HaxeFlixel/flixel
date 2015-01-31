@@ -28,7 +28,7 @@ import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import openfl.display.Tilesheet;
 
-@:bitmap("assets/images/logo/default.png")
+@:keep @:bitmap("assets/images/logo/default.png")
 private class GraphicDefault extends BitmapData {}
 
 // TODO: add updateSizeFromFrame bool which will tell sprite whether to update it's size to frame's size (when frame setter is called) or not (useful for sprites with adjusted hitbox)
@@ -1229,17 +1229,17 @@ class FlxSprite extends FlxObject
 		return color;
 	}
 	
-        override private function set_angle(Value:Float):Float
-        {
-                var newAngle = (angle != Value);
-                var ret = super.set_angle(Value);
-                if (newAngle)
-                {
-                        _angleChanged = true;
-                        animation.update(0);
-                }
-                return ret;
-        }
+	override private function set_angle(Value:Float):Float
+	{
+		var newAngle = (angle != Value);
+		var ret = super.set_angle(Value);
+		if (newAngle)
+		{
+			_angleChanged = true;
+			animation.update(0);
+		}
+		return ret;
+	}
 	
 	private function set_blend(Value:BlendMode):BlendMode 
 	{

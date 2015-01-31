@@ -20,7 +20,7 @@ import flixel.system.FlxSound;
 import flixel.text.FlxText;
 import flixel.util.FlxDestroyUtil;
 
-@:bitmap("assets/images/ui/button.png")
+@:keep @:bitmap("assets/images/ui/button.png")
 class GraphicButton extends BitmapData {}
 
 /**

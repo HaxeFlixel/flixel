@@ -30,11 +30,11 @@ import openfl.display.BlendMode;
 import openfl.display.Tilesheet;
 import openfl.geom.ColorTransform;
 
-@:bitmap("assets/images/tile/autotiles.png")
+@:keep @:bitmap("assets/images/tile/autotiles.png")
 class GraphicAuto extends BitmapData {}
 
-@:bitmap("assets/images/tile/autotiles_alt.png")
-class GraphicAutoAlt extends BitmapData { }
+@:keep @:bitmap("assets/images/tile/autotiles_alt.png")
+class GraphicAutoAlt extends BitmapData {}
 
 // TODO: try to solve "tile tearing problem" (1px gap between tile at certain conditions) on native targets
 

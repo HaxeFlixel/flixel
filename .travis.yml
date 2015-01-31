@@ -25,6 +25,7 @@ before_install:
   - haxelib -notimeout install nape
   - haxelib -notimeout install task
   - haxelib -notimeout install hscript
+  - haxelib -notimeout install poly2trihx
   - haxelib git openfl-bitfive https://github.com/YellowAfterlife/openfl-bitfive
   - haxelib git firetongue https://github.com/larsiusprime/firetongue
   - haxelib git flixel-tools https://github.com/HaxeFlixel/flixel-tools

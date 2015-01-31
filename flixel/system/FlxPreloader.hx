@@ -50,7 +50,6 @@ class FlxPreloader extends FlxBasePreloader
 		// super(0, ["test.com", FlxPreloaderBase.LOCAL]); // example of site-locking
 		
 		// super(10); // example of long delay (10 seconds)
-		
 	}
 	
 	/**

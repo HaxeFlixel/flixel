@@ -100,7 +100,6 @@ class FlxAnimation extends FlxBaseAnimation
 		{
 			paused = false;
 			finished = false;
-			set_curFrame(curFrame);
 			return;
 		}
 		

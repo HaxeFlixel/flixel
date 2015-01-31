@@ -83,7 +83,7 @@ class FlxAnalog extends FlxSpriteGroup
 	/**
 	 * The radius in which the stick can move.
 	 */ 
-	private var _radius:Float;
+	private var _radius:Float = 0;
 	private var _direction:Float = 0;
 	private var _amount:Float = 0;		
 	/**
@@ -96,7 +96,7 @@ class FlxAnalog extends FlxSpriteGroup
 	 *  
 	 * @param	X		The X-coordinate of the point in space.
  	 * @param	Y		The Y-coordinate of the point in space.
- 	 * @param	radius	The radius where the thumb can move. If 0, the background will be use as radius.
+ 	 * @param	radius	The radius where the thumb can move. If 0, half the background's width will be used as radius.
  	 * @param	ease	The duration of the easing. The value must be between 0 and 1.
 	 */
 	public function new(X:Float = 0, Y:Float = 0, Radius:Float = 0, Ease:Float = 0.25)

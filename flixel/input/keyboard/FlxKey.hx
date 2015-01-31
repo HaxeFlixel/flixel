@@ -8,8 +8,11 @@ import flixel.system.macros.FlxMacroUtil;
 @:enum
 abstract FlxKey(Int) from Int to Int
 {
-	public static var fromStringMap:Map<String, FlxKey> = FlxMacroUtil.buildMap("flixel.input.keyboard.FlxKey");
-	public static var toStringMap:Map<FlxKey, String> = FlxMacroUtil.buildMap("flixel.input.keyboard.FlxKey", true);
+	public static var fromStringMap(default, null):Map<String, FlxKey>
+		= FlxMacroUtil.buildMap("flixel.input.keyboard.FlxKey");
+		
+	public static var toStringMap(default, null):Map<FlxKey, String>
+		= FlxMacroUtil.buildMap("flixel.input.keyboard.FlxKey", true);
 	
 	// Key Indicies
 	var ANY            = -2;

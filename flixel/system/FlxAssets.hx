@@ -17,21 +17,21 @@ import flixel.graphics.frames.FlxTileFrames;
 import openfl.Assets;
 import openfl.utils.ByteArray;
 
-@:font("assets/fonts/nokiafc22.ttf")
+@:keep @:font("assets/fonts/nokiafc22.ttf")
 private class FontDefault extends Font {}
 #if !FLX_NO_DEBUG
-@:font("assets/fonts/arial.ttf")
+@:keep @:font("assets/fonts/arial.ttf")
 private class FontDebugger extends Font {}
 #end
 
-@:bitmap("assets/images/logo/logo.png")
-class GraphicLogo extends BitmapData { }
+@:keep @:bitmap("assets/images/logo/logo.png")
+class GraphicLogo extends BitmapData {}
 
-@:bitmap("assets/images/ui/virtual-input.png")
-class GraphicVirtualInput extends BitmapData { }
+@:keep @:bitmap("assets/images/ui/virtual-input.png")
+class GraphicVirtualInput extends BitmapData {}
 
 @:file("assets/images/ui/virtual-input.txt")
-class VirtualInputData extends ByteArray {  }
+class VirtualInputData extends ByteArray {}
 #end
 
 class FlxAssets
@@ -189,8 +189,7 @@ class FlxAssets
 	 */
 	public static inline function getBitmapFromClass(source:Class<Dynamic>):BitmapData
 	{
-		var bitmap:BitmapData = Type.createInstance(source, [0, 0]);
-		return bitmap;
+		return Type.createInstance(source, [0, 0]);
 	}
 	
 	/**

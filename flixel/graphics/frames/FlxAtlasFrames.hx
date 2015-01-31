@@ -53,36 +53,53 @@ class FlxAtlasFrames extends FlxFramesCollection
 		
 		var data:Dynamic = Json.parse(Description);
 		
-		var rotated:Bool;
-		var name:String;
-		var sourceSize:FlxPoint;
-		var offset:FlxPoint;
-		var angle:FlxFrameAngle;
-		var frameRect:FlxRect;
-		
-		for (frame in Lambda.array(data.frames))
+		// JSON-Array
+		if (Std.is(data.frames, Array))
 		{
-			rotated = frame.rotated;
-			name = frame.filename;
-			sourceSize = FlxPoint.get(frame.sourceSize.w, frame.sourceSize.h);
-			offset = FlxPoint.get(frame.spriteSourceSize.x, frame.spriteSourceSize.y);
-			angle = FlxFrameAngle.ANGLE_0;
-			frameRect = null;
-			
-			if (rotated)
+			for (frame in Lambda.array(data.frames))
 			{
-				frameRect = new FlxRect(frame.frame.x, frame.frame.y, frame.frame.h, frame.frame.w);
-				angle = FlxFrameAngle.ANGLE_NEG_90;
+				texturePackerHelper(frame.filename, frame, frames);
 			}
-			else
+		}
+		
+		// JSON-Hash
+		else
+		{
+			for (frameName in Reflect.fields(data.frames))
 			{
-				frameRect = new FlxRect(frame.frame.x, frame.frame.y, frame.frame.w, frame.frame.h);
+				texturePackerHelper(frameName, Reflect.field(data.frames, frameName), frames);
 			}
-			
-			frames.addAtlasFrame(frameRect, sourceSize, offset, name, angle);
 		}
 		
 		return frames;
+	}
+	
+	/**
+	 * Internal method for TexturePacker parsing. Parses the actual frame data.
+	 * @param	FrameName		Name of the frame (filename of the original source image).
+	 * @param	FrameData		The TexturePacker data excluding "filename".
+	 * @param	Frames			The FlxAtlasFrames to add this frame to.
+	 */
+	private static function texturePackerHelper(FrameName:String, FrameData:Dynamic, Frames:FlxAtlasFrames):Void
+	{
+		var rotated:Bool = FrameData.rotated;
+		var name:String = FrameName;
+		var sourceSize:FlxPoint = FlxPoint.get(FrameData.sourceSize.w, FrameData.sourceSize.h);
+		var offset:FlxPoint = FlxPoint.get(FrameData.spriteSourceSize.x, FrameData.spriteSourceSize.y);
+		var angle:FlxFrameAngle = FlxFrameAngle.ANGLE_0;
+		var frameRect:FlxRect = null;
+		
+		if (rotated)
+		{
+			frameRect = new FlxRect(FrameData.frame.x, FrameData.frame.y, FrameData.frame.h, FrameData.frame.w);
+			angle = FlxFrameAngle.ANGLE_NEG_90;
+		}
+		else
+		{
+			frameRect = new FlxRect(FrameData.frame.x, FrameData.frame.y, FrameData.frame.w, FrameData.frame.h);
+		}
+		
+		Frames.addAtlasFrame(frameRect, sourceSize, offset, name, angle);
 	}
 	
 	/**
