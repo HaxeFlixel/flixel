@@ -122,7 +122,6 @@ class FlxAnimation extends FlxBaseAnimation
 			|| (Frame < 0 && reversed))						// reversed animation
 		{
 			finished = true;
-			parent.fireFinishCallback(name);
 		}
 		else
 		{
@@ -137,6 +136,8 @@ class FlxAnimation extends FlxBaseAnimation
 		{
 			curFrame = Frame;
 		}
+		
+		if (finished)	parent.fireFinishCallback(name);
 	}
 	
 	public function restart():Void
@@ -209,7 +210,6 @@ class FlxAnimation extends FlxBaseAnimation
 			{
 				finished = true;
 				curFrame = (reversed) ? 0 : numFramesMinusOne;
-				parent.fireFinishCallback(name);
 			}
 			else
 			{
@@ -222,6 +222,9 @@ class FlxAnimation extends FlxBaseAnimation
 		}
 		
 		curIndex = _frames[curFrame];
+		
+		if (finished)	parent.fireFinishCallback(name);
+		
 		return Frame;
 	}
 	
