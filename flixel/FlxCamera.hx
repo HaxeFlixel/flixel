@@ -17,6 +17,7 @@ import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
+import openfl.geom.Matrix;
 import openfl.display.BlendMode;
 import openfl.display.Tilesheet;
 
@@ -312,6 +313,9 @@ class FlxCamera extends FlxBasic
 	 */
 	public var debugLayer:Sprite;
 	#end
+	
+	// TODO: use this transform matrix later...
+	private var transform:Matrix;
 	
 	/**
 	 * Currently used draw stack item
