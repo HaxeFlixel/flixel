@@ -401,7 +401,10 @@ class FlxBitmapText extends FlxSprite
 			{
 				drawItem = camera.getDrawTilesItem(FlxG.bitmap.whitePixel.parent, true, _blendInt, antialiasing);
 				currFrame = FlxG.bitmap.whitePixel;
-				drawItem.setDrawData(_point, currFrame.frame, currFrame.origin, _bgMatrix, true, backgroundColor.to24Bit(), bgAlpha * camera.alpha);
+				
+				_bgMatrix.translate(_point.x, _point.y);
+				
+				drawItem.setDrawData(currFrame.frame, currFrame.origin, _bgMatrix, true, backgroundColor.to24Bit(), bgAlpha * camera.alpha);
 			}
 			
 			drawItem = camera.getDrawTilesItem(font.parent, true, _blendInt, antialiasing);
@@ -421,7 +424,10 @@ class FlxBitmapText extends FlxSprite
 				_tilePoint.transform(_matrix);
 				_tilePoint.addPoint(_point);
 				
-				drawItem.setDrawData(_tilePoint, currFrame.frame, currFrame.origin, _tileMatrix, true, bColor, alphaToUse);
+				_tileMatrix.tx = _tilePoint.x;
+				_tileMatrix.ty = _tilePoint.y;
+				
+				drawItem.setDrawData(currFrame.frame, currFrame.origin, _tileMatrix, true, bColor, alphaToUse);
 			}
 			
 			alphaToUse = tAlpha * camera.alpha;
@@ -439,7 +445,10 @@ class FlxBitmapText extends FlxSprite
 				_tilePoint.transform(_matrix);
 				_tilePoint.addPoint(_point);
 				
-				drawItem.setDrawData(_tilePoint, currFrame.frame, currFrame.origin, _tileMatrix, true, tColor, alphaToUse);
+				_tileMatrix.tx = _tilePoint.x;
+				_tileMatrix.ty = _tilePoint.y;
+				
+				drawItem.setDrawData(currFrame.frame, currFrame.origin, _tileMatrix, true, tColor, alphaToUse);
 			}
 			
 			#if !FLX_NO_DEBUG

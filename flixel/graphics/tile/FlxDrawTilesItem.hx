@@ -34,11 +34,11 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 		drawData = null;
 	}
 	
-	public inline function setDrawData(coordinate:FlxPoint, rect:FlxRect, origin:FlxPoint, matrix:Matrix,
+	public inline function setDrawData(rect:FlxRect, origin:FlxPoint, matrix:Matrix,
 		isColored:Bool = false, color:FlxColor = FlxColor.WHITE, alpha:Float = 1):Void
 	{
-		drawData[position++] = coordinate.x;
-		drawData[position++] = coordinate.y;
+		drawData[position++] = matrix.tx;
+		drawData[position++] = matrix.ty;
 		
 		drawData[position++] = rect.x;
 		drawData[position++] = rect.y;
@@ -60,8 +60,6 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 		}
 		
 		drawData[position++] = alpha;
-		
-		coordinate.putWeak();
 	}
 	
 	override public function render(camera:FlxCamera):Void

@@ -917,8 +917,6 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 					drawX = _helperPoint.x + (columnIndex % widthInTiles) * scaledWidth + frame.center.x * scaleX;
 					drawY = _helperPoint.y + Math.floor(columnIndex / widthInTiles) * scaledHeight + frame.center.y * scaleY;
 					
-					_point.set(drawX, drawY);
-					
 					_matrix.identity();
 					
 					if (frame.angle != FlxFrameAngle.ANGLE_0)
@@ -927,9 +925,10 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 					}
 					
 					_matrix.scale(hackScaleX, hackScaleY);
+					_matrix.translate(drawX, drawY);
 					
 					drawItem = Camera.getDrawTilesItem(graphic, isColored, _blendInt);
-					drawItem.setDrawData(_point, frame.frame, frame.origin, _matrix, isColored, color, alpha);
+					drawItem.setDrawData(frame.frame, frame.origin, _matrix, isColored, color, alpha);
 				#end
 				}
 				
