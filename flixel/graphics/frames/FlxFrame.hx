@@ -40,8 +40,6 @@ class FlxFrame implements IFlxDestroyable
 	 */
 	public var frame:FlxRect;
 	
-	public var origin(default, null):FlxPoint;
-	
 	public var parent:FlxGraphic;
 	public var tileID:Int = -1;
 	/**
@@ -58,11 +56,6 @@ class FlxFrame implements IFlxDestroyable
 	 * Frame offset from top left corner of original image.
 	 */
 	public var offset(default, null):FlxPoint;
-	/**
-	 * Helper point object for less calculations (use in tile render mode).
-	 * It holds position of tile's center of this frame (offset + half tile size).
-	 */
-	public var center(default, null):FlxPoint;
 	
 	/**
 	 * The type of this frame.
@@ -83,11 +76,8 @@ class FlxFrame implements IFlxDestroyable
 	{
 		this.parent = parent;
 		
-		origin = FlxPoint.get();
-		
 		sourceSize = FlxPoint.get();
 		offset = FlxPoint.get();
-		center = FlxPoint.get();
 		
 		type = FlxFrameType.REGULAR;
 		angle = FlxFrameAngle.ANGLE_0;
@@ -233,10 +223,8 @@ class FlxFrame implements IFlxDestroyable
 		name = null;
 		frame = null;
 		parent = null;
-		origin = FlxDestroyUtil.put(origin);
 		sourceSize = FlxDestroyUtil.put(sourceSize);
 		offset = FlxDestroyUtil.put(offset);
-		center = FlxDestroyUtil.put(center);
 		destroyBitmaps();
 	}
 	

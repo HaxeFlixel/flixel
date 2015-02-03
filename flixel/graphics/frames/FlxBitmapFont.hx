@@ -478,8 +478,6 @@ class FlxBitmapFont extends FlxFramesCollection
 		glyphFrame.offset.copyFrom(offset);
 		glyphFrame.xAdvance = xAdvance;
 		glyphFrame.frame = frame;
-		glyphFrame.origin.set(0.5 * frame.width, 0.5 * frame.height);
-		glyphFrame.center.copyFrom(glyphFrame.origin);
 		
 		offset.put();
 		

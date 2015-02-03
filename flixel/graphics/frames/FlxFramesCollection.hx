@@ -131,7 +131,6 @@ class FlxFramesCollection implements IFlxDestroyable
 	{
 		var frame:FlxEmptyFrame = new FlxEmptyFrame(parent);	
 		frame.frame = new FlxRect();
-		frame.origin.set();
 		frame.sourceSize.set(size.width, size.height);
 		frames.push(frame);
 		return frame;
@@ -147,10 +146,8 @@ class FlxFramesCollection implements IFlxDestroyable
 	{
 		var frame:FlxFrame = new FlxFrame(parent);
 		frame.frame = region;
-		frame.origin.set(0.5 * region.width, 0.5 * region.height);
 		frame.sourceSize.set(region.width, region.height);
 		frame.offset.set(0, 0);
-		frame.center.set(0.5 * region.width, 0.5 * region.height);
 		frames.push(frame);
 		return frame;
 	}
@@ -185,19 +182,9 @@ class FlxFramesCollection implements IFlxDestroyable
 		texFrame.sourceSize.set(sourceSize.x, sourceSize.y);
 		texFrame.offset.set(offset.x, offset.y);
 		texFrame.frame = frame;
-		texFrame.origin.set(0.5 * frame.width, 0.5 * frame.height);
 		
 		sourceSize.put();
 		offset.put();
-		
-		if (angle != FlxFrameAngle.ANGLE_0)
-		{
-			texFrame.center.set(frame.height * 0.5 + texFrame.offset.x, frame.width * 0.5 + texFrame.offset.y);
-		}
-		else
-		{
-			texFrame.center.set(frame.width * 0.5 + texFrame.offset.x, frame.height * 0.5 + texFrame.offset.y);
-		}
 		
 		frames.push(texFrame);
 		

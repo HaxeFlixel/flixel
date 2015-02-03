@@ -44,8 +44,6 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 		drawData[position++] = rect.y;
 		drawData[position++] = rect.width;
 		drawData[position++] = rect.height;
-		drawData[position++] = origin.x;
-		drawData[position++] = origin.y;
 		
 		drawData[position++] = matrix.a;
 		drawData[position++] = matrix.b;
@@ -69,7 +67,7 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 		
 		if (position > 0)
 		{
-			var tempFlags:Int = Tilesheet.TILE_TRANS_2x2 | Tilesheet.TILE_RECT | Tilesheet.TILE_ORIGIN | Tilesheet.TILE_ALPHA;
+			var tempFlags:Int = Tilesheet.TILE_TRANS_2x2 | Tilesheet.TILE_RECT | Tilesheet.TILE_ALPHA;
 			
 			if (colored)
 			{

@@ -634,9 +634,8 @@ class FlxSprite extends FlxObject
 				frame.prepareFrameMatrix(_matrix);
 			}
 			
-			var x1:Float = (ox - frame.center.x);
-			var y1:Float = (oy - frame.center.y);
-			_matrix.translate(x1, y1);
+			_matrix.translate(frame.offset.x, frame.offset.y);
+			_matrix.translate( -origin.x, -origin.y);
 			
 			var sx:Float = scale.x * _facingHorizontalMult;
 			var sy:Float = scale.y * _facingVerticalMult;
@@ -666,8 +665,7 @@ class FlxSprite extends FlxObject
 				_point.floor();
 			}
 			
-			_matrix.tx = _point.x - _matrix.tx;
-			_matrix.ty = _point.y - _matrix.ty;
+			_matrix.translate(_point.x, _point.y);
 			
 			setDrawData(drawItem, frame.frame, frame.origin, camera, _matrix);
 #end

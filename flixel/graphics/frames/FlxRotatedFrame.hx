@@ -34,10 +34,12 @@ class FlxRotatedFrame extends FlxFrame
 		if (angle == FlxFrameAngle.ANGLE_90)
 		{
 			mat.rotateByPositive90();
+			mat.translate(frame.height, 0);
 		}
 		else if (angle == FlxFrameAngle.ANGLE_NEG_90)
 		{
 			mat.rotateByNegative90();
+			mat.translate(0, frame.width);
 		}
 		
 		return mat;
