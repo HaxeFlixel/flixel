@@ -9,6 +9,7 @@ import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.FlxCamera.FlxCameraShakeDirection;
 import flixel.graphics.FlxGraphic;
+import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.tile.FlxDrawBaseItem;
 import flixel.graphics.tile.FlxDrawTilesItem;
 import flixel.graphics.tile.FlxDrawTrianglesItem;
@@ -315,7 +316,9 @@ class FlxCamera extends FlxBasic
 	#end
 	
 	// TODO: use this transform matrix later...
-	private var transform:Matrix;
+	private var _transform:Matrix;
+	
+	private var _helperMatrix:Matrix = new Matrix();
 	
 	/**
 	 * Currently used draw stack item
@@ -493,6 +496,17 @@ class FlxCamera extends FlxBasic
 			currItem = currItem.next;
 		}
 	}
+	
+	public function drawPixels(frame:FlxFrame, matrix:Matrix, color:FlxColor = FlxColor.WHITE, alpha:Float = 1.0, blend:Int = 0, smoothing:Bool = false):Void
+	{
+		_helperMatrix.copyFrom(matrix);
+		_helperMatrix.concat(_transform);
+		var isColored:Bool = (color.redFloat != 1.0) || (color.greenFloat != 1.0) || (color.blueFloat != 1.0);
+		var drawItem:FlxDrawTilesItem = getDrawTilesItem(frame.parent, isColored, blend, smoothing);
+		drawItem.setDrawData(frame.frame, _helperMatrix, isColored, color, alpha);
+	}
+#else
+	
 #end
 	
 	/**
@@ -559,7 +573,9 @@ class FlxCamera extends FlxBasic
 		#if !FLX_NO_DEBUG
 		debugLayer = new Sprite();
 		_scrollRect.addChild(debugLayer);
-		#end	
+		#end
+		
+		_transform = new Matrix();
 	#end
 		
 		zoom = Zoom; //sets the scale of flash sprite, which in turn loads flashoffset values
@@ -609,6 +625,8 @@ class FlxCamera extends FlxBasic
 		{
 			clearDrawStack();
 		}
+		
+		_transform = null;
 	#end
 		
 		scroll = FlxDestroyUtil.put(scroll);
@@ -1242,6 +1260,9 @@ class FlxCamera extends FlxBasic
 		#if FLX_RENDER_BLIT
 		_flashBitmap.scaleX = totalScaleX;
 		_flashBitmap.scaleY = totalScaleY;
+		#else
+		_transform.identity();
+		_transform.scale(totalScaleX, totalScaleY);
 		#end
 		
 		updateFlashSpritePosition();

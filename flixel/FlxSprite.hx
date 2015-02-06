@@ -624,8 +624,6 @@ class FlxSprite extends FlxObject
 				camera.buffer.draw(framePixels, _matrix, null, blend, null, (antialiasing || camera.antialiasing));
 			}
 #else
-			drawItem = camera.getDrawTilesItem(frame.parent, isColored, _blendInt, antialiasing);
-			
 			_matrix.identity();
 			
 			if (frame.angle != FlxFrameAngle.ANGLE_0)
@@ -634,12 +632,11 @@ class FlxSprite extends FlxObject
 				frame.prepareFrameMatrix(_matrix);
 			}
 			
-			_matrix.translate(frame.offset.x, frame.offset.y);
-			_matrix.translate( -origin.x, -origin.y);
+			_matrix.translate(frame.offset.x - origin.x, frame.offset.y - origin.y);
 			
 			var sx:Float = scale.x * _facingHorizontalMult;
 			var sy:Float = scale.y * _facingVerticalMult;
-			_matrix.scale(sx * camera.totalScaleX, sy * camera.totalScaleY);
+			_matrix.scale(sx, sy);
 			
 			// rotate matrix if sprite's graphic isn't prerotated
 			if (!isSimpleRender(camera))
@@ -657,9 +654,6 @@ class FlxSprite extends FlxObject
 			
 			_point.addPoint(origin);
 			
-			_point.x *= camera.totalScaleX;
-			_point.y *= camera.totalScaleY;
-			
 			if (isPixelPerfectRender(camera))
 			{
 				_point.floor();
@@ -667,7 +661,7 @@ class FlxSprite extends FlxObject
 			
 			_matrix.translate(_point.x, _point.y);
 			
-			setDrawData(drawItem, frame.frame, camera, _matrix);
+			camera.drawPixels(frame, _matrix, color, alpha, _blendInt, antialiasing);
 #end
 			#if !FLX_NO_DEBUG
 			FlxBasic.visibleCount++;
@@ -685,7 +679,7 @@ class FlxSprite extends FlxObject
 	#if FLX_RENDER_TILE
 	private inline function setDrawData(drawItem:FlxDrawTilesItem, rect:FlxRect, camera:FlxCamera, matrix:Matrix)
 	{
-		drawItem.setDrawData(rect, matrix, isColored, color, alpha * camera.alpha);
+		drawItem.setDrawData(rect, matrix, isColored, color, alpha);
 	}
 	#end
 	
