@@ -34,7 +34,7 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 		drawData = null;
 	}
 	
-	public inline function setDrawData(rect:FlxRect, origin:FlxPoint, matrix:Matrix,
+	public inline function setDrawData(rect:FlxRect, matrix:Matrix,
 		isColored:Bool = false, color:FlxColor = FlxColor.WHITE, alpha:Float = 1):Void
 	{
 		drawData[position++] = matrix.tx;
@@ -63,8 +63,6 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 	override public function render(camera:FlxCamera):Void
 	{
 		#if FLX_RENDER_TILE
-		var dataLen:Int = drawData.length;
-		
 		if (position > 0)
 		{
 			var tempFlags:Int = Tilesheet.TILE_TRANS_2x2 | Tilesheet.TILE_RECT | Tilesheet.TILE_ALPHA;

@@ -862,9 +862,8 @@ class FlxBar extends FlxSprite
 					_frontFrame.prepareFrameMatrix(_matrix);
 				}
 				
-				var x1:Float = (ox - _frontFrame.center.x);
-				var y1:Float = (oy - _frontFrame.center.y);
-				_matrix.translate(x1, y1);
+				_matrix.translate(frame.offset.x, frame.offset.y);
+				_matrix.translate( -origin.x, -origin.y);
 				
 				var sx:Float = scale.x * _facingHorizontalMult;
 				var sy:Float = scale.y * _facingVerticalMult;
@@ -886,9 +885,9 @@ class FlxBar extends FlxSprite
 					_point.floor();
 				}
 				
-				_point.subtract(_matrix.tx, _matrix.ty);
+				_matrix.translate(_point.x, _point.y);
 				
-				setDrawData(drawItem, _frontFrame.frame, _frontFrame.origin, camera, _matrix);
+				setDrawData(drawItem, _frontFrame.frame, camera, _matrix);
 			}
 		}
 	}
