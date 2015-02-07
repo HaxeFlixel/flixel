@@ -505,6 +505,26 @@ class FlxCamera extends FlxBasic
 		var drawItem:FlxDrawTilesItem = getDrawTilesItem(frame.parent, isColored, blend, smoothing);
 		drawItem.setDrawData(frame.frame, _helperMatrix, isColored, color, alpha);
 	}
+	
+	public function copyPixels(frame:FlxFrame, point:Point, color:FlxColor = FlxColor.WHITE, alpha:Float = 1.0, blend:Int = 0, smoothing:Bool = false):Void
+	{
+		_helperMatrix.identity();
+		_helperMatrix.translate(point.x + frame.offset.x, point.y + frame.offset.y);
+		var isColored:Bool = (color.redFloat != 1.0) || (color.greenFloat != 1.0) || (color.blueFloat != 1.0);
+		var drawItem:FlxDrawTilesItem = getDrawTilesItem(frame.parent, isColored, blend, smoothing);
+		drawItem.setDrawData(frame.frame, _helperMatrix, isColored, color, alpha);
+	}
+	
+	public function startBatch(graphic:FlxGraphic, isColored:Bool = false, blend:Int = 0, smoothing:Bool = false):FlxDrawTilesItem
+	{
+		
+		return null;
+	}
+	
+	public function endBatch():Void
+	{
+		
+	}
 #else
 	
 #end
