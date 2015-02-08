@@ -348,15 +348,15 @@ class FlxCamera extends FlxBasic
 	private static var _storageTrianglesHead:FlxDrawTrianglesItem;
 	
 	@:noCompletion
-	public function getDrawTilesItem(ObjGraphics:FlxGraphic, ObjColored:Bool, ObjBlending:Int, ObjAntialiasing:Bool = false):FlxDrawTilesItem
+	public function startBatch(graphic:FlxGraphic, colored:Bool, blend:Int = 0, smooth:Bool = false):FlxDrawTilesItem
 	{
 		var itemToReturn:FlxDrawTilesItem = null;
 		
 		if (_currentDrawItem != null && _currentDrawItem.type == FlxDrawItemType.TILES 
-			&& _headTiles.graphics == ObjGraphics 
-			&& _headTiles.colored == ObjColored 
-			&& _headTiles.blending == ObjBlending 
-			&& _headTiles.antialiasing == ObjAntialiasing)
+			&& _headTiles.graphics == graphic 
+			&& _headTiles.colored == colored
+			&& _headTiles.blending == blend 
+			&& _headTiles.antialiasing == smooth)
 		{	
 			return _headTiles;
 		}
@@ -373,10 +373,10 @@ class FlxCamera extends FlxBasic
 			itemToReturn = new FlxDrawTilesItem();
 		}
 		
-		itemToReturn.graphics = ObjGraphics;
-		itemToReturn.antialiasing = ObjAntialiasing;
-		itemToReturn.colored = ObjColored;
-		itemToReturn.blending = ObjBlending;
+		itemToReturn.graphics = graphic;
+		itemToReturn.antialiasing = smooth;
+		itemToReturn.colored = colored;
+		itemToReturn.blending = blend;
 		
 		itemToReturn.nextTyped = _headTiles;
 		_headTiles = itemToReturn;
@@ -502,7 +502,7 @@ class FlxCamera extends FlxBasic
 		_helperMatrix.copyFrom(matrix);
 		_helperMatrix.concat(_transform);
 		var isColored:Bool = (color.redFloat != 1.0) || (color.greenFloat != 1.0) || (color.blueFloat != 1.0);
-		var drawItem:FlxDrawTilesItem = getDrawTilesItem(frame.parent, isColored, blend, smoothing);
+		var drawItem:FlxDrawTilesItem = startBatch(frame.parent, isColored, blend, smoothing);
 		drawItem.setDrawData(frame.frame, _helperMatrix, isColored, color, alpha);
 	}
 	
@@ -511,19 +511,8 @@ class FlxCamera extends FlxBasic
 		_helperMatrix.identity();
 		_helperMatrix.translate(point.x + frame.offset.x, point.y + frame.offset.y);
 		var isColored:Bool = (color.redFloat != 1.0) || (color.greenFloat != 1.0) || (color.blueFloat != 1.0);
-		var drawItem:FlxDrawTilesItem = getDrawTilesItem(frame.parent, isColored, blend, smoothing);
+		var drawItem:FlxDrawTilesItem = startBatch(frame.parent, isColored, blend, smoothing);
 		drawItem.setDrawData(frame.frame, _helperMatrix, isColored, color, alpha);
-	}
-	
-	public function startBatch(graphic:FlxGraphic, isColored:Bool = false, blend:Int = 0, smoothing:Bool = false):FlxDrawTilesItem
-	{
-		
-		return null;
-	}
-	
-	public function endBatch():Void
-	{
-		
 	}
 #else
 	

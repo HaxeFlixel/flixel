@@ -927,7 +927,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 					_matrix.scale(hackScaleX, hackScaleY);
 					_matrix.translate(drawX, drawY);
 					
-					drawItem = Camera.getDrawTilesItem(graphic, isColored, _blendInt);
+					drawItem = Camera.startBatch(graphic, isColored, _blendInt);
 					drawItem.setDrawData(frame.frame, _matrix, isColored, color, alpha);
 				#end
 				}

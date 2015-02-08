@@ -750,7 +750,7 @@ class FlxBitmapText extends FlxSprite
 	private function splitLineIntoWords(line:String, words:Array<String>):Void
 	{
 		var word:String = "";				// current word to process
-		var wordUtf8:Utf8 = new Utf8();		
+		var wordUtf8:Utf8 = new Utf8();
 		var isSpaceWord:Bool = false; 		// whether current word consists of spaces or not
 		var lineLength:Int = Utf8.length(line);	// lenght of the current line
 		

@@ -852,7 +852,7 @@ class FlxBar extends FlxSprite
 				
 				getScreenPosition(_point, camera).subtractPoint(offset);
 				
-				drawItem = camera.getDrawTilesItem(_front.graphic, isColored, _blendInt, antialiasing);
+				drawItem = camera.startBatch(_front.graphic, isColored, _blendInt, antialiasing);
 				
 				_matrix.identity();
 				
