@@ -577,19 +577,6 @@ class FlxSprite extends FlxObject
 			calcFrame();
 		}
 		
-	#if FLX_RENDER_TILE
-		var ox:Float = origin.x;
-		if (_facingHorizontalMult != 1)
-		{
-			ox = frameWidth - ox;
-		}
-		var oy:Float = origin.y;
-		if (_facingVerticalMult != 1)
-		{
-			oy = frameHeight - oy;
-		}
-	#end
-		
 		for (camera in cameras)
 		{
 			if (!camera.visible || !camera.exists || !isOnScreen(camera))
@@ -602,12 +589,23 @@ class FlxSprite extends FlxObject
 			
 			var sx:Float = scale.x;
 			var sy:Float = scale.y;
+			var ox:Float = origin.x;
+			var oy:Float = origin.y;
 	#if FLX_RENDER_BLIT
 			var simple:Bool = isSimpleRender(camera);
 	#else
 			var simple:Bool = false;
 			sx *= _facingHorizontalMult;
 			sy *= _facingVerticalMult;
+			
+			if (_facingHorizontalMult != 1)
+			{
+				ox = frameWidth - ox;
+			}
+			if (_facingVerticalMult != 1)
+			{
+				oy = frameHeight - oy;
+			}
 	#end
 			if (simple)
 			{
@@ -621,7 +619,7 @@ class FlxSprite extends FlxObject
 			}
 			else
 			{
-				_matrix.translate(-origin.x, -origin.y);
+				_matrix.translate(-ox, -oy);
 				_matrix.scale(sx, sy);
 				
 				if (bakedRotationAngle <= 0)
@@ -634,7 +632,7 @@ class FlxSprite extends FlxObject
 					}
 				}
 				
-				_point.addPoint(origin);
+				_point.add(ox, oy);
 				
 				if (isPixelPerfectRender(camera))
 				{
