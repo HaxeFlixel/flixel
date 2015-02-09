@@ -29,8 +29,11 @@ class FlxRotatedFrame extends FlxFrame
 	 * @param	mat		Sprite matrix to transform.
 	 * @return	Tranformed sprite matrix.
 	 */
+	#if FLX_RENDER_TILE
 	override public function prepareFrameMatrix(mat:FlxMatrix):FlxMatrix 
 	{
+		mat.identity();
+		
 		if (angle == FlxFrameAngle.ANGLE_90)
 		{
 			mat.rotateByPositive90();
@@ -42,8 +45,10 @@ class FlxRotatedFrame extends FlxFrame
 			mat.translate(0, frame.width);
 		}
 		
-		return super.prepareFrameMatrix(mat);
+		mat.translate(offset.x, offset.y);
+		return mat;
 	}
+	#end
 	
 	override public function paintOnBitmap(bmd:BitmapData = null):BitmapData 
 	{

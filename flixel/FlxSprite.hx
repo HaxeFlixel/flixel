@@ -191,7 +191,7 @@ class FlxSprite extends FlxObject
 	 */
 	private var _sinAngle:Float = 0;
 	private var _cosAngle:Float = 1;
-	private var _angleChanged:Bool = false;
+	private var _angleChanged:Bool = true;
 	/**
 	 * Maps FlxObject direction constants to axis flips
 	 */
@@ -598,63 +598,53 @@ class FlxSprite extends FlxObject
 			}
 			
 			getScreenPosition(_point, camera).subtractPoint(offset);
+			frame.prepareFrameMatrix(_matrix);
 			
-#if FLX_RENDER_BLIT
-			if (isSimpleRender(camera))
+			var sx:Float = scale.x;
+			var sy:Float = scale.y;
+	#if FLX_RENDER_BLIT
+			var simple:Bool = isSimpleRender(camera);
+	#else
+			var simple:Bool = false;
+			sx *= _facingHorizontalMult;
+			sy *= _facingVerticalMult;
+	#end
+			if (simple)
 			{
-				_point.floor().copyToFlash(_flashPoint);
-				camera.copyPixels(framePixels, _flashRect, _flashPoint);
+				if (isPixelPerfectRender(camera))
+				{
+					_point.floor();
+				}
+				
+				_point.copyToFlash(_flashPoint);
+				camera.copyPixels(frame, framePixels, _flashRect, _flashPoint, colorTransform, blend, antialiasing);
 			}
 			else
 			{
-				_matrix.identity();
 				_matrix.translate(-origin.x, -origin.y);
-				_matrix.scale(scale.x, scale.y);
+				_matrix.scale(sx, sy);
 				
-				if ((angle != 0) && (bakedRotationAngle <= 0))
+				if (bakedRotationAngle <= 0)
 				{
-					_matrix.rotate(angle * FlxAngle.TO_RAD);
+					updateTrig();
+					
+					if (angle != 0)
+					{
+						_matrix.rotateWithTrig(_cosAngle, _sinAngle);
+					}
 				}
 				
-				_point.addPoint(origin).floor();
+				_point.addPoint(origin);
+				
+				if (isPixelPerfectRender(camera))
+				{
+					_point.floor();
+				}
 				
 				_matrix.translate(_point.x, _point.y);
 				camera.drawPixels(frame, framePixels, _matrix, colorTransform, blend, antialiasing);
 			}
-#else
-			_matrix.identity();
-			frame.prepareFrameMatrix(_matrix);
-			_matrix.translate( -origin.x, -origin.y);
 			
-			var sx:Float = scale.x * _facingHorizontalMult;
-			var sy:Float = scale.y * _facingVerticalMult;
-			_matrix.scale(sx, sy);
-			
-			// rotate matrix if sprite's graphic isn't prerotated
-			if (!isSimpleRender(camera))
-			{
-				if (_angleChanged && (bakedRotationAngle <= 0))
-				{
-					var radians:Float = angle * FlxAngle.TO_RAD;
-					_sinAngle = Math.sin(radians);
-					_cosAngle = Math.cos(radians);
-					_angleChanged = false;
-				}
-				
-				_matrix.rotateWithTrig(_cosAngle, _sinAngle);
-			}
-			
-			_point.addPoint(origin);
-			
-			if (isPixelPerfectRender(camera))
-			{
-				_point.floor();
-			}
-			
-			_matrix.translate(_point.x, _point.y);
-			
-			camera.drawPixels(frame, framePixels, _matrix, colorTransform, blend, antialiasing);
-#end
 			#if !FLX_NO_DEBUG
 			FlxBasic.visibleCount++;
 			#end
@@ -1217,6 +1207,17 @@ class FlxSprite extends FlxObject
 			animation.update(0);
 		}
 		return ret;
+	}
+	
+	private inline function updateTrig():Void
+	{
+		if (_angleChanged)
+		{
+			var radians:Float = angle * FlxAngle.TO_RAD;
+			_sinAngle = Math.sin(radians);
+			_cosAngle = Math.cos(radians);
+			_angleChanged = false; 
+		}
 	}
 	
 	private function set_blend(Value:BlendMode):BlendMode 
