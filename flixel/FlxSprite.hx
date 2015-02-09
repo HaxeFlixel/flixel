@@ -578,8 +578,6 @@ class FlxSprite extends FlxObject
 		}
 		
 	#if FLX_RENDER_TILE
-		var drawItem:FlxDrawTilesItem;
-		
 		var ox:Float = origin.x;
 		if (_facingHorizontalMult != 1)
 		{
@@ -625,14 +623,8 @@ class FlxSprite extends FlxObject
 			}
 #else
 			_matrix.identity();
-			
-			if (frame.angle != FlxFrameAngle.ANGLE_0)
-			{
-				// handle rotated frames
-				frame.prepareFrameMatrix(_matrix);
-			}
-			
-			_matrix.translate(frame.offset.x - origin.x, frame.offset.y - origin.y);
+			frame.prepareFrameMatrix(_matrix);
+			_matrix.translate( -origin.x, -origin.y);
 			
 			var sx:Float = scale.x * _facingHorizontalMult;
 			var sy:Float = scale.y * _facingVerticalMult;
@@ -661,7 +653,7 @@ class FlxSprite extends FlxObject
 			
 			_matrix.translate(_point.x, _point.y);
 			
-			camera.drawPixels(frame, _matrix, color, alpha, _blendInt, antialiasing);
+			camera.drawPixels(frame, _matrix, colorTransform, blend, antialiasing);
 #end
 			#if !FLX_NO_DEBUG
 			FlxBasic.visibleCount++;
@@ -675,13 +667,6 @@ class FlxSprite extends FlxObject
 		}
 		#end
 	}
-	
-	#if FLX_RENDER_TILE
-	private inline function setDrawData(drawItem:FlxDrawTilesItem, rect:FlxRect, camera:FlxCamera, matrix:Matrix)
-	{
-		drawItem.setDrawData(rect, matrix, isColored, color, alpha);
-	}
-	#end
 	
 	/**
 	 * Stamps / draws another FlxSprite onto this FlxSprite. 

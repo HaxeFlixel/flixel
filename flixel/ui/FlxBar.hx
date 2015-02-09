@@ -852,22 +852,10 @@ class FlxBar extends FlxSprite
 				
 				getScreenPosition(_point, camera).subtractPoint(offset);
 				
-				drawItem = camera.startBatch(_front.graphic, isColored, _blendInt, antialiasing);
-				
 				_matrix.identity();
-				
-				if (_frontFrame.angle != FlxFrameAngle.ANGLE_0)
-				{
-					// handle rotated frames
-					_frontFrame.prepareFrameMatrix(_matrix);
-				}
-				
-				_matrix.translate(frame.offset.x, frame.offset.y);
+				_frontFrame.prepareFrameMatrix(_matrix);
 				_matrix.translate( -origin.x, -origin.y);
-				
-				var sx:Float = scale.x * _facingHorizontalMult;
-				var sy:Float = scale.y * _facingVerticalMult;
-				_matrix.scale(sx * camera.totalScaleX, sy * camera.totalScaleY);
+				_matrix.scale(scale.x * _facingHorizontalMult, scale.y * _facingVerticalMult);
 				
 				// rotate matrix if sprite's graphic isn't prerotated
 				if (angle != 0)
@@ -877,9 +865,6 @@ class FlxBar extends FlxSprite
 				
 				_point.addPoint(origin);
 				
-				_point.x *= camera.totalScaleX;
-				_point.y *= camera.totalScaleY;
-				
 				if (isPixelPerfectRender(camera))
 				{
 					_point.floor();
@@ -887,7 +872,7 @@ class FlxBar extends FlxSprite
 				
 				_matrix.translate(_point.x, _point.y);
 				
-				setDrawData(drawItem, _frontFrame.frame, camera, _matrix);
+				camera.drawPixels(_frontFrame, _matrix, colorTransform, blend, antialiasing);
 			}
 		}
 	}

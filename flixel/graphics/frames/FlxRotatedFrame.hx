@@ -42,7 +42,7 @@ class FlxRotatedFrame extends FlxFrame
 			mat.translate(0, frame.width);
 		}
 		
-		return mat;
+		return super.prepareFrameMatrix(mat);
 	}
 	
 	override public function paintOnBitmap(bmd:BitmapData = null):BitmapData 

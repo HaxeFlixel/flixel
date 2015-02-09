@@ -348,14 +348,15 @@ class FlxCamera extends FlxBasic
 	private static var _storageTrianglesHead:FlxDrawTrianglesItem;
 	
 	@:noCompletion
-	public function startBatch(graphic:FlxGraphic, colored:Bool, blend:Int = 0, smooth:Bool = false):FlxDrawTilesItem
+	public function startQuadBatch(graphic:FlxGraphic, colored:Bool, blend:BlendMode = null, smooth:Bool = false):FlxDrawTilesItem
 	{
 		var itemToReturn:FlxDrawTilesItem = null;
+		var blendInt:Int = FlxDrawBaseItem.blendToInt(blend);
 		
 		if (_currentDrawItem != null && _currentDrawItem.type == FlxDrawItemType.TILES 
 			&& _headTiles.graphics == graphic 
 			&& _headTiles.colored == colored
-			&& _headTiles.blending == blend 
+			&& _headTiles.blending == blendInt
 			&& _headTiles.antialiasing == smooth)
 		{	
 			return _headTiles;
@@ -376,7 +377,7 @@ class FlxCamera extends FlxBasic
 		itemToReturn.graphics = graphic;
 		itemToReturn.antialiasing = smooth;
 		itemToReturn.colored = colored;
-		itemToReturn.blending = blend;
+		itemToReturn.blending = blendInt;
 		
 		itemToReturn.nextTyped = _headTiles;
 		_headTiles = itemToReturn;
@@ -397,26 +398,28 @@ class FlxCamera extends FlxBasic
 	}
 	
 	@:noCompletion
-	public function getDrawTrianglesItem(ObjGraphics:FlxGraphic, ObjAntialiasing:Bool = false, ObjColored:Bool = false, ObjBlending:Int = 0):FlxDrawTrianglesItem
+	public function startTrianglesBatch(graphic:FlxGraphic, smoothing:Bool = false, isColored:Bool = false, blend:BlendMode = null):FlxDrawTrianglesItem
 	{
 		var itemToReturn:FlxDrawTrianglesItem = null;
+		var blendInt:Int = FlxDrawBaseItem.blendToInt(blend);
 		
 		if (_currentDrawItem != null && _currentDrawItem.type == FlxDrawItemType.TRIANGLES 
-			&& _headTriangles.graphics == ObjGraphics 
-			&& _headTriangles.antialiasing == ObjAntialiasing
-			&& _headTriangles.colored == ObjColored
-			&& _headTriangles.blending == ObjBlending)
+			&& _headTriangles.graphics == graphic 
+			&& _headTriangles.antialiasing == smoothing
+			&& _headTriangles.colored == isColored
+			&& _headTriangles.blending == blendInt)
 		{	
 			return _headTriangles;
 		}
 		
-		return getNewDrawTrianglesItem(ObjGraphics, ObjAntialiasing, ObjColored, ObjBlending);
+		return getNewDrawTrianglesItem(graphic, smoothing, isColored, blend);
 	}
 	
 	@:noCompletion
-	public function getNewDrawTrianglesItem(ObjGraphics:FlxGraphic, ObjAntialiasing:Bool = false, ObjColored:Bool = false, ObjBlending:Int = 0):FlxDrawTrianglesItem
+	public function getNewDrawTrianglesItem(graphic:FlxGraphic, smoothing:Bool = false, isColored:Bool = false, blend:BlendMode = null):FlxDrawTrianglesItem
 	{
 		var itemToReturn:FlxDrawTrianglesItem = null;
+		var blendInt:Int = FlxDrawBaseItem.blendToInt(blend);
 		
 		if (_storageTrianglesHead != null)
 		{
@@ -430,10 +433,10 @@ class FlxCamera extends FlxBasic
 			itemToReturn = new FlxDrawTrianglesItem();
 		}
 		
-		itemToReturn.graphics = ObjGraphics;
-		itemToReturn.antialiasing = ObjAntialiasing;
-		itemToReturn.colored = ObjColored;
-		itemToReturn.blending = ObjBlending;
+		itemToReturn.graphics = graphic;
+		itemToReturn.antialiasing = smoothing;
+		itemToReturn.colored = isColored;
+		itemToReturn.blending = blendInt;
 		
 		itemToReturn.nextTyped = _headTriangles;
 		_headTriangles = itemToReturn;
@@ -497,22 +500,22 @@ class FlxCamera extends FlxBasic
 		}
 	}
 	
-	public function drawPixels(frame:FlxFrame, matrix:Matrix, color:FlxColor = FlxColor.WHITE, alpha:Float = 1.0, blend:Int = 0, smoothing:Bool = false):Void
+	public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:Matrix, colorTrans:ColorTransform = null, blend:BlendMode = null, smoothing:Bool = false):Void
 	{
 		_helperMatrix.copyFrom(matrix);
 		_helperMatrix.concat(_transform);
-		var isColored:Bool = (color.redFloat != 1.0) || (color.greenFloat != 1.0) || (color.blueFloat != 1.0);
-		var drawItem:FlxDrawTilesItem = startBatch(frame.parent, isColored, blend, smoothing);
-		drawItem.setDrawData(frame.frame, _helperMatrix, isColored, color, alpha);
+		var isColored:Bool = (colorTrans.redMultiplier != 1.0) || (colorTrans.greenMultiplier != 1.0) || (colorTrans.blueMultiplier != 1.0);
+		var drawItem:FlxDrawTilesItem = startQuadBatch(frame.parent, isColored, blend, smoothing);
+		drawItem.setData(frame.frame, _helperMatrix, isColored, colorTrans.redMultiplier, colorTrans.greenMultiplier, colorTrans.blueMultiplier, colorTrans.alphaMultiplier);
 	}
 	
-	public function copyPixels(frame:FlxFrame, point:Point, color:FlxColor = FlxColor.WHITE, alpha:Float = 1.0, blend:Int = 0, smoothing:Bool = false):Void
+	public function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle, point:Point, colorTrans:ColorTransform = null, blend:BlendMode = null, smoothing:Bool = false):Void
 	{
 		_helperMatrix.identity();
 		_helperMatrix.translate(point.x + frame.offset.x, point.y + frame.offset.y);
-		var isColored:Bool = (color.redFloat != 1.0) || (color.greenFloat != 1.0) || (color.blueFloat != 1.0);
-		var drawItem:FlxDrawTilesItem = startBatch(frame.parent, isColored, blend, smoothing);
-		drawItem.setDrawData(frame.frame, _helperMatrix, isColored, color, alpha);
+		var isColored:Bool = (colorTrans.redMultiplier != 1.0) || (colorTrans.greenMultiplier != 1.0) || (colorTrans.blueMultiplier != 1.0);
+		var drawItem:FlxDrawTilesItem = startQuadBatch(frame.parent, isColored, blend, smoothing);
+		drawItem.setData(frame.frame, _helperMatrix, isColored, colorTrans.redMultiplier, colorTrans.greenMultiplier, colorTrans.blueMultiplier, colorTrans.alphaMultiplier);
 	}
 #else
 	

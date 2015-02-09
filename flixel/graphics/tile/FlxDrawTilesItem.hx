@@ -34,8 +34,8 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 		drawData = null;
 	}
 	
-	public inline function setDrawData(rect:FlxRect, matrix:Matrix,
-		isColored:Bool = false, color:FlxColor = FlxColor.WHITE, alpha:Float = 1):Void
+	public inline function setData(rect:FlxRect, matrix:Matrix,
+		isColored:Bool = false, red:Float = 1, green:Float = 1, blue:Float = 1, alpha:Float = 1):Void
 	{
 		drawData[position++] = matrix.tx;
 		drawData[position++] = matrix.ty;
@@ -52,9 +52,9 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 		
 		if (isColored)
 		{
-			drawData[position++] = color.redFloat; 
-			drawData[position++] = color.greenFloat;
-			drawData[position++] = color.blueFloat;
+			drawData[position++] = red; 
+			drawData[position++] = green;
+			drawData[position++] = blue;
 		}
 		
 		drawData[position++] = alpha;
