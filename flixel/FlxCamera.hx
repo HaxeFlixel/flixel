@@ -509,16 +509,24 @@ class FlxCamera extends FlxBasic
 		drawItem.setData(frame.frame, _helperMatrix, isColored, colorTrans.redMultiplier, colorTrans.greenMultiplier, colorTrans.blueMultiplier, colorTrans.alphaMultiplier);
 	}
 	
-	public function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle, point:Point, colorTrans:ColorTransform = null, blend:BlendMode = null, smoothing:Bool = false):Void
+	public function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle, destPoint:Point, colorTrans:ColorTransform = null, blend:BlendMode = null, smoothing:Bool = false):Void
 	{
 		_helperMatrix.identity();
-		_helperMatrix.translate(point.x + frame.offset.x, point.y + frame.offset.y);
+		_helperMatrix.translate(destPoint.x + frame.offset.x, destPoint.y + frame.offset.y);
 		var isColored:Bool = (colorTrans.redMultiplier != 1.0) || (colorTrans.greenMultiplier != 1.0) || (colorTrans.blueMultiplier != 1.0);
 		var drawItem:FlxDrawTilesItem = startQuadBatch(frame.parent, isColored, blend, smoothing);
 		drawItem.setData(frame.frame, _helperMatrix, isColored, colorTrans.redMultiplier, colorTrans.greenMultiplier, colorTrans.blueMultiplier, colorTrans.alphaMultiplier);
 	}
 #else
+	public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:Matrix, colorTrans:ColorTransform = null, blend:BlendMode = null, smoothing:Bool = false):Void
+	{
+		buffer.draw(pixels, matrix, null, blend, null, (smoothing || antialiasing));
+	}
 	
+	public function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle, destPoint:Point, colorTrans:ColorTransform = null, blend:BlendMode = null, smoothing:Bool = false):Void
+	{
+		buffer.copyPixels(pixels, sourceRect, destPoint, null, null, true);
+	}
 #end
 	
 	/**

@@ -603,7 +603,7 @@ class FlxSprite extends FlxObject
 			if (isSimpleRender(camera))
 			{
 				_point.floor().copyToFlash(_flashPoint);
-				camera.buffer.copyPixels(framePixels, _flashRect, _flashPoint, null, null, true);
+				camera.copyPixels(framePixels, _flashRect, _flashPoint);
 			}
 			else
 			{
@@ -619,7 +619,7 @@ class FlxSprite extends FlxObject
 				_point.addPoint(origin).floor();
 				
 				_matrix.translate(_point.x, _point.y);
-				camera.buffer.draw(framePixels, _matrix, null, blend, null, (antialiasing || camera.antialiasing));
+				camera.drawPixels(frame, framePixels, _matrix, colorTransform, blend, antialiasing);
 			}
 #else
 			_matrix.identity();
@@ -653,7 +653,7 @@ class FlxSprite extends FlxObject
 			
 			_matrix.translate(_point.x, _point.y);
 			
-			camera.drawPixels(frame, _matrix, colorTransform, blend, antialiasing);
+			camera.drawPixels(frame, framePixels, _matrix, colorTransform, blend, antialiasing);
 #end
 			#if !FLX_NO_DEBUG
 			FlxBasic.visibleCount++;
