@@ -155,8 +155,6 @@ class FlxSprite extends FlxObject
 	#if FLX_RENDER_TILE
 	private var _facingHorizontalMult:Int = 1;
 	private var _facingVerticalMult:Int = 1;
-	private var _blendInt:Int = 0;
-	private var isColored:Bool = false;
 	#end
 	
 	/**
@@ -442,7 +440,7 @@ class FlxSprite extends FlxObject
 	 * Called whenever a new graphic is loaded for this sprite
 	 * - after loadGraphic(), makeGraphic() etc.
 	 */
-	public function graphicLoaded():Void {}
+	public function graphicLoaded():Void {  }
 	
 	/**
 	 * Resets _flashRect variable used for frame bitmapData calculation
@@ -591,10 +589,8 @@ class FlxSprite extends FlxObject
 			var sy:Float = scale.y;
 			var ox:Float = origin.x;
 			var oy:Float = origin.y;
-	#if FLX_RENDER_BLIT
 			var simple:Bool = isSimpleRender(camera);
-	#else
-			var simple:Bool = false;
+	#if FLX_RENDER_TILE
 			sx *= _facingHorizontalMult;
 			sy *= _facingVerticalMult;
 			
@@ -633,7 +629,6 @@ class FlxSprite extends FlxObject
 				}
 				
 				_point.add(ox, oy);
-				
 				if (isPixelPerfectRender(camera))
 				{
 					_point.floor();
@@ -1035,14 +1030,14 @@ class FlxSprite extends FlxObject
 	
 	/**
 	 * Returns the result of isSimpleRenderBlit() if FLX_RENDER_BLIT is 
-	 * defined or isSimpleRenderTile() if FLX_RENDER_TILE is defined.
+	 * defined or false if FLX_RENDER_TILE is defined.
 	 */
 	public function isSimpleRender(?camera:FlxCamera):Bool
 	{ 
 		#if FLX_RENDER_BLIT
 		return isSimpleRenderBlit(camera);
 		#else
-		return isSimpleRenderTile();
+		return false;
 		#end
 	}
 	
@@ -1058,15 +1053,6 @@ class FlxSprite extends FlxObject
 			&& scale.x == 1 && scale.y == 1 && blend == null;
 		result = result && (camera != null ? isPixelPerfectRender(camera) : pixelPerfectRender);
 		return result;
-	}
-	
-	/**
-	 * Determines whether or not additional matrix calculations are required to render sprites via drawTiles().
-	 * Sprites are considered simple when they have an angle of 0 and a scale of 1.
-	 */
-	public function isSimpleRenderTile():Bool
-	{
-		return ((angle == 0 && frame.angle == FlxFrameAngle.ANGLE_0) || (bakedRotationAngle > 0));
 	}
 	
 	/**
@@ -1187,11 +1173,6 @@ class FlxSprite extends FlxObject
 		}
 		color = Color;
 		updateColorTransform();
-		
-		#if FLX_RENDER_TILE
-		isColored = color.to24Bit() != 0xffffff;
-		#end
-		
 		return color;
 	}
 	
@@ -1220,29 +1201,6 @@ class FlxSprite extends FlxObject
 	
 	private function set_blend(Value:BlendMode):BlendMode 
 	{
-		#if FLX_RENDER_TILE
-		if (Value != null)
-		{
-			switch (Value)
-			{
-				case BlendMode.ADD:
-					_blendInt = Tilesheet.TILE_BLEND_ADD;
-				#if !flash
-				case BlendMode.MULTIPLY:
-					_blendInt = Tilesheet.TILE_BLEND_MULTIPLY;
-				case BlendMode.SCREEN:
-					_blendInt = Tilesheet.TILE_BLEND_SCREEN;
-				#end
-				default:
-					_blendInt = Tilesheet.TILE_BLEND_NORMAL;
-			}
-		}
-		else
-		{
-			_blendInt = 0;
-		}
-		#end	
-		
 		return blend = Value;
 	}
 	
@@ -1342,10 +1300,7 @@ class FlxSprite extends FlxObject
 		#if FLX_RENDER_TILE
 		_facingHorizontalMult = Value ? -1 : 1;
 		#end
-		if (flipX != Value)
-		{
-			dirty = true;
-		}
+		dirty = (flipX != Value) || dirty;
 		return flipX = Value;
 	}
 	
@@ -1354,10 +1309,7 @@ class FlxSprite extends FlxObject
 		#if FLX_RENDER_TILE
 		_facingVerticalMult = Value ? -1 : 1;
 		#end
-		if (flipY != Value)
-		{
-			dirty = true;
-		}
+		dirty = (flipY != Value) || dirty;
 		return flipY = Value;
 	}
 	
