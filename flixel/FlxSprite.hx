@@ -968,62 +968,55 @@ class FlxSprite extends FlxObject
 		
 		var minX:Float = x - offset.x - Camera.scroll.x * scrollFactor.x;
 		var minY:Float = y - offset.y - Camera.scroll.y * scrollFactor.y;
-		var maxX:Float = 0;
-		var maxY:Float = 0;
 		
 		if ((angle == 0 || bakedRotationAngle > 0) && (scale.x == 1) && (scale.y == 1))
 		{
-			maxX = minX + frameWidth;
-			maxY = minY + frameHeight;
+			if (minX > Camera.width || minX + frameWidth < 0)
+				return false;
+			
+			if (minY > Camera.height || minY + frameHeight < 0)
+				return false;
 		}
 		else
 		{
 			var radiusX:Float = _halfSize.x;
 			var radiusY:Float = _halfSize.y;
 			
-			if (origin.x == radiusX)
+			var ox:Float = origin.x;
+			if (ox != radiusX)
 			{
-				radiusX = Math.abs(radiusX * scale.x);
-			}
-			else
-			{
-				var sox:Float = scale.x * origin.x;
-				var sfw:Float = scale.x * frameWidth;
-				var x1:Float = Math.abs(sox);
-				var x2:Float = Math.abs(sfw - sox);
+				var x1:Float = Math.abs(ox);
+				var x2:Float = Math.abs(frameWidth - ox);
 				radiusX = Math.max(x2, x1);
 			}
 			
-			if (origin.y == radiusY)
+			var oy:Float = origin.y;
+			if (oy != radiusY)
 			{
-				radiusY = Math.abs(radiusY * scale.y);
-			}
-			else
-			{
-				var soy:Float = scale.y * origin.y;
-				var sfh:Float = scale.y * frameHeight;
-				var y1:Float = Math.abs(soy);
-				var y2:Float = Math.abs(sfh - soy);
+				var y1:Float = Math.abs(oy);
+				var y2:Float = Math.abs(frameHeight - oy);
 				radiusY = Math.max(y2, y1);
 			}
 			
+			radiusX *= Math.abs(scale.x);
+			radiusY *= Math.abs(scale.y);
 			var radius:Float = Math.max(radiusX, radiusY);
 			radius *= FlxMath.SQUARE_ROOT_OF_TWO;
 			
-			minX += origin.x;
-			maxX = minX + radius;
+			minX += ox;
+			var maxX:Float = minX + radius;
 			minX -= radius;
 			
-			minY += origin.y;
-			maxY = minY + radius;
+			if (maxX < 0 || minX > Camera.width)
+				return false;
+			
+			minY += oy;
+			var maxY:Float = minY + radius;
 			minY -= radius;
+			
+			if (maxY < 0 || minY > Camera.height)
+				return false;
 		}
-		
-		if (maxX < 0 || minX > Camera.width)
-			return false;
-		
-		if (maxY < 0 || minY > Camera.height)
-			return false;
 		
 		return true;
 	}
