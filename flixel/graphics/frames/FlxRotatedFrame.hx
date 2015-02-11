@@ -112,7 +112,7 @@ class FlxRotatedFrame extends FlxFrame
 		var scaleX:Int = flipX ? -1 : 1;
 		var scaleY:Int = flipY ? -1 : 1;
 		
-		// TODO: continue from here...
+		// TODO: test this method...
 		
 		var matrix:Matrix = FlxMatrix.matrix;
 		matrix.identity();
@@ -120,34 +120,32 @@ class FlxRotatedFrame extends FlxFrame
 		matrix.rotate(angle * FlxAngle.TO_RAD);
 		matrix.scale(scaleX, scaleY);
 		
-		/*
 		if (flipX)
 		{
-			matrix.translate(sourceSize.x - offset.x - 0.5 * frame.width, 0);
-			FlxRect.rect.x = sourceSize.x - offset.x - frame.width;
+			matrix.translate(sourceSize.x - offset.x - 0.5 * frame.height, 0);
+			FlxRect.rect.x = sourceSize.x - offset.x - frame.height;
 		}
 		else
 		{
-			matrix.translate(offset.x + 0.5 * frame.width, 0);
+			matrix.translate(offset.x + 0.5 * frame.height, 0);
 			FlxRect.rect.x = offset.x;
 		}
 		
 		if (flipY)
 		{
-			matrix.translate(0, sourceSize.y - offset.y - 0.5 * frame.height);
-			FlxRect.rect.y = sourceSize.y - offset.y - frame.height;
+			matrix.translate(0, sourceSize.y - offset.y - 0.5 * frame.width);
+			FlxRect.rect.y = sourceSize.y - offset.y - frame.width;
 		}
 		else
 		{
-			matrix.translate(0, offset.y + 0.5 * frame.height);
+			matrix.translate(0, offset.y + 0.5 * frame.width);
 			FlxRect.rect.y = offset.y;
 		}
 		
-		FlxRect.rect.width = frame.width;
-		FlxRect.rect.height = frame.height;
+		FlxRect.rect.width = frame.height;
+		FlxRect.rect.height = frame.width;
 		
 		result.draw(parent.bitmap, matrix, null, null, FlxRect.rect);
-		*/
 		return result;
 	}
 }
