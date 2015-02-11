@@ -9,6 +9,7 @@ import flixel.math.FlxRect;
 import flixel.util.FlxColor;
 import flixel.math.FlxMatrix;
 import openfl.geom.Matrix;
+import openfl.geom.Rectangle;
 
 /**
  * Rotated frame. It uses more math for rendering, that's why it has been moved in separate class.
@@ -57,6 +58,8 @@ class FlxRotatedFrame extends FlxFrame
 		if (bmd != null && (bmd.width == sourceSize.x && bmd.height == sourceSize.y))
 		{
 			result = bmd;
+			FlxRect.rect.setTo(0, 0, sourceSize.x, sourceSize.y);
+			result.fillRect(FlxRect.rect, FlxColor.TRANSPARENT);
 		}
 		else if (bmd != null)
 		{
@@ -75,6 +78,76 @@ class FlxRotatedFrame extends FlxFrame
 		matrix.translate(offset.x + 0.5 * frame.height, offset.y + 0.5 * frame.width);
 		FlxRect.rect.setTo(offset.x, offset.y, frame.height, frame.width);
 		result.draw(parent.bitmap, matrix, null, null, FlxRect.rect);
+		return result;
+	}
+	
+	override public function paintFlipped(bmd:BitmapData = null, flipX:Bool = false, flipY:Bool = false):BitmapData
+	{
+		var result:BitmapData = null;
+		
+		if (bmd != null && (bmd.width == sourceSize.x && bmd.height == sourceSize.y))
+		{
+			result = bmd;
+			
+			var w:Int = bmd.width;
+			var h:Int = bmd.height;
+			
+			if (w > frame.width || h > frame.height)
+			{
+				var rect:Rectangle = FlxRect.rect;
+				rect.setTo(0, 0, w, h);
+				bmd.fillRect(rect, FlxColor.TRANSPARENT);
+			}
+		}
+		else if (bmd != null)
+		{
+			bmd.dispose();
+		}
+		
+		if (result == null)
+		{
+			result = new BitmapData(Std.int(sourceSize.x), Std.int(sourceSize.y), true, FlxColor.TRANSPARENT);
+		}
+		
+		var scaleX:Int = flipX ? -1 : 1;
+		var scaleY:Int = flipY ? -1 : 1;
+		
+		// TODO: continue from here...
+		
+		var matrix:Matrix = FlxMatrix.matrix;
+		matrix.identity();
+		matrix.translate( -(frame.x + 0.5 * frame.height), -(frame.y + 0.5 * frame.width));
+		matrix.rotate(angle * FlxAngle.TO_RAD);
+		matrix.scale(scaleX, scaleY);
+		
+		/*
+		if (flipX)
+		{
+			matrix.translate(sourceSize.x - offset.x - 0.5 * frame.width, 0);
+			FlxRect.rect.x = sourceSize.x - offset.x - frame.width;
+		}
+		else
+		{
+			matrix.translate(offset.x + 0.5 * frame.width, 0);
+			FlxRect.rect.x = offset.x;
+		}
+		
+		if (flipY)
+		{
+			matrix.translate(0, sourceSize.y - offset.y - 0.5 * frame.height);
+			FlxRect.rect.y = sourceSize.y - offset.y - frame.height;
+		}
+		else
+		{
+			matrix.translate(0, offset.y + 0.5 * frame.height);
+			FlxRect.rect.y = offset.y;
+		}
+		
+		FlxRect.rect.width = frame.width;
+		FlxRect.rect.height = frame.height;
+		
+		result.draw(parent.bitmap, matrix, null, null, FlxRect.rect);
+		*/
 		return result;
 	}
 }

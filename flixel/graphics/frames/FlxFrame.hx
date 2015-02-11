@@ -138,6 +138,73 @@ class FlxFrame implements IFlxDestroyable
 		return result;
 	}
 	
+	public function paintFlipped(bmd:BitmapData = null, flipX:Bool = false, flipY:Bool = false):BitmapData
+	{
+		var result:BitmapData = null;
+		
+		if (bmd != null && (bmd.width == sourceSize.x && bmd.height == sourceSize.y))
+		{
+			result = bmd;
+			
+			var w:Int = bmd.width;
+			var h:Int = bmd.height;
+			
+			if (w > frame.width || h > frame.height)
+			{
+				var rect:Rectangle = FlxRect.rect;
+				rect.setTo(0, 0, w, h);
+				bmd.fillRect(rect, FlxColor.TRANSPARENT);
+			}
+		}
+		else if (bmd != null)
+		{
+			bmd.dispose();
+		}
+		
+		if (result == null)
+		{
+			result = new BitmapData(Std.int(sourceSize.x), Std.int(sourceSize.y), true, FlxColor.TRANSPARENT);
+		}
+		
+		var scaleX:Int = flipX ? -1 : 1;
+		var scaleY:Int = flipY ? -1 : 1;
+		
+		// TODO: test this method...
+		
+		var matrix:Matrix = FlxMatrix.matrix;
+		matrix.identity();
+		matrix.translate( -(frame.x + 0.5 * frame.width), -(frame.y + 0.5 * frame.height));
+		matrix.scale(scaleX, scaleY);
+		
+		if (flipX)
+		{
+			matrix.translate(sourceSize.x - offset.x - 0.5 * frame.width, 0);
+			FlxRect.rect.x = sourceSize.x - offset.x - frame.width;
+		}
+		else
+		{
+			matrix.translate(offset.x + 0.5 * frame.width, 0);
+			FlxRect.rect.x = offset.x;
+		}
+		
+		if (flipY)
+		{
+			matrix.translate(0, sourceSize.y - offset.y - 0.5 * frame.height);
+			FlxRect.rect.y = sourceSize.y - offset.y - frame.height;
+		}
+		else
+		{
+			matrix.translate(0, offset.y + 0.5 * frame.height);
+			FlxRect.rect.y = offset.y;
+		}
+		
+		FlxRect.rect.width = frame.width;
+		FlxRect.rect.height = frame.height;
+		
+		result.draw(parent.bitmap, matrix, null, null, FlxRect.rect);
+		return result;
+	}
+	
 	/**
 	 * Generates BitmapData for this frame object.
 	 */
