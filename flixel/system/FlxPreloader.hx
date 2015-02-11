@@ -1,6 +1,6 @@
 package flixel.system;
 
-#if !doc
+#if !FLX_HAXE_BUILD
 import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.BlendMode;
@@ -50,7 +50,6 @@ class FlxPreloader extends FlxBasePreloader
 		// super(0, ["test.com", FlxPreloaderBase.LOCAL]); // example of site-locking
 		
 		// super(10); // example of long delay (10 seconds)
-		
 	}
 	
 	/**

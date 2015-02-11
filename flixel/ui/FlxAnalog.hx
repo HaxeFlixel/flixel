@@ -9,15 +9,10 @@ import flixel.graphics.FlxGraphic;
 import flixel.group.FlxSpriteGroup;
 import flixel.input.touch.FlxTouch;
 import flixel.math.FlxAngle;
+import flixel.system.FlxAssets;
 import flixel.util.FlxDestroyUtil;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
-
-@:bitmap("assets/images/ui/analog/base.png")
-private class GraphicBase extends BitmapData {}
-
-@:bitmap("assets/images/ui/analog/thumb.png")
-private class GraphicThumb extends BitmapData {}
 
 /**
  * A virtual thumbstick - useful for input on mobile devices.
@@ -88,7 +83,7 @@ class FlxAnalog extends FlxSpriteGroup
 	/**
 	 * The radius in which the stick can move.
 	 */ 
-	private var _radius:Float;
+	private var _radius:Float = 0;
 	private var _direction:Float = 0;
 	private var _amount:Float = 0;		
 	/**
@@ -101,7 +96,7 @@ class FlxAnalog extends FlxSpriteGroup
 	 *  
 	 * @param	X		The X-coordinate of the point in space.
  	 * @param	Y		The Y-coordinate of the point in space.
- 	 * @param	radius	The radius where the thumb can move. If 0, the background will be use as radius.
+ 	 * @param	radius	The radius where the thumb can move. If 0, half the background's width will be used as radius.
  	 * @param	ease	The duration of the easing. The value must be between 0 and 1.
 	 */
 	public function new(X:Float = 0, Y:Float = 0, Radius:Float = 0, Ease:Float = 0.25)
@@ -132,7 +127,9 @@ class FlxAnalog extends FlxSpriteGroup
 	private function createBase():Void
 	{
 		base = new FlxSprite(x, y);
-		base.loadGraphic(FlxGraphic.fromClass(GraphicBase));
+		base.frames = FlxAssets.getVirtualInputFrames();
+		base.animation.frameName = "base";
+		base.resetSizeFromFrame();
 		base.x += -base.width * 0.5;
 		base.y += -base.height * 0.5;
 		base.scrollFactor.set();
@@ -152,7 +149,9 @@ class FlxAnalog extends FlxSpriteGroup
 	private function createThumb():Void 
 	{
 		thumb = new FlxSprite(x, y);
-		thumb.loadGraphic(FlxGraphic.fromClass(GraphicThumb));
+		thumb.frames = FlxAssets.getVirtualInputFrames();
+		thumb.animation.frameName = "thumb";
+		thumb.resetSizeFromFrame();
 		thumb.scrollFactor.set();
 		thumb.solid = false;
 		

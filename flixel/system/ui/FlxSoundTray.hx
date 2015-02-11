@@ -44,6 +44,7 @@ class FlxSoundTray extends Sprite
 	/**
 	 * Sets up the "sound tray", the little volume meter that pops down sometimes.
 	 */
+	@:keep
 	public function new()
 	{
 		super();

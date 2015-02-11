@@ -12,12 +12,28 @@ import flixel.util.FlxDestroyUtil;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.graphics.FlxGraphic;
+import flixel.util.FlxStringUtil;
 
 /**
  * Base class for all frame types
  */
 class FlxFrame implements IFlxDestroyable
 {
+	/**
+	 * Sorting function for Array<FlxFrame>#sort(),
+	 * e.g. "tiles-001.png", "tiles-003.png", "tiles-002.png".
+	 */
+	public static function sortByName(frame1:FlxFrame, frame2:FlxFrame, prefixLength:Int, postfixLength:Int):Int
+	{
+		var name1:String = frame1.name;
+		var name2:String = frame2.name;
+		
+		var num1:Int = Std.parseInt(name1.substring(prefixLength, name1.length - postfixLength));
+		var num2:Int = Std.parseInt(name2.substring(prefixLength, name2.length - postfixLength));
+		
+		return num1 - num2;
+	}
+	
 	public var name:String;
 	/**
 	 * Region of image to render
@@ -60,7 +76,8 @@ class FlxFrame implements IFlxDestroyable
 	private var _vReversedBitmapData:BitmapData;
 	private var _hvReversedBitmapData:BitmapData;
 	
-	public function new(parent:FlxGraphic)
+	@:allow(flixel)
+	private function new(parent:FlxGraphic)
 	{
 		this.parent = parent;
 		
@@ -81,7 +98,7 @@ class FlxFrame implements IFlxDestroyable
 	 */
 	public function prepareFrameMatrix(mat:FlxMatrix):FlxMatrix
 	{
-		return mat;
+		return mat; // to be overriden in subclasses
 	}
 	
 	/**
@@ -147,7 +164,7 @@ class FlxFrame implements IFlxDestroyable
 		}
 		
 		var normalFrame:BitmapData = getBitmap();
-		var matrix:Matrix = FlxMatrix.MATRIX;
+		var matrix:Matrix = FlxMatrix.matrix;
 		matrix.identity();
 		matrix.scale( -1, 1);
 		matrix.translate(Std.int(sourceSize.x), 0);
@@ -167,7 +184,7 @@ class FlxFrame implements IFlxDestroyable
 		}
 		
 		var normalFrame:BitmapData = getBitmap();
-		var matrix:Matrix = FlxMatrix.MATRIX;
+		var matrix:Matrix = FlxMatrix.matrix;
 		matrix.identity();
 		matrix.scale(1, -1);
 		matrix.translate(0, Std.int(sourceSize.y));
@@ -187,7 +204,7 @@ class FlxFrame implements IFlxDestroyable
 		}
 		
 		var normalFrame:BitmapData = getBitmap();
-		var matrix:Matrix = FlxMatrix.MATRIX;
+		var matrix:Matrix = FlxMatrix.matrix;
 		matrix.identity();
 		matrix.scale( -1, -1);
 		matrix.translate(Std.int(sourceSize.x), Std.int(sourceSize.y));
@@ -216,6 +233,12 @@ class FlxFrame implements IFlxDestroyable
 		offset = FlxDestroyUtil.put(offset);
 		center = FlxDestroyUtil.put(center);
 		destroyBitmaps();
+	}
+	
+	public function toString():String
+	{
+		return FlxStringUtil.getDebugString([
+			LabelValuePair.weak("name", name)]);
 	}
 }
 

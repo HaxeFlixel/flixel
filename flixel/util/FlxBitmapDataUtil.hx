@@ -10,10 +10,24 @@ import flixel.math.FlxRect;
 import flixel.util.FlxColor;
 import openfl.geom.Matrix;
 
-// TODO: document this class and all public methods
-
+/**
+ * Just a collection of BitmapData utility methods.
+ * Just for crossplatform stuff, since not all methods are implemented across all targets.
+ */
 class FlxBitmapDataUtil
 {
+	/**
+	 * Performs per-channel blending from a source image to a destination image.
+	 * 
+	 * @param	sourceBitmapData	The input bitmap image to use. The source image can be a different BitmapData object, or it can refer to the current BitmapData object.
+	 * @param	sourceRect			A rectangle that defines the area of the source image to use as input. 
+	 * @param	destBitmapData		The output bitmap image to use.
+	 * @param	destPoint			The point within the destination image (the current BitmapData instance) that corresponds to the upper-left corner of the source rectangle.
+	 * @param	redMultiplier		A hexadecimal uint value by which to multiply the red channel value.
+	 * @param	greenMultiplier		A hexadecimal uint value by which to multiply the green channel value.
+	 * @param	blueMultiplier		A hexadecimal uint value by which to multiply the blue channel value.
+	 * @param	alphaMultiplier		A hexadecimal uint value by which to multiply the alpha transparency value. 
+	 */
 	public static function merge(sourceBitmapData:BitmapData, sourceRect:Rectangle, destBitmapData:BitmapData, destPoint:Point, redMultiplier:Int, greenMultiplier:Int, blueMultiplier:Int, alphaMultiplier:Int):Void
 	{
 		#if flash
@@ -135,6 +149,17 @@ class FlxBitmapDataUtil
 		return Std.int(((source * multiplier) + (dest * (256 - multiplier))) / 256);
 	}
 	
+	/**
+	 * Compares two BitmapData objects.
+	 * 
+	 * @param	Bitmap1		The source BitmapData object to compare with.
+	 * @param	Bitmap2		The BitmapData object to compare with the source BitmapData object.
+	 * @return	If the two BitmapData objects have the same dimensions (width and height), 
+	 * the method returns a new BitmapData object that has the difference between the two objects. 
+	 * If the BitmapData objects are equivalent, the method returns the number 0.
+	 * If the widths of the BitmapData objects are not equal, the method returns the number -3. 
+	 * If the heights of the BitmapData objects are not equal, the method returns the number -4.
+	 */
 	public static function compare(Bitmap1:BitmapData,  Bitmap2:BitmapData):Dynamic
 	{
 		#if flash
@@ -251,9 +276,10 @@ class FlxBitmapDataUtil
 	 * @param	color				Color to replace
 	 * @param	newColor			New color
 	 * @param	fetchPositions		Whether we need to store positions of pixels which colors were replaced
+	 * @param	rect				area to apply color replacement. Optional, uses whole image area if the rect is null
 	 * @return	Array replaced pixels positions
 	 */
-	public static function replaceColor(bitmapData:BitmapData, color:FlxColor, newColor:FlxColor, fetchPositions:Bool = false):Array<FlxPoint>
+	public static function replaceColor(bitmapData:BitmapData, color:FlxColor, newColor:FlxColor, fetchPositions:Bool = false, rect:FlxRect = null):Array<FlxPoint>
 	{
 		var positions:Array<FlxPoint> = null;
 		if (fetchPositions)
@@ -261,10 +287,26 @@ class FlxBitmapDataUtil
 			positions = new Array<FlxPoint>();
 		}
 		
+		var startX:Int = 0;
+		var startY:Int = 0;
+		var columns:Int = bitmapData.width;
+		var rows:Int = bitmapData.height;
+		
+		if (rect != null)
+		{
+			startX = Std.int(rect.x);
+			startY = Std.int(rect.y);
+			columns = Std.int(rect.width);
+			rows = Std.int(rect.height);
+		}
+		
+		columns = Std.int(Math.max(columns, bitmapData.width));
+		rows = Std.int(Math.max(rows, bitmapData.height));
+		
 		var row:Int = 0;
 		var column:Int = 0;
-		var rows:Int = bitmapData.height;
-		var columns:Int = bitmapData.width;
+		var x:Int, y:Int;
+		
 		var changed:Bool = false;
 		bitmapData.lock();
 		while (row < rows)
@@ -272,13 +314,15 @@ class FlxBitmapDataUtil
 			column = 0;
 			while (column < columns)
 			{
-				if (bitmapData.getPixel32(column, row) == cast color)
+				x = startX + column;
+				y = startY + row;
+				if (bitmapData.getPixel32(x, y) == cast color)
 				{
-					bitmapData.setPixel32(column, row, newColor);
+					bitmapData.setPixel32(x, y, newColor);
 					changed = true;
 					if (fetchPositions)
 					{
-						positions.push(FlxPoint.get(column, row));
+						positions.push(FlxPoint.get(x, y));
 					}
 				}
 				column++;
@@ -375,7 +419,7 @@ class FlxBitmapDataUtil
 		var midpointX:Int = Std.int(max * 0.5);
 		var midpointY:Int = Std.int(max * 0.5);
 		
-		var matrix:Matrix = FlxMatrix.MATRIX;
+		var matrix:Matrix = FlxMatrix.matrix;
 		
 		while (row < rows)
 		{

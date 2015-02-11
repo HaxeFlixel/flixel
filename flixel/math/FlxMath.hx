@@ -533,4 +533,28 @@ class FlxMath
 	{
 		return (Math.exp(f) - Math.exp(-f)) / 2;
 	}
+	
+	/**
+	 * Returns bigger argument.
+	 */
+	public static inline function maxInt(a:Int, b:Int):Int
+	{
+		return (a > b) ? a : b;
+	}
+	
+	/**
+	 * Returns smaller argument.
+	 */
+	public static inline function minInt(a:Int, b:Int):Int
+	{
+		return (a > b) ? b : a;
+	}
+	
+	/**
+	 * Returns absolute integer value.
+	 */
+	public static inline function absInt(a:Int):Int
+	{
+		return (a > 0) ? a : -a;
+	}
 }

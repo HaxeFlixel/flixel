@@ -8,6 +8,7 @@ import flixel.math.FlxRect;
 import flixel.util.FlxDestroyUtil;
 import flixel.math.FlxPoint;
 import flixel.graphics.FlxGraphic;
+import flixel.util.FlxStringUtil;
 
 /**
  * Base class for all frame collections
@@ -167,6 +168,11 @@ class FlxFramesCollection implements IFlxDestroyable
 	  */
 	public function addAtlasFrame(frame:FlxRect, sourceSize:FlxPoint, offset:FlxPoint, name:String = null, angle:FlxFrameAngle = 0):FlxFrame
 	{
+		if (name != null && framesHash.exists(name))
+		{
+			return framesHash.get(name);
+		}
+		
 		var texFrame:FlxFrame = null;
 		if (angle != FlxFrameAngle.ANGLE_0)
 		{
@@ -215,6 +221,13 @@ class FlxFramesCollection implements IFlxDestroyable
 		{
 			frame.destroyBitmaps();
 		}
+	}
+	
+	public function toString():String
+	{
+		return FlxStringUtil.getDebugString([
+			LabelValuePair.weak("frames", frames),
+			LabelValuePair.weak("type", type)]);
 	}
 	
 	private inline function get_numFrames():Int

@@ -2,8 +2,8 @@ package flixel;
 
 import flash.display.BitmapData;
 import flixel.animation.FlxAnimation;
-import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.graphics.atlas.FlxAtlas;
 import flixel.util.FlxColor;
 import massive.munit.Assert;
 
@@ -130,6 +130,56 @@ class FlxSpriteTest extends FlxTest
 		
 		var animation:FlxAnimation = sprite2.animation.getByName("animation");
 		Assert.areEqual(3, animation.numFrames);
+	}
+	
+	@Test
+	function testLoadGraphic()
+	{
+		sprite1.loadGraphic(new BitmapData(1, 1));
+		assert1x1GraphicLoaded();
+	}
+	
+	@Test
+	function testLoadGraphicFromSprite()
+	{
+		sprite2.loadGraphic(new BitmapData(1, 1));
+		sprite1.loadGraphicFromSprite(sprite2);
+		assert1x1GraphicLoaded();
+	}
+	
+	@Test
+	function testLoadRotatedGraphic()
+	{
+		sprite1.loadRotatedGraphic(new BitmapData(1, 1));
+		assert1x1GraphicLoaded();
+	}
+	
+	@Test
+	function testLoadRotatedFrame()
+	{
+		var atlas = new FlxAtlas("atlas");
+		atlas.addNode(new BitmapData(1, 1), "node");
+		sprite1.loadRotatedFrame(atlas.getAtlasFrames().getByName("node"));
+		assert1x1GraphicLoaded();
+	}
+	
+	@Test // issue 1377
+	function testUpdateHitboxNegativeScale()
+	{
+		sprite1.makeGraphic(10, 5);
+		sprite1.scale.set( -0.5, -2);
+		sprite1.updateHitbox();
+		
+		Assert.areEqual(sprite1.width, 5);
+		Assert.areEqual(sprite1.height, 10);
+	}
+	
+	function assert1x1GraphicLoaded()
+	{
+		Assert.isNotNull(sprite1.pixels);
+		Assert.isNotNull(sprite1.graphic);
+		Assert.areEqual(1, sprite1.frameWidth);
+		Assert.areEqual(1, sprite1.frameHeight);
 	}
 	
 	@Test // issue 1203

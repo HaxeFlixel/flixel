@@ -131,15 +131,9 @@ class FlxPath implements IFlxDestroyable
 	private var _wasObjectImmovable:Bool;
 	
 	/**
-	 * Creates a new FlxPath (and calls start() right away if Object != null).
+	 * Creates a new FlxPath.
 	 */
-	public function new(?Object:FlxObject, ?Nodes:Array<FlxPoint>, Speed:Float = 100, Mode:Int = FlxPath.FORWARD, AutoRotate:Bool = false) 
-	{
-		if (Object != null)
-		{
-			start(Object, Nodes, Speed, Mode, AutoRotate);
-		}
-	}
+	public function new() {}
 	
 	public function reset():FlxPath
 	{
@@ -658,7 +652,7 @@ class FlxPath implements IFlxDestroyable
 			node = nodes[i];
 			
 			//find the screen position of the node on this camera
-			_point.x = node.x - (Camera.scroll.x * debugScrollX); //copied from getScreenXY()
+			_point.x = node.x - (Camera.scroll.x * debugScrollX); //copied from getScreenPosition()
 			_point.y = node.y - (Camera.scroll.y * debugScrollY);
 			
 			//decide what color this node should be
@@ -700,7 +694,7 @@ class FlxPath implements IFlxDestroyable
 			//then draw a line to the next node
 			gfx.moveTo(_point.x, _point.y);
 			gfx.lineStyle(1, debugColor, linealpha);
-			_point.x = nextNode.x - (Camera.scroll.x * debugScrollX); //copied from getScreenXY()
+			_point.x = nextNode.x - (Camera.scroll.x * debugScrollX); //copied from getScreenPosition()
 			_point.y = nextNode.y - (Camera.scroll.y * debugScrollY);
 			gfx.lineTo(_point.x, _point.y);
 

@@ -12,18 +12,26 @@ import flash.media.Sound;
 import flash.text.Font;
 import flixel.FlxG;
 import flixel.graphics.FlxGraphic;
+import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.graphics.frames.FlxTileFrames;
 import openfl.Assets;
+import openfl.utils.ByteArray;
 
-@:font("assets/fonts/nokiafc22.ttf")
+@:keep @:font("assets/fonts/nokiafc22.ttf")
 private class FontDefault extends Font {}
 #if !FLX_NO_DEBUG
-@:font("assets/fonts/arial.ttf")
+@:keep @:font("assets/fonts/arial.ttf")
 private class FontDebugger extends Font {}
 #end
 
-@:bitmap("assets/images/logo/logo.png")
+@:keep @:bitmap("assets/images/logo/logo.png")
 class GraphicLogo extends BitmapData {}
+
+@:keep @:bitmap("assets/images/ui/virtual-input.png")
+class GraphicVirtualInput extends BitmapData {}
+
+@:file("assets/images/ui/virtual-input.txt")
+class VirtualInputData extends ByteArray {}
 #end
 
 class FlxAssets
@@ -181,8 +189,7 @@ class FlxAssets
 	 */
 	public static inline function getBitmapFromClass(source:Class<Dynamic>):BitmapData
 	{
-		var bitmap:BitmapData = Type.createInstance(source, [0, 0]);
-		return bitmap;
+		return Type.createInstance(source, [0, 0]);
 	}
 	
 	/**
@@ -257,6 +264,12 @@ class FlxAssets
 		#end
 		return Assets.getSound(id + extension);
 	}
+	
+	public static function getVirtualInputFrames():FlxAtlasFrames
+	{
+		var graphic:FlxGraphic = FlxGraphic.fromClass(GraphicVirtualInput);
+		return FlxAtlasFrames.fromSpriteSheetPacker(graphic, Std.string(new VirtualInputData()));
+	}
 #end
 }
 
@@ -281,11 +294,11 @@ private class FileReference
 	}
 }
 #else
+typedef FlxAngelCodeSource = OneOfTwo<Xml, String>;
 typedef FlxSoundAsset = OneOfThree<String, Sound, Class<Sound>>;
 typedef FlxGraphicAsset = OneOfThree<FlxGraphic, BitmapData, String>;
 typedef FlxGraphicSource = OneOfThree<BitmapData, Class<Dynamic>, String>;
 typedef FlxTilemapGraphicAsset = OneOfFour<FlxTileFrames, FlxGraphic, BitmapData, String>;
-typedef FlxTilemapAsset = OneOfTwo<String, Array<Int>>;
 
 private abstract OneOfTwo<T1, T2>(Dynamic) from T1 from T2 to T1 to T2 { }
 private abstract OneOfThree<T1, T2, T3>(Dynamic) from T1 from T2 from T3 to T1 to T2 to T3 {}

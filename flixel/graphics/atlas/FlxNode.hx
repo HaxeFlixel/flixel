@@ -1,8 +1,8 @@
 package flixel.graphics.atlas;
 
-import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.graphics.FlxGraphic;
+import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.frames.FlxImageFrame;
 import flixel.graphics.frames.FlxTileFrames;
 import flixel.math.FlxPoint;
@@ -28,11 +28,7 @@ class FlxNode implements IFlxDestroyable
 	/**
 	 * Region of atlas which this node holds, includes spacings between nodes
 	 */
-	public var rect:Rectangle;
-	/**
-	 * Position of upper left corner of this node on atlas bitmapdata
-	 */
-	public var point:Point;
+	public var rect:FlxRect;
 	/**
 	 * The "name" of this node. You can get access to this node with it:
 	 * atlas.getNode(key);
@@ -41,7 +37,7 @@ class FlxNode implements IFlxDestroyable
 	/**
 	 * Logical flag showing whether this node have image in it or not
 	 */
-	public var filled:Bool;
+	public var filled(default, null):Bool;
 	/**
 	 * Atlas object, which contains this node
 	 */
@@ -58,30 +54,17 @@ class FlxNode implements IFlxDestroyable
 	/**
 	 * The width of this node.
 	 */
-	public var width(get, null):Int;
+	public var width(get, set):Int;
 	/**
 	 * The height of this node.
 	 */
-	public var height(get, null):Int;
+	public var height(get, set):Int;
 	/**
 	 * Logical flag, showing whether this node have any child nodes or image in it
 	 */
 	public var isEmpty(get, null):Bool;
 	
-	/**
-	 * Helper rectangle object, showing actual size and position of image on atlas bitmapdata
-	 */
-	public var contentRect(get, null):FlxRect;
-	/**
-	 * The width of image in in this node (node.width - atlas.borderX)
-	 */
-	public var contentWidth(get, null):Int;
-	/**
-	 * The height of image in in this node (node.height - atlas.borderY)
-	 */
-	public var contentHeight(get, null):Int;
-	
-	private var _contentRect:FlxRect;
+	public var rotated(default, null):Bool;
 	
 	/**
 	 * Node constructot
@@ -90,15 +73,15 @@ class FlxNode implements IFlxDestroyable
 	 * @param	filled	whether this node contains image or not
 	 * @param	key		the name of image in this node, and the name of this node
 	 */
-	public function new(rect:Rectangle, atlas:FlxAtlas, filled:Bool = false, key:String = "") 
+	public function new(rect:FlxRect, atlas:FlxAtlas, filled:Bool = false, key:String = "", rotated:Bool = false) 
 	{
 		this.filled = filled;
 		this.left = null;
 		this.right = null;
 		this.rect = rect;
-		point = new Point(rect.x, rect.y);
 		this.key = key;
 		this.atlas = atlas;
+		this.rotated = rotated;
 	}
 	
 	public inline function destroy():Void
@@ -107,9 +90,7 @@ class FlxNode implements IFlxDestroyable
 		left = null;
 		right = null;
 		rect = null;
-		point = null;
 		atlas = null;
-		_contentRect = null;
 	}
 	
 	/**
@@ -124,20 +105,19 @@ class FlxNode implements IFlxDestroyable
 	 * Generates TileFrames object for this node
 	 * @param	tileSize		The size of tile in spritesheet
 	 * @param	tileSpacing		Offsets between tiles in spritesheet
-	 * @param	region			Region of node to use as a source of graphic. Default value is null, which means that the whole node will be used for it.
 	 * @return	Created TileFrames object for this node
 	 */
-	public function getTileFrames(tileSize:FlxPoint, tileSpacing:FlxPoint = null, region:FlxRect = null):FlxTileFrames
+	public function getTileFrames(tileSize:FlxPoint, tileSpacing:FlxPoint = null):FlxTileFrames
 	{
-		if (!atlas.finalized)
-			throw "You can't get tile frames from atlas which isn't finalized.";
+		var graphic:FlxGraphic = FlxG.bitmap.add(atlas.bitmapData, false, atlas.name);
+		var frame:FlxFrame = atlas.getAtlasFrames().getByName(key);
 		
-		var graphic:FlxGraphic = FlxG.bitmap.add(atlas.atlasBitmapData, false, atlas.name);
+		if (frame != null)
+		{
+			return FlxTileFrames.fromFrame(frame, tileSize, tileSpacing);
+		}
 		
-		if (region == null)
-			region = contentRect;
-		
-		return FlxTileFrames.fromRectangle(graphic, tileSize, region, tileSpacing);
+		return null;
 	}
 	
 	/**
@@ -146,11 +126,15 @@ class FlxNode implements IFlxDestroyable
 	 */
 	public function getImageFrame():FlxImageFrame
 	{
-		if (!atlas.finalized)
-			throw "You can't get image frame from atlas which isn't finalized.";
+		var graphic:FlxGraphic = FlxG.bitmap.add(atlas.bitmapData, false, atlas.name);
+		var frame = atlas.getAtlasFrames().getByName(key);
 		
-		var graphic:FlxGraphic = FlxG.bitmap.add(atlas.atlasBitmapData, false, atlas.name);
-		return FlxImageFrame.fromRectangle(graphic, contentRect);
+		if (frame != null)
+		{
+			return FlxImageFrame.fromFrame(frame);
+		}
+		
+		return null;
 	}
 	
 	private inline function get_isEmpty():Bool
@@ -173,26 +157,20 @@ class FlxNode implements IFlxDestroyable
 		return Std.int(rect.width);
 	}
 	
+	private function set_width(value:Int):Int
+	{
+		rect.width = value;
+		return value;
+	}
+	
 	private inline function get_height():Int
 	{
 		return Std.int(rect.height);
 	}
 	
-	private inline function get_contentWidth():Int
+	private function set_height(value:Int):Int
 	{
-		return Std.int(rect.width - atlas.borderX);
-	}
-	
-	private inline function get_contentHeight():Int
-	{
-		return Std.int(rect.height - atlas.borderY);
-	}
-	
-	private inline function get_contentRect():FlxRect
-	{
-		if (_contentRect == null)
-			_contentRect = new FlxRect(x, y, contentWidth, contentHeight);
-		
-		return _contentRect;
+		rect.height = value;
+		return value;
 	}
 }

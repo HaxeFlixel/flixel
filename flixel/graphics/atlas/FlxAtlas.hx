@@ -6,7 +6,9 @@ import flash.geom.Rectangle;
 import flixel.FlxG;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxAtlasFrames;
+import flixel.graphics.frames.FlxFrame.FlxFrameAngle;
 import flixel.graphics.frames.FlxTileFrames;
+import flixel.math.FlxMatrix;
 import flixel.math.FlxRect;
 import flixel.util.FlxBitmapDataUtil;
 import flixel.util.FlxColor;
@@ -14,8 +16,7 @@ import flixel.util.FlxDestroyUtil;
 import flixel.math.FlxPoint;
 import flixel.system.FlxAssets;
 import flixel.system.frontEnds.BitmapFrontEnd;
-
-// TODO: generate json file for atlas
+import openfl.geom.Matrix;
 
 /**
  * Class for packing multiple images in big one and generating frame data for each of them 
@@ -24,41 +25,78 @@ import flixel.system.frontEnds.BitmapFrontEnd;
 class FlxAtlas implements IFlxDestroyable
 {	
 	/**
+	 * Default minimum size for atlases.
+	 */
+	public static var defaultMinSize:FlxPoint = new FlxPoint(128, 128);
+	
+	/**
+	 * Default maximum size for atlases
+	 */
+	public static var defaultMaxSize:FlxPoint = new FlxPoint(1024, 1024);
+	
+	/**
 	 * Root node of atlas
 	 */
-	public var root:FlxNode;
+	public var root(default, null):FlxNode;
 	
 	/**
 	 * Name of this atlas, used as a key in bitmap cache
 	 */
-	public var name:String;
+	public var name(default, null):String;
 	
-	public var nodes:Map<String, FlxNode>;
+	public var nodes(default, null):Map<String, FlxNode>;
 	
 	/**
 	 * BitmapData of this atlas, combines all images in big one
 	 */
-	public var atlasBitmapData:BitmapData;
+	public var bitmapData(get, set):BitmapData;
 	
 	/**
-	 * Offsets between nodes on x axis
+	 * Offsets between nodes
 	 */
-	public var borderX(default, null):Int;
-	/**
-	 * Offsets between nodes on y axis
-	 */
-	public var borderY(default, null):Int;
+	public var border(default, null):Int = 1;
 	
 	/**
 	 * Total width of atlas
 	 */
-	public var width(default, null):Int;
+	@:isVar
+	public var width(get, set):Int;
+	
 	/**
 	 * Total height of atlas
 	 */
-	public var height(default, null):Int;
+	@:isVar
+	public var height(get, set):Int;
 	
-	public var finalized(default, null):Bool = false;
+	/**
+	 * Minimum width for this atlas.
+	 */
+	public var minWidth(default, set):Int = 128;
+	/**
+	 * Minimum height for this atlas
+	 */
+	public var minHeight(default, set):Int = 128;
+	
+	/**
+	 * Maximum width for this atlas.
+	 */
+	public var maxWidth(default, set):Int = 1024;
+	/**
+	 * Maximum height for this atlas.
+	 */
+	public var maxHeight(default, set):Int = 1024;
+	
+	/**
+	 * Whether to allow image rotation for packing in atlas.
+	 */
+	public var allowRotation(default, null):Bool = false;
+	
+	/**
+	 * Whether the size of this atlas should be the power of 2 or not.
+	 */
+	public var powerOfTwo(default, set):Bool = false;
+	
+	private var _bitmapData:BitmapData;
 	
 	/**
 	 * Internal storage for building atlas from queue
@@ -67,23 +105,44 @@ class FlxAtlas implements IFlxDestroyable
 	
 	/**
 	 * Atlas constructor
-	 * @param	width		atlas width
-	 * @param	height		atlas height
-	 * @param	borderX		horizontal distance between nodes
-	 * @param	borderY		vertical distance between nodes
+	 * @param	name		the name of this atlas. It will be used for caching bitmapdata of this atlas.
+	 * @param	powerOfTwo	whether the size of this atlas should be the power of 2 or not.
+	 * @param	border		gap between nodes to insert.
+	 * @param	rotate		whether to rotate added images for less atlas size
+	 * @param	minSize		min size of atlas
+	 * @param	maxSize		max size of atlas
 	 */
-	public function new(name:String, width:Int, height:Int, borderX:Int = 1, borderY:Int = 1) 
+	public function new(name:String, powerOfTwo:Bool = false, border:Int = 1, rotate:Bool = false, minSize:FlxPoint = null, maxSize:FlxPoint = null)
 	{
 		nodes = new Map<String, FlxNode>();
 		this.name = name;
+		this.powerOfTwo = powerOfTwo;
+		this.border = border;
 		
-		root = new FlxNode(new Rectangle(0, 0, width, height), this);
-		atlasBitmapData = new BitmapData(width, height, true, FlxColor.TRANSPARENT);
+		minSize = (minSize != null) ? minSize : defaultMinSize;
+		maxSize = (maxSize != null) ? maxSize : defaultMaxSize;
 		
-		this.width = width;
-		this.height = height;
-		this.borderX = borderX;
-		this.borderY = borderY;
+		this.minWidth = Std.int(minSize.x);
+		this.minHeight = Std.int(minSize.y);
+		this.maxWidth = (maxSize.x > minSize.x) ? Std.int(maxSize.x) : minWidth;
+		this.maxHeight = (maxSize.y > minSize.x) ? Std.int(maxSize.y) : minHeight;
+		this.allowRotation = rotate;
+		
+		initRoot();
+	}
+	
+	private function initRoot():Void
+	{
+		var rootWidth:Int = minWidth;
+		var rootHeight:Int = minHeight;
+		
+		if (powerOfTwo)
+		{
+			rootWidth = getNextPowerOf2(rootWidth);
+			rootHeight = getNextPowerOf2(rootHeight);
+		}
+		
+		root = new FlxNode(new FlxRect(0, 0, rootWidth, rootHeight), this);
 	}
 	
 	/**
@@ -97,62 +156,169 @@ class FlxAtlas implements IFlxDestroyable
 		var key:String = FlxAssets.resolveKey(Graphic, Key);
 		
 		if (key == null) 
+		{
+			#if !FLX_NO_DEBUG
+			throw "addNode can't find the key for specified bitmapdata. Please provide not null value as a Key argument.";
+			#end
 			return null;
+		}
 		
 		if (hasNodeWithName(key) == true)
 			return nodes.get(key);
 		
-		if (finalized)
-			throw "You can't add images to finalized atlas.";
-		
 		var data:BitmapData = FlxAssets.resolveBitmapData(Graphic);
 		
 		if (data == null)	
+		{
+			#if !FLX_NO_DEBUG
+			throw "addNode can't find bitmapdata with specified key: " + Graphic + ". Please provide valid value.";
+			#end
 			return null;
+		}
 		
-		if (root.canPlace(data.width, data.height) == false)
-			return null; // There is no place for image
+		// check if we can add nodes right into root
+		if (root.left == null)
+			return insertFirstNodeInRoot(data, key);
 		
-		var insertWidth:Int = (data.width == width) ? data.width : data.width + borderX;
-		var insertHeight:Int = (data.height == height) ? data.height : data.height + borderY;
+		if (root.right == null)
+		{
+			return expand(data, key);
+		}
 		
+		// try to find enough empty space in atlas
+		var inserted:FlxNode = tryInsert(data, key);
+		if (inserted != null)
+			return inserted;
+		
+		// if there is no empty space we need to wrap existing nodes and add new one on the right...
+		wrapRoot();
+		return expand(data, key);
+	}
+	
+	private function wrapRoot():Void
+	{
+		var temp:FlxNode = root;
+		root = new FlxNode(new FlxRect(0, 0, temp.width, temp.height), this);
+		root.left = temp;
+	}
+	
+	private function tryInsert(data:BitmapData, key:String):FlxNode
+	{
+		var insertWidth:Int = data.width + border;
+		var insertHeight:Int = data.height + border;
+		
+		var rotateNode:Bool = false;
 		var nodeToInsert:FlxNode = findNodeToInsert(insertWidth, insertHeight);
+		
+		if (allowRotation)
+		{
+			var nodeToInsertWithRotation = findNodeToInsert(insertHeight, insertWidth);
+			
+			if (nodeToInsertWithRotation != null)
+			{
+				var nodeWithRotationArea:Int = nodeToInsertWithRotation.width * nodeToInsertWithRotation.height;
+				
+				if (nodeToInsert == null || (nodeToInsert != null && nodeToInsert.width * nodeToInsert.height > nodeWithRotationArea))
+				{
+					nodeToInsert = nodeToInsertWithRotation;
+					rotateNode = true;
+					var temp:Int = insertWidth;
+					insertWidth = insertHeight;
+					insertHeight = temp;
+				}
+			}
+		}
+		
 		if (nodeToInsert != null)
 		{
-			var firstChild:FlxNode;
-			var secondChild:FlxNode;
-			var firstGrandChild:FlxNode;
-			var secondGrandChild:FlxNode;
+			var horizontally:Bool = needToDivideHorizontally(nodeToInsert, insertWidth, insertHeight);
+			return divideNode(nodeToInsert, insertWidth, insertHeight, horizontally, data, key, rotateNode);
+		}
+		
+		return null;
+	}
+	
+	private function needToDivideHorizontally(nodeToDivide:FlxNode, insertWidth:Int, insertHeight:Int):Bool
+	{
+		var dw:Int = nodeToDivide.width - insertWidth;
+		var dh:Int = nodeToDivide.height - insertHeight;
+		
+		return (dw > dh); // divide horizontally if true, vertically if false
+	}
+	
+	private function divideNode(nodeToDivide:FlxNode, insertWidth:Int, insertHeight:Int, divideHorizontally:Bool, firstGrandChildData:BitmapData = null, firstGrandChildKey:String = null, firstGrandChildRotated:Bool = false):FlxNode
+	{
+		if (nodeToDivide != null)
+		{
+			var firstChild:FlxNode = null;
+			var secondChild:FlxNode = null;
+			var firstGrandChild:FlxNode = null;
+			var secondGrandChild:FlxNode = null;
+			var firstGrandChildFilled:Bool = (firstGrandChildKey != null);
 			
-			var dw:Int = nodeToInsert.width - insertWidth;
-			var dh:Int = nodeToInsert.height - insertHeight;
-			
-			if (dw > dh) // divide horizontally
+			if (divideHorizontally) // divide horizontally
 			{
-				firstChild = new FlxNode(new Rectangle(nodeToInsert.x, nodeToInsert.y, insertWidth, nodeToInsert.height), this);
-				secondChild = new FlxNode(new Rectangle(nodeToInsert.x + insertWidth, nodeToInsert.y, nodeToInsert.width - insertWidth, nodeToInsert.height), this);
+				firstChild = new FlxNode(new FlxRect(nodeToDivide.x, nodeToDivide.y, insertWidth, nodeToDivide.height), this);
 				
-				firstGrandChild = new FlxNode(new Rectangle(firstChild.x, firstChild.y, insertWidth, insertHeight), this, true, key);
-				secondGrandChild = new FlxNode(new Rectangle(firstChild.x, firstChild.y + insertHeight, insertWidth, firstChild.height - insertHeight), this);
+				if (nodeToDivide.width - insertWidth > 0)
+				{
+					secondChild = new FlxNode(new FlxRect(nodeToDivide.x + insertWidth, nodeToDivide.y, nodeToDivide.width - insertWidth, nodeToDivide.height), this);
+				}
+				
+				firstGrandChild = new FlxNode(new FlxRect(firstChild.x, firstChild.y, insertWidth, insertHeight), this, firstGrandChildFilled, firstGrandChildKey, firstGrandChildRotated);
+				
+				if (firstChild.height - insertHeight > 0)
+				{
+					secondGrandChild = new FlxNode(new FlxRect(firstChild.x, firstChild.y + insertHeight, insertWidth, firstChild.height - insertHeight), this);
+				}
+				
 			}
 			else // divide vertically
 			{
-				firstChild = new FlxNode(new Rectangle(nodeToInsert.x, nodeToInsert.y, nodeToInsert.width, insertHeight), this);
-				secondChild = new FlxNode(new Rectangle(nodeToInsert.x, nodeToInsert.y + insertHeight, nodeToInsert.width, nodeToInsert.height - insertHeight), this);
+				firstChild = new FlxNode(new FlxRect(nodeToDivide.x, nodeToDivide.y, nodeToDivide.width, insertHeight), this);
 				
-				firstGrandChild = new FlxNode(new Rectangle(firstChild.x, firstChild.y, insertWidth, insertHeight), this, true, key);
-				secondGrandChild = new FlxNode(new Rectangle(firstChild.x + insertWidth, firstChild.y, firstChild.width - insertWidth, insertHeight), this);
+				if (nodeToDivide.height - insertHeight > 0)
+				{
+					secondChild = new FlxNode(new FlxRect(nodeToDivide.x, nodeToDivide.y + insertHeight, nodeToDivide.width, nodeToDivide.height - insertHeight), this);
+				}
+				
+				firstGrandChild = new FlxNode(new FlxRect(firstChild.x, firstChild.y, insertWidth, insertHeight), this, firstGrandChildFilled, firstGrandChildKey, firstGrandChildRotated);
+				
+				if (firstChild.width - insertWidth > 0)
+				{
+					secondGrandChild = new FlxNode(new FlxRect(firstChild.x + insertWidth, firstChild.y, firstChild.width - insertWidth, insertHeight), this);
+				}
 			}
 			
 			firstChild.left = firstGrandChild;
 			firstChild.right = secondGrandChild;
 			
-			nodeToInsert.left = firstChild;
-			nodeToInsert.right = secondChild;
+			nodeToDivide.left = firstChild;
+			nodeToDivide.right = secondChild;
 			
-			atlasBitmapData.copyPixels(data, data.rect, firstGrandChild.point);
-			
-			nodes.set(key, firstGrandChild);
+			// bake data in atlas
+			if (firstGrandChildKey != null && firstGrandChildData != null)
+			{
+				expandBitmapData();
+				
+				if (firstGrandChildRotated)
+				{
+					var matrix:Matrix = FlxMatrix.matrix;
+					matrix.identity();
+					matrix.rotate(Math.PI / 2);
+					matrix.translate(firstGrandChildData.height + firstGrandChild.x, firstGrandChild.y);
+					_bitmapData.draw(firstGrandChildData, matrix);
+				}
+				else
+				{
+					var point:Point = FlxPoint.point;
+					point.setTo(firstGrandChild.x, firstGrandChild.y);
+					_bitmapData.copyPixels(firstGrandChildData, firstGrandChildData.rect, point);
+				}
+				
+				addNodeToAtlasFrames(firstGrandChild);
+				nodes.set(firstGrandChildKey, firstGrandChild);
+			}
 			
 			return firstGrandChild;
 		}
@@ -160,9 +326,246 @@ class FlxAtlas implements IFlxDestroyable
 		return null;
 	}
 	
+	private function insertFirstNodeInRoot(data:BitmapData, key:String):FlxNode
+	{
+		if (root.left == null)
+		{
+			var insertWidth:Int = data.width + border;
+			var insertHeight:Int = data.height + border;
+			
+			var rootWidth:Int = insertWidth;
+			var rootHeight:Int = insertHeight;
+			
+			if (powerOfTwo)
+			{
+				rootWidth = getNextPowerOf2(rootWidth);
+				rootHeight = getNextPowerOf2(rootHeight);
+			}
+			
+			rootWidth = (minWidth > rootWidth) ? minWidth : rootWidth;
+			rootHeight = (minHeight > rootHeight) ? minHeight : rootHeight;
+			
+			if (powerOfTwo)
+			{
+				rootWidth = getNextPowerOf2(rootWidth);
+				rootHeight = getNextPowerOf2(rootHeight);
+			}
+			
+			if ((maxWidth > 0 && rootWidth > maxWidth) || (maxHeight > 0 && rootHeight > maxHeight))
+			{
+				#if !FLX_NO_DEBUG
+				throw "Can't insert node " + key + " with the size of (" + data.width + "; " + data.height + ") in atlas " + name + " with the max size of (" + maxWidth + "; " + maxHeight + ") and powerOfTwo: " + powerOfTwo;
+				#end
+				return null;
+			}
+			
+			root.width = rootWidth;
+			root.height = rootHeight;
+			
+			var horizontally:Bool = needToDivideHorizontally(root, insertWidth, insertHeight);
+			return divideNode(root, insertWidth, insertHeight, horizontally, data, key);
+		}
+		
+		return null;
+	}
+	
+	private function expand(data:BitmapData, key:String):FlxNode
+	{
+		if (root.right == null)
+		{
+			var insertWidth:Int = data.width + border;
+			var insertHeight:Int = data.height + border;
+			
+			// helpers for makinkg decision on how to insert new node
+			var addRightWidth:Int = root.width + insertWidth;
+			var addRightHeight:Int = Std.int(Math.max(root.height, insertHeight));
+			
+			var addBottomWidth:Int = Std.int(Math.max(root.width, insertWidth));
+			var addBottomHeight:Int = root.height + insertHeight;
+			
+			var addRightWidthRotate:Int = addRightWidth;
+			var addRightHeightRotate:Int = addRightHeight;
+			
+			var addBottomWidthRotate:Int = addBottomWidth;
+			var addBottomHeightRotate:Int = addBottomHeight;
+			
+			if (allowRotation)
+			{
+				addRightWidthRotate = root.width + insertHeight;
+				addRightHeightRotate = Std.int(Math.max(root.height, insertWidth));
+				
+				addBottomWidthRotate = Std.int(Math.max(root.width, insertHeight));
+				addBottomHeightRotate = root.height + insertWidth;
+			}
+			
+			if (powerOfTwo)
+			{
+				addRightWidthRotate = addRightWidth = getNextPowerOf2(addRightWidth);
+				addRightHeightRotate = addRightHeight = getNextPowerOf2(addRightHeight);
+				addBottomWidthRotate = addBottomWidth = getNextPowerOf2(addBottomWidth);
+				addBottomHeightRotate = addBottomHeight = getNextPowerOf2(addBottomHeight);
+				
+				if (allowRotation)
+				{
+					addRightWidthRotate = getNextPowerOf2(addRightWidthRotate);
+					addRightHeightRotate = getNextPowerOf2(addRightHeightRotate);
+					addBottomWidthRotate = getNextPowerOf2(addBottomWidthRotate);
+					addBottomHeightRotate = getNextPowerOf2(addBottomHeightRotate);
+				}
+			}
+			
+			// checks for the max size
+			var canExpandRight:Bool = true;
+			var canExpandBottom:Bool = true;
+			
+			var canExpandRightRotate:Bool = allowRotation;
+			var canExpandBottomRotate:Bool = allowRotation;
+			
+			if ((maxWidth > 0 && addRightWidth > maxWidth) || (maxHeight > 0 && addRightHeight > maxHeight))
+				canExpandRight = false;
+			
+			if ((maxWidth > 0 && addBottomWidth > maxWidth) || (maxHeight > 0 && addBottomHeight > maxHeight))
+				canExpandBottom = false;
+			
+			if ((maxWidth > 0 && addRightWidthRotate > maxWidth) || (maxHeight > 0 && addRightHeightRotate > maxHeight))
+				canExpandRightRotate = false;
+			
+			if ((maxWidth > 0 && addBottomWidthRotate > maxWidth) || (maxHeight > 0 && addBottomHeightRotate > maxHeight))
+				canExpandBottomRotate = false;
+			
+			if (!canExpandRight && !canExpandBottom && !canExpandRightRotate && !canExpandBottomRotate)
+			{
+				#if !FLX_NO_DEBUG
+				throw "Can't insert node " + key + " with the size of (" + data.width + "; " + data.height + ") in atlas " + name + " with the max size of (" + maxWidth + "; " + maxHeight + ") and powerOfTwo: " + powerOfTwo;
+				#end
+				return null; // can't expand in any direction
+			}
+			
+			// calculate area of result atlas for various cases
+			// the case with less area will be chosen
+			var addRightArea:Int = addRightWidth * addRightHeight;
+			var addBottomArea:Int = addBottomWidth * addBottomHeight;
+			
+			var addRightAreaRotate:Int = addRightWidthRotate * addRightHeightRotate;
+			var addBottomAreaRotate:Int = addBottomWidthRotate * addBottomHeightRotate;
+			
+			var rotateRight:Bool = false;
+			var rotateBottom:Bool = false;
+			var rotateNode:Bool = false;
+			
+			if ((canExpandRight && canExpandRightRotate && addRightArea > addRightAreaRotate) || (!canExpandRight && canExpandRightRotate))
+			{
+				addRightArea = addBottomAreaRotate;
+				addRightWidth = addRightWidthRotate;
+				addRightHeight = addRightHeightRotate;
+				canExpandRight = true;
+				rotateRight = true;
+			}
+			
+			if ((canExpandBottom && canExpandBottomRotate && addBottomArea > addBottomAreaRotate) || (!canExpandBottom && canExpandBottomRotate))
+			{
+				addBottomArea = addBottomAreaRotate;
+				addBottomWidth = addBottomWidthRotate;
+				addBottomHeight = addBottomHeightRotate;
+				canExpandBottom = true;
+				rotateBottom = true;
+			}
+			
+			if (!canExpandRight && canExpandBottom)
+			{
+				addRightArea = addBottomArea + 1; // can't expand to the right
+				rotateNode = rotateRight;
+			}
+			else if (canExpandRight && !canExpandBottom)
+			{
+				addBottomArea = addRightArea + 1; // can't expand to the bottom
+				rotateNode = rotateBottom;
+			}
+			
+			var dataNode:FlxNode = null;
+			var temp:FlxNode = root;
+			var insertNodeWidth:Int = insertWidth;
+			var insertNodeHeight:Int = insertHeight;
+			
+			// decide how to insert new node
+			if (addBottomArea >= addRightArea) // add node to the right
+			{
+				if (rotateRight)
+				{
+					insertNodeWidth = insertHeight;
+					insertNodeHeight = insertWidth;
+				}
+				
+				expandRoot(temp.width + insertNodeWidth, Math.max(temp.height, insertNodeHeight), true);
+				dataNode = divideNode(root.right, insertNodeWidth, insertNodeHeight, true, data, key, rotateRight);
+				expandRoot(addRightWidth, addRightHeight, false, true);
+			}
+			else // add node at the bottom
+			{
+				if (rotateBottom)
+				{
+					insertNodeWidth = insertHeight;
+					insertNodeHeight = insertWidth;
+				}
+				
+				expandRoot(Math.max(temp.width, insertNodeWidth), temp.height + insertNodeHeight, false);
+				dataNode = divideNode(root.right, insertNodeWidth, insertNodeHeight, true, data, key, rotateBottom);
+				expandRoot(addBottomWidth, addBottomHeight, false, true);
+			}
+			
+			return dataNode;
+		}
+		
+		return null;
+	}
+	
+	private function expandRoot(newWidth:Float, newHeight:Float, divideHorizontally:Bool, decideHowToDivide:Bool = false):Void
+	{
+		if (newWidth> root.width || newHeight > root.height)
+		{
+			var temp:FlxNode = root;
+			root = new FlxNode(new FlxRect(0, 0, newWidth, newHeight), this);
+			
+			divideHorizontally = decideHowToDivide ? needToDivideHorizontally(root, temp.width, temp.height) : divideHorizontally;
+			
+			divideNode(root, temp.width, temp.height, divideHorizontally);
+			root.left.left = temp;
+		}
+	}
+	
+	private function expandBitmapData():Void
+	{
+		if (_bitmapData != null && _bitmapData.width == root.width && _bitmapData.height == root.height)
+		{
+			return;
+		}
+		
+		var newBitmapData:BitmapData = new BitmapData(root.width, root.height, true, FlxColor.TRANSPARENT);
+		if (_bitmapData != null)
+		{
+			var point:Point = FlxPoint.point;
+			point.setTo(0, 0);
+			newBitmapData.copyPixels(_bitmapData, _bitmapData.rect, point);
+		}
+		
+		_bitmapData = FlxDestroyUtil.dispose(_bitmapData);
+		bitmapData = newBitmapData;
+	}
+	
+	private function getNextPowerOf2(number:Float):Int
+	{
+		var powerFloat:Float = Math.log(number) / Math.log(2);
+		var powerInt:Float = Std.int(powerFloat);
+		
+		if (powerFloat - powerInt == 0)
+			return Std.int(number);
+		
+		return Std.int(Math.pow(2, powerInt + 1));
+	}
+	
 	/**
 	 * Generates new bitmapdata with spaces between tiles, adds this bitmapdata to this atlas, 
-	 * generates TileFrames object for added node and returns it. Could be usefull for tilemaps.
+	 * generates TileFrames object for added node and returns it. Could be useful for tilemaps.
 	 * 
 	 * @param	Graphic			Source image for node, where spaces will be inserted (could be BitmapData, String or Class<Dynamic>).
 	 * @param	Key			Optional key for image
@@ -176,26 +579,38 @@ class FlxAtlas implements IFlxDestroyable
 		var key:String = FlxAssets.resolveKey(Graphic, Key);
 		
 		if (key == null) 
+		{
+			#if !FLX_NO_DEBUG
+			throw "addNodeWithSpacings can't find the key for specified bitmapdata. Please provide not null value as a Key argument.";
+			#end
 			return null;
+		}
 		
 		key = FlxG.bitmap.getKeyWithSpacings(key, tileSize, tileSpacing, region);
 		
 		if (hasNodeWithName(key) == true)
 			return nodes.get(key).getTileFrames(tileSize, tileSpacing);
 		
-		if (finalized)
-			throw "You can't add images to finalized atlas.";
-		
 		var data:BitmapData = FlxAssets.resolveBitmapData(Graphic);
 		
 		if (data == null) 
+		{
+			#if !FLX_NO_DEBUG
+			throw "addNodeWithSpacings can't find bitmapdata with specified key: " + Graphic + ". Please provide valid value.";
+			#end
 			return null;
+		}
 		
 		var nodeData:BitmapData = FlxBitmapDataUtil.addSpacing(data, tileSize, tileSpacing, region);
 		var node:FlxNode = addNode(nodeData, key);
 		
 		if (node == null) 
+		{
+			#if !FLX_NO_DEBUG
+			throw "addNodeWithSpacings can't insert provided image: " + Graphic + ") in atlas. It's probably too big.";
+			#end
 			return null;
+		}
 		
 		return node.getTileFrames(tileSize, tileSpacing);
 	}
@@ -207,31 +622,37 @@ class FlxAtlas implements IFlxDestroyable
 	 */
 	public function getAtlasFrames():FlxAtlasFrames
 	{
-		if (!finalized)
-			throw "FlxAtlas isn't finalized. Please call finalize() on your atlas and then you can get atlas frames.";
-		
-		var graphic:FlxGraphic = FlxG.bitmap.add(this.atlasBitmapData, false, name);
+		var graphic:FlxGraphic = FlxG.bitmap.add(this.bitmapData, false, name);
 		
 		var atlasFrames:FlxAtlasFrames = null;
 		if (graphic.atlasFrames == null)
-			graphic.atlasFrames = atlasFrames = new FlxAtlasFrames(graphic);
-		
-		var node:FlxNode;
-		for (key in nodes.keys())
 		{
-			node = nodes.get(key);
-			// if the node is filled and AtlasFrames does not contain image of the node, then we should add it
-			if (node.filled && !atlasFrames.framesHash.exists(key))
-			{
-				var frame:FlxRect = new FlxRect(node.x, node.y, node.width - borderX, node.height - borderY);
-				var sourceSize:FlxPoint = FlxPoint.get(node.width - borderX, node.height - borderY);
-				var offset:FlxPoint = FlxPoint.get(0, 0);
-				
-				atlasFrames.addAtlasFrame(frame, sourceSize, offset, node.key, 0); 
-			}
+			graphic.atlasFrames = new FlxAtlasFrames(graphic);
+			atlasFrames = graphic.atlasFrames;
 		}
 		
+		for (node in nodes)
+			addNodeToAtlasFrames(node);
+		
 		return graphic.atlasFrames;
+	}
+	
+	private function addNodeToAtlasFrames(node:FlxNode):Void
+	{
+		var graphic:FlxGraphic = FlxG.bitmap.get(name);
+		if (graphic == null || graphic.atlasFrames == null || node == null)
+			return;
+		
+		var atlasFrames:FlxAtlasFrames = graphic.atlasFrames;
+		
+		if (node.filled && !atlasFrames.framesHash.exists(node.key))
+		{
+			var frame:FlxRect = new FlxRect(node.x, node.y, node.width - border, node.height - border);
+			var sourceSize:FlxPoint = node.rotated ? FlxPoint.get(node.height - border, node.width - border) : FlxPoint.get(node.width - border, node.height - border);
+			var offset:FlxPoint = FlxPoint.get(0, 0);
+			var angle:FlxFrameAngle = node.rotated ? FlxFrameAngle.ANGLE_NEG_90 : FlxFrameAngle.ANGLE_0;
+			atlasFrames.addAtlasFrame(frame, sourceSize, offset, node.key, angle);
+		}
 	}
 	
 	/**
@@ -251,10 +672,7 @@ class FlxAtlas implements IFlxDestroyable
 	 */
 	public function getNode(key:String):FlxNode
 	{
-		if (hasNodeWithName(key) == true)
-			return nodes.get(key);
-		
-		return null;
+		return nodes.get(key);
 	}
 	
 	/**
@@ -264,63 +682,60 @@ class FlxAtlas implements IFlxDestroyable
 	 * @param	keys		Names of these bitmapData's
 	 * @return				true if ALL nodes were added successfully.
 	 */
-	public function addNodes(bitmaps:Array<BitmapData>, keys:Array<String>):Bool
+	public function addNodes(bitmaps:Array<BitmapData>, keys:Array<String>):FlxAtlas
 	{
-		if (finalized)
-			throw "You can't add images to finalized atlas.";
-		
 		var numKeys:Int = keys.length;
 		var numBitmaps:Int = bitmaps.length;
 		
 		if (numBitmaps != numKeys)
-			return false;
-		
-		var sortedBitmaps:Array<BitmapData> = bitmaps.slice(0, bitmaps.length);
-		sortedBitmaps.sort(bitmapSorter);
-		
-		var node:FlxNode;
-		var result:Bool = true;
-		var index:Int;
-		for (i in 0...(numBitmaps))
 		{
-			index = bitmaps.indexOf(sortedBitmaps[i]);
-			node = addNode(sortedBitmaps[i], keys[index]);
-			if (node == null)
-			{
-				result = false;
-			}
+			#if !FLX_NO_DEBUG
+			throw "The number of bitmaps (" + numBitmaps + ") should be equal to number of keys (" + numKeys + ")";
+			#end
+			return null;
 		}
 		
-		return result;
+		_tempStorage = new Array<TempAtlasObj>();
+		for (i in 0...(numBitmaps))
+		{
+			_tempStorage.push({ bmd: bitmaps[i], keyStr: keys[i] });
+		}
+		
+		addFromAtlasObjects(_tempStorage);
+		return this;
+	}
+	
+	private function addFromAtlasObjects(objects:Array<TempAtlasObj>):Void
+	{
+		objects.sort(bitmapSorter);
+		var numBitmaps:Int = objects.length;
+		
+		for (i in 0...(numBitmaps))
+		{
+			addNode(objects[i].bmd, objects[i].keyStr);
+		}
+		
+		_tempStorage = null;
 	}
 	
 	/**
 	 * Internal method for sorting bitmaps
 	 */
-	private function bitmapSorter(bmd1:BitmapData, bmd2:BitmapData):Int
+	private function bitmapSorter(obj1:TempAtlasObj, obj2:TempAtlasObj):Int
 	{
-		if (bmd2.width == bmd1.width)
+		if (allowRotation)
 		{
-			if (bmd2.height == bmd1.height)
-			{
-				return 0;
-			}
-			else if (bmd2.height > bmd1.height)
-			{
-				return 1;
-			}
-			else
-			{
-				return -1;
-			}
+			var area1:Int = obj1.bmd.width * obj1.bmd.height;
+			var area2:Int = obj2.bmd.width * obj2.bmd.height;
+			return area2 - area1;
 		}
 		
-		if (bmd2.width > bmd1.width)
+		if (obj2.bmd.width == obj1.bmd.width)
 		{
-			return 1;
+			return obj2.bmd.height - obj1.bmd.height;
 		}
 		
-		return -1;
+		return obj2.bmd.width - obj1.bmd.width;
 	}
 	
 	/**
@@ -332,12 +747,6 @@ class FlxAtlas implements IFlxDestroyable
 	 */
 	public function createQueue():FlxAtlas
 	{
-		if (finalized)
-			throw "You can't add images to finalized atlas.";
-		
-		if (_tempStorage != null)	
-			_tempStorage = null;
-		
 		_tempStorage = new Array<TempAtlasObj>();
 		return this;
 	}
@@ -349,11 +758,10 @@ class FlxAtlas implements IFlxDestroyable
 	 */
 	public function addToQueue(data:BitmapData, key:String):FlxAtlas
 	{
-		if (finalized)
-			throw "You can't add images to finalized atlas.";
-		
 		if (_tempStorage == null)
+		{
 			_tempStorage = new Array<TempAtlasObj>();
+		}
 		
 		_tempStorage.push({ bmd: data, keyStr: key });
 		return this;
@@ -364,20 +772,9 @@ class FlxAtlas implements IFlxDestroyable
 	 */
 	public function generateFromQueue():FlxAtlas
 	{
-		if (finalized)
-			throw "You can't add images to finalized atlas.";
-		
 		if (_tempStorage != null)
 		{
-			var bitmaps:Array<BitmapData> = new Array<BitmapData>();
-			var keys:Array<String> = new Array<String>();
-			for (obj in _tempStorage)
-			{
-				bitmaps.push(obj.bmd);
-				keys.push(obj.keyStr);
-			}
-			addNodes(bitmaps, keys);
-			_tempStorage = null;
+			addFromAtlasObjects(_tempStorage);
 		}
 		
 		return this;
@@ -389,65 +786,60 @@ class FlxAtlas implements IFlxDestroyable
 	 */
 	public function destroy():Void
 	{
-		FlxG.bitmap.remove(name);
+		FlxG.bitmap.removeIfNoUse(FlxG.bitmap.get(name));
 		_tempStorage = null;
 		deleteSubtree(root);
 		root = null;
-		atlasBitmapData = FlxDestroyUtil.dispose(atlasBitmapData);
+		_bitmapData = FlxDestroyUtil.dispose(_bitmapData);
 		nodes = null;
 	}
 	
 	/**
-	 * Clears all data in atlas. Use it when you want reuse this atlas
+	 * Clears all data in atlas. Use it when you want reuse this atlas.
+	 * WARNING: it will destroy graphic of this image, so you can get null pointer exception if you're using it for your sprites.
 	 */
 	public function clear():Void
 	{
-		finalized = false;
-		
-		var rootWidth:Int = root.width;
-		var rootHeight:Int = root.height;
 		deleteSubtree(root);
-		
-		root = new FlxNode(new Rectangle(0, 0, rootWidth, rootHeight), this);
-		atlasBitmapData.fillRect(root.rect, FlxColor.TRANSPARENT);
-		
-		var graphic:FlxGraphic = FlxG.bitmap.get(name);
-		graphic.atlasFrames = FlxDestroyUtil.destroy(graphic.atlasFrames);
+		initRoot();
+		FlxG.bitmap.removeByKey(name);
+		_bitmapData = null;
 		nodes = new Map<String, FlxNode>();
 	}
 	
 	/**
-	 * Let you get frame data for this atlas,
-	 * but won't let you to add any new image to it.
-	 * 
-	 * @param	trim	whether to trim this atlas' BitmapData or not.
+	 * Returns atlas data in LibGdx packer format.
 	 */
-	public function finalize(trim:Bool = true):Void
+	public function getLibGdxData():String
 	{
-		if (finalized)
-			return;
+		var data:String = "\n";
+		data += name + "\n";
+		data += "format: RGBA8888\n";
+		data += "filter: Linear,Linear\n";
+		data += "repeat: none\n";
 		
-		finalized = true;
-		
-		if (trim)
+		for (node in nodes)
 		{
-			var contentRect:FlxRect = new FlxRect();
+			data += node.key + "\n";
+			data += "  rotate: " + node.rotated + "\n";
+			data += "  xy: " + node.x + ", " + node.y + "\n";
 			
-			for (node in nodes)
+			if (allowRotation)
 			{
-				contentRect.union(node.contentRect);
+				data += "size: " + node.height + ", " + node.width + "\n";
+				data += "orig: " + node.height + ", " + node.width + "\n";
+			}
+			else
+			{
+				data += "size: " + node.width + ", " + node.height + "\n";
+				data += "orig: " + node.width + ", " + node.height + "\n";
 			}
 			
-			var finalWidth:Int = Std.int(contentRect.width);
-			var finalHeight:Int = Std.int(contentRect.height);
-			
-			var finalBD:BitmapData = new BitmapData(finalWidth, finalHeight, true, FlxColor.TRANSPARENT);
-			finalBD.copyPixels(atlasBitmapData, finalBD.rect, new Point());
-			atlasBitmapData.dispose();
-			atlasBitmapData = finalBD;
-			width = finalWidth;
-			height = finalHeight;
+			data += "  offset: 0, 0\n";
+			data += "  index: -1\n";
 		}
+		
+		return data;
 	}
 	
 	private function deleteSubtree(node:FlxNode):Void
@@ -468,15 +860,30 @@ class FlxAtlas implements IFlxDestroyable
 		// Current node
 		var current:FlxNode = root;
 		
+		var emptyNodes:Array<FlxNode> = new Array<FlxNode>();
+		
 		var canPlaceRight:Bool = false;
 		var canPlaceLeft:Bool = false;
+		
+		var looping:Bool = true;
+		
+		var result:FlxNode = null;
+		var minArea:Int = maxWidth * maxHeight + 1;
+		var nodeArea:Int;
+		
 		// Main loop
-		while (true)
+		while (looping)
 		{
 			// Look into current node
 			if (current.isEmpty && current.canPlace(insertWidth, insertHeight))
 			{
-				return current;
+				nodeArea = current.width * current.height;
+				
+				if (nodeArea < minArea)
+				{
+					minArea = nodeArea;
+					result = current;
+				}
 			}
 			// Move to next node
 			canPlaceRight = (current.right != null && current.right.canPlace(insertWidth, insertHeight));
@@ -504,22 +911,175 @@ class FlxAtlas implements IFlxDestroyable
 				else
 				{
 					// Stack is empty. End of loop
-					return null;
+					looping = false;
 				}
 			}
 		}
 		
-		return null;
+		return result;
 	}
 	
-	private inline function get_width():Int
+	private function get_bitmapData():BitmapData
 	{
-		return root.width;
+		return _bitmapData;
 	}
 	
-	private inline function get_height():Int
+	private function set_bitmapData(value:BitmapData):BitmapData
 	{
-		return root.height;
+		if (value != null)
+		{
+			// update graphic bitmapData
+			var graphic:FlxGraphic = FlxG.bitmap.get(name);
+			if (graphic != null)
+			{
+				graphic.bitmap = value;
+			}
+		}
+		
+		return _bitmapData = value;
+	}
+	
+	private function set_minWidth(value:Int):Int
+	{
+		if (value <= maxWidth)
+		{
+			minWidth = value;
+			
+			if (value > width)
+			{
+				width = value;
+			}
+		}
+		
+		return minWidth;
+	}
+	
+	private function set_minHeight(value:Int):Int
+	{
+		if (value <= maxHeight)
+		{
+			minHeight = value;
+			
+			if (value > height)
+			{
+				height = value;
+			}
+		}
+		
+		return minHeight;
+	}
+	
+	private function get_width():Int
+	{
+		if (root != null)
+		{
+			return root.width;
+		}
+		
+		return 0;
+	}
+	
+	private function set_width(value:Int):Int
+	{
+		if (value > get_width())
+		{
+			if (powerOfTwo)
+			{
+				value = getNextPowerOf2(value);
+			}
+			
+			if (value <= maxWidth)
+			{
+				if (root != null && root.width < value)
+				{
+					expandRoot(value, root.height, needToDivideHorizontally(root, root.width, root.height));
+				}
+			}
+		}
+		
+		return value;
+	}
+	
+	private function get_height():Int
+	{
+		if (root != null)
+		{
+			return root.height;
+		}
+		
+		return 0;
+	}
+	
+	private function set_height(value:Int):Int
+	{
+		if (value > get_height())
+		{
+			if (powerOfTwo)
+			{
+				value = getNextPowerOf2(value);
+			}
+			
+			if (value <= maxHeight)
+			{
+				if (root != null && root.height < value)
+				{
+					expandRoot(root.width, value, needToDivideHorizontally(root, root.width, root.height));
+				}
+			}
+		}
+		
+		return value;
+	}
+	
+	private function set_maxWidth(value:Int):Int
+	{
+		if (value >= minWidth && (root == null || value >= width))
+		{
+			maxWidth = value;
+		}
+		
+		return maxWidth;
+	}
+	
+	private function set_maxHeight(value:Int):Int
+	{
+		if (value >= minHeight && (root == null || value >= height))
+		{
+			maxHeight = value;
+		}
+		
+		return maxHeight;
+	}
+	
+	private function set_powerOfTwo(value:Bool):Bool
+	{
+		if (value != powerOfTwo && value == true)
+		{
+			var nextWidth:Int = getNextPowerOf2(root.width);
+			var nextHeight:Int = getNextPowerOf2(root.height);
+			
+			if (nextWidth != root.width || nextHeight != root.height) // need to resize atlas
+			{
+				if ((maxWidth > 0 && nextWidth > maxWidth) || (maxHeight > 0 && nextHeight > maxHeight))
+				{
+					#if !FLX_NO_DEBUG
+					throw "Can't set powerOfTwo property to true, since it requires to increase atlas size which is bigger that max size";
+					#end
+					return false;
+				}
+				
+				var temp:FlxNode = root;
+				root = new FlxNode(new FlxRect(0, 0, nextWidth, nextHeight), this);
+				
+				if (temp.left != null) // this means that atlas isn't empty and we need to resize it's bitmapdata
+				{
+					divideNode(root, temp.width, temp.height, needToDivideHorizontally(root, temp.width, temp.height));
+					root.left.left = temp;
+				}
+			}
+		}
+		
+		return powerOfTwo = value;
 	}
 }
 

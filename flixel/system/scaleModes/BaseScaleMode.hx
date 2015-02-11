@@ -48,18 +48,8 @@ class BaseScaleMode
 	
 	private function updateScaleOffset():Void
 	{
-		scale.x = gameSize.x / FlxG.width;
-		scale.y = gameSize.y / FlxG.height;
-		
-		zoom.set(FlxCamera.defaultZoom, FlxCamera.defaultZoom);
-		
-		if (FlxG.camera != null) 
-		{
-			zoom.set(FlxG.camera.scaleX, FlxG.camera.scaleY);
-		}
-		
-		scale.x /= zoom.x;
-		scale.y /= zoom.y;
+		scale.x = gameSize.x / (FlxG.width * FlxG.initialZoom);
+		scale.y = gameSize.y / (FlxG.height * FlxG.initialZoom);
 		
 		offset.x = Math.ceil((deviceSize.x - gameSize.x) * 0.5);
 		offset.y = Math.ceil((deviceSize.y - gameSize.y) * 0.5);
