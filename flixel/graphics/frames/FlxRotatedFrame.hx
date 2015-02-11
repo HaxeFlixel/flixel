@@ -68,18 +68,13 @@ class FlxRotatedFrame extends FlxFrame
 			result = new BitmapData(Std.int(sourceSize.x), Std.int(sourceSize.y), true, FlxColor.TRANSPARENT);
 		}
 		
-		var temp:BitmapData = new BitmapData(Std.int(frame.width), Std.int(frame.height), true, FlxColor.TRANSPARENT);
-		FlxPoint.point.setTo(0, 0);
-		temp.copyPixels(parent.bitmap, frame.copyToFlash(FlxRect.rect), FlxPoint.point);
-		
 		var matrix:Matrix = FlxMatrix.matrix;
 		matrix.identity();
-		matrix.translate( -0.5 * frame.width, -0.5 * frame.height);
+		matrix.translate( -(frame.x + 0.5 * frame.width), -(frame.y + 0.5 * frame.height));
 		matrix.rotate(angle * FlxAngle.TO_RAD);
 		matrix.translate(offset.x + 0.5 * frame.height, offset.y + 0.5 * frame.width);
-		
-		result.draw(temp, matrix);
-		temp.dispose();
+		FlxRect.rect.setTo(offset.x, offset.y, frame.height, frame.width);
+		result.draw(parent.bitmap, matrix, null, null, FlxRect.rect);
 		return result;
 	}
 }
