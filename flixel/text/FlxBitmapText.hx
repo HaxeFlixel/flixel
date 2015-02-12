@@ -347,16 +347,10 @@ class FlxBitmapText extends FlxSprite
 				continue;
 			}
 			
-			if (_angleChanged)
-			{
-				var radians:Float = angle * FlxAngle.TO_RAD;
-				_sinAngle = Math.sin(radians);
-				_cosAngle = Math.cos(radians);
-				_angleChanged = false;
-			}
+			updateTrig();
 			
-			totalScaleX = sx * camera.totalScaleX;
-			totalScaleY = sy * camera.totalScaleY;
+			totalScaleX = sx;
+			totalScaleY = sy;
 			
 			// matrix for calculation tile position
 			_matrix.identity();
