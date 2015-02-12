@@ -165,9 +165,6 @@ class FlxFrame implements IFlxDestroyable
 			bmd = new BitmapData(Std.int(sourceSize.x), Std.int(sourceSize.y), true, FlxColor.TRANSPARENT);
 		}
 		
-		var scaleX:Int = flipX ? -1 : 1;
-		var scaleY:Int = flipY ? -1 : 1;
-		
 		var w:Float = frame.width;
 		var h:Float = frame.height;
 		
@@ -176,8 +173,6 @@ class FlxFrame implements IFlxDestroyable
 			w = frame.height;
 			h = frame.width;
 		}
-		
-		// TODO: test this method...
 		
 		var matrix:FlxMatrix = FlxMatrix.matrix;
 		matrix.identity();
@@ -191,6 +186,9 @@ class FlxFrame implements IFlxDestroyable
 		{
 			matrix.rotateByNegative90();
 		}
+		
+		var scaleX:Int = flipX ? -1 : 1;
+		var scaleY:Int = flipY ? -1 : 1;
 		
 		matrix.scale(scaleX, scaleY);
 		

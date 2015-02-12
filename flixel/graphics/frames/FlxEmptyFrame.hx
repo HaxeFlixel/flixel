@@ -37,7 +37,7 @@ class FlxEmptyFrame extends FlxFrame
 		else if (bmd != null && !mergeAlpha)
 		{
 			var rect:Rectangle = FlxRect.rect;
-			rect.setTo(point.x, point.y, result.width, result.height);
+			rect.setTo(point.x, point.y, sourceSize.x, sourceSize.y);
 			bmd.fillRect(rect, FlxColor.TRANSPARENT);
 		}
 		
