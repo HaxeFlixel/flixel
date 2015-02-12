@@ -4,6 +4,7 @@ import flash.display.Graphics;
 import flixel.FlxBasic;
 import flixel.group.FlxGroup;
 import flixel.group.FlxSpriteGroup;
+import flixel.phys.IFlxBody;
 import flixel.tile.FlxBaseTilemap;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
@@ -12,6 +13,7 @@ import flixel.math.FlxRect;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxStringUtil;
 import flixel.math.FlxVelocity;
+import flixel.phys.IFlxBody;
 
 /**
  * This is the base class for most of the display objects (FlxSprite, FlxText, etc).
@@ -19,6 +21,7 @@ import flixel.math.FlxVelocity;
  */
 class FlxObject extends FlxBasic
 {
+	public var body : IFlxBody;
 	/**
 	 * This value dictates the maximum number of pixels two objects have to intersect before collision stops trying to separate them.
 	 * Don't modify this unless your objects are passing through eachother.
