@@ -889,7 +889,9 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 					frame = tile.frame;
 					
 				#if FLX_RENDER_BLIT
-					Buffer.pixels.copyPixels(frame.getBitmap(), _flashRect, _flashPoint, null, null, true);
+				// TODO: check this change later...
+				//	Buffer.pixels.copyPixels(frame.getBitmap(), _flashRect, _flashPoint, null, null, true);
+					frame.paintOnBitmap(Buffer.pixels, _flashPoint);
 					
 					#if !FLX_NO_DEBUG
 					if (FlxG.debugger.drawDebug && !ignoreDrawDebug) 

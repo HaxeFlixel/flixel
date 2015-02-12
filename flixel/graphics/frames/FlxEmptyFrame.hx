@@ -3,8 +3,10 @@ package flixel.graphics.frames;
 import flash.display.BitmapData;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame;
+import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.util.FlxColor;
+import openfl.geom.Point;
 import openfl.geom.Rectangle;
 
 /**
@@ -18,12 +20,10 @@ class FlxEmptyFrame extends FlxFrame
 	{
 		super(parent);
 		type = FlxFrameType.EMPTY;
-		#if FLX_RENDER_TILE
-		tileID = -1;
-		#end
 	}
 	
-	override public function paintOnBitmap(bmd:BitmapData = null):BitmapData 
+	// TODO: fix it later...
+	override public function paintOnBitmap(bmd:BitmapData = null, point:Point = null):BitmapData 
 	{
 		var result:BitmapData = null;
 		
@@ -48,18 +48,8 @@ class FlxEmptyFrame extends FlxFrame
 		return result;
 	}
 	
-	override public function getHReversedBitmap():BitmapData 
+	override public function paintFlipped(bmd:BitmapData = null, point:Point = null, flipX:Bool = false, flipY:Bool = false):BitmapData 
 	{
-		return getBitmap();
-	}
-	
-	override public function getVReversedBitmap():BitmapData 
-	{
-		return getBitmap();
-	}
-	
-	override public function getHVReversedBitmap():BitmapData 
-	{
-		return getBitmap();
+		return paintOnBitmap(bmd);
 	}
 }

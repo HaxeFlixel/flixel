@@ -806,7 +806,6 @@ class FlxText extends FlxSprite
 			graphic.bitmap.draw(textField, _matrix);
 		}
 		
-		frame.destroyBitmaps();
 		_regen = false;
 		dirty = true;
 	}

@@ -730,7 +730,6 @@ class FlxBar extends FlxSprite
 	{
 		#if FLX_RENDER_BLIT
 		pixels.copyPixels(_emptyBar, _emptyBarRect, _zeroOffset);
-		frame.destroyBitmaps();
 		dirty = true;
 		#end
 	}
@@ -785,7 +784,6 @@ class FlxBar extends FlxSprite
 			pixels.copyPixels(_filledBar, _filledBarRect, _filledBarPoint, null, null, true);
 		}
 		
-		frame.destroyBitmaps();
 		dirty = true;
 		#else
 		if (frontFrames != null)

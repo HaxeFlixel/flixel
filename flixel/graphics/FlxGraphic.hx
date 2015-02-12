@@ -156,7 +156,7 @@ class FlxGraphic
 			return graphic;
 		}
 		
-		var bitmap:BitmapData = Source.getBitmap().clone();
+		var bitmap:BitmapData = Source.paintOnBitmap();
 		graphic = createGraphic(bitmap, key, Unique);
 		var image:FlxImageFrame = FlxImageFrame.fromGraphic(graphic);
 		image.getByIndex(0).name = Source.name;
@@ -448,7 +448,6 @@ class FlxGraphic
 		
 		var dumped:Bool = isDumped;
 		undump();
-		resetFrameBitmaps();
 		if (dumped)
 			dump();
 	}
@@ -478,24 +477,6 @@ class FlxGraphic
 		
 		frameCollections = null;
 		frameCollectionTypes = null;
-	}
-	
-	/**
-	 * Forces BitmapData regeneration for all frames in this graphic object.
-	 */
-	public function resetFrameBitmaps():Void
-	{
-		var collections:Array<FlxFramesCollection>;
-		var collection:FlxFramesCollection;
-		var collectionType:FlxFrameCollectionType;
-		for (collectionType in frameCollectionTypes)
-		{
-			collections = cast frameCollections.get(collectionType);
-			for (collection in collections)
-			{
-				collection.destroyBitmaps();
-			}
-		}
 	}
 	
 	/**
@@ -644,7 +625,6 @@ class FlxGraphic
 				_tilesheet = new Tilesheet(bitmap);
 			}
 			#end
-			resetFrameBitmaps();
 		}
 		
 		return value;

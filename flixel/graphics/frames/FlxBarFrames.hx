@@ -64,7 +64,7 @@ class FlxBarFrames extends FlxFramesCollection
 	{
 		if (atlasFrame != null)
 		{
-			return atlasFrame.getBitmap().clone();
+			return atlasFrame.paintOnBitmap();
 		}
 		else
 		{
@@ -113,7 +113,7 @@ class FlxBarFrames extends FlxFramesCollection
 		var x:Float, y:Float, w:Float, h:Float;
 		var ratio:Float = 0;
 		
-		var rotated:Bool = (frame.type == FlxFrameType.ROTATED);
+		var rotated:Bool = (frame.angle != FlxFrameAngle.ANGLE_0);
 		var angle:Int = 0;
 		
 		if (rotated)

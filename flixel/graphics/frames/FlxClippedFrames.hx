@@ -2,6 +2,7 @@ package flixel.graphics.frames;
 
 import flash.geom.Rectangle;
 import flixel.graphics.FlxGraphic;
+import flixel.graphics.frames.FlxFrame.FlxFrameAngle;
 import flixel.graphics.frames.FlxFrame.FlxFrameType;
 import flixel.graphics.frames.FlxFramesCollection.FlxFrameCollectionType;
 import flixel.math.FlxPoint;
@@ -54,7 +55,7 @@ class FlxClippedFrames extends FlxFramesCollection
 			helperRect.set(0, 0, frameWidth, frameHeight);
 			clippedRect1.set(frame.offset.x, frame.offset.y, frame.frame.width, frame.frame.height);
 			
-			rotated = (frame.type == FlxFrameType.ROTATED);
+			rotated = (frame.angle == FlxFrameAngle.ANGLE_0);
 			angle = 0;
 			
 			if (rotated)

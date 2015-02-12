@@ -130,7 +130,7 @@ class FlxTileFrames extends FlxFramesCollection
 		
 		var x:Float, y:Float, w:Float, h:Float;
 		
-		var rotated:Bool = (frame.type == FlxFrameType.ROTATED);
+		var rotated:Bool = (frame.angle != FlxFrameAngle.ANGLE_0);
 		var angle:Int = 0;
 		
 		if (rotated)

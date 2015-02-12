@@ -168,16 +168,7 @@ class FlxFramesCollection implements IFlxDestroyable
 			return framesHash.get(name);
 		}
 		
-		var texFrame:FlxFrame = null;
-		if (angle != FlxFrameAngle.ANGLE_0)
-		{
-			texFrame = new FlxRotatedFrame(parent, angle);
-		}
-		else
-		{
-			texFrame = new FlxFrame(parent);
-		}
-		
+		var texFrame:FlxFrame = new FlxFrame(parent, angle);
 		texFrame.name = name;
 		texFrame.sourceSize.set(sourceSize.x, sourceSize.y);
 		texFrame.offset.set(offset.x, offset.y);
@@ -194,14 +185,6 @@ class FlxFramesCollection implements IFlxDestroyable
 		}
 		
 		return texFrame;
-	}
-	
-	public function destroyBitmaps():Void
-	{
-		for (frame in frames)
-		{
-			frame.destroyBitmaps();
-		}
 	}
 	
 	public function toString():String

@@ -413,7 +413,7 @@ class FlxSprite extends FlxObject
 		var graphic:FlxGraphic = FlxG.bitmap.get(key);
 		if (graphic == null)
 		{
-			graphic = FlxGraphic.fromBitmapData(Frame.getBitmap().clone(), false, key);
+			graphic = FlxGraphic.fromBitmapData(Frame.paintOnBitmap(), false, key);
 		}
 		
 		return loadRotatedGraphic(graphic, Rotations, -1, AntiAliasing, AutoBuffer);
@@ -677,7 +677,6 @@ class FlxSprite extends FlxObject
 			graphic.bitmap.copyPixels(bitmapData, _flashRect2, _flashPoint, null, null, true);
 			_flashRect2.width = graphic.bitmap.width;
 			_flashRect2.height = graphic.bitmap.height;
-			resetFrameBitmaps();
 			#if FLX_RENDER_BLIT
 			dirty = true;
 			calcFrame();
@@ -695,7 +694,6 @@ class FlxSprite extends FlxObject
 			_matrix.translate(X + frame.frame.x + Brush.origin.x, Y + frame.frame.y + Brush.origin.y);
 			var brushBlend:BlendMode = Brush.blend;
 			graphic.bitmap.draw(bitmapData, _matrix, null, brushBlend, null, Brush.antialiasing);
-			resetFrameBitmaps();
 			#if FLX_RENDER_BLIT
 			dirty = true;
 			calcFrame();
@@ -762,7 +760,6 @@ class FlxSprite extends FlxObject
 		if (positions != null)
 		{
 			dirty = true;
-			resetFrameBitmaps();
 		}
 		return positions;
 	}
@@ -891,30 +888,7 @@ class FlxSprite extends FlxObject
 			}
 			else
 			{
-				var frameBmd:BitmapData = null;
-				if (flipX && flipY)
-				{
-					frameBmd = frame.getHVReversedBitmap();
-				}
-				else if (flipX)
-				{
-					frameBmd = frame.getHReversedBitmap();
-				}
-				else if (flipY)
-				{
-					frameBmd = frame.getVReversedBitmap();
-				}
-				else
-				{
-					frameBmd = frame.getBitmap();
-				}
-				if ((framePixels == null) || (framePixels.width != frameWidth) || (framePixels.height != frameHeight))
-				{
-					FlxDestroyUtil.dispose(framePixels);
-					framePixels = new BitmapData(Std.int(frame.sourceSize.x), Std.int(frame.sourceSize.y));
-				}
-				
-				framePixels.copyPixels(frameBmd, _flashRect, _flashPointZero);
+				framePixels = frame.paintFlipped(framePixels, flipX, flipY);
 			}
 			
 			if (useColorTransform)
@@ -941,15 +915,6 @@ class FlxSprite extends FlxObject
 			point = FlxPoint.get();
 		}
 		return point.set(x + frameWidth * 0.5, y + frameHeight * 0.5);
-	}
-	
-	/**
-	 * Helper function for reseting precalculated FlxFrame bitmapdatas.
-	 * Useful when _pixels bitmapdata changes (e.g. after stamp(), FlxSpriteUtil.drawLine() and other similar method calls).
-	 */
-	public inline function resetFrameBitmaps():Void
-	{
-		graphic.resetFrameBitmaps();
 	}
 	
 	/**
@@ -1114,10 +1079,6 @@ class FlxSprite extends FlxObject
 		}
 		
 		frames = graphic.imageFrame;
-		
-		// not sure if i should add this line...
-		// WARNING: this is causing unnecessary string allocations (Map.get) - use arrays, or figure out a way to not call this every frame.
-		resetFrameBitmaps();
 		
 		return Pixels;
 	}
