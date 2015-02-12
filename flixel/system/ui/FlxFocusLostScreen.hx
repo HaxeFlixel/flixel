@@ -9,6 +9,7 @@ import flixel.system.FlxAssets;
 
 class FlxFocusLostScreen extends Sprite
 {
+	@:keep
 	public function new()
 	{
 		super();	

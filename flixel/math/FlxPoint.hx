@@ -53,6 +53,7 @@ class FlxPoint implements IFlxPooled
 	private var _weak:Bool = false;
 	private var _inPool:Bool = false;
 	
+	@:keep
 	public function new(X:Float = 0, Y:Float = 0) 
 	{
 		set(X, Y);

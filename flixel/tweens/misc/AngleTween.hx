@@ -38,22 +38,13 @@ class AngleTween extends FlxTween
 	public function tween(FromAngle:Float, ToAngle:Float, Duration:Float, ?Sprite:FlxSprite):AngleTween
 	{
 		_start = angle = FromAngle;
-		var d:Float = ToAngle - angle;
-		var a:Float = Math.abs(d);
-		if (a > 181) 
-		{
-			_range = (360 - a) * (d > 0 ? -1 : 1);
-		}
-		else if (a < 179) 
-		{
-			_range = d;
-		}
-		else 
-		{
-			_range = FlxG.random.float(180, -180);
-		}
+		_range = ToAngle - angle;
 		duration = Duration;
 		sprite = Sprite;
+		if (sprite != null)
+		{
+			sprite.angle = angle % 360;
+		}
 		start();
 		return this;
 	}
@@ -61,17 +52,12 @@ class AngleTween extends FlxTween
 	override private function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
-		
-		angle = (_start + _range * scale) % 360;
-		
-		if (angle < 0) 
-		{
-			angle += 360;
-		}
+		angle = _start + _range * scale;
 		
 		if (sprite != null)
 		{
-			sprite.angle = angle;
+			var spriteAngle:Float = angle % 360;
+			sprite.angle = spriteAngle;
 		}
 	}
 }

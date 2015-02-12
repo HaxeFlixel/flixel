@@ -157,11 +157,21 @@ class FlxSpriteTest extends FlxTest
 	@Test
 	function testLoadRotatedFrame()
 	{
-		var atlas = new FlxAtlas("atlas", 10, 10);
+		var atlas = new FlxAtlas("atlas");
 		atlas.addNode(new BitmapData(1, 1), "node");
-		atlas.finalize();
 		sprite1.loadRotatedFrame(atlas.getAtlasFrames().getByName("node"));
 		assert1x1GraphicLoaded();
+	}
+	
+	@Test // issue 1377
+	function testUpdateHitboxNegativeScale()
+	{
+		sprite1.makeGraphic(10, 5);
+		sprite1.scale.set( -0.5, -2);
+		sprite1.updateHitbox();
+		
+		Assert.areEqual(sprite1.width, 5);
+		Assert.areEqual(sprite1.height, 10);
 	}
 	
 	function assert1x1GraphicLoaded()

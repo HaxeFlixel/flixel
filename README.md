@@ -2,7 +2,7 @@
 
 [flixel](https://github.com/HaxeFlixel/flixel) | [addons](https://github.com/HaxeFlixel/flixel-addons) | [ui](https://github.com/HaxeFlixel/flixel-ui) | [demos](https://github.com/HaxeFlixel/flixel-demos) | [tools](https://github.com/HaxeFlixel/flixel-tools) | [templates](https://github.com/HaxeFlixel/flixel-templates) | [docs](https://github.com/HaxeFlixel/flixel-docs) | [haxeflixel.com](https://github.com/HaxeFlixel/haxeflixel.com)
 
-[![Build Status](https://travis-ci.org/HaxeFlixel/flixel.png)](https://travis-ci.org/HaxeFlixel/flixel) [![Fixes Needed](https://badge.waffle.io/haxeflixel/flixel.png?label=ready)](http://waffle.io/haxeflixel/flixel) [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/HaxeFlixel/flixel/trend.png)](https://bitdeli.com/HaxeFlixel "Bitdeli Badge")
+[![Build Status](https://travis-ci.org/HaxeFlixel/flixel.png)](https://travis-ci.org/HaxeFlixel/flixel) [![Fixes Needed](https://badge.waffle.io/haxeflixel/flixel.png?label=ready)](http://waffle.io/haxeflixel/flixel)
 
 [![](showcase.png)](http://www.haxeflixel.com/showcase)
 
@@ -10,7 +10,7 @@
 
 [Click here to get started making games with HaxeFlixel.](http://haxeflixel.com/documentation/getting-started/)
 
-HaxeFlixel is open source software developed by volunteers, [click here to meet the team!](https://github.com/orgs/HaxeFlixel/members)
+HaxeFlixel is open source software developed by volunteers, [click here to meet the team!](https://github.com/orgs/HaxeFlixel/people)
 
 If you're a developer and like what we're doing, [read the docs](#for-developers) and get involved.
 

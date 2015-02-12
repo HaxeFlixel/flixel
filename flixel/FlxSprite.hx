@@ -15,7 +15,7 @@ import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.frames.FlxFramesCollection;
 import flixel.graphics.frames.FlxImageFrame;
 import flixel.graphics.frames.FlxTileFrames;
-import flixel.graphics.tile.FlxDrawStackItem;
+import flixel.graphics.tile.FlxDrawTilesItem;
 import flixel.math.FlxAngle;
 import flixel.math.FlxMath;
 import flixel.math.FlxMatrix;
@@ -28,10 +28,10 @@ import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import openfl.display.Tilesheet;
 
-@:bitmap("assets/images/logo/default.png")
+@:keep @:bitmap("assets/images/logo/default.png")
 private class GraphicDefault extends BitmapData {}
 
-// TODO: add updateSizeFromFrame bool which will tell sprite whether to update it's size to frame's size (when frame setter is called) or not (usefull for sprites with adjusted hitbox)
+// TODO: add updateSizeFromFrame bool which will tell sprite whether to update it's size to frame's size (when frame setter is called) or not (useful for sprites with adjusted hitbox)
 // And don't forget about sprites with clipped frames: what i should do with their size in this case?
 
 // TODO: add option to "center origin" or create special subclass for it
@@ -54,7 +54,7 @@ class FlxSprite extends FlxObject
 	/**
 	 * Controls whether the object is smoothed when rotated, affects performance.
 	 */
-	public var antialiasing:Bool = false;
+	public var antialiasing(default, set):Bool = false;
 	/**
 	 * Set this flag to true to force the sprite to update during the draw() call.
 	 * NOTE: Rarely if ever necessary, most sprite operations will flip this flag automatically.
@@ -187,7 +187,7 @@ class FlxSprite extends FlxObject
 	
 	/**
 	 * These vars are being used for rendering in some of FlxSprite subclasses (FlxTileblock, FlxBar, 
-	 * FlxBitmapFont and FlxBitmapTextField) and for checks if the sprite is in camera's view.
+	 * and FlxBitmapText) and for checks if the sprite is in camera's view.
 	 */
 	private var _sinAngle:Float = 0;
 	private var _cosAngle:Float = 1;
@@ -328,7 +328,6 @@ class FlxSprite extends FlxObject
 			frames = graph.imageFrame;
 		}
 		
-		graphicLoaded();
 		return this;
 	}
 	
@@ -388,7 +387,6 @@ class FlxSprite extends FlxObject
 		
 		bakedRotationAngle = 360 / Rotations;
 		animation.createPrerotated();
-		graphicLoaded();
 		return this;
 	}
 	
@@ -511,12 +509,9 @@ class FlxSprite extends FlxObject
 	 */
 	public function updateHitbox():Void
 	{
-		var newWidth:Float = scale.x * frameWidth;
-		var newHeight:Float = scale.y * frameHeight;
-		
-		width = newWidth;
-		height = newHeight;
-		offset.set( - ((newWidth - frameWidth) * 0.5), - ((newHeight - frameHeight) * 0.5));
+		width = Math.abs(scale.x) * frameWidth;
+		height = Math.abs(scale.y) * frameHeight;
+		offset.set( -0.5 * (width - frameWidth), -0.5 * (height - frameHeight));
 		centerOrigin();
 	}
 	
@@ -565,7 +560,11 @@ class FlxSprite extends FlxObject
 	{
 		if (frame == null)
 		{
+			#if !FLX_NO_DEBUG
 			loadGraphic(FlxGraphic.fromClass(GraphicDefault));
+			#else
+			return;
+			#end
 		}
 		
 		if (alpha == 0 || frame.type == FlxFrameType.EMPTY)
@@ -579,7 +578,7 @@ class FlxSprite extends FlxObject
 		}
 		
 	#if FLX_RENDER_TILE
-		var drawItem:FlxDrawStackItem;
+		var drawItem:FlxDrawTilesItem;
 		
 		var ox:Float = origin.x;
 		if (_facingHorizontalMult != 1)
@@ -625,7 +624,7 @@ class FlxSprite extends FlxObject
 				camera.buffer.draw(framePixels, _matrix, null, blend, null, (antialiasing || camera.antialiasing));
 			}
 #else
-			drawItem = camera.getDrawStackItem(frame.parent, isColored, _blendInt, antialiasing);
+			drawItem = camera.getDrawTilesItem(frame.parent, isColored, _blendInt, antialiasing);
 			
 			_matrix.identity();
 			
@@ -685,7 +684,7 @@ class FlxSprite extends FlxObject
 	}
 	
 	#if FLX_RENDER_TILE
-	private inline function setDrawData(drawItem:FlxDrawStackItem, camera:FlxCamera, matrix:Matrix, ?tileID:Float)
+	private inline function setDrawData(drawItem:FlxDrawTilesItem, camera:FlxCamera, matrix:Matrix, ?tileID:Float)
 	{
 		drawItem.setDrawData(_point, (tileID == null) ? frame.tileID : tileID, matrix, isColored, color, alpha * camera.alpha);
 	}
@@ -701,8 +700,12 @@ class FlxSprite extends FlxObject
 	 */
 	public function stamp(Brush:FlxSprite, X:Int = 0, Y:Int = 0):Void
 	{
-		Brush.drawFrame();
-		var bitmapData:BitmapData = Brush.framePixels;
+		if (this.graphic == null || Brush.graphic == null)
+		{
+			throw "Cannot stamp to or from a FlxSprite with no graphics.";
+		}
+		
+		var bitmapData:BitmapData = Brush.getFlxFrameBitmapData();
 		
 		if (isSimpleRenderBlit()) // simple render
 		{
@@ -745,7 +748,7 @@ class FlxSprite extends FlxObject
 	 * 
 	 * @param	Force	Force the frame to redraw, even if its not flagged as necessary.
 	 */
-	public inline function drawFrame(Force:Bool = false):Void
+	public function drawFrame(Force:Bool = false):Void
 	{
 		#if FLX_RENDER_BLIT
 		if (Force || dirty)
@@ -861,7 +864,7 @@ class FlxSprite extends FlxObject
 	 * 
 	 * @param	Point		The point in world space you want to check.
 	 * @param	Mask		Used in the pixel hit test to determine what counts as solid.
-	 * @param	Camera		Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
+	 * @param	Camera		Specify which game camera you want.  If null getScreenPosition() will just grab the first global camera.
 	 * @return	Whether or not the point overlaps this object.
 	 */
 	public function pixelsOverlapPoint(point:FlxPoint, Mask:Int = 0xFF, ?Camera:FlxCamera):Bool
@@ -992,7 +995,7 @@ class FlxSprite extends FlxObject
 	 * Check and see if this object is currently on screen. Differs from FlxObject's implementation
 	 * in that it takes the actual graphic into account, not just the hitbox or bounding box or whatever.
 	 * 
-	 * @param	Camera		Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
+	 * @param	Camera		Specify which game camera you want.  If null getScreenPosition() will just grab the first global camera.
 	 * @return	Whether the object is on screen or not.
 	 */
 	override public function isOnScreen(?Camera:FlxCamera):Bool
@@ -1142,6 +1145,12 @@ class FlxSprite extends FlxObject
 	
 	private function get_pixels():BitmapData
 	{
+		#if !FLX_NO_DEBUG
+		if (graphic == null)
+		{
+			throw "FlxSprite object doesn't have any graphic! Please load graphic or call makeGraphic() on the sprite before trying to retrieve its graphic.";
+		}
+		#end
 		return graphic.bitmap;
 	}
 	
@@ -1222,8 +1231,14 @@ class FlxSprite extends FlxObject
 	
 	override private function set_angle(Value:Float):Float
 	{
-		_angleChanged = (angle != Value) || _angleChanged;
-		return super.set_angle(Value);
+		var newAngle = (angle != Value);
+		var ret = super.set_angle(Value);
+		if (newAngle)
+		{
+			_angleChanged = true;
+			animation.update(0);
+		}
+		return ret;
 	}
 	
 	private function set_blend(Value:BlendMode):BlendMode 
@@ -1318,6 +1333,11 @@ class FlxSprite extends FlxObject
 	 */
 	private function set_frames(Frames:FlxFramesCollection):FlxFramesCollection
 	{
+		if (animation != null)
+		{
+			animation.destroyAnimations();
+		}
+		
 		if (Frames != null)
 		{
 			graphic = Frames.parent;
@@ -1327,6 +1347,7 @@ class FlxSprite extends FlxObject
 			resetHelpers();
 			bakedRotationAngle = 0;
 			animation.frameIndex = 0;
+			graphicLoaded();
 		}
 		else
 		{
@@ -1336,11 +1357,6 @@ class FlxSprite extends FlxObject
 		}
 		
 		_clipRect = null;
-		
-		if (animation != null)
-		{
-			animation.destroyAnimations();
-		}
 		return Frames;
 	}
 	
@@ -1366,6 +1382,11 @@ class FlxSprite extends FlxObject
 			dirty = true;
 		}
 		return flipY = Value;
+	}
+	
+	private function set_antialiasing(value:Bool):Bool
+	{
+		return antialiasing = value;
 	}
 }
 

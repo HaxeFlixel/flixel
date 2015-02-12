@@ -8,17 +8,18 @@ import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
+import flixel.FlxSprite;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.frames.FlxFramesCollection;
 import flixel.graphics.frames.FlxImageFrame;
 import flixel.graphics.frames.FlxTileFrames;
-import flixel.graphics.tile.FlxDrawStackItem;
+import flixel.graphics.tile.FlxDrawTilesItem;
 import flixel.math.FlxMath;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxGraphicAsset;
-import flixel.system.FlxAssets.FlxTilemapAsset;
 import flixel.system.FlxAssets.FlxTilemapGraphicAsset;
 import flixel.tile.FlxBaseTilemap.FlxTilemapAutoTiling;
 import flixel.util.FlxArrayUtil;
@@ -29,11 +30,11 @@ import openfl.display.BlendMode;
 import openfl.display.Tilesheet;
 import openfl.geom.ColorTransform;
 
-@:bitmap("assets/images/tile/autotiles.png")
+@:keep @:bitmap("assets/images/tile/autotiles.png")
 class GraphicAuto extends BitmapData {}
 
-@:bitmap("assets/images/tile/autotiles_alt.png")
-class GraphicAutoAlt extends BitmapData { }
+@:keep @:bitmap("assets/images/tile/autotiles_alt.png")
+class GraphicAutoAlt extends BitmapData {}
 
 // TODO: try to solve "tile tearing problem" (1px gap between tile at certain conditions) on native targets
 
@@ -311,9 +312,9 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 			return;
 		}
 		
-		// Copied from getScreenXY()
-		_helperPoint.x = Math.floor((x - Math.floor(Camera.scroll.x) * scrollFactor.x) * 5) / 5 + 0.1;
-		_helperPoint.y = Math.floor((y - Math.floor(Camera.scroll.y) * scrollFactor.y) * 5) / 5 + 0.1;
+		// Copied from getScreenPosition()
+		_helperPoint.x = x - Camera.scroll.x * scrollFactor.x;
+		_helperPoint.y = y - Camera.scroll.y * scrollFactor.y;
 		
 		_helperPoint.x *= Camera.totalScaleX;
 		_helperPoint.y *= Camera.totalScaleY;
@@ -326,7 +327,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		var rectHeight:Float = _scaledTileHeight * Camera.totalScaleY;
 	
 		// Copy tile images into the tile buffer
-		// Modified from getScreenXY()
+		// Modified from getScreenPosition()
 		_point.x = (Camera.scroll.x * scrollFactor.x) - x; 
 		_point.y = (Camera.scroll.y * scrollFactor.y) - y;
 		var screenXInTiles:Int = Math.floor(_point.x / _scaledTileWidth);
@@ -624,7 +625,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	/**
 	 * Call this function to lock the automatic camera to the map's edges.
 	 * 
-	 * @param	Camera			Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
+	 * @param	Camera			Specify which game camera you want.  If null getScreenPosition() will just grab the first global camera.
 	 * @param	Border			Adjusts the camera follow boundary by whatever number of tiles you specify here.  Handy for blocking off deadends that are offscreen, etc.  Use a negative number to add padding instead of hiding the edges.
 	 * @param	UpdateWorld		Whether to update the collision system's world size, default value is true.
 	 */
@@ -754,33 +755,36 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 * Change a particular tile to FlxSprite. Or just copy the graphic if you dont want any changes to mapdata itself.
 	 * 
 	 * @link http://forums.flixel.org/index.php/topic,5398.0.html
-	 * @param	X		The X coordinate of the tile (in tiles, not pixels).
-	 * @param	Y		The Y coordinate of the tile (in tiles, not pixels).
-	 * @param	NewTile	New tile to the mapdata. Use -1 if you dont want any changes. Default = 0 (empty)
+	 * @param	X				The X coordinate of the tile (in tiles, not pixels).
+	 * @param	Y				The Y coordinate of the tile (in tiles, not pixels).
+	 * @param	NewTile			New tile to the mapdata. Use -1 if you dont want any changes. Default = 0 (empty)
+	 * @param	SpriteFactory	Method for converting FlxTile to FlxSprite. If null then will be used defaultTileToSprite() method.
 	 * @return	FlxSprite.
 	 */
-	public function tileToFlxSprite(X:Int, Y:Int, NewTile:Int = 0):FlxSprite
+	public function tileToSprite(X:Int, Y:Int, NewTile:Int = 0, ?SpriteFactory:FlxTileProperties->FlxSprite):FlxSprite
 	{
-		var rowIndex:Int = X + (Y * widthInTiles);
+		if (SpriteFactory == null)
+		{
+			SpriteFactory = defaultTileToSprite;
+		}
 		
+		var rowIndex:Int = X + (Y * widthInTiles);
 		var tile:FlxTile = _tileObjects[_data[rowIndex]];
-		var tileSprite:FlxSprite = new FlxSprite();
-		tileSprite.x = X * _tileWidth + x;
-		tileSprite.y = Y * _tileHeight + y;
+		var image:FlxImageFrame = null;
 		
 		if (tile != null && tile.visible)
 		{
-			var image:FlxImageFrame = FlxImageFrame.fromFrame(tile.frame);
-			tileSprite.frames = image;
+			image = FlxImageFrame.fromFrame(tile.frame);	
 		}
 		else
 		{
-			tileSprite.makeGraphic(_tileWidth, _tileHeight, FlxColor.TRANSPARENT, true);
+			image = FlxImageFrame.fromEmptyFrame(graphic, FlxRect.get(0, 0, _tileWidth, _tileHeight));
 		}
 		
-		tileSprite.scale.copyFrom(scale);
-		tileSprite.dirty = true;
-
+		var tileX:Float = X * _tileWidth * scale.x + x;
+		var tileY:Float = Y * _tileHeight * scale.y + y;
+		var tileSprite:FlxSprite = SpriteFactory({graphic: image, x: tileX, y: tileY, scale: FlxPoint.get().copyFrom(scale), alpha: alpha, blend: blend});
+		
 		if (NewTile >= 0) 
 		{
 			setTile(X, Y, NewTile);
@@ -829,13 +833,13 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		var hackScaleX:Float = tileScaleHack * scaleX;
 		var hackScaleY:Float = tileScaleHack * scaleY;
 		
-		var drawItem:FlxDrawStackItem;
+		var drawItem:FlxDrawTilesItem;
 	#end
 	
 		var isColored:Bool = ((alpha != 1) || (color != 0xffffff));
 		
 		// Copy tile images into the tile buffer
-		_point.x = (Camera.scroll.x * scrollFactor.x) - x; //modified from getScreenXY()
+		_point.x = (Camera.scroll.x * scrollFactor.x) - x; //modified from getScreenPosition()
 		_point.y = (Camera.scroll.y * scrollFactor.y) - y;
 		
 		var screenXInTiles:Int = Math.floor(_point.x / _scaledTileWidth);
@@ -924,7 +928,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 					
 					_matrix.scale(hackScaleX, hackScaleY);
 					
-					drawItem = Camera.getDrawStackItem(graphic, isColored, _blendInt);
+					drawItem = Camera.getDrawTilesItem(graphic, isColored, _blendInt);
 					drawItem.setDrawData(_point, frame.tileID, _matrix, isColored, color, alpha);
 				#end
 				}
@@ -1176,4 +1180,31 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 			}
 		}
 	}
+	
+	/**
+	 * Default method for generating FlxSprite from FlxTile
+	 * 
+	 * @param	TileProperties	properties for new sprite
+	 * @return	New FlxSprite with specified graphic
+	 */
+	private function defaultTileToSprite(TileProperties:FlxTileProperties):FlxSprite
+	{
+		var tileSprite:FlxSprite = new FlxSprite(TileProperties.x, TileProperties.y);
+		tileSprite.frames = TileProperties.graphic;
+		tileSprite.scale.copyFrom(TileProperties.scale);
+		FlxDestroyUtil.put(TileProperties.scale);
+		tileSprite.alpha = TileProperties.alpha;
+		tileSprite.blend = TileProperties.blend;
+		return tileSprite;
+	}
+}
+
+typedef FlxTileProperties =
+{
+   graphic:FlxImageFrame,
+   x:Float,
+   y:Float,
+   scale:FlxPoint,
+   alpha:Float,
+   blend:BlendMode
 }
