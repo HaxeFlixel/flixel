@@ -39,7 +39,7 @@ class FlxBasic implements IFlxDestroyable
 	public var alive(default, set):Bool = true;
 	/**
 	 * This flag indicates whether this objects has been destroyed or not. 
-	 * Cannot be set, use destroy() and revive().
+	 * Cannot be set, use destroy().
 	 */
 	public var exists(default, set):Bool = true;
 	
@@ -79,7 +79,6 @@ class FlxBasic implements IFlxDestroyable
 	public function kill():Void
 	{
 		alive = false;
-		exists = false;
 	}
 	
 	/**
@@ -89,7 +88,6 @@ class FlxBasic implements IFlxDestroyable
 	public function revive():Void
 	{
 		alive = true;
-		exists = true;
 	}
 	
 	/**
