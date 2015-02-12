@@ -69,8 +69,8 @@ class FlxBarFrames extends FlxFramesCollection
 		else
 		{
 			var filled:BitmapData = new BitmapData(Std.int(region.width), Std.int(region.height), true, FlxColor.TRANSPARENT);
-			FlxPoint.point.setTo(0, 0);
-			filled.copyPixels(parent.bitmap, region.copyToFlash(FlxRect.rect), FlxPoint.point);
+			FlxPoint.point1.setTo(0, 0);
+			filled.copyPixels(parent.bitmap, region.copyToFlash(FlxRect.rect), FlxPoint.point1);
 			return filled;
 		}
 		

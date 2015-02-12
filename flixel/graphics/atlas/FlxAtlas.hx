@@ -311,7 +311,7 @@ class FlxAtlas implements IFlxDestroyable
 				}
 				else
 				{
-					var point:Point = FlxPoint.point;
+					var point:Point = FlxPoint.point1;
 					point.setTo(firstGrandChild.x, firstGrandChild.y);
 					_bitmapData.copyPixels(firstGrandChildData, firstGrandChildData.rect, point);
 				}
@@ -543,7 +543,7 @@ class FlxAtlas implements IFlxDestroyable
 		var newBitmapData:BitmapData = new BitmapData(root.width, root.height, true, FlxColor.TRANSPARENT);
 		if (_bitmapData != null)
 		{
-			var point:Point = FlxPoint.point;
+			var point:Point = FlxPoint.point1;
 			point.setTo(0, 0);
 			newBitmapData.copyPixels(_bitmapData, _bitmapData.rect, point);
 		}

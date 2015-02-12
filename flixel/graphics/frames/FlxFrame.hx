@@ -132,8 +132,8 @@ class FlxFrame implements IFlxDestroyable
 		
 		if (angle == FlxFrameAngle.ANGLE_0)
 		{
-			offset.copyToFlash(FlxPoint.point);
-			result.copyPixels(parent.bitmap, frame.copyToFlash(FlxRect.rect), FlxPoint.point);
+			offset.copyToFlash(FlxPoint.point2);
+			result.copyPixels(parent.bitmap, frame.copyToFlash(FlxRect.rect), FlxPoint.point2);
 		}
 		else
 		{
