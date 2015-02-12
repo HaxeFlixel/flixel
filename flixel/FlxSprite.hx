@@ -413,7 +413,7 @@ class FlxSprite extends FlxObject
 		var graphic:FlxGraphic = FlxG.bitmap.get(key);
 		if (graphic == null)
 		{
-			graphic = FlxGraphic.fromBitmapData(Frame.paintOnBitmap(), false, key);
+			graphic = FlxGraphic.fromBitmapData(Frame.paint(), false, key);
 		}
 		
 		return loadRotatedGraphic(graphic, Rotations, -1, AntiAliasing, AutoBuffer);
@@ -882,13 +882,19 @@ class FlxSprite extends FlxObject
 	{
 		if (frame != null && dirty)
 		{
+			if (framePixels != null && (framePixels.width != frame.sourceSize.x || framePixels.height != frame.sourceSize.y))
+			{
+				framePixels.dispose();
+				framePixels = null;
+			}
+			
 			if (!flipX && !flipY && frame.type == FlxFrameType.REGULAR)
 			{
-				framePixels = frame.paintOnBitmap(framePixels);
+				framePixels = frame.paint(framePixels, _flashPointZero);
 			}
 			else
 			{
-				framePixels = frame.paintFlipped(framePixels, flipX, flipY);
+				framePixels = frame.paintFlipped(framePixels, _flashPointZero, flipX, flipY); 
 			}
 			
 			if (useColorTransform)

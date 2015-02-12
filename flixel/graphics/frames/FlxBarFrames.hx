@@ -64,7 +64,7 @@ class FlxBarFrames extends FlxFramesCollection
 	{
 		if (atlasFrame != null)
 		{
-			return atlasFrame.paintOnBitmap();
+			return atlasFrame.paint();
 		}
 		else
 		{

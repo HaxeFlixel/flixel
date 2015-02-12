@@ -156,7 +156,7 @@ class FlxGraphic
 			return graphic;
 		}
 		
-		var bitmap:BitmapData = Source.paintOnBitmap();
+		var bitmap:BitmapData = Source.paint();
 		graphic = createGraphic(bitmap, key, Unique);
 		var image:FlxImageFrame = FlxImageFrame.fromGraphic(graphic);
 		image.getByIndex(0).name = Source.name;

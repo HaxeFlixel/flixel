@@ -22,34 +22,30 @@ class FlxEmptyFrame extends FlxFrame
 		type = FlxFrameType.EMPTY;
 	}
 	
-	// TODO: fix it later...
-	override public function paintOnBitmap(bmd:BitmapData = null, point:Point = null, mergeAlpha:Bool = false):BitmapData 
+	override public function paint(bmd:BitmapData = null, point:Point = null, mergeAlpha:Bool = false):BitmapData 
 	{
-		var result:BitmapData = null;
-		
-		if (bmd != null && (bmd.width == sourceSize.x && bmd.height == sourceSize.y))
+		if (point == null)
 		{
-			result = bmd;
-		}
-		else if (bmd != null)
-		{
-			bmd.dispose();
+			point = FlxPoint.point1;
+			point.setTo(0, 0);
 		}
 		
-		if (result == null)
+		if (bmd == null)
 		{
 			return new BitmapData(Std.int(sourceSize.x), Std.int(sourceSize.y), true, FlxColor.TRANSPARENT);
 		}
+		else if (bmd != null && !mergeAlpha)
+		{
+			var rect:Rectangle = FlxRect.rect;
+			rect.setTo(point.x, point.y, result.width, result.height);
+			bmd.fillRect(rect, FlxColor.TRANSPARENT);
+		}
 		
-		var rect:Rectangle = FlxRect.rect;
-		rect.setTo(0, 0, result.width, result.height);
-		bmd.fillRect(rect, FlxColor.TRANSPARENT);
-		
-		return result;
+		return bmd;
 	}
 	
 	override public function paintFlipped(bmd:BitmapData = null, point:Point = null, flipX:Bool = false, flipY:Bool = false, mergeAlpha:Bool = false):BitmapData 
 	{
-		return paintOnBitmap(bmd);
+		return paint(bmd);
 	}
 }
