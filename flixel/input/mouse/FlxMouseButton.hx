@@ -100,6 +100,7 @@ class FlxMouseButton extends FlxInput<Int> implements IFlxDestroyable
 		release();
 	}
 }
+#end
 
 /**
  * These IDs are negative to avoid overlaps with possible touch point IDs.
@@ -111,4 +112,3 @@ abstract FlxMouseButtonID(Int) to Int
 	var MIDDLE = -2;
 	var RIGHT  = -3;
 }
-#end

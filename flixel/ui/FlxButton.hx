@@ -4,7 +4,10 @@ import flash.display.BitmapData;
 import flash.events.MouseEvent;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.graphics.atlas.FlxAtlas;
+import flixel.graphics.atlas.FlxNode;
 import flixel.graphics.FlxGraphic;
+import flixel.graphics.frames.FlxTileFrames;
 import flixel.input.FlxInput;
 import flixel.input.FlxPointer;
 import flixel.input.IFlxInput;
@@ -17,7 +20,7 @@ import flixel.system.FlxSound;
 import flixel.text.FlxText;
 import flixel.util.FlxDestroyUtil;
 
-@:bitmap("assets/images/ui/button.png")
+@:keep @:bitmap("assets/images/ui/button.png")
 class GraphicButton extends BitmapData {}
 
 /**
@@ -80,19 +83,27 @@ class FlxButton extends FlxTypedButton<FlxText> implements IFlxInput
 	
 	private inline function initLabel(Text:String):Void 
 	{
-		label = new FlxText(x + labelOffsets[NORMAL].x, y + labelOffsets[NORMAL].y, 80, Text);
-		label.setFormat(null, 8, 0x333333, "center");
-		label.alpha = labelAlphas[status];
+		if (Text != null)
+		{
+			label = new FlxText(x + labelOffsets[NORMAL].x, y + labelOffsets[NORMAL].y, 80, Text);
+			label.setFormat(null, 8, 0x333333, "center");
+			label.alpha = labelAlphas[status];
+			label.drawFrame(true);
+		}
 	}
 	
 	private inline function get_text():String 
 	{
-		return label.text;
+		return (label != null) ? label.text : null;
 	}
 	
 	private inline function set_text(Text:String):String 
 	{
-		return label.text = Text;
+		if (label == null)
+		{
+			initLabel(Text);
+		}
+		return Text;
 	}
 }
 
@@ -300,6 +311,41 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		}
 	}
 #end
+
+	/**
+	 * Stamps button's graphic and label onto specified atlas object and loads graphic from this atlas.
+	 * This method assumes that you're using whole image for button's graphic and image has no spaces between frames.
+	 * And it assumes that label is a single frame sprite.
+	 * 
+	 * @param	atlas	atlas to stamp graphic to.
+	 * @return	true - if both button's graphic and label's graphic are stamped on atlas successfully, false - in other case.
+	 */
+	public function stampOnAtlas(atlas:FlxAtlas):Bool
+	{
+		var buttonNode:FlxNode = atlas.addNode(graphic.bitmap, graphic.key);
+		var result:Bool = (buttonNode != null);
+		
+		if (buttonNode != null)
+		{
+			var buttonFrames:FlxTileFrames = cast frames;
+			var tileSize:FlxPoint = new FlxPoint(buttonFrames.tileSize.x, buttonFrames.tileSize.y);
+			var tileFrames:FlxTileFrames = buttonNode.getTileFrames(tileSize);
+			this.frames = tileFrames;
+		}
+		
+		if (result && label != null)
+		{
+			var labelNode:FlxNode = atlas.addNode(label.graphic.bitmap, label.graphic.key);
+			result = result && (labelNode != null);
+			
+			if (labelNode != null)
+			{
+				label.frames = labelNode.getImageFrame();
+			}
+		}
+		
+		return result;
+	}
 	
 	/**
 	 * Basic button update logic - searches for overlaps with touches and
@@ -337,7 +383,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 		}
 		
 		#if !FLX_NO_TOUCH // there's only a mouse event listener for onUp
-			if (currentInput != null && currentInput.justReleased && Std.is(currentInput, FlxTouch))
+			if (currentInput != null && currentInput.justReleased && Std.is(currentInput, FlxTouch) && overlapFound)
 			{
 				onUpHandler();
 			}

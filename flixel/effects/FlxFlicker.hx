@@ -140,7 +140,7 @@ class FlxFlicker implements IFlxDestroyable
 		completionCallback = CompletionCallback;
 		progressCallback = ProgressCallback;
 		endVisibility = EndVisibility;
-		timer = new FlxTimer(interval, flickerProgress, Std.int(duration / interval));
+		timer = new FlxTimer().start(interval, flickerProgress, Std.int(duration / interval));
 	}
 	
 	/**

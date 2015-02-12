@@ -38,7 +38,7 @@ class FlxTweenTest extends FlxTest
 			function (tween:FlxTween)
 			{
 				tween.active = false;
-				new FlxTimer(0.05, function(_)
+				new FlxTimer().start(0.05, function(_)
 				{
 					tweenActive = tween.active;
 				});

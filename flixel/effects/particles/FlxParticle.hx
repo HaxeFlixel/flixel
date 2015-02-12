@@ -76,6 +76,7 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 	 * Instantiate a new particle. Like FlxSprite, all meaningful creation
 	 * happens during loadGraphic() or makeGraphic() or whatever.
 	 */
+	@:keep
 	public function new()
 	{
 		super();

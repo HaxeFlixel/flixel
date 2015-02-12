@@ -579,7 +579,7 @@ class FlxObject extends FlxBasic
 	 * 
 	 * @param	ObjectOrGroup	The object or group being tested.
 	 * @param	InScreenSpace	Whether to take scroll factors into account when checking for overlap.  Default is false, or "only compare in world space."
-	 * @param	Camera			Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
+	 * @param	Camera			Specify which game camera you want.  If null getScreenPosition() will just grab the first global camera.
 	 * @return	Whether or not the two objects overlap.
 	 */
 	public function overlaps(ObjectOrGroup:FlxBasic, InScreenSpace:Bool = false, ?Camera:FlxCamera):Bool
@@ -627,7 +627,7 @@ class FlxObject extends FlxBasic
 	 * @param	Y				The Y position you want to check.  Pretends this object (the caller, not the parameter) is located here.
 	 * @param	ObjectOrGroup	The object or group being tested.
 	 * @param	InScreenSpace	Whether to take scroll factors into account when checking for overlap.  Default is false, or "only compare in world space."
-	 * @param	Camera			Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
+	 * @param	Camera			Specify which game camera you want.  If null getScreenPosition() will just grab the first global camera.
 	 * @return	Whether or not the two objects overlap.
 	 */
 	public function overlapsAt(X:Float, Y:Float, ObjectOrGroup:FlxBasic, InScreenSpace:Bool = false, ?Camera:FlxCamera):Bool
@@ -675,7 +675,7 @@ class FlxObject extends FlxBasic
 	 * 
 	 * @param	Point			The point in world space you want to check.
 	 * @param	InScreenSpace	Whether to take scroll factors into account when checking for overlap.
-	 * @param	Camera			Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
+	 * @param	Camera			Specify which game camera you want.  If null getScreenPosition() will just grab the first global camera.
 	 * @return	Whether or not the point overlaps this object.
 	 */
 	public function overlapsPoint(point:FlxPoint, InScreenSpace:Bool = false, ?Camera:FlxCamera):Bool
@@ -709,7 +709,7 @@ class FlxObject extends FlxBasic
 	/**
 	 * Call this function to figure out the on-screen position of the object.
 	 * 
-	 * @param	Camera		Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
+	 * @param	Camera		Specify which game camera you want.  If null getScreenPosition() will just grab the first global camera.
 	 * @param	Point		Takes a FlxPoint object and assigns the post-scrolled X and Y values of this object to it.
 	 * @return	The Point you passed in, or a new Point if you didn't pass one, containing the screen X and Y position of this object.
 	 */
@@ -768,7 +768,7 @@ class FlxObject extends FlxBasic
 	/**
 	 * Check and see if this object is currently on screen.
 	 * 
-	 * @param	Camera		Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
+	 * @param	Camera		Specify which game camera you want.  If null getScreenPosition() will just grab the first global camera.
 	 * @return	Whether the object is on screen or not.
 	 */
 	public function isOnScreen(?Camera:FlxCamera):Bool
@@ -868,10 +868,7 @@ class FlxObject extends FlxBasic
 		
 		for (camera in cameras)
 		{
-			if (camera.visible && camera.exists && isOnScreen(camera))
-			{
-				drawDebugOnCamera(camera);
-			}
+			drawDebugOnCamera(camera);
 		}
 	}
 	
@@ -883,6 +880,11 @@ class FlxObject extends FlxBasic
 	 */
 	public function drawDebugOnCamera(camera:FlxCamera):Void
 	{
+		if (!camera.visible || !camera.exists || !isOnScreen(camera))
+		{
+			return;
+		}
+		
 		var rect = getBoundingBox(camera);
 		
 		// Find the color to use

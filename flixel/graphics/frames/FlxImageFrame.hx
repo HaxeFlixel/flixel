@@ -2,6 +2,7 @@ package flixel.graphics.frames;
 
 import flash.geom.Point;
 import flash.geom.Rectangle;
+import flixel.graphics.frames.FlxFrame.FlxFrameType;
 import flixel.graphics.frames.FlxFramesCollection.FlxFrameCollectionType;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxGraphicAsset;
@@ -24,6 +25,30 @@ class FlxImageFrame extends FlxFramesCollection
 	private function new(parent:FlxGraphic) 
 	{
 		super(parent, FlxFrameCollectionType.IMAGE);
+	}
+	
+	/**
+	 * Generates ImageFrame object with empty frame of specified size.
+	 * 
+	 * @param	graphic		graphic for ImageFrame.
+	 * @param	frameRect	the size of the empty frame to generate (only width and height of the frameRect are need to be set properly).
+	 * @return	Newly created ImageFrame object with empty frame of specified size.
+	 */
+	public static function fromEmptyFrame(graphic:FlxGraphic, frameRect:FlxRect):FlxImageFrame
+	{
+		if (graphic == null || frameRect == null)	return null;
+		
+		// find ImageFrame, if there is one already
+		var imageFrame:FlxImageFrame = FlxImageFrame.findEmptyFrame(graphic, frameRect);
+		if (imageFrame != null)
+		{
+			return imageFrame;
+		}
+		
+		// or create it, if there is no such object
+		imageFrame = new FlxImageFrame(graphic);
+		imageFrame.frame = imageFrame.addEmptyFrame(frameRect);
+		return imageFrame;
 	}
 	
 	/**
@@ -135,7 +160,33 @@ class FlxImageFrame extends FlxFramesCollection
 		var imageFrame:FlxImageFrame;
 		for (imageFrame in imageFrames)
 		{
-			if (imageFrame.equals(frameRect))
+			if (imageFrame.equals(frameRect) && imageFrame.frame.type != FlxFrameType.EMPTY)
+			{
+				return imageFrame;
+			}
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * Searches ImageFrame object with the empty frame which have specified size.
+	 * 
+	 * @param	graphic		FlxGraphic object to search ImageFrame for.
+	 * @param	frameRect	The size of empty frame to search for.
+	 * @return	ImageFrame with empty frame.
+	 */
+	public static function findEmptyFrame(graphic:FlxGraphic, frameRect:FlxRect):FlxImageFrame
+	{
+		var imageFrames:Array<FlxImageFrame> = cast graphic.getFramesCollections(FlxFrameCollectionType.IMAGE);
+		var imageFrame:FlxImageFrame;
+		var frame:FlxFrame;
+		
+		for (imageFrame in imageFrames)
+		{
+			frame = imageFrame.frame;
+			
+			if (frame.sourceSize.x == frameRect.width && frame.sourceSize.y == frameRect.height && frame.type == FlxFrameType.EMPTY)
 			{
 				return imageFrame;
 			}

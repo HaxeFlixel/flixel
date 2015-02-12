@@ -262,6 +262,8 @@ class FlxG
 	 */
 	public static var plugins(default, null):PluginFrontEnd;
 	
+	public static var initialZoom(default, null):Float = 0;
+	
 	#if !FLX_NO_SOUND_SYSTEM
 	/**
 	 * Contains a list of all sounds and other things to manage or play() sounds.
@@ -502,7 +504,7 @@ class FlxG
 		BaseScaleMode.gWidth = width;
 		BaseScaleMode.gHeight = height;
 		
-		FlxCamera.defaultZoom = Zoom;
+		FlxG.initialZoom = FlxCamera.defaultZoom = Zoom;
 		
 		resizeGame(stage.stageWidth, stage.stageHeight);
 		

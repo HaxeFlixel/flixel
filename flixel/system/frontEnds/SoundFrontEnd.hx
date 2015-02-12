@@ -139,7 +139,7 @@ class SoundFrontEnd
 		return Assets.getSound(EmbeddedSound, true);
 	}
 	
-	#if !doc
+	#if !FLX_HAXE_BUILD
 	/**
 	 * Calls FlxG.sound.cache() on all sounds that are embedded.
 	 * WARNING: can lead to high memory usage.
