@@ -23,7 +23,7 @@ class FlxEmptyFrame extends FlxFrame
 	}
 	
 	// TODO: fix it later...
-	override public function paintOnBitmap(bmd:BitmapData = null, point:Point = null):BitmapData 
+	override public function paintOnBitmap(bmd:BitmapData = null, point:Point = null, mergeAlpha:Bool = false):BitmapData 
 	{
 		var result:BitmapData = null;
 		
@@ -48,7 +48,7 @@ class FlxEmptyFrame extends FlxFrame
 		return result;
 	}
 	
-	override public function paintFlipped(bmd:BitmapData = null, point:Point = null, flipX:Bool = false, flipY:Bool = false):BitmapData 
+	override public function paintFlipped(bmd:BitmapData = null, point:Point = null, flipX:Bool = false, flipY:Bool = false, mergeAlpha:Bool = false):BitmapData 
 	{
 		return paintOnBitmap(bmd);
 	}

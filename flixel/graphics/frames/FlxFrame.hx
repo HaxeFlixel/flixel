@@ -108,16 +108,22 @@ class FlxFrame implements IFlxDestroyable
 	 */
 	// TODO: use point argument...
 	// TODO: maybe add merge alpha argument...
-	public function paintOnBitmap(bmd:BitmapData = null, point:Point = null):BitmapData
+	public function paintOnBitmap(bmd:BitmapData = null, point:Point = null, mergeAlpha:Bool = false):BitmapData
 	{
 		var result:BitmapData = null;
 		
-		if (bmd != null && (bmd.width >= sourceSize.x && bmd.height >= sourceSize.y))
+		if (point == null)
+		{
+			point = FlxPoint.point1;
+			point.setTo(0, 0);
+		}
+		
+		if (bmd != null && (bmd.width >= (point.x + sourceSize.x) && bmd.height >= (point.y + sourceSize.y)))
 		{
 			result = bmd;
 			
 			var rect:Rectangle = FlxRect.rect;
-			rect.setTo(0, 0, sourceSize.x, sourceSize.y);
+			rect.setTo(point.x, point.y, sourceSize.x, sourceSize.y);
 			bmd.fillRect(rect, FlxColor.TRANSPARENT);
 		}
 		else if (bmd != null)
@@ -133,6 +139,8 @@ class FlxFrame implements IFlxDestroyable
 		if (angle == FlxFrameAngle.ANGLE_0)
 		{
 			offset.copyToFlash(FlxPoint.point2);
+			FlxPoint.point2.x += point.x;
+			FlxPoint.point2.y += point.y;
 			result.copyPixels(parent.bitmap, frame.copyToFlash(FlxRect.rect), FlxPoint.point2);
 		}
 		else
@@ -141,8 +149,8 @@ class FlxFrame implements IFlxDestroyable
 			matrix.identity();
 			matrix.translate( -(frame.x + 0.5 * frame.width), -(frame.y + 0.5 * frame.height));
 			matrix.rotate(angle * FlxAngle.TO_RAD);
-			matrix.translate(offset.x + 0.5 * frame.height, offset.y + 0.5 * frame.width);
-			FlxRect.rect.setTo(offset.x, offset.y, frame.height, frame.width);
+			matrix.translate(offset.x + point.x + 0.5 * frame.height, offset.y + point.y + 0.5 * frame.width);
+			FlxRect.rect.setTo(offset.x + point.x, offset.y + point.y, frame.height, frame.width);
 			result.draw(parent.bitmap, matrix, null, null, FlxRect.rect);
 		}
 		
@@ -151,16 +159,22 @@ class FlxFrame implements IFlxDestroyable
 	
 	// TODO: use point argument...
 	// TODO: maybe add merge alpha argument...
-	public function paintFlipped(bmd:BitmapData = null, point:Point = null, flipX:Bool = false, flipY:Bool = false):BitmapData
+	public function paintFlipped(bmd:BitmapData = null, point:Point = null, flipX:Bool = false, flipY:Bool = false, mergeAlpha:Bool = false):BitmapData
 	{
 		var result:BitmapData = null;
+		
+		if (point == null)
+		{
+			point = FlxPoint.point2;
+			point.setTo(0, 0);
+		}
 		
 		if (bmd != null && (bmd.width >= sourceSize.x && bmd.height >= sourceSize.y))
 		{
 			result = bmd;
 			
 			var rect:Rectangle = FlxRect.rect;
-			rect.setTo(0, 0, sourceSize.x, sourceSize.y);
+			rect.setTo(point.x, point.y, sourceSize.x, sourceSize.y);
 			bmd.fillRect(rect, FlxColor.TRANSPARENT);
 		}
 		else if (bmd != null)
@@ -224,12 +238,19 @@ class FlxFrame implements IFlxDestroyable
 			FlxRect.rect.y = offset.y;
 		}
 		
+		matrix.translate(point.x, point.y);
+		FlxRect.rect.x += point.x;
+		FlxRect.rect.y += point.y;
+		
 		FlxRect.rect.width = w;
 		FlxRect.rect.height = h;
 		
 		result.draw(parent.bitmap, matrix, null, null, FlxRect.rect);
 		return result;
 	}
+	
+	// TODO: add method to draw (rotated + flipped) frame
+	// paintTransformedFrame(bmd, frame, flipX, flipY, rotation, mergeAlpha);
 	
 	public function destroy():Void
 	{
