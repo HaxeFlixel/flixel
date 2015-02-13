@@ -278,7 +278,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	/**
 	 * Removes specified sprite from the group.
 	 * 
-	 * @param	Object	The FlxSprite you want to remove.
+	 * @param	Sprite	The FlxSprite you want to remove.
 	 * @param	Splice	Whether the object should be cut from the array entirely or not.
 	 * @return	The removed object.
 	 */
