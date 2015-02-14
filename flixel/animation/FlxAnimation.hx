@@ -223,7 +223,7 @@ class FlxAnimation extends FlxBaseAnimation
 		
 		curIndex = _frames[curFrame];
 		
-		if (finished)	parent.fireFinishCallback(name);
+		if (finished && parent != null)	parent.fireFinishCallback(name);
 		
 		return Frame;
 	}
