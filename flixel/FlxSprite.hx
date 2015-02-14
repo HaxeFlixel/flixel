@@ -1085,7 +1085,6 @@ class FlxSprite extends FlxObject
 		}
 		
 		frames = graphic.imageFrame;
-		
 		return Pixels;
 	}
 	

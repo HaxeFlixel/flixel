@@ -23,6 +23,7 @@ import flixel.math.FlxPoint;
 import flixel.util.FlxStringUtil;
 
 // TODO: better handling bars with borders (don't take border into account while drawing its front).
+// TODO: maybe add clipRect support for tile renderer
 
 /**
  * FlxBar is a quick and easy way to create a graphical bar which can
@@ -144,7 +145,7 @@ class FlxBar extends FlxSprite
 	{
 		super(x, y);
 		
-		direction = (direction == null) ? LEFT_TO_RIGHT : direction;
+		direction = (direction == null) ? FlxBarFillDirection.LEFT_TO_RIGHT : direction;
 		
 		barWidth = width;
 		barHeight = height;
@@ -154,7 +155,6 @@ class FlxBar extends FlxSprite
 		_emptyBarRect = new Rectangle();
 		_filledBarPoint = new Point();
 		_filledBarRect = new Rectangle();
-		
 		makeGraphic(width, height, FlxColor.TRANSPARENT, true);
 		#else
 		_front = new FlxSprite();
@@ -828,8 +828,6 @@ class FlxBar extends FlxSprite
 		
 		if (percent > 0 && _frontFrame.type != FlxFrameType.EMPTY)
 		{
-			var drawItem:FlxDrawTilesItem;
-			
 			var ox:Float = origin.x;
 			if (_facingHorizontalMult != 1)
 			{
@@ -841,6 +839,9 @@ class FlxBar extends FlxSprite
 				oy = frameHeight - oy;
 			}
 			
+			var sx:Float = scale.x * _facingHorizontalMult;
+			var sy:Float = scale.y * _facingVerticalMult;
+			
 			for (camera in cameras)
 			{
 				if (!camera.visible || !camera.exists || !isOnScreen(camera))
@@ -850,10 +851,9 @@ class FlxBar extends FlxSprite
 				
 				getScreenPosition(_point, camera).subtractPoint(offset);
 				
-				_matrix.identity();
 				_frontFrame.prepareFrameMatrix(_matrix);
-				_matrix.translate( -origin.x, -origin.y);
-				_matrix.scale(scale.x * _facingHorizontalMult, scale.y * _facingVerticalMult);
+				_matrix.translate( -ox, -oy);
+				_matrix.scale(sx, sy);
 				
 				// rotate matrix if sprite's graphic isn't prerotated
 				if (angle != 0)
@@ -861,15 +861,13 @@ class FlxBar extends FlxSprite
 					_matrix.rotateWithTrig(_cosAngle, _sinAngle);
 				}
 				
-				_point.addPoint(origin);
-				
+				_point.add(ox, oy);
 				if (isPixelPerfectRender(camera))
 				{
 					_point.floor();
 				}
 				
 				_matrix.translate(_point.x, _point.y);
-				
 				camera.drawPixels(_frontFrame, _matrix, colorTransform, blend, antialiasing);
 			}
 		}
