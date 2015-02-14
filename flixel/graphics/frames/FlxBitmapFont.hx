@@ -357,7 +357,7 @@ class FlxBitmapFont extends FlxFramesCollection
 		font.lineHeight = font.size;
 		
 		// remove background color
-		var point:Point = FlxPoint.point;
+		var point:Point = FlxPoint.point1;
 		point.x = point.y = 0;
 		var bgColor32:Int = bmd.getPixel32(0, 0);
 		#if !bitfive

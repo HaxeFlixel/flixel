@@ -110,7 +110,6 @@ class FlxBitmapText extends FlxSprite
 	 * Number of space characters in one tab.
 	 */
 	public var numSpacesInTab(default, set):Int = 4;
-	private var _tabSpaces:String = "    ";
 	
 	/**
 	 * The color of the text in 0xAARRGGBB format.
@@ -172,12 +171,6 @@ class FlxBitmapText extends FlxSprite
 	public var numLines(get, null):Int = 0;
 	
 	/**
-	 * The "size" of the font.
-	 */
-	// TODO: maybe remove this property
-	public var size(default, set):Float = 1;
-	
-	/**
 	 * The width of the TextField object used for bitmap generation for this FlxText object.
 	 * Use it when you want to change the visible width of text. Enables autoSize if <= 0.
 	 */
@@ -185,9 +178,9 @@ class FlxBitmapText extends FlxSprite
 	
 	private var _fieldWidth:Float;
 	
-	private var pendingBorderBitmap:Bool = true;
-	private var pendingTextBitmap:Bool = true;
-	
+	private var pendingTextChange:Bool = true;
+	private var pendingGraphicChange:Bool = true;
+	private var pendingColorChange:Bool = true;
 	#if FLX_RENDER_TILE
 	private var textDrawData:Array<Float>;
 	private var borderDrawData:Array<Float>;
@@ -196,8 +189,6 @@ class FlxBitmapText extends FlxSprite
 	private var bgMatrix:FlxMatrix;
 	#else
 	private var textBitmap:BitmapData;
-	private var coloredTextBitmap:BitmapData;
-	private var borderBitmap:BitmapData;
 	#end
 	
 	/**
@@ -245,10 +236,8 @@ class FlxBitmapText extends FlxSprite
 		tileMatrix = null;
 		bgMatrix = null;
 		#else
-		textGlyphs = FlxDestroyUtil.destroy(textGlyphs);
-		borderGlyphs = FlxDestroyUtil.destroy(borderGlyphs);
+		textBitmap = FlxDestroyUtil.dispose(textBitmap);
 		#end
-		
 		super.destroy();
 	}
 	
@@ -363,7 +352,7 @@ class FlxBitmapText extends FlxSprite
 			
 			// matrix for calculation tile transformations
 			tileMatrix.identity();
-			tileMatrix.scale(size * totalScaleX, size * totalScaleY);
+			tileMatrix.scale(totalScaleX, totalScaleY);
 			if (angle != 0)
 			{
 				tileMatrix.rotateWithTrig(_cosAngle, _sinAngle);
@@ -582,11 +571,11 @@ class FlxBitmapText extends FlxSprite
 	 */
 	public function getStringWidth(str:String):Float
 	{
-		var spaceWidth:Float = Math.ceil(font.spaceWidth * size);
-		var tabWidth:Float = Math.ceil(spaceWidth * numSpacesInTab);
+		var spaceWidth:Float = font.spaceWidth;
+		var tabWidth:Float = spaceWidth * numSpacesInTab;
 		
 		var lineLength:Int = Utf8.length(str);	// lenght of the current line
-		var lineWidth:Float = Math.ceil(Math.abs(font.minOffsetX) * size);
+		var lineWidth:Float = Math.ceil(Math.abs(font.minOffsetX));
 		
 		var charCode:Int;						// current character in word
 		var charWidth:Float = 0;				// the width of current character
@@ -611,11 +600,11 @@ class FlxBitmapText extends FlxSprite
 				if (font.glyphs.exists(charCode))
 				{
 					glyphFrame = font.glyphs.get(charCode);
-					charWidth = Math.ceil(glyphFrame.xAdvance * size);
+					charWidth = glyphFrame.xAdvance;
 					
 					if (c == (lineLength - 1))
 					{
-						widthPlusOffset = Math.ceil((glyphFrame.offset.x + glyphFrame.frame.width) * size);
+						widthPlusOffset = Math.ceil((glyphFrame.offset.x + glyphFrame.frame.width));
 						if (widthPlusOffset > charWidth)
 						{
 							charWidth = widthPlusOffset;
@@ -655,10 +644,10 @@ class FlxBitmapText extends FlxSprite
 		var subLine:Utf8;			// current subline to assemble
 		var subLineWidth:Float;		// the width of current subline
 		
-		var spaceWidth:Float = font.spaceWidth * size;
+		var spaceWidth:Float = font.spaceWidth;
 		var tabWidth:Float = spaceWidth * numSpacesInTab;
 		
-		var startX:Float = Math.abs(font.minOffsetX) * size;
+		var startX:Float = Math.abs(font.minOffsetX);
 		
 		for (line in _lines)
 		{
@@ -681,7 +670,7 @@ class FlxBitmapText extends FlxSprite
 				}
 				else
 				{
-					charWidth = (font.glyphs.exists(charCode)) ? font.glyphs.get(charCode).xAdvance * size : 0;
+					charWidth = (font.glyphs.exists(charCode)) ? font.glyphs.get(charCode).xAdvance : 0;
 				}
 				charWidth += letterSpacing;
 				
@@ -834,10 +823,10 @@ class FlxBitmapText extends FlxSprite
 		var subLine:String;					// current subline to assemble
 		var subLineWidth:Float;				// the width of current subline
 		
-		var spaceWidth:Float = font.spaceWidth * size;
+		var spaceWidth:Float = font.spaceWidth;
 		var tabWidth:Float = spaceWidth * numSpacesInTab;
 		
-		var startX:Float = Math.abs(font.minOffsetX) * size;
+		var startX:Float = Math.abs(font.minOffsetX);
 		
 		if (numWords > 0)
 		{
@@ -868,7 +857,7 @@ class FlxBitmapText extends FlxSprite
 					}
 					else
 					{
-						charWidth = (font.glyphs.exists(charCode)) ? font.glyphs.get(charCode).xAdvance * size : 0;
+						charWidth = (font.glyphs.exists(charCode)) ? font.glyphs.get(charCode).xAdvance : 0;
 					}
 					
 					wordWidth += charWidth;
@@ -942,10 +931,10 @@ class FlxBitmapText extends FlxSprite
 		var subLineUtf8:Utf8;
 		var subLineWidth:Float;				// the width of current subline
 		
-		var spaceWidth:Float = font.spaceWidth * size;
+		var spaceWidth:Float = font.spaceWidth;
 		var tabWidth:Float = spaceWidth * numSpacesInTab;
 		
-		var startX:Float = Math.abs(font.minOffsetX) * size;
+		var startX:Float = Math.abs(font.minOffsetX);
 		
 		if (numWords > 0)
 		{
@@ -977,7 +966,7 @@ class FlxBitmapText extends FlxSprite
 					}
 					else
 					{
-						charWidth = (font.glyphs.exists(charCode)) ? font.glyphs.get(charCode).xAdvance * size : 0;
+						charWidth = (font.glyphs.exists(charCode)) ? font.glyphs.get(charCode).xAdvance : 0;
 					}
 					
 					if (subLineWidth + charWidth > _fieldWidth - 2 * padding)
@@ -1068,150 +1057,147 @@ class FlxBitmapText extends FlxSprite
 		var textGlyphs:Bool = true;
 		#end
 		
-		if (size > 0)
+		#if FLX_RENDER_BLIT
+		pixels.lock();
+		#end
+		
+		var numLines:Int = _lines.length;
+		var line:String;
+		var lineWidth:Float;
+		
+		var ox:Int, oy:Int;
+		
+		var iterations:Int = Std.int(borderSize * borderQuality);
+		iterations = (iterations <= 0) ? 1 : iterations; 
+		
+		var delta:Int = Std.int(borderSize / iterations);
+		
+		var iterationsX:Int = 1;
+		var iterationsY:Int = 1;
+		var deltaX:Int = 1;
+		var deltaY:Int = 1;
+		
+		if (borderStyle == FlxTextBorderStyle.SHADOW)
 		{
-			#if FLX_RENDER_BLIT
-			pixels.lock();
-			#end
+			iterationsX = Math.round(Math.abs(shadowOffset.x) * borderQuality);
+			iterationsX = (iterationsX <= 0) ? 1 : iterationsX;
 			
-			var numLines:Int = _lines.length;
-			var line:String;
-			var lineWidth:Float;
+			iterationsY = Math.round(Math.abs(shadowOffset.y) * borderQuality);
+			iterationsY = (iterationsY <= 0) ? 1 : iterationsY;
 			
-			var ox:Int, oy:Int;
-			
-			var iterations:Int = Std.int(borderSize * borderQuality);
-			iterations = (iterations <= 0) ? 1 : iterations; 
-			
-			var delta:Int = Std.int(borderSize / iterations);
-			
-			var iterationsX:Int = 1;
-			var iterationsY:Int = 1;
-			var deltaX:Int = 1;
-			var deltaY:Int = 1;
-			
-			if (borderStyle == FlxTextBorderStyle.SHADOW)
-			{
-				iterationsX = Math.round(Math.abs(shadowOffset.x) * borderQuality);
-				iterationsX = (iterationsX <= 0) ? 1 : iterationsX;
-				
-				iterationsY = Math.round(Math.abs(shadowOffset.y) * borderQuality);
-				iterationsY = (iterationsY <= 0) ? 1 : iterationsY;
-				
-				deltaX = Math.round(shadowOffset.x / iterationsX);
-				deltaY = Math.round(shadowOffset.y / iterationsY);
-			}
-			
-			// render border
-			for (i in 0...numLines)
-			{
-				line = _lines[i];
-				lineWidth = _linesWidth[i];
-				
-				// LEFT
-				ox = Std.int(Math.abs(font.minOffsetX) * size);
-				oy = Std.int(i * (font.lineHeight * size + lineSpacing)) + padding;
-				
-				if (alignment == FlxTextAlign.CENTER) 
-				{
-					ox += Std.int((frameWidth - lineWidth) / 2) - padding;
-				}
-				if (alignment == FlxTextAlign.RIGHT) 
-				{
-					ox += (frameWidth - Std.int(lineWidth)) - padding;
-				}
-				else	// LEFT
-				{
-					ox += padding;
-				}
-				
-				switch (borderStyle)
-				{
-					case SHADOW:
-						for (iterY in 0...iterationsY)
-						{
-							for (iterX in 0...iterationsX)
-							{
-								blitLine(line, borderGlyphs, ox + deltaX * (iterX + 1), oy + deltaY * (iterY + 1));
-							}
-						}
-					case OUTLINE:
-						//Render an outline around the text
-						//(do 8 offset draw calls)
-						var itd:Int = 0;
-						for (iter in 0...iterations)
-						{
-							itd = delta * (iter + 1);
-							//upper-left
-							blitLine(line, borderGlyphs, ox - itd, oy - itd);
-							//upper-middle
-							blitLine(line, borderGlyphs, ox, oy - itd);
-							//upper-right
-							blitLine(line, borderGlyphs, ox + itd, oy - itd);
-							//middle-left
-							blitLine(line, borderGlyphs, ox - itd, oy);
-							//middle-right
-							blitLine(line, borderGlyphs, ox + itd, oy);
-							//lower-left
-							blitLine(line, borderGlyphs, ox - itd, oy + itd);
-							//lower-middle
-							blitLine(line, borderGlyphs, ox, oy + itd);
-							//lower-right
-							blitLine(line, borderGlyphs, ox + itd, oy + itd);
-						}
-					case OUTLINE_FAST:
-						//Render an outline around the text
-						//(do 4 diagonal offset draw calls)
-						//(this method might not work with certain narrow fonts)
-						var itd:Int = 0;
-						for (iter in 0...iterations)
-						{
-							itd = delta * (iter + 1);
-							//upper-left
-							blitLine(line, borderGlyphs, ox - itd, oy - itd);
-							//upper-right
-							blitLine(line, borderGlyphs, ox + itd, oy - itd);
-							//lower-left
-							blitLine(line, borderGlyphs, ox - itd, oy + itd);
-							//lower-right
-							blitLine(line, borderGlyphs, ox + itd, oy + itd);
-						}	
-					case NONE:
-				}
-			}
-			
-			// render text
-			for (i in 0...numLines)
-			{
-				line = _lines[i];
-				lineWidth = _linesWidth[i];
-				
-				// LEFT
-				ox = Std.int(Math.abs(font.minOffsetX) * size);
-				oy = Std.int(i * (font.lineHeight * size + lineSpacing)) + padding;
-				
-				if (alignment == FlxTextAlign.CENTER) 
-				{
-					ox += Std.int((frameWidth - lineWidth) / 2) - padding;
-				}
-				else if (alignment == FlxTextAlign.RIGHT) 
-				{
-					ox += (frameWidth - Std.int(lineWidth)) - padding;
-				}
-				else	// LEFT
-				{
-					ox += padding;
-				}
-				
-				blitLine(line, textGlyphs, ox, oy);
-			}
-			
-			#if FLX_RENDER_BLIT
-			pixels.unlock();
-			frame.destroyBitmaps();
-			dirty = true;
-			#end
+			deltaX = Math.round(shadowOffset.x / iterationsX);
+			deltaY = Math.round(shadowOffset.y / iterationsY);
 		}
+		
+		// render border
+		for (i in 0...numLines)
+		{
+			line = _lines[i];
+			lineWidth = _linesWidth[i];
+			
+			// LEFT
+			ox = Std.int(Math.abs(font.minOffsetX));
+			oy = Std.int(i * (font.lineHeight + lineSpacing)) + padding;
+			
+			if (alignment == FlxTextAlign.CENTER) 
+			{
+				ox += Std.int((frameWidth - lineWidth) / 2) - padding;
+			}
+			if (alignment == FlxTextAlign.RIGHT) 
+			{
+				ox += (frameWidth - Std.int(lineWidth)) - padding;
+			}
+			else	// LEFT
+			{
+				ox += padding;
+			}
+			
+			switch (borderStyle)
+			{
+				case SHADOW:
+					for (iterY in 0...iterationsY)
+					{
+						for (iterX in 0...iterationsX)
+						{
+							blitLine(line, borderGlyphs, ox + deltaX * (iterX + 1), oy + deltaY * (iterY + 1));
+						}
+					}
+				case OUTLINE:
+					//Render an outline around the text
+					//(do 8 offset draw calls)
+					var itd:Int = 0;
+					for (iter in 0...iterations)
+					{
+						itd = delta * (iter + 1);
+						//upper-left
+						blitLine(line, borderGlyphs, ox - itd, oy - itd);
+						//upper-middle
+						blitLine(line, borderGlyphs, ox, oy - itd);
+						//upper-right
+						blitLine(line, borderGlyphs, ox + itd, oy - itd);
+						//middle-left
+						blitLine(line, borderGlyphs, ox - itd, oy);
+						//middle-right
+						blitLine(line, borderGlyphs, ox + itd, oy);
+						//lower-left
+						blitLine(line, borderGlyphs, ox - itd, oy + itd);
+						//lower-middle
+						blitLine(line, borderGlyphs, ox, oy + itd);
+						//lower-right
+						blitLine(line, borderGlyphs, ox + itd, oy + itd);
+					}
+				case OUTLINE_FAST:
+					//Render an outline around the text
+					//(do 4 diagonal offset draw calls)
+					//(this method might not work with certain narrow fonts)
+					var itd:Int = 0;
+					for (iter in 0...iterations)
+					{
+						itd = delta * (iter + 1);
+						//upper-left
+						blitLine(line, borderGlyphs, ox - itd, oy - itd);
+						//upper-right
+						blitLine(line, borderGlyphs, ox + itd, oy - itd);
+						//lower-left
+						blitLine(line, borderGlyphs, ox - itd, oy + itd);
+						//lower-right
+						blitLine(line, borderGlyphs, ox + itd, oy + itd);
+					}	
+				case NONE:
+			}
+		}
+		
+		// render text
+		for (i in 0...numLines)
+		{
+			line = _lines[i];
+			lineWidth = _linesWidth[i];
+			
+			// LEFT
+			ox = Std.int(Math.abs(font.minOffsetX));
+			oy = Std.int(i * (font.lineHeight + lineSpacing)) + padding;
+			
+			if (alignment == FlxTextAlign.CENTER) 
+			{
+				ox += Std.int((frameWidth - lineWidth) / 2) - padding;
+			}
+			else if (alignment == FlxTextAlign.RIGHT) 
+			{
+				ox += (frameWidth - Std.int(lineWidth)) - padding;
+			}
+			else	// LEFT
+			{
+				ox += padding;
+			}
+			
+			blitLine(line, textGlyphs, ox, oy);
+		}
+		
+		#if FLX_RENDER_BLIT
+		pixels.unlock();
+		frame.destroyBitmaps();
+		dirty = true;
+		#end
 	}
 	
 	#if FLX_RENDER_BLIT
@@ -1233,7 +1219,7 @@ class FlxBitmapText extends FlxSprite
 		var curX:Int = startX;
 		var curY:Int = startY;
 		
-		var spaceWidth:Int = Std.int(font.spaceWidth * size);
+		var spaceWidth:Int = Std.int(font.spaceWidth);
 		var tabWidth:Int = Std.int(spaceWidth * numSpacesInTab);
 		
 		var lineLength:Int = Utf8.length(line);
@@ -1272,7 +1258,7 @@ class FlxBitmapText extends FlxSprite
 				//	drawData[pos++] = _flashPoint.y;
 					drawData[pos++] = curX;
 					drawData[pos++] = curY;
-					curX += Math.ceil(glyph.xAdvance * size);
+					curX += glyph.xAdvance;
 				}
 				#end
 			}
@@ -1431,21 +1417,6 @@ class FlxBitmapText extends FlxSprite
 		return autoSize;
 	}
 	
-	private function set_size(value:Float):Float
-	{
-		var tmp:Float = Math.abs(value);
-		
-		if (tmp != size)
-		{
-			size = tmp;
-			_pendingTextGlyphsChange = true;
-			_pendingBorderGlyphsChange = true;
-			_pendingTextChange = true;
-		}
-		
-		return value;
-	}
-	
 	private function set_padding(value:Int):Int
 	{
 		if (value != padding)
@@ -1462,13 +1433,6 @@ class FlxBitmapText extends FlxSprite
 		if (numSpacesInTab != value && value > 0)
 		{
 			numSpacesInTab = value;
-			_tabSpaces = "";
-			
-			for (i in 0...value)
-			{
-				_tabSpaces += " ";
-			}
-			
 			_pendingTextChange = true;
 		}
 		
@@ -1585,7 +1549,7 @@ class FlxBitmapText extends FlxSprite
 	
 	private function get_lineHeight():Float
 	{
-		return font.lineHeight * size;
+		return font.lineHeight;
 	}
 	
 	override private function set_antialiasing(value:Bool):Bool 
@@ -1611,29 +1575,5 @@ class FlxBitmapText extends FlxSprite
 	{
 		checkPendingChanges();
 		return super.get_height();
-	}
-	
-	private function updateColoredTextBitmap():Void
-	{
-		#if FLX_RENDER_BLIT
-		if (font == null)	return;
-		textGlyphs = FlxDestroyUtil.destroy(textGlyphs);
-		textGlyphs = font.prepareGlyphs(size, textColor, useTextColor, antialiasing);
-		_pendingGraphicChange = true;
-		#end
-		pendingTextBitmap = false;
-	}
-	
-	private function updateBorderBitmap():Void
-	{
-		#if FLX_RENDER_BLIT
-		if (font != null && (borderGlyphs == null || borderColor != borderGlyphs.color || size != borderGlyphs.scale || font != borderGlyphs.font))
-		{
-			borderGlyphs = FlxDestroyUtil.destroy(borderGlyphs);
-			borderGlyphs = font.prepareGlyphs(size, borderColor, true, antialiasing);
-			_pendingGraphicChange = true;
-		}
-		#end
-		pendingBorderBitmap = false;
 	}
 }

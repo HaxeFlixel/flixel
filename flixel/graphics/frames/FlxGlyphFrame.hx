@@ -54,8 +54,8 @@ class FlxGlyphFrame extends FlxFrame
 			bmd = new BitmapData(xAdvance, Std.int(sourceSize.y + offset.y), true, FlxColor.TRANSPARENT);
 		}
 		
-		FlxPoint.point.setTo(point.x + offset.x, point.y + offset.y);
-		bmd.copyPixels(parent.bitmap, frame.copyToFlash(FlxRect.rect), FlxPoint.point, null, null, mergeAlpha);
+		FlxPoint.point2.setTo(point.x + offset.x, point.y + offset.y);
+		bmd.copyPixels(parent.bitmap, frame.copyToFlash(FlxRect.rect), FlxPoint.point2, null, null, mergeAlpha);
 		return bmd;
 	}
 	
