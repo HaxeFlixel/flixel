@@ -308,17 +308,17 @@ class FlxRect implements IFlxPooled
 		var x1:Float = right > rect.right ? rect.right : right;
 		if (x1 <= x0) 
 		{	
-			return new FlxRect();	
+			return FlxRect.get(0, 0, 0, 0);
 		}
 		
 		var y0:Float = y < rect.y ? rect.y : y;
 		var y1:Float = bottom > rect.bottom ? rect.bottom : bottom;
 		if (y1 <= y0) 
 		{	
-			return new FlxRect();	
+			return FlxRect.get(0, 0, 0, 0);
 		}
 		
-		return new FlxRect(x0, y0, x1 - x0, y1 - y0);
+		return FlxRect.get(x0, y0, x1 - x0, y1 - y0);
 	}
 	
 	private inline function get_left():Float

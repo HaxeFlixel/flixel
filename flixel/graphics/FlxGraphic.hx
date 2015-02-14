@@ -2,7 +2,6 @@ package flixel.graphics;
 
 import flash.display.BitmapData;
 import flixel.FlxG;
-import flixel.graphics.frames.FlxEmptyFrame;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets;
@@ -517,9 +516,10 @@ class FlxGraphic
 	 * @param	size	dimensions of the frame to add.
 	 * @return	Empty frame with specified size which belongs to this FlxGraphic object.
 	 */
-	public inline function getEmptyFrame(size:FlxPoint):FlxEmptyFrame
+	public inline function getEmptyFrame(size:FlxPoint):FlxFrame
 	{
-		var frame:FlxEmptyFrame = new FlxEmptyFrame(this);	
+		var frame:FlxFrame = new FlxFrame(this);
+		frame.type = FlxFrameType.EMPTY;
 		frame.frame = new FlxRect();
 		frame.sourceSize.set(size.x, size.y);
 		return frame;

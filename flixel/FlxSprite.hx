@@ -3,14 +3,12 @@ package flixel;
 import flash.display.BitmapData;
 import flash.display.BlendMode;
 import flash.geom.ColorTransform;
-import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.animation.FlxAnimationController;
 import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.graphics.FlxGraphic;
-import flixel.graphics.frames.FlxClippedFrames;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.frames.FlxFramesCollection;
 import flixel.graphics.frames.FlxImageFrame;
@@ -26,7 +24,6 @@ import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.util.FlxBitmapDataUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
-import openfl.display.Tilesheet;
 
 @:keep @:bitmap("assets/images/logo/default.png")
 private class GraphicDefault extends BitmapData {}
@@ -150,7 +147,10 @@ class FlxSprite extends FlxObject
 	 */
 	public var clipRect(default, set):FlxRect;
 	
-	private var _clipRect:FlxRect;
+	/**
+	 * The actual frame used for sprite rendering
+	 */
+	private var _frame:FlxFrame;
 	
 	#if FLX_RENDER_TILE
 	private var _facingHorizontalMult:Int = 1;
@@ -556,7 +556,7 @@ class FlxSprite extends FlxObject
 	 */
 	override public function draw():Void
 	{
-		if (frame == null)
+		if (_frame == null)
 		{
 			#if !FLX_NO_DEBUG
 			loadGraphic(FlxGraphic.fromClass(GraphicDefault));
@@ -565,7 +565,7 @@ class FlxSprite extends FlxObject
 			#end
 		}
 		
-		if (alpha == 0 || frame.type == FlxFrameType.EMPTY)
+		if (alpha == 0 || _frame.type == FlxFrameType.EMPTY)
 		{
 			return;
 		}
@@ -583,7 +583,7 @@ class FlxSprite extends FlxObject
 			}
 			
 			getScreenPosition(_point, camera).subtractPoint(offset);
-			frame.prepareFrameMatrix(_matrix);
+			_frame.prepareFrameMatrix(_matrix);
 			
 			var sx:Float = scale.x;
 			var sy:Float = scale.y;
@@ -611,7 +611,7 @@ class FlxSprite extends FlxObject
 				}
 				
 				_point.copyToFlash(_flashPoint);
-				camera.copyPixels(frame, framePixels, _flashRect, _flashPoint, colorTransform, blend, antialiasing);
+				camera.copyPixels(_frame, framePixels, _flashRect, _flashPoint, colorTransform, blend, antialiasing);
 			}
 			else
 			{
@@ -635,7 +635,7 @@ class FlxSprite extends FlxObject
 				}
 				
 				_matrix.translate(_point.x, _point.y);
-				camera.drawPixels(frame, framePixels, _matrix, colorTransform, blend, antialiasing);
+				camera.drawPixels(_frame, framePixels, _matrix, colorTransform, blend, antialiasing);
 			}
 			
 			#if !FLX_NO_DEBUG
@@ -880,21 +880,21 @@ class FlxSprite extends FlxObject
 	 */
 	public inline function getFlxFrameBitmapData():BitmapData
 	{
-		if (frame != null && dirty)
+		if (_frame != null && dirty)
 		{
-			if (framePixels != null && (framePixels.width != frame.sourceSize.x || framePixels.height != frame.sourceSize.y))
+			if (framePixels != null && (framePixels.width != _frame.sourceSize.x || framePixels.height != _frame.sourceSize.y))
 			{
 				framePixels.dispose();
 				framePixels = null;
 			}
 			
-			if (!flipX && !flipY && frame.type == FlxFrameType.REGULAR)
+			if (!flipX && !flipY && _frame.type == FlxFrameType.REGULAR)
 			{
-				framePixels = frame.paint(framePixels, _flashPointZero);
+				framePixels = _frame.paint(framePixels, _flashPointZero);
 			}
 			else
 			{
-				framePixels = frame.paintFlipped(framePixels, _flashPointZero, flipX, flipY); 
+				framePixels = _frame.paintFlipped(framePixels, _flashPointZero, flipX, flipY); 
 			}
 			
 			if (useColorTransform)
@@ -1103,6 +1103,15 @@ class FlxSprite extends FlxObject
 			dirty = true;
 		}
 		
+		if (frame != null && clipRect != null)
+		{
+			_frame = FlxFrame.clipTo(frame, clipRect, _frame);
+		}
+		else
+		{
+			_frame = frame;
+		}
+		
 		return frame;
 	}
 	
@@ -1185,35 +1194,13 @@ class FlxSprite extends FlxObject
 		return graphic = Value;
 	}
 	
-	private function get_clipRect():FlxRect
-	{
-		return _clipRect;
-	}
-	
 	private function set_clipRect(rect:FlxRect):FlxRect
 	{
+		clipRect = rect;
+		
 		if (frames != null)
 		{
-			var anim:FlxAnimationController = animation;
-			animation = null;
-			
-			if (rect != null)
-			{
-				frames = FlxClippedFrames.clip(frames, rect);
-				_clipRect = rect.copyTo(new FlxRect());
-			}
-			else
-			{
-				if (frames.type == FlxFrameCollectionType.CLIPPED)
-				{
-					frames = cast(frames, FlxClippedFrames).original;
-				}
-				
-				_clipRect = null;
-			}
-			
-			frame = frames.frames[anim.frameIndex];
-			animation = anim;
+			frame = frames.frames[animation.frameIndex];
 		}
 		
 		return rect;
@@ -1251,7 +1238,7 @@ class FlxSprite extends FlxObject
 			graphic = null;
 		}
 		
-		_clipRect = null;
+		clipRect = null;
 		return Frames;
 	}
 	

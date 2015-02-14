@@ -4,6 +4,7 @@ import flash.display.BitmapData;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.graphics.frames.FlxFrame.FlxFrameAngle;
+import flixel.graphics.frames.FlxFrame.FlxFrameType;
 import flixel.math.FlxRect;
 import flixel.util.FlxDestroyUtil;
 import flixel.math.FlxPoint;
@@ -127,9 +128,10 @@ class FlxFramesCollection implements IFlxDestroyable
 	 * @param	size	dimensions of the frame to add.
 	 * @return	Newly added empty frame.
 	 */
-	public function addEmptyFrame(size:FlxRect):FlxEmptyFrame
+	public function addEmptyFrame(size:FlxRect):FlxFrame
 	{
-		var frame:FlxEmptyFrame = new FlxEmptyFrame(parent);	
+		var frame:FlxFrame = new FlxFrame(parent);
+		frame.type = FlxFrameType.EMPTY;
 		frame.frame = new FlxRect();
 		frame.sourceSize.set(size.width, size.height);
 		frames.push(frame);
