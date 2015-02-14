@@ -174,6 +174,7 @@ class FlxBitmapText extends FlxSprite
 	/**
 	 * The "size" of the font.
 	 */
+	// TODO: maybe remove this property
 	public var size(default, set):Float = 1;
 	
 	/**
@@ -1266,12 +1267,13 @@ class FlxBitmapText extends FlxSprite
 				glyph = font.glyphs.get(charCode);
 				if (glyph != null)
 				{
-					_flashPoint.x = curX + (glyph.offset.x + 0.5 * glyph.frame.width) * size - origin.x;
-					_flashPoint.y = curY + (glyph.offset.y + 0.5 * glyph.frame.height) * size - origin.y;
-					
+				//	_flashPoint.x = curX + (glyph.offset.x + 0.5 * glyph.frame.width) * size - origin.x;
+				//	_flashPoint.y = curY + (glyph.offset.y + 0.5 * glyph.frame.height) * size - origin.y;
 					drawData[pos++] = charCode;
-					drawData[pos++] = _flashPoint.x;
-					drawData[pos++] = _flashPoint.y;
+				//	drawData[pos++] = _flashPoint.x;
+				//	drawData[pos++] = _flashPoint.y;
+					drawData[pos++] = curX;
+					drawData[pos++] = curY;
 					curX += Math.ceil(glyph.xAdvance * size);
 				}
 				#end

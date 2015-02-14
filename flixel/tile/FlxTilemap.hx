@@ -1086,7 +1086,6 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		}
 		color = Color;
 		updateColorTransform();
-		
 		return color;
 	}
 	
