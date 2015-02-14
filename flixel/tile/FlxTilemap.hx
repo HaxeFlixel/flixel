@@ -131,12 +131,13 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	
 	#if FLX_RENDER_TILE
 	/**
-	 * Rendering helper, minimize new object instantiation on repetitive methods. Used only in cpp
+	 * Rendering helper, minimize new object instantiation on repetitive methods. Used only in tile rendering mode
 	 */
 	private var _helperPoint:Point;
 	
-	private var _blendInt:Int = 0;
-	
+	/**
+	 * Rendering helper, used for tile's frame transoformations (only in tile rendering mode).
+	 */
 	private var _matrix:FlxMatrix;
 	#end
 	
@@ -284,7 +285,6 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		#end
 		
 		var numTiles:Int = _tileObjects.length;
-		
 		for (i in 0...numTiles)
 		{
 			updateTile(i);
@@ -1114,31 +1114,9 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	
 	private function set_blend(Value:BlendMode):BlendMode 
 	{
-		#if FLX_RENDER_TILE
-		if (Value != null)
-		{
-			switch (Value)
-			{
-				case BlendMode.ADD:
-					_blendInt = Tilesheet.TILE_BLEND_ADD;
-				#if !flash
-				case BlendMode.MULTIPLY:
-					_blendInt = Tilesheet.TILE_BLEND_MULTIPLY;
-				case BlendMode.SCREEN:
-					_blendInt = Tilesheet.TILE_BLEND_SCREEN;
-				#end
-				default:
-					_blendInt = Tilesheet.TILE_BLEND_NORMAL;
-			}
-		}
-		else
-		{
-			_blendInt = 0;
-		}
-		#else
+		#if FLX_RENDER_BLIT
 		setDirty();
-		#end	
-		
+		#end
 		return blend = Value;
 	}
 	

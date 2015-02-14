@@ -19,6 +19,7 @@ import flixel.util.FlxDestroyUtil;
 import haxe.Utf8;
 
 // TODO: make pixels accessible in tile render mode also...
+// TODO: use Utf8 util for converting text to upper/lower case
 
 /**
  * Extends FlxSprite to support rendering text.
