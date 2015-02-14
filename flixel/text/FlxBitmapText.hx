@@ -261,14 +261,17 @@ class FlxBitmapText extends FlxSprite
 			pendingGraphicChange = true;
 		}
 		
-		if (pendingColorChange)
-		{
-			// TODO: continue from here...
-		}
+		// TODO: continue from here...
 		
 		if (pendingGraphicChange)
 		{
-			updateGraphic();
+			updateTextBitmap();
+			pendingColorChange = true;
+		}
+		
+		if (pendingColorChange)
+		{
+			updateTextGraphic();
 		}
 	}
 	
@@ -375,15 +378,15 @@ class FlxBitmapText extends FlxSprite
 			
 			if (background)
 			{
-				drawItem = camera.getDrawTilesItem(FlxG.bitmap.whitePixel.parent, true, _blendInt, antialiasing);
+				drawItem = camera.getDrawTilesItem(FlxG.bitmap.whitePixel.parent, true, blend, antialiasing);
 				currFrame = FlxG.bitmap.whitePixel;
 				
 				bgMatrix.translate(_point.x, _point.y);
 				
-				drawItem.setDrawData(currFrame.frame, currFrame.origin, bgMatrix, true, backgroundColor.to24Bit(), bgAlpha * camera.alpha);
+				drawItem.setData(currFrame.frame, currFrame.origin, bgMatrix, true, backgroundColor.to24Bit(), bgAlpha * camera.alpha);
 			}
 			
-			drawItem = camera.getDrawTilesItem(font.parent, true, _blendInt, antialiasing);
+			drawItem = camera.getDrawTilesItem(font.parent, true, blend, antialiasing);
 			
 			alphaToUse = bAlpha * camera.alpha;
 			
@@ -403,7 +406,7 @@ class FlxBitmapText extends FlxSprite
 				tileMatrix.tx = tilePoint.x;
 				tileMatrix.ty = tilePoint.y;
 				
-				drawItem.setDrawData(currFrame.frame, currFrame.origin, tileMatrix, true, bColor, alphaToUse);
+				drawItem.setData(currFrame.frame, currFrame.origin, tileMatrix, true, bColor, alphaToUse);
 			}
 			
 			alphaToUse = tAlpha * camera.alpha;
@@ -1012,13 +1015,23 @@ class FlxBitmapText extends FlxSprite
 	}
 	
 	/**
-	 * Internal method for updating the view of the text component
+	 * Internal method for updating helper data for text rendering
 	 */
-	private function updateGraphic():Void 
+	private function updateTextBitmap():Void 
 	{
 		computeTextSize();
 		updateBuffer();
 		pendingGraphicChange = false;
+	}
+	
+	/**
+	 * Internal method for updating the view of the text component (actual data used for text rendering)
+	 */
+	private function updateTextGraphic():Void
+	{
+		// textBitmap
+		
+		pendingColorChange = false;
 	}
 	
 	private function updateBuffer():Void
@@ -1030,7 +1043,7 @@ class FlxBitmapText extends FlxSprite
 		{
 			pixels = new BitmapData(frameWidth, frameHeight, true, colorForFill);
 		}
-		else 
+		else
 		{
 			pixels.fillRect(graphic.bitmap.rect, colorForFill);
 		}
