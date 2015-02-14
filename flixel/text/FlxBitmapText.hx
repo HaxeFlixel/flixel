@@ -1128,8 +1128,6 @@ class FlxBitmapText extends FlxSprite
 		pixels.lock();
 		#end
 		
-		var ox:Int, oy:Int;
-		
 		var iterations:Int = Std.int(borderSize * borderQuality);
 		iterations = (iterations <= 0) ? 1 : iterations; 
 		
@@ -1155,108 +1153,61 @@ class FlxBitmapText extends FlxSprite
 		// TODO: continue from here...
 		
 		// render border
-		for (i in 0...numLines)
+		switch (borderStyle)
 		{
-			line = _lines[i];
-			lineWidth = _linesWidth[i];
-			
-			// LEFT
-			ox = Std.int(Math.abs(font.minOffsetX));
-			oy = Std.int(i * (font.lineHeight + lineSpacing)) + padding;
-			
-			if (alignment == FlxTextAlign.CENTER) 
-			{
-				ox += Std.int((frameWidth - lineWidth) / 2) - padding;
-			}
-			if (alignment == FlxTextAlign.RIGHT) 
-			{
-				ox += (frameWidth - Std.int(lineWidth)) - padding;
-			}
-			else	// LEFT
-			{
-				ox += padding;
-			}
-			
-			switch (borderStyle)
-			{
-				case SHADOW:
-					for (iterY in 0...iterationsY)
+			case SHADOW:
+				for (iterY in 0...iterationsY)
+				{
+					for (iterX in 0...iterationsX)
 					{
-						for (iterX in 0...iterationsX)
-						{
-							blitLine(line, borderGlyphs, ox + deltaX * (iterX + 1), oy + deltaY * (iterY + 1));
-						}
+						blitLine(line, borderGlyphs, deltaX * (iterX + 1), deltaY * (iterY + 1));
 					}
-				case OUTLINE:
-					//Render an outline around the text
-					//(do 8 offset draw calls)
-					var itd:Int = 0;
-					for (iter in 0...iterations)
-					{
-						itd = delta * (iter + 1);
-						//upper-left
-						blitLine(line, borderGlyphs, ox - itd, oy - itd);
-						//upper-middle
-						blitLine(line, borderGlyphs, ox, oy - itd);
-						//upper-right
-						blitLine(line, borderGlyphs, ox + itd, oy - itd);
-						//middle-left
-						blitLine(line, borderGlyphs, ox - itd, oy);
-						//middle-right
-						blitLine(line, borderGlyphs, ox + itd, oy);
-						//lower-left
-						blitLine(line, borderGlyphs, ox - itd, oy + itd);
-						//lower-middle
-						blitLine(line, borderGlyphs, ox, oy + itd);
-						//lower-right
-						blitLine(line, borderGlyphs, ox + itd, oy + itd);
-					}
-				case OUTLINE_FAST:
-					//Render an outline around the text
-					//(do 4 diagonal offset draw calls)
-					//(this method might not work with certain narrow fonts)
-					var itd:Int = 0;
-					for (iter in 0...iterations)
-					{
-						itd = delta * (iter + 1);
-						//upper-left
-						blitLine(line, borderGlyphs, ox - itd, oy - itd);
-						//upper-right
-						blitLine(line, borderGlyphs, ox + itd, oy - itd);
-						//lower-left
-						blitLine(line, borderGlyphs, ox - itd, oy + itd);
-						//lower-right
-						blitLine(line, borderGlyphs, ox + itd, oy + itd);
-					}	
-				case NONE:
-			}
+				}
+			case OUTLINE:
+				//Render an outline around the text
+				//(do 8 offset draw calls)
+				var itd:Int = 0;
+				for (iter in 0...iterations)
+				{
+					itd = delta * (iter + 1);
+					//upper-left
+					blitLine(line, borderGlyphs, -itd, -itd);
+					//upper-middle
+					blitLine(line, borderGlyphs, 0, -itd);
+					//upper-right
+					blitLine(line, borderGlyphs, itd, -itd);
+					//middle-left
+					blitLine(line, borderGlyphs, -itd, 0);
+					//middle-right
+					blitLine(line, borderGlyphs, itd, 0);
+					//lower-left
+					blitLine(line, borderGlyphs, -itd, itd);
+					//lower-middle
+					blitLine(line, borderGlyphs, 0, itd);
+					//lower-right
+					blitLine(line, borderGlyphs, itd, itd);
+				}
+			case OUTLINE_FAST:
+				//Render an outline around the text
+				//(do 4 diagonal offset draw calls)
+				//(this method might not work with certain narrow fonts)
+				var itd:Int = 0;
+				for (iter in 0...iterations)
+				{
+					itd = delta * (iter + 1);
+					//upper-left
+					blitLine(line, borderGlyphs, -itd, -itd);
+					//upper-right
+					blitLine(line, borderGlyphs, itd, -itd);
+					//lower-left
+					blitLine(line, borderGlyphs, -itd, itd);
+					//lower-right
+					blitLine(line, borderGlyphs, itd, itd);
+				}	
+			case NONE:
 		}
 		
-		// render text
-		for (i in 0...numLines)
-		{
-			line = _lines[i];
-			lineWidth = _linesWidth[i];
-			
-			// LEFT
-			ox = Std.int(Math.abs(font.minOffsetX));
-			oy = Std.int(i * (font.lineHeight + lineSpacing)) + padding;
-			
-			if (alignment == FlxTextAlign.CENTER) 
-			{
-				ox += Std.int((frameWidth - lineWidth) / 2) - padding;
-			}
-			else if (alignment == FlxTextAlign.RIGHT) 
-			{
-				ox += (frameWidth - Std.int(lineWidth)) - padding;
-			}
-			else	// LEFT
-			{
-				ox += padding;
-			}
-			
-			blitLine(line, textGlyphs, ox, oy);
-		}
+		blitLine(line, textGlyphs, 0, 0);
 		
 		#if FLX_RENDER_BLIT
 		pixels.unlock();
