@@ -3,9 +3,12 @@ package flixel.graphics.frames;
 import flash.display.BitmapData;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame.FlxFrameType;
+import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.util.FlxColor;
+import openfl.geom.Point;
+import openfl.geom.Rectangle;
 
 /**
  * Just a special frame for handling bitmap fonts
@@ -27,32 +30,37 @@ class FlxGlyphFrame extends FlxFrame
 		type = FlxFrameType.GLYPH;
 	}
 	
-	override public function paintOnBitmap(bmd:BitmapData = null):BitmapData
+	override public function paint(bmd:BitmapData = null, point:Point = null, mergeAlpha:Bool = false):BitmapData
 	{
 		if (sourceSize.x == 0 || sourceSize.y == 0)
 		{
-			return null;
+			return bmd;
 		}
 		
-		var result:BitmapData = null;
-		
-		if (bmd != null && (bmd.width == sourceSize.x && bmd.height == sourceSize.y))
+		if (point == null)
 		{
-			result = bmd;
+			point = FlxPoint.point1;
+			point.setTo(0, 0);
 		}
-		else if (bmd != null)
+		
+		if (bmd != null && !mergeAlpha)
 		{
-			bmd.dispose();
+			var rect:Rectangle = FlxRect.rect;
+			rect.setTo(point.x, point.y, xAdvance, sourceSize.y + offset.y);
+			bmd.fillRect(rect, FlxColor.TRANSPARENT);
 		}
-		
-		if (result == null)
+		else if (bmd == null)
 		{
-			result = new BitmapData(Std.int(sourceSize.x), Std.int(sourceSize.y), true, FlxColor.TRANSPARENT);
+			bmd = new BitmapData(xAdvance, Std.int(sourceSize.y + offset.y), true, FlxColor.TRANSPARENT);
 		}
 		
-		FlxPoint.point.setTo(0, 0);
-		result.copyPixels(parent.bitmap, frame.copyToFlash(FlxRect.rect), FlxPoint.point);
-		
-		return result;
+		FlxPoint.point.setTo(point.x + offset.x, point.y + offset.y);
+		bmd.copyPixels(parent.bitmap, frame.copyToFlash(FlxRect.rect), FlxPoint.point, null, null, mergeAlpha);
+		return bmd;
+	}
+	
+	override public function paintFlipped(bmd:BitmapData = null, point:Point = null, flipX:Bool = false, flipY:Bool = false, mergeAlpha:Bool = false):BitmapData
+	{
+		return bmd;
 	}
 }

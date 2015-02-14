@@ -185,21 +185,19 @@ class FlxBitmapText extends FlxSprite
 	
 	private var _fieldWidth:Float;
 	
-	private var _pendingTextChange:Bool = true;
-	private var _pendingGraphicChange:Bool = true;
-	
-	private var _pendingTextGlyphsChange:Bool = true;
-	private var _pendingBorderGlyphsChange:Bool = false;
+	private var pendingBorderBitmap:Bool = true;
+	private var pendingTextBitmap:Bool = true;
 	
 	#if FLX_RENDER_TILE
-	private var _textDrawData:Array<Float>;
-	private var _borderDrawData:Array<Float>;
-	private var _tilePoint:FlxPoint;
-	private var _tileMatrix:FlxMatrix;
-	private var _bgMatrix:FlxMatrix;
+	private var textDrawData:Array<Float>;
+	private var borderDrawData:Array<Float>;
+	private var tilePoint:FlxPoint;
+	private var tileMatrix:FlxMatrix;
+	private var bgMatrix:FlxMatrix;
 	#else
-	private var textGlyphs:BitmapGlyphCollection;
-	private var borderGlyphs:BitmapGlyphCollection;
+	private var textBitmap:BitmapData;
+	private var coloredTextBitmap:BitmapData;
+	private var borderBitmap:BitmapData;
 	#end
 	
 	/**
@@ -220,11 +218,11 @@ class FlxBitmapText extends FlxSprite
 		#if FLX_RENDER_BLIT
 		pixels = new BitmapData(1, 1, true, FlxColor.TRANSPARENT);
 		#else
-		_textDrawData = [];
-		_borderDrawData = [];
-		_tilePoint = new FlxPoint();
-		_tileMatrix = new FlxMatrix();
-		_bgMatrix = new FlxMatrix();
+		textDrawData = [];
+		borderDrawData = [];
+		tilePoint = new FlxPoint();
+		tileMatrix = new FlxMatrix();
+		bgMatrix = new FlxMatrix();
 		#end
 	}
 	
@@ -241,11 +239,11 @@ class FlxBitmapText extends FlxSprite
 		shadowOffset = FlxDestroyUtil.put(shadowOffset);
 		
 		#if FLX_RENDER_TILE
-		_textDrawData = null;
-		_borderDrawData = null;
-		_tilePoint = null;
-		_tileMatrix = null;
-		_bgMatrix = null;
+		textDrawData = null;
+		borderDrawData = null;
+		tilePoint = null;
+		tileMatrix = null;
+		bgMatrix = null;
 		#else
 		textGlyphs = FlxDestroyUtil.destroy(textGlyphs);
 		borderGlyphs = FlxDestroyUtil.destroy(borderGlyphs);
@@ -303,8 +301,8 @@ class FlxBitmapText extends FlxSprite
 	{
 		checkPendingChanges();
 		
-		var textLength:Int = Std.int(_textDrawData.length / 3);
-		var borderLength:Int = Std.int(_borderDrawData.length / 3);
+		var textLength:Int = Std.int(textDrawData.length / 3);
+		var borderLength:Int = Std.int(borderDrawData.length / 3);
 		
 		var dataPos:Int;
 		
@@ -364,22 +362,22 @@ class FlxBitmapText extends FlxSprite
 			}
 			
 			// matrix for calculation tile transformations
-			_tileMatrix.identity();
-			_tileMatrix.scale(size * totalScaleX, size * totalScaleY);
+			tileMatrix.identity();
+			tileMatrix.scale(size * totalScaleX, size * totalScaleY);
 			if (angle != 0)
 			{
-				_tileMatrix.rotateWithTrig(_cosAngle, _sinAngle);
+				tileMatrix.rotateWithTrig(_cosAngle, _sinAngle);
 			}
 			
 			if (background)
 			{
 				// backround tile transformations
-				_bgMatrix.identity();
-				_bgMatrix.scale(0.1 * frameWidth * totalScaleX, 0.1 * frameHeight * totalScaleY);
+				bgMatrix.identity();
+				bgMatrix.scale(0.1 * frameWidth * totalScaleX, 0.1 * frameHeight * totalScaleY);
 				
 				if (angle != 0)
 				{
-					_bgMatrix.rotateWithTrig(_cosAngle, _sinAngle);
+					bgMatrix.rotateWithTrig(_cosAngle, _sinAngle);
 				}
 			}
 			
@@ -398,9 +396,9 @@ class FlxBitmapText extends FlxSprite
 				drawItem = camera.getDrawTilesItem(FlxG.bitmap.whitePixel.parent, true, _blendInt, antialiasing);
 				currFrame = FlxG.bitmap.whitePixel;
 				
-				_bgMatrix.translate(_point.x, _point.y);
+				bgMatrix.translate(_point.x, _point.y);
 				
-				drawItem.setDrawData(currFrame.frame, currFrame.origin, _bgMatrix, true, backgroundColor.to24Bit(), bgAlpha * camera.alpha);
+				drawItem.setDrawData(currFrame.frame, currFrame.origin, bgMatrix, true, backgroundColor.to24Bit(), bgAlpha * camera.alpha);
 			}
 			
 			drawItem = camera.getDrawTilesItem(font.parent, true, _blendInt, antialiasing);
@@ -411,19 +409,19 @@ class FlxBitmapText extends FlxSprite
 			{
 				dataPos = j * 3;
 				
-				currFrame = font.glyphs.get(Std.int(_borderDrawData[dataPos]));
+				currFrame = font.glyphs.get(Std.int(borderDrawData[dataPos]));
 				
-				currTileX = _borderDrawData[dataPos + 1];
-				currTileY = _borderDrawData[dataPos + 2];
+				currTileX = borderDrawData[dataPos + 1];
+				currTileY = borderDrawData[dataPos + 2];
 				
-				_tilePoint.set(currTileX, currTileY);
-				_tilePoint.transform(_matrix);
-				_tilePoint.addPoint(_point);
+				tilePoint.set(currTileX, currTileY);
+				tilePoint.transform(_matrix);
+				tilePoint.addPoint(_point);
 				
-				_tileMatrix.tx = _tilePoint.x;
-				_tileMatrix.ty = _tilePoint.y;
+				tileMatrix.tx = tilePoint.x;
+				tileMatrix.ty = tilePoint.y;
 				
-				drawItem.setDrawData(currFrame.frame, currFrame.origin, _tileMatrix, true, bColor, alphaToUse);
+				drawItem.setDrawData(currFrame.frame, currFrame.origin, tileMatrix, true, bColor, alphaToUse);
 			}
 			
 			alphaToUse = tAlpha * camera.alpha;
@@ -432,19 +430,19 @@ class FlxBitmapText extends FlxSprite
 			{
 				dataPos = j * 3;
 				
-				currFrame = font.glyphs.get(Std.int(_textDrawData[dataPos]));
+				currFrame = font.glyphs.get(Std.int(textDrawData[dataPos]));
 				
-				currTileX = _textDrawData[dataPos + 1];
-				currTileY = _textDrawData[dataPos + 2];
+				currTileX = textDrawData[dataPos + 1];
+				currTileY = textDrawData[dataPos + 2];
 				
-				_tilePoint.set(currTileX, currTileY);
-				_tilePoint.transform(_matrix);
-				_tilePoint.addPoint(_point);
+				tilePoint.set(currTileX, currTileY);
+				tilePoint.transform(_matrix);
+				tilePoint.addPoint(_point);
 				
-				_tileMatrix.tx = _tilePoint.x;
-				_tileMatrix.ty = _tilePoint.y;
+				tileMatrix.tx = tilePoint.x;
+				tileMatrix.ty = tilePoint.y;
 				
-				drawItem.setDrawData(currFrame.frame, currFrame.origin, _tileMatrix, true, tColor, alphaToUse);
+				drawItem.setDrawData(currFrame.frame, currFrame.origin, tileMatrix, true, tColor, alphaToUse);
 			}
 			
 			#if !FLX_NO_DEBUG
@@ -1063,8 +1061,8 @@ class FlxBitmapText extends FlxSprite
 		origin.x = frameWidth * 0.5;
 		origin.y = frameHeight * 0.5;
 		
-		_textDrawData.splice(0, _textDrawData.length);
-		_borderDrawData.splice(0, _borderDrawData.length);
+		textDrawData.splice(0, textDrawData.length);
+		borderDrawData.splice(0, borderDrawData.length);
 		
 		var borderGlyphs:Bool = false;
 		var textGlyphs:Bool = true;
@@ -1228,7 +1226,7 @@ class FlxBitmapText extends FlxSprite
 		var glyph:FlxGlyphFrame;
 		
 		var isFrontText:Bool = glyphs;
-		var drawData:Array<Float> = (isFrontText) ? _textDrawData : _borderDrawData;
+		var drawData:Array<Float> = (isFrontText) ? textDrawData : borderDrawData;
 		var pos:Int = drawData.length;
 		#end
 		var charCode:Int;
@@ -1615,7 +1613,7 @@ class FlxBitmapText extends FlxSprite
 		return super.get_height();
 	}
 	
-	private function updateTextGlyphs():Void
+	private function updateColoredTextBitmap():Void
 	{
 		#if FLX_RENDER_BLIT
 		if (font == null)	return;
@@ -1623,10 +1621,10 @@ class FlxBitmapText extends FlxSprite
 		textGlyphs = font.prepareGlyphs(size, textColor, useTextColor, antialiasing);
 		_pendingGraphicChange = true;
 		#end
-		_pendingTextGlyphsChange = false;
+		pendingTextBitmap = false;
 	}
 	
-	private function updateBorderGlyphs():Void
+	private function updateBorderBitmap():Void
 	{
 		#if FLX_RENDER_BLIT
 		if (font != null && (borderGlyphs == null || borderColor != borderGlyphs.color || size != borderGlyphs.scale || font != borderGlyphs.font))
@@ -1636,6 +1634,6 @@ class FlxBitmapText extends FlxSprite
 			_pendingGraphicChange = true;
 		}
 		#end
-		_pendingBorderGlyphsChange = false;
+		pendingBorderBitmap = false;
 	}
 }
