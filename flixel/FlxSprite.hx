@@ -257,6 +257,8 @@ class FlxSprite extends FlxObject
 		blend = null;
 		frame = null;
 		
+		_frame = FlxDestroyUtil.destroy(_frame);
+		
 		frames = null;
 		graphic = null;
 	}
@@ -1106,9 +1108,9 @@ class FlxSprite extends FlxObject
 		{
 			_frame = FlxFrame.clipTo(frame, clipRect, _frame);
 		}
-		else
+		else if (frame != null)
 		{
-			_frame = frame;
+			_frame = frame.copyTo(_frame);
 		}
 		
 		return frame;

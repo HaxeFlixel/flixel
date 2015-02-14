@@ -5,6 +5,7 @@ import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.FlxG;
+import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxAngle;
 import flixel.math.FlxRect;
 import flixel.util.FlxColor;
@@ -54,6 +55,7 @@ class FlxFrame implements IFlxDestroyable
 		{
 			clippedFrame.parent = original.parent;
 			clippedFrame.angle = angle;
+			FlxDestroyUtil.put(clippedFrame.frame);
 		}
 		
 		clippedFrame.sourceSize.copyFrom(original.sourceSize);
@@ -327,6 +329,26 @@ class FlxFrame implements IFlxDestroyable
 		
 		bmd.draw(parent.bitmap, matrix, null, null, FlxRect.rect);
 		return bmd;
+	}
+	
+	public function copyTo(clone:FlxFrame):FlxFrame
+	{
+		if (clone == null)
+		{
+			clone = new FlxFrame(parent, angle);
+		}
+		else
+		{
+			clone.parent = parent;
+			clone.angle = angle;
+			FlxDestroyUtil.put(clone.frame);
+		}
+		
+		clone.offset.copyFrom(offset);
+		clone.sourceSize.copyFrom(sourceSize);
+		clone.frame = FlxRect.get().copyFrom(frame);
+		clone.type = type;
+		return clone;
 	}
 	
 	// TODO: add method to draw (rotated + flipped) frame
