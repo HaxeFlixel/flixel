@@ -193,6 +193,10 @@ class FlxBitmapText extends FlxSprite
 	private var tilePoint:FlxPoint;
 	private var tileMatrix:FlxMatrix;
 	private var bgMatrix:FlxMatrix;
+	
+	private var borderColorTransform:ColorTransform;
+	private var textColorTransform:ColorTransform;
+	private var bgColorTransform:ColorTransform;
 	#end
 	
 	public var textBitmap:BitmapData;
@@ -222,6 +226,9 @@ class FlxBitmapText extends FlxSprite
 		tilePoint = new FlxPoint();
 		tileMatrix = new FlxMatrix();
 		bgMatrix = new FlxMatrix();
+		borderColorTransform = new ColorTransform();
+		textColorTransform = new ColorTransform();
+		bgColorTransform = new ColorTransform();
 		#end
 	}
 	
@@ -245,6 +252,10 @@ class FlxBitmapText extends FlxSprite
 		tilePoint = null;
 		tileMatrix = null;
 		bgMatrix = null;
+		
+		textColorTransform = null;
+		borderColorTransform = null;
+		bgColorTransform = null;
 		#end
 		super.destroy();
 	}
@@ -255,14 +266,18 @@ class FlxBitmapText extends FlxSprite
 	override public function drawFrame(Force:Bool = false):Void 
 	{
 		pendingTextBitmapChange = pendingTextBitmapChange || Force;
-		checkPendingChanges();
+		checkPendingChanges(true);
 		#if FLX_RENDER_BLIT
 		super.drawFrame(Force);
 		#end
 	}
 	
-	inline private function checkPendingChanges():Void
+	inline private function checkPendingChanges(useTiles:Bool = false):Void
 	{
+		#if FLX_RENDER_BLIT
+		useTiles = false;
+		#end
+		
 		if (pendingTextChange)
 		{
 			updateText();
@@ -271,13 +286,13 @@ class FlxBitmapText extends FlxSprite
 		
 		if (pendingTextBitmapChange)
 		{
-			updateTextBitmap();
+			updateTextBitmap(useTiles);
 			pendingPixelsChange = true;
 		}
 		
 		if (pendingPixelsChange)
 		{
-			updatePixels();
+			updatePixels(useTiles);
 		}
 	}
 	
@@ -301,7 +316,6 @@ class FlxBitmapText extends FlxSprite
 		var borderGreen:Float = borderColor.greenFloat * color.greenFloat;
 		var borderBlue:Float = borderColor.blueFloat * color.blueFloat;
 		var bAlpha:Float = borderColor.alphaFloat * alpha;
-		var bColor:FlxColor = FlxColor.fromRGBFloat(borderRed, borderGreen, borderBlue);
 		
 		var textRed:Float = color.redFloat;
 		var textGreen:Float = color.greenFloat;
@@ -316,9 +330,23 @@ class FlxBitmapText extends FlxSprite
 			tAlpha *= textColor.alpha;		
 		}
 		
-		var tColor:FlxColor = FlxColor.fromRGBFloat(textRed, textGreen, textBlue); 
+		textColorTransform.redMultiplier = textRed;
+		textColorTransform.greenMultiplier = textGreen;
+		textColorTransform.blueMultiplier = textBlue;
+		textColorTransform.alphaMultiplier = tAlpha;
 		
-		var alphaToUse:Float = 0;
+		borderColorTransform.redMultiplier = borderRed;
+		borderColorTransform.greenMultiplier = borderGreen;
+		borderColorTransform.blueMultiplier = borderBlue;
+		borderColorTransform.alphaMultiplier = bAlpha;
+		
+		if (background)
+		{
+			bgColorTransform.redMultiplier = backgroundColor.redFloat * color.redFloat;
+			bgColorTransform.greenMultiplier = backgroundColor.greenFloat * color.redFloat;
+			bgColorTransform.blueMultiplier = backgroundColor.blueFloat * color.redFloat;
+			bgColorTransform.alphaMultiplier = backgroundColor.alphaFloat * alpha;
+		}
 		
 		var drawItem:FlxDrawTilesItem;
 		var currFrame:FlxFrame = null;
@@ -374,9 +402,6 @@ class FlxBitmapText extends FlxSprite
 			
 			getScreenPosition(_point, camera).subtractPoint(offset).addPoint(origin);
 			
-			_point.x *= camera.totalScaleX;
-			_point.y *= camera.totalScaleY;
-			
 			if (isPixelPerfectRender(camera))
 			{
 				_point.floor();
@@ -384,17 +409,15 @@ class FlxBitmapText extends FlxSprite
 			
 			if (background)
 			{
-				drawItem = camera.getDrawTilesItem(FlxG.bitmap.whitePixel.parent, true, blend, antialiasing);
+				drawItem = camera.startQuadBatch(FlxG.bitmap.whitePixel.parent, true, blend, antialiasing);
 				currFrame = FlxG.bitmap.whitePixel;
 				
 				bgMatrix.translate(_point.x, _point.y);
 				
-				drawItem.setData(currFrame.frame, currFrame.origin, bgMatrix, true, backgroundColor.to24Bit(), bgAlpha * camera.alpha);
+				camera.drawPixels(currFrame, null, bgMatrix, bgColorTransform, blend, antialiasing);
 			}
 			
 			drawItem = camera.getDrawTilesItem(font.parent, true, blend, antialiasing);
-			
-			alphaToUse = bAlpha * camera.alpha;
 			
 			for (j in 0...borderLength)
 			{
@@ -412,10 +435,8 @@ class FlxBitmapText extends FlxSprite
 				tileMatrix.tx = tilePoint.x;
 				tileMatrix.ty = tilePoint.y;
 				
-				drawItem.setData(currFrame.frame, currFrame.origin, tileMatrix, true, bColor, alphaToUse);
+				drawItem.setData(currFrame.frame, currFrame.origin, tileMatrix, true, bColor, bAlpha);
 			}
-			
-			alphaToUse = tAlpha * camera.alpha;
 			
 			for (j in 0...textLength)
 			{
@@ -433,7 +454,7 @@ class FlxBitmapText extends FlxSprite
 				tileMatrix.tx = tilePoint.x;
 				tileMatrix.ty = tilePoint.y;
 				
-				drawItem.setDrawData(currFrame.frame, currFrame.origin, tileMatrix, true, tColor, alphaToUse);
+				drawItem.setDrawData(currFrame.frame, currFrame.origin, tileMatrix, true, tColor, tAlpha);
 			}
 			
 			#if !FLX_NO_DEBUG
@@ -1026,29 +1047,34 @@ class FlxBitmapText extends FlxSprite
 	private function updateTextBitmap(useTiles:Bool = false):Void 
 	{
 		computeTextSize();
-		if (textBitmap != null && (frameWidth != textBitmap.width || frameHeight != textBitmap.height))
-		{
-			textBitmap.dispose();
-			textBitmap = null;
-		}
 		
-		if (textBitmap == null)
-		{
-			textBitmap = new BitmapData(frameWidth, frameHeight, true, FlxColor.TRANSPARENT);
-		}
-		else
-		{
-			textBitmap.fillRect(textBitmap.rect, FlxColor.TRANSPARENT);
-		}
-		
-		#if FLX_RENDER_TILE
-		textData.splice(0, textData.length);
+		#if FLX_RENDER_BLIT
+		useTiles = false;
+		#end
 		
 		if (!useTiles)
 		{
-		#end
+			if (textBitmap != null && (frameWidth != textBitmap.width || frameHeight != textBitmap.height))
+			{
+				textBitmap.dispose();
+				textBitmap = null;
+			}
+			
+			if (textBitmap == null)
+			{
+				textBitmap = new BitmapData(frameWidth, frameHeight, true, FlxColor.TRANSPARENT);
+			}
+			else
+			{
+				textBitmap.fillRect(textBitmap.rect, FlxColor.TRANSPARENT);
+			}
+			
 			textBitmap.lock();
+		}
 		#if FLX_RENDER_TILE
+		else
+		{
+			textData.splice(0, textData.length);
 		}
 		#end
 		
@@ -1085,14 +1111,10 @@ class FlxBitmapText extends FlxSprite
 			drawLine(line, ox, oy, useTiles);
 		}
 		
-		#if FLX_RENDER_TILE
 		if (!useTiles)
 		{
-		#end
 			textBitmap.unlock();
-		#if FLX_RENDER_TILE
 		}
-		#end
 		
 		pendingTextBitmapChange = false;
 	}
@@ -1100,8 +1122,9 @@ class FlxBitmapText extends FlxSprite
 	private function drawLine(line:String, posX:Int, posY:Int, useTiles:Bool = false):Void
 	{
 		#if FLX_RENDER_BLIT
-		blitLine(line, posX, posY);
-		#else
+		useTiles = false;
+		#end
+		
 		if (useTiles)
 		{
 			tileLine(line, posX, posY);
@@ -1110,198 +1133,6 @@ class FlxBitmapText extends FlxSprite
 		{
 			blitLine(line, posX, posY);
 		}
-		#end
-	}
-	
-	private function updatePixels(useTiles:Bool = false):Void
-	{
-		var colorForFill:Int = background ? backgroundColor : FlxColor.TRANSPARENT;
-		var bitmap:BitmapData = null;
-		
-		// TODO: continue from here...
-		
-		#if FLX_RENDER_BLIT
-		if (pixels == null || (frameWidth != pixels.width || frameHeight != pixels.height))
-		{
-			pixels = new BitmapData(frameWidth, frameHeight, true, colorForFill);
-		}
-		else
-		{
-			pixels.fillRect(graphic.bitmap.rect, colorForFill);
-		}
-		
-		bitmap = pixels;
-		#else
-		if (!useTiles)
-		{
-			bitmap = framePixels;
-		}
-		else
-		{
-			
-		}
-		
-		width = frameWidth;
-		height = frameHeight;
-		
-		origin.x = frameWidth * 0.5;
-		origin.y = frameHeight * 0.5;
-		
-		textDrawData.splice(0, textDrawData.length);
-		borderDrawData.splice(0, borderDrawData.length);
-		#end
-		
-		#if FLX_RENDER_BLIT
-		bitmap.lock();
-		#end
-		
-		var isFront:Bool = false;
-		
-		var iterations:Int = Std.int(borderSize * borderQuality);
-		iterations = (iterations <= 0) ? 1 : iterations; 
-		
-		var delta:Int = Std.int(borderSize / iterations);
-		
-		var iterationsX:Int = 1;
-		var iterationsY:Int = 1;
-		var deltaX:Int = 1;
-		var deltaY:Int = 1;
-		
-		if (borderStyle == FlxTextBorderStyle.SHADOW)
-		{
-			iterationsX = Math.round(Math.abs(shadowOffset.x) * borderQuality);
-			iterationsX = (iterationsX <= 0) ? 1 : iterationsX;
-			
-			iterationsY = Math.round(Math.abs(shadowOffset.y) * borderQuality);
-			iterationsY = (iterationsY <= 0) ? 1 : iterationsY;
-			
-			deltaX = Math.round(shadowOffset.x / iterationsX);
-			deltaY = Math.round(shadowOffset.y / iterationsY);
-		}
-		
-		// render border
-		switch (borderStyle)
-		{
-			case SHADOW:
-				for (iterY in 0...iterationsY)
-				{
-					for (iterX in 0...iterationsX)
-					{
-						drawText(deltaX * (iterX + 1), deltaY * (iterY + 1), isFront, bitmap, useTiles);
-					}
-				}
-			case OUTLINE:
-				//Render an outline around the text
-				//(do 8 offset draw calls)
-				var itd:Int = 0;
-				for (iter in 0...iterations)
-				{
-					itd = delta * (iter + 1);
-					//upper-left
-					drawText( -itd, -itd, isFront, bitmap, useTiles);
-					//upper-middle
-					drawText(0, -itd, isFront, bitmap, useTiles);
-					//upper-right
-					drawText(itd, -itd, isFront, bitmap, useTiles);
-					//middle-left
-					drawText( -itd, 0, isFront, bitmap, useTiles);
-					//middle-right
-					drawText(itd, 0, isFront, bitmap, useTiles);
-					//lower-left
-					drawText( -itd, itd, isFront, bitmap, useTiles);
-					//lower-middle
-					drawText(0, itd, isFront, bitmap, useTiles);
-					//lower-right
-					drawText(itd, itd, isFront, bitmap, useTiles);
-				}
-			case OUTLINE_FAST:
-				//Render an outline around the text
-				//(do 4 diagonal offset draw calls)
-				//(this method might not work with certain narrow fonts)
-				var itd:Int = 0;
-				for (iter in 0...iterations)
-				{
-					itd = delta * (iter + 1);
-					//upper-left
-					drawText( -itd, -itd, isFront, bitmap, useTiles);
-					//upper-right
-					drawText(itd, -itd, isFront, bitmap, useTiles);
-					//lower-left
-					drawText( -itd, itd, isFront, bitmap, useTiles);
-					//lower-right
-					drawText(itd, itd, isFront, bitmap, useTiles);
-				}	
-			case NONE:
-		}
-		
-		isFront = true;
-		drawText(0, 0, isFront, null, useTiles);
-		
-		#if FLX_RENDER_BLIT
-		bitmap.unlock();
-		dirty = true;
-		#end
-	}
-	
-	private function drawText(posX:Int, posY:Int, isFront:Bool = true, bitmap:BitmapData = null, useTiles:Bool = false):Void
-	{
-		if (useTiles)
-		{
-			tileText(posX, posY, isFront);
-		}
-		else
-		{
-			blitText(posX, posY, isFront, bitmap);
-		}
-	}
-	
-	private function blitText(posX:Int, posY:Int, isFront:Bool = true, bitmap:BitmapData = null):Void
-	{
-		if (bitmap == null)
-		{
-			bitmap = pixels;
-		}
-		
-		_matrix.identity();
-		_matrix.translate(posX, posY);
-		
-		var colorToApply:FlxColor = FlxColor.WHITE;
-		
-		if (isFront && useTextColor)
-		{
-			colorToApply = textColor;
-		}
-		else if (!isFront)
-		{
-			colorToApply = borderColor;
-		}
-		
-		var cTrans:ColorTransform = COLOR_TRANSFORM;
-		cTrans.redMultiplier = colorToApply.redFloat;
-		cTrans.greenMultiplier = colorToApply.greenFloat;
-		cTrans.blueMultiplier = colorToApply.blueFloat;
-		cTrans.alphaMultiplier = colorToApply.alphaFloat;
-		
-		bitmap.draw(textBitmap, _matrix, cTrans);
-	}
-	
-	private function tileText(posX:Int, posY:Int, isFront:Bool = true):Void
-	{
-		#if FLX_RENDER_TILE
-		var data:Array<Float> = isFront ? textDrawData : borderDrawData;
-		
-		var pos:Int = data.length;
-		var textPos:Int;
-		var textLen:Int = Std.int(textData.length / 3);
-		
-		for (i in 0...textLen)
-		{
-			textPos = 3 * i;
-			data[pos++] = textData[textPos];
-			data[pos++] = textData[textPos + 1] + posX;
-			data[pos++] = textData[textPos + 2] + posY;
-		}
-		#end
 	}
 	
 	private function blitLine(line:String, startX:Int, startY:Int):Void
@@ -1387,10 +1218,210 @@ class FlxBitmapText extends FlxSprite
 		#end
 	}
 	
-	// TODO: reimplement it for this class...
-	override public function getFlxFrameBitmapData():BitmapData 
+	private function updatePixels(useTiles:Bool = false):Void
 	{
-		return super.getFlxFrameBitmapData();
+		var colorForFill:Int = background ? backgroundColor : FlxColor.TRANSPARENT;
+		var bitmap:BitmapData = null;
+		
+		#if FLX_RENDER_BLIT
+		if (pixels == null || (frameWidth != pixels.width || frameHeight != pixels.height))
+		{
+			pixels = new BitmapData(frameWidth, frameHeight, true, colorForFill);
+		}
+		else
+		{
+			pixels.fillRect(graphic.bitmap.rect, colorForFill);
+		}
+		
+		bitmap = pixels;
+		#else
+		if (!useTiles)
+		{
+			if (framePixels == null || (frameWidth != framePixels.width || frameHeight != framePixels.height))
+			{
+				framePixels = FlxDestroyUtil.dispose(framePixels);
+				framePixels = new BitmapData(frameWidth, frameHeight, true, colorForFill);
+			}
+			else
+			{
+				framePixels.fillRect(framePixels.rect, colorForFill);
+			}
+			
+			bitmap = framePixels;
+		}
+		else
+		{
+			textDrawData.splice(0, textDrawData.length);
+			borderDrawData.splice(0, borderDrawData.length);
+		}
+		
+		width = frameWidth;
+		height = frameHeight;
+		
+		origin.x = frameWidth * 0.5;
+		origin.y = frameHeight * 0.5;
+		#end
+		
+		if (!useTiles)
+		{
+			bitmap.lock();
+		}
+		
+		var isFront:Bool = false;
+		
+		var iterations:Int = Std.int(borderSize * borderQuality);
+		iterations = (iterations <= 0) ? 1 : iterations; 
+		
+		var delta:Int = Std.int(borderSize / iterations);
+		
+		var iterationsX:Int = 1;
+		var iterationsY:Int = 1;
+		var deltaX:Int = 1;
+		var deltaY:Int = 1;
+		
+		if (borderStyle == FlxTextBorderStyle.SHADOW)
+		{
+			iterationsX = Math.round(Math.abs(shadowOffset.x) * borderQuality);
+			iterationsX = (iterationsX <= 0) ? 1 : iterationsX;
+			
+			iterationsY = Math.round(Math.abs(shadowOffset.y) * borderQuality);
+			iterationsY = (iterationsY <= 0) ? 1 : iterationsY;
+			
+			deltaX = Math.round(shadowOffset.x / iterationsX);
+			deltaY = Math.round(shadowOffset.y / iterationsY);
+		}
+		
+		// render border
+		switch (borderStyle)
+		{
+			case SHADOW:
+				for (iterY in 0...iterationsY)
+				{
+					for (iterX in 0...iterationsX)
+					{
+						drawText(deltaX * (iterX + 1), deltaY * (iterY + 1), isFront, bitmap, useTiles);
+					}
+				}
+			case OUTLINE:
+				//Render an outline around the text
+				//(do 8 offset draw calls)
+				var itd:Int = 0;
+				for (iter in 0...iterations)
+				{
+					itd = delta * (iter + 1);
+					//upper-left
+					drawText( -itd, -itd, isFront, bitmap, useTiles);
+					//upper-middle
+					drawText(0, -itd, isFront, bitmap, useTiles);
+					//upper-right
+					drawText(itd, -itd, isFront, bitmap, useTiles);
+					//middle-left
+					drawText( -itd, 0, isFront, bitmap, useTiles);
+					//middle-right
+					drawText(itd, 0, isFront, bitmap, useTiles);
+					//lower-left
+					drawText( -itd, itd, isFront, bitmap, useTiles);
+					//lower-middle
+					drawText(0, itd, isFront, bitmap, useTiles);
+					//lower-right
+					drawText(itd, itd, isFront, bitmap, useTiles);
+				}
+			case OUTLINE_FAST:
+				//Render an outline around the text
+				//(do 4 diagonal offset draw calls)
+				//(this method might not work with certain narrow fonts)
+				var itd:Int = 0;
+				for (iter in 0...iterations)
+				{
+					itd = delta * (iter + 1);
+					//upper-left
+					drawText( -itd, -itd, isFront, bitmap, useTiles);
+					//upper-right
+					drawText(itd, -itd, isFront, bitmap, useTiles);
+					//lower-left
+					drawText( -itd, itd, isFront, bitmap, useTiles);
+					//lower-right
+					drawText(itd, itd, isFront, bitmap, useTiles);
+				}	
+			case NONE:
+		}
+		
+		isFront = true;
+		drawText(0, 0, isFront, null, useTiles);
+		
+		if (!useTiles)
+		{
+			bitmap.unlock();
+		}
+		
+		#if FLX_RENDER_BLIT
+		dirty = true;
+		#end
+	}
+	
+	private function drawText(posX:Int, posY:Int, isFront:Bool = true, bitmap:BitmapData = null, useTiles:Bool = false):Void
+	{
+		#if FLX_RENDER_BLIT
+		useTiles = false;
+		#end
+		
+		if (useTiles)
+		{
+			tileText(posX, posY, isFront);
+		}
+		else
+		{
+			blitText(posX, posY, isFront, bitmap);
+		}
+	}
+	
+	private function blitText(posX:Int, posY:Int, isFront:Bool = true, bitmap:BitmapData = null):Void
+	{
+		if (bitmap == null)
+		{
+			bitmap = pixels;
+		}
+		
+		_matrix.identity();
+		_matrix.translate(posX, posY);
+		
+		var colorToApply:FlxColor = FlxColor.WHITE;
+		
+		if (isFront && useTextColor)
+		{
+			colorToApply = textColor;
+		}
+		else if (!isFront)
+		{
+			colorToApply = borderColor;
+		}
+		
+		var cTrans:ColorTransform = COLOR_TRANSFORM;
+		cTrans.redMultiplier = colorToApply.redFloat;
+		cTrans.greenMultiplier = colorToApply.greenFloat;
+		cTrans.blueMultiplier = colorToApply.blueFloat;
+		cTrans.alphaMultiplier = colorToApply.alphaFloat;
+		
+		bitmap.draw(textBitmap, _matrix, cTrans);
+	}
+	
+	private function tileText(posX:Int, posY:Int, isFront:Bool = true):Void
+	{
+		#if FLX_RENDER_TILE
+		var data:Array<Float> = isFront ? textDrawData : borderDrawData;
+		
+		var pos:Int = data.length;
+		var textPos:Int;
+		var textLen:Int = Std.int(textData.length / 3);
+		
+		for (i in 0...textLen)
+		{
+			textPos = 3 * i;
+			data[pos++] = textData[textPos];
+			data[pos++] = textData[textPos + 1] + posX;
+			data[pos++] = textData[textPos + 2] + posY;
+		}
+		#end
 	}
 	
 	/**
