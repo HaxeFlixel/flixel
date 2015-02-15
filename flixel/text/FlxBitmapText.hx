@@ -343,7 +343,17 @@ class FlxBitmapText extends FlxSprite
 		var sx:Float = scale.x * _facingHorizontalMult;
 		var sy:Float = scale.y * _facingVerticalMult;
 		
-		var totalScaleX:Float, totalScaleY:Float;
+		var ox:Float = origin.x;
+		var oy:Float = origin.y;
+		
+		if (_facingHorizontalMult != 1)
+		{
+			ox = frameWidth - ox;
+		}
+		if (_facingVerticalMult != 1)
+		{
+			oy = frameHeight - oy;
+		}
 		
 		for (camera in cameras)
 		{
@@ -352,14 +362,27 @@ class FlxBitmapText extends FlxSprite
 				continue;
 			}
 			
+			getScreenPosition(_point, camera).subtractPoint(offset);
+			
 			updateTrig();
 			
-			totalScaleX = sx;
-			totalScaleY = sy;
+			// TODO: continue from here...
+			
+			if (background)
+			{
+				// backround tile transformations
+				bgMatrix.identity();
+				bgMatrix.scale(0.1 * frameWidth, 0.1 * frameHeight);
+				
+				if (angle != 0)
+				{
+					bgMatrix.rotateWithTrig(_cosAngle, _sinAngle);
+				}
+			}
 			
 			// matrix for calculation tile position
 			_matrix.identity();
-			_matrix.scale(totalScaleX, totalScaleY);
+			_matrix.scale(sx, sy);
 			
 			if (angle != 0)
 			{
@@ -374,26 +397,12 @@ class FlxBitmapText extends FlxSprite
 				tileMatrix.rotateWithTrig(_cosAngle, _sinAngle);
 			}
 			
-			if (background)
-			{
-				// backround tile transformations
-				bgMatrix.identity();
-				bgMatrix.scale(0.1 * frameWidth, 0.1 * frameHeight);
-				
-				if (angle != 0)
-				{
-					bgMatrix.rotateWithTrig(_cosAngle, _sinAngle);
-				}
-			}
-			
-			getScreenPosition(_point, camera).subtractPoint(offset).addPoint(origin);
-			
 			if (isPixelPerfectRender(camera))
 			{
 				_point.floor();
 			}
 			
-			// TODO: continue from here...
+			
 			
 			if (background)
 			{
