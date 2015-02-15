@@ -521,7 +521,7 @@ class FlxCamera extends FlxBasic
 #else
 	public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:Matrix, colorTrans:ColorTransform = null, blend:BlendMode = null, smoothing:Bool = false):Void
 	{
-		buffer.draw(pixels, matrix, null, blend, null, (smoothing || antialiasing));
+		buffer.draw(pixels, matrix, colorTrans, blend, null, (smoothing || antialiasing));
 	}
 	
 	public function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle, destPoint:Point, colorTrans:ColorTransform = null, blend:BlendMode = null, smoothing:Bool = false):Void
