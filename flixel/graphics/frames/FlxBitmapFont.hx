@@ -42,8 +42,6 @@ class FlxBitmapFont extends FlxFramesCollection
 	 */
 	public static inline var DEFAULT_GLYPHS:String = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
 	
-	private static var COLOR_TRANSFORM:ColorTransform = new ColorTransform();
-	
 	/**
 	 * The size of the font. Can be useful for AngelCode fonts.
 	 */

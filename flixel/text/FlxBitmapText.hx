@@ -17,6 +17,7 @@ import flixel.text.FlxText.FlxTextBorderStyle;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import haxe.Utf8;
+import openfl.geom.ColorTransform;
 
 // TODO: make pixels accessible in tile render mode also...
 // TODO: use Utf8 util for converting text to upper/lower case
@@ -28,6 +29,8 @@ import haxe.Utf8;
  */
 class FlxBitmapText extends FlxSprite
 {
+	private static var COLOR_TRANSFORM:ColorTransform = new ColorTransform();
+	
 	/**
 	 * Font for text rendering.
 	 */
@@ -1128,6 +1131,8 @@ class FlxBitmapText extends FlxSprite
 		pixels.lock();
 		#end
 		
+		var isFront:Bool = false;
+		
 		var iterations:Int = Std.int(borderSize * borderQuality);
 		iterations = (iterations <= 0) ? 1 : iterations; 
 		
@@ -1207,12 +1212,64 @@ class FlxBitmapText extends FlxSprite
 			case NONE:
 		}
 		
+		isFront = true;
 		blitLine(line, textGlyphs, 0, 0);
 		
 		#if FLX_RENDER_BLIT
 		pixels.unlock();
 		dirty = true;
 		#end
+	}
+	
+	private function drawText(posX:Int, posY:Int, isFront:Bool = true, bitmap:BitmapData = null, useTiles:Bool = false):Void
+	{
+		if (useTiles)
+		{
+			
+		}
+		else
+		{
+			
+		}
+	}
+	
+	private function blitText(posX:Int, posY:Int, colorToApply:FlxColor = FlxColor.WHITE, bitmap:BitmapData = null):Void
+	{
+		if (bitmap == null)
+		{
+			bitmap = pixels;
+		}
+		
+		_matrix.identity();
+		_matrix.translate(posX, posY);
+		
+		var cTrans:ColorTransform = COLOR_TRANSFORM;
+		cTrans.redMultiplier = colorToApply.redFloat;
+		cTrans.greenMultiplier = colorToApply.greenFloat;
+		cTrans.blueMultiplier = colorToApply.blueFloat;
+		cTrans.alphaMultiplier = colorToApply.alphaFloat;
+		
+		bitmap.draw(textBitmap, _matrix, cTrans);
+	}
+	
+	private function tileText(posX:Int, posY:Int, data:Array<Float> = null):Void
+	{
+		if (data == null)
+		{
+			data = textDrawData;
+		}
+		
+		var pos:Int = data.length;
+		var textPos:Int;
+		var textLen:Int = Std.int(textData / 3);
+		
+		for (i in 0...textLen)
+		{
+			textPos = 3 * i;
+			data[pos++] = textData[textPos];
+			data[pos++] = textData[textPos + 1] + posX;
+			data[pos++] = textData[textPos + 2] + posY;
+		}
 	}
 	
 	private function blitLine(line:String, startX:Int, startY:Int):Void
