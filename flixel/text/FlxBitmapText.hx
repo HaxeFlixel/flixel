@@ -194,6 +194,7 @@ class FlxBitmapText extends FlxSprite
 	private var tileMatrix:FlxMatrix;
 	private var bgMatrix:FlxMatrix;
 	
+	// TODO: try to remove these vars later...
 	private var borderColorTransform:ColorTransform;
 	private var textColorTransform:ColorTransform;
 	private var bgColorTransform:ColorTransform;
@@ -392,7 +393,7 @@ class FlxBitmapText extends FlxSprite
 			{
 				// backround tile transformations
 				bgMatrix.identity();
-				bgMatrix.scale(0.1 * frameWidth * totalScaleX, 0.1 * frameHeight * totalScaleY);
+				bgMatrix.scale(0.1 * frameWidth, 0.1 * frameHeight);
 				
 				if (angle != 0)
 				{

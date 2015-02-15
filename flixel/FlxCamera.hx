@@ -500,6 +500,7 @@ class FlxCamera extends FlxBasic
 		}
 	}
 	
+	// TODO: add versions of these methods which takes color components multipliers instead of colorTransform objects...
 	public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:Matrix, colorTrans:ColorTransform = null, blend:BlendMode = null, smoothing:Bool = false):Void
 	{
 		_helperMatrix.copyFrom(matrix);
