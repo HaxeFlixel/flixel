@@ -193,11 +193,6 @@ class FlxBitmapText extends FlxSprite
 	private var tilePoint:FlxPoint;
 	private var tileMatrix:FlxMatrix;
 	private var bgMatrix:FlxMatrix;
-	
-	// TODO: try to remove these vars later...
-	private var borderColorTransform:ColorTransform;
-	private var textColorTransform:ColorTransform;
-	private var bgColorTransform:ColorTransform;
 	#end
 	
 	public var textBitmap:BitmapData;
@@ -227,9 +222,6 @@ class FlxBitmapText extends FlxSprite
 		tilePoint = new FlxPoint();
 		tileMatrix = new FlxMatrix();
 		bgMatrix = new FlxMatrix();
-		borderColorTransform = new ColorTransform();
-		textColorTransform = new ColorTransform();
-		bgColorTransform = new ColorTransform();
 		#end
 	}
 	
@@ -253,10 +245,6 @@ class FlxBitmapText extends FlxSprite
 		tilePoint = null;
 		tileMatrix = null;
 		bgMatrix = null;
-		
-		textColorTransform = null;
-		borderColorTransform = null;
-		bgColorTransform = null;
 		#end
 		super.destroy();
 	}
@@ -313,14 +301,18 @@ class FlxBitmapText extends FlxSprite
 		
 		var dataPos:Int;
 		
-		var borderRed:Float = borderColor.redFloat * color.redFloat;
-		var borderGreen:Float = borderColor.greenFloat * color.greenFloat;
-		var borderBlue:Float = borderColor.blueFloat * color.blueFloat;
+		var cr:Float = color.redFloat;
+		var cg:Float = color.greenFloat;
+		var cb:Float = color.blueFloat;
+		
+		var borderRed:Float = borderColor.redFloat * cr;
+		var borderGreen:Float = borderColor.greenFloat * cg;
+		var borderBlue:Float = borderColor.blueFloat * cb;
 		var bAlpha:Float = borderColor.alphaFloat * alpha;
 		
-		var textRed:Float = color.redFloat;
-		var textGreen:Float = color.greenFloat;
-		var textBlue:Float = color.blueFloat;
+		var textRed:Float = cr;
+		var textGreen:Float = cg;
+		var textBlue:Float = cb;
 		var tAlpha:Float = alpha;
 		
 		if (useTextColor)
@@ -331,22 +323,17 @@ class FlxBitmapText extends FlxSprite
 			tAlpha *= textColor.alpha;		
 		}
 		
-		textColorTransform.redMultiplier = textRed;
-		textColorTransform.greenMultiplier = textGreen;
-		textColorTransform.blueMultiplier = textBlue;
-		textColorTransform.alphaMultiplier = tAlpha;
-		
-		borderColorTransform.redMultiplier = borderRed;
-		borderColorTransform.greenMultiplier = borderGreen;
-		borderColorTransform.blueMultiplier = borderBlue;
-		borderColorTransform.alphaMultiplier = bAlpha;
+		var bgRed:Float = cr;
+		var bgGreen:Float = cg;
+		var bgBlue:Float = cb;
+		var bgAlpha:Float = alpha;
 		
 		if (background)
 		{
-			bgColorTransform.redMultiplier = backgroundColor.redFloat * color.redFloat;
-			bgColorTransform.greenMultiplier = backgroundColor.greenFloat * color.redFloat;
-			bgColorTransform.blueMultiplier = backgroundColor.blueFloat * color.redFloat;
-			bgColorTransform.alphaMultiplier = backgroundColor.alphaFloat * alpha;
+			bgRed *= backgroundColor.redFloat;
+			bgGreen *= backgroundColor.greenFloat;
+			bgBlue *= backgroundColor.blueFloat;
+			bgAlpha *= backgroundColor.alphaFloat;
 		}
 		
 		var drawItem:FlxDrawTilesItem;
@@ -355,8 +342,6 @@ class FlxBitmapText extends FlxSprite
 		var currTileY:Float = 0;
 		var sx:Float = scale.x * _facingHorizontalMult;
 		var sy:Float = scale.y * _facingVerticalMult;
-		
-		var bgAlpha:Float = backgroundColor.alphaFloat * alpha;
 		
 		var totalScaleX:Float, totalScaleY:Float;
 		
@@ -408,14 +393,15 @@ class FlxBitmapText extends FlxSprite
 				_point.floor();
 			}
 			
+			// TODO: continue from here...
+			
 			if (background)
 			{
-				drawItem = camera.startQuadBatch(FlxG.bitmap.whitePixel.parent, true, blend, antialiasing);
 				currFrame = FlxG.bitmap.whitePixel;
 				
 				bgMatrix.translate(_point.x, _point.y);
 				
-				camera.drawPixels(currFrame, null, bgMatrix, bgColorTransform, blend, antialiasing);
+				camera.drawPixels(currFrame, null, bgMatrix, bgRed, bgGreen, bgBlue, bgAlpha, blend, antialiasing);
 			}
 			
 			drawItem = camera.getDrawTilesItem(font.parent, true, blend, antialiasing);

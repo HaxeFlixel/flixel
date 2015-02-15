@@ -500,31 +500,31 @@ class FlxCamera extends FlxBasic
 		}
 	}
 	
-	// TODO: add versions of these methods which takes color components multipliers instead of colorTransform objects...
-	public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:Matrix, colorTrans:ColorTransform = null, blend:BlendMode = null, smoothing:Bool = false):Void
+	public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:Matrix, cr:Float = 1.0, cg:Float = 1.0, cb:Float = 1.0, ca:Float = 1.0, blend:BlendMode = null, smoothing:Bool = false):Void
 	{
+		// TODO: optimize this math, since _helper matrix contains only scaling
 		_helperMatrix.copyFrom(matrix);
 		_helperMatrix.concat(_transform);
-		var isColored:Bool = (colorTrans.redMultiplier != 1.0) || (colorTrans.greenMultiplier != 1.0) || (colorTrans.blueMultiplier != 1.0);
+		var isColored:Bool = (cr != 1.0) || (cg != 1.0) || (cb != 1.0);
 		var drawItem:FlxDrawTilesItem = startQuadBatch(frame.parent, isColored, blend, smoothing);
-		drawItem.setData(frame.frame, _helperMatrix, isColored, colorTrans.redMultiplier, colorTrans.greenMultiplier, colorTrans.blueMultiplier, colorTrans.alphaMultiplier);
+		drawItem.setData(frame.frame, _helperMatrix, isColored, cr, cg, cb, ca);
 	}
 	
-	public function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle, destPoint:Point, colorTrans:ColorTransform = null, blend:BlendMode = null, smoothing:Bool = false):Void
+	public function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle, destPoint:Point, cr:Float = 1.0, cg:Float = 1.0, cb:Float = 1.0, ca:Float = 1.0, blend:BlendMode = null, smoothing:Bool = false):Void
 	{
 		_helperMatrix.identity();
 		_helperMatrix.translate(destPoint.x + frame.offset.x, destPoint.y + frame.offset.y);
-		var isColored:Bool = (colorTrans.redMultiplier != 1.0) || (colorTrans.greenMultiplier != 1.0) || (colorTrans.blueMultiplier != 1.0);
+		var isColored:Bool = (cr != 1.0) || (cg != 1.0) || (cb != 1.0);
 		var drawItem:FlxDrawTilesItem = startQuadBatch(frame.parent, isColored, blend, smoothing);
-		drawItem.setData(frame.frame, _helperMatrix, isColored, colorTrans.redMultiplier, colorTrans.greenMultiplier, colorTrans.blueMultiplier, colorTrans.alphaMultiplier);
+		drawItem.setData(frame.frame, _helperMatrix, isColored, cr, cg, cb, ca);
 	}
 #else
-	public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:Matrix, colorTrans:ColorTransform = null, blend:BlendMode = null, smoothing:Bool = false):Void
+	public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:Matrix, cr:Float = 1.0, cg:Float = 1.0, cb:Float = 1.0, ca:Float = 1.0, blend:BlendMode = null, smoothing:Bool = false):Void
 	{
 		buffer.draw(pixels, matrix, null, blend, null, (smoothing || antialiasing));
 	}
 	
-	public function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle, destPoint:Point, colorTrans:ColorTransform = null, blend:BlendMode = null, smoothing:Bool = false):Void
+	public function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle, destPoint:Point, cr:Float = 1.0, cg:Float = 1.0, cb:Float = 1.0, ca:Float = 1.0, blend:BlendMode = null, smoothing:Bool = false):Void
 	{
 		buffer.copyPixels(pixels, sourceRect, destPoint, null, null, true);
 	}
