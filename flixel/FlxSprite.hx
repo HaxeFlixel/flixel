@@ -47,6 +47,7 @@ class FlxSprite extends FlxObject
 	 * The actual Flash BitmapData object representing the current display state of the sprite.
 	 * WARNING: can be null in FLX_RENDER_TILE mode unless you call getFlxFrameBitmapData() beforehand.
 	 */
+	// TODO: maybe convert this var to property...
 	public var framePixels:BitmapData;
 	/**
 	 * Controls whether the object is smoothed when rotated, affects performance.

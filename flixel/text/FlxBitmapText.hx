@@ -1144,7 +1144,6 @@ class FlxBitmapText extends FlxSprite
 		
 		bitmap = pixels;
 		#else
-		
 		if (!useTiles)
 		{
 			bitmap = framePixels;
@@ -1165,7 +1164,7 @@ class FlxBitmapText extends FlxSprite
 		#end
 		
 		#if FLX_RENDER_BLIT
-		pixels.lock();
+		bitmap.lock();
 		#end
 		
 		var isFront:Bool = false;
@@ -1251,7 +1250,7 @@ class FlxBitmapText extends FlxSprite
 		drawText(0, 0, isFront, null, useTiles);
 		
 		#if FLX_RENDER_BLIT
-		pixels.unlock();
+		bitmap.unlock();
 		dirty = true;
 		#end
 	}
