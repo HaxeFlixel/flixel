@@ -1026,7 +1026,7 @@ class FlxBitmapText extends FlxSprite
 	/**
 	 * Internal method for updating helper data for text rendering
 	 */
-	private function updateTextBitmap():Void 
+	private function updateTextBitmap(useTiles:Bool = false):Void 
 	{
 		computeTextSize();
 		updateBuffer();
@@ -1036,7 +1036,7 @@ class FlxBitmapText extends FlxSprite
 	/**
 	 * Internal method for updating the view of the text component (actual data used for text rendering)
 	 */
-	private function updateTextGraphic():Void
+	private function updateTextGraphic(useTiles:Bool = false):Void
 	{
 		if (textBitmap != null && (frameWidth != textBitmap.width || frameHeight != textBitmap.height))
 		{
@@ -1053,8 +1053,13 @@ class FlxBitmapText extends FlxSprite
 			textBitmap.fillRect(textBitmap.rect, colorForFill);
 		}
 		
-		#if FLX_RENDER_BLIT
-		textBitmap.lock();
+		#if FLX_RENDER_TILE
+		if (!useTiles)
+		{
+		#end
+			textBitmap.lock();
+		#if FLX_RENDER_TILE
+		}
 		#end
 		
 		textData.splice(0, textData.length);
@@ -1089,21 +1094,31 @@ class FlxBitmapText extends FlxSprite
 				ox += padding;
 			}
 			
-			#if FLX_RENDER_BLIT
-			blitLine(line, ox, oy);
-			#else
-			tileLine(line, ox, oy);
-			#end
+			drawLine(line, ox, oy, useTiles);
 		}
 		
-		#if FLX_RENDER_BLIT
-		textBitmap.unlock();
+		#if FLX_RENDER_TILE
+		if (!useTiles)
+		{
+		#end
+			textBitmap.unlock();
+		#if FLX_RENDER_TILE
+		}
 		#end
 		
 		pendingColorChange = false;
 	}
 	
-	private function updateBuffer():Void
+	private function drawLine(line:String, posX:Int, posY:Int, useTiles:Bool = false):Void
+	{
+		#if FLX_RENDER_BLIT
+		blitLine(line, ox, oy);
+		#else
+		tileLine(line, ox, oy);
+		#end
+	}
+	
+	private function updateBuffer(useTiles:Bool = false):Void
 	{
 		var colorForFill:Int = background ? backgroundColor : FlxColor.TRANSPARENT;
 		
@@ -1213,7 +1228,7 @@ class FlxBitmapText extends FlxSprite
 		}
 		
 		isFront = true;
-		blitLine(line, textGlyphs, 0, 0);
+		drawText(0, 0, isFront, null, useTiles);
 		
 		#if FLX_RENDER_BLIT
 		pixels.unlock();
@@ -1225,15 +1240,15 @@ class FlxBitmapText extends FlxSprite
 	{
 		if (useTiles)
 		{
-			
+			tileText(posX, posY, isFront);
 		}
 		else
 		{
-			
+			blitText(posX, posY, isFront, bitmap);
 		}
 	}
 	
-	private function blitText(posX:Int, posY:Int, colorToApply:FlxColor = FlxColor.WHITE, bitmap:BitmapData = null):Void
+	private function blitText(posX:Int, posY:Int, isFront:Bool = true, bitmap:BitmapData = null):Void
 	{
 		if (bitmap == null)
 		{
@@ -1242,6 +1257,17 @@ class FlxBitmapText extends FlxSprite
 		
 		_matrix.identity();
 		_matrix.translate(posX, posY);
+		
+		var colorToApply:FlxColor = FlxColor.WHITE;
+		
+		if (isFront && useTextColor)
+		{
+			colorToApply = textColor;
+		}
+		else if (!isFront)
+		{
+			colorToApply = borderColor;
+		}
 		
 		var cTrans:ColorTransform = COLOR_TRANSFORM;
 		cTrans.redMultiplier = colorToApply.redFloat;
@@ -1252,12 +1278,9 @@ class FlxBitmapText extends FlxSprite
 		bitmap.draw(textBitmap, _matrix, cTrans);
 	}
 	
-	private function tileText(posX:Int, posY:Int, data:Array<Float> = null):Void
+	private function tileText(posX:Int, posY:Int, isFront:Bool = true):Void
 	{
-		if (data == null)
-		{
-			data = textDrawData;
-		}
+		var data:Array<Float> = isFront ? textDrawData : borderDrawData;
 		
 		var pos:Int = data.length;
 		var textPos:Int;
