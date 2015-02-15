@@ -881,7 +881,7 @@ class FlxSprite extends FlxObject
 	/**
 	 * Retrieves BitmapData of current FlxFrame. Updates framePixels.
 	 */
-	public inline function getFlxFrameBitmapData():BitmapData
+	public function getFlxFrameBitmapData():BitmapData
 	{
 		if (_frame != null && dirty)
 		{

@@ -184,11 +184,12 @@ class FlxBitmapText extends FlxSprite
 	private var pendingTextChange:Bool = true;
 	private var pendingGraphicChange:Bool = true;
 	private var pendingColorChange:Bool = true;
+	
 	#if FLX_RENDER_TILE
 	private var textData:Array<Float>;
-	
 	private var textDrawData:Array<Float>;
 	private var borderDrawData:Array<Float>;
+	
 	private var tilePoint:FlxPoint;
 	private var tileMatrix:FlxMatrix;
 	private var bgMatrix:FlxMatrix;
@@ -274,13 +275,13 @@ class FlxBitmapText extends FlxSprite
 		
 		if (pendingGraphicChange)
 		{
-			updateTextBitmap();
+			updateTextGraphic();
 			pendingColorChange = true;
 		}
 		
 		if (pendingColorChange)
 		{
-			updateTextGraphic();
+			updateTextBitmap();
 		}
 	}
 	
@@ -1050,10 +1051,12 @@ class FlxBitmapText extends FlxSprite
 		}
 		else
 		{
-			textBitmap.fillRect(textBitmap.rect, colorForFill);
+			textBitmap.fillRect(textBitmap.rect, FlxColor.TRANSPARENT);
 		}
 		
 		#if FLX_RENDER_TILE
+		textData.splice(0, textData.length);
+		
 		if (!useTiles)
 		{
 		#end
@@ -1061,8 +1064,6 @@ class FlxBitmapText extends FlxSprite
 		#if FLX_RENDER_TILE
 		}
 		#end
-		
-		textData.splice(0, textData.length);
 		
 		_fieldWidth = frameWidth;
 		
@@ -1112,15 +1113,15 @@ class FlxBitmapText extends FlxSprite
 	private function drawLine(line:String, posX:Int, posY:Int, useTiles:Bool = false):Void
 	{
 		#if FLX_RENDER_BLIT
-		blitLine(line, ox, oy);
+		blitLine(line, posX, posY);
 		#else
 		if (useTiles)
 		{
-			tileLine(line, ox, oy);
+			tileLine(line, posX, posY);
 		}
 		else
 		{
-			blitLine(line, ox, oy);
+			blitLine(line, posX, posY);
 		}
 		#end
 	}
@@ -1299,11 +1300,12 @@ class FlxBitmapText extends FlxSprite
 	
 	private function tileText(posX:Int, posY:Int, isFront:Bool = true):Void
 	{
+		#if FLX_RENDER_TILE
 		var data:Array<Float> = isFront ? textDrawData : borderDrawData;
 		
 		var pos:Int = data.length;
 		var textPos:Int;
-		var textLen:Int = Std.int(textData / 3);
+		var textLen:Int = Std.int(textData.length / 3);
 		
 		for (i in 0...textLen)
 		{
@@ -1312,6 +1314,7 @@ class FlxBitmapText extends FlxSprite
 			data[pos++] = textData[textPos + 1] + posX;
 			data[pos++] = textData[textPos + 2] + posY;
 		}
+		#end
 	}
 	
 	private function blitLine(line:String, startX:Int, startY:Int):Void
@@ -1321,7 +1324,7 @@ class FlxBitmapText extends FlxSprite
 		var curX:Int = startX;
 		var curY:Int = startY;
 		
-		var spaceWidth:Int = font.spaceWidth);
+		var spaceWidth:Int = font.spaceWidth;
 		var tabWidth:Int = spaceWidth * numSpacesInTab;
 		
 		var lineLength:Int = Utf8.length(line);
@@ -1355,8 +1358,8 @@ class FlxBitmapText extends FlxSprite
 	
 	private function tileLine(line:String, startX:Int, startY:Int):Void
 	{
+		#if FLX_RENDER_TILE
 		var glyph:FlxGlyphFrame;
-		var isFrontText:Bool = glyphs;
 		var pos:Int = textData.length;
 		
 		var charCode:Int;
@@ -1394,6 +1397,13 @@ class FlxBitmapText extends FlxSprite
 			
 			curX += letterSpacing;
 		}
+		#end
+	}
+	
+	// TODO: reimplement it for this class...
+	override public function getFlxFrameBitmapData():BitmapData 
+	{
+		return super.getFlxFrameBitmapData();
 	}
 	
 	/**
