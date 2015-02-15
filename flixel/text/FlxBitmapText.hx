@@ -1114,13 +1114,23 @@ class FlxBitmapText extends FlxSprite
 		#if FLX_RENDER_BLIT
 		blitLine(line, ox, oy);
 		#else
-		tileLine(line, ox, oy);
+		if (useTiles)
+		{
+			tileLine(line, ox, oy);
+		}
+		else
+		{
+			blitLine(line, ox, oy);
+		}
 		#end
 	}
 	
 	private function updateBuffer(useTiles:Bool = false):Void
 	{
 		var colorForFill:Int = background ? backgroundColor : FlxColor.TRANSPARENT;
+		var bitmap:BitmapData = null;
+		
+		// TODO: continue from here...
 		
 		#if FLX_RENDER_BLIT
 		if (pixels == null || (frameWidth != pixels.width || frameHeight != pixels.height))
@@ -1131,7 +1141,19 @@ class FlxBitmapText extends FlxSprite
 		{
 			pixels.fillRect(graphic.bitmap.rect, colorForFill);
 		}
+		
+		bitmap = pixels;
 		#else
+		
+		if (!useTiles)
+		{
+			bitmap = framePixels;
+		}
+		else
+		{
+			
+		}
+		
 		width = frameWidth;
 		height = frameHeight;
 		
@@ -1170,8 +1192,6 @@ class FlxBitmapText extends FlxSprite
 			deltaY = Math.round(shadowOffset.y / iterationsY);
 		}
 		
-		// TODO: continue from here...
-		
 		// render border
 		switch (borderStyle)
 		{
@@ -1180,7 +1200,7 @@ class FlxBitmapText extends FlxSprite
 				{
 					for (iterX in 0...iterationsX)
 					{
-						blitLine(line, borderGlyphs, deltaX * (iterX + 1), deltaY * (iterY + 1));
+						drawText(deltaX * (iterX + 1), deltaY * (iterY + 1), isFront, bitmap, useTiles);
 					}
 				}
 			case OUTLINE:
@@ -1191,21 +1211,21 @@ class FlxBitmapText extends FlxSprite
 				{
 					itd = delta * (iter + 1);
 					//upper-left
-					blitLine(line, borderGlyphs, -itd, -itd);
+					drawText( -itd, -itd, isFront, bitmap, useTiles);
 					//upper-middle
-					blitLine(line, borderGlyphs, 0, -itd);
+					drawText(0, -itd, isFront, bitmap, useTiles);
 					//upper-right
-					blitLine(line, borderGlyphs, itd, -itd);
+					drawText(itd, -itd, isFront, bitmap, useTiles);
 					//middle-left
-					blitLine(line, borderGlyphs, -itd, 0);
+					drawText( -itd, 0, isFront, bitmap, useTiles);
 					//middle-right
-					blitLine(line, borderGlyphs, itd, 0);
+					drawText(itd, 0, isFront, bitmap, useTiles);
 					//lower-left
-					blitLine(line, borderGlyphs, -itd, itd);
+					drawText( -itd, itd, isFront, bitmap, useTiles);
 					//lower-middle
-					blitLine(line, borderGlyphs, 0, itd);
+					drawText(0, itd, isFront, bitmap, useTiles);
 					//lower-right
-					blitLine(line, borderGlyphs, itd, itd);
+					drawText(itd, itd, isFront, bitmap, useTiles);
 				}
 			case OUTLINE_FAST:
 				//Render an outline around the text
@@ -1216,13 +1236,13 @@ class FlxBitmapText extends FlxSprite
 				{
 					itd = delta * (iter + 1);
 					//upper-left
-					blitLine(line, borderGlyphs, -itd, -itd);
+					drawText( -itd, -itd, isFront, bitmap, useTiles);
 					//upper-right
-					blitLine(line, borderGlyphs, itd, -itd);
+					drawText(itd, -itd, isFront, bitmap, useTiles);
 					//lower-left
-					blitLine(line, borderGlyphs, -itd, itd);
+					drawText( -itd, itd, isFront, bitmap, useTiles);
 					//lower-right
-					blitLine(line, borderGlyphs, itd, itd);
+					drawText(itd, itd, isFront, bitmap, useTiles);
 				}	
 			case NONE:
 		}
