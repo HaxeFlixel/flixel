@@ -391,7 +391,7 @@ class FlxBitmapText extends FlxSprite
 			
 			// matrix for calculation tile transformations
 			tileMatrix.identity();
-			tileMatrix.scale(totalScaleX, totalScaleY);
+			tileMatrix.scale(sx, sy);
 			if (angle != 0)
 			{
 				tileMatrix.rotateWithTrig(_cosAngle, _sinAngle);
@@ -469,6 +469,7 @@ class FlxBitmapText extends FlxSprite
 	override private function set_color(Color:FlxColor):FlxColor
 	{
 		super.set_color(Color);
+		// TODO: do i need to set this var to true on tile render mode?
 		pendingTextBitmapChange = true;
 		return color;
 	}
@@ -476,6 +477,7 @@ class FlxBitmapText extends FlxSprite
 	override private function set_alpha(value:Float):Float
 	{
 		alpha = value;
+		// TODO: do i need to set this var to true on tile render mode?
 		pendingTextBitmapChange = true;
 		return value;
 	}
@@ -486,6 +488,7 @@ class FlxBitmapText extends FlxSprite
 		if (textColor != value)
 		{
 			textColor = value;
+			// TODO: do i need to set this var to true on tile render mode?
 			pendingPixelsChange = true;
 		}
 		
@@ -497,6 +500,7 @@ class FlxBitmapText extends FlxSprite
 		if (useTextColor != value)
 		{
 			useTextColor = value;
+			// TODO: do i need to set this var to true on tile render mode?
 			pendingPixelsChange = true;
 		}
 		
@@ -1596,6 +1600,7 @@ class FlxBitmapText extends FlxSprite
 		if (background != value)
 		{
 			background = value;
+			// TODO: do i need to set this var to true on tile render mode?
 			pendingPixelsChange = true;
 		}
 		
@@ -1607,6 +1612,7 @@ class FlxBitmapText extends FlxSprite
 		if (backgroundColor != value)
 		{
 			backgroundColor = value;
+			// TODO: do i need to set this var to true on tile render mode?
 			pendingPixelsChange = true;
 		}
 		
@@ -1629,6 +1635,7 @@ class FlxBitmapText extends FlxSprite
 		if (borderColor != value)
 		{
 			borderColor = value;
+			// TODO: do i need to set this var to true on tile render mode?
 			pendingPixelsChange = true;
 		}
 		
