@@ -11,9 +11,12 @@ class FlxClassicSpace implements IFlxSpace {
 	private var objects : Array<FlxClassicBody>;
 	private var _hasToBeRemoved : FlxGroup;
 	
-	public function new()
+	public var iterationCount : Int;
+	
+	public function new(iterationCount : Int = 4)
 	{
 		objects = new Array<FlxClassicBody>();
+		this.iterationCount = iterationCount;
 	}
 	
 	public function add(body : IFlxBody) : Void
@@ -37,11 +40,11 @@ class FlxClassicSpace implements IFlxSpace {
 		{
 			obj.updateBody(elapsed);
 		}
-		FlxCollide.collide(objects);
+		FlxCollide.collide(objects, iterationCount);
 		for (obj in objects)
 		{
-			obj.parent.x = obj.position.x;
-			obj.parent.y = obj.position.y;
+			obj.parent.x = obj.x;
+			obj.parent.y = obj.y;
 		}
 	}
 	

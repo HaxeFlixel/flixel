@@ -546,6 +546,9 @@ class FlxObject extends FlxBasic
 	 */
 	private function updateMotion(elapsed:Float):Void
 	{
+		if (PlayState.useNewSystem)
+			return;
+		
 		var velocityDelta = 0.5 * (FlxVelocity.computeVelocity(angularVelocity, angularAcceleration, angularDrag, maxAngular, elapsed) - angularVelocity);
 		angularVelocity += velocityDelta; 
 		angle += angularVelocity * elapsed;

@@ -89,17 +89,17 @@ class FlxPolygon implements IFlxHitbox {
 	{
 		_updated = true;
 		
-		FlxMatrix.MATRIX.identity();
-		FlxMatrix.MATRIX.rotate(parent.angle * FlxAngle.TO_RAD);
-		FlxMatrix.MATRIX.scale(parent.scale.x, parent.scale.y);
-		FlxMatrix.MATRIX.translate(parent.x + parent.origin.x, parent.y + parent.origin.y);
+		FlxMatrix.matrix.identity();
+		FlxMatrix.matrix.rotate(parent.angle * FlxAngle.TO_RAD);
+		FlxMatrix.matrix.scale(parent.scale.x, parent.scale.y);
+		FlxMatrix.matrix.translate(parent.x + parent.origin.x, parent.y + parent.origin.y);
 		
 		for (i in 0..._vertices.length)
 		{
 			transformedVertices[i].x = _vertices[i].x - parent.origin.x;
 			transformedVertices[i].y = _vertices[i].y - parent.origin.y;
 			
-			transformedVertices[i].transform(FlxMatrix.MATRIX);
+			transformedVertices[i].transform(FlxMatrix.matrix);
 		}
 			
 		//Create the bounding box

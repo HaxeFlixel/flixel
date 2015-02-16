@@ -11,7 +11,8 @@ class FlxClassicBody implements flixel.phys.IFlxBody
 	public var 	parent : FlxObject;
 	public var	space  : IFlxSpace;
 	
-	public var 	position : FlxPoint;
+	public var 	x : Float;
+	public var 	y : Float;
 	public var 	last : FlxPoint;
 	public var 	velocity : FlxPoint;
 	public var	drag : FlxPoint;
@@ -27,17 +28,20 @@ class FlxClassicBody implements flixel.phys.IFlxBody
 	public var	mass : Float = 1;
 	public var	elasticity : Float = 0;
 	
-	public var	kinematic : Bool = false;
+	public var  allowCollisions : Int = FlxCollide.ANY;
+	public var 	touching : Int = 0;
 	
-	public var width : Float;
-	public var height : Float;
+	public var	kinematic : Bool = false;
+	public var  collisonXDrag : Bool = false;
+	
+	public var 	width : Float;
+	public var 	height : Float;
 	
 	public function new(parent : FlxObject, space : FlxClassicSpace)
 	{
 		this.space = space;
 		this.parent = parent;
 		
-		position = FlxPoint.get(parent.x,parent.y);
 		last = FlxPoint.get(parent.x,parent.y);
 		velocity = FlxPoint.get(parent.velocity.x, parent.velocity.y);
 		maxVelocity = FlxPoint.get(parent.maxVelocity.x, parent.maxVelocity.y);
@@ -55,19 +59,17 @@ class FlxClassicBody implements flixel.phys.IFlxBody
 	public function destroy() : Void
 	{
 		space.remove(this);
-		position.put();
 		last.put();
 		velocity.put();
-		if (maxVelocity != null)
-			maxVelocity.put;
+		maxVelocity.put;
 		acceleration.put();
 	}
 	
 	public function updateBody(elapsed : Float) : Void
 	{
-		position.x = parent.x;
-		position.y = parent.y;
-		last.set(position.x, position.y);
+		x = parent.x;
+		y = parent.y;
+		last.set(x, y);
 		
 		var velocityDelta = 0.5 * (FlxVelocity.computeVelocity(angularVelocity, angularAcceleration, angularDrag, maxAngular, elapsed) - angularVelocity);
 		angularVelocity += velocityDelta; 
@@ -78,15 +80,15 @@ class FlxClassicBody implements flixel.phys.IFlxBody
 		velocity.x += velocityDelta;
 		var delta = velocity.x * elapsed;
 		velocity.x += velocityDelta;
-		position.x += delta;
+		x += delta;
 		
 		velocityDelta = 0.5 * (FlxVelocity.computeVelocity(velocity.y, acceleration.y, drag.y, maxVelocity.y, elapsed) - velocity.y);
 		velocity.y += velocityDelta;
 		delta = velocity.y * elapsed;
 		velocity.y += velocityDelta;
-		position.y += delta;
+		y += delta;
 		
-		parent.x = position.x;
-		parent.y = position.y;
+		parent.x = x;
+		parent.y = y;
 	}
 }

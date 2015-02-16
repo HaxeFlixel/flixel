@@ -9,7 +9,8 @@ interface IFlxBody extends IFlxDestroyable
 	public var 	parent : FlxObject;
 	public var	space  : IFlxSpace;
 	
-	public var 	position : FlxPoint;
+	public var 	x : Float;
+	public var 	y : Float;
 	public var 	last : FlxPoint;
 	public var 	velocity : FlxPoint;
 	public var	maxVelocity : FlxPoint;

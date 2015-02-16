@@ -17,12 +17,13 @@ import flixel.phys.classic.FlxClassicBody;
  */
 class FlxCollide
 {
-	public static function collide(array : Array<FlxClassicBody>)
+	public static function collide(array : Array<FlxClassicBody>, iterationNumber : Int)
 	{
 		FlxNewQuadTree.divisions = 6;
 		var root = FlxNewQuadTree.recycle(0, 0, FlxG.worldBounds.width, FlxG.worldBounds.height);
 		root.load(array, null, null, separate);
-		root.execute();
+		while(iterationNumber-- > 0)
+			root.execute();
 		root.destroy();
 	}
 	
@@ -114,8 +115,8 @@ class FlxCollide
 		
 		//First, get the two object deltas
 		var overlap:Float = 0;
-		var obj1delta:Float = Object1.position.x - Object1.last.x;
-		var obj2delta:Float = Object2.position.x - Object2.last.x;
+		var obj1delta:Float = Object1.x - Object1.last.x;
+		var obj2delta:Float = Object2.x - Object2.last.x;
 		
 		if (obj1delta != obj2delta)
 		{
@@ -123,8 +124,8 @@ class FlxCollide
 			var obj1deltaAbs:Float = (obj1delta > 0) ? obj1delta : -obj1delta;
 			var obj2deltaAbs:Float = (obj2delta > 0) ? obj2delta : -obj2delta;
 			
-			var obj1rect:FlxRect = _firstSeparateFlxRect.set(Object1.position.x - ((obj1delta > 0) ? obj1delta : 0), Object1.last.y, Object1.width + obj1deltaAbs, Object1.height);
-			var obj2rect:FlxRect = _secondSeparateFlxRect.set(Object2.position.x - ((obj2delta > 0) ? obj2delta : 0), Object2.last.y, Object2.width + obj2deltaAbs, Object2.height);
+			var obj1rect:FlxRect = _firstSeparateFlxRect.set(Object1.x - ((obj1delta > 0) ? obj1delta : 0), Object1.last.y, Object1.width + obj1deltaAbs, Object1.height);
+			var obj2rect:FlxRect = _secondSeparateFlxRect.set(Object2.x - ((obj2delta > 0) ? obj2delta : 0), Object2.last.y, Object2.width + obj2deltaAbs, Object2.height);
 			
 			if ((obj1rect.x + obj1rect.width > obj2rect.x) && (obj1rect.x < obj2rect.x + obj2rect.width) && (obj1rect.y + obj1rect.height > obj2rect.y) && (obj1rect.y < obj2rect.y + obj2rect.height))
 			{
@@ -133,28 +134,28 @@ class FlxCollide
 				//If they did overlap (and can), figure out by how much and flip the corresponding flags
 				if (obj1delta > obj2delta)
 				{
-					overlap = Object1.position.x + Object1.width - Object2.position.x;
-					if ((overlap > maxOverlap) /*|| ((Object1.allowCollisions & RIGHT) == 0) || ((Object2.allowCollisions & LEFT) == 0)*/)
+					overlap = Object1.x + Object1.width - Object2.x;
+					if ((overlap > maxOverlap) || ((Object1.allowCollisions & RIGHT) == 0) || ((Object2.allowCollisions & LEFT) == 0))
 					{
 						overlap = 0;
 					}
 					else
-					{/*
+					{
 						Object1.touching |= RIGHT;
-						Object2.touching |= LEFT;*/
+						Object2.touching |= LEFT;
 					}
 				}
 				else if (obj1delta < obj2delta)
 				{
-					overlap = Object1.position.x - Object2.width - Object2.position.x;
-					if ((-overlap > maxOverlap)/* || ((Object1.allowCollisions & LEFT) == 0) || ((Object2.allowCollisions & RIGHT) == 0)*/)
+					overlap = Object1.x - Object2.width - Object2.x;
+					if ((-overlap > maxOverlap) || ((Object1.allowCollisions & LEFT) == 0) || ((Object2.allowCollisions & RIGHT) == 0))
 					{
 						overlap = 0;
 					}
 					else
-					{/*
+					{
 						Object1.touching |= LEFT;
-						Object2.touching |= RIGHT;*/
+						Object2.touching |= RIGHT;
 					}
 				}
 			}
@@ -169,8 +170,8 @@ class FlxCollide
 			if (!obj1immovable && !obj2immovable)
 			{
 				overlap *= 0.5;
-				Object1.position.x = Object1.position.x - overlap;
-				Object2.position.x += overlap;
+				Object1.x = Object1.x - overlap;
+				Object2.x += overlap;
 				
 				var obj1velocity:Float = Math.sqrt((obj2v * obj2v * Object2.mass) / Object1.mass) * ((obj2v > 0) ? 1 : -1);
 				var obj2velocity:Float = Math.sqrt((obj1v * obj1v * Object1.mass) / Object2.mass) * ((obj1v > 0) ? 1 : -1);
@@ -182,12 +183,12 @@ class FlxCollide
 			}
 			else if (!obj1immovable)
 			{
-				Object1.position.x = Object1.position.x - overlap;
+				Object1.x = Object1.x - overlap;
 				Object1.velocity.x = obj2v - obj1v * Object1.elasticity;
 			}
 			else if (!obj2immovable)
 			{
-				Object2.position.x += overlap;
+				Object2.x += overlap;
 				Object2.velocity.x = obj1v - obj2v * Object2.elasticity;
 			}
 			return true;
@@ -227,8 +228,8 @@ class FlxCollide
 
 		//First, get the two object deltas
 		var overlap:Float = 0;
-		var obj1delta:Float = Object1.position.y - Object1.last.y;
-		var obj2delta:Float = Object2.position.y - Object2.last.y;
+		var obj1delta:Float = Object1.y - Object1.last.y;
+		var obj2delta:Float = Object2.y - Object2.last.y;
 		
 		if (obj1delta != obj2delta)
 		{
@@ -236,8 +237,8 @@ class FlxCollide
 			var obj1deltaAbs:Float = (obj1delta > 0) ? obj1delta : -obj1delta;
 			var obj2deltaAbs:Float = (obj2delta > 0) ? obj2delta : -obj2delta;
 			
-			var obj1rect:FlxRect = _firstSeparateFlxRect.set(Object1.position.x, Object1.position.y - ((obj1delta > 0) ? obj1delta : 0), Object1.width, Object1.height + obj1deltaAbs);
-			var obj2rect:FlxRect = _secondSeparateFlxRect.set(Object2.position.x, Object2.position.y - ((obj2delta > 0) ? obj2delta : 0), Object2.width, Object2.height + obj2deltaAbs);
+			var obj1rect:FlxRect = _firstSeparateFlxRect.set(Object1.x, Object1.y - ((obj1delta > 0) ? obj1delta : 0), Object1.width, Object1.height + obj1deltaAbs);
+			var obj2rect:FlxRect = _secondSeparateFlxRect.set(Object2.x, Object2.y - ((obj2delta > 0) ? obj2delta : 0), Object2.width, Object2.height + obj2deltaAbs);
 			
 			if ((obj1rect.x + obj1rect.width > obj2rect.x) && (obj1rect.x < obj2rect.x + obj2rect.width) && (obj1rect.y + obj1rect.height > obj2rect.y) && (obj1rect.y < obj2rect.y + obj2rect.height))
 			{
@@ -246,28 +247,28 @@ class FlxCollide
 				//If they did overlap (and can), figure out by how much and flip the corresponding flags
 				if (obj1delta > obj2delta)
 				{
-					overlap = Object1.position.y + Object1.height - Object2.position.y;
-					if ((overlap > maxOverlap) /*|| ((Object1.allowCollisions & DOWN) == 0) || ((Object2.allowCollisions & UP) == 0)*/)
+					overlap = Object1.y + Object1.height - Object2.y;
+					if ((overlap > maxOverlap) || ((Object1.allowCollisions & DOWN) == 0) || ((Object2.allowCollisions & UP) == 0))
 					{
 						overlap = 0;
 					}
 					else
-					{/*
+					{
 						Object1.touching |= DOWN;
-						Object2.touching |= UP;*/
+						Object2.touching |= UP;
 					}
 				}
 				else if (obj1delta < obj2delta)
 				{
-					overlap = Object1.position.y - Object2.height - Object2.position.y;
-					if ((-overlap > maxOverlap)/* || ((Object1.allowCollisions & UP) == 0) || ((Object2.allowCollisions & DOWN) == 0)*/)
+					overlap = Object1.y - Object2.height - Object2.y;
+					if ((-overlap > maxOverlap) || ((Object1.allowCollisions & UP) == 0) || ((Object2.allowCollisions & DOWN) == 0))
 					{
 						overlap = 0;
 					}
 					else
-					{/*
+					{
 						Object1.touching |= UP;
-						Object2.touching |= DOWN;*/
+						Object2.touching |= DOWN;
 					}
 				}
 			}
@@ -282,8 +283,8 @@ class FlxCollide
 			if (!obj1immovable && !obj2immovable)
 			{
 				overlap *= 0.5;
-				Object1.position.y = Object1.position.y - overlap;
-				Object2.position.y += overlap;
+				Object1.y = Object1.y - overlap;
+				Object2.y += overlap;
 				
 				var obj1velocity:Float = Math.sqrt((obj2v * obj2v * Object2.mass)/Object1.mass) * ((obj2v > 0) ? 1 : -1);
 				var obj2velocity:Float = Math.sqrt((obj1v * obj1v * Object1.mass)/Object2.mass) * ((obj1v > 0) ? 1 : -1);
@@ -295,23 +296,23 @@ class FlxCollide
 			}
 			else if (!obj1immovable)
 			{
-				Object1.position.y = Object1.position.y - overlap;
+				Object1.y = Object1.y - overlap;
 				Object1.velocity.y = obj2v - obj1v*Object1.elasticity;
 				// This is special case code that handles cases like horizontal moving platforms you can ride
-				/*if (Object1.collisonXDrag && Object2.active && Object2.moves && (obj1delta > obj2delta))
+				if (Object1.collisonXDrag && Object2.parent.active && (obj1delta > obj2delta))
 				{
 					Object1.x += Object2.x - Object2.last.x;
-				}*/
+				}
 			}
 			else if (!obj2immovable)
 			{
-				Object2.position.y += overlap;
+				Object2.y += overlap;
 				Object2.velocity.y = obj1v - obj2v*Object2.elasticity;
 				// This is special case code that handles cases like horizontal moving platforms you can ride
-				/*if (Object2.collisonXDrag && Object1.active && Object1.moves && (obj1delta < obj2delta))
+				if (Object2.collisonXDrag && Object1.parent.active && (obj1delta < obj2delta))
 				{
 					Object2.x += Object1.x - Object1.last.x;
-				}*/
+				}
 			}
 			return true;
 		}
@@ -684,10 +685,10 @@ class FlxNewQuadTree extends FlxRect
 	{
 		_list = list;
 		_object = ObjectOrGroup;
-		_objectLeftEdge = _object.position.x;
-		_objectTopEdge = _object.position.y;
-		_objectRightEdge = _object.position.x + _object.width;
-		_objectBottomEdge = _object.position.y + _object.height;
+		_objectLeftEdge = _object.x;
+		_objectTopEdge = _object.y;
+		_objectRightEdge = _object.x + _object.width;
+		_objectBottomEdge = _object.y + _object.height;
 		addObject();
 	}
 	
@@ -892,11 +893,11 @@ class FlxNewQuadTree extends FlxRect
 	private function overlapNode():Bool
 	{
 		//Calculate bulk hull for _object
-		_objectHullX = (_object.position.x < _object.last.x) ? _object.position.x : _object.last.x;
-		_objectHullY = (_object.position.y < _object.last.y) ? _object.position.y : _object.last.y;
-		_objectHullWidth = _object.position.x - _object.last.x;
+		_objectHullX = (_object.x < _object.last.x) ? _object.x : _object.last.x;
+		_objectHullY = (_object.y < _object.last.y) ? _object.y : _object.last.y;
+		_objectHullWidth = _object.x - _object.last.x;
 		_objectHullWidth = _object.width + ((_objectHullWidth > 0) ? _objectHullWidth : -_objectHullWidth);
-		_objectHullHeight = _object.position.y - _object.last.y;
+		_objectHullHeight = _object.y - _object.last.y;
 		_objectHullHeight = _object.height + ((_objectHullHeight > 0) ? _objectHullHeight : -_objectHullHeight);
 		
 		//Walk the list and check for overlaps
@@ -913,11 +914,11 @@ class FlxNewQuadTree extends FlxRect
 			}
 			
 			//Calculate bulk hull for checkObject
-			_checkObjectHullX = (checkObject.position.x < checkObject.last.x) ? checkObject.position.x : checkObject.last.x;
-			_checkObjectHullY = (checkObject.position.y < checkObject.last.y) ? checkObject.position.y : checkObject.last.y;
-			_checkObjectHullWidth = checkObject.position.x - checkObject.last.x;
+			_checkObjectHullX = (checkObject.x < checkObject.last.x) ? checkObject.x : checkObject.last.x;
+			_checkObjectHullY = (checkObject.y < checkObject.last.y) ? checkObject.y : checkObject.last.y;
+			_checkObjectHullWidth = checkObject.x - checkObject.last.x;
 			_checkObjectHullWidth = checkObject.width + ((_checkObjectHullWidth > 0) ? _checkObjectHullWidth : -_checkObjectHullWidth);
-			_checkObjectHullHeight = checkObject.position.y - checkObject.last.y;
+			_checkObjectHullHeight = checkObject.y - checkObject.last.y;
 			_checkObjectHullHeight = checkObject.height + ((_checkObjectHullHeight > 0) ? _checkObjectHullHeight : -_checkObjectHullHeight);
 			
 			//Check for intersection of the two hulls
