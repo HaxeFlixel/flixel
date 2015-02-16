@@ -96,7 +96,7 @@ class FlxAnimation extends FlxBaseAnimation
 	 */
 	public function play(Force:Bool = false, Reversed:Bool = false, Frame:Int = 0):Void
 	{
-		if (!Force && (looped || !finished) && reversed == Reversed)
+		if (!Force && !finished && reversed == Reversed)
 		{
 			paused = false;
 			finished = false;
