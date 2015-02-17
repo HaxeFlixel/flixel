@@ -1361,11 +1361,6 @@ class FlxBitmapText extends FlxSprite
 	
 	private function blitText(posX:Int, posY:Int, isFront:Bool = true, bitmap:BitmapData = null):Void
 	{
-		if (bitmap == null)
-		{
-			bitmap = pixels;
-		}
-		
 		_matrix.identity();
 		_matrix.translate(posX, posY);
 		
