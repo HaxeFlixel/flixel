@@ -19,7 +19,6 @@ import flixel.util.FlxDestroyUtil;
 import haxe.Utf8;
 import openfl.geom.ColorTransform;
 
-// TODO: make pixels accessible in tile render mode also...
 // TODO: use Utf8 util for converting text to upper/lower case
 
 /**
@@ -189,10 +188,6 @@ class FlxBitmapText extends FlxSprite
 	private var textData:Array<Float>;
 	private var textDrawData:Array<Float>;
 	private var borderDrawData:Array<Float>;
-	
-	private var tilePoint:FlxPoint;
-	private var tileMatrix:FlxMatrix;
-	private var bgMatrix:FlxMatrix;
 	#end
 	
 	public var textBitmap:BitmapData;
@@ -219,9 +214,6 @@ class FlxBitmapText extends FlxSprite
 		
 		textDrawData = [];
 		borderDrawData = [];
-		tilePoint = new FlxPoint();
-		tileMatrix = new FlxMatrix();
-		bgMatrix = new FlxMatrix();
 		#end
 	}
 	
@@ -242,9 +234,6 @@ class FlxBitmapText extends FlxSprite
 		textData = null;
 		textDrawData = null;
 		borderDrawData = null;
-		tilePoint = null;
-		tileMatrix = null;
-		bgMatrix = null;
 		#end
 		super.destroy();
 	}
@@ -254,8 +243,11 @@ class FlxBitmapText extends FlxSprite
 	 */
 	override public function drawFrame(Force:Bool = false):Void 
 	{
+		#if FLX_RENDER_TILE
+		Force = true;
+		#end
 		pendingTextBitmapChange = pendingTextBitmapChange || Force;
-		checkPendingChanges(true);
+		checkPendingChanges(false);
 		#if FLX_RENDER_BLIT
 		super.drawFrame(Force);
 		#end
@@ -288,13 +280,13 @@ class FlxBitmapText extends FlxSprite
 	#if FLX_RENDER_BLIT
 	override public function draw():Void 
 	{
-		checkPendingChanges();
+		checkPendingChanges(false);
 		super.draw();
 	}
 	#else
 	override public function draw():Void 
 	{
-		checkPendingChanges();
+		checkPendingChanges(true);
 		
 		var textLength:Int = Std.int(textDrawData.length / 3);
 		var borderLength:Int = Std.int(borderDrawData.length / 3);
@@ -364,56 +356,31 @@ class FlxBitmapText extends FlxSprite
 			
 			getScreenPosition(_point, camera).subtractPoint(offset);
 			
-			updateTrig();
-			
-			// TODO: continue from here...
-			
-			if (background)
-			{
-				// backround tile transformations
-				bgMatrix.identity();
-				bgMatrix.scale(0.1 * frameWidth, 0.1 * frameHeight);
-				
-				if (angle != 0)
-				{
-					bgMatrix.rotateWithTrig(_cosAngle, _sinAngle);
-				}
-			}
-			
-			// matrix for calculation tile position
-			_matrix.identity();
-			_matrix.scale(sx, sy);
-			
-			if (angle != 0)
-			{
-				_matrix.rotateWithTrig(_cosAngle, _sinAngle);
-			}
-			
-			// matrix for calculation tile transformations
-			tileMatrix.identity();
-			tileMatrix.scale(sx, sy);
-			if (angle != 0)
-			{
-				tileMatrix.rotateWithTrig(_cosAngle, _sinAngle);
-			}
-			
 			if (isPixelPerfectRender(camera))
 			{
 				_point.floor();
 			}
 			
-			
+			updateTrig();
 			
 			if (background)
 			{
+				// backround tile transformations
 				currFrame = FlxG.bitmap.whitePixel;
+				_matrix.identity();
+				_matrix.scale(0.1 * frameWidth, 0.1 * frameHeight);
+				_matrix.translate(-ox, -oy);
+				_matrix.scale(sx, sy);
 				
-				bgMatrix.translate(_point.x, _point.y);
+				if (angle != 0)
+				{
+					_matrix.rotateWithTrig(_cosAngle, _sinAngle);
+				}
 				
-				camera.drawPixels(currFrame, null, bgMatrix, bgRed, bgGreen, bgBlue, bgAlpha, blend, antialiasing);
+				_matrix.translate(_point.x + ox, _point.y + oy);
+				camera.drawPixels(currFrame, null, _matrix, bgRed, bgGreen, bgBlue, bgAlpha, blend, antialiasing);
+				camera.drawPixels(currFrame, null, _matrix, bgRed, bgGreen, bgBlue, bgAlpha, blend, antialiasing);
 			}
-			
-			drawItem = camera.getDrawTilesItem(font.parent, true, blend, antialiasing);
 			
 			for (j in 0...borderLength)
 			{
@@ -424,14 +391,17 @@ class FlxBitmapText extends FlxSprite
 				currTileX = borderDrawData[dataPos + 1];
 				currTileY = borderDrawData[dataPos + 2];
 				
-				tilePoint.set(currTileX, currTileY);
-				tilePoint.transform(_matrix);
-				tilePoint.addPoint(_point);
+				currFrame.prepareFrameMatrix(_matrix);
+				_matrix.translate(currTileX - ox, currTileY - oy);
+				_matrix.scale(sx, sy);
+				if (angle != 0)
+				{
+					_matrix.rotateWithTrig(_cosAngle, _sinAngle);
+				}
 				
-				tileMatrix.tx = tilePoint.x;
-				tileMatrix.ty = tilePoint.y;
+				_matrix.translate(_point.x + ox, _point.y + oy);
 				
-				drawItem.setData(currFrame.frame, currFrame.origin, tileMatrix, true, bColor, bAlpha);
+				camera.drawPixels(currFrame, null, _matrix, borderRed, borderGreen, borderBlue, bAlpha, blend, antialiasing);
 			}
 			
 			for (j in 0...textLength)
@@ -443,14 +413,17 @@ class FlxBitmapText extends FlxSprite
 				currTileX = textDrawData[dataPos + 1];
 				currTileY = textDrawData[dataPos + 2];
 				
-				tilePoint.set(currTileX, currTileY);
-				tilePoint.transform(_matrix);
-				tilePoint.addPoint(_point);
+				currFrame.prepareFrameMatrix(_matrix);
+				_matrix.translate(currTileX - ox, currTileY - oy);
+				_matrix.scale(sx, sy);
+				if (angle != 0)
+				{
+					_matrix.rotateWithTrig(_cosAngle, _sinAngle);
+				}
 				
-				tileMatrix.tx = tilePoint.x;
-				tileMatrix.ty = tilePoint.y;
+				_matrix.translate(_point.x + ox, _point.y + oy);
 				
-				drawItem.setDrawData(currFrame.frame, currFrame.origin, tileMatrix, true, tColor, tAlpha);
+				camera.drawPixels(currFrame, null, _matrix, textRed, textGreen, textBlue, tAlpha, blend, antialiasing);
 			}
 			
 			#if !FLX_NO_DEBUG
@@ -469,16 +442,18 @@ class FlxBitmapText extends FlxSprite
 	override private function set_color(Color:FlxColor):FlxColor
 	{
 		super.set_color(Color);
-		// TODO: do i need to set this var to true on tile render mode?
+		#if FLX_RENDER_BLIT
 		pendingTextBitmapChange = true;
+		#end
 		return color;
 	}
 	
 	override private function set_alpha(value:Float):Float
 	{
 		alpha = value;
-		// TODO: do i need to set this var to true on tile render mode?
+		#if FLX_RENDER_BLIT
 		pendingTextBitmapChange = true;
+		#end
 		return value;
 	}
 	#end
@@ -488,8 +463,9 @@ class FlxBitmapText extends FlxSprite
 		if (textColor != value)
 		{
 			textColor = value;
-			// TODO: do i need to set this var to true on tile render mode?
+			#if FLX_RENDER_BLIT
 			pendingPixelsChange = true;
+			#end
 		}
 		
 		return value;
@@ -500,14 +476,20 @@ class FlxBitmapText extends FlxSprite
 		if (useTextColor != value)
 		{
 			useTextColor = value;
-			// TODO: do i need to set this var to true on tile render mode?
+			#if FLX_RENDER_BLIT
 			pendingPixelsChange = true;
+			#end
 		}
 		
 		return value;
 	}
 	
-	// TODO: override calcFrame (maybe)
+	#if FLX_RENDER_TILE
+	override private function calcFrame(RunOnCpp:Bool = false):Void 
+	{
+		drawFrame(RunOnCpp);
+	}
+	#end
 	
 	private function set_text(value:String):String 
 	{
@@ -1347,7 +1329,7 @@ class FlxBitmapText extends FlxSprite
 		}
 		
 		isFront = true;
-		drawText(0, 0, isFront, null, useTiles);
+		drawText(0, 0, isFront, bitmap, useTiles);
 		
 		if (!useTiles)
 		{
@@ -1357,6 +1339,8 @@ class FlxBitmapText extends FlxSprite
 		#if FLX_RENDER_BLIT
 		dirty = true;
 		#end
+		
+		pendingPixelsChange = false;
 	}
 	
 	private function drawText(posX:Int, posY:Int, isFront:Bool = true, bitmap:BitmapData = null, useTiles:Bool = false):Void
@@ -1600,8 +1584,9 @@ class FlxBitmapText extends FlxSprite
 		if (background != value)
 		{
 			background = value;
-			// TODO: do i need to set this var to true on tile render mode?
+			#if FLX_RENDER_BLIT
 			pendingPixelsChange = true;
+			#end
 		}
 		
 		return value;
@@ -1612,8 +1597,9 @@ class FlxBitmapText extends FlxSprite
 		if (backgroundColor != value)
 		{
 			backgroundColor = value;
-			// TODO: do i need to set this var to true on tile render mode?
+			#if FLX_RENDER_BLIT
 			pendingPixelsChange = true;
+			#end
 		}
 		
 		return value;
@@ -1635,8 +1621,9 @@ class FlxBitmapText extends FlxSprite
 		if (borderColor != value)
 		{
 			borderColor = value;
-			// TODO: do i need to set this var to true on tile render mode?
+			#if FLX_RENDER_BLIT
 			pendingPixelsChange = true;
+			#end
 		}
 		
 		return value;
@@ -1713,13 +1700,13 @@ class FlxBitmapText extends FlxSprite
 	
 	override private function get_width():Float 
 	{
-		checkPendingChanges();
+		checkPendingChanges(true);
 		return super.get_width();
 	}
 	
 	override private function get_height():Float 
 	{
-		checkPendingChanges();
+		checkPendingChanges(true);
 		return super.get_height();
 	}
 }
