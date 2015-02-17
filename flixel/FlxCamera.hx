@@ -502,49 +502,14 @@ class FlxCamera extends FlxBasic
 	
 	public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:Matrix, cr:Float = 1.0, cg:Float = 1.0, cb:Float = 1.0, ca:Float = 1.0, blend:BlendMode = null, smoothing:Bool = false):Void
 	{
-		// TODO: optimize this math, since _helper matrix contains only scaling
 		_helperMatrix.copyFrom(matrix);
-		_helperMatrix.concat(_transform);
+	//	_helperMatrix.concat(_transform);
+		concatHelper(matrix);
 		var isColored:Bool = (cr != 1.0) || (cg != 1.0) || (cb != 1.0);
 		var drawItem:FlxDrawTilesItem = startQuadBatch(frame.parent, isColored, blend, smoothing);
 		drawItem.setData(frame.frame, _helperMatrix, isColored, cr, cg, cb, ca);
 	}
-	/*
-	public function identity():Void 
-	{	
-		a = 1;
-		b = 0;
-		c = 0;
-		d = 1;
-		tx = 0;
-		ty = 0;	
-	}
 	
-	public function scale(sx:Float, sy:Float) 
-	{	
-		a *= sx;
-		b *= sy;
-		c *= sx;
-		d *= sy;
-		tx *= sx;
-		ty *= sy;
-	}
-	
-	public function concat(m:Matrix):Void 
-	{	
-		var a1 = a * m.a + b * m.c;
-		b = a * m.b + b * m.d;
-		a = a1;
-
-		var c1 = c * m.a + d * m.c;
-		d = c * m.b + d * m.d;
-		c = c1;
-		
-		var tx1 = tx * m.a + ty * m.c + m.tx;
-		ty = tx * m.b + ty * m.d + m.ty;
-		tx = tx1;
-	}
-	*/
 	public function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle, destPoint:Point, cr:Float = 1.0, cg:Float = 1.0, cb:Float = 1.0, ca:Float = 1.0, blend:BlendMode = null, smoothing:Bool = false):Void
 	{
 		_helperMatrix.identity();
@@ -552,6 +517,21 @@ class FlxCamera extends FlxBasic
 		var isColored:Bool = (cr != 1.0) || (cg != 1.0) || (cb != 1.0);
 		var drawItem:FlxDrawTilesItem = startQuadBatch(frame.parent, isColored, blend, smoothing);
 		drawItem.setData(frame.frame, _helperMatrix, isColored, cr, cg, cb, ca);
+	}
+	
+	/**
+	 * Just a helper method which applies camera's scale (the only transfromation we make on camera, at this time)
+	 */
+	private inline function concatHelper(m:Matrix):Void 
+	{	
+		_helperMatrix.a = totalScaleX * m.a;
+		_helperMatrix.b = totalScaleX * m.b;
+		
+		_helperMatrix.c = totalScaleY * m.c;
+		_helperMatrix.d = totalScaleY * m.d;
+		
+		_helperMatrix.tx = totalScaleX * m.tx;
+		_helperMatrix.ty = totalScaleY * m.ty;
 	}
 #else
 	public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:Matrix, cr:Float = 1.0, cg:Float = 1.0, cb:Float = 1.0, ca:Float = 1.0, blend:BlendMode = null, smoothing:Bool = false):Void
