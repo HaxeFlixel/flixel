@@ -533,6 +533,11 @@ class FlxCamera extends FlxBasic
 		_helperMatrix.tx = totalScaleX * m.tx;
 		_helperMatrix.ty = totalScaleY * m.ty;
 	}
+	
+	public function drawVertex():Void
+	{
+		
+	}
 #else
 	public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:Matrix, cr:Float = 1.0, cg:Float = 1.0, cb:Float = 1.0, ca:Float = 1.0, blend:BlendMode = null, smoothing:Bool = false):Void
 	{
@@ -542,6 +547,11 @@ class FlxCamera extends FlxBasic
 	public function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle, destPoint:Point, cr:Float = 1.0, cg:Float = 1.0, cb:Float = 1.0, ca:Float = 1.0, blend:BlendMode = null, smoothing:Bool = false):Void
 	{
 		buffer.copyPixels(pixels, sourceRect, destPoint, null, null, true);
+	}
+	
+	public function drawVertex():Void
+	{
+		
 	}
 #end
 	
