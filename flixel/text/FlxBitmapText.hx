@@ -578,7 +578,7 @@ class FlxBitmapText extends FlxSprite
 		var tabWidth:Float = spaceWidth * numSpacesInTab;
 		
 		var lineLength:Int = Utf8.length(str);	// lenght of the current line
-		var lineWidth:Float = Math.abs(font.minOffsetX);
+		var lineWidth:Float = font.minOffsetX;
 		
 		var charCode:Int;						// current character in word
 		var charWidth:Float = 0;				// the width of current character
@@ -650,7 +650,7 @@ class FlxBitmapText extends FlxSprite
 		var spaceWidth:Float = font.spaceWidth;
 		var tabWidth:Float = spaceWidth * numSpacesInTab;
 		
-		var startX:Float = Math.abs(font.minOffsetX);
+		var startX:Float = font.minOffsetX;
 		
 		for (line in _lines)
 		{
@@ -829,7 +829,7 @@ class FlxBitmapText extends FlxSprite
 		var spaceWidth:Float = font.spaceWidth;
 		var tabWidth:Float = spaceWidth * numSpacesInTab;
 		
-		var startX:Float = Math.abs(font.minOffsetX);
+		var startX:Float = font.minOffsetX;
 		
 		if (numWords > 0)
 		{
@@ -937,7 +937,7 @@ class FlxBitmapText extends FlxSprite
 		var spaceWidth:Float = font.spaceWidth;
 		var tabWidth:Float = spaceWidth * numSpacesInTab;
 		
-		var startX:Float = Math.abs(font.minOffsetX);
+		var startX:Float = font.minOffsetX;
 		
 		if (numWords > 0)
 		{
@@ -1074,8 +1074,8 @@ class FlxBitmapText extends FlxSprite
 			lineWidth = _linesWidth[i];
 			
 			// LEFT
-			ox = Std.int(Math.abs(font.minOffsetX));
-			oy = Std.int(i * (font.lineHeight + lineSpacing)) + padding;
+			ox = font.minOffsetX;
+			oy = i * (font.lineHeight + lineSpacing) + padding;
 			
 			if (alignment == FlxTextAlign.CENTER) 
 			{
@@ -1488,7 +1488,7 @@ class FlxBitmapText extends FlxSprite
 	{
 		if (lineSpacing != value)
 		{
-			lineSpacing = Std.int(Math.abs(value));
+			lineSpacing = (value >= 0) ? value : -value;
 			pendingTextBitmapChange = true;
 		}
 		
@@ -1497,7 +1497,7 @@ class FlxBitmapText extends FlxSprite
 	
 	private function set_letterSpacing(value:Int):Int
 	{
-		var tmp:Int = Std.int(Math.abs(value));
+		var tmp:Int = (value >= 0) ? value : -value;
 		
 		if (tmp != letterSpacing)
 		{

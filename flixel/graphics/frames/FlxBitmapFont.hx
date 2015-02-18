@@ -197,6 +197,7 @@ class FlxBitmapFont extends FlxFramesCollection
 		var glyph:String;
 		var charCode:Int;
 		var xOffset:Int, yOffset:Int, xAdvance:Int;
+		var xOffsetAbs:Int;
 		var glyphWidth:Int, glyphHeight:Int;
 		
 		var chars = fast.node.chars;
@@ -216,7 +217,9 @@ class FlxBitmapFont extends FlxFramesCollection
 			
 			offset = FlxPoint.get(xOffset, yOffset);
 			
-			font.minOffsetX = (font.minOffsetX > xOffset) ? xOffset : font.minOffsetX;
+			xOffsetAbs = (xOffset >= 0) ? xOffset : -xOffset;
+			
+			font.minOffsetX = (font.minOffsetX > xOffsetAbs) ? xOffsetAbs : font.minOffsetX;
 			
 			charCode = -1;
 			glyph = null;
