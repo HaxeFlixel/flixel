@@ -1381,7 +1381,15 @@ class FlxBitmapText extends FlxSprite
 		cTrans.blueMultiplier = colorToApply.blueFloat;
 		cTrans.alphaMultiplier = colorToApply.alphaFloat;
 		
-		bitmap.draw(textBitmap, _matrix, cTrans);
+		if (isFront && !useTextColor)
+		{
+			_flashRect.setTo(0, 0, textBitmap.width, textBitmap.height);
+			bitmap.copyPixels(textBitmap, _flashRect, _flashPointZero, null, null, true);
+		}
+		else
+		{
+			bitmap.draw(textBitmap, _matrix, cTrans);
+		}
 	}
 	
 	private function tileText(posX:Int, posY:Int, isFront:Bool = true):Void
