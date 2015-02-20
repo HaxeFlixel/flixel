@@ -920,7 +920,9 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 							debugTile = _debugTileSolid; 
 						}
 						
+						offset.addToFlash(_flashPoint);
 						Buffer.pixels.copyPixels(debugTile, _debugRect, _flashPoint, null, null, true);
+						offset.subtractFromFlash(_flashPoint);
 					}
 					#end
 				#else
