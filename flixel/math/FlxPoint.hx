@@ -213,6 +213,34 @@ class FlxPoint implements IFlxPooled
 		FlashPoint.y = y;
 		return FlashPoint;
 	}
+
+	/**
+	 * Helper function, just increases the values of the specified Flash point by the values of this point.
+	 * 
+	 * @param	Point	Any Point.
+	 * @return	A reference to the altered point parameter.
+	 */
+	public inline function addToFlash(FlashPoint:Point):Point
+	{
+		FlashPoint.x += x;
+		FlashPoint.y += y;
+
+		return FlashPoint;
+	}
+
+	/**
+	 * Helper function, just decreases the values of the specified Flash point by the values of this point.
+	 * 
+	 * @param	Point	Any Point.
+	 * @return	A reference to the altered point parameter.
+	 */
+	public inline function subtractFromFlash(FlashPoint:Point):Point
+	{
+		FlashPoint.x -= x;
+		FlashPoint.y -= y;
+
+		return FlashPoint;
+	}
 	
 	/**
 	 * Returns true if this point is within the given rectangular block
