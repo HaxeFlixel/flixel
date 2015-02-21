@@ -61,6 +61,12 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 * Anything other than the default is very slow with blitting!
 	 */
 	public var scale(default, null):FlxPoint;
+
+	/**
+	 * Use to offset the drawing position of the tilemap,
+	 * just like FlxSprite.
+	 */
+	public var offset(default, null):FlxPoint;
 	
 	/**
 	 * Rendering variables.
@@ -160,6 +166,8 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		
 		scale = new FlxCallbackPoint(setScaleXCallback, setScaleYCallback, setScaleXYCallback);
 		scale.set(1, 1);
+
+		offset = FlxPoint.get();
 		
 		FlxG.signals.gameResized.add(onGameResize);
 	}
@@ -194,6 +202,8 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		
 		// need to destroy FlxCallbackPoints
 		scale = FlxDestroyUtil.destroy(scale);
+
+		offset = FlxDestroyUtil.put(offset);
 		
 		colorTransform = null;
 		
@@ -417,7 +427,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 			buffer = _buffers[i];
 			
 			#if FLX_RENDER_BLIT
-			getScreenPosition(_point, camera).add(buffer.x, buffer.y);
+			getScreenPosition(_point, camera).subtractPoint(offset).add(buffer.x, buffer.y);
 			buffer.dirty = buffer.dirty || _point.x > 0 || (_point.y > 0) || (_point.x + buffer.width < camera.width) || (_point.y + buffer.height < camera.height);
 			
 			if (buffer.dirty)
@@ -425,7 +435,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 				drawTilemap(buffer, camera);
 			}
 			
-			getScreenPosition(_point, camera).add(buffer.x, buffer.y).copyToFlash(_flashPoint);
+			getScreenPosition(_point, camera).subtractPoint(offset).add(buffer.x, buffer.y).copyToFlash(_flashPoint);
 			buffer.draw(camera, _flashPoint, scale.x, scale.y);
 			#else			
 			drawTilemap(buffer, camera);
@@ -813,7 +823,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	#if FLX_RENDER_BLIT
 		Buffer.fill();
 	#else
-		getScreenPosition(_point, Camera).copyToFlash(_helperPoint);
+		getScreenPosition(_point, Camera).subtractPoint(offset).copyToFlash(_helperPoint);
 		
 		_helperPoint.x *= Camera.totalScaleX;
 		_helperPoint.y *= Camera.totalScaleY;
@@ -839,8 +849,8 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		var isColored:Bool = ((alpha != 1) || (color != 0xffffff));
 		
 		// Copy tile images into the tile buffer
-		_point.x = (Camera.scroll.x * scrollFactor.x) - x; //modified from getScreenPosition()
-		_point.y = (Camera.scroll.y * scrollFactor.y) - y;
+		_point.x = (Camera.scroll.x * scrollFactor.x) - x - offset.x; //modified from getScreenPosition()
+		_point.y = (Camera.scroll.y * scrollFactor.y) - y - offset.y;
 		
 		var screenXInTiles:Int = Math.floor(_point.x / _scaledTileWidth);
 		var screenYInTiles:Int = Math.floor(_point.y / _scaledTileHeight);
@@ -910,7 +920,9 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 							debugTile = _debugTileSolid; 
 						}
 						
+						offset.addToFlash(_flashPoint);
 						Buffer.pixels.copyPixels(debugTile, _debugRect, _flashPoint, null, null, true);
+						offset.subtractFromFlash(_flashPoint);
 					}
 					#end
 				#else
