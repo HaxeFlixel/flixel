@@ -99,7 +99,7 @@ class FlxPoint implements IFlxPooled
 	}
 	
 	/**
-	 * Adds the to the coordinates of this point.
+	 * Adds to the coordinates of this point.
 	 * 
 	 * @param	X	Amount to add to x
 	 * @param	Y	Amount to add to y
@@ -127,7 +127,7 @@ class FlxPoint implements IFlxPooled
 	}
 	
 	/**
-	 * Adds the to the coordinates of this point.
+	 * Subtracts from the coordinates of this point.
 	 * 
 	 * @param	X	Amount to subtract from x
 	 * @param	Y	Amount to subtract from y
@@ -141,7 +141,7 @@ class FlxPoint implements IFlxPooled
 	}
 	
 	/**
-	 * Adds the coordinates of another point to the coordinates of this point.
+	 * Subtracts the coordinates of another point from the coordinates of this point.
 	 * 
 	 * @param	point	The point to subtract from this point
 	 * @return	This point.
@@ -212,6 +212,34 @@ class FlxPoint implements IFlxPooled
 		
 		FlashPoint.x = x;
 		FlashPoint.y = y;
+		return FlashPoint;
+	}
+
+	/**
+	 * Helper function, just increases the values of the specified Flash point by the values of this point.
+	 * 
+	 * @param	Point	Any Point.
+	 * @return	A reference to the altered point parameter.
+	 */
+	public inline function addToFlash(FlashPoint:Point):Point
+	{
+		FlashPoint.x += x;
+		FlashPoint.y += y;
+
+		return FlashPoint;
+	}
+
+	/**
+	 * Helper function, just decreases the values of the specified Flash point by the values of this point.
+	 * 
+	 * @param	Point	Any Point.
+	 * @return	A reference to the altered point parameter.
+	 */
+	public inline function subtractFromFlash(FlashPoint:Point):Point
+	{
+		FlashPoint.x -= x;
+		FlashPoint.y -= y;
+
 		return FlashPoint;
 	}
 	
