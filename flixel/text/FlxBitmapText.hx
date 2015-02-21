@@ -48,7 +48,7 @@ class FlxBitmapText extends FlxSprite
 	/**
 	 * Helper array which contains width of each displayed lines.
 	 */
-	private var _linesWidth:Array<Float> = [];
+	private var _linesWidth:Array<Int> = [];
 	
 	/**
 	 * Specifies how the text field should align text.
@@ -96,17 +96,17 @@ class FlxBitmapText extends FlxSprite
 	/**
 	 * Width of the text in this text field.
 	 */
-	public var textWidth(get, null):Float;
+	public var textWidth(get, null):Int;
 	
 	/**
 	 * Height of the text in this text field.
 	 */
-	public var textHeight(get, null):Float;
+	public var textHeight(get, null):Int;
 	
 	/**
 	 * Height of the single line of text (without lineSpacing).
 	 */
-	public var lineHeight(get, null):Float;
+	public var lineHeight(get, null):Int;
 	
 	/**
 	 * Number of space characters in one tab.
@@ -176,9 +176,9 @@ class FlxBitmapText extends FlxSprite
 	 * The width of the TextField object used for bitmap generation for this FlxText object.
 	 * Use it when you want to change the visible width of text. Enables autoSize if <= 0.
 	 */
-	public var fieldWidth(get, set):Float;
+	public var fieldWidth(get, set):Int;
 	
-	private var _fieldWidth:Float;
+	private var _fieldWidth:Int;
 	
 	private var pendingTextChange:Bool = true;
 	private var pendingTextBitmapChange:Bool = true;
@@ -203,7 +203,7 @@ class FlxBitmapText extends FlxSprite
 	{
 		super();
 		
-		fieldWidth = width = 2;
+		width = fieldWidth = 2;
 		alpha = 1;
 		
 		this.font = (font == null) ? FlxBitmapFont.getDefaultFont() : font;
@@ -537,8 +537,8 @@ class FlxBitmapText extends FlxSprite
 	 */
 	private function computeTextSize():Void 
 	{
-		var txtWidth:Int = Math.ceil(textWidth);
-		var txtHeight:Int = Math.ceil(textHeight) + 2 * padding;
+		var txtWidth:Int = textWidth;
+		var txtHeight:Int = textHeight + 2 * padding;
 		
 		if (autoSize)
 		{
@@ -546,7 +546,7 @@ class FlxBitmapText extends FlxSprite
 		}
 		else
 		{
-			txtWidth = Math.ceil(fieldWidth);
+			txtWidth = fieldWidth;
 		}
 		
 		frameWidth = txtWidth;
@@ -559,7 +559,7 @@ class FlxBitmapText extends FlxSprite
 	 * @param	lineIndex	index of the line in _lines array
 	 * @return	The width of the line
 	 */
-	public function getLineWidth(lineIndex:Int):Float
+	public function getLineWidth(lineIndex:Int):Int
 	{
 		if (lineIndex < 0 || lineIndex >= _lines.length)
 		{
@@ -575,16 +575,16 @@ class FlxBitmapText extends FlxSprite
 	 * @param	str	String to calculate width for
 	 * @return	The width of result bitmap text.
 	 */
-	public function getStringWidth(str:String):Float
+	public function getStringWidth(str:String):Int
 	{
-		var spaceWidth:Float = font.spaceWidth;
-		var tabWidth:Float = spaceWidth * numSpacesInTab;
+		var spaceWidth:Int = font.spaceWidth;
+		var tabWidth:Int = spaceWidth * numSpacesInTab;
 		
 		var lineLength:Int = Utf8.length(str);	// lenght of the current line
-		var lineWidth:Float = font.minOffsetX;
+		var lineWidth:Int = font.minOffsetX;
 		
 		var charCode:Int;						// current character in word
-		var charWidth:Float = 0;				// the width of current character
+		var charWidth:Int = 0;				// the width of current character
 		
 		var widthPlusOffset:Int = 0;
 		var glyphFrame:FlxGlyphFrame;
@@ -610,7 +610,7 @@ class FlxBitmapText extends FlxSprite
 					
 					if (c == (lineLength - 1))
 					{
-						widthPlusOffset = Math.ceil(glyphFrame.offset.x + glyphFrame.frame.width);
+						widthPlusOffset = Std.int(glyphFrame.offset.x + glyphFrame.frame.width);
 						if (widthPlusOffset > charWidth)
 						{
 							charWidth = widthPlusOffset;
@@ -645,15 +645,15 @@ class FlxBitmapText extends FlxSprite
 		
 		var c:Int;					// char index
 		var charCode:Int;			// code for the current character in word
-		var charWidth:Float = 0;	// the width of current character
+		var charWidth:Int = 0;	// the width of current character
 		
 		var subLine:Utf8;			// current subline to assemble
-		var subLineWidth:Float;		// the width of current subline
+		var subLineWidth:Int;		// the width of current subline
 		
-		var spaceWidth:Float = font.spaceWidth;
-		var tabWidth:Float = spaceWidth * numSpacesInTab;
+		var spaceWidth:Int = font.spaceWidth;
+		var tabWidth:Int = spaceWidth * numSpacesInTab;
 		
-		var startX:Float = font.minOffsetX;
+		var startX:Int = font.minOffsetX;
 		
 		for (line in _lines)
 		{
@@ -816,23 +816,23 @@ class FlxBitmapText extends FlxSprite
 		var numWords:Int = words.length;	// number of words in the current line
 		var w:Int;							// word index in the current line
 		var word:String;					// current word to process
-		var wordWidth:Float;				// total width of current word
+		var wordWidth:Int;					// total width of current word
 		var wordLength:Int;					// number of letters in current word
 		
 		var isSpaceWord:Bool = false; 		// whether current word consists of spaces or not
 		
 		var charCode:Int;
-		var charWidth:Float = 0;			// the width of current character
+		var charWidth:Int = 0;				// the width of current character
 		
 		var subLines:Array<String> = [];	// helper array for subdividing lines
 		
 		var subLine:String;					// current subline to assemble
-		var subLineWidth:Float;				// the width of current subline
+		var subLineWidth:Int;				// the width of current subline
 		
-		var spaceWidth:Float = font.spaceWidth;
-		var tabWidth:Float = spaceWidth * numSpacesInTab;
+		var spaceWidth:Int = font.spaceWidth;
+		var tabWidth:Int = spaceWidth * numSpacesInTab;
 		
-		var startX:Float = font.minOffsetX;
+		var startX:Int = font.minOffsetX;
 		
 		if (numWords > 0)
 		{
@@ -863,7 +863,7 @@ class FlxBitmapText extends FlxSprite
 					}
 					else
 					{
-						charWidth = (font.glyphs.exists(charCode)) ? font.glyphs.get(charCode).xAdvance : 0;
+						charWidth = font.glyphs.exists(charCode) ? font.glyphs.get(charCode).xAdvance : 0;
 					}
 					
 					wordWidth += charWidth;
@@ -929,18 +929,18 @@ class FlxBitmapText extends FlxSprite
 		
 		var charCode:Int;
 		var c:Int;							// char index
-		var charWidth:Float = 0;			// the width of current character
+		var charWidth:Int = 0;				// the width of current character
 		
 		var subLines:Array<String> = [];	// helper array for subdividing lines
 		
 		var subLine:String;					// current subline to assemble
 		var subLineUtf8:Utf8;
-		var subLineWidth:Float;				// the width of current subline
+		var subLineWidth:Int;				// the width of current subline
 		
-		var spaceWidth:Float = font.spaceWidth;
-		var tabWidth:Float = spaceWidth * numSpacesInTab;
+		var spaceWidth:Int = font.spaceWidth;
+		var tabWidth:Int = spaceWidth * numSpacesInTab;
 		
-		var startX:Float = font.minOffsetX;
+		var startX:Int = font.minOffsetX;
 		
 		if (numWords > 0)
 		{
@@ -1067,7 +1067,7 @@ class FlxBitmapText extends FlxSprite
 		
 		var numLines:Int = _lines.length;
 		var line:String;
-		var lineWidth:Float;
+		var lineWidth:Int;
 		
 		var ox:Int, oy:Int;
 		
@@ -1086,7 +1086,7 @@ class FlxBitmapText extends FlxSprite
 			}
 			else if (alignment == FlxTextAlign.RIGHT) 
 			{
-				ox += (frameWidth - Std.int(lineWidth)) - padding;
+				ox += (frameWidth - lineWidth) - padding;
 			}
 			else	// LEFT
 			{
@@ -1435,7 +1435,7 @@ class FlxBitmapText extends FlxSprite
 		pendingTextBitmapChange = true;
 	}
 	
-	private function get_fieldWidth():Float
+	private function get_fieldWidth():Int
 	{
 		return (autoSize) ? textWidth : _fieldWidth;
 	}
@@ -1443,10 +1443,9 @@ class FlxBitmapText extends FlxSprite
 	/**
 	 * Sets the width of the text field. If the text does not fit, it will spread on multiple lines.
 	 */
-	private function set_fieldWidth(value:Float):Float
+	private function set_fieldWidth(value:Int):Int
 	{
-		value = Std.int(value);
-		value = Math.max(1, value);
+		value = (value > 1) ? value : 1;
 		
 		if (value != _fieldWidth)
 		{
@@ -1677,29 +1676,29 @@ class FlxBitmapText extends FlxSprite
 	 * 
 	 * @return	text width.
 	 */
-	private function get_textWidth():Float
+	private function get_textWidth():Int
 	{
-		var max:Float = 0;
+		var max:Int = 0;
 		var numLines:Int = _lines.length;
-		var lineWidth:Float;
+		var lineWidth:Int;
 		_linesWidth = [];
 		
 		for (i in 0...numLines)
 		{
 			lineWidth = getLineWidth(i);
 			_linesWidth[i] = lineWidth;
-			max = Math.max(max, lineWidth);
+			max = (max > lineWidth) ? max : lineWidth;
 		}
 		
 		return max;
 	}
 	
-	private function get_textHeight():Float
+	private function get_textHeight():Int
 	{
 		return (lineHeight + lineSpacing) * _lines.length - lineSpacing;
 	}
 	
-	private function get_lineHeight():Float
+	private function get_lineHeight():Int
 	{
 		return font.lineHeight;
 	}
