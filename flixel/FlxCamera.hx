@@ -315,7 +315,7 @@ class FlxCamera extends FlxBasic
 	public var debugLayer:Sprite;
 	#end
 	
-	// TODO: use this transform matrix later...
+	// TODO: use this transform matrix later in hardware accelerated mode...
 	private var _transform:Matrix;
 	
 	private var _helperMatrix:Matrix = new Matrix();
@@ -502,12 +502,9 @@ class FlxCamera extends FlxBasic
 	
 	public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:Matrix, cr:Float = 1.0, cg:Float = 1.0, cb:Float = 1.0, ca:Float = 1.0, blend:BlendMode = null, smoothing:Bool = false):Void
 	{
-		_helperMatrix.copyFrom(matrix);
-	//	_helperMatrix.concat(_transform);
-		concatHelper(matrix);
 		var isColored:Bool = (cr != 1.0) || (cg != 1.0) || (cb != 1.0);
 		var drawItem:FlxDrawTilesItem = startQuadBatch(frame.parent, isColored, blend, smoothing);
-		drawItem.setData(frame.frame, _helperMatrix, isColored, cr, cg, cb, ca);
+		drawItem.setData(frame.frame, matrix, isColored, cr, cg, cb, ca);
 	}
 	
 	public function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle, destPoint:Point, cr:Float = 1.0, cg:Float = 1.0, cb:Float = 1.0, ca:Float = 1.0, blend:BlendMode = null, smoothing:Bool = false):Void
@@ -517,21 +514,6 @@ class FlxCamera extends FlxBasic
 		var isColored:Bool = (cr != 1.0) || (cg != 1.0) || (cb != 1.0);
 		var drawItem:FlxDrawTilesItem = startQuadBatch(frame.parent, isColored, blend, smoothing);
 		drawItem.setData(frame.frame, _helperMatrix, isColored, cr, cg, cb, ca);
-	}
-	
-	/**
-	 * Just a helper method which applies camera's scale (the only transfromation we make on camera, at this time)
-	 */
-	private inline function concatHelper(m:Matrix):Void 
-	{	
-		_helperMatrix.a = totalScaleX * m.a;
-		_helperMatrix.b = totalScaleX * m.b;
-		
-		_helperMatrix.c = totalScaleY * m.c;
-		_helperMatrix.d = totalScaleY * m.d;
-		
-		_helperMatrix.tx = totalScaleX * m.tx;
-		_helperMatrix.ty = totalScaleY * m.ty;
 	}
 	
 	public function drawVertex():Void
@@ -673,6 +655,7 @@ class FlxCamera extends FlxBasic
 		}
 		
 		_transform = null;
+		_helperMatrix = null;
 	#end
 		
 		scroll = FlxDestroyUtil.put(scroll);
@@ -924,11 +907,17 @@ class FlxCamera extends FlxBasic
 			canvas.x = -0.5 * width * (scaleX - initialZoom) * FlxG.scaleMode.scale.x;
 			canvas.y = -0.5 * height * (scaleY - initialZoom) * FlxG.scaleMode.scale.y;
 			
+			canvas.scaleX = totalScaleX;
+			canvas.scaleY = totalScaleY;
+			
 			#if !FLX_NO_DEBUG
 			if (debugLayer != null)
 			{
 				debugLayer.x = canvas.x;
 				debugLayer.y = canvas.y;
+				
+				debugLayer.scaleX = totalScaleX;
+				debugLayer.scaleY = totalScaleY;
 			}
 			#end
 		}
