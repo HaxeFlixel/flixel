@@ -833,9 +833,8 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		var hackScaleX:Float = tileScaleHack * scaleX;
 		var hackScaleY:Float = tileScaleHack * scaleY;
 		
-		var drawItem:FlxDrawTilesItem;
+		var drawItem:FlxDrawTilesItem = Camera.startQuadBatch(graphic, isColored, blend);
 	#end
-	
 		var isColored:Bool = ((alpha != 1) || (color != 0xffffff));
 		
 		// Copy tile images into the tile buffer
@@ -889,8 +888,6 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 					frame = tile.frame;
 					
 				#if FLX_RENDER_BLIT
-				// TODO: check this change later...
-				//	Buffer.pixels.copyPixels(frame.getBitmap(), _flashRect, _flashPoint, null, null, true);
 					frame.paint(Buffer.pixels, _flashPoint, true);
 					
 					#if !FLX_NO_DEBUG
@@ -929,7 +926,6 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 					_matrix.scale(hackScaleX, hackScaleY);
 					_matrix.translate(drawX, drawY);
 					
-					drawItem = Camera.startQuadBatch(graphic, isColored, blend);
 					drawItem.setData(frame.frame, _matrix, color.redFloat, color.greenFloat, color.blueFloat, alpha);
 				#end
 				}
