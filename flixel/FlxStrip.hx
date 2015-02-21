@@ -135,9 +135,6 @@ class FlxStrip extends FlxSprite
 			#if FLX_RENDER_TILE
 			drawItem = camera.getDrawTrianglesItem(graphic, antialiasing, numColors > 0, _blendInt);
 			
-			cameraBounds.width *= camera.totalScaleX;
-			cameraBounds.height *= camera.totalScaleY;
-			
 			vs = drawItem.vertices;
 			idx = drawItem.indices;
 			uvt = drawItem.uvt;
@@ -159,11 +156,6 @@ class FlxStrip extends FlxSprite
 			while (i < verticesLength)
 			{
 				tempX = _point.x + vertices[i]; tempY = _point.y + vertices[i + 1];
-				
-				#if FLX_RENDER_TILE
-				tempX *= camera.totalScaleX;
-				tempY *= camera.totalScaleY;
-				#end
 				
 				vs[currentVertexPosition++] = tempX;
 				vs[currentVertexPosition++] = tempY;

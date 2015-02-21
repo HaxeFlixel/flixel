@@ -930,7 +930,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 					_matrix.translate(drawX, drawY);
 					
 					drawItem = Camera.startQuadBatch(graphic, isColored, blend);
-					drawItem.setData(frame.frame, _matrix, isColored, color.redFloat, color.greenFloat, color.blueFloat, alpha);
+					drawItem.setData(frame.frame, _matrix, color.redFloat, color.greenFloat, color.blueFloat, alpha);
 				#end
 				}
 				

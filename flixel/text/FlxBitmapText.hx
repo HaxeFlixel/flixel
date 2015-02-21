@@ -382,8 +382,9 @@ class FlxBitmapText extends FlxSprite
 				
 				_matrix.translate(_point.x + ox, _point.y + oy);
 				camera.drawPixels(currFrame, null, _matrix, bgRed, bgGreen, bgBlue, bgAlpha, blend, antialiasing);
-				camera.drawPixels(currFrame, null, _matrix, bgRed, bgGreen, bgBlue, bgAlpha, blend, antialiasing);
 			}
+			
+			drawItem = camera.startQuadBatch(font.parent, true, blend, antialiasing);
 			
 			for (j in 0...borderLength)
 			{
@@ -404,7 +405,7 @@ class FlxBitmapText extends FlxSprite
 				
 				_matrix.translate(_point.x + ox, _point.y + oy);
 				
-				camera.drawPixels(currFrame, null, _matrix, borderRed, borderGreen, borderBlue, bAlpha, blend, antialiasing);
+				drawItem.setData(currFrame.frame, _matrix, borderRed, borderGreen, borderBlue, bAlpha);
 			}
 			
 			for (j in 0...textLength)
@@ -426,7 +427,7 @@ class FlxBitmapText extends FlxSprite
 				
 				_matrix.translate(_point.x + ox, _point.y + oy);
 				
-				camera.drawPixels(currFrame, null, _matrix, textRed, textGreen, textBlue, tAlpha, blend, antialiasing);
+				drawItem.setData(currFrame.frame, _matrix, textRed, textGreen, textBlue, tAlpha);
 			}
 			
 			#if !FLX_NO_DEBUG
