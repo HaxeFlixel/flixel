@@ -190,7 +190,10 @@ class FlxBitmapText extends FlxSprite
 	private var borderDrawData:Array<Float>;
 	#end
 	
-	public var textBitmap:BitmapData;
+	/**
+	 * Helper bitmap buffer for text pixels but without any color transformations
+	 */
+	private var textBitmap:BitmapData;
 	
 	/**
 	 * Constructs a new text field component.
