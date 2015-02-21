@@ -584,14 +584,15 @@ class FlxBitmapText extends FlxSprite
 		var lineWidth:Int = font.minOffsetX;
 		
 		var charCode:Int;						// current character in word
-		var charWidth:Int = 0;				// the width of current character
+		var charWidth:Int;						// the width of current character
 		
-		var widthPlusOffset:Int = 0;
+		var widthPlusOffset:Int;
 		var glyphFrame:FlxGlyphFrame;
 		
 		for (c in 0...lineLength)
 		{
 			charCode = Utf8.charCodeAt(str, c);
+			charWidth = 0;
 			
 			if (charCode == FlxBitmapFont.spaceCode)
 			{
@@ -601,25 +602,18 @@ class FlxBitmapText extends FlxSprite
 			{
 				charWidth = tabWidth;
 			}
-			else
+			else if (font.glyphs.exists(charCode))
 			{
-				if (font.glyphs.exists(charCode))
+				glyphFrame = font.glyphs.get(charCode);
+				charWidth = glyphFrame.xAdvance;
+				
+				if (c == (lineLength - 1))
 				{
-					glyphFrame = font.glyphs.get(charCode);
-					charWidth = glyphFrame.xAdvance;
-					
-					if (c == (lineLength - 1))
+					widthPlusOffset = Std.int(glyphFrame.offset.x + glyphFrame.frame.width);
+					if (widthPlusOffset > charWidth)
 					{
-						widthPlusOffset = Std.int(glyphFrame.offset.x + glyphFrame.frame.width);
-						if (widthPlusOffset > charWidth)
-						{
-							charWidth = widthPlusOffset;
-						}
+						charWidth = widthPlusOffset;
 					}
-				}
-				else
-				{
-					charWidth = 0;
 				}
 			}
 			
@@ -645,7 +639,7 @@ class FlxBitmapText extends FlxSprite
 		
 		var c:Int;					// char index
 		var charCode:Int;			// code for the current character in word
-		var charWidth:Int = 0;	// the width of current character
+		var charWidth:Int;			// the width of current character
 		
 		var subLine:Utf8;			// current subline to assemble
 		var subLineWidth:Int;		// the width of current subline
