@@ -6,6 +6,5 @@
 	"description": "HaxeFlixel is a 2D game framework based on OpenFL that delivers cross-platform games.",
 	"version": "3.3.6",
 	"releasenote": "Compatibility fix for OpenFL 2.1.6.",
-	"contributors": ["haxeflixel"],
-	"dependencies": { "lime": "", "openfl": "" }
+	"contributors": ["haxeflixel"]
 }
