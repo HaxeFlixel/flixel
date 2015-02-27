@@ -13,7 +13,7 @@ class FlxClassicSpace implements IFlxSpace {
 	
 	public var iterationCount : Int;
 	
-	public function new(iterationCount : Int = 4)
+	public function new(iterationCount : Int = 8)
 	{
 		objects = new Array<FlxClassicBody>();
 		this.iterationCount = iterationCount;

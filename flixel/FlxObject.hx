@@ -336,6 +336,11 @@ class FlxObject extends FlxBasic
 	@:isVar
 	public var height(get, set):Float;
 	/**
+	 * WARNING: The origin of the sprite will default to its center. If you change this, 
+	 * the visuals and the collisions will likely be pretty out-of-sync if you do any rotation.
+	 */
+	public var origin(default, null):FlxPoint;
+	/**
 	 * Whether or not the coordinates should be rounded during draw(), true by default (recommended for pixel art). 
 	 * Only affects tilesheet rendering and rendering using BitmapData.draw() in blitting.
 	 * (copyPixels() only renders on whole pixels by nature). Causes draw() to be used if false, which is more expensive.
@@ -358,7 +363,8 @@ class FlxObject extends FlxBasic
 	/**
 	 * Whether an object will move/alter position after a collision.
 	 */
-	public var immovable(default, set):Bool = false;
+	@:isVar
+	public var immovable(get, set):Bool = false;
 	/**
 	 * Whether the object collides or not.  For more control over what directions the object will collide from, 
 	 * use collision constants (like LEFT, FLOOR, etc) to set the value of allowCollisions directly.
@@ -372,12 +378,12 @@ class FlxObject extends FlxBasic
 	/**
 	 * The basic speed of this object (in pixels per second).
 	 */
-	public var velocity(default, null):FlxPoint;
+	public var velocity(default, null):FlxCallbackPoint;
 	/**
 	 * How fast the speed of this object is changing (in pixels per second).
 	 * Useful for smooth movement and gravity.
 	 */
-	public var acceleration(default, null):FlxPoint;
+	public var acceleration(default, null):FlxCallbackPoint;
 	/**
 	 * This isn't drag exactly, more like deceleration that is only applied
 	 * when acceleration is not affecting the sprite.
@@ -387,7 +393,7 @@ class FlxObject extends FlxBasic
 	 * If you are using acceleration, you can use maxVelocity with it
 	 * to cap the speed automatically (very useful!).
 	 */
-	public var maxVelocity(default, null):FlxPoint;
+	public var maxVelocity(default, null):FlxCallbackPoint;
 	/**
 	 * Important variable for collision processing.
 	 * By default this value is set automatically during preUpdate().
@@ -397,19 +403,19 @@ class FlxObject extends FlxBasic
 	 * The virtual mass of the object. Default value is 1. Currently only used with elasticity 
 	 * during collision resolution. Change at your own risk; effects seem crazy unpredictable so far!
 	 */
-	public var mass:Float = 1;
+	public var mass(default, set):Float = 1;
 	/**
 	 * The bounciness of this object. Only affects collisions. Default value is 0, or "not bouncy at all."
 	 */
-	public var elasticity:Float = 0;
+	public var elasticity(default, set):Float = 0;
 	/**
 	 * This is how fast you want this sprite to spin (in degrees per second).
 	 */
-	public var angularVelocity:Float = 0;
+	public var angularVelocity(default, set):Float = 0;
 	/**
 	 * How fast the spin speed should change (in degrees per second).
 	 */
-	public var angularAcceleration:Float = 0;
+	public var angularAcceleration(default, set):Float = 0;
 	/**
 	 * Like drag but for spinning.
 	 */
@@ -484,6 +490,7 @@ class FlxObject extends FlxBasic
 		flixelType = OBJECT;
 		last = FlxPoint.get(x, y);
 		scrollFactor = FlxPoint.get(1, 1);
+		origin = FlxPoint.get(width / 2, height / 2);
 		
 		initMotionVars();
 	}
@@ -493,10 +500,10 @@ class FlxObject extends FlxBasic
 	 */
 	private inline function initMotionVars():Void
 	{
-		velocity = FlxPoint.get();
-		acceleration = FlxPoint.get();
+		velocity = new FlxCallbackPoint(set_velocityX,set_velocityY,set_velocityXY);
+		acceleration = new FlxCallbackPoint(set_accelerationX,set_accelerationY,set_accelerationXY);
 		drag = FlxPoint.get();
-		maxVelocity = FlxPoint.get(10000, 10000);
+		maxVelocity = new FlxCallbackPoint(set_maxVelocityX,set_maxVelocityY,set_maxVelocityXY);
 	}
 	
 	/**
@@ -515,6 +522,7 @@ class FlxObject extends FlxBasic
 		last = FlxDestroyUtil.put(last);
 		_point = FlxDestroyUtil.put(_point);
 		_rect = FlxDestroyUtil.put(_rect);
+		origin = FlxDestroyUtil.put(origin);
 	}
 	
 	/**
@@ -531,7 +539,7 @@ class FlxObject extends FlxBasic
 		last.x = x;
 		last.y = y;
 		
-		if (moves)
+		if (moves && body == null)
 		{
 			updateMotion(elapsed);
 		}
@@ -546,9 +554,6 @@ class FlxObject extends FlxBasic
 	 */
 	private function updateMotion(elapsed:Float):Void
 	{
-		if (PlayState.useNewSystem)
-			return;
-		
 		var velocityDelta = 0.5 * (FlxVelocity.computeVelocity(angularVelocity, angularAcceleration, angularDrag, maxAngular, elapsed) - angularVelocity);
 		angularVelocity += velocityDelta; 
 		angle += angularVelocity * elapsed;
@@ -1052,6 +1057,10 @@ class FlxObject extends FlxBasic
 		return moves = Value;
 	}
 	
+	private function get_immovable():Bool
+	{
+		return body == null ? immovable : true;
+	}
 	private function set_immovable(Value:Bool):Bool
 	{
 		return immovable = Value;
@@ -1060,5 +1069,110 @@ class FlxObject extends FlxBasic
 	private function set_pixelPerfectRender(Value:Bool):Bool 
 	{
 		return pixelPerfectRender = Value;
+	}
+	
+	private function set_velocityX(Point:FlxPoint):Void
+	{
+		if (body != null)
+		{
+			body.velocity.x = Point.x;
+		}
+	}
+	private function set_velocityY(Point:FlxPoint):Void
+	{
+		if (body != null)
+		{
+			body.velocity.y = Point.y;
+		}
+	}
+	private function set_velocityXY(Point:FlxPoint):Void
+	{
+		if (body != null)
+		{
+			body.velocity.x = Point.x;
+			body.velocity.y = Point.y;
+		}
+	}
+	
+	private function set_accelerationX(Point:FlxPoint):Void
+	{
+		if (body != null)
+		{
+			body.acceleration.x = Point.x;
+		}
+	}
+	private function set_accelerationY(Point:FlxPoint):Void
+	{
+		if (body != null)
+		{
+			body.acceleration.y = Point.y;
+		}
+	}
+	private function set_accelerationXY(Point:FlxPoint):Void
+	{
+		if (body != null)
+		{
+			body.acceleration.x = Point.x;
+			body.acceleration.y = Point.y;
+		}
+	}
+	
+	private function set_maxVelocityX(Point:FlxPoint):Void
+	{
+		if (body != null)
+		{
+			body.maxVelocity.x = Point.x;
+		}
+	}
+	private function set_maxVelocityY(Point:FlxPoint):Void
+	{
+		if (body != null)
+		{
+			body.maxVelocity.y = Point.y;
+		}
+	}
+	private function set_maxVelocityXY(Point:FlxPoint):Void
+	{
+		if (body != null)
+		{
+			body.maxVelocity.x = Point.x;
+			body.maxVelocity.y = Point.y;
+		}
+	}
+	
+	private function set_elasticity(Value : Float):Float
+	{
+		if (body != null)
+		{
+			body.elasticity = Value;
+		}
+		return elasticity = Value;
+	}
+	
+	private function set_mass(Value : Float):Float
+	{
+		if (body != null)
+		{
+			body.mass = Value;
+		}
+		return mass = Value;
+	}
+
+	private function set_angularVelocity(Value : Float):Float
+	{
+		if (body != null)
+		{
+			body.angularVelocity = Value;
+		}
+		return angularVelocity = Value;
+	}
+	
+	private function set_angularAcceleration(Value : Float):Float
+	{
+		if (body != null)
+		{
+			body.angularAcceleration = Value;
+		}
+		return angularAcceleration = Value;
 	}
 }

@@ -22,6 +22,7 @@ import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.overlap.IFlxHitbox;
+import flixel.phys.classic.FlxClassicSpace;
 import flixel.system.FlxAssets;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.util.FlxBitmapDataUtil;
@@ -110,12 +111,7 @@ class FlxSprite extends FlxObject
 	 * Whether this sprite is flipped on the Y axis
 	 */
 	public var flipY(default, set):Bool = false;
-	 
-	/**
-	 * WARNING: The origin of the sprite will default to its center. If you change this, 
-	 * the visuals and the collisions will likely be pretty out-of-sync if you do any rotation.
-	 */
-	public var origin(default, null):FlxPoint;
+
 	/**
 	 * Controls the position of the sprite's hitbox. Likely needs to be adjusted after
 	 * changing a sprite's width, height or scale.
@@ -229,7 +225,6 @@ class FlxSprite extends FlxObject
 		_flashRect2 = new Rectangle();
 		_flashPointZero = new Point();
 		offset = FlxPoint.get();
-		origin = FlxPoint.get();
 		scale = FlxPoint.get(1, 1);
 		_halfSize = FlxPoint.get();
 		_matrix = new FlxMatrix();
@@ -247,7 +242,6 @@ class FlxSprite extends FlxObject
 		animation = FlxDestroyUtil.destroy(animation);
 		
 		offset = FlxDestroyUtil.put(offset);
-		origin = FlxDestroyUtil.put(origin);
 		scale = FlxDestroyUtil.put(scale);
 		_halfSize = FlxDestroyUtil.put(_halfSize);
 		
@@ -1401,14 +1395,14 @@ interface IFlxSprite extends IFlxBasic
 	public var angle(default, set):Float;
 	public var facing(default, set):Int;
 	public var moves(default, set):Bool;
-	public var immovable(default, set):Bool;
+	public var immovable(get, set):Bool;
 	
 	public var offset(default, null):FlxPoint;
 	public var origin(default, null):FlxPoint;
 	public var scale(default, null):FlxPoint;
-	public var velocity(default, null):FlxPoint;
-	public var maxVelocity(default, null):FlxPoint;
-	public var acceleration(default, null):FlxPoint;
+	public var velocity(default, null):FlxCallbackPoint;
+	public var maxVelocity(default, null):FlxCallbackPoint;
+	public var acceleration(default, null):FlxCallbackPoint;
 	public var drag(default, null):FlxPoint;
 	public var scrollFactor(default, null):FlxPoint;
 

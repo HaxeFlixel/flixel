@@ -30,6 +30,7 @@ class FlxClassicBody implements flixel.phys.IFlxBody
 	
 	public var  allowCollisions : Int = FlxCollide.ANY;
 	public var 	touching : Int = 0;
+	public var 	wasTouching : Int = 0;
 	
 	public var	kinematic : Bool = false;
 	public var  collisonXDrag : Bool = false;
@@ -58,7 +59,7 @@ class FlxClassicBody implements flixel.phys.IFlxBody
 	
 	public function destroy() : Void
 	{
-		space.remove(this);
+		cast(space, FlxClassicSpace).remove(this);
 		last.put();
 		velocity.put();
 		maxVelocity.put;
@@ -67,6 +68,8 @@ class FlxClassicBody implements flixel.phys.IFlxBody
 	
 	public function updateBody(elapsed : Float) : Void
 	{
+		wasTouching = touching;
+		
 		x = parent.x;
 		y = parent.y;
 		last.set(x, y);
@@ -90,5 +93,30 @@ class FlxClassicBody implements flixel.phys.IFlxBody
 		
 		parent.x = x;
 		parent.y = y;
+	}
+	
+	
+	/**
+	 * Handy function for checking if this object is just landed on a particular surface.
+	 * Be sure to check it before calling super.update(), as that will reset the flags.
+	 * 
+	 * @param	Direction	Any of the collision flags (e.g. LEFT, FLOOR, etc).
+	 * @return	Whether the object just landed on (any of) the specified surface(s) this frame.
+	 */
+	public inline function justTouched(Direction:Int):Bool
+	{
+		return ((touching & Direction) > FlxCollide.NONE) && ((wasTouching & Direction) <= FlxCollide.NONE);
+	}
+	
+	/**
+	 * Handy function for checking if this object is touching a particular surface.
+	 * Be sure to check it before calling super.update(), as that will reset the flags.
+	 * 
+	 * @param	Direction	Any of the collision flags (e.g. LEFT, FLOOR, etc).
+	 * @return	Whether the object is touching an object in (any of) the specified direction(s) this frame.
+	 */
+	public inline function isTouching(Direction:Int):Bool
+	{
+		return (touching & Direction) > FlxCollide.NONE;
 	}
 }

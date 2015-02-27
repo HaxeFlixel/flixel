@@ -638,6 +638,7 @@ class FlxQuadTree extends FlxRect
 				continue;
 			}
 			
+			PlayState.calcNumber++;
 			//Calculate bulk hull for checkObject
 			_checkObjectHullX = (checkObject.x < checkObject.last.x) ? checkObject.x : checkObject.last.x;
 			_checkObjectHullY = (checkObject.y < checkObject.last.y) ? checkObject.y : checkObject.last.y;
