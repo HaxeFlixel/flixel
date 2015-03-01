@@ -50,7 +50,6 @@ class BaseScaleMode
 	{
 		scale.x = gameSize.x / (FlxG.width * FlxG.initialZoom);
 		scale.y = gameSize.y / (FlxG.height * FlxG.initialZoom);
-		
 		offset.x = Math.ceil((deviceSize.x - gameSize.x) * 0.5);
 		offset.y = Math.ceil((deviceSize.y - gameSize.y) * 0.5);
 	}

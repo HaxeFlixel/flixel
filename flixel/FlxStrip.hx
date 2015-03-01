@@ -133,7 +133,7 @@ class FlxStrip extends FlxSprite
 			cameraBounds.set(0, 0, camera.width, camera.height);
 			
 			#if FLX_RENDER_TILE
-			drawItem = camera.getDrawTrianglesItem(graphic, antialiasing, numColors > 0, _blendInt);
+			drawItem = camera.startTrianglesBatch(graphic, antialiasing, numColors > 0, blend);
 			
 			vs = drawItem.vertices;
 			idx = drawItem.indices;

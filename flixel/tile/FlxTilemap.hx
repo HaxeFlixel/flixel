@@ -820,6 +820,8 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 */
 	private function drawTilemap(Buffer:FlxTilemapBuffer, Camera:FlxCamera):Void
 	{
+		var isColored:Bool = ((alpha != 1) || (color != 0xffffff));
+		
 	#if FLX_RENDER_BLIT
 		Buffer.fill();
 	#else
@@ -845,7 +847,6 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		
 		var drawItem:FlxDrawTilesItem = Camera.startQuadBatch(graphic, isColored, blend);
 	#end
-		var isColored:Bool = ((alpha != 1) || (color != 0xffffff));
 		
 		// Copy tile images into the tile buffer
 		_point.x = (Camera.scroll.x * scrollFactor.x) - x - offset.x; //modified from getScreenPosition()
