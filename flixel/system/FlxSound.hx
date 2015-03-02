@@ -442,7 +442,7 @@ class FlxSound extends FlxBasic
 	 */
 	public inline function fadeOut(Duration:Float = 1, ?To:Float = 0):FlxSound
 	{
-		FlxTween.num(volume, To, Duration, null, volumeTween);
+		FlxTween.num(volume, To, Duration, { onComplete:function (_) { stop(); } }, volumeTween);
 		return this;
 	}
 	
@@ -455,6 +455,8 @@ class FlxSound extends FlxBasic
 	 */
 	public inline function fadeIn(Duration:Float = 1, From:Float = 0, To:Float = 1):FlxSound
 	{
+		if (!playing)
+			play();
 		FlxTween.num(From, To, Duration, null, volumeTween);
 		return this;
 	}
