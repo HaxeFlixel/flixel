@@ -586,7 +586,6 @@ class FlxSprite extends FlxObject
 			}
 			
 			getScreenPosition(_point, camera).subtractPoint(offset);
-			_frame.prepareFrameMatrix(_matrix);
 			
 			var cr:Float = colorTransform.redMultiplier;
 			var cg:Float = colorTransform.greenMultiplier;
@@ -622,6 +621,7 @@ class FlxSprite extends FlxObject
 			}
 			else
 			{
+				_frame.prepareFrameMatrix(_matrix);
 				_matrix.translate(-ox, -oy);
 				_matrix.scale(sx, sy);
 				
