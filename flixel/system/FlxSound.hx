@@ -440,12 +440,9 @@ class FlxSound extends FlxBasic
 	 * @param	Duration	The amount of time the fade-out operation should take.
 	 * @param	To			The volume to tween to, 0 by default.
 	 */
-	public inline function fadeOut(Duration:Float = 1, ?To:Float = 0, ?onComplete = null):FlxSound
+	public inline function fadeOut(Duration:Float = 1, ?To:Float = 0, ?onComplete:Void->Void = null):FlxSound
 	{
-		if (onComplete != null)
-			FlxTween.num(volume, To, Duration, onComplete, volumeTween);
-		else
-			FlxTween.num(volume, To, Duration, null, volumeTween);
+		FlxTween.num(volume, To, Duration, onComplete, volumeTween);
 		
 		return this;
 	}
@@ -457,11 +454,11 @@ class FlxSound extends FlxBasic
 	 * @param	From		The volume to tween from, 0 by default.
 	 * @param	To			The volume to tween to, 1 by default.
 	 */
-	public inline function fadeIn(Duration:Float = 1, From:Float = 0, To:Float = 1):FlxSound
+	public inline function fadeIn(Duration:Float = 1, From:Float = 0, To:Float = 1, ?onComplete:Void->Void = null):FlxSound
 	{
 		if (!playing)
 			play();
-		FlxTween.num(From, To, Duration, null, volumeTween);
+		FlxTween.num(From, To, Duration, onComplete, volumeTween);
 		return this;
 	}
 	
