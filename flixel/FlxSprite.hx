@@ -723,6 +723,7 @@ class FlxSprite extends FlxObject
 			calcFrame();
 		}
 		#else
+		dirty = true;
 		calcFrame(true);
 		#end
 	}
