@@ -121,11 +121,6 @@ class FlxFilterFrames extends FlxFramesCollection
 			
 			filterFrame.paintOnBitmap(filterFrame.parent.bitmap);
 			
-			#if FLX_RENDER_TILE
-			flashRect = region.copyToFlash(new Rectangle());
-			filterFrame.tileID = graph.tilesheet.addTileRect(flashRect, new Point(0.5 * region.width, 0.5 * region.height));
-			#end
-			
 			frames.push(filterFrame);
 			if (frame.name != null)
 			{
@@ -134,6 +129,49 @@ class FlxFilterFrames extends FlxFramesCollection
 			}
 		}
 	}
+	
+	/*
+	override public function paintOnBitmap(bmd:BitmapData = null):BitmapData
+	{
+		var result:BitmapData = null;
+		
+		if (bmd != null && (bmd.width == sourceSize.x && bmd.height == sourceSize.y))
+		{
+			result = bmd;
+			var rect:Rectangle = FlxRect.rect;
+			rect.setTo(0, 0, bmd.width, bmd.height);
+			bmd.fillRect(rect, FlxColor.TRANSPARENT);
+		}
+		else if (bmd != null)
+		{
+			bmd.dispose();
+		}
+		
+		if (result == null)
+		{
+			result = new BitmapData(Std.int(sourceSize.x), Std.int(sourceSize.y), true, FlxColor.TRANSPARENT);
+		}
+		
+		var point:Point = FlxPoint.point;
+		point.setTo(0.5 * filterFrames.widthInc, 0.5 * filterFrames.heightInc);
+		
+		var rect:Rectangle = FlxRect.rect;
+		rect.setTo(0, 0, sourceFrame.sourceSize.x, sourceFrame.sourceSize.y);
+		
+		result.copyPixels(sourceFrame.getBitmap(), rect, point);
+		
+		// apply filters
+		point.setTo(0, 0);
+		rect.setTo(0, 0, sourceSize.x, sourceSize.y);
+		
+		for (filter in filterFrames.filters)
+		{
+			result.applyFilter(result, rect, point, filter);
+		}
+		
+		return result;
+	}
+	*/
 	
 	/**
 	 * Adds a filter to this frames collection.
@@ -189,7 +227,6 @@ class FlxFilterFrames extends FlxFramesCollection
 	{
 		for (frame in frames)
 		{
-			frame.destroyBitmaps();
 			frame.paintOnBitmap(frame.parent.bitmap);
 		}
 	}
