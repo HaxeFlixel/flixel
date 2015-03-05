@@ -5,6 +5,7 @@ import flash.display.BlendMode;
 import flash.geom.ColorTransform;
 import flash.geom.Point;
 import flash.geom.Rectangle;
+import flixel.animation.FlxAnimation;
 import flixel.animation.FlxAnimationController;
 import flixel.FlxBasic;
 import flixel.FlxG;
@@ -1053,12 +1054,26 @@ class FlxSprite extends FlxObject
 	{
 		if (saveAnimations)
 		{
-			// TODO: save current animation params (name, frame, etc.)
 			var anim:FlxAnimationController = animation;
+			var currAnim:FlxAnimation = anim.curAnim;
+			var reverse:Bool = false;
+			var index:Int = 0;
+			
+			if (currAnim != null)
+			{
+				reverse = curAnim.reversed;
+				index = currAnim.curFrame;
+			}
+			
 			animation = null;
 			this.frames = Frames;
 			frame = frames.frames[anim.frameIndex];
 			animation = anim;
+			
+			if (currAnim != null)
+			{
+				animation.play(currAnim.name, false, reverse, index);
+			}
 		}
 		else
 		{
