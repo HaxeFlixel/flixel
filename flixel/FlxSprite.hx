@@ -1053,6 +1053,7 @@ class FlxSprite extends FlxObject
 	{
 		if (saveAnimations)
 		{
+			// TODO: save current animation params (name, frame, etc.)
 			var anim:FlxAnimationController = animation;
 			animation = null;
 			this.frames = Frames;

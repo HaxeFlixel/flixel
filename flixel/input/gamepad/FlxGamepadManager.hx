@@ -293,7 +293,7 @@ class FlxGamepadManager implements IFlxInputManager
 	 * @param AxisID The axis id
 	 * @return Float Value from -1 to 1 or 0 if no X axes were moved
 	 */
-	public function anyMovedXAxis(AxisID:Int):Float
+	public function anyMovedXAxis(AxisID:FlxGamepadAnalogStick):Float
 	{
 		for (gamepad in _gamepads)
 		{
@@ -312,7 +312,7 @@ class FlxGamepadManager implements IFlxInputManager
 	 * @param AxisID The axis id
 	 * @return Float Value from -1 to 1 or 0 if no Y axes were moved
 	 */
-	public function anyMovedYAxis(AxisID:Int):Float
+	public function anyMovedYAxis(AxisID:FlxGamepadAnalogStick):Float
 	{
 		for (gamepad in _gamepads)
 		{
