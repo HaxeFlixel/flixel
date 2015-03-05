@@ -1061,7 +1061,7 @@ class FlxSprite extends FlxObject
 			
 			if (currAnim != null)
 			{
-				reverse = curAnim.reversed;
+				reverse = currAnim.reversed;
 				index = currAnim.curFrame;
 			}
 			
