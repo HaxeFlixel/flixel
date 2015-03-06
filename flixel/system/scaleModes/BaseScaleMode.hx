@@ -94,6 +94,7 @@ class BaseScaleMode
 		hAlign = value;
 		updateOffsetX();
 		updateGamePosition();
+		return value;
 	}
 	
 	private function set_vAlign(value:VAlign):VAlign
@@ -101,6 +102,7 @@ class BaseScaleMode
 		vAlign = value;
 		updateOffsetY();
 		updateGamePosition();
+		return value;
 	}
 }
 
