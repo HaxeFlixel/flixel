@@ -538,7 +538,7 @@ class FlxCamera extends FlxBasic
 		vs[prevVerticesLength + 2] = point.x;
 		vs[prevVerticesLength + 3] = point.y;
 		
-		uvt[prevVerticesLength + 2] = frame.uv.right;
+		uvt[prevVerticesLength + 2] = frame.uv.width;
 		uvt[prevVerticesLength + 3] = frame.uv.y;
 		
 		point.set(frame.frame.width, frame.frame.height);
@@ -547,8 +547,8 @@ class FlxCamera extends FlxBasic
 		vs[prevVerticesLength + 4] = point.x;
 		vs[prevVerticesLength + 5] = point.y;
 		
-		uvt[prevVerticesLength + 4] = frame.uv.right;
-		uvt[prevVerticesLength + 5] = frame.uv.bottom;
+		uvt[prevVerticesLength + 4] = frame.uv.width;
+		uvt[prevVerticesLength + 5] = frame.uv.height;
 		
 		point.set(0, frame.frame.height);
 		point.transform(matrix);
@@ -557,7 +557,7 @@ class FlxCamera extends FlxBasic
 		vs[prevVerticesLength + 7] = point.y;
 		
 		uvt[prevVerticesLength + 6] = frame.uv.x;
-		uvt[prevVerticesLength + 7] = frame.uv.bottom;
+		uvt[prevVerticesLength + 7] = frame.uv.height;
 		
 		idx[prevIndicesLength] = prevIndicesLength;
 		idx[prevIndicesLength + 1] = prevIndicesLength + 1;
