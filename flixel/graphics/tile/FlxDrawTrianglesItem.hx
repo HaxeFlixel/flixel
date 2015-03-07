@@ -20,6 +20,10 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 	public var uvt:DrawData<Float>;
 	public var colors:DrawData<Int>;
 	
+	public var verticesPosition:Int = 0;
+	public var indicesPosition:Int = 0;
+	public var colorsPosition:Int = 0;
+	
 	public function new() 
 	{
 		super();
@@ -73,6 +77,10 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		indices.splice(0, indices.length);
 		uvt.splice(0, uvt.length);
 		colors.splice(0, colors.length);
+		
+		verticesPosition = 0;
+		indicesPosition = 0;
+		colorsPosition = 0;
 	}
 	
 	override public function dispose():Void 

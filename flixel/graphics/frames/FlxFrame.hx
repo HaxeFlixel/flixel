@@ -55,6 +55,7 @@ class FlxFrame implements IFlxDestroyable
 			clippedFrame.parent = original.parent;
 			clippedFrame.angle = angle;
 			FlxDestroyUtil.put(clippedFrame.frame);
+			FlxDestroyUtil.put(clippedFrame.uv);
 		}
 		
 		clippedFrame.sourceSize.copyFrom(original.sourceSize);
@@ -83,7 +84,8 @@ class FlxFrame implements IFlxDestroyable
 				clippedRect2.width == 0 || clippedRect2.height == 0)
 		{
 			clippedFrame.type = FlxFrameType.EMPTY;
-			clippedFrame.frame.set(0, 0, 0, 0);
+			frameRect.set(0, 0, 0, 0);
+			clippedFrame.frame = frameRect;
 			clippedFrame.offset.set(0, 0);
 		}
 		else
@@ -133,7 +135,9 @@ class FlxFrame implements IFlxDestroyable
 	/**
 	 * Region of image to render
 	 */
-	public var frame:FlxRect;
+	public var frame(default, set):FlxRect;
+	
+	public var uv:FlxRect;
 	
 	public var parent:FlxGraphic;
 	
@@ -360,12 +364,26 @@ class FlxFrame implements IFlxDestroyable
 		sourceSize = FlxDestroyUtil.put(sourceSize);
 		offset = FlxDestroyUtil.put(offset);
 		frame = FlxDestroyUtil.put(frame);
+		uv = FlxDestroyUtil.put(uv);
 	}
 	
 	public function toString():String
 	{
 		return FlxStringUtil.getDebugString([
 			LabelValuePair.weak("name", name)]);
+	}
+	
+	private function set_frame(value:FlxRect):FlxRect
+	{
+		if (value != null)
+		{
+			if (uv == null)
+				uv = FlxRect.get();
+			
+			uv.set(value.x / parent.width, value.y / parent.height, value.right / parent.width, value.bottom / parent.height);
+		}
+		
+		return frame = value;
 	}
 }
 

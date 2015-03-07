@@ -514,10 +514,9 @@ class FlxCamera extends FlxBasic
 		var idx = drawItem.indices;
 		var uvt = drawItem.uvt;
 		var cols = drawItem.colors;
-		var prevVerticesLength = vs.length;
-		var prevIndicesLength = idx.length;
-		var prevColorsLength = cols.length;
-		var prevNumberOfVertices = drawItem.numVertices;
+		var prevVerticesLength = drawItem.verticesPosition;
+		var prevIndicesLength = drawItem.indicesPosition;
+		var prevColorsLength = drawItem.colorsPosition;
 		
 		var bdW:Int = frame.parent.width;
 		var bdH:Int = frame.parent.height;
@@ -530,8 +529,8 @@ class FlxCamera extends FlxBasic
 		vs[prevVerticesLength] = point.x;
 		vs[prevVerticesLength + 1] = point.y;
 		
-		uvt[prevVerticesLength] = frame.frame.x / bdW;
-		uvt[prevVerticesLength + 1] = frame.frame.y / bdH;
+		uvt[prevVerticesLength] = frame.uv.x;
+		uvt[prevVerticesLength + 1] = frame.uv.y;
 		
 		point.set(frame.frame.width, 0);
 		point.transform(matrix);
@@ -539,8 +538,8 @@ class FlxCamera extends FlxBasic
 		vs[prevVerticesLength + 2] = point.x;
 		vs[prevVerticesLength + 3] = point.y;
 		
-		uvt[prevVerticesLength + 2] = (frame.frame.x + frame.frame.width) / bdW;
-		uvt[prevVerticesLength + 3] = frame.frame.y / bdH;
+		uvt[prevVerticesLength + 2] = frame.uv.right;
+		uvt[prevVerticesLength + 3] = frame.uv.y;
 		
 		point.set(frame.frame.width, frame.frame.height);
 		point.transform(matrix);
@@ -548,8 +547,8 @@ class FlxCamera extends FlxBasic
 		vs[prevVerticesLength + 4] = point.x;
 		vs[prevVerticesLength + 5] = point.y;
 		
-		uvt[prevVerticesLength + 4] = (frame.frame.x + frame.frame.width) / bdW;
-		uvt[prevVerticesLength + 5] = (frame.frame.y + frame.frame.height) / bdH;
+		uvt[prevVerticesLength + 4] = frame.uv.right;
+		uvt[prevVerticesLength + 5] = frame.uv.bottom;
 		
 		point.set(0, frame.frame.height);
 		point.transform(matrix);
@@ -557,8 +556,8 @@ class FlxCamera extends FlxBasic
 		vs[prevVerticesLength + 6] = point.x;
 		vs[prevVerticesLength + 7] = point.y;
 		
-		uvt[prevVerticesLength + 6] = frame.frame.x / bdW;
-		uvt[prevVerticesLength + 7] = (frame.frame.y + frame.frame.height) / bdH;
+		uvt[prevVerticesLength + 6] = frame.uv.x;
+		uvt[prevVerticesLength + 7] = frame.uv.bottom;
 		
 		idx[prevIndicesLength] = prevIndicesLength;
 		idx[prevIndicesLength + 1] = prevIndicesLength + 1;
@@ -574,7 +573,12 @@ class FlxCamera extends FlxBasic
 			cols[prevColorsLength + 1] = color;
 			cols[prevColorsLength + 2] = color;
 			cols[prevColorsLength + 3] = color;
+			
+			drawItem.colorsPosition = prevColorsLength + 4;
 		}
+		
+		drawItem.verticesPosition = prevVerticesLength + 8;
+		drawItem.indicesPosition = prevIndicesLength + 6;
 		#end
 	}
 	

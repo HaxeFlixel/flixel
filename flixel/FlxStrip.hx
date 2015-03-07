@@ -196,7 +196,12 @@ class FlxStrip extends FlxSprite
 					{
 						cols[prevColorsLength + i] = colors[i];
 					}
+					
+					drawItem.colorsPosition += numberOfVertices;
 				}
+				
+				drawItem.verticesPosition += verticesLength;
+				drawItem.indicesPosition += indices.length;
 			#else
 				sprite.graphics.clear();
 				sprite.graphics.beginBitmapFill(graphic.bitmap, null, false, antialiasing);

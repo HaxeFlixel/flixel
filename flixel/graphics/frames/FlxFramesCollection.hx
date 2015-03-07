@@ -132,7 +132,7 @@ class FlxFramesCollection implements IFlxDestroyable
 	{
 		var frame:FlxFrame = new FlxFrame(parent);
 		frame.type = FlxFrameType.EMPTY;
-		frame.frame = new FlxRect();
+		frame.frame = FlxRect.get();
 		frame.sourceSize.set(size.width, size.height);
 		frames.push(frame);
 		return frame;
