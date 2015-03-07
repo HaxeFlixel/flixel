@@ -101,6 +101,7 @@ class FlxBar extends FlxSprite
 	 * It is recommended to use this property in tile render mode
 	 * (altrough it will work in blit render mode also).
 	 */
+	@:isVar
 	public var frontFrames(get, set):FlxImageFrame;
 	
 	public var backFrames(get, set):FlxImageFrame;
@@ -115,7 +116,6 @@ class FlxBar extends FlxSprite
 	/**
 	 * FlxSprite which is used for rendering front graphics of bar (showing value) in tile render mode.
 	 */
-	private var _front:FlxSprite;
 	private var _frontFrame:FlxFrame;
 	private var _filledFlxRect:FlxRect;
 	#else
@@ -159,8 +159,6 @@ class FlxBar extends FlxSprite
 		_emptyBarRect = new Rectangle();
 		makeGraphic(width, height, FlxColor.TRANSPARENT, true);
 		#else
-		_front = new FlxSprite();
-		_frontFrame = _front.frame;
 		_filledFlxRect = FlxRect.get();
 		#end
 		
@@ -180,7 +178,6 @@ class FlxBar extends FlxSprite
 		positionOffset = FlxDestroyUtil.put(positionOffset);
 		
 		#if FLX_RENDER_TILE
-		_front = FlxDestroyUtil.destroy(_front);
 		_frontFrame = null;
 		_filledFlxRect = FlxDestroyUtil.put(_filledFlxRect);
 		#else
@@ -787,11 +784,9 @@ class FlxBar extends FlxSprite
 			{
 				var prct:Int = Std.int(percent);
 				_filledFlxRect.copyFromFlash(_filledBarRect);
-				trace(prct);
-				trace(_filledFlxRect);
 				if (prct > 0)
 				{
-					_frontFrame = _front.frame = FlxFrame.clipTo(frontFrames.frame, _filledFlxRect, _frontFrame);
+					_frontFrame = FlxFrame.clipTo(frontFrames.frame, _filledFlxRect, _frontFrame);
 				}
 			}
 			#end
@@ -956,10 +951,7 @@ class FlxBar extends FlxSprite
 	private function get_frontFrames():FlxImageFrame
 	{
 		#if FLX_RENDER_TILE
-		if (_front != null)
-		{
-			return cast(_front.frames, FlxImageFrame);
-		}
+		return frontFrames;
 		#end
 		return null;
 	}
@@ -967,11 +959,8 @@ class FlxBar extends FlxSprite
 	private function set_frontFrames(value:FlxImageFrame):FlxImageFrame
 	{
 		#if FLX_RENDER_TILE
-		if (_front != null)
-		{
-			_front.frames = value;
-			_frontFrame = _front.frame;
-		}
+		frontFrames = value;
+		_frontFrame = (value != null) ? value.frame : null;
 		#else
 		createImageFilledBar(value.frame.paint());
 		#end

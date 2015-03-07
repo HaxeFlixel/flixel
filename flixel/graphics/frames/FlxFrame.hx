@@ -35,7 +35,6 @@ class FlxFrame implements IFlxDestroyable
 		return num1 - num2;
 	}
 	
-	// TODO: test it...
 	/**
 	 * Frame clipping
 	 * @param	original		Original frame to clip
@@ -71,7 +70,7 @@ class FlxFrame implements IFlxDestroyable
 		var helperRect:FlxRect = FlxRect.get(0, 0, original.sourceSize.x, original.sourceSize.y);
 		var clippedRect1:FlxRect = FlxRect.get(original.offset.x, original.offset.y, original.frame.width, original.frame.height);
 		
-		if (angle == FlxFrameAngle.ANGLE_0)
+		if (angle != FlxFrameAngle.ANGLE_0)
 		{
 			clippedRect1.width = original.frame.height;
 			clippedRect1.height = original.frame.width;
