@@ -503,8 +503,79 @@ class FlxCamera extends FlxBasic
 	public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:Matrix, cr:Float = 1.0, cg:Float = 1.0, cb:Float = 1.0, ca:Float = 1.0, blend:BlendMode = null, smoothing:Bool = false):Void
 	{
 		var isColored:Bool = (cr != 1.0) || (cg != 1.0) || (cb != 1.0);
+	
+		#if !FLX_RENDER_TRIANGLE
 		var drawItem:FlxDrawTilesItem = startQuadBatch(frame.parent, isColored, blend, smoothing);
 		drawItem.setData(frame.frame, matrix, cr, cg, cb, ca);
+		#else
+		var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(frame.parent, smoothing, isColored, blend);
+		
+		var vs = drawItem.vertices;
+		var idx = drawItem.indices;
+		var uvt = drawItem.uvt;
+		var cols = drawItem.colors;
+		var prevVerticesLength = vs.length;
+		var prevIndicesLength = idx.length;
+		var prevColorsLength = cols.length;
+		var prevNumberOfVertices = drawItem.numVertices;
+		
+		var bdW:Int = frame.parent.width;
+		var bdH:Int = frame.parent.height;
+		
+		var point:FlxPoint = FlxPoint.flxPoint;
+		
+		point.set(0, 0);
+		point.transform(matrix);
+		
+		vs[prevVerticesLength] = point.x;
+		vs[prevVerticesLength + 1] = point.y;
+		
+		uvt[prevVerticesLength] = frame.frame.x / bdW;
+		uvt[prevVerticesLength + 1] = frame.frame.y / bdH;
+		
+		point.set(frame.frame.width, 0);
+		point.transform(matrix);
+		
+		vs[prevVerticesLength + 2] = point.x;
+		vs[prevVerticesLength + 3] = point.y;
+		
+		uvt[prevVerticesLength + 2] = (frame.frame.x + frame.frame.width) / bdW;
+		uvt[prevVerticesLength + 3] = frame.frame.y / bdH;
+		
+		point.set(frame.frame.width, frame.frame.height);
+		point.transform(matrix);
+		
+		vs[prevVerticesLength + 4] = point.x;
+		vs[prevVerticesLength + 5] = point.y;
+		
+		uvt[prevVerticesLength + 4] = (frame.frame.x + frame.frame.width) / bdW;
+		uvt[prevVerticesLength + 5] = (frame.frame.y + frame.frame.height) / bdH;
+		
+		point.set(0, frame.frame.height);
+		point.transform(matrix);
+		
+		vs[prevVerticesLength + 6] = point.x;
+		vs[prevVerticesLength + 7] = point.y;
+		
+		uvt[prevVerticesLength + 6] = frame.frame.x / bdW;
+		uvt[prevVerticesLength + 7] = (frame.frame.y + frame.frame.height) / bdH;
+		
+		idx[prevIndicesLength] = prevIndicesLength;
+		idx[prevIndicesLength + 1] = prevIndicesLength + 1;
+		idx[prevIndicesLength + 2] = prevIndicesLength + 2;
+		idx[prevIndicesLength + 3] = prevIndicesLength + 2;
+		idx[prevIndicesLength + 4] = prevIndicesLength + 3;
+		idx[prevIndicesLength + 5] = prevIndicesLength;
+		
+		var color:FlxColor = FlxColor.fromRGBFloat(cr, cg, cb, ca);
+		if (isColored)
+		{
+			cols[prevColorsLength] = color;
+			cols[prevColorsLength + 1] = color;
+			cols[prevColorsLength + 2] = color;
+			cols[prevColorsLength + 3] = color;
+		}
+		#end
 	}
 	
 	public function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle, destPoint:Point, cr:Float = 1.0, cg:Float = 1.0, cb:Float = 1.0, ca:Float = 1.0, blend:BlendMode = null, smoothing:Bool = false):Void
@@ -771,8 +842,8 @@ class FlxCamera extends FlxBasic
 				{
 					_lastTargetPosition = FlxPoint.get(target.x, target.y); // Creates this point.
 				} 
-				_scrollTarget.x += (target.x - _lastTargetPosition.x ) * followLead.x;
-				_scrollTarget.y += (target.y - _lastTargetPosition.y ) * followLead.y;
+				_scrollTarget.x += (target.x - _lastTargetPosition.x) * followLead.x;
+				_scrollTarget.y += (target.y - _lastTargetPosition.y) * followLead.y;
 				
 				_lastTargetPosition.x = target.x;
 				_lastTargetPosition.y = target.y;
