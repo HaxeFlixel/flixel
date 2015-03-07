@@ -514,9 +514,10 @@ class FlxCamera extends FlxBasic
 		var idx = drawItem.indices;
 		var uvt = drawItem.uvt;
 		var cols = drawItem.colors;
-		var prevVerticesLength = drawItem.verticesPosition;
-		var prevIndicesLength = drawItem.indicesPosition;
-		var prevColorsLength = drawItem.colorsPosition;
+		var prevVerticesPos = drawItem.verticesPosition;
+		var prevIndicesPos = drawItem.indicesPosition;
+		var prevColorsPos = drawItem.colorsPosition;
+		var prevNumberOfVertices = drawItem.numVertices;
 		
 		var bdW:Int = frame.parent.width;
 		var bdH:Int = frame.parent.height;
@@ -526,59 +527,59 @@ class FlxCamera extends FlxBasic
 		point.set(0, 0);
 		point.transform(matrix);
 		
-		vs[prevVerticesLength] = point.x;
-		vs[prevVerticesLength + 1] = point.y;
+		vs[prevVerticesPos] = point.x;
+		vs[prevVerticesPos + 1] = point.y;
 		
-		uvt[prevVerticesLength] = frame.uv.x;
-		uvt[prevVerticesLength + 1] = frame.uv.y;
+		uvt[prevVerticesPos] = frame.uv.x;
+		uvt[prevVerticesPos + 1] = frame.uv.y;
 		
 		point.set(frame.frame.width, 0);
 		point.transform(matrix);
 		
-		vs[prevVerticesLength + 2] = point.x;
-		vs[prevVerticesLength + 3] = point.y;
+		vs[prevVerticesPos + 2] = point.x;
+		vs[prevVerticesPos + 3] = point.y;
 		
-		uvt[prevVerticesLength + 2] = frame.uv.width;
-		uvt[prevVerticesLength + 3] = frame.uv.y;
+		uvt[prevVerticesPos + 2] = frame.uv.width;
+		uvt[prevVerticesPos + 3] = frame.uv.y;
 		
 		point.set(frame.frame.width, frame.frame.height);
 		point.transform(matrix);
 		
-		vs[prevVerticesLength + 4] = point.x;
-		vs[prevVerticesLength + 5] = point.y;
+		vs[prevVerticesPos + 4] = point.x;
+		vs[prevVerticesPos + 5] = point.y;
 		
-		uvt[prevVerticesLength + 4] = frame.uv.width;
-		uvt[prevVerticesLength + 5] = frame.uv.height;
+		uvt[prevVerticesPos + 4] = frame.uv.width;
+		uvt[prevVerticesPos + 5] = frame.uv.height;
 		
 		point.set(0, frame.frame.height);
 		point.transform(matrix);
 		
-		vs[prevVerticesLength + 6] = point.x;
-		vs[prevVerticesLength + 7] = point.y;
+		vs[prevVerticesPos + 6] = point.x;
+		vs[prevVerticesPos + 7] = point.y;
 		
-		uvt[prevVerticesLength + 6] = frame.uv.x;
-		uvt[prevVerticesLength + 7] = frame.uv.height;
+		uvt[prevVerticesPos + 6] = frame.uv.x;
+		uvt[prevVerticesPos + 7] = frame.uv.height;
 		
-		idx[prevIndicesLength] = prevIndicesLength;
-		idx[prevIndicesLength + 1] = prevIndicesLength + 1;
-		idx[prevIndicesLength + 2] = prevIndicesLength + 2;
-		idx[prevIndicesLength + 3] = prevIndicesLength + 2;
-		idx[prevIndicesLength + 4] = prevIndicesLength + 3;
-		idx[prevIndicesLength + 5] = prevIndicesLength;
+		idx[prevIndicesPos] = prevNumberOfVertices;
+		idx[prevIndicesPos + 1] = prevNumberOfVertices + 1;
+		idx[prevIndicesPos + 2] = prevNumberOfVertices + 2;
+		idx[prevIndicesPos + 3] = prevNumberOfVertices + 2;
+		idx[prevIndicesPos + 4] = prevNumberOfVertices + 3;
+		idx[prevIndicesPos + 5] = prevNumberOfVertices;
 		
 		var color:FlxColor = FlxColor.fromRGBFloat(cr, cg, cb, ca);
 		if (isColored)
 		{
-			cols[prevColorsLength] = color;
-			cols[prevColorsLength + 1] = color;
-			cols[prevColorsLength + 2] = color;
-			cols[prevColorsLength + 3] = color;
+			cols[prevColorsPos] = color;
+			cols[prevColorsPos + 1] = color;
+			cols[prevColorsPos + 2] = color;
+			cols[prevColorsPos + 3] = color;
 			
-			drawItem.colorsPosition = prevColorsLength + 4;
+			drawItem.colorsPosition += 4;
 		}
 		
-		drawItem.verticesPosition = prevVerticesLength + 8;
-		drawItem.indicesPosition = prevIndicesLength + 6;
+		drawItem.verticesPosition += 8;
+		drawItem.indicesPosition += 6;
 		#end
 	}
 	
@@ -587,8 +588,69 @@ class FlxCamera extends FlxBasic
 		_helperMatrix.identity();
 		_helperMatrix.translate(destPoint.x + frame.offset.x, destPoint.y + frame.offset.y);
 		var isColored:Bool = (cr != 1.0) || (cg != 1.0) || (cb != 1.0);
+		#if !FLX_RENDER_TRIANGLE
 		var drawItem:FlxDrawTilesItem = startQuadBatch(frame.parent, isColored, blend, smoothing);
 		drawItem.setData(frame.frame, _helperMatrix, cr, cg, cb, ca);
+		#else
+		var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(frame.parent, smoothing, isColored, blend);
+		
+		var vs = drawItem.vertices;
+		var idx = drawItem.indices;
+		var uvt = drawItem.uvt;
+		var cols = drawItem.colors;
+		var prevVerticesPos = drawItem.verticesPosition;
+		var prevIndicesPos = drawItem.indicesPosition;
+		var prevColorsPos = drawItem.colorsPosition;
+		var prevNumberOfVertices = drawItem.numVertices;
+		
+		var bdW:Int = frame.parent.width;
+		var bdH:Int = frame.parent.height;
+		
+		vs[prevVerticesPos] = _helperMatrix.tx;
+		vs[prevVerticesPos + 1] = _helperMatrix.ty;
+		
+		uvt[prevVerticesPos] = frame.uv.x;
+		uvt[prevVerticesPos + 1] = frame.uv.y;
+		
+		vs[prevVerticesPos + 2] = _helperMatrix.tx + frame.frame.width;
+		vs[prevVerticesPos + 3] = _helperMatrix.ty;
+		
+		uvt[prevVerticesPos + 2] = frame.uv.width;
+		uvt[prevVerticesPos + 3] = frame.uv.y;
+		
+		vs[prevVerticesPos + 4] = _helperMatrix.tx + frame.frame.width;
+		vs[prevVerticesPos + 5] = _helperMatrix.ty + frame.frame.height;
+		
+		uvt[prevVerticesPos + 4] = frame.uv.width;
+		uvt[prevVerticesPos + 5] = frame.uv.height;
+		
+		vs[prevVerticesPos + 6] = _helperMatrix.tx;
+		vs[prevVerticesPos + 7] = _helperMatrix.ty + frame.frame.height;
+		
+		uvt[prevVerticesPos + 6] = frame.uv.x;
+		uvt[prevVerticesPos + 7] = frame.uv.height;
+		
+		idx[prevIndicesPos] = prevNumberOfVertices;
+		idx[prevIndicesPos + 1] = prevNumberOfVertices + 1;
+		idx[prevIndicesPos + 2] = prevNumberOfVertices + 2;
+		idx[prevIndicesPos + 3] = prevNumberOfVertices + 2;
+		idx[prevIndicesPos + 4] = prevNumberOfVertices + 3;
+		idx[prevIndicesPos + 5] = prevNumberOfVertices;
+		
+		var color:FlxColor = FlxColor.fromRGBFloat(cr, cg, cb, ca);
+		if (isColored)
+		{
+			cols[prevColorsPos] = color;
+			cols[prevColorsPos + 1] = color;
+			cols[prevColorsPos + 2] = color;
+			cols[prevColorsPos + 3] = color;
+			
+			drawItem.colorsPosition += 4;
+		}
+		
+		drawItem.verticesPosition += 8;
+		drawItem.indicesPosition += 6;
+		#end
 	}
 	
 	public function drawVertex():Void
