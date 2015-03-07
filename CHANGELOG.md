@@ -218,7 +218,6 @@
 * Added `FlxImageFrame` frames collection which contains single frame
 * Added `FlxTileFrames` frames collection which contains frames for spritesheet, which can be generated from image region or frame (including rotated and trimmed frames)
 * Added `FlxAtlasFrames` frames collection instead of various texture atlas loaders (like `SparrowData` and `TexturePackerData`). It contains various static methods for parsing atlas files
-* Added `FlxBarFrames` which is used by `FlxBar` class on native targets
 * Rewrote `PxBitmapFont` class and renamed it to `FlxBitmapFont`. It supports (can parse) AngelCode, XNA and Monospace bitmap fonts now
 * Rewrote `FlxBitmapTextField` class and renamed it to `FlxBitmapText`
 * Added `FlxFilterFrames` frames collection instead of `FlxSpriteFilter` (see filters demo)

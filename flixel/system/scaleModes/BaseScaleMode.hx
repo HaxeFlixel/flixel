@@ -15,8 +15,8 @@ class BaseScaleMode
 	public var scale(default, null):FlxPoint;
 	public var offset(default, null):FlxPoint;
 	
-	public var hAlign(default, set):HAlign = HAlign.Center;
-	public var vAlign(default, set):VAlign = VAlign.Center;
+	public var hAlign(default, set):HAlign;
+	public var vAlign(default, set):VAlign;
 	
 	private static var zoom:FlxPoint = FlxPoint.get();
 	
@@ -26,6 +26,9 @@ class BaseScaleMode
 		gameSize = FlxPoint.get();
 		scale = FlxPoint.get();
 		offset = FlxPoint.get();
+		
+		hAlign = HAlign.Center;
+		vAlign = VAlign.Center;
 	}
 	
 	public function onMeasure(Width:Int, Height:Int):Void
@@ -85,6 +88,9 @@ class BaseScaleMode
 	
 	private function updateGamePosition():Void
 	{
+		if (FlxG.game == null)
+			return;
+		
 		FlxG.game.x = offset.x;
 		FlxG.game.y = offset.y;
 	}
@@ -92,16 +98,22 @@ class BaseScaleMode
 	private function set_hAlign(value:HAlign):HAlign
 	{
 		hAlign = value;
-		updateOffsetX();
-		updateGamePosition();
+		if (offset != null)
+		{
+			updateOffsetX();
+			updateGamePosition();
+		}
 		return value;
 	}
 	
 	private function set_vAlign(value:VAlign):VAlign
 	{
 		vAlign = value;
-		updateOffsetY();
-		updateGamePosition();
+		if (offset != null)
+		{
+			updateOffsetY();
+			updateGamePosition();
+		}
 		return value;
 	}
 }

@@ -2,8 +2,6 @@ package flixel.util;
 
 import flixel.math.FlxMath;
 import flixel.system.macros.FlxMacroUtil;
-import haxe.Int32;
-
 /**
  * Class representing a color, based on Int. Provides a variety of methods for creating and converting colors.
  * 
@@ -16,7 +14,7 @@ import haxe.Int32;
  * 
  * @author Joe Williamson (JoeCreates)
  */
-abstract FlxColor(Int) from Int from UInt from Int32 to Int to UInt to Int32
+abstract FlxColor(Int) from Int from UInt to Int to UInt
 {
 	public static inline var TRANSPARENT:FlxColor = 0x00000000;
 	public static inline var WHITE:FlxColor =       0xFFFFFFFF;

@@ -506,7 +506,7 @@ class FlxG
 		
 		FlxG.initialZoom = FlxCamera.defaultZoom = Zoom;
 		
-		resizeGame(stage.stageWidth, stage.stageHeight);
+		resizeGame(Lib.current.stage.stageWidth, Lib.current.stage.stageHeight);
 		
 		// Instantiate inputs
 		#if !FLX_NO_KEYBOARD
