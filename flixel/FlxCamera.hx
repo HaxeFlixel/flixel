@@ -638,9 +638,10 @@ class FlxCamera extends FlxBasic
 		idx[prevIndicesPos + 4] = prevNumberOfVertices + 3;
 		idx[prevIndicesPos + 5] = prevNumberOfVertices;
 		
-		var color:FlxColor = FlxColor.fromRGBFloat(cr, cg, cb, ca);
 		if (isColored)
 		{
+			var color:FlxColor = FlxColor.fromRGBFloat(cr, cg, cb, ca);
+			
 			cols[prevColorsPos] = color;
 			cols[prevColorsPos + 1] = color;
 			cols[prevColorsPos + 2] = color;
