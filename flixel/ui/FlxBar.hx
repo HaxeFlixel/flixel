@@ -23,7 +23,6 @@ import flixel.math.FlxPoint;
 import flixel.util.FlxStringUtil;
 
 // TODO: better handling bars with borders (don't take border into account while drawing its front).
-// TODO: maybe add clipRect support for tile renderer
 
 /**
  * FlxBar is a quick and easy way to create a graphical bar which can
@@ -102,7 +101,8 @@ class FlxBar extends FlxSprite
 	 * It is recommended to use this property in tile render mode
 	 * (altrough it will work in blit render mode also).
 	 */
-	public var frontFrames(get, set):FlxBarFrames;
+	@:isVar
+	public var frontFrame(get, set):FlxFrame;
 	
 	/**
 	 * The direction from which the health bar will fill-up. Default is from left to right. Change takes effect immediately.
@@ -948,19 +948,13 @@ class FlxBar extends FlxSprite
 		return value;
 	}
 	
-	private function get_frontFrames():FlxBarFrames
+	private function get_frontFrame():FlxFrame
 	{
-		#if FLX_RENDER_TILE
-		if (_front != null && _front.frames != null)
-		{
-			return cast(_front.frames, FlxBarFrames);
-		}
-		#end
-		
+		// TODO: reimplement it...
 		return null;
 	}
 	
-	private function set_frontFrames(value:FlxBarFrames):FlxBarFrames
+	private function set_frontFrame(value:FlxFrame):FlxFrame
 	{
 		#if FLX_RENDER_TILE
 		if (_front != null)
@@ -969,7 +963,7 @@ class FlxBar extends FlxSprite
 			_frontFrame = _front.frame;
 		}
 		#else
-		createImageFilledBar(value.getFilledBitmap());
+		createImageFilledBar(value.paint());
 		#end
 		
 		return value;

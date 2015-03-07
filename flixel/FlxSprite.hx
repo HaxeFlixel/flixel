@@ -891,11 +891,7 @@ class FlxSprite extends FlxObject
 	{
 		if (_frame != null && dirty)
 		{
-			if (framePixels != null && (framePixels.width != _frame.sourceSize.x || framePixels.height != _frame.sourceSize.y))
-			{
-				framePixels.dispose();
-				framePixels = null;
-			}
+			framePixels = FlxDestroyUtil.disposeIfNotEqual(framePixels, _frame.sourceSize.x, _frame.sourceSize.y);
 			
 			if (!flipX && !flipY && _frame.type == FlxFrameType.REGULAR)
 			{
