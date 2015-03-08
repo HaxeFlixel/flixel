@@ -528,19 +528,13 @@ class FlxGame extends Sprite
 				
 				while (_accumulator >= _stepMS)
 				{
-					step(_stepMS);
+					step();
 					_accumulator -= _stepMS; 
-				}
-				
-				if (_accumulator > 0)
-				{
-					step(Math.abs(_accumulator - _stepMS));
-					_accumulator -= _stepMS;
 				}
 			}
 			else
 			{
-				step(_elapsedMS);
+				step();
 			}
 			
 			#if !FLX_NO_DEBUG
@@ -649,7 +643,7 @@ class FlxGame extends Sprite
 	 * the appropriate number of times each frame.
 	 * This block handles state changes, replays, all that good stuff.
 	 */
-	private function step(stepTime:Float):Void
+	private function step():Void
 	{
 		// Handle game reset request
 		if (_resetGame)
@@ -690,7 +684,7 @@ class FlxGame extends Sprite
 		FlxBasic.activeCount = 0;
 		#end
 		
-		update(stepTime);
+		update();
 		
 		#if !FLX_NO_DEBUG
 		debugger.stats.activeObjects(FlxBasic.activeCount);
@@ -701,7 +695,7 @@ class FlxGame extends Sprite
 	 * This function is called by step() and updates the actual game state.
 	 * May be called multiple times per "frame" or draw call.
 	 */
-	private function update(stepTime:Float):Void
+	private function update():Void
 	{
 		if (!_state.active || !_state.exists)
 		{
@@ -724,11 +718,11 @@ class FlxGame extends Sprite
 		
 		if (FlxG.fixedTimestep)
 		{
-			FlxG.elapsed = FlxG.timeScale * (stepTime / 1000); // fixed timestep
+			FlxG.elapsed = FlxG.timeScale * _stepSeconds; // fixed timestep
 		}
 		else
 		{
-			FlxG.elapsed = FlxG.timeScale * (stepTime / 1000); // variable timestep
+			FlxG.elapsed = FlxG.timeScale * (_elapsedMS / 1000); // variable timestep
 			
 			var max = FlxG.maxElapsed * FlxG.timeScale;
 			if (FlxG.elapsed > max) 
