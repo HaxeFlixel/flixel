@@ -569,7 +569,11 @@ class FlxCamera extends FlxBasic
 		
 		if (isColored)
 		{
+			#if neko
+			var color:FlxColor = FlxColor.fromRGBFloat(cr, cg, cb, 1.0);
+			#else
 			var color:FlxColor = FlxColor.fromRGBFloat(cr, cg, cb, ca);
+			#end
 			
 			cols[prevColorsPos] = color;
 			cols[prevColorsPos + 1] = color;
@@ -641,7 +645,11 @@ class FlxCamera extends FlxBasic
 		
 		if (isColored)
 		{
+			#if neko
+			var color:FlxColor = FlxColor.fromRGBFloat(cr, cg, cb, 1.0);
+			#else
 			var color:FlxColor = FlxColor.fromRGBFloat(cr, cg, cb, ca);
+			#end
 			
 			cols[prevColorsPos] = color;
 			cols[prevColorsPos + 1] = color;
