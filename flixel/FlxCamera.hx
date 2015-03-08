@@ -502,12 +502,12 @@ class FlxCamera extends FlxBasic
 	
 	public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:Matrix, cr:Float = 1.0, cg:Float = 1.0, cb:Float = 1.0, ca:Float = 1.0, blend:BlendMode = null, smoothing:Bool = false):Void
 	{
-		var isColored:Bool = (cr != 1.0) || (cg != 1.0) || (cb != 1.0);
-	
 		#if !FLX_RENDER_TRIANGLE
+		var isColored:Bool = (cr != 1.0) || (cg != 1.0) || (cb != 1.0);
 		var drawItem:FlxDrawTilesItem = startQuadBatch(frame.parent, isColored, blend, smoothing);
 		drawItem.setData(frame.frame, matrix, cr, cg, cb, ca);
 		#else
+		var isColored:Bool = (cr != 1.0) || (cg != 1.0) || (cb != 1.0) || (ca != 1.0);
 		var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(frame.parent, smoothing, isColored, blend);
 		
 		var vs = drawItem.vertices;
@@ -588,11 +588,12 @@ class FlxCamera extends FlxBasic
 	{
 		_helperMatrix.identity();
 		_helperMatrix.translate(destPoint.x + frame.offset.x, destPoint.y + frame.offset.y);
-		var isColored:Bool = (cr != 1.0) || (cg != 1.0) || (cb != 1.0);
 		#if !FLX_RENDER_TRIANGLE
+		var isColored:Bool = (cr != 1.0) || (cg != 1.0) || (cb != 1.0);
 		var drawItem:FlxDrawTilesItem = startQuadBatch(frame.parent, isColored, blend, smoothing);
 		drawItem.setData(frame.frame, _helperMatrix, cr, cg, cb, ca);
 		#else
+		var isColored:Bool = (cr != 1.0) || (cg != 1.0) || (cb != 1.0) || (ca != 1.0);
 		var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(frame.parent, smoothing, isColored, blend);
 		
 		var vs = drawItem.vertices;

@@ -54,7 +54,7 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		#if flash
 		camera.canvas.graphics.drawTriangles(vertices, indices, uvt, TriangleCulling.NONE);
 		#else
-		camera.canvas.graphics.drawTriangles(vertices, indices, uvt, TriangleCulling.NONE, (colors.length == 0) ? null : colors, blending);
+		camera.canvas.graphics.drawTriangles(vertices, indices, uvt, TriangleCulling.NONE, (colored) ? colors : null, blending);
 		#end
 		camera.canvas.graphics.endFill();
 		#if !FLX_NO_DEBUG
