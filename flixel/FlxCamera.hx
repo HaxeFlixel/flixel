@@ -14,6 +14,7 @@ import flixel.graphics.tile.FlxDrawBaseItem;
 import flixel.graphics.tile.FlxDrawTilesItem;
 import flixel.graphics.tile.FlxDrawTrianglesItem;
 import flixel.math.FlxMath;
+import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.util.FlxColor;
@@ -318,7 +319,7 @@ class FlxCamera extends FlxBasic
 	// TODO: use this transform matrix later in hardware accelerated mode...
 	private var _transform:Matrix;
 	
-	private var _helperMatrix:Matrix = new Matrix();
+	private var _helperMatrix:FlxMatrix = new FlxMatrix();
 	
 	/**
 	 * Currently used draw stack item
@@ -347,6 +348,7 @@ class FlxCamera extends FlxBasic
 	 */
 	private static var _storageTrianglesHead:FlxDrawTrianglesItem;
 	
+	#if !FLX_RENDER_TRIANGLE
 	@:noCompletion
 	public function startQuadBatch(graphic:FlxGraphic, colored:Bool, blend:BlendMode = null, smooth:Bool = false):FlxDrawTilesItem
 	{
@@ -396,6 +398,13 @@ class FlxCamera extends FlxBasic
 		
 		return itemToReturn;
 	}
+	#else
+	@:noCompletion
+	public function startQuadBatch(graphic:FlxGraphic, colored:Bool, blend:BlendMode = null, smooth:Bool = false):FlxDrawTrianglesItem
+	{
+		return startTrianglesBatch(graphic, smooth, colored, blend);
+	}
+	#end
 	
 	@:noCompletion
 	public function startTrianglesBatch(graphic:FlxGraphic, smoothing:Bool = false, isColored:Bool = false, blend:BlendMode = null):FlxDrawTrianglesItem
@@ -500,92 +509,16 @@ class FlxCamera extends FlxBasic
 		}
 	}
 	
-	public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:Matrix, cr:Float = 1.0, cg:Float = 1.0, cb:Float = 1.0, ca:Float = 1.0, blend:BlendMode = null, smoothing:Bool = false):Void
+	public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix, cr:Float = 1.0, cg:Float = 1.0, cb:Float = 1.0, ca:Float = 1.0, blend:BlendMode = null, smoothing:Bool = false):Void
 	{
 		#if !FLX_RENDER_TRIANGLE
 		var isColored:Bool = (cr != 1.0) || (cg != 1.0) || (cb != 1.0);
 		var drawItem:FlxDrawTilesItem = startQuadBatch(frame.parent, isColored, blend, smoothing);
-		drawItem.setData(frame.frame, matrix, cr, cg, cb, ca);
 		#else
 		var isColored:Bool = (cr != 1.0) || (cg != 1.0) || (cb != 1.0) || (ca != 1.0);
 		var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(frame.parent, smoothing, isColored, blend);
-		
-		var vs = drawItem.vertices;
-		var idx = drawItem.indices;
-		var uvt = drawItem.uvt;
-		var cols = drawItem.colors;
-		var prevVerticesPos = drawItem.verticesPosition;
-		var prevIndicesPos = drawItem.indicesPosition;
-		var prevColorsPos = drawItem.colorsPosition;
-		var prevNumberOfVertices = drawItem.numVertices;
-		
-		var bdW:Int = frame.parent.width;
-		var bdH:Int = frame.parent.height;
-		
-		var point:FlxPoint = FlxPoint.flxPoint;
-		
-		point.set(0, 0);
-		point.transform(matrix);
-		
-		vs[prevVerticesPos] = point.x;
-		vs[prevVerticesPos + 1] = point.y;
-		
-		uvt[prevVerticesPos] = frame.uv.x;
-		uvt[prevVerticesPos + 1] = frame.uv.y;
-		
-		point.set(frame.frame.width, 0);
-		point.transform(matrix);
-		
-		vs[prevVerticesPos + 2] = point.x;
-		vs[prevVerticesPos + 3] = point.y;
-		
-		uvt[prevVerticesPos + 2] = frame.uv.width;
-		uvt[prevVerticesPos + 3] = frame.uv.y;
-		
-		point.set(frame.frame.width, frame.frame.height);
-		point.transform(matrix);
-		
-		vs[prevVerticesPos + 4] = point.x;
-		vs[prevVerticesPos + 5] = point.y;
-		
-		uvt[prevVerticesPos + 4] = frame.uv.width;
-		uvt[prevVerticesPos + 5] = frame.uv.height;
-		
-		point.set(0, frame.frame.height);
-		point.transform(matrix);
-		
-		vs[prevVerticesPos + 6] = point.x;
-		vs[prevVerticesPos + 7] = point.y;
-		
-		uvt[prevVerticesPos + 6] = frame.uv.x;
-		uvt[prevVerticesPos + 7] = frame.uv.height;
-		
-		idx[prevIndicesPos] = prevNumberOfVertices;
-		idx[prevIndicesPos + 1] = prevNumberOfVertices + 1;
-		idx[prevIndicesPos + 2] = prevNumberOfVertices + 2;
-		idx[prevIndicesPos + 3] = prevNumberOfVertices + 2;
-		idx[prevIndicesPos + 4] = prevNumberOfVertices + 3;
-		idx[prevIndicesPos + 5] = prevNumberOfVertices;
-		
-		if (isColored)
-		{
-			#if neko
-			var color:FlxColor = FlxColor.fromRGBFloat(cr, cg, cb, 1.0);
-			#else
-			var color:FlxColor = FlxColor.fromRGBFloat(cr, cg, cb, ca);
-			#end
-			
-			cols[prevColorsPos] = color;
-			cols[prevColorsPos + 1] = color;
-			cols[prevColorsPos + 2] = color;
-			cols[prevColorsPos + 3] = color;
-			
-			drawItem.colorsPosition += 4;
-		}
-		
-		drawItem.verticesPosition += 8;
-		drawItem.indicesPosition += 6;
 		#end
+		drawItem.setData(frame, matrix, cr, cg, cb, ca);
 	}
 	
 	public function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle, destPoint:Point, cr:Float = 1.0, cg:Float = 1.0, cb:Float = 1.0, ca:Float = 1.0, blend:BlendMode = null, smoothing:Bool = false):Void
@@ -595,73 +528,11 @@ class FlxCamera extends FlxBasic
 		#if !FLX_RENDER_TRIANGLE
 		var isColored:Bool = (cr != 1.0) || (cg != 1.0) || (cb != 1.0);
 		var drawItem:FlxDrawTilesItem = startQuadBatch(frame.parent, isColored, blend, smoothing);
-		drawItem.setData(frame.frame, _helperMatrix, cr, cg, cb, ca);
 		#else
 		var isColored:Bool = (cr != 1.0) || (cg != 1.0) || (cb != 1.0) || (ca != 1.0);
 		var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(frame.parent, smoothing, isColored, blend);
-		
-		var vs = drawItem.vertices;
-		var idx = drawItem.indices;
-		var uvt = drawItem.uvt;
-		var cols = drawItem.colors;
-		var prevVerticesPos = drawItem.verticesPosition;
-		var prevIndicesPos = drawItem.indicesPosition;
-		var prevColorsPos = drawItem.colorsPosition;
-		var prevNumberOfVertices = drawItem.numVertices;
-		
-		var bdW:Int = frame.parent.width;
-		var bdH:Int = frame.parent.height;
-		
-		vs[prevVerticesPos] = _helperMatrix.tx;
-		vs[prevVerticesPos + 1] = _helperMatrix.ty;
-		
-		uvt[prevVerticesPos] = frame.uv.x;
-		uvt[prevVerticesPos + 1] = frame.uv.y;
-		
-		vs[prevVerticesPos + 2] = _helperMatrix.tx + frame.frame.width;
-		vs[prevVerticesPos + 3] = _helperMatrix.ty;
-		
-		uvt[prevVerticesPos + 2] = frame.uv.width;
-		uvt[prevVerticesPos + 3] = frame.uv.y;
-		
-		vs[prevVerticesPos + 4] = _helperMatrix.tx + frame.frame.width;
-		vs[prevVerticesPos + 5] = _helperMatrix.ty + frame.frame.height;
-		
-		uvt[prevVerticesPos + 4] = frame.uv.width;
-		uvt[prevVerticesPos + 5] = frame.uv.height;
-		
-		vs[prevVerticesPos + 6] = _helperMatrix.tx;
-		vs[prevVerticesPos + 7] = _helperMatrix.ty + frame.frame.height;
-		
-		uvt[prevVerticesPos + 6] = frame.uv.x;
-		uvt[prevVerticesPos + 7] = frame.uv.height;
-		
-		idx[prevIndicesPos] = prevNumberOfVertices;
-		idx[prevIndicesPos + 1] = prevNumberOfVertices + 1;
-		idx[prevIndicesPos + 2] = prevNumberOfVertices + 2;
-		idx[prevIndicesPos + 3] = prevNumberOfVertices + 2;
-		idx[prevIndicesPos + 4] = prevNumberOfVertices + 3;
-		idx[prevIndicesPos + 5] = prevNumberOfVertices;
-		
-		if (isColored)
-		{
-			#if neko
-			var color:FlxColor = FlxColor.fromRGBFloat(cr, cg, cb, 1.0);
-			#else
-			var color:FlxColor = FlxColor.fromRGBFloat(cr, cg, cb, ca);
-			#end
-			
-			cols[prevColorsPos] = color;
-			cols[prevColorsPos + 1] = color;
-			cols[prevColorsPos + 2] = color;
-			cols[prevColorsPos + 3] = color;
-			
-			drawItem.colorsPosition += 4;
-		}
-		
-		drawItem.verticesPosition += 8;
-		drawItem.indicesPosition += 6;
 		#end
+		drawItem.setData(frame, _helperMatrix, cr, cg, cb, ca);
 	}
 	
 	public function drawVertex():Void

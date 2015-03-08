@@ -1,5 +1,7 @@
 package flixel.graphics.tile;
 import flixel.FlxCamera;
+import flixel.graphics.frames.FlxFrame;
+import flixel.math.FlxMatrix;
 import openfl.display.BlendMode;
 import openfl.display.Tilesheet;
 
@@ -67,6 +69,9 @@ class FlxDrawBaseItem<T>
 	}
 	
 	public function render(camera:FlxCamera):Void {  }
+	
+	public function setData(frame:FlxFrame, matrix:FlxMatrix,
+		red:Float = 1, green:Float = 1, blue:Float = 1, alpha:Float = 1):Void {  }
 	
 	private function get_numVertices():Int
 	{

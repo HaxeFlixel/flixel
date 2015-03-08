@@ -2,12 +2,13 @@ package flixel.graphics.tile;
 
 import flixel.FlxCamera;
 import flixel.graphics.FlxGraphic;
+import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.tile.FlxDrawBaseItem.FlxDrawItemType;
+import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.util.FlxColor;
 import openfl.display.Tilesheet;
-import openfl.geom.Matrix;
 
 class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 {
@@ -34,11 +35,13 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 		drawData = null;
 	}
 	
-	public inline function setData(rect:FlxRect, matrix:Matrix,
+	override public function setData(frame:FlxFrame, matrix:FlxMatrix,
 		red:Float = 1, green:Float = 1, blue:Float = 1, alpha:Float = 1):Void
 	{
 		drawData[position++] = matrix.tx;
 		drawData[position++] = matrix.ty;
+		
+		var rect:FlxRect = frame.frame;
 		
 		drawData[position++] = rect.x;
 		drawData[position++] = rect.y;

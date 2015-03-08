@@ -845,7 +845,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		var hackScaleX:Float = tileScaleHack * scaleX;
 		var hackScaleY:Float = tileScaleHack * scaleY;
 		
-		var drawItem:FlxDrawTilesItem = Camera.startQuadBatch(graphic, isColored, blend);
+		var drawItem = Camera.startQuadBatch(graphic, isColored, blend);
 	#end
 		
 		// Copy tile images into the tile buffer
@@ -939,7 +939,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 					_matrix.scale(hackScaleX, hackScaleY);
 					_matrix.translate(drawX, drawY);
 					
-					drawItem.setData(frame.frame, _matrix, color.redFloat, color.greenFloat, color.blueFloat, alpha);
+					drawItem.setData(frame, _matrix, color.redFloat, color.greenFloat, color.blueFloat, alpha);
 				#end
 				}
 				

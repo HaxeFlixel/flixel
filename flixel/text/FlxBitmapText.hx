@@ -331,7 +331,7 @@ class FlxBitmapText extends FlxSprite
 			bgAlpha *= backgroundColor.alphaFloat;
 		}
 		
-		var drawItem:FlxDrawTilesItem;
+		var drawItem;
 		var currFrame:FlxFrame = null;
 		var currTileX:Float = 0;
 		var currTileY:Float = 0;
@@ -405,7 +405,7 @@ class FlxBitmapText extends FlxSprite
 				
 				_matrix.translate(_point.x + ox, _point.y + oy);
 				
-				drawItem.setData(currFrame.frame, _matrix, borderRed, borderGreen, borderBlue, bAlpha);
+				drawItem.setData(currFrame, _matrix, borderRed, borderGreen, borderBlue, bAlpha);
 			}
 			
 			for (j in 0...textLength)
@@ -427,7 +427,7 @@ class FlxBitmapText extends FlxSprite
 				
 				_matrix.translate(_point.x + ox, _point.y + oy);
 				
-				drawItem.setData(currFrame.frame, _matrix, textRed, textGreen, textBlue, tAlpha);
+				drawItem.setData(currFrame, _matrix, textRed, textGreen, textBlue, tAlpha);
 			}
 			
 			#if !FLX_NO_DEBUG
