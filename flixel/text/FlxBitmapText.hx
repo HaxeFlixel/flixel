@@ -1034,11 +1034,7 @@ class FlxBitmapText extends FlxSprite
 		
 		if (!useTiles)
 		{
-			if (textBitmap != null && (frameWidth != textBitmap.width || frameHeight != textBitmap.height))
-			{
-				textBitmap.dispose();
-				textBitmap = null;
-			}
+			textBitmap = FlxDestroyUtil.disposeIfNotEqual(textBitmap, frameWidth, frameHeight);
 			
 			if (textBitmap == null)
 			{

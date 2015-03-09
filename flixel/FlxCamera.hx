@@ -1231,7 +1231,7 @@ class FlxCamera extends FlxBasic
 				_flashBitmap.bitmapData = buffer;
 				_flashRect.width = width;
 				_flashRect.height = height;
-				_fill.dispose();
+				_fill = FlxDestroyUtil.dispose(_fill);
 				_fill = new BitmapData(width, height, true, FlxColor.TRANSPARENT);
 				FlxG.bitmap.removeIfNoUse(oldBuffer);
 			}
