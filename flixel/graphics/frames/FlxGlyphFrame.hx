@@ -22,12 +22,21 @@ class FlxGlyphFrame extends FlxFrame
 	
 	public var charCode:Int;
 	
+	public var font:FlxBitmapFont;
+	
 	@:allow(flixel)
-	private function new(parent:FlxGraphic, charCode:Int) 
+	private function new(parent:FlxGraphic, charCode:Int, font:FlxBitmapFont) 
 	{
 		super(parent);
 		this.charCode = charCode;
 		type = FlxFrameType.GLYPH;
+		this.font = font;
+	}
+	
+	override public function destroy():Void 
+	{
+		font = null;
+		super.destroy();
 	}
 	
 	override public function paint(bmd:BitmapData = null, point:Point = null, mergeAlpha:Bool = false):BitmapData
@@ -59,6 +68,7 @@ class FlxGlyphFrame extends FlxFrame
 		return bmd;
 	}
 	
+	// TODO: implement it...
 	override public function paintFlipped(bmd:BitmapData = null, point:Point = null, flipX:Bool = false, flipY:Bool = false, mergeAlpha:Bool = false):BitmapData
 	{
 		return bmd;

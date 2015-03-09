@@ -474,7 +474,9 @@ class FlxBitmapFont extends FlxFramesCollection
 	{
 		if (frame.width == 0 || frame.height == 0 || glyphs.get(charCode) != null)	return;
 		
-		var glyphFrame:FlxGlyphFrame = new FlxGlyphFrame(parent, charCode);
+		var glyphFrame:FlxGlyphFrame = new FlxGlyphFrame(parent, charCode, this);
+		
+		// TODO: do something with frame's sourceSize later
 		glyphFrame.sourceSize.set(frame.width, frame.height);
 		glyphFrame.offset.copyFrom(offset);
 		glyphFrame.xAdvance = xAdvance;
