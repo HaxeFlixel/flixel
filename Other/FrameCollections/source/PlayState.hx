@@ -4,9 +4,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.graphics.frames.FlxAtlasFrames;
-import flixel.graphics.frames.FlxBarFrames;
 import flixel.graphics.frames.FlxBitmapFont;
-import flixel.graphics.frames.FlxClippedFrames;
 import flixel.graphics.frames.FlxFilterFrames;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.frames.FlxTileFrames;
@@ -16,8 +14,6 @@ import flixel.text.FlxBitmapText;
 import flixel.text.FlxText;
 import flixel.tile.FlxTileblock;
 import flixel.tile.FlxTilemap;
-import flixel.ui.FlxBar;
-import flixel.ui.FlxBar.FlxBarFillDirection;
 import flixel.util.FlxColor;
 import openfl.Assets;
 import openfl.filters.BlurFilter;
@@ -81,24 +77,6 @@ class PlayState extends FlxState
 				tileSprite.immovable = true;
 			}
 		}
-		
-		// there is a special frames collection for progress bars (just in case if you need it), but mostly you'll be using FlxBars for it and these frames collections will be generated automatically
-		var barFramesAxe:FlxBarFrames = FlxBarFrames.fromFrame(atlasFrames.getByName("100px-1,202,0,200-Scythescraper.png"), 
-			FlxBarFillDirection.VERTICAL_INSIDE_OUT);
-		
-		var axeBar:FlxSprite = new FlxSprite(10, 300);
-		axeBar.frames = barFramesAxe;
-		axeBar.antialiasing = true;
-		
-		var animationFrames:Array<Int> = [];
-		for (i in 0...100)
-		{
-			animationFrames.push(i);
-		}
-		
-		axeBar.animation.add("bar", animationFrames);
-		axeBar.animation.play("bar");
-		add(axeBar);
 		
 		// Let's try bitmap text and bitmap font, which is another one type of frames collection
 		var bitmapText:FlxBitmapText = new FlxBitmapText();
