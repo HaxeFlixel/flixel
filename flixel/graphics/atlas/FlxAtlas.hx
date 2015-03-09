@@ -574,7 +574,7 @@ class FlxAtlas implements IFlxDestroyable
 	 * @param	region			Region of source image to use as a source graphic
 	 * @return	Generated TileFrames for added node
 	 */
-	public function addNodeWithSpacings(Graphic:FlxGraphicSource, ?Key:String, tileSize:FlxPoint, tileSpacing:FlxPoint, region:FlxRect = null):FlxTileFrames
+	public function addNodeWithSpacesAndBorders(Graphic:FlxGraphicSource, ?Key:String, tileSize:FlxPoint, tileSpacing:FlxPoint, tileBorder:FlxPoint = null, region:FlxRect = null):FlxTileFrames
 	{
 		var key:String = FlxAssets.resolveKey(Graphic, Key);
 		
@@ -586,10 +586,21 @@ class FlxAtlas implements IFlxDestroyable
 			return null;
 		}
 		
-		key = FlxG.bitmap.getKeyWithSpacings(key, tileSize, tileSpacing, region);
+		key = FlxG.bitmap.getKeyWithSpacesAndBorders(key, tileSize, tileSpacing, tileBorder, region);
+		
+		var borderX:Int = 0;
+		var borderY:Int = 0;
+		
+		if (tileBorder != null)
+		{
+			borderX = Std.int(tileBorder.x);
+			borderY = Std.int(tileBorder.y); 
+		}
+		
+		var spaces:FlxPoint = FlxPoint.get().copyFrom(tileSpacing).add(borderX, borderY);
 		
 		if (hasNodeWithName(key) == true)
-			return nodes.get(key).getTileFrames(tileSize, tileSpacing);
+			return nodes.get(key).getTileFrames(tileSize, spaces);
 		
 		var data:BitmapData = FlxAssets.resolveBitmapData(Graphic);
 		
@@ -601,7 +612,7 @@ class FlxAtlas implements IFlxDestroyable
 			return null;
 		}
 		
-		var nodeData:BitmapData = FlxBitmapDataUtil.addSpacing(data, tileSize, tileSpacing, region);
+		var nodeData:BitmapData = FlxBitmapDataUtil.addSpacesAndBorders(data, tileSize, tileSpacing, tileBorder, region);
 		var node:FlxNode = addNode(nodeData, key);
 		
 		if (node == null) 
@@ -612,7 +623,7 @@ class FlxAtlas implements IFlxDestroyable
 			return null;
 		}
 		
-		return node.getTileFrames(tileSize, tileSpacing);
+		return node.getTileFrames(tileSize, spaces);
 	}
 	
 	/**
