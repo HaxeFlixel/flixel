@@ -414,8 +414,54 @@ class FlxFrame implements IFlxDestroyable
 			matrix.rotateByNegative90();
 		}
 		
-		// TODO: continue from here...
+		if (rotation = FlxFrameAngle.ANGLE_90)
+		{
+			matrix.rotateByPositive90();
+			// TODO: don't forget to apply additional translation...
+		}
+		else if (rotation = FlxFrameAngle.ANGLE_NEG_90)
+		{
+			matrix.rotateByNegative90();
+			// TODO: don't forget to apply additional translation...
+		}
 		
+		var scaleX:Int = flipX ? -1 : 1;
+		var scaleY:Int = flipY ? -1 : 1;
+		
+		matrix.scale(scaleX, scaleY);
+		
+		// TODO: continue from here...
+		/*
+		if (flipX)
+		{
+			matrix.translate(sourceSize.x - offset.x - 0.5 * w, 0);
+			FlxRect.rect.x = sourceSize.x - offset.x - w;
+		}
+		else
+		{
+			matrix.translate(offset.x + 0.5 * w, 0);
+			FlxRect.rect.x = offset.x;
+		}
+		
+		if (flipY)
+		{
+			matrix.translate(0, sourceSize.y - offset.y - 0.5 * h);
+			FlxRect.rect.y = sourceSize.y - offset.y - h;
+		}
+		else
+		{
+			matrix.translate(0, offset.y + 0.5 * h);
+			FlxRect.rect.y = offset.y;
+		}
+		
+		matrix.translate(point.x, point.y);
+		FlxRect.rect.x += point.x;
+		FlxRect.rect.y += point.y;
+		
+		FlxRect.rect.width = w;
+		FlxRect.rect.height = h;
+		*/
+		bmd.draw(parent.bitmap, matrix, null, null, FlxRect.rect);
 		return bmd;
 	}
 	
