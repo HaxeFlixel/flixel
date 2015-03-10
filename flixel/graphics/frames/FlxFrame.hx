@@ -533,4 +533,5 @@ abstract FlxFrameAngle(Int) from Int to Int
 	var ANGLE_0			= 0;
 	var ANGLE_90		= 90;
 	var ANGLE_NEG_90	= -90;
+	var ANGLE_270		= -90;
 }
