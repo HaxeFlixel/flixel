@@ -200,9 +200,11 @@ class FlxFrame implements IFlxDestroyable
 	}
 	
 	/**
-	 * Draws frame on specified BitmapData object (all underlying pixels become unvisible).
+	 * Draws frame on specified BitmapData object.
 	 * 
-	 * @param	bmd	BitmapData object to draw this frame on. If bmd is null or doesn't have the same size as frame then new BitmapData created
+	 * @param	bmd			BitmapData object to draw this frame on. If bmd is null then new BitmapData created
+	 * @param	point		Where to draw this frame on specified BitmapData object
+	 * @param	mergeAlpha	Whether to merge alphas or not (works like with BitmapData's copyPixels() method). Default value is false
 	 * @return	Modified or newly created BitmapData with frame image on it
 	 */
 	public function paint(bmd:BitmapData = null, point:Point = null, mergeAlpha:Bool = false):BitmapData
@@ -250,6 +252,16 @@ class FlxFrame implements IFlxDestroyable
 		return bmd;
 	}
 	
+	/**
+	 * Draws flipped frame on specified BitmapData object.
+	 * 
+	 * @param	bmd			BitmapData object to draw this frame on. If bmd is null then new BitmapData created
+	 * @param	point		Where to draw this frame on specified BitmapData object
+	 * @param	flipX		Do we need to flip frame horizontally
+	 * @param	flipY		Do we need to flip frame vertically
+	 * @param	mergeAlpha	Whether to merge alphas or not (works like with BitmapData's copyPixels() method). Default value is false
+	 * @return	Modified or newly created BitmapData with frame image on it
+	 */
 	public function paintFlipped(bmd:BitmapData = null, point:Point = null, flipX:Bool = false, flipY:Bool = false, mergeAlpha:Bool = false):BitmapData
 	{
 		if (type == FlxFrameType.EMPTY)
@@ -334,6 +346,12 @@ class FlxFrame implements IFlxDestroyable
 		return bmd;
 	}
 	
+	// TODO: implement it...
+	public function paintFlippedAndRotated(bmd:BitmapData = null, point:Point = null, flipX:Bool = false, flipY:Bool = false, angle:FlxFrameAngle = 0, mergeAlpha:Bool = false):BitmapData
+	{
+		return null;
+	}
+	
 	public function copyTo(clone:FlxFrame):FlxFrame
 	{
 		if (clone == null)
@@ -353,9 +371,6 @@ class FlxFrame implements IFlxDestroyable
 		clone.type = type;
 		return clone;
 	}
-	
-	// TODO: add method to draw (rotated + flipped) frame
-	// paintTransformedFrame(bmd, frame, flipX, flipY, rotation, mergeAlpha);
 	
 	public function destroy():Void
 	{

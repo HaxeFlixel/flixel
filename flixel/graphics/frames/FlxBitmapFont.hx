@@ -265,6 +265,7 @@ class FlxBitmapFont extends FlxFramesCollection
 			}
 		}
 		
+		font.updateSourceHeight();
 		return font;
 	}
 	
@@ -356,6 +357,7 @@ class FlxBitmapFont extends FlxFramesCollection
 		}
 		
 		font.lineHeight = font.size;
+		font.updateSourceHeight();
 		
 		// remove background color
 		var point:Point = FlxPoint.point1;
@@ -459,6 +461,7 @@ class FlxBitmapFont extends FlxFramesCollection
 			}
 		}
 		
+		font.updateSourceHeight();
 		return font;
 	}
 	
@@ -474,18 +477,22 @@ class FlxBitmapFont extends FlxFramesCollection
 	{
 		if (frame.width == 0 || frame.height == 0 || glyphs.get(charCode) != null)	return;
 		
-		var glyphFrame:FlxGlyphFrame = new FlxGlyphFrame(parent, charCode, this);
-		
-		// TODO: do something with frame's sourceSize later
-		glyphFrame.sourceSize.set(frame.width, frame.height);
+		var glyphFrame:FlxGlyphFrame = new FlxGlyphFrame(parent, charCode);
+		glyphFrame.sourceSize.set(xAdvance, frame.height + offset.y);
 		glyphFrame.offset.copyFrom(offset);
 		glyphFrame.xAdvance = xAdvance;
 		glyphFrame.frame = frame;
-		
-		offset.put();
-		
 		frames.push(glyphFrame);
 		glyphs.set(charCode, glyphFrame);
+		offset.put();
+	}
+	
+	private function updateSourceHeight():Void
+	{
+		for (frame in frames)
+		{
+			frame.sourceSize.y = lineHeight;
+		}
 	}
 	
 	public static inline function findFont(graphic:FlxGraphic):FlxBitmapFont
