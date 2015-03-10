@@ -347,9 +347,76 @@ class FlxFrame implements IFlxDestroyable
 	}
 	
 	// TODO: implement it...
-	public function paintFlippedAndRotated(bmd:BitmapData = null, point:Point = null, flipX:Bool = false, flipY:Bool = false, angle:FlxFrameAngle = 0, mergeAlpha:Bool = false):BitmapData
+	/**
+	 * Draws rotated and flipped frame on specified BitmapData object.
+	 * 
+	 * @param	bmd			BitmapData object to draw this frame on. If bmd is null then new BitmapData created
+	 * @param	point		Where to draw this frame on specified BitmapData object
+	 * @param	angle		How much rotate the frame. Works only with 0, 90 and -90 (or 270) values
+	 * @param	flipX		Do we need to flip frame horizontally
+	 * @param	flipY		Do we need to flip frame vertically
+	 * @param	mergeAlpha	Whether to merge alphas or not (works like with BitmapData's copyPixels() method). Default value is false
+	 * @return	Modified or newly created BitmapData with frame image on it
+	 */
+	public function paintRotatedAndFlipped(bmd:BitmapData = null, point:Point = null, rotation:FlxFrameAngle = 0, flipX:Bool = false, flipY:Bool = false, mergeAlpha:Bool = false):BitmapData
 	{
-		return null;
+		if (type == FlxFrameType.EMPTY)
+		{
+			return paint(bmd, point, mergeAlpha);
+		}
+		
+		if (point == null)
+		{
+			point = FlxPoint.point2;
+			point.setTo(0, 0);
+		}
+		
+		var w:Int = Std.int(sourceSize.x);
+		var h:Int = Std.int(sourceSize.y);
+		
+		if (rotation != FlxFrameAngle.ANGLE_0)
+		{
+			var t:Int = w;
+			w = h;
+			h = t;
+		}
+		
+		if (bmd != null && !mergeAlpha)
+		{
+			var rect:Rectangle = FlxRect.rect;
+			rect.setTo(point.x, point.y, w, h);
+			bmd.fillRect(rect, FlxColor.TRANSPARENT);
+		}
+		else if (bmd == null)
+		{
+			bmd = new BitmapData(w, h, true, FlxColor.TRANSPARENT);
+		}
+		
+		var fw:Float = frame.width;
+		var fh:Float = frame.height;
+		
+		if (angle != FlxFrameAngle.ANGLE_0)
+		{
+			fw = frame.height;
+			fh = frame.width;
+		}
+		
+		var matrix:FlxMatrix = FlxMatrix.matrix;
+		matrix.identity();
+		matrix.translate( -(frame.x + 0.5 * frame.width), -(frame.y + 0.5 * frame.height));
+		
+		if (angle == FlxFrameAngle.ANGLE_90)
+		{
+			matrix.rotateByPositive90();
+		}
+		else if (angle == FlxFrameAngle.ANGLE_NEG_90)
+		{
+			matrix.rotateByNegative90();
+		}
+		
+		// TODO: continue from here...
+		
+		return bmd;
 	}
 	
 	public function copyTo(clone:FlxFrame):FlxFrame
