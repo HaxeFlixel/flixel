@@ -44,6 +44,8 @@ class FlxFrame implements IFlxDestroyable
 	 */
 	public static function clipTo(original:FlxFrame, clip:FlxRect, clippedFrame:FlxFrame = null):FlxFrame
 	{
+		// TODO: maybe rewrite it...
+		
 		var angle:FlxFrameAngle = original.angle;
 		
 		if (clippedFrame == null)
@@ -264,6 +266,8 @@ class FlxFrame implements IFlxDestroyable
 	 */
 	public function paintFlipped(bmd:BitmapData = null, point:Point = null, flipX:Bool = false, flipY:Bool = false, mergeAlpha:Bool = false):BitmapData
 	{
+		// TODO: maybe rewrite it...
+		
 		if (type == FlxFrameType.EMPTY)
 		{
 			return paint(bmd, point, mergeAlpha);
