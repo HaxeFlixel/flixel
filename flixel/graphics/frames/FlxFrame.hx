@@ -414,12 +414,12 @@ class FlxFrame implements IFlxDestroyable
 			matrix.rotateByNegative90();
 		}
 		
-		if (rotation = FlxFrameAngle.ANGLE_90)
+		if (rotation == FlxFrameAngle.ANGLE_90)
 		{
 			matrix.rotateByPositive90();
 			// TODO: don't forget to apply additional translation...
 		}
-		else if (rotation = FlxFrameAngle.ANGLE_NEG_90)
+		else if (rotation == FlxFrameAngle.ANGLE_NEG_90)
 		{
 			matrix.rotateByNegative90();
 			// TODO: don't forget to apply additional translation...
