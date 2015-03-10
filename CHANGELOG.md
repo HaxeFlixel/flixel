@@ -1,5 +1,12 @@
 4.0.0
 ------------------------------
+* Added `FlxStrip` class which allows to draw triangles (just like with drawTriangles in flash). It's extremely slow in blit render mode, but works reasonably fast in tile render mode
+* Made blit and tile renderer more general. They still work quite differently, but share a lot of code
+* Reworked tile renderer, it doesn't use addTileRect anymore (but uses Tilesheet.TILE_RECT flag now), so flixel won't work with old versions of openfl
+* Added experimental rendering which works with `drawTriangles()` method. You can enable it if you set `FLX_RENDER_TRIANGLE` haxedef in project.xml (`FLX_RENDER_TILE` should be enabled also).
+* `FlxFrame`:
+ * it doesn't store frame's bitmapdatas anymore, so i removed `getBitmap()` and other bitmap methods
+ * added `paint()` and `paintFlipped()` methods instead. This solution requires much less memory, but will be a bit slower.
 * `FlxArrayUtil`: removed `indexOf()`
 * Changed static inline vars to enums:
  * `FlxCamera` follow styles
@@ -70,6 +77,7 @@
  * `loadMap()` accepts `FlxGraphic`, `String`, `FlxTileFrames` or `BitmapData` as `TileGraphic` now
  * `loadMap()` has been split into `loadMapFromCSV()` and `loadMapFromArray()`
  * added `loadMapFrom2DArray()`
+ * added `offset` property (thanks @steverichey)
 * `FlxBaseTilemap`: added `setRect()` method which allows you to set a rectangular region of tiles to the provided index
 * `FlxTile`: added `frame` variable which holds tile's "graphic"
 * `FlxTileblock`: 
@@ -153,7 +161,7 @@
  * added `graphicLoaded()` which is called whenever a new graphic is loaded
  * `getScreenXY()` -> `getScreenPosition()`
  * removed the `NewSprite` argument from `clone()`
- * added `clipRect()` and `unclip()`
+ * added `clipRect` property
  * renamed `frames` property to `numFrames`
  * added `frames` property which reflects sprite's current frames collection
  * removed `loadGraphicFromTexture()`, `loadRotatedGraphicFromTexture()` methods
@@ -163,6 +171,8 @@
  * added `loadRotatedFrame()` method which allows you to generate prerotated image from given frame and load it
  * added error message then trying to get pixels and graphic is null
  * made `drawFrame()` method not inlined, so it can be redefined in subclasses. For example, you can use it in `FlxText` now if you need to force immediate graphic regeneration.
+ * always change sprite's prerotated animation angle in sprite's `angle` setter, so there won't be any "lag" with it (thanks @jorgenpt)
+ * removed `resetFrameBitmaps()` method, since frames don't store bitmaps anymore. Just set `dirty` to true to force sprite's frame graphic regeneration on next render loop.
 * Added some helpful error messages when trying to target older swf versions
 * `FlxAngle`:
  * changed `rotatePoint()` to not invert the y-axis anymore and rotate clockwise (consistent with `FlxSprite#angle`)
@@ -176,8 +186,10 @@
 * `FlxSound`
   * Can now be used even if `FLX_NO_SOUND_SYSTEM` is enabled
   * `looped` is exposed as a public variable
+  * fixed `fadeIn()` and `fadeOut()` methods (thanks @Tiago-Ling)
 * `FlxVelocity`: `accelerateTowards()`-functions now only take a single `maxSpeed` argument (instead of x and y)
 * `FlxG.signals`: split `gameReset` into pre/post signals
+* `BaseScaleMode`: added `hAlign` and `vAlign` properties, so you can switch game's align mode on both axis
 * `RatioScaleMode#new()`: added a `fillScreen` option
 * Fixed scale modes not working correctly on HTML5
 * `FlxPath`: fixed an issue where a velocity would be set even if the object positon matches the current node
@@ -190,6 +202,7 @@
  * `complete` callback parameter in options is now called `onComplete`. Its type, `CompleteCallback`, is now called `TweenCallback`.
  * Added `onStart` and `onUpdate` callback parameters in options
  * fixed `active = false;` not doing anything during `onComplete()` of `LOOPING` or `PINGPONG` tweens
+* Angle tween sets sprite's angle on start now
 * `FlxTimer`:
  * timers with a time of 0 can now be started
  * `complete` was renamed to `onComplete`
@@ -209,8 +222,7 @@
  * so the atlas can be expanded while new images are added in the atlas. It starts from minimum size and grows up to maximum size (if there is no free space to hold new images)
  * added `powerOfTwo` property, which forces atlas size to be the power of two number (if true)
  * added `allowRotation` property, which is settable only in atlas constructor and tells whether new image added in the atlas could be rotated to fit in existing empty atlas nodes
-* Changed game scaling behavior on native targets: it doesn't scale game sprite, but scales tiles instead
-* Changed game scaling behavior on flash target: it scales camera's sprite now
+* Changed game scaling behavior for all targets: it scales camera's sprite now
 * Renamed `CachedGraphics` class to `FlxGraphic` and moved it in `flixel.graphics` package
 * Added static methods to `FlxGraphic` class for generation of objects of this type from various sources: `fromAssetKey()`, `fromClass()`, `fromBitmapData()`
 * `FlxGraphic`'s `bitmap` property is now settable, changing it will lead to regeneration of graphic's tilesheet. `FlxAtlas` uses this feature, since it could increase its size and therefore change its bitmapdata canvas
@@ -220,6 +232,7 @@
 * Added `FlxAtlasFrames` frames collection instead of various texture atlas loaders (like `SparrowData` and `TexturePackerData`). It contains various static methods for parsing atlas files
 * Rewrote `PxBitmapFont` class and renamed it to `FlxBitmapFont`. It supports (can parse) AngelCode, XNA and Monospace bitmap fonts now
 * Rewrote `FlxBitmapTextField` class and renamed it to `FlxBitmapText`
+* `FlxBitmapText`: removed `size` property
 * Added `FlxFilterFrames` frames collection instead of `FlxSpriteFilter` (see filters demo)
 * Changed `FlxGraphicAsset` from `OneOfFive<String, Class<Dynamic>, CachedGraphics, TextureRegion, BitmapData>` to `OneOfThree<FlxGraphic, BitmapData, String>` which means that graphic loading methods (in all classes) accept only these three types of objects
 * `FlxBitmapDataUtil`:
