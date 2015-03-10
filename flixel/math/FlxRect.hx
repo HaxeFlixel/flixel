@@ -267,6 +267,18 @@ class FlxRect implements IFlxPooled
 	}
 	
 	/**
+	 * Rounds x, y, width and height using Math.round()
+	 */
+	public inline function round():FlxRect
+	{
+		x = Math.round(x);
+		y = Math.round(y);
+		width = Math.round(width);
+		height = Math.round(height);
+		return this;
+	}
+	
+	/**
 	 * Necessary for IFlxDestroyable.
 	 */
 	public function destroy() {}

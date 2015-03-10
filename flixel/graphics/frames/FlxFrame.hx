@@ -44,8 +44,6 @@ class FlxFrame implements IFlxDestroyable
 	 */
 	public static function clipTo(original:FlxFrame, clip:FlxRect, clippedFrame:FlxFrame = null):FlxFrame
 	{
-		// TODO: check this method again since it doesn't work correctly with drawTriangles...
-		
 		var angle:FlxFrameAngle = original.angle;
 		
 		if (clippedFrame == null)
@@ -56,8 +54,8 @@ class FlxFrame implements IFlxDestroyable
 		{
 			clippedFrame.parent = original.parent;
 			clippedFrame.angle = angle;
-			FlxDestroyUtil.put(clippedFrame.frame);
-			FlxDestroyUtil.put(clippedFrame.uv);
+			clippedFrame.frame = FlxDestroyUtil.put(clippedFrame.frame);
+			clippedFrame.uv = FlxDestroyUtil.put(clippedFrame.uv);
 		}
 		
 		clippedFrame.sourceSize.copyFrom(original.sourceSize);

@@ -300,6 +300,16 @@ class FlxPoint implements IFlxPooled
 	}
 	
 	/**
+	 * Rounds x and y using Math.round()
+	 */
+	public inline function round():FlxPoint
+	{
+		x = Math.round(x);
+		y = Math.round(y);
+		return this;
+	}
+	
+	/**
 	 * Rotates this point clockwise in 2D space around another point by the given angle.
 	 * 
 	 * @param   Pivot   The pivot you want to rotate this point around

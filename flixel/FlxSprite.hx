@@ -1215,7 +1215,7 @@ class FlxSprite extends FlxObject
 	
 	private function set_clipRect(rect:FlxRect):FlxRect
 	{
-		clipRect = rect;
+		clipRect = rect.round();
 		
 		if (frames != null)
 		{
