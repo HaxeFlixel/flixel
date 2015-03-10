@@ -201,8 +201,8 @@ class FlxTileFrames extends FlxFramesCollection
 			}
 		}
 		
-		FlxDestroyUtil.put(clippedRect);
-		FlxDestroyUtil.put(helperRect);
+		clippedRect = FlxDestroyUtil.put(clippedRect);
+		helperRect = FlxDestroyUtil.put(helperRect);
 		
 		tileFrames.numCols = numCols;
 		tileFrames.numRows = numRows;
