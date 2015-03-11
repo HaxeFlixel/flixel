@@ -1124,7 +1124,7 @@ class FlxSprite extends FlxObject
 		
 		if (frame != null && clipRect != null)
 		{
-			_frame = FlxFrame.clipTo(frame, clipRect, _frame);
+			_frame = frame.clipTo(clipRect, _frame);
 		}
 		else if (frame != null)
 		{

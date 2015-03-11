@@ -783,10 +783,10 @@ class FlxBar extends FlxSprite
 			if (frontFrames != null)
 			{
 				var prct:Int = Std.int(percent);
-				_filledFlxRect.copyFromFlash(_filledBarRect);
+				_filledFlxRect.copyFromFlash(_filledBarRect).round();
 				if (prct > 0)
 				{
-					_frontFrame = FlxFrame.clipTo(frontFrames.frame, _filledFlxRect, _frontFrame);
+					_frontFrame = frontFrames.frame.clipTo(_filledFlxRect, _frontFrame);
 				}
 			}
 			#end

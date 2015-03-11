@@ -35,104 +35,6 @@ class FlxFrame implements IFlxDestroyable
 		return num1 - num2;
 	}
 	
-	/**
-	 * Frame clipping
-	 * @param	original		Original frame to clip
-	 * @param	clip			Clipping rectangle to apply on frame
-	 * @param	clippedFrame	The frame which will contain result of original frame clipping. If null then new frame will be created.
-	 * @return	Result of applying frame clipping
-	 */
-	public static function clipTo(original:FlxFrame, clip:FlxRect, clippedFrame:FlxFrame = null):FlxFrame
-	{
-		// TODO: maybe rewrite it...
-		
-		var angle:FlxFrameAngle = original.angle;
-		
-		if (clippedFrame == null)
-		{
-			clippedFrame = new FlxFrame(original.parent, angle);
-		}
-		else
-		{
-			clippedFrame.parent = original.parent;
-			clippedFrame.angle = angle;
-			clippedFrame.frame = FlxDestroyUtil.put(clippedFrame.frame);
-			clippedFrame.uv = FlxDestroyUtil.put(clippedFrame.uv);
-		}
-		
-		clippedFrame.sourceSize.copyFrom(original.sourceSize);
-		
-		// no need to make all calculations if original frame is empty...
-		if (original.type == FlxFrameType.EMPTY)
-		{
-			clippedFrame.type = FlxFrameType.EMPTY;
-			clippedFrame.offset.set(0, 0);
-			return clippedFrame;
-		}
-		
-		var helperRect:FlxRect = FlxRect.get(0, 0, original.sourceSize.x, original.sourceSize.y);
-		var clippedRect1:FlxRect = FlxRect.get(original.offset.x, original.offset.y, original.frame.width, original.frame.height);
-		
-		if (angle != FlxFrameAngle.ANGLE_0)
-		{
-			clippedRect1.width = original.frame.height;
-			clippedRect1.height = original.frame.width;
-		}
-		
-		var clippedRect2:FlxRect = clippedRect1.intersection(clip);		
-		var frameRect:FlxRect = clippedRect2.intersection(helperRect);
-		
-		if (frameRect.width == 0 || frameRect.height == 0 || 
-				clippedRect2.width == 0 || clippedRect2.height == 0)
-		{
-			clippedFrame.type = FlxFrameType.EMPTY;
-			frameRect.set(0, 0, 0, 0);
-			clippedFrame.frame = frameRect;
-			clippedFrame.offset.set(0, 0);
-		}
-		else
-		{
-			clippedFrame.type = FlxFrameType.REGULAR;
-			clippedFrame.offset.set(clippedRect2.x, clippedRect2.y);
-			
-			var x:Float = frameRect.x;
-			var y:Float = frameRect.y;
-			var w:Float = frameRect.width;
-			var h:Float = frameRect.height;
-			
-			if (angle == FlxFrameAngle.ANGLE_0)
-			{
-				frameRect.x -= clippedRect1.x;
-				frameRect.y -= clippedRect1.y;
-			}
-			else if (angle == FlxFrameAngle.ANGLE_NEG_90)
-			{
-				frameRect.x = clippedRect1.bottom - y - h;
-				frameRect.y = x - clippedRect1.x;
-				frameRect.width = h;
-				frameRect.height = w;
-			}
-			else if (angle == FlxFrameAngle.ANGLE_90)
-			{
-				frameRect.x = y - clippedRect1.y;
-				frameRect.y = clippedRect1.right - x - w;
-				frameRect.width = h;
-				frameRect.height = w;
-			}
-			
-			frameRect.x += original.frame.x;
-			frameRect.y += original.frame.y;
-			
-			clippedFrame.frame = frameRect;
-		}
-		
-		helperRect.put();
-		clippedRect1.put();
-		clippedRect2.put();
-		
-		return clippedFrame;
-	}
-	
 	public var name:String;
 	/**
 	 * Region of image to render
@@ -493,6 +395,101 @@ class FlxFrame implements IFlxDestroyable
 		// TODO: continue from here...
 		
 		return frameToFill;
+	}
+	
+	/**
+	 * Frame clipping
+	 * @param	clip			Clipping rectangle to apply on frame
+	 * @param	clippedFrame	The frame which will contain result of original frame clipping. If null then new frame will be created.
+	 * @return	Result of applying frame clipping
+	 */
+	public function clipTo(clip:FlxRect, clippedFrame:FlxFrame = null):FlxFrame
+	{
+		// TODO: maybe rewrite it...
+		
+		if (clippedFrame == null)
+		{
+			clippedFrame = new FlxFrame(parent, angle);
+		}
+		else
+		{
+			clippedFrame.parent = parent;
+			clippedFrame.angle = angle;
+			clippedFrame.frame = FlxDestroyUtil.put(clippedFrame.frame);
+			clippedFrame.uv = FlxDestroyUtil.put(clippedFrame.uv);
+		}
+		
+		clippedFrame.sourceSize.copyFrom(sourceSize);
+		
+		// no need to make all calculations if original frame is empty...
+		if (type == FlxFrameType.EMPTY)
+		{
+			clippedFrame.type = FlxFrameType.EMPTY;
+			clippedFrame.offset.set(0, 0);
+			return clippedFrame;
+		}
+		
+		var helperRect:FlxRect = FlxRect.get(0, 0, sourceSize.x, sourceSize.y);
+		var clippedRect1:FlxRect = FlxRect.get(offset.x, offset.y, frame.width, frame.height);
+		
+		if (angle != FlxFrameAngle.ANGLE_0)
+		{
+			clippedRect1.width = frame.height;
+			clippedRect1.height = frame.width;
+		}
+		
+		var clippedRect2:FlxRect = clippedRect1.intersection(clip);		
+		var frameRect:FlxRect = clippedRect2.intersection(helperRect);
+		
+		if (frameRect.width == 0 || frameRect.height == 0 || 
+				clippedRect2.width == 0 || clippedRect2.height == 0)
+		{
+			clippedFrame.type = FlxFrameType.EMPTY;
+			frameRect.set(0, 0, 0, 0);
+			clippedFrame.frame = frameRect;
+			clippedFrame.offset.set(0, 0);
+		}
+		else
+		{
+			clippedFrame.type = FlxFrameType.REGULAR;
+			clippedFrame.offset.set(clippedRect2.x, clippedRect2.y);
+			
+			var x:Float = frameRect.x;
+			var y:Float = frameRect.y;
+			var w:Float = frameRect.width;
+			var h:Float = frameRect.height;
+			
+			if (angle == FlxFrameAngle.ANGLE_0)
+			{
+				frameRect.x -= clippedRect1.x;
+				frameRect.y -= clippedRect1.y;
+			}
+			else if (angle == FlxFrameAngle.ANGLE_NEG_90)
+			{
+				frameRect.x = clippedRect1.bottom - y - h;
+				frameRect.y = x - clippedRect1.x;
+				frameRect.width = h;
+				frameRect.height = w;
+			}
+			else if (angle == FlxFrameAngle.ANGLE_90)
+			{
+				frameRect.x = y - clippedRect1.y;
+				frameRect.y = clippedRect1.right - x - w;
+				frameRect.width = h;
+				frameRect.height = w;
+			}
+			
+			frameRect.x += frame.x;
+			frameRect.y += frame.y;
+			
+			clippedFrame.frame = frameRect;
+		}
+		
+		helperRect.put();
+		clippedRect1.put();
+		clippedRect2.put();
+		
+		return clippedFrame;
 	}
 	
 	public function copyTo(clone:FlxFrame):FlxFrame
