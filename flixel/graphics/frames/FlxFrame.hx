@@ -469,6 +469,32 @@ class FlxFrame implements IFlxDestroyable
 		return bmd;
 	}
 	
+	// TODO: implement it...
+	/**
+	 * Generates frame with specified subregion of this frame
+	 * 
+	 * @param	rect			frame region to generate frame for
+	 * @param	frameToFill		frame to fill with data. If null then new frame will be created
+	 * @return	Specified frameToFill object but filled with data
+	 */
+	public function subFrameTo(rect:FlxRect, frameToFill:FlxFrame = null):FlxFrame
+	{
+		if (frameToFill == null)
+		{
+			frameToFill = new FlxFrame(parent, angle);
+		}
+		else
+		{
+			frameToFill.parent = parent;
+			frameToFill.angle = angle;
+			frameToFill.frame = FlxDestroyUtil.put(frameToFill.frame);
+		}
+		
+		// TODO: continue from here...
+		
+		return frameToFill;
+	}
+	
 	public function copyTo(clone:FlxFrame):FlxFrame
 	{
 		if (clone == null)

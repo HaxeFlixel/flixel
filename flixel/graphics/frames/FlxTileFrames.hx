@@ -103,6 +103,8 @@ class FlxTileFrames extends FlxFramesCollection
 	 */
 	public static function fromFrame(frame:FlxFrame, tileSize:FlxPoint, tileSpacing:FlxPoint = null):FlxTileFrames
 	{
+		// TODO: maybe rewrite it...
+		
 		var graphic:FlxGraphic = frame.parent;
 		// find TileFrames object, if there is one already
 		var tileFrames:FlxTileFrames = FlxTileFrames.findFrame(graphic, tileSize, null, frame, tileSpacing);
