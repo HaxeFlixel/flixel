@@ -492,7 +492,7 @@ class FlxFrame implements IFlxDestroyable
 		return clippedFrame;
 	}
 	
-	public function copyTo(clone:FlxFrame):FlxFrame
+	public function copyTo(clone:FlxFrame = null):FlxFrame
 	{
 		if (clone == null)
 		{
