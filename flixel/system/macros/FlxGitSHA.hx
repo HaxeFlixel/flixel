@@ -16,9 +16,19 @@ class FlxGitSHA
 	public static function buildGitSHA(library:String):Array<Field>
 	{
 		var fields:Array<Field> = Context.getBuildFields();
+		var libraryPath:String;
+		var sha:String;
 		
-		var libraryPath = getLibraryPath(library);
-		var sha = getGitSHA(libraryPath);
+		// make sure the build isn't cancelled if a Sys call fails
+		try
+		{
+			libraryPath = getLibraryPath(library);
+			sha = getGitSHA(libraryPath);
+		}
+		catch (_:Dynamic)
+		{
+			sha = "";
+		}
 		
 		fields.push({
 			name: "sha",
@@ -41,7 +51,7 @@ class FlxGitSHA
 		
 		for (i in 1...lines.length)
 		{
-			if (lines[i].trim() == '-D $library')
+			if (lines[i].startsWith('-D $library'))
 			{
 				result = lines[i - 1].trim(); 
 			}
