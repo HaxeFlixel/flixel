@@ -433,7 +433,7 @@ class FlxTileFrames extends FlxFramesCollection
 		
 		if (tileSpacing == null)
 		{
-			tileSpacing = FlxPoint.flxPoint;
+			tileSpacing = FlxPoint.flxPoint1;
 			tileSpacing.set(0, 0);
 		}
 		

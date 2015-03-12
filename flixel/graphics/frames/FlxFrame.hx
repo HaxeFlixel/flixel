@@ -405,8 +405,6 @@ class FlxFrame implements IFlxDestroyable
 	 */
 	public function clipTo(clip:FlxRect, clippedFrame:FlxFrame = null):FlxFrame
 	{
-		// TODO: maybe rewrite it...
-		
 		if (clippedFrame == null)
 		{
 			clippedFrame = new FlxFrame(parent, angle);
@@ -429,8 +427,10 @@ class FlxFrame implements IFlxDestroyable
 			return clippedFrame;
 		}
 		
-		var helperRect:FlxRect = FlxRect.get(0, 0, sourceSize.x, sourceSize.y);
-		var clippedRect1:FlxRect = FlxRect.get(offset.x, offset.y, frame.width, frame.height);
+		clip.offset( -offset.x, -offset.y);
+		
+		var helperRect:FlxRect = FlxRect.get( -offset.x, -offset.y, sourceSize.x, sourceSize.y);
+		var clippedRect1:FlxRect = FlxRect.get().setSize(frame.width, frame.height);
 		
 		if (angle != FlxFrameAngle.ANGLE_0)
 		{
@@ -441,8 +441,9 @@ class FlxFrame implements IFlxDestroyable
 		var clippedRect2:FlxRect = clippedRect1.intersection(clip);		
 		var frameRect:FlxRect = clippedRect2.intersection(helperRect);
 		
-		if (frameRect.width == 0 || frameRect.height == 0 || 
-				clippedRect2.width == 0 || clippedRect2.height == 0)
+		clip.offset(offset.x, offset.y);
+		
+		if (frameRect.isEmpty || clippedRect2.isEmpty)
 		{
 			clippedFrame.type = FlxFrameType.EMPTY;
 			frameRect.set(0, 0, 0, 0);
@@ -452,35 +453,33 @@ class FlxFrame implements IFlxDestroyable
 		else
 		{
 			clippedFrame.type = FlxFrameType.REGULAR;
-			clippedFrame.offset.set(clippedRect2.x, clippedRect2.y);
+			clippedFrame.offset.set(clippedRect2.x, clippedRect2.y).addPoint(offset);
 			
-			var x:Float = frameRect.x;
-			var y:Float = frameRect.y;
-			var w:Float = frameRect.width;
-			var h:Float = frameRect.height;
+			var p1:FlxPoint = FlxPoint.flxPoint1.set(frameRect.x, frameRect.y);
+			var p2:FlxPoint = FlxPoint.flxPoint2.set(frameRect.right, frameRect.bottom);
 			
-			if (angle == FlxFrameAngle.ANGLE_0)
+			var mat:FlxMatrix = FlxMatrix.matrix;
+			mat.identity();
+			
+			if (angle == FlxFrameAngle.ANGLE_NEG_90)
 			{
-				frameRect.x -= clippedRect1.x;
-				frameRect.y -= clippedRect1.y;
-			}
-			else if (angle == FlxFrameAngle.ANGLE_NEG_90)
-			{
-				frameRect.x = clippedRect1.bottom - y - h;
-				frameRect.y = x - clippedRect1.x;
-				frameRect.width = h;
-				frameRect.height = w;
+				mat.rotateByPositive90();
+				mat.translate(sourceSize.y, 0);
 			}
 			else if (angle == FlxFrameAngle.ANGLE_90)
 			{
-				frameRect.x = y - clippedRect1.y;
-				frameRect.y = clippedRect1.right - x - w;
-				frameRect.width = h;
-				frameRect.height = w;
+				mat.rotateByNegative90();
+				mat.translate(0, sourceSize.x);
 			}
 			
-			frameRect.x += frame.x;
-			frameRect.y += frame.y;
+			if (angle != FlxFrameAngle.ANGLE_0)
+			{
+				p1.transform(mat);
+				p2.transform(mat);
+			}
+			
+			frameRect.fromTwoPoints(p1, p2);
+			frameRect.offset(frame.x, frame.y);
 			
 			clippedFrame.frame = frameRect;
 		}

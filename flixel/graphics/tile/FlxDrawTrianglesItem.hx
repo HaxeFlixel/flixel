@@ -104,7 +104,7 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		var prevColorsPos:Int = colorsPosition;
 		var prevNumberOfVertices:Int = numVertices;
 		
-		var point:FlxPoint = FlxPoint.flxPoint;
+		var point:FlxPoint = FlxPoint.flxPoint1;
 		
 		point.set(0, 0);
 		point.transform(matrix);
