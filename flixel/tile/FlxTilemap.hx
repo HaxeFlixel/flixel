@@ -326,15 +326,12 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		_helperPoint.x = x - Camera.scroll.x * scrollFactor.x;
 		_helperPoint.y = y - Camera.scroll.y * scrollFactor.y;
 		
-		_helperPoint.x *= Camera.totalScaleX;
-		_helperPoint.y *= Camera.totalScaleY;
-		
 		var debugColor:FlxColor;
 		var drawX:Float;
 		var drawY:Float;
 		
-		var rectWidth:Float = _scaledTileWidth * Camera.totalScaleX;
-		var rectHeight:Float = _scaledTileHeight * Camera.totalScaleY;
+		var rectWidth:Float = _scaledTileWidth;
+		var rectHeight:Float = _scaledTileHeight;
 	
 		// Copy tile images into the tile buffer
 		// Modified from getScreenPosition()
@@ -827,20 +824,17 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	#else
 		getScreenPosition(_point, Camera).subtractPoint(offset).copyToFlash(_helperPoint);
 		
-		_helperPoint.x *= Camera.totalScaleX;
-		_helperPoint.y *= Camera.totalScaleY;
-		
 		_helperPoint.x = isPixelPerfectRender(Camera) ? Math.floor(_helperPoint.x) : _helperPoint.x;
 		_helperPoint.y = isPixelPerfectRender(Camera) ? Math.floor(_helperPoint.y) : _helperPoint.y;
 		
 		var drawX:Float;
 		var drawY:Float;
 		
-		var scaledWidth:Float = _scaledTileWidth * Camera.totalScaleX;
-		var scaledHeight:Float = _scaledTileHeight * Camera.totalScaleY;
+		var scaledWidth:Float = _scaledTileWidth;
+		var scaledHeight:Float = _scaledTileHeight;
 		
-		var scaleX:Float = scale.x * Camera.totalScaleX;
-		var scaleY:Float = scale.y * Camera.totalScaleY;
+		var scaleX:Float = scale.x;
+		var scaleY:Float = scale.y;
 		
 		var hackScaleX:Float = tileScaleHack * scaleX;
 		var hackScaleY:Float = tileScaleHack * scaleY;
