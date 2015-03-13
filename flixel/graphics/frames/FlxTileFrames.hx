@@ -162,7 +162,7 @@ class FlxTileFrames extends FlxFramesCollection
 				helperRect.y = spacedHeight * j;
 				tileRect = clippedRect.intersection(helperRect);
 				
-				if (tileRect.width == 0 || tileRect.height == 0)
+				if (tileRect.isEmpty)
 				{
 					tileRect.set(0, 0, frameWidth, frameHeight);
 					tileFrames.addEmptyFrame(tileRect);
@@ -176,19 +176,19 @@ class FlxTileFrames extends FlxFramesCollection
 					w = tileRect.width;
 					h = tileRect.height;
 					
-					if (angle == 0)
+					if (angle == FlxFrameAngle.ANGLE_0)
 					{
 						tileRect.x -= clippedRect.x;
 						tileRect.y -= clippedRect.y;
 					}
-					if (angle == -90)
+					if (angle == FlxFrameAngle.ANGLE_NEG_90)
 					{
 						tileRect.x = clippedRect.bottom - y - h;
 						tileRect.y = x - clippedRect.x;
 						tileRect.width = h;
 						tileRect.height = w;
 					}
-					else if (angle == 90)
+					else if (angle == FlxFrameAngle.ANGLE_90)
 					{
 						tileRect.x = y - clippedRect.y;
 						tileRect.y = clippedRect.right - x - w;
@@ -299,6 +299,8 @@ class FlxTileFrames extends FlxFramesCollection
 	 */
 	public static function fromGraphic(graphic:FlxGraphic, tileSize:FlxPoint, region:FlxRect = null, tileSpacing:FlxPoint = null):FlxTileFrames
 	{
+		// TODO: maybe use fromFrame() method?
+		
 		// find TileFrames object, if there is one already
 		var tileFrames:FlxTileFrames = FlxTileFrames.findFrame(graphic, tileSize, region, null, tileSpacing);
 		if (tileFrames != null)
