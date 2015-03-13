@@ -392,8 +392,69 @@ class FlxFrame implements IFlxDestroyable
 			frameToFill.frame = FlxDestroyUtil.put(frameToFill.frame);
 		}
 		
-		// TODO: continue from here...
+		frameToFill.sourceSize.set(rect.width, rect.height);
 		
+		// no need to make all calculations if original frame is empty...
+		if (type == FlxFrameType.EMPTY)
+		{
+			frameToFill.type = FlxFrameType.EMPTY;
+			frameToFill.offset.set(0, 0);
+			return frameToFill;
+		}
+		
+		var clippedRect:FlxRect = FlxRect.get().setSize(frame.width, frame.height);
+		if (angle != FlxFrameAngle.ANGLE_0)
+		{
+			clippedRect.width = frame.height;
+			clippedRect.height = frame.width;
+		}
+		
+		rect.offset( -offset.x, -offset.y);
+		var frameRect:FlxRect = clippedRect.intersection(rect);
+		clippedRect.put();
+		
+		if (frameRect.isEmpty)
+		{
+			frameToFill.type = FlxFrameType.EMPTY;
+			frameRect.set(0, 0, 0, 0);
+			frameToFill.frame = frameRect;
+			frameToFill.offset.set(0, 0);
+		}
+		else
+		{
+			frameToFill.type = FlxFrameType.REGULAR;
+			frameToFill.offset.set(frameRect.x, frameRect.y).subtract(rect.x, rect.y);
+			
+			var p1:FlxPoint = FlxPoint.flxPoint1.set(frameRect.x, frameRect.y);
+			var p2:FlxPoint = FlxPoint.flxPoint2.set(frameRect.right, frameRect.bottom);
+			
+			var mat:FlxMatrix = FlxMatrix.matrix;
+			mat.identity();
+			
+			if (angle == FlxFrameAngle.ANGLE_NEG_90)
+			{
+				mat.rotateByPositive90();
+				mat.translate(sourceSize.y, 0);
+			}
+			else if (angle == FlxFrameAngle.ANGLE_90)
+			{
+				mat.rotateByNegative90();
+				mat.translate(0, sourceSize.x);
+			}
+			
+			if (angle != FlxFrameAngle.ANGLE_0)
+			{
+				p1.transform(mat);
+				p2.transform(mat);
+			}
+			
+			frameRect.fromTwoPoints(p1, p2);
+			frameRect.offset(frame.x, frame.y);
+			
+			frameToFill.frame = frameRect;
+		}
+		
+		rect.offset(offset.x, offset.y);
 		return frameToFill;
 	}
 	
