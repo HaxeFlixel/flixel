@@ -427,23 +427,19 @@ class FlxFrame implements IFlxDestroyable
 			return clippedFrame;
 		}
 		
-		clip.offset( -offset.x, -offset.y);
-		
-		var helperRect:FlxRect = FlxRect.get( -offset.x, -offset.y, sourceSize.x, sourceSize.y);
-		var clippedRect1:FlxRect = FlxRect.get().setSize(frame.width, frame.height);
-		
+		var clippedRect:FlxRect = FlxRect.get().setSize(frame.width, frame.height);
 		if (angle != FlxFrameAngle.ANGLE_0)
 		{
-			clippedRect1.width = frame.height;
-			clippedRect1.height = frame.width;
+			clippedRect.width = frame.height;
+			clippedRect.height = frame.width;
 		}
 		
-		var clippedRect2:FlxRect = clippedRect1.intersection(clip);		
-		var frameRect:FlxRect = clippedRect2.intersection(helperRect);
-		
+		clip.offset( -offset.x, -offset.y);
+		var frameRect:FlxRect = clippedRect.intersection(clip);
+		clippedRect.put();
 		clip.offset(offset.x, offset.y);
 		
-		if (frameRect.isEmpty || clippedRect2.isEmpty)
+		if (frameRect.isEmpty)
 		{
 			clippedFrame.type = FlxFrameType.EMPTY;
 			frameRect.set(0, 0, 0, 0);
@@ -453,7 +449,7 @@ class FlxFrame implements IFlxDestroyable
 		else
 		{
 			clippedFrame.type = FlxFrameType.REGULAR;
-			clippedFrame.offset.set(clippedRect2.x, clippedRect2.y).addPoint(offset);
+			clippedFrame.offset.set(frameRect.x, frameRect.y).addPoint(offset);
 			
 			var p1:FlxPoint = FlxPoint.flxPoint1.set(frameRect.x, frameRect.y);
 			var p2:FlxPoint = FlxPoint.flxPoint2.set(frameRect.right, frameRect.bottom);
@@ -483,10 +479,6 @@ class FlxFrame implements IFlxDestroyable
 			
 			clippedFrame.frame = frameRect;
 		}
-		
-		helperRect.put();
-		clippedRect1.put();
-		clippedRect2.put();
 		
 		return clippedFrame;
 	}
