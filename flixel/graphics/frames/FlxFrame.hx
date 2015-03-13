@@ -371,7 +371,6 @@ class FlxFrame implements IFlxDestroyable
 		return bmd;
 	}
 	
-	// TODO: implement it...
 	/**
 	 * Generates frame with specified subregion of this frame
 	 * 
