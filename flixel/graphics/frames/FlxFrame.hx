@@ -264,7 +264,7 @@ class FlxFrame implements IFlxDestroyable
 	 * @param	mergeAlpha	Whether to merge alphas or not (works like with BitmapData's copyPixels() method). Default value is false
 	 * @return	Modified or newly created BitmapData with frame image on it
 	 */
-	public function paintRotatedAndFlipped(bmd:BitmapData = null, point:Point = null, rotation:FlxFrameAngle = 0, flipX:Bool = false, flipY:Bool = false, mergeAlpha:Bool = false):BitmapData
+	public function paintRotatedAndFlipped(bmd:BitmapData = null, point:Point = null, rotation:FlxFrameAngle = FlxFrameAngle.ANGLE_0, flipX:Bool = false, flipY:Bool = false, mergeAlpha:Bool = false):BitmapData
 	{
 		if (type == FlxFrameType.EMPTY)
 		{

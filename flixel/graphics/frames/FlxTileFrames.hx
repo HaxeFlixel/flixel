@@ -286,7 +286,7 @@ class FlxTileFrames extends FlxFramesCollection
 		{
 			for (i in 0...(numCols))
 			{
-				tileRect = FlxRect.get(startX + i * spacedWidth, startY + j * spacedHeight, width, height);
+				tileRect = FlxRect.get(region.x + i * spacedWidth, region.y + j * spacedHeight, tileSize.x, tileSize.y);
 				tileFrames.addSpriteSheetFrame(tileRect);
 			}
 		}
