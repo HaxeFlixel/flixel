@@ -52,9 +52,10 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
  	private static var _helperBuffer:FlxTilemapBuffer = Type.createEmptyInstance(FlxTilemapBuffer);
 	
 	/**
-	 * Helper variable for non-flash targets. Adjust it's value if you'll see tilemap tearing (empty pixels between tiles). To something like 1.02 or 1.03
+	 * Try to eliminate 1 px gap between tiles in tile render mode by increasing tile scale, 
+	 * so the tile will look one pixel wider than it is.
 	 */
-	public var tileScaleHack:Float = 1.00;
+	public var useScaleHack:Bool = true;
 	
 	/**
 	 * Changes the size of this tilemap. Default is (1, 1). 
@@ -833,12 +834,6 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		var scaledWidth:Float = _scaledTileWidth;
 		var scaledHeight:Float = _scaledTileHeight;
 		
-		var scaleX:Float = scale.x;
-		var scaleY:Float = scale.y;
-		
-		var hackScaleX:Float = tileScaleHack * scaleX;
-		var hackScaleY:Float = tileScaleHack * scaleY;
-		
 		var drawItem = Camera.startQuadBatch(graphic, isColored, blend);
 	#end
 		
@@ -930,7 +925,16 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 						frame.prepareFrameMatrix(_matrix);
 					}
 					
-					_matrix.scale(hackScaleX, hackScaleY);
+					var scaleX:Float = scale.x;
+					var scaleY:Float = scale.y;
+					
+					if (useScaleHack)
+					{
+						scaleX += 1 / (frame.sourceSize.x * Camera.totalScaleX);
+						scaleY += 1 / (frame.sourceSize.y * Camera.totalScaleY);
+					}
+					
+					_matrix.scale(scaleX, scaleY);
 					_matrix.translate(drawX, drawY);
 					
 					drawItem.setData(frame, _matrix, color.redFloat, color.greenFloat, color.blueFloat, alpha);
