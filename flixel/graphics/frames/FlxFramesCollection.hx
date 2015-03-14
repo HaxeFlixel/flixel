@@ -198,6 +198,23 @@ class FlxFramesCollection implements IFlxDestroyable
 		return frameObj;
 	}
 	
+	// TODO: implement it and document it...
+	/**
+	 * 
+	 * 
+	 * @param	border
+	 * @return
+	 */
+	public function setBorder(border:FlxPoint):FlxFramesCollection
+	{
+		for (frame in frames)
+		{
+			frame.setBorder(border);
+		}
+		
+		return this;
+	}
+	
 	public function toString():String
 	{
 		return FlxStringUtil.getDebugString([
