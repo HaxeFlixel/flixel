@@ -168,8 +168,6 @@ class FlxFrame implements IFlxDestroyable
 	 */
 	public function paintFlipped(bmd:BitmapData = null, point:Point = null, flipX:Bool = false, flipY:Bool = false, mergeAlpha:Bool = false):BitmapData
 	{
-		// TODO: maybe rewrite it...
-		
 		if (type == FlxFrameType.EMPTY)
 		{
 			return paint(bmd, point, mergeAlpha);
@@ -192,63 +190,48 @@ class FlxFrame implements IFlxDestroyable
 			bmd = new BitmapData(Std.int(sourceSize.x), Std.int(sourceSize.y), true, FlxColor.TRANSPARENT);
 		}
 		
-		var w:Float = frame.width;
-		var h:Float = frame.height;
-		
-		if (angle != FlxFrameAngle.ANGLE_0)
-		{
-			w = frame.height;
-			h = frame.width;
-		}
-		
 		var matrix:FlxMatrix = FlxMatrix.matrix;
 		matrix.identity();
-		matrix.translate( -(frame.x + 0.5 * frame.width), -(frame.y + 0.5 * frame.height));
+		matrix.translate( -frame.x, -frame.y);
 		
 		if (angle == FlxFrameAngle.ANGLE_90)
 		{
 			matrix.rotateByPositive90();
+			matrix.translate(frame.height, 0);
 		}
 		else if (angle == FlxFrameAngle.ANGLE_NEG_90)
 		{
 			matrix.rotateByNegative90();
+			matrix.translate(0, frame.width);
 		}
 		
-		var scaleX:Int = flipX ? -1 : 1;
-		var scaleY:Int = flipY ? -1 : 1;
-		
-		matrix.scale(scaleX, scaleY);
+		matrix.translate(offset.x, offset.y);
 		
 		if (flipX)
 		{
-			matrix.translate(sourceSize.x - offset.x - 0.5 * w, 0);
-			FlxRect.rect.x = sourceSize.x - offset.x - w;
-		}
-		else
-		{
-			matrix.translate(offset.x + 0.5 * w, 0);
-			FlxRect.rect.x = offset.x;
+			matrix.scale( -1, 1);
+			matrix.translate(sourceSize.x, 0);
 		}
 		
 		if (flipY)
 		{
-			matrix.translate(0, sourceSize.y - offset.y - 0.5 * h);
-			FlxRect.rect.y = sourceSize.y - offset.y - h;
-		}
-		else
-		{
-			matrix.translate(0, offset.y + 0.5 * h);
-			FlxRect.rect.y = offset.y;
+			matrix.scale(1, -1);
+			matrix.translate(0, sourceSize.y);
 		}
 		
 		matrix.translate(point.x, point.y);
-		FlxRect.rect.x += point.x;
-		FlxRect.rect.y += point.y;
 		
-		FlxRect.rect.width = w;
-		FlxRect.rect.height = h;
+		var p1:FlxPoint = FlxPoint.flxPoint1.set(frame.x, frame.y);
+		var p2:FlxPoint = FlxPoint.flxPoint2.set(frame.right, frame.bottom);
 		
-		bmd.draw(parent.bitmap, matrix, null, null, FlxRect.rect);
+		p1.transform(matrix);
+		p2.transform(matrix);
+		
+		var flxRect:FlxRect = FlxRect.get().fromTwoPoints(p1, p2);
+		var rect:Rectangle = FlxRect.rect;
+		flxRect.copyToFlash(rect);
+		
+		bmd.draw(parent.bitmap, matrix, null, null, rect);
 		return bmd;
 	}
 	
