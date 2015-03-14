@@ -891,15 +891,13 @@ class FlxSprite extends FlxObject
 	{
 		if (_frame != null && dirty)
 		{
-			framePixels = FlxDestroyUtil.disposeIfNotEqual(framePixels, _frame.sourceSize.x, _frame.sourceSize.y);
-			
 			if (!flipX && !flipY && _frame.type == FlxFrameType.REGULAR)
 			{
-				framePixels = _frame.paint(framePixels, _flashPointZero);
+				framePixels = _frame.paint(framePixels, _flashPointZero, false, true);
 			}
 			else
 			{
-				framePixels = _frame.paintFlipped(framePixels, _flashPointZero, flipX, flipY); 
+				framePixels = _frame.paintFlipped(framePixels, _flashPointZero, flipX, flipY, false, true);
 			}
 			
 			if (useColorTransform)

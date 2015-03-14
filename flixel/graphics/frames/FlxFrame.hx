@@ -106,17 +106,23 @@ class FlxFrame implements IFlxDestroyable
 	/**
 	 * Draws frame on specified BitmapData object.
 	 * 
-	 * @param	bmd			BitmapData object to draw this frame on. If bmd is null then new BitmapData created
-	 * @param	point		Where to draw this frame on specified BitmapData object
-	 * @param	mergeAlpha	Whether to merge alphas or not (works like with BitmapData's copyPixels() method). Default value is false
+	 * @param	bmd					BitmapData object to draw this frame on. If bmd is null then new BitmapData created
+	 * @param	point				Where to draw this frame on specified BitmapData object
+	 * @param	mergeAlpha			Whether to merge alphas or not (works like with BitmapData's copyPixels() method). Default value is false
+	 * @param	disposeIfNotEqual	Whether dispose passed bmd or not if its size is less than frame's original size (sourceSize)
 	 * @return	Modified or newly created BitmapData with frame image on it
 	 */
-	public function paint(bmd:BitmapData = null, point:Point = null, mergeAlpha:Bool = false):BitmapData
+	public function paint(bmd:BitmapData = null, point:Point = null, mergeAlpha:Bool = false, disposeIfNotEqual:Bool = false):BitmapData
 	{
 		if (point == null)
 		{
 			point = FlxPoint.point1;
 			point.setTo(0, 0);
+		}
+		
+		if (bmd != null && disposeIfNotEqual)
+		{
+			bmd = FlxDestroyUtil.disposeIfNotEqual(bmd, sourceSize.x, sourceSize.y);
 		}
 		
 		if (bmd != null && !mergeAlpha)
@@ -159,24 +165,30 @@ class FlxFrame implements IFlxDestroyable
 	/**
 	 * Draws flipped frame on specified BitmapData object.
 	 * 
-	 * @param	bmd			BitmapData object to draw this frame on. If bmd is null then new BitmapData created
-	 * @param	point		Where to draw this frame on specified BitmapData object
-	 * @param	flipX		Do we need to flip frame horizontally
-	 * @param	flipY		Do we need to flip frame vertically
-	 * @param	mergeAlpha	Whether to merge alphas or not (works like with BitmapData's copyPixels() method). Default value is false
+	 * @param	bmd					BitmapData object to draw this frame on. If bmd is null then new BitmapData created
+	 * @param	point				Where to draw this frame on specified BitmapData object
+	 * @param	flipX				Do we need to flip frame horizontally
+	 * @param	flipY				Do we need to flip frame vertically
+	 * @param	mergeAlpha			Whether to merge alphas or not (works like with BitmapData's copyPixels() method). Default value is false
+	 * @param	disposeIfNotEqual	Whether dispose passed bmd or not if its size is less than frame's original size (sourceSize)
 	 * @return	Modified or newly created BitmapData with frame image on it
 	 */
-	public function paintFlipped(bmd:BitmapData = null, point:Point = null, flipX:Bool = false, flipY:Bool = false, mergeAlpha:Bool = false):BitmapData
+	public function paintFlipped(bmd:BitmapData = null, point:Point = null, flipX:Bool = false, flipY:Bool = false, mergeAlpha:Bool = false, disposeIfNotEqual:Bool = false):BitmapData
 	{
 		if (type == FlxFrameType.EMPTY)
 		{
-			return paint(bmd, point, mergeAlpha);
+			return paint(bmd, point, mergeAlpha, disposeIfNotEqual);
 		}
 		
 		if (point == null)
 		{
 			point = FlxPoint.point2;
 			point.setTo(0, 0);
+		}
+		
+		if (bmd != null && disposeIfNotEqual)
+		{
+			bmd = FlxDestroyUtil.disposeIfNotEqual(bmd, sourceSize.x, sourceSize.y);
 		}
 		
 		if (bmd != null && !mergeAlpha)
@@ -240,19 +252,20 @@ class FlxFrame implements IFlxDestroyable
 	/**
 	 * Draws rotated and flipped frame on specified BitmapData object.
 	 * 
-	 * @param	bmd			BitmapData object to draw this frame on. If bmd is null then new BitmapData created
-	 * @param	point		Where to draw this frame on specified BitmapData object
-	 * @param	angle		How much rotate the frame. Works only with 0, 90 and -90 (which is the same as 270) values
-	 * @param	flipX		Do we need to flip frame horizontally
-	 * @param	flipY		Do we need to flip frame vertically
-	 * @param	mergeAlpha	Whether to merge alphas or not (works like with BitmapData's copyPixels() method). Default value is false
+	 * @param	bmd					BitmapData object to draw this frame on. If bmd is null then new BitmapData created
+	 * @param	point				Where to draw this frame on specified BitmapData object
+	 * @param	angle				How much rotate the frame. Works only with 0, 90 and -90 (which is the same as 270) values
+	 * @param	flipX				Do we need to flip frame horizontally
+	 * @param	flipY				Do we need to flip frame vertically
+	 * @param	mergeAlpha			Whether to merge alphas or not (works like with BitmapData's copyPixels() method). Default value is false
+	 * @param	disposeIfNotEqual	Whether dispose passed bmd or not if its size is less than frame's original size (sourceSize)
 	 * @return	Modified or newly created BitmapData with frame image on it
 	 */
-	public function paintRotatedAndFlipped(bmd:BitmapData = null, point:Point = null, rotation:FlxFrameAngle = FlxFrameAngle.ANGLE_0, flipX:Bool = false, flipY:Bool = false, mergeAlpha:Bool = false):BitmapData
+	public function paintRotatedAndFlipped(bmd:BitmapData = null, point:Point = null, rotation:FlxFrameAngle = FlxFrameAngle.ANGLE_0, flipX:Bool = false, flipY:Bool = false, mergeAlpha:Bool = false, disposeIfNotEqual:Bool = false):BitmapData
 	{
-		if (type == FlxFrameType.EMPTY)
+		if (type == FlxFrameType.EMPTY && rotation == FlxFrameAngle.ANGLE_0)
 		{
-			return paint(bmd, point, mergeAlpha);
+			return paint(bmd, point, mergeAlpha, disposeIfNotEqual);
 		}
 		
 		if (point == null)
@@ -271,6 +284,11 @@ class FlxFrame implements IFlxDestroyable
 			h = t;
 		}
 		
+		if (bmd != null && disposeIfNotEqual)
+		{
+			bmd = FlxDestroyUtil.disposeIfNotEqual(bmd, w, h);
+		}
+		
 		if (bmd != null && !mergeAlpha)
 		{
 			var rect:Rectangle = FlxRect.rect;
@@ -280,6 +298,11 @@ class FlxFrame implements IFlxDestroyable
 		else if (bmd == null)
 		{
 			bmd = new BitmapData(w, h, true, FlxColor.TRANSPARENT);
+		}
+		
+		if (type == FlxFrameType.EMPTY)
+		{
+			return bmd;
 		}
 		
 		var matrix:FlxMatrix = FlxMatrix.matrix;
