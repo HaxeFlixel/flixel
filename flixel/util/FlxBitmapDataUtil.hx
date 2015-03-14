@@ -339,6 +339,8 @@ class FlxBitmapDataUtil
 		return positions;
 	}
 	
+	// TODO: add borders AROUND tiles, not only on the right and bottom...
+	// TODO: and make appropriate changes in FlxAtlas and FlxTileFrames...
 	/**
 	 * Gets image without spaces between tiles and generates new one with spaces.
 	 * @param	bitmapData	original image without spaces between tiles.

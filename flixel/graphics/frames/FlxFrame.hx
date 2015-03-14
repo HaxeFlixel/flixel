@@ -450,6 +450,21 @@ class FlxFrame implements IFlxDestroyable
 		return frameToFill;
 	}
 	
+	// TODO: implement it and document it...
+	/**
+	 * 
+	 * 
+	 * @param	border
+	 * @return
+	 */
+	public function setBorder(border:FlxPoint):FlxFrame
+	{
+		var rect:FlxRect = FlxRect.get(border.x, border.y, sourceSize.x - 2 * border.x, sourceSize.y - 2 * border.y);
+		
+		
+		return this;
+	}
+	
 	/**
 	 * Frame clipping
 	 * @param	clip			Clipping rectangle to apply on frame
