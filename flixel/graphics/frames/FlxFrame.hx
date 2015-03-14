@@ -194,6 +194,7 @@ class FlxFrame implements IFlxDestroyable
 		matrix.identity();
 		matrix.translate( -frame.x, -frame.y);
 		
+		// prepare frame transformation matrix if the frame is rotated
 		if (angle == FlxFrameAngle.ANGLE_90)
 		{
 			matrix.rotateByPositive90();
@@ -207,6 +208,7 @@ class FlxFrame implements IFlxDestroyable
 		
 		matrix.translate(offset.x, offset.y);
 		
+		// flip frame transformation matrix
 		if (flipX)
 		{
 			matrix.scale( -1, 1);
@@ -235,13 +237,12 @@ class FlxFrame implements IFlxDestroyable
 		return bmd;
 	}
 	
-	// TODO: implement it...
 	/**
 	 * Draws rotated and flipped frame on specified BitmapData object.
 	 * 
 	 * @param	bmd			BitmapData object to draw this frame on. If bmd is null then new BitmapData created
 	 * @param	point		Where to draw this frame on specified BitmapData object
-	 * @param	angle		How much rotate the frame. Works only with 0, 90 and -90 (or 270) values
+	 * @param	angle		How much rotate the frame. Works only with 0, 90 and -90 (which is the same as 270) values
 	 * @param	flipX		Do we need to flip frame horizontally
 	 * @param	flipY		Do we need to flip frame vertically
 	 * @param	mergeAlpha	Whether to merge alphas or not (works like with BitmapData's copyPixels() method). Default value is false
@@ -281,76 +282,62 @@ class FlxFrame implements IFlxDestroyable
 			bmd = new BitmapData(w, h, true, FlxColor.TRANSPARENT);
 		}
 		
-		var fw:Float = frame.width;
-		var fh:Float = frame.height;
-		
-		if (angle != FlxFrameAngle.ANGLE_0)
-		{
-			fw = frame.height;
-			fh = frame.width;
-		}
-		
 		var matrix:FlxMatrix = FlxMatrix.matrix;
 		matrix.identity();
-		matrix.translate( -(frame.x + 0.5 * frame.width), -(frame.y + 0.5 * frame.height));
+		matrix.translate( -frame.x, -frame.y);
 		
+		// prepare frame transformation matrix if the frame is rotated
 		if (angle == FlxFrameAngle.ANGLE_90)
 		{
 			matrix.rotateByPositive90();
+			matrix.translate(frame.height, 0);
 		}
 		else if (angle == FlxFrameAngle.ANGLE_NEG_90)
 		{
 			matrix.rotateByNegative90();
+			matrix.translate(0, frame.width);
 		}
 		
+		matrix.translate(offset.x, offset.y);
+		
+		// rotate frame transformation matrix if rotation isn't zero
 		if (rotation == FlxFrameAngle.ANGLE_90)
 		{
 			matrix.rotateByPositive90();
-			// TODO: don't forget to apply additional translation...
+			matrix.translate(sourceSize.y, 0);
 		}
-		else if (rotation == FlxFrameAngle.ANGLE_NEG_90)
+		else if (rotation == FlxFrameAngle.ANGLE_270 || rotation == FlxFrameAngle.ANGLE_NEG_90)
 		{
 			matrix.rotateByNegative90();
-			// TODO: don't forget to apply additional translation...
+			matrix.translate(0, sourceSize.x);
 		}
 		
-		var scaleX:Int = flipX ? -1 : 1;
-		var scaleY:Int = flipY ? -1 : 1;
-		
-		matrix.scale(scaleX, scaleY);
-		
-		// TODO: continue from here...
-		/*
+		// flip frame transformation matrix
 		if (flipX)
 		{
-			matrix.translate(sourceSize.x - offset.x - 0.5 * w, 0);
-			FlxRect.rect.x = sourceSize.x - offset.x - w;
-		}
-		else
-		{
-			matrix.translate(offset.x + 0.5 * w, 0);
-			FlxRect.rect.x = offset.x;
+			matrix.scale( -1, 1);
+			matrix.translate(w, 0);
 		}
 		
 		if (flipY)
 		{
-			matrix.translate(0, sourceSize.y - offset.y - 0.5 * h);
-			FlxRect.rect.y = sourceSize.y - offset.y - h;
-		}
-		else
-		{
-			matrix.translate(0, offset.y + 0.5 * h);
-			FlxRect.rect.y = offset.y;
+			matrix.scale(1, -1);
+			matrix.translate(0, h);
 		}
 		
 		matrix.translate(point.x, point.y);
-		FlxRect.rect.x += point.x;
-		FlxRect.rect.y += point.y;
 		
-		FlxRect.rect.width = w;
-		FlxRect.rect.height = h;
-		*/
-		bmd.draw(parent.bitmap, matrix, null, null, FlxRect.rect);
+		var p1:FlxPoint = FlxPoint.flxPoint1.set(frame.x, frame.y);
+		var p2:FlxPoint = FlxPoint.flxPoint2.set(frame.right, frame.bottom);
+		
+		p1.transform(matrix);
+		p2.transform(matrix);
+		
+		var flxRect:FlxRect = FlxRect.get().fromTwoPoints(p1, p2);
+		var rect:Rectangle = FlxRect.rect;
+		flxRect.copyToFlash(rect);
+		
+		bmd.draw(parent.bitmap, matrix, null, null, rect);
 		return bmd;
 	}
 	
