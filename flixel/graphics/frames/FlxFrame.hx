@@ -103,6 +103,23 @@ class FlxFrame implements IFlxDestroyable
 		return mat;
 	}
 	
+	// TODO: implement it and document it...
+	/**
+	 * 
+	 * 
+	 * @param	mat
+	 * @param	rotation
+	 * @param	flipX
+	 * @param	flipY
+	 * @return
+	 */
+	public function prepareRotatedAndFlippedMatrix(mat:FlxMatrix, rotation:FlxFrameAngle = FlxFrameAngle.ANGLE_0, flipX:Bool = false, flipY:Bool = false):FlxMatrix
+	{
+		
+		
+		return mat;
+	}
+	
 	/**
 	 * Draws frame on specified BitmapData object.
 	 * 
