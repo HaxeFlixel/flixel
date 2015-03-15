@@ -70,7 +70,7 @@ class FlxFrame implements IFlxDestroyable
 	public var type:FlxFrameType;
 	
 	@:allow(flixel)
-	private function new(parent:FlxGraphic, angle:Int = 0)
+	private function new(parent:FlxGraphic, angle:FlxFrameAngle = 0)
 	{
 		this.parent = parent;
 		this.angle = angle;
@@ -349,35 +349,51 @@ class FlxFrame implements IFlxDestroyable
 	 */
 	public function subFrameTo(rect:FlxRect, frameToFill:FlxFrame = null):FlxFrame
 	{
+		var p:FlxGraphic = parent;
+		var a:FlxFrameAngle = angle;
+		
+		var sx:Float = sourceSize.x;
+		var sy:Float = sourceSize.y;
+		
+		var fx:Float = frame.x;
+		var fy:Float = frame.y;
+		var fw:Float = frame.width;
+		var fh:Float = frame.height;
+		
+		var ox:Float = offset.x;
+		var oy:Float = offset.y;
+		
+		var t:FlxFrameType = type;
+		
 		if (frameToFill == null)
 		{
-			frameToFill = new FlxFrame(parent, angle);
+			frameToFill = new FlxFrame(p, a);
 		}
 		else
 		{
-			frameToFill.parent = parent;
-			frameToFill.angle = angle;
+			frameToFill.parent = p;
+			frameToFill.angle = a;
 			frameToFill.frame = FlxDestroyUtil.put(frameToFill.frame);
 		}
 		
 		frameToFill.sourceSize.set(rect.width, rect.height);
 		
 		// no need to make all calculations if original frame is empty...
-		if (type == FlxFrameType.EMPTY)
+		if (t == FlxFrameType.EMPTY)
 		{
 			frameToFill.type = FlxFrameType.EMPTY;
 			frameToFill.offset.set(0, 0);
 			return frameToFill;
 		}
 		
-		var clippedRect:FlxRect = FlxRect.get().setSize(frame.width, frame.height);
-		if (angle != FlxFrameAngle.ANGLE_0)
+		var clippedRect:FlxRect = FlxRect.get().setSize(fw, fh);
+		if (a != FlxFrameAngle.ANGLE_0)
 		{
-			clippedRect.width = frame.height;
-			clippedRect.height = frame.width;
+			clippedRect.width = fh;
+			clippedRect.height = fw;
 		}
 		
-		rect.offset( -offset.x, -offset.y);
+		rect.offset( -ox, -oy);
 		var frameRect:FlxRect = clippedRect.intersection(rect);
 		clippedRect.put();
 		
@@ -399,30 +415,30 @@ class FlxFrame implements IFlxDestroyable
 			var mat:FlxMatrix = FlxMatrix.matrix;
 			mat.identity();
 			
-			if (angle == FlxFrameAngle.ANGLE_NEG_90)
+			if (a == FlxFrameAngle.ANGLE_NEG_90)
 			{
 				mat.rotateByPositive90();
-				mat.translate(sourceSize.y, 0);
+				mat.translate(sy, 0);
 			}
-			else if (angle == FlxFrameAngle.ANGLE_90)
+			else if (a == FlxFrameAngle.ANGLE_90)
 			{
 				mat.rotateByNegative90();
-				mat.translate(0, sourceSize.x);
+				mat.translate(0, sx);
 			}
 			
-			if (angle != FlxFrameAngle.ANGLE_0)
+			if (a != FlxFrameAngle.ANGLE_0)
 			{
 				p1.transform(mat);
 				p2.transform(mat);
 			}
 			
 			frameRect.fromTwoPoints(p1, p2);
-			frameRect.offset(frame.x, frame.y);
+			frameRect.offset(fx, fy);
 			
 			frameToFill.frame = frameRect;
 		}
 		
-		rect.offset(offset.x, offset.y);
+		rect.offset(ox, oy);
 		return frameToFill;
 	}
 	
@@ -436,9 +452,8 @@ class FlxFrame implements IFlxDestroyable
 	public function setBorder(border:FlxPoint):FlxFrame
 	{
 		var rect:FlxRect = FlxRect.get(border.x, border.y, sourceSize.x - 2 * border.x, sourceSize.y - 2 * border.y);
-		
-		// TODO: use code from subFrameTo, but you should reuse it, not just copy-paste it...
-		
+		this.subFrameTo(rect, this);
+		FlxDestroyUtil.put(rect);
 		return this;
 	}
 	
