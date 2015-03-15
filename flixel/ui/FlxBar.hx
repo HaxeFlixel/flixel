@@ -855,7 +855,7 @@ class FlxBar extends FlxSprite
 				
 				getScreenPosition(_point, camera).subtractPoint(offset);
 				
-				_frontFrame.prepareFrameMatrix(_matrix);
+				_frontFrame.prepareMatrix(_matrix);
 				_matrix.translate( -ox, -oy);
 				_matrix.scale(sx, sy);
 				

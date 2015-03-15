@@ -622,7 +622,7 @@ class FlxSprite extends FlxObject
 			}
 			else
 			{
-				_frame.prepareFrameMatrix(_matrix);
+				_frame.prepareMatrix(_matrix);
 				_matrix.translate(-ox, -oy);
 				_matrix.scale(sx, sy);
 				

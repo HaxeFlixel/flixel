@@ -923,7 +923,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 					
 					if (frame.angle != FlxFrameAngle.ANGLE_0)
 					{
-						frame.prepareFrameMatrix(_matrix);
+						frame.prepareMatrix(_matrix);
 					}
 					
 					var scaleX:Float = scale.x;
