@@ -334,11 +334,9 @@ class FlxFrame implements IFlxDestroyable
 		p1.transform(mat);
 		p2.transform(mat);
 		
-		var flxRect:FlxRect = FlxRect.get().fromTwoPoints(p1, p2);
+		var flxRect:FlxRect = FlxRect.flxRect.fromTwoPoints(p1, p2);
 		var rect:Rectangle = FlxRect.rect;
 		flxRect.copyToFlash(rect);
-		FlxDestroyUtil.put(flxRect);
-		
 		return rect;
 	}
 	
