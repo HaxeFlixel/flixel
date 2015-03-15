@@ -110,15 +110,14 @@ class FlxFrame implements IFlxDestroyable
 	 * 
 	 * 
 	 * @param	mat
+	 * @param	mat
 	 * @param	rotation
 	 * @param	flipX
 	 * @param	flipY
 	 * @return
 	 */
-	private function prepareTransformedBlitMatrix(mat:FlxMatrix, rotation:FlxFrameAngle = FlxFrameAngle.ANGLE_0, flipX:Bool = false, flipY:Bool = false):FlxMatrix
+	private inline function rotateAndFlip(mat:FlxMatrix, rotation:FlxFrameAngle = FlxFrameAngle.ANGLE_0, flipX:Bool = false, flipY:Bool = false):FlxMatrix
 	{
-		mat = prepareBlitMatrix(mat);
-		
 		var w:Int = Std.int(sourceSize.x);
 		var h:Int = Std.int(sourceSize.y);
 		
@@ -154,7 +153,22 @@ class FlxFrame implements IFlxDestroyable
 			mat.translate(0, h);
 		}
 		
-		return mat;
+		return mat
+	}
+	
+	/**
+	 * 
+	 * 
+	 * @param	mat
+	 * @param	rotation
+	 * @param	flipX
+	 * @param	flipY
+	 * @return
+	 */
+	private function prepareTransformedBlitMatrix(mat:FlxMatrix, rotation:FlxFrameAngle = FlxFrameAngle.ANGLE_0, flipX:Bool = false, flipY:Bool = false):FlxMatrix
+	{
+		mat = prepareBlitMatrix(mat);
+		return rotateAndFlip(mat, rotation, flipX, flipY);
 	}
 	
 	// TODO: implement it and document it...
@@ -174,43 +188,7 @@ class FlxFrame implements IFlxDestroyable
 		return mat;
 		#else
 		prepareBlitMatrix(mat, false);
-		
-		var w:Int = Std.int(sourceSize.x);
-		var h:Int = Std.int(sourceSize.y);
-		
-		// rotate frame transformation matrix if rotation isn't zero
-		if (rotation != FlxFrameAngle.ANGLE_0)
-		{
-			var t:Int = w;
-			w = h;
-			h = t;
-			
-			if (rotation == FlxFrameAngle.ANGLE_90)
-			{
-				mat.rotateByPositive90();
-				mat.translate(sourceSize.y, 0);
-			}
-			else if (rotation == FlxFrameAngle.ANGLE_270 || rotation == FlxFrameAngle.ANGLE_NEG_90)
-			{
-				mat.rotateByNegative90();
-				mat.translate(0, sourceSize.x);
-			}
-		}
-		
-		// flip frame transformation matrix
-		if (flipX)
-		{
-			mat.scale( -1, 1);
-			mat.translate(w, 0);
-		}
-		
-		if (flipY)
-		{
-			mat.scale(1, -1);
-			mat.translate(0, h);
-		}
-		
-		return mat;
+		return rotateAndFlip(mat, rotation, flipX, flipY);
 		#end
 	}
 	
