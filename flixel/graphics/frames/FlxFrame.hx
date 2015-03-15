@@ -478,6 +478,7 @@ class FlxFrame implements IFlxDestroyable
 	{
 		var rect:FlxRect = FlxRect.get(border.x, border.y, sourceSize.x - 2 * border.x, sourceSize.y - 2 * border.y);
 		
+		// TODO: use code from subFrameTo, but you should reuse it, not just copy-paste it...
 		
 		return this;
 	}
