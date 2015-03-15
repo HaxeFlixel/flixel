@@ -153,7 +153,7 @@ class FlxFrame implements IFlxDestroyable
 			mat.translate(0, h);
 		}
 		
-		return mat
+		return mat;
 	}
 	
 	/**
@@ -209,21 +209,7 @@ class FlxFrame implements IFlxDestroyable
 			point.setTo(0, 0);
 		}
 		
-		if (bmd != null && disposeIfNotEqual)
-		{
-			bmd = FlxDestroyUtil.disposeIfNotEqual(bmd, sourceSize.x, sourceSize.y);
-		}
-		
-		if (bmd != null && !mergeAlpha)
-		{
-			var rect:Rectangle = FlxRect.rect;
-			rect.setTo(point.x, point.y, sourceSize.x, sourceSize.y);
-			bmd.fillRect(rect, FlxColor.TRANSPARENT);
-		}
-		else if (bmd == null)
-		{
-			bmd = new BitmapData(Std.int(sourceSize.x), Std.int(sourceSize.y), true, FlxColor.TRANSPARENT);
-		}
+		bmd = checkInputBitmap(bmd, point, FlxFrameAngle.ANGLE_0, mergeAlpha, disposeIfNotEqual);
 		
 		if (type == FlxFrameType.EMPTY)
 		{
@@ -274,6 +260,33 @@ class FlxFrame implements IFlxDestroyable
 			point.setTo(0, 0);
 		}
 		
+		bmd = checkInputBitmap(bmd, point, rotation, mergeAlpha, disposeIfNotEqual);
+		
+		if (type == FlxFrameType.EMPTY)
+		{
+			return bmd;
+		}
+		
+		var matrix:FlxMatrix = FlxMatrix.matrix;
+		prepareTransformedBlitMatrix(matrix, rotation, flipX, flipY);
+		matrix.translate(point.x, point.y);
+		var rect:Rectangle = getDrawFrameRect(matrix);
+		bmd.draw(parent.bitmap, matrix, null, null, rect);
+		return bmd;
+	}
+	
+	/**
+	 * 
+	 * 
+	 * @param	bmd
+	 * @param	point
+	 * @param	rotation
+	 * @param	mergeAlpha
+	 * @param	disposeIfNotEqual
+	 * @return
+	 */
+	private inline function checkInputBitmap(bmd:BitmapData = null, point:Point = null, rotation:FlxFrameAngle = FlxFrameAngle.ANGLE_0, mergeAlpha:Bool = false, disposeIfNotEqual:Bool = false):BitmapData
+	{
 		var w:Int = Std.int(sourceSize.x);
 		var h:Int = Std.int(sourceSize.y);
 		
@@ -300,16 +313,6 @@ class FlxFrame implements IFlxDestroyable
 			bmd = new BitmapData(w, h, true, FlxColor.TRANSPARENT);
 		}
 		
-		if (type == FlxFrameType.EMPTY)
-		{
-			return bmd;
-		}
-		
-		var matrix:FlxMatrix = FlxMatrix.matrix;
-		prepareTransformedBlitMatrix(matrix, rotation, flipX, flipY);
-		matrix.translate(point.x, point.y);
-		var rect:Rectangle = getDrawFrameRect(matrix);
-		bmd.draw(parent.bitmap, matrix, null, null, rect);
 		return bmd;
 	}
 	
