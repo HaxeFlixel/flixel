@@ -41,6 +41,10 @@ class FlxFrame implements IFlxDestroyable
 	 */
 	public var frame(default, set):FlxRect;
 	
+	/**
+	 * UV coordinates for this frame.
+	 * WARNING: In optimization purposes width and height of this rect contain right and bottom coordinates (x + width and y + height).
+	 */
 	public var uv:FlxRect;
 	
 	public var parent:FlxGraphic;
@@ -77,11 +81,11 @@ class FlxFrame implements IFlxDestroyable
 	}
 	
 	/**
-	 * Transforms specified matrix for further rendering.
+	 * Applies frame rotation to the specified matrix, which should be used for tiling or blitting.
 	 * Required for rotated frame support.
 	 * 
 	 * @param	mat		Matrix to transform / rotate
-	 * @param	blit	
+	 * @param	blit	Whether specified matrix will be used for blitting or for tile rendering.
 	 * @return	Transformed matrix.
 	 */
 	private inline function prepareBlitMatrix(mat:FlxMatrix, blit:Bool = true):FlxMatrix
@@ -107,14 +111,14 @@ class FlxFrame implements IFlxDestroyable
 	}
 	
 	/**
+	 * Rotates and flips matrix. This method expects matrix which were prepared by prepareBlitMatrix() method.
+	 * Internal use only.
 	 * 
-	 * 
-	 * @param	mat
-	 * @param	mat
-	 * @param	rotation
-	 * @param	flipX
-	 * @param	flipY
-	 * @return
+	 * @param	mat			Matrix to transform
+	 * @param	rotation	Rotation to apply to specified matrix. This method expects only 0, 90 and -90 degrees values.
+	 * @param	flipX		Do we need to flip frame horizontally
+	 * @param	flipY		Do we need to flip frame vertically
+	 * @return	Transformed matrix with applied rotation and flipping
 	 */
 	private inline function rotateAndFlip(mat:FlxMatrix, rotation:FlxFrameAngle = FlxFrameAngle.ANGLE_0, flipX:Bool = false, flipY:Bool = false):FlxMatrix
 	{
@@ -157,13 +161,13 @@ class FlxFrame implements IFlxDestroyable
 	}
 	
 	/**
+	 * Prepares matrix for frame blitting (see "paint" methods).
 	 * 
-	 * 
-	 * @param	mat
-	 * @param	rotation
-	 * @param	flipX
-	 * @param	flipY
-	 * @return
+	 * @param	mat			Matrix to transform/prepare
+	 * @param	rotation	Rotation to apply to specified matrix. This method expects only 0, 90 and -90 degrees values.
+	 * @param	flipX		Do we need to flip frame horizontally
+	 * @param	flipY		Do we need to flip frame vertically
+	 * @return	Tranformed matrix which can be used for frame painting.
 	 */
 	private function prepareTransformedBlitMatrix(mat:FlxMatrix, rotation:FlxFrameAngle = FlxFrameAngle.ANGLE_0, flipX:Bool = false, flipY:Bool = false):FlxMatrix
 	{
@@ -171,15 +175,14 @@ class FlxFrame implements IFlxDestroyable
 		return rotateAndFlip(mat, rotation, flipX, flipY);
 	}
 	
-	// TODO: implement it and document it...
 	/**
+	 * Prepares matrix for frame tile/triangles rendering.
 	 * 
-	 * 
-	 * @param	mat
-	 * @param	rotation
-	 * @param	flipX
-	 * @param	flipY
-	 * @return
+	 * @param	mat			Matrix to transform/prepare
+	 * @param	rotation	Rotation to apply to specified matrix. This method expects only 0, 90 and -90 degrees values.
+	 * @param	flipX		Do we need to flip frame horizontally
+	 * @param	flipY		Do we need to flip frame vertically
+	 * @return	Tranformed matrix which can be used for frame drawing.
 	 */
 	public function prepareMatrix(mat:FlxMatrix, rotation:FlxFrameAngle = FlxFrameAngle.ANGLE_0, flipX:Bool = false, flipY:Bool = false):FlxMatrix
 	{
@@ -198,7 +201,7 @@ class FlxFrame implements IFlxDestroyable
 	 * @param	bmd					BitmapData object to draw this frame on. If bmd is null then new BitmapData created
 	 * @param	point				Where to draw this frame on specified BitmapData object
 	 * @param	mergeAlpha			Whether to merge alphas or not (works like with BitmapData's copyPixels() method). Default value is false
-	 * @param	disposeIfNotEqual	Whether dispose passed bmd or not if its size is less than frame's original size (sourceSize)
+	 * @param	disposeIfNotEqual	Whether dispose passed bmd or not if its size isn't equal to frame's original size (sourceSize)
 	 * @return	Modified or newly created BitmapData with frame image on it
 	 */
 	public function paint(bmd:BitmapData = null, point:Point = null, mergeAlpha:Bool = false, disposeIfNotEqual:Bool = false):BitmapData
@@ -240,11 +243,11 @@ class FlxFrame implements IFlxDestroyable
 	 * 
 	 * @param	bmd					BitmapData object to draw this frame on. If bmd is null then new BitmapData created
 	 * @param	point				Where to draw this frame on specified BitmapData object
-	 * @param	angle				How much rotate the frame. Works only with 0, 90 and -90 (which is the same as 270) values
+	 * @param	rotation			How much rotate the frame. Works only with 0, 90 and -90 (which is the same as 270) values
 	 * @param	flipX				Do we need to flip frame horizontally
 	 * @param	flipY				Do we need to flip frame vertically
 	 * @param	mergeAlpha			Whether to merge alphas or not (works like with BitmapData's copyPixels() method). Default value is false
-	 * @param	disposeIfNotEqual	Whether dispose passed bmd or not if its size is less than frame's original size (sourceSize)
+	 * @param	disposeIfNotEqual	Whether dispose passed bmd or not if its size isn't equal to frame's original size (sourceSize)
 	 * @return	Modified or newly created BitmapData with frame image on it
 	 */
 	public function paintRotatedAndFlipped(bmd:BitmapData = null, point:Point = null, rotation:FlxFrameAngle = FlxFrameAngle.ANGLE_0, flipX:Bool = false, flipY:Bool = false, mergeAlpha:Bool = false, disposeIfNotEqual:Bool = false):BitmapData
@@ -276,14 +279,14 @@ class FlxFrame implements IFlxDestroyable
 	}
 	
 	/**
+	 * Internal method which runs few checks on specified BitmapData object.
 	 * 
-	 * 
-	 * @param	bmd
-	 * @param	point
-	 * @param	rotation
-	 * @param	mergeAlpha
-	 * @param	disposeIfNotEqual
-	 * @return
+	 * @param	bmd					BitmapData object to check againist.
+	 * @param	point				Optional point for mergeAlpha checks
+	 * @param	rotation			How much we will rotate the frame when we will be drawing it on specified BitmapData.
+	 * @param	mergeAlpha			Whether to merge alphas or not (works like with BitmapData's copyPixels() method). Default value is false
+	 * @param	disposeIfNotEqual	Whether dispose passed bmd or not if its size isn't equal to frame's original size (sourceSize)
+	 * @return	Prepared BitmapData for further frame blitting. Output BitmapData could be a different object.
 	 */
 	private inline function checkInputBitmap(bmd:BitmapData = null, point:Point = null, rotation:FlxFrameAngle = FlxFrameAngle.ANGLE_0, mergeAlpha:Bool = false, disposeIfNotEqual:Bool = false):BitmapData
 	{
@@ -317,10 +320,11 @@ class FlxFrame implements IFlxDestroyable
 	}
 	
 	/**
+	 * Internal method which prepares frame rect for blitting.
+	 * Required for rotated frames support.
 	 * 
-	 * 
-	 * @param	mat
-	 * @return
+	 * @param	mat	frame transformation matrix (rotated / flipped / translated)
+	 * @return	Clipping rectangle which will be used for frame blitting
 	 */
 	private inline function getDrawFrameRect(mat:FlxMatrix):Rectangle
 	{
