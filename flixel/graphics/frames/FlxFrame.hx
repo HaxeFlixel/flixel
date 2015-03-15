@@ -114,22 +114,7 @@ class FlxFrame implements IFlxDestroyable
 	 */
 	private function prepareTransformedBlitMatrix(mat:FlxMatrix, rotation:FlxFrameAngle = FlxFrameAngle.ANGLE_0, flipX:Bool = false, flipY:Bool = false):FlxMatrix
 	{
-		mat.identity();
-		mat.translate( -frame.x, -frame.y);
-		
-		// prepare frame transformation matrix if the frame is rotated
-		if (angle == FlxFrameAngle.ANGLE_90)
-		{
-			mat.rotateByPositive90();
-			mat.translate(frame.height, 0);
-		}
-		else if (angle == FlxFrameAngle.ANGLE_NEG_90)
-		{
-			mat.rotateByNegative90();
-			mat.translate(0, frame.width);
-		}
-		
-		mat.translate(offset.x, offset.y);
+		mat = prepareBlitMatrix(mat);
 		
 		var w:Int = Std.int(sourceSize.x);
 		var h:Int = Std.int(sourceSize.y);
