@@ -81,12 +81,15 @@ class FlxFrame implements IFlxDestroyable
 	 * Required for rotated frame support.
 	 * 
 	 * @param	mat		Matrix to transform / rotate
+	 * @param	blit	
 	 * @return	Transformed matrix.
 	 */
-	private function prepareBlitMatrix(mat:FlxMatrix):FlxMatrix
+	private inline function prepareBlitMatrix(mat:FlxMatrix, blit:Bool = true):FlxMatrix
 	{
 		mat.identity();
-		mat.translate( -frame.x, -frame.y);
+		
+		if (blit)
+			mat.translate( -frame.x, -frame.y);
 		
 		if (angle == FlxFrameAngle.ANGLE_90)
 		{
@@ -166,21 +169,11 @@ class FlxFrame implements IFlxDestroyable
 	 */
 	public function prepareMatrix(mat:FlxMatrix, rotation:FlxFrameAngle = FlxFrameAngle.ANGLE_0, flipX:Bool = false, flipY:Bool = false):FlxMatrix
 	{
+		#if FLX_RENDER_BLIT
 		mat.identity();
-		#if FLX_RENDER_TILE
-		// prepare frame transformation matrix if the frame is rotated
-		if (angle == FlxFrameAngle.ANGLE_90)
-		{
-			mat.rotateByPositive90();
-			mat.translate(frame.height, 0);
-		}
-		else if (angle == FlxFrameAngle.ANGLE_NEG_90)
-		{
-			mat.rotateByNegative90();
-			mat.translate(0, frame.width);
-		}
-		
-		mat.translate(offset.x, offset.y);
+		return mat;
+		#else
+		prepareBlitMatrix(mat, false);
 		
 		var w:Int = Std.int(sourceSize.x);
 		var h:Int = Std.int(sourceSize.y);
@@ -216,8 +209,9 @@ class FlxFrame implements IFlxDestroyable
 			mat.scale(1, -1);
 			mat.translate(0, h);
 		}
-		#end
+		
 		return mat;
+		#end
 	}
 	
 	/**
