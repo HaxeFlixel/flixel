@@ -828,20 +828,6 @@ class FlxBar extends FlxSprite
 		
 		if (percent > 0 && _frontFrame.type != FlxFrameType.EMPTY)
 		{
-			var ox:Float = origin.x;
-			if (_facingHorizontalMult != 1)
-			{
-				ox = frameWidth - ox;
-			}
-			var oy:Float = origin.y;
-			if (_facingVerticalMult != 1)
-			{
-				oy = frameHeight - oy;
-			}
-			
-			var sx:Float = scale.x * _facingHorizontalMult;
-			var sy:Float = scale.y * _facingVerticalMult;
-			
 			var cr:Float = colorTransform.redMultiplier;
 			var cg:Float = colorTransform.greenMultiplier;
 			var cb:Float = colorTransform.blueMultiplier;
@@ -855,9 +841,9 @@ class FlxBar extends FlxSprite
 				
 				getScreenPosition(_point, camera).subtractPoint(offset);
 				
-				_frontFrame.prepareMatrix(_matrix);
-				_matrix.translate( -ox, -oy);
-				_matrix.scale(sx, sy);
+				_frontFrame.prepareMatrix(_matrix, FlxFrameAngle.ANGLE_0, flipX, flipY);
+				_matrix.translate( -origin.x, -origin.y);
+				_matrix.scale(scale.x, scale.y);
 				
 				// rotate matrix if sprite's graphic isn't prerotated
 				if (angle != 0)
@@ -865,7 +851,7 @@ class FlxBar extends FlxSprite
 					_matrix.rotateWithTrig(_cosAngle, _sinAngle);
 				}
 				
-				_point.add(ox, oy);
+				_point.add(origin.x, origin.y);
 				if (isPixelPerfectRender(camera))
 				{
 					_point.floor();
