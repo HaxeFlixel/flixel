@@ -175,8 +175,8 @@ class FlxFramesCollection implements IFlxDestroyable
 		texFrame.offset.set(offset.x, offset.y);
 		texFrame.frame = frame;
 		
-		sourceSize.put();
-		offset.put();
+		sourceSize = FlxDestroyUtil.put(sourceSize);
+		offset = FlxDestroyUtil.put(offset);
 		
 		return pushFrame(texFrame);
 	}

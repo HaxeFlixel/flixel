@@ -395,7 +395,7 @@ class FlxFrame implements IFlxDestroyable
 		
 		rect.offset( -ox, -oy);
 		var frameRect:FlxRect = clippedRect.intersection(rect);
-		FlxDestroyUtil.put(clippedRect);
+		clippedRect = FlxDestroyUtil.put(clippedRect);
 		
 		if (frameRect.isEmpty)
 		{
@@ -453,7 +453,7 @@ class FlxFrame implements IFlxDestroyable
 	{
 		var rect:FlxRect = FlxRect.get(border.x, border.y, sourceSize.x - 2 * border.x, sourceSize.y - 2 * border.y);
 		this.subFrameTo(rect, this);
-		FlxDestroyUtil.put(rect);
+		rect = FlxDestroyUtil.put(rect);
 		return this;
 	}
 	
@@ -496,7 +496,7 @@ class FlxFrame implements IFlxDestroyable
 		
 		clip.offset( -offset.x, -offset.y);
 		var frameRect:FlxRect = clippedRect.intersection(clip);
-		FlxDestroyUtil.put(clippedRect);
+		clippedRect = FlxDestroyUtil.put(clippedRect);
 		clip.offset(offset.x, offset.y);
 		
 		if (frameRect.isEmpty)
