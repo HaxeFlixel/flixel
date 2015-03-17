@@ -63,7 +63,7 @@ class FlxFrame implements IFlxDestroyable
 		clippedFrame.sourceSize.copyFrom(original.sourceSize);
 		
 		// no need to make all calculations if original frame is empty...
-		if (original.type == FlxFrameType.EMPTY)
+		if (original.type == FlxFrameType.EMPTY || original.frame == null)
 		{
 			clippedFrame.type = FlxFrameType.EMPTY;
 			clippedFrame.offset.set(0, 0);
@@ -79,7 +79,7 @@ class FlxFrame implements IFlxDestroyable
 			clippedRect1.height = original.frame.width;
 		}
 		
-		var clippedRect2:FlxRect = clippedRect1.intersection(clip);		
+		var clippedRect2:FlxRect = clippedRect1.intersection(clip);
 		var frameRect:FlxRect = clippedRect2.intersection(helperRect);
 		
 		if (frameRect.width == 0 || frameRect.height == 0 || 
