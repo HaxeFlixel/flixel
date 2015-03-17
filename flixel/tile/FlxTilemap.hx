@@ -51,10 +51,12 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
  	 */
  	private static var _helperBuffer:FlxTilemapBuffer = Type.createEmptyInstance(FlxTilemapBuffer);
 	
+	// TODO: remove this hack and add docs about how to avoid tearing problem by preparing assets and some code...
 	/**
-	 * Helper variable for non-flash targets. Adjust it's value if you'll see tilemap tearing (empty pixels between tiles). To something like 1.02 or 1.03
+	 * Try to eliminate 1 px gap between tiles in tile render mode by increasing tile scale, 
+	 * so the tile will look one pixel wider than it is.
 	 */
-	public var tileScaleHack:Float = 1.00;
+	public var useScaleHack:Bool = true;
 	
 	/**
 	 * Changes the size of this tilemap. Default is (1, 1). 
@@ -326,15 +328,12 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		_helperPoint.x = x - Camera.scroll.x * scrollFactor.x;
 		_helperPoint.y = y - Camera.scroll.y * scrollFactor.y;
 		
-		_helperPoint.x *= Camera.totalScaleX;
-		_helperPoint.y *= Camera.totalScaleY;
-		
 		var debugColor:FlxColor;
 		var drawX:Float;
 		var drawY:Float;
 		
-		var rectWidth:Float = _scaledTileWidth * Camera.totalScaleX;
-		var rectHeight:Float = _scaledTileHeight * Camera.totalScaleY;
+		var rectWidth:Float = _scaledTileWidth;
+		var rectHeight:Float = _scaledTileHeight;
 	
 		// Copy tile images into the tile buffer
 		// Modified from getScreenPosition()
@@ -827,23 +826,14 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	#else
 		getScreenPosition(_point, Camera).subtractPoint(offset).copyToFlash(_helperPoint);
 		
-		_helperPoint.x *= Camera.totalScaleX;
-		_helperPoint.y *= Camera.totalScaleY;
-		
 		_helperPoint.x = isPixelPerfectRender(Camera) ? Math.floor(_helperPoint.x) : _helperPoint.x;
 		_helperPoint.y = isPixelPerfectRender(Camera) ? Math.floor(_helperPoint.y) : _helperPoint.y;
 		
 		var drawX:Float;
 		var drawY:Float;
 		
-		var scaledWidth:Float = _scaledTileWidth * Camera.totalScaleX;
-		var scaledHeight:Float = _scaledTileHeight * Camera.totalScaleY;
-		
-		var scaleX:Float = scale.x * Camera.totalScaleX;
-		var scaleY:Float = scale.y * Camera.totalScaleY;
-		
-		var hackScaleX:Float = tileScaleHack * scaleX;
-		var hackScaleY:Float = tileScaleHack * scaleY;
+		var scaledWidth:Float = _scaledTileWidth;
+		var scaledHeight:Float = _scaledTileHeight;
 		
 		var drawItem = Camera.startQuadBatch(graphic, isColored, blend);
 	#end
@@ -933,10 +923,19 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 					
 					if (frame.angle != FlxFrameAngle.ANGLE_0)
 					{
-						frame.prepareFrameMatrix(_matrix);
+						frame.prepareMatrix(_matrix);
 					}
 					
-					_matrix.scale(hackScaleX, hackScaleY);
+					var scaleX:Float = scale.x;
+					var scaleY:Float = scale.y;
+					
+					if (useScaleHack)
+					{
+						scaleX += 1 / (frame.sourceSize.x * Camera.totalScaleX);
+						scaleY += 1 / (frame.sourceSize.y * Camera.totalScaleY);
+					}
+					
+					_matrix.scale(scaleX, scaleY);
 					_matrix.translate(drawX, drawY);
 					
 					drawItem.setData(frame, _matrix, color.redFloat, color.greenFloat, color.blueFloat, alpha);

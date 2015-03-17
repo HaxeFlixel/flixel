@@ -395,7 +395,7 @@ class FlxBitmapText extends FlxSprite
 				currTileX = borderDrawData[dataPos + 1];
 				currTileY = borderDrawData[dataPos + 2];
 				
-				currFrame.prepareFrameMatrix(_matrix);
+				currFrame.prepareMatrix(_matrix);
 				_matrix.translate(currTileX - ox, currTileY - oy);
 				_matrix.scale(sx, sy);
 				if (angle != 0)
@@ -417,7 +417,7 @@ class FlxBitmapText extends FlxSprite
 				currTileX = textDrawData[dataPos + 1];
 				currTileY = textDrawData[dataPos + 2];
 				
-				currFrame.prepareFrameMatrix(_matrix);
+				currFrame.prepareMatrix(_matrix);
 				_matrix.translate(currTileX - ox, currTileY - oy);
 				_matrix.scale(sx, sy);
 				if (angle != 0)

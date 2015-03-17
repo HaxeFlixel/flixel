@@ -150,8 +150,7 @@ class FlxFramesCollection implements IFlxDestroyable
 		frame.frame = region;
 		frame.sourceSize.set(region.width, region.height);
 		frame.offset.set(0, 0);
-		frames.push(frame);
-		return frame;
+		return pushFrame(frame);
 	}
 	
 	/**
@@ -179,14 +178,41 @@ class FlxFramesCollection implements IFlxDestroyable
 		sourceSize.put();
 		offset.put();
 		
-		frames.push(texFrame);
-		
-		if (name != null)
+		return pushFrame(texFrame);
+	}
+	
+	public function pushFrame(frameObj:FlxFrame):FlxFrame
+	{
+		var name:String = frameObj.name;
+		if (name != null && framesHash.exists(name))
 		{
-			framesHash.set(name, texFrame);
+			return framesHash.get(name);
 		}
 		
-		return texFrame;
+		frames.push(frameObj);
+		if (name != null)
+		{
+			framesHash.set(name, frameObj);
+		}
+		
+		return frameObj;
+	}
+	
+	// TODO: implement it and document it...
+	/**
+	 * 
+	 * 
+	 * @param	border
+	 * @return
+	 */
+	public function setBorder(border:FlxPoint):FlxFramesCollection
+	{
+		for (frame in frames)
+		{
+			frame.setBorder(border);
+		}
+		
+		return this;
 	}
 	
 	public function toString():String

@@ -20,6 +20,15 @@ import flixel.math.FlxVelocity;
 class FlxObject extends FlxBasic
 {
 	/**
+	 * Default value for FlxObject's pixelPerfectPosition var.
+	 */
+	#if FLX_RENDER_BLIT
+	public static var defaultPixelPerfectPosition:Bool = true;
+	#else
+	public static var defaultPixelPerfectPosition:Bool = false;
+	#end
+	
+	/**
 	 * This value dictates the maximum number of pixels two objects have to intersect before collision stops trying to separate them.
 	 * Don't modify this unless your objects are passing through eachother.
 	 */
@@ -481,6 +490,7 @@ class FlxObject extends FlxBasic
 		flixelType = OBJECT;
 		last = FlxPoint.get(x, y);
 		scrollFactor = FlxPoint.get(1, 1);
+		pixelPerfectPosition = FlxObject.defaultPixelPerfectPosition;
 		
 		initMotionVars();
 	}
@@ -930,12 +940,6 @@ class FlxObject extends FlxBasic
 	{
 		getScreenPosition(_point, camera);
 		_rect.set(_point.x, _point.y, width, height);
-		#if FLX_RENDER_TILE
-		_rect.x *= camera.totalScaleX;
-		_rect.y *= camera.totalScaleY;
-		_rect.width *= camera.totalScaleX;
-		_rect.height *= camera.totalScaleY;
-		#end
 		
 		if (isPixelPerfectRender(camera))
 		{

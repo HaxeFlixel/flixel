@@ -103,8 +103,6 @@ class FlxTileFrames extends FlxFramesCollection
 	 */
 	public static function fromFrame(frame:FlxFrame, tileSize:FlxPoint, tileSpacing:FlxPoint = null):FlxTileFrames
 	{
-		// TODO: maybe rewrite it...
-		
 		var graphic:FlxGraphic = frame.parent;
 		// find TileFrames object, if there is one already
 		var tileFrames:FlxTileFrames = FlxTileFrames.findFrame(graphic, tileSize, null, frame, tileSpacing);
@@ -122,37 +120,16 @@ class FlxTileFrames extends FlxFramesCollection
 		tileFrames.tileSize = tileSize;
 		tileFrames.tileSpacing = tileSpacing;
 		
-		var bitmapWidth:Int = Std.int(frame.sourceSize.x);
-		var bitmapHeight:Int = Std.int(frame.sourceSize.y);
+		tileSpacing.floor();
+		tileSize.floor();
 		
-		var xSpacing:Int = Std.int(tileSpacing.x);
-		var ySpacing:Int = Std.int(tileSpacing.y);
+		var spacedWidth:Float = tileSize.x + tileSpacing.x;
+		var spacedHeight:Float = tileSize.y + tileSpacing.y;
 		
-		var frameWidth:Int = Std.int(tileSize.x);
-		var frameHeight:Int = Std.int(tileSize.y);
+		var numRows:Int = (tileSize.y == 0) ? 1 : Std.int((frame.sourceSize.y + tileSpacing.y) / spacedHeight);
+		var numCols:Int = (tileSize.x == 0) ? 1 : Std.int((frame.sourceSize.x + tileSpacing.x) / spacedWidth);
 		
-		var spacedWidth:Int = frameWidth + xSpacing;
-		var spacedHeight:Int = frameHeight + ySpacing;
-		
-		var clippedRect:FlxRect = FlxRect.get(frame.offset.x, frame.offset.y, frame.frame.width, frame.frame.height);
-		var helperRect:FlxRect = FlxRect.get(0, 0, frameWidth, frameHeight);
-		var tileRect:FlxRect;
-		var frameOffset:FlxPoint;
-		
-		var numRows:Int = (frameHeight == 0) ? 1 : Std.int((bitmapHeight + ySpacing) / spacedHeight);
-		var numCols:Int = (frameWidth == 0) ? 1 : Std.int((bitmapWidth + xSpacing) / spacedWidth);
-		
-		var x:Float, y:Float, w:Float, h:Float;
-		
-		var rotated:Bool = (frame.angle != FlxFrameAngle.ANGLE_0);
-		var angle:Int = 0;
-		
-		if (rotated)
-		{
-			angle = frame.angle;
-			clippedRect.width = frame.frame.height;
-			clippedRect.height = frame.frame.width;
-		}
+		var helperRect:FlxRect = FlxRect.get(0, 0, tileSize.x, tileSize.y);
 		
 		for (j in 0...(numRows))
 		{
@@ -160,50 +137,11 @@ class FlxTileFrames extends FlxFramesCollection
 			{
 				helperRect.x = spacedWidth * i;
 				helperRect.y = spacedHeight * j;
-				tileRect = clippedRect.intersection(helperRect);
 				
-				if (tileRect.width == 0 || tileRect.height == 0)
-				{
-					tileRect.set(0, 0, frameWidth, frameHeight);
-					tileFrames.addEmptyFrame(tileRect);
-				}
-				else
-				{
-					frameOffset = FlxPoint.get(tileRect.x - helperRect.x, tileRect.y - helperRect.y);
-					
-					x = tileRect.x;
-					y = tileRect.y;
-					w = tileRect.width;
-					h = tileRect.height;
-					
-					if (angle == 0)
-					{
-						tileRect.x -= clippedRect.x;
-						tileRect.y -= clippedRect.y;
-					}
-					if (angle == -90)
-					{
-						tileRect.x = clippedRect.bottom - y - h;
-						tileRect.y = x - clippedRect.x;
-						tileRect.width = h;
-						tileRect.height = w;
-					}
-					else if (angle == 90)
-					{
-						tileRect.x = y - clippedRect.y;
-						tileRect.y = clippedRect.right - x - w;
-						tileRect.width = h;
-						tileRect.height = w;
-					}
-					
-					tileRect.x += frame.frame.x;
-					tileRect.y += frame.frame.y;
-					tileFrames.addAtlasFrame(tileRect, FlxPoint.get(frameWidth, frameHeight), frameOffset, null, angle);
-				}
+				tileFrames.pushFrame(frame.subFrameTo(helperRect));
 			}
 		}
 		
-		clippedRect = FlxDestroyUtil.put(clippedRect);
 		helperRect = FlxDestroyUtil.put(helperRect);
 		
 		tileFrames.numCols = numCols;
@@ -332,23 +270,15 @@ class FlxTileFrames extends FlxFramesCollection
 		tileFrames.tileSize = tileSize;
 		tileFrames.tileSpacing = tileSpacing;
 		
-		var bitmapWidth:Int = Std.int(region.width);
-		var bitmapHeight:Int = Std.int(region.height);
+		region.floor();
+		tileSpacing.floor();
+		tileSize.floor();
 		
-		var startX:Int = Std.int(region.x);
-		var startY:Int = Std.int(region.y);
+		var spacedWidth:Float = tileSize.x + tileSpacing.x;
+		var spacedHeight:Float = tileSize.y + tileSpacing.y;
 		
-		var xSpacing:Int = Std.int(tileSpacing.x);
-		var ySpacing:Int = Std.int(tileSpacing.y);
-		
-		var width:Int = Std.int(tileSize.x);
-		var height:Int = Std.int(tileSize.y);
-		
-		var spacedWidth:Int = width + xSpacing;
-		var spacedHeight:Int = height + ySpacing;
-		
-		var numRows:Int = (height == 0) ? 1 : Std.int((bitmapHeight + ySpacing) / spacedHeight);
-		var numCols:Int = (width == 0) ? 1 : Std.int((bitmapWidth + xSpacing) / spacedWidth);
+		var numRows:Int = (tileSize.y == 0) ? 1 : Std.int((region.height + tileSpacing.y) / spacedHeight);
+		var numCols:Int = (tileSize.x == 0) ? 1 : Std.int((region.width + tileSpacing.x) / spacedWidth);
 		
 		var tileRect:FlxRect;
 		
@@ -356,7 +286,7 @@ class FlxTileFrames extends FlxFramesCollection
 		{
 			for (i in 0...(numCols))
 			{
-				tileRect = FlxRect.get(startX + i * spacedWidth, startY + j * spacedHeight, width, height);
+				tileRect = FlxRect.get(region.x + i * spacedWidth, region.y + j * spacedHeight, tileSize.x, tileSize.y);
 				tileFrames.addSpriteSheetFrame(tileRect);
 			}
 		}
@@ -433,7 +363,7 @@ class FlxTileFrames extends FlxFramesCollection
 		
 		if (tileSpacing == null)
 		{
-			tileSpacing = FlxPoint.flxPoint;
+			tileSpacing = FlxPoint.flxPoint1;
 			tileSpacing.set(0, 0);
 		}
 		

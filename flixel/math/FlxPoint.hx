@@ -12,7 +12,8 @@ import openfl.geom.Matrix;
  */
 class FlxPoint implements IFlxPooled
 {
-	public static var flxPoint:FlxPoint = new FlxPoint();
+	public static var flxPoint1:FlxPoint = new FlxPoint();
+	public static var flxPoint2:FlxPoint = new FlxPoint();
 	public static var point1:Point = new Point();
 	public static var point2:Point = new Point();
 	
