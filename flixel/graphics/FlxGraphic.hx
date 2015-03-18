@@ -394,6 +394,7 @@ class FlxGraphic
 		bitmap = Bitmap;
 	}
 	
+	#if lime_legacy
 	/**
 	 * Dumps bits of bitmapdata == less memory, but you can't read/write pixels on it anymore
 	 * (but you can call onContext() (or undump()) method which will restore it again)
@@ -403,7 +404,7 @@ class FlxGraphic
 		#if (FLX_RENDER_TILE && !flash && !nme)
 		if (canBeDumped)
 		{
-			bitmap.dumpBits();
+			bitmap.dumpbits();
 			isDumped = true;
 		}
 		#end
@@ -421,6 +422,7 @@ class FlxGraphic
 		}
 		isDumped = false;
 	}
+	#end
 	
 	/**
 	 * Use this method to restore cached bitmapdata (if it's possible).

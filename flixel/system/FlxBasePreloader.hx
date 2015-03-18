@@ -2,7 +2,7 @@ package flixel.system;
 
 #if !FLX_HAXE_BUILD
 #if (openfl >= "3.0.0-alpha")
-class FlxBasePreloader extends openfl.display.Preloader {}
+class FlxBasePreloader extends NMEPreloader {}
 #elseif js
 class FlxBasePreloader extends NMEPreloader {}
 #else
