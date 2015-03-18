@@ -427,7 +427,6 @@ class FlxGraphic
 			isDumped = false;
 		#end
 	}
-	#end
 	
 	/**
 	 * Use this method to restore cached bitmapdata (if it's possible).
