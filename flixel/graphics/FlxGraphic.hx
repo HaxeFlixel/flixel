@@ -394,19 +394,21 @@ class FlxGraphic
 		bitmap = Bitmap;
 	}
 	
-	#if lime_legacy
 	/**
 	 * Dumps bits of bitmapdata == less memory, but you can't read/write pixels on it anymore
 	 * (but you can call onContext() (or undump()) method which will restore it again)
 	 */
 	public function dump():Void
 	{
-		#if (FLX_RENDER_TILE && !flash && !nme)
-		if (canBeDumped)
-		{
-			bitmap.dumpbits();
-			isDumped = true;
-		}
+		//TODO: figure out what to do with this in lime_next
+		#if lime_legacy
+			#if (FLX_RENDER_TILE && !flash && !nme)
+			if (canBeDumped)
+			{
+				bitmap.dumpbits();
+				isDumped = true;
+			}
+			#end
 		#end
 	}
 	
@@ -415,12 +417,15 @@ class FlxGraphic
 	 */
 	public function undump():Void
 	{
-		var newBitmap:BitmapData = getBitmapFromSystem();	
-		if (newBitmap != null)
-		{
-			bitmap = newBitmap;
-		}
-		isDumped = false;
+		//TODO: figure out what to do with this in lime_next
+		#if lime_legacy
+			var newBitmap:BitmapData = getBitmapFromSystem();	
+			if (newBitmap != null)
+			{
+				bitmap = newBitmap;
+			}
+			isDumped = false;
+		#end
 	}
 	#end
 	
