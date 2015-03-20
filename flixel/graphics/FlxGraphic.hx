@@ -403,7 +403,9 @@ class FlxGraphic
 		#if (FLX_RENDER_TILE && !flash && !nme)
 		if (canBeDumped)
 		{
+			#if lime_legacy
 			bitmap.dumpBits();
+			#end
 			isDumped = true;
 		}
 		#end
