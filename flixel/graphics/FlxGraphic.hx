@@ -405,7 +405,7 @@ class FlxGraphic
 			#if (FLX_RENDER_TILE && !flash && !nme)
 			if (canBeDumped)
 			{
-				bitmap.dumpbits();
+				bitmap.dumpBits();
 				isDumped = true;
 			}
 			#end
