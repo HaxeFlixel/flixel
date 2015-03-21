@@ -14,6 +14,7 @@ import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.graphics.FlxGraphic;
 import flixel.util.FlxStringUtil;
+import haxe.ds.Vector;
 
 /**
  * Base class for all frame types
@@ -70,7 +71,7 @@ class FlxFrame implements IFlxDestroyable
 	public var type:FlxFrameType;
 	
 	#if FLX_RENDER_TILE
-	private var frameMatrix:Array<Float>;
+	private var frameMatrix:Vector<Float>;
 	#end
 	
 	@:allow(flixel)
@@ -197,7 +198,7 @@ class FlxFrame implements IFlxDestroyable
 		if (frameMatrix == null)
 		{
 			prepareBlitMatrix(mat, false);
-			frameMatrix = [];
+			frameMatrix = new Vector<Float>(6);
 			frameMatrix[0] = mat.a;
 			frameMatrix[1] = mat.b;
 			frameMatrix[2] = mat.c;
