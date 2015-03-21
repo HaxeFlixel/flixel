@@ -45,10 +45,17 @@ class FlxFramesCollection implements IFlxDestroyable
 	 */
 	public var type(default, null):FlxFrameCollectionType;
 	
-	public function new(parent:FlxGraphic, type:FlxFrameCollectionType = null)
+	/**
+	 * How much space were trimmed around original frames.
+	 * Use addBorder() method to add borders.
+	 */
+	public var border(default, null):FlxPoint;
+	
+	public function new(parent:FlxGraphic, type:FlxFrameCollectionType = null, border:FlxPoint = null)
 	{
 		this.parent = parent;
 		this.type = type;
+		this.border = (border == null) ? FlxPoint.get() : border;
 		frames = [];
 		framesHash = new Map<String, FlxFrame>();
 		
@@ -116,6 +123,7 @@ class FlxFramesCollection implements IFlxDestroyable
 	public function destroy():Void
 	{
 		frames = FlxDestroyUtil.destroyArray(frames);
+		border = FlxDestroyUtil.put(border);
 		framesHash = null;
 		parent = null;
 		type = null;
@@ -175,12 +183,18 @@ class FlxFramesCollection implements IFlxDestroyable
 		texFrame.offset.set(offset.x, offset.y);
 		texFrame.frame = frame;
 		
-		sourceSize.put();
-		offset.put();
+		sourceSize = FlxDestroyUtil.put(sourceSize);
+		offset = FlxDestroyUtil.put(offset);
 		
 		return pushFrame(texFrame);
 	}
 	
+	/**
+	 * Helper method for adding frame into collection
+	 * 
+	 * @param	frameObj	frame to add
+	 * @return	added frame
+	 */
 	public function pushFrame(frameObj:FlxFrame):FlxFrame
 	{
 		var name:String = frameObj.name;
@@ -190,6 +204,7 @@ class FlxFramesCollection implements IFlxDestroyable
 		}
 		
 		frames.push(frameObj);
+		
 		if (name != null)
 		{
 			framesHash.set(name, frameObj);
@@ -198,21 +213,16 @@ class FlxFramesCollection implements IFlxDestroyable
 		return frameObj;
 	}
 	
-	// TODO: implement it and document it...
 	/**
+	 * Generates new frames collection from this collection but trims frames by specified borders.
 	 * 
-	 * 
-	 * @param	border
-	 * @return
+	 * @param	border	How much space trim around frame's
+	 * @return	Generated frames collection.	
 	 */
-	public function setBorder(border:FlxPoint):FlxFramesCollection
+	public function addBorder(border:FlxPoint):FlxFramesCollection
 	{
-		for (frame in frames)
-		{
-			frame.setBorder(border);
-		}
-		
-		return this;
+		throw "To be overriden in subclasses";
+		return null;
 	}
 	
 	public function toString():String

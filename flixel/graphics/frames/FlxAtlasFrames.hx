@@ -19,10 +19,9 @@ import haxe.Json;
  */
 class FlxAtlasFrames extends FlxFramesCollection
 {
-	public function new(parent:FlxGraphic) 
+	public function new(parent:FlxGraphic, border:FlxPoint = null) 
 	{
-		super(parent, FlxFrameCollectionType.ATLAS);
-		parent.atlasFrames = this;
+		super(parent, FlxFrameCollectionType.ATLAS, border);
 	}
 	
 	/**
@@ -409,8 +408,43 @@ class FlxAtlasFrames extends FlxFramesCollection
 	 * @param	graphic	FlxGraphic object to find AtlasFrames collection for.
 	 * @return	AtlasFrames Collection for specified FlxGraphic object. Could be null, if FlxGraphic doesn't have it yet.
 	 */
-	public static inline function findFrame(graphic:FlxGraphic):FlxAtlasFrames
+	public static function findFrame(graphic:FlxGraphic, border:FlxPoint = null):FlxAtlasFrames
 	{
-		return graphic.atlasFrames;
+		if (border == null)
+		{
+			border = FlxPoint.flxPoint1.set(0, 0);
+		}
+		
+		var atlasFrames:Array<FlxAtlasFrames> = cast graphic.getFramesCollections(FlxFrameCollectionType.ATLAS);
+		var atlas:FlxAtlasFrames;
+		
+		for (atlas in atlasFrames)
+		{
+			if (atlas.border.equals(border))
+			{
+				return atlas;
+			}
+		}
+		
+		return null;
+	}
+	
+	override public function addBorder(border:FlxPoint):FlxAtlasFrames
+	{
+		var resultBorder:FlxPoint = new FlxPoint().addPoint(this.border).addPoint(border);
+		var atlasFrames:FlxAtlasFrames = FlxAtlasFrames.findFrame(parent, resultBorder);
+		if (atlasFrames != null)
+		{
+			return atlasFrames;
+		}
+		
+		atlasFrames = new FlxAtlasFrames(parent, resultBorder);
+		
+		for (frame in frames)
+		{
+			atlasFrames.pushFrame(frame.setBorderTo(border));
+		}
+		
+		return atlasFrames;
 	}
 }
