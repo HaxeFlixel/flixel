@@ -400,15 +400,15 @@ class FlxGraphic
 	 */
 	public function dump():Void
 	{
+	#if lime_legacy	
 		#if (FLX_RENDER_TILE && !flash && !nme)
 		if (canBeDumped)
 		{
-			#if lime_legacy
 			bitmap.dumpBits();
-			#end
 			isDumped = true;
 		}
 		#end
+	#end
 	}
 	
 	/**
@@ -416,12 +416,14 @@ class FlxGraphic
 	 */
 	public function undump():Void
 	{
+	#if lime_legacy
 		var newBitmap:BitmapData = getBitmapFromSystem();	
 		if (newBitmap != null)
 		{
 			bitmap = newBitmap;
 		}
 		isDumped = false;
+	#end
 	}
 	
 	/**
