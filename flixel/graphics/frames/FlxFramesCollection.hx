@@ -45,9 +45,9 @@ class FlxFramesCollection implements IFlxDestroyable
 	 */
 	public var type(default, null):FlxFrameCollectionType;
 	
-	// TODO: document it...
 	/**
-	 * 
+	 * How much space were trimmed around original frames.
+	 * Use addBorder() method to add borders.
 	 */
 	public var border(default, null):FlxPoint;
 	
@@ -189,12 +189,11 @@ class FlxFramesCollection implements IFlxDestroyable
 		return pushFrame(texFrame);
 	}
 	
-	// TODO: document it...
 	/**
+	 * Helper method for adding frame into collection
 	 * 
-	 * 
-	 * @param	frameObj
-	 * @return
+	 * @param	frameObj	frame to add
+	 * @return	added frame
 	 */
 	public function pushFrame(frameObj:FlxFrame):FlxFrame
 	{
@@ -214,12 +213,11 @@ class FlxFramesCollection implements IFlxDestroyable
 		return frameObj;
 	}
 	
-	// TODO: document it...
 	/**
 	 * Generates new frames collection from this collection but trims frames by specified borders.
 	 * 
-	 * @param	border
-	 * @return
+	 * @param	border	How much space trim around frame's
+	 * @return	Generated frames collection.	
 	 */
 	public function addBorder(border:FlxPoint):FlxFramesCollection
 	{

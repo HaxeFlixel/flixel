@@ -101,11 +101,11 @@ class FlxNode implements IFlxDestroyable
 		return ((rect.width >= width) && (rect.height >= height));
 	}
 	
-	// TODO: update docs...
 	/**
 	 * Generates TileFrames object for this node
 	 * @param	tileSize		The size of tile in spritesheet
 	 * @param	tileSpacing		Offsets between tiles in spritesheet
+	 * @param	tileBorder		Border to add around tiles (helps to avoid "tearing" problem)
 	 * @return	Created TileFrames object for this node
 	 */
 	public function getTileFrames(tileSize:FlxPoint, tileSpacing:FlxPoint = null, tileBorder:FlxPoint = null):FlxTileFrames
@@ -115,18 +115,11 @@ class FlxNode implements IFlxDestroyable
 		
 		if (frame != null)
 		{
-			if (tileBorder != null)
-			{
-				tileSize.add(2 * tileBorder.x, 2 * tileBorder.y);
-			}
-			
 			var tileFrames:FlxTileFrames = FlxTileFrames.fromFrame(frame, tileSize, tileSpacing);
-			
 			if (tileBorder != null)
 			{
 				tileFrames = tileFrames.addBorder(tileBorder);
 			}
-			
 			return tileFrames;
 		}
 		

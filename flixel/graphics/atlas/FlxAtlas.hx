@@ -18,6 +18,9 @@ import flixel.system.FlxAssets;
 import flixel.system.frontEnds.BitmapFrontEnd;
 import openfl.geom.Matrix;
 
+// TODO: rewrite this class again, since it's a total mess again.
+// It needs better resize handling.
+
 /**
  * Class for packing multiple images in big one and generating frame data for each of them 
  * so you can easily load regions of atlas in sprites and tilemaps as a source of graphic
@@ -563,15 +566,15 @@ class FlxAtlas implements IFlxDestroyable
 		return Std.int(Math.pow(2, powerInt + 1));
 	}
 	
-	// TODO: update docs...
 	/**
 	 * Generates new bitmapdata with spaces between tiles, adds this bitmapdata to this atlas, 
 	 * generates TileFrames object for added node and returns it. Could be useful for tilemaps.
 	 * 
 	 * @param	Graphic			Source image for node, where spaces will be inserted (could be BitmapData, String or Class<Dynamic>).
-	 * @param	Key			Optional key for image
+	 * @param	Key				Optional key for image
 	 * @param	tileSize		The size of tile in spritesheet
-	 * @param	tileSpacing	Offsets to add in spritesheet between tiles
+	 * @param	tileSpacing		Offsets to add in spritesheet between tiles
+	 * @param	tileBorder		Border to add around tiles (helps to avoid "tearing" problem)
 	 * @param	region			Region of source image to use as a source graphic
 	 * @return	Generated TileFrames for added node
 	 */
@@ -589,19 +592,8 @@ class FlxAtlas implements IFlxDestroyable
 		
 		key = FlxG.bitmap.getKeyWithSpacesAndBorders(key, tileSize, tileSpacing, tileBorder, region);
 		
-		var borderX:Int = 0;
-		var borderY:Int = 0;
-		
-		if (tileBorder != null)
-		{
-			borderX = Std.int(tileBorder.x);
-			borderY = Std.int(tileBorder.y); 
-		}
-		
-		var spaces:FlxPoint = FlxPoint.get().copyFrom(tileSpacing).add(borderX, borderY);
-		
 		if (hasNodeWithName(key) == true)
-			return nodes.get(key).getTileFrames(tileSize, spaces);
+			return nodes.get(key).getTileFrames(tileSize, tileSpacing, tileBorder);
 		
 		var data:BitmapData = FlxAssets.resolveBitmapData(Graphic);
 		
@@ -622,6 +614,11 @@ class FlxAtlas implements IFlxDestroyable
 			throw "addNodeWithSpacings can't insert provided image: " + Graphic + ") in atlas. It's probably too big.";
 			#end
 			return null;
+		}
+		
+		if (tileBorder != null)
+		{
+			tileSize.add(2 * tileBorder.x, 2 * tileBorder.y);
 		}
 		
 		return node.getTileFrames(tileSize, tileSpacing, tileBorder);

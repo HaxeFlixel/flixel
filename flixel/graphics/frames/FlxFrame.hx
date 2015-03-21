@@ -558,12 +558,11 @@ class FlxFrame implements IFlxDestroyable
 		return clippedFrame;
 	}
 	
-	// TODO: document it...
 	/**
+	 * Copies data from this frame into specified frame.
 	 * 
-	 * 
-	 * @param	clone
-	 * @return
+	 * @param	clone	Frame to fill data with. If null, then new frame will be created.
+	 * @return	Frame with data of this frame.
 	 */
 	public function copyTo(clone:FlxFrame = null):FlxFrame
 	{

@@ -53,7 +53,6 @@ class FlxTileFrames extends FlxFramesCollection
 		return frames[row * numCols + column];
 	}
 	
-	// TODO: update this method (due to FlxBitmapDataUtil.addSpacesAndBorders() changes)
 	/**
 	 * Gets source bitmapdata, generates new bitmapdata with spaces between frames (if there is no such bitmapdata in the cache already) 
 	 * and creates TileFrames collection.
@@ -62,6 +61,7 @@ class FlxTileFrames extends FlxFramesCollection
 	 * @param	tileSize		the size of tiles in spritesheet
 	 * @param	tileSpacing		desired offsets between frames in spritesheet
 	 * 							(this method takes spritesheet bitmap without offsets between frames and adds them).
+	 * @param	tileBorder		Border to add around tiles (helps to avoid "tearing" problem)
 	 * @param	region			Region of image to generate spritesheet from. Default value is null, which means that
 	 * 							whole image will be used for spritesheet generation
 	 * @return	Newly created spritesheet
