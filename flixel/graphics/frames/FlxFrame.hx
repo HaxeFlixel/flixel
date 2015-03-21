@@ -69,6 +69,10 @@ class FlxFrame implements IFlxDestroyable
 	 */
 	public var type:FlxFrameType;
 	
+	#if FLX_RENDER_TILE
+	private var frameMatrix:Array<Float>;
+	#end
+	
 	@:allow(flixel)
 	private function new(parent:FlxGraphic, angle:FlxFrameAngle = FlxFrameAngle.ANGLE_0)
 	{
@@ -190,7 +194,32 @@ class FlxFrame implements IFlxDestroyable
 		mat.identity();
 		return mat;
 		#else
-		prepareBlitMatrix(mat, false);
+		if (frameMatrix == null)
+		{
+			prepareBlitMatrix(mat, false);
+			frameMatrix = [];
+			frameMatrix[0] = mat.a;
+			frameMatrix[1] = mat.b;
+			frameMatrix[2] = mat.c;
+			frameMatrix[3] = mat.d;
+			frameMatrix[4] = mat.tx;
+			frameMatrix[5] = mat.ty;
+		}
+		else
+		{
+			mat.a = frameMatrix[0];
+			mat.b = frameMatrix[1];
+			mat.c = frameMatrix[2];
+			mat.d = frameMatrix[3];
+			mat.tx = frameMatrix[4];
+			mat.ty = frameMatrix[5];
+		}
+		
+		if (rotation == FlxFrameAngle.ANGLE_0 && !flipX && !flipY)
+		{
+			return mat;
+		}
+		
 		return rotateAndFlip(mat, rotation, flipX, flipY);
 		#end
 	}
@@ -432,7 +461,7 @@ class FlxFrame implements IFlxDestroyable
 	 * @param	border	Amount to clip from frame
 	 * @return	Clipped frame
 	 */
-	public function setBorderTo(border:FlxPoint, frameToFill:FlxFrame = null):FlxFrame
+	private function setBorderTo(border:FlxPoint, frameToFill:FlxFrame = null):FlxFrame
 	{
 		var rect:FlxRect = FlxRect.get(border.x, border.y, sourceSize.x - 2 * border.x, sourceSize.y - 2 * border.y);
 		frameToFill = this.subFrameTo(rect, frameToFill);
@@ -560,6 +589,9 @@ class FlxFrame implements IFlxDestroyable
 		offset = FlxDestroyUtil.put(offset);
 		frame = FlxDestroyUtil.put(frame);
 		uv = FlxDestroyUtil.put(uv);
+		#if FLX_RENDER_TILE
+		frameMatrix = null;
+		#end
 	}
 	
 	public function toString():String

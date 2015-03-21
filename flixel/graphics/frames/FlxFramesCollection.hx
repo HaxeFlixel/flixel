@@ -45,6 +45,10 @@ class FlxFramesCollection implements IFlxDestroyable
 	 */
 	public var type(default, null):FlxFrameCollectionType;
 	
+	// TODO: document it...
+	/**
+	 * 
+	 */
 	public var border(default, null):FlxPoint;
 	
 	public function new(parent:FlxGraphic, type:FlxFrameCollectionType = null, border:FlxPoint = null)
@@ -208,41 +212,6 @@ class FlxFramesCollection implements IFlxDestroyable
 		}
 		
 		return frameObj;
-	}
-	
-	// TODO: implement it, rename (generateWithBorders) it and document it...
-	/**
-	 * 
-	 * 
-	 * @param	border
-	 * @return
-	 */
-	public function setBorder(border:FlxPoint):FlxFramesCollection
-	{
-	//	var collection = clone();
-		
-		
-		throw "setBorder() method should be implemented in subclasses";
-		return null;
-		/*
-		for (frame in frames)
-		{
-			frame.setBorder(border);
-		}
-		
-		this.border = border;
-		return this;
-		*/
-	}
-	
-	// TODO: implement it and document it...
-	/**
-	 * 
-	 * @return
-	 */
-	private function clone():FlxFramesCollection
-	{
-		return null;
 	}
 	
 	public function toString():String
