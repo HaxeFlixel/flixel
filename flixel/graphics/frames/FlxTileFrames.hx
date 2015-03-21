@@ -88,9 +88,8 @@ class FlxTileFrames extends FlxFramesCollection
 			borderY = Std.int(tileBorder.y); 
 		}
 		
-		var spaces:FlxPoint = FlxPoint.get().copyFrom(tileSpacing).add(borderX, borderY);
-		
-		return FlxTileFrames.fromRectangle(result, tileSize, null, spaces);
+		var tileFrames:FlxTileFrames = FlxTileFrames.fromGraphic(result, FlxPoint.get().addPoint(tileSize).add(2 * tileBorder.x, 2 * tileBorder.y), null, tileSpacing);
+		return tileFrames.addBorder(tileBorder);
 	}
 	
 	/**
@@ -378,13 +377,19 @@ class FlxTileFrames extends FlxFramesCollection
 	override public function addBorder(border:FlxPoint):FlxTileFrames
 	{
 		var resultBorder:FlxPoint = new FlxPoint().addPoint(this.border).addPoint(border);
-		var tileFrames:FlxTileFrames = FlxTileFrames.findFrame(parent, tileSize, region, atlasFrame, tileSpacing, resultBorder);
+		var resultSize:FlxPoint = FlxPoint.get().copyFrom(tileSize).subtract(2 * border.x, 2 * border.y);
+		var tileFrames:FlxTileFrames = FlxTileFrames.findFrame(parent, resultSize, region, atlasFrame, tileSpacing, resultBorder);
 		if (tileFrames != null)
 		{
+			resultSize = FlxDestroyUtil.put(resultSize);
 			return tileFrames;
 		}
 		
 		tileFrames = new FlxTileFrames(parent, resultBorder);
+		tileFrames.region = FlxRect.get().copyFrom(region);
+		tileFrames.atlasFrame = atlasFrame;
+		tileFrames.tileSize = resultSize;
+		tileFrames.tileSpacing = FlxPoint.get().copyFrom(tileSpacing);
 		
 		for (frame in frames)
 		{

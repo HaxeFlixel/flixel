@@ -563,7 +563,7 @@ class FlxAtlas implements IFlxDestroyable
 		return Std.int(Math.pow(2, powerInt + 1));
 	}
 	
-	// TODO: update this method (due to FlxBitmapDataUtil.addSpacesAndBorders() changes)
+	// TODO: update docs...
 	/**
 	 * Generates new bitmapdata with spaces between tiles, adds this bitmapdata to this atlas, 
 	 * generates TileFrames object for added node and returns it. Could be useful for tilemaps.
@@ -624,7 +624,7 @@ class FlxAtlas implements IFlxDestroyable
 			return null;
 		}
 		
-		return node.getTileFrames(tileSize, spaces);
+		return node.getTileFrames(tileSize, tileSpacing, tileBorder);
 	}
 	
 	/**
