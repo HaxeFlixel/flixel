@@ -339,7 +339,7 @@ class FlxGraphic
 	 * You should fill it yourself with one of the AtlasFrames static methods
 	 * (like texturePackerJSON(), texturePackerXML(), sparrow(), libGDX()).
 	 */
-	public var atlasFrames:FlxAtlasFrames;
+	public var atlasFrames(get, null):FlxAtlasFrames;
 	
 	/**
 	 * Storage for all available frame collection of all types for this graphic object.
@@ -464,7 +464,6 @@ class FlxGraphic
 		assetsKey = null;
 		assetsClass = null;
 		_imageFrame = null;	// no need to dispose _imageFrame since it exists in imageFrames
-		atlasFrames = null;
 		
 		var collections:Array<FlxFramesCollection>;
 		var collectionType:FlxFrameCollectionType;
@@ -610,6 +609,11 @@ class FlxGraphic
 		}
 		
 		return _imageFrame;
+	}
+	
+	private function get_atlasFrames():FlxAtlasFrames
+	{
+		return FlxAtlasFrames.findFrame(this, null);
 	}
 	
 	private function set_bitmap(value:BitmapData):BitmapData

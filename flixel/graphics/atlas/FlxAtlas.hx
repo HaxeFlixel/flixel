@@ -639,14 +639,13 @@ class FlxAtlas implements IFlxDestroyable
 		var atlasFrames:FlxAtlasFrames = null;
 		if (graphic.atlasFrames == null)
 		{
-			graphic.atlasFrames = new FlxAtlasFrames(graphic);
-			atlasFrames = graphic.atlasFrames;
+			atlasFrames = new FlxAtlasFrames(graphic);
 		}
 		
 		for (node in nodes)
 			addNodeToAtlasFrames(node);
 		
-		return graphic.atlasFrames;
+		return atlasFrames;
 	}
 	
 	private function addNodeToAtlasFrames(node:FlxNode):Void
