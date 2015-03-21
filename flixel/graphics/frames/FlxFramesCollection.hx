@@ -55,7 +55,7 @@ class FlxFramesCollection implements IFlxDestroyable
 	{
 		this.parent = parent;
 		this.type = type;
-		this.border = border;
+		this.border = (border == null) ? FlxPoint.get() : border;
 		frames = [];
 		framesHash = new Map<String, FlxFrame>();
 		
@@ -212,6 +212,19 @@ class FlxFramesCollection implements IFlxDestroyable
 		}
 		
 		return frameObj;
+	}
+	
+	// TODO: document it...
+	/**
+	 * Generates new frames collection from this collection but trims frames by specified borders.
+	 * 
+	 * @param	border
+	 * @return
+	 */
+	public function addBorder(border:FlxPoint):FlxFramesCollection
+	{
+		throw "To be overriden in subclasses";
+		return null;
 	}
 	
 	public function toString():String

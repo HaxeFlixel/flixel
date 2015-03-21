@@ -391,6 +391,7 @@ class FlxFrame implements IFlxDestroyable
 		}
 		
 		frameToFill.sourceSize.set(rect.width, rect.height);
+		frameToFill.name = name;
 		
 		// no need to make all calculations if original frame is empty...
 		if (type == FlxFrameType.EMPTY)
@@ -457,12 +458,13 @@ class FlxFrame implements IFlxDestroyable
 	}
 	
 	/**
-	 * Just a helper method for some frame adjusting
+	 * Just a helper method for some frame adjusting.
+	 * Try to not use it, since it may cause memory leaks.
 	 * 
 	 * @param	border	Amount to clip from frame
 	 * @return	Clipped frame
 	 */
-	private function setBorderTo(border:FlxPoint, frameToFill:FlxFrame = null):FlxFrame
+	public function setBorderTo(border:FlxPoint, frameToFill:FlxFrame = null):FlxFrame
 	{
 		var rect:FlxRect = FlxRect.get(border.x, border.y, sourceSize.x - 2 * border.x, sourceSize.y - 2 * border.y);
 		frameToFill = this.subFrameTo(rect, frameToFill);
@@ -490,6 +492,7 @@ class FlxFrame implements IFlxDestroyable
 		}
 		
 		clippedFrame.sourceSize.copyFrom(sourceSize);
+		clippedFrame.name = name;
 		
 		// no need to make all calculations if original frame is empty...
 		if (type == FlxFrameType.EMPTY)
@@ -555,7 +558,7 @@ class FlxFrame implements IFlxDestroyable
 		return clippedFrame;
 	}
 	
-	// TODO: think about making cloning more flexible...
+	// TODO: document it...
 	/**
 	 * 
 	 * 
@@ -579,6 +582,7 @@ class FlxFrame implements IFlxDestroyable
 		clone.sourceSize.copyFrom(sourceSize);
 		clone.frame = FlxRect.get().copyFrom(frame);
 		clone.type = type;
+		clone.name = name;
 		return clone;
 	}
 	
