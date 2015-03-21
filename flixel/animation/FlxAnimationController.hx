@@ -512,6 +512,18 @@ class FlxAnimationController implements IFlxDestroyable
 	}
 	
 	/**
+	 * Stops current animation and resets its frame index to zero.
+	 */
+	public inline function stop():Void
+	{
+		if (_curAnim != null)
+		{
+			_curAnim.stop();
+			_curAnim.curFrame = 0;
+		}
+	}
+	
+	/**
 	 * Pauses the current animation.
 	 */
 	public inline function pause():Void
