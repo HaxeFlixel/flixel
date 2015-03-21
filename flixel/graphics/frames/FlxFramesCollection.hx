@@ -45,10 +45,13 @@ class FlxFramesCollection implements IFlxDestroyable
 	 */
 	public var type(default, null):FlxFrameCollectionType;
 	
-	public function new(parent:FlxGraphic, type:FlxFrameCollectionType = null)
+	public var border(default, null):FlxPoint;
+	
+	public function new(parent:FlxGraphic, type:FlxFrameCollectionType = null, border:FlxPoint = null)
 	{
 		this.parent = parent;
 		this.type = type;
+		this.border = border;
 		frames = [];
 		framesHash = new Map<String, FlxFrame>();
 		
@@ -182,6 +185,13 @@ class FlxFramesCollection implements IFlxDestroyable
 		return pushFrame(texFrame);
 	}
 	
+	// TODO: document it...
+	/**
+	 * 
+	 * 
+	 * @param	frameObj
+	 * @return
+	 */
 	public function pushFrame(frameObj:FlxFrame):FlxFrame
 	{
 		var name:String = frameObj.name;
@@ -191,6 +201,7 @@ class FlxFramesCollection implements IFlxDestroyable
 		}
 		
 		frames.push(frameObj);
+		
 		if (name != null)
 		{
 			framesHash.set(name, frameObj);
@@ -199,7 +210,7 @@ class FlxFramesCollection implements IFlxDestroyable
 		return frameObj;
 	}
 	
-	// TODO: implement it, rename it and document it...
+	// TODO: implement it, rename (generateWithBorders) it and document it...
 	/**
 	 * 
 	 * 

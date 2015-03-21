@@ -70,7 +70,7 @@ class FlxFrame implements IFlxDestroyable
 	public var type:FlxFrameType;
 	
 	@:allow(flixel)
-	private function new(parent:FlxGraphic, angle:FlxFrameAngle = 0)
+	private function new(parent:FlxGraphic, angle:FlxFrameAngle = FlxFrameAngle.ANGLE_0)
 	{
 		this.parent = parent;
 		this.angle = angle;
@@ -457,7 +457,6 @@ class FlxFrame implements IFlxDestroyable
 			clippedFrame.parent = parent;
 			clippedFrame.angle = angle;
 			clippedFrame.frame = FlxDestroyUtil.put(clippedFrame.frame);
-			clippedFrame.uv = FlxDestroyUtil.put(clippedFrame.uv);
 		}
 		
 		clippedFrame.sourceSize.copyFrom(sourceSize);
