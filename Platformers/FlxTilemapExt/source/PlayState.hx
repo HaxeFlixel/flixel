@@ -9,6 +9,9 @@ import flixel.FlxState;
 import flixel.group.FlxGroup;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
+import flixel.graphics.frames.FlxTileFrames;
+import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
 import openfl.Assets;
 
 class PlayState extends FlxState
@@ -61,6 +64,10 @@ class PlayState extends FlxState
 		
 		// Load in the Level and Define Arrays for different slope types
 		add(level.loadMapFromCSV(Assets.getText("assets/slopemap.txt"), "assets/colortiles.png", 10, 10));
+		
+		// tile tearing problem fix
+		var levelTiles:FlxTileFrames = FlxTileFrames.fromBitmapWithSpacesAndBorders("assets/colortiles.png", new FlxPoint(10, 10), new FlxPoint(2, 2), new FlxPoint(2, 2));
+		level.frames = levelTiles;
 		
 		var tempFL:Array<Int> = [5, 13, 21];
 		var tempFR:Array<Int> = [6, 14, 22];
