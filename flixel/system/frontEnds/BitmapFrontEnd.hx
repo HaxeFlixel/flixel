@@ -14,6 +14,7 @@ import flixel.util.FlxColor;
 import flixel.graphics.FlxGraphic;
 import openfl.Assets;
 import openfl.events.Event;
+import openfl.gl.GL;
 
 /**
  * Internal storage system to prevent graphics from being used repeatedly in memory.
@@ -22,6 +23,11 @@ class BitmapFrontEnd
 {
 	@:allow(flixel.system.frontEnds.BitmapLogFrontEnd)
 	private var _cache:Map<String, FlxGraphic>;
+	
+	/**
+	 * Gets max texture size for native targets
+	 */
+	public var maxTextureSize(get, null):Int;
 	
 	public function new()
 	{
@@ -415,5 +421,10 @@ class BitmapFrontEnd
 				}
 			}
 		}
+	}
+	
+	private function get_maxTextureSize():Int
+	{
+		return cast GL.getParameter(GL.MAX_TEXTURE_SIZE);
 	}
 }
