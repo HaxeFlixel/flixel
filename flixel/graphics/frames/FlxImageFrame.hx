@@ -7,9 +7,11 @@ import flixel.graphics.frames.FlxFramesCollection;
 import flixel.graphics.frames.FlxFramesCollection.FlxFrameCollectionType;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxGraphicAsset;
+import flixel.util.FlxBitmapDataUtil;
 import flixel.util.FlxDestroyUtil;
 import flixel.math.FlxPoint;
 import flixel.graphics.FlxGraphic;
+import openfl.display.BitmapData;
 
 /**
  * Single-frame collection.
@@ -146,6 +148,50 @@ class FlxImageFrame extends FlxFramesCollection
 	{
 		var graphic:FlxGraphic = FlxG.bitmap.add(source, false);
 		return fromGraphic(graphic, region);
+	}
+	
+	/**
+	 * Gets source bitmapdata, generates new bitmapdata (if there is no such bitmapdata in the cache already) 
+	 * and creates FlxImageFrame collection.
+	 * 
+	 * @param	source			the source of graphic for frame collection (can be String, BitmapData or FlxGraphic).
+	 * @param	border			Border to add around tiles (helps to avoid "tearing" problem)
+	 * @param	region			Region of image to generate image frame from. Default value is null, which means that
+	 * 							whole image will be used for it
+	 * @return	Newly created image frame collection
+	 */
+	public static function fromBitmapAddSpacesAndBorders(source:FlxGraphicAsset, border:FlxPoint, region:FlxRect = null):FlxImageFrame
+	{
+		var graphic:FlxGraphic = FlxG.bitmap.add(source, false);
+		if (graphic == null) return null;
+		
+		var key:String = FlxG.bitmap.getKeyWithSpacesAndBorders(graphic.key, null, null, border, region);
+		var result:FlxGraphic = FlxG.bitmap.get(key);
+		if (result == null)
+		{
+			var bitmap:BitmapData = FlxBitmapDataUtil.addSpacesAndBorders(graphic.bitmap, null, null, border, region);
+			result = FlxG.bitmap.add(bitmap, false, key);
+		}
+		
+		var borderX:Int = Std.int(border.x);
+		var borderY:Int = Std.int(border.y);
+		
+		var imageFrame:FlxImageFrame = FlxImageFrame.fromGraphic(graphic);
+		return imageFrame.addBorder(border);
+	}
+	
+	/**
+	 * Gets FlxFrame object, generates new bitmapdata with border pixels around (if there is no such bitmapdata in the cache already) 
+	 * and creates image frame collection.
+	 *  
+	 * @param	frame		Frame to generate tiles from
+	 * @param	border		Border to add around frame image (helps to avoid "tearing" problem)
+	 * @return	Newly created image frame collection
+	 */
+	public static function fromFrameAddSpacesAndBorders(frame:FlxFrame, border:FlxPoint):FlxImageFrame
+	{
+		var bitmap:BitmapData = frame.paint();
+		return FlxImageFrame.fromBitmapAddSpacesAndBorders(bitmap, border);
 	}
 	
 	/**

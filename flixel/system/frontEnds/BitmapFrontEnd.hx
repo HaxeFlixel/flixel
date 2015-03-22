@@ -300,7 +300,7 @@ class BitmapFrontEnd
 	 * @param	region			region of image to use as spritesheet graphics source
 	 * @return	Generated key for spritesheet with inserted spaces between tiles
 	 */
-	public function getKeyWithSpacesAndBorders(baseKey:String, frameSize:FlxPoint, frameSpacing:FlxPoint, frameBorder:FlxPoint = null, region:FlxRect = null):String
+	public function getKeyWithSpacesAndBorders(baseKey:String, frameSize:FlxPoint = null, frameSpacing:FlxPoint = null, frameBorder:FlxPoint = null, region:FlxRect = null):String
 	{
 		var result:String = baseKey;
 		
@@ -309,13 +309,19 @@ class BitmapFrontEnd
 			result += "_Region:" + region.x + "_" + region.y + "_" + region.width + "_" + region.height;
 		}
 		
-		result += "_FrameSize:" + frameSize.x + "_" + frameSize.y + "_Spaces:" + frameSpacing.x + "_" + frameSpacing.y;
+		if (frameSize != null)
+		{
+			result += "_FrameSize:" + frameSize.x + "_" + frameSize.y;
+		}
+		
+		if (frameSpacing != null)
+		{
+			result += "_Spaces:" + frameSpacing.x + "_" + frameSpacing.y;
+		}
 		
 		if (frameBorder != null)
 		{
-			var borderX:Int = Std.int(frameBorder.x);
-			var borderY:Int = Std.int(frameBorder.y);
-			result += "_Border:" + borderX + "_" + borderY;
+			result += "_Border:" + frameBorder.x + "_" + frameBorder.y;
 		}
 		
 		return result;

@@ -348,21 +348,33 @@ class FlxBitmapDataUtil
 	 * @param	region		region of image to use as a source graphics for spritesheet. Default value is null, which means that whole image will be used.
 	 * @return	Image for spritesheet with inserted spaces between tiles.
 	 */
-	public static function addSpacesAndBorders(bitmapData:BitmapData, frameSize:FlxPoint, spacing:FlxPoint, border:FlxPoint = null, region:FlxRect = null):BitmapData
+	public static function addSpacesAndBorders(bitmapData:BitmapData, frameSize:FlxPoint = null, spacing:FlxPoint = null, border:FlxPoint = null, region:FlxRect = null):BitmapData
 	{
 		if (region == null)
 		{
 			region = new FlxRect(0, 0, bitmapData.width, bitmapData.height);
 		}
 		
-		var frameWidth:Int = Std.int(frameSize.x);
-		var frameHeight:Int = Std.int(frameSize.y);
+		var frameWidth:Int = Std.int(region.width);
+		var frameHeight:Int = Std.int(region.height);
+		
+		if (frameSize != null)
+		{
+			frameWidth = Std.int(frameSize.x);
+			frameHeight = Std.int(frameSize.y);
+		}
 		
 		var numHorizontalFrames:Int = Std.int(region.width / frameWidth);
 		var numVerticalFrames:Int = Std.int(region.height / frameHeight);
 		
-		var spaceX:Int = Std.int(spacing.x);
-		var spaceY:Int = Std.int(spacing.y);
+		var spaceX:Int = 0;
+		var spaceY:Int = 0;
+		
+		if (spacing != null)
+		{
+			spaceX = Std.int(spacing.x);
+			spaceY = Std.int(spacing.y);
+		}
 		
 		var borderX:Int = 0;
 		var borderY:Int = 0;
