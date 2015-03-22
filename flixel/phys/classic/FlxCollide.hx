@@ -7,6 +7,7 @@ import flixel.group.FlxSpriteGroup;
 import flixel.util.FlxDestroyUtil;
 import flixel.math.FlxRect;
 import flixel.phys.classic.FlxClassicBody;
+import haxe.ds.Vector;
 
 /**
  * A fairly generic quad tree structure for rapid overlap checks.
@@ -19,12 +20,19 @@ class FlxCollide
 {
 	public static function collide(array : Array<FlxClassicBody>, iterationNumber : Int)
 	{
+		/*
 		FlxNewQuadTree.divisions = 6;
 		var root = FlxNewQuadTree.recycle(0, 0, FlxG.worldBounds.width, FlxG.worldBounds.height);
-		root.load(array, null, null, separate);
+		iterationNumber = 1;
+		root.load(array, null, separate);
 		while(iterationNumber-- > 0)
 			root.execute();
-		root.destroy();
+		root.destroy();*/
+		
+		var world = new FlxCollideWorld(FlxRect.get( -50, -50, 500, 400), 2, 1);
+		world.addArray(array);
+		world.collideWorld();
+		world.destroy();
 	}
 	
 	/**
@@ -323,6 +331,275 @@ class FlxCollide
 	}
 }
 
+class FlxCollideWorld
+{
+	private var _worldSize : FlxRect;
+	private var _worldDivisionX : Int;
+	private var _worldDivisionY : Int;
+	
+	private var _world : Vector<Vector<FlxWorldPart>>;
+	
+	public function new(worldSize : FlxRect, worldDivisionX : Int, worldDivisionY : Int)
+	{
+		_world = new Vector<Vector<FlxWorldPart>>(_worldDivisionY = worldDivisionY);
+		for (i in 0..._world.length)
+		{
+			_world[i] = new Vector<FlxWorldPart>(_worldDivisionX = worldDivisionX);
+			for (j in 0..._world[i].length)
+			{
+				_world[i][j] = new FlxWorldPart();
+			}
+		}
+		
+		_worldSize = worldSize;
+	}
+	
+	//BUG : object out of bounds
+	public function addArray(bodies : Array<FlxClassicBody>)
+	{
+		for (body in bodies)
+		{
+			var x = Math.floor((body.x - _worldSize.x) / (_worldSize.width/_worldDivisionX));
+			var y = Math.floor((body.y - _worldSize.y) / (_worldSize.height/_worldDivisionY));
+			
+			if (x < 0 || y < 0 || x >= _worldDivisionX || y >= _worldDivisionY)
+				continue;
+				
+			_world[y][x].addObject(body);
+		}
+	}
+	
+	public function collideWorld()
+	{
+		for (y in 0..._worldDivisionY)
+		{
+			for (x in 0..._worldDivisionX)
+			{
+				var mainListIterator = _world[y][x].mainHead;
+				var mainTail = _world[y][x].mainTail;
+				var priorityHead = _world[y][x].priorityHead;
+				var priorityTail = _world[y][x].priorityTail;
+				var temporaryObjects : Bool = false;
+				
+				while (mainListIterator != priorityHead)
+				{
+					if (mainListIterator == mainTail)
+						temporaryObjects = false;
+						
+					if (mainListIterator.object == null)
+					{
+						mainListIterator = mainListIterator.next;
+						continue;
+					}
+						
+					var object = mainListIterator.object;
+					for (i in x...Math.floor(Math.min(((object._hull.right - _worldSize.x) / (_worldSize.width / _worldDivisionX )) + 1, _worldDivisionX)))
+					{
+						var secondIterator = i == x ? mainListIterator.next : _world[y][i].mainHead;
+						while (secondIterator != null && (!temporaryObjects || secondIterator != _world[y][i].priorityTail))
+						{
+							if (temporaryObjects && secondIterator == _world[y][i].mainTail)
+							{
+								secondIterator = _world[y][i].priorityHead;
+								continue;
+							}
+							if (secondIterator.object == null)
+							{
+								secondIterator = secondIterator.next;
+								continue;
+							}
+								
+							var secondObject = secondIterator.object;
+							if (object._hull.overlaps(secondObject._hull))
+							{
+								FlxCollide.separate(object, secondObject);
+								object.updateHull();
+								secondObject.updateHull();
+							}
+							secondIterator = secondIterator.next;
+						}
+					}
+					
+					if ((object._hull.bottom - _worldSize.y) / (_worldSize.height / _worldDivisionY) > y + 1 && y != _worldDivisionY - 1)
+					{
+						_world[y + 1][x].addObject(object, true);
+					}
+					
+					if (temporaryObjects)
+					{
+						trace("k");
+						mainTail.next = mainListIterator.next;
+						mainListIterator.next = null;
+						mainListIterator.destroy();
+						mainListIterator = mainTail.next;
+					}
+					else
+					{
+					mainListIterator = mainListIterator.next;
+					}
+				}
+				while (mainListIterator != _world[y][x].priorityTail)
+				{
+					if (mainListIterator.object == null)
+					{
+						mainListIterator = mainListIterator.next;
+						continue;
+					}
+					
+					var object = mainListIterator.object;
+					for (j in y...Math.floor(Math.min((object._hull.bottom - _worldSize.y) / (_worldSize.height/_worldDivisionY) + 1, _worldDivisionY)))
+					{
+						for (i in x...Math.floor(Math.min((object._hull.right - _worldSize.x) / (_worldSize.width/_worldDivisionX) + 1, _worldDivisionX)))
+						{
+							if (j == y && x == i)
+								continue;
+							
+							_world[j][i].addObject(object, true);
+						}
+					}
+					mainListIterator = mainListIterator.next;
+				}
+				mainListIterator.object = null;
+				if (mainListIterator.next != null)
+					mainListIterator.next.destroy();
+			}
+		}
+	}
+	
+	public function updateBodyLocations()
+	{
+		for (j in 0..._worldDivisionY)
+		{
+			for (i in 0..._worldDivisionX)
+			{
+				var beforeMainIterator = null;
+				var mainIterator = _world[j][i].mainHead;
+				var mainTemp : Bool = false;
+				
+				while (mainIterator != _world[j][i].priorityTail)
+				{
+					if (mainTemp || mainIterator == _world[j][i].mainTail)
+					{
+						mainTemp = true;
+						if (mainIterator.object != null)
+							trace ("BAJ UPDATEBODY maintail");
+						beforeMainIterator = mainIterator;
+						mainIterator = mainIterator.next;
+						if (mainIterator == _world[j][i].priorityHead)
+							mainTemp = false;
+						continue;
+					}
+					
+					if (mainIterator.object == null)
+					{
+						beforeMainIterator = mainIterator;
+						mainIterator = mainIterator.next;
+						continue;
+					}
+					
+					var body = mainIterator.object;
+					
+					//BUG : Out of bounds
+					var x = Math.floor((body.x - _worldSize.x) / (_worldSize.width/_worldDivisionX));
+					var y = Math.floor((body.y - _worldSize.y) / (_worldSize.height/_worldDivisionY));
+					
+					if (j != y || i != x)
+					{
+						if (beforeMainIterator != null)
+						{
+							beforeMainIterator.next = mainIterator.next;
+							_world[y][x].moveObject(mainIterator);
+						}
+					}
+					beforeMainIterator = mainIterator;
+					mainIterator = mainIterator.next;
+				}
+			}
+		}
+	}
+	
+	public function destroy()
+	{
+		for (worldVector in _world)
+		{
+			for (worldPart in worldVector)
+			{
+				worldPart.destroy();
+			}
+		}
+		_world = null;
+		_worldSize.put();
+	}
+}
+
+class FlxWorldPart
+{
+	public var mainHead : FlxLinkedListNew;
+	public var mainTail : FlxLinkedListNew;
+	
+	public var priorityHead : FlxLinkedListNew;
+	public var priorityTail : FlxLinkedListNew;
+	
+	public function new()
+	{
+		mainHead = FlxLinkedListNew.recycle();
+		mainTail = FlxLinkedListNew.recycle();
+		priorityHead = FlxLinkedListNew.recycle();
+		priorityTail = FlxLinkedListNew.recycle();
+		
+		mainHead.next = mainTail;
+		mainTail.next = priorityHead;
+		priorityHead.next = priorityTail;
+	}
+	
+	public function addObject (body : FlxClassicBody, isTemporary : Bool = false)
+	{	
+		var insertAfter = body.kinematic ? (isTemporary ? priorityTail : priorityHead) : (isTemporary ? mainTail : mainHead);
+		
+		if (insertAfter.object != null)
+		{
+			var nextObject = FlxLinkedListNew.recycle();
+			nextObject.object = body;
+			nextObject.next = insertAfter.next;
+			insertAfter.next = nextObject;
+		}
+		else
+		{
+			insertAfter.object = body;
+		}
+	}
+	
+	public function moveObject (listElement : FlxLinkedListNew)
+	{
+		var insertAfter = listElement.object.kinematic ? priorityHead : mainHead;
+		listElement.next = insertAfter.next;
+		insertAfter.next = listElement;
+	}
+	
+	public function destroy()
+	{
+		mainHead.destroy();
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 class FlxNewQuadTree extends FlxRect
 {
 	/**
@@ -350,21 +627,8 @@ class FlxNewQuadTree extends FlxRect
 	 * which are used to store objects in the leaves.
 	 */
 	private var _headA:FlxLinkedListNew;
-	/**
-	 * Refers to the internal A and B linked lists,
-	 * which are used to store objects in the leaves.
-	 */
-	private var _tailA:FlxLinkedListNew;
-	/**
-	 * Refers to the internal A and B linked lists,
-	 * which are used to store objects in the leaves.
-	 */
-	private var _headB:FlxLinkedListNew;
-	/**
-	 * Refers to the internal A and B linked lists,
-	 * which are used to store objects in the leaves.
-	 */
-	private var _tailB:FlxLinkedListNew;
+	
+	private static var _priority : FlxLinkedListNew;
 
 	/**
 	 * Internal, governs and assists with the formation of the tree.
@@ -510,9 +774,9 @@ class FlxNewQuadTree extends FlxRect
 	private function new(X:Float, Y:Float, Width:Float, Height:Float, ?Parent:FlxNewQuadTree)
 	{
 		super();
+		
 		set(X, Y, Width, Height);
 		reset(X, Y, Width, Height, Parent);
-		trace(++numberOfQuadTrees);
 	}
 	
 	/**
@@ -558,46 +822,12 @@ class FlxNewQuadTree extends FlxRect
 		
 		set(X, Y, Width, Height);
 		
-		_headA = _tailA = FlxLinkedListNew.recycle();
-		_headB = _tailB = FlxLinkedListNew.recycle();
+		_headA = FlxLinkedListNew.recycle();
+		_headA.object = null;
+		_headA.next = Parent == null ? _priority = FlxLinkedListNew.recycle() : Parent._headA; //If this is the root, we make a priority group for immovable objects
 		
 		//Copy the parent's children (if there are any)
-		if (Parent != null)
-		{
-			var iterator:FlxLinkedListNew;
-			var ot:FlxLinkedListNew;
-			if (Parent._headA.object != null)
-			{
-				iterator = Parent._headA;
-				while (iterator != null)
-				{
-					if (_tailA.object != null)
-					{
-						ot = _tailA;
-						_tailA = FlxLinkedListNew.recycle();
-						ot.next = _tailA;
-					}
-					_tailA.object = iterator.object;
-					iterator = iterator.next;
-				}
-			}
-			if (Parent._headB.object != null)
-			{
-				iterator = Parent._headB;
-				while (iterator != null)
-				{
-					if (_tailB.object != null)
-					{
-						ot = _tailB;
-						_tailB = FlxLinkedListNew.recycle();
-						ot.next = _tailB;
-					}
-					_tailB.object = iterator.object;
-					iterator = iterator.next;
-				}
-			}
-		}
-		else
+		if (Parent == null)
 		{
 			_min = Math.floor((width + height) / (2 * divisions));
 		}
@@ -624,10 +854,6 @@ class FlxNewQuadTree extends FlxRect
 	override public function destroy():Void
 	{
 		_headA = FlxDestroyUtil.destroy(_headA);
-		_headB = FlxDestroyUtil.destroy(_headB);
-
-		_tailA = FlxDestroyUtil.destroy(_tailA);
-		_tailB = FlxDestroyUtil.destroy(_tailB);
 
 		_northWestTree = FlxDestroyUtil.destroy(_northWestTree);
 		_northEastTree = FlxDestroyUtil.destroy(_northEastTree);
@@ -656,20 +882,11 @@ class FlxNewQuadTree extends FlxRect
 	 * @param NotifyCallback	A function with the form myFunction(Object1:FlxObject,Object2:FlxObject):void that is called whenever two objects are found to overlap in world space, and either no ProcessCallback is specified, or the ProcessCallback returns true. 
 	 * @param ProcessCallback	A function with the form myFunction(Object1:FlxObject,Object2:FlxObject):Boolean that is called whenever two objects are found to overlap in world space.  The NotifyCallback is only called if this function returns true.  See FlxObject.separate(). 
 	 */
-	public function load(ObjectOrGroup1:Array<FlxClassicBody>, ObjectOrGroup2:FlxClassicBody = null, NotifyCallback:FlxClassicBody->FlxClassicBody->Void = null, ProcessCallback:FlxClassicBody->FlxClassicBody->Bool = null):Void
+	public function load(ObjectOrGroup1:Array<FlxClassicBody>, NotifyCallback:FlxClassicBody->FlxClassicBody->Void = null, ProcessCallback:FlxClassicBody->FlxClassicBody->Bool = null):Void
 	{
 		for(obj in ObjectOrGroup1)
-			add(obj, A_LIST);
-		
-		if (ObjectOrGroup2 != null)
-		{
-			add(ObjectOrGroup2, B_LIST);
-			_useBothLists = true;
-		}
-		else
-		{
-			_useBothLists = false;
-		}
+			add(obj);
+			
 		_notifyCallback = NotifyCallback;
 		_processingCallback = ProcessCallback;
 	}
@@ -681,9 +898,8 @@ class FlxNewQuadTree extends FlxRect
 	 * @param	ObjectOrGroup	FlxObjects are just added, FlxGroups are recursed and their applicable members added accordingly.
 	 * @param	List			A int flag indicating the list to which you want to add the objects.  Options are A_LIST and B_LIST.
 	 */
-	public function add(ObjectOrGroup:FlxClassicBody, list:Int):Void
+	public function add(ObjectOrGroup:FlxClassicBody):Void
 	{
-		_list = list;
 		_object = ObjectOrGroup;
 		_objectLeftEdge = _object.x;
 		_objectTopEdge = _object.y;
@@ -698,13 +914,14 @@ class FlxNewQuadTree extends FlxRect
 	 */
 	private function addObject():Void
 	{
-		//If this quad (not its children) lies entirely inside this object, add it here
-		if (!_canSubdivide || (_leftEdge >= _objectLeftEdge && _rightEdge <= _objectRightEdge && _topEdge >= _objectTopEdge && _bottomEdge <= _objectBottomEdge))
+		if (_object.kinematic)
 		{
-			addToList();
+			var next = FlxLinkedListNew.recycle();
+			next.next = _priority.next;
+			_priority.next = next;
+			next.object = _object;
 			return;
 		}
-		
 		//See if the selected object fits completely inside any of the quadrants
 		if ((_objectLeftEdge > _leftEdge) && (_objectRightEdge < _midpointX))
 		{
@@ -749,39 +966,8 @@ class FlxNewQuadTree extends FlxRect
 			}
 		}
 		
-		//If it wasn't completely contained we have to check out the partial overlaps
-		if ((_objectRightEdge > _leftEdge) && (_objectLeftEdge < _midpointX) && (_objectBottomEdge > _topEdge) && (_objectTopEdge < _midpointY))
-		{
-			if (_northWestTree == null)
-			{
-				_northWestTree = FlxNewQuadTree.recycle(_leftEdge, _topEdge, _halfWidth, _halfHeight, this);
-			}
-			_northWestTree.addObject();
-		}
-		if ((_objectRightEdge > _midpointX) && (_objectLeftEdge < _rightEdge) && (_objectBottomEdge > _topEdge) && (_objectTopEdge < _midpointY))
-		{
-			if (_northEastTree == null)
-			{
-				_northEastTree = FlxNewQuadTree.recycle(_midpointX, _topEdge, _halfWidth, _halfHeight, this);
-			}
-			_northEastTree.addObject();
-		}
-		if ((_objectRightEdge > _midpointX) && (_objectLeftEdge < _rightEdge) && (_objectBottomEdge > _midpointY) && (_objectTopEdge < _bottomEdge))
-		{
-			if (_southEastTree == null)
-			{
-				_southEastTree = FlxNewQuadTree.recycle(_midpointX, _midpointY, _halfWidth, _halfHeight, this);
-			}
-			_southEastTree.addObject();
-		}
-		if ((_objectRightEdge > _leftEdge) && (_objectLeftEdge < _midpointX) && (_objectBottomEdge > _midpointY) && (_objectTopEdge < _bottomEdge))
-		{
-			if (_southWestTree == null)
-			{
-				_southWestTree = FlxNewQuadTree.recycle(_leftEdge, _midpointY, _halfWidth, _halfHeight, this);
-			}
-			_southWestTree.addObject();
-		}
+		addToList();
+		return;
 	}
 	
 	/**
@@ -790,46 +976,10 @@ class FlxNewQuadTree extends FlxRect
 	private function addToList():Void
 	{
 		var ot:FlxLinkedListNew;
-		if (_list == A_LIST)
-		{
-			if (_tailA.object != null)
-			{
-				ot = _tailA;
-				_tailA = FlxLinkedListNew.recycle();
-				ot.next = _tailA;
-			}
-			_tailA.object = _object;
-		}
-		else
-		{
-			if (_tailB.object != null)
-			{
-				ot = _tailB;
-				_tailB = FlxLinkedListNew.recycle();
-				ot.next = _tailB;
-			}
-			_tailB.object = _object;
-		}
-		if (!_canSubdivide)
-		{
-			return;
-		}
-		if (_northWestTree != null)
-		{
-			_northWestTree.addToList();
-		}
-		if (_northEastTree != null)
-		{
-			_northEastTree.addToList();
-		}
-		if (_southEastTree != null)
-		{
-			_southEastTree.addToList();
-		}
-		if (_southWestTree != null)
-		{
-			_southWestTree.addToList();
-		}
+		var next = FlxLinkedListNew.recycle();
+		next.next = _headA.next;
+		_headA.next = next;
+		next.object = _object;
 	}
 	
 	/**
@@ -841,29 +991,6 @@ class FlxNewQuadTree extends FlxRect
 	{
 		var overlapProcessed:Bool = false;
 		var iterator:FlxLinkedListNew;
-		
-		if (_headA.object != null)
-		{
-			iterator = _headA;
-			while (iterator != null)
-			{
-				_object = iterator.object;
-				if (_useBothLists)
-				{
-					_iterator = _headB;
-				}
-				else
-				{
-					_iterator = iterator.next;
-				}
-				if (_object != null &&
-					_iterator != null && _iterator.object != null && overlapNode())
-				{
-					overlapProcessed = true;
-				}
-				iterator = iterator.next;
-			}
-		}
 		
 		//Advance through the tree by calling overlap on each child
 		if ((_northWestTree != null) && _northWestTree.execute())
@@ -881,6 +1008,21 @@ class FlxNewQuadTree extends FlxRect
 		if ((_southWestTree != null) && _southWestTree.execute())
 		{
 			overlapProcessed = true;
+		}
+		
+		iterator = _headA.next;
+		while (iterator.object != null)
+		{
+			if (iterator.object.kinematic)
+				trace("BAZD");
+			_object = iterator.object;
+			_iterator = iterator.next;
+			if (_object != null &&
+				_iterator != null && overlapNode())
+			{
+				overlapProcessed = true;
+			}
+			iterator = iterator.next;
 		}
 		
 		return overlapProcessed;
@@ -907,11 +1049,13 @@ class FlxNewQuadTree extends FlxRect
 		while (_iterator != null)
 		{
 			checkObject = _iterator.object;
-			if (_object == checkObject)
+			if (_object == checkObject || checkObject == null)
 			{
 				_iterator = _iterator.next;
 				continue;
 			}
+			
+			PlayState.calcNumber++;
 			
 			//Calculate bulk hull for checkObject
 			_checkObjectHullX = (checkObject.x < checkObject.last.x) ? checkObject.x : checkObject.last.x;

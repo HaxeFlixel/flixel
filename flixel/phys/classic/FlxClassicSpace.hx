@@ -9,7 +9,6 @@ import flixel.math.FlxRect;
 class FlxClassicSpace implements IFlxSpace {
 	
 	private var objects : Array<FlxClassicBody>;
-	private var _hasToBeRemoved : FlxGroup;
 	
 	public var iterationCount : Int;
 	

@@ -2,6 +2,7 @@ package flixel.phys.classic;
 
 import flixel.FlxObject;
 import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
 import flixel.phys.IFlxSpace;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import flixel.math.FlxVelocity;
@@ -38,6 +39,8 @@ class FlxClassicBody implements flixel.phys.IFlxBody
 	public var 	width : Float;
 	public var 	height : Float;
 	
+	public var _hull : FlxRect;
+	
 	public function new(parent : FlxObject, space : FlxClassicSpace)
 	{
 		this.space = space;
@@ -53,6 +56,8 @@ class FlxClassicBody implements flixel.phys.IFlxBody
 		angle = parent.angle;
 		width = parent.width;
 		height = parent.height;
+		
+		_hull = FlxRect.get();
 		
 		space.add(this);
 	}
@@ -93,6 +98,13 @@ class FlxClassicBody implements flixel.phys.IFlxBody
 		
 		parent.x = x;
 		parent.y = y;
+		
+		updateHull();
+	}
+	
+	public inline function updateHull()
+	{
+		_hull.set((x < last.x) ? x : last.x, (y < last.y) ? y : last.y, width + Math.abs(x - last.x), height + Math.abs(y - last.y));
 	}
 	
 	
