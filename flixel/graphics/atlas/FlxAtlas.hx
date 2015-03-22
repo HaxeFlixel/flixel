@@ -18,6 +18,9 @@ import flixel.system.FlxAssets;
 import flixel.system.frontEnds.BitmapFrontEnd;
 import openfl.geom.Matrix;
 
+// TODO: rewrite this class again, since it's a total mess again.
+// It needs better resize handling.
+
 /**
  * Class for packing multiple images in big one and generating frame data for each of them 
  * so you can easily load regions of atlas in sprites and tilemaps as a source of graphic
@@ -311,7 +314,7 @@ class FlxAtlas implements IFlxDestroyable
 				}
 				else
 				{
-					var point:Point = FlxPoint.point;
+					var point:Point = FlxPoint.point1;
 					point.setTo(firstGrandChild.x, firstGrandChild.y);
 					_bitmapData.copyPixels(firstGrandChildData, firstGrandChildData.rect, point);
 				}
@@ -543,7 +546,7 @@ class FlxAtlas implements IFlxDestroyable
 		var newBitmapData:BitmapData = new BitmapData(root.width, root.height, true, FlxColor.TRANSPARENT);
 		if (_bitmapData != null)
 		{
-			var point:Point = FlxPoint.point;
+			var point:Point = FlxPoint.point1;
 			point.setTo(0, 0);
 			newBitmapData.copyPixels(_bitmapData, _bitmapData.rect, point);
 		}
@@ -568,13 +571,14 @@ class FlxAtlas implements IFlxDestroyable
 	 * generates TileFrames object for added node and returns it. Could be useful for tilemaps.
 	 * 
 	 * @param	Graphic			Source image for node, where spaces will be inserted (could be BitmapData, String or Class<Dynamic>).
-	 * @param	Key			Optional key for image
+	 * @param	Key				Optional key for image
 	 * @param	tileSize		The size of tile in spritesheet
-	 * @param	tileSpacing	Offsets to add in spritesheet between tiles
+	 * @param	tileSpacing		Offsets to add in spritesheet between tiles
+	 * @param	tileBorder		Border to add around tiles (helps to avoid "tearing" problem)
 	 * @param	region			Region of source image to use as a source graphic
 	 * @return	Generated TileFrames for added node
 	 */
-	public function addNodeWithSpacings(Graphic:FlxGraphicSource, ?Key:String, tileSize:FlxPoint, tileSpacing:FlxPoint, region:FlxRect = null):FlxTileFrames
+	public function addNodeWithSpacesAndBorders(Graphic:FlxGraphicSource, ?Key:String, tileSize:FlxPoint, tileSpacing:FlxPoint, tileBorder:FlxPoint = null, region:FlxRect = null):FlxTileFrames
 	{
 		var key:String = FlxAssets.resolveKey(Graphic, Key);
 		
@@ -586,10 +590,10 @@ class FlxAtlas implements IFlxDestroyable
 			return null;
 		}
 		
-		key = FlxG.bitmap.getKeyWithSpacings(key, tileSize, tileSpacing, region);
+		key = FlxG.bitmap.getKeyWithSpacesAndBorders(key, tileSize, tileSpacing, tileBorder, region);
 		
 		if (hasNodeWithName(key) == true)
-			return nodes.get(key).getTileFrames(tileSize, tileSpacing);
+			return nodes.get(key).getTileFrames(tileSize, tileSpacing, tileBorder);
 		
 		var data:BitmapData = FlxAssets.resolveBitmapData(Graphic);
 		
@@ -601,7 +605,7 @@ class FlxAtlas implements IFlxDestroyable
 			return null;
 		}
 		
-		var nodeData:BitmapData = FlxBitmapDataUtil.addSpacing(data, tileSize, tileSpacing, region);
+		var nodeData:BitmapData = FlxBitmapDataUtil.addSpacesAndBorders(data, tileSize, tileSpacing, tileBorder, region);
 		var node:FlxNode = addNode(nodeData, key);
 		
 		if (node == null) 
@@ -612,7 +616,12 @@ class FlxAtlas implements IFlxDestroyable
 			return null;
 		}
 		
-		return node.getTileFrames(tileSize, tileSpacing);
+		if (tileBorder != null)
+		{
+			tileSize.add(2 * tileBorder.x, 2 * tileBorder.y);
+		}
+		
+		return node.getTileFrames(tileSize, tileSpacing, tileBorder);
 	}
 	
 	/**
@@ -627,14 +636,13 @@ class FlxAtlas implements IFlxDestroyable
 		var atlasFrames:FlxAtlasFrames = null;
 		if (graphic.atlasFrames == null)
 		{
-			graphic.atlasFrames = new FlxAtlasFrames(graphic);
-			atlasFrames = graphic.atlasFrames;
+			atlasFrames = new FlxAtlasFrames(graphic);
 		}
 		
 		for (node in nodes)
 			addNodeToAtlasFrames(node);
 		
-		return graphic.atlasFrames;
+		return atlasFrames;
 	}
 	
 	private function addNodeToAtlasFrames(node:FlxNode):Void

@@ -5,6 +5,7 @@ import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.FlxG;
+import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxAngle;
 import flixel.math.FlxRect;
 import flixel.util.FlxColor;
@@ -13,6 +14,7 @@ import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.graphics.FlxGraphic;
 import flixel.util.FlxStringUtil;
+import haxe.ds.Vector;
 
 /**
  * Base class for all frame types
@@ -38,10 +40,16 @@ class FlxFrame implements IFlxDestroyable
 	/**
 	 * Region of image to render
 	 */
-	public var frame:FlxRect;
+	public var frame(default, set):FlxRect;
+	
+	/**
+	 * UV coordinates for this frame.
+	 * WARNING: In optimization purposes width and height of this rect contain right and bottom coordinates (x + width and y + height).
+	 */
+	public var uv:FlxRect;
 	
 	public var parent:FlxGraphic;
-	public var tileID:Int = -1;
+	
 	/**
 	 * Rotation angle of this frame. 
 	 * Required for packed atlas images.
@@ -56,189 +64,557 @@ class FlxFrame implements IFlxDestroyable
 	 * Frame offset from top left corner of original image.
 	 */
 	public var offset(default, null):FlxPoint;
-	/**
-	 * Helper point object for less calculations (use in tile render mode).
-	 * It holds position of tile's center of this frame (offset + half tile size).
-	 */
-	public var center(default, null):FlxPoint;
 	
 	/**
 	 * The type of this frame.
 	 */
-	public var type(default, null):FlxFrameType;
+	public var type:FlxFrameType;
 	
-	/**
-	 * Frame bitmapDatas.
-	 * Required for blit render mode and pixel perfect collision detection.
-	 */
-	private var _bitmapData:BitmapData;
-	private var _hReversedBitmapData:BitmapData;
-	private var _vReversedBitmapData:BitmapData;
-	private var _hvReversedBitmapData:BitmapData;
+	#if FLX_RENDER_TILE
+	private var frameMatrix:Vector<Float>;
+	#end
 	
 	@:allow(flixel)
-	private function new(parent:FlxGraphic)
+	private function new(parent:FlxGraphic, angle:FlxFrameAngle = FlxFrameAngle.ANGLE_0)
 	{
 		this.parent = parent;
+		this.angle = angle;
+		type = FlxFrameType.REGULAR;
 		
 		sourceSize = FlxPoint.get();
 		offset = FlxPoint.get();
-		center = FlxPoint.get();
-		
-		type = FlxFrameType.REGULAR;
-		angle = FlxFrameAngle.ANGLE_0;
 	}
 	
 	/**
-	 * Transforms specified matrix for further rendering.
+	 * Applies frame rotation to the specified matrix, which should be used for tiling or blitting.
 	 * Required for rotated frame support.
 	 * 
-	 * @param	mat	Matrix to transform / rotate
+	 * @param	mat		Matrix to transform / rotate
+	 * @param	blit	Whether specified matrix will be used for blitting or for tile rendering.
 	 * @return	Transformed matrix.
 	 */
-	public function prepareFrameMatrix(mat:FlxMatrix):FlxMatrix
+	private inline function prepareBlitMatrix(mat:FlxMatrix, blit:Bool = true):FlxMatrix
 	{
-		return mat; // to be overriden in subclasses
+		mat.identity();
+		
+		if (blit)
+			mat.translate( -frame.x, -frame.y);
+		
+		if (angle == FlxFrameAngle.ANGLE_90)
+		{
+			mat.rotateByPositive90();
+			mat.translate(frame.height, 0);
+		}
+		else if (angle == FlxFrameAngle.ANGLE_NEG_90)
+		{
+			mat.rotateByNegative90();
+			mat.translate(0, frame.width);
+		}
+		
+		mat.translate(offset.x, offset.y);
+		return mat;
 	}
 	
 	/**
-	 * Draws frame on specified BitmapData object (all underlying pixels become unvisible).
+	 * Rotates and flips matrix. This method expects matrix which were prepared by prepareBlitMatrix() method.
+	 * Internal use only.
 	 * 
-	 * @param	bmd	BitmapData object to draw this frame on. If bmd is null or doesn't have the same size as frame then new BitmapData created
-	 * @return	Modified or newly created BitmapData with frame image on it
+	 * @param	mat			Matrix to transform
+	 * @param	rotation	Rotation to apply to specified matrix. This method expects only 0, 90 and -90 degrees values.
+	 * @param	flipX		Do we need to flip frame horizontally
+	 * @param	flipY		Do we need to flip frame vertically
+	 * @return	Transformed matrix with applied rotation and flipping
 	 */
-	public function paintOnBitmap(bmd:BitmapData = null):BitmapData
+	private inline function rotateAndFlip(mat:FlxMatrix, rotation:FlxFrameAngle = FlxFrameAngle.ANGLE_0, flipX:Bool = false, flipY:Bool = false):FlxMatrix
 	{
-		var result:BitmapData = null;
+		var w:Int = Std.int(sourceSize.x);
+		var h:Int = Std.int(sourceSize.y);
 		
-		if (bmd != null && (bmd.width == sourceSize.x && bmd.height == sourceSize.y))
+		// rotate frame transformation matrix if rotation isn't zero
+		if (rotation != FlxFrameAngle.ANGLE_0)
 		{
-			result = bmd;
+			var t:Int = w;
+			w = h;
+			h = t;
 			
-			var w:Int = bmd.width;
-			var h:Int = bmd.height;
-			
-			if (w > frame.width || h > frame.height)
+			if (rotation == FlxFrameAngle.ANGLE_90)
 			{
-				var rect:Rectangle = FlxRect.rect;
-				rect.setTo(0, 0, w, h);
-				bmd.fillRect(rect, FlxColor.TRANSPARENT);
+				mat.rotateByPositive90();
+				mat.translate(sourceSize.y, 0);
+			}
+			else if (rotation == FlxFrameAngle.ANGLE_270 || rotation == FlxFrameAngle.ANGLE_NEG_90)
+			{
+				mat.rotateByNegative90();
+				mat.translate(0, sourceSize.x);
 			}
 		}
-		else if (bmd != null)
+		
+		// flip frame transformation matrix
+		if (flipX)
 		{
-			bmd.dispose();
+			mat.scale( -1, 1);
+			mat.translate(w, 0);
 		}
 		
-		if (result == null)
+		if (flipY)
 		{
-			result = new BitmapData(Std.int(sourceSize.x), Std.int(sourceSize.y), true, FlxColor.TRANSPARENT);
+			mat.scale(1, -1);
+			mat.translate(0, h);
 		}
 		
-		offset.copyToFlash(FlxPoint.point);
-		result.copyPixels(parent.bitmap, frame.copyToFlash(FlxRect.rect), FlxPoint.point);
-		return result;
+		return mat;
 	}
 	
 	/**
-	 * Generates BitmapData for this frame object.
+	 * Prepares matrix for frame blitting (see "paint" methods).
+	 * 
+	 * @param	mat			Matrix to transform/prepare
+	 * @param	rotation	Rotation to apply to specified matrix. This method expects only 0, 90 and -90 degrees values.
+	 * @param	flipX		Do we need to flip frame horizontally
+	 * @param	flipY		Do we need to flip frame vertically
+	 * @return	Tranformed matrix which can be used for frame painting.
 	 */
-	public function getBitmap():BitmapData
+	private function prepareTransformedBlitMatrix(mat:FlxMatrix, rotation:FlxFrameAngle = FlxFrameAngle.ANGLE_0, flipX:Bool = false, flipY:Bool = false):FlxMatrix
 	{
-		if (_bitmapData != null)
-		{
-			return _bitmapData;
-		}
-		
-		return _bitmapData = paintOnBitmap();
+		mat = prepareBlitMatrix(mat);
+		return rotateAndFlip(mat, rotation, flipX, flipY);
 	}
 	
 	/**
-	 * Generates horizontally reversed BitmapData for this frame object.
+	 * Prepares matrix for frame tile/triangles rendering.
+	 * 
+	 * @param	mat			Matrix to transform/prepare
+	 * @param	rotation	Rotation to apply to specified matrix. This method expects only 0, 90 and -90 degrees values.
+	 * @param	flipX		Do we need to flip frame horizontally
+	 * @param	flipY		Do we need to flip frame vertically
+	 * @return	Tranformed matrix which can be used for frame drawing.
 	 */
-	public function getHReversedBitmap():BitmapData
+	public function prepareMatrix(mat:FlxMatrix, rotation:FlxFrameAngle = FlxFrameAngle.ANGLE_0, flipX:Bool = false, flipY:Bool = false):FlxMatrix
 	{
-		if (_hReversedBitmapData != null)
+		#if FLX_RENDER_BLIT
+		mat.identity();
+		return mat;
+		#else
+		if (frameMatrix == null)
 		{
-			return _hReversedBitmapData;
+			prepareBlitMatrix(mat, false);
+			frameMatrix = new Vector<Float>(6);
+			frameMatrix[0] = mat.a;
+			frameMatrix[1] = mat.b;
+			frameMatrix[2] = mat.c;
+			frameMatrix[3] = mat.d;
+			frameMatrix[4] = mat.tx;
+			frameMatrix[5] = mat.ty;
+		}
+		else
+		{
+			mat.a = frameMatrix[0];
+			mat.b = frameMatrix[1];
+			mat.c = frameMatrix[2];
+			mat.d = frameMatrix[3];
+			mat.tx = frameMatrix[4];
+			mat.ty = frameMatrix[5];
 		}
 		
-		var normalFrame:BitmapData = getBitmap();
-		var matrix:Matrix = FlxMatrix.matrix;
-		matrix.identity();
-		matrix.scale( -1, 1);
-		matrix.translate(Std.int(sourceSize.x), 0);
-		_hReversedBitmapData = new BitmapData(Std.int(sourceSize.x), Std.int(sourceSize.y), true, FlxColor.TRANSPARENT);
-		_hReversedBitmapData.draw(normalFrame, matrix);
-		return _hReversedBitmapData;
+		if (rotation == FlxFrameAngle.ANGLE_0 && !flipX && !flipY)
+		{
+			return mat;
+		}
+		
+		return rotateAndFlip(mat, rotation, flipX, flipY);
+		#end
 	}
 	
 	/**
-	 * Generates vertically reversed BitmapData for this frame object.
+	 * Draws frame on specified BitmapData object.
+	 * 
+	 * @param	bmd					BitmapData object to draw this frame on. If bmd is null then new BitmapData created
+	 * @param	point				Where to draw this frame on specified BitmapData object
+	 * @param	mergeAlpha			Whether to merge alphas or not (works like with BitmapData's copyPixels() method). Default value is false
+	 * @param	disposeIfNotEqual	Whether dispose passed bmd or not if its size isn't equal to frame's original size (sourceSize)
+	 * @return	Modified or newly created BitmapData with frame image on it
 	 */
-	public function getVReversedBitmap():BitmapData
+	public function paint(bmd:BitmapData = null, point:Point = null, mergeAlpha:Bool = false, disposeIfNotEqual:Bool = false):BitmapData
 	{
-		if (_vReversedBitmapData != null)
+		if (point == null)
 		{
-			return _vReversedBitmapData;
+			point = FlxPoint.point1;
+			point.setTo(0, 0);
 		}
 		
-		var normalFrame:BitmapData = getBitmap();
-		var matrix:Matrix = FlxMatrix.matrix;
-		matrix.identity();
-		matrix.scale(1, -1);
-		matrix.translate(0, Std.int(sourceSize.y));
-		_vReversedBitmapData = new BitmapData(Std.int(sourceSize.x), Std.int(sourceSize.y), true, FlxColor.TRANSPARENT);
-		_vReversedBitmapData.draw(normalFrame, matrix);
-		return _vReversedBitmapData;
+		bmd = checkInputBitmap(bmd, point, FlxFrameAngle.ANGLE_0, mergeAlpha, disposeIfNotEqual);
+		
+		if (type == FlxFrameType.EMPTY)
+		{
+			return bmd;
+		}
+		
+		if (angle == FlxFrameAngle.ANGLE_0)
+		{
+			offset.copyToFlash(FlxPoint.point2);
+			FlxPoint.point2.x += point.x;
+			FlxPoint.point2.y += point.y;
+			bmd.copyPixels(parent.bitmap, frame.copyToFlash(FlxRect.rect), FlxPoint.point2, null, null, mergeAlpha);
+		}
+		else
+		{
+			var matrix:FlxMatrix = FlxMatrix.matrix;
+			prepareBlitMatrix(matrix);
+			matrix.translate(point.x, point.y);
+			var rect:Rectangle = getDrawFrameRect(matrix);
+			bmd.draw(parent.bitmap, matrix, null, null, rect);
+		}
+		
+		return bmd;
 	}
 	
 	/**
-	 * Generates horizontally and vertically reversed BitmapData for this frame object.
+	 * Draws rotated and flipped frame on specified BitmapData object.
+	 * 
+	 * @param	bmd					BitmapData object to draw this frame on. If bmd is null then new BitmapData created
+	 * @param	point				Where to draw this frame on specified BitmapData object
+	 * @param	rotation			How much rotate the frame. Works only with 0, 90 and -90 (which is the same as 270) values
+	 * @param	flipX				Do we need to flip frame horizontally
+	 * @param	flipY				Do we need to flip frame vertically
+	 * @param	mergeAlpha			Whether to merge alphas or not (works like with BitmapData's copyPixels() method). Default value is false
+	 * @param	disposeIfNotEqual	Whether dispose passed bmd or not if its size isn't equal to frame's original size (sourceSize)
+	 * @return	Modified or newly created BitmapData with frame image on it
 	 */
-	public function getHVReversedBitmap():BitmapData
+	public function paintRotatedAndFlipped(bmd:BitmapData = null, point:Point = null, rotation:FlxFrameAngle = FlxFrameAngle.ANGLE_0, flipX:Bool = false, flipY:Bool = false, mergeAlpha:Bool = false, disposeIfNotEqual:Bool = false):BitmapData
 	{
-		if (_hvReversedBitmapData != null)
+		if (type == FlxFrameType.EMPTY && rotation == FlxFrameAngle.ANGLE_0)
 		{
-			return _hvReversedBitmapData;
+			return paint(bmd, point, mergeAlpha, disposeIfNotEqual);
 		}
 		
-		var normalFrame:BitmapData = getBitmap();
-		var matrix:Matrix = FlxMatrix.matrix;
-		matrix.identity();
-		matrix.scale( -1, -1);
-		matrix.translate(Std.int(sourceSize.x), Std.int(sourceSize.y));
-		_hvReversedBitmapData = new BitmapData(Std.int(sourceSize.x), Std.int(sourceSize.y), true, FlxColor.TRANSPARENT);
-		_hvReversedBitmapData.draw(normalFrame, matrix);
-		return _hvReversedBitmapData;
+		if (point == null)
+		{
+			point = FlxPoint.point2;
+			point.setTo(0, 0);
+		}
+		
+		bmd = checkInputBitmap(bmd, point, rotation, mergeAlpha, disposeIfNotEqual);
+		
+		if (type == FlxFrameType.EMPTY)
+		{
+			return bmd;
+		}
+		
+		var matrix:FlxMatrix = FlxMatrix.matrix;
+		prepareTransformedBlitMatrix(matrix, rotation, flipX, flipY);
+		matrix.translate(point.x, point.y);
+		var rect:Rectangle = getDrawFrameRect(matrix);
+		bmd.draw(parent.bitmap, matrix, null, null, rect);
+		return bmd;
 	}
 	
 	/**
-	 * Frees memory taken by frame BitmapDatas.
+	 * Internal method which runs few checks on specified BitmapData object.
+	 * 
+	 * @param	bmd					BitmapData object to check againist.
+	 * @param	point				Optional point for mergeAlpha checks
+	 * @param	rotation			How much we will rotate the frame when we will be drawing it on specified BitmapData.
+	 * @param	mergeAlpha			Whether to merge alphas or not (works like with BitmapData's copyPixels() method). Default value is false
+	 * @param	disposeIfNotEqual	Whether dispose passed bmd or not if its size isn't equal to frame's original size (sourceSize)
+	 * @return	Prepared BitmapData for further frame blitting. Output BitmapData could be a different object.
 	 */
-	public inline function destroyBitmaps():Void
+	private inline function checkInputBitmap(bmd:BitmapData = null, point:Point = null, rotation:FlxFrameAngle = FlxFrameAngle.ANGLE_0, mergeAlpha:Bool = false, disposeIfNotEqual:Bool = false):BitmapData
 	{
-		_bitmapData = FlxDestroyUtil.dispose(_bitmapData);
-		_hReversedBitmapData = FlxDestroyUtil.dispose(_hReversedBitmapData);
-		_vReversedBitmapData = FlxDestroyUtil.dispose(_vReversedBitmapData);
-		_hvReversedBitmapData = FlxDestroyUtil.dispose(_hvReversedBitmapData);
+		var w:Int = Std.int(sourceSize.x);
+		var h:Int = Std.int(sourceSize.y);
+		
+		if (rotation != FlxFrameAngle.ANGLE_0)
+		{
+			var t:Int = w;
+			w = h;
+			h = t;
+		}
+		
+		if (bmd != null && disposeIfNotEqual)
+		{
+			bmd = FlxDestroyUtil.disposeIfNotEqual(bmd, w, h);
+		}
+		
+		if (bmd != null && !mergeAlpha)
+		{
+			var rect:Rectangle = FlxRect.rect;
+			rect.setTo(point.x, point.y, w, h);
+			bmd.fillRect(rect, FlxColor.TRANSPARENT);
+		}
+		else if (bmd == null)
+		{
+			bmd = new BitmapData(w, h, true, FlxColor.TRANSPARENT);
+		}
+		
+		return bmd;
+	}
+	
+	/**
+	 * Internal method which prepares frame rect for blitting.
+	 * Required for rotated frames support.
+	 * 
+	 * @param	mat	frame transformation matrix (rotated / flipped / translated)
+	 * @return	Clipping rectangle which will be used for frame blitting
+	 */
+	private inline function getDrawFrameRect(mat:FlxMatrix):Rectangle
+	{
+		var p1:FlxPoint = FlxPoint.flxPoint1.set(frame.x, frame.y);
+		var p2:FlxPoint = FlxPoint.flxPoint2.set(frame.right, frame.bottom);
+		
+		p1.transform(mat);
+		p2.transform(mat);
+		
+		var flxRect:FlxRect = FlxRect.flxRect.fromTwoPoints(p1, p2);
+		var rect:Rectangle = FlxRect.rect;
+		flxRect.copyToFlash(rect);
+		return rect;
+	}
+	
+	/**
+	 * Generates frame with specified subregion of this frame
+	 * 
+	 * @param	rect			frame region to generate frame for
+	 * @param	frameToFill		frame to fill with data. If null then new frame will be created
+	 * @return	Specified frameToFill object but filled with data
+	 */
+	public function subFrameTo(rect:FlxRect, frameToFill:FlxFrame = null):FlxFrame
+	{
+		if (frameToFill == null)
+		{
+			frameToFill = new FlxFrame(parent, angle);
+		}
+		else
+		{
+			frameToFill.parent = parent;
+			frameToFill.angle = angle;
+			frameToFill.frame = FlxDestroyUtil.put(frameToFill.frame);
+		}
+		
+		frameToFill.sourceSize.set(rect.width, rect.height);
+		frameToFill.name = name;
+		
+		// no need to make all calculations if original frame is empty...
+		if (type == FlxFrameType.EMPTY)
+		{
+			frameToFill.type = FlxFrameType.EMPTY;
+			frameToFill.offset.set(0, 0);
+			return frameToFill;
+		}
+		
+		var clippedRect:FlxRect = FlxRect.get().setSize(frame.width, frame.height);
+		if (angle != FlxFrameAngle.ANGLE_0)
+		{
+			clippedRect.width = frame.height;
+			clippedRect.height = frame.width;
+		}
+		
+		rect.offset( -offset.x, -offset.y);
+		var frameRect:FlxRect = clippedRect.intersection(rect);
+		clippedRect = FlxDestroyUtil.put(clippedRect);
+		
+		if (frameRect.isEmpty)
+		{
+			frameToFill.type = FlxFrameType.EMPTY;
+			frameRect.set(0, 0, 0, 0);
+			frameToFill.frame = frameRect;
+			frameToFill.offset.set(0, 0);
+		}
+		else
+		{
+			frameToFill.type = FlxFrameType.REGULAR;
+			frameToFill.offset.set(frameRect.x, frameRect.y).subtract(rect.x, rect.y);
+			
+			var p1:FlxPoint = FlxPoint.flxPoint1.set(frameRect.x, frameRect.y);
+			var p2:FlxPoint = FlxPoint.flxPoint2.set(frameRect.right, frameRect.bottom);
+			
+			var mat:FlxMatrix = FlxMatrix.matrix;
+			mat.identity();
+			
+			if (angle == FlxFrameAngle.ANGLE_NEG_90)
+			{
+				mat.rotateByPositive90();
+				mat.translate(sourceSize.y, 0);
+			}
+			else if (angle == FlxFrameAngle.ANGLE_90)
+			{
+				mat.rotateByNegative90();
+				mat.translate(0, sourceSize.x);
+			}
+			
+			if (angle != FlxFrameAngle.ANGLE_0)
+			{
+				p1.transform(mat);
+				p2.transform(mat);
+			}
+			
+			frameRect.fromTwoPoints(p1, p2);
+			frameRect.offset(frame.x, frame.y);
+			
+			frameToFill.frame = frameRect;
+		}
+		
+		rect.offset(offset.x, offset.y);
+		return frameToFill;
+	}
+	
+	/**
+	 * Just a helper method for some frame adjusting.
+	 * Try to not use it, since it may cause memory leaks.
+	 * 
+	 * @param	border	Amount to clip from frame
+	 * @return	Clipped frame
+	 */
+	public function setBorderTo(border:FlxPoint, frameToFill:FlxFrame = null):FlxFrame
+	{
+		var rect:FlxRect = FlxRect.get(border.x, border.y, sourceSize.x - 2 * border.x, sourceSize.y - 2 * border.y);
+		frameToFill = this.subFrameTo(rect, frameToFill);
+		rect = FlxDestroyUtil.put(rect);
+		return frameToFill;
+	}
+	
+	/**
+	 * Frame clipping
+	 * @param	clip			Clipping rectangle to apply on frame
+	 * @param	clippedFrame	The frame which will contain result of original frame clipping. If null then new frame will be created.
+	 * @return	Result of applying frame clipping
+	 */
+	public function clipTo(clip:FlxRect, clippedFrame:FlxFrame = null):FlxFrame
+	{
+		if (clippedFrame == null)
+		{
+			clippedFrame = new FlxFrame(parent, angle);
+		}
+		else
+		{
+			clippedFrame.parent = parent;
+			clippedFrame.angle = angle;
+			clippedFrame.frame = FlxDestroyUtil.put(clippedFrame.frame);
+		}
+		
+		clippedFrame.sourceSize.copyFrom(sourceSize);
+		clippedFrame.name = name;
+		
+		// no need to make all calculations if original frame is empty...
+		if (type == FlxFrameType.EMPTY)
+		{
+			clippedFrame.type = FlxFrameType.EMPTY;
+			clippedFrame.offset.set(0, 0);
+			return clippedFrame;
+		}
+		
+		var clippedRect:FlxRect = FlxRect.get().setSize(frame.width, frame.height);
+		if (angle != FlxFrameAngle.ANGLE_0)
+		{
+			clippedRect.width = frame.height;
+			clippedRect.height = frame.width;
+		}
+		
+		clip.offset( -offset.x, -offset.y);
+		var frameRect:FlxRect = clippedRect.intersection(clip);
+		clippedRect = FlxDestroyUtil.put(clippedRect);
+		clip.offset(offset.x, offset.y);
+		
+		if (frameRect.isEmpty)
+		{
+			clippedFrame.type = FlxFrameType.EMPTY;
+			frameRect.set(0, 0, 0, 0);
+			clippedFrame.frame = frameRect;
+			clippedFrame.offset.set(0, 0);
+		}
+		else
+		{
+			clippedFrame.type = FlxFrameType.REGULAR;
+			clippedFrame.offset.set(frameRect.x, frameRect.y).addPoint(offset);
+			
+			var p1:FlxPoint = FlxPoint.flxPoint1.set(frameRect.x, frameRect.y);
+			var p2:FlxPoint = FlxPoint.flxPoint2.set(frameRect.right, frameRect.bottom);
+			
+			var mat:FlxMatrix = FlxMatrix.matrix;
+			mat.identity();
+			
+			if (angle == FlxFrameAngle.ANGLE_NEG_90)
+			{
+				mat.rotateByPositive90();
+				mat.translate(sourceSize.y, 0);
+			}
+			else if (angle == FlxFrameAngle.ANGLE_90)
+			{
+				mat.rotateByNegative90();
+				mat.translate(0, sourceSize.x);
+			}
+			
+			if (angle != FlxFrameAngle.ANGLE_0)
+			{
+				p1.transform(mat);
+				p2.transform(mat);
+			}
+			
+			frameRect.fromTwoPoints(p1, p2);
+			frameRect.offset(frame.x, frame.y);
+			
+			clippedFrame.frame = frameRect;
+		}
+		
+		return clippedFrame;
+	}
+	
+	/**
+	 * Copies data from this frame into specified frame.
+	 * 
+	 * @param	clone	Frame to fill data with. If null, then new frame will be created.
+	 * @return	Frame with data of this frame.
+	 */
+	public function copyTo(clone:FlxFrame = null):FlxFrame
+	{
+		if (clone == null)
+		{
+			clone = new FlxFrame(parent, angle);
+		}
+		else
+		{
+			clone.parent = parent;
+			clone.angle = angle;
+			clone.frame = FlxDestroyUtil.put(clone.frame);
+		}
+		
+		clone.offset.copyFrom(offset);
+		clone.sourceSize.copyFrom(sourceSize);
+		clone.frame = FlxRect.get().copyFrom(frame);
+		clone.type = type;
+		clone.name = name;
+		return clone;
 	}
 	
 	public function destroy():Void
 	{
 		name = null;
-		frame = null;
 		parent = null;
 		sourceSize = FlxDestroyUtil.put(sourceSize);
 		offset = FlxDestroyUtil.put(offset);
-		center = FlxDestroyUtil.put(center);
-		destroyBitmaps();
+		frame = FlxDestroyUtil.put(frame);
+		uv = FlxDestroyUtil.put(uv);
+		#if FLX_RENDER_TILE
+		frameMatrix = null;
+		#end
 	}
 	
 	public function toString():String
 	{
 		return FlxStringUtil.getDebugString([
 			LabelValuePair.weak("name", name)]);
+	}
+	
+	private function set_frame(value:FlxRect):FlxRect
+	{
+		if (value != null)
+		{
+			if (uv == null)
+				uv = FlxRect.get();
+			
+			uv.set(value.x / parent.width, value.y / parent.height, value.right / parent.width, value.bottom / parent.height);
+		}
+		
+		return frame = value;
 	}
 }
 
@@ -250,10 +626,8 @@ class FlxFrame implements IFlxDestroyable
 abstract FlxFrameType(Int) 
 {
 	var REGULAR		= 0;
-	var ROTATED		= 1;
 	var EMPTY		= 2;
 	var GLYPH		= 3;
-	var FILTER		= 4;
 }
 
 @:enum
@@ -262,4 +636,5 @@ abstract FlxFrameAngle(Int) from Int to Int
 	var ANGLE_0			= 0;
 	var ANGLE_90		= 90;
 	var ANGLE_NEG_90	= -90;
+	var ANGLE_270		= -90;
 }

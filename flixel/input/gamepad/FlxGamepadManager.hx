@@ -288,6 +288,44 @@ class FlxGamepadManager implements IFlxInputManager
 	}
 	
 	/**
+	 * Check to see if the X axis is moved on any Gamepad.
+	 * 
+	 * @param AxisID The axis id
+	 * @return Float Value from -1 to 1 or 0 if no X axes were moved
+	 */
+	public function anyMovedXAxis(AxisID:FlxGamepadAnalogStick):Float
+	{
+		for (gamepad in _gamepads)
+		{
+			if ((gamepad != null) && gamepad.getXAxis(AxisID) != 0)
+			{
+				return gamepad.getXAxis(AxisID);
+			}
+		}
+		
+		return 0;
+	}
+
+	/**
+	 * Check to see if the Y axis is moved on any Gamepad.
+	 * 
+	 * @param AxisID The axis id
+	 * @return Float Value from -1 to 1 or 0 if no Y axes were moved
+	 */
+	public function anyMovedYAxis(AxisID:FlxGamepadAnalogStick):Float
+	{
+		for (gamepad in _gamepads)
+		{
+			if ((gamepad != null) && gamepad.getYAxis(AxisID) != 0)
+			{
+				return gamepad.getYAxis(AxisID);
+			}
+		}
+		
+		return 0;
+	}
+	
+	/**
 	 * Clean up memory. Internal use only.
 	 */
 	@:noCompletion

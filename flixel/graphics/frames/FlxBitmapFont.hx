@@ -42,8 +42,6 @@ class FlxBitmapFont extends FlxFramesCollection
 	 */
 	public static inline var DEFAULT_GLYPHS:String = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
 	
-	private static var COLOR_TRANSFORM:ColorTransform = new ColorTransform();
-	
 	/**
 	 * The size of the font. Can be useful for AngelCode fonts.
 	 */
@@ -70,7 +68,7 @@ class FlxBitmapFont extends FlxFramesCollection
 	 */
 	public var spaceWidth:Int = 0;
 	
-	public var glyphs:Map<Int, FlxGlyphFrame>;
+	private var glyphMap:Map<Int, FlxFrame>;
 	
 	/**
 	 * Creates a new bitmap font using specified bitmap data and letter input.
@@ -80,14 +78,14 @@ class FlxBitmapFont extends FlxFramesCollection
 		super(parent, FlxFrameCollectionType.FONT);
 		parent.persist = true;
 		parent.destroyOnNoUse = false;
-		glyphs = new Map<Int, FlxGlyphFrame>();
+		glyphMap = new Map<Int, FlxFrame>();
 	}
 	
 	override public function destroy():Void 
 	{
 		super.destroy();
-		glyphs = null;
 		fontName = null;
+		glyphMap = null;
 	}
 	
 	/**
@@ -192,13 +190,14 @@ class FlxBitmapFont extends FlxFramesCollection
 		font.bold = (Std.parseInt(fast.node.info.att.bold) != 0);
 		font.italic = (Std.parseInt(fast.node.info.att.italic) != 0);
 		
-		var glyphFrame:FlxGlyphFrame;
+		var glyphFrame:FlxFrame;
 		var frame:FlxRect;
 		var frameHeight:Int;
 		var offset:FlxPoint;
 		var glyph:String;
 		var charCode:Int;
 		var xOffset:Int, yOffset:Int, xAdvance:Int;
+		var xOffsetAbs:Int;
 		var glyphWidth:Int, glyphHeight:Int;
 		
 		var chars = fast.node.chars;
@@ -218,7 +217,9 @@ class FlxBitmapFont extends FlxFramesCollection
 			
 			offset = FlxPoint.get(xOffset, yOffset);
 			
-			font.minOffsetX = (font.minOffsetX > xOffset) ? xOffset : font.minOffsetX;
+			xOffsetAbs = (xOffset >= 0) ? xOffset : -xOffset;
+			
+			font.minOffsetX = (font.minOffsetX > xOffsetAbs) ? xOffsetAbs : font.minOffsetX;
 			
 			charCode = -1;
 			glyph = null;
@@ -264,6 +265,7 @@ class FlxBitmapFont extends FlxFramesCollection
 			}
 		}
 		
+		font.updateSourceHeight();
 		return font;
 	}
 	
@@ -355,9 +357,10 @@ class FlxBitmapFont extends FlxFramesCollection
 		}
 		
 		font.lineHeight = font.size;
+		font.updateSourceHeight();
 		
 		// remove background color
-		var point:Point = FlxPoint.point;
+		var point:Point = FlxPoint.point1;
 		point.x = point.y = 0;
 		var bgColor32:Int = bmd.getPixel32(0, 0);
 		#if !bitfive
@@ -458,6 +461,7 @@ class FlxBitmapFont extends FlxFramesCollection
 			}
 		}
 		
+		font.updateSourceHeight();
 		return font;
 	}
 	
@@ -471,24 +475,39 @@ class FlxBitmapFont extends FlxFramesCollection
 	 */
 	private function addGlyphFrame(charCode:Int, frame:FlxRect, offset:FlxPoint, xAdvance:Int):Void
 	{
-		if (frame.width == 0 || frame.height == 0 || glyphs.get(charCode) != null)	return;
-		
-		var glyphFrame:FlxGlyphFrame = new FlxGlyphFrame(parent, charCode);
-		glyphFrame.sourceSize.set(frame.width, frame.height);
+		var charName:String = Std.string(charCode);
+		if (frame.width == 0 || frame.height == 0 || getByName(charName) != null)	return;
+		var glyphFrame:FlxFrame = new FlxFrame(parent);
+		glyphFrame.sourceSize.set(xAdvance, frame.height + offset.y);
 		glyphFrame.offset.copyFrom(offset);
-		glyphFrame.xAdvance = xAdvance;
 		glyphFrame.frame = frame;
-		glyphFrame.center.set(0.5 * frame.width, 0.5 * frame.height);
-		
+		glyphFrame.name = charName;
+		pushFrame(glyphFrame);
+		glyphMap.set(charCode, glyphFrame);
 		offset.put();
-		
-		#if FLX_RENDER_TILE
-		var flashRect:Rectangle = frame.copyToFlash(new Rectangle());
-		glyphFrame.tileID = parent.tilesheet.addTileRect(flashRect, new Point(0.5 * frame.width, 0.5 * frame.height));
-		#end
-		
-		frames.push(glyphFrame);
-		glyphs.set(charCode, glyphFrame);
+	}
+	
+	private function updateSourceHeight():Void
+	{
+		for (frame in frames)
+		{
+			frame.sourceSize.y = lineHeight;
+		}
+	}
+	
+	public inline function glyphExists(charCode:Int):Bool
+	{
+		return glyphMap.exists(charCode);
+	}
+	
+	public inline function getGlyph(charCode:Int):FlxFrame
+	{
+		return glyphMap.get(charCode);
+	}
+	
+	public inline function getGlyphWidth(charCode:Int):Float
+	{
+		return glyphMap.exists(charCode) ? glyphMap.get(charCode).sourceSize.x : 0;
 	}
 	
 	public static inline function findFont(graphic:FlxGraphic):FlxBitmapFont
@@ -500,143 +519,5 @@ class FlxBitmapFont extends FlxFramesCollection
 		}
 		
 		return null;
-	}
-	
-	#if FLX_RENDER_BLIT
-	public inline function prepareGlyphs(scale:Float, color:FlxColor, useColor:Bool = true, antialiasing:Bool = true):BitmapGlyphCollection
-	{
-		return new BitmapGlyphCollection(this, scale, color, useColor, antialiasing);
-	}
-	#end
-}
-
-/**
- * Helper class for blit render mode to reduce BitmapData draw() method calls.
- * It stores info about transformed bitmap font glyphs. 
- */
-class BitmapGlyphCollection implements IFlxDestroyable
-{
-	public var minOffsetX:Float = 0;
-	
-	public var charCodeMap:Map<Int, BitmapGlyph>;
-	
-	public var glyphs:Array<BitmapGlyph>;
-	
-	public var color:FlxColor;
-	
-	public var scale:Float;
-	
-	public var spaceWidth:Float = 0;
-	
-	public var font:FlxBitmapFont;
-	
-	public function new(font:FlxBitmapFont, scale:Float, color:FlxColor, useColor:Bool = true, antialiasing:Bool = true)
-	{
-		charCodeMap = new Map<Int, BitmapGlyph>();
-		glyphs = new Array<BitmapGlyph>();
-		this.font = font;
-		this.scale = scale;
-		this.color = (useColor) ? color : FlxColor.WHITE;
-		this.minOffsetX = font.minOffsetX * scale;
-		prepareGlyphs(antialiasing);
-	}
-	
-	private function prepareGlyphs(antialiasing:Bool = true):Void
-	{
-		var matrix:Matrix = FlxMatrix.matrix;
-		matrix.identity();
-		matrix.scale(scale, scale);
-		
-		var colorTransform:ColorTransform = new ColorTransform();
-		colorTransform.redMultiplier = color.redFloat;
-		colorTransform.greenMultiplier = color.greenFloat;
-		colorTransform.blueMultiplier = color.blueFloat;
-		colorTransform.alphaMultiplier = color.alphaFloat;
-		
-		var glyphBD:BitmapData;
-		var preparedBD:BitmapData;
-		var frame:FlxFrame;
-		var glyph:FlxGlyphFrame;
-		var preparedGlyph:BitmapGlyph;
-		var bdWidth:Int, bdHeight:Int;
-		var offsetX:Int, offsetY:Int, xAdvance:Int;
-		
-		spaceWidth = font.spaceWidth * scale;
-		
-		#if js
-		var rect:Rectangle = FlxRect.rect;
-		#end
-		
-		for (frame in font.frames)
-		{
-			glyph = cast(frame, FlxGlyphFrame);
-			glyphBD = glyph.getBitmap();
-			
-			bdWidth = Math.ceil(glyphBD.width * scale);
-			bdHeight = Math.ceil(glyphBD.height * scale);
-			
-			bdWidth = (bdWidth > 0) ? bdWidth : 1;
-			bdHeight = (bdHeight > 0) ? bdHeight : 1;
-			
-			preparedBD = new BitmapData(bdWidth, bdHeight, true, FlxColor.TRANSPARENT);
-			
-			#if js
-			preparedBD.draw(glyphBD, matrix, null, null, null, antialiasing);
-			rect.setTo(0, 0, bdWidth, bdHeight);
-			preparedBD.colorTransform(rect, colorTransform);
-			#else
-			preparedBD.draw(glyphBD, matrix, colorTransform, null, null, antialiasing);
-			#end
-			
-			offsetX = Math.ceil(glyph.offset.x * scale);
-			offsetY = Math.ceil(glyph.offset.y * scale);
-			xAdvance = Math.ceil(glyph.xAdvance * scale);
-			
-			preparedGlyph = new BitmapGlyph(glyph.charCode, preparedBD, offsetX, offsetY, xAdvance);
-			
-			glyphs.push(preparedGlyph);
-			charCodeMap.set(preparedGlyph.charCode, preparedGlyph);
-		}
-	}
-	
-	public function destroy():Void
-	{
-		glyphs = FlxDestroyUtil.destroyArray(glyphs);
-		charCodeMap = null;
-		font = null;
-	}
-}
-
-/**
- * Helper class for blit render mode. 
- * Stores info about single transformed bitmap glyph.
- */
-class BitmapGlyph implements IFlxDestroyable
-{
-	public var charCode:Int;
-	
-	public var bitmap:BitmapData;
-	
-	public var offsetX:Int = 0;
-	
-	public var offsetY:Int = 0;
-	
-	public var xAdvance:Int = 0;
-	
-	public var rect:Rectangle;
-	
-	public function new(charCode:Int, bmd:BitmapData, offsetX:Int = 0, offsetY:Int = 0, xAdvance:Int = 0)
-	{
-		this.charCode = charCode;
-		this.bitmap = bmd;
-		this.offsetX = offsetX;
-		this.offsetY = offsetY;
-		this.xAdvance = xAdvance;
-		this.rect = bmd.rect;
-	}
-	
-	public function destroy():Void
-	{
-		bitmap = FlxDestroyUtil.dispose(bitmap);
 	}
 }
