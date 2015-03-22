@@ -416,14 +416,12 @@ class FlxGraphic
 	 */
 	public function undump():Void
 	{
-	#if lime_legacy
 		var newBitmap:BitmapData = getBitmapFromSystem();	
 		if (newBitmap != null)
 		{
 			bitmap = newBitmap;
 		}
 		isDumped = false;
-	#end
 	}
 	
 	/**
@@ -567,7 +565,12 @@ class FlxGraphic
 			newBitmap = FlxAssets.getBitmapData(assetsKey);
 		}
 		
-		return FlxGraphic.getBitmap(newBitmap, unique);
+		if (newBitmap != null)
+		{
+			return FlxGraphic.getBitmap(newBitmap, unique);
+		}
+		
+		return null;
 	}
 	
 	private inline function get_canBeDumped():Bool
