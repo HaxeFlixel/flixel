@@ -374,11 +374,11 @@ class FlxBitmapDataUtil
 		}
 		
 		var result:BitmapData = new BitmapData(
-						Std.int(region.width + (numHorizontalFrames - 1) * spaceX + 2 * numVerticalFrames * borderX), 
+						Std.int(region.width + (numHorizontalFrames - 1) * spaceX + 2 * numHorizontalFrames * borderX), 
 						Std.int(region.height + (numVerticalFrames - 1) * spaceY + 2 * numVerticalFrames * borderY), 
 						true, 
 						FlxColor.TRANSPARENT);
-		
+						
 		result.lock();
 		var tempRect:Rectangle = new Rectangle(0, 0, frameWidth, frameHeight);
 		var tempPoint:Point = new Point();

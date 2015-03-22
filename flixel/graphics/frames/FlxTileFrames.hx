@@ -89,6 +89,7 @@ class FlxTileFrames extends FlxFramesCollection
 		}
 		
 		var tileFrames:FlxTileFrames = FlxTileFrames.fromGraphic(result, FlxPoint.get().addPoint(tileSize).add(2 * tileBorder.x, 2 * tileBorder.y), null, tileSpacing);
+		
 		return tileFrames.addBorder(tileBorder);
 	}
 	
