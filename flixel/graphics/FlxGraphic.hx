@@ -522,7 +522,7 @@ class FlxGraphic
 		var frame:FlxFrame = new FlxFrame(this);
 		frame.type = FlxFrameType.EMPTY;
 		frame.frame = new FlxRect();
-		frame.sourceSize.set(size.x, size.y);
+		frame.sourceSize.copyFrom(size);
 		return frame;
 	}
 	
