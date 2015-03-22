@@ -68,6 +68,7 @@ class PlayState extends FlxState
 		// tile tearing problem fix
 		var levelTiles:FlxTileFrames = FlxTileFrames.fromBitmapWithSpacesAndBorders("assets/colortiles.png", new FlxPoint(10, 10), new FlxPoint(2, 2), new FlxPoint(2, 2));
 		level.frames = levelTiles;
+		level.useScaleHack = false;
 		
 		var tempFL:Array<Int> = [5, 13, 21];
 		var tempFR:Array<Int> = [6, 14, 22];
