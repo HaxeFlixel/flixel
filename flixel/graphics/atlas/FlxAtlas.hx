@@ -635,7 +635,7 @@ class FlxAtlas implements IFlxDestroyable
 	{
 		var graphic:FlxGraphic = FlxG.bitmap.add(this.bitmapData, false, name);
 		
-		var atlasFrames:FlxAtlasFrames = null;
+		var atlasFrames:FlxAtlasFrames = graphic.atlasFrames;
 		if (graphic.atlasFrames == null)
 		{
 			atlasFrames = new FlxAtlasFrames(graphic);
