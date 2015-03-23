@@ -160,7 +160,6 @@ class FlxTileFrames extends FlxFramesCollection
 			{
 				helperRect.x = spacedWidth * i;
 				helperRect.y = spacedHeight * j;
-				
 				tileFrames.pushFrame(frame.subFrameTo(helperRect));
 			}
 		}

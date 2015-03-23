@@ -391,7 +391,6 @@ class FlxFrame implements IFlxDestroyable
 		}
 		
 		frameToFill.sourceSize.set(rect.width, rect.height);
-		frameToFill.name = name;
 		
 		// no need to make all calculations if original frame is empty...
 		if (type == FlxFrameType.EMPTY)
@@ -468,6 +467,7 @@ class FlxFrame implements IFlxDestroyable
 	{
 		var rect:FlxRect = FlxRect.get(border.x, border.y, sourceSize.x - 2 * border.x, sourceSize.y - 2 * border.y);
 		frameToFill = this.subFrameTo(rect, frameToFill);
+		frameToFill.name = name;
 		rect = FlxDestroyUtil.put(rect);
 		return frameToFill;
 	}
