@@ -946,7 +946,7 @@ class FlxBar extends FlxSprite
 	{
 		#if FLX_RENDER_TILE
 		frontFrames = value;
-		_frontFrame = (value != null) ? value.frame : null;
+		_frontFrame = (value != null) ? value.frame.copyTo(_frontFrame) : null;
 		#else
 		createImageFilledBar(value.frame.paint());
 		#end
