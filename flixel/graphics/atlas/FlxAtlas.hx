@@ -18,6 +18,9 @@ import flixel.system.FlxAssets;
 import flixel.system.frontEnds.BitmapFrontEnd;
 import openfl.geom.Matrix;
 
+// TODO: rewrite this class again, since it's a total mess again.
+// It needs better resize handling.
+
 /**
  * Class for packing multiple images in big one and generating frame data for each of them 
  * so you can easily load regions of atlas in sprites and tilemaps as a source of graphic
@@ -138,8 +141,8 @@ class FlxAtlas implements IFlxDestroyable
 		
 		if (powerOfTwo)
 		{
-			rootWidth = getNextPowerOf2(rootWidth);
-			rootHeight = getNextPowerOf2(rootHeight);
+			rootWidth = getNextPowerOfTwo(rootWidth);
+			rootHeight = getNextPowerOfTwo(rootHeight);
 		}
 		
 		root = new FlxNode(new FlxRect(0, 0, rootWidth, rootHeight), this);
@@ -338,8 +341,8 @@ class FlxAtlas implements IFlxDestroyable
 			
 			if (powerOfTwo)
 			{
-				rootWidth = getNextPowerOf2(rootWidth);
-				rootHeight = getNextPowerOf2(rootHeight);
+				rootWidth = getNextPowerOfTwo(rootWidth);
+				rootHeight = getNextPowerOfTwo(rootHeight);
 			}
 			
 			rootWidth = (minWidth > rootWidth) ? minWidth : rootWidth;
@@ -347,8 +350,8 @@ class FlxAtlas implements IFlxDestroyable
 			
 			if (powerOfTwo)
 			{
-				rootWidth = getNextPowerOf2(rootWidth);
-				rootHeight = getNextPowerOf2(rootHeight);
+				rootWidth = getNextPowerOfTwo(rootWidth);
+				rootHeight = getNextPowerOfTwo(rootHeight);
 			}
 			
 			if ((maxWidth > 0 && rootWidth > maxWidth) || (maxHeight > 0 && rootHeight > maxHeight))
@@ -400,17 +403,17 @@ class FlxAtlas implements IFlxDestroyable
 			
 			if (powerOfTwo)
 			{
-				addRightWidthRotate = addRightWidth = getNextPowerOf2(addRightWidth);
-				addRightHeightRotate = addRightHeight = getNextPowerOf2(addRightHeight);
-				addBottomWidthRotate = addBottomWidth = getNextPowerOf2(addBottomWidth);
-				addBottomHeightRotate = addBottomHeight = getNextPowerOf2(addBottomHeight);
+				addRightWidthRotate = addRightWidth = getNextPowerOfTwo(addRightWidth);
+				addRightHeightRotate = addRightHeight = getNextPowerOfTwo(addRightHeight);
+				addBottomWidthRotate = addBottomWidth = getNextPowerOfTwo(addBottomWidth);
+				addBottomHeightRotate = addBottomHeight = getNextPowerOfTwo(addBottomHeight);
 				
 				if (allowRotation)
 				{
-					addRightWidthRotate = getNextPowerOf2(addRightWidthRotate);
-					addRightHeightRotate = getNextPowerOf2(addRightHeightRotate);
-					addBottomWidthRotate = getNextPowerOf2(addBottomWidthRotate);
-					addBottomHeightRotate = getNextPowerOf2(addBottomHeightRotate);
+					addRightWidthRotate = getNextPowerOfTwo(addRightWidthRotate);
+					addRightHeightRotate = getNextPowerOfTwo(addRightHeightRotate);
+					addBottomWidthRotate = getNextPowerOfTwo(addBottomWidthRotate);
+					addBottomHeightRotate = getNextPowerOfTwo(addBottomHeightRotate);
 				}
 			}
 			
@@ -552,15 +555,17 @@ class FlxAtlas implements IFlxDestroyable
 		bitmapData = newBitmapData;
 	}
 	
-	private function getNextPowerOf2(number:Float):Int
+	private function getNextPowerOfTwo(number:Float):Int
 	{
-		var powerFloat:Float = Math.log(number) / Math.log(2);
-		var powerInt:Float = Std.int(powerFloat);
+		var n:Int = Std.int(number);
+		if (n > 0 && (n & (n - 1)) == 0) // see: http://goo.gl/D9kPj
+		{
+			return n;
+		}
 		
-		if (powerFloat - powerInt == 0)
-			return Std.int(number);
-		
-		return Std.int(Math.pow(2, powerInt + 1));
+		var result:Int = 1;
+		while (result < n) result <<= 1;
+		return result;
 	}
 	
 	/**
@@ -568,9 +573,10 @@ class FlxAtlas implements IFlxDestroyable
 	 * generates TileFrames object for added node and returns it. Could be useful for tilemaps.
 	 * 
 	 * @param	Graphic			Source image for node, where spaces will be inserted (could be BitmapData, String or Class<Dynamic>).
-	 * @param	Key			Optional key for image
+	 * @param	Key				Optional key for image
 	 * @param	tileSize		The size of tile in spritesheet
-	 * @param	tileSpacing	Offsets to add in spritesheet between tiles
+	 * @param	tileSpacing		Offsets to add in spritesheet between tiles
+	 * @param	tileBorder		Border to add around tiles (helps to avoid "tearing" problem)
 	 * @param	region			Region of source image to use as a source graphic
 	 * @return	Generated TileFrames for added node
 	 */
@@ -588,19 +594,8 @@ class FlxAtlas implements IFlxDestroyable
 		
 		key = FlxG.bitmap.getKeyWithSpacesAndBorders(key, tileSize, tileSpacing, tileBorder, region);
 		
-		var borderX:Int = 0;
-		var borderY:Int = 0;
-		
-		if (tileBorder != null)
-		{
-			borderX = Std.int(tileBorder.x);
-			borderY = Std.int(tileBorder.y); 
-		}
-		
-		var spaces:FlxPoint = FlxPoint.get().copyFrom(tileSpacing).add(borderX, borderY);
-		
 		if (hasNodeWithName(key) == true)
-			return nodes.get(key).getTileFrames(tileSize, spaces);
+			return nodes.get(key).getTileFrames(tileSize, tileSpacing, tileBorder);
 		
 		var data:BitmapData = FlxAssets.resolveBitmapData(Graphic);
 		
@@ -623,7 +618,12 @@ class FlxAtlas implements IFlxDestroyable
 			return null;
 		}
 		
-		return node.getTileFrames(tileSize, spaces);
+		if (tileBorder != null)
+		{
+			tileSize.add(2 * tileBorder.x, 2 * tileBorder.y);
+		}
+		
+		return node.getTileFrames(tileSize, tileSpacing, tileBorder);
 	}
 	
 	/**
@@ -635,17 +635,16 @@ class FlxAtlas implements IFlxDestroyable
 	{
 		var graphic:FlxGraphic = FlxG.bitmap.add(this.bitmapData, false, name);
 		
-		var atlasFrames:FlxAtlasFrames = null;
+		var atlasFrames:FlxAtlasFrames = graphic.atlasFrames;
 		if (graphic.atlasFrames == null)
 		{
-			graphic.atlasFrames = new FlxAtlasFrames(graphic);
-			atlasFrames = graphic.atlasFrames;
+			atlasFrames = new FlxAtlasFrames(graphic);
 		}
 		
 		for (node in nodes)
 			addNodeToAtlasFrames(node);
 		
-		return graphic.atlasFrames;
+		return atlasFrames;
 	}
 	
 	private function addNodeToAtlasFrames(node:FlxNode):Void
@@ -996,7 +995,7 @@ class FlxAtlas implements IFlxDestroyable
 		{
 			if (powerOfTwo)
 			{
-				value = getNextPowerOf2(value);
+				value = getNextPowerOfTwo(value);
 			}
 			
 			if (value <= maxWidth)
@@ -1027,7 +1026,7 @@ class FlxAtlas implements IFlxDestroyable
 		{
 			if (powerOfTwo)
 			{
-				value = getNextPowerOf2(value);
+				value = getNextPowerOfTwo(value);
 			}
 			
 			if (value <= maxHeight)
@@ -1066,8 +1065,8 @@ class FlxAtlas implements IFlxDestroyable
 	{
 		if (value != powerOfTwo && value == true)
 		{
-			var nextWidth:Int = getNextPowerOf2(root.width);
-			var nextHeight:Int = getNextPowerOf2(root.height);
+			var nextWidth:Int = getNextPowerOfTwo(root.width);
+			var nextHeight:Int = getNextPowerOfTwo(root.height);
 			
 			if (nextWidth != root.width || nextHeight != root.height) // need to resize atlas
 			{

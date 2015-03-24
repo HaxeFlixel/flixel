@@ -72,6 +72,7 @@ class FlxAnimationController implements IFlxDestroyable
 	/**
 	 * Internal, stores all the animation that were added to this sprite.
 	 */
+	@:allow(flixel.FlxSprite)
 	private var _animations(default, null):Map<String, FlxAnimation>;
 	
 	private var _prerotated:FlxPrerotatedAnimation;
@@ -509,6 +510,18 @@ class FlxAnimationController implements IFlxDestroyable
 		}
 		_curAnim = _animations.get(AnimName);
 		_curAnim.play(Force, Reversed, Frame);
+	}
+	
+	/**
+	 * Stops current animation and resets its frame index to zero.
+	 */
+	public inline function stop():Void
+	{
+		if (_curAnim != null)
+		{
+			_curAnim.stop();
+			_curAnim.curFrame = 0;
+		}
 	}
 	
 	/**

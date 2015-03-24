@@ -68,7 +68,7 @@ class FlxBitmapFont extends FlxFramesCollection
 	 */
 	public var spaceWidth:Int = 0;
 	
-	public var glyphs:Map<Int, FlxGlyphFrame>;
+	private var glyphMap:Map<Int, FlxFrame>;
 	
 	/**
 	 * Creates a new bitmap font using specified bitmap data and letter input.
@@ -78,14 +78,14 @@ class FlxBitmapFont extends FlxFramesCollection
 		super(parent, FlxFrameCollectionType.FONT);
 		parent.persist = true;
 		parent.destroyOnNoUse = false;
-		glyphs = new Map<Int, FlxGlyphFrame>();
+		glyphMap = new Map<Int, FlxFrame>();
 	}
 	
 	override public function destroy():Void 
 	{
 		super.destroy();
-		glyphs = null;
 		fontName = null;
+		glyphMap = null;
 	}
 	
 	/**
@@ -190,7 +190,7 @@ class FlxBitmapFont extends FlxFramesCollection
 		font.bold = (Std.parseInt(fast.node.info.att.bold) != 0);
 		font.italic = (Std.parseInt(fast.node.info.att.italic) != 0);
 		
-		var glyphFrame:FlxGlyphFrame;
+		var glyphFrame:FlxFrame;
 		var frame:FlxRect;
 		var frameHeight:Int;
 		var offset:FlxPoint;
@@ -475,15 +475,15 @@ class FlxBitmapFont extends FlxFramesCollection
 	 */
 	private function addGlyphFrame(charCode:Int, frame:FlxRect, offset:FlxPoint, xAdvance:Int):Void
 	{
-		if (frame.width == 0 || frame.height == 0 || glyphs.get(charCode) != null)	return;
-		
-		var glyphFrame:FlxGlyphFrame = new FlxGlyphFrame(parent, charCode);
+		var charName:String = Std.string(charCode);
+		if (frame.width == 0 || frame.height == 0 || getByName(charName) != null)	return;
+		var glyphFrame:FlxFrame = new FlxFrame(parent);
 		glyphFrame.sourceSize.set(xAdvance, frame.height + offset.y);
 		glyphFrame.offset.copyFrom(offset);
-		glyphFrame.xAdvance = xAdvance;
 		glyphFrame.frame = frame;
-		frames.push(glyphFrame);
-		glyphs.set(charCode, glyphFrame);
+		glyphFrame.name = charName;
+		pushFrame(glyphFrame);
+		glyphMap.set(charCode, glyphFrame);
 		offset.put();
 	}
 	
@@ -493,6 +493,21 @@ class FlxBitmapFont extends FlxFramesCollection
 		{
 			frame.sourceSize.y = lineHeight;
 		}
+	}
+	
+	public inline function glyphExists(charCode:Int):Bool
+	{
+		return glyphMap.exists(charCode);
+	}
+	
+	public inline function getGlyph(charCode:Int):FlxFrame
+	{
+		return glyphMap.get(charCode);
+	}
+	
+	public inline function getGlyphWidth(charCode:Int):Float
+	{
+		return glyphMap.exists(charCode) ? glyphMap.get(charCode).sourceSize.x : 0;
 	}
 	
 	public static inline function findFont(graphic:FlxGraphic):FlxBitmapFont

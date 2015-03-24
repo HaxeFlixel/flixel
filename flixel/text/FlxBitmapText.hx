@@ -7,7 +7,6 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxBitmapFont;
 import flixel.graphics.frames.FlxFrame;
-import flixel.graphics.frames.FlxGlyphFrame;
 import flixel.graphics.tile.FlxDrawTilesItem;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
@@ -390,7 +389,7 @@ class FlxBitmapText extends FlxSprite
 			{
 				dataPos = j * 3;
 				
-				currFrame = font.glyphs.get(Std.int(borderDrawData[dataPos]));
+				currFrame = font.getGlyph(Std.int(borderDrawData[dataPos]));
 				
 				currTileX = borderDrawData[dataPos + 1];
 				currTileY = borderDrawData[dataPos + 2];
@@ -412,7 +411,7 @@ class FlxBitmapText extends FlxSprite
 			{
 				dataPos = j * 3;
 				
-				currFrame = font.glyphs.get(Std.int(textDrawData[dataPos]));
+				currFrame = font.getGlyph(Std.int(textDrawData[dataPos]));
 				
 				currTileX = textDrawData[dataPos + 1];
 				currTileY = textDrawData[dataPos + 2];
@@ -571,7 +570,7 @@ class FlxBitmapText extends FlxSprite
 	}
 	
 	/**
-	 * Calculates width of provided string (for current font with fontScale).
+	 * Calculates width of provided string (for current font).
 	 * 
 	 * @param	str	String to calculate width for
 	 * @return	The width of result bitmap text.
@@ -582,13 +581,13 @@ class FlxBitmapText extends FlxSprite
 		var tabWidth:Int = spaceWidth * numSpacesInTab;
 		
 		var lineLength:Int = Utf8.length(str);	// lenght of the current line
-		var lineWidth:Int = font.minOffsetX;
+		var lineWidth:Float = font.minOffsetX;
 		
 		var charCode:Int;						// current character in word
-		var charWidth:Int;						// the width of current character
+		var charWidth:Float;					// the width of current character
 		
 		var widthPlusOffset:Int;
-		var glyphFrame:FlxGlyphFrame;
+		var glyphFrame:FlxFrame;
 		
 		for (c in 0...lineLength)
 		{
@@ -603,10 +602,10 @@ class FlxBitmapText extends FlxSprite
 			{
 				charWidth = tabWidth;
 			}
-			else if (font.glyphs.exists(charCode))
+			else if (font.glyphExists(charCode))
 			{
-				glyphFrame = font.glyphs.get(charCode);
-				charWidth = glyphFrame.xAdvance;
+				glyphFrame = font.getGlyph(charCode);
+				charWidth = glyphFrame.sourceSize.x;
 				
 				if (c == (lineLength - 1))
 				{
@@ -626,7 +625,7 @@ class FlxBitmapText extends FlxSprite
 			lineWidth -= letterSpacing;
 		}
 		
-		return lineWidth;
+		return Std.int(lineWidth);
 	}
 	
 	/**
@@ -640,10 +639,10 @@ class FlxBitmapText extends FlxSprite
 		
 		var c:Int;					// char index
 		var charCode:Int;			// code for the current character in word
-		var charWidth:Int;			// the width of current character
+		var charWidth:Float;		// the width of current character
 		
 		var subLine:Utf8;			// current subline to assemble
-		var subLineWidth:Int;		// the width of current subline
+		var subLineWidth:Float;		// the width of current subline
 		
 		var spaceWidth:Int = font.spaceWidth;
 		var tabWidth:Int = spaceWidth * numSpacesInTab;
@@ -671,7 +670,7 @@ class FlxBitmapText extends FlxSprite
 				}
 				else
 				{
-					charWidth = font.glyphs.exists(charCode) ? font.glyphs.get(charCode).xAdvance : 0;
+					charWidth = font.getGlyphWidth(charCode);
 				}
 				charWidth += letterSpacing;
 				
@@ -811,18 +810,18 @@ class FlxBitmapText extends FlxSprite
 		var numWords:Int = words.length;	// number of words in the current line
 		var w:Int;							// word index in the current line
 		var word:String;					// current word to process
-		var wordWidth:Int;					// total width of current word
+		var wordWidth:Float;				// total width of current word
 		var wordLength:Int;					// number of letters in current word
 		
 		var isSpaceWord:Bool = false; 		// whether current word consists of spaces or not
 		
 		var charCode:Int;
-		var charWidth:Int = 0;				// the width of current character
+		var charWidth:Float = 0;			// the width of current character
 		
 		var subLines:Array<String> = [];	// helper array for subdividing lines
 		
 		var subLine:String;					// current subline to assemble
-		var subLineWidth:Int;				// the width of current subline
+		var subLineWidth:Float;				// the width of current subline
 		
 		var spaceWidth:Int = font.spaceWidth;
 		var tabWidth:Int = spaceWidth * numSpacesInTab;
@@ -858,7 +857,7 @@ class FlxBitmapText extends FlxSprite
 					}
 					else
 					{
-						charWidth = font.glyphs.exists(charCode) ? font.glyphs.get(charCode).xAdvance : 0;
+						charWidth = font.getGlyphWidth(charCode);
 					}
 					
 					wordWidth += charWidth;
@@ -924,13 +923,13 @@ class FlxBitmapText extends FlxSprite
 		
 		var charCode:Int;
 		var c:Int;							// char index
-		var charWidth:Int = 0;				// the width of current character
+		var charWidth:Float = 0;			// the width of current character
 		
 		var subLines:Array<String> = [];	// helper array for subdividing lines
 		
 		var subLine:String;					// current subline to assemble
 		var subLineUtf8:Utf8;
-		var subLineWidth:Int;				// the width of current subline
+		var subLineWidth:Float;				// the width of current subline
 		
 		var spaceWidth:Int = font.spaceWidth;
 		var tabWidth:Int = spaceWidth * numSpacesInTab;
@@ -967,7 +966,7 @@ class FlxBitmapText extends FlxSprite
 					}
 					else
 					{
-						charWidth = font.glyphs.exists(charCode) ? font.glyphs.get(charCode).xAdvance : 0;
+						charWidth = font.getGlyphWidth(charCode);
 					}
 					
 					if (subLineWidth + charWidth > _fieldWidth - 2 * padding)
@@ -1113,9 +1112,9 @@ class FlxBitmapText extends FlxSprite
 	
 	private function blitLine(line:String, startX:Int, startY:Int):Void
 	{
-		var glyph:FlxGlyphFrame;
+		var glyph:FlxFrame;
 		var charCode:Int;
-		var curX:Int = startX;
+		var curX:Float = startX;
 		var curY:Int = startY;
 		
 		var spaceWidth:Int = font.spaceWidth;
@@ -1137,12 +1136,12 @@ class FlxBitmapText extends FlxSprite
 			}
 			else
 			{
-				glyph = font.glyphs.get(charCode);
+				glyph = font.getGlyph(charCode);
 				if (glyph != null)
 				{
 					_flashPoint.setTo(curX, curY);
 					glyph.paint(textBitmap, _flashPoint, true);
-					curX += glyph.xAdvance;
+					curX += glyph.sourceSize.x;
 				}
 			}
 			
@@ -1153,11 +1152,11 @@ class FlxBitmapText extends FlxSprite
 	private function tileLine(line:String, startX:Int, startY:Int):Void
 	{
 		#if FLX_RENDER_TILE
-		var glyph:FlxGlyphFrame;
+		var glyph:FlxFrame;
 		var pos:Int = textData.length;
 		
 		var charCode:Int;
-		var curX:Int = startX;
+		var curX:Float = startX;
 		var curY:Int = startY;
 		
 		var spaceWidth:Int = font.spaceWidth;
@@ -1179,13 +1178,13 @@ class FlxBitmapText extends FlxSprite
 			}
 			else
 			{
-				glyph = font.glyphs.get(charCode);
+				glyph = font.getGlyph(charCode);
 				if (glyph != null)
 				{
 					textData[pos++] = charCode;
 					textData[pos++] = curX;
 					textData[pos++] = curY;
-					curX += glyph.xAdvance;
+					curX += glyph.sourceSize.x;
 				}
 			}
 			

@@ -3,12 +3,15 @@ package flixel.graphics.frames;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.graphics.frames.FlxFrame.FlxFrameType;
+import flixel.graphics.frames.FlxFramesCollection;
 import flixel.graphics.frames.FlxFramesCollection.FlxFrameCollectionType;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxGraphicAsset;
+import flixel.util.FlxBitmapDataUtil;
 import flixel.util.FlxDestroyUtil;
 import flixel.math.FlxPoint;
 import flixel.graphics.FlxGraphic;
+import openfl.display.BitmapData;
 
 /**
  * Single-frame collection.
@@ -20,11 +23,11 @@ class FlxImageFrame extends FlxFramesCollection
 	 * Single frame of this frame collection.
 	 * Added this var for faster access, so you don't need to type something like: imageFrame.frames[0]
 	 */
-	public var frame:FlxFrame;
+	public var frame(get, null):FlxFrame;
 	
-	private function new(parent:FlxGraphic) 
+	private function new(parent:FlxGraphic, border:FlxPoint = null)
 	{
-		super(parent, FlxFrameCollectionType.IMAGE);
+		super(parent, FlxFrameCollectionType.IMAGE, border);
 	}
 	
 	/**
@@ -47,7 +50,7 @@ class FlxImageFrame extends FlxFramesCollection
 		
 		// or create it, if there is no such object
 		imageFrame = new FlxImageFrame(graphic);
-		imageFrame.frame = imageFrame.addEmptyFrame(frameRect);
+		imageFrame.addEmptyFrame(frameRect);
 		return imageFrame;
 	}
 	
@@ -69,7 +72,7 @@ class FlxImageFrame extends FlxFramesCollection
 		}
 		
 		imageFrame = new FlxImageFrame(graphic);
-		imageFrame.frame = imageFrame.addSpriteSheetFrame(rect.copyTo(new FlxRect()));
+		imageFrame.addSpriteSheetFrame(rect.copyTo(new FlxRect()));
 		return imageFrame;
 	}
 	
@@ -130,7 +133,7 @@ class FlxImageFrame extends FlxFramesCollection
 			}
 		}
 		
-		imageFrame.frame = imageFrame.addSpriteSheetFrame(region);
+		imageFrame.addSpriteSheetFrame(region);
 		return imageFrame;
 	}
 	
@@ -148,25 +151,82 @@ class FlxImageFrame extends FlxFramesCollection
 	}
 	
 	/**
+	 * Gets source bitmapdata, generates new bitmapdata (if there is no such bitmapdata in the cache already) 
+	 * and creates FlxImageFrame collection.
+	 * 
+	 * @param	source			the source of graphic for frame collection (can be String, BitmapData or FlxGraphic).
+	 * @param	border			Border to add around tiles (helps to avoid "tearing" problem)
+	 * @param	region			Region of image to generate image frame from. Default value is null, which means that
+	 * 							whole image will be used for it
+	 * @return	Newly created image frame collection
+	 */
+	public static function fromBitmapAddSpacesAndBorders(source:FlxGraphicAsset, border:FlxPoint, region:FlxRect = null):FlxImageFrame
+	{
+		var graphic:FlxGraphic = FlxG.bitmap.add(source, false);
+		if (graphic == null) return null;
+		
+		var key:String = FlxG.bitmap.getKeyWithSpacesAndBorders(graphic.key, null, null, border, region);
+		var result:FlxGraphic = FlxG.bitmap.get(key);
+		if (result == null)
+		{
+			var bitmap:BitmapData = FlxBitmapDataUtil.addSpacesAndBorders(graphic.bitmap, null, null, border, region);
+			result = FlxG.bitmap.add(bitmap, false, key);
+		}
+		
+		var borderX:Int = Std.int(border.x);
+		var borderY:Int = Std.int(border.y);
+		
+		var imageFrame:FlxImageFrame = FlxImageFrame.fromGraphic(graphic);
+		return imageFrame.addBorder(border);
+	}
+	
+	/**
+	 * Gets FlxFrame object, generates new bitmapdata with border pixels around (if there is no such bitmapdata in the cache already) 
+	 * and creates image frame collection.
+	 *  
+	 * @param	frame		Frame to generate tiles from
+	 * @param	border		Border to add around frame image (helps to avoid "tearing" problem)
+	 * @return	Newly created image frame collection
+	 */
+	public static function fromFrameAddSpacesAndBorders(frame:FlxFrame, border:FlxPoint):FlxImageFrame
+	{
+		var bitmap:BitmapData = frame.paint();
+		return FlxImageFrame.fromBitmapAddSpacesAndBorders(bitmap, border);
+	}
+	
+	/**
 	 * Searches ImageFrame object for specified FlxGraphic object which have the same frame rectangle.
 	 * 
 	 * @param	graphic		FlxGraphic object to search ImageFrame for.
 	 * @param	frameRect	ImageFrame object should have frame with the same position and dimensions as specified with this argument.
 	 * @return	ImageFrame object which corresponds to specified rectangle. Could be null if there is no such ImageFrame.
 	 */
-	public static function findFrame(graphic:FlxGraphic, frameRect:FlxRect):FlxImageFrame
+	public static function findFrame(graphic:FlxGraphic, frameRect:FlxRect, frameBorder:FlxPoint = null):FlxImageFrame
 	{
+		if (frameBorder == null)
+		{
+			frameBorder = FlxPoint.flxPoint1.set();
+		}
+		
 		var imageFrames:Array<FlxImageFrame> = cast graphic.getFramesCollections(FlxFrameCollectionType.IMAGE);
 		var imageFrame:FlxImageFrame;
 		for (imageFrame in imageFrames)
 		{
-			if (imageFrame.equals(frameRect) && imageFrame.frame.type != FlxFrameType.EMPTY)
+			if (imageFrame.equals(frameRect, frameBorder) && imageFrame.frame.type != FlxFrameType.EMPTY)
 			{
 				return imageFrame;
 			}
 		}
 		
 		return null;
+	}
+	
+	/**
+	 * ImageFrame comparison method. For internal use.
+	 */
+	private inline function equals(rect:FlxRect, border:FlxPoint):Bool
+	{
+		return (rect.equals(frame.frame) && border.equals(this.border));
 	}
 	
 	/**
@@ -195,17 +255,29 @@ class FlxImageFrame extends FlxFramesCollection
 		return null;
 	}
 	
-	/**
-	 * ImageFrame comparison method. For internal use.
-	 */
-	public inline function equals(rect:FlxRect = null):Bool
+	override public function addBorder(border:FlxPoint):FlxImageFrame 
 	{
-		return rect.equals(frame.frame);
+		var resultBorder:FlxPoint = new FlxPoint().addPoint(this.border).addPoint(border);
+		
+		var imageFrame:FlxImageFrame = FlxImageFrame.findFrame(parent, frame.frame, resultBorder);
+		if (imageFrame != null)
+		{
+			return imageFrame;
+		}
+		
+		imageFrame = new FlxImageFrame(parent, resultBorder);
+		imageFrame.pushFrame(frame.setBorderTo(border));
+		return imageFrame;
 	}
 	
 	override public function destroy():Void 
 	{
 		super.destroy();
 		frame = FlxDestroyUtil.destroy(frame);
+	}
+	
+	private function get_frame():FlxFrame
+	{
+		return frames[0];
 	}
 }

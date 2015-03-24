@@ -339,7 +339,7 @@ class FlxGraphic
 	 * You should fill it yourself with one of the AtlasFrames static methods
 	 * (like texturePackerJSON(), texturePackerXML(), sparrow(), libGDX()).
 	 */
-	public var atlasFrames:FlxAtlasFrames;
+	public var atlasFrames(get, null):FlxAtlasFrames;
 	
 	/**
 	 * Storage for all available frame collection of all types for this graphic object.
@@ -400,18 +400,15 @@ class FlxGraphic
 	 */
 	public function dump():Void
 	{
-		//TODO: figure out what to do with this in lime_next
-		#if lime_legacy
-			#if (FLX_RENDER_TILE && !flash && !nme)
-			if (canBeDumped)
-			{
-			#if lime_legacy
-				bitmap.dumpBits();
-			#end
-				isDumped = true;
-			}
-			#end
+	#if lime_legacy	
+		#if (FLX_RENDER_TILE && !flash && !nme)
+		if (canBeDumped)
+		{
+			bitmap.dumpBits();
+			isDumped = true;
+		}
 		#end
+	#end
 	}
 	
 	/**
@@ -419,15 +416,12 @@ class FlxGraphic
 	 */
 	public function undump():Void
 	{
-		//TODO: figure out what to do with this in lime_next
-		#if lime_legacy
-			var newBitmap:BitmapData = getBitmapFromSystem();	
-			if (newBitmap != null)
-			{
-				bitmap = newBitmap;
-			}
-			isDumped = false;
-		#end
+		var newBitmap:BitmapData = getBitmapFromSystem();	
+		if (newBitmap != null)
+		{
+			bitmap = newBitmap;
+		}
+		isDumped = false;
 	}
 	
 	/**
@@ -472,7 +466,6 @@ class FlxGraphic
 		assetsKey = null;
 		assetsClass = null;
 		_imageFrame = null;	// no need to dispose _imageFrame since it exists in imageFrames
-		atlasFrames = null;
 		
 		var collections:Array<FlxFramesCollection>;
 		var collectionType:FlxFrameCollectionType;
@@ -529,7 +522,7 @@ class FlxGraphic
 		var frame:FlxFrame = new FlxFrame(this);
 		frame.type = FlxFrameType.EMPTY;
 		frame.frame = new FlxRect();
-		frame.sourceSize.set(size.x, size.y);
+		frame.sourceSize.copyFrom(size);
 		return frame;
 	}
 	
@@ -572,7 +565,12 @@ class FlxGraphic
 			newBitmap = FlxAssets.getBitmapData(assetsKey);
 		}
 		
-		return FlxGraphic.getBitmap(newBitmap, unique);
+		if (newBitmap != null)
+		{
+			return FlxGraphic.getBitmap(newBitmap, unique);
+		}
+		
+		return null;
 	}
 	
 	private inline function get_canBeDumped():Bool
@@ -618,6 +616,11 @@ class FlxGraphic
 		}
 		
 		return _imageFrame;
+	}
+	
+	private function get_atlasFrames():FlxAtlasFrames
+	{
+		return FlxAtlasFrames.findFrame(this, null);
 	}
 	
 	private function set_bitmap(value:BitmapData):BitmapData
