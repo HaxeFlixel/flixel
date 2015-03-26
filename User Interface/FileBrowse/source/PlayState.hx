@@ -198,11 +198,15 @@ class PlayState extends FlxState
 		if (arr != null && arr.length > 0)
 		{
 			_text.text = arr[0];
-			var img:BitmapData = BitmapData.load(arr[0]);
+			var img =
+			#if lime_legacy
+				BitmapData.load(arr[0]);
+			#else
+				BitmapData.fromFile(arr[0]);
+			#end
 			
 			if (img != null) 
 			{					
-				trace("img = " + img.width + "," + img.height);
 				_showImage(img);
 			}
 		}
@@ -213,7 +217,7 @@ class PlayState extends FlxState
 	}
 	#end
 	
-	private function _onCancel(E:Event):Void 
+	private function _onCancel(_):Void 
 	{	   
 		_text.text = "Cancelled!";
 	}		
