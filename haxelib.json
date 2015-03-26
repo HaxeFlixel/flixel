@@ -6,6 +6,5 @@
     "description": "Demo Projects for HaxeFlixel",
     "version": "1.1.1",
     "releasenote": "Fixed the GamepadTest demo for OpenFL 1.4.0. See the CHANGELOG.md for more details.",
-    "contributors": [ "haxeflixel" ],
-    "dependencies": { "flixel": "" }
+    "contributors": [ "haxeflixel" ]
 }
