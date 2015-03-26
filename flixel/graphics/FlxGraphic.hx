@@ -430,7 +430,7 @@ class FlxGraphic
 	 */
 	public function onContext():Void
 	{
-		// no need to restore tilesheet if it haven't been dumped
+		// no need to restore tilesheet if it hasn't been dumped
 		if (isDumped)
 		{
 			undump();	// restore everything
