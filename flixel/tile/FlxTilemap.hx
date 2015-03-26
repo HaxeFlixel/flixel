@@ -1200,6 +1200,16 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		tileSprite.blend = TileProperties.blend;
 		return tileSprite;
 	}
+	
+	override function set_allowCollisions(Value:Int):Int 
+	{
+		for (tile in _tileObjects)
+		{
+			if (tile.index >= _collideIndex)
+				tile.allowCollisions = Value;
+		}
+		return super.set_allowCollisions(Value);
+	}
 }
 
 typedef FlxTileProperties =

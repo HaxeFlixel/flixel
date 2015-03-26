@@ -442,7 +442,7 @@ class FlxObject extends FlxBasic
 	 * Bit field of flags (use with UP, DOWN, LEFT, RIGHT, etc) indicating collision directions. Use bitwise operators to check the values stored here.
 	 * Useful for things like one-way platforms (e.g. allowCollisions = UP;). The accessor "solid" just flips this variable between NONE and ANY.
 	 */
-	public var allowCollisions:Int = ANY;
+	public var allowCollisions(default, set):Int = ANY;
 	/**
 	 * Whether this sprite is dragged along with the horizontal movement of objects it collides with 
 	 * (makes sense for horizontally-moving platforms in platformers for example).
@@ -1058,5 +1058,10 @@ class FlxObject extends FlxBasic
 	private function set_pixelPerfectRender(Value:Bool):Bool 
 	{
 		return pixelPerfectRender = Value;
+	}
+	
+	private function set_allowCollisions(Value:Int):Int 
+	{
+		return allowCollisions = Value;
 	}
 }
