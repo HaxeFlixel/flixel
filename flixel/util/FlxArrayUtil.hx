@@ -121,7 +121,6 @@ class FlxArrayUtil
 	 * @param	array		The array to clear out
 	 * @param	Recursive	Whether to search for arrays inside of arr and clear them out, too (false by default)
 	 */
-	@:generic
 	public static function clearArray<T>(array:Array<T>, recursive:Bool = false):Void
 	{
 		if (array != null)
