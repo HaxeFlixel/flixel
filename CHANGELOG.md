@@ -1,3 +1,7 @@
+3.3.7
+------------------------------
+* Compatibility fix for Haxe 3.2.0 (recursive @:generic function)
+
 3.3.6
 ------------------------------
 * Compatibility fix for OpenFL 2.1.6
