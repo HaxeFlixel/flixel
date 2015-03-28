@@ -83,6 +83,25 @@ class FlxFrame implements IFlxDestroyable
 		
 		sourceSize = FlxPoint.get();
 		offset = FlxPoint.get();
+		
+		#if FLX_RENDER_TILE
+		frameMatrix = new Vector<Float>(6);
+		#end
+	}
+	
+	@:allow(flixel.graphics.frames)
+	private function cacheFrameMatrix():Void
+	{
+		#if FLX_RENDER_TILE
+		var matrix:FlxMatrix = FlxMatrix.matrix;
+		prepareBlitMatrix(matrix, false);
+		frameMatrix[0] = matrix.a;
+		frameMatrix[1] = matrix.b;
+		frameMatrix[2] = matrix.c;
+		frameMatrix[3] = matrix.d;
+		frameMatrix[4] = matrix.tx;
+		frameMatrix[5] = matrix.ty;
+		#end
 	}
 	
 	/**
@@ -195,26 +214,12 @@ class FlxFrame implements IFlxDestroyable
 		mat.identity();
 		return mat;
 		#else
-		if (frameMatrix == null)
-		{
-			prepareBlitMatrix(mat, false);
-			frameMatrix = new Vector<Float>(6);
-			frameMatrix[0] = mat.a;
-			frameMatrix[1] = mat.b;
-			frameMatrix[2] = mat.c;
-			frameMatrix[3] = mat.d;
-			frameMatrix[4] = mat.tx;
-			frameMatrix[5] = mat.ty;
-		}
-		else
-		{
-			mat.a = frameMatrix[0];
-			mat.b = frameMatrix[1];
-			mat.c = frameMatrix[2];
-			mat.d = frameMatrix[3];
-			mat.tx = frameMatrix[4];
-			mat.ty = frameMatrix[5];
-		}
+		mat.a = frameMatrix[0];
+		mat.b = frameMatrix[1];
+		mat.c = frameMatrix[2];
+		mat.d = frameMatrix[3];
+		mat.tx = frameMatrix[4];
+		mat.ty = frameMatrix[5];
 		
 		if (rotation == FlxFrameAngle.ANGLE_0 && !flipX && !flipY)
 		{
@@ -450,6 +455,7 @@ class FlxFrame implements IFlxDestroyable
 			frameRect.offset(frame.x, frame.y);
 			
 			frameToFill.frame = frameRect;
+			frameToFill.cacheFrameMatrix();
 		}
 		
 		rect.offset(offset.x, offset.y);
@@ -553,6 +559,7 @@ class FlxFrame implements IFlxDestroyable
 			frameRect.offset(frame.x, frame.y);
 			
 			clippedFrame.frame = frameRect;
+			clippedFrame.cacheFrameMatrix();
 		}
 		
 		return clippedFrame;
@@ -582,6 +589,7 @@ class FlxFrame implements IFlxDestroyable
 		clone.frame = FlxRect.get().copyFrom(frame);
 		clone.type = type;
 		clone.name = name;
+		clone.cacheFrameMatrix();
 		return clone;
 	}
 	
