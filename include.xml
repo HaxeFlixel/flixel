@@ -5,6 +5,8 @@
 	<assets path="assets/sounds" include="*.mp3" if="web" />
 	<assets path="assets/sounds" include="*.ogg" unless="flash" />
 	
+	<set name="legacy" unless="next" />
+	
 	<set name="html5-backend" value="openfl-bitfive" unless="html5-backend" />
 	<haxelib name="openfl" />
 	
