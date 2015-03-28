@@ -1,0 +1,25 @@
+-main ApplicationMain 
+-cp D:/HaxeToolkit/haxe/lib/flixel/flixel
+-D flixel=3.3.6
+-cp D:/HaxeToolkit/haxe/lib/openfl/2,2,6
+-D openfl=2.2.6
+-cp D:/HaxeToolkit/haxe/lib/lime/2,1,1
+-D lime=2.1.1
+-cp D:/HaxeToolkit/haxe/lib/nape/2,0,16
+-D nape=2.0.16
+-cp source
+-D lime-openal
+-D tools=2.1.1
+-D flash-use-stage
+-D no-compilation
+-D lime-opengl
+-D openfl-flash
+-D lime-curl
+-D fdb
+-D web
+--macro flixel.system.macros.FlxConditionals.run()
+-swf-lib D:\HaxeToolkit\haxe\lib\flixel-demos\dev\Flixel Features\CollisionAndGrouping\export/flash/obj/assets.swf
+-swf-version 11.8
+-swf export/flash/bin/CollisionAndGrouping.swf
+-swf-header 400:300:60:000000
+-cp export/flash/haxe

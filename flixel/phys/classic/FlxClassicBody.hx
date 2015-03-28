@@ -96,9 +96,6 @@ class FlxClassicBody implements flixel.phys.IFlxBody
 		velocity.y += velocityDelta;
 		y += delta;
 		
-		parent.x = x;
-		parent.y = y;
-		
 		updateHull();
 	}
 	

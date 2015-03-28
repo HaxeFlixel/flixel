@@ -686,7 +686,6 @@ class FlxGame extends Sprite
 		// Finally actually step through the game physics
 		FlxBasic.activeCount = 0;
 		#end
-		
 		update();
 		
 		#if !FLX_NO_DEBUG
