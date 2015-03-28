@@ -1,3 +1,7 @@
+3.3.8
+------------------------------
+* Use lime legacy with OpenFL 3+
+
 3.3.7
 ------------------------------
 * Compatibility fix for Haxe 3.2.0 (recursive @:generic function)
