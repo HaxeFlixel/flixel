@@ -1,2 +1,0 @@
- -DFLX_MOUSE_ADVANCED="1" -DFLX_NO_TOUCH="1" -DFLX_OPENFL_JOYSTICK_API="1" -DFLX_POINTER_INPUT="1" -DFLX_POST_PROCESS="1" -DFLX_RENDER_TILE="1" -DFLX_SOUND_TRAY="1" -Ddesktop="1" -Dfdb="1" -Dflixel="3.3.6" -Dhaxe3="1" -Dhaxe_ver="3.103" -Dhxcpp="3.1.68" -Dhxcpp_api_level="311" -Dlime="2.1.1" -Dlime-legacy="1" -Dlime-native="1" -Dlime_legacy="1" -Dlime_native="1" -Dnape="2.0.16" -Dnative="1" -Dno-compilation="1" -Dno_compilation="1" -Dno_console="1" -Dopenfl="2.2.6" -Dopenfl-native="1" -Dopenfl_native="1" -Dtools="2.1.1" -Dwindows="1"
-D:\HaxeToolkit\haxe\lib\/hxcpp/3,1,68/
