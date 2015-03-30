@@ -17,10 +17,10 @@
 -swf-version 11.8
 -swf bin/as3_test.swf
 
--cmd haxelib run lime build html5
---next
+#-cmd haxelib run lime build html5
+#--next
 
 ## HTML5
 
--js bin/html5/bin/TestMain.js
---no-output
+#-js bin/html5/bin/TestMain.js
+#--no-output

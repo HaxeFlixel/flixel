@@ -163,4 +163,35 @@ class FlxSignalTest extends FlxTest
 		signal0.add(null);
 		Assert.isFalse(signal0.has(null));
 	}
+	
+	@Test // issue 1420
+	function testRemoveCurrentDuringDispatch()
+	{
+		signal0.addOnce(callbackEmpty1);
+		signal0.add(callbackSetFlagTrue);
+		signal0.dispatch();
+		
+		Assert.isTrue(flag);
+		Assert.isTrue(signal0.has(callbackSetFlagTrue));
+		Assert.isFalse(signal0.has(callbackEmpty1));
+	}
+	
+	@Test // issue 1420
+	function testRemovePreviousDuringDispatch()
+	{
+		var timesCalled = 0;
+		var removePrevious = function()
+		{
+			timesCalled++;
+			signal0.remove(callbackSetFlagTrue);
+		};
+		
+		signal0.add(callbackSetFlagTrue);
+		signal0.add(removePrevious);
+		signal0.dispatch();
+		
+		Assert.areEqual(1, timesCalled);
+		Assert.isTrue(signal0.has(removePrevious));
+		Assert.isFalse(signal0.has(callbackSetFlagTrue));
+	}
 }
