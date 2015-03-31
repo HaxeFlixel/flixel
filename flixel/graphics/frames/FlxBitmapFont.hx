@@ -377,6 +377,7 @@ class FlxBitmapFont extends FlxFramesCollection
 			bmd.threshold(bmd, bmd.rect, point, "==", glyphBGColor, FlxColor.TRANSPARENT, FlxColor.WHITE, true);
 		}
 		#else
+		// TODO: use region here...
 		FlxBitmapDataUtil.replaceColor(bmd, bgColor32, FlxColor.TRANSPARENT);
 		FlxBitmapDataUtil.replaceColor(bmd, glyphBGColor, FlxColor.TRANSPARENT);
 		#end
@@ -498,6 +499,7 @@ class FlxBitmapFont extends FlxFramesCollection
 		for (frame in frames)
 		{
 			frame.sourceSize.y = lineHeight;
+			frame.cacheFrameMatrix();
 		}
 	}
 	
