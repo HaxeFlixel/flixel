@@ -34,7 +34,7 @@ class VCRFrontEnd
 	/**
 	 * Helps time out a replay if necessary.
 	 */
-	public var timeout:Int = 0;
+	public var timeout:Float = 0;
 
 	#if flash
 	private var _file:FileReference;

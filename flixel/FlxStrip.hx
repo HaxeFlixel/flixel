@@ -133,7 +133,7 @@ class FlxStrip extends FlxSprite
 			cameraBounds.set(0, 0, camera.width, camera.height);
 			
 			#if FLX_RENDER_TILE
-			drawItem = camera.getDrawTrianglesItem(graphic, antialiasing, numColors > 0, _blendInt);
+			drawItem = camera.startTrianglesBatch(graphic, antialiasing, numColors > 0, blend);
 			
 			vs = drawItem.vertices;
 			idx = drawItem.indices;
@@ -156,11 +156,6 @@ class FlxStrip extends FlxSprite
 			while (i < verticesLength)
 			{
 				tempX = _point.x + vertices[i]; tempY = _point.y + vertices[i + 1];
-				
-				#if FLX_RENDER_TILE
-				tempX *= camera.totalScaleX;
-				tempY *= camera.totalScaleY;
-				#end
 				
 				vs[currentVertexPosition++] = tempX;
 				vs[currentVertexPosition++] = tempY;
@@ -201,7 +196,12 @@ class FlxStrip extends FlxSprite
 					{
 						cols[prevColorsLength + i] = colors[i];
 					}
+					
+					drawItem.colorsPosition += numberOfVertices;
 				}
+				
+				drawItem.verticesPosition += verticesLength;
+				drawItem.indicesPosition += indices.length;
 			#else
 				sprite.graphics.clear();
 				sprite.graphics.beginBitmapFill(graphic.bitmap, null, false, antialiasing);

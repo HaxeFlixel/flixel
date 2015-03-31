@@ -99,11 +99,15 @@ private class FlxBaseSignal<T> implements IFlxSignal<T>
 	 */
 	public var dispatch:T;
 	
-	private var _handlers:Array<FlxSignalHandler<T>>;
+	private var handlers:Array<FlxSignalHandler<T>>;
+	private var pendingRemove:Array<FlxSignalHandler<T>>;
+	private var processingListeners:Bool = false;
+	
 	
 	public function new() 
 	{
-		_handlers = [];
+		handlers = [];
+		pendingRemove = [];
 	}
 	
 	public function add(listener:T)
@@ -125,11 +129,16 @@ private class FlxBaseSignal<T> implements IFlxSignal<T>
 			var handler = getHandler(listener);
 			if (handler != null)
 			{
-				_handlers.remove(handler);
-				handler.destroy();
-				handler = null;
+				if (processingListeners)
+					pendingRemove.push(handler);
+				else
+				{
+					handlers.remove(handler);
+					handler.destroy();
+				}
 			}
 		}
+		
 	}
 	
 	public function has(listener:T):Bool
@@ -141,13 +150,14 @@ private class FlxBaseSignal<T> implements IFlxSignal<T>
 	
 	public inline function removeAll():Void 
 	{
-		FlxDestroyUtil.destroyArray(_handlers);
+		FlxDestroyUtil.destroyArray(handlers);
 	}
 	
 	public function destroy():Void
 	{
 		removeAll();
-		_handlers = null;
+		handlers = null;
+		pendingRemove = null;
 	}
 	
 	private function registerListener(listener:T, dispatchOnce:Bool):FlxSignalHandler<T>
@@ -157,7 +167,7 @@ private class FlxBaseSignal<T> implements IFlxSignal<T>
 		if (handler == null)
 		{
 			handler = new FlxSignalHandler<T>(listener, dispatchOnce);
-			_handlers.push(handler);
+			handlers.push(handler);
 			return handler;
 		}
 		else
@@ -173,7 +183,7 @@ private class FlxBaseSignal<T> implements IFlxSignal<T>
 	
 	private function getHandler(listener:T):FlxSignalHandler<T>
 	{
-		for (handler in _handlers)
+		for (handler in handlers)
 		{
 			if (
 				#if neko // simply comparing the functions doesn't do the trick on neko
@@ -277,13 +287,23 @@ private class Macro
 	{
 		return macro
 		{ 
-			for (handler in _handlers)
+			processingListeners = true;
+			for (handler in handlers)
 			{
 				handler.listener($a{exprs});
 				
 				if (handler.dispatchOnce)
 					remove(handler.listener);
 			}
+			
+			processingListeners = false;
+			
+			for (handler in pendingRemove)
+			{
+				remove(handler.listener);
+			}
+			if (pendingRemove.length > 0)
+				pendingRemove = [];
 		}
 	}
 }

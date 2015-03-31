@@ -105,16 +105,22 @@ class FlxNode implements IFlxDestroyable
 	 * Generates TileFrames object for this node
 	 * @param	tileSize		The size of tile in spritesheet
 	 * @param	tileSpacing		Offsets between tiles in spritesheet
+	 * @param	tileBorder		Border to add around tiles (helps to avoid "tearing" problem)
 	 * @return	Created TileFrames object for this node
 	 */
-	public function getTileFrames(tileSize:FlxPoint, tileSpacing:FlxPoint = null):FlxTileFrames
+	public function getTileFrames(tileSize:FlxPoint, tileSpacing:FlxPoint = null, tileBorder:FlxPoint = null):FlxTileFrames
 	{
 		var graphic:FlxGraphic = FlxG.bitmap.add(atlas.bitmapData, false, atlas.name);
 		var frame:FlxFrame = atlas.getAtlasFrames().getByName(key);
 		
 		if (frame != null)
 		{
-			return FlxTileFrames.fromFrame(frame, tileSize, tileSpacing);
+			var tileFrames:FlxTileFrames = FlxTileFrames.fromFrame(frame, tileSize, tileSpacing);
+			if (tileBorder != null)
+			{
+				tileFrames = tileFrames.addBorder(tileBorder);
+			}
+			return tileFrames;
 		}
 		
 		return null;

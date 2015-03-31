@@ -31,22 +31,22 @@ class FlxAnimation extends FlxBaseAnimation
 	/**
 	 * Whether the current animation has finished.
 	 */
-	public var finished:Bool = true;
+	public var finished(default, null):Bool = true;
 	
 	/**
 	 * Whether the current animation gets updated or not.
 	 */
-	public var paused:Bool = true;
+	public var paused(default, null):Bool = true;
 	
 	/**
 	 * Whether or not the animation is looped
 	 */
-	public var looped:Bool = true;
+	public var looped(default, null):Bool = true;
 	
 	/**
 	 * Whether or not this animation is being played backwards.
 	 */
-	public var reversed:Bool = false;
+	public var reversed(default, null):Bool = false;
 	
 	/**
 	 * A list of frames stored as int objects
@@ -96,7 +96,7 @@ class FlxAnimation extends FlxBaseAnimation
 	 */
 	public function play(Force:Bool = false, Reversed:Bool = false, Frame:Int = 0):Void
 	{
-		if (!Force && (looped || !finished) && reversed == Reversed)
+		if (!Force && !finished && reversed == Reversed)
 		{
 			paused = false;
 			finished = false;
@@ -151,9 +151,37 @@ class FlxAnimation extends FlxBaseAnimation
 		paused = true;
 	}
 	
+	public function reset():Void
+	{
+		stop();
+		curFrame = reversed ? (numFrames - 1) : 0;
+	}
+	
+	public function finish():Void
+	{
+		stop();
+		curFrame = reversed ? 0 : (numFrames - 1);
+	}
+	
+	public function pause():Void
+	{
+		paused = true;
+	}
+	
+	public inline function resume():Void
+	{
+		paused = false;
+	}
+	
+	public function reverse():Void
+	{
+		reversed = !reversed;
+		if (finished)	play(false, reversed);
+	}
+	
 	override public function update(elapsed:Float):Void
 	{
-		if (delay > 0 && (looped || !finished) && !paused)
+		if (delay > 0 && !finished && !paused)
 		{
 			_frameTimer += elapsed;
 			while (_frameTimer > delay)

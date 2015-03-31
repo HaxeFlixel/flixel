@@ -23,6 +23,15 @@ class FlxObject extends FlxBasic
 {
 	public var body : IFlxBody;
 	/**
+	 * Default value for FlxObject's pixelPerfectPosition var.
+	 */
+	#if FLX_RENDER_BLIT
+	public static var defaultPixelPerfectPosition:Bool = true;
+	#else
+	public static var defaultPixelPerfectPosition:Bool = false;
+	#end
+	
+	/**
 	 * This value dictates the maximum number of pixels two objects have to intersect before collision stops trying to separate them.
 	 * Don't modify this unless your objects are passing through eachother.
 	 */
@@ -442,7 +451,7 @@ class FlxObject extends FlxBasic
 	 * Bit field of flags (use with UP, DOWN, LEFT, RIGHT, etc) indicating collision directions. Use bitwise operators to check the values stored here.
 	 * Useful for things like one-way platforms (e.g. allowCollisions = UP;). The accessor "solid" just flips this variable between NONE and ANY.
 	 */
-	public var allowCollisions:Int = ANY;
+	public var allowCollisions(default, set):Int = ANY;
 	/**
 	 * Whether this sprite is dragged along with the horizontal movement of objects it collides with 
 	 * (makes sense for horizontally-moving platforms in platformers for example).
@@ -490,7 +499,11 @@ class FlxObject extends FlxBasic
 		flixelType = OBJECT;
 		last = FlxPoint.get(x, y);
 		scrollFactor = FlxPoint.get(1, 1);
+<<<<<<< HEAD
 		origin = FlxPoint.get(width / 2, height / 2);
+=======
+		pixelPerfectPosition = FlxObject.defaultPixelPerfectPosition;
+>>>>>>> 9eb7be7c7ad26355d09713e4828b9fe5588af828
 		
 		initMotionVars();
 	}
@@ -941,12 +954,6 @@ class FlxObject extends FlxBasic
 	{
 		getScreenPosition(_point, camera);
 		_rect.set(_point.x, _point.y, width, height);
-		#if FLX_RENDER_TILE
-		_rect.x *= camera.totalScaleX;
-		_rect.y *= camera.totalScaleY;
-		_rect.width *= camera.totalScaleX;
-		_rect.height *= camera.totalScaleY;
-		#end
 		
 		if (isPixelPerfectRender(camera))
 		{
@@ -1071,6 +1078,7 @@ class FlxObject extends FlxBasic
 		return pixelPerfectRender = Value;
 	}
 	
+<<<<<<< HEAD
 	private function set_velocityX(Point:FlxPoint):Void
 	{
 		if (body != null)
@@ -1174,5 +1182,10 @@ class FlxObject extends FlxBasic
 			body.angularAcceleration = Value;
 		}
 		return angularAcceleration = Value;
+=======
+	private function set_allowCollisions(Value:Int):Int 
+	{
+		return allowCollisions = Value;
+>>>>>>> 9eb7be7c7ad26355d09713e4828b9fe5588af828
 	}
 }

@@ -44,6 +44,16 @@ class FlxMatrix extends Matrix
 	}
 	
 	/**
+	 * Adds 180 degrees to rotation of this matrix
+	 * @return	rotated matrix
+	 */
+	public inline function rotateBy180():FlxMatrix
+	{
+		this.setTo( -a, -b, -c, -d, -tx, -ty);
+		return this;
+	}
+	
+	/**
 	 * Adds 90 degrees to rotation of this matrix
 	 * @return	rotated matrix
 	 */

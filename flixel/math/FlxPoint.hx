@@ -12,8 +12,10 @@ import openfl.geom.Matrix;
  */
 class FlxPoint implements IFlxPooled
 {
-	public static var flxPoint:FlxPoint = new FlxPoint();
-	public static var point:Point = new Point();
+	public static var flxPoint1:FlxPoint = new FlxPoint();
+	public static var flxPoint2:FlxPoint = new FlxPoint();
+	public static var point1:Point = new Point();
+	public static var point2:Point = new Point();
 	
 	private static var _pool = new FlxPool<FlxPoint>(FlxPoint);
 	
@@ -98,7 +100,7 @@ class FlxPoint implements IFlxPooled
 	}
 	
 	/**
-	 * Adds the to the coordinates of this point.
+	 * Adds to the coordinates of this point.
 	 * 
 	 * @param	X	Amount to add to x
 	 * @param	Y	Amount to add to y
@@ -126,7 +128,7 @@ class FlxPoint implements IFlxPooled
 	}
 	
 	/**
-	 * Adds the to the coordinates of this point.
+	 * Subtracts from the coordinates of this point.
 	 * 
 	 * @param	X	Amount to subtract from x
 	 * @param	Y	Amount to subtract from y
@@ -140,7 +142,7 @@ class FlxPoint implements IFlxPooled
 	}
 	
 	/**
-	 * Adds the coordinates of another point to the coordinates of this point.
+	 * Subtracts the coordinates of another point from the coordinates of this point.
 	 * 
 	 * @param	point	The point to subtract from this point
 	 * @return	This point.
@@ -213,6 +215,34 @@ class FlxPoint implements IFlxPooled
 		FlashPoint.y = y;
 		return FlashPoint;
 	}
+
+	/**
+	 * Helper function, just increases the values of the specified Flash point by the values of this point.
+	 * 
+	 * @param	Point	Any Point.
+	 * @return	A reference to the altered point parameter.
+	 */
+	public inline function addToFlash(FlashPoint:Point):Point
+	{
+		FlashPoint.x += x;
+		FlashPoint.y += y;
+
+		return FlashPoint;
+	}
+
+	/**
+	 * Helper function, just decreases the values of the specified Flash point by the values of this point.
+	 * 
+	 * @param	Point	Any Point.
+	 * @return	A reference to the altered point parameter.
+	 */
+	public inline function subtractFromFlash(FlashPoint:Point):Point
+	{
+		FlashPoint.x -= x;
+		FlashPoint.y -= y;
+
+		return FlashPoint;
+	}
 	
 	/**
 	 * Returns true if this point is within the given rectangular block
@@ -267,6 +297,16 @@ class FlxPoint implements IFlxPooled
 	{
 		x = Math.ceil(x);
 		y = Math.ceil(y);
+		return this;
+	}
+	
+	/**
+	 * Rounds x and y using Math.round()
+	 */
+	public inline function round():FlxPoint
+	{
+		x = Math.round(x);
+		y = Math.round(y);
 		return this;
 	}
 	

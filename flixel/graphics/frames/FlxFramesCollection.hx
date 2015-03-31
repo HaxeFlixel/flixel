@@ -4,6 +4,7 @@ import flash.display.BitmapData;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.graphics.frames.FlxFrame.FlxFrameAngle;
+import flixel.graphics.frames.FlxFrame.FlxFrameType;
 import flixel.math.FlxRect;
 import flixel.util.FlxDestroyUtil;
 import flixel.math.FlxPoint;
@@ -44,10 +45,17 @@ class FlxFramesCollection implements IFlxDestroyable
 	 */
 	public var type(default, null):FlxFrameCollectionType;
 	
-	public function new(parent:FlxGraphic, type:FlxFrameCollectionType = null)
+	/**
+	 * How much space were trimmed around original frames.
+	 * Use addBorder() method to add borders.
+	 */
+	public var border(default, null):FlxPoint;
+	
+	public function new(parent:FlxGraphic, type:FlxFrameCollectionType = null, border:FlxPoint = null)
 	{
 		this.parent = parent;
 		this.type = type;
+		this.border = (border == null) ? FlxPoint.get() : border;
 		frames = [];
 		framesHash = new Map<String, FlxFrame>();
 		
@@ -115,6 +123,7 @@ class FlxFramesCollection implements IFlxDestroyable
 	public function destroy():Void
 	{
 		frames = FlxDestroyUtil.destroyArray(frames);
+		border = FlxDestroyUtil.put(border);
 		framesHash = null;
 		parent = null;
 		type = null;
@@ -127,10 +136,11 @@ class FlxFramesCollection implements IFlxDestroyable
 	 * @param	size	dimensions of the frame to add.
 	 * @return	Newly added empty frame.
 	 */
-	public function addEmptyFrame(size:FlxRect):FlxEmptyFrame
+	public function addEmptyFrame(size:FlxRect):FlxFrame
 	{
-		var frame:FlxEmptyFrame = new FlxEmptyFrame(parent);	
-		frame.frame = new FlxRect();
+		var frame:FlxFrame = new FlxFrame(parent);
+		frame.type = FlxFrameType.EMPTY;
+		frame.frame = FlxRect.get();
 		frame.sourceSize.set(size.width, size.height);
 		frames.push(frame);
 		return frame;
@@ -144,17 +154,11 @@ class FlxFramesCollection implements IFlxDestroyable
 	 */
 	public function addSpriteSheetFrame(region:FlxRect):FlxFrame
 	{
-		var frame:FlxFrame = new FlxFrame(parent);	
-		#if FLX_RENDER_TILE
-		var flashRect:Rectangle = region.copyToFlash(new Rectangle());
-		frame.tileID = parent.tilesheet.addTileRect(flashRect, new Point(0.5 * region.width, 0.5 * region.height));
-		#end
+		var frame:FlxFrame = new FlxFrame(parent);
 		frame.frame = region;
 		frame.sourceSize.set(region.width, region.height);
 		frame.offset.set(0, 0);
-		frame.center.set(0.5 * region.width, 0.5 * region.height);
-		frames.push(frame);
-		return frame;
+		return pushFrame(frame);
 	}
 	
 	/**
@@ -173,54 +177,53 @@ class FlxFramesCollection implements IFlxDestroyable
 			return framesHash.get(name);
 		}
 		
-		var texFrame:FlxFrame = null;
-		if (angle != FlxFrameAngle.ANGLE_0)
-		{
-			texFrame = new FlxRotatedFrame(parent, angle);
-		}
-		else
-		{
-			texFrame = new FlxFrame(parent);
-		}
-		
+		var texFrame:FlxFrame = new FlxFrame(parent, angle);
 		texFrame.name = name;
 		texFrame.sourceSize.set(sourceSize.x, sourceSize.y);
 		texFrame.offset.set(offset.x, offset.y);
 		texFrame.frame = frame;
 		
-		sourceSize.put();
-		offset.put();
+		sourceSize = FlxDestroyUtil.put(sourceSize);
+		offset = FlxDestroyUtil.put(offset);
 		
-		if (angle != FlxFrameAngle.ANGLE_0)
+		return pushFrame(texFrame);
+	}
+	
+	/**
+	 * Helper method for adding frame into collection
+	 * 
+	 * @param	frameObj	frame to add
+	 * @return	added frame
+	 */
+	public function pushFrame(frameObj:FlxFrame):FlxFrame
+	{
+		var name:String = frameObj.name;
+		if (name != null && framesHash.exists(name))
 		{
-			texFrame.center.set(frame.height * 0.5 + texFrame.offset.x, frame.width * 0.5 + texFrame.offset.y);
-		}
-		else
-		{
-			texFrame.center.set(frame.width * 0.5 + texFrame.offset.x, frame.height * 0.5 + texFrame.offset.y);
+			return framesHash.get(name);
 		}
 		
-		#if FLX_RENDER_TILE
-		var flashRect:Rectangle = frame.copyToFlash(new Rectangle());
-		texFrame.tileID = parent.tilesheet.addTileRect(flashRect, new Point(0.5 * frame.width, 0.5 * frame.height));
-		#end
-		
-		frames.push(texFrame);
+		frames.push(frameObj);
+		frameObj.cacheFrameMatrix();
 		
 		if (name != null)
 		{
-			framesHash.set(name, texFrame);
+			framesHash.set(name, frameObj);
 		}
 		
-		return texFrame;
+		return frameObj;
 	}
 	
-	public function destroyBitmaps():Void
+	/**
+	 * Generates new frames collection from this collection but trims frames by specified borders.
+	 * 
+	 * @param	border	How much space trim around frame's
+	 * @return	Generated frames collection.	
+	 */
+	public function addBorder(border:FlxPoint):FlxFramesCollection
 	{
-		for (frame in frames)
-		{
-			frame.destroyBitmaps();
-		}
+		throw "To be overriden in subclasses";
+		return null;
 	}
 	
 	public function toString():String
@@ -246,8 +249,6 @@ enum FlxFrameCollectionType
 	TILES;
 	ATLAS;
 	FONT;
-	BAR(type:flixel.ui.FlxBar.FlxBarFillDirection);
-	CLIPPED;
 	USER(type:String);
 	FILTER;
 }

@@ -98,14 +98,14 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 	 */
 	override public function destroy():Void
 	{
-		FlxDestroyUtil.put(velocityRange.start);
-		FlxDestroyUtil.put(velocityRange.end);
-		FlxDestroyUtil.put(scaleRange.start);
-		FlxDestroyUtil.put(scaleRange.end);
-		FlxDestroyUtil.put(dragRange.start);
-		FlxDestroyUtil.put(dragRange.end);
-		FlxDestroyUtil.put(accelerationRange.start);
-		FlxDestroyUtil.put(accelerationRange.end);
+		velocityRange.start = FlxDestroyUtil.put(velocityRange.start);
+		velocityRange.end = FlxDestroyUtil.put(velocityRange.end);
+		scaleRange.start = FlxDestroyUtil.put(scaleRange.start);
+		scaleRange.end = FlxDestroyUtil.put(scaleRange.end);
+		dragRange.start = FlxDestroyUtil.put(dragRange.start);
+		dragRange.end = FlxDestroyUtil.put(dragRange.end);
+		accelerationRange.start = FlxDestroyUtil.put(accelerationRange.start);
+		accelerationRange.end = FlxDestroyUtil.put(accelerationRange.end);
 		
 		velocityRange = null;
 		angularVelocityRange = null;
