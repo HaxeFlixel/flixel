@@ -70,6 +70,12 @@ class FlxBitmapFont extends FlxFramesCollection
 	
 	private var glyphMap:Map<Int, FlxFrame>;
 	
+	// TODO: use it and document it...
+	/**
+	 * 
+	 */
+	private var region:FlxRect;
+	
 	/**
 	 * Creates a new bitmap font using specified bitmap data and letter input.
 	 */
