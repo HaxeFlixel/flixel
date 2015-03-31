@@ -146,16 +146,13 @@ class FlxSprite extends FlxObject
 	 */
 	public var clipRect(default, set):FlxRect;
 	
-<<<<<<< HEAD
 	public var hitbox : IFlxHitbox;
 	
 	private var _clipRect:FlxRect;
-=======
 	/**
 	 * The actual frame used for sprite rendering
 	 */
 	private var _frame:FlxFrame;
->>>>>>> 9eb7be7c7ad26355d09713e4828b9fe5588af828
 	
 	#if FLX_RENDER_TILE
 	private var _facingHorizontalMult:Int = 1;

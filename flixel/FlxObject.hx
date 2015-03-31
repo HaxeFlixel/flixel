@@ -499,11 +499,8 @@ class FlxObject extends FlxBasic
 		flixelType = OBJECT;
 		last = FlxPoint.get(x, y);
 		scrollFactor = FlxPoint.get(1, 1);
-<<<<<<< HEAD
 		origin = FlxPoint.get(width / 2, height / 2);
-=======
 		pixelPerfectPosition = FlxObject.defaultPixelPerfectPosition;
->>>>>>> 9eb7be7c7ad26355d09713e4828b9fe5588af828
 		
 		initMotionVars();
 	}
@@ -536,6 +533,8 @@ class FlxObject extends FlxBasic
 		_point = FlxDestroyUtil.put(_point);
 		_rect = FlxDestroyUtil.put(_rect);
 		origin = FlxDestroyUtil.put(origin);
+		
+		body.destroy();
 	}
 	
 	/**
@@ -1078,7 +1077,6 @@ class FlxObject extends FlxBasic
 		return pixelPerfectRender = Value;
 	}
 	
-<<<<<<< HEAD
 	private function set_velocityX(Point:FlxPoint):Void
 	{
 		if (body != null)
@@ -1182,10 +1180,10 @@ class FlxObject extends FlxBasic
 			body.angularAcceleration = Value;
 		}
 		return angularAcceleration = Value;
-=======
+	}
+
 	private function set_allowCollisions(Value:Int):Int 
 	{
 		return allowCollisions = Value;
->>>>>>> 9eb7be7c7ad26355d09713e4828b9fe5588af828
 	}
 }

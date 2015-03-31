@@ -78,5 +78,5 @@
 	
 	<!--------------------------------CUSTOM---------------------------------------->
 	
-	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)--><set name="legacy" />
+	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
 </project>

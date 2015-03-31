@@ -99,5 +99,9 @@ class FlxNapeBody implements IFlxBody
 		maxVelocity = null;
 		acceleration.put();
 		acceleration = null;
+		_filter = null;
+		_material = null;
+		
+		cast(space, FlxNapeSpace).remove(this);
 	}
 }

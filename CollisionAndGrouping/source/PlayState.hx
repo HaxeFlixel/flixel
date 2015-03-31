@@ -6,14 +6,13 @@ import flixel.FlxState;
 import flixel.group.FlxGroup;
 import flixel.group.FlxGroup;
 import flixel.math.FlxRect;
-//import flixel.phys.nape.FlxNapeSpace;
+import flixel.phys.nape.FlxNapeSpace;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import flixel.math.FlxRandom;
 import flixel.phys.IFlxBody;
 import flixel.phys.IFlxSpace;
 import flixel.phys.classic.FlxClassicSpace;
-import flixel.phys.classic.FlxClassicBody;
 
 class PlayState extends FlxState
 {
@@ -176,8 +175,6 @@ class PlayState extends FlxState
 		add(_groupCollision);
 		
 		FlxG.cameras.flash();
-		
-		FlxG.watch.add(PlayState, "calcNumber");
 	}
 	
 	override public function update(elapsed:Float):Void
