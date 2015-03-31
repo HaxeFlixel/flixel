@@ -7,14 +7,49 @@ import flixel.phys.IFlxSpace;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import flixel.math.FlxVelocity;
 
+@:allow(flixel.phys.classic)
 class FlxClassicBody implements flixel.phys.IFlxBody
 {	
+		public static inline var LEFT:Int	= 0x0001;
+	/**
+	 * Generic value for "right" Used by facing, allowCollisions, and touching.
+	 */
+	public static inline var RIGHT:Int	= 0x0010;
+	/**
+	 * Generic value for "up" Used by facing, allowCollisions, and touching.
+	 */
+	public static inline var UP:Int		= 0x0100;
+	/**
+	 * Generic value for "down" Used by facing, allowCollisions, and touching.
+	 */
+	public static inline var DOWN:Int	= 0x1000;
+	/**
+	 * Special-case constant meaning no collisions, used mainly by allowCollisions and touching.
+	 */
+	public static inline var NONE:Int	= 0;
+	/**
+	 * Special-case constant meaning up, used mainly by allowCollisions and touching.
+	 */
+	public static inline var CEILING:Int	= UP;
+	/**
+	 * Special-case constant meaning down, used mainly by allowCollisions and touching.
+	 */
+	public static inline var FLOOR:Int	= DOWN;
+	/**
+	 * Special-case constant meaning only the left and right sides, used mainly by allowCollisions and touching.
+	 */
+	public static inline var WALL:Int	= LEFT | RIGHT;
+	/**
+	 * Special-case constant meaning any direction, used mainly by allowCollisions and touching.
+	 */
+	public static inline var ANY:Int	= LEFT | RIGHT | UP | DOWN;
+	
+	
 	public var 	parent : FlxObject;
 	public var	space  : IFlxSpace;
 	
 	public var 	x : Float;
 	public var 	y : Float;
-	public var 	last : FlxPoint;
 	public var 	velocity : FlxPoint;
 	public var	drag : FlxPoint;
 	public var	maxVelocity : FlxPoint;
@@ -29,21 +64,26 @@ class FlxClassicBody implements flixel.phys.IFlxBody
 	public var	mass : Float = 1;
 	public var	elasticity : Float = 0;
 	
-	public var  allowCollisions : Int = FlxCollide.ANY;
+	public var  allowCollisions : Int = ANY;
 	public var 	touching : Int = 0;
 	public var 	wasTouching : Int = 0;
 	
 	public var	kinematic : Bool = false;
 	public var  collisonXDrag : Bool = false;
 	
+	public var  collisionGroup : Int = 1;
+	public var  collisionMask : Int = 1;
+	
 	public var 	width : Float;
 	public var 	height : Float;
 	
-	public var _hull : FlxRect;
+	public var  callback : FlxClassicBody->FlxClassicBody->Void;
 	
-	public function new(parent : FlxObject, space : FlxClassicSpace)
+	private var _hull : FlxRect;
+	private var last : FlxPoint;
+	
+	public function new(parent : FlxObject)
 	{
-		this.space = space;
 		this.parent = parent;
 		
 		last = FlxPoint.get(parent.x,parent.y);
@@ -58,8 +98,6 @@ class FlxClassicBody implements flixel.phys.IFlxBody
 		height = parent.height;
 		
 		_hull = FlxRect.get();
-		
-		space.add(this);
 	}
 	
 	public function destroy() : Void
@@ -114,7 +152,7 @@ class FlxClassicBody implements flixel.phys.IFlxBody
 	 */
 	public inline function justTouched(Direction:Int):Bool
 	{
-		return ((touching & Direction) > FlxCollide.NONE) && ((wasTouching & Direction) <= FlxCollide.NONE);
+		return ((touching & Direction) > NONE) && ((wasTouching & Direction) <= NONE);
 	}
 	
 	/**
@@ -126,6 +164,6 @@ class FlxClassicBody implements flixel.phys.IFlxBody
 	 */
 	public inline function isTouching(Direction:Int):Bool
 	{
-		return (touching & Direction) > FlxCollide.NONE;
+		return (touching & Direction) > NONE;
 	}
 }

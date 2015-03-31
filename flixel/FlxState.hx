@@ -1,6 +1,7 @@
 package flixel;
 
 import flixel.group.FlxGroup;
+import flixel.phys.IFlxSpace;
 import flixel.util.FlxColor;
 
 /**
@@ -37,6 +38,8 @@ class FlxState extends FlxGroup
 	 */
 	public var subState(default, null):FlxSubState;
 	
+	public var spaces:Array<IFlxSpace>;
+	
 	/**
 	 * If a state change was requested, the new state object is stored here until we switch to it.
 	 */
@@ -51,7 +54,9 @@ class FlxState extends FlxGroup
 	 * This function is called after the game engine successfully switches states. Override this function, NOT the constructor, to initialize or set up your game state.
 	 * We do NOT recommend overriding the constructor, unless you want some crazy unpredictable things to happen!
 	 */
-	public function create():Void {}
+	public function create():Void {
+		spaces = new Array<IFlxSpace>();
+	}
 
 	override public function draw():Void
 	{
@@ -126,6 +131,10 @@ class FlxState extends FlxGroup
 			subState.destroy();
 			subState = null;
 		}
+		for (space in spaces)
+		{
+			space.destroy();
+		}
 		super.destroy();
 	}
 	
@@ -166,7 +175,19 @@ class FlxState extends FlxGroup
 	 * @param 	Width	The new window width
 	 * @param 	Height	The new window Height
 	 */  
-	public function onResize(Width:Int, Height:Int):Void {}
+	public function onResize(Width:Int, Height:Int):Void { }
+
+	override public function update(elapsed : Float)
+	{
+		if (spaces != null)
+		{
+			for (space in spaces)
+			{
+				space.step(elapsed);
+			}
+		}
+		super.update(elapsed);
+	}
 	
 	@:allow(flixel.FlxGame)
 	private function tryUpdate(elapsed:Float):Void

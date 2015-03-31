@@ -25,5 +25,8 @@ interface IFlxBody extends IFlxDestroyable
 	
 	public var	kinematic : Bool;
 	
+	public var  collisionGroup : Int;
+	public var  collisionMask : Int;
+	
 	public function destroy() : Void;
 }

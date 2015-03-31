@@ -5,6 +5,8 @@ import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxGroup;
 import flixel.group.FlxGroup;
+import flixel.math.FlxRect;
+//import flixel.phys.nape.FlxNapeSpace;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import flixel.math.FlxRandom;
@@ -15,8 +17,6 @@ import flixel.phys.classic.FlxClassicBody;
 
 class PlayState extends FlxState
 {
-	public static var useNewSystem = true;
-	public static var calcNumber = 0;
 	// This is for our messages
 	private var _topText:FlxText;
 	
@@ -27,7 +27,7 @@ class PlayState extends FlxState
 	private var _crate:FlxSprite;
 	
 	// We'll make 100 per group crates to smash about
-	private var _numCrates:Int = 400;
+	private var _numCrates:Int = 200;
 	
 	//these are the groups that will hold all of our crates
 	private var _crateStormGroup:FlxTypedGroup<FlxSprite>;
@@ -53,11 +53,17 @@ class PlayState extends FlxState
 	private var _blueGroup:Bool = true;
 	private var _rising:Bool = true;
 	
-	private var space : FlxClassicSpace;
-	
 	override public function create():Void
 	{
-		space = new FlxClassicSpace();
+		super.create();
+		
+		
+		////////////////////
+		var space = new FlxClassicSpace();
+		spaces.push(space);
+		////////////////////
+		
+		
 		// Let's setup our elevator, for some wonderful crate bashing goodness
 		_elevator = new FlxSprite((FlxG.width / 2) - 100, 250, "assets/elevator.png");
 		// Make it able to collide, and make sure it's not tossed around
@@ -75,19 +81,25 @@ class PlayState extends FlxState
 			_crate = new FlxSprite((FlxG.random.float() * 200) + 100, 20);
 			// This loads in a graphic, and 'bakes' some rotations in so we don't waste resources computing real rotations later
 			_crate.loadRotatedGraphic("assets/crate.png", 16, 0); 
-			_crate.body = new FlxClassicBody(_crate, space);
+			
+			/////////////////////////////
+			space.createBody(_crate);
+			
+			_crate.body.collisionGroup = 1;
+			_crate.body.collisionMask = ~1;
 			// Make it spin a tad
-			_crate.angularVelocity = FlxG.random.float() * 50 - 150; 
+			_crate.body.angularVelocity = FlxG.random.float() * 50 - 150; 
 			// Gravity
-			_crate.acceleration.y = 300; 
+			_crate.body.acceleration.y = 300; 
 			// Some wind for good measure
-			_crate.acceleration.x = -50; 
+			_crate.body.acceleration.x = 50; 
 			// Don't fall at 235986mph
-			_crate.maxVelocity.y = 500; 
+			_crate.body.maxVelocity.y = 500; 
 			// "      fly  "  "
-			_crate.maxVelocity.x = 200; 
+			_crate.body.maxVelocity.x = 200; 
 			// Let's make them all bounce a little bit differently
-			_crate.elasticity = FlxG.random.float();
+			_crate.body.elasticity = FlxG.random.float();
+			/////////////////////////////
 			
 			_crateStormGroup.add(_crate);
 		}
@@ -101,20 +113,28 @@ class PlayState extends FlxState
 		{
 			_crate = new FlxSprite((FlxG.random.float() * 200) + 100, 20);
 			_crate.loadRotatedGraphic("assets/crate.png", 16, 1);
-			_crate.body = new FlxClassicBody(_crate, space);
-			_crate.angularVelocity = FlxG.random.float() * 50-150;
-			_crate.acceleration.y = 300;
-			_crate.acceleration.x = 50;
-			_crate.maxVelocity.y = 500;
-			_crate.maxVelocity.x = 200;
-			_crate.elasticity = FlxG.random.float();
+			
+			////////////////////////////////
+			space.createBody(_crate);
+			_crate.body.collisionGroup = 1;
+			_crate.body.collisionMask = ~1;
+			_crate.body.angularVelocity = FlxG.random.float() * 50-150;
+			_crate.body.acceleration.y = 300;
+			_crate.body.acceleration.x = -50;
+			_crate.body.maxVelocity.y = 500;
+			_crate.body.maxVelocity.x = 200;
+			_crate.body.elasticity = FlxG.random.float();
+			////////////////////////////////
 			
 			_crateStormGroup2.add(_crate);
 		}
-		 
-		_elevator.body = new FlxClassicBody(_elevator, space);
+		/////////////////////////////////
+		space.createBody(_elevator);
+		_elevator.body.collisionGroup = 4;
+		_elevator.body.collisionMask = ~0;
 		_elevator.body.kinematic = true;
-		//_elevator.immovable = true;
+		/////////////////////////////////
+		
 		add(_crateStormGroup2);
 		
 		// Now what we're going to do here is add both of those groups to a new containter group
@@ -157,8 +177,6 @@ class PlayState extends FlxState
 		
 		FlxG.cameras.flash();
 		
-		add(new FlxSprite(0, 149).makeGraphic(400, 2));
-		
 		FlxG.watch.add(PlayState, "calcNumber");
 	}
 	
@@ -170,23 +188,28 @@ class PlayState extends FlxState
 			_topText.alpha -= 0.01;
 		}
 		
+		
+		///////////////////////////////////
+		
 		// Here we'll make the elevator rise and fall - all of the constants chosen here are just after tinkering
 		if (_rising) 
 		{
-			_elevator.velocity.y -= 10;
+			_elevator.body.velocity.y -= 10;
 		}
 		else 
 		{
-			_elevator.velocity.y += 10;
+			_elevator.body.velocity.y += 10;
 		}
-		if (_elevator.velocity.y == - 300) 
+		if (_elevator.body.velocity.y == - 300) 
 		{
 			_rising = false;
 		}
-		else if (_elevator.velocity.y == 300) 
+		else if (_elevator.body.velocity.y == 300) 
 		{
 			_rising = true;
 		}
+		
+		///////////////////////////////////
 		
 		// Run through the groups, and if a crate is off screen, get it back!
 		for (crate in _crateStormGroup) 
@@ -223,28 +246,11 @@ class PlayState extends FlxState
 		
 		super.update(elapsed);
 		
-		calcNumber = 0;
-		
 		// Here we call our simple collide() function, what this does is checks to see if there is a collision
 		// between the two objects specified, But if you pass in a group then it checks the group against the object,
 		// or group against a group, You can even check a group of groups against an object - You can see the possibilities this presents.
 		// To use it, simply call FlxG.collide(Group/Object1, Group/Object2, Notification(optional))
 		// If you DO pass in a notification it will fire the function you created when two objects collide - allowing for even more functionality.
-		if (useNewSystem)
-			space.step(elapsed);
-		
-		if (_collideGroups || !useNewSystem)
-		{
-			FlxG.collide(_crateStormMegaGroup);
-		}
-		if (_isCrateStormOn)
-		{
-		//	FlxG.collide(_elevator, _crateStormMegaGroup);
-		}
-		if (_isFlxRiderOn) 
-		{
-			FlxG.collide(_elevator, _flixelRider);
-		}
 		// We don't specify a callback here, because we aren't doing anything super specific - just using the default collide method.
 	}
 	
@@ -375,6 +381,8 @@ class PlayState extends FlxState
 		}
 	}
 	
+	/////////////////////////////////////
+	
 	/**
 	 * Toggle the group collision
 	 */
@@ -386,11 +394,17 @@ class PlayState extends FlxState
 		{
 			_topText.text = "Group Collision: Disabled";
 			_topText.alpha = 1;
+			
+			_crateStormGroup2.forEach(function (sprite) { sprite.body.collisionGroup = 1; sprite.body.collisionMask = ~1; },true);
 		}
 		else 
 		{
 			_topText.text = "Group Collision: Enabled";
 			_topText.alpha = 1;
+			
+			_crateStormGroup2.forEach(function (sprite) { sprite.body.collisionGroup = 2; sprite.body.collisionMask = ~2; },true);
 		}
 	}
+	
+	///////////////////////////////////
 }

@@ -21,7 +21,7 @@
     <class path="D:\HaxeToolkit\haxe\lib\lime\2,1,1" />
     <class path="D:\HaxeToolkit\haxe\lib\nape\2,0,16" />
     <class path="source" />
-    <class path="export\windows\neko\haxe" />
+    <class path="export\windows\cpp\haxe" />
   </classpaths>
   <!-- Build options -->
   <build>

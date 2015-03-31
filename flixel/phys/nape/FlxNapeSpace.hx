@@ -1,4 +1,5 @@
 package flixel.phys.nape;
+import flixel.FlxObject;
 import flixel.phys.IFlxSpace;
 import nape.geom.Vec2;
 import nape.space.Space;
@@ -36,8 +37,24 @@ class FlxNapeSpace implements IFlxSpace
 		}
 	}
 	
+	public function remove(body : FlxNapeBody)
+	{
+		objects.remove(body);
+		napeSpace.bodies.remove(body.napeBody);
+	}
+	
+	public function createBody(parent : FlxObject) : FlxNapeBody
+	{
+		var body = new FlxNapeBody(parent);
+		body.space = this;
+		parent.body = body;
+		add(body);
+		return body;
+	}
+	
 	public function destroy()
 	{
-		
+		napeSpace = null;
+		objects = null;
 	}
 }
