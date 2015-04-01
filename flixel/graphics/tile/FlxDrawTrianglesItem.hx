@@ -96,7 +96,7 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		colors = null;
 	}
 	
-	override public function setData(frame:FlxFrame, matrix:FlxMatrix,
+	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix,
 		red:Float = 1, green:Float = 1, blue:Float = 1, alpha:Float = 1):Void
 	{
 		var prevVerticesPos:Int = verticesPosition;

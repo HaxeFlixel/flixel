@@ -944,7 +944,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 					_matrix.scale(scaleX, scaleY);
 					_matrix.translate(drawX, drawY);
 					
-					drawItem.setData(frame, _matrix, color.redFloat, color.greenFloat, color.blueFloat, alpha);
+					drawItem.addQuad(frame, _matrix, color.redFloat, color.greenFloat, color.blueFloat, alpha);
 				#end
 				}
 				

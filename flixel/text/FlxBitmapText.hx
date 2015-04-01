@@ -404,7 +404,7 @@ class FlxBitmapText extends FlxSprite
 				
 				_matrix.translate(_point.x + ox, _point.y + oy);
 				
-				drawItem.setData(currFrame, _matrix, borderRed, borderGreen, borderBlue, bAlpha);
+				drawItem.addQuad(currFrame, _matrix, borderRed, borderGreen, borderBlue, bAlpha);
 			}
 			
 			for (j in 0...textLength)
@@ -426,7 +426,7 @@ class FlxBitmapText extends FlxSprite
 				
 				_matrix.translate(_point.x + ox, _point.y + oy);
 				
-				drawItem.setData(currFrame, _matrix, textRed, textGreen, textBlue, tAlpha);
+				drawItem.addQuad(currFrame, _matrix, textRed, textGreen, textBlue, tAlpha);
 			}
 			
 			#if !FLX_NO_DEBUG
