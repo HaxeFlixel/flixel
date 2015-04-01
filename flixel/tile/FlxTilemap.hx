@@ -173,6 +173,9 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		offset = FlxPoint.get();
 		
 		FlxG.signals.gameResized.add(onGameResize);
+		#if (FLX_RENDER_BLIT && !FLX_NO_DEBUG)
+		FlxG.debugger.drawDebugChanged.add(onDrawDebugChanged);
+		#end
 	}
 	
 	/**
@@ -211,6 +214,9 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		colorTransform = null;
 		
 		FlxG.signals.gameResized.remove(onGameResize);
+		#if (FLX_RENDER_BLIT && !FLX_NO_DEBUG)
+		FlxG.debugger.drawDebugChanged.remove(onDrawDebugChanged);
+		#end
 		
 		super.destroy();
 	}
@@ -1042,6 +1048,17 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		}
 	}
 	
+	#if (FLX_RENDER_BLIT && !FLX_NO_DEBUG)
+	private function onDrawDebugChanged():Void
+	{
+		for (buffer in _buffers)
+		{
+			if (buffer != null)
+				buffer.dirty = true;
+		}
+	}
+	#end
+	
 	/**
 	 * Internal function for setting graphic property for this object. 
 	 * It changes graphic' useCount also for better memory tracking.
@@ -1182,6 +1199,16 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		tileSprite.alpha = TileProperties.alpha;
 		tileSprite.blend = TileProperties.blend;
 		return tileSprite;
+	}
+	
+	override function set_allowCollisions(Value:Int):Int 
+	{
+		for (tile in _tileObjects)
+		{
+			if (tile.index >= _collideIndex)
+				tile.allowCollisions = Value;
+		}
+		return super.set_allowCollisions(Value);
 	}
 }
 

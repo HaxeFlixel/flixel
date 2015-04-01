@@ -204,6 +204,7 @@ class FlxFramesCollection implements IFlxDestroyable
 		}
 		
 		frames.push(frameObj);
+		frameObj.cacheFrameMatrix();
 		
 		if (name != null)
 		{

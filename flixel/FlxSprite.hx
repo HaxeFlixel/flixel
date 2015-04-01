@@ -1031,25 +1031,27 @@ class FlxSprite extends FlxObject
 	{
 		if (saveAnimations)
 		{
-			var anim:FlxAnimationController = animation;
-			var currAnim:FlxAnimation = anim.curAnim;
+			var animations = animation._animations;
 			var reverse:Bool = false;
 			var index:Int = 0;
+			var frameIndex:Int = animation.frameIndex;
+			var currName:String = null;
 			
-			if (currAnim != null)
+			if (animation.curAnim != null)
 			{
-				reverse = currAnim.reversed;
-				index = currAnim.curFrame;
+				reverse = animation.curAnim.reversed;
+				index = animation.curAnim.curFrame;
+				currName = animation.curAnim.name;
 			}
 			
-			animation = null;
+			animation._animations = null;
 			this.frames = Frames;
-			frame = frames.frames[anim.frameIndex];
-			animation = anim;
+			frame = frames.frames[frameIndex];
+			animation._animations = animations;
 			
-			if (currAnim != null)
+			if (currName != null)
 			{
-				animation.play(currAnim.name, false, reverse, index);
+				animation.play(currName, false, reverse, index);
 			}
 		}
 		else

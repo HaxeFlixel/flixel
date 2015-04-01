@@ -66,7 +66,7 @@ class FlxTileFrames extends FlxFramesCollection
 	 * 							whole image will be used for spritesheet generation
 	 * @return	Newly created spritesheet
 	 */
-	public static function fromBitmapWithSpacesAndBorders(source:FlxGraphicAsset, tileSize:FlxPoint, tileSpacing:FlxPoint, tileBorder:FlxPoint = null, region:FlxRect = null):FlxTileFrames
+	public static function fromBitmapAddSpacesAndBorders(source:FlxGraphicAsset, tileSize:FlxPoint, tileSpacing:FlxPoint = null, tileBorder:FlxPoint = null, region:FlxRect = null):FlxTileFrames
 	{
 		var graphic:FlxGraphic = FlxG.bitmap.add(source, false);
 		if (graphic == null) return null;
@@ -88,9 +88,31 @@ class FlxTileFrames extends FlxFramesCollection
 			borderY = Std.int(tileBorder.y); 
 		}
 		
-		var tileFrames:FlxTileFrames = FlxTileFrames.fromGraphic(result, FlxPoint.get().addPoint(tileSize).add(2 * tileBorder.x, 2 * tileBorder.y), null, tileSpacing);
+		var tileFrames:FlxTileFrames = FlxTileFrames.fromGraphic(result, FlxPoint.get().addPoint(tileSize).add(2 * borderX, 2 * borderY), null, tileSpacing);
+		
+		if (tileBorder == null)
+		{
+			return tileFrames;
+		}
 		
 		return tileFrames.addBorder(tileBorder);
+	}
+	
+	/**
+	 * Gets FlxFrame object, generates new bitmapdata with spaces between tiles in the frame (if there is no such bitmapdata in the cache already) 
+	 * and creates TileFrames collection.
+	 *  
+	 * @param	frame			Frame to generate tiles from
+	 * @param	tileSize		the size of tiles in spritesheet
+	 * @param	tileSpacing		desired offsets between frames in spritesheet
+	 * 							(this method takes spritesheet bitmap without offsets between frames and adds them).
+	 * @param	tileBorder		Border to add around tiles (helps to avoid "tearing" problem)
+	 * @return	Newly created spritesheet
+	 */
+	public static function fromFrameAddSpacesAndBorders(frame:FlxFrame, tileSize:FlxPoint, tileSpacing:FlxPoint = null, tileBorder:FlxPoint = null):FlxTileFrames
+	{
+		var bitmap:BitmapData = frame.paint();
+		return FlxTileFrames.fromBitmapAddSpacesAndBorders(bitmap, tileSize, tileSpacing, tileBorder);
 	}
 	
 	/**
@@ -138,7 +160,6 @@ class FlxTileFrames extends FlxFramesCollection
 			{
 				helperRect.x = spacedWidth * i;
 				helperRect.y = spacedHeight * j;
-				
 				tileFrames.pushFrame(frame.subFrameTo(helperRect));
 			}
 		}

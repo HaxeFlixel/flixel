@@ -14,6 +14,7 @@ import flixel.util.FlxColor;
 import flixel.graphics.FlxGraphic;
 import openfl.Assets;
 import openfl.events.Event;
+import openfl.gl.GL;
 
 /**
  * Internal storage system to prevent graphics from being used repeatedly in memory.
@@ -22,6 +23,11 @@ class BitmapFrontEnd
 {
 	@:allow(flixel.system.frontEnds.BitmapLogFrontEnd)
 	private var _cache:Map<String, FlxGraphic>;
+	
+	/**
+	 * Gets max texture size for native targets
+	 */
+	public var maxTextureSize(get, null):Int;
 	
 	public function new()
 	{
@@ -300,7 +306,7 @@ class BitmapFrontEnd
 	 * @param	region			region of image to use as spritesheet graphics source
 	 * @return	Generated key for spritesheet with inserted spaces between tiles
 	 */
-	public function getKeyWithSpacesAndBorders(baseKey:String, frameSize:FlxPoint, frameSpacing:FlxPoint, frameBorder:FlxPoint = null, region:FlxRect = null):String
+	public function getKeyWithSpacesAndBorders(baseKey:String, frameSize:FlxPoint = null, frameSpacing:FlxPoint = null, frameBorder:FlxPoint = null, region:FlxRect = null):String
 	{
 		var result:String = baseKey;
 		
@@ -309,13 +315,19 @@ class BitmapFrontEnd
 			result += "_Region:" + region.x + "_" + region.y + "_" + region.width + "_" + region.height;
 		}
 		
-		result += "_FrameSize:" + frameSize.x + "_" + frameSize.y + "_Spaces:" + frameSpacing.x + "_" + frameSpacing.y;
+		if (frameSize != null)
+		{
+			result += "_FrameSize:" + frameSize.x + "_" + frameSize.y;
+		}
+		
+		if (frameSpacing != null)
+		{
+			result += "_Spaces:" + frameSpacing.x + "_" + frameSpacing.y;
+		}
 		
 		if (frameBorder != null)
 		{
-			var borderX:Int = Std.int(frameBorder.x);
-			var borderY:Int = Std.int(frameBorder.y);
-			result += "_Border:" + borderX + "_" + borderY;
+			result += "_Border:" + frameBorder.x + "_" + frameBorder.y;
 		}
 		
 		return result;
@@ -409,5 +421,10 @@ class BitmapFrontEnd
 				}
 			}
 		}
+	}
+	
+	private function get_maxTextureSize():Int
+	{
+		return cast GL.getParameter(GL.MAX_TEXTURE_SIZE);
 	}
 }

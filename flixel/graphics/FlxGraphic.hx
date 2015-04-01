@@ -416,14 +416,12 @@ class FlxGraphic
 	 */
 	public function undump():Void
 	{
-	#if lime_legacy
 		var newBitmap:BitmapData = getBitmapFromSystem();	
 		if (newBitmap != null)
 		{
 			bitmap = newBitmap;
 		}
 		isDumped = false;
-	#end
 	}
 	
 	/**
@@ -432,7 +430,7 @@ class FlxGraphic
 	 */
 	public function onContext():Void
 	{
-		// no need to restore tilesheet if it haven't been dumped
+		// no need to restore tilesheet if it hasn't been dumped
 		if (isDumped)
 		{
 			undump();	// restore everything
@@ -524,7 +522,7 @@ class FlxGraphic
 		var frame:FlxFrame = new FlxFrame(this);
 		frame.type = FlxFrameType.EMPTY;
 		frame.frame = new FlxRect();
-		frame.sourceSize.set(size.x, size.y);
+		frame.sourceSize.copyFrom(size);
 		return frame;
 	}
 	
@@ -567,7 +565,12 @@ class FlxGraphic
 			newBitmap = FlxAssets.getBitmapData(assetsKey);
 		}
 		
-		return FlxGraphic.getBitmap(newBitmap, unique);
+		if (newBitmap != null)
+		{
+			return FlxGraphic.getBitmap(newBitmap, unique);
+		}
+		
+		return null;
 	}
 	
 	private inline function get_canBeDumped():Bool
