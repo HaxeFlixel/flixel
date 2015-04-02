@@ -239,9 +239,9 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	
 	override private function cacheGraphics(TileWidth:Int, TileHeight:Int, TileGraphic:FlxTilemapGraphicAsset):Void 
 	{
-		if (Std.is(TileGraphic, FlxTileFrames))
+		if (Std.is(TileGraphic, FlxFramesCollection))
 		{
-			frames = cast(TileGraphic, FlxTileFrames);
+			frames = cast(TileGraphic, FlxFramesCollection);
 			return;
 		}
 		
