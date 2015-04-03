@@ -51,7 +51,7 @@ class FlxSplash extends FlxState
 		
 		for (time in _times)
 		{
-			new FlxTimer(time, timerCallback);
+			new FlxTimer().start(time, timerCallback);
 		}
 		
 		var stageWidth:Int = Lib.current.stage.stageWidth;

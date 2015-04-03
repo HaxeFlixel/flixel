@@ -71,14 +71,14 @@ class FlxCircle implements IFlxHitbox {
 		transformedRadius = _radius * (parent.scale.x + parent.scale.y) / 2;
 		
 		//Create the transform matrix
-		FlxMatrix.MATRIX.identity();
-		FlxMatrix.MATRIX.rotate(parent.angle * FlxAngle.TO_RAD);
-		FlxMatrix.MATRIX.scale(parent.scale.x, parent.scale.y);
-		FlxMatrix.MATRIX.translate(parent.x + parent.origin.x * parent.scale.x, parent.y + parent.origin.y * parent.scale.y);
+		FlxMatrix.matrix.identity();
+		FlxMatrix.matrix.rotate(parent.angle * FlxAngle.TO_RAD);
+		FlxMatrix.matrix.scale(parent.scale.x, parent.scale.y);
+		FlxMatrix.matrix.translate(parent.x + parent.origin.x * parent.scale.x, parent.y + parent.origin.y * parent.scale.y);
 		
 		//Make the transform
 		_tempPoint.set(_x - parent.origin.x, _y - parent.origin.y);
-		_tempPoint.transform(FlxMatrix.MATRIX);
+		_tempPoint.transform(FlxMatrix.matrix);
 		transformedX = _tempPoint.x;
 		transformedY = _tempPoint.y;
 		transformedBoundingBox.set(transformedX - transformedRadius, transformedY - transformedRadius, 2 * transformedRadius, 2 * transformedRadius);

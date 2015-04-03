@@ -1,5 +1,12 @@
 4.0.0
 ------------------------------
+* Added `FlxStrip` class which allows to draw triangles (just like with drawTriangles in flash). It's extremely slow in blit render mode, but works reasonably fast in tile render mode
+* Made blit and tile renderer more general. They still work quite differently, but share a lot of code
+* Reworked tile renderer, it doesn't use addTileRect anymore (but uses Tilesheet.TILE_RECT flag now), so flixel won't work with old versions of openfl
+* Added experimental rendering which works with `drawTriangles()` method. You can enable it if you set `FLX_RENDER_TRIANGLE` haxedef in project.xml (`FLX_RENDER_TILE` should be enabled also).
+* `FlxFrame`:
+ * it doesn't store frame's bitmapdatas anymore, so i removed `getBitmap()` and other bitmap methods
+ * added `paint()` and `paintFlipped()` methods instead. This solution requires much less memory, but will be a bit slower.
 * `FlxArrayUtil`: removed `indexOf()`
 * Changed static inline vars to enums:
  * `FlxCamera` follow styles
@@ -14,6 +21,8 @@
  * `setBounds()` -> `setScrollBoundsRect()`
  * added `setScrollBounds()`
  * added `targetOffset`
+ * added `scrollRect` sprite which crops camera's view when the camera is scaled
+ * camera is scaled from its center, not from the top left corner
  * `followLerp` is now a range taking values from 0 to (60 / `FlxG.updateFramerate`) - the closer to zero the more lerp!
 * `FlxMath`:
  * `bound()` and `inBounds()` now accept `null` as values, meaning "unbounded in that direction"
@@ -57,7 +66,7 @@
  * `getFileReferences()` now ignores invisible files
  * fixed some iOS issues
 * `FlxMouse` and `FlxTouch` now extend a new common base class `FlxPointer` instead of `FlxPoint`
- * adds `overlaps()` to `FlxMouse` 
+ * adds `overlaps()` to `FlxMouse`
 * `FlxTilemap`:
  * separated rendering and logic, adding `FlxBaseTilemap`
  * added `getTileIndexByCoords()` and `getTileCoordsByIndex()`
@@ -66,6 +75,9 @@
  * added `blend`, `alpha` and `color`
  * added `frames` property, so you can change tilemap's graphic without reloading map
  * `loadMap()` accepts `FlxGraphic`, `String`, `FlxTileFrames` or `BitmapData` as `TileGraphic` now
+ * `loadMap()` has been split into `loadMapFromCSV()` and `loadMapFromArray()`
+ * added `loadMapFrom2DArray()`
+ * added `offset` property (thanks @steverichey)
 * `FlxBaseTilemap`: added `setRect()` method which allows you to set a rectangular region of tiles to the provided index
 * `FlxTile`: added `frame` variable which holds tile's "graphic"
 * `FlxTileblock`: 
@@ -88,6 +100,7 @@
  * added `preventDefaultKeys` for HTML5
  * added an `abstract` enum for key names (`FlxG.keys.anyPressed([A, LEFT])` is now possible)
  * the any-functions now take an Array of `FlxKey`s instead of Array of Strings (string names are still supported)
+ * removed `FlxKey.NUMPADSLASH` (`SLASH` has the same keycode)
 * `FlxTypedGroup`:
  * added a `recurse` argument to the `forEach()` functions
  * removed `callAll()` and `setAll()` - use `forEach()` instead
@@ -121,6 +134,8 @@
  * fixed an issue where the value returned by `get_font()` wouldn't be the same as the one passed into `set_font()`
  * added `applyMarkup()`
  * fixed issues with `borderStyle` and `FlxTextFormat` on native
+ * added `stampOnAtlas()` method, which stamps text graphic on provided atlas and loads result node's graphic into this text object
+ * retrieving text dimensions (`width` and `height`) could run text graphic regeneration (if the text properties has been changed and these changes lead to text dimensions changes). So you'll get the right values
 * `FlxTypedButton`:
  * added input-like getters: `pressed`, `justPressed`, `released` and `justReleased`
  * now uses animations for statuses instead of setting `frameIndex` directly for more flexibility (removes `allowHighlightOnMobile`, adds `statusAnimations`)
@@ -129,6 +144,8 @@
  * `set_label()` now updates the label position
  * added `maxInputMovement`
  * added `mouseButtons` to control which mouse buttons can trigger the button
+ * don't initialize label when the label's text passed in the constructor is null
+ * added `stampOnAtlas()` method which stamps button's label graphic and button's graphic on the provided atlas and then loads result nodes into button and label. This helps reduce number of drawcalls on native targets
 * `FlxMouseEventManager`:
  * moved from `flixel.plugin.MouseEventManager` to `flixel.input.mouse.FlxMouseEventManager`
  * added `removeAll()`
@@ -144,7 +161,7 @@
  * added `graphicLoaded()` which is called whenever a new graphic is loaded
  * `getScreenXY()` -> `getScreenPosition()`
  * removed the `NewSprite` argument from `clone()`
- * added `clipRect()` and `unclip()`
+ * added `clipRect` property
  * renamed `frames` property to `numFrames`
  * added `frames` property which reflects sprite's current frames collection
  * removed `loadGraphicFromTexture()`, `loadRotatedGraphicFromTexture()` methods
@@ -152,6 +169,10 @@
  * added `setFrames()` method which allows you to save animations which already exists in this sprite
  * `colorTransform` is always instantiated
  * added `loadRotatedFrame()` method which allows you to generate prerotated image from given frame and load it
+ * added error message then trying to get pixels and graphic is null
+ * made `drawFrame()` method not inlined, so it can be redefined in subclasses. For example, you can use it in `FlxText` now if you need to force immediate graphic regeneration.
+ * always change sprite's prerotated animation angle in sprite's `angle` setter, so there won't be any "lag" with it (thanks @jorgenpt)
+ * removed `resetFrameBitmaps()` method, since frames don't store bitmaps anymore. Just set `dirty` to true to force sprite's frame graphic regeneration on next render loop.
 * Added some helpful error messages when trying to target older swf versions
 * `FlxAngle`:
  * changed `rotatePoint()` to not invert the y-axis anymore and rotate clockwise (consistent with `FlxSprite#angle`)
@@ -165,8 +186,10 @@
 * `FlxSound`
   * Can now be used even if `FLX_NO_SOUND_SYSTEM` is enabled
   * `looped` is exposed as a public variable
+  * fixed `fadeIn()` and `fadeOut()` methods (thanks @Tiago-Ling)
 * `FlxVelocity`: `accelerateTowards()`-functions now only take a single `maxSpeed` argument (instead of x and y)
 * `FlxG.signals`: split `gameReset` into pre/post signals
+* `BaseScaleMode`: added `hAlign` and `vAlign` properties, so you can switch game's align mode on both axis
 * `RatioScaleMode#new()`: added a `fillScreen` option
 * Fixed scale modes not working correctly on HTML5
 * `FlxPath`: fixed an issue where a velocity would be set even if the object positon matches the current node
@@ -179,6 +202,7 @@
  * `complete` callback parameter in options is now called `onComplete`. Its type, `CompleteCallback`, is now called `TweenCallback`.
  * Added `onStart` and `onUpdate` callback parameters in options
  * fixed `active = false;` not doing anything during `onComplete()` of `LOOPING` or `PINGPONG` tweens
+* Angle tween sets sprite's angle on start now
 * `FlxTimer`:
  * timers with a time of 0 can now be started
  * `complete` was renamed to `onComplete`
@@ -192,23 +216,47 @@
 * Moved `FlxAtlas` and `FlxNode` in `flixel.graphics.atlas` package
 * Added `addNodeWithSpacings()` in `FlxAtlas`
 * Added `getTileFrames()` and `getImageFrame` in `FlxNode` which generate frames collections for this node
-* Changed game scaling behavior on native targets: it doesn't scale game sprite, but scales tiles instead
-* Changed game scaling behavior on flash target: it scales camera's sprite now
+* Rewrote big part of `FlxAtlas`:
+ * added `minWidth`, `minHeight` properties which sets minimum size of atlas canvas
+ * added `maxWidth`, `maxHeight` properties which sets maximum size of atlas canvas
+ * so the atlas can be expanded while new images are added in the atlas. It starts from minimum size and grows up to maximum size (if there is no free space to hold new images)
+ * added `powerOfTwo` property, which forces atlas size to be the power of two number (if true)
+ * added `allowRotation` property, which is settable only in atlas constructor and tells whether new image added in the atlas could be rotated to fit in existing empty atlas nodes
+* Changed game scaling behavior for all targets: it scales camera's sprite now
 * Renamed `CachedGraphics` class to `FlxGraphic` and moved it in `flixel.graphics` package
 * Added static methods to `FlxGraphic` class for generation of objects of this type from various sources: `fromAssetKey()`, `fromClass()`, `fromBitmapData()`
+* `FlxGraphic`'s `bitmap` property is now settable, changing it will lead to regeneration of graphic's tilesheet. `FlxAtlas` uses this feature, since it could increase its size and therefore change its bitmapdata canvas
 * Added new conception of frames collections instead of regions, which required a lot of typing to get simple spritesheet from image region
 * Added `FlxImageFrame` frames collection which contains single frame
 * Added `FlxTileFrames` frames collection which contains frames for spritesheet, which can be generated from image region or frame (including rotated and trimmed frames)
 * Added `FlxAtlasFrames` frames collection instead of various texture atlas loaders (like `SparrowData` and `TexturePackerData`). It contains various static methods for parsing atlas files
-* Added `FlxBarFrames` which is used by `FlxBar` class on native targets
 * Rewrote `PxBitmapFont` class and renamed it to `FlxBitmapFont`. It supports (can parse) AngelCode, XNA and Monospace bitmap fonts now
-* Rewrote `FlxBitmapTextField` class
+* Rewrote `FlxBitmapTextField` class and renamed it to `FlxBitmapText`
+* `FlxBitmapText`: removed `size` property
 * Added `FlxFilterFrames` frames collection instead of `FlxSpriteFilter` (see filters demo)
 * Changed `FlxGraphicAsset` from `OneOfFive<String, Class<Dynamic>, CachedGraphics, TextureRegion, BitmapData>` to `OneOfThree<FlxGraphic, BitmapData, String>` which means that graphic loading methods (in all classes) accept only these three types of objects
 * `FlxBitmapDataUtil`:
  * added `replaceColor()` method which is used by `FlxSprite`'s `replaceColor()` method
  * added `addSpacing()` method which takes BitmapData and generates new one with spaces between frames
  * added `generateRotations()` method which generates new BitmapData with prerotated given BitmapData object (this functionality is moved from `FlxSprite`)
+* `FlxSave`: fix `data` still having the deleted properties after `erase()`
+* `FlxGradient`: now supported with bitfive
+* `FlxAnalog` and `FlxVirtualPad` have their own atlas with default graphic, so they propduce less drawcalls
+* Added `FlxSpriteButton` which is button which label is a simple `FlxSprite`. It have useful `createTextLabel()` method, which generates sprite with text graphic
+
+3.3.8
+------------------------------
+* Use lime legacy with OpenFL 3+
+
+3.3.7
+------------------------------
+* Compatibility fix for Haxe 3.2.0 (recursive @:generic function)
+
+
+3.3.6
+------------------------------
+* Compatibility fix for OpenFL 2.1.6
+
 
 3.3.5
 ------------------------------

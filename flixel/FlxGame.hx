@@ -108,15 +108,15 @@ class FlxGame extends Sprite
 	 * Total number of milliseconds elapsed since last update loop.
 	 * Counts down as we step through the game loop.
 	 */
-	private var _accumulator:Int;
+	private var _accumulator:Float;
 	/**
 	 * Milliseconds of time since last step.
 	 */
-	private var _elapsedMS:Int;
+	private var _elapsedMS:Float;
 	/**
 	 * Milliseconds of time per step of the game loop. e.g. 60 fps = 16ms.
 	 */
-	private var _stepMS:Int;
+	private var _stepMS:Float;
 	/**
 	 * Optimization so we don't have to divide step by 1000 to get its value in seconds every frame.
 	 */
@@ -125,7 +125,7 @@ class FlxGame extends Sprite
 	 * Max allowable accumulation (see _accumulator).
 	 * Should always (and automatically) be set to roughly 2x the flash player framerate.
 	 */
-	private var _maxAccumulation:Int;
+	private var _maxAccumulation:Float;
 	
 	/**
 	 * Whether the Flash player lost focus.
@@ -366,6 +366,11 @@ class FlxGame extends Sprite
 		}
 		#end
 		
+		#if mobile
+		// just check if device orientation has been changed
+		onResize(_);
+		#end
+		
 		_lostFocus = false;
 		FlxG.signals.focusGained.dispatch();
 		_state.onFocus();
@@ -519,15 +524,12 @@ class FlxGame extends Sprite
 			if (FlxG.fixedTimestep)
 			{
 				_accumulator += _elapsedMS;
-				if (_accumulator > _maxAccumulation)
-				{
-					_accumulator = _maxAccumulation;
-				}
+				_accumulator = (_accumulator > _maxAccumulation) ? _maxAccumulation : _accumulator;
 				
-				while (_accumulator > _stepMS)
+				while (_accumulator >= _stepMS)
 				{
 					step();
-					_accumulator = _accumulator - _stepMS; 
+					_accumulator -= _stepMS; 
 				}
 			}
 			else
@@ -681,7 +683,6 @@ class FlxGame extends Sprite
 		// Finally actually step through the game physics
 		FlxBasic.activeCount = 0;
 		#end
-		
 		update();
 		
 		#if !FLX_NO_DEBUG

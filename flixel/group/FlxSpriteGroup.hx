@@ -133,7 +133,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	/**
 	 * Check and see if any sprite in this group is currently on screen.
 	 * 
-	 * @param	Camera		Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
+	 * @param	Camera		Specify which game camera you want.  If null getScreenPosition() will just grab the first global camera.
 	 * @return	Whether the object is on screen or not.
 	 */
 	override public function isOnScreen(?Camera:FlxCamera):Bool 
@@ -155,7 +155,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 * 
 	 * @param	Point			The point in world space you want to check.
 	 * @param	InScreenSpace	Whether to take scroll factors into account when checking for overlap.
-	 * @param	Camera			Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
+	 * @param	Camera			Specify which game camera you want.  If null getScreenPosition() will just grab the first global camera.
 	 * @return	Whether or not the point overlaps this group.
 	 */
 	override public function overlapsPoint(point:FlxPoint, InScreenSpace:Bool = false, ?Camera:FlxCamera):Bool 
@@ -178,7 +178,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 * 
 	 * @param	Point		The point in world space you want to check.
 	 * @param	Mask		Used in the pixel hit test to determine what counts as solid.
-	 * @param	Camera		Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
+	 * @param	Camera		Specify which game camera you want.  If null getScreenPosition() will just grab the first global camera.
 	 * @return	Whether or not the point overlaps this object.
 	 */
 	override public function pixelsOverlapPoint(point:FlxPoint, Mask:Int = 0xFF, ?Camera:FlxCamera):Bool 
@@ -278,13 +278,18 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	/**
 	 * Removes specified sprite from the group.
 	 * 
-	 * @param	Object	The FlxSprite you want to remove.
+	 * @param	Sprite	The FlxSprite you want to remove.
 	 * @param	Splice	Whether the object should be cut from the array entirely or not.
 	 * @return	The removed object.
 	 */
-	public function remove(Object:T, Splice:Bool = false):T
+	public function remove(Sprite:T, Splice:Bool = false):T
 	{
-		return group.remove(Object, Splice);
+		var sprite:FlxSprite = cast Sprite;
+		sprite.x -= x;
+		sprite.y -= y;
+		// alpha
+		sprite.cameras = null;
+		return group.remove(Sprite, Splice);
 	}
 	
 	/**
@@ -552,7 +557,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		
 		for (sprite in _sprites)
 		{
-			if ((sprite != null) && sprite.exists)
+			if (sprite != null)
 			{
 				Function(cast sprite, Value);
 			}
@@ -848,7 +853,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	private inline function solidTransform(Sprite:FlxSprite, Solid:Bool)						{ Sprite.solid = Solid; }						// set
 	private inline function aliveTransform(Sprite:FlxSprite, Alive:Bool)						{ Sprite.alive = Alive; }						// set
 	private inline function existsTransform(Sprite:FlxSprite, Exists:Bool)						{ Sprite.exists = Exists; }						// set
-	private inline function camerasTransform(Sprite:FlxSprite, Cameras:Array<FlxCamera>)		{ Sprite.cameras = Cameras; }						// set
+	private inline function camerasTransform(Sprite:FlxSprite, Cameras:Array<FlxCamera>)		{ Sprite.cameras = Cameras; }					// set
 
 	private inline function offsetTransform(Sprite:FlxSprite, Offset:FlxPoint)					{ Sprite.offset.copyFrom(Offset); }				// set
 	private inline function originTransform(Sprite:FlxSprite, Origin:FlxPoint)					{ Sprite.origin.copyFrom(Origin); }				// set

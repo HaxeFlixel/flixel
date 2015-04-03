@@ -86,7 +86,6 @@ class FlxArrayUtil
 	 * @param	array		The array to clear out
 	 * @param	Recursive	Whether to search for arrays inside of arr and clear them out, too (false by default)
 	 */
-	@:generic
 	public static function clearArray<T>(array:Array<T>, recursive:Bool = false):Void
 	{
 		if (array != null)
@@ -110,5 +109,21 @@ class FlxArrayUtil
 				}
 			}
 		}
+	}
+	
+	/**
+	 * Flattens 2D arrays into 1D arrays.
+	 */
+	@:generic
+	public static function flatten2DArray<T>(array:Array<Array<T>>):Array<T>
+	{
+		var result = [];
+		
+		for (innerArray in array)
+		{
+			result = result.concat(innerArray);
+		}
+		
+		return result;
 	}
 }

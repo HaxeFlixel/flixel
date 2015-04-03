@@ -64,9 +64,15 @@ class FlxRect implements IFlxPooled
 	 */
 	public var bottom(get, set):Float;
 	
+	/**
+	 * Whether width or height of this rectangle is equal to zero or not.
+	 */
+	public var isEmpty(get, null):Bool;
+	
 	private var _weak:Bool = false;
 	private var _inPool:Bool = false;
 	
+	@:keep
 	public function new(X:Float = 0, Y:Float = 0, Width:Float = 0, Height:Float = 0)
 	{
 		set(X, Y, Width, Height);
@@ -266,6 +272,60 @@ class FlxRect implements IFlxPooled
 	}
 	
 	/**
+	 * Rounds x, y, width and height using Math.round()
+	 */
+	public inline function round():FlxRect
+	{
+		x = Math.round(x);
+		y = Math.round(y);
+		width = Math.round(width);
+		height = Math.round(height);
+		return this;
+	}
+	
+	/**
+	 * Calculation of bounding box for two points
+	 * 
+	 * @param	point1	first point to calculate bounding box
+	 * @param	point2	second point to calculate bounding box
+	 * @return	this rectangle filled with the position and size of bounding box for two specified points
+	 */
+	public inline function fromTwoPoints(Point1:FlxPoint, Point2:FlxPoint):FlxRect
+	{
+		var minX:Float = Math.min(Point1.x, Point2.x);
+		var minY:Float = Math.min(Point1.y, Point2.y);
+		
+		var maxX:Float = Math.max(Point1.x, Point2.x);
+		var maxY:Float = Math.max(Point1.y, Point2.y);
+		
+		return this.set(minX, minY, maxX - minX, maxY - minY);
+	}
+	
+	/**
+	 * Add another point to this rectangle one by filling in the 
+	 * horizontal and vertical space between the point and this rectangle.
+	 * 
+	 * @param	Point	point to add to this one
+	 * @return	The changed FlxRect
+	 */
+	public inline function unionWithPoint(Point:FlxPoint):FlxRect
+	{
+		var minX:Float = Math.min(x, Point.x);
+		var minY:Float = Math.min(y, Point.y);
+		var maxX:Float = Math.max(right, Point.x);
+		var maxY:Float = Math.max(bottom, Point.y);
+		
+		return set(minX, minY, maxX - minX, maxY - minY);
+	}
+	
+	public inline function offset(dx:Float, dy:Float):FlxRect
+	{
+		x += dx;
+		y += dy;
+		return this;
+	}
+	
+	/**
 	 * Necessary for IFlxDestroyable.
 	 */
 	public function destroy() {}
@@ -307,17 +367,17 @@ class FlxRect implements IFlxPooled
 		var x1:Float = right > rect.right ? rect.right : right;
 		if (x1 <= x0) 
 		{	
-			return new FlxRect();	
+			return FlxRect.get(0, 0, 0, 0);
 		}
 		
 		var y0:Float = y < rect.y ? rect.y : y;
 		var y1:Float = bottom > rect.bottom ? rect.bottom : bottom;
 		if (y1 <= y0) 
 		{	
-			return new FlxRect();	
+			return FlxRect.get(0, 0, 0, 0);
 		}
 		
-		return new FlxRect(x0, y0, x1 - x0, y1 - y0);
+		return FlxRect.get(x0, y0, x1 - x0, y1 - y0);
 	}
 	
 	private inline function get_left():Float
@@ -362,5 +422,10 @@ class FlxRect implements IFlxPooled
 	{
 		height = Value - y;
 		return Value;
+	}
+	
+	private inline function get_isEmpty():Bool
+	{
+		return (width == 0 || height == 0);
 	}
 }

@@ -78,26 +78,6 @@ class FlxAnimationControllerTest extends FlxTest
 		FlxAssert.arraysAreEqual([0, 1, 2], animation);
 	}
 	
-	@Test // issue 1284
-	function testFinishedInCallback():Void
-	{
-		var animation:Array<Int> = [1, 0];
-		loadSpriteSheet();
-		
-		sprite.animation.callback = function(s:String, n:Int, i:Int)
-		{
-			if (i == 0) // last frame
-			{
-				Assert.isTrue(sprite.animation.curAnim.finished);
-				Assert.isTrue(sprite.animation.finished);
-			}
-		};
-		
-		sprite.animation.add("animation", animation, 30, false);
-		sprite.animation.play("animation");
-		finishAnimation();
-	}
-	
 	function loadSpriteSheet():Void
 	{
 		var bitmapData = new BitmapData(2, 1);

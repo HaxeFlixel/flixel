@@ -61,8 +61,10 @@ class FlxPointer
 		{
 			point = FlxPoint.get();
 		}
-		point.x = (_globalScreenX - Camera.x) / Camera.zoom;
-		point.y = (_globalScreenY - Camera.y) / Camera.zoom;
+		
+		point.x = (_globalScreenX - Camera.x + 0.5 * Camera.width * (Camera.zoom - Camera.initialZoom)) / Camera.zoom;
+		point.y = (_globalScreenY - Camera.y + 0.5 * Camera.height * (Camera.zoom - Camera.initialZoom)) / Camera.zoom;
+		
 		return point;
 	}
 	
@@ -80,7 +82,7 @@ class FlxPointer
 	 * WARNING: Currently tilemaps do NOT support screen space overlap checks!
 	 * 
 	 * @param 	ObjectOrGroup The object or group being tested.
-	 * @param 	Camera Specify which game camera you want. If null getScreenXY() will just grab the first global camera.
+	 * @param 	Camera Specify which game camera you want. If null getScreenPosition() will just grab the first global camera.
 	 * @return 	Whether or not the two objects overlap.
 	*/
 	public function overlaps(ObjectOrGroup:FlxBasic, ?Camera:FlxCamera):Bool

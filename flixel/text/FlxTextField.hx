@@ -159,9 +159,6 @@ class FlxTextField extends FlxText
 		#if FLX_RENDER_TILE
 		textField.x = _point.x;
 		textField.y = _point.y;
-		
-		textField.scaleX = _camera.totalScaleX;
-		textField.scaleY = _camera.totalScaleY;
 		#else
 		textField.x = (_point.x - 0.5 * _camera.width);
 		textField.y = (_point.y - 0.5 * _camera.height);

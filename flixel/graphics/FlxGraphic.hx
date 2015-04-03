@@ -2,8 +2,6 @@ package flixel.graphics;
 
 import flash.display.BitmapData;
 import flixel.FlxG;
-import flixel.graphics.frames.FlxEmptyFrame;
-import flixel.graphics.tile.FlxTilesheet;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets;
@@ -13,6 +11,7 @@ import flixel.graphics.frames.FlxFramesCollection;
 import flixel.graphics.frames.FlxImageFrame;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
+import openfl.display.Tilesheet;
 import openfl.geom.Rectangle;
 
 /**
@@ -156,7 +155,7 @@ class FlxGraphic
 			return graphic;
 		}
 		
-		var bitmap:BitmapData = Source.getBitmap().clone();
+		var bitmap:BitmapData = Source.paint();
 		graphic = createGraphic(bitmap, key, Unique);
 		var image:FlxImageFrame = FlxImageFrame.fromGraphic(graphic);
 		image.getByIndex(0).name = Source.name;
@@ -275,7 +274,7 @@ class FlxGraphic
 	/**
 	 * Cached BitmapData object
 	 */
-	public var bitmap:BitmapData;
+	public var bitmap(default, set):BitmapData;
 	
 	/**
 	 * The width of cached BitmapData.
@@ -322,7 +321,7 @@ class FlxGraphic
 	/**
 	 * Tilesheet for this graphic object. It is used only for FLX_RENDER_TILE mode
 	 */
-	public var tilesheet(get, null):FlxTilesheet;
+	public var tilesheet(get, null):Tilesheet;
 	#end
 	
 	/**
@@ -340,7 +339,7 @@ class FlxGraphic
 	 * You should fill it yourself with one of the AtlasFrames static methods
 	 * (like texturePackerJSON(), texturePackerXML(), sparrow(), libGDX()).
 	 */
-	public var atlasFrames:FlxAtlasFrames;
+	public var atlasFrames(get, null):FlxAtlasFrames;
 	
 	/**
 	 * Storage for all available frame collection of all types for this graphic object.
@@ -372,7 +371,7 @@ class FlxGraphic
 	 * Internal var holding Tilesheet for bitmap of this graphic.
 	 * It is used only in FLX_RENDER_TILE mode
 	 */
-	private var _tilesheet:FlxTilesheet;
+	private var _tilesheet:Tilesheet;
 	#end
 	
 	private var _useCount:Int = 0;
@@ -388,14 +387,11 @@ class FlxGraphic
 	private function new(Key:String, Bitmap:BitmapData, ?Persist:Bool)
 	{
 		key = Key;
-		bitmap = Bitmap;
 		persist = (Persist != null) ? Persist : defaultPersist;
-		
-		width = bitmap.width;
-		height = bitmap.height;
 		
 		frameCollections = new Map<FlxFrameCollectionType, Array<Dynamic>>();
 		frameCollectionTypes = new Array<FlxFrameCollectionType>();
+		bitmap = Bitmap;
 	}
 	
 	/**
@@ -404,6 +400,7 @@ class FlxGraphic
 	 */
 	public function dump():Void
 	{
+	#if lime_legacy	
 		#if (FLX_RENDER_TILE && !flash && !nme)
 		if (canBeDumped)
 		{
@@ -411,6 +408,7 @@ class FlxGraphic
 			isDumped = true;
 		}
 		#end
+	#end
 	}
 	
 	/**
@@ -422,14 +420,7 @@ class FlxGraphic
 		if (newBitmap != null)
 		{
 			bitmap = newBitmap;
-			#if (FLX_RENDER_TILE && !flash && !nme)
-			if (_tilesheet != null)
-			{
-				_tilesheet = FlxTilesheet.rebuildFromOld(_tilesheet, bitmap);
-			}
-			#end
 		}
-		
 		isDumped = false;
 	}
 	
@@ -439,7 +430,7 @@ class FlxGraphic
 	 */
 	public function onContext():Void
 	{
-		// no need to restore tilesheet if it haven't been dumped
+		// no need to restore tilesheet if it hasn't been dumped
 		if (isDumped)
 		{
 			undump();	// restore everything
@@ -453,15 +444,13 @@ class FlxGraphic
 	 */
 	public function onAssetsReload():Void
 	{
-		if (!canBeDumped)	return;
+		if (!canBeDumped)
+			return;
 		
 		var dumped:Bool = isDumped;
 		undump();
-		resetFrameBitmaps();
 		if (dumped)
-		{
 			dump();
-		}
 	}
 	
 	/**
@@ -471,13 +460,12 @@ class FlxGraphic
 	{
 		bitmap = FlxDestroyUtil.dispose(bitmap);
 		#if FLX_RENDER_TILE
-		_tilesheet = FlxDestroyUtil.destroy(_tilesheet);
+		_tilesheet = null;
 		#end
 		key = null;
 		assetsKey = null;
 		assetsClass = null;
 		_imageFrame = null;	// no need to dispose _imageFrame since it exists in imageFrames
-		atlasFrames = null;
 		
 		var collections:Array<FlxFramesCollection>;
 		var collectionType:FlxFrameCollectionType;
@@ -489,24 +477,6 @@ class FlxGraphic
 		
 		frameCollections = null;
 		frameCollectionTypes = null;
-	}
-	
-	/**
-	 * Forces BitmapData regeneration for all frames in this graphic object.
-	 */
-	public function resetFrameBitmaps():Void
-	{
-		var collections:Array<FlxFramesCollection>;
-		var collection:FlxFramesCollection;
-		var collectionType:FlxFrameCollectionType;
-		for (collectionType in frameCollectionTypes)
-		{
-			collections = cast frameCollections.get(collectionType);
-			for (collection in collections)
-			{
-				collection.destroyBitmaps();
-			}
-		}
 	}
 	
 	/**
@@ -547,11 +517,12 @@ class FlxGraphic
 	 * @param	size	dimensions of the frame to add.
 	 * @return	Empty frame with specified size which belongs to this FlxGraphic object.
 	 */
-	public inline function getEmptyFrame(size:FlxPoint):FlxEmptyFrame
+	public inline function getEmptyFrame(size:FlxPoint):FlxFrame
 	{
-		var frame:FlxEmptyFrame = new FlxEmptyFrame(this);	
+		var frame:FlxFrame = new FlxFrame(this);
+		frame.type = FlxFrameType.EMPTY;
 		frame.frame = new FlxRect();
-		frame.sourceSize.set(size.x, size.y);
+		frame.sourceSize.copyFrom(size);
 		return frame;
 	}
 	
@@ -559,17 +530,19 @@ class FlxGraphic
 	/**
 	 * Tilesheet getter. Generates new one (and regenerates) if there is no tilesheet for this graphic yet.
 	 */
-	private function get_tilesheet():FlxTilesheet
+	private function get_tilesheet():Tilesheet
 	{
 		if (_tilesheet == null)
 		{
 			var dumped:Bool = isDumped;
 			
-			if (dumped)	undump();
+			if (dumped)	
+				undump();
 			
-			_tilesheet = new FlxTilesheet(bitmap);
+			_tilesheet = new Tilesheet(bitmap);
 			
-			if (dumped)	dump();
+			if (dumped)	
+				dump();
 		}
 		
 		return _tilesheet;
@@ -592,7 +565,12 @@ class FlxGraphic
 			newBitmap = FlxAssets.getBitmapData(assetsKey);
 		}
 		
-		return FlxGraphic.getBitmap(newBitmap, unique);
+		if (newBitmap != null)
+		{
+			return FlxGraphic.getBitmap(newBitmap, unique);
+		}
+		
+		return null;
 	}
 	
 	private inline function get_canBeDumped():Bool
@@ -609,7 +587,7 @@ class FlxGraphic
 	{
 		if ((Value <= 0) && _destroyOnNoUse && !persist)
 		{
-			FlxG.bitmap.remove(key);
+			FlxG.bitmap.remove(this);
 		}
 		
 		return _useCount = Value;
@@ -624,7 +602,7 @@ class FlxGraphic
 	{
 		if (Value && _useCount <= 0 && key != null && !persist)
 		{
-			FlxG.bitmap.remove(key);
+			FlxG.bitmap.remove(this);
 		}
 		
 		return _destroyOnNoUse = Value;
@@ -638,5 +616,28 @@ class FlxGraphic
 		}
 		
 		return _imageFrame;
+	}
+	
+	private function get_atlasFrames():FlxAtlasFrames
+	{
+		return FlxAtlasFrames.findFrame(this, null);
+	}
+	
+	private function set_bitmap(value:BitmapData):BitmapData
+	{
+		if (value != null)
+		{
+			bitmap = value;
+			width = bitmap.width;
+			height = bitmap.height;
+			#if (FLX_RENDER_TILE && !flash && !nme)
+			if (_tilesheet != null)
+			{
+				_tilesheet = new Tilesheet(bitmap);
+			}
+			#end
+		}
+		
+		return value;
 	}
 }

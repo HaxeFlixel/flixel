@@ -14,6 +14,11 @@ class FlxConditionals
 	static inline var FLX_RENDER_BLIT = "FLX_RENDER_BLIT";
 	
 	/**
+	 * Additional render flag
+	 */
+	static inline var FLX_RENDER_TRIANGLE = "FLX_RENDER_TRIANGLE";
+	
+	/**
 	 * Flixel-defined helper conditionals
 	 */
 	static inline var FLX_MOUSE_ADVANCED = "FLX_MOUSE_ADVANCED";
@@ -31,15 +36,23 @@ class FlxConditionals
 	static inline var FLX_NO_NATIVE_CURSOR = "FLX_NO_NATIVE_CURSOR";
 	static inline var FLX_NO_MOUSE = "FLX_NO_MOUSE";
 	static inline var FLX_NO_TOUCH = "FLX_NO_TOUCH";
+	static inline var FLX_NO_KEYBOARD = "FLX_NO_KEYBOARD";
 	static inline var FLX_NO_SOUND_SYSTEM = "FLX_NO_SOUND_SYSTEM";
 	static inline var FLX_NO_SOUND_TRAY = "FLX_NO_SOUND_TRAY";
 	static inline var FLX_NO_FOCUS_LOST_SCREEN = "FLX_NO_FOCUS_LOST_SCREEN";
 	static inline var FLX_NO_DEBUG = "FLX_NO_DEBUG";
 	static inline var FLX_RECORD = "FLX_RECORD";
 	
+	/**
+	 * Mostly internal, makes sure that flixel can be built with pure haxe
+	 * (as opposed to lime-tools). Needed for API doc generation and unit tests.
+	 */
+	static inline var FLX_HAXE_BUILD = "FLX_HAXE_BUILD";
+	
 	static var USER_DEFINABLE:Array<String> = [
 		FLX_RENDER_BLIT,
 		FLX_RENDER_TILE,
+		FLX_RENDER_TRIANGLE,
 		FLX_NO_MOUSE,
 		FLX_NO_MOUSE_ADVANCED,
 		FLX_NO_NATIVE_CURSOR,
@@ -50,10 +63,17 @@ class FlxConditionals
 		FLX_NO_FOCUS_LOST_SCREEN,
 		FLX_NO_DEBUG,
 		FLX_NO_GAMEPAD,
-		FLX_RECORD];
+		FLX_NO_KEYBOARD,
+		FLX_RECORD,
+		FLX_HAXE_BUILD];
 	
 	public static function run()
 	{
+		#if (haxe_ver < "3.1.1")
+			Context.fatalError('The minimum required Haxe version for HaxeFlixel is 3.1.1. '
+				+ 'Please install a newer version.', FlxMacroUtil.here());
+		#end
+		
 		checkConditionals();
 		defineConditionals();
 		
@@ -67,7 +87,7 @@ class FlxConditionals
 	{
 		if (defined(FLX_RENDER_BLIT) && defined(FLX_RENDER_TILE))
 		{
-			Context.fatalError('Cannot define both $FLX_RENDER_BLIT and $FLX_RENDER_TILE.', Context.currentPos());
+			Context.fatalError('You cannot define both $FLX_RENDER_BLIT and $FLX_RENDER_TILE.', FlxMacroUtil.here());
 		}
 		
 		abortIfDefined(FLX_MOUSE_ADVANCED);
@@ -83,7 +103,7 @@ class FlxConditionals
 			{
 				if (define.startsWith("FLX_") && USER_DEFINABLE.indexOf(define) == -1)
 				{
-					Context.warning('"$define" is not a valid flixel-conditional.', Context.currentPos());
+					Context.warning('"$define" is not a valid flixel conditional.', FlxMacroUtil.here());
 				}
 			}
 		#end
@@ -94,7 +114,7 @@ class FlxConditionals
 	{
 		if (defined(conditional))
 		{
-			Context.fatalError('$conditional can only be defined by flixel.', Context.currentPos());
+			Context.fatalError('$conditional can only be defined by flixel.', FlxMacroUtil.here());
 		}
 	}
 	
@@ -174,7 +194,7 @@ class FlxConditionals
 				.replace("[feature]", feature)
 				.replace("[version]", version)
 				.replace("[conditional]", conditional),
-				Context.currentPos());
+				FlxMacroUtil.here());
 		}
 	}
 	

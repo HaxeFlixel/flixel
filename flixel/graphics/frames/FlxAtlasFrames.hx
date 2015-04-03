@@ -19,10 +19,9 @@ import haxe.Json;
  */
 class FlxAtlasFrames extends FlxFramesCollection
 {
-	public function new(parent:FlxGraphic) 
+	public function new(parent:FlxGraphic, border:FlxPoint = null) 
 	{
-		super(parent, FlxFrameCollectionType.ATLAS);
-		parent.atlasFrames = this;
+		super(parent, FlxFrameCollectionType.ATLAS, border);
 	}
 	
 	/**
@@ -53,36 +52,53 @@ class FlxAtlasFrames extends FlxFramesCollection
 		
 		var data:Dynamic = Json.parse(Description);
 		
-		var rotated:Bool;
-		var name:String;
-		var sourceSize:FlxPoint;
-		var offset:FlxPoint;
-		var angle:FlxFrameAngle;
-		var frameRect:FlxRect;
-		
-		for (frame in Lambda.array(data.frames))
+		// JSON-Array
+		if (Std.is(data.frames, Array))
 		{
-			rotated = frame.rotated;
-			name = frame.filename;
-			sourceSize = FlxPoint.get(frame.sourceSize.w, frame.sourceSize.h);
-			offset = FlxPoint.get(frame.spriteSourceSize.x, frame.spriteSourceSize.y);
-			angle = FlxFrameAngle.ANGLE_0;
-			frameRect = null;
-			
-			if (rotated)
+			for (frame in Lambda.array(data.frames))
 			{
-				frameRect = new FlxRect(frame.frame.x, frame.frame.y, frame.frame.h, frame.frame.w);
-				angle = FlxFrameAngle.ANGLE_NEG_90;
+				texturePackerHelper(frame.filename, frame, frames);
 			}
-			else
+		}
+		
+		// JSON-Hash
+		else
+		{
+			for (frameName in Reflect.fields(data.frames))
 			{
-				frameRect = new FlxRect(frame.frame.x, frame.frame.y, frame.frame.w, frame.frame.h);
+				texturePackerHelper(frameName, Reflect.field(data.frames, frameName), frames);
 			}
-			
-			frames.addAtlasFrame(frameRect, sourceSize, offset, name, angle);
 		}
 		
 		return frames;
+	}
+	
+	/**
+	 * Internal method for TexturePacker parsing. Parses the actual frame data.
+	 * @param	FrameName		Name of the frame (filename of the original source image).
+	 * @param	FrameData		The TexturePacker data excluding "filename".
+	 * @param	Frames			The FlxAtlasFrames to add this frame to.
+	 */
+	private static function texturePackerHelper(FrameName:String, FrameData:Dynamic, Frames:FlxAtlasFrames):Void
+	{
+		var rotated:Bool = FrameData.rotated;
+		var name:String = FrameName;
+		var sourceSize:FlxPoint = FlxPoint.get(FrameData.sourceSize.w, FrameData.sourceSize.h);
+		var offset:FlxPoint = FlxPoint.get(FrameData.spriteSourceSize.x, FrameData.spriteSourceSize.y);
+		var angle:FlxFrameAngle = FlxFrameAngle.ANGLE_0;
+		var frameRect:FlxRect = null;
+		
+		if (rotated)
+		{
+			frameRect = new FlxRect(FrameData.frame.x, FrameData.frame.y, FrameData.frame.h, FrameData.frame.w);
+			angle = FlxFrameAngle.ANGLE_NEG_90;
+		}
+		else
+		{
+			frameRect = new FlxRect(FrameData.frame.x, FrameData.frame.y, FrameData.frame.w, FrameData.frame.h);
+		}
+		
+		Frames.addAtlasFrame(frameRect, sourceSize, offset, name, angle);
 	}
 	
 	/**
@@ -231,6 +247,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 		var angle:Int;
 		var name:String;
 		var trimmed:Bool;
+		var rotated:Bool;
 		var rect:FlxRect;
 		var size:Rectangle;
 		var offset:FlxPoint;
@@ -238,9 +255,10 @@ class FlxAtlasFrames extends FlxFramesCollection
 		
 		for (texture in data.nodes.SubTexture)
 		{
-			angle = FlxFrameAngle.ANGLE_0;
 			name = texture.att.name;
 			trimmed = texture.has.frameX;
+			rotated = (texture.has.rotated && texture.att.rotated == "true") ? true : false;
+			
 			rect = new FlxRect(Std.parseFloat(texture.att.x), Std.parseFloat(texture.att.y), Std.parseFloat(texture.att.width), Std.parseFloat(texture.att.height));
 			
 			size = if (trimmed)
@@ -252,8 +270,16 @@ class FlxAtlasFrames extends FlxFramesCollection
 				new Rectangle(0, 0, rect.width, rect.height);
 			}
 			
+			angle = (rotated) ? FlxFrameAngle.ANGLE_NEG_90 : FlxFrameAngle.ANGLE_0;
+			
 			offset = FlxPoint.get(-size.left, -size.top);
 			sourceSize = FlxPoint.get(size.width, size.height);
+			
+			if (rotated && !trimmed)
+			{
+				sourceSize.set(size.height, size.width);
+			}
+			
 			frames.addAtlasFrame(rect, sourceSize, offset, name, angle);
 		}
 		
@@ -261,8 +287,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 	}
 	
 	/**
-	 * Parsing method for TexturePacker atlases in xml format
-	 * (trimmed images aren't supported yet for this type of atlas).
+	 * Parsing method for TexturePacker atlases in generic xml format
 	 * 
 	 * @param	Source			the image source (can be FlxGraphic, String or BitmapData).
 	 * @param	Description		contents of xml file with atlas description. You can get it with Assets.getText(path/to/description.xml)
@@ -292,6 +317,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 		var root = xml.firstElement();
 		
 		var rotated:Bool;
+		var trimmed:Bool;
 		var angle:FlxFrameAngle;
 		var name:String;
 		var offset:FlxPoint;
@@ -300,13 +326,20 @@ class FlxAtlasFrames extends FlxFramesCollection
 		
 		for (sprite in root.elements())
 		{
-			// trimmed images aren't supported yet for this type of atlas
+			trimmed = (sprite.exists("oX") || sprite.exists("oY"));
 			rotated = (sprite.exists("r") && sprite.get("r") == "y");
 			angle = (rotated) ? FlxFrameAngle.ANGLE_NEG_90 : FlxFrameAngle.ANGLE_0;
 			name = sprite.get("n");
 			offset = FlxPoint.get(0, 0);
 			rect = new FlxRect(Std.parseInt(sprite.get("x")), Std.parseInt(sprite.get("y")), Std.parseInt(sprite.get("w")), Std.parseInt(sprite.get("h")));
 			sourceSize = FlxPoint.get(rect.width, rect.height);
+			
+			if (trimmed)
+			{
+				offset.set(Std.parseInt(sprite.get("oX")), Std.parseInt(sprite.get("oY")));
+				sourceSize.set(Std.parseInt(sprite.get("oW")), Std.parseInt(sprite.get("oH")));
+			}
+			
 			frames.addAtlasFrame(rect, sourceSize, offset, name, angle);
 		}
 		
@@ -375,8 +408,43 @@ class FlxAtlasFrames extends FlxFramesCollection
 	 * @param	graphic	FlxGraphic object to find AtlasFrames collection for.
 	 * @return	AtlasFrames Collection for specified FlxGraphic object. Could be null, if FlxGraphic doesn't have it yet.
 	 */
-	public static inline function findFrame(graphic:FlxGraphic):FlxAtlasFrames
+	public static function findFrame(graphic:FlxGraphic, border:FlxPoint = null):FlxAtlasFrames
 	{
-		return graphic.atlasFrames;
+		if (border == null)
+		{
+			border = FlxPoint.flxPoint1.set(0, 0);
+		}
+		
+		var atlasFrames:Array<FlxAtlasFrames> = cast graphic.getFramesCollections(FlxFrameCollectionType.ATLAS);
+		var atlas:FlxAtlasFrames;
+		
+		for (atlas in atlasFrames)
+		{
+			if (atlas.border.equals(border))
+			{
+				return atlas;
+			}
+		}
+		
+		return null;
+	}
+	
+	override public function addBorder(border:FlxPoint):FlxAtlasFrames
+	{
+		var resultBorder:FlxPoint = new FlxPoint().addPoint(this.border).addPoint(border);
+		var atlasFrames:FlxAtlasFrames = FlxAtlasFrames.findFrame(parent, resultBorder);
+		if (atlasFrames != null)
+		{
+			return atlasFrames;
+		}
+		
+		atlasFrames = new FlxAtlasFrames(parent, resultBorder);
+		
+		for (frame in frames)
+		{
+			atlasFrames.pushFrame(frame.setBorderTo(border));
+		}
+		
+		return atlasFrames;
 	}
 }

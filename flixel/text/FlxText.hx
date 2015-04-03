@@ -9,7 +9,10 @@ import flash.text.TextFormatAlign;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
+import flixel.graphics.atlas.FlxAtlas;
+import flixel.graphics.atlas.FlxNode;
 import flixel.graphics.FlxGraphic;
+import flixel.graphics.frames.FlxFramesCollection;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.system.FlxAssets;
@@ -32,7 +35,7 @@ class FlxText extends FlxSprite
 	/**
 	 * The text being displayed.
 	 */
-	public var text(get, set):String;
+	public var text(default, set):String = "";
 	
 	/**
 	 * The size of the text being displayed in pixels.
@@ -155,17 +158,16 @@ class FlxText extends FlxSprite
 	{
 		super(X, Y);
 		
-		var setTextEmpty:Bool = false;
 		if (Text == null || Text == "")
 		{
 			// empty texts have a textHeight of 0, need to
 			// prevent initialiazing with "" before the first calcFrame() call
-			#if flash
+			text = "";
 			Text = " ";
-			#else
-			Text = "";
-			#end
-			setTextEmpty = true;
+		}
+		else
+		{
+			text = Text;
 		}
 		
 		textField = new TextField();
@@ -189,22 +191,8 @@ class FlxText extends FlxSprite
 		allowCollisions = FlxObject.NONE;
 		moves = false;
 		
-		var key:String = FlxG.bitmap.getUniqueKey("text");
-		var graphicWidth:Int = (FieldWidth <= 0) ? 1 : Std.int(FieldWidth);
-		makeGraphic(graphicWidth, 1, FlxColor.TRANSPARENT, false, key);
-		
-		#if FLX_RENDER_BLIT 
+		_regen = true;
 		calcFrame();
-		if (setTextEmpty)
-		{
-			text = "";
-		}
-		#else
-		if (Text != "")
-		{
-			calcFrame();
-		}
-		#end
 		
 		shadowOffset = FlxPoint.get(1, 1);
 	}
@@ -220,6 +208,38 @@ class FlxText extends FlxSprite
 		_formatAdjusted = null;
 		shadowOffset = FlxDestroyUtil.put(shadowOffset);
 		super.destroy();
+	}
+	
+	override public function drawFrame(Force:Bool = false):Void 
+	{
+		_regen = _regen || Force;
+		super.drawFrame(Force);
+	}
+	
+	/**
+	 * Stamps text onto specified atlas object and loads graphic from this atlas.
+	 * WARNING: Changing text after stamping it on the atlas will break the atlas, 
+	 * so do it only for static texts and only after making all the text customizing (like size, align, color, etc.)
+	 * 
+	 * @param	atlas	atlas to stamp graphic to.
+	 * @return	true - if text's graphic is stamped on atlas successfully, false - in other case.
+	 */
+	public function stampOnAtlas(atlas:FlxAtlas):Bool
+	{
+		if (_regen)
+		{
+			regenGraphics();
+		}
+		
+		var node:FlxNode = atlas.addNode(graphic.bitmap, graphic.key);
+		var result:Bool = (node != null);
+		
+		if (node != null)
+		{
+			frames = node.getImageFrame();
+		}
+		
+		return result;
 	}
 	
 	/**
@@ -458,6 +478,8 @@ class FlxText extends FlxSprite
 			}
 			else
 			{
+				autoSize = false;
+				wordWrap = true;
 				textField.width = value;
 			}
 			
@@ -488,19 +510,16 @@ class FlxText extends FlxSprite
 		return (textField != null) ? (textField.autoSize != TextFieldAutoSize.NONE) : false;
 	}
 	
-	private inline function get_text():String
-	{
-		return textField.text;
-	}
-	
 	private function set_text(Text:String):String
 	{
-		var ot:String = textField.text;
-		textField.text = Text;
-		
-		_regen = (textField.text != ot) || _regen;
-		
-		return textField.text;
+		text = Text;
+		if (textField != null)
+		{
+			var ot:String = textField.text;
+			textField.text = Text;
+			_regen = (textField.text != ot) || _regen;
+		}
+		return Text;
 	}
 	
 	private inline function get_size():Float
@@ -678,35 +697,38 @@ class FlxText extends FlxSprite
 	
 	override private function set_graphic(Value:FlxGraphic):FlxGraphic 
 	{
+		var oldGraphic:FlxGraphic = graphic;
 		var graph:FlxGraphic = super.set_graphic(Value);
-		
-		if (Value != null)
-			Value.destroyOnNoUse = true;
-		
+		FlxG.bitmap.removeIfNoUse(oldGraphic);
 		return graph;
+	}
+	
+	override private function get_width():Float 
+	{
+		if (_regen)
+			regenGraphics();
+		
+		return super.get_width();
+	}
+	
+	override private function get_height():Float 
+	{
+		if (_regen)
+			regenGraphics();
+		
+		return super.get_height();
 	}
 	
 	override private function updateColorTransform():Void
 	{
 		if (alpha != 1)
 		{
-			if (colorTransform == null)
-			{
-				colorTransform = new ColorTransform(1, 1, 1, alpha);
-			}
-			else
-			{
-				colorTransform.alphaMultiplier = alpha;
-			}
+			colorTransform.alphaMultiplier = alpha;
 			useColorTransform = true;
 		}
 		else
 		{
-			if (colorTransform != null)
-			{
-				colorTransform.alphaMultiplier = 1;
-			}
-			
+			colorTransform.alphaMultiplier = 1;
 			useColorTransform = false;
 		}
 		
@@ -718,8 +740,14 @@ class FlxText extends FlxSprite
 		if (textField == null || _regen == false)
 			return;
 		
-		var oldWidth:Int = graphic.width;
-		var oldHeight:Int = graphic.height;
+		var oldWidth:Int = 0;
+		var oldHeight:Int = 0;
+		
+		if (graphic != null)
+		{
+			oldWidth = graphic.width;
+			oldHeight = graphic.height;
+		}
 		
 		var newWidth:Float = textField.width;
 		// Account for 2px gutter on top and bottom (that's why there is "+ 4")
@@ -768,17 +796,16 @@ class FlxText extends FlxSprite
 				#else
 					var textWidth = textField.getLineMetrics(0).width;
 				#end
-				if (textField.textWidth <= textField.width)
-					_matrix.translate(Math.floor((width - textWidth) / 2), 0);
+				if (textWidth <= textField.width)
+					_matrix.translate(Math.floor((textField.width - textWidth) / 2), 0);
 			}
 			
 			applyBorderStyle();
 			applyFormats(_formatAdjusted, false);
-
+			
 			graphic.bitmap.draw(textField, _matrix);
 		}
 		
-		frame.destroyBitmaps();
 		_regen = false;
 		dirty = true;
 	}
@@ -801,10 +828,15 @@ class FlxText extends FlxSprite
 		if (textField == null)
 			return;
 		
+		#if FLX_RENDER_TILE
+		if (!RunOnCpp)
+			return;
+		#end
+			
 		if (_regen)
 			regenGraphics();
 		
-		super.calcFrame();
+		super.calcFrame(RunOnCpp);
 	}
 	
 	private function applyBorderStyle():Void
@@ -953,6 +985,13 @@ class FlxText extends FlxSprite
 		textField.defaultTextFormat = _defaultFormat;
 		textField.setTextFormat(_defaultFormat);
 		_regen = true;
+	}
+	
+	override function set_frames(Frames:FlxFramesCollection):FlxFramesCollection 
+	{
+		super.set_frames(Frames);
+		_regen = false;
+		return Frames;
 	}
 }
 

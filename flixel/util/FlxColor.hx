@@ -2,7 +2,6 @@ package flixel.util;
 
 import flixel.math.FlxMath;
 import flixel.system.macros.FlxMacroUtil;
-
 /**
  * Class representing a color, based on Int. Provides a variety of methods for creating and converting colors.
  * 
@@ -38,7 +37,8 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 * A Map<String, Int> which values are the static colors of FlxColor.
 	 * You can add more colors for FlxColor.fromString(String) if you need.
 	 */
-	public static var colorLookup:Map<String,Int> = FlxMacroUtil.buildMap("flixel.util.FlxColor");
+	public static var colorLookup(default, null):Map<String,Int>
+		= FlxMacroUtil.buildMap("flixel.util.FlxColor");
 	
 	public var red(get, set):Int;
 	public var blue(get, set):Int;
@@ -254,7 +254,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 		
 		if (Ease == null)
 		{
-			Ease = inline function(t:Float):Float
+			Ease = function(t:Float):Float
 			{
 				return t;
 			}
@@ -762,6 +762,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 		return Value > 0xff ? 0xff : Value < 0 ? 0 : Value;
 	}
 	
+	#if (haxe_ver < "3.2")
 	@:commutative
 	@:op(A == B)
 	private static inline function equal(lhs:Null<FlxColor>, rhs:Null<Int>):Bool
@@ -775,6 +776,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	{
 		return lhs != (rhs:Null<FlxColor>);
 	}
+	#end
 }
 
 typedef Harmony = { 

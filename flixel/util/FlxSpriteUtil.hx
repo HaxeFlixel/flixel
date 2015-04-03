@@ -526,7 +526,6 @@ class FlxSpriteUtil
 		sprite.pixels.draw(flashGfxSprite, drawStyle.matrix, drawStyle.colorTransform, 
 			drawStyle.blendMode, drawStyle.clipRect, drawStyle.smoothing);
 		sprite.dirty = true;
-		sprite.resetFrameBitmaps();
 		return sprite;
 	}
 	
@@ -595,7 +594,6 @@ class FlxSpriteUtil
 			sprite.dirty = true;
 		}
 		
-		sprite.resetFrameBitmaps();
 		return sprite;
 	}
 	

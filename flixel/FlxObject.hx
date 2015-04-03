@@ -4,6 +4,7 @@ import flash.display.Graphics;
 import flixel.FlxBasic;
 import flixel.group.FlxGroup;
 import flixel.group.FlxSpriteGroup;
+import flixel.phys.IFlxBody;
 import flixel.tile.FlxBaseTilemap;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
@@ -12,6 +13,7 @@ import flixel.math.FlxRect;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxStringUtil;
 import flixel.math.FlxVelocity;
+import flixel.phys.IFlxBody;
 
 /**
  * This is the base class for most of the display objects (FlxSprite, FlxText, etc).
@@ -19,6 +21,16 @@ import flixel.math.FlxVelocity;
  */
 class FlxObject extends FlxBasic
 {
+	public var body : IFlxBody;
+	/**
+	 * Default value for FlxObject's pixelPerfectPosition var.
+	 */
+	#if FLX_RENDER_BLIT
+	public static var defaultPixelPerfectPosition:Bool = true;
+	#else
+	public static var defaultPixelPerfectPosition:Bool = false;
+	#end
+	
 	/**
 	 * This value dictates the maximum number of pixels two objects have to intersect before collision stops trying to separate them.
 	 * Don't modify this unless your objects are passing through eachother.
@@ -333,6 +345,11 @@ class FlxObject extends FlxBasic
 	@:isVar
 	public var height(get, set):Float;
 	/**
+	 * WARNING: The origin of the sprite will default to its center. If you change this, 
+	 * the visuals and the collisions will likely be pretty out-of-sync if you do any rotation.
+	 */
+	public var origin(default, null):FlxPoint;
+	/**
 	 * Whether or not the coordinates should be rounded during draw(), true by default (recommended for pixel art). 
 	 * Only affects tilesheet rendering and rendering using BitmapData.draw() in blitting.
 	 * (copyPixels() only renders on whole pixels by nature). Causes draw() to be used if false, which is more expensive.
@@ -355,7 +372,8 @@ class FlxObject extends FlxBasic
 	/**
 	 * Whether an object will move/alter position after a collision.
 	 */
-	public var immovable(default, set):Bool = false;
+	@:isVar
+	public var immovable(get, set):Bool = false;
 	/**
 	 * Whether the object collides or not.  For more control over what directions the object will collide from, 
 	 * use collision constants (like LEFT, FLOOR, etc) to set the value of allowCollisions directly.
@@ -369,12 +387,12 @@ class FlxObject extends FlxBasic
 	/**
 	 * The basic speed of this object (in pixels per second).
 	 */
-	public var velocity(default, null):FlxPoint;
+	public var velocity(default, null):FlxCallbackPoint;
 	/**
 	 * How fast the speed of this object is changing (in pixels per second).
 	 * Useful for smooth movement and gravity.
 	 */
-	public var acceleration(default, null):FlxPoint;
+	public var acceleration(default, null):FlxCallbackPoint;
 	/**
 	 * This isn't drag exactly, more like deceleration that is only applied
 	 * when acceleration is not affecting the sprite.
@@ -384,7 +402,7 @@ class FlxObject extends FlxBasic
 	 * If you are using acceleration, you can use maxVelocity with it
 	 * to cap the speed automatically (very useful!).
 	 */
-	public var maxVelocity(default, null):FlxPoint;
+	public var maxVelocity(default, null):FlxCallbackPoint;
 	/**
 	 * Important variable for collision processing.
 	 * By default this value is set automatically during preUpdate().
@@ -394,19 +412,19 @@ class FlxObject extends FlxBasic
 	 * The virtual mass of the object. Default value is 1. Currently only used with elasticity 
 	 * during collision resolution. Change at your own risk; effects seem crazy unpredictable so far!
 	 */
-	public var mass:Float = 1;
+	public var mass(default, set):Float = 1;
 	/**
 	 * The bounciness of this object. Only affects collisions. Default value is 0, or "not bouncy at all."
 	 */
-	public var elasticity:Float = 0;
+	public var elasticity(default, set):Float = 0;
 	/**
 	 * This is how fast you want this sprite to spin (in degrees per second).
 	 */
-	public var angularVelocity:Float = 0;
+	public var angularVelocity(default, set):Float = 0;
 	/**
 	 * How fast the spin speed should change (in degrees per second).
 	 */
-	public var angularAcceleration:Float = 0;
+	public var angularAcceleration(default, set):Float = 0;
 	/**
 	 * Like drag but for spinning.
 	 */
@@ -433,7 +451,7 @@ class FlxObject extends FlxBasic
 	 * Bit field of flags (use with UP, DOWN, LEFT, RIGHT, etc) indicating collision directions. Use bitwise operators to check the values stored here.
 	 * Useful for things like one-way platforms (e.g. allowCollisions = UP;). The accessor "solid" just flips this variable between NONE and ANY.
 	 */
-	public var allowCollisions:Int = ANY;
+	public var allowCollisions(default, set):Int = ANY;
 	/**
 	 * Whether this sprite is dragged along with the horizontal movement of objects it collides with 
 	 * (makes sense for horizontally-moving platforms in platformers for example).
@@ -481,6 +499,8 @@ class FlxObject extends FlxBasic
 		flixelType = OBJECT;
 		last = FlxPoint.get(x, y);
 		scrollFactor = FlxPoint.get(1, 1);
+		origin = FlxPoint.get(width / 2, height / 2);
+		pixelPerfectPosition = FlxObject.defaultPixelPerfectPosition;
 		
 		initMotionVars();
 	}
@@ -490,10 +510,10 @@ class FlxObject extends FlxBasic
 	 */
 	private inline function initMotionVars():Void
 	{
-		velocity = FlxPoint.get();
-		acceleration = FlxPoint.get();
+		velocity = new FlxCallbackPoint(set_velocityX,set_velocityY,set_velocityXY);
+		acceleration = new FlxCallbackPoint(set_accelerationX,set_accelerationY,set_accelerationXY);
 		drag = FlxPoint.get();
-		maxVelocity = FlxPoint.get(10000, 10000);
+		maxVelocity = new FlxCallbackPoint(set_maxVelocityX,set_maxVelocityY,set_maxVelocityXY);
 	}
 	
 	/**
@@ -512,6 +532,9 @@ class FlxObject extends FlxBasic
 		last = FlxDestroyUtil.put(last);
 		_point = FlxDestroyUtil.put(_point);
 		_rect = FlxDestroyUtil.put(_rect);
+		origin = FlxDestroyUtil.put(origin);
+		
+		body.destroy();
 	}
 	
 	/**
@@ -528,7 +551,7 @@ class FlxObject extends FlxBasic
 		last.x = x;
 		last.y = y;
 		
-		if (moves)
+		if (moves && body == null)
 		{
 			updateMotion(elapsed);
 		}
@@ -579,7 +602,7 @@ class FlxObject extends FlxBasic
 	 * 
 	 * @param	ObjectOrGroup	The object or group being tested.
 	 * @param	InScreenSpace	Whether to take scroll factors into account when checking for overlap.  Default is false, or "only compare in world space."
-	 * @param	Camera			Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
+	 * @param	Camera			Specify which game camera you want.  If null getScreenPosition() will just grab the first global camera.
 	 * @return	Whether or not the two objects overlap.
 	 */
 	public function overlaps(ObjectOrGroup:FlxBasic, InScreenSpace:Bool = false, ?Camera:FlxCamera):Bool
@@ -627,7 +650,7 @@ class FlxObject extends FlxBasic
 	 * @param	Y				The Y position you want to check.  Pretends this object (the caller, not the parameter) is located here.
 	 * @param	ObjectOrGroup	The object or group being tested.
 	 * @param	InScreenSpace	Whether to take scroll factors into account when checking for overlap.  Default is false, or "only compare in world space."
-	 * @param	Camera			Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
+	 * @param	Camera			Specify which game camera you want.  If null getScreenPosition() will just grab the first global camera.
 	 * @return	Whether or not the two objects overlap.
 	 */
 	public function overlapsAt(X:Float, Y:Float, ObjectOrGroup:FlxBasic, InScreenSpace:Bool = false, ?Camera:FlxCamera):Bool
@@ -675,7 +698,7 @@ class FlxObject extends FlxBasic
 	 * 
 	 * @param	Point			The point in world space you want to check.
 	 * @param	InScreenSpace	Whether to take scroll factors into account when checking for overlap.
-	 * @param	Camera			Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
+	 * @param	Camera			Specify which game camera you want.  If null getScreenPosition() will just grab the first global camera.
 	 * @return	Whether or not the point overlaps this object.
 	 */
 	public function overlapsPoint(point:FlxPoint, InScreenSpace:Bool = false, ?Camera:FlxCamera):Bool
@@ -709,7 +732,7 @@ class FlxObject extends FlxBasic
 	/**
 	 * Call this function to figure out the on-screen position of the object.
 	 * 
-	 * @param	Camera		Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
+	 * @param	Camera		Specify which game camera you want.  If null getScreenPosition() will just grab the first global camera.
 	 * @param	Point		Takes a FlxPoint object and assigns the post-scrolled X and Y values of this object to it.
 	 * @return	The Point you passed in, or a new Point if you didn't pass one, containing the screen X and Y position of this object.
 	 */
@@ -768,7 +791,7 @@ class FlxObject extends FlxBasic
 	/**
 	 * Check and see if this object is currently on screen.
 	 * 
-	 * @param	Camera		Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
+	 * @param	Camera		Specify which game camera you want.  If null getScreenPosition() will just grab the first global camera.
 	 * @return	Whether the object is on screen or not.
 	 */
 	public function isOnScreen(?Camera:FlxCamera):Bool
@@ -868,10 +891,7 @@ class FlxObject extends FlxBasic
 		
 		for (camera in cameras)
 		{
-			if (camera.visible && camera.exists && isOnScreen(camera))
-			{
-				drawDebugOnCamera(camera);
-			}
+			drawDebugOnCamera(camera);
 		}
 	}
 	
@@ -883,6 +903,11 @@ class FlxObject extends FlxBasic
 	 */
 	public function drawDebugOnCamera(camera:FlxCamera):Void
 	{
+		if (!camera.visible || !camera.exists || !isOnScreen(camera))
+		{
+			return;
+		}
+		
 		var rect = getBoundingBox(camera);
 		
 		// Find the color to use
@@ -928,12 +953,6 @@ class FlxObject extends FlxBasic
 	{
 		getScreenPosition(_point, camera);
 		_rect.set(_point.x, _point.y, width, height);
-		#if FLX_RENDER_TILE
-		_rect.x *= camera.totalScaleX;
-		_rect.y *= camera.totalScaleY;
-		_rect.width *= camera.totalScaleX;
-		_rect.height *= camera.totalScaleY;
-		#end
 		
 		if (isPixelPerfectRender(camera))
 		{
@@ -1044,6 +1063,10 @@ class FlxObject extends FlxBasic
 		return moves = Value;
 	}
 	
+	private function get_immovable():Bool
+	{
+		return body == null ? immovable : true;
+	}
 	private function set_immovable(Value:Bool):Bool
 	{
 		return immovable = Value;
@@ -1052,5 +1075,115 @@ class FlxObject extends FlxBasic
 	private function set_pixelPerfectRender(Value:Bool):Bool 
 	{
 		return pixelPerfectRender = Value;
+	}
+	
+	private function set_velocityX(Point:FlxPoint):Void
+	{
+		if (body != null)
+		{
+			body.velocity.x = Point.x;
+		}
+	}
+	private function set_velocityY(Point:FlxPoint):Void
+	{
+		if (body != null)
+		{
+			body.velocity.y = Point.y;
+		}
+	}
+	private function set_velocityXY(Point:FlxPoint):Void
+	{
+		if (body != null)
+		{
+			body.velocity.x = Point.x;
+			body.velocity.y = Point.y;
+		}
+	}
+	
+	private function set_accelerationX(Point:FlxPoint):Void
+	{
+		if (body != null)
+		{
+			body.acceleration.x = Point.x;
+		}
+	}
+	private function set_accelerationY(Point:FlxPoint):Void
+	{
+		if (body != null)
+		{
+			body.acceleration.y = Point.y;
+		}
+	}
+	private function set_accelerationXY(Point:FlxPoint):Void
+	{
+		if (body != null)
+		{
+			body.acceleration.x = Point.x;
+			body.acceleration.y = Point.y;
+		}
+	}
+	
+	private function set_maxVelocityX(Point:FlxPoint):Void
+	{
+		if (body != null)
+		{
+			body.maxVelocity.x = Point.x;
+		}
+	}
+	private function set_maxVelocityY(Point:FlxPoint):Void
+	{
+		if (body != null)
+		{
+			body.maxVelocity.y = Point.y;
+		}
+	}
+	private function set_maxVelocityXY(Point:FlxPoint):Void
+	{
+		if (body != null)
+		{
+			body.maxVelocity.x = Point.x;
+			body.maxVelocity.y = Point.y;
+		}
+	}
+	
+	private function set_elasticity(Value : Float):Float
+	{
+		if (body != null)
+		{
+			body.elasticity = Value;
+		}
+		return elasticity = Value;
+	}
+	
+	private function set_mass(Value : Float):Float
+	{
+		if (body != null)
+		{
+			body.mass = Value;
+		}
+		return mass = Value;
+	}
+
+	private function set_angularVelocity(Value : Float):Float
+	{
+		if (body != null)
+		{
+			body.angularVelocity = Value;
+		}
+		return angularVelocity = Value;
+	}
+	
+	private function set_angularAcceleration(Value : Float):Float
+	{
+		if (body != null)
+		{
+			body.angularAcceleration = Value;
+		}
+		return angularAcceleration = Value;
+	}
+
+	private function set_allowCollisions(Value:Int):Int 
+	{
+		return allowCollisions = Value;
 	}
 }

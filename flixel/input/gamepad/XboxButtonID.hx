@@ -67,7 +67,7 @@ class XboxButtonID
 	/**
 	 * Button IDs
 	 */
-	public static inline var A:Int = 1;
+	public static inline var A:Int = 0;
 	public static inline var B:Int = 1;
 	public static inline var X:Int = 2;
 	public static inline var Y:Int = 3;

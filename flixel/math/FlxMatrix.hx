@@ -12,11 +12,16 @@ class FlxMatrix extends Matrix
 	 * Helper object, which you can use without instantiation of
 	 * additional objects.
 	 */
-	public static var MATRIX:FlxMatrix = new FlxMatrix();
+	public static var matrix:FlxMatrix = new FlxMatrix();
+	
+	public function new(a:Float = 1, b:Float = 0, c:Float = 0, d:Float = 1, tx:Float = 0, ty:Float = 0)
+	{
+		super(a, b, c, d, tx, ty);
+	}
 	
 	/**
 	 * Rotates this matrix, but takes the values of sine and cosine,
-	 * so it might be usefull when you rotate multiple matrices by the same angle
+	 * so it might be useful when you rotate multiple matrices by the same angle
 	 * @param	cos	The cosine value for rotation angle
 	 * @param	sin	The sine value for rotation angle
 	 * @return	this transformed matrix
@@ -35,6 +40,16 @@ class FlxMatrix extends Matrix
 		ty = tx * sin + ty * cos;
 		tx = tx1;
 		
+		return this;
+	}
+	
+	/**
+	 * Adds 180 degrees to rotation of this matrix
+	 * @return	rotated matrix
+	 */
+	public inline function rotateBy180():FlxMatrix
+	{
+		this.setTo( -a, -b, -c, -d, -tx, -ty);
 		return this;
 	}
 	

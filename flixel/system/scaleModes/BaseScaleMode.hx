@@ -15,6 +15,9 @@ class BaseScaleMode
 	public var scale(default, null):FlxPoint;
 	public var offset(default, null):FlxPoint;
 	
+	public var hAlign(default, set):HAlign;
+	public var vAlign(default, set):VAlign;
+	
 	private static var zoom:FlxPoint = FlxPoint.get();
 	
 	public function new()
@@ -23,6 +26,9 @@ class BaseScaleMode
 		gameSize = FlxPoint.get();
 		scale = FlxPoint.get();
 		offset = FlxPoint.get();
+		
+		hAlign = HAlign.Center;
+		vAlign = VAlign.Center;
 	}
 	
 	public function onMeasure(Width:Int, Height:Int):Void
@@ -48,26 +54,80 @@ class BaseScaleMode
 	
 	private function updateScaleOffset():Void
 	{
-		scale.x = gameSize.x / FlxG.width;
-		scale.y = gameSize.y / FlxG.height;
-		
-		zoom.set(FlxCamera.defaultZoom, FlxCamera.defaultZoom);
-		
-		if (FlxG.camera != null) 
+		scale.x = gameSize.x / (FlxG.width * FlxG.initialZoom);
+		scale.y = gameSize.y / (FlxG.height * FlxG.initialZoom);
+		updateOffsetX();
+		updateOffsetY();
+	}
+	
+	private function updateOffsetX():Void
+	{
+		switch (hAlign)
 		{
-			zoom.set(FlxG.camera.scaleX, FlxG.camera.scaleY);
+			case HAlign.Left:
+				offset.x = 0;
+			case HAlign.Center:
+				offset.x = Math.ceil((deviceSize.x - gameSize.x) * 0.5);
+			case HAlign.Right:
+				offset.x = deviceSize.x - gameSize.x;
 		}
-		
-		scale.x /= zoom.x;
-		scale.y /= zoom.y;
-		
-		offset.x = Math.ceil((deviceSize.x - gameSize.x) * 0.5);
-		offset.y = Math.ceil((deviceSize.y - gameSize.y) * 0.5);
+	}
+	
+	private function updateOffsetY():Void
+	{
+		switch (vAlign)
+		{
+			case VAlign.Top:
+				offset.y = 0;
+			case VAlign.Center:
+				offset.y = Math.ceil((deviceSize.y - gameSize.y) * 0.5);
+			case VAlign.Bottom:
+				offset.y = deviceSize.y - gameSize.y;
+		}
 	}
 	
 	private function updateGamePosition():Void
 	{
+		if (FlxG.game == null)
+			return;
+		
 		FlxG.game.x = offset.x;
 		FlxG.game.y = offset.y;
 	}
+	
+	private function set_hAlign(value:HAlign):HAlign
+	{
+		hAlign = value;
+		if (offset != null)
+		{
+			updateOffsetX();
+			updateGamePosition();
+		}
+		return value;
+	}
+	
+	private function set_vAlign(value:VAlign):VAlign
+	{
+		vAlign = value;
+		if (offset != null)
+		{
+			updateOffsetY();
+			updateGamePosition();
+		}
+		return value;
+	}
+}
+
+enum HAlign 
+{
+	Left;
+	Center;
+	Right;
+}
+
+enum VAlign
+{
+	Top;
+	Center;
+	Bottom;
 }
