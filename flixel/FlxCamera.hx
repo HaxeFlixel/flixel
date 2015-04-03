@@ -518,7 +518,7 @@ class FlxCamera extends FlxBasic
 		var isColored:Bool = (cr != 1.0) || (cg != 1.0) || (cb != 1.0) || (ca != 1.0);
 		var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(frame.parent, smoothing, isColored, blend);
 		#end
-		drawItem.setData(frame, matrix, cr, cg, cb, ca);
+		drawItem.addQuad(frame, matrix, cr, cg, cb, ca);
 	}
 	
 	public function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle, destPoint:Point, cr:Float = 1.0, cg:Float = 1.0, cb:Float = 1.0, ca:Float = 1.0, blend:BlendMode = null, smoothing:Bool = false):Void
@@ -532,7 +532,7 @@ class FlxCamera extends FlxBasic
 		var isColored:Bool = (cr != 1.0) || (cg != 1.0) || (cb != 1.0) || (ca != 1.0);
 		var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(frame.parent, smoothing, isColored, blend);
 		#end
-		drawItem.setData(frame, _helperMatrix, cr, cg, cb, ca);
+		drawItem.addQuad(frame, _helperMatrix, cr, cg, cb, ca);
 	}
 	
 	public function drawVertex():Void

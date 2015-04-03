@@ -35,7 +35,7 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 		drawData = null;
 	}
 	
-	override public function setData(frame:FlxFrame, matrix:FlxMatrix,
+	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix,
 		red:Float = 1, green:Float = 1, blue:Float = 1, alpha:Float = 1):Void
 	{
 		drawData[position++] = matrix.tx;
