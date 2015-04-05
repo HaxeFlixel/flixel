@@ -459,12 +459,14 @@ class FlxFrame implements IFlxDestroyable
 			if (angle == FlxFrameAngle.ANGLE_NEG_90)
 			{
 				mat.rotateByPositive90();
-				mat.translate(sourceSize.y, 0);
+			//	mat.translate(sourceSize.y, 0);
+				mat.translate(frame.width, 0);
 			}
 			else if (angle == FlxFrameAngle.ANGLE_90)
 			{
 				mat.rotateByNegative90();
-				mat.translate(0, sourceSize.x);
+			//	mat.translate(0, sourceSize.x);
+				mat.translate(0, frame.height);
 			}
 			
 			if (angle != FlxFrameAngle.ANGLE_0)
@@ -475,7 +477,6 @@ class FlxFrame implements IFlxDestroyable
 			
 			frameRect.fromTwoPoints(p1, p2);
 			frameRect.offset(frame.x, frame.y);
-			
 			frameToFill.frame = frameRect;
 			frameToFill.cacheFrameMatrix();
 		}
@@ -500,6 +501,7 @@ class FlxFrame implements IFlxDestroyable
 		return frameToFill;
 	}
 	
+	// TODO: fix this method for rotated frames
 	/**
 	 * Frame clipping
 	 * @param	clip			Clipping rectangle to apply on frame
@@ -530,7 +532,7 @@ class FlxFrame implements IFlxDestroyable
 			return clippedFrame;
 		}
 		
-		var clippedRect:FlxRect = FlxRect.get().setSize(frame.width, frame.height);
+		var clippedRect:FlxRect = FlxRect.get(0, 0).setSize(frame.width, frame.height);
 		if (angle != FlxFrameAngle.ANGLE_0)
 		{
 			clippedRect.width = frame.height;
@@ -540,7 +542,6 @@ class FlxFrame implements IFlxDestroyable
 		clip.offset( -offset.x, -offset.y);
 		var frameRect:FlxRect = clippedRect.intersection(clip);
 		clippedRect = FlxDestroyUtil.put(clippedRect);
-		clip.offset(offset.x, offset.y);
 		
 		if (frameRect.isEmpty)
 		{
@@ -563,12 +564,14 @@ class FlxFrame implements IFlxDestroyable
 			if (angle == FlxFrameAngle.ANGLE_NEG_90)
 			{
 				mat.rotateByPositive90();
-				mat.translate(sourceSize.y, 0);
+			//	mat.translate(sourceSize.y, 0);
+				mat.translate(frame.width, 0);
 			}
 			else if (angle == FlxFrameAngle.ANGLE_90)
 			{
 				mat.rotateByNegative90();
-				mat.translate(0, sourceSize.x);
+			//	mat.translate(0, sourceSize.x);
+				mat.translate(0, frame.height);
 			}
 			
 			if (angle != FlxFrameAngle.ANGLE_0)
@@ -579,11 +582,11 @@ class FlxFrame implements IFlxDestroyable
 			
 			frameRect.fromTwoPoints(p1, p2);
 			frameRect.offset(frame.x, frame.y);
-			
 			clippedFrame.frame = frameRect;
 			clippedFrame.cacheFrameMatrix();
 		}
 		
+		clip.offset(offset.x, offset.y);
 		return clippedFrame;
 	}
 	
