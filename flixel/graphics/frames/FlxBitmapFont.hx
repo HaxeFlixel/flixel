@@ -23,8 +23,6 @@ import haxe.Utf8;
 import haxe.xml.Fast;
 import openfl.Assets;
 
-// TODO: implement borders for bitmap fonts...
-
 /**
  * Holds information and bitmap glyphs for a bitmap font.
  */
@@ -79,9 +77,9 @@ class FlxBitmapFont extends FlxFramesCollection
 	/**
 	 * Creates a new bitmap font using specified bitmap data and letter input.
 	 */
-	private function new(frame:FlxFrame)
+	private function new(frame:FlxFrame, border:FlxPoint = null)
 	{
-		super(frame.parent, FlxFrameCollectionType.FONT);
+		super(frame.parent, FlxFrameCollectionType.FONT, border);
 		this.frame = frame;
 		parent.persist = true;
 		parent.destroyOnNoUse = false;
@@ -591,16 +589,53 @@ class FlxBitmapFont extends FlxFramesCollection
 		return glyphMap.exists(charCode) ? glyphMap.get(charCode).sourceSize.x : 0;
 	}
 	
-	public static function findFont(frame:FlxFrame):FlxBitmapFont
+	public static function findFont(frame:FlxFrame, border:FlxPoint = null):FlxBitmapFont
 	{
+		if (border == null)
+		{
+			border = FlxPoint.flxPoint1.set();
+		}
+		
 		var bitmapFonts:Array<FlxBitmapFont> = cast frame.parent.getFramesCollections(FlxFrameCollectionType.FONT);
 		for (font in bitmapFonts)
 		{
-			if (font.frame == frame)
+			if (font.frame == frame && font.border.equals(border))
 			{
 				return font;
 			}
 		}
 		return null;
+	}
+	
+	override public function addBorder(border:FlxPoint):FlxBitmapFont 
+	{
+		var resultBorder:FlxPoint = new FlxPoint().addPoint(this.border).addPoint(border);
+		
+		var font:FlxBitmapFont = FlxBitmapFont.findFont(frame, resultBorder);
+		if (font != null)
+		{
+			return font;
+		}
+		
+		font = new FlxBitmapFont(frame, border);
+		font.spaceWidth = spaceWidth;
+		font.fontName = fontName;
+		font.numLetters = numLetters;
+		font.minOffsetX = minOffsetX;
+		font.size = size;
+		font.lineHeight = lineHeight;
+		font.italic = italic;
+		font.bold = bold;
+		
+		var borderGlyph:FlxFrame;
+		for (glyph in frames)
+		{
+			borderGlyph = glyph.setBorderTo(border);
+			font.pushFrame(borderGlyph);
+			font.glyphMap.set(Utf8.charCodeAt(glyph.name, 0), borderGlyph);
+		}
+		
+		font.updateSourceHeight();
+		return font;
 	}
 }

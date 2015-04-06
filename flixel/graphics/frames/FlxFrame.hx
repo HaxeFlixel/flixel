@@ -501,7 +501,6 @@ class FlxFrame implements IFlxDestroyable
 		return frameToFill;
 	}
 	
-	// TODO: fix this method for rotated frames
 	/**
 	 * Frame clipping
 	 * @param	clip			Clipping rectangle to apply on frame
