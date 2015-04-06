@@ -80,7 +80,7 @@ class FlxSound extends FlxBasic
 	public var volume(get, set):Float;
 	#if ((cpp || neko) && openfl_legacy)
 	/**
-	 * Set pitch, which also alters the playback speed. Normal is 1.
+	 * Set pitch, which also alters the playback speed. Default is 1.
 	 */
 	public var pitch(get, set):Float;
 	#end
