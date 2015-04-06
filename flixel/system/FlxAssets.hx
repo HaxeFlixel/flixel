@@ -22,7 +22,7 @@ import openfl.utils.ByteArray;
 @:keep @:font("assets/fonts/nokiafc22.ttf")
 private class FontDefault extends Font {}
 #if !FLX_NO_DEBUG
-@:keep @:font("assets/fonts/nokiafc22.ttf")
+@:keep @:font("assets/fonts/arial.ttf")
 private class FontDebugger extends Font {}
 #end
 
