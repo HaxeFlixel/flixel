@@ -404,7 +404,7 @@ class FlxBitmapText extends FlxSprite
 				
 				_matrix.translate(_point.x + ox, _point.y + oy);
 				
-				drawItem.setData(currFrame, _matrix, borderRed, borderGreen, borderBlue, bAlpha);
+				drawItem.addQuad(currFrame, _matrix, borderRed, borderGreen, borderBlue, bAlpha);
 			}
 			
 			for (j in 0...textLength)
@@ -426,7 +426,7 @@ class FlxBitmapText extends FlxSprite
 				
 				_matrix.translate(_point.x + ox, _point.y + oy);
 				
-				drawItem.setData(currFrame, _matrix, textRed, textGreen, textBlue, tAlpha);
+				drawItem.addQuad(currFrame, _matrix, textRed, textGreen, textBlue, tAlpha);
 			}
 			
 			#if !FLX_NO_DEBUG
@@ -1072,7 +1072,7 @@ class FlxBitmapText extends FlxSprite
 			
 			if (alignment == FlxTextAlign.CENTER) 
 			{
-				ox += Std.int((frameWidth - lineWidth) / 2) - padding;
+				ox += Std.int((frameWidth - lineWidth) / 2);
 			}
 			else if (alignment == FlxTextAlign.RIGHT) 
 			{
@@ -1141,6 +1141,9 @@ class FlxBitmapText extends FlxSprite
 				{
 					_flashPoint.setTo(curX, curY);
 					glyph.paint(textBitmap, _flashPoint, true);
+					var charUt8 = new Utf8();
+					charUt8.addChar(charCode);
+					trace(charUt8.toString() + "; " + glyph.frame);
 					curX += glyph.sourceSize.x;
 				}
 			}

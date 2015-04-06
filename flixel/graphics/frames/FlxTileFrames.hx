@@ -11,6 +11,7 @@ import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.math.FlxPoint;
 import flixel.graphics.FlxGraphic;
 import flixel.util.FlxBitmapDataUtil;
+import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 
 /**
@@ -334,6 +335,146 @@ class FlxTileFrames extends FlxFramesCollection
 		var graphic:FlxGraphic = FlxG.bitmap.add(source, false);
 		if (graphic == null)	return null;
 		return fromGraphic(graphic, tileSize, region, tileSpacing);
+	}
+	
+	/**
+	 * This method takes array of tileset bitmaps and the size of tiles in them and then combine them in one big tileset.
+	 * The order of bitmaps in array is important.
+	 * 
+	 * @param	bitmaps		tilesets
+	 * @param	tileSize	the size of tiles (tilesets should have tiles of the same size)
+	 * @return	atlas frames collection, which you can load in tilemaps or sprites:
+	 * 
+	 * var combinedFrames = FlxTileFrames.combineTileSets(bitmaps, new FlxPoint(16, 16));
+	 * tilemap.loadMapFromCSV(mapData, combinedFrames);
+	 * 
+	 * or
+	 * 
+	 * sprite.frames = combinedFrames;
+	 */
+	public static function combineTileSets(bitmaps:Array<BitmapData>, tileSize:FlxPoint):FlxTileFrames
+	{
+		// we need to calculate the size of result bitmap first
+		var totalArea:Int = 0;
+		var rows:Int = 0;
+		var cols:Int = 0;
+		
+		for (bitmap in bitmaps)
+		{
+			cols = Std.int(bitmap.width / tileSize.x);
+			rows = Std.int(bitmap.height / tileSize.y);
+			totalArea += Std.int(cols * tileSize.x * rows * tileSize.y);
+		}
+		
+		var side:Float = Math.sqrt(totalArea);
+		cols = Std.int(side / tileSize.x);
+		rows = Math.ceil(totalArea / (cols * tileSize.x * tileSize.y));
+		var width:Int = Std.int(cols * tileSize.x);
+		var height:Int = Std.int(rows * tileSize.y);
+		
+		// now we'll create result atlas and will blit every tile on it.
+		var combined:BitmapData = new BitmapData(width, height, true, FlxColor.TRANSPARENT);
+		var graphic:FlxGraphic = FlxG.bitmap.add(combined);
+		var result:FlxTileFrames = new FlxTileFrames(graphic);
+		
+		result.region = FlxRect.get(0, 0, width, height);
+		result.atlasFrame = null;
+		result.tileSize = FlxPoint.get(tileSize.x, tileSize.y);
+		result.tileSpacing = FlxPoint.get(0, 0);
+		result.numCols = cols;
+		result.numRows = rows;
+		
+		var frames:FlxTileFrames;
+		var point:Point = new Point(0, 0);
+		
+		for (bitmap in bitmaps)
+		{
+			frames = FlxTileFrames.fromRectangle(bitmap, tileSize);
+			
+			for (frame in frames.frames)
+			{
+				frame.paint(combined, point, true);
+				result.addAtlasFrame(new FlxRect(point.x, point.y, tileSize.x, tileSize.y), new FlxPoint(tileSize.x, tileSize.y), new FlxPoint(0, 0));				
+				point.x += tileSize.x;
+				
+				if (point.x >= combined.width)
+				{
+					point.x = 0;
+					point.y += tileSize.y;
+				}
+			}
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * This method takes array of tile frames collections and then combine them in one big tileset.
+	 * The order of bitmaps in array is important.
+	 * 
+	 * @param	tileframes		tile frames collection to combine tiles from
+	 * @return	atlas frames collection, which you can load in tilemaps or sprites:
+	 * 
+	 * var combinedFrames = FlxTileFrames.combineTileFrames(tileframes);
+	 * tilemap.loadMapFromCSV(mapData, combinedFrames);
+	 * 
+	 * or
+	 * 
+	 * sprite.frames = combinedFrames;
+	 */
+	public static function combineTileFrames(tileframes:Array<FlxTileFrames>):FlxTileFrames
+	{
+		// we need to calculate the size of result bitmap first
+		var totalArea:Int = 0;
+		var rows:Int = 0;
+		var cols:Int = 0;
+		
+		var tileWidth:Int = Std.int(tileframes[0].frames[0].sourceSize.x);
+		var tileHeight:Int = Std.int(tileframes[0].frames[0].sourceSize.y);
+		
+		for (collection in tileframes)
+		{
+			cols = collection.numCols;
+			rows = collection.numRows;
+			totalArea += Std.int(cols * tileWidth * rows * tileHeight);
+		}
+		
+		var side:Float = Math.sqrt(totalArea);
+		cols = Std.int(side / tileWidth);
+		rows = Math.ceil(totalArea / (cols * tileWidth * tileHeight));
+		var width:Int = Std.int(cols * tileWidth);
+		var height:Int = Std.int(rows * tileHeight);
+		
+		// now we'll create result atlas and will blit every tile on it.
+		var combined:BitmapData = new BitmapData(width, height, true, FlxColor.TRANSPARENT);
+		var graphic:FlxGraphic = FlxG.bitmap.add(combined);
+		var result:FlxTileFrames = new FlxTileFrames(graphic);
+		var point:Point = new Point(0, 0);
+		
+		result.region = FlxRect.get(0, 0, width, height);
+		result.atlasFrame = null;
+		result.tileSize = FlxPoint.get(tileWidth, tileHeight);
+		result.tileSpacing = FlxPoint.get(0, 0);
+		result.numCols = cols;
+		result.numRows = rows;
+		
+		for (collection in tileframes)
+		{
+			for (frame in collection.frames)
+			{
+				frame.paint(combined, point, true);
+				result.addAtlasFrame(new FlxRect(point.x, point.y, tileWidth, tileHeight), new FlxPoint(tileWidth, tileHeight), new FlxPoint(0, 0));				
+				point.x += tileWidth;
+				
+				if (point.x >= combined.width)
+				{
+					point.x = 0;
+					point.y += tileHeight;
+				}
+			}
+		}
+		
+		return result;
 	}
 	
 	/**
