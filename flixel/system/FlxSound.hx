@@ -526,7 +526,9 @@ class FlxSound extends FlxBasic
 		_channel = _sound.play(time, numLoops, _transform);
 		if (_channel != null)
 		{
+			#if (cpp || neko)
 			pitch = _pitch;
+			#end
 			_channel.addEventListener(Event.SOUND_COMPLETE, stopped);
 			active = true;
 		}
