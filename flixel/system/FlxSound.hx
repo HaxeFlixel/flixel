@@ -79,6 +79,10 @@ class FlxSound extends FlxBasic
 	 */
 	public var volume(get, set):Float;
 	/**
+	 * Set pitch, which also alters the playback speed. Normal is 1.
+	 */
+	public var pitch(get, set):Float;
+	/**
 	 * The position in runtime of the music playback.
 	 */
 	public var time(default, null):Float;
@@ -107,6 +111,10 @@ class FlxSound extends FlxBasic
 	 * Internal tracker for volume.
 	 */
 	private var _volume:Float;
+	/**
+	 * Internal tracker for pitch.
+	 */
+	private var _pitch:Float = 1.0;
 	/**
 	 * Internal tracker for total volume adjustment.
 	 */
@@ -518,6 +526,7 @@ class FlxSound extends FlxBasic
 		_channel = _sound.play(time, numLoops, _transform);
 		if (_channel != null)
 		{
+			pitch = _pitch;
 			_channel.addEventListener(Event.SOUND_COMPLETE, stopped);
 			active = true;
 		}
@@ -628,6 +637,23 @@ class FlxSound extends FlxBasic
 		updateTransform();
 		return Volume;
 	}
+	
+	
+	private inline function get_pitch():Float
+	{
+		return _pitch;
+	}
+	
+	private function set_pitch(v:Float):Float
+	{
+		#if (cpp || neko)
+		_channel.pitch = v;
+		#else
+		FlxG.log.warn("Pitch is only supported on OpenAL targets (i.e. cpp & neko)");
+		#end
+		return _pitch = v;
+	}
+	
 	
 	private inline function get_pan():Float
 	{
