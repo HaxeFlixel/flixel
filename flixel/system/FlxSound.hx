@@ -78,7 +78,7 @@ class FlxSound extends FlxBasic
 	 * Set volume to a value between 0 and 1 to change how this sound is.
 	 */
 	public var volume(get, set):Float;
-	#if (cpp || neko)
+	#if ((cpp || neko) && openfl_legacy)
 	/**
 	 * Set pitch, which also alters the playback speed. Normal is 1.
 	 */
@@ -113,7 +113,7 @@ class FlxSound extends FlxBasic
 	 * Internal tracker for volume.
 	 */
 	private var _volume:Float;
-	#if (cpp || neko)
+	#if ((cpp || neko) && openfl_legacy)
 	/**
 	 * Internal tracker for pitch.
 	 */
@@ -530,7 +530,7 @@ class FlxSound extends FlxBasic
 		_channel = _sound.play(time, numLoops, _transform);
 		if (_channel != null)
 		{
-			#if (cpp || neko)
+			#if ((cpp || neko) && openfl_legacy)
 			pitch = _pitch;
 			#end
 			_channel.addEventListener(Event.SOUND_COMPLETE, stopped);
@@ -645,7 +645,7 @@ class FlxSound extends FlxBasic
 	}
 	
 	
-	#if (cpp || neko)
+	#if ((cpp || neko) && openfl_legacy)
 	private inline function get_pitch():Float
 	{
 		return _pitch;
