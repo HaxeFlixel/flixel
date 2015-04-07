@@ -67,7 +67,16 @@ class FlxBitmapFont extends FlxFramesCollection
 	 */
 	public var spaceWidth:Int = 0;
 	
+	/**
+	 * Helper map where glyph frames are stored by char codes
+	 */
 	private var glyphMap:Map<Int, FlxFrame>;
+	
+	// TODO: use it...
+	/**
+	 * Helper map where glyph's xAdvance are stored by char codes
+	 */
+	private var glyphAdvance:Map<Int, Int>;
 	
 	/**
 	 * Atlas frame from which this font had been parsed.
@@ -84,6 +93,7 @@ class FlxBitmapFont extends FlxFramesCollection
 		parent.persist = true;
 		parent.destroyOnNoUse = false;
 		glyphMap = new Map<Int, FlxFrame>();
+		glyphAdvance = new Map<Int, Int>();
 	}
 	
 	override public function destroy():Void 
@@ -92,6 +102,7 @@ class FlxBitmapFont extends FlxFramesCollection
 		frame = null;
 		fontName = null;
 		glyphMap = null;
+		glyphAdvance = null;
 	}
 	
 	/**
@@ -232,9 +243,7 @@ class FlxBitmapFont extends FlxFramesCollection
 			
 			offset = FlxPoint.get(xOffset, yOffset);
 			
-			xOffsetAbs = (xOffset >= 0) ? xOffset : -xOffset;
-			
-			font.minOffsetX = (font.minOffsetX > xOffsetAbs) ? xOffsetAbs : font.minOffsetX;
+			font.minOffsetX = (font.minOffsetX < -xOffset) ? -xOffset : font.minOffsetX;
 			
 			charCode = -1;
 			glyph = null;
@@ -584,6 +593,11 @@ class FlxBitmapFont extends FlxFramesCollection
 		return glyphMap.get(charCode);
 	}
 	
+	public inline function getGlyphAdvance(charCode:Int):Int
+	{
+		return glyphAdvance.get(charCode);
+	}
+	
 	public inline function getGlyphWidth(charCode:Int):Float
 	{
 		return glyphMap.exists(charCode) ? glyphMap.get(charCode).sourceSize.x : 0;
@@ -631,6 +645,18 @@ class FlxBitmapFont extends FlxFramesCollection
 		for (glyph in frames)
 		{
 			borderGlyph = glyph.setBorderTo(border);
+			
+			trace(glyph.name);
+			
+			trace("glyph.sourceSize: " + glyph.sourceSize);
+			trace("borderGlyph.sourceSize: " + borderGlyph.sourceSize);
+			
+			trace("glyph.frame: " + glyph.frame);
+			trace("borderGlyph.frame: " + borderGlyph.frame);
+			
+			trace("glyph.offset: " + glyph.offset);
+			trace("borderGlyph.offset: " + borderGlyph.offset);
+			
 			font.pushFrame(borderGlyph);
 			font.glyphMap.set(Utf8.charCodeAt(glyph.name, 0), borderGlyph);
 		}
