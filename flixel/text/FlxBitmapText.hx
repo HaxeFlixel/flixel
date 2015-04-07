@@ -1072,7 +1072,7 @@ class FlxBitmapText extends FlxSprite
 			
 			if (alignment == FlxTextAlign.CENTER) 
 			{
-				ox += Std.int((frameWidth - lineWidth) / 2) - padding;
+				ox += Std.int((frameWidth - lineWidth) / 2);
 			}
 			else if (alignment == FlxTextAlign.RIGHT) 
 			{
@@ -1141,6 +1141,9 @@ class FlxBitmapText extends FlxSprite
 				{
 					_flashPoint.setTo(curX, curY);
 					glyph.paint(textBitmap, _flashPoint, true);
+					var charUt8 = new Utf8();
+					charUt8.addChar(charCode);
+					trace(charUt8.toString() + "; " + glyph.frame);
 					curX += glyph.sourceSize.x;
 				}
 			}
