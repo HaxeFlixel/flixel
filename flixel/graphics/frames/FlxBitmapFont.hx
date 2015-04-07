@@ -645,18 +645,6 @@ class FlxBitmapFont extends FlxFramesCollection
 		for (glyph in frames)
 		{
 			borderGlyph = glyph.setBorderTo(border);
-			
-			trace(glyph.name);
-			
-			trace("glyph.sourceSize: " + glyph.sourceSize);
-			trace("borderGlyph.sourceSize: " + borderGlyph.sourceSize);
-			
-			trace("glyph.frame: " + glyph.frame);
-			trace("borderGlyph.frame: " + borderGlyph.frame);
-			
-			trace("glyph.offset: " + glyph.offset);
-			trace("borderGlyph.offset: " + borderGlyph.offset);
-			
 			font.pushFrame(borderGlyph);
 			font.glyphMap.set(Utf8.charCodeAt(glyph.name, 0), borderGlyph);
 		}
