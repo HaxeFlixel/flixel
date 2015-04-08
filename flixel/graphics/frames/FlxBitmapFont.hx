@@ -569,7 +569,7 @@ class FlxBitmapFont extends FlxFramesCollection
 		var w:Float = glyphFrame.sourceSize.x;
 		var h:Float = glyphFrame.sourceSize.y;
 		w += (offset.x > 0) ? offset.x : 0;
-		h += offset.y;
+		h += (offset.y > 0) ? offset.y : 0;
 		glyphFrame.sourceSize.set(w, h);
 		glyphFrame.offset.addPoint(offset);
 		glyphFrame.name = charName;
