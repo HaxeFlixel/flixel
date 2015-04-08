@@ -434,9 +434,13 @@ class FlxFrame implements IFlxDestroyable
 			clippedRect.height = frame.width;
 		}
 		
-		rect.offset( -offset.x, -offset.y);
+		var ox:Float = Math.max(offset.x, 0);
+		var oy:Float = Math.max(offset.y, 0);
+		
+		rect.offset( -ox, -oy);
 		var frameRect:FlxRect = clippedRect.intersection(rect);
 		clippedRect = FlxDestroyUtil.put(clippedRect);
+		rect.offset(ox, oy);
 		
 		if (frameRect.isEmpty)
 		{
@@ -448,7 +452,7 @@ class FlxFrame implements IFlxDestroyable
 		else
 		{
 			frameToFill.type = FlxFrameType.REGULAR;
-			frameToFill.offset.set(frameRect.x, frameRect.y).subtract(rect.x, rect.y);
+			frameToFill.offset.set(frameRect.x, frameRect.y).subtract(rect.x, rect.y).addPoint(offset);
 			
 			var p1:FlxPoint = FlxPoint.flxPoint1.set(frameRect.x, frameRect.y);
 			var p2:FlxPoint = FlxPoint.flxPoint2.set(frameRect.right, frameRect.bottom);
@@ -481,7 +485,6 @@ class FlxFrame implements IFlxDestroyable
 			frameToFill.cacheFrameMatrix();
 		}
 		
-		rect.offset(offset.x, offset.y);
 		return frameToFill;
 	}
 	

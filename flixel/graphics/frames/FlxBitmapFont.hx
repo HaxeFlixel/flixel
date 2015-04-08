@@ -72,7 +72,6 @@ class FlxBitmapFont extends FlxFramesCollection
 	 */
 	private var glyphMap:Map<Int, FlxFrame>;
 	
-	// TODO: use it...
 	/**
 	 * Helper map where glyph's xAdvance are stored by char codes
 	 */
@@ -566,11 +565,17 @@ class FlxBitmapFont extends FlxFramesCollection
 		var charName:String = utf8.toString();
 		if (frame.width == 0 || frame.height == 0 || getByName(charName) != null)	return;
 		var glyphFrame:FlxFrame = this.frame.subFrameTo(frame);
-		glyphFrame.sourceSize.set(xAdvance, frame.height + offset.y);
+		
+		var w:Float = glyphFrame.sourceSize.x;
+		var h:Float = glyphFrame.sourceSize.y;
+		w += (offset.x > 0) ? offset.x : 0;
+		h += offset.y;
+		glyphFrame.sourceSize.set(w, h);
 		glyphFrame.offset.addPoint(offset);
 		glyphFrame.name = charName;
 		pushFrame(glyphFrame);
 		glyphMap.set(charCode, glyphFrame);
+		glyphAdvance.set(charCode, xAdvance);
 		offset.put();
 	}
 	
@@ -642,11 +647,14 @@ class FlxBitmapFont extends FlxFramesCollection
 		font.bold = bold;
 		
 		var borderGlyph:FlxFrame;
+		var code:Int;
 		for (glyph in frames)
 		{
 			borderGlyph = glyph.setBorderTo(border);
 			font.pushFrame(borderGlyph);
-			font.glyphMap.set(Utf8.charCodeAt(glyph.name, 0), borderGlyph);
+			code = Utf8.charCodeAt(glyph.name, 0);
+			font.glyphMap.set(code, borderGlyph);
+			font.glyphAdvance.set(code, glyphAdvance.get(code));
 		}
 		
 		font.updateSourceHeight();

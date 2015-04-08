@@ -605,7 +605,7 @@ class FlxBitmapText extends FlxSprite
 			else if (font.glyphExists(charCode))
 			{
 				glyphFrame = font.getGlyph(charCode);
-				charWidth = glyphFrame.sourceSize.x;
+				charWidth = font.getGlyphAdvance(charCode);
 				
 				if (c == (lineLength - 1))
 				{
@@ -1143,8 +1143,7 @@ class FlxBitmapText extends FlxSprite
 					glyph.paint(textBitmap, _flashPoint, true);
 					var charUt8 = new Utf8();
 					charUt8.addChar(charCode);
-					trace(charUt8.toString() + "; " + glyph.frame);
-					curX += glyph.sourceSize.x;
+					curX += font.getGlyphAdvance(charCode);
 				}
 			}
 			
@@ -1187,7 +1186,7 @@ class FlxBitmapText extends FlxSprite
 					textData[pos++] = charCode;
 					textData[pos++] = curX;
 					textData[pos++] = curY;
-					curX += glyph.sourceSize.x;
+					curX += font.getGlyphAdvance(charCode);
 				}
 			}
 			
