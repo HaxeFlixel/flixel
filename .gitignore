@@ -165,6 +165,7 @@ pip-log.txt
 # export directories
 export
 bin
+dump
 
 *.hash
 Other/SpriteStressTest/
