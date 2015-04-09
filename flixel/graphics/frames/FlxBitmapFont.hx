@@ -598,7 +598,7 @@ class FlxBitmapFont extends FlxFramesCollection
 	
 	public inline function getCharAdvance(charCode:Int):Int
 	{
-		return charAdvance.get(charCode);
+		return charAdvance.exists(charCode) ? charAdvance.get(charCode) : 0;
 	}
 	
 	public inline function getCharWidth(charCode:Int):Float

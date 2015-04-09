@@ -585,8 +585,6 @@ class FlxBitmapText extends FlxSprite
 		
 		var charCode:Int;						// current character in word
 		var charWidth:Float;					// the width of current character
-		
-		var widthPlusOffset:Int;
 		var charFrame:FlxFrame;
 		
 		for (c in 0...lineLength)
@@ -609,11 +607,7 @@ class FlxBitmapText extends FlxSprite
 				
 				if (c == (lineLength - 1))
 				{
-					widthPlusOffset = Std.int(charFrame.offset.x + charFrame.frame.width);
-					if (widthPlusOffset > charWidth)
-					{
-						charWidth = widthPlusOffset;
-					}
+					charWidth = Std.int(charFrame.sourceSize.x);
 				}
 			}
 			
@@ -670,7 +664,7 @@ class FlxBitmapText extends FlxSprite
 				}
 				else
 				{
-					charWidth = font.getCharWidth(charCode);
+					charWidth = font.getCharAdvance(charCode);
 				}
 				charWidth += letterSpacing;
 				
@@ -857,7 +851,7 @@ class FlxBitmapText extends FlxSprite
 					}
 					else
 					{
-						charWidth = font.getCharWidth(charCode);
+						charWidth = font.getCharAdvance(charCode);
 					}
 					
 					wordWidth += charWidth;
@@ -966,7 +960,7 @@ class FlxBitmapText extends FlxSprite
 					}
 					else
 					{
-						charWidth = font.getCharWidth(charCode);
+						charWidth = font.getCharAdvance(charCode);
 					}
 					
 					if (subLineWidth + charWidth > _fieldWidth - 2 * padding)
