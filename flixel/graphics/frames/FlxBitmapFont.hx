@@ -24,7 +24,7 @@ import haxe.xml.Fast;
 import openfl.Assets;
 
 /**
- * Holds information and bitmap glyphs for a bitmap font.
+ * Holds information and bitmap characters for a bitmap font.
  */
 class FlxBitmapFont extends FlxFramesCollection
 {
@@ -39,7 +39,7 @@ class FlxBitmapFont extends FlxFramesCollection
 	/**
 	 * Default letters for XNA font.
 	 */
-	public static inline var DEFAULT_GLYPHS:String = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
+	public static inline var DEFAULT_CHARS:String = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
 	
 	/**
 	 * The size of the font. Can be useful for AngelCode fonts.
@@ -68,14 +68,14 @@ class FlxBitmapFont extends FlxFramesCollection
 	public var spaceWidth:Int = 0;
 	
 	/**
-	 * Helper map where glyph frames are stored by char codes
+	 * Helper map where character's frames are stored by char codes
 	 */
-	private var glyphMap:Map<Int, FlxFrame>;
+	private var charMap:Map<Int, FlxFrame>;
 	
 	/**
-	 * Helper map where glyph's xAdvance are stored by char codes
+	 * Helper map where character's xAdvance are stored by char codes
 	 */
-	private var glyphAdvance:Map<Int, Int>;
+	private var charAdvance:Map<Int, Int>;
 	
 	/**
 	 * Atlas frame from which this font had been parsed.
@@ -91,8 +91,8 @@ class FlxBitmapFont extends FlxFramesCollection
 		this.frame = frame;
 		parent.persist = true;
 		parent.destroyOnNoUse = false;
-		glyphMap = new Map<Int, FlxFrame>();
-		glyphAdvance = new Map<Int, Int>();
+		charMap = new Map<Int, FlxFrame>();
+		charAdvance = new Map<Int, Int>();
 	}
 	
 	override public function destroy():Void 
@@ -100,8 +100,8 @@ class FlxBitmapFont extends FlxFramesCollection
 		super.destroy();
 		frame = null;
 		fontName = null;
-		glyphMap = null;
-		glyphAdvance = null;
+		charMap = null;
+		charAdvance = null;
 	}
 	
 	/**
@@ -215,15 +215,13 @@ class FlxBitmapFont extends FlxFramesCollection
 		font.bold = (Std.parseInt(fast.node.info.att.bold) != 0);
 		font.italic = (Std.parseInt(fast.node.info.att.italic) != 0);
 		
-		var glyphFrame:FlxFrame;
 		var frame:FlxRect;
 		var frameHeight:Int;
 		var offset:FlxPoint;
-		var glyph:String;
+		var charStr:String;
 		var charCode:Int;
 		var xOffset:Int, yOffset:Int, xAdvance:Int;
 		var xOffsetAbs:Int;
-		var glyphWidth:Int, glyphHeight:Int;
 		
 		var chars = fast.node.chars;
 		
@@ -245,38 +243,38 @@ class FlxBitmapFont extends FlxFramesCollection
 			font.minOffsetX = (font.minOffsetX < -xOffset) ? -xOffset : font.minOffsetX;
 			
 			charCode = -1;
-			glyph = null;
+			charStr = null;
 			
 			if (char.has.letter) // The ASCII value of the character this line is describing. Helpful for debugging
 			{
-				glyph = char.att.letter;
+				charStr = char.att.letter;
 			}
 			else if (char.has.id) // The character number in the ASCII table.
 			{
 				charCode = Std.parseInt(char.att.id);
 			}
 			
-			if (charCode == -1 && glyph == null) 
+			if (charCode == -1 && charStr == null) 
 			{
 				throw 'Invalid font xml data!';
 			}
 			
-			if (glyph != null)
+			if (charStr != null)
 			{
-				glyph = switch(glyph) 
+				charStr = switch(charStr) 
 				{
 					case "space": ' ';
 					case "&quot;": '"';
 					case "&amp;": '&';
 					case "&gt;": '>';
 					case "&lt;": '<';
-					default: glyph;
+					default: charStr;
 				}
 				
-				charCode = Utf8.charCodeAt(glyph, 0);
+				charCode = Utf8.charCodeAt(charStr, 0);
 			}
 			
-			font.addGlyphFrame(charCode, frame, offset, xAdvance);
+			font.addCharFrame(charCode, frame, offset, xAdvance);
 			
 			if (charCode == spaceCode)
 			{
@@ -297,11 +295,11 @@ class FlxBitmapFont extends FlxFramesCollection
 	 * May work incorrectly on html5 target.
 	 * 
 	 * @param	source			Source image for this font.
-	 * @param	letters			String of glyphs contained in the source image, in order (ex. " abcdefghijklmnopqrstuvwxyz"). Defaults to DEFAULT_GLYPHS.
-	 * @param	glyphBGColor	An additional background color to remove. Defaults to 0xFF202020, often used for glyphs background.
+	 * @param	letters			String of characters contained in the source image, in order (ex. " abcdefghijklmnopqrstuvwxyz"). Defaults to DEFAULT_CHARS.
+	 * @param	charBGColor		An additional background color to remove. Defaults to 0xFF202020, often used for characters background.
 	 * @return	Generated bitmap font object.
 	 */
-	public static function fromXNA(source:FlxBitmapFontGraphicAsset, letters:String = null, glyphBGColor:Int = FlxColor.TRANSPARENT):FlxBitmapFont
+	public static function fromXNA(source:FlxBitmapFontGraphicAsset, letters:String = null, charBGColor:Int = FlxColor.TRANSPARENT):FlxBitmapFont
 	{
 		var graphic:FlxGraphic = null;
 		var frame:FlxFrame = null;
@@ -321,7 +319,7 @@ class FlxBitmapFont extends FlxFramesCollection
 		if (font != null)
 			return font;
 		
-		letters = (letters == null) ? DEFAULT_GLYPHS : letters;
+		letters = (letters == null) ? DEFAULT_CHARS : letters;
 		font = new FlxBitmapFont(frame);
 		font.fontName = graphic.key;
 		
@@ -368,7 +366,7 @@ class FlxBitmapFont extends FlxFramesCollection
 					p.setTo(gx, gy);
 					transformPoint(p, frame);
 					
-					// find width and height of glyph
+					// find width and height of char
 					while (bmd.getPixel(Std.int(p.x), Std.int(p.y)) != globalBGColor) 
 					{
 						gx++;
@@ -394,7 +392,7 @@ class FlxBitmapFont extends FlxFramesCollection
 					offset = FlxPoint.get(0, 0);
 					xAdvance = gw;
 					
-					font.addGlyphFrame(charCode, rect, offset, xAdvance);
+					font.addCharFrame(charCode, rect, offset, xAdvance);
 					
 					if (charCode == spaceCode)
 					{
@@ -405,7 +403,7 @@ class FlxBitmapFont extends FlxFramesCollection
 					if (gh > rowHeight) rowHeight = gh;
 					if (gh > font.size) font.size = gh;
 					
-					// go to next glyph
+					// go to next char
 					cx += gw;
 					letterIdx++;
 				}
@@ -434,13 +432,13 @@ class FlxBitmapFont extends FlxFramesCollection
 		bmd.threshold(bmd, frameRect, point, "==", bgColor32, FlxColor.TRANSPARENT, FlxColor.WHITE, true);
 		#end
 		
-		if (glyphBGColor != FlxColor.TRANSPARENT)
+		if (charBGColor != FlxColor.TRANSPARENT)
 		{
-			bmd.threshold(bmd, frameRect, point, "==", glyphBGColor, FlxColor.TRANSPARENT, FlxColor.WHITE, true);
+			bmd.threshold(bmd, frameRect, point, "==", charBGColor, FlxColor.TRANSPARENT, FlxColor.WHITE, true);
 		}
 		#else
 		FlxBitmapDataUtil.replaceColor(bmd, bgColor32, FlxColor.TRANSPARENT, false, frame.frame);
-		FlxBitmapDataUtil.replaceColor(bmd, glyphBGColor, FlxColor.TRANSPARENT, false, frame.frame);
+		FlxBitmapDataUtil.replaceColor(bmd, charBGColor, FlxColor.TRANSPARENT, false, frame.frame);
 		#end
 		return font;
 	}
@@ -497,7 +495,7 @@ class FlxBitmapFont extends FlxFramesCollection
 		if (font != null)
 			return font;
 		
-		letters = (letters == null) ? DEFAULT_GLYPHS : letters;
+		letters = (letters == null) ? DEFAULT_CHARS : letters;
 		region = (region == null) ? FlxRect.flxRect.set(0, 0, frame.sourceSize.x, frame.sourceSize.y) : region;
 		spacing = (spacing == null) ? new FlxPoint(0, 0) : spacing;
 		
@@ -536,7 +534,7 @@ class FlxBitmapFont extends FlxFramesCollection
 			{
 				charRect = new FlxRect(startX + i * spacedWidth, startY + j * spacedHeight, charWidth, charHeight);
 				offset = FlxPoint.get(0, 0);
-				font.addGlyphFrame(Utf8.charCodeAt(letters, letterIndex), charRect, offset, xAdvance);
+				font.addCharFrame(Utf8.charCodeAt(letters, letterIndex), charRect, offset, xAdvance);
 				letterIndex++;
 				
 				if (letterIndex >= numLetters)
@@ -551,31 +549,31 @@ class FlxBitmapFont extends FlxFramesCollection
 	}
 	
 	/**
-	 * Internal method which creates and add glyph frames into this font.
+	 * Internal method which creates and add char frames into this font.
 	 * 
-	 * @param	charCode		Char code for glyph frame.
-	 * @param	frame			Glyph area from source image.	
-	 * @param	offset			Offset before rendering this glyph.
-	 * @param	xAdvance		How much cursor will jump after this glyph.
+	 * @param	charCode		Char code for char frame.
+	 * @param	frame			Character region from source image.	
+	 * @param	offset			Offset before rendering this char.
+	 * @param	xAdvance		How much cursor will jump after this char.
 	 */
-	private function addGlyphFrame(charCode:Int, frame:FlxRect, offset:FlxPoint, xAdvance:Int):Void
+	private function addCharFrame(charCode:Int, frame:FlxRect, offset:FlxPoint, xAdvance:Int):Void
 	{
 		var utf8:Utf8 = new Utf8();
 		utf8.addChar(charCode);
 		var charName:String = utf8.toString();
 		if (frame.width == 0 || frame.height == 0 || getByName(charName) != null)	return;
-		var glyphFrame:FlxFrame = this.frame.subFrameTo(frame);
+		var charFrame:FlxFrame = this.frame.subFrameTo(frame);
 		
-		var w:Float = glyphFrame.sourceSize.x;
-		var h:Float = glyphFrame.sourceSize.y;
+		var w:Float = charFrame.sourceSize.x;
+		var h:Float = charFrame.sourceSize.y;
 		w += (offset.x > 0) ? offset.x : 0;
 		h += (offset.y > 0) ? offset.y : 0;
-		glyphFrame.sourceSize.set(w, h);
-		glyphFrame.offset.addPoint(offset);
-		glyphFrame.name = charName;
-		pushFrame(glyphFrame);
-		glyphMap.set(charCode, glyphFrame);
-		glyphAdvance.set(charCode, xAdvance);
+		charFrame.sourceSize.set(w, h);
+		charFrame.offset.addPoint(offset);
+		charFrame.name = charName;
+		pushFrame(charFrame);
+		charMap.set(charCode, charFrame);
+		charAdvance.set(charCode, xAdvance);
 		offset.put();
 	}
 	
@@ -588,24 +586,24 @@ class FlxBitmapFont extends FlxFramesCollection
 		}
 	}
 	
-	public inline function glyphExists(charCode:Int):Bool
+	public inline function charExists(charCode:Int):Bool
 	{
-		return glyphMap.exists(charCode);
+		return charMap.exists(charCode);
 	}
 	
-	public inline function getGlyph(charCode:Int):FlxFrame
+	public inline function getCharFrame(charCode:Int):FlxFrame
 	{
-		return glyphMap.get(charCode);
+		return charMap.get(charCode);
 	}
 	
-	public inline function getGlyphAdvance(charCode:Int):Int
+	public inline function getCharAdvance(charCode:Int):Int
 	{
-		return glyphAdvance.get(charCode);
+		return charAdvance.get(charCode);
 	}
 	
-	public inline function getGlyphWidth(charCode:Int):Float
+	public inline function getCharWidth(charCode:Int):Float
 	{
-		return glyphMap.exists(charCode) ? glyphMap.get(charCode).sourceSize.x : 0;
+		return charMap.exists(charCode) ? charMap.get(charCode).sourceSize.x : 0;
 	}
 	
 	public static function findFont(frame:FlxFrame, border:FlxPoint = null):FlxBitmapFont
@@ -646,15 +644,15 @@ class FlxBitmapFont extends FlxFramesCollection
 		font.italic = italic;
 		font.bold = bold;
 		
-		var borderGlyph:FlxFrame;
+		var charWithBorder:FlxFrame;
 		var code:Int;
-		for (glyph in frames)
+		for (char in frames)
 		{
-			borderGlyph = glyph.setBorderTo(border);
-			font.pushFrame(borderGlyph);
-			code = Utf8.charCodeAt(glyph.name, 0);
-			font.glyphMap.set(code, borderGlyph);
-			font.glyphAdvance.set(code, glyphAdvance.get(code));
+			charWithBorder = char.setBorderTo(border);
+			font.pushFrame(charWithBorder);
+			code = Utf8.charCodeAt(char.name, 0);
+			font.charMap.set(code, charWithBorder);
+			font.charAdvance.set(code, charAdvance.get(code));
 		}
 		
 		font.updateSourceHeight();

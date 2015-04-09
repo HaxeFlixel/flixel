@@ -389,7 +389,7 @@ class FlxBitmapText extends FlxSprite
 			{
 				dataPos = j * 3;
 				
-				currFrame = font.getGlyph(Std.int(borderDrawData[dataPos]));
+				currFrame = font.getCharFrame(Std.int(borderDrawData[dataPos]));
 				
 				currTileX = borderDrawData[dataPos + 1];
 				currTileY = borderDrawData[dataPos + 2];
@@ -411,7 +411,7 @@ class FlxBitmapText extends FlxSprite
 			{
 				dataPos = j * 3;
 				
-				currFrame = font.getGlyph(Std.int(textDrawData[dataPos]));
+				currFrame = font.getCharFrame(Std.int(textDrawData[dataPos]));
 				
 				currTileX = textDrawData[dataPos + 1];
 				currTileY = textDrawData[dataPos + 2];
@@ -587,7 +587,7 @@ class FlxBitmapText extends FlxSprite
 		var charWidth:Float;					// the width of current character
 		
 		var widthPlusOffset:Int;
-		var glyphFrame:FlxFrame;
+		var charFrame:FlxFrame;
 		
 		for (c in 0...lineLength)
 		{
@@ -602,14 +602,14 @@ class FlxBitmapText extends FlxSprite
 			{
 				charWidth = tabWidth;
 			}
-			else if (font.glyphExists(charCode))
+			else if (font.charExists(charCode))
 			{
-				glyphFrame = font.getGlyph(charCode);
-				charWidth = font.getGlyphAdvance(charCode);
+				charFrame = font.getCharFrame(charCode);
+				charWidth = font.getCharAdvance(charCode);
 				
 				if (c == (lineLength - 1))
 				{
-					widthPlusOffset = Std.int(glyphFrame.offset.x + glyphFrame.frame.width);
+					widthPlusOffset = Std.int(charFrame.offset.x + charFrame.frame.width);
 					if (widthPlusOffset > charWidth)
 					{
 						charWidth = widthPlusOffset;
@@ -670,7 +670,7 @@ class FlxBitmapText extends FlxSprite
 				}
 				else
 				{
-					charWidth = font.getGlyphWidth(charCode);
+					charWidth = font.getCharWidth(charCode);
 				}
 				charWidth += letterSpacing;
 				
@@ -857,7 +857,7 @@ class FlxBitmapText extends FlxSprite
 					}
 					else
 					{
-						charWidth = font.getGlyphWidth(charCode);
+						charWidth = font.getCharWidth(charCode);
 					}
 					
 					wordWidth += charWidth;
@@ -966,7 +966,7 @@ class FlxBitmapText extends FlxSprite
 					}
 					else
 					{
-						charWidth = font.getGlyphWidth(charCode);
+						charWidth = font.getCharWidth(charCode);
 					}
 					
 					if (subLineWidth + charWidth > _fieldWidth - 2 * padding)
@@ -987,7 +987,7 @@ class FlxBitmapText extends FlxSprite
 							subLineUtf8.addChar(charCode);
 							subLineWidth = startX + charWidth + letterSpacing;
 						}
-						else	// the line is too tight to hold even one glyph
+						else	// the line is too tight to hold even one character
 						{
 							subLineUtf8 = new Utf8();
 							subLineUtf8.addChar(charCode);
@@ -1112,7 +1112,7 @@ class FlxBitmapText extends FlxSprite
 	
 	private function blitLine(line:String, startX:Int, startY:Int):Void
 	{
-		var glyph:FlxFrame;
+		var charFrame:FlxFrame;
 		var charCode:Int;
 		var curX:Float = startX;
 		var curY:Int = startY;
@@ -1136,14 +1136,14 @@ class FlxBitmapText extends FlxSprite
 			}
 			else
 			{
-				glyph = font.getGlyph(charCode);
-				if (glyph != null)
+				charFrame = font.getCharFrame(charCode);
+				if (charFrame != null)
 				{
 					_flashPoint.setTo(curX, curY);
-					glyph.paint(textBitmap, _flashPoint, true);
+					charFrame.paint(textBitmap, _flashPoint, true);
 					var charUt8 = new Utf8();
 					charUt8.addChar(charCode);
-					curX += font.getGlyphAdvance(charCode);
+					curX += font.getCharAdvance(charCode);
 				}
 			}
 			
@@ -1154,7 +1154,7 @@ class FlxBitmapText extends FlxSprite
 	private function tileLine(line:String, startX:Int, startY:Int):Void
 	{
 		#if FLX_RENDER_TILE
-		var glyph:FlxFrame;
+		var charFrame:FlxFrame;
 		var pos:Int = textData.length;
 		
 		var charCode:Int;
@@ -1180,13 +1180,13 @@ class FlxBitmapText extends FlxSprite
 			}
 			else
 			{
-				glyph = font.getGlyph(charCode);
-				if (glyph != null)
+				charFrame = font.getCharFrame(charCode);
+				if (charFrame != null)
 				{
 					textData[pos++] = charCode;
 					textData[pos++] = curX;
 					textData[pos++] = curY;
-					curX += font.getGlyphAdvance(charCode);
+					curX += font.getCharAdvance(charCode);
 				}
 			}
 			
