@@ -653,7 +653,9 @@ class FlxSound extends FlxBasic
 	
 	private function set_pitch(v:Float):Float
 	{
-		return _pitch = _channel.pitch = v;
+		if (_channel != null)
+			_channel.pitch = v;
+		return _pitch = v;
 	}
 	#end
 	
