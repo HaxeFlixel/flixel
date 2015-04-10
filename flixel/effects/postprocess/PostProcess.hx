@@ -176,6 +176,7 @@ class PostProcess extends OpenGLView
 		time += elapsed;
 	}
 
+	#if openfl_legacy
 	/**
 	 * Renders to a framebuffer or the screen every frame
 	 */
@@ -225,6 +226,7 @@ class PostProcess extends OpenGLView
 			trace("INVALID_FRAMEBUFFER_OPERATION!!");
 		}
 	}
+	#end
 
 	private var framebuffer:GLFramebuffer;
 	private var renderbuffer:GLRenderbuffer;
