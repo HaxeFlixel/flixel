@@ -535,7 +535,8 @@ class FlxCamera extends FlxBasic
 		drawItem.addQuad(frame, _helperMatrix, cr, cg, cb, ca);
 	}
 	
-	public function drawVertex():Void
+	// TODO: implement it...
+	public function drawTriangles():Void
 	{
 		
 	}
@@ -547,10 +548,17 @@ class FlxCamera extends FlxBasic
 	
 	public function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle, destPoint:Point, cr:Float = 1.0, cg:Float = 1.0, cb:Float = 1.0, ca:Float = 1.0, blend:BlendMode = null, smoothing:Bool = false):Void
 	{
-		buffer.copyPixels(pixels, sourceRect, destPoint, null, null, true);
+		if (pixels != null)
+		{
+			buffer.copyPixels(pixels, sourceRect, destPoint, null, null, true);
+		}
+		else if (frame != null)
+		{
+			frame.paint(buffer, destPoint, true);
+		}
 	}
 	
-	public function drawVertex():Void
+	public function drawTriangles():Void
 	{
 		
 	}
