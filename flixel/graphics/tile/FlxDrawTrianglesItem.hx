@@ -5,6 +5,7 @@ import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.tile.FlxDrawBaseItem.FlxDrawItemType;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
 import flixel.util.FlxColor;
 import openfl.display.Graphics;
 import openfl.Vector;
@@ -27,6 +28,8 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 	public var indicesPosition:Int = 0;
 	public var colorsPosition:Int = 0;
 	
+	private var bounds:FlxRect;
+	
 	public function new() 
 	{
 		super();
@@ -43,6 +46,8 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		uvt = new Array<Float>();
 		colors = new Array<Int>();
 		#end
+		
+		bounds = new FlxRect();
 	}
 	
 	override public function render(camera:FlxCamera):Void 
@@ -94,6 +99,110 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		indices = null;
 		uvt = null;
 		colors = null;
+		bounds = null;
+	}
+	
+	public function addTriangles(vertices:DrawData<Float>, indices:DrawData<Int>, uvs:DrawData<Float>, colors:DrawData<Int> = null, position:FlxPoint = null, cameraBounds:FlxRect = null):Void
+	{
+		if (position == null)
+		{
+			position = FlxPoint.flxPoint1.set(0, 0);
+		}
+		
+		if (cameraBounds == null)
+		{
+			cameraBounds = FlxRect.flxRect.set(0, 0, FlxG.width, FlxG.height);
+		}
+		
+		var verticesLength:Int = vertices.length;
+		var prevVerticesLength:Int = this.vertices.length;
+		var numberOfVertices:Int = Std.int(verticesLength / 2);
+		var prevIndicesLength:Int = this.indices.length;
+		var prevColorsLength:Int = this.colors.length;
+		var prevNumberOfVertices:Int = this.numVertices;
+		
+		var tempX:Float, tempY:Float;
+		var i:Int = 0;
+		var currentVertexPosition:Int = prevVerticesLength;
+		
+		while (i < verticesLength)
+		{
+			tempX = position.x + vertices[i]; 
+			tempY = position.y + vertices[i + 1];
+			
+			this.vertices[currentVertexPosition++] = tempX;
+			this.vertices[currentVertexPosition++] = tempY;
+			
+			if (i == 0)
+			{
+				bounds.set(tempX, tempY, 0, 0);
+			}
+			else
+			{
+				inflateBounds(bounds, tempX, tempY);
+			}
+			
+			i += 2;
+		}
+		
+		var vis:Bool = cameraBounds.overlaps(bounds);
+		if (!vis)
+		{
+			this.vertices.splice(this.vertices.length - verticesLength, verticesLength);
+		}
+		else
+		{
+			for (i in 0...verticesLength)
+			{
+				uvt[prevVerticesLength + i] = uvs[i];
+			}
+			
+			var indicesLength:Int = indices.length;
+			for (i in 0...indicesLength)
+			{
+				this.indices[prevIndicesLength + i] = indices[i] + prevNumberOfVertices;
+			}
+			
+			if (colored)
+			{
+				for (i in 0...numberOfVertices)
+				{
+					this.colors[prevColorsLength + i] = colors[i];
+				}
+				
+				colorsPosition += numberOfVertices;
+			}
+			
+			verticesPosition += verticesLength;
+			indicesPosition += indicesLength;
+		}
+	}
+	
+	public static inline function inflateBounds(bounds:FlxRect, x:Float, y:Float):FlxRect
+	{
+		if (x < bounds.x) 
+		{
+			bounds.width += bounds.x - x;
+			bounds.x = x;
+		}
+		
+		if (y < bounds.y) 
+		{
+			bounds.height += bounds.y - y;
+			bounds.y = y;
+		}
+		
+		if (x > bounds.x + bounds.width) 
+		{
+			bounds.width = x - bounds.x;
+		}
+		
+		if (y > bounds.y + bounds.height) 
+		{
+			bounds.height = y - bounds.y;
+		}
+		
+		return bounds;
 	}
 	
 	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix,
