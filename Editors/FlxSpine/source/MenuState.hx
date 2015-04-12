@@ -1,26 +1,20 @@
 package;
 
+import flixel.addons.editors.spine.FlxSpine;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.text.FlxText;
-import flixel.addons.editors.spine.FlxSpine;
 import testclasses.SpineBoyTest;
 
-/**
- * A FlxState which can be used for the game's menu.
- */
 class MenuState extends FlxState
 {
 	var spineSprite:FlxSpine;
-	/**
-	 * Function that is called up when to state is created to set it up.
-	 */
+	
 	override public function create():Void
 	{
-		// Set a background color
 		FlxG.cameras.bgColor = 0xff131c1b;
 		
-		spineSprite = new SpineBoyTest(FlxSpine.readSkeletonData("spineboy", "assets", 0.6), 300, 420);
+		spineSprite = new SpineBoyTest(FlxSpine.readSkeletonData("spineboy", "spineboy", "assets", 0.6), 300, 440);
 		spineSprite.antialiasing = true;
 		add(spineSprite);
 		
@@ -34,10 +28,8 @@ class MenuState extends FlxState
 	override public function update(elapsed:Float):Void
 	{
 		// toggle debug display
-		#if !FLX_NO_DEBUG
 		if (FlxG.keys.justPressed.SPACE)
 			FlxG.debugger.drawDebug = !FlxG.debugger.drawDebug;
-		#end
 		
 		// movement
 		if (FlxG.keys.anyPressed([W, UP]))

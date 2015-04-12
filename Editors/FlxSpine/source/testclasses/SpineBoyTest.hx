@@ -1,4 +1,5 @@
 package  testclasses;
+
 import flixel.FlxG;
 import flixel.addons.editors.spine.FlxSpine;
 import spinehaxe.SkeletonData;
@@ -9,10 +10,9 @@ import spinehaxe.SkeletonData;
  */
 class SpineBoyTest extends FlxSpine
 {
-
-	public function new(skeletonData:SkeletonData,  X:Float = 0, Y:Float = 0) 
+	public function new(skeletonData:SkeletonData, x:Float = 0, y:Float = 0) 
 	{
-		super(skeletonData, X, Y);
+		super(skeletonData, x, y);
 		
 		stateData.setMixByName("walk", "jump", 0.2);
 		stateData.setMixByName("jump", "walk", 0.4);
