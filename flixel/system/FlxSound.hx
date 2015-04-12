@@ -78,6 +78,12 @@ class FlxSound extends FlxBasic
 	 * Set volume to a value between 0 and 1 to change how this sound is.
 	 */
 	public var volume(get, set):Float;
+	#if ((cpp || neko) && openfl_legacy)
+	/**
+	 * Set pitch, which also alters the playback speed. Default is 1.
+	 */
+	public var pitch(get, set):Float;
+	#end
 	/**
 	 * The position in runtime of the music playback.
 	 */
@@ -107,6 +113,12 @@ class FlxSound extends FlxBasic
 	 * Internal tracker for volume.
 	 */
 	private var _volume:Float;
+	#if ((cpp || neko) && openfl_legacy)
+	/**
+	 * Internal tracker for pitch.
+	 */
+	private var _pitch:Float = 1.0;
+	#end
 	/**
 	 * Internal tracker for total volume adjustment.
 	 */
@@ -518,6 +530,9 @@ class FlxSound extends FlxBasic
 		_channel = _sound.play(time, numLoops, _transform);
 		if (_channel != null)
 		{
+			#if ((cpp || neko) && openfl_legacy)
+			pitch = _pitch;
+			#end
 			_channel.addEventListener(Event.SOUND_COMPLETE, stopped);
 			active = true;
 		}
@@ -628,6 +643,22 @@ class FlxSound extends FlxBasic
 		updateTransform();
 		return Volume;
 	}
+	
+	
+	#if ((cpp || neko) && openfl_legacy)
+	private inline function get_pitch():Float
+	{
+		return _pitch;
+	}
+	
+	private function set_pitch(v:Float):Float
+	{
+		if (_channel != null)
+			_channel.pitch = v;
+		return _pitch = v;
+	}
+	#end
+	
 	
 	private inline function get_pan():Float
 	{
