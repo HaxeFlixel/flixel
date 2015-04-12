@@ -28,9 +28,6 @@ import haxe.EnumTools;
  */
 class PlayState extends FlxState
 {
-	/**
-	 * The duration of the tween
-	 */
 	private static inline var DURATION:Float = 1;
 
 	private var _easeInfo:Array<EaseInfo>;
@@ -53,49 +50,48 @@ class PlayState extends FlxState
 		FlxG.autoPause = false;
 		
 		// Set up an array containing all the different ease functions there are
-		_easeInfo = new Array<EaseInfo>();
-
-		_easeInfo.push({ name: "quadIn",       ease: FlxEase.quadIn       });
-		_easeInfo.push({ name: "quadOut",      ease: FlxEase.quadOut      });
-		_easeInfo.push({ name: "quadInOut",    ease: FlxEase.quadInOut    });
+		_easeInfo = [
+			{ name: "quadIn",       ease: FlxEase.quadIn       },
+			{ name: "quadOut",      ease: FlxEase.quadOut      },
+			{ name: "quadInOut",    ease: FlxEase.quadInOut    },
+			
+			{ name: "cubeIn",       ease: FlxEase.cubeIn       },
+			{ name: "cubeOut",      ease: FlxEase.cubeOut      },
+			{ name: "cubeInOut",    ease: FlxEase.cubeInOut    },
+		    
+			{ name: "quartIn",      ease: FlxEase.quartIn      },
+			{ name: "quartOut",     ease: FlxEase.quartOut     },
+			{ name: "quartInOut",   ease: FlxEase.quartInOut   },
+			
+			{ name: "quintIn",      ease: FlxEase.quintIn      },
+			{ name: "quintOut",     ease: FlxEase.quintOut     },
+			{ name: "quintInOut",   ease: FlxEase.quintInOut   },
+		    
+			{ name: "sineIn",       ease: FlxEase.sineIn       },
+			{ name: "sineOut",      ease: FlxEase.sineOut      },
+			{ name: "sineInOut",    ease: FlxEase.sineInOut    },
+			
+			{ name: "bounceIn",     ease: FlxEase.bounceIn     },
+			{ name: "bounceOut",    ease: FlxEase.bounceOut    },
+			{ name: "bounceInOut",  ease: FlxEase.bounceInOut  },
+		    
+			{ name: "circIn",       ease: FlxEase.circIn       },
+			{ name: "circOut",      ease: FlxEase.circOut      },
+			{ name: "circInOut",    ease: FlxEase.circInOut    },
+			
+			{ name: "expoIn",       ease: FlxEase.expoIn       },
+			{ name: "expoOut",      ease: FlxEase.expoOut      },
+			{ name: "expoInOut",    ease: FlxEase.expoInOut    },
+			
+			{ name: "backIn",       ease: FlxEase.backIn       },
+			{ name: "backOut",      ease: FlxEase.backOut      },
+			{ name: "backInOut",    ease: FlxEase.backInOut    },
+			
+			{ name: "elasticIn",    ease: FlxEase.elasticIn    },
+			{ name: "elasticOut",   ease: FlxEase.elasticOut   },
+			{ name: "elasticInOut", ease: FlxEase.elasticInOut },
 		
-		_easeInfo.push({ name: "cubeIn",       ease: FlxEase.cubeIn       });
-		_easeInfo.push({ name: "cubeOut",      ease: FlxEase.cubeOut      });
-		_easeInfo.push({ name: "cubeInOut",    ease: FlxEase.cubeInOut    });
-		
-		_easeInfo.push({ name: "quartIn",      ease: FlxEase.quartIn      });
-		_easeInfo.push({ name: "quartOut",     ease: FlxEase.quartOut     });
-		_easeInfo.push({ name: "quartInOut",   ease: FlxEase.quartInOut   });
-		
-		_easeInfo.push({ name: "quintIn",      ease: FlxEase.quintIn      });
-		_easeInfo.push({ name: "quintOut",     ease: FlxEase.quintOut     });
-		_easeInfo.push({ name: "quintInOut",   ease: FlxEase.quintInOut   });
-		
-		_easeInfo.push({ name: "sineIn",       ease: FlxEase.sineIn       });
-		_easeInfo.push({ name: "sineOut",      ease: FlxEase.sineOut      });
-		_easeInfo.push({ name: "sineInOut",    ease: FlxEase.sineInOut    });
-		
-		_easeInfo.push({ name: "bounceIn",     ease: FlxEase.bounceIn     });
-		_easeInfo.push({ name: "bounceOut",    ease: FlxEase.bounceOut    });
-		_easeInfo.push({ name: "bounceInOut",  ease: FlxEase.bounceInOut  });
-		
-		_easeInfo.push({ name: "circIn",       ease: FlxEase.circIn       });
-		_easeInfo.push({ name: "circOut",      ease: FlxEase.circOut      });
-		_easeInfo.push({ name: "circInOut",    ease: FlxEase.circInOut    });
-		
-		_easeInfo.push({ name: "expoIn",       ease: FlxEase.expoIn       });
-		_easeInfo.push({ name: "expoOut",      ease: FlxEase.expoOut      });
-		_easeInfo.push({ name: "expoInOut",    ease: FlxEase.expoInOut    });
-		
-		_easeInfo.push({ name: "backIn",       ease: FlxEase.backIn       });
-		_easeInfo.push({ name: "backOut",      ease: FlxEase.backOut      });
-		_easeInfo.push({ name: "backInOut",    ease: FlxEase.backInOut    });
-		
-		_easeInfo.push({ name: "elasticIn",    ease: FlxEase.elasticIn    });
-		_easeInfo.push({ name: "elasticOut",   ease: FlxEase.elasticOut   });
-		_easeInfo.push({ name: "elasticInOut", ease: FlxEase.elasticInOut });
-		
-		_easeInfo.push({ name: "none",         ease: null                 });
+			{ name: "none",         ease: null                 }];
 		
 		var title = new FlxText(0, 0, FlxG.width, "FlxTween", 64);
 		title.alignment = CENTER;
@@ -134,11 +130,12 @@ class PlayState extends FlxState
 		
 		xOff = 80;
 		
-		var tweenTypes:Array<String> = ["tween", "angle", "color", "linearMotion", "linearPath", "circularMotion", "cubicMotion",
-										 "quadMotion", "quadPath"];
+		var tweenTypes:Array<String> =
+			["tween", "angle", "color", "linearMotion", "linearPath", "circularMotion", "cubicMotion", "quadMotion", "quadPath"];
 		
 		var header = new FlxUIDropDownHeader(130);
-		var tweenTypeDropDown = new FlxUIDropDownMenu(xOff, yOff, FlxUIDropDownMenu.makeStrIdLabelArray(tweenTypes, true), onTweenChange, header);
+		var tweenTypeDropDown = new FlxUIDropDownMenu(xOff, yOff,
+			FlxUIDropDownMenu.makeStrIdLabelArray(tweenTypes, true), onTweenChange, header);
 		tweenTypeDropDown.header.text.text = "tween"; // Initialize header with correct value
 		
 		// Second row
@@ -152,14 +149,15 @@ class PlayState extends FlxState
 		
 		var easeTypes:Array<String> = ["quad", "cube", "quart", "quint", "sine", "bounce", "circ", "expo", "back", "elastic", "none"];
 		var header = new FlxUIDropDownHeader(headerWidth);
-		var easeTypeDropDown = new FlxUIDropDownMenu(xOff, yOff, FlxUIDropDownMenu.makeStrIdLabelArray(easeTypes), onEaseTypeChange, header);
+		var easeTypeDropDown = new FlxUIDropDownMenu(xOff, yOff,
+			FlxUIDropDownMenu.makeStrIdLabelArray(easeTypes), onEaseTypeChange, header);
 		
 		xOff += (headerWidth + gutter);
 		
 		var easeDirections:Array<String> = ["In", "Out", "InOut"];
 		var header2 = new FlxUIDropDownHeader(headerWidth);
 		var easeDirectionDropDown = new FlxUIDropDownMenu(xOff, yOff, 
-									FlxUIDropDownMenu.makeStrIdLabelArray(easeDirections), onEaseDirectionChange, header2);
+			FlxUIDropDownMenu.makeStrIdLabelArray(easeDirections), onEaseDirectionChange, header2);
 		
 		// Third row
 		
