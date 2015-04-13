@@ -61,11 +61,9 @@
 		<param type="string" value="popup"/>
 	</button>
 
-	<!--
 	<radio_group x="10" y="10" use_def="radio_1" id="locale_radio">
 		<radio id="en-US" label="$LANGUAGE_BILINGUAL:EN-US" context="index"/>
 		<radio id="nb-NO" label="$LANGUAGE_BILINGUAL:NB-NO" context="index"/>
 	</radio_group>
-	-->
 	
 </data>
