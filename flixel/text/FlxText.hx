@@ -639,12 +639,12 @@ class FlxText extends FlxSprite
 	
 	private inline function get_alignment():FlxTextAlign
 	{
-		return cast(_defaultFormat.align, String);
+		return FlxTextAlign.fromOpenFL(_defaultFormat.align);
 	}
 	
 	private function set_alignment(Alignment:FlxTextAlign):FlxTextAlign
 	{
-		_defaultFormat.align = convertTextAlignmentFromString(Alignment);
+		_defaultFormat.align = FlxTextAlign.toOpenFL(Alignment);
 		updateDefaultFormat();
 		return Alignment;
 	}
@@ -962,24 +962,6 @@ class FlxText extends FlxSprite
 		return new TextFormat(dtf.font, dtf.size, dtf.color, dtf.bold, dtf.italic, dtf.underline, dtf.url, dtf.target, dtf.align);
 	}
 	
-	/**
-	 * Method for converting string to TextFormatAlign
-	 */
-	private function convertTextAlignmentFromString(StrAlign:FlxTextAlign)
-	{
-		return switch (StrAlign)
-		{
-			case LEFT:
-				TextFormatAlign.LEFT;
-			case CENTER:
-				TextFormatAlign.CENTER;
-			case RIGHT:
-				TextFormatAlign.RIGHT;
-			case JUSTIFY:
-				TextFormatAlign.JUSTIFY;
-		}
-	}
-	
 	private inline function updateDefaultFormat():Void
 	{
 		textField.defaultTextFormat = _defaultFormat;
@@ -1066,4 +1048,32 @@ abstract FlxTextAlign(String) from String
 	var CENTER = "center";
 	var RIGHT = "right";
 	var JUSTIFY = "justify";
+	
+	#if !openfl_legacy
+	public static function fromOpenFL(tf:TextFormatAlign):FlxTextAlign
+	#else
+	public static function fromOpenFL(tf:String):FlxTextAlign
+	#end
+	{
+		//ifs instead of a switch b/c you can only switch on lower-case variable names and TextFormatAlign are all caps constants in legacy
+		if (tf == TextFormatAlign.LEFT) return FlxTextAlign.LEFT;
+		if (tf == TextFormatAlign.RIGHT) return FlxTextAlign.RIGHT;
+		if (tf == TextFormatAlign.CENTER) return FlxTextAlign.CENTER;
+		if (tf == TextFormatAlign.JUSTIFY) return FlxTextAlign.JUSTIFY;
+		throw "illegal TextFormatAlign value!";
+	}
+	
+	#if !openfl_legacy
+	public static function toOpenFL(str:FlxTextAlign):TextFormatAlign
+	#else
+	public static function toOpenFL(str:FlxTextAlign):String
+	#end
+	{
+		//ifs instead of a switch b/c you can only switch on lower-case variable names and TextFormatAlign are all caps constants in legacy
+		if (str == LEFT) return TextFormatAlign.LEFT;
+		if (str == RIGHT) return TextFormatAlign.RIGHT;
+		if (str == CENTER) return TextFormatAlign.CENTER;
+		if (str == JUSTIFY) return TextFormatAlign.JUSTIFY;
+		throw "illegal FlxTextAlign value!";
+	}
 }
