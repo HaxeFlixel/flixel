@@ -1049,31 +1049,29 @@ abstract FlxTextAlign(String) from String
 	var RIGHT = "right";
 	var JUSTIFY = "justify";
 	
-	#if !openfl_legacy
-	public static function fromOpenFL(tf:TextFormatAlign):FlxTextAlign
-	#else
-	public static function fromOpenFL(tf:String):FlxTextAlign
-	#end
+	public static function fromOpenFL(align:AlignType):FlxTextAlign
 	{
-		//ifs instead of a switch b/c you can only switch on lower-case variable names and TextFormatAlign are all caps constants in legacy
-		if (tf == TextFormatAlign.LEFT) return FlxTextAlign.LEFT;
-		if (tf == TextFormatAlign.RIGHT) return FlxTextAlign.RIGHT;
-		if (tf == TextFormatAlign.CENTER) return FlxTextAlign.CENTER;
-		if (tf == TextFormatAlign.JUSTIFY) return FlxTextAlign.JUSTIFY;
-		throw "illegal TextFormatAlign value!";
+		return switch (align)
+		{
+			case TextFormatAlign.LEFT: LEFT;
+			case TextFormatAlign.CENTER: CENTER;
+			case TextFormatAlign.RIGHT: RIGHT;
+			case TextFormatAlign.JUSTIFY: JUSTIFY;
+			default: LEFT;
+		}
 	}
 	
-	#if !openfl_legacy
-	public static function toOpenFL(str:FlxTextAlign):TextFormatAlign
-	#else
-	public static function toOpenFL(str:FlxTextAlign):String
-	#end
+	public static function toOpenFL(align:FlxTextAlign):AlignType
 	{
-		//ifs instead of a switch b/c you can only switch on lower-case variable names and TextFormatAlign are all caps constants in legacy
-		if (str == LEFT) return TextFormatAlign.LEFT;
-		if (str == RIGHT) return TextFormatAlign.RIGHT;
-		if (str == CENTER) return TextFormatAlign.CENTER;
-		if (str == JUSTIFY) return TextFormatAlign.JUSTIFY;
-		throw "illegal FlxTextAlign value!";
+		return switch (align)
+		{
+			case LEFT: TextFormatAlign.LEFT;
+			case CENTER: TextFormatAlign.CENTER;
+			case RIGHT: TextFormatAlign.RIGHT;
+			case JUSTIFY: TextFormatAlign.JUSTIFY;
+			default: TextFormatAlign.LEFT;
+		}
 	}
 }
+
+private typedef AlignType = #if openfl_legacy String #else TextFormatAlign #end
