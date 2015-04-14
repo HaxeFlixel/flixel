@@ -30,8 +30,8 @@ class FlxFrame implements IFlxDestroyable
 		var name1:String = frame1.name;
 		var name2:String = frame2.name;
 		
-		var num1:Int = Std.parseInt(name1.substr(prefixLength, name1.length - postfixLength));
-		var num2:Int = Std.parseInt(name2.substr(prefixLength, name2.length - postfixLength));
+		var num1:Int = Std.parseInt(name1.substring(prefixLength, name1.length - postfixLength));
+		var num2:Int = Std.parseInt(name2.substring(prefixLength, name2.length - postfixLength));
 		
 		return num1 - num2;
 	}
