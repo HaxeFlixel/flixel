@@ -723,7 +723,7 @@ class FlxCamera extends FlxBasic
 		scroll.y = FlxMath.bound(scroll.y, minScrollY, (maxScrollY != null) ? maxScrollY - height : null);
 	}
 	
-	private function updateFollow():Void
+	public function updateFollow():Void
 	{
 		//Either follow the object closely, 
 		//or doublecheck our deadzone and update accordingly.
@@ -1001,6 +1001,15 @@ class FlxCamera extends FlxBasic
 		{
 			Offset.putWeak();
 		}
+	}
+	
+	/**
+	 * Snap the camera to the current target
+	 */
+	public function snapToTarget():Void
+	{
+		updateFollow();
+		scroll.copyFrom(_scrollTarget);
 	}
 	
 	/**
