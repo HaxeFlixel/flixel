@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<data>
+	
+	<button id="butt_0" label="asplode">
+		<anchor x="74%" x-flush="right"/>
+	</button>
+	<button id="butt_1" label="button" x="butt_0.x"/>
+	<button id="butt_2" label="countdown" x="butt_0.x"/>
+	<button id="butt_3" label="enemy" x="butt_0.x"/>
+	<button id="butt_4" label="hit" x="butt_0.x"/>
+	<button id="butt_5" label="hurt" x="butt_0.x"/>
+	<button id="butt_6" label="jam">
+		<anchor x="butt_0.right" x-flush="left"/>
+	</button>
+	<button id="butt_7" label="jet" x="butt_6.x"/>
+	<button id="butt_8" label="jump" x="butt_6.x"/>
+	<button id="butt_9" label="menu_hit" x="butt_6.x"/>
+	<button id="butt_10" label="menu_hit_2" x="butt_6.x"/>
+	<button id="butt_11" label="shoot" x="butt_6.x"/>
+	
+	<align axis="vertical">
+		<objects value="butt_0,butt_1,butt_2,butt_3,butt_4,butt_5"/>
+		<objects value="butt_6,butt_7,butt_8,butt_9,butt_10,butt_11"/>
+		<bounds top="40%" bottom="100%"/>
+	</align>
+	
+	<button_toggle id="butt_music" label="music" y="butt_0.y">
+		<anchor x="butt_0.left" x-flush="right"/>
+	</button_toggle>
+	
+	<checkbox id="check_loop" label="loop music" x="5" y="5"/>
+	
+	<numeric_stepper id="sfx_volume" x="5" y="5" step="0.1" value="0.5" min="0.0" max="1.0" decimals="1">
+		<anchor y="check_loop.bottom" y-flush="top"/>
+	</numeric_stepper>
+	
+	<numeric_stepper id="music_volume" x="5" y="5" step="0.1" value="0.5" min="0.0" max="1.0" decimals="1">
+		<anchor y="sfx_volume.bottom" y-flush="top"/>
+	</numeric_stepper>
+	
+	<text id="sfx_volume_label" x="sfx_volume.right+5" y="sfx_volume.y" text="sfx volume" color="white"/>
+	<text id="music_volume_label" x="music_volume.right+5" y="music_volume.y" text="music volume" color="white"/>
+</data>

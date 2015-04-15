@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<project version="2">
+  <!-- Output SWF options -->
+  <output>
+    <movie outputType="CustomBuild" />
+    <movie input="" />
+    <movie path="Project.xml" />
+    <movie fps="60" />
+    <movie width="640" />
+    <movie height="480" />
+    <movie version="1" />
+    <movie minorVersion="0" />
+    <movie platform="Lime" />
+    <movie background="000000" />
+  </output>
+  <!-- Other classes to be compiled into your SWF -->
+  <classpaths>
+    <class path="T:\Development\Git\flixel" />
+    <class path="T:\Development\Git\openfl" />
+    <class path="T:\Development\Git\lime" />
+    <class path="T:\Development\Git\flixel-ui" />
+    <class path="source" />
+    <class path="export\windows\neko\haxe" />
+  </classpaths>
+  <!-- Build options -->
+  <build>
+    <option directives="flixel=3.3.8&#xA;openfl=3.0.1&#xA;lime=2.3.1&#xA;flixel-ui=1.0.2&#xA;openfl-next&#xA;tools=2.3.1&#xA;no-compilation&#xA;native&#xA;FLX_NO_TOUCH&#xA;lime-native&#xA;openfl-native&#xA;windows&#xA;desktop" />
+    <option flashStrict="False" />
+    <option noInlineOnDebug="False" />
+    <option mainClass="ApplicationMain" />
+    <option enabledebug="False" />
+    <option additional="--remap flash:openfl&#xA;--macro flixel.system.macros.FlxConditionals.run()&#xA;#--macro keep(&quot;Main&quot;)&#xA;-debug " />
+  </build>
+  <!-- haxelib libraries -->
+  <haxelib>
+    <!-- example: <library name="..." /> -->
+  </haxelib>
+  <!-- Class files to compile (other referenced classes will automatically be included) -->
+  <compileTargets>
+    <!-- example: <compile path="..." /> -->
+  </compileTargets>
+  <!-- Paths to exclude from the Project Explorer tree -->
+  <hiddenPaths>
+    <hidden path="obj" />
+  </hiddenPaths>
+  <!-- Executed before build -->
+  <preBuildCommand>"$(CompilerPath)/haxelib" run lime build "$(OutputFile)" $(TargetBuild) -$(BuildConfig) -Dfdb</preBuildCommand>
+  <!-- Executed after build -->
+  <postBuildCommand alwaysRun="False" />
+  <!-- Other project options -->
+  <options>
+    <option showHiddenPaths="False" />
+    <option testMovie="Custom" />
+    <option testMovieCommand="" />
+  </options>
+  <!-- Plugin storage -->
+  <storage />
+</project>
