@@ -89,7 +89,7 @@ class FlxCamera extends FlxBasic
 	public var targetOffset(default, null):FlxPoint;
 	/**
 	 * Used to smoothly track the camera as it follows: The percent of the distance to the follow target the camera moves per 1/60 sec.
-	 * Values are bounded between 0.0 and FlxG.updateFrameRate / 60 for consistency acaross framerates.
+	 * Values are bounded between 0.0 and FlxG.updateFrameRate / 60 for consistency across framerates.
 	 * The maximum value means no camera easing. A value of 0 means the camera does not move.
 	 */
 	public var followLerp(default, set):Float = 60 / FlxG.updateFramerate;
