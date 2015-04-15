@@ -78,27 +78,27 @@ class DebuggerFrontEnd
 	}
 	
 	/**
-	 * Creates a new tracker window if there exists a tracking profile for the class of the object.
+	 * Creates a new tracker window if there exists a tracking profile for the class / class of the object.
 	 * By default, flixel classes like FlxBasic, FlxRect and FlxPoint are supported.
 	 * 
-	 * @param	Object	The object to track
-	 * @param	WindowTitle	Title of the tracker window, uses the Object's class name by default
+	 * @param	ObjectOrClass	The object or class to track
+	 * @param	WindowTitle	Title of the tracker window, uses the class name by default
 	 */
-	public function track(Object:Dynamic, ?WindowTitle:String):Window
+	public function track(ObjectOrClass:Dynamic, ?WindowTitle:String):Window
 	{
 		#if !FLX_NO_DEBUG
-		if (Tracker.objectsBeingTracked.indexOf(Object) == -1)
+		if (Tracker.objectsBeingTracked.indexOf(ObjectOrClass) == -1)
 		{
-			var profile = Tracker.findProfile(Object);
+			var profile = Tracker.findProfile(ObjectOrClass);
 			if (profile == null)
 			{
 				FlxG.log.error("Could not find a tracking profile for object of class '" +
-					FlxStringUtil.getClassName(Object, true) + "'."); 
+					FlxStringUtil.getClassName(ObjectOrClass, true) + "'."); 
 				return null;
 			}
 			else 
 			{
-				return FlxG.game.debugger.addWindow(new Tracker(profile, Object, WindowTitle));
+				return FlxG.game.debugger.addWindow(new Tracker(profile, ObjectOrClass, WindowTitle));
 			}
 		}
 		#end

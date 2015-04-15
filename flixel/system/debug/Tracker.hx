@@ -145,12 +145,12 @@ class Tracker extends Watch
 	
 	private var _object:Dynamic;
 	
-	public function new(Profile:TrackerProfile, Object:Dynamic, ?WindowTitle:String) 
+	public function new(Profile:TrackerProfile, ObjectOrClass:Dynamic, ?WindowTitle:String) 
 	{
 		super(true);
 		
 		initProfiles();
-		_object = Object;
+		_object = ObjectOrClass;
 		objectsBeingTracked.push(_object);
 		
 		initWatchEntries(Profile);

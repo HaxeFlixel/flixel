@@ -120,7 +120,7 @@ class ConsoleUtil
 	 * 
 	 * @param	ObjectAndVariable	The path to the variable as a String, for example array.length
 	 * @param	Object	Starting point for the search, has to contain the first object / variable of the first param
-	 * @return	A PathToVarible typedef, or null.
+	 * @return	A PathToVarible typedef, or null. variableName is "" in case of a Class<T>.
 	 */
 	public static function resolveObjectAndVariable(ObjectAndVariable:String, Object:Dynamic):PathToVariable
 	{
@@ -146,7 +146,6 @@ class ConsoleUtil
 		for (i in 0...l)
 		{
 			tempVarName = searchArr[i];			
-
 			
 			if (i < (l - 1))
 			{
