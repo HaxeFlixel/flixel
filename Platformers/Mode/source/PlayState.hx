@@ -200,8 +200,10 @@ class PlayState extends FlxState
 		#end
 		
 		super.create();
-		
-		makeFPSCounter();
+
+		#if SHOW_FPS
+			makeFPSCounter();
+		#end
 	}
 	
 	/**
