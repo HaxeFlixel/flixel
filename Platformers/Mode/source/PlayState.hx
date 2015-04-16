@@ -236,7 +236,7 @@ class PlayState extends FlxState
 		_tileMap = null;
 		
 		#if SHOW_FPS
-			Lib.current.stage.removeChild(fps);
+			FlxG.removeChild(fps);
 		#end
 		
 		super.destroy();
@@ -535,7 +535,7 @@ class PlayState extends FlxState
 	{
 		
 		fps = new FPS(Lib.current.stage.stageWidth-50, 0, 0xFFFFFF);
-		Lib.current.stage.addChild(fps);
+		FlxG.addChildBelowMouse(fps);
 	}
 	#end
 }
