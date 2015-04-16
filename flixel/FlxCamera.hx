@@ -1081,7 +1081,8 @@ class FlxCamera extends FlxBasic
 	}
 	
 	/**
-	 * Snap the camera to the current target
+	 * Snaps the camera to the current target. Useful to move the camera without
+	 * any easing when the target position changes and there is a followLerp.
 	 */
 	public function snapToTarget():Void
 	{
