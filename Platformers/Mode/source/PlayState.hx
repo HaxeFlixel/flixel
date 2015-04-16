@@ -15,6 +15,10 @@ import flixel.ui.FlxButton;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRandom;
 import flixel.util.FlxStringUtil;
+import flixel.util.FlxTimer;
+import openfl.display.FPS;
+import openfl.events.Event;
+import openfl.Lib;
 
 #if (cpp || neko)
 import flixel.input.gamepad.FlxGamepad;
@@ -198,6 +202,10 @@ class PlayState extends FlxState
 		#end
 		
 		super.create();
+
+		#if SHOW_FPS
+			makeFPSCounter();
+		#end
 	}
 	
 	/**
@@ -226,6 +234,10 @@ class PlayState extends FlxState
 		
 		_map = null;
 		_tileMap = null;
+		
+		#if SHOW_FPS
+			FlxG.removeChild(fps);
+		#end
 		
 		super.destroy();
 	}
@@ -515,4 +527,15 @@ class PlayState extends FlxState
 		
 		return _map;
 	}
+	
+	#if SHOW_FPS
+	private var fps:FPS;
+	
+	private function makeFPSCounter():Void
+	{
+		
+		fps = new FPS(Lib.current.stage.stageWidth-50, 0, 0xFFFFFF);
+		FlxG.addChildBelowMouse(fps);
+	}
+	#end
 }
