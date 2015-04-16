@@ -16,7 +16,9 @@ import flixel.math.FlxPoint;
 import flixel.math.FlxRandom;
 import flixel.util.FlxStringUtil;
 import flixel.util.FlxTimer;
+import openfl.display.FPS;
 import openfl.events.Event;
+import openfl.Lib;
 
 #if (cpp || neko)
 import flixel.input.gamepad.FlxGamepad;
@@ -232,6 +234,10 @@ class PlayState extends FlxState
 		
 		_map = null;
 		_tileMap = null;
+		
+		#if SHOW_FPS
+			Lib.current.stage.removeChild(fps);
+		#end
 		
 		super.destroy();
 	}
@@ -523,67 +529,13 @@ class PlayState extends FlxState
 	}
 	
 	#if SHOW_FPS
+	private var fps:FPS;
 	
-	private var _fpsText:FlxText;
-	private var _itvTime:Int = 0;
-	private var _initTime:Int;
-	private var _frameCount:Int;
-	private var _totalCount:Int;
-	private var _currentTime:Int;
-	private var _lastTime:Int = 0;
-	private var _updateTimer:Int = 0;
-	private static inline var UPDATE_DELAY:Int = 250;
-	
-	private function makeFPSCounter(ft:FlxTimer = null):Void
+	private function makeFPSCounter():Void
 	{
-		FlxG.stage.addEventListener(Event.ENTER_FRAME, updateFPS, false, 0, true);
-		_initTime = _itvTime = FlxG.game.ticks;
-		_totalCount = _frameCount = 0;
-		_fpsText = new FlxText(FlxG.width - 100, 0, 100, "99");
-		_fpsText.alignment = FlxTextAlign.RIGHT;
-		_fpsText.scrollFactor.set(0,0);
-		add(_fpsText);
-	}
-	
-	private inline function currentFps():Int
-	{
-		return Std.int(_frameCount / intervalTime());
-	}
-	
-	private inline function intervalTime():Float
-	{
-		return (_currentTime - _itvTime) / 1000;
-	}
-	
-	private inline function averageFps():Int
-	{
-		return Std.int(_totalCount / runningTime());
-	}
-	
-	private inline function runningTime():Float
-	{
-		return (_currentTime - _initTime) / 1000;
-	}
-	
-	private function updateFPS(e:Event=null):Void
-	{
-		var time:Int = _currentTime = FlxG.game.ticks;
-		var fpselapsed = time - _lastTime;
-		if (fpselapsed > UPDATE_DELAY)
-		{
-			fpselapsed = UPDATE_DELAY;
-		}
-		_lastTime = time;
-		_updateTimer += fpselapsed;
-		_frameCount++;
-		_totalCount++;
-		if (_updateTimer > UPDATE_DELAY)
-		{
-			_fpsText.text = currentFps() + " / " + averageFps();
-			_frameCount = 0;
-			_itvTime = _currentTime;
-			_updateTimer -= UPDATE_DELAY;
-		}
+		
+		fps = new FPS(Lib.current.stage.stageWidth-50, 0, 0xFFFFFF);
+		Lib.current.stage.addChild(fps);
 	}
 	#end
 }
