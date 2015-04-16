@@ -71,7 +71,7 @@ class MenuState extends FlxUIState
 			}
 			for (sound in FlxG.sound.list.members)
 			{
-				if (sound != FlxG.sound.music)
+				if (sound != null && sound != FlxG.sound.music)
 				{
 					sound.volume = sfx_volume;
 				}
