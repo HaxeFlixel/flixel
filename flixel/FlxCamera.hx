@@ -45,24 +45,23 @@ class FlxCamera extends FlxBasic
 	public static var defaultCameras:Array<FlxCamera>;
 	
 	/**
-	 * The X position of this camera's display.  Zoom does NOT affect this number.
+	 * The X position of this camera's display. Zoom does NOT affect this number.
 	 * Measured in pixels from the left side of the flash window.
 	 */
 	public var x(default, set):Float = 0;
 	/**
-	 * The Y position of this camera's display.  Zoom does NOT affect this number.
+	 * The Y position of this camera's display. Zoom does NOT affect this number.
 	 * Measured in pixels from the top of the flash window.
 	 */
 	public var y(default, set):Float = 0;
 	
 	/**
-	 *The scaling on horizontal axis for this camera.
+	 * The scaling on horizontal axis for this camera.
 	 */
 	public var scaleX(default, null):Float;
 	/**
-	 *
 	 * The scaling on vertical axis for this camera.
-	*/
+	 */
 	public var scaleY(default, null):Float;
 	/**
 	 * Product of camera's scaleX and game's scalemode scale.x multiplication.
