@@ -32,6 +32,9 @@ class MenuState extends FlxUIState
 		
 		var butt_music:FlxUIButton = cast _ui.getAsset("butt_music");
 		butt_music.color = FlxColor.RED;
+		
+		var butt_pause:FlxUIButton = cast _ui.getAsset("butt_pause");
+		enablePause(false);
 	}
 	
 	public override function getEvent(name:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void {
@@ -89,18 +92,36 @@ class MenuState extends FlxUIState
 				sound_id += ".ogg";
 			#end
 			
-			if (Assets.exists(sound_id, AssetType.SOUND) || Assets.exists(sound_id, AssetType.MUSIC))
+			if (label == "pause music")
 			{
-				if (label == "music")
+				if (FlxG.sound.music != null && FlxG.sound.music.exists)
 				{
-					if (FlxG.sound.music != null && FlxG.sound.music.exists && FlxG.sound.music.playing)
+					if (fuib.toggled)
 					{
-						FlxG.sound.music.stop();
+						FlxG.sound.music.pause();
 					}
 					else
 					{
+						FlxG.sound.music.resume();
+					}
+				}
+			}
+			else if (Assets.exists(sound_id, AssetType.SOUND) || Assets.exists(sound_id, AssetType.MUSIC))
+			{
+				if (label == "music")
+				{
+					if (FlxG.sound.music != null && FlxG.sound.music.active)
+					{
+						fuib.toggled = false;
+						FlxG.sound.music.stop();
+						enablePause(false);
+					}
+					else
+					{
+						fuib.toggled = true;
 						FlxG.sound.playMusic(sound_id, music_volume, loop_music);
 						FlxG.sound.music.onComplete = musicComplete;
+						enablePause(true);
 					}
 				}
 				else
@@ -111,12 +132,29 @@ class MenuState extends FlxUIState
 		}
 	}
 	
+	private function enablePause(b:Bool):Void
+	{
+		var butt_pause:FlxUIButton = cast _ui.getAsset("butt_pause");
+		if (b)
+		{
+			butt_pause.active = true;
+			butt_pause.toggled = false;
+			butt_pause.color = FlxColor.fromRGB(128, 192, 255);
+		}
+		else
+		{ 
+			butt_pause.active = false;
+			butt_pause.color = FlxColor.fromRGB(128, 128, 128);
+		}
+	}
+	
 	private function musicComplete():Void
 	{
 		if (!loop_music)
 		{
 			var butt:FlxUIButton = cast _ui.getAsset("butt_music");
 			butt.toggled = false;
+			enablePause(false);
 		}
 	}
 }
