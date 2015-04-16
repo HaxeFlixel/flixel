@@ -89,7 +89,7 @@ class MenuState extends FlxUIState
 				sound_id += ".ogg";
 			#end
 			
-			if (Assets.exists(sound_id))
+			if (Assets.exists(sound_id, AssetType.SOUND) || Assets.exists(sound_id, AssetType.MUSIC))
 			{
 				if (label == "music")
 				{
