@@ -1051,11 +1051,11 @@ abstract FlxTextAlign(String) from String
 	
 	public static function fromOpenFL(align:AlignType):FlxTextAlign
 	{
-		return switch(tf)
+		return switch (align)
 		{
 			case TextFormatAlign.LEFT: LEFT;
-			case TextFormatAlign.RIGHT: RIGHT;
 			case TextFormatAlign.CENTER: CENTER;
+			case TextFormatAlign.RIGHT: RIGHT;
 			case TextFormatAlign.JUSTIFY: JUSTIFY;
 			default: LEFT;
 		}
@@ -1063,11 +1063,11 @@ abstract FlxTextAlign(String) from String
 	
 	public static function toOpenFL(align:FlxTextAlign):AlignType
 	{
-		return switch(str)
+		return switch (align)
 		{
 			case LEFT: TextFormatAlign.LEFT;
-			case RIGHT: TextFormatAlign.RIGHT;
 			case CENTER: TextFormatAlign.CENTER;
+			case RIGHT: TextFormatAlign.RIGHT;
 			case JUSTIFY: TextFormatAlign.JUSTIFY;
 			default: TextFormatAlign.LEFT;
 		}
