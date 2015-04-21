@@ -1049,29 +1049,34 @@ abstract FlxTextAlign(String) from String
 	var RIGHT = "right";
 	var JUSTIFY = "justify";
 	
-	public static function fromOpenFL(align:AlignType):FlxTextAlign
+	#if !openfl_legacy
+	public static function fromOpenFL(tf:TextFormatAlign):FlxTextAlign
+	#else
+	public static function fromOpenFL(tf:String):FlxTextAlign
+	#end
 	{
-		return switch (align)
+		return switch(tf)
 		{
-			case TextFormatAlign.LEFT: LEFT;
-			case TextFormatAlign.CENTER: CENTER;
-			case TextFormatAlign.RIGHT: RIGHT;
-			case TextFormatAlign.JUSTIFY: JUSTIFY;
-			default: LEFT;
+			case TextFormatAlign.LEFT: FlxTextAlign.LEFT;
+			case TextFormatAlign.RIGHT: FlxTextAlign.RIGHT;
+			case TextFormatAlign.CENTER: FlxTextAlign.CENTER;
+			case TextFormatAlign.JUSTIFY: FlxTextAlign.JUSTIFY;
+			default: FlxTextAlign.LEFT;
 		}
 	}
 	
-	public static function toOpenFL(align:FlxTextAlign):AlignType
+	#if !openfl_legacy
+	public static function toOpenFL(str:FlxTextAlign):TextFormatAlign
+	#else
+	public static function toOpenFL(str:FlxTextAlign):String
+	#end
 	{
-		return switch (align)
+		return switch(str)
 		{
-			case LEFT: TextFormatAlign.LEFT;
-			case CENTER: TextFormatAlign.CENTER;
-			case RIGHT: TextFormatAlign.RIGHT;
-			case JUSTIFY: TextFormatAlign.JUSTIFY;
-			default: TextFormatAlign.LEFT;
+			case FlxTextAlign.LEFT: TextFormatAlign.LEFT;
+			case FlxTextAlign.RIGHT: TextFormatAlign.RIGHT;
+			case FlxTextAlign.CENTER: TextFormatAlign.CENTER;
+			case FlxTextAlign.JUSTIFY: TextFormatAlign.JUSTIFY;
 		}
 	}
 }
-
-private typedef AlignType = #if openfl_legacy String #else TextFormatAlign #end
