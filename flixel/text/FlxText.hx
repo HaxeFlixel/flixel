@@ -1049,34 +1049,29 @@ abstract FlxTextAlign(String) from String
 	var RIGHT = "right";
 	var JUSTIFY = "justify";
 	
-	#if !openfl_legacy
-	public static function fromOpenFL(tf:TextFormatAlign):FlxTextAlign
-	#else
-	public static function fromOpenFL(tf:String):FlxTextAlign
-	#end
+	public static function fromOpenFL(align:AlignType):FlxTextAlign
 	{
 		return switch(tf)
 		{
-			case TextFormatAlign.LEFT: FlxTextAlign.LEFT;
-			case TextFormatAlign.RIGHT: FlxTextAlign.RIGHT;
-			case TextFormatAlign.CENTER: FlxTextAlign.CENTER;
-			case TextFormatAlign.JUSTIFY: FlxTextAlign.JUSTIFY;
-			default: FlxTextAlign.LEFT;
+			case TextFormatAlign.LEFT: LEFT;
+			case TextFormatAlign.RIGHT: RIGHT;
+			case TextFormatAlign.CENTER: CENTER;
+			case TextFormatAlign.JUSTIFY: JUSTIFY;
+			default: LEFT;
 		}
 	}
 	
-	#if !openfl_legacy
-	public static function toOpenFL(str:FlxTextAlign):TextFormatAlign
-	#else
-	public static function toOpenFL(str:FlxTextAlign):String
-	#end
+	public static function toOpenFL(align:FlxTextAlign):AlignType
 	{
 		return switch(str)
 		{
-			case FlxTextAlign.LEFT: TextFormatAlign.LEFT;
-			case FlxTextAlign.RIGHT: TextFormatAlign.RIGHT;
-			case FlxTextAlign.CENTER: TextFormatAlign.CENTER;
-			case FlxTextAlign.JUSTIFY: TextFormatAlign.JUSTIFY;
+			case LEFT: TextFormatAlign.LEFT;
+			case RIGHT: TextFormatAlign.RIGHT;
+			case CENTER: TextFormatAlign.CENTER;
+			case JUSTIFY: TextFormatAlign.JUSTIFY;
+			default: TextFormatAlign.LEFT;
 		}
 	}
 }
+
+private typedef AlignType = #if openfl_legacy String #else TextFormatAlign #end
