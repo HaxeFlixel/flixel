@@ -357,7 +357,7 @@ class FlxBitmapFont extends FlxFramesCollection
 				p.setTo(cx, cy);
 				transformPoint(p, frame);
 				
-				if (bmd.getPixel(Std.int(p.x), Std.int(p.y)) != globalBGColor) 
+				if (bmd.getPixel(Std.int(p.x), Std.int(p.y)) != cast globalBGColor) 
 				{
 					// found non bg pixel
 					gx = cx;
@@ -367,7 +367,7 @@ class FlxBitmapFont extends FlxFramesCollection
 					transformPoint(p, frame);
 					
 					// find width and height of char
-					while (bmd.getPixel(Std.int(p.x), Std.int(p.y)) != globalBGColor) 
+					while (bmd.getPixel(Std.int(p.x), Std.int(p.y)) != cast globalBGColor) 
 					{
 						gx++;
 						p.setTo(gx, cy);
@@ -377,7 +377,7 @@ class FlxBitmapFont extends FlxFramesCollection
 					p.setTo(gx - 1, gy);
 					transformPoint(p, frame);
 					
-					while (bmd.getPixel(Std.int(p.x), Std.int(p.y)) != globalBGColor) 
+					while (bmd.getPixel(Std.int(p.x), Std.int(p.y)) != cast globalBGColor) 
 					{
 						gy++;
 						p.setTo(cx, gy);
