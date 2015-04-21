@@ -39,7 +39,7 @@ class Tracker extends Watch
 {
 	#if !FLX_NO_DEBUG
 	/**
-	 * Order matters here, as the last profile is the most releveant - i.e., if the 
+	 * Order matters here, as the last profile is the most relevant - i.e., if the 
 	 * FlxSprite profile were added before the one for FlxObject, it would never be selected.
 	 */
 	public static var profiles:Array<TrackerProfile>;
@@ -145,12 +145,12 @@ class Tracker extends Watch
 	
 	private var _object:Dynamic;
 	
-	public function new(Profile:TrackerProfile, Object:Dynamic, ?WindowTitle:String) 
+	public function new(Profile:TrackerProfile, ObjectOrClass:Dynamic, ?WindowTitle:String) 
 	{
 		super(true);
 		
 		initProfiles();
-		_object = Object;
+		_object = ObjectOrClass;
 		objectsBeingTracked.push(_object);
 		
 		initWatchEntries(Profile);

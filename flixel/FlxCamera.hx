@@ -45,24 +45,23 @@ class FlxCamera extends FlxBasic
 	public static var defaultCameras:Array<FlxCamera>;
 	
 	/**
-	 * The X position of this camera's display.  Zoom does NOT affect this number.
+	 * The X position of this camera's display. Zoom does NOT affect this number.
 	 * Measured in pixels from the left side of the flash window.
 	 */
 	public var x(default, set):Float = 0;
 	/**
-	 * The Y position of this camera's display.  Zoom does NOT affect this number.
+	 * The Y position of this camera's display. Zoom does NOT affect this number.
 	 * Measured in pixels from the top of the flash window.
 	 */
 	public var y(default, set):Float = 0;
 	
 	/**
-	 *The scaling on horizontal axis for this camera.
+	 * The scaling on horizontal axis for this camera.
 	 */
 	public var scaleX(default, null):Float;
 	/**
-	 *
 	 * The scaling on vertical axis for this camera.
-	*/
+	 */
 	public var scaleY(default, null):Float;
 	/**
 	 * Product of camera's scaleX and game's scalemode scale.x multiplication.
@@ -89,7 +88,7 @@ class FlxCamera extends FlxBasic
 	public var targetOffset(default, null):FlxPoint;
 	/**
 	 * Used to smoothly track the camera as it follows: The percent of the distance to the follow target the camera moves per 1/60 sec.
-	 * Values are bounded between 0.0 and FlxG.updateFrameRate / 60 for consistency acaross framerates.
+	 * Values are bounded between 0.0 and FlxG.updateFrameRate / 60 for consistency across framerates.
 	 * The maximum value means no camera easing. A value of 0 means the camera does not move.
 	 */
 	public var followLerp(default, set):Float = 60 / FlxG.updateFramerate;
@@ -800,7 +799,7 @@ class FlxCamera extends FlxBasic
 		scroll.y = FlxMath.bound(scroll.y, minScrollY, (maxScrollY != null) ? maxScrollY - height : null);
 	}
 	
-	private function updateFollow():Void
+	public function updateFollow():Void
 	{
 		//Either follow the object closely, 
 		//or doublecheck our deadzone and update accordingly.
@@ -1078,6 +1077,16 @@ class FlxCamera extends FlxBasic
 		{
 			Offset.putWeak();
 		}
+	}
+	
+	/**
+	 * Snaps the camera to the current target. Useful to move the camera without
+	 * any easing when the target position changes and there is a followLerp.
+	 */
+	public function snapToTarget():Void
+	{
+		updateFollow();
+		scroll.copyFrom(_scrollTarget);
 	}
 	
 	/**

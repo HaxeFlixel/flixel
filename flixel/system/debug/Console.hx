@@ -298,10 +298,9 @@ class Console extends Window
 		if (_historyIndex < cmdHistory.length)
 			_historyIndex++;
 		
-		if (cmdHistory[_historyIndex] != null)
-			return cmdHistory[_historyIndex];
-		else 
-			return "";
+		return if (cmdHistory[_historyIndex] != null)
+			cmdHistory[_historyIndex];
+		else "";
 	}
 	
 	/**
@@ -342,9 +341,6 @@ class Console extends Window
 						numParams:NumParams, paramCutoff:ParamCutoff });
 	}
 	
-	/**
-	 * Clean up memory.
-	 */
 	override public function destroy():Void
 	{
 		super.destroy();
