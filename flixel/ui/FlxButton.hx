@@ -103,6 +103,10 @@ class FlxButton extends FlxTypedButton<FlxText> implements IFlxInput
 		{
 			initLabel(Text);
 		}
+		else
+		{
+			label.text = Text;
+		}
 		return Text;
 	}
 }
