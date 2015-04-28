@@ -2,11 +2,13 @@ package flixel.graphics.tile;
 
 import flixel.FlxCamera;
 import flixel.graphics.FlxGraphic;
+import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.tile.FlxDrawBaseItem.FlxDrawItemType;
+import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
 import flixel.util.FlxColor;
 import openfl.display.Tilesheet;
-import openfl.geom.Matrix;
 
 class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 {
@@ -33,40 +35,40 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 		drawData = null;
 	}
 	
-	public inline function setDrawData(coordinate:FlxPoint, ID:Float, matrix:Matrix,
-		isColored:Bool = false, color:FlxColor = FlxColor.WHITE, alpha:Float = 1):Void
+	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix,
+		red:Float = 1, green:Float = 1, blue:Float = 1, alpha:Float = 1):Void
 	{
-		drawData[position++] = coordinate.x;
-		drawData[position++] = coordinate.y;
+		drawData[position++] = matrix.tx;
+		drawData[position++] = matrix.ty;
 		
-		drawData[position++] = ID;
+		var rect:FlxRect = frame.frame;
+		
+		drawData[position++] = rect.x;
+		drawData[position++] = rect.y;
+		drawData[position++] = rect.width;
+		drawData[position++] = rect.height;
 		
 		drawData[position++] = matrix.a;
 		drawData[position++] = matrix.b;
 		drawData[position++] = matrix.c;
 		drawData[position++] = matrix.d;
 		
-		if (isColored)
+		if (colored)
 		{
-			drawData[position++] = color.redFloat; 
-			drawData[position++] = color.greenFloat;
-			drawData[position++] = color.blueFloat;
+			drawData[position++] = red; 
+			drawData[position++] = green;
+			drawData[position++] = blue;
 		}
 		
 		drawData[position++] = alpha;
-		
-		coordinate.putWeak();
 	}
 	
 	override public function render(camera:FlxCamera):Void
 	{
 		#if FLX_RENDER_TILE
-		var dataLen:Int = drawData.length;
-		
 		if (position > 0)
 		{
-			var tempFlags:Int = Tilesheet.TILE_TRANS_2x2;
-			tempFlags |= Tilesheet.TILE_ALPHA;
+			var tempFlags:Int = Tilesheet.TILE_TRANS_2x2 | Tilesheet.TILE_RECT | Tilesheet.TILE_ALPHA;
 			
 			if (colored)
 			{

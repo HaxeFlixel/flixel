@@ -2,6 +2,7 @@ import massive.munit.TestSuite;
 
 import flixel.animation.FlxAnimationControllerTest;
 import flixel.effects.particles.FlxEmitterTest;
+import flixel.FlxBasicTest;
 import flixel.FlxCameraTest;
 import flixel.FlxGTest;
 import flixel.FlxObjectTest;
@@ -34,7 +35,6 @@ import flixel.util.FlxSignalTest;
 import flixel.util.FlxSpriteUtilTest;
 import flixel.util.FlxStringUtilTest;
 import flixel.util.FlxTimerTest;
-import FlxBasicTest;
 import FlxTest;
 
 /**
@@ -51,6 +51,7 @@ class TestSuite extends massive.munit.TestSuite
 
 		add(flixel.animation.FlxAnimationControllerTest);
 		add(flixel.effects.particles.FlxEmitterTest);
+		add(flixel.FlxBasicTest);
 		add(flixel.FlxCameraTest);
 		add(flixel.FlxGTest);
 		add(flixel.FlxObjectTest);
@@ -83,7 +84,6 @@ class TestSuite extends massive.munit.TestSuite
 		add(flixel.util.FlxSpriteUtilTest);
 		add(flixel.util.FlxStringUtilTest);
 		add(flixel.util.FlxTimerTest);
-		add(FlxBasicTest);
 		add(FlxTest);
 	}
 }

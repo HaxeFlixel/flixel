@@ -86,6 +86,24 @@ class FlxDestroyUtil
 		return null;
 	}
 	
+	/**
+	 * Checks if a BitmapData object is not null and it's size isn't equal to specified one before calling dispose() on it.
+	 */
+	public static function disposeIfNotEqual(bitmapData:BitmapData, width:Float, height:Float):BitmapData
+	{
+		if (bitmapData != null && (bitmapData.width != width || bitmapData.height != height))
+		{
+			bitmapData.dispose();
+			return null;
+		}
+		else if (bitmapData != null)
+		{
+			return bitmapData;
+		}
+		
+		return null;
+	}
+	
 	public static function removeChild<T:DisplayObject>(parent:DisplayObjectContainer, child:T):T
 	{
 		if (parent != null && child != null && parent.contains(child))

@@ -120,7 +120,6 @@ class FlxTileblock extends FlxSprite
 			row++;
 		}
 		
-		frame.destroyBitmaps();
 		dirty = true;
 		return this;
 	}

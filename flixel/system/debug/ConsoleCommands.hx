@@ -10,9 +10,6 @@ import flixel.util.FlxStringUtil;
 
 class ConsoleCommands
 {
-	/**
-	 * Reference to the console window.
-	 */
 	private var _console:Console;
 	/**
 	 * Helper variable for toggling the mouse coords in the watch window.
@@ -45,7 +42,7 @@ class ConsoleCommands
 		console.addCommand(["listFunctions", "lf"], listFunctions, "Lists all the aliases of the registered objects.");
 		
 		console.addCommand(["watchMouse", "wm"], watchMouse, "Adds the mouse coordinates to the watch window.");
-		console.addCommand(["track", "t"], track, "Adds a tracker window for the specified object.");
+		console.addCommand(["track", "t"], track, "Adds a tracker window for the specified object or class.");
 		
 		console.addCommand(["pause", "p"], pause, "Toggle between paused and unpaused");
 		
@@ -56,10 +53,6 @@ class ConsoleCommands
 		console.registerObject("FlxG", FlxG);
 		#end
 	}
-	
-	/**
-	 * Commands
-	 */
 	
 	#if !FLX_NO_DEBUG
 	private function help(?Alias:String):Void
@@ -413,8 +406,14 @@ class ConsoleCommands
 	{
 		if (ObjectAndVariable != null)
 		{
-			var pathToVariable:PathToVariable = ConsoleUtil.resolveObjectAndVariableFromMap(ObjectAndVariable, _console.registeredObjects);
-			FlxG.debugger.track(Reflect.getProperty(pathToVariable.object, pathToVariable.variableName));
+			var path:PathToVariable = ConsoleUtil.resolveObjectAndVariableFromMap(ObjectAndVariable, _console.registeredObjects);
+			var objectOrClass = 
+				if (path.variableName == "") // Class<T>
+					path.object;
+				else
+					Reflect.getProperty(path.object, path.variableName);
+				
+			FlxG.debugger.track(objectOrClass);
 		}
 	}
 	

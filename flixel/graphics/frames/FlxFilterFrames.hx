@@ -27,11 +27,12 @@ class FlxFilterFrames extends FlxFramesCollection
 	 * @param	frames		frames collection to generate filters for.
 	 * @param	widthInc	how much frames should expand horizontally.
 	 * @param	heightInc	how much frames should expend vertically.
+	 * @param	filters		optional filters array to apply
 	 * @return	New frames collection which you can apply filters to.
 	 */
-	public static inline function fromFrames(frames:FlxFramesCollection, widthInc:Int = 0, heightInc:Int = 0):FlxFilterFrames
+	public static inline function fromFrames(frames:FlxFramesCollection, widthInc:Int = 0, heightInc:Int = 0, filters:Array<BitmapFilter> = null):FlxFilterFrames
 	{
-		return new FlxFilterFrames(frames, widthInc, heightInc);
+		return new FlxFilterFrames(frames, widthInc, heightInc, filters);
 	}
 	
 	/**
@@ -54,7 +55,7 @@ class FlxFilterFrames extends FlxFramesCollection
 	 */
 	public var filters(default, set):Array<BitmapFilter>;
 	
-	private function new(sourceFrames:FlxFramesCollection, widthInc:Int = 0, heightInc:Int = 0)
+	private function new(sourceFrames:FlxFramesCollection, widthInc:Int = 0, heightInc:Int = 0, filters:Array<BitmapFilter> = null)
 	{
 		super(null, FlxFrameCollectionType.FILTER);
 		
@@ -69,9 +70,10 @@ class FlxFilterFrames extends FlxFramesCollection
 		this.widthInc = widthInc;
 		this.heightInc = heightInc;
 		
-		filters = [];
+		this.filters = (filters == null) ? [] : filters;
 		
 		genFrames();
+		applyFilters();
 	}
 	
 	/**
@@ -100,31 +102,14 @@ class FlxFilterFrames extends FlxFramesCollection
 		var canvas:BitmapData;
 		var graph:FlxGraphic;
 		var region:FlxRect;
-		var filterFrame:FlxFilterFrame;
+		var filterFrame:FlxFrame;
 		
-		#if FLX_RENDER_TILE
-		var flashRect:Rectangle;
-		#end
-	
 		for (frame in sourceFrames.frames)
 		{
 			canvas = new BitmapData(Std.int(frame.sourceSize.x + widthInc), Std.int(frame.sourceSize.y + heightInc), true, FlxColor.TRANSPARENT);
 			graph = FlxGraphic.fromBitmapData(canvas, false, null, false);
-			region = new FlxRect(0, 0, graph.width, graph.height);
 			
-			filterFrame = new FlxFilterFrame(graph, frame, this);
-			
-			filterFrame.frame = region;
-			filterFrame.sourceSize.set(region.width, region.height);
-			filterFrame.offset.set(0, 0);
-			filterFrame.center.set(0.5 * region.width, 0.5 * region.height);
-			
-			filterFrame.paintOnBitmap(filterFrame.parent.bitmap);
-			
-			#if FLX_RENDER_TILE
-			flashRect = region.copyToFlash(new Rectangle());
-			filterFrame.tileID = graph.tilesheet.addTileRect(flashRect, new Point(0.5 * region.width, 0.5 * region.height));
-			#end
+			filterFrame = graph.imageFrame.frame;
 			
 			frames.push(filterFrame);
 			if (frame.name != null)
@@ -133,6 +118,8 @@ class FlxFilterFrames extends FlxFramesCollection
 				framesHash.set(frame.name, filterFrame);
 			}
 		}
+		
+		regenBitmaps(false);
 	}
 	
 	/**
@@ -145,7 +132,7 @@ class FlxFilterFrames extends FlxFramesCollection
 		if (filter != null)
 		{
 			filters.push(filter);
-			regenBitmaps();
+			applyFilter(filter);
 		}
 	}
 	
@@ -163,7 +150,7 @@ class FlxFilterFrames extends FlxFramesCollection
 		
 		if (filters.remove(filter))
 		{
-			regenBitmaps();
+			regenAndApplyFilters();
 		}
 	}
 	
@@ -185,12 +172,54 @@ class FlxFilterFrames extends FlxFramesCollection
 		regenBitmaps();
 	}
 	
-	private function regenBitmaps():Void
+	private function regenAndApplyFilters():Void
 	{
+		regenBitmaps();
+		applyFilters();
+	}
+	
+	private function regenBitmaps(fill:Bool = true):Void
+	{
+		var numFrames:Int = frames.length;
+		var frame:FlxFrame;
+		var sourceFrame:FlxFrame;
+		var frameOffset:Point;
+		
+		for (i in 0...numFrames)
+		{
+			sourceFrame = sourceFrames.frames[i];
+			frame = frames[i];
+			
+			if (fill)
+				frame.parent.bitmap.fillRect(frame.parent.bitmap.rect, FlxColor.TRANSPARENT);
+			
+			frameOffset = FlxPoint.point1;
+			frameOffset.setTo(widthInc, heightInc);
+			
+			sourceFrame.paint(frame.parent.bitmap, frameOffset, true);
+		}
+	}
+	
+	function applyFilter(filter:BitmapFilter) 
+	{
+		var point:Point = FlxPoint.point1;
+		var rect:Rectangle = FlxRect.rect;
+		var bitmap:BitmapData;
+		
 		for (frame in frames)
 		{
-			frame.destroyBitmaps();
-			frame.paintOnBitmap(frame.parent.bitmap);
+			point.setTo(0, 0);
+			rect.setTo(0, 0, frame.sourceSize.x, frame.sourceSize.y);
+			bitmap = frame.parent.bitmap;
+			bitmap.applyFilter(bitmap, rect, point, filter);
+		}
+	}
+	
+	private function applyFilters():Void
+	{
+		for (filter in filters)
+		{
+			applyFilter(filter);
 		}
 	}
 	
@@ -212,7 +241,7 @@ class FlxFilterFrames extends FlxFramesCollection
 		filters = value;
 		
 		if (value != null)
-			regenBitmaps();
+			regenAndApplyFilters();
 		
 		return filters;
 	}

@@ -14,6 +14,11 @@ class FlxConditionals
 	static inline var FLX_RENDER_BLIT = "FLX_RENDER_BLIT";
 	
 	/**
+	 * Additional render flag
+	 */
+	static inline var FLX_RENDER_TRIANGLE = "FLX_RENDER_TRIANGLE";
+	
+	/**
 	 * Flixel-defined helper conditionals
 	 */
 	static inline var FLX_MOUSE_ADVANCED = "FLX_MOUSE_ADVANCED";
@@ -47,6 +52,7 @@ class FlxConditionals
 	static var USER_DEFINABLE:Array<String> = [
 		FLX_RENDER_BLIT,
 		FLX_RENDER_TILE,
+		FLX_RENDER_TRIANGLE,
 		FLX_NO_MOUSE,
 		FLX_NO_MOUSE_ADVANCED,
 		FLX_NO_NATIVE_CURSOR,

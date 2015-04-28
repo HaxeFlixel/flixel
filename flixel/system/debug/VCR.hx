@@ -43,7 +43,7 @@ class VCR
 	*/
 	public var runtimeDisplay:TextField;
 	
-	public var runtime:Int = 0;
+	public var runtime:Float = 0;
 
 	public var playbackToggleBtn:FlxSystemButton;
 	public var stepBtn:FlxSystemButton;
@@ -125,7 +125,7 @@ class VCR
 	/**
 	 * Just updates the VCR GUI so the runtime displays roughly the right thing.
 	 */
-	public function updateRuntime(Time:Int):Void
+	public function updateRuntime(Time:Float):Void
 	{
 		runtime += Time;
 		runtimeDisplay.text = FlxStringUtil.formatTime(Std.int(runtime / 1000), true);

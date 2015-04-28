@@ -72,6 +72,7 @@ class FlxAnimationController implements IFlxDestroyable
 	/**
 	 * Internal, stores all the animation that were added to this sprite.
 	 */
+	@:allow(flixel.FlxSprite)
 	private var _animations(default, null):Map<String, FlxAnimation>;
 	
 	private var _prerotated:FlxPrerotatedAnimation;
@@ -512,13 +513,46 @@ class FlxAnimationController implements IFlxDestroyable
 	}
 	
 	/**
+	 * Stops current animation and resets its frame index to zero.
+	 */
+	public inline function reset():Void
+	{
+		if (_curAnim != null)
+		{
+			_curAnim.reset();
+		}
+	}
+	
+	/**
+	 * Stops current animation and sets its frame to the last one.
+	 */
+	public function finish():Void
+	{
+		if (_curAnim != null)
+		{
+			_curAnim.finish();
+		}
+	}
+	
+	/**
+	 * Just stops current animation.
+	 */
+	public function stop():Void
+	{
+		if (_curAnim != null)
+		{
+			_curAnim.stop();
+		}
+	}
+	
+	/**
 	 * Pauses the current animation.
 	 */
 	public inline function pause():Void
 	{
 		if (_curAnim != null)
 		{
-			_curAnim.paused = true;
+			_curAnim.pause();
 		}
 	}
 	
@@ -529,7 +563,18 @@ class FlxAnimationController implements IFlxDestroyable
 	{
 		if (_curAnim != null)
 		{
-			_curAnim.paused = false;
+			_curAnim.resume();
+		}
+	}
+	
+	/**
+	 * Reverses current animation if it exists.
+	 */
+	public inline function reverse():Void
+	{
+		if (_curAnim != null)
+		{
+			_curAnim.reverse();
 		}
 	}
 	
@@ -740,7 +785,14 @@ class FlxAnimationController implements IFlxDestroyable
 	{
 		if (_curAnim != null)
 		{
-			_curAnim.paused = Value;
+			if (Value) 
+			{ 
+				_curAnim.pause();
+			} 
+			else
+			{
+				_curAnim.resume();
+			}
 		}
 		return Value;
 	}
@@ -759,8 +811,7 @@ class FlxAnimationController implements IFlxDestroyable
 	{
 		if (Value == true && _curAnim != null)
 		{
-			_curAnim.finished = true;
-			frameIndex = _curAnim.numFrames - 1;
+			_curAnim.finish();
 		}
 		return Value;
 	}

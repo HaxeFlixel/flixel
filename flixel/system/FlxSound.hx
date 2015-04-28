@@ -38,27 +38,27 @@ class FlxSound extends FlxBasic
 	 */
 	public var persist:Bool;
 	/**
-	 * The ID3 song name.  Defaults to null.  Currently only works for streamed sounds.
+	 * The ID3 song name. Defaults to null. Currently only works for streamed sounds.
 	 */
-	public var name:String;
+	public var name(default, null):String;
 	/**
-	 * The ID3 artist name.  Defaults to null.  Currently only works for streamed sounds.
+	 * The ID3 artist name. Defaults to null. Currently only works for streamed sounds.
 	 */
-	public var artist:String;
+	public var artist(default, null):String;
 	/**
 	 * Stores the average wave amplitude of both stereo channels
 	 */
-	public var amplitude:Float;
+	public var amplitude(default, null):Float;
 	/**
 	 * Just the amplitude of the left stereo channel
 	 */
-	public var amplitudeLeft:Float;
+	public var amplitudeLeft(default, null):Float;
 	/**
 	 * Just the amplitude of the left stereo channel
 	 */
-	public var amplitudeRight:Float;
+	public var amplitudeRight(default, null):Float;
 	/**
-	 * Whether to call destroy() when the sound has finished.
+	 * Whether to call destroy() when the sound has finished playing.
 	 */
 	public var autoDestroy:Bool;
 	/**
@@ -78,6 +78,12 @@ class FlxSound extends FlxBasic
 	 * Set volume to a value between 0 and 1 to change how this sound is.
 	 */
 	public var volume(get, set):Float;
+	#if ((cpp || neko) && openfl_legacy)
+	/**
+	 * Set pitch, which also alters the playback speed. Default is 1.
+	 */
+	public var pitch(get, set):Float;
+	#end
 	/**
 	 * The position in runtime of the music playback.
 	 */
@@ -107,6 +113,12 @@ class FlxSound extends FlxBasic
 	 * Internal tracker for volume.
 	 */
 	private var _volume:Float;
+	#if ((cpp || neko) && openfl_legacy)
+	/**
+	 * Internal tracker for pitch.
+	 */
+	private var _pitch:Float = 1.0;
+	#end
 	/**
 	 * Internal tracker for total volume adjustment.
 	 */
@@ -518,6 +530,9 @@ class FlxSound extends FlxBasic
 		_channel = _sound.play(time, numLoops, _transform);
 		if (_channel != null)
 		{
+			#if ((cpp || neko) && openfl_legacy)
+			pitch = _pitch;
+			#end
 			_channel.addEventListener(Event.SOUND_COMPLETE, stopped);
 			active = true;
 		}
@@ -584,9 +599,8 @@ class FlxSound extends FlxBasic
 	
 	/**
 	 * Internal event handler for ID3 info (i.e. fetching the song name).
-	 * @param	event	An Event object.
 	 */
-	private function gotID3(?event:Event):Void
+	private function gotID3(_):Void
 	{
 		FlxG.log.notice("Got ID3 info.");
 		name = _sound.id3.songName;
@@ -628,6 +642,22 @@ class FlxSound extends FlxBasic
 		updateTransform();
 		return Volume;
 	}
+	
+	
+	#if ((cpp || neko) && openfl_legacy)
+	private inline function get_pitch():Float
+	{
+		return _pitch;
+	}
+	
+	private function set_pitch(v:Float):Float
+	{
+		if (_channel != null)
+			_channel.pitch = v;
+		return _pitch = v;
+	}
+	#end
+	
 	
 	private inline function get_pan():Float
 	{

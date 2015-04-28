@@ -340,48 +340,118 @@ class FlxBitmapDataUtil
 	}
 	
 	/**
-	 * Gets image without spaces between tiles and generates new one with spaces.
+	 * Gets image without spaces between tiles and generates new one with spaces and adds borders around them.
 	 * @param	bitmapData	original image without spaces between tiles.
 	 * @param	frameSize	the size of tile in spritesheet.
 	 * @param	spacing		spaces between tiles to add.
+	 * @param	border		how many times to copy border of tiles.
 	 * @param	region		region of image to use as a source graphics for spritesheet. Default value is null, which means that whole image will be used.
 	 * @return	Image for spritesheet with inserted spaces between tiles.
 	 */
-	public static function addSpacing(bitmapData:BitmapData, frameSize:FlxPoint, spacing:FlxPoint, region:FlxRect = null):BitmapData
+	public static function addSpacesAndBorders(bitmapData:BitmapData, frameSize:FlxPoint = null, spacing:FlxPoint = null, border:FlxPoint = null, region:FlxRect = null):BitmapData
 	{
 		if (region == null)
 		{
 			region = new FlxRect(0, 0, bitmapData.width, bitmapData.height);
 		}
 		
-		var frameWidth:Int = Std.int(frameSize.x);
-		var frameHeight:Int = Std.int(frameSize.y);
+		var frameWidth:Int = Std.int(region.width);
+		var frameHeight:Int = Std.int(region.height);
+		
+		if (frameSize != null)
+		{
+			frameWidth = Std.int(frameSize.x);
+			frameHeight = Std.int(frameSize.y);
+		}
 		
 		var numHorizontalFrames:Int = Std.int(region.width / frameWidth);
 		var numVerticalFrames:Int = Std.int(region.height / frameHeight);
 		
+		var spaceX:Int = 0;
+		var spaceY:Int = 0;
+		
+		if (spacing != null)
+		{
+			spaceX = Std.int(spacing.x);
+			spaceY = Std.int(spacing.y);
+		}
+		
+		var borderX:Int = 0;
+		var borderY:Int = 0;
+		
+		if (border != null)
+		{
+			borderX = Std.int(border.x);
+			borderY = Std.int(border.y); 
+		}
+		
 		var result:BitmapData = new BitmapData(
-						Std.int(region.width + (numHorizontalFrames - 1) * spacing.x), 
-						Std.int(region.height + (numVerticalFrames - 1) * spacing.y), 
+						Std.int(region.width + (numHorizontalFrames - 1) * spaceX + 2 * numHorizontalFrames * borderX), 
+						Std.int(region.height + (numVerticalFrames - 1) * spaceY + 2 * numVerticalFrames * borderY), 
 						true, 
 						FlxColor.TRANSPARENT);
-		
+						
 		result.lock();
 		var tempRect:Rectangle = new Rectangle(0, 0, frameWidth, frameHeight);
 		var tempPoint:Point = new Point();
 		
+		// insert spaces
 		for (i in 0...(numHorizontalFrames))
 		{
-			tempPoint.x = i * (frameWidth + spacing.x);
+			tempPoint.x = i * (frameWidth + spaceX + 2 * borderX) + borderX;
 			tempRect.x = i * frameWidth + region.x;
 			
 			for (j in 0...(numVerticalFrames))
 			{
-				tempPoint.y = j * (frameHeight + spacing.y);
+				tempPoint.y = j * (frameHeight + spaceY + 2 * borderY) + borderY;
 				tempRect.y = j * frameHeight + region.y;
 				result.copyPixels(bitmapData, tempRect, tempPoint);
 			}
 		}
+		
+		// copy borders
+		tempPoint.setTo(0, 0);
+		tempRect.setTo(0, 0, 1, result.height);
+		for (i in 0...(numHorizontalFrames))
+		{
+			tempRect.x = i * (frameWidth + 2 * borderX + spaceX) + borderX;
+			
+			for (j in 0...borderX)
+			{
+				tempPoint.x = tempRect.x - j - 1;
+				result.copyPixels(result, tempRect, tempPoint);
+			}
+			
+			tempRect.x += frameWidth - 1;
+			
+			for (j in 0...borderX)
+			{
+				tempPoint.x = tempRect.x + j + 1;
+				result.copyPixels(result, tempRect, tempPoint);
+			}
+		}
+		
+		tempPoint.setTo(0, 0);
+		tempRect.setTo(0, 0, result.width, 1);
+		for (i in 0...(numVerticalFrames))
+		{
+			tempRect.y = i * (frameHeight + 2 * borderY + spaceY) + borderY;
+			
+			for (j in 0...borderY)
+			{
+				tempPoint.y = tempRect.y - j - 1;
+				result.copyPixels(result, tempRect, tempPoint);
+			}
+			
+			tempRect.y += frameHeight - 1;
+			
+			for (j in 0...borderY)
+			{
+				tempPoint.y = tempRect.y + j + 1;
+				result.copyPixels(result, tempRect, tempPoint);
+			}
+		}
+		
 		result.unlock();
 		return result;
 	}

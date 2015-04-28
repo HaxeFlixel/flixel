@@ -1,5 +1,9 @@
 package flixel.graphics.tile;
 import flixel.FlxCamera;
+import flixel.graphics.frames.FlxFrame;
+import flixel.math.FlxMatrix;
+import openfl.display.BlendMode;
+import openfl.display.Tilesheet;
 
 /**
  * ...
@@ -7,6 +11,30 @@ import flixel.FlxCamera;
  */
 class FlxDrawBaseItem<T>
 {
+	public static function blendToInt(blend:BlendMode):Int
+	{
+		var blendInt:Int = 0;
+		
+		if (blend != null)
+		{
+			switch (blend)
+			{
+				case BlendMode.ADD:
+					blendInt = Tilesheet.TILE_BLEND_ADD;
+				#if !flash
+				case BlendMode.MULTIPLY:
+					blendInt = Tilesheet.TILE_BLEND_MULTIPLY;
+				case BlendMode.SCREEN:
+					blendInt = Tilesheet.TILE_BLEND_SCREEN;
+				#end
+				default:
+					blendInt = Tilesheet.TILE_BLEND_NORMAL;
+			}
+		}
+		
+		return blendInt;
+	}
+	
 	public var nextTyped:T;
 	
 	public var next:FlxDrawBaseItem<T>;
@@ -41,6 +69,9 @@ class FlxDrawBaseItem<T>
 	}
 	
 	public function render(camera:FlxCamera):Void {  }
+	
+	public function addQuad(frame:FlxFrame, matrix:FlxMatrix,
+		red:Float = 1, green:Float = 1, blue:Float = 1, alpha:Float = 1):Void {  }
 	
 	private function get_numVertices():Int
 	{

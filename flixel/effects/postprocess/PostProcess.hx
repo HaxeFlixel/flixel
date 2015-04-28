@@ -176,10 +176,10 @@ class PostProcess extends OpenGLView
 		time += elapsed;
 	}
 
+	#if openfl_legacy
 	/**
 	 * Renders to a framebuffer or the screen every frame
 	 */
-	#if ((openfl < "3") && !openfl_next)	
 	override public function render(rect:Rectangle)
 	{
 		GL.bindFramebuffer(GL.FRAMEBUFFER, renderTo);

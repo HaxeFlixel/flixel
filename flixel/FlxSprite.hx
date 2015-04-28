@@ -3,14 +3,13 @@ package flixel;
 import flash.display.BitmapData;
 import flash.display.BlendMode;
 import flash.geom.ColorTransform;
-import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
+import flixel.animation.FlxAnimation;
 import flixel.animation.FlxAnimationController;
 import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.graphics.FlxGraphic;
-import flixel.graphics.frames.FlxClippedFrames;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.frames.FlxFramesCollection;
 import flixel.graphics.frames.FlxImageFrame;
@@ -26,7 +25,6 @@ import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.util.FlxBitmapDataUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
-import openfl.display.Tilesheet;
 
 @:keep @:bitmap("assets/images/logo/default.png")
 private class GraphicDefault extends BitmapData {}
@@ -50,6 +48,7 @@ class FlxSprite extends FlxObject
 	 * The actual Flash BitmapData object representing the current display state of the sprite.
 	 * WARNING: can be null in FLX_RENDER_TILE mode unless you call getFlxFrameBitmapData() beforehand.
 	 */
+	// TODO: maybe convert this var to property...
 	public var framePixels:BitmapData;
 	/**
 	 * Controls whether the object is smoothed when rotated, affects performance.
@@ -150,13 +149,14 @@ class FlxSprite extends FlxObject
 	 */
 	public var clipRect(default, set):FlxRect;
 	
-	private var _clipRect:FlxRect;
+	/**
+	 * The actual frame used for sprite rendering
+	 */
+	private var _frame:FlxFrame;
 	
 	#if FLX_RENDER_TILE
 	private var _facingHorizontalMult:Int = 1;
 	private var _facingVerticalMult:Int = 1;
-	private var _blendInt:Int = 0;
-	private var isColored:Bool = false;
 	#end
 	
 	/**
@@ -191,7 +191,7 @@ class FlxSprite extends FlxObject
 	 */
 	private var _sinAngle:Float = 0;
 	private var _cosAngle:Float = 1;
-	private var _angleChanged:Bool = false;
+	private var _angleChanged:Bool = true;
 	/**
 	 * Maps FlxObject direction constants to axis flips
 	 */
@@ -258,6 +258,8 @@ class FlxSprite extends FlxObject
 		colorTransform = null;
 		blend = null;
 		frame = null;
+		
+		_frame = FlxDestroyUtil.destroy(_frame);
 		
 		frames = null;
 		graphic = null;
@@ -415,7 +417,7 @@ class FlxSprite extends FlxObject
 		var graphic:FlxGraphic = FlxG.bitmap.get(key);
 		if (graphic == null)
 		{
-			graphic = FlxGraphic.fromBitmapData(Frame.getBitmap().clone(), false, key);
+			graphic = FlxGraphic.fromBitmapData(Frame.paint(), false, key);
 		}
 		
 		return loadRotatedGraphic(graphic, Rotations, -1, AntiAliasing, AutoBuffer);
@@ -442,7 +444,7 @@ class FlxSprite extends FlxObject
 	 * Called whenever a new graphic is loaded for this sprite
 	 * - after loadGraphic(), makeGraphic() etc.
 	 */
-	public function graphicLoaded():Void {}
+	public function graphicLoaded():Void {  }
 	
 	/**
 	 * Resets _flashRect variable used for frame bitmapData calculation
@@ -558,7 +560,7 @@ class FlxSprite extends FlxObject
 	 */
 	override public function draw():Void
 	{
-		if (frame == null)
+		if (_frame == null)
 		{
 			#if !FLX_NO_DEBUG
 			loadGraphic(FlxGraphic.fromClass(GraphicDefault));
@@ -567,7 +569,7 @@ class FlxSprite extends FlxObject
 			#end
 		}
 		
-		if (alpha == 0 || frame.type == FlxFrameType.EMPTY)
+		if (alpha == 0 || _frame.type == FlxFrameType.EMPTY)
 		{
 			return;
 		}
@@ -576,21 +578,6 @@ class FlxSprite extends FlxObject
 		{
 			calcFrame();
 		}
-		
-	#if FLX_RENDER_TILE
-		var drawItem:FlxDrawTilesItem;
-		
-		var ox:Float = origin.x;
-		if (_facingHorizontalMult != 1)
-		{
-			ox = frameWidth - ox;
-		}
-		var oy:Float = origin.y;
-		if (_facingVerticalMult != 1)
-		{
-			oy = frameHeight - oy;
-		}
-	#end
 		
 		for (camera in cameras)
 		{
@@ -601,75 +588,47 @@ class FlxSprite extends FlxObject
 			
 			getScreenPosition(_point, camera).subtractPoint(offset);
 			
-#if FLX_RENDER_BLIT
-			if (isSimpleRender(camera))
+			var cr:Float = colorTransform.redMultiplier;
+			var cg:Float = colorTransform.greenMultiplier;
+			var cb:Float = colorTransform.blueMultiplier;
+			
+			var simple:Bool = isSimpleRender(camera);
+			if (simple)
 			{
-				_point.floor().copyToFlash(_flashPoint);
-				camera.buffer.copyPixels(framePixels, _flashRect, _flashPoint, null, null, true);
+				if (isPixelPerfectRender(camera))
+				{
+					_point.floor();
+				}
+				
+				_point.copyToFlash(_flashPoint);
+				camera.copyPixels(_frame, framePixels, _flashRect, _flashPoint, cr, cg, cb, alpha, blend, antialiasing);
 			}
 			else
 			{
-				_matrix.identity();
-				_matrix.translate(-origin.x, -origin.y);
+				_frame.prepareMatrix(_matrix, FlxFrameAngle.ANGLE_0, flipX, flipY);
+				_matrix.translate( -origin.x, -origin.y);
 				_matrix.scale(scale.x, scale.y);
 				
-				if ((angle != 0) && (bakedRotationAngle <= 0))
+				if (bakedRotationAngle <= 0)
 				{
-					_matrix.rotate(angle * FlxAngle.TO_RAD);
+					updateTrig();
+					
+					if (angle != 0)
+					{
+						_matrix.rotateWithTrig(_cosAngle, _sinAngle);
+					}
 				}
 				
-				_point.addPoint(origin).floor();
+				_point.add(origin.x, origin.y);
+				if (isPixelPerfectRender(camera))
+				{
+					_point.floor();
+				}
 				
 				_matrix.translate(_point.x, _point.y);
-				camera.buffer.draw(framePixels, _matrix, null, blend, null, (antialiasing || camera.antialiasing));
-			}
-#else
-			drawItem = camera.getDrawTilesItem(frame.parent, isColored, _blendInt, antialiasing);
-			
-			_matrix.identity();
-			
-			if (frame.angle != FlxFrameAngle.ANGLE_0)
-			{
-				// handle rotated frames
-				frame.prepareFrameMatrix(_matrix);
+				camera.drawPixels(_frame, framePixels, _matrix, cr, cg, cb, alpha, blend, antialiasing);
 			}
 			
-			var x1:Float = (ox - frame.center.x);
-			var y1:Float = (oy - frame.center.y);
-			_matrix.translate(x1, y1);
-			
-			var sx:Float = scale.x * _facingHorizontalMult;
-			var sy:Float = scale.y * _facingVerticalMult;
-			_matrix.scale(sx * camera.totalScaleX, sy * camera.totalScaleY);
-			
-			// rotate matrix if sprite's graphic isn't prerotated
-			if (!isSimpleRender(camera))
-			{
-				if (_angleChanged && (bakedRotationAngle <= 0))
-				{
-					var radians:Float = angle * FlxAngle.TO_RAD;
-					_sinAngle = Math.sin(radians);
-					_cosAngle = Math.cos(radians);
-					_angleChanged = false;
-				}
-				
-				_matrix.rotateWithTrig(_cosAngle, _sinAngle);
-			}
-			
-			_point.addPoint(origin);
-			
-			_point.x *= camera.totalScaleX;
-			_point.y *= camera.totalScaleY;
-			
-			if (isPixelPerfectRender(camera))
-			{
-				_point.floor();
-			}
-			
-			_point.subtract(_matrix.tx, _matrix.ty);
-			
-			setDrawData(drawItem, camera, _matrix);
-#end
 			#if !FLX_NO_DEBUG
 			FlxBasic.visibleCount++;
 			#end
@@ -682,13 +641,6 @@ class FlxSprite extends FlxObject
 		}
 		#end
 	}
-	
-	#if FLX_RENDER_TILE
-	private inline function setDrawData(drawItem:FlxDrawTilesItem, camera:FlxCamera, matrix:Matrix, ?tileID:Float)
-	{
-		drawItem.setDrawData(_point, (tileID == null) ? frame.tileID : tileID, matrix, isColored, color, alpha * camera.alpha);
-	}
-	#end
 	
 	/**
 	 * Stamps / draws another FlxSprite onto this FlxSprite. 
@@ -716,7 +668,6 @@ class FlxSprite extends FlxObject
 			graphic.bitmap.copyPixels(bitmapData, _flashRect2, _flashPoint, null, null, true);
 			_flashRect2.width = graphic.bitmap.width;
 			_flashRect2.height = graphic.bitmap.height;
-			resetFrameBitmaps();
 			#if FLX_RENDER_BLIT
 			dirty = true;
 			calcFrame();
@@ -734,7 +685,6 @@ class FlxSprite extends FlxObject
 			_matrix.translate(X + frame.frame.x + Brush.origin.x, Y + frame.frame.y + Brush.origin.y);
 			var brushBlend:BlendMode = Brush.blend;
 			graphic.bitmap.draw(bitmapData, _matrix, null, brushBlend, null, Brush.antialiasing);
-			resetFrameBitmaps();
 			#if FLX_RENDER_BLIT
 			dirty = true;
 			calcFrame();
@@ -757,6 +707,7 @@ class FlxSprite extends FlxObject
 			calcFrame();
 		}
 		#else
+		dirty = true;
 		calcFrame(true);
 		#end
 	}
@@ -801,7 +752,6 @@ class FlxSprite extends FlxObject
 		if (positions != null)
 		{
 			dirty = true;
-			resetFrameBitmaps();
 		}
 		return positions;
 	}
@@ -920,40 +870,17 @@ class FlxSprite extends FlxObject
 	/**
 	 * Retrieves BitmapData of current FlxFrame. Updates framePixels.
 	 */
-	public inline function getFlxFrameBitmapData():BitmapData
+	public function getFlxFrameBitmapData():BitmapData
 	{
-		if (frame != null && dirty)
+		if (_frame != null && dirty)
 		{
-			if (!flipX && !flipY && frame.type == FlxFrameType.REGULAR)
+			if (!flipX && !flipY && _frame.type == FlxFrameType.REGULAR)
 			{
-				framePixels = frame.paintOnBitmap(framePixels);
+				framePixels = _frame.paint(framePixels, _flashPointZero, false, true);
 			}
 			else
 			{
-				var frameBmd:BitmapData = null;
-				if (flipX && flipY)
-				{
-					frameBmd = frame.getHVReversedBitmap();
-				}
-				else if (flipX)
-				{
-					frameBmd = frame.getHReversedBitmap();
-				}
-				else if (flipY)
-				{
-					frameBmd = frame.getVReversedBitmap();
-				}
-				else
-				{
-					frameBmd = frame.getBitmap();
-				}
-				if ((framePixels == null) || (framePixels.width != frameWidth) || (framePixels.height != frameHeight))
-				{
-					FlxDestroyUtil.dispose(framePixels);
-					framePixels = new BitmapData(Std.int(frame.sourceSize.x), Std.int(frame.sourceSize.y));
-				}
-				
-				framePixels.copyPixels(frameBmd, _flashRect, _flashPointZero);
+				framePixels = _frame.paintRotatedAndFlipped(framePixels, _flashPointZero, FlxFrameAngle.ANGLE_0, flipX, flipY, false, true);
 			}
 			
 			if (useColorTransform)
@@ -983,15 +910,6 @@ class FlxSprite extends FlxObject
 	}
 	
 	/**
-	 * Helper function for reseting precalculated FlxFrame bitmapdatas.
-	 * Useful when _pixels bitmapdata changes (e.g. after stamp(), FlxSpriteUtil.drawLine() and other similar method calls).
-	 */
-	public inline function resetFrameBitmaps():Void
-	{
-		graphic.resetFrameBitmaps();
-	}
-	
-	/**
 	 * Check and see if this object is currently on screen. Differs from FlxObject's implementation
 	 * in that it takes the actual graphic into account, not just the hitbox or bounding box or whatever.
 	 * 
@@ -1007,76 +925,69 @@ class FlxSprite extends FlxObject
 		
 		var minX:Float = x - offset.x - Camera.scroll.x * scrollFactor.x;
 		var minY:Float = y - offset.y - Camera.scroll.y * scrollFactor.y;
-		var maxX:Float = 0;
-		var maxY:Float = 0;
 		
 		if ((angle == 0 || bakedRotationAngle > 0) && (scale.x == 1) && (scale.y == 1))
 		{
-			maxX = minX + frameWidth;
-			maxY = minY + frameHeight;
+			if (minX > Camera.width || minX + frameWidth < 0)
+				return false;
+			
+			if (minY > Camera.height || minY + frameHeight < 0)
+				return false;
 		}
 		else
 		{
 			var radiusX:Float = _halfSize.x;
 			var radiusY:Float = _halfSize.y;
 			
-			if (origin.x == radiusX)
+			var ox:Float = origin.x;
+			if (ox != radiusX)
 			{
-				radiusX = Math.abs(radiusX * scale.x);
-			}
-			else
-			{
-				var sox:Float = scale.x * origin.x;
-				var sfw:Float = scale.x * frameWidth;
-				var x1:Float = Math.abs(sox);
-				var x2:Float = Math.abs(sfw - sox);
+				var x1:Float = Math.abs(ox);
+				var x2:Float = Math.abs(frameWidth - ox);
 				radiusX = Math.max(x2, x1);
 			}
 			
-			if (origin.y == radiusY)
+			var oy:Float = origin.y;
+			if (oy != radiusY)
 			{
-				radiusY = Math.abs(radiusY * scale.y);
-			}
-			else
-			{
-				var soy:Float = scale.y * origin.y;
-				var sfh:Float = scale.y * frameHeight;
-				var y1:Float = Math.abs(soy);
-				var y2:Float = Math.abs(sfh - soy);
+				var y1:Float = Math.abs(oy);
+				var y2:Float = Math.abs(frameHeight - oy);
 				radiusY = Math.max(y2, y1);
 			}
 			
+			radiusX *= Math.abs(scale.x);
+			radiusY *= Math.abs(scale.y);
 			var radius:Float = Math.max(radiusX, radiusY);
 			radius *= FlxMath.SQUARE_ROOT_OF_TWO;
 			
-			minX += origin.x;
-			maxX = minX + radius;
+			minX += ox;
+			var maxX:Float = minX + radius;
 			minX -= radius;
 			
-			minY += origin.y;
-			maxY = minY + radius;
+			if (maxX < 0 || minX > Camera.width)
+				return false;
+			
+			minY += oy;
+			var maxY:Float = minY + radius;
 			minY -= radius;
+			
+			if (maxY < 0 || minY > Camera.height)
+				return false;
 		}
-		
-		if (maxX < 0 || minX > Camera.width)
-			return false;
-		
-		if (maxY < 0 || minY > Camera.height)
-			return false;
 		
 		return true;
 	}
 	
 	/**
 	 * Returns the result of isSimpleRenderBlit() if FLX_RENDER_BLIT is 
-	 * defined or isSimpleRenderTile() if FLX_RENDER_TILE is defined.
+	 * defined or false if FLX_RENDER_TILE is defined.
 	 */
 	public function isSimpleRender(?camera:FlxCamera):Bool
 	{ 
 		#if FLX_RENDER_BLIT
 		return isSimpleRenderBlit(camera);
 		#else
-		return isSimpleRenderTile();
+		return false;
 		#end
 	}
 	
@@ -1092,15 +1003,6 @@ class FlxSprite extends FlxObject
 			&& scale.x == 1 && scale.y == 1 && blend == null;
 		result = result && (camera != null ? isPixelPerfectRender(camera) : pixelPerfectRender);
 		return result;
-	}
-	
-	/**
-	 * Determines whether or not additional matrix calculations are required to render sprites via drawTiles().
-	 * Sprites are considered simple when they have an angle of 0 and a scale of 1.
-	 */
-	public function isSimpleRenderTile():Bool
-	{
-		return ((angle == 0 && frame.angle == FlxFrameAngle.ANGLE_0) || (bakedRotationAngle > 0));
 	}
 	
 	/**
@@ -1129,11 +1031,28 @@ class FlxSprite extends FlxObject
 	{
 		if (saveAnimations)
 		{
-			var anim:FlxAnimationController = animation;
-			animation = null;
+			var animations = animation._animations;
+			var reverse:Bool = false;
+			var index:Int = 0;
+			var frameIndex:Int = animation.frameIndex;
+			var currName:String = null;
+			
+			if (animation.curAnim != null)
+			{
+				reverse = animation.curAnim.reversed;
+				index = animation.curAnim.curFrame;
+				currName = animation.curAnim.name;
+			}
+			
+			animation._animations = null;
 			this.frames = Frames;
-			frame = frames.frames[anim.frameIndex];
-			animation = anim;
+			frame = frames.frames[frameIndex];
+			animation._animations = animations;
+			
+			if (currName != null)
+			{
+				animation.play(currName, false, reverse, index);
+			}
 		}
 		else
 		{
@@ -1169,11 +1088,6 @@ class FlxSprite extends FlxObject
 		}
 		
 		frames = graphic.imageFrame;
-		
-		// not sure if i should add this line...
-		// WARNING: this is causing unnecessary string allocations (Map.get) - use arrays, or figure out a way to not call this every frame.
-		resetFrameBitmaps();
-		
 		return Pixels;
 	}
 	
@@ -1189,6 +1103,15 @@ class FlxSprite extends FlxObject
 		{
 			frame = frames.frames[0];
 			dirty = true;
+		}
+		
+		if (frame != null && clipRect != null)
+		{
+			_frame = frame.clipTo(clipRect, _frame);
+		}
+		else if (frame != null)
+		{
+			_frame = frame.copyTo(_frame);
 		}
 		
 		return frame;
@@ -1221,11 +1144,6 @@ class FlxSprite extends FlxObject
 		}
 		color = Color;
 		updateColorTransform();
-		
-		#if FLX_RENDER_TILE
-		isColored = color.to24Bit() != 0xffffff;
-		#end
-		
 		return color;
 	}
 	
@@ -1241,31 +1159,19 @@ class FlxSprite extends FlxObject
 		return ret;
 	}
 	
+	private inline function updateTrig():Void
+	{
+		if (_angleChanged)
+		{
+			var radians:Float = angle * FlxAngle.TO_RAD;
+			_sinAngle = Math.sin(radians);
+			_cosAngle = Math.cos(radians);
+			_angleChanged = false; 
+		}
+	}
+	
 	private function set_blend(Value:BlendMode):BlendMode 
 	{
-		#if FLX_RENDER_TILE
-		if (Value != null)
-		{
-			switch (Value)
-			{
-				case BlendMode.ADD:
-					_blendInt = Tilesheet.TILE_BLEND_ADD;
-				#if !flash
-				case BlendMode.MULTIPLY:
-					_blendInt = Tilesheet.TILE_BLEND_MULTIPLY;
-				case BlendMode.SCREEN:
-					_blendInt = Tilesheet.TILE_BLEND_SCREEN;
-				#end
-				default:
-					_blendInt = Tilesheet.TILE_BLEND_NORMAL;
-			}
-		}
-		else
-		{
-			_blendInt = 0;
-		}
-		#end	
-		
 		return blend = Value;
 	}
 	
@@ -1290,35 +1196,20 @@ class FlxSprite extends FlxObject
 		return graphic = Value;
 	}
 	
-	private function get_clipRect():FlxRect
-	{
-		return _clipRect;
-	}
-	
 	private function set_clipRect(rect:FlxRect):FlxRect
 	{
+		if (rect != null)
+		{
+			clipRect = rect.round();
+		}
+		else
+		{
+			clipRect = null;
+		}
+		
 		if (frames != null)
 		{
-			var anim:FlxAnimationController = animation;
-			animation = null;
-			
-			if (rect != null)
-			{
-				frames = FlxClippedFrames.clip(frames, rect);
-				_clipRect = rect.copyTo(new FlxRect());
-			}
-			else
-			{
-				if (frames.type == FlxFrameCollectionType.CLIPPED)
-				{
-					frames = cast(frames, FlxClippedFrames).original;
-				}
-				
-				_clipRect = null;
-			}
-			
-			frame = frames.frames[anim.frameIndex];
-			animation = anim;
+			frame = frames.frames[animation.frameIndex];
 		}
 		
 		return rect;
@@ -1356,7 +1247,7 @@ class FlxSprite extends FlxObject
 			graphic = null;
 		}
 		
-		_clipRect = null;
+		clipRect = null;
 		return Frames;
 	}
 	
@@ -1365,10 +1256,7 @@ class FlxSprite extends FlxObject
 		#if FLX_RENDER_TILE
 		_facingHorizontalMult = Value ? -1 : 1;
 		#end
-		if (flipX != Value)
-		{
-			dirty = true;
-		}
+		dirty = (flipX != Value) || dirty;
 		return flipX = Value;
 	}
 	
@@ -1377,10 +1265,7 @@ class FlxSprite extends FlxObject
 		#if FLX_RENDER_TILE
 		_facingVerticalMult = Value ? -1 : 1;
 		#end
-		if (flipY != Value)
-		{
-			dirty = true;
-		}
+		dirty = (flipY != Value) || dirty;
 		return flipY = Value;
 	}
 	

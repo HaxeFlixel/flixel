@@ -106,7 +106,7 @@ class FlxG
 	 * How many times you want your game to update each second. More updates usually means better collisions and smoother motion.
 	 * NOTE: This is NOT the same thing as the draw framerate!
 	 */
-	public static var updateFramerate(get, set):Int;
+	public static var updateFramerate(default, set):Int;
 	/**
 	 * How many times you want your game to step each second. More steps usually means greater responsiveness, 
 	 * but it can also slowdown your game if the stage can't keep up with the update routine. NOTE: This is NOT the same thing as the Update framerate!
@@ -506,7 +506,7 @@ class FlxG
 		
 		FlxG.initialZoom = FlxCamera.defaultZoom = Zoom;
 		
-		resizeGame(stage.stageWidth, stage.stageHeight);
+		resizeGame(Lib.current.stage.stageWidth, Lib.current.stage.stageHeight);
 		
 		// Instantiate inputs
 		#if !FLX_NO_KEYBOARD
@@ -592,11 +592,6 @@ class FlxG
 	}
 	#end
 	
-	private static inline function get_updateFramerate():Int
-	{
-		return Std.int(1000 / game._stepMS);
-	}
-	
 	private static function set_updateFramerate(Framerate:Int):Int
 	{
 		if (Framerate < drawFramerate)
@@ -604,8 +599,10 @@ class FlxG
 			log.warn("FlxG.framerate: The game's framerate shouldn't be smaller than the flash framerate, since it can stop your game from updating.");
 		}
 		
-		game._stepMS = Std.int(Math.abs(1000 / Framerate));
-		game._stepSeconds = (game._stepMS / 1000);
+		updateFramerate = Framerate;
+		
+		game._stepMS = Math.abs(1000 / Framerate);
+		game._stepSeconds = game._stepMS / 1000;
 		
 		if (game._maxAccumulation < game._stepMS)
 		{
@@ -629,7 +626,7 @@ class FlxG
 			game.stage.frameRate = drawFramerate;
 		}
 		
-		game._maxAccumulation = Std.int(2000 / drawFramerate) - 1;
+		game._maxAccumulation = 2000 / drawFramerate - 1;
 		
 		if (game._maxAccumulation < game._stepMS)
 		{

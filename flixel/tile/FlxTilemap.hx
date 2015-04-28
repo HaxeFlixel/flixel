@@ -51,10 +51,12 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
  	 */
  	private static var _helperBuffer:FlxTilemapBuffer = Type.createEmptyInstance(FlxTilemapBuffer);
 	
+	// TODO: remove this hack and add docs about how to avoid tearing problem by preparing assets and some code...
 	/**
-	 * Helper variable for non-flash targets. Adjust it's value if you'll see tilemap tearing (empty pixels between tiles). To something like 1.02 or 1.03
+	 * Try to eliminate 1 px gap between tiles in tile render mode by increasing tile scale, 
+	 * so the tile will look one pixel wider than it is.
 	 */
-	public var tileScaleHack:Float = 1.00;
+	public var useScaleHack:Bool = true;
 	
 	/**
 	 * Changes the size of this tilemap. Default is (1, 1). 
@@ -137,12 +139,13 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	
 	#if FLX_RENDER_TILE
 	/**
-	 * Rendering helper, minimize new object instantiation on repetitive methods. Used only in cpp
+	 * Rendering helper, minimize new object instantiation on repetitive methods. Used only in tile rendering mode
 	 */
 	private var _helperPoint:Point;
 	
-	private var _blendInt:Int = 0;
-	
+	/**
+	 * Rendering helper, used for tile's frame transoformations (only in tile rendering mode).
+	 */
 	private var _matrix:FlxMatrix;
 	#end
 	
@@ -170,6 +173,9 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		offset = FlxPoint.get();
 		
 		FlxG.signals.gameResized.add(onGameResize);
+		#if (FLX_RENDER_BLIT && !FLX_NO_DEBUG)
+		FlxG.debugger.drawDebugChanged.add(onDrawDebugChanged);
+		#end
 	}
 	
 	/**
@@ -208,6 +214,9 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		colorTransform = null;
 		
 		FlxG.signals.gameResized.remove(onGameResize);
+		#if (FLX_RENDER_BLIT && !FLX_NO_DEBUG)
+		FlxG.debugger.drawDebugChanged.remove(onDrawDebugChanged);
+		#end
 		
 		super.destroy();
 	}
@@ -230,9 +239,9 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	
 	override private function cacheGraphics(TileWidth:Int, TileHeight:Int, TileGraphic:FlxTilemapGraphicAsset):Void 
 	{
-		if (Std.is(TileGraphic, FlxTileFrames))
+		if (Std.is(TileGraphic, FlxFramesCollection))
 		{
-			frames = cast(TileGraphic, FlxTileFrames);
+			frames = cast(TileGraphic, FlxFramesCollection);
 			return;
 		}
 		
@@ -294,7 +303,6 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		#end
 		
 		var numTiles:Int = _tileObjects.length;
-		
 		for (i in 0...numTiles)
 		{
 			updateTile(i);
@@ -326,15 +334,12 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		_helperPoint.x = x - Camera.scroll.x * scrollFactor.x;
 		_helperPoint.y = y - Camera.scroll.y * scrollFactor.y;
 		
-		_helperPoint.x *= Camera.totalScaleX;
-		_helperPoint.y *= Camera.totalScaleY;
-		
 		var debugColor:FlxColor;
 		var drawX:Float;
 		var drawY:Float;
 		
-		var rectWidth:Float = _scaledTileWidth * Camera.totalScaleX;
-		var rectHeight:Float = _scaledTileHeight * Camera.totalScaleY;
+		var rectWidth:Float = _scaledTileWidth;
+		var rectHeight:Float = _scaledTileHeight;
 	
 		// Copy tile images into the tile buffer
 		// Modified from getScreenPosition()
@@ -820,13 +825,12 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 */
 	private function drawTilemap(Buffer:FlxTilemapBuffer, Camera:FlxCamera):Void
 	{
+		var isColored:Bool = ((alpha != 1) || (color != 0xffffff));
+		
 	#if FLX_RENDER_BLIT
 		Buffer.fill();
 	#else
 		getScreenPosition(_point, Camera).subtractPoint(offset).copyToFlash(_helperPoint);
-		
-		_helperPoint.x *= Camera.totalScaleX;
-		_helperPoint.y *= Camera.totalScaleY;
 		
 		_helperPoint.x = isPixelPerfectRender(Camera) ? Math.floor(_helperPoint.x) : _helperPoint.x;
 		_helperPoint.y = isPixelPerfectRender(Camera) ? Math.floor(_helperPoint.y) : _helperPoint.y;
@@ -834,19 +838,11 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		var drawX:Float;
 		var drawY:Float;
 		
-		var scaledWidth:Float = _scaledTileWidth * Camera.totalScaleX;
-		var scaledHeight:Float = _scaledTileHeight * Camera.totalScaleY;
+		var scaledWidth:Float = _scaledTileWidth;
+		var scaledHeight:Float = _scaledTileHeight;
 		
-		var scaleX:Float = scale.x * Camera.totalScaleX;
-		var scaleY:Float = scale.y * Camera.totalScaleY;
-		
-		var hackScaleX:Float = tileScaleHack * scaleX;
-		var hackScaleY:Float = tileScaleHack * scaleY;
-		
-		var drawItem:FlxDrawTilesItem;
+		var drawItem = Camera.startQuadBatch(graphic, isColored, blend);
 	#end
-	
-		var isColored:Bool = ((alpha != 1) || (color != 0xffffff));
 		
 		// Copy tile images into the tile buffer
 		_point.x = (Camera.scroll.x * scrollFactor.x) - x - offset.x; //modified from getScreenPosition()
@@ -899,7 +895,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 					frame = tile.frame;
 					
 				#if FLX_RENDER_BLIT
-					Buffer.pixels.copyPixels(frame.getBitmap(), _flashRect, _flashPoint, null, null, true);
+					frame.paint(Buffer.pixels, _flashPoint, true);
 					
 					#if !FLX_NO_DEBUG
 					if (FlxG.debugger.drawDebug && !ignoreDrawDebug) 
@@ -926,22 +922,29 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 					}
 					#end
 				#else
-					drawX = _helperPoint.x + (columnIndex % widthInTiles) * scaledWidth + frame.center.x * scaleX;
-					drawY = _helperPoint.y + Math.floor(columnIndex / widthInTiles) * scaledHeight + frame.center.y * scaleY;
-					
-					_point.set(drawX, drawY);
+					drawX = _helperPoint.x + (columnIndex % widthInTiles) * scaledWidth;
+					drawY = _helperPoint.y + Math.floor(columnIndex / widthInTiles) * scaledHeight;
 					
 					_matrix.identity();
 					
 					if (frame.angle != FlxFrameAngle.ANGLE_0)
 					{
-						frame.prepareFrameMatrix(_matrix);
+						frame.prepareMatrix(_matrix);
 					}
 					
-					_matrix.scale(hackScaleX, hackScaleY);
+					var scaleX:Float = scale.x;
+					var scaleY:Float = scale.y;
 					
-					drawItem = Camera.getDrawTilesItem(graphic, isColored, _blendInt);
-					drawItem.setDrawData(_point, frame.tileID, _matrix, isColored, color, alpha);
+					if (useScaleHack)
+					{
+						scaleX += 1 / (frame.sourceSize.x * Camera.totalScaleX);
+						scaleY += 1 / (frame.sourceSize.y * Camera.totalScaleY);
+					}
+					
+					_matrix.scale(scaleX, scaleY);
+					_matrix.translate(drawX, drawY);
+					
+					drawItem.addQuad(frame, _matrix, color.redFloat, color.greenFloat, color.blueFloat, alpha);
 				#end
 				}
 				
@@ -1045,6 +1048,17 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		}
 	}
 	
+	#if (FLX_RENDER_BLIT && !FLX_NO_DEBUG)
+	private function onDrawDebugChanged():Void
+	{
+		for (buffer in _buffers)
+		{
+			if (buffer != null)
+				buffer.dirty = true;
+		}
+	}
+	#end
+	
 	/**
 	 * Internal function for setting graphic property for this object. 
 	 * It changes graphic' useCount also for better memory tracking.
@@ -1097,7 +1111,6 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		}
 		color = Color;
 		updateColorTransform();
-		
 		return color;
 	}
 	
@@ -1125,31 +1138,9 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	
 	private function set_blend(Value:BlendMode):BlendMode 
 	{
-		#if FLX_RENDER_TILE
-		if (Value != null)
-		{
-			switch (Value)
-			{
-				case BlendMode.ADD:
-					_blendInt = Tilesheet.TILE_BLEND_ADD;
-				#if !flash
-				case BlendMode.MULTIPLY:
-					_blendInt = Tilesheet.TILE_BLEND_MULTIPLY;
-				case BlendMode.SCREEN:
-					_blendInt = Tilesheet.TILE_BLEND_SCREEN;
-				#end
-				default:
-					_blendInt = Tilesheet.TILE_BLEND_NORMAL;
-			}
-		}
-		else
-		{
-			_blendInt = 0;
-		}
-		#else
+		#if FLX_RENDER_BLIT
 		setDirty();
-		#end	
-		
+		#end
 		return blend = Value;
 	}
 	
@@ -1204,10 +1195,20 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		var tileSprite:FlxSprite = new FlxSprite(TileProperties.x, TileProperties.y);
 		tileSprite.frames = TileProperties.graphic;
 		tileSprite.scale.copyFrom(TileProperties.scale);
-		FlxDestroyUtil.put(TileProperties.scale);
+		TileProperties.scale = FlxDestroyUtil.put(TileProperties.scale);
 		tileSprite.alpha = TileProperties.alpha;
 		tileSprite.blend = TileProperties.blend;
 		return tileSprite;
+	}
+	
+	override function set_allowCollisions(Value:Int):Int 
+	{
+		for (tile in _tileObjects)
+		{
+			if (tile.index >= _collideIndex)
+				tile.allowCollisions = Value;
+		}
+		return super.set_allowCollisions(Value);
 	}
 }
 

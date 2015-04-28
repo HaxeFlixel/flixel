@@ -639,12 +639,12 @@ class FlxText extends FlxSprite
 	
 	private inline function get_alignment():FlxTextAlign
 	{
-		return cast(_defaultFormat.align, String);
+		return FlxTextAlign.fromOpenFL(_defaultFormat.align);
 	}
 	
 	private function set_alignment(Alignment:FlxTextAlign):FlxTextAlign
 	{
-		_defaultFormat.align = convertTextAlignmentFromString(Alignment);
+		_defaultFormat.align = FlxTextAlign.toOpenFL(Alignment);
 		updateDefaultFormat();
 		return Alignment;
 	}
@@ -806,7 +806,6 @@ class FlxText extends FlxSprite
 			graphic.bitmap.draw(textField, _matrix);
 		}
 		
-		frame.destroyBitmaps();
 		_regen = false;
 		dirty = true;
 	}
@@ -963,24 +962,6 @@ class FlxText extends FlxSprite
 		return new TextFormat(dtf.font, dtf.size, dtf.color, dtf.bold, dtf.italic, dtf.underline, dtf.url, dtf.target, dtf.align);
 	}
 	
-	/**
-	 * Method for converting string to TextFormatAlign
-	 */
-	private function convertTextAlignmentFromString(StrAlign:FlxTextAlign)
-	{
-		return switch (StrAlign)
-		{
-			case LEFT:
-				TextFormatAlign.LEFT;
-			case CENTER:
-				TextFormatAlign.CENTER;
-			case RIGHT:
-				TextFormatAlign.RIGHT;
-			case JUSTIFY:
-				TextFormatAlign.JUSTIFY;
-		}
-	}
-	
 	private inline function updateDefaultFormat():Void
 	{
 		textField.defaultTextFormat = _defaultFormat;
@@ -1067,4 +1048,30 @@ abstract FlxTextAlign(String) from String
 	var CENTER = "center";
 	var RIGHT = "right";
 	var JUSTIFY = "justify";
+	
+	public static function fromOpenFL(align:AlignType):FlxTextAlign
+	{
+		return switch (align)
+		{
+			case TextFormatAlign.LEFT: LEFT;
+			case TextFormatAlign.CENTER: CENTER;
+			case TextFormatAlign.RIGHT: RIGHT;
+			case TextFormatAlign.JUSTIFY: JUSTIFY;
+			default: LEFT;
+		}
+	}
+	
+	public static function toOpenFL(align:FlxTextAlign):AlignType
+	{
+		return switch (align)
+		{
+			case LEFT: TextFormatAlign.LEFT;
+			case CENTER: TextFormatAlign.CENTER;
+			case RIGHT: TextFormatAlign.RIGHT;
+			case JUSTIFY: TextFormatAlign.JUSTIFY;
+			default: TextFormatAlign.LEFT;
+		}
+	}
 }
+
+private typedef AlignType = #if openfl_legacy String #else TextFormatAlign #end

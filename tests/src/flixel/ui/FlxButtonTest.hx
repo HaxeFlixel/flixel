@@ -11,20 +11,20 @@ class FlxButtonTest extends FlxTest
 
 #if !js // assets (including the FlxButton default one) don't work in openfl-html5 tests
 	@Before
-	function before():Void
+	function before()
 	{
 		button = new FlxButton();
 		destroyable = button;
 	}
 	
 	@Test
-	function testDefaultStatusAnimations():Void
+	function testDefaultStatusAnimations()
 	{
 		assertStatusAnimationsExist();
 	}
 	
 	@Test
-	function testLoadGraphicStatusAnimations():Void
+	function testLoadGraphicStatusAnimations()
 	{
 		var graphic = new BitmapData(3, 1);
 		button.loadGraphic(graphic, true, 1, 1);
@@ -33,7 +33,7 @@ class FlxButtonTest extends FlxTest
 	}
 	
 	@Test
-	function testLoadGraphicFromSpriteStatusAnimations():Void
+	function testLoadGraphicFromSpriteStatusAnimations()
 	{
 		var sprite = new FlxSprite();
 		var graphic = new BitmapData(3, 1);
@@ -44,7 +44,7 @@ class FlxButtonTest extends FlxTest
 		assertStatusAnimationsExist();
 	}
 	
-	function assertStatusAnimationsExist():Void
+	function assertStatusAnimationsExist()
 	{
 		var normalName:String = button.statusAnimations[FlxButton.NORMAL];
 		var highlightName:String = button.statusAnimations[FlxButton.HIGHLIGHT];
@@ -53,6 +53,27 @@ class FlxButtonTest extends FlxTest
 		Assert.isNotNull(button.animation.getByName(normalName));
 		Assert.isNotNull(button.animation.getByName(highlightName));
 		Assert.isNotNull(button.animation.getByName(pressedName));
+	}
+	
+	@Test // #1479
+	function testSetTextTwice()
+	{
+		setAndAssertText("Test");
+		setAndAssertText("Test2");
+	}
+	
+	@Test
+	function testSetTextNull()
+	{
+		setAndAssertText(null);
+	}
+	
+	function setAndAssertText(text:String)
+	{
+		button.text = text;
+		Assert.areEqual(text, button.text);
+		if (button.label != null)
+			Assert.areEqual(text, button.label.text);
 	}
 #end
 }
