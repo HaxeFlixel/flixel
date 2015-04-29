@@ -134,8 +134,7 @@ class FlxG
 	@:allow(flixel.system.scaleModes)
 	public static var height(default, null):Int;
 	/**
-	 * The scale mode the game should use - available policies are FillScaleMode, FixedScaleMode,
-	 * RatioScaleMode, RelativeScaleMode and StageSizeScaleMode.
+	 * The scale mode the game should use - available policies are found in flixel.system.scaleModes.
 	 */
 	public static var scaleMode(default, set):BaseScaleMode = new RatioScaleMode();
 	/**
