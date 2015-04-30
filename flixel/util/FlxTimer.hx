@@ -243,6 +243,18 @@ class FlxTimerManager extends FlxBasic
 	}
 	
 	/**
+	 * Toggles pause for all timers.
+	 * @param	value	True to pause and false to resume
+	 */
+	public function pauseAll(Value:Bool):Void
+	{
+		for (timer in _timers)
+		{
+			timer.active = !Value;
+		}
+	}
+	
+	/**
 	 * Add a new timer to the timer manager.
 	 * Called when FlxTimer is started.
 	 * 
