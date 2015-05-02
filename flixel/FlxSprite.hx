@@ -47,7 +47,7 @@ private class GraphicDefault extends BitmapData {}
  * HaxeFlixel copies the previous reference onto pixels instead of creating
  * another copy of the image data, to save memory. If you need to work with
  * the image data independently, you can disable this by setting the 'Unique' 
- * parameter in the loadGraphic*() or makeGraphic() functions to true. 
+ * parameter in the loadGraphic(), loadGraphicFromTexture(), or makeGraphic() functions to true. 
  */
 class FlxSprite extends FlxObject
 {
