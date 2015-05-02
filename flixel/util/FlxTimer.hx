@@ -144,6 +144,18 @@ class FlxTimer implements IFlxDestroyable
 	}
 	
 	/**
+	 * Toggles pause for all timers.
+	 * @param	value	True to pause and false to resume
+	 */
+	public function pauseAll(Value:Bool):Void
+	{
+		for (timer in _timers)
+		{
+			timer.active = !Value;
+		}
+	}
+	
+	/**
 	 * Called by the timer manager plugin to update the timer.
 	 * If time runs out, the loop counter is advanced, the timer reset, and the callback called if it exists.
 	 * If the timer runs out of loops, then the timer calls cancel().
