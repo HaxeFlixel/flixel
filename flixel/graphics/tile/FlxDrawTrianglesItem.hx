@@ -21,7 +21,7 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 {
 	public var vertices:DrawData<Float>;
 	public var indices:DrawData<Int>;
-	public var uvt:DrawData<Float>;
+	public var uvtData:DrawData<Float>;
 	public var colors:DrawData<Int>;
 	
 	public var verticesPosition:Int = 0;
@@ -38,12 +38,12 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		#if flash
 		vertices = new Vector<Float>();
 		indices = new Vector<Int>();
-		uvt = new Vector<Float>();
+		uvtData = new Vector<Float>();
 		colors = new Vector<Int>();
 		#else
 		vertices = new Array<Float>();
 		indices = new Array<Int>();
-		uvt = new Array<Float>();
+		uvtData = new Array<Float>();
 		colors = new Array<Int>();
 		#end
 		
@@ -60,9 +60,9 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		
 		camera.canvas.graphics.beginBitmapFill(graphics.bitmap, null, true, (camera.antialiasing || antialiasing));
 		#if flash
-		camera.canvas.graphics.drawTriangles(vertices, indices, uvt, TriangleCulling.NONE);
+		camera.canvas.graphics.drawTriangles(vertices, indices, uvtData, TriangleCulling.NONE);
 		#else
-		camera.canvas.graphics.drawTriangles(vertices, indices, uvt, TriangleCulling.NONE, (colored) ? colors : null, blending);
+		camera.canvas.graphics.drawTriangles(vertices, indices, uvtData, TriangleCulling.NONE, (colored) ? colors : null, blending);
 		#end
 		camera.canvas.graphics.endFill();
 		#if !FLX_NO_DEBUG
@@ -83,7 +83,7 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		super.reset();
 		vertices.splice(0, vertices.length);
 		indices.splice(0, indices.length);
-		uvt.splice(0, uvt.length);
+		uvtData.splice(0, uvtData.length);
 		colors.splice(0, colors.length);
 		
 		verticesPosition = 0;
@@ -97,12 +97,12 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		
 		vertices = null;
 		indices = null;
-		uvt = null;
+		uvtData = null;
 		colors = null;
 		bounds = null;
 	}
 	
-	public function addTriangles(vertices:DrawData<Float>, indices:DrawData<Int>, uvs:DrawData<Float>, colors:DrawData<Int> = null, position:FlxPoint = null, cameraBounds:FlxRect = null):Void
+	public function addTriangles(vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, colors:DrawData<Int> = null, position:FlxPoint = null, cameraBounds:FlxRect = null):Void
 	{
 		if (position == null)
 		{
@@ -118,6 +118,7 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		var prevVerticesLength:Int = this.vertices.length;
 		var numberOfVertices:Int = Std.int(verticesLength / 2);
 		var prevIndicesLength:Int = this.indices.length;
+		var prevUVTDataLength:Int = this.uvtData.length;
 		var prevColorsLength:Int = this.colors.length;
 		var prevNumberOfVertices:Int = this.numVertices;
 		
@@ -152,9 +153,10 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		}
 		else
 		{
-			for (i in 0...verticesLength)
+			var uvtDataLength:Int = uvtData.length;
+			for (i in 0...uvtDataLength)
 			{
-				uvt[prevVerticesLength + i] = uvs[i];
+				this.uvtData[prevUVTDataLength + i] = uvtData[i];
 			}
 			
 			var indicesLength:Int = indices.length;
@@ -221,8 +223,8 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		vertices[prevVerticesPos] = point.x;
 		vertices[prevVerticesPos + 1] = point.y;
 		
-		uvt[prevVerticesPos] = frame.uv.x;
-		uvt[prevVerticesPos + 1] = frame.uv.y;
+		uvtData[prevVerticesPos] = frame.uv.x;
+		uvtData[prevVerticesPos + 1] = frame.uv.y;
 		
 		point.set(frame.frame.width, 0);
 		point.transform(matrix);
@@ -230,8 +232,8 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		vertices[prevVerticesPos + 2] = point.x;
 		vertices[prevVerticesPos + 3] = point.y;
 		
-		uvt[prevVerticesPos + 2] = frame.uv.width;
-		uvt[prevVerticesPos + 3] = frame.uv.y;
+		uvtData[prevVerticesPos + 2] = frame.uv.width;
+		uvtData[prevVerticesPos + 3] = frame.uv.y;
 		
 		point.set(frame.frame.width, frame.frame.height);
 		point.transform(matrix);
@@ -239,8 +241,8 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		vertices[prevVerticesPos + 4] = point.x;
 		vertices[prevVerticesPos + 5] = point.y;
 		
-		uvt[prevVerticesPos + 4] = frame.uv.width;
-		uvt[prevVerticesPos + 5] = frame.uv.height;
+		uvtData[prevVerticesPos + 4] = frame.uv.width;
+		uvtData[prevVerticesPos + 5] = frame.uv.height;
 		
 		point.set(0, frame.frame.height);
 		point.transform(matrix);
@@ -248,8 +250,8 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		vertices[prevVerticesPos + 6] = point.x;
 		vertices[prevVerticesPos + 7] = point.y;
 		
-		uvt[prevVerticesPos + 6] = frame.uv.x;
-		uvt[prevVerticesPos + 7] = frame.uv.height;
+		uvtData[prevVerticesPos + 6] = frame.uv.x;
+		uvtData[prevVerticesPos + 7] = frame.uv.height;
 		
 		indices[prevIndicesPos] = prevNumberOfVertices;
 		indices[prevIndicesPos + 1] = prevNumberOfVertices + 1;
