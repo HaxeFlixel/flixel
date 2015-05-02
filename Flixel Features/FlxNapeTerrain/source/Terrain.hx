@@ -92,7 +92,7 @@ class Terrain #if flash implements nape.geom.IsoFunction #end
 		var strip:FlxStrip;
 		var vertices:DrawData<Float>;
 		var ids:DrawData<Int>;
-		var uvs:DrawData<Float>;
+		var uvtData:DrawData<Float>;
 		
 		var x_1:Float, y_1:Float, x_2:Float, y_2:Float, x_3:Float, y_3:Float;
 		var maxX:Float, maxY:Float;
@@ -160,11 +160,11 @@ class Terrain #if flash implements nape.geom.IsoFunction #end
 				strip = strips[y * width + x];
 				vertices = strip.vertices;
 				ids = strip.indices;
-				uvs = strip.uvs;
+				uvtData = strip.uvtData;
 				
 				vertices.splice(0, vertices.length);
 				ids.splice(0, ids.length);
-				uvs.splice(0, uvs.length);
+				uvtData.splice(0, uvtData.length);
 				
 				i = 0;
 				
@@ -214,8 +214,8 @@ class Terrain #if flash implements nape.geom.IsoFunction #end
 							u = (u == 0 && pl[0].x == maxX) ? 1 : u;
 							v = (v == 0 && pl[0].y == maxY) ? 1 : v;
 							
-							uvs.push(u);
-							uvs.push(v);
+							uvtData.push(u);
+							uvtData.push(v);
 							
 							u = (pl[1].x % cellSize) / cellSize;
 							v = (pl[1].y % cellSize) / cellSize;
@@ -223,8 +223,8 @@ class Terrain #if flash implements nape.geom.IsoFunction #end
 							u = (u == 0 && pl[1].x == maxX) ? 1 : u;
 							v = (v == 0 && pl[1].y == maxY) ? 1 : v;
 							
-							uvs.push(u);
-							uvs.push(v);
+							uvtData.push(u);
+							uvtData.push(v);
 							
 							u = (pl[2].x % cellSize) / cellSize;
 							v = (pl[2].y % cellSize) / cellSize;
@@ -232,8 +232,8 @@ class Terrain #if flash implements nape.geom.IsoFunction #end
 							u = (u == 0 && pl[2].x == maxX) ? 1 : u;
 							v = (v == 0 && pl[2].y == maxY) ? 1 : v;
 							
-							uvs.push(u);
-							uvs.push(v);
+							uvtData.push(u);
+							uvtData.push(v);
 						}
 					}
 				}
@@ -242,15 +242,15 @@ class Terrain #if flash implements nape.geom.IsoFunction #end
 		
 		vertices = megaStrip.vertices;
 		ids = megaStrip.indices;
-		uvs = megaStrip.uvs;
+		uvtData = megaStrip.uvtData;
 		
 		vertices.splice(0, vertices.length);
 		ids.splice(0, ids.length);
-		uvs.splice(0, uvs.length);
+		uvtData.splice(0, uvtData.length);
 		
 		var verticesPos:Int = 0;
 		var prevIndicesLength:Int = 0;
-		var UVsPos:Int = 0;
+		var uvtDataPos:Int = 0;
 		
 		// join the data of all strips in the megaStrip data
 		for (strip in strips)
@@ -268,9 +268,9 @@ class Terrain #if flash implements nape.geom.IsoFunction #end
 				}
 				prevIndicesLength += strip.indices.length;
 				
-				for (i in 0...strip.uvs.length)
+				for (i in 0...strip.uvtData.length)
 				{
-					uvs[UVsPos++] = strip.uvs[i];
+					uvtData[uvtDataPos++] = strip.uvtData[i];
 				}
 			}
 		}
@@ -278,7 +278,7 @@ class Terrain #if flash implements nape.geom.IsoFunction #end
 		#if FLX_RENDER_BLIT
 		flashSprite.graphics.clear();
 		flashSprite.graphics.beginBitmapFill(Assets.getBitmapData(graphicPath), null, false, true);
-		flashSprite.graphics.drawTriangles(vertices, ids, uvs);
+		flashSprite.graphics.drawTriangles(vertices, ids, uvtData);
 		flashSprite.graphics.endFill();
 		
 		var pixels:BitmapData = sprite.pixels;

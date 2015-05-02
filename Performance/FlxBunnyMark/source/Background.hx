@@ -32,7 +32,7 @@ class Background extends FlxStrip
 		var ci:Int, ci2:Int, ri:Int;
 		
 		vertices.splice(0, vertices.length);
-		uvs.splice(0, uvs.length);
+		uvtData.splice(0, uvtData.length);
 		indices.splice(0, indices.length);
 		
 		for (j in 0...rows + 1)
@@ -45,8 +45,8 @@ class Background extends FlxStrip
 				kx = i / cols;
 				vertices[ci] = sw * kx; 
 				vertices[ci + 1] = sh * ky; 
-				uvs[ci] = uw * kx; 
-				uvs[ci + 1] = uh * ky;
+				uvtData[ci] = uw * kx; 
+				uvtData[ci + 1] = uh * ky;
 			}
 		}
 		for (j in 0...rows)
