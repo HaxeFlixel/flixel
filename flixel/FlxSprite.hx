@@ -37,6 +37,17 @@ private class GraphicDefault extends BitmapData {}
 /**
  * The main "game object" class, the sprite is a FlxObject
  * with a bunch of graphics options and abilities, like animation and stamping.
+ *
+ * Load an image onto a sprite using the loadGraphic*() functions, 
+ * or create a base monochromatic rectangle using makeGraphic().
+ * The image bitmap is stored in the pixels field.
+ *
+ * HaxeFlixel's graphic caching system keeps track of loaded image data. 
+ * When you load or make an identical copy of a previously used image, by default
+ * HaxeFlixel copies the previous reference onto pixels instead of creating
+ * another copy of the image data, to save memory. If you need to work with
+ * the image data independently, you can disable this by setting the 'Unique' 
+ * parameter in the loadGraphic*() or makeGraphic() functions to true. 
  */
 class FlxSprite extends FlxObject
 {
