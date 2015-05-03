@@ -85,7 +85,7 @@ class FlxText extends FlxSprite
 	public var borderStyle(default, set):FlxTextBorderStyle = NONE;
 	
 	/**
-	 * The color of the border in 0xRRGGBB format
+	 * The color of the border in 0xAARRGGBB format
 	 */	
 	public var borderColor(default, set):FlxColor = FlxColor.TRANSPARENT;
 	
@@ -142,6 +142,15 @@ class FlxText extends FlxSprite
 	 * Helper boolean which tells whether to update graphic of this text object or not.
 	 */
 	private var _regen:Bool = true;
+	
+	/**
+	 * Helper vars to draw border styles with transparency.
+	 */
+	private var _borderPixels:BitmapData;
+	
+	private var _borderColorTransform:ColorTransform;
+	
+	private var _hasBorderAlpha = false;
 	
 	/**
 	 * Creates a new FlxText object at the specified position.
@@ -423,7 +432,7 @@ class FlxText extends FlxSprite
 	 * @param	Color			The color of the text in traditional flash 0xRRGGBB format.
 	 * @param	Alignment		The desired alignment
 	 * @param	BorderStyle		NONE, SHADOW, OUTLINE, or OUTLINE_FAST (use setBorderFormat)
-	 * @param	BorderColor 	Int, color for the border, 0xRRGGBB format
+	 * @param	BorderColor 	Int, color for the border, 0xAARRGGBB format
 	 * @param	EmbeddedFont	Whether this text field uses embedded fonts or not
 	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
 	 */
@@ -455,7 +464,7 @@ class FlxText extends FlxSprite
 	 * Set border's style (shadow, outline, etc), color, and size all in one go!
 	 * 
 	 * @param	Style outline style
-	 * @param	Color outline color in flash 0xRRGGBB format
+	 * @param	Color outline color in 0xAARRGGBB format
 	 * @param	Size outline size in pixels
 	 * @param	Quality outline quality - # of iterations to use when drawing. 0:just 1, 1:equal number to BorderSize
 	 */
@@ -662,10 +671,11 @@ class FlxText extends FlxSprite
 	
 	private function set_borderColor(Color:FlxColor):FlxColor
 	{
-		if (borderColor.to24Bit() != Color.to24Bit() && borderStyle != NONE)
+		if (borderColor != Color && borderStyle != NONE)
 		{
 			_regen = true;
 		}
+		_hasBorderAlpha = Color.alphaFloat < 1;
 		borderColor = Color;
 		return Color;
 	}
@@ -766,6 +776,8 @@ class FlxText extends FlxSprite
 			var key:String = FlxG.bitmap.getUniqueKey("text");
 			
 			makeGraphic(Std.int(newWidth), Std.int(newHeight), FlxColor.TRANSPARENT, false, key);
+			if (_hasBorderAlpha)
+				_borderPixels = graphic.bitmap.clone();
 			frameHeight = Std.int(height);
 			textField.height = height * 1.2;
 			_flashRect.x = 0;
@@ -776,6 +788,13 @@ class FlxText extends FlxSprite
 		else // Else just clear the old buffer before redrawing the text
 		{
 			graphic.bitmap.fillRect(_flashRect, FlxColor.TRANSPARENT);
+			if (_hasBorderAlpha)
+			{
+				if (_borderPixels == null)
+					_borderPixels = new BitmapData(frameWidth, frameHeight, true);
+				else
+					_borderPixels.fillRect(_flashRect, FlxColor.TRANSPARENT);
+			}
 		}
 		
 		if (textField != null && textField.text != null && textField.text.length > 0)
@@ -801,6 +820,7 @@ class FlxText extends FlxSprite
 			}
 			
 			applyBorderStyle();
+			applyBorderTransparency();
 			applyFormats(_formatAdjusted, false);
 			
 			graphic.bitmap.draw(textField, _matrix);
@@ -905,13 +925,27 @@ class FlxText extends FlxSprite
 		}
 	}
 	
+	private inline function applyBorderTransparency()
+	{
+		if (!_hasBorderAlpha)
+			return;
+		
+		if (_borderColorTransform == null)
+			_borderColorTransform = new ColorTransform();
+			
+		_borderColorTransform.alphaMultiplier = borderColor.alphaFloat;
+		_borderPixels.colorTransform(_borderPixels.rect, _borderColorTransform);
+		graphic.bitmap.draw(_borderPixels);
+	}
+	
 	/**
 	 * Helper function for applyBorderStyle()
 	 */
 	private inline function copyTextWithOffset(x:Float, y:Float)
 	{
+		var graphic:BitmapData = _hasBorderAlpha ? _borderPixels : graphic.bitmap;
 		_matrix.translate(x, y);
-		graphic.bitmap.draw(textField, _matrix);
+		graphic.draw(textField, _matrix);
 	}
 	
 	private inline function applyFormats(FormatAdjusted:TextFormat, UseBorderColor:Bool = false):Void
