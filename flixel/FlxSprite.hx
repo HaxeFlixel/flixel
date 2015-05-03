@@ -40,7 +40,7 @@ private class GraphicDefault extends BitmapData {}
  *
  * Load an image onto a sprite using the loadGraphic*() functions, 
  * or create a base monochromatic rectangle using makeGraphic().
- * The image bitmap is stored in the pixels field.
+ * The image BitmapData is stored in the pixels field.
  */
 class FlxSprite extends FlxObject
 {
