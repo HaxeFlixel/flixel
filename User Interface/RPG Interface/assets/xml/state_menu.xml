@@ -153,4 +153,36 @@
 		</group>
 	</tab_menu>
 	
+	<!--You can scale the source of a 9-slice sprite BEFORE the sprite itself is constructed!-->
+	
+	<chrome id="scaled_chrome" center_x="true" x="-200" y="300" group="top" width="144" height="90" src="ui/buttons/button_blue_scale_0" slice9="24,24,48,48">
+		<scale_src scale="0.5"/>
+	</chrome>
+	
+	<!--You can do the same thing with the internal 9-slice sprites fed into a button-->
+	
+	<button id="scaledsrc" center_x="true" x="0" y="300" group="top" label="SCALED SRC" width="93" height="32">
+		<text use_def="sans14c"/>
+		<graphic id="up" image="ui/buttons/button_blue_scale_0" slice9="24,24,48,48">
+			<scale_src scale="screen.height/1200"/>
+		</graphic>
+		<graphic id="over" image="ui/buttons/button_blue_scale_1" slice9="24,24,48,48">
+			<scale_src scale="screen.height/1200"/>
+		</graphic>
+		<graphic id="down" image="ui/buttons/button_blue_scale_2" slice9="24,24,48,48">
+			<scale_src scale="screen.height/1200"/>
+		</graphic>
+		<param type="string" value="scaledsrc"/>
+	</button>
+	
+	<!--You can also do it with a single vertical button strip-->
+	
+	<button id="scaledsrc" center_x="true" x="0" y="350" group="top" label="SCALED SRC" width="93" height="32">
+		<text use_def="sans14c"/>
+		<graphic id="all" image="ui/buttons/button_blue_scale_all" slice9="24,24,48,48">
+			<scale_src scale="screen.height/1200"/>
+		</graphic>
+		<param type="string" value="scaledsrc"/>
+	</button>
+	
 </data>

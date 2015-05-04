@@ -66,6 +66,15 @@ class State_Title extends FlxUIState
 		}		
 	}	
 	
+	public override function update(elapsed:Float):Void
+	{
+		if (FlxG.keys.justPressed.ONE)
+		{
+			FlxG.bitmapLog.viewCache();
+		}
+		super.update(elapsed);
+	}
+	
 	private function reloadState():Void {
 		FlxG.switchState(new State_Title());
 	}
