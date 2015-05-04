@@ -15,20 +15,19 @@
   </output>
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
+    <class path="T:\Development\Git\flixel" />
+    <class path="T:\Development\Git\lime" />
     <class path="T:\Development\Git\firetongue" />
+    <class path="T:\Development\Git\openfl" />
     <class path="C:\HaxeToolkit\haxe\lib\task\1,0,6" />
     <class path="T:\Development\Git\flixel-addons" />
     <class path="T:\Development\Git\flixel-ui" />
-    <class path="T:\Development\Git\openfl" />
-    <class path="T:\Development\Git\flixel" />
-    <class path="T:\Development\Git\lime" />
     <class path="source" />
-    <class path="T:\Development\Git\lime\legacy" />
-    <class path="export\windows\cpp\haxe" />
+    <class path="export\windows\neko\haxe" />
   </classpaths>
   <!-- Build options -->
   <build>
-    <option directives="firetongue=0.0.1&#xA;task=1.0.6&#xA;flixel-addons=1.1.0&#xA;flixel-ui=1.0.2&#xA;openfl=2.1.6&#xA;flixel=3.3.6&#xA;lime=2.0.4&#xA;tools=2.0.4&#xA;lime-legacy&#xA;no-compilation&#xA;native&#xA;lime-native&#xA;openfl-native&#xA;windows&#xA;desktop" />
+    <option directives="flixel=3.3.8&#xA;lime=2.3.3&#xA;firetongue=0.0.1&#xA;openfl=3.0.3&#xA;task=1.0.6&#xA;flixel-addons=1.1.0&#xA;flixel-ui=1.0.2&#xA;openfl-next&#xA;tools=2.3.3&#xA;NAPE_NO_INLINE&#xA;no-compilation&#xA;native&#xA;lime-native&#xA;openfl-native&#xA;windows&#xA;desktop" />
     <option flashStrict="False" />
     <option noInlineOnDebug="False" />
     <option mainClass="ApplicationMain" />
