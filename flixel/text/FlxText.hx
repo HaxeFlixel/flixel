@@ -76,6 +76,7 @@ class FlxText extends FlxSprite
 	
 	/**
 	 * The alignment of the font (LEFT, RIGHT, CENTER or JUSTIFY).
+	 * Note: 'autoSize' must be set to false or alignment won't show any visual differences.
 	 */
 	public var alignment(get, set):FlxTextAlign;
 	
