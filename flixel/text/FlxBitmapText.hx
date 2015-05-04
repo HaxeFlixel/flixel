@@ -52,7 +52,7 @@ class FlxBitmapText extends FlxSprite
 	/**
 	 * Specifies how the text field should align text.
 	 * JUSTIFY alignment isn't supported.
-	 * Note: For alignment to work, 'autoSize' must be set to false.
+	 * Note: 'autoSize' must be set to false or alignment won't show any visual differences.
 	 */
 	public var alignment(default, set):FlxTextAlign = FlxTextAlign.LEFT;
 	
