@@ -32,6 +32,7 @@ class Motion extends FlxTween
 		_object = object;
 		_wasObjectImmovable = _object.immovable;
 		_object.immovable = true;
+		FlxTween.manager.addTweenOf(this, _object);
 		return this;
 	}
 	

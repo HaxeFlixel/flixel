@@ -56,6 +56,9 @@ class VarTween extends FlxTween
 		_object = object;
 		_properties = properties;
 		this.duration = duration;
+		
+		FlxTween.manager.addTweenOf(this, _object);
+		
 		start();
 		return this;
 	}

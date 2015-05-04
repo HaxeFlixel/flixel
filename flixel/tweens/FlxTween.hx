@@ -632,10 +632,16 @@ class FlxTweenManager extends FlxBasic
 	 */
 	private var _tweens(default, null):Array<FlxTween> = [];
 	
+	/**
+	 * Stores object-FlxTween relations to cancel() all of an object's FlxTweens at once.
+	 */
+	private var _objMappings:Map<Dynamic, Array<FlxTween>>;
+	
 	public function new():Void
 	{
 		super();
 		visible = false; // No draw-calls needed
+		_objMappings = new Map<Dynamic, Array<FlxTween>>();
 		FlxG.signals.stateSwitched.add(clear);
 	}
 	
@@ -671,6 +677,54 @@ class FlxTweenManager extends FlxBasic
 			while (finishedTweens.length > 0)
 			{
 				finishedTweens.shift().finish();
+			}
+		}
+	}
+	
+	/**
+	 * Adds an object-FlxTween mapping.
+	 * Useful to avoid null object reference errors when an object is destroyed before its tween is complete.
+	 * Manually call this to add tweens that use an object indirectly (e.g. NumTween on an object's property).
+	 * 
+	 * @param	Tween	The FlxTween to add a mapping of.
+	 * @param	Object	The object that the FlxTween relies on.
+	 */
+	public function addTweenOf(Tween:FlxTween, Object:Dynamic):Void
+	{
+		if (Tween != null && Object != null)
+		{
+			var mappings = _objMappings.get(Object);
+			
+			if (mappings == null)
+			{
+				mappings = [];
+				_objMappings.set(Object, mappings);
+			}
+			
+			mappings.push(Tween);
+		}
+	}
+	
+	/**
+	 * Cancels all added FlxTweens of an object.
+	 * Useful to avoid null object reference errors when an object is destroyed before its tween is complete.
+	 * 
+	 * @param	Object	The object whose related FlxTweens should be destroyed.
+	 */
+	public function cancelTweensOf(Object:Dynamic):Void
+	{
+		if (Object != null)
+		{
+			var mappings = _objMappings.get(Object);
+			
+			if (mappings != null)
+			{
+				for (tween in mappings)
+				{
+					tween.cancel();
+				}
+				
+				_objMappings.remove(Object);
 			}
 		}
 	}
