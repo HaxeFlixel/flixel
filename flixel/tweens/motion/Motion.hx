@@ -2,7 +2,6 @@
 
 import flixel.FlxObject;
 import flixel.tweens.FlxTween;
-import flixel.tweens.FlxEase;
 
 /**
  * Base class for motion Tweens.
@@ -32,7 +31,6 @@ class Motion extends FlxTween
 		_object = object;
 		_wasObjectImmovable = _object.immovable;
 		_object.immovable = true;
-		FlxTween.manager.addTweenOf(this, _object);
 		return this;
 	}
 	

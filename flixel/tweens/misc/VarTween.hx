@@ -1,7 +1,6 @@
 package flixel.tweens.misc;
 
 import flixel.tweens.FlxTween;
-import flixel.util.FlxArrayUtil;
 
 /**
  * Tweens multiple numeric public properties of an Object simultaneously.
@@ -56,8 +55,6 @@ class VarTween extends FlxTween
 		_object = object;
 		_properties = properties;
 		this.duration = duration;
-		
-		FlxTween.manager.addTweenOf(this, _object);
 		
 		start();
 		return this;
