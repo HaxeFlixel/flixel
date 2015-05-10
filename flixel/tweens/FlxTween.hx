@@ -348,7 +348,7 @@ class FlxTween implements IFlxDestroyable
 	 * @param	Tween	The FlxTween to add a mapping of.
 	 * @param	Object	The object that the FlxTween should be registered to.
 	 */
-	public function registerTween(Tween:FlxTween, Object:Dynamic):Void
+	public static function registerTween(Tween:FlxTween, Object:Dynamic):Void
 	{
 		manager.registerTweens([Tween], Object);
 	}
@@ -361,7 +361,7 @@ class FlxTween implements IFlxDestroyable
 	 * @param	Tweens	The Array of FlxTweens to add mappings of.
 	 * @param	Object	The object that each FlxTween should be registered to.
 	 */
-	public function registerTweens(Tweens:Array<FlxTween>, Object:Dynamic):Void
+	public static function registerTweens(Tweens:Array<FlxTween>, Object:Dynamic):Void
 	{
 		manager.registerTweens(Tweens, Object);
 	}
@@ -373,7 +373,7 @@ class FlxTween implements IFlxDestroyable
 	 * @param	Tween	The FlxTween to remove the mapping of.
 	 * @param	Object	The object that the FlxTween should be deregistered from. If not specified, the object will be searched for.
 	 */
-	public function unregisterTween(Tween:FlxTween, Object:Dynamic):Void
+	public static function unregisterTween(Tween:FlxTween, Object:Dynamic):Void
 	{
 		manager.unregisterTween(Tween, Object);
 	}
@@ -385,7 +385,7 @@ class FlxTween implements IFlxDestroyable
 	 * 
 	 * @param	Object	The object whose registered FlxTweens should be destroyed.
 	 */
-	public function cancelTweensOf(Object:Dynamic):Void
+	public static function cancelTweensOf(Object:Dynamic):Void
 	{
 		manager.cancelTweensOf(Object);
 	}
@@ -685,13 +685,12 @@ class FlxTweenManager extends FlxBasic
 	/**
 	 * Stores object-FlxTween relations to cancel() all of an object's FlxTweens at once.
 	 */
-	private var _objMappings:Map<Dynamic, Array<FlxTween>>;
+	private var _objMappings:Map<{}, Array<FlxTween>> = new Map<{}, Array<FlxTween>>();
 	
 	public function new():Void
 	{
 		super();
 		visible = false; // No draw-calls needed
-		_objMappings = new Map<Dynamic, Array<FlxTween>>();
 		FlxG.signals.stateSwitched.add(clear);
 	}
 	
