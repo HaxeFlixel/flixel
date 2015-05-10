@@ -3,6 +3,7 @@ package flixel.tweens;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
+import flixel.math.FlxPoint;
 import flixel.tweens.FlxEase.EaseFunction;
 import flixel.tweens.misc.AngleTween;
 import flixel.tweens.misc.ColorTween;
@@ -17,7 +18,6 @@ import flixel.tweens.motion.QuadPath;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
-import flixel.math.FlxPoint;
 
 class FlxTween implements IFlxDestroyable
 {
@@ -343,14 +343,39 @@ class FlxTween implements IFlxDestroyable
 	/**
 	 * Registers an object-FlxTween mapping.
 	 * Useful to avoid null object reference errors when an object is destroyed before its tween is complete.
-	 * Convenience method for FlxTween.manager.registerTween()
+	 * Convenience method for FlxTween.manager.registerTweens()
 	 * 
 	 * @param	Tween	The FlxTween to add a mapping of.
 	 * @param	Object	The object that the FlxTween should be registered to.
 	 */
 	public function registerTween(Tween:FlxTween, Object:Dynamic):Void
 	{
-		manager.registerTween(Tween, Object);
+		manager.registerTweens([Tween], Object);
+	}
+	
+	/**
+	 * Registers multiple object-FlxTween mappings.
+	 * Useful to avoid null object reference errors when an object is destroyed before its tween is complete.
+	 * Convenience method for FlxTween.manager.registerTweens()
+	 * 
+	 * @param	Tweens	The Array of FlxTweens to add mappings of.
+	 * @param	Object	The object that each FlxTween should be registered to.
+	 */
+	public function registerTweens(Tweens:Array<FlxTween>, Object:Dynamic):Void
+	{
+		manager.registerTweens(Tweens, Object);
+	}
+	
+	/**
+	 * Unregisters an object-FlxTween mapping.
+	 * Convenience method for FlxTween.manager.unregisterTween()
+	 * 
+	 * @param	Tween	The FlxTween to remove the mapping of.
+	 * @param	Object	The object that the FlxTween should be deregistered from. If not specified, the object will be searched for.
+	 */
+	public function unregisterTween(Tween:FlxTween, Object:Dynamic):Void
+	{
+		manager.unregisterTween(Tween, Object);
 	}
 	
 	/**
@@ -767,15 +792,15 @@ class FlxTweenManager extends FlxBasic
 	}
 	
 	/**
-	 * Registers an object-FlxTween mapping.
+	 * Registers multiple object-FlxTween mappings.
 	 * Useful to avoid null object reference errors when an object is destroyed before its tween is complete.
 	 * 
-	 * @param	Tween	The FlxTween to add a mapping of.
-	 * @param	Object	The object that the FlxTween should be registered to.
+	 * @param	Tween	The Array of FlxTweens to add mappings of.
+	 * @param	Object	The object that each FlxTween should be registered to.
 	 */
-	public function registerTween(Tween:FlxTween, Object:Dynamic):Void
+	public function registerTweens(Tweens:Array<FlxTween>, Object:Dynamic):Void
 	{
-		if (Tween != null && Object != null)
+		if (Tweens != null && Object != null)
 		{
 			var mappings = _objMappings.get(Object);
 			
@@ -785,7 +810,24 @@ class FlxTweenManager extends FlxBasic
 				_objMappings.set(Object, mappings);
 			}
 			
-			mappings.push(Tween);
+			for (tween in Tweens)
+			{
+				mappings.push(tween);
+			}
+		}
+	}
+	
+	/**
+	 * Unregisters an object-FlxTween mapping.
+	 * 
+	 * @param	Tween	The FlxTween to remove the mapping of.
+	 * @param	Object	The optional object that the FlxTween should be deregistered from. If not specified, the object will be searched for.
+	 */
+	public function unregisterTween(Tween:FlxTween, Object:Dynamic):Void
+	{
+		if (Tween != null && Object != null)
+		{
+			_objMappings.get(Object).remove(Tween);
 		}
 	}
 	
