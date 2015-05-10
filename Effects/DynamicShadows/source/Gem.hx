@@ -9,7 +9,7 @@ import nape.phys.BodyType;
 import nape.phys.Material;
 
 /*  
- *  About the 'userData'-field:
+ *	About the 'userData'-field:
  *	Most things in Nape have this handy Dynamic field called 'userData' which can hold pretty much any kind of data. This can aid you in finding- or referencing this particular
  *	nape-sprite instance later, just do: body.userData.someFieldName = someValue
  *	Note: The program does not always provide you with error messages when it crashes and when Nape is involved; be sure to not refer to fields in userData that you're not
@@ -40,9 +40,9 @@ class Gem extends FlxNapeSprite
 		body.userData.type = "Gem";
 		
 		dragJoint = new PivotJoint(FlxNapeSpace.space.world, null, Vec2.weak(), Vec2.weak());
-        dragJoint.space = FlxNapeSpace.space;
-        dragJoint.active = false;
-        dragJoint.stiff = false;
+		dragJoint.space = FlxNapeSpace.space;
+		dragJoint.active = false;
+		dragJoint.stiff = false;
 	}
 	
 	override public function update(elapsed:Float):Void
@@ -85,10 +85,10 @@ class Gem extends FlxNapeSprite
 			dragJoint.active = false;
 		}
 		
-        if (dragJoint.active)
+		if (dragJoint.active)
 		{
-            dragJoint.anchor1.setxy(FlxG.mouse.x, FlxG.mouse.y);
-        }
+			dragJoint.anchor1.setxy(FlxG.mouse.x, FlxG.mouse.y);
+		}
 		
 		super.update(elapsed);
 	}

@@ -6,7 +6,6 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.math.FlxPoint;
-import flixel.math.FlxRandom;
 import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
 import flixel.util.FlxColor;
@@ -15,6 +14,7 @@ import nape.geom.Vec2List;
 import openfl.display.BlendMode;
 import openfl.geom.ColorTransform;
 import openfl.geom.Matrix;
+import openfl.display.FPS;
 
 using flixel.util.FlxSpriteUtil;
 
@@ -64,11 +64,6 @@ class PlayState extends FlxState
 	 */
 	private var gem:Gem;
 	
-	/**
-	 * Used later when randomly moving the red flares that the gem emits
-	 */
-	private var random:FlxRandom;
-	
 	private var shadowColor = 0xff2a2963;
 	private var overlayColor = 0xff887fff;
 	
@@ -77,21 +72,15 @@ class PlayState extends FlxState
 	 */
 	private var lineStyle:LineStyle;
 	
-	/**
-	 * Used for drawing stuff
-	 */
-	private var drawStyle:DrawStyle;
-	
 	private var infoText:FlxText;
+	private var fps:FPS;
 	
 	override public function create():Void
 	{
 		super.create();
 		
-		random = new FlxRandom();
 		FlxG.camera.bgColor = 0x5a81ad;
 		lineStyle = { color:shadowColor, thickness:1 };
-		drawStyle = {matrix:new Matrix(), colorTransform:new ColorTransform(1,1,1)};
 		
 		FlxNapeSpace.init();
 		FlxNapeSpace.space.gravity.setxy(0, 1200);
@@ -146,6 +135,11 @@ class PlayState extends FlxState
 		
 		infoText = new FlxText(10, 10, 100, "");
 		add(infoText);
+		
+		// This here is only used to get the current FPS in a simple way, without having to run the application in Debug mode
+		fps = new FPS(10, 10, 0xffffff);
+		FlxG.stage.addChild(fps);
+		fps.visible = false;
 	}
 	
 	/**
@@ -158,7 +152,7 @@ class PlayState extends FlxState
 	
 	override public function update(elapsed:Float):Void
 	{
-		infoText.text = "FPS: " +Std.string(FlxG.game.debugger.stats.currentFps()).substr(0, 4) +"\n\nObjects can be dragged/thrown around.\n\nPress 'R' to restart.";
+		infoText.text = "FPS: " +fps.currentFPS +"\n\nObjects can be dragged/thrown around.\n\nPress 'R' to restart.";
 		
 		if (FlxG.keys.justPressed.R)
 		{
@@ -179,8 +173,8 @@ class PlayState extends FlxState
 		shadowCanvas.fill(FlxColor.TRANSPARENT);
 		
 		shadowOverlay.fill(overlayColor);
-		shadowOverlay.drawCircle(gem.body.position.x +random.float(-.6, .6), gem.body.position.y +random.float(-.6, .6), (random.bool(5) ? 16 : 16.5), 0xffff5f5f);		// outer red circle
-		shadowOverlay.drawCircle(gem.body.position.x +random.float(-.25, .25), gem.body.position.y +random.float(-.25, .25), (random.bool(5) ? 13 : 13.5), 0xffff7070); // inner red circle
+		shadowOverlay.drawCircle(gem.body.position.x +FlxG.random.float(-.6, .6), gem.body.position.y +FlxG.random.float(-.6, .6), (FlxG.random.bool(5) ? 16 : 16.5), 0xffff5f5f);		// outer red circle
+		shadowOverlay.drawCircle(gem.body.position.x +FlxG.random.float(-.25, .25), gem.body.position.y +FlxG.random.float(-.25, .25), (FlxG.random.bool(5) ? 13 : 13.5), 0xffff7070); // inner red circle
 		
 		for (_body in FlxNapeSpace.space.bodies)
 		{
@@ -207,7 +201,7 @@ class PlayState extends FlxState
 					
 					endVertex = verts.at(i);
 					
-					var tempLightOrigin:Vec2 = Vec2.get(gem.body.position.x +random.float(-.3, 3), gem.body.position.y +random.float(-.3, .3));
+					var tempLightOrigin:Vec2 = Vec2.get(gem.body.position.x +FlxG.random.float(-.3, 3), gem.body.position.y +FlxG.random.float(-.3, .3));
 					
 					if (doesEdgeCastShadow(startVertex, endVertex, tempLightOrigin))
 					{
@@ -248,14 +242,6 @@ class PlayState extends FlxState
 		var lightToStart:Vec2 = start_.copy();
 		lightToStart.subeq(light_);
 	 
-		if (normal.dot(lightToStart) > 0)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		return normal.dot(lightToStart) > 0;
 	}
-
 }

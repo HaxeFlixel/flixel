@@ -18,9 +18,9 @@ class Barrel extends FlxNapeSprite
 		body.setShapeMaterials(new Material(0.1, 0.2, 0.38, 1, 0.005));
 		
 		dragJoint = new PivotJoint(FlxNapeSpace.space.world, null, Vec2.weak(), Vec2.weak());
-        dragJoint.space = FlxNapeSpace.space;
-        dragJoint.active = false;
-        dragJoint.stiff = false;
+		dragJoint.space = FlxNapeSpace.space;
+		dragJoint.active = false;
+		dragJoint.stiff = false;
 	}
 	
 	override public function update(elapsed:Float):Void
@@ -30,8 +30,8 @@ class Barrel extends FlxNapeSprite
 			var mousePoint = Vec2.get(FlxG.mouse.x, FlxG.mouse.y);
 			
 			dragJoint.body2 = body;
-            dragJoint.anchor2.set(body.worldPointToLocal(mousePoint, true));
-            dragJoint.active = true;
+			dragJoint.anchor2.set(body.worldPointToLocal(mousePoint, true));
+			dragJoint.active = true;
 			
 			mousePoint.dispose();
 		}
@@ -41,10 +41,10 @@ class Barrel extends FlxNapeSprite
 			dragJoint.active = false;
 		}
 		
-        if (dragJoint.active)
+		if (dragJoint.active)
 		{
-            dragJoint.anchor1.setxy(FlxG.mouse.x, FlxG.mouse.y);
-        }
+			dragJoint.anchor1.setxy(FlxG.mouse.x, FlxG.mouse.y);
+		}
 		
 		super.update(elapsed);
 	}
