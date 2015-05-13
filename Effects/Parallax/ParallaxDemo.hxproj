@@ -5,7 +5,7 @@
     <movie outputType="CustomBuild" />
     <movie input="" />
     <movie path="Project.xml" />
-    <movie fps="60" />
+    <movie fps="120" />
     <movie width="640" />
     <movie height="480" />
     <movie version="1" />
@@ -23,7 +23,7 @@
   </classpaths>
   <!-- Build options -->
   <build>
-    <option directives="flixel=3.3.8&#xA;openfl=3.0.3&#xA;lime=2.3.3&#xA;openfl-next&#xA;tools=2.3.3&#xA;no-compilation&#xA;openfl-flash&#xA;web" />
+    <option directives="flixel=3.3.8&#xA;openfl=3.0.3&#xA;lime=2.3.3&#xA;openfl-next&#xA;FLX_NO_MOUSE&#xA;FLX_NO_GAMEPAD&#xA;tools=2.3.3&#xA;FLX_NO_MOUSE_ADVANCED&#xA;no-compilation&#xA;FLX_NO_SOUND_SYSTEM&#xA;advanced-telemetry&#xA;openfl-flash&#xA;FLX_NO_TOUCH&#xA;FLX_NO_NATIVE_CURSOR&#xA;FLX_NO_SOUND_TRAY&#xA;web" />
     <option flashStrict="False" />
     <option noInlineOnDebug="False" />
     <option mainClass="ApplicationMain" />

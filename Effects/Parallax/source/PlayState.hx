@@ -28,7 +28,7 @@ class PlayState extends FlxState
 	 */
 	override public function create():Void
 	{
-		FlxG.mouse.visible = false; // don't need the mouse
+		//FlxG.mouse.visible = false; // don't need the mouse
 		
 		// build a gradient sky for the background - make it as big as our screen, and, it's going to be stationary
 		var sky:FlxSprite = FlxGradient.createGradientFlxSprite(FlxG.width, FlxG.height, [0xff6dcff6, 0xff333333], 16);
@@ -83,7 +83,7 @@ class PlayState extends FlxState
 		_flakes = new FlxTypedGroup<Flake>();
 		add(_flakes);
 		
-		for (i in 0...2000)
+		for (i in 0...1000)
 		{
 			_flakes.add(new Flake(i % 10));
 		}
@@ -107,10 +107,11 @@ class PlayState extends FlxState
 		var rand:FlxRandom = new FlxRandom();
 		var clouds:FlxTileblock = new FlxTileblock(0, 0, Math.ceil(FlxG.width * 4), 64);
 		clouds.x += Math.floor(rand.float( -8, 8) * 4);
-		clouds.y += Math.floor(rand.float( -8, 8) * 4 * Pos);
+		clouds.y += Math.floor(rand.float( -8, 8) * Pos);
 		clouds.loadTiles("assets/clouds.png", 64, 64, Pos * 5);
 		clouds.scrollFactor.set(.2 + (Pos * .1) + .05, 0);
 		clouds.alpha = (1 - (.2 + (Pos * .1) * .5)); 
+		clouds.color = clouds.color.getDarkened(.6 - ( (Pos * .1)));
 		return clouds;
 	}
 	
@@ -151,12 +152,12 @@ class PlayState extends FlxState
 		if (_left && _right)
 			_left = _right = false;
 		
-		if (_guy.x <= 32)
+		if (_guy.x < 32)
 		{
 			_guy.velocity.x = 0;
 			_guy.x = 32;
 		}
-		else if (_guy.x + _guy.width >= (FlxG.width * 4 - 32))
+		else if (_guy.x + _guy.width > (FlxG.width * 4 - 32))
 		{
 			_guy.velocity.x = 0;
 			_guy.x = (FlxG.width * 4) - 32 - _guy.width;

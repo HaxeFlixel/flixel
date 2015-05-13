@@ -20,14 +20,16 @@ class Flake extends FlxSprite
 		super();
 		_level = Level;
 		_rnd  = new FlxRandom();
-		var size:Int = Std.int(FlxMath.bound(_level / 2, 1, 2));
-		makeGraphic(size, size);
+		
+		
 		revive();
 		_initialized = true;
 	}
 	
 	override public function revive():Void 
 	{
+		var size:Int = Std.int(FlxMath.bound(_level / 2, 1, 2));
+		makeGraphic(size, size, FlxColor.WHITE.getDarkened(.5 - (_level * .06)));
 		super.revive();
 		alpha = 1;
 		if (_initialized)
@@ -40,8 +42,7 @@ class Flake extends FlxSprite
 			x = _rnd.int(0, FlxG.width * 4 * _level);
 			y = _rnd.int( -10, FlxG.height);
 		}
-		color = FlxColor.WHITE.getDarkened(.5 - (_level * .06));
-		scrollFactor.set(.7 + (_level * .08), 0);
+		scrollFactor.set(.7 + (_level * .1), 0);
 		velocity.y = _rnd.int(20, 40) * ((_level+1) * .2);
 		velocity.x = _rnd.int( -25, -50) * ((_level+1) * .1);
 		
@@ -49,19 +50,28 @@ class Flake extends FlxSprite
 	
 	override public function update(elapsed:Float):Void 
 	{
-		if (x < 0 || y > FlxG.height || alpha <= 0)
-		{
-			revive();
-		}
-		else if (y >= FlxG.height - 64 && _level < 5)
-		{
-			velocity.set();
-			y = FlxG.height - 65;
-		}
 		
 		if (velocity.y == 0)
 			alpha -= elapsed * .5;
-			
+		else
+		{
+			if (x < 0 || y > FlxG.height || alpha <= 0)
+			{
+				revive();
+			}
+			else if (y >= FlxG.height - 64 && _level <= 3)
+			{
+				if (_level == 3)
+				{
+					scrollFactor.x = 1;
+					velocity.set();
+					y = FlxG.height - 65;
+				}
+				else
+					revive();
+				
+			}
+		}
 		super.update(elapsed);
 		
 	}
