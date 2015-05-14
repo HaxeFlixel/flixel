@@ -26,7 +26,7 @@ class GraphicButton extends BitmapData {}
 /**
  * A simple button class that calls a function when clicked by the mouse.
  */
-class FlxButton extends FlxTypedButton<FlxText> implements IFlxInput
+class FlxButton extends FlxTypedButton<FlxText>
 {
 	/**
 	 * Used with public variable status, means not highlighted or pressed.
@@ -114,7 +114,7 @@ class FlxButton extends FlxTypedButton<FlxText> implements IFlxInput
 /**
  * A simple button class that calls a function when clicked by the mouse.
  */
-class FlxTypedButton<T:FlxSprite> extends FlxSprite
+class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 {
 	/**
 	 * The label that appears on the button. Can be any FlxSprite.
