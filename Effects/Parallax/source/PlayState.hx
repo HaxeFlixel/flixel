@@ -4,13 +4,20 @@ package;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
+import flixel.graphics.FlxGraphic;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxRandom;
+import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.text.FlxText;
 import flixel.tile.FlxTileblock;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
+import flixel.util.FlxColor;
 import flixel.util.FlxGradient;
+import openfl.Assets;
+import openfl.display.Bitmap;
+import openfl.display.BitmapData;
+import openfl.geom.ColorTransform;
 
 /**
  * A FlxState which can be used for the actual gameplay.
@@ -34,6 +41,10 @@ class PlayState extends FlxState
 		var sky:FlxSprite = FlxGradient.createGradientFlxSprite(FlxG.width, FlxG.height, [0xff6dcff6, 0xff333333], 16);
 		sky.scrollFactor.set();
 		add(sky);
+		
+		
+		var uncoloredMountain:FlxSprite = new FlxSprite(0, 0, "assets/mountains.png");
+		var uncoloredClouds:FlxSprite = new FlxSprite(0, 0, "assets/clouds.png");
 		
 		add(spawnCloud(0)); // add a cloud layer to go behind everything else
 		
@@ -106,12 +117,10 @@ class PlayState extends FlxState
 	{
 		var rand:FlxRandom = new FlxRandom();
 		var clouds:FlxTileblock = new FlxTileblock(0, 0, Math.ceil(FlxG.width * 4), 64);
-		clouds.x += Math.floor(rand.float( -8, 8) * 4);
-		clouds.y += Math.floor(rand.float( -8, 8) * Pos);
-		clouds.loadTiles("assets/clouds.png", 64, 64, Pos * 5);
+		clouds.x += -8 + Math.floor(rand.float( 1, 8) * 4);
+		clouds.y += -8 +  Math.floor(rand.float( 1, 8) * Pos);
+		clouds.loadTiles(bakeColors(FlxColor.WHITE.getDarkened(.6 - ( (Pos * .1))),"assets/clouds.png", (1 - (.2 + (Pos * .1) * .5))), 64, 64, Pos * 5);
 		clouds.scrollFactor.set(.2 + (Pos * .1) + .05, 0);
-		clouds.alpha = (1 - (.2 + (Pos * .1) * .5)); 
-		clouds.color = clouds.color.getDarkened(.6 - ( (Pos * .1)));
 		return clouds;
 	}
 	
@@ -121,9 +130,8 @@ class PlayState extends FlxState
 	private function spawnMountain(Pos:Int):FlxTileblock
 	{
 		var mountain:FlxTileblock = new FlxTileblock(0, FlxG.height - (180 + ((5 - Pos) * 16)) , Math.ceil(FlxG.width * 4), 116);
-		mountain.loadTiles("assets/mountains.png", 256, 116, 0);
+		mountain.loadTiles(bakeColors(FlxColor.WHITE.getDarkened(1 - (.2 + (Pos * .1))), "assets/mountains.png"), 256, 116, 0);
 		mountain.scrollFactor.set(.2 + (Pos * .1), 0);
-		mountain.color = mountain.color.getDarkened(1 - (.2 + (Pos * .1)));
 		return mountain;
 	}
 	
@@ -184,6 +192,30 @@ class PlayState extends FlxState
 		super.update(elapsed);
 		
 		movement();
+		
+	}
+	
+	/**
+	 * This function will 'bake' a color transformation onto a bitmap to cut down on draw time (thanks Lars!)
+	 * @param	color	the color you want to transform the bitmap with
+	 * @param	asset	the asset key of the bitmap
+	 * @param	alpha	if you want to apply alpha to the bitmap
+	 * @return	the key to get the modified bitmap
+	 */
+	private function bakeColors(color:FlxColor, asset:String, ?alpha:Float = 1):String
+	{
+		var bmpData:BitmapData = FlxG.bitmap.get(asset).bitmap.clone();
+		
+		var colorTransform:ColorTransform = new ColorTransform();
+		colorTransform.redMultiplier = color.redFloat;
+		colorTransform.greenMultiplier = color.greenFloat;
+		colorTransform.blueMultiplier = color.blueFloat;
+		colorTransform.alphaMultiplier = alpha;
+		
+		bmpData.colorTransform(bmpData.rect, colorTransform);
+		var key:String = asset + "_color=" + color;
+		FlxG.bitmap.add(bmpData,false, key);
+		return key;
 		
 	}
 }
