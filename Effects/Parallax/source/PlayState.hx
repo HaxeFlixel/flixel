@@ -12,6 +12,8 @@ import flixel.text.FlxText;
 import flixel.tile.FlxTileblock;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
+import flixel.ui.FlxButton;
+import flixel.ui.FlxVirtualPad;
 import flixel.util.FlxColor;
 import flixel.util.FlxGradient;
 import openfl.Assets;
@@ -29,14 +31,12 @@ class PlayState extends FlxState
 	private var _guy:FlxSprite;	// this is our 'guy' the player will move around
 	private var _baseY:Float;	// this is the starting Y position of our guy, we will use this to make the guy float up and down
 	private var _flakes:FlxTypedGroup<Flake>; // a group of flakes
-	
+	private var _vPad:FlxVirtualPad;
 	/**
 	 * Function that is called up when to state is created to set it up. 
 	 */
 	override public function create():Void
 	{
-		//FlxG.mouse.visible = false; // don't need the mouse
-		
 		// build a gradient sky for the background - make it as big as our screen, and, it's going to be stationary
 		var sky:FlxSprite = FlxGradient.createGradientFlxSprite(FlxG.width, FlxG.height, [0xff6dcff6, 0xff333333], 16);
 		sky.scrollFactor.set();
@@ -107,6 +107,12 @@ class PlayState extends FlxState
 		FlxTween.num(0, 1, 2, { ease:FlxEase.sineInOut, type:FlxTween.PINGPONG }, guyFloat);
 		FlxTween.num(.4, 1, 3, { ease:FlxEase.sineInOut, type:FlxTween.PINGPONG }, guyFade);
 		
+		#if (mobile)
+		_vPad = new FlxVirtualPad(FlxDPadMode.LEFT_RIGHT, FlxActionMode.NONE);
+		
+		add(_vPad);
+		#end
+		
 		super.create();
 	}
 	
@@ -153,10 +159,13 @@ class PlayState extends FlxState
 	{
 		var _left:Bool = false;
 		var _right:Bool = false;
-		
+		#if (mobile)		
+		_left = _vPad.buttonLeft.status == FlxButton.PRESSED;
+		_right = _vPad.buttonRight.status == FlxButton.PRESSED;
+		#else
 		_left = FlxG.keys.anyPressed(["LEFT", "A"]);
 		_right = FlxG.keys.anyPressed(["RIGHT", "D"]);
-		
+		#end
 		if (_left && _right)
 			_left = _right = false;
 		
