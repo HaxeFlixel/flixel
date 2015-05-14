@@ -11,7 +11,7 @@ import openfl.Vector;
 
 /**
  * A very basic rendering component which uses drawTriangles.
- * You have access to vertices, indices and uvs vectors which are used as data storages for rendering.
+ * You have access to vertices, indices and uvtData vectors which are used as data storages for rendering.
  * The whole FlxGraphic object is used as a texture for this sprite.
  * Use these links for more info about drawTriangles method:
  * http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/display/Graphics.html#drawTriangles%28%29
@@ -33,7 +33,7 @@ class FlxStrip extends FlxSprite
 	/**
 	 * A Vector of normalized coordinates used to apply texture mapping.
 	 */
-	public var uvs:DrawData<Float>;
+	public var uvtData:DrawData<Float>;
 	
 	public var colors:DrawData<Int>;
 	
@@ -43,7 +43,7 @@ class FlxStrip extends FlxSprite
 		
 		vertices = new #if flash Vector #else Array #end<Float>();
 		indices = new #if flash Vector #else Array #end<Int>();
-		uvs = new #if flash Vector #else Array #end<Float>();
+		uvtData = new #if flash Vector #else Array #end<Float>();
 		colors = new #if flash Vector #else Array #end<Int>();
 	}
 	
@@ -51,7 +51,7 @@ class FlxStrip extends FlxSprite
 	{
 		vertices = null;
 		indices = null;
-		uvs = null;
+		uvtData = null;
 		colors = null;
 		
 		super.destroy();
@@ -72,7 +72,7 @@ class FlxStrip extends FlxSprite
 			}
 			
 			getScreenPosition(_point, camera);
-			camera.drawTriangles(graphic, vertices, indices, uvs, colors, _point, blend, antialiasing);
+			camera.drawTriangles(graphic, vertices, indices, uvtData, colors, _point, blend, antialiasing);
 		}
 	}
 }

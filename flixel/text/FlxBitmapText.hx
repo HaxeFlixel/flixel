@@ -1461,7 +1461,7 @@ class FlxBitmapText extends FlxSprite
 	 * Set border's style (shadow, outline, etc), color, and size all in one go!
 	 * 
 	 * @param	Style outline style
-	 * @param	Color outline color in flash 0xRRGGBB format
+	 * @param	Color outline color in flash 0xAARRGGBB format
 	 * @param	Size outline size in pixels
 	 * @param	Quality outline quality - # of iterations to use when drawing. 0:just 1, 1:equal number to BorderSize
 	 */

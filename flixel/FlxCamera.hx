@@ -539,12 +539,12 @@ class FlxCamera extends FlxBasic
 		drawItem.addQuad(frame, _helperMatrix, cr, cg, cb, ca);
 	}
 	
-	public function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>, uvs:DrawData<Float>, colors:DrawData<Int> = null, position:FlxPoint = null, blend:BlendMode = null, smoothing:Bool = false):Void
+	public function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, colors:DrawData<Int> = null, position:FlxPoint = null, blend:BlendMode = null, smoothing:Bool = false):Void
 	{
 		_bounds.set(0, 0, width, height);
 		var isColored:Bool = (colors != null && colors.length != 0);
 		var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(graphic, smoothing, isColored, blend);
-		drawItem.addTriangles(vertices, indices, uvs, colors, position, _bounds);
+		drawItem.addTriangles(vertices, indices, uvtData, colors, position, _bounds);
 	}
 #else
 	public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:Matrix, cr:Float = 1.0, cg:Float = 1.0, cb:Float = 1.0, ca:Float = 1.0, blend:BlendMode = null, smoothing:Bool = false):Void
@@ -567,7 +567,7 @@ class FlxCamera extends FlxBasic
 	private static var drawVertices:Vector<Float> = new Vector<Float>();
 	private static var trianglesSprite:Sprite = new Sprite();
 	
-	public function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>, uvs:DrawData<Float>, colors:DrawData<Int> = null, position:FlxPoint = null, blend:BlendMode = null, smoothing:Bool = false):Void
+	public function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, colors:DrawData<Int> = null, position:FlxPoint = null, blend:BlendMode = null, smoothing:Bool = false):Void
 	{
 		if (position == null)
 		{
@@ -614,7 +614,7 @@ class FlxCamera extends FlxBasic
 		{
 			trianglesSprite.graphics.clear();
 			trianglesSprite.graphics.beginBitmapFill(graphic.bitmap, null, false, smoothing);
-			trianglesSprite.graphics.drawTriangles(drawVertices, indices, uvs);
+			trianglesSprite.graphics.drawTriangles(drawVertices, indices, uvtData);
 			trianglesSprite.graphics.endFill();
 			buffer.draw(trianglesSprite);
 			#if !FLX_NO_DEBUG
