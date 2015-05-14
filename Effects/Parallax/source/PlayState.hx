@@ -121,10 +121,9 @@ class PlayState extends FlxState
 	 */
 	private function spawnCloud(Pos:Int):FlxTileblock
 	{
-		var rand:FlxRandom = new FlxRandom();
 		var clouds:FlxTileblock = new FlxTileblock(0, 0, Math.ceil(FlxG.width * 4), 64);
-		clouds.x += -8 + Math.floor(rand.float( 1, 8) * 4);
-		clouds.y += -8 +  Math.floor(rand.float( 1, 8) * Pos);
+		clouds.x += -8 + Math.floor(FlxG.random.float( 1, 8) * 4);
+		clouds.y += -8 +  Math.floor(FlxG.random.float( 1, 8) * Pos);
 		clouds.loadTiles(bakeColors(FlxColor.WHITE.getDarkened(.6 - ( (Pos * .1))),"assets/clouds.png", (1 - (.2 + (Pos * .1) * .5))), 64, 64, Pos * 5);
 		clouds.scrollFactor.set(.2 + (Pos * .1) + .05, 0);
 		return clouds;
@@ -160,11 +159,11 @@ class PlayState extends FlxState
 		var _left:Bool = false;
 		var _right:Bool = false;
 		#if (mobile)		
-		_left = _vPad.buttonLeft.status == FlxButton.PRESSED;
-		_right = _vPad.buttonRight.status == FlxButton.PRESSED;
+		_left = _vPad.buttonLeft.pressed;
+		_right = _vPad.buttonRight.pressed;
 		#else
-		_left = FlxG.keys.anyPressed(["LEFT", "A"]);
-		_right = FlxG.keys.anyPressed(["RIGHT", "D"]);
+		_left = FlxG.keys.anyPressed([LEFT, A]);
+		_right = FlxG.keys.anyPressed([RIGHT, D]);
 		#end
 		if (_left && _right)
 			_left = _right = false;

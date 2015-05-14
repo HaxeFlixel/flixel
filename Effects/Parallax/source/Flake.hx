@@ -9,7 +9,6 @@ import flixel.util.FlxColor;
 
 class Flake extends FlxSprite
 {
-	private var _rnd:FlxRandom;
 	private var _level:Int = 0;
 	private var _initialized:Bool = false;
 	
@@ -19,9 +18,6 @@ class Flake extends FlxSprite
 		
 		super();
 		_level = Level;
-		_rnd  = new FlxRandom();
-		
-		
 		revive();
 		_initialized = true;
 	}
@@ -34,17 +30,17 @@ class Flake extends FlxSprite
 		alpha = 1;
 		if (_initialized)
 		{
-			x = _rnd.int(0, FlxG.width * 4 * _level);
-			y = _rnd.int( -5, -10);
+			x = FlxG.random.int(0, FlxG.width * 4 * _level);
+			y = FlxG.random.int( -5, -10);
 		}
 		else
 		{
-			x = _rnd.int(0, FlxG.width * 4 * _level);
-			y = _rnd.int( -10, FlxG.height);
+			x = FlxG.random.int(0, FlxG.width * 4 * _level);
+			y = FlxG.random.int( -10, FlxG.height);
 		}
 		scrollFactor.set(.7 + (_level * .1), 0);
-		velocity.y = _rnd.int(20, 40) * ((_level+1) * .2);
-		velocity.x = _rnd.int( -25, -50) * ((_level+1) * .1);
+		velocity.y = FlxG.random.int(20, 40) * ((_level+1) * .2);
+		velocity.x = FlxG.random.int( -25, -50) * ((_level+1) * .1);
 		
 	}
 	
