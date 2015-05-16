@@ -14,6 +14,11 @@ import flixel.util.FlxDestroyUtil;
 import openfl.display.Tilesheet;
 import openfl.geom.Rectangle;
 
+#if (flash11 && FLX_RENDER_TILE)
+import com.asliceofcrazypie.flash.TextureUtil;
+import com.asliceofcrazypie.flash.TilesheetStage3D;
+#end
+
 /**
  * BitmapData wrapper which is used for rendering.
  * It stores info about all frames, generated for specific BitmapData object.
@@ -253,6 +258,10 @@ class FlxGraphic
 		Bitmap = FlxGraphic.getBitmap(Bitmap, Unique);
 		var graphic:FlxGraphic = null;
 		
+		#if (flash11 && FLX_RENDER_TILE)
+		Bitmap = TextureUtil.fixTextureSize(Bitmap);
+		#end
+		
 		if (Cache)
 		{
 			graphic = new FlxGraphic(Key, Bitmap);
@@ -366,13 +375,17 @@ class FlxGraphic
 	 */
 	private var _imageFrame:FlxImageFrame;
 	
-	#if FLX_RENDER_TILE
+#if FLX_RENDER_TILE
 	/**
 	 * Internal var holding Tilesheet for bitmap of this graphic.
 	 * It is used only in FLX_RENDER_TILE mode
 	 */
+	#if flash11
+	private var _tilesheet:TilesheetStage3D;
+	#else
 	private var _tilesheet:Tilesheet;
 	#end
+#end
 	
 	private var _useCount:Int = 0;
 	
@@ -526,11 +539,15 @@ class FlxGraphic
 		return frame;
 	}
 	
-	#if FLX_RENDER_TILE
+#if FLX_RENDER_TILE
 	/**
 	 * Tilesheet getter. Generates new one (and regenerates) if there is no tilesheet for this graphic yet.
 	 */
+	#if flash11
+	private function get_tilesheet():TilesheetStage3D
+	#else
 	private function get_tilesheet():Tilesheet
+	#end
 	{
 		if (_tilesheet == null)
 		{
@@ -539,7 +556,7 @@ class FlxGraphic
 			if (dumped)	
 				undump();
 			
-			_tilesheet = new Tilesheet(bitmap);
+			createTilesheet();
 			
 			if (dumped)	
 				dump();
@@ -547,7 +564,7 @@ class FlxGraphic
 		
 		return _tilesheet;
 	}
-	#end
+#end
 	
 	/**
 	 * Gets BitmapData for this graphic object from OpenFl.
@@ -630,14 +647,23 @@ class FlxGraphic
 			bitmap = value;
 			width = bitmap.width;
 			height = bitmap.height;
-			#if (FLX_RENDER_TILE && !flash && !nme)
+			#if (FLX_RENDER_TILE && !nme)
 			if (_tilesheet != null)
 			{
-				_tilesheet = new Tilesheet(bitmap);
+				createTilesheet();
 			}
 			#end
 		}
 		
 		return value;
+	}
+	
+	private inline function createTilesheet():Void
+	{
+		#if flash11
+		_tilesheet = new TilesheetStage3D(bitmap);
+		#else
+		_tilesheet = new Tilesheet(bitmap);
+		#end
 	}
 }
