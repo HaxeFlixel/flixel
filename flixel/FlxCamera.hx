@@ -361,7 +361,6 @@ class FlxCamera extends FlxBasic
 	 */
 	private static var _storageTrianglesHead:FlxDrawTrianglesItem;
 	
-	#if !FLX_RENDER_TRIANGLE
 	@:noCompletion
 	public function startQuadBatch(graphic:FlxGraphic, colored:Bool, blend:BlendMode = null, smooth:Bool = false):FlxDrawTilesItem
 	{
@@ -411,13 +410,6 @@ class FlxCamera extends FlxBasic
 		
 		return itemToReturn;
 	}
-	#else
-	@:noCompletion
-	public function startQuadBatch(graphic:FlxGraphic, colored:Bool, blend:BlendMode = null, smooth:Bool = false):FlxDrawTrianglesItem
-	{
-		return startTrianglesBatch(graphic, smooth, colored, blend);
-	}
-	#end
 	
 	@:noCompletion
 	public function startTrianglesBatch(graphic:FlxGraphic, smoothing:Bool = false, isColored:Bool = false, blend:BlendMode = null):FlxDrawTrianglesItem
@@ -526,11 +518,7 @@ class FlxCamera extends FlxBasic
 	{
 	#if !flash11
 		var isColored:Bool = (cr != 1.0) || (cg != 1.0) || (cb != 1.0) || (ca != 1.0);
-		#if !FLX_RENDER_TRIANGLE
 		var drawItem:FlxDrawTilesItem = startQuadBatch(frame.parent, isColored, blend, smoothing);
-		#else
-		var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(frame.parent, smoothing, isColored, blend);
-		#end
 		drawItem.addQuad(frame, matrix, cr, cg, cb, ca);
 	#else
 		FlxPoint.point1.setTo(0, 0);
@@ -544,11 +532,7 @@ class FlxCamera extends FlxBasic
 		_helperMatrix.identity();
 		_helperMatrix.translate(destPoint.x + frame.offset.x, destPoint.y + frame.offset.y);
 		var isColored:Bool = (cr != 1.0) || (cg != 1.0) || (cb != 1.0) || (ca != 1.0);
-		#if !FLX_RENDER_TRIANGLE
 		var drawItem:FlxDrawTilesItem = startQuadBatch(frame.parent, isColored, blend, smoothing);
-		#else
-		var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(frame.parent, smoothing, isColored, blend);
-		#end
 		drawItem.addQuad(frame, _helperMatrix, cr, cg, cb, ca);
 	}
 	
