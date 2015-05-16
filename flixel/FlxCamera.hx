@@ -1,5 +1,10 @@
 package flixel;
 
+#if flash11
+import com.asliceofcrazypie.flash.Viewport;
+import com.asliceofcrazypie.flash.Batcher;
+#end
+
 import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.Graphics;
@@ -309,6 +314,11 @@ class FlxCamera extends FlxBasic
 	private var _bounds:FlxRect = new FlxRect();
 	
 #if FLX_RENDER_TILE
+	
+	#if flash11
+	public var viewport:Viewport;
+	#end
+	
 	/**
 	 * Sprite for drawing (instead of _flashBitmap for blitting)
 	 */
@@ -514,6 +524,7 @@ class FlxCamera extends FlxBasic
 	
 	public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix, cr:Float = 1.0, cg:Float = 1.0, cb:Float = 1.0, ca:Float = 1.0, blend:BlendMode = null, smoothing:Bool = false):Void
 	{
+	#if !flash11
 		var isColored:Bool = (cr != 1.0) || (cg != 1.0) || (cb != 1.0) || (ca != 1.0);
 		#if !FLX_RENDER_TRIANGLE
 		var drawItem:FlxDrawTilesItem = startQuadBatch(frame.parent, isColored, blend, smoothing);
@@ -521,6 +532,11 @@ class FlxCamera extends FlxBasic
 		var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(frame.parent, smoothing, isColored, blend);
 		#end
 		drawItem.addQuad(frame, matrix, cr, cg, cb, ca);
+	#else
+		FlxPoint.point1.setTo(0, 0);
+		frame.frame.copyToFlash(FlxRect.rect);
+		viewport.drawMatrix(frame.parent.tilesheet, FlxRect.rect, FlxPoint.point1, matrix, cr, cg, cb, ca, blend, smoothing);
+	#end
 	}
 	
 	public function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle, destPoint:Point, cr:Float = 1.0, cg:Float = 1.0, cb:Float = 1.0, ca:Float = 1.0, blend:BlendMode = null, smoothing:Bool = false):Void
@@ -698,6 +714,10 @@ class FlxCamera extends FlxBasic
 		zoom = Zoom; //sets the scale of flash sprite, which in turn loads flashoffset values
 		
 		initialZoom = zoom;
+		
+		#if (flash11 && FLX_RENDER_TILE)
+		viewport = Batcher.addViewport(x, y, width, height, 1, 1);
+		#end
 		
 		_scrollRect.scrollRect = new Rectangle();
 		
@@ -1240,6 +1260,7 @@ class FlxCamera extends FlxBasic
 			buffer.fillRect(_flashRect, Color);
 		}
 	#else
+		#if !flash11
 		if (FxAlpha == 0)
 		{
 			return;
@@ -1254,6 +1275,7 @@ class FlxCamera extends FlxBasic
 		// which could appear while cameras fading
 		targetGraphics.drawRect(-1, -1, width * totalScaleX + 2, height * totalScaleY + 2);
 		targetGraphics.endFill();
+		#end
 	#end
 	}
 	

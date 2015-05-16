@@ -326,12 +326,16 @@ class FlxGraphic
 	 */
 	public var canBeDumped(get, never):Bool;
 	
-	#if FLX_RENDER_TILE
+#if FLX_RENDER_TILE
 	/**
 	 * Tilesheet for this graphic object. It is used only for FLX_RENDER_TILE mode
 	 */
+	#if flash11
+	public var tilesheet(get, null):TilesheetStage3D;
+	#else
 	public var tilesheet(get, null):Tilesheet;
 	#end
+#end
 	
 	/**
 	 * Usage counter for this FlxGraphic object.
