@@ -322,9 +322,6 @@ class FlxCamera extends FlxBasic
 	public var debugLayer:Sprite;
 	#end
 	
-	// TODO: use this transform matrix later in hardware accelerated mode...
-	private var _transform:Matrix;
-	
 	private var _helperMatrix:FlxMatrix = new FlxMatrix();
 	
 	/**
@@ -696,8 +693,6 @@ class FlxCamera extends FlxBasic
 		debugLayer = new Sprite();
 		_scrollRect.addChild(debugLayer);
 		#end
-		
-		_transform = new Matrix();
 	#end
 		
 		zoom = Zoom; //sets the scale of flash sprite, which in turn loads flashoffset values
@@ -748,7 +743,6 @@ class FlxCamera extends FlxBasic
 			clearDrawStack();
 		}
 		
-		_transform = null;
 		_helperMatrix = null;
 	#end
 		
@@ -1246,7 +1240,6 @@ class FlxCamera extends FlxBasic
 			buffer.fillRect(_flashRect, Color);
 		}
 	#else
-		
 		if (FxAlpha == 0)
 		{
 			return;
@@ -1401,8 +1394,7 @@ class FlxCamera extends FlxBasic
 		_flashBitmap.scaleX = totalScaleX;
 		_flashBitmap.scaleY = totalScaleY;
 		#else
-		_transform.identity();
-		_transform.scale(totalScaleX, totalScaleY);
+		
 		#end
 		
 		updateFlashSpritePosition();
