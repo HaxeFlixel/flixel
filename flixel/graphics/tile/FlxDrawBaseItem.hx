@@ -26,6 +26,8 @@ class FlxDrawBaseItem<T>
 					blendInt = Tilesheet.TILE_BLEND_MULTIPLY;
 				case BlendMode.SCREEN:
 					blendInt = Tilesheet.TILE_BLEND_SCREEN;
+				case BlendMode.SUBTRACT:
+					blendInt = Tilesheet.TILE_BLEND_SUBTRACT;
 				#end
 				default:
 					blendInt = Tilesheet.TILE_BLEND_NORMAL;
