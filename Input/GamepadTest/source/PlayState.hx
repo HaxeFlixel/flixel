@@ -16,11 +16,14 @@ class PlayState extends FlxState
 	private static inline var ALPHA_OFF:Float = 0.5;
 	private static inline var ALPHA_ON:Float = 1;
 	
-	private static inline var LB_Y:Float = 2;
-	private static inline var RB_Y:Float = 2;
+	private static inline var LB_Y:Float = 16;
+	private static inline var RB_Y:Float = 16;
 	
-	private static var LEFT_STICK_POS:FlxPoint = FlxPoint.get(80, 48);
-	private static var RIGHT_STICK_POS:FlxPoint = FlxPoint.get(304, 136);
+	private static inline var LT_Y:Float = 4;
+	private static inline var RT_Y:Float = 4;
+	
+	private static var LEFT_STICK_POS:FlxPoint = FlxPoint.get(80, 62);
+	private static var RIGHT_STICK_POS:FlxPoint = FlxPoint.get(304, 150);
 	
 	private var _controllerBg:FlxSprite;
 	private var _leftStick:FlxSprite;
@@ -37,6 +40,8 @@ class PlayState extends FlxState
 	
 	private var _LB:FlxSprite;
 	private var _RB:FlxSprite;
+	private var _LTrigger:FlxSprite;
+	private var _RTrigger:FlxSprite;
 	private var _gamePad:FlxGamepad;
 
 	override public function create():Void 
@@ -44,26 +49,29 @@ class PlayState extends FlxState
 		FlxG.mouse.visible = false;
 		FlxG.cameras.bgColor = FlxColor.WHITE;
 		
-		_LB = createSprite(71, LB_Y, "assets/LB.png", 0.8);
-		_RB = createSprite(367, RB_Y, "assets/RB.png", 0.8);
+		_LTrigger = createSprite(128, LT_Y, "assets/LTrigger.png", 1);
+		_RTrigger = createSprite(380, RT_Y, "assets/RTrigger.png", 1);
+		
+		_LB = createSprite(71, LB_Y, "assets/LB.png", 1);
+		_RB = createSprite(367, RB_Y, "assets/RB.png", 1);
 		
 		_controllerBg = createSprite(0, 0, "assets/xbox360_gamepad.png", 1);
 		
 		_leftStick = createSprite(LEFT_STICK_POS.x, LEFT_STICK_POS.y, "assets/Stick.png");
 		_rightStick = createSprite(RIGHT_STICK_POS.x, RIGHT_STICK_POS.y, "assets/Stick.png");
 		
-		_dPad = new FlxSprite(144, 126);
+		_dPad = new FlxSprite(144, 140);
 		_dPad.loadGraphic("assets/DPad.png", true, 87, 87);
 		_dPad.alpha = ALPHA_OFF;
 		add(_dPad);
 		
-		_xButton = createSprite(357, 70, "assets/X.png");
-		_yButton = createSprite(395, 34, "assets/Y.png");
-		_aButton = createSprite(395, 109, "assets/A.png");
-		_bButton = createSprite(433, 70, "assets/B.png");
+		_xButton = createSprite(357, 84, "assets/X.png");
+		_yButton = createSprite(395, 48, "assets/Y.png");
+		_aButton = createSprite(395, 123, "assets/A.png");
+		_bButton = createSprite(433, 84, "assets/B.png");
 		
-		_backButton = createSprite(199, 79, "assets/Back.png");
-		_startButton = createSprite(306, 79, "assets/Start.png");
+		_backButton = createSprite(199, 93, "assets/Back.png");
+		_startButton = createSprite(306, 93, "assets/Start.png");
 		
 		_startButton.alpha = ALPHA_OFF;
 		_backButton.alpha = ALPHA_OFF;
@@ -139,9 +147,22 @@ class PlayState extends FlxState
 			_RB.y = RB_Y + 5;
 		else
 			_RB.y = RB_Y;
+			
+		if (_gamePad.pressed(GamepadIDs.LEFT_ANALOG))
+			_leftStick.color = FlxColor.RED;
+		else
+			_leftStick.color = FlxColor.WHITE;
+		
+		if (_gamePad.pressed(GamepadIDs.RIGHT_ANALOG))
+			_rightStick.color = FlxColor.RED;
+		else
+			_rightStick.color = FlxColor.WHITE;
 		
 		updateAxis(GamepadIDs.LEFT_ANALOG_STICK, _leftStick, LEFT_STICK_POS);
 		updateAxis(GamepadIDs.RIGHT_ANALOG_STICK, _rightStick, RIGHT_STICK_POS);
+		
+		updateTrigger(GamepadIDs.LEFT_TRIGGER, _LTrigger, LT_Y);
+		updateTrigger(GamepadIDs.RIGHT_TRIGGER, _RTrigger, RT_Y);
 		
 		updateDpad();
 	}
@@ -150,7 +171,7 @@ class PlayState extends FlxState
 	{
 		var xAxisValue = _gamePad.getXAxis(axes);
 		var yAxisValue = _gamePad.getYAxis(axes);
-		var angle:Float;
+		var angle:Float=0;
 		
 		if ((xAxisValue != 0) || (yAxisValue != 0))
 		{
@@ -167,12 +188,27 @@ class PlayState extends FlxState
 		}
 	}
 	
+	private function updateTrigger(axis:Int, sprite:FlxSprite, pos:Float):Void
+	{
+		var yAxisValue = _gamePad.getAxis(axis);
+		yAxisValue = (yAxisValue+1) / 2;
+		sprite.y = pos + (10 * yAxisValue);
+	}
+	
 	private function updateDpad():Void
 	{
-		var dpadLeft = _gamePad.pressed(XboxButtonID.DPAD_LEFT);
-		var dpadRight = _gamePad.pressed(XboxButtonID.DPAD_RIGHT);
-		var dpadUp = _gamePad.pressed(XboxButtonID.DPAD_UP);
-		var dpadDown = _gamePad.pressed(XboxButtonID.DPAD_DOWN);
+		#if !flash
+			var dpadLeft = _gamePad.dpadLeft;
+			var dpadRight = _gamePad.dpadRight;
+			var dpadUp = _gamePad.dpadUp;
+			var dpadDown = _gamePad.dpadDown;
+		#else
+			var dpadLeft = _gamePad.pressed(XboxButtonID.DPAD_LEFT);
+			var dpadRight = _gamePad.pressed(XboxButtonID.DPAD_RIGHT);
+			var dpadUp = _gamePad.pressed(XboxButtonID.DPAD_UP);
+			var dpadDown = _gamePad.pressed(XboxButtonID.DPAD_DOWN);
+		#end
+		
 		var newIndex:Int = 0;
 		var newAlpha:Float = ALPHA_OFF;
 		

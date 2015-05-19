@@ -19,6 +19,8 @@ class GamepadIDs
 	public static inline var SELECT = #if (OUYA) OUYAButtonID.LEFT_ANALOG #else XboxButtonID.BACK #end;
 	public static inline var LEFT_ANALOG = #if (OUYA) OUYAButtonID.LEFT_ANALOG #else XboxButtonID.LEFT_ANALOG #end;
 	public static inline var RIGHT_ANALOG = #if (OUYA) OUYAButtonID.RIGHT_ANALOG #else XboxButtonID.RIGHT_ANALOG #end;
+	public static inline var LEFT_TRIGGER = #if (OUYA) OUYAButtonID.LEFT_TRIGGER #else XboxButtonID.LEFT_TRIGGER #end;
+	public static inline var RIGHT_TRIGGER = #if (OUYA) OUYAButtonID.RIGHT_TRIGGER #else XboxButtonID.RIGHT_TRIGGER #end;
 	public static var LEFT_ANALOG_STICK = #if (OUYA) OUYAButtonID.LEFT_ANALOG_STICK #else XboxButtonID.LEFT_ANALOG_STICK #end;
 	public static var RIGHT_ANALOG_STICK = #if (OUYA) OUYAButtonID.RIGHT_ANALOG_STICK #else XboxButtonID.RIGHT_ANALOG_STICK #end;
 }
