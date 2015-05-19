@@ -125,16 +125,16 @@ class XboxButtonID
 	/**
 	 * Button IDs
 	 */
-	public static inline var A:Int = 10;
-	public static inline var B:Int = 11;
-	public static inline var X:Int = 12;
-	public static inline var Y:Int = 13;
-	public static inline var LB:Int = 8;
-	public static inline var RB:Int = 9;
-	public static inline var BACK:Int = 5;
-	public static inline var START:Int = 4;
-	public static inline var LEFT_ANALOG:Int = 6;
-	public static inline var RIGHT_ANALOG:Int = 7;
+	public static inline var A:Int = 0;
+	public static inline var B:Int = 1;
+	public static inline var X:Int = 2;
+	public static inline var Y:Int = 3;
+	public static inline var LB:Int = 4;
+	public static inline var RB:Int = 5;
+	public static inline var BACK:Int = 6;
+	public static inline var START:Int = 7;
+	public static inline var LEFT_ANALOG:Int = 8;
+	public static inline var RIGHT_ANALOG:Int = 9;
 	
 	public static inline var XBOX:Int = 14;
 	
@@ -147,8 +147,8 @@ class XboxButtonID
 	 * Axis array indicies
 	 */
 	public static var LEFT_ANALOG_STICK(default, null):FlxGamepadAnalogStick = [FlxAxes.X => 0, FlxAxes.Y => 1];
-	public static var RIGHT_ANALOG_STICK(default, null):FlxGamepadAnalogStick = [FlxAxes.X => 2, FlxAxes.Y => 3];
-	public static inline var LEFT_TRIGGER:Int = 4;
+	public static var RIGHT_ANALOG_STICK(default, null):FlxGamepadAnalogStick = [FlxAxes.X => 3, FlxAxes.Y => 4];
+	public static inline var LEFT_TRIGGER:Int = 2;
 	public static inline var RIGHT_TRIGGER:Int = 5;
 #end
 }

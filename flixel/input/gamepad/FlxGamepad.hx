@@ -411,11 +411,6 @@ class FlxGamepad implements IFlxDestroyable
 	
 	private function getAxisValue(AxisID:Int):Float
 	{
-		if (AxisID < 0 || AxisID >= axis.length)
-		{
-			return 0;
-		}
-		
 		var axisValue:Float = 0;
 		
 		#if flash
@@ -424,6 +419,11 @@ class FlxGamepad implements IFlxDestroyable
 			axisValue = _device.getControlAt(AxisID).value;
 		}
 		#else
+		if (AxisID < 0 || AxisID >= axis.length)
+		{
+			return 0;
+		}
+		
 		axisValue = axis[AxisID];
 		#end
 		
