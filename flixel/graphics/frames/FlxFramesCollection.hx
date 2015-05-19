@@ -93,7 +93,7 @@ class FlxFramesCollection implements IFlxDestroyable
 	 * @param	name	name of the frame.
 	 * @return	index of the frame with specified name.
 	 */
-	public inline function getIndexByName(name:String):Int
+	public function getIndexByName(name:String):Int
 	{
 		var numFrames:Int = frames.length;
 		var frame:FlxFrame;
