@@ -138,16 +138,15 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 */
 	override public function isOnScreen(?Camera:FlxCamera):Bool 
 	{
-		var result:Bool = false;
 		for (sprite in _sprites)
 		{
-			if (sprite != null && sprite.exists && sprite.visible)
+			if (sprite != null && sprite.exists && sprite.visible && sprite.isOnScreen(Camera))
 			{
-				result = result || sprite.isOnScreen(Camera);
+				return true;
 			}
 		}
 		
-		return result;
+		return false;
 	}
 	
 	/**
