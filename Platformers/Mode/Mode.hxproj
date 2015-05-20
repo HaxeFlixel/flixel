@@ -23,7 +23,7 @@
   </classpaths>
   <!-- Build options -->
   <build>
-    <option directives="flixel=3.3.8&#xA;openfl=3.0.1&#xA;lime=2.3.1&#xA;openfl-next&#xA;FLX_RECORD&#xA;tools=2.3.1&#xA;no-compilation&#xA;native&#xA;FLX_NO_TOUCH&#xA;lime-native&#xA;openfl-native&#xA;windows&#xA;desktop" />
+    <option directives="flixel=3.3.8&#xA;openfl=3.0.2&#xA;lime=2.3.2&#xA;openfl-next&#xA;FLX_RECORD&#xA;tools=2.3.2&#xA;no-compilation&#xA;native&#xA;FLX_NO_TOUCH&#xA;lime-native&#xA;openfl-native&#xA;windows&#xA;desktop" />
     <option flashStrict="False" />
     <option noInlineOnDebug="False" />
     <option mainClass="ApplicationMain" />

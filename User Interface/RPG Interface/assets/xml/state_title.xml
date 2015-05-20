@@ -61,6 +61,22 @@
 		<param type="string" value="popup"/>
 	</button>
 	
+	<button id="scaledsrc" center_x="true" x="-200" y="350" group="top" label="SCALED SRC" width="200" height="100">
+		<text use_def="sans14c"/>
+		<graphic id="all" image="ui/buttons/button_blue_scale_all2" slice9="24,24,48,48" src_h="72">
+			<scale_src scale="screen.height/1200"/>
+		</graphic>
+		<param type="string" value="scaledsrc"/>
+	</button>
+	
+	
+	<button id="button_blue" center_x="true" x="200" y="350" group="top" label="SCALED SRC" width="200" height="100">
+		<text use_def="sans14c"/>
+		<graphic id="all" image="ui/buttons/master_button_blue" slice9="20,20,232,228" src_h="256" tile="h" smooth="true">
+			<scale_src scale="screen.height/2400"/>
+		</graphic>
+	</button>
+	
 	<radio_group x="10" y="10" use_def="radio_1" id="locale_radio">
 		<radio id="en-US" label="$LANGUAGE_BILINGUAL:EN-US" context="index"/>
 		<radio id="nb-NO" label="$LANGUAGE_BILINGUAL:NB-NO" context="index"/>
