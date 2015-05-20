@@ -1,6 +1,7 @@
 package flixel.input.gamepad;
 
 import flixel.input.FlxInput.FlxInputState;
+import flixel.input.gamepad.FlxGamepad.GamepadModel;
 import flixel.math.FlxPoint;
 import flixel.math.FlxVector;
 import flixel.util.FlxDestroyUtil;
@@ -15,6 +16,8 @@ import flash.system.Capabilities;
 class FlxGamepad implements IFlxDestroyable
 {
 	public var id(default, null):Int;
+	public var model(default, null):GamepadModel;
+	public var buttonIndex:ButtonIndex;
 	public var buttons(default, null):Array<FlxGamepadButton> = [];
 	public var connected(default, null):Bool = true;
 	
@@ -31,11 +34,6 @@ class FlxGamepad implements IFlxDestroyable
 	#if !flash
 	public var hat(default, null):FlxPoint = FlxPoint.get();
 	public var ball(default, null):FlxPoint = FlxPoint.get();
-	
-	public var dpadUp(get, null):Bool = false;
-	public var dpadDown(get, null):Bool = false;
-	public var dpadLeft(get, null):Bool = false;
-	public var dpadRight(get, null):Bool = false;
 	#end
 	
 	/**
@@ -47,9 +45,12 @@ class FlxGamepad implements IFlxDestroyable
 	private var _device:GameInputDevice; 
 	#end
 	
-	public function new(ID:Int, GlobalDeadZone:Float = 0) 
+	public function new(ID:Int, GlobalDeadZone:Float = 0, ?Model:GamepadModel) 
 	{
 		id = ID;
+		
+		model = Model != null ? Model : Xbox;
+		buttonIndex = new ButtonIndex(model);
 		
 		if (GlobalDeadZone != 0)
 		{
@@ -457,13 +458,6 @@ class FlxGamepad implements IFlxDestroyable
 		
 		return 0;
 	}
-	
-	#if !flash
-	private inline function get_dpadUp():Bool    { return hat.y < 0; }
-	private inline function get_dpadDown():Bool  { return hat.y > 0; }
-	private inline function get_dpadLeft():Bool  { return hat.x < 0; }
-	private inline function get_dpadRight():Bool { return hat.x > 0; }
-	#end
 }
 
 enum FlxGamepadDeadZoneMode
@@ -486,4 +480,36 @@ enum FlxAxes
 {
 	X;
 	Y;
+}
+
+enum GamepadModel
+{
+	Logitech;
+	OUYA;
+	PS3;
+	PS4;
+	Xbox;
+}
+
+//Enum that matches lime's GamepadButton.hx variable names
+enum GamepadButtonID
+{
+	A;
+	B;
+	X;
+	Y;
+	BACK;
+	GUIDE;
+	START;
+	LEFT_STICK;
+	RIGHT_STICK;
+	LEFT_TRIGGER;
+	RIGHT_TRIGGER;
+	LEFT_SHOULDER;
+	RIGHT_SHOULDER;
+	DPAD_UP;
+	DPAD_DOWN;
+	DPAD_LEFT;
+	DPAD_RIGHT;
+	UNKNOWN;
 }

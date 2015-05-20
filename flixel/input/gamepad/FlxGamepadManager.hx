@@ -89,12 +89,12 @@ class FlxGamepadManager implements IFlxInputManager
 			firstActive = null;
 	}
 	
-	private function createByID(GamepadID:Int):FlxGamepad
+	private function createByID(GamepadID:Int,?Model:GamepadModel):FlxGamepad
 	{
 		var gamepad:FlxGamepad = _gamepads[GamepadID];
 		if (gamepad == null)
 		{
-			gamepad = new FlxGamepad(GamepadID, globalDeadZone);
+			gamepad = new FlxGamepad(GamepadID, globalDeadZone, Model);
 			_gamepads[GamepadID] = gamepad;
 			
 			//fill the first "empty spot" in the array
@@ -421,10 +421,31 @@ class FlxGamepadManager implements IFlxInputManager
 			
 			if (id >= 0)
 			{
-				var gamepad:FlxGamepad = createByID(id);
+				var gamepad:FlxGamepad = createByID(id, getModelFromFlashDeviceName(Device.name));
 				gamepad._device = Device;
 			}
 		}
+	}
+	
+	private function getModelFromFlashDeviceName(str:String):GamepadModel
+	{
+		str = str.toLowerCase();
+		var strip = ["-", "_"];
+		for (s in strip)
+		{
+			while (str.indexOf(s) != -1)
+			{
+				str = StringTools.replace(str, s, "");
+			}
+		}
+		
+		if (str.indexOf("xbox") != -1) return Xbox;					//"Microsoft X-Box 360 pad"
+		if (str.indexOf("playstation") != -1) return PS3;			//"Sony PLAYSTATION(R)3 Controller"
+		if (str.indexOf("ouya") != -1) return OUYA;					//"OUYA Game Controller"
+		if (str.indexOf("wireless controller") != -1) return PS4;	//"Wireless Controller"
+		if (str.indexOf("logitech") != -1) return Logitech;
+		
+		return Xbox;	//default
 	}
 	
 	private function removeGamepad(Device:GameInputDevice):Void
@@ -482,8 +503,92 @@ class FlxGamepadManager implements IFlxInputManager
 	private function handleHatMove(FlashEvent:JoystickEvent):Void
 	{
 		var gamepad:FlxGamepad = createByID(FlashEvent.device);
-		gamepad.hat.x = (Math.abs(FlashEvent.x) < gamepad.deadZone) ? 0 : FlashEvent.x;
-		gamepad.hat.y = (Math.abs(FlashEvent.y) < gamepad.deadZone) ? 0 : FlashEvent.y;
+		
+		var oldx = gamepad.hat.x;
+		var oldy = gamepad.hat.y;
+		
+		var newx = (Math.abs(FlashEvent.x) < gamepad.deadZone) ? 0 : FlashEvent.x;
+		var newy = (Math.abs(FlashEvent.y) < gamepad.deadZone) ? 0 : FlashEvent.y;
+		
+		gamepad.hat.x = newx;
+		gamepad.hat.y = newy;
+		
+		#if !flash
+			var newType:String = "";
+			var newId:Int = 0;
+			
+			var change = false;
+			
+			//We see if there's been a change so we can properly set "justPressed"/"justReleased", etc.
+			if (oldx != newx)
+			{
+				change = true;
+				
+				if (oldx == -1)
+				{
+					newType = "buttonUp";
+					newId = gamepad.buttonIndex.get(GamepadButtonID.DPAD_LEFT);
+				}
+				else if (oldx == 1)
+				{
+					newType = "buttonUp";
+					newId = gamepad.buttonIndex.get(GamepadButtonID.DPAD_RIGHT);
+				}
+				
+				if (newx == -1)
+				{
+					newType = "buttonDown";
+					newId = gamepad.buttonIndex.get(GamepadButtonID.DPAD_LEFT);
+				}
+				else if (newx == 1)
+				{
+					newType = "buttonDown";
+					newId = gamepad.buttonIndex.get(GamepadButtonID.DPAD_RIGHT);
+				}
+			}
+			
+			if (oldy != newy)
+			{
+				change = true;
+				
+				if (oldy == -1)
+				{
+					newType = "buttonUp";
+					newId = gamepad.buttonIndex.get(GamepadButtonID.DPAD_UP);
+				}
+				else if (oldy == 1)
+				{
+					newType = "buttonUp";
+					newId = gamepad.buttonIndex.get(GamepadButtonID.DPAD_DOWN);
+				}
+				
+				if (newy == -1)
+				{
+					newType = "buttonDown";
+					newId = gamepad.buttonIndex.get(GamepadButtonID.DPAD_UP);
+				}
+				else if (newy == 1)
+				{
+					newType = "buttonDown";
+					newId = gamepad.buttonIndex.get(GamepadButtonID.DPAD_DOWN);
+				}
+			}
+			
+			//Send a fake joystick button event that corresponds to the DPAD codes
+			if (change && newType != "")
+			{
+				var newEvent = new JoystickEvent(newType, FlashEvent.bubbles, FlashEvent.cancelable, FlashEvent.device, newId, FlashEvent.x, FlashEvent.y, FlashEvent.z);
+				
+				if (newType == "buttonUp")
+				{
+					handleButtonUp(newEvent);
+				}
+				else if (newType == "buttonDown")
+				{
+					handleButtonDown(newEvent);
+				}
+			}
+		#end
 	}
 
 	private function handleDeviceAdded(event:JoystickEvent):Void

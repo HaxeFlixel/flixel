@@ -17,6 +17,7 @@ class PS4ButtonID
 	public static inline var L2:Int = 6;
 	public static inline var R2:Int = 7;
 	public static inline var SHARE:Int = 0;
+	public static inline var SELECT:Int = 8;
 	public static inline var START:Int = 9;
 	public static inline var PS:Int = 12;
 	public static inline var TOUCHPAD:Int = 13;

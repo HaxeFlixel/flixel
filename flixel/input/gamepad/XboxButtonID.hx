@@ -28,6 +28,7 @@ class XboxButtonID
 	public static inline var DPAD_LEFT:Int = 18;
 	public static inline var DPAD_RIGHT:Int = 19;
 	
+	public static inline var XBOX:Int = -1;
 	/**
 	 * Axis array indicies
 	 */
@@ -58,6 +59,7 @@ class XboxButtonID
 	public static inline var DPAD_LEFT:Int = 14;
 	public static inline var DPAD_RIGHT:Int = 15;
 	
+	public static inline var XBOX:Int = -1;
 	/**
 	 * Axis array indicies
 	 */
@@ -136,12 +138,13 @@ class XboxButtonID
 	public static inline var LEFT_ANALOG:Int = 8;
 	public static inline var RIGHT_ANALOG:Int = 9;
 	
-	public static inline var XBOX:Int = 14;
+	public static inline var XBOX:Int = 10;
 	
-	public static inline var DPAD_UP:Int = 0;
-	public static inline var DPAD_DOWN:Int = 1;
-	public static inline var DPAD_LEFT:Int = 2;
-	public static inline var DPAD_RIGHT:Int = 3;
+	//"fake" id's, we manually watch for hat axis changes and then send events using these otherwise unused joystick button codes
+	public static inline var DPAD_UP:Int = 11;
+	public static inline var DPAD_DOWN:Int = 12;
+	public static inline var DPAD_LEFT:Int = 13;
+	public static inline var DPAD_RIGHT:Int = 14;
 	
 	/**
 	 * Axis array indicies
