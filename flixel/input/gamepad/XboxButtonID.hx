@@ -125,8 +125,8 @@ class XboxButtonID
 	public static inline var RIGHT_TRIGGER:Int = 5;
 #else // windows
 	/**
-	 * Button IDs
-	 */
+	* Button IDs
+	*/
 	public static inline var A:Int = 0;
 	public static inline var B:Int = 1;
 	public static inline var X:Int = 2;
@@ -147,10 +147,11 @@ class XboxButtonID
 	public static inline var DPAD_RIGHT:Int = 14;
 	
 	/**
-	 * Axis array indicies
-	 */
+	* Axis array indicies
+	*/
 	public static var LEFT_ANALOG_STICK(default, null):FlxGamepadAnalogStick = [FlxAxes.X => 0, FlxAxes.Y => 1];
 	public static var RIGHT_ANALOG_STICK(default, null):FlxGamepadAnalogStick = [FlxAxes.X => 3, FlxAxes.Y => 4];
+	
 	public static inline var LEFT_TRIGGER:Int = 2;
 	public static inline var RIGHT_TRIGGER:Int = 5;
 #end

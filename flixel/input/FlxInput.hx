@@ -23,6 +23,10 @@ class FlxInput<T> implements IFlxInput
 	{
 		last = current;
 		current = pressed ? PRESSED : JUST_PRESSED;
+		if (current == JUST_PRESSED)
+		{
+			trace(ID);
+		}
 	}
 	
 	public function release():Void
