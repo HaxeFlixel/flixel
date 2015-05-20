@@ -67,10 +67,10 @@ class ButtonIndex
 			case RIGHT_SHOULDER: LogitechButtonID.SIX;
 			case LEFT_TRIGGER: LogitechButtonID.SEVEN;
 			case RIGHT_TRIGGER: LogitechButtonID.EIGHT;
-			case DPAD_UP: LogitechButtonID.DPAD_UP;
-			case DPAD_DOWN: LogitechButtonID.DPAD_DOWN;
-			case DPAD_LEFT: LogitechButtonID.DPAD_LEFT;
-			case DPAD_RIGHT: LogitechButtonID.DPAD_RIGHT;
+			//case DPAD_UP: 
+			//case DPAD_DOWN: 
+			//case DPAD_LEFT: 
+			//case DPAD_RIGHT: 
 			//case GUIDE:
 			default: -1;
 		}
