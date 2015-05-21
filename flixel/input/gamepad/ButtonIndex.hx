@@ -1,5 +1,5 @@
 package flixel.input.gamepad;
-import flixel.input.gamepad.ButtonID;
+import flixel.input.gamepad.FlxGamepadButtonID;
 import flixel.input.gamepad.FlxGamepad.FlxGamepadAnalogStick;
 import flixel.input.gamepad.FlxGamepad.GamepadModel;
 
@@ -21,7 +21,7 @@ class ButtonIndex
 	 * @param	buttonID the "universal" ButtonID
 	 * @return	the raw hardware code
 	 */
-	public function getRaw(buttonID:ButtonID):Int
+	public function getRaw(buttonID:FlxGamepadButtonID):Int
 	{
 		return switch(model)
 		{
@@ -40,7 +40,7 @@ class ButtonIndex
 	 * @param	RawID	the raw hardware code
 	 * @return	the "universal" ButtonID
 	 */
-	public function getBtn(RawID:Int):ButtonID
+	public function getBtn(RawID:Int):FlxGamepadButtonID
 	{
 		return switch(model)
 		{
@@ -59,9 +59,9 @@ class ButtonIndex
 	 * @param	buttonID	the "universal" ButtonID
 	 * @return	structure containing raw analog stick axes integer codes
 	 */
-	public function getRawAnalogStick(buttonID:ButtonID):FlxGamepadAnalogStick
+	public function getRawAnalogStick(buttonID:FlxGamepadButtonID):FlxGamepadAnalogStick
 	{
-		if (buttonID == ButtonID.LEFT_ANALOG_STICK)
+		if (buttonID == FlxGamepadButtonID.LEFT_ANALOG_STICK)
 		{
 			return switch(model)
 			{
@@ -74,7 +74,7 @@ class ButtonIndex
 				default: null;
 			}
 		}
-		if (buttonID == ButtonID.RIGHT_ANALOG_STICK)
+		if (buttonID == FlxGamepadButtonID.RIGHT_ANALOG_STICK)
 		{
 			return switch(model)
 			{
@@ -90,7 +90,7 @@ class ButtonIndex
 		return null;
 	}
 	
-	public function getRawOUYA(buttonID:ButtonID):Int
+	public function getRawOUYA(buttonID:FlxGamepadButtonID):Int
 	{
 		return switch(buttonID)
 		{
@@ -113,7 +113,7 @@ class ButtonIndex
 		}
 	}
 	
-	public function getRawLogitech(buttonID:ButtonID):Int
+	public function getRawLogitech(buttonID:FlxGamepadButtonID):Int
 	{
 		return switch(buttonID)
 		{
@@ -138,7 +138,7 @@ class ButtonIndex
 		}
 	}
 	
-	public function getRawPS4(buttonID:ButtonID):Int
+	public function getRawPS4(buttonID:FlxGamepadButtonID):Int
 	{
 		return switch(buttonID)
 		{
@@ -163,7 +163,7 @@ class ButtonIndex
 		}
 	}
 	
-	public function getRawPS3(buttonID:ButtonID):Int
+	public function getRawPS3(buttonID:FlxGamepadButtonID):Int
 	{
 		return switch(buttonID)
 		{
@@ -188,7 +188,7 @@ class ButtonIndex
 		}
 	}
 	
-	public function getRawXbox(buttonID:ButtonID):Int
+	public function getRawXbox(buttonID:FlxGamepadButtonID):Int
 	{
 		return switch(buttonID)
 		{
@@ -215,7 +215,7 @@ class ButtonIndex
 		}
 	}
 	
-	public function getRawXInput(buttonID:ButtonID):Int
+	public function getRawXInput(buttonID:FlxGamepadButtonID):Int
 	{
 		return switch(buttonID)
 		{
@@ -244,7 +244,7 @@ class ButtonIndex
 		}
 	}
 	
-	public function getBtnOUYA(rawID:Int):ButtonID
+	public function getBtnOUYA(rawID:Int):FlxGamepadButtonID
 	{
 		return switch(rawID)
 		{
@@ -267,7 +267,7 @@ class ButtonIndex
 		}
 	}
 	
-	public function getBtnLogitech(rawID:Int):ButtonID
+	public function getBtnLogitech(rawID:Int):FlxGamepadButtonID
 	{
 		return switch(rawID)
 		{
@@ -292,7 +292,7 @@ class ButtonIndex
 		}
 	}
 	
-	public function getBtnPS4(rawID:Int):ButtonID
+	public function getBtnPS4(rawID:Int):FlxGamepadButtonID
 	{
 		return switch(rawID)
 		{
@@ -317,7 +317,7 @@ class ButtonIndex
 		}
 	}
 	
-	public function getBtnPS3(rawID:Int):ButtonID
+	public function getBtnPS3(rawID:Int):FlxGamepadButtonID
 	{
 		return switch(rawID)
 		{
@@ -342,7 +342,7 @@ class ButtonIndex
 		}
 	}
 	
-	public function getBtnXbox(rawID:Int):ButtonID
+	public function getBtnXbox(rawID:Int):FlxGamepadButtonID
 	{
 		return switch(rawID)
 		{
@@ -370,7 +370,7 @@ class ButtonIndex
 		}
 	}
 	
-	public function getBtnXInput(rawID:Int):ButtonID
+	public function getBtnXInput(rawID:Int):FlxGamepadButtonID
 	{
 		return switch(rawID)
 		{

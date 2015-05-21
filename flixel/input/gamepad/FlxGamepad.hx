@@ -89,17 +89,17 @@ class FlxGamepad implements IFlxDestroyable
 		analog = new FlxGamepadAnalogList(this);
 	}
 	
-	public inline function getButtonID(RawID:Int):ButtonID
+	public inline function getButtonID(RawID:Int):FlxGamepadButtonID
 	{
 		return buttonIndex.getBtn(RawID);
 	}
 	
-	public inline function getRawID(buttonID:ButtonID):Int
+	public inline function getRawID(buttonID:FlxGamepadButtonID):Int
 	{
 		return buttonIndex.getRaw(buttonID);
 	}
 	
-	public inline function getRawAnalogStick(buttonID:ButtonID):FlxGamepadAnalogStick
+	public inline function getRawAnalogStick(buttonID:FlxGamepadButtonID):FlxGamepadAnalogStick
 	{
 		return buttonIndex.getRawAnalogStick(buttonID);
 	}
@@ -204,7 +204,7 @@ class FlxGamepad implements IFlxDestroyable
 	 * @return	Whether the provided button has the specified status
 	 */
 	
-	public inline function checkStatus(buttonID:ButtonID, Status:FlxInputState):Bool
+	public inline function checkStatus(buttonID:FlxGamepadButtonID, Status:FlxInputState):Bool
 	{
 		return checkStatusRaw(getRawID(buttonID), Status);
 	}
@@ -231,7 +231,7 @@ class FlxGamepad implements IFlxDestroyable
 	 * @param	ButtonIDArray	An array of universal button IDs
 	 * @return	Whether at least one of the buttons is pressed
 	 */
-	public function anyPressed(ButtonIDArray:Array<ButtonID>):Bool
+	public function anyPressed(ButtonIDArray:Array<FlxGamepadButtonID>):Bool
 	{
 		for (id in ButtonIDArray)
 		{
@@ -273,7 +273,7 @@ class FlxGamepad implements IFlxDestroyable
 	 * @param	ButtonIDArray	An array of universal button IDs
 	 * @return	Whether at least one of the buttons was just pressed
 	 */
-	public function anyJustPressed(ButtonIDArray:Array<ButtonID>):Bool
+	public function anyJustPressed(ButtonIDArray:Array<FlxGamepadButtonID>):Bool
 	{
 		for (b in ButtonIDArray)
 		{
@@ -314,7 +314,7 @@ class FlxGamepad implements IFlxDestroyable
 	 * @param	ButtonArray	An array of button IDs
 	 * @return	Whether at least one of the buttons was just released
 	 */
-	public function anyJustReleased(ButtonIDArray:Array<ButtonID>):Bool
+	public function anyJustReleased(ButtonIDArray:Array<FlxGamepadButtonID>):Bool
 	{
 		for (b in ButtonIDArray)
 		{
@@ -353,7 +353,7 @@ class FlxGamepad implements IFlxDestroyable
 	 * Get the first found "universal" ButtonID of the button which is currently pressed.
 	 * Returns NONE if no button is pressed.
 	 */
-	public inline function firstPressedButtonID():ButtonID
+	public inline function firstPressedButtonID():FlxGamepadButtonID
 	{
 		return getButtonID(firstPressedRawID());
 	}
@@ -378,7 +378,7 @@ class FlxGamepad implements IFlxDestroyable
 	 * Get the first found "universal" ButtonID of the button which has been just pressed.
 	 * Returns NONE if no button was just pressed.
 	 */
-	public inline function firstJustPressedButtonID():ButtonID
+	public inline function firstJustPressedButtonID():FlxGamepadButtonID
 	{
 		return getButtonID(firstJustPressedRawID());
 	}
@@ -403,7 +403,7 @@ class FlxGamepad implements IFlxDestroyable
 	 * Get the first found "universal" ButtonID of the button which has been just released.
 	 * Returns NONE if no button was just released.
 	 */
-	public inline function firstJustReleasedButtonID():ButtonID
+	public inline function firstJustReleasedButtonID():FlxGamepadButtonID
 	{
 		return getButtonID(firstJustReleasedRawID());
 	}
@@ -429,7 +429,7 @@ class FlxGamepad implements IFlxDestroyable
 	 * use this only for things like <code>ButtonID.LEFT_TRIGGER</code>, 
 	 * use getXAxis() / getYAxis() for analog sticks!
 	 */
-	public inline function getAxis(AxisButtonID:ButtonID):Float
+	public inline function getAxis(AxisButtonID:FlxGamepadButtonID):Float
 	{
 		return getAxisRaw(getRawID(AxisButtonID));
 	}
@@ -458,7 +458,7 @@ class FlxGamepad implements IFlxDestroyable
 	 * @param	AxesButtonID an analog stick, ie <code>ButtonID.LEFT_STICK</code> or <code>ButtonID.RIGHT_STICK</code>
 	 * @return	
 	 */
-	public inline function getXAxis(AxesButtonID:ButtonID):Float
+	public inline function getXAxis(AxesButtonID:FlxGamepadButtonID):Float
 	{
 		var axesValue = getRawAnalogStick(AxesButtonID);
 		return getAnalogueAxisValue(FlxAxes.X, axesValue);
@@ -478,7 +478,7 @@ class FlxGamepad implements IFlxDestroyable
 	 * @param	AxesButtonID an analog stick, ie <code>ButtonID.LEFT_STICK</code> or <code>ButtonID.RIGHT_STICK</code>
 	 * @return	
 	 */
-	public inline function getYAxis(AxesButtonID:ButtonID):Float
+	public inline function getYAxis(AxesButtonID:FlxGamepadButtonID):Float
 	{
 		var axesValue = getRawAnalogStick(AxesButtonID);
 		return getYAxisRaw(axesValue);

@@ -6,13 +6,13 @@ import flixel.system.macros.FlxMacroUtil;
  * Maps enum values and strings to integer keycodes.
  */
 @:enum
-abstract ButtonID(Int) from Int to Int
+abstract FlxGamepadButtonID(Int) from Int to Int
 {
-	public static var fromStringMap(default, null):Map<String, ButtonID>
-		= FlxMacroUtil.buildMap("flixel.input.gamepad.ButtonID");
+	public static var fromStringMap(default, null):Map<String, FlxGamepadButtonID>
+		= FlxMacroUtil.buildMap("flixel.input.gamepad.FlxGamepadButtonID");
 		
-	public static var toStringMap(default, null):Map<ButtonID, String>
-		= FlxMacroUtil.buildMap("flixel.input.gamepad.ButtonID", true);
+	public static var toStringMap(default, null):Map<FlxGamepadButtonID, String>
+		= FlxMacroUtil.buildMap("flixel.input.gamepad.FlxGamepadButtonID", true);
 	
 	// Button Indices
 	var ANY               = -2;

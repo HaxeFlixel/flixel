@@ -2,7 +2,7 @@ package flixel.input.gamepad;
 
 import flixel.input.FlxInput;
 import flixel.input.FlxKeyManager;
-import flixel.input.gamepad.ButtonID;
+import flixel.input.gamepad.FlxGamepadButtonID;
 import flixel.input.gamepad.FlxGamepad;
 import flixel.input.gamepad.FlxGamepadManager;
 
@@ -17,7 +17,7 @@ class FlxBaseGamepadButtonList
 		this.gamepad = gamepad;
 	}
 	
-	private inline function check(id:ButtonID):Bool
+	private inline function check(id:FlxGamepadButtonID):Bool
 	{
 		return gamepad.checkStatus(id, status);
 	}
