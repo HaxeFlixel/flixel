@@ -36,7 +36,7 @@ class FlxGamepadMapping
 			case OUYA: getRawOUYA(buttonID);
 			case PS3: getRawPS3(buttonID);
 			case PS4: getRawPS4(buttonID);
-			case Xbox: getRawXbox(buttonID);
+			case XBox360: getRawXBox360(buttonID);
 			case XInput: getRawXInput(buttonID);
 			default: -1;
 		}
@@ -55,7 +55,7 @@ class FlxGamepadMapping
 			case OUYA: getBtnOUYA(RawID);
 			case PS3: getBtnPS3(RawID);
 			case PS4: getBtnPS4(RawID);
-			case Xbox: getBtnXbox(RawID);
+			case XBox360: getBtnXBox360(RawID);
 			case XInput: getBtnXInput(RawID);
 			default: NONE;
 		}
@@ -76,7 +76,7 @@ class FlxGamepadMapping
 				case OUYA: OUYAButtonID.LEFT_ANALOG_STICK;
 				case PS3: PS3ButtonID.LEFT_ANALOG_STICK;
 				case PS4: PS4ButtonID.LEFT_ANALOG_STICK;
-				case Xbox: XBox360ButtonID.LEFT_ANALOG_STICK;
+				case XBox360: XBox360ButtonID.LEFT_ANALOG_STICK;
 				case XInput: XInputButtonID.LEFT_ANALOG_STICK;
 				default: null;
 			}
@@ -89,7 +89,7 @@ class FlxGamepadMapping
 				case OUYA: OUYAButtonID.RIGHT_ANALOG_STICK;
 				case PS3: PS3ButtonID.RIGHT_ANALOG_STICK;
 				case PS4: PS4ButtonID.RIGHT_ANALOG_STICK;
-				case Xbox: XBox360ButtonID.RIGHT_ANALOG_STICK;
+				case XBox360: XBox360ButtonID.RIGHT_ANALOG_STICK;
 				case XInput: XInputButtonID.RIGHT_ANALOG_STICK;
 				default: null;
 			}
@@ -195,7 +195,7 @@ class FlxGamepadMapping
 		}
 	}
 	
-	public function getRawXbox(buttonID:FlxGamepadButtonID):Int
+	public function getRawXBox360(buttonID:FlxGamepadButtonID):Int
 	{
 		return switch(buttonID)
 		{
@@ -349,7 +349,7 @@ class FlxGamepadMapping
 		}
 	}
 	
-	public function getBtnXbox(rawID:Int):FlxGamepadButtonID
+	public function getBtnXBox360(rawID:Int):FlxGamepadButtonID
 	{
 		return switch(rawID)
 		{
@@ -369,8 +369,8 @@ class FlxGamepadMapping
 			case XBox360ButtonID.DPAD_LEFT: DPAD_LEFT;
 			case XBox360ButtonID.DPAD_RIGHT: DPAD_RIGHT;
 			
-			//case XboxButtonID.LEFT_TRIGGER: LEFT_TRIGGER;
-			//case XboxButtonID.RIGHT_TRIGGER: RIGHT_TRIGGER;
+			//case XBox360ButtonID.LEFT_TRIGGER: LEFT_TRIGGER;
+			//case XBox360ButtonID.RIGHT_TRIGGER: RIGHT_TRIGGER;
 			//case LEFT_TRIGGER: 
 			//case RIGHT_TRIGGER: 
 			default: NONE;

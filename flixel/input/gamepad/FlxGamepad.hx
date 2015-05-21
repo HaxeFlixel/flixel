@@ -73,7 +73,7 @@ class FlxGamepad implements IFlxDestroyable
 	{
 		id = ID;
 		
-		if (Model == null) Model = Xbox;
+		if (Model == null) Model = XBox360;
 		
 		buttonIndex = new FlxGamepadMapping(model);
 		model = Model;
@@ -506,7 +506,7 @@ class FlxGamepad implements IFlxDestroyable
 		
 		// the y axis is inverted on the Xbox gamepad in flash for some reason - but not in Chrome!
 		#if (flash)
-		if (model == Xbox && !_isChrome)
+		if (model == XBox360 && !_isChrome)
 		{
 			axisValue = -axisValue;
 		}
@@ -641,6 +641,6 @@ enum GamepadModel
 	OUYA;
 	PS3;
 	PS4;
-	Xbox;
+	XBox360;
 	XInput;
 }

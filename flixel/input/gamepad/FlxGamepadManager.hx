@@ -442,14 +442,15 @@ class FlxGamepadManager implements IFlxInputManager
 			}
 		}
 		
-		if (str.indexOf("xbox") != -1) return Xbox;               //"Microsoft X-Box 360 pad"
+		if (str.indexOf("xbox") != -1 && 
+		    str.indexOf("360") != -1) return XBox360;             //"Microsoft X-Box 360 pad"
 		if (str.indexOf("playstation") != -1) return PS3;         //"Sony PLAYSTATION(R)3 Controller"
 		if (str.indexOf("ouya") != -1) return OUYA;               //"OUYA Game Controller"
 		if (str.indexOf("wireless controller") != -1) return PS4; //"Wireless Controller"
 		if (str.indexOf("logitech") != -1) return Logitech;
 		if (str.indexOf("xinput") != -1) return XInput;
 		
-		return Xbox;	//default
+		return XBox360;	//default
 	}
 	
 	private function removeGamepad(Device:GameInputDevice):Void
