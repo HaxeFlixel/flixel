@@ -31,6 +31,13 @@ class MenuState extends FlxUIState
 		move_text = cast _ui.getAsset("move_text");
 		event_text = cast _ui.getAsset("event_text");
 		
+		var check_lstick:FlxUICheckBox = cast _ui.getAsset("check_lstick");
+		var check_rstick:FlxUICheckBox = cast _ui.getAsset("check_rstick");
+		
+		//enable when lstick/rstick cursor functionality is ready
+		check_lstick.color = check_rstick.color = 0x808080;
+		check_lstick.active = check_rstick.active = false;
+		
 		updateInputMethod();
 	}
 	
