@@ -20,8 +20,8 @@ class XboxButtonID
 	public static inline var BACK:Int = 12;
 	public static inline var START:Int = 13;
 	
-	public static inline var LEFT_ANALOG:Int = 14;
-	public static inline var RIGHT_ANALOG:Int = 15;
+	public static inline var LEFT_STICK_BTN:Int = 14;
+	public static inline var RIGHT_STICK_BTN:Int = 15;
 	
 	public static inline var DPAD_UP:Int = 16;
 	public static inline var DPAD_DOWN:Int = 17;
@@ -51,8 +51,8 @@ class XboxButtonID
 	public static inline var BACK:Int = 8;
 	public static inline var START:Int = 9;
 	
-	public static inline var LEFT_ANALOG:Int = 10;
-	public static inline var RIGHT_ANALOG:Int = 11;
+	public static inline var LEFT_STICK_BTN:Int = 10;
+	public static inline var RIGHT_STICK_BTN:Int = 11;
 	
 	public static inline var DPAD_UP:Int = 12;
 	public static inline var DPAD_DOWN:Int = 13;
@@ -77,8 +77,8 @@ class XboxButtonID
 	public static inline var RB:Int = 5;
 	public static inline var BACK:Int = 9;
 	public static inline var START:Int = 8;
-	public static inline var LEFT_ANALOG:Int = 6;
-	public static inline var RIGHT_ANALOG:Int = 7;
+	public static inline var LEFT_STICK_BTN:Int = 6;
+	public static inline var RIGHT_STICK_BTN:Int = 7;
 	
 	public static inline var XBOX:Int = 10;
 
@@ -106,8 +106,8 @@ class XboxButtonID
 	public static inline var RB:Int = 5;
 	public static inline var BACK:Int = 6;
 	public static inline var START:Int = 7;
-	public static inline var LEFT_ANALOG:Int = 9;
-	public static inline var RIGHT_ANALOG:Int = 10;
+	public static inline var LEFT_STICK_BTN:Int = 9;
+	public static inline var RIGHT_STICK_BTN:Int = 10;
 	
 	public static inline var XBOX:Int = 8;
 	
@@ -135,8 +135,8 @@ class XboxButtonID
 	public static inline var RB:Int = 5;
 	public static inline var BACK:Int = 6;
 	public static inline var START:Int = 7;
-	public static inline var LEFT_ANALOG:Int = 8;
-	public static inline var RIGHT_ANALOG:Int = 9;
+	public static inline var LEFT_STICK_BTN:Int = 8;
+	public static inline var RIGHT_STICK_BTN:Int = 9;
 	
 	public static inline var XBOX:Int = 10;
 	
