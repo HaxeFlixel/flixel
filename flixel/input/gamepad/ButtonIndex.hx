@@ -21,7 +21,6 @@ class ButtonIndex
 	 * @param	buttonID the "universal" ButtonID
 	 * @return	the raw hardware code
 	 */
-	
 	public function getRaw(buttonID:ButtonID):Int
 	{
 		return switch(model)
@@ -41,7 +40,6 @@ class ButtonIndex
 	 * @param	RawID	the raw hardware code
 	 * @return	the "universal" ButtonID
 	 */
-	
 	public function getBtn(RawID:Int):ButtonID
 	{
 		return switch(model)
@@ -61,7 +59,6 @@ class ButtonIndex
 	 * @param	buttonID	the "universal" ButtonID
 	 * @return	structure containing raw analog stick axes integer codes
 	 */
-	
 	public function getRawAnalogStick(buttonID:ButtonID):FlxGamepadAnalogStick
 	{
 		if (buttonID == ButtonID.LEFT_ANALOG_STICK)
@@ -93,9 +90,7 @@ class ButtonIndex
 		return null;
 	}
 	
-	/*****************************************/
-	
-	public inline function getRawOUYA(buttonID:ButtonID):Int
+	public function getRawOUYA(buttonID:ButtonID):Int
 	{
 		return switch(buttonID)
 		{
@@ -118,7 +113,7 @@ class ButtonIndex
 		}
 	}
 	
-	public inline function getRawLogitech(buttonID:ButtonID):Int
+	public function getRawLogitech(buttonID:ButtonID):Int
 	{
 		return switch(buttonID)
 		{
@@ -143,7 +138,7 @@ class ButtonIndex
 		}
 	}
 	
-	public inline function getRawPS4(buttonID:ButtonID):Int
+	public function getRawPS4(buttonID:ButtonID):Int
 	{
 		return switch(buttonID)
 		{
@@ -168,7 +163,7 @@ class ButtonIndex
 		}
 	}
 	
-	public inline function getRawPS3(buttonID:ButtonID):Int
+	public function getRawPS3(buttonID:ButtonID):Int
 	{
 		return switch(buttonID)
 		{
@@ -193,7 +188,7 @@ class ButtonIndex
 		}
 	}
 	
-	public inline function getRawXbox(buttonID:ButtonID):Int
+	public function getRawXbox(buttonID:ButtonID):Int
 	{
 		return switch(buttonID)
 		{
@@ -220,7 +215,7 @@ class ButtonIndex
 		}
 	}
 	
-	public inline function getRawXInput(buttonID:ButtonID):Int
+	public function getRawXInput(buttonID:ButtonID):Int
 	{
 		return switch(buttonID)
 		{
@@ -249,9 +244,7 @@ class ButtonIndex
 		}
 	}
 	
-	/**************/
-	
-	public inline function getBtnOUYA(rawID:Int):ButtonID
+	public function getBtnOUYA(rawID:Int):ButtonID
 	{
 		return switch(rawID)
 		{
@@ -274,7 +267,7 @@ class ButtonIndex
 		}
 	}
 	
-	public inline function getBtnLogitech(rawID:Int):ButtonID
+	public function getBtnLogitech(rawID:Int):ButtonID
 	{
 		return switch(rawID)
 		{
@@ -299,7 +292,7 @@ class ButtonIndex
 		}
 	}
 	
-	public inline function getBtnPS4(rawID:Int):ButtonID
+	public function getBtnPS4(rawID:Int):ButtonID
 	{
 		return switch(rawID)
 		{
@@ -324,7 +317,7 @@ class ButtonIndex
 		}
 	}
 	
-	public inline function getBtnPS3(rawID:Int):ButtonID
+	public function getBtnPS3(rawID:Int):ButtonID
 	{
 		return switch(rawID)
 		{
@@ -349,7 +342,7 @@ class ButtonIndex
 		}
 	}
 	
-	public inline function getBtnXbox(rawID:Int):ButtonID
+	public function getBtnXbox(rawID:Int):ButtonID
 	{
 		return switch(rawID)
 		{
@@ -377,7 +370,7 @@ class ButtonIndex
 		}
 	}
 	
-	public inline function getBtnXInput(rawID:Int):ButtonID
+	public function getBtnXInput(rawID:Int):ButtonID
 	{
 		return switch(rawID)
 		{
