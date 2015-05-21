@@ -19,7 +19,7 @@ class FlxBaseGamepadButtonList
 	
 	private inline function check(id:ButtonID):Bool
 	{
-		return gamepad.checkStatusRaw(gamepad.rawID(id), status);
+		return gamepad.checkStatus(id, status);
 	}
 	
 	private inline function checkRaw(id:Int):Bool

@@ -10,7 +10,7 @@ import flixel.util.FlxDestroyUtil;
 import openfl.events.JoystickEvent;
 #end
 
-#if flash11_8
+#if (flash11_8 || next)
 import flash.ui.GameInput;
 import flash.ui.GameInputDevice;
 import flash.events.GameInputEvent;
@@ -51,7 +51,7 @@ class FlxGamepadManager implements IFlxInputManager
 	 */
 	private var _activeGamepads:Array<FlxGamepad> = [];
 	
-	#if flash11_8
+	#if (flash11_8 || next)
 	/**
 	 * GameInput needs to be statically created, otherwise GameInput.numDevices will be zero during construction.
 	 */
@@ -293,13 +293,14 @@ class FlxGamepadManager implements IFlxInputManager
 	 * @param AxisID The axis id
 	 * @return Float Value from -1 to 1 or 0 if no X axes were moved
 	 */
-	public function anyMovedXAxis(AxisID:FlxGamepadAnalogStick):Float
+	public function anyMovedXAxis(RawAxisID:FlxGamepadAnalogStick):Float
 	{
 		for (gamepad in _gamepads)
 		{
-			if ((gamepad != null) && gamepad.getXAxis(AxisID) != 0)
+			if ((gamepad != null))
 			{
-				return gamepad.getXAxis(AxisID);
+				var value = gamepad.getXAxisRaw(RawAxisID);
+				if (value != 0) return value;
 			}
 		}
 		
@@ -312,13 +313,14 @@ class FlxGamepadManager implements IFlxInputManager
 	 * @param AxisID The axis id
 	 * @return Float Value from -1 to 1 or 0 if no Y axes were moved
 	 */
-	public function anyMovedYAxis(AxisID:FlxGamepadAnalogStick):Float
+	public function anyMovedYAxis(RawAxisID:FlxGamepadAnalogStick):Float
 	{
 		for (gamepad in _gamepads)
 		{
-			if ((gamepad != null) && gamepad.getYAxis(AxisID) != 0)
+			if ((gamepad != null))
 			{
-				return gamepad.getYAxis(AxisID);
+				var value = gamepad.getYAxisRaw(RawAxisID);
+				if (value != 0) return value;
 			}
 		}
 		
@@ -340,7 +342,7 @@ class FlxGamepadManager implements IFlxInputManager
 		lastActive = null;
 		_gamepads = null;
 		
-		#if flash11_8 
+		#if (flash11_8 || next)
 		// not sure this is needed - can't imagine any use case where FlxGamepadManager would be destroyed
 		_gameInput.removeEventListener(GameInputEvent.DEVICE_ADDED, onDeviceAdded);
 		_gameInput.removeEventListener(GameInputEvent.DEVICE_REMOVED, onDeviceRemoved);
@@ -374,7 +376,7 @@ class FlxGamepadManager implements IFlxInputManager
 		FlxG.stage.addEventListener(JoystickEvent.DEVICE_ADDED, handleDeviceAdded);
 		#end
 		
-		#if flash11_8
+		#if (flash11_8 || next)
 		_gameInput.addEventListener(GameInputEvent.DEVICE_ADDED, onDeviceAdded);
 		_gameInput.addEventListener(GameInputEvent.DEVICE_REMOVED, onDeviceRemoved);
 		
@@ -385,7 +387,7 @@ class FlxGamepadManager implements IFlxInputManager
 		#end
 	}
 	
-	#if flash11_8
+	#if (flash11_8 || next)
 	private function onDeviceAdded(Event:GameInputEvent):Void
 	{
 		addGamepad(Event.device);
@@ -444,6 +446,8 @@ class FlxGamepadManager implements IFlxInputManager
 		if (str.indexOf("ouya") != -1) return OUYA;					//"OUYA Game Controller"
 		if (str.indexOf("wireless controller") != -1) return PS4;	//"Wireless Controller"
 		if (str.indexOf("logitech") != -1) return Logitech;
+		if (str.indexOf("xinput") != -1) return XInput;				
+		trace(str);
 		
 		return Xbox;	//default
 	}

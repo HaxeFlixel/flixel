@@ -6,7 +6,7 @@ import flixel.math.FlxPoint;
 import flixel.math.FlxVector;
 import flixel.util.FlxDestroyUtil;
 
-#if flash
+#if (flash || next)
 import flash.ui.GameInputControl;
 import flash.ui.GameInputDevice;
 import flash.system.Capabilities;
@@ -41,28 +41,41 @@ class FlxGamepad implements IFlxDestroyable
 	 */
 	private var axis:Array<Float> = [for (i in 0...6) 0];
 	
-	#if flash
+	#if (flash || next)
 	private var _device:GameInputDevice; 
 	#end
 	
+	#if (flash)
+	private var _isChrome:Bool = false;
+	#end
+	
 	/**
-	 * Helper class to check if a keys is pressed.
+	 * Helper class to check if a button is pressed.
 	 */
 	public var pressed:FlxGamepadButtonList;
 	/**
-	 * Helper class to check if a keys was just pressed.
+	 * Helper class to check if a button was just pressed.
 	 */
 	public var justPressed:FlxGamepadButtonList;
 	/**
-	 * Helper class to check if a keys was just released.
+	 * Helper class to check if a button was just released.
 	 */
 	public var justReleased:FlxGamepadButtonList;
+	/**
+	 * Helper class to get the float value of analog input.
+	 */
+	public var analog:FlxGamepadAnalogList;
 	
 	public function new(ID:Int, GlobalDeadZone:Float = 0, ?Model:GamepadModel) 
 	{
 		id = ID;
 		
 		model = Model != null ? Model : Xbox;
+		
+		#if flash
+		_isChrome = (Capabilities.manufacturer == "Google Pepper");
+		#end
+		
 		buttonIndex = new ButtonIndex(model);
 		
 		if (GlobalDeadZone != 0)
@@ -73,6 +86,7 @@ class FlxGamepad implements IFlxDestroyable
 		pressed = new FlxGamepadButtonList(FlxInputState.PRESSED, this);
 		justPressed = new FlxGamepadButtonList(FlxInputState.JUST_PRESSED, this);
 		justReleased = new FlxGamepadButtonList(FlxInputState.JUST_RELEASED, this);
+		analog = new FlxGamepadAnalogList(this);
 	}
 	
 	public inline function btnID(RawID:Int):ButtonID
@@ -83,6 +97,11 @@ class FlxGamepad implements IFlxDestroyable
 	public inline function rawID(buttonID:ButtonID):Int
 	{
 		return buttonIndex.getRaw(buttonID);
+	}
+	
+	public inline function rawAnalogStick(buttonID:ButtonID):FlxGamepadAnalogStick
+	{
+		return buttonIndex.getRawAnalogStick(buttonID);
 	}
 	
 	public function getButton(ButtonID:Int):FlxGamepadButton
@@ -103,7 +122,7 @@ class FlxGamepad implements IFlxDestroyable
 	 */
 	public function update():Void
 	{
-		#if flash
+		#if (flash || next)
 		var control:GameInputControl;
 		var button:FlxGamepadButton;
 		
@@ -406,40 +425,77 @@ class FlxGamepad implements IFlxDestroyable
 	}
 	
 	/**
-	 * Gets the value of the specified axis - use this only for things like
-	 * XboxButtonID.LEFT_TRIGGER, use getXAxis() / getYAxis() for analog sticks!
+	 * Gets the value of the specified axis using the "universal" ButtonID - 
+	 * use this only for things like <code>ButtonID.LEFT_TRIGGER</code>, 
+	 * use getXAxis() / getYAxis() for analog sticks!
 	 */
-	public inline function getAxis(AxisID:Int):Float
+	public inline function getAxis(AxisButtonID:ButtonID):Float
 	{
-		var axisValue = getAxisValue(AxisID);
+		return getAxisRaw(rawID(AxisButtonID));
+	}
+	
+	/**
+	 * Gets the value of the specified axis using the raw ID - 
+	 * use this only for things like <code>XboxButtonID.LEFT_TRIGGER</code>,
+	 * use getXAxis() / getYAxis() for analog sticks!
+	 */
+	public inline function getAxisRaw(RawAxisID:Int):Float
+	{
+		var axisValue = getAxisValue(RawAxisID);
 		if (Math.abs(axisValue) > deadZone)
 		{
+			#if (!flash && !next)
+				//(-1,1) range, normalize to (0,1) for legacy target only
+				axisValue = (axisValue+1) / 2;
+			#end
 			return axisValue;
 		}
 		return 0;
 	}
 	
 	/**
-	 * Gets the value of the specified X axis.
+	 * Given a ButtonID for an analog stick, gets the value of its X axis
+	 * @param	AxesButtonID an analog stick, ie <code>ButtonID.LEFT_STICK</code> or <code>ButtonID.RIGHT_STICK</code>
+	 * @return	
 	 */
-	public inline function getXAxis(Axes:FlxGamepadAnalogStick):Float
+	public inline function getXAxis(AxesButtonID:ButtonID):Float
+	{
+		var axesValue = rawAnalogStick(AxesButtonID);
+		return getAnalogueAxisValue(FlxAxes.X, axesValue);
+	}
+	
+	/**
+	 * Given both raw ID's for the axes of an analog stick, gets the value of its X axis
+	 * @param	Axes a FlxGamepadAnalogStick value
+	 */
+	public inline function getXAxisRaw(Axes:FlxGamepadAnalogStick):Float
 	{
 		return getAnalogueAxisValue(FlxAxes.X, Axes);
 	}
 	
 	/**
-	 * Gets the value of the specified Y axis - 
-	 * should be used in flash to correct the inverted y axis.
+	 * Given a ButtonID for an analog stick, gets the value of its Y axis
+	 * @param	AxesButtonID an analog stick, ie <code>ButtonID.LEFT_STICK</code> or <code>ButtonID.RIGHT_STICK</code>
+	 * @return	
 	 */
-	public function getYAxis(Axes:FlxGamepadAnalogStick):Float
+	public inline function getYAxis(AxesButtonID:ButtonID):Float
+	{
+		var axesValue = rawAnalogStick(AxesButtonID);
+		return getYAxisRaw(axesValue);
+	}
+	
+	/**
+	 * Given both raw ID's for the axes of an analog stick, gets the value of its Y axis
+	 * (should be used in flash to correct the inverted y axis)
+	 * @param	Axes a FlxGamepadAnalogStick value
+	 */
+	public function getYAxisRaw(Axes:FlxGamepadAnalogStick):Float
 	{
 		var axisValue = getAnalogueAxisValue(FlxAxes.Y, Axes);
 		
 		// the y axis is inverted on the Xbox gamepad in flash for some reason - but not in Chrome!
-		// WARNING: this causes unnecessary string allocations - we should remove this hack when possible.
-		#if flash
-		if ((_device != null) && _device.enabled && (_device.name.indexOf("Xbox") != -1) && 
-		   (Capabilities.manufacturer != "Google Pepper"))
+		#if (flash)
+		if (model == Xbox && !_isChrome)
 		{
 			axisValue = -axisValue;
 		}
@@ -500,7 +556,7 @@ class FlxGamepad implements IFlxDestroyable
 	{
 		var axisValue:Float = 0;
 		
-		#if flash
+		#if (flash || next)
 		if ((_device != null) && _device.enabled)
 		{
 			axisValue = _device.getControlAt(AxisID).value;
@@ -575,27 +631,5 @@ enum GamepadModel
 	PS3;
 	PS4;
 	Xbox;
-}
-
-//Enum that matches lime's GamepadButton.hx variable names
-enum GamepadButtonID
-{
-	A;
-	B;
-	X;
-	Y;
-	BACK;
-	GUIDE;
-	START;
-	LEFT_STICK;
-	RIGHT_STICK;
-	LEFT_TRIGGER;
-	RIGHT_TRIGGER;
-	LEFT_SHOULDER;
-	RIGHT_SHOULDER;
-	DPAD_UP;
-	DPAD_DOWN;
-	DPAD_LEFT;
-	DPAD_RIGHT;
-	UNKNOWN;
+	XInput;
 }

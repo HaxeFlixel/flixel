@@ -18,8 +18,8 @@ class XInputButtonID
 	public static inline var RB:Int = 16;
 	public static inline var BACK:Int = 10;
 	public static inline var START:Int = 12;
-	public static inline var LEFT_ANALOG:Int = 13;
-	public static inline var RIGHT_ANALOG:Int = 14;
+	public static inline var LEFT_STICK_BTN:Int = 13;
+	public static inline var RIGHT_STICK_BTN:Int = 14;
 	
 	public static inline var GUIDE:Int = 11;
 	
@@ -33,7 +33,8 @@ class XInputButtonID
 	* Axis array indicies
 	*/
 	public static var LEFT_ANALOG_STICK(default, null):FlxGamepadAnalogStick = [FlxAxes.X => 0, FlxAxes.Y => 1];
-	public static var RIGHT_ANALOG_STICK(default, null):FlxGamepadAnalogStick = [FlxAxes.X => 3, FlxAxes.Y => 4];
-	public static inline var LEFT_TRIGGER:Int = 2;
+	public static var RIGHT_ANALOG_STICK(default, null):FlxGamepadAnalogStick = [FlxAxes.X => 2, FlxAxes.Y => 3];
+	
+	public static inline var LEFT_TRIGGER:Int = 4;
 	public static inline var RIGHT_TRIGGER:Int = 5;
 }

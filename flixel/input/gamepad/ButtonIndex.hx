@@ -1,5 +1,6 @@
 package flixel.input.gamepad;
 import flixel.input.gamepad.ButtonID;
+import flixel.input.gamepad.FlxGamepad.FlxGamepadAnalogStick;
 import flixel.input.gamepad.FlxGamepad.GamepadModel;
 
 /**
@@ -21,7 +22,7 @@ class ButtonIndex
 	 * @return	the raw hardware code
 	 */
 	
-	public inline function getRaw(buttonID:ButtonID):Int
+	public function getRaw(buttonID:ButtonID):Int
 	{
 		return switch(model)
 		{
@@ -30,6 +31,7 @@ class ButtonIndex
 			case PS3: getRawPS3(buttonID);
 			case PS4: getRawPS4(buttonID);
 			case Xbox: getRawXbox(buttonID);
+			case XInput: getRawXInput(buttonID);
 			default: -1;
 		}
 	}
@@ -40,7 +42,7 @@ class ButtonIndex
 	 * @return	the "universal" ButtonID
 	 */
 	
-	public inline function getBtn(RawID:Int):ButtonID
+	public function getBtn(RawID:Int):ButtonID
 	{
 		return switch(model)
 		{
@@ -49,9 +51,49 @@ class ButtonIndex
 			case PS3: getBtnPS3(RawID);
 			case PS4: getBtnPS4(RawID);
 			case Xbox: getBtnXbox(RawID);
+			case XInput: getBtnXInput(RawID);
 			default: NONE;
 		}
 	}
+	
+	/**
+	 * Given a ButtonID, return the raw AnalogStick axes data structure
+	 * @param	buttonID	the "universal" ButtonID
+	 * @return	structure containing raw analog stick axes integer codes
+	 */
+	
+	public function getRawAnalogStick(buttonID:ButtonID):FlxGamepadAnalogStick
+	{
+		if (buttonID == ButtonID.LEFT_ANALOG_STICK)
+		{
+			return switch(model)
+			{
+				case Logitech: LogitechButtonID.LEFT_ANALOG_STICK;
+				case OUYA: OUYAButtonID.LEFT_ANALOG_STICK;
+				case PS3: PS3ButtonID.LEFT_ANALOG_STICK;
+				case PS4: PS4ButtonID.LEFT_ANALOG_STICK;
+				case Xbox: XboxButtonID.LEFT_ANALOG_STICK;
+				case XInput: XInputButtonID.LEFT_ANALOG_STICK;
+				default: null;
+			}
+		}
+		if (buttonID == ButtonID.RIGHT_ANALOG_STICK)
+		{
+			return switch(model)
+			{
+				case Logitech: LogitechButtonID.RIGHT_ANALOG_STICK;
+				case OUYA: OUYAButtonID.RIGHT_ANALOG_STICK;
+				case PS3: PS3ButtonID.RIGHT_ANALOG_STICK;
+				case PS4: PS4ButtonID.RIGHT_ANALOG_STICK;
+				case Xbox: XboxButtonID.RIGHT_ANALOG_STICK;
+				case XInput: XInputButtonID.RIGHT_ANALOG_STICK;
+				default: null;
+			}
+		}
+		return null;
+	}
+	
+	/*****************************************/
 	
 	public inline function getRawOUYA(buttonID:ButtonID):Int
 	{
@@ -170,6 +212,37 @@ class ButtonIndex
 			case DPAD_DOWN: XboxButtonID.DPAD_DOWN;
 			case DPAD_LEFT: XboxButtonID.DPAD_LEFT;
 			case DPAD_RIGHT: XboxButtonID.DPAD_RIGHT;
+			
+			case LEFT_TRIGGER:  XboxButtonID.LEFT_TRIGGER;
+			case RIGHT_TRIGGER: XboxButtonID.RIGHT_TRIGGER;
+			
+			default: -1;
+		}
+	}
+	
+	public inline function getRawXInput(buttonID:ButtonID):Int
+	{
+		return switch(buttonID)
+		{
+			case A: XInputButtonID.A;
+			case B: XInputButtonID.B;
+			case X: XInputButtonID.X;
+			case Y: XInputButtonID.Y;
+			case BACK: XInputButtonID.BACK;
+			case GUIDE: XInputButtonID.GUIDE;
+			case START: XInputButtonID.START;
+			case LEFT_STICK_BTN: XInputButtonID.LEFT_STICK_BTN;
+			case RIGHT_STICK_BTN: XInputButtonID.RIGHT_STICK_BTN;
+			case LEFT_SHOULDER: XInputButtonID.LB;
+			case RIGHT_SHOULDER: XInputButtonID.RB;
+			case DPAD_UP: XInputButtonID.DPAD_UP;
+			case DPAD_DOWN: XInputButtonID.DPAD_DOWN;
+			case DPAD_LEFT: XInputButtonID.DPAD_LEFT;
+			case DPAD_RIGHT: XInputButtonID.DPAD_RIGHT;
+			
+			case LEFT_TRIGGER: XInputButtonID.LEFT_TRIGGER;
+			case RIGHT_TRIGGER: XInputButtonID.RIGHT_TRIGGER;
+			
 			//case LEFT_TRIGGER: 
 			//case RIGHT_TRIGGER: 
 			default: -1;
@@ -295,9 +368,38 @@ class ButtonIndex
 			case XboxButtonID.DPAD_DOWN: DPAD_DOWN;
 			case XboxButtonID.DPAD_LEFT: DPAD_LEFT;
 			case XboxButtonID.DPAD_RIGHT: DPAD_RIGHT;
+			
+			//case XboxButtonID.LEFT_TRIGGER: LEFT_TRIGGER;
+			//case XboxButtonID.RIGHT_TRIGGER: RIGHT_TRIGGER;
 			//case LEFT_TRIGGER: 
 			//case RIGHT_TRIGGER: 
-			default: ButtonID.NONE;
+			default: NONE;
+		}
+	}
+	
+	public inline function getBtnXInput(rawID:Int):ButtonID
+	{
+		return switch(rawID)
+		{
+			case XInputButtonID.A: A;
+			case XInputButtonID.B: B;
+			case XInputButtonID.X: X;
+			case XInputButtonID.Y: Y;
+			case XInputButtonID.BACK: BACK;
+			case XInputButtonID.GUIDE: GUIDE;
+			case XInputButtonID.START: START;
+			case XInputButtonID.LEFT_STICK_BTN: LEFT_STICK_BTN;
+			case XInputButtonID.RIGHT_STICK_BTN: RIGHT_STICK_BTN;
+			case XInputButtonID.LB: LEFT_SHOULDER;
+			case XInputButtonID.RB: RIGHT_SHOULDER;
+			case XInputButtonID.DPAD_UP: DPAD_UP;
+			case XInputButtonID.DPAD_DOWN: DPAD_DOWN;
+			case XInputButtonID.DPAD_LEFT: DPAD_LEFT;
+			case XInputButtonID.DPAD_RIGHT: DPAD_RIGHT;
+			
+			case XInputButtonID.LEFT_TRIGGER: LEFT_TRIGGER;
+			case XInputButtonID.RIGHT_TRIGGER: RIGHT_TRIGGER;
+			default: NONE;
 		}
 	}
 }
