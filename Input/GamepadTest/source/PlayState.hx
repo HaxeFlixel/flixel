@@ -3,12 +3,12 @@ package;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
-import flixel.input.gamepad.ButtonID;
+import flixel.input.gamepad.FlxGamepadButtonID;
 import flixel.util.FlxColor;
 import flixel.math.FlxPoint;
 import flixel.input.gamepad.FlxGamepad;
-import flixel.input.gamepad.XboxButtonID;
-import flixel.input.gamepad.OUYAButtonID;
+import flixel.input.gamepad.id.XBox360ID;
+import flixel.input.gamepad.id.OUYAID;
 
 class PlayState extends FlxState
 {
@@ -150,12 +150,12 @@ class PlayState extends FlxState
 		else
 			_RB.y = RB_Y;
 			
-		if (_gamePad.pressed.LEFT_STICK_BTN)
+		if (_gamePad.pressed.LEFT_STICK_CLICK)
 			_leftStick.color = FlxColor.RED;
 		else
 			_leftStick.color = FlxColor.WHITE;
 		
-		if (_gamePad.pressed.RIGHT_STICK_BTN)
+		if (_gamePad.pressed.RIGHT_STICK_CLICK)
 			_rightStick.color = FlxColor.RED;
 		else
 			_rightStick.color = FlxColor.WHITE;
