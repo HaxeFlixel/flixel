@@ -530,23 +530,23 @@ class FlxGamepadManager implements IFlxInputManager
 				if (oldx == -1)
 				{
 					newType = JOYSTICK_BUTTON_UP;
-					newId = gamepad.rawID(ButtonID.DPAD_LEFT);
+					newId = gamepad.getRawID(ButtonID.DPAD_LEFT);
 				}
 				else if (oldx == 1)
 				{
 					newType = JOYSTICK_BUTTON_UP;
-					newId = gamepad.rawID(ButtonID.DPAD_RIGHT);
+					newId = gamepad.getRawID(ButtonID.DPAD_RIGHT);
 				}
 				
 				if (newx == -1)
 				{
 					newType = JOYSTICK_BUTTON_DOWN;
-					newId = gamepad.rawID(ButtonID.DPAD_LEFT);
+					newId = gamepad.getRawID(ButtonID.DPAD_LEFT);
 				}
 				else if (newx == 1)
 				{
 					newType = JOYSTICK_BUTTON_DOWN;
-					newId = gamepad.rawID(ButtonID.DPAD_RIGHT);
+					newId = gamepad.getRawID(ButtonID.DPAD_RIGHT);
 				}
 			}
 			
@@ -557,23 +557,23 @@ class FlxGamepadManager implements IFlxInputManager
 				if (oldy == -1)
 				{
 					newType = JOYSTICK_BUTTON_UP;
-					newId = gamepad.rawID(ButtonID.DPAD_UP);
+					newId = gamepad.getRawID(ButtonID.DPAD_UP);
 				}
 				else if (oldy == 1)
 				{
 					newType = JOYSTICK_BUTTON_UP;
-					newId = gamepad.rawID(ButtonID.DPAD_DOWN);
+					newId = gamepad.getRawID(ButtonID.DPAD_DOWN);
 				}
 				
 				if (newy == -1)
 				{
 					newType = JOYSTICK_BUTTON_DOWN;
-					newId = gamepad.rawID(ButtonID.DPAD_UP);
+					newId = gamepad.getRawID(ButtonID.DPAD_UP);
 				}
 				else if (newy == 1)
 				{
 					newType = JOYSTICK_BUTTON_DOWN;
-					newId = gamepad.rawID(ButtonID.DPAD_DOWN);
+					newId = gamepad.getRawID(ButtonID.DPAD_DOWN);
 				}
 			}
 			
@@ -658,10 +658,10 @@ class FlxGamepadManager implements IFlxInputManager
 		return globalDeadZone;
 	}
 	
-	#if (!flash && !next)
+	#if (!flash)
 	
-	private static inline var JOYSTICK_BUTTON_UP: "buttonUp";
-	private static inline var JOYSTICK_BUTTON_DOWN: "buttonDown";
+	private static inline var JOYSTICK_BUTTON_UP:String = "buttonUp";
+	private static inline var JOYSTICK_BUTTON_DOWN:String = "buttonDown";
 	
 	#end
 }

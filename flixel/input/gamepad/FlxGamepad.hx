@@ -89,12 +89,12 @@ class FlxGamepad implements IFlxDestroyable
 		analog = new FlxGamepadAnalogList(this);
 	}
 	
-	public inline function btnID(RawID:Int):ButtonID
+	public inline function getButtonID(RawID:Int):ButtonID
 	{
 		return buttonIndex.getBtn(RawID);
 	}
 	
-	public inline function rawID(buttonID:ButtonID):Int
+	public inline function getRawID(buttonID:ButtonID):Int
 	{
 		return buttonIndex.getRaw(buttonID);
 	}
@@ -206,7 +206,7 @@ class FlxGamepad implements IFlxDestroyable
 	
 	public inline function checkStatus(buttonID:ButtonID, Status:FlxInputState):Bool
 	{
-		return checkStatusRaw(rawID(buttonID), Status);
+		return checkStatusRaw(getRawID(buttonID), Status);
 	}
 	
 	/**
@@ -235,7 +235,7 @@ class FlxGamepad implements IFlxDestroyable
 	{
 		for (id in ButtonIDArray)
 		{
-			var raw = rawID(id);
+			var raw = getRawID(id);
 			if (buttons[raw] != null)
 			{
 				if (buttons[raw].pressed)
@@ -277,7 +277,7 @@ class FlxGamepad implements IFlxDestroyable
 	{
 		for (b in ButtonIDArray)
 		{
-			var raw = rawID(b);
+			var raw = getRawID(b);
 			if (buttons[raw] != null)
 			{
 				if (buttons[raw].justPressed)
@@ -318,7 +318,7 @@ class FlxGamepad implements IFlxDestroyable
 	{
 		for (b in ButtonIDArray)
 		{
-			var raw = rawID(b);
+			var raw = getRawID(b);
 			if (buttons[raw] != null)
 			{
 				if (buttons[raw].justReleased)
@@ -355,7 +355,7 @@ class FlxGamepad implements IFlxDestroyable
 	 */
 	public inline function firstPressedButtonID():ButtonID
 	{
-		return btnID(firstPressedRawID());
+		return getButtonID(firstPressedRawID());
 	}
 	
 	/**
@@ -380,7 +380,7 @@ class FlxGamepad implements IFlxDestroyable
 	 */
 	public inline function firstJustPressedButtonID():ButtonID
 	{
-		return btnID(firstJustPressedRawID());
+		return getButtonID(firstJustPressedRawID());
 	}
 	
 	/**
@@ -405,7 +405,7 @@ class FlxGamepad implements IFlxDestroyable
 	 */
 	public inline function firstJustReleasedButtonID():ButtonID
 	{
-		return btnID(firstJustReleasedRawID());
+		return getButtonID(firstJustReleasedRawID());
 	}
 	
 	/**
@@ -431,7 +431,7 @@ class FlxGamepad implements IFlxDestroyable
 	 */
 	public inline function getAxis(AxisButtonID:ButtonID):Float
 	{
-		return getAxisRaw(rawID(AxisButtonID));
+		return getAxisRaw(getRawID(AxisButtonID));
 	}
 	
 	/**
