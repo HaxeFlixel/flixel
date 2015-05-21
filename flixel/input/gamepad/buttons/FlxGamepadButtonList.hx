@@ -1,6 +1,6 @@
-package flixel.input.gamepad;
+package flixel.input.gamepad.buttons;
 
-import flixel.input.gamepad.FlxBaseGamepadButtonList;
+import flixel.input.gamepad.buttons.FlxBaseGamepadButtonList;
 import flixel.input.FlxInput.FlxInputState;
 import flixel.input.gamepad.FlxGamepadButtonID;
 

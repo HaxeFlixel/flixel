@@ -1,4 +1,10 @@
 package flixel.input.gamepad;
+import flixel.input.gamepad.buttons.LogitechButtonID;
+import flixel.input.gamepad.buttons.OUYAButtonID;
+import flixel.input.gamepad.buttons.PS3ButtonID;
+import flixel.input.gamepad.buttons.PS4ButtonID;
+import flixel.input.gamepad.buttons.XBox360ButtonID;
+import flixel.input.gamepad.buttons.XInputButtonID;
 import flixel.input.gamepad.FlxGamepadButtonID;
 import flixel.input.gamepad.FlxGamepad.FlxGamepadAnalogStick;
 import flixel.input.gamepad.FlxGamepad.GamepadModel;
@@ -70,7 +76,7 @@ class FlxGamepadMapping
 				case OUYA: OUYAButtonID.LEFT_ANALOG_STICK;
 				case PS3: PS3ButtonID.LEFT_ANALOG_STICK;
 				case PS4: PS4ButtonID.LEFT_ANALOG_STICK;
-				case Xbox: XboxButtonID.LEFT_ANALOG_STICK;
+				case Xbox: XBox360ButtonID.LEFT_ANALOG_STICK;
 				case XInput: XInputButtonID.LEFT_ANALOG_STICK;
 				default: null;
 			}
@@ -83,7 +89,7 @@ class FlxGamepadMapping
 				case OUYA: OUYAButtonID.RIGHT_ANALOG_STICK;
 				case PS3: PS3ButtonID.RIGHT_ANALOG_STICK;
 				case PS4: PS4ButtonID.RIGHT_ANALOG_STICK;
-				case Xbox: XboxButtonID.RIGHT_ANALOG_STICK;
+				case Xbox: XBox360ButtonID.RIGHT_ANALOG_STICK;
 				case XInput: XInputButtonID.RIGHT_ANALOG_STICK;
 				default: null;
 			}
@@ -193,24 +199,24 @@ class FlxGamepadMapping
 	{
 		return switch(buttonID)
 		{
-			case A: XboxButtonID.A;
-			case B: XboxButtonID.B;
-			case X: XboxButtonID.X;
-			case Y: XboxButtonID.Y;
-			case BACK: XboxButtonID.BACK;
-			case GUIDE: XboxButtonID.XBOX;
-			case START: XboxButtonID.START;
-			case LEFT_STICK_CLICK: XboxButtonID.LEFT_STICK_CLICK;
-			case RIGHT_STICK_CLICK: XboxButtonID.RIGHT_STICK_CLICK;
-			case LEFT_SHOULDER: XboxButtonID.LB;
-			case RIGHT_SHOULDER: XboxButtonID.RB;
-			case DPAD_UP: XboxButtonID.DPAD_UP;
-			case DPAD_DOWN: XboxButtonID.DPAD_DOWN;
-			case DPAD_LEFT: XboxButtonID.DPAD_LEFT;
-			case DPAD_RIGHT: XboxButtonID.DPAD_RIGHT;
+			case A: XBox360ButtonID.A;
+			case B: XBox360ButtonID.B;
+			case X: XBox360ButtonID.X;
+			case Y: XBox360ButtonID.Y;
+			case BACK: XBox360ButtonID.BACK;
+			case GUIDE: XBox360ButtonID.XBOX;
+			case START: XBox360ButtonID.START;
+			case LEFT_STICK_CLICK: XBox360ButtonID.LEFT_STICK_CLICK;
+			case RIGHT_STICK_CLICK: XBox360ButtonID.RIGHT_STICK_CLICK;
+			case LEFT_SHOULDER: XBox360ButtonID.LB;
+			case RIGHT_SHOULDER: XBox360ButtonID.RB;
+			case DPAD_UP: XBox360ButtonID.DPAD_UP;
+			case DPAD_DOWN: XBox360ButtonID.DPAD_DOWN;
+			case DPAD_LEFT: XBox360ButtonID.DPAD_LEFT;
+			case DPAD_RIGHT: XBox360ButtonID.DPAD_RIGHT;
 			
-			case LEFT_TRIGGER:  XboxButtonID.LEFT_TRIGGER;
-			case RIGHT_TRIGGER: XboxButtonID.RIGHT_TRIGGER;
+			case LEFT_TRIGGER:  XBox360ButtonID.LEFT_TRIGGER;
+			case RIGHT_TRIGGER: XBox360ButtonID.RIGHT_TRIGGER;
 			
 			default: -1;
 		}
@@ -347,21 +353,21 @@ class FlxGamepadMapping
 	{
 		return switch(rawID)
 		{
-			case XboxButtonID.A: A;
-			case XboxButtonID.B: B;
-			case XboxButtonID.X: X;
-			case XboxButtonID.Y: Y;
-			case XboxButtonID.BACK: BACK;
-			case XboxButtonID.XBOX: GUIDE;
-			case XboxButtonID.START: START;
-			case XboxButtonID.LEFT_STICK_CLICK: LEFT_STICK_CLICK;
-			case XboxButtonID.RIGHT_STICK_CLICK: RIGHT_STICK_CLICK;
-			case XboxButtonID.LB: LEFT_SHOULDER;
-			case XboxButtonID.RB: RIGHT_SHOULDER;
-			case XboxButtonID.DPAD_UP: DPAD_UP;
-			case XboxButtonID.DPAD_DOWN: DPAD_DOWN;
-			case XboxButtonID.DPAD_LEFT: DPAD_LEFT;
-			case XboxButtonID.DPAD_RIGHT: DPAD_RIGHT;
+			case XBox360ButtonID.A: A;
+			case XBox360ButtonID.B: B;
+			case XBox360ButtonID.X: X;
+			case XBox360ButtonID.Y: Y;
+			case XBox360ButtonID.BACK: BACK;
+			case XBox360ButtonID.XBOX: GUIDE;
+			case XBox360ButtonID.START: START;
+			case XBox360ButtonID.LEFT_STICK_CLICK: LEFT_STICK_CLICK;
+			case XBox360ButtonID.RIGHT_STICK_CLICK: RIGHT_STICK_CLICK;
+			case XBox360ButtonID.LB: LEFT_SHOULDER;
+			case XBox360ButtonID.RB: RIGHT_SHOULDER;
+			case XBox360ButtonID.DPAD_UP: DPAD_UP;
+			case XBox360ButtonID.DPAD_DOWN: DPAD_DOWN;
+			case XBox360ButtonID.DPAD_LEFT: DPAD_LEFT;
+			case XBox360ButtonID.DPAD_RIGHT: DPAD_RIGHT;
 			
 			//case XboxButtonID.LEFT_TRIGGER: LEFT_TRIGGER;
 			//case XboxButtonID.RIGHT_TRIGGER: RIGHT_TRIGGER;

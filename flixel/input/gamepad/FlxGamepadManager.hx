@@ -3,6 +3,7 @@ package flixel.input.gamepad;
 import flash.Lib;
 import flixel.FlxG;
 import flixel.input.FlxInput.FlxInputState;
+import flixel.input.gamepad.FlxGamepadButtonID;
 import flixel.input.gamepad.FlxGamepad;
 import flixel.util.FlxDestroyUtil;
 

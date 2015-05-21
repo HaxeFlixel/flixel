@@ -1,11 +1,11 @@
-package flixel.input.gamepad;
+package flixel.input.gamepad.buttons;
 
 import flixel.input.gamepad.FlxGamepad;
 
 /**
  * Button IDs for Xbox 360 controllers
  */
-class XboxButtonID
+class XBox360ButtonID
 {
 #if flash
 	/**
