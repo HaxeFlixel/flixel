@@ -35,9 +35,9 @@ abstract FlxGamepadButtonID(Int) from Int to Int
 	/**the rightmost center button*/
 	var START             =  7;
 	/**digital click of the left analog stick*/
-	var LEFT_STICK_BTN    =  8;
+	var LEFT_STICK_CLICK  =  8;
 	/**digital click of the right analog stick*/
-	var RIGHT_STICK_BTN   =  9;
+	var RIGHT_STICK_CLICK =  9;
 	/**this is the "XBox" or "PS" or "home" button in the center*/
 	var GUIDE             = 10;
 	var DPAD_UP           = 11;

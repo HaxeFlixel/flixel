@@ -18,8 +18,8 @@ class PS3ButtonID
 	public static inline var SELECT:Int = 0;
 	public static inline var START:Int = 3;
 	public static inline var PS:Int = 16;
-	public static inline var LEFT_STICK_BTN:Int = 1;
-	public static inline var RIGHT_STICK_BTN:Int = 2;
+	public static inline var LEFT_STICK_CLICK:Int = 1;
+	public static inline var RIGHT_STICK_CLICK:Int = 2;
 	
 	public static inline var DPAD_UP:Int = 4;
 	public static inline var DPAD_DOWN:Int = 6;

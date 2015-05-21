@@ -21,8 +21,8 @@ class PS4ButtonID
 	public static inline var START:Int = 9;
 	public static inline var PS:Int = 12;
 	public static inline var TOUCHPAD:Int = 13;
-	public static inline var LEFT_STICK_BTN:Int = 10;
-	public static inline var RIGHT_STICK_BTN:Int = 11;
+	public static inline var LEFT_STICK_CLICK:Int = 10;
+	public static inline var RIGHT_STICK_CLICK:Int = 11;
 	
 	public static var LEFT_ANALOG_STICK(default, null):FlxGamepadAnalogStick = [FlxAxes.X => 0, FlxAxes.Y => 1];
 	public static var RIGHT_ANALOG_STICK(default, null):FlxGamepadAnalogStick = [FlxAxes.X => 2, FlxAxes.Y => 5];

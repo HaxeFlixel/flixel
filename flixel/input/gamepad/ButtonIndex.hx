@@ -100,8 +100,8 @@ class ButtonIndex
 			case X: OUYAButtonID.U;
 			case Y: OUYAButtonID.Y;
 			case GUIDE: OUYAButtonID.HOME;
-			case LEFT_STICK_BTN: OUYAButtonID.LEFT_STICK_BTN;
-			case RIGHT_STICK_BTN: OUYAButtonID.RIGHT_STICK_BTN;
+			case LEFT_STICK_CLICK: OUYAButtonID.LEFT_STICK_CLICK;
+			case RIGHT_STICK_CLICK: OUYAButtonID.RIGHT_STICK_CLICK;
 			case LEFT_SHOULDER: OUYAButtonID.LB;
 			case RIGHT_SHOULDER: OUYAButtonID.RB;
 			//case BACK:
@@ -124,8 +124,8 @@ class ButtonIndex
 			case Y: LogitechButtonID.FOUR;
 			case BACK: LogitechButtonID.NINE;
 			case START: LogitechButtonID.TEN;
-			case LEFT_STICK_BTN: LogitechButtonID.LEFT_STICK_BTN;
-			case RIGHT_STICK_BTN: LogitechButtonID.RIGHT_STICK_BTN;
+			case LEFT_STICK_CLICK: LogitechButtonID.LEFT_STICK_CLICK;
+			case RIGHT_STICK_CLICK: LogitechButtonID.RIGHT_STICK_CLICK;
 			case LEFT_SHOULDER: LogitechButtonID.FIVE;
 			case RIGHT_SHOULDER: LogitechButtonID.SIX;
 			case LEFT_TRIGGER: LogitechButtonID.SEVEN;
@@ -150,8 +150,8 @@ class ButtonIndex
 			case BACK: PS4ButtonID.SELECT;
 			case GUIDE: PS4ButtonID.PS;
 			case START: PS4ButtonID.START;
-			case LEFT_STICK_BTN: PS4ButtonID.LEFT_STICK_BTN;
-			case RIGHT_STICK_BTN: PS4ButtonID.RIGHT_STICK_BTN;
+			case LEFT_STICK_CLICK: PS4ButtonID.LEFT_STICK_CLICK;
+			case RIGHT_STICK_CLICK: PS4ButtonID.RIGHT_STICK_CLICK;
 			case LEFT_SHOULDER: PS4ButtonID.L1;
 			case RIGHT_SHOULDER: PS4ButtonID.R1;
 			case LEFT_TRIGGER: PS4ButtonID.L2;
@@ -175,8 +175,8 @@ class ButtonIndex
 			case BACK: PS3ButtonID.SELECT;
 			case GUIDE: PS3ButtonID.PS;
 			case START: PS3ButtonID.START;
-			case LEFT_STICK_BTN: PS3ButtonID.LEFT_STICK_BTN;
-			case RIGHT_STICK_BTN: PS3ButtonID.RIGHT_STICK_BTN;
+			case LEFT_STICK_CLICK: PS3ButtonID.LEFT_STICK_CLICK;
+			case RIGHT_STICK_CLICK: PS3ButtonID.RIGHT_STICK_CLICK;
 			case LEFT_SHOULDER: PS3ButtonID.L1;
 			case RIGHT_SHOULDER: PS3ButtonID.R1;
 			case LEFT_TRIGGER: PS3ButtonID.L2;
@@ -200,8 +200,8 @@ class ButtonIndex
 			case BACK: XboxButtonID.BACK;
 			case GUIDE: XboxButtonID.XBOX;
 			case START: XboxButtonID.START;
-			case LEFT_STICK_BTN: XboxButtonID.LEFT_STICK_BTN;
-			case RIGHT_STICK_BTN: XboxButtonID.RIGHT_STICK_BTN;
+			case LEFT_STICK_CLICK: XboxButtonID.LEFT_STICK_CLICK;
+			case RIGHT_STICK_CLICK: XboxButtonID.RIGHT_STICK_CLICK;
 			case LEFT_SHOULDER: XboxButtonID.LB;
 			case RIGHT_SHOULDER: XboxButtonID.RB;
 			case DPAD_UP: XboxButtonID.DPAD_UP;
@@ -227,8 +227,8 @@ class ButtonIndex
 			case BACK: XInputButtonID.BACK;
 			case GUIDE: XInputButtonID.GUIDE;
 			case START: XInputButtonID.START;
-			case LEFT_STICK_BTN: XInputButtonID.LEFT_STICK_BTN;
-			case RIGHT_STICK_BTN: XInputButtonID.RIGHT_STICK_BTN;
+			case LEFT_STICK_CLICK: XInputButtonID.LEFT_STICK_CLICK;
+			case RIGHT_STICK_CLICK: XInputButtonID.RIGHT_STICK_CLICK;
 			case LEFT_SHOULDER: XInputButtonID.LB;
 			case RIGHT_SHOULDER: XInputButtonID.RB;
 			case DPAD_UP: XInputButtonID.DPAD_UP;
@@ -254,8 +254,8 @@ class ButtonIndex
 			case OUYAButtonID.U: X;
 			case OUYAButtonID.Y: Y;
 			case OUYAButtonID.HOME: GUIDE;
-			case OUYAButtonID.LEFT_STICK_BTN: LEFT_STICK_BTN;
-			case OUYAButtonID.RIGHT_STICK_BTN: RIGHT_STICK_BTN;
+			case OUYAButtonID.LEFT_STICK_CLICK: LEFT_STICK_CLICK;
+			case OUYAButtonID.RIGHT_STICK_CLICK: RIGHT_STICK_CLICK;
 			case OUYAButtonID.LB: LEFT_SHOULDER;
 			case OUYAButtonID.RB: RIGHT_SHOULDER;
 			//case BACK:
@@ -278,8 +278,8 @@ class ButtonIndex
 			case LogitechButtonID.FOUR: Y;
 			case LogitechButtonID.NINE: BACK;
 			case LogitechButtonID.TEN: START;
-			case LogitechButtonID.LEFT_STICK_BTN: LEFT_STICK_BTN;
-			case LogitechButtonID.RIGHT_STICK_BTN: RIGHT_STICK_BTN;
+			case LogitechButtonID.LEFT_STICK_CLICK: LEFT_STICK_CLICK;
+			case LogitechButtonID.RIGHT_STICK_CLICK: RIGHT_STICK_CLICK;
 			case LogitechButtonID.FIVE: LEFT_SHOULDER;
 			case LogitechButtonID.SIX: RIGHT_SHOULDER;
 			case LogitechButtonID.SEVEN: LEFT_TRIGGER;
@@ -304,8 +304,8 @@ class ButtonIndex
 			case PS4ButtonID.SELECT: BACK;
 			case PS4ButtonID.PS: GUIDE;
 			case PS4ButtonID.START: START;
-			case PS4ButtonID.LEFT_STICK_BTN: LEFT_STICK_BTN;
-			case PS4ButtonID.RIGHT_STICK_BTN: RIGHT_STICK_BTN;
+			case PS4ButtonID.LEFT_STICK_CLICK: LEFT_STICK_CLICK;
+			case PS4ButtonID.RIGHT_STICK_CLICK: RIGHT_STICK_CLICK;
 			case PS4ButtonID.L1: LEFT_SHOULDER;
 			case PS4ButtonID.R1: RIGHT_SHOULDER;
 			case PS4ButtonID.L2: LEFT_TRIGGER;
@@ -329,8 +329,8 @@ class ButtonIndex
 			case PS3ButtonID.SELECT: BACK;
 			case PS3ButtonID.PS: GUIDE;
 			case PS3ButtonID.START: START;
-			case PS3ButtonID.LEFT_STICK_BTN: LEFT_STICK_BTN;
-			case PS3ButtonID.RIGHT_STICK_BTN: RIGHT_STICK_BTN;
+			case PS3ButtonID.LEFT_STICK_CLICK: LEFT_STICK_CLICK;
+			case PS3ButtonID.RIGHT_STICK_CLICK: RIGHT_STICK_CLICK;
 			case PS3ButtonID.L1: LEFT_SHOULDER;
 			case PS3ButtonID.R1: RIGHT_SHOULDER;
 			case PS3ButtonID.L2: LEFT_TRIGGER;
@@ -354,8 +354,8 @@ class ButtonIndex
 			case XboxButtonID.BACK: BACK;
 			case XboxButtonID.XBOX: GUIDE;
 			case XboxButtonID.START: START;
-			case XboxButtonID.LEFT_STICK_BTN: LEFT_STICK_BTN;
-			case XboxButtonID.RIGHT_STICK_BTN: RIGHT_STICK_BTN;
+			case XboxButtonID.LEFT_STICK_CLICK: LEFT_STICK_CLICK;
+			case XboxButtonID.RIGHT_STICK_CLICK: RIGHT_STICK_CLICK;
 			case XboxButtonID.LB: LEFT_SHOULDER;
 			case XboxButtonID.RB: RIGHT_SHOULDER;
 			case XboxButtonID.DPAD_UP: DPAD_UP;
@@ -382,8 +382,8 @@ class ButtonIndex
 			case XInputButtonID.BACK: BACK;
 			case XInputButtonID.GUIDE: GUIDE;
 			case XInputButtonID.START: START;
-			case XInputButtonID.LEFT_STICK_BTN: LEFT_STICK_BTN;
-			case XInputButtonID.RIGHT_STICK_BTN: RIGHT_STICK_BTN;
+			case XInputButtonID.LEFT_STICK_CLICK: LEFT_STICK_CLICK;
+			case XInputButtonID.RIGHT_STICK_CLICK: RIGHT_STICK_CLICK;
 			case XInputButtonID.LB: LEFT_SHOULDER;
 			case XInputButtonID.RB: RIGHT_SHOULDER;
 			case XInputButtonID.DPAD_UP: DPAD_UP;

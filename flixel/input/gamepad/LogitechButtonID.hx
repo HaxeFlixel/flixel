@@ -56,11 +56,11 @@ class LogitechButtonID
 	/**
 	 * Placement equivalent to the 'left analog' button on the Xbox 360 controller.
 	 */
-	public static inline var LEFT_STICK_BTN:Int = 18;
+	public static inline var LEFT_STICK_CLICK:Int = 18;
 	/**
 	 * Placement equivalent to the 'right analog' button on the Xbox 360 controller.
 	 */
-	public static inline var RIGHT_STICK_BTN:Int = 19;
+	public static inline var RIGHT_STICK_CLICK:Int = 19;
 	
 	/**
 	 * Axis array indicies
@@ -121,11 +121,11 @@ class LogitechButtonID
 	/**
 	 * Placement equivalent to the 'left analog' button on the Xbox 360 controller.
 	 */
-	public static inline var LEFT_STICK_BTN:Int = 10;
+	public static inline var LEFT_STICK_CLICK:Int = 10;
 	/**
 	 * Placement equivalent to the 'right analog' button on the Xbox 360 controller.
 	 */
-	public static inline var RIGHT_STICK_BTN:Int = 11;
+	public static inline var RIGHT_STICK_CLICK:Int = 11;
 	
 	/**
 	 * Axis array indicies

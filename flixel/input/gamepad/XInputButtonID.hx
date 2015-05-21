@@ -18,8 +18,8 @@ class XInputButtonID
 	public static inline var RB:Int = 16;
 	public static inline var BACK:Int = 10;
 	public static inline var START:Int = 12;
-	public static inline var LEFT_STICK_BTN:Int = 13;
-	public static inline var RIGHT_STICK_BTN:Int = 14;
+	public static inline var LEFT_STICK_CLICK:Int = 13;
+	public static inline var RIGHT_STICK_CLICK:Int = 14;
 	
 	public static inline var GUIDE:Int = 11;
 	
