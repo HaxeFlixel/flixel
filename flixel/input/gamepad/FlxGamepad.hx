@@ -55,19 +55,19 @@ class FlxGamepad implements IFlxDestroyable
 	/**
 	 * Helper class to check if a button is pressed.
 	 */
-	public var pressed:FlxGamepadButtonList;
+	public var pressed(default, null):FlxGamepadButtonList;
 	/**
 	 * Helper class to check if a button was just pressed.
 	 */
-	public var justPressed:FlxGamepadButtonList;
+	public var justPressed(default, null):FlxGamepadButtonList;
 	/**
 	 * Helper class to check if a button was just released.
 	 */
-	public var justReleased:FlxGamepadButtonList;
+	public var justReleased(default, null):FlxGamepadButtonList;
 	/**
 	 * Helper class to get the float value of analog input.
 	 */
-	public var analog:FlxGamepadAnalogList;
+	public var analog(default, null):FlxGamepadAnalogList;
 	
 	public function new(ID:Int, GlobalDeadZone:Float = 0, ?Model:GamepadModel) 
 	{
