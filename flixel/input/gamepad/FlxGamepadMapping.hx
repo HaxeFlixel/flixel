@@ -51,12 +51,12 @@ class FlxGamepadMapping
 	{
 		return switch(model)
 		{
-			case Logitech: getBtnLogitech(RawID);
-			case OUYA: getBtnOUYA(RawID);
-			case PS3: getBtnPS3(RawID);
-			case PS4: getBtnPS4(RawID);
-			case XBox360: getBtnXBox360(RawID);
-			case XInput: getBtnXInput(RawID);
+			case Logitech: getIDLogitech(RawID);
+			case OUYA: getIDOUYA(RawID);
+			case PS3: getIDPS3(RawID);
+			case PS4: getIDPS4(RawID);
+			case XBox360: getIDXBox360(RawID);
+			case XInput: getIDXInput(RawID);
 			default: NONE;
 		}
 	}
@@ -245,7 +245,7 @@ class FlxGamepadMapping
 		}
 	}
 	
-	public function getBtnOUYA(rawID:Int):FlxGamepadID
+	public function getIDOUYA(rawID:Int):FlxGamepadID
 	{
 		return switch(rawID)
 		{
@@ -266,7 +266,7 @@ class FlxGamepadMapping
 		}
 	}
 	
-	public function getBtnLogitech(rawID:Int):FlxGamepadID
+	public function getIDLogitech(rawID:Int):FlxGamepadID
 	{
 		return switch(rawID)
 		{
@@ -291,7 +291,7 @@ class FlxGamepadMapping
 		}
 	}
 	
-	public function getBtnPS4(rawID:Int):FlxGamepadID
+	public function getIDPS4(rawID:Int):FlxGamepadID
 	{
 		return switch(rawID)
 		{
@@ -316,7 +316,7 @@ class FlxGamepadMapping
 		}
 	}
 	
-	public function getBtnPS3(rawID:Int):FlxGamepadID
+	public function getIDPS3(rawID:Int):FlxGamepadID
 	{
 		return switch(rawID)
 		{
@@ -341,7 +341,7 @@ class FlxGamepadMapping
 		}
 	}
 	
-	public function getBtnXBox360(rawID:Int):FlxGamepadID
+	public function getIDXBox360(rawID:Int):FlxGamepadID
 	{
 		return switch(rawID)
 		{
@@ -364,7 +364,7 @@ class FlxGamepadMapping
 		}
 	}
 	
-	public function getBtnXInput(rawID:Int):FlxGamepadID
+	public function getIDXInput(rawID:Int):FlxGamepadID
 	{
 		return switch(rawID)
 		{
