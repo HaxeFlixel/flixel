@@ -1,6 +1,6 @@
-package flixel.input.gamepad.buttons;
+package flixel.input.gamepad.id;
 
-import flixel.input.gamepad.buttons.FlxBaseGamepadButtonList;
+import flixel.input.gamepad.id.FlxBaseGamepadList;
 import flixel.input.FlxInput.FlxInputState;
 import flixel.input.gamepad.FlxGamepadButtonID;
 
@@ -9,7 +9,7 @@ import flixel.input.gamepad.FlxGamepadButtonID;
  * Provides optimized gamepad button checking using direct array access.
  */
 @:keep
-class FlxGamepadButtonList extends FlxBaseGamepadButtonList
+class FlxGamepadButtonList extends FlxBaseGamepadList
 {
 	public var A                (get, never):Bool; inline function get_A()                 { return check(FlxGamepadButtonID.A);                 }
 	public var B                (get, never):Bool; inline function get_B()                 { return check(FlxGamepadButtonID.B);                 }

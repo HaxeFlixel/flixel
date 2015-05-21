@@ -1,4 +1,4 @@
-package flixel.input.gamepad.buttons;
+package flixel.input.gamepad.id;
 
 import flixel.input.FlxInput;
 import flixel.input.FlxKeyManager;
@@ -6,7 +6,7 @@ import flixel.input.gamepad.FlxGamepadButtonID;
 import flixel.input.gamepad.FlxGamepad;
 import flixel.input.gamepad.FlxGamepadManager;
 
-class FlxBaseGamepadButtonList
+class FlxBaseGamepadList
 {
 	private var status:FlxInputState;
 	private var gamepad:FlxGamepad;

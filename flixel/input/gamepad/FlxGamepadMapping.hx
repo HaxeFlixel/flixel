@@ -1,10 +1,10 @@
 package flixel.input.gamepad;
-import flixel.input.gamepad.buttons.LogitechButtonID;
-import flixel.input.gamepad.buttons.OUYAButtonID;
-import flixel.input.gamepad.buttons.PS3ButtonID;
-import flixel.input.gamepad.buttons.PS4ButtonID;
-import flixel.input.gamepad.buttons.XBox360ButtonID;
-import flixel.input.gamepad.buttons.XInputButtonID;
+import flixel.input.gamepad.id.LogitechID;
+import flixel.input.gamepad.id.OUYAID;
+import flixel.input.gamepad.id.PS3ID;
+import flixel.input.gamepad.id.PS4ID;
+import flixel.input.gamepad.id.XBox360ID;
+import flixel.input.gamepad.id.XInputID;
 import flixel.input.gamepad.FlxGamepadButtonID;
 import flixel.input.gamepad.FlxGamepad.FlxGamepadAnalogStick;
 import flixel.input.gamepad.FlxGamepad.GamepadModel;
@@ -72,12 +72,12 @@ class FlxGamepadMapping
 		{
 			return switch(model)
 			{
-				case Logitech: LogitechButtonID.LEFT_ANALOG_STICK;
-				case OUYA: OUYAButtonID.LEFT_ANALOG_STICK;
-				case PS3: PS3ButtonID.LEFT_ANALOG_STICK;
-				case PS4: PS4ButtonID.LEFT_ANALOG_STICK;
-				case XBox360: XBox360ButtonID.LEFT_ANALOG_STICK;
-				case XInput: XInputButtonID.LEFT_ANALOG_STICK;
+				case Logitech: LogitechID.LEFT_ANALOG_STICK;
+				case OUYA: OUYAID.LEFT_ANALOG_STICK;
+				case PS3: PS3ID.LEFT_ANALOG_STICK;
+				case PS4: PS4ID.LEFT_ANALOG_STICK;
+				case XBox360: XBox360ID.LEFT_ANALOG_STICK;
+				case XInput: XInputID.LEFT_ANALOG_STICK;
 				default: null;
 			}
 		}
@@ -85,12 +85,12 @@ class FlxGamepadMapping
 		{
 			return switch(model)
 			{
-				case Logitech: LogitechButtonID.RIGHT_ANALOG_STICK;
-				case OUYA: OUYAButtonID.RIGHT_ANALOG_STICK;
-				case PS3: PS3ButtonID.RIGHT_ANALOG_STICK;
-				case PS4: PS4ButtonID.RIGHT_ANALOG_STICK;
-				case XBox360: XBox360ButtonID.RIGHT_ANALOG_STICK;
-				case XInput: XInputButtonID.RIGHT_ANALOG_STICK;
+				case Logitech: LogitechID.RIGHT_ANALOG_STICK;
+				case OUYA: OUYAID.RIGHT_ANALOG_STICK;
+				case PS3: PS3ID.RIGHT_ANALOG_STICK;
+				case PS4: PS4ID.RIGHT_ANALOG_STICK;
+				case XBox360: XBox360ID.RIGHT_ANALOG_STICK;
+				case XInput: XInputID.RIGHT_ANALOG_STICK;
 				default: null;
 			}
 		}
@@ -101,21 +101,21 @@ class FlxGamepadMapping
 	{
 		return switch(buttonID)
 		{
-			case A: OUYAButtonID.O;
-			case B: OUYAButtonID.A;
-			case X: OUYAButtonID.U;
-			case Y: OUYAButtonID.Y;
-			case GUIDE: OUYAButtonID.HOME;
-			case LEFT_STICK_CLICK: OUYAButtonID.LEFT_STICK_CLICK;
-			case RIGHT_STICK_CLICK: OUYAButtonID.RIGHT_STICK_CLICK;
-			case LEFT_SHOULDER: OUYAButtonID.LB;
-			case RIGHT_SHOULDER: OUYAButtonID.RB;
-			case DPAD_UP: OUYAButtonID.DPAD_UP;
-			case DPAD_DOWN: OUYAButtonID.DPAD_DOWN;
-			case DPAD_LEFT: OUYAButtonID.DPAD_LEFT;
-			case DPAD_RIGHT: OUYAButtonID.DPAD_RIGHT;
-			case LEFT_TRIGGER: OUYAButtonID.LEFT_TRIGGER;
-			case RIGHT_TRIGGER: OUYAButtonID.RIGHT_TRIGGER;
+			case A: OUYAID.O;
+			case B: OUYAID.A;
+			case X: OUYAID.U;
+			case Y: OUYAID.Y;
+			case GUIDE: OUYAID.HOME;
+			case LEFT_STICK_CLICK: OUYAID.LEFT_STICK_CLICK;
+			case RIGHT_STICK_CLICK: OUYAID.RIGHT_STICK_CLICK;
+			case LEFT_SHOULDER: OUYAID.LB;
+			case RIGHT_SHOULDER: OUYAID.RB;
+			case DPAD_UP: OUYAID.DPAD_UP;
+			case DPAD_DOWN: OUYAID.DPAD_DOWN;
+			case DPAD_LEFT: OUYAID.DPAD_LEFT;
+			case DPAD_RIGHT: OUYAID.DPAD_RIGHT;
+			case LEFT_TRIGGER: OUYAID.LEFT_TRIGGER;
+			case RIGHT_TRIGGER: OUYAID.RIGHT_TRIGGER;
 			default: -1;
 		}
 	}
@@ -124,23 +124,23 @@ class FlxGamepadMapping
 	{
 		return switch(buttonID)
 		{
-			case A: LogitechButtonID.TWO;
-			case B: LogitechButtonID.THREE;
-			case X: LogitechButtonID.ONE;
-			case Y: LogitechButtonID.FOUR;
-			case BACK: LogitechButtonID.NINE;
-			case GUIDE: LogitechButtonID.LOGITECH;
-			case START: LogitechButtonID.TEN;
-			case LEFT_STICK_CLICK: LogitechButtonID.LEFT_STICK_CLICK;
-			case RIGHT_STICK_CLICK: LogitechButtonID.RIGHT_STICK_CLICK;
-			case LEFT_SHOULDER: LogitechButtonID.FIVE;
-			case RIGHT_SHOULDER: LogitechButtonID.SIX;
-			case DPAD_UP: LogitechButtonID.DPAD_UP;
-			case DPAD_DOWN: LogitechButtonID.DPAD_DOWN;
-			case DPAD_LEFT: LogitechButtonID.DPAD_LEFT;
-			case DPAD_RIGHT: LogitechButtonID.DPAD_RIGHT;
-			case LEFT_TRIGGER: LogitechButtonID.SEVEN;
-			case RIGHT_TRIGGER: LogitechButtonID.EIGHT;
+			case A: LogitechID.TWO;
+			case B: LogitechID.THREE;
+			case X: LogitechID.ONE;
+			case Y: LogitechID.FOUR;
+			case BACK: LogitechID.NINE;
+			case GUIDE: LogitechID.LOGITECH;
+			case START: LogitechID.TEN;
+			case LEFT_STICK_CLICK: LogitechID.LEFT_STICK_CLICK;
+			case RIGHT_STICK_CLICK: LogitechID.RIGHT_STICK_CLICK;
+			case LEFT_SHOULDER: LogitechID.FIVE;
+			case RIGHT_SHOULDER: LogitechID.SIX;
+			case DPAD_UP: LogitechID.DPAD_UP;
+			case DPAD_DOWN: LogitechID.DPAD_DOWN;
+			case DPAD_LEFT: LogitechID.DPAD_LEFT;
+			case DPAD_RIGHT: LogitechID.DPAD_RIGHT;
+			case LEFT_TRIGGER: LogitechID.SEVEN;
+			case RIGHT_TRIGGER: LogitechID.EIGHT;
 			default: -1;
 		}
 	}
@@ -149,23 +149,23 @@ class FlxGamepadMapping
 	{
 		return switch(buttonID)
 		{
-			case A: PS4ButtonID.X;
-			case B: PS4ButtonID.CIRCLE;
-			case X: PS4ButtonID.SQUARE;
-			case Y: PS4ButtonID.TRIANGLE;
-			case BACK: PS4ButtonID.SELECT;
-			case GUIDE: PS4ButtonID.PS;
-			case START: PS4ButtonID.START;
-			case LEFT_STICK_CLICK: PS4ButtonID.LEFT_STICK_CLICK;
-			case RIGHT_STICK_CLICK: PS4ButtonID.RIGHT_STICK_CLICK;
-			case LEFT_SHOULDER: PS4ButtonID.L1;
-			case RIGHT_SHOULDER: PS4ButtonID.R1;
-			case DPAD_UP: PS4ButtonID.DPAD_UP;
-			case DPAD_DOWN: PS4ButtonID.DPAD_DOWN;
-			case DPAD_LEFT: PS4ButtonID.DPAD_LEFT;
-			case DPAD_RIGHT: PS4ButtonID.DPAD_RIGHT;
-			case LEFT_TRIGGER: PS4ButtonID.L2;
-			case RIGHT_TRIGGER: PS4ButtonID.R2;
+			case A: PS4ID.X;
+			case B: PS4ID.CIRCLE;
+			case X: PS4ID.SQUARE;
+			case Y: PS4ID.TRIANGLE;
+			case BACK: PS4ID.SELECT;
+			case GUIDE: PS4ID.PS;
+			case START: PS4ID.START;
+			case LEFT_STICK_CLICK: PS4ID.LEFT_STICK_CLICK;
+			case RIGHT_STICK_CLICK: PS4ID.RIGHT_STICK_CLICK;
+			case LEFT_SHOULDER: PS4ID.L1;
+			case RIGHT_SHOULDER: PS4ID.R1;
+			case DPAD_UP: PS4ID.DPAD_UP;
+			case DPAD_DOWN: PS4ID.DPAD_DOWN;
+			case DPAD_LEFT: PS4ID.DPAD_LEFT;
+			case DPAD_RIGHT: PS4ID.DPAD_RIGHT;
+			case LEFT_TRIGGER: PS4ID.L2;
+			case RIGHT_TRIGGER: PS4ID.R2;
 			default: -1;
 		}
 	}
@@ -174,23 +174,23 @@ class FlxGamepadMapping
 	{
 		return switch(buttonID)
 		{
-			case A: PS3ButtonID.X;
-			case B: PS3ButtonID.CIRCLE;
-			case X: PS3ButtonID.SQUARE;
-			case Y: PS3ButtonID.TRIANGLE;
-			case BACK: PS3ButtonID.SELECT;
-			case GUIDE: PS3ButtonID.PS;
-			case START: PS3ButtonID.START;
-			case LEFT_STICK_CLICK: PS3ButtonID.LEFT_STICK_CLICK;
-			case RIGHT_STICK_CLICK: PS3ButtonID.RIGHT_STICK_CLICK;
-			case LEFT_SHOULDER: PS3ButtonID.L1;
-			case RIGHT_SHOULDER: PS3ButtonID.R1;
-			case DPAD_UP: PS3ButtonID.DPAD_UP;
-			case DPAD_DOWN: PS3ButtonID.DPAD_DOWN;
-			case DPAD_LEFT: PS3ButtonID.DPAD_LEFT;
-			case DPAD_RIGHT: PS3ButtonID.DPAD_RIGHT;
-			case LEFT_TRIGGER: PS3ButtonID.L2;
-			case RIGHT_TRIGGER: PS3ButtonID.R2;
+			case A: PS3ID.X;
+			case B: PS3ID.CIRCLE;
+			case X: PS3ID.SQUARE;
+			case Y: PS3ID.TRIANGLE;
+			case BACK: PS3ID.SELECT;
+			case GUIDE: PS3ID.PS;
+			case START: PS3ID.START;
+			case LEFT_STICK_CLICK: PS3ID.LEFT_STICK_CLICK;
+			case RIGHT_STICK_CLICK: PS3ID.RIGHT_STICK_CLICK;
+			case LEFT_SHOULDER: PS3ID.L1;
+			case RIGHT_SHOULDER: PS3ID.R1;
+			case DPAD_UP: PS3ID.DPAD_UP;
+			case DPAD_DOWN: PS3ID.DPAD_DOWN;
+			case DPAD_LEFT: PS3ID.DPAD_LEFT;
+			case DPAD_RIGHT: PS3ID.DPAD_RIGHT;
+			case LEFT_TRIGGER: PS3ID.L2;
+			case RIGHT_TRIGGER: PS3ID.R2;
 			default: -1;
 		}
 	}
@@ -199,23 +199,23 @@ class FlxGamepadMapping
 	{
 		return switch(buttonID)
 		{
-			case A: XBox360ButtonID.A;
-			case B: XBox360ButtonID.B;
-			case X: XBox360ButtonID.X;
-			case Y: XBox360ButtonID.Y;
-			case BACK: XBox360ButtonID.BACK;
-			case GUIDE: XBox360ButtonID.XBOX;
-			case START: XBox360ButtonID.START;
-			case LEFT_STICK_CLICK: XBox360ButtonID.LEFT_STICK_CLICK;
-			case RIGHT_STICK_CLICK: XBox360ButtonID.RIGHT_STICK_CLICK;
-			case LEFT_SHOULDER: XBox360ButtonID.LB;
-			case RIGHT_SHOULDER: XBox360ButtonID.RB;
-			case DPAD_UP: XBox360ButtonID.DPAD_UP;
-			case DPAD_DOWN: XBox360ButtonID.DPAD_DOWN;
-			case DPAD_LEFT: XBox360ButtonID.DPAD_LEFT;
-			case DPAD_RIGHT: XBox360ButtonID.DPAD_RIGHT;
-			case LEFT_TRIGGER:  XBox360ButtonID.LEFT_TRIGGER;
-			case RIGHT_TRIGGER: XBox360ButtonID.RIGHT_TRIGGER;
+			case A: XBox360ID.A;
+			case B: XBox360ID.B;
+			case X: XBox360ID.X;
+			case Y: XBox360ID.Y;
+			case BACK: XBox360ID.BACK;
+			case GUIDE: XBox360ID.XBOX;
+			case START: XBox360ID.START;
+			case LEFT_STICK_CLICK: XBox360ID.LEFT_STICK_CLICK;
+			case RIGHT_STICK_CLICK: XBox360ID.RIGHT_STICK_CLICK;
+			case LEFT_SHOULDER: XBox360ID.LB;
+			case RIGHT_SHOULDER: XBox360ID.RB;
+			case DPAD_UP: XBox360ID.DPAD_UP;
+			case DPAD_DOWN: XBox360ID.DPAD_DOWN;
+			case DPAD_LEFT: XBox360ID.DPAD_LEFT;
+			case DPAD_RIGHT: XBox360ID.DPAD_RIGHT;
+			case LEFT_TRIGGER:  XBox360ID.LEFT_TRIGGER;
+			case RIGHT_TRIGGER: XBox360ID.RIGHT_TRIGGER;
 			default: -1;
 		}
 	}
@@ -224,23 +224,23 @@ class FlxGamepadMapping
 	{
 		return switch(buttonID)
 		{
-			case A: XInputButtonID.A;
-			case B: XInputButtonID.B;
-			case X: XInputButtonID.X;
-			case Y: XInputButtonID.Y;
-			case BACK: XInputButtonID.BACK;
-			case GUIDE: XInputButtonID.GUIDE;
-			case START: XInputButtonID.START;
-			case LEFT_STICK_CLICK: XInputButtonID.LEFT_STICK_CLICK;
-			case RIGHT_STICK_CLICK: XInputButtonID.RIGHT_STICK_CLICK;
-			case LEFT_SHOULDER: XInputButtonID.LB;
-			case RIGHT_SHOULDER: XInputButtonID.RB;
-			case DPAD_UP: XInputButtonID.DPAD_UP;
-			case DPAD_DOWN: XInputButtonID.DPAD_DOWN;
-			case DPAD_LEFT: XInputButtonID.DPAD_LEFT;
-			case DPAD_RIGHT: XInputButtonID.DPAD_RIGHT;
-			case LEFT_TRIGGER: XInputButtonID.LEFT_TRIGGER;
-			case RIGHT_TRIGGER: XInputButtonID.RIGHT_TRIGGER;
+			case A: XInputID.A;
+			case B: XInputID.B;
+			case X: XInputID.X;
+			case Y: XInputID.Y;
+			case BACK: XInputID.BACK;
+			case GUIDE: XInputID.GUIDE;
+			case START: XInputID.START;
+			case LEFT_STICK_CLICK: XInputID.LEFT_STICK_CLICK;
+			case RIGHT_STICK_CLICK: XInputID.RIGHT_STICK_CLICK;
+			case LEFT_SHOULDER: XInputID.LB;
+			case RIGHT_SHOULDER: XInputID.RB;
+			case DPAD_UP: XInputID.DPAD_UP;
+			case DPAD_DOWN: XInputID.DPAD_DOWN;
+			case DPAD_LEFT: XInputID.DPAD_LEFT;
+			case DPAD_RIGHT: XInputID.DPAD_RIGHT;
+			case LEFT_TRIGGER: XInputID.LEFT_TRIGGER;
+			case RIGHT_TRIGGER: XInputID.RIGHT_TRIGGER;
 			default: -1;
 		}
 	}
@@ -249,19 +249,19 @@ class FlxGamepadMapping
 	{
 		return switch(rawID)
 		{
-			case OUYAButtonID.O: A;
-			case OUYAButtonID.A: B;
-			case OUYAButtonID.U: X;
-			case OUYAButtonID.Y: Y;
-			case OUYAButtonID.HOME: GUIDE;
-			case OUYAButtonID.LEFT_STICK_CLICK: LEFT_STICK_CLICK;
-			case OUYAButtonID.RIGHT_STICK_CLICK: RIGHT_STICK_CLICK;
-			case OUYAButtonID.LB: LEFT_SHOULDER;
-			case OUYAButtonID.RB: RIGHT_SHOULDER;
-			case OUYAButtonID.DPAD_UP: DPAD_UP;
-			case OUYAButtonID.DPAD_DOWN: DPAD_DOWN;
-			case OUYAButtonID.DPAD_LEFT: DPAD_LEFT;
-			case OUYAButtonID.DPAD_RIGHT: DPAD_RIGHT;
+			case OUYAID.O: A;
+			case OUYAID.A: B;
+			case OUYAID.U: X;
+			case OUYAID.Y: Y;
+			case OUYAID.HOME: GUIDE;
+			case OUYAID.LEFT_STICK_CLICK: LEFT_STICK_CLICK;
+			case OUYAID.RIGHT_STICK_CLICK: RIGHT_STICK_CLICK;
+			case OUYAID.LB: LEFT_SHOULDER;
+			case OUYAID.RB: RIGHT_SHOULDER;
+			case OUYAID.DPAD_UP: DPAD_UP;
+			case OUYAID.DPAD_DOWN: DPAD_DOWN;
+			case OUYAID.DPAD_LEFT: DPAD_LEFT;
+			case OUYAID.DPAD_RIGHT: DPAD_RIGHT;
 			default: NONE;
 		}
 	}
@@ -270,23 +270,23 @@ class FlxGamepadMapping
 	{
 		return switch(rawID)
 		{
-			case LogitechButtonID.TWO: A;
-			case LogitechButtonID.THREE: B;
-			case LogitechButtonID.ONE: X;
-			case LogitechButtonID.FOUR: Y;
-			case LogitechButtonID.NINE: BACK;
-			case LogitechButtonID.TEN: START;
-			case LogitechButtonID.LEFT_STICK_CLICK: LEFT_STICK_CLICK;
-			case LogitechButtonID.RIGHT_STICK_CLICK: RIGHT_STICK_CLICK;
-			case LogitechButtonID.FIVE: LEFT_SHOULDER;
-			case LogitechButtonID.SIX: RIGHT_SHOULDER;
-			case LogitechButtonID.SEVEN: LEFT_TRIGGER;
-			case LogitechButtonID.EIGHT: RIGHT_TRIGGER;
-			case LogitechButtonID.DPAD_DOWN: DPAD_DOWN;
-			case LogitechButtonID.DPAD_LEFT: DPAD_LEFT;
-			case LogitechButtonID.DPAD_RIGHT: DPAD_RIGHT;
-			case LogitechButtonID.DPAD_UP: DPAD_UP;
-			case LogitechButtonID.LOGITECH: GUIDE;
+			case LogitechID.TWO: A;
+			case LogitechID.THREE: B;
+			case LogitechID.ONE: X;
+			case LogitechID.FOUR: Y;
+			case LogitechID.NINE: BACK;
+			case LogitechID.TEN: START;
+			case LogitechID.LEFT_STICK_CLICK: LEFT_STICK_CLICK;
+			case LogitechID.RIGHT_STICK_CLICK: RIGHT_STICK_CLICK;
+			case LogitechID.FIVE: LEFT_SHOULDER;
+			case LogitechID.SIX: RIGHT_SHOULDER;
+			case LogitechID.SEVEN: LEFT_TRIGGER;
+			case LogitechID.EIGHT: RIGHT_TRIGGER;
+			case LogitechID.DPAD_DOWN: DPAD_DOWN;
+			case LogitechID.DPAD_LEFT: DPAD_LEFT;
+			case LogitechID.DPAD_RIGHT: DPAD_RIGHT;
+			case LogitechID.DPAD_UP: DPAD_UP;
+			case LogitechID.LOGITECH: GUIDE;
 			default: NONE;
 		}
 	}
@@ -295,23 +295,23 @@ class FlxGamepadMapping
 	{
 		return switch(rawID)
 		{
-			case PS4ButtonID.X: A;
-			case PS4ButtonID.CIRCLE: B;
-			case PS4ButtonID.SQUARE: X;
-			case PS4ButtonID.TRIANGLE: Y;
-			case PS4ButtonID.SELECT: BACK;
-			case PS4ButtonID.PS: GUIDE;
-			case PS4ButtonID.START: START;
-			case PS4ButtonID.LEFT_STICK_CLICK: LEFT_STICK_CLICK;
-			case PS4ButtonID.RIGHT_STICK_CLICK: RIGHT_STICK_CLICK;
-			case PS4ButtonID.L1: LEFT_SHOULDER;
-			case PS4ButtonID.R1: RIGHT_SHOULDER;
-			case PS4ButtonID.L2: LEFT_TRIGGER;
-			case PS4ButtonID.R2: RIGHT_TRIGGER;
-			case PS4ButtonID.DPAD_DOWN: DPAD_DOWN;
-			case PS4ButtonID.DPAD_UP: DPAD_UP;
-			case PS4ButtonID.DPAD_LEFT: DPAD_LEFT;
-			case PS4ButtonID.DPAD_RIGHT: DPAD_RIGHT;
+			case PS4ID.X: A;
+			case PS4ID.CIRCLE: B;
+			case PS4ID.SQUARE: X;
+			case PS4ID.TRIANGLE: Y;
+			case PS4ID.SELECT: BACK;
+			case PS4ID.PS: GUIDE;
+			case PS4ID.START: START;
+			case PS4ID.LEFT_STICK_CLICK: LEFT_STICK_CLICK;
+			case PS4ID.RIGHT_STICK_CLICK: RIGHT_STICK_CLICK;
+			case PS4ID.L1: LEFT_SHOULDER;
+			case PS4ID.R1: RIGHT_SHOULDER;
+			case PS4ID.L2: LEFT_TRIGGER;
+			case PS4ID.R2: RIGHT_TRIGGER;
+			case PS4ID.DPAD_DOWN: DPAD_DOWN;
+			case PS4ID.DPAD_UP: DPAD_UP;
+			case PS4ID.DPAD_LEFT: DPAD_LEFT;
+			case PS4ID.DPAD_RIGHT: DPAD_RIGHT;
 			default: NONE;
 		}
 	}
@@ -320,23 +320,23 @@ class FlxGamepadMapping
 	{
 		return switch(rawID)
 		{
-			case PS3ButtonID.X: A;
-			case PS3ButtonID.CIRCLE: B;
-			case PS3ButtonID.SQUARE: X;
-			case PS3ButtonID.TRIANGLE: Y;
-			case PS3ButtonID.SELECT: BACK;
-			case PS3ButtonID.PS: GUIDE;
-			case PS3ButtonID.START: START;
-			case PS3ButtonID.LEFT_STICK_CLICK: LEFT_STICK_CLICK;
-			case PS3ButtonID.RIGHT_STICK_CLICK: RIGHT_STICK_CLICK;
-			case PS3ButtonID.L1: LEFT_SHOULDER;
-			case PS3ButtonID.R1: RIGHT_SHOULDER;
-			case PS3ButtonID.L2: LEFT_TRIGGER;
-			case PS3ButtonID.R2: RIGHT_TRIGGER;
-			case PS3ButtonID.DPAD_UP: DPAD_UP;
-			case PS3ButtonID.DPAD_DOWN: DPAD_DOWN;
-			case PS3ButtonID.DPAD_LEFT: DPAD_LEFT;
-			case PS3ButtonID.DPAD_RIGHT: DPAD_RIGHT;
+			case PS3ID.X: A;
+			case PS3ID.CIRCLE: B;
+			case PS3ID.SQUARE: X;
+			case PS3ID.TRIANGLE: Y;
+			case PS3ID.SELECT: BACK;
+			case PS3ID.PS: GUIDE;
+			case PS3ID.START: START;
+			case PS3ID.LEFT_STICK_CLICK: LEFT_STICK_CLICK;
+			case PS3ID.RIGHT_STICK_CLICK: RIGHT_STICK_CLICK;
+			case PS3ID.L1: LEFT_SHOULDER;
+			case PS3ID.R1: RIGHT_SHOULDER;
+			case PS3ID.L2: LEFT_TRIGGER;
+			case PS3ID.R2: RIGHT_TRIGGER;
+			case PS3ID.DPAD_UP: DPAD_UP;
+			case PS3ID.DPAD_DOWN: DPAD_DOWN;
+			case PS3ID.DPAD_LEFT: DPAD_LEFT;
+			case PS3ID.DPAD_RIGHT: DPAD_RIGHT;
 			default: NONE;
 		}
 	}
@@ -345,21 +345,21 @@ class FlxGamepadMapping
 	{
 		return switch(rawID)
 		{
-			case XBox360ButtonID.A: A;
-			case XBox360ButtonID.B: B;
-			case XBox360ButtonID.X: X;
-			case XBox360ButtonID.Y: Y;
-			case XBox360ButtonID.BACK: BACK;
-			case XBox360ButtonID.XBOX: GUIDE;
-			case XBox360ButtonID.START: START;
-			case XBox360ButtonID.LEFT_STICK_CLICK: LEFT_STICK_CLICK;
-			case XBox360ButtonID.RIGHT_STICK_CLICK: RIGHT_STICK_CLICK;
-			case XBox360ButtonID.LB: LEFT_SHOULDER;
-			case XBox360ButtonID.RB: RIGHT_SHOULDER;
-			case XBox360ButtonID.DPAD_UP: DPAD_UP;
-			case XBox360ButtonID.DPAD_DOWN: DPAD_DOWN;
-			case XBox360ButtonID.DPAD_LEFT: DPAD_LEFT;
-			case XBox360ButtonID.DPAD_RIGHT: DPAD_RIGHT;
+			case XBox360ID.A: A;
+			case XBox360ID.B: B;
+			case XBox360ID.X: X;
+			case XBox360ID.Y: Y;
+			case XBox360ID.BACK: BACK;
+			case XBox360ID.XBOX: GUIDE;
+			case XBox360ID.START: START;
+			case XBox360ID.LEFT_STICK_CLICK: LEFT_STICK_CLICK;
+			case XBox360ID.RIGHT_STICK_CLICK: RIGHT_STICK_CLICK;
+			case XBox360ID.LB: LEFT_SHOULDER;
+			case XBox360ID.RB: RIGHT_SHOULDER;
+			case XBox360ID.DPAD_UP: DPAD_UP;
+			case XBox360ID.DPAD_DOWN: DPAD_DOWN;
+			case XBox360ID.DPAD_LEFT: DPAD_LEFT;
+			case XBox360ID.DPAD_RIGHT: DPAD_RIGHT;
 			default: NONE;
 		}
 	}
@@ -368,23 +368,23 @@ class FlxGamepadMapping
 	{
 		return switch(rawID)
 		{
-			case XInputButtonID.A: A;
-			case XInputButtonID.B: B;
-			case XInputButtonID.X: X;
-			case XInputButtonID.Y: Y;
-			case XInputButtonID.BACK: BACK;
-			case XInputButtonID.GUIDE: GUIDE;
-			case XInputButtonID.START: START;
-			case XInputButtonID.LEFT_STICK_CLICK: LEFT_STICK_CLICK;
-			case XInputButtonID.RIGHT_STICK_CLICK: RIGHT_STICK_CLICK;
-			case XInputButtonID.LB: LEFT_SHOULDER;
-			case XInputButtonID.RB: RIGHT_SHOULDER;
-			case XInputButtonID.DPAD_UP: DPAD_UP;
-			case XInputButtonID.DPAD_DOWN: DPAD_DOWN;
-			case XInputButtonID.DPAD_LEFT: DPAD_LEFT;
-			case XInputButtonID.DPAD_RIGHT: DPAD_RIGHT;
-			case XInputButtonID.LEFT_TRIGGER: LEFT_TRIGGER;
-			case XInputButtonID.RIGHT_TRIGGER: RIGHT_TRIGGER;
+			case XInputID.A: A;
+			case XInputID.B: B;
+			case XInputID.X: X;
+			case XInputID.Y: Y;
+			case XInputID.BACK: BACK;
+			case XInputID.GUIDE: GUIDE;
+			case XInputID.START: START;
+			case XInputID.LEFT_STICK_CLICK: LEFT_STICK_CLICK;
+			case XInputID.RIGHT_STICK_CLICK: RIGHT_STICK_CLICK;
+			case XInputID.LB: LEFT_SHOULDER;
+			case XInputID.RB: RIGHT_SHOULDER;
+			case XInputID.DPAD_UP: DPAD_UP;
+			case XInputID.DPAD_DOWN: DPAD_DOWN;
+			case XInputID.DPAD_LEFT: DPAD_LEFT;
+			case XInputID.DPAD_RIGHT: DPAD_RIGHT;
+			case XInputID.LEFT_TRIGGER: LEFT_TRIGGER;
+			case XInputID.RIGHT_TRIGGER: RIGHT_TRIGGER;
 			default: NONE;
 		}
 	}

@@ -1,4 +1,4 @@
-package flixel.input.gamepad.buttons;
+package flixel.input.gamepad.id;
 
 import flixel.input.gamepad.FlxGamepad;
 
@@ -6,7 +6,7 @@ import flixel.input.gamepad.FlxGamepad;
  * Button IDs for PlayStation 4 controllers
  * (D-pad values are obtained from FlxGamepad.hat)
  */
-class PS4ButtonID
+class PS4ID
 {
 	public static inline var TRIANGLE:Int = 3;
 	public static inline var CIRCLE:Int = 2;

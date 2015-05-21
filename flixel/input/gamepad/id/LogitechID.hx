@@ -1,11 +1,11 @@
-package flixel.input.gamepad.buttons;
+package flixel.input.gamepad.id;
 
 import flixel.input.gamepad.FlxGamepad;
 
 /**
  * Button IDs for Logitech controllers (key codes based on Cordless Rumblepad 2)
  */
-class LogitechButtonID
+class LogitechID
 {
 #if flash
 	/**

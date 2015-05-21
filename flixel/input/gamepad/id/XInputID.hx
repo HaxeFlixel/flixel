@@ -1,11 +1,11 @@
-package flixel.input.gamepad.buttons;
+package flixel.input.gamepad.id;
 
 import flixel.input.gamepad.FlxGamepad;
 
 /**
  * Button IDs for generic XInput controllers
  */
-class XInputButtonID
+class XInputID
 {
 	/**
 	* Button IDs

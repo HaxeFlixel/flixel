@@ -1,11 +1,11 @@
-package flixel.input.gamepad.buttons;
+package flixel.input.gamepad.id;
 
 import flixel.input.gamepad.FlxGamepad;
 
 /**
  * Button IDs for OUYA controllers
  */
-class OUYAButtonID
+class OUYAID
 {
 	/**
 	 * Button IDs (DPAD values are obtained from FlxGamepad.hat)
