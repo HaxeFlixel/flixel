@@ -89,7 +89,7 @@ class FlxGamepadManager implements IFlxInputManager
 			firstActive = null;
 	}
 	
-	private function createByID(GamepadID:Int,?Model:GamepadModel):FlxGamepad
+	private function createByID(GamepadID:Int, ?Model:GamepadModel):FlxGamepad
 	{
 		var gamepad:FlxGamepad = _gamepads[GamepadID];
 		if (gamepad == null)
@@ -441,13 +441,12 @@ class FlxGamepadManager implements IFlxInputManager
 			}
 		}
 		
-		if (str.indexOf("xbox") != -1) return Xbox;					//"Microsoft X-Box 360 pad"
-		if (str.indexOf("playstation") != -1) return PS3;			//"Sony PLAYSTATION(R)3 Controller"
-		if (str.indexOf("ouya") != -1) return OUYA;					//"OUYA Game Controller"
-		if (str.indexOf("wireless controller") != -1) return PS4;	//"Wireless Controller"
+		if (str.indexOf("xbox") != -1) return Xbox;               //"Microsoft X-Box 360 pad"
+		if (str.indexOf("playstation") != -1) return PS3;         //"Sony PLAYSTATION(R)3 Controller"
+		if (str.indexOf("ouya") != -1) return OUYA;               //"OUYA Game Controller"
+		if (str.indexOf("wireless controller") != -1) return PS4; //"Wireless Controller"
 		if (str.indexOf("logitech") != -1) return Logitech;
-		if (str.indexOf("xinput") != -1) return XInput;				
-		trace(str);
+		if (str.indexOf("xinput") != -1) return XInput;
 		
 		return Xbox;	//default
 	}
@@ -530,23 +529,23 @@ class FlxGamepadManager implements IFlxInputManager
 				
 				if (oldx == -1)
 				{
-					newType = "buttonUp";
+					newType = JOYSTICK_BUTTON_UP;
 					newId = gamepad.rawID(ButtonID.DPAD_LEFT);
 				}
 				else if (oldx == 1)
 				{
-					newType = "buttonUp";
+					newType = JOYSTICK_BUTTON_UP;
 					newId = gamepad.rawID(ButtonID.DPAD_RIGHT);
 				}
 				
 				if (newx == -1)
 				{
-					newType = "buttonDown";
+					newType = JOYSTICK_BUTTON_DOWN;
 					newId = gamepad.rawID(ButtonID.DPAD_LEFT);
 				}
 				else if (newx == 1)
 				{
-					newType = "buttonDown";
+					newType = JOYSTICK_BUTTON_DOWN;
 					newId = gamepad.rawID(ButtonID.DPAD_RIGHT);
 				}
 			}
@@ -557,23 +556,23 @@ class FlxGamepadManager implements IFlxInputManager
 				
 				if (oldy == -1)
 				{
-					newType = "buttonUp";
+					newType = JOYSTICK_BUTTON_UP;
 					newId = gamepad.rawID(ButtonID.DPAD_UP);
 				}
 				else if (oldy == 1)
 				{
-					newType = "buttonUp";
+					newType = JOYSTICK_BUTTON_UP;
 					newId = gamepad.rawID(ButtonID.DPAD_DOWN);
 				}
 				
 				if (newy == -1)
 				{
-					newType = "buttonDown";
+					newType = JOYSTICK_BUTTON_DOWN;
 					newId = gamepad.rawID(ButtonID.DPAD_UP);
 				}
 				else if (newy == 1)
 				{
-					newType = "buttonDown";
+					newType = JOYSTICK_BUTTON_DOWN;
 					newId = gamepad.rawID(ButtonID.DPAD_DOWN);
 				}
 			}
@@ -583,11 +582,11 @@ class FlxGamepadManager implements IFlxInputManager
 			{
 				var newEvent = new JoystickEvent(newType, FlashEvent.bubbles, FlashEvent.cancelable, FlashEvent.device, newId, FlashEvent.x, FlashEvent.y, FlashEvent.z);
 				
-				if (newType == "buttonUp")
+				if (newType == JOYSTICK_BUTTON_UP)
 				{
 					handleButtonUp(newEvent);
 				}
-				else if (newType == "buttonDown")
+				else if (newType == JOYSTICK_BUTTON_DOWN)
 				{
 					handleButtonDown(newEvent);
 				}
@@ -658,4 +657,11 @@ class FlxGamepadManager implements IFlxInputManager
 		}
 		return globalDeadZone;
 	}
+	
+	#if (!flash && !next)
+	
+	private static inline var JOYSTICK_BUTTON_UP: "buttonUp";
+	private static inline var JOYSTICK_BUTTON_DOWN: "buttonDown";
+	
+	#end
 }

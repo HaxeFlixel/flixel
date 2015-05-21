@@ -23,7 +23,7 @@ class FlxGamepad implements IFlxDestroyable
 	
 	/**
 	 * Gamepad deadzone. Sets the sensibility. 
-	 * Less this number the more gamepad is sensible. Should be between 0.0 and 1.0.
+	 * Less this number the more sensitive the gamepad is. Should be between 0.0 and 1.0.
 	 */
 	public var deadZone:Float = 0.15;
 	/**
