@@ -21,6 +21,13 @@ class OUYAButtonID
 	public static inline var HOME:Int = 2;
 	public static inline var LEFT_TRIGGER:Int = 8;
 	public static inline var RIGHT_TRIGGER:Int = 9;
+	
+	//TODO: someone needs to look these up and define them!
+	public static inline var DPAD_LEFT:Int = -1;
+	public static inline var DPAD_RIGHT:Int = -2;
+	public static inline var DPAD_DOWN:Int = -3;
+	public static inline var DPAD_UP:Int = -4;
+	
 	/**
 	 * Axis array indicies
 	 * 

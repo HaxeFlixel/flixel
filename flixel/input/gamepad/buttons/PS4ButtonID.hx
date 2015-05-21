@@ -29,4 +29,10 @@ class PS4ButtonID
 	
 	public static inline var L2_Y:Int = 3;
 	public static inline var R2_Y:Int = 4;
+	
+	//TODO: someone needs to look these up and define them!
+	public static inline var DPAD_LEFT:Int = -1;
+	public static inline var DPAD_RIGHT:Int = -2;
+	public static inline var DPAD_DOWN:Int = -3;
+	public static inline var DPAD_UP:Int = -4;
 }
