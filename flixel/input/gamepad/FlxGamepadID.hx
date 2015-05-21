@@ -3,16 +3,20 @@ package flixel.input.gamepad;
 import flixel.system.macros.FlxMacroUtil;
 
 /**
- * Maps enum values and strings to integer keycodes.
+ * A high-level list of unique values for gamepad inputs.
+ * These do NOT correspond to any actual hardware values but
+ * are the basis for all hardware-specific lookups.
+ * 
+ * Maps enum values and strings to unique integer codes
  */
 @:enum
-abstract FlxGamepadButtonID(Int) from Int to Int
+abstract FlxGamepadID(Int) from Int to Int
 {
-	public static var fromStringMap(default, null):Map<String, FlxGamepadButtonID>
-		= FlxMacroUtil.buildMap("flixel.input.gamepad.FlxGamepadButtonID");
+	public static var fromStringMap(default, null):Map<String, FlxGamepadID>
+		= FlxMacroUtil.buildMap("flixel.input.gamepad.FlxGamepadID");
 		
-	public static var toStringMap(default, null):Map<FlxGamepadButtonID, String>
-		= FlxMacroUtil.buildMap("flixel.input.gamepad.FlxGamepadButtonID", true);
+	public static var toStringMap(default, null):Map<FlxGamepadID, String>
+		= FlxMacroUtil.buildMap("flixel.input.gamepad.FlxGamepadID", true);
 	
 	// Button Indices
 	var ANY               = -2;
