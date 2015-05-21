@@ -47,7 +47,7 @@ class MenuState extends FlxUIState
 			switch(type){
 				case "wrap": 
 					cursor.wrap = checked;
-				case "tab","arrows","wasd","numpad":
+				case "tab","arrows","wasd","numpad","dpad","lstick","rstick","bumpers":
 					updateInputMethod();
 			}
 		}
@@ -95,6 +95,27 @@ class MenuState extends FlxUIState
 		if (check.checked) { 
 			input = input | FlxUICursor.KEYS_DEFAULT_NUMPAD; 
 			modes.push("NUMPAD");
+		}
+		
+		check = cast _ui.getAsset("check_dpad");
+		if (check.checked) { 
+			input = input | FlxUICursor.GAMEPAD_DEFAULT_DPAD; 
+			modes.push("DPAD");
+		}
+		check = cast _ui.getAsset("check_lstick");
+		if (check.checked) { 
+			input = input | FlxUICursor.GAMEPAD_DEFAULT_LEFT_STICK; 
+			modes.push("LSTICK");
+		}
+		check = cast _ui.getAsset("check_rstick");
+		if (check.checked) { 
+			input = input | FlxUICursor.GAMEPAD_DEFAULT_RIGHT_STICK; 
+			modes.push("RSTICK");
+		}
+		check = cast _ui.getAsset("check_bumpers");
+		if (check.checked) { 
+			input = input | FlxUICursor.GAMEPAD_DEFAULT_SHOULDER_BUTTONS; 
+			modes.push("BUMPERS");
 		}
 		
 		var instructions:FlxUIText = cast _ui.getAsset("text");
