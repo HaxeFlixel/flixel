@@ -7,7 +7,7 @@ import flixel.input.gamepad.FlxGamepad.GamepadModel;
  * ...
  * @author larsiusprime
  */
-class ButtonIndex
+class FlxGamepadMapping
 {
 	@:allow(flixel.input.gamepad.FlxGamepad)
 	public var model(default, null):GamepadModel;

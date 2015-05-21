@@ -17,7 +17,7 @@ class FlxGamepad implements IFlxDestroyable
 {
 	public var id(default, null):Int;
 	public var model(default, set):GamepadModel;
-	public var buttonIndex(default, null):ButtonIndex;
+	public var buttonIndex(default, null):FlxGamepadMapping;
 	public var buttons(default, null):Array<FlxGamepadButton> = [];
 	public var connected(default, null):Bool = true;
 	
@@ -72,7 +72,7 @@ class FlxGamepad implements IFlxDestroyable
 		
 		if (Model == null) Model = Xbox;
 		
-		buttonIndex = new ButtonIndex(model);
+		buttonIndex = new FlxGamepadMapping(model);
 		model = Model;
 		
 		#if flash
