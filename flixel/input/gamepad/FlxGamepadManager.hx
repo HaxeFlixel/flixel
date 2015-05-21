@@ -90,7 +90,7 @@ class FlxGamepadManager implements IFlxInputManager
 			firstActive = null;
 	}
 	
-	private function createByID(GamepadID:Int, ?Model:GamepadModel):FlxGamepad
+	private function createByID(GamepadID:Int, ?Model:FlxGamepadModel):FlxGamepad
 	{
 		var gamepad:FlxGamepad = _gamepads[GamepadID];
 		if (gamepad == null)
@@ -430,7 +430,7 @@ class FlxGamepadManager implements IFlxInputManager
 		}
 	}
 	
-	private function getModelFromFlashDeviceName(str:String):GamepadModel
+	private function getModelFromFlashDeviceName(str:String):FlxGamepadModel
 	{
 		str = str.toLowerCase();
 		var strip = ["-", "_"];

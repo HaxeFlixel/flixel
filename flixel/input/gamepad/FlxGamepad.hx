@@ -4,7 +4,7 @@ import flixel.input.FlxInput.FlxInputState;
 import flixel.input.gamepad.id.FlxGamepadAnalogList;
 import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.input.gamepad.id.FlxGamepadButtonList;
-import flixel.input.gamepad.FlxGamepad.GamepadModel;
+import flixel.input.gamepad.FlxGamepad.FlxGamepadModel;
 import flixel.math.FlxPoint;
 import flixel.math.FlxVector;
 import flixel.util.FlxDestroyUtil;
@@ -19,7 +19,7 @@ import flash.system.Capabilities;
 class FlxGamepad implements IFlxDestroyable
 {
 	public var id(default, null):Int;
-	public var model(default, set):GamepadModel;
+	public var model(default, set):FlxGamepadModel;
 	public var buttonIndex(default, null):FlxGamepadMapping;
 	public var buttons(default, null):Array<FlxGamepadButton> = [];
 	public var connected(default, null):Bool = true;
@@ -69,7 +69,7 @@ class FlxGamepad implements IFlxDestroyable
 	 */
 	public var analog(default, null):FlxGamepadAnalogList;
 	
-	public function new(ID:Int, GlobalDeadZone:Float = 0, ?Model:GamepadModel) 
+	public function new(ID:Int, GlobalDeadZone:Float = 0, ?Model:FlxGamepadModel) 
 	{
 		id = ID;
 		
@@ -93,7 +93,7 @@ class FlxGamepad implements IFlxDestroyable
 		analog = new FlxGamepadAnalogList(this);
 	}
 	
-	public function set_model(Model:GamepadModel):GamepadModel
+	public function set_model(Model:FlxGamepadModel):FlxGamepadModel
 	{
 		model = Model;
 		buttonIndex.model = Model;
@@ -645,7 +645,7 @@ enum FlxAxes
 	Y;
 }
 
-enum GamepadModel
+enum FlxGamepadModel
 {
 	Logitech;
 	OUYA;

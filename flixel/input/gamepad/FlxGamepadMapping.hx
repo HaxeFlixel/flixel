@@ -7,7 +7,7 @@ import flixel.input.gamepad.id.XBox360ID;
 import flixel.input.gamepad.id.XInputID;
 import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.input.gamepad.FlxGamepad.FlxGamepadAnalogStick;
-import flixel.input.gamepad.FlxGamepad.GamepadModel;
+import flixel.input.gamepad.FlxGamepad.FlxGamepadModel;
 
 /**
  * ...
@@ -16,9 +16,9 @@ import flixel.input.gamepad.FlxGamepad.GamepadModel;
 class FlxGamepadMapping
 {
 	@:allow(flixel.input.gamepad.FlxGamepad)
-	public var model(default, null):GamepadModel;
+	public var model(default, null):FlxGamepadModel;
 	
-	public function new(Model:GamepadModel) 
+	public function new(Model:FlxGamepadModel) 
 	{
 		model = Model;
 	}
