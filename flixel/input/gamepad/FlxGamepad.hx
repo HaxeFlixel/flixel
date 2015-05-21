@@ -445,7 +445,7 @@ class FlxGamepad implements IFlxDestroyable
 		if (Math.abs(axisValue) > deadZone)
 		{
 			#if (!flash && !next)
-				//(-1,1) range, normalize to (0,1) for legacy target only
+				//in legacy this returns a (-1,1) range, but in flash/next it returns (0,1) so we normalize to (0,1) for legacy target only
 				axisValue = (axisValue+1) / 2;
 			#end
 			return axisValue;
