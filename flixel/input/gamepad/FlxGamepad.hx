@@ -99,7 +99,7 @@ class FlxGamepad implements IFlxDestroyable
 		return buttonIndex.getRaw(buttonID);
 	}
 	
-	public inline function rawAnalogStick(buttonID:ButtonID):FlxGamepadAnalogStick
+	public inline function getRawAnalogStick(buttonID:ButtonID):FlxGamepadAnalogStick
 	{
 		return buttonIndex.getRawAnalogStick(buttonID);
 	}
@@ -460,7 +460,7 @@ class FlxGamepad implements IFlxDestroyable
 	 */
 	public inline function getXAxis(AxesButtonID:ButtonID):Float
 	{
-		var axesValue = rawAnalogStick(AxesButtonID);
+		var axesValue = getRawAnalogStick(AxesButtonID);
 		return getAnalogueAxisValue(FlxAxes.X, axesValue);
 	}
 	
@@ -480,7 +480,7 @@ class FlxGamepad implements IFlxDestroyable
 	 */
 	public inline function getYAxis(AxesButtonID:ButtonID):Float
 	{
-		var axesValue = rawAnalogStick(AxesButtonID);
+		var axesValue = getRawAnalogStick(AxesButtonID);
 		return getYAxisRaw(axesValue);
 	}
 	
