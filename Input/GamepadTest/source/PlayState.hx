@@ -13,6 +13,7 @@ import flixel.input.gamepad.OUYAButtonID;
 class PlayState extends FlxState
 {
 	private static inline var STICK_MOVEMENT_RANGE:Float = 10;
+	private static inline var TRIGGER_MOVEMENT_RANGE:Float = 20;
 	
 	private static inline var ALPHA_OFF:Float = 0.5;
 	private static inline var ALPHA_ON:Float = 1;
@@ -20,8 +21,8 @@ class PlayState extends FlxState
 	private static inline var LB_Y:Float = 16;
 	private static inline var RB_Y:Float = 16;
 	
-	private static inline var LT_Y:Float = 4;
-	private static inline var RT_Y:Float = 4;
+	private static inline var LT_Y:Float = -6;
+	private static inline var RT_Y:Float = -6;
 	
 	private static var LEFT_STICK_POS:FlxPoint = FlxPoint.get(80, 62);
 	private static var RIGHT_STICK_POS:FlxPoint = FlxPoint.get(304, 150);
@@ -159,19 +160,17 @@ class PlayState extends FlxState
 		else
 			_rightStick.color = FlxColor.WHITE;
 		
-		updateAxis(GamepadIDs.LEFT_ANALOG_STICK, _leftStick, LEFT_STICK_POS);
-		updateAxis(GamepadIDs.RIGHT_ANALOG_STICK, _rightStick, RIGHT_STICK_POS);
+		updateAxis(_gamePad.analog.LEFT_STICK_X, _gamePad.analog.LEFT_STICK_Y, _leftStick, LEFT_STICK_POS);
+		updateAxis(_gamePad.analog.RIGHT_STICK_X, _gamePad.analog.RIGHT_STICK_Y, _rightStick, RIGHT_STICK_POS);
 		
-		updateTrigger(GamepadIDs.LEFT_TRIGGER, _LTrigger, LT_Y);
-		updateTrigger(GamepadIDs.RIGHT_TRIGGER, _RTrigger, RT_Y);
+		updateTrigger(_gamePad.analog.LEFT_TRIGGER, _LTrigger, LT_Y);
+		updateTrigger(_gamePad.analog.RIGHT_TRIGGER, _RTrigger, RT_Y);
 		
 		updateDpad();
 	}
 	
-	private function updateAxis(axes:FlxGamepadAnalogStick, stickSprite:FlxSprite, stickPosition:FlxPoint):Void
+	private function updateAxis(xAxisValue:Float, yAxisValue:Float, stickSprite:FlxSprite, stickPosition:FlxPoint):Void
 	{
-		var xAxisValue = _gamePad.getXAxis(axes);
-		var yAxisValue = _gamePad.getYAxis(axes);
 		var angle:Float=0;
 		
 		if ((xAxisValue != 0) || (yAxisValue != 0))
@@ -189,11 +188,10 @@ class PlayState extends FlxState
 		}
 	}
 	
-	private function updateTrigger(axis:Int, sprite:FlxSprite, pos:Float):Void
+	private function updateTrigger(yAxisValue:Float, sprite:FlxSprite, pos:Float):Void
 	{
-		var yAxisValue = _gamePad.getAxis(axis);
 		yAxisValue = (yAxisValue+1) / 2;
-		sprite.y = pos + (10 * yAxisValue);
+		sprite.y = pos + (TRIGGER_MOVEMENT_RANGE * yAxisValue);
 	}
 	
 	private function updateDpad():Void
