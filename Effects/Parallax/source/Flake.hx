@@ -1,10 +1,8 @@
 package;
 
-
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.math.FlxMath;
-import flixel.math.FlxRandom;
 import flixel.util.FlxColor;
 
 class Flake extends FlxSprite
@@ -12,10 +10,8 @@ class Flake extends FlxSprite
 	private var _level:Int = 0;
 	private var _initialized:Bool = false;
 	
-	
 	public function new(Level:Int = 0) 
 	{
-		
 		super();
 		_level = Level;
 		revive();
@@ -41,12 +37,10 @@ class Flake extends FlxSprite
 		scrollFactor.set(.7 + (_level * .1), 0);
 		velocity.y = FlxG.random.int(20, 40) * ((_level+1) * .2);
 		velocity.x = FlxG.random.int( -25, -50) * ((_level+1) * .1);
-		
 	}
 	
 	override public function update(elapsed:Float):Void 
 	{
-		
 		if (velocity.y == 0)
 			alpha -= elapsed * .5;
 		else
@@ -65,10 +59,8 @@ class Flake extends FlxSprite
 				}
 				else
 					revive();
-				
 			}
 		}
 		super.update(elapsed);
-		
 	}
 }
