@@ -3,7 +3,7 @@ package;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
-import flixel.input.gamepad.FlxGamepadID;
+import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.util.FlxColor;
 import flixel.math.FlxPoint;
 import flixel.input.gamepad.FlxGamepad;
