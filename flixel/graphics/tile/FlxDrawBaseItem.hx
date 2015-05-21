@@ -13,26 +13,24 @@ class FlxDrawBaseItem<T>
 {
 	public static function blendToInt(blend:BlendMode):Int
 	{
-		var blendInt:Int = 0;
+		if (blend == null)
+			return Tilesheet.TILE_BLEND_NORMAL;
 		
-		if (blend != null)
+		return switch (blend)
 		{
-			switch (blend)
-			{
-				case BlendMode.ADD:
-					blendInt = Tilesheet.TILE_BLEND_ADD;
-				#if !flash
-				case BlendMode.MULTIPLY:
-					blendInt = Tilesheet.TILE_BLEND_MULTIPLY;
-				case BlendMode.SCREEN:
-					blendInt = Tilesheet.TILE_BLEND_SCREEN;
-				#end
-				default:
-					blendInt = Tilesheet.TILE_BLEND_NORMAL;
-			}
+			case BlendMode.ADD:
+				Tilesheet.TILE_BLEND_ADD;
+			#if !flash
+			case BlendMode.MULTIPLY:
+				Tilesheet.TILE_BLEND_MULTIPLY;
+			case BlendMode.SCREEN:
+				Tilesheet.TILE_BLEND_SCREEN;
+			case BlendMode.SUBTRACT:
+				Tilesheet.TILE_BLEND_SUBTRACT;
+			#end
+			default:
+				Tilesheet.TILE_BLEND_NORMAL;
 		}
-		
-		return blendInt;
 	}
 	
 	public var nextTyped:T;
