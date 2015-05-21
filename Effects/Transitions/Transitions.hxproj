@@ -15,11 +15,11 @@
   </output>
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
-    <class path="T:\Development\Git\flixel" />
-    <class path="T:\Development\Git\openfl" />
-    <class path="T:\Development\Git\lime" />
-    <class path="T:\Development\Git\flixel-addons" />
-    <class path="T:\Development\Git\flixel-ui" />
+    <class path="C:\HaxeToolkit\haxe\lib\flixel-addons\git" />
+    <class path="C:\HaxeToolkit\haxe\lib\flixel-ui\git" />
+    <class path="C:\HaxeToolkit\haxe\lib\openfl\2,1,0" />
+    <class path="C:\HaxeToolkit\haxe\lib\flixel\git" />
+   <class path="C:\HaxeToolkit\haxe\lib\lime\2,0,0-alpha" />
     <class path="source" />
     <class path="export\flash\haxe" />
   </classpaths>
