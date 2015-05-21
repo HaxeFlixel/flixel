@@ -25,7 +25,7 @@ class MenuState extends FlxUIState
 		_makeCursor = true;
 		super.create();
 		
-		cursor.setDefaultKeys(FlxUICursor.KEYS_DEFAULT_ARROWS | FlxUICursor.KEYS_DEFAULT_TAB);
+		cursor.setDefaultKeys(FlxUICursor.KEYS_ARROWS | FlxUICursor.KEYS_TAB);
 		
 		click_text = cast _ui.getAsset("click_text");
 		move_text = cast _ui.getAsset("move_text");
@@ -78,43 +78,43 @@ class MenuState extends FlxUIState
 		
 		check = cast _ui.getAsset("check_tab");
 		if (check.checked) {
-			input = input | FlxUICursor.KEYS_DEFAULT_TAB;
+			input = input | FlxUICursor.KEYS_TAB;
 			modes.push("Tab/Shift+Tab");
 		}
 		check = cast _ui.getAsset("check_arrows");
 		if (check.checked) { 
-			input = input | FlxUICursor.KEYS_DEFAULT_ARROWS;
+			input = input | FlxUICursor.KEYS_ARROWS;
 			modes.push("Arrows");
 		}
 		check = cast _ui.getAsset("check_wasd");
 		if (check.checked) {
-			input = input | FlxUICursor.KEYS_DEFAULT_WASD;
+			input = input | FlxUICursor.KEYS_WASD;
 			modes.push("WASD");
 		}
 		check = cast _ui.getAsset("check_numpad");
 		if (check.checked) { 
-			input = input | FlxUICursor.KEYS_DEFAULT_NUMPAD; 
+			input = input | FlxUICursor.KEYS_NUMPAD; 
 			modes.push("NUMPAD");
 		}
 		
 		check = cast _ui.getAsset("check_dpad");
 		if (check.checked) { 
-			input = input | FlxUICursor.GAMEPAD_DEFAULT_DPAD; 
+			input = input | FlxUICursor.GAMEPAD_DPAD; 
 			modes.push("DPAD");
 		}
 		check = cast _ui.getAsset("check_lstick");
 		if (check.checked) { 
-			input = input | FlxUICursor.GAMEPAD_DEFAULT_LEFT_STICK; 
+			input = input | FlxUICursor.GAMEPAD_LEFT_STICK; 
 			modes.push("LSTICK");
 		}
 		check = cast _ui.getAsset("check_rstick");
 		if (check.checked) { 
-			input = input | FlxUICursor.GAMEPAD_DEFAULT_RIGHT_STICK; 
+			input = input | FlxUICursor.GAMEPAD_RIGHT_STICK; 
 			modes.push("RSTICK");
 		}
 		check = cast _ui.getAsset("check_bumpers");
 		if (check.checked) { 
-			input = input | FlxUICursor.GAMEPAD_DEFAULT_SHOULDER_BUTTONS; 
+			input = input | FlxUICursor.GAMEPAD_SHOULDER_BUTTONS; 
 			modes.push("BUMPERS");
 		}
 		
