@@ -16,8 +16,8 @@ import flash.system.Capabilities;
 class FlxGamepad implements IFlxDestroyable
 {
 	public var id(default, null):Int;
-	public var model(default, null):GamepadModel;
-	public var buttonIndex:ButtonIndex;
+	public var model(default, set):GamepadModel;
+	public var buttonIndex(default, null):ButtonIndex;
 	public var buttons(default, null):Array<FlxGamepadButton> = [];
 	public var connected(default, null):Bool = true;
 	
@@ -70,13 +70,14 @@ class FlxGamepad implements IFlxDestroyable
 	{
 		id = ID;
 		
-		model = Model != null ? Model : Xbox;
+		if (Model == null) Model = Xbox;
+		
+		buttonIndex = new ButtonIndex(model);
+		model = Model;
 		
 		#if flash
 		_isChrome = (Capabilities.manufacturer == "Google Pepper");
 		#end
-		
-		buttonIndex = new ButtonIndex(model);
 		
 		if (GlobalDeadZone != 0)
 		{
@@ -87,6 +88,13 @@ class FlxGamepad implements IFlxDestroyable
 		justPressed = new FlxGamepadButtonList(FlxInputState.JUST_PRESSED, this);
 		justReleased = new FlxGamepadButtonList(FlxInputState.JUST_RELEASED, this);
 		analog = new FlxGamepadAnalogList(this);
+	}
+	
+	public function set_model(Model:GamepadModel):GamepadModel
+	{
+		model = Model;
+		buttonIndex.model = Model;
+		return model;
 	}
 	
 	public inline function getButtonID(RawID:Int):FlxGamepadButtonID
