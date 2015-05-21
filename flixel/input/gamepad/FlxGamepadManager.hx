@@ -3,7 +3,7 @@ package flixel.input.gamepad;
 import flash.Lib;
 import flixel.FlxG;
 import flixel.input.FlxInput.FlxInputState;
-import flixel.input.gamepad.FlxGamepadID;
+import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.input.gamepad.FlxGamepad;
 import flixel.util.FlxDestroyUtil;
 
@@ -237,7 +237,7 @@ class FlxGamepadManager implements IFlxInputManager
 	 * @param 	ButtonID  The button id (from 0 to 7).
 	 * @return 	Whether the button is pressed
 	 */
-	public function anyPressed(buttonID:FlxGamepadID):Bool
+	public function anyPressed(buttonID:FlxGamepadInputID):Bool
 	{
 		for (gamepad in _gamepads)
 		{
@@ -256,7 +256,7 @@ class FlxGamepadManager implements IFlxInputManager
 	 * @param 	ButtonID 	The button id (from 0 to 7).
 	 * @return 	Whether the button was just pressed
 	*/
-	public function anyJustPressed(buttonID:FlxGamepadID):Bool
+	public function anyJustPressed(buttonID:FlxGamepadInputID):Bool
 	{
 		for (gamepad in _gamepads)
 		{
@@ -275,7 +275,7 @@ class FlxGamepadManager implements IFlxInputManager
 	 * @param 	ButtonID 	The Button id (from 0 to 7).
 	 * @return 	Whether the button is just released.
 	*/
-	public function anyJustReleased(buttonID:FlxGamepadID):Bool
+	public function anyJustReleased(buttonID:FlxGamepadInputID):Bool
 	{
 		for (gamepad in _gamepads)
 		{
@@ -532,23 +532,23 @@ class FlxGamepadManager implements IFlxInputManager
 				if (oldx == -1)
 				{
 					newType = JOYSTICK_BUTTON_UP;
-					newId = gamepad.getRawID(FlxGamepadID.DPAD_LEFT);
+					newId = gamepad.getRawID(FlxGamepadInputID.DPAD_LEFT);
 				}
 				else if (oldx == 1)
 				{
 					newType = JOYSTICK_BUTTON_UP;
-					newId = gamepad.getRawID(FlxGamepadID.DPAD_RIGHT);
+					newId = gamepad.getRawID(FlxGamepadInputID.DPAD_RIGHT);
 				}
 				
 				if (newx == -1)
 				{
 					newType = JOYSTICK_BUTTON_DOWN;
-					newId = gamepad.getRawID(FlxGamepadID.DPAD_LEFT);
+					newId = gamepad.getRawID(FlxGamepadInputID.DPAD_LEFT);
 				}
 				else if (newx == 1)
 				{
 					newType = JOYSTICK_BUTTON_DOWN;
-					newId = gamepad.getRawID(FlxGamepadID.DPAD_RIGHT);
+					newId = gamepad.getRawID(FlxGamepadInputID.DPAD_RIGHT);
 				}
 			}
 			
@@ -559,23 +559,23 @@ class FlxGamepadManager implements IFlxInputManager
 				if (oldy == -1)
 				{
 					newType = JOYSTICK_BUTTON_UP;
-					newId = gamepad.getRawID(FlxGamepadID.DPAD_UP);
+					newId = gamepad.getRawID(FlxGamepadInputID.DPAD_UP);
 				}
 				else if (oldy == 1)
 				{
 					newType = JOYSTICK_BUTTON_UP;
-					newId = gamepad.getRawID(FlxGamepadID.DPAD_DOWN);
+					newId = gamepad.getRawID(FlxGamepadInputID.DPAD_DOWN);
 				}
 				
 				if (newy == -1)
 				{
 					newType = JOYSTICK_BUTTON_DOWN;
-					newId = gamepad.getRawID(FlxGamepadID.DPAD_UP);
+					newId = gamepad.getRawID(FlxGamepadInputID.DPAD_UP);
 				}
 				else if (newy == 1)
 				{
 					newType = JOYSTICK_BUTTON_DOWN;
-					newId = gamepad.getRawID(FlxGamepadID.DPAD_DOWN);
+					newId = gamepad.getRawID(FlxGamepadInputID.DPAD_DOWN);
 				}
 			}
 			

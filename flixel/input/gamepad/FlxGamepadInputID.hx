@@ -10,13 +10,13 @@ import flixel.system.macros.FlxMacroUtil;
  * Maps enum values and strings to unique integer codes
  */
 @:enum
-abstract FlxGamepadID(Int) from Int to Int
+abstract FlxGamepadInputID(Int) from Int to Int
 {
-	public static var fromStringMap(default, null):Map<String, FlxGamepadID>
-		= FlxMacroUtil.buildMap("flixel.input.gamepad.FlxGamepadID");
+	public static var fromStringMap(default, null):Map<String, FlxGamepadInputID>
+		= FlxMacroUtil.buildMap("flixel.input.gamepad.FlxGamepadInputID");
 		
-	public static var toStringMap(default, null):Map<FlxGamepadID, String>
-		= FlxMacroUtil.buildMap("flixel.input.gamepad.FlxGamepadID", true);
+	public static var toStringMap(default, null):Map<FlxGamepadInputID, String>
+		= FlxMacroUtil.buildMap("flixel.input.gamepad.FlxGamepadInputID", true);
 	
 	// Button Indices
 	var ANY               = -2;
