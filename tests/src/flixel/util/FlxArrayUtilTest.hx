@@ -44,7 +44,7 @@ class FlxArrayUtilTest
 	@Test
 	function testEqualsDifferentLength()
 	{
-		Assert.isTrue([1, 2, 3].equals([1, 2]));
+		Assert.isFalse([1, 2, 3].equals([1, 2]));
 	}
 	
 	@Test

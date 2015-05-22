@@ -141,7 +141,7 @@ class FlxArrayUtil
 		if (array1 != null && array2 == null)
 			return false;
 		if (array1.length != array2.length)
-			return true;
+			return false;
 		
 		for (i in 0...array1.length)
 		{
