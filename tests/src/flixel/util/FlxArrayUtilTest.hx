@@ -20,15 +20,13 @@ class FlxArrayUtilTest
 	@Test
 	function testEqualsNullNull()
 	{
-		var array:Array<Int> = null;
-		Assert.isTrue(array.equals(null));
+		Assert.isTrue((null : Array<Int>).equals(null));
 	}
 	
 	@Test
 	function testEqualsNullNotNull()
 	{
-		var array:Array<Int> = null;
-		Assert.isFalse(array.equals([]));
+		Assert.isFalse((null : Array<Int>).equals([]));
 	}
 	
 	@Test
@@ -53,5 +51,11 @@ class FlxArrayUtilTest
 	function testEqualsSame()
 	{
 		Assert.isTrue([1, 2, 3].equals([1, 2, 3]));
+	}
+	
+	@Test
+	function testEqualsSameLengthButDifferent()
+	{
+		Assert.isFalse([1, 2, 3].equals([3, 2, 1]));
 	}
 }
