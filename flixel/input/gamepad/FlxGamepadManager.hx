@@ -5,6 +5,7 @@ import flixel.input.FlxInput.FlxInputState;
 import flixel.input.gamepad.FlxGamepad;
 import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.util.FlxDestroyUtil;
+using flixel.util.FlxStringUtil;
 
 #if FLX_OPENFL_JOYSTICK_API
 import openfl.events.JoystickEvent;
@@ -443,12 +444,12 @@ class FlxGamepadManager implements IFlxInputManager
 		}
 		
 		// needs to be checked even though it's default to not mistake it for XInput on flash 
-		return   if (str.indexOf("xbox") != -1 && str.indexOf("360") != -1) XBox360;
-			else if (str.indexOf("playstation") != -1)  PS3;        //"Sony PLAYSTATION(R)3 Controller"
-			else if (str.indexOf("ouya") != -1) OUYA;               //"OUYA Game Controller"
-			else if (str.indexOf("wireless controller") != -1) PS4; //"Wireless Controller"
-			else if (str.indexOf("logitech") != -1) Logitech;
-			else if (str.indexOf("xinput") != -1) XInput;
+		return   if (str.contains("xbox") && str.contains("360")) XBox360;
+			else if (str.contains("playstation"))  PS3;        //"Sony PLAYSTATION(R)3 Controller"
+			else if (str.contains("ouya")) OUYA;               //"OUYA Game Controller"
+			else if (str.contains("wireless controller")) PS4; //"Wireless Controller"
+			else if (str.contains("logitech")) Logitech;
+			else if (str.contains("xinput")) XInput;
 			else XBox360; //default
 	}
 	

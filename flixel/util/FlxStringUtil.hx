@@ -558,6 +558,11 @@ class FlxStringUtil
 		output = output.substr(0, output.length - 2).trim();
 		return (output + ")");
 	}
+	
+	public static inline function contains(s:String, str:String):Bool
+	{
+		return s.indexOf(str) != -1;
+	}
 }
 
 class LabelValuePair implements IFlxDestroyable
