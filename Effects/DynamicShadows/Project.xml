@@ -2,7 +2,7 @@
 <project>
 	<!------------------------------APPLICATION SETTINGS---------------------------->
 	
-	<app title="GamepadTest" file="GamepadTest" main="Main" version="0.0.1" company="HaxeFlixel" />
+	<app title="DynamicShadows" file="DynamicShadows" main="Main" version="0.0.1" company="HaxeFlixel" />
 	
 	<!--The flixel preloader is not accurate in Chrome. You can use it regularly if you embed the swf into a html file
 	<!--or you can set the actual size of your file manually at "FlxPreloaderBase-onUpdate-bytesTotal"!-->
@@ -14,7 +14,7 @@
 	<!--------------------------------WINDOW SETTINGS------------------------------->
 	
 	<!--These window settings apply to all targets-->
-	<window width="526" height="390" fps="60" background="#000000" hardware="true" vsync="true" />
+	<window width="640" height="320" fps="60" background="#000000" hardware="true" vsync="true" />
 	
 	<!--Web-specific-->
 	<window if="web" orientation="portrait"  />
@@ -36,13 +36,13 @@
 	<haxelib name="flixel"/>
 	
 	<!--In case you want to use the addons package-->
-	<!--haxelib name="flixel-addons" /-->
+	<haxelib name="flixel-addons" />
 	
 	<!--In case you want to use the ui package-->
-	<haxelib name="flixel-ui"/>
+	<!--haxelib name="flixel-ui"/-->
 	
 	<!--In case you want to use nape with flixel-->
-	<!--haxelib name="nape" /-->
+	<haxelib name="nape" />
 	
 	<!--------------------------------HAXEDEFINES----------------------------------->
 	
@@ -56,9 +56,9 @@
 	<!--haxedef name="FLX_NO_NATIVE_CURSOR" /-->
 	
 	<!--Optimise inputs, be careful you will get null errors if you don't use conditionals in your game-->
-	<haxedef name="FLX_NO_MOUSE" if="mobile" />
-	<haxedef name="FLX_NO_KEYBOARD" if="mobile" />
-	<haxedef name="FLX_NO_TOUCH" if="desktop" />
+	<!--haxedef name="FLX_NO_MOUSE" if="mobile" /-->
+	<!--haxedef name="FLX_NO_KEYBOARD" if="mobile" /-->
+	<!--haxedef name="FLX_NO_TOUCH" if="desktop" /-->
 	<!--haxedef name="FLX_NO_GAMEPAD" /-->
 	
 	<!--Disable the Flixel core sound tray-->
