@@ -21,9 +21,9 @@ class FlxGamepadAnalogList
 	public var LEFT_TRIGGER   (get, never):Float; inline function get_LEFT_TRIGGER()     { return getAxis (FlxGamepadInputID.LEFT_TRIGGER);           }
 	public var RIGHT_TRIGGER  (get, never):Float; inline function get_RIGHT_TRIGGER()    { return getAxis (FlxGamepadInputID.RIGHT_TRIGGER);          }
 	
-	public function new(Gamepad:FlxGamepad)
+	public function new(gamepad:FlxGamepad)
 	{
-		gamepad = Gamepad;
+		this.gamepad = gamepad;
 	}
 	
 	private inline function getAxis(id:FlxGamepadInputID):Float
