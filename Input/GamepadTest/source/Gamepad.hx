@@ -33,6 +33,7 @@ class Gamepad extends FlxTypedGroup<FlxSprite>
 	var yButton:FlxSprite;
 	
 	var backButton:FlxSprite;
+	var guideButton:FlxSprite;
 	var startButton:FlxSprite;
 	
 	var leftShoulder:FlxSprite;
@@ -53,7 +54,7 @@ class Gamepad extends FlxTypedGroup<FlxSprite>
 		leftShoulder = createSprite(71, LB_Y, "LB", 1);
 		rightShoulder = createSprite(367, RB_Y, "RB", 1);
 		
-		createSprite(0, 0, "xbox360_gamepad", 1);
+		createSprite(0, 0, "gamepad", 1);
 		
 		leftStick = createSprite(LEFT_STICK_POS.x, LEFT_STICK_POS.y, "Stick");
 		rightStick = createSprite(RIGHT_STICK_POS.x, RIGHT_STICK_POS.y, "Stick");
@@ -67,6 +68,7 @@ class Gamepad extends FlxTypedGroup<FlxSprite>
 		bButton = createSprite(433, 84, "B");
 		
 		backButton = createSprite(199, 93, "Back");
+		guideButton = createSprite(235, 73, "Guide");
 		startButton = createSprite(306, 93, "Start");
 	}
 	
@@ -100,12 +102,13 @@ class Gamepad extends FlxTypedGroup<FlxSprite>
 		
 		var pressed = gamepad.pressed;
 		
-		updateButton(aButton, gamepad.pressed.A);
+		updateButton(aButton, pressed.A);
 		updateButton(bButton, pressed.B);
 		updateButton(xButton, pressed.X);
 		updateButton(yButton, pressed.Y);
 		
 		updateButton(startButton, pressed.START);
+		updateButton(guideButton, pressed.GUIDE);
 		updateButton(backButton, pressed.BACK);
 		
 		updateShoulderButton(leftShoulder, pressed.LEFT_SHOULDER, LB_Y);
