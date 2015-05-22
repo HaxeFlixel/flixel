@@ -4,6 +4,7 @@ import flash.display.BitmapData;
 import flixel.FlxSprite;
 import flixel.util.FlxColor;
 import massive.munit.Assert;
+using flixel.util.FlxArrayUtil;
 
 class FlxAnimationControllerTest extends FlxTest
 {
@@ -75,7 +76,7 @@ class FlxAnimationControllerTest extends FlxTest
 		loadSpriteSheet();
 		sprite.animation.add("animation", animation);
 		
-		FlxAssert.arraysAreEqual([0, 1, 2], animation);
+		Assert.isTrue([0, 1, 2].equals(animation));
 	}
 	
 	function loadSpriteSheet():Void

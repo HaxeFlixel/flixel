@@ -113,6 +113,7 @@ class FlxArrayUtil
 	
 	/**
 	 * Flattens 2D arrays into 1D arrays.
+	 * Example: [[1, 2], [3, 2], [1, 1]] -> [1, 2, 3, 2, 1, 1]
 	 */
 	@:generic
 	public static function flatten2DArray<T>(array:Array<Array<T>>):Array<T>
@@ -125,5 +126,30 @@ class FlxArrayUtil
 		}
 		
 		return result;
+	}
+	
+	/**
+	 * Compares the contents with == to see if the two arrays are the same.
+	 * Also takes null arrays and the length of the arrays into account.
+	 */
+	public static function equals<T>(array1:Array<T>, array2:Array<T>):Bool
+	{
+		if (array1 == null && array2 == null)
+			return true;
+		if (array1 == null && array2 != null)
+			return false;
+		if (array1 != null && array2 == null)
+			return false;
+		if (array1.length != array2.length)
+			return true;
+		
+		for (i in 0...array1.length)
+		{
+			if (array1[i] != array2[i])
+			{
+				return false;
+			}
+		}
+		return true;
 	}
 }

@@ -3,6 +3,7 @@ package flixel.util;
 import flixel.math.FlxPoint;
 import flixel.util.FlxPool;
 import massive.munit.Assert;
+using flixel.util.FlxArrayUtil;
 
 class FlxPoolTest extends FlxTest
 {
@@ -70,6 +71,6 @@ class FlxPoolTest extends FlxTest
 		
 		var old = ppool.clear();
 		
-		FlxAssert.arraysAreEqual([pt3, pt2, pt1, pt5, pt1], old);
+		Assert.isTrue([pt3, pt2, pt1, pt5, pt1].equals(old));
 	}
 }

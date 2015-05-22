@@ -5,6 +5,7 @@ import flash.errors.ArgumentError;
 import flixel.graphics.FlxGraphic;
 import flixel.tile.FlxTilemap;
 import massive.munit.Assert;
+using flixel.util.FlxArrayUtil;
 using StringTools;
 
 class FlxTilemapTest extends FlxTest
@@ -51,7 +52,7 @@ class FlxTilemapTest extends FlxTest
 		
 		Assert.areEqual(3, tilemap.widthInTiles);
 		Assert.areEqual(2, tilemap.heightInTiles);
-		FlxAssert.arraysAreEqual([0, 1, 0, 1, 1, 1], tilemap.getData());
+		Assert.isTrue([0, 1, 0, 1, 1, 1].equals(tilemap.getData()));
 	}
 	
 	@Test
@@ -64,7 +65,7 @@ class FlxTilemapTest extends FlxTest
 		
 		Assert.areEqual(3, tilemap.widthInTiles);
 		Assert.areEqual(2, tilemap.heightInTiles);
-		FlxAssert.arraysAreEqual([0, 1, 0, 1, 1, 1], tilemap.getData());
+		Assert.isTrue([0, 1, 0, 1, 1, 1].equals(tilemap.getData()));
 	}
 	
 	@Test
@@ -91,7 +92,7 @@ class FlxTilemapTest extends FlxTest
 		
 		Assert.areEqual(4, tilemap.widthInTiles);
 		Assert.areEqual(3, tilemap.heightInTiles);
-		FlxAssert.arraysAreEqual(sampleMapArray, tilemap.getData());
+		Assert.isTrue(sampleMapArray.equals(tilemap.getData()));
 	}
 	
 	function getBitmapData()
