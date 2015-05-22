@@ -1,25 +1,21 @@
 package flixel.input.gamepad;
 
-import flash.Lib;
 import flixel.FlxG;
 import flixel.input.FlxInput.FlxInputState;
 import flixel.input.gamepad.FlxGamepad;
+import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.util.FlxDestroyUtil;
 
 #if FLX_OPENFL_JOYSTICK_API
 import openfl.events.JoystickEvent;
 #end
 
-#if flash11_8
+#if (flash11_8 || next)
 import flash.ui.GameInput;
 import flash.ui.GameInputDevice;
 import flash.events.GameInputEvent;
 #end
 
-/**
- * Manages gamepad input
- * @author Zaphod
- */
 class FlxGamepadManager implements IFlxInputManager
 {
 	/**
@@ -37,8 +33,8 @@ class FlxGamepadManager implements IFlxInputManager
 	public var numActiveGamepads(get, null):Int;
 	
 	/**
-	 * While you can have each joystick use a custom dead zone, setting this will 
-	 * set every gamepad to use this deadzone.
+	 * Global Gamepad deadzone. The lower, the more sensitive the gamepad.
+	 * Should be between 0.0 and 1.0.
 	 */
 	public var globalDeadZone(default, set):Float = 0;
 	
@@ -51,16 +47,21 @@ class FlxGamepadManager implements IFlxInputManager
 	 */
 	private var _activeGamepads:Array<FlxGamepad> = [];
 	
-	#if flash11_8
+	#if (flash11_8 || next)
 	/**
 	 * GameInput needs to be statically created, otherwise GameInput.numDevices will be zero during construction.
 	 */
 	private static var _gameInput:GameInput = new GameInput();
 	#end
 	
+	#if (!flash)
+	private static inline var JOYSTICK_BUTTON_UP:String = "buttonUp";
+	private static inline var JOYSTICK_BUTTON_DOWN:String = "buttonDown";
+	#end
+	
 	/**
 	 * Returns a FlxGamepad with the specified ID or null if none was found.
-	 * E.g. if there are 4 gamepads connected, they will have the IDs 0-3.
+	 * For example, if there are 4 gamepads connected, they will have the IDs 0-3.
 	 */
 	public inline function getByID(GamepadID:Int):FlxGamepad
 	{
@@ -89,12 +90,12 @@ class FlxGamepadManager implements IFlxInputManager
 			firstActive = null;
 	}
 	
-	private function createByID(GamepadID:Int):FlxGamepad
+	private function createByID(GamepadID:Int, ?Model:FlxGamepadModel):FlxGamepad
 	{
 		var gamepad:FlxGamepad = _gamepads[GamepadID];
 		if (gamepad == null)
 		{
-			gamepad = new FlxGamepad(GamepadID, globalDeadZone);
+			gamepad = new FlxGamepad(GamepadID, globalDeadZone, Model);
 			_gamepads[GamepadID] = gamepad;
 			
 			//fill the first "empty spot" in the array
@@ -236,11 +237,11 @@ class FlxGamepadManager implements IFlxInputManager
 	 * @param 	ButtonID  The button id (from 0 to 7).
 	 * @return 	Whether the button is pressed
 	 */
-	public function anyPressed(ButtonID:Int):Bool
+	public function anyPressed(buttonID:FlxGamepadInputID):Bool
 	{
 		for (gamepad in _gamepads)
 		{
-			if ((gamepad != null) && gamepad.pressed(ButtonID))
+			if (gamepad != null && gamepad.checkStatus(buttonID, PRESSED))
 			{
 				return true;
 			}
@@ -255,11 +256,11 @@ class FlxGamepadManager implements IFlxInputManager
 	 * @param 	ButtonID 	The button id (from 0 to 7).
 	 * @return 	Whether the button was just pressed
 	*/
-	public function anyJustPressed(ButtonID:Int):Bool
+	public function anyJustPressed(buttonID:FlxGamepadInputID):Bool
 	{
 		for (gamepad in _gamepads)
 		{
-			if ((gamepad != null) && gamepad.justPressed(ButtonID))
+			if (gamepad != null && gamepad.checkStatus(buttonID, JUST_PRESSED))
 			{
 				return true;
 			}
@@ -274,11 +275,11 @@ class FlxGamepadManager implements IFlxInputManager
 	 * @param 	ButtonID 	The Button id (from 0 to 7).
 	 * @return 	Whether the button is just released.
 	*/
-	public function anyJustReleased(ButtonID:Int):Bool
+	public function anyJustReleased(buttonID:FlxGamepadInputID):Bool
 	{
 		for (gamepad in _gamepads)
 		{
-			if ((gamepad != null) && gamepad.justReleased(ButtonID))
+			if (gamepad != null && gamepad.checkStatus(buttonID, JUST_RELEASED))
 			{
 				return true;
 			}
@@ -293,13 +294,14 @@ class FlxGamepadManager implements IFlxInputManager
 	 * @param AxisID The axis id
 	 * @return Float Value from -1 to 1 or 0 if no X axes were moved
 	 */
-	public function anyMovedXAxis(AxisID:FlxGamepadAnalogStick):Float
+	public function anyMovedXAxis(RawAxisID:FlxGamepadAnalogStick):Float
 	{
 		for (gamepad in _gamepads)
 		{
-			if ((gamepad != null) && gamepad.getXAxis(AxisID) != 0)
+			if (gamepad != null)
 			{
-				return gamepad.getXAxis(AxisID);
+				var value = gamepad.getXAxisRaw(RawAxisID);
+				if (value != 0) return value;
 			}
 		}
 		
@@ -312,13 +314,14 @@ class FlxGamepadManager implements IFlxInputManager
 	 * @param AxisID The axis id
 	 * @return Float Value from -1 to 1 or 0 if no Y axes were moved
 	 */
-	public function anyMovedYAxis(AxisID:FlxGamepadAnalogStick):Float
+	public function anyMovedYAxis(RawAxisID:FlxGamepadAnalogStick):Float
 	{
 		for (gamepad in _gamepads)
 		{
-			if ((gamepad != null) && gamepad.getYAxis(AxisID) != 0)
+			if (gamepad != null)
 			{
-				return gamepad.getYAxis(AxisID);
+				var value = gamepad.getYAxisRaw(RawAxisID);
+				if (value != 0) return value;
 			}
 		}
 		
@@ -340,7 +343,7 @@ class FlxGamepadManager implements IFlxInputManager
 		lastActive = null;
 		_gamepads = null;
 		
-		#if flash11_8 
+		#if (flash11_8 || next)
 		// not sure this is needed - can't imagine any use case where FlxGamepadManager would be destroyed
 		_gameInput.removeEventListener(GameInputEvent.DEVICE_ADDED, onDeviceAdded);
 		_gameInput.removeEventListener(GameInputEvent.DEVICE_REMOVED, onDeviceRemoved);
@@ -374,7 +377,7 @@ class FlxGamepadManager implements IFlxInputManager
 		FlxG.stage.addEventListener(JoystickEvent.DEVICE_ADDED, handleDeviceAdded);
 		#end
 		
-		#if flash11_8
+		#if (flash11_8 || next)
 		_gameInput.addEventListener(GameInputEvent.DEVICE_ADDED, onDeviceAdded);
 		_gameInput.addEventListener(GameInputEvent.DEVICE_REMOVED, onDeviceRemoved);
 		
@@ -385,7 +388,7 @@ class FlxGamepadManager implements IFlxInputManager
 		#end
 	}
 	
-	#if flash11_8
+	#if (flash11_8 || next)
 	private function onDeviceAdded(Event:GameInputEvent):Void
 	{
 		addGamepad(Event.device);
@@ -421,10 +424,31 @@ class FlxGamepadManager implements IFlxInputManager
 			
 			if (id >= 0)
 			{
-				var gamepad:FlxGamepad = createByID(id);
+				var gamepad:FlxGamepad = createByID(id, getModelFromFlashDeviceName(Device.name));
 				gamepad._device = Device;
 			}
 		}
+	}
+	
+	private function getModelFromFlashDeviceName(str:String):FlxGamepadModel
+	{
+		str = str.toLowerCase();
+		var strip = ["-", "_"];
+		for (s in strip)
+		{
+			while (str.indexOf(s) != -1)
+			{
+				str = StringTools.replace(str, s, "");
+			}
+		}
+		
+		return
+			if (str.indexOf("playstation") != -1)  PS3;             //"Sony PLAYSTATION(R)3 Controller"
+			else if (str.indexOf("ouya") != -1) OUYA;               //"OUYA Game Controller"
+			else if (str.indexOf("wireless controller") != -1) PS4; //"Wireless Controller"
+			else if (str.indexOf("logitech") != -1) Logitech;
+			else if (str.indexOf("xinput") != -1) XInput;
+			else XBox360; //default
 	}
 	
 	private function removeGamepad(Device:GameInputDevice):Void
@@ -482,8 +506,92 @@ class FlxGamepadManager implements IFlxInputManager
 	private function handleHatMove(FlashEvent:JoystickEvent):Void
 	{
 		var gamepad:FlxGamepad = createByID(FlashEvent.device);
-		gamepad.hat.x = (Math.abs(FlashEvent.x) < gamepad.deadZone) ? 0 : FlashEvent.x;
-		gamepad.hat.y = (Math.abs(FlashEvent.y) < gamepad.deadZone) ? 0 : FlashEvent.y;
+		
+		var oldx = gamepad.hat.x;
+		var oldy = gamepad.hat.y;
+		
+		var newx = (Math.abs(FlashEvent.x) < gamepad.deadZone) ? 0 : FlashEvent.x;
+		var newy = (Math.abs(FlashEvent.y) < gamepad.deadZone) ? 0 : FlashEvent.y;
+		
+		gamepad.hat.x = newx;
+		gamepad.hat.y = newy;
+		
+		#if !flash
+			var newType:String = "";
+			var newId:Int = 0;
+			
+			var change = false;
+			
+			//We see if there's been a change so we can properly set "justPressed"/"justReleased", etc.
+			if (oldx != newx)
+			{
+				change = true;
+				
+				if (oldx == -1)
+				{
+					newType = JOYSTICK_BUTTON_UP;
+					newId = gamepad.getRawID(FlxGamepadInputID.DPAD_LEFT);
+				}
+				else if (oldx == 1)
+				{
+					newType = JOYSTICK_BUTTON_UP;
+					newId = gamepad.getRawID(FlxGamepadInputID.DPAD_RIGHT);
+				}
+				
+				if (newx == -1)
+				{
+					newType = JOYSTICK_BUTTON_DOWN;
+					newId = gamepad.getRawID(FlxGamepadInputID.DPAD_LEFT);
+				}
+				else if (newx == 1)
+				{
+					newType = JOYSTICK_BUTTON_DOWN;
+					newId = gamepad.getRawID(FlxGamepadInputID.DPAD_RIGHT);
+				}
+			}
+			
+			if (oldy != newy)
+			{
+				change = true;
+				
+				if (oldy == -1)
+				{
+					newType = JOYSTICK_BUTTON_UP;
+					newId = gamepad.getRawID(FlxGamepadInputID.DPAD_UP);
+				}
+				else if (oldy == 1)
+				{
+					newType = JOYSTICK_BUTTON_UP;
+					newId = gamepad.getRawID(FlxGamepadInputID.DPAD_DOWN);
+				}
+				
+				if (newy == -1)
+				{
+					newType = JOYSTICK_BUTTON_DOWN;
+					newId = gamepad.getRawID(FlxGamepadInputID.DPAD_UP);
+				}
+				else if (newy == 1)
+				{
+					newType = JOYSTICK_BUTTON_DOWN;
+					newId = gamepad.getRawID(FlxGamepadInputID.DPAD_DOWN);
+				}
+			}
+			
+			//Send a fake joystick button event that corresponds to the DPAD codes
+			if (change && newType != "")
+			{
+				var newEvent = new JoystickEvent(newType, FlashEvent.bubbles, FlashEvent.cancelable, FlashEvent.device, newId, FlashEvent.x, FlashEvent.y, FlashEvent.z);
+				
+				if (newType == JOYSTICK_BUTTON_UP)
+				{
+					handleButtonUp(newEvent);
+				}
+				else if (newType == JOYSTICK_BUTTON_DOWN)
+				{
+					handleButtonDown(newEvent);
+				}
+			}
+		#end
 	}
 
 	private function handleDeviceAdded(event:JoystickEvent):Void
@@ -531,12 +639,6 @@ class FlxGamepadManager implements IFlxInputManager
 		return count;
 	}
 	
-	/**
-	 * Facility function to set the deadzone on every available gamepad.
-	 * @param	DeadZone	Joystick deadzone. Sets the sensibility. 
-	 * 						Less this number the more Joystick is sensible.
-	 * 						Should be between 0.0 and 1.0.
-	 */
 	private function set_globalDeadZone(DeadZone:Float):Float
 	{
 		globalDeadZone = DeadZone;
