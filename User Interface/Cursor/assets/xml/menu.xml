@@ -76,7 +76,7 @@
 	
 	<text id="gamepad" x="32%" y="butt_0.top-16" align="left" width="20%" color="0xFFFFFF" text="Gamepad:"/>
 	
-	<checkbox id="check_dpad" label="DPAD" checked="false" x="32%">
+	<checkbox id="check_dpad" label="DPAD" checked="true" x="32%">
 		<anchor y="butt_0.top" x-flush="top"/>
 		<param type="string" value="dpad"/>
 	</checkbox>
