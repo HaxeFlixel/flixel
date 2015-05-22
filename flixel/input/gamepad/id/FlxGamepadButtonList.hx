@@ -25,7 +25,7 @@ class FlxGamepadButtonList extends FlxBaseGamepadList
 	public var DPAD_DOWN        (get, never):Bool; inline function get_DPAD_DOWN()         { return check(FlxGamepadInputID.DPAD_DOWN);          }
 	public var DPAD_LEFT        (get, never):Bool; inline function get_DPAD_LEFT()         { return check(FlxGamepadInputID.DPAD_LEFT);          }
 	public var DPAD_RIGHT       (get, never):Bool; inline function get_DPAD_RIGHT()        { return check(FlxGamepadInputID.DPAD_RIGHT);         }
-	#if(flash || next)
+	#if !FLX_OPENFL_JOYSTICK_API
 	public var LEFT_TRIGGER     (get, never):Bool; inline function get_LEFT_TRIGGER()      { return check(FlxGamepadInputID.LEFT_TRIGGER);       }
 	public var RIGHT_TRIGGER    (get, never):Bool; inline function get_RIGHT_TRIGGER()     { return check(FlxGamepadInputID.RIGHT_TRIGGER);      }
 	#else

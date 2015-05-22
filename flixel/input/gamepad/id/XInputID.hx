@@ -34,7 +34,7 @@ class XInputID
 	public static inline var LEFT_TRIGGER:Int = 4;
 	public static inline var RIGHT_TRIGGER:Int = 5;
 	
-	#if (!next)
+	#if FLX_OPENFL_JOYSTICK_API
 		//the axis index values for this don't overlap with anything so we can just return the original values!
 		public static function axisIndexToRawID(index:Int):Int
 		{

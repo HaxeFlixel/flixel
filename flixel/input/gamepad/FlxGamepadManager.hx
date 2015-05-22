@@ -469,7 +469,7 @@ class FlxGamepadManager implements IFlxInputManager
 	}
 	#end
 	
-	#if (FLX_OPENFL_JOYSTICK_API && !next)
+	#if FLX_OPENFL_JOYSTICK_API
 	private function handleButtonDown(FlashEvent:JoystickEvent):Void
 	{
 		var gamepad:FlxGamepad = createByID(FlashEvent.device);
