@@ -1028,6 +1028,9 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 */
 	private function onGameResize(_,_):Void
 	{
+		if (graphic == null)
+			return;
+		
 		for (i in 0...cameras.length)
 		{
 			var camera = cameras[i];
