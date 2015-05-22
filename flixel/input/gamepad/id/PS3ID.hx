@@ -3,7 +3,7 @@ package flixel.input.gamepad.id;
 import flixel.input.gamepad.FlxGamepad;
 
 /**
- * Button IDs for PlayStation 3 controllers
+ * IDs for PlayStation 3 controllers
  */
 class PS3ID
 {

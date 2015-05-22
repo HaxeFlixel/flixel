@@ -1,13 +1,14 @@
 package flixel.input.gamepad;
+
+import flixel.input.gamepad.FlxGamepad.FlxGamepadAnalogStick;
+import flixel.input.gamepad.FlxGamepad.FlxGamepadModel;
+import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.input.gamepad.id.LogitechID;
 import flixel.input.gamepad.id.OUYAID;
 import flixel.input.gamepad.id.PS3ID;
 import flixel.input.gamepad.id.PS4ID;
 import flixel.input.gamepad.id.XBox360ID;
 import flixel.input.gamepad.id.XInputID;
-import flixel.input.gamepad.FlxGamepadInputID;
-import flixel.input.gamepad.FlxGamepad.FlxGamepadAnalogStick;
-import flixel.input.gamepad.FlxGamepad.FlxGamepadModel;
 
 /**
  * ...
@@ -81,7 +82,7 @@ class FlxGamepadMapping
 				default: null;
 			}
 		}
-		if (ID == FlxGamepadInputID.RIGHT_ANALOG_STICK)
+		else if (ID == FlxGamepadInputID.RIGHT_ANALOG_STICK)
 		{
 			return switch(model)
 			{

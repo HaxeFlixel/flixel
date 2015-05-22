@@ -3,7 +3,7 @@ package flixel.input.gamepad.id;
 import flixel.input.gamepad.FlxGamepad;
 
 /**
- * Button IDs for PlayStation 4 controllers
+ * IDs for PlayStation 4 controllers
  * (D-pad values are obtained from FlxGamepad.hat)
  */
 class PS4ID

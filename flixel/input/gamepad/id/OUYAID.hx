@@ -3,13 +3,11 @@ package flixel.input.gamepad.id;
 import flixel.input.gamepad.FlxGamepad;
 
 /**
- * Button IDs for OUYA controllers
+ * IDs for OUYA controllers
  */
 class OUYAID
 {
-	/**
-	 * Button IDs (DPAD values are obtained from FlxGamepad.hat)
-	 */
+	// Button IDs
 	public static inline var O:Int = 0;
 	public static inline var U:Int = 3;
 	public static inline var Y:Int = 4;
@@ -28,13 +26,11 @@ class OUYAID
 	public static inline var DPAD_DOWN:Int = -3;
 	public static inline var DPAD_UP:Int = -4;
 	
-	/**
-	 * Axis array indicies
-	 * 
-	 * If TRIGGER axis returns value > 0 then LT is being pressed, and if it's < 0 then RT is being pressed
-	 */
+	// Axis indicies 
+	// If TRIGGER axis returns value > 0 then LT is being pressed, and if it's < 0 then RT is being pressed
 	public static var LEFT_ANALOG_STICK(default, null):FlxGamepadAnalogStick = [FlxAxes.X => 0, FlxAxes.Y => 1];
 	public static var RIGHT_ANALOG_STICK(default, null):FlxGamepadAnalogStick = [FlxAxes.X => 11, FlxAxes.Y => 14];
+	
 	public static inline var LEFT_TRIGGER_ANALOG:Int = 17;
 	public static inline var RIGHT_TRIGGER_ANALOG:Int = 18;
 } 

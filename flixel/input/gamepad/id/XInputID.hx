@@ -3,13 +3,11 @@ package flixel.input.gamepad.id;
 import flixel.input.gamepad.FlxGamepad;
 
 /**
- * Button IDs for generic XInput controllers
+ * IDs for generic XInput controllers
  */
 class XInputID
 {
-	/**
-	* Button IDs
-	*/
+	// Button IDs
 	public static inline var A:Int = 6;
 	public static inline var B:Int = 7;
 	public static inline var X:Int = 8;
@@ -23,7 +21,7 @@ class XInputID
 	
 	public static inline var GUIDE:Int = 11;
 	
-	//real dpad id's this time, no need for hats!
+	// real dpad id's this time, no need for hats!
 	public static inline var DPAD_UP:Int = 17;
 	public static inline var DPAD_DOWN:Int = 18;
 	public static inline var DPAD_LEFT:Int = 19;

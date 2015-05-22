@@ -1,10 +1,10 @@
 package flixel.input.gamepad;
 
 import flixel.input.FlxInput.FlxInputState;
-import flixel.input.gamepad.id.FlxGamepadAnalogList;
-import flixel.input.gamepad.FlxGamepadInputID;
-import flixel.input.gamepad.id.FlxGamepadButtonList;
 import flixel.input.gamepad.FlxGamepad.FlxGamepadModel;
+import flixel.input.gamepad.FlxGamepadInputID;
+import flixel.input.gamepad.id.FlxGamepadAnalogList;
+import flixel.input.gamepad.id.FlxGamepadButtonList;
 import flixel.math.FlxPoint;
 import flixel.math.FlxVector;
 import flixel.util.FlxDestroyUtil;
@@ -25,32 +25,14 @@ class FlxGamepad implements IFlxDestroyable
 	public var connected(default, null):Bool = true;
 	
 	/**
-	 * Gamepad deadzone. Sets the sensibility. 
-	 * Less this number the more sensitive the gamepad is. Should be between 0.0 and 1.0.
+	 * Gamepad deadzone. The lower, the more sensitive the gamepad.
+	 * Should be between 0.0 and 1.0.
 	 */
 	public var deadZone:Float = 0.15;
 	/**
 	 * Which dead zone mode to use for analog sticks.
 	 */
 	public var deadZoneMode:FlxGamepadDeadZoneMode = INDEPENDANT_AXES;
-	
-	#if !flash
-	public var hat(default, null):FlxPoint = FlxPoint.get();
-	public var ball(default, null):FlxPoint = FlxPoint.get();
-	#end
-	
-	/**
-	 * Axis array is read-only, use "getAxis" function for deadZone checking.
-	 */
-	private var axis:Array<Float> = [for (i in 0...6) 0];
-	
-	#if (flash || next)
-	private var _device:GameInputDevice; 
-	#end
-	
-	#if (flash)
-	private var _isChrome:Bool = false;
-	#end
 	
 	/**
 	 * Helper class to check if a button is pressed.
@@ -68,6 +50,21 @@ class FlxGamepad implements IFlxDestroyable
 	 * Helper class to get the float value of analog input.
 	 */
 	public var analog(default, null):FlxGamepadAnalogList;
+	
+	#if !flash
+	public var hat(default, null):FlxPoint = FlxPoint.get();
+	public var ball(default, null):FlxPoint = FlxPoint.get();
+	#end
+	
+	private var axis:Array<Float> = [for (i in 0...6) 0];
+	
+	#if (flash || next)
+	private var _device:GameInputDevice; 
+	#end
+	
+	#if (flash)
+	private var _isChrome:Bool = false;
+	#end
 	
 	public function new(ID:Int, GlobalDeadZone:Float = 0, ?Model:FlxGamepadModel) 
 	{
@@ -101,9 +98,7 @@ class FlxGamepad implements IFlxDestroyable
 	}
 	
 	/**
-	 * Given a raw integer, return the "universal" gamepad input ID
-	 * @param	RawID
-	 * @return
+	 * Returns the "universal" gamepad input ID Given a raw integer.
 	 */
 	public inline function getID(RawID:Int):FlxGamepadInputID
 	{
@@ -111,9 +106,7 @@ class FlxGamepad implements IFlxDestroyable
 	}
 	
 	/**
-	 * Given a "universal" gamepad input ID, return the raw hardware integer
-	 * @param	ID
-	 * @return
+	 * Returns the raw hardware integer given a "universal" gamepad input ID, 
 	 */
 	public inline function getRawID(ID:FlxGamepadInputID):Int
 	{
@@ -218,22 +211,21 @@ class FlxGamepad implements IFlxDestroyable
 	}
 	
 	/**
-	 * Check the status of a "universal" button ID, auto-mapped to this gamepad (something like FlxGamepadID.A)
+	 * Check the status of a "universal" button ID, auto-mapped to this gamepad (something like FlxGamepadInputID.A).
 	 * 
 	 * @param	ID			"universal" gamepad input ID
 	 * @param	Status		The key state to check for
 	 * @return	Whether the provided button has the specified status
 	 */
-	
 	public inline function checkStatus(ID:FlxGamepadInputID, Status:FlxInputState):Bool
 	{
 		return checkStatusRaw(getRawID(ID), Status);
 	}
 	
 	/**
-	 * Check the status of a raw button ID (ie, something like XBox360ID.A)
+	 * Check the status of a raw button ID (like XBox360ID.A).
 	 * 
-	 * @param	RawID	Index into _keyList array.
+	 * @param	RawID	Index into buttons array.
 	 * @param	Status	The key state to check for
 	 * @return	Whether the provided button has the specified status
 	 */
@@ -447,7 +439,7 @@ class FlxGamepad implements IFlxDestroyable
 	
 	/**
 	 * Gets the value of the specified axis using the "universal" ButtonID - 
-	 * use this only for things like <code>ButtonID.LEFT_TRIGGER</code>, 
+	 * use this only for things like FlxGamepadButtonID.LEFT_TRIGGER, 
 	 * use getXAxis() / getYAxis() for analog sticks!
 	 */
 	public inline function getAxis(AxisButtonID:FlxGamepadInputID):Float
@@ -457,7 +449,7 @@ class FlxGamepad implements IFlxDestroyable
 	
 	/**
 	 * Gets the value of the specified axis using the raw ID - 
-	 * use this only for things like <code>XboxButtonID.LEFT_TRIGGER</code>,
+	 * use this only for things like Xbox360ID.LEFT_TRIGGER,
 	 * use getXAxis() / getYAxis() for analog sticks!
 	 */
 	public inline function getAxisRaw(RawAxisID:Int):Float
@@ -466,8 +458,9 @@ class FlxGamepad implements IFlxDestroyable
 		if (Math.abs(axisValue) > deadZone)
 		{
 			#if (!flash && !next)
-				//in legacy this returns a (-1,1) range, but in flash/next it returns (0,1) so we normalize to (0,1) for legacy target only
-				axisValue = (axisValue+1) / 2;
+				// in legacy this returns a (-1,1) range, but in flash/next it
+				// returns (0,1) so we normalize to (0,1) for legacy target only
+				axisValue = (axisValue + 1) / 2;
 			#end
 			return axisValue;
 		}
@@ -475,9 +468,8 @@ class FlxGamepad implements IFlxDestroyable
 	}
 	
 	/**
-	 * Given a ButtonID for an analog stick, gets the value of its X axis
-	 * @param	AxesButtonID an analog stick, ie <code>ButtonID.LEFT_STICK</code> or <code>ButtonID.RIGHT_STICK</code>
-	 * @return	
+	 * Given a ButtonID for an analog stick, gets the value of its x axis
+	 * @param	AxesButtonID an analog stick like FlxGamepadButtonID.LEFT_STICK
 	 */
 	public inline function getXAxis(AxesButtonID:FlxGamepadInputID):Float
 	{
@@ -486,18 +478,16 @@ class FlxGamepad implements IFlxDestroyable
 	}
 	
 	/**
-	 * Given both raw ID's for the axes of an analog stick, gets the value of its X axis
-	 * @param	Axes a FlxGamepadAnalogStick value
+	 * Given both raw IDs for the axes of an analog stick, gets the value of its x axis
 	 */
-	public inline function getXAxisRaw(Axes:FlxGamepadAnalogStick):Float
+	public inline function getXAxisRaw(Stick:FlxGamepadAnalogStick):Float
 	{
-		return getAnalogueAxisValue(FlxAxes.X, Axes);
+		return getAnalogueAxisValue(FlxAxes.X, Stick);
 	}
 	
 	/**
-	 * Given a ButtonID for an analog stick, gets the value of its Y axis
-	 * @param	AxesButtonID an analog stick, ie <code>ButtonID.LEFT_STICK</code> or <code>ButtonID.RIGHT_STICK</code>
-	 * @return	
+	 * Given a ButtonID for an analog stick, gets the value of its y axis
+	 * @param	AxesButtonID an analog stick FlxGamepadButtonID.LEFT_STICK
 	 */
 	public inline function getYAxis(AxesButtonID:FlxGamepadInputID):Float
 	{
@@ -508,11 +498,10 @@ class FlxGamepad implements IFlxDestroyable
 	/**
 	 * Given both raw ID's for the axes of an analog stick, gets the value of its Y axis
 	 * (should be used in flash to correct the inverted y axis)
-	 * @param	Axes a FlxGamepadAnalogStick value
 	 */
-	public function getYAxisRaw(Axes:FlxGamepadAnalogStick):Float
+	public function getYAxisRaw(Stick:FlxGamepadAnalogStick):Float
 	{
-		var axisValue = getAnalogueAxisValue(FlxAxes.Y, Axes);
+		var axisValue = getAnalogueAxisValue(FlxAxes.Y, Stick);
 		
 		// the y axis is inverted on the Xbox gamepad in flash for some reason - but not in Chrome!
 		#if (flash)
@@ -541,7 +530,7 @@ class FlxGamepad implements IFlxDestroyable
 	}
 	
 	/**
-	 * Check to see if any buttons are pressed right or Axis, Ball and Hat Moved now.
+	 * Check to see if any buttons are pressed right or Axis, Ball and Hat moved now.
 	 */
 	public function anyInput():Bool
 	{
