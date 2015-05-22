@@ -169,3 +169,6 @@ dump
 
 *.hash
 Other/SpriteStressTest/
+Platformers/ModeNext/
+Platformers/Mode/ModeVCPP/
+Performance/FlxBunnyMarkNext/
