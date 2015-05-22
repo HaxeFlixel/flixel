@@ -118,11 +118,11 @@ class Gamepad extends FlxTypedGroup<FlxSprite>
 		
 		var analog = gamepad.analog;
 		
-		updateTrigger(analog.LEFT_TRIGGER, leftTrigger, LT_Y);
-		updateTrigger(analog.RIGHT_TRIGGER, rightTrigger, RT_Y);
+		updateTrigger(analog.value.LEFT_TRIGGER, leftTrigger, LT_Y);
+		updateTrigger(analog.value.RIGHT_TRIGGER, rightTrigger, RT_Y);
 		
-		updateStick(leftStick, analog.LEFT_STICK_X, analog.LEFT_STICK_Y, LEFT_STICK_POS);
-		updateStick(rightStick, analog.RIGHT_STICK_X, analog.RIGHT_STICK_Y, RIGHT_STICK_POS);
+		updateStick(leftStick, analog.value.LEFT_STICK_X, analog.value.LEFT_STICK_Y, LEFT_STICK_POS);
+		updateStick(rightStick, analog.value.RIGHT_STICK_X, analog.value.RIGHT_STICK_Y, RIGHT_STICK_POS);
 		
 		if (leftStick.alpha == ALPHA_OFF)
 			updateButton(leftStick, pressed.LEFT_STICK_CLICK);
