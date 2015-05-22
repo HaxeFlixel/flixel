@@ -10,6 +10,7 @@ import flixel.input.gamepad.id.FlxGamepadButtonList;
 import flixel.math.FlxPoint;
 import flixel.math.FlxVector;
 import flixel.util.FlxDestroyUtil;
+import flixel.util.FlxStringUtil;
 
 #if (flash || next)
 import flash.ui.GameInputControl;
@@ -669,6 +670,14 @@ class FlxGamepad implements IFlxDestroyable
 		if (Math.abs(axisValue) > deadZone)
 			return axisValue;
 		return 0;
+	}
+	
+	public function toString():String
+	{
+		return FlxStringUtil.getDebugString([
+			LabelValuePair.weak("id", id),
+			LabelValuePair.weak("model", model),
+			LabelValuePair.weak("deadZone", deadZone)]);
 	}
 }
 
