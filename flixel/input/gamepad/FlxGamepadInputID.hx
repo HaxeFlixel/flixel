@@ -19,45 +19,45 @@ abstract FlxGamepadInputID(Int) from Int to Int
 		= FlxMacroUtil.buildMap("flixel.input.gamepad.FlxGamepadInputID", true);
 	
 	// Button Indices
-	var ANY               = -2;
-	var NONE              = -1;
+	var ANY                  = -2;
+	var NONE                 = -1;
 	
 	/**BOTTOM face button*/ 
-	var A                 =  0;
+	var A                    =  0;
 	/**RIGHT face button*/  
-	var B                 =  1;
+	var B                    =  1;
 	/**LEFT face button*/
-	var X                 =  2;
+	var X                    =  2;
 	/**TOP face button*/
-	var Y                 =  3;
+	var Y                    =  3;
 	/**left digital "bumper"*/
-	var LEFT_SHOULDER     =  4;
+	var LEFT_SHOULDER        =  4;
 	/**right digital "bumper"*/
-	var RIGHT_SHOULDER    =  5;
+	var RIGHT_SHOULDER       =  5;
 	/**also known as "select", the leftmost center button*/
-	var BACK              =  6;
+	var BACK                 =  6;
 	/**the rightmost center button*/
-	var START             =  7;
+	var START                =  7;
 	/**digital click of the left analog stick*/
-	var LEFT_STICK_CLICK  =  8;
+	var LEFT_STICK_CLICK     =  8;
 	/**digital click of the right analog stick*/
-	var RIGHT_STICK_CLICK =  9;
+	var RIGHT_STICK_CLICK    =  9;
 	/**this is the "XBox" or "PS" or "home" button in the center*/
-	var GUIDE             = 10;
-	var DPAD_UP           = 11;
-	var DPAD_DOWN         = 12;
-	var DPAD_LEFT         = 13;
-	var DPAD_RIGHT        = 14;
+	var GUIDE                = 10;
+	var DPAD_UP              = 11;
+	var DPAD_DOWN            = 12;
+	var DPAD_LEFT            = 13;
+	var DPAD_RIGHT           = 14;
 	/**digital click at end of left analog trigger's squeeze (if available)*/
-	var LEFT_TRIGGER_BTN  = 15;
+	var LEFT_TRIGGER_BUTTON  = 15;
 	/**digital click at end of right analog trigger's squeeze (if available)*/
-	var RIGHT_TRIGGER_BTN = 16;
+	var RIGHT_TRIGGER_BUTTON = 16;
 	
-	var LEFT_TRIGGER       = 17;
-	var RIGHT_TRIGGER      = 18;
+	var LEFT_TRIGGER         = 17;
+	var RIGHT_TRIGGER        = 18;
 	
-	var LEFT_ANALOG_STICK  = 19;
-	var RIGHT_ANALOG_STICK = 20;
+	var LEFT_ANALOG_STICK    = 19;
+	var RIGHT_ANALOG_STICK   = 20;
 	
 	@:from
 	public static inline function fromString(s:String)
