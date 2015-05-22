@@ -173,6 +173,29 @@ class FlxGamepad implements IFlxDestroyable
 				button.press();
 			}
 		}
+		#else
+		
+		for (i in 0...axis.length)
+		{
+			//do a reverse axis lookup to get a "fake" RawID and generate a button state object
+			var button = getButton(axisIndexToRawID(i));
+			
+			if (button != null)
+			{
+				//TODO: account for circular deadzone if an analog stick input is detected?
+				var value = Math.abs(axis[i]);
+				if (value > deadZone)
+				{
+					button.press();
+				}
+				else if (value < deadZone)
+				{
+					button.release();
+				}
+			}
+			
+			axisActive = false;
+		}
 		#end
 		
 		for (button in buttons)
@@ -470,15 +493,29 @@ class FlxGamepad implements IFlxDestroyable
 		var axisValue = getAxisValue(RawAxisID);
 		if (Math.abs(axisValue) > deadZone)
 		{
-			#if (!flash && !next)
-				// in legacy this returns a (-1,1) range, but in flash/next it
-				// returns (0,1) so we normalize to (0,1) for legacy target only
-				axisValue = (axisValue + 1) / 2;
-			#end
 			return axisValue;
 		}
 		return 0;
 	}
+	
+	#if(!flash && !next)
+	/**
+	 * Given the array index into the axis array from the legacy joystick API, returns the "fake" RawID for button status
+	 * @param	RawAxisID
+	 */
+	public inline function axisIndexToRawID(AxisIndex:Int):Int
+	{
+		return buttonIndex.axisIndexToRawID(AxisIndex);
+	}
+	
+	public inline function isAxisForAnalogStick(AxisIndex:Int):Bool
+	{
+		return AxisIndex == leftStick.x  ||
+		       AxisIndex == leftStick.y  ||
+		       AxisIndex == rightStick.x ||
+		       AxisIndex == rightStick.y;
+	}
+	#end
 	
 	/**
 	 * Given a ButtonID for an analog stick, gets the value of its x axis
