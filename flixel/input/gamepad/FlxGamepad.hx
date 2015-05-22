@@ -4,8 +4,8 @@ import flixel.input.FlxInput.FlxInputState;
 import flixel.input.gamepad.FlxGamepad.FlxGamepadAnalogStick;
 import flixel.input.gamepad.FlxGamepad.FlxGamepadModel;
 import flixel.input.gamepad.FlxGamepadInputID;
-import flixel.input.gamepad.id.FlxGamepadAnalog;
 import flixel.input.gamepad.id.FlxGamepadAnalogList;
+import flixel.input.gamepad.id.FlxGamepadAnalogValueList;
 import flixel.input.gamepad.id.FlxGamepadButtonList;
 import flixel.math.FlxPoint;
 import flixel.math.FlxVector;
@@ -51,7 +51,7 @@ class FlxGamepad implements IFlxDestroyable
 	/**
 	 * Helper class to get the justMoved, justReleased, and float values of analog input.
 	 */
-	public var analog(default, null):FlxGamepadAnalog;
+	public var analog(default, null):FlxGamepadAnalogList;
 	
 	#if !flash
 	public var hat(default, null):FlxPoint = FlxPoint.get();
@@ -95,7 +95,7 @@ class FlxGamepad implements IFlxDestroyable
 		pressed = new FlxGamepadButtonList(FlxInputState.PRESSED, this);
 		justPressed = new FlxGamepadButtonList(FlxInputState.JUST_PRESSED, this);
 		justReleased = new FlxGamepadButtonList(FlxInputState.JUST_RELEASED, this);
-		analog = new FlxGamepadAnalog(this);
+		analog = new FlxGamepadAnalogList(this);
 	}
 	
 	public function set_model(Model:FlxGamepadModel):FlxGamepadModel
