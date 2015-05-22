@@ -23,8 +23,8 @@ class LogitechID
 	public static inline var RIGHT_STICK_CLICK:Int = 19;
 	
 	// Axis indices
-	public static var LEFT_ANALOG_STICK(default, null):FlxGamepadAnalogStick = [FlxAxes.X => 0, FlxAxes.Y => 1];
-	public static var RIGHT_ANALOG_STICK(default, null):FlxGamepadAnalogStick = [FlxAxes.X => 2, FlxAxes.Y => 3];
+	public static var LEFT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(0, 1);
+	public static var RIGHT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(2, 3);
 	
 	public static inline var DPAD_UP:Int = 4;
 	public static inline var DPAD_DOWN:Int = 5;
@@ -59,7 +59,7 @@ class LogitechID
 	public static inline var LOGITECH:Int = -5;
 	
 	// Axis indices
-	public static var LEFT_ANALOG_STICK(default, null):FlxGamepadAnalogStick = [FlxAxes.X => 0, FlxAxes.Y => 1];
-	public static var RIGHT_ANALOG_STICK(default, null):FlxGamepadAnalogStick = [FlxAxes.X => 2, FlxAxes.Y => #if js 5 #else 3 #end];
+	public static var LEFT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(0, 1);
+	public static var RIGHT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(2, 3);
 #end
 }

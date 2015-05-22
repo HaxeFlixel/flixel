@@ -26,8 +26,8 @@ class PS3ID
 	public static inline var DPAD_LEFT:Int = 7;
 	public static inline var DPAD_RIGHT:Int = 5;
 	
-	public static var LEFT_ANALOG_STICK(default, null):FlxGamepadAnalogStick = [FlxAxes.X => 0, FlxAxes.Y => 1];
-	public static var RIGHT_ANALOG_STICK(default, null):FlxGamepadAnalogStick = [FlxAxes.X => 2, FlxAxes.Y => 3];
+	public static var LEFT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(0, 1);
+	public static var RIGHT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(2, 3);
 	
 	public static inline var TRIANGLE_PRESSURE:Int = 16;
 	public static inline var CIRCLE_PRESSURE:Int = 17;

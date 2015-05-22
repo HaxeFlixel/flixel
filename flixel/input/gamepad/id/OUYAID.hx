@@ -28,8 +28,8 @@ class OUYAID
 	
 	// Axis indicies 
 	// If TRIGGER axis returns value > 0 then LT is being pressed, and if it's < 0 then RT is being pressed
-	public static var LEFT_ANALOG_STICK(default, null):FlxGamepadAnalogStick = [FlxAxes.X => 0, FlxAxes.Y => 1];
-	public static var RIGHT_ANALOG_STICK(default, null):FlxGamepadAnalogStick = [FlxAxes.X => 11, FlxAxes.Y => 14];
+	public static var LEFT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(0, 1);
+	public static var RIGHT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(11, 14);
 	
 	public static inline var LEFT_TRIGGER_ANALOG:Int = 17;
 	public static inline var RIGHT_TRIGGER_ANALOG:Int = 18;

@@ -1,6 +1,7 @@
 package flixel.input.gamepad;
 
 import flixel.input.FlxInput.FlxInputState;
+import flixel.input.gamepad.FlxGamepad.FlxGamepadAnalogStick;
 import flixel.input.gamepad.FlxGamepad.FlxGamepadModel;
 import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.input.gamepad.id.FlxGamepadAnalogList;
@@ -473,8 +474,7 @@ class FlxGamepad implements IFlxDestroyable
 	 */
 	public inline function getXAxis(AxesButtonID:FlxGamepadInputID):Float
 	{
-		var axesValue = getRawAnalogStick(AxesButtonID);
-		return getAnalogueAxisValue(FlxAxes.X, axesValue);
+		return getAnalogXAxisValue(getRawAnalogStick(AxesButtonID));
 	}
 	
 	/**
@@ -482,7 +482,7 @@ class FlxGamepad implements IFlxDestroyable
 	 */
 	public inline function getXAxisRaw(Stick:FlxGamepadAnalogStick):Float
 	{
-		return getAnalogueAxisValue(FlxAxes.X, Stick);
+		return getAnalogXAxisValue(Stick);
 	}
 	
 	/**
@@ -491,8 +491,7 @@ class FlxGamepad implements IFlxDestroyable
 	 */
 	public inline function getYAxis(AxesButtonID:FlxGamepadInputID):Float
 	{
-		var axesValue = getRawAnalogStick(AxesButtonID);
-		return getYAxisRaw(axesValue);
+		return getYAxisRaw(getRawAnalogStick(AxesButtonID));
 	}
 	
 	/**
@@ -501,7 +500,7 @@ class FlxGamepad implements IFlxDestroyable
 	 */
 	public function getYAxisRaw(Stick:FlxGamepadAnalogStick):Float
 	{
-		var axisValue = getAnalogueAxisValue(FlxAxes.Y, Stick);
+		var axisValue = getAnalogYAxisValue(Stick);
 		
 		// the y axis is inverted on the Xbox gamepad in flash for some reason - but not in Chrome!
 		#if (flash)
@@ -583,31 +582,43 @@ class FlxGamepad implements IFlxDestroyable
 		return axisValue;
 	}
 	
-	private function getAnalogueAxisValue(Axis:FlxAxes, Axes:FlxGamepadAnalogStick):Float
+	private function getAnalogXAxisValue(stick:FlxGamepadAnalogStick):Float
 	{
-		if (deadZoneMode == CIRCULAR)
-		{
-			var xAxis = getAxisValue(Axes.get(FlxAxes.X));
-			var yAxis = getAxisValue(Axes.get(FlxAxes.Y));
-			
-			var vector = FlxVector.get(xAxis, yAxis);
-			var length = vector.length;
-			vector.put();
-			
-			if (length > deadZone)
-			{
-				return (Axis == FlxAxes.X) ? xAxis : yAxis;
-			}
-		}
+		return if (deadZoneMode == CIRCULAR)
+			getAnalogAxisValueCircular(stick, stick.x);
 		else
-		{
-			var axisValue = getAxisValue(Axes.get(Axis));
-			if (Math.abs(axisValue) > deadZone)
-			{
-				return axisValue;
-			}
-		}
+			getAnalogAxisValueIndependant(stick.x);
+	}
+	
+	private function getAnalogYAxisValue(stick:FlxGamepadAnalogStick):Float
+	{
+		return if (deadZoneMode == CIRCULAR)
+			getAnalogAxisValueCircular(stick, stick.y);
+		else
+			getAnalogAxisValueIndependant(stick.y);
+	}
+	
+	private function getAnalogAxisValueCircular(stick:FlxGamepadAnalogStick, axisID:Int):Float
+	{
+		var xAxis = getAxisValue(stick.x);
+		var yAxis = getAxisValue(stick.y);
 		
+		var vector = FlxVector.get(xAxis, yAxis);
+		var length = vector.length;
+		vector.put();
+		
+		if (length > deadZone)
+		{
+			return getAxisValue(axisID);
+		}
+		return 0;
+	}
+	
+	private function getAnalogAxisValueIndependant(axisID:Int):Float
+	{
+		var axisValue = getAxisValue(axisID);
+		if (Math.abs(axisValue) > deadZone)
+			return axisValue;
 		return 0;
 	}
 }
@@ -626,12 +637,16 @@ enum FlxGamepadDeadZoneMode
 	CIRCULAR;
 }
 
-typedef FlxGamepadAnalogStick = Map<FlxAxes, Int>;
-
-enum FlxAxes
+class FlxGamepadAnalogStick
 {
-	X;
-	Y;
+	public var x(default, null):Int;
+	public var y(default, null):Int;
+	
+	public function new(x:Int, y:Int)
+	{
+		this.x = x;
+		this.y = y;
+	}
 }
 
 enum FlxGamepadModel

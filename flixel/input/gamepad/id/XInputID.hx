@@ -27,11 +27,9 @@ class XInputID
 	public static inline var DPAD_LEFT:Int = 19;
 	public static inline var DPAD_RIGHT:Int = 20;
 	
-	/**
-	* Axis array indicies
-	*/
-	public static var LEFT_ANALOG_STICK(default, null):FlxGamepadAnalogStick = [FlxAxes.X => 0, FlxAxes.Y => 1];
-	public static var RIGHT_ANALOG_STICK(default, null):FlxGamepadAnalogStick = [FlxAxes.X => 2, FlxAxes.Y => 3];
+	// Axis indices
+	public static var LEFT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(0, 1);
+	public static var RIGHT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(2, 3);
 	
 	public static inline var LEFT_TRIGGER:Int = 4;
 	public static inline var RIGHT_TRIGGER:Int = 5;

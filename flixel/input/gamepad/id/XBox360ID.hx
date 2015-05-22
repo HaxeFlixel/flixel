@@ -29,8 +29,8 @@ class XBox360ID
 	public static inline var XBOX:Int = -1;
 	
 	// Axis indices
-	public static var LEFT_ANALOG_STICK(default, null):FlxGamepadAnalogStick = [FlxAxes.X => 0, FlxAxes.Y => 1];
-	public static var RIGHT_ANALOG_STICK(default, null):FlxGamepadAnalogStick = [FlxAxes.X => 2, FlxAxes.Y => 3];
+	public static var LEFT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(0, 1);
+	public static var RIGHT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(2, 3);
 	
 	public static inline var LEFT_TRIGGER:Int = 10;
 	public static inline var RIGHT_TRIGGER:Int = 11;
@@ -58,8 +58,8 @@ class XBox360ID
 	public static inline var XBOX:Int = -1;
 	
 	// Axis indices
-	public static var LEFT_ANALOG_STICK(default, null):FlxGamepadAnalogStick = [FlxAxes.X => 0, FlxAxes.Y => 1];
-	public static var RIGHT_ANALOG_STICK(default, null):FlxGamepadAnalogStick = [FlxAxes.X => 2, FlxAxes.Y => 3];
+	public static var LEFT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(0, 1);
+	public static var RIGHT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(2, 3);
 #elseif mac
 	// Button IDs
 	public static inline var A:Int = 0;
@@ -81,8 +81,8 @@ class XBox360ID
 	public static inline var DPAD_RIGHT:Int = 14;
 	
 	// Axis indices
-	public static var LEFT_ANALOG_STICK(default, null):FlxGamepadAnalogStick = [FlxAxes.X => 0, FlxAxes.Y => 1];
-	public static var RIGHT_ANALOG_STICK(default, null):FlxGamepadAnalogStick = [FlxAxes.X => 3, FlxAxes.Y => 4];
+	public static var LEFT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(0, 1);
+	public static var RIGHT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(3, 4);
 	public static inline var LEFT_TRIGGER:Int = 2;
 	public static inline var RIGHT_TRIGGER:Int = 5;
 #elseif linux
@@ -106,8 +106,8 @@ class XBox360ID
 	public static inline var DPAD_RIGHT:Int = 12;
 	
 	// Axis indices
-	public static var LEFT_ANALOG_STICK(default, null):FlxGamepadAnalogStick = [FlxAxes.X => 0, FlxAxes.Y => 1];
-	public static var RIGHT_ANALOG_STICK(default, null):FlxGamepadAnalogStick = [FlxAxes.X => 3, FlxAxes.Y => 4];
+	public static var LEFT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(0, 1);
+	public static var RIGHT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(3, 4);
 	public static inline var LEFT_TRIGGER:Int = 2;
 	public static inline var RIGHT_TRIGGER:Int = 5;
 #else // windows
@@ -135,8 +135,7 @@ class XBox360ID
 	public static inline var LEFT_TRIGGER:Int = 2;
 	public static inline var RIGHT_TRIGGER:Int = 5;
 	
-	public static var LEFT_ANALOG_STICK(default, null):FlxGamepadAnalogStick = [FlxAxes.X => 0, FlxAxes.Y => 1];
-	public static var RIGHT_ANALOG_STICK(default, null):FlxGamepadAnalogStick = [FlxAxes.X => 3, FlxAxes.Y => 4];
-	
+	public static var LEFT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(0, 1);
+	public static var RIGHT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(3, 4);
 #end
 }

@@ -24,8 +24,8 @@ class PS4ID
 	public static inline var LEFT_STICK_CLICK:Int = 10;
 	public static inline var RIGHT_STICK_CLICK:Int = 11;
 	
-	public static var LEFT_ANALOG_STICK(default, null):FlxGamepadAnalogStick = [FlxAxes.X => 0, FlxAxes.Y => 1];
-	public static var RIGHT_ANALOG_STICK(default, null):FlxGamepadAnalogStick = [FlxAxes.X => 2, FlxAxes.Y => 5];
+	public static var LEFT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(0 , 1);
+	public static var RIGHT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(2, 5);
 	
 	public static inline var L2_Y:Int = 3;
 	public static inline var R2_Y:Int = 4;
