@@ -150,7 +150,7 @@ class FlxConditionals
 			Compiler.define(FLX_NATIVE_CURSOR);
 		}
 		
-		if (defined("cpp") || defined("neko") || defined("bitfive"))
+		if (!defined("next") && (defined("cpp") || defined("neko") || defined("bitfive")))
 		{
 			Compiler.define(FLX_OPENFL_JOYSTICK_API);
 		}

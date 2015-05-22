@@ -61,7 +61,7 @@ class FlxGamepad implements IFlxDestroyable
 	private var axis:Array<Float> = [for (i in 0...6) 0];
 	private var axisActive:Bool = false;
 	
-	#if (!flash && !next)
+	#if FLX_OPENFL_JOYSTICK_API
 	private var leftStick:FlxGamepadAnalogStick;
 	private var rightStick:FlxGamepadAnalogStick;
 	#end
@@ -102,7 +102,7 @@ class FlxGamepad implements IFlxDestroyable
 	{
 		model = Model;
 		buttonIndex.model = Model;
-		#if (!flash && !next)
+		#if FLX_OPENFL_JOYSTICK_API
 			leftStick = getRawAnalogStick(FlxGamepadInputID.LEFT_ANALOG_STICK);
 			rightStick = getRawAnalogStick(FlxGamepadInputID.RIGHT_ANALOG_STICK);
 		#end
@@ -498,7 +498,7 @@ class FlxGamepad implements IFlxDestroyable
 		return 0;
 	}
 	
-	#if(!flash && !next)
+	#if FLX_OPENFL_JOYSTICK_API
 	/**
 	 * Given the array index into the axis array from the legacy joystick API, returns the "fake" RawID for button status
 	 * @param	RawAxisID

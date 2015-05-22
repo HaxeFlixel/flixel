@@ -98,7 +98,7 @@ class FlxGamepadMapping
 		return null;
 	}
 	
-	#if(!flash && !next)
+	#if FLX_OPENFL_JOYSTICK_API
 		/**
 		 * Given an axis index value like 0-6, figures out which input that corresponds to and returns a "fake" ButtonID for that input
 		 * @param	AxisID
@@ -163,7 +163,7 @@ class FlxGamepadMapping
 			case DPAD_RIGHT: LogitechID.DPAD_RIGHT;
 			case LEFT_TRIGGER: LogitechID.SEVEN;
 			case RIGHT_TRIGGER: LogitechID.EIGHT;
-			#if (!flash && !next)
+			#if FLX_OPENFL_JOYSTICK_API
 			case LEFT_TRIGGER_FAKE: LogitechID.LEFT_TRIGGER_FAKE;
 			case RIGHT_TRIGGER_FAKE: LogitechID.RIGHT_TRIGGER_FAKE;
 			#end
@@ -192,7 +192,7 @@ class FlxGamepadMapping
 			case DPAD_RIGHT: PS4ID.DPAD_RIGHT;
 			case LEFT_TRIGGER: PS4ID.L2;
 			case RIGHT_TRIGGER: PS4ID.R2;
-			#if (!flash && !next)
+			#if FLX_OPENFL_JOYSTICK_API
 			case LEFT_TRIGGER_FAKE: PS4ID.LEFT_TRIGGER_FAKE;
 			case RIGHT_TRIGGER_FAKE: PS4ID.RIGHT_TRIGGER_FAKE;
 			#end
@@ -221,7 +221,7 @@ class FlxGamepadMapping
 			case DPAD_RIGHT: PS3ID.DPAD_RIGHT;
 			case LEFT_TRIGGER: PS3ID.L2;
 			case RIGHT_TRIGGER: PS3ID.R2;
-			#if (!flash && !next)
+			#if FLX_OPENFL_JOYSTICK_API
 			case LEFT_TRIGGER_FAKE: PS3ID.LEFT_TRIGGER_FAKE;
 			case RIGHT_TRIGGER_FAKE: PS3ID.RIGHT_TRIGGER_FAKE;
 			#end
@@ -250,7 +250,7 @@ class FlxGamepadMapping
 			case DPAD_RIGHT: XBox360ID.DPAD_RIGHT;
 			case LEFT_TRIGGER:  XBox360ID.LEFT_TRIGGER;
 			case RIGHT_TRIGGER: XBox360ID.RIGHT_TRIGGER;
-			#if (!flash && !next)
+			#if FLX_OPENFL_JOYSTICK_API
 			case LEFT_TRIGGER_FAKE: XBox360ID.LEFT_TRIGGER_FAKE;
 			case RIGHT_TRIGGER_FAKE: XBox360ID.RIGHT_TRIGGER_FAKE;
 			#end
@@ -279,7 +279,7 @@ class FlxGamepadMapping
 			case DPAD_RIGHT: XInputID.DPAD_RIGHT;
 			case LEFT_TRIGGER: XInputID.LEFT_TRIGGER;
 			case RIGHT_TRIGGER: XInputID.RIGHT_TRIGGER;
-			#if (!flash && !next)
+			#if FLX_OPENFL_JOYSTICK_API
 			case LEFT_TRIGGER_FAKE: XInputID.LEFT_TRIGGER_FAKE;
 			case RIGHT_TRIGGER_FAKE: XInputID.RIGHT_TRIGGER_FAKE;
 			#end
