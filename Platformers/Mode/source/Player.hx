@@ -168,22 +168,22 @@ class Player extends FlxSprite
 		var gamepad:FlxGamepad = FlxG.gamepads.lastActive;
 		if (gamepad == null) return;
 		
-		if (gamepad.analog.LEFT_STICK_X < 0 || gamepad.pressed.DPAD_LEFT)
+		if (gamepad.analog.value.LEFT_STICK_X < 0 || gamepad.pressed.DPAD_LEFT)
 		{
 			moveLeft();
 		}
 		else
-		if (gamepad.analog.LEFT_STICK_X > 0 || gamepad.pressed.DPAD_RIGHT)
+		if (gamepad.analog.value.LEFT_STICK_X > 0 || gamepad.pressed.DPAD_RIGHT)
 		{
 			moveRight();
 		}
 		
-		if (gamepad.analog.LEFT_STICK_Y < 0 || gamepad.pressed.DPAD_UP)
+		if (gamepad.analog.value.LEFT_STICK_Y < 0 || gamepad.pressed.DPAD_UP)
 		{
 			moveUp();
 		}
 		else
-		if (gamepad.analog.LEFT_STICK_Y > 0 || gamepad.pressed.DPAD_DOWN)
+		if (gamepad.analog.value.LEFT_STICK_Y > 0 || gamepad.pressed.DPAD_DOWN)
 		{
 			moveDown();
 		}
