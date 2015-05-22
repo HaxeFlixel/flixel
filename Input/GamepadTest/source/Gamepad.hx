@@ -2,11 +2,9 @@ package;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.FlxState;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.gamepad.FlxGamepad;
 import flixel.math.FlxPoint;
-import flixel.util.FlxColor;
 
 class Gamepad extends FlxTypedGroup<FlxSprite>
 {
