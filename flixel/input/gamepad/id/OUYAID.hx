@@ -1,11 +1,11 @@
-package flixel.input.gamepad;
+package flixel.input.gamepad.id;
 
 import flixel.input.gamepad.FlxGamepad;
 
 /**
  * Button IDs for OUYA controllers
  */
-class OUYAButtonID
+class OUYAID
 {
 	/**
 	 * Button IDs (DPAD values are obtained from FlxGamepad.hat)
@@ -16,11 +16,18 @@ class OUYAButtonID
 	public static inline var A:Int = 1;
 	public static inline var LB:Int = 6;
 	public static inline var RB:Int = 7;
-	public static inline var LEFT_ANALOG:Int = 10;
-	public static inline var RIGHT_ANALOG:Int = 11;
+	public static inline var LEFT_STICK_CLICK:Int = 10;
+	public static inline var RIGHT_STICK_CLICK:Int = 11;
 	public static inline var HOME:Int = 2;
 	public static inline var LEFT_TRIGGER:Int = 8;
 	public static inline var RIGHT_TRIGGER:Int = 9;
+	
+	//TODO: someone needs to look these up and define them!
+	public static inline var DPAD_LEFT:Int = -1;
+	public static inline var DPAD_RIGHT:Int = -2;
+	public static inline var DPAD_DOWN:Int = -3;
+	public static inline var DPAD_UP:Int = -4;
+	
 	/**
 	 * Axis array indicies
 	 * 

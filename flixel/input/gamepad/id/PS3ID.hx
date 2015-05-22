@@ -1,11 +1,11 @@
-package flixel.input.gamepad;
+package flixel.input.gamepad.id;
 
 import flixel.input.gamepad.FlxGamepad;
 
 /**
  * Button IDs for PlayStation 3 controllers
  */
-class PS3ButtonID
+class PS3ID
 {
 	public static inline var TRIANGLE:Int = 12;
 	public static inline var CIRCLE:Int = 13;
@@ -18,8 +18,8 @@ class PS3ButtonID
 	public static inline var SELECT:Int = 0;
 	public static inline var START:Int = 3;
 	public static inline var PS:Int = 16;
-	public static inline var LEFT_ANALOG:Int = 1;
-	public static inline var RIGHT_ANALOG:Int = 2;
+	public static inline var LEFT_STICK_CLICK:Int = 1;
+	public static inline var RIGHT_STICK_CLICK:Int = 2;
 	
 	public static inline var DPAD_UP:Int = 4;
 	public static inline var DPAD_DOWN:Int = 6;

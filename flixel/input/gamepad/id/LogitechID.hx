@@ -1,11 +1,11 @@
-package flixel.input.gamepad;
+package flixel.input.gamepad.id;
 
 import flixel.input.gamepad.FlxGamepad;
 
 /**
  * Button IDs for Logitech controllers (key codes based on Cordless Rumblepad 2)
  */
-class LogitechButtonID
+class LogitechID
 {
 #if flash
 	/**
@@ -56,11 +56,11 @@ class LogitechButtonID
 	/**
 	 * Placement equivalent to the 'left analog' button on the Xbox 360 controller.
 	 */
-	public static inline var LEFT_ANALOG:Int = 18;
+	public static inline var LEFT_STICK_CLICK:Int = 18;
 	/**
 	 * Placement equivalent to the 'right analog' button on the Xbox 360 controller.
 	 */
-	public static inline var RIGHT_ANALOG:Int = 19;
+	public static inline var RIGHT_STICK_CLICK:Int = 19;
 	
 	/**
 	 * Axis array indicies
@@ -72,6 +72,10 @@ class LogitechButtonID
 	public static inline var DPAD_DOWN:Int = 5;
 	public static inline var DPAD_LEFT:Int = 6;
 	public static inline var DPAD_RIGHT:Int = 7;
+	
+	//TODO: Someone needs to look this up and define it! (NOTE: not all logitech controllers have this)
+	public static inline var LOGITECH:Int = -1;
+	
 #else // native and html5
 	/**
 	 * Placement equivalent to 'X' button on the Xbox 360 controller.
@@ -121,11 +125,20 @@ class LogitechButtonID
 	/**
 	 * Placement equivalent to the 'left analog' button on the Xbox 360 controller.
 	 */
-	public static inline var LEFT_ANALOG:Int = 10;
+	public static inline var LEFT_STICK_CLICK:Int = 10;
 	/**
 	 * Placement equivalent to the 'right analog' button on the Xbox 360 controller.
 	 */
-	public static inline var RIGHT_ANALOG:Int = 11;
+	public static inline var RIGHT_STICK_CLICK:Int = 11;
+	
+	//TODO: someone needs to look these up and define them!
+	public static inline var DPAD_UP:Int = -1;
+	public static inline var DPAD_DOWN:Int = -2;
+	public static inline var DPAD_LEFT:Int = -3;
+	public static inline var DPAD_RIGHT:Int = -4;
+	
+	//TODO: Someone needs to look this up and define it! (NOTE: not all logitech controllers have this)
+	public static inline var LOGITECH:Int = -5;
 	
 	/**
 	 * Axis array indicies
