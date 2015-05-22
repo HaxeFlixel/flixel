@@ -8,25 +8,32 @@ import flixel.util.FlxColor;
 
 class PlayState extends FlxState
 {
+	var modelDropDown:FlxUIDropDownMenu;
+	
 	override public function create() 
 	{
 		FlxG.cameras.bgColor = FlxColor.WHITE;
 		
 		add(new Gamepad());
 		
-		var models = FlxGamepadModel.getConstructors();
-		models.sort(function (i, j) // move Xbox360 to top
-		{
-			return i == FlxGamepadModel.XBox360.getName() ? -1 : 1;
-		});
-		
-		add(new FlxUIDropDownMenu(210, 340,
-			FlxUIDropDownMenu.makeStrIdLabelArray(models),
+		add(modelDropDown = new FlxUIDropDownMenu(210, 340,
+			FlxUIDropDownMenu.makeStrIdLabelArray(FlxGamepadModel.getConstructors()),
 			function (model)
 			{
 				var gamepad = FlxG.gamepads.lastActive;
 				if (gamepad != null)
 					gamepad.model = FlxGamepadModel.createByName(model);
 			}));
+	}
+	
+	override public function update(elapsed:Float)
+	{
+		super.update(elapsed);
+		
+		var gamepad = FlxG.gamepads.lastActive;
+		if (gamepad == null)
+			return;
+		
+		modelDropDown.selectedLabel = Std.string(gamepad.model);
 	}
 }

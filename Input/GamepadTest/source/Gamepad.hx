@@ -121,8 +121,10 @@ class Gamepad extends FlxTypedGroup<FlxSprite>
 		updateStick(leftStick, analog.LEFT_STICK_X, analog.LEFT_STICK_Y, LEFT_STICK_POS);
 		updateStick(rightStick, analog.RIGHT_STICK_X, analog.RIGHT_STICK_Y, RIGHT_STICK_POS);
 		
-		updateButton(leftStick, pressed.LEFT_STICK_CLICK);
-		updateButton(rightStick, pressed.RIGHT_STICK_CLICK);
+		if (leftStick.alpha == ALPHA_OFF)
+			updateButton(leftStick, pressed.LEFT_STICK_CLICK);
+		if (rightStick.alpha == ALPHA_OFF)
+			updateButton(rightStick, pressed.RIGHT_STICK_CLICK);
 	}
 	
 	function updateButton(button:FlxSprite, pressed:Bool)
