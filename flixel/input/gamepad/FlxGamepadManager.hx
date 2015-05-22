@@ -443,11 +443,13 @@ class FlxGamepadManager implements IFlxInputManager
 		}
 		
 		return
-			if (str.indexOf("playstation") != -1)  PS3;             //"Sony PLAYSTATION(R)3 Controller"
+			if (str.indexOf("xbox") != -1 && 						//"Xbox 360 controller (XInput STANDARD GAMEPAD)"
+			    str.indexOf("360") != -1) XBox360;
+			else if (str.indexOf("playstation") != -1)  PS3;        //"Sony PLAYSTATION(R)3 Controller"
 			else if (str.indexOf("ouya") != -1) OUYA;               //"OUYA Game Controller"
 			else if (str.indexOf("wireless controller") != -1) PS4; //"Wireless Controller"
 			else if (str.indexOf("logitech") != -1) Logitech;
-			else if (str.indexOf("xinput") != -1) XInput;
+			else if (str.indexOf("xinput") != -1) XInput;           //"XInput Controller"
 			else XBox360; //default
 	}
 	
