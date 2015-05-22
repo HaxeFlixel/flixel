@@ -4,7 +4,9 @@ import flixel.addons.ui.FlxUIDropDownMenu;
 import flixel.addons.ui.FlxUINumericStepper;
 import flixel.addons.ui.FlxUIRadioGroup;
 import flixel.FlxG;
+import flixel.FlxSprite;
 import flixel.FlxState;
+import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.gamepad.FlxGamepad;
 import flixel.input.gamepad.FlxGamepad.FlxGamepadModel;
 import flixel.text.FlxText;
@@ -16,6 +18,7 @@ class PlayState extends FlxState
 	var modelDropDown:FlxUIDropDownMenu;
 	var deadZoneStepper:FlxUINumericStepper;
 	var connectedGamepads:FlxUIRadioGroup;
+	var disconnectedOverlay:FlxTypedGroup<FlxSprite>;
 	var gamepads:Array<FlxGamepad> = [];
 	
 	override public function create() 
@@ -41,6 +44,17 @@ class PlayState extends FlxState
 			1, 1, FlxUINumericStepper.STACK_HORIZONTAL));
 			
 		add(connectedGamepads = new FlxUIRadioGroup(550, 10));
+		
+		disconnectedOverlay = new FlxTypedGroup();
+		var background = new FlxSprite();
+		background.makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
+		background.alpha = 0.85;
+		var disconnectedText = new FlxText(0, (FlxG.height / 2) - 16, FlxG.width, "No gamepads connected!");
+		disconnectedText.size = 32;
+		disconnectedText.alignment = FlxTextAlign.CENTER;
+		disconnectedOverlay.add(background);
+		disconnectedOverlay.add(disconnectedText);
+		add(disconnectedOverlay);
 	}
 	
 	override public function update(elapsed:Float)
@@ -50,17 +64,27 @@ class PlayState extends FlxState
 		
 		var gamepad = FlxG.gamepads.lastActive;
 		if (gamepad == null)
+		{
+			setEnabled(false);
 			return;
+		}
 		
+		setEnabled(true);
 		modelDropDown.selectedLabel = gamepad.model.getName();
 		gamepad.deadZone = deadZoneStepper.value;
 		connectedGamepads.selectedIndex = getGamepadIndex(gamepad);
 	}
 	
+	function setEnabled(enabled:Bool)
+	{
+		disconnectedOverlay.visible = !enabled;
+		deadZoneStepper.active = enabled;
+		modelDropDown.active = enabled;
+	}
+	
 	function getGamepadIndex(gamepad:FlxGamepad)
 	{
-		var gamepads = [for (i in 0...10) FlxG.gamepads.getByID(i)];
-		return gamepads.indexOf(gamepad);
+		return [for (i in 0...10) FlxG.gamepads.getByID(i)].indexOf(gamepad);
 	}
 	
 	function updateConnectedGamepads(force:Bool = false)
