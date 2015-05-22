@@ -27,12 +27,37 @@ class PS4ID
 	public static var LEFT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(0 , 1);
 	public static var RIGHT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(2, 5);
 	
-	public static inline var L2_Y:Int = 3;
-	public static inline var R2_Y:Int = 4;
+	//TODO: these look like axis values. Can anyone confirm whether the PS4 has a separate digital button input click for L2 & R2 at the end of the squeeze
+	//that is different from just a maximum analog pressure from L2 & R2?
+	public static inline var L2_PRESSURE:Int = 3;
+	public static inline var R2_PRESSURE:Int = 4;
 	
 	//TODO: someone needs to look these up and define them!
 	public static inline var DPAD_LEFT:Int = -1;
 	public static inline var DPAD_RIGHT:Int = -2;
 	public static inline var DPAD_DOWN:Int = -3;
 	public static inline var DPAD_UP:Int = -4;
+	
+	#if (!flash && !next)
+		//Analog stick and trigger values overlap with regular buttons so we remap to "fake" button ID's
+		public static function axisIndexToRawID(index:Int):Int
+		{
+			if (index == LEFT_ANALOG_STICK.x) return LEFT_ANALOG_STICK_FAKE_X;
+			if (index == LEFT_ANALOG_STICK.y) return LEFT_ANALOG_STICK_FAKE_Y;
+			if (index == RIGHT_ANALOG_STICK.x) return RIGHT_ANALOG_STICK_FAKE_X;
+			if (index == RIGHT_ANALOG_STICK.y) return RIGHT_ANALOG_STICK_FAKE_Y;
+			if (index == L2_PRESSURE) return LEFT_TRIGGER_FAKE;
+			if (index == R2_PRESSURE) return RIGHT_TRIGGER_FAKE;
+			return index;
+		}
+		//"fake" IDs
+		public static inline var LEFT_ANALOG_STICK_FAKE_X:Int = 18;
+		public static inline var LEFT_ANALOG_STICK_FAKE_Y:Int = 19;
+		
+		public static inline var RIGHT_ANALOG_STICK_FAKE_X:Int = 20;
+		public static inline var RIGHT_ANALOG_STICK_FAKE_Y:Int = 21;
+		
+		public static inline var LEFT_TRIGGER_FAKE:Int = 22;
+		public static inline var RIGHT_TRIGGER_FAKE:Int = 23;
+	#end
 }
