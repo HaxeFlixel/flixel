@@ -15,22 +15,21 @@
   </output>
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
-    <class path="T:\Development\Git\flixel-ui" />
-    <class path="T:\Development\Git\openfl" />
     <class path="T:\Development\Git\flixel" />
+    <class path="T:\Development\Git\openfl" />
     <class path="T:\Development\Git\lime" />
+    <class path="T:\Development\Git\flixel-ui" />
     <class path="source" />
-    <class path="T:\Development\Git\lime\legacy" />
-    <class path="export\windows\neko\haxe" />
+    <class path="export\flash\haxe" />
   </classpaths>
   <!-- Build options -->
   <build>
-    <option directives="flixel-ui=1.0.2&#xA;openfl=2.1.6&#xA;flixel=3.3.6&#xA;lime=2.0.4&#xA;tools=2.0.4&#xA;lime-legacy&#xA;no-compilation&#xA;native&#xA;FLX_NO_TOUCH&#xA;lime-native&#xA;openfl-native&#xA;windows&#xA;desktop" />
+    <option directives="flixel=3.3.8&#xA;openfl=3.0.6&#xA;lime=2.4.1&#xA;flixel-ui=1.0.2&#xA;openfl-next&#xA;tools=2.4.1&#xA;no-compilation&#xA;openfl-flash&#xA;web" />
     <option flashStrict="False" />
     <option noInlineOnDebug="False" />
     <option mainClass="ApplicationMain" />
     <option enabledebug="False" />
-    <option additional="--remap flash:openfl&#xA;--macro flixel.system.macros.FlxConditionals.run()&#xA;#--macro keep(&quot;Main&quot;)&#xA;-debug " />
+    <option additional="--macro flixel.system.macros.FlxConditionals.run()&#xA;-swf-version 11.8&#xA;-debug " />
   </build>
   <!-- haxelib libraries -->
   <haxelib>

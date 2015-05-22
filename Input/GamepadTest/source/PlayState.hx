@@ -3,15 +3,17 @@ package;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
+import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.util.FlxColor;
 import flixel.math.FlxPoint;
 import flixel.input.gamepad.FlxGamepad;
-import flixel.input.gamepad.XboxButtonID;
-import flixel.input.gamepad.OUYAButtonID;
+import flixel.input.gamepad.id.XBox360ID;
+import flixel.input.gamepad.id.OUYAID;
 
 class PlayState extends FlxState
 {
 	private static inline var STICK_MOVEMENT_RANGE:Float = 10;
+	private static inline var TRIGGER_MOVEMENT_RANGE:Float = 20;
 	
 	private static inline var ALPHA_OFF:Float = 0.5;
 	private static inline var ALPHA_ON:Float = 1;
@@ -19,8 +21,8 @@ class PlayState extends FlxState
 	private static inline var LB_Y:Float = 16;
 	private static inline var RB_Y:Float = 16;
 	
-	private static inline var LT_Y:Float = 4;
-	private static inline var RT_Y:Float = 4;
+	private static inline var LT_Y:Float = -6;
+	private static inline var RT_Y:Float = -6;
 	
 	private static var LEFT_STICK_POS:FlxPoint = FlxPoint.get(80, 62);
 	private static var RIGHT_STICK_POS:FlxPoint = FlxPoint.get(304, 150);
@@ -108,69 +110,67 @@ class PlayState extends FlxState
 		FlxG.watch.addQuick("justPressed ID", _gamePad.firstJustPressedButtonID());
 		#end
 		
-		if (_gamePad.pressed(GamepadIDs.A))
+		if (_gamePad.pressed.A)
 			_aButton.alpha = ALPHA_ON;
 		else
 			_aButton.alpha = ALPHA_OFF;
 		
-		if (_gamePad.pressed(GamepadIDs.B))
+		if (_gamePad.pressed.B)
 			_bButton.alpha = ALPHA_ON;
 		else
 			_bButton.alpha = ALPHA_OFF;
 		
-		if (_gamePad.pressed(GamepadIDs.X))
+		if (_gamePad.pressed.X)
 			_xButton.alpha = ALPHA_ON;
 		else
 			_xButton.alpha = ALPHA_OFF;
 		
-		if (_gamePad.pressed(GamepadIDs.Y))
+		if (_gamePad.pressed.Y)
 			_yButton.alpha = ALPHA_ON;
 		else
 			_yButton.alpha = ALPHA_OFF;
 		
-		if (_gamePad.pressed(GamepadIDs.START))
+		if (_gamePad.pressed.START)
 			_startButton.alpha = ALPHA_ON;
 		else
 			_startButton.alpha = ALPHA_OFF;
 		
-		if (_gamePad.pressed(GamepadIDs.SELECT))
+		if (_gamePad.pressed.BACK)
 			_backButton.alpha = ALPHA_ON;
 		else
 			_backButton.alpha = ALPHA_OFF;
 		
-		if (_gamePad.pressed(GamepadIDs.LB))
+		if (_gamePad.pressed.LEFT_SHOULDER)
 			_LB.y = LB_Y + 5;
 		else
 			_LB.y = LB_Y;
 		
-		if (_gamePad.pressed(GamepadIDs.RB))
+		if (_gamePad.pressed.RIGHT_SHOULDER)
 			_RB.y = RB_Y + 5;
 		else
 			_RB.y = RB_Y;
 			
-		if (_gamePad.pressed(GamepadIDs.LEFT_ANALOG))
+		if (_gamePad.pressed.LEFT_STICK_CLICK)
 			_leftStick.color = FlxColor.RED;
 		else
 			_leftStick.color = FlxColor.WHITE;
 		
-		if (_gamePad.pressed(GamepadIDs.RIGHT_ANALOG))
+		if (_gamePad.pressed.RIGHT_STICK_CLICK)
 			_rightStick.color = FlxColor.RED;
 		else
 			_rightStick.color = FlxColor.WHITE;
 		
-		updateAxis(GamepadIDs.LEFT_ANALOG_STICK, _leftStick, LEFT_STICK_POS);
-		updateAxis(GamepadIDs.RIGHT_ANALOG_STICK, _rightStick, RIGHT_STICK_POS);
+		updateAxis(_gamePad.analog.LEFT_STICK_X, _gamePad.analog.LEFT_STICK_Y, _leftStick, LEFT_STICK_POS);
+		updateAxis(_gamePad.analog.RIGHT_STICK_X, _gamePad.analog.RIGHT_STICK_Y, _rightStick, RIGHT_STICK_POS);
 		
-		updateTrigger(GamepadIDs.LEFT_TRIGGER, _LTrigger, LT_Y);
-		updateTrigger(GamepadIDs.RIGHT_TRIGGER, _RTrigger, RT_Y);
+		updateTrigger(_gamePad.analog.LEFT_TRIGGER, _LTrigger, LT_Y);
+		updateTrigger(_gamePad.analog.RIGHT_TRIGGER, _RTrigger, RT_Y);
 		
 		updateDpad();
 	}
 	
-	private function updateAxis(axes:FlxGamepadAnalogStick, stickSprite:FlxSprite, stickPosition:FlxPoint):Void
+	private function updateAxis(xAxisValue:Float, yAxisValue:Float, stickSprite:FlxSprite, stickPosition:FlxPoint):Void
 	{
-		var xAxisValue = _gamePad.getXAxis(axes);
-		var yAxisValue = _gamePad.getYAxis(axes);
 		var angle:Float=0;
 		
 		if ((xAxisValue != 0) || (yAxisValue != 0))
@@ -188,26 +188,18 @@ class PlayState extends FlxState
 		}
 	}
 	
-	private function updateTrigger(axis:Int, sprite:FlxSprite, pos:Float):Void
+	private function updateTrigger(yAxisValue:Float, sprite:FlxSprite, pos:Float):Void
 	{
-		var yAxisValue = _gamePad.getAxis(axis);
 		yAxisValue = (yAxisValue+1) / 2;
-		sprite.y = pos + (10 * yAxisValue);
+		sprite.y = pos + (TRIGGER_MOVEMENT_RANGE * yAxisValue);
 	}
 	
 	private function updateDpad():Void
 	{
-		#if !flash
-			var dpadLeft = _gamePad.dpadLeft;
-			var dpadRight = _gamePad.dpadRight;
-			var dpadUp = _gamePad.dpadUp;
-			var dpadDown = _gamePad.dpadDown;
-		#else
-			var dpadLeft = _gamePad.pressed(XboxButtonID.DPAD_LEFT);
-			var dpadRight = _gamePad.pressed(XboxButtonID.DPAD_RIGHT);
-			var dpadUp = _gamePad.pressed(XboxButtonID.DPAD_UP);
-			var dpadDown = _gamePad.pressed(XboxButtonID.DPAD_DOWN);
-		#end
+		var dpadLeft = _gamePad.pressed.DPAD_LEFT;
+		var dpadRight = _gamePad.pressed.DPAD_RIGHT;
+		var dpadUp = _gamePad.pressed.DPAD_UP;
+		var dpadDown = _gamePad.pressed.DPAD_DOWN;
 		
 		var newIndex:Int = 0;
 		var newAlpha:Float = ALPHA_OFF;

@@ -5,8 +5,6 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.input.gamepad.FlxGamepad;
-import flixel.input.gamepad.OUYAButtonID;
-import flixel.input.gamepad.XboxButtonID;
 import flixel.ui.FlxButton;
 import flixel.ui.FlxVirtualPad;
 import flixel.util.FlxDestroyUtil;
@@ -168,84 +166,38 @@ class Player extends FlxSprite
 	{
 		#if !FLX_NO_GAMEPAD
 		var gamepad:FlxGamepad = FlxG.gamepads.lastActive;
-		if (gamepad != null)
+		if (gamepad == null) return;
+		
+		if (gamepad.analog.LEFT_STICK_X < 0 || gamepad.pressed.DPAD_LEFT)
 		{
-			#if android
-			updateOUYAGamepadInput(gamepad);
-			#else
-			updateXboxGamepadInput(gamepad);
-			#end
+			moveLeft();
+		}
+		else
+		if (gamepad.analog.LEFT_STICK_X > 0 || gamepad.pressed.DPAD_RIGHT)
+		{
+			moveRight();
+		}
+		
+		if (gamepad.analog.LEFT_STICK_Y < 0 || gamepad.pressed.DPAD_UP)
+		{
+			moveUp();
+		}
+		else
+		if (gamepad.analog.LEFT_STICK_Y > 0 || gamepad.pressed.DPAD_DOWN)
+		{
+			moveDown();
+		}
+		
+		if (gamepad.justPressed.A)
+		{
+			jump();
+		}
+		
+		if (gamepad.pressed.X)
+		{
+			shoot();
 		}
 		#end
-	}
-	
-	private function updateXboxGamepadInput(gamepad:FlxGamepad):Void
-	{
-		if (gamepad.getXAxis(XboxButtonID.LEFT_ANALOG_STICK) < 0 ||
-			gamepad.pressed(XboxButtonID.DPAD_LEFT))
-		{
-			moveLeft();
-		}
-		else
-		if (gamepad.getXAxis(XboxButtonID.LEFT_ANALOG_STICK) > 0 ||
-			gamepad.pressed(XboxButtonID.DPAD_RIGHT))
-		{
-			moveRight();
-		}
-		
-		if (gamepad.getYAxis(XboxButtonID.LEFT_ANALOG_STICK) < 0 ||
-			gamepad.pressed(XboxButtonID.DPAD_UP))
-		{
-			moveUp();
-		}
-		else
-		if (gamepad.getYAxis(XboxButtonID.LEFT_ANALOG_STICK) > 0 ||
-			gamepad.pressed(XboxButtonID.DPAD_DOWN))
-		{
-			moveDown();
-		}
-		
-		if (gamepad.justPressed(XboxButtonID.A))
-		{
-			jump();
-		}
-		
-		if (gamepad.pressed(XboxButtonID.X))
-		{
-			shoot();
-		}
-	}
-	
-	private function updateOUYAGamepadInput(gamepad:FlxGamepad):Void
-	{
-		if (gamepad.getXAxis(OUYAButtonID.LEFT_ANALOG_STICK) < 0)
-		{
-			moveLeft();
-		}
-		if (gamepad.getXAxis(OUYAButtonID.LEFT_ANALOG_STICK) > 0)
-		{
-			moveRight();
-		}
-		
-		if (gamepad.getYAxis(OUYAButtonID.LEFT_ANALOG_STICK) < 0)
-		{
-			moveUp();
-		}
-		
-		if (gamepad.getYAxis(OUYAButtonID.LEFT_ANALOG_STICK) > 0)
-		{
-			moveDown();
-		}
-		
-		if (gamepad.justPressed(OUYAButtonID.O))
-		{
-			jump();
-		}
-		
-		if (gamepad.pressed(OUYAButtonID.U))
-		{
-			shoot();
-		}
 	}
 	
 	private function updateAnimations():Void

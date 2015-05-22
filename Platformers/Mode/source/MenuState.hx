@@ -197,14 +197,10 @@ class MenuState extends FlxState
 		}
 		#end
 		
-		#if (!FLX_NO_GAMEPAD && (cpp || neko || js))
+		#if (!FLX_NO_GAMEPAD)
 		if (FlxG.gamepads.anyButton())
 		{
-		#if OUYA
-			if (FlxG.gamepads.lastActive.justPressed(flixel.input.gamepad.OUYAButtonID.O))
-		#else
-			if (FlxG.gamepads.lastActive.justPressed(flixel.input.gamepad.XboxButtonID.A))
-		#end 
+			if (FlxG.gamepads.lastActive.justPressed.A)
 				onPlay();
 		}
 		#end
