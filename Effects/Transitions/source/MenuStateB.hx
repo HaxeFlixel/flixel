@@ -9,12 +9,6 @@ import flixel.FlxG;
  */
 class MenuStateB extends MenuState
 {
-
-	public function new() 
-	{
-		super();
-	}
-	
 	private override function init():Void {
 		super.init();
 		var back:FlxUISprite = cast _ui.getAsset("back");
