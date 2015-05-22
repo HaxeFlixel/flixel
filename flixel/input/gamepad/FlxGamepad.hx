@@ -4,6 +4,7 @@ import flixel.input.FlxInput.FlxInputState;
 import flixel.input.gamepad.FlxGamepad.FlxGamepadAnalogStick;
 import flixel.input.gamepad.FlxGamepad.FlxGamepadModel;
 import flixel.input.gamepad.FlxGamepadInputID;
+import flixel.input.gamepad.id.FlxGamepadAnalog;
 import flixel.input.gamepad.id.FlxGamepadAnalogList;
 import flixel.input.gamepad.id.FlxGamepadButtonList;
 import flixel.math.FlxPoint;
@@ -48,9 +49,9 @@ class FlxGamepad implements IFlxDestroyable
 	 */
 	public var justReleased(default, null):FlxGamepadButtonList;
 	/**
-	 * Helper class to get the float value of analog input.
+	 * Helper class to get the justMoved, justReleased, and float values of analog input.
 	 */
-	public var analog(default, null):FlxGamepadAnalogList;
+	public var analog(default, null):FlxGamepadAnalog;
 	
 	#if !flash
 	public var hat(default, null):FlxPoint = FlxPoint.get();
@@ -58,6 +59,12 @@ class FlxGamepad implements IFlxDestroyable
 	#end
 	
 	private var axis:Array<Float> = [for (i in 0...6) 0];
+	private var axisActive:Bool = false;
+	
+	#if (!flash && !next)
+	private var leftStick:FlxGamepadAnalogStick;
+	private var rightStick:FlxGamepadAnalogStick;
+	#end
 	
 	#if (flash || next)
 	private var _device:GameInputDevice; 
@@ -88,13 +95,17 @@ class FlxGamepad implements IFlxDestroyable
 		pressed = new FlxGamepadButtonList(FlxInputState.PRESSED, this);
 		justPressed = new FlxGamepadButtonList(FlxInputState.JUST_PRESSED, this);
 		justReleased = new FlxGamepadButtonList(FlxInputState.JUST_RELEASED, this);
-		analog = new FlxGamepadAnalogList(this);
+		analog = new FlxGamepadAnalog(this);
 	}
 	
 	public function set_model(Model:FlxGamepadModel):FlxGamepadModel
 	{
 		model = Model;
 		buttonIndex.model = Model;
+		#if (!flash && !next)
+			leftStick = getRawAnalogStick(FlxGamepadInputID.LEFT_ANALOG_STICK);
+			rightStick = getRawAnalogStick(FlxGamepadInputID.RIGHT_ANALOG_STICK);
+		#end
 		return model;
 	}
 	
@@ -150,9 +161,10 @@ class FlxGamepad implements IFlxDestroyable
 		{
 			control = _device.getControlAt(i);
 			var value = control.value;
+			value = Math.abs(value);		//quick absolute value for analog sticks
 			button = getButton(i);
 			
-			if (value == 0)
+			if (value < deadZone)
 			{
 				button.release();
 			}
