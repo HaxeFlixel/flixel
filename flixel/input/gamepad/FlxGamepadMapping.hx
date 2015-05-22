@@ -99,24 +99,22 @@ class FlxGamepadMapping
 	}
 	
 	#if FLX_OPENFL_JOYSTICK_API
-		/**
-		 * Given an axis index value like 0-6, figures out which input that corresponds to and returns a "fake" ButtonID for that input
-		 * @param	AxisID
-		 * @return
-		 */
-		public function axisIndexToRawID(AxisID:Int):Int
+	/**
+	 * Given an axis index value like 0-6, figures out which input that corresponds to and returns a "fake" ButtonID for that input
+	 */
+	public function axisIndexToRawID(AxisID:Int):Int
+	{
+		return switch(model)
 		{
-			return switch(model)
-			{
-				case Logitech: LogitechID.axisIndexToRawID(AxisID);
-				case OUYA: OUYAID.axisIndexToRawID(AxisID);
-				case PS3: PS3ID.axisIndexToRawID(AxisID);
-				case PS4: PS4ID.axisIndexToRawID(AxisID);
-				case XBox360: XBox360ID.axisIndexToRawID(AxisID);
-				case XInput: XInputID.axisIndexToRawID(AxisID);
-				default: -1;
-			}
+			case Logitech: LogitechID.axisIndexToRawID(AxisID);
+			case OUYA: OUYAID.axisIndexToRawID(AxisID);
+			case PS3: PS3ID.axisIndexToRawID(AxisID);
+			case PS4: PS4ID.axisIndexToRawID(AxisID);
+			case XBox360: XBox360ID.axisIndexToRawID(AxisID);
+			case XInput: XInputID.axisIndexToRawID(AxisID);
+			default: -1;
 		}
+	}
 	#end
 	
 	public function getRawOUYA(ID:FlxGamepadInputID):Int

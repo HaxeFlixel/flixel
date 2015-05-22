@@ -39,25 +39,25 @@ class PS4ID
 	public static inline var DPAD_UP:Int = -4;
 	
 	#if FLX_OPENFL_JOYSTICK_API
-		//Analog stick and trigger values overlap with regular buttons so we remap to "fake" button ID's
-		public static function axisIndexToRawID(index:Int):Int
-		{
-			if (index == LEFT_ANALOG_STICK.x) return LEFT_ANALOG_STICK_FAKE_X;
-			if (index == LEFT_ANALOG_STICK.y) return LEFT_ANALOG_STICK_FAKE_Y;
-			if (index == RIGHT_ANALOG_STICK.x) return RIGHT_ANALOG_STICK_FAKE_X;
-			if (index == RIGHT_ANALOG_STICK.y) return RIGHT_ANALOG_STICK_FAKE_Y;
-			if (index == L2_PRESSURE) return LEFT_TRIGGER_FAKE;
-			if (index == R2_PRESSURE) return RIGHT_TRIGGER_FAKE;
-			return index;
-		}
-		//"fake" IDs
-		public static inline var LEFT_ANALOG_STICK_FAKE_X:Int = 18;
-		public static inline var LEFT_ANALOG_STICK_FAKE_Y:Int = 19;
-		
-		public static inline var RIGHT_ANALOG_STICK_FAKE_X:Int = 20;
-		public static inline var RIGHT_ANALOG_STICK_FAKE_Y:Int = 21;
-		
-		public static inline var LEFT_TRIGGER_FAKE:Int = 22;
-		public static inline var RIGHT_TRIGGER_FAKE:Int = 23;
+	//Analog stick and trigger values overlap with regular buttons so we remap to "fake" button ID's
+	public static function axisIndexToRawID(index:Int):Int
+	{
+		return   if (index == LEFT_ANALOG_STICK.x) LEFT_ANALOG_STICK_FAKE_X;
+			else if (index == LEFT_ANALOG_STICK.y) LEFT_ANALOG_STICK_FAKE_Y;
+			else if (index == RIGHT_ANALOG_STICK.x) RIGHT_ANALOG_STICK_FAKE_X;
+			else if (index == RIGHT_ANALOG_STICK.y) RIGHT_ANALOG_STICK_FAKE_Y;
+			else if (index == L2_PRESSURE) LEFT_TRIGGER_FAKE;
+			else if (index == R2_PRESSURE) RIGHT_TRIGGER_FAKE;
+			else index;
+	}
+	//"fake" IDs
+	public static inline var LEFT_ANALOG_STICK_FAKE_X:Int = 18;
+	public static inline var LEFT_ANALOG_STICK_FAKE_Y:Int = 19;
+	
+	public static inline var RIGHT_ANALOG_STICK_FAKE_X:Int = 20;
+	public static inline var RIGHT_ANALOG_STICK_FAKE_Y:Int = 21;
+	
+	public static inline var LEFT_TRIGGER_FAKE:Int = 22;
+	public static inline var RIGHT_TRIGGER_FAKE:Int = 23;
 	#end
 }

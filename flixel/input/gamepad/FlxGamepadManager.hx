@@ -368,7 +368,7 @@ class FlxGamepadManager implements IFlxInputManager
 	@:allow(flixel.FlxG)
 	private function new() 
 	{
-		#if (FLX_OPENFL_JOYSTICK_API)
+		#if FLX_OPENFL_JOYSTICK_API
 		FlxG.stage.addEventListener(JoystickEvent.AXIS_MOVE, handleAxisMove);
 		FlxG.stage.addEventListener(JoystickEvent.BALL_MOVE, handleBallMove);
 		FlxG.stage.addEventListener(JoystickEvent.BUTTON_DOWN, handleButtonDown);
@@ -529,80 +529,81 @@ class FlxGamepadManager implements IFlxInputManager
 		gamepad.hat.y = newy;
 		
 		#if !flash
-			var newType:String = "";
-			var newId:Int = 0;
+		var newType:String = "";
+		var newId:Int = 0;
+		
+		var change = false;
+		
+		//We see if there's been a change so we can properly set "justPressed"/"justReleased", etc.
+		if (oldx != newx)
+		{
+			change = true;
 			
-			var change = false;
-			
-			//We see if there's been a change so we can properly set "justPressed"/"justReleased", etc.
-			if (oldx != newx)
+			if (oldx == -1)
 			{
-				change = true;
-				
-				if (oldx == -1)
-				{
-					newType = JOYSTICK_BUTTON_UP;
-					newId = gamepad.getRawID(FlxGamepadInputID.DPAD_LEFT);
-				}
-				else if (oldx == 1)
-				{
-					newType = JOYSTICK_BUTTON_UP;
-					newId = gamepad.getRawID(FlxGamepadInputID.DPAD_RIGHT);
-				}
-				
-				if (newx == -1)
-				{
-					newType = JOYSTICK_BUTTON_DOWN;
-					newId = gamepad.getRawID(FlxGamepadInputID.DPAD_LEFT);
-				}
-				else if (newx == 1)
-				{
-					newType = JOYSTICK_BUTTON_DOWN;
-					newId = gamepad.getRawID(FlxGamepadInputID.DPAD_RIGHT);
-				}
+				newType = JOYSTICK_BUTTON_UP;
+				newId = gamepad.getRawID(FlxGamepadInputID.DPAD_LEFT);
+			}
+			else if (oldx == 1)
+			{
+				newType = JOYSTICK_BUTTON_UP;
+				newId = gamepad.getRawID(FlxGamepadInputID.DPAD_RIGHT);
 			}
 			
-			if (oldy != newy)
+			if (newx == -1)
 			{
-				change = true;
-				
-				if (oldy == -1)
-				{
-					newType = JOYSTICK_BUTTON_UP;
-					newId = gamepad.getRawID(FlxGamepadInputID.DPAD_UP);
-				}
-				else if (oldy == 1)
-				{
-					newType = JOYSTICK_BUTTON_UP;
-					newId = gamepad.getRawID(FlxGamepadInputID.DPAD_DOWN);
-				}
-				
-				if (newy == -1)
-				{
-					newType = JOYSTICK_BUTTON_DOWN;
-					newId = gamepad.getRawID(FlxGamepadInputID.DPAD_UP);
-				}
-				else if (newy == 1)
-				{
-					newType = JOYSTICK_BUTTON_DOWN;
-					newId = gamepad.getRawID(FlxGamepadInputID.DPAD_DOWN);
-				}
+				newType = JOYSTICK_BUTTON_DOWN;
+				newId = gamepad.getRawID(FlxGamepadInputID.DPAD_LEFT);
+			}
+			else if (newx == 1)
+			{
+				newType = JOYSTICK_BUTTON_DOWN;
+				newId = gamepad.getRawID(FlxGamepadInputID.DPAD_RIGHT);
+			}
+		}
+		
+		if (oldy != newy)
+		{
+			change = true;
+			
+			if (oldy == -1)
+			{
+				newType = JOYSTICK_BUTTON_UP;
+				newId = gamepad.getRawID(FlxGamepadInputID.DPAD_UP);
+			}
+			else if (oldy == 1)
+			{
+				newType = JOYSTICK_BUTTON_UP;
+				newId = gamepad.getRawID(FlxGamepadInputID.DPAD_DOWN);
 			}
 			
-			//Send a fake joystick button event that corresponds to the DPAD codes
-			if (change && newType != "")
+			if (newy == -1)
 			{
-				var newEvent = new JoystickEvent(newType, FlashEvent.bubbles, FlashEvent.cancelable, FlashEvent.device, newId, FlashEvent.x, FlashEvent.y, FlashEvent.z);
-				
-				if (newType == JOYSTICK_BUTTON_UP)
-				{
-					handleButtonUp(newEvent);
-				}
-				else if (newType == JOYSTICK_BUTTON_DOWN)
-				{
-					handleButtonDown(newEvent);
-				}
+				newType = JOYSTICK_BUTTON_DOWN;
+				newId = gamepad.getRawID(FlxGamepadInputID.DPAD_UP);
 			}
+			else if (newy == 1)
+			{
+				newType = JOYSTICK_BUTTON_DOWN;
+				newId = gamepad.getRawID(FlxGamepadInputID.DPAD_DOWN);
+			}
+		}
+		
+		//Send a fake joystick button event that corresponds to the DPAD codes
+		if (change && newType != "")
+		{
+			var newEvent = new JoystickEvent(newType, FlashEvent.bubbles, FlashEvent.cancelable,
+				FlashEvent.device, newId, FlashEvent.x, FlashEvent.y, FlashEvent.z);
+			
+			if (newType == JOYSTICK_BUTTON_UP)
+			{
+				handleButtonUp(newEvent);
+			}
+			else if (newType == JOYSTICK_BUTTON_DOWN)
+			{
+				handleButtonDown(newEvent);
+			}
+		}
 		#end
 	}
 

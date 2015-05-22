@@ -62,28 +62,26 @@ class LogitechID
 	public static var LEFT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(0, 1);
 	public static var RIGHT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(2, 3);
 	
-	#if (!next)
-		// Analog stick values overlap with regular buttons so we remap to "fake" button ID's
-		public static function axisIndexToRawID(index:Int):Int
-		{
-			if (index == LEFT_ANALOG_STICK.x) return LEFT_ANALOG_STICK_FAKE_X;
-			if (index == LEFT_ANALOG_STICK.y) return LEFT_ANALOG_STICK_FAKE_Y;
-			if (index == RIGHT_ANALOG_STICK.x) return RIGHT_ANALOG_STICK_FAKE_X;
-			if (index == RIGHT_ANALOG_STICK.y) return RIGHT_ANALOG_STICK_FAKE_Y;
-			
-			//For stuff like SEVEN, EIGHT (shoulder triggers), return what was passed in, no overlaps for those:
-			return index;
-		}
-		//"fake" IDs
-		public static inline var LEFT_ANALOG_STICK_FAKE_X:Int = 20;
-		public static inline var LEFT_ANALOG_STICK_FAKE_Y:Int = 21;
-		
-		public static inline var RIGHT_ANALOG_STICK_FAKE_X:Int = 22;
-		public static inline var RIGHT_ANALOG_STICK_FAKE_Y:Int = 23;
-		
-		//just pass back SEVEN/EIGHT (the left/right triggers)
-		public static inline var LEFT_TRIGGER_FAKE:Int = SEVEN;
-		public static inline var RIGHT_TRIGGER_FAKE:Int = EIGHT;
+	#if FLX_OPENFL_JOYSTICK_API
+	// Analog stick values overlap with regular buttons so we remap to "fake" button ID's
+	public static function axisIndexToRawID(index:Int):Int
+	{
+		return   if (index == LEFT_ANALOG_STICK.x) LEFT_ANALOG_STICK_FAKE_X;
+			else if (index == LEFT_ANALOG_STICK.y) LEFT_ANALOG_STICK_FAKE_Y;
+			else if (index == RIGHT_ANALOG_STICK.x) RIGHT_ANALOG_STICK_FAKE_X;
+			else if (index == RIGHT_ANALOG_STICK.y) RIGHT_ANALOG_STICK_FAKE_Y;
+			else return index;  // return what was passed in, no overlaps for other IDs
+	}
+	//"fake" IDs
+	public static inline var LEFT_ANALOG_STICK_FAKE_X:Int = 20;
+	public static inline var LEFT_ANALOG_STICK_FAKE_Y:Int = 21;
+	
+	public static inline var RIGHT_ANALOG_STICK_FAKE_X:Int = 22;
+	public static inline var RIGHT_ANALOG_STICK_FAKE_Y:Int = 23;
+	
+	//just pass back SEVEN/EIGHT (the left/right triggers)
+	public static inline var LEFT_TRIGGER_FAKE:Int = SEVEN;
+	public static inline var RIGHT_TRIGGER_FAKE:Int = EIGHT;
 	#end
 #end
 }

@@ -139,26 +139,26 @@ class XBox360ID
 	public static var RIGHT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(3, 4);
 	
 	#if FLX_OPENFL_JOYSTICK_API
-		//Analog stick and trigger values overlap with regular buttons so we remap to "fake" button ID's
-		public static function axisIndexToRawID(index:Int):Int
-		{
-			if (index == LEFT_ANALOG_STICK.x) return LEFT_ANALOG_STICK_FAKE_X;
-			if (index == LEFT_ANALOG_STICK.y) return LEFT_ANALOG_STICK_FAKE_Y;
-			if (index == RIGHT_ANALOG_STICK.x) return RIGHT_ANALOG_STICK_FAKE_X;
-			if (index == RIGHT_ANALOG_STICK.y) return RIGHT_ANALOG_STICK_FAKE_Y;
-			if (index == LEFT_TRIGGER) return LEFT_TRIGGER_FAKE;
-			if (index == RIGHT_TRIGGER) return RIGHT_TRIGGER_FAKE;
-			return index;
-		}
-		//"fake" IDs
-		public static inline var LEFT_ANALOG_STICK_FAKE_X:Int = 15;
-		public static inline var LEFT_ANALOG_STICK_FAKE_Y:Int = 16;
-		
-		public static inline var RIGHT_ANALOG_STICK_FAKE_X:Int = 17;
-		public static inline var RIGHT_ANALOG_STICK_FAKE_Y:Int = 18;
-		
-		public static inline var LEFT_TRIGGER_FAKE:Int = 19;
-		public static inline var RIGHT_TRIGGER_FAKE:Int = 20;
+	//Analog stick and trigger values overlap with regular buttons so we remap to "fake" button ID's
+	public static function axisIndexToRawID(index:Int):Int
+	{
+		return   if (index == LEFT_ANALOG_STICK.x) LEFT_ANALOG_STICK_FAKE_X;
+			else if (index == LEFT_ANALOG_STICK.y) LEFT_ANALOG_STICK_FAKE_Y;
+			else if (index == RIGHT_ANALOG_STICK.x) RIGHT_ANALOG_STICK_FAKE_X;
+			else if (index == RIGHT_ANALOG_STICK.y) RIGHT_ANALOG_STICK_FAKE_Y;
+			else if (index == LEFT_TRIGGER) LEFT_TRIGGER_FAKE;
+			else if (index == RIGHT_TRIGGER) RIGHT_TRIGGER_FAKE;
+			else index;
+	}
+	//"fake" IDs
+	public static inline var LEFT_ANALOG_STICK_FAKE_X:Int = 15;
+	public static inline var LEFT_ANALOG_STICK_FAKE_Y:Int = 16;
+	
+	public static inline var RIGHT_ANALOG_STICK_FAKE_X:Int = 17;
+	public static inline var RIGHT_ANALOG_STICK_FAKE_Y:Int = 18;
+	
+	public static inline var LEFT_TRIGGER_FAKE:Int = 19;
+	public static inline var RIGHT_TRIGGER_FAKE:Int = 20;
 	#end
 #end
 }

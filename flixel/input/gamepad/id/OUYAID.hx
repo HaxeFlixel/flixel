@@ -35,24 +35,24 @@ class OUYAID
 	public static inline var RIGHT_TRIGGER_ANALOG:Int = 18;
 	
 	#if FLX_OPENFL_JOYSTICK_API
-		//Analog stick values overlap with regular buttons so we remap to "fake" button ID's
-		public static function axisIndexToRawID(index:Int):Int
-		{
-			if (index == LEFT_ANALOG_STICK.x) return LEFT_ANALOG_STICK_FAKE_X;
-			if (index == LEFT_ANALOG_STICK.y) return LEFT_ANALOG_STICK_FAKE_Y;
-			if (index == RIGHT_ANALOG_STICK.x) return RIGHT_ANALOG_STICK_FAKE_X;
-			if (index == RIGHT_ANALOG_STICK.y) return RIGHT_ANALOG_STICK_FAKE_Y;
-			return index;
-		}
-		//"fake" IDs
-		public static inline var LEFT_ANALOG_STICK_FAKE_X:Int = 19;
-		public static inline var LEFT_ANALOG_STICK_FAKE_Y:Int = 20;
-		
-		public static inline var RIGHT_ANALOG_STICK_FAKE_X:Int = 21;
-		public static inline var RIGHT_ANALOG_STICK_FAKE_Y:Int = 22;
-		
-		//Just pass back LEFT/RIGHT triggers
-		public static inline var LEFT_TRIGGER_FAKE:Int = LEFT_TRIGGER;
-		public static inline var RIGHT_TRIGGER_FAKE:Int = RIGHT_TRIGGER;
+	//Analog stick values overlap with regular buttons so we remap to "fake" button ID's
+	public static function axisIndexToRawID(index:Int):Int
+	{
+		return   if (index == LEFT_ANALOG_STICK.x) LEFT_ANALOG_STICK_FAKE_X;
+			else if (index == LEFT_ANALOG_STICK.y) LEFT_ANALOG_STICK_FAKE_Y;
+			else if (index == RIGHT_ANALOG_STICK.x) RIGHT_ANALOG_STICK_FAKE_X;
+			else if (index == RIGHT_ANALOG_STICK.y) RIGHT_ANALOG_STICK_FAKE_Y;
+			else return index;
+	}
+	//"fake" IDs
+	public static inline var LEFT_ANALOG_STICK_FAKE_X:Int = 19;
+	public static inline var LEFT_ANALOG_STICK_FAKE_Y:Int = 20;
+	
+	public static inline var RIGHT_ANALOG_STICK_FAKE_X:Int = 21;
+	public static inline var RIGHT_ANALOG_STICK_FAKE_Y:Int = 22;
+	
+	//Just pass back LEFT/RIGHT triggers
+	public static inline var LEFT_TRIGGER_FAKE:Int = LEFT_TRIGGER;
+	public static inline var RIGHT_TRIGGER_FAKE:Int = RIGHT_TRIGGER;
 	#end
 } 
