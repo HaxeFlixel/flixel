@@ -33,7 +33,7 @@ class FlxGamepad implements IFlxDestroyable
 	/**
 	 * Which dead zone mode to use for analog sticks.
 	 */
-	public var deadZoneMode:FlxGamepadDeadZoneMode = INDEPENDANT_AXES;
+	public var deadZoneMode:FlxGamepadDeadZoneMode = INDEPENDENT_AXES;
 	
 	/**
 	 * Helper class to check if a button is pressed.
@@ -629,7 +629,7 @@ enum FlxGamepadDeadZoneMode
 	 * The value of each axis is compared to the deadzone individually.
 	 * Works better when an analog stick is used like arrow keys for 4-directional-input.
 	 */
-	INDEPENDANT_AXES;
+	INDEPENDENT_AXES;
 	/**
 	 * X and y are combined against the deadzone combined.
 	 * Works better when an analog stick is used as a two-dimensional control surface.
