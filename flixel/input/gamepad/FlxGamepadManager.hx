@@ -62,13 +62,13 @@ class FlxGamepadManager implements IFlxInput
 		{
 			gamepad = new FlxGamepad(GamepadID, globalDeadZone);
 			_gamepads[GamepadID] = gamepad;
-			
-			lastActive = gamepad;
-			if (firstActive == null)
-			{
-				firstActive = gamepad;
-			}
 		}
+		
+		if (firstActive == null)
+		{
+			firstActive = gamepad;
+		}
+		lastActive = gamepad;
 		
 		return gamepad;
 	}
