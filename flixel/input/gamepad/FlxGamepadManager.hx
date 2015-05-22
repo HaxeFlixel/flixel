@@ -368,7 +368,7 @@ class FlxGamepadManager implements IFlxInputManager
 	@:allow(flixel.FlxG)
 	private function new() 
 	{
-		#if FLX_OPENFL_JOYSTICK_API
+		#if (FLX_OPENFL_JOYSTICK_API)
 		FlxG.stage.addEventListener(JoystickEvent.AXIS_MOVE, handleAxisMove);
 		FlxG.stage.addEventListener(JoystickEvent.BALL_MOVE, handleBallMove);
 		FlxG.stage.addEventListener(JoystickEvent.BUTTON_DOWN, handleButtonDown);
@@ -496,6 +496,16 @@ class FlxGamepadManager implements IFlxInputManager
 	{
 		var gamepad:FlxGamepad = createByID(FlashEvent.device);
 		gamepad.axis = FlashEvent.axis;
+		for (i in 0...gamepad.axis.length)
+		{
+			if (!gamepad.isAxisForAnalogStick(i))
+			{
+				// in legacy this returns a (-1,1) range, but in flash/next it
+				// returns (0,1) so we normalize to (0,1) for legacy target only
+				gamepad.axis[i] = (gamepad.axis[i] + 1) / 2;
+			}
+		}
+		gamepad.axisActive = true;
 	}
 	
 	private function handleBallMove(FlashEvent:JoystickEvent):Void

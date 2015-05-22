@@ -5,6 +5,7 @@ import flixel.input.gamepad.FlxGamepad.FlxGamepadAnalogStick;
 import flixel.input.gamepad.FlxGamepad.FlxGamepadModel;
 import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.input.gamepad.id.FlxGamepadAnalogList;
+import flixel.input.gamepad.id.FlxGamepadAnalogValueList;
 import flixel.input.gamepad.id.FlxGamepadButtonList;
 import flixel.math.FlxPoint;
 import flixel.math.FlxVector;
@@ -33,7 +34,7 @@ class FlxGamepad implements IFlxDestroyable
 	/**
 	 * Which dead zone mode to use for analog sticks.
 	 */
-	public var deadZoneMode:FlxGamepadDeadZoneMode = INDEPENDANT_AXES;
+	public var deadZoneMode:FlxGamepadDeadZoneMode = INDEPENDENT_AXES;
 	
 	/**
 	 * Helper class to check if a button is pressed.
@@ -48,7 +49,7 @@ class FlxGamepad implements IFlxDestroyable
 	 */
 	public var justReleased(default, null):FlxGamepadButtonList;
 	/**
-	 * Helper class to get the float value of analog input.
+	 * Helper class to get the justMoved, justReleased, and float values of analog input.
 	 */
 	public var analog(default, null):FlxGamepadAnalogList;
 	
@@ -58,6 +59,12 @@ class FlxGamepad implements IFlxDestroyable
 	#end
 	
 	private var axis:Array<Float> = [for (i in 0...6) 0];
+	private var axisActive:Bool = false;
+	
+	#if FLX_OPENFL_JOYSTICK_API
+	private var leftStick:FlxGamepadAnalogStick;
+	private var rightStick:FlxGamepadAnalogStick;
+	#end
 	
 	#if (flash || next)
 	private var _device:GameInputDevice; 
@@ -95,6 +102,10 @@ class FlxGamepad implements IFlxDestroyable
 	{
 		model = Model;
 		buttonIndex.model = Model;
+		#if FLX_OPENFL_JOYSTICK_API
+			leftStick = getRawAnalogStick(FlxGamepadInputID.LEFT_ANALOG_STICK);
+			rightStick = getRawAnalogStick(FlxGamepadInputID.RIGHT_ANALOG_STICK);
+		#end
 		return model;
 	}
 	
@@ -150,9 +161,10 @@ class FlxGamepad implements IFlxDestroyable
 		{
 			control = _device.getControlAt(i);
 			var value = control.value;
+			value = Math.abs(value);		//quick absolute value for analog sticks
 			button = getButton(i);
 			
-			if (value == 0)
+			if (value < deadZone)
 			{
 				button.release();
 			}
@@ -160,6 +172,29 @@ class FlxGamepad implements IFlxDestroyable
 			{
 				button.press();
 			}
+		}
+		#else
+		
+		for (i in 0...axis.length)
+		{
+			//do a reverse axis lookup to get a "fake" RawID and generate a button state object
+			var button = getButton(axisIndexToRawID(i));
+			
+			if (button != null)
+			{
+				//TODO: account for circular deadzone if an analog stick input is detected?
+				var value = Math.abs(axis[i]);
+				if (value > deadZone)
+				{
+					button.press();
+				}
+				else if (value < deadZone)
+				{
+					button.release();
+				}
+			}
+			
+			axisActive = false;
 		}
 		#end
 		
@@ -458,15 +493,29 @@ class FlxGamepad implements IFlxDestroyable
 		var axisValue = getAxisValue(RawAxisID);
 		if (Math.abs(axisValue) > deadZone)
 		{
-			#if (!flash && !next)
-				// in legacy this returns a (-1,1) range, but in flash/next it
-				// returns (0,1) so we normalize to (0,1) for legacy target only
-				axisValue = (axisValue + 1) / 2;
-			#end
 			return axisValue;
 		}
 		return 0;
 	}
+	
+	#if FLX_OPENFL_JOYSTICK_API
+	/**
+	 * Given the array index into the axis array from the legacy joystick API, returns the "fake" RawID for button status
+	 * @param	RawAxisID
+	 */
+	public inline function axisIndexToRawID(AxisIndex:Int):Int
+	{
+		return buttonIndex.axisIndexToRawID(AxisIndex);
+	}
+	
+	public inline function isAxisForAnalogStick(AxisIndex:Int):Bool
+	{
+		return AxisIndex == leftStick.x  ||
+		       AxisIndex == leftStick.y  ||
+		       AxisIndex == rightStick.x ||
+		       AxisIndex == rightStick.y;
+	}
+	#end
 	
 	/**
 	 * Given a ButtonID for an analog stick, gets the value of its x axis
@@ -629,7 +678,7 @@ enum FlxGamepadDeadZoneMode
 	 * The value of each axis is compared to the deadzone individually.
 	 * Works better when an analog stick is used like arrow keys for 4-directional-input.
 	 */
-	INDEPENDANT_AXES;
+	INDEPENDENT_AXES;
 	/**
 	 * X and y are combined against the deadzone combined.
 	 * Works better when an analog stick is used as a two-dimensional control surface.

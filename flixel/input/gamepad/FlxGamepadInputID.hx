@@ -59,6 +59,13 @@ abstract FlxGamepadInputID(Int) from Int to Int
 	var LEFT_ANALOG_STICK    = 19;
 	var RIGHT_ANALOG_STICK   = 20;
 	
+	#if FLX_OPENFL_JOYSTICK_API
+	var LEFT_TRIGGER_FAKE    = 21;
+	var RIGHT_TRIGGER_FAKE   = 22;
+	var LEFT_STICK_FAKE      = 23;
+	var RIGHT_STICK_FAKE     = 24;
+	#end
+	
 	@:from
 	public static inline function fromString(s:String)
 	{
