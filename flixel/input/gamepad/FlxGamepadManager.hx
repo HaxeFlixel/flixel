@@ -34,10 +34,10 @@ class FlxGamepadManager implements IFlxInputManager
 	public var numActiveGamepads(get, null):Int;
 	
 	/**
-	 * Global Gamepad deadzone. The lower, the more sensitive the gamepad.
-	 * Should be between 0.0 and 1.0.
+	 * Global Gamepad deadzone. The lower, the more sensitive the gamepad. Should be
+	 * between 0.0 and 1.0. Null by default, overrides the deadzone of gamepads if non-null.
 	 */
-	public var globalDeadZone(default, set):Float = 0;
+	public var globalDeadZone(default, set):Null<Float>;
 	
 	/**
 	 * Stores all gamepads - can have null entries, but index matches event.device
@@ -652,16 +652,18 @@ class FlxGamepadManager implements IFlxInputManager
 		return count;
 	}
 	
-	private function set_globalDeadZone(DeadZone:Float):Float
+	private function set_globalDeadZone(DeadZone:Null<Float>):Null<Float>
 	{
-		globalDeadZone = DeadZone;
-		for (gamepad in _gamepads)
+		if (DeadZone != null)
 		{
-			if (gamepad != null)
+			for (gamepad in _gamepads)
 			{
-				gamepad.deadZone = DeadZone;
+				if (gamepad != null)
+				{
+					gamepad.deadZone = DeadZone;
+				}
 			}
 		}
-		return globalDeadZone;
+		return globalDeadZone = DeadZone;
 	}
 }

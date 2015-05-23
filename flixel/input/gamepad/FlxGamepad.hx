@@ -75,11 +75,12 @@ class FlxGamepad implements IFlxDestroyable
 	private var _isChrome:Bool = false;
 	#end
 	
-	public function new(ID:Int, GlobalDeadZone:Float = 0, ?Model:FlxGamepadModel) 
+	public function new(ID:Int, ?GlobalDeadZone:Null<Float>, ?Model:FlxGamepadModel) 
 	{
 		id = ID;
 		
-		if (Model == null) Model = XBox360;
+		if (Model == null)
+			Model = XBox360;
 		
 		buttonIndex = new FlxGamepadMapping(model);
 		model = Model;
@@ -88,7 +89,7 @@ class FlxGamepad implements IFlxDestroyable
 		_isChrome = (Capabilities.manufacturer == "Google Pepper");
 		#end
 		
-		if (GlobalDeadZone != 0)
+		if (GlobalDeadZone != null)
 		{
 			deadZone = GlobalDeadZone;
 		}
