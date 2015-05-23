@@ -261,7 +261,7 @@ class FlxBitmapFont extends FlxFramesCollection
 			
 			if (charStr != null)
 			{
-				charStr = switch(charStr) 
+				charStr = switch (charStr) 
 				{
 					case "space": ' ';
 					case "&quot;": '"';

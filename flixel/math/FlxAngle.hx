@@ -225,7 +225,7 @@ class FlxAngle
 	 */
 	public static inline function angleFromFacing(Sprite:FlxSprite, AsDegrees:Bool = false):Float
 	{		
-		var degrees = switch(Sprite.facing)
+		var degrees = switch (Sprite.facing)
 		{
 			case FlxObject.LEFT: 180;
 			case FlxObject.RIGHT: 0;

@@ -182,7 +182,7 @@ class FlxDebugger extends Sprite
 	 */
 	public function resetLayout():Void
 	{
-		switch(_layout)
+		switch (_layout)
 		{
 			case MICRO:
 				log.resize(_screen.x / 4, 68);

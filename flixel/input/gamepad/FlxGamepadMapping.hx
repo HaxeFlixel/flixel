@@ -31,7 +31,7 @@ class FlxGamepadMapping
 	 */
 	public function getRaw(ID:FlxGamepadInputID):Int
 	{
-		return switch(model)
+		return switch (model)
 		{
 			case Logitech: getRawLogitech(ID);
 			case OUYA: getRawOUYA(ID);
@@ -50,7 +50,7 @@ class FlxGamepadMapping
 	 */
 	public function getID(RawID:Int):FlxGamepadInputID
 	{
-		return switch(model)
+		return switch (model)
 		{
 			case Logitech: getIDLogitech(RawID);
 			case OUYA: getIDOUYA(RawID);
@@ -71,7 +71,7 @@ class FlxGamepadMapping
 	{
 		if (ID == FlxGamepadInputID.LEFT_ANALOG_STICK)
 		{
-			return switch(model)
+			return switch (model)
 			{
 				case Logitech: LogitechID.LEFT_ANALOG_STICK;
 				case OUYA: OUYAID.LEFT_ANALOG_STICK;
@@ -84,7 +84,7 @@ class FlxGamepadMapping
 		}
 		else if (ID == FlxGamepadInputID.RIGHT_ANALOG_STICK)
 		{
-			return switch(model)
+			return switch (model)
 			{
 				case Logitech: LogitechID.RIGHT_ANALOG_STICK;
 				case OUYA: OUYAID.RIGHT_ANALOG_STICK;
@@ -104,7 +104,7 @@ class FlxGamepadMapping
 	 */
 	public function axisIndexToRawID(AxisID:Int):Int
 	{
-		return switch(model)
+		return switch (model)
 		{
 			case Logitech: LogitechID.axisIndexToRawID(AxisID);
 			case OUYA: OUYAID.axisIndexToRawID(AxisID);
@@ -119,7 +119,7 @@ class FlxGamepadMapping
 	
 	public function getRawOUYA(ID:FlxGamepadInputID):Int
 	{
-		return switch(ID)
+		return switch (ID)
 		{
 			case A: OUYAID.O;
 			case B: OUYAID.A;
@@ -142,7 +142,7 @@ class FlxGamepadMapping
 	
 	public function getRawLogitech(ID:FlxGamepadInputID):Int
 	{
-		return switch(ID)
+		return switch (ID)
 		{
 			case A: LogitechID.TWO;
 			case B: LogitechID.THREE;
@@ -171,7 +171,7 @@ class FlxGamepadMapping
 	
 	public function getRawPS4(ID:FlxGamepadInputID):Int
 	{
-		return switch(ID)
+		return switch (ID)
 		{
 			case A: PS4ID.X;
 			case B: PS4ID.CIRCLE;
@@ -200,7 +200,7 @@ class FlxGamepadMapping
 	
 	public function getRawPS3(ID:FlxGamepadInputID):Int
 	{
-		return switch(ID)
+		return switch (ID)
 		{
 			case A: PS3ID.X;
 			case B: PS3ID.CIRCLE;
@@ -229,7 +229,7 @@ class FlxGamepadMapping
 	
 	public function getRawXBox360(ID:FlxGamepadInputID):Int
 	{
-		return switch(ID)
+		return switch (ID)
 		{
 			case A: XBox360ID.A;
 			case B: XBox360ID.B;
@@ -258,7 +258,7 @@ class FlxGamepadMapping
 	
 	public function getRawXInput(ID:FlxGamepadInputID):Int
 	{
-		return switch(ID)
+		return switch (ID)
 		{
 			case A: XInputID.A;
 			case B: XInputID.B;
@@ -287,7 +287,7 @@ class FlxGamepadMapping
 	
 	public function getIDOUYA(rawID:Int):FlxGamepadInputID
 	{
-		return switch(rawID)
+		return switch (rawID)
 		{
 			case OUYAID.O: A;
 			case OUYAID.A: B;
@@ -308,7 +308,7 @@ class FlxGamepadMapping
 	
 	public function getIDLogitech(rawID:Int):FlxGamepadInputID
 	{
-		return switch(rawID)
+		return switch (rawID)
 		{
 			case LogitechID.TWO: A;
 			case LogitechID.THREE: B;
@@ -333,7 +333,7 @@ class FlxGamepadMapping
 	
 	public function getIDPS4(rawID:Int):FlxGamepadInputID
 	{
-		return switch(rawID)
+		return switch (rawID)
 		{
 			case PS4ID.X: A;
 			case PS4ID.CIRCLE: B;
@@ -358,7 +358,7 @@ class FlxGamepadMapping
 	
 	public function getIDPS3(rawID:Int):FlxGamepadInputID
 	{
-		return switch(rawID)
+		return switch (rawID)
 		{
 			case PS3ID.X: A;
 			case PS3ID.CIRCLE: B;
@@ -383,7 +383,7 @@ class FlxGamepadMapping
 	
 	public function getIDXBox360(rawID:Int):FlxGamepadInputID
 	{
-		return switch(rawID)
+		return switch (rawID)
 		{
 			case XBox360ID.A: A;
 			case XBox360ID.B: B;
@@ -406,7 +406,7 @@ class FlxGamepadMapping
 	
 	public function getIDXInput(rawID:Int):FlxGamepadInputID
 	{
-		return switch(rawID)
+		return switch (rawID)
 		{
 			case XInputID.A: A;
 			case XInputID.B: B;
