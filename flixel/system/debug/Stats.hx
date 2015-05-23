@@ -247,7 +247,7 @@ class Stats extends Window
 		_updateTimer += elapsed;
 		
 		_frameCount++;
-        _totalCount++;
+		_totalCount++;
 		
 		if (_updateTimer > UPDATE_DELAY)
 		{

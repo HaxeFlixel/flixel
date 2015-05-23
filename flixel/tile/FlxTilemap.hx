@@ -1217,10 +1217,10 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 
 typedef FlxTileProperties =
 {
-   graphic:FlxImageFrame,
-   x:Float,
-   y:Float,
-   scale:FlxPoint,
-   alpha:Float,
-   blend:BlendMode
+	graphic:FlxImageFrame,
+	x:Float,
+	y:Float,
+	scale:FlxPoint,
+	alpha:Float,
+	blend:BlendMode
 }

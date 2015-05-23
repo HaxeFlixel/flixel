@@ -296,6 +296,6 @@ class FlxAngle
 }
 
 typedef FlxSinCos = {
-    var cos: Array<Float>;
-    var sin: Array<Float>;
+	var cos: Array<Float>;
+	var sin: Array<Float>;
 };

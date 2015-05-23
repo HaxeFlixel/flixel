@@ -215,7 +215,7 @@ class FlxGradient
 
 typedef GradientMatrix =
 {
-    matrix:Matrix,
-    alpha:Array<Float>,
-    ratio:Array<Int>
+	matrix:Matrix,
+	alpha:Array<Float>,
+	ratio:Array<Int>
 }
