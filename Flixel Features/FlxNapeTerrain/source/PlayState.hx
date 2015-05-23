@@ -124,26 +124,26 @@ class PlayState extends FlxState
 			
 			for (body in bodyList) 
 			{
-                if (body.isDynamic()) 
+				if (body.isDynamic()) 
 				{
-                    hand.body2 = body;
-                    hand.anchor2 = body.worldPointToLocal(mp, true);
-                    hand.active = true;
-                    break;
-                }
-            }
-
-            if (bodyList.empty()) 
+					hand.body2 = body;
+					hand.anchor2 = body.worldPointToLocal(mp, true);
+					hand.active = true;
+					break;
+				}
+			}
+	
+			if (bodyList.empty()) 
 			{
-                createObject(mp);
-            }
-            else if (!hand.active) 
+				createObject(mp);
+			}
+			else if (!hand.active) 
 			{
-                explosion(mp);
-            }
-
-            // recycle nodes.
-            bodyList.clear();
+				explosion(mp);
+			}
+		
+			// recycle nodes.
+			bodyList.clear();
 			
 			mp.dispose();
 		}
@@ -154,10 +154,10 @@ class PlayState extends FlxState
 		
 		if (hand.active) 
 		{
-            hand.anchor1.setxy(FlxG.mouse.x, FlxG.mouse.y);
-            hand.body2.angularVel *= 0.9;
-        }
-		
+			hand.anchor1.setxy(FlxG.mouse.x, FlxG.mouse.y);
+			hand.body2.angularVel *= 0.9;
+		}
+	
 		super.update(elapsed);
 	}
 	

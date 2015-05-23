@@ -33,7 +33,7 @@ class EnemyBullet extends FlxSprite
 			kill();
 		}
 
-        super.update(elapsed);
+		super.update(elapsed);
 	}
 	
 	override public function kill():Void

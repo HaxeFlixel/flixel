@@ -95,7 +95,7 @@ class Player extends FlxSprite
 		
 		updateAnimations();
 		
-        super.update(elapsed);
+		super.update(elapsed);
 	}
 	
 	private function updateKeyboardInput():Void

@@ -76,6 +76,6 @@ class Player extends FlxSprite
 			animation.play("flail");
 		}
 		
-        super.update(elapsed);
+		super.update(elapsed);
 	}
 }
