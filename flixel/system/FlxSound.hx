@@ -281,6 +281,11 @@ class FlxSound extends FlxBasic
 	 */
 	public function loadEmbedded(EmbeddedSound:FlxSoundAsset, Looped:Bool = false, AutoDestroy:Bool = false, ?OnComplete:Void->Void):FlxSound
 	{
+		if (EmbeddedSound == null)
+		{
+			return this;
+		}
+		
 		cleanup(true);
 		
 		if (Std.is(EmbeddedSound, Sound))
@@ -293,7 +298,10 @@ class FlxSound extends FlxBasic
 		}
 		else if (Std.is(EmbeddedSound, String))
 		{
-			_sound = Assets.getSound(EmbeddedSound);
+			if (Assets.exists(EmbeddedSound))
+				_sound = Assets.getSound(EmbeddedSound);
+			else
+				FlxG.log.error('Could not find a Sound asset with an ID of \'$EmbeddedSound\'.');
 		}
 		
 		//NOTE: can't pull ID3 info from embedded sound currently
@@ -524,6 +532,11 @@ class FlxSound extends FlxBasic
 	 */
 	private function startSound(Position:Float):Void
 	{
+		if (_sound == null)
+		{
+			return;
+		}
+		
 		var numLoops:Int = looped && Position == 0 ? FlxMath.MAX_VALUE_INT : 0;
 		
 		time = Position;

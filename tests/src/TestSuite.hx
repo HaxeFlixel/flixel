@@ -20,6 +20,8 @@ import flixel.math.FlxRandomTest;
 import flixel.math.FlxRectTest;
 import flixel.math.FlxVectorTest;
 import flixel.system.FlxAssetsTest;
+import flixel.system.FlxSoundTest;
+import flixel.system.frontEnds.SoundFrontEndTest;
 import flixel.text.FlxBitmapTextTest;
 import flixel.text.FlxTextTest;
 import flixel.tile.FlxTileblockTest;
@@ -71,6 +73,8 @@ class TestSuite extends massive.munit.TestSuite
 		add(flixel.math.FlxRectTest);
 		add(flixel.math.FlxVectorTest);
 		add(flixel.system.FlxAssetsTest);
+		add(flixel.system.FlxSoundTest);
+		add(flixel.system.frontEnds.SoundFrontEndTest);
 		add(flixel.text.FlxBitmapTextTest);
 		add(flixel.text.FlxTextTest);
 		add(flixel.tile.FlxTileblockTest);
