@@ -141,6 +141,10 @@ class FlxTileblock extends FlxSprite
 		}
 		
 		var graph:FlxGraphic = FlxG.bitmap.add(TileGraphic);
+		if (graph == null)
+		{
+			return this;
+		}
 		
 		if (TileWidth == 0)
 		{

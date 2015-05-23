@@ -183,9 +183,21 @@ class FlxSpriteTest extends FlxTest
 	}
 	
 	@Test // issue 1203
-	function testColorWithAlphaComparison():Void
+	function testColorWithAlphaComparison()
 	{
 		sprite1.color = FlxColor.RED;
 		Assert.areEqual(FlxColor.RED, sprite1.color);
+	}
+	
+	@Test // issue 1511
+	function testLoadGraphicInvalidGraphicPathNoCrash()
+	{
+		sprite1.loadGraphic("assets/invalid");
+	}
+	
+	@Test // issue 1511
+	function testLoadRotatedGraphicInvalidGraphicPathNoCrash()
+	{
+		sprite1.loadRotatedGraphic("assets/invalid");
 	}
 }

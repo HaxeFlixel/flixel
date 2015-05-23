@@ -246,6 +246,10 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		}
 		
 		var graph:FlxGraphic = FlxG.bitmap.add(cast TileGraphic);
+		if (graph == null)
+		{
+			return;
+		}
 		// Figure out the size of the tiles
 		_tileWidth = TileWidth;
 		
@@ -266,6 +270,11 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	
 	override private function initTileObjects():Void 
 	{
+		if (frames == null)
+		{
+			return;
+		}
+		
 		_tileObjects = FlxDestroyUtil.destroyArray(_tileObjects);
 		// Create some tile objects that we'll use for overlap checks (one for each tile)
 		_tileObjects = new Array<FlxTile>();

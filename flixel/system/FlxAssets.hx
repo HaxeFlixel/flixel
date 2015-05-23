@@ -181,7 +181,10 @@ class FlxAssets
 	
 	public static inline function getBitmapData(id:String):BitmapData
 	{
-		return Assets.getBitmapData(id, false);
+		if (Assets.exists(id))
+			return Assets.getBitmapData(id, false);
+		FlxG.log.error('Could not find a BitmapData asset with ID \'$id\'.');
+		return null;
 	}
 	
 	/**

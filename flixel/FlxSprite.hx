@@ -318,6 +318,10 @@ class FlxSprite extends FlxObject
 	public function loadGraphic(Graphic:FlxGraphicAsset, Animated:Bool = false, Width:Int = 0, Height:Int = 0, Unique:Bool = false, ?Key:String):FlxSprite
 	{
 		var graph:FlxGraphic = FlxG.bitmap.add(Graphic, Unique, Key);
+		if (graph == null)
+		{
+			return this;
+		}
 		
 		if (Width == 0)
 		{
@@ -358,6 +362,11 @@ class FlxSprite extends FlxObject
 	public function loadRotatedGraphic(Graphic:FlxGraphicAsset, Rotations:Int = 16, Frame:Int = -1, AntiAliasing:Bool = false, AutoBuffer:Bool = false, ?Key:String):FlxSprite
 	{
 		var brushGraphic:FlxGraphic = FlxG.bitmap.add(Graphic, false, Key);
+		if (brushGraphic == null)
+		{
+			return this;
+		}
+		
 		var brush:BitmapData = brushGraphic.bitmap;
 		var key:String = brushGraphic.key;
 		

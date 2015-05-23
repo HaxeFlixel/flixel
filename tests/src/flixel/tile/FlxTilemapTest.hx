@@ -86,6 +86,12 @@ class FlxTilemapTest extends FlxTest
 		testLoadMapFromCSVWithNewline("\r");
 	}
 	
+	@Test // issue 1511
+	function testLoadMapInvalidGraphicPathNoCrash()
+	{
+		tilemap.loadMapFromArray([1], 1, 1, "assets/invalid");
+	}
+	
 	function testLoadMapFromCSVWithNewline(newlines:String)
 	{
 		tilemap.loadMapFromCSV(sampleMapString.replace("[nl]", newlines), getBitmapData(), 8, 8);

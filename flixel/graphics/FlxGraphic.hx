@@ -42,6 +42,10 @@ class FlxGraphic
 		if (!Cache)
 		{
 			bitmap = FlxAssets.getBitmapData(Source);
+			if (bitmap == null)
+			{
+				return null;
+			}
 			return createGraphic(bitmap, Key, Unique, Cache);
 		}
 		
@@ -53,6 +57,11 @@ class FlxGraphic
 		}
 		
 		bitmap = FlxAssets.getBitmapData(Source);
+		if (bitmap == null)
+		{
+			return null;
+		}
+		
 		graphic = createGraphic(bitmap, key, Unique);
 		graphic.assetsKey = Source;
 		return graphic;
