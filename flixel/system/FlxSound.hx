@@ -8,10 +8,11 @@ import flash.net.URLRequest;
 import flash.utils.ByteArray;
 import flixel.FlxBasic;
 import flixel.FlxG;
-import flixel.system.FlxAssets.FlxSoundAsset;
-import flixel.tweens.FlxTween;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
+import flixel.system.FlxAssets.FlxSoundAsset;
+import flixel.tweens.FlxTween;
+import flixel.util.FlxStringUtil;
 import openfl.Assets;
 
 #if !FLX_NO_SOUND_SYSTEM
@@ -692,5 +693,13 @@ class FlxSound extends FlxBasic
 		}
 		
 		return loop;
+	}
+	
+	override public function toString():String
+	{
+		return FlxStringUtil.getDebugString([
+			LabelValuePair.weak("playing", playing),
+			LabelValuePair.weak("time", time),
+			LabelValuePair.weak("volume", volume)]);
 	}
 }
