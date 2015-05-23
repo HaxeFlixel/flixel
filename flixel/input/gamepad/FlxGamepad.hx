@@ -29,9 +29,9 @@ class FlxGamepad implements IFlxDestroyable
 	
 	/**
 	 * Gamepad deadzone. The lower, the more sensitive the gamepad.
-	 * Should be between 0.0 and 1.0.
+	 * Should be between 0.0 and 1.0. Defaults to 0.15.
 	 */
-	public var deadZone:Float = 0.15;
+	public var deadZone(get, set):Float;
 	/**
 	 * Which dead zone mode to use for analog sticks.
 	 */
@@ -62,6 +62,9 @@ class FlxGamepad implements IFlxDestroyable
 	private var axis:Array<Float> = [for (i in 0...6) 0];
 	private var axisActive:Bool = false;
 	
+	private var manager:FlxGamepadManager;
+	private var _deadZone:Float = 0.15;
+	
 	#if FLX_OPENFL_JOYSTICK_API
 	private var leftStick:FlxGamepadAnalogStick;
 	private var rightStick:FlxGamepadAnalogStick;
@@ -75,9 +78,11 @@ class FlxGamepad implements IFlxDestroyable
 	private var _isChrome:Bool = false;
 	#end
 	
-	public function new(ID:Int, ?GlobalDeadZone:Null<Float>, ?Model:FlxGamepadModel) 
+	public function new(ID:Int, Manager:FlxGamepadManager, ?Model:FlxGamepadModel) 
 	{
 		id = ID;
+		
+		manager = Manager;
 		
 		if (Model == null)
 			Model = XBox360;
@@ -88,11 +93,6 @@ class FlxGamepad implements IFlxDestroyable
 		#if flash
 		_isChrome = (Capabilities.manufacturer == "Google Pepper");
 		#end
-		
-		if (GlobalDeadZone != null)
-		{
-			deadZone = GlobalDeadZone;
-		}
 		
 		pressed = new FlxGamepadButtonList(FlxInputState.PRESSED, this);
 		justPressed = new FlxGamepadButtonList(FlxInputState.JUST_PRESSED, this);
@@ -238,6 +238,7 @@ class FlxGamepad implements IFlxDestroyable
 		
 		buttons = null;
 		axis = null;
+		manager = null;
 		
 		#if !flash
 		hat = FlxDestroyUtil.put(hat);
@@ -671,6 +672,16 @@ class FlxGamepad implements IFlxDestroyable
 		if (Math.abs(axisValue) > deadZone)
 			return axisValue;
 		return 0;
+	}
+	
+	private function get_deadZone():Float
+	{
+		return (manager.globalDeadZone == null) ? _deadZone : manager.globalDeadZone;
+	}
+	
+	private inline function set_deadZone(deadZone:Float):Float
+	{
+		return _deadZone = deadZone;
 	}
 	
 	public function toString():String
