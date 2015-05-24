@@ -24,11 +24,11 @@ class Watch extends Window
 	/**
 	 * Whether a watch entry is currently being edited or not. 
 	 */		
-	public var editing:Bool;
+	public var editing(default, null):Bool;
 	
 	private var _names:Sprite;
 	private var _values:Sprite;
-	private var _watching:Array<WatchEntry>;
+	private var _watchEntries:Array<WatchEntry>;
 	private var _quickWatchList:Map<String, WatchEntry>;
 	
 	/**
@@ -48,7 +48,7 @@ class Watch extends Window
 		_values.y = 15;
 		addChild(_values);
 		
-		_watching = new Array<WatchEntry>();
+		_watchEntries = new Array<WatchEntry>();
 		_quickWatchList = new Map<String, WatchEntry>();
 		
 		editing = false;
@@ -57,22 +57,11 @@ class Watch extends Window
 		FlxG.signals.stateSwitched.add(removeAll);
 	}
 	
-	/**
-	 * Clean up memory.
-	 */
 	override public function destroy():Void
 	{
-		if (_names != null)
-		{
-			removeChild(_names);
-			_names = null;
-		}
-		if (_values != null)
-		{
-			removeChild(_values);
-			_values = null;
-		}
-		FlxDestroyUtil.destroyArray(_watching);
+		_names = FlxDestroyUtil.removeChild(this, _names);
+		_values = FlxDestroyUtil.removeChild(this, _values);
+		_watchEntries = FlxDestroyUtil.destroyArray(_watchEntries);
 		_quickWatchList = null;
 		FlxG.signals.stateSwitched.remove(removeAll);
 		
@@ -80,8 +69,7 @@ class Watch extends Window
 	}
 
 	/**
-	 * Add a new variable to the watch window. Has some simple code in place to prevent
-	 * accidentally watching the same variable twice.
+	 * Add a new variable to the watch window. Prevents the same variable being watched twice.
 	 * 
 	 * @param 	AnyObject		The Object containing the variable you want to track, e.g. this or Player.velocity.
 	 * @param 	VariableName	The String name of the variable you want to track, e.g. "width" or "x".
@@ -89,13 +77,16 @@ class Watch extends Window
 	 */
 	public function add(AnyObject:Dynamic, VariableName:String, ?DisplayName:String):Void
 	{
+		if (DisplayName == null)
+			DisplayName = VariableName;
+		
 		// Attempt to resolve variable paths, like FlxG.state.members.length
 		var varData:PathToVariable = ConsoleUtil.resolveObjectAndVariable(VariableName, AnyObject);
 		AnyObject = varData.object;
 		VariableName = varData.variableName;
 		
 		// Don't add repeats
-		for (watchEntry in _watching)
+		for (watchEntry in _watchEntries)
 		{
 			if ((watchEntry.object == AnyObject) && (watchEntry.field == VariableName))
 			{
@@ -104,18 +95,7 @@ class Watch extends Window
 		}
 		
 		// Good, no repeats, add away!
-		var watchEntry = new WatchEntry(_watching.length * LINE_HEIGHT, getNameWidth(), getValueWidth(), AnyObject, VariableName, DisplayName);
-		
-		if (watchEntry.field == null)
-		{
-			watchEntry.destroy();
-			watchEntry = null;
-			return;
-		}
-		
-		_names.addChild(watchEntry.nameDisplay);
-		_values.addChild(watchEntry.valueDisplay);
-		_watching.push(watchEntry);
+		addEntry(AnyObject, VariableName, DisplayName);
 	}
 	
 	/**
@@ -130,20 +110,25 @@ class Watch extends Window
 		// Does this quickWatch exist yet? If not, create one.
 		if (_quickWatchList.get(Name) == null)
 		{
-			var quickWatch = new WatchEntry(_watching.length * LINE_HEIGHT, getNameWidth(), getValueWidth(), null, null, Name);
-			_names.addChild(quickWatch.nameDisplay);
-			_values.addChild(quickWatch.valueDisplay);
-			_watching.push(quickWatch);
+			var quickWatch = addEntry(null, null, Name);
 			_quickWatchList.set(Name, quickWatch);
 		}
 		
 		//  Update the value
 		var quickWatch:WatchEntry = _quickWatchList.get(Name);
-		
 		if (quickWatch != null) 
 		{
 			quickWatch.valueDisplay.text = Std.string(NewValue);
 		}
+	}
+	
+	private function addEntry(object:Dynamic, field:String, custom:String):WatchEntry
+	{
+		var entry = new WatchEntry(_watchEntries.length * LINE_HEIGHT, getNameWidth(), getValueWidth(), object, field, custom);
+		_names.addChild(entry.nameDisplay);
+		_values.addChild(entry.valueDisplay);
+		_watchEntries.push(entry);
+		return entry;
 	}
 	
 	/**
@@ -153,27 +138,23 @@ class Watch extends Window
 	 * @param 	VariableName	The String name of the variable you want to remove, e.g. "width" or "x".  If left null, this will remove all variables of that object. 
 	 * @param	QuickWatchName	In case you want to remove a quickWatch entry.
 	 */
-	public function remove(AnyObject:Dynamic, VariableName:String = null, ?QuickWatchName:String):Void
+	public function remove(AnyObject:Dynamic, ?VariableName:String, ?QuickWatchName:String):Void
 	{
-		// Remove quickWatch entry
-		if (AnyObject == null && VariableName == null && QuickWatchName != null)
+		if (QuickWatchName != null) // Remove quickWatch entry
 		{
 			var quickWatch:WatchEntry = _quickWatchList.get(QuickWatchName);
-			
 			if (quickWatch != null)
 			{
-				removeEntry(quickWatch, _watching.indexOf(quickWatch));
+				removeEntry(quickWatch, _watchEntries.indexOf(quickWatch));
 			}
 			_quickWatchList.remove(QuickWatchName);
 			
-			// We're done here
-			return;
+			return; // We're done here
 		}
 		
-		// Remove regular entrys
-		for (i in 0..._watching.length)
+		for (i in 0..._watchEntries.length) // Remove regular entrys
 		{
-			var watchEntry:WatchEntry = _watching[i];
+			var watchEntry:WatchEntry = _watchEntries[i];
 			if (watchEntry != null && watchEntry.object == AnyObject && ((VariableName == null) || (watchEntry.field == VariableName)))
 			{
 				removeEntry(watchEntry, i);
@@ -186,16 +167,16 @@ class Watch extends Window
 	 */
 	private function removeEntry(Entry:WatchEntry, Index:Int):Void
 	{
-		FlxArrayUtil.fastSplice(_watching, Entry);
+		FlxArrayUtil.fastSplice(_watchEntries, Entry);
 		
 		_names.removeChild(Entry.nameDisplay);
 		_values.removeChild(Entry.valueDisplay);
 		Entry.destroy();
 		
 		// Reset the display heights of the remaining objects
-		for (i in 0..._watching.length)
+		for (i in 0..._watchEntries.length)
 		{
-			_watching[i].setY(i * LINE_HEIGHT);
+			_watchEntries[i].setY(i * LINE_HEIGHT);
 		}
 	}
 	
@@ -204,14 +185,14 @@ class Watch extends Window
 	 */
 	public function removeAll():Void
 	{
-		for (watchEntry in _watching)
+		for (watchEntry in _watchEntries)
 		{
 			_names.removeChild(watchEntry.nameDisplay);
 			_values.removeChild(watchEntry.valueDisplay);
 			watchEntry.destroy();
 		}
 		
-		_watching = [];
+		_watchEntries = [];
 		_quickWatchList = new Map<String, WatchEntry>();
 	}
 
@@ -222,7 +203,7 @@ class Watch extends Window
 	{
 		editing = false;
 		
-		for (watchEntry in _watching)
+		for (watchEntry in _watchEntries)
 		{
 			if (!watchEntry.updateValue())
 				editing = true;
@@ -234,7 +215,7 @@ class Watch extends Window
 	 */
 	public function submit():Void
 	{
-		for (watchEntry in _watching)
+		for (watchEntry in _watchEntries)
 		{
 			if (watchEntry.editing)
 				watchEntry.submit();
@@ -249,9 +230,9 @@ class Watch extends Window
 	 */
 	override private function updateSize():Void
 	{
-		if (Std.int(_height) < _watching.length * LINE_HEIGHT + 17)
+		if (Std.int(_height) < _watchEntries.length * LINE_HEIGHT + 17)
 		{
-			_height = _watching.length * LINE_HEIGHT + 17;
+			_height = _watchEntries.length * LINE_HEIGHT + 17;
 		}
 		
 		super.updateSize();
@@ -259,7 +240,7 @@ class Watch extends Window
 		var newNameWidth = getNameWidth();
 		_values.x = newNameWidth + 2;
 		
-		for (watchEntry in _watching)
+		for (watchEntry in _watchEntries)
 		{
 			watchEntry.updateWidth(newNameWidth, getValueWidth());
 		}

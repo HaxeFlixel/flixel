@@ -21,123 +21,84 @@ class WatchEntry implements IFlxDestroyable
 	/**
 	 * The Object being watched.
 	 */
-	public var object:Dynamic;
+	public var object(default, null):Dynamic;
 	/**
 	 * The member variable of that object.
 	 */
-	public var field:String;	
+	public var field(default, null):String;	
 	/**
 	 * A custom display name for this object, if there is any.
 	 */
-	public var custom:String;
+	public var custom(default, null):String;
 	/**
 	 * The Flash TextField object used to display this entry's name.
 	 */
-	public var nameDisplay:TextField;
+	public var nameDisplay(default, null):TextField;
 	/**
 	 * The Flash TextField object used to display and edit this entry's value.
 	 */
-	public var valueDisplay:TextField;
+	public var valueDisplay(default, null):TextField;
 	/**
 	 * Whether the entry is currently being edited or not.
 	 */
-	public var editing:Bool;
+	public var editing(default, null):Bool;
 	/**
 	 * The value of the field before it was edited.
 	 */
-	public var oldValue:Dynamic;
+	public var oldValue(default, null):Dynamic;
 	
 	private var _whiteText:TextFormat;
 	private var _blackText:TextFormat;
-	
-	/**
-	 * Whether this entry is a quickWatch or not.
-	 */
-	public var quickWatch:Bool = false;
+	private var _isQuickWatch:Bool = false;
 	
 	/**
 	 * Creates a new watch entry in the watch window. 
 	 * Will be a "quickWatch" when Obj and Field are null, but a Custom name is set.
 	 * 
-	 * @param 	Y			The initial height in the Watch window.
-	 * @param 	NameWidth	The initial width of the name field.
-	 * @param 	ValueWidth	The initial width of the value field.
-	 * @param 	Obj			The Object containing the variable we want to watch.
-	 * @param 	Field		The variable name we want to watch.
-	 * @param 	Custom		A custom display name (optional).
+	 * @param 	y			The initial height in the Watch window.
+	 * @param 	nameWidth	The initial width of the name field.
+	 * @param 	valueWidth	The initial width of the value field.
+	 * @param 	object		The Object containing the variable we want to watch.
+	 * @param 	field		The variable name we want to watch.
+	 * @param 	custom		A custom display name (optional).
 	 */
-	public function new(Y:Float, NameWidth:Float, ValueWidth:Float, Obj:Dynamic, Field:String, ?Custom:String)
+	public function new(y:Float, nameWidth:Float, valueWidth:Float, object:Dynamic, field:String, ?custom:String)
 	{
 		editing = false;
 		
-		if (Obj == null && Field == null && Custom != null)
+		if (object == null && field == null && custom != null)
 		{
-			quickWatch = true;
+			_isQuickWatch = true;
+		}
+		else
+		{
+			this.object = object;
+			this.field = field;
 		}
 		
-		custom = Custom;
-		
-		// No need to retrieve a variable if this is a quickWatch
-		if (!quickWatch)
-		{
-			object = Obj;
-			field = Field;
-			
-			var tempArr:Array<String> = field.split(".");
-			var l:Int = tempArr.length;
-			var tempObj:Dynamic = object;
-			var tempVarName:String = "";
-			for (i in 0...l)
-			{
-				tempVarName = tempArr[i];
-				
-				try 
-				{
-					Reflect.getProperty(tempObj, tempVarName);
-				}
-				catch (e:Dynamic)
-				{
-					FlxG.log.error("Watch: " + Std.string(tempObj) + " does not have a field '" + tempVarName + "'");
-					tempVarName = null;
-					break;
-				}
-				
-				if (i < (l - 1))
-				{
-					tempObj = Reflect.getProperty(tempObj, tempVarName);
-				}
-			}
-			
-			object = tempObj;
-			field = tempVarName;
-		}
+		this.custom = custom;
 		
 		var fontName:String = FlxAssets.FONT_DEBUGGER;
-		// quickWatch is green, normal watch is white
-		var color:FlxColor = 0xffffff;
-		if (quickWatch)
-		{
-			color = 0xA5F1ED;
-		}
 		
+		// quickWatch is green, normal watch is white
+		var color = _isQuickWatch ? 0xA5F1ED : 0xffffff;
 		_whiteText = new TextFormat(fontName, 12, color);
 		_blackText = new TextFormat(fontName, 12, 0);
 		
 		nameDisplay = new TextField();
-		nameDisplay.y = Y;
+		nameDisplay.y = y;
 		nameDisplay.multiline = false;
 		nameDisplay.selectable = true;
 		nameDisplay.embedFonts = true;
 		nameDisplay.defaultTextFormat = _whiteText;
 		
 		valueDisplay = new TextField();
-		valueDisplay.y = Y;
+		valueDisplay.y = y;
 		valueDisplay.height = 20;
 		valueDisplay.multiline = false;
 		valueDisplay.selectable = true;
 		valueDisplay.doubleClickEnabled = true;
-		// No editing for quickWatch
-		if (!quickWatch) 
+		if (!_isQuickWatch) // No editing for quickWatch
 		{
 			valueDisplay.addEventListener(KeyboardEvent.KEY_UP,onKeyUp);
 			valueDisplay.addEventListener(MouseEvent.MOUSE_UP,onMouseUp);
@@ -147,12 +108,9 @@ class WatchEntry implements IFlxDestroyable
 		valueDisplay.embedFonts = true;
 		valueDisplay.defaultTextFormat = _whiteText;
 		
-		updateWidth(NameWidth, ValueWidth);
+		updateWidth(nameWidth, valueWidth);
 	}
 	
-	/**
-	 * Clean up memory.
-	 */
 	public function destroy():Void
 	{
 		object = null;
@@ -168,22 +126,19 @@ class WatchEntry implements IFlxDestroyable
 		}
 	}
 	
-	/**
-	 * Set the watch window Y height of the Flash TextField objects.
-	 */
-	public function setY(Y:Float):Void
+	public function setY(y:Float):Void
 	{
-		nameDisplay.y = Y;
-		valueDisplay.y = Y;
+		nameDisplay.y = y;
+		valueDisplay.y = y;
 	}
 	
 	/**
 	 * Adjust the width of the Flash TextField objects.
 	 */
-	public function updateWidth(NameWidth:Float, ValueWidth:Float):Void
+	public function updateWidth(nameWidth:Float, valueWidth:Float):Void
 	{
-		nameDisplay.width = NameWidth;
-		valueDisplay.width = ValueWidth;
+		nameDisplay.width = nameWidth;
+		valueDisplay.width = valueWidth;
 		if (custom != null)
 		{
 			nameDisplay.text = custom;
@@ -191,7 +146,7 @@ class WatchEntry implements IFlxDestroyable
 		else if (field != null)
 		{
 			nameDisplay.text = "";
-			if (NameWidth > 120)
+			if (nameWidth > 120)
 			{
 				nameDisplay.appendText(FlxStringUtil.getClassName(object, true) + ".");
 			}
@@ -206,7 +161,7 @@ class WatchEntry implements IFlxDestroyable
 	 */
 	public function updateValue():Bool
 	{
-		if (editing || quickWatch) 
+		if (editing || _isQuickWatch) 
 		{
 			return false;
 		}
@@ -220,9 +175,8 @@ class WatchEntry implements IFlxDestroyable
 	
 	/**
 	 * A watch entry was clicked, so flip into edit mode for that entry.
-	 * @param	FlashEvent	Flash mouse event.
 	 */
-	public function onMouseUp(FlashEvent:MouseEvent):Void
+	public function onMouseUp(_):Void
 	{
 		editing = true;
 		#if !FLX_NO_KEYBOARD
@@ -237,13 +191,12 @@ class WatchEntry implements IFlxDestroyable
 	/**
 	 * Check to see if Enter, Tab or Escape were just released.
 	 * Enter or Tab submit the change, and Escape cancels it.
-	 * @param	FlashEvent	Flash keyboard event.
 	 */
-	public function onKeyUp(FlashEvent:KeyboardEvent):Void
+	public function onKeyUp(e:KeyboardEvent):Void
 	{
-		if ((FlashEvent.keyCode == 13) || (FlashEvent.keyCode == 9) || (FlashEvent.keyCode == 27)) //enter or tab or escape
+		if ((e.keyCode == 13) || (e.keyCode == 9) || (e.keyCode == 27)) //enter or tab or escape
 		{
-			if (FlashEvent.keyCode == 27)
+			if (e.keyCode == 27)
 			{
 				cancel();
 			}

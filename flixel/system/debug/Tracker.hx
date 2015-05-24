@@ -158,7 +158,7 @@ class Tracker extends Watch
 		_title.text = (WindowTitle == null) ? FlxStringUtil.getClassName(_object, true) : WindowTitle;
 		visible = true;
 		
-		var lastWatchEntryY:Float = _watching[_watching.length - 1].nameDisplay.y;
+		var lastWatchEntryY:Float = _watchEntries[_watchEntries.length - 1].nameDisplay.y;
 		resize(200, lastWatchEntryY + 30);
 		
 		// Small x and y offset
