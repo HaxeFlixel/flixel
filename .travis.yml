@@ -32,6 +32,7 @@ install:
   - haxelib git flixel-addons https://github.com/HaxeFlixel/flixel-addons dev > /dev/null
   - haxelib git flixel-ui https://github.com/HaxeFlixel/flixel-ui dev > /dev/null
   - haxelib dev flixel $TRAVIS_BUILD_DIR
+  - haxelib list
 
 script:
   - cd ./tests
