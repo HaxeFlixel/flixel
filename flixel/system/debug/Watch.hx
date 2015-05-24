@@ -72,14 +72,7 @@ class Watch extends Window
 			removeChild(_values);
 			_values = null;
 		}
-		if (_watching != null)
-		{
-			for (watchEntry in _watching)
-			{
-				watchEntry = FlxDestroyUtil.destroy(watchEntry);
-			}
-			_watching = null;
-		}
+		FlxDestroyUtil.destroyArray(_watching);
 		_quickWatchList = null;
 		FlxG.signals.stateSwitched.remove(removeAll);
 		
@@ -111,7 +104,7 @@ class Watch extends Window
 		}
 		
 		// Good, no repeats, add away!
-		var watchEntry = new WatchEntry((_watching.length * LINE_HEIGHT), (_width / 2), (_width / 2 - 10), AnyObject, VariableName, DisplayName);
+		var watchEntry = new WatchEntry(_watching.length * LINE_HEIGHT, getNameWidth(), getValueWidth(), AnyObject, VariableName, DisplayName);
 		
 		if (watchEntry.field == null)
 		{
@@ -137,7 +130,7 @@ class Watch extends Window
 		// Does this quickWatch exist yet? If not, create one.
 		if (_quickWatchList.get(Name) == null)
 		{
-			var quickWatch = new WatchEntry(_watching.length * LINE_HEIGHT, _width / 2, _width / 2 - 10, null, null, Name);
+			var quickWatch = new WatchEntry(_watching.length * LINE_HEIGHT, getNameWidth(), getValueWidth(), null, null, Name);
 			_names.addChild(quickWatch.nameDisplay);
 			_values.addChild(quickWatch.valueDisplay);
 			_watching.push(quickWatch);
@@ -263,12 +256,23 @@ class Watch extends Window
 		
 		super.updateSize();
 		
-		_values.x = _width/2 + 2;
+		var newNameWidth = getNameWidth();
+		_values.x = newNameWidth + 2;
 		
 		for (watchEntry in _watching)
 		{
-			watchEntry.updateWidth(_width / 2, _width / 2 - 10);
+			watchEntry.updateWidth(newNameWidth, getValueWidth());
 		}
+	}
+	
+	private function getNameWidth():Float
+	{
+		return Math.min(100, _width / 2);
+	}
+	
+	private function getValueWidth():Float
+	{
+		return _width - getNameWidth() - 10;
 	}
 	#end
 }
