@@ -19,6 +19,7 @@ import flixel.system.scaleModes.RatioScaleMode;
 import flixel.util.FlxCollision;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSave;
+using flixel.util.FlxArrayUtil;
 
 #if !FLX_NO_TOUCH
 import flixel.input.touch.FlxTouchManager;
@@ -470,7 +471,7 @@ class FlxG
 			{
 				postProcesses[i].to = postProcesses[i + 1];
 			}
-			postProcesses[postProcesses.length - 1].to = null;
+			postProcesses.last().to = null;
 		}
 	}
 	#end

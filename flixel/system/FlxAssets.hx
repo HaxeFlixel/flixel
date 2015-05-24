@@ -4,6 +4,7 @@ package flixel.system;
 import haxe.macro.Context;
 import haxe.macro.Expr;
 import sys.FileSystem;
+using flixel.util.FlxArrayUtil;
 using StringTools;
 #else
 import flash.display.BitmapData;
@@ -293,7 +294,7 @@ private class FileReference
 		// replace some forbidden names to underscores, since variables cannot have these symbols.
 		this.name = value.split("-").join("_").split(".").join("__");
 		var split:Array<String> = name.split("/");
-		this.name = split[split.length - 1];
+		this.name = split.last();
 		
 		// auto generate documentation
 		this.documentation = "\"" + value + "\" (auto generated).";

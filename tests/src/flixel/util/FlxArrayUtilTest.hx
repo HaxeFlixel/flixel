@@ -58,4 +58,23 @@ class FlxArrayUtilTest
 	{
 		Assert.isFalse([1, 2, 3].equals([3, 2, 1]));
 	}
+	
+	@Test
+	function testLastNullArray()
+	{
+		Assert.isNull((null : Array<Int>).last());
+	}
+	
+	@Test
+	function testLastEmptyArray()
+	{
+		Assert.isNull([].last());
+	}
+	
+	@Test
+	function testLast()
+	{
+		Assert.areEqual(1, [1].last());
+		Assert.areEqual(3, [1, 2, 3].last());
+	}
 }

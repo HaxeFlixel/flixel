@@ -32,8 +32,9 @@ import flixel.math.FlxRect;
 import flixel.util.FlxTimer;
 import flixel.animation.FlxAnimationController;
 import flixel.effects.particles.FlxEmitter;
-#end
 import flixel.util.FlxStringUtil;
+using flixel.util.FlxArrayUtil;
+#end
 
 class Tracker extends Watch
 {
@@ -158,7 +159,7 @@ class Tracker extends Watch
 		_title.text = (WindowTitle == null) ? FlxStringUtil.getClassName(_object, true) : WindowTitle;
 		visible = true;
 		
-		var lastWatchEntryY:Float = _watchEntries[_watchEntries.length - 1].nameDisplay.y;
+		var lastWatchEntryY:Float = _watchEntries.last().nameDisplay.y;
 		resize(200, lastWatchEntryY + 30);
 		
 		// Small x and y offset
