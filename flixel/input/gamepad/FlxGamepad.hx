@@ -175,8 +175,7 @@ class FlxGamepad implements IFlxDestroyable
 				button.press();
 			}
 		}
-		#else
-		
+		#elseif FLX_OPENFL_JOYSTICK_API
 		for (i in 0...axis.length)
 		{
 			//do a reverse axis lookup to get a "fake" RawID and generate a button state object
@@ -504,7 +503,6 @@ class FlxGamepad implements IFlxDestroyable
 	#if FLX_OPENFL_JOYSTICK_API
 	/**
 	 * Given the array index into the axis array from the legacy joystick API, returns the "fake" RawID for button status
-	 * @param	RawAxisID
 	 */
 	public inline function axisIndexToRawID(AxisIndex:Int):Int
 	{
