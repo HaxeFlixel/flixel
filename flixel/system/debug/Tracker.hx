@@ -32,9 +32,9 @@ import flixel.math.FlxRect;
 import flixel.util.FlxTimer;
 import flixel.animation.FlxAnimationController;
 import flixel.effects.particles.FlxEmitter;
-import flixel.util.FlxStringUtil;
 using flixel.util.FlxArrayUtil;
 #end
+import flixel.util.FlxStringUtil;
 
 class Tracker extends Watch
 {
