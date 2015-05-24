@@ -14,7 +14,7 @@ env:
 matrix:
   allow_failures:
     - env: "TARGET=html5"
-	- haxe: development
+    - haxe: development
 
 install:
   - haxelib install munit > /dev/null
