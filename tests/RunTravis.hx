@@ -37,7 +37,9 @@ class RunTravis
 		if (target == Target.FLASH)
 		{
 			return runInDir("unit", function() {
-				return haxelibRun(["munit", "test"]);
+				// can't run / display results without a browser,
+				// this at least checks if the tests compile
+				return haxelibRun(["munit", "test", "-as3", "-norun"]);
 			});
 		}
 		else return runOpenFL("test", "unit", target);
