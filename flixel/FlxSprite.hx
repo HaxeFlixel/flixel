@@ -487,8 +487,11 @@ class FlxSprite extends FlxObject
 	 */
 	public inline function resetFrameSize():Void
 	{
-		frameWidth = Std.int(frame.sourceSize.x);
-		frameHeight = Std.int(frame.sourceSize.y);
+		if (frame != null) 
+		{
+			frameWidth = Std.int(frame.sourceSize.x);
+			frameHeight = Std.int(frame.sourceSize.y);
+		}
 		_halfSize.set(0.5 * frameWidth, 0.5 * frameHeight);
 		resetSize();
 	}
