@@ -2,6 +2,5 @@
 *.n
 template-bak/*
 *.log
-tests/report/
-tests/.temp/
-tests/bin/
+tests/unit/report/
+tests/unit/.temp/
