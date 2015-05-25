@@ -9,9 +9,7 @@ using flixel.util.FlxStringUtil;
 
 #if FLX_JOYSTICK_API
 import openfl.events.JoystickEvent;
-#end
-
-#if (flash11_8 || next)
+#elseif FLX_GAMEINPUT_API
 import flash.ui.GameInput;
 import flash.ui.GameInputDevice;
 import flash.events.GameInputEvent;
@@ -48,14 +46,12 @@ class FlxGamepadManager implements IFlxInputManager
 	 */
 	private var _activeGamepads:Array<FlxGamepad> = [];
 	
-	#if (flash11_8 || next)
+	#if FLX_GAMEINPUT_API
 	/**
 	 * GameInput needs to be statically created, otherwise GameInput.numDevices will be zero during construction.
 	 */
 	private static var _gameInput:GameInput = new GameInput();
-	#end
-	
-	#if (!flash)
+	#elseif FLX_JOYSTICK_API
 	private static inline var JOYSTICK_BUTTON_UP:String = "buttonUp";
 	private static inline var JOYSTICK_BUTTON_DOWN:String = "buttonDown";
 	#end
@@ -344,7 +340,7 @@ class FlxGamepadManager implements IFlxInputManager
 		lastActive = null;
 		_gamepads = null;
 		
-		#if (flash11_8 || next)
+		#if FLX_GAMEINPUT_API
 		// not sure this is needed - can't imagine any use case where FlxGamepadManager would be destroyed
 		_gameInput.removeEventListener(GameInputEvent.DEVICE_ADDED, onDeviceAdded);
 		_gameInput.removeEventListener(GameInputEvent.DEVICE_REMOVED, onDeviceRemoved);
@@ -376,9 +372,7 @@ class FlxGamepadManager implements IFlxInputManager
 		FlxG.stage.addEventListener(JoystickEvent.HAT_MOVE, handleHatMove);
 		FlxG.stage.addEventListener(JoystickEvent.DEVICE_REMOVED, handleDeviceRemoved);
 		FlxG.stage.addEventListener(JoystickEvent.DEVICE_ADDED, handleDeviceAdded);
-		#end
-		
-		#if (flash11_8 || next)
+		#elseif FLX_GAMEINPUT_API
 		_gameInput.addEventListener(GameInputEvent.DEVICE_ADDED, onDeviceAdded);
 		_gameInput.addEventListener(GameInputEvent.DEVICE_REMOVED, onDeviceRemoved);
 		
@@ -389,7 +383,7 @@ class FlxGamepadManager implements IFlxInputManager
 		#end
 	}
 	
-	#if (flash11_8 || next)
+	#if FLX_GAMEINPUT_API
 	private function onDeviceAdded(Event:GameInputEvent):Void
 	{
 		addGamepad(Event.device);
@@ -528,7 +522,7 @@ class FlxGamepadManager implements IFlxInputManager
 		gamepad.hat.x = newx;
 		gamepad.hat.y = newy;
 		
-		#if !flash
+		#if FLX_JOYSTICK_API
 		var newType:String = "";
 		var newId:Int = 0;
 		

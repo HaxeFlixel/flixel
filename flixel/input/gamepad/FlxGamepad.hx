@@ -12,7 +12,7 @@ import flixel.math.FlxVector;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxStringUtil;
 
-#if (flash || next)
+#if FLX_GAMEINPUT_API
 import flash.ui.GameInputControl;
 import flash.ui.GameInputDevice;
 import flash.system.Capabilities;
@@ -54,7 +54,7 @@ class FlxGamepad implements IFlxDestroyable
 	 */
 	public var analog(default, null):FlxGamepadAnalogList;
 	
-	#if !flash
+	#if FLX_JOYSTICK_API
 	public var hat(default, null):FlxPoint = FlxPoint.get();
 	public var ball(default, null):FlxPoint = FlxPoint.get();
 	#end
@@ -68,13 +68,11 @@ class FlxGamepad implements IFlxDestroyable
 	#if FLX_JOYSTICK_API
 	private var leftStick:FlxGamepadAnalogStick;
 	private var rightStick:FlxGamepadAnalogStick;
-	#end
-	
-	#if (flash || next)
+	#elseif FLX_GAMEINPUT_API
 	private var _device:GameInputDevice; 
 	#end
 	
-	#if (flash)
+	#if flash
 	private var _isChrome:Bool = false;
 	#end
 	
@@ -105,8 +103,8 @@ class FlxGamepad implements IFlxDestroyable
 		model = Model;
 		buttonIndex.model = Model;
 		#if FLX_JOYSTICK_API
-			leftStick = getRawAnalogStick(FlxGamepadInputID.LEFT_ANALOG_STICK);
-			rightStick = getRawAnalogStick(FlxGamepadInputID.RIGHT_ANALOG_STICK);
+		leftStick = getRawAnalogStick(FlxGamepadInputID.LEFT_ANALOG_STICK);
+		rightStick = getRawAnalogStick(FlxGamepadInputID.RIGHT_ANALOG_STICK);
 		#end
 		return model;
 	}
@@ -150,7 +148,7 @@ class FlxGamepad implements IFlxDestroyable
 	 */
 	public function update():Void
 	{
-		#if (flash || next)
+		#if FLX_GAMEINPUT_API
 		var control:GameInputControl;
 		var button:FlxGamepadButton;
 		
@@ -225,7 +223,7 @@ class FlxGamepad implements IFlxDestroyable
 			axis[i] = 0;
 		}
 		
-		#if !flash
+		#if FLX_JOYSTICK_API
 		hat.set();
 		ball.set();
 		#end
@@ -239,7 +237,7 @@ class FlxGamepad implements IFlxDestroyable
 		axis = null;
 		manager = null;
 		
-		#if !flash
+		#if FLX_JOYSTICK_API
 		hat = FlxDestroyUtil.put(hat);
 		ball = FlxDestroyUtil.put(ball);
 		
@@ -553,7 +551,7 @@ class FlxGamepad implements IFlxDestroyable
 		var axisValue = getAnalogYAxisValue(Stick);
 		
 		// the y axis is inverted on the Xbox gamepad in flash for some reason - but not in Chrome!
-		#if (flash)
+		#if flash
 		if (model == XBox360 && !_isChrome)
 		{
 			axisValue = -axisValue;
@@ -596,7 +594,7 @@ class FlxGamepad implements IFlxDestroyable
 			}
 		}
 		
-		#if !flash
+		#if FLX_JOYSTICK_API
 		if (ball.x != 0 || ball.y != 0)
 		{
 			return true;
@@ -615,7 +613,7 @@ class FlxGamepad implements IFlxDestroyable
 	{
 		var axisValue:Float = 0;
 		
-		#if (flash || next)
+		#if FLX_GAMEINPUT_API
 		if ((_device != null) && _device.enabled)
 		{
 			axisValue = _device.getControlAt(AxisID).value;

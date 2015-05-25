@@ -39,10 +39,12 @@ private enum HelperDefines
 {
 	FLX_MOUSE_ADVANCED;
 	FLX_NATIVE_CURSOR;
-	FLX_JOYSTICK_API;
 	FLX_SOUND_TRAY;
 	FLX_POINTER_INPUT;
 	FLX_POST_PROCESS;
+	
+	FLX_JOYSTICK_API;
+	FLX_GAMEINPUT_API;
 }
 
 class FlxDefines
@@ -123,7 +125,11 @@ class FlxDefines
 			define(FLX_NATIVE_CURSOR);
 		}
 		
-		if (!defined("next") && (defined("cpp") || defined("neko") || defined("bitfive")))
+		if (defined("next") || defined("flash11_8"))
+		{
+			define(FLX_GAMEINPUT_API);
+		}
+		else if (!defined("next") && (defined("cpp") || defined("neko") || defined("bitfive")))
 		{
 			define(FLX_JOYSTICK_API);
 		}
