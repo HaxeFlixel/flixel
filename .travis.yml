@@ -9,7 +9,6 @@ env:
   - TARGET=flash
   - TARGET=neko
   - TARGET=html5
-  - TARGET=munit
   
 matrix:
   allow_failures:
@@ -36,4 +35,4 @@ install:
 
 script:
   - cd ./tests
-  - /bin/sh -c '[ $TARGET = "munit" ] && haxe test.hxml || haxelib run flixel-tools testdemos -$TARGET'
+  - /bin/sh runTravis.sh
