@@ -45,7 +45,7 @@ class RunTravis
 	
 	static function runCoverageTests(target:Target):ExitCode
 	{
-		Sys.println("Running coverage tests...\n");
+		Sys.println("\nRunning coverage tests...\n");
 		return getResult([
 			runOpenFL("build", "coverage", target, "coverage1"),
 			runOpenFL("build", "coverage", target, "coverage2")
@@ -54,7 +54,7 @@ class RunTravis
 	
 	static function buildDemos(target:Target):ExitCode
 	{
-		Sys.println("Building demos...\n");
+		Sys.println("\nBuilding demos...\n");
 		var demos = [];
 		if (target == Target.CPP)
 			demos = ["Mode", '"RPG Interface"', "FlxNape"];

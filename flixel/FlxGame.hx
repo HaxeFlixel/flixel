@@ -865,7 +865,7 @@ class FlxGame extends Sprite
 		#end
 		#end
 		
-		#if js
+		#if (js && FLX_RENDER_BLIT)
 		_display.fillRect(_display.rect, FlxColor.TRANSPARENT);
 		
 		for (camera in FlxG.cameras.list)

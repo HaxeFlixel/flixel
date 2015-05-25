@@ -272,7 +272,8 @@ class BitmapLog extends Window
 			_entries[i] = null;
 		}
 		_entries = [];
-		_canvas.fillRect(_canvas.rect, FlxColor.TRANSPARENT);
+		if (_canvas != null)
+			_canvas.fillRect(_canvas.rect, FlxColor.TRANSPARENT);
 		_dimensionsText.text = "";
 		_counterText.text = "0/0";
 		_footerText.text = "";
