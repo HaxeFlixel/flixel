@@ -5,73 +5,48 @@ import haxe.macro.Compiler;
 import haxe.macro.Context;
 using StringTools;
 
-class FlxConditionals
+private enum UserDefines
 {
-	/**
-	 * Rendering conditionals - only one may be defined. Can be defined by the user.
-	 */
-	static inline var FLX_RENDER_TILE = "FLX_RENDER_TILE";
-	static inline var FLX_RENDER_BLIT = "FLX_RENDER_BLIT";
-	
-	/**
-	 * Additional render flag
-	 */
-	static inline var FLX_RENDER_TRIANGLE = "FLX_RENDER_TRIANGLE";
-	
-	/**
-	 * Flixel-defined helper conditionals
-	 */
-	static inline var FLX_MOUSE_ADVANCED = "FLX_MOUSE_ADVANCED";
-	static inline var FLX_NATIVE_CURSOR = "FLX_NATIVE_CURSOR";
-	static inline var FLX_JOYSTICK_API = "FLX_JOYSTICK_API";
-	static inline var FLX_SOUND_TRAY = "FLX_SOUND_TRAY";
-	static inline var FLX_POINTER_INPUT = "FLX_POINTER_INPUT";
-	static inline var FLX_POST_PROCESS = "FLX_POST_PROCESS";
-	
-	/**
-	 * User-defined conditionals
-	 */
-	static inline var FLX_NO_MOUSE_ADVANCED = "FLX_NO_MOUSE_ADVANCED";
-	static inline var FLX_NO_GAMEPAD = "FLX_NO_GAMEPAD";
-	static inline var FLX_NO_NATIVE_CURSOR = "FLX_NO_NATIVE_CURSOR";
-	static inline var FLX_NO_MOUSE = "FLX_NO_MOUSE";
-	static inline var FLX_NO_TOUCH = "FLX_NO_TOUCH";
-	static inline var FLX_NO_KEYBOARD = "FLX_NO_KEYBOARD";
-	static inline var FLX_NO_SOUND_SYSTEM = "FLX_NO_SOUND_SYSTEM";
-	static inline var FLX_NO_SOUND_TRAY = "FLX_NO_SOUND_TRAY";
-	static inline var FLX_NO_FOCUS_LOST_SCREEN = "FLX_NO_FOCUS_LOST_SCREEN";
-	static inline var FLX_NO_DEBUG = "FLX_NO_DEBUG";
-	static inline var FLX_RECORD = "FLX_RECORD";
-	
+	FLX_NO_MOUSE_ADVANCED;
+	FLX_NO_GAMEPAD;
+	FLX_NO_NATIVE_CURSOR;
+	FLX_NO_MOUSE;
+	FLX_NO_TOUCH;
+	FLX_NO_KEYBOARD;
+	FLX_NO_SOUND_SYSTEM;
+	FLX_NO_SOUND_TRAY;
+	FLX_NO_FOCUS_LOST_SCREEN;
+	FLX_NO_DEBUG;
+	FLX_RECORD;
 	/**
 	 * Mostly internal, makes sure that flixel can be built with pure haxe
 	 * (as opposed to lime-tools). Needed for API doc generation and unit tests.
 	 */
-	static inline var FLX_HAXE_BUILD = "FLX_HAXE_BUILD";
-	
-	static var USER_DEFINABLE:Array<String> = [
-		FLX_RENDER_BLIT,
-		FLX_RENDER_TILE,
-		FLX_RENDER_TRIANGLE,
-		FLX_NO_MOUSE,
-		FLX_NO_MOUSE_ADVANCED,
-		FLX_NO_NATIVE_CURSOR,
-		FLX_NO_SOUND_SYSTEM,
-		FLX_NO_TOUCH,
-		FLX_NO_SOUND_SYSTEM,
-		FLX_NO_SOUND_TRAY,
-		FLX_NO_FOCUS_LOST_SCREEN,
-		FLX_NO_DEBUG,
-		FLX_NO_GAMEPAD,
-		FLX_NO_KEYBOARD,
-		FLX_RECORD,
-		FLX_HAXE_BUILD];
-	
+	FLX_HAXE_BUILD;
+	/** only one of these two may be defined */
+	FLX_RENDER_TILE;
+	FLX_RENDER_BLIT;
+	/* additional rendering conditional */
+	FLX_RENDER_TRIANGLE;
+}
+
+private enum HelperDefines
+{
+	FLX_MOUSE_ADVANCED;
+	FLX_NATIVE_CURSOR;
+	FLX_JOYSTICK_API;
+	FLX_SOUND_TRAY;
+	FLX_POINTER_INPUT;
+	FLX_POST_PROCESS;
+}
+
+class FlxConditionals
+{
 	public static function run()
 	{
 		#if (haxe_ver < "3.1.1")
-			Context.fatalError('The minimum required Haxe version for HaxeFlixel is 3.1.1. '
-				+ 'Please install a newer version.', FlxMacroUtil.here());
+		Context.fatalError('The minimum required Haxe version for HaxeFlixel is 3.1.1. '
+			+ 'Please install a newer version.', FlxMacroUtil.here());
 		#end
 		
 		checkConditionals();
@@ -90,24 +65,21 @@ class FlxConditionals
 			Context.fatalError('You cannot define both $FLX_RENDER_BLIT and $FLX_RENDER_TILE.', FlxMacroUtil.here());
 		}
 		
-		abortIfDefined(FLX_MOUSE_ADVANCED);
-		abortIfDefined(FLX_NATIVE_CURSOR);
-		abortIfDefined(FLX_JOYSTICK_API);
-		abortIfDefined(FLX_SOUND_TRAY);
-		abortIfDefined(FLX_POINTER_INPUT);
-		abortIfDefined(FLX_POST_PROCESS);
+		for (define in HelperDefines.getConstructors())
+		{
+			abortIfDefined(define);
+		}
 		
 		#if (haxe_ver >= "3.2")
-			var defines = Context.getDefines();
-			for (define in defines.keys())
+		var userDefinable = UserDefines.getConstructors();
+		for (define in Context.getDefines().keys())
+		{
+			if (define.startsWith("FLX_") && userDefinable.indexOf(define) == -1)
 			{
-				if (define.startsWith("FLX_") && USER_DEFINABLE.indexOf(define) == -1)
-				{
-					Context.warning('"$define" is not a valid flixel conditional.', FlxMacroUtil.here());
-				}
+				Context.warning('"$define" is not a valid flixel conditional.', FlxMacroUtil.here());
 			}
+		}
 		#end
-		
 	}
 	
 	private static function abortIfDefined(conditional:String)
@@ -132,47 +104,47 @@ class FlxConditionals
 		{
 			if (defined("flash") || defined("js"))
 			{
-				Compiler.define(FLX_RENDER_BLIT);
+				define(FLX_RENDER_BLIT);
 			}
 			else
 			{
-				Compiler.define(FLX_RENDER_TILE);
+				define(FLX_RENDER_TILE);
 			}
 		}
 		
 		if (!defined(FLX_NO_MOUSE) && !defined(FLX_NO_MOUSE_ADVANCED) && (!defined("flash") || defined("flash11_2")))
 		{
-			Compiler.define(FLX_MOUSE_ADVANCED);
+			define(FLX_MOUSE_ADVANCED);
 		}
 		
 		if (!defined(FLX_NO_MOUSE) && !defined(FLX_NO_NATIVE_CURSOR) && defined("flash10_2"))
 		{
-			Compiler.define(FLX_NATIVE_CURSOR);
+			define(FLX_NATIVE_CURSOR);
 		}
 		
 		if (!defined("next") && (defined("cpp") || defined("neko") || defined("bitfive")))
 		{
-			Compiler.define(FLX_JOYSTICK_API);
+			define(FLX_JOYSTICK_API);
 		}
 		
 		if (!defined(FLX_NO_SOUND_SYSTEM) && !defined(FLX_NO_SOUND_TRAY))
 		{
-			Compiler.define(FLX_SOUND_TRAY);
+			define(FLX_SOUND_TRAY);
 		}
 		
 		if (!defined(FLX_NO_TOUCH) || !defined(FLX_NO_MOUSE))
 		{
-			Compiler.define(FLX_POINTER_INPUT);
+			define(FLX_POINTER_INPUT);
 		}
 		
 		if (!defined(FLX_NO_GAMEPAD) && defined("bitfive"))
 		{
-			Compiler.define("bitfive_gamepads");
+			define("bitfive_gamepads");
 		}
 		
 		if (defined("cpp") || defined("neko"))
 		{
-			Compiler.define(FLX_POST_PROCESS);
+			define(FLX_POST_PROCESS);
 		}
 	}
 	
@@ -183,24 +155,29 @@ class FlxConditionals
 		swfVersionError("Gamepad input is", "11.8", FLX_NO_GAMEPAD);
 	}
 	
-	private static function swfVersionError(feature:String, version:String, conditional:String)
+	private static function swfVersionError(feature:String, version:String, define:UserDefines)
 	{
 		var errorMessage = '[feature] only supported in Flash Player version [version] or higher. '
 			+ 'Define [conditional] to disable this feature or add <set name="SWF_VERSION" value="$version" /> to your Project.xml.';
 		
-		if (!defined("flash" + version.replace(".", "_")) && !defined(conditional))
+		if (!defined("flash" + version.replace(".", "_")) && !defined(define))
 		{
 			Context.fatalError(errorMessage
 				.replace("[feature]", feature)
 				.replace("[version]", version)
-				.replace("[conditional]", conditional),
+				.replace("[conditional]", define.getName()),
 				FlxMacroUtil.here());
 		}
 	}
 	
-	private static inline function defined(conditional:String)
+	private static inline function defined(define:Dynamic)
 	{
-		return Context.defined(conditional);
+		return Context.defined(Std.string(define));
+	}
+	
+	private static inline function define(define:Dynamic)
+	{
+		Compiler.define(Std.string(define));
 	}
 }
 #end

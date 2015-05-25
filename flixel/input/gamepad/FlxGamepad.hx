@@ -65,7 +65,7 @@ class FlxGamepad implements IFlxDestroyable
 	private var manager:FlxGamepadManager;
 	private var _deadZone:Float = 0.15;
 	
-	#if FLX_OPENFL_JOYSTICK_API
+	#if FLX_JOYSTICK_API
 	private var leftStick:FlxGamepadAnalogStick;
 	private var rightStick:FlxGamepadAnalogStick;
 	#end
@@ -104,7 +104,7 @@ class FlxGamepad implements IFlxDestroyable
 	{
 		model = Model;
 		buttonIndex.model = Model;
-		#if FLX_OPENFL_JOYSTICK_API
+		#if FLX_JOYSTICK_API
 			leftStick = getRawAnalogStick(FlxGamepadInputID.LEFT_ANALOG_STICK);
 			rightStick = getRawAnalogStick(FlxGamepadInputID.RIGHT_ANALOG_STICK);
 		#end
@@ -175,7 +175,7 @@ class FlxGamepad implements IFlxDestroyable
 				button.press();
 			}
 		}
-		#elseif FLX_OPENFL_JOYSTICK_API
+		#elseif FLX_JOYSTICK_API
 		for (i in 0...axis.length)
 		{
 			//do a reverse axis lookup to get a "fake" RawID and generate a button state object
@@ -500,7 +500,7 @@ class FlxGamepad implements IFlxDestroyable
 		return 0;
 	}
 	
-	#if FLX_OPENFL_JOYSTICK_API
+	#if FLX_JOYSTICK_API
 	/**
 	 * Given the array index into the axis array from the legacy joystick API, returns the "fake" RawID for button status
 	 */
