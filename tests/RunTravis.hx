@@ -59,7 +59,6 @@ class RunTravis
 		Sys.println("\nBuilding demos...\n");
 		var demos = [];
 		if (target == Target.CPP)
-			demos = ["Mode", '"RPG Interface"', "FlxNape"];
 			demos = ["Mode", "RPG Interface", "FlxNape"];
 		return haxelibRun(["flixel-tools", "td", target].concat(demos));
 	}
