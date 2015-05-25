@@ -74,8 +74,8 @@ class Gem extends FlxNapeSprite
 			var mousePoint = Vec2.get(FlxG.mouse.x, FlxG.mouse.y);
 			
 			dragJoint.body2 = body;
-            dragJoint.anchor2.set(body.worldPointToLocal(mousePoint, true));
-            dragJoint.active = true;
+			dragJoint.anchor2.set(body.worldPointToLocal(mousePoint, true));
+			dragJoint.active = true;
 			
 			mousePoint.dispose();
 		}

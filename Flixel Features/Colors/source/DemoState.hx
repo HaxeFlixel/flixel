@@ -121,10 +121,10 @@ class DemoState extends FlxState
 		
 		var sliders = new Array<PropertySlider>();
 		
-		var colX = inline function(column:Int) {
+		var colX = function(column:Int) {
 			return 5 + column * 100;
 		}
-		var rowY = inline function(row:Int) {
+		var rowY = function(row:Int) {
 			return 72 + row * 36;
 		}
 		

@@ -40,8 +40,8 @@ class PlayState extends FlxState
 		var label = new FlxText(209, 365, 0, "Deadzone: ");
 		label.setFormat(null, 8, FlxColor.BLACK);
 		add(label);
-		add(deadZoneStepper = new FlxUINumericStepper(272, 365, 0.1, 0.5, 0,
-			1, 1, FlxUINumericStepper.STACK_HORIZONTAL));
+		add(deadZoneStepper = new FlxUINumericStepper(272, 365, 0.05, 0.15, 0,
+			1, 2, FlxUINumericStepper.STACK_HORIZONTAL));
 			
 		add(connectedGamepads = new FlxUIRadioGroup(550, 10));
 		

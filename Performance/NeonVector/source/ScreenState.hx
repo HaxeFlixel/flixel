@@ -268,7 +268,7 @@ class ScreenState extends FlxState
 		{
 			if (_mixColors)
 			{
-				_mixedColor.interpolate(BlendColor, FlxG.random.float());
+				_mixedColor = FlxColor.interpolate(_mixedColor, BlendColor, FlxG.random.float());
 			}
 			makeParticle(Type, PositionX, PositionY, 360 * FlxG.random.float(), Speed * (1 - 0.5 * FlxG.random.float()), _mixedColor);
 		}
