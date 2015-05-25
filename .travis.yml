@@ -38,6 +38,5 @@ install:
 
 script:
   - cd ./tests
-  - /bin/bash runUnit.sh
-  - /bin/bash runCoverage.sh
-  - /bin/bash runDemos.sh
+  - haxe RunTravis.hxml
+  - neko RunTravis.n
