@@ -9,7 +9,7 @@ class Main
 	
 	macro static function importFlixel()
 	{
-        haxe.macro.Compiler.include("flixel");
-        return haxe.macro.Context.makeExpr(0, haxe.macro.Context.currentPos());
-    }
+		haxe.macro.Compiler.include("flixel");
+		return haxe.macro.Context.makeExpr(0, haxe.macro.Context.currentPos());
+	}
 }
