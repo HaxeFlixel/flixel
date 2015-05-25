@@ -8,7 +8,6 @@
 	
 	<set name="legacy" unless="next" />
 	
-	<set name="html5-backend" value="openfl-bitfive" unless="html5-backend" />
 	<haxelib name="openfl" unless="create" />
 	
 	<haxeflag name="--macro" value="flixel.system.macros.FlxConditionals.run()" />

@@ -10,10 +10,6 @@ env:
   - TARGET=neko
   - TARGET=html5
   
-matrix:
-  allow_failures:
-    - env: "TARGET=html5"
-
 install:
   - haxelib install munit > /dev/null
   - haxelib install lime > /dev/null

@@ -1,9 +1,9 @@
 #!/bin/bash
 
-haxelib run flixel-tools testdemos -$TARGET
-
 if [ $TARGET == "flash" ]; then
 	haxelib run munit test
-else
+elif [ $TARGET != "html5" ]; then
 	haxelib run lime test $TARGET
 fi
+
+haxelib run flixel-tools testdemos -$TARGET
