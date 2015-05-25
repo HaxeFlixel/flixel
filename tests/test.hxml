@@ -9,7 +9,7 @@
 -lib lime
 -lib openfl
 
---macro flixel.system.macros.FlxConditionals.run()
+--macro flixel.system.macros.FlxDefines.run()
 
 -D FLX_HAXE_BUILD
 -D openfl-flash

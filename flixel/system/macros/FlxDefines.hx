@@ -26,10 +26,15 @@ private enum UserDefines
 	/** only one of these two may be defined */
 	FLX_RENDER_TILE;
 	FLX_RENDER_BLIT;
-	/* additional rendering conditional */
+	/* additional rendering define */
 	FLX_RENDER_TRIANGLE;
 }
 
+/**
+ * These are "typedef defines" - complex #if / #elseif conditions
+ * are shortened into a single define to avoid the redundancy
+ * that comes with using them frequently.
+ */
 private enum HelperDefines
 {
 	FLX_MOUSE_ADVANCED;
@@ -40,7 +45,7 @@ private enum HelperDefines
 	FLX_POST_PROCESS;
 }
 
-class FlxConditionals
+class FlxDefines
 {
 	public static function run()
 	{
@@ -49,8 +54,9 @@ class FlxConditionals
 			+ 'Please install a newer version.', FlxMacroUtil.here());
 		#end
 		
-		checkConditionals();
-		defineConditionals();
+		checkDefines();
+		defineRenderingDefine();
+		defineHelperDefines();
 		
 		if (defined("flash"))
 		{
@@ -58,7 +64,7 @@ class FlxConditionals
 		}
 	}
 	
-	private static function checkConditionals()
+	private static function checkDefines()
 	{
 		if (defined(FLX_RENDER_BLIT) && defined(FLX_RENDER_TILE))
 		{
@@ -76,30 +82,22 @@ class FlxConditionals
 		{
 			if (define.startsWith("FLX_") && userDefinable.indexOf(define) == -1)
 			{
-				Context.warning('"$define" is not a valid flixel conditional.', FlxMacroUtil.here());
+				Context.warning('"$define" is not a valid flixel define.', FlxMacroUtil.here());
 			}
 		}
 		#end
 	}
 	
-	private static function abortIfDefined(conditional:String)
+	private static function abortIfDefined(define:String)
 	{
-		if (defined(conditional))
+		if (defined(define))
 		{
-			Context.fatalError('$conditional can only be defined by flixel.', FlxMacroUtil.here());
+			Context.fatalError('$define can only be defined by flixel.', FlxMacroUtil.here());
 		}
 	}
 	
-	/**
-	 * Acts as a "typedef for conditionals" - complex "#if"s that are made up of
-	 * several conditionals / negations and used commonly are shortened into a
-	 * single conditional to avoid redundancy.
-	 * 
-	 * Also handles rendering conditionals.
-	 */
-	private static function defineConditionals()
+	private static function defineRenderingDefine()
 	{
-		// no rendering conditonal defined yet?
 		if (!defined(FLX_RENDER_BLIT) && !defined(FLX_RENDER_TILE))
 		{
 			if (defined("flash") || defined("js"))
@@ -111,7 +109,10 @@ class FlxConditionals
 				define(FLX_RENDER_TILE);
 			}
 		}
-		
+	}
+	
+	private static function defineHelperDefines()
+	{
 		if (!defined(FLX_NO_MOUSE) && !defined(FLX_NO_MOUSE_ADVANCED) && (!defined("flash") || defined("flash11_2")))
 		{
 			define(FLX_MOUSE_ADVANCED);
@@ -158,14 +159,14 @@ class FlxConditionals
 	private static function swfVersionError(feature:String, version:String, define:UserDefines)
 	{
 		var errorMessage = '[feature] only supported in Flash Player version [version] or higher. '
-			+ 'Define [conditional] to disable this feature or add <set name="SWF_VERSION" value="$version" /> to your Project.xml.';
+			+ 'Define [define] to disable this feature or add <set name="SWF_VERSION" value="$version" /> to your Project.xml.';
 		
 		if (!defined("flash" + version.replace(".", "_")) && !defined(define))
 		{
 			Context.fatalError(errorMessage
 				.replace("[feature]", feature)
 				.replace("[version]", version)
-				.replace("[conditional]", define.getName()),
+				.replace("[define]", define.getName()),
 				FlxMacroUtil.here());
 		}
 	}

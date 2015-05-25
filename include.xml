@@ -10,7 +10,7 @@
 	
 	<haxelib name="openfl" unless="create" />
 	
-	<haxeflag name="--macro" value="flixel.system.macros.FlxConditionals.run()" />
+	<haxeflag name="--macro" value="flixel.system.macros.FlxDefines.run()" />
 	
 	<section if="setup">
 		<haxelib name="systools"/>
