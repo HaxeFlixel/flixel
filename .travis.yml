@@ -35,4 +35,4 @@ install:
 
 script:
   - cd ./tests
-  - /bin/sh runTravis.sh
+  - /bin/bash runTravis.sh
