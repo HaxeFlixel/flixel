@@ -140,7 +140,7 @@ class XBox360ID
 #end
 
 #if (!flash && !js)
-	#if FLX_OPENFL_JOYSTICK_API
+	#if FLX_JOYSTICK_API
 	//Analog stick and trigger values overlap with regular buttons so we remap to "fake" button ID's
 	public static function axisIndexToRawID(index:Int):Int
 	{

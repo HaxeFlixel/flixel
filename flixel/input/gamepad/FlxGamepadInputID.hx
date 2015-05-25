@@ -59,7 +59,7 @@ abstract FlxGamepadInputID(Int) from Int to Int
 	var LEFT_ANALOG_STICK    = 19;
 	var RIGHT_ANALOG_STICK   = 20;
 	
-	#if FLX_OPENFL_JOYSTICK_API
+	#if FLX_JOYSTICK_API
 	var LEFT_TRIGGER_FAKE    = 21;
 	var RIGHT_TRIGGER_FAKE   = 22;
 	var LEFT_STICK_FAKE      = 23;

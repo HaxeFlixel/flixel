@@ -23,7 +23,7 @@ class FlxConditionals
 	 */
 	static inline var FLX_MOUSE_ADVANCED = "FLX_MOUSE_ADVANCED";
 	static inline var FLX_NATIVE_CURSOR = "FLX_NATIVE_CURSOR";
-	static inline var FLX_OPENFL_JOYSTICK_API = "FLX_OPENFL_JOYSTICK_API";
+	static inline var FLX_JOYSTICK_API = "FLX_JOYSTICK_API";
 	static inline var FLX_SOUND_TRAY = "FLX_SOUND_TRAY";
 	static inline var FLX_POINTER_INPUT = "FLX_POINTER_INPUT";
 	static inline var FLX_POST_PROCESS = "FLX_POST_PROCESS";
@@ -92,7 +92,7 @@ class FlxConditionals
 		
 		abortIfDefined(FLX_MOUSE_ADVANCED);
 		abortIfDefined(FLX_NATIVE_CURSOR);
-		abortIfDefined(FLX_OPENFL_JOYSTICK_API);
+		abortIfDefined(FLX_JOYSTICK_API);
 		abortIfDefined(FLX_SOUND_TRAY);
 		abortIfDefined(FLX_POINTER_INPUT);
 		abortIfDefined(FLX_POST_PROCESS);
@@ -152,7 +152,7 @@ class FlxConditionals
 		
 		if (!defined("next") && (defined("cpp") || defined("neko") || defined("bitfive")))
 		{
-			Compiler.define(FLX_OPENFL_JOYSTICK_API);
+			Compiler.define(FLX_JOYSTICK_API);
 		}
 		
 		if (!defined(FLX_NO_SOUND_SYSTEM) && !defined(FLX_NO_SOUND_TRAY))

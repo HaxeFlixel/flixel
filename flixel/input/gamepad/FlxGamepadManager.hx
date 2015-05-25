@@ -7,7 +7,7 @@ import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.util.FlxDestroyUtil;
 using flixel.util.FlxStringUtil;
 
-#if FLX_OPENFL_JOYSTICK_API
+#if FLX_JOYSTICK_API
 import openfl.events.JoystickEvent;
 #end
 
@@ -368,7 +368,7 @@ class FlxGamepadManager implements IFlxInputManager
 	@:allow(flixel.FlxG)
 	private function new() 
 	{
-		#if FLX_OPENFL_JOYSTICK_API
+		#if FLX_JOYSTICK_API
 		FlxG.stage.addEventListener(JoystickEvent.AXIS_MOVE, handleAxisMove);
 		FlxG.stage.addEventListener(JoystickEvent.BALL_MOVE, handleBallMove);
 		FlxG.stage.addEventListener(JoystickEvent.BUTTON_DOWN, handleButtonDown);
@@ -469,7 +469,7 @@ class FlxGamepadManager implements IFlxInputManager
 	}
 	#end
 	
-	#if FLX_OPENFL_JOYSTICK_API
+	#if FLX_JOYSTICK_API
 	private function handleButtonDown(FlashEvent:JoystickEvent):Void
 	{
 		var gamepad:FlxGamepad = createByID(FlashEvent.device);

@@ -34,7 +34,7 @@ class PS3ID
 	public static inline var X_PRESSURE:Int = 18;
 	public static inline var SQUARE_PRESSURE:Int = 19;
 	
-	#if FLX_OPENFL_JOYSTICK_API
+	#if FLX_JOYSTICK_API
 	//Analog stick values overlap with regular buttons so we remap to "fake" button ID's
 	public static function axisIndexToRawID(index:Int):Int
 	{

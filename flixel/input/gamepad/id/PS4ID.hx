@@ -38,7 +38,7 @@ class PS4ID
 	public static inline var DPAD_DOWN:Int = -3;
 	public static inline var DPAD_UP:Int = -4;
 	
-	#if FLX_OPENFL_JOYSTICK_API
+	#if FLX_JOYSTICK_API
 	//Analog stick and trigger values overlap with regular buttons so we remap to "fake" button ID's
 	public static function axisIndexToRawID(index:Int):Int
 	{
