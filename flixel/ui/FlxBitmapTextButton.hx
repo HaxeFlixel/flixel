@@ -20,7 +20,7 @@ class FlxBitmapTextButton extends FlxTypedButton<FlxBitmapText>
 			label = new FlxBitmapText();
 			label.width = 80;
 			label.text = Label;
-			label.size = 0.7 * 10 / 11;
+			//label.size = 0.7 * 10 / 11;
 			label.color = 0xFF333333;
 			label.useTextColor = true;
 			label.alignment = FlxTextAlign.CENTER;

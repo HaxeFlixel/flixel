@@ -5,3 +5,4 @@ template-bak/*
 tests/unit/report/
 tests/unit/.temp/
 tests/unit/bin/
+tests/coverage/export/

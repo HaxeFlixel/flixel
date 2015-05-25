@@ -9,7 +9,12 @@ elif [ $TARGET != "html5" ]; then
 	haxelib run lime test $TARGET
 fi
 
-cd ..
+# coverage tests
+
+cd ../coverage
+
+haxelib run lime build $TARGET -Dcoverage1
+haxelib run lime build $TARGET -Dcoverage2
 
 # demos
 if [ $TARGET == "cpp" ]; then
