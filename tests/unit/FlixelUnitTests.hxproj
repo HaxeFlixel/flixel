@@ -15,8 +15,8 @@
   </output>
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
-    <class path="..\flixel" />
-    <class path="..\..\..\munit" />
+    <class path="..\..\flixel" />
+    <class path="..\..\..\..\munit" />
   </classpaths>
   <!-- Build options -->
   <build>
