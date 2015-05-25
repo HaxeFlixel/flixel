@@ -298,7 +298,7 @@ class FlxSound extends FlxBasic
 		}
 		else if (Std.is(EmbeddedSound, String))
 		{
-			if (Assets.exists(EmbeddedSound, AssetType.SOUND) &&
+			if (Assets.exists(EmbeddedSound, AssetType.SOUND) ||
 				Assets.exists(EmbeddedSound, AssetType.MUSIC))
 				_sound = Assets.getSound(EmbeddedSound);
 			else

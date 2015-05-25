@@ -136,7 +136,7 @@ class SoundFrontEnd
 	public inline function cache(EmbeddedSound:String):Sound
 	{
 		// load the sound into the OpenFL assets cache
-		if (Assets.exists(EmbeddedSound, AssetType.SOUND) &&
+		if (Assets.exists(EmbeddedSound, AssetType.SOUND) ||
 			Assets.exists(EmbeddedSound, AssetType.MUSIC))
 			return Assets.getSound(EmbeddedSound, true);
 		FlxG.log.error('Could not find a Sound asset with an ID of \'$EmbeddedSound\'.');
