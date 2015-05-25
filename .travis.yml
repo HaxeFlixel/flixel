@@ -38,4 +38,6 @@ install:
 
 script:
   - cd ./tests
-  - /bin/bash runTravis.sh
+  - /bin/bash runUnit.sh
+  - /bin/bash runCoverage.sh
+  - /bin/bash runDemos.sh
