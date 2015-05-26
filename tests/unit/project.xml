@@ -11,4 +11,6 @@
 	<haxelib name="munit" />
 	<haxelib name="flixel" />
 	<haxelib name="hamcrest" />
+	
+	<haxedef name="FLX_UNIT_TEST" />
 </project>

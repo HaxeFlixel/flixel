@@ -23,6 +23,7 @@ private enum UserDefines
 	 * (as opposed to lime-tools). Needed for API doc generation and unit tests.
 	 */
 	FLX_HAXE_BUILD;
+	FLX_UNIT_TEST;
 	/** only one of these two may be defined */
 	FLX_RENDER_TILE;
 	FLX_RENDER_BLIT;
