@@ -389,7 +389,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	 */
 	private function update():Void
 	{
-		#if !FLX_UNIT_TEST
+		#if !FLX_UNIT_TEST // Travis segfaults when game.mouseX / Y is accessed
 		_globalScreenX = Math.floor(FlxG.game.mouseX / FlxG.scaleMode.scale.x);
 		_globalScreenY = Math.floor(FlxG.game.mouseY / FlxG.scaleMode.scale.y);
 		
