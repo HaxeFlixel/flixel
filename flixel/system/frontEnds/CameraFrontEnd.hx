@@ -40,7 +40,7 @@ class CameraFrontEnd
 	@:generic
 	public inline function add<T:FlxCamera>(NewCamera:T):T
 	{
-		#if !js
+		#if !FLX_RENDER_CRISP
 		FlxG.game.addChildAt(NewCamera.flashSprite, FlxG.game.getChildIndex(FlxG.game._inputContainer));
 		#end
 		FlxG.cameras.list.push(NewCamera);
@@ -59,7 +59,7 @@ class CameraFrontEnd
 		var index:Int = list.indexOf(Camera);
 		if ((Camera != null) && index != -1)
 		{
-			#if !js
+			#if !FLX_RENDER_CRISP
 			FlxG.game.removeChild(Camera.flashSprite);
 			#end
 			
@@ -91,7 +91,7 @@ class CameraFrontEnd
 	 */
 	public function reset(?NewCamera:FlxCamera):Void
 	{
-		#if !js
+		#if !FLX_RENDER_CRISP
 		for (camera in list)
 		{
 			FlxG.game.removeChild(camera.flashSprite);

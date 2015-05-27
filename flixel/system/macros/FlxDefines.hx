@@ -46,6 +46,12 @@ private enum HelperDefines
 	
 	FLX_JOYSTICK_API;
 	FLX_GAMEINPUT_API;
+	
+	/**
+	 * Renders all cameras into a single BitmapData using draw() with
+	 * smoothing. Necessary to achieve non-blurry rendering with bitfive.
+	 */ 
+	FLX_RENDER_CRISP;
 }
 
 class FlxDefines
@@ -148,6 +154,11 @@ class FlxDefines
 		if (!defined(FLX_NO_GAMEPAD) && defined("bitfive"))
 		{
 			define("bitfive_gamepads");
+		}
+		
+		if (defined("js") && defined("bitfive") && defined(FLX_RENDER_BLIT))
+		{
+			define(FLX_RENDER_CRISP);
 		}
 		
 		if (defined("cpp") || defined("neko"))

@@ -204,10 +204,7 @@ class FlxGame extends Sprite
 	private var _recordingRequested:Bool = false;
 	#end
 	
-	#if js
-	/**
-	 * On html5, we draw() all our cameras into a bitmap to avoid blurry zooming.
-	 */
+	#if FLX_RENDER_CRISP
 	private var _display:BitmapData;
 	private var _displayBitmap:Bitmap;
 	private var _displayMatrix = new Matrix();
@@ -456,7 +453,7 @@ class FlxGame extends Sprite
 		
 		FlxG.cameras.resize();
 		
-		#if js
+		#if FLX_RENDER_CRISP
 		FlxDestroyUtil.removeChild(this, _displayBitmap);
 		FlxDestroyUtil.dispose(_display);
 		
@@ -865,7 +862,7 @@ class FlxGame extends Sprite
 		#end
 		#end
 		
-		#if (js && FLX_RENDER_BLIT)
+		#if FLX_RENDER_CRISP
 		_display.fillRect(_display.rect, FlxColor.TRANSPARENT);
 		
 		for (camera in FlxG.cameras.list)
