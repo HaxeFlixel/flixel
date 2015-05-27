@@ -100,7 +100,7 @@ class BitmapFrontEnd
 	 */
 	public function dumpCache():Void
 	{
-		#if !(flash || js)
+		#if !web
 		var obj:FlxGraphic;
 		
 		if (_cache != null)
@@ -122,7 +122,7 @@ class BitmapFrontEnd
 	 */
 	public function undumpCache():Void
 	{
-		#if !(flash || js)
+		#if !web
 		var obj:FlxGraphic;
 		
 		if (_cache != null)

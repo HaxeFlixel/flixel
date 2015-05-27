@@ -139,7 +139,7 @@ class XBox360ID
 	public static var RIGHT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(3, 4);
 #end
 
-#if (!flash && !js)
+#if !web
 	#if FLX_JOYSTICK_API
 	//Analog stick and trigger values overlap with regular buttons so we remap to "fake" button ID's
 	public static function axisIndexToRawID(index:Int):Int
