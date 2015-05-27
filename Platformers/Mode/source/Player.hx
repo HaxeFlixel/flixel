@@ -4,13 +4,12 @@ import flixel.effects.particles.FlxEmitter;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
+import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.gamepad.FlxGamepad;
-import flixel.ui.FlxButton;
 import flixel.ui.FlxVirtualPad;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxTimer;
-import flixel.group.FlxGroup;
 
 class Player extends FlxSprite
 {

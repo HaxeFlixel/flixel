@@ -3,8 +3,7 @@ package;
 import flixel.effects.particles.FlxEmitter;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.group.FlxGroup;
-import flixel.math.FlxRandom;
+import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.util.FlxSpriteUtil;
 
 class Spawner extends FlxSprite
