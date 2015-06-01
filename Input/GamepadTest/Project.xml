@@ -14,7 +14,7 @@
 	<!--------------------------------WINDOW SETTINGS------------------------------->
 	
 	<!--These window settings apply to all targets-->
-	<window width="526" height="376" fps="60" background="#000000" hardware="true" vsync="true" />
+	<window width="650" height="390" fps="60" background="#000000" hardware="true" vsync="true" />
 	
 	<!--Web-specific-->
 	<window if="web" orientation="portrait"  />
@@ -39,7 +39,7 @@
 	<!--haxelib name="flixel-addons" /-->
 	
 	<!--In case you want to use the ui package-->
-	<!--haxelib name="flixel-ui"/-->
+	<haxelib name="flixel-ui"/>
 	
 	<!--In case you want to use nape with flixel-->
 	<!--haxelib name="nape" /-->

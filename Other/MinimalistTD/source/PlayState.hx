@@ -64,7 +64,7 @@ class PlayState extends FlxState
 	// Text
 	private var _centerText:FlxText;
 	private var _enemyText:FlxText;
-    private var _moneyText:FlxText;
+	private var _moneyText:FlxText;
 	private var _tutText:FlxText;
 	private var _waveText:FlxText;
 	private var _areYouSure:FlxText;

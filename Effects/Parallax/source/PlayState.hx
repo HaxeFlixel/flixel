@@ -1,47 +1,33 @@
 package;
 
-
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
-import flixel.graphics.FlxGraphic;
 import flixel.group.FlxGroup.FlxTypedGroup;
-import flixel.math.FlxRandom;
-import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.text.FlxText;
 import flixel.tile.FlxTileblock;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
-import flixel.ui.FlxButton;
 import flixel.ui.FlxVirtualPad;
 import flixel.util.FlxColor;
 import flixel.util.FlxGradient;
-import openfl.Assets;
-import openfl.display.Bitmap;
 import openfl.display.BitmapData;
 import openfl.geom.ColorTransform;
 
-/**
- * A FlxState which can be used for the actual gameplay.
- */
 class PlayState extends FlxState
 {
-	
 	private inline static var  GUY_SPEED:Int = 100;	// how fast we want our guy to move
 	private var _guy:FlxSprite;	// this is our 'guy' the player will move around
 	private var _baseY:Float;	// this is the starting Y position of our guy, we will use this to make the guy float up and down
 	private var _flakes:FlxTypedGroup<Flake>; // a group of flakes
 	private var _vPad:FlxVirtualPad;
-	/**
-	 * Function that is called up when to state is created to set it up. 
-	 */
+	
 	override public function create():Void
 	{
 		// build a gradient sky for the background - make it as big as our screen, and, it's going to be stationary
 		var sky:FlxSprite = FlxGradient.createGradientFlxSprite(FlxG.width, FlxG.height, [0xff6dcff6, 0xff333333], 16);
 		sky.scrollFactor.set();
 		add(sky);
-		
 		
 		var uncoloredMountain:FlxSprite = new FlxSprite(0, 0, "assets/mountains.png");
 		var uncoloredClouds:FlxSprite = new FlxSprite(0, 0, "assets/clouds.png");
@@ -51,11 +37,8 @@ class PlayState extends FlxState
 		// we're going to have 6 mountain layers with a cloud layer on top.
 		for (i in 0...6)
 		{
-			
 			add(spawnMountain(i));
-			
 			add(spawnCloud(i));
-			
 		}
 		
 		// this is just a solid-gradient to go behind our ground
@@ -70,7 +53,6 @@ class PlayState extends FlxState
 		_spookyStuff.scrollFactor.set(.95, 0);
 		add(_spookyStuff);		
 		
-		
 		// a tileblock of ground tiles - will move with the player
 		var _ground = new FlxTileblock(0, FlxG.height - 64, FlxG.width * 4, 64);
 		_ground.loadTiles("assets/tiles.png", 16, 16, 1);
@@ -82,7 +64,6 @@ class PlayState extends FlxState
 		_guy.y = FlxG.height - 72 - _guy.height;
 		_baseY = _guy.y;
 		add(_guy);
-		
 		
 		var txtInst:FlxText = new FlxText(0, FlxG.height - 16, FlxG.width, "Left/Right to Move");
 		txtInst.alignment = FlxTextAlign.CENTER;
@@ -140,17 +121,16 @@ class PlayState extends FlxState
 		return mountain;
 	}
 	
-	
 	private function guyFloat(Amt:Float):Void
 	{
 		_guy.y = _baseY - Amt * 10;
-		
 	}
+	
 	private function guyFade(Amt:Float):Void
 	{
 		_guy.alpha = Amt;
-		
 	}
+	
 	/**
 	 * this is just logic to make the guy move when the player presses left/right and to keep him within the 'world'
 	 */
@@ -188,7 +168,6 @@ class PlayState extends FlxState
 		}
 		else
 			_guy.velocity.x = 0;
-			
 	}
 	
 	/**
@@ -196,11 +175,8 @@ class PlayState extends FlxState
 	 */
 	override public function update(elapsed:Float):Void
 	{
-		
 		super.update(elapsed);
-		
 		movement();
-		
 	}
 	
 	/**
@@ -224,6 +200,5 @@ class PlayState extends FlxState
 		var key:String = asset + "_color=" + color;
 		FlxG.bitmap.add(bmpData,false, key);
 		return key;
-		
 	}
 }

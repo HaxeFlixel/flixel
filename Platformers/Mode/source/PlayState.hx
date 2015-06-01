@@ -8,21 +8,10 @@ import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxGroup;
 import flixel.group.FlxSpriteGroup;
-import flixel.group.FlxGroup;
 import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
-import flixel.ui.FlxButton;
-import flixel.math.FlxPoint;
-import flixel.math.FlxRandom;
-import flixel.util.FlxStringUtil;
-import flixel.util.FlxTimer;
 import openfl.display.FPS;
-import openfl.events.Event;
 import openfl.Lib;
-
-#if (cpp || neko)
-import flixel.input.gamepad.FlxGamepad;
-#end
 
 /**
  * A FlxState which can be used for the actual gameplay.

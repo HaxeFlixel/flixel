@@ -1,6 +1,7 @@
 package;
 
 import flixel.FlxG;
+import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
@@ -8,6 +9,10 @@ using flixel.util.FlxSpriteUtil;
 
 class PlayState extends FlxState
 {
+	
+	public var text1:FlxText;
+	public var text2:FlxText;
+	
 	override public function create():Void
 	{
 		super.create();
@@ -19,7 +24,7 @@ class PlayState extends FlxState
 		var format5 = new FlxTextFormat(0x00E6E6, false, false, null);
 		var format6 = new FlxTextFormat(0x0080FF, false, false, 0xFFFFFF);
 		
-		var text1:FlxText = createText(40, "Formatted via addFormat()");
+		text1 = createText(40, "Formatted via addFormat()");
 		text1.addFormat(format1, 0, 5);
 		text1.addFormat(format2, 5, 10);
 		text1.addFormat(format3, 10, 11);
@@ -28,7 +33,7 @@ class PlayState extends FlxState
 		text1.addFormat(format6, 17, 100);
 		add(text1);
 		
-		var text2:FlxText = createText(120);
+		text2 = createText(120);
 		text2.applyMarkup("*Forma*_tted_ $v$^i^!a! apply:Markup():", [
 			new FlxTextFormatMarkerPair(format1, "*"),
 			new FlxTextFormatMarkerPair(format2, "_"),
@@ -37,6 +42,16 @@ class PlayState extends FlxState
 			new FlxTextFormatMarkerPair(format5, "!"),
 			new FlxTextFormatMarkerPair(format6, ":")]);
 		add(text2);
+	}
+	
+	public override function update(elapsed:Float):Void
+	{
+		super.update(elapsed);
+		if (FlxG.keys.justPressed.ONE)
+		{
+			var b = text1.graphic;
+			add(new FlxSprite(0, 0, b));
+		}
 	}
 	
 	function createText(y:Float, ?text:String)

@@ -6,6 +6,7 @@ import flixel.addons.transition.FlxTransitionSprite.GraphicTransTileCircle;
 import flixel.addons.transition.FlxTransitionSprite.GraphicTransTileDiamond;
 import flixel.addons.transition.FlxTransitionSprite.GraphicTransTileSquare;
 import flixel.addons.transition.TransitionData;
+import flixel.addons.transition.TransitionFade;
 import flixel.addons.ui.FlxUIButton;
 import flixel.addons.ui.FlxUINumericStepper;
 import flixel.addons.ui.FlxUIRadioGroup;

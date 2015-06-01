@@ -1,44 +1,46 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <data>
 	
-	<button id="butt_0" label="Thing 0">
-		<anchor x="70%" x-flush="right"/>
+	<definition id="btn" width="60" height="20"/>
+	
+	<button id="butt_0" label="Thing 0" use_def="btn">
+		<anchor x="75%" x-flush="right"/>
 		<param type="int" value="0"/>
 	</button>
-	<button id="butt_1" label="Thing 1">
-		<anchor x="70%" x-flush="right"/>
+	<button id="butt_1" label="Thing 1" use_def="btn">
+		<anchor x="75%" x-flush="right"/>
 		<param type="int" value="1"/>
 	</button>
-	<button id="butt_2" label="Thing 2">
-		<anchor x="70%" x-flush="right"/>
+	<button id="butt_2" label="Thing 2" use_def="btn">
+		<anchor x="75%" x-flush="right"/>
 		<param type="int" value="2"/>
 	</button>
-	<button id="butt_3" label="Thing 3">
-		<anchor x="70%" x-flush="right"/>
+	<button id="butt_3" label="Thing 3" use_def="btn">
+		<anchor x="75%" x-flush="right"/>
 		<param type="int" value="3"/>
 	</button>
-	<button id="butt_4" label="Thing 4">
-		<anchor x="70%" x-flush="right"/>
+	<button id="butt_4" label="Thing 4" use_def="btn">
+		<anchor x="75%" x-flush="right"/>
 		<param type="int" value="4"/>
 	</button>
 	
-	<button id="butt_5" label="Thing 5" x="5">
+	<button id="butt_5" label="Thing 5" x="5" use_def="btn">
 		<anchor x="butt_0.right" x-flush="left"/>
 		<param type="int" value="5"/>
 	</button>
-	<button id="butt_6" label="Thing 6" x="5">
+	<button id="butt_6" label="Thing 6" x="5" use_def="btn">
 		<anchor x="butt_0.right" x-flush="left"/>
 		<param type="int" value="6"/>
 	</button>
-	<button id="butt_7" label="Thing 7" x="5">
+	<button id="butt_7" label="Thing 7" x="5" use_def="btn">
 		<anchor x="butt_0.right" x-flush="left"/>
 		<param type="int" value="7"/>
 	</button>
-	<button id="butt_8" label="Thing 8" x="5">
+	<button id="butt_8" label="Thing 8" x="5" use_def="btn">
 		<anchor x="butt_0.right" x-flush="left"/>
 		<param type="int" value="8"/>
 	</button>
-	<button id="butt_9" label="Thing 9" x="5">
+	<button id="butt_9" label="Thing 9" x="5" use_def="btn">
 		<anchor x="butt_0.right" x-flush="left"/>
 		<param type="int" value="9"/>
 	</button>
@@ -49,25 +51,46 @@
 		<bounds top="10%" bottom="60%"/>
 	</align>
 	
-	<checkbox id="check_wrap" label="Wrap" checked="true" x="10%">
+	<text id="keyboard" x="6%" y="butt_0.top-16" align="left" width="20%" color="0xFFFFFF" text="Keyboard:"/>
+	
+	<checkbox id="check_wrap" label="Wrap" checked="true" x="6%">
 		<anchor y="butt_0.top" x-flush="top"/>
 		<param type="string" value="wrap"/>
 	</checkbox>
-	<checkbox id="check_tab" label="Tab" checked="true" x="10%">
+	<checkbox id="check_tab" label="Tab" checked="true" x="6%">
 		<anchor y="butt_1.top" x-flush="top"/>
 		<param type="string" value="tab"/>
 	</checkbox>
-	<checkbox id="check_arrows" label="Arrows" checked="true" x="10%">
+	<checkbox id="check_arrows" label="Arrows" checked="true" x="6%">
 		<anchor y="butt_2.top" x-flush="top"/>
 		<param type="string" value="arrows"/>
 	</checkbox>
-	<checkbox id="check_wasd" label="WASD" checked="false" x="10%">
+	<checkbox id="check_wasd" label="WASD" checked="false" x="6%">
 		<anchor y="butt_3.top" x-flush="top"/>
 		<param type="string" value="wasd"/>
 	</checkbox>
-	<checkbox id="check_numpad" label="NUMPAD" checked="false" x="10%">
+	<checkbox id="check_numpad" label="NUMPAD" checked="false" x="6%">
 		<anchor y="butt_4.top" x-flush="top"/>
 		<param type="string" value="numpad"/>
+	</checkbox>
+	
+	<text id="gamepad" x="32%" y="butt_0.top-16" align="left" width="20%" color="0xFFFFFF" text="Gamepad:"/>
+	
+	<checkbox id="check_dpad" label="DPAD" checked="true" x="32%">
+		<anchor y="butt_0.top" x-flush="top"/>
+		<param type="string" value="dpad"/>
+	</checkbox>
+	<checkbox id="check_lstick" label="L STICK" checked="false" x="32%">
+		<anchor y="butt_1.top" x-flush="top"/>
+		<param type="string" value="lstick"/>
+	</checkbox>
+	<checkbox id="check_rstick" label="R STICK" checked="false" x="32%">
+		<anchor y="butt_2.top" x-flush="top"/>
+		<param type="string" value="rstick"/>
+	</checkbox>
+	<checkbox id="check_bumpers" label="BUMPERS" checked="false" x="32%">
+		<anchor y="butt_3.top" x-flush="top"/>
+		<param type="string" value="bumpers"/>
 	</checkbox>
 	
 	<text id="text" center_x="true" y="65%" align="center" width="100%" color="0xFFFFFF" text="Tab/Shift+Tab to move, Enter to click"/>

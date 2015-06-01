@@ -1,13 +1,11 @@
 package;
 
+import flixel.effects.particles.FlxEmitter;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
-import flixel.math.FlxRandom;
 import flixel.util.FlxSave;
-import flixel.util.FlxStringUtil;
-import flixel.effects.particles.FlxEmitter;
 import openfl.Assets;
 
 /**
@@ -197,14 +195,10 @@ class MenuState extends FlxState
 		}
 		#end
 		
-		#if (!FLX_NO_GAMEPAD && (cpp || neko || js))
+		#if (!FLX_NO_GAMEPAD)
 		if (FlxG.gamepads.anyButton())
 		{
-		#if OUYA
-			if (FlxG.gamepads.lastActive.justPressed(flixel.input.gamepad.OUYAButtonID.O))
-		#else
-			if (FlxG.gamepads.lastActive.justPressed(flixel.input.gamepad.XboxButtonID.A))
-		#end 
+			if (FlxG.gamepads.lastActive.justPressed.A)
 				onPlay();
 		}
 		#end

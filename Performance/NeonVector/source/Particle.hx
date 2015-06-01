@@ -108,7 +108,7 @@ class Particle extends Entity
 		if (_speedRatio > 1) _speedRatio = 1;
 		
 		var _color = new FlxColor();
-		_color.interpolate(lineColor, _speedRatio);
+		_color = FlxColor.interpolate(_color, lineColor, _speedRatio);
 		
 		gfx.lineStyle(3, _color);
 		gfx.moveTo(_startX,_startY);
