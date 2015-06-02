@@ -15,6 +15,9 @@ import flixel.util.FlxStringUtil;
 #if FLX_GAMEINPUT_API
 import flash.ui.GameInputControl;
 import flash.ui.GameInputDevice;
+#end
+
+#if flash
 import flash.system.Capabilities;
 #end
 
