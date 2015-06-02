@@ -65,6 +65,7 @@ class PlayState extends FlxState
 	
 	override public function update(elapsed:Float):Void
 	{
+		
 		super.update(elapsed);
 		
 		FlxG.collide(_map, _slime);
@@ -74,9 +75,11 @@ class PlayState extends FlxState
 	}
 	
 	private function getPowerup(S:Slime, P:FlxSprite):Void
-	{
-		
+	{		
+		S.fsm.transitions.start(Slime.Idle);
 		S.fsm.transitions.replace(Slime.Jump, Slime.SuperJump);
+		
 		P.kill();
+		
 	}
 }
