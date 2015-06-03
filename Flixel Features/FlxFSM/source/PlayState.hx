@@ -5,6 +5,7 @@ import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
+import flixel.util.FlxColor;
 
 class PlayState extends FlxState
 {
@@ -13,7 +14,7 @@ class PlayState extends FlxState
 	private var _slime:Slime;
 	private var _powerup:FlxSprite;
 	
-	private var _info:String = "LEFT & RIGHT to move, UP to jump\nDOWN (in the air) to ground-pound.\n\nCurrent State: {STATE}";
+	private var _info:String = "LEFT & RIGHT to move, UP to jump\nDOWN (in the air) to ground-pound.\nR to Reset\n\nCurrent State: {STATE}";
 	private var _txtInfo:FlxText;
 	
 	override public function create():Void
@@ -72,12 +73,17 @@ class PlayState extends FlxState
 		FlxG.overlap(_slime, _powerup, getPowerup);
 		
 		_txtInfo.text = StringTools.replace(_info, "{STATE}", Type.getClassName(_slime.fsm.stateClass));
+		
+		if (FlxG.keys.justReleased.R)
+		{
+			FlxG.camera.flash(FlxColor.BLACK, .1, FlxG.resetState);
+		}
 	}
 	
 	private function getPowerup(S:Slime, P:FlxSprite):Void
 	{		
-		S.fsm.transitions.start(Slime.Idle);
 		S.fsm.transitions.replace(Slime.Jump, Slime.SuperJump);
+		S.fsm.transitions.add(Slime.Jump, Slime.Idle, Slime.Conditions.grounded);
 		
 		P.kill();
 		
