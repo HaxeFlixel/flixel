@@ -1,5 +1,7 @@
 package;
 
+import flixel.addons.editors.tiled.TiledLayer;
+import flixel.addons.editors.tiled.TiledTileLayer;
 import openfl.Assets;
 import haxe.io.Path;
 import haxe.xml.Parser;
@@ -10,11 +12,10 @@ import flixel.group.FlxGroup;
 import flixel.tile.FlxTilemap;
 import flixel.addons.editors.tiled.TiledMap;
 import flixel.addons.editors.tiled.TiledObject;
-import flixel.addons.editors.tiled.TiledObjectGroup;
+import flixel.addons.editors.tiled.TiledObjectLayer;
 import flixel.addons.editors.tiled.TiledTileSet;
 
 /**
- * ...
  * @author Samuel Batista
  */
 class TiledLevel extends TiledMap
@@ -38,8 +39,11 @@ class TiledLevel extends TiledMap
 		FlxG.camera.setScrollBoundsRect(0, 0, fullWidth, fullHeight, true);
 		
 		// Load Tile Maps
-		for (tileLayer in layers)
+		for (layer in layers)
 		{
+			if (Type.enumEq(layer.type, TiledLayerType.OBJECT)) continue;
+			var tileLayer:TiledTileLayer = cast layer;
+			
 			var tileSheetName:String = tileLayer.properties.get("tileset");
 			
 			if (tileSheetName == null)
@@ -82,16 +86,19 @@ class TiledLevel extends TiledMap
 	
 	public function loadObjects(state:PlayState)
 	{
-		for (group in objectGroups)
+		for (layer in layers)
 		{
-			for (o in group.objects)
+			if (Type.enumEq(layer.type, TiledLayerType.TILE)) continue;
+			var objectLayer:TiledObjectLayer = cast layer;
+			
+			for (o in objectLayer.objects)
 			{
-				loadObject(o, group, state);
+				loadObject(o, objectLayer, state);
 			}
 		}
 	}
 	
-	private function loadObject(o:TiledObject, g:TiledObjectGroup, state:PlayState)
+	private function loadObject(o:TiledObject, g:TiledObjectLayer, state:PlayState)
 	{
 		var x:Int = o.x;
 		var y:Int = o.y;

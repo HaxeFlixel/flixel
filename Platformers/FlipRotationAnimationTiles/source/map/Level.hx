@@ -4,8 +4,9 @@ import entities.Character;
 import flixel.addons.editors.tiled.TiledLayer;
 import flixel.addons.editors.tiled.TiledMap;
 import flixel.addons.editors.tiled.TiledObject;
-import flixel.addons.editors.tiled.TiledObjectGroup;
+import flixel.addons.editors.tiled.TiledObjectLayer;
 import flixel.addons.editors.tiled.TiledTile;
+import flixel.addons.editors.tiled.TiledTileLayer;
 import flixel.addons.editors.tiled.TiledTileSet;
 import flixel.addons.tile.FlxTilemapExt;
 import flixel.addons.tile.FlxTileSpecial;
@@ -53,8 +54,11 @@ class Level extends TiledMap
 		// Prepare the tile animations
 		var animations = TileAnims.getAnimations(animFile);
 		
-		for (layer in layers)
+		for (tiledLayer in layers)
 		{
+			if (Type.enumEq(tiledLayer.type, TiledLayerType.OBJECT)) continue;
+			var layer:TiledTileLayer = cast tiledLayer;
+			
 			if (layer.properties.contains("tileset"))
 				tileset = this.getTileSet(layer.properties.get("tileset"));
 			else
@@ -121,8 +125,11 @@ class Level extends TiledMap
 	
 	public function loadObjects()
 	{
-		for (group in objectGroups)
+		for (layer in layers)
 		{
+			if (Type.enumEq(layer.type, TiledLayerType.TILE)) continue;
+			var group:TiledObjectLayer = cast layer;
+			
 			for (obj in group.objects)
 			{
 				loadObject(obj, group);
@@ -130,7 +137,7 @@ class Level extends TiledMap
 		}
 	}
 	
-	private function loadObject(o:TiledObject, g:TiledObjectGroup)
+	private function loadObject(o:TiledObject, g:TiledObjectLayer)
 	{
 		var x:Int = o.x;
 		var y:Int = o.y;
