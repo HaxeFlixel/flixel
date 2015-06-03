@@ -1,8 +1,10 @@
 package;
 
+import flixel.addons.editors.tiled.TiledLayer;
 import flixel.addons.editors.tiled.TiledMap;
 import flixel.addons.editors.tiled.TiledObject;
-import flixel.addons.editors.tiled.TiledObjectGroup;
+import flixel.addons.editors.tiled.TiledObjectLayer;
+import flixel.addons.editors.tiled.TiledTileLayer;
 import flixel.addons.editors.tiled.TiledTileSet;
 import flixel.FlxG;
 import flixel.FlxObject;
@@ -36,8 +38,11 @@ class TiledLevel extends TiledMap
 		FlxG.camera.setScrollBoundsRect(0, 0, fullWidth, fullHeight, true);
 		
 		// Load Tile Maps
-		for (tileLayer in layers)
+		for (layer in layers)
 		{
+			if (Type.enumEq(layer.type, TiledLayerType.OBJECT)) continue;
+			var tileLayer:TiledTileLayer = cast layer;
+			
 			var tileSheetName:String = tileLayer.properties.get("tileset");
 			
 			if (tileSheetName == null)
@@ -80,8 +85,11 @@ class TiledLevel extends TiledMap
 	
 	public function loadObjects(state:PlayState)
 	{
-		for (group in objectGroups)
+		for (layer in layers)
 		{
+			if (Type.enumEq(layer.type, TiledLayerType.TILE)) continue;
+			var group:TiledObjectLayer = cast layer;
+			
 			for (o in group.objects)
 			{
 				loadObject(o, group, state);
@@ -89,7 +97,7 @@ class TiledLevel extends TiledMap
 		}
 	}
 	
-	private function loadObject(o:TiledObject, g:TiledObjectGroup, state:PlayState)
+	private function loadObject(o:TiledObject, g:TiledObjectLayer, state:PlayState)
 	{
 		var x:Int = o.x;
 		var y:Int = o.y;
