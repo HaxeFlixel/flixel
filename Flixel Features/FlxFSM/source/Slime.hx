@@ -8,7 +8,6 @@ import flixel.util.FlxColor;
 
 class Slime extends FlxSprite
 {
-
 	public static inline var GRAVITY:Float = 600;
 	
 	public var fsm:FlxFSM<FlxSprite>;
@@ -33,20 +32,17 @@ class Slime extends FlxSprite
 		
 		fsm = new FlxFSM<FlxSprite>(this);
 		fsm.transitions
-				.add(Idle, Jump, Conditions.jump)
-				.add(Jump, Idle, Conditions.grounded)
-				.add(Jump, GroundPound, Conditions.groundSlam)
-				.add(GroundPound, GroundPoundFinish, Conditions.grounded)
-				.add(GroundPoundFinish, Idle, Conditions.animationFinished)
-				.start(Idle);
-		
-		
+			.add(Idle, Jump, Conditions.jump)
+			.add(Jump, Idle, Conditions.grounded)
+			.add(Jump, GroundPound, Conditions.groundSlam)
+			.add(GroundPound, GroundPoundFinish, Conditions.grounded)
+			.add(GroundPoundFinish, Idle, Conditions.animationFinished)
+			.start(Idle);
 	}
 	
 	override public function update(elapsed:Float):Void 
 	{
 		fsm.update(elapsed);
-		
 		super.update(elapsed);
 	}
 	
@@ -64,14 +60,17 @@ class Conditions
 	{
 		return (FlxG.keys.justPressed.UP && Owner.isTouching(FlxObject.DOWN));
 	}
+	
 	public static function grounded(Owner:FlxSprite):Bool
 	{
 		return Owner.isTouching(FlxObject.DOWN);
 	}
+	
 	public static function groundSlam(Owner:FlxSprite)
 	{
 		return FlxG.keys.justPressed.DOWN && !Owner.isTouching(FlxObject.DOWN);
 	}
+	
 	public static function animationFinished(Owner:FlxSprite):Bool
 	{
 		return Owner.animation.finished;
@@ -133,6 +132,7 @@ class SuperJump extends Jump
 class GroundPound extends FlxFSMState<FlxSprite>
 {
 	private var _ticks:Float;
+	
 	override public function enter(owner:FlxSprite, fsm:FlxFSM<FlxSprite>):Void 
 	{
 		owner.animation.play("pound");
@@ -143,7 +143,6 @@ class GroundPound extends FlxFSMState<FlxSprite>
 	
 	override public function update(elapsed:Float, owner:FlxSprite, fsm:FlxFSM<FlxSprite>):Void 
 	{
-		
 		_ticks++;
 		if (_ticks < 15)
 		{
@@ -166,7 +165,3 @@ class GroundPoundFinish extends FlxFSMState<FlxSprite>
 		owner.acceleration.x = 0;
 	}
 }
-
-
-
-

@@ -1,32 +1,26 @@
 package;
 
 import flixel.effects.particles.FlxEmitter;
-import flixel.effects.particles.FlxParticle;
 import flixel.FlxG;
 import flixel.FlxObject;
-import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.text.FlxText;
 import flixel.tile.FlxTile;
 import flixel.tile.FlxTilemap;
-import flixel.ui.FlxButton;
-import flixel.math.FlxMath;
 import flixel.util.FlxColor;
 
 class PlayState extends FlxState
 {
-	
 	private var _map:FlxTilemap;
 	
-	private var _leftEmitter:FlxTypedEmitter<FlxParticle>;
-	private var _rightEmitter:FlxTypedEmitter<FlxParticle>;
+	private var _redEmitter:FlxEmitter;
+	private var _blueEmitter:FlxEmitter;
 	
-	private var _scoreRed:Int = 0;
-	private var _scoreBlue:Int = 0;
+	private var _redScore:Int = 0;
+	private var _blueScore:Int = 0;
 	
-	private var _txtScoreRed:FlxText;
-	private var _txtScoreBlue:FlxText;
-	
+	private var _redScoreText:FlxText;
+	private var _blueScoreText:FlxText;
 	
 	override public function create():Void
 	{
@@ -35,7 +29,7 @@ class PlayState extends FlxState
 		super.create();
 		
 		var mapRow:String = "0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 0, 0\n\r";
-		var mapData:String='';
+		var mapData:String= '';
 		for (i in 0...Std.int(FlxG.height / 16))
 		{
 			mapData += mapRow;
@@ -51,71 +45,66 @@ class PlayState extends FlxState
 		
 		add(_map);
 		
-		_leftEmitter = createEmitter(FlxColor.RED);
-		_rightEmitter = createEmitter(FlxColor.BLUE);
+		_redEmitter = createEmitter(FlxColor.RED);
+		_redEmitter.launchAngle.set( -45, -30);
 		
-		add(_leftEmitter);
-		add(_rightEmitter);
+		_blueEmitter = createEmitter(FlxColor.BLUE);
+		_blueEmitter.x = FlxG.width;
+		_blueEmitter.launchAngle.set( -150, -135);
 		
-		_txtScoreRed = createText(4, 4, FlxTextAlign.LEFT, FlxColor.RED);
-		add(_txtScoreRed);
+		add(_redEmitter);
+		add(_blueEmitter);
 		
-		_txtScoreBlue =  createText(FlxG.width - 104, 4, FlxTextAlign.LEFT, FlxColor.BLUE);
-		add(_txtScoreBlue);
+		_redScoreText = createText(4, 4, FlxTextAlign.LEFT, FlxColor.RED);
+		add(_redScoreText);
 		
-		var _txtInst = createText(Std.int((FlxG.width / 2) - 50), 0, FlxTextAlign.CENTER, FlxColor.PURPLE);
-		_txtInst.text = "Press R to Reset";
-		_txtInst.y = FlxG.height - _txtInst.height - 4;
-		add(_txtInst);
+		_blueScoreText = createText(FlxG.width - 104, 4, FlxTextAlign.LEFT, FlxColor.BLUE);
+		_blueScoreText.alignment = FlxTextAlign.RIGHT;
+		add(_blueScoreText);
 		
-	}
-
-	
-	private function createText(X:Int, Y:Int, Align:FlxTextAlign, Color:FlxColor):FlxText
-	{
-		var _text:FlxText = new FlxText(X, Y, 100);
-		_text.color = FlxColor.WHITE;
-		_text.setBorderStyle(FlxTextBorderStyle.SHADOW, Color, 2, 2);
-		_text.alignment = Align;
-		return _text;
+		var instructionText = createText(
+			Std.int((FlxG.width / 2) - 50), 0, FlxTextAlign.CENTER, FlxColor.PURPLE);
+		instructionText.text = "Press R to Reset";
+		instructionText.y = FlxG.height - instructionText.height - 4;
+		add(instructionText);
 	}
 	
-	private function createEmitter(Color:FlxColor):FlxTypedEmitter<FlxParticle>
+	private function createEmitter(Color:FlxColor):FlxEmitter
 	{
-		var isRed:Bool = Color == FlxColor.RED;
-		
-		var emitter:FlxTypedEmitter<FlxParticle> = new FlxTypedEmitter<FlxParticle>(isRed ? 0 : FlxG.width-1, Std.int(FlxG.height * .6), 50);
+		var emitter = new FlxEmitter(0, Std.int(FlxG.height * .6));
 		emitter.makeParticles(12, 12, Color, 50);
 		emitter.launchMode = FlxEmitterMode.CIRCLE;
-		if (isRed)
-			emitter.launchAngle.set( -45, -30);
-		else
-			emitter.launchAngle.set( -150, -135);
 		emitter.speed.set(400, 900);
 		emitter.allowCollisions = FlxObject.ANY;
 		emitter.elasticity.set(.8, .8);
 		emitter.acceleration.set(0, 1200, 0, 1200);
 		emitter.start(false, .8);
-		
 		return emitter;
+	}
+	
+	private function createText(X:Int, Y:Int, Align:FlxTextAlign, Color:FlxColor):FlxText
+	{
+		var text = new FlxText(X, Y, 100);
+		text.color = FlxColor.WHITE;
+		text.setBorderStyle(FlxTextBorderStyle.SHADOW, Color, 2, 2);
+		text.alignment = Align;
+		return text;
 	}
 	
 	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 		
-		FlxG.collide(_map, _leftEmitter);
-		FlxG.collide(_map, _rightEmitter);
+		FlxG.collide(_map, _redEmitter);
+		FlxG.collide(_map, _blueEmitter);
 		
-		if (Std.string(_scoreRed) != _txtScoreRed.text)
-			_txtScoreRed.text = Std.string(_scoreRed);
-		if (Std.string(_scoreBlue) != _txtScoreBlue.text)
-			_txtScoreBlue.text = Std.string(_scoreBlue);	
+		if (Std.string(_redScore) != _redScoreText.text)
+			_redScoreText.text = Std.string(_redScore);
+		if (Std.string(_blueScore) != _blueScoreText.text)
+			_blueScoreText.text = Std.string(_blueScore);	
 			
 		if (FlxG.keys.justReleased.R)
-		{
 			FlxG.camera.flash(FlxColor.BLACK, .1, FlxG.resetState);
-		}
 	}	
 	
 	private function removeTile(Tile:FlxTile):Void
@@ -126,14 +115,12 @@ class PlayState extends FlxState
 	private function leftHit(Tile:FlxObject, Particle:FlxObject):Void
 	{
 		removeTile(cast Tile);
-		_scoreBlue++;
-		
+		_blueScore++;
 	}
 	
 	private function rightHit(Tile:FlxObject, Particle:FlxObject):Void
 	{
 		removeTile(cast Tile);
-		_scoreRed++;
+		_redScore++;
 	}
-	
 }
