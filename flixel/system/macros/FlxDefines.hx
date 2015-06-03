@@ -132,7 +132,7 @@ class FlxDefines
 			define(FLX_NATIVE_CURSOR);
 		}
 		
-		if (defined("next") || defined("flash11_8"))
+		if ((defined("next") && !defined("flash")) || defined("flash11_8"))
 		{
 			define(FLX_GAMEINPUT_API);
 		}
