@@ -188,10 +188,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	 */
 	private var currentInput:IFlxInput;
 
-	/**
-	 * A helper for making sure animations won't trigger more than once per input.
-	 */
-	private var _status = -1;
+	private var lastStatus = -1;
 	
 	/**
 	 * Creates a new FlxTypedButton object with a gray background.
@@ -286,10 +283,10 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 			#end
 			
 			// Trigger the animation only if the button's input status changes. 
-			if (_status != status) 
+			if (lastStatus != status) 
 			{
 				updateStatusAnimation();
-				_status = status;
+				lastStatus = status;
 			}
 		}
 	}
