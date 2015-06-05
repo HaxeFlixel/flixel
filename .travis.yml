@@ -37,6 +37,6 @@ install:
   - haxelib list
 
 script:
-  - cd ~/travis/haxe/lib/flixel/git/tests
+  - cd ~/haxe/lib/flixel/git/tests
   - haxe RunTravis.hxml
   - neko RunTravis.n
