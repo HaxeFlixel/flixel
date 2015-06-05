@@ -1,3 +1,7 @@
+1.1.2
+------------------------------
+* Added Tutorials/TurnBasedRPG
+
 1.1.1
 ------------------------------
 * GamepadTest: now compatible with OpenFL 1.4.0
