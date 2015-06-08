@@ -1,9 +1,13 @@
 package com.asliceofcrazypie.flash;
+import com.asliceofcrazypie.flash.jobs.BaseRenderJob;
+import haxe.ds.IntMap;
 
 #if flash11
 import com.asliceofcrazypie.flash.jobs.RenderJob;
 import com.asliceofcrazypie.flash.jobs.QuadRenderJob;
 import com.asliceofcrazypie.flash.jobs.TriangleRenderJob;
+
+import openfl.display3D._shaders.AGLSLShaderUtils;
 
 import flash.display3D.Context3DRenderMode;
 import flash.display3D.Context3DBlendFactor;
@@ -12,6 +16,7 @@ import flash.display3D.Context3DTextureFormat;
 import flash.display3D.Context3D;
 import flash.display3D.Program3D;
 import flash.display3D.textures.Texture;
+import flash.display.BlendMode;
 import flash.display.BitmapData;
 import flash.display.DisplayObject;
 import flash.display.DisplayObjectContainer;
@@ -44,26 +49,8 @@ class ContextWrapper extends EventDispatcher
 	private var antiAliasLevel:Int;
 	private var baseTransformMatrix:Matrix3D;
 	
-	public var programRGBASmooth:Program3D;
-	public var programRGBSmooth:Program3D;
-	public var programASmooth:Program3D;
-	public var programSmooth:Program3D;
-	public var programRGBA:Program3D;
-	public var programRGB:Program3D;
-	public var programA:Program3D;
-	public var program:Program3D;
-	
-	private var vertexDataRGBA:ByteArray;
-	private var vertexData:ByteArray;
-	
-	private var fragmentDataRGBASmooth:ByteArray;
-	private var fragmentDataRGBSmooth:ByteArray;
-	private var fragmentDataASmooth:ByteArray;
-	private var fragmentDataSmooth:ByteArray;
-	private var fragmentDataRGBA:ByteArray;
-	private var fragmentDataRGB:ByteArray;
-	private var fragmentDataA:ByteArray;
-	private var fragmentData:ByteArray;
+	private var imagePrograms:IntMap<Program3D>;
+	private var noImagePrograms:IntMap<Program3D>;
 	
 	private var _initCallback:Void->Void;
 	
@@ -77,42 +64,119 @@ class ContextWrapper extends EventDispatcher
 	private var currentTexture:Texture;
 	private var currentProgram:Program3D;
 	
+	private var globalMultiplier:Vector<Float>;
+	
 	public function new(depth:Int, antiAliasLevel:Int = 1)
 	{
 		super();
 		
+		globalMultiplier = new Vector<Float>();
+		
 		this.depth = depth;
 		this.antiAliasLevel = antiAliasLevel;
 		
-		//vertex shader data
-		var vertexRawDataRGBA:Array<Int> = 	[ -96, 1, 0, 0, 0, -95, 0, 24, 0, 0, 0, 0, 0, 15, 3, 0, 0, 0, -28, 0, 0, 0, 0, 0, 0, 0, -28, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 4, 1, 0, 0, -28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 15, 4, 2, 0, 0, -28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-		var vertexRawData:Array<Int> = 		[ -96, 1, 0, 0, 0, -95, 0, 24, 0, 0, 0, 0, 0, 15, 3, 0, 0, 0, -28, 0, 0, 0, 0, 0, 0, 0, -28, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 4, 1, 0, 0, -28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-		
-		//fragment shaders
-		var fragmentRawDataRGBASmooth:Array<Int> = 	[ -96, 1, 0, 0, 0, -95, 1, 40, 0, 0, 0, 1, 0, 15, 2, 0, 0, 0, -28, 4, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 16, 3, 0, 0, 0, 2, 0, 15, 2, 1, 0, 0, -28, 2, 0, 0, 0, 1, 0, 0, -28, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 3, 2, 0, 0, -28, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-		var fragmentRawDataRGBSmooth:Array<Int> = 	[ -96, 1, 0, 0, 0, -95, 1, 40, 0, 0, 0, 1, 0, 15, 2, 0, 0, 0, -28, 4, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 16, 3, 0, 0, 0, 1, 0, 15, 2, 1, 0, 0, -28, 2, 0, 0, 0, 1, 0, 0, -28, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 3, 1, 0, 0, -28, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-		var fragmentRawDataASmooth:Array<Int> = 	[ -96, 1, 0, 0, 0, -95, 1, 40, 0, 0, 0, 1, 0, 15, 2, 0, 0, 0, -28, 4, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 16, 3, 0, 0, 0, 1, 0, 8, 2, 1, 0, 0, -1, 2, 0, 0, 0, 1, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 3, 1, 0, 0, -28, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-		var fragmentRawDataSmooth:Array<Int> = 		[ -96, 1, 0, 0, 0, -95, 1, 40, 0, 0, 0, 1, 0, 15, 2, 0, 0, 0, -28, 4, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 16, 0, 0, 0, 0, 0, 0, 15, 3, 1, 0, 0, -28, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-		var fragmentRawDataRGBA:Array<Int> = 		[ -96, 1, 0, 0, 0, -95, 1, 40, 0, 0, 0, 1, 0, 15, 2, 0, 0, 0, -28, 4, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 3, 0, 0, 0, 2, 0, 15, 2, 1, 0, 0, -28, 2, 0, 0, 0, 1, 0, 0, -28, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 3, 2, 0, 0, -28, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-		var fragmentRawDataRGB:Array<Int> = 		[ -96, 1, 0, 0, 0, -95, 1, 40, 0, 0, 0, 1, 0, 15, 2, 0, 0, 0, -28, 4, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 3, 0, 0, 0, 2, 0, 15, 2, 1, 0, 0, -28, 2, 0, 0, 0, 1, 0, 0, -28, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 3, 2, 0, 0, -28, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-		var fragmentRawDataA:Array<Int> = 			[ -96, 1, 0, 0, 0, -95, 1, 40, 0, 0, 0, 1, 0, 15, 2, 0, 0, 0, -28, 4, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 3, 0, 0, 0, 1, 0, 8, 2, 1, 0, 0, -1, 2, 0, 0, 0, 1, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 3, 1, 0, 0, -28, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-		var fragmentRawData:Array<Int> = 			[ -96, 1, 0, 0, 0, -95, 1, 40, 0, 0, 0, 1, 0, 15, 2, 0, 0, 0, -28, 4, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 3, 1, 0, 0, -28, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-		
-		vertexDataRGBA = 	rawDataToBytes(vertexRawDataRGBA);
-		vertexData = 		rawDataToBytes(vertexRawData);
-		
-		fragmentDataRGBASmooth = 	rawDataToBytes(fragmentRawDataRGBASmooth);
-		fragmentDataRGBSmooth = 	rawDataToBytes(fragmentRawDataRGBSmooth);
-		fragmentDataASmooth = 		rawDataToBytes(fragmentRawDataASmooth);
-		fragmentDataSmooth = 		rawDataToBytes(fragmentRawDataSmooth);
-		fragmentDataRGBA = 			rawDataToBytes(fragmentRawDataRGBA);
-		fragmentDataRGB = 			rawDataToBytes(fragmentRawDataRGB);
-		fragmentDataA = 			rawDataToBytes(fragmentRawDataA);
-		fragmentData = 				rawDataToBytes(fragmentRawData);
+		imagePrograms = new IntMap<Program3D>();
+		noImagePrograms = new IntMap<Program3D>();
 		
 		currentRenderJobs = new Vector<RenderJob>();
 		quadRenderJobs = new Vector<QuadRenderJob>();
 		triangleRenderJobs = new Vector<TriangleRenderJob>();
+	}
+	
+	private function getNoImageProgram(globalColor:Bool = false):Program3D
+	{
+		var programName:UInt = getNoImageProgramName(globalColor);
+		
+		if (noImagePrograms.exists(programName))
+		{
+			return noImagePrograms.get(programName);
+		}
+		
+		var vertexString:String =	"m44 op, va0, vc0   \n" +		// 4x4 matrix transform to output clipspace
+									"mov v0, va1 		\n";		// move color transform to fragment shader
+		
+		var fragmentString:String = null;
+		if (globalColor)
+		{
+			fragmentString =	"mul oc, v0, fc0	\n";	// multiply global color by quad color and put result in output color
+		}
+		else
+		{
+			fragmentString =	"mov oc, v0			\n";	// output color
+		}
+		
+		var program:Program3D = assembleAgal(vertexString, fragmentString);
+		noImagePrograms.set(programName, program);
+		return program;
+	}
+	
+	private function getImageProgram(isRGB:Bool, isAlpha:Bool, smooth:Bool, mipmap:Bool, globalColor:Bool = false):Program3D
+	{
+		var programName:UInt = getImageProgramName(isRGB, isAlpha, mipmap, smooth, globalColor);
+		
+		if (imagePrograms.exists(programName))
+		{
+			return imagePrograms.get(programName);
+		}
+		
+		var vertexString:String = null;
+		var fragmentString:String = null;
+		
+		if (isRGB || isAlpha)
+		{
+			vertexString =	"mov v0, va1      \n" +		// move uv to fragment shader
+							"mov v1, va2      \n" +		// move color transform to fragment shader
+							"m44 op, va0, vc0 \n";		// multiply position by transform matrix
+		}
+		else
+		{
+			vertexString =	"m44 op, va0, vc0 \n" + 	// 4x4 matrix transform to output clipspace
+							"mov v0, va1      \n";  	// pass texture coordinates to fragment program
+		}
+		
+		if (globalColor)
+		{
+			if (isRGB)
+			{
+				fragmentString =	"tex ft0, v0, fs0 <???> \n" +	// sample texture
+									"mul ft1, v1, fc0		\n" +	// multiple sprite color by global color
+									"mul oc, ft0, ft1		\n";	// multiply texture by color
+			}
+			else if (isAlpha)
+			{
+				fragmentString = 	"tex ft0, v0, fs0 <???>	\n" +	// sample texture
+									"mul ft1, fc0, v1.zzz	\n" +	// multiple sprite alpha by global color
+									"mul oc, ft0, ft1		\n";	// multiply texture by color
+			}
+			else
+			{
+				fragmentString =	"tex ft0, v0, fs0 <???>	\n" +	// sample texture
+									"mul oc, ft0, fc0		\n";	// multiply texture by color
+			}
+		}
+		else
+		{
+			if (isRGB)
+			{
+				fragmentString =	"tex ft0, v0, fs0 <???> \n" +	// sample texture
+									"mul oc, ft0, v1		\n";	// multiply texture by color
+			}
+			else if (isAlpha)
+			{
+				fragmentString = 	"tex ft0, v0, fs0 <???>	\n" +	// sample texture
+									"mul oc, ft0, v1.zzzz	\n";	// multiply texture by alpha
+			}
+			else
+			{
+				fragmentString = "tex oc, v0, fs0 <???> \n"; 		// sample texture 0
+			}
+		}
+		
+		fragmentString = StringTools.replace(fragmentString, "<???>", getTextureLookupFlags(mipmap, smooth));
+		
+		var program:Program3D = assembleAgal(vertexString, fragmentString);
+		imagePrograms.set(programName, program);
+		return program;
 	}
 	
 	public inline function setTexture(texture:Texture):Void
@@ -127,7 +191,7 @@ class ContextWrapper extends EventDispatcher
 		}
 	}
 	
-	public inline function init(stage:Stage, initCallback:Void->Void = null, renderMode:Context3DRenderMode):Void
+	public inline function init(stage:Stage, initCallback:Void->Void = null, renderMode:Dynamic):Void
 	{
 		if (context3D == null)
 		{
@@ -136,11 +200,13 @@ class ContextWrapper extends EventDispatcher
 				renderMode = Context3DRenderMode.AUTO;
 			}
 			
+			BlendModeUtil.initBlendFactors();
+			
 			this.stage = stage;
 			this._initCallback = initCallback;
 			stage.stage3Ds[depth].addEventListener(Event.CONTEXT3D_CREATE, initStage3D);
 			stage.stage3Ds[depth].addEventListener(ErrorEvent.ERROR, initStage3DError);
-			stage.stage3Ds[depth].requestContext3D(Std.string(renderMode));
+			stage.stage3Ds[depth].requestContext3D(renderMode);
 			
 			stage.addEventListener(Event.EXIT_FRAME, onRender, false, -0xFFFFFE);
 		}
@@ -179,11 +245,11 @@ class ContextWrapper extends EventDispatcher
 		}
 	}
 	
-	public inline function renderJob(job:RenderJob):Void
+	public inline function renderJob(job:BaseRenderJob, colored:Bool = false):Void
 	{
 		if (context3D != null && !presented)
 		{
-			job.render(this);
+			job.render(this, colored);
 		}
 	}
 	
@@ -218,30 +284,8 @@ class ContextWrapper extends EventDispatcher
 				
 				stage.addEventListener(Event.RESIZE, onStageResize); //listen for future stage resize events
 				
-				//init programs
-				programRGBASmooth = context3D.createProgram();
-				programRGBASmooth.upload(vertexDataRGBA, fragmentDataRGBASmooth);
-				
-				programRGBSmooth = context3D.createProgram();
-				programRGBSmooth.upload(vertexDataRGBA, fragmentDataRGBSmooth);
-				
-				programASmooth = context3D.createProgram();
-				programASmooth.upload(vertexDataRGBA, fragmentDataASmooth);
-				
-				programSmooth = context3D.createProgram();
-				programSmooth.upload(vertexData, fragmentDataSmooth);
-				
-				programRGBA = context3D.createProgram();
-				programRGBA.upload(vertexDataRGBA, fragmentDataRGBA);
-				
-				programRGB = context3D.createProgram();
-				programRGB.upload(vertexDataRGBA, fragmentDataRGB);
-				
-				programA = context3D.createProgram();
-				programA.upload( vertexDataRGBA, fragmentDataA);
-				
-				program = context3D.createProgram();
-				program.upload(vertexData, fragmentData);
+				imagePrograms = new IntMap<Program3D>();
+				noImagePrograms = new IntMap<Program3D>();
 				
 				onStageResize(null); //init the base transform matrix
 				
@@ -313,9 +357,9 @@ class ContextWrapper extends EventDispatcher
 		return numJobs;
 	}
 	
-	public function uploadTexture(image:BitmapData):Texture
+	public function uploadTexture(image:BitmapData, mipmap:Bool = true):Texture
 	{
-		return TextureUtil.uploadTexture(image, context3D);
+		return TextureUtil.uploadTexture(image, context3D, mipmap);
 	}
 	
 	private inline function doSetProgram(program:Program3D):Void
@@ -327,46 +371,72 @@ class ContextWrapper extends EventDispatcher
 		}
 	}
 	
-	public function setProgram(isRGB:Bool, isAlpha:Bool, smooth:Bool):Void
+	public function setImageProgram(isRGB:Bool, isAlpha:Bool, smooth:Bool, mipmap:Bool = true, globalColor:Bool = false):Void
 	{
-		if (smooth)
+		var program:Program3D = getImageProgram(isRGB, isAlpha, smooth, mipmap, globalColor);
+		doSetProgram(program);
+	}
+	
+	public function setNoImageProgram(globalColor:Bool = false):Void
+	{
+		var program:Program3D = getNoImageProgram(globalColor);
+		doSetProgram(program);
+	}
+	
+	private function assembleAgal(vertexString:String, fragmentString:String, result:Program3D = null):Program3D
+	{
+		if (context3D == null)	return null;
+		
+		if (result == null) 
 		{
-			if (isRGB && isAlpha)
-			{
-				doSetProgram(programRGBASmooth);
-			}
-			else if (isRGB)
-			{
-				doSetProgram(programRGBSmooth);
-			}
-			else if (isAlpha)
-			{
-				doSetProgram(programASmooth);
-			}
-			else
-			{
-				doSetProgram(programSmooth);
-			}
+			result = context3D.createProgram();
 		}
-		else
-		{
-			if (isRGB && isAlpha)
-			{
-				doSetProgram(programRGBA);
-			}
-			else if (isRGB)
-			{
-				doSetProgram(programRGB);
-			}
-			else if (isAlpha)
-			{
-				doSetProgram(programA);
-			}
-			else
-			{
-				doSetProgram(program);
-			}
+		
+		var vertexByteCode = AGLSLShaderUtils.createShader(Context3DProgramType.VERTEX, vertexString);
+		var fragmentByteCode = AGLSLShaderUtils.createShader(Context3DProgramType.FRAGMENT, fragmentString);
+		
+		result.upload(vertexByteCode, fragmentByteCode);
+		return result;
+	}
+	
+	private function getNoImageProgramName(globalColor:Bool):UInt
+	{
+		var bitField:UInt = 0;
+		if (globalColor) bitField |= 0x0001;
+		return bitField;
+	}
+	
+	private function getImageProgramName(rgb:Bool, alpha:Bool, mipMap:Bool, smoothing:Bool, globalColor:Bool = false):UInt
+	{
+		var repeat:Bool = true;
+		var bitField:UInt = 0;
+		
+		if (rgb) bitField |= 0x0001;
+		if (alpha) bitField |= 0x0002;
+		if (mipMap) bitField |= 0x0004;
+		if (repeat) bitField |= 0x0008;
+		if (smoothing) bitField |= 0x0010;
+		if (globalColor) bitField |= 0x0020;
+		
+		return bitField;
+	}
+	
+	private function getTextureLookupFlags(mipMapping:Bool, smoothing:Bool):String
+	{
+		var repeat:Bool = true; // making it default for now (to make things simpler)
+		
+		var options:Array<String> = ["2d", repeat ? "repeat" : "clamp"];
+		
+		if (smoothing == false) {
+			options.push("nearest");
+			options.push(mipMapping ? "mipnearest" : "mipnone");
 		}
+		else {
+			options.push("linear");
+			options.push(mipMapping ? "miplinear" : "mipnone");
+		}
+		
+		return "<" + options.join("") + ">";
 	}
 	
 	public function setMatrix(matrix:Matrix3D):Void
@@ -382,6 +452,23 @@ class ContextWrapper extends EventDispatcher
 		if (context3D != null)
 		{
 			context3D.setScissorRectangle(rect);
+		}
+	}
+	
+	public inline function setBlendMode(blendMode:BlendMode, premultipliedAlpha:Bool):Void
+	{
+		BlendModeUtil.applyToContext(blendMode, this, premultipliedAlpha);
+	}
+	
+	public function setColorMultiplier(r:Float, g:Float, b:Float, a:Float):Void
+	{
+		if (context3D != null)
+		{
+			globalMultiplier[0] = r;
+			globalMultiplier[1] = g;
+			globalMultiplier[2] = b;
+			globalMultiplier[3] = a;
+			context3D.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, globalMultiplier);
 		}
 	}
 	

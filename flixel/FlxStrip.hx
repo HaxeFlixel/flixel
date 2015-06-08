@@ -1,6 +1,5 @@
 package flixel;
 import flixel.graphics.FlxGraphic;
-import flixel.graphics.tile.FlxDrawTrianglesItem;
 import flixel.math.FlxMath;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxGraphicAsset;
@@ -25,26 +24,26 @@ class FlxStrip extends FlxSprite
 	/**
 	 * A Vector of Floats where each pair of numbers is treated as a coordinate location (an x, y pair).
 	 */
-	public var vertices:DrawData<Float>;
+	public var vertices:Vector<Float>;
 	/**
 	 * A Vector of integers or indexes, where every three indexes define a triangle.
 	 */
-	public var indices:DrawData<Int>;
+	public var indices:Vector<Int>;
 	/**
 	 * A Vector of normalized coordinates used to apply texture mapping.
 	 */
-	public var uvtData:DrawData<Float>;
+	public var uvtData:Vector<Float>;
 	
-	public var colors:DrawData<Int>;
+	public var colors:Vector<Int>;
 	
 	public function new(X:Float = 0, Y:Float = 0, ?SimpleGraphic:FlxGraphicAsset)
 	{
 		super(X, Y, SimpleGraphic);
 		
-		vertices = new #if flash Vector #else Array #end<Float>();
-		indices = new #if flash Vector #else Array #end<Int>();
-		uvtData = new #if flash Vector #else Array #end<Float>();
-		colors = new #if flash Vector #else Array #end<Int>();
+		vertices = new Vector<Float>();
+		indices = new Vector<Int>();
+		uvtData = new Vector<Float>();
+		colors = new Vector<Int>();
 	}
 	
 	override public function destroy():Void 

@@ -1,16 +1,24 @@
 package com.asliceofcrazypie.flash;
 
+#if flash11
+import flash.display3D.Context3DRenderMode;
+#end
+
+import com.asliceofcrazypie.flash.jobs.BaseRenderJob;
+import com.asliceofcrazypie.flash.jobs.ColorRenderJob;
 import com.asliceofcrazypie.flash.jobs.QuadRenderJob;
 import com.asliceofcrazypie.flash.jobs.RenderJob;
 import com.asliceofcrazypie.flash.jobs.TriangleRenderJob;
 import flash.display.BlendMode;
-import flash.display3D.Context3DRenderMode;
 import flash.display.Stage;
 import flash.display.TriangleCulling;
 import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import flash.Vector;
+import openfl.display.BitmapData;
+
+import openfl.display.Sprite;
 import openfl.Lib;
 
 /**
@@ -31,14 +39,23 @@ class Batcher
 	public static var gameX(default, set):Float = 0;
 	public static var gameY(default, set):Float = 0;
 	
-	private static var viewports:Array<Viewport> = [];
+	public static var game(default, null):Sprite;
 	
-	public static var numViewports(default, null):Int;
+	private static var viewports:Array<Viewport>;
+	
+	public static var numViewports(default, null):Int = 0;
 	
 	/**
 	 * The first viewport.
 	 */
 	public static var defaultViewport(get, null):Viewport;
+	
+	#if !flash11
+	/**
+	 * Helper tilesheet for rendering axis-aligned colored rectangles on native targets.
+	 */
+	public static var colorsheet:TilesheetStage3D;
+	#end
 	
 	private static var _isInited:Bool = false;
 	
@@ -63,6 +80,9 @@ class Batcher
 		var index:Int = numViewports;
 		viewports[index] = viewport;
 		viewport.index = index;
+		#if !flash11
+		game.addChild(viewport.view);
+		#end
 		numViewports++;
 		return viewport;
 	}
@@ -85,6 +105,9 @@ class Batcher
 		if (index >= 0 || index < numViewports)
 		{
 			var viewport:Viewport = viewports[index];
+			#if !flash11
+			game.removeChild(viewport.view);
+			#end
 			if (dispose)	viewport.dispose();
 			viewports.splice(index, 1);
 			numViewports--;
@@ -111,6 +134,10 @@ class Batcher
 		
 		view1.index = index2;
 		view2.index = index1;
+		
+		#if !flash11
+		game.swapChildren(view1.view, view2.view);
+		#end
 	}
 	
 	public static function setViewportIndex(viewport:Viewport, index:Int):Void
@@ -128,6 +155,9 @@ class Batcher
 		
 		viewports.insert(index, viewport);
 		numViewports = viewports.length;
+		#if !flash11
+		game.addChildAt(viewport.view, index);
+		#end
 		updateViewportIndices();
 	}
 	
@@ -178,12 +208,28 @@ class Batcher
 	/**
 	 * Batcher initialization method. It also calls TilesheetStage3D.init() method.
 	 */
-	public static function init(stage:Stage, stage3DLevel:Int = 0, antiAliasLevel:Int = 5, initCallback:String->Void = null, renderMode:Context3DRenderMode = null, batchSize:Int = 0):Void
+	public static function init(stage:Stage, stage3DLevel:Int = 0, antiAliasLevel:Int = 5, initCallback:String->Void = null, renderMode:Dynamic = null, batchSize:Int = 0):Void
 	{
 		if (!_isInited)
 		{
+			viewports = new Array<Viewport>();
+			
+			#if flash11
 			TilesheetStage3D.init(stage, stage3DLevel, antiAliasLevel, initCallback, renderMode, batchSize);
 			TilesheetStage3D.context.renderCallback = render;
+			#else
+			BaseRenderJob.init(batchSize);
+			
+			game = new Sprite();
+			stage.addChild(game);
+			
+			var canvas:BitmapData = new BitmapData(128, 128);
+			colorsheet = new TilesheetStage3D(canvas);
+			
+			initCallback('success');
+			#end
+			
+			_isInited = true;
 		}
 	}
 	
@@ -197,7 +243,12 @@ class Batcher
 	
 	public static inline function render():Void
 	{
+		#if flash11
 		var context = TilesheetStage3D.context;
+		#else 
+		var context = null;
+		#end
+		
 		for (viewport in viewports)
 		{
 			viewport.render(context);
@@ -206,7 +257,9 @@ class Batcher
 	
 	public static inline function clear():Void
 	{
+		#if flash11
 		TilesheetStage3D.clear();
+		#end
 		reset();
 	}
 }

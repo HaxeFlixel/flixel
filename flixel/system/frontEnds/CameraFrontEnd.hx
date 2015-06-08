@@ -1,6 +1,6 @@
 package flixel.system.frontEnds;
 
-#if flash11
+#if FLX_RENDER_TILE
 import com.asliceofcrazypie.flash.Batcher;
 #end
 
@@ -194,8 +194,6 @@ class CameraFrontEnd
 		#end
 			
 		#if FLX_RENDER_TILE
-			camera.clearDrawStack();
-			camera.canvas.graphics.clear();
 			// Clearing camera's debug sprite
 			#if !FLX_NO_DEBUG
 			camera.debugLayer.graphics.clear();
@@ -206,11 +204,12 @@ class CameraFrontEnd
 			camera.fill(camera.bgColor, camera.useBgAlphaBlending);
 			camera.screen.dirty = true;
 			#else
-			camera.fill((camera.bgColor & 0x00ffffff), camera.useBgAlphaBlending, ((camera.bgColor >> 24) & 255) / 255);
+			camera.viewport.bgColor = camera.bgColor;
+			camera.viewport.useBgColor = true;
 			#end
 		}
 		
-		#if (flash11 && FLX_RENDER_TILE)
+		#if FLX_RENDER_TILE
 		Batcher.clear();
 		#end
 	}
@@ -218,17 +217,7 @@ class CameraFrontEnd
 	#if FLX_RENDER_TILE
 	private inline function render():Void
 	{
-		#if flash11
 		Batcher.render();
-		#else
-		for (camera in list)
-		{
-			if ((camera != null) && camera.exists && camera.visible)
-			{
-				camera.render();
-			}
-		}
-		#end
 	}
 	#end
 	

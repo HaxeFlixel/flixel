@@ -7,7 +7,6 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxBitmapFont;
 import flixel.graphics.frames.FlxFrame;
-import flixel.graphics.tile.FlxDrawTilesItem;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.text.FlxText.FlxTextAlign;

@@ -14,7 +14,6 @@ import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.frames.FlxFramesCollection;
 import flixel.graphics.frames.FlxImageFrame;
 import flixel.graphics.frames.FlxTileFrames;
-import flixel.graphics.tile.FlxDrawTilesItem;
 import flixel.math.FlxAngle;
 import flixel.math.FlxMath;
 import flixel.math.FlxMatrix;

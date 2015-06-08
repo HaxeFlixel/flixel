@@ -14,7 +14,7 @@ import openfl.geom.Point;
  */
 class TextureUtil
 {
-	public static function uploadTexture(image:BitmapData, context:Context3D):Texture
+	public static function uploadTexture(image:BitmapData, context:Context3D, mipmap:Bool = true):Texture
 	{
 		if (context != null)
 		{
@@ -22,24 +22,28 @@ class TextureUtil
 			
 			texture.uploadFromBitmapData(image);
 			
-			// generate mipmaps
-			var currentWidth:Int = image.width;
-			var currentHeight:Int = image.height;
-			var level:Int = 1;
-			var canvas:BitmapData = new BitmapData(currentWidth >> 1, currentHeight >> 1, true, 0);
-			var transform:Matrix = new Matrix(0.5, 0, 0, 0.5);
-			
-			while (currentWidth >= 2 && currentHeight >= 2) //should that be an OR?
+			if (mipmap)
 			{
-				currentWidth = currentWidth >> 1;
-				currentHeight = currentHeight >> 1;
-				canvas.fillRect(canvas.rect, 0);
-				canvas.draw(image, transform, null, null, null, true);
-				texture.uploadFromBitmapData(canvas, level++);
-				transform.scale(0.5, 0.5); 
+				// generate mipmaps
+				var currentWidth:Int = image.width;
+				var currentHeight:Int = image.height;
+				var level:Int = 1;
+				var canvas:BitmapData = new BitmapData(currentWidth >> 1, currentHeight >> 1, true, 0);
+				var transform:Matrix = new Matrix(0.5, 0, 0, 0.5);
+				
+				while (currentWidth >= 2 && currentHeight >= 2) //should that be an OR?
+				{
+					currentWidth = currentWidth >> 1;
+					currentHeight = currentHeight >> 1;
+					canvas.fillRect(canvas.rect, 0);
+					canvas.draw(image, transform, null, null, null, true);
+					texture.uploadFromBitmapData(canvas, level++);
+					transform.scale(0.5, 0.5); 
+				}
+				
+				canvas.dispose();
 			}
 			
-			canvas.dispose();
 			return texture;
 		}
 		

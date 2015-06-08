@@ -1,18 +1,22 @@
 package com.asliceofcrazypie.flash.jobs;
-import com.asliceofcrazypie.flash.TilesheetStage3D;
+import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
 
 #if flash11
-import flash.display3D.IndexBuffer3D;
-import flash.display3D.textures.Texture;
-import flash.display3D.Context3DVertexBufferFormat;
-import flash.display3D.Context3DBlendFactor;
-import flash.display3D.VertexBuffer3D;
-import flash.display3D.Context3DTriangleFace;
-import flash.display.TriangleCulling;
+import com.asliceofcrazypie.flash.TilesheetStage3D;
+import com.asliceofcrazypie.flash.jobs.BaseRenderJob;
+
 import flash.display.BlendMode;
 import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
+
+import flash.display3D.IndexBuffer3D;
+import flash.display3D.textures.Texture;
+import flash.display3D.Context3DVertexBufferFormat;
+import flash.display3D.VertexBuffer3D;
+import flash.display3D.Context3DTriangleFace;
+import flash.display.TriangleCulling;
 import flash.Vector;
 import flash.errors.Error;
 import flash.utils.ByteArray;
@@ -23,90 +27,14 @@ import haxe.ds.StringMap;
  * ...
  * @author Paul M Pepper
  */
-class RenderJob 
+class RenderJob extends BaseRenderJob
 {
-	public static inline var NUM_JOBS_TO_POOL:Int = 25;
-	
-	public static inline var BLEND_NORMAL:String = "normal";
-	public static inline var BLEND_ADD:String = "add";
-	public static inline var BLEND_MULTIPLY:String = "multiply";
-	public static inline var BLEND_SCREEN:String = "screen";
-	
-	public static inline var MAX_INDICES_PER_BUFFER:Int = 98298;
-	public static inline var MAX_VERTEX_PER_BUFFER:Int = 65532;		// (MAX_INDICES_PER_BUFFER * 4 / 6)
-	public static inline var MAX_QUADS_PER_BUFFER:Int = 16383;		// (MAX_VERTEX_PER_BUFFER / 4)
-	public static inline var MAX_TRIANGLES_PER_BUFFER:Int = 21844;	// (MAX_VERTEX_PER_BUFFER / 3)
-	
-	// TODO: use these static vars (and document them)...
-	public static var vertexPerBuffer(default, null):Int;
-	public static var quadsPerBuffer(default, null):Int;
-	public static var trianglesPerBuffer(default, null):Int;
-	public static var indicesPerBuffer(default, null):Int;
-	
-	private static var premultipliedBlendFactors:StringMap<Array<Context3DBlendFactor>>;
-	private static var noPremultipliedBlendFactors:StringMap<Array<Context3DBlendFactor>>;
-	
-	public var tilesheet:TilesheetStage3D;
-	public var vertices(default, null):Vector<Float>;
-	public var isRGB:Bool;
-	public var isAlpha:Bool;
-	public var isSmooth:Bool;
-	
-	public var blendMode:BlendMode;
-	public var premultipliedAlpha:Bool;
-	
-	public var type(default, null):RenderJobType;
-	
-	public var dataPerVertice:Int;
-	public var numVertices:Int;
-	public var numIndices:Int;
-	
-	public var indicesBytes(default, null):ByteArray;
-	public var indicesVector(default, null):Vector<UInt>;
-	
-	public var vertexPos:Int = 0;
-	public var indexPos:Int = 0;
-	
-	@:allow(com.asliceofcrazypie.flash)
-	private static function init(batchSize:Int = 0):Void
+	private function new(useBytes:Bool)
 	{
-		if (batchSize <= 0 || batchSize > MAX_QUADS_PER_BUFFER)
-		{
-			batchSize = MAX_QUADS_PER_BUFFER;
-		}
-		
-		quadsPerBuffer = batchSize;
-		vertexPerBuffer = batchSize * 4;
-		trianglesPerBuffer = Std.int(vertexPerBuffer / 3);
-		indicesPerBuffer = Std.int(vertexPerBuffer * 6 / 4);
+		super(useBytes);
 	}
 	
-	public function new(useBytes:Bool = false)
-	{
-		this.vertices = new Vector<Float>(RenderJob.vertexPerBuffer >> 2);
-		
-		if (useBytes)
-		{
-			indicesBytes = new ByteArray();
-			indicesBytes.endian = Endian.LITTLE_ENDIAN;
-			
-			for (i in 0...Std.int(RenderJob.vertexPerBuffer / 4))
-			{
-				indicesBytes.writeShort((i * 4) + 2);
-				indicesBytes.writeShort((i * 4) + 1);
-				indicesBytes.writeShort((i * 4) + 0);
-				indicesBytes.writeShort((i * 4) + 3);
-				indicesBytes.writeShort((i * 4) + 2);
-				indicesBytes.writeShort((i * 4) + 0);
-			}
-		}
-		else
-		{
-			indicesVector = new Vector<UInt>();
-		}
-	}
-	
-	public function addQuad(rect:Rectangle, normalizedOrigin:Point, uv:Rectangle, matrix:Matrix, r:Float = 1, g:Float = 1, b:Float = 1, a:Float = 1):Void
+	public function addQuad(rect:FlxRect, normalizedOrigin:FlxPoint, uv:FlxRect, matrix:Matrix, r:Float = 1, g:Float = 1, b:Float = 1, a:Float = 1):Void
 	{
 		var imgWidth:Int = Std.int(rect.width);
 		var imgHeight:Int = Std.int(rect.height);
@@ -220,15 +148,16 @@ class RenderJob
 		*/
 	}
 	
-	public function render(context:ContextWrapper):Void
+	override public function render(context:ContextWrapper = null, colored:Bool = false):Void
 	{
-		if (context.context3D.driverInfo != 'Disposed')
+		if (context != null && context.context3D.driverInfo != 'Disposed')
 		{
 			//blend mode
-			setBlending(context);
+			context.setBlendMode(blendMode, tilesheet.premultipliedAlpha);
 			
-			context.setProgram(isRGB, isAlpha, isSmooth); //assign appropriate shader
+			context.setImageProgram(isRGB, isAlpha, isSmooth, tilesheet.mipmap, colored); //assign appropriate shader
 			
+			// TODO: culling support...
 			// context.context3D.setCulling();
 			
 			context.setTexture(tilesheet.texture);
@@ -281,88 +210,5 @@ class RenderJob
 			context.context3D.drawTriangles(indexbuffer);
 		}
 	}
-	
-	public inline function canAddQuad():Bool
-	{
-		return (numVertices + 4) <= RenderJob.vertexPerBuffer;
-	}
-	
-	public inline function canAddTriangles(numVertices:Int):Bool
-	{
-		return (numVertices + this.numVertices) <= RenderJob.vertexPerBuffer;
-	}
-	
-	public inline function checkMaxTrianglesCapacity(numVertices:Int):Bool
-	{
-		return numVertices <= RenderJob.vertexPerBuffer;
-	}
-	
-	private inline function setBlending(context:ContextWrapper):Void
-	{
-		var factors = RenderJob.premultipliedBlendFactors;
-		if (!premultipliedAlpha)
-		{
-			factors = RenderJob.noPremultipliedBlendFactors;
-		}
-		
-		var blendString:String = switch (blendMode)
-		{
-			case BlendMode.ADD:
-				RenderJob.BLEND_ADD;
-			case BlendMode.MULTIPLY:
-				RenderJob.BLEND_MULTIPLY;
-			case BlendMode.SCREEN:
-				RenderJob.BLEND_SCREEN;
-			default:
-				RenderJob.BLEND_NORMAL;
-		}
-		
-		var factor:Array<Context3DBlendFactor> = factors.get(blendString);
-		if (factor == null)
-		{
-			factor = factors.get(RenderJob.BLEND_NORMAL);
-		}
-		
-		context.context3D.setBlendFactors(factor[0], factor[1]);
-	}
-	
-	public function reset():Void
-	{
-		vertexPos = 0;
-		indexPos = 0;
-		numVertices = 0;
-		numIndices = 0;
-	}
-	
-	public static function __init__():Void
-	{
-	//	QuadRenderJob.__init__();
-	//	TriangleRenderJob.__init__();
-		RenderJob.initBlendFactors();
-	}
-	
-	private static function initBlendFactors():Void
-	{
-		if (RenderJob.premultipliedBlendFactors == null)
-		{
-			RenderJob.premultipliedBlendFactors = new StringMap();
-			RenderJob.premultipliedBlendFactors.set(BLEND_NORMAL, [Context3DBlendFactor.ONE, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA]);
-			RenderJob.premultipliedBlendFactors.set(BLEND_ADD, [Context3DBlendFactor.ONE, Context3DBlendFactor.ONE]);
-			RenderJob.premultipliedBlendFactors.set(BLEND_MULTIPLY, [Context3DBlendFactor.DESTINATION_COLOR, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA]);
-			RenderJob.premultipliedBlendFactors.set(BLEND_SCREEN, [Context3DBlendFactor.ONE, Context3DBlendFactor.ONE_MINUS_SOURCE_COLOR]);
-			
-			RenderJob.noPremultipliedBlendFactors = new StringMap();
-			RenderJob.noPremultipliedBlendFactors.set(BLEND_NORMAL, [Context3DBlendFactor.SOURCE_ALPHA, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA]);
-			RenderJob.noPremultipliedBlendFactors.set(BLEND_ADD, [Context3DBlendFactor.SOURCE_ALPHA, Context3DBlendFactor.DESTINATION_ALPHA]);
-			RenderJob.noPremultipliedBlendFactors.set(BLEND_MULTIPLY, [Context3DBlendFactor.DESTINATION_COLOR, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA]);
-			RenderJob.noPremultipliedBlendFactors.set(BLEND_SCREEN, [Context3DBlendFactor.SOURCE_ALPHA, Context3DBlendFactor.ONE]);
-		}
-	}
 }
 #end
-
-enum RenderJobType
-{
-	QUAD;
-	TRIANGLE;
-}

@@ -16,6 +16,9 @@ import openfl.geom.Rectangle;
 
 #if (flash11 && FLX_RENDER_TILE)
 import com.asliceofcrazypie.flash.TextureUtil;
+#end
+
+#if FLX_RENDER_TILE
 import com.asliceofcrazypie.flash.TilesheetStage3D;
 #end
 
@@ -330,11 +333,7 @@ class FlxGraphic
 	/**
 	 * Tilesheet for this graphic object. It is used only for FLX_RENDER_TILE mode
 	 */
-	#if flash11
 	public var tilesheet(get, null):TilesheetStage3D;
-	#else
-	public var tilesheet(get, null):Tilesheet;
-	#end
 #end
 	
 	/**
@@ -384,11 +383,7 @@ class FlxGraphic
 	 * Internal var holding Tilesheet for bitmap of this graphic.
 	 * It is used only in FLX_RENDER_TILE mode
 	 */
-	#if flash11
 	private var _tilesheet:TilesheetStage3D;
-	#else
-	private var _tilesheet:Tilesheet;
-	#end
 #end
 	
 	private var _useCount:Int = 0;
@@ -547,11 +542,7 @@ class FlxGraphic
 	/**
 	 * Tilesheet getter. Generates new one (and regenerates) if there is no tilesheet for this graphic yet.
 	 */
-	#if flash11
 	private function get_tilesheet():TilesheetStage3D
-	#else
-	private function get_tilesheet():Tilesheet
-	#end
 	{
 		if (_tilesheet == null)
 		{
@@ -664,10 +655,6 @@ class FlxGraphic
 	
 	private inline function createTilesheet():Void
 	{
-		#if flash11
 		_tilesheet = new TilesheetStage3D(bitmap);
-		#else
-		_tilesheet = new Tilesheet(bitmap);
-		#end
 	}
 }
