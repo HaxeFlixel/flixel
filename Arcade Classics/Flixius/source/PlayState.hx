@@ -53,9 +53,7 @@ class PlayState extends FlxState
 	private var _healthBar:FlxBar;
 	private var _launchedSubstate:Bool = false;
 	private var _starting:Bool = true;
-	private var _showingReady:Bool = false;
-	private var _txtReady:FlxText;
-	private var _sprReady:FlxSprite;
+	
 	private var _stars:FlxStarField2D;
 	private var _backgroundStuff:FlxTypedGroup<FlxSprite>;
 	/**
@@ -163,21 +161,6 @@ class PlayState extends FlxState
 		shine.y = _healthBar.y;
 		shine.scrollFactor.set();
 		add(shine);
-		
-		_sprReady = new FlxSprite(0, 0);
-		_sprReady.makeGraphic(FlxG.width, Std.int(FlxG.height / 6),FlxColor.RED);
-		_sprReady.screenCenter(false, true);
-		_sprReady.x = FlxG.width;
-		_sprReady.alpha = 0;
-		add(_sprReady);
-		
-		_txtReady  = new FlxText(0, 0, 0, "START!", 48);
-		_txtReady.color = FlxColor.YELLOW;
-		_txtReady.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.BLUE, 4, 1);
-		_txtReady.italic = true;
-		_txtReady.alpha = 0;
-		_txtReady.screenCenter(true, true);
-		add(_txtReady);
 		
 		FlxG.camera.setScrollBoundsRect(_map.x,  _map.y, _map.width,  _map.height, true);
 		
@@ -297,54 +280,21 @@ class PlayState extends FlxState
 	
 	public function returnFromSubState():Void
 	{
-		_showingReady = true;
+		
 		#if flash
 		FlxG.sound.playMusic(AssetPaths.music__mp3);
 		#else
 		FlxG.sound.playMusic(AssetPaths.music__ogg);
 		#end
-		/* okay, I admit, this is ridiculous, but it works ;) I would probably find a nicer solution for a 'real' game lol */
-		FlxTween.num(0, 1, .1, { type:FlxTween.ONESHOT, ease:FlxEase.sineOut, onComplete:function(_) {
-			FlxTween.num(0, 1, .2, { type:FlxTween.ONESHOT, ease:FlxEase.sineOut, onComplete:function(_) {
-				FlxTween.num(1, .2, .2, { type:FlxTween.ONESHOT, ease: FlxEase.sineInOut, onComplete:function (_) {
-					FlxTween.num(.2, 1, .2, { type:FlxTween.ONESHOT, ease: FlxEase.sineInOut, onComplete:function (_) {
-						FlxTween.num(1, .2, .2, { type:FlxTween.ONESHOT, ease: FlxEase.sineInOut, onComplete:function (_) {
-							FlxTween.num(.2, 1, .2, { type:FlxTween.ONESHOT, ease: FlxEase.sineInOut, onComplete:function (_) {
-								FlxTween.num(1, 0, .2, { type:FlxTween.ONESHOT, ease: FlxEase.sineIn, onComplete:function (_) {
-									FlxG.camera.flash(FlxColor.WHITE,.2,function() {
-										FlxTween.num(1,0,.1, { type: FlxTween.ONESHOT,ease:FlxEase.sineIn,onComplete:function (_){									
-											_starting = false;
-											_showingReady = false;
-											_chaser.velocity.x = 60;
-											_stars.setStarSpeed(60, 160);
-										}},readyBoxAlphaOut);
-									});
-								}},readyAlpha);
-							}},readyAlpha);
-						}},readyAlpha);
-					}},readyAlpha);
-				}},readyAlpha);
-			}},readyAlpha);
-		}}, readyBoxAlphaIn);
+		
+		_starting = false;
+		
+		_chaser.velocity.x = 60;
+		_stars.setStarSpeed(60, 160);
+		
+		
 	}
-	
-	private function readyAlpha(A:Float):Void
-	{
-		_txtReady.alpha = A;
-	}
-	
-	private function readyBoxAlphaIn(A:Float):Void
-	{
-		_sprReady.alpha = A*.8;
-		_sprReady.x = FlxG.width * (1-A);
-	}
-	
-	private function readyBoxAlphaOut(A:Float):Void
-	{
-		_sprReady.alpha = A*.8;
-		_sprReady.x = -FlxG.width * (1-A);
-	}
-	
+		
 	/**
 	 * Function that is called once every frame.
 	 */
