@@ -1,13 +1,11 @@
 package;
 
+import flixel.effects.particles.FlxEmitter;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
-import flixel.math.FlxRandom;
 import flixel.util.FlxSave;
-import flixel.util.FlxStringUtil;
-import flixel.effects.particles.FlxEmitter;
 import openfl.Assets;
 
 /**

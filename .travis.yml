@@ -1,37 +1,42 @@
-language: java
+language: haxe
 
+haxe:
+  - "3.2.0"
+  - "3.1.3"
+  - development
+  
 env: 
   - TARGET=flash
   - TARGET=neko
+  - TARGET=cpp
   - TARGET=html5
-
+  
 matrix:
   allow_failures:
-    - env: "TARGET=html5"
-    
-before_install:
-  - sudo add-apt-repository ppa:eyecreate/haxe -y
-  - sudo apt-get update
-  - sudo apt-get install haxe -y
-  - sudo apt-get install -qq --force-yes libgd2-xpm ia32-libs ia32-libs-multiarch
-  - mkdir ~/haxelib
-  - haxelib -notimeout setup ~/haxelib 
-  - haxelib -notimeout install munit
-  - haxelib -notimeout install lime > /dev/null
-  - haxelib -notimeout run lime install openfl > /dev/null
-  - haxelib -notimeout install systools
-  - haxelib git spinehaxe https://github.com/bendmorris/spinehaxe
-  - haxelib -notimeout install nape
-  - haxelib -notimeout install task
-  - haxelib -notimeout install hscript
-  - haxelib -notimeout install poly2trihx
-  - haxelib git openfl-bitfive https://github.com/YellowAfterlife/openfl-bitfive
-  - haxelib git firetongue https://github.com/larsiusprime/firetongue
-  - haxelib git flixel-tools https://github.com/HaxeFlixel/flixel-tools
-  - haxelib git flixel-addons https://github.com/HaxeFlixel/flixel-addons dev
-  - haxelib git flixel-ui https://github.com/HaxeFlixel/flixel-ui dev
-  - haxelib git flixel https://github.com/HaxeFlixel/flixel dev
-  - haxelib dev flixel-demos .
+    - env: "TARGET=cpp"
+      haxe: development
+  
+install:
+  - haxelib install munit > /dev/null
+  - haxelib install lime > /dev/null
+  - haxelib install openfl > /dev/null
+  - haxelib install hxcpp > /dev/null
+  - haxelib install systools > /dev/null
+  - haxelib install nape > /dev/null
+  - haxelib install task > /dev/null
+  - haxelib install hscript > /dev/null
+  - haxelib install poly2trihx > /dev/null
+  - haxelib git spinehaxe https://github.com/bendmorris/spinehaxe > /dev/null
+  - haxelib git openfl-bitfive https://github.com/YellowAfterlife/openfl-bitfive > /dev/null
+  - haxelib git firetongue https://github.com/larsiusprime/firetongue > /dev/null
+  - haxelib git flixel https://github.com/HaxeFlixel/flixel > /dev/null
+  - haxelib git flixel-tools https://github.com/HaxeFlixel/flixel-tools > /dev/null
+  - haxelib git flixel-addons https://github.com/HaxeFlixel/flixel-addons dev > /dev/null
+  - haxelib git flixel-ui https://github.com/HaxeFlixel/flixel-ui dev > /dev/null
+  - haxelib dev flixel-demos $TRAVIS_BUILD_DIR
+  - haxelib list
 
 script:
-  - haxelib run flixel-tools testdemos -$TARGET
+  - cd ~/haxe/lib/flixel/git/tests
+  - haxe RunTravis.hxml
+  - neko RunTravis.n
