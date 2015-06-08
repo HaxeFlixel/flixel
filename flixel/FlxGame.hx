@@ -42,9 +42,9 @@ import flixel.system.ui.FlxSoundTray;
 import flixel.system.ui.FlxFocusLostScreen;
 #end
 
-#if (flash11 && FLX_RENDER_TILE)
+#if FLX_RENDER_TILE
 import com.asliceofcrazypie.flash.Batcher;
-import flash.display3D.Context3DRenderMode;
+import openfl.display3D.Context3DRenderMode;
 #end
 
 /**
@@ -282,7 +282,7 @@ class FlxGame extends Sprite
 		}
 		removeEventListener(Event.ADDED_TO_STAGE, create);
 		
-		#if (flash11 && FLX_RENDER_TILE)
+		#if FLX_RENDER_TILE
 		Batcher.init(stage, 0, 5, onCreate, Context3DRenderMode.AUTO, 2000);
 		#else
 		onCreate();

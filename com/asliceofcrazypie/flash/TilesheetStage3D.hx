@@ -1,6 +1,8 @@
 package com.asliceofcrazypie.flash;
 
 import com.asliceofcrazypie.flash.jobs.BaseRenderJob;
+import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
 import openfl.display.BitmapData;
 import openfl.display.Tilesheet;
 import openfl.events.Event;
@@ -200,6 +202,8 @@ class TilesheetStage3D extends Tilesheet
 		}
 	}
 	
+	private static var flxUV:FlxRect = new FlxRect();
+	
 	override public function drawTiles(graphics:Graphics, tileData:Array<Float>, smooth:Bool = false, flags:Int = 0, count:Int = -1):Void
 	{
 		if (context != null && context.context3D != null && !Type.enumEq(fallbackMode, FallbackMode.FORCE_FALLBACK))
@@ -229,6 +233,9 @@ class TilesheetStage3D extends Tilesheet
 			var origin:Point;
 			var uv:Rectangle;
 			var tileId:Int;
+			
+			var flxRect:FlxRect = FlxRect.flxRect;
+			var flxPoint:FlxPoint = FlxPoint.flxPoint1;
 			
 			//determine data structure based on flags
 			var tileDataPerItem:Int = 3;
@@ -412,7 +419,11 @@ class TilesheetStage3D extends Tilesheet
 					
 					matrix.setTo(transform_a, transform_b, transform_c, transform_d, transform_tx, transform_ty);
 					
-					renderJob.addQuad(rect, origin, uv, matrix, r, g, b, a);
+					flxRect.copyFromFlash(rect);
+					flxPoint.copyFromFlash(origin);
+					flxUV.copyFromFlash(uv);
+					
+					renderJob.addQuad(flxRect, flxPoint, flxUV, matrix, r, g, b, a);
 					
 					tileDataPos += tileDataPerItem;
 				}

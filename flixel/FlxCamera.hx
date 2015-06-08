@@ -472,8 +472,6 @@ class FlxCamera extends FlxBasic
 		zeroPoint = new FlxPoint(0, 0);
 		#end
 		
-		set_color(FlxColor.WHITE);
-		
 		flashSprite = new Sprite();
 		
 		#if FLX_RENDER_BLIT
@@ -501,6 +499,8 @@ class FlxCamera extends FlxBasic
 		viewport.view.addChild(debugLayer);
 		#end
 	#end
+		
+		set_color(FlxColor.WHITE);
 		
 		flashSprite.scrollRect = new Rectangle();
 		

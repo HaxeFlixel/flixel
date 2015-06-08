@@ -80,9 +80,7 @@ class Batcher
 		var index:Int = numViewports;
 		viewports[index] = viewport;
 		viewport.index = index;
-		#if !flash11
 		game.addChild(viewport.view);
-		#end
 		numViewports++;
 		return viewport;
 	}
@@ -105,9 +103,7 @@ class Batcher
 		if (index >= 0 || index < numViewports)
 		{
 			var viewport:Viewport = viewports[index];
-			#if !flash11
 			game.removeChild(viewport.view);
-			#end
 			if (dispose)	viewport.dispose();
 			viewports.splice(index, 1);
 			numViewports--;
@@ -134,10 +130,7 @@ class Batcher
 		
 		view1.index = index2;
 		view2.index = index1;
-		
-		#if !flash11
 		game.swapChildren(view1.view, view2.view);
-		#end
 	}
 	
 	public static function setViewportIndex(viewport:Viewport, index:Int):Void
@@ -155,9 +148,7 @@ class Batcher
 		
 		viewports.insert(index, viewport);
 		numViewports = viewports.length;
-		#if !flash11
 		game.addChildAt(viewport.view, index);
-		#end
 		updateViewportIndices();
 	}
 	
@@ -214,14 +205,14 @@ class Batcher
 		{
 			viewports = new Array<Viewport>();
 			
+			game = new Sprite();
+			stage.addChild(game);
+			
 			#if flash11
 			TilesheetStage3D.init(stage, stage3DLevel, antiAliasLevel, initCallback, renderMode, batchSize);
 			TilesheetStage3D.context.renderCallback = render;
 			#else
 			BaseRenderJob.init(batchSize);
-			
-			game = new Sprite();
-			stage.addChild(game);
 			
 			var canvas:BitmapData = new BitmapData(128, 128);
 			colorsheet = new TilesheetStage3D(canvas);

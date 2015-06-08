@@ -110,10 +110,8 @@ class Viewport
 	
 	public var useBgColor:Bool = false;
 	
-	#if !flash11
 	public var canvas(default, null):Sprite;
 	public var view(default, null):Sprite;
-	#end
 	
 	/**
 	 * Viewport consctructor.
@@ -134,10 +132,10 @@ class Viewport
 		bgRenderJob = ColorRenderJob.getJob();
 		#else
 		colorTransform = new ColorTransform();
+		#end
 		view = new Sprite();
 		canvas = new Sprite();
 		view.addChild(canvas);
-		#end
 		
 		renderJobs = new Vector<BaseRenderJob>();
 		quadRenderJobs = new Vector<QuadRenderJob>();
@@ -169,11 +167,10 @@ class Viewport
 		matrix = null;
 		#else
 		colorTransform = null;
-		
+		#end
 		view.removeChild(canvas);
 		view = null;
 		canvas = null;
-		#end
 		
 		renderJobs = null;
 		quadRenderJobs = null;
@@ -255,7 +252,7 @@ class Viewport
 		
 		if (useBgColor)
 		{
-			helperRect.setTo(	-0.5 * width * (initialScaleX - scaleX) / scaleX - 1, 
+			helperRect.set(	-0.5 * width * (initialScaleX - scaleX) / scaleX - 1, 
 								-0.5 * height * (initialScaleY - scaleY) / scaleY - 1, 
 								width / scaleX + 2, 
 								height / scaleY + 2);
