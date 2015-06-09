@@ -12,7 +12,7 @@ import flixel.input.touch.FlxTouch;
  */
 class FlxMath
 {	
-	#if (flash || js || ios)
+	#if (flash || js || ios || blackberry)
 	/**
 	 * Minimum value of a floating point number.
 	 */
