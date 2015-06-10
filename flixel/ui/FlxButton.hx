@@ -178,13 +178,17 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	public var pressed(get, never):Bool;
 	public var justPressed(get, never):Bool;
 	
-	// we don't need an ID here, so let's just use Int as the type
+	/** 
+	 * We don't need an ID here, so let's just use Int as the type.
+	 */
 	private var input:FlxInput<Int>;
 	
 	/**
 	 * The input currently pressing this button, if none, it's null. Needed to check for its release.
 	 */
 	private var currentInput:IFlxInput;
+
+	private var lastStatus = -1;
 	
 	/**
 	 * Creates a new FlxTypedButton object with a gray background.
@@ -278,7 +282,12 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 				updateButton();
 			#end
 			
-			updateStatusAnimation();
+			// Trigger the animation only if the button's input status changes. 
+			if (lastStatus != status) 
+			{
+				updateStatusAnimation();
+				lastStatus = status;
+			}
 		}
 	}
 	
