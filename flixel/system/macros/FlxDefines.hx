@@ -59,8 +59,8 @@ class FlxDefines
 	public static function run()
 	{
 		#if (haxe_ver < "3.1.1")
-		Context.fatalError('The minimum required Haxe version for HaxeFlixel is 3.1.1. '
-			+ 'Please install a newer version.', FlxMacroUtil.here());
+		abort('The minimum required Haxe version for HaxeFlixel is 3.1.1. '
+			+ 'Please install a newer version.');
 		#end
 		
 		checkDefines();
@@ -77,7 +77,7 @@ class FlxDefines
 	{
 		if (defined(FLX_RENDER_BLIT) && defined(FLX_RENDER_TILE))
 		{
-			Context.fatalError('You cannot define both $FLX_RENDER_BLIT and $FLX_RENDER_TILE.', FlxMacroUtil.here());
+			abort('You cannot define both $FLX_RENDER_BLIT and $FLX_RENDER_TILE.');
 		}
 		
 		for (define in HelperDefines.getConstructors())
@@ -101,7 +101,7 @@ class FlxDefines
 	{
 		if (defined(define))
 		{
-			Context.fatalError('$define can only be defined by flixel.', FlxMacroUtil.here());
+			abort('$define can only be defined by flixel.');
 		}
 	}
 	
@@ -169,7 +169,10 @@ class FlxDefines
 	
 	private static function checkSwfVersion()
 	{
-		swfVersionError("Native mouse cursors are", "10.2", FLX_NO_NATIVE_CURSOR);
+		if (!defined("flash11"))
+			abort("The minimum required Flash Player version for HaxeFlixel is 11." +
+				" Please specify a newer version in your Project.xml file.");
+		
 		swfVersionError("Middle and right mouse button events are", "11.2", FLX_NO_MOUSE_ADVANCED);
 		swfVersionError("Gamepad input is", "11.8", FLX_NO_GAMEPAD);
 	}
@@ -181,11 +184,10 @@ class FlxDefines
 		
 		if (!defined("flash" + version.replace(".", "_")) && !defined(define))
 		{
-			Context.fatalError(errorMessage
+			abort(errorMessage
 				.replace("[feature]", feature)
 				.replace("[version]", version)
-				.replace("[define]", define.getName()),
-				FlxMacroUtil.here());
+				.replace("[define]", define.getName()));
 		}
 	}
 	
@@ -197,6 +199,11 @@ class FlxDefines
 	private static inline function define(define:Dynamic)
 	{
 		Compiler.define(Std.string(define));
+	}
+	
+	private static function abort(message:String)
+	{
+		Context.fatalError(message, FlxMacroUtil.here());
 	}
 }
 #end
