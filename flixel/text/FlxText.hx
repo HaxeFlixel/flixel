@@ -983,7 +983,8 @@ class FlxText extends FlxSprite
 		to.italic = from.italic;
 		to.size = from.size;
 		to.color = from.color;
-		if(withAlign) to.align = from.align;
+		if (withAlign)
+			to.align = from.align;
 	}
 	
 	/**
