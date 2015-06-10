@@ -68,6 +68,21 @@ class FlxButtonTest extends FlxTest
 		setAndAssertText(null);
 	}
 	
+	@Test // #1365
+	function testTriggerAnimationOnce()
+	{
+		button.animation.add("normal", [for (i in 0...4) 0], 30, false);
+		FlxG.state.add(button);
+		step(2);
+		
+		Assert.areEqual(FlxButton.NORMAL, button.status);
+		Assert.areEqual("normal", button.animation.curAnim.name);
+		Assert.areEqual(false, button.animation.finished);
+		step(10);
+		Assert.areEqual("normal", button.animation.curAnim.name);
+		Assert.areEqual(true, button.animation.finished);
+	}
+	
 	function setAndAssertText(text:String)
 	{
 		button.text = text;
