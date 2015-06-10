@@ -39,4 +39,4 @@ install:
 script:
   - cd ./tests
   - haxe RunTravis.hxml
-  - neko RunTravis.n
+  - neko RunTravis.n $TARGET

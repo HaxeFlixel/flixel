@@ -20,7 +20,10 @@ class RunTravis
 {
 	public static function main():Void
 	{
-		var target:Target = Sys.getEnv("TARGET");
+		var target:Target = Sys.args()[0];
+		if (target == null)
+			target = Target.FLASH;
+		
 		Sys.exit(getResult([
 			runUnitTests(target),
 			buildCoverageTests(target),
@@ -48,7 +51,7 @@ class RunTravis
 	
 	static function buildCoverageTests(target:Target):ExitCode
 	{
-		Sys.println("\nRunning coverage tests...\n");
+		Sys.println("\nBuilding coverage tests...\n");
 		return getResult([
 			build("coverage", target, "coverage1"),
 			build("coverage", target, "coverage2")
@@ -68,6 +71,7 @@ class RunTravis
 	{
 		if (target == Target.FLASH)
 		{
+			Sys.println("\nBuilding swf version tests...\n");
 			return getResult([
 				build("swfVersion/11", target),
 				build("swfVersion/11_2", target)
