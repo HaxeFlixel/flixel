@@ -11,11 +11,6 @@ env:
   - TARGET=cpp
   - TARGET=html5
   
-matrix:
-  allow_failures:
-    - env: "TARGET=cpp"
-      haxe: development
-  
 install:
   - haxelib install munit > /dev/null
   - haxelib install lime > /dev/null
