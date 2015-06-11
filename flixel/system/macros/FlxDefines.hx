@@ -58,8 +58,8 @@ class FlxDefines
 {
 	public static function run()
 	{
-		#if (haxe_ver < "3.1.1")
-		abort('The minimum required Haxe version for HaxeFlixel is 3.1.1. '
+		#if (haxe_ver < "3.1.3")
+		abort('The minimum required Haxe version for HaxeFlixel is 3.1.3. '
 			+ 'Please install a newer version.');
 		#end
 		
