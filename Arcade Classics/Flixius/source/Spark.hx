@@ -1,15 +1,11 @@
-package ;
+package;
 
 import flixel.FlxG;
-import flixel.FlxObject;
 import flixel.FlxSprite;
-import flixel.input.FlxPointer;
 import flixel.math.FlxPoint;
-import flixel.system.FlxAssets.FlxGraphicAsset;
 
 class Spark extends FlxSprite
 {
-
 	private var _life:Float = 1;
 	private var _pos:FlxPoint;
 	private var _source:FlxSprite;
@@ -30,23 +26,7 @@ class Spark extends FlxSprite
 		_source = Source;
 		_life = 1;
 		reset(_source.x + _pos.x, _source.y + _pos.y);
-		if (SourceType == 0)
-		{
-			animation.play("p");
-		}
-		else
-		{
-			animation.play("e");
-		}
-		
-	}
-	
-	override public function draw():Void 
-	{
-		
-		x = _source.x + _pos.x;
-		y = _source.y + _pos.y;
-		super.draw();	
+		animation.play((SourceType == 0) ? "p" : "e");
 	}
 	
 	override public function update(elapsed:Float):Void 
@@ -54,12 +34,12 @@ class Spark extends FlxSprite
 		super.update(elapsed);
 		if (alive)
 		{
-			
 			if (_life > 0)
 				_life-= FlxG.elapsed * 10;
 			else
 				kill();
 		}
+		x = _source.x + _pos.x;
+		y = _source.y + _pos.y;
 	}
-	
 }

@@ -1,15 +1,13 @@
-package ;
+package;
 
 import flixel.FlxSprite;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 
 class EBullet extends FlxSprite
 {
-
 	public function new() 
 	{
-		super(0,0, AssetPaths.bullet_enemy__png);
-		
+		super(0, 0, AssetPaths.bullet_enemy__png);
 	}
 	
 	override public function update(elapsed:Float):Void 
@@ -20,5 +18,4 @@ class EBullet extends FlxSprite
 		else
 			velocity.x = -200;
 	}
-	
 }

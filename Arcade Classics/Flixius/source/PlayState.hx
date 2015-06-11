@@ -1,35 +1,24 @@
 package;
 
-import flixel.addons.display.FlxStarField;
+import flixel.addons.display.FlxStarField.FlxStarField2D;
 import flixel.FlxCamera.FlxCameraFollowStyle;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
-import flixel.graphics.FlxGraphic;
 import flixel.group.FlxGroup;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.touch.FlxTouch;
 import flixel.math.FlxPoint;
-import flixel.math.FlxRandom;
 import flixel.text.FlxText;
 import flixel.tile.FlxBaseTilemap.FlxTilemapAutoTiling;
 import flixel.tile.FlxTilemap;
-import flixel.tweens.FlxEase;
-import flixel.tweens.FlxTween;
 import flixel.ui.FlxBar;
-import flixel.ui.FlxButton;
-import flixel.math.FlxMath;
 import flixel.util.FlxColor;
 import flixel.util.FlxGradient;
 using flixel.util.FlxSpriteUtil;
 
-/**
- * A FlxState which can be used for the actual gameplay.
- */
 class PlayState extends FlxState
 {
-	
-	
 	private var _sprPlayer:Player;
 	private var _map:FlxTilemap;
 	private var _mapDecoTop:FlxTilemap;
@@ -53,18 +42,16 @@ class PlayState extends FlxState
 	private var _healthBar:FlxBar;
 	private var _launchedSubstate:Bool = false;
 	private var _starting:Bool = true;
+	private var _score = 0;
 	
 	private var _stars:FlxStarField2D;
 	private var _backgroundStuff:FlxTypedGroup<FlxSprite>;
-	/**
-	 * Function that is called up when to state is created to set it up. 
-	 */
+	
 	override public function create():Void
 	{
 		super.create();
 		bgColor = 0xff160100;
-		
-		Reg.score = 0;
+		FlxG.mouse.visible = false;
 		
 		_stars = new FlxStarField2D(0, 0, FlxG.width, FlxG.height, 60);
 		_stars.bgColor = 0x0;
@@ -92,7 +79,6 @@ class PlayState extends FlxState
 		moon2.scrollFactor.set(.9, .9);
 		_backgroundStuff.add(moon2);
 		
-		
 		_grpAllEnemies = new FlxGroup();
 		
 		_grpEnemies = new FlxTypedGroup<Enemy>();
@@ -101,8 +87,6 @@ class PlayState extends FlxState
 		_grpEThrust = new FlxTypedGroup<Jet>();
 		
 		loadMaps();
-		
-		
 		
 		_sprPlayer = new Player(addExplosions);
 		
@@ -119,8 +103,6 @@ class PlayState extends FlxState
 		_chaser.x = FlxG.width / 2 -1;
 		_chaser.y = _sprPlayer.y + (_sprPlayer.height / 2) - 1;
 		add(_chaser);
-		
-		
 		
 		add(_grpEThrust);
 		
@@ -155,7 +137,9 @@ class PlayState extends FlxState
 		_healthBar.scrollFactor.set();
 		add(_healthBar);
 		
-		var shine:FlxSprite = FlxGradient.createGradientFlxSprite(Std.int(_healthBar.width), Std.int(_healthBar.height), [0x66ffffff, 0xffffffff, 0x66ffffff, 0x11ffffff, 0x0]);
+		var shine:FlxSprite = FlxGradient.createGradientFlxSprite(
+			Std.int(_healthBar.width), Std.int(_healthBar.height),
+			[0x66ffffff, 0xffffffff, 0x66ffffff, 0x11ffffff, 0x0]);
 		shine.alpha = .5;
 		shine.x = _healthBar.x;
 		shine.y = _healthBar.y;
@@ -166,17 +150,10 @@ class PlayState extends FlxState
 		
 		FlxG.camera.target = _chaser;
 		FlxG.camera.style = FlxCameraFollowStyle.LOCKON;
-		
-		
-		
-		
-		
 	}
 
 	private function loadMaps():Void
 	{
-		var rnd:FlxRandom = new FlxRandom();
-		
 		var gfxMap:FlxSprite = new FlxSprite();
 		var arrMap:Array<Array<Int>> = [];
 		var arrDecoTop:Array<Array<Int>> = [];
@@ -198,22 +175,21 @@ class PlayState extends FlxState
 			arrDecoBottom.push([]);
 			for (x in 0...Std.int(gfxMap.width))
 			{
-				
-				if (gfxMap.pixels.getPixel(x,y) == 0x000000)
+				if (gfxMap.pixels.getPixel(x, y) == 0x000000)
 				{
-					arrMap[y].push(rnd.int(1, 4));
+					arrMap[y].push(FlxG.random.int(1, 4));
 					arrDecoTop[y].push(0);
 					arrDecoBottom[y].push(0);
 				}
 				else if (gfxMap.pixels.getPixel(x, y) == 0x00ff00)
 				{
-					arrDecoBottom[y].push(rnd.int(1, 9));
+					arrDecoBottom[y].push(FlxG.random.int(1, 9));
 					arrDecoTop[y].push(0);
 					arrMap[y].push(0);
 				}
 				else if (gfxMap.pixels.getPixel(x, y) == 0xffff00)
 				{
-					arrDecoTop[y].push(rnd.int(1, 9)+9);
+					arrDecoTop[y].push(FlxG.random.int(1, 9)+9);
 					arrDecoBottom[y].push(0);
 					arrMap[y].push(0);
 				}
@@ -262,25 +238,13 @@ class PlayState extends FlxState
 		_mapDecoTop.y -= 4;
 		_mapDecoBottom.y += 4;
 		
-		
 		add(_map);
 		add(_mapDecoTop);
 		add(_mapDecoBottom);
 	}
 	
-	/**
-	 * Function that is called when this state is destroyed - you might want to 
-	 * consider setting all objects this state uses to null to help garbage collection.
-	 */
-	override public function destroy():Void
-	{
-		super.destroy();
-	}
-	
-	
 	public function returnFromSubState():Void
 	{
-		
 		#if flash
 		FlxG.sound.playMusic(AssetPaths.music__mp3);
 		#else
@@ -291,19 +255,11 @@ class PlayState extends FlxState
 		
 		_chaser.velocity.x = 60;
 		_stars.setStarSpeed(60, 160);
-		
-		
 	}
-		
-	/**
-	 * Function that is called once every frame.
-	 */
+
 	override public function update(elapsed:Float):Void
 	{
-		
-		
 		super.update(elapsed);
-		
 		
 		if (_starting)
 		{
@@ -315,7 +271,6 @@ class PlayState extends FlxState
 		}
 		else
 		{
-			
 			if (_sprPlayer.alive)
 			{
 				if (!_sprPlayer.dying)
@@ -333,7 +288,6 @@ class PlayState extends FlxState
 				{
 					_sprPlayer.velocity.x = 40;
 					_sprPlayer.velocity.y = 40;
-					
 				}
 			}
 			else
@@ -349,18 +303,7 @@ class PlayState extends FlxState
 				}
 			}
 			
-				
-			updateScore();
-		
-		}
-	}
-	
-	
-	private function updateScore():Void
-	{
-		if (_txtScore.text != Std.string(Reg.score))
-		{
-			_txtScore.text = Std.string(Reg.score);
+			_txtScore.text = Std.string(_score);
 		}
 	}
 	
@@ -379,12 +322,9 @@ class PlayState extends FlxState
 		FlxG.collide(_grpEBullets, _map, bulletHitsWall);
 		FlxG.collide(_grpPBullets, _map, bulletHitsWall);
 		
-		
-		if (_sprPlayer.x < _chaser.x - (FlxG.width / 2) + 8)
-		{
-			_sprPlayer.x = _chaser.x - (FlxG.width / 2) + 8;
-		}
-		
+		var playerMin = _chaser.x - (FlxG.width / 2) + 8;
+		if (_sprPlayer.x < playerMin)
+			_sprPlayer.x = playerMin;
 		
 		FlxG.overlap(_grpPBullets, _grpAllEnemies, pBulletHitEnemy);
 		FlxG.overlap(_sprPlayer, _grpAllEnemies, playerHitEnemy);
@@ -397,7 +337,6 @@ class PlayState extends FlxState
 		if (B.alive)
 		{
 			B.kill();
-			
 		}
 	}
 	
@@ -430,7 +369,7 @@ class PlayState extends FlxState
 			E.kill();
 			addExplosions(E);
 			FlxG.camera.flash(FlxColor.WHITE, .1);
-			Reg.score += 100;
+			_score += 100;
 			_sprPlayer.hurt(1);
 		}
 	}
@@ -440,7 +379,6 @@ class PlayState extends FlxState
 		FlxG.camera.flash(FlxColor.WHITE, .1);
 	}
 	
-	
 	private function pBulletHitEnemy(PB:PBullet, E:FlxSprite):Void
 	{
 		if (PB.alive && E.alive)
@@ -448,8 +386,7 @@ class PlayState extends FlxState
 			PB.kill();
 			E.kill();
 			addExplosions(E);
-			Reg.score += 100;
-			
+			_score += 100;
 		}
 	}
 	
@@ -477,7 +414,6 @@ class PlayState extends FlxState
 		
 		if (t!=null)
 		{
-			
 			if (t.y < _sprPlayer.y - (_sprPlayer.height / 2))
 				v -= 120;
 			else if (t.y > _sprPlayer.y + _sprPlayer.height + (_sprPlayer.height / 2))
@@ -486,9 +422,9 @@ class PlayState extends FlxState
 		#end
 		
 		#if !FLX_NO_KEYBOARD
-		if (FlxG.keys.anyPressed(["UP", "W"]))
+		if (FlxG.keys.anyPressed([UP, W]))
 			v -= 120;
-		if (FlxG.keys.anyPressed(["DOWN", "S"]))
+		if (FlxG.keys.anyPressed([DOWN, S]))
 			v += 120;
 		#end
 		
@@ -512,9 +448,9 @@ class PlayState extends FlxState
 		#end
 		
 		#if !FLX_NO_KEYBOARD
-		if (FlxG.keys.anyPressed(["LEFT", "A"]))
+		if (FlxG.keys.anyPressed([LEFT, A]))
 			v -= 90;
-		if (FlxG.keys.anyPressed(["RIGHT", "D"]))
+		if (FlxG.keys.anyPressed([RIGHT, D]))
 			v += 90;
 		#end
 		
@@ -522,24 +458,18 @@ class PlayState extends FlxState
 		
 		#if android
 		var t:FlxTouch = FlxG.touches.getFirst();
-		if (t != null)
-		{
-			if (t.pressed)
-			{
-				shootPBullet();
-			}
-		}
-		#end
-		
-		#if !FLX_NO_KEYBOARD
-		if (FlxG.keys.anyPressed(["SPACE", "X"]))
+		if (t != null && t.pressed)
 		{
 			shootPBullet();
 		}
 		#end
 		
-		
-		
+		#if !FLX_NO_KEYBOARD
+		if (FlxG.keys.anyPressed([SPACE, X]))
+		{
+			shootPBullet();
+		}
+		#end
 	}
 	
 	public function shootEBullet(E:Enemy):Void
@@ -547,15 +477,14 @@ class PlayState extends FlxState
 		var eB:EBullet = _grpEBullets.recycle();
 		if (eB == null)
 			eB = new EBullet();
-		eB.reset(E.x -eB.width, E.y +E.height -1);
+		eB.reset(E.x - eB.width, E.y + E.height - 1);
 		_grpEBullets.add(eB);
-		FlxG.sound.play(AssetPaths.eshoot__wav,.66);
+		FlxG.sound.play(AssetPaths.eshoot__wav, .66);
 		var s:Spark = _sparks.recycle();
 		if (s == null)
 			s = new Spark();
 		s.spark(-1, E.height-2, E,1);
 		_sparks.add(s);
-		
 	}
 	
 	public function shootEBulletBubble(E:EnemySpinner):Void
@@ -563,14 +492,11 @@ class PlayState extends FlxState
 		var eB:EBulletBubble = _grpEBulletBubbles.recycle();
 		if (eB == null)
 			eB = new EBulletBubble();
-		eB.reset(E.x +(eB.width / 2) - (eB.width / 2) , E.y +(E.height / 2) - (eB.height / 2));
-		var rnd:FlxRandom = new FlxRandom();
+		eB.reset(E.x +(eB.width / 2) - (eB.width / 2) , E.y + (E.height / 2) - (eB.height / 2));
 		eB.velocity.set(100, 0);
-		eB.velocity.rotate(FlxPoint.weak(), rnd.int(0, 360));
+		eB.velocity.rotate(FlxPoint.weak(), FlxG.random.int(0, 360));
 		_grpEBulletBubbles.add(eB);
 		FlxG.sound.play(AssetPaths.bubble__wav,.66);
-		
-		
 	}
 	
 	private function shootPBullet():Void
@@ -580,14 +506,14 @@ class PlayState extends FlxState
 			var pB:PBullet = _grpPBullets.recycle();
 			if (pB == null)
 				pB = new PBullet();
-			pB.reset(_sprPlayer.x + _sprPlayer.width, _sprPlayer.y +_sprPlayer.height -1);
+			pB.reset(_sprPlayer.x + _sprPlayer.width, _sprPlayer.y + _sprPlayer.height -1);
 			_grpPBullets.add(pB);
 			_shootDelay = .5;
-			FlxG.sound.play(AssetPaths.shoot__wav,.33);
+			FlxG.sound.play(AssetPaths.shoot__wav, .33);
 			var s:Spark = _sparks.recycle();
 			if (s == null)
 				s = new Spark();
-			s.spark(_sprPlayer.width-1,_sprPlayer.height -2,_sprPlayer, 0);
+			s.spark(_sprPlayer.width-1, _sprPlayer.height -2, _sprPlayer, 0);
 			_sparks.add(s);
 		}
 	}

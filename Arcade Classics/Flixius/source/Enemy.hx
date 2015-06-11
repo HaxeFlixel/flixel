@@ -1,10 +1,10 @@
-package ;
+package;
+
 import flixel.FlxG;
 import flixel.FlxSprite;
 
 class Enemy extends FlxSprite
 {
-	
 	private var _shootTimer:Float = 6;
 	private var _parent:PlayState;
 	private var _dying:Float = 2;
@@ -16,7 +16,6 @@ class Enemy extends FlxSprite
 		_dying = 2;
 	}
 	
-	
 	override public function update(elapsed:Float):Void 
 	{
 		super.update(elapsed);
@@ -27,7 +26,6 @@ class Enemy extends FlxSprite
 				alpha = _dying;
 				if (_dying <= 0)
 				{
-					
 					velocity.set();
 					alive = false;
 					exists = false;
@@ -67,8 +65,5 @@ class Enemy extends FlxSprite
 	{
 		_dying = 1;
 		velocity.set( -20, 40);
-		
 	}
-	
-	
 }

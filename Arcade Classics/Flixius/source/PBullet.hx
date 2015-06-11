@@ -1,15 +1,12 @@
-package ;
+package;
 
 import flixel.FlxSprite;
-import flixel.system.FlxAssets.FlxGraphicAsset;
 
 class PBullet extends FlxSprite
 {
-
-	public function new(X:Float=0, Y:Float=0) 
+	public function new(X:Float = 0, Y:Float = 0) 
 	{
-		super(0,0, AssetPaths.bullet__png);
-		
+		super(0, 0, AssetPaths.bullet__png);
 	}
 	
 	override public function update(elapsed:Float):Void 
@@ -20,5 +17,4 @@ class PBullet extends FlxSprite
 		else
 			velocity.x = 300;
 	}
-	
 }

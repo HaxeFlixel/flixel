@@ -1,14 +1,12 @@
-package ;
+package;
 
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.math.FlxPoint;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 
-
 class Jet extends FlxSprite
 {
-
 	private var _target:FlxSprite;
 	private var _targetType:Int = 0;
 	private var _pos:FlxPoint;
@@ -27,13 +25,11 @@ class Jet extends FlxSprite
 		setFacingFlip(FlxObject.LEFT, true, false);
 		setFacingFlip(FlxObject.RIGHT, false, false);
 		
-		
 		if (_targetType == 0)
 		{
 			facing = FlxObject.RIGHT;
 			_pos.x = -8;
 			_pos.y = _target.height - 8;
-			
 		}
 		else
 		{
@@ -46,10 +42,8 @@ class Jet extends FlxSprite
 		animation.play("thrust");
 	}
 	
-	
 	override public function draw():Void 
 	{
-		
 		if (!_target.isOnScreen() || isOnScreen())
 		{
 			x = _target.x + _pos.x;
@@ -58,18 +52,12 @@ class Jet extends FlxSprite
 		super.draw();
 	}
 	
-	
 	override public function update(elapsed:Float):Void 
 	{
 		super.update(elapsed);
-		if (alive)
+		if (alive && !_target.alive)
 		{
-			if (!_target.alive)
-			{
-				kill();
-			}
-			
+			kill();
 		}
 	}
-	
 }

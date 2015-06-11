@@ -1,13 +1,11 @@
-package ;
+package;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.util.FlxColor;
 
 class Player extends FlxSprite
 {
-
 	public var dying:Bool = false;
 	private var _dyingTimer:Float = 2;
 	private var _deathCallback:FlxSprite->Void;
@@ -21,7 +19,6 @@ class Player extends FlxSprite
 		animation.add("up", [2]);
 		health = 10;
 		_deathCallback = DeathCallback;
-		
 	}
 	
 	override public function kill():Void 
@@ -52,7 +49,4 @@ class Player extends FlxSprite
 			}
 		}
 	}
-	
-	
-	
 }

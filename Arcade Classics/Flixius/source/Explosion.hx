@@ -1,14 +1,12 @@
-package ;
+package;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.math.FlxPoint;
-import flixel.math.FlxRandom;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 
 class Explosion extends FlxSprite
 {
-
 	private var _delay:Float = 0;
 	private var _target:FlxSprite;
 	private var _pos:FlxPoint;
@@ -26,14 +24,12 @@ class Explosion extends FlxSprite
 		_delay = Delay;
 		
 		_target = Target;
-		var rnd:FlxRandom = new FlxRandom();
-		_pos.x = rnd.float(-20, _target.width-5);
-		_pos.y = rnd.float( -20, _target.height-5);
+		_pos.x = FlxG.random.float(-20, _target.width-5);
+		_pos.y = FlxG.random.float( -20, _target.height-5);
 		reset(_target.x + _pos.x, _target.y + _pos.y);
 		
 		visible = false;
 	}
-	
 	
 	override public function draw():Void 
 	{
@@ -65,6 +61,4 @@ class Explosion extends FlxSprite
 			}
 		}
 	}
-	
-	
 }

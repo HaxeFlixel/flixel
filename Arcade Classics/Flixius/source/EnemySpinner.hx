@@ -1,4 +1,4 @@
-package ;
+package;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -10,14 +10,13 @@ class EnemySpinner extends FlxSprite
 	private var _parent:PlayState;
 	private var _dying:Float = 2;
 	
-	public function new(X:Float=0, Y:Float=0, ParentState:PlayState) 
+	public function new(X:Float = 0, Y:Float = 0, ParentState:PlayState) 
 	{
 		super(X, Y, AssetPaths.enemy_spinner__png);
 		_parent = ParentState;
 		_dying = 2;
 		angularVelocity = 250;
 	}
-	
 	
 	override public function update(elapsed:Float):Void 
 	{
@@ -52,7 +51,6 @@ class EnemySpinner extends FlxSprite
 			}
 		}
 	}
-	
 	
 	override public function kill():Void 
 	{

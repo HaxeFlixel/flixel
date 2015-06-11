@@ -80,6 +80,4 @@
 	<!--------------------------------CUSTOM---------------------------------------->
 	
 	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
-	
-	<set name="JAVA_HOME" value="C:\Program Files\Java\jdk1.7.0_65" />
 </project>
