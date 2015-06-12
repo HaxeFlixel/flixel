@@ -81,7 +81,7 @@ class FlxDebugger extends Sprite
 	 */
 	private var _layout:FlxDebuggerLayout;
 	/**
-	 * Internal, stores width and height of the Flash Player window.
+	 * Internal, stores width and height of the game.
 	 */
 	private var _screen:Point;
 	/**

@@ -123,12 +123,12 @@ class FlxGame extends Sprite
 	private var _stepSeconds:Float;
 	/**
 	 * Max allowable accumulation (see _accumulator).
-	 * Should always (and automatically) be set to roughly 2x the flash player framerate.
+	 * Should always (and automatically) be set to roughly 2x the stage framerate.
 	 */
 	private var _maxAccumulation:Float;
 	
 	/**
-	 * Whether the Flash player lost focus.
+	 * Whether the game lost focus.
 	 */
 	private var _lostFocus:Bool = false;
 	
