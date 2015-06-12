@@ -112,7 +112,7 @@ class Console extends Window
 		_input.addEventListener(FocusEvent.FOCUS_OUT, onFocusLost);
 		_input.addEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
 		
-		#if (cpp || neko) // workaround for broken TextField focus on native
+		#if (!next && sys) // workaround for broken TextField focus on native
 		_input.addEventListener(MouseEvent.MOUSE_DOWN, function(_)
 		{
 			inputMouseDown = true;
@@ -146,8 +146,16 @@ class Console extends Window
 	}
 	#end
 	
+	@:access(flixel.FlxGame)
 	private function onFocus(_):Void
 	{
+		#if (sys && next)
+			if (!FlxG.game._lostFocus)
+			{
+				return;
+			}
+		#end
+		
 		#if !FLX_NO_DEBUG
 		#if flash 
 		// Pause game
@@ -165,8 +173,16 @@ class Console extends Window
 		#end
 	}
 	
+	@:access(flixel.FlxGame)
 	private function onFocusLost(_):Void
 	{
+		#if (sys && next)
+			if (FlxG.game._lostFocus)
+			{
+				return;
+			}
+		#end
+		
 		#if !FLX_NO_DEBUG
 		#if flash
 		// Unpause game
