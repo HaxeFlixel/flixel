@@ -63,7 +63,7 @@ class Console extends Window
 	 */
 	private var _input:TextField;
 	
-	#if (cpp || neko)
+	#if (!next && sys)
 	private var inputMouseDown:Bool = false;
 	private var stageMouseDown:Bool = false;
 	#end
@@ -129,7 +129,7 @@ class Console extends Window
 		#end
 	}
 	
-	#if (cpp || neko)
+	#if (!next && sys)
 	override public function update():Void
 	{
 		super.update();
