@@ -60,4 +60,15 @@ class FlxCameraTest extends FlxTest
 		FlxG.cameras.remove(camera);
 		Assert.areEqual(1, FlxG.cameras.list.length);
 	}
+	
+	@Test // #1515
+	function testFollowNoLerpChange()
+	{
+		FlxG.updateFramerate = 30;
+		camera = new FlxCamera();
+		
+		var defaultLerp = camera.followLerp;
+		camera.follow(new FlxObject());
+		Assert.areEqual(defaultLerp, camera.followLerp);
+	}
 }

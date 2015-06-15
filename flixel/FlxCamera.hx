@@ -1028,12 +1028,13 @@ class FlxCamera extends FlxBasic
 	 * @param	Offset	Offset the follow deadzone by a certain amount. Only applicable for PLATFORMER and LOCKON styles.
 	 * @param	Lerp	How much lag the camera should have (can help smooth out the camera movement).
 	 */
-	public function follow(Target:FlxObject, ?Style:FlxCameraFollowStyle, ?Offset:FlxPoint, Lerp:Float = 1):Void
+	public function follow(Target:FlxObject, ?Style:FlxCameraFollowStyle, ?Offset:FlxPoint, ?Lerp:Float):Void
 	{
 		if (Style == null)
-		{
 			Style = LOCKON;
-		}
+
+		if (Lerp == null)
+			Lerp = 60 / FlxG.updateFramerate;
 		
 		style = Style;
 		target = Target;
