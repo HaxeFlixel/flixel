@@ -13,7 +13,7 @@ class FlxTileblockTest extends FlxTest
 		destroyable = tileblock;
 	}
 	
-	@Test // issue 1511
+	@Test // #1511
 	function testLoadTilesInvalidGraphicPathNoCrash()
 	{
 		tileblock.loadTiles("assets/invalid");

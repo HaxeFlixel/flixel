@@ -4,7 +4,7 @@ import flixel.system.FlxSound;
 
 class FlxSoundTest
 {
-	@Test // issue 1511
+	@Test // #1511
 	function testLoadEmbeddedInvalidSoundPathNoCrash()
 	{
 		var sound = new FlxSound();

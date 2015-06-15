@@ -164,7 +164,7 @@ class FlxSignalTest extends FlxTest
 		Assert.isFalse(signal0.has(null));
 	}
 	
-	@Test // issue 1420
+	@Test // #1420
 	function testRemoveCurrentDuringDispatch()
 	{
 		signal0.addOnce(callbackEmpty1);
@@ -176,7 +176,7 @@ class FlxSignalTest extends FlxTest
 		Assert.isFalse(signal0.has(callbackEmpty1));
 	}
 	
-	@Test // issue 1420
+	@Test // #1420
 	function testRemovePreviousDuringDispatch()
 	{
 		var timesCalled = 0;

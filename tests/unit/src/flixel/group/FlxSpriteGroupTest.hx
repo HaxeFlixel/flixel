@@ -16,7 +16,7 @@ class FlxSpriteGroupTest extends FlxTest
 			group.add(new FlxSprite());
 	}
 	
-	@Test // issue 1368
+	@Test // #1368
 	function testExistsTransform()
 	{
 		Assert.isTrue(existsHasValue(true));

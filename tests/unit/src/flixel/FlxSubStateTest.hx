@@ -26,7 +26,7 @@ class FlxSubStateTest extends FlxTest
 		Assert.areEqual(subState1, FlxG.state.subState);
 	}
 	
-	@Test // issue 1219
+	@Test // #1219
 	function testCloseOpenSameFrame()
 	{
 		FlxG.state.openSubState(subState1);

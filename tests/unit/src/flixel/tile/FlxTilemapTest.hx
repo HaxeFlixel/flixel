@@ -80,13 +80,13 @@ class FlxTilemapTest extends FlxTest
 		testLoadMapFromCSVWithNewline("\n");
 	}
 	
-	@Test // issue 1375
+	@Test // #1375
 	function testLoadMapFromCSVMacNewlines()
 	{
 		testLoadMapFromCSVWithNewline("\r");
 	}
 	
-	@Test // issue 1511
+	@Test // #1511
 	function testLoadMapInvalidGraphicPathNoCrash()
 	{
 		tilemap.loadMapFromArray([1], 1, 1, "assets/invalid");
