@@ -2,7 +2,8 @@
 <project>
 	<!------------------------------APPLICATION SETTINGS---------------------------->
 	
-	<app title="Mode" file="Mode" main="Main" version="0.0.1" company="HaxeFlixel" />
+	<meta title="flixius" package="net.tileisle.flixius" version="0.0.1" company="Tile Isle" />
+	<app title="flixius" file="flixius" main="Main" version="0.0.1" company="Tile Isle" />
 	
 	<!--The flixel preloader is not accurate in Chrome. You can use it regularly if you embed the swf into a html file
 	<!--or you can set the actual size of your file manually at "FlxPreloaderBase-onUpdate-bytesTotal"!-->
@@ -14,7 +15,7 @@
 	<!--------------------------------WINDOW SETTINGS------------------------------->
 	
 	<!--These window settings apply to all targets-->
-	<window width="640" height="480" fps="60" background="#000000" hardware="true" vsync="true" />
+	<window width="1280" height="720" fps="60" background="#160100" hardware="true" vsync="true" />
 	
 	<!--Web-specific-->
 	<window if="web" orientation="portrait"  />
@@ -29,16 +30,17 @@
 	
 	<set name="BUILD_DIR" value="export" />
 	<classpath name="source" />
+	<assets path="assets" />
 	
 	<!--------------------------------LIBRARIES------------------------------------->
 
 	<haxelib name="flixel"/>
 	
 	<!--In case you want to use the addons package-->
-	<!--haxelib name="flixel-addons" /-->
+	<haxelib name="flixel-addons" />
 	
 	<!--In case you want to use the ui package-->
-	<!--haxelib name="flixel-ui"/-->
+	<haxelib name="flixel-ui"/>
 	
 	<!--In case you want to use nape with flixel-->
 	<!--haxelib name="nape" /-->
@@ -46,10 +48,7 @@
 	<!--------------------------------HAXEDEFINES----------------------------------->
 	
 	<!--Enable the Flixel core recording system-->
-	<haxedef name="FLX_RECORD" />
-	
-	<!--Enable this to show a custom FPS counter in Mode-->
-	<!--<haxedef name="SHOW_FPS"/>-->
+	<!--haxedef name="FLX_RECORD" /-->
 	
 	<!--Disable the right and middle mouse buttons-->
 	<!--haxedef name="FLX_NO_MOUSE_ADVANCED" /-->
@@ -58,10 +57,10 @@
 	<!--haxedef name="FLX_NO_NATIVE_CURSOR" /-->
 	
 	<!--Optimise inputs, be careful you will get null errors if you don't use conditionals in your game-->
-	<haxedef name="FLX_NO_MOUSE" if="mobile" />
+	<!--<haxedef name="FLX_NO_MOUSE" />-->
 	<haxedef name="FLX_NO_KEYBOARD" if="mobile" />
-	<haxedef name="FLX_NO_TOUCH" if="desktop" />
-	<!--haxedef name="FLX_NO_GAMEPAD" /-->
+	<haxedef name="FLX_NO_TOUCH" />
+	<haxedef name="FLX_NO_GAMEPAD" />
 	
 	<!--Disable the Flixel core sound tray-->
 	<!--haxedef name="FLX_NO_SOUND_TRAY" /-->
@@ -81,40 +80,4 @@
 	<!--------------------------------CUSTOM---------------------------------------->
 	
 	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
-	
-	<assets path="assets/images" rename="images" />
-	<assets path="assets/data" rename="data" />
-	<icon path="assets/images/bot.png" />
-	
-	<assets path="assets/sounds" if="flash">
-		<music path="asplode.mp3" id="Asplode" />
-		<music path="button.mp3" id="Button" />
-		<music path="countdown.mp3" id="Countdown" />
-		<music path="enemy.mp3" id="Enemy" />
-		<music path="hit.mp3" id="Hit" />
-		<music path="hurt.mp3" id="Hurt" />
-		<music path="jam.mp3" id="Jam" />
-		<music path="jet.mp3" id="Jet" />
-		<music path="jump.mp3" id="Jump" />
-		<music path="menu_hit.mp3" id="MenuHit" />
-		<music path="menu_hit_2.mp3" id="MenuHit2" />
-		<music path="mode.mp3" id="Mode" />
-		<music path="shoot.mp3" id="Shoot" />
-	</assets>
-	
-	<assets path="assets/sounds" unless="flash">
-		<sound path="asplode.ogg" id="Asplode" />
-		<sound path="button.ogg" id="Button" />
-		<sound path="countdown.ogg" id="Countdown" />
-		<sound path="enemy.ogg" id="Enemy" />
-		<sound path="hit.ogg" id="Hit" />
-		<sound path="hurt.ogg" id="Hurt" />
-		<sound path="jam.ogg" id="Jam" />
-		<sound path="jet.ogg" id="Jet" />
-		<sound path="jump.ogg" id="Jump" />
-		<sound path="menu_hit.ogg" id="MenuHit" />
-		<sound path="menu_hit_2.ogg" id="MenuHit2" />
-		<music path="mode.ogg" id="Mode" />
-		<sound path="shoot.ogg" id="Shoot" />
-	</assets>
 </project>
