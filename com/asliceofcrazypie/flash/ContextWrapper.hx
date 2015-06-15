@@ -145,8 +145,8 @@ class ContextWrapper extends EventDispatcher
 			else if (isAlpha)
 			{
 				fragmentString = 	"tex ft0, v0, fs0 <???>	\n" +	// sample texture
-									"mul ft1, fc0, v1.zzz	\n" +	// multiple sprite alpha by global color
-									"mul oc, ft0, ft1		\n";	// multiply texture by color
+									"mul ft0.w, ft0.w, v1.x \n" + 	// multiple texture alpha by sprite alpha
+									"mul oc, ft0, fc0		\n";	// multiply texture color by global color
 			}
 			else
 			{
@@ -164,11 +164,13 @@ class ContextWrapper extends EventDispatcher
 			else if (isAlpha)
 			{
 				fragmentString = 	"tex ft0, v0, fs0 <???>	\n" +	// sample texture
-									"mul oc, ft0, v1.zzzz	\n";	// multiply texture by alpha
+									"mul ft0.w, ft0.w, v1.x \n" + 	// multiply texture by alpha
+									"mov oc, ft0			\n";	// set output color
 			}
 			else
 			{
-				fragmentString = "tex oc, v0, fs0 <???> \n"; 		// sample texture 0
+				fragmentString =	"tex ft0, v0, fs0 <???> \n" + 
+									"mov oc, ft0			\n"; 		// sample texture 0
 			}
 		}
 		

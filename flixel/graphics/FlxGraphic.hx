@@ -653,8 +653,10 @@ class FlxGraphic
 		return value;
 	}
 	
+	#if FLX_RENDER_TILE
 	private inline function createTilesheet():Void
 	{
 		_tilesheet = new TilesheetStage3D(bitmap);
 	}
+	#end
 }

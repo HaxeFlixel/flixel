@@ -959,7 +959,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		Buffer.y = screenYInTiles * _scaledTileHeight;
 		
 		#if FLX_RENDER_BLIT
-		if (isColored)
+		if (color != 0xffffff || alpha != 1.0)
 		{
 			Buffer.colorTransform(colorTransform);
 		}

@@ -342,10 +342,7 @@ class FlxCamera extends FlxBasic
 	
 	public function drawTriangles(graphic:FlxGraphic, vertices:Vector<Float>, indices:Vector<Int>, uvtData:Vector<Float>, colors:Vector<Int> = null, position:FlxPoint = null, blend:BlendMode = null, smoothing:Bool = false):Void
 	{
-	//	_bounds.set(0, 0, width, height);
-	//	var isColored:Bool = (colors != null && colors.length != 0);
-	//	var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(graphic, smoothing, isColored, blend);
-	//	drawItem.addTriangles(vertices, indices, uvtData, colors, position, _bounds);
+		viewport.drawTriangles(graphic.tilesheet, vertices, indices, uvtData, colors, blend, smoothing, position);
 	}
 #else
 	public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:Matrix, cr:Float = 1.0, cg:Float = 1.0, cb:Float = 1.0, ca:Float = 1.0, blend:BlendMode = null, smoothing:Bool = false):Void
@@ -368,7 +365,7 @@ class FlxCamera extends FlxBasic
 	private static var drawVertices:Vector<Float> = new Vector<Float>();
 	private static var trianglesSprite:Sprite = new Sprite();
 	
-	public function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, colors:DrawData<Int> = null, position:FlxPoint = null, blend:BlendMode = null, smoothing:Bool = false):Void
+	public function drawTriangles(graphic:FlxGraphic, vertices:Vector<Float>, indices:Vector<Int>, uvtData:Vector<Float>, colors:Vector<Int> = null, position:FlxPoint = null, blend:BlendMode = null, smoothing:Bool = false):Void
 	{
 		if (position == null)
 		{
@@ -1249,7 +1246,7 @@ class FlxCamera extends FlxBasic
 		{
 			return Color;
 		}
-		var colorTransform:ColorTransform; = _flashBitmap.transform.colorTransform;
+		var colorTransform:ColorTransform = _flashBitmap.transform.colorTransform;
 		colorTransform.redMultiplier = color.redFloat;
 		colorTransform.greenMultiplier = color.greenFloat;
 		colorTransform.blueMultiplier = color.blueFloat;

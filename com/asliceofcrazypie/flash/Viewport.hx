@@ -451,7 +451,7 @@ class Viewport
 	 */
 	public inline function drawMatrix2(tilesheet:TilesheetStage3D, sourceRect:FlxRect, origin:FlxPoint, uv:FlxRect, matrix:Matrix, cr:Float = 1.0, cg:Float = 1.0, cb:Float = 1.0, ca:Float = 1.0, blend:BlendMode = null, smoothing:Bool = false):Void
 	{
-		var tinted:Bool = (cr != 1.0) || (cg != 1.0) || (cb != 1.0);
+		var tinted:Bool = ((cr != 1.0) || (cg != 1.0) || (cb != 1.0));
 		var alpha:Bool = (ca != 1.0);
 		var job:QuadRenderJob = startQuadBatch(tilesheet, tinted, alpha, blend, smoothing);
 		helperPoint2.set(origin.x / sourceRect.width, origin.y / sourceRect.height); // normalize origin

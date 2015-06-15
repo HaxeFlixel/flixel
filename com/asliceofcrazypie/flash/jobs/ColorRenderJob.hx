@@ -232,7 +232,7 @@ class ColorRenderJob extends BaseRenderJob
 	
 	override public function render(context:ContextWrapper = null, colored:Bool = false):Void 
 	{
-		if (context != null && context.context3D.driverInfo != 'Disposed')
+		if (context != null)
 		{
 			//blend mode
 			context.setBlendMode(blendMode, false);

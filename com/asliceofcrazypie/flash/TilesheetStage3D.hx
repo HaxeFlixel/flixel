@@ -7,6 +7,8 @@ import openfl.display.BitmapData;
 import openfl.display.Tilesheet;
 import openfl.events.Event;
 import openfl.geom.Matrix;
+import openfl.Lib;
+import openfl.text.TextField;
 
 #if flash11
 import com.asliceofcrazypie.flash.jobs.RenderJob;

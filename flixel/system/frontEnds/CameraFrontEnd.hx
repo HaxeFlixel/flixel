@@ -217,7 +217,7 @@ class CameraFrontEnd
 	#if FLX_RENDER_TILE
 	private inline function render():Void
 	{
-		Batcher.render();
+	//	Batcher.render();
 	}
 	#end
 	

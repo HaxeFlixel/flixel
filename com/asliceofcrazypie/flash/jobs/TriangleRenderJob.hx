@@ -120,10 +120,11 @@ class TriangleRenderJob extends BaseRenderJob
 			if (colored)
 			{
 				vColor = colors[i];
+				
 				this.vertices[vertexPos++] = ((vColor >> 16) & 0xff) / 255;
 				this.vertices[vertexPos++] = ((vColor >> 8) & 0xff) / 255;
 				this.vertices[vertexPos++] = (vColor & 0xff) / 255;
-				this.vertices[vertexPos++] = ((vColor >> 24) & 0xff) / 255;	
+				this.vertices[vertexPos++] = ((vColor >> 24) & 0xff) / 255;
 			}
 		}
 		
