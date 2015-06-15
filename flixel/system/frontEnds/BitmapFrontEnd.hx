@@ -397,7 +397,7 @@ class BitmapFrontEnd
 			obj = _cache.get(key);
 			if (obj != null && !obj.persist)
 			{
-				removeByKey(obj.key);
+				removeByKey(key);
 			}
 		}
 	}
@@ -417,7 +417,7 @@ class BitmapFrontEnd
 				obj = _cache.get(key);
 				if (obj != null && obj.useCount <= 0 && !obj.persist && obj.destroyOnNoUse)
 				{
-					removeByKey(obj.key);
+					removeByKey(key);
 				}
 			}
 		}
