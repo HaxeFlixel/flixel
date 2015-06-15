@@ -209,7 +209,7 @@ class FlxSprite extends FlxObject
 	 * @param	Y				The initial Y position of the sprite.
 	 * @param	SimpleGraphic	The graphic you want to display (OPTIONAL - for simple stuff only, do NOT use for animated images!).
 	 */
-	public function new(X:Float = 0, Y:Float = 0, ?SimpleGraphic:FlxGraphicAsset)
+	public function new(?X:Float = 0, ?Y:Float = 0, ?SimpleGraphic:FlxGraphicAsset)
 	{
 		super(X, Y);
 		
