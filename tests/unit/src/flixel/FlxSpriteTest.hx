@@ -200,4 +200,17 @@ class FlxSpriteTest extends FlxTest
 	{
 		sprite1.loadRotatedGraphic("assets/invalid");
 	}
+	
+	@Test // #1526
+	function testCreateSpriteSkipPosition()
+	{
+		var sprite = new FlxSprite(new BitmapData(10, 20));
+		
+		Assert.areEqual(0, sprite.x);
+		Assert.areEqual(0, sprite.y);
+		
+		Assert.isNotNull(sprite.pixels);
+		Assert.areEqual(10, sprite.pixels.width);
+		Assert.areEqual(20, sprite.pixels.height);
+	}
 }
