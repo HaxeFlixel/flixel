@@ -84,6 +84,7 @@
 	
 	<assets path="assets/images" rename="images" />
 	<assets path="assets/data" rename="data" />
+	<icon path="assets/images/bot.png" />
 	
 	<assets path="assets/sounds" if="flash">
 		<music path="asplode.mp3" id="Asplode" />
