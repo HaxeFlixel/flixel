@@ -279,7 +279,7 @@ class FlxGraphic
 	/**
 	 * Key in BitmapFrontEnd cache
 	 */
-	public var key:String;
+	public var key(default, null):String;
 	/**
 	 * Cached BitmapData object
 	 */
@@ -299,11 +299,11 @@ class FlxGraphic
 	/**
 	 * Asset name from openfl.Assets
 	 */
-	public var assetsKey:String;
+	public var assetsKey(default, null):String;
 	/**
 	 * Class name for the BitmapData
 	 */
-	public var assetsClass:Class<BitmapData>;
+	public var assetsClass(default, null):Class<BitmapData>;
 	
 	/**
 	 * Whether this graphic object should stay in cache after state changes or not.
