@@ -50,10 +50,10 @@ class LogitechID
 	public static inline var RIGHT_STICK_CLICK:Int = 11;
 	
 	//TODO: someone needs to look these up and define them!
-	public static inline var DPAD_UP:Int = -1;
-	public static inline var DPAD_DOWN:Int = -2;
-	public static inline var DPAD_LEFT:Int = -3;
-	public static inline var DPAD_RIGHT:Int = -4;
+	public static inline var DPAD_UP:Int = 100;
+	public static inline var DPAD_DOWN:Int = 101;
+	public static inline var DPAD_LEFT:Int = 102;
+	public static inline var DPAD_RIGHT:Int = 103;
 	
 	//TODO: Someone needs to look this up and define it! (NOTE: not all logitech controllers have this)
 	public static inline var LOGITECH:Int = -5;

@@ -33,10 +33,10 @@ class PS4ID
 	public static inline var R2_PRESSURE:Int = 4;
 	
 	//TODO: someone needs to look these up and define them!
-	public static inline var DPAD_LEFT:Int = -1;
-	public static inline var DPAD_RIGHT:Int = -2;
-	public static inline var DPAD_DOWN:Int = -3;
-	public static inline var DPAD_UP:Int = -4;
+	public static inline var DPAD_LEFT:Int = 100;
+	public static inline var DPAD_RIGHT:Int = 101;
+	public static inline var DPAD_DOWN:Int = 102;
+	public static inline var DPAD_UP:Int = 103;
 	
 	#if FLX_JOYSTICK_API
 	//Analog stick and trigger values overlap with regular buttons so we remap to "fake" button ID's

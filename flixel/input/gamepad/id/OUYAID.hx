@@ -21,10 +21,10 @@ class OUYAID
 	public static inline var RIGHT_TRIGGER:Int = 9;
 	
 	//TODO: someone needs to look these up and define them!
-	public static inline var DPAD_LEFT:Int = -1;
-	public static inline var DPAD_RIGHT:Int = -2;
-	public static inline var DPAD_DOWN:Int = -3;
-	public static inline var DPAD_UP:Int = -4;
+	public static inline var DPAD_LEFT:Int = 100;
+	public static inline var DPAD_RIGHT:Int = 101;
+	public static inline var DPAD_DOWN:Int = 102;
+	public static inline var DPAD_UP:Int = 103;
 	
 	// Axis indicies 
 	// If TRIGGER axis returns value > 0 then LT is being pressed, and if it's < 0 then RT is being pressed
