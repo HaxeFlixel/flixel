@@ -1,3 +1,36 @@
+?.?.?
+------------------------------
+* Compatibility with flixel 4.0.0
+* Added 17 new demos:
+ * Arcade Classics:
+    * Flixius 
+ * Editors:
+    * FlxPexParser
+ * Effects:
+    * DynamicShadows
+    * Parallax
+    * PostProcess
+    * Transitions
+ * Flixel Features:
+    * Colors
+    * FlxFSM
+    * FlxNapeTerrain
+    * FlxNapeTilemap
+    * FlxScene
+    * FlxShape
+    * FlxSound
+    * SubState
+ * Other:
+    * BSPMapGen
+    * Calculator
+    * FrameCollections
+* Merged Effects/ParticlesExt into Effects/Particles
+* FlxNape: added a SolarSystem demo
+* GamepadTest:
+ * added a gamepad model dropdown
+ * added a deadzone numeric stepper
+ * added a list of all connected gamepads
+
 1.1.2
 ------------------------------
 * Added Tutorials/TurnBasedRPG
