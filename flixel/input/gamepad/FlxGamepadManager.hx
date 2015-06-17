@@ -477,8 +477,7 @@ class FlxGamepadManager implements IFlxInputManager
 	
 	private function getModelFromJoystick(f:Float):FlxGamepadModel
 	{
-		var i = Math.round(f);
-		return switch(i)
+		return switch (Math.round(f))
 		{
 			case 1: PS3;
 			case 2: PS4;

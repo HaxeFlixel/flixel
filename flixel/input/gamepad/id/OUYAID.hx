@@ -20,11 +20,11 @@ class OUYAID
 	public static inline var LEFT_TRIGGER:Int = 8;
 	public static inline var RIGHT_TRIGGER:Int = 9;
 	
-	//TODO: someone needs to look these up and define them!
-	public static inline var DPAD_LEFT:Int = 100;
-	public static inline var DPAD_RIGHT:Int = 101;
-	public static inline var DPAD_DOWN:Int = 102;
-	public static inline var DPAD_UP:Int = 103;
+	//"fake" IDs, we manually watch for hat axis changes and then send events using these otherwise unused joystick button codes
+	public static inline var DPAD_LEFT:Int = 13;
+	public static inline var DPAD_RIGHT:Int = 14;
+	public static inline var DPAD_DOWN:Int = 15;
+	public static inline var DPAD_UP:Int = 16;
 	
 	// Axis indicies 
 	// If TRIGGER axis returns value > 0 then LT is being pressed, and if it's < 0 then RT is being pressed

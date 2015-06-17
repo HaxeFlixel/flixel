@@ -10,7 +10,7 @@ class PS4ID
 {
 	//These values have only been tested on WINDOWS!
 	
-	#if flash
+#if flash
 	
 	public static inline var SQUARE:Int = 10;
 	public static inline var X:Int = 11;
@@ -35,7 +35,7 @@ class PS4ID
 	public static inline var DPAD_LEFT:Int = 8;
 	public static inline var DPAD_RIGHT:Int = 9;
 	
-	#elseif !FLX_JOYSTICK_API		//"next"
+#elseif !FLX_JOYSTICK_API		//"next"
 	
 	public static inline var X:Int = 6;
 	public static inline var CIRCLE:Int = 7;
@@ -62,7 +62,7 @@ class PS4ID
 	public static inline var DPAD_LEFT:Int = 19;
 	public static inline var DPAD_RIGHT:Int = 20;
 	
-	#else		//"legacy"
+#else		//"legacy"
 	
 	public static inline var SQUARE:Int = 0;
 	public static inline var X:Int = 1;
@@ -112,5 +112,5 @@ class PS4ID
 	
 	public static inline var LEFT_TRIGGER_FAKE:Int = 25;
 	public static inline var RIGHT_TRIGGER_FAKE:Int = 26;
-	#end
+#end
 }
