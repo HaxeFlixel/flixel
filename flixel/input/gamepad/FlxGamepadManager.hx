@@ -441,7 +441,7 @@ class FlxGamepadManager implements IFlxInputManager
 		return   if (str.contains("xbox") && str.contains("360")) XBox360;
 			else if (str.contains("playstation"))  PS3;        //"Sony PLAYSTATION(R)3 Controller"
 			else if (str.contains("ouya")) OUYA;               //"OUYA Game Controller"
-			else if (str.contains("wireless controller")) PS4; //"Wireless Controller"
+			else if (str.contains("wireless controller") || str.contains("ps4")) PS4; //"Wireless Controller" or "PS4 controller"
 			else if (str.contains("logitech")) Logitech;
 			else if (str.contains("xinput")) XInput;
 			else XBox360; //default
@@ -472,6 +472,17 @@ class FlxGamepadManager implements IFlxInputManager
 		if (button != null) 
 		{
 			button.press();
+		}
+	}
+	
+	private function getModelFromJoystick(f:Float):FlxGamepadModel
+	{
+		return switch (Math.round(f))
+		{
+			case 1: PS3;
+			case 2: PS4;
+			case 3: OUYA;
+			default: XBox360;
 		}
 	}
 	
@@ -603,7 +614,7 @@ class FlxGamepadManager implements IFlxInputManager
 
 	private function handleDeviceAdded(event:JoystickEvent):Void
 	{
-		createByID(event.device);
+		createByID(event.device, getModelFromJoystick(event.x));
 	}
 	
 	private function handleDeviceRemoved(event:JoystickEvent):Void

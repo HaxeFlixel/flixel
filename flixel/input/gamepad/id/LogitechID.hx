@@ -49,11 +49,11 @@ class LogitechID
 	public static inline var LEFT_STICK_CLICK:Int = 10;
 	public static inline var RIGHT_STICK_CLICK:Int = 11;
 	
-	//TODO: someone needs to look these up and define them!
-	public static inline var DPAD_UP:Int = 100;
-	public static inline var DPAD_DOWN:Int = 101;
-	public static inline var DPAD_LEFT:Int = 102;
-	public static inline var DPAD_RIGHT:Int = 103;
+	//"fake" IDs, we manually watch for hat axis changes and then send events using these otherwise unused joystick button codes
+	public static inline var DPAD_UP:Int = 16;
+	public static inline var DPAD_DOWN:Int = 17;
+	public static inline var DPAD_LEFT:Int = 18;
+	public static inline var DPAD_RIGHT:Int = 19;
 	
 	//TODO: Someone needs to look this up and define it! (NOTE: not all logitech controllers have this)
 	public static inline var LOGITECH:Int = -5;
