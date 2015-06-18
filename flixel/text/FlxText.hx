@@ -534,11 +534,7 @@ class FlxText extends FlxSprite
 	
 	private inline function get_size():Int
 	{
-		#if openfl_legacy
-			return Std.int(_defaultFormat.size);
-		#else
-			return _defaultFormat.size;
-		#end
+		return Std.int(_defaultFormat.size);
 	}
 	
 	private function set_size(Size:Int):Int
