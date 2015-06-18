@@ -1,13 +1,14 @@
 ?.?.?
 ------------------------------
 * Compatibility with flixel 4.0.0
-* Added 17 new demos:
+* Added 18 new demos:
  * Arcade Classics:
     * Flixius 
  * Editors:
     * FlxPexParser
  * Effects:
     * DynamicShadows
+    * FlxRainbowSprite
     * Parallax
     * PostProcess
     * Transitions
