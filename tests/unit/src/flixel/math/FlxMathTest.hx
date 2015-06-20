@@ -10,7 +10,7 @@ class FlxMathTest extends FlxTest
 	{
 		var eps = 0.0011; // max error is 0.001090292749970 or so
 		
-		var angles = [for (i in 0...100) Math.random() * i];
+		var angles = [for (i in 0...100) (Math.random() - .5) * i];
 		angles.push(0);
 		angles.push(Math.PI);
 		angles.push( -Math.PI);
