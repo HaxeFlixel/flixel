@@ -540,8 +540,6 @@ class FlxG
 		#if !FLX_NO_SOUND_SYSTEM
 		sound = new SoundFrontEnd();
 		#end
-		
-		FlxAssets.init();
 	}
 	
 	/**

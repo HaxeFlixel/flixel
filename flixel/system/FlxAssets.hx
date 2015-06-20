@@ -21,13 +21,6 @@ import flixel.util.typeLimit.*;
 import openfl.Assets;
 import openfl.utils.ByteArray;
 
-@:keep @:font("assets/fonts/nokiafc22.ttf")
-private class FontDefault extends Font {}
-#if !FLX_NO_DEBUG
-@:keep @:font("assets/fonts/arial.ttf")
-private class FontDebugger extends Font {}
-#end
-
 @:keep @:bitmap("assets/images/logo/logo.png")
 class GraphicLogo extends BitmapData {}
 
@@ -114,15 +107,6 @@ class FlxAssets
 	// fonts
 	public static var FONT_DEFAULT:String = "Nokia Cellphone FC Small";
 	public static var FONT_DEBUGGER:String = "Arial";
-	
-	public static function init():Void
-	{
-		Font.registerFont(FontDefault);
-		
-		#if !FLX_NO_DEBUG
-		Font.registerFont(FontDebugger);
-		#end
-	}
 	
 	public static function drawLogo(graph:Graphics):Void
 	{

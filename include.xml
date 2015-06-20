@@ -5,6 +5,8 @@
 	<assets path="assets/sounds" include="*.ogg" if="html5" unless="unit-test" />
 	<assets path="assets/sounds" include="*.mp3" if="flash" embed="true" />
 	<assets path="assets/sounds" include="*.ogg" unless="flash || html5" embed="true" />
+	<assets path="assets/fonts/nokiafc22.ttf" embed="true" />
+	<assets path="assets/fonts/arial.ttf" embed="true" unless="FLX_NO_DEBUG" />
 	
 	<set name="legacy" unless="next" />
 	
