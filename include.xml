@@ -33,6 +33,7 @@
 		<sample path="${haxelib:flixel-demos}/Other" />
 		<sample path="${haxelib:flixel-demos}/Performance" />
 		<sample path="${haxelib:flixel-demos}/Platformers" />
+		<sample path="${haxelib:flixel-demos}/Tutorials" />
 		<sample path="${haxelib:flixel-demos}/User Interface" />
 	</section>
 </project>
