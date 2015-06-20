@@ -74,6 +74,18 @@ class TilesheetStage3D extends Tilesheet
 		#end
 	}
 	
+	public function updateTexture():Void
+	{
+		#if flash11
+		if (texture != null)
+		{
+			texture.dispose();
+		}
+		
+		onResetTexture(null);
+		#end
+	}
+	
 	#if flash11
 	private function onResetTexture(e:Event):Void 
 	{

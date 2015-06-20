@@ -104,7 +104,7 @@ class FlxImageFrame extends FlxFramesCollection
 		if (checkRegion == null)
 		{
 			checkRegion = FlxRect.flxRect;
-			checkRegion.set(0, 0, graphic.width, graphic.height);
+			checkRegion.set(0, 0, graphic.originalWidth, graphic.originalHeight);
 		}
 		
 		var imageFrame:FlxImageFrame = FlxImageFrame.findFrame(graphic, checkRegion);
@@ -118,18 +118,18 @@ class FlxImageFrame extends FlxFramesCollection
 		
 		if (region == null)
 		{
-			region = new FlxRect(0, 0, graphic.width, graphic.height);
+			region = new FlxRect(0, 0, graphic.originalWidth, graphic.originalHeight);
 		}
 		else
 		{
 			if (region.width == 0)
 			{
-				region.width = graphic.width - region.x;
+				region.width = graphic.originalWidth - region.x;
 			}
 			
 			if (region.height == 0)
 			{
-				region.height = graphic.height - region.y;
+				region.height = graphic.originalHeight - region.y;
 			}
 		}
 		

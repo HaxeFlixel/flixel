@@ -544,8 +544,8 @@ class FlxSprite extends FlxObject
 		
 		if (graphic != null)
 		{
-			_flashRect2.width = graphic.width;
-			_flashRect2.height = graphic.height;
+			_flashRect2.width = graphic.originalWidth;
+			_flashRect2.height = graphic.originalHeight;
 		}
 		
 		centerOrigin();
@@ -568,6 +568,14 @@ class FlxSprite extends FlxObject
 	private function updateAnimation(elapsed:Float):Void
 	{
 		animation.update(elapsed);
+	}
+	
+	public function updateGraphic():Void
+	{
+		if (graphic != null)
+		{
+			graphic.updateTexture();
+		}
 	}
 	
 	/**

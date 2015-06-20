@@ -270,18 +270,18 @@ class FlxTileFrames extends FlxFramesCollection
 		// or create it, if there is no such object
 		if (region == null)
 		{
-			region = FlxRect.get(0, 0, graphic.width, graphic.height);
+			region = FlxRect.get(0, 0, graphic.originalWidth, graphic.originalHeight);
 		}
 		else
 		{
 			if (region.width == 0)
 			{
-				region.width = graphic.width - region.x;
+				region.width = graphic.originalWidth - region.x;
 			}
 			
 			if (region.height == 0)
 			{
-				region.height = graphic.height - region.y;
+				region.height = graphic.originalHeight - region.y;
 			}
 		}
 		

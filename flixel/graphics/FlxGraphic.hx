@@ -261,6 +261,9 @@ class FlxGraphic
 		Bitmap = FlxGraphic.getBitmap(Bitmap, Unique);
 		var graphic:FlxGraphic = null;
 		
+		var originalWidth:Int = Bitmap.width;
+		var originalHeight:Int = Bitmap.height;
+		
 		#if (flash11 && FLX_RENDER_TILE)
 		Bitmap = TextureUtil.fixTextureSize(Bitmap);
 		#end
@@ -276,6 +279,8 @@ class FlxGraphic
 			graphic = new FlxGraphic(null, Bitmap);
 		}
 		
+		graphic.originalWidth = originalWidth;
+		graphic.originalHeight = originalHeight;
 		return graphic;
 	}
 	
@@ -298,6 +303,9 @@ class FlxGraphic
 	 * Added for faster access/typing
 	 */
 	public var height(default, null):Int = 0;
+	
+	public var originalWidth(default, null):Int = 0;
+	public var originalHeight(default, null):Int = 0;
 	
 	/**
 	 * Asset name from openfl.Assets
@@ -651,6 +659,16 @@ class FlxGraphic
 		}
 		
 		return value;
+	}
+	
+	public function updateTexture():Void
+	{
+		#if FLX_RENDER_TILE
+		if (_tilesheet != null)
+		{
+			_tilesheet.updateTexture();
+		}
+		#end
 	}
 	
 	#if FLX_RENDER_TILE
