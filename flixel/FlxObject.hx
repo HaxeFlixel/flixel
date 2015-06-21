@@ -858,6 +858,19 @@ class FlxObject extends FlxBasic
 	}
 	
 	/**
+	 * Helper function to set the coordinates of this object 
+	 * using the center instead of the top-left corner.
+	 * 
+	 * @param	X	The new x position of the center
+	 * @param	Y	The new y position of the center
+	 */	
+	public function setPositionUsingCenter(X:Float = 0, Y:Float = 0):Void
+	{
+		x = X - width / 2;
+		y = Y - height / 2;
+	}
+	
+	/**
 	 * Shortcut for setting both width and Height.
 	 * 
 	 * @param	Width	The new sprite width.
