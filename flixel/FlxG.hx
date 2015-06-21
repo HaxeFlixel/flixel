@@ -295,7 +295,6 @@ class FlxG
 	/**
 	 * Switch from the current game state to the one specified here.
 	 */
-	
 	public static inline function switchState(State:FlxState):Void
 	{
 		//If a transition is required

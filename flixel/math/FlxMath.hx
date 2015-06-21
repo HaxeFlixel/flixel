@@ -105,10 +105,10 @@ class FlxMath
 	}
 	
 	/**
-	 * Returns true if the number given is odd.
+	 * Returns true if the given number is odd.
 	 * 
 	 * @param	n	The number to check 
-	 * @return	True if the given number is odd. False if the given number is even.
+	 * @return	Whether the number is odd
 	 */
 	public static inline function isOdd(n:Float):Bool
 	{
@@ -116,12 +116,12 @@ class FlxMath
 	}
 	
 	/**
-	 * Returns true if the number given is even.
+	 * Returns true if the given number is even.
 	 * 
 	 * @param	n	The number to check
-	 * @return	True if the given number is even. False if the given number is odd.
+	 * @return	Whether the number is even
 	 */
-	public static function isEven(n:Float):Bool
+	public static inline function isEven(n:Float):Bool
 	{
 		return (Std.int(n) & 1) == 0;
 	}
