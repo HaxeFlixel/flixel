@@ -180,11 +180,7 @@ class FlxMath
 	 */
 	public static function pointInFlxRect(pointX:Float, pointY:Float, rect:FlxRect):Bool
 	{
-		if (pointX >= rect.x && pointX <= rect.right && pointY >= rect.y && pointY <= rect.bottom)
-		{
-			return true;
-		}
-		return false;
+		return pointX >= rect.x && pointX <= rect.right && pointY >= rect.y && pointY <= rect.bottom;
 	}
 	
 	#if !FLX_NO_MOUSE
@@ -224,11 +220,7 @@ class FlxMath
 	 */
 	public static function pointInRectangle(pointX:Float, pointY:Float, rect:Rectangle):Bool
 	{
-		if (pointX >= rect.x && pointX <= rect.right && pointY >= rect.y && pointY <= rect.bottom)
-		{
-			return true;
-		}
-		return false;
+		return pointX >= rect.x && pointX <= rect.right && pointY >= rect.y && pointY <= rect.bottom;
 	}
 	
 	/**
@@ -299,9 +291,6 @@ class FlxMath
 	
 	/**
 	 * Finds the length of the given vector
-	 * 
-	 * @param	dx
-	 * @param	dy
 	 * 
 	 * @return The length
 	 */
@@ -537,7 +526,6 @@ class FlxMath
 		{
 			return f * (3.1 + f * (0.5 + f * ( -7.2 + f * 3.6)));
 		}
-		
 		else
 		{
 			return f * (3.1 - f * (0.5 + f * (7.2 + f * 3.6)));

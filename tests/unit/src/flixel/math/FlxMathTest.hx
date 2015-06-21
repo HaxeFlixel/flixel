@@ -4,6 +4,45 @@ import massive.munit.Assert;
 
 class FlxMathTest extends FlxTest
 {
+	static var evenNumbers = [0, 2, 4, -4, 100, 1000000];
+	static var oddNumbers = [1, 3, 5, -5, 99, 999999];
+	
+	@Test
+	function testIsOdd()
+	{
+		for (evenNumber in evenNumbers)
+			Assert.isFalse(FlxMath.isOdd(evenNumber));
+
+		for (oddNumber in oddNumbers)
+			Assert.isTrue(FlxMath.isOdd(oddNumber));
+	}
+	
+	@Test
+	function testIsEven()
+	{
+		for (evenNumber in evenNumbers)
+			Assert.isTrue(FlxMath.isEven(evenNumber));
+	
+		for (oddNumber in oddNumbers)
+			Assert.isFalse(FlxMath.isEven(oddNumber));
+	}
+	
+	@Test
+	function testSignOf()
+	{
+		Assert.areEqual(-1, FlxMath.signOf(-1));
+		Assert.areEqual(1, FlxMath.signOf(0));
+		Assert.areEqual(1, FlxMath.signOf(1));
+	}
+	
+	@Test
+	function testSameSign()
+	{
+		Assert.isTrue(FlxMath.sameSign(0, 0));
+		Assert.isTrue(FlxMath.sameSign(1, 100));
+		Assert.isTrue(FlxMath.sameSign(-5, -30));
+		Assert.isFalse(FlxMath.sameSign(-5, 1));
+	}
 	
 	@Test
 	function testFastTrig()
