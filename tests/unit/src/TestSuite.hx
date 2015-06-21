@@ -14,6 +14,7 @@ import flixel.graphics.frames.FlxFramesCollectionTest;
 import flixel.graphics.frames.FlxFrameTest;
 import flixel.group.FlxGroupTest;
 import flixel.group.FlxSpriteGroupTest;
+import flixel.math.FlxMathTest;
 import flixel.math.FlxMatrixTest;
 import flixel.math.FlxPointTest;
 import flixel.math.FlxRandomTest;
@@ -67,6 +68,7 @@ class TestSuite extends massive.munit.TestSuite
 		add(flixel.graphics.frames.FlxFrameTest);
 		add(flixel.group.FlxGroupTest);
 		add(flixel.group.FlxSpriteGroupTest);
+		add(flixel.math.FlxMathTest);
 		add(flixel.math.FlxMatrixTest);
 		add(flixel.math.FlxPointTest);
 		add(flixel.math.FlxRandomTest);
