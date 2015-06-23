@@ -337,7 +337,7 @@ class FlxRandom
 	 * @param   GreyScale  Whether or not to create a color that is strictly a shade of grey. False by default.
 	 * @return  A color value as a FlxColor.
 	 */
-	public function color(?Min:FlxColor, ?Max:FlxColor, ?Alpha:Null<Int>, GreyScale:Bool = false):FlxColor
+	public function color(?Min:FlxColor, ?Max:FlxColor, ?Alpha:Int, GreyScale:Bool = false):FlxColor
 	{
 		var red:Int;
 		var green:Int;
@@ -351,14 +351,14 @@ class FlxRandom
 			blue = int(0, 255);
 			alpha = Alpha == null ? int(0, 255) : Alpha;
 		}
-		else if (Min == null)
+		else if (Max == null)
 		{
 			red = int(Min.red, 255);
 			green = GreyScale ? red : int(Min.green, 255);
 			blue = GreyScale ? red : int(Min.blue, 255);
 			alpha = Alpha == null ? int(Min.alpha, 255) : Alpha;
 		}
-		else if (Max == null)
+		else if (Min == null)
 		{
 			red = int(0, Max.red);
 			green = GreyScale ? red : int(0, Max.green);
