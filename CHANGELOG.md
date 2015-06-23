@@ -17,6 +17,7 @@
  * `FlxG.html5` browser types
 * `FlxCamera`: 
  * added `pixelPerfectRender` as a global setting for sprites and tilemaps
+ * `pixelPerfectRender` now defaults to `false` with `FLX_RENDER_TILE`
  * `bounds` -> `minScrollX`, `maxScrollX`, `minScrollY` and `maxScrollY` (`null` means unbounded)
  * `setBounds()` -> `setScrollBoundsRect()`
  * added `setScrollBounds()`
@@ -30,6 +31,8 @@
  * `wrapValue()` now supports negative values
  * changed `MIN_VALUE` and `MAX_VALUE` to `MIN_VALUE_FLOAT` and `MAX_VALUE_FLOAT`, added `MAX_VALUE_INT`
  * added `sinh()`
+ * added `fastSin()` and `fastCos()`
+ * optimized `isEven()` and `isOdd()`
 * `FlxTypedSpriteGroup`: added `iterator()`
 * `FlxTimer`, `FlxTween`, `FlxPath`: `active` is now only true when they are active
 * `FlxAnimationController`:
@@ -149,6 +152,7 @@
  * added `stampOnAtlas()` method, which stamps text graphic on provided atlas and loads result node's graphic into this text object
  * retrieving text dimensions (`width` and `height`) can now trigger text graphic regeneration (if any changes led to a dimensions change) to report the correct values
  * `borderColor` now supports alpha values / ARBG colors
+ * fixed the default font not working on Android due to an OpenFL bug
 * `FlxTypedButton`:
  * added input-like getters: `pressed`, `justPressed`, `released` and `justReleased`
  * now uses animations for statuses instead of setting `frameIndex` directly for more flexibility (removes `allowHighlightOnMobile`, adds `statusAnimations`)
@@ -256,6 +260,7 @@
 * `FlxGradient`: now supported with bitfive
 * `FlxAnalog` and `FlxVirtualPad` now have their own atlas with default graphic, so they propduce less draw calls
 * Added `FlxSpriteButton` which is button which label is a simple `FlxSprite`. It has a useful `createTextLabel()` method which generates a sprite with text graphic.
+* No longer use openfl-bitfive as the default HTML5 backend
 
 3.3.8
 ------------------------------
