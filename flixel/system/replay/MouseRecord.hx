@@ -1,7 +1,6 @@
 package flixel.system.replay;
 
-import flixel.math.FlxPoint;
-import flixel.input.FlxInput;
+import flixel.input.FlxInput.FlxInputState;
 
 /**
  * A helper class for the frame records, part of the replay/demo/recording system.

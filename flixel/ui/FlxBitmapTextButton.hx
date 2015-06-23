@@ -1,10 +1,8 @@
 package flixel.ui;
 
-import flixel.system.FlxAssets;
 import flixel.text.FlxBitmapText;
 import flixel.text.FlxText.FlxTextAlign;
-import flixel.math.FlxPoint;
-import flixel.ui.FlxButton;
+import flixel.ui.FlxButton.FlxTypedButton;
 
 /**
  * A button with a bitmap text field for the label

@@ -1,7 +1,5 @@
 ﻿package flixel.tweens.motion;
 
-import flixel.tweens.FlxTween.TweenOptions;
-
 /**
  * Determines a circular motion.
  */

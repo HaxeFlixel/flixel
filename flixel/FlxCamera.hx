@@ -20,9 +20,8 @@ import flixel.math.FlxRect;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
-import openfl.geom.Matrix;
 import openfl.display.BlendMode;
-import openfl.display.Tilesheet;
+import openfl.geom.Matrix;
 import openfl.Vector;
 
 /**

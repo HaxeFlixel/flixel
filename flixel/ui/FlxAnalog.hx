@@ -1,18 +1,14 @@
 package flixel.ui;
 
-import flash.display.BitmapData;
-import flash.geom.Rectangle;
-import flash.ui.Keyboard;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.graphics.FlxGraphic;
 import flixel.group.FlxSpriteGroup;
 import flixel.input.touch.FlxTouch;
 import flixel.math.FlxAngle;
-import flixel.system.FlxAssets;
-import flixel.util.FlxDestroyUtil;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
+import flixel.system.FlxAssets;
+import flixel.util.FlxDestroyUtil;
 
 /**
  * A virtual thumbstick - useful for input on mobile devices.

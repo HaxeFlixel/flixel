@@ -18,7 +18,6 @@ import flixel.input.touch.FlxTouch;
  */
 class FlxAngle
 {
-
 	/**
 	 * Generate a sine and cosine table during compilation
 	 * 

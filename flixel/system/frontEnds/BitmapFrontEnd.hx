@@ -1,17 +1,12 @@
 package flixel.system.frontEnds;
 
 import flash.display.BitmapData;
-import flash.geom.Point;
-import flash.geom.Rectangle;
+import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame;
-import flixel.graphics.frames.FlxFramesCollection;
-import flixel.graphics.frames.FlxImageFrame;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
-import flixel.system.FlxAssets;
-import flixel.util.FlxBitmapDataUtil;
+import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.util.FlxColor;
-import flixel.graphics.FlxGraphic;
 import openfl.Assets;
 import openfl.events.Event;
 import openfl.gl.GL;

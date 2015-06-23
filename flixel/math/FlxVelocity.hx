@@ -50,7 +50,6 @@ class FlxVelocity
 	public static function accelerateTowardsObject(Source:FlxSprite, Dest:FlxSprite, Acceleration:Float, MaxSpeed:Float):Void
 	{
 		var a:Float = FlxAngle.angleBetween(Source, Dest);
-		
 		accelerateFromAngle(Source, a, Acceleration, MaxSpeed);
 	}
 	

@@ -10,7 +10,6 @@ import flixel.FlxBasic;
 import flixel.math.FlxMath;
 import flixel.math.FlxRandom;
 import flixel.math.FlxRect;
-import flixel.system.FlxAssets;
 import flixel.system.FlxQuadTree;
 import flixel.system.FlxVersion;
 import flixel.system.frontEnds.*;

@@ -1,15 +1,11 @@
 package flixel.system.debug;
 
 import flash.display.Sprite;
-import flash.geom.Rectangle;
 import flixel.FlxG;
 import flixel.system.debug.ConsoleUtil.PathToVariable;
-import flixel.system.debug.FlxDebugger;
+import flixel.system.debug.FlxDebugger.GraphicWatch;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxDestroyUtil;
-import flixel.math.FlxPoint;
-import flixel.util.FlxStringUtil;
-import haxe.ds.StringMap;
 
 /**
  * A Visual Studio-style "watch" window, for use in the debugger overlay.

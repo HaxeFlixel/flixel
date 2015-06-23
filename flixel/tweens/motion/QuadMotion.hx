@@ -1,6 +1,5 @@
 ﻿package flixel.tweens.motion;
 
-import flixel.tweens.FlxTween.TweenOptions;
 import flixel.math.FlxPoint;
 
 /**

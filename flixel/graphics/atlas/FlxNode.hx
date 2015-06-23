@@ -1,6 +1,5 @@
 package flixel.graphics.atlas;
 
-import flash.geom.Rectangle;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.frames.FlxImageFrame;

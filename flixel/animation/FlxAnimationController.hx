@@ -3,9 +3,7 @@ package flixel.animation;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxFrame;
-import flixel.util.FlxArrayUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
-import flixel.math.FlxRandom;
 
 class FlxAnimationController implements IFlxDestroyable
 {

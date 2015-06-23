@@ -13,18 +13,13 @@ import flash.Lib;
 import flixel.effects.postprocess.PostProcess;
 import flixel.graphics.tile.FlxTilesheet;
 import flixel.math.FlxAngle;
-import flixel.math.FlxMatrix;
-import flixel.math.FlxPoint;
 import flixel.math.FlxRandom;
-import flixel.math.FlxRect;
 import flixel.system.FlxSplash;
 import flixel.system.replay.FlxReplay;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import openfl.Assets;
-import openfl.geom.Point;
-import openfl.geom.Rectangle;
 
 #if FLX_POST_PROCESS
 import openfl.display.OpenGLView;

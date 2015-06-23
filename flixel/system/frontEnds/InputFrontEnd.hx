@@ -1,6 +1,5 @@
 package flixel.system.frontEnds;
 
-import flixel.FlxG;
 import flixel.input.IFlxInputManager;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxStringUtil;

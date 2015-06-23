@@ -3,7 +3,6 @@ package flixel.system.frontEnds;
 import flash.geom.Rectangle;
 import flixel.FlxCamera;
 import flixel.FlxG;
-import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
 
 @:allow(flixel.FlxGame)

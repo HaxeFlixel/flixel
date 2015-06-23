@@ -10,10 +10,8 @@ import flash.text.GridFitType;
 import flash.text.TextField;
 import flash.text.TextFormat;
 import flash.text.TextFormatAlign;
-import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.system.FlxAssets;
-import flixel.system.FlxSound;
 import flixel.util.FlxColor;
 
 /**

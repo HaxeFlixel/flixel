@@ -245,7 +245,6 @@ class FlxPreloader extends FlxBasePreloader
 			_buffer.alpha = 1 - (Percent - 0.9) / 0.1;
 		}
 	}
-	
 	#end
 }
 #end

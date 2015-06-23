@@ -1,13 +1,10 @@
 package flixel.graphics.tile;
 
 import flixel.FlxCamera;
-import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.tile.FlxDrawBaseItem.FlxDrawItemType;
 import flixel.math.FlxMatrix;
-import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
-import flixel.util.FlxColor;
 import openfl.display.Tilesheet;
 
 class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>

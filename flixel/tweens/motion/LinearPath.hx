@@ -1,9 +1,8 @@
 package flixel.tweens.motion;
 
-import flixel.tweens.FlxTween.TweenOptions;
-import flixel.util.FlxArrayUtil;
-import flixel.util.FlxDestroyUtil;
 import flixel.math.FlxPoint;
+import flixel.tweens.FlxTween.TweenOptions;
+import flixel.util.FlxDestroyUtil;
 
 /**
  * Determines linear motion along a set of points.

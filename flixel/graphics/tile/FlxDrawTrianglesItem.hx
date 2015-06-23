@@ -8,8 +8,8 @@ import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.util.FlxColor;
 import openfl.display.Graphics;
-import openfl.Vector;
 import openfl.display.TriangleCulling;
+import openfl.Vector;
 
 typedef DrawData<T> = #if flash Vector<T> #else Array<T> #end;
 

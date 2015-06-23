@@ -2,10 +2,8 @@ package flixel.system;
 
 #if FLX_RENDER_TILE
 import flixel.FlxBasic;
-import flixel.FlxCamera;
-import flixel.FlxSprite;
 import flixel.FlxG;
-import flixel.graphics.tile.FlxDrawTilesItem;
+import flixel.FlxSprite;
 import flixel.util.FlxColor;
 
 class FlxBGSprite extends FlxSprite

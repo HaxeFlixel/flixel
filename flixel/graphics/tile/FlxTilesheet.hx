@@ -1,7 +1,5 @@
 package flixel.graphics.tile;
 
-import flash.display.BitmapData;
-import flixel.FlxG;
 import openfl.display.Tilesheet;
 
 class FlxTilesheet extends Tilesheet

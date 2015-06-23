@@ -1,9 +1,8 @@
 ﻿package flixel.tweens.motion;
 
-import flixel.tweens.FlxTween;
-import flixel.util.FlxArrayUtil;
-import flixel.util.FlxDestroyUtil;
 import flixel.math.FlxPoint;
+import flixel.tweens.FlxTween.TweenOptions;
+import flixel.util.FlxDestroyUtil;
 
 /**
  * A series of points which will determine a path from the

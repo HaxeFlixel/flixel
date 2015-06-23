@@ -2,6 +2,7 @@ package flixel.util;
 
 import flixel.math.FlxMath;
 import flixel.system.macros.FlxMacroUtil;
+
 /**
  * Class representing a color, based on Int. Provides a variety of methods for creating and converting colors.
  * 

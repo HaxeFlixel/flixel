@@ -1,18 +1,14 @@
 package flixel.tile;
 
-import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxTileFrames;
 import flixel.math.FlxPoint;
 import flixel.system.FlxAssets.FlxGraphicAsset;
-import flixel.math.FlxAngle;
-import flixel.math.FlxRandom;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
-import openfl.geom.Point;
 
 /**
  * This is a basic "environment object" class, used to create simple walls and floors.

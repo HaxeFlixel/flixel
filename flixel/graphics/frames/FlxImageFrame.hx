@@ -1,16 +1,14 @@
 package flixel.graphics.frames;
 
-import flash.geom.Point;
-import flash.geom.Rectangle;
+import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame.FlxFrameType;
 import flixel.graphics.frames.FlxFramesCollection;
 import flixel.graphics.frames.FlxFramesCollection.FlxFrameCollectionType;
+import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.util.FlxBitmapDataUtil;
 import flixel.util.FlxDestroyUtil;
-import flixel.math.FlxPoint;
-import flixel.graphics.FlxGraphic;
 import openfl.display.BitmapData;
 
 /**

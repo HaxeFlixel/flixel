@@ -2,16 +2,15 @@ package flixel;
 
 import flash.display.Graphics;
 import flixel.FlxBasic;
-import flixel.group.FlxGroup;
-import flixel.group.FlxSpriteGroup;
+import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
+import flixel.math.FlxVelocity;
 import flixel.tile.FlxBaseTilemap;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
-import flixel.math.FlxPoint;
-import flixel.math.FlxRect;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxStringUtil;
-import flixel.math.FlxVelocity;
 
 /**
  * This is the base class for most of the display objects (FlxSprite, FlxText, etc).

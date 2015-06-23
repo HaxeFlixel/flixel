@@ -1,7 +1,6 @@
 package flixel.util.helpers;
 
 import flixel.util.FlxStringUtil;
-import flixel.math.FlxPoint;
 
 /**
  * Helper object for holding beginning and ending values of various properties.

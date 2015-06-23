@@ -9,15 +9,14 @@ import flash.display.Sprite;
 import flash.events.MouseEvent;
 import flash.geom.Matrix;
 import flash.text.TextField;
-import flash.text.TextFormatAlign;
+import flixel.math.FlxMath;
+import flixel.math.FlxPoint;
 import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
-import flixel.math.FlxMath;
-import flixel.math.FlxPoint;
 import flixel.util.FlxSpriteUtil;
-import flixel.system.debug.FlxDebugger;
 import flixel.util.FlxStringUtil;
+import flixel.system.debug.FlxDebugger;
 using flixel.util.FlxBitmapDataUtil;
 
 /**

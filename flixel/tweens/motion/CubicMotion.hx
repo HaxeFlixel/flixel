@@ -1,8 +1,5 @@
 ﻿package flixel.tweens.motion;
 
-import flixel.tweens.FlxEase.EaseFunction;
-import flixel.tweens.FlxTween;
-
 /**
  * Determines motion along a cubic curve.
  */

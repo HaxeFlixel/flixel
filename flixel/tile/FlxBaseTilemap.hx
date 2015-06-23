@@ -1,12 +1,11 @@
 package flixel.tile;
 
 import flixel.FlxObject;
+import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxPoint;
-import flixel.math.FlxRandom;
 import flixel.math.FlxRect;
+import flixel.system.FlxAssets.FlxTilemapGraphicAsset;
 import flixel.util.FlxArrayUtil;
-import flixel.system.FlxAssets;
-import flixel.group.FlxGroup;
 import openfl.Assets;
 
 class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
