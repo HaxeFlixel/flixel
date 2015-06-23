@@ -351,14 +351,14 @@ class FlxRandom
 			blue = int(0, 255);
 			alpha = Alpha == null ? int(0, 255) : Alpha;
 		}
-		else if (Min == null)
+		else if (Max == null)
 		{
 			red = int(Min.red, 255);
 			green = GreyScale ? red : int(Min.green, 255);
 			blue = GreyScale ? red : int(Min.blue, 255);
 			alpha = Alpha == null ? int(Min.alpha, 255) : Alpha;
 		}
-		else if (Max == null)
+		else if (Min == null)
 		{
 			red = int(0, Max.red);
 			green = GreyScale ? red : int(0, Max.green);
