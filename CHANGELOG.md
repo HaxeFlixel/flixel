@@ -169,7 +169,9 @@
  * fixed inaccurate pixel-perfect sprite overlap checks
  * fixed `reorder()` for sprites within `FlxSpriteGroup`s
  * now supports all mouse buttons (`mouseButtons` argument in `add()` / `setObjectMouseButtons()`)
-* `FlxObject`: added `toPoint()` and `toRect()`
+* `FlxObject`:
+	* added `toPoint()` and `toRect()`
+	* added `setPositionUsingCenter()`
 * `FlxVector`:
  * fixed behaviour of `set_length()` for `(0, 0)` vectors
  * fixed `subtractNew()`
