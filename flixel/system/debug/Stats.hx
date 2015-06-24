@@ -5,7 +5,7 @@ import flash.system.System;
 import flash.text.TextField;
 import flixel.FlxG;
 import flixel.math.FlxMath;
-import flixel.system.debug.FlxDebugger.GraphicStats;
+import flixel.system.debug.FlxDebugger;
 import flixel.system.FlxLinkedList;
 import flixel.system.FlxQuadTree;
 import flixel.system.ui.FlxSystemButton;
