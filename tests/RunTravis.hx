@@ -64,7 +64,7 @@ class RunTravis
 		var demos = [];
 		if (target == Target.CPP)
 			demos = ["Mode", "RPG Interface", "FlxNape"];
-		return haxelibRun(["flixel-tools", "td", target].concat(demos));
+		return haxelibRun(["flixel-tools", "bp", target].concat(demos));
 	}
 	
 	static function buildSwfVersionTests(target:Target):ExitCode
