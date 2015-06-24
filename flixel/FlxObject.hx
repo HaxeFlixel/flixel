@@ -7,6 +7,7 @@ import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.math.FlxVelocity;
 import flixel.tile.FlxBaseTilemap;
+import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
@@ -846,16 +847,17 @@ class FlxObject extends FlxBasic
 	/**
 	 * Centers this FlxObject on the screen, either by the x axis, y axis, or both
 	 * 
-	 * @param	Horizontally	Boolean true if you want it centered horizontally
-	 * @param	Vertically		Boolean	true if you want it centered vertically
+	 * @param	axes	On what axes to center the object - default is XY / both.
 	 * @return 	This FlxObject for chaining
 	 */
-	public function screenCenter(xAxis:Bool = true, yAxis:Bool = true):FlxObject
+	public function screenCenter(?axes:FlxAxes):FlxObject
 	{
-		if (xAxis)
-			x = (FlxG.width / 2) - (width / 2);
+		if (axes == null)
+			axes = FlxAxes.XY;
 		
-		if (yAxis)
+		if (axes != FlxAxes.Y)
+			x = (FlxG.width / 2) - (width / 2);
+		if (axes != FlxAxes.X)
 			y = (FlxG.height / 2) - (height / 2);
 		
 		return this;
