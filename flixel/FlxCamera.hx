@@ -7,7 +7,6 @@ import flash.display.Sprite;
 import flash.geom.ColorTransform;
 import flash.geom.Point;
 import flash.geom.Rectangle;
-import flixel.FlxCamera.FlxCameraShakeDirection;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.tile.FlxDrawBaseItem;
@@ -17,6 +16,7 @@ import flixel.math.FlxMath;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
+import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
@@ -276,7 +276,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Internal, used to control the "shake" special effect.
 	 */
-	private var _fxShakeDirection:FlxCameraShakeDirection = BOTH_AXES;
+	private var _fxShakeAxes:FlxAxes = XY;
 	/**
 	 * Internal, to help avoid costly allocations.
 	 */
@@ -944,11 +944,11 @@ class FlxCamera extends FlxBasic
 			}
 			else
 			{
-				if ((_fxShakeDirection == BOTH_AXES) || (_fxShakeDirection == X_AXIS))
+				if (_fxShakeAxes != FlxAxes.Y)
 				{
 					_fxShakeOffset.x = FlxG.random.float( -_fxShakeIntensity * width, _fxShakeIntensity * width) * zoom;
 				}
-				if ((_fxShakeDirection == BOTH_AXES) || (_fxShakeDirection == Y_AXIS))
+				if (_fxShakeAxes != FlxAxes.X)
 				{
 					_fxShakeOffset.y = FlxG.random.float( -_fxShakeIntensity * height, _fxShakeIntensity * height) * zoom;
 				}
@@ -1160,14 +1160,12 @@ class FlxCamera extends FlxBasic
 	 * @param	Duration	The length in seconds that the shaking effect should last.
 	 * @param	OnComplete	A function you want to run when the shake effect finishes.
 	 * @param	Force		Force the effect to reset (default = true, unlike flash() and fade()!).
-	 * @param	Direction	Whether to shake on both axes, just up and down, or just side to side. Default value is BOTH_AXES.
+	 * @param	Axes		On what axes to shake. Default value is XY / both.
 	 */
-	public function shake(Intensity:Float = 0.05, Duration:Float = 0.5, ?OnComplete:Void->Void, Force:Bool = true, ?Direction:FlxCameraShakeDirection):Void
+	public function shake(Intensity:Float = 0.05, Duration:Float = 0.5, ?OnComplete:Void->Void, Force:Bool = true, ?Axes:FlxAxes):Void
 	{
-		if (Direction == null)
-		{
-			Direction = BOTH_AXES;
-		}
+		if (Axes == null)
+			Axes = XY;
 		
 		if (!Force && ((_fxShakeOffset.x != 0) || (_fxShakeOffset.y != 0)))
 		{
@@ -1176,7 +1174,7 @@ class FlxCamera extends FlxBasic
 		_fxShakeIntensity = Intensity;
 		_fxShakeDuration = Duration;
 		_fxShakeComplete = OnComplete;
-		_fxShakeDirection = Direction;
+		_fxShakeAxes = Axes;
 		_fxShakeOffset.set();
 	}
 	
@@ -1525,22 +1523,6 @@ class FlxCamera extends FlxBasic
 		}
 		return this.visible = visible;
 	}
-}
-
-enum FlxCameraShakeDirection
-{
-	/**
-	 * Shake camera on both the X and Y axes.
-	 */
-	BOTH_AXES;
-	/**
-	 * Shake camera on the X axis only.
-	 */
-	X_AXIS;
-	/**
-	 * Shake camera on the Y axis only.
-	 */
-	Y_AXIS;
 }
 
 enum FlxCameraFollowStyle

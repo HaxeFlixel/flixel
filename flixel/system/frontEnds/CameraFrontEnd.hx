@@ -3,6 +3,7 @@ package flixel.system.frontEnds;
 import flash.geom.Rectangle;
 import flixel.FlxCamera;
 import flixel.FlxG;
+import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 
 @:allow(flixel.FlxGame)
@@ -151,13 +152,13 @@ class CameraFrontEnd
 	 * @param	Duration	The length in seconds that the shaking effect should last.
 	 * @param	OnComplete	A function you want to run when the shake effect finishes.
 	 * @param	Force		Force the effect to reset (default = true, unlike flash() and fade()!).
-	 * @param	Direction	Whether to shake on both axes, just up and down, or just side to side. Default value is BOTH_AXES.
+	 * @param	Axes		On what axes to shake. Default value is XY / both.
 	 */
-	public function shake(Intensity:Float = 0.05, Duration:Float = 0.5, ?OnComplete:Void->Void, Force:Bool = true, ?Direction:FlxCameraShakeDirection):Void
+	public function shake(Intensity:Float = 0.05, Duration:Float = 0.5, ?OnComplete:Void->Void, Force:Bool = true, ?Axes:FlxAxes):Void
 	{
 		for (camera in list)
 		{
-			camera.shake(Intensity, Duration, OnComplete, Force, Direction);
+			camera.shake(Intensity, Duration, OnComplete, Force, Axes);
 		}
 	}
 	
