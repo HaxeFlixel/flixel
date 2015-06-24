@@ -28,7 +28,8 @@ class RunTravis
 			runUnitTests(target),
 			buildCoverageTests(target),
 			buildSwfVersionTests(target),
-			buildDemos(target)
+			buildDemos(target),
+			buildMechanicsDemos(target)
 		]));
 	}
 	
@@ -65,6 +66,17 @@ class RunTravis
 		if (target == Target.CPP)
 			demos = ["Mode", "RPG Interface", "FlxNape"];
 		return haxelibRun(["flixel-tools", "bp", target].concat(demos));
+	}
+	
+	static function buildMechanicsDemos(target:Target):ExitCode
+	{
+		if (target == Target.CPP)
+			return ExitCode.SUCCESS;
+		
+		Sys.println("\nBuilding mechanics demos...\n");
+		Sys.command("git", ["clone", "https://github.com/HaxeFlixel/haxeflixel-mechanics"]);
+		
+		return haxelibRun(["flixel-tools", "bp", target, "-dir", "haxeflixel-mechanics"]);
 	}
 	
 	static function buildSwfVersionTests(target:Target):ExitCode
