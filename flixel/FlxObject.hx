@@ -844,6 +844,24 @@ class FlxObject extends FlxBasic
 	}
 	
 	/**
+	 * Centers this FlxObject on the screen, either by the x axis, y axis, or both
+	 * 
+	 * @param	Horizontally	Boolean true if you want it centered horizontally
+	 * @param	Vertically		Boolean	true if you want it centered vertically
+	 * @return 	This FlxObject for chaining
+	 */
+	public function screenCenter(xAxis:Bool = true, yAxis:Bool = true):FlxObject
+	{
+		if (xAxis)
+			x = (FlxG.width / 2) - (width / 2);
+		
+		if (yAxis)
+			y = (FlxG.height / 2) - (height / 2);
+		
+		return this;
+	}
+	
+	/**
 	 * Helper function to set the coordinates of this object.
 	 * Handy since it only requires one line of code.
 	 * 
