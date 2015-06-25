@@ -298,6 +298,8 @@ class FlxGamepadMapping
 			case OUYAID.RIGHT_STICK_CLICK: RIGHT_STICK_CLICK;
 			case OUYAID.LB: LEFT_SHOULDER;
 			case OUYAID.RB: RIGHT_SHOULDER;
+			case OUYAID.LEFT_TRIGGER: LEFT_TRIGGER;
+			case OUYAID.RIGHT_TRIGGER: RIGHT_TRIGGER;
 			case OUYAID.DPAD_UP: DPAD_UP;
 			case OUYAID.DPAD_DOWN: DPAD_DOWN;
 			case OUYAID.DPAD_LEFT: DPAD_LEFT;
@@ -346,6 +348,16 @@ class FlxGamepadMapping
 			case PS4ID.RIGHT_STICK_CLICK: RIGHT_STICK_CLICK;
 			case PS4ID.L1: LEFT_SHOULDER;
 			case PS4ID.R1: RIGHT_SHOULDER;
+			#if !FLX_JOYSTICK_API
+			//in the legacy API, the PS4ID's for L2/R2 overlap with other ID's,
+			//so using them in a switch statement is ambiguous. Therefore you
+			//can only translate from
+			//PS4ID.L2/R2 -> 
+			//FlxGamepadInputID.LEFT_TRIGGER/RIGHT_TRIGGER
+			//in flash/next.
+			case PS4ID.L2: LEFT_TRIGGER;
+			case PS4ID.R2: RIGHT_TRIGGER;
+			#end
 			case PS4ID.DPAD_DOWN: DPAD_DOWN;
 			case PS4ID.DPAD_UP: DPAD_UP;
 			case PS4ID.DPAD_LEFT: DPAD_LEFT;
@@ -369,6 +381,8 @@ class FlxGamepadMapping
 			case PS3ID.RIGHT_STICK_CLICK: RIGHT_STICK_CLICK;
 			case PS3ID.L1: LEFT_SHOULDER;
 			case PS3ID.R1: RIGHT_SHOULDER;
+			case PS3ID.L2: LEFT_TRIGGER;
+			case PS3ID.R2: RIGHT_TRIGGER;
 			case PS3ID.DPAD_UP: DPAD_UP;
 			case PS3ID.DPAD_DOWN: DPAD_DOWN;
 			case PS3ID.DPAD_LEFT: DPAD_LEFT;
@@ -392,6 +406,16 @@ class FlxGamepadMapping
 			case XBox360ID.RIGHT_STICK_CLICK: RIGHT_STICK_CLICK;
 			case XBox360ID.LB: LEFT_SHOULDER;
 			case XBox360ID.RB: RIGHT_SHOULDER;
+			#if !FLX_JOYSTICK_API
+			//in the legacy API, the XBox360ID's for LEFT_TRIGGER/RIGHT_TRIGGER
+			//overlap with other ID's, so using them in a switch statement is
+			//ambiguous. Therefore you can only translate from
+			//XBox360ID.LEFT_TRIGGER/RIGHT_TRIGGER ->
+			//FlxGamepadInputID.LEFT_TRIGGER/RIGHT_TRIGGER
+			//in flash/next.
+			case XBox360ID.LEFT_TRIGGER: LEFT_TRIGGER;
+			case XBox360ID.RIGHT_TRIGGER: RIGHT_TRIGGER;
+			#end
 			case XBox360ID.DPAD_UP: DPAD_UP;
 			case XBox360ID.DPAD_DOWN: DPAD_DOWN;
 			case XBox360ID.DPAD_LEFT: DPAD_LEFT;
@@ -415,12 +439,12 @@ class FlxGamepadMapping
 			case XInputID.RIGHT_STICK_CLICK: RIGHT_STICK_CLICK;
 			case XInputID.LB: LEFT_SHOULDER;
 			case XInputID.RB: RIGHT_SHOULDER;
+			case XInputID.LEFT_TRIGGER: LEFT_TRIGGER;
+			case XInputID.RIGHT_TRIGGER: RIGHT_TRIGGER;
 			case XInputID.DPAD_UP: DPAD_UP;
 			case XInputID.DPAD_DOWN: DPAD_DOWN;
 			case XInputID.DPAD_LEFT: DPAD_LEFT;
 			case XInputID.DPAD_RIGHT: DPAD_RIGHT;
-			case XInputID.LEFT_TRIGGER: LEFT_TRIGGER;
-			case XInputID.RIGHT_TRIGGER: RIGHT_TRIGGER;
 			default: NONE;
 		}
 	}
