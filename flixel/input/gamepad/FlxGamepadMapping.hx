@@ -406,16 +406,6 @@ class FlxGamepadMapping
 			case XBox360ID.RIGHT_STICK_CLICK: RIGHT_STICK_CLICK;
 			case XBox360ID.LB: LEFT_SHOULDER;
 			case XBox360ID.RB: RIGHT_SHOULDER;
-			#if !FLX_JOYSTICK_API
-			//in the legacy API, the XBox360ID's for LEFT_TRIGGER/RIGHT_TRIGGER
-			//overlap with other ID's, so using them in a switch statement is
-			//ambiguous. Therefore you can only translate from
-			//XBox360ID.LEFT_TRIGGER/RIGHT_TRIGGER ->
-			//FlxGamepadInputID.LEFT_TRIGGER/RIGHT_TRIGGER
-			//in flash/next.
-			case XBox360ID.LEFT_TRIGGER: LEFT_TRIGGER;
-			case XBox360ID.RIGHT_TRIGGER: RIGHT_TRIGGER;
-			#end
 			case XBox360ID.DPAD_UP: DPAD_UP;
 			case XBox360ID.DPAD_DOWN: DPAD_DOWN;
 			case XBox360ID.DPAD_LEFT: DPAD_LEFT;
