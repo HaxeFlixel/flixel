@@ -348,16 +348,6 @@ class FlxGamepadMapping
 			case PS4ID.RIGHT_STICK_CLICK: RIGHT_STICK_CLICK;
 			case PS4ID.L1: LEFT_SHOULDER;
 			case PS4ID.R1: RIGHT_SHOULDER;
-			#if !FLX_JOYSTICK_API
-			//in the legacy API, the PS4ID's for L2/R2 overlap with other ID's,
-			//so using them in a switch statement is ambiguous. Therefore you
-			//can only translate from
-			//PS4ID.L2/R2 -> 
-			//FlxGamepadInputID.LEFT_TRIGGER/RIGHT_TRIGGER
-			//in flash/next.
-			case PS4ID.L2: LEFT_TRIGGER;
-			case PS4ID.R2: RIGHT_TRIGGER;
-			#end
 			case PS4ID.DPAD_DOWN: DPAD_DOWN;
 			case PS4ID.DPAD_UP: DPAD_UP;
 			case PS4ID.DPAD_LEFT: DPAD_LEFT;
