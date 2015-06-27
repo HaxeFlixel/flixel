@@ -22,11 +22,19 @@ import flash.system.Capabilities;
 class FlxGamepad implements IFlxDestroyable
 {
 	public var id(default, null):Int;
-	public var model(default, set):FlxGamepadModel;
 	public var buttonIndex(default, null):FlxGamepadMapping;
 	public var buttons(default, null):Array<FlxGamepadButton> = [];
 	public var connected(default, null):Bool = true;
 	
+	/**
+	 * The gamepad model used for the mapping of the IDs.
+	 * Defaults to detectedModel, but can be changed manually.
+	 */
+	public var model(default, set):FlxGamepadModel;
+	
+	/**
+	 * The gamepad model this gamepad has been identified as.
+	 */
 	public var detectedModel(default, null):FlxGamepadModel;
 	
 	/**
@@ -89,7 +97,6 @@ class FlxGamepad implements IFlxDestroyable
 		
 		buttonIndex = new FlxGamepadMapping(model);
 		model = Model;
-		
 		detectedModel = Model;
 		
 		#if flash
