@@ -56,14 +56,19 @@ abstract FlxGamepadInputID(Int) from Int to Int
 	var LEFT_TRIGGER         = 17;
 	var RIGHT_TRIGGER        = 18;
 	
+	/**identifier for the entire LEFT_ANALOG_STICK itself, not just any particular direction**/
 	var LEFT_ANALOG_STICK    = 19;
+	/**identifier for the entire RIGHT_ANALOG_STICK itself, not just any particular direction**/
 	var RIGHT_ANALOG_STICK   = 20;
 	
+	/**identifier for the entire DPAD itself, not just any particular button**/
+	var DPAD                 = 21;
+	
 	#if FLX_JOYSTICK_API
-	var LEFT_TRIGGER_FAKE    = 21;
-	var RIGHT_TRIGGER_FAKE   = 22;
-	var LEFT_STICK_FAKE      = 23;
-	var RIGHT_STICK_FAKE     = 24;
+	var LEFT_TRIGGER_FAKE    = 22;
+	var RIGHT_TRIGGER_FAKE   = 23;
+	var LEFT_STICK_FAKE      = 24;
+	var RIGHT_STICK_FAKE     = 25;
 	#end
 	
 	@:from

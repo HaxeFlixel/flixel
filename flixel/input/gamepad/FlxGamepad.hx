@@ -27,6 +27,8 @@ class FlxGamepad implements IFlxDestroyable
 	public var buttons(default, null):Array<FlxGamepadButton> = [];
 	public var connected(default, null):Bool = true;
 	
+	public var detectedModel(default, null):FlxGamepadModel;
+	
 	/**
 	 * Gamepad deadzone. The lower, the more sensitive the gamepad.
 	 * Should be between 0.0 and 1.0. Defaults to 0.15.
@@ -87,6 +89,8 @@ class FlxGamepad implements IFlxDestroyable
 		
 		buttonIndex = new FlxGamepadMapping(model);
 		model = Model;
+		
+		detectedModel = Model;
 		
 		#if flash
 		_isChrome = (Capabilities.manufacturer == "Google Pepper");
