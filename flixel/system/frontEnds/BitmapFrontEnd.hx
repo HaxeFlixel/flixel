@@ -19,10 +19,12 @@ class BitmapFrontEnd
 	@:allow(flixel.system.frontEnds.BitmapLogFrontEnd)
 	private var _cache:Map<String, FlxGraphic>;
 	
+	#if !flash
 	/**
 	 * Gets max texture size for native targets
 	 */
-	public var maxTextureSize(get, null):Int;
+	public var maxTextureSize(get, never):Int;
+	#end
 	
 	public function new()
 	{
@@ -48,9 +50,9 @@ class BitmapFrontEnd
 	#if FLX_RENDER_TILE
 	/**
 	 * Helper FlxFrame object. Containing only one frame.
-	 * Useful for drawing colored rectangles of all sizes in FLX_RENDER_TILE mode
+	 * Useful for drawing colored rectangles of all sizes in FLX_RENDER_TILE mode.
 	 */
-	public var whitePixel(get, null):FlxFrame;
+	public var whitePixel(get, never):FlxFrame;
 	
 	private var _whitePixel:FlxFrame;
 	
@@ -58,7 +60,7 @@ class BitmapFrontEnd
 	{
 		if (_whitePixel == null)
 		{
-			var bd:BitmapData = new BitmapData(10, 10, true, FlxColor.WHITE);
+			var bd = new BitmapData(10, 10, true, FlxColor.WHITE);
 			var graphic:FlxGraphic = FlxG.bitmap.add(bd, true, "whitePixels");
 			graphic.persist = true;
 			_whitePixel = graphic.imageFrame.frame;
@@ -69,7 +71,7 @@ class BitmapFrontEnd
 	
 	/**
 	 * New context handler.
-	 * Regenerates tilesheets for all dumped graphics objects in the cache
+	 * Regenerates tilesheets for all dumped graphics objects in the cache.
 	 */
 	public function onContext():Void
 	{
@@ -418,8 +420,10 @@ class BitmapFrontEnd
 		}
 	}
 	
+	#if !flash
 	private function get_maxTextureSize():Int
 	{
 		return cast GL.getParameter(GL.MAX_TEXTURE_SIZE);
 	}
+	#end
 }
