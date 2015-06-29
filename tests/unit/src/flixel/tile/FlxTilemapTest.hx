@@ -92,6 +92,15 @@ class FlxTilemapTest extends FlxTest
 		tilemap.loadMapFromArray([1], 1, 1, "assets/invalid");
 	}
 	
+	@Test  // #1546
+	function testOffMapOverlap()
+	{
+		var mapData = [[1], [0]];
+		tilemap.loadMapFrom2DArray(mapData, getBitmapData(), 8, 8);
+		var sprite = new FlxSprite( -2, 10);
+		Assert.isFalse(tilemap.overlapsWithCallback(sprite));
+	}
+	
 	function testLoadMapFromCSVWithNewline(newlines:String)
 	{
 		tilemap.loadMapFromCSV(sampleMapString.replace("[nl]", newlines), getBitmapData(), 8, 8);
