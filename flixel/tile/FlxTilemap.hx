@@ -946,6 +946,8 @@ class FlxTilemap extends FlxObject
 		var selectionHeight:Int = selectionY + Math.ceil(Object.height / _scaledTileHeight) + 1;
 		
 		// Then bound these coordinates by the map edges
+		selectionX = Std.int(FlxMath.bound(selectionX, 0, widthInTiles));
+		selectionY = Std.int(FlxMath.bound(selectionY, 0, heightInTiles));
 		selectionWidth = Std.int(FlxMath.bound(selectionWidth, 0, widthInTiles));
 		selectionHeight = Std.int(FlxMath.bound(selectionHeight, 0, heightInTiles));
 		
