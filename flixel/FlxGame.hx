@@ -196,7 +196,7 @@ class FlxGame extends Sprite
 	private var _recordingRequested:Bool = false;
 	#end
 	
-	#if js
+	#if bitfive
 	/**
 	 * On html5, we draw() all our cameras into a bitmap to avoid blurry zooming.
 	 */
@@ -268,7 +268,7 @@ class FlxGame extends Sprite
 		stage.align = StageAlign.TOP_LEFT;
 		stage.frameRate = FlxG.drawFramerate;
 		
-		#if js
+		#if bitfive
 		_display = new BitmapData(Lib.current.stage.stageWidth, Lib.current.stage.stageHeight);
 		_displayMatrix = new Matrix();
 		_displayColorTransform = new ColorTransform();
@@ -812,7 +812,7 @@ class FlxGame extends Sprite
 		#end
 		#end
 		
-		#if js
+		#if bitfive
 		_display.fillRect(_display.rect, FlxColor.TRANSPARENT);
 		
 		for (camera in FlxG.cameras.list)
