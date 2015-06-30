@@ -159,6 +159,7 @@ class FlxSave
 			return false;
 		}
 		_sharedObject.clear();
+		data = {};
 		return true;
 	}
 	
