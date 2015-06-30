@@ -42,7 +42,7 @@ class TimerManager extends FlxPlugin
 	{
 		for (timer in _timers)
 		{
-			if (timer.active && !timer.finished && timer.time > 0)
+			if (timer.active && !timer.finished && timer.time >= 0)
 			{
 				timer.update();
 			}
