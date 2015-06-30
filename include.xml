@@ -16,7 +16,6 @@
 	
 	<section if="setup">
 		<haxelib name="systools"/>
-		<haxelib name="openfl-bitfive"/>
 		<haxelib name="flixel-addons"/>
 		<haxelib name="flixel-ui"/>
 		<haxelib name="flixel-demos"/>
