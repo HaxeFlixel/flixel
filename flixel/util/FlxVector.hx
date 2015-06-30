@@ -604,9 +604,12 @@ class FlxVector extends FlxPoint
 	
 	private inline function set_length(l:Float):Float
 	{
-		var a:Float = radians;
-		x = l * Math.cos(a);
-		y = l * Math.sin(a);
+		if (!isZero())
+		{
+			var a:Float = radians;
+			x = l * Math.cos(a);
+			y = l * Math.sin(a);
+		}
 		return l;
 	}
 	
