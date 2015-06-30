@@ -21,11 +21,7 @@ class FlxObject extends FlxBasic
 	/**
 	 * Default value for FlxObject's pixelPerfectPosition var.
 	 */
-	#if FLX_RENDER_BLIT
-	public static var defaultPixelPerfectPosition:Bool = true;
-	#else
-	public static var defaultPixelPerfectPosition:Bool = false;
-	#end
+	public static var defaultPixelPerfectPosition:Bool = #if FLX_RENDER_BLIT true #else false #end;
 	
 	/**
 	 * This value dictates the maximum number of pixels two objects have to intersect before collision stops trying to separate them.
