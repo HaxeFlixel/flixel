@@ -65,10 +65,7 @@
  * "active" flags (`alphaRange.active`, `velocityRange.active`, etc) which `FlxEmitter` uses to control particle behavior
 * Moved `FlxMath`, `FlxPoint`, `FlxVector`, `FlxRect`, `FlxAngle`, `FlxVelocity` and `FlxRandom` to `flixel.math`
 * `FlxPath`: exposed `nodeIndex` as a read-only property
-* `FlxAssets`:
- * `cacheSounds()` -> `FlxG.sound.cacheAll()`
- * `getFileReferences()` now ignores invisible files
- * fixed some iOS issues
+* `FlxAssets`: `cacheSounds()` -> `FlxG.sound.cacheAll()`
 * `FlxMouse` and `FlxTouch` now extend a new common base class `FlxPointer` instead of `FlxPoint`
  * adds `overlaps()` to `FlxMouse`
 * `FlxTilemap`:
@@ -111,12 +108,10 @@
  * removed `callAll()` and `setAll()` - use `forEach()` instead
  * replaced the parameter array in `recycle()` with an optional factory method
  * `revive()` now calls `revive()` on all `members` of a group as well
-* `FlxTextField#new()`: fix bug with passing `null` for the `Text` argument
 * `FlxGamepadManager`:
  * better handling of disconnecting and reconnecting gamepads. `getByID()` can now return `null`.
  * now supported on HTML5 with openfl-bitfive
  * `anyButton()` now has a `state` argument
- * fixed `lastActive` only updating when a new gamepad connects
  * `globalDeadZone` can now be 0
  * `globalDeadZone` now overshadows instead of overriding the gamepad's deadzone values
 * `FlxGamepad`:
@@ -152,7 +147,6 @@
  * added `stampOnAtlas()` method, which stamps text graphic on provided atlas and loads result node's graphic into this text object
  * retrieving text dimensions (`width` and `height`) can now trigger text graphic regeneration (if any changes led to a dimensions change) to report the correct values
  * `borderColor` now supports alpha values / ARBG colors
- * fixed the default font not working on Android due to an OpenFL bug
 * `FlxTypedButton`:
  * added input-like getters: `pressed`, `justPressed`, `released` and `justReleased`
  * now uses animations for statuses instead of setting `frameIndex` directly for more flexibility (removes `allowHighlightOnMobile`, adds `statusAnimations`)
@@ -167,14 +161,10 @@
  * moved from `flixel.plugin.MouseEventManager` to `flixel.input.mouse.FlxMouseEventManager`
  * added `removeAll()`
  * fixed inaccurate pixel-perfect sprite overlap checks
- * fixed `reorder()` for sprites within `FlxSpriteGroup`s
  * now supports all mouse buttons (`mouseButtons` argument in `add()` / `setObjectMouseButtons()`)
 * `FlxObject`:
 	* added `toPoint()` and `toRect()`
 	* added `setPositionUsingCenter()`
-* `FlxVector`:
- * fixed behaviour of `set_length()` for `(0, 0)` vectors
- * fixed `subtractNew()`
 * `PS4ButtonID` / `PS3ButtonID`: removed the `_BUTTON` suffix for consistency with other button ID classes
 * `FlxSprite`:
  * added `graphicLoaded()` which is called whenever a new graphic is loaded
@@ -205,26 +195,19 @@
 * `FlxSound`
   * Can now be used even if `FLX_NO_SOUND_SYSTEM` is enabled
   * `looped` is exposed as a public variable
-  * fixed `fadeIn()` and `fadeOut()` methods
 * `FlxVelocity`: `accelerateTowards()`-functions now only take a single `maxSpeed` argument (instead of x and y)
 * `FlxG.signals`: split `gameReset` into pre/post signals
 * `BaseScaleMode`: added `hAlign` and `vAlign` properties, so you can switch game's align mode on both axis
 * `RatioScaleMode#new()`: added a `fillScreen` option
-* Fixed scale modes not working correctly on HTML5
 * `FlxPath`: fixed an issue where a velocity would be set even if the object positon matches the current node
-* `FlxSignal`: fixed `addOnce()` not working on neko
 * `CachedGraphics`: added `defaultPersist`
-* `FlxPool`:
- * Fixed a bug with point / rect pooling that could lead to them being recycled when they shouldn't be
- * improved pooling performance
+* `FlxPool`: improved pooling performance
 * `FlxTween`
  * `complete` callback parameter in options is now called `onComplete`. Its type, `CompleteCallback`, is now called `TweenCallback`.
  * Added `onStart` and `onUpdate` callback parameters in options
  * fixed `active = false;` not doing anything during `onComplete()` of `LOOPING` or `PINGPONG` tweens
  * Angle tween sets sprite's angle on start now
-* `FlxTimer`:
- * timers with a time of 0 can now be started
- * `complete` was renamed to `onComplete`
+* `FlxTimer`: `complete` was renamed to `onComplete`
 * `FlxSwipe`: duration now uses seconds instead of milliseconds
 * `FlxPath` and motion tweens now restore the original `immovable` value of `FlxObject`s after completion
 * The signature of `update()` was changed to `update(elapsed:Float)`. The `elapsed` argument should be used instead of `FlxG.elapsed`.
@@ -255,14 +238,32 @@
 * Added `FlxFilterFrames` frames collection instead of `FlxSpriteFilter` (see filters demo)
 * Changed `FlxGraphicAsset` from `OneOfFive<String, Class<Dynamic>, CachedGraphics, TextureRegion, BitmapData>` to `OneOfThree<FlxGraphic, BitmapData, String>` which means that graphic loading methods (in all classes) accept only these three types of objects
 * `FlxBitmapDataUtil`:
- * added `replaceColor()` method which is used by `FlxSprite`'s `replaceColor()` method
- * added `addSpacing()` method which takes BitmapData and generates new one with spaces between frames
- * added `generateRotations()` method which generates new BitmapData with prerotated given BitmapData object (this functionality is moved from `FlxSprite`)
-* `FlxSave`: fix `data` still having the deleted properties after `erase()`
+ * added `replaceColor()` which is used by `FlxSprite`'s `replaceColor()` method
+ * added `addSpacing()` which takes BitmapData and generates new one with spaces between frames
+ * added `generateRotations()` which generates new BitmapData with prerotated given BitmapData object (this functionality is moved from `FlxSprite`)
 * `FlxGradient`: now supported with bitfive
 * `FlxAnalog` and `FlxVirtualPad` now have their own atlas with default graphic, so they propduce less draw calls
 * Added `FlxSpriteButton` which is button which label is a simple `FlxSprite`. It has a useful `createTextLabel()` method which generates a sprite with text graphic.
-* No longer use openfl-bitfive as the default HTML5 backend
+
+3.3.9
+------------------------------
+* HTML5 builds no longer default to using openfl-bitfive over OpenFL's backend
+* `FlxAssets.getFileReferences()`:
+  * now ignores invisible files (#1280)
+  * fixed compiler error with iOS builds (#1276)
+* `FlxTilemap`:
+  * fixed a collision bug near the edge of the tilemap (#1546)
+  * fixed `loadMap()` with trailing whitespace in CSV files (#1550)
+* `FlxTextField`: fixed a crash when calling the constructor with `Text == null`
+* `FlxGamepadManager`: fixed `lastActive` only updating when a new gamepad connects
+* `FlxText`: fixed the default font not working on Android due to an OpenFL bug (#1399)
+* `FlxVector`:
+  * fixed behaviour of `set_length()` for `(0, 0)` vectors (#1144)
+  * fixed `subtractNew()` (#1231)
+* `FlxTimer`: timers with a time of 0 can now be started
+* `FlxSignal`: fixed `addOnce()` not working on neko (#1223)
+* `FlxSave`: fixed `data` still having the deleted properties after `erase()` (#1302)
+* `FlxPool`: fixed a bug with point / rect pooling that could lead to them being recycled when they shouldn't be
 
 3.3.8
 ------------------------------
