@@ -1,3 +1,23 @@
+3.3.9
+------------------------------
+* HTML5 builds no longer default to using openfl-bitfive over OpenFL's backend
+* `FlxAssets.getFileReferences()`:
+  * now ignores invisible files (#1280)
+  * fixed compiler error with iOS builds (#1276)
+* `FlxTilemap`:
+  * fixed a collision bug near the edge of the tilemap (#1546)
+  * fixed `loadMap()` with trailing whitespace in CSV files (#1550)
+* `FlxTextField`: fixed a crash when calling the constructor with `Text == null`
+* `FlxGamepadManager`: fixed `lastActive` only updating when a new gamepad connects
+* `FlxText`: fixed the default font not working on Android due to an OpenFL bug (#1399)
+* `FlxVector`:
+  * fixed behaviour of `set_length()` for `(0, 0)` vectors (#1144)
+  * fixed `subtractNew()` (#1231)
+* `FlxTimer`: timers with a time of 0 can now be started
+* `FlxSignal`: fixed `addOnce()` not working on neko (#1223)
+* `FlxSave`: fixed `data` still having the deleted properties after `erase()` (#1302)
+* `FlxPool`: fixed a bug with point / rect pooling that could lead to them being recycled when they shouldn't be
+
 3.3.8
 ------------------------------
 * Use lime legacy with OpenFL 3+
