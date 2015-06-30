@@ -9,7 +9,6 @@
 	
 	<set name="legacy" unless="next" />
 	
-	<set name="html5-backend" value="openfl-bitfive" unless="html5-backend" />
 	<haxelib name="openfl" />
 	
 	<!-- Allow this setting to be overridden on the command-line -->
