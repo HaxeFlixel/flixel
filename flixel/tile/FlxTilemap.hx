@@ -310,6 +310,8 @@ class FlxTilemap extends FlxObject
 		// Populate data if MapData is a CSV string
 		if (Std.is(MapData, String))
 		{
+			MapData = StringTools.rtrim(MapData);
+			
 			// Figure out the map dimensions based on the data string
 			_data = new Array<Int>();
 			var columns:Array<String>;
