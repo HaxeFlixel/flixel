@@ -71,19 +71,19 @@ class FlxTilemapTest extends FlxTest
 	@Test
 	function testLoadMapFromCSVWindowsNewlines()
 	{
-		testLoadMapFromCSVWithNewline("\r\n");
+		testLoadMapFromCSVWithNewline(sampleMapString, "\r\n");
 	}
 	
 	@Test
 	function testLoadMapFromCSVUnixNewlines()
 	{
-		testLoadMapFromCSVWithNewline("\n");
+		testLoadMapFromCSVWithNewline(sampleMapString, "\n");
 	}
 	
 	@Test // #1375
 	function testLoadMapFromCSVMacNewlines()
 	{
-		testLoadMapFromCSVWithNewline("\r");
+		testLoadMapFromCSVWithNewline(sampleMapString, "\r");
 	}
 	
 	@Test // #1511
@@ -95,15 +95,20 @@ class FlxTilemapTest extends FlxTest
 	@Test  // #1546
 	function testOffMapOverlap()
 	{
-		var mapData = [[1], [0]];
-		tilemap.loadMapFrom2DArray(mapData, getBitmapData(), 8, 8);
+		tilemap.loadMapFrom2DArray([[1], [0]], getBitmapData(), 8, 8);
 		var sprite = new FlxSprite( -2, 10);
 		Assert.isFalse(tilemap.overlapsWithCallback(sprite));
 	}
 	
-	function testLoadMapFromCSVWithNewline(newlines:String)
+	@Test // #1550
+	function testLoadMapFromCSVTrailingNewline()
 	{
-		tilemap.loadMapFromCSV(sampleMapString.replace("[nl]", newlines), getBitmapData(), 8, 8);
+		testLoadMapFromCSVWithNewline(sampleMapString + "[nl]", "\n");
+	}
+	
+	function testLoadMapFromCSVWithNewline(csv:String, newlines:String)
+	{
+		tilemap.loadMapFromCSV(csv.replace("[nl]", newlines), getBitmapData(), 8, 8);
 		
 		Assert.areEqual(4, tilemap.widthInTiles);
 		Assert.areEqual(3, tilemap.heightInTiles);

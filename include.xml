@@ -15,12 +15,12 @@
 	<haxeflag name="--macro" value="flixel.system.macros.FlxDefines.run()" />
 	
 	<section if="setup">
-		<haxelib name="systools"/>
-		<haxelib name="flixel-addons"/>
-		<haxelib name="flixel-ui"/>
-		<haxelib name="flixel-demos"/>
-		<haxelib name="flixel-tools"/>
-		<haxelib name="flixel-templates"/>
+		<haxelib name="systools" />
+		<haxelib name="flixel-addons" />
+		<haxelib name="flixel-ui" />
+		<haxelib name="flixel-demos" />
+		<haxelib name="flixel-tools" />
+		<haxelib name="flixel-templates" />
 	</section>
 	
 	<section if="create">
