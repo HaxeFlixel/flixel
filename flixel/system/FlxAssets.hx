@@ -12,17 +12,6 @@ import flash.media.Sound;
 import flash.text.Font;
 import flixel.FlxG;
 import openfl.Assets;
-
-/** Fonts **/
-@:font("assets/fonts/nokiafc22.ttf")
-private class FontDefault extends Font {}
-#if !FLX_NO_DEBUG
-@:font("assets/fonts/arial.ttf")
-private class FontDebugger extends Font {}
-#end
-
-@:bitmap("assets/images/logo/logo.png")
-class GraphicLogo extends BitmapData {}
 #end
 
 class FlxAssets
@@ -48,15 +37,10 @@ class FlxAssets
 	{
 		if (!directory.endsWith("/"))
 			directory += "/";
-			
-		#if ios
-			directory = "../" + directory;
-		#end
 		
 		var fileReferences:Array<FileReference> = getFileReferences(directory, subDirectories, filterExtensions);
 		
 		var fields:Array<Field> = Context.getBuildFields();
-			
 		for (fileRef in fileReferences)
 		{
 			// create new field based on file references!
@@ -64,13 +48,7 @@ class FlxAssets
 				name: fileRef.name,
 				doc: fileRef.documentation,
 				access: [Access.APublic, Access.AStatic, Access.AInline],
-				kind: FieldType.FVar(macro:String, macro $v{
-					#if ios	
-						fileRef.value.substr(directory.length)
-					#else
-						fileRef.value
-					#end
-				}),
+				kind: FieldType.FVar(macro:String, macro $v{fileRef.value}),
 				pos: Context.currentPos()
 			});
 		}
@@ -80,16 +58,11 @@ class FlxAssets
 	private static function getFileReferences(directory:String, subDirectories:Bool = false, ?filterExtensions:Array<String>):Array<FileReference>
 	{
 		var fileReferences:Array<FileReference> = [];
-		var resolvedPath = #if ios Context.resolvePath(directory) #else directory #end;
-		var directoryInfo = FileSystem.readDirectory(resolvedPath);
+		var directoryInfo = FileSystem.readDirectory(directory);
 		for (name in directoryInfo)
 		{
-			if (!FileSystem.isDirectory(resolvedPath + name))
+			if (!FileSystem.isDirectory(directory + name))
 			{
-				// ignore invisible files
-				if (name.startsWith("."))
-					continue;
-				
 				if (filterExtensions != null)
 				{
 					var extension:String = name.split(".")[1]; // get the string after the dot
@@ -110,15 +83,6 @@ class FlxAssets
 	// fonts
 	public static var FONT_DEFAULT:String = "Nokia Cellphone FC Small";
 	public static var FONT_DEBUGGER:String = "Arial";
-	
-	public static function init():Void
-	{
-		Font.registerFont(FontDefault);
-		
-		#if !FLX_NO_DEBUG
-		Font.registerFont(FontDebugger);
-		#end
-	}
 	
 	public static function drawLogo(graph:Graphics):Void
 	{

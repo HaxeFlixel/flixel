@@ -467,8 +467,6 @@ class FlxG
 		#if !FLX_NO_SOUND_SYSTEM
 		sound.loadSavedPrefs();
 		#end
-		
-		FlxAssets.init();
 	}
 	
 	/**

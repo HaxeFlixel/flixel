@@ -4,6 +4,8 @@
 	
 	<assets path="assets/sounds" include="*.mp3" if="web" />
 	<assets path="assets/sounds" include="*.ogg" unless="flash" />
+	<assets path="assets/fonts/nokiafc22.ttf" embed="true" />
+	<assets path="assets/fonts/arial.ttf" embed="true" unless="FLX_NO_DEBUG" />
 	
 	<set name="legacy" unless="next" />
 	
