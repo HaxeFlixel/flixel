@@ -605,13 +605,12 @@ class FlxSpriteUtil
 	 * @param	ForceRestart		Force the flicker to restart from beginnig, discarding the flickering effect already in progress if there is one.
 	 * @param	CompletionCallback	An optional callback that will be triggered when a flickering has finished.
 	 * @param	ProgressCallback	An optional callback that will be triggered when visibility is toggled.
-	 * @return	The FlxObject for chaining
+	 * @return The FlxFlicker object. FlxFlickers are pooled internally, so beware of storing references.
 	 */
 	public static inline function flicker(Object:FlxObject, Duration:Float = 1, Interval:Float = 0.04, EndVisibility:Bool = true, 
 		ForceRestart:Bool = true, ?CompletionCallback:FlxFlicker->Void, ?ProgressCallback:FlxFlicker->Void):FlxObject
 	{
-		FlxFlicker.flicker(Object, Duration, Interval, EndVisibility, ForceRestart, CompletionCallback, ProgressCallback);
-		return Object;
+		return FlxFlicker.flicker(Object, Duration, Interval, EndVisibility, ForceRestart, CompletionCallback, ProgressCallback);
 	}
 	
 	/**
