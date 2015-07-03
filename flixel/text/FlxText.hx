@@ -325,7 +325,7 @@ class FlxText extends FlxSprite
 		
 		_textField.embedFonts = Embedded;
 		
-		_defaultFormat.size = Size;
+		_defaultFormat.size = Std.int(Size);
 		Color &= 0x00ffffff;
 		_defaultFormat.color = Color;
 		_defaultFormat.align = convertTextAlignmentFromString(Alignment);
@@ -487,7 +487,7 @@ class FlxText extends FlxSprite
 	
 	private function set_size(Size:Float):Float
 	{
-		_defaultFormat.size = Size;
+		_defaultFormat.size = Std.int(Size);
 		_textField.defaultTextFormat = _defaultFormat;
 		updateFormat(_defaultFormat);
 		dirty = true;
