@@ -42,7 +42,7 @@ class FlxFlicker implements IFlxDestroyable
 			else
 			{
 				// Ignore this call if object is already flickering.
-				return;
+				return _boundObjects[Object];
 			}
 		}
 		
