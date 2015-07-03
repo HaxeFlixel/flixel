@@ -1,3 +1,7 @@
+3.3.10
+------------------------------
+* Fix HTML5 compilation with OpenFL 3.1.1 / Lime 2.4.5
+
 3.3.9
 ------------------------------
 * HTML5 builds no longer default to using openfl-bitfive over OpenFL's backend
