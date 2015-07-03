@@ -29,8 +29,9 @@ class FlxFlicker implements IFlxDestroyable
 	 * @param  ForceRestart    Force the flicker to restart from beginnig, discarding the flickering effect already in progress if there is one.
 	 * @param  ?CompletionCallback An optional callback that will be triggered when a flickering has finished.
 	 * @param  ?ProgressCallback   An optional callback that will be triggered when visibility is toggled.
+	 * @return The FlxFlicker object. FlxFlickers are pooled internally, so beware of storing references.
 	 */
-	public static function flicker(Object:FlxObject, Duration:Float = 1, Interval:Float = 0.04, EndVisibility:Bool = true, ForceRestart:Bool = true, ?CompletionCallback:FlxFlicker->Void, ?ProgressCallback:FlxFlicker->Void):Void
+	public static function flicker(Object:FlxObject, Duration:Float = 1, Interval:Float = 0.04, EndVisibility:Bool = true, ForceRestart:Bool = true, ?CompletionCallback:FlxFlicker->Void, ?ProgressCallback:FlxFlicker->Void):FlxFlicker
 	{
 		if (isFlickering(Object))
 		{
@@ -41,7 +42,7 @@ class FlxFlicker implements IFlxDestroyable
 			else
 			{
 				// Ignore this call if object is already flickering.
-				return;
+				return _boundObjects[Object];
 			}
 		}
 		
@@ -52,7 +53,7 @@ class FlxFlicker implements IFlxDestroyable
 		
 		var flicker:FlxFlicker = _pool.get();
 		flicker.start(Object, Duration, Interval, EndVisibility, CompletionCallback, ProgressCallback);
-		_boundObjects[Object] = flicker;
+		return _boundObjects[Object] = flicker;
 	}
 	
 	/**
