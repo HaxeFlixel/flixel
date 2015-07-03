@@ -4,7 +4,7 @@
 	"license": "MIT",
 	"tags": ["game", "openfl", "flash", "neko", "cpp", "android", "ios", "cross"],
 	"description": "A cross-platform, 2D game engine based on OpenFL",
-	"version": "3.3.9",
-	"releasenote": "Several bugfixes, see the CHANGELOG.md for more details.",
+	"version": "3.3.10",
+	"releasenote": "Fix HTML5 compilation with OpenFL 3.1.1 / Lime 2.4.5.",
 	"contributors": ["haxeflixel"]
 }

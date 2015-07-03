@@ -245,6 +245,10 @@
 * `FlxAnalog` and `FlxVirtualPad` now have their own atlas with default graphic, so they propduce less draw calls
 * Added `FlxSpriteButton` which is button which label is a simple `FlxSprite`. It has a useful `createTextLabel()` method which generates a sprite with text graphic.
 
+3.3.10
+------------------------------
+* Fix HTML5 compilation with OpenFL 3.1.1 / Lime 2.4.5
+
 3.3.9
 ------------------------------
 * HTML5 builds no longer default to using openfl-bitfive over OpenFL's backend
