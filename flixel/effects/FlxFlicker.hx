@@ -31,7 +31,7 @@ class FlxFlicker implements IFlxDestroyable
 	 * @param  ?ProgressCallback   An optional callback that will be triggered when visibility is toggled.
 	 * @return The FlxFlicker object. FlxFlickers are pooled internally, so beware of storing references.
 	 */
-	public static function flicker(Object:FlxObject, Duration:Float = 1, Interval:Float = 0.04, EndVisibility:Bool = true, ForceRestart:Bool = true, ?CompletionCallback:FlxFlicker->Void, ?ProgressCallback:FlxFlicker->Void):Void
+	public static function flicker(Object:FlxObject, Duration:Float = 1, Interval:Float = 0.04, EndVisibility:Bool = true, ForceRestart:Bool = true, ?CompletionCallback:FlxFlicker->Void, ?ProgressCallback:FlxFlicker->Void):FlxFlicker
 	{
 		if (isFlickering(Object))
 		{
