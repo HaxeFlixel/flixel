@@ -83,6 +83,78 @@ class FlxObject extends FlxBasic
 	}
 	
 	/**
+	 * Similar to "separate", but only checks whether any overlap is found and updates 
+	 * the "touching" flags of the input objects, but no separation is performed.
+	 * 
+	 * @param	Object1		Any FlxObject.
+	 * @param	Object2		Any other FlxObject.
+	 * @return	Whether the objects in fact touched.
+	 */
+	public static function updateTouchingFlags(Object1:FlxObject, Object2:FlxObject):Bool
+	{
+		var touchingX:Bool = updateTouchingFlagsX(Object1, Object2);
+		var touchingY:Bool = updateTouchingFlagsY(Object1, Object2);
+		return touchingX || touchingY;
+	}
+	
+	/**
+	 * Internal function that computes overlap among two objects on the X axis. It also updates the "touching" variable.
+	 * "checkMaxOverlap" is used to determine whether we want to exclude (therefore check) overlaps which are
+	 * greater than a certain maximum (linked to SEPARATE_BIAS). Default is true, handy for "separateX" code.
+	 */
+	private static function computeOverlapX(Object1:FlxObject, Object2:FlxObject, checkMaxOverlap:Bool=true):Float
+	{
+		var overlap:Float = 0;
+		//First, get the two object deltas
+		var obj1delta:Float = Object1.x - Object1.last.x;
+		var obj2delta:Float = Object2.x - Object2.last.x;
+		
+		if (obj1delta != obj2delta)
+		{
+			//Check if the X hulls actually overlap
+			var obj1deltaAbs:Float = (obj1delta > 0) ? obj1delta : -obj1delta;
+			var obj2deltaAbs:Float = (obj2delta > 0) ? obj2delta : -obj2delta;
+			
+			var obj1rect:FlxRect = _firstSeparateFlxRect.set(Object1.x - ((obj1delta > 0) ? obj1delta : 0), Object1.last.y, Object1.width + obj1deltaAbs, Object1.height);
+			var obj2rect:FlxRect = _secondSeparateFlxRect.set(Object2.x - ((obj2delta > 0) ? obj2delta : 0), Object2.last.y, Object2.width + obj2deltaAbs, Object2.height);
+			
+			if ((obj1rect.x + obj1rect.width > obj2rect.x) && (obj1rect.x < obj2rect.x + obj2rect.width) && (obj1rect.y + obj1rect.height > obj2rect.y) && (obj1rect.y < obj2rect.y + obj2rect.height))
+			{
+				var maxOverlap:Float = checkMaxOverlap ? (obj1deltaAbs + obj2deltaAbs + SEPARATE_BIAS) : 0;
+				
+				//If they did overlap (and can), figure out by how much and flip the corresponding flags
+				if (obj1delta > obj2delta)
+				{
+					overlap = Object1.x + Object1.width - Object2.x;
+					if ( (checkMaxOverlap && (overlap > maxOverlap)) || ((Object1.allowCollisions & RIGHT) == 0) || ((Object2.allowCollisions & LEFT) == 0))
+					{
+						overlap = 0;
+					}
+					else
+					{
+						Object1.touching |= RIGHT;
+						Object2.touching |= LEFT;
+					}
+				}
+				else if (obj1delta < obj2delta)
+				{
+					overlap = Object1.x - Object2.width - Object2.x;
+					if ( (checkMaxOverlap && (-overlap > maxOverlap)) || ((Object1.allowCollisions & LEFT) == 0) || ((Object2.allowCollisions & RIGHT) == 0))
+					{
+						overlap = 0;
+					}
+					else
+					{
+						Object1.touching |= LEFT;
+						Object2.touching |= RIGHT;
+					}
+				}
+			}
+		}
+		return overlap;
+	}
+	
+	/**
 	 * The X-axis component of the object separation process.
 	 * 
 	 * @param	Object1 	Any FlxObject.
@@ -109,54 +181,7 @@ class FlxObject extends FlxBasic
 			return cast(Object2, FlxBaseTilemap<Dynamic>).overlapsWithCallback(Object1, separateX, true);
 		}
 		
-		//First, get the two object deltas
-		var overlap:Float = 0;
-		var obj1delta:Float = Object1.x - Object1.last.x;
-		var obj2delta:Float = Object2.x - Object2.last.x;
-		
-		if (obj1delta != obj2delta)
-		{
-			//Check if the X hulls actually overlap
-			var obj1deltaAbs:Float = (obj1delta > 0) ? obj1delta : -obj1delta;
-			var obj2deltaAbs:Float = (obj2delta > 0) ? obj2delta : -obj2delta;
-			
-			var obj1rect:FlxRect = _firstSeparateFlxRect.set(Object1.x - ((obj1delta > 0) ? obj1delta : 0), Object1.last.y, Object1.width + obj1deltaAbs, Object1.height);
-			var obj2rect:FlxRect = _secondSeparateFlxRect.set(Object2.x - ((obj2delta > 0) ? obj2delta : 0), Object2.last.y, Object2.width + obj2deltaAbs, Object2.height);
-			
-			if ((obj1rect.x + obj1rect.width > obj2rect.x) && (obj1rect.x < obj2rect.x + obj2rect.width) && (obj1rect.y + obj1rect.height > obj2rect.y) && (obj1rect.y < obj2rect.y + obj2rect.height))
-			{
-				var maxOverlap:Float = obj1deltaAbs + obj2deltaAbs + SEPARATE_BIAS;
-				
-				//If they did overlap (and can), figure out by how much and flip the corresponding flags
-				if (obj1delta > obj2delta)
-				{
-					overlap = Object1.x + Object1.width - Object2.x;
-					if ((overlap > maxOverlap) || ((Object1.allowCollisions & RIGHT) == 0) || ((Object2.allowCollisions & LEFT) == 0))
-					{
-						overlap = 0;
-					}
-					else
-					{
-						Object1.touching |= RIGHT;
-						Object2.touching |= LEFT;
-					}
-				}
-				else if (obj1delta < obj2delta)
-				{
-					overlap = Object1.x - Object2.width - Object2.x;
-					if ((-overlap > maxOverlap) || ((Object1.allowCollisions & LEFT) == 0) || ((Object2.allowCollisions & RIGHT) == 0))
-					{
-						overlap = 0;
-					}
-					else
-					{
-						Object1.touching |= LEFT;
-						Object2.touching |= RIGHT;
-					}
-				}
-			}
-		}
-		
+		var overlap:Float = computeOverlapX(Object1, Object2);
 		//Then adjust their positions and velocities accordingly (if there was any overlap)
 		if (overlap != 0)
 		{
@@ -196,6 +221,85 @@ class FlxObject extends FlxBasic
 	}
 	
 	/**
+	 * Checking overlap and updating touching variables, X-axis part used by "updateTouchingFlags".
+	 * 
+	 * @param	Object1 	Any FlxObject.
+	 * @param	Object2		Any other FlxObject.
+	 * @return	Whether the objects in fact touched along the X axis.
+	 */
+	public static function updateTouchingFlagsX(Object1:FlxObject, Object2:FlxObject):Bool
+	{		
+		//If one of the objects is a tilemap, just pass it off.
+		if (Object1.flixelType == TILEMAP)
+		{
+			return cast(Object1, FlxBaseTilemap<Dynamic>).overlapsWithCallback(Object2, updateTouchingFlagsX);
+		}
+		if (Object2.flixelType == TILEMAP)
+		{
+			return cast(Object2, FlxBaseTilemap<Dynamic>).overlapsWithCallback(Object1, updateTouchingFlagsX, true);
+		}
+		// Since we are not separating, always return any amount of overlap => false as last parameter
+		return computeOverlapX(Object1, Object2, false) != 0;
+	}
+	
+	/**
+	 * Internal function that computes overlap among two objects on the Y axis. It also updates the "touching" variable.
+	 * "checkMaxOverlap" is used to determine whether we want to exclude (therefore check) overlaps which are
+	 * greater than a certain maximum (linked to SEPARATE_BIAS). Default is true, handy for "separateY" code.
+	 */
+	private static function computeOverlapY(Object1:FlxObject, Object2:FlxObject, checkMaxOverlap:Bool = true):Float
+	{
+		var overlap:Float = 0;
+		//First, get the two object deltas
+		var obj1delta:Float = Object1.y - Object1.last.y;
+		var obj2delta:Float = Object2.y - Object2.last.y;
+		
+		if (obj1delta != obj2delta)
+		{
+			//Check if the Y hulls actually overlap
+			var obj1deltaAbs:Float = (obj1delta > 0) ? obj1delta : -obj1delta;
+			var obj2deltaAbs:Float = (obj2delta > 0) ? obj2delta : -obj2delta;
+			
+			var obj1rect:FlxRect = _firstSeparateFlxRect.set(Object1.x, Object1.y - ((obj1delta > 0) ? obj1delta : 0), Object1.width, Object1.height + obj1deltaAbs);
+			var obj2rect:FlxRect = _secondSeparateFlxRect.set(Object2.x, Object2.y - ((obj2delta > 0) ? obj2delta : 0), Object2.width, Object2.height + obj2deltaAbs);
+			
+			if ((obj1rect.x + obj1rect.width > obj2rect.x) && (obj1rect.x < obj2rect.x + obj2rect.width) && (obj1rect.y + obj1rect.height > obj2rect.y) && (obj1rect.y < obj2rect.y + obj2rect.height))
+			{
+				var maxOverlap:Float = checkMaxOverlap ? (obj1deltaAbs + obj2deltaAbs + SEPARATE_BIAS) : 0;
+				
+				//If they did overlap (and can), figure out by how much and flip the corresponding flags
+				if (obj1delta > obj2delta)
+				{
+					overlap = Object1.y + Object1.height - Object2.y;
+					if ( (checkMaxOverlap && (overlap > maxOverlap)) || ((Object1.allowCollisions & DOWN) == 0) || ((Object2.allowCollisions & UP) == 0))
+					{
+						overlap = 0;
+					}
+					else
+					{
+						Object1.touching |= DOWN;
+						Object2.touching |= UP;
+					}
+				}
+				else if (obj1delta < obj2delta)
+				{
+					overlap = Object1.y - Object2.height - Object2.y;
+					if ( (checkMaxOverlap && (-overlap > maxOverlap)) || ((Object1.allowCollisions & UP) == 0) || ((Object2.allowCollisions & DOWN) == 0))
+					{
+						overlap = 0;
+					}
+					else
+					{
+						Object1.touching |= UP;
+						Object2.touching |= DOWN;
+					}
+				}
+			}
+		}
+		return overlap;
+	}
+	
+	/**
 	 * The Y-axis component of the object separation process.
 	 * 
 	 * @param	Object1 	Any FlxObject.
@@ -222,57 +326,12 @@ class FlxObject extends FlxBasic
 			return cast(Object2, FlxBaseTilemap<Dynamic>).overlapsWithCallback(Object1, separateY, true);
 		}
 
-		//First, get the two object deltas
-		var overlap:Float = 0;
-		var obj1delta:Float = Object1.y - Object1.last.y;
-		var obj2delta:Float = Object2.y - Object2.last.y;
-		
-		if (obj1delta != obj2delta)
-		{
-			//Check if the Y hulls actually overlap
-			var obj1deltaAbs:Float = (obj1delta > 0) ? obj1delta : -obj1delta;
-			var obj2deltaAbs:Float = (obj2delta > 0) ? obj2delta : -obj2delta;
-			
-			var obj1rect:FlxRect = _firstSeparateFlxRect.set(Object1.x, Object1.y - ((obj1delta > 0) ? obj1delta : 0), Object1.width, Object1.height + obj1deltaAbs);
-			var obj2rect:FlxRect = _secondSeparateFlxRect.set(Object2.x, Object2.y - ((obj2delta > 0) ? obj2delta : 0), Object2.width, Object2.height + obj2deltaAbs);
-			
-			if ((obj1rect.x + obj1rect.width > obj2rect.x) && (obj1rect.x < obj2rect.x + obj2rect.width) && (obj1rect.y + obj1rect.height > obj2rect.y) && (obj1rect.y < obj2rect.y + obj2rect.height))
-			{
-				var maxOverlap:Float = obj1deltaAbs + obj2deltaAbs + SEPARATE_BIAS;
-				
-				//If they did overlap (and can), figure out by how much and flip the corresponding flags
-				if (obj1delta > obj2delta)
-				{
-					overlap = Object1.y + Object1.height - Object2.y;
-					if ((overlap > maxOverlap) || ((Object1.allowCollisions & DOWN) == 0) || ((Object2.allowCollisions & UP) == 0))
-					{
-						overlap = 0;
-					}
-					else
-					{
-						Object1.touching |= DOWN;
-						Object2.touching |= UP;
-					}
-				}
-				else if (obj1delta < obj2delta)
-				{
-					overlap = Object1.y - Object2.height - Object2.y;
-					if ((-overlap > maxOverlap) || ((Object1.allowCollisions & UP) == 0) || ((Object2.allowCollisions & DOWN) == 0))
-					{
-						overlap = 0;
-					}
-					else
-					{
-						Object1.touching |= UP;
-						Object2.touching |= DOWN;
-					}
-				}
-			}
-		}
-		
+		var overlap:Float = computeOverlapY(Object1, Object2);
 		// Then adjust their positions and velocities accordingly (if there was any overlap)
 		if (overlap != 0)
 		{
+			var obj1delta:Float = Object1.y - Object1.last.y;
+			var obj2delta:Float = Object2.y - Object2.last.y;
 			var obj1v:Float = Object1.velocity.y;
 			var obj2v:Float = Object2.velocity.y;
 			
@@ -316,6 +375,28 @@ class FlxObject extends FlxBasic
 		{
 			return false;
 		}
+	}
+	
+	/**
+	 * Checking overlap and updating touching variables, Y-axis part used by "updateTouchingFlags".
+	 * 
+	 * @param	Object1 	Any FlxObject.
+	 * @param	Object2		Any other FlxObject.
+	 * @return	Whether the objects in fact touched along the Y axis.
+	 */
+	public static function updateTouchingFlagsY(Object1:FlxObject, Object2:FlxObject):Bool
+	{
+		//If one of the objects is a tilemap, just pass it off.
+		if (Object1.flixelType == TILEMAP)
+		{
+			return cast(Object1, FlxBaseTilemap<Dynamic>).overlapsWithCallback(Object2, updateTouchingFlagsY);
+		}
+		if (Object2.flixelType == TILEMAP)
+		{
+			return cast(Object2, FlxBaseTilemap<Dynamic>).overlapsWithCallback(Object1, updateTouchingFlagsY, true);
+		}
+		// Since we are not separating, always return any amount of overlap => false as last parameter
+		return computeOverlapY(Object1, Object2, false) != 0;
 	}
 	
 	/**
