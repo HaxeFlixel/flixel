@@ -611,6 +611,8 @@ class FlxGame extends Sprite
 		// Finally assign and create the new state
 		_state = _requestedState;
 		
+		FlxG.signals.preStateCreate.dispatch(_state);
+		
 		_state.create();
 		
 		if (_gameJustStarted)
