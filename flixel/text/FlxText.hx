@@ -915,11 +915,7 @@ class FlxText extends FlxSprite
 	/**
 	 * Method for converting string to TextFormatAlign
 	 */
-	#if (flash || js)
-	private function convertTextAlignmentFromString(StrAlign:String):TextFormatAlign
-	#else
-	private function convertTextAlignmentFromString(StrAlign:String):String
-	#end
+	private function convertTextAlignmentFromString(StrAlign:String):AlignType
 	{
 		if (StrAlign == "right")
 		{
@@ -1007,3 +1003,5 @@ class FlxTextFormat implements IFlxDestroyable
 		format = null;
 	}
 }
+
+private typedef AlignType = #if openfl_legacy String #else TextFormatAlign #end

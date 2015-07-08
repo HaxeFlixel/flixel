@@ -71,6 +71,7 @@ class CachedGraphics
 	 */
 	public function dump():Void
 	{
+	#if lime_legacy
 		#if (FLX_RENDER_TILE && !flash)
 		if (canBeDumped)
 		{
@@ -78,6 +79,7 @@ class CachedGraphics
 			isDumped = true;
 		}
 		#end
+	#end
 	}
 
 	/**
