@@ -211,29 +211,6 @@ class FlxSpriteUtil
 	}
 	
 	/**
-	 * Centers the given FlxObject on the screen, either by the x axis, y axis, or both
-	 * 
-	 * @param	object			The FlxSprite to center
-	 * @param	Horizontally	Boolean true if you want it centered horizontally
-	 * @param	Vertically		Boolean	true if you want it centered vertically
-	 * @return 	The FlxObject for chaining
-	 */
-	public static function screenCenter(object:FlxObject, xAxis:Bool = true, yAxis:Bool = true):FlxObject
-	{
-		if (xAxis)
-		{
-			object.x = (FlxG.width / 2) - (object.width / 2);
-		}
-		
-		if (yAxis)
-		{
-			object.y = (FlxG.height / 2) - (object.height / 2);
-		}
-		
-		return object;
-	}
-	
-	/**
 	 * This function draws a line on a FlxSprite from position X1,Y1
 	 * to position X2,Y2 with the specified color.
 	 * 
