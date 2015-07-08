@@ -58,11 +58,16 @@ class FlxAssets
 	private static function getFileReferences(directory:String, subDirectories:Bool = false, ?filterExtensions:Array<String>):Array<FileReference>
 	{
 		var fileReferences:Array<FileReference> = [];
-		var directoryInfo = FileSystem.readDirectory(directory);
+		var resolvedPath = #if ios Context.resolvePath(directory) #else directory #end;
+		var directoryInfo = FileSystem.readDirectory(resolvedPath);
 		for (name in directoryInfo)
 		{
-			if (!FileSystem.isDirectory(directory + name))
+			if (!FileSystem.isDirectory(resolvedPath + name))
 			{
+				// ignore invisible files
+				if (name.startsWith("."))
+					continue;
+				
 				if (filterExtensions != null)
 				{
 					var extension:String = name.split(".")[1]; // get the string after the dot
