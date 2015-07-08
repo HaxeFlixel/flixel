@@ -1,3 +1,10 @@
+3.3.11
+------------------------------
+* Fix compilation with OpenFL next
+* `FlxAssets.getFileReferences()`:
+  * now ignores invisible files (#1280)
+  * fixed compiler error with iOS builds (#1276)
+
 3.3.10
 ------------------------------
 * Fix HTML5 compilation with OpenFL 3.1.1 / Lime 2.4.5
@@ -5,9 +12,6 @@
 3.3.9
 ------------------------------
 * HTML5 builds no longer default to using openfl-bitfive over OpenFL's backend
-* `FlxAssets.getFileReferences()`:
-  * now ignores invisible files (#1280)
-  * fixed compiler error with iOS builds (#1276)
 * `FlxTilemap`:
   * fixed a collision bug near the edge of the tilemap (#1546)
   * fixed `loadMap()` with trailing whitespace in CSV files (#1550)
