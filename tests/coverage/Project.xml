@@ -29,6 +29,8 @@
 	
 	<!---------------------------------HAXEDEFINES---------------------------------->
 	
+	<haxeflag name="--macro" value="include('flixel')" />
+	
 	<section if="coverage1">
 		<haxedef name="FLX_NO_MOUSE_ADVANCED" />
 		<haxedef name="FLX_NO_GAMEPAD" />
