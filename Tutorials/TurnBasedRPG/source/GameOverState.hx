@@ -5,6 +5,7 @@ import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
+import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSave;
@@ -44,20 +45,20 @@ class GameOverState extends FlxState
 		
 		_txtTitle = new FlxText(0, 20, 0, _win ? "You Win!" : "Game Over!", 22);
 		_txtTitle.alignment = "center";
-		_txtTitle.screenCenter(true, false);
+		_txtTitle.screenCenter(FlxAxes.X);
 		add(_txtTitle);
 		
 		_txtMessage = new FlxText(0, (FlxG.height / 2) - 18, 0, "Final Score:", 8);
 		_txtMessage.alignment = "center";
-		_txtMessage.screenCenter(true, false);
+		_txtMessage.screenCenter(FlxAxes.X);
 		add(_txtMessage);
 		
 		_sprScore = new FlxSprite((FlxG.width / 2) - 8, 0, AssetPaths.coin__png);
-		_sprScore.screenCenter(false, true);
+		_sprScore.screenCenter(FlxAxes.Y);
 		add(_sprScore);
 		
 		_txtScore = new FlxText((FlxG.width / 2), 0, 0, Std.string(_score), 8);
-		_txtScore.screenCenter(false, true);
+		_txtScore.screenCenter(FlxAxes.Y);
 		add(_txtScore);
 		
 		// we want to see what the hi-score is
@@ -65,11 +66,11 @@ class GameOverState extends FlxState
 		
 		_txtHiScore = new FlxText(0, (FlxG.height / 2) + 10, 0, "Hi-Score: " + Std.string(_hiScore), 8);
 		_txtHiScore.alignment = "center";
-		_txtHiScore.screenCenter(true, false);
+		_txtHiScore.screenCenter(FlxAxes.Y);
 		add(_txtHiScore);
 		
 		_btnMainMenu = new FlxButton(0, FlxG.height - 32, "Main Menu", goMainMenu);
-		_btnMainMenu.screenCenter(true, false);
+		_btnMainMenu.screenCenter(FlxAxes.X);
 		_btnMainMenu.onUp.sound = FlxG.sound.load(AssetPaths.select__wav);
 		add(_btnMainMenu);
 		

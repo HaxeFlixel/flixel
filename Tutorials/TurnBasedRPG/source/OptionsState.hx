@@ -5,10 +5,10 @@ import flixel.FlxState;
 import flixel.text.FlxText;
 import flixel.ui.FlxBar;
 import flixel.ui.FlxButton;
+import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSave;
-using flixel.util.FlxSpriteUtil;
 
 class OptionsState extends FlxState
 {
@@ -33,12 +33,12 @@ class OptionsState extends FlxState
 		// setup and add our objects to the screen
 		_txtTitle = new FlxText(0, 20, 0, "Options", 22);
 		_txtTitle.alignment = "center";
-		_txtTitle.screenCenter(true, false);
+		_txtTitle.screenCenter(FlxAxes.X);
 		add(_txtTitle);
 		
 		_txtVolume = new FlxText(0, _txtTitle.y + _txtTitle.height + 10, 0, "Volume", 8);
 		_txtVolume.alignment = "center";
-		_txtVolume.screenCenter(true, false);
+		_txtVolume.screenCenter(FlxAxes.X);
 		add(_txtVolume);
 		
 		// the volume buttons will be smaller than 'default' buttons
@@ -61,7 +61,7 @@ class OptionsState extends FlxState
 		_txtVolumeAmt.borderStyle = FlxTextBorderStyle.OUTLINE;
 		_txtVolumeAmt.borderColor = 0xff464646;
 		_txtVolumeAmt.y = _barVolume.y + (_barVolume.height / 2) - (_txtVolumeAmt.height / 2);
-		_txtVolumeAmt.screenCenter(true, false);
+		_txtVolumeAmt.screenCenter(FlxAxes.X);
 		add(_txtVolumeAmt);
 		
 		#if desktop

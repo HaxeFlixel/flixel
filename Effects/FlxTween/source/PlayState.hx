@@ -13,6 +13,7 @@ import flixel.tweens.FlxEase;
 import flixel.tweens.FlxEase.EaseFunction;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxTween.TweenOptions;
+import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.math.FlxPoint;
 import flixel.util.FlxSpriteUtil;
@@ -95,7 +96,7 @@ class PlayState extends FlxState
 		
 		var title = new FlxText(0, 0, FlxG.width, "FlxTween", 64);
 		title.alignment = CENTER;
-		FlxSpriteUtil.screenCenter(title);
+		title.screenCenter();
 		title.alpha = 0.15;
 		add(title);
 		
@@ -192,7 +193,7 @@ class PlayState extends FlxState
 	{
 		var options:TweenOptions = { type: FlxTween.PINGPONG, ease: _currentEase };
 		
-		FlxSpriteUtil.screenCenter(_sprite);
+		_sprite.screenCenter(FlxAxes.Y);
 		_sprite.x = _min.x;
 		
 		_sprite.angle = 0;
@@ -212,11 +213,11 @@ class PlayState extends FlxState
 				
 			case ANGLE:
 				_tween = FlxTween.angle(_sprite, 0, 90, DURATION, options);
-				FlxSpriteUtil.screenCenter(_sprite);
+				_sprite.screenCenter(FlxAxes.X);
 				
 			case COLOR:
 				_tween = FlxTween.color(_sprite, DURATION, FlxColor.BLACK, FlxColor.fromRGB(0, 0, 255, 0), options);
-				FlxSpriteUtil.screenCenter(_sprite);
+				_sprite.screenCenter(FlxAxes.X);
 				
 			case LINEAR_MOTION:
 				_tween = FlxTween.linearMotion(_sprite,

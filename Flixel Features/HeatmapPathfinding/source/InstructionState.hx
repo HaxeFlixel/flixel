@@ -5,7 +5,7 @@ import flixel.FlxState;
 import flixel.FlxSubState;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
-using flixel.util.FlxSpriteUtil;
+import flixel.util.FlxAxes;
 
 class InstructionState extends FlxSubState
 {
@@ -18,12 +18,12 @@ class InstructionState extends FlxSubState
 		add(t);
 		
 		var t2 = new FlxText(0, 170, FlxG.width, 
-		                     "Left Click: Place Wall\nRight Click: Erase Wall\nMiddle Click: Move McGuffin\nSpace: Add Seeker", 16);
+			"Left Click: Place Wall\nRight Click: Erase Wall\nMiddle Click: Move McGuffin\nSpace: Add Seeker", 16);
 		t2.alignment = CENTER;
 		add(t2);
 		
-		var closeButton = new FlxButton(0, 300, "Ok", function() { close(); } );
-		closeButton.screenCenter(true, false);
+		var closeButton = new FlxButton(0, 300, "Ok", function() close());
+		closeButton.screenCenter(FlxAxes.X);
 		add(closeButton);
 	}
 }

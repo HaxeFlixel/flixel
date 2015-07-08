@@ -4,7 +4,7 @@ import flixel.effects.particles.FlxEmitter;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.text.FlxText;
-import flixel.util.FlxSpriteUtil;
+import flixel.util.FlxAxes;
 
 /**
  * A FlxState which is shown when the player wins.
@@ -34,7 +34,7 @@ class VictoryState extends FlxState
 		var text = new FlxText(0, 0, FlxG.width, "VICTORY\n\nSCORE: " + Reg.score, 16);
 		text.alignment = CENTER;
 		text.color = 0xffD8EBA2;
-		FlxSpriteUtil.screenCenter(text, false, true);
+		text.screenCenter(FlxAxes.Y);
 		add(text);
 	}
 
