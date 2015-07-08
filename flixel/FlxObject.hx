@@ -28,43 +28,43 @@ class FlxObject extends FlxBasic
 	 * This value dictates the maximum number of pixels two objects have to intersect before collision stops trying to separate them.
 	 * Don't modify this unless your objects are passing through eachother.
 	 */
-	public static var SEPARATE_BIAS:Float	= 4;
+	public static var SEPARATE_BIAS:Float = 4;
 	/**
 	 * Generic value for "left" Used by facing, allowCollisions, and touching.
 	 */
-	public static inline var LEFT:Int	= 0x0001;
+	public static inline var LEFT:Int = 0x0001;
 	/**
 	 * Generic value for "right" Used by facing, allowCollisions, and touching.
 	 */
-	public static inline var RIGHT:Int	= 0x0010;
+	public static inline var RIGHT:Int = 0x0010;
 	/**
 	 * Generic value for "up" Used by facing, allowCollisions, and touching.
 	 */
-	public static inline var UP:Int		= 0x0100;
+	public static inline var UP:Int = 0x0100;
 	/**
 	 * Generic value for "down" Used by facing, allowCollisions, and touching.
 	 */
-	public static inline var DOWN:Int	= 0x1000;
+	public static inline var DOWN:Int = 0x1000;
 	/**
 	 * Special-case constant meaning no collisions, used mainly by allowCollisions and touching.
 	 */
-	public static inline var NONE:Int	= 0;
+	public static inline var NONE:Int = 0x0000;
 	/**
 	 * Special-case constant meaning up, used mainly by allowCollisions and touching.
 	 */
-	public static inline var CEILING:Int	= UP;
+	public static inline var CEILING:Int = UP;
 	/**
 	 * Special-case constant meaning down, used mainly by allowCollisions and touching.
 	 */
-	public static inline var FLOOR:Int	= DOWN;
+	public static inline var FLOOR:Int = DOWN;
 	/**
 	 * Special-case constant meaning only the left and right sides, used mainly by allowCollisions and touching.
 	 */
-	public static inline var WALL:Int	= LEFT | RIGHT;
+	public static inline var WALL:Int = LEFT | RIGHT;
 	/**
 	 * Special-case constant meaning any direction, used mainly by allowCollisions and touching.
 	 */
-	public static inline var ANY:Int	= LEFT | RIGHT | UP | DOWN;
+	public static inline var ANY:Int = LEFT | RIGHT | UP | DOWN;
 	
 	private static var _firstSeparateFlxRect:FlxRect = FlxRect.get();
 	private static var _secondSeparateFlxRect:FlxRect = FlxRect.get();
@@ -78,9 +78,7 @@ class FlxObject extends FlxBasic
 	 */
 	public static function separate(Object1:FlxObject, Object2:FlxObject):Bool
 	{
-		var separatedX:Bool = separateX(Object1, Object2);
-		var separatedY:Bool = separateY(Object1, Object2);
-		return separatedX || separatedY;
+		return separateX(Object1, Object2) || separateY(Object1, Object2);
 	}
 	
 	/**
@@ -93,9 +91,7 @@ class FlxObject extends FlxBasic
 	 */
 	public static function updateTouchingFlags(Object1:FlxObject, Object2:FlxObject):Bool
 	{
-		var touchingX:Bool = updateTouchingFlagsX(Object1, Object2);
-		var touchingY:Bool = updateTouchingFlagsY(Object1, Object2);
-		return touchingX || touchingY;
+		return updateTouchingFlagsX(Object1, Object2) || updateTouchingFlagsY(Object1, Object2);
 	}
 	
 	/**
@@ -103,7 +99,7 @@ class FlxObject extends FlxBasic
 	 * "checkMaxOverlap" is used to determine whether we want to exclude (therefore check) overlaps which are
 	 * greater than a certain maximum (linked to SEPARATE_BIAS). Default is true, handy for "separateX" code.
 	 */
-	private static function computeOverlapX(Object1:FlxObject, Object2:FlxObject, checkMaxOverlap:Bool=true):Float
+	private static function computeOverlapX(Object1:FlxObject, Object2:FlxObject, checkMaxOverlap:Bool = true):Float
 	{
 		var overlap:Float = 0;
 		//First, get the two object deltas
@@ -127,7 +123,7 @@ class FlxObject extends FlxBasic
 				if (obj1delta > obj2delta)
 				{
 					overlap = Object1.x + Object1.width - Object2.x;
-					if ( (checkMaxOverlap && (overlap > maxOverlap)) || ((Object1.allowCollisions & RIGHT) == 0) || ((Object2.allowCollisions & LEFT) == 0))
+					if ((checkMaxOverlap && (overlap > maxOverlap)) || ((Object1.allowCollisions & RIGHT) == 0) || ((Object2.allowCollisions & LEFT) == 0))
 					{
 						overlap = 0;
 					}
@@ -140,7 +136,7 @@ class FlxObject extends FlxBasic
 				else if (obj1delta < obj2delta)
 				{
 					overlap = Object1.x - Object2.width - Object2.x;
-					if ( (checkMaxOverlap && (-overlap > maxOverlap)) || ((Object1.allowCollisions & LEFT) == 0) || ((Object2.allowCollisions & RIGHT) == 0))
+					if ((checkMaxOverlap && (-overlap > maxOverlap)) || ((Object1.allowCollisions & LEFT) == 0) || ((Object2.allowCollisions & RIGHT) == 0))
 					{
 						overlap = 0;
 					}
@@ -215,10 +211,8 @@ class FlxObject extends FlxBasic
 			}
 			return true;
 		}
-		else
-		{
-			return false;
-		}
+
+		return false;
 	}
 	
 	/**
@@ -272,7 +266,7 @@ class FlxObject extends FlxBasic
 				if (obj1delta > obj2delta)
 				{
 					overlap = Object1.y + Object1.height - Object2.y;
-					if ( (checkMaxOverlap && (overlap > maxOverlap)) || ((Object1.allowCollisions & DOWN) == 0) || ((Object2.allowCollisions & UP) == 0))
+					if ((checkMaxOverlap && (overlap > maxOverlap)) || ((Object1.allowCollisions & DOWN) == 0) || ((Object2.allowCollisions & UP) == 0))
 					{
 						overlap = 0;
 					}
@@ -285,7 +279,7 @@ class FlxObject extends FlxBasic
 				else if (obj1delta < obj2delta)
 				{
 					overlap = Object1.y - Object2.height - Object2.y;
-					if ( (checkMaxOverlap && (-overlap > maxOverlap)) || ((Object1.allowCollisions & UP) == 0) || ((Object2.allowCollisions & DOWN) == 0))
+					if ((checkMaxOverlap && (-overlap > maxOverlap)) || ((Object1.allowCollisions & UP) == 0) || ((Object2.allowCollisions & DOWN) == 0))
 					{
 						overlap = 0;
 					}
@@ -372,10 +366,8 @@ class FlxObject extends FlxBasic
 			}
 			return true;
 		}
-		else
-		{
-			return false;
-		}
+		
+		return false;
 	}
 	
 	/**
@@ -1099,16 +1091,11 @@ class FlxObject extends FlxBasic
 		if (Width < 0) 
 		{
 			FlxG.log.warn("An object's width cannot be smaller than 0. Use offset for sprites to control the hitbox position!");
-		}
-		else
-		{
-		#end
-			width = Width;
-		#if !FLX_NO_DEBUG
+			return Width;
 		}
 		#end
 		
-		return Width;
+		return width = Width;
 	}
 	
 	private function set_height(Height:Float):Float
@@ -1117,16 +1104,11 @@ class FlxObject extends FlxBasic
 		if (Height < 0) 
 		{
 			FlxG.log.warn("An object's height cannot be smaller than 0. Use offset for sprites to control the hitbox position!");
-		}
-		else
-		{
-		#end
-			height = Height;
-		#if !FLX_NO_DEBUG
+			return Height;
 		}
 		#end
 		
-		return Height;
+		return height = Height;
 	}
 	
 	private function get_width():Float
