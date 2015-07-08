@@ -66,7 +66,7 @@ class OptionsState extends FlxState
 		
 		#if desktop
 		_btnFullScreen = new FlxButton(0, _barVolume.y + _barVolume.height + 8, FlxG.fullscreen ? "FULLSCREEN" : "WINDOWED", clickFullscreen);
-		_btnFullScreen.screenCenter(true, false);
+		_btnFullScreen.screenCenter(FlxAxes.X);
 		add(_btnFullScreen);
 		#end
 		
