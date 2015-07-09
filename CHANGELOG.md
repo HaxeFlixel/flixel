@@ -8,7 +8,7 @@
  * doesn't store the frame's bitmapatas anymore, so `getBitmap()` and other bitmap methods have been removed
  * added `paint()` and `paintFlipped()` methods instead. This solution requires much less memory, but will be a bit slower.
 * `FlxArrayUtil`: removed `indexOf()`
-* Changed static inline vars to enums:
+* Changed static inline vars to enums: (#998)
  * `FlxCamera` follow styles
  * `FlxCamera` shake modes
  * `FlxText` border styles
@@ -16,22 +16,22 @@
  * `FlxBar` fill directions
  * `FlxG.html5` browser types
 * `FlxCamera`: 
- * added `pixelPerfectRender` as a global setting for sprites and tilemaps
- * `pixelPerfectRender` now defaults to `false` with `FLX_RENDER_TILE`
- * `bounds` -> `minScrollX`, `maxScrollX`, `minScrollY` and `maxScrollY` (`null` means unbounded)
- * `setBounds()` -> `setScrollBoundsRect()`
+ * added `pixelPerfectRender` as a global setting for sprites and tilemaps (#1060)
+ * `pixelPerfectRender` now defaults to `false` with `FLX_RENDER_TILE` (#1065)
+ * `bounds` -> `minScrollX`, `maxScrollX`, `minScrollY` and `maxScrollY` (`null` means unbounded) (#1070)
+ * `setBounds()` -> `setScrollBoundsRect()` (#1070)
  * added `setScrollBounds()`
- * added `targetOffset`
+ * added `targetOffset` (#1056)
  * added `scrollRect` sprite which crops camera's view when the camera is scaled
  * camera is scaled from its center, not from the top left corner
- * `followLerp` is now a range taking values from 0 to (`60 / FlxG.updateFramerate`) - the closer to zero the more lerp!
- * added `snapToTarget()`
+ * `followLerp` is now a range taking values from 0 to (`60 / FlxG.updateFramerate`) - the closer to zero the more lerp! (#1220)
+ * added `snapToTarget()` (#1477)
 * `FlxMath`:
- * `bound()` and `inBounds()` now accept `null` as values, meaning "unbounded in that direction"
+ * `bound()` and `inBounds()` now accept `null` as values, meaning "unbounded in that direction" (#1070)
  * `wrapValue()` now supports negative values
- * changed `MIN_VALUE` and `MAX_VALUE` to `MIN_VALUE_FLOAT` and `MAX_VALUE_FLOAT`, added `MAX_VALUE_INT`
- * added `sinh()`
- * added `fastSin()` and `fastCos()`
+ * changed `MIN_VALUE` and `MAX_VALUE` to `MIN_VALUE_FLOAT` and `MAX_VALUE_FLOAT`, added `MAX_VALUE_INT` (#1148)
+ * added `sinh()` (#1309)
+ * added `fastSin()` and `fastCos()` (#1534)
  * optimized `isEven()` and `isOdd()`
 * `FlxTypedSpriteGroup`: added `iterator()`
 * `FlxTimer`, `FlxTween`, `FlxPath`: `active` is now only true when they are active
@@ -48,56 +48,58 @@
 * `FlxSpriteUtil`:
  * `drawLine()`: default settings for `lineStyle` are now thickness 1 and color white
  * `fadeIn()` and `fadeOut()` now tween `alpha` instead of `color`
- * added `drawCurve()`
+ * added `drawCurve()` (#1263)
  * removed `FillStyle`, the same functionality is now covered by `FillColor`
+ * moved `screenCenter()` to `FlxObject` and changed the the arguments from two booleans to the `FlxAxes` enum (#1541)
 * `FlxEmitter`:
  * `at()` -> `focusOn()`
  * `on` -> `emitting`
  * emitters and particles now use `FlxColor` instead of separate red, green, and blue values
- * removed `FlxEmitterExt`, `FlxEmitter` now has two launch modes: `CIRCLE` (the new default) and `SQUARE`
- * removed `xPosition`, `yPosition`, `life`, `bounce`, and various other properties, and property setting convenience functions (see below)
- * a variety of values can now be set with much greater control, via `lifespan.set()`, `scale.set()`, `velocity.set()` and so on
- * simplified `start()` parameters
-* `FlxParticle`:
+ * removed `FlxEmitterExt`, `FlxEmitter` now has two launch modes: `CIRCLE` (the new default) and `SQUARE` (#1174)
+ * removed `xPosition`, `yPosition`, `life`, `bounce`, and various other properties, and property setting convenience functions (see below) (#1174)
+ * a variety of values can now be set with much greater control, via `lifespan.set()`, `scale.set()`, `velocity.set()` and so on (#1174)
+ * simplified `start()` parameters (#1174)
+ * added `angularDrag` and `angularAcceleration` (#1246)
+* `FlxParticle`: (#1174)
  * `maxLifespan` -> `lifespan`, `lifespan` -> `age`, percent indicates `(age / lifespan)`
  * `age` counts up (as opposed to `lifespan`, which counted down)
  * range properties (`velocityRange`, `alphaRange`) which determine particle behavior after launch
  * "active" flags (`alphaRange.active`, `velocityRange.active`, etc) which `FlxEmitter` uses to control particle behavior
 * Moved `FlxMath`, `FlxPoint`, `FlxVector`, `FlxRect`, `FlxAngle`, `FlxVelocity` and `FlxRandom` to `flixel.math`
 * `FlxPath`: exposed `nodeIndex` as a read-only property
-* `FlxAssets`: `cacheSounds()` -> `FlxG.sound.cacheAll()`
-* `FlxMouse` and `FlxTouch` now extend a new common base class `FlxPointer` instead of `FlxPoint`
+* `FlxAssets`: `cacheSounds()` -> `FlxG.sound.cacheAll()` (#1097)
+* `FlxMouse` and `FlxTouch` now extend a new common base class `FlxPointer` instead of `FlxPoint` (#1099)
  * adds `overlaps()` to `FlxMouse`
 * `FlxTilemap`:
- * separated rendering and logic, adding `FlxBaseTilemap`
+ * separated rendering and logic, adding `FlxBaseTilemap` (#1101)
  * added `getTileIndexByCoords()` and `getTileCoordsByIndex()`
  * fixed a bug in `overlapsAt()`
- * `loadMap()` now treats tile indices with negative values in the map data as 0
+ * `loadMap()` now treats tile indices with negative values in the map data as 0 (#1166)
  * added `blend`, `alpha` and `color`
  * added `frames` property, so you can change tilemap's graphic without reloading map
  * `loadMap()` accepts `FlxGraphic`, `String`, `FlxTileFrames` or `BitmapData` as `TileGraphic` now
- * `loadMap()` has been split into `loadMapFromCSV()` and `loadMapFromArray()`
- * added `loadMapFrom2DArray()`
- * added `offset` property
+ * `loadMap()` has been split into `loadMapFromCSV()` and `loadMapFromArray()` (#1292)
+ * added `loadMapFrom2DArray()` (#1292)
+ * added `offset` property (#1444)
  * `allowCollisions` now sets the `allowCollisions` property of each tile
 * `FlxBaseTilemap`: added `setRect()` method which allows you to set a rectangular region of tiles to the provided index
 * `FlxTile`: added `frame` variable which holds tile's "graphic"
 * `FlxTileblock`: 
- * added `setTile()` and `tileSprite`
+ * added `setTile()` and `tileSprite` (#1300)
  * added `loadFrames()` method which allows you to use frames collection as a source of graphic
 * `Console`:
- * the `set` command now supports arrays
+ * the `set` command now supports arrays (#1105)
  * the `fields` command now has type info for the fields
  * fixed focus on native targets
 * `FlxColor`:
- * `FlxColor` is now an `abstract`, interchangable with `Int` - the `FlxColorUtil` functions have been merged into it
- * the color presets have been reduced to a smaller, more useful selection
-* Moved
+ * `FlxColor` is now an `abstract`, interchangable with `Int` - the `FlxColorUtil` functions have been merged into it (#1027)
+ * the color presets have been reduced to a smaller, more useful selection (#1117)
+* Moved "typed" classes: (#1100)
  * `FlxTypedGroup` into `FlxGroup.hx`
  * `FlxTypedSpriteGroup` into `FlxSpriteGroup.hx`
  * `FlxTypedEmitter` into `FlxEmitter.hx`
  * `FlxTypedButton` into `FlxButton.hx`
-* `FlxBitmapUtil` -> `FlxBitmapDataUtil`
+* `FlxBitmapUtil` -> `FlxBitmapDataUtil` (#1118)
 * `FlxKeyboard`: 
  * added `preventDefaultKeys` for HTML5
  * added an `abstract` enum for key names (`FlxG.keys.anyPressed([A, LEFT])` is now possible)
@@ -105,12 +107,11 @@
  * removed `FlxKey.NUMPADSLASH` (`SLASH` has the same keycode)
 * `FlxTypedGroup`:
  * added a `recurse` argument to the `forEach()` functions
- * removed `callAll()` and `setAll()` - use `forEach()` instead
- * replaced the parameter array in `recycle()` with an optional factory method
- * `revive()` now calls `revive()` on all `members` of a group as well
+ * removed `callAll()` and `setAll()` - use `forEach()` instead (#1086)
+ * replaced the parameter array in `recycle()` with an optional factory method (#1191)
+ * `revive()` now calls `revive()` on all `members` of a group as well (#1243)
 * `FlxGamepadManager`:
  * better handling of disconnecting and reconnecting gamepads. `getByID()` can now return `null`.
- * now supported on HTML5 with openfl-bitfive
  * `anyButton()` now has a `state` argument
  * `globalDeadZone` can now be 0
  * `globalDeadZone` now overshadows instead of overriding the gamepad's deadzone values
@@ -123,26 +124,26 @@
  	* added `pressed`, `justPressed`, `justReleased` and `analog`
  	* removed the dpad properties, they are now mapped to buttons
  * added a `connected` flag
- * added `deadZoneMode`, circular deadzones are now supported
+ * added `deadZoneMode`, circular deadzones are now supported (#1177)
  * `getXAxis()` and `getYAxis()` now take `FlxGamepadAnalogStick` as parameters (for example `Xbox360ID.LEFT_ANALOG_STICK`)
  * `anyButton()` now has a `state` argument
 * `FlxRandom`:
- * `FlxRandom` functions are now member functions, call `FlxG.random` instead of `FlxRandom`
- * exposed `currentSeed` as an external representation of `internalSeed`
- * removed `intRanged()` and `floatRanged()`, `int()` and `float()` now provide optional ranges
- * removed `weightedGetObject()`, `getObject()` now has an optional `weights` parameter
- * removed `colorExt()`, try using `FlxColor` to get finer control over randomly-generated colors
- * updated random number generation equation to avoid inconsistent results across platforms; may break recordings made in 3.x!
+ * `FlxRandom` functions are now member functions, call `FlxG.random` instead of `FlxRandom` (#1201)
+ * exposed `currentSeed` as an external representation of `internalSeed` (#1138)
+ * removed `intRanged()` and `floatRanged()`, `int()` and `float()` now provide optional ranges (#1138)
+ * removed `weightedGetObject()`, `getObject()` now has an optional `weights` parameter (#1148)
+ * removed `colorExt()`, try using `FlxColor` to get finer control over randomly-generated colors (#1158)
+ * updated random number generation equation to avoid inconsistent results across platforms; may break recordings made in 3.x! (#1148)
  * can now create an instance of `FlxRandom` to create deterministic pseudorandom numbers independently of HaxeFlixel core functions (e.g. particle emitters)
  * renamed `chanceRoll()` to `bool()`
- * added `floatNormal()`
-* `FlxArrayUtil`: removed randomness-related functions, please use `FlxRandom` instead
+ * added `floatNormal()` (#1251)
+* `FlxArrayUtil`: removed randomness-related functions, please use `FlxRandom` instead (#1138)
 * `FlxText`:
  * added an `abstract` enum for alignment (`text.alignment = CENTER;` is now possible)
  * `font` now supports font assets not embedded via `openfl.Assets` (i.e. `@:font`)
  * `font = null;` now resets it to the default font
  * fixed an issue where the value returned by `get_font()` wouldn't be the same as the one passed into `set_font()`
- * added `applyMarkup()`
+ * added `applyMarkup()` (#1229)
  * fixed issues with `borderStyle` and `FlxTextFormat` on native
  * added `stampOnAtlas()` method, which stamps text graphic on provided atlas and loads result node's graphic into this text object
  * retrieving text dimensions (`width` and `height`) can now trigger text graphic regeneration (if any changes led to a dimensions change) to report the correct values
@@ -159,13 +160,14 @@
  * added `stampOnAtlas()` method which stamps button's label graphic and button's graphic on the provided atlas and then loads result nodes into button and label. This helps reduce number of drawcalls on native targets
 * `FlxMouseEventManager`:
  * moved from `flixel.plugin.MouseEventManager` to `flixel.input.mouse.FlxMouseEventManager`
- * added `removeAll()`
- * fixed inaccurate pixel-perfect sprite overlap checks
+ * added `removeAll()` (#1141)
+ * fixed inaccurate pixel-perfect sprite overlap checks (#1075)
  * now supports all mouse buttons (`mouseButtons` argument in `add()` / `setObjectMouseButtons()`)
 * `FlxObject`:
 	* added `toPoint()` and `toRect()`
-	* added `setPositionUsingCenter()`
-* `PS4ButtonID` / `PS3ButtonID`: removed the `_BUTTON` suffix for consistency with other button ID classes
+	* added `setPositionUsingCenter()` (#1482)
+	* split some of `separate()`'s functionality into `updateTouchingFlags()`, allowing `touching` to be used without any separate calls (#1555)
+* `PS4ButtonID` / `PS3ButtonID`: removed the `_BUTTON` suffix for consistency with other button ID classes (#1137)
 * `FlxSprite`:
  * added `graphicLoaded()` which is called whenever a new graphic is loaded
  * `getScreenXY()` -> `getScreenPosition()`
@@ -185,32 +187,35 @@
 * Added some helpful error messages when trying to target older swf versions
 * `FlxAngle`:
  * changed `rotatePoint()` to not invert the y-axis anymore and rotate clockwise (consistent with `FlxSprite#angle`)
- * `rotatePoint()` -> `FlxPoint#rotate()`
- * `getAngle()` -> `FlxPoint#angleBetween()`
- * added `angleFromFacing()`
+ * `rotatePoint()` -> `FlxPoint#rotate()` (#1143)
+ * `getAngle()` -> `FlxPoint#angleBetween()` (#1143)
+ * added `angleFromFacing()` (#1193)
 * Added GitSHA macro that includes the SHA of the current commit into `FlxVersion` for dev builds
 * Flixel sound assets are now being embedded via `embed="true"`
 * `FlxRect`: added `weak()`, `putWeak()`, `ceil()` and `floor()`
 * Added support for reloading graphics via OpenFL live asset reloading (native targets)
 * `FlxSound`
-  * Can now be used even if `FLX_NO_SOUND_SYSTEM` is enabled
+  * Can now be used even if `FLX_NO_SOUND_SYSTEM` is enabled (#1199)
   * `looped` is exposed as a public variable
+  * added `pitch` (#1465)
 * `FlxVelocity`: `accelerateTowards()`-functions now only take a single `maxSpeed` argument (instead of x and y)
-* `FlxG.signals`: split `gameReset` into pre/post signals
+* `FlxG.signals`:
+  * split `gameReset` into pre/post signals
+  * added `preStateCreate` (#1557)
 * `BaseScaleMode`: added `hAlign` and `vAlign` properties, so you can switch game's align mode on both axis
 * `RatioScaleMode#new()`: added a `fillScreen` option
 * `FlxPath`: fixed an issue where a velocity would be set even if the object positon matches the current node
-* `CachedGraphics`: added `defaultPersist`
-* `FlxPool`: improved pooling performance
+* `FlxGraphic`: added `defaultPersist` (#1241)
+* `FlxPool`: improved pooling performance (#1189)
 * `FlxTween`
- * `complete` callback parameter in options is now called `onComplete`. Its type, `CompleteCallback`, is now called `TweenCallback`.
- * Added `onStart` and `onUpdate` callback parameters in options
+ * `complete` callback parameter in options is now called `onComplete`. Its type, `CompleteCallback`, is now called `TweenCallback`. (#1273)
+ * Added `onStart` and `onUpdate` callback parameters in options (#1273)
  * fixed `active = false;` not doing anything during `onComplete()` of `LOOPING` or `PINGPONG` tweens
  * Angle tween sets sprite's angle on start now
-* `FlxTimer`: `complete` was renamed to `onComplete`
-* `FlxSwipe`: duration now uses seconds instead of milliseconds
+* `FlxTimer`: `complete` was renamed to `onComplete` (#1275)
+* `FlxSwipe`: `duration` now uses seconds instead of milliseconds (#1272)
 * `FlxPath` and motion tweens now restore the original `immovable` value of `FlxObject`s after completion
-* The signature of `update()` was changed to `update(elapsed:Float)`. The `elapsed` argument should be used instead of `FlxG.elapsed`.
+* The signature of `update()` was changed to `update(elapsed:Float)`. The `elapsed` argument should be used instead of `FlxG.elapsed`. (#1188)
 * `FlxG.inputs`: added `resetOnStateSwitch`
 * Added support for post-processing shaders on native targets via `FlxG.addPostProcess()` / `removePostProcess()` and `flixel.effects.postprocess`
 * `FlxG.android`: `preventDefaultBackAction` has been replaced by `preventDefaultKeys`
@@ -241,9 +246,9 @@
  * added `replaceColor()` which is used by `FlxSprite`'s `replaceColor()` method
  * added `addSpacing()` which takes BitmapData and generates new one with spaces between frames
  * added `generateRotations()` which generates new BitmapData with prerotated given BitmapData object (this functionality is moved from `FlxSprite`)
-* `FlxGradient`: now supported with bitfive
 * `FlxAnalog` and `FlxVirtualPad` now have their own atlas with default graphic, so they propduce less draw calls
 * Added `FlxSpriteButton` which is button which label is a simple `FlxSprite`. It has a useful `createTextLabel()` method which generates a sprite with text graphic.
+* `FlxSignal`: fixed a bug that occured when calling `remove()` during a dispatch (#1420)
 
 3.3.11
 ------------------------------
