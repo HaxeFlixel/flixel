@@ -8,7 +8,6 @@ import flixel.text.FlxText;
 import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
 import flixel.tile.FlxTilemap;
-using flixel.util.FlxSpriteUtil;
 
 class MenuState extends FlxState
 {

@@ -13,7 +13,7 @@ class Barrel extends FlxNapeSprite
 	
 	public function new(X:Float, Y:Float)
 	{
-		super(X +PlayState.TILE_SIZE *.5, Y+8, "assets/images/barrel.png");
+		super(X + PlayState.TILE_SIZE *.5, Y + 8, "assets/images/barrel.png");
 		createRectangularBody(14, 16);
 		body.setShapeMaterials(new Material(0.1, 0.2, 0.38, 1, 0.005));
 		
@@ -48,5 +48,4 @@ class Barrel extends FlxNapeSprite
 		
 		super.update(elapsed);
 	}
-	
 }

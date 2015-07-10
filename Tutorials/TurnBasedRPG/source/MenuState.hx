@@ -7,10 +7,10 @@ import flixel.FlxState;
 import flixel.system.FlxSound;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
+import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.math.FlxMath;
 import flixel.util.FlxDestroyUtil;
-using flixel.util.FlxSpriteUtil;
 
 /**
  * A FlxState which can be used for the game's menu.
@@ -40,7 +40,7 @@ class MenuState extends FlxState
 		
 		_txtTitle = new FlxText(0, 20, 0, "HaxeFlixel\nTutorial\nGame", 22);
 		_txtTitle.alignment = "center";
-		_txtTitle.screenCenter(true, false);
+		_txtTitle.screenCenter(FlxAxes.X);
 		add(_txtTitle);
 		
 		_btnPlay = new FlxButton(0, 0, "Play", clickPlay);
@@ -56,7 +56,10 @@ class MenuState extends FlxState
 		add(_btnOptions);
 		
 		#if desktop
-		_btnExit = new FlxButton(FlxG.width - 28, 8, "X", clickExit);
+		_btnExit = new FlxButton(FlxG.width - 28, 8, "X", function()
+		{
+			System.exit(0);
+		});
 		_btnExit.loadGraphic(AssetPaths.button__png, true, 20, 20);
 		add(_btnExit);
 		#end
@@ -65,13 +68,6 @@ class MenuState extends FlxState
 		
 		super.create();
 	}
-	
-	#if desktop
-	private function clickExit():Void
-	{
-		System.exit(0);
-	}
-	#end
 	
 	private function clickPlay():Void
 	{

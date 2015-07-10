@@ -8,7 +8,6 @@ import flixel.graphics.FlxGraphic;
 import flixel.text.FlxText;
 import flixel.math.FlxMath;
 import flixel.system.FlxAssets;
-using flixel.util.FlxSpriteUtil;
 using StringTools;
 
 class PlayState extends FlxState

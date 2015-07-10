@@ -70,7 +70,7 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 		_sprBack = new FlxSprite().makeGraphic(120, 120, FlxColor.WHITE);
 		_sprBack.drawRect(1, 1, 118, 44, FlxColor.BLACK);
 		_sprBack.drawRect(1, 46, 118, 73, FlxColor.BLACK);
-		_sprBack.screenCenter(true, true);
+		_sprBack.screenCenter();
 		add(_sprBack);
 		
 		// next, make a 'dummy' player that looks like our player (but can't move) and add it.

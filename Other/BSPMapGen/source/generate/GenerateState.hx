@@ -9,7 +9,6 @@ import flixel.math.FlxRandom;
 import flixel.ui.FlxButton;
 import flixel.util.FlxColor;
 import play.PlayState;
-using flixel.util.FlxSpriteUtil;
 
 class GenerateState extends FlxState
 {
@@ -42,13 +41,9 @@ class GenerateState extends FlxState
 		add(new FlxButton(gutter * 2 + 80, gutter, "Play (Space)", play));
 		
 		if (mapData == null)
-		{
 			generateMap();
-		}
 		else
-		{
 			updateSprite();
-		}
 	}
 
 	function generateMap():Void

@@ -11,12 +11,8 @@ import flixel.util.FlxColor;
 import flixel.math.FlxRandom;
 import flixel.util.FlxSpriteUtil;
 
-/**
- * A FlxState which can be used for the game's menu.
- */
 class MenuState extends FlxState
 {
-	// initializing some things we'll need
 	private var _grpProgress:FlxGroup;
 	private var _grpFinished:FlxGroup;
 	private var _loopOne:FlxAsyncLoop;
@@ -24,12 +20,8 @@ class MenuState extends FlxState
 	private var _bar:FlxBar;
 	private var _barText:FlxText;
 	
-	/**
-	 * Function that is called up when to state is created to set it up. 
-	 */
 	override public function create():Void
 	{
-		// Set a background color
 		FlxG.cameras.bgColor = 0xff131c1b;
 		// Show the mouse (in case it hasn't been disabled)
 		#if !FLX_NO_MOUSE
@@ -46,13 +38,13 @@ class MenuState extends FlxState
 		// create a fancy progress bar
 		_bar = new FlxBar(0, 0, LEFT_TO_RIGHT, FlxG.width - 50, 50, null, "", 0, 100, true);
 		_bar.value = 0;
-		FlxSpriteUtil.screenCenter(_bar);
+		_bar.screenCenter();
 		_grpProgress.add(_bar);
 		
 		// some text for the bar
 		_barText = new FlxText(0, 0, FlxG.width, "Loading... 0 / " + _maxItems);
 		_barText.setFormat(null, 28, FlxColor.WHITE, CENTER, OUTLINE);
-		FlxSpriteUtil.screenCenter(_barText);
+		_barText.screenCenter();
 		_grpProgress.add(_barText);
 		
 		// only our progress bar group should be getting draw() and update() called on it until the loop is done...
@@ -78,12 +70,9 @@ class MenuState extends FlxState
 		// then we update our progress bar and progress bar text
 		_bar.value = (_grpFinished.members.length / _maxItems) * 100;
 		_barText.text = "Loading... " + _grpFinished.members.length + " / " + _maxItems;
-		FlxSpriteUtil.screenCenter(_barText);
+		_barText.screenCenter();
 	}
 
-	/**
-	 * Function that is called once every frame.
-	 */
 	override public function update(elapsed:Float):Void
 	{
 		// If my loop hasn't started yet, start it
@@ -109,5 +98,4 @@ class MenuState extends FlxState
 		
 		super.update(elapsed);
 	}
-	
 }
