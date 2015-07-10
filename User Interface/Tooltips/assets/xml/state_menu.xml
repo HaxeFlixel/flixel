@@ -1,82 +1,63 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <data>
 	
-	<include id="_ui_globals"/>
+	<include name="_ui_globals"/>
 	
 	<!--DEFS-->
 	
-	<!--
-	<default id="tooltip" background="white">
-		<title color="black" outline="false" use_def="sans12"/>
-		<body color="black" outline="false" use_def="sans10"/>
-	</default>
-	-->
+	<definition name="grey" src="ui/chrome/dark_grey"/>
+	<definition name="grey_flat" src="ui/chrome/dark_grey_flat_top"/>
 	
-	<definition id="grey" src="ui/chrome/dark_grey"/>
-	<definition id="grey_flat" src="ui/chrome/dark_grey_flat_top"/>
+	<definition name="sans8" font="vera" size="10" style="bold" color="0xffffff" outline="0x000000" align="left"/>
+	<definition name="sans10" font="vera" size="10" style="bold" color="0xffffff" outline="0x000000" align="left"/>
+	<definition name="sans12" font="vera" size="12" style="bold" color="0xffffff" outline="0x000000" align="left"/>
+	<definition name="sans16" font="vera" size="16" style="bold" color="0xffffff" outline="0x000000" align="left"/>
 	
-	<definition id="sans10" font="vera" size="10" style="bold" color="0xffffff" outline="0x000000" align="left"/>
-	<definition id="sans10c" font="vera" size="10" style="bold" color="0xffffff" outline="0x000000" align="center"/>
-	<definition id="sans12" font="vera" size="12" style="bold" color="0xffffff" outline="0x000000" align="left"/>
-	<definition id="sans12y" font="vera" size="12" style="bold" color="0xffcc00" outline="0x000000" align="left"/>
-	
-	<definition id="sans8" font="vera" size="10" style="bold" color="0xffffff" outline="0x000000" align="left"/>
-	<definition id="sans8y" font="vera" size="10" style="bold" color="0xffcc00" outline="0x000000" align="left"/>
-	
-	<definition id="sans8c" font="vera" size="10" style="bold" color="0xffffff" outline="0x000000" align="center"/>
-	<definition id="sans8yc" font="vera" size="10" style="bold" color="0xffcc00" outline="0x000000" align="center"/>
-	
-	<definition id="sans8dc" font="vera" size="10" style="bold" color="0xcccccc" outline="0x000000" align="center"/>
-	<definition id="sans8dyc" font="vera" size="10" style="bold" color="0xccaa00" outline="0x000000" align="center"/>
-		
-	<definition id="sans16" font="vera" size="16" style="bold" color="0xffffff" outline="0x000000" align="left"/>
-	<definition id="sans16y" font="vera" size="16" style="bold" color="0xffcc00" outline="0x000000" align="left"/>
-		
-	<definition id="check_small" box_src="ui/misc/check_box_small" check_src="ui/misc/check_small" text_y="0">
+	<definition name="check_small" box_src="ui/misc/check_box_small" check_src="ui/misc/check_small" text_y="0">
 		<text use_def="sans12" color="0xffffff">
-			<color id="over" value="0xffff00"/>
+			<color name="over" value="0xffff00"/>
 		</text>
 	</definition>
 	
-	<definition id="check_big" box_src="ui/misc/check_box_big" check_src="ui/misc/check_big" text_y="0">
+	<definition name="check_big" box_src="ui/misc/check_box_big" check_src="ui/misc/check_big" text_y="0">
 		<text use_def="sans16" color="0xffffff">
-			<color id="over" value="0xffff00"/>
+			<color name="over" value="0xffff00"/>
 		</text>
 	</definition>
 	
-	<definition id="radio_1" radio_src="ui/misc/radio" dot_src="ui/misc/radio_dot">
+	<definition name="radio_1" radio_src="ui/misc/radio" dot_src="ui/misc/radio_dot">
 		<text use_def="sans10" color="0xffffff">
-			<color id="over" value="0xffff00"/>
+			<color name="over" value="0xffff00"/>
 		</text>
 	</definition>
 	
-	<definition id="tab_button_toggle" width="50" height="20" text_x="-2" text_y="0">
+	<definition name="tab_button_toggle" width="50" height="20" text_x="-2" text_y="0">
 		<text use_def="sans10c" color="0xcccccc">
-			<color id="over" value="0xccaa00"/>
-			<color id="up" toggle="true" value="0xffffff"/>
-			<color id="over" toggle="true" value="0xffff00"/>
+			<color name="over" value="0xccaa00"/>
+			<color name="up" toggle="true" value="0xffffff"/>
+			<color name="over" toggle="true" value="0xffff00"/>
 		</text>
 		
-		<graphic id="up" image="ui/buttons/tab_grey_back" slice9="6,6,12,12"/>
-		<graphic id="over" image="ui/buttons/tab_grey_back_over" slice9="6,6,12,12"/>
-		<graphic id="down" image="ui/buttons/tab_grey_back_over" slice9="6,6,12,12"/>
+		<graphic name="up" image="ui/buttons/tab_grey_back" slice9="6,6,12,12"/>
+		<graphic name="over" image="ui/buttons/tab_grey_back_over" slice9="6,6,12,12"/>
+		<graphic name="down" image="ui/buttons/tab_grey_back_over" slice9="6,6,12,12"/>
 		
-		<graphic id="up" toggle="true" image="ui/buttons/tab_grey" slice9="6,6,12,12"/>
-		<graphic id="over" toggle="true" image="ui/buttons/tab_grey_over" slice9="6,6,12,12"/>
-		<graphic id="down" toggle="true" image="ui/buttons/tab_grey_over" slice9="6,6,12,12"/>
+		<graphic name="up" toggle="true" image="ui/buttons/tab_grey" slice9="6,6,12,12"/>
+		<graphic name="over" toggle="true" image="ui/buttons/tab_grey_over" slice9="6,6,12,12"/>
+		<graphic name="down" toggle="true" image="ui/buttons/tab_grey_over" slice9="6,6,12,12"/>
 	</definition>
 	
-	<definition id="button_toggle" width="50" height="20">
+	<definition name="button_toggle" width="50" height="20">
 		<text use_def="sans10c" color="0xffffff">
-			<color id="over" value="0xffff00"/>
+			<color name="over" value="0xffff00"/>
 		</text>
 		
-		<graphic id="all" image="ui/buttons/button_blue_toggle" slice9="6,6,12,12"/>
+		<graphic name="all" image="ui/buttons/button_blue_toggle" slice9="6,6,12,12"/>
 	</definition>
 	
-	<definition id="chrome_flat" src="ui/chrome/dark_grey_flat_top" slice9="4,4,8,8"/>
+	<definition name="chrome_flat" src="ui/chrome/dark_grey_flat_top" slice9="4,4,8,8"/>
 		
-	<definition id="tab_menu_1" back_def="chrome_flat">
+	<definition name="tab_menu_1" back_def="chrome_flat">
 		<tab use_def="tab_button_toggle"/>
 	</definition>
 	
@@ -85,112 +66,112 @@
 	<sprite x="0" y="0" width="screen.width" height="screen.height" color="0x404040"/>
 
 	<text text="Tooltips 101" use_def="sans16" x="100" y="75" width="200" align="center"/>
-	<text id="mouse_over" text="Mouse over the buttons" use_def="sans10" x="100" y="100" width="200" align="center"/>
+	<text name="mouse_over" text="Mouse over the buttons" use_def="sans10" x="100" y="100" width="200" align="center"/>
 	
-	<button id="basic" x="160" y="120" label="Basic">
+	<button name="basic" x="160" y="120" label="Basic">
 		<tooltip text="Basic tooltip"/>
 	</button>
 	
-	<button id="fancier" x="basic.x" y="basic.bottom+10" label="Fancier">
+	<button name="fancier" x="basic.x" y="basic.bottom+10" label="Fancier">
 		<tooltip>
 			<title text="Fancier tooltip!" width="100"/>
 			<body text="This tooltip has a title AND a body." width="100" />
 		</tooltip>
 	</button>
 	
-	<button id="even_fancier" x="basic.x" y="fancier.bottom+10" label="Even fancier">
+	<button name="even_fancier" x="basic.x" y="fancier.bottom+10" label="Even fancier">
 		<tooltip pad_all="5">
 			<title text="Even fancier tooltip!" width="120"/>
 			<body text="This tooltip has a title and a body, as well as custom padding and offsets" width="120" x="5" y="5"/>
 		</tooltip>
 	</button>
 	
-	<button id="fanciest" x="basic.x" y="even_fancier.bottom+10" label="Fanciest">
+	<button name="fanciest" x="basic.x" y="even_fancier.bottom+10" label="Fanciest">
 		<tooltip pad_all="5" background="red" border="1" border_color="white">
 			<title use_def="sans12" text="Fanciest tooltip!" width="125"/>
 			<body use_def="sans10" text="This tooltip has a title and a body, custom padding and offsets, as well as custom text formatting" width="120" x="5" y="5"/>
 		</tooltip>
 	</button>
 	
-	<text id="checkboxes_text" text="Checkboxes work too" use_def="sans10" x="100" y="fanciest.bottom+20" width="200" align="center"/>
+	<text name="checkboxes_text" text="Checkboxes work too" use_def="sans10" x="100" y="fanciest.bottom+20" width="200" align="center"/>
 	
-	<checkbox id="check_1" x="basic.x" y="checkboxes_text.bottom+10" use_def="check_small" label="1">
+	<checkbox name="check_1" x="basic.x" y="checkboxes_text.bottom+10" use_def="check_small" label="1">
 		<param type="string" value="thing 1"/>
 		<tooltip text="Tooltip!"/>
 	</checkbox>
 	
-	<checkbox id="check_2" x="check_1.x" y="check_1.bottom+10" use_def="check_big" label="2">
+	<checkbox name="check_2" x="check_1.x" y="check_1.bottom+10" use_def="check_big" label="2">
 		<param type="string" value="thing 2"/>
 		<tooltip text="Another tooltip!"/>
 	</checkbox>
 	
-	<text id="radios_1_text" text="And so do radio button groups" use_def="sans10" x="checkboxes_text.x" y="check_2.bottom+20" width="200" align="center"/> 
+	<text name="radios_1_text" text="And so do radio button groups" use_def="sans10" x="checkboxes_text.x" y="check_2.bottom+20" width="200" align="center"/> 
 	
-	<radio_group id="radios_1" x="check_2.x" y="radios_1_text.bottom+10" use_def="radio_1">
-		<radio id="1_fish" label="A">
+	<radio_group name="radios_1" x="check_2.x" y="radios_1_text.bottom+10" use_def="radio_1">
+		<radio name="1_fish" label="A">
 			<tooltip text="Tooltip A!"/>
 		</radio>
-		<radio id="2_fish" label="B">
+		<radio name="2_fish" label="B">
 			<tooltip text="Tooltip B!"/>
 		</radio>
-		<radio id="0xff0000_fish" label="C">
+		<radio name="0xff0000_fish" label="C">
 			<tooltip text="Tooltip C!"/>
 		</radio>
 	</radio_group>
 
 	<text text="Tab menu buttons and their contents can also have tooltips" use_def="sans10" width="220" align="center" x="mouse_over.right+40" y="mouse_over.y"/>
 	
-	<definition id="tab_tt">
+	<definition name="tab_tt">
 		<anchor y="top" y-flush="bottom" x="center" x-flush="center"/>
 	</definition>
 	
-	<definition id="tab_tt_right">
+	<definition name="tab_tt_right">
 		<anchor y="center" y-flush="center" x="right" x-flush="left"/>
 	</definition>
 	
-	<tab_menu x="355" y="160" use_def="tab_menu_1" width="200" height="200">
-		<tab id="tab_1" label="Tab 1">
+	<tab_menu name="tab_menu" x="355" y="160" use_def="tab_menu_1" width="200" height="200">
+		<tab name="tab_1" label="Tab 1">
 			<tooltip use_def="tab_tt">
 				<title text="Tooltip 1"/>
 				<body text="This tooltip uses a definition and a vertical anchor point"/>
 			</tooltip>
 		</tab>
-		<tab id="tab_2" label="Tab 2">
+		<tab name="tab_2" label="Tab 2">
 			<tooltip use_def="tab_tt" y="-10">
 				<title text="Tooltip 2"/>
 				<body text="Same here, but with a vertical offset"/>
 			</tooltip>
 		</tab>
-		<tab id="tab_3" label="Tab 3">
+		<tab name="tab_3" label="Tab 3">
 			<tooltip use_def="tab_tt" x="16">
 				<title text="Tooltip 3"/>
 				<body text="Same here, but with a horizontal offset"/>
 			</tooltip>
 		</tab>
-		<tab id="tab_4" label="Tab 4">
+		<tab name="tab_4" label="Tab 4">
 			<tooltip use_def="tab_tt_right">
 				<title text="Tooltip 4"/>
 				<body text="This one uses a different horizontal anchor point" width="140"/>
 			</tooltip>
 		</tab>
-		<group id="tab_1">
+		<group name="tab_1">
 			<radio_group x="10" y="10" use_def="radio_1">
 				<param type="string" value="dr_seuss2"/>
-				<radio id="a" label="A">
+				<radio name="a" label="A">
 					<tooltip text="Tooltip A"/>
 				</radio>
-				<radio id="b" label="B">
+				<radio name="b" label="B">
 					<tooltip text="Tooltip B"/>
 				</radio>
-				<radio id="c" label="C">
+				<radio name="c" label="C">
 					<tooltip text="Tooltip C"/>
 				</radio>
-				<radio id="d" label="D">
+				<radio name="d" label="D">
 					<tooltip text="Tooltip D"/>
 				</radio>
 			</radio_group>
 		</group>
-		<group id="tab_2">
+		<group name="tab_2">
 			<checkbox x="10" y="10" use_def="check_small" label="1">
 				<tooltip text="Tooltip 1"/>
 			</checkbox>
@@ -199,27 +180,27 @@
 				<tooltip text="Tooltip 2"/>
 			</checkbox>
 		</group>
-		<group id="tab_3">
+		<group name="tab_3">
 		</group>
-		<group id="tab_4">
+		<group name="tab_4">
 		</group>
 	</tab_menu>
 	
-	<button id="corner_nw" label="NW" width="60" height="60">
+	<button name="corner_nw" label="NW" width="60" height="60">
 		<anchor x="left" x-flush="left" y="top" y-flush="top"/>
 		<tooltip>
 			<title text="North-West"/>
 			<body text="This tooltip normally appears to the left, but that would make it appear off-screen, so it automatically flips over here"/>
 		</tooltip>
 	</button>
-	<button id="corner_ne" label="NE" width="60" height="60">
+	<button name="corner_ne" label="NE" width="60" height="60">
 		<anchor x="right" x-flush="right" y="top" y-flush="top"/>
 		<tooltip>
 			<title text="North-East"/>
 			<body text="This tooltip normally appears to the left, and doing so it appears on-screen, so nothing about it is changed"/>
 		</tooltip>
 	</button>
-	<button id="corner_sw" label="SW" width="60" height="60">
+	<button name="corner_sw" label="SW" width="60" height="60">
 		<anchor x="left" x-flush="left" y="bottom" y-flush="bottom"/>
 		<tooltip>
 			<title text="South-West"/>
@@ -227,7 +208,7 @@
 			<anchor x="left" x-flush="left" y="bottom" y-flush="top"/>
 		</tooltip>
 	</button>
-	<button id="corner_se" label="SE" width="60" height="60">
+	<button name="corner_se" label="SE" width="60" height="60">
 		<anchor x="right" x-flush="right" y="bottom" y-flush="bottom"/>
 		<tooltip>
 			<title text="South-East"/>
@@ -236,4 +217,27 @@
 		</tooltip>
 	</button>
 	
+	<button name="defaults" label="Custom default style" width="150" height="50" x="50">
+		<tooltip text="Clicking this will reload this screen with a user-defined default style for tooltips.">
+			<anchor x="center" x-flush="center" y="top" y-flush="bottom"/>
+		</tooltip>
+		<anchor x="tab_menu.right" x-flush="left" y="tab_menu.top" y-flush="top"/>
+		<param type="string" value="defaults"/>
+	</button>
+	
+	<button name="no_defaults" label="Standard default style" width="150" height="50" x="50" y="10">
+		<tooltip text="Clicking this will restore the system standard default style for tooltips.">
+			<anchor x="center" x-flush="center" y="bottom" y-flush="top"/>
+		</tooltip>
+		<anchor x="tab_menu.right" x-flush="left" y="defaults.bottom" y-flush="top"/>
+		<param type="string" value="no_defaults"/>
+	</button>
+	
+	<button name="hand_code" label="Create with code example" width="150" height="50" x="50">
+		<tooltip text="Clicking this will load a similar screen that was created with code, not XML.">
+			<anchor x="left" x-flush="right" y="center" y-flush="center"/>
+		</tooltip>
+		<anchor x="tab_menu.right" x-flush="left" y="tab_menu.bottom" y-flush="bottom"/>
+		<param type="string" value="hand_code"/>
+	</button>
 </data>
