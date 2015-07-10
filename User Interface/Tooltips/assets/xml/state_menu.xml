@@ -218,7 +218,7 @@
 	</button>
 	
 	<button name="defaults" label="Custom default style" width="150" height="50" x="50">
-		<tooltip text="Clicking this will reload this screen with a user-defined default style for tooltips.">
+		<tooltip text="Clicking this will reload this screen with a user-defined default style for tooltips and buttons.">
 			<anchor x="center" x-flush="center" y="top" y-flush="bottom"/>
 		</tooltip>
 		<anchor x="tab_menu.right" x-flush="left" y="tab_menu.top" y-flush="top"/>
