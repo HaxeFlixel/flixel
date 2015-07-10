@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<data>
+	
+	<definition id="sans10" font="vera" size="10" style="bold" color="0xffffff" outline="0x000000" align="left"/>
+	<definition id="sans10c" font="vera" size="10" style="bold" color="0xffffff" outline="0x000000" align="center"/>
+	<definition id="sans12" font="vera" size="12" style="bold" color="0xffffff" outline="0x000000" align="left"/>
+	<definition id="sans12c" font="vera" size="12" style="bold" color="0xffffff" outline="0x000000" align="center"/>
+	<definition id="sans16" font="vera" size="16" style="bold" color="0xffffff" outline="0x000000" align="left"/>
+	<definition id="sans16c" font="vera" size="16" style="bold" color="0xffffff" outline="0x000000" align="center"/>
+	
+	<definition id="text_button" width="64" height="32">
+		<graphic blank="true"/>
+		<text use_def="sans16c" color="0xffffff">
+			<color id="up" value="0xffffff"/>
+			<color id="over" value="0xffff00"/>
+			<color id="down" value="0xffff00"/>
+		</text>
+	</definition>
+	
+	<definition id="text_button_wide" width="196" height="32">
+		<graphic blank="true"/>
+		<text use_def="sans16c" color="0xffffff">
+			<color id="over" value="0xffff00"/>
+		</text>
+	</definition>
+	
+</data>

@@ -1,0 +1,5 @@
+/flixel/
+bin/
+psds/
+*.psd
+export/*
