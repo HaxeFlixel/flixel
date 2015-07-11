@@ -3,6 +3,7 @@ package;
 import flixel.addons.ui.FlxUIDropDownMenu;
 import flixel.addons.ui.FlxUINumericStepper;
 import flixel.addons.ui.FlxUIRadioGroup;
+import flixel.addons.ui.FlxUIText;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
@@ -16,6 +17,8 @@ using flixel.util.FlxArrayUtil;
 class PlayState extends FlxState
 {
 	var modelDropDown:FlxUIDropDownMenu;
+	var attachmentDropDown:FlxUIDropDownMenu;
+	var attachmentLabel:FlxUIText;
 	var deadZoneStepper:FlxUINumericStepper;
 	var connectedGamepads:FlxUIRadioGroup;
 	var disconnectedOverlay:FlxTypedGroup<FlxSprite>;
@@ -27,6 +30,21 @@ class PlayState extends FlxState
 		
 		add(new Gamepad());
 		
+		add(attachmentLabel = new FlxUIText(525, 290, 100, "Attachment:"));
+		attachmentLabel.color = FlxColor.BLACK;
+		
+		add(attachmentDropDown = new FlxUIDropDownMenu(525, 305,
+			FlxUIDropDownMenu.makeStrIdLabelArray(FlxGamepadModelAttachment.getConstructors()),
+			function (attachment)
+			{
+				var gamepad = FlxG.gamepads.lastActive;
+				if (gamepad != null)
+					gamepad.attachment = FlxGamepadModelAttachment.createByName(attachment);
+				updateConnectedGamepads(true);
+			}));
+		attachmentDropDown.selectedId = "None";
+		showAttachment(false);
+		
 		add(modelDropDown = new FlxUIDropDownMenu(210, 335,
 			FlxUIDropDownMenu.makeStrIdLabelArray(FlxGamepadModel.getConstructors()),
 			function (model)
@@ -35,6 +53,7 @@ class PlayState extends FlxState
 				if (gamepad != null)
 					gamepad.model = FlxGamepadModel.createByName(model);
 				updateConnectedGamepads(true);
+				showAttachment(gamepad.model == FlxGamepadModel.WiiRemote);
 			}));
 		
 		var label = new FlxText(209, 365, 0, "Deadzone: ");
@@ -57,6 +76,11 @@ class PlayState extends FlxState
 		add(disconnectedOverlay);
 	}
 	
+	private function showAttachment(b:Bool):Void
+	{
+		attachmentLabel.visible = attachmentDropDown.visible = attachmentDropDown.active = b;
+	}
+	
 	override public function update(elapsed:Float)
 	{
 		super.update(elapsed);
@@ -71,6 +95,10 @@ class PlayState extends FlxState
 		
 		setEnabled(true);
 		modelDropDown.selectedLabel = gamepad.model.getName();
+		if (gamepad.model == FlxGamepadModel.WiiRemote)
+		{
+			showAttachment(true);
+		}
 		gamepad.deadZone = deadZoneStepper.value;
 		connectedGamepads.selectedIndex = getGamepadIndex(gamepad);
 	}

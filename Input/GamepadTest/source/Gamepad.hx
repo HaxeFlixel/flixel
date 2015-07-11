@@ -40,7 +40,8 @@ class Gamepad extends FlxTypedGroup<FlxSprite>
 	var rightShoulder:FlxSprite;
 	var leftTrigger:FlxSprite;
 	var rightTrigger:FlxSprite;
-	var gamepad:FlxGamepad;
+	
+	public var gamepad:FlxGamepad;
 	
 	public function new() 
 	{
