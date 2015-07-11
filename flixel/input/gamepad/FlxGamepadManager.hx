@@ -427,6 +427,7 @@ class FlxGamepadManager implements IFlxInputManager
 	
 	private function getModelFromFlashDeviceName(str:String):FlxGamepadModel
 	{
+		trace("name = (" + str + ")");
 		str = str.toLowerCase();
 		var strip = ["-", "_"];
 		for (s in strip)
@@ -464,6 +465,19 @@ class FlxGamepadManager implements IFlxInputManager
 	#end
 	
 	#if FLX_JOYSTICK_API
+	private function getModelFromJoystick(f:Float):FlxGamepadModel
+	{
+		trace("f = " + f);
+		return switch (Math.round(f))
+		{
+			case 1: PS3;
+			case 2: PS4;
+			case 3: OUYA;
+			case 4: WiiRemote;
+			default: XBox360;
+		}
+	}
+	
 	private function handleButtonDown(FlashEvent:JoystickEvent):Void
 	{
 		var gamepad:FlxGamepad = createByID(FlashEvent.device);
@@ -472,17 +486,6 @@ class FlxGamepadManager implements IFlxInputManager
 		if (button != null) 
 		{
 			button.press();
-		}
-	}
-	
-	private function getModelFromJoystick(f:Float):FlxGamepadModel
-	{
-		return switch (Math.round(f))
-		{
-			case 1: PS3;
-			case 2: PS4;
-			case 3: OUYA;
-			default: XBox360;
 		}
 	}
 	
@@ -500,16 +503,80 @@ class FlxGamepadManager implements IFlxInputManager
 	private function handleAxisMove(FlashEvent:JoystickEvent):Void
 	{
 		var gamepad:FlxGamepad = createByID(FlashEvent.device);
-		gamepad.axis = FlashEvent.axis;
-		for (i in 0...gamepad.axis.length)
+		
+		var oldAxis = gamepad.axis;
+		var newAxis = FlashEvent.axis;
+		
+		var anyAbove = false;
+		
+		for (i in 0...newAxis.length)
 		{
+			if (Math.abs(newAxis[i]) > 0.5)
+			{
+				anyAbove = true;
+			}
 			if (!gamepad.isAxisForAnalogStick(i))
 			{
 				// in legacy this returns a (-1,1) range, but in flash/next it
 				// returns (0,1) so we normalize to (0,1) for legacy target only
-				gamepad.axis[i] = (gamepad.axis[i] + 1) / 2;
+				newAxis[i] = (newAxis[i] + 1) / 2;
+			}
+			else
+			{
+				//check to see if we should send digital inputs as well as analog
+				var stick:FlxGamepadAnalogStick = gamepad.getAnalogStickByAxis(i);
+				if (stick.mode == SendOnlyDigital || stick.mode == SendBoth)
+				{
+					var newVal = newAxis[i];
+					var oldVal = oldAxis[i];
+					
+					var neg = stick.digitalThreshold * -1;
+					var pos = stick.digitalThreshold;
+					var digitalButton = -1;
+					
+					//pressed/released for digital LEFT/UP
+					if(newVal < neg && oldVal >= neg)
+					{
+						     if (i == stick.x) digitalButton = stick.rawLeft;
+						else if (i == stick.y) digitalButton = stick.rawUp;
+						handleButtonDown(new JoystickEvent(JoystickEvent.BUTTON_DOWN, FlashEvent.bubbles, FlashEvent.cancelable, FlashEvent.device, digitalButton));
+					}
+					else if (newVal >= neg && oldVal < neg)
+					{
+						     if (i == stick.x) digitalButton = stick.rawLeft;
+						else if (i == stick.y) digitalButton = stick.rawUp;
+						handleButtonUp(new JoystickEvent(JoystickEvent.BUTTON_UP, FlashEvent.bubbles, FlashEvent.cancelable, FlashEvent.device, digitalButton));
+					}
+					
+					//pressed/released for digital RIGHT/DOWN
+					if(newVal > pos && oldVal <= pos)
+					{
+						     if (i == stick.x) digitalButton = stick.rawRight;
+						else if (i == stick.y) digitalButton = stick.rawDown;
+						handleButtonDown(new JoystickEvent(JoystickEvent.BUTTON_DOWN, FlashEvent.bubbles, FlashEvent.cancelable, FlashEvent.device, digitalButton));
+					}
+					else if (newVal <= pos && oldVal > pos)
+					{
+						     if (i == stick.x) digitalButton = stick.rawRight;
+						else if (i == stick.y) digitalButton = stick.rawDown;
+						handleButtonUp(new JoystickEvent(JoystickEvent.BUTTON_UP, FlashEvent.bubbles, FlashEvent.cancelable, FlashEvent.device, digitalButton));
+					}
+					
+					if (stick.mode == SendOnlyDigital)
+					{
+						//still haven't figured out how to suppress the analog inputs properly. Oh well.
+					}
+				}
 			}
 		}
+		
+		gamepad.axis = newAxis;
+		
+		if (anyAbove)
+		{
+			//trace("axis = " + newAxis);
+		}
+		
 		gamepad.axisActive = true;
 	}
 	

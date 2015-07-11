@@ -8,6 +8,7 @@ import flixel.math.FlxPoint;
 import flixel.math.FlxVector;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxStringUtil;
+import flixel.util.FlxTimer;
 
 #if FLX_GAMEINPUT_API
 import flash.ui.GameInputControl;
@@ -31,6 +32,12 @@ class FlxGamepad implements IFlxDestroyable
 	 * Defaults to detectedModel, but can be changed manually.
 	 */
 	public var model(default, set):FlxGamepadModel;
+	
+	/**
+	 * For gamepads that can have things plugged into them (the Wii Remote, basically).
+	 * Making the user set this helps
+	 */
+	public var attachment(default, set):FlxGamepadModelAttachment;
 	
 	/**
 	 * The gamepad model this gamepad has been identified as.
@@ -86,7 +93,7 @@ class FlxGamepad implements IFlxDestroyable
 	private var _isChrome:Bool = false;
 	#end
 	
-	public function new(ID:Int, Manager:FlxGamepadManager, ?Model:FlxGamepadModel) 
+	public function new(ID:Int, Manager:FlxGamepadManager, ?Model:FlxGamepadModel, ?Attachment:FlxGamepadModelAttachment) 
 	{
 		id = ID;
 		
@@ -94,8 +101,11 @@ class FlxGamepad implements IFlxDestroyable
 		
 		if (Model == null)
 			Model = XBox360;
+			
+		if (Attachment == null)
+			Attachment = None;
 		
-		buttonIndex = new FlxGamepadMapping(model);
+		buttonIndex = new FlxGamepadMapping(model, attachment);
 		model = Model;
 		detectedModel = Model;
 		
@@ -107,6 +117,39 @@ class FlxGamepad implements IFlxDestroyable
 		justPressed = new FlxGamepadButtonList(FlxInputState.JUST_PRESSED, this);
 		justReleased = new FlxGamepadButtonList(FlxInputState.JUST_RELEASED, this);
 		analog = new FlxGamepadAnalogList(this);
+		
+		//new FlxTimer().start(1 / 15, traceButtons, 0);
+	}
+	
+	private function traceAxes(f:FlxTimer):Void
+	{
+		if (axis == null) return;
+		if (FlxG.gamepads.lastActive != this) return;
+		var str:String = "";
+		for (i in 0...axis.length)
+		{
+			var num = Std.int(axis[i] * 1000) / 1000;
+			str += num;
+			str += " | ";
+		}
+		trace(str);
+	}
+	
+	private function traceButtons(f:FlxTimer):Void
+	{
+		if (buttons == null) return;
+		if (FlxG.gamepads.lastActive != this) return;
+		var str:String = "";
+		for (i in 0...buttons.length)
+		{
+			if (buttons[i] != null)
+			{
+				str += buttons[i].ID;
+				str += ":" + (buttons[i].pressed ? "X":"_");
+				str += ",";
+			}
+		}
+		trace(str);
 	}
 	
 	public function set_model(Model:FlxGamepadModel):FlxGamepadModel
@@ -118,6 +161,19 @@ class FlxGamepad implements IFlxDestroyable
 		rightStick = getRawAnalogStick(FlxGamepadInputID.RIGHT_ANALOG_STICK);
 		#end
 		return model;
+	}
+	
+	public function set_attachment(Attachment:FlxGamepadModelAttachment):FlxGamepadModelAttachment
+	{
+		attachment = Attachment;
+		buttonIndex.attachment = Attachment;
+		#if FLX_JOYSTICK_API
+		leftStick = getRawAnalogStick(FlxGamepadInputID.LEFT_ANALOG_STICK);
+		rightStick = getRawAnalogStick(FlxGamepadInputID.RIGHT_ANALOG_STICK);
+		trace("leftStick = " + leftStick);
+		trace("rightStick = " + rightStick);
+		#end
+		return attachment;
 	}
 	
 	/**
@@ -184,6 +240,7 @@ class FlxGamepad implements IFlxDestroyable
 				button.press();
 			}
 		}
+		
 		#elseif FLX_JOYSTICK_API
 		for (i in 0...axis.length)
 		{
@@ -489,9 +546,23 @@ class FlxGamepad implements IFlxDestroyable
 	 * use this only for things like FlxGamepadButtonID.LEFT_TRIGGER, 
 	 * use getXAxis() / getYAxis() for analog sticks!
 	 */
-	public inline function getAxis(AxisButtonID:FlxGamepadInputID):Float
+	public function getAxis(AxisButtonID:FlxGamepadInputID):Float
 	{
-		return getAxisRaw(getRawID(AxisButtonID));
+		var fakeAxisRawID:Int = checkForFakeAxis(AxisButtonID);
+		
+		if (fakeAxisRawID == -1)
+		{
+			//return the regular axis value
+			return getAxisRaw(getRawID(AxisButtonID));
+		}
+		else
+		{
+			//if analog isn't supported for this input, return the correct digital button input instead
+			var btn = getButton(fakeAxisRawID);
+			if (btn == null) return 0;
+			if (btn.pressed) return 1;
+		}
+		return 0;
 	}
 	
 	/**
@@ -518,12 +589,24 @@ class FlxGamepad implements IFlxDestroyable
 		return buttonIndex.axisIndexToRawID(AxisIndex);
 	}
 	
+	public inline function checkForFakeAxis(ID:FlxGamepadInputID):Int
+	{
+		return buttonIndex.checkForFakeAxis(ID);
+	}
+	
 	public inline function isAxisForAnalogStick(AxisIndex:Int):Bool
 	{
 		return AxisIndex == leftStick.x  ||
 		       AxisIndex == leftStick.y  ||
 		       AxisIndex == rightStick.x ||
 		       AxisIndex == rightStick.y;
+	}
+	
+	public inline function getAnalogStickByAxis(AxisIndex:Int):FlxGamepadAnalogStick
+	{
+		if (AxisIndex == leftStick.x  || AxisIndex == leftStick.y)  return leftStick;
+		if (AxisIndex == rightStick.x || AxisIndex == rightStick.y) return rightStick;
+		return null;
 	}
 	#end
 	
@@ -719,11 +802,53 @@ class FlxGamepadAnalogStick
 	public var x(default, null):Int;
 	public var y(default, null):Int;
 	
-	public function new(x:Int, y:Int)
+	//these values let the analog stick to send digital inputs to, say, the dpad
+	public var rawUp(default, null):Int = -1;
+	public var rawDown(default, null):Int = -1;
+	public var rawLeft(default, null):Int = -1;
+	public var rawRight(default, null):Int = -1;
+	
+	//the value the dpad must be above before digital inputs are sent
+	public var digitalThreshold(default, null):Float = 0.5;
+	
+	//when analog inputs are received, how to process them digitally
+	public var mode(default, null):AnalogToDigitalMode = SendOnlyAnalog;
+	
+	public function new(x:Int, y:Int, ?settings:FlxGamepadAnalogStickSettings)
 	{
 		this.x = x;
 		this.y = y;
+		if (settings != null)
+		{
+			mode     = (settings.mode  != null ? settings.mode  : SendOnlyAnalog);
+			rawUp    = (settings.up    != null ? settings.up    : -1);
+			rawDown  = (settings.down  != null ? settings.down  : -1);
+			rawLeft  = (settings.left  != null ? settings.left  : -1);
+			rawRight = (settings.right != null ? settings.right : -1);
+			digitalThreshold = (settings.threshold != null ? settings.threshold : -1);
+		}
 	}
+	
+	public function toString():String
+	{
+		return("stick(" + x + "," + y + ",(" + rawUp + "," + rawDown + "," + rawLeft + "," + rawRight + ") @" + digitalThreshold + ":" + mode+")");
+	}
+}
+
+typedef FlxGamepadAnalogStickSettings = {
+	@:optional var up:Int;
+	@:optional var down:Int;
+	@:optional var left:Int;
+	@:optional var right:Int;
+	@:optional var threshold:Float;
+	@:optional var mode:AnalogToDigitalMode;
+}
+
+enum AnalogToDigitalMode
+{
+	SendBoth;
+	SendOnlyDigital;
+	SendOnlyAnalog;
 }
 
 enum FlxGamepadModel
@@ -734,4 +859,12 @@ enum FlxGamepadModel
 	PS4;
 	XBox360;
 	XInput;
+	WiiRemote;
+}
+
+enum FlxGamepadModelAttachment
+{
+	WiiNunchuk;
+	WiiClassicController;
+	None;
 }

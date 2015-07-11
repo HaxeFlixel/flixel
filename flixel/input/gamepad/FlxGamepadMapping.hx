@@ -2,11 +2,13 @@ package flixel.input.gamepad;
 
 import flixel.input.gamepad.FlxGamepad.FlxGamepadAnalogStick;
 import flixel.input.gamepad.FlxGamepad.FlxGamepadModel;
+import flixel.input.gamepad.FlxGamepad.FlxGamepadModelAttachment;
 import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.input.gamepad.id.LogitechID;
 import flixel.input.gamepad.id.OUYAID;
 import flixel.input.gamepad.id.PS3ID;
 import flixel.input.gamepad.id.PS4ID;
+import flixel.input.gamepad.id.WiiRemoteID;
 import flixel.input.gamepad.id.XBox360ID;
 import flixel.input.gamepad.id.XInputID;
 
@@ -19,7 +21,10 @@ class FlxGamepadMapping
 	@:allow(flixel.input.gamepad.FlxGamepad)
 	public var model(default, null):FlxGamepadModel;
 	
-	public function new(Model:FlxGamepadModel) 
+	@:allow(flixel.input.gamepad.FlxGamepad)
+	public var attachment(default, null):FlxGamepadModelAttachment = None;
+	
+	public function new(Model:FlxGamepadModel, attachment:FlxGamepadModelAttachment=null) 
 	{
 		model = Model;
 	}
@@ -39,6 +44,13 @@ class FlxGamepadMapping
 			case PS4: getRawPS4(ID);
 			case XBox360: getRawXBox360(ID);
 			case XInput: getRawXInput(ID);
+			case WiiRemote: 
+				switch(attachment)
+				{
+					case WiiClassicController: getRawWiiClassic(ID);
+					case WiiNunchuk: getRawWiiNunchuk(ID);
+					case None: getRawWiiRemote(ID);
+				}
 			default: -1;
 		}
 	}
@@ -58,6 +70,13 @@ class FlxGamepadMapping
 			case PS4: getIDPS4(RawID);
 			case XBox360: getIDXBox360(RawID);
 			case XInput: getIDXInput(RawID);
+			case WiiRemote: 
+				switch( attachment)
+				{
+					case WiiClassicController: getIDWiiClassicController(RawID);
+					case WiiNunchuk: getIDWiiNunchuk(RawID);
+					case None: getIDWiiRemote(RawID);
+				}
 			default: NONE;
 		}
 	}
@@ -79,6 +98,12 @@ class FlxGamepadMapping
 				case PS4: PS4ID.LEFT_ANALOG_STICK;
 				case XBox360: XBox360ID.LEFT_ANALOG_STICK;
 				case XInput: XInputID.LEFT_ANALOG_STICK;
+				case WiiRemote:
+					switch(attachment)
+					{
+						case WiiNunchuk, WiiClassicController: WiiRemoteID.LEFT_ANALOG_STICK;
+						case None: WiiRemoteID.REMOTE_DPAD;
+					}
 				default: null;
 			}
 		}
@@ -92,6 +117,7 @@ class FlxGamepadMapping
 				case PS4: PS4ID.RIGHT_ANALOG_STICK;
 				case XBox360: XBox360ID.RIGHT_ANALOG_STICK;
 				case XInput: XInputID.RIGHT_ANALOG_STICK;
+				case WiiRemote: WiiRemoteID.RIGHT_ANALOG_STICK;
 				default: null;
 			}
 		}
@@ -112,9 +138,20 @@ class FlxGamepadMapping
 			case PS4: PS4ID.axisIndexToRawID(AxisID);
 			case XBox360: XBox360ID.axisIndexToRawID(AxisID);
 			case XInput: XInputID.axisIndexToRawID(AxisID);
+			case WiiRemote: WiiRemoteID.axisIndexToRawID(AxisID, attachment);
 			default: -1;
 		}
 	}
+	
+	public function checkForFakeAxis(ID:FlxGamepadInputID):Int
+	{
+		return switch (model)
+		{
+			case WiiRemote: WiiRemoteID.checkForFakeAxis(ID, attachment);
+			default: -1;
+		}
+	}
+	
 	#end
 	
 	public function getRawOUYA(ID:FlxGamepadInputID):Int
@@ -285,6 +322,62 @@ class FlxGamepadMapping
 		}
 	}
 	
+	public function getRawWiiClassic(ID:FlxGamepadInputID):Int
+	{
+		return switch (ID)
+		{
+			case A: WiiRemoteID.CLASSIC_B;
+			case B: WiiRemoteID.CLASSIC_A;
+			case X: WiiRemoteID.CLASSIC_Y;
+			case Y: WiiRemoteID.CLASSIC_X;
+			case DPAD_UP: WiiRemoteID.CLASSIC_DPAD_UP;
+			case DPAD_DOWN: WiiRemoteID.CLASSIC_DPAD_DOWN;
+			case DPAD_LEFT: WiiRemoteID.CLASSIC_DPAD_LEFT;
+			case DPAD_RIGHT: WiiRemoteID.CLASSIC_DPAD_RIGHT;
+			case BACK: WiiRemoteID.CLASSIC_SELECT;
+			case GUIDE: WiiRemoteID.HOME;
+			case START: WiiRemoteID.CLASSIC_START;
+			case LEFT_SHOULDER: WiiRemoteID.CLASSIC_L;
+			case RIGHT_SHOULDER: WiiRemoteID.CLASSIC_R;
+			case LEFT_TRIGGER: WiiRemoteID.CLASSIC_ZL;
+			case RIGHT_TRIGGER: WiiRemoteID.CLASSIC_ZR;
+			default: getRawWiiRemote(ID);
+		}
+	}
+	
+	public function getRawWiiNunchuk(ID:FlxGamepadInputID):Int
+	{
+		return switch (ID)
+		{
+			case LEFT_SHOULDER: WiiRemoteID.NUNCHUK_C;
+			case LEFT_TRIGGER: WiiRemoteID.NUNCHUK_Z;
+			case DPAD_UP: WiiRemoteID.CLASSIC_DPAD_UP;
+			case DPAD_DOWN: WiiRemoteID.CLASSIC_DPAD_DOWN;
+			case DPAD_LEFT: WiiRemoteID.CLASSIC_DPAD_LEFT;
+			case DPAD_RIGHT: WiiRemoteID.CLASSIC_DPAD_RIGHT;
+			default: getRawWiiRemote(ID);
+		}
+	}
+	
+	public function getRawWiiRemote(ID:FlxGamepadInputID):Int
+	{
+		return switch (ID)
+		{
+			case A: WiiRemoteID.REMOTE_A;
+			case B: WiiRemoteID.REMOTE_B;
+			case X: WiiRemoteID.REMOTE_ONE;
+			case Y: WiiRemoteID.REMOTE_TWO;
+			case DPAD_UP: WiiRemoteID.REMOTE_DPAD_UP;
+			case DPAD_DOWN: WiiRemoteID.REMOTE_DPAD_DOWN;
+			case DPAD_LEFT: WiiRemoteID.REMOTE_DPAD_LEFT;
+			case DPAD_RIGHT: WiiRemoteID.REMOTE_DPAD_RIGHT;
+			case BACK: WiiRemoteID.REMOTE_MINUS;
+			case GUIDE: WiiRemoteID.HOME;
+			case START: WiiRemoteID.REMOTE_PLUS;
+			default: -1;
+		}
+	}
+	
 	public function getIDOUYA(rawID:Int):FlxGamepadInputID
 	{
 		return switch (rawID)
@@ -408,10 +501,10 @@ class FlxGamepadMapping
 	{
 		return switch (rawID)
 		{
-			case XInputID.A: A;
-			case XInputID.B: B;
-			case XInputID.X: X;
-			case XInputID.Y: Y;
+			case XInputID.A: B;
+			case XInputID.B: A;
+			case XInputID.X: Y;
+			case XInputID.Y: X;
 			case XInputID.BACK: BACK;
 			case XInputID.GUIDE: GUIDE;
 			case XInputID.START: START;
@@ -425,6 +518,62 @@ class FlxGamepadMapping
 			case XInputID.DPAD_DOWN: DPAD_DOWN;
 			case XInputID.DPAD_LEFT: DPAD_LEFT;
 			case XInputID.DPAD_RIGHT: DPAD_RIGHT;
+			default: NONE;
+		}
+	}
+	
+	public function getIDWiiClassicController(rawID:Int):FlxGamepadInputID
+	{
+		return switch (rawID)
+		{
+			case WiiRemoteID.CLASSIC_A: B;
+			case WiiRemoteID.CLASSIC_B: A;
+			case WiiRemoteID.CLASSIC_X: Y;
+			case WiiRemoteID.CLASSIC_Y: X;
+			case WiiRemoteID.CLASSIC_SELECT: BACK;
+			case WiiRemoteID.HOME: GUIDE;
+			case WiiRemoteID.CLASSIC_START: START;
+			case WiiRemoteID.CLASSIC_L: LEFT_SHOULDER;
+			case WiiRemoteID.CLASSIC_R: RIGHT_SHOULDER;
+			case WiiRemoteID.CLASSIC_ZL: LEFT_TRIGGER;
+			case WiiRemoteID.CLASSIC_ZR: RIGHT_TRIGGER;
+			case WiiRemoteID.CLASSIC_DPAD_UP: DPAD_UP;
+			case WiiRemoteID.CLASSIC_DPAD_DOWN: DPAD_DOWN;
+			case WiiRemoteID.CLASSIC_DPAD_LEFT: DPAD_LEFT;
+			case WiiRemoteID.CLASSIC_DPAD_RIGHT: DPAD_RIGHT;
+			default: getIDWiiRemote(rawID);
+		}
+	}
+	
+	public function getIDWiiNunchuk(rawID:Int):FlxGamepadInputID
+	{
+		return switch (rawID)
+		{
+			case WiiRemoteID.NUNCHUK_C: LEFT_SHOULDER;
+			case WiiRemoteID.NUNCHUK_Z: LEFT_TRIGGER;
+			case WiiRemoteID.CLASSIC_DPAD_UP: DPAD_UP;
+			case WiiRemoteID.CLASSIC_DPAD_DOWN: DPAD_DOWN;
+			case WiiRemoteID.CLASSIC_DPAD_LEFT: DPAD_LEFT;
+			case WiiRemoteID.CLASSIC_DPAD_RIGHT: DPAD_RIGHT;
+			default: getIDWiiRemote(rawID);
+		}
+	}
+	
+	public function getIDWiiRemote(rawID:Int):FlxGamepadInputID
+	{
+		return switch (rawID)
+		{
+			case WiiRemoteID.REMOTE_A: A;
+			case WiiRemoteID.REMOTE_B: B;
+			case WiiRemoteID.REMOTE_ONE: X;
+			case WiiRemoteID.REMOTE_TWO: Y;
+			case WiiRemoteID.REMOTE_MINUS: BACK;
+			case WiiRemoteID.HOME: GUIDE;
+			case WiiRemoteID.REMOTE_PLUS: START;
+			case WiiRemoteID.REMOTE_DPAD_UP: DPAD_UP;
+			case WiiRemoteID.REMOTE_DPAD_DOWN: DPAD_DOWN;
+			case WiiRemoteID.REMOTE_DPAD_LEFT: DPAD_LEFT;
+			case WiiRemoteID.REMOTE_DPAD_RIGHT: DPAD_RIGHT;
 			default: NONE;
 		}
 	}
