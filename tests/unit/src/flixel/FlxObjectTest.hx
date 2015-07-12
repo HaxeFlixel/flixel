@@ -71,7 +71,65 @@ class FlxObjectTest extends FlxTest
 		object2.velocity.x = -2000;
 		
 		step(60);
-		Assert.isFalse(FlxG.overlap(object1, object2)); 
+		Assert.isFalse(FlxG.overlap(object1, object2));
+	}
+	
+	
+	@Test
+	function testUpdateTouchingFlags():Void
+	{
+		// Check update of HORIZONTAL touching flags
+		var object1 = new FlxObject(0, 0, 10, 10);
+		var object2 = new FlxObject(20, 2, 10, 6);
+		FlxG.state.add(object1);
+		FlxG.state.add(object2);
+		var nsteps:Int = 20;
+		var vel:Float = 20;
+		
+		object1.velocity.set(vel, 0);
+		var i:Int = 0;
+		while (i < nsteps)
+		{
+			step();
+			i++;
+		}
+		Assert.isTrue(FlxG.overlap(object1, object2, null, FlxObject.updateTouchingFlags));
+		Assert.areEqual(object1.touching, FlxObject.RIGHT);
+		Assert.areEqual(object2.touching, FlxObject.LEFT);
+		
+		// Check update of VERTICAL touching flags
+		object1.touching = FlxObject.NONE;
+		object2.touching = FlxObject.NONE;
+		object1.setPosition(0, 0);
+		object2.setPosition(2, 20);
+		object1.velocity.set(0, vel);
+		i = 0;
+		while (i < nsteps)
+		{
+			step();
+			i++;
+		}
+		trace(object1.y);
+		trace(object2.y);
+		Assert.isTrue(FlxG.overlap(object1, object2, null, FlxObject.updateTouchingFlags));
+		Assert.areEqual(object1.touching, FlxObject.DOWN);
+		Assert.areEqual(object2.touching, FlxObject.UP);
+		
+		// Check no update if objects do not overlap
+		object1.touching = FlxObject.NONE;
+		object2.touching = FlxObject.NONE;
+		object1.setPosition(0, 0);
+		object2.setPosition(2000, 20);
+		object1.velocity.set(0, vel);
+		i = 0;
+		while (i < nsteps)
+		{
+			step();
+			i++;
+		}
+		Assert.isFalse(FlxG.overlap(object1, object2, null, FlxObject.updateTouchingFlags));
+		Assert.areEqual(object1.touching, FlxObject.NONE);
+		Assert.areEqual(object2.touching, FlxObject.NONE);
 	}
 	
 	@Test
