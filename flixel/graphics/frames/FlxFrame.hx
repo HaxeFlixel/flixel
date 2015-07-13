@@ -599,11 +599,11 @@ class FlxFrame implements IFlxDestroyable
 	{
 		if (clone == null)
 		{
-			clone = new FlxFrame(parent, angle);
+			clone = new FlxFrame(parent.clone(), angle);
 		}
 		else
 		{
-			clone.parent = parent;
+			clone.parent = parent.clone();
 			clone.angle = angle;
 			clone.frame = FlxDestroyUtil.put(clone.frame);
 		}
