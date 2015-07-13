@@ -5,6 +5,9 @@ import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.gamepad.FlxGamepad;
 import flixel.math.FlxPoint;
+import flixel.text.FlxText;
+import flixel.ui.FlxBar;
+import flixel.util.FlxColor;
 
 class Gamepad extends FlxTypedGroup<FlxSprite>
 {
@@ -13,6 +16,7 @@ class Gamepad extends FlxTypedGroup<FlxSprite>
 	
 	static inline var ALPHA_OFF = 0.5;
 	static inline var ALPHA_ON = 1;
+	static inline var ALPHA_INVISIBLE = 0;
 	
 	static inline var LB_Y = 16;
 	static inline var RB_Y = 16;
@@ -32,6 +36,19 @@ class Gamepad extends FlxTypedGroup<FlxSprite>
 	var xButton:FlxSprite;
 	var yButton:FlxSprite;
 	
+	var extraButton0:FlxSprite;
+	var extraButton1:FlxSprite;
+	var extraButton2:FlxSprite;
+	var extraButton3:FlxSprite;
+	
+	var motionPitch:FlxBar;
+	var motionRoll:FlxBar;
+	var motionYaw:FlxBar;
+	
+	var labelPitch:FlxText;
+	var labelRoll:FlxText;
+	var labelYaw:FlxText;
+	
 	var backButton:FlxSprite;
 	var guideButton:FlxSprite;
 	var startButton:FlxSprite;
@@ -40,6 +57,8 @@ class Gamepad extends FlxTypedGroup<FlxSprite>
 	var rightShoulder:FlxSprite;
 	var leftTrigger:FlxSprite;
 	var rightTrigger:FlxSprite;
+	
+	var crosshairs:FlxSprite;
 	
 	public var gamepad:FlxGamepad;
 	
@@ -68,9 +87,24 @@ class Gamepad extends FlxTypedGroup<FlxSprite>
 		aButton = createSprite(395, 123, "A");
 		bButton = createSprite(433, 84, "B");
 		
+		extraButton0 = createSprite(357, 84+150, "Extra0");
+		extraButton1 = createSprite(395, 84+150, "Extra1");
+		extraButton2 = createSprite(433, 84+150, "Extra2");
+		extraButton3 = createSprite(471, 84 + 150, "Extra3");
+		
 		backButton = createSprite(199, 93, "Back");
 		guideButton = createSprite(235, 73, "Guide");
 		startButton = createSprite(306, 93, "Start");
+		
+		motionPitch =   createBar(534, 310); 
+		labelPitch  = createLabel(534, 310, "Pitch");
+		motionRoll  =   createBar(534, 330);
+		labelRoll   = createLabel(534, 330, "Roll");
+		motionYaw   =   createBar(534, 350);
+		labelYaw    = createLabel(534, 350, "Yaw");
+		
+		crosshairs = createSprite(0, 0, "crosshairs", 1);
+		crosshairs.visible = false;
 	}
 	
 	function createSprite(x:Float, y:Float, ?fileName:String, alpha:Float = -1):FlxSprite
@@ -84,6 +118,21 @@ class Gamepad extends FlxTypedGroup<FlxSprite>
 		sprite.alpha = alpha;
 		sprite.antialiasing = true;
 		return add(sprite);
+	}
+	
+	function createBar(x:Float, y:Float):FlxBar
+	{
+		var bar = new FlxBar(x, y, FlxBarFillDirection.LEFT_TO_RIGHT, 100, 14, null, "", 0, 100, true).createGradientBar([FlxColor.BLACK],[FlxColor.RED,FlxColor.BLUE],1,180,true,FlxColor.BLACK);
+		return cast add(bar);
+	}
+	
+	function createLabel(x:Float, y:Float, ?label:String):FlxText
+	{
+		var label = new FlxText(x, y, 0, label);
+		label.color = FlxColor.WHITE;
+		label.setBorderStyle(FlxTextBorderStyle.OUTLINE_FAST, FlxColor.BLACK, 1, 1);
+		add(label);
+		return label;
 	}
 	
 	override public function update(elapsed:Float):Void 
@@ -108,14 +157,24 @@ class Gamepad extends FlxTypedGroup<FlxSprite>
 		updateButton(xButton, pressed.X);
 		updateButton(yButton, pressed.Y);
 		
+		updateButtonInvisible(extraButton0, pressed.EXTRA_0);
+		updateButtonInvisible(extraButton1, pressed.EXTRA_1);
+		updateButtonInvisible(extraButton2, pressed.EXTRA_2);
+		updateButtonInvisible(extraButton3, pressed.EXTRA_3);
+		
 		updateButton(startButton, pressed.START);
 		updateButton(guideButton, pressed.GUIDE);
 		updateButton(backButton, pressed.BACK);
 		
 		updateShoulderButton(leftShoulder, pressed.LEFT_SHOULDER, LB_Y);
 		updateShoulderButton(rightShoulder, pressed.RIGHT_SHOULDER, RB_Y);
-		
 		updateDpad();
+		
+		var motion = gamepad.motion;
+		
+		updateBar(motionPitch, labelPitch, motion.available, motion.TILT_PITCH);
+		updateBar(motionRoll, labelRoll, motion.available, motion.TILT_ROLL);
+		updateBar(motionYaw, labelYaw, motion.available, motion.TILT_YAW);
 		
 		var value = gamepad.analog.value;
 		
@@ -129,11 +188,60 @@ class Gamepad extends FlxTypedGroup<FlxSprite>
 			updateButton(leftStick, pressed.LEFT_STICK_CLICK);
 		if (rightStick.alpha == ALPHA_OFF)
 			updateButton(rightStick, pressed.RIGHT_STICK_CLICK);
+		
+		var pointer = gamepad.pointer;
+		
+		updatePointer(crosshairs, pointer.available, pointer.X, pointer.Y, pointer.PRESSURE);
+	}
+	
+	function updatePointer(sprite:FlxSprite, available:Bool, x:Float, y:Float, pressure:Float)
+	{
+		if (!available)
+		{
+			sprite.visible = false;
+		}
+		else
+		{
+			sprite.visible = true;
+			sprite.x = FlxG.width * x;
+			sprite.y = FlxG.height * y;
+			sprite.x -= Std.int(sprite.width / 2);
+			sprite.y -= Std.int(sprite.height / 2);
+			
+			if (pressure > 0)
+			{
+				sprite.color = FlxColor.fromRGBFloat(pressure, 0, 0);
+			}
+			else
+			{
+				sprite.color = FlxColor.BLACK;
+			}
+		}
+	}
+	
+	function updateBar(bar:FlxBar, label:FlxText, available:Bool, value:Float)
+	{
+		if (!available)
+		{
+			bar.visible = false;
+			label.visible = false;
+		}
+		else
+		{
+			bar.visible = true;
+			label.visible = true;
+			bar.value = value * 100;
+		}
 	}
 	
 	function updateButton(button:FlxSprite, pressed:Bool)
 	{
 		button.alpha = pressed ? ALPHA_ON : ALPHA_OFF;
+	}
+	
+	function updateButtonInvisible(button:FlxSprite, pressed:Bool)
+	{
+		button.alpha = pressed ? ALPHA_ON : ALPHA_INVISIBLE;
 	}
 	
 	function updateShoulderButton(button:FlxSprite, pressed:Bool, pos:Int)

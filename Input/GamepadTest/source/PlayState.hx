@@ -10,6 +10,7 @@ import flixel.FlxState;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.gamepad.FlxGamepad;
 import flixel.input.gamepad.FlxGamepad.FlxGamepadModel;
+import flixel.math.FlxPoint;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 using flixel.util.FlxArrayUtil;
@@ -24,16 +25,18 @@ class PlayState extends FlxState
 	var disconnectedOverlay:FlxTypedGroup<FlxSprite>;
 	var gamepads:Array<FlxGamepad> = [];
 	
+	var modelDropDownLoc = new FlxPoint(210, 335);
+	
 	override public function create() 
 	{
 		FlxG.cameras.bgColor = FlxColor.WHITE;
 		
 		add(new Gamepad());
 		
-		add(attachmentLabel = new FlxUIText(525, 290, 100, "Attachment:"));
+		add(attachmentLabel = new FlxUIText(modelDropDownLoc.x+65, modelDropDownLoc.y-15, 100, "Attachment:"));
 		attachmentLabel.color = FlxColor.BLACK;
 		
-		add(attachmentDropDown = new FlxUIDropDownMenu(525, 305,
+		add(attachmentDropDown = new FlxUIDropDownMenu(modelDropDownLoc.x+65, modelDropDownLoc.y,
 			FlxUIDropDownMenu.makeStrIdLabelArray(FlxGamepadModelAttachment.getConstructors()),
 			function (attachment)
 			{
@@ -43,9 +46,8 @@ class PlayState extends FlxState
 				updateConnectedGamepads(true);
 			}));
 		attachmentDropDown.selectedId = "None";
-		showAttachment(false);
 		
-		add(modelDropDown = new FlxUIDropDownMenu(210, 335,
+		add(modelDropDown = new FlxUIDropDownMenu(modelDropDownLoc.x, modelDropDownLoc.y,
 			FlxUIDropDownMenu.makeStrIdLabelArray(FlxGamepadModel.getConstructors()),
 			function (model)
 			{
@@ -56,13 +58,15 @@ class PlayState extends FlxState
 				showAttachment(gamepad.model == FlxGamepadModel.WiiRemote);
 			}));
 		
+		showAttachment(false);
+		
 		var label = new FlxText(209, 365, 0, "Deadzone: ");
 		label.setFormat(null, 8, FlxColor.BLACK);
 		add(label);
 		add(deadZoneStepper = new FlxUINumericStepper(272, 365, 0.05, 0.15, 0,
 			1, 2, FlxUINumericStepper.STACK_HORIZONTAL));
-			
-		add(connectedGamepads = new FlxUIRadioGroup(550, 10));
+		
+		add(connectedGamepads = new FlxUIRadioGroup(500, 10, null, null, null, 25, 125, 25, 125));
 		
 		disconnectedOverlay = new FlxTypedGroup();
 		var background = new FlxSprite();
@@ -79,6 +83,15 @@ class PlayState extends FlxState
 	private function showAttachment(b:Bool):Void
 	{
 		attachmentLabel.visible = attachmentDropDown.visible = attachmentDropDown.active = b;
+		
+		if (b)
+		{
+			modelDropDown.x = modelDropDownLoc.x - 65;
+		}
+		else
+		{
+			modelDropDown.x = modelDropDownLoc.x;
+		}
 	}
 	
 	override public function update(elapsed:Float)
@@ -95,7 +108,7 @@ class PlayState extends FlxState
 		
 		setEnabled(true);
 		modelDropDown.selectedLabel = gamepad.model.getName();
-		if (gamepad.model == FlxGamepadModel.WiiRemote)
+		if (gamepad.model == FlxGamepadModel.WiiRemote || gamepad.model == FlxGamepadModel.MayflashWiiRemote)
 		{
 			showAttachment(true);
 		}
