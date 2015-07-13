@@ -20,7 +20,7 @@ class FlxObjectTest extends FlxTest
 		tilemap = new FlxTilemap();
 	}
 	
-		@Test
+	@Test
 	function testXAfterAddingToState():Void
 	{
 		var object = new FlxObject(33, 445);
