@@ -7,6 +7,11 @@ import flixel.input.gamepad.FlxGamepad;
  */
 class PS3ID
 {
+	public static inline var SUPPORTS_MOTION = true;
+	
+	public static inline function getFlipAxis(AxisID:Int):Int { return 1; }
+	public static function isAxisForMotion(ID:FlxGamepadInputID):Bool { return false; }
+	
 	public static inline var TRIANGLE:Int = 12;
 	public static inline var CIRCLE:Int = 13;
 	public static inline var X:Int = 14;

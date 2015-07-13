@@ -34,6 +34,7 @@ class FlxGamepadAnalogStateList
 	private function checkXY(id:FlxGamepadInputID):Bool
 	{
 		var stick = gamepad.getRawAnalogStick(id);
+		if (stick == null) return false;
 		
 		//no matter what status we're checking for, we do two tests: 
 			//easy : both values are exactly the same (both JUST_PRESSED, both JUST_RELEASED)
@@ -77,12 +78,16 @@ class FlxGamepadAnalogStateList
 	
 	private inline function checkX(id:FlxGamepadInputID):Bool
 	{
-		return checkRaw(gamepad.getRawAnalogStick(id).x, status);
+		var stick = gamepad.getRawAnalogStick(id);
+		if (stick == null) return false;
+		return checkRaw(stick.x, status);
 	}
 	
 	private inline function checkY(id:FlxGamepadInputID):Bool
 	{
-		return checkRaw(gamepad.getRawAnalogStick(id).y, status);
+		var stick = gamepad.getRawAnalogStick(id);
+		if (stick == null) return false;
+		return checkRaw(stick.y, status);
 	}
 	
 	private inline function checkRaw(RawID:Int, Status:FlxInputState):Bool

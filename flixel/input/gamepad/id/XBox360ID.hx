@@ -7,6 +7,11 @@ import flixel.input.gamepad.FlxGamepad;
  */
 class XBox360ID
 {
+	public static inline var SUPPORTS_MOTION = false;
+	
+	public static inline function getFlipAxis(AxisID:Int):Int { return 1; }
+	public static function isAxisForMotion(ID:FlxGamepadInputID):Bool { return false; }
+	
 #if flash
 	// Button IDs
 	public static inline var A:Int = 4;

@@ -8,6 +8,11 @@ import flixel.input.gamepad.FlxGamepad;
  */
 class PS4ID
 {
+	public static inline var SUPPORTS_MOTION = true;
+	
+	public static inline function getFlipAxis(AxisID:Int):Int { return 1; }
+	public static function isAxisForMotion(ID:FlxGamepadInputID):Bool { return false; }
+	
 	//These values have only been tested on WINDOWS!
 	
 #if flash

@@ -445,6 +445,9 @@ class FlxGamepadManager implements IFlxInputManager
 			else if (str.contains("wireless controller") || str.contains("ps4")) PS4; //"Wireless Controller" or "PS4 controller"
 			else if (str.contains("logitech")) Logitech;
 			else if (str.contains("xinput")) XInput;
+			else if (str.contains("nintendo rvlcnt01tr")) WiiRemote;	//with motion plus
+			else if (str.contains("nintendo rvlcnt01")) WiiRemote;	//w/o  motion plus
+			else if (str.contains("mayflash wiimote pc adapter")) MayflashWiiRemote;
 			else XBox360; //default
 	}
 	
@@ -473,27 +476,29 @@ class FlxGamepadManager implements IFlxInputManager
 			case 1: PS3;
 			case 2: PS4;
 			case 3: OUYA;
-			case 4: WiiRemote;
+			case 4: MayflashWiiRemote;
+			case 5: WiiRemote;
 			default: XBox360;
 		}
 	}
 	
 	private function handleButtonDown(FlashEvent:JoystickEvent):Void
 	{
+		trace("Button DOWN : " + FlashEvent.id);
 		var gamepad:FlxGamepad = createByID(FlashEvent.device);
 		var button:FlxGamepadButton = gamepad.getButton(FlashEvent.id);
-		
 		if (button != null) 
 		{
 			button.press();
 		}
+		gamepad.traceButtons(null);
 	}
 	
 	private function handleButtonUp(FlashEvent:JoystickEvent):Void
 	{
+		trace("Button UP : " + FlashEvent.id);
 		var gamepad:FlxGamepad = createByID(FlashEvent.device);
 		var button:FlxGamepadButton = gamepad.getButton(FlashEvent.id);
-		
 		if (button != null) 
 		{
 			button.release();
