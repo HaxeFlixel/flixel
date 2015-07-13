@@ -1120,6 +1120,8 @@ class FlxSprite extends FlxObject
 	private function set_frame(Value:FlxFrame):FlxFrame
 	{
 		frame = Value;
+		if (Value == null)
+			return null;
 		if (frame != null)
 		{
 			resetFrameSize();
