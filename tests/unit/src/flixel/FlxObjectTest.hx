@@ -20,7 +20,7 @@ class FlxObjectTest extends FlxTest
 		tilemap = new FlxTilemap();
 	}
 	
-		@Test
+	@Test
 	function testXAfterAddingToState():Void
 	{
 		var object = new FlxObject(33, 445);
@@ -71,7 +71,50 @@ class FlxObjectTest extends FlxTest
 		object2.velocity.x = -2000;
 		
 		step(60);
-		Assert.isFalse(FlxG.overlap(object1, object2)); 
+		Assert.isFalse(FlxG.overlap(object1, object2));
+	}
+	
+	@Test
+	function testUpdateTouchingFlagsHorizontal():Void
+	{
+		var object1 = new FlxObject(0, 0, 10, 10);
+		var object2 = new FlxObject(20, 2, 10, 6);
+		FlxG.state.add(object1);
+		FlxG.state.add(object2);
+		object1.velocity.set(20, 0);
+		step(20);
+		Assert.isTrue(FlxG.overlap(object1, object2, null, FlxObject.updateTouchingFlags));
+		Assert.areEqual(object1.touching, FlxObject.RIGHT);
+		Assert.areEqual(object2.touching, FlxObject.LEFT);
+	}
+	
+	@Test // #1556
+	function testUpdateTouchingFlagsVertical():Void
+	{
+		var object1 = new FlxObject(0, 0, 10, 10);
+		var object2 = new FlxObject(2, 20, 10, 6);
+		FlxG.state.add(object1);
+		FlxG.state.add(object2);
+		object1.velocity.set(0, 20);
+		step(20);
+		Assert.isTrue(FlxG.overlap(object1, object2, null, FlxObject.updateTouchingFlags));
+		Assert.areEqual(object1.touching, FlxObject.DOWN);
+		Assert.areEqual(object2.touching, FlxObject.UP);
+	}
+	
+	@Test // #1556
+	function testUpdateTouchingFlagsNoOverlap():Void
+	{
+		// Position objects far from each other
+		var object1 = new FlxObject(0, 0, 10, 10);
+		var object2 = new FlxObject(2000, 20, 10, 6);
+		FlxG.state.add(object1);
+		FlxG.state.add(object2);
+		object1.velocity.set(0, 20);
+		step(20);
+		Assert.isFalse(FlxG.overlap(object1, object2, null, FlxObject.updateTouchingFlags));
+		Assert.areEqual(object1.touching, FlxObject.NONE);
+		Assert.areEqual(object2.touching, FlxObject.NONE);
 	}
 	
 	@Test
