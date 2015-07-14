@@ -138,37 +138,6 @@ class FlxGamepad implements IFlxDestroyable
 		#end
 	}
 	
-	public function traceAxes():Void
-	{
-		if (axis == null) return;
-		if (FlxG.gamepads.lastActive != this) return;
-		var str:String = "";
-		for (i in 0...axis.length)
-		{
-			var num = Std.int(axis[i] * 1000) / 1000;
-			str += num;
-			str += " | ";
-		}
-		trace(str);
-	}
-	
-	public function traceButtons():Void
-	{
-		if (buttons == null) return;
-		if (FlxG.gamepads.lastActive != this) return;
-		var str:String = "";
-		for (i in 0...buttons.length)
-		{
-			if (buttons[i] != null)
-			{
-				str += buttons[i].ID;
-				str += ":" + (buttons[i].pressed ? "X":"_");
-				str += ",";
-			}
-		}
-		trace(str);
-	}
-	
 	public function set_model(Model:FlxGamepadModel):FlxGamepadModel
 	{
 		model = Model;
