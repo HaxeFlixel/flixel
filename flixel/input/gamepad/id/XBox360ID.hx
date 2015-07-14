@@ -16,7 +16,7 @@ class XBox360ID
 #else
 	public static function getFlipAxis(AxisID:Int, manufacturer:Manufacturer):Int
 	{ 
-		if (manufacturer == GooglePepper || manufacturer == AdobeWindows)
+		if (manufacturer == AdobeWindows)
 		{
 			if (AxisID == LEFT_ANALOG_STICK.y || AxisID == RIGHT_ANALOG_STICK.y)
 			{
