@@ -11,7 +11,7 @@ class FlxGamepadMotionValueList
 	private var gamepad:FlxGamepad;
 	
 	@:allow(flixel.input.gamepad.FlxGamepad)
-	public var available(default, null):Bool = true;
+	public var isSupported(default, null):Bool = true;
 	
 	public var TILT_PITCH   (get, never):Float; inline function get_TILT_PITCH() { return getAxis (FlxGamepadInputID.TILT_PITCH);}
 	public var TILT_ROLL    (get, never):Float; inline function get_TILT_ROLL()  { return getAxis (FlxGamepadInputID.TILT_ROLL); }

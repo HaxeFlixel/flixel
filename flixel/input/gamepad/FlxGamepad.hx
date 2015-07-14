@@ -80,11 +80,11 @@ class FlxGamepad implements IFlxDestroyable
 	 */
 	public var analog(default, null):FlxGamepadAnalogList;
 	/**
-	 * Helper class to get the float values of motion-sensing input, if it is available
+	 * Helper class to get the float values of motion-sensing input, if it is supported
 	 */
 	public var motion(default, null):FlxGamepadMotionValueList;
 	/**
-	 * Helper class to get the float values of mouse-like pointer input, if it is available
+	 * Helper class to get the float values of mouse-like pointer input, if it is supported
 	 */
 	public var pointer(default, null):FlxGamepadPointerValueList;
 	
@@ -174,7 +174,8 @@ class FlxGamepad implements IFlxDestroyable
 		model = Model;
 		buttonIndex.model = Model;
 		
-		motion.available = buttonIndex.supportsMotion();
+		motion.isSupported = buttonIndex.supportsMotion();
+		pointer.isSupported = buttonIndex.supportsPointer();
 		
 		#if FLX_JOYSTICK_API
 		leftStick = getRawAnalogStick(FlxGamepadInputID.LEFT_ANALOG_STICK);
@@ -861,7 +862,7 @@ class FlxGamepadAnalogStick
 	public var digitalThreshold(default, null):Float = 0.5;
 	
 	//when analog inputs are received, how to process them digitally
-	public var mode(default, null):AnalogToDigitalMode = SendOnlyAnalog;
+	public var mode(default, null):AnalogToDigitalMode = OnlyAnalog;
 	
 	public function new(x:Int, y:Int, ?settings:FlxGamepadAnalogStickSettings)
 	{
@@ -869,7 +870,7 @@ class FlxGamepadAnalogStick
 		this.y = y;
 		if (settings != null)
 		{
-			mode     = (settings.mode  != null ? settings.mode  : SendOnlyAnalog);
+			mode     = (settings.mode  != null ? settings.mode  : OnlyAnalog);
 			rawUp    = (settings.up    != null ? settings.up    : -1);
 			rawDown  = (settings.down  != null ? settings.down  : -1);
 			rawLeft  = (settings.left  != null ? settings.left  : -1);
@@ -885,19 +886,19 @@ class FlxGamepadAnalogStick
 }
 
 typedef FlxGamepadAnalogStickSettings = {
-	?up:Int;
-	?down:Int;
-	?left:Int;
-	?right:Int;
-	?threshold:Float;
-	?mode:AnalogToDigitalMode;
+	?up:Int,
+	?down:Int,
+	?left:Int,
+	?right:Int,
+	?threshold:Float,
+	?mode:AnalogToDigitalMode
 }
 
 enum AnalogToDigitalMode
 {
-	SendBoth;
-	SendOnlyDigital;
-	SendOnlyAnalog;
+	Both;
+	OnlyDigital;
+	OnlyAnalog;
 }
 
 enum FlxGamepadModel

@@ -10,6 +10,7 @@ import flixel.input.gamepad.FlxGamepad.FlxGamepadModelAttachment;
 class MayflashWiiRemoteID
 {
 	public static inline var SUPPORTS_MOTION = false;
+	public static inline var SUPPORTS_POINTER = true;		//But you'll only get non-zero values for it when the Nunchuk is attached
 	
 	public static inline function getFlipAxis(AxisID:Int, attachment:FlxGamepadModelAttachment):Int { return 1; }
 	

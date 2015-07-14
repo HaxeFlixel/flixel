@@ -8,6 +8,7 @@ import flixel.input.gamepad.FlxGamepad;
 class OUYAID
 {
 	public static inline var SUPPORTS_MOTION = false;
+	public static inline var SUPPORTS_POINTER = false;		//Don't know whether OUYA's touch maps to the system mouse or not, so setting to false for now
 	
 	public static inline function getFlipAxis(AxisID:Int):Int { return 1; }
 	public static function isAxisForMotion(ID:FlxGamepadInputID):Bool { return false; }

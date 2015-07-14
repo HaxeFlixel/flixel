@@ -523,7 +523,7 @@ class FlxGamepadManager implements IFlxInputManager
 			{
 				//check to see if we should send digital inputs as well as analog
 				var stick:FlxGamepadAnalogStick = gamepad.getAnalogStickByAxis(i);
-				if (stick.mode == SendOnlyDigital || stick.mode == SendBoth)
+				if (stick.mode == OnlyDigital || stick.mode == Both)
 				{
 					var newVal = newAxis[i];
 					var oldVal = oldAxis[i];
@@ -533,7 +533,7 @@ class FlxGamepadManager implements IFlxInputManager
 					var digitalButton = -1;
 					
 					//pressed/released for digital LEFT/UP
-					if(newVal < neg && oldVal >= neg)
+					if (newVal < neg && oldVal >= neg)
 					{
 						     if (i == stick.x) digitalButton = stick.rawLeft;
 						else if (i == stick.y) digitalButton = stick.rawUp;
@@ -547,7 +547,7 @@ class FlxGamepadManager implements IFlxInputManager
 					}
 					
 					//pressed/released for digital RIGHT/DOWN
-					if(newVal > pos && oldVal <= pos)
+					if (newVal > pos && oldVal <= pos)
 					{
 						     if (i == stick.x) digitalButton = stick.rawRight;
 						else if (i == stick.y) digitalButton = stick.rawDown;

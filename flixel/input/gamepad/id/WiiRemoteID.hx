@@ -15,6 +15,7 @@ import flixel.input.gamepad.FlxGamepadInputID;
 class WiiRemoteID
 {
 	public static inline var SUPPORTS_MOTION = true;
+	public static inline var SUPPORTS_POINTER = false;		//when Julian updates his driver, this can be set to "true"
 	
 	/*Things to add:
 	

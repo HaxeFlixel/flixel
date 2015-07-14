@@ -153,12 +153,10 @@ class FlxGamepadMapping
 	
 	/**
 	 * Returns 1 or -1 depending on whether this axis needs to be flipped
-	 * @param	AxisID
-	 * @return
 	 */
 	public function getFlipAxis(AxisID:Int):Int
 	{
-		return switch(model)
+		return switch (model)
 		{
 			case Logitech: LogitechID.getFlipAxis(AxisID);
 			case OUYA: OUYAID.getFlipAxis(AxisID);
@@ -229,6 +227,21 @@ class FlxGamepadMapping
 			case XInput: XInputID.SUPPORTS_MOTION;
 			case MayflashWiiRemote: MayflashWiiRemoteID.SUPPORTS_MOTION;
 			case WiiRemote: WiiRemoteID.SUPPORTS_MOTION;
+			default: false;
+		}
+	}
+	
+	public function supportsPointer():Bool
+	{
+		return switch (model)
+		{
+			case Logitech: LogitechID.SUPPORTS_POINTER;
+			case OUYA: OUYAID.SUPPORTS_POINTER;
+			case PS4: PS4ID.SUPPORTS_POINTER;
+			case XBox360: XBox360ID.SUPPORTS_POINTER;
+			case XInput: XInputID.SUPPORTS_POINTER;
+			case MayflashWiiRemote: MayflashWiiRemoteID.SUPPORTS_POINTER;
+			case WiiRemote: WiiRemoteID.SUPPORTS_POINTER;
 			default: false;
 		}
 	}
