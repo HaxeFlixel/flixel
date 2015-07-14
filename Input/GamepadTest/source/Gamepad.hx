@@ -43,11 +43,9 @@ class Gamepad extends FlxTypedGroup<FlxSprite>
 	
 	var motionPitch:FlxBar;
 	var motionRoll:FlxBar;
-	var motionYaw:FlxBar;
 	
 	var labelPitch:FlxText;
 	var labelRoll:FlxText;
-	var labelYaw:FlxText;
 	
 	var backButton:FlxSprite;
 	var guideButton:FlxSprite;
@@ -100,8 +98,6 @@ class Gamepad extends FlxTypedGroup<FlxSprite>
 		labelPitch  = createLabel(534, 310, "Pitch");
 		motionRoll  =   createBar(534, 330);
 		labelRoll   = createLabel(534, 330, "Roll");
-		motionYaw   =   createBar(534, 350);
-		labelYaw    = createLabel(534, 350, "Yaw");
 		
 		crosshairs = createSprite(0, 0, "crosshairs", 1);
 		crosshairs.visible = false;
@@ -174,7 +170,6 @@ class Gamepad extends FlxTypedGroup<FlxSprite>
 		
 		updateBar(motionPitch, labelPitch, motion.available, motion.TILT_PITCH);
 		updateBar(motionRoll, labelRoll, motion.available, motion.TILT_ROLL);
-		updateBar(motionYaw, labelYaw, motion.available, motion.TILT_YAW);
 		
 		var value = gamepad.analog.value;
 		
@@ -191,10 +186,10 @@ class Gamepad extends FlxTypedGroup<FlxSprite>
 		
 		var pointer = gamepad.pointer;
 		
-		updatePointer(crosshairs, pointer.available, pointer.X, pointer.Y, pointer.PRESSURE);
+		updatePointer(crosshairs, pointer.available, pointer.X, pointer.Y);
 	}
 	
-	function updatePointer(sprite:FlxSprite, available:Bool, x:Float, y:Float, pressure:Float)
+	function updatePointer(sprite:FlxSprite, available:Bool, x:Float, y:Float)
 	{
 		if (!available)
 		{
@@ -207,15 +202,6 @@ class Gamepad extends FlxTypedGroup<FlxSprite>
 			sprite.y = FlxG.height * y;
 			sprite.x -= Std.int(sprite.width / 2);
 			sprite.y -= Std.int(sprite.height / 2);
-			
-			if (pressure > 0)
-			{
-				sprite.color = FlxColor.fromRGBFloat(pressure, 0, 0);
-			}
-			else
-			{
-				sprite.color = FlxColor.BLACK;
-			}
 		}
 	}
 	
