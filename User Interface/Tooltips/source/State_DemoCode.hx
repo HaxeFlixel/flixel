@@ -4,7 +4,7 @@ import flixel.addons.ui.FlxUIButton;
 import flixel.addons.ui.FlxUISprite;
 import flixel.addons.ui.FlxUIText;
 import flixel.addons.ui.FlxUITooltip;
-import flixel.addons.ui.FlxUITooltip.ToolTipStyle;
+import flixel.addons.ui.FlxUITooltip.FlxUITooltipStyle;
 import flixel.addons.ui.FlxUITypedButton;
 import flixel.addons.ui.FontDef;
 import flixel.FlxSprite;
@@ -118,7 +118,7 @@ class State_DemoCode extends FlxUIState
 			"This button takes you back to the first screen" );
 	}
 	
-	private function addBtn(name:String="", b:FlxUIButton, title:String = "", body:String = "", anchor:Anchor = null, style:ToolTipStyle = null):FlxUIButton
+	private function addBtn(name:String="", b:FlxUIButton, title:String = "", body:String = "", anchor:Anchor = null, style:FlxUITooltipStyle = null):FlxUIButton
 	{
 		tooltips.add(b, { title:title, body:body, anchor:anchor, style:style } );
 		_ui.addAsset(b,name);
