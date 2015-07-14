@@ -427,7 +427,8 @@ class FlxGamepadManager implements IFlxInputManager
 	
 	private function getModelFromFlashDeviceName(str:String):FlxGamepadModel
 	{
-		trace("name = (" + str + ")");
+		trace("str = " + str);
+		
 		str = str.toLowerCase();
 		var strip = ["-", "_"];
 		for (s in strip)
@@ -438,16 +439,20 @@ class FlxGamepadManager implements IFlxInputManager
 			}
 		}
 		
+		trace("str = " + str);
+		
+		//"Sony PLAYSTATION(R)3 Controller" is the PS3 controller, but that is not supported as its PC drivers are terrible,
+		//and the most popular tools just turn it into a 360 controller
+		
 		// needs to be checked even though it's default to not mistake it for XInput on flash 
 		return   if (str.contains("xbox") && str.contains("360")) XBox360;
-			else if (str.contains("playstation"))  PS3;        //"Sony PLAYSTATION(R)3 Controller"
-			else if (str.contains("ouya")) OUYA;               //"OUYA Game Controller"
+			else if (str.contains("ouya")) OUYA;                                      //"OUYA Game Controller"
 			else if (str.contains("wireless controller") || str.contains("ps4")) PS4; //"Wireless Controller" or "PS4 controller"
 			else if (str.contains("logitech")) Logitech;
 			else if (str.contains("xinput")) XInput;
-			else if (str.contains("nintendo rvlcnt01tr")) WiiRemote;	//with motion plus
-			else if (str.contains("nintendo rvlcnt01")) WiiRemote;	//w/o  motion plus
-			else if (str.contains("mayflash wiimote pc adapter")) MayflashWiiRemote;
+			else if (str.contains("nintendo rvlcnt01tr")) WiiRemote;                  //WiiRemote with motion plus
+			else if (str.contains("nintendo rvlcnt01")) WiiRemote;                    //WiiRemote w/o  motion plus
+			else if (str.contains("mayflash wiimote pc adapter")) MayflashWiiRemote;  //WiiRemote paired to MayFlash DolphinBar (with or w/o motion plus)
 			else XBox360; //default
 	}
 	
@@ -470,10 +475,10 @@ class FlxGamepadManager implements IFlxInputManager
 	#if FLX_JOYSTICK_API
 	private function getModelFromJoystick(f:Float):FlxGamepadModel
 	{
-		trace("f = " + f);
+		//id "1" is PS3, but that is not supported as its PC drivers are terrible, and the most popular tools just turn it into a 360 controller
+		
 		return switch (Math.round(f))
 		{
-			case 1: PS3;
 			case 2: PS4;
 			case 3: OUYA;
 			case 4: MayflashWiiRemote;
@@ -484,7 +489,6 @@ class FlxGamepadManager implements IFlxInputManager
 	
 	private function handleButtonDown(FlashEvent:JoystickEvent):Void
 	{
-		trace("Button DOWN : " + FlashEvent.id);
 		var gamepad:FlxGamepad = createByID(FlashEvent.device);
 		var button:FlxGamepadButton = gamepad.getButton(FlashEvent.id);
 		if (button != null) 
@@ -496,7 +500,6 @@ class FlxGamepadManager implements IFlxInputManager
 	
 	private function handleButtonUp(FlashEvent:JoystickEvent):Void
 	{
-		trace("Button UP : " + FlashEvent.id);
 		var gamepad:FlxGamepad = createByID(FlashEvent.device);
 		var button:FlxGamepadButton = gamepad.getButton(FlashEvent.id);
 		if (button != null) 

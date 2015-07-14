@@ -6,7 +6,6 @@ import flixel.input.gamepad.FlxGamepad.FlxGamepadModelAttachment;
 import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.input.gamepad.id.LogitechID;
 import flixel.input.gamepad.id.OUYAID;
-import flixel.input.gamepad.id.PS3ID;
 import flixel.input.gamepad.id.PS4ID;
 import flixel.input.gamepad.id.MayflashWiiRemoteID;
 import flixel.input.gamepad.id.WiiRemoteID;
@@ -41,7 +40,6 @@ class FlxGamepadMapping
 		{
 			case Logitech: getRawLogitech(ID);
 			case OUYA: getRawOUYA(ID);
-			case PS3: getRawPS3(ID);
 			case PS4: getRawPS4(ID);
 			case XBox360: getRawXBox360(ID);
 			case XInput: getRawXInput(ID);
@@ -74,7 +72,6 @@ class FlxGamepadMapping
 		{
 			case Logitech: getIDLogitech(RawID);
 			case OUYA: getIDOUYA(RawID);
-			case PS3: getIDPS3(RawID);
 			case PS4: getIDPS4(RawID);
 			case XBox360: getIDXBox360(RawID);
 			case XInput: getIDXInput(RawID);
@@ -109,7 +106,6 @@ class FlxGamepadMapping
 			{
 				case Logitech: LogitechID.LEFT_ANALOG_STICK;
 				case OUYA: OUYAID.LEFT_ANALOG_STICK;
-				case PS3: PS3ID.LEFT_ANALOG_STICK;
 				case PS4: PS4ID.LEFT_ANALOG_STICK;
 				case XBox360: XBox360ID.LEFT_ANALOG_STICK;
 				case XInput: XInputID.LEFT_ANALOG_STICK;
@@ -134,7 +130,6 @@ class FlxGamepadMapping
 			{
 				case Logitech: LogitechID.RIGHT_ANALOG_STICK;
 				case OUYA: OUYAID.RIGHT_ANALOG_STICK;
-				case PS3: PS3ID.RIGHT_ANALOG_STICK;
 				case PS4: PS4ID.RIGHT_ANALOG_STICK;
 				case XBox360: XBox360ID.RIGHT_ANALOG_STICK;
 				case XInput: XInputID.RIGHT_ANALOG_STICK;
@@ -167,7 +162,6 @@ class FlxGamepadMapping
 		{
 			case Logitech: LogitechID.getFlipAxis(AxisID);
 			case OUYA: OUYAID.getFlipAxis(AxisID);
-			case PS3: PS3ID.getFlipAxis(AxisID);
 			case PS4: PS4ID.getFlipAxis(AxisID);
 			case XBox360: XBox360ID.getFlipAxis(AxisID);
 			case XInput: XInputID.getFlipAxis(AxisID);
@@ -188,7 +182,6 @@ class FlxGamepadMapping
 		{
 			case Logitech: LogitechID.axisIndexToRawID(AxisID);
 			case OUYA: OUYAID.axisIndexToRawID(AxisID);
-			case PS3: PS3ID.axisIndexToRawID(AxisID);
 			case PS4: PS4ID.axisIndexToRawID(AxisID);
 			case XBox360: XBox360ID.axisIndexToRawID(AxisID);
 			case XInput: XInputID.axisIndexToRawID(AxisID);
@@ -204,7 +197,6 @@ class FlxGamepadMapping
 		{
 			case Logitech: LogitechID.isAxisForMotion(ID);
 			case OUYA: OUYAID.isAxisForMotion(ID);
-			case PS3: PS3ID.isAxisForMotion(ID);
 			case PS4: PS4ID.isAxisForMotion(ID);
 			case XBox360: XBox360ID.isAxisForMotion(ID);
 			case XInput: XInputID.isAxisForMotion(ID);
@@ -232,7 +224,6 @@ class FlxGamepadMapping
 		{
 			case Logitech: LogitechID.SUPPORTS_MOTION;
 			case OUYA: OUYAID.SUPPORTS_MOTION;
-			case PS3: PS3ID.SUPPORTS_MOTION;
 			case PS4: PS4ID.SUPPORTS_MOTION;
 			case XBox360: XBox360ID.SUPPORTS_MOTION;
 			case XInput: XInputID.SUPPORTS_MOTION;
@@ -318,35 +309,6 @@ class FlxGamepadMapping
 			#if FLX_JOYSTICK_API
 			case LEFT_TRIGGER_FAKE: PS4ID.LEFT_TRIGGER_FAKE;
 			case RIGHT_TRIGGER_FAKE: PS4ID.RIGHT_TRIGGER_FAKE;
-			#end
-			default: -1;
-		}
-	}
-	
-	public function getRawPS3(ID:FlxGamepadInputID):Int
-	{
-		return switch (ID)
-		{
-			case A: PS3ID.X;
-			case B: PS3ID.CIRCLE;
-			case X: PS3ID.SQUARE;
-			case Y: PS3ID.TRIANGLE;
-			case BACK: PS3ID.SELECT;
-			case GUIDE: PS3ID.PS;
-			case START: PS3ID.START;
-			case LEFT_STICK_CLICK: PS3ID.LEFT_STICK_CLICK;
-			case RIGHT_STICK_CLICK: PS3ID.RIGHT_STICK_CLICK;
-			case LEFT_SHOULDER: PS3ID.L1;
-			case RIGHT_SHOULDER: PS3ID.R1;
-			case DPAD_UP: PS3ID.DPAD_UP;
-			case DPAD_DOWN: PS3ID.DPAD_DOWN;
-			case DPAD_LEFT: PS3ID.DPAD_LEFT;
-			case DPAD_RIGHT: PS3ID.DPAD_RIGHT;
-			case LEFT_TRIGGER: PS3ID.L2;
-			case RIGHT_TRIGGER: PS3ID.R2;
-			#if FLX_JOYSTICK_API
-			case LEFT_TRIGGER_FAKE: PS3ID.LEFT_TRIGGER_FAKE;
-			case RIGHT_TRIGGER_FAKE: PS3ID.RIGHT_TRIGGER_FAKE;
 			#end
 			default: -1;
 		}
@@ -613,31 +575,6 @@ class FlxGamepadMapping
 			case PS4ID.DPAD_UP: DPAD_UP;
 			case PS4ID.DPAD_LEFT: DPAD_LEFT;
 			case PS4ID.DPAD_RIGHT: DPAD_RIGHT;
-			default: NONE;
-		}
-	}
-	
-	public function getIDPS3(rawID:Int):FlxGamepadInputID
-	{
-		return switch (rawID)
-		{
-			case PS3ID.X: A;
-			case PS3ID.CIRCLE: B;
-			case PS3ID.SQUARE: X;
-			case PS3ID.TRIANGLE: Y;
-			case PS3ID.SELECT: BACK;
-			case PS3ID.PS: GUIDE;
-			case PS3ID.START: START;
-			case PS3ID.LEFT_STICK_CLICK: LEFT_STICK_CLICK;
-			case PS3ID.RIGHT_STICK_CLICK: RIGHT_STICK_CLICK;
-			case PS3ID.L1: LEFT_SHOULDER;
-			case PS3ID.R1: RIGHT_SHOULDER;
-			case PS3ID.L2: LEFT_TRIGGER;
-			case PS3ID.R2: RIGHT_TRIGGER;
-			case PS3ID.DPAD_UP: DPAD_UP;
-			case PS3ID.DPAD_DOWN: DPAD_DOWN;
-			case PS3ID.DPAD_LEFT: DPAD_LEFT;
-			case PS3ID.DPAD_RIGHT: DPAD_RIGHT;
 			default: NONE;
 		}
 	}
