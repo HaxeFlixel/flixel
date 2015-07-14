@@ -850,7 +850,15 @@ class FlxGamepadAnalogStick
 	
 	public function toString():String
 	{
-		return("stick(" + x + "," + y + ",(" + rawUp + "," + rawDown + "," + rawLeft + "," + rawRight + ") @" + digitalThreshold + ":" + mode+")");
+		return FlxStringUtil.getDebugString([
+			LabelValuePair.weak("x", x),
+			LabelValuePair.weak("y", y),
+			LabelValuePair.weak("rawUp", rawUp),
+			LabelValuePair.weak("rawDown", rawDown),
+			LabelValuePair.weak("rawLeft", rawLeft),
+			LabelValuePair.weak("rawRight", rawRight),
+			LabelValuePair.weak("digitalThreshold", digitalThreshold),
+			LabelValuePair.weak("mode", mode)]);
 	}
 }
 
