@@ -18,10 +18,6 @@ import flash.ui.GameInputControl;
 import flash.ui.GameInputDevice;
 #end
 
-#if flash
-import flash.system.Capabilities;
-#end
-
 @:allow(flixel.input.gamepad)
 class FlxGamepad implements IFlxDestroyable
 {
@@ -100,15 +96,10 @@ class FlxGamepad implements IFlxDestroyable
 	private var manager:FlxGamepadManager;
 	private var _deadZone:Float = 0.15;
 	
-	#if FLX_JOYSTICK_API
 	private var leftStick:FlxGamepadAnalogStick;
 	private var rightStick:FlxGamepadAnalogStick;
-	#elseif FLX_GAMEINPUT_API
+	#if FLX_GAMEINPUT_API
 	private var _device:GameInputDevice; 
-	#end
-	
-	#if flash
-	private var _isChrome:Bool = false;
 	#end
 	
 	public function new(ID:Int, Manager:FlxGamepadManager, ?Model:FlxGamepadModel, ?Attachment:FlxGamepadModelAttachment) 
@@ -133,10 +124,6 @@ class FlxGamepad implements IFlxDestroyable
 		buttonIndex = new FlxGamepadMapping(model, attachment);
 		model = Model;
 		detectedModel = Model;
-		
-		#if flash
-		_isChrome = (Capabilities.manufacturer == "Google Pepper");
-		#end
 	}
 	
 	public function set_model(Model:FlxGamepadModel):FlxGamepadModel
@@ -147,24 +134,18 @@ class FlxGamepad implements IFlxDestroyable
 		motion.isSupported = buttonIndex.supportsMotion();
 		pointer.isSupported = buttonIndex.supportsPointer();
 		
-		#if FLX_JOYSTICK_API
 		leftStick = getRawAnalogStick(FlxGamepadInputID.LEFT_ANALOG_STICK);
 		rightStick = getRawAnalogStick(FlxGamepadInputID.RIGHT_ANALOG_STICK);
-		#end
 		
 		return model;
 	}
-	
-	private var t:FlxTimer = null;
 	
 	public function set_attachment(Attachment:FlxGamepadModelAttachment):FlxGamepadModelAttachment
 	{
 		attachment = Attachment;
 		buttonIndex.attachment = Attachment;
-		#if FLX_JOYSTICK_API
 		leftStick = getRawAnalogStick(FlxGamepadInputID.LEFT_ANALOG_STICK);
 		rightStick = getRawAnalogStick(FlxGamepadInputID.RIGHT_ANALOG_STICK);
-		#end
 		return attachment;
 	}
 	
@@ -225,6 +206,7 @@ class FlxGamepad implements IFlxDestroyable
 		for (i in 0..._device.numControls)
 		{
 			control = _device.getControlAt(i);
+			
 			var value = control.value;
 			value = Math.abs(value);		//quick absolute value for analog sticks
 			button = getButton(i);
@@ -596,6 +578,7 @@ class FlxGamepad implements IFlxDestroyable
 	{
 		return buttonIndex.checkForFakeAxis(ID);
 	}
+	#end
 	
 	public function isAxisForMotion(AxisIndex:Int):Bool
 	{
@@ -621,7 +604,6 @@ class FlxGamepad implements IFlxDestroyable
 		if (rightStick != null && AxisIndex == rightStick.x || AxisIndex == rightStick.y) return rightStick;
 		return null;
 	}
-	#end
 	
 	/**
 	 * Given a ButtonID for an analog stick, gets the value of its x axis
@@ -655,17 +637,7 @@ class FlxGamepad implements IFlxDestroyable
 	 */
 	public function getYAxisRaw(Stick:FlxGamepadAnalogStick):Float
 	{
-		var axisValue = getAnalogYAxisValue(Stick);
-		
-		// the y axis is inverted on the Xbox gamepad in flash for some reason - but not in Chrome!
-		#if flash
-		if (model == XBox360 && !_isChrome)
-		{
-			axisValue = -axisValue;
-		}
-		#end
-		
-		return axisValue;
+		return getAnalogYAxisValue(Stick);
 	}
 
 	/**
@@ -737,6 +709,11 @@ class FlxGamepad implements IFlxDestroyable
 		
 		axisValue = axis[AxisID];
 		#end
+		
+		if (isAxisForAnalogStick(AxisID))
+		{
+			axisValue *= getFlipAxis(AxisID);
+		}
 		
 		return axisValue;
 	}
@@ -822,16 +799,19 @@ class FlxGamepadAnalogStick
 	public var x(default, null):Int;
 	public var y(default, null):Int;
 	
-	//these values let the analog stick to send digital inputs to, say, the dpad
+	/**a raw button input ID, for sending a digital event for "up" alongside the analog event**/
 	public var rawUp(default, null):Int = -1;
+	/**a raw button input ID, for sending a digital event for "down" alongside the analog event**/
 	public var rawDown(default, null):Int = -1;
+	/**a raw button input ID, for sending a digital event for "left" alongside the analog event**/
 	public var rawLeft(default, null):Int = -1;
+	/**a raw button input ID, for sending a digital event for "right" alongside the analog event**/
 	public var rawRight(default, null):Int = -1;
 	
-	//the value the dpad must be above before digital inputs are sent
+	/**the absolute value the dpad must be greater than before digital inputs are sent**/
 	public var digitalThreshold(default, null):Float = 0.5;
 	
-	//when analog inputs are received, how to process them digitally
+	/**when analog inputs are received, how to process them digitally**/
 	public var mode(default, null):FlxAnalogToDigitalMode = OnlyAnalog;
 	
 	public function new(x:Int, y:Int, ?settings:FlxGamepadAnalogStickSettings)
@@ -874,9 +854,9 @@ typedef FlxGamepadAnalogStickSettings = {
 
 enum FlxAnalogToDigitalMode
 {
-	Both;
-	OnlyDigital;
-	OnlyAnalog;
+	Both;			//Send both digital and analog events
+	OnlyDigital;	//Send only digital events
+	OnlyAnalog;		//Send only analog events
 }
 
 enum FlxGamepadModel

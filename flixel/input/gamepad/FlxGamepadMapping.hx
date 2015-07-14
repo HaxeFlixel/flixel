@@ -12,6 +12,10 @@ import flixel.input.gamepad.id.WiiRemoteID;
 import flixel.input.gamepad.id.XBox360ID;
 import flixel.input.gamepad.id.XInputID;
 
+#if flash
+import openfl.system.Capabilities;
+#end
+
 /**
  * ...
  * @author larsiusprime
@@ -24,11 +28,21 @@ class FlxGamepadMapping
 	@:allow(flixel.input.gamepad.FlxGamepad)
 	public var attachment(default, null):FlxGamepadModelAttachment = None;
 	
+	private var _manufacturer:Manufacturer = Unknown;
+	
 	public function new(Model:FlxGamepadModel, attachment:FlxGamepadModelAttachment=null) 
 	{
 		model = Model;
+		#if flash
+		_manufacturer = switch(Capabilities.manufacturer)
+		{
+			 case "Google Pepper": GooglePepper;
+			 case "Adobe Windows": AdobeWindows;
+			 default: Unknown;
+		}
+		#end
 	}
-	
+
 	/**
 	 * Given a ID, return the raw hardware code
 	 * @param	ID the "universal" ID
@@ -161,7 +175,7 @@ class FlxGamepadMapping
 			case Logitech: LogitechID.getFlipAxis(AxisID);
 			case OUYA: OUYAID.getFlipAxis(AxisID);
 			case PS4: PS4ID.getFlipAxis(AxisID);
-			case XBox360: XBox360ID.getFlipAxis(AxisID);
+			case XBox360: XBox360ID.getFlipAxis(AxisID, _manufacturer);
 			case XInput: XInputID.getFlipAxis(AxisID);
 			case MayflashWiiRemote: MayflashWiiRemoteID.getFlipAxis(AxisID, attachment);
 			case WiiRemote: WiiRemoteID.getFlipAxis(AxisID, attachment);
@@ -189,6 +203,18 @@ class FlxGamepadMapping
 		}
 	}
 	
+	public function checkForFakeAxis(ID:FlxGamepadInputID):Int
+	{
+		return switch (model)
+		{
+			case MayflashWiiRemote: MayflashWiiRemoteID.checkForFakeAxis(ID, attachment);
+			case WiiRemote: WiiRemoteID.checkForFakeAxis(ID, attachment);
+			default: -1;
+		}
+	}
+	
+	#end
+	
 	public function isAxisForMotion(ID:FlxGamepadInputID):Bool
 	{
 		return switch (model)
@@ -203,18 +229,6 @@ class FlxGamepadMapping
 			default: false;
 		}
 	}
-	
-	public function checkForFakeAxis(ID:FlxGamepadInputID):Int
-	{
-		return switch (model)
-		{
-			case MayflashWiiRemote: MayflashWiiRemoteID.checkForFakeAxis(ID, attachment);
-			case WiiRemote: WiiRemoteID.checkForFakeAxis(ID, attachment);
-			default: -1;
-		}
-	}
-	
-	#end
 	
 	public function supportsMotion():Bool
 	{
@@ -767,4 +781,11 @@ class FlxGamepadMapping
 			default: NONE;
 		}
 	}
+}
+
+enum Manufacturer
+{
+	GooglePepper;
+	AdobeWindows;
+	Unknown;
 }

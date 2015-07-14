@@ -1,6 +1,7 @@
 package flixel.input.gamepad.id;
 
 import flixel.input.gamepad.FlxGamepad;
+import flixel.input.gamepad.FlxGamepadMapping.Manufacturer;
 
 /**
  * IDs for Xbox 360 controllers
@@ -9,8 +10,23 @@ class XBox360ID
 {
 	public static inline var SUPPORTS_MOTION = false;
 	public static inline var SUPPORTS_POINTER = false;
+
+#if !flash
+	public static inline function getFlipAxis(AxisID:Int, manufacturer:Manufacturer):Int { return 1; }
+#else
+	public static function getFlipAxis(AxisID:Int, manufacturer:Manufacturer):Int
+	{ 
+		if (manufacturer == GooglePepper || manufacturer == AdobeWindows)
+		{
+			if (AxisID == LEFT_ANALOG_STICK.y || AxisID == RIGHT_ANALOG_STICK.y)
+			{
+				return -1;
+			}
+		}
+		return 1;
+	}
+#end
 	
-	public static inline function getFlipAxis(AxisID:Int):Int { return 1; }
 	public static function isAxisForMotion(ID:FlxGamepadInputID):Bool { return false; }
 	
 #if flash
