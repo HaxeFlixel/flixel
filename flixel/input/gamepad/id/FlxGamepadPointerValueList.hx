@@ -15,7 +15,6 @@ class FlxGamepadPointerValueList
 	
 	public var X        (get, never):Float; inline function get_X()        { return getAxis (FlxGamepadInputID.POINTER_X);      }
 	public var Y        (get, never):Float; inline function get_Y()        { return getAxis (FlxGamepadInputID.POINTER_Y);      }
-	public var PRESSURE (get, never):Float; inline function get_PRESSURE() { return getAxis (FlxGamepadInputID.TOUCH_PRESSURE); }
 	
 	public function new(gamepad:FlxGamepad)
 	{
