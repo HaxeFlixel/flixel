@@ -85,13 +85,9 @@ class PlayState extends FlxState
 		attachmentLabel.visible = attachmentDropDown.visible = attachmentDropDown.active = b;
 		
 		if (b)
-		{
 			modelDropDown.x = modelDropDownLoc.x - 65;
-		}
 		else
-		{
 			modelDropDown.x = modelDropDownLoc.x;
-		}
 	}
 	
 	override public function update(elapsed:Float)

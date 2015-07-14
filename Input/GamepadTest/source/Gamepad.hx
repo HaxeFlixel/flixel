@@ -207,17 +207,9 @@ class Gamepad extends FlxTypedGroup<FlxSprite>
 	
 	function updateBar(bar:FlxBar, label:FlxText, available:Bool, value:Float)
 	{
-		if (!available)
-		{
-			bar.visible = false;
-			label.visible = false;
-		}
-		else
-		{
-			bar.visible = true;
-			label.visible = true;
+		bar.visible = label.visible = available;
+		if (available)
 			bar.value = value * 100;
-		}
 	}
 	
 	function updateButton(button:FlxSprite, pressed:Bool)
