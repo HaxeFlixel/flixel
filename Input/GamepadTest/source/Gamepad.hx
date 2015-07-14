@@ -168,8 +168,8 @@ class Gamepad extends FlxTypedGroup<FlxSprite>
 		
 		var motion = gamepad.motion;
 		
-		updateBar(motionPitch, labelPitch, motion.available, motion.TILT_PITCH);
-		updateBar(motionRoll, labelRoll, motion.available, motion.TILT_ROLL);
+		updateBar(motionPitch, labelPitch, motion.isSupported, motion.TILT_PITCH);
+		updateBar(motionRoll, labelRoll, motion.isSupported, motion.TILT_ROLL);
 		
 		var value = gamepad.analog.value;
 		
@@ -186,12 +186,12 @@ class Gamepad extends FlxTypedGroup<FlxSprite>
 		
 		var pointer = gamepad.pointer;
 		
-		updatePointer(crosshairs, pointer.available, pointer.X, pointer.Y);
+		updatePointer(crosshairs, pointer.isSupported, pointer.X, pointer.Y);
 	}
 	
-	function updatePointer(sprite:FlxSprite, available:Bool, x:Float, y:Float)
+	function updatePointer(sprite:FlxSprite, isSupported:Bool, x:Float, y:Float)
 	{
-		if (!available)
+		if (!isSupported)
 		{
 			sprite.visible = false;
 		}
@@ -205,10 +205,10 @@ class Gamepad extends FlxTypedGroup<FlxSprite>
 		}
 	}
 	
-	function updateBar(bar:FlxBar, label:FlxText, available:Bool, value:Float)
+	function updateBar(bar:FlxBar, label:FlxText, isSupported:Bool, value:Float)
 	{
-		bar.visible = label.visible = available;
-		if (available)
+		bar.visible = label.visible = isSupported;
+		if (isSupported)
 			bar.value = value * 100;
 	}
 	
