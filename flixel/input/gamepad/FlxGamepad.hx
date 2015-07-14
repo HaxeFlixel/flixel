@@ -293,18 +293,7 @@ class FlxGamepad implements IFlxDestroyable
 				button.update();
 			}
 		}
-		
-		if (timecounter > timecount)
-		{
-			timecounter = 0;
-			traceButtons(null);
-			//traceAxes(null);
-		}
-		timecounter += FlxG.elapsed;
 	}
-	
-	private var timecounter:Float = 0;
-	private var timecount:Float = 1 / 16;
 	
 	public function reset():Void
 	{
