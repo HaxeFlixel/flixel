@@ -11,21 +11,22 @@ class XBox360ID
 	public static inline var SUPPORTS_MOTION = false;
 	public static inline var SUPPORTS_POINTER = false;
 
-#if !flash
-	public static inline function getFlipAxis(AxisID:Int, manufacturer:Manufacturer):Int { return 1; }
-#else
-	public static function getFlipAxis(AxisID:Int, manufacturer:Manufacturer):Int
-	{ 
+	public static inline function getFlipAxis(AxisID:Int, manufacturer:Manufacturer):Int
+	{
+		#if flash
+		var a = 1;
 		if (manufacturer == AdobeWindows)
 		{
 			if (AxisID == LEFT_ANALOG_STICK.y || AxisID == RIGHT_ANALOG_STICK.y)
 			{
-				return -1;
+				a = -1;
 			}
 		}
+		return a;
+		#else
 		return 1;
+		#end
 	}
-#end
 	
 	public static function isAxisForMotion(ID:FlxGamepadInputID):Bool { return false; }
 	
