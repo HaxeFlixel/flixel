@@ -854,9 +854,18 @@ typedef FlxGamepadAnalogStickSettings = {
 
 enum FlxAnalogToDigitalMode
 {
-	Both;			//Send both digital and analog events
-	OnlyDigital;	//Send only digital events
-	OnlyAnalog;		//Send only analog events
+	/**
+	 * Send both digital and analog events when the analog stick is moved
+	 */
+	Both;
+	/**
+	 * Send only digital events when the analog stick is moved
+	 */
+	OnlyDigital;
+	/**
+	 * Send only analog events when the analog stick is moved
+	 */
+	OnlyAnalog;
 }
 
 enum FlxGamepadModel
