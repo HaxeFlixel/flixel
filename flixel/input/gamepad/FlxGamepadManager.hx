@@ -512,13 +512,15 @@ class FlxGamepadManager implements IFlxInputManager
 		
 		for (i in 0...newAxis.length)
 		{
-			if (!gamepad.isAxisForAnalogStick(i))
+			var isForStick = gamepad.isAxisForAnalogStick(i);
+			var isForMotion = gamepad.isAxisForMotion(i);
+			if (!isForStick && !isForMotion)
 			{
 				// in legacy this returns a (-1,1) range, but in flash/next it
 				// returns (0,1) so we normalize to (0,1) for legacy target only
 				newAxis[i] = (newAxis[i] + 1) / 2;
 			}
-			else
+			else if(isForStick)
 			{
 				//check to see if we should send digital inputs as well as analog
 				var stick:FlxGamepadAnalogStick = gamepad.getAnalogStickByAxis(i);
