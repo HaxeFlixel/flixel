@@ -5,7 +5,11 @@ import flixel.input.gamepad.FlxGamepadInputID;
 
 /**
  * WiiRemote hardware input ID's when using the device directly
- * (Hardware ID: "Nintendo RVL-CNT-01-TR")
+ * Hardware ID's: "Nintendo RVL-CNT-01-TR" and "Nintendo RVL-CNT-01" -- the latter does not have the Motion-Plus attachment
+ * 
+ * NOTE: On Windows this requires the HID-Wiimote driver by Julian Löhr, available here:
+ * https://github.com/jloehr/HID-Wiimote
+ * 
  * @author larsiusprime
  */
 class WiiRemoteID
@@ -210,8 +214,8 @@ class WiiRemoteID
 	public static inline var CLASSIC_ONE:Int = 20;
 	public static inline var CLASSIC_TWO:Int = 21;
 	
-	public static inline var CLASSIC_DPAD_DOWN:Int = 5;
-	public static inline var CLASSIC_DPAD_UP:Int = 6;
+	public static inline var CLASSIC_DPAD_UP:Int = 5;
+	public static inline var CLASSIC_DPAD_DOWN:Int = 6;
 	public static inline var CLASSIC_DPAD_LEFT:Int = 7;
 	public static inline var CLASSIC_DPAD_RIGHT:Int = 8;
 	
