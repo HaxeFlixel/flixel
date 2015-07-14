@@ -238,7 +238,7 @@ class WiiRemoteID
 			left:REMOTE_DPAD_LEFT,
 			right:REMOTE_DPAD_RIGHT,
 			threshold:0.5,
-			mode:SendOnlyDigital
+			mode:OnlyDigital
 		});
 	
 	public static var LEFT_ANALOG_STICK(default, null)  = new FlxGamepadAnalogStick(0, 1);	//the nunchuk only has the "left" analog stick
