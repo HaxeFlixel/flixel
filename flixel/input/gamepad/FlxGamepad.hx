@@ -38,7 +38,13 @@ class FlxGamepad implements IFlxDestroyable
 	
 	/**
 	 * For gamepads that can have things plugged into them (the Wii Remote, basically).
-	 * Making the user set this helps
+	 * Making the user set this helps Flixel properly interpret inputs properly. 
+	 * EX: if you plug a nunchuk into the Wii Remote, you will get different values for 
+	 * certain buttons than with the Wii Remote alone.
+	 * (This is probably why Wii games ask the player what control scheme they are using.)
+	 * 
+	 * In the future, this could also be used for any attachment that exposes new API features
+	 * to the controller, e.g. a microphone or headset
 	 */
 	public var attachment(default, set):FlxGamepadModelAttachment;
 	
@@ -78,7 +84,7 @@ class FlxGamepad implements IFlxDestroyable
 	 */
 	public var motion(default, null):FlxGamepadMotionValueList;
 	/**
-	 * Helper class to get the float values of mouse-like pointer nput, if it is available
+	 * Helper class to get the float values of mouse-like pointer input, if it is available
 	 */
 	public var pointer(default, null):FlxGamepadPointerValueList;
 	
@@ -132,7 +138,7 @@ class FlxGamepad implements IFlxDestroyable
 		#end
 	}
 	
-	public function traceAxes(f:FlxTimer):Void
+	public function traceAxes():Void
 	{
 		if (axis == null) return;
 		if (FlxG.gamepads.lastActive != this) return;
@@ -146,7 +152,7 @@ class FlxGamepad implements IFlxDestroyable
 		trace(str);
 	}
 	
-	public function traceButtons(f:FlxTimer):Void
+	public function traceButtons():Void
 	{
 		if (buttons == null) return;
 		if (FlxG.gamepads.lastActive != this) return;
@@ -879,12 +885,12 @@ class FlxGamepadAnalogStick
 }
 
 typedef FlxGamepadAnalogStickSettings = {
-	@:optional var up:Int;
-	@:optional var down:Int;
-	@:optional var left:Int;
-	@:optional var right:Int;
-	@:optional var threshold:Float;
-	@:optional var mode:AnalogToDigitalMode;
+	?up:Int;
+	?down:Int;
+	?left:Int;
+	?right:Int;
+	?threshold:Float;
+	?mode:AnalogToDigitalMode;
 }
 
 enum AnalogToDigitalMode

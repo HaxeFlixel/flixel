@@ -427,8 +427,6 @@ class FlxGamepadManager implements IFlxInputManager
 	
 	private function getModelFromFlashDeviceName(str:String):FlxGamepadModel
 	{
-		trace("str = " + str);
-		
 		str = str.toLowerCase();
 		var strip = ["-", "_"];
 		for (s in strip)
@@ -438,8 +436,6 @@ class FlxGamepadManager implements IFlxInputManager
 				str = StringTools.replace(str, s, "");
 			}
 		}
-		
-		trace("str = " + str);
 		
 		//"Sony PLAYSTATION(R)3 Controller" is the PS3 controller, but that is not supported as its PC drivers are terrible,
 		//and the most popular tools just turn it into a 360 controller
@@ -515,14 +511,8 @@ class FlxGamepadManager implements IFlxInputManager
 		var oldAxis = gamepad.axis;
 		var newAxis = FlashEvent.axis;
 		
-		var anyAbove = false;
-		
 		for (i in 0...newAxis.length)
 		{
-			if (Math.abs(newAxis[i]) > 0.5)
-			{
-				anyAbove = true;
-			}
 			if (!gamepad.isAxisForAnalogStick(i))
 			{
 				// in legacy this returns a (-1,1) range, but in flash/next it
@@ -579,11 +569,6 @@ class FlxGamepadManager implements IFlxInputManager
 		}
 		
 		gamepad.axis = newAxis;
-		
-		if (anyAbove)
-		{
-			//trace("axis = " + newAxis);
-		}
 		
 		gamepad.axisActive = true;
 	}

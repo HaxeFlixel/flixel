@@ -81,13 +81,13 @@ abstract FlxGamepadInputID(Int) from Int to Int
 	/**for a mouse-like input such as touch or IR camera. Vertical axis.**/
 	var POINTER_Y            = 29;
 	
-	/**an extra digital button that don't fit cleanly into the universal template**/
+	/**an extra digital button that doesn't fit cleanly into the universal template**/
 	var EXTRA_0              = 30;
-	/**an extra digital button that don't fit cleanly into the universal template**/
+	/**an extra digital button that doesn't fit cleanly into the universal template**/
 	var EXTRA_1              = 31;
-	/**an extra digital button that don't fit cleanly into the universal template**/
+	/**an extra digital button that doesn't fit cleanly into the universal template**/
 	var EXTRA_2              = 32;
-	/**an extra digital button that don't fit cleanly into the universal template**/
+	/**an extra digital button that doesn't fit cleanly into the universal template**/
 	var EXTRA_3              = 33;
 	
 	@:from
