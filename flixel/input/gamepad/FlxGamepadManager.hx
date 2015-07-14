@@ -491,7 +491,6 @@ class FlxGamepadManager implements IFlxInputManager
 		{
 			button.press();
 		}
-		gamepad.traceButtons(null);
 	}
 	
 	private function handleButtonUp(FlashEvent:JoystickEvent):Void
@@ -560,7 +559,7 @@ class FlxGamepadManager implements IFlxInputManager
 						handleButtonUp(new JoystickEvent(JoystickEvent.BUTTON_UP, FlashEvent.bubbles, FlashEvent.cancelable, FlashEvent.device, digitalButton));
 					}
 					
-					if (stick.mode == SendOnlyDigital)
+					if (stick.mode == OnlyDigital)
 					{
 						//still haven't figured out how to suppress the analog inputs properly. Oh well.
 					}

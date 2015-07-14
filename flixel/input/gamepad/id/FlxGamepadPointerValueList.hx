@@ -23,7 +23,7 @@ class FlxGamepadPointerValueList
 	
 	private inline function getAxis(id:FlxGamepadInputID):Float
 	{
-		if (!available) return 0;
+		if (!isSupported) return 0;
 		return gamepad.getAxis(id);
 	}
 }

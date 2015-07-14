@@ -862,7 +862,7 @@ class FlxGamepadAnalogStick
 	public var digitalThreshold(default, null):Float = 0.5;
 	
 	//when analog inputs are received, how to process them digitally
-	public var mode(default, null):AnalogToDigitalMode = OnlyAnalog;
+	public var mode(default, null):FlxAnalogToDigitalMode = OnlyAnalog;
 	
 	public function new(x:Int, y:Int, ?settings:FlxGamepadAnalogStickSettings)
 	{
@@ -891,10 +891,10 @@ typedef FlxGamepadAnalogStickSettings = {
 	?left:Int,
 	?right:Int,
 	?threshold:Float,
-	?mode:AnalogToDigitalMode
+	?mode:FlxAnalogToDigitalMode
 }
 
-enum AnalogToDigitalMode
+enum FlxAnalogToDigitalMode
 {
 	Both;
 	OnlyDigital;
