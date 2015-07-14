@@ -2,7 +2,7 @@ package flixel.input.gamepad.id;
 import flixel.input.gamepad.FlxGamepad;
 
 /**
- * A helper class for gamepad input.
+ * A helper class for gamepad input -- returns X/Y analog coordinate values between 0.0 and 1.0
  * Provides optimized gamepad button checking using direct array access.
  */
 @:keep

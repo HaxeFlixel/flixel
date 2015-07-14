@@ -84,7 +84,8 @@ class FlxGamepad implements IFlxDestroyable
 	 */
 	public var motion(default, null):FlxGamepadMotionValueList;
 	/**
-	 * Helper class to get the float values of mouse-like pointer input, if it is supported
+	 * Helper class to get the float values of mouse-like pointer input, if it is supported.
+	 * (contains continously updated X and Y coordinates, each between 0.0 and 1.0)
 	 */
 	public var pointer(default, null):FlxGamepadPointerValueList;
 	
