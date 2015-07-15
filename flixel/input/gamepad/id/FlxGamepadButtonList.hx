@@ -32,6 +32,10 @@ class FlxGamepadButtonList extends FlxBaseGamepadList
 	public var LEFT_TRIGGER     (get, never):Bool; inline function get_LEFT_TRIGGER()      { return check(FlxGamepadInputID.LEFT_TRIGGER_FAKE);  }
 	public var RIGHT_TRIGGER    (get, never):Bool; inline function get_RIGHT_TRIGGER()     { return check(FlxGamepadInputID.RIGHT_TRIGGER_FAKE); }
 	#end
+	public var EXTRA_0          (get, never):Bool; inline function get_EXTRA_0()           { return check(FlxGamepadInputID.EXTRA_0);            }
+	public var EXTRA_1          (get, never):Bool; inline function get_EXTRA_1()           { return check(FlxGamepadInputID.EXTRA_1);            }
+	public var EXTRA_2          (get, never):Bool; inline function get_EXTRA_2()           { return check(FlxGamepadInputID.EXTRA_2);            }
+	public var EXTRA_3          (get, never):Bool; inline function get_EXTRA_3()           { return check(FlxGamepadInputID.EXTRA_3);            }
 	
 	public function new(status:FlxInputState, gamepad:FlxGamepad)
 	{

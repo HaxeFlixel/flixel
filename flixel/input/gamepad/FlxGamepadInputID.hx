@@ -70,6 +70,25 @@ abstract FlxGamepadInputID(Int) from Int to Int
 	var LEFT_STICK_FAKE      = 24;
 	var RIGHT_STICK_FAKE     = 25;
 	#end
+
+	/**tilting towards or away from the ceiling (think "look up", "look down")**/
+	var TILT_PITCH           = 26;
+	/**tilting side-to-side (think "twisting", or "do a barrel roll!")**/
+	var TILT_ROLL            = 27;
+	
+	/**for a mouse-like input such as touch or IR camera. Horizontal axis.**/
+	var POINTER_X            = 28;
+	/**for a mouse-like input such as touch or IR camera. Vertical axis.**/
+	var POINTER_Y            = 29;
+	
+	/**an extra digital button that doesn't fit cleanly into the universal template**/
+	var EXTRA_0              = 30;
+	/**an extra digital button that doesn't fit cleanly into the universal template**/
+	var EXTRA_1              = 31;
+	/**an extra digital button that doesn't fit cleanly into the universal template**/
+	var EXTRA_2              = 32;
+	/**an extra digital button that doesn't fit cleanly into the universal template**/
+	var EXTRA_3              = 33;
 	
 	@:from
 	public static inline function fromString(s:String)

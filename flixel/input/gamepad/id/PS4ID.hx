@@ -8,6 +8,12 @@ import flixel.input.gamepad.FlxGamepad;
  */
 class PS4ID
 {
+	public static inline var SUPPORTS_MOTION = false;		//TODO: on a native PS4 both should be set to true, but on PC they're false
+	public static inline var SUPPORTS_POINTER = false;
+	
+	public static inline function getFlipAxis(AxisID:Int):Int { return 1; }
+	public static function isAxisForMotion(ID:FlxGamepadInputID):Bool { return false; }
+	
 	//These values have only been tested on WINDOWS!
 	
 #if flash

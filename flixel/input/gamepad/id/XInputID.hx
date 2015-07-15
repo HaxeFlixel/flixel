@@ -7,6 +7,12 @@ import flixel.input.gamepad.FlxGamepad;
  */
 class XInputID
 {
+	public static inline var SUPPORTS_MOTION = false;
+	public static inline var SUPPORTS_POINTER = false;
+	
+	public static inline function getFlipAxis(AxisID:Int):Int { return 1; }
+	public static function isAxisForMotion(ID:FlxGamepadInputID):Bool { return false; }
+	
 	// Button IDs
 	public static inline var A:Int = 6;
 	public static inline var B:Int = 7;

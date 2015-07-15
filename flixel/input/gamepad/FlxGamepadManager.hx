@@ -437,13 +437,18 @@ class FlxGamepadManager implements IFlxInputManager
 			}
 		}
 		
+		//"Sony PLAYSTATION(R)3 Controller" is the PS3 controller, but that is not supported as its PC drivers are terrible,
+		//and the most popular tools just turn it into a 360 controller
+		
 		// needs to be checked even though it's default to not mistake it for XInput on flash 
 		return   if (str.contains("xbox") && str.contains("360")) XBox360;
-			else if (str.contains("playstation"))  PS3;        //"Sony PLAYSTATION(R)3 Controller"
-			else if (str.contains("ouya")) OUYA;               //"OUYA Game Controller"
+			else if (str.contains("ouya")) OUYA;                                      //"OUYA Game Controller"
 			else if (str.contains("wireless controller") || str.contains("ps4")) PS4; //"Wireless Controller" or "PS4 controller"
 			else if (str.contains("logitech")) Logitech;
 			else if (str.contains("xinput")) XInput;
+			else if (str.contains("nintendo rvlcnt01tr")) WiiRemote;                  //WiiRemote with motion plus
+			else if (str.contains("nintendo rvlcnt01")) WiiRemote;                    //WiiRemote w/o  motion plus
+			else if (str.contains("mayflash wiimote pc adapter")) MayflashWiiRemote;  //WiiRemote paired to MayFlash DolphinBar (with or w/o motion plus)
 			else XBox360; //default
 	}
 	
@@ -464,25 +469,27 @@ class FlxGamepadManager implements IFlxInputManager
 	#end
 	
 	#if FLX_JOYSTICK_API
+	private function getModelFromJoystick(f:Float):FlxGamepadModel
+	{
+		//id "1" is PS3, but that is not supported as its PC drivers are terrible, and the most popular tools just turn it into a 360 controller
+		
+		return switch (Math.round(f))
+		{
+			case 2: PS4;
+			case 3: OUYA;
+			case 4: MayflashWiiRemote;
+			case 5: WiiRemote;
+			default: XBox360;
+		}
+	}
+	
 	private function handleButtonDown(FlashEvent:JoystickEvent):Void
 	{
 		var gamepad:FlxGamepad = createByID(FlashEvent.device);
 		var button:FlxGamepadButton = gamepad.getButton(FlashEvent.id);
-		
 		if (button != null) 
 		{
 			button.press();
-		}
-	}
-	
-	private function getModelFromJoystick(f:Float):FlxGamepadModel
-	{
-		return switch (Math.round(f))
-		{
-			case 1: PS3;
-			case 2: PS4;
-			case 3: OUYA;
-			default: XBox360;
 		}
 	}
 	
@@ -490,7 +497,6 @@ class FlxGamepadManager implements IFlxInputManager
 	{
 		var gamepad:FlxGamepad = createByID(FlashEvent.device);
 		var button:FlxGamepadButton = gamepad.getButton(FlashEvent.id);
-		
 		if (button != null) 
 		{
 			button.release();
@@ -500,16 +506,71 @@ class FlxGamepadManager implements IFlxInputManager
 	private function handleAxisMove(FlashEvent:JoystickEvent):Void
 	{
 		var gamepad:FlxGamepad = createByID(FlashEvent.device);
-		gamepad.axis = FlashEvent.axis;
-		for (i in 0...gamepad.axis.length)
+		
+		var oldAxis = gamepad.axis;
+		var newAxis = FlashEvent.axis;
+		
+		for (i in 0...newAxis.length)
 		{
-			if (!gamepad.isAxisForAnalogStick(i))
+			var isForStick = gamepad.isAxisForAnalogStick(i);
+			var isForMotion = gamepad.isAxisForMotion(i);
+			if (!isForStick && !isForMotion)
 			{
 				// in legacy this returns a (-1,1) range, but in flash/next it
 				// returns (0,1) so we normalize to (0,1) for legacy target only
-				gamepad.axis[i] = (gamepad.axis[i] + 1) / 2;
+				newAxis[i] = (newAxis[i] + 1) / 2;
+			}
+			else if(isForStick)
+			{
+				//check to see if we should send digital inputs as well as analog
+				var stick:FlxGamepadAnalogStick = gamepad.getAnalogStickByAxis(i);
+				if (stick.mode == OnlyDigital || stick.mode == Both)
+				{
+					var newVal = newAxis[i];
+					var oldVal = oldAxis[i];
+					
+					var neg = stick.digitalThreshold * -1;
+					var pos = stick.digitalThreshold;
+					var digitalButton = -1;
+					
+					//pressed/released for digital LEFT/UP
+					if (newVal < neg && oldVal >= neg)
+					{
+						     if (i == stick.x) digitalButton = stick.rawLeft;
+						else if (i == stick.y) digitalButton = stick.rawUp;
+						handleButtonDown(new JoystickEvent(JoystickEvent.BUTTON_DOWN, FlashEvent.bubbles, FlashEvent.cancelable, FlashEvent.device, digitalButton));
+					}
+					else if (newVal >= neg && oldVal < neg)
+					{
+						     if (i == stick.x) digitalButton = stick.rawLeft;
+						else if (i == stick.y) digitalButton = stick.rawUp;
+						handleButtonUp(new JoystickEvent(JoystickEvent.BUTTON_UP, FlashEvent.bubbles, FlashEvent.cancelable, FlashEvent.device, digitalButton));
+					}
+					
+					//pressed/released for digital RIGHT/DOWN
+					if (newVal > pos && oldVal <= pos)
+					{
+						     if (i == stick.x) digitalButton = stick.rawRight;
+						else if (i == stick.y) digitalButton = stick.rawDown;
+						handleButtonDown(new JoystickEvent(JoystickEvent.BUTTON_DOWN, FlashEvent.bubbles, FlashEvent.cancelable, FlashEvent.device, digitalButton));
+					}
+					else if (newVal <= pos && oldVal > pos)
+					{
+						     if (i == stick.x) digitalButton = stick.rawRight;
+						else if (i == stick.y) digitalButton = stick.rawDown;
+						handleButtonUp(new JoystickEvent(JoystickEvent.BUTTON_UP, FlashEvent.bubbles, FlashEvent.cancelable, FlashEvent.device, digitalButton));
+					}
+					
+					if (stick.mode == OnlyDigital)
+					{
+						//still haven't figured out how to suppress the analog inputs properly. Oh well.
+					}
+				}
 			}
 		}
+		
+		gamepad.axis = newAxis;
+		
 		gamepad.axisActive = true;
 	}
 	
