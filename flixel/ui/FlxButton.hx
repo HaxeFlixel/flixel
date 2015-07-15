@@ -200,7 +200,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	{
 		super(X, Y);
 		
-		loadGraphic(FlxGraphic.fromClass(GraphicButton), true, 80, 20);
+		loadDefaultGraphic();
 		
 		onUp = new FlxButtonEvent(OnClick);
 		onDown = new FlxButtonEvent();
@@ -231,6 +231,11 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 		setupAnimation("normal", FlxButton.NORMAL);
 		setupAnimation("highlight", FlxButton.HIGHLIGHT);
 		setupAnimation("pressed", FlxButton.PRESSED);
+	}
+	
+	private function loadDefaultGraphic():Void
+	{
+		loadGraphic(FlxGraphic.fromClass(GraphicButton), true, 80, 20);
 	}
 	
 	private function setupAnimation(animationName:String, frameIndex:Int):Void
