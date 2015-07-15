@@ -52,7 +52,7 @@ class State_DemoCode extends FlxUIState
 		}
 	}
 	
-	private function makeFontDef(name:String, size:Int, alignment:String = null, isBold:Bool = true, color:FlxColor = FlxColor.WHITE, extension:String = ".ttf"):FontDef
+	private function makeFontDef(name:String, size:Int, alignment = null, isBold:Bool = true, color:FlxColor = FlxColor.WHITE, extension:String = ".ttf"):FontDef
 	{
 		var suffix:String = isBold ? "b" : "";
 		return new FontDef(name, extension, "assets/fonts/" + name + suffix + extension, new TextFormat(null, size, color, isBold, null, null, null, null, alignment));
