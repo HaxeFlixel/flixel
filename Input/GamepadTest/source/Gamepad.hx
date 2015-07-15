@@ -209,7 +209,7 @@ class Gamepad extends FlxTypedGroup<FlxSprite>
 	{
 		bar.visible = label.visible = isSupported;
 		if (isSupported)
-			bar.value = value * 100;
+			bar.value = ((value + 1.0) / 2.0) * 100;	//motion value range is from -1.0 to 1.0
 	}
 	
 	function updateButton(button:FlxSprite, pressed:Bool)
