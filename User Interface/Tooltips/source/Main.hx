@@ -7,12 +7,9 @@ import flash.events.Event;
 import flash.Lib;
 import flixel.FlxGame;
 import flixel.FlxState;
-import firetongue.FireTongue;
 
 class Main extends Sprite 
 {
-	public static var tongue:FireTongueEx;
-	
 	var gameWidth:Int = 800; // Width of the game in pixels (might be less / more in actual pixels depending on your zoom).
 	var gameHeight:Int = 600; // Height of the game in pixels (might be less / more in actual pixels depending on your zoom).
 	var initialState:Class<FlxState> = State_Demo; // The FlxState the game starts with.

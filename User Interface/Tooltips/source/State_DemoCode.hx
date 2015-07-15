@@ -11,6 +11,7 @@ import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.math.FlxPoint;
 import flixel.text.FlxText;
+import flixel.ui.FlxButton;
 import flixel.util.FlxColor;
 import haxe.xml.Fast;
 import flash.Lib;
@@ -29,7 +30,6 @@ class State_DemoCode extends FlxUIState
 
 	override public function create() 
 	{
-		_xml_id = "state_code";
 		super.create();
 		makeByHand();
 	}
@@ -52,17 +52,23 @@ class State_DemoCode extends FlxUIState
 		}
 	}
 	
+	private function makeFontDef(name:String, size:Int, alignment:String = null, isBold:Bool = true, color:FlxColor = FlxColor.WHITE, extension:String = ".ttf"):FontDef
+	{
+		var suffix:String = isBold ? "b" : "";
+		return new FontDef(name, extension, "assets/fonts/" + name + suffix + extension, new TextFormat(null, size, color, isBold, null, null, null, null, alignment));
+	}
+	
 	private function makeByHand():Void
 	{
 		_ui.addAsset(cast new FlxUISprite().makeGraphic(FlxG.width, FlxG.height, 0xFF404040), "bkg");
 		
 		var border  = new BorderDef(FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, 1, 1);
-		var sans8   = new FontDef("vera", ".ttf", "assets/fonts/verab.ttf", new TextFormat(null, 8, FlxColor.WHITE, true));
-		var sans10  = new FontDef("vera", ".ttf", "assets/fonts/verab.ttf", new TextFormat(null, 10, FlxColor.WHITE, true));
-		var sans10c = new FontDef("vera", ".ttf", "assets/fonts/verab.ttf", new TextFormat(null, 10, FlxColor.WHITE, true, null, null, null, null, TextFormatAlign.CENTER));
-		var sans12  = new FontDef("vera", ".ttf", "assets/fonts/verab.ttf", new TextFormat(null, 12, FlxColor.WHITE, true));
-		var sans16  = new FontDef("vera", ".ttf", "assets/fonts/verab.ttf", new TextFormat(null, 16, FlxColor.WHITE, true));
-		var sans16c = new FontDef("vera", ".ttf", "assets/fonts/verab.ttf", new TextFormat(null, 16, FlxColor.WHITE, true, null, null, null, null, TextFormatAlign.CENTER));
+		var sans8   = makeFontDef("vera", 8);
+		var sans10  = makeFontDef("vera", 10);
+		var sans10c = makeFontDef("vera", 10, TextFormatAlign.CENTER);
+		var sans12  = makeFontDef("vera", 12);
+		var sans16  = makeFontDef("vera", 16);
+		var sans16c = makeFontDef("vera", 16, TextFormatAlign.CENTER);
 		
 		var t = null;
 		t = addTxt("txt0", new FlxUIText(100,  75, 200, "Tooltips 101"), sans16c, border);
