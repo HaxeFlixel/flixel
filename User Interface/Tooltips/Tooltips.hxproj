@@ -16,10 +16,8 @@
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
     <class path="T:\Development\Git\flixel" />
-    <class path="T:\development\git\lime" />
-    <class path="T:\Development\Git\firetongue" />
     <class path="T:\development\git\openfl" />
-    <class path="C:\HaxeToolkit\haxe\lib\task\1,0,6" />
+    <class path="T:\development\git\lime" />
     <class path="T:\Development\Git\flixel-addons" />
     <class path="T:\Development\Git\flixel-ui" />
     <class path="source" />
@@ -27,7 +25,7 @@
   </classpaths>
   <!-- Build options -->
   <build>
-    <option directives="flixel=3.3.9&#xA;lime=2.4.4&#xA;firetongue=0.0.1&#xA;openfl=3.1.0&#xA;task=1.0.6&#xA;flixel-addons=1.1.0&#xA;flixel-ui=1.0.2&#xA;openfl-next&#xA;tools=2.4.4&#xA;no-compilation&#xA;openfl-flash&#xA;web" />
+    <option directives="flixel=3.3.11&#xA;openfl=3.1.3&#xA;lime=2.4.9&#xA;flixel-addons=1.1.0&#xA;flixel-ui=1.0.2&#xA;openfl-next&#xA;tools=2.4.9&#xA;no-compilation&#xA;openfl-flash&#xA;web" />
     <option flashStrict="False" />
     <option noInlineOnDebug="False" />
     <option mainClass="ApplicationMain" />
