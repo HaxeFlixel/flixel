@@ -27,8 +27,6 @@ class WiiRemoteID
 	
 	*/
 	
-#if !html5
-	
 	public static function checkForFakeAxis(ID:FlxGamepadInputID, attachment:FlxGamepadModelAttachment):Int
 	{
 		if (attachment == WiiNunchuk)
@@ -263,5 +261,4 @@ class WiiRemoteID
 	public static inline var RIGHT_ANALOG_STICK_FAKE_Y:Int = 31;
 	
 	#end
-#end
 }

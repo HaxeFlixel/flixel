@@ -24,7 +24,6 @@ class MayflashWiiRemoteID
 	
 	*/
 	
-#if !js
 	#if FLX_JOYSTICK_API
 	
 	//Standard Wii Remote inputs:
@@ -293,5 +292,4 @@ class MayflashWiiRemoteID
 	public static inline var REMOTE_DPAD_RIGHT:Int = 25;
 	
 	#end
-#end
 }
