@@ -27,7 +27,11 @@ import openfl.text.TextFormatAlign;
 
 class State_DemoCode extends FlxUIState
 {
-
+	public function new()
+	{
+		super();
+	}
+	
 	override public function create() 
 	{
 		super.create();

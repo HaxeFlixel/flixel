@@ -12,6 +12,11 @@ import flixel.addons.ui.FlxUIState;
 class State_Demo extends FlxUIState
 {
 
+	public function new()
+	{
+		super();
+	}
+	
 	override public function create() 
 	{
 		_xml_id = "state_menu";

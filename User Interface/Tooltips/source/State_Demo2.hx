@@ -9,7 +9,11 @@ import flixel.FlxG;
  */
 class State_Demo2 extends FlxUIState
 {
-
+	public function new()
+	{
+		super();
+	}
+	
 	public override function create() 
 	{
 		_xml_id = "state_menu_2";
