@@ -74,58 +74,72 @@ class FlxObjectTest extends FlxTest
 		Assert.isFalse(FlxG.overlap(object1, object2));
 	}
 	
+	@Test // closes #1564, tests #1561
+	function testSeparateYAfterX():Void
+	{
+		var object1:FlxObject = new FlxObject(0, 0, 15, 15);
+		var bar:FlxObject = new FlxObject(17, 17, 100, 40);
+		bar.immovable = true;
+		FlxG.state.add(object1);
+		FlxG.state.add(bar);
+		object1.velocity.set(100, 100);
+		step();
+		Assert.isTrue(FlxG.collide(object1, bar));
+		Assert.areEqual(bar.y, object1.y + object1.height);
+	}
+
 	@Test
 	function testUpdateTouchingFlagsHorizontal():Void
 	{
-		var object1 = new FlxObject(0, 0, 10, 10);
-		var object2 = new FlxObject(20, 2, 10, 6);
+		var object1:FlxObject = new FlxObject(0, 0, 10, 10);
+		var object2:FlxObject = new FlxObject(20, 2, 10, 6);
 		FlxG.state.add(object1);
 		FlxG.state.add(object2);
 		object1.velocity.set(20, 0);
 		step(20);
 		Assert.isTrue(FlxG.overlap(object1, object2, null, FlxObject.updateTouchingFlags));
-		Assert.areEqual(object1.touching, FlxObject.RIGHT);
-		Assert.areEqual(object2.touching, FlxObject.LEFT);
+		Assert.areEqual(FlxObject.RIGHT, object1.touching);
+		Assert.areEqual(FlxObject.LEFT, object2.touching);
 	}
 	
 	@Test // #1556
 	function testUpdateTouchingFlagsVertical():Void
 	{
-		var object1 = new FlxObject(0, 0, 10, 10);
-		var object2 = new FlxObject(2, 20, 10, 6);
+		var object1:FlxObject = new FlxObject(0, 0, 10, 10);
+		var object2:FlxObject = new FlxObject(2, 20, 10, 6);
 		FlxG.state.add(object1);
 		FlxG.state.add(object2);
 		object1.velocity.set(0, 20);
 		step(20);
 		Assert.isTrue(FlxG.overlap(object1, object2, null, FlxObject.updateTouchingFlags));
-		Assert.areEqual(object1.touching, FlxObject.DOWN);
-		Assert.areEqual(object2.touching, FlxObject.UP);
+		Assert.areEqual(FlxObject.DOWN, object1.touching);
+		Assert.areEqual(FlxObject.UP, object2.touching);
 	}
 	
 	@Test // #1556
 	function testUpdateTouchingFlagsNoOverlap():Void
 	{
 		// Position objects far from each other
-		var object1 = new FlxObject(0, 0, 10, 10);
-		var object2 = new FlxObject(2000, 20, 10, 6);
+		var object1:FlxObject = new FlxObject(0, 0, 10, 10);
+		var object2:FlxObject = new FlxObject(2000, 20, 10, 6);
 		FlxG.state.add(object1);
 		FlxG.state.add(object2);
 		object1.velocity.set(0, 20);
 		step(20);
 		Assert.isFalse(FlxG.overlap(object1, object2, null, FlxObject.updateTouchingFlags));
-		Assert.areEqual(object1.touching, FlxObject.NONE);
-		Assert.areEqual(object2.touching, FlxObject.NONE);
+		Assert.areEqual(FlxObject.NONE, object1.touching);
+		Assert.areEqual(FlxObject.NONE, object2.touching);
 	}
 	
 	@Test
-	function testVelocityCollidingWithObject()
+	function testVelocityCollidingWithObject():Void
 	{
 		object2.setSize(100, 10);
 		velocityColldingWith(object2);
 	}
 	
 	@Test
-	function testVelocityCollidingWithTilemap()
+	function testVelocityCollidingWithTilemap():Void
 	{
 		tilemap.loadMapFromCSV("1, 1, 1, 1, 1, 1, 1", FlxGraphic.fromClass(GraphicAuto));
 		velocityColldingWith(tilemap);
