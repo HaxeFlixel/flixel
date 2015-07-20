@@ -33,6 +33,11 @@ using StringTools;
 class FlxText extends FlxSprite
 {
 	/**
+	 * 2px gutter on both top and bottom
+	 */
+	private static var VERTICAL_GUTTER_AMOUNT : Int = 4;
+
+	/**
 	 * The text being displayed.
 	 */
 	public var text(default, set):String = "";
@@ -752,7 +757,7 @@ class FlxText extends FlxSprite
 			return;
 		
 		var oldWidth:Int = 0;
-		var oldHeight:Int = 0;
+		var oldHeight:Int = VERTICAL_GUTTER_AMOUNT;
 		
 		if (graphic != null)
 		{
@@ -761,8 +766,8 @@ class FlxText extends FlxSprite
 		}
 		
 		var newWidth:Float = textField.width;
-		// Account for 2px gutter on top and bottom (that's why there is "+ 4")
-		var newHeight:Float = textField.textHeight + 4;
+		// Account for gutter
+		var newHeight:Float = textField.textHeight + VERTICAL_GUTTER_AMOUNT;
 		
 		// prevent text height from shrinking on flash if text == ""
 		if (textField.textHeight == 0) 
