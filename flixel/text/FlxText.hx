@@ -35,7 +35,7 @@ class FlxText extends FlxSprite
 	/**
 	 * 2px gutter on both top and bottom
 	 */
-	private static var VERTICAL_GUTTER_AMOUNT : Int = 4;
+	private static inline var VERTICAL_GUTTER:Int = 4;
 
 	/**
 	 * The text being displayed.
@@ -757,7 +757,7 @@ class FlxText extends FlxSprite
 			return;
 		
 		var oldWidth:Int = 0;
-		var oldHeight:Int = VERTICAL_GUTTER_AMOUNT;
+		var oldHeight:Int = VERTICAL_GUTTER;
 		
 		if (graphic != null)
 		{
@@ -767,7 +767,7 @@ class FlxText extends FlxSprite
 		
 		var newWidth:Float = textField.width;
 		// Account for gutter
-		var newHeight:Float = textField.textHeight + VERTICAL_GUTTER_AMOUNT;
+		var newHeight:Float = textField.textHeight + VERTICAL_GUTTER;
 		
 		// prevent text height from shrinking on flash if text == ""
 		if (textField.textHeight == 0) 
