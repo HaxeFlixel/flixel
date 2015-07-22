@@ -578,7 +578,8 @@ class ContextWrapper extends EventDispatcher
 	
 	private function getTextureLookupFlags(mipMapping:Bool, smoothing:Bool):String
 	{
-		var repeat:Bool = true; // making it default for now (to make things simpler)
+		//var repeat:Bool = true; // making it default for now (to make things simpler)
+		var repeat:Bool = false; // making it default for now (to make things simpler)
 		
 		var options:Array<String> = ["2d", repeat ? "repeat" : "clamp"];
 		
