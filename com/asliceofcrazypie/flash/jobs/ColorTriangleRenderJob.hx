@@ -1,75 +1,32 @@
 package com.asliceofcrazypie.flash.jobs;
 
 import com.asliceofcrazypie.flash.jobs.BaseRenderJob.RenderJobType;
-import flash.display3D.VertexBuffer3D;
-import flash.display3D.IndexBuffer3D;
-import flash.display3D.Context3DVertexBufferFormat;
-import flixel.math.FlxPoint;
-import flixel.math.FlxRect;
+import openfl.display.BlendMode;
 import openfl.display.Sprite;
 import openfl.display.Tilesheet;
-
-import com.asliceofcrazypie.flash.ContextWrapper;
-import openfl.geom.Rectangle;
-import openfl.geom.Point;
-import openfl.geom.Matrix;
-import openfl.display.BlendMode;
-
 import openfl.display.TriangleCulling;
-
+import openfl.display3D.Context3DVertexBufferFormat;
+import openfl.display3D.IndexBuffer3D;
+import openfl.display3D.VertexBuffer3D;
+import openfl.geom.Matrix;
+import openfl.geom.Point;
+import openfl.geom.Rectangle;
 import openfl.Vector;
 
 /**
  * ...
  * @author Zaphod
  */
-class ColorRenderJob extends BaseRenderJob
+#if flash11
+class ColorTriangleRenderJob extends TriangleRenderJob
 {
-	private static var renderJobPool:Array<ColorRenderJob>;
-	
-	public static inline function getJob(blend:BlendMode = null):ColorRenderJob
-	{
-		var job:ColorRenderJob = (renderJobPool.length > 0) ? renderJobPool.pop() : new ColorRenderJob();
-		job.set(blend);
-		return job;
-	}
-	
-	public static inline function returnJob(renderJob:ColorRenderJob):Void
-	{
-		renderJobPool.push(renderJob);
-	}
-	
-	public static function init():Void
-	{
-		renderJobPool = [];
-		for (i in 0...BaseRenderJob.NUM_JOBS_TO_POOL)
-		{
-			renderJobPool.push(new ColorRenderJob());
-		}
-	}
-	
-#if !flash11
-	private var color:Int = 0xFFFFFF;
-	private var alpha:Float = 1.0;
-	
-	#if flash
-	public var vertices(default, null):Vector<Float>;
-	public var indicesVector(default, null):Vector<UInt>;
-	#else
-	public var vertices(default, null):Array<Float>;
-	public var indicesVector(default, null):Array<Int>;
-	public var colors(default, null):Array<Int>;
-	#end
-#end
-	
 	public function new() 
 	{
-		super(false);
-		type = RenderJobType.NO_IMAGE;
+		super();
+		type = RenderJobType.COLOR_TRIANGLE;
 	}
 	
-	#if flash11
-	public function addAAQuad(rect:FlxRect, r:Float = 1, g:Float = 1, b:Float = 1, a:Float = 1):Void
+	public function addAAQuad(rect:Rectangle, r:Float = 1, g:Float = 1, b:Float = 1, a:Float = 1):Void
 	{
 		var prevVerticesNumber:Int = Std.int(vertexPos / dataPerVertice);
 		
@@ -108,15 +65,15 @@ class ColorRenderJob extends BaseRenderJob
 		numVertices += 4;
 		numIndices += 6;
 		
-		indicesVector[indexPos++] = prevVerticesNumber + 2;
-		indicesVector[indexPos++] = prevVerticesNumber + 1;
-		indicesVector[indexPos++] = prevVerticesNumber + 0;
-		indicesVector[indexPos++] = prevVerticesNumber + 3;
-		indicesVector[indexPos++] = prevVerticesNumber + 2;
-		indicesVector[indexPos++] = prevVerticesNumber + 0;
+		indices[indexPos++] = prevVerticesNumber + 2;
+		indices[indexPos++] = prevVerticesNumber + 1;
+		indices[indexPos++] = prevVerticesNumber + 0;
+		indices[indexPos++] = prevVerticesNumber + 3;
+		indices[indexPos++] = prevVerticesNumber + 2;
+		indices[indexPos++] = prevVerticesNumber + 0;
 	}
 	
-	public function addQuad(rect:FlxRect, normalizedOrigin:FlxPoint, matrix:Matrix, r:Float = 1, g:Float = 1, b:Float = 1, a:Float = 1):Void
+	public function addQuad(rect:Rectangle, normalizedOrigin:Point, matrix:Matrix, r:Float = 1, g:Float = 1, b:Float = 1, a:Float = 1):Void
 	{
 		var prevVerticesNumber:Int = Std.int(vertexPos / dataPerVertice);
 		
@@ -180,15 +137,15 @@ class ColorRenderJob extends BaseRenderJob
 		numVertices += 4;
 		numIndices += 6;
 		
-		indicesVector[indexPos++] = prevVerticesNumber + 2;
-		indicesVector[indexPos++] = prevVerticesNumber + 1;
-		indicesVector[indexPos++] = prevVerticesNumber + 0;
-		indicesVector[indexPos++] = prevVerticesNumber + 3;
-		indicesVector[indexPos++] = prevVerticesNumber + 2;
-		indicesVector[indexPos++] = prevVerticesNumber + 0;
+		indices[indexPos++] = prevVerticesNumber + 2;
+		indices[indexPos++] = prevVerticesNumber + 1;
+		indices[indexPos++] = prevVerticesNumber + 0;
+		indices[indexPos++] = prevVerticesNumber + 3;
+		indices[indexPos++] = prevVerticesNumber + 2;
+		indices[indexPos++] = prevVerticesNumber + 0;
 	}
 	
-	public function addTriangles(vertices:Vector<Float>, indices:Vector<Int> = null, colors:Vector<Int> = null, position:FlxPoint = null):Void
+	public function addTriangles(vertices:Vector<Float>, indices:Vector<Int> = null, colors:Vector<Int> = null, position:Point = null):Void
 	{
 		var numIndices:Int = indices.length;
 		var numVertices:Int = Std.int(vertices.length / 2);
@@ -223,7 +180,7 @@ class ColorRenderJob extends BaseRenderJob
 		
 		for (i in 0...numIndices)
 		{
-			this.indicesVector[indexPos++] = prevVerticesNumber + indices[i];
+			this.indices[indexPos++] = prevVerticesNumber + indices[i];
 		}
 		
 		this.numVertices += numVertices;
@@ -237,7 +194,7 @@ class ColorRenderJob extends BaseRenderJob
 			//blend mode
 			context.setBlendMode(blendMode, false);
 			
-			context.setNoImageProgram(colored); //assign appropriate shader
+			context.setTriangleNoImageProgram(colored); //assign appropriate shader
 			
 			// TODO: culling support...
 			// context.context3D.setCulling();
@@ -258,7 +215,7 @@ class ColorRenderJob extends BaseRenderJob
 			indexbuffer = context.context3D.createIndexBuffer(numIndices);
 			
 			// Upload IndexBuffer3D to GPU.
-			indexbuffer.uploadFromVector(indicesVector, 0, numIndices);
+			indexbuffer.uploadFromVector(indices, 0, numIndices);
 			
 			// vertex position to attribute register 0
 			context.context3D.setVertexBufferAt(0, vertexbuffer, 0, Context3DVertexBufferFormat.FLOAT_2);
@@ -269,8 +226,27 @@ class ColorRenderJob extends BaseRenderJob
 			context.context3D.drawTriangles(indexbuffer);
 		}
 	}
-	#else
-	public function addAAQuad(rect:FlxRect, r:Float = 1, g:Float = 1, b:Float = 1, a:Float = 1):Void
+	
+	public function set(blend:BlendMode, culling:TriangleCulling = null):Void
+	{
+		this.blendMode = blend;
+		this.culling = culling;
+		this.dataPerVertice = 6;
+	}
+}
+#else
+class ColorTriangleRenderJob extends TriangleRenderJob
+{
+	private var color:Int = 0xFFFFFF;
+	private var alpha:Float = 1.0;
+	
+	public function new() 
+	{
+		super();
+		type = RenderJobType.COLOR_TRIANGLE;
+	}
+	
+	public function addAAQuad(rect:Rectangle, r:Float = 1, g:Float = 1, b:Float = 1, a:Float = 1):Void
 	{
 		var prevVerticesNumber:Int = Std.int(vertexPos / dataPerVertice);
 		
@@ -289,12 +265,12 @@ class ColorRenderJob extends BaseRenderJob
 		numVertices += 4;
 		numIndices += 6;
 		
-		indicesVector[indexPos++] = prevVerticesNumber + 2;
-		indicesVector[indexPos++] = prevVerticesNumber + 1;
-		indicesVector[indexPos++] = prevVerticesNumber + 0;
-		indicesVector[indexPos++] = prevVerticesNumber + 3;
-		indicesVector[indexPos++] = prevVerticesNumber + 2;
-		indicesVector[indexPos++] = prevVerticesNumber + 0;
+		indices[indexPos++] = prevVerticesNumber + 2;
+		indices[indexPos++] = prevVerticesNumber + 1;
+		indices[indexPos++] = prevVerticesNumber + 0;
+		indices[indexPos++] = prevVerticesNumber + 3;
+		indices[indexPos++] = prevVerticesNumber + 2;
+		indices[indexPos++] = prevVerticesNumber + 0;
 		
 		#if flash
 		color = ((Std.int(r * 255) << 16) | (Std.int(g * 255) << 8) | Std.int(b * 255));
@@ -308,7 +284,7 @@ class ColorRenderJob extends BaseRenderJob
 		#end
 	}
 	
-	public function addQuad(rect:FlxRect, normalizedOrigin:FlxPoint, matrix:Matrix, r:Float = 1, g:Float = 1, b:Float = 1, a:Float = 1):Void
+	public function addQuad(rect:Rectangle, normalizedOrigin:Point, matrix:Matrix, r:Float = 1, g:Float = 1, b:Float = 1, a:Float = 1):Void
 	{
 		var prevVerticesNumber:Int = Std.int(vertexPos / dataPerVertice);
 		
@@ -352,12 +328,12 @@ class ColorRenderJob extends BaseRenderJob
 		numVertices += 4;
 		numIndices += 6;
 		
-		indicesVector[indexPos++] = prevVerticesNumber + 2;
-		indicesVector[indexPos++] = prevVerticesNumber + 1;
-		indicesVector[indexPos++] = prevVerticesNumber + 0;
-		indicesVector[indexPos++] = prevVerticesNumber + 3;
-		indicesVector[indexPos++] = prevVerticesNumber + 2;
-		indicesVector[indexPos++] = prevVerticesNumber + 0;
+		indices[indexPos++] = prevVerticesNumber + 2;
+		indices[indexPos++] = prevVerticesNumber + 1;
+		indices[indexPos++] = prevVerticesNumber + 0;
+		indices[indexPos++] = prevVerticesNumber + 3;
+		indices[indexPos++] = prevVerticesNumber + 2;
+		indices[indexPos++] = prevVerticesNumber + 0;
 		
 		#if flash
 		color = ((Std.int(r * 255) << 16) | (Std.int(g * 255) << 8) | Std.int(b * 255));
@@ -371,7 +347,7 @@ class ColorRenderJob extends BaseRenderJob
 		#end
 	}
 	
-	public function addTriangles(vertices:Vector<Float>, indices:Vector<Int> = null, colors:Vector<Int> = null, position:FlxPoint = null):Void
+	public function addTriangles(vertices:Vector<Float>, indices:Vector<Int> = null, colors:Vector<Int> = null, position:Point = null):Void
 	{
 		var numIndices:Int = indices.length;
 		var numVertices:Int = Std.int(vertices.length / 2);
@@ -403,7 +379,7 @@ class ColorRenderJob extends BaseRenderJob
 		
 		for (i in 0...numIndices)
 		{
-			this.indicesVector[indexPos++] = prevVerticesNumber + indices[i];
+			this.indices[indexPos++] = prevVerticesNumber + indices[i];
 		}
 		
 		this.numVertices += numVertices;
@@ -414,7 +390,7 @@ class ColorRenderJob extends BaseRenderJob
 	{
 		#if flash
 		context.graphics.beginFill(color, alpha);
-		context.graphics.drawTriangles(vertices, indicesVector);
+		context.graphics.drawTriangles(vertices, indices);
 		#else
 		context.graphics.beginBitmapFill(Batcher.colorsheet.bitmap);
 		var blendInt:Int = 0;
@@ -432,46 +408,18 @@ class ColorRenderJob extends BaseRenderJob
 			blendInt = Tilesheet.TILE_BLEND_SCREEN;
 		}
 		
-		context.graphics.drawTriangles(vertices, indicesVector, null, TriangleCulling.NONE, colors, blendInt);
+		culling = (culling == null) ? TriangleCulling.NONE : culling;
+		
+		context.graphics.drawTriangles(vertices, indices, null, culling, colors, blendInt);
 		#end
 		context.graphics.endFill();
 	}
 	
-	override public function reset():Void 
-	{
-		super.reset();
-		
-		vertices.splice(0, vertices.length);
-		indicesVector.splice(0, indicesVector.length);
-		
-		#if !flash
-		colors.splice(0, colors.length);
-		#end
-	}
-	
-	override function initData(useBytes:Bool = false):Void 
-	{
-		#if flash
-		vertices = new Vector<Float>();
-		indicesVector = new Vector<Int>();
-		
-		color = 0xFFFFFF;
-		alpha = 1.0;
-		#else
-		vertices = new Array<Float>();
-		indicesVector = new Array<Int>();
-		colors = new Array<Int>();
-		#end
-	}
-	#end
-	
-	public function set(blend:BlendMode):Void
+	public function set(blend:BlendMode, culling:TriangleCulling = null):Void
 	{
 		this.blendMode = blend;
-		#if flash11
-		this.dataPerVertice = 6;
-		#else
+		this.culling = culling;
 		this.dataPerVertice = 2;
-		#end
 	}
 }
+#end

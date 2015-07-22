@@ -6,12 +6,14 @@
 	<assets path="assets/sounds" include="*.mp3" if="flash" embed="true" />
 	<assets path="assets/sounds" include="*.ogg" unless="flash || html5" embed="true" />
 	
-	<set name="legacy" unless="next" />
-	
 	<set name="html5-backend" value="openfl-bitfive" unless="html5-backend" />
-	<haxelib name="openfl" unless="create" />
+	<haxelib name="openfl" />
 	
 	<haxeflag name="--macro" value="flixel.system.macros.FlxConditionals.run()" />
+	
+	<haxeflag name="-swf-lib" value="assets/AGAL.swc" if="flash" />
+	
+	<set name="SWF_VERSION" value="11.2" if="flash" ></set>
 	
 	<section if="setup">
 		<haxelib name="systools"/>
@@ -21,17 +23,5 @@
 		<haxelib name="flixel-demos"/>
 		<haxelib name="flixel-tools"/>
 		<haxelib name="flixel-templates"/>
-	</section>
-	
-	<section if="create">
-		<sample path="${haxelib:flixel-demos}/Arcade Classics" />
-		<sample path="${haxelib:flixel-demos}/Editors" />
-		<sample path="${haxelib:flixel-demos}/Effects" />
-		<sample path="${haxelib:flixel-demos}/Flixel Features" />
-		<sample path="${haxelib:flixel-demos}/Input" />
-		<sample path="${haxelib:flixel-demos}/Other" />
-		<sample path="${haxelib:flixel-demos}/Performance" />
-		<sample path="${haxelib:flixel-demos}/Platformers" />
-		<sample path="${haxelib:flixel-demos}/User Interface" />
 	</section>
 </project>

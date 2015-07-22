@@ -5,10 +5,6 @@ import flash.display3D.Context3DRenderMode;
 #end
 
 import com.asliceofcrazypie.flash.jobs.BaseRenderJob;
-import com.asliceofcrazypie.flash.jobs.ColorRenderJob;
-import com.asliceofcrazypie.flash.jobs.QuadRenderJob;
-import com.asliceofcrazypie.flash.jobs.RenderJob;
-import com.asliceofcrazypie.flash.jobs.TriangleRenderJob;
 import flash.display.BlendMode;
 import flash.display.Stage;
 import flash.display.TriangleCulling;
@@ -80,7 +76,9 @@ class Batcher
 		var index:Int = numViewports;
 		viewports[index] = viewport;
 		viewport.index = index;
+		#if !FLX_NO_DEBUG
 		game.addChild(viewport.view);
+		#end
 		numViewports++;
 		return viewport;
 	}
@@ -103,7 +101,9 @@ class Batcher
 		if (index >= 0 || index < numViewports)
 		{
 			var viewport:Viewport = viewports[index];
+			#if !FLX_NO_DEBUG
 			game.removeChild(viewport.view);
+			#end
 			if (dispose)	viewport.dispose();
 			viewports.splice(index, 1);
 			numViewports--;
@@ -130,7 +130,9 @@ class Batcher
 		
 		view1.index = index2;
 		view2.index = index1;
+		#if !FLX_NO_DEBUG
 		game.swapChildren(view1.view, view2.view);
+		#end
 	}
 	
 	public static function setViewportIndex(viewport:Viewport, index:Int):Void
@@ -148,7 +150,9 @@ class Batcher
 		
 		viewports.insert(index, viewport);
 		numViewports = viewports.length;
+		#if !FLX_NO_DEBUG
 		game.addChildAt(viewport.view, index);
+		#end
 		updateViewportIndices();
 	}
 	
@@ -199,7 +203,7 @@ class Batcher
 	/**
 	 * Batcher initialization method. It also calls TilesheetStage3D.init() method.
 	 */
-	public static function init(stage:Stage, stage3DLevel:Int = 0, antiAliasLevel:Int = 5, initCallback:String->Void = null, renderMode:Dynamic = null, batchSize:Int = 0):Void
+	public static function init(stage:Stage, stage3DLevel:Int = 0, antiAliasLevel:Int = 5, initCallback:String->Void = null, renderMode:Dynamic = null, square:Bool = true, batchSize:Int = 0):Void
 	{
 		if (!_isInited)
 		{
@@ -209,7 +213,7 @@ class Batcher
 			stage.addChild(game);
 			
 			#if flash11
-			TilesheetStage3D.init(stage, stage3DLevel, antiAliasLevel, initCallback, renderMode, batchSize);
+			TilesheetStage3D.init(stage, stage3DLevel, antiAliasLevel, initCallback, renderMode, square, batchSize);
 			TilesheetStage3D.context.renderCallback = render;
 			#else
 			BaseRenderJob.init(batchSize);

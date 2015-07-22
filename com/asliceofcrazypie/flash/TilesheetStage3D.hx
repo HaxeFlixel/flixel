@@ -1,6 +1,8 @@
 package com.asliceofcrazypie.flash;
 
 import com.asliceofcrazypie.flash.jobs.BaseRenderJob;
+import com.asliceofcrazypie.flash.jobs.TextureQuadRenderJob;
+import com.asliceofcrazypie.flash.jobs.TextureTriangleRenderJob;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import openfl.display.BitmapData;
@@ -11,7 +13,6 @@ import openfl.Lib;
 import openfl.text.TextField;
 
 #if flash11
-import com.asliceofcrazypie.flash.jobs.RenderJob;
 import com.asliceofcrazypie.flash.jobs.QuadRenderJob;
 import com.asliceofcrazypie.flash.jobs.TriangleRenderJob;
 
@@ -45,10 +46,16 @@ class TilesheetStage3D extends Tilesheet
 	public var bitmapWidth(default, null):Int;
 	public var bitmapHeight(default, null):Int;
 	
+	public var originalWidth(default, null):Int;
+	public var originalHeight(default, null):Int;
+	
 	public function new(inImage:BitmapData, premultipliedAlpha:Bool = false, mipmap:Bool = true) 
 	{
+		originalWidth = inImage.width;
+		originalHeight = inImage.height;
+		
 		#if flash11
-		inImage = TextureUtil.fixTextureSize(inImage);
+		inImage = TextureUtil.fixTextureSize(inImage, _squareTexture);
 		#end
 		
 		super(inImage);
@@ -109,21 +116,25 @@ class TilesheetStage3D extends Tilesheet
 	private static var _stage:Stage;
 	private static var _stage3DLevel:Int;
 	private static var _initCallback:String->Void;
+	private static var _squareTexture:Bool = true;
 	
 	private static var matrix:Matrix = new Matrix();
 	
-	// TODO: document it...
+	private static var flxPoint:FlxPoint = new FlxPoint();
+	private static var flxRect1:FlxRect = new FlxRect();
+	private static var flxRect2:FlxRect = new FlxRect();
+	
 	/**
+	 * Initialization of all the inner stuff for the rendering (getting stage3d context, creating pools of render jobs, etc.)
 	 * 
-	 * 
-	 * @param	stage
-	 * @param	stage3DLevel
-	 * @param	antiAliasLevel
-	 * @param	initCallback
-	 * @param	renderMode
-	 * @param	batchSize
+	 * @param	stage				flash Stage instance.
+	 * @param	stage3DLevel		the level of stage3d to use for rendering (on flash11).
+	 * @param	antiAliasLevel		Antialising level to use for rendering (on flash11).
+	 * @param	initCallback		The method which will be called after initialization of inner stuff.
+	 * @param	renderMode			Rendering mode.
+	 * @param	batchSize			The max size of batches, used for drawTriangles calls. Should be more than 0 and no more than TriangleRenderJob.MAX_QUADS_PER_BUFFER
 	 */
-	public static function init(stage:Stage, stage3DLevel:Int = 0, antiAliasLevel:Int = 5, initCallback:String->Void = null, renderMode:Dynamic = null, batchSize:Int = 0):Void
+	public static function init(stage:Stage, stage3DLevel:Int = 0, antiAliasLevel:Int = 5, initCallback:String->Void = null, renderMode:Dynamic = null, square:Bool = true, batchSize:Int = 0):Void
 	{
 		if (!_isInited)
 		{
@@ -132,6 +143,7 @@ class TilesheetStage3D extends Tilesheet
 			_stage = stage;
 			_stage3DLevel = stage3DLevel;
 			_initCallback = initCallback;
+			_squareTexture = square;
 			
 			BaseRenderJob.init(batchSize);
 			
@@ -172,17 +184,17 @@ class TilesheetStage3D extends Tilesheet
 		}
 	}
 	
-	// TODO: document it...
 	// TODO: support culling...
 	/**
+	 * Renders a set of triangles, typically to distort bitmaps and give them a three-dimensional appearance.
+	 * Works like graphics.drawTriangles().
 	 * 
-	 * 
-	 * @param	vertices
-	 * @param	indices
-	 * @param	uvtData
-	 * @param	culling
-	 * @param	colors
-	 * @param	blending
+	 * @param	vertices	A Vector of Numbers where each pair of numbers is treated as a coordinate location (an x, y pair). The vertices parameter is required.
+	 * @param	indices		A Vector of integers or indexes, where every three indexes define a triangle. 
+	 * @param	uvtData		A Vector of normalized coordinates used to apply texture mapping.
+	 * @param	culling		Specifies whether to render triangles that face in a specified direction. 
+	 * @param	colors		A Vector of integers where each value is used for vertex color tinting.
+	 * @param	blending	Blend mode used for the draw call.
 	 */
 	public function drawTriangles(graphics:Graphics, vertices:Vector<Float>, indices:Vector<Int> = null, uvtData:Vector<Float> = null, culling:TriangleCulling = null, colors:Vector<Int> = null, smooth:Bool = false, blending:BlendMode = null):Void
 	{
@@ -195,16 +207,17 @@ class TilesheetStage3D extends Tilesheet
 			var numIndices:Int = indices.length;
 			var numVertices:Int = Std.int(vertices.length / 2);
 			
-			var renderJob:TriangleRenderJob = TriangleRenderJob.getJob(this, isColored, isColored, smooth, blending);
+			var renderJob:TextureTriangleRenderJob = BaseRenderJob.textureTriangles.getJob();
+			renderJob.set(this, isColored, isColored, smooth, blending);
 			
-			if (numIndices + renderJob.numIndices > BaseRenderJob.MAX_INDICES_PER_BUFFER)
+			if (numIndices + renderJob.numIndices > TriangleRenderJob.MAX_INDICES_PER_BUFFER)
 			{
-				throw ("Number of indices shouldn't be more than " + BaseRenderJob.MAX_INDICES_PER_BUFFER);
+				throw ("Number of indices shouldn't be more than " + TriangleRenderJob.MAX_INDICES_PER_BUFFER);
 			}
 			
-			if (numVertices + renderJob.numIndices > BaseRenderJob.MAX_VERTEX_PER_BUFFER)
+			if (numVertices + renderJob.numIndices > TriangleRenderJob.MAX_VERTEX_PER_BUFFER)
 			{
-				throw ("Number of vertices shouldn't be more than " + BaseRenderJob.MAX_VERTEX_PER_BUFFER);
+				throw ("Number of vertices shouldn't be more than " + TriangleRenderJob.MAX_VERTEX_PER_BUFFER);
 			}
 			
 			renderJob.addTriangles(vertices, indices, uvtData, colors);
@@ -215,8 +228,6 @@ class TilesheetStage3D extends Tilesheet
 			graphics.drawTriangles(vertices, indices, uvtData, culling);
 		}
 	}
-	
-	private static var flxUV:FlxRect = new FlxRect();
 	
 	override public function drawTiles(graphics:Graphics, tileData:Array<Float>, smooth:Bool = false, flags:Int = 0, count:Int = -1):Void
 	{
@@ -247,9 +258,6 @@ class TilesheetStage3D extends Tilesheet
 			var origin:Point;
 			var uv:Rectangle;
 			var tileId:Int;
-			
-			var flxRect:FlxRect = FlxRect.flxRect;
-			var flxPoint:FlxPoint = FlxPoint.flxPoint1;
 			
 			//determine data structure based on flags
 			var tileDataPerItem:Int = 3;
@@ -314,7 +322,7 @@ class TilesheetStage3D extends Tilesheet
 				throw new ArgumentError('tileData length must be a multiple of ' + tileDataPerItem);
 			}
 			
-			var renderJob:QuadRenderJob;
+			var renderJob:TextureQuadRenderJob;
 			
 			var tileDataPos:Int = 0;
 			
@@ -323,7 +331,7 @@ class TilesheetStage3D extends Tilesheet
 			///////////////////
 			// for each item //
 			///////////////////
-			var maxNumItems:Int = BaseRenderJob.quadsPerBuffer;
+			var maxNumItems:Int = TextureQuadRenderJob.limit;
 			var startItemPos:Int = 0;
 			var numItemsThisLoop:Int = 0;
 			
@@ -346,7 +354,8 @@ class TilesheetStage3D extends Tilesheet
 				numItemsThisLoop = numItems > maxNumItems ? maxNumItems : numItems;
 				numItems -= numItemsThisLoop;
 				
-				renderJob = QuadRenderJob.getJob(this, isRGB, isAlpha, smooth, blend);
+				renderJob = BaseRenderJob.textureQuads.getJob();
+				renderJob.set(this, isRGB, isAlpha, smooth, blend);
 				
 				for (i in 0...numItemsThisLoop)
 				{
@@ -433,17 +442,16 @@ class TilesheetStage3D extends Tilesheet
 					
 					matrix.setTo(transform_a, transform_b, transform_c, transform_d, transform_tx, transform_ty);
 					
-					flxRect.copyFromFlash(rect);
 					flxPoint.copyFromFlash(origin);
-					flxUV.copyFromFlash(uv);
-					
-					renderJob.addQuad(flxRect, flxPoint, flxUV, matrix, r, g, b, a);
+					flxRect1.copyFromFlash(rect);
+					flxRect2.copyFromFlash(uv);
+					renderJob.addQuad(flxRect1, flxPoint, flxRect2, matrix, r, g, b, a);
 					
 					tileDataPos += tileDataPerItem;
 				}
 				
 				//push vertices into jobs list
-				context.addQuadJob(renderJob);		
+				context.addQuadJob(renderJob);
 			}//end while
 		}
 		else if(!Type.enumEq(fallbackMode, FallbackMode.NO_FALLBACK))
@@ -451,8 +459,6 @@ class TilesheetStage3D extends Tilesheet
 			super.drawTiles(graphics, tileData, smooth, flags, count);
 		}
 	}
-	
-	// TODO: add methods to draw colored polygons and quads as well???
 	
 	public static var antiAliasing(default, set):Int;
 	

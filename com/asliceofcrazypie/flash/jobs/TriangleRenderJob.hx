@@ -1,337 +1,188 @@
 package com.asliceofcrazypie.flash.jobs;
-import com.asliceofcrazypie.flash.ContextWrapper;
-import com.asliceofcrazypie.flash.TilesheetStage3D;
-import flixel.math.FlxPoint;
-import flixel.math.FlxRect;
-import openfl.display.Sprite;
-import openfl.display.Tilesheet;
 
-#if flash11
-import flash.display3D.textures.Texture;
-#end
-import com.asliceofcrazypie.flash.jobs.BaseRenderJob.RenderJobType;
-import flash.display.BlendMode;
-import flash.display.TriangleCulling;
-import flash.geom.Matrix;
-import flash.geom.Point;
-import flash.geom.Rectangle;
-import flash.Vector;
+import openfl.display.TriangleCulling;
+import openfl.display3D.Context3DVertexBufferFormat;
+import openfl.display3D.IndexBuffer3D;
+import openfl.display3D.VertexBuffer3D;
+import openfl.Vector;
 
 /**
  * ...
  * @author Zaphod
  */
 #if flash11
-class TriangleRenderJob extends RenderJob
-#else
 class TriangleRenderJob extends BaseRenderJob
-#end
 {
-	private static var renderJobPool:Array<TriangleRenderJob>;
+	public static inline var MAX_INDICES_PER_BUFFER:Int = 98298;
+	public static inline var MAX_VERTEX_PER_BUFFER:Int = 65532;		// (MAX_INDICES_PER_BUFFER * 4 / 6)
+	public static inline var MAX_QUADS_PER_BUFFER:Int = 16383;		// (MAX_VERTEX_PER_BUFFER / 4)
+	public static inline var MAX_TRIANGLES_PER_BUFFER:Int = 21844;	// (MAX_VERTEX_PER_BUFFER / 3)
 	
-	public static inline function getJob(tilesheet:TilesheetStage3D, isRGB:Bool, isAlpha:Bool, isSmooth:Bool, blend:BlendMode):TriangleRenderJob
-	{
-		var job:TriangleRenderJob = (renderJobPool.length > 0) ? renderJobPool.pop() : new TriangleRenderJob();
-		job.set(tilesheet, isRGB, isAlpha, isSmooth, blend);
-		return job;
-	}
+	/**
+	 * The number of vertices per buffer. Used to decide whether to start new batch or not.
+	 * Its value couldn't be less than 0 and more than MAX_INDICES_PER_BUFFER (flash target limit).
+	 */
+	public static var vertexPerBuffer(default, null):Int;
+	/**
+	 * The number of quads per buffer. I'm actually not using it.
+	 */
+	public static var quadsPerBuffer(default, null):Int;
+	/**
+	 * The number of triangles per buffer. I'm actually not using it.
+	 */
+	public static var trianglesPerBuffer(default, null):Int;
+	/**
+	 * The number of indices per buffer. I'm actually not using it.
+	 */
+	public static var indicesPerBuffer(default, null):Int;
 	
-	public static inline function returnJob(renderJob:TriangleRenderJob):Void
+	@:allow(com.asliceofcrazypie.flash)
+	private static function init(batchSize:Int = 0):Void
 	{
-		renderJobPool.push(renderJob);
-	}
-	
-	public static function init():Void
-	{
-		renderJobPool = [];
-		for (i in 0...BaseRenderJob.NUM_JOBS_TO_POOL)
+		if (batchSize <= 0 || batchSize > MAX_QUADS_PER_BUFFER)
 		{
-			renderJobPool.push(new TriangleRenderJob());
+			batchSize = MAX_QUADS_PER_BUFFER;
 		}
+		
+		quadsPerBuffer = batchSize;
+		vertexPerBuffer = batchSize * 4;
+		trianglesPerBuffer = Std.int(vertexPerBuffer / 3);
+		indicesPerBuffer = Std.int(vertexPerBuffer * 6 / 4);	
 	}
 	
-#if !flash11
-	#if flash
-	public var vertices(default, null):Vector<Float>;
-	public var indicesVector(default, null):Vector<UInt>;
-	public var uvtData(default, null):Vector<Float>;
-	#else
-	public var vertices(default, null):Array<Float>;
-	public var indicesVector(default, null):Array<Int>;
-	public var uvtData(default, null):Array<Float>;
-	public var colors(default, null):Array<Int>;
-	#end
+	public var dataPerVertice:Int = 0;
+	public var numVertices:Int = 0;
+	public var numIndices:Int = 0;
 	
-	public var uvtPos:Int = 0;
-#end
+	public var vertices(default, null):Vector<Float>;
+	public var indices(default, null):Vector<UInt>;
+	
+	public var vertexPos:Int = 0;
+	public var indexPos:Int = 0;
+	
+	public var culling:TriangleCulling;
 	
 	public function new() 
 	{
-		super(false);
-		type = RenderJobType.TRIANGLE;
+		super();
 	}
 	
-	#if flash11
-	override public function addQuad(rect:FlxRect, normalizedOrigin:FlxPoint, uv:FlxRect, matrix:Matrix, r:Float = 1, g:Float = 1, b:Float = 1, a:Float = 1):Void
+	override private function initData():Void
 	{
-		var prevVerticesNumber:Int = Std.int(vertexPos / dataPerVertice);
-		
-		super.addQuad(rect, normalizedOrigin, uv, matrix, r, g, b, a);
-		
-		indicesVector[indexPos++] = prevVerticesNumber + 2;
-		indicesVector[indexPos++] = prevVerticesNumber + 1;
-		indicesVector[indexPos++] = prevVerticesNumber + 0;
-		indicesVector[indexPos++] = prevVerticesNumber + 3;
-		indicesVector[indexPos++] = prevVerticesNumber + 2;
-		indicesVector[indexPos++] = prevVerticesNumber + 0;
+		this.vertices = new Vector<Float>(TriangleRenderJob.vertexPerBuffer >> 2);
+		this.indices = new Vector<UInt>();
 	}
 	
-	public function addTriangles(vertices:Vector<Float>, indices:Vector<Int> = null, uvtData:Vector<Float> = null, colors:Vector<Int> = null, position:FlxPoint = null):Void
+	override public function reset():Void
 	{
-		var numIndices:Int = indices.length;
-		var numVertices:Int = Std.int(vertices.length / 2);
+		super.reset();
 		
-		var prevVerticesNumber:Int = Std.int(vertexPos / dataPerVertice);
+		culling = null;
 		
-		var vertexIndex:Int = 0;
-		var vColor:Int;
-		
-		var colored:Bool = (isRGB || isAlpha);
-		
-		var x:Float = 0;
-		var y:Float = 0;
-		
-		if (position != null)
-		{
-			x = position.x;
-			y = position.y;
-		}
-		
-		for (i in 0...numVertices)
-		{
-			vertexIndex = 2 * i;
-			
-			this.vertices[vertexPos++] = vertices[vertexIndex] + x;
-			this.vertices[vertexPos++] = vertices[vertexIndex + 1] + y;
-			
-			this.vertices[vertexPos++] = uvtData[vertexIndex];
-			this.vertices[vertexPos++] = uvtData[vertexIndex + 1];
-			
-			if (colored)
-			{
-				vColor = colors[i];
-				
-				this.vertices[vertexPos++] = ((vColor >> 16) & 0xff) / 255;
-				this.vertices[vertexPos++] = ((vColor >> 8) & 0xff) / 255;
-				this.vertices[vertexPos++] = (vColor & 0xff) / 255;
-				this.vertices[vertexPos++] = ((vColor >> 24) & 0xff) / 255;
-			}
-		}
-		
-		for (i in 0...numIndices)
-		{
-			this.indicesVector[indexPos++] = prevVerticesNumber + indices[i];
-		}
-		
-		this.numVertices += numVertices;
-		this.numIndices += numIndices;
+		vertexPos = 0;
+		indexPos = 0;
+		numVertices = 0;
+		numIndices = 0;
 	}
+	
+	override public function canAddQuad():Bool
+	{
+		return (numVertices + 4) <= TriangleRenderJob.vertexPerBuffer;
+	}
+	
+	public inline function canAddTriangles(numVertices:Int):Bool
+	{
+		return (numVertices + this.numVertices) <= TriangleRenderJob.vertexPerBuffer;
+	}
+	
+	public static inline function checkMaxTrianglesCapacity(numVertices:Int):Bool
+	{
+		return numVertices <= TriangleRenderJob.vertexPerBuffer;
+	}
+}
+#else
+class TriangleRenderJob extends BaseRenderJob
+{
+	private static function init(batchSize:Int = 0):Void
+	{
+		
+	}
+	
+	#if flash
+	public var vertices(default, null):Vector<Float>;
+	public var indices(default, null):Vector<UInt>;
 	#else
-	public function addQuad(rect:FlxRect, normalizedOrigin:FlxPoint, uv:FlxRect, matrix:Matrix, r:Float = 1, g:Float = 1, b:Float = 1, a:Float = 1):Void
-	{
-		var prevVerticesNumber:Int = Std.int(vertexPos / dataPerVertice);
-		
-		var imgWidth:Int = Std.int(rect.width);
-		var imgHeight:Int = Std.int(rect.height);
-		
-		var centerX:Float = normalizedOrigin.x * imgWidth;
-		var centerY:Float = normalizedOrigin.y * imgHeight;
-		
-		var px:Float;
-		var py:Float;
-		
-		//top left
-		px = -centerX;
-		py = -centerY;
-		
-		vertices[vertexPos++] = px * matrix.a + py * matrix.c + matrix.tx; //top left x
-		vertices[vertexPos++] = px * matrix.b + py * matrix.d + matrix.ty; //top left y
-		
-		//top right
-		px = imgWidth - centerX;
-		py = -centerY;
-		
-		vertices[vertexPos++] = px * matrix.a + py * matrix.c + matrix.tx; //top right x
-		vertices[vertexPos++] = px * matrix.b + py * matrix.d + matrix.ty; //top right y
-		
-		//bottom right
-		px = imgWidth - centerX;
-		py = imgHeight - centerY;
-		
-		vertices[vertexPos++] = px * matrix.a + py * matrix.c + matrix.tx; //bottom right x
-		vertices[vertexPos++] = px * matrix.b + py * matrix.d + matrix.ty; //bottom right y
-		
-		//bottom left
-		px = -centerX;
-		py = imgHeight - centerY;
-		
-		vertices[vertexPos++] = px * matrix.a + py * matrix.c + matrix.tx; //bottom left x
-		vertices[vertexPos++] = px * matrix.b + py * matrix.d + matrix.ty; //bottom left y
-		
-		this.uvtData[uvtPos++] = uv.x;
-		this.uvtData[uvtPos++] = uv.y;
-		
-		this.uvtData[uvtPos++] = uv.width;
-		this.uvtData[uvtPos++] = uv.y;
-		
-		this.uvtData[uvtPos++] = uv.width;
-		this.uvtData[uvtPos++] = uv.height;
-		
-		this.uvtData[uvtPos++] = uv.x;
-		this.uvtData[uvtPos++] = uv.height;
-		
-		indicesVector[indexPos++] = prevVerticesNumber + 2;
-		indicesVector[indexPos++] = prevVerticesNumber + 1;
-		indicesVector[indexPos++] = prevVerticesNumber + 0;
-		indicesVector[indexPos++] = prevVerticesNumber + 3;
-		indicesVector[indexPos++] = prevVerticesNumber + 2;
-		indicesVector[indexPos++] = prevVerticesNumber + 0;
-		
-		#if !flash
-		if (isRGB || isAlpha)
-		{
-			var color = ((Std.int(a * 255) << 24) | (Std.int(r * 255) << 16) | (Std.int(g * 255) << 8) | Std.int(b * 255));
-			colors[colorPos++] = color;
-			colors[colorPos++] = color;
-			colors[colorPos++] = color;
-			colors[colorPos++] = color;
-		}		
-		#end
-		
-		this.numVertices += 4;
-		this.numIndices += 6;
-	}
+	public var vertices(default, null):Array<Float>;
+	public var indices(default, null):Array<Int>;
+	public var colors(default, null):Array<Int>;
+	#end
 	
-	public function addTriangles(vertices:Vector<Float>, indices:Vector<Int> = null, uvtData:Vector<Float> = null, colors:Vector<Int> = null, position:FlxPoint = null):Void
-	{
-		var numIndices:Int = indices.length;
-		var numVertices:Int = Std.int(vertices.length / 2);
-		
-		var prevVerticesNumber:Int = Std.int(vertexPos / dataPerVertice);
-		
-		var vertexIndex:Int = 0;
-		
-		var x:Float = 0;
-		var y:Float = 0;
-		
-		if (position != null)
-		{
-			x = position.x;
-			y = position.y;
-		}
-		
-		for (i in 0...numVertices)
-		{
-			vertexIndex = 2 * i;
-			
-			this.vertices[vertexPos++] = vertices[vertexIndex] + x;
-			this.vertices[vertexPos++] = vertices[vertexIndex + 1] + y;
-			
-			#if !flash
-			if (colors != null)
-				this.colors[colorPos++] = colors[i];
-			#end
-		}
-		
-		var uvtDataLength:Int = uvtData.length;
-		for (i in 0...uvtDataLength)
-		{
-			this.uvtData[uvtPos++] = uvtData[i];
-		}
-		
-		for (i in 0...numIndices)
-		{
-			this.indicesVector[indexPos++] = prevVerticesNumber + indices[i];
-		}
-		
-		this.numVertices += numVertices;
-		this.numIndices += numIndices;
-	}
+	public var dataPerVertice:Int = 0;
+	public var numVertices:Int = 0;
+	public var numIndices:Int = 0;
 	
-	override public function render(context:Sprite = null, colored:Bool = false):Void 
-	{
-		context.graphics.beginBitmapFill(tilesheet.bitmap, null, true, isSmooth);
-		#if flash
-		context.graphics.drawTriangles(vertices, indicesVector, uvtData, TriangleCulling.NONE);
-		#else
-		var blendInt:Int = 0;
-		
-		if (blendMode == BlendMode.ADD)
-		{
-			blendInt = Tilesheet.TILE_BLEND_ADD;
-		}
-		else if (blendMode == BlendMode.MULTIPLY)
-		{
-			blendInt = Tilesheet.TILE_BLEND_MULTIPLY;
-		}
-		else if (blendMode == BlendMode.SCREEN)
-		{
-			blendInt = Tilesheet.TILE_BLEND_SCREEN;
-		}
-		
-		context.graphics.drawTriangles(vertices, indicesVector, uvtData, TriangleCulling.NONE, (colors.length > 0) ? colors : null, blendInt);
-		#end
-		context.graphics.endFill();
-	}
+	public var vertexPos:Int = 0;
+	public var indexPos:Int = 0;
 	
-	override function initData(useBytes:Bool = false):Void 
+	#if !flash
+	public var colorPos:Int = 0;
+	#end
+	
+	public var culling:TriangleCulling;
+	
+	public function new()
 	{
-		#if flash
-		vertices = new Vector<Float>();
-		indicesVector = new Vector<Int>();
-		uvtData = new Vector<Float>();
-		#else
-		vertices = new Array<Float>();
-		indicesVector = new Array<Int>();
-		uvtData = new Array<Float>();
-		colors = new Array<Int>();
-		#end
+		super();
 	}
 	
 	override public function reset():Void 
 	{
 		super.reset();
 		
-		uvtPos = 0;
+		culling = null;
 		
 		vertices.splice(0, vertices.length);
-		indicesVector.splice(0, indicesVector.length);
-		uvtData.splice(0, uvtData.length);
-		
+		indices.splice(0, indices.length);
 		#if !flash
 		colors.splice(0, colors.length);
 		#end
+		
+		dataPerVertice = 0;
+		numVertices = 0;
+		numIndices = 0;
+		
+		vertexPos = 0;
+		indexPos = 0;
+		#if !flash
+		colorPos = 0;
+		#end
 	}
-	#end
 	
-	public function set(tilesheet:TilesheetStage3D, isRGB:Bool, isAlpha:Bool, isSmooth:Bool, blend:BlendMode):Void
+	override function initData():Void 
 	{
-		this.tilesheet = tilesheet;
-		this.isRGB = isRGB;
-		this.isAlpha = isAlpha;
-		this.isSmooth = isSmooth;
-		this.blendMode = blend;
-		
-		var dataPerVertice:Int = 4;
-		if (isRGB)
-		{
-			dataPerVertice += 3;
-		}
-		if (isAlpha)
-		{
-			dataPerVertice++;
-		}
-		
-		this.dataPerVertice = dataPerVertice;
+		#if flash
+		vertices = new Vector<Float>();
+		indices = new Vector<Int>();
+		#else
+		vertices = new Array<Float>();
+		indices = new Array<Int>();
+		colors = new Array<Int>();
+		#end
+	}
+	
+	override public function canAddQuad():Bool
+	{
+		return true;
+	}
+	
+	public inline function canAddTriangles(numVertices:Int):Bool
+	{
+		return true;
+	}
+	
+	public static inline function checkMaxTrianglesCapacity(numVertices:Int):Bool
+	{
+		return true;
 	}
 }
+#end

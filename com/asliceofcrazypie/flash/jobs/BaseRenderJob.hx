@@ -1,13 +1,7 @@
 package com.asliceofcrazypie.flash.jobs;
 
 import flash.display.BlendMode;
-import flash.Vector;
-import openfl.display.Sprite;
-
-#if flash11
-import flash.utils.ByteArray;
-import flash.utils.Endian;
-#end
+import flash.display.Sprite;
 
 /**
  * ...
@@ -15,18 +9,21 @@ import flash.utils.Endian;
  */
 class BaseRenderJob
 {
-	public static inline var NUM_JOBS_TO_POOL:Int = 25;
+	public static var textureQuads:JobPool<TextureQuadRenderJob>;
+	public static var textureTriangles:JobPool<TextureTriangleRenderJob>;
+	public static var colorQuads:JobPool<ColorQuadRenderJob>;
+	public static var colorTriangles:JobPool<ColorTriangleRenderJob>;
 	
-	public static inline var MAX_INDICES_PER_BUFFER:Int = 98298;
-	public static inline var MAX_VERTEX_PER_BUFFER:Int = 65532;		// (MAX_INDICES_PER_BUFFER * 4 / 6)
-	public static inline var MAX_QUADS_PER_BUFFER:Int = 16383;		// (MAX_VERTEX_PER_BUFFER / 4)
-	public static inline var MAX_TRIANGLES_PER_BUFFER:Int = 21844;	// (MAX_VERTEX_PER_BUFFER / 3)
-	
-	// TODO: use these static vars (and document them)...
-	public static var vertexPerBuffer(default, null):Int;
-	public static var quadsPerBuffer(default, null):Int;
-	public static var trianglesPerBuffer(default, null):Int;
-	public static var indicesPerBuffer(default, null):Int;
+	@:allow(com.asliceofcrazypie.flash)
+	private static function init(batchSize:Int = 0):Void
+	{
+		TriangleRenderJob.init(batchSize);
+		
+		textureQuads = new JobPool<TextureQuadRenderJob>(TextureQuadRenderJob);
+		textureTriangles = new JobPool<TextureTriangleRenderJob>(TextureTriangleRenderJob);
+		colorQuads = new JobPool<ColorQuadRenderJob>(ColorQuadRenderJob);
+		colorTriangles = new JobPool<ColorTriangleRenderJob>(ColorTriangleRenderJob);
+	}
 	
 	public var tilesheet:TilesheetStage3D;
 	
@@ -38,69 +35,14 @@ class BaseRenderJob
 	
 	public var type(default, null):RenderJobType;
 	
-	public var dataPerVertice:Int = 0;
-	public var numVertices:Int = 0;
-	public var numIndices:Int = 0;
-	
-	#if flash11
-	public var vertices(default, null):Vector<Float>;
-	public var indicesVector(default, null):Vector<UInt>;
-	public var indicesBytes(default, null):ByteArray;
-	#end
-	
-	public var vertexPos:Int = 0;
-	public var indexPos:Int = 0;
-	public var colorPos:Int = 0;
-	
-	@:allow(com.asliceofcrazypie.flash)
-	private static function init(batchSize:Int = 0):Void
+	private function new() 
 	{
-		if (batchSize <= 0 || batchSize > MAX_QUADS_PER_BUFFER)
-		{
-			batchSize = MAX_QUADS_PER_BUFFER;
-		}
-		
-		quadsPerBuffer = batchSize;
-		vertexPerBuffer = batchSize * 4;
-		trianglesPerBuffer = Std.int(vertexPerBuffer / 3);
-		indicesPerBuffer = Std.int(vertexPerBuffer * 6 / 4);
-		
-		QuadRenderJob.init();
-		TriangleRenderJob.init();
-		ColorRenderJob.init();
+		initData();
 	}
 	
-	// TODO: use `useBytes` not only in constructor...
-	private function new(useBytes:Bool = false) 
+	private function initData():Void
 	{
-		initData(useBytes);
-	}
-	
-	private function initData(useBytes:Bool = false):Void
-	{
-		#if flash11
-		this.vertices = new Vector<Float>(BaseRenderJob.vertexPerBuffer >> 2);
 		
-		if (useBytes)
-		{
-			indicesBytes = new ByteArray();
-			indicesBytes.endian = Endian.LITTLE_ENDIAN;
-			
-			for (i in 0...Std.int(BaseRenderJob.vertexPerBuffer / 4))
-			{
-				indicesBytes.writeShort((i * 4) + 2);
-				indicesBytes.writeShort((i * 4) + 1);
-				indicesBytes.writeShort((i * 4) + 0);
-				indicesBytes.writeShort((i * 4) + 3);
-				indicesBytes.writeShort((i * 4) + 2);
-				indicesBytes.writeShort((i * 4) + 0);
-			}
-		}
-		else
-		{
-			indicesVector = new Vector<UInt>();
-		}
-		#end
 	}
 	
 	#if flash11
@@ -115,36 +57,38 @@ class BaseRenderJob
 	}
 	#end
 	
-	public inline function canAddQuad():Bool
+	public function canAddQuad():Bool
 	{
-		return (numVertices + 4) <= BaseRenderJob.vertexPerBuffer;
+		return false;
 	}
 	
-	public inline function canAddTriangles(numVertices:Int):Bool
+	/**
+	 * This method should help to decide whether we need start another batch or not
+	 * To be overriden in subclasses.
+	 * 
+	 * @param	tilesheet	Tilesheet to use as a source of graphics for the next draw call.
+	 * @param	tint		Whether next draw call should be tinted or not.
+	 * @param	alpha		Whether next draw call should have alpha multiplier or not.
+	 * @param	smooth		Whether next draw call should have smoothing or not.
+	 * @param	blend		Blending mode for the next draw call.
+	 * @return	True if we need to start another batch, false in the other case and we can continue current one.
+	 */
+	public function stateChanged(tilesheet:TilesheetStage3D, tint:Bool, alpha:Bool, smooth:Bool, blend:BlendMode):Bool
 	{
-		return (numVertices + this.numVertices) <= BaseRenderJob.vertexPerBuffer;
-	}
-	
-	public static inline function checkMaxTrianglesCapacity(numVertices:Int):Bool
-	{
-		return numVertices <= BaseRenderJob.vertexPerBuffer;
+		return false;
 	}
 	
 	public function reset():Void
 	{
 		blendMode = null;
 		tilesheet = null;
-		vertexPos = 0;
-		indexPos = 0;
-		colorPos = 0;
-		numVertices = 0;
-		numIndices = 0;
 	}
 }
 
 enum RenderJobType
 {
-	QUAD;
-	TRIANGLE;
-	NO_IMAGE;
+	COLOR_QUAD;
+	COLOR_TRIANGLE;
+	TEXTURE_TRIANGLE;
+	TEXTURE_QUAD;
 }

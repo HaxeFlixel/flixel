@@ -63,20 +63,32 @@ class TextureUtil
 		return number;
 	}
 	
-	public static inline function isTextureOk(texture:BitmapData):Bool
+	public static inline function isTextureOk(texture:BitmapData, square:Bool = true):Bool
 	{
-		return (roundUpToPow2(texture.width) == texture.width && roundUpToPow2(texture.height) == texture.height);
+		return (roundUpToPow2(texture.width) == texture.width && roundUpToPow2(texture.height) == texture.height && (!square || texture.width == texture.height));
 	}
 	
-	public static inline function fixTextureSize(texture:BitmapData):BitmapData
+	public static inline function fixTextureSize(texture:BitmapData, square:Bool = true):BitmapData
 	{
-		return if (isTextureOk(texture))
+		return if (isTextureOk(texture, square))
 		{
 			texture;
 		}
 		else
 		{
-			var newTexture:BitmapData = new BitmapData(roundUpToPow2(texture.width), roundUpToPow2(texture.height), true, 0);
+			var newWidth = roundUpToPow2(texture.width);
+			var newHeight = roundUpToPow2(texture.height);
+			var newTexture:BitmapData = null;
+			if (square)
+			{
+				var newSize = (newWidth > newHeight) ? newWidth : newHeight;
+				newTexture = new BitmapData(newSize, newSize, true, 0);
+			}
+			else
+			{
+				newTexture = new BitmapData(newWidth, newHeight, true, 0);
+			}
+			
 			newTexture.copyPixels(texture, texture.rect, new Point(), null, null, true);
 			newTexture;
 		}

@@ -283,7 +283,7 @@ class FlxGame extends Sprite
 		removeEventListener(Event.ADDED_TO_STAGE, create);
 		
 		#if FLX_RENDER_TILE
-		Batcher.init(stage, 0, 5, onCreate, Context3DRenderMode.AUTO, 2000);
+		Batcher.init(stage, 0, 5, onCreate, Context3DRenderMode.AUTO, true, 2000);
 		#else
 		onCreate();
 		#end

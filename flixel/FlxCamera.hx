@@ -318,18 +318,6 @@ class FlxCamera extends FlxBasic
 	public var debugLayer:Sprite;
 	#end
 	
-	@:allow(flixel.system.frontEnds.CameraFrontEnd)
-	private function clearDrawStack():Void
-	{	
-		
-	}
-	
-	@:allow(flixel.system.frontEnds.CameraFrontEnd)
-	private function render():Void
-	{
-		
-	}
-	
 	public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix, cr:Float = 1.0, cg:Float = 1.0, cb:Float = 1.0, ca:Float = 1.0, blend:BlendMode = null, smoothing:Bool = false):Void
 	{
 		viewport.drawMatrix2(frame.parent.tilesheet, frame.frame, zeroPoint, frame.uv, matrix, cr, cg, cb, ca, blend, smoothing);
@@ -337,7 +325,8 @@ class FlxCamera extends FlxBasic
 	
 	public function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle, destPoint:Point, cr:Float = 1.0, cg:Float = 1.0, cb:Float = 1.0, ca:Float = 1.0, blend:BlendMode = null, smoothing:Bool = false):Void
 	{
-		viewport.copyPixels2(frame.parent.tilesheet, frame.frame, frame.uv, destPoint, cr, cg, cb, ca, blend, smoothing);
+		FlxPoint.flxPoint1.copyFromFlash(destPoint);
+		viewport.copyPixels2(frame.parent.tilesheet, frame.frame, frame.uv, FlxPoint.flxPoint1, cr, cg, cb, ca, blend, smoothing);
 	}
 	
 	public function drawTriangles(graphic:FlxGraphic, vertices:Vector<Float>, indices:Vector<Int>, uvtData:Vector<Float>, colors:Vector<Int> = null, position:FlxPoint = null, blend:BlendMode = null, smoothing:Bool = false):Void
