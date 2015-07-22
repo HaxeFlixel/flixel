@@ -350,12 +350,6 @@ class FlxG
 		return result;
 	}
 	
-	/*
-		Ideally, there should be a function that you call like this:
-		getFirstOverlap(Object:FlxObject, Group:FlxObject):FlxObject
-		You pass it an object and it returns the first item in the group that overlaps that object, or null if there are none.
-	*/
-	
 	/**
 	 * Returns the first member of Group that overlaps InputObject, or null if none apply.
 	 * 
