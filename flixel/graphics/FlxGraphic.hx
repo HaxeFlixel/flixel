@@ -635,7 +635,7 @@ class FlxGraphic
 	{
 		if (_imageFrame == null)
 		{
-			_imageFrame = FlxImageFrame.fromRectangle(this, new FlxRect(0, 0, bitmap.width, bitmap.height));
+			_imageFrame = FlxImageFrame.fromRectangle(this, new FlxRect(0, 0, originalWidth, originalHeight));
 		}
 		
 		return _imageFrame;
