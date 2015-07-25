@@ -759,8 +759,8 @@ class FlxText extends FlxSprite
 		
 		if (graphic != null)
 		{
-			oldWidth = graphic.width;
-			oldHeight = graphic.height;
+			oldWidth = graphic.originalWidth;
+			oldHeight = graphic.originalHeight;
 		}
 		
 		var newWidth:Float = textField.width;

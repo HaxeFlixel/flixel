@@ -478,10 +478,13 @@ class FlxGraphic
 	 */
 	public function destroy():Void
 	{
-		bitmap = FlxDestroyUtil.dispose(bitmap);
 		#if FLX_RENDER_TILE
+		if (_tilesheet != null)
+			_tilesheet.dispose();
 		_tilesheet = null;
 		#end
+		bitmap = FlxDestroyUtil.dispose(bitmap);
+		
 		key = null;
 		assetsKey = null;
 		assetsClass = null;

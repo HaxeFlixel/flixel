@@ -469,6 +469,9 @@ class ContextWrapper extends EventDispatcher
 			context3D.clear(0, 0, 0, 1);
 		}
 		
+		currentTexture = null;
+		currentProgram = null;
+		
 		presented = false;
 	}
 	
