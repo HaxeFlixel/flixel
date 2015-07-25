@@ -1239,11 +1239,13 @@ class FlxCamera extends FlxBasic
 		colorTransform.redMultiplier = color.redFloat;
 		colorTransform.greenMultiplier = color.greenFloat;
 		colorTransform.blueMultiplier = color.blueFloat;
+		colorTransform.alphaMultiplier = color.alpha;
 		_flashBitmap.transform.colorTransform = colorTransform;
 		#else
 		viewport.cRed = color.redFloat;
 		viewport.cGreen = color.greenFloat;
 		viewport.cBlue = color.blueFloat;
+		viewport.cAlpha = color.alpha;
 		#end
 		
 		return Color;
