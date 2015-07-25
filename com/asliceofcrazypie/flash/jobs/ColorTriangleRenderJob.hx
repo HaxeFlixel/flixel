@@ -1,6 +1,8 @@
 package com.asliceofcrazypie.flash.jobs;
 
 import com.asliceofcrazypie.flash.jobs.BaseRenderJob.RenderJobType;
+import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
 import openfl.display.BlendMode;
 import openfl.display.Sprite;
 import openfl.display.Tilesheet;
@@ -73,7 +75,7 @@ class ColorTriangleRenderJob extends TriangleRenderJob
 		indices[indexPos++] = prevVerticesNumber + 0;
 	}
 	
-	public function addQuad(rect:Rectangle, normalizedOrigin:Point, matrix:Matrix, r:Float = 1, g:Float = 1, b:Float = 1, a:Float = 1):Void
+	public function addQuad(rect:FlxRect, normalizedOrigin:FlxPoint, matrix:Matrix, r:Float = 1, g:Float = 1, b:Float = 1, a:Float = 1):Void
 	{
 		var prevVerticesNumber:Int = Std.int(vertexPos / dataPerVertice);
 		
@@ -284,7 +286,7 @@ class ColorTriangleRenderJob extends TriangleRenderJob
 		#end
 	}
 	
-	public function addQuad(rect:Rectangle, normalizedOrigin:Point, matrix:Matrix, r:Float = 1, g:Float = 1, b:Float = 1, a:Float = 1):Void
+	public function addQuad(rect:FlxRect, normalizedOrigin:FlxPoint, matrix:Matrix, r:Float = 1, g:Float = 1, b:Float = 1, a:Float = 1):Void
 	{
 		var prevVerticesNumber:Int = Std.int(vertexPos / dataPerVertice);
 		

@@ -2,6 +2,7 @@ package com.asliceofcrazypie.flash.jobs;
 
 import flash.Vector;
 import flash.display.BlendMode;
+import flixel.graphics.tile.FlxTilesheet;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import openfl.display.Sprite;
@@ -142,7 +143,7 @@ class TextureQuadRenderJob extends QuadRenderJob
 		type = RenderJobType.TEXTURE_QUAD;
 	}
 	
-	public function addQuad(rect:Rectangle, normalizedOrigin:Point, uv:Rectangle, matrix:Matrix, r:Float = 1, g:Float = 1, b:Float = 1, a:Float = 1):Void
+	public function addQuad(rect:FlxRect, normalizedOrigin:FlxPoint, uv:FlxRect, matrix:Matrix, r:Float = 1, g:Float = 1, b:Float = 1, a:Float = 1):Void
 	{
 		var imgWidth:Int = Std.int(rect.width);
 		var imgHeight:Int = Std.int(rect.height);
@@ -200,6 +201,7 @@ class TextureQuadRenderJob extends QuadRenderJob
 		}
 		
 		tilesheet.drawTiles(context.graphics, tileData, isSmooth, flags, dataPosition);
+		FlxTilesheet._DRAWCALLS++;
 	}
 	
 	public function set(tilesheet:TilesheetStage3D, isRGB:Bool, isAlpha:Bool, isSmooth:Bool, blend:BlendMode):Void

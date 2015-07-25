@@ -107,7 +107,7 @@ class Viewport
 	
 	public var useBgColor:Bool = false;
 	
-	#if !FLX_NO_DEBUG
+	#if (!FLX_NO_DEBUG || !flash)
 	public var canvas(default, null):Sprite;
 	public var view(default, null):Sprite;
 	#end
@@ -133,7 +133,7 @@ class Viewport
 		colorTransform = new ColorTransform();
 		#end
 		
-		#if !FLX_NO_DEBUG
+		#if (!FLX_NO_DEBUG || !flash)
 		view = new Sprite();
 		canvas = new Sprite();
 		view.addChild(canvas);
@@ -172,7 +172,7 @@ class Viewport
 		colorTransform = null;
 		#end
 		
-		#if !FLX_NO_DEBUG
+		#if (!FLX_NO_DEBUG || !flash)
 		view.removeChild(canvas);
 		view = null;
 		canvas = null;
@@ -245,7 +245,7 @@ class Viewport
 		bgRenderJob.reset();
 		#end
 		
-		#if !FLX_NO_DEBUG
+		#if (!FLX_NO_DEBUG || !flash)
 		canvas.graphics.clear();
 		#end
 		
@@ -586,8 +586,8 @@ class Viewport
 		if (job != null)
 			job.addAAQuad(rect, cr, cg, cb, ca);
 		#else
-		helperRect2.setTo(0, 0, 10, 10);
-		helperPoint.setTo(0, 0);
+		helperRect2.set(0, 0, 10, 10);
+		helperPoint.set(0, 0);
 		
 		drawPixels(Batcher.colorsheet, helperRect2, helperPoint, rect.x, rect.y, 0.1 * rect.width, 0.1 * rect.height, 0, cr, cg, cb, ca, blend);
 		#end

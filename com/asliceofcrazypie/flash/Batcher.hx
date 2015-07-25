@@ -12,6 +12,7 @@ import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import flash.Vector;
+import flixel.FlxGame;
 import openfl.display.BitmapData;
 
 import openfl.display.Sprite;
@@ -76,7 +77,7 @@ class Batcher
 		var index:Int = numViewports;
 		viewports[index] = viewport;
 		viewport.index = index;
-		#if !FLX_NO_DEBUG
+		#if (!FLX_NO_DEBUG || !flash)
 		game.addChild(viewport.view);
 		#end
 		numViewports++;
@@ -101,7 +102,7 @@ class Batcher
 		if (index >= 0 || index < numViewports)
 		{
 			var viewport:Viewport = viewports[index];
-			#if !FLX_NO_DEBUG
+			#if (!FLX_NO_DEBUG || !flash)
 			game.removeChild(viewport.view);
 			#end
 			if (dispose)	viewport.dispose();
@@ -130,7 +131,7 @@ class Batcher
 		
 		view1.index = index2;
 		view2.index = index1;
-		#if !FLX_NO_DEBUG
+		#if (!FLX_NO_DEBUG || !flash)
 		game.swapChildren(view1.view, view2.view);
 		#end
 	}
@@ -150,7 +151,7 @@ class Batcher
 		
 		viewports.insert(index, viewport);
 		numViewports = viewports.length;
-		#if !FLX_NO_DEBUG
+		#if (!FLX_NO_DEBUG || !flash)
 		game.addChildAt(viewport.view, index);
 		#end
 		updateViewportIndices();
@@ -203,14 +204,15 @@ class Batcher
 	/**
 	 * Batcher initialization method. It also calls TilesheetStage3D.init() method.
 	 */
-	public static function init(stage:Stage, stage3DLevel:Int = 0, antiAliasLevel:Int = 5, initCallback:String->Void = null, renderMode:Dynamic = null, square:Bool = true, batchSize:Int = 0):Void
+	public static function init(flxGame:FlxGame, stage3DLevel:Int = 0, antiAliasLevel:Int = 5, initCallback:String->Void = null, renderMode:Dynamic = null, square:Bool = true, batchSize:Int = 0):Void
 	{
 		if (!_isInited)
 		{
 			viewports = new Array<Viewport>();
 			
 			game = new Sprite();
-			stage.addChild(game);
+			flxGame.addChild(game);
+			var stage:Stage = flxGame.stage;
 			
 			#if flash11
 			TilesheetStage3D.init(stage, stage3DLevel, antiAliasLevel, initCallback, renderMode, square, batchSize);

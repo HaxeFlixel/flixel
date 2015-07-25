@@ -40,7 +40,7 @@ class FlxText extends FlxSprite
 	/**
 	 * The size of the text being displayed in pixels.
 	 */
-	public var size(get, set):Float;
+	public var size(get, set):Int;
 	
 	/**
 	 * The font used for this text (assuming that it's using embedded font).
@@ -163,7 +163,7 @@ class FlxText extends FlxSprite
 	 * @param   Size           The font size for this text object.
 	 * @param   EmbeddedFont   Whether this text field uses embedded fonts or not.
 	 */
-	public function new(X:Float = 0, Y:Float = 0, FieldWidth:Float = 0, ?Text:String, Size:Float = 8, EmbeddedFont:Bool = true)
+	public function new(X:Float = 0, Y:Float = 0, FieldWidth:Float = 0, ?Text:String, Size:Int = 8, EmbeddedFont:Bool = true)
 	{
 		super(X, Y);
 		
@@ -436,7 +436,7 @@ class FlxText extends FlxSprite
 	 * @param	EmbeddedFont	Whether this text field uses embedded fonts or not
 	 * @return	This FlxText instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function setFormat(?Font:String, Size:Float = 8, Color:FlxColor = FlxColor.WHITE, ?Alignment:FlxTextAlign, 
+	public function setFormat(?Font:String, Size:Int = 8, Color:FlxColor = FlxColor.WHITE, ?Alignment:FlxTextAlign, 
 		?BorderStyle:FlxTextBorderStyle, BorderColor:FlxColor = FlxColor.TRANSPARENT, Embedded:Bool = true):FlxText
 	{
 		BorderStyle = (BorderStyle == null) ? NONE : BorderStyle;
@@ -531,12 +531,16 @@ class FlxText extends FlxSprite
 		return Text;
 	}
 	
-	private inline function get_size():Float
+	private inline function get_size():Int
 	{
+		#if flash
+		return Std.int(_defaultFormat.size);
+		#else
 		return _defaultFormat.size;
+		#end
 	}
 	
-	private function set_size(Size:Float):Float
+	private function set_size(Size:Int):Int
 	{
 		_defaultFormat.size = Size;
 		updateDefaultFormat();

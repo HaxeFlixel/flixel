@@ -3,6 +3,7 @@ package com.asliceofcrazypie.flash.jobs;
 import com.asliceofcrazypie.flash.ContextWrapper;
 import com.asliceofcrazypie.flash.jobs.BaseRenderJob.RenderJobType;
 import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
 import openfl.display.Sprite;
 import openfl.display.Tilesheet;
 import openfl.display.TriangleCulling;
@@ -329,7 +330,7 @@ class TextureTriangleRenderJob extends TriangleRenderJob
 		this.dataPerVertice = 2;
 	}
 	
-	public function addQuad(rect:Rectangle, normalizedOrigin:Point, uv:Rectangle, matrix:Matrix, r:Float = 1, g:Float = 1, b:Float = 1, a:Float = 1):Void
+	public function addQuad(rect:FlxRect, normalizedOrigin:FlxPoint, uv:FlxRect, matrix:Matrix, r:Float = 1, g:Float = 1, b:Float = 1, a:Float = 1):Void
 	{
 		var prevVerticesNumber:Int = Std.int(vertexPos / dataPerVertice);
 		
@@ -404,7 +405,7 @@ class TextureTriangleRenderJob extends TriangleRenderJob
 		this.numIndices += 6;
 	}
 	
-	public function addTriangles(vertices:Vector<Float>, indices:Vector<Int> = null, uvtData:Vector<Float> = null, colors:Vector<Int> = null, position:Point = null):Void
+	public function addTriangles(vertices:Vector<Float>, indices:Vector<Int> = null, uvtData:Vector<Float> = null, colors:Vector<Int> = null, position:FlxPoint = null):Void
 	{
 		var numIndices:Int = indices.length;
 		var numVertices:Int = Std.int(vertices.length / 2);
@@ -425,6 +426,8 @@ class TextureTriangleRenderJob extends TriangleRenderJob
 			y = position.y;
 		}
 		
+		var addColors:Bool = (colors != null && colors.length > 0);
+		
 		for (i in 0...numVertices)
 		{
 			vertexIndex = 2 * i;
@@ -433,7 +436,7 @@ class TextureTriangleRenderJob extends TriangleRenderJob
 			this.vertices[vertexPos++] = vertices[vertexIndex + 1] + y;
 			
 			#if !flash
-			if (colors != null)
+			if (addColors)
 				this.colors[colorPos++] = colors[i];
 			#end
 		}
@@ -486,7 +489,7 @@ class TextureTriangleRenderJob extends TriangleRenderJob
 		}
 		
 		culling = (culling == null) ? TriangleCulling.NONE : culling;
-		context.graphics.drawTriangles(vertices, indices, uvtData, culling, (colors.length > 0) ? colors : null, blendInt);
+		context.graphics.drawTriangles(vertices, indices, uvtData, culling, (colorPos > 0) ? colors : null, blendInt);
 		#end
 		context.graphics.endFill();
 	}
