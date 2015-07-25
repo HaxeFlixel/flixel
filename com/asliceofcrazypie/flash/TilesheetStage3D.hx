@@ -507,6 +507,11 @@ class TilesheetStage3D extends Tilesheet
 		__uvs = null;
 		__vertices = null;
 	}
+	#else
+	public function dispose():Void
+	{
+		
+	}
 	#end
 	
 	private function get_bitmap():BitmapData
