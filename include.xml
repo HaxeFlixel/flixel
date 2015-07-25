@@ -13,8 +13,6 @@
 	
 	<haxeflag name="-swf-lib" value="assets/AGAL.swc" if="flash" />
 	
-	<set name="SWF_VERSION" value="11.2" if="flash" ></set>
-	
 	<section if="setup">
 		<haxelib name="systools"/>
 		<haxelib name="openfl-bitfive"/>
