@@ -16,8 +16,6 @@ import flixel.effects.FlxFlicker;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
-import flixel.graphics.FlxGraphic;
-import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.system.FlxAssets;
@@ -210,29 +208,6 @@ class FlxSpriteUtil
 				object.y = startY + (i * verticalSpacing);
 			}
 		}
-	}
-	
-	/**
-	 * Centers the given FlxObject on the screen, either by the x axis, y axis, or both
-	 * 
-	 * @param	object			The FlxSprite to center
-	 * @param	Horizontally	Boolean true if you want it centered horizontally
-	 * @param	Vertically		Boolean	true if you want it centered vertically
-	 * @return 	The FlxObject for chaining
-	 */
-	public static function screenCenter(object:FlxObject, xAxis:Bool = true, yAxis:Bool = true):FlxObject
-	{
-		if (xAxis)
-		{
-			object.x = (FlxG.width / 2) - (object.width / 2);
-		}
-		
-		if (yAxis)
-		{
-			object.y = (FlxG.height / 2) - (object.height / 2);
-		}
-		
-		return object;
 	}
 	
 	/**
@@ -607,13 +582,12 @@ class FlxSpriteUtil
 	 * @param	ForceRestart		Force the flicker to restart from beginnig, discarding the flickering effect already in progress if there is one.
 	 * @param	CompletionCallback	An optional callback that will be triggered when a flickering has finished.
 	 * @param	ProgressCallback	An optional callback that will be triggered when visibility is toggled.
-	 * @return	The FlxObject for chaining
+	 * @return The FlxFlicker object. FlxFlickers are pooled internally, so beware of storing references.
 	 */
 	public static inline function flicker(Object:FlxObject, Duration:Float = 1, Interval:Float = 0.04, EndVisibility:Bool = true, 
-		ForceRestart:Bool = true, ?CompletionCallback:FlxFlicker->Void, ?ProgressCallback:FlxFlicker->Void):FlxObject
+		ForceRestart:Bool = true, ?CompletionCallback:FlxFlicker->Void, ?ProgressCallback:FlxFlicker->Void):FlxFlicker
 	{
-		FlxFlicker.flicker(Object, Duration, Interval, EndVisibility, ForceRestart, CompletionCallback, ProgressCallback);
-		return Object;
+		return FlxFlicker.flicker(Object, Duration, Interval, EndVisibility, ForceRestart, CompletionCallback, ProgressCallback);
 	}
 	
 	/**

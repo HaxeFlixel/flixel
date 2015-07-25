@@ -2,8 +2,6 @@ package flixel.system.ui;
 
 import flash.display.Graphics;
 import flash.display.Sprite;
-import flash.Lib;
-import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.system.FlxAssets;
 

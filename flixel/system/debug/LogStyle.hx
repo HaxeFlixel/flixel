@@ -1,8 +1,5 @@
 package flixel.system.debug;
 
-import flash.media.Sound;
-import flixel.system.FlxAssets;
-
 /**
  * A class that allows you to create a custom style for FlxG.log.advanced(). 
  * Also used internally for the pre-defined styles.
@@ -50,7 +47,8 @@ class LogStyle
 	 * @param	OpenConsole			Whether the console should be forced to open when this LogStyle is used.
 	 * @param	CallbackFunction	A callback function that is called when this LogStyle is used.
 	 */
-	public function new(Prefix:String = "", Color:String = "FFFFFF", Size:Int = 12, Bold:Bool = false, Italic:Bool = false, Underlined:Bool = false, ?ErrorSound:String, OpenConsole:Bool = false, ?CallbackFunction:Void->Void)
+	public function new(Prefix:String = "", Color:String = "FFFFFF", Size:Int = 12, Bold:Bool = false,
+		Italic:Bool = false, Underlined:Bool = false, ?ErrorSound:String, OpenConsole:Bool = false, ?CallbackFunction:Void->Void)
 	{
 		prefix = Prefix;
 		color = Color;

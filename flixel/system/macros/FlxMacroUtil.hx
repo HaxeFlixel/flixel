@@ -1,8 +1,7 @@
 package flixel.system.macros;
 
-import haxe.macro.Expr;
 import haxe.macro.Context;
-
+import haxe.macro.Expr;
 using haxe.macro.Tools;
 
 class FlxMacroUtil

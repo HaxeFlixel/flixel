@@ -2,10 +2,9 @@ package flixel.system;
 
 import flixel.FlxBasic;
 import flixel.FlxObject;
-import flixel.group.FlxGroup;
-import flixel.group.FlxSpriteGroup;
-import flixel.util.FlxDestroyUtil;
+import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxRect;
+import flixel.util.FlxDestroyUtil;
 
 /**
  * A fairly generic quad tree structure for rapid overlap checks.

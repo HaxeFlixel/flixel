@@ -4,14 +4,11 @@ import flash.display.BitmapData;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.FlxSprite;
-import flixel.graphics.frames.FlxFramesCollection.FlxFrameCollectionType;
-import flixel.math.FlxRect;
-import flixel.system.FlxAssets.FlxGraphicAsset;
-import flixel.util.FlxBitmapDataUtil;
-import flixel.util.FlxColor;
-import flixel.util.FlxDestroyUtil;
-import flixel.math.FlxPoint;
 import flixel.graphics.FlxGraphic;
+import flixel.graphics.frames.FlxFramesCollection.FlxFrameCollectionType;
+import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
+import flixel.util.FlxColor;
 import openfl.filters.BitmapFilter;
 	
 /**

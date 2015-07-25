@@ -1,17 +1,15 @@
 package flixel.graphics.frames;
 
+import flash.geom.Rectangle;
+import flixel.graphics.FlxGraphic;
+import flixel.graphics.frames.FlxFrame.FlxFrameAngle;
+import flixel.graphics.frames.FlxFramesCollection;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxGraphicAsset;
+import haxe.Json;
 import haxe.xml.Fast;
 import openfl.Assets;
-
-import flash.display.BitmapData;
-import flash.geom.Rectangle;
-import flixel.graphics.frames.FlxFrame;
-import flixel.graphics.frames.FlxFramesCollection;
-import flixel.graphics.FlxGraphic;
-import haxe.Json;
 
 /**
  * Atlas frames collection. It makes possible to use texture atlases in flixel. 

@@ -1,6 +1,6 @@
 package flixel.system.debug;
-#if !FLX_NO_DEBUG
 
+#if !FLX_NO_DEBUG
 import flash.geom.Rectangle;
 import flash.text.TextField;
 import flash.text.TextFormat;

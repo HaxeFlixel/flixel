@@ -1,6 +1,5 @@
 package flixel.animation;
 
-import flixel.FlxSprite;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 
 /**

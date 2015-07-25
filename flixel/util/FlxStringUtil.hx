@@ -2,8 +2,6 @@ package flixel.util;
 
 import flash.display.BitmapData;
 import flash.geom.Matrix;
-import flash.Lib;
-import flash.net.URLRequest;
 import flixel.FlxG;
 import flixel.math.FlxMath;
 import flixel.system.FlxAssets;
@@ -557,6 +555,11 @@ class FlxStringUtil
 		// remove the | of the last item, we don't want that at the end
 		output = output.substr(0, output.length - 2).trim();
 		return (output + ")");
+	}
+	
+	public static inline function contains(s:String, str:String):Bool
+	{
+		return s.indexOf(str) != -1;
 	}
 }
 

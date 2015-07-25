@@ -1,13 +1,13 @@
 package flixel.system;
 
 #if !FLX_HAXE_BUILD
-import flash.events.Event;
-import flash.Lib;
-import flash.display.StageAlign;
-import flash.display.StageScaleMode;
-import flash.events.MouseEvent;
 import flash.display.Bitmap;
 import flash.display.BitmapData;
+import flash.display.StageAlign;
+import flash.display.StageScaleMode;
+import flash.events.Event;
+import flash.events.MouseEvent;
+import flash.Lib;
 import flash.net.URLRequest;
 import flash.text.TextField;
 import flash.text.TextFormat;
@@ -223,6 +223,5 @@ class FlxBasePreloader extends NMEPreloader
 		return false;
 	}
 	#end
-	
 }
 #end

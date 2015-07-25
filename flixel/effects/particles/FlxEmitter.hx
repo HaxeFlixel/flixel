@@ -1,25 +1,19 @@
 package flixel.effects.particles;
 
-import flash.display.BitmapData;
 import flash.display.BlendMode;
+import flixel.effects.particles.FlxParticle;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
-import flixel.effects.particles.FlxParticle;
 import flixel.group.FlxGroup.FlxTypedGroup;
-import flixel.math.FlxAngle;
-import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
-import flixel.math.FlxRandom;
 import flixel.math.FlxVelocity;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
-import flixel.util.FlxStringUtil;
 import flixel.util.helpers.FlxBounds;
-import flixel.util.helpers.FlxRange;
-import flixel.util.helpers.FlxRangeBounds;
 import flixel.util.helpers.FlxPointRangeBounds;
+import flixel.util.helpers.FlxRangeBounds;
 
 typedef FlxEmitter = FlxTypedEmitter<FlxParticle>;
 

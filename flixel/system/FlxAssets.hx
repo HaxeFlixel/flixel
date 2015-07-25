@@ -4,6 +4,7 @@ package flixel.system;
 import haxe.macro.Context;
 import haxe.macro.Expr;
 import sys.FileSystem;
+using flixel.util.FlxArrayUtil;
 using StringTools;
 #else
 import flash.display.BitmapData;
@@ -19,13 +20,6 @@ import flixel.graphics.frames.FlxFrame;
 import flixel.util.typeLimit.*;
 import openfl.Assets;
 import openfl.utils.ByteArray;
-
-@:keep @:font("assets/fonts/nokiafc22.ttf")
-private class FontDefault extends Font {}
-#if !FLX_NO_DEBUG
-@:keep @:font("assets/fonts/arial.ttf")
-private class FontDebugger extends Font {}
-#end
 
 @:keep @:bitmap("assets/images/logo/logo.png")
 class GraphicLogo extends BitmapData {}
@@ -114,15 +108,6 @@ class FlxAssets
 	public static var FONT_DEFAULT:String = "Nokia Cellphone FC Small";
 	public static var FONT_DEBUGGER:String = "Arial";
 	
-	public static function init():Void
-	{
-		Font.registerFont(FontDefault);
-		
-		#if !FLX_NO_DEBUG
-		Font.registerFont(FontDebugger);
-		#end
-	}
-	
 	public static function drawLogo(graph:Graphics):Void
 	{
 		// draw green area
@@ -181,7 +166,10 @@ class FlxAssets
 	
 	public static inline function getBitmapData(id:String):BitmapData
 	{
-		return Assets.getBitmapData(id, false);
+		if (Assets.exists(id))
+			return Assets.getBitmapData(id, false);
+		FlxG.log.error('Could not find a BitmapData asset with ID \'$id\'.');
+		return null;
 	}
 	
 	/**
@@ -290,7 +278,7 @@ private class FileReference
 		// replace some forbidden names to underscores, since variables cannot have these symbols.
 		this.name = value.split("-").join("_").split(".").join("__");
 		var split:Array<String> = name.split("/");
-		this.name = split[split.length - 1];
+		this.name = split.last();
 		
 		// auto generate documentation
 		this.documentation = "\"" + value + "\" (auto generated).";

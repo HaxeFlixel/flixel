@@ -8,10 +8,11 @@ import flash.net.URLRequest;
 import flash.utils.ByteArray;
 import flixel.FlxBasic;
 import flixel.FlxG;
-import flixel.system.FlxAssets.FlxSoundAsset;
-import flixel.tweens.FlxTween;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
+import flixel.system.FlxAssets.FlxSoundAsset;
+import flixel.tweens.FlxTween;
+import flixel.util.FlxStringUtil;
 import openfl.Assets;
 
 #if !FLX_NO_SOUND_SYSTEM
@@ -280,6 +281,11 @@ class FlxSound extends FlxBasic
 	 */
 	public function loadEmbedded(EmbeddedSound:FlxSoundAsset, Looped:Bool = false, AutoDestroy:Bool = false, ?OnComplete:Void->Void):FlxSound
 	{
+		if (EmbeddedSound == null)
+		{
+			return this;
+		}
+		
 		cleanup(true);
 		
 		if (Std.is(EmbeddedSound, Sound))
@@ -292,7 +298,11 @@ class FlxSound extends FlxBasic
 		}
 		else if (Std.is(EmbeddedSound, String))
 		{
-			_sound = Assets.getSound(EmbeddedSound);
+			if (Assets.exists(EmbeddedSound, AssetType.SOUND) ||
+				Assets.exists(EmbeddedSound, AssetType.MUSIC))
+				_sound = Assets.getSound(EmbeddedSound);
+			else
+				FlxG.log.error('Could not find a Sound asset with an ID of \'$EmbeddedSound\'.');
 		}
 		
 		//NOTE: can't pull ID3 info from embedded sound currently
@@ -523,6 +533,11 @@ class FlxSound extends FlxBasic
 	 */
 	private function startSound(Position:Float):Void
 	{
+		if (_sound == null)
+		{
+			return;
+		}
+		
 		var numLoops:Int = looped && Position == 0 ? FlxMath.MAX_VALUE_INT : 0;
 		
 		time = Position;
@@ -692,5 +707,13 @@ class FlxSound extends FlxBasic
 		}
 		
 		return loop;
+	}
+	
+	override public function toString():String
+	{
+		return FlxStringUtil.getDebugString([
+			LabelValuePair.weak("playing", playing),
+			LabelValuePair.weak("time", time),
+			LabelValuePair.weak("volume", volume)]);
 	}
 }

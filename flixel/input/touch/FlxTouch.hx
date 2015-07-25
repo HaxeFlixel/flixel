@@ -14,7 +14,7 @@ import flixel.math.FlxPoint;
 import flixel.util.FlxDestroyUtil;
 
 /**
- * Helper class, contains and track touch points in your game.
+ * Helper class, contains and tracks touch points in your game.
  * Automatically accounts for parallax scrolling, etc.
  */
 @:allow(flixel.input.touch.FlxTouchManager)
@@ -22,7 +22,7 @@ class FlxTouch extends FlxPointer implements IFlxDestroyable implements IFlxInpu
 {	
 	/**
 	 * The unique ID of this touch. Example: if there are 3 concurrently active touches 
-	 * (and the device supporst that many), they will have the IDs 0, 1 and 2.
+	 * (and the device supports that many), they will have the IDs 0, 1 and 2.
 	 */
 	public var touchPointID(get, never):Int;
 	
@@ -45,7 +45,7 @@ class FlxTouch extends FlxPointer implements IFlxDestroyable implements IFlxInpu
 	}
 
 	/**
-	 * Resets the just pressed/just released flags and sets touch to not pressed.
+	 * Resets the justPressed/justReleased flags and sets touch to not pressed.
 	 */
 	public function recycle(x:Int, y:Int, pointID:Int):Void
 	{

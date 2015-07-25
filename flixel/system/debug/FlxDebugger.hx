@@ -1,6 +1,6 @@
 package flixel.system.debug;
-#if !FLX_NO_DEBUG
 
+#if !FLX_NO_DEBUG
 import flash.display.BitmapData;
 import flash.display.Sprite;
 import flash.events.MouseEvent;
@@ -81,7 +81,7 @@ class FlxDebugger extends Sprite
 	 */
 	private var _layout:FlxDebuggerLayout;
 	/**
-	 * Internal, stores width and height of the Flash Player window.
+	 * Internal, stores width and height of the game.
 	 */
 	private var _screen:Point;
 	/**
@@ -182,7 +182,7 @@ class FlxDebugger extends Sprite
 	 */
 	public function resetLayout():Void
 	{
-		switch(_layout)
+		switch (_layout)
 		{
 			case MICRO:
 				log.resize(_screen.x / 4, 68);

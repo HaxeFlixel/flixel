@@ -1,14 +1,11 @@
 package flixel.graphics.frames;
 
-import flash.display.BitmapData;
-import flash.geom.Point;
-import flash.geom.Rectangle;
+import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame.FlxFrameAngle;
 import flixel.graphics.frames.FlxFrame.FlxFrameType;
+import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.util.FlxDestroyUtil;
-import flixel.math.FlxPoint;
-import flixel.graphics.FlxGraphic;
 import flixel.util.FlxStringUtil;
 
 /**
@@ -93,7 +90,7 @@ class FlxFramesCollection implements IFlxDestroyable
 	 * @param	name	name of the frame.
 	 * @return	index of the frame with specified name.
 	 */
-	public inline function getIndexByName(name:String):Int
+	public function getIndexByName(name:String):Int
 	{
 		var numFrames:Int = frames.length;
 		var frame:FlxFrame;

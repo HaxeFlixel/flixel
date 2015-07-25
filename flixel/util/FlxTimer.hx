@@ -1,7 +1,6 @@
 package flixel.util;
 
 import flixel.FlxG;
-import flixel.system.frontEnds.PluginFrontEnd;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 
 /**

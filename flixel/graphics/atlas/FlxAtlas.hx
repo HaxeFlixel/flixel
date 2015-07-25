@@ -2,20 +2,18 @@ package flixel.graphics.atlas;
 
 import flash.display.BitmapData;
 import flash.geom.Point;
-import flash.geom.Rectangle;
 import flixel.FlxG;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.graphics.frames.FlxFrame.FlxFrameAngle;
 import flixel.graphics.frames.FlxTileFrames;
 import flixel.math.FlxMatrix;
+import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
+import flixel.system.FlxAssets;
 import flixel.util.FlxBitmapDataUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
-import flixel.math.FlxPoint;
-import flixel.system.FlxAssets;
-import flixel.system.frontEnds.BitmapFrontEnd;
 import openfl.geom.Matrix;
 
 // TODO: rewrite this class again, since it's a total mess again.

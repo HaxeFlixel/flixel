@@ -1,4 +1,5 @@
 package flixel.math;
+
 import flixel.util.FlxPool;
 
 /**

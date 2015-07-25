@@ -1,5 +1,4 @@
 package flixel.system.frontEnds;
-import flixel.input.keyboard.FlxKey;
 
 #if !FLX_NO_SOUND_SYSTEM
 import flash.media.Sound;
@@ -9,6 +8,7 @@ import flixel.group.FlxGroup;
 import flixel.system.FlxAssets.FlxSoundAsset;
 import flixel.system.FlxSound;
 import flixel.math.FlxMath;
+import flixel.input.keyboard.FlxKey;
 import openfl.Assets;
 
 @:allow(flixel.FlxGame)
@@ -87,7 +87,7 @@ class SoundFrontEnd
 	}
 	
 	/**
-	 * Creates a new sound object. 
+	 * Creates a new FlxSound object. 
 	 * 
 	 * @param	EmbeddedSound	The embedded sound resource you want to play.  To stream, use the optional URL parameter instead.
 	 * @param	Volume			How loud to play it (0 to 1).
@@ -136,7 +136,12 @@ class SoundFrontEnd
 	public inline function cache(EmbeddedSound:String):Sound
 	{
 		// load the sound into the OpenFL assets cache
-		return Assets.getSound(EmbeddedSound, true);
+		if (Assets.exists(EmbeddedSound, AssetType.SOUND) ||
+			Assets.exists(EmbeddedSound, AssetType.MUSIC))
+			return Assets.getSound(EmbeddedSound, true);
+		FlxG.log.error('Could not find a Sound asset with an ID of \'$EmbeddedSound\'.');
+		return null;
+		
 	}
 	
 	#if !FLX_HAXE_BUILD

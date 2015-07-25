@@ -2,7 +2,6 @@
 
 import flixel.FlxObject;
 import flixel.tweens.FlxTween;
-import flixel.tweens.FlxEase;
 
 /**
  * Base class for motion Tweens.

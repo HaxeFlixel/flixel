@@ -1,16 +1,14 @@
 package flixel.system.debug;
 
 import flash.display.BitmapData;
-import flash.geom.Rectangle;
 import flash.system.System;
 import flash.text.TextField;
 import flixel.FlxG;
+import flixel.math.FlxMath;
 import flixel.system.debug.FlxDebugger;
 import flixel.system.FlxLinkedList;
 import flixel.system.FlxQuadTree;
 import flixel.system.ui.FlxSystemButton;
-import flixel.util.FlxColor;
-import flixel.math.FlxMath;
 import flixel.util.FlxColor;
 
 @:bitmap("assets/images/debugger/buttons/minimize.png")
@@ -247,7 +245,7 @@ class Stats extends Window
 		_updateTimer += elapsed;
 		
 		_frameCount++;
-        _totalCount++;
+		_totalCount++;
 		
 		if (_updateTimer > UPDATE_DELAY)
 		{

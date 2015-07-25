@@ -35,7 +35,7 @@ class FlxBitmapDataPool
 	 * If a suitable BitmapData cannot be found in the pool a new one will be created.
 	 * If fillColor is specified the returned BitmapData will also be cleared with it.
 	 * 
-	 * @param ?exactSize	If false a BitmapData with size >= [w, h] may be returned.
+	 * @param exactSize	If false a BitmapData with size >= [w, h] may be returned.
 	 */
 	public static function get(w:Int, h:Int, transparent:Bool = true, ?fillColor:FlxColor, ?exactSize:Bool = false):BitmapData 
 	{

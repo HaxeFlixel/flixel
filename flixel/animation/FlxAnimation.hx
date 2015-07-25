@@ -1,6 +1,6 @@
 package flixel.animation;
+
 import flixel.FlxG;
-import flixel.FlxSprite;
 
 /**
  * Just a helper structure for the FlxSprite animation system.

@@ -12,7 +12,7 @@ import flixel.input.touch.FlxTouch;
  */
 class FlxMath
 {	
-	#if (flash || js || ios)
+	#if (flash || js || ios || blackberry)
 	/**
 	 * Minimum value of a floating point number.
 	 */
@@ -105,39 +105,25 @@ class FlxMath
 	}
 	
 	/**
-	 * Returns true if the number given is odd.
+	 * Returns true if the given number is odd.
 	 * 
 	 * @param	n	The number to check 
-	 * @return	True if the given number is odd. False if the given number is even.
+	 * @return	Whether the number is odd
 	 */
-	public static function isOdd(n:Float):Bool
+	public static inline function isOdd(n:Float):Bool
 	{
-		if ((Std.int(n) & 1) != 0)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		return (Std.int(n) & 1) != 0;
 	}
 	
 	/**
-	 * Returns true if the number given is even.
+	 * Returns true if the given number is even.
 	 * 
 	 * @param	n	The number to check
-	 * @return	True if the given number is even. False if the given number is odd.
+	 * @return	Whether the number is even
 	 */
-	public static function isEven(n:Float):Bool
+	public static inline function isEven(n:Float):Bool
 	{
-		if ((Std.int(n) & 1) != 0)
-		{
-			return false;
-		}
-		else
-		{
-			return true;
-		}
+		return (Std.int(n) & 1) == 0;
 	}
 	
 	/**
@@ -194,11 +180,7 @@ class FlxMath
 	 */
 	public static function pointInFlxRect(pointX:Float, pointY:Float, rect:FlxRect):Bool
 	{
-		if (pointX >= rect.x && pointX <= rect.right && pointY >= rect.y && pointY <= rect.bottom)
-		{
-			return true;
-		}
-		return false;
+		return pointX >= rect.x && pointX <= rect.right && pointY >= rect.y && pointY <= rect.bottom;
 	}
 	
 	#if !FLX_NO_MOUSE
@@ -238,11 +220,7 @@ class FlxMath
 	 */
 	public static function pointInRectangle(pointX:Float, pointY:Float, rect:Rectangle):Bool
 	{
-		if (pointX >= rect.x && pointX <= rect.right && pointY >= rect.y && pointY <= rect.bottom)
-		{
-			return true;
-		}
-		return false;
+		return pointX >= rect.x && pointX <= rect.right && pointY >= rect.y && pointY <= rect.bottom;
 	}
 	
 	/**
@@ -313,9 +291,6 @@ class FlxMath
 	
 	/**
 	 * Finds the length of the given vector
-	 * 
-	 * @param	dx
-	 * @param	dy
 	 * 
 	 * @return The length
 	 */
@@ -524,6 +499,48 @@ class FlxMath
 	public static inline function sameSign(f1:Float, f2:Float):Bool
 	{
 		return signOf(f1) == signOf(f2);
+	}
+	
+	/**
+	 * A faster but slightly less accurate version of Math.sin.
+	 * About 2-6 times faster with < 0.05% average error.
+	 * @param	f	The angle in radians.
+	 * @return	An approximated sine of f.
+	 */
+	public static inline function fastSin(f:Float):Float
+	{
+		f *= 0.3183098862; // divide by pi to normalize
+		
+		// bound between -1 and 1
+		if (f > 1) 
+		{
+			f -= (Math.ceil(f) >> 1) << 1;
+		}
+		else if (f < -1)
+		{
+			f += (Math.ceil( -f) >> 1) << 1;
+		}
+		
+		// this approx only works for -pi <= rads <= pi, but it's quite accurate in this region
+		if (f > 0)
+		{
+			return f * (3.1 + f * (0.5 + f * ( -7.2 + f * 3.6)));
+		}
+		else
+		{
+			return f * (3.1 - f * (0.5 + f * (7.2 + f * 3.6)));
+		}
+	}
+	
+	/**
+	 * A faster but less accurate version of Math.cos.
+	 * About 2-6 times faster with < 0.05% average error.
+	 * @param	f	The angle in radians.
+	 * @return	An approximated cosine of f.
+	 */
+	public static inline function fastCos(f:Float):Float
+	{
+		return fastSin(f + 1.570796327); // sin and cos are the same, offset by pi/2
 	}
 	
 	/**

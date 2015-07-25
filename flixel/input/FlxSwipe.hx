@@ -1,10 +1,6 @@
 package flixel.input;
 
 import flixel.FlxG;
-import flixel.system.debug.FlxDebugger;
-import flixel.system.FlxAssets;
-import flixel.system.frontEnds.PluginFrontEnd;
-import flixel.math.FlxAngle;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.util.FlxStringUtil;

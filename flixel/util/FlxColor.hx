@@ -2,6 +2,7 @@ package flixel.util;
 
 import flixel.math.FlxMath;
 import flixel.system.macros.FlxMacroUtil;
+
 /**
  * Class representing a color, based on Int. Provides a variety of methods for creating and converting colors.
  * 
@@ -75,7 +76,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	private static var COLOR_REGEX = ~/^(0x|#)(([A-F0-9]{2}){3,4})$/i;
 	
 	/**
-	 * Create a color from the lest significant four bytes of an Int
+	 * Create a color from the least significant four bytes of an Int
 	 * 
 	 * @param	Value And Int with bytes in the format 0xAARRGGBB
 	 * @return	The color as a FlxColor

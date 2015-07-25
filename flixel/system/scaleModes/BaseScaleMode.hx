@@ -1,6 +1,5 @@
 package flixel.system.scaleModes;
 
-import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.math.FlxPoint;
 

@@ -1,16 +1,11 @@
 package flixel.ui;
 
 import flixel.FlxSprite;
-import flixel.graphics.atlas.FlxAtlas;
-import flixel.graphics.atlas.FlxNode;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxImageFrame;
-import flixel.graphics.frames.FlxTileFrames;
 import flixel.input.IFlxInput;
-import flixel.math.FlxPoint;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton.FlxTypedButton;
-import flixel.util.FlxDestroyUtil;
 import openfl.display.BitmapData;
 
 /**

@@ -10,7 +10,6 @@ import flixel.FlxBasic;
 import flixel.math.FlxMath;
 import flixel.math.FlxRandom;
 import flixel.math.FlxRect;
-import flixel.system.FlxAssets;
 import flixel.system.FlxQuadTree;
 import flixel.system.FlxVersion;
 import flixel.system.frontEnds.*;
@@ -19,6 +18,7 @@ import flixel.system.scaleModes.RatioScaleMode;
 import flixel.util.FlxCollision;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSave;
+using flixel.util.FlxArrayUtil;
 
 #if !FLX_NO_TOUCH
 import flixel.input.touch.FlxTouchManager;
@@ -294,7 +294,6 @@ class FlxG
 	/**
 	 * Switch from the current game state to the one specified here.
 	 */
-	
 	public static inline function switchState(State:FlxState):Void
 	{
 		//If a transition is required
@@ -470,7 +469,7 @@ class FlxG
 			{
 				postProcesses[i].to = postProcesses[i + 1];
 			}
-			postProcesses[postProcesses.length - 1].to = null;
+			postProcesses.last().to = null;
 		}
 	}
 	#end
@@ -539,8 +538,6 @@ class FlxG
 		#if !FLX_NO_SOUND_SYSTEM
 		sound = new SoundFrontEnd();
 		#end
-		
-		FlxAssets.init();
 	}
 	
 	/**

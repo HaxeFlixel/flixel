@@ -1,18 +1,15 @@
 package flixel.graphics.frames;
 
 import flash.display.BitmapData;
-import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
-import flixel.FlxG;
+import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame;
-import flixel.math.FlxAngle;
+import flixel.math.FlxMatrix;
+import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
-import flixel.math.FlxMatrix;
-import flixel.math.FlxPoint;
-import flixel.graphics.FlxGraphic;
 import flixel.util.FlxStringUtil;
 import haxe.ds.Vector;
 

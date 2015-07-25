@@ -1,7 +1,5 @@
 package flixel.ui;
 
-import flixel.graphics.FlxGraphic;
-import flash.display.BitmapData;
 import flixel.FlxG;
 import flixel.graphics.frames.FlxTileFrames;
 import flixel.group.FlxSpriteGroup;

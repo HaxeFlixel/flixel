@@ -1,7 +1,6 @@
 package flixel.util.helpers;
 
 import flixel.util.FlxStringUtil;
-import flixel.math.FlxPoint;
 
 /**
  * Helper object for holding minimum and maximum values of various properties.

@@ -18,7 +18,7 @@ class FlxKeyboard extends FlxKeyManager<FlxKey, FlxKeyList>
 	 * this workaround fixes that. Thanks @HaxePunk!
 	 * @see https://github.com/openfl/openfl-native/issues/193
 	 */
-	#if !(flash || js)
+	#if !web
 	private var _nativeCorrection:Map<String, Int>;
 	#end
 	
@@ -40,7 +40,7 @@ class FlxKeyboard extends FlxKeyManager<FlxKey, FlxKeyList>
 			}
 		}
 		
-		#if !(flash || js)
+		#if !web
 			_nativeCorrection = new Map<String, Int>();
 			
 			_nativeCorrection.set("0_64", FlxKey.INSERT);
@@ -123,7 +123,7 @@ class FlxKeyboard extends FlxKeyManager<FlxKey, FlxKeyList>
 	
 	override private function resolveKeyCode(e:KeyboardEvent):Int
 	{
-		#if (flash || js)
+		#if web
 			return e.keyCode;
 		#else
 			var code = _nativeCorrection.get(e.charCode + "_" + e.keyCode);

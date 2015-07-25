@@ -19,7 +19,6 @@ class FlxGamepadButton extends FlxInput<Int>
 		super.release();
 	}
 	
-	
 	override public function press():Void
 	{
 		// simulate button onDown event which does not exist on flash

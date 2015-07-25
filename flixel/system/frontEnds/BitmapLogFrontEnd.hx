@@ -2,7 +2,6 @@ package flixel.system.frontEnds;
 
 import flash.display.BitmapData;
 import flixel.FlxG;
-import flixel.FlxSprite;
 
 class BitmapLogFrontEnd
 {

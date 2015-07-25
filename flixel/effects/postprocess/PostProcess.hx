@@ -110,6 +110,7 @@ class PostProcess extends OpenGLView
 	 * Set to null to render to the screen
 	 */
 	public var to(never, set):PostProcess;
+	
 	private function set_to(value:PostProcess):PostProcess
 	{
 		renderTo = (value == null ? defaultFramebuffer : value.framebuffer);

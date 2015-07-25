@@ -50,7 +50,6 @@ class FlxVelocity
 	public static function accelerateTowardsObject(Source:FlxSprite, Dest:FlxSprite, Acceleration:Float, MaxSpeed:Float):Void
 	{
 		var a:Float = FlxAngle.angleBetween(Source, Dest);
-		
 		accelerateFromAngle(Source, a, Acceleration, MaxSpeed);
 	}
 	
@@ -243,7 +242,7 @@ class FlxVelocity
 			var drag:Float = Drag * Elapsed;
 			if (Velocity - drag > 0)
 			{
-				Velocity = Velocity - drag;
+				Velocity -= drag;
 			}
 			else if (Velocity + drag < 0)
 			{
@@ -273,7 +272,7 @@ class FlxVelocity
 		var sin = Math.sin(radians);
 		var cos = Math.cos(radians);
 		
-		if(resetVelocity)
+		if (resetVelocity)
 			source.velocity.set(0, 0);
 		
 		source.acceleration.set(cos * acceleration, sin * acceleration);
