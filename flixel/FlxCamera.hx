@@ -481,7 +481,7 @@ class FlxCamera extends FlxBasic
 		initialZoom = zoom;
 		
 	#if FLX_RENDER_TILE
-		viewport = Batcher.addViewport(x, y, width, height, 1, 1);
+		viewport = Batcher.addViewport(x, y, width, height, zoom, zoom);
 		#if !FLX_NO_DEBUG
 		debugLayer = new Sprite();
 		viewport.view.addChild(debugLayer);

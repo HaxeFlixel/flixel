@@ -782,10 +782,10 @@ class Viewport
 		
 		scissor.setTo(	Batcher.gameX + x * Batcher.gameScaleX, 
 						Batcher.gameY + y * Batcher.gameScaleY, 
-						width * Batcher.gameScaleX, 
-						height * Batcher.gameScaleY);
+						width * Batcher.gameScaleX * initialScaleX,
+						height * Batcher.gameScaleY * initialScaleY);
 		#else
-		scissor.setTo(0, 0, width * Batcher.gameScaleX, height * Batcher.gameScaleY);
+		scissor.setTo(0, 0, width * Batcher.gameScaleX * initialScaleX, height * Batcher.gameScaleY * initialScaleY);
 		view.scrollRect = scissor;
 		#end
 	}
