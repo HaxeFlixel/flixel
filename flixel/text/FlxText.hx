@@ -529,7 +529,6 @@ class FlxText extends FlxSprite
 			var ot:String = textField.text;
 			textField.text = Text;
 			_regen = (textField.text != ot) || _regen;
-			trace(Text);
 		}
 		return Text;
 	}

@@ -320,14 +320,14 @@ class FlxSprite extends FlxObject
 		
 		if (Width == 0)
 		{
-			Width = (Animated == true) ? graph.height : graph.width;
-			Width = (Width > graph.width) ? graph.width : Width;
+			Width = (Animated == true) ? graph.originalHeight : graph.originalWidth;
+			Width = (Width > graph.originalWidth) ? graph.originalWidth : Width;
 		}
 		
 		if (Height == 0)
 		{
-			Height = (Animated == true) ? Width : graph.height;
-			Height = (Height > graph.height) ? graph.height : Height;
+			Height = (Animated == true) ? Width : graph.originalHeight;
+			Height = (Height > graph.originalHeight) ? graph.originalHeight : Height;
 		}
 		
 		if (Animated)

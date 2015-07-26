@@ -65,6 +65,7 @@ class ContextWrapper extends EventDispatcher
 	//avoid unneeded context changes
 	private var currentTexture:Texture;
 	private var currentProgram:Program3D;
+	private var currentBlendMode:BlendMode;
 	
 	private var globalMultiplier:Vector<Float>;
 	
@@ -471,6 +472,7 @@ class ContextWrapper extends EventDispatcher
 		
 		currentTexture = null;
 		currentProgram = null;
+		currentBlendMode = null;
 		
 		presented = false;
 	}
@@ -616,7 +618,11 @@ class ContextWrapper extends EventDispatcher
 	
 	public inline function setBlendMode(blendMode:BlendMode, premultipliedAlpha:Bool):Void
 	{
-		BlendModeUtil.applyToContext(blendMode, this, premultipliedAlpha);
+		if (currentBlendMode != blendMode)
+		{
+			BlendModeUtil.applyToContext(blendMode, this, premultipliedAlpha);
+			currentBlendMode = blendMode;
+		}
 	}
 	
 	public function setColorMultiplier(r:Float, g:Float, b:Float, a:Float):Void

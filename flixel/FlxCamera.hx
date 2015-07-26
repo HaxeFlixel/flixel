@@ -379,13 +379,15 @@ class FlxCamera extends FlxBasic
 			drawVertices[currentVertexPosition++] = tempX;
 			drawVertices[currentVertexPosition++] = tempY;
 			
+			// TODO: fix this...
+			
 			if (i == 0)
 			{
 				bounds.set(tempX, tempY, 0, 0);
 			}
 			else
 			{
-				FlxDrawTrianglesItem.inflateBounds(bounds, tempX, tempY);
+			//	FlxDrawTrianglesItem.inflateBounds(bounds, tempX, tempY);
 			}
 			
 			i += 2;
