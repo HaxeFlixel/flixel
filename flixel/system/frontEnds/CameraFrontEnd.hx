@@ -177,6 +177,10 @@ class CameraFrontEnd
 	 */
 	private inline function lock():Void
 	{
+		#if FLX_RENDER_TILE
+		Batcher.clear();
+		#end
+		
 		for (camera in list)
 		{
 			if (camera == null || !camera.exists || !camera.visible)
@@ -207,11 +211,7 @@ class CameraFrontEnd
 			camera.viewport.bgColor = camera.bgColor;
 			camera.viewport.useBgColor = true;
 			#end
-		}
-		
-		#if FLX_RENDER_TILE
-		Batcher.clear();
-		#end
+		}	
 	}
 	
 	#if FLX_RENDER_TILE

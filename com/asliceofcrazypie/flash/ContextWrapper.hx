@@ -196,38 +196,35 @@ class ContextWrapper extends EventDispatcher
 			return quadNoImagePrograms.get(programName);
 		}
 		
-		var vertexString:String =	"m44 op, va0, vc124   \n" +		// 4x4 matrix transform to output clipspace
-									"mov v0, va1 		\n";		// move color transform to fragment shader
-		
 		var vertexString:String =
 			// Pivot
-				"mov vt2, vc[va0.z]\n" + // originX, originY, width, height
-				"sub vt0.z, va0.x, vt2.x\n" +
-				"sub vt0.w, va0.y, vt2.y\n" +
+				"mov vt2, vc[va0.z]			\n" + // originX, originY, width, height
+				"sub vt0.z, va0.x, vt2.x	\n" +
+				"sub vt0.w, va0.y, vt2.y	\n" +
 			// Width and height
-				"mul vt0.z, vt0.z, vt2.z\n" +
-				"mul vt0.w, vt0.w, vt2.w\n" +
+				"mul vt0.z, vt0.z, vt2.z	\n" +
+				"mul vt0.w, vt0.w, vt2.w	\n" +
 			// Tranformation
-				"mov vt2, vc[va0.z+1]\n" + // a, b, c, d
-				"mul vt1.z, vt0.z, vt2.x\n" + // pos.x * a
-				"mul vt1.w, vt0.w, vt2.z\n" + // pos.y * c
-				"add vt0.x, vt1.z, vt1.w\n" + // X
-				"mul vt1.z, vt0.z, vt2.y\n" + // pos.x * b
-				"mul vt1.w, vt0.w, vt2.w\n" + // pos.y * d
-				"add vt0.y, vt1.z, vt1.w\n" + // Y			
+				"mov vt2, vc[va0.z+1]		\n" + // a, b, c, d
+				"mul vt1.z, vt0.z, vt2.x	\n" + // pos.x * a
+				"mul vt1.w, vt0.w, vt2.z	\n" + // pos.y * c
+				"add vt0.x, vt1.z, vt1.w	\n" + // X
+				"mul vt1.z, vt0.z, vt2.y	\n" + // pos.x * b
+				"mul vt1.w, vt0.w, vt2.w	\n" + // pos.y * d
+				"add vt0.y, vt1.z, vt1.w	\n" + // Y			
 			// Translation
-				"mov vt2, vc[va0.z+2]\n" + // x, y, 0, 0
-				"add vt0.x, vt0.x, vt2.x\n" +
-				"add vt0.y, vt0.y, vt2.y\n" +
-				"mov vt0.zw, va0.ww\n" +
+				"mov vt2, vc[va0.z+2]		\n" + // x, y, 0, 0
+				"add vt0.x, vt0.x, vt2.x	\n" +
+				"add vt0.y, vt0.y, vt2.y	\n" +
+				"mov vt0.zw, va0.ww			\n" +
 			// Projection
 //				"m44 op, vt0, vc124\n" +
-				"dp4 op.x, vt0, vc124\n" +
-				"dp4 op.y, vt0, vc125\n" +
-				"dp4 op.z, vt0, vc126\n" +
-				"dp4 op.w, vt0, vc127\n" +
+				"dp4 op.x, vt0, vc124		\n" +
+				"dp4 op.y, vt0, vc125		\n" +
+				"dp4 op.z, vt0, vc126		\n" +
+				"dp4 op.w, vt0, vc127		\n" +
 			// Passing color
-				"mov v0, vc[va0.z+3]\n";// red, green, blue, alpha	
+				"mov v0, vc[va0.z+3]		\n";	// red, green, blue, alpha	
 		
 		var fragmentString:String = null;
 		if (globalColor)
@@ -552,9 +549,6 @@ class ContextWrapper extends EventDispatcher
 		var vertexByteCode = assembler.assemble(cast Context3DProgramType.VERTEX, vertexString);
 		var fragmentByteCode = assembler.assemble(cast Context3DProgramType.FRAGMENT, fragmentString);
 		
-	//	var vertexByteCode = AGLSLShaderUtils.createShader(Context3DProgramType.VERTEX, vertexString);
-	//	var fragmentByteCode = AGLSLShaderUtils.createShader(Context3DProgramType.FRAGMENT, fragmentString);
-		
 		result.upload(vertexByteCode, fragmentByteCode);
 		return result;
 	}
@@ -618,11 +612,8 @@ class ContextWrapper extends EventDispatcher
 	
 	public inline function setBlendMode(blendMode:BlendMode, premultipliedAlpha:Bool):Void
 	{
-		if (currentBlendMode != blendMode)
-		{
-			BlendModeUtil.applyToContext(blendMode, this, premultipliedAlpha);
-			currentBlendMode = blendMode;
-		}
+		BlendModeUtil.applyToContext(blendMode, this, premultipliedAlpha);
+		currentBlendMode = blendMode;
 	}
 	
 	public function setColorMultiplier(r:Float, g:Float, b:Float, a:Float):Void

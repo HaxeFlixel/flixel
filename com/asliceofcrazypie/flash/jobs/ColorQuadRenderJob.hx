@@ -9,6 +9,7 @@ import openfl.display.BlendMode;
 import openfl.display.Sprite;
 import openfl.display.Tilesheet;
 import openfl.display3D.Context3D;
+import openfl.display3D.Context3DBlendFactor;
 import openfl.display3D.Context3DProgramType;
 import openfl.display3D.Context3DVertexBufferFormat;
 import openfl.display3D.IndexBuffer3D;
@@ -92,7 +93,6 @@ class ColorQuadRenderJob extends QuadRenderJob
 		context.setBlendMode(blendMode, false);
 		context.setQuadNoImageProgram(colored);
 		context.setTexture(null);
-		
 		// Set streams
 		context3D.setVertexBufferAt(0, vertexBuffer, 0, Context3DVertexBufferFormat.FLOAT_3);
 		context.context3D.setVertexBufferAt(1, null);
@@ -102,7 +102,7 @@ class ColorQuadRenderJob extends QuadRenderJob
 		// Set constants
 	//	mvp.copyFrom(support.mvpMatrix3D);
 	//	context.context3D.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 124, context.baseTransformMatrix, true);
-		
+	
 		context.context3D.drawTriangles(indexBuffer, 0, numQuads << 1); // numQuads * 2
 	}
 	
@@ -127,13 +127,6 @@ class ColorQuadRenderJob extends QuadRenderJob
 	override public function canAddQuad():Bool
 	{
 		return (numQuads < limit);
-	}
-	
-	override public function reset():Void 
-	{
-		super.reset();
-		numQuads = 0;
-		numConstants = 0;
 	}
 	
 	public function set(blend:BlendMode):Void 
