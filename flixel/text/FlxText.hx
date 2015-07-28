@@ -805,6 +805,7 @@ class FlxText extends FlxSprite
 			
 			_matrix.identity();
 			
+			#if !openfl_next
 			// If it's a single, centered line of text, we center it ourselves so it doesn't blur to hell
 			if (_defaultFormat.align == TextFormatAlign.CENTER && textField.numLines == 1)
 			{
@@ -819,6 +820,7 @@ class FlxText extends FlxSprite
 				if (textWidth <= textField.width)
 					_matrix.translate(Math.floor((textField.width - textWidth) / 2), 0);
 			}
+			#end
 			
 			applyBorderStyle();
 			applyBorderTransparency();
