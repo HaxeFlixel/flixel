@@ -67,6 +67,10 @@ class ContextWrapper extends EventDispatcher
 	private var currentProgram:Program3D;
 	private var currentBlendMode:BlendMode;
 	
+	private var firstTextureSet:Bool = false;
+	private var firstProgramSet:Bool = false;
+	private var firstBlendModeSet:Bool = false;
+	
 	private var globalMultiplier:Vector<Float>;
 	
 	public function new(depth:Int, antiAliasLevel:Int = 1)
@@ -314,10 +318,11 @@ class ContextWrapper extends EventDispatcher
 	{
 		if (context3D != null)
 		{
-			if (texture != currentTexture)
+			if (texture != currentTexture || !firstTextureSet)
 			{
 				context3D.setTextureAt(0, texture);
 				currentTexture = texture;
+				firstTextureSet = true;
 			}
 		}
 	}
@@ -471,6 +476,10 @@ class ContextWrapper extends EventDispatcher
 		currentProgram = null;
 		currentBlendMode = null;
 		
+		firstTextureSet = false;
+		firstProgramSet = false;
+		firstBlendModeSet = false;
+		
 		presented = false;
 	}
 	
@@ -612,8 +621,12 @@ class ContextWrapper extends EventDispatcher
 	
 	public inline function setBlendMode(blendMode:BlendMode, premultipliedAlpha:Bool):Void
 	{
-		BlendModeUtil.applyToContext(blendMode, this, premultipliedAlpha);
-		currentBlendMode = blendMode;
+		if (blendMode != currentBlendMode || !firstBlendModeSet)
+		{
+			BlendModeUtil.applyToContext(blendMode, this, premultipliedAlpha);
+			currentBlendMode = blendMode;
+			firstBlendModeSet = true;
+		}
 	}
 	
 	public function setColorMultiplier(r:Float, g:Float, b:Float, a:Float):Void

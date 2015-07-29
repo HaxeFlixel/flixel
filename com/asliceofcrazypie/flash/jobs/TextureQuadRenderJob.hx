@@ -79,7 +79,6 @@ class TextureQuadRenderJob extends QuadRenderJob
 		}
 		
 		var context3D:Context3D = context.context3D;
-		
 		vertexBuffer = context3D.createVertexBuffer(limit * 4, 3);
 		vertexBuffer.uploadFromVector(vertices, 0, limit * 4);
 		indexBuffer = context3D.createIndexBuffer(limit * 6);
