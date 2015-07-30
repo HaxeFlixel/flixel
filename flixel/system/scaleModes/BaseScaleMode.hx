@@ -1,5 +1,6 @@
 package flixel.system.scaleModes;
 
+import com.asliceofcrazypie.flash.Batcher;
 import flixel.FlxG;
 import flixel.math.FlxPoint;
 
@@ -92,6 +93,11 @@ class BaseScaleMode
 		
 		FlxG.game.x = offset.x;
 		FlxG.game.y = offset.y;
+		
+		#if FLX_RENDER_TILE
+		Batcher.gameX = offset.x;
+		Batcher.gameY = offset.y;
+		#end
 	}
 	
 	private function set_hAlign(value:HAlign):HAlign

@@ -195,6 +195,8 @@ class Batcher
 	
 	private static function updateViewports():Void
 	{
+		if (viewports == null)	return;
+		
 		for (viewport in viewports)
 		{
 			viewport.update();
