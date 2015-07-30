@@ -4,6 +4,7 @@ import flixel.FlxObject;
 import flixel.graphics.FlxGraphic;
 import flixel.math.FlxPoint;
 import flixel.tile.FlxTilemap;
+import flixel.math.FlxMath;
 import massive.munit.Assert;
 
 class FlxObjectTest extends FlxTest
@@ -77,22 +78,24 @@ class FlxObjectTest extends FlxTest
 	@Test // closes #1564, tests #1561
 	function testSeparateYAfterX():Void
 	{
-		var object1:FlxObject = new FlxObject(0, 0, 15, 15);
-		var bar:FlxObject = new FlxObject(17, 17, 100, 40);
-		bar.immovable = true;
+		var object1 = new FlxObject(8, 4, 8, 12);
+		var level = new FlxTilemap();
+		level.loadMapFromCSV("0,0,1\n0,0,1\n1,1,1", FlxGraphic.fromClass(GraphicAuto));
+
 		FlxG.state.add(object1);
-		FlxG.state.add(bar);
+		FlxG.state.add(level);
 		object1.velocity.set(100, 100);
 		step();
-		Assert.isTrue(FlxG.collide(object1, bar));
-		Assert.areEqual(bar.y, object1.y + object1.height);
+
+		Assert.isTrue(FlxG.collide(object1, level));
+		Assert.isTrue(FlxMath.equal(16.0, object1.y + object1.height, 0.0002));
 	}
 
 	@Test
 	function testUpdateTouchingFlagsHorizontal():Void
 	{
-		var object1:FlxObject = new FlxObject(0, 0, 10, 10);
-		var object2:FlxObject = new FlxObject(20, 2, 10, 6);
+		var object1 = new FlxObject(0, 0, 10, 10);
+		var object2 = new FlxObject(20, 2, 10, 6);
 		FlxG.state.add(object1);
 		FlxG.state.add(object2);
 		object1.velocity.set(20, 0);
@@ -105,8 +108,8 @@ class FlxObjectTest extends FlxTest
 	@Test // #1556
 	function testUpdateTouchingFlagsVertical():Void
 	{
-		var object1:FlxObject = new FlxObject(0, 0, 10, 10);
-		var object2:FlxObject = new FlxObject(2, 20, 10, 6);
+		var object1 = new FlxObject(0, 0, 10, 10);
+		var object2 = new FlxObject(2, 20, 10, 6);
 		FlxG.state.add(object1);
 		FlxG.state.add(object2);
 		object1.velocity.set(0, 20);
@@ -120,8 +123,8 @@ class FlxObjectTest extends FlxTest
 	function testUpdateTouchingFlagsNoOverlap():Void
 	{
 		// Position objects far from each other
-		var object1:FlxObject = new FlxObject(0, 0, 10, 10);
-		var object2:FlxObject = new FlxObject(2000, 20, 10, 6);
+		var object1 = new FlxObject(0, 0, 10, 10);
+		var object2 = new FlxObject(2000, 20, 10, 6);
 		FlxG.state.add(object1);
 		FlxG.state.add(object2);
 		object1.velocity.set(0, 20);
