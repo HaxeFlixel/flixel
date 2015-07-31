@@ -4,6 +4,7 @@ import flixel.FlxObject;
 import flixel.graphics.FlxGraphic;
 import flixel.math.FlxPoint;
 import flixel.tile.FlxTilemap;
+import flixel.math.FlxMath;
 import massive.munit.Assert;
 
 class FlxObjectTest extends FlxTest
@@ -74,6 +75,22 @@ class FlxObjectTest extends FlxTest
 		Assert.isFalse(FlxG.overlap(object1, object2));
 	}
 	
+	@Test // closes #1564, tests #1561
+	function testSeparateYAfterX():Void
+	{
+		var object1 = new FlxObject(8, 4, 8, 12);
+		var level = new FlxTilemap();
+		level.loadMapFromCSV("0,0,1\n0,0,1\n1,1,1", FlxGraphic.fromClass(GraphicAuto));
+
+		FlxG.state.add(object1);
+		FlxG.state.add(level);
+		object1.velocity.set(100, 100);
+		step();
+
+		Assert.isTrue(FlxG.collide(object1, level));
+		Assert.isTrue(FlxMath.equal(16.0, object1.y + object1.height, 0.0002));
+	}
+
 	@Test
 	function testUpdateTouchingFlagsHorizontal():Void
 	{
@@ -84,8 +101,8 @@ class FlxObjectTest extends FlxTest
 		object1.velocity.set(20, 0);
 		step(20);
 		Assert.isTrue(FlxG.overlap(object1, object2, null, FlxObject.updateTouchingFlags));
-		Assert.areEqual(object1.touching, FlxObject.RIGHT);
-		Assert.areEqual(object2.touching, FlxObject.LEFT);
+		Assert.areEqual(FlxObject.RIGHT, object1.touching);
+		Assert.areEqual(FlxObject.LEFT, object2.touching);
 	}
 	
 	@Test // #1556
@@ -98,8 +115,8 @@ class FlxObjectTest extends FlxTest
 		object1.velocity.set(0, 20);
 		step(20);
 		Assert.isTrue(FlxG.overlap(object1, object2, null, FlxObject.updateTouchingFlags));
-		Assert.areEqual(object1.touching, FlxObject.DOWN);
-		Assert.areEqual(object2.touching, FlxObject.UP);
+		Assert.areEqual(FlxObject.DOWN, object1.touching);
+		Assert.areEqual(FlxObject.UP, object2.touching);
 	}
 	
 	@Test // #1556
@@ -113,19 +130,19 @@ class FlxObjectTest extends FlxTest
 		object1.velocity.set(0, 20);
 		step(20);
 		Assert.isFalse(FlxG.overlap(object1, object2, null, FlxObject.updateTouchingFlags));
-		Assert.areEqual(object1.touching, FlxObject.NONE);
-		Assert.areEqual(object2.touching, FlxObject.NONE);
+		Assert.areEqual(FlxObject.NONE, object1.touching);
+		Assert.areEqual(FlxObject.NONE, object2.touching);
 	}
 	
 	@Test
-	function testVelocityCollidingWithObject()
+	function testVelocityCollidingWithObject():Void
 	{
 		object2.setSize(100, 10);
 		velocityColldingWith(object2);
 	}
 	
 	@Test
-	function testVelocityCollidingWithTilemap()
+	function testVelocityCollidingWithTilemap():Void
 	{
 		tilemap.loadMapFromCSV("1, 1, 1, 1, 1, 1, 1", FlxGraphic.fromClass(GraphicAuto));
 		velocityColldingWith(tilemap);
