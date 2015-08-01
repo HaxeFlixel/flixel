@@ -517,6 +517,8 @@ class FlxCamera extends FlxBasic
 		debugLayer = null;
 		#end
 		
+		Batcher.removeViewport(viewport);
+		
 		zeroPoint = FlxDestroyUtil.put(zeroPoint);
 	#end
 		
