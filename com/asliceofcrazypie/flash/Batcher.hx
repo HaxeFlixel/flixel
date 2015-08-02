@@ -195,11 +195,12 @@ class Batcher
 	
 	private static function updateViewports():Void
 	{
-		
 		if (game != null)
 		{
 			game.scaleX = gameScaleX;
 			game.scaleY = gameScaleY;
+		//	game.x = gameX;
+		//	game.y = gameY;
 		}
 		
 		if (viewports == null)	return;

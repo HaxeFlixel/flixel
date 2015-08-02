@@ -460,11 +460,6 @@ class FlxGame extends Sprite
 		#end
 		
 		resizeGame(width, height);
-		
-		#if FLX_RENDER_TILE
-		Batcher.gameScaleX = FlxG.scaleMode.scale.x;
-		Batcher.gameScaleY = FlxG.scaleMode.scale.y;
-		#end
 	}
 	
 	private function resizeGame(width:Int, height:Int):Void

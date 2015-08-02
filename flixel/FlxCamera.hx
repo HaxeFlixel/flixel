@@ -736,11 +736,11 @@ class FlxCamera extends FlxBasic
 	
 	private function updateFlashOffset():Void
 	{
-	//	_flashOffset.x = width * 0.5 * FlxG.scaleMode.scale.x * initialZoom;
-	//	_flashOffset.y = height * 0.5 * FlxG.scaleMode.scale.y * initialZoom;
+		_flashOffset.x = width * 0.5 * FlxG.scaleMode.scale.x * initialZoom;
+		_flashOffset.y = height * 0.5 * FlxG.scaleMode.scale.y * initialZoom;
 		
-		_flashOffset.x = 0.5 * width * (initialZoom - scaleX) * FlxG.scaleMode.scale.x;
-		_flashOffset.y = 0.5 * height * (initialZoom - scaleY) * FlxG.scaleMode.scale.y;
+	//	_flashOffset.x = 0.5 * width * (initialZoom - scaleX) * FlxG.scaleMode.scale.x;
+	//	_flashOffset.y = 0.5 * height * (initialZoom - scaleY) * FlxG.scaleMode.scale.y;
 	}
 	
 	private function updateScrollRect():Void
@@ -1160,7 +1160,13 @@ class FlxCamera extends FlxBasic
 		_flashBitmap.scaleX = totalScaleX;
 		_flashBitmap.scaleY = totalScaleY;
 		#else
-		
+		if (viewport != null)
+		{
+			viewport.x = x;
+			viewport.y = y;
+			
+			trace(x + "; " + y);
+		}
 		#end
 		
 		updateFlashSpritePosition();
