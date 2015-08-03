@@ -12,6 +12,7 @@ import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import flash.Vector;
+import flixel.FlxG;
 import flixel.FlxGame;
 import openfl.display.BitmapData;
 
@@ -195,14 +196,6 @@ class Batcher
 	
 	private static function updateViewports():Void
 	{
-		if (game != null)
-		{
-			game.scaleX = gameScaleX;
-			game.scaleY = gameScaleY;
-		//	game.x = gameX;
-		//	game.y = gameY;
-		}
-		
 		if (viewports == null)	return;
 		
 		for (viewport in viewports)

@@ -769,8 +769,11 @@ class Viewport
 		#end
 		
 		#if (!FLX_NO_DEBUG || !flash11)
-		canvas.scaleX = scaleX;
-		canvas.scaleY = scaleY;
+		view.x = x * Batcher.gameScaleX;
+		view.y = y * Batcher.gameScaleY;
+		
+		canvas.scaleX = scaleX * Batcher.gameScaleX;
+		canvas.scaleY = scaleY * Batcher.gameScaleY;
 		
 		canvas.x = 0.5 * width * (initialScaleX - scaleX);
 		canvas.y = 0.5 * height * (initialScaleY - scaleY);
@@ -787,7 +790,7 @@ class Viewport
 						width * Batcher.gameScaleX * initialScaleX,
 						height * Batcher.gameScaleY * initialScaleY);
 		#else
-		scissor.setTo(0, 0, width * /*Batcher.gameScaleX **/ initialScaleX, height /** Batcher.gameScaleY*/ * initialScaleY);
+		scissor.setTo(0, 0, width * Batcher.gameScaleX * initialScaleX, height * Batcher.gameScaleY * initialScaleY);
 		view.scrollRect = scissor;
 		#end
 	}

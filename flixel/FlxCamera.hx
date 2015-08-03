@@ -1164,8 +1164,6 @@ class FlxCamera extends FlxBasic
 		{
 			viewport.x = x;
 			viewport.y = y;
-			
-			trace(x + "; " + y);
 		}
 		#end
 		

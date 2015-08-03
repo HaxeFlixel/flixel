@@ -58,13 +58,6 @@ class BaseScaleMode
 		scale.y = gameSize.y / (FlxG.height * FlxG.initialZoom);
 		updateOffsetX();
 		updateOffsetY();
-		
-		#if FLX_RENDER_TILE
-		Batcher.gameX = offset.x;
-		Batcher.gameY = offset.y;
-		Batcher.gameScaleX = scale.x;
-		Batcher.gameScaleY = scale.y;
-		#end
 	}
 	
 	private function updateOffsetX():Void
@@ -100,11 +93,6 @@ class BaseScaleMode
 		
 		FlxG.game.x = offset.x;
 		FlxG.game.y = offset.y;
-		
-		#if FLX_RENDER_TILE
-	//	Batcher.gameX = offset.x;
-	//	Batcher.gameY = offset.y;
-		#end
 	}
 	
 	private function set_hAlign(value:HAlign):HAlign

@@ -267,6 +267,13 @@ class CameraFrontEnd
 	 */
 	private function resize():Void
 	{
+		#if FLX_RENDER_TILE
+		Batcher.gameX = FlxG.scaleMode.offset.x;
+		Batcher.gameY = FlxG.scaleMode.offset.y;
+		Batcher.gameScaleX = FlxG.scaleMode.scale.x;
+		Batcher.gameScaleY = FlxG.scaleMode.scale.y;
+		#end
+		
 		for (camera in list)
 		{
 			camera.onResize();
