@@ -1,6 +1,5 @@
 package flixel.system.scaleModes;
 
-import com.asliceofcrazypie.flash.Batcher;
 import flixel.FlxG;
 import flixel.math.FlxPoint;
 

@@ -5,21 +5,34 @@
 	<assets path="assets/sounds" include="*.ogg" if="html5" unless="unit-test" />
 	<assets path="assets/sounds" include="*.mp3" if="flash" embed="true" />
 	<assets path="assets/sounds" include="*.ogg" unless="flash || html5" embed="true" />
+	<assets path="assets/fonts/nokiafc22.ttf" embed="true" />
+	<assets path="assets/fonts/arial.ttf" embed="true" unless="FLX_NO_DEBUG" />
 	
-	<set name="html5-backend" value="openfl-bitfive" unless="html5-backend" />
-	<haxelib name="openfl" />
+	<set name="legacy" unless="next" />
+	<haxelib name="openfl" unless="create" />
 	
-	<haxeflag name="--macro" value="flixel.system.macros.FlxConditionals.run()" />
-	
+	<haxeflag name="--macro" value="flixel.system.macros.FlxDefines.run()" />
 	<haxeflag name="-swf-lib" value="assets/AGAL.swc" if="flash" />
 	
 	<section if="setup">
-		<haxelib name="systools"/>
-		<haxelib name="openfl-bitfive"/>
-		<haxelib name="flixel-addons"/>
-		<haxelib name="flixel-ui"/>
-		<haxelib name="flixel-demos"/>
-		<haxelib name="flixel-tools"/>
-		<haxelib name="flixel-templates"/>
+		<haxelib name="systools" />
+		<haxelib name="flixel-addons" />
+		<haxelib name="flixel-ui" />
+		<haxelib name="flixel-demos" />
+		<haxelib name="flixel-tools" />
+		<haxelib name="flixel-templates" />
+	</section>
+
+	<section if="create">
+		<sample path="${haxelib:flixel-demos}/Arcade Classics" />
+		<sample path="${haxelib:flixel-demos}/Editors" />
+		<sample path="${haxelib:flixel-demos}/Effects" />
+		<sample path="${haxelib:flixel-demos}/Flixel Features" />
+		<sample path="${haxelib:flixel-demos}/Input" />
+		<sample path="${haxelib:flixel-demos}/Other" />
+		<sample path="${haxelib:flixel-demos}/Performance" />
+		<sample path="${haxelib:flixel-demos}/Platformers" />
+		<sample path="${haxelib:flixel-demos}/Tutorials" />
+		<sample path="${haxelib:flixel-demos}/User Interface" />
 	</section>
 </project>

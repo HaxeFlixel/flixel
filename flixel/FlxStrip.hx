@@ -1,11 +1,10 @@
 package flixel;
+
 import flixel.graphics.FlxGraphic;
 import flixel.math.FlxMath;
 import flixel.math.FlxRect;
+import flixel.graphics.tile.FlxDrawTrianglesItem.DrawData;
 import flixel.system.FlxAssets.FlxGraphicAsset;
-import flixel.util.FlxColor;
-import openfl.display.Graphics;
-import openfl.display.Sprite;
 import openfl.Vector;
 
 /**
@@ -13,9 +12,9 @@ import openfl.Vector;
  * You have access to vertices, indices and uvtData vectors which are used as data storages for rendering.
  * The whole FlxGraphic object is used as a texture for this sprite.
  * Use these links for more info about drawTriangles method:
- * http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/display/Graphics.html#drawTriangles%28%29
- * http://help.adobe.com/en_US/as3/dev/WS84753F1C-5ABE-40b1-A2E4-07D7349976C4.html
- * http://www.flashandmath.com/advanced/p10triangles/index.html
+ * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/display/Graphics.html#drawTriangles%28%29
+ * @see http://help.adobe.com/en_US/as3/dev/WS84753F1C-5ABE-40b1-A2E4-07D7349976C4.html
+ * @see http://www.flashandmath.com/advanced/p10triangles/index.html
  * 
  * WARNING: This class is EXTREMELY slow on flash target!
  */

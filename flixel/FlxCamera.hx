@@ -12,19 +12,18 @@ import flash.display.Sprite;
 import flash.geom.ColorTransform;
 import flash.geom.Point;
 import flash.geom.Rectangle;
-import flixel.FlxCamera.FlxCameraShakeDirection;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxMath;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
+import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
-import openfl.geom.Matrix;
 import openfl.display.BlendMode;
-import openfl.display.Tilesheet;
+import openfl.geom.Matrix;
 import openfl.Vector;
 
 /**
@@ -161,10 +160,11 @@ class FlxCamera extends FlxBasic
 
 	/**
 	 * Whether the positions of the objects rendered on this camera are rounded.
-	 * Default is true. If set on individual objects, they ignore the global camera setting.
+	 * If set on individual objects, they ignore the global camera setting.
+	 * Defaults to false with FLX_RENDER_TILE and to true with FLX_RENDER_BLIT.
 	 * WARNING: setting this to false on blitting targets is very expensive.
 	 */
-	public var pixelPerfectRender:Bool = true;
+	public var pixelPerfectRender:Bool = #if FLX_RENDER_TILE false #else true #end;
 	
 	/**
 	 * How wide the camera display is, in game pixels.
@@ -278,7 +278,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Internal, used to control the "shake" special effect.
 	 */
-	private var _fxShakeDirection:FlxCameraShakeDirection = BOTH_AXES;
+	private var _fxShakeAxes:FlxAxes = XY;
 	/**
 	 * Internal, to help avoid costly allocations.
 	 */
@@ -713,11 +713,11 @@ class FlxCamera extends FlxBasic
 			}
 			else
 			{
-				if ((_fxShakeDirection == BOTH_AXES) || (_fxShakeDirection == X_AXIS))
+				if (_fxShakeAxes != FlxAxes.Y)
 				{
 					_fxShakeOffset.x = FlxG.random.float( -_fxShakeIntensity * width, _fxShakeIntensity * width) * zoom;
 				}
-				if ((_fxShakeDirection == BOTH_AXES) || (_fxShakeDirection == Y_AXIS))
+				if (_fxShakeAxes != FlxAxes.X)
 				{
 					_fxShakeOffset.y = FlxG.random.float( -_fxShakeIntensity * height, _fxShakeIntensity * height) * zoom;
 				}
@@ -795,12 +795,13 @@ class FlxCamera extends FlxBasic
 	 * @param	Offset	Offset the follow deadzone by a certain amount. Only applicable for PLATFORMER and LOCKON styles.
 	 * @param	Lerp	How much lag the camera should have (can help smooth out the camera movement).
 	 */
-	public function follow(Target:FlxObject, ?Style:FlxCameraFollowStyle, ?Offset:FlxPoint, Lerp:Float = 1):Void
+	public function follow(Target:FlxObject, ?Style:FlxCameraFollowStyle, ?Offset:FlxPoint, ?Lerp:Float):Void
 	{
 		if (Style == null)
-		{
 			Style = LOCKON;
-		}
+
+		if (Lerp == null)
+			Lerp = 60 / FlxG.updateFramerate;
 		
 		style = Style;
 		target = Target;
@@ -884,7 +885,7 @@ class FlxCamera extends FlxBasic
 		_fxFlashColor = Color;
 		if (Duration <= 0)
 		{
-			Duration = FlxMath.MIN_VALUE_FLOAT;
+			Duration = 0.000001;
 		}
 		_fxFlashDuration = Duration;
 		_fxFlashComplete = OnComplete;
@@ -909,21 +910,14 @@ class FlxCamera extends FlxBasic
 		_fxFadeColor = Color;
 		if (Duration <= 0)
 		{
-			Duration = FlxMath.MIN_VALUE_FLOAT;
+			Duration = 0.000001;
 		}
 		
 		_fxFadeIn = FadeIn;
 		_fxFadeDuration = Duration;
 		_fxFadeComplete = OnComplete;
 		
-		if (_fxFadeIn)
-		{
-			_fxFadeAlpha = 0.999999;
-		}
-		else
-		{
-			_fxFadeAlpha = FlxMath.MIN_VALUE_FLOAT;
-		}
+		_fxFadeAlpha = _fxFadeIn ? 0.999999 : 0.000001;
 	}
 	
 	/**
@@ -933,14 +927,12 @@ class FlxCamera extends FlxBasic
 	 * @param	Duration	The length in seconds that the shaking effect should last.
 	 * @param	OnComplete	A function you want to run when the shake effect finishes.
 	 * @param	Force		Force the effect to reset (default = true, unlike flash() and fade()!).
-	 * @param	Direction	Whether to shake on both axes, just up and down, or just side to side. Default value is BOTH_AXES.
+	 * @param	Axes		On what axes to shake. Default value is XY / both.
 	 */
-	public function shake(Intensity:Float = 0.05, Duration:Float = 0.5, ?OnComplete:Void->Void, Force:Bool = true, ?Direction:FlxCameraShakeDirection):Void
+	public function shake(Intensity:Float = 0.05, Duration:Float = 0.5, ?OnComplete:Void->Void, Force:Bool = true, ?Axes:FlxAxes):Void
 	{
-		if (Direction == null)
-		{
-			Direction = BOTH_AXES;
-		}
+		if (Axes == null)
+			Axes = XY;
 		
 		if (!Force && ((_fxShakeOffset.x != 0) || (_fxShakeOffset.y != 0)))
 		{
@@ -949,7 +941,7 @@ class FlxCamera extends FlxBasic
 		_fxShakeIntensity = Intensity;
 		_fxShakeDuration = Duration;
 		_fxShakeComplete = OnComplete;
-		_fxShakeDirection = Direction;
+		_fxShakeAxes = Axes;
 		_fxShakeOffset.set();
 	}
 	
@@ -1290,22 +1282,6 @@ class FlxCamera extends FlxBasic
 		}
 		return this.visible = visible;
 	}
-}
-
-enum FlxCameraShakeDirection
-{
-	/**
-	 * Shake camera on both the X and Y axes.
-	 */
-	BOTH_AXES;
-	/**
-	 * Shake camera on the X axis only.
-	 */
-	X_AXIS;
-	/**
-	 * Shake camera on the Y axis only.
-	 */
-	Y_AXIS;
 }
 
 enum FlxCameraFollowStyle

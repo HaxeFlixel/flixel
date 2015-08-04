@@ -13,18 +13,13 @@ import flash.Lib;
 import flixel.effects.postprocess.PostProcess;
 import flixel.graphics.tile.FlxTilesheet;
 import flixel.math.FlxAngle;
-import flixel.math.FlxMatrix;
-import flixel.math.FlxPoint;
 import flixel.math.FlxRandom;
-import flixel.math.FlxRect;
 import flixel.system.FlxSplash;
 import flixel.system.replay.FlxReplay;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import openfl.Assets;
-import openfl.geom.Point;
-import openfl.geom.Rectangle;
 
 #if FLX_POST_PROCESS
 import openfl.display.OpenGLView;
@@ -128,12 +123,12 @@ class FlxGame extends Sprite
 	private var _stepSeconds:Float;
 	/**
 	 * Max allowable accumulation (see _accumulator).
-	 * Should always (and automatically) be set to roughly 2x the flash player framerate.
+	 * Should always (and automatically) be set to roughly 2x the stage framerate.
 	 */
 	private var _maxAccumulation:Float;
 	
 	/**
-	 * Whether the Flash player lost focus.
+	 * Whether the game lost focus.
 	 */
 	private var _lostFocus:Bool = false;
 	
@@ -209,10 +204,7 @@ class FlxGame extends Sprite
 	private var _recordingRequested:Bool = false;
 	#end
 	
-	#if js
-	/**
-	 * On html5, we draw() all our cameras into a bitmap to avoid blurry zooming.
-	 */
+	#if FLX_RENDER_CRISP
 	private var _display:BitmapData;
 	private var _displayBitmap:Bitmap;
 	private var _displayMatrix = new Matrix();
@@ -471,7 +463,7 @@ class FlxGame extends Sprite
 		
 		FlxG.cameras.resize();
 		
-		#if js
+		#if FLX_RENDER_CRISP
 		FlxDestroyUtil.removeChild(this, _displayBitmap);
 		FlxDestroyUtil.dispose(_display);
 		
@@ -633,6 +625,8 @@ class FlxGame extends Sprite
 		
 		// Finally assign and create the new state
 		_state = _requestedState;
+		
+		FlxG.signals.preStateCreate.dispatch(_state);
 		
 		_state.create();
 		
@@ -880,7 +874,7 @@ class FlxGame extends Sprite
 		#end
 		#end
 		
-		#if js
+		#if FLX_RENDER_CRISP
 		_display.fillRect(_display.rect, FlxColor.TRANSPARENT);
 		
 		for (camera in FlxG.cameras.list)

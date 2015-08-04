@@ -2,7 +2,6 @@ package flixel.text;
 
 import flash.display.BitmapData;
 import flixel.FlxBasic;
-import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxBitmapFont;
@@ -10,7 +9,6 @@ import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.text.FlxText.FlxTextAlign;
-import flixel.math.FlxAngle;
 import flixel.text.FlxText.FlxTextBorderStyle;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
@@ -51,6 +49,7 @@ class FlxBitmapText extends FlxSprite
 	/**
 	 * Specifies how the text field should align text.
 	 * JUSTIFY alignment isn't supported.
+	 * Note: 'autoSize' must be set to false or alignment won't show any visual differences.
 	 */
 	public var alignment(default, set):FlxTextAlign = FlxTextAlign.LEFT;
 	

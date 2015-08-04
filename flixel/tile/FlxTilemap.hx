@@ -18,15 +18,11 @@ import flixel.math.FlxMath;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
-import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.system.FlxAssets.FlxTilemapGraphicAsset;
-import flixel.tile.FlxBaseTilemap.FlxTilemapAutoTiling;
-import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
 import openfl.display.BlendMode;
-import openfl.display.Tilesheet;
 import openfl.geom.ColorTransform;
 
 @:keep @:bitmap("assets/images/tile/autotiles.png")
@@ -245,6 +241,10 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		}
 		
 		var graph:FlxGraphic = FlxG.bitmap.add(cast TileGraphic);
+		if (graph == null)
+		{
+			return;
+		}
 		// Figure out the size of the tiles
 		_tileWidth = TileWidth;
 		
@@ -265,6 +265,11 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	
 	override private function initTileObjects():Void 
 	{
+		if (frames == null)
+		{
+			return;
+		}
+		
 		_tileObjects = FlxDestroyUtil.destroyArray(_tileObjects);
 		// Create some tile objects that we'll use for overlap checks (one for each tile)
 		_tileObjects = new Array<FlxTile>();
@@ -501,6 +506,8 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		var selectionHeight:Int = selectionY + Math.ceil(Object.height / _scaledTileHeight) + 1;
 		
 		// Then bound these coordinates by the map edges
+		selectionX = Std.int(FlxMath.bound(selectionX, 0, widthInTiles));
+		selectionY = Std.int(FlxMath.bound(selectionY, 0, heightInTiles));
 		selectionWidth = Std.int(FlxMath.bound(selectionWidth, 0, widthInTiles));
 		selectionHeight = Std.int(FlxMath.bound(selectionHeight, 0, heightInTiles));
 		
@@ -1023,6 +1030,9 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 */
 	private function onGameResize(_,_):Void
 	{
+		if (graphic == null)
+			return;
+		
 		for (i in 0...cameras.length)
 		{
 			var camera = cameras[i];
@@ -1209,10 +1219,10 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 
 typedef FlxTileProperties =
 {
-   graphic:FlxImageFrame,
-   x:Float,
-   y:Float,
-   scale:FlxPoint,
-   alpha:Float,
-   blend:BlendMode
+	graphic:FlxImageFrame,
+	x:Float,
+	y:Float,
+	scale:FlxPoint,
+	alpha:Float,
+	blend:BlendMode
 }

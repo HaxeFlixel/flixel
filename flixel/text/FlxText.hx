@@ -35,6 +35,11 @@ using StringTools;
 class FlxText extends FlxSprite
 {
 	/**
+	 * 2px gutter on both top and bottom
+	 */
+	private static inline var VERTICAL_GUTTER:Int = 4;
+
+	/**
 	 * The text being displayed.
 	 */
 	public var text(default, set):String = "";
@@ -78,6 +83,7 @@ class FlxText extends FlxSprite
 	
 	/**
 	 * The alignment of the font (LEFT, RIGHT, CENTER or JUSTIFY).
+	 * Note: 'autoSize' must be set to false or alignment won't show any visual differences.
 	 */
 	public var alignment(get, set):FlxTextAlign;
 	
@@ -535,11 +541,7 @@ class FlxText extends FlxSprite
 	
 	private inline function get_size():Int
 	{
-		#if flash
 		return Std.int(_defaultFormat.size);
-		#else
-		return _defaultFormat.size;
-		#end
 	}
 	
 	private function set_size(Size:Int):Int
@@ -757,7 +759,7 @@ class FlxText extends FlxSprite
 			return;
 		
 		var oldWidth:Int = 0;
-		var oldHeight:Int = 0;
+		var oldHeight:Int = VERTICAL_GUTTER;
 		
 		#if flash11
 		var oldGraphicWidth:Int = 0;
@@ -776,8 +778,8 @@ class FlxText extends FlxSprite
 		}
 		
 		var newWidth:Float = textField.width;
-		// Account for 2px gutter on top and bottom (that's why there is "+ 4")
-		var newHeight:Float = textField.textHeight + 4;
+		// Account for gutter
+		var newHeight:Float = textField.textHeight + VERTICAL_GUTTER;
 		
 		// prevent text height from shrinking on flash if text == ""
 		if (textField.textHeight == 0) 
@@ -824,6 +826,7 @@ class FlxText extends FlxSprite
 			
 			_matrix.identity();
 			
+			#if !openfl_next
 			// If it's a single, centered line of text, we center it ourselves so it doesn't blur to hell
 			if (_defaultFormat.align == TextFormatAlign.CENTER && textField.numLines == 1)
 			{
@@ -838,6 +841,7 @@ class FlxText extends FlxSprite
 				if (textWidth <= textField.width)
 					_matrix.translate(Math.floor((textField.width - textWidth) / 2), 0);
 			}
+			#end
 			
 			applyBorderStyle();
 			applyBorderTransparency();
@@ -1006,7 +1010,8 @@ class FlxText extends FlxSprite
 		to.italic = from.italic;
 		to.size = from.size;
 		to.color = from.color;
-		if(withAlign) to.align = from.align;
+		if (withAlign)
+			to.align = from.align;
 	}
 	
 	/**

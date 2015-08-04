@@ -2,17 +2,16 @@ package flixel.graphics;
 
 import flash.display.BitmapData;
 import flixel.FlxG;
-import flixel.math.FlxPoint;
-import flixel.math.FlxRect;
-import flixel.system.FlxAssets;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.frames.FlxFramesCollection;
 import flixel.graphics.frames.FlxImageFrame;
+import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
+import flixel.system.FlxAssets;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import openfl.display.Tilesheet;
-import openfl.geom.Rectangle;
 
 #if (flash11 && FLX_RENDER_TILE)
 import com.asliceofcrazypie.flash.TextureUtil;
@@ -50,6 +49,10 @@ class FlxGraphic
 		if (!Cache)
 		{
 			bitmap = FlxAssets.getBitmapData(Source);
+			if (bitmap == null)
+			{
+				return null;
+			}
 			return createGraphic(bitmap, Key, Unique, Cache);
 		}
 		
@@ -61,6 +64,11 @@ class FlxGraphic
 		}
 		
 		bitmap = FlxAssets.getBitmapData(Source);
+		if (bitmap == null)
+		{
+			return null;
+		}
+		
 		graphic = createGraphic(bitmap, key, Unique);
 		graphic.assetsKey = Source;
 		return graphic;
@@ -287,7 +295,7 @@ class FlxGraphic
 	/**
 	 * Key in BitmapFrontEnd cache
 	 */
-	public var key:String;
+	public var key(default, null):String;
 	/**
 	 * Cached BitmapData object
 	 */
@@ -310,11 +318,11 @@ class FlxGraphic
 	/**
 	 * Asset name from openfl.Assets
 	 */
-	public var assetsKey:String;
+	public var assetsKey(default, null):String;
 	/**
 	 * Class name for the BitmapData
 	 */
-	public var assetsClass:Class<BitmapData>;
+	public var assetsClass(default, null):Class<BitmapData>;
 	
 	/**
 	 * Whether this graphic object should stay in cache after state changes or not.

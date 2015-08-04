@@ -5,21 +5,18 @@ import flash.display.BlendMode;
 import flash.geom.ColorTransform;
 import flash.geom.Point;
 import flash.geom.Rectangle;
-import flixel.animation.FlxAnimation;
 import flixel.animation.FlxAnimationController;
 import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.frames.FlxFramesCollection;
-import flixel.graphics.frames.FlxImageFrame;
 import flixel.graphics.frames.FlxTileFrames;
 import flixel.math.FlxAngle;
 import flixel.math.FlxMath;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
-import flixel.system.FlxAssets;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.util.FlxBitmapDataUtil;
 import flixel.util.FlxColor;
@@ -208,7 +205,7 @@ class FlxSprite extends FlxObject
 	 * @param	Y				The initial Y position of the sprite.
 	 * @param	SimpleGraphic	The graphic you want to display (OPTIONAL - for simple stuff only, do NOT use for animated images!).
 	 */
-	public function new(X:Float = 0, Y:Float = 0, ?SimpleGraphic:FlxGraphicAsset)
+	public function new(?X:Float = 0, ?Y:Float = 0, ?SimpleGraphic:FlxGraphicAsset)
 	{
 		super(X, Y);
 		
@@ -317,6 +314,10 @@ class FlxSprite extends FlxObject
 	public function loadGraphic(Graphic:FlxGraphicAsset, Animated:Bool = false, Width:Int = 0, Height:Int = 0, Unique:Bool = false, ?Key:String):FlxSprite
 	{
 		var graph:FlxGraphic = FlxG.bitmap.add(Graphic, Unique, Key);
+		if (graph == null)
+		{
+			return this;
+		}
 		
 		if (Width == 0)
 		{
@@ -357,6 +358,11 @@ class FlxSprite extends FlxObject
 	public function loadRotatedGraphic(Graphic:FlxGraphicAsset, Rotations:Int = 16, Frame:Int = -1, AntiAliasing:Bool = false, AutoBuffer:Bool = false, ?Key:String):FlxSprite
 	{
 		var brushGraphic:FlxGraphic = FlxG.bitmap.add(Graphic, false, Key);
+		if (brushGraphic == null)
+		{
+			return this;
+		}
+		
 		var brush:BitmapData = brushGraphic.bitmap;
 		var key:String = brushGraphic.key;
 		
@@ -477,8 +483,11 @@ class FlxSprite extends FlxObject
 	 */
 	public inline function resetFrameSize():Void
 	{
-		frameWidth = Std.int(frame.sourceSize.x);
-		frameHeight = Std.int(frame.sourceSize.y);
+		if (frame != null) 
+		{
+			frameWidth = Std.int(frame.sourceSize.x);
+			frameHeight = Std.int(frame.sourceSize.y);
+		}
 		_halfSize.set(0.5 * frameWidth, 0.5 * frameHeight);
 		resetSize();
 	}
@@ -781,6 +790,7 @@ class FlxSprite extends FlxObject
 	
 	/**
 	 * Set sprite's color transformation with control over color offsets.
+	 * Offsets only work with FLX_RENDER_BLIT.
 	 * 
 	 * @param	redMultiplier		The value for the red multiplier, in the range from 0 to 1. 
 	 * @param	greenMultiplier		The value for the green multiplier, in the range from 0 to 1. 
@@ -791,7 +801,8 @@ class FlxSprite extends FlxObject
 	 * @param	blueOffset			The offset for the blue color channel value, in the range from -255 to 255. 
 	 * @param	alphaOffset			The offset for alpha transparency channel value, in the range from -255 to 255. 
 	 */
-	public function setColorTransform(redMultiplier:Float = 1.0, greenMultiplier:Float = 1.0, blueMultiplier:Float = 1.0, alphaMultiplier:Float = 1.0, redOffset:Float = 0, greenOffset:Float = 0, blueOffset:Float = 0, alphaOffset:Float = 0):Void
+	public function setColorTransform(redMultiplier:Float = 1.0, greenMultiplier:Float = 1.0, blueMultiplier:Float = 1.0,
+		alphaMultiplier:Float = 1.0, redOffset:Float = 0, greenOffset:Float = 0, blueOffset:Float = 0, alphaOffset:Float = 0):Void
 	{
 		color = FlxColor.fromRGBFloat(redMultiplier, greenMultiplier, blueMultiplier).to24Bit();
 		alpha = alphaMultiplier;
