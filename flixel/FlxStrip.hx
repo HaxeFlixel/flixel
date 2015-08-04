@@ -3,7 +3,6 @@ package flixel;
 import flixel.graphics.FlxGraphic;
 import flixel.math.FlxMath;
 import flixel.math.FlxRect;
-import flixel.graphics.tile.FlxDrawTrianglesItem.DrawData;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import openfl.Vector;
 
