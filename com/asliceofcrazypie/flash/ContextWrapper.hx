@@ -346,12 +346,9 @@ class ContextWrapper extends EventDispatcher
 			
 			stage.addEventListener(Event.EXIT_FRAME, onRender, false, -0xFFFFFE);
 		}
-		else
+		else if (initCallback != null)
 		{
-			if (initCallback != null)
-			{
-				initCallback();
-			}
+			initCallback();
 		}
 	}
 	
@@ -400,12 +397,9 @@ class ContextWrapper extends EventDispatcher
 	
 	private function initStage3D(e:Event):Void 
 	{
-		if (context3D != null)
+		if (context3D != null && stage.stage3Ds[depth].context3D != context3D)
 		{
-			if (stage.stage3Ds[depth].context3D != context3D)
-			{
-				context3D = null; //this context has been lost, get new context
-			}
+			context3D = null; //this context has been lost, get new context
 		}
 		
 		if (context3D == null)
@@ -591,11 +585,13 @@ class ContextWrapper extends EventDispatcher
 		
 		var options:Array<String> = ["2d", repeat ? "repeat" : "clamp"];
 		
-		if (smoothing == false) {
+		if (smoothing == false) 
+		{
 			options.push("nearest");
 			options.push(mipMapping ? "mipnearest" : "mipnone");
 		}
-		else {
+		else 
+		{
 			options.push("linear");
 			options.push(mipMapping ? "miplinear" : "mipnone");
 		}
@@ -655,29 +651,6 @@ class ContextWrapper extends EventDispatcher
 		triangleRenderJobs.push(job);
 		
 		numCurrentRenderJobs++;
-	}
-	
-	private static inline function rawDataToBytes(rawData:Array<Int>):ByteArray 
-	{
-		var bytes:ByteArray = new ByteArray();
-		bytes.endian = Endian.LITTLE_ENDIAN;
-		
-		for (n in rawData)
-		{
-			bytes.writeByte(n);
-		}
-		
-		return bytes;
-	}
-	
-	//misc methods
-	public static inline function clearArray<T>(array:Array<T>):Void
-	{
-		#if cpp
-           array.splice(0, array.length);
-        #else
-           untyped array.length = 0;
-        #end
 	}
 }
 #end
