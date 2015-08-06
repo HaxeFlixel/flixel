@@ -805,7 +805,7 @@ class FlxText extends FlxSprite
 			
 			_matrix.identity();
 			
-			#if !openfl_next
+			#if (flash || openfl_legacy)
 			// If it's a single, centered line of text, we center it ourselves so it doesn't blur to hell
 			if (_defaultFormat.align == TextFormatAlign.CENTER && textField.numLines == 1)
 			{
