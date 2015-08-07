@@ -324,6 +324,7 @@ class FlxG
 	 * whatever floats your boat! For maximum performance try bundling a lot of objects
 	 * together using a FlxGroup (or even bundling groups together!).
 	 * NOTE: does NOT take objects' scrollfactor into account, all overlaps are checked in world space.
+	 * NOTE: for checking overlap with a FlxTileMap use FlxTileMap#overlaps() instead.
 	 * 
 	 * @param	ObjectOrGroup1	The first object or group you want to check.
 	 * @param	ObjectOrGroup2	The second object or group you want to check.  If it is the same as the first, flixel knows to just do a comparison within that group.
