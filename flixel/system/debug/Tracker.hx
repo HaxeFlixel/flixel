@@ -57,6 +57,7 @@ class Tracker extends Watch
 	{
 		if (Profile != null)
 		{
+			initProfiles();
 			profiles.push(Profile);
 		}
 	}
