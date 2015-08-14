@@ -116,6 +116,7 @@ class FlxTileblock extends FlxSprite
 			row++;
 		}
 		
+		graphic.updateTexture();
 		dirty = true;
 		return this;
 	}

@@ -13,6 +13,14 @@ import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import openfl.display.Tilesheet;
 
+#if (flash11 && FLX_RENDER_TILE)
+import com.asliceofcrazypie.flash.TextureUtil;
+#end
+
+#if FLX_RENDER_TILE
+import com.asliceofcrazypie.flash.TilesheetStage3D;
+#end
+
 /**
  * BitmapData wrapper which is used for rendering.
  * It stores info about all frames, generated for specific BitmapData object.
@@ -261,6 +269,13 @@ class FlxGraphic
 		Bitmap = FlxGraphic.getBitmap(Bitmap, Unique);
 		var graphic:FlxGraphic = null;
 		
+		var originalWidth:Int = Bitmap.width;
+		var originalHeight:Int = Bitmap.height;
+		
+		#if (flash11 && FLX_RENDER_TILE)
+		Bitmap = TextureUtil.fixTextureSize(Bitmap);
+		#end
+		
 		if (Cache)
 		{
 			graphic = new FlxGraphic(Key, Bitmap);
@@ -272,6 +287,8 @@ class FlxGraphic
 			graphic = new FlxGraphic(null, Bitmap);
 		}
 		
+		graphic.originalWidth = originalWidth;
+		graphic.originalHeight = originalHeight;
 		return graphic;
 	}
 	
@@ -294,6 +311,9 @@ class FlxGraphic
 	 * Added for faster access/typing
 	 */
 	public var height(default, null):Int = 0;
+	
+	public var originalWidth(default, null):Int = 0;
+	public var originalHeight(default, null):Int = 0;
 	
 	/**
 	 * Asset name from openfl.Assets
@@ -325,12 +345,12 @@ class FlxGraphic
 	 */
 	public var canBeDumped(get, never):Bool;
 	
-	#if FLX_RENDER_TILE
+#if FLX_RENDER_TILE
 	/**
 	 * Tilesheet for this graphic object. It is used only for FLX_RENDER_TILE mode
 	 */
-	public var tilesheet(get, null):Tilesheet;
-	#end
+	public var tilesheet(get, null):TilesheetStage3D;
+#end
 	
 	/**
 	 * Usage counter for this FlxGraphic object.
@@ -374,13 +394,13 @@ class FlxGraphic
 	 */
 	private var _imageFrame:FlxImageFrame;
 	
-	#if FLX_RENDER_TILE
+#if FLX_RENDER_TILE
 	/**
 	 * Internal var holding Tilesheet for bitmap of this graphic.
 	 * It is used only in FLX_RENDER_TILE mode
 	 */
-	private var _tilesheet:Tilesheet;
-	#end
+	private var _tilesheet:TilesheetStage3D;
+#end
 	
 	private var _useCount:Int = 0;
 	
@@ -466,10 +486,13 @@ class FlxGraphic
 	 */
 	public function destroy():Void
 	{
-		bitmap = FlxDestroyUtil.dispose(bitmap);
 		#if FLX_RENDER_TILE
+		if (_tilesheet != null)
+			_tilesheet.dispose();
 		_tilesheet = null;
 		#end
+		bitmap = FlxDestroyUtil.dispose(bitmap);
+		
 		key = null;
 		assetsKey = null;
 		assetsClass = null;
@@ -534,11 +557,11 @@ class FlxGraphic
 		return frame;
 	}
 	
-	#if FLX_RENDER_TILE
+#if FLX_RENDER_TILE
 	/**
 	 * Tilesheet getter. Generates new one (and regenerates) if there is no tilesheet for this graphic yet.
 	 */
-	private function get_tilesheet():Tilesheet
+	private function get_tilesheet():TilesheetStage3D
 	{
 		if (_tilesheet == null)
 		{
@@ -547,7 +570,7 @@ class FlxGraphic
 			if (dumped)	
 				undump();
 			
-			_tilesheet = new Tilesheet(bitmap);
+			createTilesheet();
 			
 			if (dumped)	
 				dump();
@@ -555,7 +578,7 @@ class FlxGraphic
 		
 		return _tilesheet;
 	}
-	#end
+#end
 	
 	/**
 	 * Gets BitmapData for this graphic object from OpenFl.
@@ -620,7 +643,7 @@ class FlxGraphic
 	{
 		if (_imageFrame == null)
 		{
-			_imageFrame = FlxImageFrame.fromRectangle(this, new FlxRect(0, 0, bitmap.width, bitmap.height));
+			_imageFrame = FlxImageFrame.fromRectangle(this, new FlxRect(0, 0, originalWidth, originalHeight));
 		}
 		
 		return _imageFrame;
@@ -638,14 +661,31 @@ class FlxGraphic
 			bitmap = value;
 			width = bitmap.width;
 			height = bitmap.height;
-			#if (FLX_RENDER_TILE && !flash && !nme)
+			#if (FLX_RENDER_TILE && !nme)
 			if (_tilesheet != null)
 			{
-				_tilesheet = new Tilesheet(bitmap);
+				createTilesheet();
 			}
 			#end
 		}
 		
 		return value;
 	}
+	
+	public function updateTexture():Void
+	{
+		#if FLX_RENDER_TILE
+		if (_tilesheet != null)
+		{
+			_tilesheet.updateTexture();
+		}
+		#end
+	}
+	
+	#if FLX_RENDER_TILE
+	private inline function createTilesheet():Void
+	{
+		_tilesheet = new TilesheetStage3D(bitmap);
+	}
+	#end
 }

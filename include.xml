@@ -9,10 +9,10 @@
 	<assets path="assets/fonts/arial.ttf" embed="true" unless="FLX_NO_DEBUG" />
 	
 	<set name="legacy" unless="next" />
-	
 	<haxelib name="openfl" unless="create" />
 	
 	<haxeflag name="--macro" value="flixel.system.macros.FlxDefines.run()" />
+	<haxeflag name="-swf-lib" value="assets/AGAL.swc" if="flash" />
 	
 	<section if="setup">
 		<haxelib name="systools" />
@@ -22,7 +22,7 @@
 		<haxelib name="flixel-tools" />
 		<haxelib name="flixel-templates" />
 	</section>
-	
+
 	<section if="create">
 		<sample path="${haxelib:flixel-demos}/Arcade Classics" />
 		<sample path="${haxelib:flixel-demos}/Editors" />

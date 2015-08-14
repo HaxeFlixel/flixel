@@ -13,8 +13,10 @@ import flixel.graphics.atlas.FlxAtlas;
 import flixel.graphics.atlas.FlxNode;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFramesCollection;
+import flixel.graphics.frames.FlxImageFrame;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
 import flixel.system.FlxAssets;
 import flixel.text.FlxText.FlxTextBorderStyle;
 import flixel.text.FlxText.FlxTextFormat;
@@ -759,10 +761,20 @@ class FlxText extends FlxSprite
 		var oldWidth:Int = 0;
 		var oldHeight:Int = VERTICAL_GUTTER;
 		
+		#if flash11
+		var oldGraphicWidth:Int = 0;
+		var oldGraphicHeight:Int = 0;
+		#end
+		
 		if (graphic != null)
 		{
-			oldWidth = graphic.width;
-			oldHeight = graphic.height;
+			oldWidth = graphic.originalWidth;
+			oldHeight = graphic.originalHeight;
+			
+			#if flash11
+			oldGraphicWidth = graphic.height;
+			oldGraphicHeight = graphic.width;
+			#end
 		}
 		
 		var newWidth:Float = textField.width;
@@ -775,7 +787,13 @@ class FlxText extends FlxSprite
 			newHeight = oldHeight;
 		}
 		
+		_flashRect.setTo(0, 0, newWidth, newHeight);
+		
+		#if flash11
+		if (oldGraphicWidth < newWidth || oldGraphicHeight < newHeight)
+		#else
 		if (oldWidth != newWidth || oldHeight != newHeight)
+		#end
 		{
 			// Need to generate a new buffer to store the text graphic
 			height = newHeight;
@@ -786,10 +804,6 @@ class FlxText extends FlxSprite
 				_borderPixels = graphic.bitmap.clone();
 			frameHeight = Std.int(height);
 			textField.height = height * 1.2;
-			_flashRect.x = 0;
-			_flashRect.y = 0;
-			_flashRect.width = newWidth;
-			_flashRect.height = newHeight;
 		}
 		else // Else just clear the old buffer before redrawing the text
 		{
@@ -801,6 +815,8 @@ class FlxText extends FlxSprite
 				else
 					_borderPixels.fillRect(_flashRect, FlxColor.TRANSPARENT);
 			}
+			
+			frames = FlxImageFrame.fromRectangle(graphic, new FlxRect(0, 0, newWidth, newHeight));
 		}
 		
 		if (textField != null && textField.text != null && textField.text.length > 0)
@@ -832,6 +848,10 @@ class FlxText extends FlxSprite
 			applyFormats(_formatAdjusted, false);
 			
 			graphic.bitmap.draw(textField, _matrix);
+			
+			#if flash11
+			graphic.tilesheet.updateTexture();
+			#end
 		}
 		
 		_regen = false;

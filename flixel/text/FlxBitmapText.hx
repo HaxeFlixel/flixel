@@ -6,6 +6,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxBitmapFont;
 import flixel.graphics.frames.FlxFrame;
+import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.text.FlxText.FlxTextAlign;
 import flixel.text.FlxText.FlxTextBorderStyle;
@@ -380,8 +381,6 @@ class FlxBitmapText extends FlxSprite
 				camera.drawPixels(currFrame, null, _matrix, bgRed, bgGreen, bgBlue, bgAlpha, blend, antialiasing);
 			}
 			
-			drawItem = camera.startQuadBatch(font.parent, true, blend, antialiasing);
-			
 			for (j in 0...borderLength)
 			{
 				dataPos = j * 3;
@@ -401,7 +400,7 @@ class FlxBitmapText extends FlxSprite
 				
 				_matrix.translate(_point.x + ox, _point.y + oy);
 				
-				drawItem.addQuad(currFrame, _matrix, borderRed, borderGreen, borderBlue, bAlpha);
+				camera.drawPixels(currFrame, null, _matrix, borderRed, borderGreen, borderBlue, bAlpha, blend, antialiasing);
 			}
 			
 			for (j in 0...textLength)
@@ -423,7 +422,7 @@ class FlxBitmapText extends FlxSprite
 				
 				_matrix.translate(_point.x + ox, _point.y + oy);
 				
-				drawItem.addQuad(currFrame, _matrix, textRed, textGreen, textBlue, tAlpha);
+				camera.drawPixels(currFrame, null, _matrix, textRed, textGreen, textBlue, tAlpha, blend, antialiasing);
 			}
 			
 			#if !FLX_NO_DEBUG

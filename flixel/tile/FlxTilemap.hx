@@ -831,8 +831,6 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 */
 	private function drawTilemap(Buffer:FlxTilemapBuffer, Camera:FlxCamera):Void
 	{
-		var isColored:Bool = ((alpha != 1) || (color != 0xffffff));
-		
 	#if FLX_RENDER_BLIT
 		Buffer.fill();
 	#else
@@ -846,8 +844,6 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		
 		var scaledWidth:Float = _scaledTileWidth;
 		var scaledHeight:Float = _scaledTileHeight;
-		
-		var drawItem = Camera.startQuadBatch(graphic, isColored, blend);
 	#end
 		
 		// Copy tile images into the tile buffer
@@ -950,7 +946,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 					_matrix.scale(scaleX, scaleY);
 					_matrix.translate(drawX, drawY);
 					
-					drawItem.addQuad(frame, _matrix, color.redFloat, color.greenFloat, color.blueFloat, alpha);
+					Camera.drawPixels(frame, null, _matrix, color.redFloat, color.greenFloat, color.blueFloat, alpha, blend);
 				#end
 				}
 				
@@ -970,7 +966,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		Buffer.y = screenYInTiles * _scaledTileHeight;
 		
 		#if FLX_RENDER_BLIT
-		if (isColored)
+		if (color != 0xffffff || alpha != 1.0)
 		{
 			Buffer.colorTransform(colorTransform);
 		}

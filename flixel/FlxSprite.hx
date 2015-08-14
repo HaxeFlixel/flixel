@@ -321,14 +321,14 @@ class FlxSprite extends FlxObject
 		
 		if (Width == 0)
 		{
-			Width = (Animated == true) ? graph.height : graph.width;
-			Width = (Width > graph.width) ? graph.width : Width;
+			Width = (Animated == true) ? graph.originalHeight : graph.originalWidth;
+			Width = (Width > graph.originalWidth) ? graph.originalWidth : Width;
 		}
 		
 		if (Height == 0)
 		{
-			Height = (Animated == true) ? Width : graph.height;
-			Height = (Height > graph.height) ? graph.height : Height;
+			Height = (Animated == true) ? Width : graph.originalHeight;
+			Height = (Height > graph.originalHeight) ? graph.originalHeight : Height;
 		}
 		
 		if (Animated)
@@ -553,8 +553,8 @@ class FlxSprite extends FlxObject
 		
 		if (graphic != null)
 		{
-			_flashRect2.width = graphic.width;
-			_flashRect2.height = graphic.height;
+			_flashRect2.width = graphic.originalWidth;
+			_flashRect2.height = graphic.originalHeight;
 		}
 		
 		centerOrigin();
@@ -577,6 +577,14 @@ class FlxSprite extends FlxObject
 	private function updateAnimation(elapsed:Float):Void
 	{
 		animation.update(elapsed);
+	}
+	
+	public function updateGraphic():Void
+	{
+		if (graphic != null)
+		{
+			graphic.updateTexture();
+		}
 	}
 	
 	/**

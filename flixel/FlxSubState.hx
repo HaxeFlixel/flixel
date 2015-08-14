@@ -1,6 +1,5 @@
 package flixel;
 
-import flixel.system.FlxBGSprite;
 import flixel.util.FlxColor;
 
 /**
@@ -14,13 +13,6 @@ class FlxSubState extends FlxState
 	 * Callback method for state close event
 	 */
 	public var closeCallback:Void->Void;
-	
-	#if FLX_RENDER_TILE
-	/**
-	 * Helper sprite object for non-flash targets. Draws background
-	 */
-	private var _bgSprite:FlxBGSprite;
-	#end
 	
 	/**
 	 * Helper var for close() so closeSubState() can be called on the parent.
@@ -38,10 +30,6 @@ class FlxSubState extends FlxState
 	{
 		super();
 		closeCallback = null;
-		
-		#if FLX_RENDER_TILE
-		_bgSprite = new FlxBGSprite();
-		#end
 		bgColor = BGColor;
 	}
 	
@@ -54,7 +42,9 @@ class FlxSubState extends FlxState
 			camera.fill(bgColor);
 		}
 		#else
-		_bgSprite.draw();
+		
+		// TODO: draw background...
+		
 		#end
 		
 		//Now draw all children
@@ -66,9 +56,6 @@ class FlxSubState extends FlxState
 		super.destroy();
 		closeCallback = null;
 		_parentState = null;
-		#if FLX_RENDER_TILE
-		_bgSprite = null;
-		#end
 	}
 	
 	/**
@@ -89,13 +76,6 @@ class FlxSubState extends FlxState
 	
 	override private function set_bgColor(Value:Int):Int
 	{
-		#if FLX_RENDER_TILE
-		if (_bgSprite != null)
-		{
-			_bgSprite.pixels.setPixel32(0, 0, Value);
-		}
-		#end
-		
 		return _bgColor = Value;
 	}
 }

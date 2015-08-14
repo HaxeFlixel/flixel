@@ -1,5 +1,9 @@
 package flixel.system.frontEnds;
 
+#if FLX_RENDER_TILE
+import com.asliceofcrazypie.flash.Batcher;
+#end
+
 import flash.geom.Rectangle;
 import flixel.FlxCamera;
 import flixel.FlxG;
@@ -173,6 +177,10 @@ class CameraFrontEnd
 	 */
 	private inline function lock():Void
 	{
+		#if FLX_RENDER_TILE
+		Batcher.clear();
+		#end
+		
 		for (camera in list)
 		{
 			if (camera == null || !camera.exists || !camera.visible)
@@ -180,18 +188,16 @@ class CameraFrontEnd
 				continue;
 			}
 			
-			#if FLX_RENDER_BLIT
+		#if FLX_RENDER_BLIT
 			camera.checkResize();
 			
 			if (useBufferLocking)
 			{
 				camera.buffer.lock();
 			}
-			#end
+		#end
 			
 		#if FLX_RENDER_TILE
-			camera.clearDrawStack();
-			camera.canvas.graphics.clear();
 			// Clearing camera's debug sprite
 			#if !FLX_NO_DEBUG
 			camera.debugLayer.graphics.clear();
@@ -202,21 +208,18 @@ class CameraFrontEnd
 			camera.fill(camera.bgColor, camera.useBgAlphaBlending);
 			camera.screen.dirty = true;
 			#else
-			camera.fill((camera.bgColor & 0x00ffffff), camera.useBgAlphaBlending, ((camera.bgColor >> 24) & 255) / 255);
+			camera.viewport.bgColor = camera.bgColor;
+			camera.viewport.useBgColor = true;
 			#end
-		}
+		}	
 	}
 	
 	#if FLX_RENDER_TILE
 	private inline function render():Void
 	{
-		for (camera in list)
-		{
-			if ((camera != null) && camera.exists && camera.visible)
-			{
-				camera.render();
-			}
-		}
+		#if !flash11
+		Batcher.render();
+		#end
 	}
 	#end
 	
@@ -264,6 +267,13 @@ class CameraFrontEnd
 	 */
 	private function resize():Void
 	{
+		#if FLX_RENDER_TILE
+		Batcher.gameX = FlxG.scaleMode.offset.x;
+		Batcher.gameY = FlxG.scaleMode.offset.y;
+		Batcher.gameScaleX = FlxG.scaleMode.scale.x;
+		Batcher.gameScaleY = FlxG.scaleMode.scale.y;
+		#end
+		
 		for (camera in list)
 		{
 			camera.onResize();

@@ -37,6 +37,11 @@ import flixel.system.ui.FlxSoundTray;
 import flixel.system.ui.FlxFocusLostScreen;
 #end
 
+#if FLX_RENDER_TILE
+import com.asliceofcrazypie.flash.Batcher;
+import openfl.display3D.Context3DRenderMode;
+#end
+
 /**
  * FlxGame is the heart of all flixel games, and contains a bunch of basic game loops and things.
  * It is a long and sloppy file that you shouldn't have to worry about too much!
@@ -269,6 +274,16 @@ class FlxGame extends Sprite
 		}
 		removeEventListener(Event.ADDED_TO_STAGE, create);
 		
+		#if FLX_RENDER_TILE
+		// TODO: make batch size and square arguments settable
+		Batcher.init(this, 0, 5, onCreate, Context3DRenderMode.AUTO, true, 2000);
+		#else
+		onCreate();
+		#end
+	}
+	
+	private function onCreate(callbackString:String = null):Void
+	{
 		_total = getTimer();
 		
 		#if desktop
