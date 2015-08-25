@@ -165,16 +165,18 @@ class FlxFramesCollection implements IFlxDestroyable
 	  * @param	offset			how frame region is located on original frame image (offset from top left corner of original image)
 	  * @param	name			name for this frame (name of packed image file)
 	  * @param	angle			rotation of packed image (can be 0, 90, -90).
+	  * @param	flipX			if packed image should be horizontally flipped
+	  * @param	flipY			if packed iamge should be vertically flipped
 	  * @return	Newly created and added frame object.
 	  */
-	public function addAtlasFrame(frame:FlxRect, sourceSize:FlxPoint, offset:FlxPoint, name:String = null, angle:FlxFrameAngle = 0):FlxFrame
+	public function addAtlasFrame(frame:FlxRect, sourceSize:FlxPoint, offset:FlxPoint, name:String = null, angle:FlxFrameAngle = 0, flipX:Bool=false, flipY:Bool=false):FlxFrame
 	{
 		if (name != null && framesHash.exists(name))
 		{
 			return framesHash.get(name);
 		}
 		
-		var texFrame:FlxFrame = new FlxFrame(parent, angle);
+		var texFrame:FlxFrame = new FlxFrame(parent, angle, flipX, flipY);
 		texFrame.name = name;
 		texFrame.sourceSize.set(sourceSize.x, sourceSize.y);
 		texFrame.offset.set(offset.x, offset.y);

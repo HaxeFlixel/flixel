@@ -53,6 +53,9 @@ class FlxFrame implements IFlxDestroyable
 	 */
 	public var angle:FlxFrameAngle;
 	
+	public var flipX:Bool;
+	public var flipY:Bool;
+	
 	/**
 	 * Original (uncropped) image size.
 	 */
@@ -74,10 +77,18 @@ class FlxFrame implements IFlxDestroyable
 	private var blitMatrix:Vector<Float>;
 	
 	@:allow(flixel)
-	private function new(parent:FlxGraphic, angle:FlxFrameAngle = FlxFrameAngle.ANGLE_0)
+	private function new(parent:FlxGraphic, angle:FlxFrameAngle = FlxFrameAngle.ANGLE_0, flipX:Bool = false, flipY:Bool = false)
 	{
 		this.parent = parent;
 		this.angle = angle;
+		this.flipX = flipX;
+		this.flipY = flipY;
+		
+		if (flipX == true)
+		{
+			trace("BOINK");
+		}
+		
 		type = FlxFrameType.REGULAR;
 		
 		sourceSize = FlxPoint.get();
@@ -229,12 +240,15 @@ class FlxFrame implements IFlxDestroyable
 		mat.tx = tileMatrix[4];
 		mat.ty = tileMatrix[5];
 		
-		if (rotation == FlxFrameAngle.ANGLE_0 && !flipX && !flipY)
+		var doFlipX = flipX != this.flipX;
+		var doFlipY = flipY != this.flipY;
+		
+		if (rotation == FlxFrameAngle.ANGLE_0 && !doFlipX && !doFlipY)
 		{
 			return mat;
 		}
 		
-		return rotateAndFlip(mat, rotation, flipX, flipY);
+		return rotateAndFlip(mat, rotation, doFlipX, doFlipY);
 		#end
 	}
 	
@@ -324,8 +338,11 @@ class FlxFrame implements IFlxDestroyable
 			return bmd;
 		}
 		
+		var doFlipX = flipX != this.flipX;
+		var doFlipY = flipY != this.flipY;
+		
 		var matrix:FlxMatrix = FlxMatrix.matrix;
-		prepareTransformedBlitMatrix(matrix, rotation, flipX, flipY);
+		prepareTransformedBlitMatrix(matrix, rotation, doFlipX, doFlipY);
 		matrix.translate(point.x, point.y);
 		var rect:Rectangle = getDrawFrameRect(matrix);
 		bmd.draw(parent.bitmap, matrix, null, null, rect);
@@ -609,6 +626,8 @@ class FlxFrame implements IFlxDestroyable
 		}
 		
 		clone.offset.copyFrom(offset);
+		clone.flipX = flipX;
+		clone.flipY = flipY;
 		clone.sourceSize.copyFrom(sourceSize);
 		clone.frame = FlxRect.get().copyFrom(frame);
 		clone.type = type;

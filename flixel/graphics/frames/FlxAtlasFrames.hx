@@ -243,6 +243,8 @@ class FlxAtlasFrames extends FlxFramesCollection
 		var data:Fast = new haxe.xml.Fast(Xml.parse(Description).firstElement());
 		
 		var angle:Int;
+		var flipX:Bool;
+		var flipY:Bool;
 		var name:String;
 		var trimmed:Bool;
 		var rotated:Bool;
@@ -256,6 +258,8 @@ class FlxAtlasFrames extends FlxFramesCollection
 			name = texture.att.name;
 			trimmed = texture.has.frameX;
 			rotated = (texture.has.rotated && texture.att.rotated == "true") ? true : false;
+			flipX = (texture.has.flipX && texture.att.flipX == "true") ? true : false;
+			flipY = (texture.has.flipY && texture.att.flipY == "true") ? true : false;
 			
 			rect = new FlxRect(Std.parseFloat(texture.att.x), Std.parseFloat(texture.att.y), Std.parseFloat(texture.att.width), Std.parseFloat(texture.att.height));
 			
@@ -278,7 +282,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 				sourceSize.set(size.height, size.width);
 			}
 			
-			frames.addAtlasFrame(rect, sourceSize, offset, name, angle);
+			frames.addAtlasFrame(rect, sourceSize, offset, name, angle, flipX, flipY);
 		}
 		
 		return frames;
