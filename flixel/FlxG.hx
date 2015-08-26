@@ -118,6 +118,11 @@ class FlxG
 	 */
 	public static var elapsed(default, null):Float = 0;
 	/**
+	 * Represents the amount of time in seconds that passed since last frame, independent from timescale.
+	 * Useful for keeping track of time during slow-motion effects. If timescale is 1, this will be equal to elapsed. 
+	 */
+	public static var independentElapsed(default, null):Float = 0;
+	/**
 	 * Useful when the timestep is NOT fixed (i.e. variable), to prevent jerky movement or erratic behavior at very low fps.
 	 * Essentially locks the framerate to a minimum value - any slower and you'll get slowdown instead of frameskip; default is 1/10th of a second.
 	 */
