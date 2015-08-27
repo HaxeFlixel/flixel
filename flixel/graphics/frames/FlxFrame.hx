@@ -84,11 +84,6 @@ class FlxFrame implements IFlxDestroyable
 		this.flipX = flipX;
 		this.flipY = flipY;
 		
-		if (flipX == true)
-		{
-			trace("BOINK");
-		}
-		
 		type = FlxFrameType.REGULAR;
 		
 		sourceSize = FlxPoint.get();
