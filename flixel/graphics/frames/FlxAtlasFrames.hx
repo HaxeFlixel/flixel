@@ -257,9 +257,9 @@ class FlxAtlasFrames extends FlxFramesCollection
 		{
 			name = texture.att.name;
 			trimmed = texture.has.frameX;
-			rotated = (texture.has.rotated && texture.att.rotated == "true") ? true : false;
-			flipX = (texture.has.flipX && texture.att.flipX == "true") ? true : false;
-			flipY = (texture.has.flipY && texture.att.flipY == "true") ? true : false;
+			rotated = (texture.has.rotated && texture.att.rotated == "true");
+			flipX = (texture.has.flipX && texture.att.flipX == "true");
+			flipY = (texture.has.flipY && texture.att.flipY == "true");
 			
 			rect = new FlxRect(Std.parseFloat(texture.att.x), Std.parseFloat(texture.att.y), Std.parseFloat(texture.att.width), Std.parseFloat(texture.att.height));
 			
