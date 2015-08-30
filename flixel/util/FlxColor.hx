@@ -762,22 +762,6 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	{
 		return Value > 0xff ? 0xff : Value < 0 ? 0 : Value;
 	}
-	
-	#if (haxe_ver < "3.2")
-	@:commutative
-	@:op(A == B)
-	private static inline function equal(lhs:Null<FlxColor>, rhs:Null<Int>):Bool
-	{
-		return lhs == (rhs:Null<FlxColor>);
-	}
-	
-	@:commutative
-	@:op(A != B)
-	private static inline function notEqual(lhs:Null<FlxColor>, rhs:Null<Int>):Bool
-	{
-		return lhs != (rhs:Null<FlxColor>);
-	}
-	#end
 }
 
 typedef Harmony = { 
