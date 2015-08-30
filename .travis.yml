@@ -1,7 +1,7 @@
 language: haxe
 
 haxe:
-  - master
+  - 3.2.0
   - development
 
 env: 
