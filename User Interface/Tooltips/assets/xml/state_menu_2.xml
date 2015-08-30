@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<data>
+
+	<!--a "default" works exactly like a definition, except that elements of that type ALWAYS try to load it, if it exists-->
+	<!--so in this case, any <tooltip/> tag will always try to use this definition-->
+	
+	<default name="tooltip" background="white">
+		<title use_def="sans12_alt"/>
+		<body use_def="sans10_alt"/>
+	</default>
+	
+	<default name="button">
+		<text color="white" outline="black"/>
+	</default>
+	
+	<definition name="sans10_alt" font="vera" size="10" style="bold" color="blue" outline="false" align="left"/>
+	<definition name="sans12_alt" font="vera" size="12" style="bold" color="blue" outline="false" align="left"/>
+	
+	<!--this tag physically injects all the raw XML data from "state_menu", excluding the xml header and <data></data> wrapper tag-->
+	<!--the <include/> tag only adds definitions, whereas <inject/> just inserts text prior to parsing-->
+	
+	<inject name="state_menu"/>
+	
+	<text text="Custom default style in effect -- mouse over stuff to see the new tooltips!" use_def="sans12" width="350" align="center">
+		<anchor x="center" x-flush="center"/>
+	</text>
+</data>

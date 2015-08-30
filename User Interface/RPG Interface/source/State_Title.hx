@@ -38,7 +38,8 @@ class State_Title extends FlxUIState
 	public override function getEvent(name:String, sender:IFlxUIWidget, data:Dynamic,?params:Array<Dynamic>):Void {
 		var str:String = "";
 		
-		switch(name) {
+		switch(name)
+		{
 			case "finish_load":
 				var radio:FlxUIRadioGroup = cast _ui.getAsset("locale_radio");
 				if (radio != null) {
@@ -63,8 +64,8 @@ class State_Title extends FlxUIState
 				{
 					Main.tongue.init(id, reloadState);
 				}
-		}		
-	}	
+		}
+	}
 	
 	private function reloadState():Void {
 		FlxG.switchState(new State_Title());
