@@ -2,6 +2,7 @@ import massive.munit.TestSuite;
 
 import flixel.animation.FlxAnimationControllerTest;
 import flixel.effects.particles.FlxEmitterTest;
+import flixel.effects.particles.FlxParticleTest;
 import flixel.FlxBasicTest;
 import flixel.FlxCameraTest;
 import flixel.FlxGTest;
@@ -57,6 +58,7 @@ class TestSuite extends massive.munit.TestSuite
 
 		add(flixel.animation.FlxAnimationControllerTest);
 		add(flixel.effects.particles.FlxEmitterTest);
+		add(flixel.effects.particles.FlxParticleTest);
 		add(flixel.FlxBasicTest);
 		add(flixel.FlxCameraTest);
 		add(flixel.FlxGTest);
