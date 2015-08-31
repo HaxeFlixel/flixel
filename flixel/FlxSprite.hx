@@ -900,7 +900,9 @@ class FlxSprite extends FlxObject
 	{
 		if (_frame != null && dirty)
 		{
-			if (!flipX && !flipY && _frame.type == FlxFrameType.REGULAR)
+			var doFlipX = flipX != _frame.flipX;
+			var doFlipY = flipY != _frame.flipY;
+			if (!doFlipX && !doFlipY && _frame.type == FlxFrameType.REGULAR)
 			{
 				framePixels = _frame.paint(framePixels, _flashPointZero, false, true);
 			}
