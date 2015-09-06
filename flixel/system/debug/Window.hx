@@ -119,8 +119,9 @@ class Window extends Sprite
 		_title.selectable = false;
 		_title.multiline = false;
 		_title.embedFonts = true;
-		_title.defaultTextFormat = new TextFormat(FlxAssets.FONT_DEBUGGER, 12, 0xffffff);
+		_title.defaultTextFormat = new TextFormat(FlxAssets.FONT_DEBUGGER, 10, 0xffffff);
 		_title.text = Title;
+		
 		
 		addChild(_shadow);
 		addChild(_background);

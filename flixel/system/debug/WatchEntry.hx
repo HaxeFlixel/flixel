@@ -81,8 +81,8 @@ class WatchEntry implements IFlxDestroyable
 		
 		// quickWatch is green, normal watch is white
 		var color = _isQuickWatch ? 0xA5F1ED : 0xffffff;
-		_whiteText = new TextFormat(fontName, 12, color);
-		_blackText = new TextFormat(fontName, 12, 0);
+		_whiteText = new TextFormat(fontName, 10, color);
+		_blackText = new TextFormat(fontName, 10, 0);
 		
 		nameDisplay = new TextField();
 		nameDisplay.y = y;

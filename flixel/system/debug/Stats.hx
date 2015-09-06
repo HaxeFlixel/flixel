@@ -45,7 +45,7 @@ class Stats extends Window
 	private static inline var UPDATE_TIME_COLOR:FlxColor = 0xffdcd400;
 	
 	public static inline var LABEL_COLOR:FlxColor = 0xaaffffff;
-	public static inline var TEXT_SIZE:Int = 11;
+	public static inline var TEXT_SIZE:Int = 10;
 	public static inline var DECIMALS:Int = 1;
 	
 	private var _leftTextField:TextField;

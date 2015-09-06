@@ -106,7 +106,7 @@ class FlxAssets
 #else
 	// fonts
 	public static var FONT_DEFAULT:String = "Nokia Cellphone FC Small";
-	public static var FONT_DEBUGGER:String = "Arial";
+	public static var FONT_DEBUGGER:String = "Nokia Cellphone FC Small";
 	
 	public static function drawLogo(graph:Graphics):Void
 	{
@@ -250,8 +250,10 @@ class FlxAssets
 		var extension = "";
 		#if flash
 		extension = ".mp3";
-		#else
+		#elseif native
 		extension = ".ogg";
+		#elseif html5
+		extension = ".m4a";
 		#end
 		return Assets.getSound(id + extension);
 	}
