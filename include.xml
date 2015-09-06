@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
-	<!--<icon path="assets/images/logo/HaxeFlixel.svg" />-->
+	<icon path="assets/images/logo/HaxeFlixel.svg" />
 	
 	<assets path="assets/sounds" include="*.m4a" if="html5" unless="unit-test" />
 	<assets path="assets/sounds" include="*.mp3" if="flash" embed="true" />
