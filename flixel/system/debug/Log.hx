@@ -35,7 +35,7 @@ class Log extends Window
 		_text.wordWrap = true;
 		_text.selectable = true;
 		_text.embedFonts = true;
-		_text.defaultTextFormat = new TextFormat(FlxAssets.FONT_DEBUGGER, 10, 0xffffff);
+		_text.defaultTextFormat = new TextFormat(FlxAssets.FONT_DEBUGGER, 12, 0xffffff);
 		addChild(_text);
 		
 		_lines = new Array<String>();

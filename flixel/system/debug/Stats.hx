@@ -37,15 +37,15 @@ class Stats extends Window
 	/**
 	 * The minimal height of the window.
 	 */
-	private static inline var MIN_HEIGHT:Int = #if !FLX_RENDER_TILE 180 #else 195 #end;
+	private static inline var MIN_HEIGHT:Int = #if !FLX_RENDER_TILE 185 #else 200 #end;
 	
 	private static inline var FPS_COLOR:FlxColor = 0xff96ff00;
 	private static inline var MEMORY_COLOR:FlxColor = 0xff009cff;
-	private static inline var DRAW_TIME_COLOR:FlxColor = 0xffb70000;
+	private static inline var DRAW_TIME_COLOR:FlxColor = 0xffA60004;
 	private static inline var UPDATE_TIME_COLOR:FlxColor = 0xffdcd400;
 	
 	public static inline var LABEL_COLOR:FlxColor = 0xaaffffff;
-	public static inline var TEXT_SIZE:Int = 10;
+	public static inline var TEXT_SIZE:Int = 11;
 	public static inline var DECIMALS:Int = 1;
 	
 	private var _leftTextField:TextField;

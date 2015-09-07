@@ -417,7 +417,7 @@ class FlxDebugger extends Sprite
 		txt.y = -9;
 		txt.multiline = false;
 		txt.embedFonts = true;
-		var format = new TextFormat(FlxAssets.FONT_DEBUGGER, 10, FlxColor.WHITE);
+		var format = new TextFormat(FlxAssets.FONT_DEBUGGER, 12, FlxColor.WHITE);
 		txt.defaultTextFormat = format;
 		txt.autoSize = TextFieldAutoSize.LEFT;
 		txt.text = Std.string(FlxG.VERSION);

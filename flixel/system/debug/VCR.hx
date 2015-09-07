@@ -71,7 +71,7 @@ class VCR
 		runtimeDisplay.selectable = false;
 		runtimeDisplay.multiline = false;
 		runtimeDisplay.embedFonts = true;
-		var format = new TextFormat(FlxAssets.FONT_DEBUGGER, 10, FlxColor.WHITE);
+		var format = new TextFormat(FlxAssets.FONT_DEBUGGER, 12, FlxColor.WHITE);
 		runtimeDisplay.defaultTextFormat = format;
 		runtimeDisplay.autoSize = TextFieldAutoSize.LEFT;
 		updateRuntime(0);
