@@ -177,6 +177,8 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	public var pressed(get, never):Bool;
 	public var justPressed(get, never):Bool;
 	
+	private var _labelAsSprite:FlxSprite;
+	
 	/** 
 	 * We don't need an ID here, so let's just use Int as the type.
 	 */
@@ -251,6 +253,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	override public function destroy():Void
 	{
 		label = FlxDestroyUtil.destroy(label);
+		_labelAsSprite = null;
 		
 		onUp = FlxDestroyUtil.destroy(onUp);
 		onDown = FlxDestroyUtil.destroy(onDown);
@@ -456,18 +459,18 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	
 	private function updateLabelPosition()
 	{
-		if (label != null) // Label positioning
+		if (_labelAsSprite != null) // Label positioning
 		{
-			label.x = (pixelPerfectPosition ? Math.floor(x) : x) + labelOffsets[status].x;
-			label.y = (pixelPerfectPosition ? Math.floor(y) : y) + labelOffsets[status].y;
+			_labelAsSprite.x = (pixelPerfectPosition ? Math.floor(x) : x) + labelOffsets[status].x;
+			_labelAsSprite.y = (pixelPerfectPosition ? Math.floor(y) : y) + labelOffsets[status].y;
 		}
 	}
 	
 	private function updateLabelAlpha()
 	{
-		if (label != null && labelAlphas.length > status) 
+		if (_labelAsSprite != null && labelAlphas.length > status) 
 		{
-			label.alpha = alpha * labelAlphas[status];
+			_labelAsSprite.alpha = alpha * labelAlphas[status];
 		}
 	}
 	
@@ -539,6 +542,8 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 		}
 		
 		label = Value;
+		_labelAsSprite = label;
+		
 		updateLabelPosition();
 		
 		return Value;
