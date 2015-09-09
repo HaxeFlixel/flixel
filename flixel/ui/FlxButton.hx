@@ -113,6 +113,9 @@ class FlxButton extends FlxTypedButton<FlxText>
 /**
  * A simple button class that calls a function when clicked by the mouse.
  */
+#if !display
+@:generic
+#end
 class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 {
 	/**
@@ -176,6 +179,11 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	public var released(get, never):Bool;
 	public var pressed(get, never):Bool;
 	public var justPressed(get, never):Bool;
+	
+	/**
+	 * We cast label to a FlxSprite for internal operations to avoid Dynamic casts in C++
+	 */
+	private var _spriteLabel:FlxSprite;
 	
 	/** 
 	 * We don't need an ID here, so let's just use Int as the type.
@@ -251,6 +259,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	override public function destroy():Void
 	{
 		label = FlxDestroyUtil.destroy(label);
+		_spriteLabel = null;
 		
 		onUp = FlxDestroyUtil.destroy(onUp);
 		onDown = FlxDestroyUtil.destroy(onDown);
@@ -307,10 +316,10 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	{
 		super.draw();
 		
-		if (label != null && label.visible)
+		if (_spriteLabel != null && _spriteLabel.visible)
 		{
-			label.cameras = cameras;
-			label.draw();
+			_spriteLabel.cameras = cameras;
+			_spriteLabel.draw();
 		}
 	}
 	
@@ -322,9 +331,9 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	{
 		super.drawDebug();
 		
-		if (label != null) 
+		if (_spriteLabel != null) 
 		{
-			label.drawDebug();
+			_spriteLabel.drawDebug();
 		}
 	}
 #end
@@ -456,18 +465,18 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	
 	private function updateLabelPosition()
 	{
-		if (label != null) // Label positioning
+		if (_spriteLabel != null) // Label positioning
 		{
-			label.x = (pixelPerfectPosition ? Math.floor(x) : x) + labelOffsets[status].x;
-			label.y = (pixelPerfectPosition ? Math.floor(y) : y) + labelOffsets[status].y;
+			_spriteLabel.x = (pixelPerfectPosition ? Math.floor(x) : x) + labelOffsets[status].x;
+			_spriteLabel.y = (pixelPerfectPosition ? Math.floor(y) : y) + labelOffsets[status].y;
 		}
 	}
 	
 	private function updateLabelAlpha()
 	{
-		if (label != null && labelAlphas.length > status) 
+		if (_spriteLabel != null && labelAlphas.length > status) 
 		{
-			label.alpha = alpha * labelAlphas[status];
+			_spriteLabel.alpha = alpha * labelAlphas[status];
 		}
 	}
 	
@@ -539,6 +548,8 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 		}
 		
 		label = Value;
+		_spriteLabel = label;
+		
 		updateLabelPosition();
 		
 		return Value;
