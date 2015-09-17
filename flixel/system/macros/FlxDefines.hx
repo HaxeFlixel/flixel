@@ -110,7 +110,7 @@ class FlxDefines
 	{
 		if (!defined(FLX_RENDER_BLIT) && !defined(FLX_RENDER_TILE))
 		{
-			if (defined("flash") || defined("js"))
+			if (defined("flash") || (defined("js") && !defined("webgl")))
 			{
 				define(FLX_RENDER_BLIT);
 			}
