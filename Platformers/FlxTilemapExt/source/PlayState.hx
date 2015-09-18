@@ -70,15 +70,17 @@ class PlayState extends FlxState
 		level.frames = levelTiles;
 		level.useScaleHack = false;
 		
-		var tempFL:Array<Int> = [5, 13, 21];
-		var tempFR:Array<Int> = [6, 14, 22];
-		var tempCL:Array<Int> = [7, 15, 23];
-		var tempCR:Array<Int> = [8, 16, 24];
+		var tempFL:Array<Int> = [5, 21];
+		var tempFR:Array<Int> = [6, 22];
+		var tempCL:Array<Int> = [7, 23];
+		var tempCR:Array<Int> = [8, 24];
 		
 		var tempC:Array<Int> = [4, 12, 20];
 		
 		level.setSlopes(tempFL, tempFR, tempCL, tempCR);
-		level.setClouds(tempC);
+		level.setClouds([4]);
+		level.setClouds([20], true);
+		level.setConditionals([21, 22, 23, 24]);
 		
 		// Make the Camera follow the player.
 		FlxG.camera.setScrollBoundsRect(0, 0, 970, 500, true);
@@ -107,6 +109,10 @@ class PlayState extends FlxState
 	
 	override public function update(elapsed:Float):Void
 	{
+		level.throughDownClouds = FlxG.keys.anyPressed([DOWN, S]);
+		level.throughFloorSlopes = !FlxG.keys.anyPressed([UP, W]);
+		level.throughCeilingSlopes = FlxG.keys.anyPressed([UP, W]);
+		
 		_player.acceleration.x = 0;
 		
 		if (FlxG.keys.anyPressed([LEFT, A]))
@@ -117,7 +123,7 @@ class PlayState extends FlxState
 		{
 			_player.acceleration.x = _player.maxVelocity.x * 4;
 		}
-		if (FlxG.keys.anyPressed([SPACE, W, UP]) && _player.isTouching(FlxObject.FLOOR))
+		if (FlxG.keys.anyPressed([SPACE]) && _player.isTouching(FlxObject.FLOOR))
 		{
 			_player.velocity.y = -_player.maxVelocity.y / 2;
 		}
