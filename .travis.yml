@@ -10,6 +10,8 @@ env:
   - TARGET=cpp
   - TARGET=html5
 
+sudo: false
+
 matrix:
   allow_failures:
     - env: "TARGET=cpp"
