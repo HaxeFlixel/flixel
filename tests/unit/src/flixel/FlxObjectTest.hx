@@ -2,6 +2,7 @@ package flixel;
 
 import flixel.FlxObject;
 import flixel.graphics.FlxGraphic;
+import flixel.group.FlxGroup;
 import flixel.math.FlxPoint;
 import flixel.tile.FlxTilemap;
 import flixel.math.FlxMath;
@@ -132,6 +133,28 @@ class FlxObjectTest extends FlxTest
 		Assert.isFalse(FlxG.overlap(object1, object2, null, FlxObject.updateTouchingFlags));
 		Assert.areEqual(FlxObject.NONE, object1.touching);
 		Assert.areEqual(FlxObject.NONE, object2.touching);
+	}
+	
+	@Test // #1466
+	function testGetFirstOverlap():Void
+	{
+		var objectInput = new FlxObject(25, 0, 20, 10);
+		
+		var object1 = new FlxObject(0, 0, 10, 10);
+		var object2 = new FlxObject(35, 0, 10, 10);
+		var object3 = new FlxObject(20, 0, 10, 10);
+		var object4 = new FlxObject(60, 0, 10, 10);
+		
+		var objectsGroup = new FlxGroup();
+		objectsGroup.add(object1);
+		objectsGroup.add(null);
+		objectsGroup.add(object2);
+		objectsGroup.add(null);
+		objectsGroup.add(object3);
+		objectsGroup.add(null);
+		objectsGroup.add(object4);
+		
+		Assert.areEqual(object2, FlxG.getFirstOverlap(objectInput, objectsGroup));
 	}
 	
 	@Test

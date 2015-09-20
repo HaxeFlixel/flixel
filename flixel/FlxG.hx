@@ -7,6 +7,7 @@ import flash.Lib;
 import flash.net.URLRequest;
 import flixel.effects.postprocess.PostProcess;
 import flixel.FlxBasic;
+import flixel.group.FlxGroup;
 import flixel.math.FlxMath;
 import flixel.math.FlxRandom;
 import flixel.math.FlxRect;
@@ -348,6 +349,30 @@ class FlxG
 		var result:Bool = quadTree.execute();
 		quadTree.destroy();
 		return result;
+	}
+	
+	/**
+	 * Returns the first member of Group that overlaps InputObject, or null if none apply.
+	 * 
+	 * @param	InputObject	First object to test against
+	 * @param	Group		The group to test against
+	 * @return	First member of Group intersecting InputObject, or null
+	 */
+	public static function getFirstOverlap(InputObject:FlxBasic, Group:FlxGroup):FlxObject
+	{
+		var minIndex = -1;
+		var firstObject:FlxObject = null;
+		FlxG.overlap(InputObject, Group, function MyOverlap(Objec1:FlxObject, Object2:FlxObject) {
+			if (minIndex != 0) {
+				var newIndex:Int = Group.members.indexOf(Object2);
+				if (minIndex == -1 || newIndex < minIndex)
+				{
+					minIndex = newIndex;
+					firstObject = Object2;
+				}
+			}
+		});
+		return firstObject;
 	}
 	
 	/**
