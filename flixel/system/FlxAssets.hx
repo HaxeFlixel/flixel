@@ -197,7 +197,7 @@ class FlxAssets
 	{
 		if (Std.is(Graphic, BitmapData))
 		{
-			return cast(Graphic, BitmapData);
+			return cast Graphic;
 		}
 		else if (Std.is(Graphic, Class))
 		{

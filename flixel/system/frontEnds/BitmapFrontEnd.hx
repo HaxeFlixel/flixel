@@ -177,12 +177,12 @@ class BitmapFrontEnd
 	{
 		if (Std.is(Graphic, FlxGraphic))
 		{
-			var graphic:FlxGraphic = cast(Graphic, FlxGraphic);
+			var graphic:FlxGraphic = cast Graphic;
 			return FlxGraphic.fromGraphic(graphic, Unique, Key);
 		}
 		else if (Std.is(Graphic, BitmapData))
 		{
-			var bitmap:BitmapData = cast(Graphic, BitmapData);
+			var bitmap:BitmapData = cast Graphic;
 			return FlxGraphic.fromBitmapData(bitmap, Unique, Key);
 		}
 		

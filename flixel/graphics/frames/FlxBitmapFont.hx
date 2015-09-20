@@ -165,7 +165,7 @@ class FlxBitmapFont extends FlxFramesCollection
 		
 		if (Std.is(Source, FlxFrame))
 		{
-			frame = cast(Source, FlxFrame);
+			frame = cast frame;
 			graphic = frame.parent;
 		}
 		else
@@ -300,7 +300,7 @@ class FlxBitmapFont extends FlxFramesCollection
 		
 		if (Std.is(source, FlxFrame))
 		{
-			frame = cast(source, FlxFrame);
+			frame = cast source;
 			graphic = frame.parent;
 		}
 		else
@@ -476,7 +476,7 @@ class FlxBitmapFont extends FlxFramesCollection
 		
 		if (Std.is(source, FlxFrame))
 		{
-			frame = cast(source, FlxFrame);
+			frame = cast source;
 			graphic = frame.parent;
 		}
 		else

@@ -236,7 +236,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	{
 		if (Std.is(TileGraphic, FlxFramesCollection))
 		{
-			frames = cast(TileGraphic, FlxFramesCollection);
+			frames = cast TileGraphic;
 			return;
 		}
 		

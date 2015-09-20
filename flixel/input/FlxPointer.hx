@@ -92,7 +92,8 @@ class FlxPointer
 		var group = FlxTypedGroup.resolveGroup(ObjectOrGroup);
 		if (group != null)
 		{
-			group.forEachExists(function(basic:FlxBasic) {
+			group.forEachExists(function(basic:FlxBasic)
+			{
 				if (overlaps(basic, Camera)) 
 				{
 					result = true;
@@ -103,7 +104,8 @@ class FlxPointer
 		else 
 		{
 			var point:FlxPoint = toPoint();
-			result = cast(ObjectOrGroup, FlxObject).overlapsPoint(point, true, Camera);
+			var object:FlxObject = cast ObjectOrGroup;
+			result = object.overlapsPoint(point, true, Camera);
 			point.put();
 		}
 		
