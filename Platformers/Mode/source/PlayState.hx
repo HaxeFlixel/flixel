@@ -131,7 +131,8 @@ class PlayState extends FlxState
 		// that is, the player score, number of spawners left, etc.
 		// First, we'll create a text field for the current score
 		_score = new FlxText(FlxG.width / 4, 0, Math.floor(FlxG.width / 2));
-		_score.setFormat(null, 16, 0xd8eba2, CENTER, OUTLINE, 0x131c1b);
+		_score.setFormat(null, 16, 0xffd8eba2, FlxTextAlign.CENTER);
+		_score.setBorderStyle(FlxTextBorderStyle.OUTLINE, 0xff131c1b, 2);
 		_hud.add(_score);
 		
 		if (Reg.scores.length < 2)
@@ -320,6 +321,9 @@ class PlayState extends FlxState
 			}
 		}
 		
+		if (_score.size > 16)
+			_score.size--;
+		
 		// Actually update score text if it changed
 		if (scoreChanged)
 		{
@@ -328,6 +332,7 @@ class PlayState extends FlxState
 				Reg.score = 0;
 			}
 			
+			_score.size = 24;
 			_score.text = Std.string(Reg.score);
 		}
 		
