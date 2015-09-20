@@ -11,23 +11,18 @@ import openfl.display.Graphics;
 import openfl.display.TriangleCulling;
 import openfl.Vector;
 
+typedef DrawData<T> = #if flash Vector<T> #else Array<T> #end;
+
 /**
  * ...
  * @author Zaphod
  */
 class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 {
-	#if flash
-	public var vertices:Vector<Float>;
-	public var indices:Vector<Int>;
-	public var uvtData:Vector<Float>;
-	public var colors:Vector<Int>;
-	#else
-	public var vertices:Array<Float>;
-	public var indices:Array<Int>;
-	public var uvtData:Array<Float>;
-	public var colors:Array<Int>;
-	#end
+	public var vertices:DrawData<Float>;
+	public var indices:DrawData<Int>;
+	public var uvtData:DrawData<Float>;
+	public var colors:DrawData<Int>;
 	
 	public var verticesPosition:Int = 0;
 	public var indicesPosition:Int = 0;
@@ -107,11 +102,7 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		bounds = null;
 	}
 	
-	#if flash
-	public function addTriangles(vertices:Vector<Float>, indices:Vector<Int>, uvtData:Vector<Float>, colors:Vector<Int> = null, position:FlxPoint = null, cameraBounds:FlxRect = null):Void
-	#else
-	public function addTriangles(vertices:Array<Float>, indices:Array<Int>, uvtData:Array<Float>, colors:Array<Int> = null, position:FlxPoint = null, cameraBounds:FlxRect = null):Void
-	#end
+	public function addTriangles(vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, colors:DrawData<Int> = null, position:FlxPoint = null, cameraBounds:FlxRect = null):Void
 	{
 		if (position == null)
 		{
