@@ -343,7 +343,7 @@ class FlxTileFrames extends FlxFramesCollection
 	 * @param	tileSize	the size of tiles (tilesets should have tiles of the same size)
 	 * @return	atlas frames collection, which you can load in tilemaps or sprites:
 	 * 
-	 * var combinedFrames = FlxTileFrames.combineTileSets(bitmaps, new FlxPoint(16, 16));
+	 * var combinedFrames = FlxTileFrames.combineTileSets(bitmaps, FlxPoint.get(16, 16));
 	 * tilemap.loadMapFromCSV(mapData, combinedFrames);
 	 * 
 	 * or
@@ -392,7 +392,7 @@ class FlxTileFrames extends FlxFramesCollection
 			for (frame in frames.frames)
 			{
 				frame.paint(combined, point, true);
-				result.addAtlasFrame(new FlxRect(point.x, point.y, tileSize.x, tileSize.y), new FlxPoint(tileSize.x, tileSize.y), new FlxPoint(0, 0));				
+				result.addAtlasFrame(FlxRect.get(point.x, point.y, tileSize.x, tileSize.y), FlxPoint.get(tileSize.x, tileSize.y), FlxPoint.get(0, 0));				
 				point.x += tileSize.x;
 				
 				if (point.x >= combined.width)
@@ -461,7 +461,7 @@ class FlxTileFrames extends FlxFramesCollection
 			for (frame in collection.frames)
 			{
 				frame.paint(combined, point, true);
-				result.addAtlasFrame(new FlxRect(point.x, point.y, tileWidth, tileHeight), new FlxPoint(tileWidth, tileHeight), new FlxPoint(0, 0));				
+				result.addAtlasFrame(FlxRect.get(point.x, point.y, tileWidth, tileHeight), FlxPoint.get(tileWidth, tileHeight), FlxPoint.get(0, 0));				
 				point.x += tileWidth;
 				
 				if (point.x >= combined.width)
@@ -537,7 +537,7 @@ class FlxTileFrames extends FlxFramesCollection
 	
 	override public function addBorder(border:FlxPoint):FlxTileFrames
 	{
-		var resultBorder:FlxPoint = new FlxPoint().addPoint(this.border).addPoint(border);
+		var resultBorder:FlxPoint = FlxPoint.get().addPoint(this.border).addPoint(border);
 		var resultSize:FlxPoint = FlxPoint.get().copyFrom(tileSize).subtract(2 * border.x, 2 * border.y);
 		var tileFrames:FlxTileFrames = FlxTileFrames.findFrame(parent, resultSize, region, atlasFrame, tileSpacing, resultBorder);
 		if (tileFrames != null)

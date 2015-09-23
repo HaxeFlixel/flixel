@@ -88,12 +88,12 @@ class FlxAtlasFrames extends FlxFramesCollection
 		
 		if (rotated)
 		{
-			frameRect = new FlxRect(FrameData.frame.x, FrameData.frame.y, FrameData.frame.h, FrameData.frame.w);
+			frameRect = FlxRect.get(FrameData.frame.x, FrameData.frame.y, FrameData.frame.h, FrameData.frame.w);
 			angle = FlxFrameAngle.ANGLE_NEG_90;
 		}
 		else
 		{
-			frameRect = new FlxRect(FrameData.frame.x, FrameData.frame.y, FrameData.frame.w, FrameData.frame.h);
+			frameRect = FlxRect.get(FrameData.frame.x, FrameData.frame.y, FrameData.frame.w, FrameData.frame.h);
 		}
 		
 		Frames.addAtlasFrame(frameRect, sourceSize, offset, name, angle);
@@ -172,12 +172,12 @@ class FlxAtlasFrames extends FlxFramesCollection
 			rect = null;
 			if (rotated)
 			{
-				rect = new FlxRect(imageX, imageY, imageHeight, imageWidth);
+				rect = FlxRect.get(imageX, imageY, imageHeight, imageWidth);
 				angle = FlxFrameAngle.ANGLE_90;
 			}
 			else
 			{
-				rect = new FlxRect(imageX, imageY, imageWidth, imageHeight);
+				rect = FlxRect.get(imageX, imageY, imageWidth, imageHeight);
 			}
 			
 			tempString = lines[curIndex++];
@@ -261,7 +261,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 			flipX = (texture.has.flipX && texture.att.flipX == "true");
 			flipY = (texture.has.flipY && texture.att.flipY == "true");
 			
-			rect = new FlxRect(Std.parseFloat(texture.att.x), Std.parseFloat(texture.att.y), Std.parseFloat(texture.att.width), Std.parseFloat(texture.att.height));
+			rect = FlxRect.get(Std.parseFloat(texture.att.x), Std.parseFloat(texture.att.y), Std.parseFloat(texture.att.width), Std.parseFloat(texture.att.height));
 			
 			size = if (trimmed)
 			{
@@ -333,7 +333,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 			angle = (rotated) ? FlxFrameAngle.ANGLE_NEG_90 : FlxFrameAngle.ANGLE_0;
 			name = sprite.get("n");
 			offset = FlxPoint.get(0, 0);
-			rect = new FlxRect(Std.parseInt(sprite.get("x")), Std.parseInt(sprite.get("y")), Std.parseInt(sprite.get("w")), Std.parseInt(sprite.get("h")));
+			rect = FlxRect.get(Std.parseInt(sprite.get("x")), Std.parseInt(sprite.get("y")), Std.parseInt(sprite.get("w")), Std.parseInt(sprite.get("h")));
 			sourceSize = FlxPoint.get(rect.width, rect.height);
 			
 			if (trimmed)
@@ -394,9 +394,9 @@ class FlxAtlasFrames extends FlxFramesCollection
 			name = StringTools.trim(currImageData[0]);
 			currImageRegion = StringTools.trim(currImageData[1]).split(" ");
 			
-			rect = new FlxRect(Std.parseInt(currImageRegion[0]), Std.parseInt(currImageRegion[1]), Std.parseInt(currImageRegion[2]), Std.parseInt(currImageRegion[3]));
-			sourceSize = new FlxPoint(rect.width, rect.height);
-			offset = new FlxPoint();
+			rect = FlxRect.get(Std.parseInt(currImageRegion[0]), Std.parseInt(currImageRegion[1]), Std.parseInt(currImageRegion[2]), Std.parseInt(currImageRegion[3]));
+			sourceSize = FlxPoint.get(rect.width, rect.height);
+			offset = FlxPoint.get();
 			
 			frames.addAtlasFrame(rect, sourceSize, offset, name, angle);
 		}
@@ -433,7 +433,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 	
 	override public function addBorder(border:FlxPoint):FlxAtlasFrames
 	{
-		var resultBorder:FlxPoint = new FlxPoint().addPoint(this.border).addPoint(border);
+		var resultBorder:FlxPoint = FlxPoint.weak().addPoint(this.border).addPoint(border);
 		var atlasFrames:FlxAtlasFrames = FlxAtlasFrames.findFrame(parent, resultBorder);
 		if (atlasFrames != null)
 		{

@@ -352,7 +352,7 @@ class FlxBitmapDataUtil
 	{
 		if (region == null)
 		{
-			region = new FlxRect(0, 0, bitmapData.width, bitmapData.height);
+			region = FlxRect.get(0, 0, bitmapData.width, bitmapData.height);
 		}
 		
 		var frameWidth:Int = Std.int(region.width);

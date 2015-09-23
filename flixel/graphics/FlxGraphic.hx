@@ -529,7 +529,7 @@ class FlxGraphic
 	{
 		var frame:FlxFrame = new FlxFrame(this);
 		frame.type = FlxFrameType.EMPTY;
-		frame.frame = new FlxRect();
+		frame.frame = FlxRect.get();
 		frame.sourceSize.copyFrom(size);
 		return frame;
 	}
@@ -620,7 +620,7 @@ class FlxGraphic
 	{
 		if (_imageFrame == null)
 		{
-			_imageFrame = FlxImageFrame.fromRectangle(this, new FlxRect(0, 0, bitmap.width, bitmap.height));
+			_imageFrame = FlxImageFrame.fromRectangle(this, FlxRect.get(0, 0, bitmap.width, bitmap.height));
 		}
 		
 		return _imageFrame;
