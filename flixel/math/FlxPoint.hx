@@ -16,7 +16,7 @@ class FlxPoint implements IFlxPooled
 	public static var point1:Point = new Point();
 	public static var point2:Point = new Point();
 	
-	private static var _pool = new FlxPool<FlxPoint>(FlxPoint);
+	public static var pool = new FlxPool<FlxPoint>(FlxPoint);
 	
 	/**
 	 * Recycle or create a new FlxPoint. 
@@ -28,7 +28,7 @@ class FlxPoint implements IFlxPooled
 	 */
 	public static inline function get(X:Float = 0, Y:Float = 0):FlxPoint
 	{
-		var point = _pool.get().set(X, Y);
+		var point = pool.get().set(X, Y);
 		point._inPool = false;
 		return point;
 	}
@@ -69,7 +69,7 @@ class FlxPoint implements IFlxPooled
 		{
 			_inPool = true;
 			_weak = false;
-			_pool.putUnsafe(this);
+			pool.putUnsafe(this);
 		}
 	}
 	

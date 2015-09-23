@@ -14,7 +14,7 @@ class FlxRect implements IFlxPooled
 	
 	public static var rect:Rectangle = new Rectangle();
 	
-	private static var _pool = new FlxPool<FlxRect>(FlxRect);
+	public static var pool = new FlxPool<FlxRect>(FlxRect);
 	
 	/**
 	 * Recycle or create new FlxRect.
@@ -22,7 +22,7 @@ class FlxRect implements IFlxPooled
 	 */
 	public static inline function get(X:Float = 0, Y:Float = 0, Width:Float = 0, Height:Float = 0):FlxRect
 	{
-		var rect = _pool.get().set(X, Y, Width, Height);
+		var rect = pool.get().set(X, Y, Width, Height);
 		rect._inPool = false;
 		return rect;
 	}
@@ -86,7 +86,7 @@ class FlxRect implements IFlxPooled
 		{
 			_inPool = true;
 			_weak = false;
-			_pool.putUnsafe(this);
+			pool.putUnsafe(this);
 		}
 	}
 	
