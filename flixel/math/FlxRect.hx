@@ -4,7 +4,6 @@ import flash.geom.Rectangle;
 import flixel.util.FlxPool;
 import flixel.util.FlxPool.IFlxPooled;
 import flixel.util.FlxStringUtil;
-import flixel.util.IFlxPool;
 
 /**
  * Stores a rectangle.
