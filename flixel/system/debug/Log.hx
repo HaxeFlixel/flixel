@@ -83,7 +83,7 @@ class Log extends Window
 		var text:String = Style.prefix + texts.join(" ");
 		
 		// Apply text formatting
-		#if !js
+		#if (!js && !lime_console)
 		text = FlxStringUtil.htmlFormat(text, Style.size, Style.color, Style.bold, Style.italic, Style.underlined);
 		#end
 		
@@ -116,7 +116,7 @@ class Log extends Window
 				newText += _lines[i] + LINE_BREAK;
 			}
 			// TODO: Make htmlText work on HTML5 target
-			#if !js
+			#if (!js && !lime_console)
 			_text.htmlText = newText;
 			#else
 			_text.text = newText;
@@ -125,7 +125,7 @@ class Log extends Window
 		else
 		{
 			// TODO: Make htmlText work on HTML5 target
-			#if !js
+			#if (!js && !lime_console)
 			_text.htmlText += (text + LINE_BREAK);
 			#else
 			_text.text += text + LINE_BREAK;
