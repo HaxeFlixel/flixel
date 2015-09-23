@@ -4,6 +4,7 @@ import flash.geom.Rectangle;
 import flixel.util.FlxPool;
 import flixel.util.FlxPool.IFlxPooled;
 import flixel.util.FlxStringUtil;
+import flixel.util.IFlxPool;
 
 /**
  * Stores a rectangle.
@@ -14,7 +15,9 @@ class FlxRect implements IFlxPooled
 	
 	public static var rect:Rectangle = new Rectangle();
 	
-	public static var pool = new FlxPool<FlxRect>(FlxRect);
+	public static var pool(get, never):IFlxPool<FlxRect>;
+	
+	private static var _pool = new FlxPool<FlxRect>(FlxRect);
 	
 	/**
 	 * Recycle or create new FlxRect.
@@ -22,7 +25,7 @@ class FlxRect implements IFlxPooled
 	 */
 	public static inline function get(X:Float = 0, Y:Float = 0, Width:Float = 0, Height:Float = 0):FlxRect
 	{
-		var rect = pool.get().set(X, Y, Width, Height);
+		var rect = _pool.get().set(X, Y, Width, Height);
 		rect._inPool = false;
 		return rect;
 	}
@@ -86,7 +89,7 @@ class FlxRect implements IFlxPooled
 		{
 			_inPool = true;
 			_weak = false;
-			pool.putUnsafe(this);
+			_pool.putUnsafe(this);
 		}
 	}
 	
@@ -426,5 +429,10 @@ class FlxRect implements IFlxPooled
 	private inline function get_isEmpty():Bool
 	{
 		return (width == 0 || height == 0);
+	}
+	
+	private static function get_pool():IFlxPool<FlxRect>
+	{
+		return _pool;
 	}
 }

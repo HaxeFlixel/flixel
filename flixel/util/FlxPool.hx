@@ -9,7 +9,7 @@ import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 #if !display
 @:generic 
 #end
-class FlxPool<T:IFlxDestroyable>
+class FlxPool<T:IFlxDestroyable> implements IFlxPool<T>
 {
 	public var length(get, never):Int;
 	

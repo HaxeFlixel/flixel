@@ -4,6 +4,7 @@ import flash.geom.Point;
 import flixel.util.FlxPool;
 import flixel.util.FlxPool.IFlxPooled;
 import flixel.util.FlxStringUtil;
+import flixel.util.IFlxPool;
 import openfl.geom.Matrix;
 
 /**
@@ -11,12 +12,14 @@ import openfl.geom.Matrix;
  */
 class FlxPoint implements IFlxPooled
 {
+	public static var pool(get, never):IFlxPool<FlxPoint>;
+	
 	public static var flxPoint1:FlxPoint = new FlxPoint();
 	public static var flxPoint2:FlxPoint = new FlxPoint();
 	public static var point1:Point = new Point();
 	public static var point2:Point = new Point();
 	
-	public static var pool = new FlxPool<FlxPoint>(FlxPoint);
+	private static var _pool = new FlxPool<FlxPoint>(FlxPoint);
 	
 	/**
 	 * Recycle or create a new FlxPoint. 
@@ -28,7 +31,7 @@ class FlxPoint implements IFlxPooled
 	 */
 	public static inline function get(X:Float = 0, Y:Float = 0):FlxPoint
 	{
-		var point = pool.get().set(X, Y);
+		var point = _pool.get().set(X, Y);
 		point._inPool = false;
 		return point;
 	}
@@ -69,7 +72,7 @@ class FlxPoint implements IFlxPooled
 		{
 			_inPool = true;
 			_weak = false;
-			pool.putUnsafe(this);
+			_pool.putUnsafe(this);
 		}
 	}
 	
@@ -426,6 +429,11 @@ class FlxPoint implements IFlxPooled
 	private function set_y(Value:Float):Float
 	{
 		return y = Value; 
+	}
+	
+	private static function get_pool():IFlxPool<FlxPoint>
+	{
+		return _pool;
 	}
 }
 
