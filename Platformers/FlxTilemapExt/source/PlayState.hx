@@ -84,7 +84,7 @@ class PlayState extends FlxState
 		level.setSlopes22([10, 11, 18, 19], [9, 12, 17, 20]);
 		level.setSlopes67([13, 14, 21, 22], [15, 16, 23, 24]);
 		
-		level.setTileProperties(4, FlxObject.NONE, downClouds);
+		level.setTileProperties(4, FlxObject.NONE, fallInClouds);
 		level.setTileProperties(3, level.getTileCollisions(3), wallJump);
 		
 		// Make the Camera follow the player.
@@ -101,9 +101,16 @@ class PlayState extends FlxState
 		_hud.add(_levelText);
 	}
 	
-	private function downClouds(Tile:FlxObject, Object:FlxObject):Void
+	private function fallInClouds(Tile:FlxObject, Object:FlxObject):Void
 	{
-		Tile.allowCollisions = (FlxG.keys.anyPressed([DOWN, S])) ? FlxObject.NONE : FlxObject.CEILING;
+		if (FlxG.keys.anyPressed([DOWN, S]))
+		{
+			Tile.allowCollisions = FlxObject.NONE;
+		}
+		else if (Object.y >= Tile.y)
+		{
+			Tile.allowCollisions = FlxObject.CEILING;
+		}
 	}
 	
 	private function wallJump(Tile:FlxObject, Object:FlxObject):Void
