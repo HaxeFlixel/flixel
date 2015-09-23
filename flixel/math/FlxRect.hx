@@ -14,6 +14,8 @@ class FlxRect implements IFlxPooled
 	
 	public static var rect:Rectangle = new Rectangle();
 	
+	public static var pool(get, never):IFlxPool<FlxRect>;
+	
 	private static var _pool = new FlxPool<FlxRect>(FlxRect);
 	
 	/**
@@ -426,5 +428,10 @@ class FlxRect implements IFlxPooled
 	private inline function get_isEmpty():Bool
 	{
 		return (width == 0 || height == 0);
+	}
+	
+	private static function get_pool():IFlxPool<FlxRect>
+	{
+		return _pool;
 	}
 }
