@@ -90,6 +90,6 @@ interface IFlxPooled extends IFlxDestroyable
 
 interface IFlxPool<T:IFlxDestroyable> 
 {
-	function preAllocate(numObjects:Int):Void;
-	function clear():Array<T>;
+	public function preAllocate(numObjects:Int):Void;
+	public function clear():Array<T>;
 }
