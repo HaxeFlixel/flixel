@@ -165,7 +165,7 @@ class FlxBitmapFont extends FlxFramesCollection
 		
 		if (Std.is(Source, FlxFrame))
 		{
-			frame = cast frame;
+			frame = cast Source;
 			graphic = frame.parent;
 		}
 		else
