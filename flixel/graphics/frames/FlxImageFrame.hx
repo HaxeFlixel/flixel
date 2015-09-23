@@ -70,7 +70,7 @@ class FlxImageFrame extends FlxFramesCollection
 		}
 		
 		imageFrame = new FlxImageFrame(graphic);
-		imageFrame.addSpriteSheetFrame(rect.copyTo(new FlxRect()));
+		imageFrame.addSpriteSheetFrame(rect.copyTo(FlxRect.get()));
 		return imageFrame;
 	}
 	
@@ -116,7 +116,7 @@ class FlxImageFrame extends FlxFramesCollection
 		
 		if (region == null)
 		{
-			region = new FlxRect(0, 0, graphic.width, graphic.height);
+			region = FlxRect.get(0, 0, graphic.width, graphic.height);
 		}
 		else
 		{
@@ -255,7 +255,7 @@ class FlxImageFrame extends FlxFramesCollection
 	
 	override public function addBorder(border:FlxPoint):FlxImageFrame 
 	{
-		var resultBorder:FlxPoint = new FlxPoint().addPoint(this.border).addPoint(border);
+		var resultBorder:FlxPoint = FlxPoint.weak().addPoint(this.border).addPoint(border);
 		
 		var imageFrame:FlxImageFrame = FlxImageFrame.findFrame(parent, frame.frame, resultBorder);
 		if (imageFrame != null)

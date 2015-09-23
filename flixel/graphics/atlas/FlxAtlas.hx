@@ -143,7 +143,7 @@ class FlxAtlas implements IFlxDestroyable
 			rootHeight = getNextPowerOfTwo(rootHeight);
 		}
 		
-		root = new FlxNode(new FlxRect(0, 0, rootWidth, rootHeight), this);
+		root = new FlxNode(FlxRect.get(0, 0, rootWidth, rootHeight), this);
 	}
 	
 	/**
@@ -199,7 +199,7 @@ class FlxAtlas implements IFlxDestroyable
 	private function wrapRoot():Void
 	{
 		var temp:FlxNode = root;
-		root = new FlxNode(new FlxRect(0, 0, temp.width, temp.height), this);
+		root = new FlxNode(FlxRect.get(0, 0, temp.width, temp.height), this);
 		root.left = temp;
 	}
 	
@@ -259,35 +259,35 @@ class FlxAtlas implements IFlxDestroyable
 			
 			if (divideHorizontally) // divide horizontally
 			{
-				firstChild = new FlxNode(new FlxRect(nodeToDivide.x, nodeToDivide.y, insertWidth, nodeToDivide.height), this);
+				firstChild = new FlxNode(FlxRect.get(nodeToDivide.x, nodeToDivide.y, insertWidth, nodeToDivide.height), this);
 				
 				if (nodeToDivide.width - insertWidth > 0)
 				{
-					secondChild = new FlxNode(new FlxRect(nodeToDivide.x + insertWidth, nodeToDivide.y, nodeToDivide.width - insertWidth, nodeToDivide.height), this);
+					secondChild = new FlxNode(FlxRect.get(nodeToDivide.x + insertWidth, nodeToDivide.y, nodeToDivide.width - insertWidth, nodeToDivide.height), this);
 				}
 				
-				firstGrandChild = new FlxNode(new FlxRect(firstChild.x, firstChild.y, insertWidth, insertHeight), this, firstGrandChildFilled, firstGrandChildKey, firstGrandChildRotated);
+				firstGrandChild = new FlxNode(FlxRect.get(firstChild.x, firstChild.y, insertWidth, insertHeight), this, firstGrandChildFilled, firstGrandChildKey, firstGrandChildRotated);
 				
 				if (firstChild.height - insertHeight > 0)
 				{
-					secondGrandChild = new FlxNode(new FlxRect(firstChild.x, firstChild.y + insertHeight, insertWidth, firstChild.height - insertHeight), this);
+					secondGrandChild = new FlxNode(FlxRect.get(firstChild.x, firstChild.y + insertHeight, insertWidth, firstChild.height - insertHeight), this);
 				}
 				
 			}
 			else // divide vertically
 			{
-				firstChild = new FlxNode(new FlxRect(nodeToDivide.x, nodeToDivide.y, nodeToDivide.width, insertHeight), this);
+				firstChild = new FlxNode(FlxRect.get(nodeToDivide.x, nodeToDivide.y, nodeToDivide.width, insertHeight), this);
 				
 				if (nodeToDivide.height - insertHeight > 0)
 				{
-					secondChild = new FlxNode(new FlxRect(nodeToDivide.x, nodeToDivide.y + insertHeight, nodeToDivide.width, nodeToDivide.height - insertHeight), this);
+					secondChild = new FlxNode(FlxRect.get(nodeToDivide.x, nodeToDivide.y + insertHeight, nodeToDivide.width, nodeToDivide.height - insertHeight), this);
 				}
 				
-				firstGrandChild = new FlxNode(new FlxRect(firstChild.x, firstChild.y, insertWidth, insertHeight), this, firstGrandChildFilled, firstGrandChildKey, firstGrandChildRotated);
+				firstGrandChild = new FlxNode(FlxRect.get(firstChild.x, firstChild.y, insertWidth, insertHeight), this, firstGrandChildFilled, firstGrandChildKey, firstGrandChildRotated);
 				
 				if (firstChild.width - insertWidth > 0)
 				{
-					secondGrandChild = new FlxNode(new FlxRect(firstChild.x + insertWidth, firstChild.y, firstChild.width - insertWidth, insertHeight), this);
+					secondGrandChild = new FlxNode(FlxRect.get(firstChild.x + insertWidth, firstChild.y, firstChild.width - insertWidth, insertHeight), this);
 				}
 			}
 			
@@ -525,7 +525,7 @@ class FlxAtlas implements IFlxDestroyable
 		if (newWidth> root.width || newHeight > root.height)
 		{
 			var temp:FlxNode = root;
-			root = new FlxNode(new FlxRect(0, 0, newWidth, newHeight), this);
+			root = new FlxNode(FlxRect.get(0, 0, newWidth, newHeight), this);
 			
 			divideHorizontally = decideHowToDivide ? needToDivideHorizontally(root, temp.width, temp.height) : divideHorizontally;
 			
@@ -655,7 +655,7 @@ class FlxAtlas implements IFlxDestroyable
 		
 		if (node.filled && !atlasFrames.framesHash.exists(node.key))
 		{
-			var frame:FlxRect = new FlxRect(node.x, node.y, node.width - border, node.height - border);
+			var frame:FlxRect = FlxRect.get(node.x, node.y, node.width - border, node.height - border);
 			var sourceSize:FlxPoint = node.rotated ? FlxPoint.get(node.height - border, node.width - border) : FlxPoint.get(node.width - border, node.height - border);
 			var offset:FlxPoint = FlxPoint.get(0, 0);
 			var angle:FlxFrameAngle = node.rotated ? FlxFrameAngle.ANGLE_NEG_90 : FlxFrameAngle.ANGLE_0;
@@ -1077,7 +1077,7 @@ class FlxAtlas implements IFlxDestroyable
 				}
 				
 				var temp:FlxNode = root;
-				root = new FlxNode(new FlxRect(0, 0, nextWidth, nextHeight), this);
+				root = new FlxNode(FlxRect.get(0, 0, nextWidth, nextHeight), this);
 				
 				if (temp.left != null) // this means that atlas isn't empty and we need to resize it's bitmapdata
 				{
