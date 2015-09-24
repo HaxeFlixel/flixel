@@ -46,12 +46,12 @@ class PlayState extends FlxState
 		FlxG.mouse.visible = false;
 		
 		_hud = new FlxGroup();
-
+		
 		FlxG.cameras.bgColor = 0xff050509;
 		
 		// Create player (a red box)
 		_player = new FlxSprite(70, 20);
-		_player.makeGraphic(8, 14, FlxColor.LIME);
+		_player.makeGraphic(8, 14, FlxColor.RED);
 		
 		// Max velocities on player.  If it's a platformer, Y should be high, like 200.
 		// Otherwise, set them to something like 80.
@@ -115,10 +115,19 @@ class PlayState extends FlxState
 	
 	private function wallJump(Tile:FlxObject, Object:FlxObject):Void
 	{
-		if (Object.velocity.y > 0)
+		Object.velocity.y *= 0.9;
+		Object.touching |= FlxObject.FLOOR | FlxObject.CEILING;
+	}
+	
+	private function wallJumpReflect():Void
+	{
+		if (_player.isTouching(FlxObject.RIGHT))
 		{
-			Object.velocity.y *= 0.9;
-			Object.touching |= FlxObject.FLOOR;
+			_player.velocity.x = -_player.maxVelocity.x;
+		}
+		else if (_player.isTouching(FlxObject.LEFT))
+		{
+			_player.velocity.x = _player.maxVelocity.x;
 		}
 	}
 	
@@ -129,7 +138,6 @@ class PlayState extends FlxState
 		_blocks = null;
 		_hud = null;
 		
-		// Meta groups, to help speed up collisions
 		_objects = null;
 	}
 	
@@ -145,20 +153,24 @@ class PlayState extends FlxState
 		{
 			_player.acceleration.x = _player.maxVelocity.x * ((_player.isTouching(FlxObject.FLOOR))?4:3);
 		}
-		if (FlxG.keys.anyPressed([SPACE, W, UP]) && _player.isTouching(FlxObject.FLOOR))
+		
+		//Jump
+		if (FlxG.keys.anyPressed([SPACE, W, UP]) && _player.isTouching(FlxObject.FLOOR) && _player.acceleration.y > 0)
 		{
 			_player.velocity.y = -_player.maxVelocity.y / 2;
-			if (_player.isTouching(FlxObject.RIGHT))
-			{
-				_player.velocity.x = -_player.maxVelocity.x;
-			}
-			else if (_player.isTouching(FlxObject.LEFT))
-			{
-				_player.velocity.x = _player.maxVelocity.x;
-			}
+			
+			wallJumpReflect();
+		}
+		else if (FlxG.keys.anyPressed([S, DOWN]) && _player.isTouching(FlxObject.CEILING) && _player.acceleration.y < 0)
+		{
+			_player.velocity.y = _player.maxVelocity.y / 2;
+			
+			wallJumpReflect();
 		}
 		
-		if (FlxG.keys.anyJustPressed([G])) {
+		//Turn gravity direction
+		if (FlxG.keys.anyJustPressed([G]))
+		{
 			_player.acceleration.y = -_player.acceleration.y;
 		}
 		
