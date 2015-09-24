@@ -1,18 +1,15 @@
 package;
 
 import flixel.addons.tile.FlxTilemapExt;
-import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxState;
-import flixel.group.FlxGroup;
-import flixel.text.FlxText;
-import flixel.tile.FlxTile;
-import flixel.util.FlxColor;
 import flixel.graphics.frames.FlxTileFrames;
+import flixel.group.FlxGroup;
 import flixel.math.FlxPoint;
-import flixel.math.FlxRect;
+import flixel.text.FlxText;
+import flixel.util.FlxColor;
 import openfl.Assets;
 
 class PlayState extends FlxState
