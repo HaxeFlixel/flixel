@@ -76,15 +76,15 @@ class PlayState extends FlxState
 		var tempCL:Array<Int> = [7, 17, 18, 21, 23];
 		var tempCR:Array<Int> = [8, 19, 20, 22, 24];
 		
-		//var tempC:Array<Int> = [4];
-		
 		level.setSlopes(tempFL, tempFR, tempCL, tempCR);
-		//level.setClouds(tempC);
 		
 		level.setSlopes22([10, 11, 18, 19], [9, 12, 17, 20]);
 		level.setSlopes67([13, 14, 21, 22], [15, 16, 23, 24]);
 		
+		//set cloud tiles
 		level.setTileProperties(4, FlxObject.NONE, fallInClouds);
+		
+		//set wallJump tiles
 		level.setTileProperties(3, level.getTileCollisions(3), wallJump);
 		
 		// Make the Camera follow the player.
@@ -137,7 +137,6 @@ class PlayState extends FlxState
 		
 		_blocks = null;
 		_hud = null;
-		
 		_objects = null;
 	}
 	
