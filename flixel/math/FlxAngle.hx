@@ -59,7 +59,8 @@ class FlxAngle
 	public static var TO_RAD(get, never):Float;
 	
 	/**
-	 * Keeps an angle value between -180 and +180
+	 * Keeps an angle value between -180 and +180 by wrapping it
+    * e.g an angle of +270 will be converted to -90
 	 * Should be called whenever the angle is updated on a FlxSprite to stop it from going insane.
 	 * 
 	 * @param	angle	The angle value to check
@@ -70,11 +71,11 @@ class FlxAngle
 	{
 		if (angle > 180)
 		{
-			angle = -180;
+			angle = wrapAngle(angle - 360);
 		}
 		else if (angle < -180)
 		{
-			angle = 180;
+			angle = wrapAngle(angle + 360);
 		}
 		
 		return angle;
