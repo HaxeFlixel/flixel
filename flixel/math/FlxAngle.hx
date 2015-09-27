@@ -82,29 +82,6 @@ class FlxAngle
 	}
 	
 	/**
-	 * Keeps an angle value between the given min and max values
-	 * 
-	 * @param	angle	The angle value to check. Must be between -180 and +180
-	 * @param	min		The minimum angle that is allowed (must be -180 or greater)
-	 * @param	max		The maximum angle that is allowed (must be 180 or less)
-	 * 
-	 * @return	The new angle value, returns the same as the input angle if it was within bounds
-	 */
-	public static function angleLimit(angle:Float, min:Float, max:Float):Float
-	{
-		if (angle > max)
-		{
-			angle = max;
-		}
-		else if (angle < min)
-		{
-			angle = min;
-		}
-		
-		return angle;
-	}
-	
-	/**
 	 * Converts a Radian value into a Degree
 	 * Converts the radians value into degrees and returns
 	 * 
