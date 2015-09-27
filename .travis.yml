@@ -19,6 +19,7 @@ matrix:
 
 install:
   - haxelib install munit > /dev/null
+  - haxelib install hamcrest > /dev/null
   - haxelib install lime > /dev/null
   - haxelib install openfl > /dev/null
   - haxelib install hxcpp > /dev/null
