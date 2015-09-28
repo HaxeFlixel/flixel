@@ -13,22 +13,26 @@ using StringTools;
 class PlayState extends FlxState
 {
 	private static inline var INSTRUCTIONS = #if !mobile
-	                                         "Space to Cycle Modes\n" +
+	                                         "Enter to cycle Directions\n" +
+	                                         "Space to cycle Modes\n" +
 	                                         "Left/Right to adjust strength\n" +
 	                                         "Up/Down to adjust center\n" +
 	                                         "W/S to adjust speed"; 
 	                                         #else
-	                                         "Touch to Cycle Modes"
+	                                         "2 Touches to Cycle Directions\n" +
+	                                         "1 Touch to Cycle Modes";
 	                                         #end
 	
-	private static inline var STATUS = "Mode: [mode]    Strength: [strength]    Center: [center]    Speed: [speed]";
+	private static inline var STATUS = "Direction: [dir]    Mode: [mode]\nStrength: [strength]    Center: [center]    Speed: [speed]";
 	
 	private var _waveSprite:FlxWaveSprite;
 	private var _statusText:FlxText;
 	
 	override public function create():Void
 	{
+		#if !mobile
 		FlxG.mouse.visible = false;
+		#end
 		
 		var _sprite = new FlxSprite(0, 0, FlxGraphic.fromClass(GraphicLogo));
 		_sprite.screenCenter();
@@ -41,7 +45,7 @@ class PlayState extends FlxState
 		_txtInstruct.alignment = CENTER;
 		add(_txtInstruct);
 		
-		_statusText = new FlxText(0, FlxG.height - 15, FlxG.width);
+		_statusText = new FlxText(0, FlxG.height - 25, FlxG.width);
 		_statusText.alignment = CENTER;
 		add(_statusText);
 
@@ -51,6 +55,9 @@ class PlayState extends FlxState
 	override public function update(elapsed:Float):Void
 	{
 		#if !FLX_NO_KEYBOARD
+		if (FlxG.keys.justReleased.ENTER)
+			incrementDirection();
+			
 		if (FlxG.keys.justReleased.SPACE)
 			incrementMode();
 	
@@ -75,7 +82,12 @@ class PlayState extends FlxState
 		
 		#if !FLX_NO_TOUCH
 		if (FlxG.touches.justStarted().length > 0)
-			incrementMode();
+		{
+			if (FlxG.touches.justStarted().length > 1)
+				incrementDirection();
+			else
+				incrementMode();
+		}
 		#end
 		
 		boundValues();
@@ -88,6 +100,17 @@ class PlayState extends FlxState
 		_waveSprite.center = Std.int(FlxMath.bound(_waveSprite.center, 0, _waveSprite.height));
 		_waveSprite.strength = Std.int(FlxMath.bound(_waveSprite.strength, 0, 500));
 		_waveSprite.speed = FlxMath.bound(_waveSprite.speed, 0, 80);
+	}
+	
+	private function incrementDirection():Void
+	{
+		switch (_waveSprite.direction)
+		{
+			case VERTICAL:
+				_waveSprite.direction = HORIZONTAL;
+			case HORIZONTAL:
+				_waveSprite.direction = VERTICAL;
+		}
 	}
 	
 	private function incrementMode():Void
@@ -105,7 +128,8 @@ class PlayState extends FlxState
 	
 	private function updateStatusText():Void 
 	{
-		_statusText.text = STATUS.replace("[mode]", Std.string(_waveSprite.mode))
+		_statusText.text = STATUS.replace("[dir]", Std.string(_waveSprite.direction))
+								 .replace("[mode]", Std.string(_waveSprite.mode))
 		                         .replace("[strength]", Std.string(_waveSprite.strength))
 		                         .replace("[center]",  Std.string(_waveSprite.center))
 		                         .replace("[speed]",  Std.string(_waveSprite.speed));
