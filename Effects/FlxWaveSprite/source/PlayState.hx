@@ -13,17 +13,18 @@ using StringTools;
 class PlayState extends FlxState
 {
 	private static inline var INSTRUCTIONS = #if !mobile
-	                                         "Enter to cycle Directions\n" +
-	                                         "Space to cycle Modes\n" +
+	                                         "Space to cycle Directions\n" +
+	                                         "Enter to cycle Modes\n" +
 	                                         "Left/Right to adjust strength\n" +
 	                                         "Up/Down to adjust center\n" +
-	                                         "W/S to adjust speed"; 
+	                                         "W/S to adjust speed\n" +
+	                                         "A/D to adjust wavelength"; 
 	                                         #else
-	                                         "2 Touches to Cycle Directions\n" +
-	                                         "1 Touch to Cycle Modes";
+	                                         "2 Touches to cycle Directions\n" +
+	                                         "1 Touch to cycle Modes";
 	                                         #end
 	
-	private static inline var STATUS = "Direction: [dir]    Mode: [mode]\nStrength: [strength]    Center: [center]    Speed: [speed]";
+	private static inline var STATUS = "Direction: [dir]    Mode: [mode]\nStrength: [strength]    Center: [center]    Speed: [speed]    Wavelength: [wave]";
 	
 	private var _waveSprite:FlxWaveSprite;
 	private var _statusText:FlxText;
@@ -48,17 +49,17 @@ class PlayState extends FlxState
 		_statusText = new FlxText(0, FlxG.height - 25, FlxG.width);
 		_statusText.alignment = CENTER;
 		add(_statusText);
-
+		
 		super.create();
 	}
 	
 	override public function update(elapsed:Float):Void
 	{
 		#if !FLX_NO_KEYBOARD
-		if (FlxG.keys.justReleased.ENTER)
+		if (FlxG.keys.justReleased.SPACE)
 			incrementDirection();
 			
-		if (FlxG.keys.justReleased.SPACE)
+		if (FlxG.keys.justReleased.ENTER)
 			incrementMode();
 	
 		// control center
@@ -78,6 +79,12 @@ class PlayState extends FlxState
 			_waveSprite.speed++;
 		if (FlxG.keys.pressed.S)
 			_waveSprite.speed--;
+		
+		//control wavelength
+		if (FlxG.keys.pressed.D)
+			_waveSprite.wavelength++;
+		if (FlxG.keys.pressed.A)
+			_waveSprite.wavelength--;
 		#end
 		
 		#if !FLX_NO_TOUCH
@@ -100,6 +107,7 @@ class PlayState extends FlxState
 		_waveSprite.center = Std.int(FlxMath.bound(_waveSprite.center, 0, _waveSprite.height));
 		_waveSprite.strength = Std.int(FlxMath.bound(_waveSprite.strength, 0, 500));
 		_waveSprite.speed = FlxMath.bound(_waveSprite.speed, 0, 80);
+		_waveSprite.wavelength = Std.int(FlxMath.bound(_waveSprite.wavelength, 1, 20));
 	}
 	
 	private function incrementDirection():Void
@@ -132,6 +140,7 @@ class PlayState extends FlxState
 								 .replace("[mode]", Std.string(_waveSprite.mode))
 		                         .replace("[strength]", Std.string(_waveSprite.strength))
 		                         .replace("[center]",  Std.string(_waveSprite.center))
-		                         .replace("[speed]",  Std.string(_waveSprite.speed));
+		                         .replace("[speed]",  Std.string(_waveSprite.speed))
+		                         .replace("[wave]",  Std.string(_waveSprite.wavelength));
 	}
 }
