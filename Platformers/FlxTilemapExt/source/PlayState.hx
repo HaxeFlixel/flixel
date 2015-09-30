@@ -68,15 +68,16 @@ class PlayState extends FlxState
 		level.frames = levelTiles;
 		level.useScaleHack = false;
 		
-		var tempFL:Array<Int> = [5, 9, 10, 13, 15];
-		var tempFR:Array<Int> = [6, 11, 12, 14, 16];
-		var tempCL:Array<Int> = [7, 17, 18, 21, 23];
-		var tempCR:Array<Int> = [8, 19, 20, 22, 24];
+		var tempNW:Array<Int> = [5, 9, 10, 13, 15];
+		var tempNE:Array<Int> = [6, 11, 12, 14, 16];
+		var tempSW:Array<Int> = [7, 17, 18, 21, 23];
+		var tempSE:Array<Int> = [8, 19, 20, 22, 24];
 		
-		level.setSlopes(tempFL, tempFR, tempCL, tempCR);
+		level.setSlopes(tempNW, tempNE, tempSW, tempSE);
 		
-		level.setSlopes22([10, 11, 18, 19], [9, 12, 17, 20]);
-		level.setSlopes67([13, 14, 21, 22], [15, 16, 23, 24]);
+		//set tiles steepness, default is MODERATE
+		level.setSteepness(FlxSlopeSteepness.GENTLE, [10, 11, 18, 19], [9, 12, 17, 20]);
+		level.setSteepness(FlxSlopeSteepness.STEEP, [13, 14, 21, 22], [15, 16, 23, 24]);
 		
 		//set cloud tiles
 		level.setTileProperties(4, FlxObject.NONE, fallInClouds);
@@ -143,11 +144,11 @@ class PlayState extends FlxState
 		
 		if (FlxG.keys.anyPressed([LEFT, A]))
 		{
-			_player.acceleration.x = -_player.maxVelocity.x * ((_player.isTouching(FlxObject.FLOOR))?4:3);
+			_player.acceleration.x = -_player.maxVelocity.x * ((_player.isTouching(FlxObject.FLOOR)) ? 4 : 3);
 		}
 		if (FlxG.keys.anyPressed([RIGHT, D]))
 		{
-			_player.acceleration.x = _player.maxVelocity.x * ((_player.isTouching(FlxObject.FLOOR))?4:3);
+			_player.acceleration.x = _player.maxVelocity.x * ((_player.isTouching(FlxObject.FLOOR)) ? 4 : 3);
 		}
 		
 		//Jump
