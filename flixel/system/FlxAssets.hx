@@ -106,7 +106,7 @@ class FlxAssets
 #else
 	// fonts
 	public static var FONT_DEFAULT:String = "Nokia Cellphone FC Small";
-	public static var FONT_DEBUGGER:String = "Montserrat-Regular";
+	public static var FONT_DEBUGGER:String = "Monsterrat";
 	
 	
 	public static function drawLogo(graph:Graphics):Void
