@@ -4,7 +4,6 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.tweens.FlxEase.EaseFunction;
-import flixel.tweens.FlxTween.ChainedTween;
 import flixel.tweens.FlxTween.TweenOptions;
 import flixel.tweens.misc.AngleTween;
 import flixel.tweens.misc.ColorTween;
@@ -580,6 +579,10 @@ class FlxTween implements IFlxDestroyable
 				{
 					doNextTween(then.tween, _thens);
 				}
+				else
+				{
+					onEnd();
+				}
 			}
 			else
 			{
@@ -794,7 +797,11 @@ class FlxTweenManager extends FlxBasic
 		}
 		
 		Tween.active = false;
-		Tween.destroy();
+		
+		if (Destroy)
+		{
+			Tween.destroy();
+		}
 		
 		FlxArrayUtil.fastSplice(_tweens, Tween);
 		
