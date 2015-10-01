@@ -61,12 +61,6 @@ class VarTween extends FlxTween
 		return this;
 	}
 	
-	@:access(flixel.tweens.FlxTween)
-	override function onEnd():Void 
-	{
-		super.onEnd();
-	}
-	
 	override private function update(elapsed:Float):Void
 	{
 		var delay:Float = (executions > 0) ? loopDelay : startDelay;

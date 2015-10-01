@@ -4,7 +4,7 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.tweens.FlxEase.EaseFunction;
-import flixel.tweens.FlxTween.ThenCommand;
+import flixel.tweens.FlxTween.ChainedTween;
 import flixel.tweens.FlxTween.TweenOptions;
 import flixel.tweens.misc.AngleTween;
 import flixel.tweens.misc.ColorTween;
@@ -375,7 +375,7 @@ class FlxTween implements IFlxDestroyable
 	private var _delayToUse:Float = 0;
 	private var _running:Bool = false;
 	private var _waitingForRestart:Bool = false;
-	private var _thens:Array<ThenCommand>;
+	private var _thens:Array<ChainedTween>;
 	
 	/**
 	 * This function is called when tween is created, or recycled.
@@ -425,7 +425,7 @@ class FlxTween implements IFlxDestroyable
 		{
 			_thens = [];
 		}
-		_thens.push(new ThenCommand(0, Tween));
+		_thens.push(new ChainedTween(0, Tween));
 		return this;
 	}
 	
@@ -440,7 +440,7 @@ class FlxTween implements IFlxDestroyable
 		{
 			_thens = [];
 		}
-		_thens.push(new ThenCommand(Delay, null));
+		_thens.push(new ChainedTween(Delay, null));
 		return this;
 	}
 	
@@ -513,7 +513,7 @@ class FlxTween implements IFlxDestroyable
 		active = false;
 		_running = false;
 		finished = true;
-		manager.removeSoft(this);
+		manager.remove(this, false);
 	}
 	
 	private function finish():Void
@@ -589,7 +589,7 @@ class FlxTween implements IFlxDestroyable
 		}
 	}
 	
-	private function doNextTween(tween:FlxTween, thens:Array<ThenCommand>):Void
+	private function doNextTween(tween:FlxTween, thens:Array<ChainedTween>):Void
 	{
 		if (!tween.active)
 		{
@@ -782,10 +782,11 @@ class FlxTweenManager extends FlxBasic
 	 * Remove a FlxTween.
 	 * 
 	 * @param	Tween		The FlxTween to remove.
+	 * @param	Destroy		Whether you want to destroy the FlxTween
 	 * @return	The added FlxTween object.
 	 */
 	@:allow(flixel.tweens.FlxTween)
-	private function remove(Tween:FlxTween):FlxTween
+	private function remove(Tween:FlxTween, Destroy:Bool=true):FlxTween
 	{
 		if (Tween == null)
 		{
@@ -799,29 +800,6 @@ class FlxTweenManager extends FlxBasic
 		
 		return Tween;
 	}
-	
-	/**
-	 * Remove a FlxTween without destroying it
-	 * 
-	 * @param	Tween		The FlxTween to remove.
-	 * @param	Destroy		Whether you want to destroy the FlxTween.
-	 * @return	The added FlxTween object.
-	 */
-	@:allow(flixel.tweens.FlxTween)
-	private function removeSoft(Tween:FlxTween):FlxTween
-	{
-		if (Tween == null)
-		{
-			return null;
-		}
-		
-		Tween.active = false;
-		
-		FlxArrayUtil.fastSplice(_tweens, Tween);
-		
-		return Tween;
-	}
-
 	/**
 	 * Removes all FlxTweens.
 	 */
@@ -834,7 +812,7 @@ class FlxTweenManager extends FlxBasic
 	}
 }
 
-class ThenCommand
+private class ChainedTween
 {
 	public var delay:Float;
 	public var tween:FlxTween;
