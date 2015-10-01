@@ -10,7 +10,7 @@ import flixel.tweens.FlxTween.QuadMotionParams;
 import flixel.tweens.FlxTween.QuadPathParams;
 import flixel.tweens.FlxTween.ThenCommand;
 import flixel.tweens.FlxTween.TweenOptions;
-import flixel.tweens.FlxTween.TweenType;
+import flixel.tweens.FlxTween.TweenMethod;
 import flixel.tweens.misc.AngleTween;
 import flixel.tweens.misc.ColorTween;
 import flixel.tweens.misc.NumTween;
@@ -425,7 +425,7 @@ class FlxTween implements IFlxDestroyable
 	 * @return
 	 */
 	
-	public function then(tweenType:TweenType, params:Dynamic):FlxTween
+	public function then(tweenType:TweenMethod, params:Dynamic):FlxTween
 	{
 		if (_thens == null)
 		{
@@ -457,7 +457,7 @@ class FlxTween implements IFlxDestroyable
 	 * @param	params
 	 * @return
 	 */
-	public function waitThen(Delay:Float, tweenType:TweenType, params:Dynamic):FlxTween
+	public function waitThen(Delay:Float, tweenType:TweenMethod, params:Dynamic):FlxTween
 	{
 		if (_thens == null)
 		{
@@ -607,39 +607,39 @@ class FlxTween implements IFlxDestroyable
 		}
 	}
 	
-	private function doNextTween(type:TweenType, data:TweenParams, thens:Array<ThenCommand>):Void
+	private function doNextTween(type:TweenMethod, data:TweenParams, thens:Array<ThenCommand>):Void
 	{
 		var tween:FlxTween = null;
 		switch(type)
 		{
-			case TweenType.AngleTween_:
+			case TweenMethod.AngleTween_:
 				var atp:AngleTweenParams = cast data;
 				tween = FlxTween.angle(atp.Sprite, atp.FromAngle, atp.ToAngle, atp.Duration, atp.Options);
-			case TweenType.CircularMotion_:
+			case TweenMethod.CircularMotion_:
 				var cmp:CircularMotionParams = cast data;
 				tween = FlxTween.circularMotion(cmp.Object, cmp.CenterX, cmp.CenterY, cmp.Radius, cmp.Angle, cmp.Clockwise, cmp.DurationOrSpeed, cmp.UseDuration, cmp.Options);
-			case TweenType.ColorTween_:
+			case TweenMethod.ColorTween_:
 				var ctp:ColorTweenParams = cast data;
 				tween = FlxTween.color(ctp.Sprite, ctp.Duration, ctp.FromColor, ctp.ToColor, ctp.Options);
-			case TweenType.CubicMotion_:
+			case TweenMethod.CubicMotion_:
 				var cmp:CubicMotionParams = cast data;
 				tween = FlxTween.cubicMotion(cmp.Object, cmp.FromX, cmp.FromY, cmp.aX, cmp.aY, cmp.bX, cmp.bY, cmp.ToX, cmp.ToY, cmp.Duration, cmp.Options);
-			case TweenType.LinearMotion_:
+			case TweenMethod.LinearMotion_:
 				var lmp:LinearMotionParams = cast data;
 				tween = FlxTween.linearMotion(lmp.Object, lmp.FromX, lmp.FromY, lmp.ToX, lmp.ToY, lmp.DurationOrSpeed, lmp.UseDuration, lmp.Options);
-			case TweenType.NumTween_:
+			case TweenMethod.NumTween_:
 				var ntp:NumTweenParams = cast data;
 				tween = FlxTween.num(ntp.FromValue, ntp.ToValue, ntp.Duration, ntp.Options, ntp.TweenFunction);
-			case TweenType.QuadMotion_:
+			case TweenMethod.QuadMotion_:
 				var qmp:QuadMotionParams = cast data;
 				tween = FlxTween.quadMotion(qmp.Object, qmp.FromX, qmp.FromY, qmp.ControlX, qmp.ControlY, qmp.ToX, qmp.ToY, qmp.DurationOrSpeed, qmp.UseDuration, qmp.Options);
-			case TweenType.QuadPath_:
+			case TweenMethod.QuadPath_:
 				var qpp:QuadPathParams = cast data;
 				tween = FlxTween.quadPath(qpp.Object, qpp.Points, qpp.DurationOrSpeed, qpp.UseDuration, qpp.Options);
-			case TweenType.VarTween_:
+			case TweenMethod.VarTween_:
 				var vtp:VarTweenParams = cast data;
 				tween = FlxTween.tween(vtp.Object, vtp.Values, vtp.Duration, vtp.Options);
-			case TweenType.None_:
+			case TweenMethod.None_:
 				//do nothing
 		}
 		
@@ -847,7 +847,7 @@ typedef QuadPathParams = {
 
 typedef TweenParams = OneOfNine<VarTweenParams,AngleTweenParams,ColorTweenParams,NumTweenParams,CircularMotionParams,CubicMotionParams,LinearMotionParams,QuadMotionParams,QuadPathParams>;
 
-enum TweenType
+enum TweenMethod
 {
 	None_;
 	AngleTween_;
@@ -976,10 +976,10 @@ class FlxTweenManager extends FlxBasic
 class ThenCommand
 {
 	public var delay:Float;
-	public var type:TweenType;
+	public var type:TweenMethod;
 	public var params:TweenParams;
 	
-	public function new(Delay:Float, Type:TweenType, Params:TweenParams)
+	public function new(Delay:Float, Type:TweenMethod, Params:TweenParams)
 	{
 		type = Type;
 		delay = Delay;
