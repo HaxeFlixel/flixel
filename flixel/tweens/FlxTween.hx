@@ -457,7 +457,7 @@ class FlxTween implements IFlxDestroyable
 	 * @param	params
 	 * @return
 	 */
-	public function waitThen(Delay:Float, tweenType:TweenType, params:TweenParams):FlxTween
+	public function waitThen(Delay:Float, tweenType:TweenType, params:Dynamic):FlxTween
 	{
 		if (_thens == null)
 		{
