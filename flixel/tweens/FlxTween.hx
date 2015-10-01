@@ -427,7 +427,7 @@ class FlxTween implements IFlxDestroyable
 	
 	public function then(Tween:FlxTween):FlxTween
 	{
-		Tween.cancel();
+		Tween.cancelSoft();
 		if (_thens == null)
 		{
 			_thens = [];
@@ -534,6 +534,14 @@ class FlxTween implements IFlxDestroyable
 		manager.remove(this);
 	}
 	
+	private function cancelSoft():Void
+	{
+		active = false;
+		_running = false;
+		finished = true;
+		manager.removeSoft(this);
+	}
+	
 	private function finish():Void
 	{
 		executions++;
@@ -601,9 +609,7 @@ class FlxTween implements IFlxDestroyable
 			}
 			else
 			{
-				var numTween = new NumTween(null);
-				numTween.tween(0, 0, then.delay);
-				doNextTween(numTween, _thens);
+				doNextTween(FlxTween.num(0,0,then.delay), _thens);
 			}
 			_thens = null;
 		}
@@ -614,6 +620,7 @@ class FlxTween implements IFlxDestroyable
 		if (!tween.active)
 		{
 			tween.start();
+			manager.add(tween);
 		}
 		if (thens != null)
 		{
@@ -914,7 +921,6 @@ class FlxTweenManager extends FlxBasic
 	 * Remove a FlxTween.
 	 * 
 	 * @param	Tween		The FlxTween to remove.
-	 * @param	Destroy		Whether you want to destroy the FlxTween.
 	 * @return	The added FlxTween object.
 	 */
 	@:allow(flixel.tweens.FlxTween)
@@ -927,6 +933,28 @@ class FlxTweenManager extends FlxBasic
 		
 		Tween.active = false;
 		Tween.destroy();
+		
+		FlxArrayUtil.fastSplice(_tweens, Tween);
+		
+		return Tween;
+	}
+	
+	/**
+	 * Remove a FlxTween without destroying it
+	 * 
+	 * @param	Tween		The FlxTween to remove.
+	 * @param	Destroy		Whether you want to destroy the FlxTween.
+	 * @return	The added FlxTween object.
+	 */
+	@:allow(flixel.tweens.FlxTween)
+	private function removeSoft(Tween:FlxTween):FlxTween
+	{
+		if (Tween == null)
+		{
+			return null;
+		}
+		
+		Tween.active = false;
 		
 		FlxArrayUtil.fastSplice(_tweens, Tween);
 		
