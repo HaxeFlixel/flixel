@@ -6,7 +6,6 @@ import flixel.FlxSprite;
 import flixel.tweens.FlxEase.EaseFunction;
 import flixel.tweens.FlxTween.ThenCommand;
 import flixel.tweens.FlxTween.TweenOptions;
-import flixel.tweens.FlxTween.TweenMethod;
 import flixel.tweens.misc.AngleTween;
 import flixel.tweens.misc.ColorTween;
 import flixel.tweens.misc.NumTween;
