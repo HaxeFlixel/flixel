@@ -2,7 +2,6 @@ package flixel.tweens.misc;
 
 import flixel.tweens.FlxTween;
 import flixel.util.FlxArrayUtil;
-import flixel.util.FlxTimer;
 
 /**
  * Tweens multiple numeric public properties of an Object simultaneously.
