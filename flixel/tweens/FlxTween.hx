@@ -414,8 +414,7 @@ class FlxTween implements IFlxDestroyable
 	
 	/**
 	 * After this tween has finished, do this tween next
-	 * @param	method
-	 * @param	params
+	 * @param	Tween The FlxTween to run next
 	 * @return
 	 */
 	
