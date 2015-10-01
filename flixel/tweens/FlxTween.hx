@@ -4,6 +4,13 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.tweens.FlxEase.EaseFunction;
+import flixel.tweens.FlxTween.LinearMotionParams;
+import flixel.tweens.FlxTween.NumTweenParams;
+import flixel.tweens.FlxTween.QuadMotionParams;
+import flixel.tweens.FlxTween.QuadPathParams;
+import flixel.tweens.FlxTween.ThenCommand;
+import flixel.tweens.FlxTween.TweenOptions;
+import flixel.tweens.FlxTween.TweenType;
 import flixel.tweens.misc.AngleTween;
 import flixel.tweens.misc.ColorTween;
 import flixel.tweens.misc.NumTween;
@@ -18,6 +25,7 @@ import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import flixel.math.FlxPoint;
+import flixel.util.typeLimit.OneOfNine;
 
 class FlxTween implements IFlxDestroyable
 {
@@ -373,7 +381,8 @@ class FlxTween implements IFlxDestroyable
 	private var _delayToUse:Float = 0;
 	private var _running:Bool = false;
 	private var _waitingForRestart:Bool = false;
-
+	private var _thens:Array<ThenCommand>;
+	
 	/**
 	 * This function is called when tween is created, or recycled.
 	 */
@@ -406,8 +415,60 @@ class FlxTween implements IFlxDestroyable
 		onUpdate = null;
 		onComplete = null;
 		ease = null;
+		_thens = null;
 	}
-
+	
+	/**
+	 * After this tween has finished, do this tween next
+	 * @param	tweenType
+	 * @param	params
+	 * @return
+	 */
+	
+	public function then(tweenType:TweenType, params:Dynamic):FlxTween
+	{
+		if (_thens == null)
+		{
+			_thens = [];
+		}
+		_thens.push(new ThenCommand(0, tweenType, params));
+		return this;
+	}
+	
+	/**
+	 * After this tween has finished, wait this many seconds, then do the next chained "then" command
+	 * @param	Delay The number of seconds to wait
+	 * @return
+	 */
+	public function wait(Delay:Float):FlxTween
+	{
+		if (_thens == null)
+		{
+			_thens = [];
+		}
+		_thens.push(new ThenCommand(Delay, None_, null));
+		return this;
+	}
+	
+	/**
+	 * Add a delay and a chained tween in the same command
+	 * @param	Delay
+	 * @param	tweenType
+	 * @param	params
+	 * @return
+	 */
+	public function waitThen(Delay:Float, tweenType:TweenType, params:TweenParams):FlxTween
+	{
+		if (_thens == null)
+		{
+			_thens = [];
+		}
+		
+		_thens.push(new ThenCommand(Delay, None_, null));
+		_thens.push(new ThenCommand(0    , tweenType, params));
+		return this;
+	}
+	
 	private function update(elapsed:Float):Void
 	{
 		_secondsSinceStart += elapsed;
@@ -523,6 +584,69 @@ class FlxTween implements IFlxDestroyable
 		active = false;
 		_running = false;
 		finished = true;
+		
+		if (_thens != null && _thens.length > 0)
+		{
+			var then = _thens[0];
+			
+			_thens.splice(0, 1);
+			
+			if (then.delay <= 0)
+			{
+				if (then.params != null)
+				{
+					doNextTween(then.type, then.params, _thens);
+				}
+			}
+			else
+			{
+				var params:NumTweenParams = { FromValue:0, ToValue:0, Duration:then.delay };
+				doNextTween(NumTween_, params, _thens);
+			}
+			_thens = null;
+		}
+	}
+	
+	private function doNextTween(type:TweenType, data:TweenParams, thens:Array<ThenCommand>):Void
+	{
+		var tween:FlxTween = null;
+		switch(type)
+		{
+			case TweenType.AngleTween_:
+				var atp:AngleTweenParams = cast data;
+				tween = FlxTween.angle(atp.Sprite, atp.FromAngle, atp.ToAngle, atp.Duration, atp.Options);
+			case TweenType.CircularMotion_:
+				var cmp:CircularMotionParams = cast data;
+				tween = FlxTween.circularMotion(cmp.Object, cmp.CenterX, cmp.CenterY, cmp.Radius, cmp.Angle, cmp.Clockwise, cmp.DurationOrSpeed, cmp.UseDuration, cmp.Options);
+			case TweenType.ColorTween_:
+				var ctp:ColorTweenParams = cast data;
+				tween = FlxTween.color(ctp.Sprite, ctp.Duration, ctp.FromColor, ctp.ToColor, ctp.Options);
+			case TweenType.CubicMotion_:
+				var cmp:CubicMotionParams = cast data;
+				tween = FlxTween.cubicMotion(cmp.Object, cmp.FromX, cmp.FromY, cmp.aX, cmp.aY, cmp.bX, cmp.bY, cmp.ToX, cmp.ToY, cmp.Duration, cmp.Options);
+			case TweenType.LinearMotion_:
+				var lmp:LinearMotionParams = cast data;
+				tween = FlxTween.linearMotion(lmp.Object, lmp.FromX, lmp.FromY, lmp.ToX, lmp.ToY, lmp.DurationOrSpeed, lmp.UseDuration, lmp.Options);
+			case TweenType.NumTween_:
+				var ntp:NumTweenParams = cast data;
+				tween = FlxTween.num(ntp.FromValue, ntp.ToValue, ntp.Duration, ntp.Options, ntp.TweenFunction);
+			case TweenType.QuadMotion_:
+				var qmp:QuadMotionParams = cast data;
+				tween = FlxTween.quadMotion(qmp.Object, qmp.FromX, qmp.FromY, qmp.ControlX, qmp.ControlY, qmp.ToX, qmp.ToY, qmp.DurationOrSpeed, qmp.UseDuration, qmp.Options);
+			case TweenType.QuadPath_:
+				var qpp:QuadPathParams = cast data;
+				tween = FlxTween.quadPath(qpp.Object, qpp.Points, qpp.DurationOrSpeed, qpp.UseDuration, qpp.Options);
+			case TweenType.VarTween_:
+				var vtp:VarTweenParams = cast data;
+				tween = FlxTween.tween(vtp.Object, vtp.Values, vtp.Duration, vtp.Options);
+			case TweenType.None_:
+				//do nothing
+		}
+		
+		if (thens != null)
+		{
+			tween._thens = _thens;
+		}
 	}
 	
 	/**
@@ -621,7 +745,120 @@ typedef TweenOptions = {
 	?onUpdate:TweenCallback,
 	?onComplete:TweenCallback,
 	?startDelay:Null<Float>,
-	?loopDelay:Null<Float>,
+	?loopDelay:Null<Float>
+}
+
+typedef VarTweenParams = {
+	Object:Dynamic,
+	Values:Dynamic,
+	?Duration:Float,
+	?Options:TweenOptions
+}
+
+typedef NumTweenParams = {
+	FromValue:Float,
+	ToValue:Float,
+	Duration:Float,
+	?Options:TweenOptions,
+	?TweenFunction:Float->Void
+}
+
+typedef AngleTweenParams = {
+	?Sprite:FlxSprite,
+	FromAngle:Float,
+	ToAngle:Float,
+	?Duration:Float,
+	?Options:TweenOptions
+}
+
+typedef ColorTweenParams = {
+	?Sprite:FlxSprite,
+	?Duration:Float,
+	FromColor:FlxColor,
+	ToColor:FlxColor,
+	?Options:TweenOptions
+}
+
+typedef LinearMotionParams = {
+	Object:FlxObject,
+	FromX:Float,
+	FromY:Float,
+	ToX:Float,
+	ToY:Float,
+	?DurationOrSpeed:Float,
+	?UseDuration:Bool,
+	?Options:TweenOptions
+}
+
+typedef QuadMotionParams = {
+	Object:FlxObject,
+	FromX:Float,
+	FromY:Float,
+	ControlX:Float,
+	ControlY:Float,
+	ToX:Float,
+	ToY:Float,
+	?DurationOrSpeed:Float,
+	UseDuration:Bool,
+	?Options:TweenOptions
+}
+
+typedef CubicMotionParams = {
+	Object:FlxObject,
+	FromX:Float,
+	FromY:Float,
+	aX:Float,
+	aY:Float,
+	bX:Float,
+	bY:Float,
+	ToX:Float,
+	ToY:Float,
+	?Duration:Float,
+	?Options:TweenOptions
+}
+
+typedef CircularMotionParams = {
+	Object:FlxObject,
+	CenterX:Float,
+	CenterY:Float,
+	Radius:Float,
+	Angle:Float,
+	Clockwise:Bool,
+	?DurationOrSpeed:Float,
+	?UseDuration:Bool,
+	?Options:TweenOptions
+}
+
+typedef LinearPathOptions = {
+	Object:FlxObject,
+	Points:Array<FlxPoint>,
+	?DurationOrSpeed:Float,
+	?UseDuration:Bool,
+	?Options:TweenOptions
+}
+
+typedef QuadPathParams = {
+	Object:FlxObject,
+	Points:Array<FlxPoint>,
+	?DurationOrSpeed:Float,
+	?UseDuration:Bool,
+	?Options:TweenOptions
+}
+
+typedef TweenParams = OneOfNine<VarTweenParams,AngleTweenParams,ColorTweenParams,NumTweenParams,CircularMotionParams,CubicMotionParams,LinearMotionParams,QuadMotionParams,QuadPathParams>;
+
+enum TweenType
+{
+	None_;
+	AngleTween_;
+	ColorTween_;
+	NumTween_;
+	VarTween_;
+	CircularMotion_;
+	CubicMotion_;
+	LinearMotion_;
+	QuadMotion_;
+	QuadPath_;
 }
 
 @:access(flixel.tweens.FlxTween)
@@ -733,5 +970,19 @@ class FlxTweenManager extends FlxBasic
 		{
 			remove(_tweens[0]);
 		}
+	}
+}
+
+class ThenCommand
+{
+	public var delay:Float;
+	public var type:TweenType;
+	public var params:TweenParams;
+	
+	public function new(Delay:Float, Type:TweenType, Params:TweenParams)
+	{
+		type = Type;
+		delay = Delay;
+		params = Params;
 	}
 }
