@@ -445,25 +445,6 @@ class FlxTween implements IFlxDestroyable
 		return this;
 	}
 	
-	/**
-	 * Add a delay and a chained tween in the same command
-	 * @param	Delay
-	 * @param	method
-	 * @param	params
-	 * @return
-	 */
-	public function waitThen(Delay:Float, Tween:FlxTween):FlxTween
-	{
-		if (_thens == null)
-		{
-			_thens = [];
-		}
-		
-		_thens.push(new ThenCommand(Delay, null));
-		_thens.push(new ThenCommand(0    , Tween));
-		return this;
-	}
-	
 	private function update(elapsed:Float):Void
 	{
 		_secondsSinceStart += elapsed;
