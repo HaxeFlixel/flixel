@@ -4,10 +4,6 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.tweens.FlxEase.EaseFunction;
-import flixel.tweens.FlxTween.LinearMotionParams;
-import flixel.tweens.FlxTween.NumTweenParams;
-import flixel.tweens.FlxTween.QuadMotionParams;
-import flixel.tweens.FlxTween.QuadPathParams;
 import flixel.tweens.FlxTween.ThenCommand;
 import flixel.tweens.FlxTween.TweenOptions;
 import flixel.tweens.FlxTween.TweenMethod;
@@ -25,7 +21,6 @@ import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import flixel.math.FlxPoint;
-import flixel.util.typeLimit.OneOfNine;
 
 class FlxTween implements IFlxDestroyable
 {
@@ -725,119 +720,6 @@ typedef TweenOptions = {
 	?onComplete:TweenCallback,
 	?startDelay:Null<Float>,
 	?loopDelay:Null<Float>
-}
-
-typedef VarTweenParams = {
-	Object:Dynamic,
-	Values:Dynamic,
-	?Duration:Float,
-	?Options:TweenOptions
-}
-
-typedef NumTweenParams = {
-	FromValue:Float,
-	ToValue:Float,
-	Duration:Float,
-	?Options:TweenOptions,
-	?TweenFunction:Float->Void
-}
-
-typedef AngleTweenParams = {
-	?Sprite:FlxSprite,
-	FromAngle:Float,
-	ToAngle:Float,
-	?Duration:Float,
-	?Options:TweenOptions
-}
-
-typedef ColorTweenParams = {
-	?Sprite:FlxSprite,
-	?Duration:Float,
-	FromColor:FlxColor,
-	ToColor:FlxColor,
-	?Options:TweenOptions
-}
-
-typedef LinearMotionParams = {
-	Object:FlxObject,
-	FromX:Float,
-	FromY:Float,
-	ToX:Float,
-	ToY:Float,
-	?DurationOrSpeed:Float,
-	?UseDuration:Bool,
-	?Options:TweenOptions
-}
-
-typedef QuadMotionParams = {
-	Object:FlxObject,
-	FromX:Float,
-	FromY:Float,
-	ControlX:Float,
-	ControlY:Float,
-	ToX:Float,
-	ToY:Float,
-	?DurationOrSpeed:Float,
-	UseDuration:Bool,
-	?Options:TweenOptions
-}
-
-typedef CubicMotionParams = {
-	Object:FlxObject,
-	FromX:Float,
-	FromY:Float,
-	aX:Float,
-	aY:Float,
-	bX:Float,
-	bY:Float,
-	ToX:Float,
-	ToY:Float,
-	?Duration:Float,
-	?Options:TweenOptions
-}
-
-typedef CircularMotionParams = {
-	Object:FlxObject,
-	CenterX:Float,
-	CenterY:Float,
-	Radius:Float,
-	Angle:Float,
-	Clockwise:Bool,
-	?DurationOrSpeed:Float,
-	?UseDuration:Bool,
-	?Options:TweenOptions
-}
-
-typedef LinearPathOptions = {
-	Object:FlxObject,
-	Points:Array<FlxPoint>,
-	?DurationOrSpeed:Float,
-	?UseDuration:Bool,
-	?Options:TweenOptions
-}
-
-typedef QuadPathParams = {
-	Object:FlxObject,
-	Points:Array<FlxPoint>,
-	?DurationOrSpeed:Float,
-	?UseDuration:Bool,
-	?Options:TweenOptions
-}
-
-typedef TweenParams = OneOfNine<VarTweenParams,AngleTweenParams,ColorTweenParams,NumTweenParams,CircularMotionParams,CubicMotionParams,LinearMotionParams,QuadMotionParams,QuadPathParams>;
-
-enum TweenMethod
-{
-	None;
-	AngleTween;
-	ColorTween;
-	NumTween;
-	VarTween;
-	CircularMotion;
-	CubicMotion;
-	LinearMotion;
-	QuadMotion;
-	QuadPath;
 }
 
 @:access(flixel.tweens.FlxTween)
