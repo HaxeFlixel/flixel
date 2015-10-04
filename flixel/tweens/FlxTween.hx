@@ -4,7 +4,6 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.tweens.FlxEase.EaseFunction;
-import flixel.tweens.FlxTween.TweenOptions;
 import flixel.tweens.misc.AngleTween;
 import flixel.tweens.misc.ColorTween;
 import flixel.tweens.misc.NumTween;
@@ -374,7 +373,7 @@ class FlxTween implements IFlxDestroyable
 	private var _delayToUse:Float = 0;
 	private var _running:Bool = false;
 	private var _waitingForRestart:Bool = false;
-	private var _thens:Array<ChainedTween>;
+	private var _chainedTweens:Array<ChainedTween>;
 	
 	/**
 	 * This function is called when tween is created, or recycled.
@@ -408,38 +407,35 @@ class FlxTween implements IFlxDestroyable
 		onUpdate = null;
 		onComplete = null;
 		ease = null;
-		_thens = null;
+		_chainedTweens = null;
 	}
 	
 	/**
-	 * After this tween has finished, do this tween next
-	 * @param	Tween The FlxTween to run next
-	 * @return
+	 * Specify a tween to be excuted when this one has finished
+	 * (useful for creating "tween chains").
 	 */
-	
 	public function then(Tween:FlxTween):FlxTween
 	{
-		Tween.cancelSoft();
-		if (_thens == null)
-		{
-			_thens = [];
-		}
-		_thens.push(new ChainedTween(0, Tween));
-		return this;
+		Tween.setVarsOnEnd();
+		manager.remove(Tween, false);
+		
+		return addChainedTween(new ChainedTween(0, Tween));
 	}
 	
 	/**
-	 * After this tween has finished, wait this many seconds, then do the next chained "then" command
-	 * @param	Delay The number of seconds to wait
-	 * @return
+	 * How many seconds to delay the execution of the next tween in a tween chain.
 	 */
 	public function wait(Delay:Float):FlxTween
 	{
-		if (_thens == null)
-		{
-			_thens = [];
-		}
-		_thens.push(new ChainedTween(Delay, null));
+		return addChainedTween(new ChainedTween(Delay, null));
+	}
+	
+	private function addChainedTween(chainedTween:ChainedTween):FlxTween
+	{
+		if (_chainedTweens == null)
+			_chainedTweens = [];
+		
+		_chainedTweens.push(chainedTween);
 		return this;
 	}
 	
@@ -507,14 +503,6 @@ class FlxTween implements IFlxDestroyable
 		manager.remove(this);
 	}
 	
-	private function cancelSoft():Void
-	{
-		active = false;
-		_running = false;
-		finished = true;
-		manager.remove(this, false);
-	}
-	
 	private function finish():Void
 	{
 		executions++;
@@ -563,46 +551,53 @@ class FlxTween implements IFlxDestroyable
 	 */
 	private function onEnd():Void
 	{
+		setVarsOnEnd();
+		processTweenChain();
+	}
+	
+	private function setVarsOnEnd():Void
+	{
 		active = false;
 		_running = false;
 		finished = true;
+	}
+	
+	private function processTweenChain():Void
+	{
+		if (_chainedTweens == null || _chainedTweens.length <= 0)
+			return;
 		
-		if (_thens != null && _thens.length > 0)
+		var then = _chainedTweens.shift();
+		
+		if (then.delay <= 0)
 		{
-			var then = _thens[0];
-			
-			_thens.splice(0, 1);
-			
-			if (then.delay <= 0)
+			if (then.tween != null)
 			{
-				if (then.tween != null)
-				{
-					doNextTween(then.tween, _thens);
-				}
-				else
-				{
-					onEnd();
-				}
+				doNextTween(then.tween);
 			}
 			else
 			{
-				doNextTween(FlxTween.num(0,0,then.delay), _thens);
+				onEnd();
 			}
-			_thens = null;
 		}
+		else
+		{
+			doNextTween(FlxTween.num(0, 0, then.delay));
+		}
+		
+		_chainedTweens = null;
 	}
 	
-	private function doNextTween(tween:FlxTween, thens:Array<ChainedTween>):Void
+	private function doNextTween(tween:FlxTween):Void
 	{
 		if (!tween.active)
 		{
 			tween.start();
 			manager.add(tween);
 		}
-		if (thens != null)
-		{
-			tween._thens = _thens;
-		}
+		
+		if (_chainedTweens != null)
+			tween._chainedTweens = _chainedTweens;
 	}
 	
 	/**
@@ -789,7 +784,7 @@ class FlxTweenManager extends FlxBasic
 	 * @return	The added FlxTween object.
 	 */
 	@:allow(flixel.tweens.FlxTween)
-	private function remove(Tween:FlxTween, Destroy:Bool=true):FlxTween
+	private function remove(Tween:FlxTween, Destroy:Bool = true):FlxTween
 	{
 		if (Tween == null)
 		{
