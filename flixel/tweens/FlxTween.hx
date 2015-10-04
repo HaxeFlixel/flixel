@@ -373,7 +373,7 @@ class FlxTween implements IFlxDestroyable
 	private var _delayToUse:Float = 0;
 	private var _running:Bool = false;
 	private var _waitingForRestart:Bool = false;
-	private var _chainedTweens:Array<ChainedTween>;
+	private var _chainedTweens:Array<FlxTween>;
 	
 	/**
 	 * This function is called when tween is created, or recycled.
@@ -414,28 +414,28 @@ class FlxTween implements IFlxDestroyable
 	 * Specify a tween to be excuted when this one has finished
 	 * (useful for creating "tween chains").
 	 */
-	public function then(Tween:FlxTween):FlxTween
+	public function then(tween:FlxTween):FlxTween
 	{
-		Tween.setVarsOnEnd();
-		manager.remove(Tween, false);
-		
-		return addChainedTween(new ChainedTween(0, Tween));
+		return addChainedTween(tween);
 	}
 	
 	/**
 	 * How many seconds to delay the execution of the next tween in a tween chain.
 	 */
-	public function wait(Delay:Float):FlxTween
+	public function wait(delay:Float):FlxTween
 	{
-		return addChainedTween(new ChainedTween(Delay, null));
+		return addChainedTween(FlxTween.num(0, 0, delay));
 	}
 	
-	private function addChainedTween(chainedTween:ChainedTween):FlxTween
+	private function addChainedTween(tween:FlxTween):FlxTween
 	{
+		tween.setVarsOnEnd();
+		manager.remove(tween, false);
+		
 		if (_chainedTweens == null)
 			_chainedTweens = [];
 		
-		_chainedTweens.push(chainedTween);
+		_chainedTweens.push(tween);
 		return this;
 	}
 	
@@ -567,24 +567,7 @@ class FlxTween implements IFlxDestroyable
 		if (_chainedTweens == null || _chainedTweens.length <= 0)
 			return;
 		
-		var then = _chainedTweens.shift();
-		
-		if (then.delay <= 0)
-		{
-			if (then.tween != null)
-			{
-				doNextTween(then.tween);
-			}
-			else
-			{
-				onEnd();
-			}
-		}
-		else
-		{
-			doNextTween(FlxTween.num(0, 0, then.delay));
-		}
-		
+		doNextTween(_chainedTweens.shift());
 		_chainedTweens = null;
 	}
 	
@@ -811,17 +794,5 @@ class FlxTweenManager extends FlxBasic
 		{
 			remove(_tweens[0]);
 		}
-	}
-}
-
-private class ChainedTween
-{
-	public var delay:Float;
-	public var tween:FlxTween;
-	
-	public function new(Delay:Float, Tween:FlxTween)
-	{
-		delay = Delay;
-		tween = Tween;
 	}
 }
