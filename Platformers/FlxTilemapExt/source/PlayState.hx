@@ -50,7 +50,7 @@ class PlayState extends FlxState
 		_player = new FlxSprite(70, 20);
 		_player.makeGraphic(8, 14, FlxColor.RED);
 		
-		// Max velocities on player.  If it's a platformer, Y should be high, like 200.
+		// Max velocities on player. If it's a platformer, Y should be high, like 220.
 		// Otherwise, set them to something like 80.
 		_player.maxVelocity.set(120, 220);
 		
@@ -75,9 +75,9 @@ class PlayState extends FlxState
 		
 		level.setSlopes(tempNW, tempNE, tempSW, tempSE);
 		
-		//set tiles steepness, default is MODERATE
-		level.setSteepness(FlxSlopeSteepness.GENTLE, [10, 11, 18, 19], [9, 12, 17, 20]);
-		level.setSteepness(FlxSlopeSteepness.STEEP, [13, 14, 21, 22], [15, 16, 23, 24]);
+		//set tiles steepness
+		level.setGentle([10, 11, 18, 19], [9, 12, 17, 20]);
+		level.setSteep([13, 14, 21, 22], [15, 16, 23, 24]);
 		
 		//set cloud tiles
 		level.setTileProperties(4, FlxObject.NONE, fallInClouds);
