@@ -20,8 +20,8 @@ class PlayState extends FlxState
 	                                         "W/S to adjust speed\n" +
 	                                         "A/D to adjust wavelength"; 
 	                                         #else
-	                                         "2 Touches to cycle Directions\n" +
-	                                         "1 Touch to cycle Modes";
+	                                         "1 Touches to cycle Directions\n" +
+	                                         "2 Touch to cycle Modes";
 	                                         #end
 	
 	private static inline var STATUS = "Direction: [dir]    Mode: [mode]\nStrength: [strength]    Center: [center]    Speed: [speed]    Wavelength: [wave]";
@@ -31,9 +31,7 @@ class PlayState extends FlxState
 	
 	override public function create():Void
 	{
-		#if !mobile
 		FlxG.mouse.visible = false;
-		#end
 		
 		var _sprite = new FlxSprite(0, 0, FlxGraphic.fromClass(GraphicLogo));
 		_sprite.screenCenter();
@@ -61,7 +59,7 @@ class PlayState extends FlxState
 			
 		if (FlxG.keys.justReleased.ENTER)
 			incrementMode();
-	
+		
 		// control center
 		if (FlxG.keys.pressed.UP)
 			_waveSprite.center++;
@@ -90,7 +88,7 @@ class PlayState extends FlxState
 		#if !FLX_NO_TOUCH
 		if (FlxG.touches.justStarted().length > 0)
 		{
-			if (FlxG.touches.justStarted().length > 1)
+			if (FlxG.touches.justStarted().length == 1)
 				incrementDirection();
 			else
 				incrementMode();
@@ -112,32 +110,27 @@ class PlayState extends FlxState
 	
 	private function incrementDirection():Void
 	{
-		switch (_waveSprite.direction)
+		_waveSprite.direction = switch (_waveSprite.direction)
 		{
-			case VERTICAL:
-				_waveSprite.direction = HORIZONTAL;
-			case HORIZONTAL:
-				_waveSprite.direction = VERTICAL;
+			case VERTICAL: HORIZONTAL;
+			case HORIZONTAL: VERTICAL;
 		}
 	}
 	
 	private function incrementMode():Void
 	{
-		switch (_waveSprite.mode)
+		_waveSprite.mode = switch (_waveSprite.mode)
 		{
-			case ALL:
-				_waveSprite.mode = TOP;
-			case TOP:
-				_waveSprite.mode = BOTTOM;
-			case BOTTOM:
-				_waveSprite.mode = ALL;
+			case ALL: START;
+			case START: END;
+			case END: ALL;
 		}
 	}
 	
 	private function updateStatusText():Void 
 	{
 		_statusText.text = STATUS.replace("[dir]", Std.string(_waveSprite.direction))
-								 .replace("[mode]", Std.string(_waveSprite.mode))
+		                         .replace("[mode]", Std.string(_waveSprite.mode))
 		                         .replace("[strength]", Std.string(_waveSprite.strength))
 		                         .replace("[center]",  Std.string(_waveSprite.center))
 		                         .replace("[speed]",  Std.string(_waveSprite.speed))
