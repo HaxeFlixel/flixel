@@ -171,6 +171,21 @@ class FlxStringUtil
 		}
 		return FlxMath.roundDecimal(Bytes, Precision) + units[curUnit];
 	}
+
+	/**
+	 * Converts an int to string and add leading zeroes to reach a certain number of digits.
+	 * 
+	 * @param  Number    The number to be converted
+	 * @param  Digits    The amount of digits in the resulting string
+	 * @return  The zero-padded string
+	 */
+	public static function zeroPad(Number:Int, Digits:Int):String 
+    {
+        var string:String = "" + Number;
+        while (string.length < Digits) 
+            string = "0" + string;
+        return string;
+    }
 	
 	/** 
 	 * Takes a string and filters out everything but the digits.
