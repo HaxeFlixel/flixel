@@ -11,6 +11,7 @@ import flixel.input.gamepad.id.MayflashWiiRemoteID;
 import flixel.input.gamepad.id.WiiRemoteID;
 import flixel.input.gamepad.id.XBox360ID;
 import flixel.input.gamepad.id.XInputID;
+import flixel.input.gamepad.id.MFiID;
 
 #if flash
 import openfl.system.Capabilities;
@@ -71,6 +72,7 @@ class FlxGamepadMapping
 					case WiiNunchuk: getRawWiiNunchuk(ID);
 					case None: getRawWiiRemote(ID);
 				}
+			case MFi: getRawMFi(ID);
 			default: -1;
 		}
 	}
@@ -103,6 +105,7 @@ class FlxGamepadMapping
 					case WiiNunchuk: getIDWiiNunchuk(RawID);
 					case None: getIDWiiRemote(RawID);
 				}
+			case MFi: getIDMFi(RawID);
 			default: NONE;
 		}
 	}
@@ -135,6 +138,7 @@ class FlxGamepadMapping
 						case WiiNunchuk, WiiClassicController: WiiRemoteID.LEFT_ANALOG_STICK;
 						case None: WiiRemoteID.REMOTE_DPAD;
 					}
+				case MFi: MFiID.LEFT_ANALOG_STICK;
 				default: null;
 			}
 		}
@@ -159,6 +163,7 @@ class FlxGamepadMapping
 						case WiiClassicController: WiiRemoteID.RIGHT_ANALOG_STICK;
 						default: null;
 					}
+				case MFi: MFiID.RIGHT_ANALOG_STICK;
 				default: null;
 			}
 		}
@@ -179,6 +184,7 @@ class FlxGamepadMapping
 			case XInput: XInputID.getFlipAxis(AxisID);
 			case MayflashWiiRemote: MayflashWiiRemoteID.getFlipAxis(AxisID, attachment);
 			case WiiRemote: WiiRemoteID.getFlipAxis(AxisID, attachment);
+			case MFi: MFiID.getFlipAxis(AxisID);
 			default: -1;
 		}
 	}
@@ -199,6 +205,7 @@ class FlxGamepadMapping
 			case XInput: XInputID.axisIndexToRawID(AxisID);
 			case MayflashWiiRemote: MayflashWiiRemoteID.axisIndexToRawID(AxisID, attachment);
 			case WiiRemote: WiiRemoteID.axisIndexToRawID(AxisID, attachment);
+			case MFiID: MFiID.axisIndexToRawID(AxisID);
 			default: -1;
 		}
 	}
@@ -226,6 +233,7 @@ class FlxGamepadMapping
 			case XInput: XInputID.isAxisForMotion(ID);
 			case MayflashWiiRemote: MayflashWiiRemoteID.isAxisForMotion(ID, attachment);
 			case WiiRemote: WiiRemoteID.isAxisForMotion(ID, attachment);
+			case MFi: MFiID.isAxisForMotion(ID);
 			default: false;
 		}
 	}
@@ -241,6 +249,7 @@ class FlxGamepadMapping
 			case XInput: XInputID.SUPPORTS_MOTION;
 			case MayflashWiiRemote: MayflashWiiRemoteID.SUPPORTS_MOTION;
 			case WiiRemote: WiiRemoteID.SUPPORTS_MOTION;
+			case MFi: MFiID.SUPPORTS_MOTION;
 			default: false;
 		}
 	}
@@ -256,6 +265,7 @@ class FlxGamepadMapping
 			case XInput: XInputID.SUPPORTS_POINTER;
 			case MayflashWiiRemote: MayflashWiiRemoteID.SUPPORTS_POINTER;
 			case WiiRemote: WiiRemoteID.SUPPORTS_POINTER;
+			case MFi: MFiID.SUPPORTS_POINTER;
 			default: false;
 		}
 	}
@@ -534,6 +544,36 @@ class FlxGamepadMapping
 			default: -1;
 		}
 	}
+
+	public function getRawMFi(ID:FlxGamepadInputID):Int
+	{
+		return switch (ID)
+		{
+			case A: MFiID.A;
+			case B: MFiID.B;
+			case X: MFiID.X;
+			case Y: MFiID.Y;
+			case BACK: MFiID.BACK;
+			case GUIDE: MFiID.GUIDE;
+			case START: MFiID.START;
+			case LEFT_STICK_CLICK: MFiID.LEFT_STICK_CLICK;
+			case RIGHT_STICK_CLICK: MFiID.RIGHT_STICK_CLICK;
+			case LEFT_SHOULDER: MFiID.LB;
+			case RIGHT_SHOULDER: MFiID.RB;
+			case DPAD_UP: MFiID.DPAD_UP;
+			case DPAD_DOWN: MFiID.DPAD_DOWN;
+			case DPAD_LEFT: MFiID.DPAD_LEFT;
+			case DPAD_RIGHT: MFiID.DPAD_RIGHT;
+			case LEFT_TRIGGER:  MFiID.LEFT_TRIGGER;
+			case RIGHT_TRIGGER: MFiID.RIGHT_TRIGGER;
+			#if FLX_JOYSTICK_API
+			case LEFT_TRIGGER_FAKE: MFiID.LEFT_TRIGGER_FAKE;
+			case RIGHT_TRIGGER_FAKE: MFiID.RIGHT_TRIGGER_FAKE;
+			#end
+			default: -1;
+		}
+	}
+
 	
 	public function getIDOUYA(rawID:Int):FlxGamepadInputID
 	{
@@ -781,6 +821,30 @@ class FlxGamepadMapping
 			default: NONE;
 		}
 	}
+
+	public function getIDMFi(rawID:Int):FlxGamepadInputID
+	{
+		return switch (rawID)
+		{
+			case MFiID.A: A;
+			case MFiID.B: B;
+			case MFiID.X: X;
+			case MFiID.Y: Y;
+			case MFiID.BACK: BACK;
+			case MFiID.GUIDE: GUIDE;
+			case MFiID.START: START;
+			case MFiID.LEFT_STICK_CLICK: LEFT_STICK_CLICK;
+			case MFiID.RIGHT_STICK_CLICK: RIGHT_STICK_CLICK;
+			case MFiID.LB: LEFT_SHOULDER;
+			case MFiID.RB: RIGHT_SHOULDER;
+			case MFiID.DPAD_UP: DPAD_UP;
+			case MFiID.DPAD_DOWN: DPAD_DOWN;
+			case MFiID.DPAD_LEFT: DPAD_LEFT;
+			case MFiID.DPAD_RIGHT: DPAD_RIGHT;
+			default: NONE;
+		}
+	}
+
 }
 
 enum Manufacturer
