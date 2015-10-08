@@ -66,15 +66,15 @@ class PlayState extends FlxState
 	override public function update(elapsed:Float):Void 
 	{
 		player.acceleration.x = 0;
-		if (FlxG.keys.pressed.LEFT)
+		if (FlxG.keys.anyPressed([LEFT, A]))
 		{
 			player.acceleration.x = -player.maxVelocity.x * 4;
 		}
-		if (FlxG.keys.pressed.RIGHT)
+		if (FlxG.keys.anyPressed([RIGHT, D]))
 		{
 			player.acceleration.x = player.maxVelocity.x * 4;
 		}
-		if (FlxG.keys.pressed.SPACE && player.isTouching(FlxObject.FLOOR))
+		if (FlxG.keys.anyPressed([W, UP, SPACE]) && player.isTouching(FlxObject.FLOOR))
 		{
 			player.velocity.y = -player.maxVelocity.y / 2;
 		}
