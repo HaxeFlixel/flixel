@@ -38,6 +38,9 @@ class PlayState extends FlxState
 		coins = new FlxGroup();
 		add(coins);
 		
+		// Add static images
+		add(level.imagesLayer);
+		
 		// Load player objects
 		level.loadObjects(this);
 		

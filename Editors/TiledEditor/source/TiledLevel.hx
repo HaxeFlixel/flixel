@@ -10,6 +10,7 @@ import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup;
 import flixel.tile.FlxTilemap;
+import flixel.addons.editors.tiled.TiledImageLayer;
 import flixel.addons.editors.tiled.TiledMap;
 import flixel.addons.editors.tiled.TiledObject;
 import flixel.addons.editors.tiled.TiledObjectLayer;
@@ -29,19 +30,25 @@ class TiledLevel extends TiledMap
 	public var backgroundTiles:FlxGroup;
 	private var collidableTileLayers:Array<FlxTilemap>;
 	
+	// Sprites of images layers
+	public var imagesLayer:FlxGroup;
+	
 	public function new(tiledLevel:Dynamic)
 	{
 		super(tiledLevel);
 		
+		imagesLayer = new FlxGroup();
 		foregroundTiles = new FlxGroup();
 		backgroundTiles = new FlxGroup();
 		
 		FlxG.camera.setScrollBoundsRect(0, 0, fullWidth, fullHeight, true);
 		
+		loadImages();
+		
 		// Load Tile Maps
 		for (layer in layers)
 		{
-			if (Type.enumEq(layer.type, TiledLayerType.OBJECT)) continue;
+			if (! Type.enumEq(layer.type, TiledLayerType.TILE)) continue;
 			var tileLayer:TiledTileLayer = cast layer;
 			
 			var tileSheetName:String = tileLayer.properties.get("tileset");
@@ -88,7 +95,7 @@ class TiledLevel extends TiledMap
 	{
 		for (layer in layers)
 		{
-			if (Type.enumEq(layer.type, TiledLayerType.TILE)) continue;
+			if (! Type.enumEq(layer.type, TiledLayerType.OBJECT)) continue;
 			var objectLayer:TiledObjectLayer = cast layer;
 			
 			for (o in objectLayer.objects)
@@ -136,6 +143,18 @@ class TiledLevel extends TiledMap
 				exit.exists = false;
 				state.exit = exit;
 				state.add(exit);
+		}
+	}
+
+	public function loadImages()
+	{
+		for (layer in layers)
+		{
+			if (! Type.enumEq(layer.type, TiledLayerType.IMAGE)) continue;
+			var image:TiledImageLayer = cast layer;
+			
+			var sprite = new FlxSprite(image.x, image.y, c_PATH_LEVEL_TILESHEETS + image.imagePath);
+			imagesLayer.add(sprite);
 		}
 	}
 	
