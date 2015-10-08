@@ -48,7 +48,7 @@ class TiledLevel extends TiledMap
 		// Load Tile Maps
 		for (layer in layers)
 		{
-			if (!Type.enumEq(layer.type, TiledLayerType.TILE)) continue;
+			if (layer.type != TiledLayerType.TILE) continue;
 			var tileLayer:TiledTileLayer = cast layer;
 			
 			var tileSheetName:String = tileLayer.properties.get("tileset");
@@ -95,7 +95,7 @@ class TiledLevel extends TiledMap
 	{
 		for (layer in layers)
 		{
-			if (!Type.enumEq(layer.type, TiledLayerType.OBJECT)) continue;
+			if (layer.type != TiledLayerType.OBJECT) continue;
 			var objectLayer:TiledObjectLayer = cast layer;
 			
 			for (o in objectLayer.objects)
@@ -150,7 +150,7 @@ class TiledLevel extends TiledMap
 	{
 		for (layer in layers)
 		{
-			if (!Type.enumEq(layer.type, TiledLayerType.IMAGE)) continue;
+			if (layer.type != TiledLayerType.IMAGE) continue;
 			var image:TiledImageLayer = cast layer;
 			
 			var sprite = new FlxSprite(image.x, image.y, c_PATH_LEVEL_TILESHEETS + image.imagePath);

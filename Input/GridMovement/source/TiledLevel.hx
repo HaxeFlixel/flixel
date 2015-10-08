@@ -40,7 +40,7 @@ class TiledLevel extends TiledMap
 		// Load Tile Maps
 		for (layer in layers)
 		{
-			if (Type.enumEq(layer.type, TiledLayerType.OBJECT)) continue;
+			if (layer.type == TiledLayerType.OBJECT) continue;
 			var tileLayer:TiledTileLayer = cast layer;
 			
 			var tileSheetName:String = tileLayer.properties.get("tileset");
@@ -87,7 +87,7 @@ class TiledLevel extends TiledMap
 	{
 		for (layer in layers)
 		{
-			if (Type.enumEq(layer.type, TiledLayerType.TILE)) continue;
+			if (layer.type == TiledLayerType.TILE) continue;
 			var group:TiledObjectLayer = cast layer;
 			
 			for (o in group.objects)

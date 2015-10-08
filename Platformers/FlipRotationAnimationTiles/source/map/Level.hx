@@ -56,7 +56,7 @@ class Level extends TiledMap
 		
 		for (tiledLayer in layers)
 		{
-			if (Type.enumEq(tiledLayer.type, TiledLayerType.OBJECT)) continue;
+			if (tiledLayer.type == TiledLayerType.OBJECT) continue;
 			var layer:TiledTileLayer = cast tiledLayer;
 			
 			if (layer.properties.contains("tileset"))
@@ -127,7 +127,7 @@ class Level extends TiledMap
 	{
 		for (layer in layers)
 		{
-			if (Type.enumEq(layer.type, TiledLayerType.TILE)) continue;
+			if (layer.type == TiledLayerType.TILE) continue;
 			var group:TiledObjectLayer = cast layer;
 			
 			for (obj in group.objects)
