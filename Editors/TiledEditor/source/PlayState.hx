@@ -25,7 +25,6 @@ class PlayState extends FlxState
 	{
 		FlxG.mouse.visible = false;
 		
-		//super.create();
 		bgColor = 0xffaaaaaa;
 		
 		// Load the level's tilemaps
@@ -60,12 +59,7 @@ class PlayState extends FlxState
 		status.borderColor = 0xff000000;
 		score.borderStyle = SHADOW;
 		status.alignment = RIGHT;
-		
-		if (youDied == false)
-			status.text = "Collect coins.";
-		else
-			status.text = "Aww, you died!";
-		
+		status.text = youDied ? "Aww, you died!" : "Collect coins.";
 		add(status);
 	}
 	
@@ -117,5 +111,4 @@ class PlayState extends FlxState
 			exit.exists = true;
 		}
 	}
-	
 }
