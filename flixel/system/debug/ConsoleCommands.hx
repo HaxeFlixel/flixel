@@ -35,6 +35,7 @@ class ConsoleCommands
 		console.addCommand(["create", "cr"], create, "Creates a new FlxObject and registers it - by default at the mouse position.", 
 							"[FlxObject] (MousePos = true)", 3, 3);
 		console.addCommand(["set", "s"], set, "Sets a variable within a registered object.", "[Path to variable] [Value]", 3);
+		console.addCommand(["get", "g"], get, "Gets a variable within a registered object or the object itself.", "[Path to variable]", 2);
 		console.addCommand(["call", "c"], call, "Calls a registered function / function within a registered object.", 3, 2);
 		console.addCommand(["fields", "f"], fields, "Lists the fields of a class or instance", "[Class or path to instance] [NumSuperClassesToInclude]", 2);
 		
@@ -210,7 +211,7 @@ class ConsoleCommands
 
 		if (isArrayIndex && variable.length <= index)
 		{
-			FlxG.log.error("set: '" + varName + ":" + FlxStringUtil.getClassName(variable, true) + "' cannot access indice " + index);
+			FlxG.log.error("set: '" + varName + ":" + FlxStringUtil.getClassName(variable, true) + "' cannot access index " + index);
 			return;
 		}
 
@@ -261,6 +262,80 @@ class ConsoleCommands
 			Reflect.setProperty(object, varName, NewVariableValue);
 		}
 		ConsoleUtil.log("set: " + FlxStringUtil.getClassName(object, true) + "." + varName + (isArrayIndex ? "[" + index + "]" : "") + " is now " + NewVariableValue);
+
+		if (WatchName != null)
+			FlxG.watch.add(object, varName, WatchName);
+	}
+	
+	private function get(ObjectAndVariable:String, ?WatchName:String):Void
+	{
+		var pathToVariable:PathToVariable = ConsoleUtil.resolveObjectAndVariableFromMap(ObjectAndVariable, _console.registeredObjects);
+		
+		// In case resolving failed
+		if (pathToVariable == null)
+			return;
+		
+		var object:Dynamic = pathToVariable.object;
+		var varName:String = pathToVariable.variableName;
+		var variable:Dynamic = null;
+		var arrayType:Class<Dynamic> = null;
+		var isArrayIndex:Bool = false;
+		
+		//Exclude last brackets from variable name and extract its indice
+		var index:Null<Int> = -1;
+		var bracketStart = varName.lastIndexOf("[");
+		if (bracketStart != -1)
+		{
+			var bracket = varName.substr(bracketStart + 1);
+			index = Std.parseInt(bracket.substr(0, bracket.length - 1));
+			if (index == null)
+			{
+				FlxG.log.error("get: '" +  ObjectAndVariable + "' invalid syntax");
+				return;
+			}
+			varName = varName.substr(0, bracketStart);
+			isArrayIndex = true;
+		}
+
+		try
+		{
+			variable = ConsoleUtil.resolveProperty(object, varName);
+		}
+		catch (e:Dynamic)
+		{
+			return;
+		}
+
+		if (variable == null && varName.length > 0)
+		{
+			FlxG.log.error("get: '" +  ObjectAndVariable + "' could not be found");
+			return;
+		}
+		
+		if (!isArrayIndex && index >= 0)
+		{
+			FlxG.log.error("get: '" +  ObjectAndVariable + "' is an invalid array access");
+			return;
+		}
+
+		if (isArrayIndex && variable.length <= index)
+		{
+			FlxG.log.error("get: '" + varName + ":" + FlxStringUtil.getClassName(variable, true) + "' cannot access index " + index);
+			return;
+		}
+		
+		if (varName.length == 0)
+		{
+			ConsoleUtil.log("get: " + FlxStringUtil.getClassName(object, true) + " is " + object);
+		}
+		else if (isArrayIndex)
+		{
+			ConsoleUtil.log("get: " + FlxStringUtil.getClassName(object, true) + "." + varName + "[" + index + "]" + " is " + variable[index]);
+		}
+		else
+		{
+			ConsoleUtil.log("get: " + FlxStringUtil.getClassName(object, true) + "." + varName + " is " + variable);
+		}
 
 		if (WatchName != null)
 			FlxG.watch.add(object, varName, WatchName);
