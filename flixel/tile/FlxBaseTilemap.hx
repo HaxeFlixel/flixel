@@ -1142,10 +1142,9 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	
 	private inline function tilemapOverlapsCallback(ObjectOrGroup:FlxBasic, X:Float = 0, Y:Float = 0, InScreenSpace:Bool = false, ?Camera:FlxCamera):Bool
 	{
-		if ((ObjectOrGroup.flixelType == OBJECT) || 
-		    (ObjectOrGroup.flixelType == TILEMAP))
+		if (ObjectOrGroup.flixelType == OBJECT || ObjectOrGroup.flixelType == TILEMAP)
 		{
-			return overlapsWithCallback(cast(ObjectOrGroup, FlxObject));
+			return overlapsWithCallback(cast ObjectOrGroup);
 		}
 		else 
 		{
@@ -1185,7 +1184,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		if (ObjectOrGroup.flixelType == OBJECT || 
 		    ObjectOrGroup.flixelType == TILEMAP)
 		{
-			return overlapsWithCallback(cast(ObjectOrGroup, FlxObject), null, false, _point.set(X, Y));
+			return overlapsWithCallback(cast ObjectOrGroup, null, false, _point.set(X, Y));
 		}
 		else 
 		{

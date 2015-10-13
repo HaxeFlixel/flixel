@@ -55,7 +55,8 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			}
 			else if (ObjectOrGroup.flixelType == SPRITEGROUP)
 			{
-				group = cast cast(ObjectOrGroup, FlxTypedSpriteGroup<Dynamic>).group;
+				var spriteGroup:FlxTypedSpriteGroup<Dynamic> = cast ObjectOrGroup;
+				group = cast spriteGroup.group;
 			}
 		}
 		return group;

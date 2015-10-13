@@ -165,7 +165,7 @@ class FlxBitmapFont extends FlxFramesCollection
 		
 		if (Std.is(Source, FlxFrame))
 		{
-			frame = cast(Source, FlxFrame);
+			frame = cast Source;
 			graphic = frame.parent;
 		}
 		else
@@ -221,7 +221,7 @@ class FlxBitmapFont extends FlxFramesCollection
 		
 		for (char in chars.nodes.char)
 		{
-			frame = new FlxRect();
+			frame = FlxRect.get();
 			frame.x = Std.parseInt(char.att.x); // X position within the bitmap image file.
 			frame.y = Std.parseInt(char.att.y); // Y position within the bitmap image file.
 			frame.width = Std.parseInt(char.att.width); // Width of the character in the image file.
@@ -300,7 +300,7 @@ class FlxBitmapFont extends FlxFramesCollection
 		
 		if (Std.is(source, FlxFrame))
 		{
-			frame = cast(source, FlxFrame);
+			frame = cast source;
 			graphic = frame.parent;
 		}
 		else
@@ -382,7 +382,7 @@ class FlxBitmapFont extends FlxFramesCollection
 					gh = gy - cy;
 					
 					charCode = Utf8.charCodeAt(letters, letterIdx);
-					rect = new FlxRect(cx, cy, gw, gh);
+					rect = FlxRect.get(cx, cy, gw, gh);
 					offset = FlxPoint.get(0, 0);
 					xAdvance = gw;
 					
@@ -476,7 +476,7 @@ class FlxBitmapFont extends FlxFramesCollection
 		
 		if (Std.is(source, FlxFrame))
 		{
-			frame = cast(source, FlxFrame);
+			frame = cast source;
 			graphic = frame.parent;
 		}
 		else
@@ -491,7 +491,7 @@ class FlxBitmapFont extends FlxFramesCollection
 		
 		letters = (letters == null) ? DEFAULT_CHARS : letters;
 		region = (region == null) ? FlxRect.flxRect.set(0, 0, frame.sourceSize.x, frame.sourceSize.y) : region;
-		spacing = (spacing == null) ? new FlxPoint(0, 0) : spacing;
+		spacing = (spacing == null) ? FlxPoint.get(0, 0) : spacing;
 		
 		var bitmapWidth:Int = Std.int(region.width);
 		var bitmapHeight:Int = Std.int(region.height);
@@ -526,7 +526,7 @@ class FlxBitmapFont extends FlxFramesCollection
 		{
 			for (i in 0...(numCols))
 			{
-				charRect = new FlxRect(startX + i * spacedWidth, startY + j * spacedHeight, charWidth, charHeight);
+				charRect = FlxRect.get(startX + i * spacedWidth, startY + j * spacedHeight, charWidth, charHeight);
 				offset = FlxPoint.get(0, 0);
 				font.addCharFrame(Utf8.charCodeAt(letters, letterIndex), charRect, offset, xAdvance);
 				letterIndex++;
@@ -620,7 +620,7 @@ class FlxBitmapFont extends FlxFramesCollection
 	
 	override public function addBorder(border:FlxPoint):FlxBitmapFont 
 	{
-		var resultBorder:FlxPoint = new FlxPoint().addPoint(this.border).addPoint(border);
+		var resultBorder:FlxPoint = FlxPoint.weak().addPoint(this.border).addPoint(border);
 		
 		var font:FlxBitmapFont = FlxBitmapFont.findFont(frame, resultBorder);
 		if (font != null)

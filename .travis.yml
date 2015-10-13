@@ -1,8 +1,7 @@
 language: haxe
 
 haxe:
-  - "3.2.0"
-  - "3.1.3"
+  - 3.2.0
   - development
 
 env: 
@@ -11,6 +10,8 @@ env:
   - TARGET=cpp
   - TARGET=html5
 
+sudo: false
+
 matrix:
   allow_failures:
     - env: "TARGET=cpp"
@@ -18,6 +19,7 @@ matrix:
 
 install:
   - haxelib install munit > /dev/null
+  - haxelib install hamcrest > /dev/null
   - haxelib install lime > /dev/null
   - haxelib install openfl > /dev/null
   - haxelib install hxcpp > /dev/null

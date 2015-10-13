@@ -957,7 +957,7 @@ class FlxBar extends FlxSprite
 	private function get_backFrames():FlxImageFrame
 	{
 		#if FLX_RENDER_TILE
-		return cast(frames, FlxImageFrame);
+		return cast frames;
 		#end
 		return null;
 	}

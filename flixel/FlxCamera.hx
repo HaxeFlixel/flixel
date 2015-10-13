@@ -306,7 +306,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Helper rect for drawTriangles visibility checks
 	 */
-	private var _bounds:FlxRect = new FlxRect();
+	private var _bounds:FlxRect = FlxRect.get();
 	
 #if FLX_RENDER_TILE
 	/**

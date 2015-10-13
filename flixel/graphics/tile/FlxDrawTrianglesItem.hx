@@ -47,7 +47,7 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		colors = new Array<Int>();
 		#end
 		
-		bounds = new FlxRect();
+		bounds = FlxRect.get();
 	}
 	
 	override public function render(camera:FlxCamera):Void 

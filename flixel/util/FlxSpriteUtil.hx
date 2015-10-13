@@ -63,7 +63,8 @@ class FlxSpriteUtil
 		}
 		else if (Std.is(source, BitmapData))
 		{
-			data = cast(source, BitmapData).clone();
+			data = cast source;
+			data = data.clone();
 		}
 		else
 		{

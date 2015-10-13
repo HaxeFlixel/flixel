@@ -175,11 +175,13 @@ class FlxObject extends FlxBasic
 		//If one of the objects is a tilemap, just pass it off.
 		if (Object1.flixelType == TILEMAP)
 		{
-			return cast(Object1, FlxBaseTilemap<Dynamic>).overlapsWithCallback(Object2, separateX);
+			var tilemap:FlxBaseTilemap<Dynamic> = cast Object1;
+			return tilemap.overlapsWithCallback(Object2, separateX);
 		}
 		if (Object2.flixelType == TILEMAP)
 		{
-			return cast(Object2, FlxBaseTilemap<Dynamic>).overlapsWithCallback(Object1, separateX, true);
+			var tilemap:FlxBaseTilemap<Dynamic> = cast Object2;
+			return tilemap.overlapsWithCallback(Object1, separateX, true);
 		}
 		
 		var overlap:Float = computeOverlapX(Object1, Object2);
@@ -231,11 +233,13 @@ class FlxObject extends FlxBasic
 		//If one of the objects is a tilemap, just pass it off.
 		if (Object1.flixelType == TILEMAP)
 		{
-			return cast(Object1, FlxBaseTilemap<Dynamic>).overlapsWithCallback(Object2, updateTouchingFlagsX);
+			var tilemap:FlxBaseTilemap<Dynamic> = cast Object1;
+			return tilemap.overlapsWithCallback(Object2, updateTouchingFlagsX);
 		}
 		if (Object2.flixelType == TILEMAP)
 		{
-			return cast(Object2, FlxBaseTilemap<Dynamic>).overlapsWithCallback(Object1, updateTouchingFlagsX, true);
+			var tilemap:FlxBaseTilemap<Dynamic> = cast Object2;
+			return tilemap.overlapsWithCallback(Object1, updateTouchingFlagsX, true);
 		}
 		// Since we are not separating, always return any amount of overlap => false as last parameter
 		return computeOverlapX(Object1, Object2, false) != 0;
@@ -318,11 +322,13 @@ class FlxObject extends FlxBasic
 		//If one of the objects is a tilemap, just pass it off.
 		if (Object1.flixelType == TILEMAP)
 		{
-			return cast(Object1, FlxBaseTilemap<Dynamic>).overlapsWithCallback(Object2, separateY);
+			var tilemap:FlxBaseTilemap<Dynamic> = cast Object1;
+			return tilemap.overlapsWithCallback(Object2, separateY);
 		}
 		if (Object2.flixelType == TILEMAP)
 		{
-			return cast(Object2, FlxBaseTilemap<Dynamic>).overlapsWithCallback(Object1, separateY, true);
+			var tilemap:FlxBaseTilemap<Dynamic> = cast Object2;
+			return tilemap.overlapsWithCallback(Object1, separateY, true);
 		}
 
 		var overlap:Float = computeOverlapY(Object1, Object2);
@@ -386,11 +392,13 @@ class FlxObject extends FlxBasic
 		//If one of the objects is a tilemap, just pass it off.
 		if (Object1.flixelType == TILEMAP)
 		{
-			return cast(Object1, FlxBaseTilemap<Dynamic>).overlapsWithCallback(Object2, updateTouchingFlagsY);
+			var tilemap:FlxBaseTilemap<Dynamic> = cast Object1;
+			return tilemap.overlapsWithCallback(Object2, updateTouchingFlagsY);
 		}
 		if (Object2.flixelType == TILEMAP)
 		{
-			return cast(Object2, FlxBaseTilemap<Dynamic>).overlapsWithCallback(Object1, updateTouchingFlagsY, true);
+			var tilemap:FlxBaseTilemap<Dynamic> = cast Object2;
+			return tilemap.overlapsWithCallback(Object1, updateTouchingFlagsY, true);
 		}
 		// Since we are not separating, always return any amount of overlap => false as last parameter
 		return computeOverlapY(Object1, Object2, false) != 0;
@@ -678,10 +686,11 @@ class FlxObject extends FlxBasic
 		{
 			//Since tilemap's have to be the caller, not the target, to do proper tile-based collisions,
 			// we redirect the call to the tilemap overlap here.
-			return cast(ObjectOrGroup, FlxBaseTilemap<Dynamic>).overlaps(this, InScreenSpace, Camera);
+			var tilemap:FlxBaseTilemap<Dynamic> = cast ObjectOrGroup; 
+			return tilemap.overlaps(this, InScreenSpace, Camera);
 		}
 		
-		var object:FlxObject = cast(ObjectOrGroup, FlxObject);
+		var object:FlxObject = cast ObjectOrGroup;
 		if (!InScreenSpace)
 		{
 			return	(object.x + object.width > x) && (object.x < x + width) &&
@@ -728,11 +737,11 @@ class FlxObject extends FlxBasic
 			// we redirect the call to the tilemap overlap here.
 			//However, since this is overlapsAt(), we also have to invent the appropriate position for the tilemap.
 			//So we calculate the offset between the player and the requested position, and subtract that from the tilemap.
-			var tilemap:FlxBaseTilemap<Dynamic> = cast(ObjectOrGroup, FlxBaseTilemap<Dynamic>);
+			var tilemap:FlxBaseTilemap<Dynamic> = cast ObjectOrGroup;
 			return tilemap.overlapsAt(tilemap.x - (X - x), tilemap.y - (Y - y), this, InScreenSpace, Camera);
 		}
 		
-		var object:FlxObject = cast(ObjectOrGroup, FlxObject);
+		var object:FlxObject = cast ObjectOrGroup;
 		if (!InScreenSpace)
 		{
 			return	(object.x + object.width > X) && (object.x < X + width) &&

@@ -236,7 +236,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	{
 		if (Std.is(TileGraphic, FlxFramesCollection))
 		{
-			frames = cast(TileGraphic, FlxFramesCollection);
+			frames = cast TileGraphic;
 			return;
 		}
 		
@@ -260,7 +260,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 			_tileHeight = _tileWidth;
 		}
 		
-		frames = FlxTileFrames.fromGraphic(graph, new FlxPoint(_tileWidth, _tileHeight));
+		frames = FlxTileFrames.fromGraphic(graph, FlxPoint.get(_tileWidth, _tileHeight));
 	}
 	
 	override private function initTileObjects():Void 
@@ -731,7 +731,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 				rx = q;
 				ry = ly + stepY * ((q - lx) / stepX);
 				
-				if ((ry > tileY) && (ry < tileY + _scaledTileHeight))
+				if ((ry >= tileY) && (ry <= tileY + _scaledTileHeight))
 				{
 					if (Result == null)
 					{
@@ -753,7 +753,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 				rx = lx + stepX * ((q - ly) / stepY);
 				ry = q;
 				
-				if ((rx > tileX) && (rx < tileX + _scaledTileWidth))
+				if ((rx >= tileX) && (rx <= tileX + _scaledTileWidth))
 				{
 					if (Result == null)
 					{

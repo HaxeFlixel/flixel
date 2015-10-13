@@ -11,6 +11,8 @@ import openfl.geom.Matrix;
  */
 class FlxPoint implements IFlxPooled
 {
+	public static var pool(get, never):IFlxPool<FlxPoint>;
+	
 	public static var flxPoint1:FlxPoint = new FlxPoint();
 	public static var flxPoint2:FlxPoint = new FlxPoint();
 	public static var point1:Point = new Point();
@@ -426,6 +428,11 @@ class FlxPoint implements IFlxPooled
 	private function set_y(Value:Float):Float
 	{
 		return y = Value; 
+	}
+	
+	private static function get_pool():IFlxPool<FlxPoint>
+	{
+		return _pool;
 	}
 }
 

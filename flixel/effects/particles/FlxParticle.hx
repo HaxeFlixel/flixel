@@ -96,21 +96,33 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 	 */
 	override public function destroy():Void
 	{
-		velocityRange.start = FlxDestroyUtil.put(velocityRange.start);
-		velocityRange.end = FlxDestroyUtil.put(velocityRange.end);
-		scaleRange.start = FlxDestroyUtil.put(scaleRange.start);
-		scaleRange.end = FlxDestroyUtil.put(scaleRange.end);
-		dragRange.start = FlxDestroyUtil.put(dragRange.start);
-		dragRange.end = FlxDestroyUtil.put(dragRange.end);
-		accelerationRange.start = FlxDestroyUtil.put(accelerationRange.start);
-		accelerationRange.end = FlxDestroyUtil.put(accelerationRange.end);
+		if (velocityRange != null)
+		{
+			velocityRange.start = FlxDestroyUtil.put(velocityRange.start);
+			velocityRange.end = FlxDestroyUtil.put(velocityRange.end);
+			velocityRange = null;
+		}
+		if (scaleRange != null)
+		{
+			scaleRange.start = FlxDestroyUtil.put(scaleRange.start);
+			scaleRange.end = FlxDestroyUtil.put(scaleRange.end);
+			scaleRange = null;
+		}
+		if (dragRange != null)
+		{
+			dragRange.start = FlxDestroyUtil.put(dragRange.start);
+			dragRange.end = FlxDestroyUtil.put(dragRange.end);
+			dragRange = null;
+		}
+		if (accelerationRange != null)
+		{
+			accelerationRange.start = FlxDestroyUtil.put(accelerationRange.start);
+			accelerationRange.end = FlxDestroyUtil.put(accelerationRange.end);
+			angularVelocityRange = null;
+		}
 		
-		velocityRange = null;
-		angularVelocityRange = null;
-		scaleRange = null;
 		alphaRange = null;
 		colorRange = null;
-		dragRange = null;
 		accelerationRange = null;
 		elasticityRange = null;
 		

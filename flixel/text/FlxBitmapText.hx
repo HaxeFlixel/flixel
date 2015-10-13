@@ -1547,11 +1547,9 @@ class FlxBitmapText extends FlxSprite
 	
 	private function set_letterSpacing(value:Int):Int
 	{
-		var tmp:Int = (value >= 0) ? value : -value;
-		
-		if (tmp != letterSpacing)
+		if (value != letterSpacing)
 		{
-			letterSpacing = tmp;
+			letterSpacing = value;
 			pendingTextChange = true;
 		}
 		

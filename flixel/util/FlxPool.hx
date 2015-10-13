@@ -6,7 +6,10 @@ import flixel.util.FlxDestroyUtil.IFlxDestroyable;
  * A generic container that facilitates pooling and recycling of objects.
  * WARNING: Pooled objects must have parameterless constructors: function new()
  */
-class FlxPool<T:IFlxDestroyable>
+#if !display
+@:generic 
+#end
+class FlxPool<T:IFlxDestroyable> implements IFlxPool<T>
 {
 	public var length(get, never):Int;
 	
@@ -83,4 +86,10 @@ interface IFlxPooled extends IFlxDestroyable
 {
 	public function put():Void;
 	private var _inPool:Bool;
+}
+
+interface IFlxPool<T:IFlxDestroyable> 
+{
+	public function preAllocate(numObjects:Int):Void;
+	public function clear():Array<T>;
 }

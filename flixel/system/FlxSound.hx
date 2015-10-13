@@ -226,7 +226,7 @@ class FlxSound extends FlxBasic
 		//Distance-based volume control
 		if (_target != null)
 		{
-			radialMultiplier = FlxMath.getDistance(FlxPoint.get(_target.x, _target.y), FlxPoint.get(x, y)) / _radius;
+			radialMultiplier = FlxMath.getDistance(FlxPoint.weak(_target.x, _target.y), FlxPoint.weak(x, y)) / _radius;
 			if (radialMultiplier < 0) radialMultiplier = 0;
 			if (radialMultiplier > 1) radialMultiplier = 1;
 			

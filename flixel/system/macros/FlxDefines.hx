@@ -3,6 +3,7 @@ package flixel.system.macros;
 #if macro
 import haxe.macro.Compiler;
 import haxe.macro.Context;
+import haxe.macro.Expr.Position;
 using StringTools;
 
 private enum UserDefines
@@ -58,9 +59,9 @@ class FlxDefines
 {
 	public static function run()
 	{
-		#if (haxe_ver < "3.1.3")
-		abort('The minimum required Haxe version for HaxeFlixel is 3.1.3. '
-			+ 'Please install a newer version.');
+		#if (haxe_ver < "3.2")
+		abort('The minimum required Haxe version for HaxeFlixel is 3.2.0. '
+			+ 'Please install a newer version.', FlxMacroUtil.here());
 		#end
 		
 		checkDefines();
@@ -77,7 +78,7 @@ class FlxDefines
 	{
 		if (defined(FLX_RENDER_BLIT) && defined(FLX_RENDER_TILE))
 		{
-			abort('You cannot define both $FLX_RENDER_BLIT and $FLX_RENDER_TILE.');
+			abort('You cannot define both $FLX_RENDER_BLIT and $FLX_RENDER_TILE.', FlxMacroUtil.here());
 		}
 		
 		for (define in HelperDefines.getConstructors())
@@ -101,7 +102,7 @@ class FlxDefines
 	{
 		if (defined(define))
 		{
-			abort('$define can only be defined by flixel.');
+			abort('$define can only be defined by flixel.', FlxMacroUtil.here());
 		}
 	}
 	
@@ -171,7 +172,7 @@ class FlxDefines
 	{
 		if (!defined("flash11"))
 			abort("The minimum required Flash Player version for HaxeFlixel is 11." +
-				" Please specify a newer version in your Project.xml file.");
+				" Please specify a newer version in your Project.xml file.", FlxMacroUtil.here());
 		
 		swfVersionError("Middle and right mouse button events are", "11.2", FLX_NO_MOUSE_ADVANCED);
 		swfVersionError("Gamepad input is", "11.8", FLX_NO_GAMEPAD);
@@ -187,7 +188,8 @@ class FlxDefines
 			abort(errorMessage
 				.replace("[feature]", feature)
 				.replace("[version]", version)
-				.replace("[define]", define.getName()));
+				.replace("[define]", define.getName()),
+				FlxMacroUtil.here());
 		}
 	}
 	
@@ -201,9 +203,9 @@ class FlxDefines
 		Compiler.define(Std.string(define));
 	}
 	
-	private static function abort(message:String)
+	private static function abort(message:String, pos:Position)
 	{
-		Context.fatalError(message, FlxMacroUtil.here());
+		Context.fatalError(message, pos);
 	}
 }
 #end

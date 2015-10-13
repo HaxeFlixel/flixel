@@ -333,7 +333,7 @@ class FlxSprite extends FlxObject
 		
 		if (Animated)
 		{
-			frames = FlxTileFrames.fromGraphic(graph, new FlxPoint(Width, Height));
+			frames = FlxTileFrames.fromGraphic(graph, FlxPoint.get(Width, Height));
 		}
 		else
 		{
@@ -393,7 +393,7 @@ class FlxSprite extends FlxObject
 		var max:Int = (brush.height > brush.width) ? brush.height : brush.width;
 		max = (AutoBuffer) ? Std.int(max * 1.5) : max;
 		
-		frames = FlxTileFrames.fromGraphic(tempGraph, new FlxPoint(max, max));
+		frames = FlxTileFrames.fromGraphic(tempGraph, FlxPoint.get(max, max));
 		
 		if (AutoBuffer)
 		{
@@ -900,7 +900,9 @@ class FlxSprite extends FlxObject
 	{
 		if (_frame != null && dirty)
 		{
-			if (!flipX && !flipY && _frame.type == FlxFrameType.REGULAR)
+			var doFlipX = flipX != _frame.flipX;
+			var doFlipY = flipY != _frame.flipY;
+			if (!doFlipX && !doFlipY && _frame.type == FlxFrameType.REGULAR)
 			{
 				framePixels = _frame.paint(framePixels, _flashPointZero, false, true);
 			}

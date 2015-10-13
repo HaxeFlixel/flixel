@@ -28,6 +28,20 @@ class FlxDrawBaseItem<T>
 				Tilesheet.TILE_BLEND_SCREEN;
 			case BlendMode.SUBTRACT:
 				Tilesheet.TILE_BLEND_SUBTRACT;
+			#if (!lime_legacy && openfl > "3.3.1")
+			case BlendMode.DARKEN:
+				Tilesheet.TILE_BLEND_DARKEN;
+			case BlendMode.LIGHTEN:
+				Tilesheet.TILE_BLEND_LIGHTEN;
+			case BlendMode.OVERLAY:
+				Tilesheet.TILE_BLEND_OVERLAY;
+			case BlendMode.HARDLIGHT:
+				Tilesheet.TILE_BLEND_HARDLIGHT;
+			case BlendMode.DIFFERENCE:
+				Tilesheet.TILE_BLEND_DIFFERENCE;
+			case BlendMode.INVERT:
+				Tilesheet.TILE_BLEND_INVERT;
+			#end
 			#end
 			default:
 				Tilesheet.TILE_BLEND_NORMAL;
