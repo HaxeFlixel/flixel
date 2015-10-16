@@ -64,18 +64,18 @@ class PostProcess extends OpenGLView
 		GL.bufferData(GL.ARRAY_BUFFER, new Float32Array(cast vertices), GL.STATIC_DRAW);
 		GL.bindBuffer(GL.ARRAY_BUFFER, null);
 
-		shader = new Shader([
+		postProcessShader = new Shader([
 			{ src: vertexShader, fragment: false },
 			{ src: Assets.getText(fragmentShader), fragment: true }
 		]);
 
 		// default shader variables
-		imageUniform = shader.uniform("uImage0");
-		timeUniform = shader.uniform("uTime");
-		resolutionUniform = shader.uniform("uResolution");
+		imageUniform = postProcessShader.uniform("uImage0");
+		timeUniform = postProcessShader.uniform("uTime");
+		resolutionUniform = postProcessShader.uniform("uResolution");
 
-		vertexSlot = shader.attribute("aVertex");
-		texCoordSlot = shader.attribute("aTexCoord");
+		vertexSlot = postProcessShader.attribute("aVertex");
+		texCoordSlot = postProcessShader.attribute("aTexCoord");
 	}
 
 	/**
@@ -92,7 +92,7 @@ class PostProcess extends OpenGLView
 		}
 		else
 		{
-			var id:Int = shader.uniform(uniform);
+			var id:Int = postProcessShader.uniform(uniform);
 			if (id != -1)
 			{
 				uniforms.set(uniform, new Uniform(id, value));
@@ -186,7 +186,7 @@ class PostProcess extends OpenGLView
 		GL.bindFramebuffer(GL.FRAMEBUFFER, renderTo);
 		GL.viewport(0, 0, screenWidth, screenHeight);
 		
-		shader.bind();
+		postProcessShader.bind();
 
 		GL.enableVertexAttribArray(vertexSlot);
 		GL.enableVertexAttribArray(texCoordSlot);
@@ -233,7 +233,7 @@ class PostProcess extends OpenGLView
 	private var renderbuffer:GLRenderbuffer;
 	private var texture:GLTexture;
 
-	private var shader:Shader;
+	private var postProcessShader:Shader;
 	private var buffer:GLBuffer;
 	private var renderTo:GLFramebuffer;
 	private var defaultFramebuffer:GLFramebuffer = null;
