@@ -205,7 +205,7 @@ class FlxGamepadMapping
 			case XInput: XInputID.axisIndexToRawID(AxisID);
 			case MayflashWiiRemote: MayflashWiiRemoteID.axisIndexToRawID(AxisID, attachment);
 			case WiiRemote: WiiRemoteID.axisIndexToRawID(AxisID, attachment);
-			case MFiID: MFiID.axisIndexToRawID(AxisID);
+			case MFi: MFiID.axisIndexToRawID(AxisID);
 			default: -1;
 		}
 	}
