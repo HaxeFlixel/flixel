@@ -8,6 +8,7 @@ import openfl.Assets;
 import openfl.display.OpenGLView;
 import openfl.gl.*;
 import openfl.utils.Float32Array;
+import flixel.effects.postprocess.Shader in PShader;
 
 private class Uniform
 {
@@ -64,18 +65,18 @@ class PostProcess extends OpenGLView
 		GL.bufferData(GL.ARRAY_BUFFER, new Float32Array(cast vertices), GL.STATIC_DRAW);
 		GL.bindBuffer(GL.ARRAY_BUFFER, null);
 
-		shader = new Shader([
+		pshader = new PShader([
 			{ src: vertexShader, fragment: false },
 			{ src: Assets.getText(fragmentShader), fragment: true }
 		]);
 
 		// default shader variables
-		imageUniform = shader.uniform("uImage0");
-		timeUniform = shader.uniform("uTime");
-		resolutionUniform = shader.uniform("uResolution");
+		imageUniform = pshader.uniform("uImage0");
+		timeUniform = pshader.uniform("uTime");
+		resolutionUniform = pshader.uniform("uResolution");
 
-		vertexSlot = shader.attribute("aVertex");
-		texCoordSlot = shader.attribute("aTexCoord");
+		vertexSlot = pshader.attribute("aVertex");
+		texCoordSlot = pshader.attribute("aTexCoord");
 	}
 
 	/**
@@ -92,7 +93,7 @@ class PostProcess extends OpenGLView
 		}
 		else
 		{
-			var id:Int = shader.uniform(uniform);
+			var id:Int = pshader.uniform(uniform);
 			if (id != -1)
 			{
 				uniforms.set(uniform, new Uniform(id, value));
@@ -186,7 +187,7 @@ class PostProcess extends OpenGLView
 		GL.bindFramebuffer(GL.FRAMEBUFFER, renderTo);
 		GL.viewport(0, 0, screenWidth, screenHeight);
 		
-		shader.bind();
+		pshader.bind();
 
 		GL.enableVertexAttribArray(vertexSlot);
 		GL.enableVertexAttribArray(texCoordSlot);
@@ -233,7 +234,7 @@ class PostProcess extends OpenGLView
 	private var renderbuffer:GLRenderbuffer;
 	private var texture:GLTexture;
 
-	private var shader:Shader;
+	private var pshader:PShader;
 	private var buffer:GLBuffer;
 	private var renderTo:GLFramebuffer;
 	private var defaultFramebuffer:GLFramebuffer = null;

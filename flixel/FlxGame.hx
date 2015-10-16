@@ -20,6 +20,7 @@ import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import openfl.Assets;
+import openfl.filters.BitmapFilter;
 
 #if FLX_POST_PROCESS
 import openfl.display.OpenGLView;
@@ -80,6 +81,10 @@ class FlxGame extends Sprite
 	 * Time in milliseconds that has passed (amount of "ticks" passed) since the game has started.
 	 */
 	public var ticks(default, null):Int = 0;
+	/**
+	 * Enables or disables the filters set via setFilters()
+	 */
+	public var enableFilters:Bool = true;
 	
 	/**
 	 * A flag for triggering the onGameStart "event".
@@ -126,6 +131,11 @@ class FlxGame extends Sprite
 	 * Whether the game lost focus.
 	 */
 	private var _lostFocus:Bool = false;
+	
+	/**
+	 * The filters array to be applied to the game.
+	 */
+	private var _filters:Array<BitmapFilter>;
 	
 	#if (cpp || neko)
 	/**
@@ -256,6 +266,16 @@ class FlxGame extends Sprite
 		_initialState = (InitialState == null) ? FlxState : InitialState;
 		
 		addEventListener(Event.ADDED_TO_STAGE, create);
+	}
+	
+	/**
+	 * Sets the filter array to be applied to the game.
+	 * 
+	 * @param	filters
+	 */
+	public function setFilters(filters:Array<BitmapFilter>):Void
+	{
+		_filters = filters;
 	}
 	
 	/**
@@ -753,6 +773,8 @@ class FlxGame extends Sprite
 		}
 		FlxArrayUtil.clearArray(FlxG.swipes);
 		#end
+		
+		filters = enableFilters ? _filters : null;
 	}
 	
 	private function updateInput():Void
