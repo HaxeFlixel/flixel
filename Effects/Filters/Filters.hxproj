@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<project version="2">
+  <!-- Output SWF options -->
+  <output>
+    <movie outputType="CustomBuild" />
+    <movie input="" />
+    <movie path="Project.xml" />
+    <movie fps="60" />
+    <movie width="640" />
+    <movie height="480" />
+    <movie version="0" />
+    <movie minorVersion="0" />
+    <movie platform="Lime" />
+    <movie background="#000000" />
+  </output>
+  <!-- Other classes to be compiled into your SWF -->
+  <classpaths>
+    <class path="Z:\HaxeToolkit\libs\flixel" />
+    <class path="Z:\HaxeToolkit\libs\openfl" />
+    <class path="Z:\HaxeToolkit\libs\lime" />
+    <class path="Z:\HaxeToolkit\libs\flixel-addons" />
+    <class path="Z:\HaxeToolkit\libs\flixel-ui" />
+    <class path="source" />
+    <class path="export\html5\haxe" />
+  </classpaths>
+  <!-- Build options -->
+  <build>
+    <option directives="flixel=3.3.11&#xA;openfl=3.3.9&#xA;lime=2.6.9&#xA;flixel-addons=1.1.0&#xA;flixel-ui=1.0.2&#xA;next&#xA;openfl-next&#xA;FLX_NO_FOCUS_LOST_SCREEN&#xA;tools=2.6.9&#xA;FLX_NO_DEBUG&#xA;no-compilation&#xA;openfl-html5&#xA;NAPE_RELEASE_BUILD&#xA;webgl&#xA;lime-html5&#xA;FLX_RENDER_TILE&#xA;html5&#xA;web&#xA;html5&#xA;display" />
+    <option flashStrict="False" />
+    <option noInlineOnDebug="False" />
+    <option mainClass="ApplicationMain" />
+    <option enabledebug="True" />
+    <option additional="--remap flash:openfl&#xA;--macro flixel.system.macros.FlxDefines.run()&#xA;--macro allowPackage(&quot;flash&quot;)" />
+  </build>
+  <!-- haxelib libraries -->
+  <haxelib>
+    <!-- example: <library name="..." /> -->
+  </haxelib>
+  <!-- Class files to compile (other referenced classes will automatically be included) -->
+  <compileTargets>
+    <compile path="source\ProjectClass.hx" />
+    <compile path="source\game\Main.hx" />
+    <compile path="source\flixel\src\org\flixel\FlxTilemap.hx" />
+    <compile path="source\game\actors\Player.hx" />
+  </compileTargets>
+  <!-- Paths to exclude from the Project Explorer tree -->
+  <hiddenPaths>
+    <hidden path="tools" />
+    <hidden path="source\flixel\template" />
+    <hidden path="source\flixel\tools" />
+    <hidden path="source\flixel\build.xml" />
+    <hidden path="source\flixel\CHANGELOG.txt" />
+    <hidden path="source\flixel\haxelib.xml" />
+    <hidden path="source\flixel\LICENSE" />
+    <hidden path="source\flixel\license.txt" />
+    <hidden path="source\flixel\README.md" />
+    <hidden path="source\flixel\d" />
+    <hidden path=".build" />
+    <hidden path=".hgignore" />
+    <hidden path="obj" />
+  </hiddenPaths>
+  <!-- Executed before build -->
+  <preBuildCommand>"$(CompilerPath)/haxelib" run lime build "$(OutputFile)" $(TargetBuild) -$(BuildConfig) -Dfdb</preBuildCommand>
+  <!-- Executed after build -->
+  <postBuildCommand alwaysRun="False" />
+  <!-- Other project options -->
+  <options>
+    <option showHiddenPaths="False" />
+    <option testMovie="Custom" />
+    <option testMovieCommand="" />
+  </options>
+  <!-- Plugin storage -->
+  <storage />
+</project>
