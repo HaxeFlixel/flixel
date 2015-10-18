@@ -21,6 +21,7 @@ import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
 import openfl.display.BlendMode;
+import openfl.filters.BitmapFilter;
 import openfl.geom.Matrix;
 import openfl.Vector;
 
@@ -200,6 +201,10 @@ class FlxCamera extends FlxBasic
 	 * Used to force the camera to look ahead of the target.
 	 */
 	public var followLead(default, null):FlxPoint;
+	/**
+	 * Enables or disables the filters set via setFilters()
+	 */
+	public var enableFilters:Bool = true;
 	
 	/**
 	 * Internal, used to render buffer to screen space.
@@ -281,6 +286,10 @@ class FlxCamera extends FlxBasic
 	 * Internal, to help avoid costly allocations.
 	 */
 	private var _point:FlxPoint;
+	/**
+	 * Internal, the filters array to be applied to the camera.
+	 */
+	private var _filters:Array<BitmapFilter>;
 	
 	/**
 	 * Camera's initial zoom value. Used for camera's scale handling.
@@ -786,6 +795,8 @@ class FlxCamera extends FlxBasic
 		updateFade(elapsed);
 		updateShake(elapsed);
 		
+		flashSprite.filters = enableFilters ? _filters : null;
+		
 		updateFlashSpritePosition();
 	}
 	
@@ -1187,6 +1198,16 @@ class FlxCamera extends FlxBasic
 		_fxFadeAlpha = 0.0;
 		_fxShakeDuration = 0;
 		updateFlashSpritePosition();
+	}
+	
+	/**
+	 * Sets the filter array to be applied to the camera.
+	 * 
+	 * @param	filters
+	 */
+	public function setFilters(filters:Array<BitmapFilter>):Void
+	{
+		_filters = filters;
 	}
 	
 	/**

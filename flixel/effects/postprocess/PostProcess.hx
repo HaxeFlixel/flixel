@@ -61,7 +61,7 @@ class PostProcess extends OpenGLView
 
 		buffer = GL.createBuffer();
 		GL.bindBuffer(GL.ARRAY_BUFFER, buffer);
-		GL.bufferData(GL.ARRAY_BUFFER, new Float32Array(cast vertices), GL.STATIC_DRAW);
+		GL.bufferData(GL.ARRAY_BUFFER, new Float32Array(#if !openfl_next cast #end vertices), GL.STATIC_DRAW);
 		GL.bindBuffer(GL.ARRAY_BUFFER, null);
 
 		postProcessShader = new Shader([
