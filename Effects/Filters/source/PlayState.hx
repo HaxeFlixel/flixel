@@ -165,7 +165,7 @@ class PlayState extends FlxState
 	{
 		super.update(elapsed);
 		
-		for (filter in filterMap.iterator()) {
+		for (filter in filterMap) {
 			if (filter.onUpdate != null) {
 				filter.onUpdate();
 			}
