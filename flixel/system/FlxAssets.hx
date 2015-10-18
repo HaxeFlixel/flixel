@@ -251,10 +251,8 @@ class FlxAssets
 		var extension = "";
 		#if flash
 		extension = ".mp3";
-		#elseif native
+		#else
 		extension = ".ogg";
-		#elseif html5
-		extension = ".m4a";
 		#end
 		return Assets.getSound(id + extension);
 	}
