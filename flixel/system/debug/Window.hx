@@ -122,6 +122,7 @@ class Window extends Sprite
 		_title.defaultTextFormat = new TextFormat(FlxAssets.FONT_DEBUGGER, 12, 0xffffff);
 		_title.text = Title;
 		
+		
 		addChild(_shadow);
 		addChild(_background);
 		addChild(_header);

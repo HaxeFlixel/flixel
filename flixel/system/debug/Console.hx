@@ -100,7 +100,7 @@ class Console extends Window
 		_input = new TextField();
 		_input.type = TextFieldType.INPUT;
 		_input.embedFonts = true;
-		_input.defaultTextFormat = new TextFormat(FlxAssets.FONT_DEBUGGER, 13, 0xFFFFFF, false, false, false);
+		_input.defaultTextFormat = new TextFormat(FlxAssets.FONT_DEBUGGER, 12, 0xFFFFFF, false, false, false);
 		_input.text = Console._DEFAULT_TEXT;
 		_input.width = _width - 4;
 		_input.height = _height - 15;
