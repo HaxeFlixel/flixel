@@ -34,10 +34,10 @@ class ConsoleCommands
 		
 		console.addCommand(["create", "cr"], create, "Creates a new FlxObject and registers it - by default at the mouse position.", 
 							"[FlxObject] (MousePos = true)", 3, 3);
-		console.addCommand(["set", "s"], set, "Sets a variable within a registered object.", "[Path to variable] [Value]", 3);
-		console.addCommand(["get", "g"], get, "Gets a variable within a registered object or the object itself.", "[Path to variable]", 2);
+		console.addCommand(["set", "s"], set, "Sets a variable within a registered object.", "[Path to variable] [Value] (WatchName)", 3);
+		console.addCommand(["get", "g"], get, "Gets a variable within a registered object or the object itself.", "[Path to variable] (WatchName)", 2);
 		console.addCommand(["call", "c"], call, "Calls a registered function / function within a registered object.", 3, 2);
-		console.addCommand(["fields", "f"], fields, "Lists the fields of a class or instance", "[Class or path to instance] [NumSuperClassesToInclude]", 2);
+		console.addCommand(["fields", "f"], fields, "Lists the fields of a class or instance", "[Class or path to instance] (NumSuperClassesToInclude = 0)", 2);
 		
 		console.addCommand(["listObjects", "lo"], listObjects, "Lists all the aliases of the registered objects.");
 		console.addCommand(["listFunctions", "lf"], listFunctions, "Lists all the aliases of the registered objects.");
