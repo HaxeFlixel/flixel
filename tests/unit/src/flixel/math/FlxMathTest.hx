@@ -43,6 +43,14 @@ class FlxMathTest extends FlxTest
 		Assert.isTrue(FlxMath.sameSign(-5, -30));
 		Assert.isFalse(FlxMath.sameSign(-5, 1));
 	}
+
+	@Test
+	function testRemapToRange()
+	{
+		Assert.areEqual(35, FlxMath.remapToRange(5, 0, 10, 25, 45));
+		Assert.areEqual(23, FlxMath.remapToRange(-1, 0, 10, 25, 45));
+		Assert.areEqual(-2, FlxMath.remapToRange(2, 10, 1, -10, -1));
+	}
 	
 	@Test
 	function testFastTrig()
