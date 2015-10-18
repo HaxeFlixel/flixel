@@ -449,6 +449,7 @@ class FlxGamepadManager implements IFlxInputManager
 			else if (str.contains("nintendo rvlcnt01tr")) WiiRemote;                  //WiiRemote with motion plus
 			else if (str.contains("nintendo rvlcnt01")) WiiRemote;                    //WiiRemote w/o  motion plus
 			else if (str.contains("mayflash wiimote pc adapter")) MayflashWiiRemote;  //WiiRemote paired to MayFlash DolphinBar (with or w/o motion plus)
+			else if (str.contains("mfi")) MFi;
 			else XBox360; //default
 	}
 	

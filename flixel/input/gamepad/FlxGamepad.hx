@@ -878,6 +878,7 @@ enum FlxGamepadModel
 	XInput;
 	MayflashWiiRemote;
 	WiiRemote;
+	MFi;
 }
 
 enum FlxGamepadModelAttachment
