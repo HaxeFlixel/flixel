@@ -13,15 +13,18 @@ using StringTools;
 class PlayState extends FlxState
 {
 	private static inline var INSTRUCTIONS = #if !mobile
-	                                         "Space to Cycle Modes\n" +
+	                                         "Space to cycle Directions\n" +
+	                                         "Enter to cycle Modes\n" +
 	                                         "Left/Right to adjust strength\n" +
 	                                         "Up/Down to adjust center\n" +
-	                                         "W/S to adjust speed"; 
+	                                         "W/S to adjust speed\n" +
+	                                         "A/D to adjust wavelength"; 
 	                                         #else
-	                                         "Touch to Cycle Modes"
+	                                         "1 Touches to cycle Directions\n" +
+	                                         "2 Touch to cycle Modes";
 	                                         #end
 	
-	private static inline var STATUS = "Mode: [mode]    Strength: [strength]    Center: [center]    Speed: [speed]";
+	private static inline var STATUS = "Direction: [dir]    Mode: [mode]\nStrength: [strength]    Center: [center]    Speed: [speed]    Wavelength: [wave]";
 	
 	private var _waveSprite:FlxWaveSprite;
 	private var _statusText:FlxText;
@@ -41,10 +44,10 @@ class PlayState extends FlxState
 		_txtInstruct.alignment = CENTER;
 		add(_txtInstruct);
 		
-		_statusText = new FlxText(0, FlxG.height - 15, FlxG.width);
+		_statusText = new FlxText(0, FlxG.height - 25, FlxG.width);
 		_statusText.alignment = CENTER;
 		add(_statusText);
-
+		
 		super.create();
 	}
 	
@@ -52,8 +55,11 @@ class PlayState extends FlxState
 	{
 		#if !FLX_NO_KEYBOARD
 		if (FlxG.keys.justReleased.SPACE)
+			incrementDirection();
+			
+		if (FlxG.keys.justReleased.ENTER)
 			incrementMode();
-	
+		
 		// control center
 		if (FlxG.keys.pressed.UP)
 			_waveSprite.center++;
@@ -71,11 +77,22 @@ class PlayState extends FlxState
 			_waveSprite.speed++;
 		if (FlxG.keys.pressed.S)
 			_waveSprite.speed--;
+		
+		//control wavelength
+		if (FlxG.keys.pressed.D)
+			_waveSprite.wavelength++;
+		if (FlxG.keys.pressed.A)
+			_waveSprite.wavelength--;
 		#end
 		
 		#if !FLX_NO_TOUCH
 		if (FlxG.touches.justStarted().length > 0)
-			incrementMode();
+		{
+			if (FlxG.touches.justStarted().length == 1)
+				incrementDirection();
+			else
+				incrementMode();
+		}
 		#end
 		
 		boundValues();
@@ -88,26 +105,35 @@ class PlayState extends FlxState
 		_waveSprite.center = Std.int(FlxMath.bound(_waveSprite.center, 0, _waveSprite.height));
 		_waveSprite.strength = Std.int(FlxMath.bound(_waveSprite.strength, 0, 500));
 		_waveSprite.speed = FlxMath.bound(_waveSprite.speed, 0, 80);
+		_waveSprite.wavelength = Std.int(FlxMath.bound(_waveSprite.wavelength, 1, 20));
+	}
+	
+	private function incrementDirection():Void
+	{
+		_waveSprite.direction = switch (_waveSprite.direction)
+		{
+			case VERTICAL: HORIZONTAL;
+			case HORIZONTAL: VERTICAL;
+		}
 	}
 	
 	private function incrementMode():Void
 	{
-		switch (_waveSprite.mode)
+		_waveSprite.mode = switch (_waveSprite.mode)
 		{
-			case ALL:
-				_waveSprite.mode = TOP;
-			case TOP:
-				_waveSprite.mode = BOTTOM;
-			case BOTTOM:
-				_waveSprite.mode = ALL;
+			case ALL: START;
+			case START: END;
+			case END: ALL;
 		}
 	}
 	
 	private function updateStatusText():Void 
 	{
-		_statusText.text = STATUS.replace("[mode]", Std.string(_waveSprite.mode))
+		_statusText.text = STATUS.replace("[dir]", Std.string(_waveSprite.direction))
+		                         .replace("[mode]", Std.string(_waveSprite.mode))
 		                         .replace("[strength]", Std.string(_waveSprite.strength))
 		                         .replace("[center]",  Std.string(_waveSprite.center))
-		                         .replace("[speed]",  Std.string(_waveSprite.speed));
+		                         .replace("[speed]",  Std.string(_waveSprite.speed))
+		                         .replace("[wave]",  Std.string(_waveSprite.wavelength));
 	}
 }
