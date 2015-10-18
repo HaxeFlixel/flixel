@@ -47,9 +47,9 @@ class FlxMathTest extends FlxTest
 	@Test
 	function testRemapToRange()
 	{
-		Assert.areEqual(35, FlxMath.remapToRange(5,0,10,25,45));
-		Assert.areEqual(23, FlxMath.remapToRange(-1,0,10,25,45));
-		Assert.areEqual(-2, FlxMath.remapToRange(2,10,1,-10,-1));
+		Assert.areEqual(35, FlxMath.remapToRange(5, 0, 10, 25, 45));
+		Assert.areEqual(23, FlxMath.remapToRange(-1, 0, 10, 25, 45));
+		Assert.areEqual(-2, FlxMath.remapToRange(2, 10, 1, -10, -1));
 	}
 	
 	@Test
