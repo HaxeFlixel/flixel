@@ -737,18 +737,21 @@ class FlxText extends FlxSprite
 	
 	override private function updateColorTransform():Void
 	{
-		if (alpha != 1)
+		if (colorTransform != null)
 		{
-			colorTransform.alphaMultiplier = alpha;
-			useColorTransform = true;
+			if (alpha != 1)
+			{
+				colorTransform.alphaMultiplier = alpha;
+				useColorTransform = true;
+			}
+			else
+			{
+				colorTransform.alphaMultiplier = 1;
+				useColorTransform = false;
+			}
+			
+			dirty = true;
 		}
-		else
-		{
-			colorTransform.alphaMultiplier = 1;
-			useColorTransform = false;
-		}
-		
-		dirty = true;
 	}
 	
 	private function regenGraphics():Void
