@@ -2,7 +2,6 @@ package flixel.system.debug;
 
 import flash.display.Sprite;
 import flixel.FlxG;
-import flixel.system.debug.ConsoleUtil.PathToVariable;
 import flixel.system.debug.FlxDebugger;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxDestroyUtil;
@@ -77,7 +76,8 @@ class Watch extends Window
 			DisplayName = VariableName;
 		
 		// Attempt to resolve variable paths, like FlxG.state.members.length
-		var varData:PathToVariable = ConsoleUtil.resolveObjectAndVariable(VariableName, AnyObject);
+		/*
+		var varData:PathToVariable = null; // ConsoleUtil.resolveObjectAndVariable(VariableName, AnyObject);
 		AnyObject = varData.object;
 		VariableName = varData.variableName;
 		
@@ -92,6 +92,7 @@ class Watch extends Window
 		
 		// Good, no repeats, add away!
 		addEntry(AnyObject, VariableName, DisplayName);
+		*/
 	}
 	
 	/**

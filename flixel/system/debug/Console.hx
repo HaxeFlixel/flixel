@@ -49,10 +49,6 @@ class Console extends Window
 	 * Reference to the array containing the command history.
 	 */
 	public var cmdHistory:Array<String>;
-	/**
-	 * An array holding all the registered commands.
-	 */
-	public var commands:Array<Command>;
 	
 	/**
 	 * The history index of the current input.
@@ -75,7 +71,7 @@ class Console extends Window
 	{	
 		super("Console", new GraphicConsole(0, 0), 0, 0, false);
 		
-		commands = new Array<Command>();
+		ConsoleUtil.init();
 		
 		registeredObjects = new Map<String, Dynamic>();
 		registeredFunctions = new Map<String, Dynamic>();
@@ -203,10 +199,6 @@ class Console extends Window
 	
 	private function onKeyPress(e:KeyboardEvent):Void
 	{
-		// Don't allow spaces at the start, they break commands
-		if (e.keyCode == Keyboard.SPACE && _input.text == " ") 
-			_input.text = "";	
-		
 		// Submitting the command
 		if (e.keyCode == Keyboard.ENTER && _input.text != "")
 			processCommand();
@@ -227,78 +219,84 @@ class Console extends Window
 			
 			_input.text = getPreviousCommand();
 			
-			// Workaround to override default behaviour of selection jumping to 0 when pressing up
-			addEventListener(Event.RENDER, overrideDefaultSelection);
-			FlxG.stage.invalidate();
+			// Set caret to the end of the command
+			_input.setSelection(_input.text.length, _input.text.length);
 		}
 		// Show next command in history
 		else if (e.keyCode == Keyboard.DOWN) 
 		{
 			if (cmdHistory.length == 0) 
 				return;
+			
 			_input.text = getNextCommand();
+			
+			// Set caret to the end of the command
+			_input.setSelection(_input.text.length, _input.text.length);
 		}
 	}
 	
 	private function processCommand():Void
 	{
-		var args:Array<Dynamic> = StringTools.rtrim(_input.text).split(" ");
-		var alias:String = args.shift();
-		var command:Command = ConsoleUtil.findCommand(alias, commands);
+		// trim
+		// parse (in consoleutil)
+		// execute (in consoleutil)
 		
-		// Only if the command exists
-		if (command != null) 
+		// prolly try catch here
+		ConsoleUtil.log(ConsoleUtil.runCommand(StringTools.trim(_input.text)));
+		
+		// Only save new commands 
+		if (getPreviousCommand() != _input.text) 
 		{
-			var func:Dynamic = command.processFunction;
+			// Save the command to the history
+			cmdHistory.push(_input.text);
+			FlxG.save.flush();
 			
-			// Only save new commands 
-			if (getPreviousCommand() != _input.text) 
-			{
-				// Save the command to the history
-				cmdHistory.push(_input.text);
-				FlxG.save.flush();
-				
-				// Set a maximum for commands you can save
-				if (cmdHistory.length > Console._HISTORY_MAX)
-					cmdHistory.shift();
-			}
-			
-			_historyIndex = cmdHistory.length;
-			
-			if (Reflect.isFunction(func)) 
-			{
-				// Push all the remaining params into an array if a paramCutoff has been set
-				if (command.paramCutoff > 0)
-				{
-					var start:Int = command.paramCutoff - 1;
-					args[start] = args.slice(start, args.length);
-					args = args.slice(0, command.paramCutoff);
-				}
-				
-				ConsoleUtil.callFunction(func, args); 
-				
-				// Skip to the next step if the game is paused to see the effects of the command
-				#if (flash && !FLX_NO_DEBUG)
-				if (FlxG.vcr.paused)
-				{
-					FlxG.game.debugger.vcr.onStep();
-				}
-				#end
-			}
-			
-			_input.text = "";
+			// Set a maximum for commands you can save
+			if (cmdHistory.length > Console._HISTORY_MAX)
+				cmdHistory.shift();
 		}
+		
+		_historyIndex = cmdHistory.length;
+		
+		/*
+		if (Reflect.isFunction(func)) 
+		{
+			// Push all the remaining params into an array if a paramCutoff has been set
+			if (command.paramCutoff > 0)
+			{
+				var start:Int = command.paramCutoff - 1;
+				args[start] = args.slice(start, args.length);
+				args = args.slice(0, command.paramCutoff);
+			}
+			
+			ConsoleUtil.callFunction(func, args); 
+			
+			// Skip to the next step if the game is paused to see the effects of the command
+			#if (flash && !FLX_NO_DEBUG)
+			if (FlxG.vcr.paused)
+			{
+				FlxG.game.debugger.vcr.onStep();
+			}
+			#end
+		}
+		*/
+		
+		#if (flash && !FLX_NO_DEBUG)
+		if (FlxG.vcr.paused)
+		{
+			FlxG.game.debugger.vcr.onStep();
+		}
+		#end
+		
+		_input.text = "";
+		
+		/*
 		// Error in case the command doesn't exist
 		else 
 		{
 			FlxG.log.error("Console: Invalid command: '" + alias + "'");
 		}
-	}
-	
-	private function overrideDefaultSelection(e:Event):Void
-	{
-		_input.setSelection(_input.text.length, _input.text.length);
-		removeEventListener(Event.RENDER, overrideDefaultSelection);
+		*/
 	}
 	
 	private inline function getPreviousCommand():String
@@ -328,6 +326,7 @@ class Console extends Window
 	public inline function registerObject(ObjectAlias:String, AnyObject:Dynamic):Void
 	{
 		registeredObjects.set(ObjectAlias, AnyObject);
+		ConsoleUtil.registerObject(ObjectAlias, AnyObject);
 	}
 	
 	/**
@@ -339,22 +338,7 @@ class Console extends Window
 	public inline function registerFunction(FunctionAlias:String, Function:Dynamic):Void
 	{
 		registeredFunctions.set(FunctionAlias, Function);
-	}
-	
-	/**
-	 * Add a custom command to the console on the debugging screen.
-	 * 
-	 * @param 	Aliases			An array of accepted aliases for this command.
-	 * @param 	ProcessFunction	Function to be called with params when the command is entered.
-	 * @param	Help			The description of this command shown in the help command.
-	 * @param	ParamHelp		The description of this command's processFunction's params.
-	 * @param 	NumParams		The amount of parameters a function has. Require to prevent crashes on Neko.
-	 * @param	ParamCutoff		At which parameter to put all remaining params into an array
-	 */
-	public inline function addCommand(Aliases:Array<String>, ProcessFunction:Dynamic, ?Help:String, ?ParamHelp:String, NumParams:Int = 0, ParamCutoff:Int = -1):Void
-	{
-		commands.push( { aliases:Aliases, processFunction:ProcessFunction, help:Help, paramHelp:ParamHelp, 
-						numParams:NumParams, paramCutoff:ParamCutoff });
+		ConsoleUtil.registerFunction(FunctionAlias, Function);
 	}
 	
 	override public function destroy():Void
@@ -370,8 +354,6 @@ class Console extends Window
 			removeChild(_input);
 			_input = null;
 		}
-		
-		commands = null;
 		
 		registeredObjects = null;
 		registeredFunctions = null;
@@ -391,13 +373,3 @@ class Console extends Window
 	}
 }
 #end
-
-typedef Command =
-{
-	aliases:Array<String>,
-	processFunction:Dynamic,
-	?help:String,
-	?paramHelp:String,
-	?numParams:Int,
-	?paramCutoff:Int
-}

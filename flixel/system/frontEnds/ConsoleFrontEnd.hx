@@ -48,7 +48,7 @@ class ConsoleFrontEnd
 	public inline function addCommand(Aliases:Array<String>, ProcessFunction:Dynamic, ?Help:String, ?ParamHelp:String, NumParams:Int = 0, ParamCutoff:Int = -1):Void
 	{
 		#if !FLX_NO_DEBUG
-		FlxG.game.debugger.console.addCommand(Aliases, ProcessFunction, Help, ParamHelp, NumParams, ParamCutoff);
+		// FlxG.game.debugger.console.addCommand(Aliases, ProcessFunction, Help, ParamHelp, NumParams, ParamCutoff);
 		#end
 	}
 	
