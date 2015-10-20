@@ -10,7 +10,7 @@ class ConsoleFrontEnd
 	public var autoPause:Bool = true;
 	
 	/**
-	 * Register a new function to use for the call command.
+	 * Register a new function to use in any command.
 	 * 
 	 * @param 	FunctionAlias		The name with which you want to access the function.
 	 * @param 	Function			The function to register.
@@ -23,7 +23,7 @@ class ConsoleFrontEnd
 	}
 	
 	/**
-	 * Register a new object to use for the set command.
+	 * Register a new object to use in any command.
 	 * 
 	 * @param 	ObjectAlias		The name with which you want to access the object.
 	 * @param 	AnyObject		The object to register.

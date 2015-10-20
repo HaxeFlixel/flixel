@@ -203,7 +203,7 @@ class Console extends Window
 		if (e.keyCode == Keyboard.ENTER && _input.text != "")
 			processCommand();
 		
-		// Quick-unfcous
+		// Quick-unfocus
 		else if (e.keyCode == Keyboard.ESCAPE)
 			FlxG.stage.focus = null;
 		
@@ -237,66 +237,42 @@ class Console extends Window
 	
 	private function processCommand():Void
 	{
-		// trim
-		// parse (in consoleutil)
-		// execute (in consoleutil)
-		
-		// prolly try catch here
-		ConsoleUtil.log(ConsoleUtil.runCommand(StringTools.trim(_input.text)));
-		
-		// Only save new commands 
-		if (getPreviousCommand() != _input.text) 
+		try
 		{
-			// Save the command to the history
-			cmdHistory.push(_input.text);
-			FlxG.save.flush();
+			// Attempt to parse, run, and output the command
+			var output = ConsoleUtil.runCommand(StringTools.trim(_input.text));
+			ConsoleUtil.log(output);
 			
-			// Set a maximum for commands you can save
-			if (cmdHistory.length > Console._HISTORY_MAX)
-				cmdHistory.shift();
-		}
-		
-		_historyIndex = cmdHistory.length;
-		
-		/*
-		if (Reflect.isFunction(func)) 
-		{
-			// Push all the remaining params into an array if a paramCutoff has been set
-			if (command.paramCutoff > 0)
+			// Only save new commands 
+			if (getPreviousCommand() != _input.text) 
 			{
-				var start:Int = command.paramCutoff - 1;
-				args[start] = args.slice(start, args.length);
-				args = args.slice(0, command.paramCutoff);
+				// Save the command to the history
+				cmdHistory.push(_input.text);
+				FlxG.save.flush();
+				
+				// Set a maximum for commands you can save
+				if (cmdHistory.length > Console._HISTORY_MAX)
+					cmdHistory.shift();
 			}
 			
-			ConsoleUtil.callFunction(func, args); 
+			_historyIndex = cmdHistory.length;
 			
-			// Skip to the next step if the game is paused to see the effects of the command
+			// Step forward one frame to see the results of the command
 			#if (flash && !FLX_NO_DEBUG)
 			if (FlxG.vcr.paused)
 			{
 				FlxG.game.debugger.vcr.onStep();
 			}
 			#end
+			
+			_input.text = "";
 		}
-		*/
 		
-		#if (flash && !FLX_NO_DEBUG)
-		if (FlxG.vcr.paused)
+		catch (e:Dynamic)
 		{
-			FlxG.game.debugger.vcr.onStep();
+			// Parsing error, improper syntax
+			FlxG.log.error("Console: Invalid syntax: '" + e + "'");
 		}
-		#end
-		
-		_input.text = "";
-		
-		/*
-		// Error in case the command doesn't exist
-		else 
-		{
-			FlxG.log.error("Console: Invalid command: '" + alias + "'");
-		}
-		*/
 	}
 	
 	private inline function getPreviousCommand():String
@@ -318,7 +294,7 @@ class Console extends Window
 	}
 	
 	/**
-	 * Register a new object to use for the set command.
+	 * Register a new object to use in any command.
 	 * 
 	 * @param 	ObjectAlias		The name with which you want to access the object.
 	 * @param 	AnyObject		The object to register.
@@ -330,7 +306,7 @@ class Console extends Window
 	}
 	
 	/**
-	 * Register a new function to use for the call command.
+	 * Register a new function to use in any command.
 	 * 
 	 * @param 	FunctionAlias	The name with which you want to access the function.
 	 * @param 	Function		The function to register.

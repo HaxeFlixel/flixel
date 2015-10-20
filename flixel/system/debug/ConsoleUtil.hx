@@ -14,6 +14,9 @@ class ConsoleUtil
 	// The custom hscript interpreter to run the haxe code from the parser.
 	public static var interp:Interp;
 	
+	/**
+	 * Sets up the hscript parser and interpreter.
+	 */
 	public static function init():Void
 	{
 		parser = new Parser();
@@ -25,18 +28,20 @@ class ConsoleUtil
 	
 	/**
 	 * Converts the input string into its AST form to be executed.
+	 * 
 	 * @param	Input	The user's input command.
 	 * @return	The parsed out AST.
 	 */
 	public static function parseCommand(Input:String):Expr
 	{
 		if (StringTools.endsWith(Input, ";"))
-			Input = Input.substr( -1);
+			Input = Input.substr(0, -1);
 		return parser.parseString(Input);
 	}
 	
 	/**
 	 * Parses and runs the input command.
+	 * 
 	 * @param	Input	The user's input command.
 	 * @return	Whatever the input code evaluates to.
 	 */
@@ -44,12 +49,24 @@ class ConsoleUtil
 		return interp.expr(parseCommand(Input));
 	}
 	
+	/**
+	 * Register a new object to use in any command.
+	 * 
+	 * @param	ObjectAlias	The name with which you want to access the object.
+	 * @param	AnyObject	The object to register.
+	 */
 	public static function registerObject(ObjectAlias:String, AnyObject:Dynamic):Void
 	{
 		if (Reflect.isObject(AnyObject))
 			interp.variables.set(ObjectAlias, AnyObject);
 	}
 	
+	/**
+	 * Register a new function to use in any command.
+	 * 
+	 * @param 	FunctionAlias	The name with which you want to access the function.
+	 * @param 	Function		The function to register.
+	 */
 	public static function registerFunction(FunctionAlias:String, Function:Dynamic):Void
 	{
 		if (Reflect.isFunction(Function))
