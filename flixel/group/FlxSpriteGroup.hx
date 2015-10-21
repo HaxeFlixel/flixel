@@ -762,6 +762,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		
 		for (member in _sprites)
 		{
+			if (member == null) continue;
 			var minMemberX:Float = member.x;
 			var maxMemberX:Float = minMemberX + member.width;
 			
@@ -797,6 +798,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		
 		for (member in _sprites)
 		{
+			if (member == null) continue;
 			var minMemberY:Float = member.y;
 			var maxMemberY:Float = minMemberY + member.height;
 			
