@@ -677,6 +677,10 @@ class FlxText extends FlxSprite
 	
 	private function set_borderColor(Color:FlxColor):FlxColor
 	{
+		if (Color == null)
+		{
+			Color = FlxColor.TRANSPARENT;
+		}
 		if (borderColor != Color && borderStyle != NONE)
 		{
 			_regen = true;
