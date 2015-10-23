@@ -15,6 +15,7 @@
 	<haxeflag name="--macro" value="flixel.system.macros.FlxDefines.run()" />
 	
 	<section if="setup">
+		<haxelib name="hscript" />
 		<haxelib name="systools" />
 		<haxelib name="flixel-addons" />
 		<haxelib name="flixel-ui" />

@@ -36,23 +36,6 @@ class ConsoleFrontEnd
 	}
 	
 	/**
-	 * Add a custom command to the console on the debugging screen.
-	 * 
-	 * @param 	Aliases			An array of accepted aliases for this command.
-	 * @param 	ProcessFunction	Function to be called with params when the command is entered.
-	 * @param	Help			The description of this command shown in the help command.
-	 * @param	ParamHelp		The description of this command's processFunction's params.
-	 * @param 	NumParams		The amount of parameters a function has. Require to prevent crashes on Neko.
-	 * @param	ParamCutoff		At which parameter to put all remaining params into an array
-	 */
-	public inline function addCommand(Aliases:Array<String>, ProcessFunction:Dynamic, ?Help:String, ?ParamHelp:String, NumParams:Int = 0, ParamCutoff:Int = -1):Void
-	{
-		#if !FLX_NO_DEBUG
-		// FlxG.game.debugger.console.addCommand(Aliases, ProcessFunction, Help, ParamHelp, NumParams, ParamCutoff);
-		#end
-	}
-	
-	/**
 	 * Just needed to create an instance.
 	 */
 	@:allow(flixel.FlxG)

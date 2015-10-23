@@ -31,16 +31,16 @@ class Console extends Window
 	private static inline var _HISTORY_MAX:Int = 25;
 	
 	/**
-	 * Hash containing all registered Obejects for the set command. You can use the registerObject() 
-	 * helper function to register new ones or add them to this Hash directly.
+	 * Map containing all registered Objects. You can use registerObject() or add them directly to this map.
 	 */
 	public var registeredObjects:StringMap<Dynamic>;
 	/**
-	 * Hash containing all registered Functions for the call command. You can use the registerFunction() 
-	 * helper function to register new ones or add them to this Hash directly.
+	 * Map containing all registered Functions. You can use registerFunction() or add them directly to this map.
 	 */
 	public var registeredFunctions:StringMap<Dynamic>;
-	
+	/**
+	 * Map containing all registered help text. Set these values from registerObject() or registerFunction().
+	 */
 	public var registeredHelp:StringMap<String>;
 	
 	/**
@@ -245,10 +245,11 @@ class Console extends Window
 		{
 			var text = StringTools.trim(_input.text);
 			
-			if (text == "help")
+			if (registeredFunctions.get(text) != null)
 			{
-				// Special case: Force "help" to be the help command
-				text = "help()";
+				// Force registered functions to have "()" if the command doesn't already include them
+				// so when the user types "help" or "resetGame", something useful happens
+				text += "()";
 			}
 			
 			// Attempt to parse, run, and output the command
@@ -257,7 +258,7 @@ class Console extends Window
 			if (output != null) ConsoleUtil.log(output);
 			
 			// Only save new commands 
-			if (getPreviousCommand() != _input.text) 
+			if (getPreviousCommand() != _input.text)
 			{
 				// Save the command to the history
 				cmdHistory.push(_input.text);

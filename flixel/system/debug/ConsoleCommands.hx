@@ -18,13 +18,6 @@ class ConsoleCommands
 	{
 		#if !FLX_NO_DEBUG
 		_console = console;
-		/*
-		console.addCommand(["create", "cr"], create, "Creates a new FlxObject and registers it - by default at the mouse position.", 
-							"[FlxObject] (MousePos = true)", 3, 3);
-		
-		console.addCommand(["watchMouse", "wm"], watchMouse, "Adds the mouse coordinates to the watch window.");
-		console.addCommand(["track", "t"], track, "Adds a tracker window for the specified object or class.");
-		*/
 		
 		console.registerFunction("help", help, "Displays the help text of a registered object or function. See \"help\".");
 		console.registerFunction("close", close, "Closes the debugger overlay.");
@@ -46,9 +39,15 @@ class ConsoleCommands
 		console.registerFunction("clearBitmapLog", FlxG.bitmapLog.clear, "Clears the bitmapLog window.");
 		console.registerFunction("viewCache", FlxG.bitmapLog.viewCache, "Adds the cache to the bitmapLog window.");
 		
+		console.registerFunction("create", create, "Creates a new FlxObject and registers it - by default at the mouse position. \"create(ObjClass:Class<T>, PlaceAtMouse:Bool, ExtraParams:Array<Dynamic>)\" Ex: \"create(FlxSprite, false, [100, 100])\"");
+		
+		console.registerFunction("watchMouse", watchMouse, "Adds the mouse coordinates to the watch window.");
+		console.registerFunction("track", track, "Adds a tracker window for the specified object or class.");
+		
 		// Default classes to include
 		console.registerObject("Math", Math);
 		console.registerObject("FlxG", FlxG);
+		console.registerObject("FlxSprite", FlxSprite);
 		
 		#end
 	}
@@ -117,37 +116,35 @@ class ConsoleCommands
 		ConsoleUtil.log("resetGame: Game has been reset");
 	}
 	
-	/*
-	private function create(ClassName:String, MousePos:String = "true", ?Params:Array<String>):Void
+	private function create<T:FlxObject>(ObjClass:Class<T>, MousePos:Bool = true, ?Params:Array<Dynamic>):Void
 	{
 		if (Params == null)
 			Params = [];
-
-		var instance:Dynamic = ConsoleUtil.attemptToCreateInstance(ClassName, FlxObject, Params);
-		if (instance == null)
-			return;
-
-		var obj:FlxObject = instance;
-
-		if (MousePos == "true")
+		
+		var obj:FlxObject = Type.createInstance(ObjClass, Params);
+		
+		if (obj == null) return;
+		
+		if (MousePos)
 		{
 			obj.x = FlxG.game.mouseX;
 			obj.y = FlxG.game.mouseY;
 		}
-
-		FlxG.state.add(instance);
-
+		
+		FlxG.state.add(obj);
+		
 		if (Params.length == 0)
-			ConsoleUtil.log("create: New " + ClassName + " created at X = " + obj.x + " Y = " + obj.y);
+			ConsoleUtil.log("create: New " + ObjClass + " created at X = " + obj.x + " Y = " + obj.y);
 		else
-			ConsoleUtil.log("create: New " + ClassName + " created at X = " + obj.x + " Y = " + obj.y + " with params " + Params);
-
-		_console.objectStack.push(instance);
-		_console.registerObject(Std.string(_console.objectStack.length), instance);
-
-		ConsoleUtil.log("create: " + ClassName + " registered as object '" + _console.objectStack.length + "'");
+			ConsoleUtil.log("create: New " + ObjClass + " created at X = " + obj.x + " Y = " + obj.y + " with params " + Params);
+		
+		_console.objectStack.push(obj);
+		
+		var name = "Object_" + _console.objectStack.length;
+		_console.registerObject(name, obj);
+		
+		ConsoleUtil.log("create: " + ObjClass + " registered as '" + name + "'");
 	}
-	*/
 	
 	private function fields(Object:Dynamic):String
 	{
@@ -208,22 +205,13 @@ class ConsoleCommands
 		_watchingMouse = !_watchingMouse;
 	}
 	
-	/*
-	private function track(ObjectAndVariable:String):Void
+	private function track(Object:Dynamic):Void
 	{
-		if (ObjectAndVariable != null)
+		if (Object != null)
 		{
-			var path:PathToVariable = ConsoleUtil.resolveObjectAndVariableFromMap(ObjectAndVariable, _console.registeredObjects);
-			var objectOrClass = 
-				if (path.variableName == "") // Class<T>
-					path.object;
-				else
-					Reflect.getProperty(path.object, path.variableName);
-				
-			FlxG.debugger.track(objectOrClass);
+			FlxG.debugger.track(Object);
 		}
 	}
-	*/
 	
 	private function pause():Void
 	{
