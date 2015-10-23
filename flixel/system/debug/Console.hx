@@ -1,4 +1,5 @@
 package flixel.system.debug;
+import haxe.ds.StringMap;
 
 #if !FLX_NO_DEBUG
 import flash.events.Event;
@@ -33,12 +34,14 @@ class Console extends Window
 	 * Hash containing all registered Obejects for the set command. You can use the registerObject() 
 	 * helper function to register new ones or add them to this Hash directly.
 	 */
-	public var registeredObjects:Map<String, Dynamic>;
+	public var registeredObjects:StringMap<Dynamic>;
 	/**
 	 * Hash containing all registered Functions for the call command. You can use the registerFunction() 
 	 * helper function to register new ones or add them to this Hash directly.
 	 */
-	public var registeredFunctions:Map<String, Dynamic>;
+	public var registeredFunctions:StringMap<Dynamic>;
+	
+	public var registeredHelp:StringMap<String>;
 	
 	/**
 	 * Internal helper var containing all the FlxObjects created via the create command.
@@ -73,8 +76,9 @@ class Console extends Window
 		
 		ConsoleUtil.init();
 		
-		registeredObjects = new Map<String, Dynamic>();
-		registeredFunctions = new Map<String, Dynamic>();
+		registeredObjects = new StringMap<Dynamic>();
+		registeredFunctions = new StringMap<Dynamic>();
+		registeredHelp = new StringMap<String>();
 		
 		objectStack = new Array<FlxObject>();
 		
@@ -239,9 +243,18 @@ class Console extends Window
 	{
 		try
 		{
+			var text = StringTools.trim(_input.text);
+			
+			if (text == "help")
+			{
+				// Special case: Force "help" to be the help command
+				text = "help()";
+			}
+			
 			// Attempt to parse, run, and output the command
-			var output = ConsoleUtil.runCommand(StringTools.trim(_input.text));
-			ConsoleUtil.log(output);
+			var output = ConsoleUtil.runCommand(text);
+			
+			if (output != null) ConsoleUtil.log(output);
 			
 			// Only save new commands 
 			if (getPreviousCommand() != _input.text) 
@@ -298,11 +311,17 @@ class Console extends Window
 	 * 
 	 * @param 	ObjectAlias		The name with which you want to access the object.
 	 * @param 	AnyObject		The object to register.
+	 * @param 	HelpText		An optional string to trace to the console using the "help" command.
 	 */
-	public inline function registerObject(ObjectAlias:String, AnyObject:Dynamic):Void
+	public inline function registerObject(ObjectAlias:String, AnyObject:Dynamic, ?HelpText:String):Void
 	{
 		registeredObjects.set(ObjectAlias, AnyObject);
 		ConsoleUtil.registerObject(ObjectAlias, AnyObject);
+		
+		if (HelpText != null)
+		{
+			registeredHelp.set(ObjectAlias, HelpText);
+		}
 	}
 	
 	/**
@@ -310,11 +329,17 @@ class Console extends Window
 	 * 
 	 * @param 	FunctionAlias	The name with which you want to access the function.
 	 * @param 	Function		The function to register.
+	 * @param 	HelpText		An optional string to trace to the console using the "help" command.
 	 */
-	public inline function registerFunction(FunctionAlias:String, Function:Dynamic):Void
+	public inline function registerFunction(FunctionAlias:String, Function:Dynamic, ?HelpText:String):Void
 	{
 		registeredFunctions.set(FunctionAlias, Function);
 		ConsoleUtil.registerFunction(FunctionAlias, Function);
+		
+		if (HelpText != null)
+		{
+			registeredHelp.set(FunctionAlias, HelpText);
+		}
 	}
 	
 	override public function destroy():Void
@@ -333,6 +358,7 @@ class Console extends Window
 		
 		registeredObjects = null;
 		registeredFunctions = null;
+		registeredHelp = null;
 		
 		objectStack = null;
 	}

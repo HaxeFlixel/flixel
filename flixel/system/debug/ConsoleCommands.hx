@@ -19,84 +19,69 @@ class ConsoleCommands
 		#if !FLX_NO_DEBUG
 		_console = console;
 		/*
-		// Install commands
-		console.addCommand(["help", "h"], help, null, "(Command)", 1);
-		console.addCommand(["close", "cl"], close, "Closes the debugger overlay.");
-		console.addCommand(["clearHistory", "ch"], clearHistory, "Clears the command history.");
-		
-		console.addCommand(["clearLog", "clear"], FlxG.log.clear, "Clears the log window.");
-		
-		console.addCommand(["resetState", "rs"], resetState, "Resets the current state.");
-		console.addCommand(["switchState", "ss"], switchState, "Switches to a specified state.", "[FlxState]");
-		console.addCommand(["resetGame", "rg"], resetGame, "Resets the game.");
-		
 		console.addCommand(["create", "cr"], create, "Creates a new FlxObject and registers it - by default at the mouse position.", 
 							"[FlxObject] (MousePos = true)", 3, 3);
-		console.addCommand(["set", "s"], set, "Sets a variable within a registered object.", "[Path to variable] [Value] (WatchName)", 3);
-		console.addCommand(["get", "g"], get, "Gets a variable within a registered object or the object itself.", "[Path to variable] (WatchName)", 2);
-		console.addCommand(["call", "c"], call, "Calls a registered function / function within a registered object.", 3, 2);
-		console.addCommand(["fields", "f"], fields, "Lists the fields of a class or instance", "[Class or path to instance] (NumSuperClassesToInclude = 0)", 2);
-		
-		console.addCommand(["listObjects", "lo"], listObjects, "Lists all the aliases of the registered objects.");
-		console.addCommand(["listFunctions", "lf"], listFunctions, "Lists all the aliases of the registered objects.");
 		
 		console.addCommand(["watchMouse", "wm"], watchMouse, "Adds the mouse coordinates to the watch window.");
 		console.addCommand(["track", "t"], track, "Adds a tracker window for the specified object or class.");
-		
-		console.addCommand(["pause", "p"], pause, "Toggle between paused and unpaused");
-		
-		console.addCommand(["clearBitmapLog", "cbl"], FlxG.bitmapLog.clear, "Clears the bitmapLog window.");
-		console.addCommand(["viewCache", "vc"], FlxG.bitmapLog.viewCache, "Adds the cache to the bitmapLog window");
-		
-		// Default registration
-		console.registerObject("FlxG", FlxG);
 		*/
 		
+		console.registerFunction("help", help, "Displays the help text of a registered object or function. See \"help\".");
+		console.registerFunction("close", close, "Closes the debugger overlay.");
+		
+		console.registerFunction("clearHistory", clearHistory, "Closes the debugger overlay.");
+		console.registerFunction("clearLog", FlxG.log.clear, "Clears the command history.");
+		
+		console.registerFunction("resetState", resetState, "Resets the current state.");
+		console.registerFunction("switchState", switchState, "Switches to the specified state. Ex: \"switchState(new TestState())\". Be sure the class of the new state is a registered object!");
+		console.registerFunction("resetGame", resetGame, "Resets the game.");
+		
+		console.registerFunction("fields", fields, "Lists the fields of a class or instance");
+		
+		console.registerFunction("listObjects", listObjects, "Lists the aliases of all registered objects.");
+		console.registerFunction("listFunctions", listFunctions, "Lists the aliases of all registered functions.");
+		
+		console.registerFunction("pause", pause, "Toggles the game between paused and unpaused.");
+		
+		console.registerFunction("clearBitmapLog", FlxG.bitmapLog.clear, "Clears the bitmapLog window.");
+		console.registerFunction("viewCache", FlxG.bitmapLog.viewCache, "Adds the cache to the bitmapLog window.");
+		
+		// Default classes to include
 		console.registerObject("Math", Math);
 		console.registerObject("FlxG", FlxG);
 		
 		#end
 	}
 	
-	/*
-	private function help(?Alias:String):Void
+	private function help(?Alias:String):String
 	{
-		if (Alias == null) 
+		if (Alias == null || Alias.length == 0) 
 		{
-			var output:String = "System commands: ";
-			for (command in _console.commands)
+			var output:String = "System classes and commands: ";
+			for (obj in _console.registeredObjects.keys())
 			{
-				output += command.aliases[0] + ", ";
+				output += obj + ", ";
 			}
-			ConsoleUtil.log(output);
-			ConsoleUtil.log("help (Command) for more information about a specific command"); 
+			for (func in _console.registeredFunctions.keys())
+			{
+				output += func + "(), ";
+			}
+			return output + "\nTry 'help(\"command\")' for more information about a specific command."; 
 		}
 		else 
 		{
-			var command:Command = ConsoleUtil.findCommand(Alias, _console.commands);
-			
-			if (command != null)
+			if (_console.registeredHelp.exists(Alias))
 			{
-				FlxG.log.add("");
-				ConsoleUtil.log(command.aliases);
-				
-				if (command.help != null)
-					ConsoleUtil.log(command.help);
-				
-				var cutoffHelp:String = "";
-				if (command.paramCutoff > 0)
-					cutoffHelp = " [param0...paramX]";
-				
-				if (command.paramHelp != null || cutoffHelp != "")
-					ConsoleUtil.log("Params: " + command.paramHelp + cutoffHelp);
+				return Alias + (_console.registeredFunctions.exists(Alias) ? "()" : "") + ": " + _console.registeredHelp.get(Alias);
 			}
-			else 
+			
+			else
 			{
-				FlxG.log.error("A command named '" + Alias + "' does not exist");
+				FlxG.log.error("Help: The command '" + Alias + "' does not have help text.");
+				return null;
 			}
 		}
 	}
-	*/
 	
 	#if !FLX_NO_DEBUG
 	private inline function close():Void
@@ -117,17 +102,14 @@ class ConsoleCommands
 		ConsoleUtil.log("resetState: State has been reset");
 	}
 	
-	/*
-	private function switchState(ClassName:String):Void 
+	private function switchState(State:FlxState):Void 
 	{
-		var instance:Dynamic = ConsoleUtil.attemptToCreateInstance(ClassName, FlxState);
-		if (instance == null)
+		if (State == null)
 			return;
 		
-		FlxG.switchState(instance);
-		ConsoleUtil.log("switchState: New '" + ClassName + "' created");  
+		FlxG.switchState(State);
+		ConsoleUtil.log("switchState: New '" + Type.getClass(State) + "' created");  
 	}
-	*/
 	
 	private inline function resetGame():Void
 	{
@@ -167,50 +149,38 @@ class ConsoleCommands
 	}
 	*/
 	
-	/*
-	private function fields(ObjectAndVariable:String, NumSuperClassesToInclude:Int = 0):Void
+	private function fields(Object:Dynamic):String
 	{
-		var pathToVariable:PathToVariable = ConsoleUtil.resolveObjectAndVariableFromMap(ObjectAndVariable, _console.registeredObjects);
-		
-		// In case resolving failed
-		if (pathToVariable == null)
-			return;
-	
-		var fields:Array<String> = [];
-		var isClass:Bool = Std.is(pathToVariable.object, Class);
-		
+		var fields:Array<String> = null;
 		// passed a class -> get static fields
-		if (isClass && pathToVariable.variableName == "")
+		if (Std.is(Object, Class))
 		{
-			fields = Type.getClassFields(pathToVariable.object);
+			fields = Type.getClassFields(Object);
 		}
-		else // get instance fields
+		else if (Reflect.isObject(Object)) // get instance fields
 		{
-			var instance = Reflect.getProperty(pathToVariable.object, pathToVariable.variableName);
-			if (instance == null)
-				return;
-		
-			var cl = Type.getClass(instance);
-			fields = ConsoleUtil.getInstanceFieldsAdvanced(cl, NumSuperClassesToInclude);
+			fields = Type.getInstanceFields((Type.getClass(Object)));
 		}
 		
-		var object = isClass ? pathToVariable.object : 
-			Reflect.getProperty(pathToVariable.object, pathToVariable.variableName);
+		else
+		{
+			return "Can't get the fields of a registered function.";
+		}
 		
 		for (i in 0...fields.length)
 		{
-			fields[i] += ":" + ConsoleUtil.getTypeName(Reflect.getProperty(object, fields[i]));
+			fields[i] += ":" + Reflect.getProperty(Object, fields[i]);
 		}
 		
-		ConsoleUtil.log("fields: list of fields for " + ObjectAndVariable);
+		ConsoleUtil.log("List of fields for " + Object + ":");
 		var output:String = "";
 		for (field in fields)
 		{
 			output += field + "\n";
 		}
-		ConsoleUtil.log(output);
+		
+		return StringTools.rtrim(output);
 	}
-	*/
 	
 	private inline function listObjects():Void
 	{
