@@ -1111,27 +1111,27 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	
 	private function updateColorTransform():Void
 	{
-		if (colorTransform != null)
+		if (colorTransform == null)
+			colorTransform = new ColorTransform();
+		
+		if ((alpha != 1) || (color != 0xffffff))
 		{
-			if ((alpha != 1) || (color != 0xffffff))
-			{
-				colorTransform.redMultiplier = color.redFloat;
-				colorTransform.greenMultiplier = color.greenFloat;
-				colorTransform.blueMultiplier = color.blueFloat;
-				colorTransform.alphaMultiplier = alpha;
-			}
-			else
-			{
-				colorTransform.redMultiplier = 1;
-				colorTransform.greenMultiplier = 1;
-				colorTransform.blueMultiplier = 1;
-				colorTransform.alphaMultiplier = 1;
-			}
-			
-			#if FLX_RENDER_BLIT
-			setDirty();
-			#end
+			colorTransform.redMultiplier = color.redFloat;
+			colorTransform.greenMultiplier = color.greenFloat;
+			colorTransform.blueMultiplier = color.blueFloat;
+			colorTransform.alphaMultiplier = alpha;
 		}
+		else
+		{
+			colorTransform.redMultiplier = 1;
+			colorTransform.greenMultiplier = 1;
+			colorTransform.blueMultiplier = 1;
+			colorTransform.alphaMultiplier = 1;
+		}
+		
+		#if FLX_RENDER_BLIT
+		setDirty();
+		#end
 	}
 	
 	private function set_blend(Value:BlendMode):BlendMode 
