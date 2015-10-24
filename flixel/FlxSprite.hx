@@ -814,24 +814,27 @@ class FlxSprite extends FlxObject
 	
 	private function updateColorTransform():Void
 	{
-		if ((alpha != 1) || (color != 0xffffff))
+		if (colorTransform != null)
 		{
-			colorTransform.redMultiplier = color.redFloat;
-			colorTransform.greenMultiplier = color.greenFloat;
-			colorTransform.blueMultiplier = color.blueFloat;
-			colorTransform.alphaMultiplier = alpha;
-			useColorTransform = true;
+			if ((alpha != 1) || (color != 0xffffff))
+			{
+				colorTransform.redMultiplier = color.redFloat;
+				colorTransform.greenMultiplier = color.greenFloat;
+				colorTransform.blueMultiplier = color.blueFloat;
+				colorTransform.alphaMultiplier = alpha;
+				useColorTransform = true;
+			}
+			else
+			{
+				colorTransform.redMultiplier = 1;
+				colorTransform.greenMultiplier = 1;
+				colorTransform.blueMultiplier = 1;
+				colorTransform.alphaMultiplier = 1;
+				useColorTransform = false;
+			}
+			
+			dirty = true;
 		}
-		else
-		{
-			colorTransform.redMultiplier = 1;
-			colorTransform.greenMultiplier = 1;
-			colorTransform.blueMultiplier = 1;
-			colorTransform.alphaMultiplier = 1;
-			useColorTransform = false;
-		}
-		
-		dirty = true;
 	}
 	
 	/**
