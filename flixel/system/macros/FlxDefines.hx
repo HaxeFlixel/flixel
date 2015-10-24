@@ -133,11 +133,11 @@ class FlxDefines
 			define(FLX_NATIVE_CURSOR);
 		}
 		
-		if ((defined("next") && !defined("flash")) || defined("flash11_8"))
+		if ((defined("openfl_next") && !defined("flash")) || defined("flash11_8"))
 		{
 			define(FLX_GAMEINPUT_API);
 		}
-		else if (!defined("next") && (defined("cpp") || defined("neko") || defined("bitfive")))
+		else if (!defined("openfl_next") && (defined("cpp") || defined("neko") || defined("bitfive")))
 		{
 			define(FLX_JOYSTICK_API);
 		}
