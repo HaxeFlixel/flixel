@@ -553,7 +553,7 @@ class FlxBitmapText extends FlxSprite
 			txtWidth = fieldWidth;
 		}
 		
-		frameWidth = txtWidth;
+		frameWidth = (txtWidth == 0) ? 1 : txtWidth;
 		frameHeight = (txtHeight == 0) ? 1 : txtHeight;
 	}
 	
