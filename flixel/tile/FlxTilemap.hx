@@ -164,7 +164,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		
 		scale = new FlxCallbackPoint(setScaleXCallback, setScaleYCallback, setScaleXYCallback);
 		scale.set(1, 1);
-
+		
 		offset = FlxPoint.get();
 		
 		FlxG.signals.gameResized.add(onGameResize);
@@ -203,7 +203,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		
 		// need to destroy FlxCallbackPoints
 		scale = FlxDestroyUtil.destroy(scale);
-
+		
 		offset = FlxDestroyUtil.put(offset);
 		
 		colorTransform = null;
@@ -329,7 +329,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 			}
 		}
 		
-		if (buffer == null)	
+		if (buffer == null)
 		{
 			return;
 		}
@@ -344,7 +344,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		
 		var rectWidth:Float = _scaledTileWidth;
 		var rectHeight:Float = _scaledTileHeight;
-	
+		
 		// Copy tile images into the tile buffer
 		// Modified from getScreenPosition()
 		_point.x = (Camera.scroll.x * scrollFactor.x) - x; 
@@ -795,7 +795,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		
 		if (tile != null && tile.visible)
 		{
-			image = FlxImageFrame.fromFrame(tile.frame);	
+			image = FlxImageFrame.fromFrame(tile.frame);
 		}
 		else
 		{
@@ -860,22 +860,8 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		var screenColumns:Int = Buffer.columns;
 		
 		// Bound the upper left corner
-		if (screenXInTiles < 0)
-		{
-			screenXInTiles = 0;
-		}
-		if (screenXInTiles > widthInTiles - screenColumns)
-		{
-			screenXInTiles = widthInTiles - screenColumns;
-		}
-		if (screenYInTiles < 0)
-		{
-			screenYInTiles = 0;
-		}
-		if (screenYInTiles > heightInTiles - screenRows)
-		{
-			screenYInTiles = heightInTiles - screenRows;
-		}
+		screenXInTiles = Std.int(FlxMath.bound(screenXInTiles, 0, widthInTiles - screenColumns));
+		screenYInTiles =  Std.int(FlxMath.bound(screenYInTiles, 0, heightInTiles - screenRows));
 		
 		var rowIndex:Int = screenYInTiles * widthInTiles + screenXInTiles;
 		_flashPoint.y = 0;
@@ -989,7 +975,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	{
 		var debugTile:BitmapData;
 		debugTile = new BitmapData(_tileWidth, _tileHeight, true, 0);
-
+		
 		var gfx:Graphics = FlxSpriteUtil.flashGfx;
 		gfx.clear();
 		gfx.moveTo(0, 0);
@@ -1051,7 +1037,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 			{
 				if (buffer != null)
 					buffer.destroy();
-
+				
 				_buffers[i] = createBuffer(camera);
 			}
 		}
