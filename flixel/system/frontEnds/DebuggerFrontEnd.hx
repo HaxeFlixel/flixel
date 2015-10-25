@@ -147,6 +147,14 @@ class DebuggerFrontEnd
 	{
 		#if !FLX_NO_DEBUG
 		FlxG.game.debugger.visible = Value;
+		
+		// if the debugger is non-visible, then we need to focus on game sprite, 
+		// so the game still will be able to capture key presses
+		if (!Value)
+		{
+			FlxG.stage.stageFocusRect = false; // don't show yellow focus rect on flash
+			FlxG.stage.focus = FlxG.game;
+		}
 		#end
 		
 		return visible = Value;
