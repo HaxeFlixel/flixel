@@ -6,6 +6,7 @@
 -lib munit
 -lib hamcrest
 -lib flixel
+-lib hscript
 -lib lime
 -lib openfl
 
