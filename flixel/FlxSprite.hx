@@ -814,6 +814,9 @@ class FlxSprite extends FlxObject
 	
 	private function updateColorTransform():Void
 	{
+		if (colorTransform == null)
+			colorTransform = new ColorTransform();
+		
 		if ((alpha != 1) || (color != 0xffffff))
 		{
 			colorTransform.redMultiplier = color.redFloat;

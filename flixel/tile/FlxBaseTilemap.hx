@@ -58,7 +58,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 */
 	private var _randomLambda:Void->Float;
 	/**
-	 * Internal collection of tile objects, one for each type of tile in the map (NOTE one for every single tile in the whole map).
+	 * Internal collection of tile objects, one for each type of tile in the map (NOT one for every single tile in the whole map).
 	 */
 	private var _tileObjects:Array<Tile> = [];
 

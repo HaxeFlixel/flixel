@@ -677,6 +677,12 @@ class FlxText extends FlxSprite
 	
 	private function set_borderColor(Color:FlxColor):FlxColor
 	{
+		#if neko
+		if (Color == null)
+		{
+			Color = FlxColor.TRANSPARENT;
+		}
+		#end
 		if (borderColor != Color && borderStyle != NONE)
 		{
 			_regen = true;
@@ -737,6 +743,9 @@ class FlxText extends FlxSprite
 	
 	override private function updateColorTransform():Void
 	{
+		if (colorTransform == null)
+			colorTransform = new ColorTransform();
+		
 		if (alpha != 1)
 		{
 			colorTransform.alphaMultiplier = alpha;
