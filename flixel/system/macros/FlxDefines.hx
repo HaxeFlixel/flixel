@@ -48,6 +48,9 @@ private enum HelperDefines
 	FLX_JOYSTICK_API;
 	FLX_GAMEINPUT_API;
 	
+	FLX_LINC_DIALOGS;
+	FLX_SYSTOOLS_DIALOGS;
+	
 	/**
 	 * Renders all cameras into a single BitmapData using draw() with
 	 * smoothing. Necessary to achieve non-blurry rendering with bitfive.
@@ -165,6 +168,16 @@ class FlxDefines
 		if (defined("cpp") || defined("neko"))
 		{
 			define(FLX_POST_PROCESS);
+		}
+		
+		if (defined("sys") && !defined("neko") && defined("linc_dialogs"))
+		{
+			define(FLX_LINC_DIALOGS);
+		}
+		
+		if (defined("sys") && !defined(FLX_LINC_DIALOGS) && defined("systools"))
+		{
+			define(FLX_SYSTOOLS_DIALOGS);
 		}
 	}
 	
