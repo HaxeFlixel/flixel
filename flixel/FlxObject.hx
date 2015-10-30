@@ -7,6 +7,7 @@ import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.math.FlxVelocity;
 import flixel.tile.FlxBaseTilemap;
+import flixel.util.FlxAlign;
 import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
@@ -941,6 +942,47 @@ class FlxObject extends FlxBasic
 			x = (FlxG.width / 2) - (width / 2);
 		if (axes != FlxAxes.X)
 			y = (FlxG.height / 2) - (height / 2);
+		
+		return this;
+	}
+	
+	/**
+	 * Aligns this FlxObject to a target by an anchor point.
+	 * 
+	 * @param	target	To target object to be aligned with.
+	 * @param	anchor	On what anchor point to align the object - default is CENTER.
+	 * @return 	This FlxObject for chaining
+	 */
+	public function alignTo(target:FlxObject, ?anchor:FlxAlign):FlxObject
+	{
+		if (anchor == null)
+			anchor = FlxAlign.CENTER;
+			
+		if (anchor == FlxAlign.CENTER || anchor == FlxAlign.CENTER_LEFT || anchor == FlxAlign.CENTER_RIGHT)
+		{
+			y = target.y + (target.height / 2) - (height / 2);
+		}
+		else if (anchor == FlxAlign.TOP || anchor == FlxAlign.TOP_LEFT || anchor == FlxAlign.TOP_RIGHT || anchor == FlxAlign.CENTER_TOP)
+		{
+			y = target.y;
+		}
+		else if (anchor == FlxAlign.BOTTOM || anchor == FlxAlign.BOTTOM_LEFT || anchor == FlxAlign.BOTTOM_RIGHT || anchor == FlxAlign.CENTER_BOTTOM)
+		{
+			y = target.y + target.height - height;
+		}
+		
+		if (anchor == FlxAlign.CENTER || anchor == FlxAlign.CENTER_TOP || anchor == FlxAlign.CENTER_BOTTOM)
+		{
+			x = target.x + (target.width / 2) - (width / 2);
+		}
+		else if (anchor == FlxAlign.LEFT || anchor == FlxAlign.TOP_LEFT || anchor == FlxAlign.BOTTOM_LEFT || anchor == FlxAlign.CENTER_LEFT)
+		{
+			x = target.x;
+		}
+		else if (anchor == FlxAlign.RIGHT || anchor == FlxAlign.TOP_RIGHT || anchor == FlxAlign.BOTTOM_RIGHT || anchor == FlxAlign.CENTER_RIGHT)
+		{
+			x = target.x + target.width - width;
+		}
 		
 		return this;
 	}

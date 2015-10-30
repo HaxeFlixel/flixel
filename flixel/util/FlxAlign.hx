@@ -1,0 +1,18 @@
+package flixel.util;
+
+enum FlxAlign
+{
+	BOTTOM;
+	BOTTOM_LEFT;
+	BOTTOM_RIGHT;
+	CENTER;
+	CENTER_BOTTOM;
+	CENTER_LEFT;
+	CENTER_RIGHT;
+	CENTER_TOP;
+	LEFT;
+	RIGHT;
+	TOP;
+	TOP_LEFT;
+	TOP_RIGHT;
+}
