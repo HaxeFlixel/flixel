@@ -128,7 +128,11 @@ class FlxAtlasFrames extends FlxFramesCollection
 		
 		var pack:String = StringTools.trim(Description);
 		var lines:Array<String> = pack.split("\n");
-		lines.splice(0, 4);
+		
+		// find the "repeat" option and skip unused data
+		var repeatLine:Int = (lines[3].indexOf("repeat:") > -1) ? 3 : 4;
+		lines.splice(0, repeatLine + 1);
+		
 		var numElementsPerImage:Int = 7;
 		var numImages:Int = Std.int(lines.length / numElementsPerImage);
 		
