@@ -257,12 +257,17 @@ class FlxSprite extends FlxObject
 		_matrix = null;
 		colorTransform = null;
 		blend = null;
-		frame = null;
 		
-		_frame = FlxDestroyUtil.destroy(_frame);
+		#if FLX_RENDER_TILE
+		if (_frame != null && frame != null && frame.parent != _frame.parent)
+		{
+			_frame.parent.destroy();
+		}
+		#end
 		
 		frames = null;
 		graphic = null;
+		_frame = FlxDestroyUtil.destroy(_frame);
 	}
 	
 	public function clone():FlxSprite
@@ -919,6 +924,17 @@ class FlxSprite extends FlxObject
 				framePixels.colorTransform(_flashRect, colorTransform);
 			}
 			
+			// recreate _frame for native target, so it will use modified framePixels
+			#if FLX_RENDER_TILE
+			if (frame.parent != _frame.parent)
+			{
+				_frame.parent.destroy();
+			}
+			
+			var graph:FlxGraphic = FlxGraphic.fromBitmapData(framePixels, false, null, false);
+			_frame = graph.imageFrame.frame.copyTo(_frame);
+			#end
+			
 			dirty = false;
 		}
 		
@@ -1135,12 +1151,23 @@ class FlxSprite extends FlxObject
 			frame = frames.frames[0];
 			dirty = true;
 		}
+		else
+		{
+			return null;
+		}
 		
-		if (frame != null && clipRect != null)
+		#if FLX_RENDER_TILE
+		if (_frame != null && _frame.parent.bitmap == framePixels)
+		{
+			_frame.parent.destroy();
+		}
+		#end
+		
+		if (clipRect != null)
 		{
 			_frame = frame.clipTo(clipRect, _frame);
 		}
-		else if (frame != null)
+		else
 		{
 			_frame = frame.copyTo(_frame);
 		}
