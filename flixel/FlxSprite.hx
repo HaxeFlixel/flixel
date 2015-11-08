@@ -258,16 +258,21 @@ class FlxSprite extends FlxObject
 		colorTransform = null;
 		blend = null;
 		
+		destroyInnerFrameGraphic();
+		
+		frames = null;
+		graphic = null;
+		_frame = FlxDestroyUtil.destroy(_frame);
+	}
+	
+	private inline function destroyInnerFrameGraphic():Void
+	{
 		#if FLX_RENDER_TILE
 		if (_frame != null && frame != null && frame.parent != _frame.parent)
 		{
 			_frame.parent.destroy();
 		}
 		#end
-		
-		frames = null;
-		graphic = null;
-		_frame = FlxDestroyUtil.destroy(_frame);
 	}
 	
 	public function clone():FlxSprite
@@ -504,6 +509,15 @@ class FlxSprite extends FlxObject
 	{
 		width = frameWidth;
 		height = frameHeight;
+	}
+	
+	/**
+	 * Helper method just for convinience, so you don't need to type:
+	 * sprite.frame = sprite.frame;
+	 */
+	public inline function resetFrame():Void
+	{
+		frame = this.frame;
 	}
 	
 	/**
@@ -926,11 +940,7 @@ class FlxSprite extends FlxObject
 			
 			// recreate _frame for native target, so it will use modified framePixels
 			#if FLX_RENDER_TILE
-			if (frame.parent != _frame.parent)
-			{
-				_frame.parent.destroy();
-			}
-			
+			destroyInnerFrameGraphic();
 			var graph:FlxGraphic = FlxGraphic.fromBitmapData(framePixels, false, null, false);
 			_frame = graph.imageFrame.frame.copyTo(_frame);
 			#end
