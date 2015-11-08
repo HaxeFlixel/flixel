@@ -648,4 +648,15 @@ class FlxGraphic
 		
 		return value;
 	}
+	
+	/**
+	 * Clones this FlxGraphic object
+	 */
+	public function clone():FlxGraphic
+	{
+		var toClone:FlxGraphic = new FlxGraphic(key, bitmap.clone(), persist);
+		toClone.frameCollections = frameCollections;
+		toClone.frameCollectionTypes = frameCollectionTypes;
+		return toClone;
+	}
 }
