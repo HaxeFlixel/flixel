@@ -514,6 +514,8 @@ class FlxSprite extends FlxObject
 	/**
 	 * Helper method just for convinience, so you don't need to type:
 	 * sprite.frame = sprite.frame;
+	 * You may need this method in tile render mode, 
+	 * when you want sprite to use its original graphic, not the graphic generated from its framePixels
 	 */
 	public inline function resetFrame():Void
 	{
