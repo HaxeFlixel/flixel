@@ -469,7 +469,7 @@ class FlxGamepadManager implements IFlxInputManager
 	}
 	#end
 	
-	#if FLX_JOYSTICK_API
+	#if (FLX_JOYSTICK_API && openfl_legacy)
 	private function getModelFromJoystick(f:Float):FlxGamepadModel
 	{
 		//id "1" is PS3, but that is not supported as its PC drivers are terrible, and the most popular tools just turn it into a 360 controller
