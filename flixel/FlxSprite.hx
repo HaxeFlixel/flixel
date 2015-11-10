@@ -925,6 +925,8 @@ class FlxSprite extends FlxObject
 		if (_frame != null && dirty)
 		{
 			#if FLX_RENDER_TILE
+			// don't try to regenerate frame pixels if _frame already uses it as source of graphics
+			// if you'll try then it will clear framePixels and you won't see anything
 			if (_frame.parent.bitmap == framePixels)
 			{
 				dirty = false;
@@ -948,8 +950,8 @@ class FlxSprite extends FlxObject
 				framePixels.colorTransform(_flashRect, colorTransform);
 			}
 			
-			// recreate _frame for native target, so it will use modified framePixels
 			#if FLX_RENDER_TILE
+			// recreate _frame for native target, so it will use modified framePixels
 			destroyInnerFrameGraphic();
 			var graph:FlxGraphic = FlxGraphic.fromBitmapData(framePixels, false, null, false);
 			_frame = graph.imageFrame.frame.copyTo(_frame);
