@@ -924,6 +924,14 @@ class FlxSprite extends FlxObject
 	{
 		if (_frame != null && dirty)
 		{
+			#if FLX_RENDER_TILE
+			if (_frame.parent.bitmap == framePixels)
+			{
+				dirty = false;
+				return framePixels;
+			}
+			#end
+			
 			var doFlipX = flipX != _frame.flipX;
 			var doFlipY = flipY != _frame.flipY;
 			if (!doFlipX && !doFlipY && _frame.type == FlxFrameType.REGULAR)
