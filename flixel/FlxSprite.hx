@@ -257,12 +257,22 @@ class FlxSprite extends FlxObject
 		_matrix = null;
 		colorTransform = null;
 		blend = null;
-		frame = null;
 		
-		_frame = FlxDestroyUtil.destroy(_frame);
+		destroyInnerFrameGraphic();
 		
 		frames = null;
 		graphic = null;
+		_frame = FlxDestroyUtil.destroy(_frame);
+	}
+	
+	private inline function destroyInnerFrameGraphic():Void
+	{
+		#if FLX_RENDER_TILE
+		if (_frame != null && frame != null && frame.parent != _frame.parent)
+		{
+			_frame.parent.destroy();
+		}
+		#end
 	}
 	
 	public function clone():FlxSprite
@@ -499,6 +509,17 @@ class FlxSprite extends FlxObject
 	{
 		width = frameWidth;
 		height = frameHeight;
+	}
+	
+	/**
+	 * Helper method just for convinience, so you don't need to type:
+	 * sprite.frame = sprite.frame;
+	 * You may need this method in tile render mode, 
+	 * when you want sprite to use its original graphic, not the graphic generated from its framePixels
+	 */
+	public inline function resetFrame():Void
+	{
+		frame = this.frame;
 	}
 	
 	/**
@@ -903,6 +924,16 @@ class FlxSprite extends FlxObject
 	{
 		if (_frame != null && dirty)
 		{
+			#if FLX_RENDER_TILE
+			// don't try to regenerate frame pixels if _frame already uses it as source of graphics
+			// if you'll try then it will clear framePixels and you won't see anything
+			if (_frame.parent.bitmap == framePixels)
+			{
+				dirty = false;
+				return framePixels;
+			}
+			#end
+			
 			var doFlipX = flipX != _frame.flipX;
 			var doFlipY = flipY != _frame.flipY;
 			if (!doFlipX && !doFlipY && _frame.type == FlxFrameType.REGULAR)
@@ -918,6 +949,13 @@ class FlxSprite extends FlxObject
 			{
 				framePixels.colorTransform(_flashRect, colorTransform);
 			}
+			
+			#if FLX_RENDER_TILE
+			// recreate _frame for native target, so it will use modified framePixels
+			destroyInnerFrameGraphic();
+			var graph:FlxGraphic = FlxGraphic.fromBitmapData(framePixels, false, null, false);
+			_frame = graph.imageFrame.frame.copyTo(_frame);
+			#end
 			
 			dirty = false;
 		}
@@ -1135,12 +1173,23 @@ class FlxSprite extends FlxObject
 			frame = frames.frames[0];
 			dirty = true;
 		}
+		else
+		{
+			return null;
+		}
 		
-		if (frame != null && clipRect != null)
+		#if FLX_RENDER_TILE
+		if (_frame != null && _frame.parent.bitmap == framePixels)
+		{
+			_frame.parent.destroy();
+		}
+		#end
+		
+		if (clipRect != null)
 		{
 			_frame = frame.clipTo(clipRect, _frame);
 		}
-		else if (frame != null)
+		else
 		{
 			_frame = frame.copyTo(_frame);
 		}
