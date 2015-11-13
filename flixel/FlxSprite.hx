@@ -779,7 +779,7 @@ class FlxSprite extends FlxObject
 	 */
 	public inline function centerOrigin():Void
 	{
-		origin.set(frameWidth * 0.5, frameHeight * 0.5);
+		origin.set(width * 0.5, height * 0.5);
 	}
 	
 	/**
