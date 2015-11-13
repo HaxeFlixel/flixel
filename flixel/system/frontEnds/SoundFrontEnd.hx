@@ -29,7 +29,7 @@ class SoundFrontEnd
 	 */
 	public var volumeHandler:Float->Void;
 	
-	#if !FLX_NO_KEYBOARD
+	#if (!FLX_NO_KEYBOARD && !FLX_NO_SOUND_TRAY)
 	/**
 	 * The key codes used to increase volume (see FlxG.keys for the keys available).
 	 * Default keys: + (and numpad +). Set to null to deactivate.
@@ -333,7 +333,7 @@ class SoundFrontEnd
 		if (list != null && list.active)
 			list.update(elapsed);
 		
-		#if !FLX_NO_KEYBOARD
+		#if (!FLX_NO_KEYBOARD && !FLX_NO_SOUND_TRAY)
 		if (FlxG.keys.anyJustReleased(muteKeys))
 			toggleMuted();
 		else if (FlxG.keys.anyJustReleased(volumeUpKeys))
