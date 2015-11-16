@@ -1255,18 +1255,18 @@ enum FlxTilemapAutoTiling
 }
 
 @:enum
-abstract FlxTilemapDiagonalPolicy(Int)
+abstract FlxTilemapDiagonalPolicy(Null<Bool>)
 {
 	/**
 	 * No diagonal movement allowed when calculating the path
 	 */
-	var NONE = 0;
+	var NONE = null;
 	/**
 	 * Diagonal movement costs the same as orthogonal movement
 	 */
-	var NORMAL = 1;
+	var NORMAL = false;
 	/**
 	 * Diagonal movement costs one more than orthogonal movement
 	 */
-	var WIDE = 2;
+	var WIDE = true;
 }
