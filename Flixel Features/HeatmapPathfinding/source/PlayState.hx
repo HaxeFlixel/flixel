@@ -146,7 +146,7 @@ class PlayState extends FlxState
 		if (startX == endX)
 			endX = 1;
 			
-		var tempDistances = tilemap.computePathDistance(startX, endX, true, false);
+		var tempDistances = tilemap.computePathDistance(startX, endX, NONE, false);
 		
 		if (tempDistances == null)
 			return;
