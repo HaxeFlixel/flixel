@@ -958,7 +958,7 @@ class FlxObject extends FlxBasic
 		if (anchor == null)
 			anchor = FlxAlign.CENTER;
 			
-		if (anchor == FlxAlign.CENTER || anchor == FlxAlign.CENTER_LEFT || anchor == FlxAlign.CENTER_RIGHT)
+		if (anchor == FlxAlign.CENTER || anchor == FlxAlign.CENTER_LEFT || anchor == FlxAlign.CENTER_RIGHT || anchor == FlxAlign.VERTICAL)
 		{
 			y = target.y + (target.height / 2) - (height / 2);
 		}
@@ -971,7 +971,7 @@ class FlxObject extends FlxBasic
 			y = target.y + target.height - height;
 		}
 		
-		if (anchor == FlxAlign.CENTER || anchor == FlxAlign.CENTER_TOP || anchor == FlxAlign.CENTER_BOTTOM)
+		if (anchor == FlxAlign.CENTER || anchor == FlxAlign.CENTER_TOP || anchor == FlxAlign.CENTER_BOTTOM || anchor == FlxAlign.HORIZONTAL)
 		{
 			x = target.x + (target.width / 2) - (width / 2);
 		}
