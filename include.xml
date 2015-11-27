@@ -11,10 +11,12 @@
 	<set name="legacy" unless="next" />
 	
 	<haxelib name="openfl" unless="create" />
+	<haxelib name="hscript" unless="create" />
 	
 	<haxeflag name="--macro" value="flixel.system.macros.FlxDefines.run()" />
 	
 	<section if="setup">
+		<haxelib name="hscript" />
 		<haxelib name="systools" />
 		<haxelib name="flixel-addons" />
 		<haxelib name="flixel-ui" />

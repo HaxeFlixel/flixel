@@ -26,6 +26,7 @@
 	<haxelib name="flixel-ui" />
 	<haxelib name="nape" />
 	<haxelib name="spinehaxe" />
+	<haxelib name="hscript" />
 	
 	<!---------------------------------HAXEDEFINES---------------------------------->
 	
