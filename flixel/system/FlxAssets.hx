@@ -28,11 +28,7 @@ class GraphicLogo extends BitmapData {}
 class GraphicVirtualInput extends BitmapData {}
 
 @:file("assets/images/ui/virtual-input.txt")
-#if lime_legacy
-class VirtualInputData extends ByteArray{}
-#else
-class VirtualInputData extends ByteArrayData {}
-#end
+class VirtualInputData extends ByteArray {}
 #end
 
 class FlxAssets
