@@ -64,6 +64,13 @@ class FlxDefines
 			+ 'Please install a newer version.', FlxMacroUtil.here());
 		#end
 		
+		#if ((haxe_ver == "3.201") && flixel_ui)
+		if (defined("cpp"))
+			abort('flixel-ui is not compatible with Haxe 3.2.1 on the cpp target'
+				+' due to a compiler bug (#4343). Please use a different Haxe version.',
+				FlxMacroUtil.here());
+		#end
+		
 		checkDefines();
 		defineRenderingDefine();
 		defineHelperDefines();
