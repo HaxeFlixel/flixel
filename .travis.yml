@@ -14,8 +14,7 @@ sudo: false
 
 matrix:
   allow_failures:
-    - env: "TARGET=cpp"
-      haxe: development
+    - haxe: development
 
 install:
   - haxelib install munit > /dev/null
