@@ -9,7 +9,7 @@ class Popup_Demo extends FlxUIPopup
 		_ui.setMode("demo_0");
 	}
 	
-	public override function getEvent(id:String, target:Dynamic, data:Array<Dynamic>, ?params:Array<Dynamic>):Void 
+	public override function getEvent(id:String, target:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void 
 	{
 		if (params != null && params.length > 0) {
 			if (id == "click_button") {

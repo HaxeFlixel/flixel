@@ -63,11 +63,11 @@ class State_Battle extends FlxUIState
 		hideFailedUI();
 	}
 	
-	public override function getRequest(id:String, sender:IFlxUIWidget, data:Dynamic, ?params:Array<Dynamic>):Dynamic {
+	public override function getRequest(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Dynamic {
 		return null;
 	}	
 	
-	public override function getEvent(id:String, sender:IFlxUIWidget, data:Dynamic, ?params:Array<Dynamic>):Void {
+	public override function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void {
 		if (params != null){
 			switch(id) {
 				case FlxUITypedButton.CLICK_EVENT: 

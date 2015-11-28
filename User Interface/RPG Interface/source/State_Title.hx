@@ -35,7 +35,7 @@ class State_Title extends FlxUIState
 		super.create();
 	}
 	
-	public override function getEvent(name:String, sender:IFlxUIWidget, data:Dynamic,?params:Array<Dynamic>):Void {
+	public override function getEvent(name:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void {
 		var str:String = "";
 		
 		switch(name)

@@ -30,7 +30,7 @@ class State_SaveMenu extends FlxUIState
 		return null;
 	}
 	
-	public override function getEvent(id:String, target:Dynamic, data:Array<Dynamic>,?params:Array<Dynamic>):Void {
+	public override function getEvent(id:String, target:Dynamic, data:Dynamic,?params:Array<Dynamic>):Void {
 		if (params != null) {
 			switch(id) {
 			case "click_button":
