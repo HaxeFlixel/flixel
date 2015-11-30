@@ -15,12 +15,14 @@ class FlxSubState extends FlxState
 	 */
 	public var closeCallback:Void->Void;
 	
-	#if FLX_RENDER_TILE
-	/**
-	 * Helper sprite object for non-flash targets. Draws background
-	 */
-	private var _bgSprite:FlxBGSprite;
-	#end
+	//start FlxG.renderTile
+	
+		/**
+		* Helper sprite object for non-flash targets. Draws background
+		*/
+		private var _bgSprite:FlxBGSprite;
+	
+	//end FlxG.renderTile
 	
 	/**
 	 * Helper var for close() so closeSubState() can be called on the parent.
@@ -39,23 +41,27 @@ class FlxSubState extends FlxState
 		super();
 		closeCallback = null;
 		
-		#if FLX_RENDER_TILE
-		_bgSprite = new FlxBGSprite();
-		#end
+		if (FlxG.renderTile)
+		{
+			_bgSprite = new FlxBGSprite();
+		}
 		bgColor = BGColor;
 	}
 	
 	override public function draw():Void
 	{
 		//Draw background
-		#if FLX_RENDER_BLIT
-		for (camera in cameras)
+		if (FlxG.renderBlit)
 		{
-			camera.fill(bgColor);
+			for (camera in cameras)
+			{
+				camera.fill(bgColor);
+			}
 		}
-		#else
-		_bgSprite.draw();
-		#end
+		else
+		{
+			_bgSprite.draw();
+		}
 		
 		//Now draw all children
 		super.draw();
@@ -66,9 +72,10 @@ class FlxSubState extends FlxState
 		super.destroy();
 		closeCallback = null;
 		_parentState = null;
-		#if FLX_RENDER_TILE
-		_bgSprite = null;
-		#end
+		if (FlxG.renderTile)
+		{
+			_bgSprite = null;
+		}
 	}
 	
 	/**
@@ -89,12 +96,13 @@ class FlxSubState extends FlxState
 	
 	override private function set_bgColor(Value:Int):Int
 	{
-		#if FLX_RENDER_TILE
-		if (_bgSprite != null)
+		if (FlxG.renderTile)
 		{
-			_bgSprite.pixels.setPixel32(0, 0, Value);
+			if (_bgSprite != null)
+			{
+				_bgSprite.pixels.setPixel32(0, 0, Value);
+			}
 		}
-		#end
 		
 		return _bgColor = Value;
 	}

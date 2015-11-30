@@ -452,8 +452,11 @@ class FlxGame extends Sprite
 		var width:Int = FlxG.stage.stageWidth;
 		var height:Int = FlxG.stage.stageHeight;
 		
-		#if FLX_RENDER_TILE
-		FlxG.bitmap.onContext();
+		#if !flash
+		if (FlxG.renderTile)
+		{
+			FlxG.bitmap.onContext();
+		}
 		#end
 		
 		resizeGame(width, height);
@@ -469,12 +472,15 @@ class FlxGame extends Sprite
 		FlxG.cameras.resize();
 		
 		#if FLX_RENDER_CRISP
-		FlxDestroyUtil.removeChild(this, _displayBitmap);
-		FlxDestroyUtil.dispose(_display);
-		
-		var index:Int = getChildIndex(_inputContainer);
-		_display = new BitmapData(width, height);
-		addChildAt(_displayBitmap = new Bitmap(_display), index);
+		if (FlxG.renderBlit)
+		{
+			FlxDestroyUtil.removeChild(this, _displayBitmap);
+			FlxDestroyUtil.dispose(_display);
+			
+			var index:Int = getChildIndex(_inputContainer);
+			_display = new BitmapData(width, height);
+			addChildAt(_displayBitmap = new Bitmap(_display), index);
+		}
 		#end
 		
 		#if !FLX_NO_DEBUG
@@ -856,9 +862,10 @@ class FlxGame extends Sprite
 		
 		FlxG.signals.preDraw.dispatch();
 		
-		#if FLX_RENDER_TILE
-		FlxTilesheet._DRAWCALLS = 0;
-		#end
+		if (FlxG.renderTile)
+		{
+			FlxTilesheet._DRAWCALLS = 0;
+		}
 		
 		#if FLX_POST_PROCESS
 		if (postProcesses[0] != null)
@@ -873,33 +880,37 @@ class FlxGame extends Sprite
 		
 		_state.draw();
 		
-		#if FLX_RENDER_TILE
-		FlxG.cameras.render();
-		
-		#if !FLX_NO_DEBUG
-		debugger.stats.drawCalls(FlxTilesheet._DRAWCALLS);
-		#end
-		#end
+		if (FlxG.renderTile)
+		{
+			FlxG.cameras.render();
+			
+			#if !FLX_NO_DEBUG
+			debugger.stats.drawCalls(FlxTilesheet._DRAWCALLS);
+			#end
+		}
 		
 		#if FLX_RENDER_CRISP
-		_display.fillRect(_display.rect, FlxColor.TRANSPARENT);
-		
-		for (camera in FlxG.cameras.list)
+		if (FlxG.renderBlit)
 		{
-			_displayMatrix.identity();
-			_displayMatrix.scale(camera.zoom * FlxG.scaleMode.scale.x, camera.zoom * FlxG.scaleMode.scale.y);
-			_displayMatrix.translate(camera.x * FlxG.scaleMode.scale.x, camera.y * FlxG.scaleMode.scale.y);
+			_display.fillRect(_display.rect, FlxColor.TRANSPARENT);
 			
-			// rotate around center
-			if (camera.angle != 0)
+			for (camera in FlxG.cameras.list)
 			{
-				_displayMatrix.translate( - _display.width >> 1, - _display.height >> 1);
-				_displayMatrix.rotate(camera.angle * FlxAngle.TO_RAD);
-				_displayMatrix.translate(_display.width >> 1, _display.height >> 1);
+				_displayMatrix.identity();
+				_displayMatrix.scale(camera.zoom * FlxG.scaleMode.scale.x, camera.zoom * FlxG.scaleMode.scale.y);
+				_displayMatrix.translate(camera.x * FlxG.scaleMode.scale.x, camera.y * FlxG.scaleMode.scale.y);
+				
+				// rotate around center
+				if (camera.angle != 0)
+				{
+					_displayMatrix.translate( - _display.width >> 1, - _display.height >> 1);
+					_displayMatrix.rotate(camera.angle * FlxAngle.TO_RAD);
+					_displayMatrix.translate(_display.width >> 1, _display.height >> 1);
+				}
+				
+				_displayColorTransform.alphaMultiplier = camera.alpha;
+				_display.draw(camera.buffer, _displayMatrix, _displayColorTransform, null, null, camera.antialiasing);
 			}
-			
-			_displayColorTransform.alphaMultiplier = camera.alpha;
-			_display.draw(camera.buffer, _displayMatrix, _displayColorTransform, null, null, camera.antialiasing);
 		}
 		#end
 	

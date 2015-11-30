@@ -126,18 +126,21 @@ class FlxTextField extends FlxText
 	 */
 	override public function draw():Void
 	{
-		if (_camera == null)	
+		if (_camera == null)
 		{
 			return;
 		}
 		
 		if (!_addedToDisplay)
 		{
-			#if FLX_RENDER_TILE
-			_camera.canvas.addChild(textField);
-			#else
-			_camera.flashSprite.addChild(textField);
-			#end
+			if (FlxG.renderTile)
+			{
+				_camera.canvas.addChild(textField);
+			}
+			else 
+			{
+				_camera.flashSprite.addChild(textField);
+			}
 			
 			_addedToDisplay = true;
 			updateDefaultFormat();
@@ -155,13 +158,16 @@ class FlxTextField extends FlxText
 		_point.x = x - (_camera.scroll.x * scrollFactor.x) - (offset.x);
 		_point.y = y - (_camera.scroll.y * scrollFactor.y) - (offset.y);
 		
-		#if FLX_RENDER_TILE
-		textField.x = _point.x;
-		textField.y = _point.y;
-		#else
-		textField.x = (_point.x - 0.5 * _camera.width);
-		textField.y = (_point.y - 0.5 * _camera.height);
-		#end
+		if (FlxG.renderTile)
+		{
+			textField.x = _point.x;
+			textField.y = _point.y;
+		}
+		else
+		{
+			textField.x = (_point.x - 0.5 * _camera.width);
+			textField.y = (_point.y - 0.5 * _camera.height);
+		}
 		
 		#if !FLX_NO_DEBUG
 		FlxBasic.visibleCount++;
@@ -179,11 +185,14 @@ class FlxTextField extends FlxText
 		{
 			if (Value != null)
 			{
-				#if FLX_RENDER_TILE
-				Value.canvas.addChild(textField);
-				#else
-				Value.flashSprite.addChild(textField);
-				#end
+				if (FlxG.renderTile)
+				{
+					Value.canvas.addChild(textField);
+				}
+				else
+				{
+					Value.flashSprite.addChild(textField);
+				}
 				
 				_addedToDisplay = true;
 			}

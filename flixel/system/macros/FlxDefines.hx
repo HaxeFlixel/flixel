@@ -25,9 +25,6 @@ private enum UserDefines
 	 */
 	FLX_HAXE_BUILD;
 	FLX_UNIT_TEST;
-	/** only one of these two may be defined */
-	FLX_RENDER_TILE;
-	FLX_RENDER_BLIT;
 	/* additional rendering define */
 	FLX_RENDER_TRIANGLE;
 }
@@ -72,7 +69,6 @@ class FlxDefines
 		#end
 		
 		checkDefines();
-		defineRenderingDefine();
 		defineHelperDefines();
 		
 		if (defined("flash"))
@@ -83,11 +79,6 @@ class FlxDefines
 	
 	private static function checkDefines()
 	{
-		if (defined(FLX_RENDER_BLIT) && defined(FLX_RENDER_TILE))
-		{
-			abort('You cannot define both $FLX_RENDER_BLIT and $FLX_RENDER_TILE.', FlxMacroUtil.here());
-		}
-		
 		for (define in HelperDefines.getConstructors())
 		{
 			abortIfDefined(define);
@@ -110,21 +101,6 @@ class FlxDefines
 		if (defined(define))
 		{
 			abort('$define can only be defined by flixel.', FlxMacroUtil.here());
-		}
-	}
-	
-	private static function defineRenderingDefine()
-	{
-		if (!defined(FLX_RENDER_BLIT) && !defined(FLX_RENDER_TILE))
-		{
-			if (defined("flash") || defined("js"))
-			{
-				define(FLX_RENDER_BLIT);
-			}
-			else
-			{
-				define(FLX_RENDER_TILE);
-			}
 		}
 	}
 	
@@ -164,7 +140,7 @@ class FlxDefines
 			define("bitfive_gamepads");
 		}
 		
-		if (defined("js") && defined("bitfive") && defined(FLX_RENDER_BLIT))
+		if (defined("js") && defined("bitfive"))
 		{
 			define(FLX_RENDER_CRISP);
 		}

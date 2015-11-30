@@ -52,9 +52,8 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	 */
 	public var pixelPerfectRender:Null<Bool>;
 	
-	#if FLX_RENDER_BLIT
 	/**
-	 * The actual buffer BitmapData.
+	 * The actual buffer BitmapData. (Only used if FlxG.renderBlit == true)
 	 */ 
 	public var pixels(default, null):BitmapData;
 	
@@ -62,8 +61,7 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	
 	private var _flashRect:Rectangle;
 	private var _matrix:Matrix;
-	#end
-
+	
 	/**
 	 * Instantiates a new camera-specific buffer for storing the visual tilemap data.
 	 * 
@@ -79,11 +77,12 @@ class FlxTilemapBuffer implements IFlxDestroyable
 		updateColumns(TileWidth, WidthInTiles, ScaleX, Camera);
 		updateRows(TileHeight, HeightInTiles, ScaleY, Camera);
 		
-		#if FLX_RENDER_BLIT
-		pixels = new BitmapData(Std.int(columns * TileWidth), Std.int(rows * TileHeight), true, 0);
-		_flashRect = new Rectangle(0, 0, pixels.width, pixels.height);
-		_matrix = new Matrix();
-		#end
+		if (FlxG.renderBlit)
+		{
+			pixels = new BitmapData(Std.int(columns * TileWidth), Std.int(rows * TileHeight), true, 0);
+			_flashRect = new Rectangle(0, 0, pixels.width, pixels.height);
+			_matrix = new Matrix();
+		}
 		
 		dirty = true;
 	}
@@ -93,12 +92,15 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	 */
 	public function destroy():Void
 	{
-		#if FLX_RENDER_BLIT
-		pixels = null;
-		blend = null;
-		_matrix = null;
-		#end
+		if (FlxG.renderBlit)
+		{
+			pixels = null;
+			blend = null;
+			_matrix = null;
+		}
 	}
+	
+	//start FlxG.renderBlit
 	
 	/**
 	 * Fill the buffer with the specified color.
@@ -106,10 +108,12 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	 * 
 	 * @param	Color	What color to fill with, in 0xAARRGGBB hex format.
 	 */
-	#if FLX_RENDER_BLIT
 	public function fill(Color:FlxColor = FlxColor.TRANSPARENT):Void
 	{
-		pixels.fillRect(_flashRect, Color);
+		if (FlxG.renderBlit)
+		{
+			pixels.fillRect(_flashRect, Color);
+		}
 	}
 	
 	/**
@@ -143,7 +147,8 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	{
 		pixels.colorTransform(_flashRect, Transform);
 	}
-	#end
+	
+	//end FlxG.renderBlit
 	
 	public function updateColumns(TileWidth:Int, WidthInTiles:Int, ScaleX:Float = 1.0, ?Camera:FlxCamera):Void
 	{

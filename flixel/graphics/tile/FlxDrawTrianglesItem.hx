@@ -52,7 +52,8 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 	
 	override public function render(camera:FlxCamera):Void 
 	{
-		#if FLX_RENDER_TILE
+		if (!FlxG.renderTile) return;
+		
 		if (numTriangles <= 0)
 		{
 			return;
@@ -75,7 +76,6 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		#end
 		
 		FlxTilesheet._DRAWCALLS++;
-		#end
 	}
 	
 	override public function reset():Void 

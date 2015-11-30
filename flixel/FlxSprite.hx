@@ -52,10 +52,10 @@ class FlxSprite extends FlxObject
 	public var framePixels:BitmapData;
 	
 	/**
-	 * Always true on FLX_RENDER_BLIT. On FLX_RENDER_TILE it determines whether
+	 * Always true on FlxG.renderBlit. On FlxG.renderTile it determines whether
 	 * framePixels is used and defaults to false for performance reasons.
 	 */
-	public var useFramePixels(default, set):Bool = #if FLX_RENDER_BLIT true #else false #end;
+	public var useFramePixels(default, set):Bool = true;
 	
 	/**
 	 * Controls whether the object is smoothed when rotated, affects performance.
@@ -161,15 +161,15 @@ class FlxSprite extends FlxObject
 	 */
 	private var _frame:FlxFrame;
 	
-	#if FLX_RENDER_TILE
+	//start FlxG.renderTIle
 	/**
 	 * Graphic of _frame. Used in tile render mode, when useFramePixels is true.
 	 */
 	private var _frameGraphic:FlxGraphic;
 	
-	private var _facingHorizontalMult:Int = 1;
-	private var _facingVerticalMult:Int = 1;
-	#end
+		private var _facingHorizontalMult:Int = 1;
+		private var _facingVerticalMult:Int = 1;
+	//end FlxG.renderTile
 	
 	/**
 	 * Internal, reused frequently during drawing and animating.
@@ -221,6 +221,7 @@ class FlxSprite extends FlxObject
 	{
 		super(X, Y);
 		
+		useFramePixels = FlxG.renderBlit;
 		if (SimpleGraphic != null)
 		{
 			loadGraphic(SimpleGraphic);
@@ -274,9 +275,13 @@ class FlxSprite extends FlxObject
 		graphic = null;
 		_frame = FlxDestroyUtil.destroy(_frame);
 		
-		#if FLX_RENDER_TILE
-		_frameGraphic = FlxDestroyUtil.destroy(_frameGraphic);
-		#end
+		if (FlxG.renderTile)
+		{
+			if (_frame != null && frame != null && frame.parent != _frame.parent)
+			{
+				_frame.parent.destroy();
+			}
+		}
 	}
 	
 	public function clone():FlxSprite
@@ -584,10 +589,11 @@ class FlxSprite extends FlxObject
 		
 		centerOrigin();
 		
-	#if FLX_RENDER_BLIT
-		dirty = true;
-		getFlxFrameBitmapData();
-	#end
+		if (FlxG.renderBlit)
+		{
+			dirty = true;
+			getFlxFrameBitmapData();
+		}
 	}
 	
 	override public function update(elapsed:Float):Void 
@@ -717,10 +723,11 @@ class FlxSprite extends FlxObject
 			graphic.bitmap.copyPixels(bitmapData, _flashRect2, _flashPoint, null, null, true);
 			_flashRect2.width = graphic.bitmap.width;
 			_flashRect2.height = graphic.bitmap.height;
-			#if FLX_RENDER_BLIT
-			dirty = true;
-			calcFrame();
-			#end
+			if (FlxG.renderBlit)
+			{
+				dirty = true;
+				calcFrame();
+			}
 		}
 		else // complex render
 		{
@@ -734,10 +741,11 @@ class FlxSprite extends FlxObject
 			_matrix.translate(X + frame.frame.x + Brush.origin.x, Y + frame.frame.y + Brush.origin.y);
 			var brushBlend:BlendMode = Brush.blend;
 			graphic.bitmap.draw(bitmapData, _matrix, null, brushBlend, null, Brush.antialiasing);
-			#if FLX_RENDER_BLIT
-			dirty = true;
-			calcFrame();
-			#end
+			if (FlxG.renderBlit)
+			{
+				dirty = true;
+				calcFrame();
+			}
 		}
 	}
 	
@@ -749,16 +757,19 @@ class FlxSprite extends FlxObject
 	 */
 	public function drawFrame(Force:Bool = false):Void
 	{
-		#if FLX_RENDER_BLIT
-		if (Force || dirty)
+		if (FlxG.renderBlit)
+		{
+			if (Force || dirty)
+			{
+				dirty = true;
+				calcFrame();
+			}
+		}
+		else
 		{
 			dirty = true;
-			calcFrame();
+			calcFrame(true);
 		}
-		#else
-		dirty = true;
-		calcFrame(true);
-		#end
 	}
 	
 	/**
@@ -807,7 +818,7 @@ class FlxSprite extends FlxObject
 	
 	/**
 	 * Set sprite's color transformation with control over color offsets.
-	 * Offsets only work with FLX_RENDER_BLIT.
+	 * Offsets only work with FlxG.renderBlit.
 	 * 
 	 * @param	redMultiplier		The value for the red multiplier, in the range from 0 to 1. 
 	 * @param	greenMultiplier		The value for the green multiplier, in the range from 0 to 1. 
@@ -911,12 +922,13 @@ class FlxSprite extends FlxObject
 			loadGraphic(FlxGraphic.fromClass(GraphicDefault));
 		}
 		
-		#if FLX_RENDER_TILE
-		if (!RunOnCpp)
+		if (FlxG.renderTile)
 		{
-			return;
+			if (!RunOnCpp)
+			{
+				return;
+			}
 		}
-		#end
 		
 		getFlxFrameBitmapData();
 	}
@@ -928,15 +940,16 @@ class FlxSprite extends FlxObject
 	{
 		if (_frame != null && dirty)
 		{
-			#if FLX_RENDER_TILE
-			// don't try to regenerate frame pixels if _frame already uses it as source of graphics
-			// if you'll try then it will clear framePixels and you won't see anything
-			if (_frameGraphic != null)
+			if (FlxG.renderTile)
 			{
-				dirty = false;
-				return framePixels;
+				// don't try to regenerate frame pixels if _frame already uses it as source of graphics
+				// if you'll try then it will clear framePixels and you won't see anything
+				if (_frame.parent.bitmap == framePixels)
+				{
+					dirty = false;
+					return framePixels;
+				}
 			}
-			#end
 			
 			var doFlipX:Bool = checkFlipX();
 			var doFlipY:Bool = checkFlipY();
@@ -955,15 +968,16 @@ class FlxSprite extends FlxObject
 				framePixels.colorTransform(_flashRect, colorTransform);
 			}
 			
-			#if FLX_RENDER_TILE
-			if (useFramePixels)
+			if (FlxG.renderTile)
 			{
-				// recreate _frame for native target, so it will use modified framePixels
-				_frameGraphic = FlxDestroyUtil.destroy(_frameGraphic);
-				_frameGraphic = FlxGraphic.fromBitmapData(framePixels, false, null, false);
-				_frame = _frameGraphic.imageFrame.frame.copyTo(_frame);
+				if(useFramePixels)
+				{
+					// recreate _frame for native target, so it will use modified framePixels
+					destroyInnerFrameGraphic();
+					var graph:FlxGraphic = FlxGraphic.fromBitmapData(framePixels, false, null, false);
+					_frame = graph.imageFrame.frame.copyTo(_frame);
+				}
 			}
-			#end
 			
 			dirty = false;
 		}
@@ -1056,16 +1070,19 @@ class FlxSprite extends FlxObject
 	}
 	
 	/**
-	 * Returns the result of isSimpleRenderBlit() if FLX_RENDER_BLIT is 
-	 * defined or false if FLX_RENDER_TILE is defined.
+	 * Returns the result of isSimpleRenderBlit() if FlxG.renderBlit is 
+	 * true or false if FlxG.renderTle is true.
 	 */
 	public function isSimpleRender(?camera:FlxCamera):Bool
 	{ 
-		#if FLX_RENDER_BLIT
-		return isSimpleRenderBlit(camera);
-		#else
-		return false;
-		#end
+		if (FlxG.renderBlit)
+		{
+			return isSimpleRenderBlit(camera);
+		}
+		else
+		{
+			return false;
+		}
 	}
 	
 	/**
@@ -1186,9 +1203,13 @@ class FlxSprite extends FlxObject
 			return null;
 		}
 		
-		#if FLX_RENDER_TILE
-		_frameGraphic = FlxDestroyUtil.destroy(_frameGraphic);
-		#end
+		if (FlxG.renderTile)
+		{
+			if (_frame != null && _frame.parent.bitmap == framePixels)
+			{
+				_frame.parent.destroy();
+			}
+		}
 		
 		if (clipRect != null)
 		{
@@ -1342,18 +1363,20 @@ class FlxSprite extends FlxObject
 	
 	private function set_flipX(Value:Bool):Bool
 	{
-		#if FLX_RENDER_TILE
-		_facingHorizontalMult = Value ? -1 : 1;
-		#end
+		if (FlxG.renderTile)
+		{
+			_facingHorizontalMult = Value ? -1 : 1;
+		}
 		dirty = (flipX != Value) || dirty;
 		return flipX = Value;
 	}
 	
 	private function set_flipY(Value:Bool):Bool
 	{
-		#if FLX_RENDER_TILE
-		_facingVerticalMult = Value ? -1 : 1;
-		#end
+		if (FlxG.renderTile)
+		{
+			_facingVerticalMult = Value ? -1 : 1;
+		}
 		dirty = (flipY != Value) || dirty;
 		return flipY = Value;
 	}
@@ -1365,22 +1388,26 @@ class FlxSprite extends FlxObject
 	
 	private function set_useFramePixels(value:Bool):Bool
 	{
-		#if FLX_RENDER_TILE
-		if (value != useFramePixels)
+		if (FlxG.renderTile)
 		{
-			useFramePixels = value;
-			resetFrame();
-			
-			if (value)
+			if (value != useFramePixels)
 			{
-				getFlxFrameBitmapData();
+				useFramePixels = value;
+				resetFrame();
+				
+				if (value)
+				{
+					getFlxFrameBitmapData();
+				}
 			}
+			
+			return value;
 		}
-		
-		return value;
-		#else
-		return true;
-		#end
+		else
+		{
+			useFramePixels = true;
+			return true;
+		}
 	}
 	
 	private inline function checkFlipX():Bool

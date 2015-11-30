@@ -22,7 +22,7 @@ class FlxObject extends FlxBasic
 	/**
 	 * Default value for FlxObject's pixelPerfectPosition var.
 	 */
-	public static var defaultPixelPerfectPosition:Bool = #if FLX_RENDER_BLIT true #else false #end;
+	public static var defaultPixelPerfectPosition:Bool = false;
 	
 	/**
 	 * This value dictates the maximum number of pixels two objects have to intersect before collision stops trying to separate them.
@@ -1035,19 +1035,23 @@ class FlxObject extends FlxBasic
 
 	private inline function beginDrawDebug(camera:FlxCamera):Graphics
 	{
-		#if FLX_RENDER_BLIT
+		if (FlxG.renderBlit)
+		{
 			FlxSpriteUtil.flashGfx.clear();
 			return FlxSpriteUtil.flashGfx;
-		#else
+		}
+		else
+		{
 			return camera.debugLayer.graphics;
-		#end
+		}
 	}
 	
 	private inline function endDrawDebug(camera:FlxCamera)
 	{
-		#if FLX_RENDER_BLIT
+		if (FlxG.renderBlit)
+		{
 			camera.buffer.draw(FlxSpriteUtil.flashGfxSprite);
-		#end
+		}
 	}
 #end
 

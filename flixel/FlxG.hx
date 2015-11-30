@@ -113,6 +113,11 @@ class FlxG
 	 */
 	public static var drawFramerate(default, set):Int;
 	
+	public static var renderMethod(default, null):FlxRenderMethod;
+	
+	public static var renderBlit(default, null):Bool;
+	public static var renderTile(default, null):Bool;
+	
 	/**
 	 * Represents the amount of time in seconds that passed since last frame.
 	 */
@@ -500,6 +505,8 @@ class FlxG
 		width = Std.int(Math.abs(Width));
 		height = Std.int(Math.abs(Height));
 		
+		initRenderMethod();
+		
 		BaseScaleMode.gWidth = width;
 		BaseScaleMode.gHeight = height;
 		
@@ -539,6 +546,38 @@ class FlxG
 		#if !FLX_NO_SOUND_SYSTEM
 		sound = new SoundFrontEnd();
 		#end
+	}
+	
+	private static function initRenderMethod():Void
+	{
+		renderMethod = BLIT;
+		
+		#if (!lime_legacy && !flash)
+			if (Lib.application.config.windows[0].hardware == false)
+			{
+				renderMethod = BLIT;
+			}
+			else
+			{
+				renderMethod = switch(stage.window.renderer.type)
+				{
+					case OPENGL, CONSOLE:      TILES;
+					case CANVAS, FLASH, CAIRO: BLIT;
+					default:                   BLIT;
+				}
+			}
+		#else
+			#if (flash || js)
+				renderMethod = BLIT;
+			#else
+				renderMethod = TILES;
+			#end
+		#end
+		
+		renderBlit = renderMethod == BLIT;
+		renderTile = renderMethod == TILES;
+		
+		FlxObject.defaultPixelPerfectPosition = renderBlit;
 	}
 	
 	/**
@@ -654,4 +693,10 @@ class FlxG
 	{
 		return game._state;
 	}
+}
+
+enum FlxRenderMethod 
+{
+	TILES;
+	BLIT;
 }
