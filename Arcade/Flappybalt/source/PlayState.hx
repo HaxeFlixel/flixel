@@ -185,6 +185,7 @@ class PlayState extends FlxState
 	{
 		_paddleLeft.y = FlxG.height;
 		_paddleRight.y = FlxG.height;
+		_player.flipX = false;
 		Reg.score = 0;
 		_scoreDisplay.text = "";
 		Reg.highScore = loadScore();

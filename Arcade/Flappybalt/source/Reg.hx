@@ -40,7 +40,7 @@ class Reg
 	static private var dustMoteData:BitmapData;
 	
 	/**
-	 * Draws the bounce panels. Useful for mobile devices with wierd resolutions.
+	 * Draws the bounce panels. Useful for mobile devices with weird resolutions.
 	 * 
 	 * @param	Height	The height of the panel to draw.
 	 * @return	A BitmapData object representing the paddle. Cached for the second paddle to save time.
