@@ -82,7 +82,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		throw "updateTile must be implemented";
 	}
 	
-	private function cacheGraphics(TileWidth:Int, TileHeight:Int, TileGraphic:Dynamic):Void
+	private function cacheGraphics(TileWidth:Int, TileHeight:Int, TileGraphic:FlxTilemapGraphicAsset):Void
 	{
 		throw "cacheGraphics must be implemented";
 	}
@@ -698,10 +698,10 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param	End			The end point in world coordinates.
 	 * @param	Simplify	Whether to run a basic simplification algorithm over the path data, removing extra points that are on the same line.  Default value is true.
 	 * @param	RaySimplify	Whether to run an extra raycasting simplification algorithm over the remaining path data.  This can result in some close corners being cut, and should be used with care if at all (yet).  Default value is false.
-	 * @param   WideDiagonal   Whether to require an additional tile to make diagonal movement. Default value is true;
+	 * @param	DiagonalPolicy	How to treat diagonal movement. (Default is WIDE, count +1 tile for diagonal movement)
 	 * @return	An Array of FlxPoints, containing all waypoints from the start to the end.  If no path could be found, then a null reference is returned.
 	 */
-	public function findPath(Start:FlxPoint, End:FlxPoint, Simplify:Bool = true, RaySimplify:Bool = false, WideDiagonal:Bool = true):Array<FlxPoint>
+	public function findPath(Start:FlxPoint, End:FlxPoint, Simplify:Bool = true, RaySimplify:Bool = false, DiagonalPolicy:FlxTilemapDiagonalPolicy = WIDE):Array<FlxPoint>
 	{
 		// Figure out what tile we are starting and ending on.
 		var startIndex:Int = getTileIndexByCoords(Start);
@@ -714,7 +714,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		}
 		
 		// Figure out how far each of the tiles is from the starting tile
-		var distances:Array<Int> = computePathDistance(startIndex, endIndex, WideDiagonal);
+		var distances:Array<Int> = computePathDistance(startIndex, endIndex, DiagonalPolicy);
 		
 		if (distances == null)
 		{
@@ -765,11 +765,11 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * 
 	 * @param	StartIndex		The starting tile's map index.
 	 * @param	EndIndex		The ending tile's map index.
-	 * @param	WideDiagonal	Whether to require an additional tile to make diagonal movement. Default value is true.
+	 * @param	DiagonalPolicy	How to treat diagonal movement.
 	 * @param	StopOnEnd		Whether to stop at the end or not (default true)
 	 * @return	A Flash Array of FlxPoint nodes.  If the end tile could not be found, then a null Array is returned instead.
 	 */
-	public function computePathDistance(StartIndex:Int, EndIndex:Int, WideDiagonal:Bool, StopOnEnd:Bool = true):Array<Int>
+	public function computePathDistance(StartIndex:Int, EndIndex:Int, DiagonalPolicy:FlxTilemapDiagonalPolicy, StopOnEnd:Bool = true):Array<Int>
 	{
 		// Create a distance-based representation of the tilemap.
 		// All walls are flagged as -2, all open areas as -1.
@@ -872,64 +872,69 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 						neighbors.push(index);
 					}
 				}
-				if (up && right)
+				
+				if (DiagonalPolicy != NONE)
 				{
-					index = currentIndex - widthInTiles + 1;
-					
-					if (WideDiagonal && (distances[index] == -1) && (distances[currentIndex-widthInTiles] >= -1) && (distances[currentIndex+1] >= -1))
+					var WideDiagonal = DiagonalPolicy == WIDE;
+					if (up && right)
 					{
-						distances[index] = distance;
-						neighbors.push(index);
+						index = currentIndex - widthInTiles + 1;
+						
+						if (WideDiagonal && (distances[index] == -1) && (distances[currentIndex-widthInTiles] >= -1) && (distances[currentIndex+1] >= -1))
+						{
+							distances[index] = distance;
+							neighbors.push(index);
+						}
+						else if (!WideDiagonal && (distances[index] == -1))
+						{
+							distances[index] = distance;
+							neighbors.push(index);
+						}
 					}
-					else if (!WideDiagonal && (distances[index] == -1))
+					if (right && down)
 					{
-						distances[index] = distance;
-						neighbors.push(index);
+						index = currentIndex + widthInTiles + 1;
+						
+						if (WideDiagonal && (distances[index] == -1) && (distances[currentIndex+widthInTiles] >= -1) && (distances[currentIndex+1] >= -1))
+						{
+							distances[index] = distance;
+							neighbors.push(index);
+						}
+						else if (!WideDiagonal && (distances[index] == -1))
+						{
+							distances[index] = distance;
+							neighbors.push(index);
+						}
 					}
-				}
-				if (right && down)
-				{
-					index = currentIndex + widthInTiles + 1;
-					
-					if (WideDiagonal && (distances[index] == -1) && (distances[currentIndex+widthInTiles] >= -1) && (distances[currentIndex+1] >= -1))
+					if (left && down)
 					{
-						distances[index] = distance;
-						neighbors.push(index);
+						index = currentIndex + widthInTiles - 1;
+						
+						if (WideDiagonal && (distances[index] == -1) && (distances[currentIndex+widthInTiles] >= -1) && (distances[currentIndex-1] >= -1))
+						{
+							distances[index] = distance;
+							neighbors.push(index);
+						}
+						else if (!WideDiagonal && (distances[index] == -1))
+						{
+							distances[index] = distance;
+							neighbors.push(index);
+						}
 					}
-					else if (!WideDiagonal && (distances[index] == -1))
+					if (up && left)
 					{
-						distances[index] = distance;
-						neighbors.push(index);
-					}
-				}
-				if (left && down)
-				{
-					index = currentIndex + widthInTiles - 1;
-					
-					if (WideDiagonal && (distances[index] == -1) && (distances[currentIndex+widthInTiles] >= -1) && (distances[currentIndex-1] >= -1))
-					{
-						distances[index] = distance;
-						neighbors.push(index);
-					}
-					else if (!WideDiagonal && (distances[index] == -1))
-					{
-						distances[index] = distance;
-						neighbors.push(index);
-					}
-				}
-				if (up && left)
-				{
-					index = currentIndex - widthInTiles - 1;
-					
-					if (WideDiagonal && (distances[index] == -1) && (distances[currentIndex-widthInTiles] >= -1) && (distances[currentIndex-1] >= -1))
-					{
-						distances[index] = distance;
-						neighbors.push(index);
-					}
-					else if (!WideDiagonal && (distances[index] == -1))
-					{
-						distances[index] = distance;
-						neighbors.push(index);
+						index = currentIndex - widthInTiles - 1;
+						
+						if (WideDiagonal && (distances[index] == -1) && (distances[currentIndex-widthInTiles] >= -1) && (distances[currentIndex-1] >= -1))
+						{
+							distances[index] = distance;
+							neighbors.push(index);
+						}
+						else if (!WideDiagonal && (distances[index] == -1))
+						{
+							distances[index] = distance;
+							neighbors.push(index);
+						}
 					}
 				}
 			}
@@ -1247,4 +1252,21 @@ enum FlxTilemapAutoTiling
 	 * Better for levels with thick walls that look better with interior corner art.
 	 */
 	ALT;
+}
+
+@:enum
+abstract FlxTilemapDiagonalPolicy(Int)
+{
+	/**
+	 * No diagonal movement allowed when calculating the path
+	 */
+	var NONE = 0;
+	/**
+	 * Diagonal movement costs the same as orthogonal movement
+	 */
+	var NORMAL = 1;
+	/**
+	 * Diagonal movement costs one more than orthogonal movement
+	 */
+	var WIDE = 2;
 }

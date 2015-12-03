@@ -844,7 +844,7 @@ class FlxText extends FlxSprite
 		}
 		
 		_regen = false;
-		dirty = true;
+		resetFrame();
 	}
 	
 	override public function draw():Void 

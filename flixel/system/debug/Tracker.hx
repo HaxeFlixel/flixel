@@ -18,7 +18,6 @@ import flixel.input.gamepad.FlxGamepad;
 import flixel.input.mouse.FlxMouse;
 import flixel.input.touch.FlxTouch;
 import flixel.input.FlxSwipe;
-import flixel.system.debug.ConsoleUtil.PathToVariable;
 import flixel.system.debug.Tracker.TrackerProfile;
 import flixel.system.debug.Watch;
 import flixel.text.FlxText;

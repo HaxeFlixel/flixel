@@ -1,4 +1,5 @@
 package flixel.system.debug;
+import haxe.ds.StringMap;
 
 #if !FLX_NO_DEBUG
 import flash.events.Event;
@@ -30,15 +31,17 @@ class Console extends Window
 	private static inline var _HISTORY_MAX:Int = 25;
 	
 	/**
-	 * Hash containing all registered Obejects for the set command. You can use the registerObject() 
-	 * helper function to register new ones or add them to this Hash directly.
+	 * Map containing all registered Objects. You can use registerObject() or add them directly to this map.
 	 */
-	public var registeredObjects:Map<String, Dynamic>;
+	public var registeredObjects:StringMap<Dynamic>;
 	/**
-	 * Hash containing all registered Functions for the call command. You can use the registerFunction() 
-	 * helper function to register new ones or add them to this Hash directly.
+	 * Map containing all registered Functions. You can use registerFunction() or add them directly to this map.
 	 */
-	public var registeredFunctions:Map<String, Dynamic>;
+	public var registeredFunctions:StringMap<Dynamic>;
+	/**
+	 * Map containing all registered help text. Set these values from registerObject() or registerFunction().
+	 */
+	public var registeredHelp:StringMap<String>;
 	
 	/**
 	 * Internal helper var containing all the FlxObjects created via the create command.
@@ -49,10 +52,6 @@ class Console extends Window
 	 * Reference to the array containing the command history.
 	 */
 	public var cmdHistory:Array<String>;
-	/**
-	 * An array holding all the registered commands.
-	 */
-	public var commands:Array<Command>;
 	
 	/**
 	 * The history index of the current input.
@@ -75,10 +74,11 @@ class Console extends Window
 	{	
 		super("Console", new GraphicConsole(0, 0), 0, 0, false);
 		
-		commands = new Array<Command>();
+		ConsoleUtil.init();
 		
-		registeredObjects = new Map<String, Dynamic>();
-		registeredFunctions = new Map<String, Dynamic>();
+		registeredObjects = new StringMap<Dynamic>();
+		registeredFunctions = new StringMap<Dynamic>();
+		registeredHelp = new StringMap<String>();
 		
 		objectStack = new Array<FlxObject>();
 		
@@ -203,15 +203,11 @@ class Console extends Window
 	
 	private function onKeyPress(e:KeyboardEvent):Void
 	{
-		// Don't allow spaces at the start, they break commands
-		if (e.keyCode == Keyboard.SPACE && _input.text == " ") 
-			_input.text = "";	
-		
 		// Submitting the command
 		if (e.keyCode == Keyboard.ENTER && _input.text != "")
 			processCommand();
 		
-		// Quick-unfcous
+		// Quick-unfocus
 		else if (e.keyCode == Keyboard.ESCAPE)
 			FlxG.stage.focus = null;
 		
@@ -227,32 +223,42 @@ class Console extends Window
 			
 			_input.text = getPreviousCommand();
 			
-			// Workaround to override default behaviour of selection jumping to 0 when pressing up
-			addEventListener(Event.RENDER, overrideDefaultSelection);
-			FlxG.stage.invalidate();
+			// Set caret to the end of the command
+			_input.setSelection(_input.text.length, _input.text.length);
 		}
 		// Show next command in history
 		else if (e.keyCode == Keyboard.DOWN) 
 		{
 			if (cmdHistory.length == 0) 
 				return;
+			
 			_input.text = getNextCommand();
+			
+			// Set caret to the end of the command
+			_input.setSelection(_input.text.length, _input.text.length);
 		}
 	}
 	
 	private function processCommand():Void
 	{
-		var args:Array<Dynamic> = StringTools.rtrim(_input.text).split(" ");
-		var alias:String = args.shift();
-		var command:Command = ConsoleUtil.findCommand(alias, commands);
-		
-		// Only if the command exists
-		if (command != null) 
+		try
 		{
-			var func:Dynamic = command.processFunction;
+			var text = StringTools.trim(_input.text);
+			
+			if (registeredFunctions.get(text) != null)
+			{
+				// Force registered functions to have "()" if the command doesn't already include them
+				// so when the user types "help" or "resetGame", something useful happens
+				text += "()";
+			}
+			
+			// Attempt to parse, run, and output the command
+			var output = ConsoleUtil.runCommand(text);
+			
+			if (output != null) ConsoleUtil.log(output);
 			
 			// Only save new commands 
-			if (getPreviousCommand() != _input.text) 
+			if (getPreviousCommand() != _input.text)
 			{
 				// Save the command to the history
 				cmdHistory.push(_input.text);
@@ -265,40 +271,22 @@ class Console extends Window
 			
 			_historyIndex = cmdHistory.length;
 			
-			if (Reflect.isFunction(func)) 
+			// Step forward one frame to see the results of the command
+			#if (flash && !FLX_NO_DEBUG)
+			if (FlxG.vcr.paused)
 			{
-				// Push all the remaining params into an array if a paramCutoff has been set
-				if (command.paramCutoff > 0)
-				{
-					var start:Int = command.paramCutoff - 1;
-					args[start] = args.slice(start, args.length);
-					args = args.slice(0, command.paramCutoff);
-				}
-				
-				ConsoleUtil.callFunction(func, args); 
-				
-				// Skip to the next step if the game is paused to see the effects of the command
-				#if (flash && !FLX_NO_DEBUG)
-				if (FlxG.vcr.paused)
-				{
-					FlxG.game.debugger.vcr.onStep();
-				}
-				#end
+				FlxG.game.debugger.vcr.onStep();
 			}
+			#end
 			
 			_input.text = "";
 		}
-		// Error in case the command doesn't exist
-		else 
+		
+		catch (e:Dynamic)
 		{
-			FlxG.log.error("Console: Invalid command: '" + alias + "'");
+			// Parsing error, improper syntax
+			FlxG.log.error("Console: Invalid syntax: '" + e + "'");
 		}
-	}
-	
-	private function overrideDefaultSelection(e:Event):Void
-	{
-		_input.setSelection(_input.text.length, _input.text.length);
-		removeEventListener(Event.RENDER, overrideDefaultSelection);
 	}
 	
 	private inline function getPreviousCommand():String
@@ -320,41 +308,39 @@ class Console extends Window
 	}
 	
 	/**
-	 * Register a new object to use for the set command.
+	 * Register a new object to use in any command.
 	 * 
 	 * @param 	ObjectAlias		The name with which you want to access the object.
 	 * @param 	AnyObject		The object to register.
+	 * @param 	HelpText		An optional string to trace to the console using the "help" command.
 	 */
-	public inline function registerObject(ObjectAlias:String, AnyObject:Dynamic):Void
+	public inline function registerObject(ObjectAlias:String, AnyObject:Dynamic, ?HelpText:String):Void
 	{
 		registeredObjects.set(ObjectAlias, AnyObject);
+		ConsoleUtil.registerObject(ObjectAlias, AnyObject);
+		
+		if (HelpText != null)
+		{
+			registeredHelp.set(ObjectAlias, HelpText);
+		}
 	}
 	
 	/**
-	 * Register a new function to use for the call command.
+	 * Register a new function to use in any command.
 	 * 
 	 * @param 	FunctionAlias	The name with which you want to access the function.
 	 * @param 	Function		The function to register.
+	 * @param 	HelpText		An optional string to trace to the console using the "help" command.
 	 */
-	public inline function registerFunction(FunctionAlias:String, Function:Dynamic):Void
+	public inline function registerFunction(FunctionAlias:String, Function:Dynamic, ?HelpText:String):Void
 	{
 		registeredFunctions.set(FunctionAlias, Function);
-	}
-	
-	/**
-	 * Add a custom command to the console on the debugging screen.
-	 * 
-	 * @param 	Aliases			An array of accepted aliases for this command.
-	 * @param 	ProcessFunction	Function to be called with params when the command is entered.
-	 * @param	Help			The description of this command shown in the help command.
-	 * @param	ParamHelp		The description of this command's processFunction's params.
-	 * @param 	NumParams		The amount of parameters a function has. Require to prevent crashes on Neko.
-	 * @param	ParamCutoff		At which parameter to put all remaining params into an array
-	 */
-	public inline function addCommand(Aliases:Array<String>, ProcessFunction:Dynamic, ?Help:String, ?ParamHelp:String, NumParams:Int = 0, ParamCutoff:Int = -1):Void
-	{
-		commands.push( { aliases:Aliases, processFunction:ProcessFunction, help:Help, paramHelp:ParamHelp, 
-						numParams:NumParams, paramCutoff:ParamCutoff });
+		ConsoleUtil.registerFunction(FunctionAlias, Function);
+		
+		if (HelpText != null)
+		{
+			registeredHelp.set(FunctionAlias, HelpText);
+		}
 	}
 	
 	override public function destroy():Void
@@ -371,10 +357,9 @@ class Console extends Window
 			_input = null;
 		}
 		
-		commands = null;
-		
 		registeredObjects = null;
 		registeredFunctions = null;
+		registeredHelp = null;
 		
 		objectStack = null;
 	}
@@ -391,13 +376,3 @@ class Console extends Window
 	}
 }
 #end
-
-typedef Command =
-{
-	aliases:Array<String>,
-	processFunction:Dynamic,
-	?help:String,
-	?paramHelp:String,
-	?numParams:Int,
-	?paramCutoff:Int
-}

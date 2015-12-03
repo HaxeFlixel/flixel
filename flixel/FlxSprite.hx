@@ -552,7 +552,7 @@ class FlxSprite extends FlxObject
 	
 	/**
 	 * Updates the sprite's hitbox (width, height, offset) according to the current scale. 
-	 * Also calls setOriginToCenter(). Called by setGraphicSize().
+	 * Also calls centerOrigin().
 	 */
 	public function updateHitbox():Void
 	{
