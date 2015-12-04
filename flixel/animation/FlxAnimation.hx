@@ -51,12 +51,12 @@ class FlxAnimation extends FlxBaseAnimation
 	/**
 	 * Whether or not the frames of this animation are horizontally flipped
 	 */
-	public var flipX(default, null):Bool = false;
+	public var flipX:Bool = false;
 	
 	/**
 	 * Whether or not the frames of this animation are vertically flipped
 	 */
-	public var flipY(default, null):Bool = false;
+	public var flipY:Bool = false;
 	
 	/**
 	 * A list of frames stored as int objects

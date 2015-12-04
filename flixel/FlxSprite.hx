@@ -943,7 +943,7 @@ class FlxSprite extends FlxObject
 			}
 			else
 			{
-				framePixels = _frame.paintRotatedAndFlipped(framePixels, _flashPointZero, FlxFrameAngle.ANGLE_0, checkFlipX(), checkFlipY(), false, true);
+				framePixels = _frame.paintRotatedAndFlipped(framePixels, _flashPointZero, FlxFrameAngle.ANGLE_0, doFlipX, doFlipY, false, true);
 			}
 			
 			if (useColorTransform)
@@ -1361,26 +1361,26 @@ class FlxSprite extends FlxObject
 	
 	private inline function checkFlipX():Bool
 	{
-		var doFlipX:Bool = FlxMath.boolXOR(flipX, _frame.flipX);
-		
 		if (animation.curAnim != null)
 		{
-			doFlipX = FlxMath.boolXOR(flipX, animation.curAnim.flipX);
+			return ((flipX != _frame.flipX) != animation.curAnim.flipX);
 		}
-		
-		return doFlipX;
+		else
+		{
+			return (flipX != _frame.flipX);
+		}
 	}
 	
 	private inline function checkFlipY():Bool
 	{
-		var doFlipY:Bool = FlxMath.boolXOR(flipY, _frame.flipY);
-		
 		if (animation.curAnim != null)
 		{
-			doFlipY = FlxMath.boolXOR(flipY, animation.curAnim.flipY);
+			return ((flipY != _frame.flipY) != animation.curAnim.flipY);
 		}
-		
-		return doFlipY;
+		else
+		{
+			return (flipY != _frame.flipY);
+		}
 	}
 }
 
