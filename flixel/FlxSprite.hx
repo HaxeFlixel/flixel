@@ -1361,26 +1361,22 @@ class FlxSprite extends FlxObject
 	
 	private inline function checkFlipX():Bool
 	{
+		var doFlipX = (flipX != _frame.flipX);
 		if (animation.curAnim != null)
 		{
-			return ((flipX != _frame.flipX) != animation.curAnim.flipX);
+			return (doFlipX != animation.curAnim.flipX);
 		}
-		else
-		{
-			return (flipX != _frame.flipX);
-		}
+		return doFlipX;
 	}
 	
 	private inline function checkFlipY():Bool
 	{
+		var doFlipY = (flipY != _frame.flipY);
 		if (animation.curAnim != null)
 		{
-			return ((flipY != _frame.flipY) != animation.curAnim.flipY);
+			return (doFlipY != animation.curAnim.flipY);
 		}
-		else
-		{
-			return (flipY != _frame.flipY);
-		}
+		return doFlipY;
 	}
 }
 
