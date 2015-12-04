@@ -49,6 +49,16 @@ class FlxAnimation extends FlxBaseAnimation
 	public var reversed(default, null):Bool = false;
 	
 	/**
+	 * Whether or not the frames of this animation are horizontally flipped
+	 */
+	public var flipX(default, null):Bool = false;
+	
+	/**
+	 * Whether or not the frames of this animation are vertically flipped
+	 */
+	public var flipY(default, null):Bool = false;
+	
+	/**
 	 * A list of frames stored as int objects
 	 */
 	@:allow(flixel.animation)
@@ -64,14 +74,18 @@ class FlxAnimation extends FlxBaseAnimation
 	 * @param	Frames		An array of numbers indicating what frames to play in what order (e.g. 1, 2, 3)
 	 * @param	FrameRate	The speed in frames per second that the animation should play at (e.g. 40)
 	 * @param	Looped		Whether or not the animation is looped or just plays once
+	 * @param	FlipX		Whether or not the frames of this animation are horizontally flipped
+	 * @param	FlipY		Whether or not the frames of this animation are vertically flipped
 	 */
-	public function new(Parent:FlxAnimationController, Name:String, Frames:Array<Int>, FrameRate:Int = 0, Looped:Bool = true)
+	public function new(Parent:FlxAnimationController, Name:String, Frames:Array<Int>, FrameRate:Int = 0, Looped:Bool = true, FlipX:Bool = false, FlipY:Bool = false)
 	{
 		super(Parent, Name);
 		
 		frameRate = FrameRate;
 		_frames = Frames;
 		looped = Looped;
+		flipX = FlipX;
+		flipY = FlipY;
 	}
 	
 	/**
@@ -212,7 +226,7 @@ class FlxAnimation extends FlxBaseAnimation
 	
 	override public function clone(Parent:FlxAnimationController):FlxAnimation
 	{
-		return new FlxAnimation(Parent, name, _frames, frameRate, looped);
+		return new FlxAnimation(Parent, name, _frames, frameRate, looped, flipX, flipY);
 	}
 	
 	private function set_frameRate(value:Int):Int

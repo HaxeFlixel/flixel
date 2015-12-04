@@ -172,8 +172,10 @@ class FlxAnimationController implements IFlxDestroyable
 	 * @param	Frames		An array of numbers indicating what frames to play in what order (e.g. 1, 2, 3).
 	 * @param	FrameRate	The speed in frames per second that the animation should play at (e.g. 40 fps).
 	 * @param	Looped		Whether or not the animation is looped or just plays once.
+	 * @param	FlipX		Whether the frames should be horizontally flipped
+	 * @param	FlipY		Whether the frames should be vertically flipped
 	 */
-	public function add(Name:String, Frames:Array<Int>, FrameRate:Int = 30, Looped:Bool = true):Void
+	public function add(Name:String, Frames:Array<Int>, FrameRate:Int = 30, Looped:Bool = true, FlipX:Bool = false, FlipY:Bool = false):Void
 	{
 		// Check _animations frames
 		var framesToAdd:Array<Int> = Frames;
@@ -255,8 +257,10 @@ class FlxAnimationController implements IFlxDestroyable
 	 * @param	FrameNames		An array of image names from atlas indicating what frames to play in what order.
 	 * @param	FrameRate		The speed in frames per second that the animation should play at (e.g. 40 fps).
 	 * @param	Looped			Whether or not the animation is looped or just plays once.
+	 * @param	FlipX			Whether the frames should be horizontally flipped
+	 * @param	FlipY			Whether the frames should be vertically flipped
 	 */
-	public function addByNames(Name:String, FrameNames:Array<String>, FrameRate:Int = 30, Looped:Bool = true):Void
+	public function addByNames(Name:String, FrameNames:Array<String>, FrameRate:Int = 30, Looped:Bool = true, FlipX:Bool = false, FlipY:Bool = false):Void
 	{
 		if (_sprite.frames != null)
 		{
@@ -265,7 +269,7 @@ class FlxAnimationController implements IFlxDestroyable
 			
 			if (indices.length > 0)
 			{
-				var anim = new FlxAnimation(this, Name, indices, FrameRate, Looped);
+				var anim = new FlxAnimation(this, Name, indices, FrameRate, Looped, FlipX, FlipY);
 				_animations.set(Name, anim);
 			}
 		}
@@ -502,12 +506,22 @@ class FlxAnimationController implements IFlxDestroyable
 			return;
 		}
 		
+		var oldFlipX:Bool = false;
+		var oldFlipY:Bool = false;
+		
 		if (_curAnim != null && AnimName != _curAnim.name)
 		{
+			oldFlipX = _curAnim.flipX;
+			oldFlipY = _curAnim.flipY;
 			_curAnim.stop();
 		}
 		_curAnim = _animations.get(AnimName);
 		_curAnim.play(Force, Reversed, Frame);
+		
+		if (oldFlipX != _curAnim.flipX || oldFlipY != _curAnim.flipY)
+		{
+			_sprite.dirty = true;
+		}
 	}
 	
 	/**

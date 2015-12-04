@@ -589,4 +589,15 @@ class FlxMath
 	{
 		return (a > 0) ? a : -a;
 	}
+	
+	/**
+	 * Returns the result of a "boolean exclusive or" comparison
+	 * @param	a
+	 * @param	b
+	 * @return
+	 */
+	public static inline function boolXOR(a:Bool, b:Bool):Bool
+	{
+		return (a && !b) || (b && !a);
+	}
 }
