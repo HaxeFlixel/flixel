@@ -105,35 +105,19 @@ class FlxSave implements IFlxDestroyable
 			return false;
 		}
 		_onComplete = OnComplete;
-		#if flash
-		var result:String = null;
-		#else
 		var result:SharedObjectFlushStatus;
-		#end
 		try 
 		{ 
-			#if !js
-			result = _sharedObject.flush(MinFileSize); 
-			#else
-			result = _sharedObject.flush(); 
-			#end
+			result =  _sharedObject.flush(MinFileSize); 
 		}
 		catch (e:Error) { return onDone(ERROR); }
-		#if flash
-		if (result == "pending")
-		#else
 		if (result == SharedObjectFlushStatus.PENDING)
-		#end
 		{
 			#if flash
 			_sharedObject.addEventListener(NetStatusEvent.NET_STATUS, onFlushStatus);
 			#end
 		}
-		#if flash
-		return onDone((result == "flushed") ? SUCCESS : PENDING);
-		#else
 		return onDone((result == SharedObjectFlushStatus.FLUSHED) ? SUCCESS : PENDING);
-		#end
 	}
 	
 	/**
