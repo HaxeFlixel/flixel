@@ -17,7 +17,7 @@ import openfl.display.Tilesheet;
  * BitmapData wrapper which is used for rendering.
  * It stores info about all frames, generated for specific BitmapData object.
  */
-class FlxGraphic
+class FlxGraphic implements IFlxDestroyable
 {
 	/**
 	 * The default value for the CachedGraphics persist variable

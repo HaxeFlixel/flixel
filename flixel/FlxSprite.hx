@@ -149,12 +149,43 @@ class FlxSprite extends FlxObject
 	 */
 	public var clipRect(default, set):FlxRect;
 	
+	#if FLX_RENDER_BLIT
+	public var useFrameBitmap(default, set):Bool = true;
+	#else
+	public var useFrameBitmap(default, set):Bool = false;
+	#end
+	
+	private function set_useFrameBitmap(value:Bool):Bool
+	{
+		#if FLX_RENDER_TILE
+		if (value != useFrameBitmap)
+		{
+			useFrameBitmap = value;
+			resetFrame();
+			
+			if (value)
+			{
+				getFlxFrameBitmapData();
+			}
+		}
+		
+		return value;
+		#else
+		return true;
+		#end
+	}
+	
 	/**
 	 * The actual frame used for sprite rendering
 	 */
 	private var _frame:FlxFrame;
 	
 	#if FLX_RENDER_TILE
+	/**
+	 * Graphic of _frame. Used in tile render mode, when useFrameBitmap is true.
+	 */
+	private var _frameGraphic:FlxGraphic;
+	
 	private var _facingHorizontalMult:Int = 1;
 	private var _facingVerticalMult:Int = 1;
 	#end
@@ -258,20 +289,12 @@ class FlxSprite extends FlxObject
 		colorTransform = null;
 		blend = null;
 		
-		destroyInnerFrameGraphic();
-		
 		frames = null;
 		graphic = null;
 		_frame = FlxDestroyUtil.destroy(_frame);
-	}
-	
-	private inline function destroyInnerFrameGraphic():Void
-	{
+		
 		#if FLX_RENDER_TILE
-		if (_frame != null && frame != null && frame.parent != _frame.parent)
-		{
-			_frame.parent.destroy();
-		}
+		_frameGraphic = FlxDestroyUtil.destroy(_frameGraphic);
 		#end
 	}
 	
@@ -621,7 +644,7 @@ class FlxSprite extends FlxObject
 		
 		if (dirty)	//rarely 
 		{
-			calcFrame();
+			calcFrame(useFrameBitmap);
 		}
 		
 		for (camera in cameras)
@@ -927,7 +950,7 @@ class FlxSprite extends FlxObject
 			#if FLX_RENDER_TILE
 			// don't try to regenerate frame pixels if _frame already uses it as source of graphics
 			// if you'll try then it will clear framePixels and you won't see anything
-			if (_frame.parent.bitmap == framePixels)
+			if (_frameGraphic != null)
 			{
 				dirty = false;
 				return framePixels;
@@ -952,10 +975,13 @@ class FlxSprite extends FlxObject
 			}
 			
 			#if FLX_RENDER_TILE
-			// recreate _frame for native target, so it will use modified framePixels
-			destroyInnerFrameGraphic();
-			var graph:FlxGraphic = FlxGraphic.fromBitmapData(framePixels, false, null, false);
-			_frame = graph.imageFrame.frame.copyTo(_frame);
+			if (useFrameBitmap)
+			{
+				// recreate _frame for native target, so it will use modified framePixels
+				_frameGraphic = FlxDestroyUtil.destroy(_frameGraphic);
+				_frameGraphic = FlxGraphic.fromBitmapData(framePixels, false, null, false);
+				_frame = _frameGraphic.imageFrame.frame.copyTo(_frame);
+			}
 			#end
 			
 			dirty = false;
@@ -1180,10 +1206,7 @@ class FlxSprite extends FlxObject
 		}
 		
 		#if FLX_RENDER_TILE
-		if (_frame != null && _frame.parent.bitmap == framePixels)
-		{
-			_frame.parent.destroy();
-		}
+		_frameGraphic = FlxDestroyUtil.destroy(_frameGraphic);
 		#end
 		
 		if (clipRect != null)
