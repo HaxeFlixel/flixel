@@ -45,11 +45,18 @@ class FlxSprite extends FlxObject
 	 */
 	public var animation:FlxAnimationController;
 	/**
-	 * The actual Flash BitmapData object representing the current display state of the sprite.
-	 * WARNING: can be null in FLX_RENDER_TILE mode unless you call getFlxFrameBitmapData() beforehand.
+	 * The current display state of the sprite including current animation frame,
+	 * tint, flip etc... may be null unless useFrameBitmap is true.
 	 */
 	// TODO: maybe convert this var to property...
 	public var framePixels:BitmapData;
+	
+	/**
+	 * Always true on FLX_RENDER_BLIT. On FLX_RENDER_TILE it determines whether
+	 * framePixels is used and defaults to false for performance reasons.
+	 */
+	public var useFrameBitmap(default, set):Bool = #if FLX_RENDER_BLIT true #else false #end;
+	
 	/**
 	 * Controls whether the object is smoothed when rotated, affects performance.
 	 */
@@ -148,8 +155,6 @@ class FlxSprite extends FlxObject
 	 * Set clipRect to null to discard graphic frame clipping 
 	 */
 	public var clipRect(default, set):FlxRect;
-	
-	public var useFrameBitmap(default, set):Bool = #if FLX_RENDER_BLIT true #else false #end;
 	
 	/**
 	 * The actual frame used for sprite rendering
