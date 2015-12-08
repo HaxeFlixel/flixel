@@ -212,14 +212,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 */
 	public static function getHSBColorWheel(Alpha:Int = 255):Array<FlxColor>
 	{
-		var colors:Array<FlxColor> = new Array<FlxColor>();
-		
-		for (c in 0...360)
-		{
-			colors[c] = fromHSB(c, 1.0, 1.0, Alpha);
-		}
-		
-		return colors;
+		return [for (c in 0...360) fromHSB(c, 1.0, 1.0, Alpha)];
 	}
 	
 	/**

@@ -1,5 +1,4 @@
 package flixel.system.debug;
-import haxe.ds.StringMap;
 
 #if !FLX_NO_DEBUG
 import flash.events.Event;
@@ -24,7 +23,8 @@ class Console extends Window
 	/**
 	 * The text that is displayed in the console's input field by default.
 	 */
-	private static inline var _DEFAULT_TEXT:String = "(Click here / press [Tab] to enter command. Type 'help' for help.)";
+	private static inline var _DEFAULT_TEXT:String =
+		"(Click here / press [Tab] to enter command. Type 'help' for help.)";
 	/**
 	 * The amount of commands that will be saved.
 	 */
@@ -33,20 +33,20 @@ class Console extends Window
 	/**
 	 * Map containing all registered Objects. You can use registerObject() or add them directly to this map.
 	 */
-	public var registeredObjects:StringMap<Dynamic>;
+	public var registeredObjects:Map<String, Dynamic> = new Map<String, Dynamic>();
 	/**
 	 * Map containing all registered Functions. You can use registerFunction() or add them directly to this map.
 	 */
-	public var registeredFunctions:StringMap<Dynamic>;
+	public var registeredFunctions:Map<String, Dynamic> = new Map<String, Dynamic>();
 	/**
 	 * Map containing all registered help text. Set these values from registerObject() or registerFunction().
 	 */
-	public var registeredHelp:StringMap<String>;
+	public var registeredHelp:Map<String, String> = new Map<String, String>();
 	
 	/**
 	 * Internal helper var containing all the FlxObjects created via the create command.
 	 */
-	public var objectStack:Array<FlxObject>;
+	public var objectStack:Array<FlxObject> = [];
 	
 	/**
 	 * Reference to the array containing the command history.
@@ -75,14 +75,6 @@ class Console extends Window
 		super("Console", new GraphicConsole(0, 0), 0, 0, false);
 		
 		ConsoleUtil.init();
-		
-		registeredObjects = new StringMap<Dynamic>();
-		registeredFunctions = new StringMap<Dynamic>();
-		registeredHelp = new StringMap<String>();
-		
-		objectStack = new Array<FlxObject>();
-		
-		cmdHistory = new Array<String>();
 		
 		// Load old command history if existant
 		if (FlxG.save.data.history != null) 

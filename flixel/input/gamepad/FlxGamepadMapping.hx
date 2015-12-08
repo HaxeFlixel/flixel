@@ -35,11 +35,11 @@ class FlxGamepadMapping
 	{
 		model = Model;
 		#if flash
-		_manufacturer = switch(Capabilities.manufacturer)
+		_manufacturer = switch (Capabilities.manufacturer)
 		{
-			 case "Google Pepper": GooglePepper;
-			 case "Adobe Windows": AdobeWindows;
-			 default: Unknown;
+			case "Google Pepper": GooglePepper;
+			case "Adobe Windows": AdobeWindows;
+			default: Unknown;
 		}
 		#end
 	}
@@ -59,14 +59,14 @@ class FlxGamepadMapping
 			case XBox360: getRawXBox360(ID);
 			case XInput: getRawXInput(ID);
 			case MayflashWiiRemote: 
-				switch(attachment)
+				switch (attachment)
 				{
 					case WiiClassicController: getRawMayflashWiiClassicController(ID);
 					case WiiNunchuk: getRawMayflashWiiNunchuk(ID);
 					case None: getRawMayflashWiiRemote(ID);
 				}
 			case WiiRemote:
-				switch(attachment)
+				switch (attachment)
 				{
 					case WiiClassicController: getRawWiiClassicController(ID);
 					case WiiNunchuk: getRawWiiNunchuk(ID);
@@ -92,14 +92,14 @@ class FlxGamepadMapping
 			case XBox360: getIDXBox360(RawID);
 			case XInput: getIDXInput(RawID);
 			case MayflashWiiRemote: 
-				switch(attachment)
+				switch (attachment)
 				{
 					case WiiClassicController: getIDMayflashWiiClassicController(RawID);
 					case WiiNunchuk: getIDMayflashWiiNunchuk(RawID);
 					case None: getIDMayflashWiiRemote(RawID);
 				}
 			case WiiRemote:
-				switch(attachment)
+				switch (attachment)
 				{
 					case WiiClassicController: getIDWiiClassicController(RawID);
 					case WiiNunchuk: getIDWiiNunchuk(RawID);
@@ -127,13 +127,13 @@ class FlxGamepadMapping
 				case XBox360: XBox360ID.LEFT_ANALOG_STICK;
 				case XInput: XInputID.LEFT_ANALOG_STICK;
 				case MayflashWiiRemote:
-					switch(attachment)
+					switch (attachment)
 					{
 						case WiiNunchuk, WiiClassicController: MayflashWiiRemoteID.LEFT_ANALOG_STICK;
 						case None: MayflashWiiRemoteID.REMOTE_DPAD;
 					}
 				case WiiRemote:
-					switch(attachment)
+					switch (attachment)
 					{
 						case WiiNunchuk, WiiClassicController: WiiRemoteID.LEFT_ANALOG_STICK;
 						case None: WiiRemoteID.REMOTE_DPAD;
@@ -152,13 +152,13 @@ class FlxGamepadMapping
 				case XBox360: XBox360ID.RIGHT_ANALOG_STICK;
 				case XInput: XInputID.RIGHT_ANALOG_STICK;
 				case MayflashWiiRemote: 
-					switch(attachment)
+					switch (attachment)
 					{
 						case WiiClassicController: MayflashWiiRemoteID.RIGHT_ANALOG_STICK;
 						default: null;
 					}
 				case WiiRemote: 
-					switch(attachment)
+					switch (attachment)
 					{
 						case WiiClassicController: WiiRemoteID.RIGHT_ANALOG_STICK;
 						default: null;

@@ -1216,7 +1216,7 @@ class FlxSprite extends FlxObject
 	
 	private function set_alpha(Alpha:Float):Float
 	{
-		if(alpha == Alpha)
+		if (alpha == Alpha)
 		{
 			return Alpha;
 		}

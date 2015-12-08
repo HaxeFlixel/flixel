@@ -9,9 +9,13 @@ import hscript.Parser;
  */
 class ConsoleUtil
 {
-	// The hscript parser to make strings into haxe code.
+	/**
+	 * The hscript parser to make strings into haxe code.
+	 */
 	private static var parser:Parser;
-	// The custom hscript interpreter to run the haxe code from the parser.
+	/**
+	 * The custom hscript interpreter to run the haxe code from the parser.
+	 */
 	public static var interp:Interp;
 	
 	/**
@@ -45,7 +49,8 @@ class ConsoleUtil
 	 * @param	Input	The user's input command.
 	 * @return	Whatever the input code evaluates to.
 	 */
-	public static function runCommand(Input:String):Dynamic {
+	public static function runCommand(Input:String):Dynamic
+	{
 		return interp.expr(parseCommand(Input));
 	}
 	
@@ -91,13 +96,15 @@ private class Interp extends hscript.Interp
 {
     override function get(o:Dynamic, f:String):Dynamic
 	{
-        if (o == null) throw hscript.Expr.Error.EInvalidAccess(f);
+        if (o == null)
+			throw hscript.Expr.Error.EInvalidAccess(f);
         return Reflect.getProperty(o, f);
     }
 
     override function set(o:Dynamic, f:String, v:Dynamic):Dynamic
 	{
-        if (o == null) throw hscript.Expr.Error.EInvalidAccess(f);
+        if (o == null)
+			throw hscript.Expr.Error.EInvalidAccess(f);
         Reflect.setProperty(o, f, v);
         return v;
     }

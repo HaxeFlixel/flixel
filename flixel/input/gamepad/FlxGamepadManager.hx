@@ -521,7 +521,7 @@ class FlxGamepadManager implements IFlxInputManager
 				// returns (0,1) so we normalize to (0,1) for legacy target only
 				newAxis[i] = (newAxis[i] + 1) / 2;
 			}
-			else if(isForStick)
+			else if (isForStick)
 			{
 				//check to see if we should send digital inputs as well as analog
 				var stick:FlxGamepadAnalogStick = gamepad.getAnalogStickByAxis(i);
