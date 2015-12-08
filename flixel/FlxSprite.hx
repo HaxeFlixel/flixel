@@ -149,31 +149,7 @@ class FlxSprite extends FlxObject
 	 */
 	public var clipRect(default, set):FlxRect;
 	
-	#if FLX_RENDER_BLIT
-	public var useFrameBitmap(default, set):Bool = true;
-	#else
-	public var useFrameBitmap(default, set):Bool = false;
-	#end
-	
-	private function set_useFrameBitmap(value:Bool):Bool
-	{
-		#if FLX_RENDER_TILE
-		if (value != useFrameBitmap)
-		{
-			useFrameBitmap = value;
-			resetFrame();
-			
-			if (value)
-			{
-				getFlxFrameBitmapData();
-			}
-		}
-		
-		return value;
-		#else
-		return true;
-		#end
-	}
+	public var useFrameBitmap(default, set):Bool = #if FLX_RENDER_BLIT true #else false #end;
 	
 	/**
 	 * The actual frame used for sprite rendering
@@ -1380,6 +1356,26 @@ class FlxSprite extends FlxObject
 	private function set_antialiasing(value:Bool):Bool
 	{
 		return antialiasing = value;
+	}
+	
+	private function set_useFrameBitmap(value:Bool):Bool
+	{
+		#if FLX_RENDER_TILE
+		if (value != useFrameBitmap)
+		{
+			useFrameBitmap = value;
+			resetFrame();
+			
+			if (value)
+			{
+				getFlxFrameBitmapData();
+			}
+		}
+		
+		return value;
+		#else
+		return true;
+		#end
 	}
 	
 	private inline function checkFlipX():Bool
