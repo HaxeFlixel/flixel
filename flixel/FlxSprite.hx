@@ -673,7 +673,7 @@ class FlxSprite extends FlxObject
 			}
 			else
 			{
-				_frame.prepareMatrix(_matrix, FlxFrameAngle.ANGLE_0, flipX, flipY);
+				_frame.prepareMatrix(_matrix, FlxFrameAngle.ANGLE_0, checkFlipX(), checkFlipY());
 				_matrix.translate( -origin.x, -origin.y);
 				_matrix.scale(scale.x, scale.y);
 				
@@ -957,15 +957,16 @@ class FlxSprite extends FlxObject
 			}
 			#end
 			
-			var doFlipX = flipX != _frame.flipX;
-			var doFlipY = flipY != _frame.flipY;
+			var doFlipX:Bool = checkFlipX();
+			var doFlipY:Bool = checkFlipY();
+			
 			if (!doFlipX && !doFlipY && _frame.type == FlxFrameType.REGULAR)
 			{
 				framePixels = _frame.paint(framePixels, _flashPointZero, false, true);
 			}
 			else
 			{
-				framePixels = _frame.paintRotatedAndFlipped(framePixels, _flashPointZero, FlxFrameAngle.ANGLE_0, flipX, flipY, false, true);
+				framePixels = _frame.paintRotatedAndFlipped(framePixels, _flashPointZero, FlxFrameAngle.ANGLE_0, doFlipX, doFlipY, false, true);
 			}
 			
 			if (useColorTransform)
@@ -1379,6 +1380,26 @@ class FlxSprite extends FlxObject
 	private function set_antialiasing(value:Bool):Bool
 	{
 		return antialiasing = value;
+	}
+	
+	private inline function checkFlipX():Bool
+	{
+		var doFlipX = (flipX != _frame.flipX);
+		if (animation.curAnim != null)
+		{
+			return (doFlipX != animation.curAnim.flipX);
+		}
+		return doFlipX;
+	}
+	
+	private inline function checkFlipY():Bool
+	{
+		var doFlipY = (flipY != _frame.flipY);
+		if (animation.curAnim != null)
+		{
+			return (doFlipY != animation.curAnim.flipY);
+		}
+		return doFlipY;
 	}
 }
 

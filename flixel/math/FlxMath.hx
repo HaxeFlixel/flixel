@@ -589,4 +589,5 @@ class FlxMath
 	{
 		return (a > 0) ? a : -a;
 	}
+	
 }
