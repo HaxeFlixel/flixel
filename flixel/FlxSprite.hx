@@ -46,7 +46,7 @@ class FlxSprite extends FlxObject
 	public var animation:FlxAnimationController;
 	/**
 	 * The current display state of the sprite including current animation frame,
-	 * tint, flip etc... may be null unless useFrameBitmap is true.
+	 * tint, flip etc... may be null unless useFramePixels is true.
 	 */
 	// TODO: maybe convert this var to property...
 	public var framePixels:BitmapData;
@@ -55,7 +55,7 @@ class FlxSprite extends FlxObject
 	 * Always true on FLX_RENDER_BLIT. On FLX_RENDER_TILE it determines whether
 	 * framePixels is used and defaults to false for performance reasons.
 	 */
-	public var useFrameBitmap(default, set):Bool = #if FLX_RENDER_BLIT true #else false #end;
+	public var useFramePixels(default, set):Bool = #if FLX_RENDER_BLIT true #else false #end;
 	
 	/**
 	 * Controls whether the object is smoothed when rotated, affects performance.
@@ -163,7 +163,7 @@ class FlxSprite extends FlxObject
 	
 	#if FLX_RENDER_TILE
 	/**
-	 * Graphic of _frame. Used in tile render mode, when useFrameBitmap is true.
+	 * Graphic of _frame. Used in tile render mode, when useFramePixels is true.
 	 */
 	private var _frameGraphic:FlxGraphic;
 	
@@ -625,7 +625,7 @@ class FlxSprite extends FlxObject
 		
 		if (dirty)	//rarely 
 		{
-			calcFrame(useFrameBitmap);
+			calcFrame(useFramePixels);
 		}
 		
 		for (camera in cameras)
@@ -956,7 +956,7 @@ class FlxSprite extends FlxObject
 			}
 			
 			#if FLX_RENDER_TILE
-			if (useFrameBitmap)
+			if (useFramePixels)
 			{
 				// recreate _frame for native target, so it will use modified framePixels
 				_frameGraphic = FlxDestroyUtil.destroy(_frameGraphic);
@@ -1363,12 +1363,12 @@ class FlxSprite extends FlxObject
 		return antialiasing = value;
 	}
 	
-	private function set_useFrameBitmap(value:Bool):Bool
+	private function set_useFramePixels(value:Bool):Bool
 	{
 		#if FLX_RENDER_TILE
-		if (value != useFrameBitmap)
+		if (value != useFramePixels)
 		{
-			useFrameBitmap = value;
+			useFramePixels = value;
 			resetFrame();
 			
 			if (value)
