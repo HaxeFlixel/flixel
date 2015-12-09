@@ -1,22 +1,9 @@
 ## Flash
 
--main TestMain
--cp src
-
--lib munit
--lib hamcrest
--lib flixel
--lib hscript
--lib lime
--lib openfl
-
---macro flixel.system.macros.FlxDefines.run()
-
--D FLX_HAXE_BUILD
--D openfl-flash
-
--swf-version 11.8
 -swf bin/as3_test.swf
+-swf-version 11.8
+--no-output
+-cmd haxelib run openfl build flash
 
 #-cmd haxelib run lime build html5
 #--next
