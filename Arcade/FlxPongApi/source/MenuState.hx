@@ -11,6 +11,7 @@ import flixel.FlxState;
 import flixel.group.FlxGroup;
 import flixel.text.FlxText;
 import flixel.text.FlxTextField;
+import openfl.utils.ByteArray;
 
 /**
  * These lines allow embedding of assets as ByteArrays, which helps to minimize the threat of data being compromised.
@@ -18,7 +19,7 @@ import flixel.text.FlxTextField;
  * The content of the .privatekey file should be just your private key.
  * To see how this file is read and used, look at the bottom of the create() function below.
  */
-@:file("assets/example.privatekey") class MyPrivateKey extends ByteArray { }
+@:file("assets/example.privatekey") class MyPrivateKey extends #if (lime_legacy || openfl <= "3.4.0") ByteArray #else ByteArrayData #end {} 
 
 class MenuState extends FlxState
 {
