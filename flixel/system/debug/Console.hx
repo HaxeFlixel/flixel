@@ -23,8 +23,10 @@ class Console extends Window
 	/**
 	 * The text that is displayed in the console's input field by default.
 	 */
-	private static inline var _DEFAULT_TEXT:String =
-		"(Click here / press [Tab] to enter command. Type 'help' for help.)";
+	private static inline var _DEFAULT_TEXT:String = #if hscript
+		"(Click here / press [Tab] to enter command. Type 'help' for help.)" #else
+		"Using the console requires hscript - please run 'haxelib install hscript'." #end;
+	
 	/**
 	 * The amount of commands that will be saved.
 	 */
@@ -74,7 +76,9 @@ class Console extends Window
 	{	
 		super("Console", new GraphicConsole(0, 0), 0, 0, false);
 		
+		#if hscript
 		ConsoleUtil.init();
+		#end
 		
 		// Load old command history if existant
 		if (FlxG.save.data.history != null) 
@@ -90,7 +94,6 @@ class Console extends Window
 		
 		// Create the input textfield
 		_input = new TextField();
-		_input.type = TextFieldType.INPUT;
 		_input.embedFonts = true;
 		_input.defaultTextFormat = new TextFormat(FlxAssets.FONT_DEBUGGER, 12, 0xFFFFFF, false, false, false);
 		_input.text = Console._DEFAULT_TEXT;
@@ -100,9 +103,12 @@ class Console extends Window
 		_input.y = 15;
 		addChild(_input);
 		
+		#if hscript
+		_input.type = TextFieldType.INPUT;
 		_input.addEventListener(FocusEvent.FOCUS_IN, onFocus);
 		_input.addEventListener(FocusEvent.FOCUS_OUT, onFocusLost);
 		_input.addEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
+		#end
 		
 		#if (!next && sys) // workaround for broken TextField focus on native
 		_input.addEventListener(MouseEvent.MOUSE_DOWN, function(_)
@@ -193,6 +199,7 @@ class Console extends Window
 		#end
 	}
 	
+	#if hscript
 	private function onKeyPress(e:KeyboardEvent):Void
 	{
 		// Submitting the command
@@ -280,6 +287,7 @@ class Console extends Window
 			FlxG.log.error("Console: Invalid syntax: '" + e + "'");
 		}
 	}
+	#end
 	
 	private inline function getPreviousCommand():String
 	{
@@ -309,7 +317,9 @@ class Console extends Window
 	public inline function registerObject(ObjectAlias:String, AnyObject:Dynamic, ?HelpText:String):Void
 	{
 		registeredObjects.set(ObjectAlias, AnyObject);
+		#if hscript
 		ConsoleUtil.registerObject(ObjectAlias, AnyObject);
+		#end
 		
 		if (HelpText != null)
 		{
@@ -327,7 +337,9 @@ class Console extends Window
 	public inline function registerFunction(FunctionAlias:String, Function:Dynamic, ?HelpText:String):Void
 	{
 		registeredFunctions.set(FunctionAlias, Function);
+		#if hscript
 		ConsoleUtil.registerFunction(FunctionAlias, Function);
+		#end
 		
 		if (HelpText != null)
 		{
@@ -339,9 +351,11 @@ class Console extends Window
 	{
 		super.destroy();
 		
+		#if hscript
 		_input.removeEventListener(FocusEvent.FOCUS_IN, onFocus);
 		_input.removeEventListener(FocusEvent.FOCUS_OUT, onFocusLost);
 		_input.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
+		#end
 		
 		if (_input != null) 
 		{

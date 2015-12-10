@@ -1,14 +1,18 @@
 package flixel.system.debug;
 
 import flixel.FlxG;
+
+#if hscript
 import hscript.Expr;
 import hscript.Parser;
+#end
 
 /** 
  * A set of helper functions used by the console.
  */
 class ConsoleUtil
 {
+	#if hscript
 	/**
 	 * The hscript parser to make strings into haxe code.
 	 */
@@ -77,6 +81,7 @@ class ConsoleUtil
 		if (Reflect.isFunction(Function))
 			interp.variables.set(FunctionAlias, Function);
 	}
+	#end
 	
 	/**
 	 * Shortcut to log a text with the Console LogStyle.
@@ -92,6 +97,7 @@ class ConsoleUtil
 /**
  * hscript doesn't use property access by default... have to make our own.
  */
+#if hscript
 private class Interp extends hscript.Interp
 {
     override function get(o:Dynamic, f:String):Dynamic
@@ -109,3 +115,4 @@ private class Interp extends hscript.Interp
         return v;
     }
 }
+#end

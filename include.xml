@@ -11,7 +11,7 @@
 	<set name="legacy" unless="next" />
 	
 	<haxelib name="openfl" unless="create" />
-	<haxelib name="hscript" unless="create" />
+	<haxelib name="hscript" unless="create" optional="true" />
 	
 	<haxeflag name="--macro" value="flixel.system.macros.FlxDefines.run()" />
 	
