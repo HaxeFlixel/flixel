@@ -325,14 +325,10 @@ class FlxGraphic implements IFlxDestroyable
 	 */
 	public var canBeDumped(get, never):Bool;
 	
-	//start FlxG.renderTile
-	
 	/**
 	 * Tilesheet for this graphic object. It is used only for FlxG.renderTile mode
 	 */
 	public var tilesheet(get, null):Tilesheet;
-	
-	//end FlxG.renderTile
 	
 	/**
 	 * Usage counter for this FlxGraphic object.

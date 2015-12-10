@@ -1,7 +1,5 @@
 package flixel.system;
 
-//start FlxG.renderTile
-
 import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -43,5 +41,3 @@ class FlxBGSprite extends FlxSprite
 		}
 	}
 }
-
-//end FlxG.renderTile
