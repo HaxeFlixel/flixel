@@ -120,8 +120,6 @@ class FlxCamera extends FlxBasic
 	 */
 	public var scroll:FlxPoint;
 	
-	//start renderBlit
-	
 	/**
 	* The actual bitmap data of the camera display itself.
 	*/
@@ -142,8 +140,6 @@ class FlxCamera extends FlxBasic
 	* This sprite reference will allow you to do exactly that.
 	*/
 	public var screen:FlxSprite;
-	
-	//end renderBlit
 	
 	/**
 	 * Whether to use alpha blending for camera's background fill or not. 
@@ -296,18 +292,14 @@ class FlxCamera extends FlxBasic
 	 */
 	public var initialZoom(default, null):Float = 1;
 	
-	//start FlxG.renderBlit
-		
-		/**
-		 * Internal helper variable for doing better wipes/fills between renders.
-		 */
-		private var _fill:BitmapData;
-		/**
-		 * Internal, used to render buffer to screen space.
-		 */
-		private var _flashBitmap:Bitmap;
-		
-	//end FlxG.renderBlit
+	/**
+	 * Internal helper variable for doing better wipes/fills between renders.
+	 */
+	private var _fill:BitmapData;
+	/**
+	 * Internal, used to render buffer to screen space.
+	 */
+	private var _flashBitmap:Bitmap;
 	
 	/**
 	 * Internal sprite, used for correct trimming of camera viewport.
@@ -318,8 +310,6 @@ class FlxCamera extends FlxBasic
 	 * Helper rect for drawTriangles visibility checks
 	 */
 	private var _bounds:FlxRect = FlxRect.get();
-	
-//Start FlxG.renderTile
 	
 	/**
 	 * Sprite for drawing (instead of _flashBitmap for blitting)
@@ -645,13 +635,7 @@ class FlxCamera extends FlxBasic
 		}
 	}
 
-	/**
-	 * Used for FlxG.renderBlit
-	 */
 	private static var drawVertices:Vector<Float> = new Vector<Float>();
-	/**
-	 * Used for FlxG.renderBlit
-	 */
 	private static var trianglesSprite:Sprite = new Sprite();
 	
 	/**
