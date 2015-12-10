@@ -161,15 +161,13 @@ class FlxSprite extends FlxObject
 	 */
 	private var _frame:FlxFrame;
 	
-	//start FlxG.renderTIle
 	/**
 	 * Graphic of _frame. Used in tile render mode, when useFramePixels is true.
 	 */
 	private var _frameGraphic:FlxGraphic;
 	
-		private var _facingHorizontalMult:Int = 1;
-		private var _facingVerticalMult:Int = 1;
-	//end FlxG.renderTile
+	private var _facingHorizontalMult:Int = 1;
+	private var _facingVerticalMult:Int = 1;
 	
 	/**
 	 * Internal, reused frequently during drawing and animating.
@@ -1199,10 +1197,7 @@ class FlxSprite extends FlxObject
 		
 		if (FlxG.renderTile)
 		{
-			if (_frame != null && _frame.parent.bitmap == framePixels)
-			{
-				_frame.parent.destroy();
-			}
+			_frameGraphic = FlxDestroyUtil.destroy(_frameGraphic);
 		}
 		
 		if (clipRect != null)

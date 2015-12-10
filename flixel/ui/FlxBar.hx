@@ -112,15 +112,11 @@ class FlxBar extends FlxSprite
 	public var fillDirection(default, set):FlxBarFillDirection;	
 	private var _fillHorizontal:Bool;
 	
-	//start FlxG.renderTile
-	
 	/**
 	 * FlxSprite which is used for rendering front graphics of bar (showing value) in tile render mode.
 	 */
 	private var _frontFrame:FlxFrame;
 	private var _filledFlxRect:FlxRect;
-	
-	//else (FlxG.renderBlit)
 	
 	private var _emptyBar:BitmapData;
 	private var _emptyBarRect:Rectangle;
@@ -128,8 +124,6 @@ class FlxBar extends FlxSprite
 	private var _filledBar:BitmapData;
 	
 	private var _zeroOffset:Point;
-	
-	//end FlxG.renderBlit
 	
 	private var _filledBarRect:Rectangle;
 	private var _filledBarPoint:Point;

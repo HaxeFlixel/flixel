@@ -115,30 +115,24 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	
 	#if (!FLX_NO_DEBUG)
 	
-	//start FlxG.renderBlit
-	
-		/**
-		* Internal, used for rendering the debug bounding box display.
-		*/
-		private var _debugTileNotSolid:BitmapData;
-		/**
-		* Internal, used for rendering the debug bounding box display.
-		*/
-		private var _debugTilePartial:BitmapData;
-		/**
-		* Internal, used for rendering the debug bounding box display.
-		*/
-		private var _debugTileSolid:BitmapData;
-		/**
-		* Internal, used for rendering the debug bounding box display.
-		*/
-		private var _debugRect:Rectangle;
-	
-	//end FlxG.renderBlit
+	/**
+	* Internal, used for rendering the debug bounding box display.
+	*/
+	private var _debugTileNotSolid:BitmapData;
+	/**
+	* Internal, used for rendering the debug bounding box display.
+	*/
+	private var _debugTilePartial:BitmapData;
+	/**
+	* Internal, used for rendering the debug bounding box display.
+	*/
+	private var _debugTileSolid:BitmapData;
+	/**
+	* Internal, used for rendering the debug bounding box display.
+	*/
+	private var _debugRect:Rectangle;
 	
 	#end
-	
-	//start FlxG.renderTile
 	
 	/**
 	 * Rendering helper, minimize new object instantiation on repetitive methods. Used only in tile rendering mode
@@ -149,8 +143,6 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 * Rendering helper, used for tile's frame transoformations (only in tile rendering mode).
 	 */
 	private var _matrix:FlxMatrix;
-	
-	//end FlxG.renderTile
 	
 	/**
 	 * The tilemap constructor just initializes some basic variables.

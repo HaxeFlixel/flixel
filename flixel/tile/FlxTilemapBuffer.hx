@@ -100,8 +100,6 @@ class FlxTilemapBuffer implements IFlxDestroyable
 		}
 	}
 	
-	//start FlxG.renderBlit
-	
 	/**
 	 * Fill the buffer with the specified color.
 	 * Default value is transparent.
@@ -147,8 +145,6 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	{
 		pixels.colorTransform(_flashRect, Transform);
 	}
-	
-	//end FlxG.renderBlit
 	
 	public function updateColumns(TileWidth:Int, WidthInTiles:Int, ScaleX:Float = 1.0, ?Camera:FlxCamera):Void
 	{

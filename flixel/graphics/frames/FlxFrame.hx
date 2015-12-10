@@ -70,9 +70,7 @@ class FlxFrame implements IFlxDestroyable
 	 */
 	public var type:FlxFrameType;
 	
-	//start FlxG.renderTile
 	private var tileMatrix:Vector<Float>;
-	//end FlxG.renderTile
 	
 	private var blitMatrix:Vector<Float>;
 	

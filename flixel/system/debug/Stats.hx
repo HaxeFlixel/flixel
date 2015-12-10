@@ -87,13 +87,9 @@ class Stats extends Window
 	
 	private var _toggleSizeButton:FlxSystemButton;
 	
-	//start FlxG.renderTile
-	
 	private var drawCallsCount:Int = 0;
 	private var _drawCalls:Array<Int>;
 	private var _drawCallsMarker:Int = 0;
-	
-	//end FlxG.renderTile
 	
 	/**
 	 * Creates a new window with fps and memory graphs, as well as other useful stats for debugging.

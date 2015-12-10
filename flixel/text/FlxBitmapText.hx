@@ -180,11 +180,9 @@ class FlxBitmapText extends FlxSprite
 	private var pendingTextBitmapChange:Bool = true;
 	private var pendingPixelsChange:Bool = true;
 	
-	//start FlxG.renderTile
-		private var textData:Array<Float>;
-		private var textDrawData:Array<Float>;
-		private var borderDrawData:Array<Float>;
-	//end FlxG.renderTile
+	private var textData:Array<Float>;
+	private var textDrawData:Array<Float>;
+	private var borderDrawData:Array<Float>;
 	
 	/**
 	 * Helper bitmap buffer for text pixels but without any color transformations
