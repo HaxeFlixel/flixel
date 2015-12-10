@@ -970,13 +970,7 @@ class FlxSprite extends FlxObject
 			
 			if (FlxG.renderTile)
 			{
-				if(useFramePixels)
-				{
-					// recreate _frame for native target, so it will use modified framePixels
-					destroyInnerFrameGraphic();
-					var graph:FlxGraphic = FlxGraphic.fromBitmapData(framePixels, false, null, false);
-					_frame = graph.imageFrame.frame.copyTo(_frame);
-				}
+				_frameGraphic = FlxDestroyUtil.destroy(_frameGraphic);
 			}
 			
 			dirty = false;
