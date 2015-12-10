@@ -26,7 +26,6 @@
 	<haxelib name="flixel-ui" />
 	<haxelib name="nape" />
 	<haxelib name="spinehaxe" />
-	<haxelib name="hscript" />
 	
 	<!---------------------------------HAXEDEFINES---------------------------------->
 	
@@ -48,6 +47,7 @@
 		<haxedef name="FLX_RENDER_TRIANGLE" />
 	</section>
 	<section if="coverage2">
+		<haxedef name="debug" />
 		<haxedef name="FLX_RENDER_BLIT" />
 	</section>
 </project>
