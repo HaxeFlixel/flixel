@@ -412,8 +412,6 @@ class Stats extends Window
 		_visibleObject[_visibleObjectMarker++] = Count;
 	}
 	
-	//start FlxG.renderTile
-	
 	/**
 	 * How many times drawTiles() method was called.
 	 * 
@@ -425,8 +423,6 @@ class Stats extends Window
 			return;
 		_drawCalls[_drawCallsMarker++] = Drawcalls;
 	}
-	
-	//end FlxG.renderTile
 	
 	/**
 	 * Re-enables tracking of the stats.

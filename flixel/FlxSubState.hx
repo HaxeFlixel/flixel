@@ -15,14 +15,10 @@ class FlxSubState extends FlxState
 	 */
 	public var closeCallback:Void->Void;
 	
-	//start FlxG.renderTile
-	
-		/**
-		* Helper sprite object for non-flash targets. Draws background
-		*/
-		private var _bgSprite:FlxBGSprite;
-	
-	//end FlxG.renderTile
+	/**
+	* Helper sprite object for non-flash targets. Draws background
+	*/
+	private var _bgSprite:FlxBGSprite;
 	
 	/**
 	 * Helper var for close() so closeSubState() can be called on the parent.

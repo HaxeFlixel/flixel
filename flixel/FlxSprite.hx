@@ -275,10 +275,7 @@ class FlxSprite extends FlxObject
 		
 		if (FlxG.renderTile)
 		{
-			if (_frame != null && frame != null && frame.parent != _frame.parent)
-			{
-				_frame.parent.destroy();
-			}
+			_frameGraphic = FlxDestroyUtil.destroy(_frameGraphic);
 		}
 	}
 	
@@ -942,7 +939,7 @@ class FlxSprite extends FlxObject
 			{
 				// don't try to regenerate frame pixels if _frame already uses it as source of graphics
 				// if you'll try then it will clear framePixels and you won't see anything
-				if (_frame.parent.bitmap == framePixels)
+				if (_frameGraphic != null)
 				{
 					dirty = false;
 					return framePixels;
@@ -968,7 +965,10 @@ class FlxSprite extends FlxObject
 			
 			if (FlxG.renderTile)
 			{
+				//recreate _frame for native target, so it will use modified framePixels
 				_frameGraphic = FlxDestroyUtil.destroy(_frameGraphic);
+				_frameGraphic = FlxGraphic.fromBitmapData(framePixels, false, null, false);
+				_frame = _frameGraphic.imageFrame.frame.copyTo(_frame);
 			}
 			
 			dirty = false;
