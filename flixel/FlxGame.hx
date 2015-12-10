@@ -472,15 +472,12 @@ class FlxGame extends Sprite
 		FlxG.cameras.resize();
 		
 		#if FLX_RENDER_CRISP
-		if (FlxG.renderBlit)
-		{
-			FlxDestroyUtil.removeChild(this, _displayBitmap);
-			FlxDestroyUtil.dispose(_display);
-			
-			var index:Int = getChildIndex(_inputContainer);
-			_display = new BitmapData(width, height);
-			addChildAt(_displayBitmap = new Bitmap(_display), index);
-		}
+		FlxDestroyUtil.removeChild(this, _displayBitmap);
+		FlxDestroyUtil.dispose(_display);
+		
+		var index:Int = getChildIndex(_inputContainer);
+		_display = new BitmapData(width, height);
+		addChildAt(_displayBitmap = new Bitmap(_display), index);
 		#end
 		
 		#if !FLX_NO_DEBUG
@@ -890,27 +887,24 @@ class FlxGame extends Sprite
 		}
 		
 		#if FLX_RENDER_CRISP
-		if (FlxG.renderBlit)
+		_display.fillRect(_display.rect, FlxColor.TRANSPARENT);
+		
+		for (camera in FlxG.cameras.list)
 		{
-			_display.fillRect(_display.rect, FlxColor.TRANSPARENT);
+			_displayMatrix.identity();
+			_displayMatrix.scale(camera.zoom * FlxG.scaleMode.scale.x, camera.zoom * FlxG.scaleMode.scale.y);
+			_displayMatrix.translate(camera.x * FlxG.scaleMode.scale.x, camera.y * FlxG.scaleMode.scale.y);
 			
-			for (camera in FlxG.cameras.list)
+			// rotate around center
+			if (camera.angle != 0)
 			{
-				_displayMatrix.identity();
-				_displayMatrix.scale(camera.zoom * FlxG.scaleMode.scale.x, camera.zoom * FlxG.scaleMode.scale.y);
-				_displayMatrix.translate(camera.x * FlxG.scaleMode.scale.x, camera.y * FlxG.scaleMode.scale.y);
-				
-				// rotate around center
-				if (camera.angle != 0)
-				{
-					_displayMatrix.translate( - _display.width >> 1, - _display.height >> 1);
-					_displayMatrix.rotate(camera.angle * FlxAngle.TO_RAD);
-					_displayMatrix.translate(_display.width >> 1, _display.height >> 1);
-				}
-				
-				_displayColorTransform.alphaMultiplier = camera.alpha;
-				_display.draw(camera.buffer, _displayMatrix, _displayColorTransform, null, null, camera.antialiasing);
+				_displayMatrix.translate( - _display.width >> 1, - _display.height >> 1);
+				_displayMatrix.rotate(camera.angle * FlxAngle.TO_RAD);
+				_displayMatrix.translate(_display.width >> 1, _display.height >> 1);
 			}
+			
+			_displayColorTransform.alphaMultiplier = camera.alpha;
+			_display.draw(camera.buffer, _displayMatrix, _displayColorTransform, null, null, camera.antialiasing);
 		}
 		#end
 	
