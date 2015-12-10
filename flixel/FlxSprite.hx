@@ -963,7 +963,7 @@ class FlxSprite extends FlxObject
 				framePixels.colorTransform(_flashRect, colorTransform);
 			}
 			
-			if (FlxG.renderTile)
+			if (FlxG.renderTile && useFramePixels)
 			{
 				//recreate _frame for native target, so it will use modified framePixels
 				_frameGraphic = FlxDestroyUtil.destroy(_frameGraphic);
