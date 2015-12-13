@@ -15,15 +15,10 @@ class Watch extends Window
 	#if !FLX_NO_DEBUG
 	private static inline var LINE_HEIGHT:Int = 15;
 	
-	/**
-	 * Whether a watch entry is currently being edited or not. 
-	 */		
-	public var editing(default, null):Bool;
-	
 	private var _names:Sprite;
 	private var _values:Sprite;
-	private var _watchEntries:Array<WatchEntry>;
-	private var _quickWatchList:Map<String, WatchEntry>;
+	private var _watchEntries:Array<WatchEntry> = [];
+	private var _quickWatchList:Map<String, WatchEntry> = new Map<String, WatchEntry>();
 	
 	/**
 	 * Creates a new watch window object.
@@ -41,11 +36,6 @@ class Watch extends Window
 		_values.x = 2;
 		_values.y = 15;
 		addChild(_values);
-		
-		_watchEntries = new Array<WatchEntry>();
-		_quickWatchList = new Map<String, WatchEntry>();
-		
-		editing = false;
 		
 		removeAll();
 		FlxG.signals.stateSwitched.add(removeAll);
@@ -190,27 +180,8 @@ class Watch extends Window
 	 */
 	override public function update():Void
 	{
-		editing = false;
-		
 		for (watchEntry in _watchEntries)
-		{
-			if (!watchEntry.updateValue())
-				editing = true;
-		}
-	}
-	
-	/**
-	 * Force any watch entries currently being edited to submit their changes.
-	 */
-	public function submit():Void
-	{
-		for (watchEntry in _watchEntries)
-		{
-			if (watchEntry.editing)
-				watchEntry.submit();
-		}
-		
-		editing = false;
+			watchEntry.updateValue();
 	}
 	
 	/**

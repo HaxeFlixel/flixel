@@ -10,6 +10,7 @@ import flixel.math.FlxPoint;
 import flixel.system.FlxAssets;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import flixel.util.FlxStringUtil;
+import openfl.events.FocusEvent;
 import openfl.ui.Keyboard;
 
 /**
@@ -102,6 +103,7 @@ class WatchEntry implements IFlxDestroyable
 		{
 			valueDisplay.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 			valueDisplay.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+			valueDisplay.addEventListener(FocusEvent.FOCUS_OUT, onFocusLost);
 		}
 		valueDisplay.background = false;
 		valueDisplay.backgroundColor = 0xffffff;
@@ -121,7 +123,8 @@ class WatchEntry implements IFlxDestroyable
 		if (valueDisplay != null)
 		{
 			valueDisplay.removeEventListener(MouseEvent.MOUSE_UP,onMouseUp);
-			valueDisplay.removeEventListener(KeyboardEvent.KEY_UP,onKeyUp);
+			valueDisplay.removeEventListener(KeyboardEvent.KEY_UP, onKeyUp);
+			valueDisplay.removeEventListener(FocusEvent.FOCUS_OUT, onFocusLost);
 			valueDisplay = null;
 		}
 	}
@@ -159,17 +162,13 @@ class WatchEntry implements IFlxDestroyable
 	/**
 	 * Update the variable value on display with the current in-game value.
 	 */
-	public function updateValue():Bool
+	public function updateValue():Void
 	{
-		if (editing || _isQuickWatch) 
-		{
-			return false;
-		}
+		if (editing || _isQuickWatch)
+			return;
 		
 		var property:Dynamic = Reflect.getProperty(object, field);
 		valueDisplay.text = Std.string(property);
-		
-		return true;
 	}
 	#end
 	
@@ -196,12 +195,17 @@ class WatchEntry implements IFlxDestroyable
 			cancel();
 	}
 	
+	private function onFocusLost(_)
+	{
+		cancel();
+	}
+	
 	/**
 	 * Cancel the current edits and stop editing.
 	 */
 	public function cancel():Void
 	{
-		valueDisplay.text = oldValue.toString();
+		valueDisplay.text = Std.string(oldValue);
 		doneEditing();
 	}
 	
