@@ -137,7 +137,7 @@ class FlxGame extends Sprite
 	 */
 	private var _filters:Array<BitmapFilter>;
 	
-	#if (cpp || neko)
+	#if (desktop && lime_legacy)
 	/**
 	 * Ugly workaround to ensure consistent behaviour between flash and cpp 
 	 * (the focus event should not fire when the game starts up!)
@@ -369,7 +369,7 @@ class FlxGame extends Sprite
 		}
 		#end
 		
-		#if desktop
+		#if (desktop && lime_legacy)
 		// make sure the on focus event doesn't fire on startup 
 		if (!_onFocusFiredOnce)
 		{
