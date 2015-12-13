@@ -1,4 +1,4 @@
-package flixel.system.debug;
+package flixel.system.debug.watch;
 
 #if !FLX_NO_DEBUG
 import flash.display.DisplayObject;
@@ -18,8 +18,6 @@ import flixel.input.gamepad.FlxGamepad;
 import flixel.input.mouse.FlxMouse;
 import flixel.input.touch.FlxTouch;
 import flixel.input.FlxSwipe;
-import flixel.system.debug.Tracker.TrackerProfile;
-import flixel.system.debug.Watch;
 import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
 import flixel.tweens.FlxTween;

@@ -1,4 +1,4 @@
-package flixel.system.debug;
+package flixel.system.debug.stats;
 
 import flash.display.BitmapData;
 import flash.system.System;

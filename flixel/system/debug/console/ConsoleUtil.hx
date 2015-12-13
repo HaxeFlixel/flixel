@@ -1,6 +1,9 @@
-package flixel.system.debug;
+package flixel.system.debug.console;
 
 import flixel.FlxG;
+import flixel.system.debug.log.LogStyle;
+using flixel.util.FlxStringUtil;
+using StringTools;
 
 #if hscript
 import hscript.Expr;
@@ -83,6 +86,33 @@ class ConsoleUtil
 	}
 	#end
 	
+	public static function getFields(Object:Dynamic):Array<String>
+	{
+		var fields = [];
+		if (Std.is(Object, Class)) // passed a class -> get static fields
+			fields = Type.getClassFields(Object);
+		else if (Reflect.isObject(Object)) // get instance fields
+			fields = Type.getInstanceFields(Type.getClass(Object));
+		
+		// remove getters and setters
+		fields = fields.filter(function(field)
+		{
+			return !field.startsWith("get_") && !field.startsWith("set_");
+		});
+		
+		fields.sortAlphabetically();
+		fields.sort(function(a, b)
+		{
+			var aHidden = a.startsWith("_");
+			var bHidden = b.startsWith("_");
+			if (aHidden && !bHidden) return 1;
+			if (!aHidden && bHidden) return -1;
+			return 0;
+		});
+		
+		return fields;
+	}
+	
 	/**
 	 * Shortcut to log a text with the Console LogStyle.
 	 * 
@@ -100,16 +130,16 @@ class ConsoleUtil
 #if hscript
 private class Interp extends hscript.Interp
 {
-    override function get(o:Dynamic, f:String):Dynamic
+	override function get(o:Dynamic, f:String):Dynamic
 	{
-        if (o == null)
+		if (o == null)
 			throw hscript.Expr.Error.EInvalidAccess(f);
-        return Reflect.getProperty(o, f);
-    }
-
-    override function set(o:Dynamic, f:String, v:Dynamic):Dynamic
+		return Reflect.getProperty(o, f);
+	}
+	
+	override function set(o:Dynamic, f:String, v:Dynamic):Dynamic
 	{
-        if (o == null)
+		if (o == null)
 			throw hscript.Expr.Error.EInvalidAccess(f);
         Reflect.setProperty(o, f, v);
         return v;

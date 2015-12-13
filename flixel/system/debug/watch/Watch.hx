@@ -1,4 +1,4 @@
-package flixel.system.debug;
+package flixel.system.debug.watch;
 
 import flash.display.Sprite;
 import flixel.FlxG;
@@ -13,7 +13,6 @@ import flixel.util.FlxDestroyUtil;
 class Watch extends Window
 {
 	#if !FLX_NO_DEBUG
-	private static inline var MAX_LOG_LINES:Int = 1024;
 	private static inline var LINE_HEIGHT:Int = 15;
 	
 	/**

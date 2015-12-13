@@ -1,10 +1,11 @@
-package flixel.system.debug;
+package flixel.system.debug.console;
 
 #if !FLX_NO_DEBUG
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxState;
 import flixel.util.FlxStringUtil;
+using StringTools;
 
 class ConsoleCommands
 {
@@ -47,8 +48,7 @@ class ConsoleCommands
 		// Default classes to include
 		console.registerObject("Math", Math);
 		console.registerObject("FlxG", FlxG);
-		console.registerObject("FlxSprite", FlxSprite);
-		
+		console.registerObject("FlxSprite", FlxSprite);	
 		#end
 	}
 	
@@ -90,8 +90,7 @@ class ConsoleCommands
 	
 	private inline function clearHistory():Void
 	{
-		_console.cmdHistory.splice(0, _console.cmdHistory.length);
-		FlxG.save.flush();
+		_console.history.clear();
 		ConsoleUtil.log("clearHistory: Command history cleared");
 	}
 	
@@ -148,43 +147,16 @@ class ConsoleCommands
 	
 	private function fields(Object:Dynamic):String
 	{
-		var fields:Array<String> = null;
-		// passed a class -> get static fields
-		if (Std.is(Object, Class))
-		{
-			fields = Type.getClassFields(Object);
-		}
-		else if (Reflect.isObject(Object)) // get instance fields
-		{
-			fields = Type.getInstanceFields((Type.getClass(Object)));
-		}
-		
-		else
-		{
-			return "Can't get the fields of a registered function.";
-		}
-		
-		for (i in 0...fields.length)
-		{
-			fields[i] += ":" + Reflect.getProperty(Object, fields[i]);
-		}
-		
-		ConsoleUtil.log("List of fields for " + Object + ":");
-		var output:String = "";
-		for (field in fields)
-		{
-			output += field + "\n";
-		}
-		
-		return StringTools.rtrim(output);
+		return 'Fields of ${Type.getClassName(Object)}:\n' +
+			ConsoleUtil.getFields(Object).join("\n").trim();
 	}
 	
-	private inline function listObjects():Void
+	private function listObjects():Void
 	{
 		ConsoleUtil.log("Objects registered: \n" + FlxStringUtil.formatStringMap(_console.registeredObjects)); 
 	}
 	
-	private inline function listFunctions():Void
+	private function listFunctions():Void
 	{
 		ConsoleUtil.log("Functions registered: \n" + FlxStringUtil.formatStringMap(_console.registeredFunctions)); 
 	}

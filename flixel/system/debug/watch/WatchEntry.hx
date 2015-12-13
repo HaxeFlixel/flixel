@@ -1,4 +1,4 @@
-package flixel.system.debug;
+package flixel.system.debug.watch;
 
 import flash.events.KeyboardEvent;
 import flash.events.MouseEvent;

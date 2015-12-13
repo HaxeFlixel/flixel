@@ -1,4 +1,4 @@
-package flixel.system.debug;
+package flixel.system.debug.log;
 
 /**
  * A class that allows you to create a custom style for FlxG.log.advanced(). 
