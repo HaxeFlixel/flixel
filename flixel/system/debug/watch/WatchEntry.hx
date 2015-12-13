@@ -175,7 +175,7 @@ class WatchEntry implements IFlxDestroyable
 	/**
 	 * A watch entry was clicked, so flip into edit mode for that entry.
 	 */
-	public function onMouseUp(_):Void
+	private function onMouseUp(_):Void
 	{
 		editing = true;
 		#if !FLX_NO_KEYBOARD
@@ -187,7 +187,7 @@ class WatchEntry implements IFlxDestroyable
 		valueDisplay.background = true;
 	}
 	
-	public function onKeyUp(e:KeyboardEvent):Void
+	private function onKeyUp(e:KeyboardEvent):Void
 	{
 		if (e.keyCode == Keyboard.ENTER)
 			submit();
@@ -203,7 +203,7 @@ class WatchEntry implements IFlxDestroyable
 	/**
 	 * Cancel the current edits and stop editing.
 	 */
-	public function cancel():Void
+	private function cancel():Void
 	{
 		valueDisplay.text = Std.string(oldValue);
 		doneEditing();
@@ -212,7 +212,7 @@ class WatchEntry implements IFlxDestroyable
 	/**
 	 * Submit the current edits and stop editing.
 	 */
-	public function submit():Void
+	private function submit():Void
 	{
 		try
 		{
