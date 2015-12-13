@@ -452,8 +452,11 @@ class FlxGame extends Sprite
 		var width:Int = FlxG.stage.stageWidth;
 		var height:Int = FlxG.stage.stageHeight;
 		
-		#if FLX_RENDER_TILE
-		FlxG.bitmap.onContext();
+		#if !flash
+		if (FlxG.renderTile)
+		{
+			FlxG.bitmap.onContext();
+		}
 		#end
 		
 		resizeGame(width, height);
@@ -856,9 +859,10 @@ class FlxGame extends Sprite
 		
 		FlxG.signals.preDraw.dispatch();
 		
-		#if FLX_RENDER_TILE
-		FlxTilesheet._DRAWCALLS = 0;
-		#end
+		if (FlxG.renderTile)
+		{
+			FlxTilesheet._DRAWCALLS = 0;
+		}
 		
 		#if FLX_POST_PROCESS
 		if (postProcesses[0] != null)
@@ -873,13 +877,14 @@ class FlxGame extends Sprite
 		
 		_state.draw();
 		
-		#if FLX_RENDER_TILE
-		FlxG.cameras.render();
-		
-		#if !FLX_NO_DEBUG
-		debugger.stats.drawCalls(FlxTilesheet._DRAWCALLS);
-		#end
-		#end
+		if (FlxG.renderTile)
+		{
+			FlxG.cameras.render();
+			
+			#if !FLX_NO_DEBUG
+			debugger.stats.drawCalls(FlxTilesheet._DRAWCALLS);
+			#end
+		}
 		
 		#if FLX_RENDER_CRISP
 		_display.fillRect(_display.rect, FlxColor.TRANSPARENT);

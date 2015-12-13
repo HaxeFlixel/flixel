@@ -58,7 +58,7 @@ class FlxCollision
 		{
 			// find the center of both sprites
 			Contact.origin.copyToFlash(centerA);
-			Target.origin.copyToFlash(centerB);			
+			Target.origin.copyToFlash(centerB);
 			
 			// now make a bounding box that allows for the sprite to be rotated in 360 degrees
 			boundsA.x = (pointA.x + centerA.x - centerA.length);
@@ -98,10 +98,11 @@ class FlxCollision
 		matrixB.identity();
 		matrixB.translate(-(intersect.x - boundsB.x), -(intersect.y - boundsB.y));
 		
-	#if FLX_RENDER_TILE
-		Contact.drawFrame();
-		Target.drawFrame();
-	#end
+		if (FlxG.renderTile)
+		{
+			Contact.drawFrame();
+			Target.drawFrame();
+		}
 		
 		var testA:BitmapData = Contact.framePixels;
 		var testB:BitmapData = Target.framePixels;
@@ -221,18 +222,20 @@ class FlxCollision
 			return false;
 		}
 		
-		#if FLX_RENDER_TILE
-		Target.drawFrame();
-		#end
+		if (FlxG.renderTile)
+		{
+			Target.drawFrame();
+		}
 		
 		// How deep is pointX/Y within the rect?
 		var test:BitmapData = Target.framePixels;
 		
 		var pixelAlpha = FlxColor.fromInt(test.getPixel32(Math.floor(PointX - Target.x), Math.floor(PointY - Target.y))).alpha;
 		
-		#if FLX_RENDER_TILE
-		pixelAlpha = Std.int(pixelAlpha * Target.alpha);
-		#end
+		if (FlxG.renderTile)
+		{
+			pixelAlpha = Std.int(pixelAlpha * Target.alpha);
+		}
 		
 		// How deep is pointX/Y within the rect?
 		if (pixelAlpha >= AlphaTolerance)

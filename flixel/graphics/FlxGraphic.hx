@@ -325,12 +325,10 @@ class FlxGraphic implements IFlxDestroyable
 	 */
 	public var canBeDumped(get, never):Bool;
 	
-	#if FLX_RENDER_TILE
 	/**
-	 * Tilesheet for this graphic object. It is used only for FLX_RENDER_TILE mode
+	 * Tilesheet for this graphic object. It is used only for FlxG.renderTile mode
 	 */
 	public var tilesheet(get, null):Tilesheet;
-	#end
 	
 	/**
 	 * Usage counter for this FlxGraphic object.
@@ -374,13 +372,15 @@ class FlxGraphic implements IFlxDestroyable
 	 */
 	private var _imageFrame:FlxImageFrame;
 	
-	#if FLX_RENDER_TILE
+	//start FlxG.renderTile
+	
 	/**
 	 * Internal var holding Tilesheet for bitmap of this graphic.
-	 * It is used only in FLX_RENDER_TILE mode
+	 * It is used only in FlxG.renderTile mode
 	 */
 	private var _tilesheet:Tilesheet;
-	#end
+	
+	//end FlxG.renderTile
 	
 	private var _useCount:Int = 0;
 	
@@ -409,11 +409,14 @@ class FlxGraphic implements IFlxDestroyable
 	public function dump():Void
 	{
 	#if lime_legacy	
-		#if (FLX_RENDER_TILE && !flash && !nme)
-		if (canBeDumped)
+		#if (!flash && !nme)
+		if (FlxG.renderTile)
 		{
-			bitmap.dumpBits();
-			isDumped = true;
+			if (canBeDumped)
+			{
+				bitmap.dumpBits();
+				isDumped = true;
+			}
 		}
 		#end
 	#end
@@ -467,9 +470,10 @@ class FlxGraphic implements IFlxDestroyable
 	public function destroy():Void
 	{
 		bitmap = FlxDestroyUtil.dispose(bitmap);
-		#if FLX_RENDER_TILE
-		_tilesheet = null;
-		#end
+		if (FlxG.renderTile)
+		{
+			_tilesheet = null;
+		}
 		key = null;
 		assetsKey = null;
 		assetsClass = null;
@@ -534,7 +538,8 @@ class FlxGraphic implements IFlxDestroyable
 		return frame;
 	}
 	
-	#if FLX_RENDER_TILE
+	//start FlxG.renderTile
+	
 	/**
 	 * Tilesheet getter. Generates new one (and regenerates) if there is no tilesheet for this graphic yet.
 	 */
@@ -555,7 +560,8 @@ class FlxGraphic implements IFlxDestroyable
 		
 		return _tilesheet;
 	}
-	#end
+	
+	//end FlxG.renderTile
 	
 	/**
 	 * Gets BitmapData for this graphic object from OpenFl.
@@ -638,10 +644,13 @@ class FlxGraphic implements IFlxDestroyable
 			bitmap = value;
 			width = bitmap.width;
 			height = bitmap.height;
-			#if (FLX_RENDER_TILE && !flash && !nme)
-			if (_tilesheet != null)
+			#if (!flash && !nme)
+			if (FlxG.renderTile)
 			{
-				_tilesheet = new Tilesheet(bitmap);
+				if (_tilesheet != null)
+				{
+					_tilesheet = new Tilesheet(bitmap);
+				}
 			}
 			#end
 		}

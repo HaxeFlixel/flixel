@@ -37,7 +37,7 @@ class Stats extends Window
 	/**
 	 * The minimal height of the window.
 	 */
-	private static inline var MIN_HEIGHT:Int = #if !FLX_RENDER_TILE 185 #else 200 #end;
+	private static var MIN_HEIGHT:Int = 0;
 	
 	private static inline var FPS_COLOR:FlxColor = 0xff96ff00;
 	private static inline var MEMORY_COLOR:FlxColor = 0xff009cff;
@@ -87,11 +87,9 @@ class Stats extends Window
 	
 	private var _toggleSizeButton:FlxSystemButton;
 	
-	#if FLX_RENDER_TILE
 	private var drawCallsCount:Int = 0;
 	private var _drawCalls:Array<Int>;
 	private var _drawCallsMarker:Int = 0;
-	#end
 	
 	/**
 	 * Creates a new window with fps and memory graphs, as well as other useful stats for debugging.
@@ -99,6 +97,13 @@ class Stats extends Window
 	public function new()
 	{
 		super("Stats", new GraphicStats(0, 0), 0, 0, false);
+		
+		if (MIN_HEIGHT == 0) {
+			if (!FlxG.renderTile)
+				MIN_HEIGHT = 185;
+			else
+				MIN_HEIGHT = 200;
+		}
 		
 		minSize.y = MIN_HEIGHT;
 		resize(INITIAL_WIDTH, MIN_HEIGHT);
@@ -110,9 +115,10 @@ class Stats extends Window
 		_activeObject = [];
 		_visibleObject = [];
 		
-		#if FLX_RENDER_TILE
-		_drawCalls = [];
-		#end
+		if (FlxG.renderTile)
+		{
+			_drawCalls = [];
+		}
 		
 		var gutter:Int = 5;
 		var graphX:Int = gutter;
@@ -150,7 +156,7 @@ class Stats extends Window
 		_leftTextField.multiline = _rightTextField.multiline = true;
 		_leftTextField.wordWrap = _rightTextField.wordWrap = true;
 		
-		_leftTextField.text = "Update: \nDraw:" + #if FLX_RENDER_TILE "\nDrawTiles:" + #end "\nQuadTrees: \nLists:";
+		_leftTextField.text = "Update: \nDraw:" + (FlxG.renderTile ? "\nDrawTiles:" : "") + "\nQuadTrees: \nLists:";
 		
 		_toggleSizeButton = new FlxSystemButton(new GraphicMaximizeButton(0, 0), toggleSize);
 		_toggleSizeButton.alpha = Window.HEADER_ALPHA;
@@ -215,9 +221,10 @@ class Stats extends Window
 		_activeObject = null;
 		_visibleObject = null;
 		
-		#if FLX_RENDER_TILE
-		_drawCalls = null;
-		#end
+		if (FlxG.renderTile)
+		{
+			_drawCalls = null;
+		}
 		
 		super.destroy();
 	}
@@ -280,21 +287,23 @@ class Stats extends Window
 			}
 			visibleCount = Std.int(visibleCount / _visibleObjectMarker);
 			
-			#if FLX_RENDER_TILE
-			for (i in 0..._drawCallsMarker)
+			if (FlxG.renderTile)
 			{
-				drawCallsCount += _drawCalls[i];
+				for (i in 0..._drawCallsMarker)
+				{
+					drawCallsCount += _drawCalls[i];
+				}
+				drawCallsCount = Std.int(drawCallsCount / _drawCallsMarker);
 			}
-			drawCallsCount = Std.int(drawCallsCount / _drawCallsMarker);
-			#end
 			
 			_updateMarker = 0;
 			_drawMarker = 0;
 			_activeObjectMarker = 0;
 			_visibleObjectMarker = 0;
-			#if FLX_RENDER_TILE
-			_drawCallsMarker = 0;
-			#end
+			if (FlxG.renderTile)
+			{
+				_drawCallsMarker = 0;
+			}
 			
 			_updateTimer -= UPDATE_DELAY;
 		}
@@ -309,10 +318,8 @@ class Stats extends Window
 		updateTimeGraph.update(updTime);
 		
 		_rightTextField.text = 	activeCount + " (" + updTime + "ms)\n"
-								+ visibleCount + " (" + drwTime + "ms)\n" 
-								#if FLX_RENDER_TILE
-								+ drawCallsCount + "\n"
-								#end 
+								+ visibleCount + " (" + drwTime + "ms)\n"
+								+ (FlxG.renderTile ? (drawCallsCount + "\n") : "")
 								+ FlxQuadTree._NUM_CACHED_QUAD_TREES + "\n"
 								+ FlxLinkedList._NUM_CACHED_FLX_LIST;
 	}
@@ -405,7 +412,6 @@ class Stats extends Window
 		_visibleObject[_visibleObjectMarker++] = Count;
 	}
 	
-	#if FLX_RENDER_TILE
 	/**
 	 * How many times drawTiles() method was called.
 	 * 
@@ -417,7 +423,6 @@ class Stats extends Window
 			return;
 		_drawCalls[_drawCallsMarker++] = Drawcalls;
 	}
-	#end
 	
 	/**
 	 * Re-enables tracking of the stats.
