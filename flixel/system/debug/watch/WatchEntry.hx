@@ -10,6 +10,7 @@ import flixel.math.FlxPoint;
 import flixel.system.FlxAssets;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import flixel.util.FlxStringUtil;
+import openfl.ui.Keyboard;
 
 /**
  * Helper class for the debugger overlay's Watch window.
@@ -99,8 +100,8 @@ class WatchEntry implements IFlxDestroyable
 		valueDisplay.doubleClickEnabled = true;
 		if (!_isQuickWatch) // No editing for quickWatch
 		{
-			valueDisplay.addEventListener(KeyboardEvent.KEY_UP,onKeyUp);
-			valueDisplay.addEventListener(MouseEvent.MOUSE_UP,onMouseUp);
+			valueDisplay.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
+			valueDisplay.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 		}
 		valueDisplay.background = false;
 		valueDisplay.backgroundColor = 0xffffff;
@@ -187,23 +188,12 @@ class WatchEntry implements IFlxDestroyable
 		valueDisplay.background = true;
 	}
 	
-	/**
-	 * Check to see if Enter, Tab or Escape were just released.
-	 * Enter or Tab submit the change, and Escape cancels it.
-	 */
 	public function onKeyUp(e:KeyboardEvent):Void
 	{
-		if ((e.keyCode == 13) || (e.keyCode == 9) || (e.keyCode == 27)) //enter or tab or escape
-		{
-			if (e.keyCode == 27)
-			{
-				cancel();
-			}
-			else
-			{
-				submit();
-			}
-		}
+		if (e.keyCode == Keyboard.ENTER)
+			submit();
+		else if (e.keyCode == Keyboard.ESCAPE)
+			cancel();
 	}
 	
 	/**
@@ -223,7 +213,8 @@ class WatchEntry implements IFlxDestroyable
 		var property:Dynamic = Reflect.getProperty(object, field);
 		
 		// Workaround to be able to edit FlxPoints
-		if (Std.is(property, FlxPoint)) {
+		if (Std.is(property, FlxPoint))
+		{
 			var xString:String = valueDisplay.text.split(" |")[0];
 			xString = xString.substring(3, xString.length);
 			var xValue:Float = Std.parseFloat(xString);
