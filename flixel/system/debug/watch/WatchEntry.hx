@@ -210,33 +210,7 @@ class WatchEntry implements IFlxDestroyable
 	 */
 	public function submit():Void
 	{
-		var property:Dynamic = Reflect.getProperty(object, field);
-		
-		// Workaround to be able to edit FlxPoints
-		if (Std.is(property, FlxPoint))
-		{
-			var xString:String = valueDisplay.text.split(" |")[0];
-			xString = xString.substring(3, xString.length);
-			var xValue:Float = Std.parseFloat(xString);
-			
-			var yString:String = valueDisplay.text.split("| ")[1];
-			yString = yString.substring(3, yString.length);
-			var yValue:Float = Std.parseFloat(yString);
-			
-			if (!Math.isNaN(xValue)) 
-			{
-				Reflect.setField(property, "x", xValue);
-			}
-			if (!Math.isNaN(yValue)) 
-			{
-				Reflect.setField(property, "y", yValue);
-			}
-		}
-		else
-		{
-			Reflect.setProperty(object, field, valueDisplay.text); 
-		}
-		
+		Reflect.setProperty(object, field, valueDisplay.text); 
 		doneEditing();
 	}
 	
