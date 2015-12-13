@@ -210,8 +210,15 @@ class WatchEntry implements IFlxDestroyable
 	 */
 	public function submit():Void
 	{
-		Reflect.setProperty(object, field, valueDisplay.text); 
-		doneEditing();
+		try
+		{
+			Reflect.setProperty(object, field, valueDisplay.text);
+			doneEditing();
+		}
+		catch (e:Dynamic)
+		{
+			cancel();
+		}
 	}
 	
 	public function toString():String
