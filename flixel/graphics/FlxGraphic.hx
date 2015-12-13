@@ -372,15 +372,11 @@ class FlxGraphic implements IFlxDestroyable
 	 */
 	private var _imageFrame:FlxImageFrame;
 	
-	//start FlxG.renderTile
-	
 	/**
 	 * Internal var holding Tilesheet for bitmap of this graphic.
 	 * It is used only in FlxG.renderTile mode
 	 */
 	private var _tilesheet:Tilesheet;
-	
-	//end FlxG.renderTile
 	
 	private var _useCount:Int = 0;
 	
@@ -538,8 +534,6 @@ class FlxGraphic implements IFlxDestroyable
 		return frame;
 	}
 	
-	//start FlxG.renderTile
-	
 	/**
 	 * Tilesheet getter. Generates new one (and regenerates) if there is no tilesheet for this graphic yet.
 	 */
@@ -560,8 +554,6 @@ class FlxGraphic implements IFlxDestroyable
 		
 		return _tilesheet;
 	}
-	
-	//end FlxG.renderTile
 	
 	/**
 	 * Gets BitmapData for this graphic object from OpenFl.

@@ -47,8 +47,6 @@ class BitmapFrontEnd
 		}
 	}
 	
-	//start FlxG.renderTile
-	
 	/**
 	 * Helper FlxFrame object. Containing only one frame.
 	 * Useful for drawing colored rectangles of all sizes in FlxG.renderTile mode.
@@ -90,8 +88,6 @@ class BitmapFrontEnd
 			}
 		}
 	}
-	
-	//end FlxG.renderTile
 	
 	/**
 	 * Dumps bits of all graphics in the cache. This frees some memory, but you can't read/write pixels on those graphics anymore.

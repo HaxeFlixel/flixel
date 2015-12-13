@@ -121,24 +121,24 @@ class FlxCamera extends FlxBasic
 	public var scroll:FlxPoint;
 	
 	/**
-	* The actual bitmap data of the camera display itself.
-	*/
+	 * The actual bitmap data of the camera display itself.
+	 */
 	public var buffer:BitmapData;
 	/**
-	* Whether checkResize checks if the camera dimensions have changed to update the buffer dimensions.
-	*/
+	 * Whether checkResize checks if the camera dimensions have changed to update the buffer dimensions.
+	 */
 	public var regen:Bool = false;
 	
 	/**
-	* The natural background color of the camera, in AARRGGBB format. Defaults to FlxG.cameras.bgColor.
-	* On flash, transparent backgrounds can be used in conjunction with useBgAlphaBlending.
-	*/ 
+	 * The natural background color of the camera, in AARRGGBB format. Defaults to FlxG.cameras.bgColor.
+	 * On flash, transparent backgrounds can be used in conjunction with useBgAlphaBlending.
+	 */ 
 	public var bgColor:FlxColor;
 	
 	/**
-	* Sometimes it's easier to just work with a FlxSprite than it is to work directly with the BitmapData buffer.  
-	* This sprite reference will allow you to do exactly that.
-	*/
+	 * Sometimes it's easier to just work with a FlxSprite than it is to work directly with the BitmapData buffer.  
+	 * This sprite reference will allow you to do exactly that.
+	 */
 	public var screen:FlxSprite;
 	
 	/**
