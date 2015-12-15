@@ -92,7 +92,7 @@ class FlxG
 	 * The HaxeFlixel version, in semantic versioning syntax. Use Std.string()
 	 * on it to get a String formatted like this: "HaxeFlixel MAJOR.MINOR.PATCH-PATCH_VERSION".
 	 */ 
-	public static var VERSION(default, null):FlxVersion = new FlxVersion(3, 3, 11);
+	public static var VERSION(default, null):FlxVersion = new FlxVersion(3, 3, 12);
 	
 	/**
 	 * Internal tracker for game object.

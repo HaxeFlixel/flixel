@@ -1,3 +1,7 @@
+3.3.12
+------------------------------
+* Fix compilation with OpenFL 3.5 / Lime 2.8
+
 3.3.11
 ------------------------------
 * Fix compilation with OpenFL next
