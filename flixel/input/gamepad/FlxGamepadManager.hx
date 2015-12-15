@@ -6,7 +6,7 @@ import flixel.input.gamepad.FlxGamepad;
 import flixel.interfaces.IFlxInput;
 import flixel.util.FlxDestroyUtil;
 
-#if (cpp || neko)
+#if (sys && lime_legacy)
 import openfl.events.JoystickEvent;
 #end
 
@@ -278,7 +278,7 @@ class FlxGamepadManager implements IFlxInput
 	{
 		_gamepads = [];
 		
-		#if (cpp || neko)
+		#if (sys && lime_legacy)
 		Lib.current.stage.addEventListener(JoystickEvent.AXIS_MOVE, handleAxisMove);
 		Lib.current.stage.addEventListener(JoystickEvent.BALL_MOVE, handleBallMove);
 		Lib.current.stage.addEventListener(JoystickEvent.BUTTON_DOWN, handleButtonDown);
@@ -356,7 +356,7 @@ class FlxGamepadManager implements IFlxInput
 	}
 	#end
 	
-	#if (cpp || neko)
+	#if (sys && lime_legacy)
 	private function handleButtonDown(FlashEvent:JoystickEvent):Void
 	{
 		var gamepad:FlxGamepad = getByID(FlashEvent.device);
