@@ -250,6 +250,10 @@
 * Added `FlxSpriteButton` which is button which label is a simple `FlxSprite`. It has a useful `createTextLabel()` method which generates a sprite with text graphic.
 * `FlxSignal`: fixed a bug that occured when calling `remove()` during a dispatch (#1420)
 
+3.3.12
+------------------------------
+* Fix compilation with OpenFL 3.5 / Lime 2.8
+
 3.3.11
 ------------------------------
 * Fix compilation with OpenFL next

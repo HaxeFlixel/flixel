@@ -5,7 +5,7 @@ import flash.net.SharedObject;
 import flash.net.SharedObjectFlushStatus;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 
-#if flash
+#if (flash && openfl <= "3.4.0")
 import flash.events.NetStatusEvent;
 #end
 
@@ -157,7 +157,7 @@ class FlxSave implements IFlxDestroyable
 	/**
 	 * Event handler for special case storage requests.
 	 */
-	#if flash
+	#if (flash && openfl <= "3.4.0")
 	private function onFlushStatus(E:NetStatusEvent):Void
 	{
 		_sharedObject.removeEventListener(NetStatusEvent.NET_STATUS, onFlushStatus);
