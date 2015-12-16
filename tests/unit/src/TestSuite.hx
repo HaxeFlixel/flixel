@@ -22,6 +22,7 @@ import flixel.math.FlxPointTest;
 import flixel.math.FlxRandomTest;
 import flixel.math.FlxRectTest;
 import flixel.math.FlxVectorTest;
+import flixel.system.debug.completion.CompletionListTest;
 import flixel.system.FlxAssetsTest;
 import flixel.system.FlxSoundTest;
 import flixel.system.frontEnds.DebuggerFontEndTest;
@@ -79,6 +80,7 @@ class TestSuite extends massive.munit.TestSuite
 		add(flixel.math.FlxRandomTest);
 		add(flixel.math.FlxRectTest);
 		add(flixel.math.FlxVectorTest);
+		add(flixel.system.debug.completion.CompletionListTest);
 		add(flixel.system.FlxAssetsTest);
 		add(flixel.system.FlxSoundTest);
 		add(flixel.system.frontEnds.DebuggerFontEndTest);
