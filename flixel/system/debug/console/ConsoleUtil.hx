@@ -3,6 +3,7 @@ package flixel.system.debug.console;
 import flixel.FlxG;
 import flixel.system.debug.log.LogStyle;
 using flixel.util.FlxStringUtil;
+using flixel.util.FlxArrayUtil;
 using StringTools;
 
 #if hscript
@@ -93,6 +94,17 @@ class ConsoleUtil
 			fields = Type.getClassFields(Object);
 		else if (Reflect.isObject(Object)) // get instance fields
 			fields = Type.getInstanceFields(Type.getClass(Object));
+		
+		// workaround for properties without backing fields missing
+		for (field in fields)
+		{
+			if (field.startsWith("get_") || field.startsWith("set_"))
+			{
+				var name = field.substr(4);
+				if (!fields.contains(name))
+					fields.push(name);
+			}
+		}
 		
 		// remove getters and setters
 		fields = fields.filter(function(field)
