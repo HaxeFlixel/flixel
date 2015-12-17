@@ -8,6 +8,8 @@
 	<assets path="assets/fonts/nokiafc22.ttf" embed="true" />
 	<assets path="assets/fonts/monsterrat.ttf" embed="true" />
 	
+	<assets path="assets/images/ui" include="*" if="html5" />
+	
 	<set name="legacy" unless="next" />
 	
 	<haxelib name="openfl" unless="create" />
