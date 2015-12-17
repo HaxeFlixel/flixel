@@ -254,6 +254,7 @@ class FlxCamera extends FlxBasic
 	 * Internal, used to control the "fade" special effect.
 	 */
 	private var _fxFadeComplete:Void->Void = null;
+	private var _fxFadeCompleted:Bool = true;
 	/**
 	 * Internal, used to control the "fade" special effect.
 	 */
@@ -923,33 +924,34 @@ class FlxCamera extends FlxBasic
 	
 	private function updateFade(elapsed:Float):Void
 	{
-		if ((_fxFadeAlpha > 0.0) && (_fxFadeAlpha < 1.0))
+		if (_fxFadeCompleted)
+			return;
+		
+		if (_fxFadeIn)
 		{
-			if (_fxFadeIn)
+			_fxFadeAlpha -= elapsed /_fxFadeDuration;
+			if (_fxFadeAlpha <= 0.0)
 			{
-				_fxFadeAlpha -= elapsed /_fxFadeDuration;
-				if (_fxFadeAlpha <= 0.0)
-				{
-					_fxFadeAlpha = 0.0;
-					if (_fxFadeComplete != null)
-					{
-						_fxFadeComplete();
-					}
-				}
-			}
-			else
-			{
-				_fxFadeAlpha += elapsed / _fxFadeDuration;
-				if (_fxFadeAlpha >= 1.0)
-				{
-					_fxFadeAlpha = 1.0;
-					if (_fxFadeComplete != null)
-					{
-						_fxFadeComplete();
-					}
-				}
+				_fxFadeAlpha = 0.0;
+				completeFade();
 			}
 		}
+		else
+		{
+			_fxFadeAlpha += elapsed / _fxFadeDuration;
+			if (_fxFadeAlpha >= 1.0)
+			{
+				_fxFadeAlpha = 1.0;
+				completeFade();
+			}
+		}
+	}
+	
+	private function completeFade()
+	{
+		_fxFadeCompleted = true;
+		if (_fxFadeComplete != null)
+			_fxFadeComplete();
 	}
 	
 	private function updateShake(elapsed:Float):Void
@@ -1162,21 +1164,19 @@ class FlxCamera extends FlxBasic
 	 */
 	public function fade(Color:FlxColor = FlxColor.BLACK, Duration:Float = 1, FadeIn:Bool = false, ?OnComplete:Void->Void, Force:Bool = false):Void
 	{
-		if (!Force && (_fxFadeAlpha > 0.0))
-		{
+		if (!_fxFadeCompleted && !Force)
 			return;
-		}
+		
 		_fxFadeColor = Color;
 		if (Duration <= 0)
-		{
 			Duration = 0.000001;
-		}
 		
 		_fxFadeIn = FadeIn;
 		_fxFadeDuration = Duration;
 		_fxFadeComplete = OnComplete;
 		
 		_fxFadeAlpha = _fxFadeIn ? 0.999999 : 0.000001;
+		_fxFadeCompleted = false;
 	}
 	
 	/**
