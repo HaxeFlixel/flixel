@@ -28,8 +28,10 @@ class CompletionHandler
 	
 	private function onKeyUp(e:KeyboardEvent)
 	{
-		// function call, close completion so that enter works
-		if (input.text.endsWith(")"))
+		var text = input.text;
+		
+		// close completion so that enter works
+		if (text.endsWith(")") || text.endsWith("\"") || text.endsWith("'"))
 		{
 			completionList.close();
 			return;
@@ -44,10 +46,10 @@ class CompletionHandler
 				// handled by completion list, do nothing
 			
 			case _:
-				invokeCompletion(getPathBeforeDot(input.text), e.keyCode == Keyboard.PERIOD);
+				invokeCompletion(getPathBeforeDot(text), e.keyCode == Keyboard.PERIOD);
 				
 				if (completionList.visible)
-					completionList.filter = getWordAfterDot(input.text);
+					completionList.filter = getWordAfterDot(text);
 		}
 	}
 	
