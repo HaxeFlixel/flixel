@@ -168,6 +168,6 @@ class CompletionHandler
 	
 	private function getLastWord(text:String):String
 	{
-		return ~/([^.a-zA-Z0-9_\[\]]+)/g.split(text).last();
+		return ~/([^.a-zA-Z0-9_\[\]"']+)/g.split(text).last();
 	}
 }
