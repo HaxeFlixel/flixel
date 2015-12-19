@@ -1,6 +1,7 @@
 package flixel.text;
 
 import flixel.text.FlxText;
+import flixel.text.FlxText.FlxTextAlign;
 import massive.munit.Assert;
 
 class FlxTextTest extends FlxTest
@@ -27,4 +28,12 @@ class FlxTextTest extends FlxTest
 		text.borderColor = null;
 	}
 	#end
+	
+	@Test // #1629
+	function testSetFormatAlignmentReset()
+	{
+		text.alignment = FlxTextAlign.RIGHT;
+		text.setFormat();
+		Assert.areEqual(FlxTextAlign.RIGHT, text.alignment);
+	}
 }

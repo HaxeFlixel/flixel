@@ -458,7 +458,8 @@ class FlxText extends FlxSprite
 		
 		size = Size;
 		color = Color;
-		alignment = Alignment;
+		if (Alignment != null)
+			alignment = Alignment;
 		setBorderStyle(BorderStyle, BorderColor);
 		
 		updateDefaultFormat();
