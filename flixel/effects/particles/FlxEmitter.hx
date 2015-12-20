@@ -369,7 +369,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	 * 
 	 * @param	Explode			Whether the particles should all burst out at once.
 	 * @param	Frequency		Ignored if Explode is set to true. Frequency is how often to emit a particle. 0 = never emit, 0.1 = 1 particle every 0.1 seconds, 5 = 1 particle every 5 seconds.
-	 * @param	Quantity		Ignored if Explode is set to true. How many particles to launch. 0 = "all of the particles".
+	 * @param	Quantity		How many particles to launch. 0 = "all of the particles".
 	 * @return	This FlxEmitter instance (nice for chaining stuff together).
 	 */
 	public function start(Explode:Bool = true, Frequency:Float = 0.1, Quantity:Int = 0):FlxTypedEmitter<T>
