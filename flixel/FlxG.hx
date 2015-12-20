@@ -297,26 +297,18 @@ class FlxG
 	}
 	
 	/**
-	 * Switch from the current game state to the one specified here.
+	 * Attempts to switch from the current game state to `nextState`.
+	 * The state switch is successful if `switchTo()` of the current `state` returns `true`.
 	 */
-	public static inline function switchState(State:FlxState):Void
+	public static inline function switchState(nextState:FlxState):Void
 	{
-		//If a transition is required
-		if (game._state.isTransitionNeeded())
-		{
-			//Do the transition and exit early
-			game._state.transitionToState(State);
-			return;
-		}
-		//Otherwise do the switch normally
-		else
-		{
-			game._requestedState = State; 
-		}
+		if (state.switchTo(nextState))
+			game._requestedState = nextState;
 	}
 	
 	/**
 	 * Request a reset of the current game state.
+	 * Calls `switchState()` with a new instance of the current `state`.
 	 */
 	public static inline function resetState():Void
 	{
