@@ -454,7 +454,8 @@ class PlayState extends FlxState
 		{
 			var dist:Float = FlxMath.getDistance(searchPoint, tower.getMidpoint());
 			
-			if (dist < minDistance) {
+			if (dist < minDistance)
+			{
 				closestTower = tower;
 				minDistance = dist;
 			}
@@ -470,15 +471,13 @@ class PlayState extends FlxState
 	private function hitGoal(enemy:Dynamic, goal:Dynamic):Void
 	{
 		_lives--;
-		enemy.explode(false);
+		enemy.startAtPosition(false);
 		
-		if (_lives >= 0) {
+		if (_lives >= 0)
 			_lifeGroup.members[_lives].kill();
-		}
 		
-		if (_lives == 0) {
+		if (_lives == 0)
 			loseGame();
-		}
 		
 		FlxG.sound.play("hurt");
 	}

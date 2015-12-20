@@ -27,9 +27,8 @@ class Enemy extends FlxSprite
 	{
 		reset(X, Y);
 		
-		if (Reg.PS != null) {
+		if (Reg.PS != null)
 			health = Math.floor(Reg.PS.wave / 3) + 1;
-		}
 		
 		maxHealth = health;
 	}
@@ -53,9 +52,8 @@ class Enemy extends FlxSprite
 	{
 		health -= Damage;
 		
-		if (health <= 0) {
+		if (health <= 0)
 			explode(true);
-		}
 	}
 	
 	/**
@@ -69,17 +67,16 @@ class Enemy extends FlxSprite
 		FlxG.sound.play("enemykill");
 		
 		var emitter:EnemyGibs = Reg.PS.emitterGroup.recycle(EnemyGibs);
-		emitter.explode(x, y);
+		emitter.startAtPosition(x, y);
 		
 		Reg.PS.enemiesToKill--;
 		
-		if (Reg.PS.enemiesToKill <= 0) {
+		if (Reg.PS.enemiesToKill <= 0)
 			Reg.PS.killedWave();
-		}
 		
-		if (GainMoney) {
+		if (GainMoney)
+		{
 			var money:Int = (Reg.PS.wave < 5) ? 2 : 1;
-			
 			Reg.PS.money += money;
 		}
 		
@@ -93,9 +90,8 @@ class Enemy extends FlxSprite
 	 */
 	public function followPath(Path:Array<FlxPoint>, Speed:Int, ?OnComplete:FlxPath->Void):Void
 	{
-		if (Path == null) {
+		if (Path == null)
 			throw("No valid path was passed to the enemy! Does the tilemap provide a valid path from start to finish?");
-		}
 		
 		x = Path[0].x;
 		y = Path[0].y;

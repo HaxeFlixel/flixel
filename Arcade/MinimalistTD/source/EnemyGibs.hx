@@ -49,12 +49,9 @@ class EnemyGibs extends FlxEmitter
 	}
 	
 	/**
-	 * Explode this emitter at a given X and Y. Called by Enemy.explode() when health reaches zero or the enemy reaches the goal.
-	 * 
-	 * @param	X	The X position for this emitter.
-	 * @param	Y	The Y position for this emitter.
+	 * Explode this emitter at a given X and Y.
 	 */ 
-	public function explode(X:Float, Y:Float):Void
+	public function startAtPosition(X:Float, Y:Float):Void
 	{
 		x = X;
 		y = Y;
