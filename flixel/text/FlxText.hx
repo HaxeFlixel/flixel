@@ -241,7 +241,7 @@ class FlxText extends FlxSprite
 	 */
 	public function stampOnAtlas(atlas:FlxAtlas):Bool
 	{
-		regenGraphics();
+		regenGraphic();
 		
 		var node:FlxNode = atlas.addNode(graphic.bitmap, graphic.key);
 		var result:Bool = (node != null);
@@ -725,13 +725,13 @@ class FlxText extends FlxSprite
 	
 	override private function get_width():Float 
 	{
-		regenGraphics();
+		regenGraphic();
 		return super.get_width();
 	}
 	
 	override private function get_height():Float 
 	{
-		regenGraphics();
+		regenGraphic();
 		return super.get_height();
 	}
 	
@@ -754,7 +754,7 @@ class FlxText extends FlxSprite
 		dirty = true;
 	}
 	
-	private function regenGraphics():Void
+	private function regenGraphic():Void
 	{
 		if (textField == null || _regen == false)
 			return;
@@ -843,7 +843,7 @@ class FlxText extends FlxSprite
 	
 	override public function draw():Void 
 	{
-		regenGraphics();
+		regenGraphic();
 		super.draw();
 	}
 	
@@ -863,7 +863,7 @@ class FlxText extends FlxSprite
 				return;
 		}
 		
-		regenGraphics();
+		regenGraphic();
 		super.calcFrame(RunOnCpp);
 	}
 	
