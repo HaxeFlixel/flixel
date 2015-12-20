@@ -342,58 +342,9 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		if (emitting)
 		{
 			if (_explode)
-			{
-				emitting = false;
-				_waitForKill = true;
-				
-				var i:Int = 0;
-				var l:Int = _quantity;
-				
-				if ((l <= 0) || (l > length))
-				{
-					l = length;
-				}
-				
-				while (i < l)
-				{
-					emitParticle();
-					i++;
-				}
-				
-				_quantity = 0;
-			}
+				explode();
 			else
-			{
-				// Spawn a particle per frame
-				if (frequency <= 0)
-				{
-					emitParticle();
-					
-					if ((_quantity > 0) && (++_counter >= _quantity))
-					{
-						emitting = false;
-						_waitForKill = true;
-						_quantity = 0;
-					}
-				}
-				else
-				{
-					_timer += elapsed;
-					
-					while (_timer > frequency)
-					{
-						_timer -= frequency;
-						emitParticle();
-						
-						if ((_quantity > 0) && (++_counter >= _quantity))
-						{
-							emitting = false;
-							_waitForKill = true;
-							_quantity = 0;
-						}
-					}
-				}
-			}
+				emitContinuously(elapsed);
 		}
 		else if (_waitForKill)
 		{
@@ -407,6 +358,61 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		}
 		
 		super.update(elapsed);
+	}
+	
+	private function explode():Void
+	{
+		emitting = false;
+		_waitForKill = true;
+		
+		var i:Int = 0;
+		var l:Int = _quantity;
+		
+		if ((l <= 0) || (l > length))
+		{
+			l = length;
+		}
+		
+		while (i < l)
+		{
+			emitParticle();
+			i++;
+		}
+		
+		_quantity = 0;
+	}
+	
+	private function emitContinuously(elapsed:Float):Void
+	{
+		// Spawn a particle per frame
+		if (frequency <= 0)
+		{
+			emitParticle();
+			
+			if ((_quantity > 0) && (++_counter >= _quantity))
+			{
+				emitting = false;
+				_waitForKill = true;
+				_quantity = 0;
+			}
+		}
+		else
+		{
+			_timer += elapsed;
+			
+			while (_timer > frequency)
+			{
+				_timer -= frequency;
+				emitParticle();
+				
+				if ((_quantity > 0) && (++_counter >= _quantity))
+				{
+					emitting = false;
+					_waitForKill = true;
+					_quantity = 0;
+				}
+			}
+		}
 	}
 	
 	/**
