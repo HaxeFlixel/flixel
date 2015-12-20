@@ -254,17 +254,14 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 			totalFrames = sprite.numFrames;
 			sprite.destroy();
 		}
-		
-		var randomFrame:Int;
-		var i:Int = 0;
-		
-		while (i < Quantity)
+			
+		for (i in 0...Quantity)
 		{
 			var particle:T = Type.createInstance(particleClass, []);
 			
 			if (Multiple)
 			{
-				randomFrame = FlxG.random.int(0, totalFrames - 1);
+				var randomFrame = FlxG.random.int(0, totalFrames - 1);
 				
 				if (bakedRotationAngles > 0)
 				{
@@ -303,7 +300,6 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 			}
 			
 			add(particle);
-			i++;
 		}
 		
 		return this;
@@ -320,15 +316,11 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	 */
 	public function makeParticles(Width:Int = 2, Height:Int = 2, Color:FlxColor = FlxColor.WHITE, Quantity:Int = 50):FlxTypedEmitter<T>
 	{
-		var i:Int = 0;
-		
-		while (i < Quantity)
+		for (i in 0...Quantity)
 		{
 			var particle:T = Type.createInstance(particleClass, []);
 			particle.makeGraphic(Width, Height, Color);
 			add(particle);
-			
-			i++;
 		}
 		
 		return this;
@@ -365,19 +357,12 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		emitting = false;
 		_waitForKill = true;
 		
-		var i:Int = 0;
-		var l:Int = _quantity;
+		var amount:Int = _quantity;
+		if (amount <= 0 || amount > length)
+			amount = length;
 		
-		if ((l <= 0) || (l > length))
-		{
-			l = length;
-		}
-		
-		while (i < l)
-		{
+		for (i in 0...amount)
 			emitParticle();
-			i++;
-		}
 		
 		_quantity = 0;
 	}
