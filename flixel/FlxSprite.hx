@@ -44,11 +44,12 @@ class FlxSprite extends FlxObject
 	 * Class that handles adding and playing animations on this sprite.
 	 */
 	public var animation:FlxAnimationController;
+	
+	// TODO: maybe convert this var to property...
 	/**
 	 * The current display state of the sprite including current animation frame,
 	 * tint, flip etc... may be null unless useFramePixels is true.
 	 */
-	// TODO: maybe convert this var to property...
 	public var framePixels:BitmapData;
 	
 	/**
@@ -952,8 +953,6 @@ class FlxSprite extends FlxObject
 		}
 		
 		dirty = false;
-		
-		
 		return framePixels;
 	}
 	
