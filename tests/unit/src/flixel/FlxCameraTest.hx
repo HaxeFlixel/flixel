@@ -13,9 +13,8 @@ class FlxCameraTest extends FlxTest
 	function before()
 	{
 		camera = new FlxCamera();
-		FlxG.resetGame();
-		step(1);
 		destroyable = camera;
+		resetGame();
 	}
 	
 	@Test
@@ -47,9 +46,8 @@ class FlxCameraTest extends FlxTest
 	function testDefaultCamerasStateSwitch():Void
 	{
 		FlxCamera.defaultCameras = [FlxG.camera];
-		FlxG.switchState(new FlxState());
+		switchState(new FlxState());
 		
-		step();
 		Assert.areEqual(FlxG.cameras.list, FlxCamera.defaultCameras);
 	}
 	
