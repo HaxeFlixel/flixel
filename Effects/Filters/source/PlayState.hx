@@ -23,7 +23,6 @@ import shaders.Tiltshift;
 
 class PlayState extends FlxState
 {
-	
 	var filters:Array<BitmapFilter> = [];
 	var uiCamera:flixel.FlxCamera;
 	var filterMap:Map<String, {filter:BitmapFilter, ?onUpdate:Void->Void}>;
@@ -117,7 +116,7 @@ class PlayState extends FlxState
 		FlxG.camera.setFilters(filters);
 		FlxG.game.setFilters(filters);
 		
-		FlxG.game.enableFilters = false;
+		FlxG.game.filtersEnabled = false;
 		
 		var x = 10;
 		var y = 10;
@@ -136,9 +135,8 @@ class PlayState extends FlxState
 		checkbox.callback = function()
 		{
 			
-			FlxG.camera.enableFilters = !checkbox.checked;
-			FlxG.game.enableFilters = checkbox.checked;
-			
+			FlxG.camera.filtersEnabled = !checkbox.checked;
+			FlxG.game.filtersEnabled = checkbox.checked;
 		}
 	}
 	
