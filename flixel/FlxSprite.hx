@@ -601,11 +601,7 @@ class FlxSprite extends FlxObject
 	{
 		if (_frame == null)
 		{
-			#if !FLX_NO_DEBUG
 			loadGraphic(FlxGraphic.fromClass(GraphicDefault));
-			#else
-			return;
-			#end
 		}
 		
 		if (alpha == 0 || _frame.type == FlxFrameType.EMPTY)
