@@ -200,7 +200,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Enables or disables the filters set via setFilters()
 	 */
-	public var enableFilters:Bool = true;
+	public var filtersEnabled:Bool = true;
 	
 	/**
 	 * Internal, used to render buffer to screen space.
@@ -808,7 +808,7 @@ class FlxCamera extends FlxBasic
 		updateFade(elapsed);
 		updateShake(elapsed);
 		
-		flashSprite.filters = enableFilters ? _filters : null;
+		flashSprite.filters = filtersEnabled ? _filters : null;
 		
 		updateFlashSpritePosition();
 	}

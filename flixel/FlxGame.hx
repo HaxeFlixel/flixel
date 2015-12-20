@@ -84,7 +84,7 @@ class FlxGame extends Sprite
 	/**
 	 * Enables or disables the filters set via setFilters()
 	 */
-	public var enableFilters:Bool = true;
+	public var filtersEnabled:Bool = true;
 	
 	/**
 	 * A flag for triggering the onGameStart "event".
@@ -777,7 +777,7 @@ class FlxGame extends Sprite
 		FlxArrayUtil.clearArray(FlxG.swipes);
 		#end
 		
-		filters = enableFilters ? _filters : null;
+		filters = filtersEnabled ? _filters : null;
 	}
 	
 	private function updateInput():Void
