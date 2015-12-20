@@ -328,9 +328,6 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	
 	private function explode():Void
 	{
-		emitting = false;
-		_waitForKill = true;
-		
 		var amount:Int = _quantity;
 		if (amount <= 0 || amount > length)
 			amount = length;
@@ -338,22 +335,15 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		for (i in 0...amount)
 			emitParticle();
 		
-		_quantity = 0;
+		onFinished();
 	}
 	
 	private function emitContinuously(elapsed:Float):Void
 	{
-		// Spawn a particle per frame
+		// Spawn one particle per frame
 		if (frequency <= 0)
 		{
-			emitParticle();
-			
-			if ((_quantity > 0) && (++_counter >= _quantity))
-			{
-				emitting = false;
-				_waitForKill = true;
-				_quantity = 0;
-			}
+			emitParticleContinuously();
 		}
 		else
 		{
@@ -362,16 +352,25 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 			while (_timer > frequency)
 			{
 				_timer -= frequency;
-				emitParticle();
-				
-				if ((_quantity > 0) && (++_counter >= _quantity))
-				{
-					emitting = false;
-					_waitForKill = true;
-					_quantity = 0;
-				}
+				emitParticleContinuously();
 			}
 		}
+	}
+	
+	private function emitParticleContinuously():Void
+	{
+		emitParticle();
+		_counter++;
+		
+		if (_quantity > 0 && _counter >= _quantity)
+			onFinished();
+	}
+	
+	private function onFinished():Void
+	{
+		emitting = false;
+		_waitForKill = true;
+		_quantity = 0;
 	}
 	
 	/**
