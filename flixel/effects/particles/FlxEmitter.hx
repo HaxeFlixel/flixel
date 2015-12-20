@@ -32,7 +32,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	/**
 	 * Set your own particle class type here. The custom class must extend FlxParticle. Default is FlxParticle.
 	 */
-	public var particleClass:Class<T>;
+	public var particleClass:Class<T> = cast FlxParticle;
 	/**
 	 * Determines whether the emitter is currently emitting particles. It is totally safe to directly toggle this.
 	 */
@@ -72,27 +72,27 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	/**
 	 * Sets the velocity range of particles launched from this emitter. Only used with FlxEmitterMode.SQUARE.
 	 */
-	public var velocity(default, null):FlxPointRangeBounds;
+	public var velocity(default, null):FlxPointRangeBounds = new FlxPointRangeBounds(-100, -100, 100, 100);
 	/**
 	 * Set the speed range of particles launched from this emitter. Only used with FlxEmitterMode.CIRCLE.
 	 */
-	public var speed(default, null):FlxRangeBounds<Float>;
+	public var speed(default, null):FlxRangeBounds<Float> = new FlxRangeBounds<Float>(0, 100);
 	/**
 	 * Set the angular acceleration range of particles launched from this emitter.
 	 */
-	public var angularAcceleration(default, null):FlxRangeBounds<Float>;
+	public var angularAcceleration(default, null):FlxRangeBounds<Float> = new FlxRangeBounds<Float>(0, 0);
 	/**
 	 * Set the angular drag range of particles launched from this emitter.
 	 */
-	public var angularDrag(default, null):FlxRangeBounds<Float>;
+	public var angularDrag(default, null):FlxRangeBounds<Float> = new FlxRangeBounds<Float>(0, 0);
 	/**
 	 * The angular velocity range of particles launched from this emitter.
 	 */
-	public var angularVelocity(default, null):FlxRangeBounds<Float>;
+	public var angularVelocity(default, null):FlxRangeBounds<Float> = new FlxRangeBounds<Float>(0, 0);
 	/**
 	 * The angle range of particles launched from this emitter. angle.end is ignored unless ignoreAngularVelocity is set to true.
 	 */
-	public var angle(default, null):FlxRangeBounds<Float>;
+	public var angle(default, null):FlxRangeBounds<Float> = new FlxRangeBounds<Float>(0);
 	/**
 	 * Set this if you want to specify the beginning and ending value of angle, instead of using angularVelocity(or angularAcceleration).
 	 */
@@ -100,35 +100,35 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	/**
 	 * The angle range at which particles will be launched from this emitter. Ignored unless launchMode is set to FlxEmitterMode.CIRCLE
 	 */
-	public var launchAngle(default, null):FlxBounds<Float>;
+	public var launchAngle(default, null):FlxBounds<Float> = new FlxBounds<Float>(-180, 180);
 	/**
 	 * The life, or duration, range of particles launched from this emitter.
 	 */
-	public var lifespan(default, null):FlxBounds<Float>;
+	public var lifespan(default, null):FlxBounds<Float> = new FlxBounds<Float>(3);
 	/**
 	 * Sets scale range of particles launched from this emitter.
 	 */
-	public var scale(default, null):FlxPointRangeBounds;
+	public var scale(default, null):FlxPointRangeBounds = new FlxPointRangeBounds(1, 1);
 	/**
 	 * Sets alpha range of particles launched from this emitter.
 	 */
-	public var alpha(default, null):FlxRangeBounds<Float>;
+	public var alpha(default, null):FlxRangeBounds<Float> = new FlxRangeBounds<Float>(1);
 	/**
 	 * Sets color range of particles launched from this emitter.
 	 */
-	public var color(default, null):FlxRangeBounds<FlxColor>;
+	public var color(default, null):FlxRangeBounds<FlxColor> = new FlxRangeBounds(FlxColor.WHITE, FlxColor.WHITE);
 	/**
 	 * Sets X and Y drag component of particles launched from this emitter.
 	 */
-	public var drag(default, null):FlxPointRangeBounds;
+	public var drag(default, null):FlxPointRangeBounds = new FlxPointRangeBounds(0, 0);
 	/**
 	 * Sets the acceleration range of particles launched from this emitter. Set acceleration y-values to give particles gravity.
 	 */
-	public var acceleration(default, null):FlxPointRangeBounds;
+	public var acceleration(default, null):FlxPointRangeBounds = new FlxPointRangeBounds(0, 0);
 	/**
 	 * Sets the elasticity, or bounce, range of particles launched from this emitter.
 	 */
-	public var elasticity(default, null):FlxRangeBounds<Float>;
+	public var elasticity(default, null):FlxRangeBounds<Float> = new FlxRangeBounds<Float>(0);
 	/**
 	 * Sets the immovable flag for particles launched from this emitter.
 	 */
@@ -164,7 +164,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	/**
 	 * Internal point object, handy for reusing for memory management purposes.
 	 */
-	private var _point:FlxPoint;
+	private var _point:FlxPoint = FlxPoint.get();
 	/**
 	 * Internal helper for automatically calling the kill() method
 	 */
@@ -182,28 +182,8 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	{
 		super(Size);
 		
-		x = X;
-		y = Y;
-		
-		velocity = new FlxPointRangeBounds(-100, -100, 100, 100);
-		speed = new FlxRangeBounds<Float>(0, 100);
-		angularAcceleration = new FlxRangeBounds<Float>(0, 0);
-		angularDrag = new FlxRangeBounds<Float>(0, 0);
-		angularVelocity = new FlxRangeBounds<Float>(0, 0);
-		angle = new FlxRangeBounds<Float>(0);
-		launchAngle = new FlxBounds<Float>(-180, 180);
-		lifespan = new FlxBounds<Float>(3);
-		scale = new FlxPointRangeBounds(1, 1);
-		alpha = new FlxRangeBounds<Float>(1);
-		color = new FlxRangeBounds<FlxColor>(FlxColor.WHITE, FlxColor.WHITE);
-		drag = new FlxPointRangeBounds(0, 0);
-		acceleration = new FlxPointRangeBounds(0, 0);
-		elasticity = new FlxRangeBounds<Float>(0);
-		
-		particleClass = cast FlxParticle;
-		
+		setPosition(X, Y);
 		exists = false;
-		_point = FlxPoint.get();
 	}
 	
 	/**
