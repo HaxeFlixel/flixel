@@ -511,7 +511,7 @@ class FlxText extends FlxSprite
 	{
 		if (textField != null)
 		{
-			textField.autoSize = (value) ? TextFieldAutoSize.LEFT : TextFieldAutoSize.NONE;
+			textField.autoSize = value ? TextFieldAutoSize.LEFT : TextFieldAutoSize.NONE;
 			_regen = true;
 		}
 		
@@ -665,54 +665,39 @@ class FlxText extends FlxSprite
 	private function set_borderStyle(style:FlxTextBorderStyle):FlxTextBorderStyle
 	{		
 		if (style != borderStyle)
-		{
-			borderStyle = style;
 			_regen = true;
-		}
 		
-		return borderStyle;
+		return borderStyle = style;
 	}
 	
 	private function set_borderColor(Color:FlxColor):FlxColor
 	{
 		#if neko
 		if (Color == null)
-		{
 			Color = FlxColor.TRANSPARENT;
-		}
 		#end
+		
 		if (borderColor != Color && borderStyle != NONE)
-		{
 			_regen = true;
-		}
 		_hasBorderAlpha = Color.alphaFloat < 1;
-		borderColor = Color;
-		return Color;
+		return borderColor = Color;
 	}
 	
 	private function set_borderSize(Value:Float):Float
 	{
-		if (Value != borderSize && borderStyle != NONE)
-		{			
+		if (Value != borderSize && borderStyle != NONE)		
 			_regen = true;
-		}
-		borderSize = Value;
 		
-		return Value;
+		return borderSize = Value;
 	}
 	
 	private function set_borderQuality(Value:Float):Float
 	{
 		Value = FlxMath.bound(Value, 0, 1);
-		
 		if (Value != borderQuality && borderStyle != NONE)
-		{
 			_regen = true;
-		}
 		
-		borderQuality = Value;
-		
-		return Value;
+		return borderQuality = Value;
 	}
 	
 	override private function set_graphic(Value:FlxGraphic):FlxGraphic 
