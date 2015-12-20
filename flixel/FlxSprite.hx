@@ -221,9 +221,7 @@ class FlxSprite extends FlxObject
 		
 		useFramePixels = FlxG.renderBlit;
 		if (SimpleGraphic != null)
-		{
 			loadGraphic(SimpleGraphic);
-		}
 	}
 	
 	override private function initVars():Void 
@@ -272,11 +270,7 @@ class FlxSprite extends FlxObject
 		frames = null;
 		graphic = null;
 		_frame = FlxDestroyUtil.destroy(_frame);
-		
-		if (FlxG.renderTile)
-		{
-			_frameGraphic = FlxDestroyUtil.destroy(_frameGraphic);
-		}
+		_frameGraphic = FlxDestroyUtil.destroy(_frameGraphic);
 	}
 	
 	public function clone():FlxSprite
@@ -329,9 +323,7 @@ class FlxSprite extends FlxObject
 	{
 		var graph:FlxGraphic = FlxG.bitmap.add(Graphic, Unique, Key);
 		if (graph == null)
-		{
 			return this;
-		}
 		
 		if (Width == 0)
 		{
@@ -373,9 +365,7 @@ class FlxSprite extends FlxObject
 	{
 		var brushGraphic:FlxGraphic = FlxG.bitmap.add(Graphic, false, Key);
 		if (brushGraphic == null)
-		{
 			return this;
-		}
 		
 		var brush:BitmapData = brushGraphic.bitmap;
 		var key:String = brushGraphic.key;
@@ -536,9 +526,7 @@ class FlxSprite extends FlxObject
 	public function setGraphicSize(Width:Int = 0, Height:Int = 0):Void
 	{
 		if (Width <= 0 && Height <= 0)
-		{
 			return;
-		}
 		
 		var newScaleX:Float = Width / frameWidth;
 		var newScaleY:Float = Height / frameHeight;
@@ -913,17 +901,10 @@ class FlxSprite extends FlxObject
 	private function calcFrame(RunOnCpp:Bool = false):Void
 	{
 		if (frame == null)	
-		{
 			loadGraphic(FlxGraphic.fromClass(GraphicDefault));
-		}
 		
-		if (FlxG.renderTile)
-		{
-			if (!RunOnCpp)
-			{
-				return;
-			}
-		}
+		if (FlxG.renderTile && !RunOnCpp)
+			return;
 		
 		getFlxFrameBitmapData();
 	}
@@ -933,46 +914,45 @@ class FlxSprite extends FlxObject
 	 */
 	public function getFlxFrameBitmapData():BitmapData
 	{
-		if (_frame != null && dirty)
+		if (_frame == null || !dirty)
+			return framePixels;
+		
+		// don't try to regenerate frame pixels if _frame already uses it as source of graphics
+		// if you'll try then it will clear framePixels and you won't see anything
+		if (FlxG.renderTile && _frameGraphic != null)
 		{
-			if (FlxG.renderTile)
-			{
-				// don't try to regenerate frame pixels if _frame already uses it as source of graphics
-				// if you'll try then it will clear framePixels and you won't see anything
-				if (_frameGraphic != null)
-				{
-					dirty = false;
-					return framePixels;
-				}
-			}
-			
-			var doFlipX:Bool = checkFlipX();
-			var doFlipY:Bool = checkFlipY();
-			
-			if (!doFlipX && !doFlipY && _frame.type == FlxFrameType.REGULAR)
-			{
-				framePixels = _frame.paint(framePixels, _flashPointZero, false, true);
-			}
-			else
-			{
-				framePixels = _frame.paintRotatedAndFlipped(framePixels, _flashPointZero, FlxFrameAngle.ANGLE_0, doFlipX, doFlipY, false, true);
-			}
-			
-			if (useColorTransform)
-			{
-				framePixels.colorTransform(_flashRect, colorTransform);
-			}
-			
-			if (FlxG.renderTile && useFramePixels)
-			{
-				//recreate _frame for native target, so it will use modified framePixels
-				_frameGraphic = FlxDestroyUtil.destroy(_frameGraphic);
-				_frameGraphic = FlxGraphic.fromBitmapData(framePixels, false, null, false);
-				_frame = _frameGraphic.imageFrame.frame.copyTo(_frame);
-			}
-			
 			dirty = false;
+			return framePixels;
 		}
+		
+		var doFlipX:Bool = checkFlipX();
+		var doFlipY:Bool = checkFlipY();
+		
+		if (!doFlipX && !doFlipY && _frame.type == FlxFrameType.REGULAR)
+		{
+			framePixels = _frame.paint(framePixels, _flashPointZero, false, true);
+		}
+		else
+		{
+			framePixels = _frame.paintRotatedAndFlipped(framePixels, _flashPointZero,
+				FlxFrameAngle.ANGLE_0, doFlipX, doFlipY, false, true);
+		}
+		
+		if (useColorTransform)
+		{
+			framePixels.colorTransform(_flashRect, colorTransform);
+		}
+		
+		if (FlxG.renderTile && useFramePixels)
+		{
+			//recreate _frame for native target, so it will use modified framePixels
+			_frameGraphic = FlxDestroyUtil.destroy(_frameGraphic);
+			_frameGraphic = FlxGraphic.fromBitmapData(framePixels, false, null, false);
+			_frame = _frameGraphic.imageFrame.frame.copyTo(_frame);
+		}
+		
+		dirty = false;
+		
 		
 		return framePixels;
 	}
