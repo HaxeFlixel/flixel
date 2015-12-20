@@ -242,7 +242,8 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	 * @param	AutoBuffer		Whether to automatically increase the image size to accomodate rotated corners.  Default is false.  Will create frames that are 150% larger on each axis than the original frame or graphic.
 	 * @return	This FlxEmitter instance (nice for chaining stuff together).
 	 */
-	public function loadParticles(Graphics:FlxGraphicAsset, Quantity:Int = 50, bakedRotationAngles:Int = 16, Multiple:Bool = false, AutoBuffer:Bool = false):FlxTypedEmitter<T>
+	public function loadParticles(Graphics:FlxGraphicAsset, Quantity:Int = 50, bakedRotationAngles:Int = 16,
+		Multiple:Bool = false, AutoBuffer:Bool = false):FlxTypedEmitter<T>
 	{
 		maxSize = Quantity;
 		var totalFrames:Int = 1;
@@ -256,53 +257,58 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		}
 			
 		for (i in 0...Quantity)
+			add(loadParticle(Graphics, Quantity, bakedRotationAngles, Multiple, AutoBuffer, totalFrames));
+		
+		return this;
+	}
+	
+	private function loadParticle(Graphics:FlxGraphicAsset, Quantity:Int, bakedRotationAngles:Int, Multiple:Bool = false,
+		AutoBuffer:Bool = false, totalFrames:Int):T
+	{
+		var particle:T = Type.createInstance(particleClass, []);
+		
+		if (Multiple)
 		{
-			var particle:T = Type.createInstance(particleClass, []);
+			var randomFrame = FlxG.random.int(0, totalFrames - 1);
 			
-			if (Multiple)
+			if (bakedRotationAngles > 0)
 			{
-				var randomFrame = FlxG.random.int(0, totalFrames - 1);
-				
-				if (bakedRotationAngles > 0)
+				if (FlxG.renderBlit)
 				{
-					if (FlxG.renderBlit)
-					{
-						particle.loadRotatedGraphic(Graphics, bakedRotationAngles, randomFrame, false, AutoBuffer);
-					}
-					else
-					{
-					particle.loadGraphic(Graphics, true);
-					}
+					particle.loadRotatedGraphic(Graphics, bakedRotationAngles, randomFrame, false, AutoBuffer);
 				}
 				else
 				{
 					particle.loadGraphic(Graphics, true);
 				}
-				particle.animation.frameIndex = randomFrame;
 			}
 			else
 			{
-				if (bakedRotationAngles > 0)
+				particle.loadGraphic(Graphics, true);
+			}
+			
+			particle.animation.frameIndex = randomFrame;
+		}
+		else
+		{
+			if (bakedRotationAngles > 0)
+			{
+				if (FlxG.renderBlit)
 				{
-					if (FlxG.renderBlit)
-					{
-						particle.loadRotatedGraphic(Graphics, bakedRotationAngles, -1, false, AutoBuffer);
-					}
-					else
-					{
-						particle.loadGraphic(Graphics);
-					}
+					particle.loadRotatedGraphic(Graphics, bakedRotationAngles, -1, false, AutoBuffer);
 				}
 				else
 				{
 					particle.loadGraphic(Graphics);
 				}
 			}
-			
-			add(particle);
+			else
+			{
+				particle.loadGraphic(Graphics);
+			}
 		}
 		
-		return this;
+		return particle;
 	}
 	
 	/**
