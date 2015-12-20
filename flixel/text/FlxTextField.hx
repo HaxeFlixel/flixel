@@ -92,14 +92,14 @@ class FlxTextField extends FlxText
 	{
 		alpha = FlxMath.bound(Alpha, 0, 1);
 		textField.alpha = alpha;
-		
 		return Alpha;
 	}
 	
 	override private function set_height(Height:Float):Float
 	{
 		Height = super.set_height(Height);
-		if (textField != null)	textField.height = Height;
+		if (textField != null)
+			textField.height = Height;
 		return Height;
 	}
 	
@@ -155,8 +155,8 @@ class FlxTextField extends FlxText
 			textField.visible = true;
 		}
 		
-		_point.x = x - (_camera.scroll.x * scrollFactor.x) - (offset.x);
-		_point.y = y - (_camera.scroll.y * scrollFactor.y) - (offset.y);
+		_point.x = x - (_camera.scroll.x * scrollFactor.x) - offset.x;
+		_point.y = y - (_camera.scroll.y * scrollFactor.y) - offset.y;
 		
 		if (FlxG.renderTile)
 		{
@@ -182,32 +182,31 @@ class FlxTextField extends FlxText
 	override private function set_camera(Value:FlxCamera):FlxCamera 
 	{
 		if (_camera != Value)
+			return Value;
+		
+		if (Value != null)
 		{
-			if (Value != null)
+			if (FlxG.renderTile)
 			{
-				if (FlxG.renderTile)
-				{
-					Value.canvas.addChild(textField);
-				}
-				else
-				{
-					Value.flashSprite.addChild(textField);
-				}
-				
-				_addedToDisplay = true;
+				Value.canvas.addChild(textField);
 			}
 			else
 			{
-				if (_camera != null)
-				{
-					textField.parent.removeChild(textField);
-				}
-				
-				_addedToDisplay = false;
+				Value.flashSprite.addChild(textField);
 			}
 			
-			_camera = Value;
+			_addedToDisplay = true;
 		}
-		return Value;
+		else
+		{
+			if (_camera != null)
+			{
+				textField.parent.removeChild(textField);
+			}
+			
+			_addedToDisplay = false;
+		}	
+		
+		return _camera = Value;
 	}
 }
