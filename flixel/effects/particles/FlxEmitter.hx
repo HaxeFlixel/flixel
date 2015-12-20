@@ -266,47 +266,15 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		AutoBuffer:Bool = false, totalFrames:Int):T
 	{
 		var particle:T = Type.createInstance(particleClass, []);
+		var frame = Multiple ? FlxG.random.int(0, totalFrames - 1) : -1;
+		
+		if (FlxG.renderBlit && bakedRotationAngles > 0)
+			particle.loadRotatedGraphic(Graphics, bakedRotationAngles, frame, false, AutoBuffer);
+		else
+			particle.loadGraphic(Graphics, Multiple);
 		
 		if (Multiple)
-		{
-			var randomFrame = FlxG.random.int(0, totalFrames - 1);
-			
-			if (bakedRotationAngles > 0)
-			{
-				if (FlxG.renderBlit)
-				{
-					particle.loadRotatedGraphic(Graphics, bakedRotationAngles, randomFrame, false, AutoBuffer);
-				}
-				else
-				{
-					particle.loadGraphic(Graphics, true);
-				}
-			}
-			else
-			{
-				particle.loadGraphic(Graphics, true);
-			}
-			
-			particle.animation.frameIndex = randomFrame;
-		}
-		else
-		{
-			if (bakedRotationAngles > 0)
-			{
-				if (FlxG.renderBlit)
-				{
-					particle.loadRotatedGraphic(Graphics, bakedRotationAngles, -1, false, AutoBuffer);
-				}
-				else
-				{
-					particle.loadGraphic(Graphics);
-				}
-			}
-			else
-			{
-				particle.loadGraphic(Graphics);
-			}
-		}
+			particle.animation.frameIndex = frame;
 		
 		return particle;
 	}
