@@ -554,24 +554,40 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 		this = Value;
 	}
 	
+	private inline function getThis():Int
+	{
+		#if neko
+		return Std.int(this);
+		#else
+		return this;
+		#end
+	}
+	
+	private inline function validate():Void
+	{
+		#if neko
+		this = Std.int(this);
+		#end
+	}
+	
 	private inline function get_red():Int
 	{
-		return (this >> 16) & 0xff;
+		return (getThis() >> 16) & 0xff;
 	}
 	
 	private inline function get_green():Int
 	{
-		return (this >> 8) & 0xff;
+		return (getThis() >> 8) & 0xff;
 	}
 	
 	private inline function get_blue():Int
 	{
-		return this & 0xff;
+		return getThis() & 0xff;
 	}
 	
 	private inline function get_alpha():Int
 	{
-		return (this >> 24) & 0xff;
+		return (getThis() >> 24) & 0xff;
 	}
 	
 	private inline function get_redFloat():Float
@@ -596,6 +612,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	
 	private inline function set_red(Value:Int):Int
 	{
+		validate();
 		this &= 0xff00ffff;
 		this |= boundChannel(Value) << 16;
 		return Value;
@@ -603,6 +620,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	
 	private inline function set_green(Value:Int):Int
 	{
+		validate();
 		this &= 0xffff00ff;
 		this |= boundChannel(Value) << 8;
 		return Value;
@@ -610,6 +628,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	
 	private inline function set_blue(Value:Int):Int
 	{
+		validate();
 		this &= 0xffffff00;
 		this |= boundChannel(Value);
 		return Value;
@@ -617,6 +636,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	
 	private inline function set_alpha(Value:Int):Int
 	{
+		validate();
 		this &= 0x00ffffff;
 		this |= boundChannel(Value) << 24;
 		return Value;
