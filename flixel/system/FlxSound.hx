@@ -351,9 +351,6 @@ class FlxSound extends FlxBasic
 	{
 		cleanup(true);
 		
-		#if js
-		onComplete();
-		#else
 		_sound = new Sound();
 		_sound.addEventListener(Event.ID3, gotID3);
 		_sound.loadCompressedDataFromByteArray(Bytes, Bytes.length);
@@ -362,8 +359,7 @@ class FlxSound extends FlxBasic
 		updateTransform();
 		exists = true;
 		onComplete = OnComplete;
-		#end
-		return this;	
+		return this;
 	}
 	#end
 	
