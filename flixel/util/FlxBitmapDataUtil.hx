@@ -160,7 +160,7 @@ class FlxBitmapDataUtil
 	 * If the widths of the BitmapData objects are not equal, the method returns the number -3. 
 	 * If the heights of the BitmapData objects are not equal, the method returns the number -4.
 	 */
-	public static function compare(Bitmap1:BitmapData,  Bitmap2:BitmapData):Dynamic
+	public static function compare(Bitmap1:BitmapData, Bitmap2:BitmapData):Dynamic
 	{
 		#if flash
 		return Bitmap1.compare(Bitmap2);
@@ -194,38 +194,24 @@ class FlxBitmapDataUtil
 					if (pixel1 != pixel2)
 					{
 						identical = false;
-						var checkAlpha = true;
 						
-						var rgb1:FlxColor = pixel1.to24Bit();
-						var rgb2:FlxColor = pixel2.to24Bit();
-						
-						if (rgb1 != rgb2)
+						if (pixel1.to24Bit() != pixel2.to24Bit())
 						{
-							var diffR = pixel1.red - pixel2.red;
-							var diffG = pixel1.green - pixel2.green;
-							var diffB = pixel1.blue - pixel2.blue;
-							
-							var resultR = (diffR >= 0) ? diffR : (256 + diffR);
-							var resultG = (diffG >= 0) ? diffG : (256 + diffG);
-							var resultB = (diffB >= 0) ? diffB : (256 + diffB);
-							
-							var resultColor = FlxColor.fromRGB(resultR, resultG, resultB);
-							result.setPixel32(i, j, resultColor);
-							
-							checkAlpha = false;
+							result.setPixel32(i, j, FlxColor.fromRGB(
+								getDiff(pixel1.red, pixel2.red),
+								getDiff(pixel1.green, pixel2.green),
+								getDiff(pixel1.blue, pixel2.blue))
+							);
 						}
-						
-						if (checkAlpha)
+						else
 						{
 							var alpha1 = pixel1.alpha;
 							var alpha2 = pixel2.alpha;
-							var diffA = alpha1 - alpha2;
-							var resultAlpha = (diffA >= 0) ? diffA : (256 + diffA);
-							var resultColor = FlxColor.fromRGB(0xFF, 0xFF, 0xFF, resultAlpha);
 							
 							if (alpha1 != alpha2)
 							{
-								result.setPixel32(i, j, resultColor);
+								result.setPixel32(i, j, FlxColor.fromRGB(0xFF, 0xFF, 0xFF,
+									getDiff(alpha1, alpha2)));
 							}
 						}	
 					}
@@ -240,6 +226,12 @@ class FlxBitmapDataUtil
 		
 		return 0;
 		#end
+	}
+	
+	private static inline function getDiff(value1:Int, value2:Int):Int
+	{
+		var diff = value1 - value2;
+		return (diff >= 0) ? diff : (256 + diff);
 	}
 	
 	/**
