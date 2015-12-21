@@ -112,17 +112,27 @@ class ConsoleUtil
 			return !field.startsWith("get_") && !field.startsWith("set_");
 		});
 		
-		fields.sortAlphabetically();
-		fields.sort(function(a, b)
+		return sortFields(fields);
+	}
+	
+	private static function sortFields(fields:Array<String>):Array<String>
+	{
+		var underscoreList = [];
+		
+		fields = fields.filter(function(field)
 		{
-			var aHidden = a.startsWith("_");
-			var bHidden = b.startsWith("_");
-			if (aHidden && !bHidden) return 1;
-			if (!aHidden && bHidden) return -1;
-			return 0;
+			if (field.startsWith("_"))
+			{
+				underscoreList.push(field);
+				return false;
+			}
+			return true;
 		});
 		
-		return fields;
+		fields.sortAlphabetically();
+		underscoreList.sortAlphabetically();
+		
+		return fields.concat(underscoreList);
 	}
 	
 	/**
