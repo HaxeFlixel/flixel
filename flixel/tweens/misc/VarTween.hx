@@ -76,10 +76,7 @@ class VarTween extends FlxTween
 			
 			for (info in _propertyInfos)
 			{
-				var value = (info.startValue + info.range * scale);
-				if (info.isInt) // don't turn Ints into Floats
-					value = Std.int(value);
-				Reflect.setProperty(_object, info.name, value);
+				Reflect.setProperty(_object, info.name, (info.startValue + info.range * scale));
 			}
 		}
 	}
@@ -112,13 +109,7 @@ class VarTween extends FlxTween
 				throw "The property \"" + p + "\" is not numeric.";
 			}
 			
-			_propertyInfos.push(
-			{
-				name: p,
-				startValue: a,
-				range: Reflect.getProperty(_properties, p) - a,
-				isInt: Std.is(a, Int)
-			});
+			_propertyInfos.push({ name: p, startValue: a, range: Reflect.getProperty(_properties, p) - a });
 		}
 	}
 }
@@ -126,6 +117,5 @@ class VarTween extends FlxTween
 typedef VarTweenProperty = {
 	name:String,
 	startValue:Float,
-	range:Float,
-	isInt:Bool
+	range:Float
 }
