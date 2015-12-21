@@ -1,6 +1,6 @@
 ## Flash
 
--swf bin/as3_test.swf
+-swf bin/flash/bin/TestMain.swf
 -swf-version 11.8
 --no-output
 -cmd haxelib run openfl build flash
