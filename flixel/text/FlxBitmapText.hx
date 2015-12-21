@@ -1055,7 +1055,7 @@ class FlxBitmapText extends FlxSprite
 			
 			textBitmap.lock();
 		}
-		else if(FlxG.renderTile)
+		else if (FlxG.renderTile)
 		{
 			textData.splice(0, textData.length);
 		}

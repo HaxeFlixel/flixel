@@ -315,7 +315,7 @@ class FlxBar extends FlxSprite
 	 * @param	border		The border colour in 0xAARRGGBB format
 	 * @return	This FlxBar object with generated images for front and backround.
 	 */
-	public function createFilledBar(empty:Int, fill:Int, showBorder:Bool = false, border:Int = 0xffffffff):FlxBar
+	public function createFilledBar(empty:FlxColor, fill:FlxColor, showBorder:Bool = false, border:FlxColor = FlxColor.WHITE):FlxBar
 	{
 		createColoredEmptyBar(empty, showBorder, border);
 		createColoredFilledBar(fill, showBorder, border);
@@ -330,19 +330,13 @@ class FlxBar extends FlxSprite
 	 * @param	border			The border colour in 0xAARRGGBB format
 	 * @return	This FlxBar object with generated image for rendering health bar backround.
 	 */
-	public function createColoredEmptyBar(empty:Int, showBorder:Bool = false, border:Int = 0xffffffff):FlxBar
+	public function createColoredEmptyBar(empty:FlxColor, showBorder:Bool = false, border:FlxColor = FlxColor.WHITE):FlxBar
 	{
-		if(FlxG.renderTile) {
-			var emptyA:Int = (empty >> 24) & 255;
-			var emptyRGB:Int = empty & 0x00ffffff;
-			var borderA:Int = (border >> 24) & 255;
-			var borderRGB:Int = border & 0x00ffffff;
-			var emptyKey:String = "empty: " + barWidth + "x" + barHeight + ":" + emptyA + "." + emptyRGB;
-			
+		if (FlxG.renderTile)
+		{
+			var emptyKey:String = "empty: " + barWidth + "x" + barHeight + ":" + empty.toHexString();
 			if (showBorder)
-			{
-				emptyKey += ",border: " + borderA + "." + borderRGB;
-			}
+				emptyKey += ",border: " + border.toHexString();
 			
 			if (FlxG.bitmap.checkCache(emptyKey) == false)
 			{
@@ -389,20 +383,13 @@ class FlxBar extends FlxSprite
 	 * @param	border		The border colour in 0xAARRGGBB format
 	 * @return	This FlxBar object with generated image for rendering actual values.
 	 */
-	public function createColoredFilledBar(fill:Int, showBorder:Bool = false, border:Int = 0xffffffff):FlxBar
+	public function createColoredFilledBar(fill:FlxColor, showBorder:Bool = false, border:FlxColor = FlxColor.WHITE):FlxBar
 	{
 		if (FlxG.renderTile)
 		{
-			var fillA:Int = (fill >> 24) & 255;
-			var fillRGB:Int = fill & 0x00ffffff;
-			var borderA:Int = (border >> 24) & 255;
-			var borderRGB:Int = border & 0x00ffffff;
-			
-			var filledKey:String = "filled: " + barWidth + "x" + barHeight + ":" + fillA + "." + fillRGB;
+			var filledKey:String = "filled: " + barWidth + "x" + barHeight + ":" + fill.toHexString();
 			if (showBorder)
-			{
-				filledKey += ",border: " + borderA + "." + borderRGB;
-			}
+				filledKey += ",border: " + border.toHexString();
 			
 			if (FlxG.bitmap.checkCache(filledKey) == false)
 			{
@@ -453,7 +440,7 @@ class FlxBar extends FlxSprite
 	 * @param	border		The border colour in 0xAARRGGBB format
 	 * @return 	This FlxBar object with generated images for front and backround.
 	 */
-	public function createGradientBar(empty:Array<Int>, fill:Array<Int>, chunkSize:Int = 1, rotation:Int = 180, showBorder:Bool = false, border:Int = 0xffffffff):FlxBar
+	public function createGradientBar(empty:Array<FlxColor>, fill:Array<FlxColor>, chunkSize:Int = 1, rotation:Int = 180, showBorder:Bool = false, border:FlxColor = FlxColor.WHITE):FlxBar
 	{
 		createGradientEmptyBar(empty, chunkSize, rotation, showBorder, border);
 		createGradientFilledBar(fill, chunkSize, rotation, showBorder, border);
@@ -470,29 +457,20 @@ class FlxBar extends FlxSprite
 	 * @param	border			The border colour in 0xAARRGGBB format
 	 * @return 	This FlxBar object with generated image for backround rendering.
 	 */
-	public function createGradientEmptyBar(empty:Array<Int>, chunkSize:Int = 1, rotation:Int = 180, showBorder:Bool = false, border:Int = 0xffffffff):FlxBar
+	public function createGradientEmptyBar(empty:Array<FlxColor>, chunkSize:Int = 1, rotation:Int = 180, showBorder:Bool = false, border:FlxColor = FlxColor.WHITE):FlxBar
 	{
 		if (FlxG.renderTile)
 		{
-			var colA:Int;
-			var colRGB:Int;
-			
 			var emptyKey:String = "Gradient:" + barWidth + "x" + barHeight + ",colors:[";
 			for (col in empty)
 			{
-				colA = (col >> 24) & 255;
-				colRGB = col & 0x00ffffff;
-				
-				emptyKey = emptyKey + colA + "." + colRGB + ",";
+				emptyKey += col.toHexString() + ",";
 			}
-			emptyKey = emptyKey + "],chunkSize: " + chunkSize + ",rotation: " + rotation;
+			emptyKey += "],chunkSize: " + chunkSize + ",rotation: " + rotation;
 			
 			if (showBorder)
 			{
-				var borderA:Int = (border >> 24) & 255;
-				var borderRGB:Int = border & 0x00ffffff;
-				
-				emptyKey = emptyKey + ",border: " + borderA + "." + borderRGB;
+				emptyKey += ",border: " + border.toHexString();
 			}
 			
 			if (FlxG.bitmap.checkCache(emptyKey) == false)
@@ -543,29 +521,20 @@ class FlxBar extends FlxSprite
 	 * @param	border		The border colour in 0xAARRGGBB format
 	 * @return 	This FlxBar object with generated image for rendering actual values.
 	 */
-	public function createGradientFilledBar(fill:Array<Int>, chunkSize:Int = 1, rotation:Int = 180, showBorder:Bool = false, border:Int = 0xffffffff):FlxBar
+	public function createGradientFilledBar(fill:Array<FlxColor>, chunkSize:Int = 1, rotation:Int = 180, showBorder:Bool = false, border:FlxColor = FlxColor.WHITE):FlxBar
 	{
 		if (FlxG.renderTile)
 		{
-			var colA:Int;
-			var colRGB:Int;
-			
 			var filledKey:String = "Gradient:" + barWidth + "x" + barHeight + ",colors:[";
 			for (col in fill)
 			{
-				colA = (col >> 24) & 255;
-				colRGB = col & 0x00ffffff;
-				
-				filledKey = filledKey + colA + "_" + colRGB + ",";
+				filledKey += col.toHexString() + ",";
 			}
-			filledKey = filledKey + "],chunkSize: " + chunkSize + ",rotation: " + rotation;
+			filledKey += "],chunkSize: " + chunkSize + ",rotation: " + rotation;
 			
 			if (showBorder)
 			{
-				var borderA:Int = (border >> 24) & 255;
-				var borderRGB:Int = border & 0x00ffffff;
-				
-				filledKey += ",border: " + borderA + "." + borderRGB;
+				filledKey += ",border: " + border.toHexString();
 			}
 			
 			if (FlxG.bitmap.checkCache(filledKey) == false)
@@ -618,7 +587,7 @@ class FlxBar extends FlxSprite
 	 * @param	fillBackground		If no foreground (fill) image is given, use this colour value instead. 0xAARRGGBB format
 	 * @return	This FlxBar object with generated images for front and backround.
 	 */
-	public function createImageBar(?empty:FlxGraphicAsset, ?fill:FlxGraphicAsset, emptyBackground:Int = 0xff000000, fillBackground:Int = 0xff00ff00):FlxBar
+	public function createImageBar(?empty:FlxGraphicAsset, ?fill:FlxGraphicAsset, emptyBackground:FlxColor = FlxColor.BLACK, fillBackground:FlxColor = FlxColor.LIME):FlxBar
 	{
 		createImageEmptyBar(empty, emptyBackground);
 		createImageFilledBar(fill, fillBackground);
@@ -632,7 +601,7 @@ class FlxBar extends FlxSprite
 	 * @param	emptyBackground		If no background (empty) image is given, use this colour value instead. 0xAARRGGBB format
 	 * @return	This FlxBar object with generated image for backround rendering.
 	 */
-	public function createImageEmptyBar(?empty:FlxGraphicAsset, emptyBackground:Int = 0xff000000):FlxBar
+	public function createImageEmptyBar(?empty:FlxGraphicAsset, emptyBackground:FlxColor = FlxColor.BLACK):FlxBar
 	{
 		if (empty != null)
 		{
@@ -674,7 +643,7 @@ class FlxBar extends FlxSprite
 	 * @param	fillBackground		If no foreground (fill) image is given, use this colour value instead. 0xAARRGGBB format
 	 * @return	This FlxBar object with generated image for rendering actual values.
 	 */
-	public function createImageFilledBar(?fill:FlxGraphicAsset, fillBackground:Int = 0xff00ff00):FlxBar
+	public function createImageFilledBar(?fill:FlxGraphicAsset, fillBackground:FlxColor = FlxColor.LIME):FlxBar
 	{
 		if (fill != null)
 		{
@@ -846,12 +815,11 @@ class FlxBar extends FlxSprite
 	{
 		super.draw();
 		
-		if (!FlxG.renderTile) return;
+		if (!FlxG.renderTile)
+			return;
 		
 		if (alpha == 0)
-		{
 			return;
-		}
 		
 		if (percent > 0 && _frontFrame.type != FlxFrameType.EMPTY)
 		{

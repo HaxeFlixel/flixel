@@ -208,7 +208,7 @@ class CameraFrontEnd
 			}
 			else
 			{
-				camera.fill((camera.bgColor & 0x00ffffff), camera.useBgAlphaBlending, ((camera.bgColor >> 24) & 255) / 255);
+				camera.fill(camera.bgColor.to24Bit(), camera.useBgAlphaBlending, camera.bgColor.alphaFloat);
 			}
 		}
 	}

@@ -565,7 +565,7 @@ class FlxCamera extends FlxBasic
 	
 	public function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, colors:DrawData<Int> = null, position:FlxPoint = null, blend:BlendMode = null, smoothing:Bool = false):Void
 	{
-		if(FlxG.renderBlit)
+		if (FlxG.renderBlit)
 		{
 			if (position == null)
 			{

@@ -885,8 +885,7 @@ class FlxSprite extends FlxObject
 		{
 			var frameData:BitmapData = getFlxFrameBitmapData();
 			var pixelColor:FlxColor = frameData.getPixel32(Std.int(_flashPoint.x), Std.int(_flashPoint.y));
-			var pixelAlpha:Int = (pixelColor >> 24) & 0xFF;
-			return (pixelAlpha * alpha >= Mask);
+			return pixelColor.alpha * alpha >= Mask;
 		}
 	}
 	

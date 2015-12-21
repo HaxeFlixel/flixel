@@ -181,53 +181,35 @@ class FlxBitmapDataUtil
 		{
 			var width:Int = Bitmap1.width;
 			var height:Int = Bitmap1.height;
-			var result:BitmapData = new BitmapData(width, height, true, 0x0);
+			var result = new BitmapData(width, height, true, 0x0);
 			var identical:Bool = true;
-			
-			var pixel1:Int, pixel2:Int;
-			var rgb1:Int, rgb2:Int;
-			var r1:Int, g1:Int, b1:Int;
-			var r2:Int, g2:Int, b2:Int;
-			var alpha1:Int, alpha2:Int;
-			var resultAlpha:Int, resultColor:FlxColor;
-			var resultR:Int, resultG:Int, resultB:Int;
-			var diffR:Int, diffG:Int, diffB:Int, diffA:Int;
-			var checkAlpha:Bool = true;
 			
 			for (i in 0...width)
 			{
 				for (j in 0...height)
 				{
-					pixel1 = Bitmap1.getPixel32(i, j);
-					pixel2 = Bitmap2.getPixel32(i, j);
+					var pixel1:FlxColor = Bitmap1.getPixel32(i, j);
+					var pixel2:FlxColor = Bitmap2.getPixel32(i, j);
 					
 					if (pixel1 != pixel2)
 					{
 						identical = false;
-						checkAlpha = true;
+						var checkAlpha = true;
 						
-						rgb1 = pixel1 & 0x00ffffff;
-						rgb2 = pixel2 & 0x00ffffff;
+						var rgb1:FlxColor = pixel1.to24Bit();
+						var rgb2:FlxColor = pixel2.to24Bit();
 						
 						if (rgb1 != rgb2)
 						{
-							r1 = pixel1 >> 16 & 0xFF;
-							g1 = pixel1 >> 8 & 0xFF;
-							b1 = pixel1 & 0xFF;
+							var diffR = pixel1.red - pixel2.red;
+							var diffG = pixel1.green - pixel2.green;
+							var diffB = pixel1.blue - pixel2.blue;
 							
-							r2 = pixel2 >> 16 & 0xFF;
-							g2 = pixel2 >> 8 & 0xFF;
-							b2 = pixel2 & 0xFF;
+							var resultR = (diffR >= 0) ? diffR : (256 + diffR);
+							var resultG = (diffG >= 0) ? diffG : (256 + diffG);
+							var resultB = (diffB >= 0) ? diffB : (256 + diffB);
 							
-							diffR = r1 - r2;
-							diffG = g1 - g2;
-							diffB = b1 - b2;
-							
-							resultR = (diffR >= 0) ? diffR : (256 + diffR);
-							resultG = (diffG >= 0) ? diffG : (256 + diffG);
-							resultB = (diffB >= 0) ? diffB : (256 + diffB);
-							
-							resultColor = (0xFF << 24 | resultR << 16 | resultG << 8 | resultB);
+							var resultColor = FlxColor.fromRGB(resultR, resultG, resultB);
 							result.setPixel32(i, j, resultColor);
 							
 							checkAlpha = false;
@@ -235,11 +217,11 @@ class FlxBitmapDataUtil
 						
 						if (checkAlpha)
 						{
-							alpha1 = (pixel1 >> 24) & 0xff;
-							alpha2 = (pixel2 >> 24) & 0xff;
-							diffA = alpha1 - alpha2;
-							resultAlpha = (diffA >= 0) ? diffA : (256 + diffA);
-							resultColor = (resultAlpha | 0xFF << 16 | 0xFF << 8 | 0xFF);
+							var alpha1 = pixel1.alpha;
+							var alpha2 = pixel2.alpha;
+							var diffA = alpha1 - alpha2;
+							var resultAlpha = (diffA >= 0) ? diffA : (256 + diffA);
+							var resultColor = FlxColor.fromRGB(0xFF, 0xFF, 0xFF, resultAlpha);
 							
 							if (alpha1 != alpha2)
 							{
