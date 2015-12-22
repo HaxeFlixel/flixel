@@ -19,6 +19,7 @@ import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxTilemapGraphicAsset;
+import flixel.tile.FlxTile.FlxTileFilter;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
@@ -566,38 +567,65 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 				tile.last.x = tile.x - deltaX;
 				tile.last.y = tile.y - deltaY;
 				
-				overlapFound = ((Object.x + Object.width) > tile.x)  && (Object.x < (tile.x + tile.width)) && 
-				               ((Object.y + Object.height) > tile.y) && (Object.y < (tile.y + tile.height));
-				
-				if (tile.allowCollisions != FlxObject.NONE)
-				{
-					if (Callback != null)
-					{
-						if (FlipCallbackParams)
-						{
-							overlapFound = Callback(Object, tile);
-						}
-						else
-						{
-							overlapFound = Callback(tile, Object);
-						}
-					}
-				}
+				overlapFound = 	((Object.x + Object.width) > tile.x)  && (Object.x < (tile.x + tile.width)) && 
+								((Object.y + Object.height) > tile.y) && (Object.y < (tile.y + tile.height));
 				
 				if (overlapFound)
 				{
-					if ((tile.callbackFunction != null) && ((tile.filter == null) || Std.is(Object, tile.filter)))
+					var tileFilter:FlxTileFilter = null;
+					var tmpCollisions:Int = FlxObject.ANY;
+					var classType:String = "";
+					if (tile.filters != null)
 					{
-						tile.mapIndex = rowStart + column;
-						tile.callbackFunction(tile, Object);
+						classType = Type.getClassName(Type.getClass(Object));
+						if (tile.filters.exists(classType))
+						{
+							tileFilter = tile.filters.get(classType);
+							tmpCollisions = tile.allowCollisions;
+							tile.allowCollisions = tileFilter.collisions;
+							if (tileFilter.processCallback != null)
+							{
+								overlapFound = tileFilter.processCallback(tile, Object);
+							}
+						}
+					}
+
+					if (tile.allowCollisions != FlxObject.NONE && overlapFound)
+					{
+						if (Callback != null)
+						{
+							if (FlipCallbackParams)
+							{
+								overlapFound = Callback(Object, tile);
+							}
+							else
+							{
+								overlapFound = Callback(tile, Object);
+							}
+						}
 					}
 					
-					if (tile.allowCollisions != FlxObject.NONE)
+					if (overlapFound)
 					{
-						results = true;
+						if (tileFilter != null && tileFilter.overlapCallback != null)
+						{
+							tile.mapIndex = rowStart + column;
+							tileFilter.overlapCallback(tile, Object);
+						}
+						
+						if (tile.allowCollisions != FlxObject.NONE)
+						{
+							results = true;
+						}
+						
+						if (tileFilter != null)
+						{
+							tile.allowCollisions = tmpCollisions;
+							tileFilter = null;
+							classType = null;
+						}
 					}
 				}
-				
 				column++;
 			}
 			
