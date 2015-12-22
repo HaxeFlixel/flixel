@@ -157,11 +157,11 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 	 */
 	public function initCombat(PlayerHealth:Int, E:Enemy):Void
 	{
-		#if FLX_RENDER_BLIT
-		_sprScreen.pixels.copyPixels(FlxG.camera.buffer, FlxG.camera.buffer.rect, new Point());
-		#else
-		_sprScreen.pixels.draw(FlxG.camera.canvas, new Matrix(1, 0, 0, 1, 0, 0));
-		#end
+		if (FlxG.renderBlit)
+			_sprScreen.pixels.copyPixels(FlxG.camera.buffer, FlxG.camera.buffer.rect, new Point());
+		else
+			_sprScreen.pixels.draw(FlxG.camera.canvas, new Matrix(1, 0, 0, 1, 0, 0));
+		
 		var rc:Float = 1 / 3;
 		var gc:Float = 1 / 2;
 		var bc:Float = 1 / 6;

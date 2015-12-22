@@ -81,8 +81,7 @@ class PlayState extends FlxState
 		
 		FlxG.camera.fade(FlxColor.BLACK, .33, true);
 		
-		super.create();	
-		
+		super.create();
 	}
 	
 	private function placeEntities(entityName:String, entityData:Xml):Void
@@ -97,7 +96,6 @@ class PlayState extends FlxState
 		else if (entityName == "coin")
 		{
 			_grpCoins.add(new Coin(x + 4, y + 4));
-			
 		}
 		else if (entityName == "enemy")
 		{

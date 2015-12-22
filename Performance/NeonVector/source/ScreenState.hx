@@ -95,9 +95,8 @@ class ScreenState extends FlxState
 		blur = new BlurFilter(8, 8, BitmapFilterQuality.LOW);
 		#end
 		
-		#if FLX_RENDER_TILE
-		FlxG.camera.canvas.addChild(FlxSpriteUtil.flashGfxSprite);
-		#end
+		if (FlxG.renderTile)
+			FlxG.camera.canvas.addChild(FlxSpriteUtil.flashGfxSprite);
 	}
 	
 	override public function update(elapsed:Float):Void

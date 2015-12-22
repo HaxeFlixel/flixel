@@ -14,11 +14,10 @@ class Bunny extends FlxSprite
 	{
 		super();
 		
-		#if FLX_RENDER_BLIT
-		loadRotatedGraphic("assets/wabbit_alpha.png", 16, -1, false, true);
-		#else
-		loadGraphic("assets/wabbit_alpha.png");
-		#end
+		if (FlxG.renderBlit)
+			loadRotatedGraphic("assets/wabbit_alpha.png", 16, -1, false, true);
+		else
+			loadGraphic("assets/wabbit_alpha.png");
 	}
 	
 	public function init(Offscreen:Bool = false):Bunny

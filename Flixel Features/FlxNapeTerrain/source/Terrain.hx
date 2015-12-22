@@ -38,9 +38,7 @@ class Terrain #if flash implements nape.geom.IsoFunction #end
 	
 	public var sprite:FlxSprite;
 	
-	#if FLX_RENDER_BLIT
 	private var flashSprite:Sprite;
-	#end
 	
 	private var graphicPath:String = "assets/Patagonia30.jpg";
 	
@@ -65,12 +63,15 @@ class Terrain #if flash implements nape.geom.IsoFunction #end
 		isoBounds = new AABB(0, 0, cellSize, cellSize);
 		isoGranularity = Vec2.get(subSize, subSize);
 		
-		#if FLX_RENDER_BLIT
-		sprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.TRANSPARENT);
-		flashSprite = new Sprite();
-		#else
-		sprite = megaStrip;
-		#end
+		if (FlxG.renderBlit)
+		{
+			sprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.TRANSPARENT);
+			flashSprite = new Sprite();
+		}
+		else
+		{
+			sprite = megaStrip;
+		}
 	}
 	
 	public function invalidate(region:AABB, state:FlxState) 
@@ -275,17 +276,18 @@ class Terrain #if flash implements nape.geom.IsoFunction #end
 			}
 		}
 		
-		#if FLX_RENDER_BLIT
-		flashSprite.graphics.clear();
-		flashSprite.graphics.beginBitmapFill(Assets.getBitmapData(graphicPath), null, false, true);
-		flashSprite.graphics.drawTriangles(vertices, ids, uvtData);
-		flashSprite.graphics.endFill();
-		
-		var pixels:BitmapData = sprite.pixels;
-		pixels.fillRect(pixels.rect, FlxColor.TRANSPARENT);
-		pixels.draw(flashSprite);
-		sprite.pixels = pixels;
-		#end
+		if (FlxG.renderBlit)
+		{
+			flashSprite.graphics.clear();
+			flashSprite.graphics.beginBitmapFill(Assets.getBitmapData(graphicPath), null, false, true);
+			flashSprite.graphics.drawTriangles(vertices, ids, uvtData);
+			flashSprite.graphics.endFill();
+			
+			var pixels:BitmapData = sprite.pixels;
+			pixels.fillRect(pixels.rect, FlxColor.TRANSPARENT);
+			pixels.draw(flashSprite);
+			sprite.pixels = pixels;
+		}
 	}
 	
 	//iso-function for terrain, computed as a linearly-interpolated
