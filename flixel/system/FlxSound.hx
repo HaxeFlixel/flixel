@@ -227,23 +227,12 @@ class FlxSound extends FlxBasic
 		if (_target != null)
 		{
 			radialMultiplier = FlxMath.getDistance(FlxPoint.weak(_target.x, _target.y), FlxPoint.weak(x, y)) / _radius;
-			if (radialMultiplier < 0) radialMultiplier = 0;
-			if (radialMultiplier > 1) radialMultiplier = 1;
-			
-			radialMultiplier = 1 - radialMultiplier;
+			radialMultiplier = 1 - FlxMath.bound(radialMultiplier, 0, 1);
 			
 			if (_proximityPan)
 			{
 				var d:Float = (x - _target.x) / _radius;
-				if (d < -1) 
-				{
-					d = -1;
-				}
-				else if (d > 1) 
-				{
-					d = 1;
-				}
-				_transform.pan = d;
+				_transform.pan = FlxMath.bound(d, -1, 1);
 			}
 		}
 		
@@ -556,10 +545,8 @@ class FlxSound extends FlxBasic
 	
 	/**
 	 * An internal helper function used to help Flash clean up finished sounds or restart looped sounds.
-	 * 
-	 * @param	event		An Event object.
 	 */
-	private function stopped(event:Event = null):Void
+	private function stopped(_):Void
 	{
 		if (onComplete != null)
 		{
