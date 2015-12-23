@@ -3,7 +3,6 @@ package;
 import flixel.addons.ui.FlxUIDropDownMenu;
 import flixel.addons.ui.FlxUINumericStepper;
 import flixel.addons.ui.FlxUIRadioGroup;
-import flixel.addons.ui.FlxUIText;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
@@ -19,8 +18,9 @@ class PlayState extends FlxState
 {
 	var modelDropDown:FlxUIDropDownMenu;
 	var attachmentDropDown:FlxUIDropDownMenu;
-	var attachmentLabel:FlxUIText;
+	var attachmentLabel:FlxText;
 	var deadZoneStepper:FlxUINumericStepper;
+	var deadZoneModeDropDown:FlxUIDropDownMenu;
 	var connectedGamepads:FlxUIRadioGroup;
 	var disconnectedOverlay:FlxTypedGroup<FlxSprite>;
 	var gamepads:Array<FlxGamepad> = [];
@@ -33,10 +33,21 @@ class PlayState extends FlxState
 		
 		add(new Gamepad());
 		
-		add(attachmentLabel = new FlxUIText(modelDropDownLoc.x+65, modelDropDownLoc.y-15, 100, "Attachment:"));
-		attachmentLabel.color = FlxColor.BLACK;
+		createAttachmentControls();
+		createModelControls();
+		showAttachment(false);
 		
-		add(attachmentDropDown = new FlxUIDropDownMenu(modelDropDownLoc.x+65, modelDropDownLoc.y,
+		createDeadZoneControls();
+		
+		createDisconnectedOverlay();
+		add(connectedGamepads = new FlxUIRadioGroup(500, 10, null, null, null, 25, 125, 25, 125));
+	}
+	
+	function createAttachmentControls():Void
+	{
+		add(attachmentLabel = addLabel(modelDropDownLoc.x + 65, modelDropDownLoc.y - 15, "Attachment:"));
+		
+		add(attachmentDropDown = new FlxUIDropDownMenu(modelDropDownLoc.x + 65, modelDropDownLoc.y,
 			FlxUIDropDownMenu.makeStrIdLabelArray(FlxGamepadModelAttachment.getConstructors()),
 			function (attachment)
 			{
@@ -46,7 +57,11 @@ class PlayState extends FlxState
 				updateConnectedGamepads(true);
 			}));
 		attachmentDropDown.selectedId = "None";
-		
+		attachmentDropDown.dropDirection = Up;
+	}
+	
+	function createModelControls():Void
+	{
 		add(modelDropDown = new FlxUIDropDownMenu(modelDropDownLoc.x, modelDropDownLoc.y,
 			FlxUIDropDownMenu.makeStrIdLabelArray(FlxGamepadModel.getConstructors()),
 			function (model)
@@ -57,17 +72,29 @@ class PlayState extends FlxState
 				updateConnectedGamepads(true);
 				showAttachment(gamepad.model == FlxGamepadModel.WiiRemote);
 			}));
-		
-		showAttachment(false);
-		
-		var label = new FlxText(209, 365, 0, "Deadzone: ");
-		label.setFormat(null, 8, FlxColor.BLACK);
-		add(label);
-		add(deadZoneStepper = new FlxUINumericStepper(272, 365, 0.05, 0.15, 0,
+	}
+	
+	function createDeadZoneControls():Void
+	{
+		var x = 175;
+		addLabel(x, 365, "Deadzone:");
+		add(deadZoneStepper = new FlxUINumericStepper(x, 385, 0.05, 0.15, 0,
 			1, 2, FlxUINumericStepper.STACK_HORIZONTAL));
 		
-		add(connectedGamepads = new FlxUIRadioGroup(500, 10, null, null, null, 25, 125, 25, 125));
-		
+		x += 70;
+		addLabel(x, 365, "Deadzone Mode:");
+		add(deadZoneModeDropDown = new FlxUIDropDownMenu(x, 381,
+			FlxUIDropDownMenu.makeStrIdLabelArray(FlxGamepadDeadZoneMode.getConstructors()),
+			function (mode)
+			{
+				var gamepad = FlxG.gamepads.lastActive;
+				if (gamepad != null)
+					gamepad.deadZoneMode = FlxGamepadDeadZoneMode.createByName(mode);
+			}, new FlxUIDropDownHeader(130)));
+	}
+	
+	function createDisconnectedOverlay():Void
+	{
 		disconnectedOverlay = new FlxTypedGroup();
 		var background = new FlxSprite();
 		background.makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
@@ -80,7 +107,15 @@ class PlayState extends FlxState
 		add(disconnectedOverlay);
 	}
 	
-	private function showAttachment(b:Bool):Void
+	function addLabel(x:Float, y:Float, text:String):FlxText
+	{
+		var label = new FlxText(x, y, 0, text);
+		label.color = FlxColor.BLACK;
+		add(label);
+		return label;
+	}
+	
+	function showAttachment(b:Bool):Void
 	{
 		attachmentLabel.visible = attachmentDropDown.visible = attachmentDropDown.active = b;
 		
@@ -109,6 +144,7 @@ class PlayState extends FlxState
 			showAttachment(true);
 		}
 		gamepad.deadZone = deadZoneStepper.value;
+		deadZoneModeDropDown.selectedLabel = gamepad.deadZoneMode.getName();
 		connectedGamepads.selectedIndex = getGamepadIndex(gamepad);
 	}
 	
