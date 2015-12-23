@@ -151,6 +151,13 @@ class FlxTilemapTest extends FlxTest
 		Assert.isFalse(tilemap.ray(new FlxPoint(0, 0), new FlxPoint(tilemap.width, tilemap.height)));
 	}
 	
+	@Test
+	function testNegativeIndicesTreatedAsZero()
+	{
+		tilemap.loadMapFromCSV("-1,1", getBitmapData());
+		FlxAssert.arraysEqual([0, 1], tilemap.getData());
+	}
+	
 	function getBitmapData()
 	{
 		return new BitmapData(16, 8);

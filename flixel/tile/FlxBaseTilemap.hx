@@ -179,67 +179,38 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		
 		var regex:EReg = new EReg("[ \t]*((\r\n)|\r|\n)[ \t]*", "g");
 		var lines:Array<String> = regex.split(MapData);
-		var rows:Array<String> = [];
-		for (s in lines) 
-		{
-			if (s != "") rows.push(s);
-		}
+		var rows:Array<String> = lines.filter(function(line) return line != "");
 		
 		heightInTiles = rows.length;
 		widthInTiles = 0;
-		var row:Int = 0;
-		var column:Int;
 		
+		var row:Int = 0;
 		while (row < heightInTiles)
 		{
 			columns = rows[row++].split(",");
 			
-			if (columns.length < 1)
+			if (columns.length == 0)
 			{
-				heightInTiles = heightInTiles - 1;
+				heightInTiles--;
 				continue;
 			}
 			if (widthInTiles == 0)
 			{
 				widthInTiles = columns.length;
 			}
-			column = 0;
 			
+			var column = 0;
 			while (column < widthInTiles)
 			{
 				//the current tile to be added:
-				var curTile:Int = Std.parseInt(columns[column]);
+				var curTile = Std.parseInt(columns[column]);
 				
+				// anything < 0 should be treated as 0 for compatibility with certain map formats (ogmo)
 				if (curTile < 0)
-				{
-					// anything < 0 should be treated as 0 for compatibility with certain map formats (ogmo)
 					curTile = 0;
-				}
 				
-				//if neko, make sure the value was not null, and if it is null,
-				//make sure it is the last in the row (used to ignore commas)
-				#if neko
-				if (curTile != null)
-				{
-					_data.push(curTile);	
-					column++;
-				}
-				else if (column == columns.length - 1)
-				{
-					//if value was a comma, decrease the width by one
-					widthInTiles--;
-				}
-				else
-				{
-					//if a non-int value was passed not at the end, warn the user
-					throw "Value passed wan NaN";
-				}
-				#else
-				//if not neko, dont worry about the comma
-				_data.push(curTile);	
+				_data.push(curTile);
 				column++;
-				#end
-				
 			}
 		}
 		
