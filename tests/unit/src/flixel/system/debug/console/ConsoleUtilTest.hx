@@ -1,7 +1,6 @@
 package flixel.system.debug.console;
 
 import massive.munit.Assert;
-using flixel.util.FlxArrayUtil;
 
 class ConsoleUtilTest extends FlxTest
 {
@@ -19,8 +18,9 @@ class ConsoleUtilTest extends FlxTest
 	
 	function testGetFields(objectOrClass:Dynamic)
 	{
-		Assert.isTrue(ConsoleUtil.getFields(objectOrClass)
-			.equals([for (i in 0...6) "test" + (i + 1)]));
+		FlxAssert.arraysEqual(
+			ConsoleUtil.getFields(objectOrClass),
+			[for (i in 0...6) "test" + (i + 1)]);
 	}
 }
 

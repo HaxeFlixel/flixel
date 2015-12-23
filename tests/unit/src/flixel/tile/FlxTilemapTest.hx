@@ -6,7 +6,6 @@ import flixel.graphics.FlxGraphic;
 import flixel.math.FlxPoint;
 import flixel.tile.FlxTilemap;
 import massive.munit.Assert;
-using flixel.util.FlxArrayUtil;
 using StringTools;
 
 class FlxTilemapTest extends FlxTest
@@ -53,7 +52,7 @@ class FlxTilemapTest extends FlxTest
 		
 		Assert.areEqual(3, tilemap.widthInTiles);
 		Assert.areEqual(2, tilemap.heightInTiles);
-		Assert.isTrue([0, 1, 0, 1, 1, 1].equals(tilemap.getData()));
+		FlxAssert.arraysEqual([0, 1, 0, 1, 1, 1], tilemap.getData());
 	}
 	
 	@Test
@@ -66,7 +65,7 @@ class FlxTilemapTest extends FlxTest
 		
 		Assert.areEqual(3, tilemap.widthInTiles);
 		Assert.areEqual(2, tilemap.heightInTiles);
-		Assert.isTrue([0, 1, 0, 1, 1, 1].equals(tilemap.getData()));
+		FlxAssert.arraysEqual([0, 1, 0, 1, 1, 1], tilemap.getData());
 	}
 	
 	@Test
@@ -113,7 +112,7 @@ class FlxTilemapTest extends FlxTest
 		
 		Assert.areEqual(4, tilemap.widthInTiles);
 		Assert.areEqual(3, tilemap.heightInTiles);
-		Assert.isTrue(sampleMapArray.equals(tilemap.getData()));
+		FlxAssert.arraysEqual(sampleMapArray, tilemap.getData());
 	}
 	
 	@Test //#1617
