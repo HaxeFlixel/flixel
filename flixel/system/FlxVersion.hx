@@ -28,7 +28,7 @@ class FlxVersion
 		var sha = FlxVersion.sha;
 		if (sha != "")
 		{
-			sha = '@$sha';
+			sha = "@" + sha.substring(0, 7);
 		}
 		return 'HaxeFlixel $major.$minor.$patch$sha';
 	}
