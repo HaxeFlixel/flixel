@@ -14,7 +14,7 @@ import openfl.display.FPS;
  * @author TiagoLr ( ~~~ProG4mr~~~ )
  * @link https://github.com/ProG4mr
  */
-class Piramid extends BaseState
+class Pyramid extends BaseState
 {	
 	private var shooter:Shooter;
 	private static var levels;
@@ -27,8 +27,8 @@ class Piramid extends BaseState
 		
 		add(new FlxSprite(0, 0, "assets/piramidbg.jpg"));
 
-		if (Piramid.levels == 0)
-			Piramid.levels = 10;
+		if (Pyramid.levels == 0)
+			Pyramid.levels = 10;
 			
 		shooter = new Shooter();
 		add(shooter);	
@@ -51,12 +51,12 @@ class Piramid extends BaseState
 		bricks = new Array<FlxNapeSprite>();
 		var brick:FlxNapeSprite;
 		
-		var brickHeight:Int = Std.int(8 * 40 / Piramid.levels); // magic number!
+		var brickHeight:Int = Std.int(8 * 40 / Pyramid.levels); // magic number!
 		var brickWidth:Int = brickHeight * 2;
 		
 		for (i in 0...levels)
 		{
-			for (j in 0...(Piramid.levels - i)) 
+			for (j in 0...(Pyramid.levels - i)) 
 			{
 				brick = new FlxNapeSprite();
 				brick.makeGraphic(brickWidth, brickHeight, 0x0);
@@ -69,7 +69,7 @@ class Piramid extends BaseState
 				if (FlxG.random.bool()) brick.scale.y *= -1; // add some variety.
 				brick.setBodyMaterial(.5, .5, .5, 2);
 				brick.body.position.y = FlxG.height - brickHeight / 2 - brickHeight * i + 2;
-				brick.body.position.x = (FlxG.width / 2 - brickWidth / 2 * (Piramid.levels - i - 1)) + brickWidth * j; 
+				brick.body.position.x = (FlxG.width / 2 - brickWidth / 2 * (Pyramid.levels - i - 1)) + brickWidth * j; 
 				add(brick);
 				bricks.push(brick);
 			}
@@ -85,12 +85,12 @@ class Piramid extends BaseState
 		
 		if (FlxG.keys.justPressed.Q)
 		{
-			Piramid.levels++;
+			Pyramid.levels++;
 			FlxG.resetState();
 		}
 		if (FlxG.keys.justPressed.W)
 		{
-			Piramid.levels--;
+			Pyramid.levels--;
 			FlxG.resetState();
 		}
 	}

@@ -2,13 +2,13 @@ package;
 
 import flixel.FlxGame;
 import openfl.display.Sprite;
-import states.Piramid;
+import states.Pyramid;
 
 class Main extends Sprite
 {
 	public function new()
 	{
 		super();
-		addChild(new FlxGame(640, 480, Piramid));
+		addChild(new FlxGame(640, 480, Pyramid));
 	}
 }

@@ -10,7 +10,7 @@ import openfl.display.FPS;
 class BaseState extends FlxState
 {
 	var fps:FPS;
-	var states:Array<Dynamic> = [Piramid, Balloons, Blob, Fight, Cutup, SolarSystem];
+	var states:Array<Dynamic> = [Pyramid, Balloons, Blob, Fight, Cutup, SolarSystem];
 	static var stateIndex = 0;
 	
 	override public function create():Void
