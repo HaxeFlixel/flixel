@@ -158,6 +158,13 @@ class FlxTilemapTest extends FlxTest
 		FlxAssert.arraysEqual([0, 1], tilemap.getData());
 	}
 	
+	@Test // #1520
+	function testLoadMapFromCSVTrailingComma()
+	{
+		tilemap.loadMapFromCSV("1,", getBitmapData());
+		FlxAssert.arraysEqual([1], tilemap.getData());
+	}
+	
 	function getBitmapData()
 	{
 		return new BitmapData(16, 8);

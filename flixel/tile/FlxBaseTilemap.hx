@@ -7,6 +7,7 @@ import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxTilemapGraphicAsset;
 import flixel.util.FlxArrayUtil;
 import openfl.Assets;
+using StringTools;
 
 class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 {
@@ -187,7 +188,10 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		var row:Int = 0;
 		while (row < heightInTiles)
 		{
-			columns = rows[row++].split(",");
+			var rowString = rows[row++];
+			if (rowString.endsWith(","))
+				rowString = rowString.substr(0, rowString.length - 1);
+			columns = rowString.split(",");
 			
 			if (columns.length == 0)
 			{
