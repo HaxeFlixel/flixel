@@ -14,6 +14,7 @@ import flixel.FlxObject;
 import flixel.system.debug.FlxDebugger;
 import flixel.system.debug.completion.CompletionList;
 import flixel.system.debug.completion.CompletionHandler;
+import flixel.util.FlxStringUtil;
 using StringTools;
 
 /**
@@ -267,24 +268,6 @@ class Console extends Window
 	#end
 	
 	/**
-	 * Register a new object to use in any command.
-	 * 
-	 * @param 	ObjectAlias		The name with which you want to access the object.
-	 * @param 	AnyObject		The object to register.
-	 * @param 	HelpText		An optional string to trace to the console using the "help" command.
-	 */
-	public inline function registerObject(objectAlias:String, anyObject:Dynamic, ?helpText:String)
-	{
-		registeredObjects.set(objectAlias, anyObject);
-		#if hscript
-		ConsoleUtil.registerObject(objectAlias, anyObject);
-		#end
-		
-		if (helpText != null)
-			registeredHelp.set(objectAlias, helpText);
-	}
-	
-	/**
 	 * Register a new function to use in any command.
 	 * 
 	 * @param 	FunctionAlias	The name with which you want to access the function.
@@ -300,6 +283,30 @@ class Console extends Window
 		
 		if (helpText != null)
 			registeredHelp.set(functionAlias, helpText);
+	}
+	
+	/**
+	 * Register a new object to use in any command.
+	 * 
+	 * @param 	ObjectAlias		The name with which you want to access the object.
+	 * @param 	AnyObject		The object to register.
+	 */
+	public inline function registerObject(objectAlias:String, anyObject:Dynamic)
+	{
+		registeredObjects.set(objectAlias, anyObject);
+		#if hscript
+		ConsoleUtil.registerObject(objectAlias, anyObject);
+		#end
+	}
+	
+	/**
+	 * Register a new class to use in any command.
+	 * 
+	 * @param 	cl			The class to register.
+	 */
+	public inline function registerClass(cl:Class<Dynamic>)
+	{
+		registerObject(FlxStringUtil.getClassName(cl, true), cl);
 	}
 	
 	override public function destroy()

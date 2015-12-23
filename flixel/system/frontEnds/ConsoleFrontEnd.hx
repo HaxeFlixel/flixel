@@ -36,6 +36,18 @@ class ConsoleFrontEnd
 	}
 	
 	/**
+	 * Register a new class to use in any command.
+	 * 
+	 * @param 	cl			The class to register.
+	 */
+	public inline function registerClass(cl:Class<Dynamic>):Void
+	{
+		#if !FLX_NO_DEBUG
+		FlxG.game.debugger.console.registerClass(cl);
+		#end
+	}
+	
+	/**
 	 * Just needed to create an instance.
 	 */
 	@:allow(flixel.FlxG)

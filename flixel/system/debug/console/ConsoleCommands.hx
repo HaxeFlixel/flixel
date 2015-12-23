@@ -46,9 +46,9 @@ class ConsoleCommands
 		console.registerFunction("track", track, "Adds a tracker window for the specified object or class.");
 		
 		// Default classes to include
-		console.registerObject("Math", Math);
-		console.registerObject("FlxG", FlxG);
-		console.registerObject("FlxSprite", FlxSprite);	
+		console.registerClass(Math);
+		console.registerClass(FlxG);
+		console.registerClass(FlxSprite);
 		#end
 	}
 	
