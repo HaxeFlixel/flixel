@@ -188,7 +188,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		var row:Int = 0;
 		while (row < heightInTiles)
 		{
-			var rowString = rows[row++];
+			var rowString = rows[row];
 			if (rowString.endsWith(","))
 				rowString = rowString.substr(0, rowString.length - 1);
 			columns = rowString.split(",");
@@ -207,7 +207,11 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 			while (column < widthInTiles)
 			{
 				//the current tile to be added:
-				var curTile = Std.parseInt(columns[column]);
+				var columnString = columns[column];
+				var curTile = Std.parseInt(columnString);
+				
+				if (curTile == null)
+					throw 'String in row $row, column $column is not a valid integer: "$columnString"';
 				
 				// anything < 0 should be treated as 0 for compatibility with certain map formats (ogmo)
 				if (curTile < 0)
@@ -216,6 +220,8 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 				_data.push(curTile);
 				column++;
 			}
+			
+			row++;
 		}
 		
 		loadMapHelper(TileGraphic, TileWidth, TileHeight, AutoTile, StartingIndex, DrawIndex, CollideIndex);

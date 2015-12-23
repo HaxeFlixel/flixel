@@ -165,6 +165,22 @@ class FlxTilemapTest extends FlxTest
 		FlxAssert.arraysEqual([1], tilemap.getData());
 	}
 	
+	@Test
+	function testLoadMapFromCSVInvalidIndices()
+	{
+		var exceptionThrown = false;
+		try
+		{
+			tilemap.loadMapFromCSV("1,f,1", getBitmapData());
+		}
+		catch (e:Dynamic)
+		{
+			exceptionThrown = true;
+		}
+		
+		Assert.isTrue(exceptionThrown);
+	}
+	
 	function getBitmapData()
 	{
 		return new BitmapData(16, 8);
