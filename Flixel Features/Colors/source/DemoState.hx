@@ -264,12 +264,12 @@ class DemoState extends FlxState
 	
 	public function nextPanel():Void
 	{
-		currentPanelIndex = FlxMath.wrapValue(currentPanelIndex, 1, panels.length);
+		currentPanelIndex = FlxMath.wrapValue(currentPanelIndex, 1, panels.length - 1);
 		changePanel();
 	}
 	public function previousPanel():Void
 	{
-		currentPanelIndex = FlxMath.wrapValue(currentPanelIndex, -1, panels.length);
+		currentPanelIndex = FlxMath.wrapValue(currentPanelIndex, -1, panels.length - 1);
 		changePanel();
 	}
 	
