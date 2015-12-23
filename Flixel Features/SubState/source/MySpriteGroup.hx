@@ -1,4 +1,4 @@
-package ;
+package;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -11,7 +11,6 @@ import flixel.math.FlxRandom;
  */
 class MySpriteGroup extends FlxTypedGroup<FlxSprite>
 {
-
 	public function new(numSprites:Int = 50) 
 	{
 		super();
@@ -55,5 +54,4 @@ class MySpriteGroup extends FlxTypedGroup<FlxSprite>
 			}
 		}
 	}
-	
 }

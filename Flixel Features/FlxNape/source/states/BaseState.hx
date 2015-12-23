@@ -3,12 +3,15 @@ package states;
 import flixel.addons.nape.FlxNapeSpace;
 import flixel.FlxG;
 import flixel.FlxState;
+import flixel.math.FlxMath;
 import flixel.util.FlxColor;
 import openfl.display.FPS;
 
 class BaseState extends FlxState
 {
 	var fps:FPS;
+	var states:Array<Dynamic> = [Piramid, Balloons, Blob, Fight, Cutup, SolarSystem];
+	static var stateIndex = 0;
 	
 	override public function create():Void
 	{
@@ -26,9 +29,15 @@ class BaseState extends FlxState
 			FlxG.resetState();
 		
 		if (FlxG.keys.justPressed.LEFT)
-			Main.prevState();
+			changeState(-1);
 		if (FlxG.keys.justPressed.RIGHT)
-			Main.nextState();
+			changeState(1);
+	}
+	
+	private function changeState(modifier:Int):Void
+	{
+		stateIndex = FlxMath.wrapValue(stateIndex, modifier, states.length);
+		FlxG.switchState(Type.createInstance(states[stateIndex], []));
 	}
 	
 	override public function destroy():Void 

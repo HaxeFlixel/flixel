@@ -14,9 +14,6 @@ import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import flixel.group.FlxGroup;
 
-/**
- * A FlxState which can be used for the game's menu.
- */
 class MenuState extends FlxState
 {
 	private var _display:FlxText;
@@ -330,8 +327,7 @@ class MenuState extends FlxState
 	private function getObjects():Void
 	{
 		var array:Array<Int> = [for (i in 0...20) i];
-		var results:Array<Int> = [for (i in 0...20) 0
-		];
+		var results:Array<Int> = [for (i in 0...20) 0];
 		timer = Lib.getTimer();
 		for (i in 0...ONEMIL) results[FlxG.random.getObject(array)]++;
 		

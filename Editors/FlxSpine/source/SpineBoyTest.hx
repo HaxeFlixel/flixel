@@ -1,4 +1,4 @@
-package  testclasses;
+package;
 
 import flixel.FlxG;
 import flixel.addons.editors.spine.FlxSpine;

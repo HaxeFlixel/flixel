@@ -4,7 +4,6 @@ import flixel.addons.editors.spine.FlxSpine;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.text.FlxText;
-import testclasses.SpineBoyTest;
 
 class MenuState extends FlxState
 {
