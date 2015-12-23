@@ -250,7 +250,8 @@ class FlxMath
 	}
 	
 	/**
-	 * Adds value to amount and ensures that the result always stays between 0 and max, by wrapping the value around.
+	 * Adds value to amount and ensures that the result always stays between 0 and max,
+	 * by wrapping the value around. Returns 0 if max is <= 0.
 	 * 
 	 * @param 	value 	The value to add the amount to
 	 * @param 	amount 	The amount to add to the value
@@ -259,9 +260,12 @@ class FlxMath
 	 */
 	public static function wrapValue(value:Int, amount:Int, max:Int):Int
 	{
+		if (max <= 0)
+			return 0;
+		
 		var output:Int = value + amount;
 		
-		if (output >= max)
+		if (output > max)
 		{
 			output %= max;
 		}

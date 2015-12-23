@@ -73,4 +73,15 @@ class FlxMathTest extends FlxTest
 		
 		Assert.isTrue(eps > maxError);
 	}
+	
+	@Test
+	function testWrapAngle()
+	{
+		Assert.areEqual(2, FlxMath.wrapValue(2, 4, 4));
+		Assert.areEqual(4, FlxMath.wrapValue(3, 1, 4));
+		Assert.areEqual(0, FlxMath.wrapValue(0, 0, 0));
+		Assert.areEqual(0, FlxMath.wrapValue(0, 1, 0));
+		Assert.areEqual(1, FlxMath.wrapValue( -8, -1, 5));
+		Assert.areEqual(0, FlxMath.wrapValue(-4, 1, -2));
+	}
 }
