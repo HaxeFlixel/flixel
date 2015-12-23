@@ -30,7 +30,7 @@ class FlxTilemapTest extends FlxTest
 	@Test
 	function test1x1Map()
 	{
-		tilemap.loadMapFromCSV("1", getBitmapData(), 8, 8);
+		tilemap.loadMapFromCSV("1", getBitmapData());
 		
 		try
 		{
@@ -48,7 +48,7 @@ class FlxTilemapTest extends FlxTest
 	function testLoadMapArray()
 	{
 		var mapData = [0, 1, 0, 1, 1, 1];
-		tilemap.loadMapFromArray(mapData, 3, 2, getBitmapData(), 8, 8);
+		tilemap.loadMapFromArray(mapData, 3, 2, getBitmapData());
 		
 		Assert.areEqual(3, tilemap.widthInTiles);
 		Assert.areEqual(2, tilemap.heightInTiles);
@@ -61,7 +61,7 @@ class FlxTilemapTest extends FlxTest
 		var mapData = [
 			[0, 1, 0],
 			[1, 1, 1]];
-		tilemap.loadMapFrom2DArray(mapData, getBitmapData(), 8, 8);
+		tilemap.loadMapFrom2DArray(mapData, getBitmapData());
 		
 		Assert.areEqual(3, tilemap.widthInTiles);
 		Assert.areEqual(2, tilemap.heightInTiles);
@@ -95,7 +95,7 @@ class FlxTilemapTest extends FlxTest
 	@Test  // #1546
 	function testOffMapOverlap()
 	{
-		tilemap.loadMapFrom2DArray([[1], [0]], getBitmapData(), 8, 8);
+		tilemap.loadMapFrom2DArray([[1], [0]], getBitmapData());
 		var sprite = new FlxSprite( -2, 10);
 		Assert.isFalse(tilemap.overlapsWithCallback(sprite));
 	}
@@ -108,7 +108,7 @@ class FlxTilemapTest extends FlxTest
 	
 	function testLoadMapFromCSVWithNewline(csv:String, newlines:String)
 	{
-		tilemap.loadMapFromCSV(csv.replace("[nl]", newlines), getBitmapData(), 8, 8);
+		tilemap.loadMapFromCSV(csv.replace("[nl]", newlines), getBitmapData());
 		
 		Assert.areEqual(4, tilemap.widthInTiles);
 		Assert.areEqual(3, tilemap.heightInTiles);
@@ -119,7 +119,7 @@ class FlxTilemapTest extends FlxTest
 	function testRayEmpty()
 	{
 		var mapData = [0, 0, 0]; //3x1 
-		tilemap.loadMapFromArray(mapData, 3, 1, getBitmapData(), 8, 8);
+		tilemap.loadMapFromArray(mapData, 3, 1, getBitmapData());
 		
 		Assert.isTrue(tilemap.ray(new FlxPoint(0, tilemap.height/2), new FlxPoint(tilemap.width, tilemap.height/2)));
 	}
@@ -128,7 +128,7 @@ class FlxTilemapTest extends FlxTest
 	function testRayStraight()
 	{
 		var mapData = [0, 1, 0]; //3x1 with a solid block in the middle
-		tilemap.loadMapFromArray(mapData, 3, 1, getBitmapData(), 8, 8);
+		tilemap.loadMapFromArray(mapData, 3, 1, getBitmapData());
 		
 		Assert.isFalse(tilemap.ray(new FlxPoint(0, tilemap.height/2), new FlxPoint(tilemap.width, tilemap.height/2)));
 	}
@@ -137,7 +137,7 @@ class FlxTilemapTest extends FlxTest
 	function testRayImperfectDiagonal()
 	{
 		var mapData = [0, 0, 0, 0, 1, 0, 0, 0, 0]; //3x3 with a solid block in the middle
-		tilemap.loadMapFromArray(mapData, 3, 3, getBitmapData(), 8, 8);
+		tilemap.loadMapFromArray(mapData, 3, 3, getBitmapData());
 		
 		Assert.isFalse(tilemap.ray(new FlxPoint(0, 0), new FlxPoint(tilemap.width-tilemap.width/8, tilemap.height)));
 	}
@@ -146,7 +146,7 @@ class FlxTilemapTest extends FlxTest
 	function testRayPerfectDiagonal()
 	{
 		var mapData = [0, 0, 0, 0, 1, 0, 0, 0, 0]; //3x3 with a solid block in the middle
-		tilemap.loadMapFromArray(mapData, 3, 3, getBitmapData(), 8, 8);
+		tilemap.loadMapFromArray(mapData, 3, 3, getBitmapData());
 		
 		Assert.isFalse(tilemap.ray(new FlxPoint(0, 0), new FlxPoint(tilemap.width, tilemap.height)));
 	}
