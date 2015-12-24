@@ -4,6 +4,7 @@ package flixel.system.debug.console;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxState;
+import flixel.math.FlxMath;
 import flixel.util.FlxStringUtil;
 using StringTools;
 
@@ -49,6 +50,7 @@ class ConsoleCommands
 		console.registerClass(Math);
 		console.registerClass(FlxG);
 		console.registerClass(FlxSprite);
+		console.registerClass(FlxMath);
 		#end
 	}
 	
