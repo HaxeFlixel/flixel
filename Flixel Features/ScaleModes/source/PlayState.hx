@@ -42,7 +42,7 @@ class PlayState extends FlxState
 	{
 		if (FlxG.keys.justPressed.SPACE || FlxG.mouse.justPressed)
 		{
-			scaleModeIndex = FlxMath.wrapValue(scaleModeIndex, 1, scaleModes.length - 1);
+			scaleModeIndex = FlxMath.wrap(scaleModeIndex + 1, 0, scaleModes.length - 1);
 			setScaleMode(scaleModes[scaleModeIndex]);
 		}
 		

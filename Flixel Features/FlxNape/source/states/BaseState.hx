@@ -36,7 +36,7 @@ class BaseState extends FlxState
 	
 	private function changeState(modifier:Int):Void
 	{
-		stateIndex = FlxMath.wrapValue(stateIndex, modifier, states.length - 1);
+		stateIndex = FlxMath.wrap(stateIndex + modifier, 0, states.length - 1);
 		FlxG.switchState(Type.createInstance(states[stateIndex], []));
 	}
 	
