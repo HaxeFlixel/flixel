@@ -75,13 +75,13 @@ class FlxMathTest extends FlxTest
 	}
 	
 	@Test
-	function testWrapAngle()
+	function testWrap()
 	{
-		Assert.areEqual(2, FlxMath.wrapValue(2, 4, 4));
-		Assert.areEqual(4, FlxMath.wrapValue(3, 1, 4));
-		Assert.areEqual(0, FlxMath.wrapValue(0, 0, 0));
-		Assert.areEqual(0, FlxMath.wrapValue(0, 1, 0));
-		Assert.areEqual(1, FlxMath.wrapValue( -8, -1, 5));
-		Assert.areEqual(0, FlxMath.wrapValue(-4, 1, -2));
+		Assert.areEqual(0, FlxMath.wrap(0, 0, 0));
+		Assert.areEqual(4, FlxMath.wrap(-1, 0, 4));
+		Assert.areEqual(0, FlxMath.wrap(5, 0, 4));
+		Assert.areEqual(0, FlxMath.wrap(-11, -10, 0));
+		Assert.areEqual(-10, FlxMath.wrap(1, -10, 0));
+		Assert.areEqual(10, FlxMath.wrap(11, 10, 10));
 	}
 }
