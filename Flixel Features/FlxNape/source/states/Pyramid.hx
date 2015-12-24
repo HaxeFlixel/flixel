@@ -33,8 +33,7 @@ class Pyramid extends BaseState
 		FlxNapeSpace.createWalls( -2000, -2000, 1640, 480);
 		createBricks();
 		
-		var txt:FlxText = new FlxText(FlxG.width - 100, 30, 100, "Bricks: " + bricks.length);
-		txt = new FlxText( -10, 5, 640, "      'R' - reset state, 'G' - toggle physics graphics");
+		var txt = new FlxText( -10, 5, 640, "      'R' - reset state, 'G' - toggle physics graphics");
 		add(txt);
 		txt = new FlxText( -10, 20, 640, "      'LEFT' & 'RIGHT' - switch demo");
 		add(txt);
@@ -58,12 +57,12 @@ class Pyramid extends BaseState
 				brick = new FlxNapeSprite();
 				brick.makeGraphic(brickWidth, brickHeight, 0x0);
 				brick.createRectangularBody();
-				brick.loadGraphic("assets/pyramid/brick" + Std.string(FlxG.random.int(1, 4)) + ".png");
+				brick.loadGraphic("assets/pyramid/brick" + FlxG.random.int(1, 4) + ".png");
 				brick.antialiasing = true;
 				brick.scale.x = brickWidth / 80;
 				brick.scale.y = brickHeight / 40;
-				if (FlxG.random.bool()) brick.scale.x *= -1; // add some variety
-				if (FlxG.random.bool()) brick.scale.y *= -1; // add some variety.
+				brick.flipX = FlxG.random.bool(); // add some variety
+				brick.flipY = FlxG.random.bool(); // add some variety.
 				brick.setBodyMaterial(.5, .5, .5, 2);
 				brick.body.position.y = FlxG.height - brickHeight / 2 - brickHeight * i + 2;
 				brick.body.position.x = (FlxG.width / 2 - brickWidth / 2 * (Pyramid.levels - i - 1)) + brickWidth * j; 

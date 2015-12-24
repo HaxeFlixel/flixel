@@ -130,7 +130,6 @@ class Ragdoll extends FlxGroup
 		
 		startX = X;
 		startY = Y;
-		
 	}
 	
 	public function init()
@@ -275,14 +274,14 @@ class Ragdoll extends FlxGroup
 		lTorso.loadGraphic(getPath("LTorso"));
 		
 		rULeg.loadGraphic(getPath("ULeg"));
-		lULeg.loadGraphic(getPath("ULeg")); lULeg.scale.x *= -1;
+		lULeg.loadGraphic(getPath("ULeg")); lULeg.flipX = true;
 		rLLeg.loadGraphic(getPath("LLeg"));
-		lLLeg.loadGraphic(getPath("LLeg")); lLLeg.scale.x *= -1;
+		lLLeg.loadGraphic(getPath("LLeg")); lLLeg.flipX = true;
 		
 		rUArm.loadGraphic(getPath("UArm"));
-		lUArm.loadGraphic(getPath("UArm")); lUArm.scale.x *= -1;
+		lUArm.loadGraphic(getPath("UArm")); lUArm.flipX = true;
 		rLArm.loadGraphic(getPath("LArm"));
-		lLArm.loadGraphic(getPath("LArm")); lLArm.scale.x *= -1;
+		lLArm.loadGraphic(getPath("LArm")); lLArm.flipX = true;
 	}
 	
 	function createJoints() 
