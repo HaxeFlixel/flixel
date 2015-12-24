@@ -34,7 +34,7 @@ class Blob extends BaseState
 	static var OUTLINE_COLOR = 0x00f58f;
 	static var NUM_TWINKLES = 7;
 	
-	static var CB_IGNOREME:CbType = new CbType();
+	var CB_IGNOREME:CbType = new CbType();
 	
 	var shooter:Shooter;
 	var listBlobCircles:Array<FlxNapeSprite>;

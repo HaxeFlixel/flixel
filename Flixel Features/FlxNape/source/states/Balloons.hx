@@ -32,7 +32,7 @@ class Balloons extends BaseState
 	private inline static var WIRE_MAX_LENGTH = 200;
 	private inline static var NUM_BALLOONS = 7;
 	private inline static var NUM_SEGMENTS = 10;
-	public static var CB_BALLOON:CbType = new CbType();
+	public var CB_BALLOON:CbType = new CbType();
 	
 	var listBalloons:Array<Balloon>;
 	private var shooter:Shooter;
@@ -61,8 +61,8 @@ class Balloons extends BaseState
 		FlxNapeSpace.space.listeners.add(new InteractionListener(
 			CbEvent.BEGIN, 
 			InteractionType.COLLISION, 
-			Shooter.CB_BULLET,
-			Balloons.CB_BALLOON,
+			shooter.CB_BULLET,
+			CB_BALLOON,
 			onBulletColides));
 	 
 		shooter.registerPhysSprite(box);
@@ -95,7 +95,7 @@ class Balloons extends BaseState
 		listBalloons = new Array<Balloon>();
 		for (i in 0...NUM_BALLOONS)
 		{
-			var b:Balloon = new Balloon(Std.int(FlxG.width * 0.5 - 50 * 2.5 + 50 * i - 25), 300);
+			var b:Balloon = new Balloon(Std.int(FlxG.width * 0.5 - 50 * 2.5 + 50 * i - 25), 300, CB_BALLOON);
 			listBalloons.push(b);
 			add(b);
 		}
@@ -225,7 +225,7 @@ class Wire
 
 class Balloon extends FlxNapeSprite
 {
-	public function new(X:Int, Y:Int)
+	public function new(X:Int, Y:Int, cbBalloon:CbType)
 	{
 		super(X, Y);
 		loadGraphic("assets/Balloon.png", true, 68, 68);
@@ -240,7 +240,7 @@ class Balloon extends FlxNapeSprite
 		circle.filter.collisionGroup = 256;
 		
 		body.shapes.add(circle);
-		body.cbTypes.add(Balloons.CB_BALLOON);
+		body.cbTypes.add(cbBalloon);
 		body.userData.data = this;
 		
 		body.shapes.at(0).material.density = .5;

@@ -18,7 +18,6 @@ import flixel.FlxG;
 
 class Balls extends FlxNapeState
 {
-
 	private var shooter:Shooter;
 	
 	override public function create():Void 
@@ -35,7 +34,6 @@ class Balls extends FlxNapeState
 		
 		shooter = new Shooter();
 		add(shooter);
-											
 	}
 	
 	private function createBalls() 

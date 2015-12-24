@@ -17,7 +17,7 @@ import openfl.display.FPS;
 class Pyramid extends BaseState
 {	
 	private var shooter:Shooter;
-	private static var levels;
+	private static var levels = 10;
 	var bricks:Array<FlxNapeSprite>;
 	
 	override public function create():Void 
@@ -26,10 +26,7 @@ class Pyramid extends BaseState
 		FlxNapeSpace.init();
 		
 		add(new FlxSprite(0, 0, "assets/piramidbg.jpg"));
-
-		if (Pyramid.levels == 0)
-			Pyramid.levels = 10;
-			
+	
 		shooter = new Shooter();
 		add(shooter);	
 		

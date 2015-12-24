@@ -26,7 +26,7 @@ import nape.phys.Body;
  */
 class Shooter extends FlxTypedGroup<FlxNapeSprite>
 {
-	public static var CB_BULLET:CbType = new CbType();
+	public var CB_BULLET:CbType = new CbType();
 	var mouseJoint:DistanceJoint;
 	var impulse = 3000;
 	
@@ -66,7 +66,7 @@ class Shooter extends FlxTypedGroup<FlxNapeSprite>
 		FlxNapeSpace.space.listeners.add(new InteractionListener(
 			CbEvent.BEGIN, 
 			InteractionType.COLLISION, 
-			Shooter.CB_BULLET,
+			CB_BULLET,
 			CbType.ANY_BODY,
 			onBulletColides));
 	}
