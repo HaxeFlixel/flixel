@@ -49,7 +49,7 @@ class Blob extends BaseState
 		super.create();
 		FlxNapeSpace.init();
 		
-		add(new FlxSprite(0, 0, "assets/BlobBground.jpg"));
+		add(new FlxSprite(0, 0, "assets/blob/BlobBground.jpg"));
 		
 		startXOffset = FlxG.random.float( -200, 200);	
 		
@@ -69,7 +69,7 @@ class Blob extends BaseState
 			
 		}
 		
-		add(new FlxSprite(0, 0, "assets/BlobFground.png"));
+		add(new FlxSprite(0, 0, "assets/blob/BlobFground.png"));
 		
 		var txt:FlxText;
 		txt = new FlxText( -10, 5, 640, "      'R' - reset state, 'G' - toggle physics graphics");
@@ -266,15 +266,15 @@ class Twinkle extends FlxNapeSprite
 	function new()
 	{
 		var rand = FlxG.random.int(0, 4);
-		var graphic:String = null;
+		var graphic:String = "assets/blob/Twinkle";
 		
 		switch (rand)
 		{
-			case 0: graphic = "assets/Twinkle10Y.png"; radius = 10;
-			case 1: graphic = "assets/Twinkle3Y.png"; radius = 3;
-			case 2: graphic = "assets/Twinkle4B.png"; radius = 4;
-			case 3: graphic = "assets/Twinkle5B.png"; radius = 5;
-			case 4: graphic = "assets/Twinkle5Y.png"; radius = 5;
+			case 0: graphic += "10Y.png"; radius = 10;
+			case 1: graphic += "3Y.png"; radius = 3;
+			case 2: graphic += "4B.png"; radius = 4;
+			case 3: graphic += "5B.png"; radius = 5;
+			case 4: graphic += "5Y.png"; radius = 5;
 		}
 		
 		super(FlxG.random.float(50, 540), FlxG.random.float(200, 480), graphic);

@@ -45,7 +45,7 @@ class Balloons extends BaseState
 		super.create();
 		FlxNapeSpace.init();
 		
-		add(new FlxSprite(0, 0, "assets/BalloonsBground.jpg"));
+		add(new FlxSprite(0, 0, "assets/balloons/BalloonsBground.jpg"));
 		
 		FlxNapeSpace.space.gravity.setxy(0, 500);
 		FlxNapeSpace.createWalls();
@@ -103,7 +103,7 @@ class Balloons extends BaseState
 	
 	function createBox() 
 	{
-		box = new FlxNapeSprite(FlxG.width * 0.5 - 27, 480 - 27, "assets/box.png");
+		box = new FlxNapeSprite(FlxG.width * 0.5 - 27, 480 - 27, "assets/balloons/box.png");
 		box.antialiasing = true;
 		box.setBodyMaterial(1, .2, .4, .5);
 		add(box);
@@ -228,7 +228,7 @@ class Balloon extends FlxNapeSprite
 	public function new(X:Int, Y:Int, cbBalloon:CbType)
 	{
 		super(X, Y);
-		loadGraphic("assets/Balloon.png", true, 68, 68);
+		loadGraphic("assets/balloons/Balloon.png", true, 68, 68);
 		
 		this.animation.frameIndex = FlxG.random.int(0, 6);
 		

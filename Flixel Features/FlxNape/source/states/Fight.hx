@@ -1,14 +1,12 @@
 package states;
 
-import flixel.addons.nape.FlxNapeSprite;
 import flixel.addons.nape.FlxNapeSpace;
+import flixel.addons.nape.FlxNapeSprite;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.FlxState;
 import flixel.group.FlxGroup;
-import flixel.text.FlxText;
 import flixel.math.FlxPoint;
-import flixel.math.FlxRandom;
+import flixel.text.FlxText;
 import nape.callbacks.CbType;
 import nape.callbacks.InteractionType;
 import nape.callbacks.PreCallback;
@@ -33,31 +31,19 @@ class Fight extends BaseState
 		FlxNapeSpace.createWalls(0,-300,FlxG.width, FlxG.height - 30);
 		FlxNapeSpace.space.gravity.setxy(0, 400);
 		
-		add(new FlxSprite(0, 0, "assets/dbzbg.jpg"));
+		add(new FlxSprite(0, 0, "assets/fight/dbzbg.jpg"));
 		
 		shooter = new Shooter();
 		add(shooter);
 		
 		var songoku = new Ragdoll(100,250);
 		songoku.init();
-		songoku.createGraphics("assets/GokuHead.png",
-								"assets/GokuUTorso.png",
-								"assets/GokuLTorso.png",
-								"assets/GokuUArm.png",
-								"assets/GokuLArm.png",
-								"assets/GokuULeg.png",
-								"assets/GokuLLeg.png");
+		songoku.createGraphics("Goku");
 		add(songoku);
 		
 		var vegeta = new Ragdoll(550, 250);
 		vegeta.init();
-		vegeta.createGraphics("assets/VegeHead.png",
-								"assets/VegeUTorso.png",
-								"assets/VegeLTorso.png",
-								"assets/VegeUArm.png",
-								"assets/VegeLArm.png",
-								"assets/VegeULeg.png",
-								"assets/VegeLLeg.png");
+		vegeta.createGraphics("Vege");
 		add(vegeta);
 		
 		for (spr in songoku.sprites)
@@ -130,7 +116,6 @@ class Ragdoll extends FlxGroup
 		
 		Scale > 0 ? scale = Scale : scale = 1;
 		
-		//
 		larmSize = FlxPoint.get(12 * scale, 45 * scale);
 		uarmSize = FlxPoint.get(12 * scale, 40 * scale);
 		llegSize = FlxPoint.get(15 * scale, 45 * scale);
@@ -279,21 +264,25 @@ class Ragdoll extends FlxGroup
 		return PreFlag.IGNORE;
 	}
 	
-	public function createGraphics(Head:String, UpperTorso:String, LowerTorso:String, UpperArm:String, LowerArm:String, UpperLeg:String, LowerLeg:String)
+	public function createGraphics(prefix:String)
 	{
-		head.loadGraphic(Head);
-		uTorso.loadGraphic(UpperTorso);
-		lTorso.loadGraphic(LowerTorso);
+		var getPath = function(part) {
+			return 'assets/fight/$prefix$part.png';
+		}
 		
-		rULeg.loadGraphic(UpperLeg);
-		lULeg.loadGraphic(UpperLeg); lULeg.scale.x *= -1;
-		rLLeg.loadGraphic(LowerLeg);
-		lLLeg.loadGraphic(LowerLeg); lLLeg.scale.x *= -1;
+		head.loadGraphic(getPath("Head"));
+		uTorso.loadGraphic(getPath("UTorso"));
+		lTorso.loadGraphic(getPath("LTorso"));
 		
-		rUArm.loadGraphic(UpperArm);
-		lUArm.loadGraphic(UpperArm); lUArm.scale.x *= -1;
-		rLArm.loadGraphic(LowerArm);
-		lLArm.loadGraphic(LowerArm); lLArm.scale.x *= -1;
+		rULeg.loadGraphic(getPath("ULeg"));
+		lULeg.loadGraphic(getPath("ULeg")); lULeg.scale.x *= -1;
+		rLLeg.loadGraphic(getPath("LLeg"));
+		lLLeg.loadGraphic(getPath("LLeg")); lLLeg.scale.x *= -1;
+		
+		rUArm.loadGraphic(getPath("UArm"));
+		lUArm.loadGraphic(getPath("UArm")); lUArm.scale.x *= -1;
+		rLArm.loadGraphic(getPath("LArm"));
+		lLArm.loadGraphic(getPath("LArm")); lLArm.scale.x *= -1;
 	}
 	
 	function createJoints() 
