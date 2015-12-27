@@ -191,7 +191,7 @@ class FlxFilterFrames extends FlxFramesCollection
 				frame.parent.bitmap.fillRect(frame.parent.bitmap.rect, FlxColor.TRANSPARENT);
 			
 			frameOffset = FlxPoint.point1;
-			frameOffset.setTo(widthInc, heightInc);
+			frameOffset.setTo(widthInc * 0.5, heightInc * 0.5);
 			
 			sourceFrame.paint(frame.parent.bitmap, frameOffset, true);
 		}
