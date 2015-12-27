@@ -100,6 +100,7 @@ class PlayState extends FlxState
 		filter2 = new GlowFilter(0xFF0000, 1, 50, 50, 1.5, 1);
 		
 		spr2Filter = FlxFilterFrames.fromFrames(spr2.frames, 50, 50);
+		spr2Filter.addFilter(filter2);
 		updateFilter(spr2, spr2Filter);
 		
 		// BLUR
