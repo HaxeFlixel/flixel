@@ -10,12 +10,11 @@ import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFilterFrames;
+import flixel.system.FlxAssets.GraphicLogo;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
-import flixel.math.FlxRandom;
 import openfl.Assets;
-import flixel.system.FlxAssets;
 
 #if flash
 import flash.filters.BevelFilter;
@@ -25,6 +24,8 @@ import flash.filters.DisplacementMapFilterMode;
 
 class PlayState extends FlxState
 {
+	static inline var SIZE_INCREASE:Int = 50;
+	
 	var spr1:FlxSprite;
 	var spr2:FlxSprite;
 	var spr3:FlxSprite;
@@ -38,15 +39,6 @@ class PlayState extends FlxState
 	var txt4:FlxText;
 	var txt5:FlxText;
 	var txt6:FlxText;
-	
-	var filter1:BitmapFilter;
-	var filter2:GlowFilter;
-	var filter3:BlurFilter;
-	var filter4:DropShadowFilter;
-	#if flash
-	var filter5:BevelFilter;
-	var filter6:DisplacementMapFilter;
-	#end
 	
 	var isAnimSpr1:Bool;
 	var isAnimSpr2:Bool;
@@ -65,6 +57,11 @@ class PlayState extends FlxState
 	var tween3:FlxTween;
 	var tween5:FlxTween;
 	
+	var dropShadowFilter:DropShadowFilter;
+	#if flash
+	var displacementFilter:DisplacementMapFilter;
+	#end
+	
 	override public function create():Void 
 	{
 		FlxG.camera.bgColor = 0xFF01355F;
@@ -78,93 +75,63 @@ class PlayState extends FlxState
 		return;
 		#end
 		
-		// SPRITES
-		
-		// NO FILTER
-		spr1 = new FlxSprite(FlxG.width * 0.25 - 50, FlxG.height / 2 - 100 - 50, FlxGraphic.fromClass(GraphicLogo)); 
+		spr1 = createSprite(0.25, -100, "No filter");
 		spr1.antialiasing = true;
-		add(spr1);
-		txt1 = new FlxText(spr1.x, spr1.y + 120, 100, "No Filter", 10);
-		txt1.alignment = CENTER;
-		add(txt1);
 		
-		// GLOW
-		spr2 = new FlxSprite(FlxG.width * 0.5 - 50, FlxG.height / 2 - 100 - 50, FlxGraphic.fromClass(GraphicLogo));
-		add(spr2);
-		txt2 = new FlxText(spr2.x, spr2.y + 120, 100, "Glow", 10);
-		txt2.alignment = CENTER;
-		add(txt2);
-		filter2 = new GlowFilter(0xFF0000, 1, 50, 50, 1.5, 1);
-		
-		spr2Filter = FlxFilterFrames.fromFrames(spr2.frames, 50, 50);
-		spr2Filter.addFilter(filter2);
-		updateFilter(spr2, spr2Filter);
-		
-		// BLUR
-		spr3 = new FlxSprite(FlxG.width * 0.75 - 50, FlxG.height / 2 - 100 - 50, FlxGraphic.fromClass(GraphicLogo));
-		add(spr3);
-		txt3 = new FlxText(spr3.x, spr3.y + 120, 100, "Blur", 10);
-		txt3.alignment = CENTER;
-		add(txt3);
-		filter3 = new BlurFilter();
-		
-		spr3Filter = FlxFilterFrames.fromFrames(spr3.frames, 50, 50);
-		spr3Filter.addFilter(filter3);
-		updateFilter(spr3, spr3Filter);
-		
-		// DROP SHADOW
-		spr4 = new FlxSprite(FlxG.width * 0.25 - 50, FlxG.height / 2 + 100 - 50, FlxGraphic.fromClass(GraphicLogo));
-		add(spr4);
-		txt4 = new FlxText(spr4.x, spr4.y + 120, 100, "Drop Shadow", 10); 
-		txt4.alignment = CENTER;
-		add(txt4);
-		filter4 = new DropShadowFilter(10, 45, 0, .75, 10, 10, 1, 1);
-		
-		spr4Filter = FlxFilterFrames.fromFrames(spr4.frames, 50, 50);
-		spr4Filter.addFilter(filter4);
-		updateFilter(spr4, spr4Filter);
-		
-		#if flash
-		// BEVEL
-		spr5 = new FlxSprite(FlxG.width * 0.5 - 50, FlxG.height / 2 + 100 - 50, FlxGraphic.fromClass(GraphicLogo));
-		add(spr5);
-		filter5 = new BevelFilter(6);
-		spr5Filter = FlxFilterFrames.fromFrames(spr5.frames, 50, 50);
-		spr5Filter.addFilter(filter5);
-		updateFilter(spr5, spr5Filter);
-		
-		txt5 = new FlxText(spr5.x, spr5.y + 120, 100, "Bevel\n( flash only )", 10);
-		txt5.alignment = CENTER;
-		add(txt5);
-		
-		// DISPLACEMENT MAP
-		spr6 = new FlxSprite(FlxG.width * 0.75 - 50, FlxG.height / 2 + 100 - 50, FlxGraphic.fromClass(GraphicLogo));
-		add(spr6);
-		filter6 = (new DisplacementMapFilter(Assets.getBitmapData("assets/StaticMap.png"), 
-						new Point(0, 0), 1, 1, 15, 1, DisplacementMapFilterMode.COLOR, 1, 0));
-		spr6Filter = FlxFilterFrames.fromFrames(spr6.frames, 50, 50);
-		spr6Filter.addFilter(filter6);
-		updateFilter(spr6, spr6Filter);
-		
-		updateDisplaceFilter();
-		txt6 = new FlxText(spr6.x, spr6.y + 120, 100, "Displacement\n( flash only )", 10);
-		txt6.alignment = CENTER;
-		add(txt6);
-		#end
-		
-		// FILTERS
-		
-		// Animations
-		tween2 = FlxTween.tween(filter2, { blurX: 4, blurY: 4 }, 1, { type: FlxTween.PINGPONG });
+		var glowFilter = new GlowFilter(0xFF0000, 1, 50, 50, 1.5, 1);
+		spr2 = createSprite(0.5, -100, "Glow");
+		spr2Filter = createFilterFrames(spr2, glowFilter);
+		tween2 = FlxTween.tween(glowFilter, { blurX: 4, blurY: 4 }, 1, { type: FlxTween.PINGPONG });
 		tween2.active = false;
 		
-		tween3 = FlxTween.tween(filter3, { blurX:50, blurY:50 }, 1.5, { type: FlxTween.PINGPONG });
+		var blurFilter = new BlurFilter();
+		spr3 = createSprite(0.75, -100, "Blur");
+		spr3Filter = createFilterFrames(spr3, blurFilter);
+		tween3 = FlxTween.tween(blurFilter, { blurX: 50, blurY: 50 }, 1.5, { type: FlxTween.PINGPONG });
 		tween3.active = false;
 		
+		dropShadowFilter = new DropShadowFilter(10, 45, 0, .75, 10, 10, 1, 1);
+		spr4 = createSprite(0.25, 100, "Drop Shadow");
+		spr4Filter = createFilterFrames(spr4, dropShadowFilter);
+		
 		#if flash
-		tween5 = FlxTween.tween(filter5, { distance: -6 }, 1.5, { type: FlxTween.PINGPONG, ease: FlxEase.quadInOut });
+		
+		var bevelFilter = new BevelFilter(6); 
+		spr5 = createSprite(0.5, 100, "Bevel\n( flash only )");
+		spr5Filter = createFilterFrames(spr5, bevelFilter);
+		tween5 = FlxTween.tween(bevelFilter, { distance: -6 }, 1.5, { type: FlxTween.PINGPONG, ease: FlxEase.quadInOut });
 		tween5.active = false;
+		
+		displacementFilter = new DisplacementMapFilter(
+			Assets.getBitmapData("assets/StaticMap.png"), 
+			new Point(0, 0), 1, 1, 15, 1, DisplacementMapFilterMode.COLOR, 1, 0);
+		spr6 = createSprite(0.75, 100, "Displacement\n( flash only )");
+		spr6Filter = createFilterFrames(spr6, displacementFilter);	
+		
 		#end
+	}
+	
+	function createSprite(xFactor:Float, yOffset:Float, label:String)
+	{
+		var sprite = new FlxSprite(
+			FlxG.width * xFactor - SIZE_INCREASE,
+			FlxG.height / 2 + yOffset - SIZE_INCREASE,
+			FlxGraphic.fromClass(GraphicLogo));
+		add(sprite);
+		
+		var text = new FlxText(sprite.x, sprite.y + 120, sprite.width, label, 10);
+		text.alignment = CENTER;
+		add(text);
+		
+		return sprite;
+	}
+	
+	function createFilterFrames(sprite:FlxSprite, filter:BitmapFilter)
+	{
+		var filterFrames = FlxFilterFrames.fromFrames(
+			sprite.frames, SIZE_INCREASE, SIZE_INCREASE, [filter]);
+		updateFilter(sprite, filterFrames);
+		return filterFrames;
 	}
 	
 	override public function update(elapsed:Float):Void 
@@ -230,22 +197,22 @@ class PlayState extends FlxState
 			updateDisplaceFilter();
 		}
 	}
-	
+
 	function updateDisplaceFilter()
 	{
 		#if flash
-		filter6.scaleX = FlxG.random.float( -10, 10);
-		filter6.mapPoint = new Point(0, FlxG.random.float(0, 30));
+		displacementFilter.scaleX = FlxG.random.float( -10, 10);
+		displacementFilter.mapPoint = new Point(0, FlxG.random.float(0, 30));
 		updateFilter(spr6, spr6Filter);
 		#end
 	}
 	
 	function updateDropShadowFilter(elapsed:Float)
 	{
-		filter4.angle -= 360 * elapsed;
+		dropShadowFilter.angle -= 360 * elapsed;
 		updateFilter(spr4, spr4Filter);
 	}
-	
+
 	function updateFilter(spr:FlxSprite, sprFilter:FlxFilterFrames)
 	{
 		sprFilter.applyToSprite(spr, false, true);
