@@ -137,7 +137,7 @@ class PlayState extends FlxState
 		spr5Filter.addFilter(filter5);
 		updateFilter(spr5, spr5Filter);
 		
-		txt5 = new FlxText(spr5.x + 25, spr5.y + 120 + 15, 100, "Bevel\n( flash only )", 10);
+		txt5 = new FlxText(spr5.x, spr5.y + 120, 100, "Bevel\n( flash only )", 10);
 		txt5.alignment = CENTER;
 		add(txt5);
 		
@@ -151,7 +151,7 @@ class PlayState extends FlxState
 		updateFilter(spr6, spr6Filter);
 		
 		updateDisplaceFilter();
-		txt6 = new FlxText(spr6.x + 25, spr6.y + 120 + 15, 100, "Displacement\n( flash only )", 10);
+		txt6 = new FlxText(spr6.x, spr6.y + 120, 100, "Displacement\n( flash only )", 10);
 		txt6.alignment = CENTER;
 		add(txt6);
 		#end
