@@ -178,7 +178,7 @@ class Cutup extends BaseState
 				cutPhySpr.pixels.draw(sprite, new Matrix(1, 0, 0, 1, cutBody.worldCOM.x - cutBody.bounds.x, cutBody.worldCOM.y - cutBody.bounds.y));
 				cutPhySpr.dirty = true;
 				cutPhySpr.origin.set(cutBody.worldCOM.x - cutBody.bounds.x, cutBody.worldCOM.y - cutBody.bounds.y);
-				cutPhySpr.reset(cutBody.worldCOM.x - cutPhySpr.origin.x, cutBody.worldCOM.y - cutPhySpr.origin.y);
+				cutPhySpr.reset(cutBody.worldCOM.x, cutBody.worldCOM.y);
 				cutPhySpr.angle = cutBody.rotation * FlxAngle.TO_DEG;
 				pieces.add(cutPhySpr);
 				
