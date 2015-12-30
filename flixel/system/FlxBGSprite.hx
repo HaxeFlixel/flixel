@@ -19,11 +19,6 @@ class FlxBGSprite extends FlxSprite
 	 */
 	override public function draw():Void
 	{
-		var cr:Float = colorTransform.redMultiplier;
-		var cg:Float = colorTransform.greenMultiplier;
-		var cb:Float = colorTransform.blueMultiplier;
-		var ca:Float = colorTransform.alphaMultiplier;
-		
 		for (camera in cameras)
 		{
 			if (!camera.visible || !camera.exists)
@@ -33,7 +28,7 @@ class FlxBGSprite extends FlxSprite
 			
 			_matrix.identity();
 			_matrix.scale(camera.width, camera.height);
-			camera.drawPixels(frame, _matrix, cr, cg, cb, ca);
+			camera.drawPixels(frame, _matrix, colorTransform);
 			
 			#if !FLX_NO_DEBUG
 			FlxBasic.visibleCount++;

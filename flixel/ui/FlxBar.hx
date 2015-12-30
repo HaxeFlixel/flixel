@@ -823,10 +823,6 @@ class FlxBar extends FlxSprite
 		
 		if (percent > 0 && _frontFrame.type != FlxFrameType.EMPTY)
 		{
-			var cr:Float = colorTransform.redMultiplier;
-			var cg:Float = colorTransform.greenMultiplier;
-			var cb:Float = colorTransform.blueMultiplier;
-			
 			for (camera in cameras)
 			{
 				if (!camera.visible || !camera.exists || !isOnScreen(camera))
@@ -853,7 +849,7 @@ class FlxBar extends FlxSprite
 				}
 				
 				_matrix.translate(_point.x, _point.y);
-				camera.drawPixels(_frontFrame, _matrix, cr, cg, cb, alpha, blend, antialiasing);
+				camera.drawPixels(_frontFrame, _matrix, colorTransform, blend, antialiasing);
 			}
 		}
 	}
