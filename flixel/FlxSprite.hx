@@ -143,6 +143,12 @@ class FlxSprite extends FlxObject
 	 */
 	public var color(default, set):FlxColor = 0xffffff;
 	
+	/**
+	 * Brightens the whole sprite by adding a color (0xRRGGBB format). You can use
+	 * 0xAARRGGBB colors, but the alpha value will simply be ignored. To change the opacity use alpha. 
+	 */
+	public var colorOffset(default, set):FlxColor = 0x000000; 
+	 
 	public var colorTransform(default, null):ColorTransform;
 	
 	/**
@@ -815,6 +821,7 @@ class FlxSprite extends FlxObject
 		alphaMultiplier:Float = 1.0, redOffset:Float = 0, greenOffset:Float = 0, blueOffset:Float = 0, alphaOffset:Float = 0):Void
 	{
 		color = FlxColor.fromRGBFloat(redMultiplier, greenMultiplier, blueMultiplier).to24Bit();
+		colorOffset = FlxColor.fromRGB(Std.int(redOffset), Std.int(greenOffset), Std.int(blueOffset)).to24Bit();
 		alpha = alphaMultiplier;
 		
 		colorTransform.redMultiplier = redMultiplier;
@@ -826,7 +833,7 @@ class FlxSprite extends FlxObject
 		colorTransform.blueOffset = blueOffset;
 		colorTransform.alphaOffset = alphaOffset;
 		
-		useColorTransform = ((alpha != 1) || (color != 0xffffff) || (redOffset != 0) || (greenOffset != 0) || (blueOffset != 0) || (alphaOffset != 0));
+		useColorTransform = ((alpha != 1) || (color != 0xffffff) || (colorOffset != 0x000000) || (redOffset != 0) || (greenOffset != 0) || (blueOffset != 0) || (alphaOffset != 0));
 		dirty = true;
 	}
 	
@@ -835,11 +842,14 @@ class FlxSprite extends FlxObject
 		if (colorTransform == null)
 			colorTransform = new ColorTransform();
 		
-		if ((alpha != 1) || (color != 0xffffff))
+		if ((alpha != 1) || (color != 0xffffff) || (colorOffset != 0x000000))
 		{
 			colorTransform.redMultiplier = color.redFloat;
 			colorTransform.greenMultiplier = color.greenFloat;
 			colorTransform.blueMultiplier = color.blueFloat;
+			colorTransform.redOffset = colorOffset.red;
+			colorTransform.greenOffset = colorOffset.green;
+			colorTransform.blueOffset = colorOffset.blue;
 			colorTransform.alphaMultiplier = alpha;
 			useColorTransform = true;
 		}
@@ -1207,6 +1217,7 @@ class FlxSprite extends FlxObject
 	
 	private function set_color(Color:FlxColor):Int
 	{
+		Color = 0x00FFFFFF & Color;
 		if (color == Color)
 		{
 			return Color;
@@ -1214,6 +1225,18 @@ class FlxSprite extends FlxObject
 		color = Color;
 		updateColorTransform();
 		return color;
+	}
+	
+	private function set_colorOffset(Color:FlxColor):Int
+	{
+		Color = 0x00FFFFFF & Color;
+		if (colorOffset == Color)
+		{
+			return Color;
+		}
+		colorOffset = Color;
+		updateColorTransform();
+		return colorOffset;
 	}
 	
 	override private function set_angle(Value:Float):Float

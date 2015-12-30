@@ -11,7 +11,7 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 {
 	public var drawData:Array<Float> = [];
 	public var position:Int = 0;
-	
+	public var hasColorOffsets:Bool = false;
 	public var numTiles(get, never):Int;
 	
 	public function new() 
@@ -33,7 +33,7 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 	}
 	
 	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix,
-		red:Float = 1, green:Float = 1, blue:Float = 1, alpha:Float = 1):Void
+		red:Float = 1, green:Float = 1, blue:Float = 1, alpha:Float = 1, redOffset:Float = 0, greenOffset:Float = 0, blueOffset:Float = 0, alphaOffset:Float = 0):Void
 	{
 		drawData[position++] = matrix.tx;
 		drawData[position++] = matrix.ty;
@@ -58,6 +58,14 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 		}
 		
 		drawData[position++] = alpha;
+		
+		if (hasColorOffsets)
+		{
+			/*drawData[position++] = redOffset;
+			drawData[position++] = greenOffset;
+			drawData[position++] = blueOffset;
+			drawData[position++] = alphaOffset;*/
+		}
 	}
 	
 	override public function render(camera:FlxCamera):Void
@@ -71,6 +79,11 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 			if (colored)
 			{
 				tempFlags |= Tilesheet.TILE_RGB;
+			}
+			
+			if (hasColorOffsets)
+			{
+				tempFlags |= Tilesheet.TILE_TRANS_COLOR;
 			}
 			
 			tempFlags |= blending;
