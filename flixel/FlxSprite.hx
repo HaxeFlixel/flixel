@@ -632,6 +632,10 @@ class FlxSprite extends FlxObject
 			var cr:Float = colorTransform.redMultiplier;
 			var cg:Float = colorTransform.greenMultiplier;
 			var cb:Float = colorTransform.blueMultiplier;
+			var croff:Int = Std.int(colorTransform.redOffset);
+			var cgoff:Int = Std.int(colorTransform.greenOffset);
+			var cboff:Int = Std.int(colorTransform.blueOffset);
+			var caoff:Int = Std.int(colorTransform.alphaOffset);
 			
 			var simple:Bool = isSimpleRender(camera);
 			if (simple)
@@ -642,7 +646,7 @@ class FlxSprite extends FlxObject
 				}
 				
 				_point.copyToFlash(_flashPoint);
-				camera.copyPixels(_frame, framePixels, _flashRect, _flashPoint, cr, cg, cb, alpha, blend, antialiasing);
+				camera.copyPixels(_frame, framePixels, _flashRect, _flashPoint, cr, cg, cb, alpha, croff, cgoff, cboff, caoff, blend, antialiasing);
 			}
 			else
 			{
@@ -667,7 +671,7 @@ class FlxSprite extends FlxObject
 				}
 				
 				_matrix.translate(_point.x, _point.y);
-				camera.drawPixels(_frame, framePixels, _matrix, cr, cg, cb, alpha, blend, antialiasing);
+				camera.drawPixels(_frame, framePixels, _matrix, cr, cg, cb, alpha, croff, cgoff, cboff, caoff, blend, antialiasing);
 			}
 			
 			#if !FLX_NO_DEBUG
@@ -859,6 +863,10 @@ class FlxSprite extends FlxObject
 			colorTransform.greenMultiplier = 1;
 			colorTransform.blueMultiplier = 1;
 			colorTransform.alphaMultiplier = 1;
+			colorTransform.redOffset = 0;
+			colorTransform.greenOffset = 0;
+			colorTransform.blueOffset = 0;
+			colorTransform.alphaOffset = 0;
 			useColorTransform = false;
 		}
 		
