@@ -666,13 +666,21 @@ class FlxG
 	
 	private static function get_fullscreen():Bool
 	{
-		return (stage.displayState == StageDisplayState.FULL_SCREEN 
-			|| stage.displayState == StageDisplayState.FULL_SCREEN_INTERACTIVE);
+		#if (lime_legacy)
+			return (stage.displayState == StageDisplayState.FULL_SCREEN 
+				|| stage.displayState == StageDisplayState.FULL_SCREEN_INTERACTIVE);
+		#else
+			return stage.window.fullscreen;
+		#end
 	}
 	
 	private static function set_fullscreen(Value:Bool):Bool
 	{
-		stage.displayState = Value ? StageDisplayState.FULL_SCREEN : StageDisplayState.NORMAL;
+		#if (lime_legacy)
+			stage.displayState = Value ? StageDisplayState.FULL_SCREEN : StageDisplayState.NORMAL;
+		#else
+			stage.window.fullscreen = Value;
+		#end
 		return Value;
 	}
 	
