@@ -666,7 +666,11 @@ class FlxG
 	
 	private static function get_fullscreen():Bool
 	{
+<<<<<<< HEAD
 		#if (lime_legacy || flash)
+=======
+		#if (lime_legacy)
+>>>>>>> refs/remotes/origin/dev
 			return (stage.displayState == StageDisplayState.FULL_SCREEN 
 				|| stage.displayState == StageDisplayState.FULL_SCREEN_INTERACTIVE);
 		#else
@@ -676,7 +680,11 @@ class FlxG
 	
 	private static function set_fullscreen(Value:Bool):Bool
 	{
+<<<<<<< HEAD
 		#if (lime_legacy || flash)
+=======
+		#if (lime_legacy)
+>>>>>>> refs/remotes/origin/dev
 			stage.displayState = Value ? StageDisplayState.FULL_SCREEN : StageDisplayState.NORMAL;
 		#else
 			stage.window.fullscreen = Value;
