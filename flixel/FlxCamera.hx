@@ -563,7 +563,11 @@ class FlxCamera extends FlxBasic
 		}
 	}
 	
+<<<<<<< HEAD
 	public function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, colors:DrawData<Int> = null, position:FlxPoint = null, blend:BlendMode = null, smoothing:Bool = false, repeat:Bool = false):Void
+=======
+	public function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, colors:DrawData<Int> = null, position:FlxPoint = null, blend:BlendMode = null, repeat:Bool = false, smoothing:Bool = false):Void
+>>>>>>> origin/dev
 	{
 		if (FlxG.renderBlit)
 		{
