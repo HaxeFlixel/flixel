@@ -241,10 +241,7 @@ class FlxText extends FlxSprite
 	 */
 	public function stampOnAtlas(atlas:FlxAtlas):Bool
 	{
-		if (_regen)
-		{
-			regenGraphics();
-		}
+		regenGraphic();
 		
 		var node:FlxNode = atlas.addNode(graphic.bitmap, graphic.key);
 		var result:Bool = (node != null);
@@ -458,7 +455,8 @@ class FlxText extends FlxSprite
 		
 		size = Size;
 		color = Color;
-		alignment = Alignment;
+		if (Alignment != null)
+			alignment = Alignment;
 		setBorderStyle(BorderStyle, BorderColor);
 		
 		updateDefaultFormat();
@@ -513,7 +511,7 @@ class FlxText extends FlxSprite
 	{
 		if (textField != null)
 		{
-			textField.autoSize = (value) ? TextFieldAutoSize.LEFT : TextFieldAutoSize.NONE;
+			textField.autoSize = value ? TextFieldAutoSize.LEFT : TextFieldAutoSize.NONE;
 			_regen = true;
 		}
 		
@@ -667,54 +665,39 @@ class FlxText extends FlxSprite
 	private function set_borderStyle(style:FlxTextBorderStyle):FlxTextBorderStyle
 	{		
 		if (style != borderStyle)
-		{
-			borderStyle = style;
 			_regen = true;
-		}
 		
-		return borderStyle;
+		return borderStyle = style;
 	}
 	
 	private function set_borderColor(Color:FlxColor):FlxColor
 	{
 		#if neko
 		if (Color == null)
-		{
 			Color = FlxColor.TRANSPARENT;
-		}
 		#end
+		
 		if (borderColor != Color && borderStyle != NONE)
-		{
 			_regen = true;
-		}
 		_hasBorderAlpha = Color.alphaFloat < 1;
-		borderColor = Color;
-		return Color;
+		return borderColor = Color;
 	}
 	
 	private function set_borderSize(Value:Float):Float
 	{
-		if (Value != borderSize && borderStyle != NONE)
-		{			
+		if (Value != borderSize && borderStyle != NONE)		
 			_regen = true;
-		}
-		borderSize = Value;
 		
-		return Value;
+		return borderSize = Value;
 	}
 	
 	private function set_borderQuality(Value:Float):Float
 	{
 		Value = FlxMath.bound(Value, 0, 1);
-		
 		if (Value != borderQuality && borderStyle != NONE)
-		{
 			_regen = true;
-		}
 		
-		borderQuality = Value;
-		
-		return Value;
+		return borderQuality = Value;
 	}
 	
 	override private function set_graphic(Value:FlxGraphic):FlxGraphic 
@@ -727,17 +710,13 @@ class FlxText extends FlxSprite
 	
 	override private function get_width():Float 
 	{
-		if (_regen)
-			regenGraphics();
-		
+		regenGraphic();
 		return super.get_width();
 	}
 	
 	override private function get_height():Float 
 	{
-		if (_regen)
-			regenGraphics();
-		
+		regenGraphic();
 		return super.get_height();
 	}
 	
@@ -760,7 +739,7 @@ class FlxText extends FlxSprite
 		dirty = true;
 	}
 	
-	private function regenGraphics():Void
+	private function regenGraphic():Void
 	{
 		if (textField == null || _regen == false)
 			return;
@@ -849,9 +828,7 @@ class FlxText extends FlxSprite
 	
 	override public function draw():Void 
 	{
-		if (_regen)
-			regenGraphics();
-		
+		regenGraphic();
 		super.draw();
 	}
 	
@@ -865,14 +842,13 @@ class FlxText extends FlxSprite
 		if (textField == null)
 			return;
 		
-		#if FLX_RENDER_TILE
-		if (!RunOnCpp)
-			return;
-		#end
-			
-		if (_regen)
-			regenGraphics();
+		if (FlxG.renderTile)
+		{
+			if (!RunOnCpp)
+				return;
+		}
 		
+		regenGraphic();
 		super.calcFrame(RunOnCpp);
 	}
 	

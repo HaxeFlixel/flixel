@@ -1,7 +1,7 @@
 package flixel.system.frontEnds;
 
 import flixel.FlxG;
-import flixel.system.debug.Tracker.TrackerProfile;
+import flixel.system.debug.watch.Tracker.TrackerProfile;
 
 class DebuggerFontEndTest
 {

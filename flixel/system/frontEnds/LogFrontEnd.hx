@@ -1,7 +1,7 @@
 package flixel.system.frontEnds;
 
 import flixel.FlxG;
-import flixel.system.debug.LogStyle;
+import flixel.system.debug.log.LogStyle;
 import flixel.system.FlxAssets;
 import haxe.Log;
 import haxe.PosInfos;

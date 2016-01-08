@@ -631,13 +631,18 @@ class FlxPath implements IFlxDestroyable
 			Camera = FlxG.camera;
 		}
 		
+		var gfx:Graphics = null;
+		
 		//Set up our global flash graphics object to draw out the path
-		#if FLX_RENDER_BLIT
-		var gfx:Graphics = FlxSpriteUtil.flashGfx;
-		gfx.clear();
-		#else
-		var gfx:Graphics = Camera.debugLayer.graphics;
-		#end
+		if (FlxG.renderBlit)
+		{
+			gfx = FlxSpriteUtil.flashGfx;
+			gfx.clear();
+		}
+		else
+		{
+			gfx = Camera.debugLayer.graphics;
+		}
 		
 		//Then fill up the object with node and path graphics
 		var node:FlxPoint;
@@ -699,10 +704,11 @@ class FlxPath implements IFlxDestroyable
 			i++;
 		}
 		
-		#if FLX_RENDER_BLIT
-		//then stamp the path down onto the game buffer
-		Camera.buffer.draw(FlxSpriteUtil.flashGfxSprite);
-		#end
+		if (FlxG.renderBlit)
+		{
+			//then stamp the path down onto the game buffer
+			Camera.buffer.draw(FlxSpriteUtil.flashGfxSprite);
+		}
 	}
 	#end
 }

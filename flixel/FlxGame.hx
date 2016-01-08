@@ -84,7 +84,7 @@ class FlxGame extends Sprite
 	/**
 	 * Enables or disables the filters set via setFilters()
 	 */
-	public var enableFilters:Bool = true;
+	public var filtersEnabled:Bool = true;
 	
 	/**
 	 * A flag for triggering the onGameStart "event".
@@ -137,7 +137,7 @@ class FlxGame extends Sprite
 	 */
 	private var _filters:Array<BitmapFilter>;
 	
-	#if (cpp || neko)
+	#if (desktop && lime_legacy)
 	/**
 	 * Ugly workaround to ensure consistent behaviour between flash and cpp 
 	 * (the focus event should not fire when the game starts up!)
@@ -369,7 +369,7 @@ class FlxGame extends Sprite
 		}
 		#end
 		
-		#if desktop
+		#if (desktop && lime_legacy)
 		// make sure the on focus event doesn't fire on startup 
 		if (!_onFocusFiredOnce)
 		{
@@ -452,8 +452,11 @@ class FlxGame extends Sprite
 		var width:Int = FlxG.stage.stageWidth;
 		var height:Int = FlxG.stage.stageHeight;
 		
-		#if FLX_RENDER_TILE
-		FlxG.bitmap.onContext();
+		#if !flash
+		if (FlxG.renderTile)
+		{
+			FlxG.bitmap.onContext();
+		}
 		#end
 		
 		resizeGame(width, height);
@@ -774,7 +777,7 @@ class FlxGame extends Sprite
 		FlxArrayUtil.clearArray(FlxG.swipes);
 		#end
 		
-		filters = enableFilters ? _filters : null;
+		filters = filtersEnabled ? _filters : null;
 	}
 	
 	private function updateInput():Void
@@ -856,9 +859,10 @@ class FlxGame extends Sprite
 		
 		FlxG.signals.preDraw.dispatch();
 		
-		#if FLX_RENDER_TILE
-		FlxTilesheet._DRAWCALLS = 0;
-		#end
+		if (FlxG.renderTile)
+		{
+			FlxTilesheet._DRAWCALLS = 0;
+		}
 		
 		#if FLX_POST_PROCESS
 		if (postProcesses[0] != null)
@@ -873,13 +877,14 @@ class FlxGame extends Sprite
 		
 		_state.draw();
 		
-		#if FLX_RENDER_TILE
-		FlxG.cameras.render();
-		
-		#if !FLX_NO_DEBUG
-		debugger.stats.drawCalls(FlxTilesheet._DRAWCALLS);
-		#end
-		#end
+		if (FlxG.renderTile)
+		{
+			FlxG.cameras.render();
+			
+			#if !FLX_NO_DEBUG
+			debugger.stats.drawCalls(FlxTilesheet._DRAWCALLS);
+			#end
+		}
 		
 		#if FLX_RENDER_CRISP
 		_display.fillRect(_display.rect, FlxColor.TRANSPARENT);

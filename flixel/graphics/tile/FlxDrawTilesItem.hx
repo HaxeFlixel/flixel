@@ -62,7 +62,8 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 	
 	override public function render(camera:FlxCamera):Void
 	{
-		#if FLX_RENDER_TILE
+		if (!FlxG.renderTile) return;
+		
 		if (position > 0)
 		{
 			var tempFlags:Int = Tilesheet.TILE_TRANS_2x2 | Tilesheet.TILE_RECT | Tilesheet.TILE_ALPHA;
@@ -76,7 +77,6 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 			graphics.tilesheet.drawTiles(camera.canvas.graphics, drawData, (camera.antialiasing || antialiasing), tempFlags, position);
 			FlxTilesheet._DRAWCALLS++;
 		}
-		#end
 	}
 	
 	private function get_numTiles():Int

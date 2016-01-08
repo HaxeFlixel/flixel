@@ -561,6 +561,19 @@ class FlxStringUtil
 	{
 		return s.indexOf(str) != -1;
 	}
+	
+	public static function sortAlphabetically(list:Array<String>):Array<String>
+	{
+		list.sort(function(a, b)
+		{
+			a = a.toLowerCase();
+			b = b.toLowerCase();
+			if (a < b) return -1;
+			if (a > b) return 1;
+			return 0;
+		});
+		return list;
+	}
 }
 
 class LabelValuePair implements IFlxDestroyable

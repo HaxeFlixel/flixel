@@ -61,10 +61,6 @@ class FlxMouseButton extends FlxInput<Int> implements IFlxDestroyable
 			{
 				return;
 			}
-			if (FlxG.game.debugger.watch.editing)
-			{
-				FlxG.game.debugger.watch.submit();
-			}
 		}
 		#end
 		

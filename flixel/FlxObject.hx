@@ -22,7 +22,7 @@ class FlxObject extends FlxBasic
 	/**
 	 * Default value for FlxObject's pixelPerfectPosition var.
 	 */
-	public static var defaultPixelPerfectPosition:Bool = #if FLX_RENDER_BLIT true #else false #end;
+	public static var defaultPixelPerfectPosition:Bool = false;
 	
 	/**
 	 * This value dictates the maximum number of pixels two objects have to intersect before collision stops trying to separate them.
@@ -802,8 +802,8 @@ class FlxObject extends FlxBasic
 	/**
 	 * Call this function to figure out the on-screen position of the object.
 	 * 
-	 * @param	Camera		Specify which game camera you want.  If null getScreenPosition() will just grab the first global camera.
 	 * @param	Point		Takes a FlxPoint object and assigns the post-scrolled X and Y values of this object to it.
+	 * @param	Camera		Specify which game camera you want.  If null getScreenPosition() will just grab the first global camera.
 	 * @return	The Point you passed in, or a new Point if you didn't pass one, containing the screen X and Y position of this object.
 	 */
 	public function getScreenPosition(?point:FlxPoint, ?Camera:FlxCamera):FlxPoint
@@ -1035,19 +1035,23 @@ class FlxObject extends FlxBasic
 
 	private inline function beginDrawDebug(camera:FlxCamera):Graphics
 	{
-		#if FLX_RENDER_BLIT
+		if (FlxG.renderBlit)
+		{
 			FlxSpriteUtil.flashGfx.clear();
 			return FlxSpriteUtil.flashGfx;
-		#else
+		}
+		else
+		{
 			return camera.debugLayer.graphics;
-		#end
+		}
 	}
 	
 	private inline function endDrawDebug(camera:FlxCamera)
 	{
-		#if FLX_RENDER_BLIT
+		if (FlxG.renderBlit)
+		{
 			camera.buffer.draw(FlxSpriteUtil.flashGfxSprite);
-		#end
+		}
 	}
 #end
 

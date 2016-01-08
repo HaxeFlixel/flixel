@@ -70,9 +70,7 @@ class FlxFrame implements IFlxDestroyable
 	 */
 	public var type:FlxFrameType;
 	
-	#if FLX_RENDER_TILE
 	private var tileMatrix:Vector<Float>;
-	#end
 	
 	private var blitMatrix:Vector<Float>;
 	
@@ -90,9 +88,10 @@ class FlxFrame implements IFlxDestroyable
 		offset = FlxPoint.get();
 		
 		blitMatrix = new Vector<Float>(6);
-		#if FLX_RENDER_TILE
-		tileMatrix = new Vector<Float>(6);
-		#end
+		if (FlxG.renderTile)
+		{
+			tileMatrix = new Vector<Float>(6);
+		}
 	}
 	
 	@:allow(flixel.graphics.frames)
@@ -107,15 +106,16 @@ class FlxFrame implements IFlxDestroyable
 		blitMatrix[4] = matrix.tx;
 		blitMatrix[5] = matrix.ty;
 		
-		#if FLX_RENDER_TILE
-		prepareBlitMatrix(matrix, false);
-		tileMatrix[0] = matrix.a;
-		tileMatrix[1] = matrix.b;
-		tileMatrix[2] = matrix.c;
-		tileMatrix[3] = matrix.d;
-		tileMatrix[4] = matrix.tx;
-		tileMatrix[5] = matrix.ty;
-		#end
+		if (FlxG.renderTile)
+		{
+			prepareBlitMatrix(matrix, false);
+			tileMatrix[0] = matrix.a;
+			tileMatrix[1] = matrix.b;
+			tileMatrix[2] = matrix.c;
+			tileMatrix[3] = matrix.d;
+			tileMatrix[4] = matrix.tx;
+			tileMatrix[5] = matrix.ty;
+		}
 	}
 	
 	/**
@@ -224,10 +224,12 @@ class FlxFrame implements IFlxDestroyable
 	 */
 	public function prepareMatrix(mat:FlxMatrix, rotation:FlxFrameAngle = FlxFrameAngle.ANGLE_0, flipX:Bool = false, flipY:Bool = false):FlxMatrix
 	{
-		#if FLX_RENDER_BLIT
-		mat.identity();
-		return mat;
-		#else
+		if (FlxG.renderBlit)
+		{
+			mat.identity();
+			return mat;
+		}
+		
 		mat.a = tileMatrix[0];
 		mat.b = tileMatrix[1];
 		mat.c = tileMatrix[2];
@@ -244,7 +246,6 @@ class FlxFrame implements IFlxDestroyable
 		}
 		
 		return rotateAndFlip(mat, rotation, doFlipX, doFlipY);
-		#end
 	}
 	
 	private inline function fillBlitMatrix(mat:FlxMatrix):FlxMatrix
@@ -640,9 +641,10 @@ class FlxFrame implements IFlxDestroyable
 		frame = FlxDestroyUtil.put(frame);
 		uv = FlxDestroyUtil.put(uv);
 		blitMatrix = null;
-		#if FLX_RENDER_TILE
-		tileMatrix = null;
-		#end
+		if (FlxG.renderTile)
+		{
+			tileMatrix = null;
+		}
 	}
 	
 	public function toString():String

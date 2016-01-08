@@ -35,19 +35,18 @@ class RunTravis
 	
 	static function runUnitTests(target:Target):ExitCode
 	{
-		if (target == Target.HTML5) // no HTML5 unit tests atm
-			return ExitCode.SUCCESS;
-		
-		Sys.println("Running unit tests...\n");
-		if (target == Target.FLASH)
-		{
-			return runInDir("unit", function() {
-				// can't run / display results without a browser,
-				// this at least checks if the tests compile
-				return haxelibRun(["munit", "test", "-as3", "-norun"]);
-			});
+		if (target == Target.FLASH || target == Target.HTML5)
+		{	
+			// can't run / display results without a browser,
+			// this at least checks if the tests compile
+			Sys.println("Building unit tests...\n");
+			return build("unit", target);
 		}
-		else return runOpenFL("test", "unit", target);
+		else
+		{
+			Sys.println("Running unit tests...\n");
+			return runOpenFL("test", "unit", target);
+		}
 	}
 	
 	static function buildCoverageTests(target:Target):ExitCode

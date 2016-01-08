@@ -1,17 +1,29 @@
-package flixel.system.debug;
+package flixel.system.debug.console;
 
 import flixel.FlxG;
+import flixel.system.debug.log.LogStyle;
+using flixel.util.FlxStringUtil;
+using flixel.util.FlxArrayUtil;
+using StringTools;
+
+#if hscript
 import hscript.Expr;
 import hscript.Parser;
+#end
 
 /** 
  * A set of helper functions used by the console.
  */
 class ConsoleUtil
 {
-	// The hscript parser to make strings into haxe code.
+	#if hscript
+	/**
+	 * The hscript parser to make strings into haxe code.
+	 */
 	private static var parser:Parser;
-	// The custom hscript interpreter to run the haxe code from the parser.
+	/**
+	 * The custom hscript interpreter to run the haxe code from the parser.
+	 */
 	public static var interp:Interp;
 	
 	/**
@@ -45,7 +57,8 @@ class ConsoleUtil
 	 * @param	Input	The user's input command.
 	 * @return	Whatever the input code evaluates to.
 	 */
-	public static function runCommand(Input:String):Dynamic {
+	public static function runCommand(Input:String):Dynamic
+	{
 		return interp.expr(parseCommand(Input));
 	}
 	
@@ -72,6 +85,55 @@ class ConsoleUtil
 		if (Reflect.isFunction(Function))
 			interp.variables.set(FunctionAlias, Function);
 	}
+	#end
+	
+	public static function getFields(Object:Dynamic):Array<String>
+	{
+		var fields = [];
+		if (Std.is(Object, Class)) // passed a class -> get static fields
+			fields = Type.getClassFields(Object);
+		else if (Reflect.isObject(Object)) // get instance fields
+			fields = Type.getInstanceFields(Type.getClass(Object));
+		
+		// workaround for properties without backing fields missing
+		for (field in fields)
+		{
+			if (field.startsWith("get_") || field.startsWith("set_"))
+			{
+				var name = field.substr(4);
+				if (!fields.contains(name))
+					fields.push(name);
+			}
+		}
+		
+		// remove getters and setters
+		fields = fields.filter(function(field)
+		{
+			return !field.startsWith("get_") && !field.startsWith("set_");
+		});
+		
+		return sortFields(fields);
+	}
+	
+	private static function sortFields(fields:Array<String>):Array<String>
+	{
+		var underscoreList = [];
+		
+		fields = fields.filter(function(field)
+		{
+			if (field.startsWith("_"))
+			{
+				underscoreList.push(field);
+				return false;
+			}
+			return true;
+		});
+		
+		fields.sortAlphabetically();
+		underscoreList.sortAlphabetically();
+		
+		return fields.concat(underscoreList);
+	}
 	
 	/**
 	 * Shortcut to log a text with the Console LogStyle.
@@ -87,18 +149,22 @@ class ConsoleUtil
 /**
  * hscript doesn't use property access by default... have to make our own.
  */
+#if hscript
 private class Interp extends hscript.Interp
 {
-    override function get(o:Dynamic, f:String):Dynamic
+	override function get(o:Dynamic, f:String):Dynamic
 	{
-        if (o == null) throw hscript.Expr.Error.EInvalidAccess(f);
-        return Reflect.getProperty(o, f);
-    }
-
-    override function set(o:Dynamic, f:String, v:Dynamic):Dynamic
+		if (o == null)
+			throw hscript.Expr.Error.EInvalidAccess(f);
+		return Reflect.getProperty(o, f);
+	}
+	
+	override function set(o:Dynamic, f:String, v:Dynamic):Dynamic
 	{
-        if (o == null) throw hscript.Expr.Error.EInvalidAccess(f);
+		if (o == null)
+			throw hscript.Expr.Error.EInvalidAccess(f);
         Reflect.setProperty(o, f, v);
         return v;
     }
 }
+#end

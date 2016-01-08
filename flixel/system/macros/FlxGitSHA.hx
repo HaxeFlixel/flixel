@@ -73,7 +73,7 @@ class FlxGitSHA
 		}
 		
 		Sys.setCwd(oldWd);
-		return sha.substring(0, 10);
+		return sha;
 	}
 	
 	public static function getProcessOutput(cmd:String, args:Array<String>):String

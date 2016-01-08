@@ -5,15 +5,17 @@ import massive.munit.Assert;
 
 class FlxColorTest extends FlxTest
 {
+	var color:FlxColor;
+	
 	@Test
-	function isNull():Void
+	function isNull()
 	{
 		var color:Null<FlxColor> = null;
 		Assert.isNull(color);
 	}
 
 	@Test
-	function isNullFunction():Void
+	function isNullFunction()
 	{
 		var f = function(?c:FlxColor)
 		{ 
@@ -26,7 +28,7 @@ class FlxColorTest extends FlxTest
 	}
 
 	@Test
-	function equalityToNull():Void
+	function equalityToNull()
 	{
 		var color1:Null<FlxColor> = null;
 		var color2:FlxColor = FlxColor.BLACK;
@@ -34,7 +36,7 @@ class FlxColorTest extends FlxTest
 	}
 
 	@Test
-	function equalityToSame():Void
+	function equalityToSame()
 	{
 		var color1:FlxColor = FlxColor.BLACK;
 		var color2:FlxColor = FlxColor.BLACK;
@@ -42,7 +44,7 @@ class FlxColorTest extends FlxTest
 	}
 
 	@Test
-	function equalityNotSame():Void
+	function equalityNotSame()
 	{
 		var color1:FlxColor = FlxColor.RED;
 		var color2:FlxColor = FlxColor.BLUE;
@@ -50,23 +52,46 @@ class FlxColorTest extends FlxTest
 	}
 
 	@Test
-	function addNotSame():Void
+	function addNotSame()
 	{
 		Assert.areSame(0xFFFF8000, (FlxColor.RED + FlxColor.GREEN)); // 0xFFFF0000 + 0xFF008000
 		Assert.areSame(0xFFFF8000, (FlxColor.GREEN + FlxColor.RED));
 	}
 
 	@Test
-	function subtractNotSame():Void
+	function subtractNotSame()
 	{
 		Assert.areSame(FlxColor.RED, (FlxColor.RED - FlxColor.GREEN));
 		Assert.areSame(FlxColor.GREEN, (FlxColor.GREEN - FlxColor.RED));
 	}
 
 	@Test
-	function multiplyNotSame():Void
+	function multiplyNotSame()
 	{
 		Assert.areSame(FlxColor.BLACK, (FlxColor.RED * FlxColor.GREEN));
 		Assert.areSame(FlxColor.BLACK, (FlxColor.GREEN * FlxColor.RED));
+	}
+	
+	@Test // #1609
+	function testReflectionInvalidOperation()
+	{
+		color = FlxColor.WHITE;
+		
+		// shouldn't cause an invalid operation exception
+		asFloat(function(c) c.red);
+		asFloat(function(c) c.green);
+		asFloat(function(c) c.blue);
+		asFloat(function(c) c.alpha);
+		
+		asFloat(function(c) c.red += 1);
+		asFloat(function(c) c.green += 1);
+		asFloat(function(c) c.blue += 1);
+		asFloat(function(c) c.alpha += 1);
+	}
+	
+	function asFloat(f:FlxColor->Void)
+	{
+		Reflect.setProperty(this, "color", 0.2);
+		f(color);
 	}
 }

@@ -212,14 +212,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 */
 	public static function getHSBColorWheel(Alpha:Int = 255):Array<FlxColor>
 	{
-		var colors:Array<FlxColor> = new Array<FlxColor>();
-		
-		for (c in 0...360)
-		{
-			colors[c] = fromHSB(c, 1.0, 1.0, Alpha);
-		}
-		
-		return colors;
+		return [for (c in 0...360) fromHSB(c, 1.0, 1.0, Alpha)];
 	}
 	
 	/**
@@ -304,7 +297,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 */
 	public inline function getComplementHarmony():FlxColor
 	{		
-		return fromHSB(FlxMath.wrapValue(Std.int(hue), 180, 350), brightness, saturation, alphaFloat);
+		return fromHSB(FlxMath.wrap(Std.int(hue) + 180, 0, 350), brightness, saturation, alphaFloat);
 	}
 	
 	/**
@@ -316,8 +309,8 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 */
 	public inline function getAnalogousHarmony(Threshold:Int = 30):Harmony
 	{
-		var warmer:Int = fromHSB(FlxMath.wrapValue(Std.int(hue), - Threshold, 350), saturation, brightness, alphaFloat);
-		var colder:Int = fromHSB(FlxMath.wrapValue(Std.int(hue), Threshold, 350), saturation, brightness, alphaFloat);
+		var warmer:Int = fromHSB(FlxMath.wrap(Std.int(hue) - Threshold, 0, 350), saturation, brightness, alphaFloat);
+		var colder:Int = fromHSB(FlxMath.wrap(Std.int(hue) + Threshold, 0, 350), saturation, brightness, alphaFloat);
 		
 		return {original: this, warmer: warmer, colder: colder};
 	}
@@ -331,9 +324,9 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 */
 	public inline function getSplitComplementHarmony(Threshold:Int = 30):Harmony
 	{
-		var oppositeHue:Int = FlxMath.wrapValue(Std.int(hue), 180, 350);
-		var warmer:FlxColor = fromHSB(FlxMath.wrapValue(oppositeHue, - Threshold, 350), saturation, brightness, alphaFloat);
-		var colder:FlxColor = fromHSB(FlxMath.wrapValue(oppositeHue, Threshold, 350), saturation, brightness, alphaFloat);
+		var oppositeHue:Int = FlxMath.wrap(Std.int(hue) + 180, 0, 350);
+		var warmer:FlxColor = fromHSB(FlxMath.wrap(oppositeHue - Threshold, 0, 350), saturation, brightness, alphaFloat);
+		var colder:FlxColor = fromHSB(FlxMath.wrap(oppositeHue + Threshold, 0, 350), saturation, brightness, alphaFloat);
 		
 		return {original: this, warmer: warmer, colder: colder};
 	}
@@ -346,8 +339,8 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 */
 	public inline function getTriadicHarmony():TriadicHarmony
 	{
-		var triadic1:FlxColor = fromHSB(FlxMath.wrapValue(Std.int(hue), 120, 359), saturation, brightness, alphaFloat);
-		var triadic2:FlxColor = fromHSB(FlxMath.wrapValue(Std.int(triadic1.hue), 120, 359), saturation, brightness, alphaFloat);
+		var triadic1:FlxColor = fromHSB(FlxMath.wrap(Std.int(hue) + 120, 0, 359), saturation, brightness, alphaFloat);
+		var triadic2:FlxColor = fromHSB(FlxMath.wrap(Std.int(triadic1.hue) + 120, 0, 359), saturation, brightness, alphaFloat);
 		
 		return {color1: this, color2: triadic1, color3: triadic2};
 	}
@@ -561,24 +554,40 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 		this = Value;
 	}
 	
+	private inline function getThis():Int
+	{
+		#if neko
+		return Std.int(this);
+		#else
+		return this;
+		#end
+	}
+	
+	private inline function validate():Void
+	{
+		#if neko
+		this = Std.int(this);
+		#end
+	}
+	
 	private inline function get_red():Int
 	{
-		return (this >> 16) & 0xff;
+		return (getThis() >> 16) & 0xff;
 	}
 	
 	private inline function get_green():Int
 	{
-		return (this >> 8) & 0xff;
+		return (getThis() >> 8) & 0xff;
 	}
 	
 	private inline function get_blue():Int
 	{
-		return this & 0xff;
+		return getThis() & 0xff;
 	}
 	
 	private inline function get_alpha():Int
 	{
-		return (this >> 24) & 0xff;
+		return (getThis() >> 24) & 0xff;
 	}
 	
 	private inline function get_redFloat():Float
@@ -603,6 +612,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	
 	private inline function set_red(Value:Int):Int
 	{
+		validate();
 		this &= 0xff00ffff;
 		this |= boundChannel(Value) << 16;
 		return Value;
@@ -610,6 +620,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	
 	private inline function set_green(Value:Int):Int
 	{
+		validate();
 		this &= 0xffff00ff;
 		this |= boundChannel(Value) << 8;
 		return Value;
@@ -617,6 +628,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	
 	private inline function set_blue(Value:Int):Int
 	{
+		validate();
 		this &= 0xffffff00;
 		this |= boundChannel(Value);
 		return Value;
@@ -624,6 +636,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	
 	private inline function set_alpha(Value:Int):Int
 	{
+		validate();
 		this &= 0x00ffffff;
 		this |= boundChannel(Value) << 24;
 		return Value;

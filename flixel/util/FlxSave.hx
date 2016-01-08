@@ -5,7 +5,7 @@ import flash.net.SharedObject;
 import flash.net.SharedObjectFlushStatus;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 
-#if flash
+#if (flash && openfl <= "3.4.0")
 import flash.events.NetStatusEvent;
 #end
 
@@ -105,31 +105,31 @@ class FlxSave implements IFlxDestroyable
 			return false;
 		}
 		_onComplete = OnComplete;
-		#if flash
+		#if (flash && openfl <= "3.4.0")
 		var result:String = null;
 		#else
 		var result:SharedObjectFlushStatus;
 		#end
 		try 
 		{ 
-			#if !js
+			#if (!js && openfl <= "3.4.0")
 			result = _sharedObject.flush(MinFileSize); 
 			#else
 			result = _sharedObject.flush(); 
 			#end
 		}
 		catch (e:Error) { return onDone(ERROR); }
-		#if flash
+		#if (flash && openfl <= "3.4.0")
 		if (result == "pending")
 		#else
 		if (result == SharedObjectFlushStatus.PENDING)
 		#end
 		{
-			#if flash
+			#if (flash && openfl <= "3.4.0")
 			_sharedObject.addEventListener(NetStatusEvent.NET_STATUS, onFlushStatus);
 			#end
 		}
-		#if flash
+		#if (flash && openfl <= "3.4.0")
 		return onDone((result == "flushed") ? SUCCESS : PENDING);
 		#else
 		return onDone((result == SharedObjectFlushStatus.FLUSHED) ? SUCCESS : PENDING);
@@ -157,7 +157,7 @@ class FlxSave implements IFlxDestroyable
 	/**
 	 * Event handler for special case storage requests.
 	 */
-	#if flash
+	#if (flash && openfl <= "3.4.0")
 	private function onFlushStatus(E:NetStatusEvent):Void
 	{
 		_sharedObject.removeEventListener(NetStatusEvent.NET_STATUS, onFlushStatus);

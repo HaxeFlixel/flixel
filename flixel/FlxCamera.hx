@@ -120,7 +120,6 @@ class FlxCamera extends FlxBasic
 	 */
 	public var scroll:FlxPoint;
 	
-	#if FLX_RENDER_BLIT
 	/**
 	 * The actual bitmap data of the camera display itself.
 	 */
@@ -129,7 +128,6 @@ class FlxCamera extends FlxBasic
 	 * Whether checkResize checks if the camera dimensions have changed to update the buffer dimensions.
 	 */
 	public var regen:Bool = false;
-	#end
 	
 	/**
 	 * The natural background color of the camera, in AARRGGBB format. Defaults to FlxG.cameras.bgColor.
@@ -137,13 +135,11 @@ class FlxCamera extends FlxBasic
 	 */ 
 	public var bgColor:FlxColor;
 	
-	#if FLX_RENDER_BLIT
 	/**
 	 * Sometimes it's easier to just work with a FlxSprite than it is to work directly with the BitmapData buffer.  
 	 * This sprite reference will allow you to do exactly that.
 	 */
 	public var screen:FlxSprite;
-	#end
 	
 	/**
 	 * Whether to use alpha blending for camera's background fill or not. 
@@ -160,10 +156,10 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Whether the positions of the objects rendered on this camera are rounded.
 	 * If set on individual objects, they ignore the global camera setting.
-	 * Defaults to false with FLX_RENDER_TILE and to true with FLX_RENDER_BLIT.
+	 * Defaults to false with FlxG.renderTile and to true with FlxG.renderBlit.
 	 * WARNING: setting this to false on blitting targets is very expensive.
 	 */
-	public var pixelPerfectRender:Bool = #if FLX_RENDER_TILE false #else true #end;
+	public var pixelPerfectRender:Bool;
 	
 	/**
 	 * How wide the camera display is, in game pixels.
@@ -204,7 +200,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Enables or disables the filters set via setFilters()
 	 */
-	public var enableFilters:Bool = true;
+	public var filtersEnabled:Bool = true;
 	
 	/**
 	 * Internal, used to render buffer to screen space.
@@ -258,6 +254,7 @@ class FlxCamera extends FlxBasic
 	 * Internal, used to control the "fade" special effect.
 	 */
 	private var _fxFadeComplete:Void->Void = null;
+	private var _fxFadeCompleted:Bool = true;
 	/**
 	 * Internal, used to control the "fade" special effect.
 	 */
@@ -296,7 +293,6 @@ class FlxCamera extends FlxBasic
 	 */
 	public var initialZoom(default, null):Float = 1;
 	
-	#if FLX_RENDER_BLIT
 	/**
 	 * Internal helper variable for doing better wipes/fills between renders.
 	 */
@@ -305,7 +301,6 @@ class FlxCamera extends FlxBasic
 	 * Internal, used to render buffer to screen space.
 	 */
 	private var _flashBitmap:Bitmap;
-	#end
 	
 	/**
 	 * Internal sprite, used for correct trimming of camera viewport.
@@ -317,7 +312,6 @@ class FlxCamera extends FlxBasic
 	 */
 	private var _bounds:FlxRect = FlxRect.get();
 	
-#if FLX_RENDER_TILE
 	/**
 	 * Sprite for drawing (instead of _flashBitmap for blitting)
 	 */
@@ -526,119 +520,124 @@ class FlxCamera extends FlxBasic
 	
 	public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix, cr:Float = 1.0, cg:Float = 1.0, cb:Float = 1.0, ca:Float = 1.0, blend:BlendMode = null, smoothing:Bool = false):Void
 	{
-		var isColored:Bool = (cr != 1.0) || (cg != 1.0) || (cb != 1.0) || (ca != 1.0);
-		#if !FLX_RENDER_TRIANGLE
-		var drawItem:FlxDrawTilesItem = startQuadBatch(frame.parent, isColored, blend, smoothing);
-		#else
-		var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(frame.parent, smoothing, isColored, blend);
-		#end
-		drawItem.addQuad(frame, matrix, cr, cg, cb, ca);
-	}
-	
-	public function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle, destPoint:Point, cr:Float = 1.0, cg:Float = 1.0, cb:Float = 1.0, ca:Float = 1.0, blend:BlendMode = null, smoothing:Bool = false):Void
-	{
-		_helperMatrix.identity();
-		_helperMatrix.translate(destPoint.x + frame.offset.x, destPoint.y + frame.offset.y);
-		var isColored:Bool = (cr != 1.0) || (cg != 1.0) || (cb != 1.0) || (ca != 1.0);
-		#if !FLX_RENDER_TRIANGLE
-		var drawItem:FlxDrawTilesItem = startQuadBatch(frame.parent, isColored, blend, smoothing);
-		#else
-		var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(frame.parent, smoothing, isColored, blend);
-		#end
-		drawItem.addQuad(frame, _helperMatrix, cr, cg, cb, ca);
-	}
-	
-	public function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, colors:DrawData<Int> = null, position:FlxPoint = null, blend:BlendMode = null, smoothing:Bool = false):Void
-	{
-		_bounds.set(0, 0, width, height);
-		var isColored:Bool = (colors != null && colors.length != 0);
-		var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(graphic, smoothing, isColored, blend);
-		drawItem.addTriangles(vertices, indices, uvtData, colors, position, _bounds);
-	}
-#else
-	public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:Matrix, cr:Float = 1.0, cg:Float = 1.0, cb:Float = 1.0, ca:Float = 1.0, blend:BlendMode = null, smoothing:Bool = false):Void
-	{
-		buffer.draw(pixels, matrix, null, blend, null, (smoothing || antialiasing));
-	}
-	
-	public function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle, destPoint:Point, cr:Float = 1.0, cg:Float = 1.0, cb:Float = 1.0, ca:Float = 1.0, blend:BlendMode = null, smoothing:Bool = false):Void
-	{
-		if (pixels != null)
+		if (FlxG.renderBlit)
 		{
-			buffer.copyPixels(pixels, sourceRect, destPoint, null, null, true);
-		}
-		else if (frame != null)
-		{
-			frame.paint(buffer, destPoint, true);
-		}
-	}
-	
-	private static var drawVertices:Vector<Float> = new Vector<Float>();
-	private static var trianglesSprite:Sprite = new Sprite();
-	
-	public function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, colors:DrawData<Int> = null, position:FlxPoint = null, blend:BlendMode = null, smoothing:Bool = false):Void
-	{
-		if (position == null)
-		{
-			position = FlxPoint.flxPoint1.set(0, 0);
-		}
-		
-		_bounds.set(0, 0, width, height);
-		
-		var verticesLength:Int = vertices.length;
-		var currentVertexPosition:Int = 0;
-		
-		var tempX:Float, tempY:Float;
-		var i:Int = 0;
-		var bounds:FlxRect = FlxRect.flxRect;
-		drawVertices.splice(0, drawVertices.length);
-		
-		while (i < verticesLength)
-		{
-			tempX = position.x + vertices[i]; 
-			tempY = position.y + vertices[i + 1];
-			
-			drawVertices[currentVertexPosition++] = tempX;
-			drawVertices[currentVertexPosition++] = tempY;
-			
-			if (i == 0)
-			{
-				bounds.set(tempX, tempY, 0, 0);
-			}
-			else
-			{
-				FlxDrawTrianglesItem.inflateBounds(bounds, tempX, tempY);
-			}
-			
-			i += 2;
-		}
-		
-		var vis:Bool = _bounds.overlaps(bounds);
-		
-		if (!vis)
-		{
-			drawVertices.splice(drawVertices.length - verticesLength, verticesLength);
+			buffer.draw(pixels, matrix, null, blend, null, (smoothing || antialiasing));
 		}
 		else
 		{
-			trianglesSprite.graphics.clear();
-			trianglesSprite.graphics.beginBitmapFill(graphic.bitmap, null, false, smoothing);
-			trianglesSprite.graphics.drawTriangles(drawVertices, indices, uvtData);
-			trianglesSprite.graphics.endFill();
-			buffer.draw(trianglesSprite);
-			#if !FLX_NO_DEBUG
-			if (FlxG.debugger.drawDebug)
-			{
-				var gfx:Graphics = FlxSpriteUtil.flashGfx;
-				gfx.clear();
-				gfx.lineStyle(1, FlxColor.BLUE, 0.5);
-				gfx.drawTriangles(drawVertices, indices);
-				camera.buffer.draw(FlxSpriteUtil.flashGfxSprite);
-			}
+			var isColored:Bool = (cr != 1.0) || (cg != 1.0) || (cb != 1.0) || (ca != 1.0);
+			#if !FLX_RENDER_TRIANGLE
+			var drawItem:FlxDrawTilesItem = startQuadBatch(frame.parent, isColored, blend, smoothing);
+			#else
+			var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(frame.parent, smoothing, isColored, blend);
 			#end
-		}	
+			drawItem.addQuad(frame, matrix, cr, cg, cb, ca);
+		}
 	}
-#end
+	
+	public function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle, destPoint:Point, cr:Float = 1.0, cg:Float = 1.0, cb:Float = 1.0, ca:Float = 1.0, blend:BlendMode = null, smoothing:Bool = false):Void
+	{
+		if (FlxG.renderBlit)
+		{
+			if (pixels != null)
+			{
+				buffer.copyPixels(pixels, sourceRect, destPoint, null, null, true);
+			}
+			else if (frame != null)
+			{
+				frame.paint(buffer, destPoint, true);
+			}
+		}
+		else
+		{
+			_helperMatrix.identity();
+			_helperMatrix.translate(destPoint.x + frame.offset.x, destPoint.y + frame.offset.y);
+			var isColored:Bool = (cr != 1.0) || (cg != 1.0) || (cb != 1.0) || (ca != 1.0);
+			#if !FLX_RENDER_TRIANGLE
+			var drawItem:FlxDrawTilesItem = startQuadBatch(frame.parent, isColored, blend, smoothing);
+			#else
+			var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(frame.parent, smoothing, isColored, blend);
+			#end
+			drawItem.addQuad(frame, _helperMatrix, cr, cg, cb, ca);
+		}
+	}
+	
+	public function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, colors:DrawData<Int> = null, position:FlxPoint = null, blend:BlendMode = null, smoothing:Bool = false):Void
+	{
+		if (FlxG.renderBlit)
+		{
+			if (position == null)
+			{
+				position = FlxPoint.flxPoint1.set(0, 0);
+			}
+			
+			_bounds.set(0, 0, width, height);
+			
+			var verticesLength:Int = vertices.length;
+			var currentVertexPosition:Int = 0;
+			
+			var tempX:Float, tempY:Float;
+			var i:Int = 0;
+			var bounds:FlxRect = FlxRect.flxRect;
+			drawVertices.splice(0, drawVertices.length);
+			
+			while (i < verticesLength)
+			{
+				tempX = position.x + vertices[i]; 
+				tempY = position.y + vertices[i + 1];
+				
+				drawVertices[currentVertexPosition++] = tempX;
+				drawVertices[currentVertexPosition++] = tempY;
+				
+				if (i == 0)
+				{
+					bounds.set(tempX, tempY, 0, 0);
+				}
+				else
+				{
+					FlxDrawTrianglesItem.inflateBounds(bounds, tempX, tempY);
+				}
+				
+				i += 2;
+			}
+			
+			var vis:Bool = _bounds.overlaps(bounds);
+			
+			if (!vis)
+			{
+				drawVertices.splice(drawVertices.length - verticesLength, verticesLength);
+			}
+			else
+			{
+				trianglesSprite.graphics.clear();
+				trianglesSprite.graphics.beginBitmapFill(graphic.bitmap, null, false, smoothing);
+				trianglesSprite.graphics.drawTriangles(drawVertices, indices, uvtData);
+				trianglesSprite.graphics.endFill();
+				buffer.draw(trianglesSprite);
+				#if !FLX_NO_DEBUG
+				if (FlxG.debugger.drawDebug)
+				{
+					var gfx:Graphics = FlxSpriteUtil.flashGfx;
+					gfx.clear();
+					gfx.lineStyle(1, FlxColor.BLUE, 0.5);
+					gfx.drawTriangles(drawVertices, indices);
+					camera.buffer.draw(FlxSpriteUtil.flashGfxSprite);
+				}
+				#end
+			}
+		}
+		else
+		{
+			_bounds.set(0, 0, width, height);
+			var isColored:Bool = (colors != null && colors.length != 0);
+			var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(graphic, smoothing, isColored, blend);
+			drawItem.addTriangles(vertices, indices, uvtData, colors, position, _bounds);
+		}
+	}
+
+	private static var drawVertices:Vector<Float> = new Vector<Float>();
+	private static var trianglesSprite:Sprite = new Sprite();
 	
 	/**
 	 * Instantiates a new camera at the specified location, with the specified size and zoom level.
@@ -653,6 +652,8 @@ class FlxCamera extends FlxBasic
 	{
 		super();
 		
+		pixelPerfectRender = FlxG.renderBlit;
+		 
 		_scrollTarget = FlxPoint.get();
 		scroll = FlxPoint.get();
 		followLead = FlxPoint.get();
@@ -667,18 +668,22 @@ class FlxCamera extends FlxBasic
 		width = (Width <= 0) ? FlxG.width : Width;
 		height = (Height <= 0) ? FlxG.height : Height;
 		
-		#if FLX_RENDER_BLIT
-		screen = new FlxSprite();
-		buffer = new BitmapData(width, height, true, 0);
-		screen.pixels = buffer;
-		screen.origin.set();
-		#end
+		if (FlxG.renderBlit)
+		{
+			screen = new FlxSprite();
+			buffer = new BitmapData(width, height, true, 0);
+			screen.pixels = buffer;
+			screen.origin.set();
+		}
 		
-		#if FLX_RENDER_BLIT
-		_flashBitmap = new Bitmap(buffer);
-		#else
-		canvas = new Sprite();
-		#end
+		if (FlxG.renderBlit)
+		{
+			_flashBitmap = new Bitmap(buffer);
+		}
+		else
+		{
+			canvas = new Sprite();
+		}
 		
 		set_color(FlxColor.WHITE);
 		
@@ -687,27 +692,32 @@ class FlxCamera extends FlxBasic
 		_scrollRect = new Sprite();
 		flashSprite.addChild(_scrollRect);
 		
-		#if FLX_RENDER_BLIT
-		_scrollRect.addChild(_flashBitmap);
-		#else
-		_scrollRect.addChild(canvas);
-		#end
+		if (FlxG.renderBlit)
+		{
+			_scrollRect.addChild(_flashBitmap);
+		}
+		else
+		{
+			_scrollRect.addChild(canvas);
+		}
 		_flashRect = new Rectangle(0, 0, width, height);
 		_flashPoint = new Point();
 		
 		_fxShakeOffset = FlxPoint.get();
 		
-	#if FLX_RENDER_BLIT
-		_fill = new BitmapData(width, height, true, FlxColor.TRANSPARENT);
-	#else
-		
-		#if !FLX_NO_DEBUG
-		debugLayer = new Sprite();
-		_scrollRect.addChild(debugLayer);
-		#end
-		
-		_transform = new Matrix();
-	#end
+		if (FlxG.renderBlit)
+		{
+			_fill = new BitmapData(width, height, true, FlxColor.TRANSPARENT);
+		}
+		else
+		{
+			#if !FLX_NO_DEBUG
+			debugLayer = new Sprite();
+			_scrollRect.addChild(debugLayer);
+			#end
+			
+			_transform = new Matrix();
+		}
 		
 		zoom = Zoom; //sets the scale of flash sprite, which in turn loads flashoffset values
 		
@@ -716,7 +726,7 @@ class FlxCamera extends FlxBasic
 		_scrollRect.scrollRect = new Rectangle();
 		
 		updateScrollRect();
-		updateFlashOffset();	
+		updateFlashOffset();
 		updateFlashSpritePosition();
 		updateInternalSpritePositions();
 		
@@ -730,36 +740,39 @@ class FlxCamera extends FlxBasic
 	{
 		FlxDestroyUtil.removeChild(flashSprite, _scrollRect);
 		
-	#if FLX_RENDER_BLIT
-		FlxDestroyUtil.removeChild(_scrollRect, _flashBitmap);
-		screen = FlxDestroyUtil.destroy(screen);
-		buffer = null;
-		_flashBitmap = null;
-		_fill = FlxDestroyUtil.dispose(_fill);
-	#else
-		#if !FLX_NO_DEBUG
-		FlxDestroyUtil.removeChild(_scrollRect, debugLayer);
-		debugLayer = null;
-		#end
-		
-		FlxDestroyUtil.removeChild(_scrollRect, canvas);
-		if (canvas != null)
+		if (FlxG.renderBlit)
 		{
-			for (i in 0...canvas.numChildren)
+			FlxDestroyUtil.removeChild(_scrollRect, _flashBitmap);
+			screen = FlxDestroyUtil.destroy(screen);
+			buffer = null;
+			_flashBitmap = null;
+			_fill = FlxDestroyUtil.dispose(_fill);
+		}
+		else
+		{
+			#if !FLX_NO_DEBUG
+			FlxDestroyUtil.removeChild(_scrollRect, debugLayer);
+			debugLayer = null;
+			#end
+			
+			FlxDestroyUtil.removeChild(_scrollRect, canvas);
+			if (canvas != null)
 			{
-				canvas.removeChildAt(0);
+				for (i in 0...canvas.numChildren)
+				{
+					canvas.removeChildAt(0);
+				}
+				canvas = null;
 			}
-			canvas = null;
+			
+			if (_headOfDrawStack != null)
+			{
+				clearDrawStack();
+			}
+			
+			_transform = null;
+			_helperMatrix = null;
 		}
-		
-		if (_headOfDrawStack != null)
-		{
-			clearDrawStack();
-		}
-		
-		_transform = null;
-		_helperMatrix = null;
-	#end
 		
 		_bounds = null;
 		scroll = FlxDestroyUtil.put(scroll);
@@ -795,7 +808,7 @@ class FlxCamera extends FlxBasic
 		updateFade(elapsed);
 		updateShake(elapsed);
 		
-		flashSprite.filters = enableFilters ? _filters : null;
+		flashSprite.filters = filtersEnabled ? _filters : null;
 		
 		updateFlashSpritePosition();
 	}
@@ -911,33 +924,34 @@ class FlxCamera extends FlxBasic
 	
 	private function updateFade(elapsed:Float):Void
 	{
-		if ((_fxFadeAlpha > 0.0) && (_fxFadeAlpha < 1.0))
+		if (_fxFadeCompleted)
+			return;
+		
+		if (_fxFadeIn)
 		{
-			if (_fxFadeIn)
+			_fxFadeAlpha -= elapsed /_fxFadeDuration;
+			if (_fxFadeAlpha <= 0.0)
 			{
-				_fxFadeAlpha -= elapsed /_fxFadeDuration;
-				if (_fxFadeAlpha <= 0.0)
-				{
-					_fxFadeAlpha = 0.0;
-					if (_fxFadeComplete != null)
-					{
-						_fxFadeComplete();
-					}
-				}
-			}
-			else
-			{
-				_fxFadeAlpha += elapsed / _fxFadeDuration;
-				if (_fxFadeAlpha >= 1.0)
-				{
-					_fxFadeAlpha = 1.0;
-					if (_fxFadeComplete != null)
-					{
-						_fxFadeComplete();
-					}
-				}
+				_fxFadeAlpha = 0.0;
+				completeFade();
 			}
 		}
+		else
+		{
+			_fxFadeAlpha += elapsed / _fxFadeDuration;
+			if (_fxFadeAlpha >= 1.0)
+			{
+				_fxFadeAlpha = 1.0;
+				completeFade();
+			}
+		}
+	}
+	
+	private function completeFade()
+	{
+		_fxFadeCompleted = true;
+		if (_fxFadeComplete != null)
+			_fxFadeComplete();
 	}
 	
 	private function updateShake(elapsed:Float):Void
@@ -999,35 +1013,38 @@ class FlxCamera extends FlxBasic
 	
 	function updateInternalSpritePositions():Void
 	{
-		#if FLX_RENDER_BLIT
-		if (_flashBitmap != null)
+		if (FlxG.renderBlit)
 		{
-			regen = regen || (width != buffer.width) || (height != buffer.height);
-			
-			_flashBitmap.x = -0.5 * width * (scaleX - initialZoom) * FlxG.scaleMode.scale.x;
-			_flashBitmap.y = -0.5 * height * (scaleY - initialZoom) * FlxG.scaleMode.scale.y;
-		}
-		#else
-		if (canvas != null)
-		{
-			canvas.x = -0.5 * width * (scaleX - initialZoom) * FlxG.scaleMode.scale.x;
-			canvas.y = -0.5 * height * (scaleY - initialZoom) * FlxG.scaleMode.scale.y;
-			
-			canvas.scaleX = totalScaleX;
-			canvas.scaleY = totalScaleY;
-			
-			#if !FLX_NO_DEBUG
-			if (debugLayer != null)
+			if (_flashBitmap != null)
 			{
-				debugLayer.x = canvas.x;
-				debugLayer.y = canvas.y;
+				regen = regen || (width != buffer.width) || (height != buffer.height);
 				
-				debugLayer.scaleX = totalScaleX;
-				debugLayer.scaleY = totalScaleY;
+				_flashBitmap.x = -0.5 * width * (scaleX - initialZoom) * FlxG.scaleMode.scale.x;
+				_flashBitmap.y = -0.5 * height * (scaleY - initialZoom) * FlxG.scaleMode.scale.y;
 			}
-			#end
 		}
-		#end
+		else
+		{
+			if (canvas != null)
+			{
+				canvas.x = -0.5 * width * (scaleX - initialZoom) * FlxG.scaleMode.scale.x;
+				canvas.y = -0.5 * height * (scaleY - initialZoom) * FlxG.scaleMode.scale.y;
+				
+				canvas.scaleX = totalScaleX;
+				canvas.scaleY = totalScaleY;
+				
+				#if !FLX_NO_DEBUG
+				if (debugLayer != null)
+				{
+					debugLayer.x = canvas.x;
+					debugLayer.y = canvas.y;
+					
+					debugLayer.scaleX = totalScaleX;
+					debugLayer.scaleY = totalScaleY;
+				}
+				#end
+			}
+		}
 	}
 	
 	/**
@@ -1147,21 +1164,19 @@ class FlxCamera extends FlxBasic
 	 */
 	public function fade(Color:FlxColor = FlxColor.BLACK, Duration:Float = 1, FadeIn:Bool = false, ?OnComplete:Void->Void, Force:Bool = false):Void
 	{
-		if (!Force && (_fxFadeAlpha > 0.0))
-		{
+		if (!_fxFadeCompleted && !Force)
 			return;
-		}
+		
 		_fxFadeColor = Color;
 		if (Duration <= 0)
-		{
 			Duration = 0.000001;
-		}
 		
 		_fxFadeIn = FadeIn;
 		_fxFadeDuration = Duration;
 		_fxFadeComplete = OnComplete;
 		
 		_fxFadeAlpha = _fxFadeIn ? 0.999999 : 0.000001;
+		_fxFadeCompleted = false;
 	}
 	
 	/**
@@ -1248,33 +1263,35 @@ class FlxCamera extends FlxBasic
 	 */
 	public function fill(Color:FlxColor, BlendAlpha:Bool = true, FxAlpha:Float = 1.0, ?graphics:Graphics):Void
 	{
-	#if FLX_RENDER_BLIT
-		if (BlendAlpha)
+		if (FlxG.renderBlit)
 		{
-			_fill.fillRect(_flashRect, Color);
-			buffer.copyPixels(_fill, _flashRect, _flashPoint, null, null, BlendAlpha);
+			if (BlendAlpha)
+			{
+				_fill.fillRect(_flashRect, Color);
+				buffer.copyPixels(_fill, _flashRect, _flashPoint, null, null, BlendAlpha);
+			}
+			else
+			{
+				buffer.fillRect(_flashRect, Color);
+			}
 		}
 		else
 		{
-			buffer.fillRect(_flashRect, Color);
+			if (FxAlpha == 0)
+			{
+				return;
+			}
+			// This is temporal fix for camera's color
+			var targetGraphics:Graphics = (graphics == null) ? canvas.graphics : graphics;
+			Color = Color.to24Bit();
+			// end of fix
+			
+			targetGraphics.beginFill(Color, FxAlpha);
+			// i'm drawing rect with these parameters to avoid light lines at the top and left of the camera,
+			// which could appear while cameras fading
+			targetGraphics.drawRect(-1, -1, width * totalScaleX + 2, height * totalScaleY + 2);
+			targetGraphics.endFill();
 		}
-	#else
-		
-		if (FxAlpha == 0)
-		{
-			return;
-		}
-		// This is temporal fix for camera's color
-		var targetGraphics:Graphics = (graphics == null) ? canvas.graphics : graphics;
-		Color = Color.to24Bit();
-		// end of fix
-		
-		targetGraphics.beginFill(Color, FxAlpha);
-		// i'm drawing rect with these parameters to avoid light lines at the top and left of the camera,
-		// which could appear while cameras fading
-		targetGraphics.drawRect(-1, -1, width * totalScaleX + 2, height * totalScaleY + 2);
-		targetGraphics.endFill();
-	#end
 	}
 	
 	/**
@@ -1290,11 +1307,14 @@ class FlxCamera extends FlxBasic
 		{
 			alphaComponent = _fxFlashColor.alpha;
 			
-			#if FLX_RENDER_BLIT
-			fill((Std.int(((alphaComponent <= 0) ? 0xff : alphaComponent) * _fxFlashAlpha) << 24) + (_fxFlashColor & 0x00ffffff));
-			#else
-			fill((_fxFlashColor & 0x00ffffff), true, ((alphaComponent <= 0) ? 0xff : alphaComponent) * _fxFlashAlpha / 255, canvas.graphics);
-			#end
+			if (FlxG.renderBlit)
+			{
+				fill((Std.int(((alphaComponent <= 0) ? 0xff : alphaComponent) * _fxFlashAlpha) << 24) + (_fxFlashColor & 0x00ffffff));
+			}
+			else
+			{
+				fill((_fxFlashColor & 0x00ffffff), true, ((alphaComponent <= 0) ? 0xff : alphaComponent) * _fxFlashAlpha / 255, canvas.graphics);
+			}
 		}
 		
 		//Draw the "fade" special effect onto the buffer
@@ -1302,11 +1322,14 @@ class FlxCamera extends FlxBasic
 		{
 			alphaComponent = _fxFadeColor.alpha;
 			
-			#if FLX_RENDER_BLIT
-			fill((Std.int(((alphaComponent <= 0) ?0xff : alphaComponent) * _fxFadeAlpha) << 24) + (_fxFadeColor & 0x00ffffff));
-			#else
-			fill((_fxFadeColor & 0x00ffffff), true, ((alphaComponent <= 0) ?0xff : alphaComponent) * _fxFadeAlpha / 255, canvas.graphics);
-			#end
+			if (FlxG.renderBlit)
+			{
+				fill((Std.int(((alphaComponent <= 0) ?0xff : alphaComponent) * _fxFadeAlpha) << 24) + (_fxFadeColor & 0x00ffffff));
+			}
+			else
+			{
+				fill((_fxFadeColor & 0x00ffffff), true, ((alphaComponent <= 0) ?0xff : alphaComponent) * _fxFadeAlpha / 255, canvas.graphics);
+			}
 		}
 		
 		if ((_fxShakeOffset.x != 0) || (_fxShakeOffset.y != 0))
@@ -1316,29 +1339,30 @@ class FlxCamera extends FlxBasic
 		}
 	}
 	
-	#if FLX_RENDER_BLIT
 	public function checkResize():Void
 	{
-		if (regen)
+		if (FlxG.renderBlit)
 		{
-			if (width != buffer.width || height != buffer.height)
+			if (regen)
 			{
-				var oldBuffer:FlxGraphic = screen.graphic;
-				buffer = new BitmapData(width, height, true, 0);
-				screen.pixels = buffer;
-				screen.origin.set();
-				_flashBitmap.bitmapData = buffer;
-				_flashRect.width = width;
-				_flashRect.height = height;
-				_fill = FlxDestroyUtil.dispose(_fill);
-				_fill = new BitmapData(width, height, true, FlxColor.TRANSPARENT);
-				FlxG.bitmap.removeIfNoUse(oldBuffer);
+				if (width != buffer.width || height != buffer.height)
+				{
+					var oldBuffer:FlxGraphic = screen.graphic;
+					buffer = new BitmapData(width, height, true, 0);
+					screen.pixels = buffer;
+					screen.origin.set();
+					_flashBitmap.bitmapData = buffer;
+					_flashRect.width = width;
+					_flashRect.height = height;
+					_fill = FlxDestroyUtil.dispose(_fill);
+					_fill = new BitmapData(width, height, true, FlxColor.TRANSPARENT);
+					FlxG.bitmap.removeIfNoUse(oldBuffer);
+				}
+				
+				regen = false;
 			}
-			
-			regen = false;
 		}
 	}
-	#end
 	
 	/**
 	 * Shortcut for setting both width and Height.
@@ -1410,13 +1434,16 @@ class FlxCamera extends FlxBasic
 		totalScaleX = scaleX * FlxG.scaleMode.scale.x;
 		totalScaleY = scaleY * FlxG.scaleMode.scale.y;
 		
-		#if FLX_RENDER_BLIT
-		_flashBitmap.scaleX = totalScaleX;
-		_flashBitmap.scaleY = totalScaleY;
-		#else
-		_transform.identity();
-		_transform.scale(totalScaleX, totalScaleY);
-		#end
+		if (FlxG.renderBlit)
+		{
+			_flashBitmap.scaleX = totalScaleX;
+			_flashBitmap.scaleY = totalScaleY;
+		}
+		else
+		{
+			_transform.identity();
+			_transform.scale(totalScaleX, totalScaleY);
+		}
 		
 		updateFlashSpritePosition();
 		updateScrollRect();
@@ -1470,11 +1497,14 @@ class FlxCamera extends FlxBasic
 	private function set_alpha(Alpha:Float):Float
 	{
 		alpha = FlxMath.bound(Alpha, 0, 1);
-		#if FLX_RENDER_BLIT
-		_flashBitmap.alpha = Alpha;
-		#else
-		canvas.alpha = Alpha;
-		#end
+		if (FlxG.renderBlit)
+		{
+			_flashBitmap.alpha = Alpha;
+		}
+		else
+		{
+			canvas.alpha = Alpha;
+		}
 		return Alpha;
 	}
 	
@@ -1490,25 +1520,31 @@ class FlxCamera extends FlxBasic
 		color = Color;
 		var colorTransform:ColorTransform;
 		
-		#if FLX_RENDER_BLIT
-		if (_flashBitmap == null)
+		if (FlxG.renderBlit)
 		{
-			return Color;
+			if (_flashBitmap == null)
+			{
+				return Color;
+			}
+			colorTransform = _flashBitmap.transform.colorTransform;
 		}
-		colorTransform = _flashBitmap.transform.colorTransform;
-		#else
-		colorTransform = canvas.transform.colorTransform;
-		#end
+		else
+		{
+			colorTransform = canvas.transform.colorTransform;
+		}
 		
 		colorTransform.redMultiplier = color.redFloat;
 		colorTransform.greenMultiplier = color.greenFloat;
 		colorTransform.blueMultiplier = color.blueFloat;
 		
-		#if FLX_RENDER_BLIT
-		_flashBitmap.transform.colorTransform = colorTransform;
-		#else
-		canvas.transform.colorTransform = colorTransform;
-		#end
+		if (FlxG.renderBlit)
+		{
+			_flashBitmap.transform.colorTransform = colorTransform;
+		}
+		else
+		{
+			canvas.transform.colorTransform = colorTransform;
+		}
 		
 		return Color;
 	}
@@ -1516,9 +1552,10 @@ class FlxCamera extends FlxBasic
 	private function set_antialiasing(Antialiasing:Bool):Bool
 	{
 		antialiasing = Antialiasing;
-		#if FLX_RENDER_BLIT
-		_flashBitmap.smoothing = Antialiasing;
-		#end
+		if (FlxG.renderBlit)
+		{
+			_flashBitmap.smoothing = Antialiasing;
+		}
 		return Antialiasing;
 	}
 	

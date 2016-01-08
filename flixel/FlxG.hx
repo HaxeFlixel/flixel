@@ -113,6 +113,11 @@ class FlxG
 	 */
 	public static var drawFramerate(default, set):Int;
 	
+	public static var renderMethod(default, null):FlxRenderMethod;
+	
+	public static var renderBlit(default, null):Bool;
+	public static var renderTile(default, null):Bool;
+	
 	/**
 	 * Represents the amount of time in seconds that passed since last frame.
 	 */
@@ -292,26 +297,18 @@ class FlxG
 	}
 	
 	/**
-	 * Switch from the current game state to the one specified here.
+	 * Attempts to switch from the current game state to `nextState`.
+	 * The state switch is successful if `switchTo()` of the current `state` returns `true`.
 	 */
-	public static inline function switchState(State:FlxState):Void
+	public static inline function switchState(nextState:FlxState):Void
 	{
-		//If a transition is required
-		if (game._state.isTransitionNeeded())
-		{
-			//Do the transition and exit early
-			game._state.transitionToState(State);
-			return;
-		}
-		//Otherwise do the switch normally
-		else
-		{
-			game._requestedState = State; 
-		}
+		if (state.switchTo(nextState))
+			game._requestedState = nextState;
 	}
 	
 	/**
 	 * Request a reset of the current game state.
+	 * Calls `switchState()` with a new instance of the current `state`.
 	 */
 	public static inline function resetState():Void
 	{
@@ -500,6 +497,8 @@ class FlxG
 		width = Std.int(Math.abs(Width));
 		height = Std.int(Math.abs(Height));
 		
+		initRenderMethod();
+		
 		BaseScaleMode.gWidth = width;
 		BaseScaleMode.gHeight = height;
 		
@@ -539,6 +538,38 @@ class FlxG
 		#if !FLX_NO_SOUND_SYSTEM
 		sound = new SoundFrontEnd();
 		#end
+	}
+	
+	private static function initRenderMethod():Void
+	{
+		renderMethod = BLIT;
+		
+		#if (!lime_legacy && !flash)
+			if (Lib.application.config.windows[0].hardware == false)
+			{
+				renderMethod = BLIT;
+			}
+			else
+			{
+				renderMethod = switch(stage.window.renderer.type)
+				{
+					case OPENGL, CONSOLE:      TILES;
+					case CANVAS, FLASH, CAIRO: BLIT;
+					default:                   BLIT;
+				}
+			}
+		#else
+			#if (flash || js)
+				renderMethod = BLIT;
+			#else
+				renderMethod = TILES;
+			#end
+		#end
+		
+		renderBlit = renderMethod == BLIT;
+		renderTile = renderMethod == TILES;
+		
+		FlxObject.defaultPixelPerfectPosition = renderBlit;
 	}
 	
 	/**
@@ -654,4 +685,10 @@ class FlxG
 	{
 		return game._state;
 	}
+}
+
+enum FlxRenderMethod 
+{
+	TILES;
+	BLIT;
 }

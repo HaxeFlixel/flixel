@@ -162,4 +162,9 @@ class FlxArrayUtil
 			return null;
 		return array[array.length - 1];
 	}
+	
+	public static inline function contains<T>(array:Array<T>, element:T):Bool
+	{
+		return array.indexOf(element) != -1;
+	}
 }

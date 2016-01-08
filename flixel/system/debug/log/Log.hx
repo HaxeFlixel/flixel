@@ -1,4 +1,4 @@
-package flixel.system.debug;
+package flixel.system.debug.log;
 
 #if !FLX_NO_DEBUG
 import flash.geom.Rectangle;

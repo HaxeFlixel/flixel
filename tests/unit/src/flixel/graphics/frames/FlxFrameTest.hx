@@ -2,7 +2,6 @@ package flixel.graphics.frames;
 
 import flixel.graphics.frames.FlxFrame;
 import massive.munit.Assert;
-using flixel.util.FlxArrayUtil;
 
 class FlxFrameTest extends FlxTest
 {
@@ -30,6 +29,6 @@ class FlxFrameTest extends FlxTest
 			var index = Std.parseInt(withoutPostfix.charAt(withoutPostfix.length - 1));
 			resultingIndices.push(index);
 		}
-		Assert.isTrue([1, 3, 5, 6, 8].equals(resultingIndices));
+		FlxAssert.arraysEqual([1, 3, 5, 6, 8], resultingIndices);
 	}
 }

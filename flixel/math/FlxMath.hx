@@ -250,28 +250,22 @@ class FlxMath
 	}
 	
 	/**
-	 * Adds value to amount and ensures that the result always stays between 0 and max, by wrapping the value around.
+	 * Makes sure that value always stays between 0 and max,
+	 * by wrapping the value around.
 	 * 
-	 * @param 	value 	The value to add the amount to
-	 * @param 	amount 	The amount to add to the value
+	 * @param 	value 	The value to wrap around
+	 * @param 	min		The minimum the value is allowed to be
 	 * @param 	max 	The maximum the value is allowed to be
 	 * @return The wrapped value
 	 */
-	public static function wrapValue(value:Int, amount:Int, max:Int):Int
+	public static function wrap(value:Int, min:Int, max:Int):Int
 	{
-		var output:Int = value + amount;
-		
-		if (output >= max)
-		{
-			output %= max;
-		}
-		
-		while (output < 0)
-		{
-			output += max;
-		}
-		
-		return output;
+		var range:Int = max - min + 1;
+
+		if (value < min)
+			value += range * Std.int((min - value) / range + 1);
+
+		return min + (value - min) % range;
 	}
 
 	/**
@@ -589,4 +583,5 @@ class FlxMath
 	{
 		return (a > 0) ? a : -a;
 	}
+	
 }

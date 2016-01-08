@@ -70,12 +70,13 @@ class CameraFrontEnd
 			FlxG.log.warn("FlxG.cameras.remove(): The camera you attemped to remove is not a part of the game.");
 		}
 		
-		#if FLX_RENDER_TILE
-		for (i in 0...list.length)
+		if (FlxG.renderTile)
 		{
-			list[i].ID = i;
+			for (i in 0...list.length)
+			{
+				list[i].ID = i;
+			}
 		}
-		#end
 		
 		if (Destroy)
 		{
@@ -101,7 +102,7 @@ class CameraFrontEnd
 		
 		list.splice(0, list.length);
 		
-		if (NewCamera == null)	
+		if (NewCamera == null)
 		{
 			NewCamera = new FlxCamera(0, 0, FlxG.width, FlxG.height);
 		}
@@ -180,45 +181,51 @@ class CameraFrontEnd
 				continue;
 			}
 			
-			#if FLX_RENDER_BLIT
-			camera.checkResize();
-			
-			if (useBufferLocking)
+			if (FlxG.renderBlit)
 			{
-				camera.buffer.lock();
+				camera.checkResize();
+				
+				if (useBufferLocking)
+				{
+					camera.buffer.lock();
+				}
 			}
-			#end
 			
-		#if FLX_RENDER_TILE
-			camera.clearDrawStack();
-			camera.canvas.graphics.clear();
-			// Clearing camera's debug sprite
-			#if !FLX_NO_DEBUG
-			camera.debugLayer.graphics.clear();
-			#end
-		#end
+			if (FlxG.renderTile)
+			{
+				camera.clearDrawStack();
+				camera.canvas.graphics.clear();
+				// Clearing camera's debug sprite
+				#if !FLX_NO_DEBUG
+				camera.debugLayer.graphics.clear();
+				#end
+			}
 			
-			#if FLX_RENDER_BLIT
-			camera.fill(camera.bgColor, camera.useBgAlphaBlending);
-			camera.screen.dirty = true;
-			#else
-			camera.fill((camera.bgColor & 0x00ffffff), camera.useBgAlphaBlending, ((camera.bgColor >> 24) & 255) / 255);
-			#end
+			if (FlxG.renderBlit)
+			{
+				camera.fill(camera.bgColor, camera.useBgAlphaBlending);
+				camera.screen.dirty = true;
+			}
+			else
+			{
+				camera.fill(camera.bgColor.to24Bit(), camera.useBgAlphaBlending, camera.bgColor.alphaFloat);
+			}
 		}
 	}
 	
-	#if FLX_RENDER_TILE
 	private inline function render():Void
 	{
-		for (camera in list)
+		if (FlxG.renderTile)
 		{
-			if ((camera != null) && camera.exists && camera.visible)
+			for (camera in list)
 			{
-				camera.render();
+				if ((camera != null) && camera.exists && camera.visible)
+				{
+					camera.render();
+				}
 			}
 		}
 	}
-	#end
 	
 	/**
 	 * Called by the game object to draw the special FX and unlock all the camera buffers.
@@ -234,14 +241,15 @@ class CameraFrontEnd
 			
 			camera.drawFX();
 			
-			#if FLX_RENDER_BLIT
-			if (useBufferLocking)
+			if (FlxG.renderBlit)
 			{
-				camera.buffer.unlock();
+				if (useBufferLocking)
+				{
+					camera.buffer.unlock();
+				}
+				
+				camera.screen.dirty = true;
 			}
-			
-			camera.screen.dirty = true;
-			#end
 		}
 	}
 	

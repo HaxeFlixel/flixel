@@ -247,7 +247,7 @@ class Window extends Sprite
 		_bounds = Bounds;
 		if (_bounds != null)
 		{
-			maxSize = new Point(_bounds.width,_bounds.height);
+			maxSize = new Point(_bounds.width, _bounds.height);
 		}
 		else
 		{

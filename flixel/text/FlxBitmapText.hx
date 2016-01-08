@@ -180,11 +180,9 @@ class FlxBitmapText extends FlxSprite
 	private var pendingTextBitmapChange:Bool = true;
 	private var pendingPixelsChange:Bool = true;
 	
-	#if FLX_RENDER_TILE
 	private var textData:Array<Float>;
 	private var textDrawData:Array<Float>;
 	private var borderDrawData:Array<Float>;
-	#end
 	
 	/**
 	 * Helper bitmap buffer for text pixels but without any color transformations
@@ -206,14 +204,17 @@ class FlxBitmapText extends FlxSprite
 		
 		shadowOffset = FlxPoint.get(1, 1);
 		
-		#if FLX_RENDER_BLIT
-		pixels = new BitmapData(1, 1, true, FlxColor.TRANSPARENT);
-		#else
-		textData = [];
-		
-		textDrawData = [];
-		borderDrawData = [];
-		#end
+		if (FlxG.renderBlit)
+		{
+			pixels = new BitmapData(1, 1, true, FlxColor.TRANSPARENT);
+		}
+		else
+		{
+			textData = [];
+			
+			textDrawData = [];
+			borderDrawData = [];
+		}
 	}
 	
 	/**
@@ -229,11 +230,12 @@ class FlxBitmapText extends FlxSprite
 		shadowOffset = FlxDestroyUtil.put(shadowOffset);
 		textBitmap = FlxDestroyUtil.dispose(textBitmap);
 		
-		#if FLX_RENDER_TILE
-		textData = null;
-		textDrawData = null;
-		borderDrawData = null;
-		#end
+		if (FlxG.renderTile)
+		{
+			textData = null;
+			textDrawData = null;
+			borderDrawData = null;
+		}
 		super.destroy();
 	}
 	
@@ -242,21 +244,24 @@ class FlxBitmapText extends FlxSprite
 	 */
 	override public function drawFrame(Force:Bool = false):Void 
 	{
-		#if FLX_RENDER_TILE
-		Force = true;
-		#end
+		if (FlxG.renderTile)
+		{
+			Force = true;
+		}
 		pendingTextBitmapChange = pendingTextBitmapChange || Force;
 		checkPendingChanges(false);
-		#if FLX_RENDER_BLIT
-		super.drawFrame(Force);
-		#end
+		if (FlxG.renderBlit)
+		{
+			super.drawFrame(Force);
+		}
 	}
 	
 	inline private function checkPendingChanges(useTiles:Bool = false):Void
 	{
-		#if FLX_RENDER_BLIT
-		useTiles = false;
-		#end
+		if (FlxG.renderBlit)
+		{
+			useTiles = false;
+		}
 		
 		if (pendingTextChange)
 		{
@@ -276,196 +281,199 @@ class FlxBitmapText extends FlxSprite
 		}
 	}
 	
-	#if FLX_RENDER_BLIT
 	override public function draw():Void 
 	{
-		checkPendingChanges(false);
-		super.draw();
-	}
-	#else
-	override public function draw():Void 
-	{
-		checkPendingChanges(true);
-		
-		var textLength:Int = Std.int(textDrawData.length / 3);
-		var borderLength:Int = Std.int(borderDrawData.length / 3);
-		
-		var dataPos:Int;
-		
-		var cr:Float = color.redFloat;
-		var cg:Float = color.greenFloat;
-		var cb:Float = color.blueFloat;
-		
-		var borderRed:Float = borderColor.redFloat * cr;
-		var borderGreen:Float = borderColor.greenFloat * cg;
-		var borderBlue:Float = borderColor.blueFloat * cb;
-		var bAlpha:Float = borderColor.alphaFloat * alpha;
-		
-		var textRed:Float = cr;
-		var textGreen:Float = cg;
-		var textBlue:Float = cb;
-		var tAlpha:Float = alpha;
-		
-		if (useTextColor)
+		if (FlxG.renderBlit)
 		{
-			textRed *= textColor.redFloat;
-			textGreen *= textColor.greenFloat;
-			textBlue *= textColor.blueFloat;
-			tAlpha *= textColor.alpha;		
+			checkPendingChanges(false);
+			super.draw();
 		}
-		
-		var bgRed:Float = cr;
-		var bgGreen:Float = cg;
-		var bgBlue:Float = cb;
-		var bgAlpha:Float = alpha;
-		
-		if (background)
+		else
 		{
-			bgRed *= backgroundColor.redFloat;
-			bgGreen *= backgroundColor.greenFloat;
-			bgBlue *= backgroundColor.blueFloat;
-			bgAlpha *= backgroundColor.alphaFloat;
-		}
-		
-		var drawItem;
-		var currFrame:FlxFrame = null;
-		var currTileX:Float = 0;
-		var currTileY:Float = 0;
-		var sx:Float = scale.x * _facingHorizontalMult;
-		var sy:Float = scale.y * _facingVerticalMult;
-		
-		var ox:Float = origin.x;
-		var oy:Float = origin.y;
-		
-		if (_facingHorizontalMult != 1)
-		{
-			ox = frameWidth - ox;
-		}
-		if (_facingVerticalMult != 1)
-		{
-			oy = frameHeight - oy;
-		}
-		
-		for (camera in cameras)
-		{
-			if (!camera.visible || !camera.exists || !isOnScreen(camera))
+			checkPendingChanges(true);
+			
+			var textLength:Int = Std.int(textDrawData.length / 3);
+			var borderLength:Int = Std.int(borderDrawData.length / 3);
+			
+			var dataPos:Int;
+			
+			var cr:Float = color.redFloat;
+			var cg:Float = color.greenFloat;
+			var cb:Float = color.blueFloat;
+			
+			var borderRed:Float = borderColor.redFloat * cr;
+			var borderGreen:Float = borderColor.greenFloat * cg;
+			var borderBlue:Float = borderColor.blueFloat * cb;
+			var bAlpha:Float = borderColor.alphaFloat * alpha;
+			
+			var textRed:Float = cr;
+			var textGreen:Float = cg;
+			var textBlue:Float = cb;
+			var tAlpha:Float = alpha;
+			
+			if (useTextColor)
 			{
-				continue;
+				textRed *= textColor.redFloat;
+				textGreen *= textColor.greenFloat;
+				textBlue *= textColor.blueFloat;
+				tAlpha *= textColor.alpha;
 			}
 			
-			getScreenPosition(_point, camera).subtractPoint(offset);
-			
-			if (isPixelPerfectRender(camera))
-			{
-				_point.floor();
-			}
-			
-			updateTrig();
+			var bgRed:Float = cr;
+			var bgGreen:Float = cg;
+			var bgBlue:Float = cb;
+			var bgAlpha:Float = alpha;
 			
 			if (background)
 			{
-				// backround tile transformations
-				currFrame = FlxG.bitmap.whitePixel;
-				_matrix.identity();
-				_matrix.scale(0.1 * frameWidth, 0.1 * frameHeight);
-				_matrix.translate(-ox, -oy);
-				_matrix.scale(sx, sy);
-				
-				if (angle != 0)
-				{
-					_matrix.rotateWithTrig(_cosAngle, _sinAngle);
-				}
-				
-				_matrix.translate(_point.x + ox, _point.y + oy);
-				camera.drawPixels(currFrame, null, _matrix, bgRed, bgGreen, bgBlue, bgAlpha, blend, antialiasing);
+				bgRed *= backgroundColor.redFloat;
+				bgGreen *= backgroundColor.greenFloat;
+				bgBlue *= backgroundColor.blueFloat;
+				bgAlpha *= backgroundColor.alphaFloat;
 			}
 			
-			drawItem = camera.startQuadBatch(font.parent, true, blend, antialiasing);
+			var drawItem;
+			var currFrame:FlxFrame = null;
+			var currTileX:Float = 0;
+			var currTileY:Float = 0;
+			var sx:Float = scale.x * _facingHorizontalMult;
+			var sy:Float = scale.y * _facingVerticalMult;
 			
-			for (j in 0...borderLength)
+			var ox:Float = origin.x;
+			var oy:Float = origin.y;
+			
+			if (_facingHorizontalMult != 1)
 			{
-				dataPos = j * 3;
-				
-				currFrame = font.getCharFrame(Std.int(borderDrawData[dataPos]));
-				
-				currTileX = borderDrawData[dataPos + 1];
-				currTileY = borderDrawData[dataPos + 2];
-				
-				currFrame.prepareMatrix(_matrix);
-				_matrix.translate(currTileX - ox, currTileY - oy);
-				_matrix.scale(sx, sy);
-				if (angle != 0)
-				{
-					_matrix.rotateWithTrig(_cosAngle, _sinAngle);
-				}
-				
-				_matrix.translate(_point.x + ox, _point.y + oy);
-				
-				drawItem.addQuad(currFrame, _matrix, borderRed, borderGreen, borderBlue, bAlpha);
+				ox = frameWidth - ox;
+			}
+			if (_facingVerticalMult != 1)
+			{
+				oy = frameHeight - oy;
 			}
 			
-			for (j in 0...textLength)
+			for (camera in cameras)
 			{
-				dataPos = j * 3;
-				
-				currFrame = font.getCharFrame(Std.int(textDrawData[dataPos]));
-				
-				currTileX = textDrawData[dataPos + 1];
-				currTileY = textDrawData[dataPos + 2];
-				
-				currFrame.prepareMatrix(_matrix);
-				_matrix.translate(currTileX - ox, currTileY - oy);
-				_matrix.scale(sx, sy);
-				if (angle != 0)
+				if (!camera.visible || !camera.exists || !isOnScreen(camera))
 				{
-					_matrix.rotateWithTrig(_cosAngle, _sinAngle);
+					continue;
 				}
 				
-				_matrix.translate(_point.x + ox, _point.y + oy);
+				getScreenPosition(_point, camera).subtractPoint(offset);
 				
-				drawItem.addQuad(currFrame, _matrix, textRed, textGreen, textBlue, tAlpha);
+				if (isPixelPerfectRender(camera))
+				{
+					_point.floor();
+				}
+				
+				updateTrig();
+				
+				if (background)
+				{
+					// backround tile transformations
+					currFrame = FlxG.bitmap.whitePixel;
+					_matrix.identity();
+					_matrix.scale(0.1 * frameWidth, 0.1 * frameHeight);
+					_matrix.translate(-ox, -oy);
+					_matrix.scale(sx, sy);
+					
+					if (angle != 0)
+					{
+						_matrix.rotateWithTrig(_cosAngle, _sinAngle);
+					}
+					
+					_matrix.translate(_point.x + ox, _point.y + oy);
+					camera.drawPixels(currFrame, null, _matrix, bgRed, bgGreen, bgBlue, bgAlpha, blend, antialiasing);
+				}
+				
+				drawItem = camera.startQuadBatch(font.parent, true, blend, antialiasing);
+				
+				for (j in 0...borderLength)
+				{
+					dataPos = j * 3;
+					
+					currFrame = font.getCharFrame(Std.int(borderDrawData[dataPos]));
+					
+					currTileX = borderDrawData[dataPos + 1];
+					currTileY = borderDrawData[dataPos + 2];
+					
+					currFrame.prepareMatrix(_matrix);
+					_matrix.translate(currTileX - ox, currTileY - oy);
+					_matrix.scale(sx, sy);
+					if (angle != 0)
+					{
+						_matrix.rotateWithTrig(_cosAngle, _sinAngle);
+					}
+					
+					_matrix.translate(_point.x + ox, _point.y + oy);
+					
+					drawItem.addQuad(currFrame, _matrix, borderRed, borderGreen, borderBlue, bAlpha);
+				}
+				
+				for (j in 0...textLength)
+				{
+					dataPos = j * 3;
+					
+					currFrame = font.getCharFrame(Std.int(textDrawData[dataPos]));
+					
+					currTileX = textDrawData[dataPos + 1];
+					currTileY = textDrawData[dataPos + 2];
+					
+					currFrame.prepareMatrix(_matrix);
+					_matrix.translate(currTileX - ox, currTileY - oy);
+					_matrix.scale(sx, sy);
+					if (angle != 0)
+					{
+						_matrix.rotateWithTrig(_cosAngle, _sinAngle);
+					}
+					
+					_matrix.translate(_point.x + ox, _point.y + oy);
+					
+					drawItem.addQuad(currFrame, _matrix, textRed, textGreen, textBlue, tAlpha);
+				}
+				
+				#if !FLX_NO_DEBUG
+				FlxBasic.visibleCount++;
+				#end
 			}
 			
 			#if !FLX_NO_DEBUG
-			FlxBasic.visibleCount++;
+			if (FlxG.debugger.drawDebug)
+			{
+				drawDebug();
+			}
 			#end
 		}
-		
-		#if !FLX_NO_DEBUG
-		if (FlxG.debugger.drawDebug)
-		{
-			drawDebug();
-		}
-		#end
 	}
 	
 	override private function set_color(Color:FlxColor):FlxColor
 	{
 		super.set_color(Color);
-		#if FLX_RENDER_BLIT
-		pendingTextBitmapChange = true;
-		#end
+		if (FlxG.renderBlit)
+		{
+			pendingTextBitmapChange = true;
+		}
 		return color;
 	}
 	
 	override private function set_alpha(value:Float):Float
 	{
 		alpha = value;
-		#if FLX_RENDER_BLIT
-		pendingTextBitmapChange = true;
-		#end
+		if (FlxG.renderBlit)
+		{
+			pendingTextBitmapChange = true;
+		}
 		return value;
 	}
-	#end
 	
 	private function set_textColor(value:FlxColor):FlxColor 
 	{
 		if (textColor != value)
 		{
 			textColor = value;
-			#if FLX_RENDER_BLIT
-			pendingPixelsChange = true;
-			#end
+			if (FlxG.renderBlit)
+			{
+				pendingPixelsChange = true;
+			}
 		}
 		
 		return value;
@@ -476,20 +484,22 @@ class FlxBitmapText extends FlxSprite
 		if (useTextColor != value)
 		{
 			useTextColor = value;
-			#if FLX_RENDER_BLIT
-			pendingPixelsChange = true;
-			#end
+			if (FlxG.renderBlit)
+			{
+				pendingPixelsChange = true;
+			}
 		}
 		
 		return value;
 	}
 	
-	#if FLX_RENDER_TILE
 	override private function calcFrame(RunOnCpp:Bool = false):Void 
 	{
-		drawFrame(RunOnCpp);
+		if (FlxG.renderTile)
+		{
+			drawFrame(RunOnCpp);
+		}
 	}
-	#end
 	
 	private function set_text(value:String):String 
 	{
@@ -1025,9 +1035,10 @@ class FlxBitmapText extends FlxSprite
 	{
 		computeTextSize();
 		
-		#if FLX_RENDER_BLIT
-		useTiles = false;
-		#end
+		if (FlxG.renderBlit)
+		{
+			useTiles = false;
+		}
 		
 		if (!useTiles)
 		{
@@ -1044,12 +1055,10 @@ class FlxBitmapText extends FlxSprite
 			
 			textBitmap.lock();
 		}
-		#if FLX_RENDER_TILE
-		else
+		else if (FlxG.renderTile)
 		{
 			textData.splice(0, textData.length);
 		}
-		#end
 		
 		_fieldWidth = frameWidth;
 		
@@ -1094,9 +1103,10 @@ class FlxBitmapText extends FlxSprite
 	
 	private function drawLine(lineIndex:Int, posX:Int, posY:Int, useTiles:Bool = false):Void
 	{
-		#if FLX_RENDER_BLIT
-		useTiles = false;
-		#end
+		if (FlxG.renderBlit)
+		{
+			useTiles = false;
+		}
 		
 		if (useTiles)
 		{
@@ -1176,7 +1186,8 @@ class FlxBitmapText extends FlxSprite
 	
 	private function tileLine(lineIndex:Int, startX:Int, startY:Int):Void
 	{
-		#if FLX_RENDER_TILE
+		if (!FlxG.renderTile) return;
+		
 		var charFrame:FlxFrame;
 		var pos:Int = textData.length;
 		
@@ -1240,7 +1251,6 @@ class FlxBitmapText extends FlxSprite
 			
 			curX += letterSpacing;
 		}
-		#end
 	}
 	
 	private function updatePixels(useTiles:Bool = false):Void
@@ -1248,44 +1258,47 @@ class FlxBitmapText extends FlxSprite
 		var colorForFill:Int = background ? backgroundColor : FlxColor.TRANSPARENT;
 		var bitmap:BitmapData = null;
 		
-		#if FLX_RENDER_BLIT
-		if (pixels == null || (frameWidth != pixels.width || frameHeight != pixels.height))
+		if (FlxG.renderBlit)
 		{
-			pixels = new BitmapData(frameWidth, frameHeight, true, colorForFill);
-		}
-		else
-		{
-			pixels.fillRect(graphic.bitmap.rect, colorForFill);
-		}
-		
-		bitmap = pixels;
-		#else
-		if (!useTiles)
-		{
-			if (framePixels == null || (frameWidth != framePixels.width || frameHeight != framePixels.height))
+			if (pixels == null || (frameWidth != pixels.width || frameHeight != pixels.height))
 			{
-				framePixels = FlxDestroyUtil.dispose(framePixels);
-				framePixels = new BitmapData(frameWidth, frameHeight, true, colorForFill);
+				pixels = new BitmapData(frameWidth, frameHeight, true, colorForFill);
 			}
 			else
 			{
-				framePixels.fillRect(framePixels.rect, colorForFill);
+				pixels.fillRect(graphic.bitmap.rect, colorForFill);
 			}
 			
-			bitmap = framePixels;
+			bitmap = pixels;
 		}
 		else
 		{
-			textDrawData.splice(0, textDrawData.length);
-			borderDrawData.splice(0, borderDrawData.length);
+			if (!useTiles)
+			{
+				if (framePixels == null || (frameWidth != framePixels.width || frameHeight != framePixels.height))
+				{
+					framePixels = FlxDestroyUtil.dispose(framePixels);
+					framePixels = new BitmapData(frameWidth, frameHeight, true, colorForFill);
+				}
+				else
+				{
+					framePixels.fillRect(framePixels.rect, colorForFill);
+				}
+				
+				bitmap = framePixels;
+			}
+			else
+			{
+				textDrawData.splice(0, textDrawData.length);
+				borderDrawData.splice(0, borderDrawData.length);
+			}
+			
+			width = frameWidth;
+			height = frameHeight;
+			
+			origin.x = frameWidth * 0.5;
+			origin.y = frameHeight * 0.5;
 		}
-		
-		width = frameWidth;
-		height = frameHeight;
-		
-		origin.x = frameWidth * 0.5;
-		origin.y = frameHeight * 0.5;
-		#end
 		
 		if (!useTiles)
 		{
@@ -1379,18 +1392,20 @@ class FlxBitmapText extends FlxSprite
 			bitmap.unlock();
 		}
 		
-		#if FLX_RENDER_BLIT
-		dirty = true;
-		#end
+		if (FlxG.renderBlit)
+		{
+			dirty = true;
+		}
 		
 		pendingPixelsChange = false;
 	}
 	
 	private function drawText(posX:Int, posY:Int, isFront:Bool = true, bitmap:BitmapData = null, useTiles:Bool = false):Void
 	{
-		#if FLX_RENDER_BLIT
-		useTiles = false;
-		#end
+		if (FlxG.renderBlit)
+		{
+			useTiles = false;
+		}
 		
 		if (useTiles)
 		{
@@ -1437,7 +1452,8 @@ class FlxBitmapText extends FlxSprite
 	
 	private function tileText(posX:Int, posY:Int, isFront:Bool = true):Void
 	{
-		#if FLX_RENDER_TILE
+		if (!FlxG.renderTile) return;
+		
 		var data:Array<Float> = isFront ? textDrawData : borderDrawData;
 		
 		var pos:Int = data.length;
@@ -1451,7 +1467,6 @@ class FlxBitmapText extends FlxSprite
 			data[pos++] = textData[textPos + 1] + posX;
 			data[pos++] = textData[textPos + 2] + posY;
 		}
-		#end
 	}
 	
 	/**
@@ -1627,9 +1642,10 @@ class FlxBitmapText extends FlxSprite
 		if (background != value)
 		{
 			background = value;
-			#if FLX_RENDER_BLIT
-			pendingPixelsChange = true;
-			#end
+			if (FlxG.renderBlit)
+			{
+				pendingPixelsChange = true;
+			}
 		}
 		
 		return value;
@@ -1640,9 +1656,10 @@ class FlxBitmapText extends FlxSprite
 		if (backgroundColor != value)
 		{
 			backgroundColor = value;
-			#if FLX_RENDER_BLIT
-			pendingPixelsChange = true;
-			#end
+			if (FlxG.renderBlit)
+			{
+				pendingPixelsChange = true;
+			}
 		}
 		
 		return value;
@@ -1664,9 +1681,10 @@ class FlxBitmapText extends FlxSprite
 		if (borderColor != value)
 		{
 			borderColor = value;
-			#if FLX_RENDER_BLIT
-			pendingPixelsChange = true;
-			#end
+			if (FlxG.renderBlit)
+			{
+				pendingPixelsChange = true;
+			}
 		}
 		
 		return value;

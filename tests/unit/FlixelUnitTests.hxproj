@@ -44,7 +44,9 @@
     <hidden path="obj" />
   </hiddenPaths>
   <!-- Executed before build -->
-  <preBuildCommand>haxelib run munit test</preBuildCommand>
+  <preBuildCommand>haxelib run openfl build flash
+haxelib run openfl build html5
+haxelib run munit test</preBuildCommand>
   <!-- Executed after build -->
   <postBuildCommand alwaysRun="False" />
   <!-- Other project options -->

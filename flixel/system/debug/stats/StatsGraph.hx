@@ -1,4 +1,4 @@
-package flixel.system.debug;
+package flixel.system.debug.stats;
 
 import flash.display.Graphics;
 import flash.display.Shape;
@@ -73,7 +73,7 @@ class StatsGraph extends Sprite
 	}
 	
 	/**
-	 * Redraws the axis of the graph.
+	 * Redraws the axes of the graph.
 	 */
 	private function drawAxis():Void
 	{
@@ -132,7 +132,7 @@ class StatsGraph extends Sprite
 		if (Average == null)
 			Average = average();
 		
-		avgLabel.text = _label +"\nAvg: " + FlxMath.roundDecimal(Average, Stats.DECIMALS) + " " + _unit;
+		avgLabel.text = _label + "\nAvg: " + FlxMath.roundDecimal(Average, Stats.DECIMALS) + " " + _unit;
 		
 		drawGraph();
 	}
@@ -140,10 +140,9 @@ class StatsGraph extends Sprite
 	public function average():Float
 	{
 		var sum:Float = 0;
-		for (value in history) {
+		for (value in history)
 			sum += value;
-		}
-		return (sum / history.length);
+		return sum / history.length;
 	}
 	
 	public function destroy():Void

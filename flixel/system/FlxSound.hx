@@ -79,7 +79,7 @@ class FlxSound extends FlxBasic
 	 * Set volume to a value between 0 and 1 to change how this sound is.
 	 */
 	public var volume(get, set):Float;
-	#if ((cpp || neko) && openfl_legacy)
+	#if (sys && openfl_legacy)
 	/**
 	 * Set pitch, which also alters the playback speed. Default is 1.
 	 */
@@ -114,7 +114,7 @@ class FlxSound extends FlxBasic
 	 * Internal tracker for volume.
 	 */
 	private var _volume:Float;
-	#if ((cpp || neko) && openfl_legacy)
+	#if (sys && openfl_legacy)
 	/**
 	 * Internal tracker for pitch.
 	 */
@@ -227,23 +227,12 @@ class FlxSound extends FlxBasic
 		if (_target != null)
 		{
 			radialMultiplier = FlxMath.getDistance(FlxPoint.weak(_target.x, _target.y), FlxPoint.weak(x, y)) / _radius;
-			if (radialMultiplier < 0) radialMultiplier = 0;
-			if (radialMultiplier > 1) radialMultiplier = 1;
-			
-			radialMultiplier = 1 - radialMultiplier;
+			radialMultiplier = 1 - FlxMath.bound(radialMultiplier, 0, 1);
 			
 			if (_proximityPan)
 			{
 				var d:Float = (x - _target.x) / _radius;
-				if (d < -1) 
-				{
-					d = -1;
-				}
-				else if (d > 1) 
-				{
-					d = 1;
-				}
-				_transform.pan = d;
+				_transform.pan = FlxMath.bound(d, -1, 1);
 			}
 		}
 		
@@ -351,9 +340,6 @@ class FlxSound extends FlxBasic
 	{
 		cleanup(true);
 		
-		#if js
-		onComplete();
-		#else
 		_sound = new Sound();
 		_sound.addEventListener(Event.ID3, gotID3);
 		_sound.loadCompressedDataFromByteArray(Bytes, Bytes.length);
@@ -362,8 +348,7 @@ class FlxSound extends FlxBasic
 		updateTransform();
 		exists = true;
 		onComplete = OnComplete;
-		#end
-		return this;	
+		return this;
 	}
 	#end
 	
@@ -421,7 +406,7 @@ class FlxSound extends FlxBasic
 	}
 	
 	/**
-	 * Unpause a sound.  Only works on sounds that have been paused.
+	 * Unpause a sound. Only works on sounds that have been paused.
 	 */
 	public function resume():FlxSound
 	{
@@ -545,7 +530,7 @@ class FlxSound extends FlxBasic
 		_channel = _sound.play(time, numLoops, _transform);
 		if (_channel != null)
 		{
-			#if ((cpp || neko) && openfl_legacy)
+			#if (sys && openfl_legacy)
 			pitch = _pitch;
 			#end
 			_channel.addEventListener(Event.SOUND_COMPLETE, stopped);
@@ -560,10 +545,8 @@ class FlxSound extends FlxBasic
 	
 	/**
 	 * An internal helper function used to help Flash clean up finished sounds or restart looped sounds.
-	 * 
-	 * @param	event		An Event object.
 	 */
-	private function stopped(event:Event = null):Void
+	private function stopped(_):Void
 	{
 		if (onComplete != null)
 		{
@@ -658,8 +641,7 @@ class FlxSound extends FlxBasic
 		return Volume;
 	}
 	
-	
-	#if ((cpp || neko) && openfl_legacy)
+	#if (sys && openfl_legacy)
 	private inline function get_pitch():Float
 	{
 		return _pitch;

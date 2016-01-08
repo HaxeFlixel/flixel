@@ -7,6 +7,7 @@ import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxTilemapGraphicAsset;
 import flixel.util.FlxArrayUtil;
 import openfl.Assets;
+using StringTools;
 
 class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 {
@@ -179,68 +180,48 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		
 		var regex:EReg = new EReg("[ \t]*((\r\n)|\r|\n)[ \t]*", "g");
 		var lines:Array<String> = regex.split(MapData);
-		var rows:Array<String> = [];
-		for (s in lines) 
-		{
-			if (s != "") rows.push(s);
-		}
+		var rows:Array<String> = lines.filter(function(line) return line != "");
 		
 		heightInTiles = rows.length;
 		widthInTiles = 0;
-		var row:Int = 0;
-		var column:Int;
 		
+		var row:Int = 0;
 		while (row < heightInTiles)
 		{
-			columns = rows[row++].split(",");
+			var rowString = rows[row];
+			if (rowString.endsWith(","))
+				rowString = rowString.substr(0, rowString.length - 1);
+			columns = rowString.split(",");
 			
-			if (columns.length < 1)
+			if (columns.length == 0)
 			{
-				heightInTiles = heightInTiles - 1;
+				heightInTiles--;
 				continue;
 			}
 			if (widthInTiles == 0)
 			{
 				widthInTiles = columns.length;
 			}
-			column = 0;
 			
+			var column = 0;
 			while (column < widthInTiles)
 			{
 				//the current tile to be added:
-				var curTile:Int = Std.parseInt(columns[column]);
+				var columnString = columns[column];
+				var curTile = Std.parseInt(columnString);
 				
+				if (curTile == null)
+					throw 'String in row $row, column $column is not a valid integer: "$columnString"';
+				
+				// anything < 0 should be treated as 0 for compatibility with certain map formats (ogmo)
 				if (curTile < 0)
-				{
-					// anything < 0 should be treated as 0 for compatibility with certain map formats (ogmo)
 					curTile = 0;
-				}
 				
-				//if neko, make sure the value was not null, and if it is null,
-				//make sure it is the last in the row (used to ignore commas)
-				#if neko
-				if (curTile != null)
-				{
-					_data.push(curTile);	
-					column++;
-				}
-				else if (column == columns.length - 1)
-				{
-					//if value was a comma, decrease the width by one
-					widthInTiles--;
-				}
-				else
-				{
-					//if a non-int value was passed not at the end, warn the user
-					throw "Value passed wan NaN";
-				}
-				#else
-				//if not neko, dont worry about the comma
-				_data.push(curTile);	
+				_data.push(curTile);
 				column++;
-				#end
-				
 			}
+			
+			row++;
 		}
 		
 		loadMapHelper(TileGraphic, TileWidth, TileHeight, AutoTile, StartingIndex, DrawIndex, CollideIndex);

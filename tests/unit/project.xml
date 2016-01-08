@@ -3,6 +3,7 @@
 	<meta title="FlixelUnitTests" version="1.0.0" />
 	<app file="TestMain" main="TestMain" />
 	
+	<set name="SWF_VERSION" value="11.8" />
 	<source path="src" />
 	
 	<set name="no-custom-backend" />

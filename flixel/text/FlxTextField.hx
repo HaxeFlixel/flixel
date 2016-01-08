@@ -92,14 +92,14 @@ class FlxTextField extends FlxText
 	{
 		alpha = FlxMath.bound(Alpha, 0, 1);
 		textField.alpha = alpha;
-		
 		return Alpha;
 	}
 	
 	override private function set_height(Height:Float):Float
 	{
 		Height = super.set_height(Height);
-		if (textField != null)	textField.height = Height;
+		if (textField != null)
+			textField.height = Height;
 		return Height;
 	}
 	
@@ -126,18 +126,21 @@ class FlxTextField extends FlxText
 	 */
 	override public function draw():Void
 	{
-		if (_camera == null)	
+		if (_camera == null)
 		{
 			return;
 		}
 		
 		if (!_addedToDisplay)
 		{
-			#if FLX_RENDER_TILE
-			_camera.canvas.addChild(textField);
-			#else
-			_camera.flashSprite.addChild(textField);
-			#end
+			if (FlxG.renderTile)
+			{
+				_camera.canvas.addChild(textField);
+			}
+			else 
+			{
+				_camera.flashSprite.addChild(textField);
+			}
 			
 			_addedToDisplay = true;
 			updateDefaultFormat();
@@ -152,16 +155,19 @@ class FlxTextField extends FlxText
 			textField.visible = true;
 		}
 		
-		_point.x = x - (_camera.scroll.x * scrollFactor.x) - (offset.x);
-		_point.y = y - (_camera.scroll.y * scrollFactor.y) - (offset.y);
+		_point.x = x - (_camera.scroll.x * scrollFactor.x) - offset.x;
+		_point.y = y - (_camera.scroll.y * scrollFactor.y) - offset.y;
 		
-		#if FLX_RENDER_TILE
-		textField.x = _point.x;
-		textField.y = _point.y;
-		#else
-		textField.x = (_point.x - 0.5 * _camera.width);
-		textField.y = (_point.y - 0.5 * _camera.height);
-		#end
+		if (FlxG.renderTile)
+		{
+			textField.x = _point.x;
+			textField.y = _point.y;
+		}
+		else
+		{
+			textField.x = (_point.x - 0.5 * _camera.width);
+			textField.y = (_point.y - 0.5 * _camera.height);
+		}
 		
 		#if !FLX_NO_DEBUG
 		FlxBasic.visibleCount++;
@@ -176,29 +182,31 @@ class FlxTextField extends FlxText
 	override private function set_camera(Value:FlxCamera):FlxCamera 
 	{
 		if (_camera != Value)
+			return Value;
+		
+		if (Value != null)
 		{
-			if (Value != null)
+			if (FlxG.renderTile)
 			{
-				#if FLX_RENDER_TILE
 				Value.canvas.addChild(textField);
-				#else
-				Value.flashSprite.addChild(textField);
-				#end
-				
-				_addedToDisplay = true;
 			}
 			else
 			{
-				if (_camera != null)
-				{
-					textField.parent.removeChild(textField);
-				}
-				
-				_addedToDisplay = false;
+				Value.flashSprite.addChild(textField);
 			}
 			
-			_camera = Value;
+			_addedToDisplay = true;
 		}
-		return Value;
+		else
+		{
+			if (_camera != null)
+			{
+				textField.parent.removeChild(textField);
+			}
+			
+			_addedToDisplay = false;
+		}	
+		
+		return _camera = Value;
 	}
 }

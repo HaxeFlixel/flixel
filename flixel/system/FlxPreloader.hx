@@ -13,9 +13,6 @@ import flash.text.TextFormat;
 import flixel.FlxG;
 import flixel.system.FlxBasePreloader;
 
-@:font("assets/fonts/nokiafc22.ttf")
-class PreloaderFont extends Font {}
-
 @:bitmap("assets/images/preloader/light.png")
 private class GraphicLogoLight extends BitmapData {}
 
@@ -29,7 +26,7 @@ private class GraphicLogoCorners extends BitmapData {}
  */
 class FlxPreloader extends FlxBasePreloader
 {
-	#if (!js && (openfl < "3.0.0-alpha"))
+	#if !js
 	
 	private static var BlendModeScreen = BlendMode.SCREEN;
 	private static var BlendModeOverlay = BlendMode.OVERLAY;
@@ -75,7 +72,6 @@ class FlxPreloader extends FlxBasePreloader
 		_bmpBar.y = _height - 11;
 		_buffer.addChild(_bmpBar);
 		
-		Font.registerFont(PreloaderFont);
 		_text = new TextField();
 		_text.defaultTextFormat = new TextFormat("Nokia Cellphone FC Small", 8, 0x5f6aff);
 		_text.embedFonts = true;

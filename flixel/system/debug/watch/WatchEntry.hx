@@ -1,4 +1,4 @@
-package flixel.system.debug;
+package flixel.system.debug.watch;
 
 import flash.events.KeyboardEvent;
 import flash.events.MouseEvent;
@@ -10,6 +10,8 @@ import flixel.math.FlxPoint;
 import flixel.system.FlxAssets;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import flixel.util.FlxStringUtil;
+import openfl.events.FocusEvent;
+import openfl.ui.Keyboard;
 
 /**
  * Helper class for the debugger overlay's Watch window.
@@ -99,8 +101,9 @@ class WatchEntry implements IFlxDestroyable
 		valueDisplay.doubleClickEnabled = true;
 		if (!_isQuickWatch) // No editing for quickWatch
 		{
-			valueDisplay.addEventListener(KeyboardEvent.KEY_UP,onKeyUp);
-			valueDisplay.addEventListener(MouseEvent.MOUSE_UP,onMouseUp);
+			valueDisplay.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
+			valueDisplay.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+			valueDisplay.addEventListener(FocusEvent.FOCUS_OUT, onFocusLost);
 		}
 		valueDisplay.background = false;
 		valueDisplay.backgroundColor = 0xffffff;
@@ -120,7 +123,8 @@ class WatchEntry implements IFlxDestroyable
 		if (valueDisplay != null)
 		{
 			valueDisplay.removeEventListener(MouseEvent.MOUSE_UP,onMouseUp);
-			valueDisplay.removeEventListener(KeyboardEvent.KEY_UP,onKeyUp);
+			valueDisplay.removeEventListener(KeyboardEvent.KEY_UP, onKeyUp);
+			valueDisplay.removeEventListener(FocusEvent.FOCUS_OUT, onFocusLost);
 			valueDisplay = null;
 		}
 	}
@@ -158,24 +162,20 @@ class WatchEntry implements IFlxDestroyable
 	/**
 	 * Update the variable value on display with the current in-game value.
 	 */
-	public function updateValue():Bool
+	public function updateValue():Void
 	{
-		if (editing || _isQuickWatch) 
-		{
-			return false;
-		}
+		if (editing || _isQuickWatch)
+			return;
 		
 		var property:Dynamic = Reflect.getProperty(object, field);
 		valueDisplay.text = Std.string(property);
-		
-		return true;
 	}
 	#end
 	
 	/**
 	 * A watch entry was clicked, so flip into edit mode for that entry.
 	 */
-	public function onMouseUp(_):Void
+	private function onMouseUp(_):Void
 	{
 		editing = true;
 		#if !FLX_NO_KEYBOARD
@@ -187,66 +187,42 @@ class WatchEntry implements IFlxDestroyable
 		valueDisplay.background = true;
 	}
 	
-	/**
-	 * Check to see if Enter, Tab or Escape were just released.
-	 * Enter or Tab submit the change, and Escape cancels it.
-	 */
-	public function onKeyUp(e:KeyboardEvent):Void
+	private function onKeyUp(e:KeyboardEvent):Void
 	{
-		if ((e.keyCode == 13) || (e.keyCode == 9) || (e.keyCode == 27)) //enter or tab or escape
-		{
-			if (e.keyCode == 27)
-			{
-				cancel();
-			}
-			else
-			{
-				submit();
-			}
-		}
+		if (e.keyCode == Keyboard.ENTER)
+			submit();
+		else if (e.keyCode == Keyboard.ESCAPE)
+			cancel();
+	}
+	
+	private function onFocusLost(_)
+	{
+		cancel();
 	}
 	
 	/**
 	 * Cancel the current edits and stop editing.
 	 */
-	public function cancel():Void
+	private function cancel():Void
 	{
-		valueDisplay.text = oldValue.toString();
+		valueDisplay.text = Std.string(oldValue);
 		doneEditing();
 	}
 	
 	/**
 	 * Submit the current edits and stop editing.
 	 */
-	public function submit():Void
+	private function submit():Void
 	{
-		var property:Dynamic = Reflect.getProperty(object, field);
-		
-		// Workaround to be able to edit FlxPoints
-		if (Std.is(property, FlxPoint)) {
-			var xString:String = valueDisplay.text.split(" |")[0];
-			xString = xString.substring(3, xString.length);
-			var xValue:Float = Std.parseFloat(xString);
-			
-			var yString:String = valueDisplay.text.split("| ")[1];
-			yString = yString.substring(3, yString.length);
-			var yValue:Float = Std.parseFloat(yString);
-			
-			if (!Math.isNaN(xValue)) 
-			{
-				Reflect.setField(property, "x", xValue);
-			}
-			if (!Math.isNaN(yValue)) 
-			{
-				Reflect.setField(property, "y", yValue);
-			}
-		}
-		else
+		try
 		{
-			Reflect.setProperty(object, field, valueDisplay.text); 
+			Reflect.setProperty(object, field, valueDisplay.text);
+			doneEditing();
 		}
-		
-		doneEditing();
+		catch (e:Dynamic)
+		{
+			cancel();
+		}
 	}
 	
 	public function toString():String

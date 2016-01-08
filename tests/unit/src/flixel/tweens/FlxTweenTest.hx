@@ -6,8 +6,7 @@ import massive.munit.Assert;
 
 class FlxTweenTest extends FlxTest
 {
-	// needs to be referenced somewhere otherwise dce removes it
-	var value:Int = 0;
+	var value:Int;
 	
 	@Before
 	function before()

@@ -1,5 +1,6 @@
 package flixel;
 
+import flash.display.BitmapData;
 import flixel.FlxObject;
 import flixel.graphics.FlxGraphic;
 import flixel.math.FlxPoint;
@@ -80,7 +81,7 @@ class FlxObjectTest extends FlxTest
 	{
 		var object1 = new FlxObject(8, 4, 8, 12);
 		var level = new FlxTilemap();
-		level.loadMapFromCSV("0,0,1\n0,0,1\n1,1,1", FlxGraphic.fromClass(GraphicAuto));
+		level.loadMapFromCSV("0,0,1\n0,0,1\n1,1,1", new BitmapData(16, 8));
 
 		FlxG.state.add(object1);
 		FlxG.state.add(level);
@@ -150,13 +151,11 @@ class FlxObjectTest extends FlxTest
 	
 	function velocityColldingWith(ground:FlxObject)
 	{
-		FlxG.switchState(new CollisionState());
+		switchState(new CollisionState());
 		
 		ground.setPosition(0, 10);
 		object1.setSize(10, 10);
 		object1.x = 50;
-		
-		step();
 		
 		FlxG.state.add(object1);
 		FlxG.state.add(ground);
