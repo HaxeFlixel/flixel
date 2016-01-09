@@ -359,7 +359,7 @@ class FlxCamera extends FlxBasic
 	
 	#if !FLX_RENDER_TRIANGLE
 	@:noCompletion
-	public function startQuadBatch(graphic:FlxGraphic, colored:Bool, blend:BlendMode = null, smooth:Bool = false):FlxDrawTilesItem
+	public function startQuadBatch(graphic:FlxGraphic, colored:Bool, ?blend:BlendMode, smooth:Bool = false):FlxDrawTilesItem
 	{
 		var itemToReturn:FlxDrawTilesItem = null;
 		var blendInt:Int = FlxDrawBaseItem.blendToInt(blend);
@@ -518,7 +518,8 @@ class FlxCamera extends FlxBasic
 		}
 	}
 	
-	public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix, cr:Float = 1.0, cg:Float = 1.0, cb:Float = 1.0, ca:Float = 1.0, blend:BlendMode = null, smoothing:Bool = false):Void
+	public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix, cr:Float = 1.0,
+		cg:Float = 1.0, cb:Float = 1.0, ca:Float = 1.0, ?blend:BlendMode, smoothing:Bool = false):Void
 	{
 		if (FlxG.renderBlit)
 		{
@@ -536,7 +537,8 @@ class FlxCamera extends FlxBasic
 		}
 	}
 	
-	public function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle, destPoint:Point, cr:Float = 1.0, cg:Float = 1.0, cb:Float = 1.0, ca:Float = 1.0, blend:BlendMode = null, smoothing:Bool = false):Void
+	public function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle, destPoint:Point,
+		cr:Float = 1.0, cg:Float = 1.0, cb:Float = 1.0, ca:Float = 1.0, ?blend:BlendMode, smoothing:Bool = false):Void
 	{
 		if (FlxG.renderBlit)
 		{
@@ -563,7 +565,9 @@ class FlxCamera extends FlxBasic
 		}
 	}
 	
-	public function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, colors:DrawData<Int> = null, position:FlxPoint = null, blend:BlendMode = null, smoothing:Bool = false):Void
+	public function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>,
+		uvtData:DrawData<Float>, ?colors:DrawData<Int>, ?position:FlxPoint, ?blend:BlendMode,
+		repeat:Bool = false, smoothing:Bool = false):Void
 	{
 		if (FlxG.renderBlit)
 		{
@@ -611,7 +615,7 @@ class FlxCamera extends FlxBasic
 			else
 			{
 				trianglesSprite.graphics.clear();
-				trianglesSprite.graphics.beginBitmapFill(graphic.bitmap, null, false, smoothing);
+				trianglesSprite.graphics.beginBitmapFill(graphic.bitmap, null, repeat, smoothing);
 				trianglesSprite.graphics.drawTriangles(drawVertices, indices, uvtData);
 				trianglesSprite.graphics.endFill();
 				buffer.draw(trianglesSprite);
