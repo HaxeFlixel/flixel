@@ -390,8 +390,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	private function update():Void
 	{
 		#if !FLX_UNIT_TEST // Travis segfaults when game.mouseX / Y is accessed
-		_globalScreenX = Math.floor(FlxG.game.mouseX / FlxG.scaleMode.scale.x);
-		_globalScreenY = Math.floor(FlxG.game.mouseY / FlxG.scaleMode.scale.y);
+		setGlobalScreenPositionUnsafe(FlxG.game.mouseX, FlxG.game.mouseY); 
 		
 		//actually position the flixel mouse cursor graphic
 		if (visible)
@@ -400,8 +399,6 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 			cursorContainer.y = FlxG.game.mouseY;
 		}
 		#end
-		
-		updatePositions();
 		
 		// Update the buttons
 		_leftButton.update();

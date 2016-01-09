@@ -95,13 +95,10 @@ class FlxTouch extends FlxPointer implements IFlxDestroyable implements IFlxInpu
 	 */
 	private function setXY(X:Int, Y:Int):Void
 	{
-		flashPoint.x = X;
-		flashPoint.y = Y;
+		flashPoint.setTo(X, Y);
 		flashPoint = FlxG.game.globalToLocal(flashPoint);
 		
-		_globalScreenX = Std.int(flashPoint.x);
-		_globalScreenY = Std.int(flashPoint.y);
-		updatePositions();
+		setGlobalScreenPositionUnsafe(flashPoint.x, flashPoint.y);
 	}
 	
 	private inline function get_touchPointID():Int
