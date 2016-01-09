@@ -384,18 +384,6 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 		
 		for (camera in cameras)
 		{
-			#if !FLX_NO_MOUSE
-				for (buttonID in mouseButtons)
-				{
-					var button = FlxMouseButton.getFromID(buttonID);
-					
-					if (button != null && checkInput(FlxG.mouse, button, button.justPressedPosition, camera))
-					{
-						overlapFound = true;
-					}
-				}
-			#end
-			
 			#if !FLX_NO_TOUCH
 				for (touch in FlxG.touches.list)
 				{
@@ -403,6 +391,16 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 					{
 						overlapFound = true;
 						break;
+					}
+				}
+			#elseif !FLX_NO_MOUSE
+				for (buttonID in mouseButtons)
+				{
+					var button = FlxMouseButton.getFromID(buttonID);
+					
+					if (button != null && checkInput(FlxG.mouse, button, button.justPressedPosition, camera))
+					{
+						overlapFound = true;
 					}
 				}
 			#end
