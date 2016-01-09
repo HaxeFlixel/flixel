@@ -687,12 +687,14 @@ class FlxSprite extends FlxObject
 	 */
 	public function stamp(Brush:FlxSprite, X:Int = 0, Y:Int = 0):Void
 	{
+		Brush.drawFrame();
+		
 		if (this.graphic == null || Brush.graphic == null)
 		{
 			throw "Cannot stamp to or from a FlxSprite with no graphics.";
 		}
 		
-		var bitmapData:BitmapData = Brush.getFlxFrameBitmapData();
+		var bitmapData:BitmapData = Brush.framePixels;
 		
 		if (isSimpleRenderBlit()) // simple render
 		{

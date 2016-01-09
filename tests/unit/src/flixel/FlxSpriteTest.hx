@@ -4,6 +4,7 @@ import flash.display.BitmapData;
 import flixel.animation.FlxAnimation;
 import flixel.FlxSprite;
 import flixel.graphics.atlas.FlxAtlas;
+import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import massive.munit.Assert;
 
@@ -212,5 +213,14 @@ class FlxSpriteTest extends FlxTest
 		Assert.isNotNull(sprite.pixels);
 		Assert.areEqual(10, sprite.pixels.width);
 		Assert.areEqual(20, sprite.pixels.height);
+	}
+	
+	@Test // #1678
+	function testStampTextCrash()
+	{
+		var text = new FlxText(0, 0, 50, 'Text');
+        var sprite = new FlxSprite();
+        sprite.makeGraphic(100, 100, 0, true);
+        sprite.stamp(text);
 	}
 }
