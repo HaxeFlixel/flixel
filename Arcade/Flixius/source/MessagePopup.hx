@@ -101,7 +101,7 @@ class MessagePopup extends FlxSubState
 		}
 		else
 		{
-			_glitchTimer -= FlxG.elapsed * 20;
+			_glitchTimer -= elapsed * 20;
 		}
 		
 		if (_talkTimer <= 0)
@@ -111,7 +111,7 @@ class MessagePopup extends FlxSubState
 		}
 		else
 		{
-			_talkTimer -= FlxG.elapsed * 20;
+			_talkTimer -= elapsed * 20;
 		}
 		if (!_fadingIn && !_fadingOut)
 		{
@@ -124,7 +124,7 @@ class MessagePopup extends FlxSubState
 				}},updateAlpha);
 			}
 			#end
-			#if android
+			#if !FLX_NO_TOUCH
 			var t:FlxTouch = FlxG.touches.getFirst();
 			if (t != null)
 			{

@@ -34,14 +34,14 @@ class EnemySpinner extends FlxSprite
 					exists = false;
 				}
 				else
-					_dying -= FlxG.elapsed * 4;
+					_dying -= elapsed * 4;
 			}
 			else
 			{
 				if (isOnScreen())
 				{	
 					
-					_shootTimer -= FlxG.elapsed*6;
+					_shootTimer -= elapsed * 6;
 					if (_shootTimer < 0)
 					{
 						_shootTimer = 8;

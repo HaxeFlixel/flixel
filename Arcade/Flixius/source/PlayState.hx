@@ -282,7 +282,7 @@ class PlayState extends FlxState
 					_chaser.y = _sprPlayer.y + (_sprPlayer.height / 2) - 1;
 					
 					if (_shootDelay > 0)
-						_shootDelay -= FlxG.elapsed * 6;
+						_shootDelay -= elapsed * 6;
 				}
 				else
 				{

@@ -31,7 +31,7 @@ class Enemy extends FlxSprite
 					exists = false;
 				}
 				else
-					_dying -= FlxG.elapsed * 4;
+					_dying -= elapsed * 4;
 			}
 			else
 			{
@@ -39,7 +39,7 @@ class Enemy extends FlxSprite
 				{	
 					velocity.x = -20;
 					velocity.y = Math.sin(x / 10) * 20;
-					_shootTimer -= FlxG.elapsed*4;
+					_shootTimer -= elapsed * 4;
 					if (_shootTimer < 4 && _shootTimer > 3)
 					{
 						_shootTimer = 3;

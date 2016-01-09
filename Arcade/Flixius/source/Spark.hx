@@ -35,7 +35,7 @@ class Spark extends FlxSprite
 		if (alive)
 		{
 			if (_life > 0)
-				_life-= FlxG.elapsed * 10;
+				_life-= elapsed * 10;
 			else
 				kill();
 		}

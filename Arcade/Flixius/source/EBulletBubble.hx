@@ -28,7 +28,7 @@ class EBulletBubble extends FlxSprite
 		if (!isOnScreen())
 			kill();
 		else if (_aliveTimer >= 0)
-			_aliveTimer -= FlxG.elapsed;
+			_aliveTimer -= elapsed;
 		else
 			kill();
 	}

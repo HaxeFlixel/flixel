@@ -1,4 +1,4 @@
-package ;
+package;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -6,7 +6,6 @@ import flixel.system.FlxAssets.FlxGraphicAsset;
 
 class EnemyPod extends FlxSprite
 {
-	
 	private var _parent:PlayState;
 	private var _dying:Float = 2;
 	
@@ -17,8 +16,6 @@ class EnemyPod extends FlxSprite
 		animation.add("pod", [0, 1, 2], 12, true);
 		animation.play("pod");
 		_dying = 2;
-		
-		
 	}
 	
 	override public function update(elapsed:Float):Void 
@@ -37,14 +34,11 @@ class EnemyPod extends FlxSprite
 					exists = false;
 				}
 				else
-					_dying -= FlxG.elapsed * 4;
+					_dying -= elapsed * 4;
 			}
-			else
+			else if (isOnScreen())
 			{
-				if (isOnScreen())
-				{	
-					velocity.x = -40;	
-				}
+				velocity.x = -40;	
 			}
 		}
 	}
@@ -53,6 +47,5 @@ class EnemyPod extends FlxSprite
 	{
 		_dying = 1;
 		velocity.set( -20, 40);
-		
 	}
 }

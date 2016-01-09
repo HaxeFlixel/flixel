@@ -39,7 +39,7 @@ class Player extends FlxSprite
 		{
 			if (_dyingTimer > 0)
 			{
-				_dyingTimer -= FlxG.elapsed*2;
+				_dyingTimer -= elapsed * 2;
 				alpha = _dyingTimer;
 			}
 			else

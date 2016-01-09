@@ -50,7 +50,7 @@ class Explosion extends FlxSprite
 				animation.play("explode");
 			}
 			else
-				_delay -= FlxG.elapsed * 6;
+				_delay -= elapsed * 6;
 		}
 		else if (alive && visible)
 		{
