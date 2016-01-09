@@ -83,7 +83,7 @@ class Enemy extends FlxSprite
 			_idleTmr = FlxG.random.int(1, 4);			
 		}
 		else
-			_idleTmr -= elapsed;
+			_idleTmr -= FlxG.elapsed;
 		
 	}
 	
