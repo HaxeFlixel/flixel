@@ -563,7 +563,8 @@ class FlxCamera extends FlxBasic
 		}
 	}
 	
-	public function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, colors:DrawData<Int> = null, position:FlxPoint = null, blend:BlendMode = null, smoothing:Bool = false):Void
+
+	public function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, colors:DrawData<Int> = null, position:FlxPoint = null, blend:BlendMode = null, repeat:Bool = false, smoothing:Bool = false):Void
 	{
 		if (FlxG.renderBlit)
 		{
@@ -611,7 +612,7 @@ class FlxCamera extends FlxBasic
 			else
 			{
 				trianglesSprite.graphics.clear();
-				trianglesSprite.graphics.beginBitmapFill(graphic.bitmap, null, false, smoothing);
+				trianglesSprite.graphics.beginBitmapFill(graphic.bitmap, null, repeat, smoothing);
 				trianglesSprite.graphics.drawTriangles(drawVertices, indices, uvtData);
 				trianglesSprite.graphics.endFill();
 				buffer.draw(trianglesSprite);
