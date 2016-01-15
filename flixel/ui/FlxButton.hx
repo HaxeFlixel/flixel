@@ -380,39 +380,15 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	private function updateButton():Void
 	{
 		// We're looking for any touch / mouse overlaps with this button
-		var overlapFound = false;
-		
-		for (camera in cameras)
-		{
-			#if !FLX_NO_MOUSE
-				for (buttonID in mouseButtons)
-				{
-					var button = FlxMouseButton.getFromID(buttonID);
-					
-					if (button != null && checkInput(FlxG.mouse, button, button.justPressedPosition, camera))
-					{
-						overlapFound = true;
-					}
-				}
-			#end
-			
-			#if !FLX_NO_TOUCH
-				for (touch in FlxG.touches.list)
-				{
-					if (checkInput(touch, touch, touch.justPressedPosition, camera))
-					{
-						overlapFound = true;
-						break;
-					}
-				}
-			#end
-		}
+		var overlapFound = checkMouseOverlap();
+		if (!overlapFound)
+			overlapFound = checkTouchOverlap();
 		
 		#if !FLX_NO_TOUCH // there's only a mouse event listener for onUp
-			if (currentInput != null && currentInput.justReleased && Std.is(currentInput, FlxTouch) && overlapFound)
-			{
-				onUpHandler();
-			}
+		if (currentInput != null && currentInput.justReleased && Std.is(currentInput, FlxTouch) && overlapFound)
+		{
+			onUpHandler();
+		}
 		#end
 		
 		if (status != FlxButton.NORMAL &&
@@ -420,6 +396,43 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 		{
 			onOutHandler();
 		}
+	}
+	
+	private function checkMouseOverlap():Bool
+	{
+		#if !FLX_NO_MOUSE
+		for (camera in cameras)
+		{
+			for (buttonID in mouseButtons)
+			{
+				var button = FlxMouseButton.getFromID(buttonID);
+				if (button != null && checkInput(FlxG.mouse, button, button.justPressedPosition, camera))
+				{
+					return true;
+				}
+			}
+		}
+		#end
+		
+		return false;
+	}
+	
+	private function checkTouchOverlap():Bool
+	{
+		#if !FLX_NO_TOUCH
+		for (camera in cameras)
+		{
+			for (touch in FlxG.touches.list)
+			{
+				if (checkInput(touch, touch, touch.justPressedPosition, camera))
+				{
+					return true;
+				}
+			}
+		}
+		#end
+		
+		return false;
 	}
 	
 	private function checkInput(pointer:FlxPointer, input:IFlxInput, justPressedPosition:FlxPoint, camera:FlxCamera):Bool
