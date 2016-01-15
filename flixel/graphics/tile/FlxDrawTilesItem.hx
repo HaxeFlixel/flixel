@@ -99,5 +99,4 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 	{
 		return 2 * numTiles;
 	}
-	
 }

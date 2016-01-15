@@ -116,10 +116,12 @@ class FlxPointer
 	 * Directly set the underyling screen position variable. WARNING! You should never use
 	 * this unless you are trying to manually dispatch low-level mouse / touch events to the stage.
 	 */
-	public inline function setGlobalScreenPositionUnsafe(X:Int, Y:Int):Void 
+	public inline function setGlobalScreenPositionUnsafe(newX:Float, newY:Float):Void 
 	{
-		_globalScreenX = X;
-		_globalScreenY = Y;
+		_globalScreenX = Std.int(newX / FlxG.scaleMode.scale.x);
+		_globalScreenY = Std.int(newY / FlxG.scaleMode.scale.y);
+		
+		updatePositions();
 	}
 	
 	public function toString():String

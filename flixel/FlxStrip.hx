@@ -32,6 +32,8 @@ class FlxStrip extends FlxSprite
 	
 	public var colors:DrawData<Int>;
 	
+	public var repeat:Bool = false;
+	
 	public function new(X:Float = 0, Y:Float = 0, ?SimpleGraphic:FlxGraphicAsset)
 	{
 		super(X, Y, SimpleGraphic);
@@ -67,7 +69,7 @@ class FlxStrip extends FlxSprite
 			}
 			
 			getScreenPosition(_point, camera);
-			camera.drawTriangles(graphic, vertices, indices, uvtData, colors, _point, blend, antialiasing);
+			camera.drawTriangles(graphic, vertices, indices, uvtData, colors, _point, blend, repeat, antialiasing);
 		}
 	}
 }
