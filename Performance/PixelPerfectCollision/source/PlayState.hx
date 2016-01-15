@@ -119,9 +119,8 @@ class PlayState extends FlxState
 		// Neat tweening effect for new aliens appearing
 		FlxTween.tween(obj, { x: destX, y:destY }, 2, { ease: FlxEase.expoOut });
 		
-		if (rotate) {
+		if (rotate)
 			randomizeRotation(obj);
-		}
 		
 		return obj;
 	}
@@ -146,24 +145,20 @@ class PlayState extends FlxState
 		player.velocity.set();
 		
 		// player movement
-		if (FlxG.keys.pressed.LEFT)  {
+		if (FlxG.keys.pressed.LEFT)
 			player.velocity.x = - PLAYER_SPEED;
-		}
-		if (FlxG.keys.pressed.RIGHT) {
+		if (FlxG.keys.pressed.RIGHT)
 			player.velocity.x =   PLAYER_SPEED;
-		}
-		if (FlxG.keys.pressed.UP)    {
+		if (FlxG.keys.pressed.UP)
 			player.velocity.y = - PLAYER_SPEED;
-		}
-		if (FlxG.keys.pressed.DOWN)  {
+		if (FlxG.keys.pressed.DOWN)
 			player.velocity.y =   PLAYER_SPEED;
-		}
 		
 		// toggle rotation
 		if (FlxG.keys.justReleased.SPACE) 
 		{
 			rotate = !rotate;
-			(rotate) ? randomizeRotation(player) : resetRotation(player);
+			rotate ? randomizeRotation(player) : resetRotation(player);
 		}
 		
 		// randomize
@@ -180,25 +175,25 @@ class PlayState extends FlxState
 		}
 		
 		// increment/decrement number of objects
-		if (FlxG.keys.justReleased.W) {
+		if (FlxG.keys.justReleased.W)
+		{
 			for (i in 0...3) addAlien();
 		}
-		if (FlxG.keys.justReleased.S) {
-			for (i in 0...3) {
+		if (FlxG.keys.justReleased.S)
+		{
+			for (i in 0...3)
+			{
 				var alien = aliens.getFirstAlive();
-				if (alien != null) {
+				if (alien != null)
 					alien.kill();
-				}
 			}
 		}
 		
 		// increment/decrement alpha tolerance
-		if (FlxG.keys.pressed.D) {
+		if (FlxG.keys.pressed.D)
 			alphaTolerance = Std.int(Math.min(alphaTolerance + 3, 255));
-		}
-		if (FlxG.keys.pressed.A) {
+		if (FlxG.keys.pressed.A)
 			alphaTolerance = Std.int(Math.max(alphaTolerance - 3, 1));
-		}
 		
 		// quit on ESC
 		if (FlxG.keys.justReleased.ESCAPE) 
@@ -267,12 +262,11 @@ class PlayState extends FlxState
 	
 	function set_rotate(Value:Bool):Bool
 	{
-		if (Value) {
+		if (Value)
 			aliens.forEach(randomizeRotation);
-		}
-		else {
+		else
 			aliens.forEach(resetRotation);
-		}
+		
 		return rotate = Value;
 	}
 	

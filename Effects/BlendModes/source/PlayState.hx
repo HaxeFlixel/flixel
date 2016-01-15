@@ -50,7 +50,8 @@ class PlayState extends FlxUIState
 		makeBlendImages();
 	}
 
-	private function makeBlendImages():Void {
+	private function makeBlendImages():Void
+	{
 		var xx:Int = 100;
 		var yy:Int = 12;
 		var column:Int = 0;
@@ -59,7 +60,8 @@ class PlayState extends FlxUIState
 		_bottoms = new Map<String,FlxSprite>();
 		_tops = new Map<String,FlxSprite>();
 		
-		for (str in _list_blends) {
+		for (str in _list_blends)
+		{
 			xx = 10 + column * 250;
 			yy = 30 + row * 250;
 			
@@ -90,19 +92,23 @@ class PlayState extends FlxUIState
 			add(label);
 			
 			column++;
-			if (column >= 4) {
+			if (column >= 4)
+			{
 				column = 0;
 				row++;
 			}
 		}
 	}
 	
-	private function onClickBlend(str:String):Void {
+	private function onClickBlend(str:String):Void
+	{
 		_top.blend = getBlend(str);
 	}
 
-	private function getBlend(str:String):BlendMode {
-		return switch(str) {
+	private function getBlend(str:String):BlendMode
+	{
+		return switch(str)
+		{
 			case "normal": BlendMode.NORMAL;
 			case "darken": BlendMode.DARKEN;
 			case "multiply": BlendMode.MULTIPLY;
@@ -118,15 +124,15 @@ class PlayState extends FlxUIState
 		}
 	}
 	
-	public override function getEvent(event:String,sender:Dynamic,data:Dynamic,?params:Dynamic):Void {
-		if (event == FlxUINumericStepper.CHANGE_EVENT){
-			if (sender == _step_alpha) {
-				for (str in _list_blends) {
-					var top = _tops.get(str);
-					top.alpha = cast data;
-				}
+	public override function getEvent(event:String, sender:Dynamic, data:Dynamic, ?params:Dynamic):Void
+	{
+		if (event == FlxUINumericStepper.CHANGE_EVENT && sender == _step_alpha)
+		{
+			for (str in _list_blends)
+			{
+				var top = _tops.get(str);
+				top.alpha = cast data;
 			}
 		}
 	}
-
 }

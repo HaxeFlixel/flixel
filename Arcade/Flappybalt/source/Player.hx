@@ -17,11 +17,13 @@ class Player extends FlxSprite
 	override public function update(elapsed:Float)
 	{
 		#if !FLX_NO_KEYBOARD
-		if (FlxG.keys.justPressed.SPACE) {
+		if (FlxG.keys.justPressed.SPACE)
 		#elseif !FLX_NO_TOUCH
-		if (FlxG.touches.justStarted().length > 0) {
+		if (FlxG.touches.justStarted().length > 0)
 		#end
-			if (acceleration.y == 0) {
+		{
+			if (acceleration.y == 0)
+			{
 				acceleration.y = 500;
 				velocity.x = 80;
 			}

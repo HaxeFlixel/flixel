@@ -161,7 +161,7 @@ class Character extends FlxExtendedSprite
 		var fileStr:String = Assets.getText(file);
 		if (fileStr == null)
 		{
-			throw 'The file {$file} doesn\'t exists!';
+			throw 'The file {$file} doesn\'t exist!';
 		}
 		
 		var json = Json.parse(fileStr);

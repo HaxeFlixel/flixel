@@ -532,7 +532,8 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
  * This enum is used to set the valid values for our outcome variable.
  * Outcome can only ever be one of these 4 values and we can check for these values easily once combat is concluded.
  */
-enum Outcome {
+enum Outcome
+{
 	NONE;
 	ESCAPE;
 	VICTORY;

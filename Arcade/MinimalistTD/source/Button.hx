@@ -22,12 +22,10 @@ class Button extends FlxButton
 	{
 		super(X, Y, Label, OnDown);
 		
-		if (Width > 0) {
+		if (Width > 0)
 			width = Width;
-		}
-		else {
+		else
 			width = Label.length * 7;
-		}
 		height = 20;
 		label.alpha = 1;
 		set_status(status);

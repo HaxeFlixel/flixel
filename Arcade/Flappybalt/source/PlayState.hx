@@ -130,16 +130,21 @@ class PlayState extends FlxState
 	override public function update(elapsed:Float):Void
 	{
 		if (FlxG.pixelPerfectOverlap(_player, _spikeBottom) || FlxG.pixelPerfectOverlap(_player, _spikeTop) 
-				|| FlxG.pixelPerfectOverlap(_player, _paddleLeft) || FlxG.pixelPerfectOverlap(_player, _paddleRight)) {
+				|| FlxG.pixelPerfectOverlap(_player, _paddleLeft) || FlxG.pixelPerfectOverlap(_player, _paddleRight))
+		{
 			_player.kill();
-		} else if (_player.x < 5) {
+		}
+		else if (_player.x < 5)
+		{
 			_player.x = 5;
 			_player.velocity.x = -_player.velocity.x;
 			_player.flipX = false;
 			increaseScore();
 			_bounceLeft.animation.play("flash");
 			_paddleRight.randomize();
-		} else if (_player.x + _player.width > FlxG.width - 5) {
+		}
+		else if (_player.x + _player.width > FlxG.width - 5)
+		{
 			_player.x = FlxG.width - _player.width - 5;
 			_player.velocity.x = -_player.velocity.x;
 			_player.flipX = true;

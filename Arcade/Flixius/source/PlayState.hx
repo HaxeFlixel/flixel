@@ -290,17 +290,15 @@ class PlayState extends FlxState
 					_sprPlayer.velocity.y = 40;
 				}
 			}
-			else
+			else if (!_fading)
 			{
-				if (!_fading)
+				_fading = true;
+				FlxG.sound.music.fadeOut(.6);
+				FlxG.camera.fade(FlxColor.BLACK, .8, false, function()
 				{
-					_fading = true;
-					FlxG.sound.music.fadeOut(.6);
-					FlxG.camera.fade(FlxColor.BLACK, .8, false, function() {
-						FlxG.sound.music.stop();
-						FlxG.resetState();
-					});
-				}
+					FlxG.sound.music.stop();
+					FlxG.resetState();
+				});
 			}
 			
 			_txtScore.text = Std.string(_score);

@@ -75,11 +75,13 @@ class MessagePopup extends FlxSubState
 		add(_text);
 		add(_textContinue);
 		
-		forEachOfType(FlxSprite, function(sprite) {
+		forEachOfType(FlxSprite, function(sprite)
+		{
 			sprite.alpha = 0;
 		});
 		
-		FlxTween.num(0, 1, .66, { type:FlxTween.ONESHOT, ease:FlxEase.sineOut, onComplete:function(_) {
+		FlxTween.num(0, 1, .66, { type:FlxTween.ONESHOT, ease:FlxEase.sineOut, onComplete:function(_)
+		{
 			_fadingIn = false;
 		}}, updateAlpha);
 	}
@@ -113,28 +115,28 @@ class MessagePopup extends FlxSubState
 		{
 			_talkTimer -= elapsed * 20;
 		}
+		
 		if (!_fadingIn && !_fadingOut)
 		{
 			#if !FLX_NO_KEYBOARD
 			if (FlxG.keys.anyJustReleased([X]))
 			{
 				_fadingOut = true;
-				FlxTween.num(1, 0, .66, { type:FlxTween.ONESHOT, ease:FlxEase.circOut, onComplete:function(_) {
+				FlxTween.num(1, 0, .66, { type:FlxTween.ONESHOT, ease:FlxEase.circOut, onComplete:function(_)
+				{
 					close();
-				}},updateAlpha);
+				}}, updateAlpha);
 			}
 			#end
 			#if !FLX_NO_TOUCH
 			var t:FlxTouch = FlxG.touches.getFirst();
-			if (t != null)
+			if (t != null && t.justReleased)
 			{
-				if (t.justReleased)
+				_fadingOut = true;
+				FlxTween.num(1, 0, .66, { type:FlxTween.ONESHOT, ease:FlxEase.circOut, onComplete:function(_)
 				{
-					_fadingOut = true;
-					FlxTween.num(1, 0, .66, { type:FlxTween.ONESHOT, ease:FlxEase.circOut, onComplete:function(_) {
-						close();
-					}}, updateAlpha);
-				}
+					close();
+				}}, updateAlpha);
 			}
 			#end
 		}

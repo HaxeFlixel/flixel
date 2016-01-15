@@ -1,4 +1,4 @@
-package ;
+package;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -112,7 +112,8 @@ class GameOverState extends FlxState
 	 */
 	private function goMainMenu():Void
 	{
-		FlxG.camera.fade(FlxColor.BLACK, .33, false, function() {
+		FlxG.camera.fade(FlxColor.BLACK, .33, false, function()
+		{
 			FlxG.switchState(new MenuState());
 		});
 	}

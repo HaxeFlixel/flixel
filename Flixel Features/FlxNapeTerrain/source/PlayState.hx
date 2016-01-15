@@ -163,15 +163,12 @@ class PlayState extends FlxState
 	
 	function createObject(pos:Vec2) 
 	{
-		var sprite:FlxNapeSprite = new FlxNapeSprite(pos.x, pos.y, null, false);
+		var sprite = new FlxNapeSprite(pos.x, pos.y, null, false);
 		
-		if (Math.random() < 0.333) 
-		{
+		if (FlxG.random.bool(33)) 
 			sprite.createCircularBody(10 + Math.random() * 20);
-		}
-		else {
+		else
 			sprite.createRectangularBody(10 + Math.random() * 20, 10 + Math.random() * 20);
-		}
 		
 		sprite.body.space = FlxNapeSpace.space;
 		add(sprite);

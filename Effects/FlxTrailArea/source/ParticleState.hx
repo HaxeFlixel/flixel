@@ -43,7 +43,8 @@ class ParticleState extends FlxState
 		add(new GUI(trailArea, startEmitter));
 		
 		// Start the emitter with a small delay to avoid the initial laggieness on startup
-		new FlxTimer().start(0.5, function(_) { 
+		new FlxTimer().start(0.5, function(_)
+		{ 
 			_emitter.start(true, 0.5); 
 		});
 		
@@ -69,14 +70,11 @@ class ParticleState extends FlxState
 		
 		// This starts the emitter at the mouse position
 		if (FlxG.mouse.x <= (FlxG.width - GUI.WIDTH)) 
-		{
 			startEmitter();
-		}
 		
 		// Toggle states
-		if (FlxG.keys.justReleased.SPACE) {
+		if (FlxG.keys.justReleased.SPACE)
 			FlxG.switchState(new BlurState());
-		}
 	}	
 	
 	/**
@@ -88,11 +86,13 @@ class ParticleState extends FlxState
 		if (FlxG.mouse.justPressed) 
 		{
 			// If this was called from a FlxSlider, we set the position to the screen center
-			if (Value != null) {
+			if (Value != null)
+			{
 				_emitter.x = 200;
 				_emitter.y = FlxG.height / 2;
 			}
-			else {
+			else
+			{
 				_emitter.x = FlxG.mouse.x;
 				_emitter.y = FlxG.mouse.y;
 			}

@@ -1,4 +1,5 @@
 package;
+
 import flash.display.BitmapData;
 import flash.geom.Rectangle;
 import flixel.util.FlxSave;
@@ -30,10 +31,8 @@ class Reg
 	 */
 	static public function dustMote():BitmapData
 	{
-		if (dustMoteData == null) {
+		if (dustMoteData == null)
 			dustMoteData = new BitmapData(2, 2, true, 0x88FFFFFF);
-		}
-		
 		return dustMoteData;
 	}
 	

@@ -169,7 +169,8 @@ class Cutup extends BaseState
 				sprite.graphics.endFill();
 				
 				// don't create the unnecessary default body on construction, it will become a ghost!
-				var cutPhySpr = pieces.recycle(FlxNapeSprite, function() {
+				var cutPhySpr = pieces.recycle(FlxNapeSprite, function()
+				{
 					return new FlxNapeSprite(0, 0, null, false);
 				});
 				cutPhySpr.body = cutBody;

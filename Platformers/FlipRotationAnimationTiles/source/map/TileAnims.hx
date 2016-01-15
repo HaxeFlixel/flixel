@@ -24,11 +24,16 @@ class TileAnims
 	{
 		//load the xml file
 		var source:Fast;
-		if (Std.is(Data, String)) {
+		if (Std.is(Data, String))
+		{
 			source = new Fast(Xml.parse(Assets.getText(Data)));
-		} else if (Std.is(Data, Xml)) {
+		}
+		else if (Std.is(Data, Xml))
+		{
 			source = new Fast(Data);
-		} else {
+		}
+		else
+		{
 			throw "No tanim file";
 		}
 		
@@ -43,48 +48,59 @@ class TileAnims
 		var speed:Float = 0;
 		var animsData:Array<AnimData>;
 		var firstGID:Int = 0;
-		for (tileset in source.nodes.tileset) {
+		for (tileset in source.nodes.tileset)
+		{
 			firstGID = 0;
-			if (tileset.has.firstGID) {
+			if (tileset.has.firstGID)
+			{
 				firstGID = Std.parseInt(tileset.att.firstGID);
 			}
-			for (node in tileset.nodes.tile) {
+			for (node in tileset.nodes.tile)
+			{
 				startTileID = Std.parseInt(node.att.id) + firstGID;
 				animsData = new Array<AnimData>();
-				for (animation in node.nodes.animation) {
+				for (animation in node.nodes.animation)
+				{
 					var name:String = "[animation]";
-					if (animation.has.id) {
+					if (animation.has.id)
+					{
 						name = animation.att.id;
 					}
 					var randomizeSpeed:Float = 0;
-					if (animation.has.randomizeSpeed) {
+					if (animation.has.randomizeSpeed)
+					{
 						randomizeSpeed = Std.parseFloat(animation.att.randomizeSpeed);
 					}
-					var data:AnimData = {
+					var data:AnimData =
+					{
 						name: name,
 						speed: Std.parseFloat(animation.att.speed),
 						randomizeSpeed: randomizeSpeed,
 						frames: new Array<Int>(),
 						framesData: new Array<AnimParams>() 
 					};
-					for (frame in animation.nodes.frame) {
+					for (frame in animation.nodes.frame)
+					{
 						data.frames.push(Std.parseInt(frame.att.id) + firstGID);
-						if (frame.has.flipX || frame.has.flipY || frame.has.rotation) {
-							var params:AnimParams = {
+						if (frame.has.flipX || frame.has.flipY || frame.has.rotation)
+						{
+							var params:AnimParams =
+							{
 								flipX: false,
 								flipY: false,
 								rotate: FlxTileSpecial.ROTATE_0
 							};
 							
-							if (frame.has.flipX && frame.att.flipX == "true") {
+							if (frame.has.flipX && frame.att.flipX == "true")
 								params.flipX = true;
-							}
-							if (frame.has.flipY && frame.att.flipY == "true") {
+							if (frame.has.flipY && frame.att.flipY == "true")
 								params.flipY = true;
-							}
-							if (frame.has.rotation) {
+
+							if (frame.has.rotation)
+							{
 								var rotation:Int = Std.parseInt(frame.att.rotation);
-								switch(rotation) {
+								switch(rotation)
+								{
 									case 90:
 										params.rotate = FlxTileSpecial.ROTATE_90;
 									case 270:
@@ -95,7 +111,9 @@ class TileAnims
 							}
 							
 							data.framesData.push(params);
-						} else {
+						}
+						else
+						{
 							data.framesData.push(null);
 						}
 					}

@@ -166,7 +166,8 @@ class PlayState extends FlxState
 		_hud.add(_gunjam);
 		
 		// With forEach() we can execute a function on every group member
-		_hud.forEach(function(s:FlxSprite) {
+		_hud.forEach(function(s:FlxSprite)
+		{
 			// This makes sure the HUD does not move with the camera scroll
 			s.scrollFactor.set(0, 0);
 			// We only want out HUD to display on the main camera

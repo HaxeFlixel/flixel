@@ -34,17 +34,20 @@ class MenuState extends FlxUIState
 		updateInputMethod();
 	}
 	
-	public override function getEvent(name:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void {
+	public override function getEvent(name:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void
+	{
 		if (destroyed) 
 		{ 
 			return;
 		}
 		
 		var widget:IFlxUIWidget = cast sender;
-		if (name == FlxUICheckBox.CLICK_EVENT) {
+		if (name == FlxUICheckBox.CLICK_EVENT)
+		{
 			var checked:Bool = cast data;
 			var type:String = cast params[0];
-			switch(type){
+			switch(type)
+			{
 				case "wrap": 
 					cursor.wrap = checked;
 				case "tab","arrows","wasd","numpad","dpad","lstick","rstick","bumpers":
@@ -52,15 +55,21 @@ class MenuState extends FlxUIState
 			}
 		}
 		
-		if(click_text != null){
+		if (click_text != null)
+		{
 			if (widget != null && Std.is(widget, FlxUIButton))
 			{
 				var fuib:FlxUIButton = cast widget;
-				if(name == "cursor_jump"){
+				if (name == "cursor_jump")
+				{
 					move_text.text = name + ": " + fuib.params;
-				}else if (name == "cursor_click") {
+				}
+				else if (name == "cursor_click")
+				{
 					click_text.text = name + ": " + fuib.params;
-				}else {
+				}
+				else
+				{
 					event_text.text = name + ": " + fuib.params;
 				}
 			}
@@ -71,13 +80,15 @@ class MenuState extends FlxUIState
 		}
 	}
 	
-	private function updateInputMethod():Void {
+	private function updateInputMethod():Void
+	{
 		var check:FlxUICheckBox;
 		var input:Int = 0;
 		var modes:Array<String>=[];
 		
 		check = cast _ui.getAsset("check_tab");
-		if (check.checked) {
+		if (check.checked)
+		{
 			input = input | FlxUICursor.KEYS_TAB;
 			modes.push("Tab/Shift+Tab");
 		}
@@ -87,41 +98,50 @@ class MenuState extends FlxUIState
 			modes.push("Arrows");
 		}
 		check = cast _ui.getAsset("check_wasd");
-		if (check.checked) {
+		if (check.checked)
+		{
 			input = input | FlxUICursor.KEYS_WASD;
 			modes.push("WASD");
 		}
 		check = cast _ui.getAsset("check_numpad");
-		if (check.checked) { 
+		if (check.checked)
+		{ 
 			input = input | FlxUICursor.KEYS_NUMPAD; 
 			modes.push("NUMPAD");
 		}
 		
 		check = cast _ui.getAsset("check_dpad");
-		if (check.checked) { 
+		if (check.checked)
+		{ 
 			input = input | FlxUICursor.GAMEPAD_DPAD; 
 			modes.push("DPAD");
 		}
 		check = cast _ui.getAsset("check_lstick");
-		if (check.checked) { 
+		if (check.checked)
+		{ 
 			input = input | FlxUICursor.GAMEPAD_LEFT_STICK; 
 			modes.push("LSTICK");
 		}
 		check = cast _ui.getAsset("check_rstick");
-		if (check.checked) { 
+		if (check.checked)
+		{ 
 			input = input | FlxUICursor.GAMEPAD_RIGHT_STICK; 
 			modes.push("RSTICK");
 		}
 		check = cast _ui.getAsset("check_bumpers");
-		if (check.checked) { 
+		if (check.checked)
+		{ 
 			input = input | FlxUICursor.GAMEPAD_SHOULDER_BUTTONS; 
 			modes.push("BUMPERS");
 		}
 		
 		var instructions:FlxUIText = cast _ui.getAsset("text");
-		if (modes.length > 0) {
+		if (modes.length > 0)
+		{
 			instructions.text = "Move:("+modes.join(", ")+")  Click:(ENTER)";
-		}else {
+		}
+		else
+		{
 			instructions.text = "Mouse Input Only";
 		}
 		

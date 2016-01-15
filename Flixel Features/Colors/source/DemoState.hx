@@ -102,8 +102,8 @@ class DemoState extends FlxState
 			FlxColor.fromRGBFloat(0.8, 0.5, 0.3),
 			FlxColor.fromHSB(120, 0.6, 0.9),
 			FlxColor.fromHSL(120, 0.6, 0.9),
-			FlxColor.fromCMYK(0.8, 0.6, 0.1, 0.5)
-		]) {
+			FlxColor.fromCMYK(0.8, 0.6, 0.1, 0.5)])
+		{
 			if (c != null) panel.add(makeSprite(240, 50 + i * 24, c));
 			i++;
 		}
@@ -121,10 +121,12 @@ class DemoState extends FlxState
 		
 		var sliders = new Array<PropertySlider>();
 		
-		var colX = function(column:Int) {
+		var colX = function(column:Int)
+		{
 			return 5 + column * 100;
 		}
-		var rowY = function(row:Int) {
+		var rowY = function(row:Int)
+		{
 			return 72 + row * 36;
 		}
 		
@@ -148,10 +150,9 @@ class DemoState extends FlxState
 		Macro.makeSlider(colX(3), rowY(2), "yellow", 0, 1, 0.01, 0.1);
 		Macro.makeSlider(colX(3), rowY(3), "black", 0, 1, 0.01, 0.1);
 		
-		for (s in sliders) {
+		for (s in sliders)
 			s.updateValue(s);
-		}
-		
+			
 		//-- Presets --
 		panel = presetsPanel;
 		
@@ -278,7 +279,7 @@ class DemoState extends FlxState
 		pageText.text = "Page " + (currentPanelIndex + 1) + " / " + panels.length;
 		for (panel in panels)
 		{
-			FlxTween.tween(panel, {x: (panels.members.indexOf(panel) - currentPanelIndex) * FlxG.width}, 0.7, { ease: FlxEase.expoOut } );
+			FlxTween.tween(panel, { x: (panels.members.indexOf(panel) - currentPanelIndex) * FlxG.width}, 0.7, { ease: FlxEase.expoOut } );
 		}
 	}
 }
@@ -302,10 +303,12 @@ private class Macro
 			sliders.push(slider);
 			slider.setPosition($x, $y);
 			slider.decimalPlaces = $v{decimalPlaces};
-			slider.updateValue = function(s:PropertySlider) {
+			slider.updateValue = function(s:PropertySlider)
+			{
 				s.value = myColor.$value;
 			};
-			slider.onChange = function(s:PropertySlider) {
+			slider.onChange = function(s:PropertySlider)
+			{
 				$assignValue;
 				colorSpr.makeGraphic(FlxG.width - 120, 20, myColor, true);
 				for (s in sliders)
@@ -317,8 +320,10 @@ private class Macro
 		}
 	}
 	
-	macro public static function makePresetSprite(name:String):Expr {
-		return macro {
+	macro public static function makePresetSprite(name:String):Expr
+	{
+		return macro
+		{
 			var presetSpr = new FlxSpriteGroup();
 			presetSpr.add(makeSprite(0, 0, FlxColor.$name, 14, 14));
 			var presetTxt = new FlxText(21, 1, 0, $v { name }, 12);
@@ -326,7 +331,8 @@ private class Macro
 			presetSpr.add(presetTxt);
 			presetSpr.setPosition(currentX, currentY);
 			currentY += presetHeight;
-			if (currentY > maxY) {
+			if (currentY > maxY)
+			{
 				currentY = startY;
 				currentX += presetWidth;
 			}

@@ -57,7 +57,8 @@ class Reg
 		
 		// generate four colors
 		
-		for (i in 0...4) {
+		for (i in 0...4)
+		{
 			var dist:Int = FlxG.random.int(32 * (i - 2), 24 * (i - 2));
 			colorArray.push(255 << 24); // alpha
 			colorArray[i] += base[0] + dist << 16; //red
@@ -76,11 +77,9 @@ class Reg
 	
 	/**
 	 * Align any FlxObject to a vertical line at 1/4, 2/4, or 3/4 of the stage.
-	 * 
-	 * @param	Object
-	 * @param	Num
 	 */
-	public static function quarterX(Object:FlxObject, Num:Int = 2):Void {
+	public static function quarterX(Object:FlxObject, Num:Int = 2):Void
+	{
 		Object.x = (FlxG.width * Num / 2 - Object.width) / 2;
 	}
 	

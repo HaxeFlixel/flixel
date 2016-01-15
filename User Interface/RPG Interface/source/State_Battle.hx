@@ -13,7 +13,6 @@ import openfl.events.Event;
 
 class State_Battle extends FlxUIState
 {
-
 	override public function create() 
 	{
 		_xml_id = "state_battle";
@@ -21,7 +20,8 @@ class State_Battle extends FlxUIState
 		hideFailedUI();
 	}
 	
-	private function hideFailedUI():Void {
+	private function hideFailedUI():Void
+	{
 		
 		//Determine which is the best layout by looking at failure thresholds
 		
@@ -35,51 +35,55 @@ class State_Battle extends FlxUIState
 			trace("ui_wide.failed = " + ui_wide.failed + " by = " + ui_wide.failed_by);
 		#end
 		
-		if (ui_tall.failed && !ui_wide.failed) {		//Show the tall layout
+		if (ui_tall.failed && !ui_wide.failed)
+		{		//Show the tall layout
 			_ui.setMode("wide");			
-		}else if (ui_wide.failed && !ui_tall.failed) {	//Show the wide layout
+		}
+		else if (ui_wide.failed && !ui_tall.failed)
+		{	//Show the wide layout
 			_ui.setMode("tall");
-		}else if (ui_wide.failed && ui_tall.failed) {	//Ambiguous, BOTH layouts failed
+		}
+		else if (ui_wide.failed && ui_tall.failed) 
+		{	//Ambiguous, BOTH layouts failed
 			
 			//Figure out which one failed by LESS and show that one
 			var diff:Float = ui_wide.failed_by - ui_tall.failed_by;
-			if (diff > 0) { _ui.setMode("tall"); }
-			else if (diff < 0) { _ui.setMode("wide"); }
-			else {
+			if (diff > 0)
+				_ui.setMode("tall");
+			else if (diff < 0) 
+				_ui.setMode("wide");
+			else
 				_ui.setMode("tall"); //If all else fails, default to "tall"
-			}
-		}else {
+		}
+		else
+		{
 			_ui.setMode("tall");	//If all else fails, default to "tall"
 		}
-		
-		//var thing:flixel.FlxSprite = cast ui_wide.getAsset("wave_bar");
-		#if debug
-		//trace("width = " + thing.width);
-		#end
 	}
 	
-	private override function reloadUI(?e:Event):Void {
+	private override function reloadUI(?e:Event):Void
+	{
 		super.reloadUI(e);
 		hideFailedUI();
 	}
 	
-	public override function getRequest(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Dynamic {
+	public override function getRequest(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Dynamic
+	{
 		return null;
 	}	
 	
-	public override function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void {
-		if (params != null){
-			switch(id) {
+	public override function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void
+	{
+		if (params != null
+		{
+			switch(id)
+			{
 				case FlxUITypedButton.CLICK_EVENT: 
-					switch(cast(params[0], String)) {
+					switch(cast(params[0], String))
+					{
 						case "back": FlxG.switchState(new State_Title());
 					}
 			}
 		}
 	}
-	
-	public override function update(elapsed:Float):Void {
-		super.update(elapsed);
-	}
-	
 }

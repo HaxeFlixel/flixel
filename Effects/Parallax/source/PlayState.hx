@@ -90,7 +90,6 @@ class PlayState extends FlxState
 		
 		#if (mobile)
 		_vPad = new FlxVirtualPad(FlxDPadMode.LEFT_RIGHT, FlxActionMode.NONE);
-		
 		add(_vPad);
 		#end
 		

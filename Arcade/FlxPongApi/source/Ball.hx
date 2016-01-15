@@ -31,7 +31,8 @@ class Ball extends PongSprite
 	
 	public function init():Void
 	{
-		_exhaust = Reg.PS.emitterGroup.recycle(Emitter, function() {
+		_exhaust = Reg.PS.emitterGroup.recycle(Emitter, function()
+		{
 			return new Emitter(x, y, 2, Reg.med_lite);
 		}, true);
 		_exhaust.acceleration.set(0, 0.5);
@@ -64,9 +65,9 @@ class Ball extends PongSprite
 		velocity = DEFAULT_VELOCITY();
 	}
 	
-	override public function kill():Void {
+	override public function kill():Void
+	{
 		_emitter.start(true);
-		
 		super.kill();
 	}
 }

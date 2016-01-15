@@ -84,7 +84,8 @@ class OldFlxRandom
 			
 			var result:Int;
 			
-			do {
+			do
+			{
 				if (Min < Max)
 				{
 					result = Math.floor(Min + (Math.random() * (Max + 1 - Min)));

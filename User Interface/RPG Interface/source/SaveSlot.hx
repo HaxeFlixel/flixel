@@ -15,10 +15,13 @@ class SaveSlot extends FlxUI
 	private var ptr:IEventGetter;
 	public var valid : Bool;
 	
-	public function new(data:Fast, _ptr:Dynamic = null) {
+	public function new(data:Fast, ?_ptr:Dynamic)
+	{
 		super(null, _ptr);
-		if (_ptr != null) {
-			if (Std.is(_ptr, FlxUI)) {
+		if (_ptr != null)
+		{
+			if (Std.is(_ptr, FlxUI))
+			{
 				var ui:FlxUI = cast _ptr;
 				_ptr_tongue = ui.tongue;
 			}
@@ -30,20 +33,20 @@ class SaveSlot extends FlxUI
 		init();
 	}
 
-	public function loadStuff(data:Fast, _ptr:Dynamic):Void {
+	public function loadStuff(data:Fast, _ptr:Dynamic):Void
+	{
 		load(data);
 		name = U.xml_name(data.x);
 	}
 	
-	public override function update(elapsed:Float):Void {
-		super.update(elapsed);
-	}
-	
-	public override function getEvent(event:String, sender:IFlxUIWidget, data:Dynamic, ?params:Array<Dynamic>):Void {
+	public override function getEvent(event:String, sender:IFlxUIWidget, data:Dynamic, ?params:Array<Dynamic>):Void
+	{
 		super.getEvent(event, sender, data);
-		if (Std.is(data, String)) {
+		if (Std.is(data, String))
+		{
 			var str:String = cast(data, String);
-			switch(str) {
+			switch(str) 
+			{
 				case "play": onPress();
 				case "play+": onPlus();
 				case "export": onExport();
@@ -53,28 +56,34 @@ class SaveSlot extends FlxUI
 		}
 	}
 	
-	function init() : Void {
-	
+	function init():Void
+	{
 	}
 
-	function onPlus() : Void {
+	function onPlus():Void
+	{
 		FlxG.log.add("press plus " + name);
 	}
 
-	function onPress() : Void {
+	function onPress():Void
+	{
 		FlxG.log.add("press " + name);
 	}
 
-	function cleanSlot() : Void {
+	function cleanSlot():Void
+	{
 		valid = false;
 	}
 
-	function onExport() : Void {
+	function onExport():Void
+	{
 	}
 
-	function onImport() : Void {
+	function onImport():Void
+	{
 	}
 
-	function onDel() : Void {
+	function onDel():Void
+	{
 	}
 }

@@ -96,7 +96,5 @@ class Tiltshift extends Shader
 	public function new() 
 	{
 		super();
-		
 	}
-	
 }

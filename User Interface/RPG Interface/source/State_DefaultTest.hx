@@ -10,24 +10,26 @@ import flixel.addons.ui.FlxInputText;
 
 class State_DefaultTest extends FlxUIState
 {
-
 	override public function create() 
 	{
 		_xml_id = "state_default";
 		super.create();
-		
-		
 	}
 	
-	public override function getRequest(id:String, target:Dynamic, data:Dynamic,?params:Array<Dynamic>):Dynamic {
+	public override function getRequest(id:String, target:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Dynamic
+	{
 		return null;
 	}	
 	
-	public override function getEvent(id:String,target:Dynamic,data:Dynamic,?params:Array<Dynamic>):Void {
-		if (params != null) {
-			switch(id) {
+	public override function getEvent(id:String, target:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void
+	{
+		if (params != null)
+		{
+			switch(id)
+			{
 				case "click_button":
-					switch(cast(params[0], String)) {
+					switch(cast(params[0], String))
+					{
 						case "back": FlxG.switchState(new State_Title());
 						case "popup":var popup:FlxUIPopup = new FlxUIPopup(); //create the popup
 									 popup.quickSetup						  //set it up
@@ -47,7 +49,8 @@ class State_DefaultTest extends FlxUIState
 									
 					}
 				case "click_popup":
-					switch(cast(params[0], Int)) {
+					switch(cast(params[0], Int))
+					{
 						case 0: FlxG.log.add("Yes was clicked");
 						case 1: FlxG.log.add("No was clicked");
 						case 2: FlxG.log.add("Cancel was clicked");
@@ -55,9 +58,4 @@ class State_DefaultTest extends FlxUIState
 			}
 		}
 	}
-	
-	public override function update(elapsed:Float):Void {
-		super.update(elapsed);
-	}
-	
 }

@@ -176,7 +176,7 @@ class State extends FlxState
 			try { outputs[4].text = HexToBin(StringTools.hex(cast(output, Int))); } catch (unknown:Dynamic) { outputs[4].color = 0xffe09f9f; outputs[4].text = "?"; }
 			
 			// Draw graph (naively execute the script 150 times per frame stepping in the y-direction. This has sampling error.)
-			FlxSpriteUtil.drawRect(graph, 0, 0, graph.width, graph.height, 0xffffffff, {thickness:2, color:0xff000000});
+			FlxSpriteUtil.drawRect(graph, 0, 0, graph.width, graph.height, 0xffffffff, { thickness:2, color:0xff000000});
 			FlxSpriteUtil.drawLine(graph, graph.width / 2, 1, graph.width / 2, graph.height - 1, { thickness:1, color:0xff999999 } );
 			FlxSpriteUtil.drawLine(graph, 1, graph.height/2, graph.width -1, graph.height/2, { thickness:1, color:0xff999999 } );
 			if (input.text.indexOf("y") >= 0)

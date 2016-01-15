@@ -265,7 +265,8 @@ class Ragdoll extends FlxGroup
 	
 	public function createGraphics(prefix:String)
 	{
-		var getPath = function(part) {
+		var getPath = function(part)
+		{
 			return 'assets/fight/$prefix$part.png';
 		}
 		

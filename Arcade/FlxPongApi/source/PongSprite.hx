@@ -16,7 +16,8 @@ class PongSprite extends FlxSprite
 	{
 		var Graphic:BitmapData = new BitmapData(Width, Height, false, Color);
 		
-		if (Style == GRADIENT && SecondColor != null) {
+		if (Style == GRADIENT && SecondColor != null)
+		{
 			secondColor = SecondColor;
 			fillWithGradient(Graphic, color, secondColor);
 		}
@@ -26,15 +27,16 @@ class PongSprite extends FlxSprite
 	
 	override public function update(elapsed:Float):Void
 	{
-		if (minVelocity != null) {
-			if (Math.abs(velocity.x) < minVelocity.x) {
+		if (minVelocity != null)
+		{
+			if (Math.abs(velocity.x) < minVelocity.x)
+			{
 				var sign:Int = (velocity.x < 0) ? -1 : 1;
-				
 				velocity.x = minVelocity.x * sign;
 			}
-			if (Math.abs(velocity.y) < minVelocity.y) {
+			if (Math.abs(velocity.y) < minVelocity.y)
+			{
 				var sign:Int = (velocity.y < 0) ? -1 : 1;
-				
 				velocity.y = minVelocity.y * sign;
 			}
 		}
@@ -52,36 +54,41 @@ class PongSprite extends FlxSprite
 		var increment:Float = 1 / h;
 		Bd = new BitmapData(w, h, false, Color);
 		
-		for (yPos in 0...h) {
-			for (xPos in 0...w) {
-				if (xPos % increment == 0) {
+		for (yPos in 0...h)
+		{
+			for (xPos in 0...w)
+			{
+				if (xPos % increment == 0)
 					Bd.setPixel(xPos, yPos, secondColor);
-				}
 			}
 		}
 	}
 	
 	public var mx(get, null):Int;
 	
-	private function get_mx():Int {
+	private function get_mx():Int
+	{
 		return Std.int(x + width / 2);
 	}
 	
 	public var my(get, null):Int;
 	
-	private function get_my():Int {
+	private function get_my():Int
+	{
 		return Std.int(y + height / 2);
 	}
 	
 	public var fx(get, null):Int;
 	
-	private function get_fx():Int {
+	private function get_fx():Int
+	{
 		return Std.int(x + width);
 	}
 	
 	public var fy(get, null):Int;
 	
-	private function get_fy():Int {
+	private function get_fy():Int
+	{
 		return Std.int(y + height);
 	}
 }

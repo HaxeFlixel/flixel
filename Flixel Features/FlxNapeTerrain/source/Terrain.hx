@@ -141,7 +141,8 @@ class Terrain #if flash implements nape.geom.IsoFunction #end
 				for (p in polys) 
 				{
 					var qolys = p.convexDecomposition(true);
-					for (q in qolys) {
+					for (q in qolys)
+					{
 						b.shapes.add(new Polygon(q));
 						// Recycle GeomPoly and its vertices
 						q.dispose();

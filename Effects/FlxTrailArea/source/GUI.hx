@@ -71,12 +71,10 @@ class GUI extends FlxSpriteGroup
 	{
 		super.update(elapsed);
 		
-		if (FlxG.keys.justReleased.R) {
+		if (FlxG.keys.justReleased.R)
 			FlxG.resetState();
-		}
-		else if (FlxG.keys.justReleased.S) {
+		else if (FlxG.keys.justReleased.S)
 			toggleSimpleRender();
-		}
 	}
 	
 	private inline function toggleSimpleRender():Void

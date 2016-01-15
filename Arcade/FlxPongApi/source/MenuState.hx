@@ -38,7 +38,8 @@ class MenuState extends FlxState
 	private var _input2:FlxTextField;
 	private var _imageDisplay:FlxSprite;
 	
-	inline private static function API_TEST_BUTTONS():Array<Array<String>> {
+	private static inline function API_TEST_BUTTONS():Array<Array<String>>
+	{
 		return [["fetchUser", "authUser", "openSession", "pingSession"],
 		        ["closeSession", "fetchTrophy", "addTrophy", "fetchScore"],
 		        ["addScore", "getTables", "fetchData", "setData"],
@@ -154,7 +155,8 @@ class MenuState extends FlxState
 		_apiPages = [];
 		_apiCurrentPage = 0;
 		
-		for (i in 0...API_TEST_BUTTONS().length) {
+		for (i in 0...API_TEST_BUTTONS().length)
+		{
 			_apiPages.push(new FlxGroup());
 			
 			var button1:Button;
@@ -162,22 +164,26 @@ class MenuState extends FlxState
 			var button3:Button;
 			var button4:Button;
 			
-			if (API_TEST_BUTTONS()[i][0] != null) {
+			if (API_TEST_BUTTONS()[i][0] != null)
+			{
 				button1 = new Button(xpos, ypos[0], API_TEST_BUTTONS()[i][0], apiCallback, buttonwidth);
 				_apiPages[i].add(button1);
 			}
 			
-			if (API_TEST_BUTTONS()[i][1] != null) {
+			if (API_TEST_BUTTONS()[i][1] != null)
+			{
 				button2 = new Button(xpos, ypos[1], API_TEST_BUTTONS()[i][1], apiCallback, buttonwidth);
 				_apiPages[i].add(button2);
 			}
 			
-			if (API_TEST_BUTTONS()[i][2] != null) {
+			if (API_TEST_BUTTONS()[i][2] != null)
+			{
 				button3 = new Button(xpos, ypos[2], API_TEST_BUTTONS()[i][2], apiCallback, buttonwidth);
 				_apiPages[i].add(button3);
 			}
 			
-			if (API_TEST_BUTTONS()[i][3] != null) {
+			if (API_TEST_BUTTONS()[i][3] != null)
+			{
 				button4 = new Button(xpos, ypos[3], API_TEST_BUTTONS()[i][3], apiCallback, buttonwidth);
 				_apiPages[i].add(button4);
 			}
@@ -204,7 +210,8 @@ class MenuState extends FlxState
 		
 		// Add everything to this screen
 		
-		for (g in _apiPages) {
+		for (g in _apiPages)
+		{
 			_apiTest.add(g);
 		}
 		
@@ -293,9 +300,12 @@ class MenuState extends FlxState
 		// with .readUTFBytes( ba.length ). The ba.length ensures that the ByteArray will be read from beginning to end
 		// and then stop; otherwise, there would be an error when the end of the ByteArray was reached.
 		
-		if (!FlxGameJolt.initialized) {
+		if (!FlxGameJolt.initialized)
+		{
 			FlxGameJolt.init(19975, ba.readUTFBytes(ba.length), true, null, null, initCallback);
-		} else {
+		}
+		else
+		{
 			_connection.text = "Welcome back to the main menu, " + FlxGameJolt.username + "!";
 		}
 		
@@ -351,27 +361,32 @@ class MenuState extends FlxState
 	
 	private function switchMenu(Name:String):Void
 	{
-		if (_loginGroup.visible) {
+		if (_loginGroup.visible)
+		{
 			_input1.text = " ";
 			_input2.text = " ";
 		}
 		
-		for (g in _allScreens) {
+		for (g in _allScreens)
+		{
 			g.visible = false;
 			g.active = false;
 		}
 		
-		if (Name == "Back") {
+		if (Name == "Back")
+		{
 			_main.visible = true;
 			_main.active = true;
 		}
 		
-		if (Name == "API Functions") {
+		if (Name == "API Functions")
+		{
 			_apiTest.visible = true;
 			_apiTest.active = true;
 		}
 		
-		if (Name == "Log in") {
+		if (Name == "Log in")
+		{
 			_loginGroup.visible = true;
 			_loginGroup.active = true;
 		}
@@ -393,7 +408,8 @@ class MenuState extends FlxState
 		_imageDisplay.visible = false;
 		_return.text = "Sending " + Name + " request to GameJolt...";
 		
-		switch (Name) {
+		switch (Name)
+		{
 			case "fetchUser":
 				FlxGameJolt.fetchUser(0, FlxGameJolt.username, [], apiReturn);
 			case "authUser":
@@ -459,7 +475,8 @@ class MenuState extends FlxState
 	{
 		_return.text = "The user authentication returned: " + Success;
 		
-		if (!Success) {
+		if (!Success)
+		{
 			_return.text += ". This is probably because the user is already authenticated! You can use resetUser() to authenticate a new user.";
 		}
 	}
@@ -469,19 +486,20 @@ class MenuState extends FlxState
 		_apiPages[_apiCurrentPage].visible = false;
 		_apiPages[_apiCurrentPage].active = false;
 		
-		if (Name.charCodeAt(0) == 60) {
+		if (Name.charCodeAt(0) == 60)
+		{
 			_apiCurrentPage--;
-		} else if (Name.charCodeAt(0) == 62) {
+		} 
+		else if (Name.charCodeAt(0) == 62)
+		{
 			_apiCurrentPage++;
 		}
 		
-		if (_apiCurrentPage < 0) {
+		if (_apiCurrentPage < 0)
 			_apiCurrentPage = _apiPages.length - 1;
-		}
 		
-		if (_apiCurrentPage > _apiPages.length - 1) {
+		if (_apiCurrentPage > _apiPages.length - 1)
 			_apiCurrentPage = 0;
-		}
 		
 		_apiPages[_apiCurrentPage].visible = true;
 		_apiPages[_apiCurrentPage].active = true;
@@ -489,26 +507,34 @@ class MenuState extends FlxState
 	
 	private function initCallback(Result:Bool):Void
 	{
-		if (_connection != null) {
-			if (Result) {
-				if (_connection != null) {
+		if (_connection != null)
+		{
+			if (Result)
+			{
+				if (_connection != null)
+				{
 					_connection.text = "Successfully connected to GameJolt! Hi " + FlxGameJolt.username + "!";
 				}
 				
 				FlxGameJolt.addTrophy(5072);
 				
-				if (_login.visible) {
+				if (_login.visible)
+				{
 					_login.visible = false;
 					_login.active = false;
 				}
 				
-				if (_loginGroup.visible == true) {
+				if (_loginGroup.visible == true)
+				{
 					switchMenu("Back");
 				}
 				
 				//FlxGameJolt.fetchAvatarImage( avatarCallback );
-			} else {
-				if (_connection != null) {
+			}
+			else
+			{
+				if (_connection != null)
+				{
 					_connection.text = "Unable to verify your information with GameJolt.";
 				}
 				_login.visible = true;

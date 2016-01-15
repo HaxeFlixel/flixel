@@ -285,7 +285,8 @@ class PlayState extends FlxState
 		cam.followLead.x += lead;
 		cam.followLead.y += lead;
 		
-		if (cam.followLead.x < 0) {
+		if (cam.followLead.x < 0)
+		{
 			cam.followLead.x = 0;
 			cam.followLead.y = 0;
 		}

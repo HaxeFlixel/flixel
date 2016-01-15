@@ -375,8 +375,10 @@ class MenuState extends FlxState
 		dummyBitmapdata = new BitmapData(FlxG.width, FlxG.height, false, 0);
 		timer = Lib.getTimer();
 		
-		for (yPos in 0...480) {
-			for (xPos in 0...640) {
+		for (yPos in 0...480)
+		{
+			for (xPos in 0...640)
+			{
 				dummyBitmapdata.setPixel(xPos, yPos, FlxG.random.color().to24Bit());
 			}
 		}

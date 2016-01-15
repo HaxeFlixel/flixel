@@ -115,7 +115,8 @@ class OptionsState extends FlxState
 	private function clickBack():Void
 	{
 		_save.close();
-		FlxG.camera.fade(FlxColor.BLACK,.33, false,function() {
+		FlxG.camera.fade(FlxColor.BLACK, .33, false, function()
+		{
 			FlxG.switchState(new MenuState());
 		});
 	}

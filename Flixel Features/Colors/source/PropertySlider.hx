@@ -59,19 +59,23 @@ class PropertySlider extends FlxSpriteGroup
 		this.maxValue = maxValue;
 		value = 0;
 		
-		upSmallButton = new Button(buttonWidth * 2 + buttonSpacing * 3 + valueWidth, labelHeight, ">", function() {
+		upSmallButton = new Button(buttonWidth * 2 + buttonSpacing * 3 + valueWidth, labelHeight, ">", function()
+		{
 			value += smallDelta;
 			onChange(this);
 		});
-		upBigButton = new Button(buttonWidth * 3 + buttonSpacing * 4 + valueWidth, labelHeight, ">>", function() {
+		upBigButton = new Button(buttonWidth * 3 + buttonSpacing * 4 + valueWidth, labelHeight, ">>", function()
+		{
 			value += bigDelta;
 			onChange(this);
 		});
-		downSmallButton = new Button(buttonWidth + buttonSpacing, labelHeight, "<", function() {
+		downSmallButton = new Button(buttonWidth + buttonSpacing, labelHeight, "<", function()
+		{
 			value -= smallDelta;
 			onChange(this);
 		});
-		downBigButton = new Button(0, labelHeight, "<<", function() {
+		downBigButton = new Button(0, labelHeight, "<<", function()
+		{
 			value -= bigDelta;
 			onChange(this);
 		});

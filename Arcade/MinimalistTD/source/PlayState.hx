@@ -207,9 +207,11 @@ class PlayState extends FlxState
 		
 		_lifeGroup = new FlxGroup();
 		
-		for (xPos in 0...3) {
-			for (yPos in 0...3) {
-				var life:FlxSprite = new FlxSprite(_goal.x + 5 + 4 * xPos, _goal.y + 5 + 4 * yPos);
+		for (xPos in 0...3)
+		{
+			for (yPos in 0...3)
+			{
+				var life = new FlxSprite(_goal.x + 5 + 4 * xPos, _goal.y + 5 + 4 * yPos);
 				life.makeGraphic(2, 2, FlxColor.WHITE);
 				_lifeGroup.add(life);
 			}
@@ -266,9 +268,8 @@ class PlayState extends FlxState
 	 */
 	public function killedWave():Void
 	{
-		if (wave != 0) {
+		if (wave != 0)
 			FlxG.sound.play("wavedefeated");
-		}
 		
 		_waveCounter = 3 * FlxG.updateFramerate;
 		
@@ -284,17 +285,14 @@ class PlayState extends FlxState
 		
 		// These elements expand when increased; this reduces their size back to normal
 		
-		if (_moneyText.size > 8) {
+		if (_moneyText.size > 8)
 			_moneyText.size--;
-		}
 		
-		if (_enemyText.size > 8) {
+		if (_enemyText.size > 8)
 			_enemyText.size--;
-		}
 		
-		if (_waveText.size > 8) {
+		if (_waveText.size > 8)
 			_waveText.size--;
-		}
 		
 		// Check for key presses, which can substitute for button clicks.
 		
@@ -303,16 +301,17 @@ class PlayState extends FlxState
 		if (FlxG.keys.justReleased.SPACE) speedButtonCallback(true); 
 		if (FlxG.keys.justReleased.S) sellButtonCallback(true);
 		if (FlxG.keys.justReleased.Y) sellConfirmCallback(true);
-		if (FlxG.keys.justReleased.ESCAPE) {
+		if (FlxG.keys.justReleased.ESCAPE)
+		{
 			FlxG.sound.destroy(true);
 			FlxG.switchState(new MenuState());
 		}
-		if (FlxG.keys.justReleased.N) {
-			if (_sellConfirm.visible) {
+		if (FlxG.keys.justReleased.N)
+		{
+			if (_sellConfirm.visible)
 				sellConfirmCallback(false);
-			} else {
+			else
 				nextWaveCallback(true); 
-			}
 		}
 		if (FlxG.keys.justReleased.ESCAPE) toggleMenus(General); 
 		if (FlxG.keys.justReleased.ONE) upgradeRangeCallback(); 
@@ -323,7 +322,8 @@ class PlayState extends FlxState
 		// If needed, updates the grid highlight square buildHelper and the range indicator
 		
 		#if !mobile
-		if (_buildingMode) {
+		if (_buildingMode)
+		{
 			_buildHelper.x = FlxG.mouse.x - (FlxG.mouse.x % 8);
 			_buildHelper.y = FlxG.mouse.y - (FlxG.mouse.y % 8);
 			updateRangeSprite(_buildHelper.getMidpoint(), 40);
@@ -332,7 +332,8 @@ class PlayState extends FlxState
 		
 		// Controls mouse clicks, which either build a tower or offer the option to upgrade a tower.
 		
-		if (FlxG.mouse.justReleased) {
+		if (FlxG.mouse.justReleased)
+		{
 			if (_buildingMode)
 			{
 				buildTower();
@@ -531,9 +532,8 @@ class PlayState extends FlxState
 	 */
 	private function buildTowerCallback(Skip:Bool = false):Void
 	{
-		if (towerPrice > money) {
+		if (towerPrice > money)
 			return;
-		}
 		
 		_buildingMode = !_buildingMode;
 		#if !mobile
@@ -549,15 +549,13 @@ class PlayState extends FlxState
 	 */
 	private function speedButtonCallback(Skip:Bool = false):Void
 	{
-		if (!_guiGroup.visible && !Skip) {
+		if (!_guiGroup.visible && !Skip)
 			return;
-		}
 		
-		if (_speed < 3) {
+		if (_speed < 3)
 			_speed += 1;
-		} else {
+		else
 			_speed = 1;
-		}
 		
 		FlxG.timeScale = _speed;
 		_speedButton.text = "x" + _speed;
@@ -570,13 +568,13 @@ class PlayState extends FlxState
 	 */
 	private function sellButtonCallback(Skip:Bool = false):Void
 	{
-		if (!_guiGroup.visible || _towerGroup.length == 0) {
+		if (!_guiGroup.visible || _towerGroup.length == 0)
 			return;
-		}
 		
 		toggleMenus(Sell);
 		
-		if (_buildingMode) {
+		if (_buildingMode)
+		{
 			_buildingMode = false;
 			_towerRange.visible = false;
 		}
@@ -596,9 +594,7 @@ class PlayState extends FlxState
 	private function sellConfirmCallback(Sure:Bool):Void
 	{
 		if (!_sellConfirm.visible)
-		{
 			return;
-		}
 		
 		_towerRange.visible = false;
 		
@@ -610,7 +606,8 @@ class PlayState extends FlxState
 			// Remove the indicator for this tower as well
 			for (indicator in towerIndicators)
 			{
-				if (indicator.x == _towerSelected.getMidpoint().x - 1 && indicator.y == _towerSelected.getMidpoint().y - 1) {
+				if (indicator.x == _towerSelected.getMidpoint().x - 1 && indicator.y == _towerSelected.getMidpoint().y - 1)
+				{
 					towerIndicators.remove(indicator, true);
 					indicator.visible = false;
 					indicator = null;
@@ -622,9 +619,8 @@ class PlayState extends FlxState
 			{
 				_sellButton.visible = false;
 				
-				if (_tutText.visible) {
+				if (_tutText.visible)
 					_tutText.visible = false;
-				}
 			}
 			
 			// Give the player their money back
@@ -655,13 +651,11 @@ class PlayState extends FlxState
 	 */
 	private function nextWaveCallback(Skip:Bool = false):Void
 	{
-		if (!_guiGroup.visible && !Skip) {
+		if (!_guiGroup.visible && !Skip)
 			return;
-		}
 		
-		if (enemiesToKill > 0) {
+		if (enemiesToKill > 0)
 			return;
-		}
 		
 		spawnWave();
 		playSelectSound();
@@ -673,9 +667,7 @@ class PlayState extends FlxState
 	private function resetCallback(Skip:Bool = false):Void
 	{
 		if (!_guiGroup.visible && !Skip)
-		{
 			return;
-		}
 		
 		FlxG.resetState();
 		playSelectSound();
@@ -688,14 +680,12 @@ class PlayState extends FlxState
 	private function buildTower():Void
 	{
 		// Can't place towers on GUI
-		
 		if (FlxG.mouse.y > FlxG.height - 16)
 		{
 			return;
 		}
 		
 		// Can't buy towers without money
-		
 		if (money < towerPrice)
 		{
 			FlxG.sound.play("deny");
@@ -705,12 +695,10 @@ class PlayState extends FlxState
 		}
 		
 		// Snap to grid
-		
 		var xPos:Float = FlxG.mouse.x - (FlxG.mouse.x % 8);
 		var yPos:Float = FlxG.mouse.y - (FlxG.mouse.y % 8);
 		
 		// Can't place towers on other towers
-		
 		for (tower in _towerGroup)
 		{
 			if (tower.x == xPos && tower.y == yPos)
@@ -723,7 +711,6 @@ class PlayState extends FlxState
 		}
 		
 		//Can't place towers on the road
-		
 		if (_map.getTile(Std.int(xPos / 8), Std.int(yPos / 8)) == 0)
 		{
 			FlxG.sound.play("deny");
@@ -735,17 +722,13 @@ class PlayState extends FlxState
 		_towerGroup.add(new Tower(xPos, yPos, towerPrice));
 		
 		// After the first tower is bought, sell mode becomes available.
-		
-		if (_sellButton.visible == false) {
+		if (_sellButton.visible == false)
 			_sellButton.visible = true;
-		}
 		
 		// If this is the first tower the player has built, they get the tutorial text.
 		// This is made invisible after they've bought an upgrade.
-		
-		if (_tutText.visible == false && _towerGroup.length == 1) {
+		if (_tutText.visible == false && _towerGroup.length == 1)
 			_tutText.visible = true;
-		}
 		
 		FlxG.sound.play("build");
 		
@@ -773,9 +756,8 @@ class PlayState extends FlxState
 		_centerText.x = -200;
 		_centerText.text = "Wave " + wave;
 		
-		if (End) {
+		if (End)
 			_centerText.text = "Game Over! :(";
-		}
 		
 		FlxTween.tween(_centerText, { x: 0 }, 2, { ease: FlxEase.expoOut, onComplete: hideText });
 		
@@ -799,9 +781,8 @@ class PlayState extends FlxState
 	 */
 	private function spawnWave():Void
 	{
-		if (_gameOver) {
+		if (_gameOver)
 			return;
-		}
 		
 		wave ++;
 		announceWave();
@@ -881,11 +862,11 @@ class PlayState extends FlxState
 	 */
 	private function upgradeRangeCallback():Void
 	{
-		if (!_upgradeMenu.visible) {
+		if (!_upgradeMenu.visible)
 			return;
-		}
 		
-		if (money >= _towerSelected.range_PRIZE) {
+		if (money >= _towerSelected.range_PRIZE)
+		{
 			money -= _towerSelected.range_PRIZE;
 			_towerSelected.upgradeRange();
 			upgradeHelper();
@@ -898,11 +879,11 @@ class PlayState extends FlxState
 	 */
 	private function upgradeDamageCallback():Void
 	{
-		if (!_upgradeMenu.visible) {
+		if (!_upgradeMenu.visible)
 			return;
-		}
 		
-		if (money >= _towerSelected.damage_PRIZE) {
+		if (money >= _towerSelected.damage_PRIZE)
+		{
 			money -= _towerSelected.damage_PRIZE;
 			_towerSelected.upgradeDamage();
 			upgradeHelper();
@@ -915,11 +896,11 @@ class PlayState extends FlxState
 	 */
 	private function upgradeFirerateCallback():Void
 	{
-		if (!_upgradeMenu.visible) {
+		if (!_upgradeMenu.visible)
 			return;
-		}
 		
-		if (money >= _towerSelected.firerate_PRIZE) {
+		if (money >= _towerSelected.firerate_PRIZE)
+		{
 			money -= _towerSelected.firerate_PRIZE;
 			_towerSelected.upgradeFirerate();
 			upgradeHelper();
@@ -934,9 +915,8 @@ class PlayState extends FlxState
 		updateUpgradeLabels();
 		playSelectSound();
 		
-		if (_tutText.visible) {
+		if (_tutText.visible)
 			_tutText.visible = false;
-		}
 	}
 	
 	/**

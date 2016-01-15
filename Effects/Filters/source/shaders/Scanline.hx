@@ -6,8 +6,8 @@ import openfl.display.Shader;
  * ...
  * @author MrCdK
  */
-class Scanline extends Shader {
-
+class Scanline extends Shader
+{
 	@fragment var fragment = '
 	const float scale = 1.0;
 
@@ -21,8 +21,8 @@ class Scanline extends Shader {
 	
 	';
 	
-	public function new() {
+	public function new()
+	{
 		super();
 	}
-	
 }

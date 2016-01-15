@@ -15,14 +15,18 @@ class State_SaveMenu extends FlxUIState
 		super.create();
 	}
 	
-	public override function getRequest(id:String, target:Dynamic, data:Dynamic,?params:Array<Dynamic>):Dynamic {
+	public override function getRequest(id:String, target:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Dynamic
+	{
 		var xml:Fast;
-		if (Std.is(data, Fast)) {
+		if (Std.is(data, Fast))
+		{
 			xml = cast(data, Fast);
 		}
-		if (id.indexOf("ui_get:") == 0) {
+		if (id.indexOf("ui_get:") == 0)
+		{
 			var str:String = StringTools.replace(id,"ui_get:","");
-			switch(str) {
+			switch(str)
+			{
 				case "save_slot":
 					return new SaveSlot(data, _ui);
 			}
@@ -30,18 +34,23 @@ class State_SaveMenu extends FlxUIState
 		return null;
 	}
 	
-	public override function getEvent(id:String, target:Dynamic, data:Dynamic,?params:Array<Dynamic>):Void {
-		if (params != null) {
-			switch(id) {
+	public override function getEvent(id:String, target:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void
+	{
+		if (params != null)
+		{
+			switch(id)
+			{
 			case "click_button":
-				switch(cast(params[0], String)) {
+				switch(cast(params[0], String))
+				{
 					case "back": FlxG.switchState(new State_Title());
 				}
 			}
 		}
 	}
 	
-	public override function update(elapsed:Float):Void {
+	public override function update(elapsed:Float):Void
+	{
 		super.update(elapsed);
 	}
 }
