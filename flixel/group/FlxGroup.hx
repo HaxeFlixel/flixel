@@ -212,7 +212,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	}
 	
 	/**
-	 * Inserts a new FlxBasic subclass (FlxBasic, FlxSprite, Enemy, etc) to the group at the specified position.
+	 * Inserts a new FlxBasic subclass (FlxBasic, FlxSprite, Enemy, etc) into the group at the specified position.
 	 * FlxGroup will try to replace a null member at the specified position of the array first.
 	 * Failing that, FlxGroup will insert it at the position of the member array,
 	 * assuming there is room for it, and doubling the size of the array if necessary.
@@ -220,14 +220,14 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 * the object will NOT be inserted to the group!
 	 * 
 	 * @param  position  The position in the group where you want to insert the object.
-	 * @param  object    The object you want to insert in the group.
+	 * @param  object    The object you want to insert into the group.
 	 * @return  The same FlxBasic object that was passed in.
 	 */
 	public function insert(position:Int, object:T):T
 	{
 		if (object == null)
 		{
-			FlxG.log.warn("Cannot insert a `null` object in a FlxGroup.");
+			FlxG.log.warn("Cannot insert a `null` object into a FlxGroup.");
 			return null;
 		}
 
@@ -250,7 +250,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			return object;
 		}
 
-		// If we made it this far, we need to insert the object in the group at the specified position.
+		// If we made it this far, we need to insert the object into the group at the specified position.
 		members.insert(position, object);
 		length++;
 
