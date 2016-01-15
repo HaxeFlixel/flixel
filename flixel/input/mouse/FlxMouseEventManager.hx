@@ -401,7 +401,7 @@ class FlxMouseEventManager extends FlxBasic
 			{
 				for (buttonID in current.mouseButtons)
 				{
-					if (FlxMouseButton.getFromID(buttonID).justPressed)
+					if (FlxMouseButton.getByID(buttonID).justPressed)
 					{
 						current.onMouseDown(current.object);
 					}
@@ -416,7 +416,7 @@ class FlxMouseEventManager extends FlxBasic
 			{
 				for (buttonID in current.mouseButtons)
 				{
-					if (FlxMouseButton.getFromID(buttonID).justReleased)
+					if (FlxMouseButton.getByID(buttonID).justReleased)
 					{
 						current.onMouseUp(current.object);
 					}

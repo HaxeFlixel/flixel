@@ -405,7 +405,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 		{
 			for (buttonID in mouseButtons)
 			{
-				var button = FlxMouseButton.getFromID(buttonID);
+				var button = FlxMouseButton.getByID(buttonID);
 				if (button != null && checkInput(FlxG.mouse, button, button.justPressedPosition, camera))
 				{
 					return true;
