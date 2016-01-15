@@ -18,12 +18,11 @@ class PlayState2 extends FlxState
 		FlxG.state.bgColor = 0xffacbcd7;
 		
 		// A bunch of blocks
-		var block:FlxSprite;
-		var blocks:FlxGroup = new FlxGroup();
+		var blocks = new FlxGroup();
 		
 		for (i in 0...300)
 		{
-			block = new FlxSprite(Math.floor(FlxG.random.float() * 40) * 16, Math.floor(FlxG.random.float() * 30) * 16);
+			var block = new FlxSprite(FlxG.random.int(0, 40) * 16, FlxG.random.int(0, 30) * 16);
 			block.makeGraphic(16, 16, 0xff233e58);
 			block.immovable = true;
 			block.moves = false;
@@ -34,7 +33,7 @@ class PlayState2 extends FlxState
 		add(blocks);
 		
 		// Shoot nuts and bolts all over
-		var dispenser:FlxEmitter = new FlxEmitter();
+		var dispenser = new FlxEmitter();
 		dispenser.setSize(640, 480);
 		dispenser.solid = true;
 		dispenser.velocity.set( -100, -100, 100, 100);
@@ -55,8 +54,7 @@ class PlayState2 extends FlxState
 		FlxG.camera.setScrollBoundsRect(0, 0, 640, 480, true);
 		
 		// Instructions and stuff
-		var tx:FlxText;
-		tx = new FlxText(2, FlxG.height - 12, FlxG.width, "Interact with ARROWS + SPACE, or press ENTER for next demo.");
+		var tx = new FlxText(2, FlxG.height - 12, FlxG.width, "Interact with ARROWS + SPACE, or press ENTER for next demo.");
 		tx.scrollFactor.x = tx.scrollFactor.y = 0;
 		tx.color = 0x49637a;
 		add(tx);

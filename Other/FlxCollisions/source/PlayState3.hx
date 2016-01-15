@@ -24,7 +24,7 @@ class PlayState3 extends FlxState
 		add(_platform);
 		
 		// Pour nuts and bolts out of the air
-		var dispenser:FlxEmitter = new FlxEmitter((FlxG.width - 64) / 2, -64);
+		var dispenser = new FlxEmitter((FlxG.width - 64) / 2, -64);
 		dispenser.acceleration.set(0, 200);
 		dispenser.setSize(64, 64);
 		dispenser.velocity.set( -20, 50, 20, 100);
@@ -36,8 +36,7 @@ class PlayState3 extends FlxState
 		add(dispenser);
 		
 		// Instructions and stuff
-		var tx:FlxText;
-		tx = new FlxText(2, FlxG.height - 12, FlxG.width, "Interact with ARROWS + SPACE, or press ENTER for next demo.");
+		var tx = new FlxText(2, FlxG.height - 12, FlxG.width, "Interact with ARROWS + SPACE, or press ENTER for next demo.");
 		tx.scrollFactor.x = tx.scrollFactor.y = 0;
 		tx.color = 0x49637a;
 		add(tx);
