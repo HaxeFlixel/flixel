@@ -162,8 +162,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	/**
 	 * Adds a new FlxBasic subclass (FlxBasic, FlxSprite, Enemy, etc) to the group.
 	 * FlxGroup will try to replace a null member of the array first.
-	 * Failing that, FlxGroup will add it to the end of the member array,
-	 * assuming there is room for it, and doubling the size of the array if necessary.
+	 * Failing that, FlxGroup will add it to the end of the member array.
 	 * WARNING: If the group has a maxSize that has already been met,
 	 * the object will NOT be added to the group!
 	 * 
@@ -214,8 +213,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	/**
 	 * Inserts a new FlxBasic subclass (FlxBasic, FlxSprite, Enemy, etc) into the group at the specified position.
 	 * FlxGroup will try to replace a null member at the specified position of the array first.
-	 * Failing that, FlxGroup will insert it at the position of the member array,
-	 * assuming there is room for it, and doubling the size of the array if necessary.
+	 * Failing that, FlxGroup will insert it at the position of the member array.
 	 * WARNING: If the group has a maxSize that has already been met,
 	 * the object will NOT be inserted to the group!
 	 * 
