@@ -347,7 +347,7 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 					FlxTween.tween(_sprEnemy, { x: _sprEnemy.x + 4 }, .1, { onComplete: function(_)
 					{
 						FlxTween.tween(_sprEnemy, { x: _sprEnemy.x - 4 }, .1);
-					}} );
+					}});
 					_sndHurt.play();
 					_enemyHealth--;
 					_enemyHealthBar.value = (_enemyHealth / _enemyMaxHealth) * 100; // change the enemy's health bar

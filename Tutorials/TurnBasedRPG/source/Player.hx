@@ -46,10 +46,11 @@ class Player extends FlxSprite
 		_right = FlxG.keys.anyPressed([RIGHT, D]);
 		#end
 		#if mobile
-		_up = _up || PlayState.virtualPad.buttonUp.status == FlxButton.PRESSED;
-		_down = _down || PlayState.virtualPad.buttonDown.status == FlxButton.PRESSED;
-		_left  = _left || PlayState.virtualPad.buttonLeft.status == FlxButton.PRESSED;
-		_right = _right || PlayState.virtualPad.buttonRight.status == FlxButton.PRESSED;
+		var virtualPad = PlayState.virtualPad;
+		_up = _up || virtualPad.buttonUp.pressed;
+		_down = _down || virtualPad.buttonDown.pressed;
+		_left  = _left || virtualPad.buttonLeft.pressed;
+		_right = _right || virtualPad.buttonRight.pressed;
 		#end
 		
 		if (_up && _down)

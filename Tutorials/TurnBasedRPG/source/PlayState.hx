@@ -104,7 +104,6 @@ class PlayState extends FlxState
 		}
 	}
 	
-	
 	/**
 	 * Function that is called when this state is destroyed - you might want to 
 	 * consider setting all objects this state uses to null to help garbage collection.
@@ -144,40 +143,37 @@ class PlayState extends FlxState
 			_grpEnemies.forEachAlive(checkEnemyVision);
 			FlxG.overlap(_player, _grpEnemies, playerTouchEnemy);
 		}
-		else
+		else if (!_combatHud.visible)
 		{
-			if (!_combatHud.visible)
+			_health = _combatHud.playerHealth;
+			_hud.updateHUD(_health, _money);
+			if (_combatHud.outcome == DEFEAT)
 			{
-				_health = _combatHud.playerHealth;
-				_hud.updateHUD(_health, _money);
-				if (_combatHud.outcome == DEFEAT)
+				_ending = true;
+				FlxG.camera.fade(FlxColor.BLACK, .33, false, doneFadeOut);
+			}
+			else
+			{
+				if (_combatHud.outcome == VICTORY)
 				{
-					_ending = true;
-					FlxG.camera.fade(FlxColor.BLACK, .33, false, doneFadeOut);
+					_combatHud.e.kill();
+					if (_combatHud.e.etype == 1)
+					{
+						_won = true;
+						_ending = true;
+						FlxG.camera.fade(FlxColor.BLACK, .33, false, doneFadeOut);
+					}
 				}
-				else
+				else 
 				{
-					if (_combatHud.outcome == VICTORY)
-					{
-						_combatHud.e.kill();
-						if (_combatHud.e.etype == 1)
-						{
-							_won = true;
-							_ending = true;
-							FlxG.camera.fade(FlxColor.BLACK, .33, false, doneFadeOut);
-						}
-					}
-					else 
-					{
-						_combatHud.e.flicker();
-					}
-					#if mobile
-					virtualPad.visible = true;
-					#end
-					_inCombat = false;
-					_player.active = true;
-					_grpEnemies.active = true;
+					_combatHud.e.flicker();
 				}
+				#if mobile
+				virtualPad.visible = true;
+				#end
+				_inCombat = false;
+				_player.active = true;
+				_grpEnemies.active = true;
 			}
 		}
 	}
