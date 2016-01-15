@@ -250,15 +250,15 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 			var _fire:Bool = false;
 			
 			// check to see any keys are pressed and set the cooresponding flags.
-			if (FlxG.keys.anyJustReleased(["SPACE", "X"]))
+			if (FlxG.keys.anyJustReleased([SPACE, X, ENTER]))
 			{
 				_fire = true;
 			}
-			else if (FlxG.keys.anyJustReleased(["W", "UP"]))
+			else if (FlxG.keys.anyJustReleased([W, UP]))
 			{
 				_up = true;
 			}
-			else if (FlxG.keys.anyJustReleased(["S", "DOWN"]))
+			else if (FlxG.keys.anyJustReleased([S, DOWN]))
 			{
 				_down = true;
 			}
