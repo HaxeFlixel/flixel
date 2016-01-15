@@ -64,7 +64,7 @@ class GameOverState extends FlxState
 		// we want to see what the hi-score is
 		var _hiScore = checkHiScore(_score);
 		
-		_txtHiScore = new FlxText(0, (FlxG.height / 2) + 10, 0, "Hi-Score: " + Std.string(_hiScore), 8);
+		_txtHiScore = new FlxText(0, (FlxG.height / 2) + 10, 0, "Hi-Score: " + _hiScore, 8);
 		_txtHiScore.alignment = "center";
 		_txtHiScore.screenCenter(FlxAxes.Y);
 		add(_txtHiScore);

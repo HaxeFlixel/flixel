@@ -67,8 +67,8 @@ class PlayState extends FlxState
 		
 		collidables = new FlxGroup();
 		
-		var topWall:PongSprite = new PongSprite(0, -2, FlxG.width, 2, Reg.dark);
-		var bottomWall:PongSprite = new PongSprite(0, FlxG.height, FlxG.width, 2, Reg.dark);
+		var topWall = new PongSprite(0, -2, FlxG.width, 2, Reg.dark);
+		var bottomWall = new PongSprite(0, FlxG.height, FlxG.width, 2, Reg.dark);
 		topWall.moves = false;
 		bottomWall.moves = false;
 		topWall.immovable = true;
@@ -94,33 +94,37 @@ class PlayState extends FlxState
 	override public function update(elapsed:Float):Void
 	{
 		#if !FLX_NO_KEYBOARD
-		if (FlxG.keys.justPressed.P) {
+		if (FlxG.keys.justPressed.P)
+		{
 			_paused = !_paused;
 		}
-		if (FlxG.keys.justPressed.ESCAPE) {
+		if (FlxG.keys.justPressed.ESCAPE)
+		{
 			FlxG.switchState(new MenuState());
 		}
 		#end
 		
-		if (_paused) {
+		if (_paused)
 			return;
-		}
 		
 		_player.y = FlxMath.bound(FlxG.mouse.y, 0, FlxG.height - _player.height);
 		
-		if (ball.alive) {
-			if (ball.x > FlxG.width) {
+		if (ball.alive)
+		{
+			if (ball.x > FlxG.width)
+			{
 				ball.kill();
 				_enemy.kill();
 				Reg.level++;
 				_centerText.text = "Nice! Moving on to level " + Reg.level + "!";
 				
-				FlxGameJolt.addScore(Std.string(Reg.level - 1) + " enemies destroyed", Reg.level - 1, 20599);
+				FlxGameJolt.addScore((Reg.level - 1) + " enemies destroyed", Reg.level - 1, 20599);
 				
 				new FlxTimer().start(4, newEnemy, 1);
 			}
 			
-			if (ball.x < 0) {
+			if (ball.x < 0)
+			{
 				ball.kill();
 				_player.kill();
 				_centerText.text = "Aww! You lost. You got as far as level " + Reg.level + " though, so there's that.";

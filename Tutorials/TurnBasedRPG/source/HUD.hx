@@ -43,7 +43,7 @@ class HUD extends FlxTypedGroup<FlxSprite>
 	
 	public function updateHUD(Health:Int = 0, Money:Int = 0):Void
 	{
-		_txtHealth.text = Std.string(Health) + " / 3";
+		_txtHealth.text = Health + " / 3";
 		_txtMoney.text = Std.string(Money);
 		_txtMoney.x = _sprMoney.x - _txtMoney.width - 4;
 	}

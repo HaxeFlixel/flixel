@@ -25,7 +25,7 @@ class Enemy extends FlxSprite
 	{
 		super(X, Y);
 		etype = EType;
-		loadGraphic("assets/images/enemy-" + Std.string(etype) + ".png", true, 16, 16);
+		loadGraphic("assets/images/enemy-" + etype + ".png", true, 16, 16);
 		setFacingFlip(FlxObject.LEFT, false, false);
 		setFacingFlip(FlxObject.RIGHT, true, false);
 		animation.add("d", [0, 1, 0, 2], 6, false);
@@ -140,7 +140,7 @@ class Enemy extends FlxSprite
 		if (etype != EType)
 		{
 			etype = EType;
-			loadGraphic("assets/images/enemy-" + Std.string(etype) + ".png", true, 16, 16);
+			loadGraphic("assets/images/enemy-" + etype + ".png", true, 16, 16);
 		}
 	}
 	

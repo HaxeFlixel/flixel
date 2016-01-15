@@ -73,7 +73,7 @@ class PlayState extends FlxState
 	private function updateStatusText():Void
 	{
 		_statusText.text = STATUS.replace("[speed]", Std.string(_rainbow.changeSpeed))
-		                         .replace("[alpha]", Std.string(Std.int(_rainbow.alpha * 100)) + '%');
+		                         .replace("[alpha]", Std.int(_rainbow.alpha * 100) + '%');
 	}
 	#end
 }

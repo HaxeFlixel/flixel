@@ -104,7 +104,7 @@ class PlayState extends FlxState
 		
 		// Calculate the time it took to create the cave and update the text
 		var timeDiff:Float = FlxMath.roundDecimal(Timer.stamp() - time1, 4);
-		_generationTime.text = "Generation time: " + Std.string(timeDiff) + "s";
+		_generationTime.text = "Generation time: " + timeDiff + "s";
 		_generationTime.alpha = 0;
 		
 		// Loads the cave to the tilemap

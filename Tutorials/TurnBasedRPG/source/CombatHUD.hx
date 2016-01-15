@@ -233,7 +233,7 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 	 */
 	private function updatePlayerHealth():Void
 	{
-		_txtPlayerHealth.text = Std.string(playerHealth) + " / 3";
+		_txtPlayerHealth.text = playerHealth + " / 3";
 		_txtPlayerHealth.x = _sprPlayer.x + 4 - (_txtPlayerHealth.width / 2);
 	}
 	

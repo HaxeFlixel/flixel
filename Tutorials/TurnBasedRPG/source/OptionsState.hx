@@ -56,7 +56,7 @@ class OptionsState extends FlxState
 		_barVolume.createFilledBar(0xff464646, FlxColor.WHITE, true, FlxColor.WHITE);
 		add(_barVolume);
 		
-		_txtVolumeAmt = new FlxText(0, 0, 200, Std.string( FlxG.sound.volume * 100) + "%", 8);
+		_txtVolumeAmt = new FlxText(0, 0, 200, (FlxG.sound.volume * 100) + "%", 8);
 		_txtVolumeAmt.alignment = "center";
 		_txtVolumeAmt.borderStyle = FlxTextBorderStyle.OUTLINE;
 		_txtVolumeAmt.borderColor = 0xff464646;
@@ -147,7 +147,7 @@ class OptionsState extends FlxState
 	{
 		var vol:Int = Math.round(FlxG.sound.volume * 100);
 		_barVolume.value = vol;
-		_txtVolumeAmt.text = Std.string(vol) + "%";
+		_txtVolumeAmt.text = vol + "%";
 	}
 	
 	override public function destroy():Void 
