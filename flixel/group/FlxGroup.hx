@@ -212,6 +212,52 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	}
 	
 	/**
+	 * Inserts a new FlxBasic subclass (FlxBasic, FlxSprite, Enemy, etc) to the group at the specified position.
+	 * FlxGroup will try to replace a null member at the specified position of the array first.
+	 * Failing that, FlxGroup will insert it at the position of the member array,
+	 * assuming there is room for it, and doubling the size of the array if necessary.
+	 * WARNING: If the group has a maxSize that has already been met,
+	 * the object will NOT be inserted to the group!
+	 * 
+	 * @param  position  The position in the group where you want to insert the object.
+	 * @param  object    The object you want to insert in the group.
+	 * @return  The same FlxBasic object that was passed in.
+	 */
+	public function insert(position:Int, object:T):T
+	{
+		if (object == null)
+		{
+			FlxG.log.warn("Cannot insert a `null` object in a FlxGroup.");
+			return null;
+		}
+
+		// Don't bother inserting an object twice.
+		if (members.indexOf(object) >= 0)
+		{
+			return object;
+		}
+
+		// First, look if the member at position is null, so we can directly assign the object at the position.
+		if (position < length && members[position] == null)
+		{
+			members[position] = object;
+			return object;
+		}
+
+		// If the group is full, return the object
+		if (maxSize > 0 && length >= maxSize)
+		{
+			return object;
+		}
+
+		// If we made it this far, we need to insert the object in the group at the specified position.
+		members.insert(position, object);
+		length++;
+
+		return object;
+	}
+
+	/**
 	 * Recycling is designed to help you reuse game objects without always re-allocating or "newing" them.
 	 * It behaves differently depending on whether maxSize equals 0 or is bigger than 0.
 	 * 
