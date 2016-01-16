@@ -74,7 +74,7 @@ class State_Battle extends FlxUIState
 	
 	public override function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void
 	{
-		if (params != null
+		if (params != null)
 		{
 			switch(id)
 			{
