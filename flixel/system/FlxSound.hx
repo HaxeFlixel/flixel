@@ -225,7 +225,6 @@ class FlxSound extends FlxBasic
 		time = _channel.position;
 		
 		var radialMultiplier:Float = 1.0;
-		var fadeMultiplier:Float = 1.0;
 		
 		//Distance-based volume control
 		if (_target != null)
@@ -240,7 +239,7 @@ class FlxSound extends FlxBasic
 			}
 		}
 		
-		_volumeAdjust = radialMultiplier * fadeMultiplier;
+		_volumeAdjust = radialMultiplier;
 		updateTransform();
 		
 		if (_transform.volume > 0)
