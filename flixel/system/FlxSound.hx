@@ -381,7 +381,7 @@ class FlxSound extends FlxBasic
 	 * 
 	 * @param	ForceRestart	Whether to start the sound over or not.  Default value is false, meaning if the sound is already playing or was paused when you call play(), it will continue playing from its current position, NOT start again from the beginning.
 	 */
-	public function play(ForceRestart:Bool = false):FlxSound
+	public function play(ForceRestart:Bool = false, Volume:Float = 1):FlxSound
 	{
 		if (!exists)
 		{
@@ -405,6 +405,7 @@ class FlxSound extends FlxBasic
 		{
 			startSound(0);
 		}
+		volume = Volume;
 		return this;
 	}
 	
