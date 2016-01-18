@@ -96,7 +96,7 @@ class QuadPath extends Motion
 		return _points[index % _points.length];
 	}
 	
-	override private function start():QuadPath
+	override public function start():QuadPath
 	{
 		_index = (backward) ? (_numSegs - 1) : 0; 
 		super.start();
