@@ -477,7 +477,7 @@ class FlxTween implements IFlxDestroyable
 	/**
 	 * Starts the Tween, or restarts it if it's currently running.
 	 */
-	private function start():FlxTween
+	public function start():FlxTween
 	{
 		_waitingForRestart = false;
 		_secondsSinceStart = 0;
