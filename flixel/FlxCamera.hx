@@ -536,10 +536,10 @@ class FlxCamera extends FlxBasic
 			                  transform.alphaMultiplier != 1.0));
 			
 			var hasColorOffsets:Bool = (transform != null &&
-			                 (transform.redOffset   != 1.0 ||
-			                  transform.greenOffset != 1.0 ||
-			                  transform.blueOffset  != 1.0 ||
-			                  transform.alphaOffset != 1.0));
+			                 (transform.redOffset   != 0 ||
+			                  transform.greenOffset != 0 ||
+			                  transform.blueOffset  != 0 ||
+			                  transform.alphaOffset != 0));
 			
 			#if !FLX_RENDER_TRIANGLE
 			var drawItem:FlxDrawTilesItem = startQuadBatch(frame.parent, isColored, hasColorOffsets, blend, smoothing);
@@ -575,10 +575,10 @@ class FlxCamera extends FlxBasic
 			                  transform.alphaMultiplier != 1.0));
 			
 			var hasColorOffsets:Bool = (transform != null &&
-			                 (transform.redOffset   != 1.0 ||
-			                  transform.greenOffset != 1.0 ||
-			                  transform.blueOffset  != 1.0 ||
-			                  transform.alphaOffset != 1.0));
+			                 (transform.redOffset   != 0 ||
+			                  transform.greenOffset != 0 ||
+			                  transform.blueOffset  != 0 ||
+			                  transform.alphaOffset != 0));
 			#if !FLX_RENDER_TRIANGLE
 			var drawItem:FlxDrawTilesItem = startQuadBatch(frame.parent, isColored, hasColorOffsets, blend, smoothing);
 			#else
