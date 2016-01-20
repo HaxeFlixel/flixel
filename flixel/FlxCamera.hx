@@ -359,7 +359,7 @@ class FlxCamera extends FlxBasic
 	
 	#if !FLX_RENDER_TRIANGLE
 	@:noCompletion
-	public function startQuadBatch(graphic:FlxGraphic, colored:Bool, ?blend:BlendMode = null, smooth:Bool = false, hasColorOffsets:Bool = false):FlxDrawTilesItem
+	public function startQuadBatch(graphic:FlxGraphic, colored:Bool, hasColorOffsets:Bool = false, ?blend:BlendMode = null, smooth:Bool = false):FlxDrawTilesItem
 	{
 		var itemToReturn:FlxDrawTilesItem = null;
 		var blendInt:Int = FlxDrawBaseItem.blendToInt(blend);
@@ -534,9 +534,9 @@ class FlxCamera extends FlxBasic
 			var isColored:Bool = (cr != 1.0) || (cg != 1.0) || (cb != 1.0) || (ca != 1.0);
 			var hasColorOffsets:Bool = (croff != 0) || (cgoff != 0) || (cboff != 0) || (caoff != 0);
 			#if !FLX_RENDER_TRIANGLE
-			var drawItem:FlxDrawTilesItem = startQuadBatch(frame.parent, isColored, blend, smoothing, hasColorOffsets);
+			var drawItem:FlxDrawTilesItem = startQuadBatch(frame.parent, isColored, hasColorOffsets, blend, smoothing);
 			#else
-			var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(frame.parent, smoothing, isColored, blend, hasColorOffsets);
+			var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(frame.parent, smoothing, isColored, blend);
 			#end
 			drawItem.addQuad(frame, matrix, cr, cg, cb, ca, croff, cgoff, cboff, caoff);
 		}
@@ -564,7 +564,7 @@ class FlxCamera extends FlxBasic
 			var isColored:Bool = (cr != 1.0) || (cg != 1.0) || (cb != 1.0) || (ca != 1.0);
 			var hasColorOffsets:Bool = (croff != 0) || (cgoff != 0) || (cboff != 0) || (caoff != 0);
 			#if !FLX_RENDER_TRIANGLE
-			var drawItem:FlxDrawTilesItem = startQuadBatch(frame.parent, isColored, blend, smoothing, hasColorOffsets);
+			var drawItem:FlxDrawTilesItem = startQuadBatch(frame.parent, isColored, hasColorOffsets, blend, smoothing);
 			#else
 			var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(frame.parent, smoothing, isColored, blend);
 			#end
