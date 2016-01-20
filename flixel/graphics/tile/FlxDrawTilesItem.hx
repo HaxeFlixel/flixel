@@ -6,6 +6,7 @@ import flixel.graphics.tile.FlxDrawBaseItem.FlxDrawItemType;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxRect;
 import openfl.display.Tilesheet;
+import openfl.geom.ColorTransform;
 
 class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 {
@@ -31,8 +32,7 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 		drawData = null;
 	}
 	
-	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix,
-		red:Float = 1, green:Float = 1, blue:Float = 1, alpha:Float = 1, redOffset:Float = 0, greenOffset:Float = 0, blueOffset:Float = 0, alphaOffset:Float = 0):Void
+	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform):Void
 	{
 		drawData[position++] = matrix.tx;
 		drawData[position++] = matrix.ty;
@@ -49,21 +49,21 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 		drawData[position++] = matrix.c;
 		drawData[position++] = matrix.d;
 		
-		if (colored)
+		if (colored && transform != null)
 		{
-			drawData[position++] = red; 
-			drawData[position++] = green;
-			drawData[position++] = blue;
+			drawData[position++] = transform.redMultiplier; 
+			drawData[position++] = transform.greenMultiplier;
+			drawData[position++] = transform.blueMultiplier;
 		}
 		
-		drawData[position++] = alpha;
+		drawData[position++] = transform != null ? transform.alphaMultiplier : 1.0;
 		
-		if (hasColorOffsets)
+		if (hasColorOffsets && transform != null)
 		{
-			drawData[position++] = redOffset;
-			drawData[position++] = greenOffset;
-			drawData[position++] = blueOffset;
-			drawData[position++] = alphaOffset;
+			drawData[position++] = transform.redOffset;
+			drawData[position++] = transform.greenOffset;
+			drawData[position++] = transform.blueOffset;
+			drawData[position++] = transform.alphaOffset;
 		}
 	}
 	

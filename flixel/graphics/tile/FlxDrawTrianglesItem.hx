@@ -9,6 +9,7 @@ import flixel.math.FlxRect;
 import flixel.util.FlxColor;
 import openfl.display.Graphics;
 import openfl.display.TriangleCulling;
+import openfl.geom.ColorTransform;
 import openfl.Vector;
 
 typedef DrawData<T> = #if flash Vector<T> #else Array<T> #end;
@@ -207,8 +208,7 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		return bounds;
 	}
 	
-	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix,
-		red:Float = 1, green:Float = 1, blue:Float = 1, alpha:Float = 1, redOffset:Float = 0, greenOffset:Float = 0, blueOffset:Float = 0, alphaOffset:Float = 0):Void
+	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform):Void
 	{
 		var prevVerticesPos:Int = verticesPosition;
 		var prevIndicesPos:Int = indicesPosition;
@@ -260,8 +260,20 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		indices[prevIndicesPos + 4] = prevNumberOfVertices + 3;
 		indices[prevIndicesPos + 5] = prevNumberOfVertices;
 		
+		var alpha = transform != null ? transform.alphaMultiplier : 1.0;
+		
 		if (colored)
 		{
+			var red   = 1.0;
+			var green = 1.0;
+			var blue  = 1.0;
+			
+			if (transform != null) {
+				red   = transform.redMultiplier;
+				green = transform.greenMultiplier;
+				blue  = transform.blueMultiplier;
+			}
+			
 			#if neko
 			var color:FlxColor = FlxColor.fromRGBFloat(red, green, blue, 1.0);
 			#else

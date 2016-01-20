@@ -36,6 +36,11 @@ class FlxBitmapText extends FlxSprite
 	public var text(default, set):String = "";
 	
 	/**
+	 * Helper object to avoid many ColorTransform allocations
+	 */
+	private var _colorParams:ColorTransform;
+	
+	/**
 	 * Helper array which contains actual strings for rendering.
 	 */
 	// TODO: switch it to Array<Array<Int>> (for optimizations - i.e. less Utf8 usage)
@@ -215,6 +220,8 @@ class FlxBitmapText extends FlxSprite
 			textDrawData = [];
 			borderDrawData = [];
 		}
+		
+		_colorParams = new ColorTransform();
 	}
 	
 	/**
@@ -382,7 +389,11 @@ class FlxBitmapText extends FlxSprite
 					}
 					
 					_matrix.translate(_point.x + ox, _point.y + oy);
-					camera.drawPixels(currFrame, null, _matrix, bgRed, bgGreen, bgBlue, bgAlpha, blend, antialiasing);
+					_colorParams.redMultiplier   = bgRed;
+					_colorParams.greenMultiplier = bgGreen;
+					_colorParams.blueMultiplier  = bgBlue;
+					_colorParams.alphaMultiplier = bgAlpha;
+					camera.drawPixels(currFrame, null, _matrix, _colorParams, blend, antialiasing);
 				}
 				
 				drawItem = camera.startQuadBatch(font.parent, true, blend, antialiasing);
@@ -405,8 +416,11 @@ class FlxBitmapText extends FlxSprite
 					}
 					
 					_matrix.translate(_point.x + ox, _point.y + oy);
-					
-					drawItem.addQuad(currFrame, _matrix, borderRed, borderGreen, borderBlue, bAlpha);
+					_colorParams.redMultiplier   = borderRed;
+					_colorParams.greenMultiplier = borderGreen;
+					_colorParams.blueMultiplier  = borderBlue;
+					_colorParams.alphaMultiplier = bAlpha;
+					drawItem.addQuad(currFrame, _matrix, _colorParams);
 				}
 				
 				for (j in 0...textLength)
@@ -428,7 +442,11 @@ class FlxBitmapText extends FlxSprite
 					
 					_matrix.translate(_point.x + ox, _point.y + oy);
 					
-					drawItem.addQuad(currFrame, _matrix, textRed, textGreen, textBlue, tAlpha);
+					_colorParams.redMultiplier   = textRed;
+					_colorParams.greenMultiplier = textGreen;
+					_colorParams.blueMultiplier  = textBlue;
+					_colorParams.alphaMultiplier = tAlpha;
+					drawItem.addQuad(currFrame, _matrix, _colorParams);
 				}
 				
 				#if !FLX_NO_DEBUG

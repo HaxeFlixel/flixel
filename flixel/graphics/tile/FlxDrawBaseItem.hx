@@ -5,6 +5,7 @@ import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxMatrix;
 import openfl.display.BlendMode;
 import openfl.display.Tilesheet;
+import openfl.geom.ColorTransform;
 
 /**
  * ...
@@ -84,8 +85,7 @@ class FlxDrawBaseItem<T>
 	
 	public function render(camera:FlxCamera):Void {  }
 	
-	public function addQuad(frame:FlxFrame, matrix:FlxMatrix,
-		red:Float = 1, green:Float = 1, blue:Float = 1, alpha:Float = 1, redOffset:Float = 0, greenOffset:Float = 0, blueOffset:Float = 0, alphaOffset:Float = 0):Void {  }
+	public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform):Void {  }
 	
 	private function get_numVertices():Int
 	{

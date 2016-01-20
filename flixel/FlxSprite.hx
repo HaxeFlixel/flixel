@@ -623,14 +623,6 @@ class FlxSprite extends FlxObject
 			
 			getScreenPosition(_point, camera).subtractPoint(offset);
 			
-			var cr:Float = colorTransform.redMultiplier;
-			var cg:Float = colorTransform.greenMultiplier;
-			var cb:Float = colorTransform.blueMultiplier;
-			var croff:Int = Std.int(colorTransform.redOffset);
-			var cgoff:Int = Std.int(colorTransform.greenOffset);
-			var cboff:Int = Std.int(colorTransform.blueOffset);
-			var caoff:Int = Std.int(colorTransform.alphaOffset);
-			
 			var simple:Bool = isSimpleRender(camera);
 			if (simple)
 			{
@@ -640,7 +632,7 @@ class FlxSprite extends FlxObject
 				}
 				
 				_point.copyToFlash(_flashPoint);
-				camera.copyPixels(_frame, framePixels, _flashRect, _flashPoint, cr, cg, cb, alpha, croff, cgoff, cboff, caoff, blend, antialiasing);
+				camera.copyPixels(_frame, framePixels, _flashRect, _flashPoint, colorTransform, blend, antialiasing);
 			}
 			else
 			{
@@ -665,7 +657,7 @@ class FlxSprite extends FlxObject
 				}
 				
 				_matrix.translate(_point.x, _point.y);
-				camera.drawPixels(_frame, framePixels, _matrix, cr, cg, cb, alpha, croff, cgoff, cboff, caoff, blend, antialiasing);
+				camera.drawPixels(_frame, framePixels, _matrix, colorTransform, blend, antialiasing);
 			}
 			
 			#if !FLX_NO_DEBUG
