@@ -1225,7 +1225,6 @@ class FlxSprite extends FlxObject
 	
 	private function set_color(Color:FlxColor):Int
 	{
-		Color = 0x00FFFFFF & Color;
 		if (color == Color)
 		{
 			return Color;
