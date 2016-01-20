@@ -80,10 +80,12 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 				tempFlags |= Tilesheet.TILE_RGB;
 			}
 			
+			#if (!openfl_legacy && openfl >= "3.5.4")
 			if (hasColorOffsets)
 			{
 				tempFlags |= Tilesheet.TILE_TRANS_COLOR;
 			}
+			#end
 			
 			tempFlags |= blending;
 			graphics.tilesheet.drawTiles(camera.canvas.graphics, drawData, (camera.antialiasing || antialiasing), tempFlags, position);

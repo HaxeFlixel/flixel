@@ -237,6 +237,8 @@ class FlxBitmapText extends FlxSprite
 		shadowOffset = FlxDestroyUtil.put(shadowOffset);
 		textBitmap = FlxDestroyUtil.dispose(textBitmap);
 		
+		_colorParams = null;
+		
 		if (FlxG.renderTile)
 		{
 			textData = null;
