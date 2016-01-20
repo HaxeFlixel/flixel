@@ -55,6 +55,7 @@ class FlxDrawBaseItem<T>
 	public var graphics:FlxGraphic;
 	public var antialiasing:Bool = false;
 	public var colored:Bool = false;
+	public var hasColorOffsets:Bool = false;
 	public var blending:Int = 0;
 	
 	public var type:FlxDrawItemType;
