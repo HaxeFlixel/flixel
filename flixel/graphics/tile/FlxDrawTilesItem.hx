@@ -60,10 +60,17 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 		
 		if (hasColorOffsets && transform != null)
 		{
+			#if (!openfl_legacy && openfl >= "3.5.4")
 			drawData[position++] = transform.redOffset;
 			drawData[position++] = transform.greenOffset;
 			drawData[position++] = transform.blueOffset;
 			drawData[position++] = transform.alphaOffset;
+			#else
+			drawData[position++] = 0;
+			drawData[position++] = 0;
+			drawData[position++] = 0;
+			drawData[position++] = 0;
+			#end
 		}
 	}
 	
