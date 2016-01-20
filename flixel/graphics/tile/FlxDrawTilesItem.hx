@@ -65,11 +65,6 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 			drawData[position++] = transform.greenOffset;
 			drawData[position++] = transform.blueOffset;
 			drawData[position++] = transform.alphaOffset;
-			#else
-			drawData[position++] = 0;
-			drawData[position++] = 0;
-			drawData[position++] = 0;
-			drawData[position++] = 0;
 			#end
 		}
 	}
