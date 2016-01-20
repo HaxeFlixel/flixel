@@ -520,9 +520,10 @@ class FlxCamera extends FlxBasic
 		}
 	}
 	
-	public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix, cr:Float = 1.0, 
-		cg:Float = 1.0, cb:Float = 1.0, ca:Float = 1.0, croff:Int = 0, cgoff:Int = 0, cboff:Int = 0, caoff:Int = 0, ?blend:BlendMode = null, ?smoothing:Bool = false):Void
-		cg:Float = 1.0, cb:Float = 1.0, ca:Float = 1.0, ?blend:BlendMode, smoothing:Bool = false):Void
+	public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix,
+		cr:Float = 1.0, cg:Float = 1.0, cb:Float = 1.0, ca:Float = 1.0,
+		croff:Int = 0,  cgoff:Int = 0,  cboff:Int = 0,  caoff:Int = 0, 
+		?blend:BlendMode = null, ?smoothing:Bool = false):Void
 	{
 		if (FlxG.renderBlit)
 		{
