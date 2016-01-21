@@ -22,6 +22,7 @@ import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.helpers.FlxRange;
 import openfl.Assets;
+import haxe.Utf8;
 using StringTools;
 
 // TODO: think about filters and text
@@ -292,10 +293,10 @@ class FlxText extends FlxSprite
 				var start:Bool = false;
 				if (input.indexOf(rule.marker) != -1)   //if this marker is present
 				{
-					for (charIndex in 0...input.length)   //inspect each character
+					for (charIndex in 0... Utf8.length(input))   //inspect each character
 					{
-						var char:String = input.charAt(charIndex);
-						if (char == rule.marker)   //it's one of the markers
+						var charCode = Utf8.charCodeAt(input, charIndex);
+						if (charCode == rule.marker.charCodeAt(0))   //it's one of the markers
 						{
 							if (!start)   //we're outside of a format block
 							{ 
