@@ -271,11 +271,11 @@ class FlxText extends FlxSprite
 	 * @param   input   The text you want to format
 	 * @param   rules   FlxTextFormats to selectively apply, paired with marker strings such as "@" or "$"
 	 */
-	public function applyMarkup(input:String, rules:Array<FlxTextFormatMarkerPair>):Void
+	public function applyMarkup(input:String, rules:Array<FlxTextFormatMarkerPair>):FlxText
 	{
 		if (rules == null || rules.length == 0)
 		{
-			return;   //there's no point in running the big loop
+			return this;   //there's no point in running the big loop
 		}
 		
 		clearFormats();   //start with default formatting
@@ -375,6 +375,8 @@ class FlxText extends FlxSprite
 		{
 			addFormat(rulesToApply[i].format, rangeStarts[i], rangeEnds[i]);
 		}
+		
+		return this;
 	}
 	
 	/**
@@ -384,7 +386,7 @@ class FlxText extends FlxSprite
 	 * @param	Start	(Default = -1) The start index of the string where the format will be applied.
 	 * @param	End		(Default = -1) The end index of the string where the format will be applied.
 	 */
-	public function addFormat(Format:FlxTextFormat, Start:Int = -1, End:Int = -1):Void
+	public function addFormat(Format:FlxTextFormat, Start:Int = -1, End:Int = -1):FlxText
 	{
 		_formatRanges.push(new FlxTextFormatRange(Format, Start, End));
 		// sort the array using the start value of the format so we can skip formats that can't be applied to the textField
@@ -393,13 +395,15 @@ class FlxText extends FlxSprite
 			return left.range.start < right.range.start ? -1 : 1;
 		});
 		_regen = true;
+		
+		return this;
 	}
 	
 	/**
 	 * Removes a specific FlxTextFormat from this text.
 	 * If a range is specified, this only removes the format when it touches that range.
 	 */
-	public inline function removeFormat(Format:FlxTextFormat, ?Start:Int, ?End:Int):Void
+	public inline function removeFormat(Format:FlxTextFormat, ?Start:Int, ?End:Int):FlxText
 	{
 		for (formatRange in _formatRanges)
 		{
@@ -415,15 +419,19 @@ class FlxText extends FlxSprite
 			}
 		}
 		_regen = true;
+		
+		return this;
 	}
 	
 	/**
 	 * Clears all the formats applied.
 	 */
-	public function clearFormats():Void
+	public function clearFormats():FlxText
 	{
 		_formatRanges = [];
 		updateDefaultFormat();
+		
+		return this;
 	}
 	
 	/**
@@ -472,12 +480,14 @@ class FlxText extends FlxSprite
 	 * @param	Size outline size in pixels
 	 * @param	Quality outline quality - # of iterations to use when drawing. 0:just 1, 1:equal number to BorderSize
 	 */
-	public inline function setBorderStyle(Style:FlxTextBorderStyle, Color:FlxColor = 0, Size:Float = 1, Quality:Float = 1):Void 
+	public inline function setBorderStyle(Style:FlxTextBorderStyle, Color:FlxColor = 0, Size:Float = 1, Quality:Float = 1):FlxText 
 	{
 		borderStyle = Style;
 		borderColor = Color;
 		borderSize = Size;
 		borderQuality = Quality;
+		
+		return this;
 	}
 	
 	private function set_fieldWidth(value:Float):Float
