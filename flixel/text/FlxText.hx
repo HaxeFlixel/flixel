@@ -256,7 +256,7 @@ class FlxText extends FlxSprite
 	}
 	
 	/**
-	 * Applies formats to text between marker strings, then removes those markers.
+	 * Applies formats to text between marker characters, then removes those markers.
 	 * NOTE: This will clear all FlxTextFormats and return to the default format.
 	 * 
 	 * Usage: 
@@ -270,7 +270,7 @@ class FlxText extends FlxSprite
 	 *    t.applyMarkup("HEY_BUDDY_@WHAT@_$IS_$_GOING@ON$?$@", [yellow, green]);
 	 * 
 	 * @param   input   The text you want to format
-	 * @param   rules   FlxTextFormats to selectively apply, paired with marker strings such as "@" or "$"
+	 * @param   rules   FlxTextFormats to selectively apply, paired with marker characters such as "@" or "$"
 	 */
 	public function applyMarkup(input:String, rules:Array<FlxTextFormatMarkerPair>):FlxText
 	{
