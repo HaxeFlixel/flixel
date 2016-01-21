@@ -18,6 +18,8 @@ abstract ExitCode(Int) from Int to Int
 
 class RunTravis
 {
+	static var importantDemos = ["Mode", "RPG Interface", "FlxNape"];
+	
 	public static function main():Void
 	{
 		var target:Target = Sys.args()[0];
@@ -29,6 +31,7 @@ class RunTravis
 			buildCoverageTests(target),
 			buildSwfVersionTests(target),
 			buildDemos(target),
+			buildNextDemos(target),
 			buildMechanicsDemos(target)
 		]));
 	}
@@ -63,8 +66,17 @@ class RunTravis
 		Sys.println("\nBuilding demos...\n");
 		var demos = [];
 		if (target == Target.CPP)
-			demos = ["Mode", "RPG Interface", "FlxNape"];
-		return haxelibRun(["flixel-tools", "bp", target].concat(demos));
+			demos = importantDemos;
+		return buildProjects(target, demos);
+	}
+	
+	static function buildNextDemos(target:Target):ExitCode
+	{
+		if (target != Target.NEKO)
+			return ExitCode.SUCCESS;
+		
+		Sys.println("\nBuilding demos for OpenFL Next...\n");
+		return buildProjects(target, importantDemos.concat(["-Dnext"]));
 	}
 	
 	static function buildMechanicsDemos(target:Target):ExitCode
@@ -75,7 +87,12 @@ class RunTravis
 		Sys.println("\nBuilding mechanics demos...\n");
 		Sys.command("git", ["clone", "https://github.com/HaxeFlixel/haxeflixel-mechanics"]);
 		
-		return haxelibRun(["flixel-tools", "bp", target, "-dir", "haxeflixel-mechanics"]);
+		return buildProjects(target, ["-dir", "haxeflixel-mechanics"]);
+	}
+	
+	static function buildProjects(target:Target, args:Array<String>):ExitCode
+	{
+		return return haxelibRun(["flixel-tools", "bp", target].concat(args));
 	}
 	
 	static function buildSwfVersionTests(target:Target):ExitCode
