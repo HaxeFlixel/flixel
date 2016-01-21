@@ -1343,29 +1343,27 @@ class FlxCamera extends FlxBasic
 		}
 	}
 	
-	public function checkResize():Void
+	@:allow(flixel.system.frontEnds.CameraFrontEnd)
+	private function checkResize():Void
 	{
-		if (FlxG.renderBlit)
+		if (!FlxG.renderBlit && !regen)
+			return;
+		
+		if (width != buffer.width || height != buffer.height)
 		{
-			if (regen)
-			{
-				if (width != buffer.width || height != buffer.height)
-				{
-					var oldBuffer:FlxGraphic = screen.graphic;
-					buffer = new BitmapData(width, height, true, 0);
-					screen.pixels = buffer;
-					screen.origin.set();
-					_flashBitmap.bitmapData = buffer;
-					_flashRect.width = width;
-					_flashRect.height = height;
-					_fill = FlxDestroyUtil.dispose(_fill);
-					_fill = new BitmapData(width, height, true, FlxColor.TRANSPARENT);
-					FlxG.bitmap.removeIfNoUse(oldBuffer);
-				}
-				
-				regen = false;
-			}
+			var oldBuffer:FlxGraphic = screen.graphic;
+			buffer = new BitmapData(width, height, true, 0);
+			screen.pixels = buffer;
+			screen.origin.set();
+			_flashBitmap.bitmapData = buffer;
+			_flashRect.width = width;
+			_flashRect.height = height;
+			_fill = FlxDestroyUtil.dispose(_fill);
+			_fill = new BitmapData(width, height, true, FlxColor.TRANSPARENT);
+			FlxG.bitmap.removeIfNoUse(oldBuffer);
 		}
+		
+		regen = false;
 	}
 	
 	/**
