@@ -1,7 +1,5 @@
 package flixel.text;
 
-using flixel.util.FlxColorTransformUtil;
-
 import flash.display.BitmapData;
 import flixel.FlxBasic;
 import flixel.FlxG;
@@ -15,6 +13,7 @@ import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import haxe.Utf8;
 import openfl.geom.ColorTransform;
+using flixel.util.FlxColorTransformUtil;
 
 // TODO: use Utf8 util for converting text to upper/lower case
 
@@ -25,8 +24,6 @@ import openfl.geom.ColorTransform;
  */
 class FlxBitmapText extends FlxSprite
 {
-	private static var COLOR_TRANSFORM:ColorTransform = new ColorTransform();
-	
 	/**
 	 * Font for text rendering.
 	 */
@@ -40,7 +37,7 @@ class FlxBitmapText extends FlxSprite
 	/**
 	 * Helper object to avoid many ColorTransform allocations
 	 */
-	private var _colorParams:ColorTransform;
+	private var _colorParams:ColorTransform = new ColorTransform();
 	
 	/**
 	 * Helper array which contains actual strings for rendering.
@@ -222,8 +219,6 @@ class FlxBitmapText extends FlxSprite
 			textDrawData = [];
 			borderDrawData = [];
 		}
-		
-		_colorParams = new ColorTransform();
 	}
 	
 	/**
@@ -1432,12 +1427,12 @@ class FlxBitmapText extends FlxSprite
 		}
 	}
 	
-	private function blitText(posX:Int, posY:Int, isFront:Bool = true, bitmap:BitmapData = null):Void
+	private function blitText(posX:Int, posY:Int, isFront:Bool = true, ?bitmap:BitmapData):Void
 	{
 		_matrix.identity();
 		_matrix.translate(posX, posY);
 		
-		var colorToApply:FlxColor = FlxColor.WHITE;
+		var colorToApply = FlxColor.WHITE;
 		
 		if (isFront && useTextColor)
 		{
@@ -1448,8 +1443,9 @@ class FlxBitmapText extends FlxSprite
 			colorToApply = borderColor;
 		}
 		
-		var cTrans:ColorTransform = COLOR_TRANSFORM;
-		cTrans.setMultipliers(colorToApply.redFloat, colorToApply.greenFloat, colorToApply.blueFloat, colorToApply.alphaFloat);
+		_colorParams.setMultipliers(
+			colorToApply.redFloat, colorToApply.greenFloat,
+			colorToApply.blueFloat, colorToApply.alphaFloat);
 		
 		if (isFront && !useTextColor)
 		{
@@ -1458,7 +1454,7 @@ class FlxBitmapText extends FlxSprite
 		}
 		else
 		{
-			bitmap.draw(textBitmap, _matrix, cTrans);
+			bitmap.draw(textBitmap, _matrix, _colorParams);
 		}
 	}
 	

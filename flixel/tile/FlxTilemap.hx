@@ -1,7 +1,5 @@
 package flixel.tile;
 
-using flixel.util.FlxColorTransformUtil;
-
 import flash.display.BitmapData;
 import flash.display.Graphics;
 import flash.geom.Point;
@@ -26,6 +24,7 @@ import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
 import openfl.display.BlendMode;
 import openfl.geom.ColorTransform;
+using flixel.util.FlxColorTransformUtil;
 
 @:keep @:bitmap("assets/images/tile/autotiles.png")
 class GraphicAuto extends BitmapData {}
@@ -876,7 +875,6 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 			scaledHeight = _scaledTileHeight;
 			
 			var hasColorOffsets:Bool = (colorTransform != null && colorTransform.hasRGBAOffsets());
-			
 			drawItem = Camera.startQuadBatch(graphic, isColored, hasColorOffsets, blend);
 		}
 		

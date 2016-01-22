@@ -260,25 +260,25 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		indices[prevIndicesPos + 4] = prevNumberOfVertices + 3;
 		indices[prevIndicesPos + 5] = prevNumberOfVertices;
 		
-		var alpha = transform != null ? transform.alphaMultiplier : 1.0;
-		
 		if (colored)
 		{
-			var red   = 1.0;
+			var red = 1.0;
 			var green = 1.0;
-			var blue  = 1.0;
+			var blue = 1.0;
+			var alpha = 1.0;
 			
-			if (transform != null) {
-				red   = transform.redMultiplier;
+			if (transform != null)
+			{
+				red  = transform.redMultiplier;
 				green = transform.greenMultiplier;
-				blue  = transform.blueMultiplier;
+				blue = transform.blueMultiplier;
+				
+				#if !neko
+				alpha = transform.alphaMultiplier;
+				#end
 			}
 			
-			#if neko
-			var color:FlxColor = FlxColor.fromRGBFloat(red, green, blue, 1.0);
-			#else
-			var color:FlxColor = FlxColor.fromRGBFloat(red, green, blue, alpha);
-			#end
+			var color = FlxColor.fromRGBFloat(red, green, blue, alpha);
 			
 			colors[prevColorsPos] = color;
 			colors[prevColorsPos + 1] = color;

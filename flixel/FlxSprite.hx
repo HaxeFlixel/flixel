@@ -1,7 +1,5 @@
 package flixel;
 
-using flixel.util.FlxColorTransformUtil;
-
 import flash.display.BitmapData;
 import flash.display.BlendMode;
 import flash.geom.ColorTransform;
@@ -23,6 +21,7 @@ import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.util.FlxBitmapDataUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
+using flixel.util.FlxColorTransformUtil;
 
 @:keep @:bitmap("assets/images/logo/default.png")
 private class GraphicDefault extends BitmapData {}
@@ -798,7 +797,7 @@ class FlxSprite extends FlxObject
 	
 	/**
 	 * Set sprite's color transformation with control over color offsets.
-	 * Offsets only work with FlxG.renderBlit.
+	 * With FlxG.renderTile, offset are only supported on OpenFL Next version 3.6.0 or higher.
 	 * 
 	 * @param	redMultiplier		The value for the red multiplier, in the range from 0 to 1. 
 	 * @param	greenMultiplier		The value for the green multiplier, in the range from 0 to 1. 

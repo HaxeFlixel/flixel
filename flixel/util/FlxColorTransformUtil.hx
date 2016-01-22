@@ -1,89 +1,60 @@
 package flixel.util;
-import flash.geom.ColorTransform;
 
-/**
- * ...
- * @author ...
- */
+import openfl.geom.ColorTransform;
+
 class FlxColorTransformUtil
 {
-
-	/**
-	 * Set all the color multipliers at once
-	 * @param	c	the ColorTransform you want to modify
-	 * @param	r	red multiplier
-	 * @param	g	green multiplier
-	 * @param	b	blue multiplier
-	 * @param	a	alpha multiplier
-	 */
-	
-	public static function setMultipliers(c:ColorTransform, r:Float, g:Float, b:Float, a:Float):Void
+	public static function setMultipliers(transform:ColorTransform, red:Float,
+		green:Float, blue:Float, alpha:Float):ColorTransform
 	{
-		c.redMultiplier   = r;
-		c.greenMultiplier = g;
-		c.blueMultiplier  = b;
-		c.alphaMultiplier = a;
+		transform.redMultiplier = red;
+		transform.greenMultiplier = green;
+		transform.blueMultiplier = blue;
+		transform.alphaMultiplier = alpha;
+		
+		return transform;
+	}
+	
+	public static function setOffsets(transform:ColorTransform, red:Int,
+		green:Int, blue:Int, alpha:Int):ColorTransform
+	{
+		transform.redOffset = red;
+		transform.greenOffset = green;
+		transform.blueOffset = blue;
+		transform.alphaOffset = alpha;
+		
+		return transform;
 	}
 	
 	/**
-	 * Set all the color offsets at once
-	 * @param	c	the ColorTransform you want to modify
-	 * @param	r	red offset
-	 * @param	g	green offset
-	 * @param	b	blue offset
-	 * @param	a	alpha offset
+	 * Returns whether red, green, or blue multipliers are set to anything other than 1.
 	 */
-	
-	public static function setOffsets(c:ColorTransform, r:Int, g:Int, b:Int, a:Int):Void
+	public static function hasRGBMultipliers(transform:ColorTransform):Bool
 	{
-		c.redOffset   = r;
-		c.greenOffset = g;
-		c.blueOffset  = b;
-		c.alphaOffset = a;
+		return transform.redMultiplier != 1 || transform.greenMultiplier != 1 || transform.blueMultiplier != 1;
 	}
 	
 	/**
-	 * Returns whether red, green, or blue multipliers are set to anything other than 1
-	 * @param	c
-	 * @return
+	 * Returns whether red, greeen, blue, or alpha multipliers are set to anything other than 1.
 	 */
-	
-	public static function hasRGBMultipliers(c:ColorTransform):Bool
+	public static function hasRGBAMultipliers(transform:ColorTransform):Bool
 	{
-		return c.redMultiplier != 1 || c.greenMultiplier != 1 || c.blueMultiplier != 1;
+		return hasRGBMultipliers(transform) || transform.alphaMultiplier != 1;
 	}
 	
 	/**
-	 * Returns whether red, greeen, blue, or alpha multipliers are set to anything other than 1
-	 * @param	c
-	 * @return
+	 * Returns whether red, green, or blue offsets are set to anything other than 0.
 	 */
-	
-	public static function hasRGBAMultipliers(c:ColorTransform):Bool
+	public static function hasRGBOffsets(transform:ColorTransform):Bool
 	{
-		return c.redMultiplier != 1 || c.greenMultiplier != 1 || c.blueMultiplier != 1 || c.alphaMultiplier != 1;
+		return transform.redOffset != 0 || transform.greenOffset != 0 || transform.blueOffset != 0;
 	}
 	
 	/**
-	 * Returns whether red, green, or blue offsets are set to anything other than 0
-	 * @param	c
-	 * @return
+	 * Returns whether red, green, blue, or alpha offsets are set to anything other than 0.
 	 */
-	
-	public static function hasRGBOffsets(c:ColorTransform):Bool
+	public static function hasRGBAOffsets(transform:ColorTransform):Bool
 	{
-		return c.redOffset != 0 || c.greenOffset != 0 || c.blueOffset != 0;
+		return hasRGBOffsets(transform) || transform.alphaOffset != 0;
 	}
-	
-	/**
-	 * Returns whether red, green, blue, or alpha offsets are set to anything other than 0
-	 * @param	c
-	 * @return
-	 */
-	
-	public static function hasRGBAOffsets(c:ColorTransform):Bool
-	{
-		return c.redOffset != 0 || c.greenOffset != 0 || c.blueOffset != 0 || c.alphaOffset != 0;
-	}
-	
 }

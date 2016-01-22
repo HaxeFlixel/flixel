@@ -58,20 +58,21 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 		
 		drawData[position++] = transform != null ? transform.alphaMultiplier : 1.0;
 		
+		#if (!openfl_legacy && openfl >= "3.6.0")
 		if (hasColorOffsets && transform != null)
 		{
-			#if (!openfl_legacy && openfl >= "3.6.0")
 			drawData[position++] = transform.redOffset;
 			drawData[position++] = transform.greenOffset;
 			drawData[position++] = transform.blueOffset;
 			drawData[position++] = transform.alphaOffset;
-			#end
 		}
+		#end
 	}
 	
 	override public function render(camera:FlxCamera):Void
 	{
-		if (!FlxG.renderTile) return;
+		if (!FlxG.renderTile)
+			return;
 		
 		if (position > 0)
 		{
