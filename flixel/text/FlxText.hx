@@ -229,7 +229,7 @@ class FlxText extends FlxSprite
 	override public function drawFrame(Force:Bool = false):Void 
 	{
 		_regen = _regen || Force;
-		super.drawFrame(Force);
+		super.drawFrame(_regen);
 	}
 	
 	/**
@@ -293,7 +293,7 @@ class FlxText extends FlxSprite
 				var start:Bool = false;
 				if (input.indexOf(rule.marker) != -1)   //if this marker is present
 				{
-					for (charIndex in 0... Utf8.length(input))   //inspect each character
+					for (charIndex in 0...Utf8.length(input))   //inspect each character
 					{
 						var charCode = Utf8.charCodeAt(input, charIndex);
 						if (charCode == rule.marker.charCodeAt(0))   //it's one of the markers

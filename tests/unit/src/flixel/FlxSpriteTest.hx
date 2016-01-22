@@ -223,4 +223,18 @@ class FlxSpriteTest extends FlxTest
         sprite.makeGraphic(100, 100, 0, true);
         sprite.stamp(text);
 	}
+	
+	@Test // #1704
+	function testStampTextColorChange()
+	{
+		var text = new FlxText(0, 0, 0, "Text");
+		text.color = FlxColor.RED;
+		
+		var sprite = new FlxSprite();
+		sprite.makeGraphic(100, 100, FlxColor.BLUE);
+		sprite.stamp(text);
+		
+		Assert.areEqual(FlxColor.RED,
+			sprite.getFlxFrameBitmapData().getPixel32(3, 3));
+	}
 }
