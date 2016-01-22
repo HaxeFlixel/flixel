@@ -1,5 +1,7 @@
 package flixel.tile;
 
+using flixel.util.FlxColorTransformUtil;
+
 import flash.display.BitmapData;
 import flash.display.Graphics;
 import flash.geom.Point;
@@ -873,11 +875,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 			scaledWidth  = _scaledTileWidth;
 			scaledHeight = _scaledTileHeight;
 			
-			var hasColorOffsets:Bool = (colorTransform != null &&
-			                           (colorTransform.redOffset   != 0 ||
-			                            colorTransform.greenOffset != 0 ||
-			                            colorTransform.blueOffset  != 0 ||
-			                            colorTransform.alphaOffset != 0));
+			var hasColorOffsets:Bool = (colorTransform != null && colorTransform.hasRGBAOffsets());
 			
 			drawItem = Camera.startQuadBatch(graphic, isColored, hasColorOffsets, blend);
 		}

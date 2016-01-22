@@ -1,5 +1,7 @@
 package flixel.text;
 
+using flixel.util.FlxColorTransformUtil;
+
 import flash.display.BitmapData;
 import flixel.FlxBasic;
 import flixel.FlxG;
@@ -391,18 +393,11 @@ class FlxBitmapText extends FlxSprite
 					}
 					
 					_matrix.translate(_point.x + ox, _point.y + oy);
-					_colorParams.redMultiplier   = bgRed;
-					_colorParams.greenMultiplier = bgGreen;
-					_colorParams.blueMultiplier  = bgBlue;
-					_colorParams.alphaMultiplier = bgAlpha;
+					_colorParams.setMultipliers(bgRed, bgReen, bgBlue, bgAlpha);
 					camera.drawPixels(currFrame, null, _matrix, _colorParams, blend, antialiasing);
 				}
 				
-				var hasColorOffsets:Bool = (colorTransform != null &&
-				                           (colorTransform.redOffset   != 0 ||
-				                            colorTransform.greenOffset != 0 ||
-				                            colorTransform.blueOffset  != 0 ||
-				                            colorTransform.alphaOffset != 0));
+				var hasColorOffsets:Bool = (colorTransform != null && colorTransform.hasRGBAOffsets());
 				
 				drawItem = camera.startQuadBatch(font.parent, true, hasColorOffsets, blend, antialiasing);
 				
@@ -424,10 +419,7 @@ class FlxBitmapText extends FlxSprite
 					}
 					
 					_matrix.translate(_point.x + ox, _point.y + oy);
-					_colorParams.redMultiplier   = borderRed;
-					_colorParams.greenMultiplier = borderGreen;
-					_colorParams.blueMultiplier  = borderBlue;
-					_colorParams.alphaMultiplier = bAlpha;
+					_colorParams.setMultipliers(borderRed, borderGreen, borderBlue, bAlpha);
 					drawItem.addQuad(currFrame, _matrix, _colorParams);
 				}
 				
@@ -450,10 +442,7 @@ class FlxBitmapText extends FlxSprite
 					
 					_matrix.translate(_point.x + ox, _point.y + oy);
 					
-					_colorParams.redMultiplier   = textRed;
-					_colorParams.greenMultiplier = textGreen;
-					_colorParams.blueMultiplier  = textBlue;
-					_colorParams.alphaMultiplier = tAlpha;
+					_colorParams.setMultipliers(textRed, textGreen, textBlue, tAlpha);
 					drawItem.addQuad(currFrame, _matrix, _colorParams);
 				}
 				
@@ -1460,10 +1449,7 @@ class FlxBitmapText extends FlxSprite
 		}
 		
 		var cTrans:ColorTransform = COLOR_TRANSFORM;
-		cTrans.redMultiplier = colorToApply.redFloat;
-		cTrans.greenMultiplier = colorToApply.greenFloat;
-		cTrans.blueMultiplier = colorToApply.blueFloat;
-		cTrans.alphaMultiplier = colorToApply.alphaFloat;
+		cTrans.setMultipliers(colorToApply.redFloat, colorToApply.greenFloat, colorToApply.blueFloat, colorToApply.alphaFloat);
 		
 		if (isFront && !useTextColor)
 		{

@@ -1,5 +1,7 @@
 package flixel;
 
+using flixel.util.FlxColorTransformUtil;
+
 import flash.display.BitmapData;
 import flash.display.BlendMode;
 import flash.geom.ColorTransform;
@@ -813,16 +815,10 @@ class FlxSprite extends FlxObject
 		color = FlxColor.fromRGBFloat(redMultiplier, greenMultiplier, blueMultiplier).to24Bit();
 		alpha = alphaMultiplier;
 		
-		colorTransform.redMultiplier = redMultiplier;
-		colorTransform.greenMultiplier = greenMultiplier;
-		colorTransform.blueMultiplier = blueMultiplier;
-		colorTransform.alphaMultiplier = alphaMultiplier;
-		colorTransform.redOffset = redOffset;
-		colorTransform.greenOffset = greenOffset;
-		colorTransform.blueOffset = blueOffset;
-		colorTransform.alphaOffset = alphaOffset;
+		colorTransform.setMultipliers(redMultiplier, greenMultiplier, blueMultiplier, alphaMultiplier);
+		colorTransform.setOffsets(redOffset, greenOffset, blueOffset, alphaOffset);
 		
-		useColorTransform = ((alpha != 1) || (color != 0xffffff) || (redOffset != 0) || (greenOffset != 0) || (blueOffset != 0) || (alphaOffset != 0));
+		useColorTransform = ((alpha != 1) || (color != 0xffffff) || colorTransform.hasRGBOffsets());
 		dirty = true;
 	}
 	
@@ -833,18 +829,12 @@ class FlxSprite extends FlxObject
 		
 		if ((alpha != 1) || (color != 0xffffff))
 		{
-			colorTransform.redMultiplier = color.redFloat;
-			colorTransform.greenMultiplier = color.greenFloat;
-			colorTransform.blueMultiplier = color.blueFloat;
-			colorTransform.alphaMultiplier = alpha;
+			colorTransform.setMultipliers(color.redFloat, color.greenFloat, color.blueFloat, color.alphaFloat);
 			useColorTransform = true;
 		}
 		else
 		{
-			colorTransform.redMultiplier = 1;
-			colorTransform.greenMultiplier = 1;
-			colorTransform.blueMultiplier = 1;
-			colorTransform.alphaMultiplier = 1;
+			colorTransform.setMultipliers(1, 1, 1, 1);
 			useColorTransform = false;
 		}
 		

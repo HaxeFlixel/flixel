@@ -1,5 +1,7 @@
 package flixel;
 
+using flixel.util.FlxColorTransformUtil;
+
 import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.Graphics;
@@ -529,17 +531,9 @@ class FlxCamera extends FlxBasic
 		}
 		else
 		{
-			var isColored = (transform != null &&
-			                 (transform.redMultiplier   != 1.0 ||
-			                  transform.greenMultiplier != 1.0 ||
-			                  transform.blueMultiplier  != 1.0 ||
-			                  transform.alphaMultiplier != 1.0));
+			var isColored = (transform != null && transform.hasRGBMultipliers());
 			
-			var hasColorOffsets:Bool = (transform != null &&
-			                 (transform.redOffset   != 0 ||
-			                  transform.greenOffset != 0 ||
-			                  transform.blueOffset  != 0 ||
-			                  transform.alphaOffset != 0));
+			var hasColorOffsets:Bool = (transform != null && transform.hasRGBAOffsets());
 			
 			#if !FLX_RENDER_TRIANGLE
 			var drawItem:FlxDrawTilesItem = startQuadBatch(frame.parent, isColored, hasColorOffsets, blend, smoothing);
@@ -568,17 +562,10 @@ class FlxCamera extends FlxBasic
 		{
 			_helperMatrix.identity();
 			_helperMatrix.translate(destPoint.x + frame.offset.x, destPoint.y + frame.offset.y);
-			var isColored = (transform != null &&
-			                 (transform.redMultiplier   != 1.0 ||
-			                  transform.greenMultiplier != 1.0 ||
-			                  transform.blueMultiplier  != 1.0 ||
-			                  transform.alphaMultiplier != 1.0));
 			
-			var hasColorOffsets:Bool = (transform != null &&
-			                 (transform.redOffset   != 0 ||
-			                  transform.greenOffset != 0 ||
-			                  transform.blueOffset  != 0 ||
-			                  transform.alphaOffset != 0));
+			var isColored = (transform != null && transform.hasRGBMultipliers());
+			var hasColorOffsets:Bool = (transform != null && transform.hasRGBAOffsets());
+			
 			#if !FLX_RENDER_TRIANGLE
 			var drawItem:FlxDrawTilesItem = startQuadBatch(frame.parent, isColored, hasColorOffsets, blend, smoothing);
 			#else
