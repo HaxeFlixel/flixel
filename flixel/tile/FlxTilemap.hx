@@ -1,5 +1,7 @@
 package flixel.tile;
 
+using flixel.util.FlxColorTransformUtil;
+
 import flash.display.BitmapData;
 import flash.display.Graphics;
 import flash.geom.Point;
@@ -873,7 +875,9 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 			scaledWidth  = _scaledTileWidth;
 			scaledHeight = _scaledTileHeight;
 			
-			drawItem = Camera.startQuadBatch(graphic, isColored, blend);
+			var hasColorOffsets:Bool = (colorTransform != null && colorTransform.hasRGBAOffsets());
+			
+			drawItem = Camera.startQuadBatch(graphic, isColored, hasColorOffsets, blend);
 		}
 		
 		// Copy tile images into the tile buffer
@@ -965,7 +969,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 						_matrix.scale(scaleX, scaleY);
 						_matrix.translate(drawX, drawY);
 						
-						drawItem.addQuad(frame, _matrix, color.redFloat, color.greenFloat, color.blueFloat, alpha);
+						drawItem.addQuad(frame, _matrix, colorTransform);
 					}
 				}
 				

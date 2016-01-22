@@ -1,5 +1,7 @@
 package flixel;
 
+using flixel.util.FlxColorTransformUtil;
+
 import flash.display.BitmapData;
 import flash.display.BlendMode;
 import flash.geom.ColorTransform;
@@ -623,10 +625,6 @@ class FlxSprite extends FlxObject
 			
 			getScreenPosition(_point, camera).subtractPoint(offset);
 			
-			var cr:Float = colorTransform.redMultiplier;
-			var cg:Float = colorTransform.greenMultiplier;
-			var cb:Float = colorTransform.blueMultiplier;
-			
 			var simple:Bool = isSimpleRender(camera);
 			if (simple)
 			{
@@ -636,7 +634,7 @@ class FlxSprite extends FlxObject
 				}
 				
 				_point.copyToFlash(_flashPoint);
-				camera.copyPixels(_frame, framePixels, _flashRect, _flashPoint, cr, cg, cb, alpha, blend, antialiasing);
+				camera.copyPixels(_frame, framePixels, _flashRect, _flashPoint, colorTransform, blend, antialiasing);
 			}
 			else
 			{
@@ -661,7 +659,7 @@ class FlxSprite extends FlxObject
 				}
 				
 				_matrix.translate(_point.x, _point.y);
-				camera.drawPixels(_frame, framePixels, _matrix, cr, cg, cb, alpha, blend, antialiasing);
+				camera.drawPixels(_frame, framePixels, _matrix, colorTransform, blend, antialiasing);
 			}
 			
 			#if !FLX_NO_DEBUG
@@ -812,21 +810,15 @@ class FlxSprite extends FlxObject
 	 * @param	alphaOffset			The offset for alpha transparency channel value, in the range from -255 to 255. 
 	 */
 	public function setColorTransform(redMultiplier:Float = 1.0, greenMultiplier:Float = 1.0, blueMultiplier:Float = 1.0,
-		alphaMultiplier:Float = 1.0, redOffset:Float = 0, greenOffset:Float = 0, blueOffset:Float = 0, alphaOffset:Float = 0):Void
+		alphaMultiplier:Float = 1.0, redOffset:Int = 0, greenOffset:Int = 0, blueOffset:Int = 0, alphaOffset:Int = 0):Void
 	{
 		color = FlxColor.fromRGBFloat(redMultiplier, greenMultiplier, blueMultiplier).to24Bit();
 		alpha = alphaMultiplier;
 		
-		colorTransform.redMultiplier = redMultiplier;
-		colorTransform.greenMultiplier = greenMultiplier;
-		colorTransform.blueMultiplier = blueMultiplier;
-		colorTransform.alphaMultiplier = alphaMultiplier;
-		colorTransform.redOffset = redOffset;
-		colorTransform.greenOffset = greenOffset;
-		colorTransform.blueOffset = blueOffset;
-		colorTransform.alphaOffset = alphaOffset;
+		colorTransform.setMultipliers(redMultiplier, greenMultiplier, blueMultiplier, alphaMultiplier);
+		colorTransform.setOffsets(redOffset, greenOffset, blueOffset, alphaOffset);
 		
-		useColorTransform = ((alpha != 1) || (color != 0xffffff) || (redOffset != 0) || (greenOffset != 0) || (blueOffset != 0) || (alphaOffset != 0));
+		useColorTransform = ((alpha != 1) || (color != 0xffffff) || colorTransform.hasRGBOffsets());
 		dirty = true;
 	}
 	
@@ -837,18 +829,12 @@ class FlxSprite extends FlxObject
 		
 		if ((alpha != 1) || (color != 0xffffff))
 		{
-			colorTransform.redMultiplier = color.redFloat;
-			colorTransform.greenMultiplier = color.greenFloat;
-			colorTransform.blueMultiplier = color.blueFloat;
-			colorTransform.alphaMultiplier = alpha;
+			colorTransform.setMultipliers(color.redFloat, color.greenFloat, color.blueFloat, alpha);
 			useColorTransform = true;
 		}
 		else
 		{
-			colorTransform.redMultiplier = 1;
-			colorTransform.greenMultiplier = 1;
-			colorTransform.blueMultiplier = 1;
-			colorTransform.alphaMultiplier = 1;
+			colorTransform.setMultipliers(1, 1, 1, 1);
 			useColorTransform = false;
 		}
 		
