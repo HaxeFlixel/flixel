@@ -1,5 +1,7 @@
 package flixel;
 
+using flixel.util.FlxColorTransformUtil;
+
 import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.Graphics;
@@ -359,7 +361,7 @@ class FlxCamera extends FlxBasic
 	
 	#if !FLX_RENDER_TRIANGLE
 	@:noCompletion
-	public function startQuadBatch(graphic:FlxGraphic, colored:Bool, ?blend:BlendMode, smooth:Bool = false):FlxDrawTilesItem
+	public function startQuadBatch(graphic:FlxGraphic, colored:Bool, hasColorOffsets:Bool = false, ?blend:BlendMode = null, smooth:Bool = false):FlxDrawTilesItem
 	{
 		var itemToReturn:FlxDrawTilesItem = null;
 		var blendInt:Int = FlxDrawBaseItem.blendToInt(blend);
@@ -367,6 +369,7 @@ class FlxCamera extends FlxBasic
 		if (_currentDrawItem != null && _currentDrawItem.type == FlxDrawItemType.TILES 
 			&& _headTiles.graphics == graphic 
 			&& _headTiles.colored == colored
+			&& _headTiles.hasColorOffsets == hasColorOffsets
 			&& _headTiles.blending == blendInt
 			&& _headTiles.antialiasing == smooth)
 		{	
@@ -388,6 +391,7 @@ class FlxCamera extends FlxBasic
 		itemToReturn.graphics = graphic;
 		itemToReturn.antialiasing = smooth;
 		itemToReturn.colored = colored;
+		itemToReturn.hasColorOffsets = hasColorOffsets;
 		itemToReturn.blending = blendInt;
 		
 		itemToReturn.nextTyped = _headTiles;
@@ -409,7 +413,7 @@ class FlxCamera extends FlxBasic
 	}
 	#else
 	@:noCompletion
-	public function startQuadBatch(graphic:FlxGraphic, colored:Bool, blend:BlendMode = null, smooth:Bool = false):FlxDrawTrianglesItem
+	public function startQuadBatch(graphic:FlxGraphic, colored:Bool, blend:BlendMode = null, smooth:Bool = false, hasColorOffsets:Bool = false):FlxDrawTrianglesItem
 	{
 		return startTrianglesBatch(graphic, smooth, colored, blend);
 	}
@@ -518,8 +522,8 @@ class FlxCamera extends FlxBasic
 		}
 	}
 	
-	public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix, cr:Float = 1.0,
-		cg:Float = 1.0, cb:Float = 1.0, ca:Float = 1.0, ?blend:BlendMode, smoothing:Bool = false):Void
+	public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix,
+		?transform:ColorTransform, ?blend:BlendMode = null, ?smoothing:Bool = false):Void
 	{
 		if (FlxG.renderBlit)
 		{
@@ -527,18 +531,21 @@ class FlxCamera extends FlxBasic
 		}
 		else
 		{
-			var isColored:Bool = (cr != 1.0) || (cg != 1.0) || (cb != 1.0) || (ca != 1.0);
+			var isColored = (transform != null && transform.hasRGBMultipliers());
+			
+			var hasColorOffsets:Bool = (transform != null && transform.hasRGBAOffsets());
+			
 			#if !FLX_RENDER_TRIANGLE
-			var drawItem:FlxDrawTilesItem = startQuadBatch(frame.parent, isColored, blend, smoothing);
+			var drawItem:FlxDrawTilesItem = startQuadBatch(frame.parent, isColored, hasColorOffsets, blend, smoothing);
 			#else
 			var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(frame.parent, smoothing, isColored, blend);
 			#end
-			drawItem.addQuad(frame, matrix, cr, cg, cb, ca);
+			drawItem.addQuad(frame, matrix, transform);
 		}
 	}
 	
 	public function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle, destPoint:Point,
-		cr:Float = 1.0, cg:Float = 1.0, cb:Float = 1.0, ca:Float = 1.0, ?blend:BlendMode, smoothing:Bool = false):Void
+		?transform:ColorTransform, ?blend:BlendMode = null, ?smoothing:Bool = false):Void
 	{
 		if (FlxG.renderBlit)
 		{
@@ -555,13 +562,16 @@ class FlxCamera extends FlxBasic
 		{
 			_helperMatrix.identity();
 			_helperMatrix.translate(destPoint.x + frame.offset.x, destPoint.y + frame.offset.y);
-			var isColored:Bool = (cr != 1.0) || (cg != 1.0) || (cb != 1.0) || (ca != 1.0);
+			
+			var isColored = (transform != null && transform.hasRGBMultipliers());
+			var hasColorOffsets:Bool = (transform != null && transform.hasRGBAOffsets());
+			
 			#if !FLX_RENDER_TRIANGLE
-			var drawItem:FlxDrawTilesItem = startQuadBatch(frame.parent, isColored, blend, smoothing);
+			var drawItem:FlxDrawTilesItem = startQuadBatch(frame.parent, isColored, hasColorOffsets, blend, smoothing);
 			#else
 			var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(frame.parent, smoothing, isColored, blend);
 			#end
-			drawItem.addQuad(frame, _helperMatrix, cr, cg, cb, ca);
+			drawItem.addQuad(frame, _helperMatrix, transform);
 		}
 	}
 	
