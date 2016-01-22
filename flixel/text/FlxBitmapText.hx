@@ -398,7 +398,13 @@ class FlxBitmapText extends FlxSprite
 					camera.drawPixels(currFrame, null, _matrix, _colorParams, blend, antialiasing);
 				}
 				
-				drawItem = camera.startQuadBatch(font.parent, true, blend, antialiasing);
+				var hasColorOffsets:Bool = (colorTransform != null &&
+				                           (colorTransform.redOffset   != 0 ||
+				                            colorTransform.greenOffset != 0 ||
+				                            colorTransform.blueOffset  != 0 ||
+				                            colorTransform.alphaOffset != 0));
+				
+				drawItem = camera.startQuadBatch(font.parent, true, hasColorOffsets, blend, antialiasing);
 				
 				for (j in 0...borderLength)
 				{

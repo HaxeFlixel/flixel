@@ -873,7 +873,13 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 			scaledWidth  = _scaledTileWidth;
 			scaledHeight = _scaledTileHeight;
 			
-			drawItem = Camera.startQuadBatch(graphic, isColored, blend);
+			var hasColorOffsets:Bool = (colorTransform != null &&
+			                           (colorTransform.redOffset   != 0 ||
+			                            colorTransform.greenOffset != 0 ||
+			                            colorTransform.blueOffset  != 0 ||
+			                            colorTransform.alphaOffset != 0));
+			
+			drawItem = Camera.startQuadBatch(graphic, isColored, hasColorOffsets, blend);
 		}
 		
 		// Copy tile images into the tile buffer
