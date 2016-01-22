@@ -829,7 +829,7 @@ class FlxSprite extends FlxObject
 		
 		if ((alpha != 1) || (color != 0xffffff))
 		{
-			colorTransform.setMultipliers(color.redFloat, color.greenFloat, color.blueFloat, color.alphaFloat);
+			colorTransform.setMultipliers(color.redFloat, color.greenFloat, color.blueFloat, alpha);
 			useColorTransform = true;
 		}
 		else
