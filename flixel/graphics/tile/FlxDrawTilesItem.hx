@@ -82,7 +82,7 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 				tempFlags |= Tilesheet.TILE_RGB;
 			}
 			
-			#if (!openfl_legacy && openfl >= "3.5.4")
+			#if (!openfl_legacy && openfl >= "3.6.0")
 			if (hasColorOffsets)
 			{
 				tempFlags |= Tilesheet.TILE_TRANS_COLOR;
