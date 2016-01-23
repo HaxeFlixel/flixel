@@ -25,7 +25,7 @@ class PlayState extends FlxState
 	var disconnectedOverlay:FlxTypedGroup<FlxSprite>;
 	var gamepads:Array<FlxGamepad> = [];
 	
-	var modelDropDownLoc = new FlxPoint(210, 335);
+	var modelDropDownLoc = new FlxPoint(210, 345);
 	
 	override public function create() 
 	{
@@ -45,9 +45,9 @@ class PlayState extends FlxState
 	
 	function createAttachmentControls():Void
 	{
-		add(attachmentLabel = addLabel(modelDropDownLoc.x + 65, modelDropDownLoc.y - 15, "Attachment:"));
+		add(attachmentLabel = addLabel(modelDropDownLoc.x, modelDropDownLoc.y - 45, "Attachment:"));
 		
-		add(attachmentDropDown = new FlxUIDropDownMenu(modelDropDownLoc.x + 65, modelDropDownLoc.y,
+		add(attachmentDropDown = new FlxUIDropDownMenu(modelDropDownLoc.x, modelDropDownLoc.y - 30,
 			FlxUIDropDownMenu.makeStrIdLabelArray(FlxGamepadModelAttachment.getConstructors()),
 			function (attachment)
 			{
@@ -55,7 +55,8 @@ class PlayState extends FlxState
 				if (gamepad != null)
 					gamepad.attachment = FlxGamepadModelAttachment.createByName(attachment);
 				updateConnectedGamepads(true);
-			}));
+			},
+			new FlxUIDropDownHeader(150)));
 		attachmentDropDown.selectedId = "None";
 		attachmentDropDown.dropDirection = Up;
 	}
@@ -70,20 +71,21 @@ class PlayState extends FlxState
 				if (gamepad != null)
 					gamepad.model = FlxGamepadModel.createByName(model);
 				updateConnectedGamepads(true);
-				showAttachment(gamepad.model == FlxGamepadModel.WiiRemote);
-			}));
+				showAttachment(gamepad.model == FlxGamepadModel.WII_REMOTE);
+			},
+			new FlxUIDropDownHeader(150)));
 	}
 	
 	function createDeadZoneControls():Void
 	{
 		var x = 175;
-		addLabel(x, 365, "Deadzone:");
-		add(deadZoneStepper = new FlxUINumericStepper(x, 385, 0.05, 0.15, 0,
+		addLabel(x, 375, "Deadzone:");
+		add(deadZoneStepper = new FlxUINumericStepper(x, 395, 0.05, 0.15, 0,
 			1, 2, FlxUINumericStepper.STACK_HORIZONTAL));
 		
 		x += 70;
-		addLabel(x, 365, "Deadzone Mode:");
-		add(deadZoneModeDropDown = new FlxUIDropDownMenu(x, 381,
+		addLabel(x, 375, "Deadzone Mode:");
+		add(deadZoneModeDropDown = new FlxUIDropDownMenu(x, 391,
 			FlxUIDropDownMenu.makeStrIdLabelArray(FlxGamepadDeadZoneMode.getConstructors()),
 			function (mode)
 			{
@@ -118,11 +120,6 @@ class PlayState extends FlxState
 	function showAttachment(b:Bool):Void
 	{
 		attachmentLabel.visible = attachmentDropDown.visible = attachmentDropDown.active = b;
-		
-		if (b)
-			modelDropDown.x = modelDropDownLoc.x - 65;
-		else
-			modelDropDown.x = modelDropDownLoc.x;
 	}
 	
 	override public function update(elapsed:Float)
@@ -139,7 +136,8 @@ class PlayState extends FlxState
 		
 		setEnabled(true);
 		modelDropDown.selectedLabel = gamepad.model.getName();
-		if (gamepad.model == FlxGamepadModel.WiiRemote || gamepad.model == FlxGamepadModel.MayflashWiiRemote)
+		if (gamepad.model == FlxGamepadModel.WII_REMOTE ||
+			gamepad.model == FlxGamepadModel.MAYFLASH_WII_REMOTE)
 		{
 			showAttachment(true);
 		}
