@@ -1,4 +1,5 @@
 package flixel.input.gamepad.id;
+
 import flixel.input.gamepad.FlxGamepad.FlxGamepadAnalogStick;
 import flixel.input.gamepad.FlxGamepad.FlxGamepadModelAttachment;
 import flixel.input.gamepad.FlxGamepadInputID;
@@ -29,7 +30,7 @@ class WiiRemoteID
 	
 	public static function checkForFakeAxis(ID:FlxGamepadInputID, attachment:FlxGamepadModelAttachment):Int
 	{
-		if (attachment == WiiNunchuk)
+		if (attachment == WII_NUNCHUCK)
 		{
 			if (ID == LEFT_TRIGGER) return NUNCHUK_Z;
 		}
@@ -38,11 +39,11 @@ class WiiRemoteID
 	
 	public static function isAxisForMotion(ID:FlxGamepadInputID, attachment:FlxGamepadModelAttachment):Bool
 	{
-		if (attachment == None)
+		if (attachment == NONE)
 		{
 			if (ID == REMOTE_TILT_PITCH  || ID == REMOTE_TILT_ROLL ) return true;
 		}
-		else if (attachment == WiiNunchuk)
+		else if (attachment == WII_NUNCHUCK)
 		{
 			if (ID == NUNCHUK_TILT_PITCH || ID == NUNCHUK_TILT_ROLL) return true;
 		}
@@ -61,21 +62,23 @@ class WiiRemoteID
 	//Analog stick and trigger values overlap with regular buttons so we remap to "fake" button ID's
 	public static function axisIndexToRawID(index:Int, attachment:FlxGamepadModelAttachment):Int
 	{
-		     if (attachment == None       && index == REMOTE_NULL_AXIS ) return -1;					//return null for this unused access so it doesn't overlap a button input
-		else if (attachment == WiiNunchuk && index == NUNCHUK_NULL_AXIS) return -1;					//return null for this unused access so it doesn't overlap a button input
+		//return null for this unused access so it doesn't overlap a button input
+		if (attachment == NONE && index == REMOTE_NULL_AXIS ) return -1;
+		//return null for this unused access so it doesn't overlap a button input
+		else if (attachment == WII_NUNCHUCK && index == NUNCHUK_NULL_AXIS) return -1;
 		
-		if (attachment == WiiNunchuk || attachment == WiiClassicController)
+		if (attachment == WII_NUNCHUCK || attachment == WII_CLASSIC_CONTROLLER)
 		{
-			     if (index == LEFT_ANALOG_STICK.x) return LEFT_ANALOG_STICK_FAKE_X;
+			if (index == LEFT_ANALOG_STICK.x) return LEFT_ANALOG_STICK_FAKE_X;
 			else if (index == LEFT_ANALOG_STICK.y) return LEFT_ANALOG_STICK_FAKE_Y;
 		}
 		else
 		{
-			     if (index == LEFT_ANALOG_STICK.x) return REMOTE_DPAD_X;
+			if (index == LEFT_ANALOG_STICK.x) return REMOTE_DPAD_X;
 			else if (index == LEFT_ANALOG_STICK.y) return REMOTE_DPAD_Y;
 		}
 		
-		     if (index == RIGHT_ANALOG_STICK.x) return RIGHT_ANALOG_STICK_FAKE_X;
+		if (index == RIGHT_ANALOG_STICK.x) return RIGHT_ANALOG_STICK_FAKE_X;
 		else if (index == RIGHT_ANALOG_STICK.y) return RIGHT_ANALOG_STICK_FAKE_Y;
 		
 		return index;
@@ -128,18 +131,21 @@ class WiiRemoteID
 	public static inline var REMOTE_NULL_AXIS:Int = 4;
 	public static inline var NUNCHUK_NULL_AXIS:Int = 4;
 	
-	//Yes, the WiiRemote DPAD is treated as ANALOG for some reason...so we have to pass in some "fake" ID's to get simulated digital inputs
+	//Yes, the WiiRemote DPAD is treated as ANALOG for some reason...
+	// so we have to pass in some "fake" ID's to get simulated digital inputs
 	public static var REMOTE_DPAD(default, null) = new FlxGamepadAnalogStick(0, 1, {
 			up:REMOTE_DPAD_UP,
 			down:REMOTE_DPAD_DOWN,
 			left:REMOTE_DPAD_LEFT,
 			right:REMOTE_DPAD_RIGHT,
 			threshold:0.5,
-			mode:OnlyDigital
+			mode:ONLY_DIGITAL
 		});
 	
-	public static var LEFT_ANALOG_STICK(default, null)  = new FlxGamepadAnalogStick(0, 1);	//the nunchuk only has the "left" analog stick
-	public static var RIGHT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(2, 3);	//the classic controller has both the "left" and "right" analog sticks
+	//the nunchuk only has the "left" analog stick
+	public static var LEFT_ANALOG_STICK(default, null)  = new FlxGamepadAnalogStick(0, 1);
+	//the classic controller has both the "left" and "right" analog sticks
+	public static var RIGHT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(2, 3);
 	
 	//these aren't real axes, they're simulated when the right digital buttons are pushed
 	public static inline var LEFT_TRIGGER_FAKE:Int = 4;
@@ -236,7 +242,7 @@ class WiiRemoteID
 			left:REMOTE_DPAD_LEFT,
 			right:REMOTE_DPAD_RIGHT,
 			threshold:0.5,
-			mode:OnlyDigital
+			mode:ONLY_DIGITAL
 		});
 	
 	public static var LEFT_ANALOG_STICK(default, null)  = new FlxGamepadAnalogStick(0, 1);	//the nunchuk only has the "left" analog stick

@@ -92,7 +92,7 @@ class MayflashWiiRemoteID
 			left:REMOTE_DPAD_LEFT,
 			right:REMOTE_DPAD_RIGHT,
 			threshold:0.5,
-			mode:OnlyDigital
+			mode:ONLY_DIGITAL
 		});
 	
 	public static var LEFT_ANALOG_STICK(default, null)  = new FlxGamepadAnalogStick(0, 1);	//the nunchuk only has the "left" analog stick
@@ -105,7 +105,7 @@ class MayflashWiiRemoteID
 	//Analog stick and trigger values overlap with regular buttons so we remap to "fake" button ID's
 	public static function axisIndexToRawID(index:Int, attachment:FlxGamepadModelAttachment):Int
 	{
-		if (attachment == WiiNunchuk || attachment == WiiClassicController)
+		if (attachment == WII_NUNCHUCK || attachment == WII_CLASSIC_CONTROLLER)
 		{
 			     if (index == LEFT_ANALOG_STICK.x) return LEFT_ANALOG_STICK_FAKE_X;
 			else if (index == LEFT_ANALOG_STICK.y) return LEFT_ANALOG_STICK_FAKE_Y;
@@ -124,11 +124,11 @@ class MayflashWiiRemoteID
 	
 	public static function checkForFakeAxis(ID:FlxGamepadInputID, attachment:FlxGamepadModelAttachment):Int
 	{
-		if (attachment == WiiNunchuk)
+		if (attachment == WII_NUNCHUCK)
 		{
 			if (ID == LEFT_TRIGGER) return NUNCHUK_Z;
 		}
-		else if (attachment == WiiClassicController)
+		else if (attachment == WII_CLASSIC_CONTROLLER)
 		{
 			if (ID == LEFT_TRIGGER)  return LEFT_TRIGGER_FAKE;
 			if (ID == RIGHT_TRIGGER) return RIGHT_TRIGGER_FAKE;
@@ -228,7 +228,7 @@ class MayflashWiiRemoteID
 			left:REMOTE_DPAD_LEFT,
 			right:REMOTE_DPAD_RIGHT,
 			threshold:0.5,
-			mode:OnlyDigital
+			mode:ONLY_DIGITAL
 		});
 	
 	public static var LEFT_ANALOG_STICK(default, null)  = new FlxGamepadAnalogStick(0, 1);	//the nunchuk only has the "left" analog stick
@@ -241,7 +241,7 @@ class MayflashWiiRemoteID
 	//Analog stick and trigger values overlap with regular buttons so we remap to "fake" button ID's
 	public static function axisIndexToRawID(index:Int, attachment:FlxGamepadModelAttachment):Int
 	{
-		if (attachment == WiiNunchuk || attachment == WiiClassicController)
+		if (attachment == WII_NUNCHUCK || attachment == WII_CLASSIC_CONTROLLER)
 		{
 			     if (index == LEFT_ANALOG_STICK.x) return LEFT_ANALOG_STICK_FAKE_X;
 			else if (index == LEFT_ANALOG_STICK.y) return LEFT_ANALOG_STICK_FAKE_Y;
@@ -260,11 +260,11 @@ class MayflashWiiRemoteID
 	
 	public static function checkForFakeAxis(ID:FlxGamepadInputID, attachment:FlxGamepadModelAttachment):Int
 	{
-		if (attachment == WiiNunchuk)
+		if (attachment == WII_NUNCHUCK)
 		{
 			if (ID == LEFT_TRIGGER) return NUNCHUK_Z;
 		}
-		else if (attachment == WiiClassicController)
+		else if (attachment == WII_CLASSIC_CONTROLLER)
 		{
 			if (ID == LEFT_TRIGGER)  return CLASSIC_ZL;
 			if (ID == RIGHT_TRIGGER) return CLASSIC_ZR;

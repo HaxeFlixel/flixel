@@ -27,11 +27,11 @@ class FlxGamepadMapping
 	public var model(default, null):FlxGamepadModel;
 	
 	@:allow(flixel.input.gamepad.FlxGamepad)
-	public var attachment(default, null):FlxGamepadModelAttachment = None;
+	public var attachment(default, null):FlxGamepadModelAttachment = NONE;
 	
 	private var _manufacturer:Manufacturer = Unknown;
 	
-	public function new(Model:FlxGamepadModel, attachment:FlxGamepadModelAttachment=null) 
+	public function new(Model:FlxGamepadModel, ?attachment:FlxGamepadModelAttachment) 
 	{
 		model = Model;
 		#if flash
@@ -53,26 +53,26 @@ class FlxGamepadMapping
 	{
 		return switch (model)
 		{
-			case Logitech: getRawLogitech(ID);
+			case LOGITECH: getRawLogitech(ID);
 			case OUYA: getRawOUYA(ID);
 			case PS4: getRawPS4(ID);
-			case XBox360: getRawXBox360(ID);
-			case XInput: getRawXInput(ID);
-			case MayflashWiiRemote: 
+			case XBOX360: getRawXBox360(ID);
+			case XINPUT: getRawXInput(ID);
+			case MAYFLASH_WII_REMOTE: 
 				switch (attachment)
 				{
-					case WiiClassicController: getRawMayflashWiiClassicController(ID);
-					case WiiNunchuk: getRawMayflashWiiNunchuk(ID);
-					case None: getRawMayflashWiiRemote(ID);
+					case WII_CLASSIC_CONTROLLER: getRawMayflashWiiClassicController(ID);
+					case WII_NUNCHUCK: getRawMayflashWiiNunchuk(ID);
+					case NONE: getRawMayflashWiiRemote(ID);
 				}
-			case WiiRemote:
+			case WII_REMOTE:
 				switch (attachment)
 				{
-					case WiiClassicController: getRawWiiClassicController(ID);
-					case WiiNunchuk: getRawWiiNunchuk(ID);
-					case None: getRawWiiRemote(ID);
+					case WII_CLASSIC_CONTROLLER: getRawWiiClassicController(ID);
+					case WII_NUNCHUCK: getRawWiiNunchuk(ID);
+					case NONE: getRawWiiRemote(ID);
 				}
-			case MFi: getRawMFi(ID);
+			case MFI: getRawMFi(ID);
 			default: -1;
 		}
 	}
@@ -86,26 +86,26 @@ class FlxGamepadMapping
 	{
 		return switch (model)
 		{
-			case Logitech: getIDLogitech(RawID);
+			case LOGITECH: getIDLogitech(RawID);
 			case OUYA: getIDOUYA(RawID);
 			case PS4: getIDPS4(RawID);
-			case XBox360: getIDXBox360(RawID);
-			case XInput: getIDXInput(RawID);
-			case MayflashWiiRemote: 
+			case XBOX360: getIDXBox360(RawID);
+			case XINPUT: getIDXInput(RawID);
+			case MAYFLASH_WII_REMOTE: 
 				switch (attachment)
 				{
-					case WiiClassicController: getIDMayflashWiiClassicController(RawID);
-					case WiiNunchuk: getIDMayflashWiiNunchuk(RawID);
-					case None: getIDMayflashWiiRemote(RawID);
+					case WII_CLASSIC_CONTROLLER: getIDMayflashWiiClassicController(RawID);
+					case WII_NUNCHUCK: getIDMayflashWiiNunchuk(RawID);
+					case NONE: getIDMayflashWiiRemote(RawID);
 				}
-			case WiiRemote:
+			case WII_REMOTE:
 				switch (attachment)
 				{
-					case WiiClassicController: getIDWiiClassicController(RawID);
-					case WiiNunchuk: getIDWiiNunchuk(RawID);
-					case None: getIDWiiRemote(RawID);
+					case WII_CLASSIC_CONTROLLER: getIDWiiClassicController(RawID);
+					case WII_NUNCHUCK: getIDWiiNunchuk(RawID);
+					case NONE: getIDWiiRemote(RawID);
 				}
-			case MFi: getIDMFi(RawID);
+			case MFI: getIDMFi(RawID);
 			default: NONE;
 		}
 	}
@@ -121,24 +121,24 @@ class FlxGamepadMapping
 		{
 			return switch (model)
 			{
-				case Logitech: LogitechID.LEFT_ANALOG_STICK;
+				case LOGITECH: LogitechID.LEFT_ANALOG_STICK;
 				case OUYA: OUYAID.LEFT_ANALOG_STICK;
 				case PS4: PS4ID.LEFT_ANALOG_STICK;
-				case XBox360: XBox360ID.LEFT_ANALOG_STICK;
-				case XInput: XInputID.LEFT_ANALOG_STICK;
-				case MayflashWiiRemote:
+				case XBOX360: XBox360ID.LEFT_ANALOG_STICK;
+				case XINPUT: XInputID.LEFT_ANALOG_STICK;
+				case MAYFLASH_WII_REMOTE:
 					switch (attachment)
 					{
-						case WiiNunchuk, WiiClassicController: MayflashWiiRemoteID.LEFT_ANALOG_STICK;
-						case None: MayflashWiiRemoteID.REMOTE_DPAD;
+						case WII_NUNCHUCK, WII_CLASSIC_CONTROLLER: MayflashWiiRemoteID.LEFT_ANALOG_STICK;
+						case NONE: MayflashWiiRemoteID.REMOTE_DPAD;
 					}
-				case WiiRemote:
+				case WII_REMOTE:
 					switch (attachment)
 					{
-						case WiiNunchuk, WiiClassicController: WiiRemoteID.LEFT_ANALOG_STICK;
-						case None: WiiRemoteID.REMOTE_DPAD;
+						case WII_NUNCHUCK, WII_CLASSIC_CONTROLLER: WiiRemoteID.LEFT_ANALOG_STICK;
+						case NONE: WiiRemoteID.REMOTE_DPAD;
 					}
-				case MFi: MFiID.LEFT_ANALOG_STICK;
+				case MFI: MFiID.LEFT_ANALOG_STICK;
 				default: null;
 			}
 		}
@@ -146,24 +146,24 @@ class FlxGamepadMapping
 		{
 			return switch (model)
 			{
-				case Logitech: LogitechID.RIGHT_ANALOG_STICK;
+				case LOGITECH: LogitechID.RIGHT_ANALOG_STICK;
 				case OUYA: OUYAID.RIGHT_ANALOG_STICK;
 				case PS4: PS4ID.RIGHT_ANALOG_STICK;
-				case XBox360: XBox360ID.RIGHT_ANALOG_STICK;
-				case XInput: XInputID.RIGHT_ANALOG_STICK;
-				case MayflashWiiRemote: 
+				case XBOX360: XBox360ID.RIGHT_ANALOG_STICK;
+				case XINPUT: XInputID.RIGHT_ANALOG_STICK;
+				case MAYFLASH_WII_REMOTE: 
 					switch (attachment)
 					{
-						case WiiClassicController: MayflashWiiRemoteID.RIGHT_ANALOG_STICK;
+						case WII_CLASSIC_CONTROLLER: MayflashWiiRemoteID.RIGHT_ANALOG_STICK;
 						default: null;
 					}
-				case WiiRemote: 
+				case WII_REMOTE: 
 					switch (attachment)
 					{
-						case WiiClassicController: WiiRemoteID.RIGHT_ANALOG_STICK;
+						case WII_CLASSIC_CONTROLLER: WiiRemoteID.RIGHT_ANALOG_STICK;
 						default: null;
 					}
-				case MFi: MFiID.RIGHT_ANALOG_STICK;
+				case MFI: MFiID.RIGHT_ANALOG_STICK;
 				default: null;
 			}
 		}
@@ -177,14 +177,14 @@ class FlxGamepadMapping
 	{
 		return switch (model)
 		{
-			case Logitech: LogitechID.getFlipAxis(AxisID);
+			case LOGITECH: LogitechID.getFlipAxis(AxisID);
 			case OUYA: OUYAID.getFlipAxis(AxisID);
 			case PS4: PS4ID.getFlipAxis(AxisID);
-			case XBox360: XBox360ID.getFlipAxis(AxisID, _manufacturer);
-			case XInput: XInputID.getFlipAxis(AxisID);
-			case MayflashWiiRemote: MayflashWiiRemoteID.getFlipAxis(AxisID, attachment);
-			case WiiRemote: WiiRemoteID.getFlipAxis(AxisID, attachment);
-			case MFi: MFiID.getFlipAxis(AxisID);
+			case XBOX360: XBox360ID.getFlipAxis(AxisID, _manufacturer);
+			case XINPUT: XInputID.getFlipAxis(AxisID);
+			case MAYFLASH_WII_REMOTE: MayflashWiiRemoteID.getFlipAxis(AxisID, attachment);
+			case WII_REMOTE: WiiRemoteID.getFlipAxis(AxisID, attachment);
+			case MFI: MFiID.getFlipAxis(AxisID);
 			default: -1;
 		}
 	}
@@ -198,14 +198,14 @@ class FlxGamepadMapping
 	{
 		return switch (model)
 		{
-			case Logitech: LogitechID.axisIndexToRawID(AxisID);
+			case LOGITECH: LogitechID.axisIndexToRawID(AxisID);
 			case OUYA: OUYAID.axisIndexToRawID(AxisID);
 			case PS4: PS4ID.axisIndexToRawID(AxisID);
-			case XBox360: XBox360ID.axisIndexToRawID(AxisID);
-			case XInput: XInputID.axisIndexToRawID(AxisID);
-			case MayflashWiiRemote: MayflashWiiRemoteID.axisIndexToRawID(AxisID, attachment);
-			case WiiRemote: WiiRemoteID.axisIndexToRawID(AxisID, attachment);
-			case MFi: MFiID.axisIndexToRawID(AxisID);
+			case XBOX360: XBox360ID.axisIndexToRawID(AxisID);
+			case XINPUT: XInputID.axisIndexToRawID(AxisID);
+			case MAYFLASH_WII_REMOTE: MayflashWiiRemoteID.axisIndexToRawID(AxisID, attachment);
+			case WII_REMOTE: WiiRemoteID.axisIndexToRawID(AxisID, attachment);
+			case MFI: MFiID.axisIndexToRawID(AxisID);
 			default: -1;
 		}
 	}
@@ -214,8 +214,8 @@ class FlxGamepadMapping
 	{
 		return switch (model)
 		{
-			case MayflashWiiRemote: MayflashWiiRemoteID.checkForFakeAxis(ID, attachment);
-			case WiiRemote: WiiRemoteID.checkForFakeAxis(ID, attachment);
+			case MAYFLASH_WII_REMOTE: MayflashWiiRemoteID.checkForFakeAxis(ID, attachment);
+			case WII_REMOTE: WiiRemoteID.checkForFakeAxis(ID, attachment);
 			default: -1;
 		}
 	}
@@ -226,14 +226,14 @@ class FlxGamepadMapping
 	{
 		return switch (model)
 		{
-			case Logitech: LogitechID.isAxisForMotion(ID);
+			case LOGITECH: LogitechID.isAxisForMotion(ID);
 			case OUYA: OUYAID.isAxisForMotion(ID);
 			case PS4: PS4ID.isAxisForMotion(ID);
-			case XBox360: XBox360ID.isAxisForMotion(ID);
-			case XInput: XInputID.isAxisForMotion(ID);
-			case MayflashWiiRemote: MayflashWiiRemoteID.isAxisForMotion(ID, attachment);
-			case WiiRemote: WiiRemoteID.isAxisForMotion(ID, attachment);
-			case MFi: MFiID.isAxisForMotion(ID);
+			case XBOX360: XBox360ID.isAxisForMotion(ID);
+			case XINPUT: XInputID.isAxisForMotion(ID);
+			case MAYFLASH_WII_REMOTE: MayflashWiiRemoteID.isAxisForMotion(ID, attachment);
+			case WII_REMOTE: WiiRemoteID.isAxisForMotion(ID, attachment);
+			case MFI: MFiID.isAxisForMotion(ID);
 			default: false;
 		}
 	}
@@ -242,14 +242,14 @@ class FlxGamepadMapping
 	{
 		return switch (model)
 		{
-			case Logitech: LogitechID.SUPPORTS_MOTION;
+			case LOGITECH: LogitechID.SUPPORTS_MOTION;
 			case OUYA: OUYAID.SUPPORTS_MOTION;
 			case PS4: PS4ID.SUPPORTS_MOTION;
-			case XBox360: XBox360ID.SUPPORTS_MOTION;
-			case XInput: XInputID.SUPPORTS_MOTION;
-			case MayflashWiiRemote: MayflashWiiRemoteID.SUPPORTS_MOTION;
-			case WiiRemote: WiiRemoteID.SUPPORTS_MOTION;
-			case MFi: MFiID.SUPPORTS_MOTION;
+			case XBOX360: XBox360ID.SUPPORTS_MOTION;
+			case XINPUT: XInputID.SUPPORTS_MOTION;
+			case MAYFLASH_WII_REMOTE: MayflashWiiRemoteID.SUPPORTS_MOTION;
+			case WII_REMOTE: WiiRemoteID.SUPPORTS_MOTION;
+			case MFI: MFiID.SUPPORTS_MOTION;
 			default: false;
 		}
 	}
@@ -258,14 +258,14 @@ class FlxGamepadMapping
 	{
 		return switch (model)
 		{
-			case Logitech: LogitechID.SUPPORTS_POINTER;
+			case LOGITECH: LogitechID.SUPPORTS_POINTER;
 			case OUYA: OUYAID.SUPPORTS_POINTER;
 			case PS4: PS4ID.SUPPORTS_POINTER;
-			case XBox360: XBox360ID.SUPPORTS_POINTER;
-			case XInput: XInputID.SUPPORTS_POINTER;
-			case MayflashWiiRemote: MayflashWiiRemoteID.SUPPORTS_POINTER;
-			case WiiRemote: WiiRemoteID.SUPPORTS_POINTER;
-			case MFi: MFiID.SUPPORTS_POINTER;
+			case XBOX360: XBox360ID.SUPPORTS_POINTER;
+			case XINPUT: XInputID.SUPPORTS_POINTER;
+			case MAYFLASH_WII_REMOTE: MayflashWiiRemoteID.SUPPORTS_POINTER;
+			case WII_REMOTE: WiiRemoteID.SUPPORTS_POINTER;
+			case MFI: MFiID.SUPPORTS_POINTER;
 			default: false;
 		}
 	}

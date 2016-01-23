@@ -441,16 +441,16 @@ class FlxGamepadManager implements IFlxInputManager
 		//and the most popular tools just turn it into a 360 controller
 		
 		// needs to be checked even though it's default to not mistake it for XInput on flash 
-		return   if (str.contains("xbox") && str.contains("360")) XBox360;
+		return if (str.contains("xbox") && str.contains("360")) XBOX360;
 			else if (str.contains("ouya")) OUYA;                                      //"OUYA Game Controller"
 			else if (str.contains("wireless controller") || str.contains("ps4")) PS4; //"Wireless Controller" or "PS4 controller"
 			else if (str.contains("logitech")) Logitech;
 			else if (str.contains("xinput")) XInput;
-			else if (str.contains("nintendo rvlcnt01tr")) WiiRemote;                  //WiiRemote with motion plus
-			else if (str.contains("nintendo rvlcnt01")) WiiRemote;                    //WiiRemote w/o  motion plus
-			else if (str.contains("mayflash wiimote pc adapter")) MayflashWiiRemote;  //WiiRemote paired to MayFlash DolphinBar (with or w/o motion plus)
-			else if (str.contains("mfi")) MFi;
-			else XBox360; //default
+			else if (str.contains("nintendo rvlcnt01tr")) WII_REMOTE;                  //WII_REMOTE with motion plus
+			else if (str.contains("nintendo rvlcnt01")) WII_REMOTE;                    //WII_REMOTE w/o  motion plus
+			else if (str.contains("mayflash wiimote pc adapter")) MAYFLASH_WII_REMOTE;  //WII_REMOTE paired to MayFlash DolphinBar (with or w/o motion plus)
+			else if (str.contains("MFI")) MFI;
+			else XBOX360; //default
 	}
 	
 	private function removeGamepad(Device:GameInputDevice):Void
@@ -472,15 +472,15 @@ class FlxGamepadManager implements IFlxInputManager
 	#if FLX_JOYSTICK_API
 	private function getModelFromJoystick(f:Float):FlxGamepadModel
 	{
-		//id "1" is PS3, but that is not supported as its PC drivers are terrible, and the most popular tools just turn it into a 360 controller
-		
+		//id "1" is PS3, but that is not supported as its PC drivers are terrible,
+		// and the most popular tools just turn it into a 360 controller
 		return switch (Math.round(f))
 		{
 			case 2: PS4;
 			case 3: OUYA;
-			case 4: MayflashWiiRemote;
-			case 5: WiiRemote;
-			default: XBox360;
+			case 4: MAYFLASH_WII_REMOTE;
+			case 5: WII_REMOTE;
+			default: XBOX360;
 		}
 	}
 	
@@ -525,7 +525,7 @@ class FlxGamepadManager implements IFlxInputManager
 			{
 				//check to see if we should send digital inputs as well as analog
 				var stick:FlxGamepadAnalogStick = gamepad.getAnalogStickByAxis(i);
-				if (stick.mode == OnlyDigital || stick.mode == Both)
+				if (stick.mode == ONLY_DIGITAL || stick.mode == BOTH)
 				{
 					var newVal = newAxis[i];
 					var oldVal = oldAxis[i];
@@ -562,7 +562,7 @@ class FlxGamepadManager implements IFlxInputManager
 						handleButtonUp(new JoystickEvent(JoystickEvent.BUTTON_UP, FlashEvent.bubbles, FlashEvent.cancelable, FlashEvent.device, digitalButton));
 					}
 					
-					if (stick.mode == OnlyDigital)
+					if (stick.mode == ONLY_DIGITAL)
 					{
 						//still haven't figured out how to suppress the analog inputs properly. Oh well.
 					}

@@ -116,10 +116,10 @@ class FlxGamepad implements IFlxDestroyable
 		pointer = new FlxGamepadPointerValueList(this);
 		
 		if (Model == null)
-			Model = XBox360;
+			Model = XBOX360;
 			
 		if (Attachment == null)
-			Attachment = None;
+			Attachment = NONE;
 		
 		buttonIndex = new FlxGamepadMapping(model, attachment);
 		model = Model;
@@ -812,7 +812,7 @@ class FlxGamepadAnalogStick
 	public var digitalThreshold(default, null):Float = 0.5;
 	
 	/**when analog inputs are received, how to process them digitally**/
-	public var mode(default, null):FlxAnalogToDigitalMode = OnlyAnalog;
+	public var mode(default, null):FlxAnalogToDigitalMode = ONLY_ANALOG;
 	
 	public function new(x:Int, y:Int, ?settings:FlxGamepadAnalogStickSettings)
 	{
@@ -820,7 +820,7 @@ class FlxGamepadAnalogStick
 		this.y = y;
 		if (settings != null)
 		{
-			mode     = (settings.mode  != null ? settings.mode  : OnlyAnalog);
+			mode     = (settings.mode  != null ? settings.mode  : ONLY_ANALOG);
 			rawUp    = (settings.up    != null ? settings.up    : -1);
 			rawDown  = (settings.down  != null ? settings.down  : -1);
 			rawLeft  = (settings.left  != null ? settings.left  : -1);
@@ -857,33 +857,33 @@ enum FlxAnalogToDigitalMode
 	/**
 	 * Send both digital and analog events when the analog stick is moved
 	 */
-	Both;
+	BOTH;
 	/**
 	 * Send only digital events when the analog stick is moved
 	 */
-	OnlyDigital;
+	ONLY_DIGITAL;
 	/**
 	 * Send only analog events when the analog stick is moved
 	 */
-	OnlyAnalog;
+	ONLY_ANALOG;
 }
 
 enum FlxGamepadModel
 {
-	Logitech;
+	LOGITECH;
 	OUYA;
 	PS3;
 	PS4;
-	XBox360;
-	XInput;
-	MayflashWiiRemote;
-	WiiRemote;
-	MFi;
+	XBOX360;
+	XINPUT;
+	MAYFLASH_WII_REMOTE;
+	WII_REMOTE;
+	MFI;
 }
 
 enum FlxGamepadModelAttachment
 {
-	WiiNunchuk;
-	WiiClassicController;
-	None;
+	WII_NUNCHUCK;
+	WII_CLASSIC_CONTROLLER;
+	NONE;
 }
