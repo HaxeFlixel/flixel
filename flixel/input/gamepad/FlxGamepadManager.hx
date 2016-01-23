@@ -444,8 +444,8 @@ class FlxGamepadManager implements IFlxInputManager
 		return if (str.contains("xbox") && str.contains("360")) XBOX360;
 			else if (str.contains("ouya")) OUYA;                                      //"OUYA Game Controller"
 			else if (str.contains("wireless controller") || str.contains("ps4")) PS4; //"Wireless Controller" or "PS4 controller"
-			else if (str.contains("logitech")) Logitech;
-			else if (str.contains("xinput")) XInput;
+			else if (str.contains("logitech")) LOGITECH;
+			else if (str.contains("xinput")) XINPUT;
 			else if (str.contains("nintendo rvlcnt01tr")) WII_REMOTE;                  //WiiRemote with motion plus
 			else if (str.contains("nintendo rvlcnt01")) WII_REMOTE;                    //WiiRemote w/o  motion plus
 			else if (str.contains("mayflash wiimote pc adapter")) MAYFLASH_WII_REMOTE;  //WiiRemote paired to MayFlash DolphinBar (with or w/o motion plus)
