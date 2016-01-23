@@ -72,7 +72,7 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	 * @param   Camera          Which camera this buffer relates to.
 	 */
 	public function new(TileWidth:Int, TileHeight:Int, WidthInTiles:Int, HeightInTiles:Int,
-		?Camera:FlxCamera,ScaleX:Float = 1.0, ScaleY:Float = 1.0)
+		?Camera:FlxCamera, ScaleX:Float = 1.0, ScaleY:Float = 1.0)
 	{
 		updateColumns(TileWidth, WidthInTiles, ScaleX, Camera);
 		updateRows(TileHeight, HeightInTiles, ScaleY, Camera);

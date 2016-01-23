@@ -19,9 +19,6 @@ import flixel.system.FlxSound;
 import flixel.text.FlxText;
 import flixel.util.FlxDestroyUtil;
 
-@:keep @:bitmap("assets/images/ui/button.png")
-class GraphicButton extends BitmapData {}
-
 /**
  * A simple button class that calls a function when clicked by the mouse.
  */
@@ -243,7 +240,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	
 	private function loadDefaultGraphic():Void
 	{
-		loadGraphic(FlxGraphic.fromClass(GraphicButton), true, 80, 20);
+		loadGraphic("assets/images/ui/button.png", true, 80, 20);
 	}
 	
 	private function setupAnimation(animationName:String, frameIndex:Int):Void
