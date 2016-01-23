@@ -358,11 +358,13 @@ class FlxCamera extends FlxBasic
 	 */
 	private static var _storageTrianglesHead:FlxDrawTrianglesItem;
 	
-	#if !FLX_RENDER_TRIANGLE
 	@:noCompletion
 	public function startQuadBatch(graphic:FlxGraphic, colored:Bool, hasColorOffsets:Bool = false,
-		?blend:BlendMode, smooth:Bool = false):FlxDrawTilesItem
+		?blend:BlendMode, smooth:Bool = false)
 	{
+		#if FLX_RENDER_TRIANGLE
+		return startTrianglesBatch(graphic, smooth, colored, blend);
+		#else
 		var itemToReturn:FlxDrawTilesItem = null;
 		var blendInt:Int = FlxDrawBaseItem.blendToInt(blend);
 		
@@ -410,15 +412,8 @@ class FlxCamera extends FlxBasic
 		_currentDrawItem = itemToReturn;
 		
 		return itemToReturn;
+		#end
 	}
-	#else
-	@:noCompletion
-	public function startQuadBatch(graphic:FlxGraphic, colored:Bool, ?blend:BlendMode,
-		smooth:Bool = false, hasColorOffsets:Bool = false):FlxDrawTrianglesItem
-	{
-		return startTrianglesBatch(graphic, smooth, colored, blend);
-	}
-	#end
 	
 	@:noCompletion
 	public function startTrianglesBatch(graphic:FlxGraphic, smoothing:Bool = false,
