@@ -207,8 +207,7 @@ class FlxText extends FlxSprite
 		allowCollisions = FlxObject.NONE;
 		moves = false;
 		
-		_regen = true;
-		calcFrame();
+		drawFrame();
 		
 		shadowOffset = FlxPoint.get(1, 1);
 	}
@@ -853,11 +852,8 @@ class FlxText extends FlxSprite
 		if (textField == null)
 			return;
 		
-		if (FlxG.renderTile)
-		{
-			if (!RunOnCpp)
-				return;
-		}
+		if (FlxG.renderTile && !RunOnCpp)
+			return;
 		
 		regenGraphic();
 		super.calcFrame(RunOnCpp);

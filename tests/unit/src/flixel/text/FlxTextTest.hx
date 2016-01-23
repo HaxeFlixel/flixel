@@ -34,6 +34,17 @@ class FlxTextTest extends FlxTest
 	{
 		text.alignment = FlxTextAlign.RIGHT;
 		text.setFormat();
+		
 		Assert.areEqual(FlxTextAlign.RIGHT, text.alignment);
+	}
+	
+	@Test // #1706
+	function testGraphicInitializedAfterConstructor()
+	{
+		text = new FlxText(0, 0, 0, "Text");
+		
+		Assert.isNotNull(text.graphic);
+		Assert.areNotEqual(0, text.frameWidth);
+		Assert.areNotEqual(0, text.frameHeight);
 	}
 }
