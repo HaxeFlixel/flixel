@@ -15,11 +15,6 @@ class FlxMatrix extends Matrix
 	 */
 	public static var matrix:FlxMatrix = new FlxMatrix();
 	
-	public function new(a:Float = 1, b:Float = 0, c:Float = 0, d:Float = 1, tx:Float = 0, ty:Float = 0)
-	{
-		super(a, b, c, d, tx, ty);
-	}
-	
 	/**
 	 * Rotates this matrix, but takes the values of sine and cosine,
 	 * so it might be useful when you rotate multiple matrices by the same angle
