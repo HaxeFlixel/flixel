@@ -266,7 +266,7 @@ class FlxPoint implements IFlxPooled
 	 * @param	Rect	The FlxRect to test within
 	 * @return	True if pointX/pointY is within the FlxRect, otherwise false
 	 */
-	public inline function inFlxRect(Rect:FlxRect):Bool
+	public inline function inRect(Rect:FlxRect):Bool
 	{
 		return FlxMath.pointInFlxRect(x, y, Rect);
 	}
