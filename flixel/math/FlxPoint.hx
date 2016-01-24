@@ -418,7 +418,7 @@ class FlxPoint implements IFlxPooled
 	}
 	
 	/**
-	 * Necessary for FlxPointHelper in FlxSpriteGroup.
+	 * Necessary for FlxCallbackPoint.
 	 */
 	private function set_x(Value:Float):Float 
 	{ 
@@ -426,7 +426,7 @@ class FlxPoint implements IFlxPooled
 	}
 	
 	/**
-	 * Necessary for FlxPointHelper in FlxSpriteGroup.
+	 * Necessary for FlxCallbackPoint.
 	 */
 	private function set_y(Value:Float):Float
 	{
