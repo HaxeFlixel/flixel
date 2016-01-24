@@ -1,4 +1,5 @@
-package ;
+package;
+
 import flixel.addons.display.FlxPieDial;
 import flixel.addons.display.FlxPieDial.FlxPieDialShape;
 import flixel.tweens.FlxTween;
@@ -21,211 +22,211 @@ class DemoState extends FlxState
 		
 		//Circular pie dials
 		
-		var circle = new FlxPieDial(xx, yy, 25, FlxColor.RED, 72, FlxPieDialShape.Circle);
-		circle.amount = 0.25;
-		add(circle);
+		var CIRCLE = new FlxPieDial(xx, yy, 25, FlxColor.RED, 72, FlxPieDialShape.CIRCLE);
+		CIRCLE.amount = 0.25;
+		add(CIRCLE);
 		
 		xx += 100;
 		
-		var circle2 = new FlxPieDial(xx, yy, 25, FlxColor.BLUE, 72, FlxPieDialShape.Circle);
-		circle2.amount = 0.50;
-		add(circle2);
+		var CIRCLE2 = new FlxPieDial(xx, yy, 25, FlxColor.BLUE, 72, FlxPieDialShape.CIRCLE);
+		CIRCLE2.amount = 0.50;
+		add(CIRCLE2);
 		
 		xx += 100;
 		
-		var circle3 = new FlxPieDial(xx, yy, 25, FlxColor.LIME, 72, FlxPieDialShape.Circle);
-		circle3.amount = 0.75;
-		add(circle3);
+		var CIRCLE3 = new FlxPieDial(xx, yy, 25, FlxColor.LIME, 72, FlxPieDialShape.CIRCLE);
+		CIRCLE3.amount = 0.75;
+		add(CIRCLE3);
 		
 		xx += 100;
 		
-		var circle4 = new FlxPieDial(xx, yy, 25, FlxColor.WHITE, 72, FlxPieDialShape.Circle);
-		circle4.amount = 1.0;
-		add(circle4);
+		var CIRCLE4 = new FlxPieDial(xx, yy, 25, FlxColor.WHITE, 72, FlxPieDialShape.CIRCLE);
+		CIRCLE4.amount = 1.0;
+		add(CIRCLE4);
 		
 		xx += 100;
 		
-		var backCircle = new FlxPieDial(xx, yy, 25, FlxColor.RED, 72, FlxPieDialShape.Circle, false);
-		backCircle.amount = 0.25;
-		add(backCircle);
+		var backCIRCLE = new FlxPieDial(xx, yy, 25, FlxColor.RED, 72, FlxPieDialShape.CIRCLE, false);
+		backCIRCLE.amount = 0.25;
+		add(backCIRCLE);
 		
 		xx += 100;
 		
-		var backCircle2 = new FlxPieDial(xx, yy, 25, FlxColor.BLUE, 72, FlxPieDialShape.Circle, false);
-		backCircle2.amount = 0.50;
-		add(backCircle2);
+		var backCIRCLE2 = new FlxPieDial(xx, yy, 25, FlxColor.BLUE, 72, FlxPieDialShape.CIRCLE, false);
+		backCIRCLE2.amount = 0.50;
+		add(backCIRCLE2);
 		
 		xx += 100;
 		
-		var backCircle3 = new FlxPieDial(xx, yy, 25, FlxColor.LIME, 72, FlxPieDialShape.Circle, false);
-		backCircle3.amount = 0.75;
-		add(backCircle3);
+		var backCIRCLE3 = new FlxPieDial(xx, yy, 25, FlxColor.LIME, 72, FlxPieDialShape.CIRCLE, false);
+		backCIRCLE3.amount = 0.75;
+		add(backCIRCLE3);
 		
 		xx += 100;
 		
-		var backCircle4 = new FlxPieDial(xx, yy, 25, FlxColor.WHITE, 72, FlxPieDialShape.Circle, false);
-		backCircle4.amount = 1.0;
-		add(backCircle4);
+		var backCIRCLE4 = new FlxPieDial(xx, yy, 25, FlxColor.WHITE, 72, FlxPieDialShape.CIRCLE, false);
+		backCIRCLE4.amount = 1.0;
+		add(backCIRCLE4);
 		
 		xx  =  25;
 		yy += 100;
 		
-		//Square-ular pie dials
+		//SQUARE-ular pie dials
 		
-		var square = new FlxPieDial(xx, yy, 25, FlxColor.RED, 72, FlxPieDialShape.Square);
-		square.amount = 0.25;
-		add(square);
-		
-		xx += 100;
-		
-		var square2 = new FlxPieDial(xx, yy, 25, FlxColor.BLUE, 72, FlxPieDialShape.Square);
-		square2.amount = 0.50;
-		add(square2);
+		var SQUARE = new FlxPieDial(xx, yy, 25, FlxColor.RED, 72, FlxPieDialShape.SQUARE);
+		SQUARE.amount = 0.25;
+		add(SQUARE);
 		
 		xx += 100;
 		
-		var square3 = new FlxPieDial(xx, yy, 25, FlxColor.LIME, 72, FlxPieDialShape.Square);
-		square3.amount = 0.75;
-		add(square3);
+		var SQUARE2 = new FlxPieDial(xx, yy, 25, FlxColor.BLUE, 72, FlxPieDialShape.SQUARE);
+		SQUARE2.amount = 0.50;
+		add(SQUARE2);
 		
 		xx += 100;
 		
-		var square4 = new FlxPieDial(xx, yy, 25, FlxColor.WHITE, 72, FlxPieDialShape.Square);
-		square4.amount = 1.00;
-		add(square4);
+		var SQUARE3 = new FlxPieDial(xx, yy, 25, FlxColor.LIME, 72, FlxPieDialShape.SQUARE);
+		SQUARE3.amount = 0.75;
+		add(SQUARE3);
 		
 		xx += 100;
 		
-		var backsquare = new FlxPieDial(xx, yy, 25, FlxColor.RED, 72, FlxPieDialShape.Square, false);
-		backsquare.amount = 0.25;
-		add(backsquare);
+		var SQUARE4 = new FlxPieDial(xx, yy, 25, FlxColor.WHITE, 72, FlxPieDialShape.SQUARE);
+		SQUARE4.amount = 1.00;
+		add(SQUARE4);
 		
 		xx += 100;
 		
-		var backsquare2 = new FlxPieDial(xx, yy, 25, FlxColor.BLUE, 72, FlxPieDialShape.Square, false);
-		backsquare2.amount = 0.50;
-		add(backsquare2);
+		var backSQUARE = new FlxPieDial(xx, yy, 25, FlxColor.RED, 72, FlxPieDialShape.SQUARE, false);
+		backSQUARE.amount = 0.25;
+		add(backSQUARE);
 		
 		xx += 100;
 		
-		var backsquare3 = new FlxPieDial(xx, yy, 25, FlxColor.LIME, 72, FlxPieDialShape.Square, false);
-		backsquare3.amount = 0.75;
-		add(backsquare3);
+		var backSQUARE2 = new FlxPieDial(xx, yy, 25, FlxColor.BLUE, 72, FlxPieDialShape.SQUARE, false);
+		backSQUARE2.amount = 0.50;
+		add(backSQUARE2);
 		
 		xx += 100;
 		
-		var backsquare4 = new FlxPieDial(xx, yy, 25, FlxColor.WHITE, 72, FlxPieDialShape.Square, false);
-		backsquare4.amount = 1.00;
-		add(backsquare4);
+		var backSQUARE3 = new FlxPieDial(xx, yy, 25, FlxColor.LIME, 72, FlxPieDialShape.SQUARE, false);
+		backSQUARE3.amount = 0.75;
+		add(backSQUARE3);
+		
+		xx += 100;
+		
+		var backSQUARE4 = new FlxPieDial(xx, yy, 25, FlxColor.WHITE, 72, FlxPieDialShape.SQUARE, false);
+		backSQUARE4.amount = 1.00;
+		add(backSQUARE4);
 		
 		xx  =  25;
 		yy += 100;
 		
 		//Donut-ular pie dials
 		
-		var donut = new FlxPieDial(xx, yy, 25, FlxColor.RED, 72, FlxPieDialShape.Circle, true, 12);
+		var donut = new FlxPieDial(xx, yy, 25, FlxColor.RED, 72, FlxPieDialShape.CIRCLE, true, 12);
 		donut.amount = 0.25;
 		add(donut);
 		
 		xx += 100;
 		
-		var donut2 = new FlxPieDial(xx, yy, 25, FlxColor.BLUE, 72, FlxPieDialShape.Circle, true, 12);
+		var donut2 = new FlxPieDial(xx, yy, 25, FlxColor.BLUE, 72, FlxPieDialShape.CIRCLE, true, 12);
 		donut2.amount = 0.50;
 		add(donut2);
 		
 		xx += 100;
 		
-		var donut3 = new FlxPieDial(xx, yy, 25, FlxColor.LIME, 72, FlxPieDialShape.Circle, true, 12);
+		var donut3 = new FlxPieDial(xx, yy, 25, FlxColor.LIME, 72, FlxPieDialShape.CIRCLE, true, 12);
 		donut3.amount = 0.75;
 		add(donut3);
 		
 		xx += 100;
 		
-		var donut4 = new FlxPieDial(xx, yy, 25, FlxColor.WHITE, 72, FlxPieDialShape.Circle, true, 12);
+		var donut4 = new FlxPieDial(xx, yy, 25, FlxColor.WHITE, 72, FlxPieDialShape.CIRCLE, true, 12);
 		donut4.amount = 1.0;
 		add(donut4);
 		
 		xx += 100;
 		
-		var backdonut = new FlxPieDial(xx, yy, 25, FlxColor.RED, 72, FlxPieDialShape.Circle, false, 12);
+		var backdonut = new FlxPieDial(xx, yy, 25, FlxColor.RED, 72, FlxPieDialShape.CIRCLE, false, 12);
 		backdonut.amount = 0.25;
 		add(backdonut);
 		
 		xx += 100;
 		
-		var backdonut2 = new FlxPieDial(xx, yy, 25, FlxColor.BLUE, 72, FlxPieDialShape.Circle, false, 12);
+		var backdonut2 = new FlxPieDial(xx, yy, 25, FlxColor.BLUE, 72, FlxPieDialShape.CIRCLE, false, 12);
 		backdonut2.amount = 0.50;
 		add(backdonut2);
 		
 		xx += 100;
 		
-		var backdonut3 = new FlxPieDial(xx, yy, 25, FlxColor.LIME, 72, FlxPieDialShape.Circle, false, 12);
+		var backdonut3 = new FlxPieDial(xx, yy, 25, FlxColor.LIME, 72, FlxPieDialShape.CIRCLE, false, 12);
 		backdonut3.amount = 0.75;
 		add(backdonut3);
 		
 		xx += 100;
 		
-		var backdonut4 = new FlxPieDial(xx, yy, 25, FlxColor.WHITE, 72, FlxPieDialShape.Circle, false, 12);
+		var backdonut4 = new FlxPieDial(xx, yy, 25, FlxColor.WHITE, 72, FlxPieDialShape.CIRCLE, false, 12);
 		backdonut4.amount = 1.0;
 		add(backdonut4);
 		
 		xx  =  50;
 		yy += 100;
 		
-		//Square donut-ular pie dials:
+		//SQUARE donut-ular pie dials:
 		
-		var squaredonut = new FlxPieDial(xx, yy, 25, FlxColor.RED, 72, FlxPieDialShape.Square, true, 12);
-		squaredonut.amount = 0.25;
-		add(squaredonut);
-		
-		xx += 100;
-		
-		var squaredonut2 = new FlxPieDial(xx, yy, 25, FlxColor.BLUE, 72, FlxPieDialShape.Square, true, 12);
-		squaredonut2.amount = 0.50;
-		add(squaredonut2);
+		var SQUAREdonut = new FlxPieDial(xx, yy, 25, FlxColor.RED, 72, FlxPieDialShape.SQUARE, true, 12);
+		SQUAREdonut.amount = 0.25;
+		add(SQUAREdonut);
 		
 		xx += 100;
 		
-		var squaredonut3 = new FlxPieDial(xx, yy, 25, FlxColor.LIME, 72, FlxPieDialShape.Square, true, 12);
-		squaredonut3.amount = 0.75;
-		add(squaredonut3);
+		var SQUAREdonut2 = new FlxPieDial(xx, yy, 25, FlxColor.BLUE, 72, FlxPieDialShape.SQUARE, true, 12);
+		SQUAREdonut2.amount = 0.50;
+		add(SQUAREdonut2);
 		
 		xx += 100;
 		
-		var squaredonut4 = new FlxPieDial(xx, yy, 25, FlxColor.WHITE, 72, FlxPieDialShape.Square, true, 12);
-		squaredonut4.amount = 1.0;
-		add(squaredonut4);
+		var SQUAREdonut3 = new FlxPieDial(xx, yy, 25, FlxColor.LIME, 72, FlxPieDialShape.SQUARE, true, 12);
+		SQUAREdonut3.amount = 0.75;
+		add(SQUAREdonut3);
 		
 		xx += 100;
 		
-		var backsquaredonut = new FlxPieDial(xx, yy, 25, FlxColor.RED, 72, FlxPieDialShape.Square, false, 12);
-		backsquaredonut.amount = 0.25;
-		add(backsquaredonut);
+		var SQUAREdonut4 = new FlxPieDial(xx, yy, 25, FlxColor.WHITE, 72, FlxPieDialShape.SQUARE, true, 12);
+		SQUAREdonut4.amount = 1.0;
+		add(SQUAREdonut4);
 		
 		xx += 100;
 		
-		var backsquaredonut2 = new FlxPieDial(xx, yy, 25, FlxColor.BLUE, 72, FlxPieDialShape.Square, false, 12);
-		backsquaredonut2.amount = 0.50;
-		add(backsquaredonut2);
+		var backSQUAREdonut = new FlxPieDial(xx, yy, 25, FlxColor.RED, 72, FlxPieDialShape.SQUARE, false, 12);
+		backSQUAREdonut.amount = 0.25;
+		add(backSQUAREdonut);
 		
 		xx += 100;
 		
-		var backsquaredonut3 = new FlxPieDial(xx, yy, 25, FlxColor.LIME, 72, FlxPieDialShape.Square, false, 12);
-		backsquaredonut3.amount = 0.75;
-		add(backsquaredonut3);
+		var backSQUAREdonut2 = new FlxPieDial(xx, yy, 25, FlxColor.BLUE, 72, FlxPieDialShape.SQUARE, false, 12);
+		backSQUAREdonut2.amount = 0.50;
+		add(backSQUAREdonut2);
 		
 		xx += 100;
 		
-		var backsquaredonut4 = new FlxPieDial(xx, yy, 25, FlxColor.WHITE, 72, FlxPieDialShape.Square, false, 12);
-		backsquaredonut4.amount = 1.0;
-		add(backsquaredonut4);
+		var backSQUAREdonut3 = new FlxPieDial(xx, yy, 25, FlxColor.LIME, 72, FlxPieDialShape.SQUARE, false, 12);
+		backSQUAREdonut3.amount = 0.75;
+		add(backSQUAREdonut3);
+		
+		xx += 100;
+		
+		var backSQUAREdonut4 = new FlxPieDial(xx, yy, 25, FlxColor.WHITE, 72, FlxPieDialShape.SQUARE, false, 12);
+		backSQUAREdonut4.amount = 1.0;
+		add(backSQUAREdonut4);
 		
 		xx  =  50;
 		yy += 100;
 		
 		//Tweened pie dial
 		
-		var pieDial = new FlxPieDial(xx, yy, 25, FlxColor.LIME, 36, FlxPieDialShape.Square, false, 10);
+		var pieDial = new FlxPieDial(xx, yy, 25, FlxColor.LIME, 36, FlxPieDialShape.SQUARE, false, 10);
 		pieDial.amount = 0.0;
 		add(pieDial);
 		

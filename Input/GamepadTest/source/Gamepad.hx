@@ -94,10 +94,10 @@ class Gamepad extends FlxTypedGroup<FlxSprite>
 		guideButton = createSprite(235, 73, "Guide");
 		startButton = createSprite(306, 93, "Start");
 		
-		motionPitch =   createBar(534, 310); 
-		labelPitch  = createLabel(534, 310, "Pitch");
-		motionRoll  =   createBar(534, 330);
-		labelRoll   = createLabel(534, 330, "Roll");
+		motionPitch = createBar(534, 310); 
+		labelPitch = createLabel(534, 310, "Pitch");
+		motionRoll = createBar(534, 330);
+		labelRoll = createLabel(534, 330, "Roll");
 		
 		crosshairs = createSprite(0, 0, "crosshairs", 1);
 		crosshairs.visible = false;
@@ -118,8 +118,10 @@ class Gamepad extends FlxTypedGroup<FlxSprite>
 	
 	function createBar(x:Float, y:Float):FlxBar
 	{
-		var bar = new FlxBar(x, y, FlxBarFillDirection.LEFT_TO_RIGHT, 100, 14, null, "", 0, 100, true).createGradientBar([FlxColor.BLACK],[FlxColor.RED,FlxColor.BLUE],1,180,true,FlxColor.BLACK);
-		return cast add(bar);
+		var bar = new FlxBar(x, y, FlxBarFillDirection.LEFT_TO_RIGHT, 100, 14, null, "", 0, 100, true);
+		bar.createGradientBar([FlxColor.BLACK], [FlxColor.RED, FlxColor.BLUE], 1, 180, true, FlxColor.BLACK);
+		add(bar);
+		return bar;
 	}
 	
 	function createLabel(x:Float, y:Float, ?label:String):FlxText
