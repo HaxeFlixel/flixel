@@ -6,6 +6,7 @@ import flixel.input.keyboard.FlxKey;
 import flixel.system.debug.watch.Tracker;
 import flixel.system.debug.Window;
 import flixel.system.ui.FlxSystemButton;
+import flixel.util.FlxHorizontalAlign;
 import flixel.util.FlxSignal;
 import flixel.util.FlxStringUtil;
 import flixel.system.debug.FlxDebugger;
@@ -61,14 +62,14 @@ class DebuggerFrontEnd
 	/**
 	 * Create and add a new debugger button.
 	 * 
-	 * @param   Position       Either LEFT, MIDDLE or RIGHT.
+	 * @param   Position       Either LEFT, CENTER or RIGHT.
 	 * @param   Icon           The icon to use for the button
 	 * @param   UpHandler      The function to be called when the button is pressed.
 	 * @param   ToggleMode     Whether this is a toggle button or not.
 	 * @param   UpdateLayout   Whether to update the button layout.
 	 * @return  The added button.
 	 */
-	public function addButton(Alignment:FlxButtonAlignment, Icon:BitmapData, UpHandler:Void->Void, ToggleMode:Bool = false, UpdateLayout:Bool = true):FlxSystemButton
+	public function addButton(Alignment:FlxHorizontalAlign, Icon:BitmapData, UpHandler:Void->Void, ToggleMode:Bool = false, UpdateLayout:Bool = true):FlxSystemButton
 	{
 		#if !FLX_NO_DEBUG
 		return FlxG.game.debugger.addButton(Alignment, Icon, UpHandler, ToggleMode, UpdateLayout);

@@ -39,8 +39,8 @@ private class GraphicStop extends BitmapData {}
 class VCR
 {
 	/**
-	* Texfield that displays the runtime display data for a game replay
-	*/
+	 * Texfield that displays the runtime display data for a game replay
+	 */
 	public var runtimeDisplay:TextField;
 	
 	public var runtime:Float = 0;
@@ -56,13 +56,13 @@ class VCR
 	 */
 	public function new(Debugger:FlxDebugger)
 	{
-		restartBtn = Debugger.addButton(MIDDLE, new GraphicRestart(0, 0), FlxG.resetState);
+		restartBtn = Debugger.addButton(CENTER, new GraphicRestart(0, 0), FlxG.resetState);
 		#if FLX_RECORD
-		recordBtn = Debugger.addButton(MIDDLE, new GraphicRecordOff(0, 0), FlxG.vcr.startRecording.bind(true));
-		openBtn = Debugger.addButton(MIDDLE, new GraphicOpen(0, 0), FlxG.vcr.onOpen);
+		recordBtn = Debugger.addButton(CENTER, new GraphicRecordOff(0, 0), FlxG.vcr.startRecording.bind(true));
+		openBtn = Debugger.addButton(CENTER, new GraphicOpen(0, 0), FlxG.vcr.onOpen);
 		#end
-		playbackToggleBtn = Debugger.addButton(MIDDLE, new GraphicPause(0, 0), FlxG.vcr.pause);
-		stepBtn = Debugger.addButton(MIDDLE, new GraphicStep(0, 0), onStep);
+		playbackToggleBtn = Debugger.addButton(CENTER, new GraphicPause(0, 0), FlxG.vcr.pause);
+		stepBtn = Debugger.addButton(CENTER, new GraphicStep(0, 0), onStep);
 		
 		#if FLX_RECORD
 		runtimeDisplay = new TextField();
@@ -76,7 +76,7 @@ class VCR
 		runtimeDisplay.autoSize = TextFieldAutoSize.LEFT;
 		updateRuntime(0);
 		
-		var runtimeBtn = Debugger.addButton(MIDDLE);
+		var runtimeBtn = Debugger.addButton(CENTER);
 		runtimeBtn.addChild(runtimeDisplay);
 		#end
 	}
