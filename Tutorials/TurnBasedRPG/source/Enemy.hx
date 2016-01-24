@@ -119,7 +119,7 @@ class Enemy extends FlxSprite
 					facing = FlxObject.DOWN;
 			}
 			
-			switch(facing)
+			switch (facing)
 			{
 				case FlxObject.LEFT, FlxObject.RIGHT:
 					animation.play("lr");

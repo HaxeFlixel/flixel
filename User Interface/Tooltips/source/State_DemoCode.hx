@@ -41,7 +41,7 @@ class State_DemoCode extends FlxUIState
 	override public function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void 
 	{
 		super.getEvent(id, sender, data, params);
-		switch(id)
+		switch (id)
 		{
 			case FlxUITypedButton.CLICK_EVENT: 
 				var str:String = (params != null && params.length >= 1) ? cast params[0] : "";

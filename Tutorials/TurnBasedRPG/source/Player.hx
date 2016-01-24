@@ -99,7 +99,7 @@ class Player extends FlxSprite
 			{
 				_sndStep.play();
 				
-				switch(facing)
+				switch (facing)
 				{
 					case FlxObject.LEFT, FlxObject.RIGHT:
 						animation.play("lr");

@@ -46,7 +46,7 @@ class MenuState extends FlxUIState
 		{
 			var checked:Bool = cast data;
 			var type:String = cast params[0];
-			switch(type)
+			switch (type)
 			{
 				case "wrap": 
 					cursor.wrap = checked;

@@ -18,7 +18,7 @@ class Popup_Demo extends FlxUIPopup
 				var i:Int = cast params[0];
 				if (_ui.currMode == "demo_0")
 				{
-					switch(i)
+					switch (i)
 					{
 						case 0: openSubState(new Popup_Simple());
 						case 1: _ui.setMode("demo_1");
@@ -27,7 +27,7 @@ class Popup_Demo extends FlxUIPopup
 				}
 				else if (_ui.currMode == "demo_1")
 				{
-					switch(i)
+					switch (i)
 					{
 						case 0: _ui.setMode("demo_0");
 						case 1: close();

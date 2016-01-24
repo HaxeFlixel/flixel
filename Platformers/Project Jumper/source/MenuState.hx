@@ -90,14 +90,11 @@ class MenuState extends FlxState
 		}
 		
 		// this is the goofus way to do it. An array would be way better
-		switch(_option)    
+		_pointer.y = switch (_option)    
 		{
-			case 0:
-				_pointer.y = _text3.y;
-			case 1:
-				_pointer.y = _text4.y;
-			case 2:
-				_pointer.y = _text5.y;
+			case 0: _text3.y;
+			case 1: _text4.y;
+			case 2: _text5.y;
 		}
 		
 		if (FlxG.keys.justPressed.UP)

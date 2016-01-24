@@ -25,7 +25,7 @@ class State_SaveMenu extends FlxUIState
 		if (id.indexOf("ui_get:") == 0)
 		{
 			var str:String = StringTools.replace(id,"ui_get:","");
-			switch(str)
+			switch (str)
 			{
 				case "save_slot":
 					return new SaveSlot(data, _ui);
@@ -38,10 +38,10 @@ class State_SaveMenu extends FlxUIState
 	{
 		if (params != null)
 		{
-			switch(id)
+			switch (id)
 			{
 			case "click_button":
-				switch(cast(params[0], String))
+				switch (cast(params[0], String))
 				{
 					case "back": FlxG.switchState(new State_Title());
 				}

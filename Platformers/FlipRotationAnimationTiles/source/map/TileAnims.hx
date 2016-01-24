@@ -99,7 +99,7 @@ class TileAnims
 							if (frame.has.rotation)
 							{
 								var rotation:Int = Std.parseInt(frame.att.rotation);
-								switch(rotation)
+								switch (rotation)
 								{
 									case 90:
 										params.rotate = FlxTileSpecial.ROTATE_90;

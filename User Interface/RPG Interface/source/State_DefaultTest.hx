@@ -25,10 +25,10 @@ class State_DefaultTest extends FlxUIState
 	{
 		if (params != null)
 		{
-			switch(id)
+			switch (id)
 			{
 				case "click_button":
-					switch(cast(params[0], String))
+					switch (cast(params[0], String))
 					{
 						case "back": FlxG.switchState(new State_Title());
 						case "popup":var popup:FlxUIPopup = new FlxUIPopup(); //create the popup
@@ -49,7 +49,7 @@ class State_DefaultTest extends FlxUIState
 									
 					}
 				case "click_popup":
-					switch(cast(params[0], Int))
+					switch (cast(params[0], Int))
 					{
 						case 0: FlxG.log.add("Yes was clicked");
 						case 1: FlxG.log.add("No was clicked");

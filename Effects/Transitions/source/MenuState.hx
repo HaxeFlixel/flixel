@@ -130,7 +130,7 @@ class MenuState extends FlxUIState
 		{
 			in_tile_text.visible = in_tile.visible = false;
 		}
-		in_color.selectedId = switch(FlxTransitionableState.defaultTransIn.color)
+		in_color.selectedId = switch (FlxTransitionableState.defaultTransIn.color)
 		{
 			case FlxColor.RED: "red";
 			case FlxColor.WHITE: "white";
@@ -154,7 +154,7 @@ class MenuState extends FlxUIState
 			out_tile_text.visible = out_tile.visible = false;
 		}
 		
-		out_color.selectedId = switch(FlxTransitionableState.defaultTransOut.color)
+		out_color.selectedId = switch (FlxTransitionableState.defaultTransOut.color)
 		{
 			case FlxColor.RED: "red";
 			case FlxColor.WHITE: "white";
@@ -169,7 +169,7 @@ class MenuState extends FlxUIState
 	
 	private function getDefaultAssetStr(c:FlxGraphic):String
 	{
-		return switch(c.assetsClass)
+		return switch (c.assetsClass)
 		{
 			case GraphicTransTileCircle: "circle";
 			case GraphicTransTileSquare: "square";
@@ -179,7 +179,7 @@ class MenuState extends FlxUIState
 	
 	private function getDefaultAsset(str):FlxGraphic
 	{
-		var graphicClass:Class<Dynamic> = switch(str)
+		var graphicClass:Class<Dynamic> = switch (str)
 		{
 			case "circle": GraphicTransTileCircle;
 			case "square": GraphicTransTileSquare;
@@ -220,7 +220,7 @@ class MenuState extends FlxUIState
 		{
 			p = new FlxPoint();
 		}
-		switch(str)
+		switch (str)
 		{
 			case "n": p.set(0, -1);
 			case "s": p.set(0, 1);
@@ -242,7 +242,7 @@ class MenuState extends FlxUIState
 	
 	public override function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void
 	{
-		switch(id)
+		switch (id)
 		{
 			case FlxUITypedButton.CLICK_EVENT:
 				var butt:FlxUIButton = cast sender;

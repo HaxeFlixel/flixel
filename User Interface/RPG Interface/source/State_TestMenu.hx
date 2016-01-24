@@ -24,10 +24,10 @@ class State_TestMenu extends FlxUIState
 	{
 		if (params != null)
 		{
-			switch(name)
+			switch (name)
 			{
 				case "click_button":
-					switch(cast(params[0], String))
+					switch (cast(params[0], String))
 					{
 						case "back": FlxG.switchState(new State_Title());
 					}

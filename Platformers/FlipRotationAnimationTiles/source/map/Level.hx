@@ -142,7 +142,7 @@ class Level extends TiledMap
 		var x:Int = o.x;
 		var y:Int = o.y;
 		
-		switch(o.type.toLowerCase())
+		switch (o.type.toLowerCase())
 		{
 			case "player":
 				var player:Character = new Character(o.name, x, y, "images/chars/"+o.name+".json");

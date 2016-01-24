@@ -107,7 +107,7 @@ class PlayState extends FlxUIState
 
 	private function getBlend(str:String):BlendMode
 	{
-		return switch(str)
+		return switch (str)
 		{
 			case "normal": BlendMode.NORMAL;
 			case "darken": BlendMode.DARKEN;

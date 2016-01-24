@@ -45,7 +45,7 @@ class SaveSlot extends FlxUI
 		if (Std.is(data, String))
 		{
 			var str:String = cast(data, String);
-			switch(str) 
+			switch (str) 
 			{
 				case "play": onPress();
 				case "play+": onPlus();

@@ -48,7 +48,7 @@ class MenuState extends FlxUIState
 		{
 			var check:FlxUICheckBox = cast sender;
 			var label = check.getLabel().text;
-			if(label == "loop music")
+			if (label == "loop music")
 			{
 				loop_music = check.checked;
 				if (FlxG.sound.music != null && FlxG.sound.music.exists)

@@ -14,7 +14,7 @@ class Popup_Simple extends FlxUIPopup
 		if (params != null)
 		{
 			if (id == "click_button"){
-				switch(Std.int(params[0]))
+				switch (Std.int(params[0]))
 				{
 					case 0: close();
 				}

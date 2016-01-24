@@ -40,7 +40,7 @@ class State_Title extends FlxUIState
 	{
 		var str:String = "";
 		
-		switch(name)
+		switch (name)
 		{
 			case "finish_load":
 				var radio:FlxUIRadioGroup = cast _ui.getAsset("locale_radio");
@@ -51,7 +51,7 @@ class State_Title extends FlxUIState
 			case "click_button":
 				if (params != null && params.length > 0)
 				{
-					switch(cast(params[0], String))
+					switch (cast(params[0], String))
 					{
 						case "saves": FlxG.switchState(new State_SaveMenu());
 						case "menu": FlxG.switchState(new State_TestMenu());
