@@ -194,7 +194,7 @@ class FlxSpriteUtil
 		var prevWidth:Int = 0;
 		var prevHeight:Int = 0;
 		
-		for (i in 0...(objects.length))
+		for (i in 0...objects.length)
 		{
 			var object = objects[i];
 			

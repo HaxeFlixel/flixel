@@ -112,7 +112,7 @@ class FlxBitmapDataUtil
 		
 		var resultColor:FlxColor = 0x0;
 		destBitmapData.lock();
-		// iterate througn pixels using following rule:
+		// iterate through pixels using following rule:
 		// new redDest = [(redSrc * redMultiplier) + (redDest * (256 - redMultiplier))] / 256; 
 		for (i in 0...width)
 		{
@@ -359,23 +359,23 @@ class FlxBitmapDataUtil
 			borderY = Std.int(border.y); 
 		}
 		
-		var result:BitmapData = new BitmapData(
-						Std.int(region.width + (numHorizontalFrames - 1) * spaceX + 2 * numHorizontalFrames * borderX), 
-						Std.int(region.height + (numVerticalFrames - 1) * spaceY + 2 * numVerticalFrames * borderY), 
-						true, 
-						FlxColor.TRANSPARENT);
-						
+		var result = new BitmapData(
+			Std.int(region.width + (numHorizontalFrames - 1) * spaceX + 2 * numHorizontalFrames * borderX), 
+			Std.int(region.height + (numVerticalFrames - 1) * spaceY + 2 * numVerticalFrames * borderY), 
+			true, 
+			FlxColor.TRANSPARENT);
+		
 		result.lock();
 		var tempRect:Rectangle = new Rectangle(0, 0, frameWidth, frameHeight);
 		var tempPoint:Point = new Point();
 		
 		// insert spaces
-		for (i in 0...(numHorizontalFrames))
+		for (i in 0...numHorizontalFrames)
 		{
 			tempPoint.x = i * (frameWidth + spaceX + 2 * borderX) + borderX;
 			tempRect.x = i * frameWidth + region.x;
 			
-			for (j in 0...(numVerticalFrames))
+			for (j in 0...numVerticalFrames)
 			{
 				tempPoint.y = j * (frameHeight + spaceY + 2 * borderY) + borderY;
 				tempRect.y = j * frameHeight + region.y;
@@ -386,7 +386,7 @@ class FlxBitmapDataUtil
 		// copy borders
 		tempPoint.setTo(0, 0);
 		tempRect.setTo(0, 0, 1, result.height);
-		for (i in 0...(numHorizontalFrames))
+		for (i in 0...numHorizontalFrames)
 		{
 			tempRect.x = i * (frameWidth + 2 * borderX + spaceX) + borderX;
 			
@@ -407,7 +407,7 @@ class FlxBitmapDataUtil
 		
 		tempPoint.setTo(0, 0);
 		tempRect.setTo(0, 0, result.width, 1);
-		for (i in 0...(numVerticalFrames))
+		for (i in 0...numVerticalFrames)
 		{
 			tempRect.y = i * (frameHeight + 2 * borderY + spaceY) + borderY;
 			
@@ -444,7 +444,7 @@ class FlxBitmapDataUtil
 		var brushWidth:Int = brush.width;
 		var brushHeight:Int = brush.height;
 		var max:Int = (brushHeight > brushWidth) ? brushHeight : brushWidth;
-		max = (autoBuffer) ? Std.int(max * 1.5) : max;
+		max = autoBuffer ? Std.int(max * 1.5) : max;
 		
 		var rows:Int = Std.int(Math.sqrt(rotations));
 		var columns:Int = Math.ceil(rotations / rows);

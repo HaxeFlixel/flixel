@@ -752,9 +752,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	override private function get_width():Float
 	{
 		if (length == 0)
-		{
 			return 0;
-		}
 		
 		var minX:Float = Math.POSITIVE_INFINITY;
 		var maxX:Float = Math.NEGATIVE_INFINITY;
@@ -774,7 +772,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 				minX = minMemberX;
 			}
 		}
-		return (maxX - minX);
+		return maxX - minX;
 	}
 	
 	/**
@@ -810,7 +808,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 				minY = minMemberY;
 			}
 		}
-		return (maxY - minY);
+		return maxY - minY;
 	}
 	
 	// GROUP FUNCTIONS

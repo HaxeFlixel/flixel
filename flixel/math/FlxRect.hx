@@ -449,7 +449,7 @@ class FlxRect implements IFlxPooled
 	
 	private inline function get_isEmpty():Bool
 	{
-		return (width == 0 || height == 0);
+		return width == 0 || height == 0;
 	}
 	
 	private static function get_pool():IFlxPool<FlxRect>

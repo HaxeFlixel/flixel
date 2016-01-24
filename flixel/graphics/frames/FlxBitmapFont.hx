@@ -522,9 +522,9 @@ class FlxBitmapFont extends FlxFramesCollection
 		var letterIndex:Int = 0;
 		var numLetters:Int = letters.length;
 		
-		for (j in 0...(numRows))
+		for (j in 0...numRows)
 		{
-			for (i in 0...(numCols))
+			for (i in 0...numCols)
 			{
 				charRect = FlxRect.get(startX + i * spacedWidth, startY + j * spacedHeight, charWidth, charHeight);
 				offset = FlxPoint.get(0, 0);

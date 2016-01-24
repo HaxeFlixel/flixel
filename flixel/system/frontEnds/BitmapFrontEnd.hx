@@ -142,7 +142,7 @@ class BitmapFrontEnd
 	 */
 	public inline function checkCache(Key:String):Bool
 	{
-		return (_cache.exists(Key) && (_cache.get(Key) != null));
+		return _cache.exists(Key) && _cache.get(Key) != null;
 	}
 	
 	/**

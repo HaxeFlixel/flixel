@@ -209,7 +209,7 @@ class FlxVector extends FlxPoint
 	 */
 	public inline function isZero():Bool
 	{
-		return (Math.abs(x) < EPSILON && Math.abs(y) < EPSILON);
+		return Math.abs(x) < EPSILON && Math.abs(y) < EPSILON;
 	}
 	
 	/**
@@ -508,7 +508,7 @@ class FlxVector extends FlxPoint
 	{
 		var dx:Float = v.x - x;
 		var dy:Float = v.y - y;
-		return (dx * dx + dy * dy);
+		return dx * dx + dy * dy;
 	}
 		
 	/**

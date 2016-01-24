@@ -244,7 +244,7 @@ class FlxAtlas implements IFlxDestroyable
 		var dw:Int = nodeToDivide.width - insertWidth;
 		var dh:Int = nodeToDivide.height - insertHeight;
 		
-		return (dw > dh); // divide horizontally if true, vertically if false
+		return dw > dh; // divide horizontally if true, vertically if false
 	}
 	
 	private function divideNode(nodeToDivide:FlxNode, insertWidth:Int, insertHeight:Int, divideHorizontally:Bool, firstGrandChildData:BitmapData = null, firstGrandChildKey:String = null, firstGrandChildRotated:Bool = false):FlxNode
@@ -704,7 +704,7 @@ class FlxAtlas implements IFlxDestroyable
 		}
 		
 		_tempStorage = new Array<TempAtlasObj>();
-		for (i in 0...(numBitmaps))
+		for (i in 0...numBitmaps)
 		{
 			_tempStorage.push({ bmd: bitmaps[i], keyStr: keys[i] });
 		}
@@ -718,7 +718,7 @@ class FlxAtlas implements IFlxDestroyable
 		objects.sort(bitmapSorter);
 		var numBitmaps:Int = objects.length;
 		
-		for (i in 0...(numBitmaps))
+		for (i in 0...numBitmaps)
 		{
 			addNode(objects[i].bmd, objects[i].keyStr);
 		}

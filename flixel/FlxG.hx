@@ -667,8 +667,8 @@ class FlxG
 	
 	private static function get_fullscreen():Bool
 	{
-		return (stage.displayState == StageDisplayState.FULL_SCREEN 
-			|| stage.displayState == StageDisplayState.FULL_SCREEN_INTERACTIVE);
+		return stage.displayState == StageDisplayState.FULL_SCREEN 
+			|| stage.displayState == StageDisplayState.FULL_SCREEN_INTERACTIVE;
 	}
 	
 	private static function set_fullscreen(Value:Bool):Bool

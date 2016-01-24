@@ -386,7 +386,7 @@ class FlxSprite extends FlxObject
 			brush.copyPixels(full, _flashRect, _flashPointZero);
 		}
 		
-		key = key + ":" + Rotations + ":" + AutoBuffer;
+		key += ":" + Rotations + ":" + AutoBuffer;
 		
 		//Generate a new sheet if necessary, then fix up the width and height
 		var tempGraph:FlxGraphic = FlxG.bitmap.get(key);
@@ -1335,7 +1335,7 @@ class FlxSprite extends FlxObject
 		var doFlipX = (flipX != _frame.flipX);
 		if (animation.curAnim != null)
 		{
-			return (doFlipX != animation.curAnim.flipX);
+			return doFlipX != animation.curAnim.flipX;
 		}
 		return doFlipX;
 	}
@@ -1345,7 +1345,7 @@ class FlxSprite extends FlxObject
 		var doFlipY = (flipY != _frame.flipY);
 		if (animation.curAnim != null)
 		{
-			return (doFlipY != animation.curAnim.flipY);
+			return doFlipY != animation.curAnim.flipY;
 		}
 		return doFlipY;
 	}

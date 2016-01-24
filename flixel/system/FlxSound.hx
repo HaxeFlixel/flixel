@@ -655,7 +655,7 @@ class FlxSound extends FlxBasic
 	
 	private inline function get_playing():Bool
 	{
-		return (_channel != null);
+		return _channel != null;
 	}
 	
 	private inline function get_volume():Float
