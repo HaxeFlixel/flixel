@@ -236,7 +236,7 @@ class FlxRect implements IFlxPooled
 	 * @param	Point	The FlxPoint to check
 	 * @return	True if the FlxPoint is within this FlxRect, otherwise false
 	 */
-	public inline function containsFlxPoint(Point:FlxPoint):Bool
+	public inline function containsPoint(Point:FlxPoint):Bool
 	{
 		var result = FlxMath.pointInFlxRect(Point.x, Point.y, this);
 		Point.putWeak();
