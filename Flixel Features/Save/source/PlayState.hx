@@ -66,7 +66,7 @@ class PlayState extends FlxState
 			if (_gameSave.data.boxPositions != null)
 			{
 				box = new FlxButton(_gameSave.data.boxPositions[i].x, _gameSave.data.boxPositions[i].y, Std.string(i + 1));
-				//I'm using a FlxButton in this instance because I can use if (button.state == FlxButton.PRESSED) 
+				//I'm using a FlxButton in this instance because I can use if (button.pressed) 
 				//to detect if the mouse is held down on a button
 				_topText.text = "Loaded positions";
 			}
@@ -120,7 +120,7 @@ class PlayState extends FlxState
 		{
 			for (box in _boxGroup) 
 			{
-				if (box.status == FlxButton.PRESSED) 
+				if (box.pressed) 
 				{
 					// The offset is used to make the box stick to the cursor and not snap to the corner
 					dragOffset.set(box.x - FlxG.mouse.x, box.y - FlxG.mouse.y);
