@@ -86,7 +86,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Offset the camera target
 	 */
-	public var targetOffset(default, null):FlxPoint;
+	public var targetOffset(default, null):FlxPoint = FlxPoint.get();
 	/**
 	 * Used to smoothly track the camera as it follows: The percent of the distance to the follow target the camera moves per 1/60 sec.
 	 * Values are bounded between 0.0 and FlxG.updateFrameRate / 60 for consistency across framerates.
@@ -119,7 +119,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Stores the basic parallax scrolling values.
 	 */
-	public var scroll:FlxPoint;
+	public var scroll:FlxPoint = FlxPoint.get();
 	
 	/**
 	 * The actual bitmap data of the camera display itself.
@@ -152,7 +152,7 @@ class FlxCamera extends FlxBasic
 	 * Used to render buffer to screen space. NOTE: We don't recommend modifying this directly unless you are fairly experienced. 
 	 * Uses include 3D projection, advanced display list modification, and more.
 	 */
-	public var flashSprite:Sprite;
+	public var flashSprite:Sprite = new Sprite();
 
 	/**
 	 * Whether the positions of the objects rendered on this camera are rounded.
@@ -197,7 +197,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Used to force the camera to look ahead of the target.
 	 */
-	public var followLead(default, null):FlxPoint;
+	public var followLead(default, null):FlxPoint = FlxPoint.get();
 	/**
 	 * Enables or disables the filters set via setFilters()
 	 */
@@ -210,11 +210,11 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Internal, used to render buffer to screen space.
 	 */
-	private var _flashPoint:Point;
+	private var _flashPoint:Point = new Point();
 	/**
 	 * Internal, used to render buffer to screen space.
 	 */
-	private var _flashOffset:FlxPoint;
+	private var _flashOffset:FlxPoint = FlxPoint.get();
 	/**
 	 * Internal, used to control the "flash" special effect.
 	 */
@@ -242,7 +242,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Helper to calculate follow target current scroll.
 	 */
-	private var _scrollTarget:FlxPoint;
+	private var _scrollTarget:FlxPoint = FlxPoint.get();
 	/**
 	 * Internal, used to control the "fade" special effect.
 	 */
@@ -275,7 +275,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Internal, used to control the "shake" special effect.
 	 */
-	private var _fxShakeOffset:FlxPoint;
+	private var _fxShakeOffset:FlxPoint = FlxPoint.get();
 	/**
 	 * Internal, used to control the "shake" special effect.
 	 */
@@ -283,7 +283,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Internal, to help avoid costly allocations.
 	 */
-	private var _point:FlxPoint;
+	private var _point:FlxPoint = FlxPoint.get();
 	/**
 	 * Internal, the filters array to be applied to the camera.
 	 */
@@ -306,7 +306,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Internal sprite, used for correct trimming of camera viewport.
 	 */
-	private var _scrollRect:Sprite;
+	private var _scrollRect:Sprite = new Sprite();
 	
 	/**
 	 * Helper rect for drawTriangles visibility checks
@@ -663,21 +663,18 @@ class FlxCamera extends FlxBasic
 	{
 		super();
 		
-		pixelPerfectRender = FlxG.renderBlit;
-		 
-		_scrollTarget = FlxPoint.get();
-		scroll = FlxPoint.get();
-		followLead = FlxPoint.get();
-		targetOffset = FlxPoint.get();
-		_point = FlxPoint.get();
-		_flashOffset = FlxPoint.get();
-		
 		x = X;
 		y = Y;
 		
 		// Use the game dimensions if width / height are <= 0
 		width = (Width <= 0) ? FlxG.width : Width;
 		height = (Height <= 0) ? FlxG.height : Height;
+		_flashRect = new Rectangle(0, 0, width, height);
+		
+		flashSprite.addChild(_scrollRect);
+		_scrollRect.scrollRect = new Rectangle();
+		
+		pixelPerfectRender = FlxG.renderBlit;
 		
 		if (FlxG.renderBlit)
 		{
@@ -685,56 +682,26 @@ class FlxCamera extends FlxBasic
 			buffer = new BitmapData(width, height, true, 0);
 			screen.pixels = buffer;
 			screen.origin.set();
-		}
-		
-		if (FlxG.renderBlit)
-		{
 			_flashBitmap = new Bitmap(buffer);
-		}
-		else
-		{
-			canvas = new Sprite();
-		}
-		
-		set_color(FlxColor.WHITE);
-		
-		flashSprite = new Sprite();
-		
-		_scrollRect = new Sprite();
-		flashSprite.addChild(_scrollRect);
-		
-		if (FlxG.renderBlit)
-		{
 			_scrollRect.addChild(_flashBitmap);
-		}
-		else
-		{
-			_scrollRect.addChild(canvas);
-		}
-		_flashRect = new Rectangle(0, 0, width, height);
-		_flashPoint = new Point();
-		
-		_fxShakeOffset = FlxPoint.get();
-		
-		if (FlxG.renderBlit)
-		{
 			_fill = new BitmapData(width, height, true, FlxColor.TRANSPARENT);
 		}
 		else
 		{
+			canvas = new Sprite();
+			_scrollRect.addChild(canvas);
+			_transform = new Matrix();
+			
 			#if !FLX_NO_DEBUG
 			debugLayer = new Sprite();
 			_scrollRect.addChild(debugLayer);
 			#end
-			
-			_transform = new Matrix();
 		}
 		
+		set_color(FlxColor.WHITE);
+		
 		zoom = Zoom; //sets the scale of flash sprite, which in turn loads flashoffset values
-		
 		initialZoom = zoom;
-		
-		_scrollRect.scrollRect = new Rectangle();
 		
 		updateScrollRect();
 		updateFlashOffset();
