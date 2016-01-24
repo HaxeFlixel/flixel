@@ -552,7 +552,7 @@ class FlxG
 			}
 			else
 			{
-				renderMethod = switch(stage.window.renderer.type)
+				renderMethod = switch (stage.window.renderer.type)
 				{
 					case OPENGL, CONSOLE:      DRAW_TILES;
 					case CANVAS, FLASH, CAIRO: BLITTING;
