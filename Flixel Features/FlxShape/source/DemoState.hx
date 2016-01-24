@@ -1,4 +1,5 @@
-package ;
+package;
+
 import flixel.addons.display.shapes.FlxShapeArrow;
 import flixel.addons.display.shapes.FlxShapeBox;
 import flixel.addons.display.shapes.FlxShapeCircle;
@@ -11,7 +12,6 @@ import flixel.addons.display.shapes.FlxShapeLine;
 import flixel.addons.display.shapes.FlxShapeSquareDonut;
 import flixel.FlxState;
 import flixel.math.FlxPoint;
-import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import openfl.display.CapsStyle;
 import openfl.display.JointStyle;
@@ -22,7 +22,23 @@ import openfl.display.JointStyle;
  */
 class DemoState extends FlxState
 {
-
+	private var box:FlxShapeBox;
+	private var circle:FlxShapeCircle;
+	private var cross:FlxShapeCross;
+	private var cross2:FlxShapeCross;
+	private var donut:FlxShapeDonut;
+	private var sdonut:FlxShapeSquareDonut;
+	
+	private var dcircle:FlxShapeDoubleCircle;
+	private var grid:FlxShapeGrid;
+	
+	private var line:FlxShapeLine;
+	private var lightning:FlxShapeLightning;
+	
+	private var norg_back:FlxShapeBox;
+	private var norg_cross:FlxShapeCross;
+	private var norg_cross2:FlxShapeCross;
+	
 	public override function create():Void
 	{
 		super.create();
@@ -84,21 +100,4 @@ class DemoState extends FlxState
 		add(arrow_se);
 		add(arrow_w);
 	}
-	
-	private var box:FlxShapeBox;
-	private var circle:FlxShapeCircle;
-	private var cross:FlxShapeCross;
-	private var cross2:FlxShapeCross;
-	private var donut:FlxShapeDonut;
-	private var sdonut:FlxShapeSquareDonut;
-	
-	private var dcircle:FlxShapeDoubleCircle;
-	private var grid:FlxShapeGrid;
-	
-	private var line:FlxShapeLine;
-	private var lightning:FlxShapeLightning;
-	
-	private var norg_back:FlxShapeBox;
-	private var norg_cross:FlxShapeCross;
-	private var norg_cross2:FlxShapeCross;
 }

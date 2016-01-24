@@ -1,4 +1,5 @@
-package ;
+package;
+
 import flash.display.Graphics;
 import flixel.util.FlxColor;
 import flixel.FlxG;

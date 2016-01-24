@@ -1,4 +1,5 @@
-package ;
+package;
+
 import flixel.ui.FlxButton;
 import flixel.FlxG;
 import flixel.FlxSprite;
