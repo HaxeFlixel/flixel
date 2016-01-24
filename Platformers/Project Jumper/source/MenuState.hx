@@ -3,9 +3,8 @@ package;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
-import flixel.text.FlxText;
-import flixel.util.FlxStringUtil;
 import flixel.math.FlxMath;
+import flixel.text.FlxText;
 
 /**
  * ...
@@ -13,8 +12,6 @@ import flixel.math.FlxMath;
  */
 class MenuState extends FlxState 
 {
-	// How many menu options there are.
-	public static inline var OPTIONS:Int = 3;
 	public static inline var TEXT_SPEED:Float = 600;
 	
 	// Augh, so many text objects. I should make arrays.
