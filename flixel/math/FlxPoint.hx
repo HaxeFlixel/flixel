@@ -166,6 +166,7 @@ class FlxPoint implements IFlxPooled
 	{
 		x = point.x;
 		y = point.y;
+		point.putWeak();
 		return this;
 	}
 	
@@ -383,7 +384,9 @@ class FlxPoint implements IFlxPooled
 	 */
 	public inline function equals(point:FlxPoint):Bool
 	{
-		return FlxMath.equal(x, point.x) && FlxMath.equal(y, point.y);
+		var result = FlxMath.equal(x, point.x) && FlxMath.equal(y, point.y);
+		point.putWeak();
+		return result;
 	}
 	
 	/**

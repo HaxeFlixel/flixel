@@ -156,6 +156,8 @@ class FlxRect implements IFlxPooled
 		y = Rect.y;
 		width = Rect.width;
 		height = Rect.height;
+		
+		Rect.putWeak();
 		return this;
 	}
 	
@@ -171,6 +173,8 @@ class FlxRect implements IFlxPooled
 		Rect.y = y;
 		Rect.width = width;
 		Rect.height = height;
+		
+		Rect.putWeak();
 		return Rect;
 	}
 	
@@ -217,7 +221,13 @@ class FlxRect implements IFlxPooled
 	 */
 	public inline function overlaps(Rect:FlxRect):Bool
 	{
-		return (Rect.x + Rect.width > x) && (Rect.x < x + width) && (Rect.y + Rect.height > y) && (Rect.y < y + height);
+		var result =
+			(Rect.x + Rect.width > x) &&
+			(Rect.x < x + width) &&
+			(Rect.y + Rect.height > y) &&
+			(Rect.y < y + height);
+		Rect.putWeak();
+		return result;
 	}
 	
 	/**
@@ -228,7 +238,9 @@ class FlxRect implements IFlxPooled
 	 */
 	public inline function containsFlxPoint(Point:FlxPoint):Bool
 	{
-		return FlxMath.pointInFlxRect(Point.x, Point.y, this);
+		var result = FlxMath.pointInFlxRect(Point.x, Point.y, this);
+		Point.putWeak();
+		return result;
 	}
 	
 	/**
@@ -245,6 +257,7 @@ class FlxRect implements IFlxPooled
 		var maxX:Float = Math.max(right, Rect.right);
 		var maxY:Float = Math.max(bottom, Rect.bottom);
 		
+		Rect.putWeak();
 		return set(minX, minY, maxX - minX, maxY - minY);
 	}
 	
@@ -299,6 +312,8 @@ class FlxRect implements IFlxPooled
 		var maxX:Float = Math.max(Point1.x, Point2.x);
 		var maxY:Float = Math.max(Point1.y, Point2.y);
 		
+		Point1.putWeak();
+		Point2.putWeak();
 		return this.set(minX, minY, maxX - minX, maxY - minY);
 	}
 	
@@ -316,6 +331,7 @@ class FlxRect implements IFlxPooled
 		var maxX:Float = Math.max(right, Point.x);
 		var maxY:Float = Math.max(bottom, Point.y);
 		
+		Point.putWeak();
 		return set(minX, minY, maxX - minX, maxY - minY);
 	}
 	
@@ -351,8 +367,13 @@ class FlxRect implements IFlxPooled
 	 */
 	public inline function equals(rect:FlxRect):Bool
 	{
-		return FlxMath.equal(x, rect.x) && FlxMath.equal(y, rect.y)
-			&& FlxMath.equal(width, rect.width) && FlxMath.equal(height, rect.height);
+		var result =
+			FlxMath.equal(x, rect.x) &&
+			FlxMath.equal(y, rect.y) &&
+			FlxMath.equal(width, rect.width) &&
+			FlxMath.equal(height, rect.height);
+		rect.putWeak();
+		return result;
 	}
 	
 	/**
@@ -368,6 +389,7 @@ class FlxRect implements IFlxPooled
 		var x1:Float = right > rect.right ? rect.right : right;
 		if (x1 <= x0) 
 		{	
+			rect.putWeak();
 			return FlxRect.get(0, 0, 0, 0);
 		}
 		
@@ -375,9 +397,11 @@ class FlxRect implements IFlxPooled
 		var y1:Float = bottom > rect.bottom ? rect.bottom : bottom;
 		if (y1 <= y0) 
 		{	
+			rect.putWeak();
 			return FlxRect.get(0, 0, 0, 0);
 		}
 		
+		rect.putWeak();
 		return FlxRect.get(x0, y0, x1 - x0, y1 - y0);
 	}
 	
