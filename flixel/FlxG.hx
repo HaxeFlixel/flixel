@@ -542,32 +542,32 @@ class FlxG
 	
 	private static function initRenderMethod():Void
 	{
-		renderMethod = BLIT;
+		renderMethod = BLITTING;
 		
 		#if (!lime_legacy && !flash)
 			if (Lib.application.config.windows[0].hardware == false)
 			{
-				renderMethod = BLIT;
+				renderMethod = BLITTING;
 			}
 			else
 			{
 				renderMethod = switch(stage.window.renderer.type)
 				{
-					case OPENGL, CONSOLE:      TILES;
-					case CANVAS, FLASH, CAIRO: BLIT;
-					default:                   BLIT;
+					case OPENGL, CONSOLE:      DRAW_TILES;
+					case CANVAS, FLASH, CAIRO: BLITTING;
+					default:                   BLITTING;
 				}
 			}
 		#else
 			#if (flash || js)
-				renderMethod = BLIT;
+				renderMethod = BLITTING;
 			#else
-				renderMethod = TILES;
+				renderMethod = DRAW_TILES;
 			#end
 		#end
 		
-		renderBlit = renderMethod == BLIT;
-		renderTile = renderMethod == TILES;
+		renderBlit = renderMethod == BLITTING;
+		renderTile = renderMethod == DRAW_TILES;
 		
 		FlxObject.defaultPixelPerfectPosition = renderBlit;
 	}
@@ -689,6 +689,6 @@ class FlxG
 
 enum FlxRenderMethod 
 {
-	TILES;
-	BLIT;
+	DRAW_TILES;
+	BLITTING;
 }
