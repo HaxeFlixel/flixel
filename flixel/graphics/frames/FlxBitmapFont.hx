@@ -490,7 +490,7 @@ class FlxBitmapFont extends FlxFramesCollection
 			return font;
 		
 		letters = (letters == null) ? DEFAULT_CHARS : letters;
-		region = (region == null) ? FlxRect.flxRect.set(0, 0, frame.sourceSize.x, frame.sourceSize.y) : region;
+		region = (region == null) ? FlxRect.weak(0, 0, frame.sourceSize.x, frame.sourceSize.y) : region;
 		spacing = (spacing == null) ? FlxPoint.get(0, 0) : spacing;
 		
 		var bitmapWidth:Int = Std.int(region.width);
@@ -498,6 +498,8 @@ class FlxBitmapFont extends FlxFramesCollection
 		
 		var startX:Int = Std.int(region.x);
 		var startY:Int = Std.int(region.y);
+		
+		region.putWeak();
 		
 		var xSpacing:Int = Std.int(spacing.x);
 		var ySpacing:Int = Std.int(spacing.y);
@@ -603,9 +605,7 @@ class FlxBitmapFont extends FlxFramesCollection
 	public static function findFont(frame:FlxFrame, border:FlxPoint = null):FlxBitmapFont
 	{
 		if (border == null)
-		{
-			border = FlxPoint.flxPoint1.set();
-		}
+			border = FlxPoint.weak();
 		
 		var bitmapFonts:Array<FlxBitmapFont> = cast frame.parent.getFramesCollections(FlxFrameCollectionType.FONT);
 		for (font in bitmapFonts)
