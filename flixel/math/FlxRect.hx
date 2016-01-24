@@ -10,7 +10,8 @@ import flixel.util.FlxStringUtil;
  */
 class FlxRect implements IFlxPooled
 {
-	public static var rect:Rectangle = new Rectangle();
+	@:allow(flixel)
+	private static var rect:Rectangle = new Rectangle();
 	
 	public static var pool(get, never):IFlxPool<FlxRect>;
 	

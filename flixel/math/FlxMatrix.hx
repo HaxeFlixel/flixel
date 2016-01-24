@@ -13,7 +13,8 @@ class FlxMatrix extends Matrix
 	 * Helper object, which you can use without instantiation of
 	 * additional objects.
 	 */
-	public static var matrix:FlxMatrix = new FlxMatrix();
+	@:allow(flixel)
+	private static var matrix:FlxMatrix = new FlxMatrix();
 	
 	/**
 	 * Rotates this matrix, but takes the values of sine and cosine,
