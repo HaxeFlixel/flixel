@@ -266,6 +266,8 @@ class FlxG
 	 */
 	public static var plugins(default, null):PluginFrontEnd;
 	
+	public static var initialWidth(default, null):Int = 0;
+	public static var initialHeight(default, null):Int = 0;
 	public static var initialZoom(default, null):Float = 0;
 	
 	#if !FLX_NO_SOUND_SYSTEM
@@ -499,9 +501,8 @@ class FlxG
 		
 		initRenderMethod();
 		
-		BaseScaleMode.gWidth = width;
-		BaseScaleMode.gHeight = height;
-		
+		FlxG.initialWidth = width;
+		FlxG.initialHeight = height;
 		FlxG.initialZoom = FlxCamera.defaultZoom = Zoom;
 		
 		resizeGame(Lib.current.stage.stageWidth, Lib.current.stage.stageHeight);

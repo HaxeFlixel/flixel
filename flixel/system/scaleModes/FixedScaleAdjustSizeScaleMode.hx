@@ -18,8 +18,8 @@ class FixedScaleAdjustSizeScaleMode extends BaseScaleMode
 	
 	override public function onMeasure(Width:Int, Height:Int):Void
 	{
-		FlxG.width = fixedWidth ? BaseScaleMode.gWidth : Math.ceil(Width / FlxG.initialZoom);
-		FlxG.height = fixedHeight ? BaseScaleMode.gHeight : Math.ceil(Height / FlxG.initialZoom);
+		FlxG.width = fixedWidth ? FlxG.initialWidth : Math.ceil(Width / FlxG.initialZoom);
+		FlxG.height = fixedHeight ? FlxG.initialHeight : Math.ceil(Height / FlxG.initialZoom);
 		
 		updateGameSize(Width, Height);
 		updateDeviceSize(Width, Height);
