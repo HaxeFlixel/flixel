@@ -417,9 +417,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 	public static function findFrame(graphic:FlxGraphic, border:FlxPoint = null):FlxAtlasFrames
 	{
 		if (border == null)
-		{
-			border = FlxPoint.flxPoint1.set(0, 0);
-		}
+			border = FlxPoint.weak();
 		
 		var atlasFrames:Array<FlxAtlasFrames> = cast graphic.getFramesCollections(FlxFrameCollectionType.ATLAS);
 		var atlas:FlxAtlasFrames;

@@ -517,22 +517,17 @@ class FlxTileFrames extends FlxFramesCollection
 		}
 		
 		if (region == null)
-		{
-			region = FlxRect.flxRect;
-			region.set(0, 0, parent.width, parent.height);
-		}
+			region = FlxRect.weak(0, 0, parent.width, parent.height);
 		
 		if (tileSpacing == null)
-		{
-			tileSpacing = FlxPoint.flxPoint1.set(0, 0);
-		}
+			tileSpacing = FlxPoint.weak();
 		
 		if (border == null)
-		{
-			border = FlxPoint.flxPoint2.set(0, 0);
-		}
+			border = FlxPoint.weak();
 		
-		return (this.atlasFrame == atlasFrame && this.region.equals(region) && this.tileSize.equals(tileSize) && this.tileSpacing.equals(tileSpacing) && this.border.equals(border));
+		return this.atlasFrame == atlasFrame && this.region.equals(region) &&
+			this.tileSize.equals(tileSize) && this.tileSpacing.equals(tileSpacing) &&
+			this.border.equals(border);
 	}
 	
 	override public function addBorder(border:FlxPoint):FlxTileFrames

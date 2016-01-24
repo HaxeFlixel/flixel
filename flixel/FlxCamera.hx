@@ -579,9 +579,7 @@ class FlxCamera extends FlxBasic
 		if (FlxG.renderBlit)
 		{
 			if (position == null)
-			{
-				position = FlxPoint.flxPoint1.set(0, 0);
-			}
+				position = FlxPoint.weak();
 			
 			_bounds.set(0, 0, width, height);
 			
@@ -590,7 +588,7 @@ class FlxCamera extends FlxBasic
 			
 			var tempX:Float, tempY:Float;
 			var i:Int = 0;
-			var bounds:FlxRect = FlxRect.flxRect;
+			var bounds = FlxRect.get();
 			drawVertices.splice(0, drawVertices.length);
 			
 			while (i < verticesLength)
@@ -613,9 +611,9 @@ class FlxCamera extends FlxBasic
 				i += 2;
 			}
 			
-			var vis:Bool = _bounds.overlaps(bounds);
+			position.putWeak();
 			
-			if (!vis)
+			if (!_bounds.overlaps(bounds))
 			{
 				drawVertices.splice(drawVertices.length - verticesLength, verticesLength);
 			}
@@ -637,6 +635,8 @@ class FlxCamera extends FlxBasic
 				}
 				#end
 			}
+			
+			bounds.put();
 		}
 		else
 		{

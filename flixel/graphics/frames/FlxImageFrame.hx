@@ -94,16 +94,14 @@ class FlxImageFrame extends FlxFramesCollection
 	 */
 	public static function fromGraphic(graphic:FlxGraphic, region:FlxRect = null):FlxImageFrame
 	{
-		if (graphic == null)	return null;
+		if (graphic == null)
+			return null;
 		
 		// find ImageFrame, if there is one already
 		var checkRegion:FlxRect = region;
 		
 		if (checkRegion == null)
-		{
-			checkRegion = FlxRect.flxRect;
-			checkRegion.set(0, 0, graphic.width, graphic.height);
-		}
+			checkRegion = FlxRect.weak(0, 0, graphic.width, graphic.height);
 		
 		var imageFrame:FlxImageFrame = FlxImageFrame.findFrame(graphic, checkRegion);
 		if (imageFrame != null)
@@ -202,9 +200,7 @@ class FlxImageFrame extends FlxFramesCollection
 	public static function findFrame(graphic:FlxGraphic, frameRect:FlxRect, frameBorder:FlxPoint = null):FlxImageFrame
 	{
 		if (frameBorder == null)
-		{
-			frameBorder = FlxPoint.flxPoint1.set();
-		}
+			frameBorder = FlxPoint.weak();
 		
 		var imageFrames:Array<FlxImageFrame> = cast graphic.getFramesCollections(FlxFrameCollectionType.IMAGE);
 		var imageFrame:FlxImageFrame;
@@ -224,7 +220,7 @@ class FlxImageFrame extends FlxFramesCollection
 	 */
 	private inline function equals(rect:FlxRect, border:FlxPoint):Bool
 	{
-		return (rect.equals(frame.frame) && border.equals(this.border));
+		return rect.equals(frame.frame) && border.equals(this.border);
 	}
 	
 	/**

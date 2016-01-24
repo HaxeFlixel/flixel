@@ -106,14 +106,10 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 	public function addTriangles(vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, colors:DrawData<Int> = null, position:FlxPoint = null, cameraBounds:FlxRect = null):Void
 	{
 		if (position == null)
-		{
-			position = FlxPoint.flxPoint1.set(0, 0);
-		}
+			position = FlxPoint.weak();
 		
 		if (cameraBounds == null)
-		{
-			cameraBounds = FlxRect.flxRect.set(0, 0, FlxG.width, FlxG.height);
-		}
+			cameraBounds = FlxRect.weak(0, 0, FlxG.width, FlxG.height);
 		
 		var verticesLength:Int = vertices.length;
 		var prevVerticesLength:Int = this.vertices.length;
@@ -147,8 +143,7 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 			i += 2;
 		}
 		
-		var vis:Bool = cameraBounds.overlaps(bounds);
-		if (!vis)
+		if (!cameraBounds.overlaps(bounds))
 		{
 			this.vertices.splice(this.vertices.length - verticesLength, verticesLength);
 		}
@@ -179,6 +174,9 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 			verticesPosition += verticesLength;
 			indicesPosition += indicesLength;
 		}
+		
+		position.putWeak();
+		cameraBounds.putWeak();
 	}
 	
 	public static inline function inflateBounds(bounds:FlxRect, x:Float, y:Float):FlxRect
@@ -215,9 +213,7 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		var prevColorsPos:Int = colorsPosition;
 		var prevNumberOfVertices:Int = numVertices;
 		
-		var point:FlxPoint = FlxPoint.flxPoint1;
-		
-		point.set(0, 0);
+		var point = FlxPoint.get();
 		point.transform(matrix);
 		
 		vertices[prevVerticesPos] = point.x;
@@ -249,6 +245,8 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		
 		vertices[prevVerticesPos + 6] = point.x;
 		vertices[prevVerticesPos + 7] = point.y;
+		
+		point.put();
 		
 		uvtData[prevVerticesPos + 6] = frame.uv.x;
 		uvtData[prevVerticesPos + 7] = frame.uv.height;

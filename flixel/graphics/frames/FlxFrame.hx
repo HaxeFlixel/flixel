@@ -395,15 +395,16 @@ class FlxFrame implements IFlxDestroyable
 	 */
 	private inline function getDrawFrameRect(mat:FlxMatrix):Rectangle
 	{
-		var p1:FlxPoint = FlxPoint.flxPoint1.set(frame.x, frame.y);
-		var p2:FlxPoint = FlxPoint.flxPoint2.set(frame.right, frame.bottom);
+		var p1:FlxPoint = FlxPoint.weak(frame.x, frame.y);
+		var p2:FlxPoint = FlxPoint.weak(frame.right, frame.bottom);
 		
 		p1.transform(mat);
 		p2.transform(mat);
 		
-		var flxRect:FlxRect = FlxRect.flxRect.fromTwoPoints(p1, p2);
+		var flxRect = FlxRect.get().fromTwoPoints(p1, p2);
 		var rect:Rectangle = FlxRect.rect;
 		flxRect.copyToFlash(rect);
+		flxRect.put();
 		return rect;
 	}
 	
@@ -447,7 +448,7 @@ class FlxFrame implements IFlxDestroyable
 		var ox:Float = Math.max(offset.x, 0);
 		var oy:Float = Math.max(offset.y, 0);
 		
-		rect.offset( -ox, -oy);
+		rect.offset(-ox, -oy);
 		var frameRect:FlxRect = clippedRect.intersection(rect);
 		clippedRect = FlxDestroyUtil.put(clippedRect);
 		rect.offset(ox, oy);
@@ -464,8 +465,8 @@ class FlxFrame implements IFlxDestroyable
 			frameToFill.type = FlxFrameType.REGULAR;
 			frameToFill.offset.set(frameRect.x, frameRect.y).subtract(rect.x, rect.y).addPoint(offset);
 			
-			var p1:FlxPoint = FlxPoint.flxPoint1.set(frameRect.x, frameRect.y);
-			var p2:FlxPoint = FlxPoint.flxPoint2.set(frameRect.right, frameRect.bottom);
+			var p1 = FlxPoint.weak(frameRect.x, frameRect.y);
+			var p2 = FlxPoint.weak(frameRect.right, frameRect.bottom);
 			
 			var mat:FlxMatrix = FlxMatrix.matrix;
 			mat.identity();
@@ -473,13 +474,11 @@ class FlxFrame implements IFlxDestroyable
 			if (angle == FlxFrameAngle.ANGLE_NEG_90)
 			{
 				mat.rotateByPositive90();
-			//	mat.translate(sourceSize.y, 0);
 				mat.translate(frame.width, 0);
 			}
 			else if (angle == FlxFrameAngle.ANGLE_90)
 			{
 				mat.rotateByNegative90();
-			//	mat.translate(0, sourceSize.x);
 				mat.translate(0, frame.height);
 			}
 			
@@ -567,8 +566,8 @@ class FlxFrame implements IFlxDestroyable
 			clippedFrame.type = FlxFrameType.REGULAR;
 			clippedFrame.offset.set(frameRect.x, frameRect.y).addPoint(offset);
 			
-			var p1:FlxPoint = FlxPoint.flxPoint1.set(frameRect.x, frameRect.y);
-			var p2:FlxPoint = FlxPoint.flxPoint2.set(frameRect.right, frameRect.bottom);
+			var p1 = FlxPoint.weak(frameRect.x, frameRect.y);
+			var p2 = FlxPoint.weak(frameRect.right, frameRect.bottom);
 			
 			var mat:FlxMatrix = FlxMatrix.matrix;
 			mat.identity();
@@ -576,13 +575,11 @@ class FlxFrame implements IFlxDestroyable
 			if (angle == FlxFrameAngle.ANGLE_NEG_90)
 			{
 				mat.rotateByPositive90();
-			//	mat.translate(sourceSize.y, 0);
 				mat.translate(frame.width, 0);
 			}
 			else if (angle == FlxFrameAngle.ANGLE_90)
 			{
 				mat.rotateByNegative90();
-			//	mat.translate(0, sourceSize.x);
 				mat.translate(0, frame.height);
 			}
 			

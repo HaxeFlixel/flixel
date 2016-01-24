@@ -10,8 +10,6 @@ import flixel.util.FlxStringUtil;
  */
 class FlxRect implements IFlxPooled
 {
-	public static var flxRect:FlxRect = new FlxRect();
-	
 	public static var rect:Rectangle = new Rectangle();
 	
 	public static var pool(get, never):IFlxPool<FlxRect>;
@@ -348,18 +346,6 @@ class FlxRect implements IFlxPooled
 	public function destroy() {}
 	
 	/**
-	 * Convert object to readable string name. Useful for debugging, save games, etc.
-	 */
-	public inline function toString():String
-	{
-		return FlxStringUtil.getDebugString([
-			LabelValuePair.weak("x", x),
-			LabelValuePair.weak("y", y),
-			LabelValuePair.weak("w", width),
-			LabelValuePair.weak("h", height)]);
-	}
-	
-	/**
 	 * Checks if this rectangle's properties are equal to properties of provided rect.
 	 * 
 	 * @param	rect	Rectangle to check equality to.
@@ -403,6 +389,18 @@ class FlxRect implements IFlxPooled
 		
 		rect.putWeak();
 		return FlxRect.get(x0, y0, x1 - x0, y1 - y0);
+	}
+	
+	/**
+	 * Convert object to readable string name. Useful for debugging, save games, etc.
+	 */
+	public inline function toString():String
+	{
+		return FlxStringUtil.getDebugString([
+			LabelValuePair.weak("x", x),
+			LabelValuePair.weak("y", y),
+			LabelValuePair.weak("w", width),
+			LabelValuePair.weak("h", height)]);
 	}
 	
 	private inline function get_left():Float

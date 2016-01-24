@@ -13,8 +13,6 @@ class FlxPoint implements IFlxPooled
 {
 	public static var pool(get, never):IFlxPool<FlxPoint>;
 	
-	public static var flxPoint1:FlxPoint = new FlxPoint();
-	public static var flxPoint2:FlxPoint = new FlxPoint();
 	public static var point1:Point = new Point();
 	public static var point2:Point = new Point();
 	
@@ -395,16 +393,6 @@ class FlxPoint implements IFlxPooled
 	public function destroy() {}
 	
 	/**
-	 * Convert object to readable string name. Useful for debugging, save games, etc.
-	 */
-	public inline function toString():String
-	{
-		return FlxStringUtil.getDebugString([ 
-			LabelValuePair.weak("x", x),
-			LabelValuePair.weak("y", y)]);
-	}
-	
-	/**
 	 * Applies tranformation matrix to this point
 	 * @param	matrix	tranformation matrix
 	 * @return	transformed point
@@ -415,6 +403,16 @@ class FlxPoint implements IFlxPooled
 		var y1:Float = x * matrix.b + y * matrix.d + matrix.ty;
 		
 		return set(x1, y1);
+	}
+	
+	/**
+	 * Convert object to readable string name. Useful for debugging, save games, etc.
+	 */
+	public inline function toString():String
+	{
+		return FlxStringUtil.getDebugString([ 
+			LabelValuePair.weak("x", x),
+			LabelValuePair.weak("y", y)]);
 	}
 	
 	/**
