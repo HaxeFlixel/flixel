@@ -5,6 +5,7 @@ import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.text.FlxText;
 import flixel.util.FlxStringUtil;
+import flixel.math.FlxMath;
 
 /**
  * ...
@@ -26,7 +27,7 @@ class MenuState extends FlxState
 	private var _pointer:FlxSprite;
 	
 	// This will indicate what the pointer is pointing at
-	private var _option:Int;     
+	private var _option:Option = PLAY;     
 	
 	override public function create():Void 
 	{
@@ -34,7 +35,7 @@ class MenuState extends FlxState
 		FlxG.state.bgColor = 0xFF101414;
 		
 		// Each word is its own object so we can position them independantly
-		_text1 = new FlxText( -220, FlxG.height / 4, 320, "Project");
+		_text1 = new FlxText(-220, FlxG.height / 4, 320, "Project");
 		_text1.moves = true;
 		_text1.size = 40;
 		_text1.color = 0xFFFF00;
@@ -52,9 +53,9 @@ class MenuState extends FlxState
 		add(_text2);
 		
 		// Set up the menu options
-		_text3 = new FlxText(FlxG.width * 2 / 3, FlxG.height * 2 / 3, 150, "Play");
-		_text4 = new FlxText(FlxG.width * 2 / 3, FlxG.height * 2 / 3 + 30, 150, "Visit NIWID");
-		_text5 = new FlxText(FlxG.width * 2 / 3, FlxG.height * 2 / 3 + 60, 150, "Visit flixel.org");
+		_text3 = new FlxText(FlxG.width * 2 / 3, FlxG.height * 2 / 3, 0, "Play");
+		_text4 = new FlxText(FlxG.width * 2 / 3, FlxG.height * 2 / 3 + 30, 0, "Visit NIWID");
+		_text5 = new FlxText(FlxG.width * 2 / 3, FlxG.height * 2 / 3 + 60, 0, "Visit haxeflixel.com");
 		_text3.color = _text4.color = _text5.color = 0xAAFFFF00;
 		_text3.size = _text4.size = _text5.size = 16;
 		_text3.antialiasing = _text4.antialiasing = _text5.antialiasing = true;
@@ -66,7 +67,6 @@ class MenuState extends FlxState
 		_pointer.loadGraphic("assets/art/pointer.png");
 		_pointer.x = _text3.x - _pointer.width - 10;
 		add(_pointer);
-		_option = 0;
 		
 		super.create();
 	}
@@ -92,43 +92,51 @@ class MenuState extends FlxState
 		// this is the goofus way to do it. An array would be way better
 		_pointer.y = switch (_option)    
 		{
-			case 0: _text3.y;
-			case 1: _text4.y;
-			case 2: _text5.y;
+			case PLAY: _text3.y;
+			case BLOG: _text4.y;
+			case FLIXEL: _text5.y;
 		}
 		
 		if (FlxG.keys.justPressed.UP)
-		{
-			// A goofy format, because % doesn't work on negative numbers
-			_option = (_option + OPTIONS - 1) % OPTIONS; 
-			FlxG.sound.play("assets/sounds/menu" + Reg.SoundExtension, 1, false);
-		}
-		
+			modifySelectedOption(-1);
 		if (FlxG.keys.justPressed.DOWN)
-		{
-			_option = (_option + OPTIONS + 1) % OPTIONS;
-			FlxG.sound.play("assets/sounds/menu" + Reg.SoundExtension, 1, false);
-		}
+			modifySelectedOption(1);
 		
 		if (FlxG.keys.anyJustPressed([SPACE, ENTER, C]))
 		{
 			switch (_option) 
 			{
-				case 0:
+				case PLAY:
 					FlxG.cameras.fade(0xff969867, 1, false, startGame);
 					FlxG.sound.play("assets/sounds/coin" + Reg.SoundExtension, 1, false);
-				case 1:
+				case BLOG:
 					FlxG.openURL("http://chipacabra.blogspot.com");
-				case 2:
-					FlxG.openURL("http://flixel.org");
+				case FLIXEL:
+					FlxG.openURL("http://haxeflixel.com");
 			}
 		}
 		
 		super.update(elapsed);
 	}
 	
+	private function modifySelectedOption(modifier:Int):Void
+	{
+		var options = Option.getConstructors();
+		var index = options.indexOf(Std.string(_option)) + modifier;
+		_option = Option.createByIndex(FlxMath.wrap(index, 0, options.length - 1));
+		
+		FlxG.sound.play("assets/sounds/menu" + Reg.SoundExtension, 1, false);
+	}
+	
 	private function startGame():Void
 	{
 		FlxG.switchState(new PlayState());
 	}
+}
+
+enum Option
+{
+	PLAY;
+	BLOG;
+	FLIXEL;
 }
