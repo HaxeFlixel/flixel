@@ -1,15 +1,16 @@
 4.0.0
 ------------------------------
-* Added `FlxStrip` class which allows to draw triangles (just like `drawTriangles()` on flash). It's extremely slow in blit render mode, but works reasonably fast in tile render mode.
+* Added `FlxStrip` which supports rendering via `drawTriangles()`.
 * Made the blit and tile renderers more general. They still work quite differently, but share a lot of code.
-* Reworked tile renderer, it doesn't use `addTileRect()` anymore (but uses `Tilesheet.TILE_RECT` flag now), so flixel won't work with old versions of OpenFL
-* Added experimental rendering which works with `drawTriangles()` method. You can enable it if you set `FLX_RENDER_TRIANGLE` haxedef in project.xml (depends on `FlxG.renderTile` to be true).
+* Reworked tile renderer, it doesn't use `addTileRect()` anymore (but uses `Tilesheet.TILE_RECT` flag now), so flixel won't work with old versions of OpenFL.
+* Renderers are now distuingished by `FlxG.renderMethod` (`FlxG.renderBlit` / `FlxG.renderTile` for easy access) instead of defines (`FLX_RENDER_BLIT` / `FLX_RENDER_TILE`). This allows for a fallback to software rendering on certain targets if hardware rendering is not available. (#1668)
+* Added an experimental rendering method using `drawTriangles()` (enabled by defining `FLX_RENDER_TRIANGLE`, requires `FlxG.renderTile to be true).
 * `FlxFrame`:
  * doesn't store the frame's bitmapatas anymore, so `getBitmap()` and other bitmap methods have been removed
  * added `paint()` and `paintFlipped()` methods instead. This solution requires much less memory, but will be a bit slower.
  * added `flipX` and `flipY` (#1591)
 * `FlxArrayUtil`: removed `indexOf()`
-* Changed static inline vars to enums: (#998)
+* Changed `static inline` vars to enums: (#998)
  * `FlxCamera` follow styles
  * `FlxCamera` shake modes
  * `FlxText` border styles
@@ -23,14 +24,14 @@
  * `setBounds()` -> `setScrollBoundsRect()` (#1070)
  * added `setScrollBounds()`
  * added `targetOffset` (#1056)
- * added `scrollRect` sprite which crops camera's view when the camera is scaled
- * camera is scaled from its center, not from the top left corner
+ * added `scrollRect` sprite which crops the camera's view when the camera is scaled
+ * camera now scales from its center, not its top left corner
  * `followLerp` is now a range taking values from 0 to (`60 / FlxG.updateFramerate`) - the closer to zero the more lerp! (#1220)
  * added `snapToTarget()` (#1477)
  * `fade()`: fixed `FadeIn == true` not working in a fade out callback (#1666)
 * `FlxMath`:
  * `bound()` and `inBounds()` now accept `null` as values, meaning "unbounded in that direction" (#1070)
- * `wrapValue()` now supports negative values
+ * `wrapValue()` -> `wrap()`, replaced the `amount` argument with a lower bound
  * changed `MIN_VALUE` and `MAX_VALUE` to `MIN_VALUE_FLOAT` and `MAX_VALUE_FLOAT`, added `MAX_VALUE_INT` (#1148)
  * added `sinh()` (#1309)
  * added `fastSin()` and `fastCos()` (#1534)
@@ -116,6 +117,7 @@
  * removed `callAll()` and `setAll()` - use `forEach()` instead (#1086)
  * replaced the parameter array in `recycle()` with an optional factory method (#1191)
  * `revive()` now calls `revive()` on all `members` of a group as well (#1243)
+ * added `insert()` (#1671)
 * `FlxGamepadManager`:
  * better handling of disconnecting and reconnecting gamepads. `getByID()` can now return `null`.
  * `anyButton()` now has a `state` argument
@@ -142,7 +144,7 @@
  * removed `colorExt()`, try using `FlxColor` to get finer control over randomly-generated colors (#1158)
  * updated random number generation equation to avoid inconsistent results across platforms; may break recordings made in 3.x! (#1148)
  * can now create an instance of `FlxRandom` to create deterministic pseudorandom numbers independently of HaxeFlixel core functions (e.g. particle emitters)
- * renamed `chanceRoll()` to `bool()`
+ * `chanceRoll()` -> `bool()`
  * added `floatNormal()` (#1251)
 * `FlxArrayUtil`: removed randomness-related functions, please use `FlxRandom` instead (#1138)
 * `FlxText`:
@@ -157,7 +159,7 @@
  * `borderColor` now supports alpha values / ARBG colors
  * fixed `setFormat()` resetting `alignment` (#1629)
 * `FlxTypedButton`:
- * added input-like getters: `pressed`, `justPressed`, `released` and `justReleased`
+ * now implements `IFlxInput`, adding `pressed`, `justPressed`, `released` and `justReleased`
  * now uses animations for statuses instead of setting `frameIndex` directly for more flexibility (removes `allowHighlightOnMobile`, adds `statusAnimations`)
  * disabling the highlight frame is now tied to `#if FLX_NO_MOUSE` instead of `#if mobile`
  * `labelAlphas[FlxButton.HIGHLIGHT]` is now 1 for `FLX_NO_MOUSE`
@@ -172,27 +174,28 @@
  * fixed inaccurate pixel-perfect sprite overlap checks (#1075)
  * now supports all mouse buttons (`mouseButtons` argument in `add()` / `setObjectMouseButtons()`)
 * `FlxObject`:
-	* added `toPoint()` and `toRect()`
-	* added `setPositionUsingCenter()` (#1482)
-	* split some of `separate()`'s functionality into `updateTouchingFlags()`, allowing `touching` to be used without any separate calls (#1555)
+ * added `toPoint()` and `toRect()`
+ * added `setPositionUsingCenter()` (#1482)
+ * split some of `separate()`'s functionality into `updateTouchingFlags()`, allowing `touching` to be used without any separate calls (#1555)
 * `PS4ButtonID` / `PS3ButtonID`: removed the `_BUTTON` suffix for consistency with other button ID classes (#1137)
 * `FlxSprite`:
  * added `graphicLoaded()` which is called whenever a new graphic is loaded
  * `getScreenXY()` -> `getScreenPosition()`
  * removed the `NewSprite` argument from `clone()`
- * added `clipRect` property
- * renamed `frames` property to `numFrames`
- * added `frames` property which reflects sprite's current frames collection
- * removed `loadGraphicFromTexture()`, `loadRotatedGraphicFromTexture()` methods
- * renamed `cachedGraphics` property to `graphic`
- * added `setFrames()` method which allows you to save animations which already exists in this sprite
+ * added `clipRect`
+ * `frames` -> `numFrames`
+ * added `frames` which reflects the sprite's current frames collection
+ * removed `loadGraphicFromTexture()` and `loadRotatedGraphicFromTexture()`
+ * `cachedGraphics` -> `graphic`
+ * added `setFrames()` which allows you to save animations which already exists in the sprite
  * `colorTransform` is always instantiated
- * added `loadRotatedFrame()` method which allows you to generate prerotated image from given frame and load it
+ * added `loadRotatedFrame()` which allows you to generate prerotated image from given frame and load it
  * added error message then trying to get pixels and graphic is null
- * made `drawFrame()` method not inlined, so it can be redefined in subclasses. For example, you can use it in `FlxText` now if you need to force immediate graphic regeneration.
- * always change sprite's prerotated animation angle in sprite's `angle` setter, so there won't be any "lag" with it
- * removed `resetFrameBitmaps()` method, since frames don't store bitmaps anymore. Just set `dirty` to true to force sprite's frame graphic regeneration on next render loop.
+ * `drawFrame()` is no longer `inline` so it can be redefined in subclasses.
+ * `set_angle()`: always change the prerotated animation angle to prevent delays
+ * removed `resetFrameBitmaps()` method, since frames don't store bitmaps anymore. Set `dirty` to true to force the frame graphic to be regenerated in the next render loop.
  * added `useFramePixels`
+ * `setColorTransform()`'s offset arguments now work with drawTiles rendering on OpenFL 3.6.0+ (#1705)
 * Added some helpful error messages when trying to target older SWF versions
 * `FlxAngle`:
  * changed `rotatePoint()` to not invert the y-axis anymore and rotate clockwise (consistent with `FlxSprite#angle`)
@@ -203,17 +206,21 @@
  * removed `angleLimit()` (#1618)
 * Added GitSHA macro that includes the SHA of the current commit into `FlxVersion` for dev builds
 * Flixel sound assets are now being embedded via `embed="true"`
-* `FlxRect`: added `weak()`, `putWeak()`, `ceil()` and `floor()`
+* `FlxRect`:
+ * added `weak()`, `putWeak()`, `ceil()` and `floor()`
+ * `containsFlxPoint()` -> `containsPoint()`
+* `FlxPoint`: `inFlxRect()` -> `inRect` 
 * Added support for reloading graphics via OpenFL live asset reloading (native targets)
 * `FlxSound`
-  * Can now be used even if `FLX_NO_SOUND_SYSTEM` is enabled (#1199)
-  * `looped` is exposed as a public variable
-  * added `pitch` (#1465)
-* `FlxVelocity`: `accelerateTowards()`-functions now only take a single `maxSpeed` argument (instead of x and y)
+ * can now be used even if `FLX_NO_SOUND_SYSTEM` is enabled (#1199)
+ * `looped` is now `public`
+ * added `pitch` (#1465)
+ * added `FlxSoundGroup` (#1316)
+* `FlxVelocity`: `accelerateTowards*()`-functions now only take a single `maxSpeed` argument (instead of `x` and `y`)
 * `FlxG.signals`:
-  * split `gameReset` into pre/post signals
-  * added `preStateCreate` (#1557)
-* `BaseScaleMode`: added `hAlign` and `vAlign` properties, so you can switch game's align mode on both axis
+ * split `gameReset` into pre/post signals
+ * added `preStateCreate` (#1557)
+* `BaseScaleMode`: added `horizontalAlign` and `verticalAlign`
 * `RatioScaleMode#new()`: added a `fillScreen` option
 * `FlxPath`: fixed an issue where a velocity would be set even if the object positon matches the current node
 * `FlxGraphic`: added `defaultPersist` (#1241)
@@ -224,7 +231,8 @@
  * fixed `active = false;` not doing anything during `onComplete()` of `LOOPING` or `PINGPONG` tweens
  * angle tween sets sprite's angle on start now
  * added `then()` and `wait()` for chaining (#1614)
-* `FlxTimer`: `complete` was renamed to `onComplete` (#1275)
+ * made `start()` public (#1692)
+* `FlxTimer`: `complete` -> `onComplete` (#1275)
 * `FlxSwipe`: `duration` now uses seconds instead of milliseconds (#1272)
 * `FlxPath` and motion tweens now restore the original `immovable` value of `FlxObject`s after completion
 * The signature of `update()` was changed to `update(elapsed:Float)`. The `elapsed` argument should be used instead of `FlxG.elapsed`. (#1188)
@@ -234,26 +242,26 @@
 * `FlxState`:
  * `onFocus()` and `onFocusLost()` no longer require `FlxG.autoPause` to be false
  * added `switchTo()` (#1676)
-* Moved `FlxAtlas` and `FlxNode` in `flixel.graphics.atlas` package
-* Added `addNodeWithSpacings()` in `FlxAtlas`
-* Added `getTileFrames()` and `getImageFrame` in `FlxNode` which generate frames collections for this node
-* Rewrote big part of `FlxAtlas`:
- * added `minWidth`, `minHeight` properties which sets minimum size of atlas canvas
- * added `maxWidth`, `maxHeight` properties which sets maximum size of atlas canvas
- * so the atlas can be expanded while new images are added in the atlas. It starts from minimum size and grows up to maximum size (if there is no free space to hold new images)
- * added `powerOfTwo` property, which forces atlas size to be the power of two number (if true)
- * added `allowRotation` property, which is settable only in atlas constructor and tells whether new image added in the atlas could be rotated to fit in existing empty atlas nodes
+* `FlxNode`:
+ * moved to `flixel.graphics.atlas`
+ * added `getTileFrames()` and `getImageFrame()`
+* `FlxAtlas`:
+ * moved to `flixel.graphics.atlas`
+ * added `addNodeWithSpacings()`
+ * added `minWidth`, `maxWidth`, `minHeight` and `maxHeight` (the size starts at `min` and grows up until `max` as images are added)
+ * added `powerOfTwo` (forces atlas size to a power of two)
+ * added `allowRotation` (indicates whether added images may be rotated to save space)
 * Changed game scaling behavior for all targets: it scales the camera's sprite now
-* Renamed `CachedGraphics` class to `FlxGraphic` and moved it in `flixel.graphics` package
+* `CachedGraphics` -> `FlxGraphic`, moved to `flixel.graphics`
 * Added static methods to `FlxGraphic` class for generation of objects of this type from various sources: `fromAssetKey()`, `fromClass()`, `fromBitmapData()`
-* `FlxGraphic`'s `bitmap` property is now settable, changing it will lead to regeneration of graphic's tilesheet. `FlxAtlas` uses this feature, since it could increase its size and therefore change its bitmapdata canvas
+* `FlxGraphic`'s `bitmap` property is now settable, changing it will lead to regeneration of graphic's tilesheet. `FlxAtlas` uses this feature, since it could increase its size and therefore change its `BitmapData` canvas.
 * Added new conception of frames collections instead of regions, which required a lot of typing to get simple spritesheet from image region
 * Added `FlxImageFrame` frames collection which contains single frame
 * Added `FlxTileFrames` frames collection which contains frames for spritesheet, which can be generated from image region or frame (including rotated and trimmed frames)
 * Added `FlxAtlasFrames` frames collection instead of various texture atlas loaders (like `SparrowData` and `TexturePackerData`). It contains various static methods for parsing atlas files
-* Rewrote `PxBitmapFont` class and renamed it to `FlxBitmapFont`. It supports (can parse) AngelCode, XNA and Monospace bitmap fonts now
+* Rewrote `PxBitmapFont` class and renamed it to `FlxBitmapFont`. It supports AngelCode, XNA and Monospace bitmap fonts now.
 * Rewrote `FlxBitmapTextField` class and renamed it to `FlxBitmapText`
-* `FlxBitmapText`: removed `size` property
+* `FlxBitmapText`: removed `size`
 * Added `FlxFilterFrames` frames collection instead of `FlxSpriteFilter` (see filters demo)
 * Changed `FlxGraphicAsset` from `OneOfFive<String, Class<Dynamic>, CachedGraphics, TextureRegion, BitmapData>` to `OneOfThree<FlxGraphic, BitmapData, String>` which means that graphic loading methods (in all classes) accept only these three types of objects
 * `FlxBitmapDataUtil`:
