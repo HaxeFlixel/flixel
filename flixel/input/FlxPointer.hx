@@ -71,7 +71,7 @@ class FlxPointer
 	/**
 	 * Returns a FlxPoint with this input's x and y.
 	 */
-	public inline function toPoint():FlxPoint
+	public inline function getPosition():FlxPoint
 	{
 		return FlxPoint.get(x, y);
 	}
@@ -103,7 +103,7 @@ class FlxPointer
 		}
 		else 
 		{
-			var point:FlxPoint = toPoint();
+			var point:FlxPoint = getPosition();
 			var object:FlxObject = cast ObjectOrGroup;
 			result = object.overlapsPoint(point, true, Camera);
 			point.put();
