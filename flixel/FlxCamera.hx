@@ -1028,13 +1028,12 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Tells this camera object what FlxObject to track.
 	 * 
-	 * @param	Target	The object you want the camera to track.  Set to null to not follow anything.
+	 * @param	Target	The object you want the camera to track. Set to null to not follow anything.
 	 * @param	Style	Leverage one of the existing "deadzone" presets. Default is LOCKON. 
 	 * 			If you use a custom deadzone, ignore this parameter and manually specify the deadzone after calling follow().
-	 * @param	Offset	Offset the follow deadzone by a certain amount. Only applicable for PLATFORMER and LOCKON styles.
 	 * @param	Lerp	How much lag the camera should have (can help smooth out the camera movement).
 	 */
-	public function follow(Target:FlxObject, ?Style:FlxCameraFollowStyle, ?Offset:FlxPoint, ?Lerp:Float):Void
+	public function follow(Target:FlxObject, ?Style:FlxCameraFollowStyle, ?Lerp:Float):Void
 	{
 		if (Style == null)
 			Style = LOCKON;
@@ -1053,8 +1052,8 @@ class FlxCamera extends FlxBasic
 		switch (Style)
 		{
 			case PLATFORMER:
-				var w:Float = (width / 8) + (Offset != null ? Offset.x : 0);
-				var h:Float = (height / 3) + (Offset != null ? Offset.y : 0);
+				var w:Float = (width / 8);
+				var h:Float = (height / 3);
 				deadzone = FlxRect.get((width - w) / 2, (height - h) / 2 - h * 0.25, w, h);
 				
 			case TOPDOWN:
@@ -1068,8 +1067,8 @@ class FlxCamera extends FlxBasic
 			case LOCKON:
 				if (target != null) 
 				{	
-					w = target.width + (Offset != null ? Offset.x : 0);
-					h = target.height + (Offset != null ? Offset.y : 0);
+					w = target.width;
+					h = target.height;
 				}
 				deadzone = FlxRect.get((width - w) / 2, (height - h) / 2 - h * 0.25, w, h);
 				
@@ -1078,11 +1077,6 @@ class FlxCamera extends FlxBasic
 				
 			default:
 				deadzone = null;
-		}
-		
-		if (Offset != null)
-		{
-			Offset.putWeak();
 		}
 	}
 	
