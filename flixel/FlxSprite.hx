@@ -577,7 +577,7 @@ class FlxSprite extends FlxObject
 		if (FlxG.renderBlit)
 		{
 			dirty = true;
-			getFlxFrameBitmapData();
+			updateFramePixels();
 		}
 	}
 	
@@ -852,7 +852,7 @@ class FlxSprite extends FlxObject
 		}
 		else // 2. Check pixel at (_flashPoint.x, _flashPoint.y)
 		{
-			var frameData:BitmapData = getFlxFrameBitmapData();
+			var frameData:BitmapData = updateFramePixels();
 			var pixelColor:FlxColor = frameData.getPixel32(Std.int(_flashPoint.x), Std.int(_flashPoint.y));
 			return pixelColor.alpha * alpha >= Mask;
 		}
@@ -871,13 +871,13 @@ class FlxSprite extends FlxObject
 		if (FlxG.renderTile && !RunOnCpp)
 			return;
 		
-		getFlxFrameBitmapData();
+		updateFramePixels();
 	}
 	
 	/**
 	 * Retrieves BitmapData of current FlxFrame. Updates framePixels.
 	 */
-	public function getFlxFrameBitmapData():BitmapData
+	public function updateFramePixels():BitmapData
 	{
 		if (_frame == null || !dirty)
 			return framePixels;
@@ -1317,7 +1317,7 @@ class FlxSprite extends FlxObject
 				
 				if (value)
 				{
-					getFlxFrameBitmapData();
+					updateFramePixels();
 				}
 			}
 			
