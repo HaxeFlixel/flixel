@@ -240,7 +240,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	
 	private function loadDefaultGraphic():Void
 	{
-		loadGraphic("assets/images/ui/button.png", true, 80, 20);
+		loadGraphic("flixel/images/ui/button.png", true, 80, 20);
 	}
 	
 	private function setupAnimation(animationName:String, frameIndex:Int):Void

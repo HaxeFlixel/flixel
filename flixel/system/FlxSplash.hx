@@ -73,7 +73,7 @@ class FlxSplash extends FlxState
 		onResize(stageWidth, stageHeight);
 		
 		#if !FLX_NO_SOUND_SYSTEM 
-		FlxG.sound.load(FlxAssets.getSound("assets/sounds/flixel")).play();
+		FlxG.sound.load(FlxAssets.getSound("flixel/sounds/flixel")).play();
 		#end
 	}
 	
