@@ -283,11 +283,25 @@ class FlxG
 	public static var signals(default, null):SignalFrontEnd = new SignalFrontEnd();
 	
 	/**
-	 * Handy helper functions that takes care of all the things to resize the game.
+	 * Resizes the game within the window by reapplying the current scale mode.
 	 */
 	public static inline function resizeGame(Width:Int, Height:Int):Void
 	{
 		scaleMode.onMeasure(Width, Height);
+	}
+	
+	/**
+	 * Resizes the window. Only works on desktop targets (neko, windows, linux, mac).
+	 */
+	public static function resizeWindow(Width:Int, Height:Int):Void
+	{
+		#if desktop
+		#if openfl_legacy
+		stage.resize(Width, Height);
+		#else
+		Lib.application.window.resize(Width, Height);
+		#end
+		#end
 	}
 	
 	/**
