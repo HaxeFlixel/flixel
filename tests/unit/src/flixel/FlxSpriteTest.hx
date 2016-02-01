@@ -235,6 +235,6 @@ class FlxSpriteTest extends FlxTest
 		sprite.stamp(text);
 		
 		Assert.areEqual(FlxColor.RED,
-			sprite.getFlxFrameBitmapData().getPixel32(3, 3));
+			sprite.updateFramePixels().getPixel32(3, 3));
 	}
 }
