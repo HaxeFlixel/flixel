@@ -142,7 +142,7 @@ class PlayState extends FlxState
 		add(hud);
 		
 		FlxG.camera.setScrollBoundsRect(LEVEL_MIN_X , LEVEL_MIN_Y , LEVEL_MAX_X + Math.abs(LEVEL_MIN_X), LEVEL_MAX_Y + Math.abs(LEVEL_MIN_Y), true);
-		FlxG.camera.follow(orb, LOCKON, null, 1);
+		FlxG.camera.follow(orb, LOCKON, 1);
 		
 		#if TRUE_ZOOM_OUT
 		hudCam = new FlxCamera(440 + 50, 0 + 45, 200, 180); // +50 + 45 For 1/2 zoom out.
@@ -308,7 +308,7 @@ class PlayState extends FlxState
 		newCamStyleIndex < 0 ? newCamStyleIndex += 6 : newCamStyleIndex %= 6;
 		
 		var newCamStyle = Type.createEnumIndex(FlxCameraFollowStyle, newCamStyleIndex);
-		FlxG.camera.follow(orb, newCamStyle, null, FlxG.camera.followLerp);
+		FlxG.camera.follow(orb, newCamStyle, FlxG.camera.followLerp);
 		
 		hud.updateStyle(Std.string(FlxG.camera.style));
 		
