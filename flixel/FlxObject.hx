@@ -826,9 +826,11 @@ class FlxObject extends FlxBasic
 		return point.subtract(Camera.scroll.x * scrollFactor.x, Camera.scroll.y * scrollFactor.y);
 	}
 	
-	public inline function getPosition():FlxPoint
+	public function getPosition(?point:FlxPoint):FlxPoint
 	{
-		return FlxPoint.get(x, y);
+		if (point == null)
+			point = FlxPoint.get();
+		return point.set(x, y);
 	}
 	
 	/**
@@ -846,9 +848,11 @@ class FlxObject extends FlxBasic
 		return point.set(x + width * 0.5, y + height * 0.5);
 	}
 	
-	public inline function getHitbox():FlxRect
+	public function getHitbox(?rect:FlxRect):FlxRect
 	{
-		return FlxRect.get(x, y, width, height);
+		if (rect == null)
+			rect = FlxRect.get();
+		return rect.set(x, y, width, height);
 	}
 	
 	/**

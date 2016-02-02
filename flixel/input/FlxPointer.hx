@@ -71,9 +71,11 @@ class FlxPointer
 	/**
 	 * Returns a FlxPoint with this input's x and y.
 	 */
-	public inline function getPosition():FlxPoint
+	public function getPosition(?point:FlxPoint):FlxPoint
 	{
-		return FlxPoint.get(x, y);
+		if (point == null)
+			point = FlxPoint.get();
+		return point.set(x, y);
 	}
 	
 	/**
