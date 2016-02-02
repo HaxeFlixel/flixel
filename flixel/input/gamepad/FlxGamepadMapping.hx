@@ -8,6 +8,7 @@ import flixel.input.gamepad.id.LogitechID;
 import flixel.input.gamepad.id.OUYAID;
 import flixel.input.gamepad.id.PS4ID;
 import flixel.input.gamepad.id.MayflashWiiRemoteID;
+import flixel.input.gamepad.id.PSVitaID;
 import flixel.input.gamepad.id.WiiRemoteID;
 import flixel.input.gamepad.id.XBox360ID;
 import flixel.input.gamepad.id.XInputID;
@@ -57,6 +58,7 @@ class FlxGamepadMapping
 			case OUYA: getRawOUYA(ID);
 			case PS4: getRawPS4(ID);
 			case XBOX360: getRawXBox360(ID);
+			case PSVITA: getRawPSVita(ID);
 			case XINPUT: getRawXInput(ID);
 			case MAYFLASH_WII_REMOTE: 
 				switch (attachment)
@@ -90,6 +92,7 @@ class FlxGamepadMapping
 			case OUYA: getIDOUYA(RawID);
 			case PS4: getIDPS4(RawID);
 			case XBOX360: getIDXBox360(RawID);
+			case PSVITA: getIDPSVita(RawID);
 			case XINPUT: getIDXInput(RawID);
 			case MAYFLASH_WII_REMOTE: 
 				switch (attachment)
@@ -125,6 +128,7 @@ class FlxGamepadMapping
 				case OUYA: OUYAID.LEFT_ANALOG_STICK;
 				case PS4: PS4ID.LEFT_ANALOG_STICK;
 				case XBOX360: XBox360ID.LEFT_ANALOG_STICK;
+				case PSVITA: PSVitaID.LEFT_ANALOG_STICK;
 				case XINPUT: XInputID.LEFT_ANALOG_STICK;
 				case MAYFLASH_WII_REMOTE:
 					switch (attachment)
@@ -150,6 +154,7 @@ class FlxGamepadMapping
 				case OUYA: OUYAID.RIGHT_ANALOG_STICK;
 				case PS4: PS4ID.RIGHT_ANALOG_STICK;
 				case XBOX360: XBox360ID.RIGHT_ANALOG_STICK;
+				case PSVITA: PSVitaID.RIGHT_ANALOG_STICK;
 				case XINPUT: XInputID.RIGHT_ANALOG_STICK;
 				case MAYFLASH_WII_REMOTE: 
 					switch (attachment)
@@ -181,6 +186,7 @@ class FlxGamepadMapping
 			case OUYA: OUYAID.getFlipAxis(AxisID);
 			case PS4: PS4ID.getFlipAxis(AxisID);
 			case XBOX360: XBox360ID.getFlipAxis(AxisID, _manufacturer);
+			case PSVITA: PSVitaID.getFlipAxis(AxisID);
 			case XINPUT: XInputID.getFlipAxis(AxisID);
 			case MAYFLASH_WII_REMOTE: MayflashWiiRemoteID.getFlipAxis(AxisID, attachment);
 			case WII_REMOTE: WiiRemoteID.getFlipAxis(AxisID, attachment);
@@ -230,6 +236,7 @@ class FlxGamepadMapping
 			case OUYA: OUYAID.isAxisForMotion(ID);
 			case PS4: PS4ID.isAxisForMotion(ID);
 			case XBOX360: XBox360ID.isAxisForMotion(ID);
+			case PSVITA: PSVitaID.isAxisForMotion(ID);
 			case XINPUT: XInputID.isAxisForMotion(ID);
 			case MAYFLASH_WII_REMOTE: MayflashWiiRemoteID.isAxisForMotion(ID, attachment);
 			case WII_REMOTE: WiiRemoteID.isAxisForMotion(ID, attachment);
@@ -246,6 +253,7 @@ class FlxGamepadMapping
 			case OUYA: OUYAID.SUPPORTS_MOTION;
 			case PS4: PS4ID.SUPPORTS_MOTION;
 			case XBOX360: XBox360ID.SUPPORTS_MOTION;
+			case PSVITA: PSVitaID.SUPPORTS_MOTION;
 			case XINPUT: XInputID.SUPPORTS_MOTION;
 			case MAYFLASH_WII_REMOTE: MayflashWiiRemoteID.SUPPORTS_MOTION;
 			case WII_REMOTE: WiiRemoteID.SUPPORTS_MOTION;
@@ -262,6 +270,7 @@ class FlxGamepadMapping
 			case OUYA: OUYAID.SUPPORTS_POINTER;
 			case PS4: PS4ID.SUPPORTS_POINTER;
 			case XBOX360: XBox360ID.SUPPORTS_POINTER;
+			case PSVITA: PSVitaID.SUPPORTS_POINTER;
 			case XINPUT: XInputID.SUPPORTS_POINTER;
 			case MAYFLASH_WII_REMOTE: MayflashWiiRemoteID.SUPPORTS_POINTER;
 			case WII_REMOTE: WiiRemoteID.SUPPORTS_POINTER;
@@ -347,6 +356,26 @@ class FlxGamepadMapping
 			case LEFT_TRIGGER_FAKE: PS4ID.LEFT_TRIGGER_FAKE;
 			case RIGHT_TRIGGER_FAKE: PS4ID.RIGHT_TRIGGER_FAKE;
 			#end
+			default: -1;
+		}
+	}
+	
+	public function getRawPSVita(ID:FlxGamepadInputID):Int
+	{
+		return switch (ID)
+		{
+			case A: PSVitaID.X;
+			case B: PSVitaID.CIRCLE;
+			case X: PSVitaID.SQUARE;
+			case Y: PSVitaID.TRIANGLE;
+			case BACK: PSVitaID.SELECT;
+			case START: PSVitaID.START;
+			case LEFT_SHOULDER: PSVitaID.L;
+			case RIGHT_SHOULDER: PSVitaID.R;
+			case DPAD_UP: PSVitaID.DPAD_UP;
+			case DPAD_DOWN: PSVitaID.DPAD_DOWN;
+			case DPAD_LEFT: PSVitaID.DPAD_LEFT;
+			case DPAD_RIGHT: PSVitaID.DPAD_RIGHT;
 			default: -1;
 		}
 	}
@@ -642,6 +671,26 @@ class FlxGamepadMapping
 			case PS4ID.DPAD_UP: DPAD_UP;
 			case PS4ID.DPAD_LEFT: DPAD_LEFT;
 			case PS4ID.DPAD_RIGHT: DPAD_RIGHT;
+			default: NONE;
+		}
+	}
+	
+	public function getIDPSVita(rawID:Int):FlxGamepadInputID
+	{
+		return switch (rawID)
+		{
+			case PSVitaID.X: A;
+			case PSVitaID.CIRCLE: B;
+			case PSVitaID.SQUARE: X;
+			case PSVitaID.TRIANGLE: Y;
+			case PSVitaID.SELECT: BACK;
+			case PSVitaID.START: START;
+			case PSVitaID.L: LEFT_SHOULDER;
+			case PSVitaID.R: RIGHT_SHOULDER;
+			case PSVitaID.DPAD_DOWN: DPAD_DOWN;
+			case PSVitaID.DPAD_UP: DPAD_UP;
+			case PSVitaID.DPAD_LEFT: DPAD_LEFT;
+			case PSVitaID.DPAD_RIGHT: DPAD_RIGHT;
 			default: NONE;
 		}
 	}

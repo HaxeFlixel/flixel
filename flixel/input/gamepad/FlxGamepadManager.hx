@@ -427,6 +427,17 @@ class FlxGamepadManager implements IFlxInputManager
 	
 	private function getModelFromFlashDeviceName(str:String):FlxGamepadModel
 	{
+		//If we're actually running on console hardware, we know what controller hardware you're using
+		//TODO: add support for multiple controller types on console that support that (wiiu for instance)
+		
+		#if vita
+			return PSVITA;
+		#elseif ps4
+			return PS4;
+		#elseif xbox1
+			return XInput;
+		#end
+		
 		str = str.toLowerCase();
 		var strip = ["-", "_"];
 		for (s in strip)
