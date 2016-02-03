@@ -53,6 +53,7 @@ class Enemy extends FlxSprite
 	 * This is the constructor for the enemy class. Because we are recycling 
 	 * enemies, we don't want our constructor to have any required parameters.
 	 */
+	@:keep
 	public function new()
 	{
 		super();

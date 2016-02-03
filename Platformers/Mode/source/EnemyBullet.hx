@@ -8,6 +8,7 @@ class EnemyBullet extends FlxSprite
 {
 	public var speed:Float;
 	
+	@:keep
 	public function new()
 	{
 		super();
