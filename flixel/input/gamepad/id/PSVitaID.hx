@@ -10,17 +10,6 @@ import flixel.input.gamepad.FlxGamepad.FlxGamepadAnalogStick;
  */
 class PSVitaID
 {
-	//TODO:
-	//Analog sticks work, but vertical axis is flipped
-	//X = start
-	//TRIANGLE = L
-	//SELECT = R
-	//START = Dpad down
-	//LH = A
-	//LV = B
-	//RH = X
-	//RV = Y
-	
 	public static inline var SUPPORTS_MOTION = false;
 	public static inline var SUPPORTS_POINTER = false;
 	
