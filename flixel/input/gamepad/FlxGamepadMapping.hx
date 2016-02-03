@@ -10,7 +10,6 @@ import flixel.input.gamepad.id.PS4ID;
 import flixel.input.gamepad.id.MayflashWiiRemoteID;
 import flixel.input.gamepad.id.PSVitaID;
 import flixel.input.gamepad.id.WiiRemoteID;
-import flixel.input.gamepad.id.XBox360ID;
 import flixel.input.gamepad.id.XInputID;
 import flixel.input.gamepad.id.MFiID;
 
@@ -57,7 +56,6 @@ class FlxGamepadMapping
 			case LOGITECH: getRawLogitech(ID);
 			case OUYA: getRawOUYA(ID);
 			case PS4: getRawPS4(ID);
-			case XBOX360: getRawXBox360(ID);
 			case PSVITA: getRawPSVita(ID);
 			case XINPUT: getRawXInput(ID);
 			case MAYFLASH_WII_REMOTE: 
@@ -91,7 +89,6 @@ class FlxGamepadMapping
 			case LOGITECH: getIDLogitech(RawID);
 			case OUYA: getIDOUYA(RawID);
 			case PS4: getIDPS4(RawID);
-			case XBOX360: getIDXBox360(RawID);
 			case PSVITA: getIDPSVita(RawID);
 			case XINPUT: getIDXInput(RawID);
 			case MAYFLASH_WII_REMOTE: 
@@ -127,7 +124,6 @@ class FlxGamepadMapping
 				case LOGITECH: LogitechID.LEFT_ANALOG_STICK;
 				case OUYA: OUYAID.LEFT_ANALOG_STICK;
 				case PS4: PS4ID.LEFT_ANALOG_STICK;
-				case XBOX360: XBox360ID.LEFT_ANALOG_STICK;
 				case PSVITA: PSVitaID.LEFT_ANALOG_STICK;
 				case XINPUT: XInputID.LEFT_ANALOG_STICK;
 				case MAYFLASH_WII_REMOTE:
@@ -153,7 +149,6 @@ class FlxGamepadMapping
 				case LOGITECH: LogitechID.RIGHT_ANALOG_STICK;
 				case OUYA: OUYAID.RIGHT_ANALOG_STICK;
 				case PS4: PS4ID.RIGHT_ANALOG_STICK;
-				case XBOX360: XBox360ID.RIGHT_ANALOG_STICK;
 				case PSVITA: PSVitaID.RIGHT_ANALOG_STICK;
 				case XINPUT: XInputID.RIGHT_ANALOG_STICK;
 				case MAYFLASH_WII_REMOTE: 
@@ -185,7 +180,6 @@ class FlxGamepadMapping
 			case LOGITECH: LogitechID.getFlipAxis(AxisID);
 			case OUYA: OUYAID.getFlipAxis(AxisID);
 			case PS4: PS4ID.getFlipAxis(AxisID);
-			case XBOX360: XBox360ID.getFlipAxis(AxisID, _manufacturer);
 			case PSVITA: PSVitaID.getFlipAxis(AxisID);
 			case XINPUT: XInputID.getFlipAxis(AxisID);
 			case MAYFLASH_WII_REMOTE: MayflashWiiRemoteID.getFlipAxis(AxisID, attachment);
@@ -207,7 +201,6 @@ class FlxGamepadMapping
 			case LOGITECH: LogitechID.axisIndexToRawID(AxisID);
 			case OUYA: OUYAID.axisIndexToRawID(AxisID);
 			case PS4: PS4ID.axisIndexToRawID(AxisID);
-			case XBOX360: XBox360ID.axisIndexToRawID(AxisID);
 			case XINPUT: XInputID.axisIndexToRawID(AxisID);
 			case MAYFLASH_WII_REMOTE: MayflashWiiRemoteID.axisIndexToRawID(AxisID, attachment);
 			case WII_REMOTE: WiiRemoteID.axisIndexToRawID(AxisID, attachment);
@@ -235,7 +228,6 @@ class FlxGamepadMapping
 			case LOGITECH: LogitechID.isAxisForMotion(ID);
 			case OUYA: OUYAID.isAxisForMotion(ID);
 			case PS4: PS4ID.isAxisForMotion(ID);
-			case XBOX360: XBox360ID.isAxisForMotion(ID);
 			case PSVITA: PSVitaID.isAxisForMotion(ID);
 			case XINPUT: XInputID.isAxisForMotion(ID);
 			case MAYFLASH_WII_REMOTE: MayflashWiiRemoteID.isAxisForMotion(ID, attachment);
@@ -252,7 +244,6 @@ class FlxGamepadMapping
 			case LOGITECH: LogitechID.SUPPORTS_MOTION;
 			case OUYA: OUYAID.SUPPORTS_MOTION;
 			case PS4: PS4ID.SUPPORTS_MOTION;
-			case XBOX360: XBox360ID.SUPPORTS_MOTION;
 			case PSVITA: PSVitaID.SUPPORTS_MOTION;
 			case XINPUT: XInputID.SUPPORTS_MOTION;
 			case MAYFLASH_WII_REMOTE: MayflashWiiRemoteID.SUPPORTS_MOTION;
@@ -269,7 +260,6 @@ class FlxGamepadMapping
 			case LOGITECH: LogitechID.SUPPORTS_POINTER;
 			case OUYA: OUYAID.SUPPORTS_POINTER;
 			case PS4: PS4ID.SUPPORTS_POINTER;
-			case XBOX360: XBox360ID.SUPPORTS_POINTER;
 			case PSVITA: PSVitaID.SUPPORTS_POINTER;
 			case XINPUT: XInputID.SUPPORTS_POINTER;
 			case MAYFLASH_WII_REMOTE: MayflashWiiRemoteID.SUPPORTS_POINTER;
@@ -376,35 +366,6 @@ class FlxGamepadMapping
 			case DPAD_DOWN: PSVitaID.DPAD_DOWN;
 			case DPAD_LEFT: PSVitaID.DPAD_LEFT;
 			case DPAD_RIGHT: PSVitaID.DPAD_RIGHT;
-			default: -1;
-		}
-	}
-	
-	public function getRawXBox360(ID:FlxGamepadInputID):Int
-	{
-		return switch (ID)
-		{
-			case A: XBox360ID.A;
-			case B: XBox360ID.B;
-			case X: XBox360ID.X;
-			case Y: XBox360ID.Y;
-			case BACK: XBox360ID.BACK;
-			case GUIDE: XBox360ID.XBOX;
-			case START: XBox360ID.START;
-			case LEFT_STICK_CLICK: XBox360ID.LEFT_STICK_CLICK;
-			case RIGHT_STICK_CLICK: XBox360ID.RIGHT_STICK_CLICK;
-			case LEFT_SHOULDER: XBox360ID.LB;
-			case RIGHT_SHOULDER: XBox360ID.RB;
-			case DPAD_UP: XBox360ID.DPAD_UP;
-			case DPAD_DOWN: XBox360ID.DPAD_DOWN;
-			case DPAD_LEFT: XBox360ID.DPAD_LEFT;
-			case DPAD_RIGHT: XBox360ID.DPAD_RIGHT;
-			case LEFT_TRIGGER:  XBox360ID.LEFT_TRIGGER;
-			case RIGHT_TRIGGER: XBox360ID.RIGHT_TRIGGER;
-			#if FLX_JOYSTICK_API
-			case LEFT_TRIGGER_FAKE: XBox360ID.LEFT_TRIGGER_FAKE;
-			case RIGHT_TRIGGER_FAKE: XBox360ID.RIGHT_TRIGGER_FAKE;
-			#end
 			default: -1;
 		}
 	}
@@ -695,29 +656,6 @@ class FlxGamepadMapping
 		}
 	}
 	
-	public function getIDXBox360(rawID:Int):FlxGamepadInputID
-	{
-		return switch (rawID)
-		{
-			case XBox360ID.A: A;
-			case XBox360ID.B: B;
-			case XBox360ID.X: X;
-			case XBox360ID.Y: Y;
-			case XBox360ID.BACK: BACK;
-			case XBox360ID.XBOX: GUIDE;
-			case XBox360ID.START: START;
-			case XBox360ID.LEFT_STICK_CLICK: LEFT_STICK_CLICK;
-			case XBox360ID.RIGHT_STICK_CLICK: RIGHT_STICK_CLICK;
-			case XBox360ID.LB: LEFT_SHOULDER;
-			case XBox360ID.RB: RIGHT_SHOULDER;
-			case XBox360ID.DPAD_UP: DPAD_UP;
-			case XBox360ID.DPAD_DOWN: DPAD_DOWN;
-			case XBox360ID.DPAD_LEFT: DPAD_LEFT;
-			case XBox360ID.DPAD_RIGHT: DPAD_RIGHT;
-			default: NONE;
-		}
-	}
-	
 	public function getIDXInput(rawID:Int):FlxGamepadInputID
 	{
 		return switch (rawID)
@@ -733,8 +671,13 @@ class FlxGamepadMapping
 			case XInputID.RIGHT_STICK_CLICK: RIGHT_STICK_CLICK;
 			case XInputID.LB: LEFT_SHOULDER;
 			case XInputID.RB: RIGHT_SHOULDER;
+			#if FLX_JOYSTICK_API
+			case XInputID.LEFT_TRIGGER_FAKE: LEFT_TRIGGER;
+			case XInputID.RIGHT_TRIGGER_FAKE: RIGHT_TRIGGER;
+			#end
 			case XInputID.LEFT_TRIGGER: LEFT_TRIGGER;
 			case XInputID.RIGHT_TRIGGER: RIGHT_TRIGGER;
+			#end
 			case XInputID.DPAD_UP: DPAD_UP;
 			case XInputID.DPAD_DOWN: DPAD_DOWN;
 			case XInputID.DPAD_LEFT: DPAD_LEFT;
