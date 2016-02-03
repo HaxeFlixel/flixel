@@ -16,8 +16,8 @@
 	<!--These window settings apply to all targets-->
 	<window width="1024" height="768" fps="60" background="#000000" hardware="true" vsync="true" />
 	
-	<!--Web-specific-->
-	<window if="web" orientation="portrait"  />
+	<!--HTML5-specific-->
+	<window if="html5" resizable="false" />
 	
 	<!--Desktop-specific-->
 	<window if="desktop" orientation="landscape" fullscreen="false" resizable="true" />
