@@ -1,4 +1,5 @@
 package flixel.input.gamepad.id;
+
 import flixel.input.gamepad.FlxGamepad.FlxGamepadAnalogStick;
 
 /**
@@ -6,12 +7,9 @@ import flixel.input.gamepad.FlxGamepad.FlxGamepadAnalogStick;
  * (The only way to use these is to actually be using a PSVita with the upcoming openfl vita target!)
  * 
  * This will ONLY work with the gamepad API (available only in OpenFL "next", not "legacy") and will NOT work with the joystick API
- * 
- * @author ...
  */
 class PSVitaID
 {
-
 	//TODO:
 	//Analog sticks work, but vertical axis is flipped
 	//X = start
@@ -28,7 +26,8 @@ class PSVitaID
 	
 	public static inline function getFlipAxis(AxisID:Int):Int
 	{
-		return switch(AxisID) {
+		return switch (AxisID)
+		{
 			case LEFT_STICK_V : -1;
 			case RIGHT_STICK_V: -1;
 			default: 1;
