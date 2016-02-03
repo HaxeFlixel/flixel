@@ -34,11 +34,11 @@ class FlxBasePreloader extends NMEPreloader
 	public var allowedURLs:Array<String>;
 
 	/**
-	* The index of which URL in allowedURLs will be triggered when a user clicks on the Site-lock Message.
-	* For example, if allowedURLs is ['mysite.com', 'othersite.com'], and siteLockURLIndex = 1, then
-	* the user will go to 'othersite.com' when they click the message, but sitelocking will allow either of those URLs to work.
-	* Defaults to 0.
-	*/
+	 * The index of which URL in allowedURLs will be triggered when a user clicks on the Site-lock Message.
+	 * For example, if allowedURLs is ['mysite.com', 'othersite.com'], and siteLockURLIndex = 1, then
+	 * the user will go to 'othersite.com' when they click the message, but sitelocking will allow either of those URLs to work.
+	 * Defaults to 0.
+	 */
 	public var siteLockURLIndex:Int = 0;
 	
 	private var _percent:Float = 0;

@@ -225,7 +225,7 @@ class FlxAnimationController implements IFlxDestroyable
 	 * The animation must already exist in order to append frames to it. FrameRate and Looped are unchanged.
 	 * @param	Name		What the existing animation is called (e.g. "run").
 	 * @param	Frames		An array of numbers indicating what frames to append (e.g. 1, 2, 3).
-	*/
+	 */
 	public function append(Name:String, Frames:Array<Int>):Void
 	{
 		var anim:FlxAnimation = _animations.get(Name);
@@ -281,7 +281,7 @@ class FlxAnimationController implements IFlxDestroyable
 	 * The animation must already exist in order to append frames to it. FrameRate and Looped are unchanged.
 	 * @param	Name			What the existing animation is called (e.g. "run").
 	 * @param	FrameNames		An array of image names from atlas indicating what frames to append.
-	*/
+	 */
 	public function appendByNames(Name:String, FrameNames:Array<String>):Void
 	{
 		var anim:FlxAnimation = _animations.get(Name);
@@ -332,7 +332,7 @@ class FlxAnimationController implements IFlxDestroyable
 	 * @param	Prefix			Common beginning of image names in atlas (e.g. "tiles-")
 	 * @param	Indices			An array of strings indicating what frames to append (e.g. "01", "02", "03").
 	 * @param	Postfix			Common ending of image names in atlas (e.g. ".png")
-	*/
+	 */
 	public function appendByStringIndices(Name:String, Prefix:String, Indices:Array<String>, Postfix:String):Void
 	{
 		var anim:FlxAnimation = _animations.get(Name);
@@ -383,7 +383,7 @@ class FlxAnimationController implements IFlxDestroyable
 	 * @param	Prefix			Common beginning of image names in atlas (e.g. "tiles-")
 	 * @param	Indices			An array of numbers indicating what frames to append (e.g. 1, 2, 3).
 	 * @param	Postfix			Common ending of image names in atlas (e.g. ".png")
-	*/
+	 */
 	public function appendByIndices(Name:String, Prefix:String, Indices:Array<Int>, Postfix:String):Void
 	{
 		var anim:FlxAnimation = _animations.get(Name);
@@ -434,7 +434,7 @@ class FlxAnimationController implements IFlxDestroyable
 	 * @param	Looped			Whether or not the animation is looped or just plays once.
 	 * @param	FlipX			Whether the frames should be horizontally flipped
 	 * @param	FlipY			Whether the frames should be vertically flipped
-	*/
+	 */
 	public function addByPrefix(Name:String, Prefix:String, FrameRate:Int = 30, Looped:Bool = true, FlipX:Bool = false, FlipY:Bool = false):Void
 	{
 		if (_sprite.frames != null)
@@ -462,7 +462,7 @@ class FlxAnimationController implements IFlxDestroyable
 	 * The animation must already exist in order to append frames to it. FrameRate and Looped are unchanged.
 	 * @param	Name			What the existing animation is called (e.g. "run").
 	 * @param	Prefix			Common beginning of image names in atlas (e.g. "tiles-")
-	*/
+	 */
 	public function appendByPrefix(Name:String, Prefix:String):Void
 	{
 		var anim:FlxAnimation = _animations.get(Name);

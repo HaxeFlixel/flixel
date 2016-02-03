@@ -56,7 +56,7 @@ class FlxAngle
 	
 	/**
 	 * Keeps an angle value between -180 and +180 by wrapping it
-    * e.g an angle of +270 will be converted to -90
+     * e.g an angle of +270 will be converted to -90
 	 * Should be called whenever the angle is updated on a FlxSprite to stop it from going insane.
 	 * 
 	 * @param	angle	The angle value to check

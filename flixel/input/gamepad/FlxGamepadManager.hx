@@ -252,7 +252,7 @@ class FlxGamepadManager implements IFlxInputManager
 	 * 
 	 * @param 	ButtonID 	The button id (from 0 to 7).
 	 * @return 	Whether the button was just pressed
-	*/
+	 */
 	public function anyJustPressed(buttonID:FlxGamepadInputID):Bool
 	{
 		for (gamepad in _gamepads)
@@ -271,7 +271,7 @@ class FlxGamepadManager implements IFlxInputManager
 	 * 
 	 * @param 	ButtonID 	The Button id (from 0 to 7).
 	 * @return 	Whether the button is just released.
-	*/
+	 */
 	public function anyJustReleased(buttonID:FlxGamepadInputID):Bool
 	{
 		for (gamepad in _gamepads)

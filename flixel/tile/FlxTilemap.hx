@@ -117,20 +117,20 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	#if (!FLX_NO_DEBUG)
 	
 	/**
-	* Internal, used for rendering the debug bounding box display.
-	*/
+	 * Internal, used for rendering the debug bounding box display.
+	 */
 	private var _debugTileNotSolid:BitmapData;
 	/**
-	* Internal, used for rendering the debug bounding box display.
-	*/
+	 * Internal, used for rendering the debug bounding box display.
+	 */
 	private var _debugTilePartial:BitmapData;
 	/**
-	* Internal, used for rendering the debug bounding box display.
-	*/
+	 * Internal, used for rendering the debug bounding box display.
+	 */
 	private var _debugTileSolid:BitmapData;
 	/**
-	* Internal, used for rendering the debug bounding box display.
-	*/
+	 * Internal, used for rendering the debug bounding box display.
+	 */
 	private var _debugRect:Rectangle;
 	
 	#end
