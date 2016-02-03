@@ -162,7 +162,7 @@ class FlxObjectTest extends FlxTest
 		
 		object1.velocity.set(100, 0);
 		
-		var lastPos = object1.toPoint();
+		var lastPos = object1.getPosition();
 		step(60, function()
 		{
 			Assert.isTrue(lastPos.x < object1.x);
@@ -176,7 +176,7 @@ class FlxObjectTest extends FlxTest
 		object1 = new OverridenReviveObject();
 		object1.reset(0, 0);
 		
-		Assert.isTrue(FlxPoint.get(10, 10).equals(object1.toPoint()));
+		Assert.isTrue(FlxPoint.get(10, 10).equals(object1.getPosition()));
 		Assert.isTrue(FlxPoint.get(10, 10).equals(object1.velocity));
 	}
 }
