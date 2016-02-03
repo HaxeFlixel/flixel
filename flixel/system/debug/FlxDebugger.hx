@@ -26,6 +26,7 @@ import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxHorizontalAlign;
 using flixel.util.FlxArrayUtil;
+using flixel.system.debug.DebuggerUtil;
 
 @:bitmap("assets/images/debugger/flixel.png")
 private class GraphicFlixel extends BitmapData {}
@@ -144,7 +145,7 @@ class FlxDebugger extends Sprite
 		
 		vcr = new VCR(this);
 		
-		addButton(LEFT, new GraphicFlixel(0, 0), openHomepage);
+		addButton(LEFT, GraphicFlixel.create(), openHomepage);
 		addButton(LEFT, null, openGitHub).addChild(txt);
 		
 		addWindowToggleButton(bitmapLog, GraphicBitmapLog);
@@ -154,7 +155,7 @@ class FlxDebugger extends Sprite
 		addWindowToggleButton(console, GraphicConsole);
 		addWindowToggleButton(stats, GraphicStats);
 		
-		var drawDebugButton = addButton(RIGHT, new GraphicDrawDebug(0, 0), toggleDrawDebug, true);
+		var drawDebugButton = addButton(RIGHT, GraphicDrawDebug.create(), toggleDrawDebug, true);
 		drawDebugButton.toggled = !FlxG.debugger.drawDebug;
 		FlxG.debugger.drawDebugChanged.add(function()
 		{ 
@@ -412,7 +413,7 @@ class FlxDebugger extends Sprite
 	
 	public function addWindowToggleButton(window:Window, icon:Class<BitmapData>):Void
 	{
-		var button = addButton(RIGHT, Type.createInstance(icon, [0, 0]),
+		var button = addButton(RIGHT, icon.create(),
 			window.toggleVisible, true, true);
 		window.toggleButton = button;
 		button.toggled = !window.visible;

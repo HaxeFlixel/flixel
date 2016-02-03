@@ -10,6 +10,7 @@ import flixel.system.FlxLinkedList;
 import flixel.system.FlxQuadTree;
 import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxColor;
+using flixel.system.debug.DebuggerUtil;
 
 @:bitmap("assets/images/debugger/buttons/minimize.png")
 private class GraphicMinimizeButton extends BitmapData {}
@@ -96,7 +97,7 @@ class Stats extends Window
 	 */
 	public function new()
 	{
-		super("Stats", new GraphicStats(0, 0), 0, 0, false);
+		super("Stats", GraphicStats.create(), 0, 0, false);
 		
 		if (MIN_HEIGHT == 0) {
 			if (!FlxG.renderTile)
@@ -158,7 +159,7 @@ class Stats extends Window
 		
 		_leftTextField.text = "Update: \nDraw:" + (FlxG.renderTile ? "\nDrawTiles:" : "") + "\nQuadTrees: \nLists:";
 		
-		_toggleSizeButton = new FlxSystemButton(new GraphicMaximizeButton(0, 0), toggleSize);
+		_toggleSizeButton = new FlxSystemButton(GraphicMaximizeButton.create(), toggleSize);
 		_toggleSizeButton.alpha = Window.HEADER_ALPHA;
 		addChild(_toggleSizeButton);
 		
@@ -448,7 +449,7 @@ class Stats extends Window
 			x -= INITIAL_WIDTH;
 			drawTimeGraph.visible = true;
 			updateTimeGraph.visible = true;
-			_toggleSizeButton.changeIcon(new GraphicMinimizeButton(0, 0));
+			_toggleSizeButton.changeIcon(GraphicMinimizeButton.create());
 		}
 		else
 		{
@@ -456,7 +457,7 @@ class Stats extends Window
 			x += INITIAL_WIDTH;
 			drawTimeGraph.visible = false;
 			updateTimeGraph.visible = false;
-			_toggleSizeButton.changeIcon(new GraphicMaximizeButton(0, 0));
+			_toggleSizeButton.changeIcon(GraphicMaximizeButton.create());
 		}
 		
 		updateSize();

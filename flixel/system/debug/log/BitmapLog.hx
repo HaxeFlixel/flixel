@@ -18,6 +18,7 @@ import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxStringUtil;
 import flixel.system.debug.FlxDebugger;
 using flixel.util.FlxBitmapDataUtil;
+using flixel.system.debug.DebuggerUtil;
 
 /**
  * An output window that lets you paste BitmapData in the debugger overlay.
@@ -48,7 +49,7 @@ class BitmapLog extends Window
 	
 	public function new()
 	{
-		super("BitmapLog", new GraphicBitmapLog(0, 0));
+		super("BitmapLog", GraphicBitmapLog.create());
 		
 		minSize.x = 165;
 		minSize.y = Window.HEADER_HEIGHT * 2 + 1;
@@ -85,7 +86,7 @@ class BitmapLog extends Window
 		_ui = new Sprite();
 		_ui.y = 2;
 		
-		_buttonLeft = new FlxSystemButton(new GraphicArrowLeft(0, 0), previous);
+		_buttonLeft = new FlxSystemButton(GraphicArrowLeft.create(), previous);
 		
 		_dimensionsText = DebuggerUtil.createTextField();
 		
@@ -99,7 +100,7 @@ class BitmapLog extends Window
 		});
 		_buttonText.addChild(_counterText);
 		
-		_buttonRight = new FlxSystemButton(new GraphicArrowRight(0, 0), next);
+		_buttonRight = new FlxSystemButton(GraphicArrowRight.create(), next);
 		_buttonRight.x = 60;
 		
 		_ui.addChild(_buttonLeft);

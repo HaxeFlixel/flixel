@@ -5,6 +5,7 @@ import flixel.FlxG;
 import flixel.system.debug.FlxDebugger;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxDestroyUtil;
+using flixel.system.debug.DebuggerUtil;
 
 /**
  * A Visual Studio-style "watch" window, for use in the debugger overlay.
@@ -25,7 +26,7 @@ class Watch extends Window
 	 */
 	public function new(Closable:Bool = false)
 	{
-		super("Watch", new GraphicWatch(0, 0), 0, 0, true, null, Closable);
+		super("Watch", GraphicWatch.create(), 0, 0, true, null, Closable);
 		
 		_names = new Sprite();
 		_names.x = 2;

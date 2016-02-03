@@ -11,6 +11,7 @@ import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxColor;
 import flixel.util.FlxStringUtil;
 import flixel.system.debug.FlxDebugger;
+using flixel.system.debug.DebuggerUtil;
 
 @:bitmap("assets/images/debugger/buttons/open.png")
 private class GraphicOpen extends BitmapData {}
@@ -56,13 +57,13 @@ class VCR
 	 */
 	public function new(Debugger:FlxDebugger)
 	{
-		restartBtn = Debugger.addButton(CENTER, new GraphicRestart(0, 0), FlxG.resetState);
+		restartBtn = Debugger.addButton(CENTER, GraphicRestart.create(), FlxG.resetState);
 		#if FLX_RECORD
-		recordBtn = Debugger.addButton(CENTER, new GraphicRecordOff(0, 0), FlxG.vcr.startRecording.bind(true));
-		openBtn = Debugger.addButton(CENTER, new GraphicOpen(0, 0), FlxG.vcr.onOpen);
+		recordBtn = Debugger.addButton(CENTER, GraphicRecordOff.create(), FlxG.vcr.startRecording.bind(true));
+		openBtn = Debugger.addButton(CENTER, GraphicOpen.create(), FlxG.vcr.onOpen);
 		#end
-		playbackToggleBtn = Debugger.addButton(CENTER, new GraphicPause(0, 0), FlxG.vcr.pause);
-		stepBtn = Debugger.addButton(CENTER, new GraphicStep(0, 0), onStep);
+		playbackToggleBtn = Debugger.addButton(CENTER, GraphicPause.create(), FlxG.vcr.pause);
+		stepBtn = Debugger.addButton(CENTER, GraphicStep.create(), onStep);
 		
 		#if FLX_RECORD
 		runtimeDisplay = new TextField();
@@ -88,7 +89,7 @@ class VCR
 	 */
 	public inline function recording():Void
 	{
-		recordBtn.changeIcon(new GraphicRecordOn(0, 0));
+		recordBtn.changeIcon(GraphicRecordOn.create());
 		recordBtn.upHandler = FlxG.vcr.stopRecording;
 	}
 
@@ -98,7 +99,7 @@ class VCR
 	 */
 	public inline function stoppedRecording():Void
 	{
-		recordBtn.changeIcon(new GraphicRecordOn(0, 0));
+		recordBtn.changeIcon(GraphicRecordOn.create());
 		recordBtn.upHandler = FlxG.vcr.startRecording.bind(true);
 	}
 	
@@ -108,7 +109,7 @@ class VCR
 	 */
 	public inline function stoppedReplay():Void
 	{
-		recordBtn.changeIcon(new GraphicRecordOff(0, 0));
+		recordBtn.changeIcon(GraphicRecordOff.create());
 		recordBtn.upHandler = FlxG.vcr.startRecording.bind(true);
 	}
 	
@@ -118,7 +119,7 @@ class VCR
 	 */
 	public inline function playingReplay():Void
 	{
-		recordBtn.changeIcon(new GraphicStop(0, 0));
+		recordBtn.changeIcon(GraphicStop.create());
 		recordBtn.upHandler = FlxG.vcr.stopReplay;
 	}
 	
@@ -144,7 +145,7 @@ class VCR
 	public inline function onPause():Void
 	{
 		playbackToggleBtn.upHandler = FlxG.vcr.resume;
-		playbackToggleBtn.changeIcon(new GraphicArrowRight(0, 0));
+		playbackToggleBtn.changeIcon(GraphicArrowRight.create());
 	}
 
 	/**
@@ -154,7 +155,7 @@ class VCR
 	public inline function onResume():Void
 	{
 		playbackToggleBtn.upHandler = FlxG.vcr.pause;
-		playbackToggleBtn.changeIcon(new GraphicPause(0, 0));
+		playbackToggleBtn.changeIcon(GraphicPause.create());
 	}
 
 	/**
