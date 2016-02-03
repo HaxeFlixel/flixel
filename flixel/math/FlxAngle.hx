@@ -32,20 +32,16 @@ class FlxAngle
 	 */
 	public static macro function sinCosGenerator(length:Int = 360, sinAmplitude:Float = 1.0, cosAmplitude:Float = 1.0, frequency:Float = 1.0):Expr
 	{
-		var sincos =
-		{
-			cos: new Array<Float>(),
-			sin: new Array<Float>()
-		};
+		var table = { cos: [], sin: [] };
 		
 		for (c in 0...length)
 		{
 			var radian = c * frequency * Math.PI / 180;
-			sincos.cos.push(Math.cos(radian) * cosAmplitude);
-			sincos.sin.push(Math.sin(radian) * sinAmplitude);
+			table.cos.push(Math.cos(radian) * cosAmplitude);
+			table.sin.push(Math.sin(radian) * sinAmplitude);
 		}
 		
-		return Context.makeExpr(sincos, Context.currentPos());
+		return Context.makeExpr(table, Context.currentPos());
 	}
 
 	#if !macro
@@ -139,6 +135,8 @@ class FlxAngle
 		var dx:Float = (Target.x) - (Sprite.x + Sprite.origin.x);
 		var dy:Float = (Target.y) - (Sprite.y + Sprite.origin.y);
 		
+		Target.putWeak();
+		
 		if (AsDegrees)
 			return asDegrees(Math.atan2(dy, dx));
 		else
@@ -165,6 +163,8 @@ class FlxAngle
 		var dx:Float = FlxG.mouse.screenX - p.x;
 		var dy:Float = FlxG.mouse.screenY - p.y;
 		
+		p.put();
+		
 		if (AsDegrees)
 			return asDegrees(Math.atan2(dy, dx));
 		else
@@ -189,6 +189,8 @@ class FlxAngle
 		
 		var dx:Float = Touch.screenX - p.x;
 		var dy:Float = Touch.screenY - p.y;
+		
+		p.put();
 		
 		if (AsDegrees)
 			return asDegrees(Math.atan2(dy, dx));
@@ -234,9 +236,7 @@ class FlxAngle
 	{
 		var p = point;
 		if (p == null)
-		{
 			p = FlxPoint.get();
-		}
 		
 		p.x = Radius * Math.cos(Angle * TO_RAD);
 		p.y = Radius * Math.sin(Angle * TO_RAD);
@@ -255,9 +255,7 @@ class FlxAngle
 	{
 		var p = point;
 		if (p == null)
-		{
 			p = FlxPoint.get();
-		}
 		
 		p.x = Math.sqrt((X * X) + (Y * Y));
 		p.y = Math.atan2(Y, X) * TO_DEG;
@@ -277,6 +275,6 @@ class FlxAngle
 }
 
 typedef FlxSinCos = {
-	var cos: Array<Float>;
-	var sin: Array<Float>;
+	var cos:Array<Float>;
+	var sin:Array<Float>;
 };
