@@ -16,7 +16,6 @@ import flixel.system.debug.completion.CompletionList;
 import flixel.system.debug.completion.CompletionHandler;
 import flixel.util.FlxStringUtil;
 using StringTools;
-using flixel.system.debug.DebuggerUtil;
 
 /**
  * A powerful console for the flixel debugger screen with supports custom commands, registering 
@@ -69,7 +68,7 @@ class Console extends Window
 	 */	
 	public function new(completionList:CompletionList)
 	{	
-		super("Console", GraphicConsole.create(), 0, 0, false);
+		super("Console", new GraphicConsole(0, 0), 0, 0, false);
 		this.completionList = completionList;
 		completionList.setY(y + Window.HEADER_HEIGHT);
 		

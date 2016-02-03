@@ -15,7 +15,6 @@ import flixel.system.FlxAssets;
 import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
-using flixel.system.debug.DebuggerUtil;
 
 @:bitmap("assets/images/debugger/windowHandle.png")
 private class GraphicWindowHandle extends BitmapData {}
@@ -130,6 +129,7 @@ class Window extends Sprite
 		
 		if (Icon != null)
 		{
+			DebuggerUtil.fixSize(Icon);
 			var _icon = new Bitmap(Icon);
 			_icon.x = 5;
 			_icon.y = 2;
@@ -140,13 +140,13 @@ class Window extends Sprite
 		
 		if (_resizable)
 		{
-			_handle = new Bitmap(GraphicWindowHandle.create());
+			_handle = new Bitmap(DebuggerUtil.fixSize(new GraphicWindowHandle(0, 0)));
 			addChild(_handle);
 		}
 		
 		if (Closable)
 		{
-			_closeButton = new FlxSystemButton(GraphicCloseButton.create(), close);
+			_closeButton = new FlxSystemButton(new GraphicCloseButton(0, 0), close);
 			_closeButton.alpha = HEADER_ALPHA;
 			addChild(_closeButton);
 		}

@@ -9,7 +9,6 @@ import flixel.system.debug.FlxDebugger;
 import flixel.math.FlxPoint;
 import flixel.util.FlxStringUtil;
 import haxe.ds.StringMap;
-using flixel.system.debug.DebuggerUtil;
 
 /**
  * A simple trace output window for use in the debugger overlay.
@@ -27,7 +26,7 @@ class Log extends Window
 	 */	
 	public function new()
 	{
-		super("Log", GraphicLog.create());
+		super("Log", new GraphicLog(0, 0));
 		
 		_text = new TextField();
 		_text.x = 2;

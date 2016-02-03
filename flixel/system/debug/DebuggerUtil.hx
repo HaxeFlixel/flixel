@@ -41,11 +41,9 @@ class DebuggerUtil
 		return tf;
 	}
 	
-	@:allow(flixel.system.debug)
-	private static function create(cl:Class<BitmapData>):BitmapData
+	@:allow(flixel.system)
+	private static function fixSize(bitmapData:BitmapData):BitmapData
 	{
-		var bitmapData = Type.createInstance(cl, [0, 0]);
-		
 		#if html5 // dirty hack for openfl/openfl#682
 		Reflect.setProperty(bitmapData, "width", 11);
 		Reflect.setProperty(bitmapData, "height", 11);
