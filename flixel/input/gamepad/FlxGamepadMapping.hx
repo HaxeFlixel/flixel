@@ -674,7 +674,7 @@ class FlxGamepadMapping
 			#if FLX_JOYSTICK_API
 			case XInputID.LEFT_TRIGGER_FAKE: LEFT_TRIGGER;
 			case XInputID.RIGHT_TRIGGER_FAKE: RIGHT_TRIGGER;
-			#end
+			#else
 			case XInputID.LEFT_TRIGGER: LEFT_TRIGGER;
 			case XInputID.RIGHT_TRIGGER: RIGHT_TRIGGER;
 			#end
