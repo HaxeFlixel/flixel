@@ -4,7 +4,10 @@ import flixel.input.gamepad.FlxGamepad;
 
 /**
  * IDs for PlayStation 4 controllers
- * (D-pad values are obtained from FlxGamepad.hat)
+ *-------
+ * NOTES
+ *-------
+ * LINUX: the PS4 controller will be detected as an XInput device when using xpad.
  */
 class PS4ID
 {
