@@ -123,8 +123,7 @@ class Tower extends FlxSprite
 		{
 			if (enemy != null && enemy.alive)
 			{
-				var distance:Float = FlxMath.getDistance(toPoint(), enemy.toPoint());
-				
+				var distance:Float = getPosition().distanceTo(enemy.getPosition());
 				if (distance <= range)
 				{
 					firstEnemy = enemy;

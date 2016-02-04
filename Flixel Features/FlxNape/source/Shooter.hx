@@ -81,7 +81,7 @@ class Shooter extends FlxTypedGroup<FlxNapeSprite>
 		
 		spr.body.position.y = 30;
 		spr.body.position.x = 30 + Std.random(640 - 30);
-		var angle = FlxG.mouse.toPoint()
+		var angle = FlxG.mouse.getPosition()
 			.angleBetween(FlxPoint.get(spr.body.position.x, spr.body.position.y));
 		angle += 90;
 		spr.body.velocity.setxy(
