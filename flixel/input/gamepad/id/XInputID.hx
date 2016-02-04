@@ -4,7 +4,15 @@ import flixel.input.gamepad.FlxGamepad;
 
 /**
  * IDs for generic XInput controllers
+ * 
+ *-------
+ * NOTES
+ *-------
+ * LINUX: we assumes the user is using the xpad driver, specifically Valve's version, steamos-xpad-dkms
+ * (we got weird errors when using xboxdrv). For full instructions on installation, see:
+ * http://askubuntu.com/questions/165210/how-do-i-get-an-xbox-360-controller-working/441548#441548
  */
+
 class XInputID
 {
 	public static inline var SUPPORTS_MOTION = false;
