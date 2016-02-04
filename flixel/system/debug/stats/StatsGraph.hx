@@ -103,14 +103,13 @@ class StatsGraph extends Sprite
 		gfx.lineStyle(1, graphColor, 1);
 		gfx.moveTo(_axis.x, _axis.y);
 		
-		var inc:Float = (_width) / (HISTORY_MAX - 1);
-		var range:Float = maxValue - minValue;
-		var value:Float;
+		var inc:Float = _width / (HISTORY_MAX - 1);
+		var range:Float = Math.max(maxValue - minValue, maxValue * 0.1);
 		
 		for (i in 0...history.length)
 		{
-			value = (history[i] - minValue) / range;
-			gfx.lineTo(_axis.x + (i * inc), (- value * _height) + _height);
+			var value = (history[i] - minValue) / range;
+			gfx.lineTo(_axis.x + (i * inc), (-value * _height) + _height);
 		}
 	}
 	
