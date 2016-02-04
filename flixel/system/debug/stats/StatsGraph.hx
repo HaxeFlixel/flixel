@@ -7,6 +7,7 @@ import flash.text.TextField;
 import flash.text.TextFormatAlign;
 import flixel.math.FlxMath;
 import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
 
 /**
  * This is a helper function for the stats window to draw a graph with given values.
@@ -146,33 +147,11 @@ class StatsGraph extends Sprite
 	
 	public function destroy():Void
 	{
-		if (_axis != null)
-		{
-			removeChild(_axis);
-			_axis = null;
-		}
-		
-		if (minLabel != null)
-		{
-			removeChild(minLabel);
-			minLabel = null;
-		}
-		if (curLabel != null)
-		{
-			removeChild(curLabel);
-			curLabel = null;
-		}
-		if (maxLabel != null)
-		{
-			removeChild(maxLabel);
-			maxLabel = null;
-		}	
-		if (avgLabel != null)
-		{
-			removeChild(avgLabel);
-			avgLabel = null;
-		}	
-		
+		_axis = FlxDestroyUtil.removeChild(this, _axis);
+		minLabel = FlxDestroyUtil.removeChild(this, minLabel);
+		curLabel = FlxDestroyUtil.removeChild(this, curLabel);
+		maxLabel = FlxDestroyUtil.removeChild(this, maxLabel);
+		avgLabel = FlxDestroyUtil.removeChild(this, avgLabel);
 		history = null;
 	}
 }
