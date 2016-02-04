@@ -125,16 +125,21 @@ class StatsGraph extends Sprite
 		maxValue = Math.max(maxValue, Value);
 		minValue = Math.min(minValue, Value);
 		
-		minLabel.text = FlxMath.roundDecimal(minValue, Stats.DECIMALS) + " " + _unit;
-		curLabel.text = FlxMath.roundDecimal(Value, Stats.DECIMALS) + " " + _unit;
-		maxLabel.text = FlxMath.roundDecimal(maxValue, Stats.DECIMALS) + " " + _unit;
+		minLabel.text = formatValue(minValue);
+		curLabel.text = formatValue(Value);
+		maxLabel.text = formatValue(maxValue);
 		
 		if (Average == null)
 			Average = average();
 		
-		avgLabel.text = _label + "\nAvg: " + FlxMath.roundDecimal(Average, Stats.DECIMALS) + " " + _unit;
+		avgLabel.text = _label + "\nAvg: " + formatValue(Average);
 		
 		drawGraph();
+	}
+	
+	private function formatValue(value:Float):String
+	{
+		return FlxMath.roundDecimal(value, Stats.DECIMALS) + " " + _unit;
 	}
 	
 	public function average():Float
