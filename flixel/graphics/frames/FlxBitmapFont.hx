@@ -416,7 +416,7 @@ class FlxBitmapFont extends FlxFramesCollection
 		var point:Point = FlxPoint.point1;
 		point.setTo(Std.int(frame.frame.x), Std.int(frame.frame.y));
 		var bgColor32:Int = bmd.getPixel32(Std.int(frame.frame.x), Std.int(frame.frame.y));
-		#if !bitfive
+
 		var frameRect:Rectangle = FlxRect.rect;
 		frame.frame.copyToFlash(frameRect);
 		
@@ -430,10 +430,7 @@ class FlxBitmapFont extends FlxFramesCollection
 		{
 			bmd.threshold(bmd, frameRect, point, "==", charBGColor, FlxColor.TRANSPARENT, FlxColor.WHITE, true);
 		}
-		#else
-		FlxBitmapDataUtil.replaceColor(bmd, bgColor32, FlxColor.TRANSPARENT, false, frame.frame);
-		FlxBitmapDataUtil.replaceColor(bmd, charBGColor, FlxColor.TRANSPARENT, false, frame.frame);
-		#end
+
 		return font;
 	}
 	

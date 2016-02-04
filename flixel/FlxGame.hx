@@ -209,13 +209,6 @@ class FlxGame extends Sprite
 	private var _recordingRequested:Bool = false;
 	#end
 	
-	#if FLX_RENDER_CRISP
-	private var _display:BitmapData;
-	private var _displayBitmap:Bitmap;
-	private var _displayMatrix = new Matrix();
-	private var _displayColorTransform = new ColorTransform();
-	#end
-	
 	#if FLX_POST_PROCESS
 	/**
 	 * Sprite for postprocessing effects
@@ -355,9 +348,7 @@ class FlxGame extends Sprite
 		// make sure the cursor etc are properly scaled from the start
 		resizeGame(FlxG.stage.stageWidth, FlxG.stage.stageHeight);
 		
-		#if !bitfive
 		Assets.addEventListener(Event.CHANGE, FlxG.bitmap.onAssetsReload);
-		#end
 	}
 	
 	private function onFocus(_):Void
@@ -470,15 +461,6 @@ class FlxGame extends Sprite
 		FlxG.signals.gameResized.dispatch(width, height);
 		
 		FlxG.cameras.resize();
-		
-		#if FLX_RENDER_CRISP
-		FlxDestroyUtil.removeChild(this, _displayBitmap);
-		FlxDestroyUtil.dispose(_display);
-		
-		var index:Int = getChildIndex(_inputContainer);
-		_display = new BitmapData(width, height);
-		addChildAt(_displayBitmap = new Bitmap(_display), index);
-		#end
 		
 		#if !FLX_NO_DEBUG
 		debugger.onResize(width, height);
@@ -885,28 +867,6 @@ class FlxGame extends Sprite
 			debugger.stats.drawCalls(FlxTilesheet._DRAWCALLS);
 			#end
 		}
-		
-		#if FLX_RENDER_CRISP
-		_display.fillRect(_display.rect, FlxColor.TRANSPARENT);
-		
-		for (camera in FlxG.cameras.list)
-		{
-			_displayMatrix.identity();
-			_displayMatrix.scale(camera.zoom * FlxG.scaleMode.scale.x, camera.zoom * FlxG.scaleMode.scale.y);
-			_displayMatrix.translate(camera.x * FlxG.scaleMode.scale.x, camera.y * FlxG.scaleMode.scale.y);
-			
-			// rotate around center
-			if (camera.angle != 0)
-			{
-				_displayMatrix.translate( - _display.width >> 1, - _display.height >> 1);
-				_displayMatrix.rotate(camera.angle * FlxAngle.TO_RAD);
-				_displayMatrix.translate(_display.width >> 1, _display.height >> 1);
-			}
-			
-			_displayColorTransform.alphaMultiplier = camera.alpha;
-			_display.draw(camera.buffer, _displayMatrix, _displayColorTransform, null, null, camera.antialiasing);
-		}
-		#end
 	
 		FlxG.cameras.unlock();
 		
