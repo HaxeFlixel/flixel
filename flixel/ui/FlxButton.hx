@@ -435,7 +435,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	private function checkInput(pointer:FlxPointer, input:IFlxInput, justPressedPosition:FlxPoint, camera:FlxCamera):Bool
 	{
 		if (maxInputMovement != Math.POSITIVE_INFINITY &&
-			FlxMath.getDistance(justPressedPosition, pointer.getScreenPosition()) > maxInputMovement &&
+			justPressedPosition.distanceTo(pointer.getScreenPosition(FlxPoint.weak())) > maxInputMovement &&
 			input == currentInput)
 		{
 			currentInput == null;
