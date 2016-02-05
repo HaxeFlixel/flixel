@@ -62,33 +62,12 @@ For using git with GitHub we recommended using a GUI application to manage your 
 ##Runtime Targets
 The current possible targets are:
 
-<table>
-  <tr>
-    <th>Mobile</th>
-    <th>Desktop</th>
-    <th>Web</th>
-  </tr>
-  <tr>
-    <td>Blackberry</td>
-    <td>Linux</td>
-    <td>Flash</td>
-  </tr>
-  <tr>
-    <td>iOS</td>
-    <td>Mac</td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>Android</td>
-    <td>Windows</td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>WebOS</td>
-    <td>Neko</td>
-    <td></td>
-  </tr>
-</table>
+| Mobile     | Desktop | Web   |
+|------------|---------|-------|
+| BlackBerry | Linux   | Flash |
+| iOS        | Mac     |       |
+| Android    | Windows |       |
+| WebOS      | Neko    |       |
 
 There's also experimental support for HTML5.
 
