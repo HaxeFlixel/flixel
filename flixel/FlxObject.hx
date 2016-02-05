@@ -1190,7 +1190,8 @@ class FlxObject extends FlxBasic
 			return path;
 		
 		if (this.path != null)
-			path.object = null;
+			this.path.object = null;
+		
 		if (path != null)
 			path.object = this;
 		return this.path = path;
