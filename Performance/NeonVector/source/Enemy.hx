@@ -195,8 +195,9 @@ class Enemy extends Entity
 		}
 		else if (Std.is(Object, Enemy))
 		{
+			var enemy:Enemy = cast Object;
 			var IsBlackHole:Bool = (type == BLACK_HOLE);
-			if (IsBlackHole && cast(Object, Enemy).type == BLACK_HOLE) return;
+			if (IsBlackHole && enemy.type == BLACK_HOLE) return;
 			
 			if (IsHitBoxCollision) 
 			{

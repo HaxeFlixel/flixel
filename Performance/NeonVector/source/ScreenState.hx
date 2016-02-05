@@ -193,10 +193,10 @@ class ScreenState extends FlxState
 	
 	public static function makeBullet(PositionX:Float, PositionY:Float, Angle:Float, Speed:Float):Bool
 	{
-		var _bullet:Bullet = cast(entities.getFirstAvailable(Bullet), Bullet);
+		var _bullet:Bullet = cast entities.getFirstAvailable(Bullet);
 		if (_bullet != null)
 		{
-			cast(_bullet, Bullet).reset(PositionX, PositionY);
+			_bullet.reset(PositionX, PositionY);
 			_bullet.angle = Angle;
 			_bullet.velocity.x = Speed * Math.cos((Angle / 180) * Math.PI);
 			_bullet.velocity.y = Speed * Math.sin((Angle / 180) * Math.PI);
@@ -207,7 +207,7 @@ class ScreenState extends FlxState
 	
 	public static function makeEnemy(Type:UInt):Bool
 	{
-		var _enemy:Enemy = cast(entities.getFirstAvailable(Enemy), Enemy);
+		var _enemy:Enemy = cast entities.getFirstAvailable(Enemy);
 		if (_enemy != null) 
 		{
 			var MinimumDistanceFromPlayer:Float = 150;
@@ -222,7 +222,7 @@ class ScreenState extends FlxState
 	
 	public static function makeBlackhole():Bool
 	{
-		var _enemy:Enemy = cast(blackholes.getFirstAvailable(Enemy), Enemy);
+		var _enemy:Enemy = cast blackholes.getFirstAvailable(Enemy);
 		if (_enemy != null) 
 		{
 			var MinimumDistanceFromPlayer:Float = 20;
