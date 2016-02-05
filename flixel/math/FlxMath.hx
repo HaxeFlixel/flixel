@@ -297,7 +297,7 @@ class FlxMath
 	{
 		return ax * bx + ay * by;
 	}
-	
+
 	/**
 	 * Finds the length of the given vector
 	 * 
@@ -307,23 +307,7 @@ class FlxMath
 	{
 		return Math.sqrt(dx * dx + dy * dy);
 	}
-	
-	/**
-	 * Calculate the distance between two points.
-	 * 
-	 * @param 	Point1		A FlxPoint object referring to the first location.
-	 * @param 	Point2		A FlxPoint object referring to the second location.
-	 * @return	The distance between the two points as a floating point Number object.
-	 */
-	public static inline function getDistance(Point1:FlxPoint, Point2:FlxPoint):Float
-	{
-		var dx:Float = Point1.x - Point2.x;
-		var dy:Float = Point1.y - Point2.y;
-		Point1.putWeak();
-		Point2.putWeak();
-		return vectorLength(dx, dy);
-	}
-	
+
 	/**
 	 * Find the distance (in pixels, rounded) between two FlxSprites, taking their origin into account
 	 * 
@@ -369,8 +353,8 @@ class FlxMath
 	 */
 	public static inline function distanceToPoint(Sprite:FlxSprite, Target:FlxPoint):Int
 	{
-		var dx:Float = (Sprite.x + Sprite.origin.x) - (Target.x);
-		var dy:Float = (Sprite.y + Sprite.origin.y) - (Target.y);
+		var dx:Float = (Sprite.x + Sprite.origin.x) - Target.x;
+		var dy:Float = (Sprite.y + Sprite.origin.y) - Target.y;
 		Target.putWeak();
 		return Std.int(FlxMath.vectorLength(dx, dy));
 	}

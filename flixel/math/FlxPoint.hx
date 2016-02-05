@@ -277,9 +277,12 @@ class FlxPoint implements IFlxPooled
 	 * @param 	AnotherPoint	A FlxPoint object to calculate the distance to.
 	 * @return	The distance between the two points as a Float.
 	 */
-	public inline function distanceTo(AnotherPoint:FlxPoint):Float
+	public function distanceTo(point:FlxPoint):Float
 	{
-		return FlxMath.getDistance(this, AnotherPoint);
+		var dx:Float = x - point.x;
+		var dy:Float = y - point.y;
+		point.putWeak();
+		return FlxMath.vectorLength(dx, dy);
 	}
 	
 	/**
