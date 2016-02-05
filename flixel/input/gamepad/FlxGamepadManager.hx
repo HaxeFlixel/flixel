@@ -435,7 +435,7 @@ class FlxGamepadManager implements IFlxInputManager
 		#elseif ps4
 			return PS4;
 		#elseif xbox1
-			return XInput;
+			return XINPUT;
 		#end
 		
 		str = str.toLowerCase();
@@ -452,7 +452,7 @@ class FlxGamepadManager implements IFlxInputManager
 		//and the most popular tools just turn it into a 360 controller
 		
 		// needs to be checked even though it's default to not mistake it for XInput on flash 
-		return if (str.contains("xbox") && str.contains("360")) XBOX360;
+		return if (str.contains("xbox") && str.contains("360")) XINPUT;
 			else if (str.contains("ouya")) OUYA;                                      //"OUYA Game Controller"
 			else if (str.contains("wireless controller") || str.contains("ps4")) PS4; //"Wireless Controller" or "PS4 controller"
 			else if (str.contains("logitech")) LOGITECH;
@@ -461,7 +461,7 @@ class FlxGamepadManager implements IFlxInputManager
 			else if (str.contains("nintendo rvlcnt01")) WII_REMOTE;                    //WiiRemote w/o  motion plus
 			else if (str.contains("mayflash wiimote pc adapter")) MAYFLASH_WII_REMOTE;  //WiiRemote paired to MayFlash DolphinBar (with or w/o motion plus)
 			else if (str.contains("mfi")) MFI;
-			else XBOX360; //default
+			else XINPUT; //default
 	}
 	
 	private function removeGamepad(Device:GameInputDevice):Void
@@ -491,7 +491,7 @@ class FlxGamepadManager implements IFlxInputManager
 			case 3: OUYA;
 			case 4: MAYFLASH_WII_REMOTE;
 			case 5: WII_REMOTE;
-			default: XBOX360;
+			default: XINPUT;
 		}
 	}
 	
