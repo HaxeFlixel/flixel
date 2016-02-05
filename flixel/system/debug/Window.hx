@@ -129,6 +129,7 @@ class Window extends Sprite
 		
 		if (Icon != null)
 		{
+			DebuggerUtil.fixSize(Icon);
 			var _icon = new Bitmap(Icon);
 			_icon.x = 5;
 			_icon.y = 2;
@@ -139,7 +140,7 @@ class Window extends Sprite
 		
 		if (_resizable)
 		{
-			_handle = new Bitmap(new GraphicWindowHandle(0, 0));
+			_handle = new Bitmap(DebuggerUtil.fixSize(new GraphicWindowHandle(0, 0)));
 			addChild(_handle);
 		}
 		

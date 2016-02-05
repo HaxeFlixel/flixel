@@ -16,8 +16,8 @@ class FlxSubState extends FlxState
 	public var closeCallback:Void->Void;
 	
 	/**
-	* Helper sprite object for non-flash targets. Draws background
-	*/
+	 * Helper sprite object for non-flash targets. Draws background
+	 */
 	private var _bgSprite:FlxBGSprite;
 	
 	/**

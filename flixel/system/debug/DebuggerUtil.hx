@@ -1,5 +1,6 @@
 package flixel.system.debug;
 
+import flash.display.BitmapData;
 import flash.display.Shape;
 import flash.text.TextField;
 import flash.text.TextFormat;
@@ -38,5 +39,16 @@ class DebuggerUtil
 		tf.defaultTextFormat = new TextFormat(FlxAssets.FONT_DEBUGGER, Size, Color.to24Bit());
 		tf.alpha = Color.alphaFloat;
 		return tf;
+	}
+	
+	@:allow(flixel.system)
+	private static function fixSize(bitmapData:BitmapData):BitmapData
+	{
+		#if html5 // dirty hack for openfl/openfl#682
+		Reflect.setProperty(bitmapData, "width", 11);
+		Reflect.setProperty(bitmapData, "height", 11);
+		#end
+		
+		return bitmapData;
 	}
 }

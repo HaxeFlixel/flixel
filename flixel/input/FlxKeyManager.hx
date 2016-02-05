@@ -280,12 +280,8 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 		var key:FlxInput<Key> = getKey(keyCode);
 		if (key != null && preventDefaultKeys != null && preventDefaultKeys.indexOf(key.ID) != -1)
 		{
-			#if bitfive
-				event.preventDefault();
-			#else
-				event.stopImmediatePropagation();
-				event.stopPropagation();
-			#end
+			event.stopImmediatePropagation();
+			event.stopPropagation();
 		}
 	}
 	

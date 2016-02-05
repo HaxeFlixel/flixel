@@ -10,6 +10,7 @@ import flixel.system.FlxLinkedList;
 import flixel.system.FlxQuadTree;
 import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxColor;
+import flixel.system.debug.DebuggerUtil;
 
 @:bitmap("assets/images/debugger/buttons/minimize.png")
 private class GraphicMinimizeButton extends BitmapData {}
@@ -98,7 +99,8 @@ class Stats extends Window
 	{
 		super("Stats", new GraphicStats(0, 0), 0, 0, false);
 		
-		if (MIN_HEIGHT == 0) {
+		if (MIN_HEIGHT == 0)
+		{
 			if (!FlxG.renderTile)
 				MIN_HEIGHT = 185;
 			else

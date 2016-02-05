@@ -826,6 +826,13 @@ class FlxObject extends FlxBasic
 		return point.subtract(Camera.scroll.x * scrollFactor.x, Camera.scroll.y * scrollFactor.y);
 	}
 	
+	public function getPosition(?point:FlxPoint):FlxPoint
+	{
+		if (point == null)
+			point = FlxPoint.get();
+		return point.set(x, y);
+	}
+	
 	/**
 	 * Retrieve the midpoint of this object in world coordinates.
 	 * 
@@ -839,6 +846,13 @@ class FlxObject extends FlxBasic
 			point = FlxPoint.get();
 		}
 		return point.set(x + width * 0.5, y + height * 0.5);
+	}
+	
+	public function getHitbox(?rect:FlxRect):FlxRect
+	{
+		if (rect == null)
+			rect = FlxRect.get();
+		return rect.set(x, y, width, height);
 	}
 	
 	/**
@@ -1080,16 +1094,6 @@ class FlxObject extends FlxBasic
 			LabelValuePair.weak("h", height), 
 			LabelValuePair.weak("visible", visible), 
 			LabelValuePair.weak("velocity", velocity)]);
-	}
-	
-	public inline function toPoint():FlxPoint
-	{
-		return FlxPoint.get(x, y);
-	}
-	
-	public inline function toRect():FlxRect
-	{
-		return FlxRect.get(x, y, width, height);
 	}
 	
 	private function set_x(NewX:Float):Float

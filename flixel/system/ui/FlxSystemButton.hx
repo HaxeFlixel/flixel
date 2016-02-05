@@ -4,6 +4,7 @@ import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.Sprite;
 import flash.events.MouseEvent;
+import flixel.system.debug.DebuggerUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 
 /**
@@ -52,10 +53,7 @@ class FlxSystemButton extends Sprite implements IFlxDestroyable
 		super();
 		
 		if (Icon != null)
-		{
-			_icon = new Bitmap(Icon);
-			addChild(_icon);
-		}
+			changeIcon(Icon);
 		
 		#if flash
 		tabEnabled = false;
@@ -78,10 +76,9 @@ class FlxSystemButton extends Sprite implements IFlxDestroyable
 	public function changeIcon(Icon:BitmapData):Void
 	{
 		if (_icon != null)
-		{
 			removeChild(_icon);
-		}
 		
+		DebuggerUtil.fixSize(Icon);
 		_icon = new Bitmap(Icon);
 		addChild(_icon);
 	}

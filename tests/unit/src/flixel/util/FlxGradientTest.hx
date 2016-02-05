@@ -15,7 +15,6 @@ class FlxGradientTest extends FlxTest
 		Assert.areEqual(colors.length, matrix.ratio.length);
 	}
 
-#if (!js || bitfive) // openfl-html5 does not support Graphics#beginGradientFill()
 	@Test
 	function testCreateGradientBitmapData()
 	{
@@ -31,5 +30,4 @@ class FlxGradientTest extends FlxTest
 		}
 		Assert.isTrue(uniqueColors.length >= 3);
 	}
-#end
 }
