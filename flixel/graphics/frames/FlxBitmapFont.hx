@@ -35,6 +35,9 @@ class FlxBitmapFont extends FlxFramesCollection
 	 */
 	public static inline var DEFAULT_CHARS:String = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
 	
+	private static var point:Point = new Point();
+	private static var flashRect:Rectangle = new Rectangle();
+	
 	/**
 	 * The size of the font. Can be useful for AngelCode fonts.
 	 */
@@ -413,11 +416,10 @@ class FlxBitmapFont extends FlxFramesCollection
 		font.updateSourceHeight();
 		
 		// remove background color
-		var point:Point = FlxPoint.point1;
 		point.setTo(Std.int(frame.frame.x), Std.int(frame.frame.y));
 		var bgColor32:Int = bmd.getPixel32(Std.int(frame.frame.x), Std.int(frame.frame.y));
 
-		var frameRect:Rectangle = FlxRect.rect;
+		var frameRect = flashRect;
 		frame.frame.copyToFlash(frameRect);
 		
 		#if flash
