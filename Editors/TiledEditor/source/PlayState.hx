@@ -10,6 +10,8 @@ import flixel.tile.FlxTilemap;
 
 class PlayState extends FlxState
 {
+	public static var instance:PlayState;
+	
 	public var level:TiledLevel;
 	
 	public var score:FlxText;
@@ -23,28 +25,31 @@ class PlayState extends FlxState
 	
 	override public function create():Void 
 	{
+		instance = this;
+		
 		FlxG.mouse.visible = false;
 		
 		bgColor = 0xffaaaaaa;
 		
 		// Load the level's tilemaps
+		coins = new FlxGroup();
 		level = new TiledLevel("assets/tiled/level.tmx");
 		
-		// Add tilemaps
-		add(level.foregroundTiles);
-		
+		// Add backgrounds
+		add(level.backgroundLayer);
+
 		// Draw coins first
-		coins = new FlxGroup();
 		add(coins);
 		
 		// Add static images
 		add(level.imagesLayer);
 		
 		// Load player objects
-		level.loadObjects(this);
+		add(level.objectsLayer);
 		
-		// Add background tiles after adding level objects, so these tiles render on top of player
-		add(level.backgroundTiles);
+		// Add foreground tiles after adding level objects, so these tiles render on top of player
+		add(level.foregroundTiles);
+
 		
 		// Create UI
 		score = new FlxText(2, 2, 80);
