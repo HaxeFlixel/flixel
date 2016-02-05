@@ -7,7 +7,15 @@ import flixel.input.gamepad.FlxGamepad;
  *-------
  * NOTES
  *-------
- * LINUX: the PS4 controller will be detected as an XInput device when using xpad.
+ *
+ * WINDOWS: seems to work fine without any special drivers on Windows 10 (and I seem to recall the same on Windows 7).
+ * DS4Windows is the popular 3rd-party utility here, but it will make the PS4 controller look like a 360 controller, which
+ * means that it will be indistinguishable from an XInput device to flixel. (DS4Windows: http://ds4windows.com)
+ *
+ * LINUX: the PS4 controller will be detected as an XInput device when using xpad (see notes in XInputID.hx)
+ * 
+ * MAC: the PS4 controller seemed to work perfectly without anything special installed, and was not detected in the 360Controller
+ * control panel, so it might just work right out of the box!
  */
 class PS4ID
 {
