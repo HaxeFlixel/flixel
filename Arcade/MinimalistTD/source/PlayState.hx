@@ -453,7 +453,7 @@ class PlayState extends FlxState
 		
 		for (tower in _towerGroup)
 		{
-			var dist:Float = FlxMath.getDistance(searchPoint, tower.getMidpoint());
+			var dist:Float = searchPoint.distanceTo(tower.getMidpoint());
 			
 			if (dist < minDistance)
 			{

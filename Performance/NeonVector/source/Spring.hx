@@ -19,7 +19,7 @@ class Spring
 		end2 = End2;
 		stiffness = Stiffness;
 		damping = Damping;
-		targetLength = 0.95 * FlxMath.getDistance(end1.position, end2.position);
+		targetLength = 0.95 * end1.position.distanceTo(end2.position);
 	}
 	
 	public function update(elapsed:Float):Void

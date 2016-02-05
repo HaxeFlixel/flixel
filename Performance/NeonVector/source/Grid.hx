@@ -165,7 +165,7 @@ class Grid
 		var _distance:Float;
 		for (_mass in points)
 		{
-			_distance = FlxMath.getDistance(Position, _mass.position);
+			_distance = Position.distanceTo(_mass.position);
 			if (_distance < Radius) _mass.applyForce(10 * Force.x / (10 + _distance), 10 * Force.y / (10 + _distance));
 		}
 	}
@@ -175,7 +175,7 @@ class Grid
 		var _distance:Float;
 		for (_mass in points)
 		{
-			_distance = FlxMath.getDistance(Position, _mass.position);
+			_distance = Position.distanceTo(_mass.position);
 			if (_distance < Radius)
 			{
 				_mass.applyForce(
@@ -191,7 +191,7 @@ class Grid
 		var _distance:Float;
 		for (_mass in points)
 		{
-			_distance = FlxMath.getDistance(Position, _mass.position);
+			_distance = Position.distanceTo(_mass.position);
 			if (_distance < Radius)
 			{
 				_mass.applyForce(

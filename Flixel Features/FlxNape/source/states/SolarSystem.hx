@@ -96,7 +96,7 @@ class SolarSystem extends BaseState
 		for (planet in planets)
 		{
 			var angle = planet.getPosition().angleBetween(FlxPoint.get(halfWidth, halfHeight)) - 90;
-			var distance = FlxMath.getDistance(FlxPoint.get(planet.x, planet.y), FlxPoint.get(halfWidth, halfHeight));
+			var distance = planet.getPosition().distanceTo(FlxPoint.get(halfWidth, halfHeight));
 			
 			var impulse = gravity * planet.body.mass / (distance * distance);
 			var force:Vec2 = new Vec2((planet.x - halfWidth) * -impulse, (planet.y - halfHeight) * -impulse);
