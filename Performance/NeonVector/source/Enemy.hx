@@ -119,16 +119,15 @@ class Enemy extends Entity
 		super.kill();
 		GameSound.randomSound(GameSound.sfxExplosion, 0.5);
 		
-		var _color:FlxColor;
-		switch (Std.int(6 * FlxG.random.float()))
+		var _color:FlxColor = switch (FlxG.random.int(0, 6))
 		{
-			case 0: _color = 0xff3333;
-			case 1: _color = 0x33ff33;
-			case 2: _color = 0x3333ff;
-			case 3: _color = 0xffffaa;
-			case 4: _color = 0xff33ff;
-			case 5: _color = 0x00ffff;
-			default: _color = 0xffffff;
+			case 0: 0xff3333;
+			case 1: 0x33ff33;
+			case 2: 0x3333ff;
+			case 3: 0xffffaa;
+			case 4: 0xff33ff;
+			case 5: 0x00ffff;
+			case _: 0xffffff;
 		}
 		ScreenState.makeExplosion(Particle.ENEMY, position.x, position.y, 90, Particle.MEDIUM_SPEED, _color, FlxColor.WHITE);
 	}
