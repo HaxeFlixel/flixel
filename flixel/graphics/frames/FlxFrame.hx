@@ -1,6 +1,7 @@
 package flixel.graphics.frames;
 
 import flash.display.BitmapData;
+import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.graphics.FlxGraphic;
@@ -18,6 +19,11 @@ import haxe.ds.Vector;
  */
 class FlxFrame implements IFlxDestroyable
 {
+	private var point1:Point = new Point();
+	private var point2:Point = new Point();
+	private var rect:Rectangle = new Rectangle();
+	private var matrix:FlxMatrix = new FlxMatrix();
+	
 	/**
 	 * Sorting function for Array<FlxFrame>#sort(),
 	 * e.g. "tiles-001.png", "tiles-003.png", "tiles-002.png".
@@ -97,7 +103,6 @@ class FlxFrame implements IFlxDestroyable
 	@:allow(flixel.graphics.frames)
 	private function cacheFrameMatrix():Void
 	{
-		var matrix:FlxMatrix = FlxMatrix.matrix;
 		prepareBlitMatrix(matrix, true);
 		blitMatrix[0] = matrix.a;
 		blitMatrix[1] = matrix.b;
@@ -272,7 +277,7 @@ class FlxFrame implements IFlxDestroyable
 	{
 		if (point == null)
 		{
-			point = FlxPoint.point1;
+			point = point1;
 			point.setTo(0, 0);
 		}
 		
@@ -285,14 +290,13 @@ class FlxFrame implements IFlxDestroyable
 		
 		if (angle == FlxFrameAngle.ANGLE_0)
 		{
-			offset.copyToFlash(FlxPoint.point2);
-			FlxPoint.point2.x += point.x;
-			FlxPoint.point2.y += point.y;
-			bmd.copyPixels(parent.bitmap, frame.copyToFlash(FlxRect.rect), FlxPoint.point2, null, null, mergeAlpha);
+			offset.copyToFlash(point2);
+			point2.x += point.x;
+			point2.y += point.y;
+			bmd.copyPixels(parent.bitmap, frame.copyToFlash(rect), point2, null, null, mergeAlpha);
 		}
 		else
 		{
-			var matrix:FlxMatrix = FlxMatrix.matrix;
 			fillBlitMatrix(matrix);
 			matrix.translate(point.x, point.y);
 			var rect:Rectangle = getDrawFrameRect(matrix);
@@ -323,7 +327,7 @@ class FlxFrame implements IFlxDestroyable
 		
 		if (point == null)
 		{
-			point = FlxPoint.point2;
+			point = point2;
 			point.setTo(0, 0);
 		}
 		
@@ -337,7 +341,6 @@ class FlxFrame implements IFlxDestroyable
 		var doFlipX = flipX != this.flipX;
 		var doFlipY = flipY != this.flipY;
 		
-		var matrix:FlxMatrix = FlxMatrix.matrix;
 		prepareTransformedBlitMatrix(matrix, rotation, doFlipX, doFlipY);
 		matrix.translate(point.x, point.y);
 		var rect:Rectangle = getDrawFrameRect(matrix);
@@ -374,7 +377,6 @@ class FlxFrame implements IFlxDestroyable
 		
 		if (bmd != null && !mergeAlpha)
 		{
-			var rect:Rectangle = FlxRect.rect;
 			rect.setTo(point.x, point.y, w, h);
 			bmd.fillRect(rect, FlxColor.TRANSPARENT);
 		}
@@ -402,7 +404,6 @@ class FlxFrame implements IFlxDestroyable
 		p2.transform(mat);
 		
 		var flxRect = FlxRect.get().fromTwoPoints(p1, p2);
-		var rect:Rectangle = FlxRect.rect;
 		flxRect.copyToFlash(rect);
 		flxRect.put();
 		return rect;
@@ -468,24 +469,23 @@ class FlxFrame implements IFlxDestroyable
 			var p1 = FlxPoint.weak(frameRect.x, frameRect.y);
 			var p2 = FlxPoint.weak(frameRect.right, frameRect.bottom);
 			
-			var mat:FlxMatrix = FlxMatrix.matrix;
-			mat.identity();
+			matrix.identity();
 			
 			if (angle == FlxFrameAngle.ANGLE_NEG_90)
 			{
-				mat.rotateByPositive90();
-				mat.translate(frame.width, 0);
+				matrix.rotateByPositive90();
+				matrix.translate(frame.width, 0);
 			}
 			else if (angle == FlxFrameAngle.ANGLE_90)
 			{
-				mat.rotateByNegative90();
-				mat.translate(0, frame.height);
+				matrix.rotateByNegative90();
+				matrix.translate(0, frame.height);
 			}
 			
 			if (angle != FlxFrameAngle.ANGLE_0)
 			{
-				p1.transform(mat);
-				p2.transform(mat);
+				p1.transform(matrix);
+				p2.transform(matrix);
 			}
 			
 			frameRect.fromTwoPoints(p1, p2);
@@ -569,24 +569,23 @@ class FlxFrame implements IFlxDestroyable
 			var p1 = FlxPoint.weak(frameRect.x, frameRect.y);
 			var p2 = FlxPoint.weak(frameRect.right, frameRect.bottom);
 			
-			var mat:FlxMatrix = FlxMatrix.matrix;
-			mat.identity();
+			matrix.identity();
 			
 			if (angle == FlxFrameAngle.ANGLE_NEG_90)
 			{
-				mat.rotateByPositive90();
-				mat.translate(frame.width, 0);
+				matrix.rotateByPositive90();
+				matrix.translate(frame.width, 0);
 			}
 			else if (angle == FlxFrameAngle.ANGLE_90)
 			{
-				mat.rotateByNegative90();
-				mat.translate(0, frame.height);
+				matrix.rotateByNegative90();
+				matrix.translate(0, frame.height);
 			}
 			
 			if (angle != FlxFrameAngle.ANGLE_0)
 			{
-				p1.transform(mat);
-				p2.transform(mat);
+				p1.transform(matrix);
+				p2.transform(matrix);
 			}
 			
 			frameRect.fromTwoPoints(p1, p2);

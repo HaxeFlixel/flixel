@@ -16,6 +16,8 @@ import openfl.geom.Matrix;
  */
 class FlxBitmapDataUtil
 {
+	private static var matrix:FlxMatrix = new FlxMatrix();
+	
 	/**
 	 * Performs per-channel blending from a source image to a destination image.
 	 * 
@@ -462,8 +464,6 @@ class FlxBitmapDataUtil
 		var halfBrushHeight:Int = Std.int(brushHeight * 0.5);
 		var midpointX:Int = Std.int(max * 0.5);
 		var midpointY:Int = Std.int(max * 0.5);
-		
-		var matrix:Matrix = FlxMatrix.matrix;
 		
 		while (row < rows)
 		{

@@ -10,13 +10,6 @@ import flash.geom.Matrix;
 class FlxMatrix extends Matrix
 {
 	/**
-	 * Helper object, which you can use without instantiation of
-	 * additional objects.
-	 */
-	@:allow(flixel)
-	private static var matrix:FlxMatrix = new FlxMatrix();
-	
-	/**
 	 * Rotates this matrix, but takes the values of sine and cosine,
 	 * so it might be useful when you rotate multiple matrices by the same angle
 	 * @param	cos	The cosine value for rotation angle

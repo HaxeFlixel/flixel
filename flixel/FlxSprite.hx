@@ -397,7 +397,7 @@ class FlxSprite extends FlxObject
 		}
 		
 		var max:Int = (brush.height > brush.width) ? brush.height : brush.width;
-		max = (AutoBuffer) ? Std.int(max * 1.5) : max;
+		max = AutoBuffer ? Std.int(max * 1.5) : max;
 		
 		frames = FlxTileFrames.fromGraphic(tempGraph, FlxPoint.get(max, max));
 		

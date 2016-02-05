@@ -13,11 +13,6 @@ class FlxPoint implements IFlxPooled
 {
 	public static var pool(get, never):IFlxPool<FlxPoint>;
 	
-	@:allow(flixel)
-	private static var point1:Point = new Point();
-	@:allow(flixel)
-	private static var point2:Point = new Point();
-	
 	private static var _pool = new FlxPool<FlxPoint>(FlxPoint);
 	
 	/**
