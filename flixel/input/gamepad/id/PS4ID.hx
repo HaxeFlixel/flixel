@@ -109,7 +109,7 @@ class PS4ID
 	
 	//No linux: On linux the drivers we're testing with just make the PS4 controller look like an XInput device
 	
-#elseif			//"legacy"
+#else			//"legacy"
 	
 	public static inline var SQUARE:Int = 0;
 	public static inline var X:Int = 1;
