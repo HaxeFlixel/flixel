@@ -65,11 +65,9 @@ The current possible targets are:
 | Mobile     | Desktop | Web   |
 |------------|---------|-------|
 | BlackBerry | Linux   | Flash |
-| iOS        | Mac     |       |
+| iOS        | Mac     | HTML5 |
 | Android    | Windows |       |
 | WebOS      | Neko    |       |
-
-There's also experimental support for HTML5.
 
 ##Basic Features
 
