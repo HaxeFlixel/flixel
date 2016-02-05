@@ -20,8 +20,6 @@ import flixel.input.gamepad.FlxGamepad;
  * MAC: we assume the user is using the 360 Controller driver, specifically this one:
  * https://github.com/360Controller/360Controller/releases
  */
-
-
 class XInputID
 {
 	public static inline var SUPPORTS_MOTION = false;
@@ -30,14 +28,11 @@ class XInputID
 	public static inline function getFlipAxis(AxisID:Int):Int 
 	{ 
 		#if flash
-			return switch(AxisID) {
-				case LEFT_ANALOG_STICK_V: -1;
-				case RIGHT_ANALOG_STICK_V: -1;
-				default: 1;
-			}
-		#else
-			return 1; 
+		if (AxisID == LEFT_ANALOG_STICK_V || AxisID == RIGHT_ANALOG_STICK_V)
+			return -1;
 		#end
+		
+		return 1; 
 	}
 
 	public static function isAxisForMotion(ID:FlxGamepadInputID):Bool { return false; }
@@ -189,7 +184,7 @@ class XInputID
 		//Analog stick and trigger values overlap with regular buttons so we remap to "fake" button ID's
 		public static function axisIndexToRawID(index:Int):Int
 		{
-			return   if (index == LEFT_ANALOG_STICK.x) LEFT_ANALOG_STICK_FAKE_X;
+			return if (index == LEFT_ANALOG_STICK.x) LEFT_ANALOG_STICK_FAKE_X;
 				else if (index == LEFT_ANALOG_STICK.y) LEFT_ANALOG_STICK_FAKE_Y;
 				else if (index == RIGHT_ANALOG_STICK.x) RIGHT_ANALOG_STICK_FAKE_X;
 				else if (index == RIGHT_ANALOG_STICK.y) RIGHT_ANALOG_STICK_FAKE_Y;
