@@ -77,7 +77,11 @@ class XInputID
 		public static inline var Y:Int = 9;
 	
 		public static inline var BACK:Int = 10;
+		#if mac
+		public static inline var GUIDE:Int = 11;
+		#else
 		public static inline var GUIDE:Int = -1;
+		#end
 		public static inline var START:Int = 12;
 	
 		public static inline var LEFT_STICK_CLICK:Int = 13;
