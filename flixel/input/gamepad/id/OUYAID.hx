@@ -44,7 +44,7 @@ class OUYAID
 	//Analog stick values overlap with regular buttons so we remap to "fake" button ID's
 	public static function axisIndexToRawID(index:Int):Int
 	{
-		return   if (index == LEFT_ANALOG_STICK.x) LEFT_ANALOG_STICK_FAKE_X;
+		return if (index == LEFT_ANALOG_STICK.x) LEFT_ANALOG_STICK_FAKE_X;
 			else if (index == LEFT_ANALOG_STICK.y) LEFT_ANALOG_STICK_FAKE_Y;
 			else if (index == RIGHT_ANALOG_STICK.x) RIGHT_ANALOG_STICK_FAKE_X;
 			else if (index == RIGHT_ANALOG_STICK.y) RIGHT_ANALOG_STICK_FAKE_Y;

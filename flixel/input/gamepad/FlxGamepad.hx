@@ -697,7 +697,7 @@ class FlxGamepad implements IFlxDestroyable
 		{
 			return 0;
 		}
-		if ((_device != null) && _device.enabled)
+		if (_device != null && _device.enabled)
 		{
 			axisValue = _device.getControlAt(AxisID).value;
 		}
@@ -720,7 +720,8 @@ class FlxGamepad implements IFlxDestroyable
 	
 	private function getAnalogXAxisValue(stick:FlxGamepadAnalogStick):Float
 	{
-		if (stick == null) return 0;
+		if (stick == null)
+			return 0;
 		return if (deadZoneMode == CIRCULAR)
 			getAnalogAxisValueCircular(stick, stick.x);
 		else
@@ -729,7 +730,8 @@ class FlxGamepad implements IFlxDestroyable
 	
 	private function getAnalogYAxisValue(stick:FlxGamepadAnalogStick):Float
 	{
-		if (stick == null) return 0;
+		if (stick == null)
+			return 0;
 		return if (deadZoneMode == CIRCULAR)
 			getAnalogAxisValueCircular(stick, stick.y);
 		else
@@ -738,7 +740,8 @@ class FlxGamepad implements IFlxDestroyable
 	
 	private function getAnalogAxisValueCircular(stick:FlxGamepadAnalogStick, axisID:Int):Float
 	{
-		if (stick == null) return 0;
+		if (stick == null)
+			return 0;
 		var xAxis = getAxisValue(stick.x);
 		var yAxis = getAxisValue(stick.y);
 		
@@ -799,19 +802,31 @@ class FlxGamepadAnalogStick
 	public var x(default, null):Int;
 	public var y(default, null):Int;
 	
-	/**a raw button input ID, for sending a digital event for "up" alongside the analog event**/
+	/**
+	 * a raw button input ID, for sending a digital event for "up" alongside the analog event
+	 */
 	public var rawUp(default, null):Int = -1;
-	/**a raw button input ID, for sending a digital event for "down" alongside the analog event**/
+	/**
+	 * a raw button input ID, for sending a digital event for "down" alongside the analog event
+	 */
 	public var rawDown(default, null):Int = -1;
-	/**a raw button input ID, for sending a digital event for "left" alongside the analog event**/
+	/**
+	 * a raw button input ID, for sending a digital event for "left" alongside the analog event
+	 */
 	public var rawLeft(default, null):Int = -1;
-	/**a raw button input ID, for sending a digital event for "right" alongside the analog event**/
+	/**
+	 * a raw button input ID, for sending a digital event for "right" alongside the analog event
+	 */
 	public var rawRight(default, null):Int = -1;
 	
-	/**the absolute value the dpad must be greater than before digital inputs are sent**/
+	/**
+	 * the absolute value the dpad must be greater than before digital inputs are sent
+	 */
 	public var digitalThreshold(default, null):Float = 0.5;
 	
-	/**when analog inputs are received, how to process them digitally**/
+	/**
+	 * when analog inputs are received, how to process them digitally
+	 */
 	public var mode(default, null):FlxAnalogToDigitalMode = ONLY_ANALOG;
 	
 	public function new(x:Int, y:Int, ?settings:FlxGamepadAnalogStickSettings)

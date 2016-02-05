@@ -13,12 +13,12 @@ class FlxGamepadAnalogStateList
 	private var gamepad:FlxGamepad;
 	private var status:FlxInputState;
 	
-	public var LEFT_STICK     (get, never):Bool; inline function get_LEFT_STICK()       { return checkXY(FlxGamepadInputID.LEFT_ANALOG_STICK);     }
-	public var LEFT_STICK_X   (get, never):Bool; inline function get_LEFT_STICK_X()     { return checkX(FlxGamepadInputID.LEFT_ANALOG_STICK);      }
-	public var LEFT_STICK_Y   (get, never):Bool; inline function get_LEFT_STICK_Y()     { return checkY(FlxGamepadInputID.LEFT_ANALOG_STICK);      }
-	public var RIGHT_STICK    (get, never):Bool; inline function get_RIGHT_STICK()      { return checkXY(FlxGamepadInputID.RIGHT_ANALOG_STICK);    }
-	public var RIGHT_STICK_X  (get, never):Bool; inline function get_RIGHT_STICK_X()    { return checkX(FlxGamepadInputID.RIGHT_ANALOG_STICK);     }
-	public var RIGHT_STICK_Y  (get, never):Bool; inline function get_RIGHT_STICK_Y()    { return checkY(FlxGamepadInputID.RIGHT_ANALOG_STICK);     }
+	public var LEFT_STICK     (get, never):Bool; inline function get_LEFT_STICK()       { return checkXY(FlxGamepadInputID.LEFT_ANALOG_STICK);  }
+	public var LEFT_STICK_X   (get, never):Bool; inline function get_LEFT_STICK_X()     { return checkX(FlxGamepadInputID.LEFT_ANALOG_STICK);   }
+	public var LEFT_STICK_Y   (get, never):Bool; inline function get_LEFT_STICK_Y()     { return checkY(FlxGamepadInputID.LEFT_ANALOG_STICK);   }
+	public var RIGHT_STICK    (get, never):Bool; inline function get_RIGHT_STICK()      { return checkXY(FlxGamepadInputID.RIGHT_ANALOG_STICK); }
+	public var RIGHT_STICK_X  (get, never):Bool; inline function get_RIGHT_STICK_X()    { return checkX(FlxGamepadInputID.RIGHT_ANALOG_STICK);  }
+	public var RIGHT_STICK_Y  (get, never):Bool; inline function get_RIGHT_STICK_Y()    { return checkY(FlxGamepadInputID.RIGHT_ANALOG_STICK);  }
 	
 	public function new(status:FlxInputState, gamepad:FlxGamepad)
 	{

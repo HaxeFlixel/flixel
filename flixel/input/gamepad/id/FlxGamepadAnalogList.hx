@@ -8,7 +8,6 @@ import flixel.input.gamepad.FlxGamepad.FlxGamepadAnalogStick;
 /**
  * A helper class for gamepad input.
  * Provides optimized gamepad button checking using direct array access.
- * 
  */
 @:keep
 class FlxGamepadAnalogList

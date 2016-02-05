@@ -107,16 +107,16 @@ class MayflashWiiRemoteID
 	{
 		if (attachment == WII_NUNCHUCK || attachment == WII_CLASSIC_CONTROLLER)
 		{
-			     if (index == LEFT_ANALOG_STICK.x) return LEFT_ANALOG_STICK_FAKE_X;
+			if (index == LEFT_ANALOG_STICK.x) return LEFT_ANALOG_STICK_FAKE_X;
 			else if (index == LEFT_ANALOG_STICK.y) return LEFT_ANALOG_STICK_FAKE_Y;
 		}
 		else
 		{
-			     if (index == LEFT_ANALOG_STICK.x) return REMOTE_DPAD_X;
+			if (index == LEFT_ANALOG_STICK.x) return REMOTE_DPAD_X;
 			else if (index == LEFT_ANALOG_STICK.y) return REMOTE_DPAD_Y;
 		}
 		
-		     if (index == RIGHT_ANALOG_STICK.x) return RIGHT_ANALOG_STICK_FAKE_X;
+		if (index == RIGHT_ANALOG_STICK.x) return RIGHT_ANALOG_STICK_FAKE_X;
 		else if (index == RIGHT_ANALOG_STICK.y) return RIGHT_ANALOG_STICK_FAKE_Y;
 		
 		return index;
@@ -243,16 +243,16 @@ class MayflashWiiRemoteID
 	{
 		if (attachment == WII_NUNCHUCK || attachment == WII_CLASSIC_CONTROLLER)
 		{
-			     if (index == LEFT_ANALOG_STICK.x) return LEFT_ANALOG_STICK_FAKE_X;
+			if (index == LEFT_ANALOG_STICK.x) return LEFT_ANALOG_STICK_FAKE_X;
 			else if (index == LEFT_ANALOG_STICK.y) return LEFT_ANALOG_STICK_FAKE_Y;
 		}
 		else
 		{
-			     if (index == LEFT_ANALOG_STICK.x) return REMOTE_DPAD_X;
+			if (index == LEFT_ANALOG_STICK.x) return REMOTE_DPAD_X;
 			else if (index == LEFT_ANALOG_STICK.y) return REMOTE_DPAD_Y;
 		}
 		
-		     if (index == RIGHT_ANALOG_STICK.x) return RIGHT_ANALOG_STICK_FAKE_X;
+		if (index == RIGHT_ANALOG_STICK.x) return RIGHT_ANALOG_STICK_FAKE_X;
 		else if (index == RIGHT_ANALOG_STICK.y) return RIGHT_ANALOG_STICK_FAKE_Y;
 		
 		return index;
