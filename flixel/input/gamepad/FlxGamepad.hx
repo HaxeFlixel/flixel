@@ -116,7 +116,7 @@ class FlxGamepad implements IFlxDestroyable
 		pointer = new FlxGamepadPointerValueList(this);
 		
 		if (Model == null)
-			Model = XBOX360;
+			Model = XINPUT;
 			
 		if (Attachment == null)
 			Attachment = NONE;
@@ -874,7 +874,6 @@ enum FlxGamepadModel
 	OUYA;
 	PS3;
 	PS4;
-	XBOX360;
 	PSVITA;
 	XINPUT;
 	MAYFLASH_WII_REMOTE;
