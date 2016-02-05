@@ -50,7 +50,7 @@ class PS4ID
 	public static inline var DPAD_LEFT:Int = 8;
 	public static inline var DPAD_RIGHT:Int = 9;
 	
-#elseif FLX_GAMEPAD_API		//"next"
+#elseif !FLX_JOYSTICK_API		//"next"
 	
 	#if windows
 		public static inline var X:Int = 6;
@@ -109,7 +109,7 @@ class PS4ID
 	
 	//No linux: On linux the drivers we're testing with just make the PS4 controller look like an XInput device
 	
-#elseif FLX_JOYSTICK_API		//"legacy"
+#elseif			//"legacy"
 	
 	public static inline var SQUARE:Int = 0;
 	public static inline var X:Int = 1;
