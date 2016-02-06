@@ -298,7 +298,8 @@ class FlxGamepadManager implements IFlxInputManager
 			if (gamepad != null)
 			{
 				var value = gamepad.getXAxisRaw(RawAxisID);
-				if (value != 0) return value;
+				if (value != 0)
+					return value;
 			}
 		}
 		
@@ -318,7 +319,8 @@ class FlxGamepadManager implements IFlxInputManager
 			if (gamepad != null)
 			{
 				var value = gamepad.getYAxisRaw(RawAxisID);
-				if (value != 0) return value;
+				if (value != 0)
+					return value;
 			}
 		}
 		

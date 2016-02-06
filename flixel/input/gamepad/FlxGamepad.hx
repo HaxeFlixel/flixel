@@ -790,7 +790,6 @@ enum FlxGamepadModel
 {
 	LOGITECH;
 	OUYA;
-	PS3;
 	PS4;
 	PSVITA;
 	XINPUT;
