@@ -427,7 +427,7 @@ class FlxGamepadManager implements IFlxInputManager
 		}
 	}
 	
-	private function getModelFromFlashDeviceName(str:String):FlxGamepadModel
+	private function getModelFromFlashDeviceName(name:String):FlxGamepadModel
 	{
 		//If we're actually running on console hardware, we know what controller hardware you're using
 		//TODO: add support for multiple controller types on console that support that (WiiU for instance)
@@ -443,15 +443,16 @@ class FlxGamepadManager implements IFlxInputManager
 		//"Sony PLAYSTATION(R)3 Controller" is the PS3 controller, but that is not supported as its PC drivers are terrible,
 		//and the most popular tools just turn it into a 360 controller
 		
-		str = str.toLowerCase().remove("-").remove("_");
-		return if (str.contains("ouya")) OUYA;                                      //"OUYA Game Controller"
-			else if (str.contains("wireless controller") || str.contains("ps4")) PS4; //"Wireless Controller" or "PS4 controller"
-			else if (str.contains("logitech")) LOGITECH;
-			else if (str.contains("xinput")) XINPUT;
-			else if (str.contains("nintendo rvlcnt01tr")) WII_REMOTE;                  //WiiRemote with motion plus
-			else if (str.contains("nintendo rvlcnt01")) WII_REMOTE;                    //WiiRemote w/o  motion plus
-			else if (str.contains("mayflash wiimote pc adapter")) MAYFLASH_WII_REMOTE;  //WiiRemote paired to MayFlash DolphinBar (with or w/o motion plus)
-			else if (str.contains("mfi")) MFI;
+		name = name.toLowerCase().remove("-").remove("_");
+		return if (name.contains("ouya")) OUYA;                                      //"OUYA Game Controller"
+			else if (name.contains("wireless controller") || name.contains("ps4")) PS4; //"Wireless Controller" or "PS4 controller"
+			else if (name.contains("logitech")) LOGITECH;
+			else if (name.contains("xbox") && name.contains("360")) XINPUT;
+			else if (name.contains("xinput")) XINPUT;
+			else if (name.contains("nintendo rvlcnt01tr")) WII_REMOTE;                  //WiiRemote with motion plus
+			else if (name.contains("nintendo rvlcnt01")) WII_REMOTE;                    //WiiRemote w/o  motion plus
+			else if (name.contains("mayflash wiimote pc adapter")) MAYFLASH_WII_REMOTE;  //WiiRemote paired to MayFlash DolphinBar (with or w/o motion plus)
+			else if (name.contains("mfi")) MFI;
 			else XINPUT; //default
 	}
 	
