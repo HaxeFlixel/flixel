@@ -515,98 +515,73 @@ class FlxGamepadManager implements IFlxInputManager
 		gamepad.ball.y = (Math.abs(FlashEvent.y) < gamepad.deadZone) ? 0 : FlashEvent.y;
 	}
 	
-	private function handleHatMove(FlashEvent:JoystickEvent):Void
+	private function handleHatMove(event:JoystickEvent):Void
 	{
-		var gamepad:FlxGamepad = createByID(FlashEvent.device);
+		var gamepad:FlxGamepad = createByID(event.device);
 		
-		var oldx = gamepad.hat.x;
-		var oldy = gamepad.hat.y;
+		var oldX = gamepad.hat.x;
+		var oldY = gamepad.hat.y;
 		
-		var newx = (Math.abs(FlashEvent.x) < gamepad.deadZone) ? 0 : FlashEvent.x;
-		var newy = (Math.abs(FlashEvent.y) < gamepad.deadZone) ? 0 : FlashEvent.y;
+		var newX = (Math.abs(event.x) < gamepad.deadZone) ? 0 : event.x;
+		var newY = (Math.abs(event.y) < gamepad.deadZone) ? 0 : event.y;
 		
-		gamepad.hat.x = newx;
-		gamepad.hat.y = newy;
+		gamepad.hat.x = newX;
+		gamepad.hat.y = newY;
 		
-		#if FLX_JOYSTICK_API
-		var newType:String = "";
-		var newId:Int = 0;
-		
-		var change = false;
-		
-		//We see if there's been a change so we can properly set "justPressed"/"justReleased", etc.
-		if (oldx != newx)
-		{
-			change = true;
-			
-			if (oldx == -1)
-			{
-				newType = JOYSTICK_BUTTON_UP;
-				newId = gamepad.mapping.getRawID(FlxGamepadInputID.DPAD_LEFT);
-			}
-			else if (oldx == 1)
-			{
-				newType = JOYSTICK_BUTTON_UP;
-				newId = gamepad.mapping.getRawID(FlxGamepadInputID.DPAD_RIGHT);
-			}
-			
-			if (newx == -1)
-			{
-				newType = JOYSTICK_BUTTON_DOWN;
-				newId = gamepad.mapping.getRawID(FlxGamepadInputID.DPAD_LEFT);
-			}
-			else if (newx == 1)
-			{
-				newType = JOYSTICK_BUTTON_DOWN;
-				newId = gamepad.mapping.getRawID(FlxGamepadInputID.DPAD_RIGHT);
-			}
-		}
-		
-		if (oldy != newy)
-		{
-			change = true;
-			
-			if (oldy == -1)
-			{
-				newType = JOYSTICK_BUTTON_UP;
-				newId = gamepad.mapping.getRawID(FlxGamepadInputID.DPAD_UP);
-			}
-			else if (oldy == 1)
-			{
-				newType = JOYSTICK_BUTTON_UP;
-				newId = gamepad.mapping.getRawID(FlxGamepadInputID.DPAD_DOWN);
-			}
-			
-			if (newy == -1)
-			{
-				newType = JOYSTICK_BUTTON_DOWN;
-				newId = gamepad.mapping.getRawID(FlxGamepadInputID.DPAD_UP);
-			}
-			else if (newy == 1)
-			{
-				newType = JOYSTICK_BUTTON_DOWN;
-				newId = gamepad.mapping.getRawID(FlxGamepadInputID.DPAD_DOWN);
-			}
-		}
-		
-		//Send a fake joystick button event that corresponds to the DPAD codes
-		if (change && newType != "")
-		{
-			var newEvent = new JoystickEvent(newType, FlashEvent.bubbles, FlashEvent.cancelable,
-				FlashEvent.device, newId, FlashEvent.x, FlashEvent.y, FlashEvent.z);
-			
-			if (newType == JOYSTICK_BUTTON_UP)
-			{
-				handleButtonUp(newEvent);
-			}
-			else if (newType == JOYSTICK_BUTTON_DOWN)
-			{
-				handleButtonDown(newEvent);
-			}
-		}
-		#end
+		checkDpadAxisChange(event, oldX, newX, FlxGamepadInputID.DPAD_LEFT, FlxGamepadInputID.DPAD_RIGHT);
+		checkDpadAxisChange(event, oldY, newY, FlxGamepadInputID.DPAD_UP, FlxGamepadInputID.DPAD_DOWN);
 	}
-
+	
+	private function checkDpadAxisChange(event:JoystickEvent, oldValue:Float, newValue:Float,
+		negativeID:FlxGamepadInputID, positiveID:FlxGamepadInputID):Void
+	{
+		if (oldValue == newValue)
+			return;
+		
+		var type = null;
+		var id = 0;
+			
+		if (oldValue == -1)
+		{
+			type = JOYSTICK_BUTTON_UP;
+			id = negativeID;
+		}
+		else if (oldValue == 1)
+		{
+			type = JOYSTICK_BUTTON_UP;
+			id = positiveID;
+		}
+		
+		if (newValue == -1)
+		{
+			type = JOYSTICK_BUTTON_DOWN;
+			id = negativeID;
+		}
+		else if (newValue == 1)
+		{
+			type = JOYSTICK_BUTTON_DOWN;
+			id = positiveID;
+		}
+		
+		sendFakeDpadEvent(event, type, id);
+	}
+	
+	private function sendFakeDpadEvent(event:JoystickEvent, type:String, dpadID:FlxGamepadInputID):Void
+	{
+		var id = createByID(event.device).mapping.getRawID(dpadID);
+		var newEvent = new JoystickEvent(type, event.bubbles, event.cancelable,
+			event.device, id, event.x, event.y, event.z);
+		
+		if (type == JOYSTICK_BUTTON_UP)
+		{
+			handleButtonUp(newEvent);
+		}
+		else if (type == JOYSTICK_BUTTON_DOWN)
+		{
+			handleButtonDown(newEvent);
+		}
+	}
+	
 	private function handleDeviceAdded(event:JoystickEvent):Void
 	{
 		createByID(event.device, getModelFromJoystick(event.x));
