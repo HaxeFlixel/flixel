@@ -6,6 +6,7 @@ import flixel.input.gamepad.FlxGamepad;
 import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.util.FlxDestroyUtil;
 using flixel.util.FlxStringUtil;
+using StringTools;
 
 #if FLX_JOYSTICK_API
 import openfl.events.JoystickEvent;
@@ -428,7 +429,7 @@ class FlxGamepadManager implements IFlxInputManager
 	private function getModelFromFlashDeviceName(str:String):FlxGamepadModel
 	{
 		//If we're actually running on console hardware, we know what controller hardware you're using
-		//TODO: add support for multiple controller types on console that support that (wiiu for instance)
+		//TODO: add support for multiple controller types on console that support that (WiiU for instance)
 		
 		#if vita
 			return PSVITA;
@@ -438,15 +439,7 @@ class FlxGamepadManager implements IFlxInputManager
 			return XINPUT;
 		#end
 		
-		str = str.toLowerCase();
-		var strip = ["-", "_"];
-		for (s in strip)
-		{
-			while (str.indexOf(s) != -1)
-			{
-				str = StringTools.replace(str, s, "");
-			}
-		}
+		str = str.toLowerCase().replace("-", "").replace("_", "");
 		
 		//"Sony PLAYSTATION(R)3 Controller" is the PS3 controller, but that is not supported as its PC drivers are terrible,
 		//and the most popular tools just turn it into a 360 controller
