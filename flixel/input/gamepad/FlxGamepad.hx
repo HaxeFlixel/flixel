@@ -55,7 +55,7 @@ class FlxGamepad implements IFlxDestroyable
 	 * In the future, this could also be used for any attachment that exposes new API features
 	 * to the controller, e.g. a microphone or headset
 	 */
-	public var attachment(default, set):FlxGamepadModelAttachment;
+	public var attachment(default, set):FlxGamepadAttachment;
 	
 	/**
 	 * The gamepad model this gamepad has been identified as.
@@ -115,7 +115,7 @@ class FlxGamepad implements IFlxDestroyable
 	
 	private var buttons:Array<FlxGamepadButton> = [];
 	
-	public function new(ID:Int, Manager:FlxGamepadManager, ?Model:FlxGamepadModel, ?Attachment:FlxGamepadModelAttachment) 
+	public function new(ID:Int, Manager:FlxGamepadManager, ?Model:FlxGamepadModel, ?Attachment:FlxGamepadAttachment) 
 	{
 		id = ID;
 		
@@ -746,7 +746,7 @@ class FlxGamepad implements IFlxDestroyable
 		return model;
 	}
 	
-	private function set_attachment(Attachment:FlxGamepadModelAttachment):FlxGamepadModelAttachment
+	private function set_attachment(Attachment:FlxGamepadAttachment):FlxGamepadAttachment
 	{
 		attachment = Attachment;
 		mapping.attachment = Attachment;
@@ -798,7 +798,7 @@ enum FlxGamepadModel
 	MFI;
 }
 
-enum FlxGamepadModelAttachment
+enum FlxGamepadAttachment
 {
 	WII_NUNCHUCK;
 	WII_CLASSIC_CONTROLLER;

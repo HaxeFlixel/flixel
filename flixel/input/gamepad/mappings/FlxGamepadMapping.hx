@@ -1,7 +1,7 @@
 package flixel.input.gamepad.mappings;
 
 import flixel.input.gamepad.FlxGamepad.FlxGamepadModel;
-import flixel.input.gamepad.FlxGamepad.FlxGamepadModelAttachment;
+import flixel.input.gamepad.FlxGamepad.FlxGamepadAttachment;
 import flixel.input.gamepad.FlxGamepadAnalogStick;
 import flixel.input.gamepad.FlxGamepadInputID;
 
@@ -18,11 +18,11 @@ class FlxGamepadMapping
 	public var rightStick:FlxGamepadAnalogStick;
 	
 	@:allow(flixel.input.gamepad.FlxGamepad)
-	private var attachment(default, set):FlxGamepadModelAttachment = NONE;
+	private var attachment(default, set):FlxGamepadAttachment = NONE;
 	
 	private var manufacturer:Manufacturer;
 	
-	public function new(?attachment:FlxGamepadModelAttachment) 
+	public function new(?attachment:FlxGamepadAttachment) 
 	{
 		if (attachment != null)
 			this.attachment = attachment;
@@ -99,7 +99,7 @@ class FlxGamepadMapping
 	}
 	#end
 	
-	private function set_attachment(attachment:FlxGamepadModelAttachment):FlxGamepadModelAttachment
+	private function set_attachment(attachment:FlxGamepadAttachment):FlxGamepadAttachment
 	{
 		return this.attachment = attachment;
 	}
