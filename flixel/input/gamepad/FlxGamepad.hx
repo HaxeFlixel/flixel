@@ -743,9 +743,6 @@ class FlxGamepad implements IFlxDestroyable
 		model = Model;
 		mapping = createMappingForModel(model);
 		
-		motion.isSupported = mapping.supportsMotion;
-		pointer.isSupported = mapping.supportsPointer;
-		
 		return model;
 	}
 	

@@ -14,7 +14,7 @@ class FlxGamepadPointerValueList
 	 * whether or not the current gamepad model supports any pointer features (IR Camera, touch surface, etc)
 	 */
 	@:allow(flixel.input.gamepad.FlxGamepad)
-	public var isSupported(default, null):Bool = true;
+	public var isSupported(get, never):Bool;
 	
 	/**
 	 * horizontal position (0.0-1.0) on the touch-surface or pointer-space
@@ -36,5 +36,10 @@ class FlxGamepadPointerValueList
 		if (!isSupported)
 			return 0;
 		return gamepad.getAxis(id);
+	}
+	
+	private inline function get_isSupported():Bool
+	{
+		return gamepad.mapping.supportsPointer;
 	}
 }

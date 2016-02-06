@@ -15,7 +15,7 @@ class FlxGamepadMotionValueList
 	/**
 	 * whether or not the current gamepad model supports any motion features
 	 */
-	public var isSupported(default, null):Bool = true;
+	public var isSupported(get, never):Bool;
 	
 	/**
 	 * analog value (-1.0 to +1.0) tilting towards or away from the ceiling (think "look up", "look down")
@@ -36,5 +36,10 @@ class FlxGamepadMotionValueList
 		if (!isSupported)
 			return 0;
 		return gamepad.getAxis(id);
+	}
+	
+	private inline function get_isSupported():Bool
+	{
+		return gamepad.mapping.supportsMotion;
 	}
 }
