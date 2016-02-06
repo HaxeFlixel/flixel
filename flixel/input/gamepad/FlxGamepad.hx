@@ -30,18 +30,30 @@ class FlxGamepad implements IFlxDestroyable
 {
 	public var id(default, null):Int;
 	
+	#if FLX_GAMEINPUT_API
 	/**
-	 * The mapping that is used to map the raw hardware IDs to the values in `FlxGamepdInputID`.
-	 * Determined by the current `model`.
-	 * It's also possible to create a custom mapping and assign it here.
+	 * The device name. Used to determine the `model`.
 	 */
-	public var mapping:FlxGamepadMapping;
+	public var name(get, never):String;
+	#end
 	
 	/**
 	 * The gamepad model used for the mapping of the IDs.
 	 * Defaults to `detectedModel`, but can be changed manually.
 	 */
 	public var model(default, set):FlxGamepadModel;
+	
+	/**
+	 * The gamepad model this gamepad has been identified as.
+	 */
+	public var detectedModel(default, null):FlxGamepadModel;
+	
+	/**
+	 * The mapping that is used to map the raw hardware IDs to the values in `FlxGamepdInputID`.
+	 * Determined by the current `model`.
+	 * It's also possible to create a custom mapping and assign it here.
+	 */
+	public var mapping:FlxGamepadMapping;
 	
 	public var connected(default, null):Bool = true;
 	
@@ -56,12 +68,7 @@ class FlxGamepad implements IFlxDestroyable
 	 * to the controller, e.g. a microphone or headset
 	 */
 	public var attachment(default, set):FlxGamepadAttachment;
-	
-	/**
-	 * The gamepad model this gamepad has been identified as.
-	 */
-	public var detectedModel(default, null):FlxGamepadModel;
-	
+
 	/**
 	 * Gamepad deadzone. The lower, the more sensitive the gamepad.
 	 * Should be between 0.0 and 1.0. Defaults to 0.15.
@@ -739,6 +746,15 @@ class FlxGamepad implements IFlxDestroyable
 			case _: new XInputMapping(attachment);
 		}
 	}
+	
+	#if FLX_GAMEINPUT_API
+	private function get_name():String
+	{
+		if (_device == null)
+			return null;
+		return _device.name;
+	}
+	#end
 	
 	private function set_model(Model:FlxGamepadModel):FlxGamepadModel
 	{
