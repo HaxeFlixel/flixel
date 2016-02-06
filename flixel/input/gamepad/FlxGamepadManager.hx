@@ -205,13 +205,9 @@ class FlxGamepadManager implements IFlxInputManager
 	 * @param 	ButtonID  The button id (from 0 to 7).
 	 * @return 	Whether the button is pressed
 	 */
-	public function anyPressed(buttonID:FlxGamepadInputID):Bool
+	public inline function anyPressed(buttonID:FlxGamepadInputID):Bool
 	{
-		for (gamepad in _gamepads)
-			if (gamepad != null && gamepad.checkStatus(buttonID, PRESSED))
-				return true;
-		
-		return false;
+		return anyHasState(buttonID, FlxInputState.PRESSED);
 	}
 
 	/**
@@ -220,13 +216,9 @@ class FlxGamepadManager implements IFlxInputManager
 	 * @param 	ButtonID 	The button id (from 0 to 7).
 	 * @return 	Whether the button was just pressed
 	 */
-	public function anyJustPressed(buttonID:FlxGamepadInputID):Bool
+	public inline function anyJustPressed(buttonID:FlxGamepadInputID):Bool
 	{
-		for (gamepad in _gamepads)
-			if (gamepad != null && gamepad.checkStatus(buttonID, JUST_PRESSED))
-				return true;
-		
-		return false;
+		return anyHasState(buttonID, FlxInputState.JUST_PRESSED);
 	}
 
 	/**
@@ -235,12 +227,17 @@ class FlxGamepadManager implements IFlxInputManager
 	 * @param 	ButtonID 	The Button id (from 0 to 7).
 	 * @return 	Whether the button is just released.
 	 */
-	public function anyJustReleased(buttonID:FlxGamepadInputID):Bool
+	public inline function anyJustReleased(buttonID:FlxGamepadInputID):Bool
+	{
+		return anyHasState(buttonID, FlxInputState.JUST_RELEASED);
+	}
+	
+	private function anyHasState(buttonID:FlxGamepadInputID, state:FlxInputState):Bool
 	{
 		for (gamepad in _gamepads)
-			if (gamepad != null && gamepad.checkStatus(buttonID, JUST_RELEASED))
+			if (gamepad != null && gamepad.checkStatus(buttonID, state))
 				return true;
-		
+
 		return false;
 	}
 	
