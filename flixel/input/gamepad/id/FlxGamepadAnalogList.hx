@@ -18,8 +18,8 @@ class FlxGamepadAnalogList
 	
 	public function new(gamepad:FlxGamepad)
 	{
-		value        = new FlxGamepadAnalogValueList(gamepad);
-		justMoved    = new FlxGamepadAnalogStateList(JUST_PRESSED,  gamepad);
+		value = new FlxGamepadAnalogValueList(gamepad);
+		justMoved = new FlxGamepadAnalogStateList(JUST_PRESSED, gamepad);
 		justReleased = new FlxGamepadAnalogStateList(JUST_RELEASED, gamepad);
 	}
 }

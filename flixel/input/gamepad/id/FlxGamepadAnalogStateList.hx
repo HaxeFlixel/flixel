@@ -28,13 +28,12 @@ class FlxGamepadAnalogStateList
 	
 	/**
 	 * Checks if the entire stick itself is in the given state
-	 * @param	id
-	 * @return
 	 */
 	private function checkXY(id:FlxGamepadInputID):Bool
 	{
-		var stick = gamepad.getRawAnalogStick(id);
-		if (stick == null) return false;
+		var stick = gamepad.mapping.getAnalogStick(id);
+		if (stick == null)
+			return false;
 		
 		//no matter what status we're checking for, we do two tests: 
 			//easy : both values are exactly the same (both JUST_PRESSED, both JUST_RELEASED)
@@ -53,9 +52,9 @@ class FlxGamepadAnalogStateList
 		
 		if (xVal)
 		{
-			var yReleased     = checkRaw(stick.y, RELEASED);
+			var yReleased = checkRaw(stick.y, RELEASED);
 			var yJustReleased = checkRaw(stick.y, JUST_RELEASED);
-			var yJustPressed  = checkRaw(stick.y, JUST_PRESSED);
+			var yJustPressed = checkRaw(stick.y, JUST_PRESSED);
 			if (yReleased || yJustReleased) 
 			{
 				return true;
@@ -64,9 +63,9 @@ class FlxGamepadAnalogStateList
 		
 		if (yVal)
 		{
-			var xReleased     = checkRaw(stick.x, RELEASED);
+			var xReleased = checkRaw(stick.x, RELEASED);
 			var xJustReleased = checkRaw(stick.x, JUST_RELEASED);
-			var xJustPressed  = checkRaw(stick.x, JUST_PRESSED);
+			var xJustPressed = checkRaw(stick.x, JUST_PRESSED);
 			if (xReleased || xJustReleased)
 			{
 				return true;
@@ -78,15 +77,17 @@ class FlxGamepadAnalogStateList
 	
 	private inline function checkX(id:FlxGamepadInputID):Bool
 	{
-		var stick = gamepad.getRawAnalogStick(id);
-		if (stick == null) return false;
+		var stick = gamepad.mapping.getAnalogStick(id);
+		if (stick == null)
+			return false;
 		return checkRaw(stick.x, status);
 	}
 	
 	private inline function checkY(id:FlxGamepadInputID):Bool
 	{
-		var stick = gamepad.getRawAnalogStick(id);
-		if (stick == null) return false;
+		var stick = gamepad.mapping.getAnalogStick(id);
+		if (stick == null)
+			return false;
 		return checkRaw(stick.y, status);
 	}
 	
@@ -95,7 +96,7 @@ class FlxGamepadAnalogStateList
 		#if FLX_JOYSTICK_API
 		//in legacy this is the axis index and not the RawID, 
 		//so we do a reverse lookup to get the rawID for a "fake" button
-		RawID = gamepad.axisIndexToRawID(RawID);
+		RawID = gamepad.mapping.axisIndexToRawID(RawID);
 		#end
 		return gamepad.checkStatusRaw(RawID, Status);
 	}

@@ -525,7 +525,7 @@ class FlxGamepadManager implements IFlxInputManager
 		for (i in 0...newAxis.length)
 		{
 			var isForStick = gamepad.isAxisForAnalogStick(i);
-			var isForMotion = gamepad.isAxisForMotion(i);
+			var isForMotion = gamepad.mapping.isAxisForMotion(i);
 			if (!isForStick && !isForMotion)
 			{
 				// in legacy this returns a (-1,1) range, but in flash/next it
@@ -548,13 +548,13 @@ class FlxGamepadManager implements IFlxInputManager
 					//pressed/released for digital LEFT/UP
 					if (newVal < neg && oldVal >= neg)
 					{
-						     if (i == stick.x) digitalButton = stick.rawLeft;
+						if (i == stick.x) digitalButton = stick.rawLeft;
 						else if (i == stick.y) digitalButton = stick.rawUp;
 						handleButtonDown(new JoystickEvent(JoystickEvent.BUTTON_DOWN, FlashEvent.bubbles, FlashEvent.cancelable, FlashEvent.device, digitalButton));
 					}
 					else if (newVal >= neg && oldVal < neg)
 					{
-						     if (i == stick.x) digitalButton = stick.rawLeft;
+						if (i == stick.x) digitalButton = stick.rawLeft;
 						else if (i == stick.y) digitalButton = stick.rawUp;
 						handleButtonUp(new JoystickEvent(JoystickEvent.BUTTON_UP, FlashEvent.bubbles, FlashEvent.cancelable, FlashEvent.device, digitalButton));
 					}
@@ -562,13 +562,13 @@ class FlxGamepadManager implements IFlxInputManager
 					//pressed/released for digital RIGHT/DOWN
 					if (newVal > pos && oldVal <= pos)
 					{
-						     if (i == stick.x) digitalButton = stick.rawRight;
+						if (i == stick.x) digitalButton = stick.rawRight;
 						else if (i == stick.y) digitalButton = stick.rawDown;
 						handleButtonDown(new JoystickEvent(JoystickEvent.BUTTON_DOWN, FlashEvent.bubbles, FlashEvent.cancelable, FlashEvent.device, digitalButton));
 					}
 					else if (newVal <= pos && oldVal > pos)
 					{
-						     if (i == stick.x) digitalButton = stick.rawRight;
+						if (i == stick.x) digitalButton = stick.rawRight;
 						else if (i == stick.y) digitalButton = stick.rawDown;
 						handleButtonUp(new JoystickEvent(JoystickEvent.BUTTON_UP, FlashEvent.bubbles, FlashEvent.cancelable, FlashEvent.device, digitalButton));
 					}
@@ -620,23 +620,23 @@ class FlxGamepadManager implements IFlxInputManager
 			if (oldx == -1)
 			{
 				newType = JOYSTICK_BUTTON_UP;
-				newId = gamepad.getRawID(FlxGamepadInputID.DPAD_LEFT);
+				newId = gamepad.mapping.getRawID(FlxGamepadInputID.DPAD_LEFT);
 			}
 			else if (oldx == 1)
 			{
 				newType = JOYSTICK_BUTTON_UP;
-				newId = gamepad.getRawID(FlxGamepadInputID.DPAD_RIGHT);
+				newId = gamepad.mapping.getRawID(FlxGamepadInputID.DPAD_RIGHT);
 			}
 			
 			if (newx == -1)
 			{
 				newType = JOYSTICK_BUTTON_DOWN;
-				newId = gamepad.getRawID(FlxGamepadInputID.DPAD_LEFT);
+				newId = gamepad.mapping.getRawID(FlxGamepadInputID.DPAD_LEFT);
 			}
 			else if (newx == 1)
 			{
 				newType = JOYSTICK_BUTTON_DOWN;
-				newId = gamepad.getRawID(FlxGamepadInputID.DPAD_RIGHT);
+				newId = gamepad.mapping.getRawID(FlxGamepadInputID.DPAD_RIGHT);
 			}
 		}
 		
@@ -647,23 +647,23 @@ class FlxGamepadManager implements IFlxInputManager
 			if (oldy == -1)
 			{
 				newType = JOYSTICK_BUTTON_UP;
-				newId = gamepad.getRawID(FlxGamepadInputID.DPAD_UP);
+				newId = gamepad.mapping.getRawID(FlxGamepadInputID.DPAD_UP);
 			}
 			else if (oldy == 1)
 			{
 				newType = JOYSTICK_BUTTON_UP;
-				newId = gamepad.getRawID(FlxGamepadInputID.DPAD_DOWN);
+				newId = gamepad.mapping.getRawID(FlxGamepadInputID.DPAD_DOWN);
 			}
 			
 			if (newy == -1)
 			{
 				newType = JOYSTICK_BUTTON_DOWN;
-				newId = gamepad.getRawID(FlxGamepadInputID.DPAD_UP);
+				newId = gamepad.mapping.getRawID(FlxGamepadInputID.DPAD_UP);
 			}
 			else if (newy == 1)
 			{
 				newType = JOYSTICK_BUTTON_DOWN;
-				newId = gamepad.getRawID(FlxGamepadInputID.DPAD_DOWN);
+				newId = gamepad.mapping.getRawID(FlxGamepadInputID.DPAD_DOWN);
 			}
 		}
 		

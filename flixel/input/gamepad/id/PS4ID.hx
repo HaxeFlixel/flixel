@@ -4,13 +4,14 @@ import flixel.input.gamepad.FlxGamepad;
 
 /**
  * IDs for PlayStation 4 controllers
+ * 
  *-------
  * NOTES
  *-------
  *
  * WINDOWS: seems to work fine without any special drivers on Windows 10 (and I seem to recall the same on Windows 7).
  * DS4Windows is the popular 3rd-party utility here, but it will make the PS4 controller look like a 360 controller, which
- * means that it will be indistinguishable from an XInput device to flixel. (DS4Windows: http://ds4windows.com)
+ * means that it will be indistinguishable from an XInput device to flixel (DS4Windows: http://ds4windows.com).
  *
  * LINUX: the PS4 controller will be detected as an XInput device when using xpad (see notes in XInputID.hx)
  * 
@@ -19,12 +20,6 @@ import flixel.input.gamepad.FlxGamepad;
  */
 class PS4ID
 {
-	public static inline var SUPPORTS_MOTION = false;		//TODO: on a native PS4 both should be set to true, but on PC they're false
-	public static inline var SUPPORTS_POINTER = false;
-	
-	public static inline function getFlipAxis(AxisID:Int):Int { return 1; }
-	public static function isAxisForMotion(ID:FlxGamepadInputID):Bool { return false; }
-	
 #if flash
 	
 	public static inline var SQUARE:Int = 10;
@@ -50,7 +45,7 @@ class PS4ID
 	public static inline var DPAD_LEFT:Int = 8;
 	public static inline var DPAD_RIGHT:Int = 9;
 	
-#elseif !FLX_JOYSTICK_API		//"next"
+#elseif !FLX_JOYSTICK_API //"next"
 	
 	#if (html5 || windows || mac || linux)
 	
@@ -85,7 +80,7 @@ class PS4ID
 	
 	#end
 	
-#else			//"legacy"
+#else //"legacy"
 	
 	public static inline var SQUARE:Int = 0;
 	public static inline var X:Int = 1;
@@ -101,7 +96,6 @@ class PS4ID
 	public static inline var PS:Int = 12;
 	public static inline var TOUCHPAD_CLICK:Int = 13;
 	
-	//Axis ID's
 	public static inline var L2:Int = 3;
 	public static inline var R2:Int = 4;
 	
@@ -113,27 +107,6 @@ class PS4ID
 	public static inline var DPAD_RIGHT:Int = 16;
 	public static inline var DPAD_DOWN:Int = 17;
 	public static inline var DPAD_UP:Int = 18;
-	
-	//Analog stick and trigger values overlap with regular buttons so we remap to "fake" button ID's
-	public static function axisIndexToRawID(index:Int):Int
-	{
-		return if (index == LEFT_ANALOG_STICK.x) LEFT_ANALOG_STICK_FAKE_X;
-			else if (index == LEFT_ANALOG_STICK.y) LEFT_ANALOG_STICK_FAKE_Y;
-			else if (index == RIGHT_ANALOG_STICK.x) RIGHT_ANALOG_STICK_FAKE_X;
-			else if (index == RIGHT_ANALOG_STICK.y) RIGHT_ANALOG_STICK_FAKE_Y;
-			else if (index == L2) LEFT_TRIGGER_FAKE;
-			else if (index == R2) RIGHT_TRIGGER_FAKE;
-			else index;
-	}
-	
-	//"fake" IDs
-	public static inline var LEFT_ANALOG_STICK_FAKE_X:Int = 21;
-	public static inline var LEFT_ANALOG_STICK_FAKE_Y:Int = 22;
-	
-	public static inline var RIGHT_ANALOG_STICK_FAKE_X:Int = 23;
-	public static inline var RIGHT_ANALOG_STICK_FAKE_Y:Int = 24;
-	
-	public static inline var LEFT_TRIGGER_FAKE:Int = 25;
-	public static inline var RIGHT_TRIGGER_FAKE:Int = 26;
+
 #end
 }
