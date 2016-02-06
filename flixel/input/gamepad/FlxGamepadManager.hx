@@ -389,7 +389,7 @@ class FlxGamepadManager implements IFlxInputManager
 			else if (name.contains("nintendo rvlcnt01")) WII_REMOTE;                    //WiiRemote w/o  motion plus
 			else if (name.contains("mayflash wiimote pc adapter")) MAYFLASH_WII_REMOTE;  //WiiRemote paired to MayFlash DolphinBar (with or w/o motion plus)
 			else if (name.contains("mfi")) MFI;
-			else XINPUT; //default
+			else UNKNOWN;
 	}
 	
 	private function removeGamepad(Device:GameInputDevice):Void

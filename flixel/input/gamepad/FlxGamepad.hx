@@ -798,6 +798,7 @@ enum FlxGamepadModel
 	MAYFLASH_WII_REMOTE;
 	WII_REMOTE;
 	MFI;
+	UNKNOWN;
 }
 
 enum FlxGamepadAttachment
