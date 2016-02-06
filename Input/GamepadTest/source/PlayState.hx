@@ -48,12 +48,12 @@ class PlayState extends FlxState
 		add(attachmentLabel = addLabel(modelDropDownLoc.x, modelDropDownLoc.y - 45, "Attachment:"));
 		
 		add(attachmentDropDown = new FlxUIDropDownMenu(modelDropDownLoc.x, modelDropDownLoc.y - 30,
-			FlxUIDropDownMenu.makeStrIdLabelArray(FlxGamepadModelAttachment.getConstructors()),
+			FlxUIDropDownMenu.makeStrIdLabelArray(FlxGamepadAttachment.getConstructors()),
 			function (attachment)
 			{
 				var gamepad = FlxG.gamepads.lastActive;
 				if (gamepad != null)
-					gamepad.attachment = FlxGamepadModelAttachment.createByName(attachment);
+					gamepad.attachment = FlxGamepadAttachment.createByName(attachment);
 				updateConnectedGamepads(true);
 			},
 			new FlxUIDropDownHeader(150)));
