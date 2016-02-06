@@ -273,7 +273,7 @@ class FlxGamepad implements IFlxDestroyable
 	}
 	
 	/**
-	 * Check the status of a raw button ID (like XBox360ID.A).
+	 * Check the status of a raw button ID (like XInputID.A).
 	 * 
 	 * @param	RawID	Index into buttons array.
 	 * @param	Status	The key state to check for
@@ -519,7 +519,7 @@ class FlxGamepad implements IFlxDestroyable
 	
 	/**
 	 * Gets the value of the specified axis using the raw ID - 
-	 * use this only for things like Xbox360ID.LEFT_TRIGGER,
+	 * use this only for things like XInputID.LEFT_TRIGGER,
 	 * use getXAxis() / getYAxis() for analog sticks!
 	 */
 	public inline function getAxisRaw(RawAxisID:Int):Float

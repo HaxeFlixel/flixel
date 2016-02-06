@@ -437,15 +437,12 @@ class FlxGamepadManager implements IFlxInputManager
 		#elseif xbox1
 			return XINPUT;
 		#end
-		
-		str = str.toLowerCase().remove("-").remove("_");
-		
+
 		//"Sony PLAYSTATION(R)3 Controller" is the PS3 controller, but that is not supported as its PC drivers are terrible,
 		//and the most popular tools just turn it into a 360 controller
 		
-		// needs to be checked even though it's default to not mistake it for XInput on flash 
-		return if (str.contains("xbox") && str.contains("360")) XINPUT;
-			else if (str.contains("ouya")) OUYA;                                      //"OUYA Game Controller"
+		str = str.toLowerCase().remove("-").remove("_");
+		return if (str.contains("ouya")) OUYA;                                      //"OUYA Game Controller"
 			else if (str.contains("wireless controller") || str.contains("ps4")) PS4; //"Wireless Controller" or "PS4 controller"
 			else if (str.contains("logitech")) LOGITECH;
 			else if (str.contains("xinput")) XINPUT;
