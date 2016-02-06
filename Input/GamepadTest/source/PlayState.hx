@@ -16,6 +16,7 @@ using flixel.util.FlxArrayUtil;
 
 class PlayState extends FlxState
 {
+	var nameLabel:FlxText;
 	var modelDropDown:FlxUIDropDownMenu;
 	var attachmentDropDown:FlxUIDropDownMenu;
 	var attachmentLabel:FlxText;
@@ -38,6 +39,7 @@ class PlayState extends FlxState
 		showAttachment(false);
 		
 		createDeadZoneControls();
+		nameLabel = addLabel(175, 418);
 		
 		createDisconnectedOverlay();
 		add(connectedGamepads = new FlxUIRadioGroup(500, 10, null, null, null, 25, 125, 25, 125));
@@ -109,7 +111,7 @@ class PlayState extends FlxState
 		add(disconnectedOverlay);
 	}
 	
-	function addLabel(x:Float, y:Float, text:String):FlxText
+	function addLabel(x:Float, y:Float, ?text:String):FlxText
 	{
 		var label = new FlxText(x, y, 0, text);
 		label.color = FlxColor.BLACK;
@@ -144,6 +146,10 @@ class PlayState extends FlxState
 		gamepad.deadZone = deadZoneStepper.value;
 		deadZoneModeDropDown.selectedLabel = gamepad.deadZoneMode.getName();
 		connectedGamepads.selectedIndex = getGamepadIndex(gamepad);
+		
+		#if FLX_GAMEINPUT_API
+		nameLabel.text = 'Name: "${gamepad.name}"';
+		#end
 	}
 	
 	function setEnabled(enabled:Bool)
