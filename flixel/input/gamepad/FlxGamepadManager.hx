@@ -421,13 +421,13 @@ class FlxGamepadManager implements IFlxInputManager
 			
 			if (id >= 0)
 			{
-				var gamepad:FlxGamepad = createByID(id, getModelFromFlashDeviceName(Device.name));
+				var gamepad:FlxGamepad = createByID(id, getModelFromDeviceName(Device.name));
 				gamepad._device = Device;
 			}
 		}
 	}
 	
-	private function getModelFromFlashDeviceName(name:String):FlxGamepadModel
+	private function getModelFromDeviceName(name:String):FlxGamepadModel
 	{
 		//If we're actually running on console hardware, we know what controller hardware you're using
 		//TODO: add support for multiple controller types on console that support that (WiiU for instance)
