@@ -153,9 +153,11 @@ class FlxGamepad implements IFlxDestroyable
 		return gamepadButton;
 	}
 	
-	private inline function getFlipAxis(AxisID:Int):Int
+	private inline function applyAxisFlip(axisValue:Float, axisID:Int):Float
 	{
-		return mapping.getFlipAxis(AxisID);
+		if (mapping.isAxisFlipped(axisID))
+			axisValue *= -1;
+		return axisValue;
 	}
 	
 	/**
@@ -196,7 +198,7 @@ class FlxGamepad implements IFlxDestroyable
 			if (button != null)
 			{
 				//TODO: account for circular deadzone if an analog stick input is detected?
-				var value = Math.abs(axis[i]) * getFlipAxis(i);
+				var value = applyAxisFlip(Math.abs(axis[i]), i);
 				if (value > deadZone)
 				{
 					button.press();
@@ -502,7 +504,7 @@ class FlxGamepad implements IFlxDestroyable
 		{
 			//return the regular axis value
 			var rawID = mapping.getRawID(AxisButtonID);
-			return getAxisRaw(rawID) * getFlipAxis(AxisButtonID);
+			return applyAxisFlip(getAxisRaw(rawID), AxisButtonID);
 		}
 		else
 		{
@@ -669,7 +671,7 @@ class FlxGamepad implements IFlxDestroyable
 		
 		if (isAxisForAnalogStick(AxisID))
 		{
-			axisValue *= getFlipAxis(AxisID);
+			axisValue = applyAxisFlip(axisValue, AxisID);
 		}
 		
 		return axisValue;

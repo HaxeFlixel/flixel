@@ -82,16 +82,13 @@ class XInputMapping extends FlxGamepadMapping
 		}
 	}
 	
-	override public function getFlipAxis(axisID:Int):Int 
+	#if flash
+	override public function isAxisFlipped(axisID:Int):Bool
 	{ 
-		#if flash
-		if (axisID == XInputID.LEFT_ANALOG_STICK.y ||
-			axisID == XInputID.RIGHT_ANALOG_STICK.y)
-			return -1;
-		#end
-		
-		return 1; 
+		return axisID == XInputID.LEFT_ANALOG_STICK.y ||
+			axisID == XInputID.RIGHT_ANALOG_STICK.y;
 	}
+	#end
 	
 	#if FLX_JOYSTICK_API
 	override public function axisIndexToRawID(axisID:Int):Int 

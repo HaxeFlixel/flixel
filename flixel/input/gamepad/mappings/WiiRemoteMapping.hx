@@ -190,11 +190,9 @@ class WiiRemoteMapping extends FlxGamepadMapping
 		return false;
 	}
 	
-	override public function getFlipAxis(axisID:Int):Int 
+	override public function isAxisFlipped(axisID:Int):Bool 
 	{
-		if (axisID == WiiRemoteID.LEFT_TRIGGER_FAKE)
-			return -1;
-		return 1;
+		return axisID == WiiRemoteID.LEFT_TRIGGER_FAKE;
 	}
 	
 	#if FLX_JOYSTICK_API

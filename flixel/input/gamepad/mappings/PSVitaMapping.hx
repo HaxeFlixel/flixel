@@ -52,11 +52,9 @@ class PSVitaMapping extends FlxGamepadMapping
 		}
 	}
 	
-	override public function getFlipAxis(axisID:Int):Int 
+	override public function isAxisFlipped(axisID:Int):Bool 
 	{
-		if (axisID == PSVitaID.LEFT_ANALOG_STICK.y ||
-			axisID == PSVitaID.RIGHT_ANALOG_STICK.y)
-			return -1;
-		return 1;
+		return axisID == PSVitaID.LEFT_ANALOG_STICK.y ||
+			axisID == PSVitaID.RIGHT_ANALOG_STICK.y;
 	}
 }

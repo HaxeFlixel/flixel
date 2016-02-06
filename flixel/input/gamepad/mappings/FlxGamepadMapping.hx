@@ -78,9 +78,9 @@ class FlxGamepadMapping
 	/**
 	 * Whether this axis needs to be flipped
 	 */
-	public function getFlipAxis(axisID:Int):Int
+	public function isAxisFlipped(axisID:Int):Bool
 	{
-		return 1;
+		return false;
 	}
 	
 	#if FLX_JOYSTICK_API
