@@ -1,4 +1,4 @@
-package flixel.input.gamepad.id;
+package flixel.input.gamepad.lists;
 
 import flixel.input.FlxInput.FlxInputState;
 import flixel.input.gamepad.FlxGamepadInputID;

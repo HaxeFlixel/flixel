@@ -2,10 +2,10 @@ package flixel.input.gamepad;
 
 import flixel.input.FlxInput.FlxInputState;
 import flixel.input.gamepad.FlxGamepadInputID;
-import flixel.input.gamepad.id.FlxGamepadAnalogList;
-import flixel.input.gamepad.id.FlxGamepadButtonList;
-import flixel.input.gamepad.id.FlxGamepadMotionValueList;
-import flixel.input.gamepad.id.FlxGamepadPointerValueList;
+import flixel.input.gamepad.lists.FlxGamepadAnalogList;
+import flixel.input.gamepad.lists.FlxGamepadButtonList;
+import flixel.input.gamepad.lists.FlxGamepadMotionValueList;
+import flixel.input.gamepad.lists.FlxGamepadPointerValueList;
 import flixel.input.gamepad.mappings.FlxGamepadMapping;
 import flixel.input.gamepad.mappings.LogitechMapping;
 import flixel.input.gamepad.mappings.MFiMapping;
