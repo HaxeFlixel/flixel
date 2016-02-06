@@ -1,4 +1,4 @@
-package flixel.input.gamepad.mapping;
+package flixel.input.gamepad.mappings;
 
 import flixel.input.gamepad.FlxGamepad.FlxGamepadModel;
 import flixel.input.gamepad.FlxGamepad.FlxGamepadModelAttachment;

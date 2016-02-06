@@ -1,9 +1,9 @@
-package flixel.input.gamepad.mapping;
+package flixel.input.gamepad.mappings;
 
 import flixel.input.gamepad.FlxGamepad.FlxGamepadModelAttachment;
 import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.input.gamepad.id.MayflashWiiRemoteID;
-import flixel.input.gamepad.mapping.FlxGamepadMapping;
+import flixel.input.gamepad.mappings.FlxGamepadMapping;
 
 class MayflashWiiRemoteMapping extends FlxGamepadMapping
 {
