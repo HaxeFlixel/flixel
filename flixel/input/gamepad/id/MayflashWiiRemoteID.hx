@@ -1,6 +1,6 @@
 package flixel.input.gamepad.id;
-import flixel.input.gamepad.FlxGamepad.FlxGamepadAnalogStick;
-import flixel.input.gamepad.FlxGamepad.FlxGamepadModelAttachment;
+
+import flixel.input.gamepad.FlxGamepadAnalogStick;
 
 /**
  * WiiRemote hardware input ID's when using "Mode 3" of the MayFlash DolphinBar accessory

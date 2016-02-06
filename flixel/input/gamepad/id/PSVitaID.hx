@@ -1,6 +1,6 @@
 package flixel.input.gamepad.id;
 
-import flixel.input.gamepad.FlxGamepad.FlxGamepadAnalogStick;
+import flixel.input.gamepad.FlxGamepadAnalogStick;
 
 /**
  * Native PSVita input values.

@@ -1,6 +1,5 @@
 package flixel.input.gamepad.mapping;
 
-import flixel.input.gamepad.FlxGamepad.FlxGamepadAnalogStick;
 import flixel.input.gamepad.FlxGamepad.FlxGamepadModelAttachment;
 import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.input.gamepad.id.MayflashWiiRemoteID;

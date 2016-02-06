@@ -1,8 +1,8 @@
 package flixel.input.gamepad.mapping;
 
-import flixel.input.gamepad.FlxGamepad.FlxGamepadAnalogStick;
 import flixel.input.gamepad.FlxGamepad.FlxGamepadModel;
 import flixel.input.gamepad.FlxGamepad.FlxGamepadModelAttachment;
+import flixel.input.gamepad.FlxGamepadAnalogStick;
 import flixel.input.gamepad.FlxGamepadInputID;
 
 #if flash

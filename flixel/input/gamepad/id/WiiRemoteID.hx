@@ -1,8 +1,6 @@
 package flixel.input.gamepad.id;
 
-import flixel.input.gamepad.FlxGamepad.FlxGamepadAnalogStick;
-import flixel.input.gamepad.FlxGamepad.FlxGamepadModelAttachment;
-import flixel.input.gamepad.FlxGamepadInputID;
+import flixel.input.gamepad.FlxGamepadAnalogStick;
 
 /**
  * WiiRemote hardware input ID's when using the device directly

@@ -1,6 +1,6 @@
 package flixel.input.gamepad.id;
 
-import flixel.input.gamepad.FlxGamepad;
+import flixel.input.gamepad.FlxGamepadAnalogStick;
 
 /**
  * IDs for Logitech controllers (key codes based on Cordless Rumblepad 2)

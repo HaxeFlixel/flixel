@@ -1,6 +1,5 @@
 package flixel.input.gamepad.mapping;
 
-import flixel.input.gamepad.FlxGamepad.FlxGamepadAnalogStick;
 import flixel.input.gamepad.FlxGamepad.FlxGamepadModelAttachment;
 import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.input.gamepad.id.WiiRemoteID;
@@ -26,9 +25,9 @@ class WiiRemoteMapping extends FlxGamepadMapping
 	{
 		return switch (attachment)
 		{
-			case WII_CLASSIC_CONTROLLER: getIDClassicController(RawID);
-			case WII_NUNCHUCK: getIDNunchuk(RawID);
-			case NONE: getIDDefault(RawID);
+			case WII_CLASSIC_CONTROLLER: getIDClassicController(rawID);
+			case WII_NUNCHUCK: getIDNunchuk(rawID);
+			case NONE: getIDDefault(rawID);
 		}
 	}
 	
@@ -180,12 +179,12 @@ class WiiRemoteMapping extends FlxGamepadMapping
 	{
 		if (attachment == NONE)
 		{
-			if (ID == REMOTE_TILT_PITCH  || ID == REMOTE_TILT_ROLL)
+			if (ID == WiiRemoteID.REMOTE_TILT_PITCH || ID == WiiRemoteID.REMOTE_TILT_ROLL)
 				return true;
 		}
 		else if (attachment == WII_NUNCHUCK)
 		{
-			if (ID == NUNCHUK_TILT_PITCH || ID == NUNCHUK_TILT_ROLL)
+			if (ID == WiiRemoteID.NUNCHUK_TILT_PITCH || ID == WiiRemoteID.NUNCHUK_TILT_ROLL)
 				return true;
 		}
 		return false;
@@ -203,33 +202,33 @@ class WiiRemoteMapping extends FlxGamepadMapping
 	override public function axisIndexToRawID(axisID:Int):Int 
 	{
 		//return null for this unused access so it doesn't overlap a button input
-		if (attachment == NONE && index == REMOTE_NULL_AXIS)
+		if (attachment == NONE && axisID == WiiRemoteID.REMOTE_NULL_AXIS)
 			return -1;
 		//return null for this unused access so it doesn't overlap a button input
-		else if (attachment == WII_NUNCHUCK && index == NUNCHUK_NULL_AXIS)
+		else if (attachment == WII_NUNCHUCK && axisID == WiiRemoteID.NUNCHUK_NULL_AXIS)
 			return -1;
 		
 		if (attachment == WII_NUNCHUCK || attachment == WII_CLASSIC_CONTROLLER)
 		{
-			if (index == LEFT_ANALOG_STICK.x)
+			if (axisID == leftStick.x)
 				return LEFT_ANALOG_STICK_FAKE_X;
-			else if (index == LEFT_ANALOG_STICK.y)
+			else if (axisID == leftStick.y)
 				return LEFT_ANALOG_STICK_FAKE_Y;
 		}
 		else
 		{
-			if (index == LEFT_ANALOG_STICK.x)
-				return REMOTE_DPAD_X;
-			else if (index == LEFT_ANALOG_STICK.y)
-				return REMOTE_DPAD_Y;
+			if (axisID == leftStick.x)
+				return WiiRemoteID.REMOTE_DPAD_X;
+			else if (axisID == leftStick.y)
+				return WiiRemoteID.REMOTE_DPAD_Y;
 		}
 		
-		if (index == RIGHT_ANALOG_STICK.x)
+		if (axisID == rightStick.x)
 			return RIGHT_ANALOG_STICK_FAKE_X;
-		else if (index == RIGHT_ANALOG_STICK.y)
+		else if (axisID == rightStick.y)
 			return RIGHT_ANALOG_STICK_FAKE_Y;
 		
-		return index;
+		return axisID;
 	}
 
 	override public function checkForFakeAxis(ID:FlxGamepadInputID):Int 
@@ -243,13 +242,13 @@ class WiiRemoteMapping extends FlxGamepadMapping
 	
 	override function set_attachment(attachment:FlxGamepadModelAttachment):FlxGamepadModelAttachment 
 	{
-		leftAnalogStick = switch (attachment)
+		leftStick = switch (attachment)
 		{
 			case WII_NUNCHUCK, WII_CLASSIC_CONTROLLER: WiiRemoteID.LEFT_ANALOG_STICK;
 			case NONE: WiiRemoteID.REMOTE_DPAD;
 		}
 		
-		rightAnalogStick = switch (attachment)
+		rightStick = switch (attachment)
 		{
 			case WII_CLASSIC_CONTROLLER: WiiRemoteID.RIGHT_ANALOG_STICK;
 			default: null;
