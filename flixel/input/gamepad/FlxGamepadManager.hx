@@ -188,7 +188,7 @@ class FlxGamepadManager implements IFlxInputManager
 	}
 	
 	/**
-	 * Check to see if any buttons are pressed right or Axis, Ball and Hat Moved on any gamepad.
+	 * Whether there's any input at all on any gamepad.
 	 */
 	public function anyInput():Bool
 	{
@@ -200,10 +200,7 @@ class FlxGamepadManager implements IFlxInputManager
 	}
 
 	/**
-	 * Check to see if this button is pressed on any Gamepad.
-	 * 
-	 * @param 	ButtonID  The button id (from 0 to 7).
-	 * @return 	Whether the button is pressed
+	 * Whether this button is pressed on any gamepad.
 	 */
 	public inline function anyPressed(buttonID:FlxGamepadInputID):Bool
 	{
@@ -211,10 +208,7 @@ class FlxGamepadManager implements IFlxInputManager
 	}
 
 	/**
-	 * Check to see if this button was just pressed on any Gamepad.
-	 * 
-	 * @param 	ButtonID 	The button id (from 0 to 7).
-	 * @return 	Whether the button was just pressed
+	 * Whether this button was just pressed on any gamepad.
 	 */
 	public inline function anyJustPressed(buttonID:FlxGamepadInputID):Bool
 	{
@@ -222,10 +216,7 @@ class FlxGamepadManager implements IFlxInputManager
 	}
 
 	/**
-	 * Check to see if this button is just released on any Gamepad.
-	 * 
-	 * @param 	ButtonID 	The Button id (from 0 to 7).
-	 * @return 	Whether the button is just released.
+	 * Whether this button was just released on any gamepad.
 	 */
 	public inline function anyJustReleased(buttonID:FlxGamepadInputID):Bool
 	{
