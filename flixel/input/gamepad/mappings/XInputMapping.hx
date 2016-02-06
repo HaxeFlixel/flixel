@@ -85,6 +85,9 @@ class XInputMapping extends FlxGamepadMapping
 	#if flash
 	override public function isAxisFlipped(axisID:Int):Bool
 	{ 
+		if (manufacturer == GooglePepper)
+			return false;
+		
 		return axisID == XInputID.LEFT_ANALOG_STICK.y ||
 			axisID == XInputID.RIGHT_ANALOG_STICK.y;
 	}
