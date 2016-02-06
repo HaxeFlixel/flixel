@@ -23,6 +23,7 @@ import flixel.util.FlxDestroyUtil;
 import flixel.util.helpers.FlxRange;
 import openfl.Assets;
 import haxe.Utf8;
+using flixel.util.FlxStringUtil;
 using StringTools;
 
 // TODO: think about filters and text
@@ -325,7 +326,7 @@ class FlxText extends FlxSprite
 		{
 			while (input.indexOf(rule.marker) != -1)
 			{
-				input = input.replace(rule.marker, "");
+				input = input.remove(rule.marker);
 			}
 		}
 		

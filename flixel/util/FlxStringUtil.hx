@@ -249,7 +249,7 @@ class FlxStringUtil
 		var s:String = Type.getClassName(cl);
 		if (s != null)
 		{
-			s = StringTools.replace(s, "::", ".");
+			s = s.replace("::", ".");
 			if (Simple)
 			{
 				s = s.substr(s.lastIndexOf(".") + 1);
@@ -560,6 +560,14 @@ class FlxStringUtil
 	public static inline function contains(s:String, str:String):Bool
 	{
 		return s.indexOf(str) != -1;
+	}
+	
+	/**
+	 * Removes occurences of a substring by calling `StringTools.replace(s, sub, "")`.
+	 */
+	public static inline function remove(s:String, sub:String):String
+	{
+		return s.replace(sub, "");
 	}
 	
 	public static function sortAlphabetically(list:Array<String>):Array<String>
