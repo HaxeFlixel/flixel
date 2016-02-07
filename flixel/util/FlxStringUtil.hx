@@ -570,6 +570,14 @@ class FlxStringUtil
 		return s.replace(sub, "");
 	}
 	
+	/**
+	 * Inserts `insertion` into `s` at index `pos`.
+	 */
+	public static inline function insert(s:String, pos:Int, insertion:String):String
+	{
+		return s.substring(0, pos) + insertion + s.substr(pos);
+	}
+	
 	public static function sortAlphabetically(list:Array<String>):Array<String>
 	{
 		list.sort(function(a, b)

@@ -809,24 +809,13 @@ class FlxText extends FlxSprite
 			
 			_matrix.identity();
 			
-			#if (flash || openfl_legacy)
-			// If it's a single, centered line of text, we center it ourselves so it doesn't blur to hell
-			if (_defaultFormat.align == TextFormatAlign.CENTER && textField.numLines == 1)
-			{
-				_formatAdjusted.align = TextFormatAlign.LEFT;
-				textField.setTextFormat(_formatAdjusted);
-				
-				var textWidth = textField.getLineMetrics(0).width;
-				if (textWidth <= textField.width)
-					_matrix.translate(Math.floor((textField.width - textWidth) / 2), 0);
-			}
-			#end
-			
 			applyBorderStyle();
 			applyBorderTransparency();
 			applyFormats(_formatAdjusted, false);
 			
-			avoidBlurry();
+			#if flash
+			avoidBlur();
+			#end
 			
 			graphic.bitmap.draw(textField, _matrix);
 		}
@@ -835,33 +824,34 @@ class FlxText extends FlxSprite
 		resetFrame();
 	}
 	
+	#if flash
 	/**
-	 * Internal function that insert an extra space in a line to prevent blurry lines.
-	 * Only work if wordWrap is not working, beacuse wordWrap seems to trim lines.
+	 * Internal function that inserts an extra space in a line to prevent blurry lines.
+	 * Only work if wordWrap is not triggered, beacuse wordWrap seems to trim lines.
+	 * Ugly workaround for #1422.
 	 */
-	private function avoidBlurry() 
+	private function avoidBlur():Void
 	{
-		var newText = "";
+		if (textField.numLines <= 1 && alignment != FlxTextAlign.CENTER)
+			return;
 		
+		var newText = "";
 		for (i in 0...textField.numLines) 
 		{
 			var lineX = textField.getLineMetrics(i).x;
-			if (Math.floor(lineX) != lineX)
-			{
-				var space = textField.getLineText(i).indexOf(" ");
-				newText += textField.getLineText(i).substring(0, space) + " " + textField.getLineText(i).substring(space);
-			}
-			else
-			{
-				newText += textField.getLineText(i);
-			}
+			var lineText = textField.getLineText(i);
+			var spaceIndex = lineText.indexOf(" ");
+			
+			if (Math.floor(lineX) != lineX && spaceIndex >= 0)
+				lineText = lineText.insert(spaceIndex, " ");
+			
+			newText += lineText;
 		}
 		
 		if (newText != "")
-		{
 			textField.text = newText;
-		}
 	}
+	#end
 	
 	override public function draw():Void 
 	{
