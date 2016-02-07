@@ -45,40 +45,38 @@ class PS4ID
 	public static inline var DPAD_LEFT:Int = 8;
 	public static inline var DPAD_RIGHT:Int = 9;
 	
-#elseif !FLX_JOYSTICK_API //"next"
+#elseif FLX_GAMEINPUT_API
 	
-	#if (html5 || windows || mac || linux)
+	//#if (html5 || windows || mac || linux)
 	
-		public static inline var X:Int = 6;
-		public static inline var CIRCLE:Int = 7;
-		public static inline var SQUARE:Int = 8;
-		public static inline var TRIANGLE:Int = 9;
-		public static inline var SHARE:Int = 10;
-		public static inline var PS:Int = 11;
-		public static inline var OPTIONS:Int = 12;
-		public static inline var LEFT_STICK_CLICK:Int = 13;
-		public static inline var RIGHT_STICK_CLICK:Int = 14;
-		public static inline var L1:Int = 15;
-		public static inline var R1:Int = 16;
-		
-		public static inline var TOUCHPAD_CLICK:Int = 21;
-		
-		public static var LEFT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(0, 1);
-		public static var RIGHT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(2, 3);
-		
-		public static inline var L2:Int = 4;
-		public static inline var R2:Int = 5;
-		
-		public static inline var DPAD_UP:Int = 17;
-		public static inline var DPAD_DOWN:Int = 18;
-		public static inline var DPAD_LEFT:Int = 19;
-		public static inline var DPAD_RIGHT:Int = 20;
-		
-		//On linux the drivers we're testing with just make the PS4 controller look like an XInput device,
-		//So strictly speaking these ID's will probably not be used, but the compiler needs something or
-		//else it will not compile on Linux
+	public static inline var X:Int = 6;
+	public static inline var CIRCLE:Int = 7;
+	public static inline var SQUARE:Int = 8;
+	public static inline var TRIANGLE:Int = 9;
+	public static inline var SHARE:Int = 10;
+	public static inline var PS:Int = 11;
+	public static inline var OPTIONS:Int = 12;
+	public static inline var LEFT_STICK_CLICK:Int = 13;
+	public static inline var RIGHT_STICK_CLICK:Int = 14;
+	public static inline var L1:Int = 15;
+	public static inline var R1:Int = 16;
 	
-	#end
+	public static inline var TOUCHPAD_CLICK:Int = 21;
+	
+	public static var LEFT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(0, 1);
+	public static var RIGHT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(2, 3);
+	
+	public static inline var L2:Int = 4;
+	public static inline var R2:Int = 5;
+	
+	public static inline var DPAD_UP:Int = 17;
+	public static inline var DPAD_DOWN:Int = 18;
+	public static inline var DPAD_LEFT:Int = 19;
+	public static inline var DPAD_RIGHT:Int = 20;
+	
+	//On linux the drivers we're testing with just make the PS4 controller look like an XInput device,
+	//So strictly speaking these ID's will probably not be used, but the compiler needs something or
+	//else it will not compile on Linux
 	
 #else //"legacy"
 	
