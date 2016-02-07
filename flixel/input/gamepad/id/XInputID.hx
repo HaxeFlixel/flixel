@@ -119,7 +119,7 @@ class XInputID
 		public static var LEFT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(0, 1);
 		public static var RIGHT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(3, 4);
 
-	#elseif mac
+	#else // mac
 
 		public static inline var A:Int = 0;
 		public static inline var B:Int = 1;
