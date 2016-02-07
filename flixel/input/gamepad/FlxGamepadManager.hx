@@ -4,6 +4,7 @@ import flixel.FlxG;
 import flixel.input.FlxInput.FlxInputState;
 import flixel.input.gamepad.FlxGamepad;
 import flixel.input.gamepad.FlxGamepadInputID;
+import flixel.math.FlxPoint;
 import flixel.util.FlxDestroyUtil;
 using flixel.util.FlxStringUtil;
 
@@ -507,15 +508,19 @@ class FlxGamepadManager implements IFlxInputManager
 		}
 		
 		gamepad.axis = newAxis;
-		
 		gamepad.axisActive = true;
+	}
+	
+	private function copyToPointWithDeadzone(gamepad:FlxGamepad, point:FlxPoint, event:JoystickEvent):Void
+	{
+		point.x = (Math.abs(event.x) < gamepad.deadZone) ? 0 : event.x;
+		point.y = (Math.abs(event.y) < gamepad.deadZone) ? 0 : event.y;
 	}
 	
 	private function handleBallMove(event:JoystickEvent):Void
 	{
 		var gamepad:FlxGamepad = createByID(event.device);
-		gamepad.ball.x = (Math.abs(event.x) < gamepad.deadZone) ? 0 : event.x;
-		gamepad.ball.y = (Math.abs(event.y) < gamepad.deadZone) ? 0 : event.y;
+		copyToPointWithDeadzone(gamepad, gamepad.ball, event);
 	}
 	
 	private function handleHatMove(event:JoystickEvent):Void
@@ -526,14 +531,12 @@ class FlxGamepadManager implements IFlxInputManager
 		var oldX = gamepad.hat.x;
 		var oldY = gamepad.hat.y;
 		
-		var newX = (Math.abs(event.x) < gamepad.deadZone) ? 0 : event.x;
-		var newY = (Math.abs(event.y) < gamepad.deadZone) ? 0 : event.y;
+		copyToPointWithDeadzone(gamepad, gamepad.hat, event);
 		
-		gamepad.hat.x = newX;
-		gamepad.hat.y = newY;
-		
-		checkDpadAxisChange(device, oldX, newX, FlxGamepadInputID.DPAD_LEFT, FlxGamepadInputID.DPAD_RIGHT);
-		checkDpadAxisChange(device, oldY, newY, FlxGamepadInputID.DPAD_UP, FlxGamepadInputID.DPAD_DOWN);
+		checkDpadAxisChange(device, oldX, gamepad.hat.x,
+			FlxGamepadInputID.DPAD_LEFT, FlxGamepadInputID.DPAD_RIGHT);
+		checkDpadAxisChange(device, oldY, gamepad.hat.y,
+			FlxGamepadInputID.DPAD_UP, FlxGamepadInputID.DPAD_DOWN);
 	}
 	
 	private function checkDpadAxisChange(device:Int, oldValue:Float, newValue:Float,
