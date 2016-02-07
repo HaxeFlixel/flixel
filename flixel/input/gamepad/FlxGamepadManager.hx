@@ -408,11 +408,12 @@ class FlxGamepadManager implements IFlxInputManager
 		// and the most popular tools just turn it into a 360 controller
 		return switch (Math.round(f))
 		{
+			case 0: XINPUT;
 			case 2: PS4;
 			case 3: OUYA;
 			case 4: MAYFLASH_WII_REMOTE;
 			case 5: WII_REMOTE;
-			default: XINPUT;
+			default: UNKNOWN;
 		}
 	}
 	
