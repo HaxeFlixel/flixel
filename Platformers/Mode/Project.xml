@@ -48,9 +48,6 @@
 	<!--Enable the Flixel core recording system-->
 	<haxedef name="FLX_RECORD" />
 	
-	<!--Enable this to show a custom FPS counter in Mode-->
-	<!--<haxedef name="SHOW_FPS"/>-->
-	
 	<!--Disable the right and middle mouse buttons-->
 	<!--<haxedef name="FLX_NO_MOUSE_ADVANCED" />-->
 	
@@ -117,4 +114,9 @@
 		<music path="mode.ogg" id="Mode" />
 		<sound path="shoot.ogg" id="Shoot" />
 	</assets>
+		
+	<!--Enable this to show a custom FPS counter in Mode-->
+	<!--<haxedef name="SHOW_FPS" />-->
+		
+	<haxedef name="VIRTUAL_PAD" if="mobile" />
 </project>

@@ -13,7 +13,7 @@ import flixel.util.FlxTimer;
 
 class Player extends FlxSprite
 {
-	#if android
+	#if VIRTUAL_PAD
 	public static var virtualPad:FlxVirtualPad;
 	#end
 	
@@ -66,7 +66,7 @@ class Player extends FlxSprite
 		_bullets = Bullets;
 		_gibs = Gibs;
 		
-		#if android
+		#if VIRTUAL_PAD
 		virtualPad = new FlxVirtualPad(FULL, A_B);
 		virtualPad.alpha = 0.5;
 		#end
@@ -76,7 +76,7 @@ class Player extends FlxSprite
 	{
 		super.destroy();
 		
-		#if android
+		#if VIRTUAL_PAD
 		virtualPad = FlxDestroyUtil.destroy(virtualPad);
 		#end
 		
@@ -131,7 +131,7 @@ class Player extends FlxSprite
 	
 	private function updateVirtualPadInput():Void
 	{
-		#if android
+		#if VIRTUAL_PAD
 		if (virtualPad.buttonLeft.pressed)
 		{
 			moveLeft();

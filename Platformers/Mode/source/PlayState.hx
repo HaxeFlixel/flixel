@@ -188,7 +188,7 @@ class PlayState extends FlxState
 		FlxG.watch.add(_enemyBullets, "length", "numEnemyBullets");
 		FlxG.watch.add(FlxG.sound.list, "length", "numSounds");
 		
-		#if android
+		#if VIRTUAL_PAD
 		add(Player.virtualPad);
 		#end
 		
