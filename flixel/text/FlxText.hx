@@ -826,11 +826,41 @@ class FlxText extends FlxSprite
 			applyBorderTransparency();
 			applyFormats(_formatAdjusted, false);
 			
+			avoidBlurry();
+			
 			graphic.bitmap.draw(textField, _matrix);
 		}
 		
 		_regen = false;
 		resetFrame();
+	}
+	
+	/**
+	 * Internal function that insert an extra space in a line to prevent blurry lines.
+	 * Only work if wordWrap is not working, beacuse wordWrap seems to trim lines.
+	 */
+	private function avoidBlurry() 
+	{
+		var newText = "";
+		
+		for (i in 0...textField.numLines) 
+		{
+			var lineX = textField.getLineMetrics(i).x;
+			if (Math.floor(lineX) != lineX)
+			{
+				var space = textField.getLineText(i).indexOf(" ");
+				newText += textField.getLineText(i).substring(0, space) + " " + textField.getLineText(i).substring(space);
+			}
+			else
+			{
+				newText += textField.getLineText(i);
+			}
+		}
+		
+		if (newText != "")
+		{
+			textField.text = newText;
+		}
 	}
 	
 	override public function draw():Void 
