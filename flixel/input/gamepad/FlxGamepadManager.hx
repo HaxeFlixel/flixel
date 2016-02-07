@@ -402,11 +402,11 @@ class FlxGamepadManager implements IFlxInputManager
 	#end
 	
 	#if FLX_JOYSTICK_API
-	private function getModelFromJoystick(f:Float):FlxGamepadModel
+	private function getModelFromJoystick(id:Float):FlxGamepadModel
 	{
 		//id "1" is PS3, but that is not supported as its PC drivers are terrible,
 		// and the most popular tools just turn it into a 360 controller
-		return switch (Math.round(f))
+		return switch (Math.round(id))
 		{
 			case 0: XINPUT;
 			case 2: PS4;
@@ -455,8 +455,8 @@ class FlxGamepadManager implements IFlxInputManager
 			var isForMotion = gamepad.mapping.isAxisForMotion(i);
 			if (!isForStick && !isForMotion)
 			{
-				// in legacy this returns a (-1,1) range, but in flash/next it
-				// returns (0,1) so we normalize to (0,1) for legacy target only
+				// in legacy this returns a (-1, 1) range, but in flash/next it
+				// returns (0,1) so we normalize to (0, 1) for legacy target only
 				newAxis[i] = (newAxis[i] + 1) / 2;
 			}
 			else if (isForStick)
@@ -546,42 +546,18 @@ class FlxGamepadManager implements IFlxInputManager
 		if (oldValue == newValue)
 			return;
 		
-		var up = false;
-		var id = 0;
+		var rawNegativeID = createByID(device).mapping.getRawID(negativeID);
+		var rawPositiveID = createByID(device).mapping.getRawID(positiveID);
 			
 		if (oldValue == -1)
-		{
-			up = true;
-			id = negativeID;
-		}
+			handleButtonUp(device, rawNegativeID);
 		else if (oldValue == 1)
-		{
-			up = true;
-			id = positiveID;
-		}
+			handleButtonUp(device, rawPositiveID);
 		
 		if (newValue == -1)
-		{
-			up = false;
-			id = negativeID;
-		}
+			handleButtonDown(device, rawNegativeID);
 		else if (newValue == 1)
-		{
-			up = false;
-			id = positiveID;
-		}
-		
-		sendFakeDpadEvent(device, up, id);
-	}
-	
-	private function sendFakeDpadEvent(device:Int, up:Bool, dpadID:FlxGamepadInputID):Void
-	{
-		var id = createByID(device).mapping.getRawID(dpadID);
-
-		if (up)
-			handleButtonUp(device, id);
-		else
-			handleButtonDown(device, id);
+			handleButtonDown(device, rawPositiveID);
 	}
 	
 	private function handleDeviceAdded(event:JoystickEvent):Void
