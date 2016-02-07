@@ -1,5 +1,6 @@
 package;
 
+import flixel.addons.editors.tiled.TiledImageTile;
 import flixel.addons.editors.tiled.TiledLayer;
 import flixel.addons.editors.tiled.TiledTileLayer;
 import openfl.Assets;
@@ -27,7 +28,8 @@ class TiledLevel extends TiledMap
 	
 	// Array of tilemaps used for collision
 	public var foregroundTiles:FlxGroup;
-	public var backgroundTiles:FlxGroup;
+	public var objectsLayer:FlxGroup;
+	public var backgroundLayer:FlxGroup;
 	private var collidableTileLayers:Array<FlxTilemap>;
 	
 	// Sprites of images layers
@@ -39,7 +41,8 @@ class TiledLevel extends TiledMap
 		
 		imagesLayer = new FlxGroup();
 		foregroundTiles = new FlxGroup();
-		backgroundTiles = new FlxGroup();
+		objectsLayer = new FlxGroup();
+		backgroundLayer = new FlxGroup();
 		
 		FlxG.camera.setScrollBoundsRect(0, 0, fullWidth, fullHeight, true);
 		
@@ -76,9 +79,11 @@ class TiledLevel extends TiledMap
 			tilemap.loadMapFromArray(tileLayer.tileArray, width, height, processedPath,
 				tileSet.tileWidth, tileSet.tileHeight, OFF, tileSet.firstGID, 1, 1);
 			
+			loadObjects();
+				
 			if (tileLayer.properties.contains("nocollide"))
 			{
-				backgroundTiles.add(tilemap);
+				backgroundLayer.add(tilemap);
 			}
 			else
 			{
@@ -91,21 +96,68 @@ class TiledLevel extends TiledMap
 		}
 	}
 	
-	public function loadObjects(state:PlayState)
+	public function loadObjects()
 	{
+		var layer:TiledObjectLayer;
 		for (layer in layers)
 		{
 			if (layer.type != TiledLayerType.OBJECT) continue;
 			var objectLayer:TiledObjectLayer = cast layer;
-			
-			for (o in objectLayer.objects)
+
+			//collection of images layer
+			if (layer.name == "images")
 			{
-				loadObject(o, objectLayer, state);
+				for (o in objectLayer.objects)
+				{
+					loadImageObject(o);
+				}
+			}
+			
+			//objects layer
+			if (layer.name == "objects")
+			{
+				for (o in objectLayer.objects)
+				{
+					loadObject(o, objectLayer, objectsLayer);
+				}
 			}
 		}
 	}
 	
-	private function loadObject(o:TiledObject, g:TiledObjectLayer, state:PlayState)
+	private function loadImageObject(object:TiledObject)
+	{
+		var tilesImageCollection:TiledTileSet = this.getTileSet("imageCollection");
+		var tileImagesSource:TiledImageTile = tilesImageCollection.getImageSourceByGid(object.gid);
+		
+		//decorative sprites
+		var levelsDir:String = "assets/tiled/";
+		
+		var decoSprite:FlxSprite = new FlxSprite(0, 0, levelsDir + tileImagesSource.source);
+		if (decoSprite.width != object.width
+		|| decoSprite.height != object.height)
+		{
+			decoSprite.antialiasing = true;
+			decoSprite.setGraphicSize(object.width, object.height);
+		}
+		decoSprite.setPosition(object.x, object.y - decoSprite.height);
+		decoSprite.origin.set(0, decoSprite.height);
+		if (object.angle != 0)
+		{
+			decoSprite.angle = object.angle;
+			decoSprite.antialiasing = true;
+		}
+		
+		//Custom Properties
+		if (object.properties.contains("depth"))
+		{
+			var depth = Std.parseFloat( object.properties.get("depth"));
+			decoSprite.scrollFactor.set(depth,depth);
+		}
+
+		backgroundLayer.add(decoSprite);
+	}
+	
+	private function loadObject(o:TiledObject, g:TiledObjectLayer, group:FlxGroup)
 	{
 		var x:Int = o.x;
 		var y:Int = o.y;
@@ -124,25 +176,25 @@ class TiledLevel extends TiledMap
 				player.acceleration.y = 400;
 				player.drag.x = player.maxVelocity.x * 4;
 				FlxG.camera.follow(player);
-				state.player = player;
-				state.add(player);
+				PlayState.instance.player = player;
+				group.add(player);
 				
 			case "floor":
 				var floor = new FlxObject(x, y, o.width, o.height);
-				state.floor = floor;
+				PlayState.instance.floor = floor;
 				
 			case "coin":
 				var tileset = g.map.getGidOwner(o.gid);
 				var coin = new FlxSprite(x, y, c_PATH_LEVEL_TILESHEETS + tileset.imageSource);
-				state.coins.add(coin);
+				PlayState.instance.coins.add(coin);
 				
 			case "exit":
 				// Create the level exit
 				var exit = new FlxSprite(x, y);
 				exit.makeGraphic(32, 32, 0xff3f3f3f);
 				exit.exists = false;
-				state.exit = exit;
-				state.add(exit);
+				PlayState.instance.exit = exit;
+				group.add(exit);
 		}
 	}
 
