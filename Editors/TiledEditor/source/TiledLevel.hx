@@ -1,21 +1,19 @@
 package;
 
-import flixel.addons.editors.tiled.TiledImageTile;
-import flixel.addons.editors.tiled.TiledLayer;
-import flixel.addons.editors.tiled.TiledTileLayer;
-import openfl.Assets;
-import haxe.io.Path;
-import haxe.xml.Parser;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
-import flixel.group.FlxGroup;
-import flixel.tile.FlxTilemap;
 import flixel.addons.editors.tiled.TiledImageLayer;
+import flixel.addons.editors.tiled.TiledImageTile;
+import flixel.addons.editors.tiled.TiledLayer.TiledLayerType;
 import flixel.addons.editors.tiled.TiledMap;
 import flixel.addons.editors.tiled.TiledObject;
 import flixel.addons.editors.tiled.TiledObjectLayer;
+import flixel.addons.editors.tiled.TiledTileLayer;
 import flixel.addons.editors.tiled.TiledTileSet;
+import flixel.group.FlxGroup;
+import flixel.tile.FlxTilemap;
+import haxe.io.Path;
 
 /**
  * @author Samuel Batista
@@ -35,7 +33,7 @@ class TiledLevel extends TiledMap
 	// Sprites of images layers
 	public var imagesLayer:FlxGroup;
 	
-	public function new(tiledLevel:Dynamic)
+	public function new(tiledLevel:Dynamic, state:PlayState)
 	{
 		super(tiledLevel);
 		
@@ -79,7 +77,7 @@ class TiledLevel extends TiledMap
 			tilemap.loadMapFromArray(tileLayer.tileArray, width, height, processedPath,
 				tileSet.tileWidth, tileSet.tileHeight, OFF, tileSet.firstGID, 1, 1);
 			
-			loadObjects();
+			loadObjects(state);
 				
 			if (tileLayer.properties.contains("nocollide"))
 			{
@@ -96,12 +94,13 @@ class TiledLevel extends TiledMap
 		}
 	}
 	
-	public function loadObjects()
+	public function loadObjects(state:PlayState)
 	{
 		var layer:TiledObjectLayer;
 		for (layer in layers)
 		{
-			if (layer.type != TiledLayerType.OBJECT) continue;
+			if (layer.type != TiledLayerType.OBJECT)
+				continue;
 			var objectLayer:TiledObjectLayer = cast layer;
 
 			//collection of images layer
@@ -118,7 +117,7 @@ class TiledLevel extends TiledMap
 			{
 				for (o in objectLayer.objects)
 				{
-					loadObject(o, objectLayer, objectsLayer);
+					loadObject(state, o, objectLayer, objectsLayer);
 				}
 			}
 		}
@@ -157,7 +156,7 @@ class TiledLevel extends TiledMap
 		backgroundLayer.add(decoSprite);
 	}
 	
-	private function loadObject(o:TiledObject, g:TiledObjectLayer, group:FlxGroup)
+	private function loadObject(state:PlayState, o:TiledObject, g:TiledObjectLayer, group:FlxGroup)
 	{
 		var x:Int = o.x;
 		var y:Int = o.y;
@@ -176,24 +175,24 @@ class TiledLevel extends TiledMap
 				player.acceleration.y = 400;
 				player.drag.x = player.maxVelocity.x * 4;
 				FlxG.camera.follow(player);
-				PlayState.instance.player = player;
+				state.player = player;
 				group.add(player);
 				
 			case "floor":
 				var floor = new FlxObject(x, y, o.width, o.height);
-				PlayState.instance.floor = floor;
+				state.floor = floor;
 				
 			case "coin":
 				var tileset = g.map.getGidOwner(o.gid);
 				var coin = new FlxSprite(x, y, c_PATH_LEVEL_TILESHEETS + tileset.imageSource);
-				PlayState.instance.coins.add(coin);
+				state.coins.add(coin);
 				
 			case "exit":
 				// Create the level exit
 				var exit = new FlxSprite(x, y);
 				exit.makeGraphic(32, 32, 0xff3f3f3f);
 				exit.exists = false;
-				PlayState.instance.exit = exit;
+				state.exit = exit;
 				group.add(exit);
 		}
 	}
@@ -202,9 +201,10 @@ class TiledLevel extends TiledMap
 	{
 		for (layer in layers)
 		{
-			if (layer.type != TiledLayerType.IMAGE) continue;
+			if (layer.type != TiledLayerType.IMAGE)
+				continue;
+
 			var image:TiledImageLayer = cast layer;
-			
 			var sprite = new FlxSprite(image.x, image.y, c_PATH_LEVEL_TILESHEETS + image.imagePath);
 			imagesLayer.add(sprite);
 		}
@@ -212,16 +212,16 @@ class TiledLevel extends TiledMap
 	
 	public function collideWithLevel(obj:FlxObject, ?notifyCallback:FlxObject->FlxObject->Void, ?processCallback:FlxObject->FlxObject->Bool):Bool
 	{
-		if (collidableTileLayers != null)
+		if (collidableTileLayers == null)
+			return false;
+
+		for (map in collidableTileLayers)
 		{
-			for (map in collidableTileLayers)
+			// IMPORTANT: Always collide the map with objects, not the other way around. 
+			//			  This prevents odd collision errors (collision separation code off by 1 px).
+			if (FlxG.overlap(map, obj, notifyCallback, processCallback != null ? processCallback : FlxObject.separate))
 			{
-				// IMPORTANT: Always collide the map with objects, not the other way around. 
-				//			  This prevents odd collision errors (collision separation code off by 1 px).
-				if (FlxG.overlap(map, obj, notifyCallback, processCallback != null ? processCallback : FlxObject.separate))
-				{
-					return true;
-				}
+				return true;
 			}
 		}
 		return false;
