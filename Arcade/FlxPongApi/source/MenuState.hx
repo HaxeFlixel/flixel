@@ -4,13 +4,13 @@ import flash.display.BitmapData;
 import flash.display.Sprite;
 import flash.text.TextFieldType;
 import flash.utils.ByteArray;
-import flixel.addons.api.FlxGameJolt;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
+import flixel.addons.api.FlxGameJolt;
+import flixel.addons.text.FlxTextField;
 import flixel.group.FlxGroup;
 import flixel.text.FlxText;
-import flixel.text.FlxTextField;
 import openfl.utils.ByteArray;
 
 /**
