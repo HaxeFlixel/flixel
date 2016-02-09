@@ -75,10 +75,6 @@ class PlayState extends FlxState
 	 * Instructions
 	 */
 	private var _instructions:FlxText;
-	/**
-	 * Path to follow
-	 */
-	private var path:FlxPath;
 	
 	override public function create():Void
 	{
@@ -105,6 +101,7 @@ class PlayState extends FlxState
 		_action = ACTION_IDLE;
 		_destination = 0;
 		_unit.maxVelocity.x = _unit.maxVelocity.y = MOVE_SPEED;
+		_unit.path = new FlxPath();
 		add(_unit);
 		
 		var buttonX:Float = FlxG.width - 90;
@@ -130,8 +127,6 @@ class PlayState extends FlxState
 		
 		var legends:FlxText = new FlxText(textX, 140, textWidth, "Legends:\nRed: Unit\nYellow: Goal\nBlue: Wall\nWhite: Path");
 		add(legends);
-		
-		path = new FlxPath();
 	}
 	
 	override public function destroy():Void
@@ -152,9 +147,9 @@ class PlayState extends FlxState
 		super.draw();
 		
 		// To draw path
-		if ((path != null) && !path.finished)
+		if (_unit.path != null && !_unit.path.finished)
 		{
-			path.drawDebug();
+			_unit.drawDebug();
 		}
 	}
 	
@@ -179,7 +174,7 @@ class PlayState extends FlxState
 		// Check if reach goal
 		if (_action == ACTION_GO)
 		{
-			if (path.finished)
+			if (_unit.path.finished)
 			{
 				resetUnit();
 				stopUnit();
@@ -190,12 +185,14 @@ class PlayState extends FlxState
 	private function moveToGoal():Void
 	{
 		// Find path to goal from unit to goal
-		var pathPoints:Array<FlxPoint> = _map.findPath(FlxPoint.get(_unit.x + _unit.width / 2, _unit.y + _unit.height / 2), FlxPoint.get(_goal.x + _goal.width / 2, _goal.y + _goal.height / 2));
+		var pathPoints:Array<FlxPoint> = _map.findPath(
+			FlxPoint.get(_unit.x + _unit.width / 2, _unit.y + _unit.height / 2),
+			FlxPoint.get(_goal.x + _goal.width / 2, _goal.y + _goal.height / 2));
 		
 		// Tell unit to follow path
 		if (pathPoints != null) 
 		{
-			path.start(_unit, pathPoints);
+			_unit.path.start(pathPoints);
 			_action = ACTION_GO;
 			_instructions.text = INSTRUCTION_1;
 		}
@@ -209,7 +206,7 @@ class PlayState extends FlxState
 	{
 		// Stop unit and destroy unit path
 		_action = ACTION_IDLE;
-		path.cancel();
+		_unit.path.cancel();
 		_unit.velocity.x = _unit.velocity.y = 0;
 	}
 	

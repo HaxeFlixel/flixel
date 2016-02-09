@@ -96,7 +96,7 @@ class Enemy extends FlxSprite
 		x = Path[0].x;
 		y = Path[0].y;
 		
-		var path = new FlxPath().start(this, Path, Speed, 0, true);
+		this.path = new FlxPath().start(Path, Speed, 0, true);
 		path.onComplete = OnComplete;
 	}
 }
