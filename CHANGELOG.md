@@ -56,7 +56,6 @@
 ### flixel.FlxObject:
 
 * added `getPosition()` and `getHitbox()`
-* added `setPositionUsingCenter()` (#1482)
 * split some of `separate()`'s functionality into `updateTouchingFlags()`, allowing `touching` to be used without any separate calls (#1555)
 
 ### flixel.FlxSprite:
