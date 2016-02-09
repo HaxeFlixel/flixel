@@ -243,7 +243,7 @@ class FlxPath implements IFlxDestroyable
 		}
 		
 		//then just move toward the current node at the requested speed
-		if (speed != 0)
+		if (object != null && speed != 0)
 		{
 			//set velocity based on path mode
 			_point.x = object.x;
