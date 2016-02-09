@@ -441,6 +441,7 @@ class FlxPath implements IFlxDestroyable
 		active = false;
 		if (_wasObjectImmovable != null)
 			object.immovable = _wasObjectImmovable;
+		_wasObjectImmovable = null;
 	}
 	
 	/**
