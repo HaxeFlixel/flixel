@@ -3,11 +3,12 @@ package;
 import flash.filters.ColorMatrixFilter;
 import flash.geom.Matrix;
 import flash.geom.Point;
-import flixel.addons.effects.FlxWaveSprite;
+import flixel.addons.effects.chainable.FlxEffectSprite;
+import flixel.addons.effects.chainable.FlxWaveEffect;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
-import flixel.group.FlxGroup;
+import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.system.FlxSound;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
@@ -56,15 +57,15 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 	private var _sndCombat:FlxSound;
 	
 	private var _sprScreen:FlxSprite;
-	private var _sprWave:FlxWaveSprite;
 	
 	public function new() 
 	{
-		super();		
+		super();
 		
 		_sprScreen = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.TRANSPARENT);
-		_sprWave = new FlxWaveSprite(_sprScreen, FlxWaveMode.ALL, 4, -1, 4);
-		add(_sprWave);
+		var waveEffect = new FlxWaveEffect(FlxWaveMode.ALL, 4, -1, 4);
+		var waveSprite = new FlxEffectSprite(_sprScreen, [waveEffect]);
+		add(waveSprite);
 		
 		// first, create our background. Make a black square, then draw borders onto it in white. Add it to our group.
 		_sprBack = new FlxSprite().makeGraphic(120, 120, FlxColor.WHITE);
@@ -157,6 +158,7 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 	 */
 	public function initCombat(PlayerHealth:Int, E:Enemy):Void
 	{
+		_sprScreen.drawFrame();
 		var screenPixels = _sprScreen.framePixels;
 		
 		if (FlxG.renderBlit)
@@ -168,7 +170,6 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 		var gc:Float = 1 / 2;
 		var bc:Float = 1 / 6;
 		screenPixels.applyFilter(screenPixels, screenPixels.rect, new Point(), new ColorMatrixFilter([rc, gc, bc, 0, 0, rc, gc, bc, 0, 0, rc, gc, bc, 0, 0, 0, 0, 0, 1, 0]));
-		_sprScreen.dirty = true;
 		
 		_sndCombat.play();
 		playerHealth = PlayerHealth;	// we set our playerHealth variable to the value that was passed to us
