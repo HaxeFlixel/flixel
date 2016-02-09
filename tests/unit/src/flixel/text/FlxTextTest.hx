@@ -21,14 +21,6 @@ class FlxTextTest extends FlxTest
 		Assert.areEqual(text.font, "Nokia Cellphone FC Small");
 	}
 	
-	#if neko
-	@Test // #1641
-	function testNullBorderColorNoCrash()
-	{
-		text.borderColor = null;
-	}
-	#end
-	
 	@Test // #1629
 	function testSetFormatAlignmentReset()
 	{

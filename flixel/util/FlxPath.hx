@@ -112,7 +112,7 @@ class FlxPath implements IFlxDestroyable
 	 */
 	private var _autoRotate:Bool = false;
 	
-	private var _wasObjectImmovable:Bool;
+	private var _wasObjectImmovable:Null<Bool> = null;
 	
 	private var _firstUpdate:Bool = false;
 	
@@ -439,7 +439,8 @@ class FlxPath implements IFlxDestroyable
 	{
 		finished = true;
 		active = false;
-		object.immovable = _wasObjectImmovable;
+		if (_wasObjectImmovable != null)
+			object.immovable = _wasObjectImmovable;
 	}
 	
 	/**
