@@ -1,6 +1,7 @@
 package;
 
-import flixel.addons.effects.FlxGlitchSprite;
+import flixel.addons.effects.chainable.FlxEffectSprite;
+import flixel.addons.effects.chainable.FlxGlitchEffect;
 import flixel.addons.ui.FlxUI9SliceSprite;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -16,7 +17,8 @@ class MessagePopup extends FlxSubState
 	private var _back:FlxSprite;
 	private var _box:FlxUI9SliceSprite;
 	private var _face:FlxSprite;
-	private var _glitchFace:FlxGlitchSprite;
+	private var _glitchFace:FlxEffectSprite;
+	private var _glitchEffect:FlxGlitchEffect;
 	private var _glitchAmt:Int;
 	private var _glitchTimer:Float;
 	private var _talkTimer:Float;
@@ -27,7 +29,7 @@ class MessagePopup extends FlxSubState
 	private var _alpha:Float = 0;
 	private var _fadingOut:Bool = false;
 	
-	public function new(CloseCallback:Void->Void) 
+	public function new(CloseCallback:Void->Void)
 	{
 		super(0);
 		
@@ -52,7 +54,9 @@ class MessagePopup extends FlxSubState
 		_talkTimer = Math.floor(FlxG.random.float(0, 10) / 2);
 		_glitchTimer = Math.floor(FlxG.random.float(0, 10) / 2);
 		
-		_glitchFace = new FlxGlitchSprite(_face, _glitchAmt, 1, 0.05, FlxGlitchDirection.HORIZONTAL);
+		_glitchEffect = new FlxGlitchEffect(_glitchAmt, 1, 0.05, FlxGlitchDirection.HORIZONTAL);
+		_glitchFace = new FlxEffectSprite(_face, [_glitchEffect]);
+		_glitchFace.setPosition(_face.x, _face.y);
 		
 		_text = new FlxText(_face.x + _face.width + 8, _face.y, _box.width - 16 - _face.width -8, "Go get 'em, Pilot!\nYou can do it!", 12);
 		_text.alignment = FlxTextAlign.CENTER;
@@ -99,7 +103,7 @@ class MessagePopup extends FlxSubState
 		{
 			_glitchTimer = Math.floor(FlxG.random.float(0, 5) / 2);
 			_glitchAmt = Math.floor(FlxG.random.float(0, 5) / 4);
-			_glitchFace.strength = _glitchAmt;
+			_glitchEffect.strength = _glitchAmt;
 		}
 		else
 		{
