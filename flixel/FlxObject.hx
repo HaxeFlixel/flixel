@@ -10,6 +10,7 @@ import flixel.tile.FlxBaseTilemap;
 import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
+import flixel.util.FlxPath;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxStringUtil;
 
@@ -543,6 +544,11 @@ class FlxObject extends FlxBasic
 	public var ignoreDrawDebug:Bool = false;
 	#end
 	
+	/**
+	 * The path this object follows.
+	 */
+	public var path(default, set):FlxPath;
+	
 	private var _point:FlxPoint = FlxPoint.get();
 	private var _rect:FlxRect = FlxRect.get();
 	
@@ -620,10 +626,11 @@ class FlxObject extends FlxBasic
 		last.x = x;
 		last.y = y;
 		
+		if (path != null && path.active)
+			path.update(elapsed);
+		
 		if (moves)
-		{
 			updateMotion(elapsed);
-		}
 		
 		wasTouching = touching;
 		touching = NONE;
@@ -995,6 +1002,9 @@ class FlxObject extends FlxBasic
 		for (camera in cameras)
 		{
 			drawDebugOnCamera(camera);
+			
+			if (path != null && !path.ignoreDrawDebug)
+				path.drawDebug();
 		}
 	}
 	
@@ -1163,5 +1173,18 @@ class FlxObject extends FlxBasic
 	private function set_allowCollisions(Value:Int):Int 
 	{
 		return allowCollisions = Value;
+	}
+	
+	private function set_path(path:FlxPath):FlxPath
+	{
+		if (this.path == path)
+			return path;
+		
+		if (this.path != null)
+			this.path.object = null;
+		
+		if (path != null)
+			path.object = this;
+		return this.path = path;
 	}
 }
