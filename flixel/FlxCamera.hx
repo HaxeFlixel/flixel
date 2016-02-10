@@ -202,7 +202,10 @@ class FlxCamera extends FlxBasic
 	 * Enables or disables the filters set via setFilters()
 	 */
 	public var filtersEnabled:Bool = true;
-	
+	/**
+	 * When true, keeps the camera's display borders static, instead of the normal behaviour of moving them depending on the zoom level.
+	 */
+	public var staticMode:Bool = false;
 	/**
 	 * Internal, used to render buffer to screen space.
 	 */
@@ -996,9 +999,12 @@ class FlxCamera extends FlxBasic
 			if (_flashBitmap != null)
 			{
 				regen = regen || (width != buffer.width) || (height != buffer.height);
-				
-				_flashBitmap.x = -0.5 * width * (scaleX - initialZoom) * FlxG.scaleMode.scale.x;
-				_flashBitmap.y = -0.5 * height * (scaleY - initialZoom) * FlxG.scaleMode.scale.y;
+				if (staticMode)
+					_flashBitmap.x = _flashBitmap.y = 0;
+				else {
+					_flashBitmap.x = -0.5 * width * (scaleX - initialZoom) * FlxG.scaleMode.scale.x;
+					_flashBitmap.y = -0.5 * height * (scaleY - initialZoom) * FlxG.scaleMode.scale.y;
+				}
 			}
 		}
 		else
