@@ -3,7 +3,7 @@ package;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxState;
-import flixel.addons.display.FlxClothSprite;
+import flixel.addons.effects.FlxClothSprite;
 import flixel.text.FlxText;
 
 /**

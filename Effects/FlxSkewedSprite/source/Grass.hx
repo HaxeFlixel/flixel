@@ -1,6 +1,6 @@
 package;
 
-import flixel.addons.display.FlxSkewedSprite;
+import flixel.addons.effects.FlxSkewedSprite;
 import flixel.FlxG;
 
 /**
