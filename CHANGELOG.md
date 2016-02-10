@@ -1,14 +1,21 @@
-?.?.?
+2.0.0
 ------------------------------
 * Compatibility with flixel 4.0.0
-* Added 18 new demos:
- * Arcade Classics:
-    * Flixius 
+* Renamed "Arcade Classics" to "Arcade"
+* Moved 3 demos to Arcade:
+ * Flappybalt
+ * MinimalistTD
+ * FlxPongAPI
+* Added 22 new demos:
+ * Arcade:
+    * Flixius
  * Editors:
     * FlxPexParser
  * Effects:
     * DynamicShadows
-    * FlxRainbowSprite
+    * Filters
+    * FlxClothSprite
+    * FlxEffectSprite (replaces the FlxGlitchSprite and FlxWaveSprite demos)
     * Parallax
     * PostProcess
     * Transitions
@@ -17,6 +24,7 @@
     * FlxFSM
     * FlxNapeTerrain
     * FlxNapeTilemap
+    * FlxPieDial
     * FlxScene
     * FlxShape
     * FlxSound
@@ -25,12 +33,19 @@
     * BSPMapGen
     * Calculator
     * FrameCollections
+ * User Interface
+    * Tooltips
 * Merged Effects/ParticlesExt into Effects/Particles
-* FlxNape: added a SolarSystem demo
+* FlxNape:
+ * added a SolarSystem demo
+ * fixed a crash on Neko
 * GamepadTest:
  * added a gamepad model dropdown
  * added a deadzone numeric stepper
  * added a list of all connected gamepads
+ * added Wii Remote support
+ * added a label with the gamepad's name
+* TiledEditor: updated to showcase support for image layers and image tilesets
 
 1.1.2
 ------------------------------
