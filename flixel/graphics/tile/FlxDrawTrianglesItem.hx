@@ -20,6 +20,9 @@ typedef DrawData<T> = #if flash Vector<T> #else Array<T> #end;
  */
 class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 {
+	private static var point:FlxPoint = FlxPoint.get();
+	private static var rect:FlxRect = FlxRect.get();
+	
 	public var vertices:DrawData<Float>;
 	public var indices:DrawData<Int>;
 	public var uvtData:DrawData<Float>;
@@ -29,7 +32,7 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 	public var indicesPosition:Int = 0;
 	public var colorsPosition:Int = 0;
 	
-	private var bounds:FlxRect;
+	private var bounds:FlxRect = FlxRect.get();
 	
 	public function new() 
 	{
@@ -47,18 +50,15 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		uvtData = new Array<Float>();
 		colors = new Array<Int>();
 		#end
-		
-		bounds = FlxRect.get();
 	}
 	
 	override public function render(camera:FlxCamera):Void 
 	{
-		if (!FlxG.renderTile) return;
+		if (!FlxG.renderTile)
+			return;
 		
 		if (numTriangles <= 0)
-		{
 			return;
-		}
 		
 		camera.canvas.graphics.beginBitmapFill(graphics.bitmap, null, true, (camera.antialiasing || antialiasing));
 		#if !openfl_legacy
@@ -106,10 +106,10 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 	public function addTriangles(vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, colors:DrawData<Int> = null, position:FlxPoint = null, cameraBounds:FlxRect = null):Void
 	{
 		if (position == null)
-			position = FlxPoint.weak();
+			position = point.set();
 		
 		if (cameraBounds == null)
-			cameraBounds = FlxRect.weak(0, 0, FlxG.width, FlxG.height);
+			cameraBounds = rect.set(0, 0, FlxG.width, FlxG.height);
 		
 		var verticesLength:Int = vertices.length;
 		var prevVerticesLength:Int = this.vertices.length;
