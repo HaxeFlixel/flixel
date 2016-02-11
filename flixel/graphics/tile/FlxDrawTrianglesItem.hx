@@ -23,10 +23,10 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 	private static var point:FlxPoint = FlxPoint.get();
 	private static var rect:FlxRect = FlxRect.get();
 	
-	public var vertices:DrawData<Float>;
-	public var indices:DrawData<Int>;
-	public var uvtData:DrawData<Float>;
-	public var colors:DrawData<Int>;
+	public var vertices:DrawData<Float> = new DrawData<Float>();
+	public var indices:DrawData<Int> = new DrawData<Int>();
+	public var uvtData:DrawData<Float> = new DrawData<Float>();
+	public var colors:DrawData<Int> = new DrawData<Int>();
 	
 	public var verticesPosition:Int = 0;
 	public var indicesPosition:Int = 0;
@@ -38,18 +38,6 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 	{
 		super();
 		type = FlxDrawItemType.TRIANGLES;
-		
-		#if flash
-		vertices = new Vector<Float>();
-		indices = new Vector<Int>();
-		uvtData = new Vector<Float>();
-		colors = new Vector<Int>();
-		#else
-		vertices = new Array<Float>();
-		indices = new Array<Int>();
-		uvtData = new Array<Float>();
-		colors = new Array<Int>();
-		#end
 	}
 	
 	override public function render(camera:FlxCamera):Void 
