@@ -57,6 +57,7 @@
 
 * added `getPosition()` and `getHitbox()`
 * split some of `separate()`'s functionality into `updateTouchingFlags()`, allowing `touching` to be used without any separate calls (#1555)
+* added `path` (#1712)
 
 ### flixel.FlxSprite:
 
@@ -268,6 +269,7 @@
  * retrieving text dimensions (`width` and `height`) can now trigger text graphic regeneration (if any changes led to a dimensions change) to report the correct values
  * `borderColor` now supports alpha values / ARBG colors
  * fixed `setFormat()` resetting `alignment` (#1629)
+* Moved `FlxTextField` to flixel-addons
 
 ### flixel.tile:
 
@@ -339,6 +341,7 @@
  * `active` is now only true when in progress
  * fixed velocity being set even if the object positon matches the current node
  * exposed `nodeIndex` as a read-only property
+ * removed the `Object` argument from `start()`, now the path has to be assigned to `FlxObject#path` (#1712)
 * `FlxPool`:
  * improved pooling performance (#1189)
 * `FlxSignal`:
