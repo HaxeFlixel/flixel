@@ -6,7 +6,7 @@
  * Flappybalt
  * MinimalistTD
  * FlxPongAPI
-* Added 22 new demos:
+* Added 23 new demos:
  * Arcade:
     * Flixius
  * Editors:
@@ -32,10 +32,12 @@
  * Other:
     * BSPMapGen
     * Calculator
+    * FlxAtlas
     * FrameCollections
  * User Interface
     * Tooltips
 * Merged Effects/ParticlesExt into Effects/Particles
+* Renamed FlxBitmapTextField to FlxBitmapText
 * FlxNape:
  * added a SolarSystem demo
  * fixed a crash on Neko
