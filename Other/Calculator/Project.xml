@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
-	<app title="calc" file="calc" main="Main" version="0.0.1" company="" />
+	<app title="Calculator" file="Calculator" main="Main" version="0.0.1" company="" />
 	
 	<window background="#222222" fps="60" width="640" height="480"/>
 	<window orientation="portrait" resizable="false" if="web" />

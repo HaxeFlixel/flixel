@@ -16,21 +16,23 @@
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
     <class path="C:\HaxeToolkit\haxe\lib\flixel\git" />
-    <class path="C:\HaxeToolkit\haxe\lib\openfl\3,0,8" />
-    <class path="C:\HaxeToolkit\haxe\lib\lime\2,4,3" />
+    <class path="C:\HaxeToolkit\haxe\lib\openfl\git" />
+    <class path="C:\HaxeToolkit\haxe\lib\lime\2,9,0" />
+    <class path="C:\HaxeToolkit\haxe\lib\hscript\2,0,5" />
     <class path="C:\HaxeToolkit\haxe\lib\flixel-addons\git" />
     <class path="C:\HaxeToolkit\haxe\lib\flixel-ui\git" />
     <class path="source" />
-    <class path="export\flash\haxe" />
+    <class path="C:\HaxeToolkit\haxe\lib\openfl\git\extern" />
+    <class path="export\html5\haxe" />
   </classpaths>
   <!-- Build options -->
   <build>
-    <option directives="flixel=3.3.8&#xA;openfl=3.0.8&#xA;lime=2.4.3&#xA;flixel-addons=1.1.0&#xA;flixel-ui=1.0.2&#xA;openfl-next&#xA;FLX_NO_MOUSE&#xA;FLX_NO_GAMEPAD&#xA;tools=2.4.3&#xA;no-compilation&#xA;openfl-flash&#xA;FLX_NO_TOUCH&#xA;web" />
+    <option directives="flixel=3.3.12&#xA;openfl=3.6.0&#xA;lime=2.9.0&#xA;hscript=2.0.5&#xA;flixel-addons=1.1.1&#xA;flixel-ui=1.0.2&#xA;openfl-next&#xA;FLX_NO_GAMEPAD&#xA;tools=2.9.0&#xA;FLX_NO_DEBUG&#xA;no-compilation&#xA;openfl-html5&#xA;canvas&#xA;NAPE_RELEASE_BUILD&#xA;FLX_NO_TOUCH&#xA;lime-html5&#xA;html5&#xA;web&#xA;html5&#xA;display" />
     <option flashStrict="False" />
     <option noInlineOnDebug="False" />
     <option mainClass="ApplicationMain" />
     <option enabledebug="False" />
-    <option additional="--macro flixel.system.macros.FlxDefines.run()&#xA;-swf-version 11.8&#xA;-debug " />
+    <option additional="--remap flash:openfl&#xA;--macro flixel.system.macros.FlxDefines.run()&#xA;--macro allowPackage(&quot;flash&quot;)" />
   </build>
   <!-- haxelib libraries -->
   <haxelib>
