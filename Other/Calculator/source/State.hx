@@ -164,10 +164,10 @@ class State extends FlxState
 			
 			// Set all the output text colors to default (green)
 			for (text in outputs)
-				 text.color = 0xffc7e0c1;
+				text.color = 0xffc7e0c1;
 			
 			// Parse the string. If this fails, it'd be caught outside of this try
-			outputs[0].text = "\"" + Std.string(output) + "\"";
+			outputs[0].text = "\"" + output + "\"";
 			
 			// Otherwise try to cast each output to its corresponding type, catching the errors as a red '?' string
 			try { outputs[1].text = Std.string(cast(output, Int)); } 				catch (unknown:Dynamic) { outputs[1].color = 0xffe09f9f; outputs[1].text = "?"; }
