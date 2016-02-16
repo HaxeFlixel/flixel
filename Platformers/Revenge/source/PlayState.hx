@@ -141,13 +141,8 @@ class PlayState extends FlxState
 				_player.animation.play("walk");
 			}	
 		} 
-		else 
-		{
-			_flagWalking = false;
-		}
-		
 		// Check input and move right
-		if (FlxG.keys.anyPressed([RIGHT, D]))
+		else if (FlxG.keys.anyPressed([RIGHT, D]))
 		{
 			_player.velocity.x = _playerSpeed;
 			_player.flipX = false;
