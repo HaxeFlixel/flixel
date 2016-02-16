@@ -810,15 +810,12 @@ class FlxText extends FlxSprite
 			applyBorderTransparency();
 			applyFormats(_formatAdjusted, false);
 			
-			avoidMultilineBlur();
-			
 			graphic.bitmap.draw(textField, _matrix);
 		}
 		
 		_regen = false;
 		resetFrame();
 	}
-	
 	
 	private function avoidSingleLineBlur():Void
 	{
@@ -835,36 +832,6 @@ class FlxText extends FlxSprite
 			_matrix.translate(Math.floor((textField.width - textWidth) / 2), 0);
 		#end
 	}
-	
-	/**
-	 * Internal function that inserts an extra space in a line to prevent blurry lines.
-	 * Only work if wordWrap is not triggered, beacuse wordWrap seems to trim lines.
-	 * Ugly workaround for #1422.
-	 */
-	private function avoidMultilineBlur():Void
-	{
-		#if flash
-		if (textField.numLines <= 1 || alignment != FlxTextAlign.CENTER)
-			return;
-		
-		var newText = "";
-		for (i in 0...textField.numLines) 
-		{
-			var lineX = textField.getLineMetrics(i).x;
-			var lineText = textField.getLineText(i);
-			var spaceIndex = lineText.indexOf(" ");
-			
-			if (Math.floor(lineX) != lineX && spaceIndex >= 0)
-				lineText = lineText.insert(spaceIndex, " ");
-			
-			newText += lineText;
-		}
-		
-		if (newText != "")
-			textField.text = newText;
-		#end
-	}
-	
 	
 	override public function draw():Void 
 	{
