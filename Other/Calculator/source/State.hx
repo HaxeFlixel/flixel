@@ -88,8 +88,8 @@ class State extends FlxState
 					input.caretIndex++;
 				}));
 				
-				buttons[y][x].resize(21, 16);
 				buttons[y][x].label.setFormat("Font", 8, 0xff000000, CENTER);
+				buttons[y][x].resize(21, 16);
 				add(buttons[y][x]);
 			}
 		}
@@ -112,16 +112,16 @@ class State extends FlxState
 				          ];
 				
 				// Button functions
-				if (i == 0) { index--; if (index < 0) index = txt.length -1; }	// Previous
-				if (i == 1) { input.text = ""; return;  }                      // Clear
-				if (i == 2) { index++; if (index >= txt.length) index = 0; }	// Next
+				if (i == 0) { index--; if (index < 0) index = txt.length -1; }  // Previous
+				if (i == 1) { input.text = ""; return; }                        // Clear
+				if (i == 2) { index++; if (index >= txt.length) index = 0; }    // Next
 				
 				input.text = txt[index];
 				input.hasFocus = true;
 			});
 			
-			examples[i].resize(66, 16);
 			examples[i].label.setFormat("Font", 8, 0xff000000, CENTER);
+			examples[i].resize(66, 16);
 			add(examples[i]);
 		}
 		
