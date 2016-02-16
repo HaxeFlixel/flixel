@@ -89,7 +89,7 @@ class PlayState extends FlxState
 		bitmapText.wrapByWord = true;
 		bitmapText.text = "Math \n for game developers";
 		bitmapText.y = 40;
-		bitmapText.alignment = "center";
+		bitmapText.alignment = CENTER;
 		add(bitmapText);
 		
 		// Experimental filters feature - filter frames collection

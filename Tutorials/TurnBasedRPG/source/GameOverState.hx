@@ -44,12 +44,12 @@ class GameOverState extends FlxState
 		// create and add each of our items
 		
 		_txtTitle = new FlxText(0, 20, 0, _win ? "You Win!" : "Game Over!", 22);
-		_txtTitle.alignment = "center";
+		_txtTitle.alignment = CENTER;
 		_txtTitle.screenCenter(FlxAxes.X);
 		add(_txtTitle);
 		
 		_txtMessage = new FlxText(0, (FlxG.height / 2) - 18, 0, "Final Score:", 8);
-		_txtMessage.alignment = "center";
+		_txtMessage.alignment = CENTER;
 		_txtMessage.screenCenter(FlxAxes.X);
 		add(_txtMessage);
 		
@@ -65,7 +65,7 @@ class GameOverState extends FlxState
 		var _hiScore = checkHiScore(_score);
 		
 		_txtHiScore = new FlxText(0, (FlxG.height / 2) + 10, 0, "Hi-Score: " + _hiScore, 8);
-		_txtHiScore.alignment = "center";
+		_txtHiScore.alignment = CENTER;
 		_txtHiScore.screenCenter(FlxAxes.Y);
 		add(_txtHiScore);
 		

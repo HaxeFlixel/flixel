@@ -32,12 +32,12 @@ class OptionsState extends FlxState
 	{
 		// setup and add our objects to the screen
 		_txtTitle = new FlxText(0, 20, 0, "Options", 22);
-		_txtTitle.alignment = "center";
+		_txtTitle.alignment = CENTER;
 		_txtTitle.screenCenter(FlxAxes.X);
 		add(_txtTitle);
 		
 		_txtVolume = new FlxText(0, _txtTitle.y + _txtTitle.height + 10, 0, "Volume", 8);
-		_txtVolume.alignment = "center";
+		_txtVolume.alignment = CENTER;
 		_txtVolume.screenCenter(FlxAxes.X);
 		add(_txtVolume);
 		
@@ -57,7 +57,7 @@ class OptionsState extends FlxState
 		add(_barVolume);
 		
 		_txtVolumeAmt = new FlxText(0, 0, 200, (FlxG.sound.volume * 100) + "%", 8);
-		_txtVolumeAmt.alignment = "center";
+		_txtVolumeAmt.alignment = CENTER;
 		_txtVolumeAmt.borderStyle = FlxTextBorderStyle.OUTLINE;
 		_txtVolumeAmt.borderColor = 0xff464646;
 		_txtVolumeAmt.y = _barVolume.y + (_barVolume.height / 2) - (_txtVolumeAmt.height / 2);

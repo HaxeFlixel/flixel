@@ -90,7 +90,7 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 		
 		// setup the player's health display and add it to the group.
 		_txtPlayerHealth = new FlxText(0, _sprPlayer.y + _sprPlayer.height  + 2, 0, "3 / 3", 8);
-		_txtPlayerHealth.alignment = "center";
+		_txtPlayerHealth.alignment = CENTER;
 		_txtPlayerHealth.x = _sprPlayer.x + 4 - (_txtPlayerHealth.width / 2);
 		add(_txtPlayerHealth);
 		
@@ -118,14 +118,14 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 		{
 			d.color = FlxColor.WHITE;
 			d.setBorderStyle(SHADOW, FlxColor.RED);
-			d.alignment = "center";
+			d.alignment = CENTER;
 			d.visible = false;
 			add(d);
 		}
 		
 		// create our results text object. We'll position it, but make it hidden for now.
 		_results = new FlxText(_sprBack.x + 2, _sprBack.y + 9, 116, "", 18);
-		_results.alignment = "center";
+		_results.alignment = CENTER;
 		_results.color = FlxColor.YELLOW;
 		_results.setBorderStyle(SHADOW, FlxColor.GRAY);
 		_results.visible = false;

@@ -89,7 +89,7 @@ class State extends FlxState
 				}));
 				
 				buttons[y][x].resize(21, 16);
-				buttons[y][x].label.setFormat("Font", 8, 0xff000000, "center");
+				buttons[y][x].label.setFormat("Font", 8, 0xff000000, CENTER);
 				add(buttons[y][x]);
 			}
 		}
@@ -121,7 +121,7 @@ class State extends FlxState
 			});
 			
 			examples[i].resize(66, 16);
-			examples[i].label.setFormat("Font", 8, 0xff000000, "center");
+			examples[i].label.setFormat("Font", 8, 0xff000000, CENTER);
 			add(examples[i]);
 		}
 		
