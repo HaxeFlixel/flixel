@@ -1,3 +1,8 @@
+2.0.1
+------------------------------
+* FlxSnake:
+ * fixed the pickup sound effect not being played
+
 2.0.0
 ------------------------------
 * Compatibility with flixel 4.0.0
