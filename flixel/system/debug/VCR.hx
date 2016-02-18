@@ -89,7 +89,7 @@ class VCR
 	public inline function recording():Void
 	{
 		recordBtn.changeIcon(new GraphicRecordOn(0, 0));
-		recordBtn.upHandler = FlxG.vcr.stopRecording;
+		recordBtn.upHandler = FlxG.vcr.stopRecording.bind(true);
 	}
 
 	/**
