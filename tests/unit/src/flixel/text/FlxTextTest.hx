@@ -1,5 +1,6 @@
 package flixel.text;
 
+import flixel.system.FlxAssets;
 import flixel.text.FlxText;
 import flixel.text.FlxText.FlxTextAlign;
 import massive.munit.Assert;
@@ -18,7 +19,7 @@ class FlxTextTest extends FlxTest
 	@Test
 	function testFontDefaultValue()
 	{
-		Assert.areEqual(text.font, "Nokia Cellphone FC Small");
+		Assert.areEqual(text.font, FlxAssets.FONT_DEFAULT);
 	}
 	
 	@Test // #1629
