@@ -34,7 +34,7 @@ class MenuState extends FlxState
 		
 		// Load a map from CSV data; note that the tile graphic does not need to be a file; in this case, it's BitmapData.
 		_map = new FlxTilemap();
-		_map.loadMapFromCSV(Assets.getText("tilemaps/menu_tilemap.csv"), Reg.tileImage);
+		_map.loadMapFromCSV("tilemaps/menu_tilemap.csv", Reg.tileImage);
 		
 		// Game title
 		var headline:FlxText = new FlxText(0, 40, FlxG.width, "Minimalist TD", 16);

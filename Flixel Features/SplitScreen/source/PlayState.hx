@@ -29,7 +29,7 @@ class PlayState extends FlxState
 		
 		// Create the tilemap from the levelData we just created
 		_level = new FlxTilemap();
-		_level.loadMapFromCSV(Assets.getText("assets/level.csv"), FlxGraphic.fromClass(GraphicAuto), 0, 0, AUTO);
+		_level.loadMapFromCSV("assets/level.csv", FlxGraphic.fromClass(GraphicAuto), 0, 0, AUTO);
 		add(_level);
 		
 		_halfWidth = Std.int(FlxG.width / 2);

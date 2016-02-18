@@ -61,7 +61,7 @@ class PlayState extends FlxState
 		add(_player);
 		
 		// Load in the Level and Define Arrays for different slope types
-		add(level.loadMapFromCSV(Assets.getText("assets/slopemap.txt"), "assets/colortiles.png", 10, 10));
+		add(level.loadMapFromCSV("assets/slopemap.txt", "assets/colortiles.png", 10, 10));
 		
 		// tile tearing problem fix
 		var levelTiles:FlxTileFrames = FlxTileFrames.fromBitmapAddSpacesAndBorders("assets/colortiles.png", new FlxPoint(10, 10), new FlxPoint(2, 2), new FlxPoint(2, 2));

@@ -40,7 +40,7 @@ class PlayState extends FlxState
 		
 		// Set up the TILEMAP
 		_tilemap = new FlxTilemap();
-		_tilemap.loadMapFromCSV(Assets.getText("assets/simpleMap.csv"), "assets/tiles.png", 25, 25, AUTO);
+		_tilemap.loadMapFromCSV("assets/simpleMap.csv", "assets/tiles.png", 25, 25, AUTO);
 		add(_tilemap);
 		_tilemap.y -= 15;
 		
