@@ -162,6 +162,11 @@ class FlxText extends FlxSprite
 	private var _hasBorderAlpha = false;
 	
 	/**
+	 * Helper to draw line by line used at drawTextFieldTo().
+	 */
+	private var _textFieldRect:Rectangle = new Rectangle();
+	
+	/**
 	 * Creates a new FlxText object at the specified position.
 	 * 
 	 * @param   X              The X position of the text.
@@ -821,23 +826,22 @@ class FlxText extends FlxSprite
 		#if flash
 		if (alignment == FlxTextAlign.CENTER)
 		{
-			// Prevents blurry lines.
 			var h:Int = 0;
-			var old_tx:Float = _matrix.tx;
-			var rect:Rectangle = new Rectangle();
+			var tx:Float = _matrix.tx;
 			for (i in 0...textField.numLines) 
 			{
 				var lineMetrics = textField.getLineMetrics(i);
+				
+				// Workaround for blurry lines caused by non-integer x positions on flash
 				if (lineMetrics.x != Std.int(lineMetrics.x))
 				{
-					_matrix.tx = old_tx + 0.5;
+					_matrix.tx = tx + 0.5;
 				}
+				_textFieldRect.setTo(0, h, textField.width, lineMetrics.height + lineMetrics.descent);
 				
-				rect.setTo(0, h, textField.width, lineMetrics.height + lineMetrics.descent);
+				graphic.draw(textField, _matrix, null, null, _textFieldRect, false);
 				
-				graphic.draw(textField, _matrix, null, null, rect, false);
-				
-				_matrix.tx = old_tx;
+				_matrix.tx = tx;
 				h += Std.int(lineMetrics.height);
 			}
 			
