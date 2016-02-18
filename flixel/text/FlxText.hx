@@ -23,6 +23,7 @@ import flixel.util.FlxDestroyUtil;
 import flixel.util.helpers.FlxRange;
 import openfl.Assets;
 import haxe.Utf8;
+import openfl.geom.Rectangle;
 using flixel.util.FlxStringUtil;
 using StringTools;
 
@@ -804,33 +805,47 @@ class FlxText extends FlxSprite
 			
 			_matrix.identity();
 			
-			avoidSingleLineBlur();
-			
 			applyBorderStyle();
 			applyBorderTransparency();
 			applyFormats(_formatAdjusted, false);
 			
-			graphic.bitmap.draw(textField, _matrix);
+			drawTextFieldTo(graphic.bitmap);
 		}
 		
 		_regen = false;
 		resetFrame();
 	}
 	
-	private function avoidSingleLineBlur():Void
+	private function drawTextFieldTo(graphic:BitmapData):Void
 	{
 		#if flash
-		// If it's a single, centered line of text, we center it ourselves so it doesn't blur to hell
-		if (textField.numLines > 1 || alignment != FlxTextAlign.CENTER)
+		if (alignment == FlxTextAlign.CENTER)
+		{
+			// Prevents blurry lines.
+			var h:Int = 0;
+			var old_tx:Float = _matrix.tx;
+			var rect:Rectangle = new Rectangle();
+			for (i in 0...textField.numLines) 
+			{
+				var lineMetrics = textField.getLineMetrics(i);
+				if (lineMetrics.x != Std.int(lineMetrics.x))
+				{
+					_matrix.tx = old_tx + 0.5;
+				}
+				
+				rect.setTo(0, h, textField.width, lineMetrics.height + lineMetrics.descent);
+				
+				graphic.draw(textField, _matrix, null, null, rect, false);
+				
+				_matrix.tx = old_tx;
+				h += Std.int(lineMetrics.height);
+			}
+			
 			return;
-		
-		_formatAdjusted.align = TextFormatAlign.LEFT;
-		textField.setTextFormat(_formatAdjusted);
-		
-		var textWidth = textField.getLineMetrics(0).width;
-		if (textWidth <= textField.width)
-			_matrix.translate(Math.floor((textField.width - textWidth) / 2), 0);
+		}
 		#end
+		
+		graphic.draw(textField, _matrix);
 	}
 	
 	override public function draw():Void 
@@ -942,7 +957,7 @@ class FlxText extends FlxSprite
 	{
 		var graphic:BitmapData = _hasBorderAlpha ? _borderPixels : graphic.bitmap;
 		_matrix.translate(x, y);
-		graphic.draw(textField, _matrix);
+		drawTextFieldTo(graphic);
 	}
 	
 	private inline function applyFormats(FormatAdjusted:TextFormat, UseBorderColor:Bool = false):Void
