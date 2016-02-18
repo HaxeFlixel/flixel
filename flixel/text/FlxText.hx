@@ -674,7 +674,7 @@ class FlxText extends FlxSprite
 	}
 	
 	private function set_borderStyle(style:FlxTextBorderStyle):FlxTextBorderStyle
-	{		
+	{
 		if (style != borderStyle)
 			_regen = true;
 		
@@ -691,7 +691,7 @@ class FlxText extends FlxSprite
 	
 	private function set_borderSize(Value:Float):Float
 	{
-		if (Value != borderSize && borderStyle != NONE)		
+		if (Value != borderSize && borderStyle != NONE)
 			_regen = true;
 		
 		return borderSize = Value;
