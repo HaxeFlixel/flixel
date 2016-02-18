@@ -6,6 +6,7 @@ import flixel.FlxState;
 import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
 import flixel.util.FlxColor;
+using StringTools;
 
 class PlayState extends FlxState
 {
@@ -13,7 +14,7 @@ class PlayState extends FlxState
 	private var _slime:Slime;
 	private var _powerup:FlxSprite;
 	
-	private var _info:String = "LEFT & RIGHT to move, UP to jump\nDOWN (in the air)" +
+	private var _info:String = "LEFT & RIGHT to move, UP to jump\nDOWN (in the air) " +
 		"to ground-pound.\nR to Reset\n\nCurrent State: {STATE}";
 	private var _txtInfo:FlxText;
 	
@@ -40,11 +41,9 @@ class PlayState extends FlxState
 			1,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,1,1,1,1,
 			1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
 			20, 15, "assets/tiles.png", 16, 16);
-		
 		add(_map);
 		
 		_slime = new Slime(192, 128);
-		
 		add(_slime);
 		
 		_powerup = new FlxSprite(48, 208, "assets/powerup.png");
@@ -61,7 +60,7 @@ class PlayState extends FlxState
 		FlxG.collide(_map, _slime);
 		FlxG.overlap(_slime, _powerup, getPowerup);
 		
-		_txtInfo.text = StringTools.replace(_info, "{STATE}", Type.getClassName(_slime.fsm.stateClass));
+		_txtInfo.text = _info.replace("{STATE}", Type.getClassName(_slime.fsm.stateClass));
 		
 		if (FlxG.keys.justReleased.R)
 		{

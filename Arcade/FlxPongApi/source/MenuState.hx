@@ -12,6 +12,7 @@ import flixel.addons.text.FlxTextField;
 import flixel.group.FlxGroup;
 import flixel.text.FlxText;
 import openfl.utils.ByteArray;
+using StringTools;
 
 /**
  * These lines allow embedding of assets as ByteArrays, which helps to minimize the threat of data being compromised.
@@ -395,7 +396,7 @@ class MenuState extends FlxState
 	private function loginCallback(Name:String):Void
 	{
 		_connection.text = "Attempting to log in...";
-		FlxGameJolt.authUser(StringTools.trim(_input1.text), StringTools.trim(_input2.text), initCallback);
+		FlxGameJolt.authUser(_input1.text.trim(), _input2.text.trim(), initCallback);
 	}
 	
 	private function mineCallback(Name:String):Void

@@ -2,6 +2,7 @@ import haxe.xml.Fast;
 import flash.Lib;
 import flixel.FlxG;
 import flixel.addons.ui.FlxUIState;
+using flixel.util.FlxStringUtil;
 
 /**
  * ...
@@ -24,8 +25,7 @@ class State_SaveMenu extends FlxUIState
 		}
 		if (id.indexOf("ui_get:") == 0)
 		{
-			var str:String = StringTools.replace(id,"ui_get:","");
-			switch (str)
+			switch (id.remove("ui_get:"))
 			{
 				case "save_slot":
 					return new SaveSlot(data, _ui);
@@ -47,10 +47,5 @@ class State_SaveMenu extends FlxUIState
 				}
 			}
 		}
-	}
-	
-	public override function update(elapsed:Float):Void
-	{
-		super.update(elapsed);
 	}
 }
