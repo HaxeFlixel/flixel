@@ -27,7 +27,7 @@
 	</section>
 	
 	<section if="create">
-		<sample path="${haxelib:flixel-demos}/Arcade Classics" />
+		<sample path="${haxelib:flixel-demos}/Arcade" />
 		<sample path="${haxelib:flixel-demos}/Editors" />
 		<sample path="${haxelib:flixel-demos}/Effects" />
 		<sample path="${haxelib:flixel-demos}/Flixel Features" />
