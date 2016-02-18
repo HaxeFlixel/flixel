@@ -73,7 +73,7 @@ class FlxPreloader extends FlxBasePreloader
 		_buffer.addChild(_bmpBar);
 		
 		_text = new TextField();
-		_text.defaultTextFormat = new TextFormat("Nokia Cellphone FC Small", 8, 0x5f6aff);
+		_text.defaultTextFormat = new TextFormat(FlxAssets.FONT_DEFAULT, 8, 0x5f6aff);
 		_text.embedFonts = true;
 		_text.selectable = false;
 		_text.multiline = false;
