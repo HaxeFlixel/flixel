@@ -1054,6 +1054,14 @@ class FlxCamera extends FlxBasic
 		
 		switch (Style)
 		{
+			case LOCKON:
+				if (target != null) 
+				{	
+					w = target.width;
+					h = target.height;
+				}
+				deadzone = FlxRect.get((width - w) / 2, (height - h) / 2 - h * 0.25, w, h);
+			
 			case PLATFORMER:
 				var w:Float = (width / 8);
 				var h:Float = (height / 3);
@@ -1067,18 +1075,10 @@ class FlxCamera extends FlxBasic
 				helper = Math.max(width, height) / 8;
 				deadzone = FlxRect.get((width - helper) / 2, (height - helper) / 2, helper, helper);
 				
-			case LOCKON:
-				if (target != null) 
-				{	
-					w = target.width;
-					h = target.height;
-				}
-				deadzone = FlxRect.get((width - w) / 2, (height - h) / 2 - h * 0.25, w, h);
-				
 			case SCREEN_BY_SCREEN:
 				deadzone = FlxRect.get(0, 0, width, height);
 				
-			default:
+			case NO_DEAD_ZONE:
 				deadzone = null;
 		}
 	}
