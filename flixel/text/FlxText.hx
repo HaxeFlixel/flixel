@@ -833,9 +833,10 @@ class FlxText extends FlxSprite
 				var lineMetrics = textField.getLineMetrics(i);
 				
 				// Workaround for blurry lines caused by non-integer x positions on flash
-				if (lineMetrics.x != Std.int(lineMetrics.x))
+				var diff:Float = lineMetrics.x - Std.int(lineMetrics.x);
+				if (diff != 0)
 				{
-					_matrix.tx = tx + 0.5;
+					_matrix.tx = tx + diff;
 				}
 				_textFieldRect.setTo(0, h, textField.width, lineMetrics.height + lineMetrics.descent);
 				
