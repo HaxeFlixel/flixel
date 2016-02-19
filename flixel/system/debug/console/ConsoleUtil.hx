@@ -103,7 +103,7 @@ class ConsoleUtil
 			{
 				var name = field.substr(4);
 				// property without a backing field, needs to be added
-				if (!fields.contains(name))
+				if (!fields.contains(name) && !filteredFields.contains(name))
 					filteredFields.push(name);
 			}
 			else
