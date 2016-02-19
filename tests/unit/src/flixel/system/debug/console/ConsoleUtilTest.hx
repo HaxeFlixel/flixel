@@ -19,8 +19,8 @@ class ConsoleUtilTest extends FlxTest
 	function testGetFields(objectOrClass:Dynamic)
 	{
 		FlxAssert.arraysEqual(
-			ConsoleUtil.getFields(objectOrClass),
-			[for (i in 0...6) "test" + (i + 1)]);
+			[for (i in 0...6) "test" + (i + 1)],
+			ConsoleUtil.getFields(objectOrClass));
 	}
 }
 
