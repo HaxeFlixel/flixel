@@ -1,6 +1,9 @@
 package flixel.system.replay;
 
 import flixel.FlxG;
+import flixel.system.replay.CodeValuePair;
+import flixel.system.replay.FrameRecord;
+import flixel.system.replay.MouseRecord;
 import flixel.util.FlxArrayUtil;
 
 /**
@@ -103,17 +106,14 @@ class FlxReplay
 		var line:String;
 		var i:Int = 1;
 		var l:Int = lines.length;
-		while (i < l)
+		while (i < l - 1) // last line is blank, traditionally
 		{
 			line = lines[i++];
-			if (line.length > 3)
+			_frames[frameCount++] = new FrameRecord().load(line);
+			if (frameCount >= _capacity)
 			{
-				_frames[frameCount++] = new FrameRecord().load(line);
-				if (frameCount >= _capacity)
-				{
-					_capacity *= 2;
-					FlxArrayUtil.setLength(_frames, _capacity);
-				}
+				_capacity *= 2;
+				FlxArrayUtil.setLength(_frames, _capacity);
 			}
 		}
 		
@@ -122,20 +122,22 @@ class FlxReplay
 	
 	/**
 	 * Save the current recording data off to a String object.
-	 * Basically goes through and calls FrameRecord.save() on each frame in the replay.
+	 * Basically goes through and calls FrameRecord.save() on each frame in the replay, and outputs it only if anything happened that frame.
 	 * return	The gameplay recording in simple ASCII format.
 	 */
 	public function save():String
 	{
 		if (frameCount <= 0)
-		{
 			return null;
-		}
+		
 		var output:String = seed + "\n";
+		var curLine:String;
 		var i:Int = 0;
 		while (i < frameCount)
 		{
-			output += _frames[i++].save() + "\n";
+			curLine = _frames[i++].save();
+			if (curLine != null)
+				output += curLine + "\n";
 		}
 		return output;
 	}
@@ -193,24 +195,18 @@ class FlxReplay
 			return;
 		}
 		if (_frames[_marker].frame != frame++)
-		{
 			return;
-		}
 		
 		var fr:FrameRecord = _frames[_marker++];
 		
 		#if FLX_KEYBOARD
 		if (fr.keys != null)
-		{
 			FlxG.keys.playback(fr.keys);
-		}
 		#end
 		
 		#if FLX_MOUSE
 		if (fr.mouse != null)
-		{
 			FlxG.mouse.playback(fr.mouse);
-		}
 		#end
 	}
 	

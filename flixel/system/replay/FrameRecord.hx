@@ -60,6 +60,9 @@ class FrameRecord
 	public function save():String
 	{
 		var output:String = frame + "k";
+	
+		if ((keys == null) && (mouse == null))
+			return null;
 		
 		if (keys != null)
 		{
