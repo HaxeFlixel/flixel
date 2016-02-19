@@ -161,10 +161,12 @@ class FlxText extends FlxSprite
 	
 	private var _hasBorderAlpha = false;
 	
+	#if flash
 	/**
 	 * Helper to draw line by line used at drawTextFieldTo().
 	 */
 	private var _textFieldRect:Rectangle = new Rectangle();
+	#end
 	
 	/**
 	 * Creates a new FlxText object at the specified position.
@@ -821,10 +823,13 @@ class FlxText extends FlxSprite
 		resetFrame();
 	}
 	
+	/**
+	 * Internal function to draw textField to a bitmapData, if flash it calculates every line x to avoid blurry lines.
+	 */
 	private function drawTextFieldTo(graphic:BitmapData):Void
 	{
 		#if flash
-		if (alignment == FlxTextAlign.CENTER)
+		if (alignment == FlxTextAlign.CENTER && isTextBlurry())
 		{
 			var h:Int = 0;
 			var tx:Float = _matrix.tx;
@@ -852,6 +857,24 @@ class FlxText extends FlxSprite
 		
 		graphic.draw(textField, _matrix);
 	}
+	
+	#if flash
+	/**
+	 * Helper function for drawTextFieldTo(), this checks if thw workaround is needed to prevent blurry lines.
+	 */
+	private function isTextBlurry():Bool
+	{
+		for (i in 0...textField.numLines) 
+		{
+			var lineMetricsX = textField.getLineMetrics(i).x;
+			if (lineMetricsX - Std.int(lineMetricsX) != 0)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	#end
 	
 	override public function draw():Void 
 	{
