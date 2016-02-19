@@ -1,3 +1,8 @@
+4.1.0
+------------------------------
+* `FlxG.vcr`:
+	* added an `OpenSaveDialog` argument to `stopRecording()`
+
 4.0.0
 ------------------------------
 
