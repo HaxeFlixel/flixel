@@ -1,7 +1,9 @@
 4.1.0
 ------------------------------
 * `FlxG.vcr`:
-	* added an `OpenSaveDialog` argument to `stopRecording()`
+	* added an `OpenSaveDialog` argument to `stopRecording()` (#1726)
+* `FlxText`:
+	* [Flash] fixed blurry lines on multiline texts with `FlxTextAlign.CENTER` (#1728)
 
 4.0.0
 ------------------------------
