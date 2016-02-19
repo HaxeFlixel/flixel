@@ -11,6 +11,6 @@ class FlxAssert
 		if (array1.equals(array2))
 			Assert.assertionCount++;
 		else
-			Assert.fail('Expected $array1 but was $array2', info);
+			Assert.fail('\nExpected\n   ${array1}\nbut was\n   ${array2}\n', info);
 	}
 }
