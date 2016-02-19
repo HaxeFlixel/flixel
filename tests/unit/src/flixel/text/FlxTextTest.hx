@@ -42,6 +42,7 @@ class FlxTextTest extends FlxTest
 		Assert.areNotEqual(0, text.frameHeight);
 	}
 	
+	#if !html5
 	@Test // #1422
 	function testBlurryLines()
 	{
@@ -59,4 +60,5 @@ class FlxTextTest extends FlxTest
 			}
 		}
 	}
+	#end
 }
