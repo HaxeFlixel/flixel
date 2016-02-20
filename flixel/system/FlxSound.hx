@@ -144,6 +144,10 @@ class FlxSound extends FlxBasic
 	 * Helper var to prevent the sound from playing after focus was regained when it was already paused.
 	 */
 	private var _alreadyPaused:Bool = false;
+	/**
+	 * In case of looping, from where to restart the sound when it loops back
+	 */
+	private var loopPoint(default, set):Float;
 	
 	/**
 	 * The FlxSound constructor gets all the variables initialized, but NOT ready to play a sound yet.
@@ -169,6 +173,7 @@ class FlxSound extends FlxBasic
 		_volume = 1.0;
 		_volumeAdjust = 1.0;
 		looped = false;
+		loopPoint = 0.0;
 		_target = null;
 		_radius = 0;
 		_proximityPan = false;
@@ -383,7 +388,7 @@ class FlxSound extends FlxBasic
 	 * 
 	 * @param	ForceRestart	Whether to start the sound over or not.  Default value is false, meaning if the sound is already playing or was paused when you call play(), it will continue playing from its current position, NOT start again from the beginning.
 	 */
-	public function play(ForceRestart:Bool = false):FlxSound
+	public function play(ForceRestart:Bool = false, Position:Float = 0.0):FlxSound
 	{
 		if (!exists)
 		{
@@ -391,7 +396,7 @@ class FlxSound extends FlxBasic
 		}
 		if (ForceRestart)
 		{
-			cleanup(false, true, true);
+			cleanup(false, true);
 		}
 		else if (playing)
 		{
@@ -405,7 +410,7 @@ class FlxSound extends FlxBasic
 		}
 		else
 		{
-			startSound(0);
+			startSound(Position);
 		}
 		return this;
 	}
@@ -433,7 +438,7 @@ class FlxSound extends FlxBasic
 		}
 		time = _channel.position;
 		_paused = true;
-		cleanup(false, false, false);
+		cleanup(false, false);
 		return this;
 	}
 	
@@ -442,8 +447,38 @@ class FlxSound extends FlxBasic
 	 */
 	public inline function stop():FlxSound
 	{
-		cleanup(autoDestroy, true, true);
+		cleanup(autoDestroy, true);
 		return this;
+	}
+	
+	/**
+	 * Sets the sound point at which to restart playing after a loop
+	 * @param	newloopPoint The new position in the sound, in milliseconds
+	 * @return	The updated value in milliseconds
+	 */
+	public function set_loopPoint(newloopPoint:Float):Float
+	{
+		if (looped && playing && loopPoint == 0.0)
+		{
+			loopPoint = newloopPoint;
+			var pos:Float = _channel.position;
+			cleanup(false, false);
+			startSound(pos);
+			return loopPoint;
+		}
+		loopPoint = newloopPoint;
+		return loopPoint;
+	}
+	
+	/**
+	 * Sets the sound point at which to restart playing after a loop using the more natural 
+	 * 	notation mm:ss.
+	 * @param	min	The minute part of the new position eg. 2 in case of 02:32
+	 * @param	sec	The seconds part of the new position eg. 32 in case of 02:32
+	 */
+	public inline function setloopPointMinSec(min:Int, sec:Int)
+	{
+		loopPoint = (min * 60 + sec) * 1000;
 	}
 	
 	/**
@@ -530,7 +565,7 @@ class FlxSound extends FlxBasic
 			return;
 		}
 		
-		var numLoops:Int = looped && Position == 0 ? FlxMath.MAX_VALUE_INT : 0;
+		var numLoops:Int = looped && loopPoint == 0.0 ? FlxMath.MAX_VALUE_INT : 0;
 		
 		time = Position;
 		_paused = false;
@@ -563,7 +598,7 @@ class FlxSound extends FlxBasic
 		if (looped)
 		{
 			cleanup(false);
-			play();
+			play(false, loopPoint);
 		}
 		else
 		{
@@ -576,9 +611,8 @@ class FlxSound extends FlxBasic
 	 * 
 	 * @param  destroySound    Whether or not to destroy the sound. If this is true, the position and fading will be reset as well.
 	 * @param  resetPosition    Whether or not to reset the position of the sound.
-	 * @param  resetFading    Whether or not to reset the current fading variables of the sound.
 	 */
-	private function cleanup(destroySound:Bool, resetPosition:Bool = true, resetFading:Bool = true):Void
+	private function cleanup(destroySound:Bool, resetPosition:Bool = true):Void
 	{
 		if (destroySound)
 		{
@@ -704,22 +738,19 @@ class FlxSound extends FlxBasic
 	
 	private inline function set_looped(loop:Bool):Bool
 	{
+		looped = loop;
+		
 		// If we're going from looping to not looping while playing,
 		// the channel needs to be updated so it won't loop next time.
-		
 		if (!loop && looped && playing)
 		{
 			looped = loop;
 			var pos:Float = _channel.position;
-			cleanup(false, false, false);
+			cleanup(false, false);
 			startSound(pos);
 		}
-		else
-		{
-			looped = loop;
-		}
 		
-		return loop;
+		return looped;
 	}
 	
 	override public function toString():String
