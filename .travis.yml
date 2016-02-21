@@ -2,7 +2,6 @@ language: haxe
 
 haxe:
   - 3.2.0
-  - development
 
 env: 
   - TARGET=flash
@@ -11,10 +10,6 @@ env:
   - TARGET=html5
 
 sudo: false
-
-matrix:
-  allow_failures:
-    - haxe: development
 
 install:
   - haxelib install munit > /dev/null
