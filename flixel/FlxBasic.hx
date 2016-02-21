@@ -38,8 +38,7 @@ class FlxBasic implements IFlxDestroyable
 	 */
 	public var alive(default, set):Bool = true;
 	/**
-	 * This flag indicates whether this objects has been destroyed or not. 
-	 * Cannot be set, use destroy() and revive().
+	 * Controls whether update() and draw() are automatically called by FlxState/FlxGroup.
 	 */
 	public var exists(default, set):Bool = true;
 	
