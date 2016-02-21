@@ -85,7 +85,7 @@ class RunTravis
 			return ExitCode.SUCCESS;
 		
 		Sys.println("\nBuilding mechanics demos...\n");
-		Sys.command("git", ["clone", "https://github.com/HaxeFlixel/haxeflixel-mechanics"]);
+		runCommand("git", ["clone", "https://github.com/HaxeFlixel/haxeflixel-mechanics"]);
 		
 		return buildProjects(target, ["-dir", "haxeflixel-mechanics"]);
 	}
@@ -123,7 +123,7 @@ class RunTravis
 	
 	static function haxelibRun(args:Array<String>):ExitCode
 	{
-		return Sys.command("haxelib", ["run"].concat(args));
+		return runCommand("haxelib", ["run"].concat(args));
 	}
 	
 	static function getResult(results:Array<ExitCode>):ExitCode
@@ -141,5 +141,11 @@ class RunTravis
 		var result = func();
 		Sys.setCwd(oldCwd);
 		return result;
+	}
+	
+	static function runCommand(cmd:String, args:Array<String>):ExitCode
+	{
+		Sys.println(cmd + " " + args.join(" "));
+		return Sys.command(cmd, args);
 	}
 }
