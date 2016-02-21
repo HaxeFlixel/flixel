@@ -5,17 +5,13 @@ import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.math.FlxPoint;
 import flixel.system.FlxSound;
-import flixel.ui.FlxButton;
-import flixel.math.FlxAngle;
-import flixel.util.FlxColor;
-import flixel.util.FlxDestroyUtil;
 
 class Player extends FlxSprite
 {
 	public var speed:Float = 200;
 	private var _sndStep:FlxSound;
 	
-	public function new(X:Float=0, Y:Float=0) 
+	public function new(X:Float = 0, Y:Float = 0) 
 	{
 		super(X, Y);
 		
@@ -123,12 +119,5 @@ class Player extends FlxSprite
 	{
 		movement();
 		super.update(elapsed);
-	}
-	
-	override public function destroy():Void 
-	{
-		super.destroy();
-		
-		_sndStep = FlxDestroyUtil.destroy(_sndStep);
 	}
 }

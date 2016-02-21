@@ -7,7 +7,6 @@ import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
-import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSave;
 using flixel.util.FlxSpriteUtil;
 
@@ -116,17 +115,5 @@ class GameOverState extends FlxState
 		{
 			FlxG.switchState(new MenuState());
 		});
-	}
-	
-	override public function destroy():Void 
-	{
-		super.destroy();
-		
-		// clean up all our objects!
-		_txtTitle = FlxDestroyUtil.destroy(_txtTitle);
-		_txtMessage = FlxDestroyUtil.destroy(_txtMessage);
-		_sprScore = FlxDestroyUtil.destroy(_sprScore);
-		_txtScore = FlxDestroyUtil.destroy(_txtScore);
-		_btnMainMenu = FlxDestroyUtil.destroy(_btnMainMenu);
 	}
 }

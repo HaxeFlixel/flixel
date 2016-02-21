@@ -1,21 +1,16 @@
 package;
 
-import flixel.addons.editors.ogmo.FlxOgmoLoader;
-import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxState;
-import flixel.group.FlxGroup;
+import flixel.addons.editors.ogmo.FlxOgmoLoader;
+import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.system.FlxSound;
 import flixel.tile.FlxTilemap;
 import flixel.ui.FlxVirtualPad;
 import flixel.util.FlxColor;
-import flixel.util.FlxDestroyUtil;
 using flixel.util.FlxSpriteUtil;
 
-/**
- * A FlxState which can be used for the actual gameplay.
- */
 class PlayState extends FlxState
 {
 	private var _player:Player;
@@ -37,9 +32,6 @@ class PlayState extends FlxState
 	public static var virtualPad:FlxVirtualPad;
 	#end
 
-	/**
-	 * Function that is called up when to state is created to set it up. 
-	 */
 	override public function create():Void
 	{
 		#if !FLX_NO_MOUSE
@@ -103,29 +95,7 @@ class PlayState extends FlxState
 			_grpEnemies.add(new Enemy(x + 4, y, Std.parseInt(entityData.get("etype"))));
 		}
 	}
-	
-	/**
-	 * Function that is called when this state is destroyed - you might want to 
-	 * consider setting all objects this state uses to null to help garbage collection.
-	 */
-	override public function destroy():Void
-	{
-		super.destroy();
-		_player = FlxDestroyUtil.destroy(_player);
-		_mWalls = FlxDestroyUtil.destroy(_mWalls);
-		_grpCoins = FlxDestroyUtil.destroy(_grpCoins);
-		_grpEnemies = FlxDestroyUtil.destroy(_grpEnemies);
-		_hud = FlxDestroyUtil.destroy(_hud);
-		_combatHud = FlxDestroyUtil.destroy(_combatHud);
-		_sndCoin = FlxDestroyUtil.destroy(_sndCoin);
-		#if mobile
-		virtualPad = FlxDestroyUtil.destroy(virtualPad);
-		#end
-	}
 
-	/**
-	 * Function that is called once every frame.
-	 */
 	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);

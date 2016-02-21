@@ -2,19 +2,12 @@ package;
 
 import flash.system.System;
 import flixel.FlxG;
-import flixel.FlxSprite;
 import flixel.FlxState;
-import flixel.system.FlxSound;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
-import flixel.math.FlxMath;
-import flixel.util.FlxDestroyUtil;
 
-/**
- * A FlxState which can be used for the game's menu.
- */
 class MenuState extends FlxState
 {
 	private var _txtTitle:FlxText;
@@ -24,9 +17,6 @@ class MenuState extends FlxState
 	private var _btnExit:FlxButton;
 	#end
 	
-	/**
-	 * Function that is called up when to state is created to set it up. 
-	 */
 	override public function create():Void
 	{
 		if (FlxG.sound.music == null) // don't restart the music if it's alredy playing
@@ -83,20 +73,5 @@ class MenuState extends FlxState
 		{
 			FlxG.switchState(new OptionsState());
 		});
-	}
-	
-	/**
-	 * Function that is called when this state is destroyed - you might want to 
-	 * consider setting all objects this state uses to null to help garbage collection.
-	 */
-	override public function destroy():Void
-	{
-		super.destroy();
-		_txtTitle = FlxDestroyUtil.destroy(_txtTitle);
-		_btnPlay = FlxDestroyUtil.destroy(_btnPlay);
-		_btnOptions = FlxDestroyUtil.destroy(_btnOptions);
-		#if desktop
-		_btnExit = FlxDestroyUtil.destroy(_btnExit);
-		#end
 	}
 }

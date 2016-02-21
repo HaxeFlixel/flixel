@@ -3,11 +3,11 @@ package;
 import flash.filters.ColorMatrixFilter;
 import flash.geom.Matrix;
 import flash.geom.Point;
-import flixel.addons.effects.chainable.FlxEffectSprite;
-import flixel.addons.effects.chainable.FlxWaveEffect;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
+import flixel.addons.effects.chainable.FlxEffectSprite;
+import flixel.addons.effects.chainable.FlxWaveEffect;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.system.FlxSound;
 import flixel.text.FlxText;
@@ -15,7 +15,6 @@ import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.ui.FlxBar;
 import flixel.util.FlxColor;
-import flixel.util.FlxDestroyUtil;
 using flixel.util.FlxSpriteUtil;
 
 class CombatHUD extends FlxTypedGroup<FlxSprite>
@@ -502,29 +501,6 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 			_wait = false;
 			_pointer.visible = true;
 		}
-	}
-	
-	override public function destroy():Void 
-	{
-		super.destroy();
-		
-		e = FlxDestroyUtil.destroy(e);
-		_sprBack = FlxDestroyUtil.destroy(_sprBack);
-		_sprPlayer = FlxDestroyUtil.destroy(_sprPlayer);
-		_sprEnemy = FlxDestroyUtil.destroy(_sprEnemy);
-		_txtPlayerHealth = FlxDestroyUtil.destroy(_txtPlayerHealth);
-		_damages = FlxDestroyUtil.destroyArray(_damages);
-		_pointer = FlxDestroyUtil.destroy(_pointer);
-		_choices = FlxDestroyUtil.destroyArray(_choices);
-		_results = FlxDestroyUtil.destroy(_results);
-		
-		_sndFled = FlxDestroyUtil.destroy(_sndFled);
-		_sndHurt = FlxDestroyUtil.destroy(_sndHurt);
-		_sndLose = FlxDestroyUtil.destroy(_sndLose);
-		_sndMiss = FlxDestroyUtil.destroy(_sndMiss);
-		_sndSelect = FlxDestroyUtil.destroy(_sndSelect);
-		_sndWin = FlxDestroyUtil.destroy(_sndWin);
-		_sndCombat = FlxDestroyUtil.destroy(_sndCombat);
 	}
 }
 

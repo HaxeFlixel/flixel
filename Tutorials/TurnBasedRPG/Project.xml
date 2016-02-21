@@ -36,7 +36,6 @@
 	<assets path="assets/music" include="*.mp3" if="flash" />
 	<assets path="assets/music" include="*.ogg" unless="flash" />
 	
-	
 	<!--------------------------------LIBRARIES------------------------------------->
 	
 	<haxelib name="flixel"/>
@@ -81,6 +80,5 @@
 	
 	<!--Disable the Flixel core debugger. Automatically gets set whenever you compile in release mode!-->
 	<haxedef name="FLX_NO_DEBUG" unless="debug" />
-	<haxedef name="FLX_NO_DEBUG" if="mobile" />
 	
 </project>

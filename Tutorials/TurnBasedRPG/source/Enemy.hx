@@ -3,11 +3,9 @@ package;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
-import flixel.math.FlxAngle;
 import flixel.math.FlxPoint;
 import flixel.math.FlxVelocity;
 import flixel.system.FlxSound;
-import flixel.util.FlxDestroyUtil;
 using flixel.util.FlxSpriteUtil;
 
 class Enemy extends FlxSprite
@@ -142,12 +140,5 @@ class Enemy extends FlxSprite
 			etype = EType;
 			loadGraphic("assets/images/enemy-" + etype + ".png", true, 16, 16);
 		}
-	}
-	
-	override public function destroy():Void 
-	{
-		super.destroy();
-		
-		_sndStep = FlxDestroyUtil.destroy(_sndStep);
 	}
 }

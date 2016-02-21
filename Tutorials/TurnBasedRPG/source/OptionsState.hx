@@ -7,7 +7,6 @@ import flixel.ui.FlxBar;
 import flixel.ui.FlxButton;
 import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
-import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSave;
 
 class OptionsState extends FlxState
@@ -149,24 +148,5 @@ class OptionsState extends FlxState
 		var vol:Int = Math.round(FlxG.sound.volume * 100);
 		_barVolume.value = vol;
 		_txtVolumeAmt.text = vol + "%";
-	}
-	
-	override public function destroy():Void 
-	{
-		super.destroy();
-		
-		// cleanup all our objects!
-		_txtTitle = FlxDestroyUtil.destroy(_txtTitle);
-		_txtVolume = FlxDestroyUtil.destroy(_txtVolume);
-		_txtVolumeAmt = FlxDestroyUtil.destroy(_txtVolumeAmt);
-		_btnVolumeDown = FlxDestroyUtil.destroy(_btnVolumeDown);
-		_btnVolumeUp = FlxDestroyUtil.destroy(_btnVolumeUp);
-		_btnClearData = FlxDestroyUtil.destroy(_btnClearData);
-		_btnBack = FlxDestroyUtil.destroy(_btnBack);
-		_save.destroy();
-		_save = null;
-		#if desktop
-		_btnFullScreen = FlxDestroyUtil.destroy(_btnFullScreen);
-		#end
 	}
 }
