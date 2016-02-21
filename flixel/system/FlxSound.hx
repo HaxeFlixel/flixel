@@ -99,6 +99,10 @@ class FlxSound extends FlxBasic
 	@:isVar
 	public var looped(get, set):Bool;
 	/**
+	 * In case of looping, the point (in milliseconds) from where to restart the sound when it loops back
+	 */
+	public var loopTime(default, set):Float;
+	/**
 	 * Internal tracker for a Flash sound object.
 	 */
 	private var _sound:Sound;
@@ -144,10 +148,6 @@ class FlxSound extends FlxBasic
 	 * Helper var to prevent the sound from playing after focus was regained when it was already paused.
 	 */
 	private var _alreadyPaused:Bool = false;
-	/**
-	 * In case of looping, from where to restart the sound when it loops back
-	 */
-	private var loopPoint(default, set):Float;
 	
 	/**
 	 * The FlxSound constructor gets all the variables initialized, but NOT ready to play a sound yet.
@@ -173,7 +173,7 @@ class FlxSound extends FlxBasic
 		_volume = 1.0;
 		_volumeAdjust = 1.0;
 		looped = false;
-		loopPoint = 0.0;
+		loopTime = 0.0;
 		_target = null;
 		_radius = 0;
 		_proximityPan = false;
@@ -387,8 +387,9 @@ class FlxSound extends FlxBasic
 	 * Call this function to play the sound - also works on paused sounds.
 	 * 
 	 * @param	ForceRestart	Whether to start the sound over or not.  Default value is false, meaning if the sound is already playing or was paused when you call play(), it will continue playing from its current position, NOT start again from the beginning.
+	 * @param	Time			At which point to start plaing the sound, in milliseconds
 	 */
-	public function play(ForceRestart:Bool = false, Position:Float = 0.0):FlxSound
+	public function play(ForceRestart:Bool = false, Time:Float = 0.0):FlxSound
 	{
 		if (!exists)
 		{
@@ -410,7 +411,7 @@ class FlxSound extends FlxBasic
 		}
 		else
 		{
-			startSound(Position);
+			startSound(Time);
 		}
 		return this;
 	}
@@ -451,34 +452,19 @@ class FlxSound extends FlxBasic
 		return this;
 	}
 	
-	/**
-	 * Sets the sound point at which to restart playing after a loop
-	 * @param	newloopPoint The new position in the sound, in milliseconds
-	 * @return	The updated value in milliseconds
-	 */
-	public function set_loopPoint(newloopPoint:Float):Float
+	private function set_loopTime(newloopTime:Float):Float
 	{
-		if (looped && playing && loopPoint == 0.0)
+		// If the sound is looping, already playing and the looptime WAS 0
+		//	we need to restart the sound and NOT call play on the _sound property
+		// 	with max int as number of loops, but with 0 instead, handling the loop with the event
+		if (looped && playing && loopTime == 0.0)
 		{
-			loopPoint = newloopPoint;
-			var pos:Float = _channel.position;
-			cleanup(false, false);
-			startSound(pos);
-			return loopPoint;
+			loopTime = newloopTime;			
+			restartSound();
+			return loopTime;
 		}
-		loopPoint = newloopPoint;
-		return loopPoint;
-	}
-	
-	/**
-	 * Sets the sound point at which to restart playing after a loop using the more natural 
-	 * 	notation mm:ss.
-	 * @param	min	The minute part of the new position eg. 2 in case of 02:32
-	 * @param	sec	The seconds part of the new position eg. 32 in case of 02:32
-	 */
-	public inline function setloopPointMinSec(min:Int, sec:Int)
-	{
-		loopPoint = (min * 60 + sec) * 1000;
+		loopTime = newloopTime;
+		return loopTime;
 	}
 	
 	/**
@@ -558,16 +544,16 @@ class FlxSound extends FlxBasic
 	/**
 	 * An internal helper function used to attempt to start playing the sound and populate the _channel variable.
 	 */
-	private function startSound(Position:Float):Void
+	private function startSound(Time:Float):Void
 	{
 		if (_sound == null)
 		{
 			return;
 		}
 		
-		var numLoops:Int = looped && loopPoint == 0.0 ? FlxMath.MAX_VALUE_INT : 0;
+		var numLoops:Int = looped && loopTime == 0.0 ? FlxMath.MAX_VALUE_INT : 0;
 		
-		time = Position;
+		time = Time;
 		_paused = false;
 		_channel = _sound.play(time, numLoops, _transform);
 		if (_channel != null)
@@ -598,7 +584,7 @@ class FlxSound extends FlxBasic
 		if (looped)
 		{
 			cleanup(false);
-			play(false, loopPoint);
+			play(false, loopTime);
 		}
 		else
 		{
@@ -736,20 +722,23 @@ class FlxSound extends FlxBasic
 		return looped;
 	}
 	
+	private inline function restartSound():Void
+	{
+		var pos:Float = _channel.position;
+		active = false;
+		startSound(pos);
+	}
+	
 	private inline function set_looped(loop:Bool):Bool
 	{
 		looped = loop;
-		
 		// If we're going from looping to not looping while playing,
 		// the channel needs to be updated so it won't loop next time.
 		if (!loop && looped && playing)
 		{
 			looped = loop;
-			var pos:Float = _channel.position;
-			cleanup(false, false);
-			startSound(pos);
+			restartSound();
 		}
-		
 		return looped;
 	}
 	

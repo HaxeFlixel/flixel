@@ -81,7 +81,7 @@ class SoundFrontEnd
 	 * @param	Group		The group to add this sound to.
 	 * @param	LoopPoint	Point at which the sound will restart when looping back (in case of looping)
 	 */
-	public function playMusic(Music:FlxSoundAsset, Volume:Float = 1, Looped:Bool = true, ?Group:FlxSoundGroup, LoopPoint:Float = 0.0):Void
+	public function playMusic(Music:FlxSoundAsset, Volume:Float = 1, Looped:Bool = true, ?Group:FlxSoundGroup, LoopTime:Float = 0.0):Void
 	{
 		if (music == null)
 		{
@@ -96,7 +96,7 @@ class SoundFrontEnd
 		music.volume = Volume;
 		music.persist = true;
 		music.group = (Group == null) ? defaultMusicGroup : Group;
-		music.set_loopPoint(LoopPoint);
+		music.loopTime = LoopTime;
 		music.play();
 	}
 	
