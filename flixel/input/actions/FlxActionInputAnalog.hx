@@ -24,7 +24,7 @@ class FlxActionInputAnalogMouse extends FlxActionInputAnalog
 {
 	/**
 	 * Mouse movement action input
-	 * @param	Trigger What state triggers this action (PRESSED, JUST_PRESSED, RELEASED, JUST_RELEASED)
+	 * @param	Trigger What state triggers this action (MOVED, JUST_MOVED, STOPPED, JUST_STOPPED)
 	 * @param	Axis which axes to monitor for triggering: X, Y, EITHER, or BOTH
 	 */
 	
@@ -145,7 +145,7 @@ class FlxActionInputAnalogSteam extends FlxActionInputAnalog
 	
 	override public function update():Void 
 	{
-		//TODO: implement DEVICE_ID_FIRST_ACTIVE
+		#if steamwrap
 		var handle = deviceID;
 		if (handle == FlxInputDeviceID.NONE)
 		{
@@ -158,9 +158,12 @@ class FlxActionInputAnalogSteam extends FlxActionInputAnalog
 		
 		analogActionData = FlxSteamController.getAnalogActionData(handle, inputID, analogActionData);
 		updateVals(analogActionData.x, analogActionData.y);
+		#end
 	}
 	
+	#if steamwrap
 	private static var analogActionData:ControllerAnalogActionData = new ControllerAnalogActionData();
+	#end
 }
 
 @:access(flixel.input.actions.FlxAction)
