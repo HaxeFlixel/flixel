@@ -23,6 +23,7 @@ import flixel.util.FlxDestroyUtil;
 import flixel.util.helpers.FlxRange;
 import openfl.Assets;
 import haxe.Utf8;
+import openfl.geom.Rectangle;
 using flixel.util.FlxStringUtil;
 using StringTools;
 
@@ -159,6 +160,13 @@ class FlxText extends FlxSprite
 	private var _borderColorTransform:ColorTransform;
 	
 	private var _hasBorderAlpha = false;
+	
+	#if flash
+	/**
+	 * Helper to draw line by line used at drawTextFieldTo().
+	 */
+	private var _textFieldRect:Rectangle = new Rectangle();
+	#end
 	
 	/**
 	 * Creates a new FlxText object at the specified position.
@@ -674,7 +682,7 @@ class FlxText extends FlxSprite
 	}
 	
 	private function set_borderStyle(style:FlxTextBorderStyle):FlxTextBorderStyle
-	{		
+	{
 		if (style != borderStyle)
 			_regen = true;
 		
@@ -691,7 +699,7 @@ class FlxText extends FlxSprite
 	
 	private function set_borderSize(Value:Float):Float
 	{
-		if (Value != borderSize && borderStyle != NONE)		
+		if (Value != borderSize && borderStyle != NONE)
 			_regen = true;
 		
 		return borderSize = Value;
@@ -804,67 +812,69 @@ class FlxText extends FlxSprite
 			
 			_matrix.identity();
 			
-			avoidSingleLineBlur();
-			
 			applyBorderStyle();
 			applyBorderTransparency();
 			applyFormats(_formatAdjusted, false);
 			
-			avoidMultilineBlur();
-			
-			graphic.bitmap.draw(textField, _matrix);
+			drawTextFieldTo(graphic.bitmap);
 		}
 		
 		_regen = false;
 		resetFrame();
 	}
 	
-	
-	private function avoidSingleLineBlur():Void
+	/**
+	 * Internal function to draw textField to a bitmapData, if flash it calculates every line x to avoid blurry lines.
+	 */
+	private function drawTextFieldTo(graphic:BitmapData):Void
 	{
 		#if flash
-		// If it's a single, centered line of text, we center it ourselves so it doesn't blur to hell
-		if (textField.numLines > 1 || alignment != FlxTextAlign.CENTER)
+		if (alignment == FlxTextAlign.CENTER && isTextBlurry())
+		{
+			var h:Int = 0;
+			var tx:Float = _matrix.tx;
+			for (i in 0...textField.numLines) 
+			{
+				var lineMetrics = textField.getLineMetrics(i);
+				
+				// Workaround for blurry lines caused by non-integer x positions on flash
+				var diff:Float = lineMetrics.x - Std.int(lineMetrics.x);
+				if (diff != 0)
+				{
+					_matrix.tx = tx + diff;
+				}
+				_textFieldRect.setTo(0, h, textField.width, lineMetrics.height + lineMetrics.descent);
+				
+				graphic.draw(textField, _matrix, null, null, _textFieldRect, false);
+				
+				_matrix.tx = tx;
+				h += Std.int(lineMetrics.height);
+			}
+			
 			return;
-		
-		_formatAdjusted.align = TextFormatAlign.LEFT;
-		textField.setTextFormat(_formatAdjusted);
-		
-		var textWidth = textField.getLineMetrics(0).width;
-		if (textWidth <= textField.width)
-			_matrix.translate(Math.floor((textField.width - textWidth) / 2), 0);
+		}
 		#end
+		
+		graphic.draw(textField, _matrix);
 	}
 	
+	#if flash
 	/**
-	 * Internal function that inserts an extra space in a line to prevent blurry lines.
-	 * Only work if wordWrap is not triggered, beacuse wordWrap seems to trim lines.
-	 * Ugly workaround for #1422.
+	 * Helper function for drawTextFieldTo(), this checks if thw workaround is needed to prevent blurry lines.
 	 */
-	private function avoidMultilineBlur():Void
+	private function isTextBlurry():Bool
 	{
-		#if flash
-		if (textField.numLines <= 1 || alignment != FlxTextAlign.CENTER)
-			return;
-		
-		var newText = "";
 		for (i in 0...textField.numLines) 
 		{
-			var lineX = textField.getLineMetrics(i).x;
-			var lineText = textField.getLineText(i);
-			var spaceIndex = lineText.indexOf(" ");
-			
-			if (Math.floor(lineX) != lineX && spaceIndex >= 0)
-				lineText = lineText.insert(spaceIndex, " ");
-			
-			newText += lineText;
+			var lineMetricsX = textField.getLineMetrics(i).x;
+			if (lineMetricsX - Std.int(lineMetricsX) != 0)
+			{
+				return true;
+			}
 		}
-		
-		if (newText != "")
-			textField.text = newText;
-		#end
+		return false;
 	}
-	
+	#end
 	
 	override public function draw():Void 
 	{
@@ -975,7 +985,7 @@ class FlxText extends FlxSprite
 	{
 		var graphic:BitmapData = _hasBorderAlpha ? _borderPixels : graphic.bitmap;
 		_matrix.translate(x, y);
-		graphic.draw(textField, _matrix);
+		drawTextFieldTo(graphic);
 	}
 	
 	private inline function applyFormats(FormatAdjusted:TextFormat, UseBorderColor:Bool = false):Void
@@ -1110,8 +1120,16 @@ enum FlxTextBorderStyle
 abstract FlxTextAlign(String) from String
 {
 	var LEFT = "left";
+	
+	/**
+	 * Warning: on Flash, this can have a negative impact on performance
+	 * of multiline texts that are frequently regenerated (especially with
+	 * `borderStyle == OUTLINE`) due to a workaround for blurry rendering.
+	 */
 	var CENTER = "center";
+	
 	var RIGHT = "right";
+	
 	var JUSTIFY = "justify";
 	
 	public static function fromOpenFL(align:AlignType):FlxTextAlign

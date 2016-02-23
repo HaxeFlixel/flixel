@@ -358,6 +358,12 @@ class FlxCamera extends FlxBasic
 	 */
 	private static var _storageTrianglesHead:FlxDrawTrianglesItem;
 	
+	private static var drawVertices:Vector<Float> = new Vector<Float>();
+	private static var trianglesSprite:Sprite = new Sprite();
+	
+	private static var renderPoint:FlxPoint = FlxPoint.get();
+	private static var renderRect:FlxRect = FlxRect.get();
+	
 	@:noCompletion
 	public function startQuadBatch(graphic:FlxGraphic, colored:Bool, hasColorOffsets:Bool = false,
 		?blend:BlendMode, smooth:Bool = false)
@@ -579,7 +585,7 @@ class FlxCamera extends FlxBasic
 		if (FlxG.renderBlit)
 		{
 			if (position == null)
-				position = FlxPoint.weak();
+				position = renderPoint.set();
 			
 			_bounds.set(0, 0, width, height);
 			
@@ -588,7 +594,7 @@ class FlxCamera extends FlxBasic
 			
 			var tempX:Float, tempY:Float;
 			var i:Int = 0;
-			var bounds = FlxRect.get();
+			var bounds = renderRect.set();
 			drawVertices.splice(0, drawVertices.length);
 			
 			while (i < verticesLength)
@@ -646,9 +652,6 @@ class FlxCamera extends FlxBasic
 			drawItem.addTriangles(vertices, indices, uvtData, colors, position, _bounds);
 		}
 	}
-
-	private static var drawVertices:Vector<Float> = new Vector<Float>();
-	private static var trianglesSprite:Sprite = new Sprite();
 	
 	/**
 	 * Instantiates a new camera at the specified location, with the specified size and zoom level.
@@ -1051,6 +1054,14 @@ class FlxCamera extends FlxBasic
 		
 		switch (Style)
 		{
+			case LOCKON:
+				if (target != null) 
+				{	
+					w = target.width;
+					h = target.height;
+				}
+				deadzone = FlxRect.get((width - w) / 2, (height - h) / 2 - h * 0.25, w, h);
+			
 			case PLATFORMER:
 				var w:Float = (width / 8);
 				var h:Float = (height / 3);
@@ -1064,18 +1075,10 @@ class FlxCamera extends FlxBasic
 				helper = Math.max(width, height) / 8;
 				deadzone = FlxRect.get((width - helper) / 2, (height - helper) / 2, helper, helper);
 				
-			case LOCKON:
-				if (target != null) 
-				{	
-					w = target.width;
-					h = target.height;
-				}
-				deadzone = FlxRect.get((width - w) / 2, (height - h) / 2 - h * 0.25, w, h);
-				
 			case SCREEN_BY_SCREEN:
 				deadzone = FlxRect.get(0, 0, width, height);
 				
-			default:
+			case NO_DEAD_ZONE:
 				deadzone = null;
 		}
 	}

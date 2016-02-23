@@ -509,6 +509,10 @@ class FlxBitmapText extends FlxSprite
 		{
 			drawFrame(RunOnCpp);
 		}
+		else
+		{
+			super.calcFrame(RunOnCpp);
+		}
 	}
 	
 	private function set_text(value:String):String 

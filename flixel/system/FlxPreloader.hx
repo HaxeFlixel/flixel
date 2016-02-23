@@ -73,7 +73,7 @@ class FlxPreloader extends FlxBasePreloader
 		_buffer.addChild(_bmpBar);
 		
 		_text = new TextField();
-		_text.defaultTextFormat = new TextFormat("Nokia Cellphone FC Small", 8, 0x5f6aff);
+		_text.defaultTextFormat = new TextFormat(FlxAssets.FONT_DEFAULT, 8, 0x5f6aff);
 		_text.embedFonts = true;
 		_text.selectable = false;
 		_text.multiline = false;
@@ -83,13 +83,13 @@ class FlxPreloader extends FlxBasePreloader
 		_buffer.addChild(_text);
 		
 		_logo = new Sprite();
-		drawLogo(_logo.graphics);
+		FlxAssets.drawLogo(_logo.graphics);
 		_logo.scaleX = _logo.scaleY = _height / 8 * 0.04;
 		_logo.x = (_width - _logo.width) / 2;
 		_logo.y = (_height - _logo.height) / 2;
 		_buffer.addChild(_logo);
 		_logoGlow = new Sprite();
-		drawLogo(_logoGlow.graphics);
+		FlxAssets.drawLogo(_logoGlow.graphics);
 		_logoGlow.blendMode = BlendModeScreen;
 		_logoGlow.scaleX = _logoGlow.scaleY = _height / 8 * 0.04;
 		_logoGlow.x = (_width - _logoGlow.width) / 2;
@@ -117,66 +117,6 @@ class FlxPreloader extends FlxBasePreloader
 		_buffer.addChild(bitmap);
 		
 		super.create();
-	}
-	
-	/**
-	 * This function simply draws the HaxeFlixel logo.
-	 * @param	graph
-	 */
-	private function drawLogo(graph:Graphics):Void
-	{
-		// draw green area
-		graph.beginFill(0x00b922);
-		graph.moveTo(50, 13);
-		graph.lineTo(51, 13);
-		graph.lineTo(87, 50);
-		graph.lineTo(87, 51);
-		graph.lineTo(51, 87);
-		graph.lineTo(50, 87);
-		graph.lineTo(13, 51);
-		graph.lineTo(13, 50);
-		graph.lineTo(50, 13);
-		graph.endFill();
-		
-		// draw yellow area
-		graph.beginFill(0xffc132);
-		graph.moveTo(0, 0);
-		graph.lineTo(25, 0);
-		graph.lineTo(50, 13);
-		graph.lineTo(13, 50);
-		graph.lineTo(0, 25);
-		graph.lineTo(0, 0);
-		graph.endFill();
-		
-		// draw red area
-		graph.beginFill(0xf5274e);
-		graph.moveTo(100, 0);
-		graph.lineTo(75, 0);
-		graph.lineTo(51, 13);
-		graph.lineTo(87, 50);
-		graph.lineTo(100, 25);
-		graph.lineTo(100, 0);
-		graph.endFill();
-		
-		// draw blue area
-		graph.beginFill(0x3641ff);
-		graph.moveTo(0, 100);
-		graph.lineTo(25, 100);
-		graph.lineTo(50, 87);
-		graph.lineTo(13, 51);
-		graph.lineTo(0, 75);
-		graph.lineTo(0, 100);
-		graph.endFill();
-		
-		// draw light-blue area
-		graph.beginFill(0x04cdfb);
-		graph.moveTo(100, 100);
-		graph.lineTo(75, 100);
-		graph.lineTo(51, 87);
-		graph.lineTo(87, 51);
-		graph.lineTo(100, 75);
-		graph.lineTo(100, 100);
-		graph.endFill();
 	}
 	
 	/**

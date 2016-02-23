@@ -95,24 +95,22 @@ class ConsoleUtil
 		else if (Reflect.isObject(Object)) // get instance fields
 			fields = Type.getInstanceFields(Type.getClass(Object));
 		
-		// workaround for properties without backing fields missing
+		var filteredFields = [];
 		for (field in fields)
 		{
+			// don't add property getters / setters
 			if (field.startsWith("get_") || field.startsWith("set_"))
 			{
 				var name = field.substr(4);
-				if (!fields.contains(name))
-					fields.push(name);
+				// property without a backing field, needs to be added
+				if (!fields.contains(name) && !filteredFields.contains(name))
+					filteredFields.push(name);
 			}
+			else
+				filteredFields.push(field);
 		}
 		
-		// remove getters and setters
-		fields = fields.filter(function(field)
-		{
-			return !field.startsWith("get_") && !field.startsWith("set_");
-		});
-		
-		return sortFields(fields);
+		return sortFields(filteredFields);
 	}
 	
 	private static function sortFields(fields:Array<String>):Array<String>
