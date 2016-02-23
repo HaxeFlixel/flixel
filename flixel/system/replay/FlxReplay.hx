@@ -148,16 +148,16 @@ class FlxReplay
 	 */
 	public function recordFrame():Void
 	{
-		var continueFrame = true;
+		var continueFrame = false;
 		
 		#if !FLX_NO_KEYBOARD
 		var keysRecord:Array<CodeValuePair> = FlxG.keys.record();
-		if (keysRecord == null) continueFrame = false;
+		if (keysRecord != null) continueFrame = true;
 		#end
 		
 		#if !FLX_NO_MOUSE
 		var mouseRecord:MouseRecord = FlxG.mouse.record();
-		if (mouseRecord == null) continueFrame = false;
+		if (mouseRecord != null) continueFrame = true;
 		#end
 
 		if (continueFrame)
