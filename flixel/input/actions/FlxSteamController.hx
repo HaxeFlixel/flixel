@@ -36,10 +36,12 @@ class FlxSteamController
 	private static function init()
 	{
 		controllers = [];
+		#if steamwrap
 		for (i in 0...Steam.controllers.MAX_CONTROLLERS)
 		{
 			controllers.push(new FlxSteamControllerMetadata());
 		}
+		#end
 	}
 	
 	private static function getActionSetHandle(name:String):Int
@@ -112,9 +114,9 @@ class FlxSteamController
 		#end
 	}
 	
+	#if steamwrap
 	private static function getAnalogActionData(controller:Int, action:Int, ?data:ControllerAnalogActionData):ControllerAnalogActionData
 	{
-		#if steamwrap
 		data = Steam.controllers.getAnalogActionData(controller, action, data);
 		if (controller > 0 && controller < controllers.length)
 		{
@@ -124,19 +126,16 @@ class FlxSteamController
 			}
 		}
 		return data;
-		#else
-		if (data == null)
-		{
-			data = new ControllerAnalogActionData();
-		}
-		data.bActive = false;
-		data.x = 0;
-		data.y = 0;
-		data.eMode = NONE;
-		return data;
-		#end
 	}
+	#else
+	private static function getAnalogActionData(controller:Int, action:Int):Dynamic
+	{
+		return null;
+	}
+	#end
 	
+	
+	#if steamwrap
 	private static function getDigitalActionData(controller:Int, action:Int):ControllerDigitalActionData 
 	{
 		#if steamwrap
@@ -153,6 +152,12 @@ class FlxSteamController
 		return 0;
 		#end
 	}
+	#else
+	private static function getDigitalActionData(controller:Int, action:Int):{bActive:Bool,bState:Bool}
+	{
+		return {bActive:false,bState:false};
+	}
+	#end
 	
 	private static inline function getAnalogActionHandle(name:String):Int
 	{
