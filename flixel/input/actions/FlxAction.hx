@@ -195,17 +195,24 @@ class FlxAction implements IFlxDestroyable
 	
 	public function check():Bool
 	{
-		var returnVal = false;
+		if (_timestamp == FlxG.game._total)
+		{
+			return _check;	//run no more than once per frame
+		}
+		
+		_timestamp = FlxG.game._total;
+		_check = false;
+		
 		for (input in inputs)
 		{
 			input.update();
 			
 			if (input.check(this))
 			{
-				returnVal = true;
+				_check = true;
 			}
 		}
-		return returnVal;
+		return _check;
 	}
 	
 	/**
@@ -231,6 +238,9 @@ class FlxAction implements IFlxDestroyable
 	/*********PRIVATE***********/
 	
 	private var inputs:Array<FlxActionInput>;
+	
+	private var _timestamp:Int = 0;
+	private var _check:Bool = false;
 	
 	private function checkExists(input:FlxActionInput):Bool
 	{
