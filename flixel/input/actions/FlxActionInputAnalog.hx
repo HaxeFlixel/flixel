@@ -35,7 +35,9 @@ class FlxActionInputAnalogMouse extends FlxActionInputAnalog
 	
 	override public function update():Void 
 	{
+		#if !FLX_NO_MOUSE
 		updateVals(FlxG.mouse.x, FlxG.mouse.y);
+		#end
 	}
 	
 	override private function updateVals(X:Float, Y:Float):Void
@@ -82,6 +84,7 @@ class FlxActionInputAnalogGamepad extends FlxActionInputAnalog
 	{
 		if (deviceID != FlxInputDeviceID.ALL)	//analog data is only meaningful on an individual device
 		{
+			#if !FLX_NO_GAMEPAD
 			var gamepad:FlxGamepad = null;
 			
 			if (deviceID == FlxInputDeviceID.FIRST_ACTIVE)
@@ -120,6 +123,7 @@ class FlxActionInputAnalogGamepad extends FlxActionInputAnalog
 			{
 				updateVals(0, 0);
 			}
+			#end
 		}
 	}
 }

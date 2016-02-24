@@ -30,6 +30,7 @@ class FlxActionInputDigitalMouse extends FlxActionInputDigital
 	{
 		return switch(inputID)
 		{
+			#if !FLX_NO_MOUSE
 			case FlxMouseButtonID.LEFT  : switch(trigger)
 			{
 				case PRESSED:        FlxG.mouse.pressed || FlxG.mouse.justPressed;
@@ -51,6 +52,7 @@ class FlxActionInputDigitalMouse extends FlxActionInputDigital
 				case JUST_PRESSED:   FlxG.mouse.justPressedRight;
 				case JUST_RELEASED:  FlxG.mouse.justReleasedRight;
 			}
+			#end
 			default: false;
 		}
 	}
@@ -73,10 +75,12 @@ class FlxActionInputDigitalKeyboard extends FlxActionInputDigital
 	{
 		return switch(trigger)
 		{
+			#if !FLX_NO_KEYBOARD
 			case PRESSED:       FlxG.keys.checkStatus(inputID, PRESSED ) || FlxG.keys.checkStatus(inputID, JUST_PRESSED);
 			case RELEASED:      FlxG.keys.checkStatus(inputID, RELEASED) || FlxG.keys.checkStatus(inputID, JUST_RELEASED);
 			case JUST_PRESSED:  FlxG.keys.checkStatus(inputID, JUST_PRESSED);
 			case JUST_RELEASED: FlxG.keys.checkStatus(inputID, JUST_RELEASED);
+			#end
 			default: false;
 		}
 	}
@@ -98,6 +102,7 @@ class FlxActionInputDigitalGamepad extends FlxActionInputDigital
 	
 	override public function check(Action:FlxAction):Bool 
 	{
+		#if !FLX_NO_GAMEPAD
 		if (deviceID == FlxInputDeviceID.ALL)
 		{
 			switch(trigger)
@@ -132,6 +137,7 @@ class FlxActionInputDigitalGamepad extends FlxActionInputDigital
 				}
 			}
 		}
+		#end
 		return false;
 	}
 }

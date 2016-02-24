@@ -401,7 +401,11 @@ class ActionSetRegister implements IFlxDestroyable
 					case FlxInputDeviceID.ALL:          gamepadAllSet = ActionSet;
 					                                    clearSetFromArray(-1, gamepadSets);
 					case FlxInputDeviceID.NONE:         clearSetFromArray(ActionSet, gamepadSets);
+					
+					#if !FLX_NO_GAMEPAD
 					case FlxInputDeviceID.FIRST_ACTIVE: gamepadSets[FlxG.gamepads.getFirstActiveGamepadID()] = ActionSet;
+					#end
+					
 					default:                            gamepadSets[DeviceID] = ActionSet;
 				}
 			
@@ -414,6 +418,7 @@ class ActionSetRegister implements IFlxDestroyable
 					case FlxInputDeviceID.FIRST_ACTIVE: steamControllerSets[FlxSteamController.getFirstActiveHandle()] = ActionSet;
 					default:                            steamControllerSets[DeviceID] = ActionSet;
 				}
+			
 			case FlxInputDevice.All:
 				activate(ActionSet, FlxInputDevice.Mouse,    DeviceID);
 				activate(ActionSet, FlxInputDevice.Keyboard, DeviceID);
