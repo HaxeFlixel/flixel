@@ -11,7 +11,7 @@ class FlxReplayTest
 	@Before
 	function before()
 	{
-		seed = Std.random(0x7FFFFFFF);
+		seed = Std.random(0x3FFFFFFF);
 		frameCount = Std.random(10000) + 1;
 		fgr = seed + "\n";
 		var key:Int;
