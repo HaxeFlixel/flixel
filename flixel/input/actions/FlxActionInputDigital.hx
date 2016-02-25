@@ -164,7 +164,13 @@ class FlxActionInputDigitalSteam extends FlxActionInputDigital
 	
 	override public function check(Action:FlxAction):Bool 
 	{
-		return compareState(steamInput.current, trigger);
+		return switch(trigger)
+		{
+			case PRESSED:        steamInput.pressed  || steamInput.justPressed;
+			case RELEASED:      !steamInput.released || steamInput.justReleased;
+			case JUST_PRESSED:   steamInput.justPressed;
+			case JUST_RELEASED:  steamInput.justReleased;
+		}
 	}
 	
 	override public function update():Void 

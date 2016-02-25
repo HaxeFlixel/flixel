@@ -1,5 +1,7 @@
 package flixel.input.actions;
+import flixel.input.IFlxInputManager;
 import flixel.input.actions.FlxActionInput;
+import flixel.system.frontEnds.InputFrontEnd;
 
 #if steamwrap
 import steamwrap.api.Controller;
@@ -37,10 +39,29 @@ class FlxSteamController
 	{
 		controllers = [];
 		#if steamwrap
+		
 		for (i in 0...Steam.controllers.MAX_CONTROLLERS)
 		{
 			controllers.push(new FlxSteamControllerMetadata());
 		}
+		
+		//If the FlxSteamUpdater hasn't been added to FlxG.inputs yet, 
+		//we need to do so now to ensure that steam controllers will
+		//be properly updated every frame
+		var steamExists = false;
+		for (input in FlxG.inputs.list)
+		{
+			if (Std.is(input, FlxSteamUpdater))
+			{
+				steamExists = true;
+				break;
+			}
+		}
+		if (!steamExists)
+		{
+			FlxG.inputs.add(new FlxSteamUpdater());
+		}
+		
 		#end
 	}
 	
@@ -118,7 +139,7 @@ class FlxSteamController
 	private static function getAnalogActionData(controller:Int, action:Int, ?data:ControllerAnalogActionData):ControllerAnalogActionData
 	{
 		data = Steam.controllers.getAnalogActionData(controller, action, data);
-		if (controller > 0 && controller < controllers.length)
+		if (controller >=0 && controller < controllers.length)
 		{
 			if (data.bActive > 0 && data.x != 0 || data.y != 0)
 			{
@@ -140,7 +161,7 @@ class FlxSteamController
 	{
 		#if steamwrap
 		var data = Steam.controllers.getDigitalActionData(controller, action);
-		if (controller > 0 && controller < controllers.length)
+		if (controller >= 0 && controller < controllers.length)
 		{
 			if (data.bActive && data.bState)
 			{
@@ -188,4 +209,26 @@ class FlxSteamControllerMetadata
 	public var active:Bool = false;
 	
 	public function new():Void{}
+}
+
+@:noCompletion
+class FlxSteamUpdater implements IFlxInputManager
+{
+	public function new(){};
+	
+	public function reset():Void {}
+	
+	public function destroy():Void {}
+	
+	//run the steam API every frame if steam is detected
+	private function update():Void
+	{
+		#if steamwrap
+		Steam.onEnterFrame();
+		#end
+	}
+	
+	private function onFocus():Void {}
+	
+	private function onFocusLost():Void {}
 }
