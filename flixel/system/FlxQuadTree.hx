@@ -564,11 +564,10 @@ class FlxQuadTree extends FlxRect
 	public function execute():Bool
 	{
 		var overlapProcessed:Bool = false;
-		var iterator:FlxLinkedList;
 		
 		if (_headA.object != null)
 		{
-			iterator = _headA;
+			var iterator = _headA;
 			while (iterator != null)
 			{
 				_object = iterator.object;
