@@ -160,8 +160,8 @@ class FlxAction implements IFlxDestroyable
 	 */
 	public var fire(default, null):Bool;
 	
-	private var _x:Float;
-	private var _y:Float;
+	private var _x:Float = 0;
+	private var _y:Float = 0;
 	
 	private function new(InputType:FlxInputType, Name:String)
 	{

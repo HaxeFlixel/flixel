@@ -175,8 +175,8 @@ class FlxActionInputAnalog extends FlxActionInput
 {
 	public var axis(default, null):FlxAnalogAxis;
 	
-	public var x(default, null):Float;
-	public var y(default, null):Float;
+	public var x(default, null):Float = 0;
+	public var y(default, null):Float = 0;
 	public var xMoved(default, null):FlxInput<Int>;
 	public var yMoved(default, null):FlxInput<Int>;
 	
@@ -215,6 +215,11 @@ class FlxActionInputAnalog extends FlxActionInput
 		{
 			Action._x = x;
 			Action._y = y;
+		}
+		else
+		{
+			Action._x = 0;
+			Action._y = 0;
 		}
 		return returnVal;
 	}
