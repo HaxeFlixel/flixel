@@ -90,6 +90,24 @@ abstract FlxGamepadInputID(Int) from Int to Int
 	/**an extra digital button that doesn't fit cleanly into the universal template**/
 	var EXTRA_3              = 33;
 	
+	/**left analog stick as a dpad, pushed up**/
+	var LEFT_STICK_DIGITAL_UP          = 34; 
+	/**left analog stick as a dpad, pushed right**/
+	var LEFT_STICK_DIGITAL_RIGHT       = 35;
+	/**left analog stick as a dpad, pushed down**/
+	var LEFT_STICK_DIGITAL_DOWN        = 36;
+	/**left analog stick as a dpad, pushed left**/
+	var LEFT_STICK_DIGITAL_LEFT        = 37;
+	
+	/**left analog stick as a dpad, pushed up**/
+	var RIGHT_STICK_DIGITAL_UP         = 38; 
+	/**left analog stick as a dpad, pushed right**/
+	var RIGHT_STICK_DIGITAL_RIGHT      = 39;
+	/**left analog stick as a dpad, pushed down**/
+	var RIGHT_STICK_DIGITAL_DOWN       = 40;
+	/**left analog stick as a dpad, pushed left**/
+	var RIGHT_STICK_DIGITAL_LEFT       = 41;
+	
 	@:from
 	public static inline function fromString(s:String)
 	{
