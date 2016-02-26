@@ -5,7 +5,7 @@ import flixel.input.actions.FlxAction;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 
 @:allow(flixel.input.actions.FlxActionInputDigital, flixel.input.actions.FlxActionInputAnalog)
-class FlxActionInput
+class FlxActionInput implements IFlxDestroyable
 {
 	/**
 	 * Digital or Analog
@@ -21,6 +21,9 @@ class FlxActionInput
 	 * Gamepad ID or Steam Controller handle (ignored for Mouse & Keyboard)
 	 */
 	public var deviceID:Int;
+	
+	
+	public var destroyed(default, null):Bool = false;
 	
 	/**
 	 * Input code (FlxMouseButtonID, FlxKey, FlxGamepadInputID, or Steam Controller action handle)
@@ -44,6 +47,11 @@ class FlxActionInput
 	public function update():Void
 	{
 		
+	}
+	
+	public function destroy():Void
+	{
+		destroyed = true;
 	}
 	
 	/**
@@ -83,6 +91,7 @@ enum FlxInputDevice
 	Keyboard;
 	Gamepad;
 	SteamController;
+	IFlxInputObject;
 	All;
 }
 

@@ -1,6 +1,7 @@
 package flixel.input.actions;
 
 import flixel.input.FlxInput;
+import flixel.input.IFlxInput;
 import flixel.input.actions.FlxAction;
 import flixel.input.actions.FlxActionInput;
 import flixel.input.keyboard.FlxKey;
@@ -13,76 +14,12 @@ import steamwrap.api.Steam;
 import steamwrap.api.Controller;
 #end
 
-class FlxActionInputDigitalMouse extends FlxActionInputDigital
+class FlxActionInputDigital extends FlxActionInput
 {
-	/**
-	 * Mouse button action input
-	 * @param	ButtonID Button identifier (FlxMouseButtonID.LEFT / MIDDLE / RIGHT)
-	 * @param	Trigger What state triggers this action (PRESSED, JUST_PRESSED, RELEASED, JUST_RELEASED)
-	 */
-	
-	public function new(ButtonID:FlxMouseButtonID, Trigger:FlxInputState)
+	private function new(Device:FlxInputDevice, InputID:Int, Trigger:FlxInputState, DeviceID:Int = FlxInputDeviceID.FIRST_ACTIVE)
 	{
-		super(FlxInputDevice.Mouse, ButtonID, Trigger);
-	}
-	
-	override public function check(Action:FlxAction):Bool 
-	{
-		return switch(inputID)
-		{
-			#if !FLX_NO_MOUSE
-			case FlxMouseButtonID.LEFT  : switch(trigger)
-			{
-				case PRESSED:        FlxG.mouse.pressed || FlxG.mouse.justPressed;
-				case RELEASED:      !FlxG.mouse.pressed || FlxG.mouse.justReleased;
-				case JUST_PRESSED:   FlxG.mouse.justPressed;
-				case JUST_RELEASED:  FlxG.mouse.justReleased;
-			}
-			case FlxMouseButtonID.MIDDLE: switch(trigger)
-			{
-				case PRESSED:        FlxG.mouse.pressedMiddle || FlxG.mouse.justPressedMiddle;
-				case RELEASED:      !FlxG.mouse.pressedMiddle || FlxG.mouse.justReleasedMiddle;
-				case JUST_PRESSED:   FlxG.mouse.justPressedMiddle;
-				case JUST_RELEASED:  FlxG.mouse.justReleasedMiddle;
-			}
-			case FlxMouseButtonID.RIGHT : switch(trigger)
-			{
-				case PRESSED:        FlxG.mouse.pressedRight || FlxG.mouse.justPressedRight;
-				case RELEASED:      !FlxG.mouse.pressedRight || FlxG.mouse.justReleasedRight;
-				case JUST_PRESSED:   FlxG.mouse.justPressedRight;
-				case JUST_RELEASED:  FlxG.mouse.justReleasedRight;
-			}
-			#end
-			default: false;
-		}
-	}
-}
-
-class FlxActionInputDigitalKeyboard extends FlxActionInputDigital
-{
-	/**
-	 * Keyboard action input
-	 * @param	Key Key identifier (FlxKey.SPACE, FlxKey.Z, etc)
-	 * @param	Trigger What state triggers this action (PRESSED, JUST_PRESSED, RELEASED, JUST_RELEASED)
-	 */
-	
-	public function new(Key:FlxKey, Trigger:FlxInputState)
-	{
-		super(FlxInputDevice.Keyboard, Key, Trigger);
-	}
-	
-	override public function check(Action:FlxAction):Bool 
-	{
-		return switch(trigger)
-		{
-			#if !FLX_NO_KEYBOARD
-			case PRESSED:       FlxG.keys.checkStatus(inputID, PRESSED ) || FlxG.keys.checkStatus(inputID, JUST_PRESSED);
-			case RELEASED:      FlxG.keys.checkStatus(inputID, RELEASED) || FlxG.keys.checkStatus(inputID, JUST_RELEASED);
-			case JUST_PRESSED:  FlxG.keys.checkStatus(inputID, JUST_PRESSED);
-			case JUST_RELEASED: FlxG.keys.checkStatus(inputID, JUST_RELEASED);
-			#end
-			default: false;
-		}
+		super(FlxInputType.Digital, Device, InputID, Trigger, DeviceID);
+		inputID = InputID;
 	}
 }
 
@@ -142,6 +79,79 @@ class FlxActionInputDigitalGamepad extends FlxActionInputDigital
 	}
 }
 
+class FlxActionInputDigitalKeyboard extends FlxActionInputDigital
+{
+	/**
+	 * Keyboard action input
+	 * @param	Key Key identifier (FlxKey.SPACE, FlxKey.Z, etc)
+	 * @param	Trigger What state triggers this action (PRESSED, JUST_PRESSED, RELEASED, JUST_RELEASED)
+	 */
+	
+	public function new(Key:FlxKey, Trigger:FlxInputState)
+	{
+		super(FlxInputDevice.Keyboard, Key, Trigger);
+	}
+	
+	override public function check(Action:FlxAction):Bool 
+	{
+		return switch(trigger)
+		{
+			#if !FLX_NO_KEYBOARD
+			case PRESSED:       FlxG.keys.checkStatus(inputID, PRESSED ) || FlxG.keys.checkStatus(inputID, JUST_PRESSED);
+			case RELEASED:      FlxG.keys.checkStatus(inputID, RELEASED) || FlxG.keys.checkStatus(inputID, JUST_RELEASED);
+			case JUST_PRESSED:  FlxG.keys.checkStatus(inputID, JUST_PRESSED);
+			case JUST_RELEASED: FlxG.keys.checkStatus(inputID, JUST_RELEASED);
+			#end
+			default: false;
+		}
+	}
+}
+
+class FlxActionInputDigitalMouse extends FlxActionInputDigital
+{
+	/**
+	 * Mouse button action input
+	 * @param	ButtonID Button identifier (FlxMouseButtonID.LEFT / MIDDLE / RIGHT)
+	 * @param	Trigger What state triggers this action (PRESSED, JUST_PRESSED, RELEASED, JUST_RELEASED)
+	 */
+	
+	public function new(ButtonID:FlxMouseButtonID, Trigger:FlxInputState)
+	{
+		super(FlxInputDevice.Mouse, ButtonID, Trigger);
+	}
+	
+	override public function check(Action:FlxAction):Bool 
+	{
+		return switch(inputID)
+		{
+			#if !FLX_NO_MOUSE
+			case FlxMouseButtonID.LEFT  : switch(trigger)
+			{
+				case PRESSED:        FlxG.mouse.pressed || FlxG.mouse.justPressed;
+				case RELEASED:      !FlxG.mouse.pressed || FlxG.mouse.justReleased;
+				case JUST_PRESSED:   FlxG.mouse.justPressed;
+				case JUST_RELEASED:  FlxG.mouse.justReleased;
+			}
+			case FlxMouseButtonID.MIDDLE: switch(trigger)
+			{
+				case PRESSED:        FlxG.mouse.pressedMiddle || FlxG.mouse.justPressedMiddle;
+				case RELEASED:      !FlxG.mouse.pressedMiddle || FlxG.mouse.justReleasedMiddle;
+				case JUST_PRESSED:   FlxG.mouse.justPressedMiddle;
+				case JUST_RELEASED:  FlxG.mouse.justReleasedMiddle;
+			}
+			case FlxMouseButtonID.RIGHT : switch(trigger)
+			{
+				case PRESSED:        FlxG.mouse.pressedRight || FlxG.mouse.justPressedRight;
+				case RELEASED:      !FlxG.mouse.pressedRight || FlxG.mouse.justReleasedRight;
+				case JUST_PRESSED:   FlxG.mouse.justPressedRight;
+				case JUST_RELEASED:  FlxG.mouse.justReleasedRight;
+			}
+			#end
+			default: false;
+		}
+	}
+}
+
 class FlxActionInputDigitalSteam extends FlxActionInputDigital
 {
 	/**
@@ -196,12 +206,48 @@ class FlxActionInputDigitalSteam extends FlxActionInputDigital
 	}
 }
 
-class FlxActionInputDigital extends FlxActionInput
+@:noCompletion
+class FlxActionInputDigitalIFlxInput extends FlxActionInputDigital
 {
-	private function new(Device:FlxInputDevice, InputID:Int, Trigger:FlxInputState, DeviceID:Int = FlxInputDeviceID.FIRST_ACTIVE)
+	/**
+	 * Generic IFlxInput action input
+	 *
+	 * WARNING: IFlxInput objects are often member variables of some other
+	 * object that is often destructed at the end of a state. If you don't
+	 * destroy() this input (or the action you assign it to), the IFlxInput
+	 * reference will persist forever even after its parent object has been
+	 * destroyed!
+	 * 
+	 * @param	Input	A generic IFlxInput object (ex: FlxButton.input)
+	 * @param	Trigger	Trigger What state triggers this action (PRESSED, JUST_PRESSED, RELEASED, JUST_RELEASED)
+	 */
+	
+	public function new(Input:IFlxInput, Trigger:FlxInputState)
 	{
-		super(FlxInputType.Digital, Device, InputID, Trigger, DeviceID);
-		inputID = InputID;
+		super(FlxInputDevice.IFlxInputObject, 0, Trigger);
+		input = Input;
 	}
+	
+	override public function check(action:FlxAction):Bool 
+	{
+		return switch(trigger)
+		{
+			case PRESSED:        input.pressed || input.justPressed;
+			case RELEASED:      !input.pressed || input.justReleased;
+			case JUST_PRESSED:   input.justPressed;
+			case JUST_RELEASED:  input.justReleased;
+			default: false;
+		}
+	}
+	
+	override public function destroy():Void 
+	{
+		super.destroy();
+		input = null;
+	}
+	
+	private var input:IFlxInput;
+
 }
+
 

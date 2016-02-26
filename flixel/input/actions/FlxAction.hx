@@ -3,6 +3,7 @@ import flixel.util.FlxArrayUtil;
 import flixel.input.actions.FlxActionInput;
 import flixel.input.actions.FlxActionInputAnalog;
 import flixel.input.actions.FlxActionInputDigital;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 
 /**
@@ -178,9 +179,13 @@ class FlxAction implements IFlxDestroyable
 		return this;
 	}
 	
-	public function removeInput(input:FlxActionInput):Void
+	public function removeInput(input:FlxActionInput, destroy:Bool=false):Void
 	{
 		inputs.remove(input);
+		if (destroy)
+		{
+			input.destroy();
+		}
 	}
 	
 	public function toString():String
@@ -203,8 +208,18 @@ class FlxAction implements IFlxDestroyable
 		_timestamp = FlxG.game._total;
 		_check = false;
 		
-		for (input in inputs)
+		var len = inputs.length;
+		for (i in 0...len)
 		{
+			var j = len - i - 1;
+			var input = inputs[j];
+			
+			if (input.destroyed)
+			{
+				inputs.splice(j, 1);
+				continue;
+			}
+			
 			input.update();
 			
 			if (input.check(this))
@@ -226,7 +241,7 @@ class FlxAction implements IFlxDestroyable
 	
 	public function destroy():Void
 	{
-		FlxArrayUtil.clearArray(inputs);
+		FlxDestroyUtil.destroyArray(inputs);
 		inputs = null;
 	}
 	
