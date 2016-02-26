@@ -41,7 +41,16 @@ class LogitechMapping extends FlxGamepadMapping
 			case LogitechID.DPAD_RIGHT: DPAD_RIGHT;
 			case LogitechID.DPAD_UP: DPAD_UP;
 			case LogitechID.LOGITECH: GUIDE;
-			default: NONE;
+			default:
+				if(rawID == LogitechID.LEFT_ANALOG_STICK.rawUp)     LEFT_STICK_DIGITAL_UP;
+				if(rawID == LogitechID.LEFT_ANALOG_STICK.rawDown)   LEFT_STICK_DIGITAL_DOWN;
+				if(rawID == LogitechID.LEFT_ANALOG_STICK.rawLeft)   LEFT_STICK_DIGITAL_LEFT;
+				if(rawID == LogitechID.LEFT_ANALOG_STICK.rawRight)  LEFT_STICK_DIGITAL_RIGHT;
+				if(rawID == LogitechID.RIGHT_ANALOG_STICK.rawUp)    RIGHT_STICK_DIGITAL_UP;
+				if(rawID == LogitechID.RIGHT_ANALOG_STICK.rawDown)  RIGHT_STICK_DIGITAL_DOWN;
+				if(rawID == LogitechID.RIGHT_ANALOG_STICK.rawLeft)  RIGHT_STICK_DIGITAL_LEFT;
+				if(rawID == LogitechID.RIGHT_ANALOG_STICK.rawRight) RIGHT_STICK_DIGITAL_RIGHT;
+				NONE;
 		}
 	}
 
@@ -66,6 +75,14 @@ class LogitechMapping extends FlxGamepadMapping
 			case DPAD_RIGHT: LogitechID.DPAD_RIGHT;
 			case LEFT_TRIGGER: LogitechID.SEVEN;
 			case RIGHT_TRIGGER: LogitechID.EIGHT;
+			case LEFT_STICK_DIGITAL_UP: LogitechID.LEFT_ANALOG_STICK.rawUp;
+			case LEFT_STICK_DIGITAL_DOWN: LogitechID.LEFT_ANALOG_STICK.rawDown;
+			case LEFT_STICK_DIGITAL_LEFT: LogitechID.LEFT_ANALOG_STICK.rawLeft;
+			case LEFT_STICK_DIGITAL_RIGHT: LogitechID.LEFT_ANALOG_STICK.rawRight;
+			case RIGHT_STICK_DIGITAL_UP: LogitechID.RIGHT_ANALOG_STICK.rawUp;
+			case RIGHT_STICK_DIGITAL_DOWN: LogitechID.RIGHT_ANALOG_STICK.rawDown;
+			case RIGHT_STICK_DIGITAL_LEFT: LogitechID.RIGHT_ANALOG_STICK.rawLeft;
+			case RIGHT_STICK_DIGITAL_RIGHT: LogitechID.RIGHT_ANALOG_STICK.rawRight;
 			#if FLX_JOYSTICK_API
 			case LEFT_TRIGGER_FAKE: LogitechID.SEVEN;
 			case RIGHT_TRIGGER_FAKE: LogitechID.EIGHT;

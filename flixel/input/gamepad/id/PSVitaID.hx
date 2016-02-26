@@ -24,6 +24,6 @@ class PSVitaID
 	public static inline var DPAD_LEFT:Int = 19;
 	public static inline var DPAD_RIGHT:Int = 20;
 
-	public static var LEFT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(0, 1);
-	public static var RIGHT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(2, 3);
+	public static var LEFT_ANALOG_STICK (default, null) = new FlxGamepadAnalogStick(0, 1, {up:21, down:22, left:23, right:24});
+	public static var RIGHT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(2, 3, {up:21, down:22, left:23, right:24});
 }

@@ -453,58 +453,18 @@ class FlxGamepadManager implements IFlxInputManager
 		{
 			var isForStick = gamepad.isAxisForAnalogStick(i);
 			var isForMotion = gamepad.mapping.isAxisForMotion(i);
+			
 			if (!isForStick && !isForMotion)
 			{
 				// in legacy this returns a (-1, 1) range, but in flash/next it
 				// returns (0,1) so we normalize to (0, 1) for legacy target only
 				newAxis[i] = (newAxis[i] + 1) / 2;
 			}
-			else if (isForStick)
+			else
 			{
-				//check to see if we should send digital inputs as well as analog
-				var stick:FlxGamepadAnalogStick = gamepad.getAnalogStickByAxis(i);
-				if (stick.mode == ONLY_DIGITAL || stick.mode == BOTH)
-				{
-					var newVal = newAxis[i];
-					var oldVal = oldAxis[i];
-					
-					var neg = stick.digitalThreshold * -1;
-					var pos = stick.digitalThreshold;
-					var digitalButton = -1;
-					
-					//pressed/released for digital LEFT/UP
-					if (newVal < neg && oldVal >= neg)
-					{
-						if (i == stick.x) digitalButton = stick.rawLeft;
-						else if (i == stick.y) digitalButton = stick.rawUp;
-						handleButtonDown(device, digitalButton);
-					}
-					else if (newVal >= neg && oldVal < neg)
-					{
-						if (i == stick.x) digitalButton = stick.rawLeft;
-						else if (i == stick.y) digitalButton = stick.rawUp;
-						handleButtonUp(device, digitalButton);
-					}
-					
-					//pressed/released for digital RIGHT/DOWN
-					if (newVal > pos && oldVal <= pos)
-					{
-						if (i == stick.x) digitalButton = stick.rawRight;
-						else if (i == stick.y) digitalButton = stick.rawDown;
-						handleButtonDown(device, digitalButton);
-					}
-					else if (newVal <= pos && oldVal > pos)
-					{
-						if (i == stick.x) digitalButton = stick.rawRight;
-						else if (i == stick.y) digitalButton = stick.rawDown;
-						handleButtonUp(device, digitalButton);
-					}
-					
-					if (stick.mode == ONLY_DIGITAL)
-					{
-						//still haven't figured out how to suppress the analog inputs properly. Oh well.
-					}
-				}
+				var newVal = newAxis[i];
+				var oldVal = oldAxis[i];
+				gamepad.handleAxisMove(i, newVal, oldVal);
 			}
 		}
 		

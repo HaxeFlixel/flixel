@@ -184,8 +184,16 @@ class FlxGamepad implements IFlxDestroyable
 			control = _device.getControlAt(i);
 			
 			//quick absolute value for analog sticks
-			var value = Math.abs(control.value);
 			button = getButton(i);
+			
+			if (isAxisForAnalogStick(i))
+			{
+				handleAxisMove(i, control.value, button.value);
+			}
+			
+			button.value = control.value;
+			
+			var value = Math.abs(control.value);
 			
 			if (value < deadZone)
 			{
@@ -261,10 +269,10 @@ class FlxGamepad implements IFlxDestroyable
 		manager = null;
 		
 		#if FLX_JOYSTICK_API
-		hat = FlxDestroyUtil.put(hat);
+		hat  = FlxDestroyUtil.put(hat);
 		ball = FlxDestroyUtil.put(ball);
 		
-		hat = null;
+		hat  = null;
 		ball = null;
 		#end
 	}
@@ -606,6 +614,61 @@ class FlxGamepad implements IFlxDestroyable
 		return getAnalogYAxisValue(Stick);
 	}
 
+	@:allow(flixel.input.gamepad.FlxGamepadManager)
+	private function handleAxisMove(axis:Int, newVal:Float, oldVal:Float)
+	{
+		newVal = applyAxisFlip(newVal, axis);
+		oldVal = applyAxisFlip(oldVal, axis);
+		
+		//check to see if we should send digital inputs as well as analog
+		var stick:FlxGamepadAnalogStick = this.getAnalogStickByAxis(axis);
+		if (stick.mode == ONLY_DIGITAL || stick.mode == BOTH)
+		{
+			var neg = stick.digitalThreshold * -1;
+			var pos = stick.digitalThreshold;
+			var digitalButton = -1;
+			
+			trace("axis(" + axis + ") val = " + newVal);
+			
+			//pressed/released for digital LEFT/UP
+			if (newVal < neg && oldVal >= neg)
+			{
+				if (axis == stick.x) digitalButton = stick.rawLeft;
+				else if (axis == stick.y) digitalButton = stick.rawUp;
+				var btn = getButton(digitalButton);
+				if (btn != null) btn.press();
+			}
+			else if (newVal >= neg && oldVal < neg)
+			{
+				if (axis == stick.x) digitalButton = stick.rawLeft;
+				else if (axis == stick.y) digitalButton = stick.rawUp;
+				var btn = getButton(digitalButton);
+				if (btn != null) btn.release();
+			}
+			
+			//pressed/released for digital RIGHT/DOWN
+			if (newVal > pos && oldVal <= pos)
+			{
+				if (axis == stick.x) digitalButton = stick.rawRight;
+				else if (axis == stick.y) digitalButton = stick.rawDown;
+				var btn = getButton(digitalButton);
+				if (btn != null) btn.press();
+			}
+			else if (newVal <= pos && oldVal > pos)
+			{
+				if (axis == stick.x) digitalButton = stick.rawRight;
+				else if (axis == stick.y) digitalButton = stick.rawDown;
+				var btn = getButton(digitalButton);
+				if (btn != null) btn.release();
+			}
+			
+			if (stick.mode == ONLY_DIGITAL)
+			{
+				//still haven't figured out how to suppress the analog inputs properly. Oh well.
+			}
+		}
+	}
+	
 	/**
 	 * Whether any buttons have the specified input state.
 	 */

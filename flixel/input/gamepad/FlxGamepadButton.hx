@@ -31,4 +31,9 @@ class FlxGamepadButton extends FlxInput<Int>
 		super.press();
 	}
 	#end
+	
+	/**
+	 * Optional analog value, so we can check when the value has changed from the last frame
+	 */
+	public var value:Float = 0;
 }
