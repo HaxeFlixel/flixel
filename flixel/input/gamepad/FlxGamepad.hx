@@ -613,58 +613,6 @@ class FlxGamepad implements IFlxDestroyable
 	{
 		return getAnalogYAxisValue(Stick);
 	}
-
-	private function handleAxisMove(axis:Int, newValue:Float, oldValue:Float)
-	{
-		newValue = applyAxisFlip(newValue, axis);
-		oldValue = applyAxisFlip(oldValue, axis);
-		
-		//check to see if we should send digital inputs as well as analog
-		var stick:FlxGamepadAnalogStick = getAnalogStickByAxis(axis);
-		if (stick.mode == ONLY_DIGITAL || stick.mode == BOTH)
-		{
-			var neg = stick.digitalThreshold * -1;
-			var pos = stick.digitalThreshold;
-			var digitalButton = -1;
-			
-			//pressed/released for digital LEFT/UP
-			if (newValue < neg && oldValue >= neg)
-			{
-				if (axis == stick.x) digitalButton = stick.rawLeft;
-				else if (axis == stick.y) digitalButton = stick.rawUp;
-				var btn = getButton(digitalButton);
-				if (btn != null) btn.press();
-			}
-			else if (newValue >= neg && oldValue < neg)
-			{
-				if (axis == stick.x) digitalButton = stick.rawLeft;
-				else if (axis == stick.y) digitalButton = stick.rawUp;
-				var btn = getButton(digitalButton);
-				if (btn != null) btn.release();
-			}
-			
-			//pressed/released for digital RIGHT/DOWN
-			if (newValue > pos && oldValue <= pos)
-			{
-				if (axis == stick.x) digitalButton = stick.rawRight;
-				else if (axis == stick.y) digitalButton = stick.rawDown;
-				var btn = getButton(digitalButton);
-				if (btn != null) btn.press();
-			}
-			else if (newValue <= pos && oldValue > pos)
-			{
-				if (axis == stick.x) digitalButton = stick.rawRight;
-				else if (axis == stick.y) digitalButton = stick.rawDown;
-				var btn = getButton(digitalButton);
-				if (btn != null) btn.release();
-			}
-			
-			if (stick.mode == ONLY_DIGITAL)
-			{
-				//still haven't figured out how to suppress the analog inputs properly. Oh well.
-			}
-		}
-	}
 	
 	/**
 	 * Whether any buttons have the specified input state.
@@ -790,6 +738,53 @@ class FlxGamepad implements IFlxDestroyable
 		return 0;
 	}
 	
+	private function handleAxisMove(axis:Int, newValue:Float, oldValue:Float)
+	{
+		newValue = applyAxisFlip(newValue, axis);
+		oldValue = applyAxisFlip(oldValue, axis);
+		
+		//check to see if we should send digital inputs as well as analog
+		var stick:FlxGamepadAnalogStick = getAnalogStickByAxis(axis);
+		if (stick.mode == ONLY_DIGITAL || stick.mode == BOTH)
+		{
+			handleAxisMoveSub(stick, axis, newValue, oldValue,  1.0);
+			handleAxisMoveSub(stick, axis, newValue, oldValue, -1.0);
+			
+			if (stick.mode == ONLY_DIGITAL)
+			{
+				//still haven't figured out how to suppress the analog inputs properly. Oh well.
+			}
+		}
+	}
+	
+	private function handleAxisMoveSub(stick:FlxGamepadAnalogStick, axis:Int, value:Float, oldValue:Float, sign:Float=1.0)
+	{
+		var digitalButton = -1;
+		
+		if (axis == stick.x)
+		{
+			digitalButton = (sign < 0) ? stick.rawLeft : stick.rawRight;
+		}
+		else if (axis == stick.y)
+		{
+			digitalButton = (sign < 0) ? stick.rawUp : stick.rawDown;
+		}
+		
+		var threshold = stick.digitalThreshold;
+		var valueSign = value * sign;
+		var oldValueSign = oldValue * sign;
+		
+		if (valueSign > threshold && oldValueSign <= threshold)
+		{
+			var btn = getButton(digitalButton);
+			if (btn != null) btn.press();
+		}
+		else if (valueSign <= threshold && oldValueSign > threshold)
+		{
+			var btn = getButton(digitalButton);
+			if (btn != null) btn.release();
+		}
+	}
 	private function createMappingForModel(model:FlxGamepadModel):FlxGamepadMapping
 	{
 		return switch (model)
