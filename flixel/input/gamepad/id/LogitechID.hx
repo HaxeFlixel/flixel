@@ -54,7 +54,7 @@ class LogitechID
 	
 #end
 
-public static var LEFT_ANALOG_STICK(default, null)  = new FlxGamepadAnalogStick(0, 1, {up:24, down:25, left:26, right:27});
-public static var RIGHT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(2, 3, {up:28, down:29, left:30, right:31});
+	public static var LEFT_ANALOG_STICK(default, null)  = new FlxGamepadAnalogStick(0, 1, {up:24, down:25, left:26, right:27});
+	public static var RIGHT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(2, 3, {up:28, down:29, left:30, right:31});
 
 }

@@ -269,7 +269,7 @@ class FlxGamepad implements IFlxDestroyable
 		manager = null;
 		
 		#if FLX_JOYSTICK_API
-		hat  = FlxDestroyUtil.put(hat);
+		hat = FlxDestroyUtil.put(hat);
 		ball = FlxDestroyUtil.put(ball);
 		
 		hat  = null;
@@ -614,31 +614,28 @@ class FlxGamepad implements IFlxDestroyable
 		return getAnalogYAxisValue(Stick);
 	}
 
-	@:allow(flixel.input.gamepad.FlxGamepadManager)
-	private function handleAxisMove(axis:Int, newVal:Float, oldVal:Float)
+	private function handleAxisMove(axis:Int, newValue:Float, oldValue:Float)
 	{
-		newVal = applyAxisFlip(newVal, axis);
-		oldVal = applyAxisFlip(oldVal, axis);
+		newValue = applyAxisFlip(newValue, axis);
+		oldValue = applyAxisFlip(oldValue, axis);
 		
 		//check to see if we should send digital inputs as well as analog
-		var stick:FlxGamepadAnalogStick = this.getAnalogStickByAxis(axis);
+		var stick:FlxGamepadAnalogStick = getAnalogStickByAxis(axis);
 		if (stick.mode == ONLY_DIGITAL || stick.mode == BOTH)
 		{
 			var neg = stick.digitalThreshold * -1;
 			var pos = stick.digitalThreshold;
 			var digitalButton = -1;
 			
-			trace("axis(" + axis + ") val = " + newVal);
-			
 			//pressed/released for digital LEFT/UP
-			if (newVal < neg && oldVal >= neg)
+			if (newValue < neg && oldValue >= neg)
 			{
 				if (axis == stick.x) digitalButton = stick.rawLeft;
 				else if (axis == stick.y) digitalButton = stick.rawUp;
 				var btn = getButton(digitalButton);
 				if (btn != null) btn.press();
 			}
-			else if (newVal >= neg && oldVal < neg)
+			else if (newValue >= neg && oldValue < neg)
 			{
 				if (axis == stick.x) digitalButton = stick.rawLeft;
 				else if (axis == stick.y) digitalButton = stick.rawUp;
@@ -647,14 +644,14 @@ class FlxGamepad implements IFlxDestroyable
 			}
 			
 			//pressed/released for digital RIGHT/DOWN
-			if (newVal > pos && oldVal <= pos)
+			if (newValue > pos && oldValue <= pos)
 			{
 				if (axis == stick.x) digitalButton = stick.rawRight;
 				else if (axis == stick.y) digitalButton = stick.rawDown;
 				var btn = getButton(digitalButton);
 				if (btn != null) btn.press();
 			}
-			else if (newVal <= pos && oldVal > pos)
+			else if (newValue <= pos && oldValue > pos)
 			{
 				if (axis == stick.x) digitalButton = stick.rawRight;
 				else if (axis == stick.y) digitalButton = stick.rawDown;
