@@ -495,7 +495,7 @@ class FlxSound extends FlxBasic
 	 * 
 	 * @param        X        The new x position
 	 * @param        Y        The new y position
- 	 */
+	 */
 	public inline function setPosition(X:Float = 0, Y:Float = 0):Void
 	{
 		x = X;

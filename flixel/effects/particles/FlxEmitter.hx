@@ -539,7 +539,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	
 	/**
 	 * Helper function to set the coordinates of this object.
- 	 */
+	 */
 	public inline function setPosition(X:Float = 0, Y:Float = 0):Void
 	{
 		x = X;

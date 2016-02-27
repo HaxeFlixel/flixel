@@ -91,9 +91,9 @@ class FlxAnalog extends FlxSpriteGroup
 	 * Create a virtual thumbstick - useful for input on mobile devices.
 	 *  
 	 * @param	X		The X-coordinate of the point in space.
- 	 * @param	Y		The Y-coordinate of the point in space.
- 	 * @param	radius	The radius where the thumb can move. If 0, half the background's width will be used as radius.
- 	 * @param	ease	The duration of the easing. The value must be between 0 and 1.
+	 * @param	Y		The Y-coordinate of the point in space.
+	 * @param	radius	The radius where the thumb can move. If 0, half the background's width will be used as radius.
+	 * @param	ease	The duration of the easing. The value must be between 0 and 1.
 	 */
 	public function new(X:Float = 0, Y:Float = 0, Radius:Float = 0, Ease:Float = 0.25)
 	{

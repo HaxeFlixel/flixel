@@ -80,7 +80,7 @@ class FlxStringUtil
 		return string;
 	}
 
-	 /**
+	/**
 	 * Generate a comma-seperated string representation of the keys of a StringMap.
 	 * 
 	 * @param  AnyMap    A StringMap object.

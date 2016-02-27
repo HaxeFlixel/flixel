@@ -1168,7 +1168,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	private inline function tilemapOverlapsAtCallback(ObjectOrGroup:FlxBasic, X:Float, Y:Float, InScreenSpace:Bool, Camera:FlxCamera):Bool
 	{
 		if (ObjectOrGroup.flixelType == OBJECT || 
-		    ObjectOrGroup.flixelType == TILEMAP)
+			ObjectOrGroup.flixelType == TILEMAP)
 		{
 			return overlapsWithCallback(cast ObjectOrGroup, null, false, _point.set(X, Y));
 		}

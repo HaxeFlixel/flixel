@@ -117,7 +117,7 @@ class FlxSprite extends FlxObject
 	 * Whether this sprite is flipped on the Y axis
 	 */
 	public var flipY(default, set):Bool = false;
-	 
+	
 	/**
 	 * WARNING: The origin of the sprite will default to its center. If you change this, 
 	 * the visuals and the collisions will likely be pretty out-of-sync if you do any rotation.
@@ -307,10 +307,10 @@ class FlxSprite extends FlxObject
 	/**
 	 * Load an image from an embedded graphic file.
 	 *
- 	 * HaxeFlixel's graphic caching system keeps track of loaded image data. 
- 	 * When you load an identical copy of a previously used image, by default
- 	 * HaxeFlixel copies the previous reference onto the pixels field instead
- 	 * of creating another copy of the image data, to save memory.
+	 * HaxeFlixel's graphic caching system keeps track of loaded image data. 
+	 * When you load an identical copy of a previously used image, by default
+	 * HaxeFlixel copies the previous reference onto the pixels field instead
+	 * of creating another copy of the image data, to save memory.
 	 * 
 	 * @param	Graphic		The image you want to use.
 	 * @param	Animated	Whether the Graphic parameter is a single sprite or a row of sprites.
@@ -447,11 +447,11 @@ class FlxSprite extends FlxObject
 	/**
 	 * This function creates a flat colored rectangular image dynamically.
 	 *
- 	 * HaxeFlixel's graphic caching system keeps track of loaded image data. 
- 	 * When you make an identical copy of a previously used image, by default
- 	 * HaxeFlixel copies the previous reference onto the pixels field instead
- 	 * of creating another copy of the image data, to save memory.
- 	 * 
+	 * HaxeFlixel's graphic caching system keeps track of loaded image data. 
+	 * When you make an identical copy of a previously used image, by default
+	 * HaxeFlixel copies the previous reference onto the pixels field instead
+	 * of creating another copy of the image data, to save memory.
+	 * 
 	 * @param	Width		The width of the sprite you want to generate.
 	 * @param	Height		The height of the sprite you want to generate.
 	 * @param	Color		Specifies the color of the generated block (ARGB format).
