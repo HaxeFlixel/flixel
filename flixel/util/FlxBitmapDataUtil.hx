@@ -36,34 +36,34 @@ class FlxBitmapDataUtil
 		destBitmapData.merge(sourceBitmapData, sourceRect, destPoint, redMultiplier, greenMultiplier, blueMultiplier, alphaMultiplier);
 		#else
 		if (destPoint.x >= destBitmapData.width ||
-		    destPoint.y >= destBitmapData.height ||
-		    sourceRect.x >= sourceBitmapData.width ||
-		    sourceRect.y >= sourceBitmapData.height ||
-		    sourceRect.x + sourceRect.width <= 0 ||
-		    sourceRect.y + sourceRect.height <= 0)
+			destPoint.y >= destBitmapData.height ||
+			sourceRect.x >= sourceBitmapData.width ||
+			sourceRect.y >= sourceBitmapData.height ||
+			sourceRect.x + sourceRect.width <= 0 ||
+			sourceRect.y + sourceRect.height <= 0)
 		{
 			return;
 		}
 		
 		// need to cut off sourceRect if it too big...
 		while (sourceRect.x + sourceRect.width > sourceBitmapData.width ||
-		       sourceRect.y + sourceRect.height > sourceBitmapData.height ||
-		       sourceRect.x < 0 ||
-		       sourceRect.y < 0 ||
-		       destPoint.x < 0 ||
-		       destPoint.y < 0 )
+			sourceRect.y + sourceRect.height > sourceBitmapData.height ||
+			sourceRect.x < 0 ||
+			sourceRect.y < 0 ||
+			destPoint.x < 0 ||
+			destPoint.y < 0 )
 		{
 			if (sourceRect.x + sourceRect.width > sourceBitmapData.width)	sourceRect.width = sourceBitmapData.width - sourceRect.x;
 			if (sourceRect.y + sourceRect.height > sourceBitmapData.height)	sourceRect.height = sourceBitmapData.height - sourceRect.y;
 			
-			if (sourceRect.x < 0)	
+			if (sourceRect.x < 0)
 			{
 				destPoint.x = destPoint.x - sourceRect.x;
 				sourceRect.width = sourceRect.width + sourceRect.x;
 				sourceRect.x = 0;
 			}
 			
-			if (sourceRect.y < 0)	
+			if (sourceRect.y < 0)
 			{
 				destPoint.y = destPoint.y - sourceRect.y;
 				sourceRect.height = sourceRect.height + sourceRect.y;

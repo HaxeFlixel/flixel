@@ -597,7 +597,7 @@ class FlxAnimationController implements IFlxDestroyable
 	}
 	
 	/**
-  	 * Gets the FlxAnimation object with the specified name.
+	 * Gets the FlxAnimation object with the specified name.
 	 */
 	public inline function getByName(Name:String):FlxAnimation
 	{

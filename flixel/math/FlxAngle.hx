@@ -56,7 +56,7 @@ class FlxAngle
 	
 	/**
 	 * Keeps an angle value between -180 and +180 by wrapping it
-     * e.g an angle of +270 will be converted to -90
+	 * e.g an angle of +270 will be converted to -90
 	 * Should be called whenever the angle is updated on a FlxSprite to stop it from going insane.
 	 * 
 	 * @param	angle	The angle value to check
@@ -199,13 +199,13 @@ class FlxAngle
 	}
 	#end
 	
-	 /**
-	  *  Translate an object's facing to angle.
-	  * 
-	  * @param	FacingBitmask	Bitmask from which to calculate the angle, as in FlxSprite::facing
-	  * @param	AsDegrees		If you need the value in degrees instead of radians, set to true
-	  * @return	The angle (in radians unless AsDegrees is true)
-	  */
+	/**
+	 *  Translate an object's facing to angle.
+	 * 
+	 * @param	FacingBitmask	Bitmask from which to calculate the angle, as in FlxSprite::facing
+	 * @param	AsDegrees		If you need the value in degrees instead of radians, set to true
+	 * @return	The angle (in radians unless AsDegrees is true)
+	 */
 	public static inline function angleFromFacing(FacingBitmask:Int, AsDegrees:Bool = false):Float
 	{		
 		var degrees = switch (FacingBitmask)
@@ -213,7 +213,7 @@ class FlxAngle
 			case FlxObject.LEFT: 180;
 			case FlxObject.RIGHT: 0;
 			case FlxObject.UP: -90;
-			case FlxObject.DOWN: 90;			
+			case FlxObject.DOWN: 90;
 			case f if (f == FlxObject.UP | FlxObject.LEFT): -135;
 			case f if (f == FlxObject.UP | FlxObject.RIGHT): -45;
 			case f if (f == FlxObject.DOWN | FlxObject.LEFT): 135;

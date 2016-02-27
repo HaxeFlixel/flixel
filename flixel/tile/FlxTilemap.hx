@@ -42,10 +42,10 @@ class GraphicAutoAlt extends BitmapData {}
 class FlxTilemap extends FlxBaseTilemap<FlxTile>
 {
 	/** 
- 	 * A helper buffer for calculating number of columns and rows when the game size changed
+	 * A helper buffer for calculating number of columns and rows when the game size changed
 	 * We are only using its member functions that's why it is an empty instance
- 	 */
- 	private static var _helperBuffer:FlxTilemapBuffer = Type.createEmptyInstance(FlxTilemapBuffer);
+	 */
+	private static var _helperBuffer:FlxTilemapBuffer = Type.createEmptyInstance(FlxTilemapBuffer);
 	
 	// TODO: remove this hack and add docs about how to avoid tearing problem by preparing assets and some code...
 	/**
@@ -567,8 +567,9 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 				tile.last.x = tile.x - deltaX;
 				tile.last.y = tile.y - deltaY;
 				
-				overlapFound = ((Object.x + Object.width) > tile.x)  && (Object.x < (tile.x + tile.width)) && 
-				               ((Object.y + Object.height) > tile.y) && (Object.y < (tile.y + tile.height));
+				overlapFound =
+					((Object.x + Object.width) > tile.x)  && (Object.x < (tile.x + tile.width)) && 
+					((Object.y + Object.height) > tile.y) && (Object.y < (tile.y + tile.height));
 				
 				if (tile.allowCollisions != FlxObject.NONE)
 				{
