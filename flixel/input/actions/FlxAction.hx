@@ -158,7 +158,12 @@ class FlxAction implements IFlxDestroyable
 	/**
 	 * If true, this action has just been triggered
 	 */
-	public var fire(default, null):Bool;
+	public var fire(default, null):Bool=false;
+	
+	/**
+	 * The inputs attached to this action
+	 */
+	public var inputs:Array<FlxActionInput>;
 	
 	private var _x:Null<Float> = null;
 	private var _y:Null<Float> = null;
@@ -205,6 +210,7 @@ class FlxAction implements IFlxDestroyable
 		
 		if (_timestamp == FlxG.game._total)
 		{
+			fire = _check;
 			return _check;	//run no more than once per frame
 		}
 		
@@ -230,6 +236,8 @@ class FlxAction implements IFlxDestroyable
 				_check = true;
 			}
 		}
+		
+		fire = _check;
 		return _check;
 	}
 	
@@ -239,7 +247,7 @@ class FlxAction implements IFlxDestroyable
 	
 	public function update():Void
 	{
-		fire = check();
+		check();
 	}
 	
 	public function destroy():Void
@@ -254,8 +262,6 @@ class FlxAction implements IFlxDestroyable
 	}
 	
 	/*********PRIVATE***********/
-	
-	private var inputs:Array<FlxActionInput>;
 	
 	private var _timestamp:Int = 0;
 	private var _check:Bool = false;
