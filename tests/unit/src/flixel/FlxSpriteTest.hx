@@ -219,9 +219,9 @@ class FlxSpriteTest extends FlxTest
 	function testStampTextCrash()
 	{
 		var text = new FlxText(0, 0, 50, 'Text');
-        var sprite = new FlxSprite();
-        sprite.makeGraphic(100, 100, 0, true);
-        sprite.stamp(text);
+		var sprite = new FlxSprite();
+		sprite.makeGraphic(100, 100, 0, true);
+		sprite.stamp(text);
 	}
 	
 	@Test // #1704
