@@ -262,7 +262,7 @@ class FlxBitmapText extends FlxSprite
 		}
 	}
 	
-	inline private function checkPendingChanges(useTiles:Bool = false):Void
+	private inline function checkPendingChanges(useTiles:Bool = false):Void
 	{
 		if (FlxG.renderBlit)
 		{

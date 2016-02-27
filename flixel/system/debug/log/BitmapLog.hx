@@ -162,7 +162,7 @@ class BitmapLog extends Window
 		_background.scaleY = _height - _header.height * 2;
 	}
 	
-	public override function resize(Width:Float, Height:Float):Void
+	override public function resize(Width:Float, Height:Float):Void
 	{
 		super.resize(Width, Height);
 		

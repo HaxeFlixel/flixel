@@ -283,7 +283,7 @@ interface IFlxSignal<T> extends IFlxDestroyable
 
 private class Macro
 {
-	macro public static function buildDispatch(exprs:Array<Expr>):Expr
+	public static macro function buildDispatch(exprs:Array<Expr>):Expr
 	{
 		return macro
 		{ 
