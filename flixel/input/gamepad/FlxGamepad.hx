@@ -184,8 +184,16 @@ class FlxGamepad implements IFlxDestroyable
 			control = _device.getControlAt(i);
 			
 			//quick absolute value for analog sticks
-			var value = Math.abs(control.value);
 			button = getButton(i);
+			
+			if (isAxisForAnalogStick(i))
+			{
+				handleAxisMove(i, control.value, button.value);
+			}
+			
+			button.value = control.value;
+			
+			var value = Math.abs(control.value);
 			
 			if (value < deadZone)
 			{
@@ -264,7 +272,7 @@ class FlxGamepad implements IFlxDestroyable
 		hat = FlxDestroyUtil.put(hat);
 		ball = FlxDestroyUtil.put(ball);
 		
-		hat = null;
+		hat  = null;
 		ball = null;
 		#end
 	}
@@ -605,7 +613,7 @@ class FlxGamepad implements IFlxDestroyable
 	{
 		return getAnalogYAxisValue(Stick);
 	}
-
+	
 	/**
 	 * Whether any buttons have the specified input state.
 	 */
@@ -730,6 +738,53 @@ class FlxGamepad implements IFlxDestroyable
 		return 0;
 	}
 	
+	private function handleAxisMove(axis:Int, newValue:Float, oldValue:Float)
+	{
+		newValue = applyAxisFlip(newValue, axis);
+		oldValue = applyAxisFlip(oldValue, axis);
+		
+		//check to see if we should send digital inputs as well as analog
+		var stick:FlxGamepadAnalogStick = getAnalogStickByAxis(axis);
+		if (stick.mode == ONLY_DIGITAL || stick.mode == BOTH)
+		{
+			handleAxisMoveSub(stick, axis, newValue, oldValue,  1.0);
+			handleAxisMoveSub(stick, axis, newValue, oldValue, -1.0);
+			
+			if (stick.mode == ONLY_DIGITAL)
+			{
+				//still haven't figured out how to suppress the analog inputs properly. Oh well.
+			}
+		}
+	}
+	
+	private function handleAxisMoveSub(stick:FlxGamepadAnalogStick, axis:Int, value:Float, oldValue:Float, sign:Float=1.0)
+	{
+		var digitalButton = -1;
+		
+		if (axis == stick.x)
+		{
+			digitalButton = (sign < 0) ? stick.rawLeft : stick.rawRight;
+		}
+		else if (axis == stick.y)
+		{
+			digitalButton = (sign < 0) ? stick.rawUp : stick.rawDown;
+		}
+		
+		var threshold = stick.digitalThreshold;
+		var valueSign = value * sign;
+		var oldValueSign = oldValue * sign;
+		
+		if (valueSign > threshold && oldValueSign <= threshold)
+		{
+			var btn = getButton(digitalButton);
+			if (btn != null) btn.press();
+		}
+		else if (valueSign <= threshold && oldValueSign > threshold)
+		{
+			var btn = getButton(digitalButton);
+			if (btn != null) btn.release();
+		}
+	}
 	private function createMappingForModel(model:FlxGamepadModel):FlxGamepadMapping
 	{
 		return switch (model)

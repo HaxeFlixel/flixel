@@ -37,8 +37,8 @@ class PS4ID
 	public static inline var PS:Int = 22;
 	public static inline var TOUCHPAD_CLICK:Int = 23;
 	
-	public static var LEFT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(0 , 1);
-	public static var RIGHT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(2, 5);
+	public static var LEFT_ANALOG_STICK (default, null) = new FlxGamepadAnalogStick(0, 1, {up:24, down:25, left:26, right:27});
+	public static var RIGHT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(2, 5, {up:28, down:29, left:30, right:31});
 	
 	public static inline var DPAD_UP:Int = 6;
 	public static inline var DPAD_DOWN:Int = 7;
@@ -63,8 +63,8 @@ class PS4ID
 	
 	public static inline var TOUCHPAD_CLICK:Int = 21;
 	
-	public static var LEFT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(0, 1);
-	public static var RIGHT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(2, 3);
+	public static var LEFT_ANALOG_STICK (default, null) = new FlxGamepadAnalogStick(0, 1, {up:22, down:23, left:24, right:25});
+	public static var RIGHT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(2, 3, {up:26, down:27, left:28, right:29});
 	
 	public static inline var L2:Int = 4;
 	public static inline var R2:Int = 5;
@@ -97,8 +97,8 @@ class PS4ID
 	public static inline var L2:Int = 3;
 	public static inline var R2:Int = 4;
 	
-	public static var LEFT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(0, 1);
-	public static var RIGHT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(2, 5);
+	public static var LEFT_ANALOG_STICK (default, null) = new FlxGamepadAnalogStick(0, 1, {up:27, down:28, left:29, right:30});
+	public static var RIGHT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(2, 5, {up:31, down:32, left:33, right:34});
 	
 	//"fake" IDs, we manually watch for hat axis changes and then send events using these otherwise unused joystick button codes
 	public static inline var DPAD_LEFT:Int = 15;
