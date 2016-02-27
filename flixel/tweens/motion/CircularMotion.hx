@@ -1,4 +1,4 @@
-﻿package flixel.tweens.motion;
+package flixel.tweens.motion;
 
 /**
  * Determines a circular motion.

@@ -1,4 +1,4 @@
-﻿package flixel.tweens.motion;
+package flixel.tweens.motion;
 
 /**
  * Determines motion along a line, from one point to another.
