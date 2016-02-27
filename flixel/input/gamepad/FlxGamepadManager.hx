@@ -462,7 +462,7 @@ class FlxGamepadManager implements IFlxInputManager
 			}
 			else if (isForStick)
 			{
-				gamepad.handleAxisMove(i, newAxis[i], (i > 0 && i < oldAxis.length) ? oldAxis[i] : 0);
+				gamepad.handleAxisMove(i, newAxis[i], (i >= 0 && i < oldAxis.length) ? oldAxis[i] : 0);
 			}
 		}
 		
