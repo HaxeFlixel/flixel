@@ -789,11 +789,11 @@ class FlxObject extends FlxBasic
 		{
 			Camera = FlxG.camera;
 		}
-		var X:Float = point.x - Camera.scroll.x;
-		var Y:Float = point.y - Camera.scroll.y;
+		var xPos:Float = point.x - Camera.scroll.x;
+		var yPos:Float = point.y - Camera.scroll.y;
 		getScreenPosition(_point, Camera);
 		point.putWeak();
-		return (X > _point.x) && (X < _point.x + width) && (Y > _point.y) && (Y < _point.y + height);
+		return (xPos > _point.x) && (xPos < _point.x + width) && (yPos > _point.y) && (yPos < _point.y + height);
 	}
 	
 	/**

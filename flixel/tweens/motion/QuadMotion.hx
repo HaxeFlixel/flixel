@@ -3,7 +3,7 @@ package flixel.tweens.motion;
 import flixel.math.FlxPoint;
 
 /**
- * Determines motion along a quadratic curve.
+ * Determines motion along p1 quadratic curve.
  */
 class QuadMotion extends Motion
 {
@@ -70,25 +70,28 @@ class QuadMotion extends Motion
 	
 	private function get_distance():Float
 	{
-		if (_distance >= 0) return _distance;
-		var a = FlxPoint.get();
-		var b = FlxPoint.get();
-		a.x = x - 2 * _controlX + _toX;
-		a.y = y - 2 * _controlY + _toY;
-		b.x = 2 * _controlX - 2 * x;
-		b.y = 2 * _controlY - 2 * y;
-		var A:Float = 4 * (a.x * a.x + a.y * a.y),
-			B:Float = 4 * (a.x * b.x + a.y * b.y),
-			C:Float = b.x * b.x + b.y * b.y,
-			ABC:Float = 2 * Math.sqrt(A + B + C),
-			A2:Float = Math.sqrt(A),
-			A32:Float = 2 * A * A2,
-			C2:Float = 2 * Math.sqrt(C),
-			BA:Float = B / A2;
-			
-		a.put();
-		b.put();
+		if (_distance >= 0)
+			return _distance;
 		
-		return (A32 * ABC + A2 * B * (ABC - C2) + (4 * C * A - B * B) * Math.log((2 * A2 + BA + ABC) / (BA + C2))) / (4 * A32);
+		var p1 = FlxPoint.get();
+		var p2 = FlxPoint.get();
+		p1.x = x - 2 * _controlX + _toX;
+		p1.y = y - 2 * _controlY + _toY;
+		p2.x = 2 * _controlX - 2 * x;
+		p2.y = 2 * _controlY - 2 * y;
+		var a:Float = 4 * (p1.x * p1.x + p1.y * p1.y),
+			b:Float = 4 * (p1.x * p2.x + p1.y * p2.y),
+			c:Float = p2.x * p2.x + p2.y * p2.y,
+			abc:Float = 2 * Math.sqrt(a + b + c),
+			a2:Float = Math.sqrt(a),
+			a32:Float = 2 * a * a2,
+			c2:Float = 2 * Math.sqrt(c),
+			ba:Float = b / a2;
+			
+		p1.put();
+		p2.put();
+		
+		return (a32 * abc + a2 * b * (abc - c2) + (4 * c * a - b * b) *
+			Math.log((2 * a2 + ba + abc) / (ba + c2))) / (4 * a32);
 	}
 }

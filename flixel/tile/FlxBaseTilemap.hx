@@ -856,17 +856,17 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 				
 				if (DiagonalPolicy != NONE)
 				{
-					var WideDiagonal = DiagonalPolicy == WIDE;
+					var wideDiagonal = DiagonalPolicy == WIDE;
 					if (up && right)
 					{
 						index = currentIndex - widthInTiles + 1;
 						
-						if (WideDiagonal && (distances[index] == -1) && (distances[currentIndex-widthInTiles] >= -1) && (distances[currentIndex+1] >= -1))
+						if (wideDiagonal && (distances[index] == -1) && (distances[currentIndex-widthInTiles] >= -1) && (distances[currentIndex+1] >= -1))
 						{
 							distances[index] = distance;
 							neighbors.push(index);
 						}
-						else if (!WideDiagonal && (distances[index] == -1))
+						else if (!wideDiagonal && (distances[index] == -1))
 						{
 							distances[index] = distance;
 							neighbors.push(index);
@@ -876,12 +876,12 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 					{
 						index = currentIndex + widthInTiles + 1;
 						
-						if (WideDiagonal && (distances[index] == -1) && (distances[currentIndex+widthInTiles] >= -1) && (distances[currentIndex+1] >= -1))
+						if (wideDiagonal && (distances[index] == -1) && (distances[currentIndex+widthInTiles] >= -1) && (distances[currentIndex+1] >= -1))
 						{
 							distances[index] = distance;
 							neighbors.push(index);
 						}
-						else if (!WideDiagonal && (distances[index] == -1))
+						else if (!wideDiagonal && (distances[index] == -1))
 						{
 							distances[index] = distance;
 							neighbors.push(index);
@@ -891,12 +891,12 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 					{
 						index = currentIndex + widthInTiles - 1;
 						
-						if (WideDiagonal && (distances[index] == -1) && (distances[currentIndex+widthInTiles] >= -1) && (distances[currentIndex-1] >= -1))
+						if (wideDiagonal && (distances[index] == -1) && (distances[currentIndex+widthInTiles] >= -1) && (distances[currentIndex-1] >= -1))
 						{
 							distances[index] = distance;
 							neighbors.push(index);
 						}
-						else if (!WideDiagonal && (distances[index] == -1))
+						else if (!wideDiagonal && (distances[index] == -1))
 						{
 							distances[index] = distance;
 							neighbors.push(index);
@@ -906,12 +906,12 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 					{
 						index = currentIndex - widthInTiles - 1;
 						
-						if (WideDiagonal && (distances[index] == -1) && (distances[currentIndex-widthInTiles] >= -1) && (distances[currentIndex-1] >= -1))
+						if (wideDiagonal && (distances[index] == -1) && (distances[currentIndex-widthInTiles] >= -1) && (distances[currentIndex-1] >= -1))
 						{
 							distances[index] = distance;
 							neighbors.push(index);
 						}
-						else if (!WideDiagonal && (distances[index] == -1))
+						else if (!wideDiagonal && (distances[index] == -1))
 						{
 							distances[index] = distance;
 							neighbors.push(index);

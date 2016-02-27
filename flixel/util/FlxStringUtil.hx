@@ -266,8 +266,8 @@ class FlxStringUtil
 		var urlStart:Int = url.indexOf("://") + 3;
 		var urlEnd:Int = url.indexOf("/", urlStart);
 		var home:String = url.substring(urlStart, urlEnd);
-		var LastDot:Int = home.lastIndexOf(".") - 1;
-		var domEnd:Int = home.lastIndexOf(".", LastDot) + 1;
+		var lastDot:Int = home.lastIndexOf(".") - 1;
+		var domEnd:Int = home.lastIndexOf(".", lastDot) + 1;
 		home = home.substring(domEnd, home.length);
 		home = home.split(":")[0];
 		return (home == "") ? "local" : home;
@@ -341,11 +341,11 @@ class FlxStringUtil
 		var row:Int = 0;
 		var column:Int;
 		var csv:String = "";
-		var Height:Int = Std.int(Data.length / Width);
+		var height:Int = Std.int(Data.length / Width);
 		var index:Int;
 		var offset:Int = 0;
 		
-		while (row < Height)
+		while (row < height)
 		{
 			column = 0;
 			
