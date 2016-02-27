@@ -286,7 +286,6 @@ class FlxStringUtil
 		return (getClassName(Obj1, Simple) == getClassName(Obj2, Simple));
 	}
 	
-	
 	/**
 	 * Split a comma-separated string into an array of ints
 	 * 

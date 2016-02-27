@@ -59,7 +59,6 @@ class WiiRemoteID
 	public static inline var CLASSIC_HOME:Int = 10;
 	public static inline var CLASSIC_ONE:Int = 11;
 	public static inline var CLASSIC_TWO:Int = 12;
-	
 
 	public static inline var REMOTE_TILT_PITCH:Int = 2;
 	public static inline var REMOTE_TILT_ROLL:Int = 3;
