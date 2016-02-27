@@ -52,7 +52,16 @@ class MayflashWiiRemoteMapping extends FlxGamepadMapping
 			case MayflashWiiRemoteID.CLASSIC_DPAD_DOWN: DPAD_DOWN;
 			case MayflashWiiRemoteID.CLASSIC_DPAD_LEFT: DPAD_LEFT;
 			case MayflashWiiRemoteID.CLASSIC_DPAD_RIGHT: DPAD_RIGHT;
-			default: NONE;
+			default:
+				if (rawID == MayflashWiiRemoteID.LEFT_ANALOG_STICK.rawUp)     LEFT_STICK_DIGITAL_UP;
+				if (rawID == MayflashWiiRemoteID.LEFT_ANALOG_STICK.rawDown)   LEFT_STICK_DIGITAL_DOWN;
+				if (rawID == MayflashWiiRemoteID.LEFT_ANALOG_STICK.rawLeft)   LEFT_STICK_DIGITAL_LEFT;
+				if (rawID == MayflashWiiRemoteID.LEFT_ANALOG_STICK.rawRight)  LEFT_STICK_DIGITAL_RIGHT;
+				if (rawID == MayflashWiiRemoteID.RIGHT_ANALOG_STICK.rawUp)    RIGHT_STICK_DIGITAL_UP;
+				if (rawID == MayflashWiiRemoteID.RIGHT_ANALOG_STICK.rawDown)  RIGHT_STICK_DIGITAL_DOWN;
+				if (rawID == MayflashWiiRemoteID.RIGHT_ANALOG_STICK.rawLeft)  RIGHT_STICK_DIGITAL_LEFT;
+				if (rawID == MayflashWiiRemoteID.RIGHT_ANALOG_STICK.rawRight) RIGHT_STICK_DIGITAL_RIGHT;
+				NONE;
 		}
 	}
 	
@@ -73,7 +82,12 @@ class MayflashWiiRemoteMapping extends FlxGamepadMapping
 			case MayflashWiiRemoteID.NUNCHUK_DPAD_DOWN: DPAD_DOWN;
 			case MayflashWiiRemoteID.NUNCHUK_DPAD_LEFT: DPAD_LEFT;
 			case MayflashWiiRemoteID.NUNCHUK_DPAD_RIGHT: DPAD_RIGHT;
-			default: NONE;
+			default:
+				if (rawID == MayflashWiiRemoteID.LEFT_ANALOG_STICK.rawUp)    LEFT_STICK_DIGITAL_UP;
+				if (rawID == MayflashWiiRemoteID.LEFT_ANALOG_STICK.rawDown)  LEFT_STICK_DIGITAL_DOWN;
+				if (rawID == MayflashWiiRemoteID.LEFT_ANALOG_STICK.rawLeft)  LEFT_STICK_DIGITAL_LEFT;
+				if (rawID == MayflashWiiRemoteID.LEFT_ANALOG_STICK.rawRight) LEFT_STICK_DIGITAL_RIGHT;
+				NONE;
 		}
 	}
 	
@@ -127,6 +141,14 @@ class MayflashWiiRemoteMapping extends FlxGamepadMapping
 			case RIGHT_TRIGGER: MayflashWiiRemoteID.CLASSIC_R;
 			case EXTRA_0: MayflashWiiRemoteID.CLASSIC_ONE;
 			case EXTRA_1: MayflashWiiRemoteID.CLASSIC_TWO;
+			case LEFT_STICK_DIGITAL_UP: MayflashWiiRemoteID.LEFT_ANALOG_STICK.rawUp;
+			case LEFT_STICK_DIGITAL_DOWN: MayflashWiiRemoteID.LEFT_ANALOG_STICK.rawDown;
+			case LEFT_STICK_DIGITAL_LEFT: MayflashWiiRemoteID.LEFT_ANALOG_STICK.rawLeft;
+			case LEFT_STICK_DIGITAL_RIGHT: MayflashWiiRemoteID.LEFT_ANALOG_STICK.rawRight;
+			case RIGHT_STICK_DIGITAL_UP: MayflashWiiRemoteID.RIGHT_ANALOG_STICK.rawUp;
+			case RIGHT_STICK_DIGITAL_DOWN: MayflashWiiRemoteID.RIGHT_ANALOG_STICK.rawDown;
+			case RIGHT_STICK_DIGITAL_LEFT: MayflashWiiRemoteID.RIGHT_ANALOG_STICK.rawLeft;
+			case RIGHT_STICK_DIGITAL_RIGHT: MayflashWiiRemoteID.RIGHT_ANALOG_STICK.rawRight;
 			default: getRawDefault(ID);
 		}
 	}
@@ -150,6 +172,10 @@ class MayflashWiiRemoteMapping extends FlxGamepadMapping
 			case DPAD_RIGHT: MayflashWiiRemoteID.NUNCHUK_DPAD_RIGHT;
 			case POINTER_X: MayflashWiiRemoteID.NUNCHUK_POINTER_X;
 			case POINTER_Y: MayflashWiiRemoteID.NUNCHUK_POINTER_Y;
+			case LEFT_STICK_DIGITAL_UP: MayflashWiiRemoteID.LEFT_ANALOG_STICK.rawUp;
+			case LEFT_STICK_DIGITAL_DOWN: MayflashWiiRemoteID.LEFT_ANALOG_STICK.rawDown;
+			case LEFT_STICK_DIGITAL_LEFT: MayflashWiiRemoteID.LEFT_ANALOG_STICK.rawLeft;
+			case LEFT_STICK_DIGITAL_RIGHT: MayflashWiiRemoteID.LEFT_ANALOG_STICK.rawRight;
 			default: -1;
 		}
 	}
