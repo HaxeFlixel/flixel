@@ -42,14 +42,14 @@ class LogitechMapping extends FlxGamepadMapping
 			case LogitechID.DPAD_UP: DPAD_UP;
 			case LogitechID.LOGITECH: GUIDE;
 			default:
-				if(rawID == LogitechID.LEFT_ANALOG_STICK.rawUp)     LEFT_STICK_DIGITAL_UP;
-				if(rawID == LogitechID.LEFT_ANALOG_STICK.rawDown)   LEFT_STICK_DIGITAL_DOWN;
-				if(rawID == LogitechID.LEFT_ANALOG_STICK.rawLeft)   LEFT_STICK_DIGITAL_LEFT;
-				if(rawID == LogitechID.LEFT_ANALOG_STICK.rawRight)  LEFT_STICK_DIGITAL_RIGHT;
-				if(rawID == LogitechID.RIGHT_ANALOG_STICK.rawUp)    RIGHT_STICK_DIGITAL_UP;
-				if(rawID == LogitechID.RIGHT_ANALOG_STICK.rawDown)  RIGHT_STICK_DIGITAL_DOWN;
-				if(rawID == LogitechID.RIGHT_ANALOG_STICK.rawLeft)  RIGHT_STICK_DIGITAL_LEFT;
-				if(rawID == LogitechID.RIGHT_ANALOG_STICK.rawRight) RIGHT_STICK_DIGITAL_RIGHT;
+				if (rawID == LogitechID.LEFT_ANALOG_STICK.rawUp)     LEFT_STICK_DIGITAL_UP;
+				if (rawID == LogitechID.LEFT_ANALOG_STICK.rawDown)   LEFT_STICK_DIGITAL_DOWN;
+				if (rawID == LogitechID.LEFT_ANALOG_STICK.rawLeft)   LEFT_STICK_DIGITAL_LEFT;
+				if (rawID == LogitechID.LEFT_ANALOG_STICK.rawRight)  LEFT_STICK_DIGITAL_RIGHT;
+				if (rawID == LogitechID.RIGHT_ANALOG_STICK.rawUp)    RIGHT_STICK_DIGITAL_UP;
+				if (rawID == LogitechID.RIGHT_ANALOG_STICK.rawDown)  RIGHT_STICK_DIGITAL_DOWN;
+				if (rawID == LogitechID.RIGHT_ANALOG_STICK.rawLeft)  RIGHT_STICK_DIGITAL_LEFT;
+				if (rawID == LogitechID.RIGHT_ANALOG_STICK.rawRight) RIGHT_STICK_DIGITAL_RIGHT;
 				NONE;
 		}
 	}

@@ -53,14 +53,14 @@ class MayflashWiiRemoteMapping extends FlxGamepadMapping
 			case MayflashWiiRemoteID.CLASSIC_DPAD_LEFT: DPAD_LEFT;
 			case MayflashWiiRemoteID.CLASSIC_DPAD_RIGHT: DPAD_RIGHT;
 			default:
-				if(rawID == MayflashWiiRemoteID.LEFT_ANALOG_STICK.rawUp)     LEFT_STICK_DIGITAL_UP;
-				if(rawID == MayflashWiiRemoteID.LEFT_ANALOG_STICK.rawDown)   LEFT_STICK_DIGITAL_DOWN;
-				if(rawID == MayflashWiiRemoteID.LEFT_ANALOG_STICK.rawLeft)   LEFT_STICK_DIGITAL_LEFT;
-				if(rawID == MayflashWiiRemoteID.LEFT_ANALOG_STICK.rawRight)  LEFT_STICK_DIGITAL_RIGHT;
-				if(rawID == MayflashWiiRemoteID.RIGHT_ANALOG_STICK.rawUp)    RIGHT_STICK_DIGITAL_UP;
-				if(rawID == MayflashWiiRemoteID.RIGHT_ANALOG_STICK.rawDown)  RIGHT_STICK_DIGITAL_DOWN;
-				if(rawID == MayflashWiiRemoteID.RIGHT_ANALOG_STICK.rawLeft)  RIGHT_STICK_DIGITAL_LEFT;
-				if(rawID == MayflashWiiRemoteID.RIGHT_ANALOG_STICK.rawRight) RIGHT_STICK_DIGITAL_RIGHT;
+				if (rawID == MayflashWiiRemoteID.LEFT_ANALOG_STICK.rawUp)     LEFT_STICK_DIGITAL_UP;
+				if (rawID == MayflashWiiRemoteID.LEFT_ANALOG_STICK.rawDown)   LEFT_STICK_DIGITAL_DOWN;
+				if (rawID == MayflashWiiRemoteID.LEFT_ANALOG_STICK.rawLeft)   LEFT_STICK_DIGITAL_LEFT;
+				if (rawID == MayflashWiiRemoteID.LEFT_ANALOG_STICK.rawRight)  LEFT_STICK_DIGITAL_RIGHT;
+				if (rawID == MayflashWiiRemoteID.RIGHT_ANALOG_STICK.rawUp)    RIGHT_STICK_DIGITAL_UP;
+				if (rawID == MayflashWiiRemoteID.RIGHT_ANALOG_STICK.rawDown)  RIGHT_STICK_DIGITAL_DOWN;
+				if (rawID == MayflashWiiRemoteID.RIGHT_ANALOG_STICK.rawLeft)  RIGHT_STICK_DIGITAL_LEFT;
+				if (rawID == MayflashWiiRemoteID.RIGHT_ANALOG_STICK.rawRight) RIGHT_STICK_DIGITAL_RIGHT;
 				NONE;
 		}
 	}
@@ -83,10 +83,10 @@ class MayflashWiiRemoteMapping extends FlxGamepadMapping
 			case MayflashWiiRemoteID.NUNCHUK_DPAD_LEFT: DPAD_LEFT;
 			case MayflashWiiRemoteID.NUNCHUK_DPAD_RIGHT: DPAD_RIGHT;
 			default:
-				if(rawID == MayflashWiiRemoteID.LEFT_ANALOG_STICK.rawUp)    LEFT_STICK_DIGITAL_UP;
-				if(rawID == MayflashWiiRemoteID.LEFT_ANALOG_STICK.rawDown)  LEFT_STICK_DIGITAL_DOWN;
-				if(rawID == MayflashWiiRemoteID.LEFT_ANALOG_STICK.rawLeft)  LEFT_STICK_DIGITAL_LEFT;
-				if(rawID == MayflashWiiRemoteID.LEFT_ANALOG_STICK.rawRight) LEFT_STICK_DIGITAL_RIGHT;
+				if (rawID == MayflashWiiRemoteID.LEFT_ANALOG_STICK.rawUp)    LEFT_STICK_DIGITAL_UP;
+				if (rawID == MayflashWiiRemoteID.LEFT_ANALOG_STICK.rawDown)  LEFT_STICK_DIGITAL_DOWN;
+				if (rawID == MayflashWiiRemoteID.LEFT_ANALOG_STICK.rawLeft)  LEFT_STICK_DIGITAL_LEFT;
+				if (rawID == MayflashWiiRemoteID.LEFT_ANALOG_STICK.rawRight) LEFT_STICK_DIGITAL_RIGHT;
 				NONE;
 		}
 	}
