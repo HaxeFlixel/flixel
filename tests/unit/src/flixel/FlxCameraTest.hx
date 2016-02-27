@@ -88,10 +88,10 @@ class FlxCameraTest extends FlxTest
 	{
 		var secondCallback = false;
 		fade(firstFade, function() {
-            fade(secondFade, function() {
+			fade(secondFade, function() {
 				secondCallback = true;
 			});
-        });
+		});
 		
 		step(10);
 		Assert.isTrue(secondCallback);

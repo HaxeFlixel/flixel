@@ -1,0 +1,2 @@
+-cmd haxelib run checkstyle -c checkstyle.json -s ../../flixel -r text
+-cmd haxelib run checkstyle -c checkstyle.json -s ../unit/src -r text

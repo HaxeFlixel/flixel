@@ -1,0 +1,68 @@
+{
+	"checks": [
+		{
+			"type": "AccessOrder",
+				"props": {
+				"severity": "WARNING",
+				"modifiers": [ 
+					"OVERRIDE",
+					"PUBLIC_PRIVATE",
+					"STATIC",
+					"MACRO",
+					"INLINE",
+					"DYNAMIC"
+				]
+			}
+		},
+		{
+			"type": "BlockFormat",
+			"props": {
+				"severity": "WARNING"
+			}
+		},
+		{
+			"type": "ConstantName",
+			"props": {
+				"severity": "WARNING",
+				"format": "^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$",
+				"tokens": [
+					"INLINE"
+				]
+			}
+		},
+		{
+			"type": "EmptyLines",
+			"props": {
+				"severity": "WARNING",
+				"max": 1
+			}
+		},
+		{
+			"type": "IndentationCharacter",
+			"props": {
+				"severity": "WARNING"
+			}
+		},
+		{
+			"type": "LocalVariableName",
+			"props": {
+				"severity": "WARNING",
+				"format": "^[a-z][a-zA-Z0-9]*$"
+			}
+		},
+		{
+			"type": "MethodName",
+			"props": {
+				"severity": "WARNING",
+				"format": "^[a-z][a-zA-Z0-9]*$"
+			}
+		},
+		{
+			"type": "TypeName",
+			"props": {
+				"severity": "WARNING",
+				"format": "^[A-Z]+[a-zA-Z0-9]*$"
+			}
+		}
+	]
+}

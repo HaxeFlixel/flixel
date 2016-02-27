@@ -282,6 +282,7 @@ interface IFlxSignal<T> extends IFlxDestroyable
 
 private class Macro
 {
+	@SuppressWarnings("checkstyle:BlockFormat") // adireddy/haxe-checkstyle#42
 	public static macro function buildDispatch(exprs:Array<Expr>):Expr
 	{
 		return macro
