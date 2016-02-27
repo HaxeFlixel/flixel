@@ -1,7 +1,13 @@
-2.0.1
+2.1.0
 ------------------------------
-* FlxSnake:
- * fixed the pickup sound effect not being played
+* FlxSnake: fixed the pickup sound effect not being played
+* Project Jumper" -> "ProjectJumper"
+* "RPG Interface" -> "RPGInterface"
+* "MouseEventManager" -> "FlxMouseEventManager"
+* `/Flixel Features` -> `/Features`
+* `/User Interface` -> `/UserInterface`
+* TurnBasedRPG: removed unnecessary comments and `destroy()` overrides
+* FlxSpriteFilters: mobile compile fix
 
 2.0.0
 ------------------------------
