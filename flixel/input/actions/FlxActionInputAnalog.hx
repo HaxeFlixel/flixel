@@ -20,10 +20,67 @@ abstract FlxAnalogState(Int) from Int
 	var JUST_MOVED   =  cast FlxInputState.JUST_PRESSED;	// became !0 on this frame
 }
 
-class FlxActionInputAnalogMouse extends FlxActionInputAnalog
+class FlxActionInputAnalogMouseMotion extends FlxActionInputAnalog
 {
 	/**
-	 * Mouse movement action input
+	 * Mouse input -- X/Y is the RELATIVE motion of the mouse since the last frame
+	 * @param	Trigger
+	 * @param	Axis
+	 * @param	Sensitivity
+	 * @param	DeadZone
+	 * @param	InvertY
+	 * @param	InvertX
+	 */
+	public function new(Trigger:FlxAnalogState, Axis:FlxAnalogAxis = EITHER, Sensitivity:Float = 1.0, DeadZone:Float = 0.1, InvertY:Bool = false, InvertX:Bool = false)
+	{
+		sensitivity = Sensitivity;
+		deadZone = DeadZone;
+		invertX = InvertX;
+		invertY = InvertY;
+		super(FlxInputDevice.Mouse, -1, cast Trigger, Axis);
+	}
+	
+	override public function update():Void
+	{
+		#if !FLX_NO_MOUSE
+		updateVals(FlxG.mouse.x, FlxG.mouse.y);
+		#end
+	}
+	
+	override private function updateVals(X:Float, Y:Float):Void
+	{
+		var xDiff = X - lastX;
+		var yDiff = Y - lastY;
+		
+		lastX = X;
+		lastY = Y;
+		
+		if (invertX) xDiff *= -1;
+		if (invertY) yDiff *= -1;
+		
+		xDiff /= (sensitivity * PIXELS_PER_SENSITIVITY_UNIT);
+		yDiff /= (sensitivity * PIXELS_PER_SENSITIVITY_UNIT);
+		
+		if (Math.abs(xDiff) < deadZone) xDiff = 0;
+		if (Math.abs(yDiff) < deadZone) yDiff = 0;
+		
+		super.updateVals(xDiff, yDiff);
+	}
+	
+	private static inline var PIXELS_PER_SENSITIVITY_UNIT:Float = 10;
+	
+	private var lastX:Float = 0;
+	private var lastY:Float = 0;
+	private var sensitivity:Float;
+	private var deadZone:Float;
+	private var invertX:Bool;
+	private var invertY:Bool;
+}
+
+class FlxActionInputAnalogMousePosition extends FlxActionInputAnalog
+{
+	/**
+	 * Mouse input -- X/Y is the mouse's absolute screen position
 	 * @param	Trigger What state triggers this action (MOVED, JUST_MOVED, STOPPED, JUST_STOPPED)
 	 * @param	Axis which axes to monitor for triggering: X, Y, EITHER, or BOTH
 	 */
