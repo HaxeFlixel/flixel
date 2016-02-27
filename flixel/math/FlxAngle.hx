@@ -223,7 +223,6 @@ class FlxAngle
 		return AsDegrees ? degrees : asRadians(degrees);
 	}
 	
-	
 	/**
 	 * Convert polar coordinates (radius + angle) to cartesian coordinates (x + y)
 	 * 

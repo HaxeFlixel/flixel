@@ -103,7 +103,6 @@ private class FlxBaseSignal<T> implements IFlxSignal<T>
 	private var pendingRemove:Array<FlxSignalHandler<T>>;
 	private var processingListeners:Bool = false;
 	
-	
 	public function new() 
 	{
 		handlers = [];

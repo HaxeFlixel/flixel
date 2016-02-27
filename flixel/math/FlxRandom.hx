@@ -148,7 +148,6 @@ class FlxRandom
 		return result;
 	}
 	
-	
 	//helper variables for floatNormal -- it produces TWO random values with each call so we have to store some state outside the function
 	private var _hasFloatNormalSpare:Bool = false;
 	private var _floatNormalRand1:Float = 0;
