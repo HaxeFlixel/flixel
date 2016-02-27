@@ -24,26 +24,33 @@ class FlxActionInputAnalogMouseMotion extends FlxActionInputAnalog
 {
 	/**
 	 * Mouse input -- X/Y is the RELATIVE motion of the mouse since the last frame
-	 * @param	Trigger
-	 * @param	Axis
-	 * @param	Sensitivity
-	 * @param	DeadZone
-	 * @param	InvertY
-	 * @param	InvertX
+	 * @param	Trigger	What state triggers this action (MOVED, JUST_MOVED, STOPPED, JUST_STOPPED)
+	 * @param	Axis	which axes to monitor for triggering: X, Y, EITHER, or BOTH
+	 * @param	PixelsPerUnit	How many pixels of movement = 1.0 in analog motion (lower: more sensitive, higher: less sensitive)
+	 * @param	DeadZone	Minimum analog value before motion will be reported
+	 * @param	InvertY	Invert the Y axis
+	 * @param	InvertX	Invert the X axis
 	 */
-	public function new(Trigger:FlxAnalogState, Axis:FlxAnalogAxis = EITHER, Sensitivity:Float = 1.0, DeadZone:Float = 0.1, InvertY:Bool = false, InvertX:Bool = false)
+	public function new(Trigger:FlxAnalogState, Axis:FlxAnalogAxis = EITHER, PixelsPerUnit:Int = 10, DeadZone:Float = 0.1, InvertY:Bool = false, InvertX:Bool = false)
 	{
-		sensitivity = Sensitivity;
+		pixelsPerUnit = PixelsPerUnit;
+		if (pixelsPerUnit < 1)
+			pixelsPerUnit = 1;
 		deadZone = DeadZone;
 		invertX = InvertX;
 		invertY = InvertY;
 		super(FlxInputDevice.Mouse, -1, cast Trigger, Axis);
 	}
 	
+	override public function destroy():Void 
+	{
+		super.destroy();
+	}
+	
 	override public function update():Void
 	{
 		#if !FLX_NO_MOUSE
-		updateVals(FlxG.mouse.x, FlxG.mouse.y);
+			updateVals(FlxG.mouse.x, FlxG.mouse.y);
 		#end
 	}
 	
@@ -58,8 +65,8 @@ class FlxActionInputAnalogMouseMotion extends FlxActionInputAnalog
 		if (invertX) xDiff *= -1;
 		if (invertY) yDiff *= -1;
 		
-		xDiff /= (sensitivity * PIXELS_PER_SENSITIVITY_UNIT);
-		yDiff /= (sensitivity * PIXELS_PER_SENSITIVITY_UNIT);
+		xDiff /= (pixelsPerUnit);
+		yDiff /= (pixelsPerUnit);
 		
 		if (Math.abs(xDiff) < deadZone) xDiff = 0;
 		if (Math.abs(yDiff) < deadZone) yDiff = 0;
@@ -67,11 +74,9 @@ class FlxActionInputAnalogMouseMotion extends FlxActionInputAnalog
 		super.updateVals(xDiff, yDiff);
 	}
 	
-	private static inline var PIXELS_PER_SENSITIVITY_UNIT:Float = 10;
-	
 	private var lastX:Float = 0;
 	private var lastY:Float = 0;
-	private var sensitivity:Float;
+	private var pixelsPerUnit:Int;
 	private var deadZone:Float;
 	private var invertX:Bool;
 	private var invertY:Bool;
@@ -268,16 +273,13 @@ class FlxActionInputAnalog extends FlxActionInput
 					                    (checkAxis(aX, RELEASED)      && checkAxis(aY, JUST_RELEASED));  //one just released & other NOT pressed = whole stick just released
 				}
 		}
+		
 		if (returnVal)
 		{
-			Action._x = x;
-			Action._y = y;
+			if (Action._x == null) Action._x = x;
+			if (Action._y == null) Action._y = y; 
 		}
-		else
-		{
-			Action._x = 0;
-			Action._y = 0;
-		}
+		
 		return returnVal;
 	}
 	

@@ -110,8 +110,8 @@ class FlxActionAnalog extends FlxAction
 	
 	override public function update():Void 
 	{
-		_x = 0;
-		_y = 0;
+		_x = null;
+		_y = null;
 		super.update();
 	}
 	
@@ -133,8 +133,8 @@ class FlxActionAnalog extends FlxAction
 		return val;
 	}
 	
-	private function get_x():Float { return _x; }
-	private function get_y():Float { return _y; }
+	private function get_x():Float { (_x != null) ? return _x : return 0; }
+	private function get_y():Float { (_y != null) ? return _y : return 0; }
 }
 
 @:allow(flixel.input.actions.FlxActionDigital, flixel.input.actions.FlxActionAnalog, flixel.input.actions.FlxActionSet)
@@ -160,8 +160,8 @@ class FlxAction implements IFlxDestroyable
 	 */
 	public var fire(default, null):Bool;
 	
-	private var _x:Float = 0;
-	private var _y:Float = 0;
+	private var _x:Null<Float> = null;
+	private var _y:Null<Float> = null;
 	
 	private function new(InputType:FlxInputType, Name:String)
 	{
@@ -200,6 +200,9 @@ class FlxAction implements IFlxDestroyable
 	
 	public function check():Bool
 	{
+		_x = null;
+		_y = null;
+		
 		if (_timestamp == FlxG.game._total)
 		{
 			return _check;	//run no more than once per frame
