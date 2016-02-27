@@ -510,18 +510,18 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	{
 		var results:Bool = false;
 		
-		var X:Float = x;
-		var Y:Float = y;
+		var xPos:Float = x;
+		var yPos:Float = y;
 		
 		if (Position != null)
 		{
-			X = Position.x;
-			Y = Position.y;
+			xPos = Position.x;
+			yPos = Position.y;
 		}
 		
 		// Figure out what tiles we need to check against
-		var selectionX:Int = Math.floor((Object.x - X) / _scaledTileWidth);
-		var selectionY:Int = Math.floor((Object.y - Y) / _scaledTileHeight);
+		var selectionX:Int = Math.floor((Object.x - xPos) / _scaledTileWidth);
+		var selectionY:Int = Math.floor((Object.y - yPos) / _scaledTileHeight);
 		var selectionWidth:Int = selectionX + Math.ceil(Object.width / _scaledTileWidth) + 1;
 		var selectionHeight:Int = selectionY + Math.ceil(Object.height / _scaledTileHeight) + 1;
 		
@@ -536,8 +536,8 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		var column:Int;
 		var tile:FlxTile;
 		var overlapFound:Bool;
-		var deltaX:Float = X - last.x;
-		var deltaY:Float = Y - last.y;
+		var deltaX:Float = xPos - last.x;
+		var deltaY:Float = yPos - last.y;
 		
 		for (row in selectionY...selectionHeight)
 		{
@@ -562,8 +562,8 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 				tile = _tileObjects[dataIndex];
 				tile.width = _scaledTileWidth;
 				tile.height = _scaledTileHeight;
-				tile.x = X + column * tile.width;
-				tile.y = Y + row * tile.height;
+				tile.x = xPos + column * tile.width;
+				tile.y = yPos + row * tile.height;
 				tile.last.x = tile.x - deltaX;
 				tile.last.y = tile.y - deltaY;
 				
