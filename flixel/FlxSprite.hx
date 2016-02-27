@@ -471,7 +471,7 @@ class FlxSprite extends FlxObject
 	 * Called whenever a new graphic is loaded for this sprite
 	 * - after loadGraphic(), makeGraphic() etc.
 	 */
-	public function graphicLoaded():Void {  }
+	public function graphicLoaded():Void {}
 	
 	/**
 	 * Resets _flashRect variable used for frame bitmapData calculation

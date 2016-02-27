@@ -65,7 +65,7 @@ class FlxDrawBaseItem<T>
 	
 	public var numTriangles(get, never):Int;
 	
-	public function new() {  }
+	public function new() {}
 	
 	public function reset():Void
 	{
@@ -83,9 +83,9 @@ class FlxDrawBaseItem<T>
 		nextTyped = null;
 	}
 	
-	public function render(camera:FlxCamera):Void {  }
+	public function render(camera:FlxCamera):Void {}
 	
-	public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform):Void {  }
+	public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform):Void {}
 	
 	private function get_numVertices():Int
 	{
