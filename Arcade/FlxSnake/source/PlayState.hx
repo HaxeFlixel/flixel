@@ -71,7 +71,7 @@ class PlayState extends FlxState
 		// Add the snake's head last so it's on top
 		add(_snakeHead);
 		
-		// Something to eat. We only ever need one _fruit, we can just reposition it.
+		// Something to eat. We only ever need one fruit, we can just reposition it.
 		_fruit = new FlxSprite();
 		_fruit.makeGraphic(BLOCK_SIZE - 2, BLOCK_SIZE - 2, FlxColor.RED);
 		randomizeFruitPosition();
@@ -107,7 +107,7 @@ class PlayState extends FlxState
 			return;
 		}
 		
-		// Did we eat the _fruit?
+		// Did we eat the fruit?
 		FlxG.overlap(_snakeHead, _fruit, collectFruit);
 		
 		// Did we hit ourself? If so, game over! :(
@@ -170,7 +170,7 @@ class PlayState extends FlxState
 	
 	private function randomizeFruitPosition(?Object1:FlxObject, ?Object2:FlxObject):Void
 	{
-		// Pick a random place to put the _fruit down
+		// Pick a random place to put the fruit down
 		_fruit.x = FlxG.random.int(0, Math.floor(FlxG.width / 8) - 1) * 8;
 		_fruit.y = FlxG.random.int(0, Math.floor(FlxG.height / 8) - 1) * 8;
 		
