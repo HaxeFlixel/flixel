@@ -91,18 +91,17 @@ class PlayState extends FlxState
 		
 		if (!recording && !replaying)
 		{
-			start_record();
+			startRecording();
 		}
 		
 		/**
-		 * Notice that I add "&&recording", because recording will recording every input
-		 * so R key for replay will also be recorded and
-		 * be triggered at replaying
+		 * Notice that I add "&& recording", because recording will recording every input
+		 * so R key for replay will also be recorded and be triggered at replaying
 		 * Please pay attention to the inputs that are not supposed to be recorded
 		 */
 		if (FlxG.keys.justPressed.R && recording)
 		{
-			start_play();
+			loadReplay();
 		}
 		
 		// Update the red block cursor
@@ -137,7 +136,7 @@ class PlayState extends FlxState
 		}
 	}
 	
-	private function start_record():Void 
+	private function startRecording():Void 
 	{
 		recording = true;
 		replaying = false;
@@ -150,7 +149,7 @@ class PlayState extends FlxState
 		FlxG.vcr.startRecording(false);
 	}
 	
-	private function start_play():Void 
+	private function loadReplay():Void 
 	{
 		replaying = true;
 		recording = false;
@@ -160,9 +159,7 @@ class PlayState extends FlxState
 		 * which records all the input during recording
 		 * Then we load the save
 		 */
-		
 		var save:String = FlxG.vcr.stopRecording();
-		
-		FlxG.vcr.loadReplay(save, new PlayState(), ["ANY", "MOUSE"], 0, start_record);
+		FlxG.vcr.loadReplay(save, new PlayState(), ["ANY", "MOUSE"], 0, startRecording);
 	}
 }
