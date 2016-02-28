@@ -1,6 +1,8 @@
 2.1.0
 ------------------------------
-* FlxSnake: fixed the pickup sound effect not being played
+* FlxSnake:
+ * fixed the pickup sound effect not being played
+ * fixed snake being able to crash into itself (#215)
 * Project Jumper" -> "ProjectJumper"
 * "RPG Interface" -> "RPGInterface"
 * "MouseEventManager" -> "FlxMouseEventManager"
@@ -8,6 +10,7 @@
 * `/User Interface` -> `/UserInterface`
 * TurnBasedRPG: removed unnecessary comments and `destroy()` overrides
 * FlxSpriteFilters: mobile compile fix
+* Minor code cleanup for several demos
 
 2.0.0
 ------------------------------
