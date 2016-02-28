@@ -56,10 +56,10 @@ class PlayState extends FlxState
 		createFloor();
 		FlxNapeSpace.createWalls(LEVEL_MIN_X, LEVEL_MIN_Y, LEVEL_MAX_X, LEVEL_MAX_Y);
 		// Walls border.
-		add(new FlxSprite( -FlxG.width / 2, -FlxG.height / 2, Assets.getBitmapData("assets/Border.png")));
+		add(new FlxSprite(-FlxG.width / 2, -FlxG.height / 2, "assets/Border.png"));
 		
 		// Player orb
-		orbShadow = new FlxSprite(FlxG.width / 2, FlxG.height / 2, Assets.getBitmapData("assets/OrbShadow.png"));
+		orbShadow = new FlxSprite(FlxG.width / 2, FlxG.height / 2, "assets/OrbShadow.png");
 		orbShadow.centerOffsets();
 		orbShadow.blend = BlendMode.MULTIPLY;
 		
@@ -73,7 +73,7 @@ class PlayState extends FlxState
 		// Other orbs
 		for (i in 0...5) 
 		{
-			var otherOrbShadow = new FlxSprite(100, 100, Assets.getBitmapData("assets/OtherOrbShadow.png"));
+			var otherOrbShadow = new FlxSprite(100, 100, "assets/OtherOrbShadow.png");
 			otherOrbShadow.centerOffsets();
 			otherOrbShadow.blend = BlendMode.MULTIPLY;
 			

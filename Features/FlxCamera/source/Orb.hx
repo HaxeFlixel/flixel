@@ -14,7 +14,7 @@ class Orb extends FlxNapeSprite
 	
 	public function new ()
 	{
-		super(FlxG.width / 2, FlxG.height / 2, Assets.getBitmapData("assets/Orb.png"));
+		super(FlxG.width / 2, FlxG.height / 2, "assets/Orb.png");
 		createCircularBody(18);
 		body.allowRotation = false;
 		setDrag(0.98, 1);
