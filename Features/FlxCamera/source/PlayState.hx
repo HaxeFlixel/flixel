@@ -145,12 +145,12 @@ class PlayState extends FlxState
 		FlxG.camera.follow(orb, LOCKON, 1);
 		
 		#if TRUE_ZOOM_OUT
-		hudCam = new FlxCamera(440 + 50, 0 + 45, 200, 180); // +50 + 45 For 1/2 zoom out.
+		hudCam = new FlxCamera(440 + 50, 0 + 45, hud.width, hud.height); // +50 + 45 For 1/2 zoom out.
 		#else
-		hudCam = new FlxCamera(440, 0, 200, 180);
+		hudCam = new FlxCamera(440, 0, hud.width, hud.height);
 		#end
 		hudCam.zoom = 1; // For 1/2 zoom out.
-		hudCam.follow(hud.background);
+		hudCam.follow(hud.background, FlxCameraFollowStyle.NO_DEAD_ZONE);
 		hudCam.alpha = .5;
 		FlxG.cameras.add(hudCam);
 	}

@@ -15,18 +15,22 @@ class HUD extends FlxGroup
 	private var txtLead:FlxText;
 	private var txtZoom:FlxText;
 	public var background:FlxSprite;
+	public var width:Int;
+	public var height:Int;
 
 	public function new() 
 	{
 		super();
 		
-		background = new FlxSprite(10000 -50, -175);
-		background.makeGraphic(300, 360, FlxColor.BLACK);
+		width = 200;
+		height = 180;
+		
+		background = new FlxSprite(10000, 0);
+		background.makeGraphic(width, height, FlxColor.BLACK);
 		add(background);
 		
 		var x:Int = 10006;
 		var startY:Int = 10;
-		var width:Int = 300;
 		
 		add(new FlxText(x, startY, width, "[W,A,S,D] or arrows to control the orb.")); 
 		
