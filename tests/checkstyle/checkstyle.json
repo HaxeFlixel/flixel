@@ -25,9 +25,7 @@
 			"props": {
 				"severity": "WARNING",
 				"format": "^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$",
-				"tokens": [
-					"INLINE"
-				]
+				"tokens": ["INLINE"]
 			}
 		},
 		{
@@ -48,6 +46,37 @@
 			"props": {
 				"severity": "WARNING",
 				"format": "^[a-z][a-zA-Z0-9]*$"
+			}
+		},
+		{
+			"type": "MemberName",
+			"props": {
+				"severity": "WARNING",
+				"format": "^([a-z][a-zA-Z0-9]*|ID)$",
+				"tokens": [
+					"CLASS",
+					"TYPEDEF",
+					"PUBLIC"
+				]
+			}
+		},
+		{
+			"type": "MemberName",
+			"props": {
+				"severity": "WARNING",
+				"format": "^_?[a-z][a-zA-Z0-9]*$",
+				"tokens": [
+					"CLASS",
+					"PRIVATE"
+				]
+			}
+		},
+		{
+			"type": "MemberName",
+			"props": {
+				"severity": "WARNING",
+				"format": "^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$",
+				"tokens": ["ENUM"]
 			}
 		},
 		{
