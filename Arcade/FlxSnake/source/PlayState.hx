@@ -26,6 +26,7 @@ import flixel.util.FlxTimer;
 class PlayState extends FlxState
 {
 	private static inline var MIN_INTERVAL:Float = 2;
+	private static inline var BLOCK_SIZE:Int = 8;
 	
 	private var _scoreText:FlxText;
 	private var _fruit:FlxSprite;
@@ -35,7 +36,6 @@ class PlayState extends FlxState
 	private var _headPositions:Array<FlxPoint>;
 	private var _movementInterval:Float = 8;
 	private var _score:Int = 0;
-	private var _blockSize:Int = 8;
 	
 	private var _currentDirection = FlxObject.LEFT;
 	private var _nextDirection:Int = FlxObject.LEFT;
@@ -49,8 +49,8 @@ class PlayState extends FlxState
 		var screenMiddleY:Int = Math.floor(FlxG.height / 2);
 		
 		// Start by creating the head of the snake
-		_snakeHead = new FlxSprite(screenMiddleX - _blockSize * 2, screenMiddleY);
-		_snakeHead.makeGraphic(_blockSize - 2, _blockSize - 2, FlxColor.LIME);
+		_snakeHead = new FlxSprite(screenMiddleX - BLOCK_SIZE * 2, screenMiddleY);
+		_snakeHead.makeGraphic(BLOCK_SIZE - 2, BLOCK_SIZE - 2, FlxColor.LIME);
 		offestSprite(_snakeHead);
 		
 		// This array stores the recent head positions to update the segment positions step by step
@@ -73,7 +73,7 @@ class PlayState extends FlxState
 		
 		// Something to eat. We only ever need one _fruit, we can just reposition it.
 		_fruit = new FlxSprite();
-		_fruit.makeGraphic(_blockSize - 2, _blockSize - 2, FlxColor.RED);
+		_fruit.makeGraphic(BLOCK_SIZE - 2, BLOCK_SIZE - 2, FlxColor.RED);
 		randomizeFruitPosition();
 		offestSprite(_fruit);
 		add(_fruit);
@@ -190,7 +190,7 @@ class PlayState extends FlxState
 		// Spawn the new segment outside of the screen
 		// It'll be attached to the snake end in the next moveSnake() call
 		var segment:FlxSprite = new FlxSprite(-20, -20);
-		segment.makeGraphic(_blockSize - 2, _blockSize - 2, FlxColor.GREEN); 
+		segment.makeGraphic(BLOCK_SIZE - 2, BLOCK_SIZE - 2, FlxColor.GREEN); 
 		_snakeBody.add(segment);
 	}
 	
@@ -220,13 +220,13 @@ class PlayState extends FlxState
 		switch (_nextDirection)
 		{
 			case FlxObject.LEFT:
-				_snakeHead.x -= _blockSize;
+				_snakeHead.x -= BLOCK_SIZE;
 			case FlxObject.RIGHT:
-				_snakeHead.x += _blockSize;
+				_snakeHead.x += BLOCK_SIZE;
 			case FlxObject.UP:
-				_snakeHead.y -= _blockSize;
+				_snakeHead.y -= BLOCK_SIZE;
 			case FlxObject.DOWN:
-				_snakeHead.y += _blockSize;
+				_snakeHead.y += BLOCK_SIZE;
 		}
 		_currentDirection = _nextDirection;
 		
