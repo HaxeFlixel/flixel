@@ -134,7 +134,7 @@ class FlxReplay
 		{
 			return null;
 		}
-		var output:String = seed+"\n";
+		var output:String = seed + "\n";
 		var i:Int = 0;
 		while (i < frameCount)
 		{

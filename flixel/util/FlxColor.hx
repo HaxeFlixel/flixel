@@ -184,7 +184,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 		
 		if (COLOR_REGEX.match(str)) 
 		{
-			var hexColor:String = "0x"+COLOR_REGEX.matched(2);
+			var hexColor:String = "0x" + COLOR_REGEX.matched(2);
 			result = new FlxColor(Std.parseInt(hexColor));
 			if (hexColor.length == 8) 
 			{

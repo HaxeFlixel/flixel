@@ -910,7 +910,7 @@ class FlxCamera extends FlxBasic
 		
 		if (_fxFadeIn)
 		{
-			_fxFadeAlpha -= elapsed /_fxFadeDuration;
+			_fxFadeAlpha -= elapsed / _fxFadeDuration;
 			if (_fxFadeAlpha <= 0.0)
 			{
 				_fxFadeAlpha = 0.0;

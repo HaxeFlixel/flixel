@@ -378,7 +378,7 @@ class FlxStringUtil
 				}
 				else
 				{
-					csv += ", "+index;
+					csv += ", " + index;
 				}
 				
 				column++;

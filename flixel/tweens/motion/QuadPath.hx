@@ -146,7 +146,7 @@ class QuadPath extends Motion
 				}
 			}
 			
-			td = _curveT[_index+1];
+			td = _curveT[_index + 1];
 			tt = _curveT[_index] - td;
 			td = (scale - td) / tt;
 			_a = _points[_index * 2 + 2];

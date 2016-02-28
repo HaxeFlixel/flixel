@@ -111,7 +111,7 @@ class FlxBasePreloader extends NMEPreloader
 			percent = time / min;
 		update(percent);
 		
-		if (_loaded && (min <= 0 || time/min >= 1))
+		if (_loaded && (min <= 0 || time / min >= 1))
 		{
 			removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 			super.onLoaded();

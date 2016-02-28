@@ -595,7 +595,7 @@ class FlxPath implements IFlxDestroyable
 	{
 		if (nodes.length > 0)
 		{
-			return nodes[nodes.length-1];
+			return nodes[nodes.length - 1];
 		}
 		return null;
 	}
