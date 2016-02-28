@@ -18,14 +18,14 @@ import flixel.util.FlxTimer;
 * FlxSnake for Flixel 2.23 - 19th March 2010
 * Ported to HaxeFlixel
 * 
-* Cursor keys to move. Red squares are _fruit. Snake can wrap around screen edges.
+* Cursor keys to move. Red squares are fruit. Snake can wrap around screen edges.
 * @author Richard Davey, Photon Storm <rich@photonstorm.com>
 * 
 * Largely rewritten by @author Gama11
 */
 class PlayState extends FlxState
 {
-	private static inline var MIN_INTERVALL:Float = 2;
+	private static inline var MIN_INTERVAL:Float = 2;
 	
 	private var _scoreText:FlxText;
 	private var _fruit:FlxSprite;
@@ -33,9 +33,12 @@ class PlayState extends FlxState
 	private var _snakeBody:FlxSpriteGroup;
 	
 	private var _headPositions:Array<FlxPoint>;
-	private var _movementIntervall:Float = 8;
+	private var _movementInterval:Float = 8;
 	private var _score:Int = 0;
 	private var _blockSize:Int = 8;
+	
+	private var _currentDirection = FlxObject.LEFT;
+	private var _nextDirection:Int = FlxObject.LEFT;
 	
 	override public function create():Void
 	{
@@ -48,8 +51,6 @@ class PlayState extends FlxState
 		// Start by creating the head of the snake
 		_snakeHead = new FlxSprite(screenMiddleX - _blockSize * 2, screenMiddleY);
 		_snakeHead.makeGraphic(_blockSize - 2, _blockSize - 2, FlxColor.LIME);
-		
-		_snakeHead.facing = FlxObject.LEFT;
 		offestSprite(_snakeHead);
 		
 		// This array stores the recent head positions to update the segment positions step by step
@@ -115,21 +116,21 @@ class PlayState extends FlxState
 		// WASD / arrow keys to control the snake
 		// Also make sure you can't travel in the opposite direction,
 		// because that causes quick and frustrating deaths!
-		if (FlxG.keys.anyPressed([UP, W]) && _snakeHead.facing != FlxObject.DOWN)
+		if (FlxG.keys.anyPressed([UP, W]) && _currentDirection != FlxObject.DOWN)
 		{
-			_snakeHead.facing = FlxObject.UP;
+			_nextDirection = FlxObject.UP;
 		}
-		else if (FlxG.keys.anyPressed([DOWN, S]) && _snakeHead.facing != FlxObject.UP)
+		else if (FlxG.keys.anyPressed([DOWN, S]) && _currentDirection != FlxObject.UP)
 		{
-			_snakeHead.facing = FlxObject.DOWN;
+			_nextDirection = FlxObject.DOWN;
 		}
-		else if (FlxG.keys.anyPressed([LEFT, A]) && _snakeHead.facing != FlxObject.RIGHT)
+		else if (FlxG.keys.anyPressed([LEFT, A]) && _currentDirection != FlxObject.RIGHT)
 		{
-			_snakeHead.facing = FlxObject.LEFT;
+			_nextDirection = FlxObject.LEFT;
 		}
-		else if (FlxG.keys.anyPressed([RIGHT, D]) && _snakeHead.facing != FlxObject.LEFT)
+		else if (FlxG.keys.anyPressed([RIGHT, D]) && _currentDirection != FlxObject.LEFT)
 		{
-			_snakeHead.facing = FlxObject.RIGHT;
+			_nextDirection = FlxObject.RIGHT;
 		}
 	}
 	
@@ -161,9 +162,9 @@ class PlayState extends FlxState
 		FlxG.sound.load(FlxAssets.getSound("flixel/sounds/beep")).play();
 		
 		// Become faster each pickup - set a max speed though!
-		if (_movementIntervall >= MIN_INTERVALL)
+		if (_movementInterval >= MIN_INTERVAL)
 		{
-			_movementIntervall -= 0.25;
+			_movementInterval -= 0.25;
 		}
 	}
 	
@@ -188,7 +189,7 @@ class PlayState extends FlxState
 	{
 		// Spawn the new segment outside of the screen
 		// It'll be attached to the snake end in the next moveSnake() call
-		var segment:FlxSprite = new FlxSprite( -20, -20);
+		var segment:FlxSprite = new FlxSprite(-20, -20);
 		segment.makeGraphic(_blockSize - 2, _blockSize - 2, FlxColor.GREEN); 
 		_snakeBody.add(segment);
 	}
@@ -202,7 +203,7 @@ class PlayState extends FlxState
 			return;
 		}
 		
-		new FlxTimer().start(_movementIntervall / FlxG.updateFramerate, resetTimer);
+		new FlxTimer().start(_movementInterval / FlxG.updateFramerate, resetTimer);
 		moveSnake();
 	}
 	
@@ -216,7 +217,7 @@ class PlayState extends FlxState
 		}
 		
 		// Update the position of the head
-		switch (_snakeHead.facing)
+		switch (_nextDirection)
 		{
 			case FlxObject.LEFT:
 				_snakeHead.x -= _blockSize;
@@ -227,6 +228,7 @@ class PlayState extends FlxState
 			case FlxObject.DOWN:
 				_snakeHead.y += _blockSize;
 		}
+		_currentDirection = _nextDirection;
 		
 		FlxSpriteUtil.screenWrap(_snakeHead);
 		
