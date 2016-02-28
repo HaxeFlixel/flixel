@@ -34,7 +34,7 @@ class FlxBitmapFont extends FlxFramesCollection
 	/**
 	 * Default letters for XNA font.
 	 */
-	private static inline var DEFAULT_CHARS:String = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
+	public static inline var DEFAULT_CHARS:String = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
 	
 	private static var point:Point = new Point();
 	private static var flashRect:Rectangle = new Rectangle();
