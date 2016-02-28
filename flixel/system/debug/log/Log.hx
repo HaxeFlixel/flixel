@@ -152,8 +152,8 @@ class Log extends Window
 	{
 		super.updateSize();
 		
-		_text.width = _width-10;
-		_text.height = _height-15;
+		_text.width = _width - 10;
+		_text.height = _height - 15;
 	}
 }
 #end

@@ -15,12 +15,6 @@
 			}
 		},
 		{
-			"type": "BlockFormat",
-			"props": {
-				"severity": "WARNING"
-			}
-		},
-		{
 			"type": "ConstantName",
 			"props": {
 				"severity": "WARNING",
@@ -91,6 +85,12 @@
 			"props": {
 				"severity": "WARNING",
 				"format": "^[A-Z]+[a-zA-Z0-9]*$"
+			}
+		},
+		{
+			"type": "Spacing",
+			"props": {
+				"severity": "WARNING"
 			}
 		}
 	]

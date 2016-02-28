@@ -510,7 +510,7 @@ class FlxTween implements IFlxDestroyable
 		if (onComplete != null) 
 			onComplete(this);
 		
-		var type = type & ~ FlxTween.BACKWARD;
+		var type = type & ~FlxTween.BACKWARD;
 		
 		if (type == FlxTween.PERSIST || type == FlxTween.ONESHOT)
 		{

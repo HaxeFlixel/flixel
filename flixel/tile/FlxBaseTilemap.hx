@@ -397,22 +397,22 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		_data[Index] = 0;
 		
 		// UP
-		if ((Index-widthInTiles < 0) || (_data[Index-widthInTiles] > 0))
+		if ((Index - widthInTiles < 0) || (_data[Index - widthInTiles] > 0))
 		{
 			_data[Index] += 1;
 		}
 		// RIGHT
-		if ((Index%widthInTiles >= widthInTiles-1) || (_data[Index+1] > 0))
+		if ((Index % widthInTiles >= widthInTiles - 1) || (_data[Index + 1] > 0))
 		{
 			_data[Index] += 2;
 		}
 		// DOWN
-		if ((Std.int(Index+widthInTiles) >= totalTiles) || (_data[Index+widthInTiles] > 0)) 
+		if ((Std.int(Index + widthInTiles) >= totalTiles) || (_data[Index + widthInTiles] > 0)) 
 		{
 			_data[Index] += 4;
 		}
 		// LEFT
-		if ((Index%widthInTiles <= 0) || (_data[Index-1] > 0))
+		if ((Index % widthInTiles <= 0) || (_data[Index - 1] > 0))
 		{
 			_data[Index] += 8;
 		}
@@ -421,17 +421,17 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		if ((auto == ALT) && (_data[Index] == 15))
 		{
 			// BOTTOM LEFT OPEN
-			if ((Index % widthInTiles > 0) && (Std.int(Index+widthInTiles) < totalTiles) && (_data[Index+widthInTiles-1] <= 0))
+			if ((Index % widthInTiles > 0) && (Std.int(Index + widthInTiles) < totalTiles) && (_data[Index + widthInTiles - 1] <= 0))
 			{
 				_data[Index] = 1;
 			}
 			// TOP LEFT OPEN
-			if ((Index % widthInTiles > 0) && (Index-widthInTiles >= 0) && (_data[Index-widthInTiles-1] <= 0))
+			if ((Index % widthInTiles > 0) && (Index - widthInTiles >= 0) && (_data[Index - widthInTiles - 1] <= 0))
 			{
 				_data[Index] = 2;
 			}
 			// TOP RIGHT OPEN
-			if ((Index % widthInTiles < widthInTiles-1) && (Index-widthInTiles >= 0) && (_data[Index-widthInTiles+1] <= 0))
+			if ((Index % widthInTiles < widthInTiles - 1) && (Index - widthInTiles >= 0) && (_data[Index - widthInTiles + 1] <= 0))
 			{
 				_data[Index] = 4;
 			}
@@ -708,7 +708,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		
 		// Reset the start and end points to be exact
 		var node:FlxPoint;
-		node = points[points.length-1];
+		node = points[points.length - 1];
 		node.copyFrom(Start);
 		node = points[0];
 		node.copyFrom(End);
@@ -861,7 +861,9 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 					{
 						index = currentIndex - widthInTiles + 1;
 						
-						if (wideDiagonal && (distances[index] == -1) && (distances[currentIndex-widthInTiles] >= -1) && (distances[currentIndex+1] >= -1))
+						if (wideDiagonal && (distances[index] == -1) &&
+							(distances[currentIndex - widthInTiles] >= -1) &&
+							(distances[currentIndex + 1] >= -1))
 						{
 							distances[index] = distance;
 							neighbors.push(index);
@@ -876,7 +878,9 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 					{
 						index = currentIndex + widthInTiles + 1;
 						
-						if (wideDiagonal && (distances[index] == -1) && (distances[currentIndex+widthInTiles] >= -1) && (distances[currentIndex+1] >= -1))
+						if (wideDiagonal && (distances[index] == -1) &&
+							(distances[currentIndex + widthInTiles] >= -1) &&
+							(distances[currentIndex + 1] >= -1))
 						{
 							distances[index] = distance;
 							neighbors.push(index);
@@ -891,7 +895,9 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 					{
 						index = currentIndex + widthInTiles - 1;
 						
-						if (wideDiagonal && (distances[index] == -1) && (distances[currentIndex+widthInTiles] >= -1) && (distances[currentIndex-1] >= -1))
+						if (wideDiagonal && (distances[index] == -1) &&
+							(distances[currentIndex + widthInTiles] >= -1) &&
+							(distances[currentIndex - 1] >= -1))
 						{
 							distances[index] = distance;
 							neighbors.push(index);
@@ -906,7 +912,9 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 					{
 						index = currentIndex - widthInTiles - 1;
 						
-						if (wideDiagonal && (distances[index] == -1) && (distances[currentIndex-widthInTiles] >= -1) && (distances[currentIndex-1] >= -1))
+						if (wideDiagonal && (distances[index] == -1) &&
+							(distances[currentIndex - widthInTiles] >= -1) &&
+							(distances[currentIndex - 1] >= -1))
 						{
 							distances[index] = distance;
 							neighbors.push(index);
@@ -1048,7 +1056,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		while (i < l)
 		{
 			node = Points[i];
-			deltaPrevious = (node.x - last.x)/(node.y - last.y);
+			deltaPrevious = (node.x - last.x) / (node.y - last.y);
 			deltaNext = (node.x - Points[i + 1].x) / (node.y - Points[i + 1].y);
 			
 			if ((last.x == Points[i + 1].x) || (last.y == Points[i + 1].y) || (deltaPrevious == deltaNext))

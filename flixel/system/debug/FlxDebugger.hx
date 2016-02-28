@@ -257,7 +257,7 @@ class FlxDebugger extends Sprite
 				watch.reposition(_screen.x,_screen.y);
 				stats.reposition(_screen.x, 0);
 				bitmapLog.resize(_screen.x / 4, 68);
-				bitmapLog.reposition(0,_screen.y - (68*2) - (GUTTER*2));
+				bitmapLog.reposition(0,_screen.y - (68 * 2) - (GUTTER * 2));
 			case BIG:
 				console.resize(_screen.x - GUTTER * 2, 35);
 				console.reposition(GUTTER, _screen.y);
@@ -266,7 +266,7 @@ class FlxDebugger extends Sprite
 				watch.resize((_screen.x - GUTTER * 3) / 2, _screen.y / 2);
 				watch.reposition(_screen.x, _screen.y - watch.height - console.height - GUTTER * 1.5);
 				stats.reposition(_screen.x, 0);
-				bitmapLog.resize((_screen.x - GUTTER * 3) / 2, _screen.y-(GUTTER*2)-(_screen.y / 2) -(35*2));
+				bitmapLog.resize((_screen.x - GUTTER * 3) / 2, _screen.y - (GUTTER * 2) - (_screen.y / 2) - (35 * 2));
 				bitmapLog.reposition(0, GUTTER * 1.5);
 			case TOP:
 				console.resize(_screen.x - GUTTER * 2, 35);
@@ -277,7 +277,7 @@ class FlxDebugger extends Sprite
 				watch.reposition(_screen.x,console.height + GUTTER + 15);
 				stats.reposition(_screen.x, _screen.y);
 				bitmapLog.resize((_screen.x - GUTTER * 3) / 2, _screen.y / 4);
-				bitmapLog.reposition(0, console.height + (GUTTER*2) + 15 + (_screen.y / 4) + GUTTER);
+				bitmapLog.reposition(0, console.height + (GUTTER * 2) + 15 + (_screen.y / 4) + GUTTER);
 			case LEFT:
 				console.resize(_screen.x - GUTTER * 2, 35);
 				console.reposition(GUTTER, _screen.y);
@@ -287,7 +287,7 @@ class FlxDebugger extends Sprite
 				watch.reposition(0,log.y + log.height + GUTTER);
 				stats.reposition(_screen.x, 0);
 				bitmapLog.resize(_screen.x / 3, (_screen.y - 15 - GUTTER * 2.5) / 2 - console.height / 2 - GUTTER);
-				bitmapLog.reposition((_screen.x / 3) + GUTTER*2, 0);
+				bitmapLog.reposition((_screen.x / 3) + GUTTER * 2, 0);
 			case RIGHT:
 				console.resize(_screen.x - GUTTER * 2, 35);
 				console.reposition(GUTTER, _screen.y);
@@ -297,7 +297,7 @@ class FlxDebugger extends Sprite
 				watch.reposition(_screen.x,log.y + log.height + GUTTER);
 				stats.reposition(0, 0);
 				bitmapLog.resize(_screen.x / 3, (_screen.y - 15 - GUTTER * 2.5) / 2 - console.height / 2 - GUTTER);
-				bitmapLog.reposition(_screen.x - (GUTTER*2) - ((_screen.x / 3)*2), 0);
+				bitmapLog.reposition(_screen.x - (GUTTER * 2) - ((_screen.x / 3) * 2), 0);
 			case STANDARD:
 				console.resize(_screen.x - GUTTER * 2, 35);
 				console.reposition(GUTTER, _screen.y);

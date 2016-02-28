@@ -523,7 +523,7 @@ class FlxAtlas implements IFlxDestroyable
 	
 	private function expandRoot(newWidth:Float, newHeight:Float, divideHorizontally:Bool, decideHowToDivide:Bool = false):Void
 	{
-		if (newWidth> root.width || newHeight > root.height)
+		if (newWidth > root.width || newHeight > root.height)
 		{
 			var temp:FlxNode = root;
 			root = new FlxNode(FlxRect.get(0, 0, newWidth, newHeight), this);
