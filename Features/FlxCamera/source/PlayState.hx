@@ -1,12 +1,12 @@
 package;
 
-import flash.display.BlendMode;
 import flash.Lib;
-import flixel.addons.nape.FlxNapeSpace;
+import flash.display.BlendMode;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
+import flixel.addons.nape.FlxNapeSpace;
 import flixel.util.FlxSpriteUtil;
 import nape.geom.Vec2;
 import openfl.Assets;
@@ -109,10 +109,9 @@ class PlayState extends FlxState
 			}
 			otherOrb.body.velocity.setxy(Std.random(150) - 75, Std.random(150) - 75);
 		}
-		// Camera OVerlay ---------------------------------------------------------------------------
-		var cameraOverlay = new FlxSprite( -10000,-10000);
+		// Camera Overlay
+		var cameraOverlay = new FlxSprite(-10000, -10000);
 		cameraOverlay.makeGraphic(640, 480, 0x0);
-		//cameraOverlay.scrollFactor.make(0, 0);
 		cameraOverlay.antialiasing = true;
 		var offset:Int = 100;
 		
@@ -136,7 +135,6 @@ class PlayState extends FlxState
 		overlayCamera.bgColor = 0x0;
 		FlxG.cameras.add(overlayCamera);
 		add(cameraOverlay);
-		//---------------------------------------------------------------------------
 		
 		hud = new HUD();
 		add(hud);
@@ -184,7 +182,8 @@ class PlayState extends FlxState
 			zoomDistDiffX *= -.5;
 			zoomDistDiffY *= -.5;
 			#end
-		} else
+		}
+		else
 		{
 			zoomDistDiffX = Math.abs((LEVEL_MIN_X + LEVEL_MAX_X) - (LEVEL_MIN_X + LEVEL_MAX_X) / zoom);
 			zoomDistDiffY = Math.abs((LEVEL_MIN_Y + LEVEL_MAX_Y) - (LEVEL_MIN_Y + LEVEL_MAX_Y) / zoom);
@@ -202,12 +201,8 @@ class PlayState extends FlxState
 							   (LEVEL_MAX_X + Math.abs(LEVEL_MIN_X) + zoomDistDiffX * 2),
 							   (LEVEL_MAX_Y + Math.abs(LEVEL_MIN_Y) + zoomDistDiffY * 2),
 							   false);
-							   
+		
 		hud.updateZoom(FlxG.camera.zoom);
-		//
-		//if (zoom > 1)
-			//cameraOverlay.scale.make(1 / zoom, 1 / zoom);
-							
 	}
 
 	private function createFloor() 

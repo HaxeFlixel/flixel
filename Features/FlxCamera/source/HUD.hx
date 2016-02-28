@@ -10,26 +10,26 @@ import flixel.util.FlxColor;
  */
 class HUD extends FlxGroup
 {
+	public var width:Int = 200;
+	public var height:Int = 180;
+	public var background:FlxSprite;
+	
 	private var txtStyle:FlxText;
 	private var txtLerp:FlxText;
 	private var txtLead:FlxText;
 	private var txtZoom:FlxText;
-	public var background:FlxSprite;
-	public var width:Int;
-	public var height:Int;
-
+	
 	public function new() 
 	{
 		super();
 		
-		width = 200;
-		height = 180;
+		var x:Int = 10000;
 		
-		background = new FlxSprite(10000, 0);
+		background = new FlxSprite(x, 0);
 		background.makeGraphic(width, height, FlxColor.BLACK);
 		add(background);
 		
-		var x:Int = 10006;
+		x += 6;
 		var startY:Int = 10;
 		
 		add(new FlxText(x, startY, width, "[W,A,S,D] or arrows to control the orb.")); 

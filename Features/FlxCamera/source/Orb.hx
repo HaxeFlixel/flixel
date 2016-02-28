@@ -1,8 +1,8 @@
 package;
 
-import flixel.addons.nape.FlxNapeSprite;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.addons.nape.FlxNapeSprite;
 import openfl.Assets;
 
 /**
