@@ -45,6 +45,7 @@ class TiledLevel extends TiledMap
 		FlxG.camera.setScrollBoundsRect(0, 0, fullWidth, fullHeight, true);
 		
 		loadImages();
+		loadObjects(state);
 		
 		// Load Tile Maps
 		for (layer in layers)
@@ -77,8 +78,6 @@ class TiledLevel extends TiledMap
 			tilemap.loadMapFromArray(tileLayer.tileArray, width, height, processedPath,
 				tileSet.tileWidth, tileSet.tileHeight, OFF, tileSet.firstGID, 1, 1);
 			
-			loadObjects(state);
-				
 			if (tileLayer.properties.contains("nocollide"))
 			{
 				backgroundLayer.add(tilemap);
@@ -132,8 +131,8 @@ class TiledLevel extends TiledMap
 		var levelsDir:String = "assets/tiled/";
 		
 		var decoSprite:FlxSprite = new FlxSprite(0, 0, levelsDir + tileImagesSource.source);
-		if (decoSprite.width != object.width
-		|| decoSprite.height != object.height)
+		if (decoSprite.width != object.width ||
+			decoSprite.height != object.height)
 		{
 			decoSprite.antialiasing = true;
 			decoSprite.setGraphicSize(object.width, object.height);
