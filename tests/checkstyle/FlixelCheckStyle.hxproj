@@ -2,15 +2,15 @@
 <project version="2">
   <!-- Output SWF options -->
   <output>
-    <movie outputType="Application" />
+    <movie outputType="CustomBuild" />
     <movie input="" />
-    <movie path="checkstyle.hxml" />
+    <movie path="" />
     <movie fps="0" />
     <movie width="0" />
     <movie height="0" />
     <movie version="0" />
     <movie minorVersion="0" />
-    <movie platform="hxml" />
+    <movie platform="Custom" />
     <movie background="#FFFFFF" />
   </output>
   <!-- Other classes to be compiled into your SWF -->
@@ -39,7 +39,8 @@
     <hidden path="obj" />
   </hiddenPaths>
   <!-- Executed before build -->
-  <preBuildCommand>cmd /c haxe $(OutputFile)</preBuildCommand>
+  <preBuildCommand>haxelib run checkstyle -c checkstyle.json -s ../../flixel -r text
+haxelib run checkstyle -c checkstyle.json -s ../unit/src -r text</preBuildCommand>
   <!-- Executed after build -->
   <postBuildCommand alwaysRun="False" />
   <!-- Other project options -->
