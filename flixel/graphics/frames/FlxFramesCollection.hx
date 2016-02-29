@@ -169,7 +169,7 @@ class FlxFramesCollection implements IFlxDestroyable
 	 * @param	flipY			if packed iamge should be vertically flipped
 	 * @return	Newly created and added frame object.
 	 */
-	public function addAtlasFrame(frame:FlxRect, sourceSize:FlxPoint, offset:FlxPoint, name:String = null, angle:FlxFrameAngle = 0, flipX:Bool=false, flipY:Bool=false):FlxFrame
+	public function addAtlasFrame(frame:FlxRect, sourceSize:FlxPoint, offset:FlxPoint, name:String = null, angle:FlxFrameAngle = 0, flipX:Bool = false, flipY:Bool = false):FlxFrame
 	{
 		if (name != null && framesHash.exists(name))
 		{
