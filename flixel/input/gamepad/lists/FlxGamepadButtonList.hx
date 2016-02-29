@@ -10,6 +10,7 @@ import flixel.input.gamepad.lists.FlxBaseGamepadList;
  */
 class FlxGamepadButtonList extends FlxBaseGamepadList
 {
+	public var A                (get, never):Bool; inline function get_A()                 return check(FlxGamepadInputID.A);
 	public var B                (get, never):Bool; inline function get_B()                 return check(FlxGamepadInputID.B);
 	public var X                (get, never):Bool; inline function get_X()                 return check(FlxGamepadInputID.X);
 	public var Y                (get, never):Bool; inline function get_Y()                 return check(FlxGamepadInputID.Y);

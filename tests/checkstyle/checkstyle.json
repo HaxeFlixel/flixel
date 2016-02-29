@@ -130,6 +130,9 @@
 			"props": {
 				"option": "nl"
 			}
+		},
+		{
+			"type": "RightCurly"
 		}
 	]
 }
