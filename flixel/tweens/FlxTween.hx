@@ -672,7 +672,8 @@ class FlxTween implements IFlxDestroyable
 
 typedef TweenCallback = FlxTween->Void;
 
-typedef TweenOptions = {
+typedef TweenOptions =
+{
 	?type:Null<Int>,
 	?ease:EaseFunction,
 	?onStart:TweenCallback,

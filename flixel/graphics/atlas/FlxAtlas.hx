@@ -1091,7 +1091,8 @@ class FlxAtlas implements IFlxDestroyable
 	}
 }
 
-typedef TempAtlasObj = {
+typedef TempAtlasObj =
+{
 	public var bmd:BitmapData;
 	public var keyStr:String;
 }

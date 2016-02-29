@@ -358,7 +358,8 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 
 		if (_randomIndices != null)
 		{
-			var randLambda:Void->Float = _randomLambda != null ? _randomLambda : function() {
+			var randLambda:Void->Float = _randomLambda != null ? _randomLambda : function()
+			{
 				return FlxG.random.float();
 			};
 			

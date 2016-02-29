@@ -835,35 +835,35 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	
 	// TRANSFORM FUNCTIONS - STATIC TYPING
 	
-	private inline function xTransform(Sprite:FlxSprite, X:Float)								{ Sprite.x += X; }								// addition
-	private inline function yTransform(Sprite:FlxSprite, Y:Float)								{ Sprite.y += Y; }								// addition
-	private inline function angleTransform(Sprite:FlxSprite, Angle:Float)						{ Sprite.angle += Angle; }						// addition
-	private inline function alphaTransform(Sprite:FlxSprite, Alpha:Float)						{ Sprite.alpha *= Alpha; }						// multiplication
-	private inline function facingTransform(Sprite:FlxSprite, Facing:Int)						{ Sprite.facing = Facing; }						// set
-	private inline function flipXTransform(Sprite:FlxSprite, FlipX:Bool)						{ Sprite.flipX = FlipX; }						// set
-	private inline function flipYTransform(Sprite:FlxSprite, FlipY:Bool)						{ Sprite.flipY = FlipY; }						// set
-	private inline function movesTransform(Sprite:FlxSprite, Moves:Bool)						{ Sprite.moves = Moves; }						// set
-	private inline function pixelPerfectTransform(Sprite:FlxSprite, PixelPerfect:Bool)			{ Sprite.pixelPerfectRender = PixelPerfect; }	// set
-	private inline function gColorTransform(Sprite:FlxSprite, Color:Int)						{ Sprite.color = Color; }						// set
-	private inline function blendTransform(Sprite:FlxSprite, Blend:BlendMode)					{ Sprite.blend = Blend; }						// set
-	private inline function immovableTransform(Sprite:FlxSprite, Immovable:Bool)				{ Sprite.immovable = Immovable; }				// set
-	private inline function visibleTransform(Sprite:FlxSprite, Visible:Bool)					{ Sprite.visible = Visible; }					// set
-	private inline function activeTransform(Sprite:FlxSprite, Active:Bool)						{ Sprite.active = Active; }						// set
-	private inline function solidTransform(Sprite:FlxSprite, Solid:Bool)						{ Sprite.solid = Solid; }						// set
-	private inline function aliveTransform(Sprite:FlxSprite, Alive:Bool)						{ Sprite.alive = Alive; }						// set
-	private inline function existsTransform(Sprite:FlxSprite, Exists:Bool)						{ Sprite.exists = Exists; }						// set
-	private inline function camerasTransform(Sprite:FlxSprite, Cameras:Array<FlxCamera>)		{ Sprite.cameras = Cameras; }					// set
+	private inline function xTransform(Sprite:FlxSprite, X:Float)                          Sprite.x += X; // addition
+	private inline function yTransform(Sprite:FlxSprite, Y:Float)                          Sprite.y += Y; // addition
+	private inline function angleTransform(Sprite:FlxSprite, Angle:Float)                  Sprite.angle += Angle; // addition
+	private inline function alphaTransform(Sprite:FlxSprite, Alpha:Float)                  Sprite.alpha *= Alpha; // multiplication
+	private inline function facingTransform(Sprite:FlxSprite, Facing:Int)                  Sprite.facing = Facing;
+	private inline function flipXTransform(Sprite:FlxSprite, FlipX:Bool)                   Sprite.flipX = FlipX;
+	private inline function flipYTransform(Sprite:FlxSprite, FlipY:Bool)                   Sprite.flipY = FlipY;
+	private inline function movesTransform(Sprite:FlxSprite, Moves:Bool)                   Sprite.moves = Moves;
+	private inline function pixelPerfectTransform(Sprite:FlxSprite, PixelPerfect:Bool)     Sprite.pixelPerfectRender = PixelPerfect;
+	private inline function gColorTransform(Sprite:FlxSprite, Color:Int)                   Sprite.color = Color;
+	private inline function blendTransform(Sprite:FlxSprite, Blend:BlendMode)              Sprite.blend = Blend;
+	private inline function immovableTransform(Sprite:FlxSprite, Immovable:Bool)           Sprite.immovable = Immovable;
+	private inline function visibleTransform(Sprite:FlxSprite, Visible:Bool)               Sprite.visible = Visible;
+	private inline function activeTransform(Sprite:FlxSprite, Active:Bool)                 Sprite.active = Active;
+	private inline function solidTransform(Sprite:FlxSprite, Solid:Bool)                   Sprite.solid = Solid;
+	private inline function aliveTransform(Sprite:FlxSprite, Alive:Bool)                   Sprite.alive = Alive;
+	private inline function existsTransform(Sprite:FlxSprite, Exists:Bool)                 Sprite.exists = Exists;
+	private inline function camerasTransform(Sprite:FlxSprite, Cameras:Array<FlxCamera>)   Sprite.cameras = Cameras;
 
-	private inline function offsetTransform(Sprite:FlxSprite, Offset:FlxPoint)					{ Sprite.offset.copyFrom(Offset); }				// set
-	private inline function originTransform(Sprite:FlxSprite, Origin:FlxPoint)					{ Sprite.origin.copyFrom(Origin); }				// set
-	private inline function scaleTransform(Sprite:FlxSprite, Scale:FlxPoint)					{ Sprite.scale.copyFrom(Scale); }				// set
-	private inline function scrollFactorTransform(Sprite:FlxSprite, ScrollFactor:FlxPoint)		{ Sprite.scrollFactor.copyFrom(ScrollFactor); }	// set
+	private inline function offsetTransform(Sprite:FlxSprite, Offset:FlxPoint)             Sprite.offset.copyFrom(Offset);
+	private inline function originTransform(Sprite:FlxSprite, Origin:FlxPoint)             Sprite.origin.copyFrom(Origin);
+	private inline function scaleTransform(Sprite:FlxSprite, Scale:FlxPoint)               Sprite.scale.copyFrom(Scale);
+	private inline function scrollFactorTransform(Sprite:FlxSprite, ScrollFactor:FlxPoint) Sprite.scrollFactor.copyFrom(ScrollFactor);
 
 	// Functions for the FlxCallbackPoint
-	private inline function offsetCallback(Offset:FlxPoint)             { transformChildren(offsetTransform, Offset); }
-	private inline function originCallback(Origin:FlxPoint)             { transformChildren(originTransform, Origin); }
-	private inline function scaleCallback(Scale:FlxPoint)               { transformChildren(scaleTransform, Scale); }
-	private inline function scrollFactorCallback(ScrollFactor:FlxPoint) { transformChildren(scrollFactorTransform, ScrollFactor); }
+	private inline function offsetCallback(Offset:FlxPoint)             transformChildren(offsetTransform, Offset);
+	private inline function originCallback(Origin:FlxPoint)             transformChildren(originTransform, Origin);
+	private inline function scaleCallback(Scale:FlxPoint)               transformChildren(scaleTransform, Scale);
+	private inline function scrollFactorCallback(ScrollFactor:FlxPoint) transformChildren(scrollFactorTransform, ScrollFactor);
 	
 	// NON-SUPPORTED FUNCTIONALITY
 	// THESE METHODS ARE OVERRIDEN FOR SAFETY PURPOSES

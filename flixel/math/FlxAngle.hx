@@ -273,7 +273,8 @@ class FlxAngle
 	#end
 }
 
-typedef FlxSinCos = {
+typedef FlxSinCos =
+{
 	var cos:Array<Float>;
 	var sin:Array<Float>;
 };
