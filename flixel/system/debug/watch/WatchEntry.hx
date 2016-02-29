@@ -122,7 +122,7 @@ class WatchEntry implements IFlxDestroyable
 		custom = null;
 		if (valueDisplay != null)
 		{
-			valueDisplay.removeEventListener(MouseEvent.MOUSE_UP,onMouseUp);
+			valueDisplay.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 			valueDisplay.removeEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 			valueDisplay.removeEventListener(FocusEvent.FOCUS_OUT, onFocusLost);
 			valueDisplay = null;

@@ -95,7 +95,7 @@ class PluginFrontEnd
 		{
 			if (Std.is(list[i], ClassType))
 			{
-				list.splice(i,1);
+				list.splice(i, 1);
 				results = true;
 			}
 			i--;

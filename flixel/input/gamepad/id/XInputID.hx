@@ -46,8 +46,8 @@ class XInputID
 	public static inline var LEFT_TRIGGER:Int = 10;
 	public static inline var RIGHT_TRIGGER:Int = 11;
 
-	public static var LEFT_ANALOG_STICK(default, null)  = new FlxGamepadAnalogStick(0, 1, {up:20,down:21,left:22,right:23});
-	public static var RIGHT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(2, 3, {up:24,down:25,left:26,right:27});
+	public static var LEFT_ANALOG_STICK(default, null)  = new FlxGamepadAnalogStick(0, 1, { up: 20, down: 21, left: 22, right: 23 });
+	public static var RIGHT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(2, 3, { up: 24, down: 25, left: 26, right: 27 });
 
 #elseif FLX_GAMEINPUT_API
 
@@ -71,8 +71,8 @@ class XInputID
 	public static inline var DPAD_LEFT:Int = 19;
 	public static inline var DPAD_RIGHT:Int = 20;
 
-	public static var LEFT_ANALOG_STICK(default, null)  = new FlxGamepadAnalogStick(0, 1, {up:21,down:22,left:23,right:24});
-	public static var RIGHT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(2, 3, {up:25,down:26,left:27,right:28});
+	public static var LEFT_ANALOG_STICK(default, null)  = new FlxGamepadAnalogStick(0, 1, { up: 21, down: 22, left: 23, right: 24 });
+	public static var RIGHT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(2, 3, { up: 25, down: 26, left: 27, right: 28 });
 
 	public static inline var LEFT_TRIGGER:Int = 4;
 	public static inline var RIGHT_TRIGGER:Int = 5;
@@ -116,8 +116,8 @@ class XInputID
 		public static inline var LEFT_TRIGGER:Int = 2;
 		public static inline var RIGHT_TRIGGER:Int = 5;
 
-		public static var LEFT_ANALOG_STICK(default, null)  = new FlxGamepadAnalogStick(0, 1, {up:21,down:22,left:23,right:24});
-		public static var RIGHT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(3, 4, {up:25,down:26,left:27,right:28});
+		public static var LEFT_ANALOG_STICK(default, null)  = new FlxGamepadAnalogStick(0, 1, { up: 21, down: 22, left: 23, right: 24 });
+		public static var RIGHT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(3, 4, { up: 25, down: 26, left: 27, right: 28 });
 
 	#else // mac
 
@@ -145,8 +145,8 @@ class XInputID
 		public static inline var LEFT_TRIGGER:Int = 2;
 		public static inline var RIGHT_TRIGGER:Int = 5;
 		
-		public static var LEFT_ANALOG_STICK(default, null)  = new FlxGamepadAnalogStick(0, 1, {up:21,down:22,left:23,right:24});
-		public static var RIGHT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(3, 4, {up:25,down:26,left:27,right:28});
+		public static var LEFT_ANALOG_STICK(default, null)  = new FlxGamepadAnalogStick(0, 1, { up: 21, down: 22, left: 23, right: 24 });
+		public static var RIGHT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(3, 4, { up: 25, down: 26, left: 27, right: 28 });
 
 	#end
 #end
