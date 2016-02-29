@@ -1,4 +1,4 @@
-﻿package;
+package;
 
 import flash.Lib;
 import flixel.FlxG;
