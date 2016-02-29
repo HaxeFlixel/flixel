@@ -89,7 +89,8 @@ class FlxStringUtil
 	public static inline function formatStringMap(AnyMap:Map<String, Dynamic>):String
 	{
 		var string:String = "";
-		for (key in AnyMap.keys()) {
+		for (key in AnyMap.keys())
+		{
 			string += Std.string(key);
 			string += ", ";
 		}
@@ -181,9 +182,11 @@ class FlxStringUtil
 	public static function filterDigits(Input:String):String
 	{
 		var output = new StringBuf();
-		for (i in 0...Input.length) {
+		for (i in 0...Input.length)
+		{
 			var c = Input.charCodeAt(i);
-			if (c >= '0'.code && c <= '9'.code) {
+			if (c >= '0'.code && c <= '9'.code)
+			{
 				output.addChar(c);
 			}
 		}

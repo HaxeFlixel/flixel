@@ -780,13 +780,15 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	}
 }
 
-typedef Harmony = { 
+typedef Harmony =
+{
 	original:FlxColor,
 	warmer:FlxColor,
 	colder:FlxColor
 }
 
-typedef TriadicHarmony = {
+typedef TriadicHarmony =
+{
 	color1:FlxColor,
 	color2:FlxColor,
 	color3:FlxColor

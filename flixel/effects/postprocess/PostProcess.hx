@@ -291,6 +291,6 @@ class PostProcess
 	public function render(rect:Rectangle) {}
 	public function setUniform(uniform:String, value:Float) {}
 	public var to(never, set):PostProcess;
-	public function set_to(value:PostProcess):PostProcess { return null; }
+	public function set_to(value:PostProcess):PostProcess return null;
 }
 #end

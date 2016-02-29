@@ -4,7 +4,7 @@
 		{
 			"type": "AccessOrder",
 				"props": {
-				"modifiers": [ 
+				"modifiers": [
 					"OVERRIDE",
 					"PUBLIC_PRIVATE",
 					"STATIC",
@@ -120,6 +120,15 @@
 				"tokens": [
 					","
 				]
+			}
+		},
+		{
+			"type": "EmptyBlock"
+		},
+		{
+			"type": "LeftCurly",
+			"props": {
+				"option": "nl"
 			}
 		}
 	]

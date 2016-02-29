@@ -118,7 +118,11 @@ class FlxSave implements IFlxDestroyable
 			result = _sharedObject.flush(); 
 			#end
 		}
-		catch (e:Error) { return onDone(ERROR); }
+		catch (e:Error)
+		{
+			return onDone(ERROR);
+		}
+
 		#if (flash && openfl <= "3.4.0")
 		if (result == "pending")
 		#else
