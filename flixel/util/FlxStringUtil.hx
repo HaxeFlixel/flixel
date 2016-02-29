@@ -86,7 +86,7 @@ class FlxStringUtil
 	 * @param  AnyMap    A StringMap object.
 	 * @return  A String formatted like this: key1, key2, ..., keyX
 	 */
-	public static inline function formatStringMap(AnyMap:Map<String,Dynamic>):String
+	public static inline function formatStringMap(AnyMap:Map<String, Dynamic>):String
 	{
 		var string:String = "";
 		for (key in AnyMap.keys()) {

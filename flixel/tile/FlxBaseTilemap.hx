@@ -1094,7 +1094,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 				continue;
 			}
 			
-			if (ray(source,node,_point))
+			if (ray(source, node, _point))
 			{
 				if (lastIndex >= 0)
 				{

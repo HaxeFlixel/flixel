@@ -1057,7 +1057,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	/**
 	 * Signal listener for gameResize 
 	 */
-	private function onGameResize(_,_):Void
+	private function onGameResize(_, _):Void
 	{
 		if (graphic == null)
 			return;

@@ -114,7 +114,7 @@ class FlxSpriteTest extends FlxTest
 		Assert.areEqual(100, sizeSprite.width);
 		Assert.areEqual(130, sizeSprite.height);
 		
-		sizeSprite.setSize(233,333);
+		sizeSprite.setSize(233, 333);
 		
 		Assert.areEqual(233, sizeSprite.width);
 		Assert.areEqual(333, sizeSprite.height);

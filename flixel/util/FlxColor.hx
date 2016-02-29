@@ -38,7 +38,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 * A `Map<String, Int>` whose values are the static colors of `FlxColor`.
 	 * You can add more colors for `FlxColor.fromString(String)` if you need.
 	 */
-	public static var colorLookup(default, null):Map<String,Int>
+	public static var colorLookup(default, null):Map<String, Int>
 		= FlxMacroUtil.buildMap("flixel.util.FlxColor");
 	
 	public var red(get, set):Int;

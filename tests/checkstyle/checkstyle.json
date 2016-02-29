@@ -113,6 +113,14 @@
 					"=>"
 				]
 			}
+		},
+		{
+			"type": "WhitespaceAfter",
+			"props": {
+				"tokens": [
+					","
+				]
+			}
 		}
 	]
 }
