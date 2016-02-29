@@ -1,9 +1,9 @@
 {
+	"defaultSeverity": "WARNING",
 	"checks": [
 		{
 			"type": "AccessOrder",
 				"props": {
-				"severity": "WARNING",
 				"modifiers": [ 
 					"OVERRIDE",
 					"PUBLIC_PRIVATE",
@@ -17,7 +17,6 @@
 		{
 			"type": "ConstantName",
 			"props": {
-				"severity": "WARNING",
 				"format": "^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$",
 				"tokens": ["INLINE"]
 			}
@@ -25,27 +24,21 @@
 		{
 			"type": "EmptyLines",
 			"props": {
-				"severity": "WARNING",
 				"max": 1
 			}
 		},
 		{
-			"type": "IndentationCharacter",
-			"props": {
-				"severity": "WARNING"
-			}
+			"type": "IndentationCharacter"
 		},
 		{
 			"type": "LocalVariableName",
 			"props": {
-				"severity": "WARNING",
 				"format": "^[a-z][a-zA-Z0-9]*$"
 			}
 		},
 		{
 			"type": "MemberName",
 			"props": {
-				"severity": "WARNING",
 				"format": "^([a-z][a-zA-Z0-9]*|ID)$",
 				"tokens": [
 					"CLASS",
@@ -57,7 +50,6 @@
 		{
 			"type": "MemberName",
 			"props": {
-				"severity": "WARNING",
 				"format": "^_?[a-z][a-zA-Z0-9]*$",
 				"tokens": [
 					"CLASS",
@@ -68,7 +60,6 @@
 		{
 			"type": "MemberName",
 			"props": {
-				"severity": "WARNING",
 				"format": "^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$",
 				"tokens": ["ENUM"]
 			}
@@ -76,22 +67,17 @@
 		{
 			"type": "MethodName",
 			"props": {
-				"severity": "WARNING",
 				"format": "^[a-z][a-zA-Z0-9]*$"
 			}
 		},
 		{
 			"type": "TypeName",
 			"props": {
-				"severity": "WARNING",
 				"format": "^[A-Z]+[a-zA-Z0-9]*$"
 			}
 		},
 		{
-			"type": "Spacing",
-			"props": {
-				"severity": "WARNING"
-			}
+			"type": "Spacing"
 		}
 	]
 }
