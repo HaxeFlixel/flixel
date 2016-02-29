@@ -757,7 +757,7 @@ class FlxGamepad implements IFlxDestroyable
 		}
 	}
 	
-	private function handleAxisMoveSub(stick:FlxGamepadAnalogStick, axis:Int, value:Float, oldValue:Float, sign:Float=1.0)
+	private function handleAxisMoveSub(stick:FlxGamepadAnalogStick, axis:Int, value:Float, oldValue:Float, sign:Float = 1.0)
 	{
 		var digitalButton = -1;
 		
