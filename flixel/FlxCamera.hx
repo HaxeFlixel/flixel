@@ -103,19 +103,19 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Lower bound of the cameras scroll on the x axis
 	 */
-	public var minScrollX:Float = FlxMath.MIN_VALUE_FLOAT;
+	public var minScrollX:Null<Float>;
 	/**
 	 * Upper bound of the cameras scroll on the x axis
 	 */
-	public var maxScrollX:Float = FlxMath.MAX_VALUE_FLOAT;
+	public var maxScrollX:Null<Float>;
 	/**
 	 * Lower bound of the cameras scroll on the y axis
 	 */
-	public var minScrollY:Float = FlxMath.MIN_VALUE_FLOAT;
+	public var minScrollY:Null<Float>;
 	/**
 	 * Upper bound of the cameras scroll on the y axis
 	 */
-	public var maxScrollY:Float = FlxMath.MAX_VALUE_FLOAT;
+	public var maxScrollY:Null<Float>;
 	/**
 	 * Stores the basic parallax scrolling values.
 	 */
@@ -1259,10 +1259,8 @@ class FlxCamera extends FlxBasic
 			{
 				return;
 			}
-			// This is temporal fix for camera's color
+			
 			var targetGraphics:Graphics = (graphics == null) ? canvas.graphics : graphics;
-			Color = Color.to24Bit();
-			// end of fix
 			
 			targetGraphics.beginFill(Color, FxAlpha);
 			// i'm drawing rect with these parameters to avoid light lines at the top and left of the camera,

@@ -9,6 +9,7 @@ import openfl.geom.Matrix;
 /**
  * Stores a 2D floating point coordinate.
  */
+@:allow(flixel)
 class FlxPoint implements IFlxPooled
 {
 	public static var pool(get, never):IFlxPool<FlxPoint>;
@@ -45,10 +46,11 @@ class FlxPoint implements IFlxPooled
 		return point;
 	}
 	
-	public var _x:Float = 0; // raw access for maximum speed
-	public var _y:Float = 0; // raw access for maximum speed
 	public var x(get, set):Float;
 	public var y(get, set):Float;
+	
+	private var _x:Float = 0;
+	private var _y:Float = 0;
 	
 	private var _weak:Bool = false;
 	private var _inPool:Bool = false;
@@ -94,20 +96,6 @@ class FlxPoint implements IFlxPooled
 	{
 		x = X;
 		y = Y;
-		return this;
-	}
-	
-	/**
-	 * Set the coordinates of this point (inline).
-	 * 
-	 * @param	X	The X-coordinate of the point in space.
-	 * @param	Y	The Y-coordinate of the point in space.
-	 * @return	This point.
-	 */
-	public inline function setInline(X:Float, Y:Float):FlxPoint
-	{
-		_x = X;
-		_y = Y;
 		return this;
 	}
 	

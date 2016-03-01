@@ -77,10 +77,10 @@ class FlxMath
 	 * @param	Max		Any number.
 	 * @return	The bounded value of the number.
 	 */
-	public static function bound(Value:Float, Min:Float=FlxMath.MIN_VALUE_FLOAT, Max:Float=FlxMath.MAX_VALUE_FLOAT):Float
+	public static function bound(Value:Float, ?Min:Float, ?Max:Float):Float
 	{
-		if(Min != FlxMath.MIN_VALUE_FLOAT && Value < Min) Value = Min;
-		if(Max != FlxMath.MAX_VALUE_FLOAT && Value > Max) Value = Max;
+		if(Min != null && Value < Min) Value = Min;
+		if(Max != null && Value > Max) Value = Max;
 		return Value;
 	}
 	
@@ -309,9 +309,9 @@ class FlxMath
 	 * 
 	 * @return The length
 	 */
-	public static inline function vectorLength(_cachedX:Float, _cachedY:Float):Float
+	public static inline function vectorLength(x:Float, y:Float):Float
 	{
-		return Math.sqrt(_cachedX * _cachedX + _cachedY * _cachedY);
+		return Math.sqrt(x * x + y * y);
 	}
 
 	/**
