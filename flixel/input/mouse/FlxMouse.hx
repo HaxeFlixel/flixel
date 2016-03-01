@@ -587,7 +587,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 		return visible = Value;
 	}
 	
-	/** Replay functions **/
+	// Replay functions
 	
 	private function record():MouseRecord
 	{

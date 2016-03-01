@@ -9,16 +9,14 @@ import flixel.input.gamepad.FlxGamepadAnalogStick;
  */
 class MayflashWiiRemoteID
 {
-	/*Things to add:
-	
-	- Accelerometer (in both remote and nunchuk)
-	- Gyroscope (in Motion-Plus version only)
-	- IR camera (position tracking)
-	- Rumble
-	- Speaker
-	
-	*/
-	
+	/**
+	 * Things to add:
+	 * - Accelerometer (in both remote and nunchuk)
+	 * - Gyroscope (in Motion-Plus version only)
+	 * - IR camera (position tracking)
+	 * - Rumble
+	 * - Speaker
+	 */
 #if FLX_JOYSTICK_API
 	
 	// Standard Wii Remote inputs:
