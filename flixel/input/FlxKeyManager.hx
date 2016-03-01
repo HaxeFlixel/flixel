@@ -4,7 +4,7 @@ import flash.events.KeyboardEvent;
 import flixel.FlxG;
 import flixel.input.FlxInput;
 
-@:allow(flixel)
+@:generic
 class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 {
 	/**
@@ -33,6 +33,7 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 	/**
 	 * Internal storage of input keys as an array, for efficient iteration.
 	 */
+	@:allow(flixel)
 	private var _keyListArray:Array<FlxInput<Key>> = [];
 	/**
 	 * Internal storage of input keys as a map, for efficient indexing.

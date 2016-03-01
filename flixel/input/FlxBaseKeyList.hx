@@ -6,9 +6,9 @@ import flixel.input.FlxKeyManager;
 class FlxBaseKeyList
 {
 	private var status:FlxInputState;
-	private var keyManager:FlxKeyManager<Dynamic, Dynamic>;
+	private var keyManager:FlxKeyManager<Int, FlxBaseKeyList>;
 	
-	public function new(status:FlxInputState, keyManager:FlxKeyManager<Dynamic, Dynamic>)
+	public function new(status:FlxInputState, keyManager:FlxKeyManager<Int, FlxBaseKeyList>)
 	{
 		this.status = status;
 		this.keyManager = keyManager;

@@ -103,19 +103,19 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Lower bound of the cameras scroll on the x axis
 	 */
-	public var minScrollX:Null<Float>;
+	public var minScrollX:Float = FlxMath.MIN_VALUE_FLOAT;
 	/**
 	 * Upper bound of the cameras scroll on the x axis
 	 */
-	public var maxScrollX:Null<Float>;
+	public var maxScrollX:Float = FlxMath.MAX_VALUE_FLOAT;
 	/**
 	 * Lower bound of the cameras scroll on the y axis
 	 */
-	public var minScrollY:Null<Float>;
+	public var minScrollY:Float = FlxMath.MIN_VALUE_FLOAT;
 	/**
 	 * Upper bound of the cameras scroll on the y axis
 	 */
-	public var maxScrollY:Null<Float>;
+	public var maxScrollY:Float = FlxMath.MAX_VALUE_FLOAT;
 	/**
 	 * Stores the basic parallax scrolling values.
 	 */
@@ -284,6 +284,10 @@ class FlxCamera extends FlxBasic
 	 * Internal, to help avoid costly allocations.
 	 */
 	private var _point:FlxPoint = FlxPoint.get();
+	/**
+	 * Internal, to help avoid costly allocations.
+	 */
+	private var _cachedFloat:Float = 0;
 	/**
 	 * Internal, the filters array to be applied to the camera.
 	 */
@@ -786,8 +790,6 @@ class FlxCamera extends FlxBasic
 		updateFade(elapsed);
 		updateShake(elapsed);
 		
-		flashSprite.filters = filtersEnabled ? _filters : null;
-		
 		updateFlashSpritePosition();
 	}
 	
@@ -796,9 +798,8 @@ class FlxCamera extends FlxBasic
 	 */
 	public function updateScroll():Void
 	{
-		//Make sure we didn't go outside the camera's bounds
-		scroll.x = FlxMath.bound(scroll.x, minScrollX, (maxScrollX != null) ? maxScrollX - width : null);
-		scroll.y = FlxMath.bound(scroll.y, minScrollY, (maxScrollY != null) ? maxScrollY - height : null);
+		scroll._x = FlxMath.bound(scroll.x, minScrollX, maxScrollX);
+		scroll._y = FlxMath.bound(scroll.y, minScrollY, minScrollY);
 	}
 	
 	public function updateFollow():Void
@@ -963,8 +964,9 @@ class FlxCamera extends FlxBasic
 	{
 		if (flashSprite != null)
 		{
-			flashSprite.x = x * FlxG.scaleMode.scale.x + _flashOffset.x;
-			flashSprite.y = y * FlxG.scaleMode.scale.y + _flashOffset.y;
+			var scale = FlxG.scaleMode.scale;
+			flashSprite.x = x * scale.x + _flashOffset.x;
+			flashSprite.y = y * scale.y + _flashOffset.y;
 		}
 	}
 	
@@ -1195,6 +1197,7 @@ class FlxCamera extends FlxBasic
 	public function setFilters(filters:Array<BitmapFilter>):Void
 	{
 		_filters = filters;
+		flashSprite.filters = filtersEnabled ? _filters : null;
 	}
 	
 	/**

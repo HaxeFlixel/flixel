@@ -13,9 +13,9 @@ class NumTween extends FlxTween
 	public var value(default, null):Float;
 	
 	// Tween information.
-	private var _tweenFunction:Float->Void;
 	private var _start:Float;
 	private var _range:Float;
+	private var _tweenFunction:Float->Void;
 	
 	/**
 	 * Clean up references

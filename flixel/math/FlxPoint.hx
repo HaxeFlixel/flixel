@@ -45,8 +45,10 @@ class FlxPoint implements IFlxPooled
 		return point;
 	}
 	
-	public var x(default, set):Float = 0;
-	public var y(default, set):Float = 0;
+	public var _x:Float = 0; // raw access for maximum speed
+	public var _y:Float = 0; // raw access for maximum speed
+	public var x(get, set):Float;
+	public var y(get, set):Float;
 	
 	private var _weak:Bool = false;
 	private var _inPool:Bool = false;
@@ -92,6 +94,20 @@ class FlxPoint implements IFlxPooled
 	{
 		x = X;
 		y = Y;
+		return this;
+	}
+	
+	/**
+	 * Set the coordinates of this point (inline).
+	 * 
+	 * @param	X	The X-coordinate of the point in space.
+	 * @param	Y	The Y-coordinate of the point in space.
+	 * @return	This point.
+	 */
+	public inline function setInline(X:Float, Y:Float):FlxPoint
+	{
+		_x = X;
+		_y = Y;
 		return this;
 	}
 	
@@ -418,17 +434,25 @@ class FlxPoint implements IFlxPooled
 	/**
 	 * Necessary for FlxCallbackPoint.
 	 */
+	private inline function get_x():Float 
+	{ 
+		return _x;
+	}
 	private function set_x(Value:Float):Float 
 	{ 
-		return x = Value;
+		return _x = Value;
 	}
 	
 	/**
 	 * Necessary for FlxCallbackPoint.
 	 */
+	private inline function get_y():Float 
+	{ 
+		return _y;
+	}
 	private function set_y(Value:Float):Float
 	{
-		return y = Value; 
+		return _y = Value; 
 	}
 	
 	private static function get_pool():IFlxPool<FlxPoint>

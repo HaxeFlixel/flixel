@@ -2,6 +2,7 @@ package flixel.input;
 
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 
+@:generic
 class FlxInput<T> implements IFlxInput
 {
 	public var ID:T;
