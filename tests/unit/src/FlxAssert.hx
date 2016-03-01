@@ -6,11 +6,11 @@ using flixel.util.FlxArrayUtil;
 
 class FlxAssert
 {
-	public static function arraysEqual<T>(array1:Array<T>, array2:Array<T>, ?info:PosInfos):Void
+	public static function arraysEqual<T>(expected:Array<T>, actual:Array<T>, ?info:PosInfos):Void
 	{
-		if (array1.equals(array2))
+		if (expected.equals(actual))
 			Assert.assertionCount++;
 		else
-			Assert.fail('Expected $array1 but was $array2', info);
+			Assert.fail('\nExpected\n   ${expected}\nbut was\n   ${actual}\n', info);
 	}
 }

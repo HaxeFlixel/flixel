@@ -649,7 +649,8 @@ class FlxSpriteUtil
 	}
 }
 
-typedef LineStyle = {
+typedef LineStyle =
+{
 	?thickness:Float,
 	?color:FlxColor,
 	?pixelHinting:Bool,
@@ -659,7 +660,8 @@ typedef LineStyle = {
 	?miterLimit:Float
 }
 
-typedef DrawStyle = {
+typedef DrawStyle =
+{
 	?matrix:Matrix,
 	?colorTransform:ColorTransform,
 	?blendMode:BlendMode,

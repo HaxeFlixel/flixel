@@ -262,7 +262,7 @@ class FlxBitmapText extends FlxSprite
 		}
 	}
 	
-	inline private function checkPendingChanges(useTiles:Bool = false):Void
+	private inline function checkPendingChanges(useTiles:Bool = false):Void
 	{
 		if (FlxG.renderBlit)
 		{
@@ -509,6 +509,10 @@ class FlxBitmapText extends FlxSprite
 		{
 			drawFrame(RunOnCpp);
 		}
+		else
+		{
+			super.calcFrame(RunOnCpp);
+		}
 	}
 	
 	private function set_text(value:String):String 
@@ -616,11 +620,11 @@ class FlxBitmapText extends FlxSprite
 			charCode = Utf8.charCodeAt(str, c);
 			charWidth = 0;
 			
-			if (charCode == FlxBitmapFont.spaceCode)
+			if (charCode == FlxBitmapFont.SPACE_CODE)
 			{
 				charWidth = spaceWidth;
 			}
-			else if (charCode == FlxBitmapFont.tabCode)
+			else if (charCode == FlxBitmapFont.TAB_CODE)
 			{
 				charWidth = tabWidth;
 			}
@@ -678,11 +682,11 @@ class FlxBitmapText extends FlxSprite
 			{
 				charCode = Utf8.charCodeAt(line, c);
 				
-				if (charCode == FlxBitmapFont.spaceCode)
+				if (charCode == FlxBitmapFont.SPACE_CODE)
 				{
 					charWidth = spaceWidth;
 				}
-				else if (charCode == FlxBitmapFont.tabCode)
+				else if (charCode == FlxBitmapFont.TAB_CODE)
 				{
 					charWidth = tabWidth;
 				}
@@ -766,7 +770,7 @@ class FlxBitmapText extends FlxSprite
 			charCode = Utf8.charCodeAt(line, c);
 			word = wordUtf8.toString();
 			
-			if (charCode == FlxBitmapFont.spaceCode || charCode == FlxBitmapFont.tabCode)
+			if (charCode == FlxBitmapFont.SPACE_CODE || charCode == FlxBitmapFont.TAB_CODE)
 			{
 				if (!isSpaceWord)
 				{
@@ -859,17 +863,17 @@ class FlxBitmapText extends FlxSprite
 				wordLength = Utf8.length(word);
 				
 				charCode = Utf8.charCodeAt(word, 0);
-				isSpaceWord = (charCode == FlxBitmapFont.spaceCode || charCode == FlxBitmapFont.tabCode);
+				isSpaceWord = (charCode == FlxBitmapFont.SPACE_CODE || charCode == FlxBitmapFont.TAB_CODE);
 				
 				for (c in 0...wordLength)
 				{
 					charCode = Utf8.charCodeAt(word, c);
 					
-					if (charCode == FlxBitmapFont.spaceCode)
+					if (charCode == FlxBitmapFont.SPACE_CODE)
 					{
 						charWidth = spaceWidth;
 					}
-					else if (charCode == FlxBitmapFont.tabCode)
+					else if (charCode == FlxBitmapFont.TAB_CODE)
 					{
 						charWidth = tabWidth;
 					}
@@ -966,7 +970,7 @@ class FlxBitmapText extends FlxSprite
 				wordLength = Utf8.length(word);
 				
 				charCode = Utf8.charCodeAt(word, 0);
-				isSpaceWord = (charCode == FlxBitmapFont.spaceCode || charCode == FlxBitmapFont.tabCode);
+				isSpaceWord = (charCode == FlxBitmapFont.SPACE_CODE || charCode == FlxBitmapFont.TAB_CODE);
 				
 				c = 0;
 				
@@ -974,11 +978,11 @@ class FlxBitmapText extends FlxSprite
 				{
 					charCode = Utf8.charCodeAt(word, c);
 					
-					if (charCode == FlxBitmapFont.spaceCode)
+					if (charCode == FlxBitmapFont.SPACE_CODE)
 					{
 						charWidth = spaceWidth;
 					}
-					else if (charCode == FlxBitmapFont.tabCode)
+					else if (charCode == FlxBitmapFont.TAB_CODE)
 					{
 						charWidth = tabWidth;
 					}
@@ -1148,11 +1152,11 @@ class FlxBitmapText extends FlxSprite
 			{
 				charCode = Utf8.charCodeAt(line, i);
 				
-				if (charCode == FlxBitmapFont.spaceCode)
+				if (charCode == FlxBitmapFont.SPACE_CODE)
 				{
 					numSpaces++;
 				}
-				else if (charCode == FlxBitmapFont.tabCode)
+				else if (charCode == FlxBitmapFont.TAB_CODE)
 				{
 					numSpaces += numSpacesInTab;
 				}
@@ -1169,11 +1173,11 @@ class FlxBitmapText extends FlxSprite
 		{
 			charCode = Utf8.charCodeAt(line, i);
 			
-			if (charCode == FlxBitmapFont.spaceCode)
+			if (charCode == FlxBitmapFont.SPACE_CODE)
 			{
 				curX += spaceWidth;
 			}
-			else if (charCode == FlxBitmapFont.tabCode)
+			else if (charCode == FlxBitmapFont.TAB_CODE)
 			{
 				curX += tabWidth;
 			}
@@ -1218,11 +1222,11 @@ class FlxBitmapText extends FlxSprite
 			{
 				charCode = Utf8.charCodeAt(line, i);
 				
-				if (charCode == FlxBitmapFont.spaceCode)
+				if (charCode == FlxBitmapFont.SPACE_CODE)
 				{
 					numSpaces++;
 				}
-				else if (charCode == FlxBitmapFont.tabCode)
+				else if (charCode == FlxBitmapFont.TAB_CODE)
 				{
 					numSpaces += numSpacesInTab;
 				}
@@ -1239,11 +1243,11 @@ class FlxBitmapText extends FlxSprite
 		{
 			charCode = Utf8.charCodeAt(line, i);
 			
-			if (charCode == FlxBitmapFont.spaceCode)
+			if (charCode == FlxBitmapFont.SPACE_CODE)
 			{
 				curX += spaceWidth;
 			}
-			else if (charCode == FlxBitmapFont.tabCode)
+			else if (charCode == FlxBitmapFont.TAB_CODE)
 			{
 				curX += tabWidth;
 			}

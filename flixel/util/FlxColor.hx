@@ -6,8 +6,8 @@ import flixel.system.macros.FlxMacroUtil;
 /**
  * Class representing a color, based on Int. Provides a variety of methods for creating and converting colors.
  * 
- * FlxColor's can be written as Ints. This means you can pass a hex value such as
- * 0xff123456 to a function expecting a FlxColor, and it will automatically become a FlxColor object.
+ * FlxColors can be written as Ints. This means you can pass a hex value such as
+ * 0xff123456 to a function expecting a FlxColor, and it will automatically become a FlxColor "object".
  * Similarly, FlxColors may be treated as Ints.
  * 
  * Note that when using properties of a FlxColor other than ARGB, the values are ultimately stored as
@@ -35,10 +35,10 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	public static inline var CYAN:FlxColor =        0xFF00FFFF;
 	
 	/**
-	 * A Map<String, Int> which values are the static colors of FlxColor.
-	 * You can add more colors for FlxColor.fromString(String) if you need.
+	 * A `Map<String, Int>` whose values are the static colors of `FlxColor`.
+	 * You can add more colors for `FlxColor.fromString(String)` if you need.
 	 */
-	public static var colorLookup(default, null):Map<String,Int>
+	public static var colorLookup(default, null):Map<String, Int>
 		= FlxMacroUtil.buildMap("flixel.util.FlxColor");
 	
 	public var red(get, set):Int;
@@ -163,16 +163,19 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	}
 	
 	/**
-	 * Parses a String and returns a FlxColor or null if the String couldn't be parsed.
+	 * Parses a `String` and returns a `FlxColor` or `null` if the `String` couldn't be parsed.
+	 * 
 	 * Examples (input -> output in hex):
-	 * 0x00FF00    -> 0xFF00FF00
-	 * 0xAA4578C2  -> 0xAA4578C2
-	 * #0000FF     -> 0xFF0000FF
-	 * #3F000011   -> 0x3F000011
-	 * GRAY        -> 0xFF808080
-	 * blue        -> 0xFF0000FF
+	 * 
+	 * - `0x00FF00`    -> `0xFF00FF00`
+	 * - `0xAA4578C2`  -> `0xAA4578C2`
+	 * - `#0000FF`     -> `0xFF0000FF`
+	 * - `#3F000011`   -> `0x3F000011`
+	 * - `GRAY`        -> `0xFF808080`
+	 * - `blue`        -> `0xFF0000FF`
+	 * 
 	 * @param	str 	The string to be parsed
-	 * @return	A FlxColor or null if the String couldn't be parsed
+	 * @return	A `FlxColor` or `null` if the `String` couldn't be parsed
 	 */
 	public static function fromString(str:String):Null<FlxColor>
 	{
@@ -181,7 +184,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 		
 		if (COLOR_REGEX.match(str)) 
 		{
-			var hexColor:String = "0x"+COLOR_REGEX.matched(2);
+			var hexColor:String = "0x" + COLOR_REGEX.matched(2);
 			result = new FlxColor(Std.parseInt(hexColor));
 			if (hexColor.length == 8) 
 			{
@@ -777,13 +780,15 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	}
 }
 
-typedef Harmony = { 
+typedef Harmony =
+{
 	original:FlxColor,
 	warmer:FlxColor,
 	colder:FlxColor
 }
 
-typedef TriadicHarmony = {
+typedef TriadicHarmony =
+{
 	color1:FlxColor,
 	color2:FlxColor,
 	color3:FlxColor

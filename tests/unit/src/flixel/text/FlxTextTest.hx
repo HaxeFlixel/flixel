@@ -1,7 +1,9 @@
 package flixel.text;
 
+import flixel.system.FlxAssets;
 import flixel.text.FlxText;
 import flixel.text.FlxText.FlxTextAlign;
+import flixel.util.FlxColor;
 import massive.munit.Assert;
 
 class FlxTextTest extends FlxTest
@@ -18,16 +20,8 @@ class FlxTextTest extends FlxTest
 	@Test
 	function testFontDefaultValue()
 	{
-		Assert.areEqual(text.font, "Nokia Cellphone FC Small");
+		Assert.areEqual(text.font, FlxAssets.FONT_DEFAULT);
 	}
-	
-	#if neko
-	@Test // #1641
-	function testNullBorderColorNoCrash()
-	{
-		text.borderColor = null;
-	}
-	#end
 	
 	@Test // #1629
 	function testSetFormatAlignmentReset()
@@ -47,4 +41,24 @@ class FlxTextTest extends FlxTest
 		Assert.areNotEqual(0, text.frameWidth);
 		Assert.areNotEqual(0, text.frameHeight);
 	}
+	
+	#if !html5
+	@Test // #1422
+	function testBlurryLines()
+	{
+		text = new FlxText(0, 0, 120, "Text with some blur\none line without blur\nand another with blur");
+		text.alignment = FlxTextAlign.CENTER;
+		text.drawFrame();
+		
+		var graphic = text.updateFramePixels();
+		for (x in 0...graphic.width)
+		{
+			for (y in 0...graphic.height)
+			{
+				var color = graphic.getPixel32(x, y);
+				Assert.isFalse(color != FlxColor.WHITE && color != FlxColor.TRANSPARENT);
+			}
+		}
+	}
+	#end
 }

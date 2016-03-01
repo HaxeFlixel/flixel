@@ -15,6 +15,7 @@ import flixel.graphics.frames.FlxFramesCollectionTest;
 import flixel.graphics.frames.FlxFrameTest;
 import flixel.group.FlxGroupTest;
 import flixel.group.FlxSpriteGroupTest;
+import flixel.input.gamepad.FlxGamepadManagerTest;
 import flixel.math.FlxAngleTest;
 import flixel.math.FlxMathTest;
 import flixel.math.FlxMatrixTest;
@@ -52,7 +53,6 @@ import FlxTest;
  * Auto generated Test Suite for MassiveUnit.
  * Refer to munit command line tool for more information (haxelib run munit)
  */
-
 class TestSuite extends massive.munit.TestSuite
 {		
 
@@ -75,6 +75,7 @@ class TestSuite extends massive.munit.TestSuite
 		add(flixel.graphics.frames.FlxFrameTest);
 		add(flixel.group.FlxGroupTest);
 		add(flixel.group.FlxSpriteGroupTest);
+		add(flixel.input.gamepad.FlxGamepadManagerTest);
 		add(flixel.math.FlxAngleTest);
 		add(flixel.math.FlxMathTest);
 		add(flixel.math.FlxMatrixTest);

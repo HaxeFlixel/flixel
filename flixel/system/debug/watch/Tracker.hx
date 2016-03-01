@@ -85,31 +85,31 @@ class Tracker extends Watch
 		{
 			profiles = [];
 			
-			addProfile(new TrackerProfile(FlxG, ["width", "height", "worldBounds.x", "worldBounds.y", "worldBounds.width", "worldBounds.height", 
-			                                     "worldDivisions", "updateFramerate", "drawFramerate", "elapsed", "maxElapsed", "autoPause", "fixedTimestep", "timeScale"]));
+			addProfile(new TrackerProfile(FlxG,
+				["width", "height", "worldBounds.x", "worldBounds.y", "worldBounds.width", "worldBounds.height", 
+				"worldDivisions", "updateFramerate", "drawFramerate", "elapsed", "maxElapsed", "autoPause", "fixedTimestep", "timeScale"]));
 			
 			addProfile(new TrackerProfile(FlxPoint, ["x", "y"]));
 			addProfile(new TrackerProfile(FlxRect, ["width", "height"], [FlxPoint]));
 			
 			addProfile(new TrackerProfile(FlxBasic, ["active", "visible", "alive", "exists"]));
-			addProfile(new TrackerProfile(FlxObject, ["velocity", "acceleration", "drag", "angle", "immovable"],
-			                                         [FlxRect, FlxBasic]));
+			addProfile(new TrackerProfile(FlxObject, ["velocity", "acceleration", "drag", "angle", "immovable"], [FlxRect, FlxBasic]));
 			addProfile(new TrackerProfile(FlxTilemap, ["auto", "widthInTiles", "heightInTiles", "totalTiles", "scaleX", "scaleY"], [FlxObject]));
 			addProfile(new TrackerProfile(FlxSprite, ["frameWidth", "frameHeight", "alpha", "origin", "offset", "scale"], [FlxObject]));
 			addProfile(new TrackerProfile(FlxTypedButton, ["status", "labelAlphas"], [FlxSprite]));
 			addProfile(new TrackerProfile(FlxBar, ["min", "max", "range", "pct", "pxPerPercent", "value"], [FlxSprite]));
-			addProfile(new TrackerProfile(FlxText, ["text", "size", "font", "embedded", "bold", "italic", "wordWrap", "borderSize", 
-			                                        "borderStyle"], [FlxSprite]));
+			addProfile(new TrackerProfile(FlxText,
+				["text", "size", "font", "embedded", "bold", "italic", "wordWrap", "borderSize",  "borderStyle"], [FlxSprite]));
 			
 			addProfile(new TrackerProfile(FlxTypedGroup, ["length", "members.length", "maxSize"], [FlxBasic]));
 			addProfile(new TrackerProfile(FlxSpriteGroup, null, [FlxSprite, FlxTypedGroup]));
 			addProfile(new TrackerProfile(FlxState, ["persistentUpdate", "persistentDraw", "destroySubStates", "bgColor"], [FlxTypedGroup]));
 			
-			addProfile(new TrackerProfile(FlxCamera, ["style", "followLerp", "followLead", "deadzone", "bounds", "zoom", 
-			                                          "alpha", "angle"], [FlxBasic, FlxRect]));
+			addProfile(new TrackerProfile(FlxCamera,
+				["style", "followLerp", "followLead", "deadzone", "bounds", "zoom", "alpha", "angle"], [FlxBasic, FlxRect]));
 			
-			addProfile(new TrackerProfile(FlxTween, ["active", "duration", "type", "percent", "finished", 
-			                                         "scale", "backward", "executions", "startDelay", "loopDelay"]));
+			addProfile(new TrackerProfile(FlxTween,
+				["active", "duration", "type", "percent", "finished", "scale", "backward", "executions", "startDelay", "loopDelay"]));
 			
 			addProfile(new TrackerProfile(FlxPath, ["speed", "angle", "autoCenter", "nodeIndex", "active", "finished"]));
 			addProfile(new TrackerProfile(FlxTimer, ["time", "loops", "active", "finished", "timeLeft", "elapsedTime", "loopsLeft", "elapsedLoops", "progress"]));
@@ -120,9 +120,10 @@ class Tracker extends Watch
 			
 			// Inputs
 			#if !FLX_NO_MOUSE
-			addProfile(new TrackerProfile(FlxMouse, ["screenX", "screenY", "wheel", "visible", "useSystemCursor", "pressed", "justPressed", 
-			                                         "justReleased" #if FLX_MOUSE_ADVANCED , "pressedMiddle", "justPressedMiddle", 
-			                                         "justReleasedMiddle", "pressedRight", "justPressedRight", "justReleasedRight" #end], [FlxPoint]));
+			addProfile(new TrackerProfile(FlxMouse,
+				["screenX", "screenY", "wheel", "visible", "useSystemCursor", "pressed", "justPressed",
+				"justReleased" #if FLX_MOUSE_ADVANCED , "pressedMiddle", "justPressedMiddle",
+				"justReleasedMiddle", "pressedRight", "justPressedRight", "justReleasedRight" #end], [FlxPoint]));
 			#end
 			#if !FLX_NO_TOUCH 
 			addProfile(new TrackerProfile(FlxTouch, ["screenX", "screenY", "touchPointID", "pressed", "justPressed", "justReleased", "isActive"], [FlxPoint]));

@@ -18,6 +18,9 @@ import openfl.filters.BitmapFilter;
  */
 class FlxFilterFrames extends FlxFramesCollection
 {
+	private static var point:Point = new Point();
+	private static var rect:Rectangle = new Rectangle();
+	
 	/**
 	 * Generates new frames collection from specified frames.
 	 * 
@@ -180,7 +183,7 @@ class FlxFilterFrames extends FlxFramesCollection
 		var numFrames:Int = frames.length;
 		var frame:FlxFrame;
 		var sourceFrame:FlxFrame;
-		var frameOffset:Point;
+		var frameOffset:Point = point;
 		
 		for (i in 0...numFrames)
 		{
@@ -190,7 +193,6 @@ class FlxFilterFrames extends FlxFramesCollection
 			if (fill)
 				frame.parent.bitmap.fillRect(frame.parent.bitmap.rect, FlxColor.TRANSPARENT);
 			
-			frameOffset = FlxPoint.point1;
 			frameOffset.setTo(widthInc * 0.5, heightInc * 0.5);
 			
 			sourceFrame.paint(frame.parent.bitmap, frameOffset, true);
@@ -199,8 +201,6 @@ class FlxFilterFrames extends FlxFramesCollection
 	
 	function applyFilter(filter:BitmapFilter) 
 	{
-		var point:Point = FlxPoint.point1;
-		var rect:Rectangle = FlxRect.rect;
 		var bitmap:BitmapData;
 		
 		for (frame in frames)

@@ -7,7 +7,7 @@
 	<assets path="assets/sounds" rename="flixel/sounds" include="*.ogg" unless="flash || html5" embed="true" />
 	<assets path="assets/fonts/nokiafc22.ttf" rename="flixel/fonts/nokiafc22.ttf" embed="true" />
 	<assets path="assets/fonts/monsterrat.ttf" rename="flixel/fonts/monsterrat.ttf" embed="true" />
-	<assets path="assets/images/ui/button.png" rename="flixel/images/ui/button.png" embed="true" />
+	<assets path="assets/images/ui/button.png" rename="flixel/images/ui/button.png" embed="true" unless="unit-test html5" />
 	
 	<set name="legacy" unless="next" />
 	
@@ -27,7 +27,7 @@
 	</section>
 	
 	<section if="create">
-		<sample path="${haxelib:flixel-demos}/Arcade Classics" />
+		<sample path="${haxelib:flixel-demos}/Arcade" />
 		<sample path="${haxelib:flixel-demos}/Editors" />
 		<sample path="${haxelib:flixel-demos}/Effects" />
 		<sample path="${haxelib:flixel-demos}/Flixel Features" />

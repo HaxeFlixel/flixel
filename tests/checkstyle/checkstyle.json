@@ -1,0 +1,142 @@
+{
+	"defaultSeverity": "WARNING",
+	"checks": [
+		{
+			"type": "AccessOrder",
+				"props": {
+				"modifiers": [
+					"OVERRIDE",
+					"PUBLIC_PRIVATE",
+					"STATIC",
+					"MACRO",
+					"INLINE",
+					"DYNAMIC"
+				]
+			}
+		},
+		{
+			"type": "ConstantName",
+			"props": {
+				"format": "^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$",
+				"tokens": ["INLINE"]
+			}
+		},
+		{
+			"type": "EmptyLines",
+			"props": {
+				"max": 1,
+				"allowEmptyLineAfterMultiLineComment": false
+			}
+		},
+		{
+			"type": "IndentationCharacter"
+		},
+		{
+			"type": "LocalVariableName",
+			"props": {
+				"format": "^[a-z][a-zA-Z0-9]*$"
+			}
+		},
+		{
+			"type": "MemberName",
+			"props": {
+				"format": "^([a-z][a-zA-Z0-9]*|ID)$",
+				"severity": "IGNORE",
+				"tokens": [
+					"CLASS",
+					"TYPEDEF",
+					"PUBLIC"
+				]
+			}
+		},
+		{
+			"type": "MemberName",
+			"props": {
+				"format": "^_?[a-z][a-zA-Z0-9]*$",
+				"tokens": [
+					"CLASS",
+					"PRIVATE"
+				]
+			}
+		},
+		{
+			"type": "MemberName",
+			"props": {
+				"format": "^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$",
+				"tokens": ["ENUM"]
+			}
+		},
+		{
+			"type": "MethodName",
+			"props": {
+				"format": "^[a-z][a-zA-Z0-9]*$"
+			}
+		},
+		{
+			"type": "TypeName",
+			"props": {
+				"format": "^[A-Z]+[a-zA-Z0-9]*$"
+			}
+		},
+		{
+			"type": "Spacing"
+		},
+		{
+			"type": "WhitespaceAround",
+			"props": {
+				"tokens": [
+					"=",
+					"/",
+					"%",
+					">=",
+					"<=",
+					"==",
+					"!=",
+					"&",
+					"|",
+					"^",
+					"&&",
+					"||",
+					"<<",
+					">>",
+					">>>",
+					"+=",
+					"-=",
+					"*=",
+					"/=",
+					"%=",
+					"<<=",
+					">>=",
+					">>>=",
+					"|=",
+					"&=",
+					"^=",
+					"=>",
+					"<",
+					">",
+					"*"
+				]
+			}
+		},
+		{
+			"type": "WhitespaceAfter",
+			"props": {
+				"tokens": [
+					","
+				]
+			}
+		},
+		{
+			"type": "EmptyBlock"
+		},
+		{
+			"type": "LeftCurly",
+			"props": {
+				"option": "nl"
+			}
+		},
+		{
+			"type": "RightCurly"
+		}
+	]
+}

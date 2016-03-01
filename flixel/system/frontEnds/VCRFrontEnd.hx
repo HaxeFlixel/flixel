@@ -219,9 +219,11 @@ class VCRFrontEnd
 	/**
 	 * Stop recording the current replay and return the replay data.
 	 * 
+	 * @param	OpenSaveDialog	If true, and targeting flash, open an OS-native save dialog for the user to choose where to save the data, and save it there.
+	 * 
 	 * @return	The replay data in simple ASCII format (see FlxReplay.save()).
 	 */
-	public inline function stopRecording():String
+	public inline function stopRecording(OpenSaveDialog:Bool = true):String
 	{
 		FlxG.game.recording = false;
 		
@@ -232,12 +234,12 @@ class VCRFrontEnd
 		
 		var data:String = FlxG.game._replay.save();
 		
-		if ((data != null) && (data.length > 0))
+		if (OpenSaveDialog && (data != null) && (data.length > 0))
 		{
 			#if flash
 			_file = new FileReference();
 			_file.addEventListener(Event.COMPLETE, onSaveComplete);
-			_file.addEventListener(Event.CANCEL,onSaveCancel);
+			_file.addEventListener(Event.CANCEL, onSaveCancel);
 			_file.addEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 			_file.save(data, DEFAULT_FILE_NAME);
 			#end
@@ -362,7 +364,7 @@ class VCRFrontEnd
 	{
 		#if flash
 		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
-		_file.removeEventListener(Event.CANCEL,onSaveCancel);
+		_file.removeEventListener(Event.CANCEL, onSaveCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 		_file = null;
 		#end
@@ -375,7 +377,7 @@ class VCRFrontEnd
 	{
 		#if flash
 		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
-		_file.removeEventListener(Event.CANCEL,onSaveCancel);
+		_file.removeEventListener(Event.CANCEL, onSaveCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 		_file = null;
 		FlxG.log.error("Problem saving flixel gameplay record.");

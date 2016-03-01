@@ -9,7 +9,7 @@ import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 
 /**
- * This is a simple path data container.  Basically a list of points that
+ * This is a simple path data container. Basically a list of points that
  * a FlxObject can follow.  Also has code for drawing debug visuals.
  * FlxTilemap.findPath() returns a path usable by FlxPath, but you can
  * also just make your own, using the add() functions below
@@ -17,7 +17,6 @@ import flixel.util.FlxDestroyUtil.IFlxDestroyable;
  */
 class FlxPath implements IFlxDestroyable
 {
-	public static var manager:FlxPathManager;
 	/**
 	 * Path behavior controls: move from the start of the path to the end then stop.
 	 */
@@ -25,7 +24,7 @@ class FlxPath implements IFlxDestroyable
 	/**
 	 * Path behavior controls: move from the end of the path to the start then stop.
 	 */
-	public static inline var BACKWARD:Int= 0x000001;
+	public static inline var BACKWARD:Int = 0x000001;
 	/**
 	 * Path behavior controls: move from the start of the path to the end then directly back to the start, and start over.
 	 */
@@ -58,11 +57,6 @@ class FlxPath implements IFlxDestroyable
 	public var nodes:Array<FlxPoint>;
 	
 	/**
-	 * Object which will follow this path
-	 */
-	public var object:FlxObject;
-	
-	/**
 	 * The speed at which the object is moving on the path.
 	 * When an object completes a non-looping path circuit,
 	 * the pathSpeed will be zeroed out, but the path reference
@@ -92,12 +86,6 @@ class FlxPath implements IFlxDestroyable
 	 */
 	public var debugColor:FlxColor = 0xffffff;
 	/**
-	 * Specify a debug display scroll factor for the path.  Default is (1,1).
-	 * NOTE: does not affect world movement!  Object scroll factors take care of that.
-	 */
-	public var debugScrollX:Float = 1.0;
-	public var debugScrollY:Float = 1.0;
-	/**
 	 * Setting this to true will prevent the object from appearing
 	 * when FlxG.debugger.drawDebug is true.
 	 */
@@ -124,9 +112,15 @@ class FlxPath implements IFlxDestroyable
 	 */
 	private var _autoRotate:Bool = false;
 	
-	private var _inManager:Bool = false;
+	private var _wasObjectImmovable:Null<Bool> = null;
 	
-	private var _wasObjectImmovable:Bool;
+	private var _firstUpdate:Bool = false;
+	
+	/**
+	 * Object which will follow this path
+	 */
+	@:allow(flixel.FlxObject)
+	private var object:FlxObject;
 	
 	/**
 	 * Creates a new FlxPath.
@@ -136,8 +130,6 @@ class FlxPath implements IFlxDestroyable
 	public function reset():FlxPath
 	{
 		#if !FLX_NO_DEBUG
-		debugScrollX = 1.0;
-		debugScrollY = 1.0;
 		debugColor = 0xffffff;
 		ignoreDrawDebug = false;
 		#end
@@ -145,9 +137,8 @@ class FlxPath implements IFlxDestroyable
 		return this;
 	}
 	
-	public function start(Object:FlxObject, Nodes:Array<FlxPoint>, Speed:Float = 100, Mode:Int = FlxPath.FORWARD, AutoRotate:Bool = false):FlxPath
+	public function start(Nodes:Array<FlxPoint>, Speed:Float = 100, Mode:Int = FlxPath.FORWARD, AutoRotate:Bool = false):FlxPath
 	{
-		object = Object;
 		nodes = Nodes;
 		speed = Math.abs(Speed);
 		_mode = Mode;
@@ -158,14 +149,10 @@ class FlxPath implements IFlxDestroyable
 	
 	public function restart():FlxPath
 	{
-		if (manager != null && !_inManager)
-		{
-			manager.add(this);
-			_inManager = true;
-		}
-		
 		finished = false;
 		active = true;
+		_firstUpdate = true;
+		
 		if (nodes == null || nodes.length <= 0)
 		{
 			active = false;
@@ -182,9 +169,6 @@ class FlxPath implements IFlxDestroyable
 			nodeIndex = 0;
 			_inc = 1;
 		}
-		
-		_wasObjectImmovable = object.immovable;
-		object.immovable = true;
 		
 		return this;
 	}
@@ -207,12 +191,21 @@ class FlxPath implements IFlxDestroyable
 	
 	/**
 	 * Internal function for moving the object along the path.
-	 * Generally this function is called automatically by preUpdate().
 	 * The first half of the function decides if the object can advance to the next node in the path,
 	 * while the second half handles actually picking a velocity toward the next node.
 	 */
 	public function update(elapsed:Float):Void
 	{
+		if (object == null)
+			return;
+		
+		if (_firstUpdate)
+		{
+			_wasObjectImmovable = object.immovable;
+			object.immovable = true;
+			_firstUpdate = false;
+		}
+		
 		//first check if we need to be pointing at the next node yet
 		_point.x = object.x;
 		_point.y = object.y;
@@ -250,7 +243,7 @@ class FlxPath implements IFlxDestroyable
 		}
 		
 		//then just move toward the current node at the requested speed
-		if (speed != 0)
+		if (object != null && speed != 0)
 		{
 			//set velocity based on path mode
 			_point.x = object.x;
@@ -437,12 +430,6 @@ class FlxPath implements IFlxDestroyable
 		{
 			object.velocity.set(0, 0);
 		}
-		
-		if (manager != null && _inManager)
-		{
-			manager.remove(this);
-			_inManager = false;
-		}
 	}
 	
 	/**
@@ -452,7 +439,9 @@ class FlxPath implements IFlxDestroyable
 	{
 		finished = true;
 		active = false;
-		object.immovable = _wasObjectImmovable;
+		if (_wasObjectImmovable != null)
+			object.immovable = _wasObjectImmovable;
+		_wasObjectImmovable = null;
 	}
 	
 	/**
@@ -606,7 +595,7 @@ class FlxPath implements IFlxDestroyable
 	{
 		if (nodes.length > 0)
 		{
-			return nodes[nodes.length-1];
+			return nodes[nodes.length - 1];
 		}
 		return null;
 	}
@@ -655,8 +644,8 @@ class FlxPath implements IFlxDestroyable
 			node = nodes[i];
 			
 			//find the screen position of the node on this camera
-			_point.x = node.x - (Camera.scroll.x * debugScrollX); //copied from getScreenPosition()
-			_point.y = node.y - (Camera.scroll.y * debugScrollY);
+			_point.x = node.x - (Camera.scroll.x * object.scrollFactor.x); //copied from getScreenPosition()
+			_point.y = node.y - (Camera.scroll.y * object.scrollFactor.y);
 			
 			//decide what color this node should be
 			var nodeSize:Int = 2;
@@ -697,8 +686,8 @@ class FlxPath implements IFlxDestroyable
 			//then draw a line to the next node
 			gfx.moveTo(_point.x, _point.y);
 			gfx.lineStyle(1, debugColor, linealpha);
-			_point.x = nextNode.x - (Camera.scroll.x * debugScrollX); //copied from getScreenPosition()
-			_point.y = nextNode.y - (Camera.scroll.y * debugScrollY);
+			_point.x = nextNode.x - (Camera.scroll.x * object.scrollFactor.x); //copied from getScreenPosition()
+			_point.y = nextNode.y - (Camera.scroll.y * object.scrollFactor.y);
 			gfx.lineTo(_point.x, _point.y);
 
 			i++;
@@ -711,91 +700,4 @@ class FlxPath implements IFlxDestroyable
 		}
 	}
 	#end
-}
-
-class FlxPathManager extends FlxBasic
-{
-	private var _paths:Array<FlxPath> = [];
-	
-	public function new()
-	{
-		super();
-		#if !FLX_NO_DEBUG
-		visible = false; // No draw-calls needed 
-		#end
-		FlxG.signals.stateSwitched.add(clear);
-	}
-	
-	/**
-	 * Clean up memory.
-	 */
-	override public function destroy():Void
-	{
-		clear();
-		_paths = null;
-		FlxG.signals.stateSwitched.remove(clear);
-		super.destroy();
-	}
-	
-	override public function update(elapsed:Float):Void
-	{
-		for (path in _paths)
-		{
-			if (path.active)
-			{
-				path.update(elapsed);
-			}
-		}
-	}
-	
-	#if !FLX_NO_DEBUG
-	/**
-	 * Called by FlxG.plugins.draw() after the game state has been drawn.
-	 * Cycles through cameras and calls drawDebug() on each one.
-	 */
-	override public function draw():Void
-	{
-		super.draw();
-		if (FlxG.debugger.drawDebug)
-		{
-			for (path in _paths)
-			{
-				if ((path != null) && !path.ignoreDrawDebug)
-				{
-					path.drawDebug();
-				}
-			}
-		}
-	}
-	#end
-	
-	/**
-	 * Add a path to the path debug display manager.
-	 * Usually called automatically by FlxPath's constructor.
-	 * 
-	 * @param	Path	The FlxPath you want to add to the manager.
-	 */
-	public function add(Path:FlxPath):Void
-	{
-		_paths.push(Path);
-	}
-	
-	/**
-	 * Remove a path from the path debug display manager.
-	 * Usually called automatically by FlxPath's destroy() function.
-	 * 
-	 * @param	Path	The FlxPath you want to remove from the manager.
-	 */
-	public function remove(Path:FlxPath, ReturnInPool:Bool = true):Void
-	{
-		FlxArrayUtil.fastSplice(_paths, Path);
-	}
-	
-	/**
-	 * Removes all the paths from the path debug display manager.
-	 */
-	public inline function clear():Void
-	{
-		FlxArrayUtil.clearArray(_paths);
-	}
 }

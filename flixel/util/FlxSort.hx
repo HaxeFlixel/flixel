@@ -13,7 +13,7 @@ class FlxSort
 	/**
 	 * You can use this function in FlxTypedGroup.sort() to sort FlxObjects by their y values.
 	 */
- 	public static inline function byY(Order:Int, Obj1:FlxObject, Obj2:FlxObject):Int
+	public static inline function byY(Order:Int, Obj1:FlxObject, Obj2:FlxObject):Int
 	{
 		return byValues(Order, Obj1.y, Obj2.y);
 	}

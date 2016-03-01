@@ -104,7 +104,7 @@ class FlxSoundTray extends Sprite
 		{
 			_timer -= MS / 1000;
 		}
-		else if (y > - height)
+		else if (y > -height)
 		{
 			y -= (MS / 1000) * FlxG.height * 2;
 			

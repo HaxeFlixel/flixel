@@ -268,10 +268,10 @@ void main() {
 	{
 		return [
 			-1.0, -1.0, 0, 0,
-			 1.0, -1.0, 1, 0,
+			1.0, -1.0, 1, 0,
 			-1.0,  1.0, 0, 1,
-			 1.0, -1.0, 1, 0,
-			 1.0,  1.0, 1, 1,
+			1.0, -1.0, 1, 0,
+			1.0,  1.0, 1, 1,
 			-1.0,  1.0, 0, 1
 		];
 	}
@@ -291,6 +291,6 @@ class PostProcess
 	public function render(rect:Rectangle) {}
 	public function setUniform(uniform:String, value:Float) {}
 	public var to(never, set):PostProcess;
-	public function set_to(value:PostProcess):PostProcess { return null; }
+	public function set_to(value:PostProcess):PostProcess return null;
 }
 #end

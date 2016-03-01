@@ -10,6 +10,7 @@ import flixel.tile.FlxBaseTilemap;
 import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
+import flixel.util.FlxPath;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxStringUtil;
 
@@ -346,8 +347,8 @@ class FlxObject extends FlxBasic
 				Object1.y = Object1.y - overlap;
 				Object2.y += overlap;
 				
-				var obj1velocity:Float = Math.sqrt((obj2v * obj2v * Object2.mass)/Object1.mass) * ((obj2v > 0) ? 1 : -1);
-				var obj2velocity:Float = Math.sqrt((obj1v * obj1v * Object1.mass)/Object2.mass) * ((obj1v > 0) ? 1 : -1);
+				var obj1velocity:Float = Math.sqrt((obj2v * obj2v * Object2.mass) / Object1.mass) * ((obj2v > 0) ? 1 : -1);
+				var obj2velocity:Float = Math.sqrt((obj1v * obj1v * Object1.mass) / Object2.mass) * ((obj1v > 0) ? 1 : -1);
 				var average:Float = (obj1velocity + obj2velocity) * 0.5;
 				obj1velocity -= average;
 				obj2velocity -= average;
@@ -357,7 +358,7 @@ class FlxObject extends FlxBasic
 			else if (!obj1immovable)
 			{
 				Object1.y = Object1.y - overlap;
-				Object1.velocity.y = obj2v - obj1v*Object1.elasticity;
+				Object1.velocity.y = obj2v - obj1v * Object1.elasticity;
 				// This is special case code that handles cases like horizontal moving platforms you can ride
 				if (Object1.collisonXDrag && Object2.active && Object2.moves && (obj1delta > obj2delta))
 				{
@@ -367,7 +368,7 @@ class FlxObject extends FlxBasic
 			else if (!obj2immovable)
 			{
 				Object2.y += overlap;
-				Object2.velocity.y = obj1v - obj2v*Object2.elasticity;
+				Object2.velocity.y = obj1v - obj2v * Object2.elasticity;
 				// This is special case code that handles cases like horizontal moving platforms you can ride
 				if (Object2.collisonXDrag && Object1.active && Object1.moves && (obj1delta < obj2delta))
 				{
@@ -543,6 +544,11 @@ class FlxObject extends FlxBasic
 	public var ignoreDrawDebug:Bool = false;
 	#end
 	
+	/**
+	 * The path this object follows.
+	 */
+	public var path(default, set):FlxPath;
+	
 	private var _point:FlxPoint = FlxPoint.get();
 	private var _rect:FlxRect = FlxRect.get();
 	
@@ -620,10 +626,11 @@ class FlxObject extends FlxBasic
 		last.x = x;
 		last.y = y;
 		
+		if (path != null && path.active)
+			path.update(elapsed);
+		
 		if (moves)
-		{
 			updateMotion(elapsed);
-		}
 		
 		wasTouching = touching;
 		touching = NONE;
@@ -782,11 +789,11 @@ class FlxObject extends FlxBasic
 		{
 			Camera = FlxG.camera;
 		}
-		var X:Float = point.x - Camera.scroll.x;
-		var Y:Float = point.y - Camera.scroll.y;
+		var xPos:Float = point.x - Camera.scroll.x;
+		var yPos:Float = point.y - Camera.scroll.y;
 		getScreenPosition(_point, Camera);
 		point.putWeak();
-		return (X > _point.x) && (X < _point.x + width) && (Y > _point.y) && (Y < _point.y + height);
+		return (xPos > _point.x) && (xPos < _point.x + width) && (yPos > _point.y) && (yPos < _point.y + height);
 	}
 	
 	/**
@@ -973,19 +980,6 @@ class FlxObject extends FlxBasic
 	}
 	
 	/**
-	 * Helper function to set the coordinates of this object 
-	 * using the center instead of the top-left corner.
-	 * 
-	 * @param	X	The new x position of the center
-	 * @param	Y	The new y position of the center
-	 */	
-	public function setPositionUsingCenter(X:Float = 0, Y:Float = 0):Void
-	{
-		x = X - width / 2;
-		y = Y - height / 2;
-	}
-	
-	/**
 	 * Shortcut for setting both width and Height.
 	 * 
 	 * @param	Width	The new sprite width.
@@ -1008,6 +1002,9 @@ class FlxObject extends FlxBasic
 		for (camera in cameras)
 		{
 			drawDebugOnCamera(camera);
+			
+			if (path != null && !path.ignoreDrawDebug)
+				path.drawDebug();
 		}
 	}
 	
@@ -1176,5 +1173,18 @@ class FlxObject extends FlxBasic
 	private function set_allowCollisions(Value:Int):Int 
 	{
 		return allowCollisions = Value;
+	}
+	
+	private function set_path(path:FlxPath):FlxPath
+	{
+		if (this.path == path)
+			return path;
+		
+		if (this.path != null)
+			this.path.object = null;
+		
+		if (path != null)
+			path.object = this;
+		return this.path = path;
 	}
 }

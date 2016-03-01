@@ -512,7 +512,7 @@ class FlxTween implements IFlxDestroyable
 		if (onComplete != null) 
 			onComplete(this);
 		
-		var type = type & ~ FlxTween.BACKWARD;
+		var type = type & ~FlxTween.BACKWARD;
 		
 		if (type == FlxTween.PERSIST || type == FlxTween.ONESHOT)
 		{
@@ -674,7 +674,8 @@ class FlxTween implements IFlxDestroyable
 
 typedef TweenCallback = FlxTween->Void;
 
-typedef TweenOptions = {
+typedef TweenOptions =
+{
 	?type:Null<Int>,
 	?ease:EaseFunction,
 	?onStart:TweenCallback,

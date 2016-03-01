@@ -114,7 +114,8 @@ class VarTween extends FlxTween
 	}
 }
 
-typedef VarTweenProperty = {
+typedef VarTweenProperty =
+{
 	name:String,
 	startValue:Float,
 	range:Float

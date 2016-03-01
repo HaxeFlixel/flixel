@@ -80,16 +80,17 @@ class FlxStringUtil
 		return string;
 	}
 
-	 /**
+	/**
 	 * Generate a comma-seperated string representation of the keys of a StringMap.
 	 * 
 	 * @param  AnyMap    A StringMap object.
 	 * @return  A String formatted like this: key1, key2, ..., keyX
 	 */
-	public static inline function formatStringMap(AnyMap:Map<String,Dynamic>):String
+	public static inline function formatStringMap(AnyMap:Map<String, Dynamic>):String
 	{
 		var string:String = "";
-		for (key in AnyMap.keys()) {
+		for (key in AnyMap.keys())
+		{
 			string += Std.string(key);
 			string += ", ";
 		}
@@ -181,9 +182,11 @@ class FlxStringUtil
 	public static function filterDigits(Input:String):String
 	{
 		var output = new StringBuf();
-		for (i in 0...Input.length) {
+		for (i in 0...Input.length)
+		{
 			var c = Input.charCodeAt(i);
-			if (c >= '0'.code && c <= '9'.code) {
+			if (c >= '0'.code && c <= '9'.code)
+			{
 				output.addChar(c);
 			}
 		}
@@ -249,7 +252,7 @@ class FlxStringUtil
 		var s:String = Type.getClassName(cl);
 		if (s != null)
 		{
-			s = StringTools.replace(s, "::", ".");
+			s = s.replace("::", ".");
 			if (Simple)
 			{
 				s = s.substr(s.lastIndexOf(".") + 1);
@@ -266,8 +269,8 @@ class FlxStringUtil
 		var urlStart:Int = url.indexOf("://") + 3;
 		var urlEnd:Int = url.indexOf("/", urlStart);
 		var home:String = url.substring(urlStart, urlEnd);
-		var LastDot:Int = home.lastIndexOf(".") - 1;
-		var domEnd:Int = home.lastIndexOf(".", LastDot) + 1;
+		var lastDot:Int = home.lastIndexOf(".") - 1;
+		var domEnd:Int = home.lastIndexOf(".", lastDot) + 1;
 		home = home.substring(domEnd, home.length);
 		home = home.split(":")[0];
 		return (home == "") ? "local" : home;
@@ -285,7 +288,6 @@ class FlxStringUtil
 	{
 		return (getClassName(Obj1, Simple) == getClassName(Obj2, Simple));
 	}
-	
 	
 	/**
 	 * Split a comma-separated string into an array of ints
@@ -342,11 +344,11 @@ class FlxStringUtil
 		var row:Int = 0;
 		var column:Int;
 		var csv:String = "";
-		var Height:Int = Std.int(Data.length / Width);
+		var height:Int = Std.int(Data.length / Width);
 		var index:Int;
 		var offset:Int = 0;
 		
-		while (row < Height)
+		while (row < height)
 		{
 			column = 0;
 			
@@ -379,7 +381,7 @@ class FlxStringUtil
 				}
 				else
 				{
-					csv += ", "+index;
+					csv += ", " + index;
 				}
 				
 				column++;
@@ -560,6 +562,22 @@ class FlxStringUtil
 	public static inline function contains(s:String, str:String):Bool
 	{
 		return s.indexOf(str) != -1;
+	}
+	
+	/**
+	 * Removes occurences of a substring by calling `StringTools.replace(s, sub, "")`.
+	 */
+	public static inline function remove(s:String, sub:String):String
+	{
+		return s.replace(sub, "");
+	}
+	
+	/**
+	 * Inserts `insertion` into `s` at index `pos`.
+	 */
+	public static inline function insert(s:String, pos:Int, insertion:String):String
+	{
+		return s.substring(0, pos) + insertion + s.substr(pos);
 	}
 	
 	public static function sortAlphabetically(list:Array<String>):Array<String>
