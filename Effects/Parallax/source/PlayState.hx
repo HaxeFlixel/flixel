@@ -3,6 +3,7 @@ package;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
+import flixel.input.keyboard.FlxKey;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.text.FlxText;
 import flixel.tile.FlxTileblock;
@@ -16,11 +17,16 @@ import openfl.geom.ColorTransform;
 
 class PlayState extends FlxState
 {
-	private inline static var  GUY_SPEED:Int = 100;	// how fast we want our guy to move
+	private static var MOVE_LEFT_KEYS = [FlxKey.LEFT, FlxKey.A];	 // prealocatd array for good memory management
+	private static var MOVE_RIGHT_KEYS = [FlxKey.RIGHT, FlxKey.D]; // prealocatd array for good memory management
+	private inline static var GUY_SPEED = 100;	 // how fast we want our guy to move
+	
 	private var _guy:FlxSprite;	// this is our 'guy' the player will move around
 	private var _baseY:Float;	// this is the starting Y position of our guy, we will use this to make the guy float up and down
 	private var _flakes:FlxTypedGroup<Flake>; // a group of flakes
 	private var _vPad:FlxVirtualPad;
+	
+	
 	
 	override public function create():Void
 	{
@@ -141,8 +147,8 @@ class PlayState extends FlxState
 		_left = _vPad.buttonLeft.pressed;
 		_right = _vPad.buttonRight.pressed;
 		#else
-		_left = FlxG.keys.anyPressed([LEFT, A]);
-		_right = FlxG.keys.anyPressed([RIGHT, D]);
+		_left = FlxG.keys.anyPressed(MOVE_LEFT_KEYS);
+		_right = FlxG.keys.anyPressed(MOVE_RIGHT_KEYS);
 		#end
 		if (_left && _right)
 			_left = _right = false;

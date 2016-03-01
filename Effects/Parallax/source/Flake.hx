@@ -14,14 +14,15 @@ class Flake extends FlxSprite
 	{
 		super();
 		_level = Level;
+		var size = Std.int(FlxMath.bound(_level / 2, 1, 2));
+		var color = FlxColor.WHITE.getDarkened(.5 - (_level * .06));
+		makeGraphic(size, size, color);
 		revive();
 		_initialized = true;
 	}
 	
 	override public function revive():Void 
 	{
-		var size:Int = Std.int(FlxMath.bound(_level / 2, 1, 2));
-		makeGraphic(size, size, FlxColor.WHITE.getDarkened(.5 - (_level * .06)));
 		super.revive();
 		alpha = 1;
 		if (_initialized)
