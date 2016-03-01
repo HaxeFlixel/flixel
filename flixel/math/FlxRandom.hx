@@ -73,7 +73,6 @@ class FlxRandom
 		else
 		{
 			// Swap values if reversed
-			
 			if (Min > Max)
 			{
 				Min = Min + Max;
@@ -279,7 +278,6 @@ class FlxRandom
 			EndIndex = Std.int(FlxMath.bound(EndIndex, 0, Objects.length - 1));
 			
 			// Swap values if reversed
-			
 			if (EndIndex < StartIndex)
 			{
 				StartIndex = StartIndex + EndIndex;
