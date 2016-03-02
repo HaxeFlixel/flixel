@@ -827,7 +827,7 @@ class FlxAnimationController implements IFlxDestroyable
 	
 	private inline function set_finished(Value:Bool):Bool
 	{
-		if (Value == true && _curAnim != null)
+		if (Value && _curAnim != null)
 		{
 			_curAnim.finish();
 		}

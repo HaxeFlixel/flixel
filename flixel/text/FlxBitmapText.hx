@@ -793,7 +793,7 @@ class FlxBitmapText extends FlxSprite
 					words.push(word);
 					words.push('-');
 				}
-				else if (isSpaceWord == false)
+				else if (!isSpaceWord)
 				{
 					charUtf8 = new Utf8();
 					charUtf8.addChar(charCode);

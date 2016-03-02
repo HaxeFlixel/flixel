@@ -137,6 +137,9 @@
 		},
 		{
 			"type": "RightCurly"
+		},
+		{
+			"type": "SimplifyBooleanExpression"
 		}
 	]
 }
