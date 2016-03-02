@@ -560,7 +560,7 @@ class FlxG
 		renderMethod = BLITTING;
 		
 		#if (!lime_legacy && !flash)
-			if (Lib.application.config.windows[0].hardware == false)
+			if (!Lib.application.config.windows[0].hardware)
 			{
 				renderMethod = BLITTING;
 			}
