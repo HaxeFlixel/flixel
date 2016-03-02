@@ -456,7 +456,7 @@ class FlxTween implements IFlxDestroyable
 		{
 			scale = 1 - scale;
 		}
-		if (_secondsSinceStart > delay && _running == false)
+		if (_secondsSinceStart > delay && !_running)
 		{
 			_running = true;
 			if (onStart != null) 

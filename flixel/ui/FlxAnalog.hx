@@ -222,7 +222,7 @@ class FlxAnalog extends FlxSpriteGroup
 					{
 						// Check whether the pointer is already taken by another analog.
 						// TODO: check this place. This line was 'if (analog != this && analog._currentTouch != touch && touchInserted == false)'
-						if (analog == this && analog._currentTouch != touch && touchInserted == false) 
+						if (analog == this && analog._currentTouch != touch && !touchInserted) 
 						{		
 							_tempTouches.push(touch);
 							touchInserted = true;
@@ -235,7 +235,7 @@ class FlxAnalog extends FlxSpriteGroup
 			{
 				_point = touch.getWorldPosition(FlxG.camera, _point);
 				
-				if (updateAnalog(_point, touch.pressed, touch.justPressed, touch.justReleased, touch) == false)
+				if (!updateAnalog(_point, touch.pressed, touch.justPressed, touch.justReleased, touch))
 				{
 					offAll = false;
 					break;
@@ -244,7 +244,7 @@ class FlxAnalog extends FlxSpriteGroup
 		#elseif !FLX_NO_MOUSE
 			_point.set(FlxG.mouse.screenX, FlxG.mouse.screenY);
 			
-			if (updateAnalog(_point, FlxG.mouse.pressed, FlxG.mouse.justPressed, FlxG.mouse.justReleased) == false)
+			if (!updateAnalog(_point, FlxG.mouse.pressed, FlxG.mouse.justPressed, FlxG.mouse.justReleased))
 			{
 				offAll = false;
 			}

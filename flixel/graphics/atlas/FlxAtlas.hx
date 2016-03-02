@@ -167,7 +167,7 @@ class FlxAtlas implements IFlxDestroyable
 			return null;
 		}
 		
-		if (hasNodeWithName(key) == true)
+		if (hasNodeWithName(key))
 			return nodes.get(key);
 		
 		var data:BitmapData = FlxAssets.resolveBitmapData(Graphic);
@@ -592,7 +592,7 @@ class FlxAtlas implements IFlxDestroyable
 		
 		key = FlxG.bitmap.getKeyWithSpacesAndBorders(key, tileSize, tileSpacing, tileBorder, region);
 		
-		if (hasNodeWithName(key) == true)
+		if (hasNodeWithName(key))
 			return nodes.get(key).getTileFrames(tileSize, tileSpacing, tileBorder);
 		
 		var data:BitmapData = FlxAssets.resolveBitmapData(Graphic);
@@ -1061,7 +1061,7 @@ class FlxAtlas implements IFlxDestroyable
 	
 	private function set_powerOfTwo(value:Bool):Bool
 	{
-		if (value != powerOfTwo && value == true)
+		if (value != powerOfTwo && value)
 		{
 			var nextWidth:Int = getNextPowerOfTwo(root.width);
 			var nextHeight:Int = getNextPowerOfTwo(root.height);
