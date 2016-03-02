@@ -11,9 +11,13 @@ import openfl.geom.Matrix;
  */
 class FlxPoint implements IFlxPooled
 {
-	public static var pool(get, never):IFlxPool<FlxPoint>;
-	
-	private static var _pool = new FlxPool<FlxPoint>(FlxPoint);
+	/**
+	 * Pooling mechanism to minimimze runtime allocations.
+	 * 
+	 * TODO: We need more evidence to decide whether liberal use of pooled objects
+	 *       is worthwhile, or whether static vars are a better alternative. - gamedevsam
+	 */
+	public static var pool(default, never):FlxPool<FlxPoint>;
 	
 	/**
 	 * Recycle or create a new FlxPoint. 
@@ -25,7 +29,21 @@ class FlxPoint implements IFlxPooled
 	 */
 	public static inline function get(X:Float = 0, Y:Float = 0):FlxPoint
 	{
-		var point = _pool.get().set(X, Y);
+		var point = pool.get().set(X, Y);
+		point._inPool = false;
+		return point;
+	}
+	
+	/**
+	 * Recycle or create a new FlxPoint and copies the values from the specified point. 
+	 * Be sure to put() them back into the pool after you're done with them!
+	 * 
+	 * @param	point	Any FlxPoint.
+	 * @return	This point.
+	 */
+	public static inline function getFrom(point:FlxPoint):FlxPoint
+	{
+		var point = pool.get().copyFrom(point);
 		point._inPool = false;
 		return point;
 	}
@@ -58,7 +76,7 @@ class FlxPoint implements IFlxPooled
 	}
 	
 	/**
-	 * Add this FlxPoint to the recycling pool.
+	 * Add this point to the recycling pool.
 	 */
 	public function put():Void
 	{
@@ -66,7 +84,7 @@ class FlxPoint implements IFlxPooled
 		{
 			_inPool = true;
 			_weak = false;
-			_pool.putUnsafe(this);
+			pool.putUnsafe(this);
 		}
 	}
 	
@@ -272,12 +290,11 @@ class FlxPoint implements IFlxPooled
 	 * @param 	AnotherPoint	A FlxPoint object to calculate the distance to.
 	 * @return	The distance between the two points as a Float.
 	 */
-	public function distanceTo(point:FlxPoint):Float
+	public inline function distanceTo(point:FlxPoint):Float
 	{
-		var dx:Float = x - point.x;
-		var dy:Float = y - point.y;
+		var length = FlxMath.vectorLength(x - point.x, y - point.y);
 		point.putWeak();
-		return FlxMath.vectorLength(dx, dy);
+		return length;
 	}
 	
 	/**
@@ -429,11 +446,6 @@ class FlxPoint implements IFlxPooled
 	private function set_y(Value:Float):Float
 	{
 		return y = Value; 
-	}
-	
-	private static function get_pool():IFlxPool<FlxPoint>
-	{
-		return _pool;
 	}
 }
 
