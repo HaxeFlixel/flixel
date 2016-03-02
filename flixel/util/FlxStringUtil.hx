@@ -623,6 +623,7 @@ class LabelValuePair implements IFlxDestroyable
 		label = null;
 		value = null;
 	}
-	
+
+	@:keep
 	private function new() {}
 }
