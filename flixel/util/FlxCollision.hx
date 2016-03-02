@@ -217,7 +217,8 @@ class FlxCollision
 	public static function pixelPerfectPointCheck(PointX:Int, PointY:Int, Target:FlxSprite, AlphaTolerance:Int = 1):Bool
 	{
 		// Intersect check
-		if (FlxMath.pointInCoordinates(PointX, PointY, Math.floor(Target.x), Math.floor(Target.y), Std.int(Target.width), Std.int(Target.height)) == false)
+		if (!FlxMath.pointInCoordinates(PointX, PointY, Math.floor(Target.x),
+			Math.floor(Target.y), Std.int(Target.width), Std.int(Target.height)))
 		{
 			return false;
 		}
