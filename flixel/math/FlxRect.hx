@@ -11,7 +11,7 @@ import flixel.util.FlxStringUtil;
 class FlxRect implements IFlxPooled
 {
 	public static var pool(get, never):IFlxPool<FlxRect>;
-	
+
 	private static var _pool = new FlxPool<FlxRect>(FlxRect);
 	
 	/**
@@ -66,6 +66,10 @@ class FlxRect implements IFlxPooled
 	 */
 	public var isEmpty(get, null):Bool;
 	
+	private var _x0:Float;
+	private var _x1:Float;
+	private var _y0:Float;
+	private var _y1:Float;
 	private var _weak:Bool = false;
 	private var _inPool:Bool = false;
 	
@@ -248,13 +252,13 @@ class FlxRect implements IFlxPooled
 	 */
 	public inline function union(Rect:FlxRect):FlxRect
 	{
-		var minX:Float = Math.min(x, Rect.x);
-		var minY:Float = Math.min(y, Rect.y);
-		var maxX:Float = Math.max(right, Rect.right);
-		var maxY:Float = Math.max(bottom, Rect.bottom);
+		_x0 = Math.min(x, Rect.x);
+		_y0 = Math.min(y, Rect.y);
+		_x1 = Math.max(right, Rect.right);
+		_y1 = Math.max(bottom, Rect.bottom);
 		
 		Rect.putWeak();
-		return set(minX, minY, maxX - minX, maxY - minY);
+		return set(_x0, _y0, _x1 - _x0, _y1 - _y0);
 	}
 	
 	/**
@@ -302,15 +306,15 @@ class FlxRect implements IFlxPooled
 	 */
 	public inline function fromTwoPoints(Point1:FlxPoint, Point2:FlxPoint):FlxRect
 	{
-		var minX:Float = Math.min(Point1.x, Point2.x);
-		var minY:Float = Math.min(Point1.y, Point2.y);
+		_x0 = Math.min(Point1.x, Point2.x);
+		_y0 = Math.min(Point1.y, Point2.y);
 		
-		var maxX:Float = Math.max(Point1.x, Point2.x);
-		var maxY:Float = Math.max(Point1.y, Point2.y);
+		_x1 = Math.max(Point1.x, Point2.x);
+		_y1 = Math.max(Point1.y, Point2.y);
 		
 		Point1.putWeak();
 		Point2.putWeak();
-		return this.set(minX, minY, maxX - minX, maxY - minY);
+		return this.set(_x0, _y0, _x1 - _x0, _y1 - _y0);
 	}
 	
 	/**
@@ -322,13 +326,13 @@ class FlxRect implements IFlxPooled
 	 */
 	public inline function unionWithPoint(Point:FlxPoint):FlxRect
 	{
-		var minX:Float = Math.min(x, Point.x);
-		var minY:Float = Math.min(y, Point.y);
-		var maxX:Float = Math.max(right, Point.x);
-		var maxY:Float = Math.max(bottom, Point.y);
+		_x0 = Math.min(x, Point.x);
+		_y0 = Math.min(y, Point.y);
+		_x1 = Math.max(right, Point.x);
+		_y1 = Math.max(bottom, Point.y);
 		
 		Point.putWeak();
-		return set(minX, minY, maxX - minX, maxY - minY);
+		return set(_x0, _y0, _x1 - _x0, _y1 - _y0);
 	}
 	
 	public inline function offset(dx:Float, dy:Float):FlxRect
@@ -367,26 +371,29 @@ class FlxRect implements IFlxPooled
 	 * @param	rect	Rectangle to check intersection againist.
 	 * @return	The area of intersection of two rectangles.
 	 */
-	public function intersection(rect:FlxRect):FlxRect
+	public function intersection(rect:FlxRect, ?result:FlxRect):FlxRect
 	{
-		var x0:Float = x < rect.x ? rect.x : x;
-		var x1:Float = right > rect.right ? rect.right : right;
-		if (x1 <= x0) 
+		if(result == null)
+			result = FlxRect.get();
+		
+		_x0 = x < rect.x ? rect.x : x;
+		_x1 = right > rect.right ? rect.right : right;
+		if (_x1 <= _x0) 
 		{	
 			rect.putWeak();
-			return FlxRect.get(0, 0, 0, 0);
+			return result;
 		}
 		
-		var y0:Float = y < rect.y ? rect.y : y;
-		var y1:Float = bottom > rect.bottom ? rect.bottom : bottom;
-		if (y1 <= y0) 
+		_y0 = y < rect.y ? rect.y : y;
+		_y1 = bottom > rect.bottom ? rect.bottom : bottom;
+		if (_y1 <= _y0) 
 		{	
 			rect.putWeak();
-			return FlxRect.get(0, 0, 0, 0);
+			return result;
 		}
 		
 		rect.putWeak();
-		return FlxRect.get(x0, y0, x1 - x0, y1 - y0);
+		return result.set(_x0, _y0, _x1 - _x0, _y1 - _y0);
 	}
 	
 	/**

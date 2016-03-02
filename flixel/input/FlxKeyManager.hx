@@ -195,8 +195,8 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 	
 	private function new(keyListClass:Class<FlxBaseKeyList>)
 	{
-		FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
+		FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 		
 		pressed = cast Type.createInstance(keyListClass, [FlxInputState.PRESSED, this]);
 		justPressed = cast Type.createInstance(keyListClass, [FlxInputState.JUST_PRESSED, this]);

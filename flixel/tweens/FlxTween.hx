@@ -17,6 +17,7 @@ import flixel.tweens.motion.QuadPath;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
+import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 
 class FlxTween implements IFlxDestroyable
@@ -370,6 +371,7 @@ class FlxTween implements IFlxDestroyable
 	public var loopDelay(default, set):Float = 0;
 	
 	private var _secondsSinceStart:Float = 0;
+	private var _cachedDelay:Float = 0;
 	private var _delayToUse:Float = 0;
 	private var _running:Bool = false;
 	private var _waitingForRestart:Bool = false;
@@ -442,12 +444,12 @@ class FlxTween implements IFlxDestroyable
 	private function update(elapsed:Float):Void
 	{
 		_secondsSinceStart += elapsed;
-		var delay:Float = (executions > 0) ? loopDelay : startDelay;
-		if (_secondsSinceStart < delay)
+		_cachedDelay = (executions > 0) ? loopDelay : startDelay;
+		if (_secondsSinceStart < _cachedDelay)
 		{
 			return;
 		}
-		scale = Math.max((_secondsSinceStart - delay), 0) / duration;
+		scale = Math.max((_secondsSinceStart - _cachedDelay), 0) / duration;
 		if (ease != null)
 		{
 			scale = ease(scale);
@@ -456,13 +458,13 @@ class FlxTween implements IFlxDestroyable
 		{
 			scale = 1 - scale;
 		}
-		if (_secondsSinceStart > delay && _running == false)
+		if (_secondsSinceStart > _cachedDelay && _running == false)
 		{
 			_running = true;
 			if (onStart != null) 
 				onStart(this);
 		}
-		if (_secondsSinceStart >= duration + delay)
+		if (_secondsSinceStart >= duration + _cachedDelay)
 		{
 			scale = (backward) ? 0 : 1;
 			finished = true;
@@ -614,24 +616,24 @@ class FlxTween implements IFlxDestroyable
 	
 	private function set_startDelay(value:Float):Float
 	{
-		var dly:Float = Math.abs(value);
+		_cachedDelay = Math.abs(value);
 		if (executions == 0)
 		{
-			_secondsSinceStart = duration * percent + Math.max((dly - startDelay), 0);
-			_delayToUse = dly;
+			_secondsSinceStart = duration * percent + Math.max((_cachedDelay - startDelay), 0);
+			_delayToUse = _cachedDelay;
 		}
-		return startDelay = dly;
+		return startDelay = _cachedDelay;
 	}
 	
 	private function set_loopDelay(value:Null<Float>):Float
 	{
-		var dly:Float = Math.abs(value);
+		_cachedDelay = Math.abs(value);
 		if (executions > 0)
 		{
-			_secondsSinceStart = duration * percent + Math.max((dly - loopDelay), 0);
-			_delayToUse = dly;
+			_secondsSinceStart = duration * percent + Math.max((_cachedDelay - loopDelay), 0);
+			_delayToUse = _cachedDelay;
 		}
-		return loopDelay = dly;
+		return loopDelay = _cachedDelay;
 	}
 	
 	private inline function get_percent():Float 

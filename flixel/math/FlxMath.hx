@@ -44,6 +44,11 @@ class FlxMath
 	 */
 	public static inline var EPSILON:Float = 0.0000001;
 	
+	private static var _cachedX:Float = 0;
+	private static var _cachedY:Float = 0;
+	private static var _cachedInt:Int = 0;
+	private static var _cachedFloat:Float = 0;
+	
 	/**
 	 * Round a decimal number to have reduced precision (less decimal numbers).
 	 * Ex: roundDecimal(1.2485, 2) -> 1.25
@@ -54,12 +59,12 @@ class FlxMath
 	 */
 	public static function roundDecimal(Value:Float, Precision:Int):Float
 	{
-		var mult:Float = 1;
+		_cachedFloat = 1;
 		for (i in 0...Precision)
 		{
-			mult *= 10;
+			_cachedFloat *= 10;
 		}
-		return Math.round(Value * mult) / mult;
+		return Math.round(Value * _cachedFloat) / _cachedFloat;
 	}
 	
 	/**
@@ -72,10 +77,11 @@ class FlxMath
 	 * @param	Max		Any number.
 	 * @return	The bounded value of the number.
 	 */
-	public static inline function bound(Value:Float, ?Min:Float, ?Max:Float):Float
+	public static function bound(Value:Float, ?Min:Float, ?Max:Float):Float
 	{
-		var lowerBound:Float = (Min != null && Value < Min) ? Min : Value;
-		return (Max != null && lowerBound > Max) ? Max : lowerBound;
+		if(Min != null && Value < Min) Value = Min;
+		if(Max != null && Value > Max) Value = Max;
+		return Value;
 	}
 	
 	/**
@@ -260,12 +266,12 @@ class FlxMath
 	 */
 	public static function wrap(value:Int, min:Int, max:Int):Int
 	{
-		var range:Int = max - min + 1;
+		_cachedInt = max - min + 1;
 
 		if (value < min)
-			value += range * Std.int((min - value) / range + 1);
+			value += _cachedInt * Std.int((min - value) / _cachedInt + 1);
 
-		return min + (value - min) % range;
+		return min + (value - min) % _cachedInt;
 	}
 
 	/**
@@ -303,9 +309,9 @@ class FlxMath
 	 * 
 	 * @return The length
 	 */
-	public static inline function vectorLength(dx:Float, dy:Float):Float
+	public static inline function vectorLength(x:Float, y:Float):Float
 	{
-		return Math.sqrt(dx * dx + dy * dy);
+		return Math.sqrt(x * x + y * y);
 	}
 
 	/**
@@ -317,9 +323,9 @@ class FlxMath
 	 */
 	public static inline function distanceBetween(SpriteA:FlxSprite, SpriteB:FlxSprite):Int
 	{
-		var dx:Float = (SpriteA.x + SpriteA.origin.x) - (SpriteB.x + SpriteB.origin.x);
-		var dy:Float = (SpriteA.y + SpriteA.origin.y) - (SpriteB.y + SpriteB.origin.y);
-		return Std.int(FlxMath.vectorLength(dx, dy));
+		_cachedX = (SpriteA.x + SpriteA.origin.x) - (SpriteB.x + SpriteB.origin.x);
+		_cachedY = (SpriteA.y + SpriteA.origin.y) - (SpriteB.y + SpriteB.origin.y);
+		return Std.int(FlxMath.vectorLength(_cachedX, _cachedY));
 	}
 	
 	/**
@@ -334,13 +340,13 @@ class FlxMath
 	 */
 	public static inline function isDistanceWithin(SpriteA:FlxSprite, SpriteB:FlxSprite, Distance:Float, IncludeEqual:Bool = false):Bool
 	{
-		var dx:Float = (SpriteA.x + SpriteA.origin.x) - (SpriteB.x + SpriteB.origin.x);
-		var dy:Float = (SpriteA.y + SpriteA.origin.y) - (SpriteB.y + SpriteB.origin.y);
+		_cachedX = (SpriteA.x + SpriteA.origin.x) - (SpriteB.x + SpriteB.origin.x);
+		_cachedY = (SpriteA.y + SpriteA.origin.y) - (SpriteB.y + SpriteB.origin.y);
 		
 		if (IncludeEqual)
-			return dx * dx + dy * dy <= Distance * Distance;
+			return _cachedX * _cachedX + _cachedY * _cachedY <= Distance * Distance;
 		else
-			return dx * dx + dy * dy < Distance * Distance;
+			return _cachedX * _cachedX + _cachedY * _cachedY < Distance * Distance;
 	}
 	
 	/**
@@ -353,10 +359,10 @@ class FlxMath
 	 */
 	public static inline function distanceToPoint(Sprite:FlxSprite, Target:FlxPoint):Int
 	{
-		var dx:Float = (Sprite.x + Sprite.origin.x) - Target.x;
-		var dy:Float = (Sprite.y + Sprite.origin.y) - Target.y;
+		_cachedX = (Sprite.x + Sprite.origin.x) - Target.x;
+		_cachedY = (Sprite.y + Sprite.origin.y) - Target.y;
 		Target.putWeak();
-		return Std.int(FlxMath.vectorLength(dx, dy));
+		return Std.int(FlxMath.vectorLength(_cachedX, _cachedY));
 	}
 	
 	/**
@@ -372,15 +378,15 @@ class FlxMath
 	 */
 	public static inline function isDistanceToPointWithin(Sprite:FlxSprite, Target:FlxPoint, Distance:Float, IncludeEqual:Bool = false):Bool
 	{
-		var dx:Float = (Sprite.x + Sprite.origin.x) - (Target.x);
-		var dy:Float = (Sprite.y + Sprite.origin.y) - (Target.y);
+		_cachedX = (Sprite.x + Sprite.origin.x) - (Target.x);
+		_cachedY = (Sprite.y + Sprite.origin.y) - (Target.y);
 		
 		Target.putWeak();
 		
 		if (IncludeEqual)
-			return dx * dx + dy * dy <= Distance * Distance;
+			return _cachedX * _cachedX + _cachedY * _cachedY <= Distance * Distance;
 		else
-			return dx * dx + dy * dy < Distance * Distance;
+			return _cachedX * _cachedX + _cachedY * _cachedY < Distance * Distance;
 	}
 	
 	#if !FLX_NO_MOUSE
@@ -392,9 +398,9 @@ class FlxMath
 	 */
 	public static inline function distanceToMouse(Sprite:FlxSprite):Int
 	{
-		var dx:Float = (Sprite.x + Sprite.origin.x) - FlxG.mouse.screenX;
-		var dy:Float = (Sprite.y + Sprite.origin.y) - FlxG.mouse.screenY;
-		return Std.int(FlxMath.vectorLength(dx, dy));
+		_cachedX = (Sprite.x + Sprite.origin.x) - FlxG.mouse.screenX;
+		_cachedY = (Sprite.y + Sprite.origin.y) - FlxG.mouse.screenY;
+		return Std.int(FlxMath.vectorLength(_cachedX, _cachedY));
 	}
 	
 	/**
@@ -408,13 +414,13 @@ class FlxMath
 	 */
 	public static inline function isDistanceToMouseWithin(Sprite:FlxSprite, Distance:Float, IncludeEqual:Bool = false):Bool
 	{
-		var dx:Float = (Sprite.x + Sprite.origin.x) - FlxG.mouse.screenX;
-		var dy:Float = (Sprite.y + Sprite.origin.y) - FlxG.mouse.screenY;
+		_cachedX = (Sprite.x + Sprite.origin.x) - FlxG.mouse.screenX;
+		_cachedY = (Sprite.y + Sprite.origin.y) - FlxG.mouse.screenY;
 		
 		if (IncludeEqual)
-			return dx * dx + dy * dy <= Distance * Distance;
+			return _cachedX * _cachedX + _cachedY * _cachedY <= Distance * Distance;
 		else
-			return dx * dx + dy * dy < Distance * Distance;
+			return _cachedX * _cachedX + _cachedY * _cachedY < Distance * Distance;
 	}
 	#end
 	
@@ -428,9 +434,9 @@ class FlxMath
 	 */
 	public static inline function distanceToTouch(Sprite:FlxSprite, Touch:FlxTouch):Int
 	{
-		var dx:Float = (Sprite.x + Sprite.origin.x) - Touch.screenX;
-		var dy:Float = (Sprite.y + Sprite.origin.y) - Touch.screenY;
-		return Std.int(FlxMath.vectorLength(dx, dy));
+		_cachedX = (Sprite.x + Sprite.origin.x) - Touch.screenX;
+		_cachedY = (Sprite.y + Sprite.origin.y) - Touch.screenY;
+		return Std.int(FlxMath.vectorLength(_cachedX, _cachedY));
 	}
 	
 	/**
@@ -444,13 +450,13 @@ class FlxMath
 	 */
 	public static inline function isDistanceToTouchWithin(Sprite:FlxSprite, Touch:FlxTouch, Distance:Float, IncludeEqual:Bool = false):Bool
 	{
-		var dx:Float = (Sprite.x + Sprite.origin.x) - Touch.screenX;
-		var dy:Float = (Sprite.y + Sprite.origin.y) - Touch.screenY;
+		_cachedX = (Sprite.x + Sprite.origin.x) - Touch.screenX;
+		_cachedY = (Sprite.y + Sprite.origin.y) - Touch.screenY;
 		
 		if (IncludeEqual)
-			return dx * dx + dy * dy <= Distance * Distance;
+			return _cachedX * _cachedX + _cachedY * _cachedY <= Distance * Distance;
 		else
-			return dx * dx + dy * dy < Distance * Distance;
+			return _cachedX * _cachedX + _cachedY * _cachedY < Distance * Distance;
 	}
 	#end
 	
@@ -463,14 +469,13 @@ class FlxMath
 	public static function getDecimals(Number:Float):Int
 	{
 		var helperArray:Array<String> = Std.string(Number).split(".");
-		var decimals:Int = 0;
 		
 		if (helperArray.length > 1)
 		{
-			decimals = helperArray[1].length;
+			return helperArray[1].length;
 		}
 		
-		return decimals;
+		return 0;
 	}
 	
 	public static inline function equal(aValueA:Float, aValueB:Float, aDiff:Float = EPSILON):Bool

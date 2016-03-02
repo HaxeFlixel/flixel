@@ -285,6 +285,10 @@ class FlxCamera extends FlxBasic
 	 */
 	private var _point:FlxPoint = FlxPoint.get();
 	/**
+	 * Internal, to help avoid costly allocations.
+	 */
+	private var _cachedFloat:Float = 0;
+	/**
 	 * Internal, the filters array to be applied to the camera.
 	 */
 	private var _filters:Array<BitmapFilter>;
@@ -789,8 +793,6 @@ class FlxCamera extends FlxBasic
 		updateFade(elapsed);
 		updateShake(elapsed);
 		
-		flashSprite.filters = filtersEnabled ? _filters : null;
-		
 		updateFlashSpritePosition();
 	}
 	
@@ -799,9 +801,8 @@ class FlxCamera extends FlxBasic
 	 */
 	public function updateScroll():Void
 	{
-		//Make sure we didn't go outside the camera's bounds
-		scroll.x = FlxMath.bound(scroll.x, minScrollX, (maxScrollX != null) ? maxScrollX - width : null);
-		scroll.y = FlxMath.bound(scroll.y, minScrollY, (maxScrollY != null) ? maxScrollY - height : null);
+		scroll._x = FlxMath.bound(scroll.x, minScrollX, maxScrollX);
+		scroll._y = FlxMath.bound(scroll.y, minScrollY, minScrollY);
 	}
 	
 	public function updateFollow():Void
@@ -966,8 +967,9 @@ class FlxCamera extends FlxBasic
 	{
 		if (flashSprite != null)
 		{
-			flashSprite.x = x * FlxG.scaleMode.scale.x + _flashOffset.x;
-			flashSprite.y = y * FlxG.scaleMode.scale.y + _flashOffset.y;
+			var scale = FlxG.scaleMode.scale;
+			flashSprite.x = x * scale.x + _flashOffset.x;
+			flashSprite.y = y * scale.y + _flashOffset.y;
 		}
 	}
 	
@@ -1198,6 +1200,7 @@ class FlxCamera extends FlxBasic
 	public function setFilters(filters:Array<BitmapFilter>):Void
 	{
 		_filters = filters;
+		flashSprite.filters = filtersEnabled ? _filters : null;
 	}
 	
 	/**
@@ -1256,10 +1259,8 @@ class FlxCamera extends FlxBasic
 			{
 				return;
 			}
-			// This is temporal fix for camera's color
+			
 			var targetGraphics:Graphics = (graphics == null) ? canvas.graphics : graphics;
-			Color = Color.to24Bit();
-			// end of fix
 			
 			targetGraphics.beginFill(Color, FxAlpha);
 			// i'm drawing rect with these parameters to avoid light lines at the top and left of the camera,
