@@ -16,7 +16,8 @@ class FlxVector extends FlxPoint
 	 * TODO: We need more evidence to decide whether liberal use of pooled objects
 	 *       is worthwhile, or whether static vars are a better alternative. - gamedevsam
 	 */
-	public static var pool(default, never):FlxPool<FlxVector> = new FlxPool<FlxVector>(FlxVector);
+	public static var pool(get, never):FlxPool<FlxVector>;
+	private static var _pool = new FlxPool<FlxVector>(FlxVector);
 	
 	private static var _vector1:FlxVector = new FlxVector();
 	private static var _vector2:FlxVector = new FlxVector();
@@ -678,14 +679,26 @@ class FlxVector extends FlxPoint
 	}
 	
 	/**
-	 * Inline set, allowing FlxVectors to bypass overhead of FlxCallbackPoint.
+	 * Inline set, allowing FlxVector to bypass function call overhead of FlxPoint
 	 */
 	override private inline function set_x(Value:Float):Float 
 	{ 
 		return x = Value;
 	}
+	
+	/**
+	 * Inline set, allowing FlxVector to bypass function call overhead of FlxPoint
+	 */
 	override private inline function set_y(Value:Float):Float
 	{
 		return y = Value; 
+	}
+	
+	/**
+	 * Necessary for object pooling.
+	 */
+	private static inline function get_pool():FlxPool<FlxVector>		
+	{		
+		return _pool;		
 	}
 }

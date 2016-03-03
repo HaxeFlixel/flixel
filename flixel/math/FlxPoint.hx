@@ -17,7 +17,8 @@ class FlxPoint implements IFlxPooled
 	 * TODO: We need more evidence to decide whether liberal use of pooled objects
 	 *       is worthwhile, or whether static vars are a better alternative. - gamedevsam
 	 */
-	public static var pool(default, never):FlxPool<FlxPoint>;
+	public static var pool(get, never):FlxPool<FlxPoint>;
+	private static var _pool = new FlxPool<FlxPoint>(FlxPoint);
 	
 	/**
 	 * Recycle or create a new FlxPoint. 
@@ -446,6 +447,14 @@ class FlxPoint implements IFlxPooled
 	private function set_y(Value:Float):Float
 	{
 		return y = Value; 
+	}
+	
+	/**
+	 * Necessary for object pooling.
+	 */
+	private static inline function get_pool():FlxPool<FlxPoint>		
+	{		
+		return _pool;	
 	}
 }
 
