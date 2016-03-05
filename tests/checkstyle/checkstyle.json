@@ -2,7 +2,7 @@
 	"defaultSeverity": "WARNING",
 	"checks": [
 		{
-			"type": "ModiferOrder",
+			"type": "ModifierOrder",
 				"props": {
 				"modifiers": [
 					"OVERRIDE",
