@@ -12,14 +12,12 @@ import flixel.util.FlxDestroyUtil.IFlxDestroyable;
  * so "jump" could be performed by a keyboard press, a mouse click,
  * or a gamepad button press.
  */
-
 class FlxActionDigital extends FlxAction
 {
 	
 	/**
 	 * Function to call when this action occurs
 	 */
-	
 	 public var callback(default, null):FlxActionDigital->Void;
 	
 	/**
@@ -27,7 +25,6 @@ class FlxActionDigital extends FlxAction
 	 * @param	Name	name of the action
 	 * @param	Callback	function to call when this action occurs
 	 */
-	
 	public function new(Name:String, ?Callback:FlxActionDigital->Void)
 	{
 		super(FlxInputType.Digital, Name);
@@ -39,7 +36,6 @@ class FlxActionDigital extends FlxAction
 	 * @param	input
 	 * @return
 	 */
-	
 	public function addInput(input:FlxActionInputDigital):FlxActionDigital
 	{
 		addGenericInput(input);
@@ -68,7 +64,6 @@ class FlxActionDigital extends FlxAction
  * FlxActions let you attach multiple inputs to a single in-game action, 
  * so "move" could be performed by a gamepad joystick, a mouse movement, etc.
  */
-
 class FlxActionAnalog extends FlxAction
 {
 	/**
@@ -168,20 +163,14 @@ class FlxAction implements IFlxDestroyable
 	private var _x:Null<Float> = null;
 	private var _y:Null<Float> = null;
 	
+	private var _timestamp:Int = 0;
+	private var _check:Bool = false;
+	
 	private function new(InputType:FlxInputType, Name:String)
 	{
 		type = InputType;
 		name = Name;
 		inputs = [];
-	}
-	
-	private function addGenericInput(input:FlxActionInput):FlxAction
-	{
-		if (false == checkExists(input))
-		{
-			inputs.push(input);
-		}
-		return this;
 	}
 	
 	public function removeInput(input:FlxActionInput, destroy:Bool=false):Void
@@ -202,7 +191,6 @@ class FlxAction implements IFlxDestroyable
 	 * See if this action has just been triggered
 	 * @return
 	 */
-	
 	public function check():Bool
 	{
 		_x = null;
@@ -244,7 +232,6 @@ class FlxAction implements IFlxDestroyable
 	/**
 	 * Check input states & fire callbacks if anything is triggered
 	 */
-	
 	public function update():Void
 	{
 		check();
@@ -261,10 +248,14 @@ class FlxAction implements IFlxDestroyable
 		return name == other.name && steamHandle == other.steamHandle;
 	}
 	
-	/*********PRIVATE***********/
-	
-	private var _timestamp:Int = 0;
-	private var _check:Bool = false;
+	private function addGenericInput(input:FlxActionInput):FlxAction
+	{
+		if (false == checkExists(input))
+		{
+			inputs.push(input);
+		}
+		return this;
+	}
 	
 	private function checkExists(input:FlxActionInput):Bool
 	{

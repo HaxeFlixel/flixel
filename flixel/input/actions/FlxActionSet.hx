@@ -16,8 +16,32 @@ import steamwrap.data.ControllerConfig.ControllerActionSet;
 @:allow(flixel.input.actions.FlxActionManager)
 class FlxActionSet implements IFlxDestroyable
 {
+	/**
+	 * Name of the action set
+	 */
+	public var name(default, null):String = "";
 	
-	/*********STATIC***********/
+	#if steamwrap
+	/**
+	 * This action set's numeric handle for the Steam API (ignored if not using Steam)
+	 */
+	public var steamHandle(default, null):Int = -1;
+	#end
+	
+	/**
+	 * Digital actions in this set
+	 */
+	public var digitalActions(default, null):Array<FlxActionDigital>;
+	
+	/**
+	 * Analog actions in this set
+	 */
+	public var analogActions(default, null):Array<FlxActionAnalog>;
+	
+	/**
+	 * Whether this action set runs when update() is called
+	 */
+	public var active:Bool = true;
 	
 	#if steamwrap
 	/**
@@ -35,7 +59,6 @@ class FlxActionSet implements IFlxDestroyable
 	 * @param	CallbackAnalog	A function to call when analog actions fire
 	 * @return	An action set
 	 */
-	
 	@:access(flixel.input.actions.FlxActionManager)
 	private static function fromSteam(SteamSet:ControllerActionSet, CallbackDigital:FlxActionDigital->Void, CallbackAnalog:FlxActionAnalog->Void):FlxActionSet
 	{
@@ -77,33 +100,6 @@ class FlxActionSet implements IFlxDestroyable
 		return "";
 	}
 	
-	/**
-	 * Name of the action set
-	 */
-	public var name(default, null):String = "";
-	
-	#if steamwrap
-	/**
-	 * This action set's numeric handle for the Steam API (ignored if not using Steam)
-	 */
-	public var steamHandle(default, null):Int = -1;
-	#end
-	
-	/**
-	 * Digital actions in this set
-	 */
-	public var digitalActions(default, null):Array<FlxActionDigital>;
-	
-	/**
-	 * Analog actions in this set
-	 */
-	public var analogActions(default, null):Array<FlxActionAnalog>;
-	
-	/**
-	 * Whether this action set runs when update() is called
-	 */
-	public var active:Bool = true;
-	
 	public function new(Name:String, DigitalActions:Array<FlxActionDigital>, AnalogActions:Array<FlxActionAnalog>)
 	{
 		name = Name;
@@ -117,7 +113,6 @@ class FlxActionSet implements IFlxDestroyable
 	 * @param	Handle	steam controller handle from FlxSteam.getConnectedControllers(), or FlxInputDeviceID.FIRST_ACTIVE / ALL
 	 * @param	Attach	true: adds inputs, false: removes inputs
 	 */
-	
 	public function attachSteamController(Handle:Int, Attach:Bool=true):Void
 	{
 		attachSteamControllerSub(Handle, Attach, FlxInputType.Digital, digitalActions, null);

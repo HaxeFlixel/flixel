@@ -22,6 +22,13 @@ abstract FlxAnalogState(Int) from Int
 
 class FlxActionInputAnalogMouseMotion extends FlxActionInputAnalog
 {
+	private var lastX:Float = 0;
+	private var lastY:Float = 0;
+	private var pixelsPerUnit:Int;
+	private var deadZone:Float;
+	private var invertX:Bool;
+	private var invertY:Bool;
+	
 	/**
 	 * Mouse input -- X/Y is the RELATIVE motion of the mouse since the last frame
 	 * @param	Trigger	What state triggers this action (MOVED, JUST_MOVED, STOPPED, JUST_STOPPED)
@@ -73,13 +80,6 @@ class FlxActionInputAnalogMouseMotion extends FlxActionInputAnalog
 		
 		super.updateVals(xDiff, yDiff);
 	}
-	
-	private var lastX:Float = 0;
-	private var lastY:Float = 0;
-	private var pixelsPerUnit:Int;
-	private var deadZone:Float;
-	private var invertX:Bool;
-	private var invertY:Bool;
 }
 
 class FlxActionInputAnalogMousePosition extends FlxActionInputAnalog
@@ -89,7 +89,6 @@ class FlxActionInputAnalogMousePosition extends FlxActionInputAnalog
 	 * @param	Trigger What state triggers this action (MOVED, JUST_MOVED, STOPPED, JUST_STOPPED)
 	 * @param	Axis which axes to monitor for triggering: X, Y, EITHER, or BOTH
 	 */
-	
 	public function new(Trigger:FlxAnalogState, Axis:FlxAnalogAxis = EITHER)
 	{
 		super(FlxInputDevice.Mouse, -1, cast Trigger, Axis);
@@ -136,7 +135,6 @@ class FlxActionInputAnalogGamepad extends FlxActionInputAnalog
 	 * @param	Axis which axes to monitor for triggering: X, Y, EITHER, or BOTH
 	 * @param	GamepadID specific gamepad ID, or FlxInputDeviceID.FIRST_ACTIVE / ALL
 	 */
-	
 	public function new(InputID:FlxGamepadInputID, Trigger:FlxAnalogState, Axis:FlxAnalogAxis = EITHER, GamepadID:Int = FlxInputDeviceID.FIRST_ACTIVE)
 	{
 		super(FlxInputDevice.Gamepad, InputID, cast Trigger, Axis, GamepadID);
@@ -199,7 +197,6 @@ class FlxActionInputAnalogSteam extends FlxActionInputAnalog
 	 * @param	Axis which axes to monitor for triggering: X, Y, EITHER, or BOTH
 	 * @param	DeviceHandle handle received from FlxSteamController.getConnectedControllers(), or FlxInputDeviceID.ALL / FlxInputDeviceID.FIRST_ACTIVE
 	 */
-	
 	@:allow(flixel.input.actions.FlxActionSet)
 	private function new(ActionHandle:Int, Trigger:FlxAnalogState, Axis:FlxAnalogAxis = EITHER, DeviceID:Int = FlxInputDeviceID.ALL)
 	{
@@ -242,6 +239,9 @@ class FlxActionInputAnalog extends FlxActionInput
 	public var xMoved(default, null):FlxInput<Int>;
 	public var yMoved(default, null):FlxInput<Int>;
 	
+	private static inline var aX = true;
+	private static inline var aY = false;
+	
 	private function new (Device:FlxInputDevice, InputID:Int, Trigger:FlxInputState, Axis:FlxAnalogAxis = EITHER, DeviceID:Int = FlxInputDeviceID.FIRST_ACTIVE)
 	{
 		super(FlxInputType.Analog, Device, InputID, Trigger, DeviceID);
@@ -282,9 +282,6 @@ class FlxActionInputAnalog extends FlxActionInput
 		
 		return returnVal;
 	}
-	
-	private static inline var aX = true;
-	private static inline var aY = false;
 	
 	private function checkAxis(isX:Bool, state:FlxInputState):Bool
 	{

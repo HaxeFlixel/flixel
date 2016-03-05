@@ -24,7 +24,8 @@ import steamwrap.api.Steam;
 @:allow(flixel.input.actions)
 class FlxSteamController
 {
-
+	private static var controllers:Array<FlxSteamControllerMetadata>;
+	
 	private static function clear()
 	{
 		#if steamwrap
@@ -197,24 +198,22 @@ class FlxSteamController
 		return -1;
 		#end
 	}
-	
-	private static var controllers:Array<FlxSteamControllerMetadata>;
 }
 
-@:noCompletion
+@:allow(flixel.input.actions)
 class FlxSteamControllerMetadata
 {
 	public var handle:Int = -1;
 	public var actionSet:Int = -1;
 	public var active:Bool = false;
 	
-	public function new():Void{}
+	private function new():Void{}
 }
 
-@:noCompletion
+@:allow(flixel.input.actions)
 class FlxSteamUpdater implements IFlxInputManager
 {
-	public function new(){};
+	private function new(){};
 	
 	public function reset():Void {}
 	

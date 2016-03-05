@@ -22,7 +22,6 @@ class FlxActionInput implements IFlxDestroyable
 	 */
 	public var deviceID:Int;
 	
-	
 	public var destroyed(default, null):Bool = false;
 	
 	/**
@@ -59,7 +58,6 @@ class FlxActionInput implements IFlxDestroyable
 	 * @param	action
 	 * @return
 	 */
-	
 	public function check(action:FlxAction):Bool
 	{
 		return false;
@@ -98,7 +96,6 @@ enum FlxInputDevice
 /**
  * Just a bucket for some handy sentinel values.
  */
-
 class FlxInputDeviceID
 {
 	/**

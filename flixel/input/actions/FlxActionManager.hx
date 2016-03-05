@@ -145,6 +145,9 @@ import steamwrap.data.ControllerConfig;
  
 class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 {
+	private var sets:Array<FlxActionSet>;
+	private var register:ActionSetRegister;
+	
 	/**
 	 * The number of registered action sets
 	 */
@@ -319,8 +322,6 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 		
 	}
 	
-	/************PRIVATE***********/
-	
 	private function addAction(Action:FlxAction, ActionSet:Int, type:FlxInputType):Bool
 	{
 		var success = false;
@@ -361,18 +362,12 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 	{
 		register.update(sets);
 	}
-	
-	private var sets:Array<FlxActionSet>;
-	private var register:ActionSetRegister;
-	
 }
 
 /**
  * internal helper class
  */
-
 @:allow(flixel.input.actions.FlxActionManager)
-@:noCompletion
 class ActionSetRegister implements IFlxDestroyable
 {
 	private function new()

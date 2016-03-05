@@ -31,7 +31,6 @@ class FlxActionInputDigitalGamepad extends FlxActionInputDigital
 	 * @param	Trigger What state triggers this action (PRESSED, JUST_PRESSED, RELEASED, JUST_RELEASED)
 	 * @param	GamepadID specific gamepad ID, or FlxInputDeviceID.ALL / FIRST_ACTIVE
 	 */
-	
 	public function new(InputID:FlxGamepadInputID, Trigger:FlxInputState, ?GamepadID:Int=FlxInputDeviceID.FIRST_ACTIVE)
 	{
 		super(FlxInputDevice.Gamepad, InputID, Trigger, GamepadID);
@@ -86,7 +85,6 @@ class FlxActionInputDigitalKeyboard extends FlxActionInputDigital
 	 * @param	Key Key identifier (FlxKey.SPACE, FlxKey.Z, etc)
 	 * @param	Trigger What state triggers this action (PRESSED, JUST_PRESSED, RELEASED, JUST_RELEASED)
 	 */
-	
 	public function new(Key:FlxKey, Trigger:FlxInputState)
 	{
 		super(FlxInputDevice.Keyboard, Key, Trigger);
@@ -114,7 +112,6 @@ class FlxActionInputDigitalMouse extends FlxActionInputDigital
 	 * @param	ButtonID Button identifier (FlxMouseButtonID.LEFT / MIDDLE / RIGHT)
 	 * @param	Trigger What state triggers this action (PRESSED, JUST_PRESSED, RELEASED, JUST_RELEASED)
 	 */
-	
 	public function new(ButtonID:FlxMouseButtonID, Trigger:FlxInputState)
 	{
 		super(FlxInputDevice.Mouse, ButtonID, Trigger);
@@ -160,7 +157,6 @@ class FlxActionInputDigitalSteam extends FlxActionInputDigital
 	 * @param	Trigger what state triggers this action (PRESSED, JUST_PRESSED, RELEASED, JUST_RELEASED)
 	 * @param	DeviceHandle handle received from FlxSteamController.getConnectedControllers(), or FlxInputDeviceID.ALL / FIRST_ACTIVE
 	 */
-	
 	@:allow(flixel.input.actions.FlxActionSet)
 	private function new(ActionHandle:Int, Trigger:FlxInputState, ?DeviceHandle:Int=FlxInputDeviceID.FIRST_ACTIVE)
 	{
@@ -206,7 +202,6 @@ class FlxActionInputDigitalSteam extends FlxActionInputDigital
 	}
 }
 
-@:noCompletion
 class FlxActionInputDigitalIFlxInput extends FlxActionInputDigital
 {
 	/**
@@ -221,7 +216,6 @@ class FlxActionInputDigitalIFlxInput extends FlxActionInputDigital
 	 * @param	Input	A generic IFlxInput object (ex: FlxButton.input)
 	 * @param	Trigger	Trigger What state triggers this action (PRESSED, JUST_PRESSED, RELEASED, JUST_RELEASED)
 	 */
-	
 	public function new(Input:IFlxInput, Trigger:FlxInputState)
 	{
 		super(FlxInputDevice.IFlxInputObject, 0, Trigger);
