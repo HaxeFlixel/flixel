@@ -66,7 +66,7 @@ class FlxSave implements IFlxDestroyable
 		{
 			_sharedObject = SharedObject.getLocal(name);
 		}
-		catch(e:Error)
+		catch (e:Error)
 		{
 			FlxG.log.error("There was a problem binding to\nthe shared object data from FlxSave.");
 			destroy();
