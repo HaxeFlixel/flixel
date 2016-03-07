@@ -5,6 +5,7 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxTilemapGraphicAsset;
+import flixel.tile.FlxTile.FlxTileFilter;
 import flixel.util.FlxArrayUtil;
 import openfl.Assets;
 using StringTools;
@@ -609,38 +610,79 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	}
 
 	/**
-	 * Adjust collision settings and/or bind a callback function to a range of tiles.
-	 * This callback function, if present, is triggered by calls to overlap() or overlapsWithCallback().
+	 * Add a new Tile Filter to this tilemap which allows you to setup specific collision and/or callback based on class.
+	 * Use `removeTileFilter` to remove the filter.
 	 * 
-	 * @param	Tile				The tile or tiles you want to adjust.
-	 * @param	AllowCollisions		Modify the tile or tiles to only allow collisions from certain directions, use FlxObject constants NONE, ANY, LEFT, RIGHT, etc. Default is "ANY".
-	 * @param	Callback			The function to trigger, e.g. lavaCallback(Tile:FlxObject, Object:FlxObject).
-	 * @param	CallbackFilter		If you only want the callback to go off for certain classes or objects based on a certain class, set that class here.
-	 * @param	Range				If you want this callback to work for a bunch of different tiles, input the range here. Default value is 1.
+	 * @param	Tile		The tile id that this filter is for, or the first tile id in a range of tiles.
+	 * @param	Filter		Specify a class for this filter to work with, defaults to `FlxObject`
+	 * @param	Collisions	Specify Collision flags to be used for this tile. Defaults to ANY
+	 * @param	Callback	The function to trigger when overlap is detected. e.g. `tileCallback(Tile:FlxObject, Object:FlxObject)`
+	 * @param	ProcessCallback	This function, if set, will be called when overlap is detected, and will return true
+	 * @param	Range		If you want this filter to be applied to a range of different tiles, input the range here. Default is 1.
 	 */
-	public function setTileProperties(Tile:Int, AllowCollisions:Int = FlxObject.ANY, ?Callback:FlxObject->FlxObject->Void, ?CallbackFilter:Class<FlxObject>, Range:Int = 1):Void
+	public function addTileFilter(Tile:Int, ?Filter:Class<FlxObject>, ?Collisions:Int = FlxObject.ANY, ?Callback:FlxTile-> FlxObject->Void, ?ProcessCallback:FlxTile-> FlxObject->Bool, ?Range:Int = 1):Void
 	{
 		if (Range <= 0)
 		{
 			Range = 1;
 		}
 		
-		var tile:Tile;
+		var tile:FlxTile;
 		var i:Int = Tile;
 		var l:Int = Tile + Range;
-		
-		var maxIndex = _tileObjects.length;
-		if (l > maxIndex) 
+		var maxIndex:Int = _tileObjects.length;
+		if (l > maxIndex)
 		{
-			throw 'Index $l exceeds the maximum tile index of $maxIndex. Please verfiy the Tile ($Tile) and Range ($Range) parameters.';
+			throw 'Index $l exeeds the maximum tile index of $maxIndex. Please verify the Tile ($Tile) and Range ($Range) parameters.';
 		}
 		
 		while (i < l)
 		{
-			tile = _tileObjects[i++];
-			tile.allowCollisions = AllowCollisions;
-			(cast tile).callbackFunction = Callback;
-			(cast tile).filter = CallbackFilter;
+			tile = cast(_tileObjects[i++]);
+			
+			if (tile.filters == null)
+			{
+				tile.filters = new Map<String, FlxTileFilter>();
+			}
+			tile.filters.set(Filter == null ? Type.getClassName(FlxObject) : Type.getClassName(Filter), new FlxTileFilter(Collisions, Callback, ProcessCallback));
+		}
+	}
+	
+	/**
+	 * This will remove the filter from one or more tiles.
+	 * 
+	 * @param	Tile	The starting tile id of the range you want to remove the filter from
+	 * @param	Filter	The Class that the filter is for.
+	 * @param	Range	How many tiles starting from Tile that should have the filter removed. Defaults to 1
+	 */
+	public function removeTileFilter(Tile:Int, Filter:Class<FlxObject>, ?Range:Int = 1):Void
+	{
+		if (Range <= 0)
+			Range = 1;
+			
+		var tile:FlxTile;
+		var i:Int = Tile;
+		var l:Int = Tile + Range;
+		var maxIndex:Int = _tileObjects.length;
+		var className:String = "";
+		if (l > maxIndex)
+		{
+			throw 'Index $l exceeds the maximum tile index of $maxIndex. Please verify the Tile ($Tile) and Range ($Range) parameters.';
+		}
+		
+		while (i < l)
+		{
+			tile = cast(_tileObjects[i++]);
+			if (tile.filters != null)
+			{
+				className = Type.getClassName(Filter);
+				if (tile.filters.exists(className))
+				{
+					tile.filters.remove(className);
+				}
+			}
+			
+			
 		}
 	}
 
