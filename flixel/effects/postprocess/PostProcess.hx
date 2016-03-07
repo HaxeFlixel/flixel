@@ -65,7 +65,7 @@ class PostProcess extends OpenGLView
 		GL.bindBuffer(GL.ARRAY_BUFFER, null);
 
 		postProcessShader = new Shader([
-			{ src: vertexShader, fragment: false },
+			{ src: VERTEX_SHADER, fragment: false },
 			{ src: Assets.getText(fragmentShader), fragment: true }
 		]);
 
@@ -249,7 +249,7 @@ class PostProcess extends OpenGLView
 	private var uniforms:Map<String, Uniform>;
 
 	/* @private Simple full screen vertex shader */
-	private static inline var vertexShader:String = "
+	private static inline var VERTEX_SHADER:String = "
 #ifdef GL_ES
 	precision mediump float;
 #endif

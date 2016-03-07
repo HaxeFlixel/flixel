@@ -30,7 +30,7 @@ class HTML5FrontEnd
 		{
 			return FIREFOX;
 		}
-		else if (untyped false || ! !document.documentMode)
+		else if (untyped false || !!document.documentMode)
 		{
 			return INTERNET_EXPLORER;
 		}
