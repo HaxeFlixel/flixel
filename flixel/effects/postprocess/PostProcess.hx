@@ -6,7 +6,11 @@ import flash.geom.Rectangle;
 import flixel.FlxG;
 import openfl.Assets;
 import openfl.display.OpenGLView;
-import openfl.gl.*;
+import openfl.gl.GL;
+import openfl.gl.GLFramebuffer;
+import openfl.gl.GLRenderbuffer;
+import openfl.gl.GLTexture;
+import openfl.gl.GLBuffer;
 import openfl.utils.Float32Array;
 
 private class Uniform
