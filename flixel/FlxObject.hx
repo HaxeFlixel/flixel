@@ -435,7 +435,7 @@ class FlxObject extends FlxBasic
 	 */
 	public var pixelPerfectPosition:Bool = true;
 	/**
-	 * Set the angle of a sprite to rotate it. WARNING: rotating sprites decreases rendering
+	 * Set the angle (in degrees) of a sprite to rotate it. WARNING: rotating sprites decreases rendering
 	 * performance for this sprite by a factor of 10x (in Flash target)!
 	 */
 	public var angle(default, set):Float = 0;
