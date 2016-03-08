@@ -1414,7 +1414,7 @@ class FlxBitmapText extends FlxSprite
 		pendingPixelsChange = false;
 	}
 	
-	private function drawText(posX:Int, posY:Int, isFront:Bool = true, bitmap:BitmapData = null, useTiles:Bool = false):Void
+	private function drawText(posX:Int, posY:Int, isFront:Bool = true, ?bitmap:BitmapData, useTiles:Bool = false):Void
 	{
 		if (FlxG.renderBlit)
 		{

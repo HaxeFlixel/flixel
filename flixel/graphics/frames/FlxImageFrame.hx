@@ -23,7 +23,7 @@ class FlxImageFrame extends FlxFramesCollection
 	 */
 	public var frame(get, null):FlxFrame;
 	
-	private function new(parent:FlxGraphic, border:FlxPoint = null)
+	private function new(parent:FlxGraphic, ?border:FlxPoint)
 	{
 		super(parent, FlxFrameCollectionType.IMAGE, border);
 	}
@@ -92,7 +92,7 @@ class FlxImageFrame extends FlxFramesCollection
 	 * @param	region	region of image to create ImageFrame for.
 	 * @return	Newly created ImageFrame object for specified region of FlxGraphic object.
 	 */
-	public static function fromGraphic(graphic:FlxGraphic, region:FlxRect = null):FlxImageFrame
+	public static function fromGraphic(graphic:FlxGraphic, ?region:FlxRect):FlxImageFrame
 	{
 		if (graphic == null)
 			return null;
@@ -140,7 +140,7 @@ class FlxImageFrame extends FlxFramesCollection
 	 * @param	region	region of image to create ImageFrame for.
 	 * @return	Newly created ImageFrame object for specified region of image.
 	 */
-	public static function fromRectangle(source:FlxGraphicAsset, region:FlxRect = null):FlxImageFrame
+	public static function fromRectangle(source:FlxGraphicAsset, ?region:FlxRect):FlxImageFrame
 	{
 		var graphic:FlxGraphic = FlxG.bitmap.add(source, false);
 		return fromGraphic(graphic, region);
@@ -156,7 +156,7 @@ class FlxImageFrame extends FlxFramesCollection
 	 * 							whole image will be used for it
 	 * @return	Newly created image frame collection
 	 */
-	public static function fromBitmapAddSpacesAndBorders(source:FlxGraphicAsset, border:FlxPoint, region:FlxRect = null):FlxImageFrame
+	public static function fromBitmapAddSpacesAndBorders(source:FlxGraphicAsset, border:FlxPoint, ?region:FlxRect):FlxImageFrame
 	{
 		var graphic:FlxGraphic = FlxG.bitmap.add(source, false);
 		if (graphic == null) return null;
@@ -197,7 +197,7 @@ class FlxImageFrame extends FlxFramesCollection
 	 * @param	frameRect	ImageFrame object should have frame with the same position and dimensions as specified with this argument.
 	 * @return	ImageFrame object which corresponds to specified rectangle. Could be null if there is no such ImageFrame.
 	 */
-	public static function findFrame(graphic:FlxGraphic, frameRect:FlxRect, frameBorder:FlxPoint = null):FlxImageFrame
+	public static function findFrame(graphic:FlxGraphic, frameRect:FlxRect, ?frameBorder:FlxPoint):FlxImageFrame
 	{
 		if (frameBorder == null)
 			frameBorder = FlxPoint.weak();

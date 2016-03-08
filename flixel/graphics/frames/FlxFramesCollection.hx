@@ -48,7 +48,7 @@ class FlxFramesCollection implements IFlxDestroyable
 	 */
 	public var border(default, null):FlxPoint;
 	
-	public function new(parent:FlxGraphic, type:FlxFrameCollectionType = null, border:FlxPoint = null)
+	public function new(parent:FlxGraphic, ?type:FlxFrameCollectionType, ?border:FlxPoint)
 	{
 		this.parent = parent;
 		this.type = type;
@@ -169,7 +169,7 @@ class FlxFramesCollection implements IFlxDestroyable
 	 * @param	flipY			if packed iamge should be vertically flipped
 	 * @return	Newly created and added frame object.
 	 */
-	public function addAtlasFrame(frame:FlxRect, sourceSize:FlxPoint, offset:FlxPoint, name:String = null, angle:FlxFrameAngle = 0, flipX:Bool = false, flipY:Bool = false):FlxFrame
+	public function addAtlasFrame(frame:FlxRect, sourceSize:FlxPoint, offset:FlxPoint, ?name:String, angle:FlxFrameAngle = 0, flipX:Bool = false, flipY:Bool = false):FlxFrame
 	{
 		if (name != null && framesHash.exists(name))
 		{
