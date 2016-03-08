@@ -17,7 +17,7 @@ import openfl.Assets;
  */
 class FlxAtlasFrames extends FlxFramesCollection
 {
-	public function new(parent:FlxGraphic, border:FlxPoint = null) 
+	public function new(parent:FlxGraphic, ?border:FlxPoint) 
 	{
 		super(parent, FlxFrameCollectionType.ATLAS, border);
 	}
@@ -414,7 +414,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 	 * @param	graphic	FlxGraphic object to find AtlasFrames collection for.
 	 * @return	AtlasFrames Collection for specified FlxGraphic object. Could be null, if FlxGraphic doesn't have it yet.
 	 */
-	public static function findFrame(graphic:FlxGraphic, border:FlxPoint = null):FlxAtlasFrames
+	public static function findFrame(graphic:FlxGraphic, ?border:FlxPoint):FlxAtlasFrames
 	{
 		if (border == null)
 			border = FlxPoint.weak();

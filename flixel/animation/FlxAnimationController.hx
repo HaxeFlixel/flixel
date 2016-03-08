@@ -629,7 +629,7 @@ class FlxAnimationController implements IFlxDestroyable
 	}
 	
 	@:allow(flixel.animation)
-	private inline function fireFinishCallback(name:String = null):Void
+	private inline function fireFinishCallback(?name:String):Void
 	{
 		if (finishCallback != null)
 		{

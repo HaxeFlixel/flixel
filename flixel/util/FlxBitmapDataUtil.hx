@@ -255,7 +255,7 @@ class FlxBitmapDataUtil
 	 * @param	rect				area to apply color replacement. Optional, uses whole image area if the rect is null
 	 * @return	Array replaced pixels positions
 	 */
-	public static function replaceColor(bitmapData:BitmapData, color:FlxColor, newColor:FlxColor, fetchPositions:Bool = false, rect:FlxRect = null):Array<FlxPoint>
+	public static function replaceColor(bitmapData:BitmapData, color:FlxColor, newColor:FlxColor, fetchPositions:Bool = false, ?rect:FlxRect):Array<FlxPoint>
 	{
 		var positions:Array<FlxPoint> = null;
 		if (fetchPositions)
@@ -324,7 +324,7 @@ class FlxBitmapDataUtil
 	 * @param	region		region of image to use as a source graphics for spritesheet. Default value is null, which means that whole image will be used.
 	 * @return	Image for spritesheet with inserted spaces between tiles.
 	 */
-	public static function addSpacesAndBorders(bitmapData:BitmapData, frameSize:FlxPoint = null, spacing:FlxPoint = null, border:FlxPoint = null, region:FlxRect = null):BitmapData
+	public static function addSpacesAndBorders(bitmapData:BitmapData, ?frameSize:FlxPoint, ?spacing:FlxPoint, ?border:FlxPoint, ?region:FlxRect):BitmapData
 	{
 		if (region == null)
 		{

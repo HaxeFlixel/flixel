@@ -83,7 +83,7 @@ class FlxBitmapFont extends FlxFramesCollection
 	/**
 	 * Creates a new bitmap font using specified bitmap data and letter input.
 	 */
-	private function new(frame:FlxFrame, border:FlxPoint = null)
+	private function new(frame:FlxFrame, ?border:FlxPoint)
 	{
 		super(frame.parent, FlxFrameCollectionType.FONT, border);
 		this.frame = frame;
@@ -297,7 +297,7 @@ class FlxBitmapFont extends FlxFramesCollection
 	 * @param	charBGColor		An additional background color to remove. Defaults to 0xFF202020, often used for characters background.
 	 * @return	Generated bitmap font object.
 	 */
-	public static function fromXNA(source:FlxBitmapFontGraphicAsset, letters:String = null, charBGColor:Int = FlxColor.TRANSPARENT):FlxBitmapFont
+	public static function fromXNA(source:FlxBitmapFontGraphicAsset, ?letters:String, charBGColor:Int = FlxColor.TRANSPARENT):FlxBitmapFont
 	{
 		var graphic:FlxGraphic = null;
 		var frame:FlxFrame = null;
@@ -469,7 +469,7 @@ class FlxBitmapFont extends FlxFramesCollection
 	 * @param	spacing		Spaces between characters in the font set. Default is null which means no spaces.
 	 * @return	Generated bitmap font object.
 	 */
-	public static function fromMonospace(source:FlxBitmapFontGraphicAsset, letters:String = null, charSize:FlxPoint, region:FlxRect = null, spacing:FlxPoint = null):FlxBitmapFont
+	public static function fromMonospace(source:FlxBitmapFontGraphicAsset, ?letters:String, charSize:FlxPoint, ?region:FlxRect, ?spacing:FlxPoint):FlxBitmapFont
 	{
 		var graphic:FlxGraphic = null;
 		var frame:FlxFrame = null;
@@ -602,7 +602,7 @@ class FlxBitmapFont extends FlxFramesCollection
 		return charMap.exists(charCode) ? charMap.get(charCode).sourceSize.x : 0;
 	}
 	
-	public static function findFont(frame:FlxFrame, border:FlxPoint = null):FlxBitmapFont
+	public static function findFont(frame:FlxFrame, ?border:FlxPoint):FlxBitmapFont
 	{
 		if (border == null)
 			border = FlxPoint.weak();

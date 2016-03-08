@@ -159,6 +159,9 @@
 		},
 		{
 			"type": "SimplifyBooleanReturn"
+		},
+		{
+			"type": "NullableParameter"
 		}
 	]
 }

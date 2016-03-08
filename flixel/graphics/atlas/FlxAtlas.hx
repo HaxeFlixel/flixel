@@ -116,7 +116,7 @@ class FlxAtlas implements IFlxDestroyable
 	 * @param	minSize		min size of atlas
 	 * @param	maxSize		max size of atlas
 	 */
-	public function new(name:String, powerOfTwo:Bool = false, border:Int = 1, rotate:Bool = false, minSize:FlxPoint = null, maxSize:FlxPoint = null)
+	public function new(name:String, powerOfTwo:Bool = false, border:Int = 1, rotate:Bool = false, ?minSize:FlxPoint, ?maxSize:FlxPoint)
 	{
 		nodes = new Map<String, FlxNode>();
 		this.name = name;
@@ -250,7 +250,7 @@ class FlxAtlas implements IFlxDestroyable
 		return dw > dh; // divide horizontally if true, vertically if false
 	}
 	
-	private function divideNode(nodeToDivide:FlxNode, insertWidth:Int, insertHeight:Int, divideHorizontally:Bool, firstGrandChildData:BitmapData = null, firstGrandChildKey:String = null, firstGrandChildRotated:Bool = false):FlxNode
+	private function divideNode(nodeToDivide:FlxNode, insertWidth:Int, insertHeight:Int, divideHorizontally:Bool, ?firstGrandChildData:BitmapData, ?firstGrandChildKey:String, firstGrandChildRotated:Bool = false):FlxNode
 	{
 		if (nodeToDivide != null)
 		{
@@ -578,7 +578,7 @@ class FlxAtlas implements IFlxDestroyable
 	 * @param	region			Region of source image to use as a source graphic
 	 * @return	Generated TileFrames for added node
 	 */
-	public function addNodeWithSpacesAndBorders(Graphic:FlxGraphicSource, ?Key:String, tileSize:FlxPoint, tileSpacing:FlxPoint, tileBorder:FlxPoint = null, region:FlxRect = null):FlxTileFrames
+	public function addNodeWithSpacesAndBorders(Graphic:FlxGraphicSource, ?Key:String, tileSize:FlxPoint, tileSpacing:FlxPoint, ?tileBorder:FlxPoint, ?region:FlxRect):FlxTileFrames
 	{
 		var key:String = FlxAssets.resolveKey(Graphic, Key);
 		

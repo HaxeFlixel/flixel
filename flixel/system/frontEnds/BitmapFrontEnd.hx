@@ -274,7 +274,7 @@ class BitmapFrontEnd
 	 * @param	baseKey	key's prefix
 	 * @return	unique key
 	 */
-	public function getUniqueKey(baseKey:String = null):String
+	public function getUniqueKey(?baseKey:String):String
 	{
 		if (baseKey == null) baseKey = "pixels";
 		
@@ -302,7 +302,7 @@ class BitmapFrontEnd
 	 * @param	region			region of image to use as spritesheet graphics source
 	 * @return	Generated key for spritesheet with inserted spaces between tiles
 	 */
-	public function getKeyWithSpacesAndBorders(baseKey:String, frameSize:FlxPoint = null, frameSpacing:FlxPoint = null, frameBorder:FlxPoint = null, region:FlxRect = null):String
+	public function getKeyWithSpacesAndBorders(baseKey:String, ?frameSize:FlxPoint, ?frameSpacing:FlxPoint, ?frameBorder:FlxPoint, ?region:FlxRect):String
 	{
 		var result:String = baseKey;
 		
