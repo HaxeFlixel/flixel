@@ -162,6 +162,12 @@
 		},
 		{
 			"type": "NullableParameter"
+		},
+		{
+			"type": "EmptyPackage",
+			"props": {
+				"enforceEmptyPackage": true
+			}
 		}
 	]
 }
