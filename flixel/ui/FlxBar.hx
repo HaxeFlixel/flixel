@@ -12,6 +12,7 @@ import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.frames.FlxFramesCollection;
 import flixel.graphics.frames.FlxImageFrame;
 import flixel.graphics.tile.FlxDrawTilesItem;
+import flixel.math.FlxMath;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.ui.FlxBar.FlxBarFillDirection;
 import flixel.math.FlxAngle;
@@ -891,7 +892,7 @@ class FlxBar extends FlxSprite
 			return 100;
 		}
 		
-		return Math.floor((value / range) * 100);
+		return FlxMath.fastFloor((value / range) * 100);
 	}
 
 	private function set_percent(newPct:Float):Float

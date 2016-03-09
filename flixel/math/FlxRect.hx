@@ -258,14 +258,14 @@ class FlxRect implements IFlxPooled
 	}
 	
 	/**
-	 * Rounds x, y, width and height using Math.floor()
+	 * Rounds x, y, width and height using FlxMath.fastFloor()
 	 */
 	public inline function floor():FlxRect
 	{
-		x = Math.floor(x);
-		y = Math.floor(y);
-		width = Math.floor(width);
-		height = Math.floor(height);
+		x = FlxMath.fastFloor(x);
+		y = FlxMath.fastFloor(y);
+		width = FlxMath.fastFloor(width);
+		height = FlxMath.fastFloor(height);
 		return this;
 	}
 	

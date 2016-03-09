@@ -367,8 +367,8 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		// Modified from getScreenPosition()
 		_point.x = (Camera.scroll.x * scrollFactor.x) - x; 
 		_point.y = (Camera.scroll.y * scrollFactor.y) - y;
-		var screenXInTiles:Int = Math.floor(_point.x / _scaledTileWidth);
-		var screenYInTiles:Int = Math.floor(_point.y / _scaledTileHeight);
+		var screenXInTiles:Int = FlxMath.fastFloor(_point.x / _scaledTileWidth);
+		var screenYInTiles:Int = FlxMath.fastFloor(_point.y / _scaledTileHeight);
 		var screenRows:Int = buffer.rows;
 		var screenColumns:Int = buffer.columns;
 		
@@ -392,7 +392,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 				if (tile != null && tile.visible)
 				{
 					drawX = _helperPoint.x + (columnIndex % widthInTiles) * rectWidth;
-					drawY = _helperPoint.y + Math.floor(columnIndex / widthInTiles) * rectHeight;
+					drawY = _helperPoint.y + FlxMath.fastFloor(columnIndex / widthInTiles) * rectHeight;
 					
 					if (tile.allowCollisions <= FlxObject.NONE)
 					{
@@ -520,8 +520,8 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		}
 		
 		// Figure out what tiles we need to check against
-		var selectionX:Int = Math.floor((Object.x - xPos) / _scaledTileWidth);
-		var selectionY:Int = Math.floor((Object.y - yPos) / _scaledTileHeight);
+		var selectionX:Int = FlxMath.fastFloor((Object.x - xPos) / _scaledTileWidth);
+		var selectionY:Int = FlxMath.fastFloor((Object.y - yPos) / _scaledTileHeight);
 		var selectionWidth:Int = selectionX + Math.ceil(Object.width / _scaledTileWidth) + 1;
 		var selectionHeight:Int = selectionY + Math.ceil(Object.height / _scaledTileHeight) + 1;
 		
@@ -727,8 +727,8 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 				continue;
 			}
 			
-			tileX = Math.floor(curX / _scaledTileWidth);
-			tileY = Math.floor(curY / _scaledTileHeight);
+			tileX = FlxMath.fastFloor(curX / _scaledTileWidth);
+			tileY = FlxMath.fastFloor(curY / _scaledTileHeight);
 			
 			if (_tileObjects[_data[tileY * widthInTiles + tileX]].allowCollisions != FlxObject.NONE)
 			{
@@ -869,8 +869,8 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		{
 			getScreenPosition(_point, Camera).subtractPoint(offset).copyToFlash(_helperPoint);
 			
-			_helperPoint.x = isPixelPerfectRender(Camera) ? Math.floor(_helperPoint.x) : _helperPoint.x;
-			_helperPoint.y = isPixelPerfectRender(Camera) ? Math.floor(_helperPoint.y) : _helperPoint.y;
+			_helperPoint.x = isPixelPerfectRender(Camera) ? FlxMath.fastFloor(_helperPoint.x) : _helperPoint.x;
+			_helperPoint.y = isPixelPerfectRender(Camera) ? FlxMath.fastFloor(_helperPoint.y) : _helperPoint.y;
 			
 			scaledWidth  = _scaledTileWidth;
 			scaledHeight = _scaledTileHeight;
@@ -883,8 +883,8 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		_point.x = (Camera.scroll.x * scrollFactor.x) - x - offset.x; //modified from getScreenPosition()
 		_point.y = (Camera.scroll.y * scrollFactor.y) - y - offset.y;
 		
-		var screenXInTiles:Int = Math.floor(_point.x / _scaledTileWidth);
-		var screenYInTiles:Int = Math.floor(_point.y / _scaledTileHeight);
+		var screenXInTiles:Int = FlxMath.fastFloor(_point.x / _scaledTileWidth);
+		var screenYInTiles:Int = FlxMath.fastFloor(_point.y / _scaledTileHeight);
 		var screenRows:Int = Buffer.rows;
 		var screenColumns:Int = Buffer.columns;
 		
@@ -947,7 +947,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 					else
 					{
 						drawX = _helperPoint.x + (columnIndex % widthInTiles) * scaledWidth;
-						drawY = _helperPoint.y + Math.floor(columnIndex / widthInTiles) * scaledHeight;
+						drawY = _helperPoint.y + FlxMath.fastFloor(columnIndex / widthInTiles) * scaledHeight;
 						
 						_matrix.identity();
 						

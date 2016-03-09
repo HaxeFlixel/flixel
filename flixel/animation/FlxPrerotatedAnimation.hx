@@ -1,6 +1,7 @@
 package flixel.animation;
 
 import flixel.animation.FlxBaseAnimation;
+import flixel.math.FlxMath;
 
 /**
  * ...
@@ -26,14 +27,14 @@ class FlxPrerotatedAnimation extends FlxBaseAnimation
 	private function set_angle(Value:Float):Float
 	{
 		var oldIndex:Int = curIndex;
-		var angleHelper:Int = Math.floor(Value % 360);
+		var angleHelper:Int = FlxMath.fastFloor(Value % 360);
 		
 		while (angleHelper < 0)
 		{
 			angleHelper += 360;
 		}
 		
-		var newIndex:Int = Math.floor(angleHelper / baked + 0.5);
+		var newIndex:Int = FlxMath.fastFloor(angleHelper / baked + 0.5);
 		newIndex = Std.int(newIndex % rotations);
 		if (oldIndex != newIndex)
 		{

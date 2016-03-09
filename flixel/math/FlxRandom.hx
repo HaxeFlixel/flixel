@@ -82,7 +82,7 @@ class FlxRandom
 			
 			if (Excludes == null)
 			{
-				return Math.floor(Min + generate() / MODULUS * (Max - Min + 1));
+				return FlxMath.fastFloor(Min + generate() / MODULUS * (Max - Min + 1));
 			}
 			else
 			{
@@ -90,7 +90,7 @@ class FlxRandom
 				
 				do
 				{
-					result = Math.floor(Min + generate() / MODULUS * (Max - Min + 1));
+					result = FlxMath.fastFloor(Min + generate() / MODULUS * (Max - Min + 1));
 				}
 				while (Excludes.indexOf(result) >= 0);
 				

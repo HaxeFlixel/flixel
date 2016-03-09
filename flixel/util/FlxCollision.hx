@@ -125,7 +125,7 @@ class FlxCollision
 			testMatrix.translate(boundsA.width / 2, boundsA.height / 2);
 			
 			// prepare an empty canvas
-			var testA2:BitmapData = FlxBitmapDataPool.get(Math.floor(boundsA.width), Math.floor(boundsA.height), true, FlxColor.TRANSPARENT, false);
+			var testA2:BitmapData = FlxBitmapDataPool.get(FlxMath.fastFloor(boundsA.width), FlxMath.fastFloor(boundsA.height), true, FlxColor.TRANSPARENT, false);
 			
 			// plot the sprite using the matrix
 			testA2.draw(testA, testMatrix, null, null, null, false);
@@ -137,7 +137,7 @@ class FlxCollision
 			testMatrix.rotate(Target.angle * FlxAngle.TO_RAD);
 			testMatrix.translate(boundsB.width / 2, boundsB.height / 2);
 			
-			var testB2:BitmapData = FlxBitmapDataPool.get(Math.floor(boundsB.width), Math.floor(boundsB.height), true, FlxColor.TRANSPARENT, false);
+			var testB2:BitmapData = FlxBitmapDataPool.get(FlxMath.fastFloor(boundsB.width), FlxMath.fastFloor(boundsB.height), true, FlxColor.TRANSPARENT, false);
 			testB2.draw(testB, testMatrix, null, null, null, false);
 			testB = testB2;
 		}
@@ -217,8 +217,8 @@ class FlxCollision
 	public static function pixelPerfectPointCheck(PointX:Int, PointY:Int, Target:FlxSprite, AlphaTolerance:Int = 1):Bool
 	{
 		// Intersect check
-		if (!FlxMath.pointInCoordinates(PointX, PointY, Math.floor(Target.x),
-			Math.floor(Target.y), Std.int(Target.width), Std.int(Target.height)))
+		if (!FlxMath.pointInCoordinates(PointX, PointY, FlxMath.fastFloor(Target.x),
+			FlxMath.fastFloor(Target.y), Std.int(Target.width), Std.int(Target.height)))
 		{
 			return false;
 		}
@@ -231,7 +231,7 @@ class FlxCollision
 		// How deep is pointX/Y within the rect?
 		var test:BitmapData = Target.framePixels;
 		
-		var pixelAlpha = FlxColor.fromInt(test.getPixel32(Math.floor(PointX - Target.x), Math.floor(PointY - Target.y))).alpha;
+		var pixelAlpha = FlxColor.fromInt(test.getPixel32(FlxMath.fastFloor(PointX - Target.x), FlxMath.fastFloor(PointY - Target.y))).alpha;
 		
 		if (FlxG.renderTile)
 		{
@@ -267,10 +267,10 @@ class FlxCollision
 		
 		if (PlaceOutside)
 		{
-			left = new FlxTileblock(Math.floor(Camera.x - Thickness), Math.floor(Camera.y + Thickness), Thickness, Camera.height - (Thickness * 2));
-			right = new FlxTileblock(Math.floor(Camera.x + Camera.width), Math.floor(Camera.y + Thickness), Thickness, Camera.height - (Thickness * 2));
-			top = new FlxTileblock(Math.floor(Camera.x - Thickness), Math.floor(Camera.y - Thickness), Camera.width + Thickness * 2, Thickness);
-			bottom = new FlxTileblock(Math.floor(Camera.x - Thickness), Camera.height, Camera.width + Thickness * 2, Thickness);
+			left = new FlxTileblock(FlxMath.fastFloor(Camera.x - Thickness), FlxMath.fastFloor(Camera.y + Thickness), Thickness, Camera.height - (Thickness * 2));
+			right = new FlxTileblock(FlxMath.fastFloor(Camera.x + Camera.width), FlxMath.fastFloor(Camera.y + Thickness), Thickness, Camera.height - (Thickness * 2));
+			top = new FlxTileblock(FlxMath.fastFloor(Camera.x - Thickness), FlxMath.fastFloor(Camera.y - Thickness), Camera.width + Thickness * 2, Thickness);
+			bottom = new FlxTileblock(FlxMath.fastFloor(Camera.x - Thickness), Camera.height, Camera.width + Thickness * 2, Thickness);
 			
 			if (AdjustWorldBounds)
 			{
@@ -279,10 +279,10 @@ class FlxCollision
 		}
 		else
 		{
-			left = new FlxTileblock(Math.floor(Camera.x), Math.floor(Camera.y + Thickness), Thickness, Camera.height - (Thickness * 2));
-			right = new FlxTileblock(Math.floor(Camera.x + Camera.width - Thickness), Math.floor(Camera.y + Thickness), Thickness, Camera.height - (Thickness * 2));
-			top = new FlxTileblock(Math.floor(Camera.x), Math.floor(Camera.y), Camera.width, Thickness);
-			bottom = new FlxTileblock(Math.floor(Camera.x), Camera.height - Thickness, Camera.width, Thickness);
+			left = new FlxTileblock(FlxMath.fastFloor(Camera.x), FlxMath.fastFloor(Camera.y + Thickness), Thickness, Camera.height - (Thickness * 2));
+			right = new FlxTileblock(FlxMath.fastFloor(Camera.x + Camera.width - Thickness), FlxMath.fastFloor(Camera.y + Thickness), Thickness, Camera.height - (Thickness * 2));
+			top = new FlxTileblock(FlxMath.fastFloor(Camera.x), FlxMath.fastFloor(Camera.y), Camera.width, Thickness);
+			bottom = new FlxTileblock(FlxMath.fastFloor(Camera.x), Camera.height - Thickness, Camera.width, Thickness);
 			
 			if (AdjustWorldBounds)
 			{

@@ -112,7 +112,7 @@ class FlxStringUtil
 	public static inline function formatMoney(Amount:Float, ShowDecimal:Bool = true, EnglishStyle:Bool = true):String
 	{
 		var helper:Int;
-		var amount:Int = Math.floor(Amount);
+		var amount:Int = FlxMath.fastFloor(Amount);
 		var string:String = "";
 		var comma:String = "";
 		var zeroes:String = "";
@@ -130,8 +130,8 @@ class FlxStringUtil
 				}
 			}
 			zeroes = "";
-			helper = amount - Math.floor(amount / 1000) * 1000;
-			amount = Math.floor(amount / 1000);
+			helper = amount - FlxMath.fastFloor(amount / 1000) * 1000;
+			amount = FlxMath.fastFloor(amount / 1000);
 			if (amount > 0)
 			{
 				if (helper < 100)

@@ -281,12 +281,12 @@ class FlxPoint implements IFlxPooled
 	}
 	
 	/**
-	 * Rounds x and y using Math.floor()
+	 * Rounds x and y using FlxMath.fastFloor()
 	 */
 	public inline function floor():FlxPoint
 	{
-		x = Math.floor(x);
-		y = Math.floor(y);
+		x = FlxMath.fastFloor(x);
+		y = FlxMath.fastFloor(y);
 		return this;
 	}
 	

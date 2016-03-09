@@ -477,8 +477,8 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	{
 		if (_spriteLabel != null) // Label positioning
 		{
-			_spriteLabel.x = (pixelPerfectPosition ? Math.floor(x) : x) + labelOffsets[status].x;
-			_spriteLabel.y = (pixelPerfectPosition ? Math.floor(y) : y) + labelOffsets[status].y;
+			_spriteLabel.x = (pixelPerfectPosition ? FlxMath.fastFloor(x) : x) + labelOffsets[status].x;
+			_spriteLabel.y = (pixelPerfectPosition ? FlxMath.fastFloor(y) : y) + labelOffsets[status].y;
 		}
 	}
 	

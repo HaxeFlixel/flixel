@@ -201,7 +201,7 @@ class FlxMath
 		
 		if (useWorldCoords)
 		{
-			return pointInFlxRect(Math.floor(FlxG.mouse.x), Math.floor(FlxG.mouse.y), rect);
+			return pointInFlxRect(fastFloor(FlxG.mouse.x), fastFloor(FlxG.mouse.y), rect);
 		}
 		else
 		{

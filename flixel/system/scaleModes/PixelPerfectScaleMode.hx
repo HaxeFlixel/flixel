@@ -1,6 +1,7 @@
 package flixel.system.scaleModes;
 
 import flixel.FlxG;
+import flixel.math.FlxMath;
 
 /**
  * A scale mode which scales up the game to the highest integer factor it can,
@@ -12,7 +13,7 @@ class PixelPerfectScaleMode extends BaseScaleMode
 	{
 		var scaleFactorX:Float = Width / FlxG.width;
 		var scaleFactorY:Float = Height / FlxG.height;
-		var scaleFactor:Int = Math.floor(Math.min(scaleFactorX, scaleFactorY));
+		var scaleFactor:Int = FlxMath.fastFloor(Math.min(scaleFactorX, scaleFactorY));
 		
 		// If the scale factor is less than zero, set it to one and crop
 		if (scaleFactor < 1)
