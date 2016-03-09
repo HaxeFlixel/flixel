@@ -5,6 +5,7 @@ import flixel.input.actions.FlxAction;
 import flixel.input.actions.FlxActionInput;
 import flixel.input.gamepad.FlxGamepad;
 import flixel.input.gamepad.FlxGamepadInputID;
+import flixel.input.mouse.FlxMouseButton;
 
 #if steamwrap
 import steamwrap.api.Steam;
@@ -18,6 +19,45 @@ abstract FlxAnalogState(Int) from Int
 	var STOPPED      =  cast FlxInputState.RELEASED;		// is 0
 	var MOVED        =  cast FlxInputState.PRESSED;			// is !0
 	var JUST_MOVED   =  cast FlxInputState.JUST_PRESSED;	// became !0 on this frame
+}
+
+class FlxActionInputAnalogClickAndDragMouseMotion extends FlxActionInputAnalogMouseMotion
+{
+	private var button:FlxMouseButtonID;
+	
+	/**
+	 * Mouse input -- same as FlxActionInputAnalogMouseMotion, but requires a particular mouse button to be PRESSED
+	 * Very useful for e.g. panning a map or canvas around
+	 * @param	ButtonID	Button identifier (FlxMouseButtonID.LEFT / MIDDLE / RIGHT)
+	 * @param	Trigger	What state triggers this action (MOVED, JUST_MOVED, STOPPED, JUST_STOPPED)
+	 * @param	Axis	which axes to monitor for triggering: X, Y, EITHER, or BOTH
+	 * @param	PixelsPerUnit	How many pixels of movement = 1.0 in analog motion (lower: more sensitive, higher: less sensitive)
+	 * @param	DeadZone	Minimum analog value before motion will be reported
+	 * @param	InvertY	Invert the Y axis
+	 * @param	InvertX	Invert the X axis
+	 */
+	public function new(ButtonID:FlxMouseButtonID, Trigger:FlxAnalogState, Axis:FlxAnalogAxis = EITHER, PixelsPerUnit:Int = 10, DeadZone:Float = 0.1, InvertY:Bool = false, InvertX:Bool = false)
+	{
+		super(Trigger, Axis, PixelsPerUnit, DeadZone, InvertY, InvertX);
+		button = ButtonID;
+	}
+	
+	override function updateVals(X:Float, Y:Float):Void 
+	{
+		var pass = switch(button)
+		{
+			case FlxMouseButtonID.LEFT: FlxG.mouse.pressed;
+			case FlxMouseButtonID.RIGHT: FlxG.mouse.pressedRight;
+			case FlxMouseButtonID.MIDDLE: FlxG.mouse.pressedMiddle;
+		}
+		if (!pass)
+		{
+			X = 0;
+			Y = 0;
+		}
+		super.updateVals(X, Y);
+		
+	}
 }
 
 class FlxActionInputAnalogMouseMotion extends FlxActionInputAnalog
@@ -57,11 +97,11 @@ class FlxActionInputAnalogMouseMotion extends FlxActionInputAnalog
 	override public function update():Void
 	{
 		#if !FLX_NO_MOUSE
-			updateVals(FlxG.mouse.x, FlxG.mouse.y);
+			updateXYPosition(FlxG.mouse.x, FlxG.mouse.y);
 		#end
 	}
 	
-	override private function updateVals(X:Float, Y:Float):Void
+	private function updateXYPosition(X:Float, Y:Float):Void
 	{
 		var xDiff = X - lastX;
 		var yDiff = Y - lastY;
@@ -78,7 +118,7 @@ class FlxActionInputAnalogMouseMotion extends FlxActionInputAnalog
 		if (Math.abs(xDiff) < deadZone) xDiff = 0;
 		if (Math.abs(yDiff) < deadZone) yDiff = 0;
 		
-		super.updateVals(xDiff, yDiff);
+		updateVals(xDiff, yDiff);
 	}
 }
 

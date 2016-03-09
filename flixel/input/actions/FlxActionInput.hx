@@ -86,6 +86,7 @@ enum FlxInputDevice
 {
 	Unknown;
 	Mouse;
+	MouseWheel;
 	Keyboard;
 	Gamepad;
 	SteamController;

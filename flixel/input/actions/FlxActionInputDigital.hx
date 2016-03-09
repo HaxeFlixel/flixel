@@ -23,6 +23,53 @@ class FlxActionInputDigital extends FlxActionInput
 	}
 }
 
+class FlxActionDigitalMouseWheel extends FlxActionInputDigital
+{
+	private var input:FlxInput<Int>;
+	private var sign:Int = 0;
+	
+	/**
+	 * Action for mouse wheel events
+	 * @param	Positive	True: respond to mouse wheel values > 0; False: respond to mouse wheel values < 0
+	 * @param	Trigger		What state triggers this action (PRESSED, JUST_PRESSED, RELEASED, JUST_RELEASED)
+	 */
+	public function new(Positive:Bool,Trigger:FlxInputState)
+	{
+		super(FlxInputDevice.MouseWheel, 0, Trigger);
+		input = new FlxInput<Int>(0);
+		sign = Positive ? 1 : -1;
+	}
+	
+	override public function check(Action:FlxAction):Bool 
+	{
+		return switch(trigger)
+		{
+			#if !FLX_NO_MOUSE
+				case PRESSED:       return  input.pressed  || input.justPressed;
+				case RELEASED:      return  input.released || input.justReleased;
+				case JUST_PRESSED:  return  input.justPressed;
+				case JUST_RELEASED: return  input.justReleased;
+			#end
+			default: false;
+		}
+	}
+	
+	override public function update():Void 
+	{
+		super.update();
+		#if !FLX_NO_MOUSE
+		if (FlxG.mouse.wheel * sign > 0)
+		{
+			input.press();
+		}
+		else
+		{
+			input.release();
+		}
+		#end
+	}
+}
+
 class FlxActionInputDigitalGamepad extends FlxActionInputDigital
 {
 	/**
