@@ -130,12 +130,12 @@ class Window extends Sprite
 		if (Icon != null)
 		{
 			DebuggerUtil.fixSize(Icon);
-			var _icon = new Bitmap(Icon);
-			_icon.x = 5;
-			_icon.y = 2;
-			_icon.alpha = HEADER_ALPHA;
-			_title.x = _icon.x + _icon.width + 2;
-			addChild(_icon);
+			var icon = new Bitmap(Icon);
+			icon.x = 5;
+			icon.y = 2;
+			icon.alpha = HEADER_ALPHA;
+			_title.x = icon.x + icon.width + 2;
+			addChild(icon);
 		}
 		
 		if (_resizable)

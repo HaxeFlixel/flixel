@@ -24,7 +24,7 @@ class FlxPath implements IFlxDestroyable
 	/**
 	 * Path behavior controls: move from the end of the path to the start then stop.
 	 */
-	public static inline var BACKWARD:Int= 0x000001;
+	public static inline var BACKWARD:Int = 0x000001;
 	/**
 	 * Path behavior controls: move from the start of the path to the end then directly back to the start, and start over.
 	 */
@@ -595,7 +595,7 @@ class FlxPath implements IFlxDestroyable
 	{
 		if (nodes.length > 0)
 		{
-			return nodes[nodes.length-1];
+			return nodes[nodes.length - 1];
 		}
 		return null;
 	}

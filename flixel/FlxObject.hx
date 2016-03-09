@@ -347,8 +347,8 @@ class FlxObject extends FlxBasic
 				Object1.y = Object1.y - overlap;
 				Object2.y += overlap;
 				
-				var obj1velocity:Float = Math.sqrt((obj2v * obj2v * Object2.mass)/Object1.mass) * ((obj2v > 0) ? 1 : -1);
-				var obj2velocity:Float = Math.sqrt((obj1v * obj1v * Object1.mass)/Object2.mass) * ((obj1v > 0) ? 1 : -1);
+				var obj1velocity:Float = Math.sqrt((obj2v * obj2v * Object2.mass) / Object1.mass) * ((obj2v > 0) ? 1 : -1);
+				var obj2velocity:Float = Math.sqrt((obj1v * obj1v * Object1.mass) / Object2.mass) * ((obj1v > 0) ? 1 : -1);
 				var average:Float = (obj1velocity + obj2velocity) * 0.5;
 				obj1velocity -= average;
 				obj2velocity -= average;
@@ -358,7 +358,7 @@ class FlxObject extends FlxBasic
 			else if (!obj1immovable)
 			{
 				Object1.y = Object1.y - overlap;
-				Object1.velocity.y = obj2v - obj1v*Object1.elasticity;
+				Object1.velocity.y = obj2v - obj1v * Object1.elasticity;
 				// This is special case code that handles cases like horizontal moving platforms you can ride
 				if (Object1.collisonXDrag && Object2.active && Object2.moves && (obj1delta > obj2delta))
 				{
@@ -368,7 +368,7 @@ class FlxObject extends FlxBasic
 			else if (!obj2immovable)
 			{
 				Object2.y += overlap;
-				Object2.velocity.y = obj1v - obj2v*Object2.elasticity;
+				Object2.velocity.y = obj1v - obj2v * Object2.elasticity;
 				// This is special case code that handles cases like horizontal moving platforms you can ride
 				if (Object2.collisonXDrag && Object1.active && Object1.moves && (obj1delta < obj2delta))
 				{
@@ -789,11 +789,11 @@ class FlxObject extends FlxBasic
 		{
 			Camera = FlxG.camera;
 		}
-		var X:Float = point.x - Camera.scroll.x;
-		var Y:Float = point.y - Camera.scroll.y;
+		var xPos:Float = point.x - Camera.scroll.x;
+		var yPos:Float = point.y - Camera.scroll.y;
 		getScreenPosition(_point, Camera);
 		point.putWeak();
-		return (X > _point.x) && (X < _point.x + width) && (Y > _point.y) && (Y < _point.y + height);
+		return (xPos > _point.x) && (xPos < _point.x + width) && (yPos > _point.y) && (yPos < _point.y + height);
 	}
 	
 	/**

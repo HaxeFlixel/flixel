@@ -31,10 +31,7 @@ class FlxGroupTest extends FlxTest
 	@Test
 	function testForEachRecurseFalse():Void
 	{
-		group.forEach(function(b:FlxBasic)
-		{
-			b.exists = false;
-		}, false);
+		group.forEach(function(basic) basic.exists = false, false);
 		
 		for (basic in group)
 		{
@@ -50,10 +47,7 @@ class FlxGroupTest extends FlxTest
 	@Test
 	function testForEachRecurseTrue():Void
 	{
-		group.forEach(function(b:FlxBasic)
-		{
-			b.exists = false;
-		}, true);
+		group.forEach(function(basic) basic.exists = false, true);
 		
 		for (basic in group)
 		{
@@ -73,10 +67,7 @@ class FlxGroupTest extends FlxTest
 		forEachExistsGroupSetup(subGroup);
 		
 		var timesCalled:Int = 0;
-		group.forEachExists(function(b:FlxBasic)
-		{
-			timesCalled++;
-		}, false);
+		group.forEachExists(function(_) timesCalled++, false);
 		
 		Assert.areEqual(1, timesCalled);
 	}
@@ -89,10 +80,7 @@ class FlxGroupTest extends FlxTest
 		subGroup.exists = true;
 		
 		var timesCalled:Int = 0;
-		group.forEachExists(function(b:FlxBasic)
-		{
-			timesCalled++;
-		}, true);
+		group.forEachExists(function(_) timesCalled++, true);
 		
 		Assert.areEqual(3, timesCalled);
 	}

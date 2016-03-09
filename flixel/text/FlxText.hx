@@ -755,7 +755,7 @@ class FlxText extends FlxSprite
 	
 	private function regenGraphic():Void
 	{
-		if (textField == null || _regen == false)
+		if (textField == null || !_regen)
 			return;
 		
 		var oldWidth:Int = 0;
@@ -1157,4 +1157,4 @@ abstract FlxTextAlign(String) from String
 	}
 }
 
-private typedef AlignType = #if openfl_legacy String #else TextFormatAlign #end
+private typedef AlignType = #if openfl_legacy String #else TextFormatAlign #end ;

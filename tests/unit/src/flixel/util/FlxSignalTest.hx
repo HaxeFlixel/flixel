@@ -17,9 +17,9 @@ class FlxSignalTest extends FlxTest
 	function callbackEmpty1() {}
 	function callbackEmpty2() {}
 	function callbackEmpty3() {}
-	function callbackSetFlagTrue() { flag = true; }
-	function callbackSetFlagFalse() { flag = false; }
-	function callbackIncrementCounter() { counter++; }
+	function callbackSetFlagTrue() flag = true;
+	function callbackSetFlagFalse() flag = false;
+	function callbackIncrementCounter() counter++;
 	
 	function addAllEmptyCallbacks():Void 
 	{
@@ -59,9 +59,9 @@ class FlxSignalTest extends FlxTest
 		var flag2:Bool = false;
 		var flag3:Bool = false;
 		
-		signal0.add(function() { flag1 = true; } );
-		signal0.add(function() { flag2 = true; } );
-		signal0.add(function() { flag3 = true; } );
+		signal0.add(function() flag1 = true);
+		signal0.add(function() flag2 = true);
+		signal0.add(function() flag3 = true);
 		
 		signal0.dispatch();
 		

@@ -13,12 +13,12 @@ import flixel.system.replay.CodeValuePair;
 @:allow(flixel)
 class FlxKeyboard extends FlxKeyManager<FlxKey, FlxKeyList>
 {
+	#if !web
 	/**
 	 * Function and numpad keycodes on native targets are incorrect, 
 	 * this workaround fixes that. Thanks @HaxePunk!
 	 * @see https://github.com/openfl/openfl-native/issues/193
 	 */
-	#if !web
 	private var _nativeCorrection:Map<String, Int>;
 	#end
 	

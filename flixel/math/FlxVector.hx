@@ -355,7 +355,7 @@ class FlxVector extends FlxPoint
 	 * @param	proj	optional argument - result vector
 	 * @return	projection of the vector
 	 */
-	public function projectToNormalized(v:FlxVector, proj:FlxVector = null):FlxVector
+	public function projectToNormalized(v:FlxVector, ?proj:FlxVector):FlxVector
 	{
 		var dp:Float = dotProduct(v);
 		
@@ -427,7 +427,7 @@ class FlxVector extends FlxPoint
 	 * @param	v	the second vector
 	 * @return the point of intersection of vectors if it is in the "bounds" of the vectors
 	 */
-	public function findIntersectionInBounds(a:FlxVector, b:FlxVector, v:FlxVector, intersection:FlxVector = null):FlxVector
+	public function findIntersectionInBounds(a:FlxVector, b:FlxVector, v:FlxVector, ?intersection:FlxVector):FlxVector
 	{
 		if (intersection == null)
 		{

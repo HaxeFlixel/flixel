@@ -111,7 +111,7 @@ class FlxBasePreloader extends NMEPreloader
 			percent = time / min;
 		update(percent);
 		
-		if (_loaded && (min <= 0 || time/min >= 1))
+		if (_loaded && (min <= 0 || time / min >= 1))
 		{
 			removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 			super.onLoaded();
@@ -123,20 +123,14 @@ class FlxBasePreloader extends NMEPreloader
 	 * This function is called when the project has finished loading.
 	 * Override it to remove all of your objects.
 	 */
-	private function destroy():Void
-	{
-		
-	}
+	private function destroy():Void {}
 	
 	/**
 	 * Override to draw your preloader objects in response to the Percent
 	 * 
 	 * @param	Percent		How much of the program has loaded.
 	 */
-	private function update(Percent:Float):Void
-	{
-		
-	}
+	private function update(Percent:Float):Void {}
 	
 	/**
 	 * This function is called EXTERNALLY once the movie has actually finished being loaded. 

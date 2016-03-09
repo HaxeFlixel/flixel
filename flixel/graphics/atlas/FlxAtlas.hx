@@ -116,7 +116,7 @@ class FlxAtlas implements IFlxDestroyable
 	 * @param	minSize		min size of atlas
 	 * @param	maxSize		max size of atlas
 	 */
-	public function new(name:String, powerOfTwo:Bool = false, border:Int = 1, rotate:Bool = false, minSize:FlxPoint = null, maxSize:FlxPoint = null)
+	public function new(name:String, powerOfTwo:Bool = false, border:Int = 1, rotate:Bool = false, ?minSize:FlxPoint, ?maxSize:FlxPoint)
 	{
 		nodes = new Map<String, FlxNode>();
 		this.name = name;
@@ -167,7 +167,7 @@ class FlxAtlas implements IFlxDestroyable
 			return null;
 		}
 		
-		if (hasNodeWithName(key) == true)
+		if (hasNodeWithName(key))
 			return nodes.get(key);
 		
 		var data:BitmapData = FlxAssets.resolveBitmapData(Graphic);
@@ -250,7 +250,7 @@ class FlxAtlas implements IFlxDestroyable
 		return dw > dh; // divide horizontally if true, vertically if false
 	}
 	
-	private function divideNode(nodeToDivide:FlxNode, insertWidth:Int, insertHeight:Int, divideHorizontally:Bool, firstGrandChildData:BitmapData = null, firstGrandChildKey:String = null, firstGrandChildRotated:Bool = false):FlxNode
+	private function divideNode(nodeToDivide:FlxNode, insertWidth:Int, insertHeight:Int, divideHorizontally:Bool, ?firstGrandChildData:BitmapData, ?firstGrandChildKey:String, firstGrandChildRotated:Bool = false):FlxNode
 	{
 		if (nodeToDivide != null)
 		{
@@ -523,7 +523,7 @@ class FlxAtlas implements IFlxDestroyable
 	
 	private function expandRoot(newWidth:Float, newHeight:Float, divideHorizontally:Bool, decideHowToDivide:Bool = false):Void
 	{
-		if (newWidth> root.width || newHeight > root.height)
+		if (newWidth > root.width || newHeight > root.height)
 		{
 			var temp:FlxNode = root;
 			root = new FlxNode(FlxRect.get(0, 0, newWidth, newHeight), this);
@@ -578,7 +578,7 @@ class FlxAtlas implements IFlxDestroyable
 	 * @param	region			Region of source image to use as a source graphic
 	 * @return	Generated TileFrames for added node
 	 */
-	public function addNodeWithSpacesAndBorders(Graphic:FlxGraphicSource, ?Key:String, tileSize:FlxPoint, tileSpacing:FlxPoint, tileBorder:FlxPoint = null, region:FlxRect = null):FlxTileFrames
+	public function addNodeWithSpacesAndBorders(Graphic:FlxGraphicSource, ?Key:String, tileSize:FlxPoint, tileSpacing:FlxPoint, ?tileBorder:FlxPoint, ?region:FlxRect):FlxTileFrames
 	{
 		var key:String = FlxAssets.resolveKey(Graphic, Key);
 		
@@ -592,7 +592,7 @@ class FlxAtlas implements IFlxDestroyable
 		
 		key = FlxG.bitmap.getKeyWithSpacesAndBorders(key, tileSize, tileSpacing, tileBorder, region);
 		
-		if (hasNodeWithName(key) == true)
+		if (hasNodeWithName(key))
 			return nodes.get(key).getTileFrames(tileSize, tileSpacing, tileBorder);
 		
 		var data:BitmapData = FlxAssets.resolveBitmapData(Graphic);
@@ -1061,7 +1061,7 @@ class FlxAtlas implements IFlxDestroyable
 	
 	private function set_powerOfTwo(value:Bool):Bool
 	{
-		if (value != powerOfTwo && value == true)
+		if (value != powerOfTwo && value)
 		{
 			var nextWidth:Int = getNextPowerOfTwo(root.width);
 			var nextHeight:Int = getNextPowerOfTwo(root.height);
@@ -1091,7 +1091,8 @@ class FlxAtlas implements IFlxDestroyable
 	}
 }
 
-typedef TempAtlasObj = {
+typedef TempAtlasObj =
+{
 	public var bmd:BitmapData;
 	public var keyStr:String;
 }

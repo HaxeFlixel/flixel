@@ -105,6 +105,7 @@ class FlxGamepadMapping
 	}
 }
 
+@SuppressWarnings("checkstyle:MemberName")
 enum Manufacturer
 {
 	GooglePepper;

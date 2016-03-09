@@ -91,9 +91,9 @@ class FlxAnalog extends FlxSpriteGroup
 	 * Create a virtual thumbstick - useful for input on mobile devices.
 	 *  
 	 * @param	X		The X-coordinate of the point in space.
- 	 * @param	Y		The Y-coordinate of the point in space.
- 	 * @param	radius	The radius where the thumb can move. If 0, half the background's width will be used as radius.
- 	 * @param	ease	The duration of the easing. The value must be between 0 and 1.
+	 * @param	Y		The Y-coordinate of the point in space.
+	 * @param	radius	The radius where the thumb can move. If 0, half the background's width will be used as radius.
+	 * @param	ease	The duration of the easing. The value must be between 0 and 1.
 	 */
 	public function new(X:Float = 0, Y:Float = 0, Radius:Float = 0, Ease:Float = 0.25)
 	{
@@ -222,7 +222,7 @@ class FlxAnalog extends FlxSpriteGroup
 					{
 						// Check whether the pointer is already taken by another analog.
 						// TODO: check this place. This line was 'if (analog != this && analog._currentTouch != touch && touchInserted == false)'
-						if (analog == this && analog._currentTouch != touch && touchInserted == false) 
+						if (analog == this && analog._currentTouch != touch && !touchInserted) 
 						{		
 							_tempTouches.push(touch);
 							touchInserted = true;
@@ -235,7 +235,7 @@ class FlxAnalog extends FlxSpriteGroup
 			{
 				_point = touch.getWorldPosition(FlxG.camera, _point);
 				
-				if (updateAnalog(_point, touch.pressed, touch.justPressed, touch.justReleased, touch) == false)
+				if (!updateAnalog(_point, touch.pressed, touch.justPressed, touch.justReleased, touch))
 				{
 					offAll = false;
 					break;
@@ -244,7 +244,7 @@ class FlxAnalog extends FlxSpriteGroup
 		#elseif !FLX_NO_MOUSE
 			_point.set(FlxG.mouse.screenX, FlxG.mouse.screenY);
 			
-			if (updateAnalog(_point, FlxG.mouse.pressed, FlxG.mouse.justPressed, FlxG.mouse.justReleased) == false)
+			if (!updateAnalog(_point, FlxG.mouse.pressed, FlxG.mouse.justPressed, FlxG.mouse.justReleased))
 			{
 				offAll = false;
 			}

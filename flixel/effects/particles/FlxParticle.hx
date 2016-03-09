@@ -81,7 +81,7 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 		
 		velocityRange = new FlxRange<FlxPoint>(FlxPoint.get(), FlxPoint.get());
 		angularVelocityRange = new FlxRange<Float>(0);
-		scaleRange = new FlxRange<FlxPoint>(FlxPoint.get(1,1), FlxPoint.get(1,1));
+		scaleRange = new FlxRange<FlxPoint>(FlxPoint.get(1, 1), FlxPoint.get(1, 1));
 		alphaRange = new FlxRange<Float>(1, 1);
 		colorRange = new FlxRange<FlxColor>(FlxColor.WHITE);
 		dragRange = new FlxRange<FlxPoint>(FlxPoint.get(), FlxPoint.get());

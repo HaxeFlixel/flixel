@@ -1,18 +1,30 @@
 package flixel;
 
+import flash.Lib;
 import flash.display.DisplayObject;
 import flash.display.Stage;
 import flash.display.StageDisplayState;
-import flash.Lib;
 import flash.net.URLRequest;
-import flixel.effects.postprocess.PostProcess;
 import flixel.FlxBasic;
+import flixel.effects.postprocess.PostProcess;
 import flixel.math.FlxMath;
 import flixel.math.FlxRandom;
 import flixel.math.FlxRect;
 import flixel.system.FlxQuadTree;
 import flixel.system.FlxVersion;
-import flixel.system.frontEnds.*;
+import flixel.system.frontEnds.BitmapFrontEnd;
+import flixel.system.frontEnds.BitmapLogFrontEnd;
+import flixel.system.frontEnds.CameraFrontEnd;
+import flixel.system.frontEnds.ConsoleFrontEnd;
+import flixel.system.frontEnds.DebuggerFrontEnd;
+import flixel.system.frontEnds.HTML5FrontEnd;
+import flixel.system.frontEnds.InputFrontEnd;
+import flixel.system.frontEnds.LogFrontEnd;
+import flixel.system.frontEnds.PluginFrontEnd;
+import flixel.system.frontEnds.SignalFrontEnd;
+import flixel.system.frontEnds.SoundFrontEnd;
+import flixel.system.frontEnds.VCRFrontEnd;
+import flixel.system.frontEnds.WatchFrontEnd;
 import flixel.system.scaleModes.BaseScaleMode;
 import flixel.system.scaleModes.RatioScaleMode;
 import flixel.util.FlxCollision;
@@ -32,17 +44,11 @@ import flixel.input.mouse.FlxMouse;
 #if !FLX_NO_GAMEPAD
 import flixel.input.gamepad.FlxGamepadManager;
 #end
-#if !FLX_NO_SOUND_SYSTEM
-import flixel.system.frontEnds.SoundFrontEnd;
-#end
 #if android
 import flixel.input.android.FlxAndroidKeys;
 #end
 #if mobile
 import flixel.input.FlxAccelerometer;
-#end
-#if js
-import flixel.system.frontEnds.HTML5FrontEnd;
 #end
 #if FLX_POINTER_INPUT
 import flixel.input.FlxSwipe;
@@ -560,7 +566,7 @@ class FlxG
 		renderMethod = BLITTING;
 		
 		#if (!lime_legacy && !flash)
-			if (Lib.application.config.windows[0].hardware == false)
+			if (!Lib.application.config.windows[0].hardware)
 			{
 				renderMethod = BLITTING;
 			}

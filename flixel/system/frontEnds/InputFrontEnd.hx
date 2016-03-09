@@ -70,7 +70,7 @@ class InputFrontEnd
 	 * @return	If successful returns New. Otherwise returns null.
 	 */
 	@:generic
-	public function replace<T:IFlxInputManager>(Old:T,New:T):T
+	public function replace<T:IFlxInputManager>(Old:T, New:T):T
 	{
 		var i:Int = 0;
 		var success:Bool = false;

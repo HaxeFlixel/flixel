@@ -57,19 +57,19 @@ abstract FlxTypedSignal<T>(IFlxSignal<T>)
 	}
 	
 	@:to 
-	private static inline function toSignal2<T1, T2>(signal:IFlxSignal<T1->T2->Void>):FlxSignal2<T1,T2> 
+	private static inline function toSignal2<T1, T2>(signal:IFlxSignal<T1->T2->Void>):FlxSignal2<T1, T2> 
 	{
 		return new FlxSignal2();
 	}
 	
 	@:to 
-	private static inline function toSignal3<T1, T2, T3>(signal:IFlxSignal<T1->T2->T3->Void>):FlxSignal3<T1,T2,T3> 
+	private static inline function toSignal3<T1, T2, T3>(signal:IFlxSignal<T1->T2->T3->Void>):FlxSignal3<T1, T2, T3> 
 	{
 		return new FlxSignal3();
 	}
 	
 	@:to 
-	private static inline function toSignal4<T1, T2, T3, T4>(signal:IFlxSignal<T1->T2->T3->T4->Void>):FlxSignal4<T1,T2,T3,T4> 
+	private static inline function toSignal4<T1, T2, T3, T4>(signal:IFlxSignal<T1->T2->T3->T4->Void>):FlxSignal4<T1, T2, T3, T4> 
 	{
 		return new FlxSignal4();
 	}
@@ -102,7 +102,6 @@ private class FlxBaseSignal<T> implements IFlxSignal<T>
 	private var handlers:Array<FlxSignalHandler<T>>;
 	private var pendingRemove:Array<FlxSignalHandler<T>>;
 	private var processingListeners:Bool = false;
-	
 	
 	public function new() 
 	{
@@ -227,7 +226,7 @@ private class FlxSignal1<T1> extends FlxBaseSignal<T1->Void>
 	}
 }
 
-private class FlxSignal2<T1,T2> extends FlxBaseSignal<T1->T2->Void>
+private class FlxSignal2<T1, T2> extends FlxBaseSignal<T1->T2->Void>
 {
 	public function new()
 	{
@@ -241,7 +240,7 @@ private class FlxSignal2<T1,T2> extends FlxBaseSignal<T1->T2->Void>
 	}
 }
 
-private class FlxSignal3<T1,T2,T3> extends FlxBaseSignal<T1->T2->T3->Void>
+private class FlxSignal3<T1, T2, T3> extends FlxBaseSignal<T1->T2->T3->Void>
 {
 	public function new()
 	{
@@ -255,7 +254,7 @@ private class FlxSignal3<T1,T2,T3> extends FlxBaseSignal<T1->T2->T3->Void>
 	}
 }
 
-private class FlxSignal4<T1,T2,T3,T4> extends FlxBaseSignal<T1->T2->T3->T4->Void>
+private class FlxSignal4<T1, T2, T3, T4> extends FlxBaseSignal<T1->T2->T3->T4->Void>
 {
 	public function new()
 	{
@@ -283,7 +282,8 @@ interface IFlxSignal<T> extends IFlxDestroyable
 
 private class Macro
 {
-	macro public static function buildDispatch(exprs:Array<Expr>):Expr
+	@SuppressWarnings("checkstyle:BlockFormat") // adireddy/haxe-checkstyle#42
+	public static macro function buildDispatch(exprs:Array<Expr>):Expr
 	{
 		return macro
 		{ 

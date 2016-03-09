@@ -15,16 +15,19 @@ import massive.munit.util.Timer;
  */
 class TestMain
 {
-	static function main(){	new TestMain(); }
+	static function main()
+	{
+		new TestMain();
+	}
 
 	public function new()
 	{
 		// Flixel was not designed for unit testing so we can only have one instance for now.
 		Lib.current.stage.addChild(new FlxGame(640, 480, FlxState, 1, 60, 60, true));
-		
+
 		var suites = new Array<Class<massive.munit.TestSuite>>();
 		suites.push(TestSuite);
-		
+
 		#if MCOVER
 		var client = new mcover.coverage.munit.client.MCoverPrintClient();
 		var httpClient = new HTTPClient(new mcover.coverage.munit.client.MCoverSummaryReportClient());
@@ -32,10 +35,10 @@ class TestMain
 		var client = new RichPrintClient();
 		var httpClient = new HTTPClient(new SummaryReportClient());
 		#end
-		
-		var runner:TestRunner = new TestRunner(client); 
+
+		var runner:TestRunner = new TestRunner(client);
 		runner.addResultClient(httpClient);
-		
+
 		runner.completionHandler = completionHandler;
 		runner.run(suites);
 	}

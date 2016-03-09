@@ -107,7 +107,7 @@ class FlxNode implements IFlxDestroyable
 	 * @param	tileBorder		Border to add around tiles (helps to avoid "tearing" problem)
 	 * @return	Created TileFrames object for this node
 	 */
-	public function getTileFrames(tileSize:FlxPoint, tileSpacing:FlxPoint = null, tileBorder:FlxPoint = null):FlxTileFrames
+	public function getTileFrames(tileSize:FlxPoint, ?tileSpacing:FlxPoint, ?tileBorder:FlxPoint):FlxTileFrames
 	{
 		var graphic:FlxGraphic = FlxG.bitmap.add(atlas.bitmapData, false, atlas.name);
 		var frame:FlxFrame = atlas.getAtlasFrames().getByName(key);

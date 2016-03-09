@@ -254,10 +254,10 @@ class FlxDebugger extends Sprite
 				console.resize((_screen.x / 2) - GUTTER * 4, 35);
 				console.reposition(log.x + log.width + GUTTER, _screen.y);
 				watch.resize(_screen.x / 4, 68);
-				watch.reposition(_screen.x,_screen.y);
+				watch.reposition(_screen.x, _screen.y);
 				stats.reposition(_screen.x, 0);
 				bitmapLog.resize(_screen.x / 4, 68);
-				bitmapLog.reposition(0,_screen.y - (68*2) - (GUTTER*2));
+				bitmapLog.reposition(0, _screen.y - (68 * 2) - (GUTTER * 2));
 			case BIG:
 				console.resize(_screen.x - GUTTER * 2, 35);
 				console.reposition(GUTTER, _screen.y);
@@ -266,45 +266,45 @@ class FlxDebugger extends Sprite
 				watch.resize((_screen.x - GUTTER * 3) / 2, _screen.y / 2);
 				watch.reposition(_screen.x, _screen.y - watch.height - console.height - GUTTER * 1.5);
 				stats.reposition(_screen.x, 0);
-				bitmapLog.resize((_screen.x - GUTTER * 3) / 2, _screen.y-(GUTTER*2)-(_screen.y / 2) -(35*2));
+				bitmapLog.resize((_screen.x - GUTTER * 3) / 2, _screen.y - (GUTTER * 2) - (_screen.y / 2) - (35 * 2));
 				bitmapLog.reposition(0, GUTTER * 1.5);
 			case TOP:
 				console.resize(_screen.x - GUTTER * 2, 35);
 				console.reposition(0, 0);
 				log.resize((_screen.x - GUTTER * 3) / 2, _screen.y / 4);
-				log.reposition(0,console.height + GUTTER + 15);
+				log.reposition(0, console.height + GUTTER + 15);
 				watch.resize((_screen.x - GUTTER * 3) / 2, _screen.y / 4);
-				watch.reposition(_screen.x,console.height + GUTTER + 15);
+				watch.reposition(_screen.x, console.height + GUTTER + 15);
 				stats.reposition(_screen.x, _screen.y);
 				bitmapLog.resize((_screen.x - GUTTER * 3) / 2, _screen.y / 4);
-				bitmapLog.reposition(0, console.height + (GUTTER*2) + 15 + (_screen.y / 4) + GUTTER);
+				bitmapLog.reposition(0, console.height + (GUTTER * 2) + 15 + (_screen.y / 4) + GUTTER);
 			case LEFT:
 				console.resize(_screen.x - GUTTER * 2, 35);
 				console.reposition(GUTTER, _screen.y);
 				log.resize(_screen.x / 3, (_screen.y - 15 - GUTTER * 2.5) / 2 - console.height / 2 - GUTTER);
-				log.reposition(0,0);
+				log.reposition(0, 0);
 				watch.resize(_screen.x / 3, (_screen.y - 15 - GUTTER * 2.5) / 2 - console.height / 2);
-				watch.reposition(0,log.y + log.height + GUTTER);
+				watch.reposition(0, log.y + log.height + GUTTER);
 				stats.reposition(_screen.x, 0);
 				bitmapLog.resize(_screen.x / 3, (_screen.y - 15 - GUTTER * 2.5) / 2 - console.height / 2 - GUTTER);
-				bitmapLog.reposition((_screen.x / 3) + GUTTER*2, 0);
+				bitmapLog.reposition((_screen.x / 3) + GUTTER * 2, 0);
 			case RIGHT:
 				console.resize(_screen.x - GUTTER * 2, 35);
 				console.reposition(GUTTER, _screen.y);
 				log.resize(_screen.x / 3, (_screen.y - 15 - GUTTER * 2.5) / 2 - console.height / 2 - GUTTER);
-				log.reposition(_screen.x,0);
+				log.reposition(_screen.x, 0);
 				watch.resize(_screen.x / 3, (_screen.y - 15 - GUTTER * 2.5) / 2 - console.height / 2);
-				watch.reposition(_screen.x,log.y + log.height + GUTTER);
+				watch.reposition(_screen.x, log.y + log.height + GUTTER);
 				stats.reposition(0, 0);
 				bitmapLog.resize(_screen.x / 3, (_screen.y - 15 - GUTTER * 2.5) / 2 - console.height / 2 - GUTTER);
-				bitmapLog.reposition(_screen.x - (GUTTER*2) - ((_screen.x / 3)*2), 0);
+				bitmapLog.reposition(_screen.x - (GUTTER * 2) - ((_screen.x / 3) * 2), 0);
 			case STANDARD:
 				console.resize(_screen.x - GUTTER * 2, 35);
 				console.reposition(GUTTER, _screen.y);
 				log.resize((_screen.x - GUTTER * 3) / 2, _screen.y / 4);
-				log.reposition(0,_screen.y - log.height - console.height - GUTTER * 1.5);
+				log.reposition(0, _screen.y - log.height - console.height - GUTTER * 1.5);
 				watch.resize((_screen.x - GUTTER * 3) / 2, _screen.y / 4);
-				watch.reposition(_screen.x,_screen.y - watch.height - console.height - GUTTER * 1.5);
+				watch.reposition(_screen.x, _screen.y - watch.height - console.height - GUTTER * 1.5);
 				stats.reposition(_screen.x, 0);
 				bitmapLog.resize((_screen.x - GUTTER * 3) / 2, _screen.y / 4);
 				bitmapLog.reposition(0, log.y - GUTTER - bitmapLog.height);

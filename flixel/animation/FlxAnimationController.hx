@@ -597,7 +597,7 @@ class FlxAnimationController implements IFlxDestroyable
 	}
 	
 	/**
-  	 * Gets the FlxAnimation object with the specified name.
+	 * Gets the FlxAnimation object with the specified name.
 	 */
 	public inline function getByName(Name:String):FlxAnimation
 	{
@@ -629,7 +629,7 @@ class FlxAnimationController implements IFlxDestroyable
 	}
 	
 	@:allow(flixel.animation)
-	private inline function fireFinishCallback(name:String = null):Void
+	private inline function fireFinishCallback(?name:String):Void
 	{
 		if (finishCallback != null)
 		{
@@ -827,7 +827,7 @@ class FlxAnimationController implements IFlxDestroyable
 	
 	private inline function set_finished(Value:Bool):Bool
 	{
-		if (Value == true && _curAnim != null)
+		if (Value && _curAnim != null)
 		{
 			_curAnim.finish();
 		}

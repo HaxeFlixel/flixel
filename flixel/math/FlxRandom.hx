@@ -73,7 +73,6 @@ class FlxRandom
 		else
 		{
 			// Swap values if reversed
-			
 			if (Min > Max)
 			{
 				Min = Min + Max;
@@ -147,7 +146,6 @@ class FlxRandom
 		
 		return result;
 	}
-	
 	
 	//helper variables for floatNormal -- it produces TWO random values with each call so we have to store some state outside the function
 	private var _hasFloatNormalSpare:Bool = false;
@@ -280,7 +278,6 @@ class FlxRandom
 			EndIndex = Std.int(FlxMath.bound(EndIndex, 0, Objects.length - 1));
 			
 			// Swap values if reversed
-			
 			if (EndIndex < StartIndex)
 			{
 				StartIndex = StartIndex + EndIndex;
