@@ -570,6 +570,7 @@ class FlxMath
 	
 	/**
 	 * Floors the argument. Same as Math.floor, but faster.
+	 * WARNING: This will not work for NaN or numbers that are outside the bounds of a 32-bit integer.
 	 */
 	public static inline function fastFloor(f:Float):Int
 	{
