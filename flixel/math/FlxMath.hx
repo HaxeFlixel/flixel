@@ -568,4 +568,12 @@ class FlxMath
 		return (a > 0) ? a : -a;
 	}
 	
+	/**
+	 * Floors the argument. Same as Math.floor, but faster.
+	 */
+	public static inline function fastFloor(f:Float):Int
+	{
+		return f >= 0 ? Std.int(f) : Std.int(f - 1);
+	}
+	
 }
