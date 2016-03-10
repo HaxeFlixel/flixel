@@ -44,12 +44,15 @@ class FlxActionInputAnalogClickAndDragMouseMotion extends FlxActionInputAnalogMo
 	
 	override function updateVals(X:Float, Y:Float):Void 
 	{
-		var pass = switch(button)
+		var pass = false;
+		#if !FLX_NO_MOUSE
+		pass = switch(button)
 		{
 			case FlxMouseButtonID.LEFT: FlxG.mouse.pressed;
 			case FlxMouseButtonID.RIGHT: FlxG.mouse.pressedRight;
 			case FlxMouseButtonID.MIDDLE: FlxG.mouse.pressedMiddle;
 		}
+		#end
 		if (!pass)
 		{
 			X = 0;
