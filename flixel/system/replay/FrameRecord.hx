@@ -1,4 +1,5 @@
 package flixel.system.replay;
+import flixel.math.FlxMath;
 
 /**
  * Helper class for the new replay system.  Represents all the game inputs for one "frame" or "step" of the game loop.
@@ -37,7 +38,7 @@ class FrameRecord
 	 */
 	public function create(Frame:Float, ?Keys:Array<CodeValuePair>, ?Mouse:MouseRecord):FrameRecord
 	{
-		frame = Math.floor(Frame);
+		frame = FlxMath.fastFloor(Frame);
 		keys = Keys;
 		mouse = Mouse;
 		

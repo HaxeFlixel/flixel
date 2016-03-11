@@ -201,7 +201,7 @@ class FlxMath
 		
 		if (useWorldCoords)
 		{
-			return pointInFlxRect(Math.floor(FlxG.mouse.x), Math.floor(FlxG.mouse.y), rect);
+			return pointInFlxRect(fastFloor(FlxG.mouse.x), fastFloor(FlxG.mouse.y), rect);
 		}
 		else
 		{
@@ -566,6 +566,15 @@ class FlxMath
 	public static inline function absInt(a:Int):Int
 	{
 		return (a > 0) ? a : -a;
+	}
+	
+	/**
+	 * Floors the argument. Same as Math.floor, but faster.
+	 * WARNING: This will not work for NaN or numbers that are outside the bounds of a 32-bit integer.
+	 */
+	public static inline function fastFloor(f:Float):Int
+	{
+		return f >= 0 ? Std.int(f) : Std.int(f - 1);
 	}
 	
 }

@@ -1,6 +1,7 @@
 package flixel.system.scaleModes;
 
 import flixel.FlxG;
+import flixel.math.FlxMath;
 
 class RatioScaleMode extends BaseScaleMode
 {
@@ -30,12 +31,12 @@ class RatioScaleMode extends BaseScaleMode
 		if (scaleY)
 		{
 			gameSize.x = Width;
-			gameSize.y = Math.floor(gameSize.x / ratio);
+			gameSize.y = FlxMath.fastFloor(gameSize.x / ratio);
 		}
 		else
 		{
 			gameSize.y = Height;
-			gameSize.x = Math.floor(gameSize.y * ratio);
+			gameSize.x = FlxMath.fastFloor(gameSize.y * ratio);
 		}
 	}
 }

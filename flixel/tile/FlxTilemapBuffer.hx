@@ -6,6 +6,7 @@ import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.FlxCamera;
 import flixel.FlxG;
+import flixel.math.FlxMath;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import openfl.display.BlendMode;
@@ -124,8 +125,8 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	{
 		if (isPixelPerfectRender(Camera))
 		{
-			FlashPoint.x = Math.floor(FlashPoint.x);
-			FlashPoint.y = Math.floor(FlashPoint.y);
+			FlashPoint.x = FlxMath.fastFloor(FlashPoint.x);
+			FlashPoint.y = FlxMath.fastFloor(FlashPoint.y);
 		}
 		
 		if (isPixelPerfectRender(Camera) && (ScaleX == 1.0 && ScaleY == 1.0) && blend == null)

@@ -3,6 +3,7 @@ package flixel.system;
 import flixel.FlxBasic;
 import flixel.FlxObject;
 import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.math.FlxMath;
 import flixel.math.FlxRect;
 import flixel.util.FlxDestroyUtil;
 
@@ -286,7 +287,7 @@ class FlxQuadTree extends FlxRect
 		}
 		else
 		{
-			_min = Math.floor((width + height) / (2 * divisions));
+			_min = FlxMath.fastFloor((width + height) / (2 * divisions));
 		}
 		_canSubdivide = (width > _min) || (height > _min);
 		
