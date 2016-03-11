@@ -17,7 +17,9 @@ import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.graphics.frames.FlxTileFrames;
 import flixel.graphics.frames.FlxFramesCollection;
 import flixel.graphics.frames.FlxFrame;
-import flixel.util.typeLimit.*;
+import flixel.util.typeLimit.OneOfTwo;
+import flixel.util.typeLimit.OneOfThree;
+import flixel.util.typeLimit.OneOfFour;
 import openfl.Assets;
 import openfl.utils.ByteArray;
 
