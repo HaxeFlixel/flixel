@@ -1,6 +1,5 @@
 package flixel.system.debug;
 
-#if !FLX_NO_DEBUG
 import flash.display.BitmapData;
 import flash.display.Sprite;
 import flash.events.MouseEvent;
@@ -57,6 +56,7 @@ class GraphicArrowRight extends BitmapData {}
  */
 class FlxDebugger extends Sprite
 {
+	#if !FLX_NO_DEBUG
 	/**
 	 * Internal, used to space out windows from the edges.
 	 */
@@ -486,8 +486,8 @@ class FlxDebugger extends Sprite
 		}
 		FlxG.openURL(url);
 	}
+	#end
 }
-#end
 
 enum FlxDebuggerLayout
 {
