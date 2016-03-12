@@ -1,14 +1,10 @@
 package flixel.system.debug.log;
 
 #if !FLX_NO_DEBUG
-import flash.geom.Rectangle;
 import flash.text.TextField;
 import flash.text.TextFormat;
-import flixel.FlxG;
-import flixel.system.debug.FlxDebugger;
-import flixel.math.FlxPoint;
 import flixel.util.FlxStringUtil;
-import haxe.ds.StringMap;
+import flixel.system.debug.FlxDebugger.GraphicLog;
 
 /**
  * A simple trace output window for use in the debugger overlay.

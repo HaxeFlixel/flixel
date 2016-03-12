@@ -1,19 +1,16 @@
 package flixel.ui;
 
-import flash.display.BitmapData;
 import flash.events.MouseEvent;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.atlas.FlxAtlas;
 import flixel.graphics.atlas.FlxNode;
-import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxTileFrames;
 import flixel.input.FlxInput;
 import flixel.input.FlxPointer;
 import flixel.input.IFlxInput;
 import flixel.input.mouse.FlxMouseButton;
 import flixel.input.touch.FlxTouch;
-import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.system.FlxSound;
 import flixel.text.FlxText;

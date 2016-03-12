@@ -3,11 +3,10 @@ package;
 import flash.Lib;
 import flixel.FlxGame;
 import flixel.FlxState;
+import massive.munit.TestRunner;
 import massive.munit.client.HTTPClient;
 import massive.munit.client.RichPrintClient;
 import massive.munit.client.SummaryReportClient;
-import massive.munit.TestRunner;
-import massive.munit.util.Timer;
 
 /**
  * Auto generated Test Application.

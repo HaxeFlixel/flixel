@@ -16,7 +16,9 @@ import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxStringUtil;
-import flixel.system.debug.FlxDebugger;
+import flixel.system.debug.FlxDebugger.GraphicArrowLeft;
+import flixel.system.debug.FlxDebugger.GraphicArrowRight;
+import flixel.system.debug.FlxDebugger.GraphicBitmapLog;
 using flixel.util.FlxBitmapDataUtil;
 
 /**

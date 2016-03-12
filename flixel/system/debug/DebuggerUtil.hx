@@ -1,7 +1,6 @@
 package flixel.system.debug;
 
 import flash.display.BitmapData;
-import flash.display.Shape;
 import flash.text.TextField;
 import flash.text.TextFormat;
 import flixel.system.FlxAssets;

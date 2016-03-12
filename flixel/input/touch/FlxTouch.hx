@@ -2,11 +2,7 @@ package flixel.input.touch;
 
 #if !FLX_NO_TOUCH
 import flash.geom.Point;
-import flixel.FlxBasic;
-import flixel.FlxCamera;
 import flixel.FlxG;
-import flixel.FlxObject;
-import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.FlxInput;
 import flixel.input.FlxSwipe;
 import flixel.input.IFlxInput;

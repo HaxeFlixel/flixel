@@ -2,7 +2,6 @@ package flixel.tile;
 
 import flash.display.BitmapData;
 import flash.errors.ArgumentError;
-import flixel.graphics.FlxGraphic;
 import flixel.math.FlxPoint;
 import flixel.tile.FlxTilemap;
 import massive.munit.Assert;

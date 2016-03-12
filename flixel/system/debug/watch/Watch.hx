@@ -2,7 +2,7 @@ package flixel.system.debug.watch;
 
 import flash.display.Sprite;
 import flixel.FlxG;
-import flixel.system.debug.FlxDebugger;
+import flixel.system.debug.FlxDebugger.GraphicWatch;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxDestroyUtil;
 

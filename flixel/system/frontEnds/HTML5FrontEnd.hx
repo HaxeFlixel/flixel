@@ -1,6 +1,5 @@
 package flixel.system.frontEnds;
 
-import flixel.FlxG;
 import flixel.math.FlxPoint;
 
 #if js
