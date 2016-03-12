@@ -4,7 +4,6 @@ import flash.display.Graphics;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.math.FlxPoint;
-import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 

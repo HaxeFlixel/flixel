@@ -6,7 +6,6 @@ import flash.geom.Rectangle;
 import flixel.FlxSprite;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFramesCollection.FlxFrameCollectionType;
-import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.util.FlxColor;
 import openfl.filters.BitmapFilter;

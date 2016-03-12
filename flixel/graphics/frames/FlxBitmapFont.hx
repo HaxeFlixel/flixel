@@ -11,7 +11,6 @@ import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxAngelCodeSource;
 import flixel.system.FlxAssets.FlxBitmapFontGraphicAsset;
-import flixel.util.FlxBitmapDataUtil;
 import flixel.util.FlxColor;
 import haxe.Utf8;
 import haxe.xml.Fast;

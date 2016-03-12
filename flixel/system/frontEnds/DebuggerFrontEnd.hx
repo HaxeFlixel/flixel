@@ -3,13 +3,13 @@ package flixel.system.frontEnds;
 import flash.display.BitmapData;
 import flixel.FlxG;
 import flixel.input.keyboard.FlxKey;
-import flixel.system.debug.watch.Tracker;
+import flixel.system.debug.FlxDebugger.FlxDebuggerLayout;
 import flixel.system.debug.Window;
+import flixel.system.debug.watch.Tracker;
 import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxHorizontalAlign;
 import flixel.util.FlxSignal;
 import flixel.util.FlxStringUtil;
-import flixel.system.debug.FlxDebugger;
 
 class DebuggerFrontEnd
 {	

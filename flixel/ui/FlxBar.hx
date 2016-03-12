@@ -3,23 +3,18 @@ package flixel.ui;
 import flash.display.BitmapData;
 import flash.geom.Point;
 import flash.geom.Rectangle;
-import flixel.FlxBasic;
-import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame;
-import flixel.graphics.frames.FlxFramesCollection;
 import flixel.graphics.frames.FlxImageFrame;
-import flixel.graphics.tile.FlxDrawTilesItem;
+import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.ui.FlxBar.FlxBarFillDirection;
-import flixel.math.FlxAngle;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxGradient;
-import flixel.math.FlxPoint;
-import flixel.math.FlxRect;
 import flixel.util.FlxStringUtil;
 
 // TODO: better handling bars with borders (don't take border into account while drawing its front).

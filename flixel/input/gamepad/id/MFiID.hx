@@ -1,7 +1,5 @@
 package flixel.input.gamepad.id;
 
-import flixel.input.gamepad.FlxGamepad;
-
 /**
  * IDs for MFi controllers
  */

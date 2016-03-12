@@ -8,7 +8,6 @@ import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.util.FlxColor;
-import openfl.geom.Matrix;
 
 /**
  * Just a collection of BitmapData utility methods.

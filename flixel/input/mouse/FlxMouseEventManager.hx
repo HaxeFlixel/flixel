@@ -6,12 +6,10 @@ import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
-import flixel.group.FlxGroup;
-import flixel.math.FlxAngle;
-import flixel.util.FlxDestroyUtil;
-import flixel.math.FlxPoint;
+import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.mouse.FlxMouseButton;
-import flixel.group.FlxSpriteGroup;
+import flixel.math.FlxPoint;
+import flixel.util.FlxDestroyUtil;
 
 /**
  * Provides mouse event detection for FlxObjects and FlxSprites (pixel-perfect for those).

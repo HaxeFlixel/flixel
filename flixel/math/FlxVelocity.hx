@@ -1,6 +1,5 @@
 package flixel.math;
 
-import flixel.FlxG;
 import flixel.FlxSprite;
 #if !FLX_NO_TOUCH
 import flixel.input.touch.FlxTouch;

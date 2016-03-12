@@ -1,7 +1,5 @@
 package flixel.math;
 
-import flixel.FlxGame;
-import flixel.system.frontEnds.VCRFrontEnd;
 import flixel.util.FlxColor;
 
 /**

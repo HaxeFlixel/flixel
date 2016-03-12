@@ -1,7 +1,6 @@
 package flixel.graphics.frames;
 
 import flash.display.BitmapData;
-import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.graphics.FlxGraphic;

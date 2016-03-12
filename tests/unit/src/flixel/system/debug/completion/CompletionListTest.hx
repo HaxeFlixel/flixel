@@ -1,7 +1,5 @@
 package flixel.system.debug.completion;
 
-import massive.munit.Assert;
-
 class CompletionListTest extends FlxTest
 {
 	@Test

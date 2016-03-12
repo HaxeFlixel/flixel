@@ -21,9 +21,6 @@ import flixel.system.debug.completion.CompletionList;
 import flixel.system.debug.log.BitmapLog;
 import flixel.system.FlxAssets;
 import flixel.system.ui.FlxSystemButton;
-import flixel.util.FlxStringUtil;
-import flixel.util.FlxColor;
-import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxHorizontalAlign;
 using flixel.util.FlxArrayUtil;
 
