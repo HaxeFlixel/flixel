@@ -178,7 +178,7 @@
 		{
 			"type": "UnusedImport",
 			"props": {
-				"ignorePackages": [
+				"ignoreModules": [
 					"haxe.macro.Expr"
 				]
 			}

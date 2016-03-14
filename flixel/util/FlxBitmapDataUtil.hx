@@ -7,7 +7,6 @@ import flixel.math.FlxAngle;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
-import flixel.util.FlxColor;
 
 /**
  * Just a collection of BitmapData utility methods.

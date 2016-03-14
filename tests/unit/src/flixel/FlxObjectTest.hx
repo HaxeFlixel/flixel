@@ -1,7 +1,6 @@
 package flixel;
 
 import flash.display.BitmapData;
-import flixel.FlxObject;
 import flixel.graphics.FlxGraphic;
 import flixel.math.FlxPoint;
 import flixel.tile.FlxTilemap;

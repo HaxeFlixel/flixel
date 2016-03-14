@@ -1,7 +1,6 @@
 package flixel.input;
 
 import flixel.input.FlxInput.FlxInputState;
-import flixel.input.FlxKeyManager;
 
 class FlxBaseKeyList
 {

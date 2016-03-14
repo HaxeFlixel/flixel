@@ -5,7 +5,6 @@ import flash.display.DisplayObject;
 import flash.display.Stage;
 import flash.display.StageDisplayState;
 import flash.net.URLRequest;
-import flixel.FlxBasic;
 import flixel.effects.postprocess.PostProcess;
 import flixel.math.FlxMath;
 import flixel.math.FlxRandom;

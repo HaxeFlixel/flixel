@@ -4,7 +4,6 @@ package flixel.input.keyboard;
 import flash.events.KeyboardEvent;
 import flixel.FlxG;
 import flixel.input.FlxInput;
-import flixel.input.keyboard.FlxKey;
 import flixel.system.replay.CodeValuePair;
 
 /**

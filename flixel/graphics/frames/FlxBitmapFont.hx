@@ -6,7 +6,7 @@ import flash.geom.Rectangle;
 import flixel.FlxG;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame.FlxFrameAngle;
-import flixel.graphics.frames.FlxFramesCollection;
+import flixel.graphics.frames.FlxFramesCollection.FlxFrameCollectionType;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxAngelCodeSource;

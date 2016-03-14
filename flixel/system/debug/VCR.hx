@@ -8,9 +8,9 @@ import flash.text.TextFormat;
 import flixel.FlxG;
 import flixel.system.FlxAssets;
 import flixel.system.ui.FlxSystemButton;
+import flixel.system.debug.FlxDebugger.GraphicArrowRight;
 import flixel.util.FlxColor;
 import flixel.util.FlxStringUtil;
-import flixel.system.debug.FlxDebugger;
 
 @:bitmap("assets/images/debugger/buttons/open.png")
 private class GraphicOpen extends BitmapData {}

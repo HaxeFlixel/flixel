@@ -1,7 +1,5 @@
 package flixel;
 
-import flixel.FlxCamera;
-import flixel.FlxG;
 import flixel.util.FlxColor;
 import massive.munit.Assert;
 

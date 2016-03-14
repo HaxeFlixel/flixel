@@ -2,7 +2,6 @@ package flixel.math;
 
 import flixel.util.FlxColor;
 import massive.munit.Assert;
-import flixel.math.FlxRandom;
 
 class FlxRandomTest extends FlxTest
 {

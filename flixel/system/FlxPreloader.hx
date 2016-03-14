@@ -9,7 +9,6 @@ import flash.Lib;
 import flash.text.TextField;
 import flash.text.TextFormat;
 import flixel.FlxG;
-import flixel.system.FlxBasePreloader;
 
 @:bitmap("assets/images/preloader/light.png")
 private class GraphicLogoLight extends BitmapData {}

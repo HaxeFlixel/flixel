@@ -2,7 +2,6 @@ package flixel.input.gamepad.mappings;
 
 import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.input.gamepad.id.LogitechID;
-import flixel.input.gamepad.mappings.FlxGamepadMapping;
 
 class LogitechMapping extends FlxGamepadMapping
 {

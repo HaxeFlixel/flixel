@@ -13,7 +13,6 @@ import flixel.FlxG;
 import flixel.system.debug.console.Console;
 import flixel.system.debug.log.Log;
 import flixel.system.debug.stats.Stats;
-import flixel.system.debug.VCR;
 import flixel.system.debug.watch.Watch;
 import flixel.system.debug.watch.Tracker;
 import flixel.system.debug.completion.CompletionList;
