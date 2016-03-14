@@ -1,7 +1,5 @@
 package flixel.animation;
 
-import flixel.animation.FlxBaseAnimation;
-
 /**
  * ...
  * @author Zaphod

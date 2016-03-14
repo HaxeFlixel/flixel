@@ -1,7 +1,5 @@
 package flixel.graphics.frames;
 
-import flixel.graphics.frames.FlxFramesCollection;
-
 class FlxFramesCollectionTest
 {
 	@Test // #1497

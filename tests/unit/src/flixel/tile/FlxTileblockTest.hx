@@ -1,7 +1,5 @@
 package flixel.tile;
 
-import flixel.tile.FlxTileblock;
-
 class FlxTileblockTest extends FlxTest
 {
 	var tileblock:FlxTileblock;

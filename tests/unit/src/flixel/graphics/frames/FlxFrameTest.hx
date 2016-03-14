@@ -1,7 +1,5 @@
 package flixel.graphics.frames;
 
-import flixel.graphics.frames.FlxFrame;
-
 class FlxFrameTest extends FlxTest
 {
 	@Test

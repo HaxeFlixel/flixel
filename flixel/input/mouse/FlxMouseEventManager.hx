@@ -7,7 +7,7 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
-import flixel.input.mouse.FlxMouseButton;
+import flixel.input.mouse.FlxMouseButton.FlxMouseButtonID;
 import flixel.math.FlxPoint;
 import flixel.util.FlxDestroyUtil;
 

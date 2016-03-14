@@ -1,6 +1,5 @@
 package flixel.util;
 
-import flixel.util.FlxTimer;
 import massive.munit.Assert;
 
 class FlxTimerTest extends FlxTest

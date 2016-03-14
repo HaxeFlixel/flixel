@@ -1,6 +1,5 @@
 package flixel.util;
 
-import flixel.util.FlxColor;
 import massive.munit.Assert;
 
 class FlxColorTest extends FlxTest

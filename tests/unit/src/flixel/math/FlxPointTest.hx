@@ -1,6 +1,5 @@
 package flixel.math;
 
-import flixel.math.FlxPoint;
 import massive.munit.Assert;
 
 class FlxPointTest extends FlxTest

@@ -2,7 +2,6 @@ package flixel.input.gamepad.mappings;
 
 import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.input.gamepad.id.PS4ID;
-import flixel.input.gamepad.mappings.FlxGamepadMapping;
 
 class PS4Mapping extends FlxGamepadMapping
 {

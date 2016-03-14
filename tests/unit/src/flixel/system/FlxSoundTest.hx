@@ -1,7 +1,5 @@
 package flixel.system;
 
-import flixel.system.FlxSound;
-
 class FlxSoundTest
 {
 	@Test // #1511
