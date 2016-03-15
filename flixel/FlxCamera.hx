@@ -789,8 +789,6 @@ class FlxCamera extends FlxBasic
 		updateFade(elapsed);
 		updateShake(elapsed);
 		
-		flashSprite.filters = filtersEnabled ? _filters : null;
-		
 		updateFlashSpritePosition();
 	}
 	
@@ -1198,6 +1196,7 @@ class FlxCamera extends FlxBasic
 	public function setFilters(filters:Array<BitmapFilter>):Void
 	{
 		_filters = filters;
+		flashSprite.filters = filtersEnabled ? _filters : null;
 	}
 	
 	/**
@@ -1256,10 +1255,8 @@ class FlxCamera extends FlxBasic
 			{
 				return;
 			}
-			// This is temporal fix for camera's color
+			
 			var targetGraphics:Graphics = (graphics == null) ? canvas.graphics : graphics;
-			Color = Color.to24Bit();
-			// end of fix
 			
 			targetGraphics.beginFill(Color, FxAlpha);
 			// i'm drawing rect with these parameters to avoid light lines at the top and left of the camera,
