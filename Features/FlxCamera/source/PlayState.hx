@@ -24,10 +24,7 @@ class PlayState extends FlxState
 	static var LEVEL_MAX_X;
 	static var LEVEL_MIN_Y;
 	static var LEVEL_MAX_Y;
-	
-	#if TRUE_ZOOM_OUT
-	private var firstUpdate:Bool;
-	#end
+
 	private var orb:Orb;
 	private var orbShadow:FlxSprite;
 	private var hud:HUD;
@@ -48,16 +45,10 @@ class PlayState extends FlxState
 		
 		FlxG.mouse.visible = false;
 		
-		#if TRUE_ZOOM_OUT
-		FlxG.width = 640; // For 1/2 zoom out
-		FlxG.height = 480; // For 1/2 zoom out
-		firstUpdate = true;
-		#end
-		
 		FlxNapeSpace.velocityIterations = 5;
 		FlxNapeSpace.positionIterations = 5;
 		
-		createFloor();
+		createFloorTiles();
 		FlxNapeSpace.createWalls(LEVEL_MIN_X, LEVEL_MIN_Y, LEVEL_MAX_X, LEVEL_MAX_Y);
 		// Walls border.
 		add(new FlxSprite(-FlxG.width / 2, -FlxG.height / 2, "assets/Border.png"));
@@ -133,11 +124,7 @@ class PlayState extends FlxState
 		FlxG.camera.follow(orb, LOCKON, 1);
 		drawDeadzone(); // now that deadzone is present
 		
-		#if TRUE_ZOOM_OUT
-		hudCam = new FlxCamera(440 + 50, 0 + 45, hud.width, hud.height); // +50 + 45 For 1/2 zoom out.
-		#else
 		hudCam = new FlxCamera(440, 0, hud.width, hud.height);
-		#end
 		hudCam.zoom = 1; // For 1/2 zoom out.
 		hudCam.follow(hud.background, FlxCameraFollowStyle.NO_DEAD_ZONE);
 		hudCam.alpha = .5;
@@ -177,14 +164,7 @@ class PlayState extends FlxState
 	public function setZoom(zoom:Float)
 	{
 		zoom = FlxMath.bound(zoom, 0.5, 4);
-		zoom = Math.round(zoom * 10) / 10; // corrects float precision problems.
-		
 		FlxG.camera.zoom = zoom;
-		
-		#if TRUE_ZOOM_OUT
-		zoom += 0.5; // For 1/2 zoom out.
-		zoom -= (1 - zoom); // For 1/2 zoom out.
-		#end
 		
 		var zoomDistDiffY;
 		var zoomDistDiffX;
@@ -193,25 +173,15 @@ class PlayState extends FlxState
 		{
 			zoomDistDiffX = Math.abs((LEVEL_MIN_X + LEVEL_MAX_X) - (LEVEL_MIN_X + LEVEL_MAX_X) / 1 + (1 - zoom));
 			zoomDistDiffY = Math.abs((LEVEL_MIN_Y + LEVEL_MAX_Y) - (LEVEL_MIN_Y + LEVEL_MAX_Y) / 1 + (1 - zoom));
-			#if TRUE_ZOOM_OUT
-			zoomDistDiffX *= 1; // For 1/2 zoom out - otherwise -0.5 
-			zoomDistDiffY *= 1; // For 1/2 zoom out - otherwise -0.5
-			#else
 			zoomDistDiffX *= -.5;
 			zoomDistDiffY *= -.5;
-			#end
 		}
 		else
 		{
 			zoomDistDiffX = Math.abs((LEVEL_MIN_X + LEVEL_MAX_X) - (LEVEL_MIN_X + LEVEL_MAX_X) / zoom);
 			zoomDistDiffY = Math.abs((LEVEL_MIN_Y + LEVEL_MAX_Y) - (LEVEL_MIN_Y + LEVEL_MAX_Y) / zoom);
-			#if TRUE_ZOOM_OUT
-			zoomDistDiffX *= 1; // For 1/2 zoom out - otherwise 0.5
-			zoomDistDiffY *= 1; // For 1/2 zoom out - otherwise 0.5
-			#else
 			zoomDistDiffX *= .5;
 			zoomDistDiffY *= .5;
-			#end
 		}
 		
 		FlxG.camera.setScrollBoundsRect(
@@ -224,12 +194,11 @@ class PlayState extends FlxState
 		hud.updateZoom(FlxG.camera.zoom);
 	}
 
-	private function createFloor() 
+	private function createFloorTiles() 
 	{
-		// CREATE FLOOR TILES
-		var	FloorImg = Assets.getBitmapData("assets/FloorTexture.png");
-		var ImgWidth = FloorImg.width;
-		var ImgHeight = FloorImg.height;
+		var	floorImg = Assets.getBitmapData("assets/FloorTexture.png");
+		var imgWidth = floorImg.width;
+		var imgHeight = floorImg.height;
 		var i = LEVEL_MIN_X; 
 		var j = LEVEL_MIN_Y; 
 		
@@ -237,30 +206,21 @@ class PlayState extends FlxState
 		{
 			while (j <= LEVEL_MAX_Y)
 			{
-				var spr = new FlxSprite(i, j, FloorImg);
-				add(spr);
-				j += ImgHeight;
+				add(new FlxSprite(i, j, floorImg));
+				j += imgHeight;
 			}
-			i += ImgWidth;
+			i += imgWidth;
 			j = LEVEL_MIN_Y;
 		}
 	}
 	
 	override public function update(elapsed:Float):Void 
 	{	
-		#if TRUE_ZOOM_OUT
-		if (firstUpdate) // For 1/2 zoom out.
-		{
-			setZoom(1);
-			firstUpdate = false;
-		}
-		#end
-
 		super.update(elapsed);
 		
 		var speed = 20;
 		if (FlxG.keys.anyPressed([A, LEFT]))
-			orb.body.applyImpulse(new Vec2( -speed, 0));
+			orb.body.applyImpulse(new Vec2(-speed, 0));
 		if (FlxG.keys.anyPressed([S, DOWN]))
 			orb.body.applyImpulse(new Vec2(0, speed));
 		if (FlxG.keys.anyPressed([D, RIGHT]))
