@@ -609,7 +609,6 @@ class FlxSound extends FlxBasic
 	 */
 	private function gotID3(_):Void
 	{
-		FlxG.log.notice("Got ID3 info.");
 		name = _sound.id3.songName;
 		artist = _sound.id3.artist;
 		_sound.removeEventListener(Event.ID3, gotID3);
