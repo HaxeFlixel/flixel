@@ -11,18 +11,10 @@ import flixel.graphics.frames.FlxFrame;
 class FlxTile extends FlxObject
 {
 	/**
-	 * This function is called whenever an object hits a tile of this type.
-	 * This function should take the form myFunction(Tile:FlxTile,Object:FlxObject):void.
-	 * Defaults to null, set through FlxTilemap.setTileProperties().
+	 * Filters used for overlap/collision vs different classes on this tile.
+	 * Use `FlxBaseTilemap.addTileFilter()` and `FlxBaseTilemap.removeTileFilter()`
 	 */
-	public var callbackFunction:FlxObject->FlxObject->Void = null;
-	/**
-	 * Each tile can store its own filter class for their callback functions.
-	 * That is, the callback will only be triggered if an object with a class
-	 * type matching the filter touched it.
-	 * Defaults to null, set through FlxTilemap.setTileProperties().
-	 */
-	public var filter:Class<FlxObject>;
+	public var filters:Map<String, FlxTileFilter> = null;
 	/**
 	 * A reference to the tilemap this tile object belongs to.
 	 */
@@ -73,10 +65,49 @@ class FlxTile extends FlxObject
 	 */
 	override public function destroy():Void
 	{
-		callbackFunction = null;
+		if (filters != null)
+		{
+			for (f in filters)
+			{
+				f.overlapCallback = null;
+				f.processCallback = null;
+				f = null;
+			}
+			filters = null;
+		}
 		tilemap = null;
 		frame = null;
 		
 		super.destroy();
 	}
+}
+class FlxTileFilter
+{
+	/**
+	 * Collision flags for this filter.
+	 * Defaults to ANY
+	 */
+	public var collisions:Int = FlxObject.ANY;
+	
+	/**
+	 * This function is called whenever an object hits a tile of this type.
+	 * This function should take the form myFunction(Tile:FlxTile,Object:FlxObject):Void.
+	 * Defaults to null
+	 */
+	public var overlapCallback:FlxTile->FlxObject->Void = null;
+	
+	/**
+	 * This function, if set, will be called when overlap is detected, and `overlapCallback` will only be called if this returns `true`.
+	 * Should take the form of myFunction(Tile:FlxTile,Object:FlxObject):Bool
+	 * Use `FlxObject.seperate()` to allow collision on this tile.
+	 */
+	public var processCallback:FlxTile->FlxObject->Bool = null;
+	
+	public function new(?collisions:Int = FlxObject.ANY, ?overlapCallback:FlxTile->FlxObject->Void, ?processCallback:FlxTile->FlxObject->Bool)
+	{
+		this.collisions = collisions;
+		this.overlapCallback = overlapCallback;
+		this.processCallback = processCallback;
+	}
+	
 }
