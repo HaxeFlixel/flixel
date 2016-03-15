@@ -7,6 +7,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.addons.nape.FlxNapeSpace;
+import flixel.math.FlxRect;
 import flixel.util.FlxSpriteUtil;
 import nape.geom.Vec2;
 import openfl.Assets;
@@ -30,6 +31,7 @@ class PlayState extends FlxState
 	private var hud:HUD;
 	private var hudCam:FlxCamera;
 	private var overlayCamera:FlxCamera;
+	private var cameraOverlay:FlxSprite;
 
 	override public function create():Void 
 	{	
@@ -110,28 +112,9 @@ class PlayState extends FlxState
 			otherOrb.body.velocity.setxy(Std.random(150) - 75, Std.random(150) - 75);
 		}
 		// Camera Overlay
-		var cameraOverlay = new FlxSprite(-10000, -10000);
-		cameraOverlay.makeGraphic(640, 480, 0x0);
-		cameraOverlay.antialiasing = true;
-		var offset:Int = 100;
-		
-		var lineStyle:LineStyle = { color: 0xFFFFFFFF, thickness: 3 };
-		
-		// Left Up Corner
-		FlxSpriteUtil.drawLine(cameraOverlay, offset, offset, offset + 50, offset, lineStyle);
-		FlxSpriteUtil.drawLine(cameraOverlay, offset, offset, offset, offset + 50, lineStyle);
-		// Right Up Corner
-		FlxSpriteUtil.drawLine(cameraOverlay, 640 - offset, offset, 640 - offset - 50, offset, lineStyle);
-		FlxSpriteUtil.drawLine(cameraOverlay, 640 - offset, offset, 640 - offset, offset + 50, lineStyle);
-		// Bottom Left Corner
-		FlxSpriteUtil.drawLine(cameraOverlay, offset, 480 - offset, offset + 50, 480 - offset, lineStyle);
-		FlxSpriteUtil.drawLine(cameraOverlay, offset, 480 - offset, offset, 480 - offset - 50, lineStyle);
-		// Bottom Right Corner
-		FlxSpriteUtil.drawLine(cameraOverlay, 640 - offset, 480 - offset, 640 - offset - 50, 480 - offset, lineStyle);
-		FlxSpriteUtil.drawLine(cameraOverlay, 640 - offset, 480 - offset, 640 - offset, 480 - offset - 50, lineStyle);
+		cameraOverlay = new FlxSprite( -10000, -10000);
 		
 		overlayCamera = new FlxCamera(0, 0, 640, 720);
-		overlayCamera.follow(cameraOverlay);
 		overlayCamera.bgColor = 0x0;
 		FlxG.cameras.add(overlayCamera);
 		add(cameraOverlay);
@@ -141,6 +124,7 @@ class PlayState extends FlxState
 		
 		FlxG.camera.setScrollBoundsRect(LEVEL_MIN_X , LEVEL_MIN_Y , LEVEL_MAX_X + Math.abs(LEVEL_MIN_X), LEVEL_MAX_Y + Math.abs(LEVEL_MIN_Y), true);
 		FlxG.camera.follow(orb, LOCKON, 1);
+		remakeCameraOverlay(); // now that deadzone is present
 		
 		#if TRUE_ZOOM_OUT
 		hudCam = new FlxCamera(440 + 50, 0 + 45, hud.width, hud.height); // +50 + 45 For 1/2 zoom out.
@@ -151,6 +135,40 @@ class PlayState extends FlxState
 		hudCam.follow(hud.background, FlxCameraFollowStyle.NO_DEAD_ZONE);
 		hudCam.alpha = .5;
 		FlxG.cameras.add(hudCam);
+	}
+	
+	function remakeCameraOverlay() 
+	{
+		cameraOverlay.makeGraphic(640, 480, 0x0, true);
+		cameraOverlay.antialiasing = true;
+		overlayCamera.follow(cameraOverlay);
+
+		var lineLength:Int = 20;
+		
+		var lineStyle:LineStyle = { color: 0xFFFFFFFF, thickness: 3 };
+		var dz:FlxRect = FlxG.camera.deadzone;
+		
+		if (dz == null)
+			return;
+		
+		// adjust points slightly so lines will be visible when at screen edges
+		dz.x += lineStyle.thickness / 2;
+		dz.width -= lineStyle.thickness;
+		dz.y += lineStyle.thickness / 2;
+		dz.height -= lineStyle.thickness;
+		
+		// Left Up Corner
+		FlxSpriteUtil.drawLine(cameraOverlay, dz.left, dz.top, dz.left + lineLength, dz.top, lineStyle);
+		FlxSpriteUtil.drawLine(cameraOverlay, dz.left, dz.top, dz.left, dz.top + lineLength, lineStyle);
+		// Right Up Corner
+		FlxSpriteUtil.drawLine(cameraOverlay, dz.right, dz.top, dz.right - lineLength, dz.top, lineStyle);
+		FlxSpriteUtil.drawLine(cameraOverlay, dz.right, dz.top, dz.right, dz.top + lineLength, lineStyle);
+		// Bottom Left Corner
+		FlxSpriteUtil.drawLine(cameraOverlay, dz.left, dz.bottom, dz.left + lineLength, dz.bottom, lineStyle);
+		FlxSpriteUtil.drawLine(cameraOverlay, dz.left, dz.bottom, dz.left, dz.bottom - lineLength, lineStyle);
+		// Bottom Right Corner
+		FlxSpriteUtil.drawLine(cameraOverlay, dz.right, dz.bottom, dz.right - lineLength, dz.bottom, lineStyle);
+		FlxSpriteUtil.drawLine(cameraOverlay, dz.right, dz.bottom, dz.right, dz.bottom - lineLength, lineStyle);
 	}
 	
 	public function setZoom(zoom:Float)
@@ -304,6 +322,7 @@ class PlayState extends FlxState
 		
 		var newCamStyle = Type.createEnumIndex(FlxCameraFollowStyle, newCamStyleIndex);
 		FlxG.camera.follow(orb, newCamStyle, FlxG.camera.followLerp);
+		remakeCameraOverlay();
 		
 		hud.updateStyle(Std.string(FlxG.camera.style));
 		
