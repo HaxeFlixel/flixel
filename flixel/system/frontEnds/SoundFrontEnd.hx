@@ -78,8 +78,9 @@ class SoundFrontEnd
 	 * @param	Volume		How loud the sound should be, from 0 to 1.
 	 * @param	Looped		Whether to loop this music.
 	 * @param	Group		The group to add this sound to.
+	 * @param	LoopTime	Point at which the sound will restart when looping back (in case of looping)
 	 */
-	public function playMusic(Music:FlxSoundAsset, Volume:Float = 1, Looped:Bool = true, ?Group:FlxSoundGroup):Void
+	public function playMusic(Music:FlxSoundAsset, Volume:Float = 1, Looped:Bool = true, ?Group:FlxSoundGroup, LoopTime:Float = 0.0):Void
 	{
 		if (music == null)
 		{
@@ -94,6 +95,7 @@ class SoundFrontEnd
 		music.volume = Volume;
 		music.persist = true;
 		music.group = (Group == null) ? defaultMusicGroup : Group;
+		music.loopTime = LoopTime;
 		music.play();
 	}
 	
