@@ -96,12 +96,11 @@ class FlxSound extends FlxBasic
 	/**
 	 * Whether or not this sound should loop.
 	 */
-	@:isVar
-	public var looped(get, set):Bool;
+	public var looped:Bool;
 	/**
 	 * In case of looping, the point (in milliseconds) from where to restart the sound when it loops back
 	 */
-	public var loopTime(default, set):Float;
+	public var loopTime:Float;
 	/**
 	 * Internal tracker for a Flash sound object.
 	 */
@@ -387,7 +386,7 @@ class FlxSound extends FlxBasic
 	 * Call this function to play the sound - also works on paused sounds.
 	 * 
 	 * @param	ForceRestart	Whether to start the sound over or not.  Default value is false, meaning if the sound is already playing or was paused when you call play(), it will continue playing from its current position, NOT start again from the beginning.
-	 * @param	Time			At which point to start plaing the sound, in milliseconds
+	 * @param	StartTime		At which point to start plaing the sound, in milliseconds
 	 */
 	public function play(ForceRestart:Bool = false, StartTime:Float = 0.0):FlxSound
 	{
@@ -450,12 +449,6 @@ class FlxSound extends FlxBasic
 	{
 		cleanup(autoDestroy, true);
 		return this;
-	}
-	
-	private function set_loopTime(newloopTime:Float):Float
-	{
-		loopTime = newloopTime;
-		return loopTime;
 	}
 	
 	/**
@@ -703,17 +696,6 @@ class FlxSound extends FlxBasic
 	private inline function set_pan(pan:Float):Float
 	{
 		return _transform.pan = pan;
-	}
-	
-	private inline function get_looped():Bool
-	{
-		return looped;
-	}
-	
-	private inline function set_looped(loop:Bool):Bool
-	{
-		looped = loop;
-		return looped;
 	}
 	
 	override public function toString():String
