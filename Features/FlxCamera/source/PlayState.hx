@@ -7,10 +7,12 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.addons.nape.FlxNapeSpace;
+import flixel.math.FlxMath;
 import flixel.math.FlxRect;
-import flixel.util.FlxSpriteUtil;
+import flixel.util.FlxColor;
 import nape.geom.Vec2;
 import openfl.Assets;
+using flixel.util.FlxSpriteUtil;
 
 /**
  * @author TiagoLr ( ~~~ProG4mr~~~ )
@@ -31,16 +33,16 @@ class PlayState extends FlxState
 	private var hud:HUD;
 	private var hudCam:FlxCamera;
 	private var overlayCamera:FlxCamera;
-	private var cameraOverlay:FlxSprite;
+	private var deadzoneOverlay:FlxSprite;
 
 	override public function create():Void 
 	{	
 		FlxNapeSpace.init();
 		
-		LEVEL_MIN_X = -Lib.current.stage.stageWidth / 2;
-		LEVEL_MAX_X = Lib.current.stage.stageWidth * 1.5;
-		LEVEL_MIN_Y = -Lib.current.stage.stageHeight / 2;
-		LEVEL_MAX_Y = Lib.current.stage.stageHeight * 1.5;
+		LEVEL_MIN_X = -FlxG.stage.stageWidth / 2;
+		LEVEL_MAX_X = FlxG.stage.stageWidth * 1.5;
+		LEVEL_MIN_Y = -FlxG.stage.stageHeight / 2;
+		LEVEL_MAX_Y = FlxG.stage.stageHeight * 1.5;
 		
 		super.create();
 		
@@ -103,28 +105,33 @@ class PlayState extends FlxState
 					otherOrb.body.position.setxy(320 + 400, 240 + 400); 
 					otherOrb.animation.frameIndex = 3;
 				case 3:
-					otherOrb.body.position.setxy( -300, 240); 
+					otherOrb.body.position.setxy(-300, 240); 
 					otherOrb.animation.frameIndex = 2;
 				case 4:
 					otherOrb.body.position.setxy(0, 240 + 400); 
 					otherOrb.animation.frameIndex = 1;
 			}
-			otherOrb.body.velocity.setxy(Std.random(150) - 75, Std.random(150) - 75);
+			otherOrb.body.velocity.setxy(FlxG.random.int(75, 150), FlxG.random.int(75, 150));
 		}
-		// Camera Overlay
-		cameraOverlay = new FlxSprite( -10000, -10000);
-		
-		overlayCamera = new FlxCamera(0, 0, 640, 720);
-		overlayCamera.bgColor = 0x0;
-		FlxG.cameras.add(overlayCamera);
-		add(cameraOverlay);
-		
+
 		hud = new HUD();
 		add(hud);
+
+		// Camera Overlay
+		deadzoneOverlay = new FlxSprite(-10000, -10000);
+		deadzoneOverlay.makeGraphic(FlxG.width, FlxG.height, FlxColor.TRANSPARENT, true);
+		deadzoneOverlay.antialiasing = true;
+
+		overlayCamera = new FlxCamera(0, 0, 640, 720);
+		overlayCamera.bgColor = FlxColor.TRANSPARENT;
+		overlayCamera.follow(deadzoneOverlay);
+		FlxG.cameras.add(overlayCamera);
+		add(deadzoneOverlay);
 		
-		FlxG.camera.setScrollBoundsRect(LEVEL_MIN_X , LEVEL_MIN_Y , LEVEL_MAX_X + Math.abs(LEVEL_MIN_X), LEVEL_MAX_Y + Math.abs(LEVEL_MIN_Y), true);
+		FlxG.camera.setScrollBoundsRect(LEVEL_MIN_X, LEVEL_MIN_Y,
+			LEVEL_MAX_X + Math.abs(LEVEL_MIN_X), LEVEL_MAX_Y + Math.abs(LEVEL_MIN_Y), true);
 		FlxG.camera.follow(orb, LOCKON, 1);
-		remakeCameraOverlay(); // now that deadzone is present
+		drawDeadzone(); // now that deadzone is present
 		
 		#if TRUE_ZOOM_OUT
 		hudCam = new FlxCamera(440 + 50, 0 + 45, hud.width, hud.height); // +50 + 45 For 1/2 zoom out.
@@ -137,19 +144,15 @@ class PlayState extends FlxState
 		FlxG.cameras.add(hudCam);
 	}
 	
-	function remakeCameraOverlay() 
+	function drawDeadzone() 
 	{
-		cameraOverlay.makeGraphic(640, 480, 0x0, true);
-		cameraOverlay.antialiasing = true;
-		overlayCamera.follow(cameraOverlay);
-
-		var lineLength:Int = 20;
-		
-		var lineStyle:LineStyle = { color: 0xFFFFFFFF, thickness: 3 };
+		deadzoneOverlay.fill(FlxColor.TRANSPARENT);
 		var dz:FlxRect = FlxG.camera.deadzone;
-		
 		if (dz == null)
 			return;
+
+		var lineLength:Int = 20;
+		var lineStyle:LineStyle = { color: FlxColor.WHITE, thickness: 3 };
 		
 		// adjust points slightly so lines will be visible when at screen edges
 		dz.x += lineStyle.thickness / 2;
@@ -158,24 +161,22 @@ class PlayState extends FlxState
 		dz.height -= lineStyle.thickness;
 		
 		// Left Up Corner
-		FlxSpriteUtil.drawLine(cameraOverlay, dz.left, dz.top, dz.left + lineLength, dz.top, lineStyle);
-		FlxSpriteUtil.drawLine(cameraOverlay, dz.left, dz.top, dz.left, dz.top + lineLength, lineStyle);
+		deadzoneOverlay.drawLine(dz.left, dz.top, dz.left + lineLength, dz.top, lineStyle);
+		deadzoneOverlay.drawLine(dz.left, dz.top, dz.left, dz.top + lineLength, lineStyle);
 		// Right Up Corner
-		FlxSpriteUtil.drawLine(cameraOverlay, dz.right, dz.top, dz.right - lineLength, dz.top, lineStyle);
-		FlxSpriteUtil.drawLine(cameraOverlay, dz.right, dz.top, dz.right, dz.top + lineLength, lineStyle);
+		deadzoneOverlay.drawLine(dz.right, dz.top, dz.right - lineLength, dz.top, lineStyle);
+		deadzoneOverlay.drawLine(dz.right, dz.top, dz.right, dz.top + lineLength, lineStyle);
 		// Bottom Left Corner
-		FlxSpriteUtil.drawLine(cameraOverlay, dz.left, dz.bottom, dz.left + lineLength, dz.bottom, lineStyle);
-		FlxSpriteUtil.drawLine(cameraOverlay, dz.left, dz.bottom, dz.left, dz.bottom - lineLength, lineStyle);
+		deadzoneOverlay.drawLine(dz.left, dz.bottom, dz.left + lineLength, dz.bottom, lineStyle);
+		deadzoneOverlay.drawLine(dz.left, dz.bottom, dz.left, dz.bottom - lineLength, lineStyle);
 		// Bottom Right Corner
-		FlxSpriteUtil.drawLine(cameraOverlay, dz.right, dz.bottom, dz.right - lineLength, dz.bottom, lineStyle);
-		FlxSpriteUtil.drawLine(cameraOverlay, dz.right, dz.bottom, dz.right, dz.bottom - lineLength, lineStyle);
+		deadzoneOverlay.drawLine(dz.right, dz.bottom, dz.right - lineLength, dz.bottom, lineStyle);
+		deadzoneOverlay.drawLine(dz.right, dz.bottom, dz.right, dz.bottom - lineLength, lineStyle);
 	}
 	
 	public function setZoom(zoom:Float)
 	{
-		if (zoom < .5) zoom = .5;
-		if (zoom > 4) zoom = 4;
-		
+		zoom = FlxMath.bound(zoom, 0.5, 4);
 		zoom = Math.round(zoom * 10) / 10; // corrects float precision problems.
 		
 		FlxG.camera.zoom = zoom;
@@ -187,7 +188,6 @@ class PlayState extends FlxState
 		
 		var zoomDistDiffY;
 		var zoomDistDiffX;
-		
 		
 		if (zoom <= 1) 
 		{
@@ -214,11 +214,12 @@ class PlayState extends FlxState
 			#end
 		}
 		
-		FlxG.camera.setScrollBoundsRect(LEVEL_MIN_X - zoomDistDiffX, 
-							   LEVEL_MIN_Y - zoomDistDiffY,
-							   (LEVEL_MAX_X + Math.abs(LEVEL_MIN_X) + zoomDistDiffX * 2),
-							   (LEVEL_MAX_Y + Math.abs(LEVEL_MIN_Y) + zoomDistDiffY * 2),
-							   false);
+		FlxG.camera.setScrollBoundsRect(
+			LEVEL_MIN_X - zoomDistDiffX, 
+			LEVEL_MIN_Y - zoomDistDiffY,
+			LEVEL_MAX_X + Math.abs(LEVEL_MIN_X) + zoomDistDiffX * 2,
+			LEVEL_MAX_Y + Math.abs(LEVEL_MIN_Y) + zoomDistDiffY * 2,
+			false);
 		
 		hud.updateZoom(FlxG.camera.zoom);
 	}
@@ -289,7 +290,6 @@ class PlayState extends FlxState
 			
 		if (FlxG.keys.justPressed.M)
 			FlxG.camera.shake();
-		
 	}
 	
 	private function setLead(lead:Float) 
@@ -322,7 +322,7 @@ class PlayState extends FlxState
 		
 		var newCamStyle = Type.createEnumIndex(FlxCameraFollowStyle, newCamStyleIndex);
 		FlxG.camera.follow(orb, newCamStyle, FlxG.camera.followLerp);
-		remakeCameraOverlay();
+		drawDeadzone();
 		
 		hud.updateStyle(Std.string(FlxG.camera.style));
 		
