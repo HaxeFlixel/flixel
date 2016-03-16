@@ -17,12 +17,31 @@ class FlxRect implements IFlxPooled
 	/**
 	 * Recycle or create new FlxRect.
 	 * Be sure to put() them back into the pool after you're done with them!
+	 * 
+	 * @param	X		The X-coordinate of the rect.
+	 * @param	Y		The Y-coordinate of the rect.
+	 * @param	Width	The Width of the rect.
+	 * @param	Height	The Height of the rect.
 	 */
 	public static inline function get(X:Float = 0, Y:Float = 0, Width:Float = 0, Height:Float = 0):FlxRect
 	{
 		var rect = _pool.get().set(X, Y, Width, Height);
 		rect._inPool = false;
 		return rect;
+	}
+	
+	/**
+	 * Recycle or create a new FlxRect and copies the values from the specified rect. 
+	 * Be sure to put() them back into the pool after you're done with them!
+	 * 
+	 * @param	point	Any FlxRect.
+	 * @return	This rect.
+	 */
+	public static inline function getFrom(rect:FlxRect):FlxRect
+	{
+		var vector = _pool.get().copyFrom(rect);
+		vector._inPool = false;
+		return vector;
 	}
 	
 	/**
@@ -76,7 +95,7 @@ class FlxRect implements IFlxPooled
 	}
 	
 	/**
-	 * Add this FlxRect to the recycling pool.
+	 * Add this rect to the recycling pool.
 	 */
 	public inline function put():Void
 	{

@@ -10,6 +10,13 @@ class FlxVector extends FlxPoint
 	public static inline var EPSILON:Float = 0.0000001;
 	public static inline var EPSILON_SQUARED:Float = EPSILON * EPSILON;
 	
+	/**
+	 * Pooling mechanism to minimimze runtime allocations.
+	 * 
+	 * TODO: We need more evidence to decide whether liberal use of pooled objects
+	 *       is worthwhile, or whether static vars are a better alternative. - gamedevsam
+	 */
+	public static var pool(get, never):FlxPool<FlxVector>;
 	private static var _pool = new FlxPool<FlxVector>(FlxVector);
 	
 	private static var _vector1:FlxVector = new FlxVector();
@@ -25,20 +32,34 @@ class FlxVector extends FlxPoint
 	 */
 	public static inline function get(X:Float = 0, Y:Float = 0):FlxVector
 	{
-		var vector = _pool.get().set(X, Y);
+		var vector:FlxVector = pool.get().set(X, Y);
 		vector._inPool = false;
 		return vector;
 	}
 	
 	/**
-	 * Add this FlxVector to the recycling pool.
+	 * Recycle or create a new FlxVector and copies the values from the specified vector. 
+	 * Be sure to put() them back into the pool after you're done with them!
+	 * 
+	 * @param	vector	Any FlxVector.
+	 * @return	This vector.
+	 */
+	public static inline function getFrom(vector:FlxVector):FlxVector
+	{
+		var vector:FlxVector = cast pool.get().copyFrom(vector);
+		vector._inPool = false;
+		return vector;
+	}
+	
+	/**
+	 * Add this vector to the recycling pool.
 	 */
 	override public function put():Void
 	{
 		if (!_inPool)
 		{
 			_inPool = true;
-			_pool.putUnsafe(this);
+			pool.putUnsafe(this);
 		}
 	}
 	
@@ -89,7 +110,7 @@ class FlxVector extends FlxPoint
 	 * @param	X		The X-coordinate of the point in space.
 	 * @param	Y		The Y-coordinate of the point in space.
 	 */
-	override public function set(X:Float = 0, Y:Float = 0):FlxVector
+	override public inline function set(X:Float = 0, Y:Float = 0):FlxVector
 	{
 		x = X;
 		y = Y;
@@ -388,7 +409,7 @@ class FlxVector extends FlxPoint
 		if (isParallel(v)) return Math.NaN;
 		if (lengthSquared < EPSILON_SQUARED || v.lengthSquared < EPSILON_SQUARED) return Math.NaN;
 		
-		_vector1 = b.clone(_vector1);
+		b.clone(_vector1);
 		_vector1.subtractPoint(a);
 		
 		return _vector1.perpProduct(v) / perpProduct(v);
@@ -655,5 +676,29 @@ class FlxVector extends FlxPoint
 	private inline function get_ly():Float
 	{
 		return -x;
+	}
+	
+	/**
+	 * Inline set, allowing FlxVector to bypass function call overhead of FlxPoint
+	 */
+	override private inline function set_x(Value:Float):Float 
+	{ 
+		return x = Value;
+	}
+	
+	/**
+	 * Inline set, allowing FlxVector to bypass function call overhead of FlxPoint
+	 */
+	override private inline function set_y(Value:Float):Float
+	{
+		return y = Value; 
+	}
+	
+	/**
+	 * Necessary for object pooling.
+	 */
+	private static inline function get_pool():FlxPool<FlxVector>		
+	{		
+		return _pool;		
 	}
 }

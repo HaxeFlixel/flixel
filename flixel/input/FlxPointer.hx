@@ -1,9 +1,10 @@
 package flixel.input;
 
 import flixel.FlxCamera;
-import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxPoint;
+import flixel.math.FlxVector;
 import flixel.util.FlxStringUtil;
+import flixel.group.FlxGroup.FlxTypedGroup;
 
 class FlxPointer
 {
@@ -15,6 +16,7 @@ class FlxPointer
 	
 	private var _globalScreenX:Int = 0;
 	private var _globalScreenY:Int = 0;
+	private static var _cachedPoint:FlxVector = FlxVector.get();
 	
 	public function new() {}
 	
@@ -32,14 +34,21 @@ class FlxPointer
 		{
 			Camera = FlxG.camera;
 		}
+		
+		getScreenPosition(Camera, _cachedPoint);
+		
+		_cachedPoint.x = _cachedPoint.x + Camera.scroll.x;
+		_cachedPoint.y = _cachedPoint.x + Camera.scroll.y;
+		
 		if (point == null)
 		{
-			point = FlxPoint.get();
+			point = FlxPoint.get(_cachedPoint.x, _cachedPoint.y);
 		}
-		var screenPosition:FlxPoint = getScreenPosition(Camera);
-		point.x = screenPosition.x + Camera.scroll.x;
-		point.y = screenPosition.y + Camera.scroll.y;
-		screenPosition.put();
+		else if(point != _cachedPoint)
+		{
+			point.copyFrom(_cachedPoint);
+		}
+		
 		return point;
 	}
 	
@@ -57,13 +66,18 @@ class FlxPointer
 		{
 			Camera = FlxG.camera;
 		}
+		
+		_cachedPoint.x = (_globalScreenX - Camera.x + 0.5 * Camera.width * (Camera.zoom - Camera.initialZoom)) / Camera.zoom;
+		_cachedPoint.y = (_globalScreenY - Camera.y + 0.5 * Camera.height * (Camera.zoom - Camera.initialZoom)) / Camera.zoom;
+		
 		if (point == null)
 		{
-			point = FlxPoint.get();
+			point = FlxPoint.getFrom(_cachedPoint);
 		}
-		
-		point.x = (_globalScreenX - Camera.x + 0.5 * Camera.width * (Camera.zoom - Camera.initialZoom)) / Camera.zoom;
-		point.y = (_globalScreenY - Camera.y + 0.5 * Camera.height * (Camera.zoom - Camera.initialZoom)) / Camera.zoom;
+		else if(point != _cachedPoint)
+		{
+			point.copyFrom(_cachedPoint);
+		}
 		
 		return point;
 	}
@@ -73,8 +87,18 @@ class FlxPointer
 	 */
 	public function getPosition(?point:FlxPoint):FlxPoint
 	{
+		_cachedPoint.x = x;
+		_cachedPoint.y = y;
+		
 		if (point == null)
-			point = FlxPoint.get();
+		{
+			point = FlxPoint.getFrom(_cachedPoint);
+		}
+		else if(point != _cachedPoint)
+		{
+			point.copyFrom(_cachedPoint);
+		}
+		
 		return point.set(x, y);
 	}
 	
@@ -105,10 +129,9 @@ class FlxPointer
 		}
 		else 
 		{
-			var point:FlxPoint = getPosition();
+			getPosition(_cachedPoint);
 			var object:FlxObject = cast ObjectOrGroup;
-			result = object.overlapsPoint(point, true, Camera);
-			point.put();
+			result = object.overlapsPoint(_cachedPoint, true, Camera);
 		}
 		
 		return result;
@@ -139,14 +162,12 @@ class FlxPointer
 	 */
 	private function updatePositions():Void
 	{
-		var screenPosition:FlxPoint = getScreenPosition();
-		screenX = Std.int(screenPosition.x);
-		screenY = Std.int(screenPosition.y);
-		screenPosition.put();
+		getScreenPosition(FlxG.camera, _cachedPoint);
+		screenX = Std.int(_cachedPoint.x);
+		screenY = Std.int(_cachedPoint.y);
 		
-		var worldPosition = getWorldPosition();
-		x = Std.int(worldPosition.x);
-		y = Std.int(worldPosition.y);
-		worldPosition.put();
+		getWorldPosition(FlxG.camera, _cachedPoint);
+		x = Std.int(_cachedPoint.x);
+		y = Std.int(_cachedPoint.y);
 	}
 }
