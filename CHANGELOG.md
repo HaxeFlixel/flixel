@@ -8,6 +8,7 @@
 	* fixed `FlxMouse`'s `visible` and `useSystemCursor`  not being restored properly
 	* fixed cursor disappearing after losing Console focus with native cursor API
 	* fixed mouse focus area of windows being too big
+* `FlxAnimationController`: fixed `finishCallback` firing multiple times in one frame (#1781)
 
 4.0.0
 ------------------------------
