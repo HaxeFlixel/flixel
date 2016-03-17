@@ -652,6 +652,22 @@ class FlxGame extends Sprite
 			_resetGame = false;
 		}
 		
+		handleReplayRequests();
+		
+		#if !FLX_NO_DEBUG
+		// Finally actually step through the game physics
+		FlxBasic.activeCount = 0;
+		#end
+		
+		update();
+		
+		#if !FLX_NO_DEBUG
+		debugger.stats.activeObjects(FlxBasic.activeCount);
+		#end
+	}
+	
+	private function handleReplayRequests():Void
+	{
 		#if FLX_RECORD
 		// Handle replay-related requests
 		if (_recordingRequested)
@@ -677,17 +693,6 @@ class FlxGame extends Sprite
 			
 			replaying = true;
 		}
-		#end
-		
-		#if !FLX_NO_DEBUG
-		// Finally actually step through the game physics
-		FlxBasic.activeCount = 0;
-		#end
-		
-		update();
-		
-		#if !FLX_NO_DEBUG
-		debugger.stats.activeObjects(FlxBasic.activeCount);
 		#end
 	}
 	

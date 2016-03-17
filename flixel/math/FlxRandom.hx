@@ -476,7 +476,7 @@ class FlxRandom
 	/**
 	 * Returns the seed to use for the requested recording.
 	 */
-	@:allow(flixel.FlxGame.step)
+	@:allow(flixel.FlxGame.handleReplayRequests)
 	private static inline function getRecordingSeed():Int
 	{
 		return _recordingSeed;
