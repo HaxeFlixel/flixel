@@ -105,6 +105,9 @@ class FlxDebugger extends Sprite
 	
 	private var _windows:Array<Window> = [];
 
+	private var _wasMouseVisible:Bool = true;
+	private var _wasUsingSystemCursor:Bool = false;
+
 	/**
 	 * Instantiates the debugger overlay.
 	 * 
@@ -449,24 +452,35 @@ class FlxDebugger extends Sprite
 	/**
 	 * Mouse handler that helps with fake "mouse focus" type behavior.
 	 */
-	private inline function onMouseOver(_):Void
+	private function onMouseOver(_):Void
 	{
 		hasMouse = true;
-		#if !FLX_NO_MOUSE
-		FlxG.mouse.useSystemCursor = true;
-		#end
+		showCursor();
 	}
 	
 	/**
 	 * Mouse handler that helps with fake "mouse focus" type behavior.
 	 */
-	private inline function onMouseOut(_):Void
+	private function onMouseOut(_):Void
 	{
 		hasMouse = false;
-		
+		restoreCursor();
+	}
+
+	private function showCursor():Void
+	{
 		#if !FLX_NO_MOUSE
-		if (!FlxG.vcr.paused)
-			FlxG.mouse.useSystemCursor = false;
+		_wasMouseVisible = FlxG.mouse.visible;
+		_wasUsingSystemCursor = FlxG.mouse.useSystemCursor;
+		FlxG.mouse.useSystemCursor = true;
+		#end
+	}
+	
+	private function restoreCursor():Void
+	{
+		#if !FLX_NO_MOUSE
+		FlxG.mouse.useSystemCursor = _wasUsingSystemCursor;
+		FlxG.mouse.visible = _wasMouseVisible;
 		#end
 	}
 
