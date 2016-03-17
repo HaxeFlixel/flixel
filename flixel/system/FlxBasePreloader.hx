@@ -15,7 +15,8 @@ import flixel.util.FlxColor;
 import flixel.util.FlxStringUtil;
 
 class FlxBasePreloader extends NMEPreloader
-{	
+{
+	#if !js
 	/**
 	 * Add this string to allowedURLs array if you want to be able to test game with enabled site-locking on local machine 
 	 */
