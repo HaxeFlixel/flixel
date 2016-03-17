@@ -189,6 +189,7 @@ class Console extends Window
 		#end
 		
 		completionList.close();
+		FlxG.game.debugger.restoreCursor();
 	}
 	
 	#if hscript

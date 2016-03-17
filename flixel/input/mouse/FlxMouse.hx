@@ -134,7 +134,6 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	#if FLX_NATIVE_CURSOR
 	private var _cursorDefaultName:String = "defaultCursor";
 	private var _currentNativeCursor:String;
-	private var _previousNativeCursor:String;
 	private var _matrix = new Matrix();
 	#end
 	
@@ -244,7 +243,6 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	 */
 	public function setNativeCursor(Name:String):Void
 	{
-		_previousNativeCursor = _currentNativeCursor;
 		_currentNativeCursor = Name;
 		
 		Mouse.show();
@@ -497,31 +495,25 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	private inline function get_justReleasedMiddle():Bool return _middleButton.justReleased;
 	#end
 	
-	/**
-	 * Show the default system cursor, if Flash 10.2 return to AUTO
-	 */
 	private function showSystemCursor():Void
 	{
 		#if FLX_NATIVE_CURSOR
-		setNativeCursor(MouseCursor.AUTO);
+		Mouse.cursor = MouseCursor.AUTO;
 		#else
-		Mouse.show();
 		cursorContainer.visible = false;
 		#end
+
+		Mouse.show();
 	}
 
-	/**
-	 * Hide the system cursor, if Flash 10.2 return to default
-	 */
 	private function hideSystemCursor():Void
 	{
 		#if FLX_NATIVE_CURSOR
-		if (Mouse.supportsCursor && (_previousNativeCursor != null))
+		if (_currentNativeCursor != null)
 		{
-			setNativeCursor(_previousNativeCursor);
+			setNativeCursor(_currentNativeCursor);
 		}
 		#else
-		
 		Mouse.hide();
 		
 		if (visible)
@@ -544,45 +536,38 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 		return useSystemCursor = Value;
 	}
 	
-	private function set_visible(Value:Bool):Bool
+	private function showCursor():Void
 	{
-		if (Value)
+		if (useSystemCursor)
 		{
-			if (useSystemCursor)
-			{
-				Mouse.show();
-			}
-			else 
-			{
-				if (_cursor == null)
-				{
-					load();
-				}
-				
-				cursorContainer.visible = true;
-				Mouse.hide();
-			}
-			
-			#if FLX_NATIVE_CURSOR
-			if (Mouse.supportsCursor && (_previousNativeCursor != null))
-			{
-				setNativeCursor(_previousNativeCursor);
-			}
 			Mouse.show();
-			#end
 		}
 		else 
 		{
-			cursorContainer.visible = false;
-			Mouse.hide();
-			
+			if (_cursor == null)
+				load();
+		
 			#if FLX_NATIVE_CURSOR
-			if (Mouse.supportsCursor)
-			{
-				_previousNativeCursor = _currentNativeCursor;
-			}
+			Mouse.show();
+			#else
+			cursorContainer.visible = true;
+			Mouse.hide();
 			#end
 		}
+	}
+
+	private function hideCursor():Void
+	{
+		cursorContainer.visible = false;
+		Mouse.hide();
+	}
+
+	private function set_visible(Value:Bool):Bool
+	{
+		if (Value)
+			showCursor();
+		else 
+			hideCursor();
 		
 		return visible = Value;
 	}
