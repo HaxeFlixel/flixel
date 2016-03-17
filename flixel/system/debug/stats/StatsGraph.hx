@@ -12,7 +12,7 @@ import flixel.util.FlxDestroyUtil;
 /**
  * This is a helper function for the stats window to draw a graph with given values.
  */
-#if !FLX_NO_DEBUG
+#if FLX_DEBUG
 class StatsGraph extends Sprite
 {
 	private static inline var AXIS_COLOR:FlxColor = 0xffffff;

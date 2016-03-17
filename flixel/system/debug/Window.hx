@@ -437,7 +437,7 @@ class Window extends Sprite
 	public function close():Void
 	{
 		destroy();
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		FlxG.game.debugger.removeWindow(this);
 		#end
 	}

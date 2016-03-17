@@ -531,7 +531,7 @@ class FlxObject extends FlxBasic
 	 */
 	public var collisonXDrag:Bool = true;
 	
-	#if !FLX_NO_DEBUG
+	#if FLX_DEBUG
 	/**
 	 * Overriding this will force a specific color to be used for debug rect.
 	 */
@@ -617,7 +617,7 @@ class FlxObject extends FlxBasic
 	 */
 	override public function update(elapsed:Float):Void 
 	{
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		// this just increments FlxBasic._ACTIVECOUNT, no need to waste a function call on release
 		super.update(elapsed);
 		#end
@@ -664,7 +664,7 @@ class FlxObject extends FlxBasic
 	 */
 	override public function draw():Void
 	{
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		super.draw();
 		if (FlxG.debugger.drawDebug)
 			drawDebug();
@@ -990,7 +990,7 @@ class FlxObject extends FlxBasic
 		height = Height;
 	}
 	
-#if !FLX_NO_DEBUG
+#if FLX_DEBUG
 	public function drawDebug():Void
 	{
 		if (ignoreDrawDebug)
@@ -1104,7 +1104,7 @@ class FlxObject extends FlxBasic
 	
 	private function set_width(Width:Float):Float
 	{
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		if (Width < 0) 
 		{
 			FlxG.log.warn("An object's width cannot be smaller than 0. Use offset for sprites to control the hitbox position!");
@@ -1117,7 +1117,7 @@ class FlxObject extends FlxBasic
 	
 	private function set_height(Height:Float):Float
 	{
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		if (Height < 0) 
 		{
 			FlxG.log.warn("An object's height cannot be smaller than 0. Use offset for sprites to control the hitbox position!");

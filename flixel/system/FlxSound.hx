@@ -15,7 +15,7 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxStringUtil;
 import openfl.Assets;
 
-#if !FLX_NO_SOUND_SYSTEM
+#if FLX_SOUND_SYSTEM
 import flixel.system.frontEnds.SoundFrontEnd;
 #end
 
@@ -514,7 +514,7 @@ class FlxSound extends FlxBasic
 	private function updateTransform():Void
 	{
 		_transform.volume =
-		#if !FLX_NO_SOUND_SYSTEM
+		#if FLX_SOUND_SYSTEM
 			(FlxG.sound.muted ? 0 : 1) * FlxG.sound.volume *
 		#end
 			(group != null ? group.volume : 1) * _volume * _volumeAdjust;
@@ -614,7 +614,7 @@ class FlxSound extends FlxBasic
 		_sound.removeEventListener(Event.ID3, gotID3);
 	}
 	
-	#if !FLX_NO_SOUND_SYSTEM
+	#if FLX_SOUND_SYSTEM
 	@:allow(flixel.system.frontEnds.SoundFrontEnd)
 	private function onFocus():Void
 	{

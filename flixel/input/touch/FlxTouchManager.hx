@@ -1,6 +1,6 @@
 package flixel.input.touch;
 
-#if !FLX_NO_TOUCH
+#if FLX_TOUCH
 import flash.events.TouchEvent;
 import flash.Lib;
 import flash.ui.Multitouch;

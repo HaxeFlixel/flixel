@@ -57,14 +57,14 @@ class VCRFrontEnd
 	{
 		if (!paused)
 		{
-			#if !FLX_NO_MOUSE
+			#if FLX_MOUSE
 			if (!FlxG.mouse.useSystemCursor)
 				Mouse.show();
 			#end
 			
 			paused = true;
 			
-			#if !FLX_NO_DEBUG
+			#if FLX_DEBUG
 			FlxG.game.debugger.vcr.onPause();
 			#end
 		}
@@ -77,14 +77,14 @@ class VCRFrontEnd
 	{
 		if (paused)
 		{
-			#if !FLX_NO_MOUSE
+			#if FLX_MOUSE
 			if (!FlxG.mouse.useSystemCursor)
 				Mouse.hide();
 			#end
 			
 			paused = false;
 			
-			#if !FLX_NO_DEBUG
+			#if FLX_DEBUG
 			FlxG.game.debugger.vcr.onResume();
 			#end
 		}
@@ -130,15 +130,15 @@ class VCRFrontEnd
 		replayCallback = Callback;
 		FlxG.game._replayRequested = true;
 		
-		#if !FLX_NO_KEYBOARD
+		#if FLX_KEYBOARD
 		FlxG.keys.enabled = false;
 		#end
 	
-		#if !FLX_NO_MOUSE
+		#if FLX_MOUSE
 		FlxG.mouse.enabled = false;
 		#end
 		
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		FlxG.game.debugger.vcr.runtime = 0;
 		FlxG.game.debugger.vcr.playingReplay();
 		#end
@@ -174,15 +174,15 @@ class VCRFrontEnd
 		FlxG.game.replaying = false;
 		FlxG.inputs.reset();
 		
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		FlxG.game.debugger.vcr.stoppedReplay();
 		#end
 		
-		#if !FLX_NO_KEYBOARD
+		#if FLX_KEYBOARD
 		FlxG.keys.enabled = true;
 		#end
 	
-		#if !FLX_NO_MOUSE
+		#if FLX_MOUSE
 		FlxG.mouse.enabled = true;
 		#end
 	}
@@ -219,7 +219,7 @@ class VCRFrontEnd
 		}
 		
 		FlxG.game._recordingRequested = true;
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		FlxG.game.debugger.vcr.recording();
 		#end
 	}
@@ -235,7 +235,7 @@ class VCRFrontEnd
 	{
 		FlxG.game.recording = false;
 		
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		FlxG.game.debugger.vcr.stoppedRecording();
 		FlxG.game.debugger.vcr.stoppedReplay();
 		#end

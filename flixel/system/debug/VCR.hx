@@ -1,6 +1,6 @@
 package flixel.system.debug;
 
-#if !FLX_NO_DEBUG
+#if FLX_DEBUG
 import flash.display.BitmapData;
 import flash.text.TextField;
 import flash.text.TextFieldAutoSize;

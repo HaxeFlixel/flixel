@@ -1,6 +1,6 @@
 package flixel.input.touch;
 
-#if !FLX_NO_TOUCH
+#if FLX_TOUCH
 import flash.geom.Point;
 import flixel.FlxG;
 import flixel.input.FlxInput;

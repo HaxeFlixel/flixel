@@ -12,19 +12,19 @@ class FlxGTest extends FlxTest
 	@Test function testWorldBoundsNull():Void  Assert.isNotNull(FlxG.worldBounds);
 	@Test function testSaveNull():Void         Assert.isNotNull(FlxG.save);
 
-	#if !FLX_NO_MOUSE
+	#if FLX_MOUSE
 	@Test function testMouseNull():Void        Assert.isNotNull(FlxG.mouse);
 	#end
-	#if !FLX_NO_TOUCH
+	#if FLX_TOUCH
 	@Test function testTouchNull():Void        Assert.isNotNull(FlxG.touches);
 	#end
 	#if FLX_POINTER_INPUT
 	@Test function testSwipesNull():Void       Assert.isNotNull(FlxG.swipes);
 	#end
-	#if !FLX_NO_KEYBOARD
+	#if FLX_KEYBOARD
 	@Test function testKeysNull():Void         Assert.isNotNull(FlxG.keys);
 	#end
-	#if !FLX_NO_GAMEPAD
+	#if FLX_GAMEPAD
 	@Test function testGamepadsNull():Void     Assert.isNotNull(FlxG.gamepads);
 	#end
 	#if android
@@ -43,7 +43,7 @@ class FlxGTest extends FlxTest
 	@Test function testBitmapNull():Void       Assert.isNotNull(FlxG.bitmap);
 	@Test function testCamerasNull():Void      Assert.isNotNull(FlxG.cameras);
 	@Test function testPluginsNull():Void      Assert.isNotNull(FlxG.plugins);
-	#if !FLX_NO_SOUND_SYSTEM
+	#if FLX_SOUND_SYSTEM
 	@Test function testSoundNull():Void        Assert.isNotNull(FlxG.sound);
 	#end
 

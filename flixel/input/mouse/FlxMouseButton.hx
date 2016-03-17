@@ -1,6 +1,6 @@
 package flixel.input.mouse;
 
-#if !FLX_NO_MOUSE
+#if FLX_MOUSE
 import flixel.FlxG;
 import flixel.input.FlxSwipe;
 import flixel.util.FlxDestroyUtil;

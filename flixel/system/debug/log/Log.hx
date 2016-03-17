@@ -1,6 +1,6 @@
 package flixel.system.debug.log;
 
-#if !FLX_NO_DEBUG
+#if FLX_DEBUG
 import flash.text.TextField;
 import flash.text.TextFormat;
 import flixel.util.FlxStringUtil;
