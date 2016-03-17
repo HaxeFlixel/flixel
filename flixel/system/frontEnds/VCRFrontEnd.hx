@@ -133,6 +133,10 @@ class VCRFrontEnd
 		#if !FLX_NO_KEYBOARD
 		FlxG.keys.enabled = false;
 		#end
+	
+		#if !FLX_NO_MOUSE
+		FlxG.mouse.enabled = false;
+		#end
 		
 		#if !FLX_NO_DEBUG
 		FlxG.game.debugger.vcr.runtime = 0;
@@ -176,6 +180,10 @@ class VCRFrontEnd
 		
 		#if !FLX_NO_KEYBOARD
 		FlxG.keys.enabled = true;
+		#end
+	
+		#if !FLX_NO_MOUSE
+		FlxG.mouse.enabled = true;
 		#end
 	}
 	

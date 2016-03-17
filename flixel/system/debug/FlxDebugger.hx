@@ -72,12 +72,7 @@ class FlxDebugger extends Sprite
 	public var vcr:VCR;
 	public var console:Console;
 	private var completionList:CompletionList;
-	
-	/**
-	 * Whether the mouse is currently over one of the debugger windows or not.
-	 */
-	public var hasMouse:Bool = false;
-	
+
 	/**
 	 * Internal, tracks what debugger window layout user has currently selected.
 	 */
@@ -451,22 +446,21 @@ class FlxDebugger extends Sprite
 	 */
 	private function onMouseOver(_):Void
 	{
-		hasMouse = true;
-		showCursor();
+		onMouseFocus();
 	}
-	
+
 	/**
 	 * Mouse handler that helps with fake "mouse focus" type behavior.
 	 */
 	private function onMouseOut(_):Void
 	{
-		hasMouse = false;
-		restoreCursor();
+		onMouseFocusLost();
 	}
 
-	private function showCursor():Void
+	private function onMouseFocus():Void
 	{
 		#if !FLX_NO_MOUSE
+		FlxG.mouse.enabled = false;
 		_wasMouseVisible = FlxG.mouse.visible;
 		_wasUsingSystemCursor = FlxG.mouse.useSystemCursor;
 		FlxG.mouse.useSystemCursor = true;
@@ -475,11 +469,12 @@ class FlxDebugger extends Sprite
 	}
 	
 	@:allow(flixel.system.debug)
-	private function restoreCursor():Void
+	private function onMouseFocusLost():Void
 	{
 		if (_usingSystemCursor)
 		{
 			#if !FLX_NO_MOUSE
+			FlxG.mouse.enabled = true;
 			FlxG.mouse.useSystemCursor = _wasUsingSystemCursor;
 			FlxG.mouse.visible = _wasMouseVisible;
 			#end

@@ -5,6 +5,7 @@
 * `flixel.input.gamepad`: added IDs for analog stick directions to `FlxGamepadInputID` (#1746)
 *  `FlxGame` / `FlxCamera`: `setFilters()` now needs to be called again on each filter array change (#1761)
 * `FlxSound`: added `loopTime`, added a `StartTime` argument to `play()` (#1736)
+* `FlxMouse:` added `enabled`
 
 4.0.0
 ------------------------------
