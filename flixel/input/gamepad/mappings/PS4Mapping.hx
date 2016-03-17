@@ -2,7 +2,6 @@ package flixel.input.gamepad.mappings;
 
 import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.input.gamepad.id.PS4ID;
-import flixel.input.gamepad.mappings.FlxGamepadMapping;
 
 class PS4Mapping extends FlxGamepadMapping
 {
@@ -42,7 +41,16 @@ class PS4Mapping extends FlxGamepadMapping
 			case PS4ID.DPAD_UP: DPAD_UP;
 			case PS4ID.DPAD_LEFT: DPAD_LEFT;
 			case PS4ID.DPAD_RIGHT: DPAD_RIGHT;
-			default: NONE;
+			default:
+				if (rawID == PS4ID.LEFT_ANALOG_STICK.rawUp)     LEFT_STICK_DIGITAL_UP;
+				if (rawID == PS4ID.LEFT_ANALOG_STICK.rawDown)   LEFT_STICK_DIGITAL_DOWN;
+				if (rawID == PS4ID.LEFT_ANALOG_STICK.rawLeft)   LEFT_STICK_DIGITAL_LEFT;
+				if (rawID == PS4ID.LEFT_ANALOG_STICK.rawRight)  LEFT_STICK_DIGITAL_RIGHT;
+				if (rawID == PS4ID.RIGHT_ANALOG_STICK.rawUp)    RIGHT_STICK_DIGITAL_UP;
+				if (rawID == PS4ID.RIGHT_ANALOG_STICK.rawDown)  RIGHT_STICK_DIGITAL_DOWN;
+				if (rawID == PS4ID.RIGHT_ANALOG_STICK.rawLeft)  RIGHT_STICK_DIGITAL_LEFT;
+				if (rawID == PS4ID.RIGHT_ANALOG_STICK.rawRight) RIGHT_STICK_DIGITAL_RIGHT;
+				NONE;
 		}
 	}
 	
@@ -67,6 +75,14 @@ class PS4Mapping extends FlxGamepadMapping
 			case DPAD_RIGHT: PS4ID.DPAD_RIGHT;
 			case LEFT_TRIGGER: PS4ID.L2;
 			case RIGHT_TRIGGER: PS4ID.R2;
+			case LEFT_STICK_DIGITAL_UP: PS4ID.LEFT_ANALOG_STICK.rawUp;
+			case LEFT_STICK_DIGITAL_DOWN: PS4ID.LEFT_ANALOG_STICK.rawDown;
+			case LEFT_STICK_DIGITAL_LEFT: PS4ID.LEFT_ANALOG_STICK.rawLeft;
+			case LEFT_STICK_DIGITAL_RIGHT: PS4ID.LEFT_ANALOG_STICK.rawRight;
+			case RIGHT_STICK_DIGITAL_UP: PS4ID.RIGHT_ANALOG_STICK.rawUp;
+			case RIGHT_STICK_DIGITAL_DOWN: PS4ID.RIGHT_ANALOG_STICK.rawDown;
+			case RIGHT_STICK_DIGITAL_LEFT: PS4ID.RIGHT_ANALOG_STICK.rawLeft;
+			case RIGHT_STICK_DIGITAL_RIGHT: PS4ID.RIGHT_ANALOG_STICK.rawRight;
 			#if FLX_JOYSTICK_API
 			case LEFT_TRIGGER_FAKE: LEFT_TRIGGER_FAKE;
 			case RIGHT_TRIGGER_FAKE: RIGHT_TRIGGER_FAKE;

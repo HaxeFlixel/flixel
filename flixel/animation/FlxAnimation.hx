@@ -128,7 +128,7 @@ class FlxAnimation extends FlxBaseAnimation
 			// bound frame value
 			Frame = (Frame > numFramesMinusOne) ? numFramesMinusOne : Frame;
 			// "reverse" frame value
-			Frame = (reversed) ? (numFramesMinusOne - Frame) : Frame;
+			Frame = reversed ? (numFramesMinusOne - Frame) : Frame;
 		}
 		
 		if ((delay <= 0) 									// non-positive fps
@@ -151,7 +151,8 @@ class FlxAnimation extends FlxBaseAnimation
 			curFrame = Frame;
 		}
 		
-		if (finished)	parent.fireFinishCallback(name);
+		if (finished)
+			parent.fireFinishCallback(name);
 	}
 	
 	public function restart():Void
@@ -190,36 +191,37 @@ class FlxAnimation extends FlxBaseAnimation
 	public function reverse():Void
 	{
 		reversed = !reversed;
-		if (finished)	play(false, reversed);
+		if (finished)
+			play(false, reversed);
 	}
 	
 	override public function update(elapsed:Float):Void
 	{
-		if (delay > 0 && !finished && !paused)
+		if (delay <= 0 || finished || paused)
+			return;
+
+		_frameTimer += elapsed;
+		while (_frameTimer > delay && !finished)
 		{
-			_frameTimer += elapsed;
-			while (_frameTimer > delay)
+			_frameTimer -= delay;
+			
+			if (looped)
 			{
-				_frameTimer -= delay;
+				var numFramesMinusOne:Int = numFrames - 1;
+				var tempFrame:Int = reversed ? (numFramesMinusOne - curFrame) : curFrame;
 				
-				if (looped)
+				if (tempFrame == numFramesMinusOne)
 				{
-					var numFramesMinusOne:Int = numFrames - 1;
-					var tempFrame:Int = (reversed) ? (numFramesMinusOne - curFrame) : curFrame;
-					
-					if (tempFrame == numFramesMinusOne)
-					{
-						curFrame = (reversed) ? numFramesMinusOne : 0;
-					}
-					else
-					{
-						curFrame = (reversed) ? (curFrame - 1) : (curFrame + 1);
-					}
+					curFrame = reversed ? numFramesMinusOne : 0;
 				}
 				else
 				{
-					curFrame = (reversed) ? (curFrame - 1) : (curFrame + 1);
+					curFrame = reversed ? (curFrame - 1) : (curFrame + 1);
 				}
+			}
+			else
+			{
+				curFrame = reversed ? (curFrame - 1) : (curFrame + 1);
 			}
 		}
 	}
@@ -244,14 +246,14 @@ class FlxAnimation extends FlxBaseAnimation
 	{
 		var numFramesMinusOne:Int = numFrames - 1;
 		// "reverse" frame value (if there is such need)
-		var tempFrame:Int = (reversed) ? (numFramesMinusOne - Frame) : Frame;
+		var tempFrame:Int = reversed ? (numFramesMinusOne - Frame) : Frame;
 		
 		if (tempFrame >= 0)
 		{
 			if (!looped && tempFrame > numFramesMinusOne)
 			{
 				finished = true;
-				curFrame = (reversed) ? 0 : numFramesMinusOne;
+				curFrame = reversed ? 0 : numFramesMinusOne;
 			}
 			else
 			{
@@ -265,7 +267,8 @@ class FlxAnimation extends FlxBaseAnimation
 		
 		curIndex = _frames[curFrame];
 		
-		if (finished && parent != null)	parent.fireFinishCallback(name);
+		if (finished && parent != null)
+			parent.fireFinishCallback(name);
 		
 		return Frame;
 	}

@@ -2,8 +2,7 @@ package flixel.input.gamepad;
 
 import flixel.FlxG;
 import flixel.input.FlxInput.FlxInputState;
-import flixel.input.gamepad.FlxGamepad;
-import flixel.input.gamepad.FlxGamepadInputID;
+import flixel.input.gamepad.FlxGamepad.FlxGamepadModel;
 import flixel.math.FlxPoint;
 import flixel.util.FlxDestroyUtil;
 using flixel.util.FlxStringUtil;
@@ -453,6 +452,7 @@ class FlxGamepadManager implements IFlxInputManager
 		{
 			var isForStick = gamepad.isAxisForAnalogStick(i);
 			var isForMotion = gamepad.mapping.isAxisForMotion(i);
+			
 			if (!isForStick && !isForMotion)
 			{
 				// in legacy this returns a (-1, 1) range, but in flash/next it
@@ -461,50 +461,7 @@ class FlxGamepadManager implements IFlxInputManager
 			}
 			else if (isForStick)
 			{
-				//check to see if we should send digital inputs as well as analog
-				var stick:FlxGamepadAnalogStick = gamepad.getAnalogStickByAxis(i);
-				if (stick.mode == ONLY_DIGITAL || stick.mode == BOTH)
-				{
-					var newVal = newAxis[i];
-					var oldVal = oldAxis[i];
-					
-					var neg = stick.digitalThreshold * -1;
-					var pos = stick.digitalThreshold;
-					var digitalButton = -1;
-					
-					//pressed/released for digital LEFT/UP
-					if (newVal < neg && oldVal >= neg)
-					{
-						if (i == stick.x) digitalButton = stick.rawLeft;
-						else if (i == stick.y) digitalButton = stick.rawUp;
-						handleButtonDown(device, digitalButton);
-					}
-					else if (newVal >= neg && oldVal < neg)
-					{
-						if (i == stick.x) digitalButton = stick.rawLeft;
-						else if (i == stick.y) digitalButton = stick.rawUp;
-						handleButtonUp(device, digitalButton);
-					}
-					
-					//pressed/released for digital RIGHT/DOWN
-					if (newVal > pos && oldVal <= pos)
-					{
-						if (i == stick.x) digitalButton = stick.rawRight;
-						else if (i == stick.y) digitalButton = stick.rawDown;
-						handleButtonDown(device, digitalButton);
-					}
-					else if (newVal <= pos && oldVal > pos)
-					{
-						if (i == stick.x) digitalButton = stick.rawRight;
-						else if (i == stick.y) digitalButton = stick.rawDown;
-						handleButtonUp(device, digitalButton);
-					}
-					
-					if (stick.mode == ONLY_DIGITAL)
-					{
-						//still haven't figured out how to suppress the analog inputs properly. Oh well.
-					}
-				}
+				gamepad.handleAxisMove(i, newAxis[i], (i >= 0 && i < oldAxis.length) ? oldAxis[i] : 0);
 			}
 		}
 		

@@ -26,7 +26,7 @@ import openfl.filters.BitmapFilter;
 import openfl.display.OpenGLView;
 #end
 
-#if !FLX_NO_DEBUG
+#if FLX_DEBUG
 import flixel.system.debug.FlxDebugger;
 #end
 
@@ -34,7 +34,7 @@ import flixel.system.debug.FlxDebugger;
 import flixel.system.ui.FlxSoundTray;
 #end
 
-#if !FLX_NO_FOCUS_LOST_SCREEN
+#if FLX_FOCUS_LOST_SCREEN
 import flixel.system.ui.FlxFocusLostScreen;
 #end
 
@@ -70,7 +70,7 @@ class FlxGame extends Sprite
 	public var soundTray(default, null):FlxSoundTray;
 	#end
 	
-	#if !FLX_NO_DEBUG
+	#if FLX_DEBUG
 	/**
 	 * The debugger overlay object.
 	 */
@@ -145,7 +145,7 @@ class FlxGame extends Sprite
 	private var _onFocusFiredOnce:Bool = false;
 	#end
 	
-	#if !FLX_NO_FOCUS_LOST_SCREEN 
+	#if FLX_FOCUS_LOST_SCREEN 
 	/**
 	 * The "focus lost" screen (see createFocusScreen()).
 	 */
@@ -166,7 +166,7 @@ class FlxGame extends Sprite
 	private var _customSoundTray:Class<FlxSoundTray> = FlxSoundTray;
 	#end
 	
-	#if !FLX_NO_FOCUS_LOST_SCREEN
+	#if FLX_FOCUS_LOST_SCREEN
 	/**
 	 * Change this after calling super() in the FlxGame constructor to use a customized screen which will be show when the application lost focus.
 	 */
@@ -269,6 +269,7 @@ class FlxGame extends Sprite
 	public function setFilters(filters:Array<BitmapFilter>):Void
 	{
 		_filters = filters;
+		filters = filtersEnabled ? _filters : null;
 	}
 	
 	/**
@@ -301,7 +302,7 @@ class FlxGame extends Sprite
 		#end
 		
 		// Creating the debugger overlay
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		debugger = new FlxDebugger(FlxG.stage.stageWidth, FlxG.stage.stageHeight);
 		addChild(debugger);
 		#end
@@ -314,7 +315,7 @@ class FlxGame extends Sprite
 		addChild(soundTray);
 		#end
 		
-		#if !FLX_NO_FOCUS_LOST_SCREEN
+		#if FLX_FOCUS_LOST_SCREEN
 		_focusLostScreen = Type.createInstance(_customFocusLostScreen, []);
 		addChild(_focusLostScreen);
 		#end
@@ -383,19 +384,19 @@ class FlxGame extends Sprite
 			return;
 		}
 		
-		#if !FLX_NO_FOCUS_LOST_SCREEN
+		#if FLX_FOCUS_LOST_SCREEN
 		if (_focusLostScreen != null)
 		{
 			_focusLostScreen.visible = false;
 		}
 		#end 
 		
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		debugger.stats.onFocus();
 		#end
 		
 		stage.frameRate = FlxG.drawFramerate;
-		#if !FLX_NO_SOUND_SYSTEM
+		#if FLX_SOUND_SYSTEM
 		FlxG.sound.onFocus();
 		#end
 		FlxG.inputs.onFocus();
@@ -419,19 +420,19 @@ class FlxGame extends Sprite
 			return;
 		}
 		
-		#if !FLX_NO_FOCUS_LOST_SCREEN
+		#if FLX_FOCUS_LOST_SCREEN
 		if (_focusLostScreen != null)
 		{
 			_focusLostScreen.visible = true;
 		}
 		#end 
 		
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		debugger.stats.onFocusLost();
 		#end
 		
 		stage.frameRate = focusLostFramerate;
-		#if !FLX_NO_SOUND_SYSTEM
+		#if FLX_SOUND_SYSTEM
 		FlxG.sound.onFocusLost();
 		#end
 		FlxG.inputs.onFocusLost();
@@ -462,11 +463,11 @@ class FlxGame extends Sprite
 		
 		FlxG.cameras.resize();
 		
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		debugger.onResize(width, height);
 		#end
 		
-		#if !FLX_NO_FOCUS_LOST_SCREEN
+		#if FLX_FOCUS_LOST_SCREEN
 		if (_focusLostScreen != null)
 		{
 			_focusLostScreen.draw();
@@ -534,13 +535,13 @@ class FlxGame extends Sprite
 				step();
 			}
 			
-			#if !FLX_NO_DEBUG
+			#if FLX_DEBUG
 			FlxBasic.visibleCount = 0;
 			#end
 			
 			draw();
 			
-			#if !FLX_NO_DEBUG
+			#if FLX_DEBUG
 			debugger.stats.visibleObjects(FlxBasic.visibleCount);
 			debugger.update();
 			#end
@@ -555,13 +556,13 @@ class FlxGame extends Sprite
 	{
 		FlxG.signals.preGameReset.dispatch();
 		
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		_skipSplash = true;
 		#end
 		
 		if (_skipSplash || FlxSplash.nextState != null) // already played
 		{
-			_requestedState = cast (Type.createInstance(_initialState, []));
+			_requestedState = cast Type.createInstance(_initialState, []);
 			if (FlxSplash.nextState == null)
 			{
 				_gameJustStarted = true;
@@ -574,7 +575,7 @@ class FlxGame extends Sprite
 			_skipSplash = true; // only play it once
 		}
 		
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		if (Std.is(_requestedState, FlxSubState))
 		{
 			throw "You can't set FlxSubState class instance as the state for you game";
@@ -597,7 +598,7 @@ class FlxGame extends Sprite
 		FlxG.bitmap.clearCache();
 		FlxG.cameras.reset();
 		FlxG.inputs.onStateSwitch();
-		#if !FLX_NO_SOUND_SYSTEM
+		#if FLX_SOUND_SYSTEM
 		FlxG.sound.destroy();
 		#end
 		
@@ -625,7 +626,7 @@ class FlxGame extends Sprite
 			gameStart();
 		}
 		
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		debugger.console.registerObject("state", _state);
 		#end
 	}
@@ -651,6 +652,22 @@ class FlxGame extends Sprite
 			_resetGame = false;
 		}
 		
+		handleReplayRequests();
+		
+		#if FLX_DEBUG
+		// Finally actually step through the game physics
+		FlxBasic.activeCount = 0;
+		#end
+		
+		update();
+		
+		#if FLX_DEBUG
+		debugger.stats.activeObjects(FlxBasic.activeCount);
+		#end
+	}
+	
+	private function handleReplayRequests():Void
+	{
 		#if FLX_RECORD
 		// Handle replay-related requests
 		if (_recordingRequested)
@@ -659,7 +676,7 @@ class FlxGame extends Sprite
 			_replay.create(FlxRandom.getRecordingSeed());
 			recording = true;
 			
-			#if !FLX_NO_DEBUG
+			#if FLX_DEBUG
 			debugger.vcr.recording();
 			FlxG.log.notice("Starting new flixel gameplay record.");
 			#end
@@ -670,23 +687,12 @@ class FlxGame extends Sprite
 			_replay.rewind();
 			FlxG.random.initialSeed = _replay.seed;
 			
-			#if !FLX_NO_DEBUG
+			#if FLX_DEBUG
 			debugger.vcr.playingReplay();
 			#end
 			
 			replaying = true;
 		}
-		#end
-		
-		#if !FLX_NO_DEBUG
-		// Finally actually step through the game physics
-		FlxBasic.activeCount = 0;
-		#end
-		
-		update();
-		
-		#if !FLX_NO_DEBUG
-		debugger.stats.activeObjects(FlxBasic.activeCount);
 		#end
 	}
 	
@@ -706,7 +712,7 @@ class FlxGame extends Sprite
 			switchState();
 		}
 		
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		if (FlxG.debugger.visible)
 		{
 			ticks = getTimer(); // Lib.getTimer() is expensive, only do it if necessary
@@ -737,7 +743,7 @@ class FlxGame extends Sprite
 		}
 		#end
 		
-		#if !FLX_NO_SOUND_SYSTEM
+		#if FLX_SOUND_SYSTEM
 		FlxG.sound.update(FlxG.elapsed);
 		#end
 		FlxG.plugins.update(FlxG.elapsed);
@@ -747,7 +753,7 @@ class FlxGame extends Sprite
 		FlxG.cameras.update(FlxG.elapsed);
 		FlxG.signals.postUpdate.dispatch();
 		
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		debugger.stats.flixelUpdate(getTimer() - ticks);
 		#end
 		
@@ -758,8 +764,6 @@ class FlxGame extends Sprite
 		}
 		FlxArrayUtil.clearArray(FlxG.swipes);
 		#end
-		
-		filters = filtersEnabled ? _filters : null;
 	}
 	
 	private function updateInput():Void
@@ -798,7 +802,7 @@ class FlxGame extends Sprite
 				}
 			}
 			
-			#if !FLX_NO_DEBUG
+			#if FLX_DEBUG
 			debugger.vcr.updateRuntime(_stepMS);
 			#end
 		}
@@ -814,7 +818,7 @@ class FlxGame extends Sprite
 		{
 			_replay.recordFrame();
 			
-			#if !FLX_NO_DEBUG
+			#if FLX_DEBUG
 			debugger.vcr.updateRuntime(_stepMS);
 			#end
 		}
@@ -831,7 +835,7 @@ class FlxGame extends Sprite
 			return;
 		}
 		
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		if (FlxG.debugger.visible)
 		{
 			// getTimer() is expensive, only do it if necessary
@@ -863,7 +867,7 @@ class FlxGame extends Sprite
 		{
 			FlxG.cameras.render();
 			
-			#if !FLX_NO_DEBUG
+			#if FLX_DEBUG
 			debugger.stats.drawCalls(FlxTilesheet._DRAWCALLS);
 			#end
 		}
@@ -872,7 +876,7 @@ class FlxGame extends Sprite
 		
 		FlxG.signals.postDraw.dispatch();
 		
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		debugger.stats.flixelDraw(getTimer() - ticks);
 		#end
 	}

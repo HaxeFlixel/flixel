@@ -318,7 +318,7 @@ class FlxCamera extends FlxBasic
 	 */
 	public var canvas:Sprite;
 	
-	#if !FLX_NO_DEBUG
+	#if FLX_DEBUG
 	/**
 	 * Sprite for visual effects (flash and fade) and drawDebug information 
 	 * (bounding boxes are drawn on it) for non-flash targets
@@ -538,10 +538,10 @@ class FlxCamera extends FlxBasic
 			var isColored = (transform != null && transform.hasRGBMultipliers());
 			var hasColorOffsets:Bool = (transform != null && transform.hasRGBAOffsets());
 			
-			#if !FLX_RENDER_TRIANGLE
-			var drawItem:FlxDrawTilesItem = startQuadBatch(frame.parent, isColored, hasColorOffsets, blend, smoothing);
-			#else
+			#if FLX_RENDER_TRIANGLE
 			var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(frame.parent, smoothing, isColored, blend);
+			#else
+			var drawItem:FlxDrawTilesItem = startQuadBatch(frame.parent, isColored, hasColorOffsets, blend, smoothing);
 			#end
 			drawItem.addQuad(frame, matrix, transform);
 		}
@@ -630,7 +630,7 @@ class FlxCamera extends FlxBasic
 				trianglesSprite.graphics.drawTriangles(drawVertices, indices, uvtData);
 				trianglesSprite.graphics.endFill();
 				buffer.draw(trianglesSprite);
-				#if !FLX_NO_DEBUG
+				#if FLX_DEBUG
 				if (FlxG.debugger.drawDebug)
 				{
 					var gfx:Graphics = FlxSpriteUtil.flashGfx;
@@ -695,7 +695,7 @@ class FlxCamera extends FlxBasic
 			_scrollRect.addChild(canvas);
 			_transform = new Matrix();
 			
-			#if !FLX_NO_DEBUG
+			#if FLX_DEBUG
 			debugLayer = new Sprite();
 			_scrollRect.addChild(debugLayer);
 			#end
@@ -731,7 +731,7 @@ class FlxCamera extends FlxBasic
 		}
 		else
 		{
-			#if !FLX_NO_DEBUG
+			#if FLX_DEBUG
 			FlxDestroyUtil.removeChild(_scrollRect, debugLayer);
 			debugLayer = null;
 			#end
@@ -788,8 +788,6 @@ class FlxCamera extends FlxBasic
 		updateFlash(elapsed);
 		updateFade(elapsed);
 		updateShake(elapsed);
-		
-		flashSprite.filters = filtersEnabled ? _filters : null;
 		
 		updateFlashSpritePosition();
 	}
@@ -910,7 +908,7 @@ class FlxCamera extends FlxBasic
 		
 		if (_fxFadeIn)
 		{
-			_fxFadeAlpha -= elapsed /_fxFadeDuration;
+			_fxFadeAlpha -= elapsed / _fxFadeDuration;
 			if (_fxFadeAlpha <= 0.0)
 			{
 				_fxFadeAlpha = 0.0;
@@ -1014,7 +1012,7 @@ class FlxCamera extends FlxBasic
 				canvas.scaleX = totalScaleX;
 				canvas.scaleY = totalScaleY;
 				
-				#if !FLX_NO_DEBUG
+				#if FLX_DEBUG
 				if (debugLayer != null)
 				{
 					debugLayer.x = canvas.x;
@@ -1198,6 +1196,7 @@ class FlxCamera extends FlxBasic
 	public function setFilters(filters:Array<BitmapFilter>):Void
 	{
 		_filters = filters;
+		flashSprite.filters = filtersEnabled ? _filters : null;
 	}
 	
 	/**
@@ -1256,10 +1255,8 @@ class FlxCamera extends FlxBasic
 			{
 				return;
 			}
-			// This is temporal fix for camera's color
+			
 			var targetGraphics:Graphics = (graphics == null) ? canvas.graphics : graphics;
-			Color = Color.to24Bit();
-			// end of fix
 			
 			targetGraphics.beginFill(Color, FxAlpha);
 			// i'm drawing rect with these parameters to avoid light lines at the top and left of the camera,

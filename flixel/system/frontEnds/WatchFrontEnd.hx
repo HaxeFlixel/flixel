@@ -14,7 +14,7 @@ class WatchFrontEnd
 	 */
 	public inline function add(AnyObject:Dynamic, VariableName:String, ?DisplayName:String):Void
 	{
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		FlxG.game.debugger.watch.add(AnyObject, VariableName, DisplayName);
 		#end
 	}
@@ -28,7 +28,7 @@ class WatchFrontEnd
 	 */
 	public inline function remove(AnyObject:Dynamic, ?VariableName:String):Void
 	{
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		FlxG.game.debugger.watch.remove(AnyObject, VariableName);
 		#end
 	}
@@ -43,7 +43,7 @@ class WatchFrontEnd
 	 */
 	public inline function addQuick(Name:String, NewValue:Dynamic):Void
 	{
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		FlxG.game.debugger.watch.updateQuickWatch(Name, NewValue);
 		#end
 	}
@@ -55,7 +55,7 @@ class WatchFrontEnd
 	 */
 	public inline function removeQuick(Name:String):Void
 	{
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		FlxG.game.debugger.watch.remove(null, null, Name);
 		#end
 	}
@@ -66,7 +66,7 @@ class WatchFrontEnd
 	 */
 	public inline function addMouse():Void
 	{
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		add(FlxG, "mouse", "Mouse Position");
 		#end
 	}
@@ -76,7 +76,7 @@ class WatchFrontEnd
 	 */
 	public inline function removeMouse():Void
 	{
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		remove(FlxG, "mouse");
 		#end
 	}

@@ -7,7 +7,6 @@ import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.graphics.frames.FlxFrame.FlxFrameAngle;
 import flixel.graphics.frames.FlxTileFrames;
-import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets;
@@ -116,7 +115,7 @@ class FlxAtlas implements IFlxDestroyable
 	 * @param	minSize		min size of atlas
 	 * @param	maxSize		max size of atlas
 	 */
-	public function new(name:String, powerOfTwo:Bool = false, border:Int = 1, rotate:Bool = false, minSize:FlxPoint = null, maxSize:FlxPoint = null)
+	public function new(name:String, powerOfTwo:Bool = false, border:Int = 1, rotate:Bool = false, ?minSize:FlxPoint, ?maxSize:FlxPoint)
 	{
 		nodes = new Map<String, FlxNode>();
 		this.name = name;
@@ -161,20 +160,20 @@ class FlxAtlas implements IFlxDestroyable
 		
 		if (key == null) 
 		{
-			#if !FLX_NO_DEBUG
+			#if FLX_DEBUG
 			throw "addNode can't find the key for specified bitmapdata. Please provide not null value as a Key argument.";
 			#end
 			return null;
 		}
 		
-		if (hasNodeWithName(key) == true)
+		if (hasNodeWithName(key))
 			return nodes.get(key);
 		
 		var data:BitmapData = FlxAssets.resolveBitmapData(Graphic);
 		
 		if (data == null)	
 		{
-			#if !FLX_NO_DEBUG
+			#if FLX_DEBUG
 			throw "addNode can't find bitmapdata with specified key: " + Graphic + ". Please provide valid value.";
 			#end
 			return null;
@@ -250,7 +249,7 @@ class FlxAtlas implements IFlxDestroyable
 		return dw > dh; // divide horizontally if true, vertically if false
 	}
 	
-	private function divideNode(nodeToDivide:FlxNode, insertWidth:Int, insertHeight:Int, divideHorizontally:Bool, firstGrandChildData:BitmapData = null, firstGrandChildKey:String = null, firstGrandChildRotated:Bool = false):FlxNode
+	private function divideNode(nodeToDivide:FlxNode, insertWidth:Int, insertHeight:Int, divideHorizontally:Bool, ?firstGrandChildData:BitmapData, ?firstGrandChildKey:String, firstGrandChildRotated:Bool = false):FlxNode
 	{
 		if (nodeToDivide != null)
 		{
@@ -355,7 +354,7 @@ class FlxAtlas implements IFlxDestroyable
 			
 			if ((maxWidth > 0 && rootWidth > maxWidth) || (maxHeight > 0 && rootHeight > maxHeight))
 			{
-				#if !FLX_NO_DEBUG
+				#if FLX_DEBUG
 				throw "Can't insert node " + key + " with the size of (" + data.width + "; " + data.height + ") in atlas " + name + " with the max size of (" + maxWidth + "; " + maxHeight + ") and powerOfTwo: " + powerOfTwo;
 				#end
 				return null;
@@ -437,7 +436,7 @@ class FlxAtlas implements IFlxDestroyable
 			
 			if (!canExpandRight && !canExpandBottom && !canExpandRightRotate && !canExpandBottomRotate)
 			{
-				#if !FLX_NO_DEBUG
+				#if FLX_DEBUG
 				throw "Can't insert node " + key + " with the size of (" + data.width + "; " + data.height + ") in atlas " + name + " with the max size of (" + maxWidth + "; " + maxHeight + ") and powerOfTwo: " + powerOfTwo;
 				#end
 				return null; // can't expand in any direction
@@ -523,7 +522,7 @@ class FlxAtlas implements IFlxDestroyable
 	
 	private function expandRoot(newWidth:Float, newHeight:Float, divideHorizontally:Bool, decideHowToDivide:Bool = false):Void
 	{
-		if (newWidth> root.width || newHeight > root.height)
+		if (newWidth > root.width || newHeight > root.height)
 		{
 			var temp:FlxNode = root;
 			root = new FlxNode(FlxRect.get(0, 0, newWidth, newHeight), this);
@@ -578,13 +577,13 @@ class FlxAtlas implements IFlxDestroyable
 	 * @param	region			Region of source image to use as a source graphic
 	 * @return	Generated TileFrames for added node
 	 */
-	public function addNodeWithSpacesAndBorders(Graphic:FlxGraphicSource, ?Key:String, tileSize:FlxPoint, tileSpacing:FlxPoint, tileBorder:FlxPoint = null, region:FlxRect = null):FlxTileFrames
+	public function addNodeWithSpacesAndBorders(Graphic:FlxGraphicSource, ?Key:String, tileSize:FlxPoint, tileSpacing:FlxPoint, ?tileBorder:FlxPoint, ?region:FlxRect):FlxTileFrames
 	{
 		var key:String = FlxAssets.resolveKey(Graphic, Key);
 		
 		if (key == null) 
 		{
-			#if !FLX_NO_DEBUG
+			#if FLX_DEBUG
 			throw "addNodeWithSpacings can't find the key for specified bitmapdata. Please provide not null value as a Key argument.";
 			#end
 			return null;
@@ -592,14 +591,14 @@ class FlxAtlas implements IFlxDestroyable
 		
 		key = FlxG.bitmap.getKeyWithSpacesAndBorders(key, tileSize, tileSpacing, tileBorder, region);
 		
-		if (hasNodeWithName(key) == true)
+		if (hasNodeWithName(key))
 			return nodes.get(key).getTileFrames(tileSize, tileSpacing, tileBorder);
 		
 		var data:BitmapData = FlxAssets.resolveBitmapData(Graphic);
 		
 		if (data == null) 
 		{
-			#if !FLX_NO_DEBUG
+			#if FLX_DEBUG
 			throw "addNodeWithSpacings can't find bitmapdata with specified key: " + Graphic + ". Please provide valid value.";
 			#end
 			return null;
@@ -610,7 +609,7 @@ class FlxAtlas implements IFlxDestroyable
 		
 		if (node == null) 
 		{
-			#if !FLX_NO_DEBUG
+			#if FLX_DEBUG
 			throw "addNodeWithSpacings can't insert provided image: " + Graphic + ") in atlas. It's probably too big.";
 			#end
 			return null;
@@ -697,7 +696,7 @@ class FlxAtlas implements IFlxDestroyable
 		
 		if (numBitmaps != numKeys)
 		{
-			#if !FLX_NO_DEBUG
+			#if FLX_DEBUG
 			throw "The number of bitmaps (" + numBitmaps + ") should be equal to number of keys (" + numKeys + ")";
 			#end
 			return null;
@@ -1061,7 +1060,7 @@ class FlxAtlas implements IFlxDestroyable
 	
 	private function set_powerOfTwo(value:Bool):Bool
 	{
-		if (value != powerOfTwo && value == true)
+		if (value != powerOfTwo && value)
 		{
 			var nextWidth:Int = getNextPowerOfTwo(root.width);
 			var nextHeight:Int = getNextPowerOfTwo(root.height);
@@ -1070,7 +1069,7 @@ class FlxAtlas implements IFlxDestroyable
 			{
 				if ((maxWidth > 0 && nextWidth > maxWidth) || (maxHeight > 0 && nextHeight > maxHeight))
 				{
-					#if !FLX_NO_DEBUG
+					#if FLX_DEBUG
 					throw "Can't set powerOfTwo property to true, since it requires to increase atlas size which is bigger that max size";
 					#end
 					return false;
@@ -1091,7 +1090,8 @@ class FlxAtlas implements IFlxDestroyable
 	}
 }
 
-typedef TempAtlasObj = {
+typedef TempAtlasObj =
+{
 	public var bmd:BitmapData;
 	public var keyStr:String;
 }

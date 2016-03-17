@@ -55,7 +55,7 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		camera.canvas.graphics.drawTriangles(vertices, indices, uvtData, TriangleCulling.NONE, (colored) ? colors : null, blending);
 		#end
 		camera.canvas.graphics.endFill();
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		if (FlxG.debugger.drawDebug)
 		{
 			var gfx:Graphics = camera.debugLayer.graphics;
@@ -91,7 +91,7 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		bounds = null;
 	}
 	
-	public function addTriangles(vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, colors:DrawData<Int> = null, position:FlxPoint = null, cameraBounds:FlxRect = null):Void
+	public function addTriangles(vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, ?colors:DrawData<Int>, ?position:FlxPoint, ?cameraBounds:FlxRect):Void
 	{
 		if (position == null)
 			position = point.set();

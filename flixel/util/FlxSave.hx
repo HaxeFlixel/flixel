@@ -66,7 +66,7 @@ class FlxSave implements IFlxDestroyable
 		{
 			_sharedObject = SharedObject.getLocal(name);
 		}
-		catch(e:Error)
+		catch (e:Error)
 		{
 			FlxG.log.error("There was a problem binding to\nthe shared object data from FlxSave.");
 			destroy();
@@ -118,7 +118,11 @@ class FlxSave implements IFlxDestroyable
 			result = _sharedObject.flush(); 
 			#end
 		}
-		catch (e:Error) { return onDone(ERROR); }
+		catch (e:Error)
+		{
+			return onDone(ERROR);
+		}
+
 		#if (flash && openfl <= "3.4.0")
 		if (result == "pending")
 		#else

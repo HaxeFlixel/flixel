@@ -4,8 +4,6 @@ import flash.display.Graphics;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.math.FlxPoint;
-import flixel.util.FlxArrayUtil;
-import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 
 /**
@@ -24,7 +22,7 @@ class FlxPath implements IFlxDestroyable
 	/**
 	 * Path behavior controls: move from the end of the path to the start then stop.
 	 */
-	public static inline var BACKWARD:Int= 0x000001;
+	public static inline var BACKWARD:Int = 0x000001;
 	/**
 	 * Path behavior controls: move from the start of the path to the end then directly back to the start, and start over.
 	 */
@@ -80,7 +78,7 @@ class FlxPath implements IFlxDestroyable
 	
 	public var onComplete:FlxPath->Void;
 
-	#if !FLX_NO_DEBUG
+	#if FLX_DEBUG
 	/**
 	 * Specify a debug display color for the path. Default is white.
 	 */
@@ -129,7 +127,7 @@ class FlxPath implements IFlxDestroyable
 	
 	public function reset():FlxPath
 	{
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		debugColor = 0xffffff;
 		ignoreDrawDebug = false;
 		#end
@@ -595,12 +593,12 @@ class FlxPath implements IFlxDestroyable
 	{
 		if (nodes.length > 0)
 		{
-			return nodes[nodes.length-1];
+			return nodes[nodes.length - 1];
 		}
 		return null;
 	}
 	
-	#if !FLX_NO_DEBUG
+	#if FLX_DEBUG
 	/**
 	 * While this doesn't override FlxBasic.drawDebug(), the behavior is very similar.
 	 * Based on this path data, it draws a simple lines-and-boxes representation of the path

@@ -111,15 +111,8 @@ class Window extends Sprite
 		_header = new Bitmap(new BitmapData(1, HEADER_HEIGHT, true, HEADER_COLOR));
 		_background.y = _header.height;
 		
-		_title = new TextField();
-		_title.x = 2;
-		_title.y = -1;
+		_title = DebuggerUtil.createTextField(2, -1);
 		_title.alpha = HEADER_ALPHA;
-		_title.height = 20;
-		_title.selectable = false;
-		_title.multiline = false;
-		_title.embedFonts = true;
-		_title.defaultTextFormat = new TextFormat(FlxAssets.FONT_DEBUGGER, 12, 0xffffff);
 		_title.text = Title;
 		
 		addChild(_shadow);
@@ -130,12 +123,12 @@ class Window extends Sprite
 		if (Icon != null)
 		{
 			DebuggerUtil.fixSize(Icon);
-			var _icon = new Bitmap(Icon);
-			_icon.x = 5;
-			_icon.y = 2;
-			_icon.alpha = HEADER_ALPHA;
-			_title.x = _icon.x + _icon.width + 2;
-			addChild(_icon);
+			var icon = new Bitmap(Icon);
+			icon.x = 5;
+			icon.y = 2;
+			icon.alpha = HEADER_ALPHA;
+			_title.x = icon.x + icon.width + 2;
+			addChild(icon);
 		}
 		
 		if (_resizable)
@@ -444,7 +437,7 @@ class Window extends Sprite
 	public function close():Void
 	{
 		destroy();
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		FlxG.game.debugger.removeWindow(this);
 		#end
 	}

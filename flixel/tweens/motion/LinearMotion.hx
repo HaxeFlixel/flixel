@@ -1,4 +1,4 @@
-﻿package flixel.tweens.motion;
+package flixel.tweens.motion;
 
 /**
  * Determines motion along a line, from one point to another.
@@ -56,7 +56,7 @@ class LinearMotion extends Motion
 		y = _fromY + _moveY * scale;
 		
 		if ((x == (_fromX + _moveX)) && (y == (_fromY + _moveY)) 
-		    && active && (_secondsSinceStart >= duration))
+			&& active && (_secondsSinceStart >= duration))
 		{
 			finished = true;
 		}

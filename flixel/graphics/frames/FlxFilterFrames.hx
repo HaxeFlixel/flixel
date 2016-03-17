@@ -6,7 +6,6 @@ import flash.geom.Rectangle;
 import flixel.FlxSprite;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFramesCollection.FlxFrameCollectionType;
-import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.util.FlxColor;
 import openfl.filters.BitmapFilter;
@@ -30,7 +29,7 @@ class FlxFilterFrames extends FlxFramesCollection
 	 * @param	filters		optional filters array to apply
 	 * @return	New frames collection which you can apply filters to.
 	 */
-	public static inline function fromFrames(frames:FlxFramesCollection, widthInc:Int = 0, heightInc:Int = 0, filters:Array<BitmapFilter> = null):FlxFilterFrames
+	public static inline function fromFrames(frames:FlxFramesCollection, widthInc:Int = 0, heightInc:Int = 0, ?filters:Array<BitmapFilter>):FlxFilterFrames
 	{
 		return new FlxFilterFrames(frames, widthInc, heightInc, filters);
 	}
@@ -55,7 +54,7 @@ class FlxFilterFrames extends FlxFramesCollection
 	 */
 	public var filters(default, set):Array<BitmapFilter>;
 	
-	private function new(sourceFrames:FlxFramesCollection, widthInc:Int = 0, heightInc:Int = 0, filters:Array<BitmapFilter> = null)
+	private function new(sourceFrames:FlxFramesCollection, widthInc:Int = 0, heightInc:Int = 0, ?filters:Array<BitmapFilter>)
 	{
 		super(null, FlxFrameCollectionType.FILTER);
 		

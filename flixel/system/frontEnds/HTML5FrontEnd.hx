@@ -1,6 +1,5 @@
 package flixel.system.frontEnds;
 
-import flixel.FlxG;
 import flixel.math.FlxPoint;
 
 #if js
@@ -30,7 +29,7 @@ class HTML5FrontEnd
 		{
 			return FIREFOX;
 		}
-		else if (untyped false || ! !document.documentMode)
+		else if (untyped false || !!document.documentMode)
 		{
 			return INTERNET_EXPLORER;
 		}

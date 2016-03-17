@@ -1,6 +1,5 @@
 package flixel.effects.particles;
 
-import flixel.effects.particles.FlxEmitter;
 import massive.munit.Assert;
 
 class FlxEmitterTest extends FlxTest

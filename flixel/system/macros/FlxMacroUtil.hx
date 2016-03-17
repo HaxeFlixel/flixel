@@ -49,8 +49,7 @@ class FlxMacroUtil
 			finalExpr = values.map(function(v) return macro $v{v.value} => $v{v.name});
 		else
 			finalExpr = values.map(function(v) return macro $v{v.name} => $v{v.value});
-			
-			
+		
 		return macro $a{finalExpr};
 	}
 	

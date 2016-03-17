@@ -1,17 +1,13 @@
 package flixel.system;
 
-#if !FLX_HAXE_BUILD
 import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.BlendMode;
-import flash.display.Graphics;
 import flash.display.Sprite;
 import flash.Lib;
-import flash.text.Font;
 import flash.text.TextField;
 import flash.text.TextFormat;
 import flixel.FlxG;
-import flixel.system.FlxBasePreloader;
 
 @:bitmap("assets/images/preloader/light.png")
 private class GraphicLogoLight extends BitmapData {}
@@ -183,4 +179,3 @@ class FlxPreloader extends FlxBasePreloader
 	}
 	#end
 }
-#end

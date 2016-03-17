@@ -649,7 +649,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		{
 			basic = members[i++];
 
-			if (basic != null && ! basic.exists)
+			if (basic != null && !basic.exists)
 			{
 				basic.revive();
 			}

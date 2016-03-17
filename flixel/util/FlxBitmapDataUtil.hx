@@ -7,8 +7,6 @@ import flixel.math.FlxAngle;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
-import flixel.util.FlxColor;
-import openfl.geom.Matrix;
 
 /**
  * Just a collection of BitmapData utility methods.
@@ -36,34 +34,34 @@ class FlxBitmapDataUtil
 		destBitmapData.merge(sourceBitmapData, sourceRect, destPoint, redMultiplier, greenMultiplier, blueMultiplier, alphaMultiplier);
 		#else
 		if (destPoint.x >= destBitmapData.width ||
-		    destPoint.y >= destBitmapData.height ||
-		    sourceRect.x >= sourceBitmapData.width ||
-		    sourceRect.y >= sourceBitmapData.height ||
-		    sourceRect.x + sourceRect.width <= 0 ||
-		    sourceRect.y + sourceRect.height <= 0)
+			destPoint.y >= destBitmapData.height ||
+			sourceRect.x >= sourceBitmapData.width ||
+			sourceRect.y >= sourceBitmapData.height ||
+			sourceRect.x + sourceRect.width <= 0 ||
+			sourceRect.y + sourceRect.height <= 0)
 		{
 			return;
 		}
 		
 		// need to cut off sourceRect if it too big...
 		while (sourceRect.x + sourceRect.width > sourceBitmapData.width ||
-		       sourceRect.y + sourceRect.height > sourceBitmapData.height ||
-		       sourceRect.x < 0 ||
-		       sourceRect.y < 0 ||
-		       destPoint.x < 0 ||
-		       destPoint.y < 0 )
+			sourceRect.y + sourceRect.height > sourceBitmapData.height ||
+			sourceRect.x < 0 ||
+			sourceRect.y < 0 ||
+			destPoint.x < 0 ||
+			destPoint.y < 0 )
 		{
 			if (sourceRect.x + sourceRect.width > sourceBitmapData.width)	sourceRect.width = sourceBitmapData.width - sourceRect.x;
 			if (sourceRect.y + sourceRect.height > sourceBitmapData.height)	sourceRect.height = sourceBitmapData.height - sourceRect.y;
 			
-			if (sourceRect.x < 0)	
+			if (sourceRect.x < 0)
 			{
 				destPoint.x = destPoint.x - sourceRect.x;
 				sourceRect.width = sourceRect.width + sourceRect.x;
 				sourceRect.x = 0;
 			}
 			
-			if (sourceRect.y < 0)	
+			if (sourceRect.y < 0)
 			{
 				destPoint.y = destPoint.y - sourceRect.y;
 				sourceRect.height = sourceRect.height + sourceRect.y;
@@ -255,7 +253,7 @@ class FlxBitmapDataUtil
 	 * @param	rect				area to apply color replacement. Optional, uses whole image area if the rect is null
 	 * @return	Array replaced pixels positions
 	 */
-	public static function replaceColor(bitmapData:BitmapData, color:FlxColor, newColor:FlxColor, fetchPositions:Bool = false, rect:FlxRect = null):Array<FlxPoint>
+	public static function replaceColor(bitmapData:BitmapData, color:FlxColor, newColor:FlxColor, fetchPositions:Bool = false, ?rect:FlxRect):Array<FlxPoint>
 	{
 		var positions:Array<FlxPoint> = null;
 		if (fetchPositions)
@@ -324,7 +322,7 @@ class FlxBitmapDataUtil
 	 * @param	region		region of image to use as a source graphics for spritesheet. Default value is null, which means that whole image will be used.
 	 * @return	Image for spritesheet with inserted spaces between tiles.
 	 */
-	public static function addSpacesAndBorders(bitmapData:BitmapData, frameSize:FlxPoint = null, spacing:FlxPoint = null, border:FlxPoint = null, region:FlxRect = null):BitmapData
+	public static function addSpacesAndBorders(bitmapData:BitmapData, ?frameSize:FlxPoint, ?spacing:FlxPoint, ?border:FlxPoint, ?region:FlxRect):BitmapData
 	{
 		if (region == null)
 		{

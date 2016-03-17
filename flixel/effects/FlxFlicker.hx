@@ -183,5 +183,6 @@ class FlxFlicker implements IFlxDestroyable
 	/**
 	 * Internal constructor. Use static methods.
 	 */
+	@:keep
 	private function new() {}
 }

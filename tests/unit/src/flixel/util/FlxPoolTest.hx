@@ -1,7 +1,6 @@
 package flixel.util;
 
 import flixel.math.FlxPoint;
-import flixel.util.FlxPool;
 import massive.munit.Assert;
 
 class FlxPoolTest extends FlxTest
@@ -66,7 +65,6 @@ class FlxPoolTest extends FlxTest
 		ppool.get();    // 32|521
 		ppool.put(pt1); // 321|21
 		ppool.put(pt5); // 3215|1
-		// ppool.put(pt4); // 32154|
 		
 		var old = ppool.clear();
 		

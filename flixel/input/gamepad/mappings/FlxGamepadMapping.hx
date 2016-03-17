@@ -1,6 +1,5 @@
 package flixel.input.gamepad.mappings;
 
-import flixel.input.gamepad.FlxGamepad.FlxGamepadModel;
 import flixel.input.gamepad.FlxGamepad.FlxGamepadAttachment;
 import flixel.input.gamepad.FlxGamepadAnalogStick;
 import flixel.input.gamepad.FlxGamepadInputID;
@@ -105,6 +104,7 @@ class FlxGamepadMapping
 	}
 }
 
+@SuppressWarnings("checkstyle:MemberName")
 enum Manufacturer
 {
 	GooglePepper;

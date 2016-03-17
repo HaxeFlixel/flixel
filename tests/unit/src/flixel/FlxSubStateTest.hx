@@ -1,6 +1,5 @@
 package flixel;
 
-import flixel.FlxG;
 import massive.munit.Assert;
 
 class FlxSubStateTest extends FlxTest

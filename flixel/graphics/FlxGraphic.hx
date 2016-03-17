@@ -404,18 +404,13 @@ class FlxGraphic implements IFlxDestroyable
 	 */
 	public function dump():Void
 	{
-	#if lime_legacy	
-		#if (!flash && !nme)
-		if (FlxG.renderTile)
+		#if (lime_legacy && !flash)
+		if (FlxG.renderTile && canBeDumped)
 		{
-			if (canBeDumped)
-			{
-				bitmap.dumpBits();
-				isDumped = true;
-			}
+			bitmap.dumpBits();
+			isDumped = true;
 		}
 		#end
-	#end
 	}
 	
 	/**
@@ -636,14 +631,9 @@ class FlxGraphic implements IFlxDestroyable
 			bitmap = value;
 			width = bitmap.width;
 			height = bitmap.height;
-			#if (!flash && !nme)
-			if (FlxG.renderTile)
-			{
-				if (_tilesheet != null)
-				{
-					_tilesheet = new Tilesheet(bitmap);
-				}
-			}
+			#if !flash
+			if (FlxG.renderTile && _tilesheet != null)
+				_tilesheet = new Tilesheet(bitmap);
 			#end
 		}
 		

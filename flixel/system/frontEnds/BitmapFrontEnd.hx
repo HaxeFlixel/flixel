@@ -16,56 +16,39 @@ import openfl.gl.GL;
  */
 class BitmapFrontEnd
 {
-	@:allow(flixel.system.frontEnds.BitmapLogFrontEnd)
-	private var _cache:Map<String, FlxGraphic>;
-	
 	#if !flash
 	/**
 	 * Gets max texture size for native targets
 	 */
 	public var maxTextureSize(get, never):Int;
 	#end
-	
-	public function new()
-	{
-		clearCache();
-	}
-	
-	public function onAssetsReload(e:Event):Void 
-	{
-		var obj:FlxGraphic;
-		if (_cache != null)
-		{
-			for (key in _cache.keys())
-			{
-				obj = _cache.get(key);
-				if (obj != null && obj.canBeDumped)
-				{
-					obj.onAssetsReload();
-				}
-			}
-		}
-	}
-	
+
 	/**
 	 * Helper FlxFrame object. Containing only one frame.
 	 * Useful for drawing colored rectangles of all sizes in FlxG.renderTile mode.
 	 */
 	public var whitePixel(get, never):FlxFrame;
+
+	@:allow(flixel.system.frontEnds.BitmapLogFrontEnd)
+	private var _cache:Map<String, FlxGraphic>;
 	
 	private var _whitePixel:FlxFrame;
-	
-	private function get_whitePixel():FlxFrame
+
+	public function new()
 	{
-		if (_whitePixel == null)
+		clearCache();
+	}
+	
+	public function onAssetsReload(_):Void 
+	{
+		for (key in _cache.keys())
 		{
-			var bd = new BitmapData(10, 10, true, FlxColor.WHITE);
-			var graphic:FlxGraphic = FlxG.bitmap.add(bd, true, "whitePixels");
-			graphic.persist = true;
-			_whitePixel = graphic.imageFrame.frame;
+			var obj = _cache.get(key);
+			if (obj != null && obj.canBeDumped)
+			{
+				obj.onAssetsReload();
+			}
 		}
-		
-		return _whitePixel;
 	}
 	
 	/**
@@ -74,17 +57,12 @@ class BitmapFrontEnd
 	 */
 	public function onContext():Void
 	{
-		var obj:FlxGraphic;
-		
-		if (_cache != null)
+		for (key in _cache.keys())
 		{
-			for (key in _cache.keys())
+			var obj = _cache.get(key);
+			if (obj != null && obj.isDumped)
 			{
-				obj = _cache.get(key);
-				if (obj != null && obj.isDumped)
-				{
-					obj.onContext();
-				}
+				obj.onContext();
 			}
 		}
 	}
@@ -96,17 +74,12 @@ class BitmapFrontEnd
 	public function dumpCache():Void
 	{
 		#if !web
-		var obj:FlxGraphic;
-		
-		if (_cache != null)
+		for (key in _cache.keys())
 		{
-			for (key in _cache.keys())
+			var obj = _cache.get(key);
+			if (obj != null && obj.canBeDumped)
 			{
-				obj = _cache.get(key);
-				if (obj != null && obj.canBeDumped)
-				{
-					obj.dump();
-				}
+				obj.dump();
 			}
 		}
 		#end
@@ -118,17 +91,12 @@ class BitmapFrontEnd
 	public function undumpCache():Void
 	{
 		#if !web
-		var obj:FlxGraphic;
-		
-		if (_cache != null)
+		for (key in _cache.keys())
 		{
-			for (key in _cache.keys())
+			var obj = _cache.get(key);
+			if (obj != null && obj.isDumped)
 			{
-				obj = _cache.get(key);
-				if (obj != null && obj.isDumped)
-				{
-					obj.undump();
-				}
+				obj.undump();
 			}
 		}
 		#end
@@ -175,18 +143,15 @@ class BitmapFrontEnd
 	{
 		if (Std.is(Graphic, FlxGraphic))
 		{
-			var graphic:FlxGraphic = cast Graphic;
-			return FlxGraphic.fromGraphic(graphic, Unique, Key);
+			return FlxGraphic.fromGraphic(cast Graphic, Unique, Key);
 		}
 		else if (Std.is(Graphic, BitmapData))
 		{
-			var bitmap:BitmapData = cast Graphic;
-			return FlxGraphic.fromBitmapData(bitmap, Unique, Key);
+			return FlxGraphic.fromBitmapData(cast Graphic, Unique, Key);
 		}
 		
 		// String case
-		var assetKey:String = Std.string(Graphic);
-		return FlxGraphic.fromAssetKey(assetKey, Unique, Key);
+		return FlxGraphic.fromAssetKey(Std.string(Graphic), Unique, Key);
 	}
 	
 	/**
@@ -206,7 +171,7 @@ class BitmapFrontEnd
 	
 	/**
 	 * Gets FlxGraphic object from this storage by specified key. 
-	 * @param	key	Key for FlxGraphic object (it's name)
+	 * @param	key	Key for FlxGraphic object (its name)
 	 * @return	FlxGraphic with the key name, or null if there is no such object
 	 */
 	public function get(key:String):FlxGraphic
@@ -224,11 +189,8 @@ class BitmapFrontEnd
 	{
 		for (key in _cache.keys())
 		{
-			var data:BitmapData = _cache.get(key).bitmap;
-			if (data == bmd)
-			{
+			if (_cache.get(key).bitmap == bmd)
 				return key;
-			}
 		}
 		return null;
 	}
@@ -256,14 +218,10 @@ class BitmapFrontEnd
 	{
 		var key:String = userKey;
 		if (key == null)
-		{
 			key = systemKey;
-		}
 		
 		if (unique || key == null)
-		{
 			key = getUniqueKey(key);
-		}
 		
 		return key;
 	}
@@ -274,9 +232,10 @@ class BitmapFrontEnd
 	 * @param	baseKey	key's prefix
 	 * @return	unique key
 	 */
-	public function getUniqueKey(baseKey:String = null):String
+	public function getUniqueKey(?baseKey:String):String
 	{
-		if (baseKey == null) baseKey = "pixels";
+		if (baseKey == null)
+			baseKey = "pixels";
 		
 		if (checkCache(baseKey))
 		{
@@ -285,7 +244,8 @@ class BitmapFrontEnd
 			do
 			{
 				ukey = baseKey + inc++;
-			} while (checkCache(ukey));
+			}
+			while (checkCache(ukey));
 			baseKey = ukey;
 		}
 		return baseKey;
@@ -301,29 +261,21 @@ class BitmapFrontEnd
 	 * @param	region			region of image to use as spritesheet graphics source
 	 * @return	Generated key for spritesheet with inserted spaces between tiles
 	 */
-	public function getKeyWithSpacesAndBorders(baseKey:String, frameSize:FlxPoint = null, frameSpacing:FlxPoint = null, frameBorder:FlxPoint = null, region:FlxRect = null):String
+	public function getKeyWithSpacesAndBorders(baseKey:String, ?frameSize:FlxPoint, ?frameSpacing:FlxPoint, ?frameBorder:FlxPoint, ?region:FlxRect):String
 	{
 		var result:String = baseKey;
 		
 		if (region != null)
-		{
 			result += "_Region:" + region.x + "_" + region.y + "_" + region.width + "_" + region.height;
-		}
 		
 		if (frameSize != null)
-		{
 			result += "_FrameSize:" + frameSize.x + "_" + frameSize.y;
-		}
 		
 		if (frameSpacing != null)
-		{
 			result += "_Spaces:" + frameSpacing.x + "_" + frameSpacing.y;
-		}
 		
 		if (frameBorder != null)
-		{
 			result += "_Border:" + frameBorder.x + "_" + frameBorder.y;
-		}
 		
 		return result;
 	}
@@ -344,34 +296,19 @@ class BitmapFrontEnd
 	 */
 	public function removeByKey(key:String):Void
 	{
-		if ((key != null) && _cache.exists(key))
+		if (key != null && _cache.exists(key))
 		{
 			var obj:FlxGraphic = _cache.get(key);
-			removeFromOpenFLCache(key);
+			Assets.cache.removeBitmapData(key);
 			_cache.remove(key);
 			obj.destroy();
 		}
 	}
 	
-	private function removeFromOpenFLCache(key:String):Void
-	{
-		#if nme
-			return;
-		#end
-		
-		#if ((openfl >= "2.1.6") || FLX_HAXE_BUILD)
-			Assets.cache.removeBitmapData(key);
-		#else
-			Assets.cache.bitmapData.remove(key);
-		#end
-	}
-	
 	public function removeIfNoUse(graphic:FlxGraphic):Void
 	{
 		if (graphic != null && graphic.useCount == 0 && !graphic.persist)
-		{
 			remove(graphic);
-		}
 	}
 	
 	/**
@@ -380,16 +317,12 @@ class BitmapFrontEnd
 	 */
 	public function clearCache():Void
 	{
-		var obj:FlxGraphic;
-		
 		if (_cache == null)
-		{
 			_cache = new Map();
-		}
 
 		for (key in _cache.keys())
 		{
-			obj = _cache.get(key);
+			var obj = _cache.get(key);
 			if (obj != null && !obj.persist)
 			{
 				removeByKey(key);
@@ -403,17 +336,12 @@ class BitmapFrontEnd
 	 */
 	public function clearUnused():Void
 	{
-		var obj:FlxGraphic;
-		
-		if (_cache != null)
+		for (key in _cache.keys())
 		{
-			for (key in _cache.keys())
+			var obj = _cache.get(key);
+			if (obj != null && obj.useCount <= 0 && !obj.persist && obj.destroyOnNoUse)
 			{
-				obj = _cache.get(key);
-				if (obj != null && obj.useCount <= 0 && !obj.persist && obj.destroyOnNoUse)
-				{
-					removeByKey(key);
-				}
+				removeByKey(key);
 			}
 		}
 	}
@@ -424,4 +352,17 @@ class BitmapFrontEnd
 		return cast GL.getParameter(GL.MAX_TEXTURE_SIZE);
 	}
 	#end
+	
+	private function get_whitePixel():FlxFrame
+	{
+		if (_whitePixel == null)
+		{
+			var bd = new BitmapData(10, 10, true, FlxColor.WHITE);
+			var graphic:FlxGraphic = FlxG.bitmap.add(bd, true, "whitePixels");
+			graphic.persist = true;
+			_whitePixel = graphic.imageFrame.frame;
+		}
+		
+		return _whitePixel;
+	}
 }

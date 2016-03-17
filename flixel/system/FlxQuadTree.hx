@@ -239,7 +239,7 @@ class FlxQuadTree extends FlxRect
 		_NUM_CACHED_QUAD_TREES = 0;
 	}
 	
-	public function reset(X:Float, Y:Float, Width:Float, Height:Float, Parent:FlxQuadTree = null):Void
+	public function reset(X:Float, Y:Float, Width:Float, Height:Float, ?Parent:FlxQuadTree):Void
 	{
 		exists = true;
 		
@@ -343,7 +343,7 @@ class FlxQuadTree extends FlxRect
 	 * @param NotifyCallback	A function with the form myFunction(Object1:FlxObject,Object2:FlxObject):void that is called whenever two objects are found to overlap in world space, and either no ProcessCallback is specified, or the ProcessCallback returns true. 
 	 * @param ProcessCallback	A function with the form myFunction(Object1:FlxObject,Object2:FlxObject):Boolean that is called whenever two objects are found to overlap in world space.  The NotifyCallback is only called if this function returns true.  See FlxObject.separate(). 
 	 */
-	public function load(ObjectOrGroup1:FlxBasic, ObjectOrGroup2:FlxBasic = null, NotifyCallback:FlxObject->FlxObject->Void = null, ProcessCallback:FlxObject->FlxObject->Bool = null):Void
+	public function load(ObjectOrGroup1:FlxBasic, ?ObjectOrGroup2:FlxBasic, ?NotifyCallback:FlxObject->FlxObject->Void, ?ProcessCallback:FlxObject->FlxObject->Bool):Void
 	{
 		add(ObjectOrGroup1, A_LIST);
 		if (ObjectOrGroup2 != null)
@@ -564,11 +564,10 @@ class FlxQuadTree extends FlxRect
 	public function execute():Bool
 	{
 		var overlapProcessed:Bool = false;
-		var iterator:FlxLinkedList;
 		
 		if (_headA.object != null)
 		{
-			iterator = _headA;
+			var iterator = _headA;
 			while (iterator != null)
 			{
 				_object = iterator.object;

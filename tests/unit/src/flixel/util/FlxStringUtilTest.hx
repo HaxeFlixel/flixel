@@ -1,8 +1,6 @@
 package flixel.util;
 
 import flash.display.BitmapData;
-import flixel.util.FlxColor;
-import flixel.util.FlxStringUtil;
 import massive.munit.Assert;
 
 class FlxStringUtilTest

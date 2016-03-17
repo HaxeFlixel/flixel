@@ -72,7 +72,7 @@ class FlxSystemButton extends Sprite implements IFlxDestroyable
 	 * Change the Icon of the button
 	 * 
 	 * @param	Icon	The new icon to use for the button.
- 	 */
+	 */
 	public function changeIcon(Icon:BitmapData):Void
 	{
 		if (_icon != null)

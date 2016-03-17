@@ -1,8 +1,6 @@
 package flixel;
 
 import flixel.graphics.tile.FlxDrawTrianglesItem.DrawData;
-import flixel.system.FlxAssets.FlxGraphicAsset;
-import openfl.Vector;
 
 /**
  * A very basic rendering component which uses drawTriangles.

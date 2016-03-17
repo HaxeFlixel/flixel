@@ -161,8 +161,8 @@ private class Interp extends hscript.Interp
 	{
 		if (o == null)
 			throw hscript.Expr.Error.EInvalidAccess(f);
-        Reflect.setProperty(o, f, v);
-        return v;
-    }
+		Reflect.setProperty(o, f, v);
+		return v;
+	}
 }
 #end

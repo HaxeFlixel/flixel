@@ -16,7 +16,7 @@ class FlxPointer
 	private var _globalScreenX:Int = 0;
 	private var _globalScreenY:Int = 0;
 	
- 	public function new() {}
+	public function new() {}
 	
 	/**
 	 * Fetch the world position of the pointer on any given camera.
