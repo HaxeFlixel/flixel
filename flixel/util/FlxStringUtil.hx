@@ -110,9 +110,12 @@ class FlxStringUtil
 	 */
 	public static inline function formatMoney(Amount:Float, ShowDecimal:Bool = true, EnglishStyle:Bool = true):String
 	{
-		var amount:Int = Math.floor(Amount);
+		var isNegative = Amount < 0;
+		Amount = Math.abs(Amount);
+
 		var string:String = "";
 		var comma:String = "";
+		var amount:Int = Math.floor(Amount);
 		while (amount > 0)
 		{
 			if (string.length > 0 && comma.length <= 0)
@@ -141,6 +144,9 @@ class FlxStringUtil
 			if (amount < 10)
 				string += "0";
 		}
+		
+		if (isNegative)
+			string = "-" + string;
 		return string;
 	}
 	
