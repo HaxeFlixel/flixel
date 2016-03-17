@@ -1,13 +1,12 @@
 4.0.1
 ------------------------------
 
-* `FlxDebugger`: [HTML5] fixed version text color (#1727)
-* `FlxFlicker` / `LabelValuePair`: fixed DCE issues (#1757)
-* `FlxMouse`: fixed `useSystemCursor = true` not always working with native cursor API
-* `FlxDebugger` mouse handling fixes (#1775):
-	* fixed `FlxMouse`'s `visible` and `useSystemCursor`  not being restored properly
-	* fixed cursor disappearing after losing Console focus with native cursor API
-	* fixed mouse focus area of windows being too big
+* `FlxG.vcr`: added an `OpenSaveDialog` argument to `stopRecording()` (#1726)
+* `FlxText`: [Flash] fixed blurry lines on multiline texts with `FlxTextAlign.CENTER` (#1728)
+* `flixel.input.gamepad`: added IDs for analog stick directions to `FlxGamepadInputID` (#1746)
+*  `FlxGame` / `FlxCamera`: `setFilters()` now needs to be called again on each filter array change (#1761)
+* `FlxSound`: added `loopTime`, added a `StartTime` argument to `play()` (#1736)
+* `FlxMouse:` added `enabled`
 
 4.0.0
 ------------------------------

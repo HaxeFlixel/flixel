@@ -34,6 +34,10 @@ private class GraphicCursor extends BitmapData {}
 class FlxMouse extends FlxPointer implements IFlxInputManager
 {
 	/**
+	 * Whether or not mouse input is currently enabled.
+	 */
+	public var enabled:Bool = true;
+	/**
 	 * Current "delta" value of mouse wheel. If the wheel was just scrolled up, 
 	 * it will have a positive value and vice versa. Otherwise the value will be 0.
 	 */
@@ -457,16 +461,11 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	 */
 	private function onMouseWheel(FlashEvent:MouseEvent):Void
 	{
-		#if !FLX_NO_DEBUG
-		if ((FlxG.debugger.visible && FlxG.game.debugger.hasMouse) 
-			#if (FLX_RECORD) || FlxG.game.replaying #end)
+		if (enabled)
 		{
-			return;
+			_wheelUsed = true;
+			wheel = FlashEvent.delta;
 		}
-		#end
-		
-		_wheelUsed = true;
-		wheel = FlashEvent.delta;
 	}
 	
 	#if FLX_MOUSE_ADVANCED
