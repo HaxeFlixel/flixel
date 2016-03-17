@@ -7,6 +7,18 @@
 * `FlxSound`: added `loopTime`, added a `StartTime` argument to `play()` (#1736)
 * `FlxMouse:` added `enabled`
 
+4.0.1
+------------------------------
+
+* `FlxDebugger`: [HTML5] fixed version text color (#1727)
+* `FlxFlicker` / `LabelValuePair`: fixed DCE issues (#1757)
+* `FlxMouse`: fixed `useSystemCursor = true` not always working with native cursor API
+* `FlxDebugger` mouse handling fixes (#1775):
+	* fixed `FlxMouse`'s `visible` and `useSystemCursor`  not being restored properly
+	* fixed cursor disappearing after losing Console focus with native cursor API
+	* fixed mouse focus area of windows being too big
+* `FlxAnimationController`: fixed `finishCallback` firing multiple times in one frame (#1781)
+
 4.0.0
 ------------------------------
 
