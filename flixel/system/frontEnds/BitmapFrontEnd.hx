@@ -299,23 +299,10 @@ class BitmapFrontEnd
 		if (key != null && _cache.exists(key))
 		{
 			var obj:FlxGraphic = _cache.get(key);
-			removeFromOpenFLCache(key);
+			Assets.cache.removeBitmapData(key);
 			_cache.remove(key);
 			obj.destroy();
 		}
-	}
-	
-	private function removeFromOpenFLCache(key:String):Void
-	{
-		#if nme
-			return;
-		#end
-		
-		#if ((openfl >= "2.1.6") || FLX_HAXE_BUILD)
-			Assets.cache.removeBitmapData(key);
-		#else
-			Assets.cache.bitmapData.remove(key);
-		#end
 	}
 	
 	public function removeIfNoUse(graphic:FlxGraphic):Void
