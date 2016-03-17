@@ -90,7 +90,7 @@ class FlxBasePreloader extends NMEPreloader
 	 */
 	override public function onUpdate(bytesLoaded:Int, bytesTotal:Int) 
 	{
-		#if !(desktop || mobile)
+		#if web
 		if (root.loaderInfo.bytesTotal == 0)
 			bytesTotal = 50000;
 		_percent = (bytesTotal != 0)?bytesLoaded / bytesTotal : 0;

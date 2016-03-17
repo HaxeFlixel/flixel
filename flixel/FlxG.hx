@@ -579,7 +579,7 @@ class FlxG
 				}
 			}
 		#else
-			#if (flash || js)
+			#if web
 				renderMethod = BLITTING;
 			#else
 				renderMethod = DRAW_TILES;
