@@ -105,6 +105,7 @@ class FlxDebugger extends Sprite
 	
 	private var _windows:Array<Window> = [];
 
+	private var _usingSystemCursor = false;
 	private var _wasMouseVisible:Bool = true;
 	private var _wasUsingSystemCursor:Bool = false;
 
@@ -473,15 +474,20 @@ class FlxDebugger extends Sprite
 		_wasMouseVisible = FlxG.mouse.visible;
 		_wasUsingSystemCursor = FlxG.mouse.useSystemCursor;
 		FlxG.mouse.useSystemCursor = true;
+		_usingSystemCursor = true;
 		#end
 	}
 	
+	@:allow(flixel.system.debug)
 	private function restoreCursor():Void
 	{
-		#if !FLX_NO_MOUSE
-		FlxG.mouse.useSystemCursor = _wasUsingSystemCursor;
-		FlxG.mouse.visible = _wasMouseVisible;
-		#end
+		if (_usingSystemCursor)
+		{
+			#if !FLX_NO_MOUSE
+			FlxG.mouse.useSystemCursor = _wasUsingSystemCursor;
+			FlxG.mouse.visible = _wasMouseVisible;
+			#end
+		}	
 	}
 
 	private inline function toggleDrawDebug():Void
