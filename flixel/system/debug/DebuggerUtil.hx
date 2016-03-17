@@ -14,18 +14,9 @@ import flash.text.GridFitType;
 
 class DebuggerUtil
 {
-	/**
-	 * Helper method for textfield creation.
-	 *
-	 * @param	X		Textfield x position.
-	 * @param	Y		Textfield y position.
-	 * @param	Color	Textfield color.
-	 * @param	Size	Textfield size.
-	 * @return	New label text field at specified position and format.
-	 */
 	public static function createTextField(X:Float = 0, Y:Float = 0, Color:FlxColor = FlxColor.WHITE, Size:Int = 12):TextField
 	{
-		var tf:TextField = new TextField();
+		var tf = new TextField();
 		tf.x = X;
 		tf.y = Y;
 		tf.multiline = false;

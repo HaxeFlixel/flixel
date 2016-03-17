@@ -65,15 +65,7 @@ class VCR
 		stepBtn = Debugger.addButton(CENTER, new GraphicStep(0, 0), onStep);
 		
 		#if FLX_RECORD
-		runtimeDisplay = new TextField();
-		runtimeDisplay.height = 10;
-		runtimeDisplay.y = -9;
-		runtimeDisplay.selectable = false;
-		runtimeDisplay.multiline = false;
-		runtimeDisplay.embedFonts = true;
-		var format = new TextFormat(FlxAssets.FONT_DEBUGGER, 12, FlxColor.WHITE);
-		runtimeDisplay.defaultTextFormat = format;
-		runtimeDisplay.autoSize = TextFieldAutoSize.LEFT;
+		runtimeDisplay = DebuggerUtil.createTextField(0, -9);
 		updateRuntime(0);
 		
 		var runtimeBtn = Debugger.addButton(CENTER);
