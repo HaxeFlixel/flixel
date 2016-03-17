@@ -177,7 +177,7 @@ class BitmapLog extends Window
 			refreshCanvas(_curIndex);
 		}
 		
-		_ui.x = _header.width - _ui.width + 43;
+		_ui.x = _header.width - _ui.width - 5;
 		
 		_footer.width = _width;
 		_footer.y = _height - _footer.height;

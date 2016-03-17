@@ -3,6 +3,7 @@ package flixel.system.debug;
 import flash.display.BitmapData;
 import flash.display.Shape;
 import flash.text.TextField;
+import flash.text.TextFieldAutoSize;
 import flash.text.TextFormat;
 import flixel.system.FlxAssets;
 import flixel.util.FlxColor;
@@ -38,6 +39,7 @@ class DebuggerUtil
 		#end
 		tf.defaultTextFormat = new TextFormat(FlxAssets.FONT_DEBUGGER, Size, Color.to24Bit());
 		tf.alpha = Color.alphaFloat;
+		tf.autoSize = TextFieldAutoSize.LEFT;
 		return tf;
 	}
 	
