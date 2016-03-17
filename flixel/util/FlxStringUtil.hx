@@ -146,7 +146,7 @@ class FlxStringUtil
 		}
 		if (ShowDecimal)
 		{
-			amount = Std.int(Amount * 100) - (Std.int(Amount) * 100);
+			amount = Math.floor(Amount * 100) - (Math.floor(Amount) * 100);
 			string += (EnglishStyle ? "." : ",") + amount;
 			if (amount < 10)
 			{
