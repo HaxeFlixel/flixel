@@ -308,17 +308,17 @@ class FlxSprite extends FlxObject
 	 *
 	 * HaxeFlixel's graphic caching system keeps track of loaded image data. 
 	 * When you load an identical copy of a previously used image, by default
-	 * HaxeFlixel copies the previous reference onto the pixels field instead
+	 * HaxeFlixel copies the previous reference onto the `pixels` field instead
 	 * of creating another copy of the image data, to save memory.
 	 * 
 	 * @param	Graphic		The image you want to use.
-	 * @param	Animated	Whether the Graphic parameter is a single sprite or a row of sprites.
-	 * @param	Width		Optional, specify the width of your sprite (helps FlxSprite figure out what to do with non-square sprites or sprite sheets).
-	 * @param	Height		Optional, specify the height of your sprite (helps FlxSprite figure out what to do with non-square sprites or sprite sheets).
-	 * @param	Unique		Optional, whether the graphic should be a unique instance in the graphics cache.  Default is false.
-	 *				Set this to true if you want to modify the pixels field without changing the pixels of other sprites with the same BitmapData.
-	 * @param	Key		Optional, set this parameter if you're loading BitmapData.
-	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
+	 * @param	Animated	Whether the `Graphic` parameter is a single sprite or a row / grid of sprites.
+	 * @param	Width		Specify the width of your sprite (helps figure out what to do with non-square sprites or sprite sheets).
+	 * @param	Height		Specify the height of your sprite (helps figure out what to do with non-square sprites or sprite sheets).
+	 * @param	Unique		Whether the graphic should be a unique instance in the graphics cache.
+	 *				Set this to `true` if you want to modify the `pixels` field without changing the `pixels` of other sprites with the same `BitmapData`.
+	 * @param	Key		Set this parameter if you're loading `BitmapData`.
+	 * @return	This `FlxSprite` instance (nice for chaining stuff together, if you're into that).
 	 */
 	public function loadGraphic(Graphic:FlxGraphicAsset, Animated:Bool = false, Width:Int = 0, Height:Int = 0, Unique:Bool = false, ?Key:String):FlxSprite
 	{
