@@ -3,7 +3,7 @@ package flixel.math;
 import flash.geom.Rectangle;
 import flixel.FlxG;
 import flixel.FlxSprite;
-#if !FLX_NO_TOUCH
+#if FLX_TOUCH
 import flixel.input.touch.FlxTouch;
 #end
 
@@ -183,7 +183,7 @@ class FlxMath
 		return pointX >= rect.x && pointX <= rect.right && pointY >= rect.y && pointY <= rect.bottom;
 	}
 	
-	#if !FLX_NO_MOUSE
+	#if FLX_MOUSE
 	/**
 	 * Returns true if the mouse world x/y coordinate are within the given rectangular block
 	 * 
@@ -383,7 +383,7 @@ class FlxMath
 			return dx * dx + dy * dy < Distance * Distance;
 	}
 	
-	#if !FLX_NO_MOUSE
+	#if FLX_MOUSE
 	/**
 	 * Find the distance (in pixels, rounded) from the object x/y and the mouse x/y
 	 * 
@@ -418,7 +418,7 @@ class FlxMath
 	}
 	#end
 	
-	#if !FLX_NO_TOUCH
+	#if FLX_TOUCH
 	/**
 	 * Find the distance (in pixels, rounded) from the object x/y and the FlxPoint screen x/y
 	 * 

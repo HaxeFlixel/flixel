@@ -141,7 +141,7 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 				return true;
 			}
 		}
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 			else
 			{
 				throw 'Invalid key code: $KeyCode.';

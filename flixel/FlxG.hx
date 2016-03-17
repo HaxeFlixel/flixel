@@ -31,16 +31,16 @@ import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSave;
 using flixel.util.FlxArrayUtil;
 
-#if !FLX_NO_TOUCH
+#if FLX_TOUCH
 import flixel.input.touch.FlxTouchManager;
 #end
-#if !FLX_NO_KEYBOARD
+#if FLX_KEYBOARD
 import flixel.input.keyboard.FlxKeyboard;
 #end
-#if !FLX_NO_MOUSE
+#if FLX_MOUSE
 import flixel.input.mouse.FlxMouse;
 #end
-#if !FLX_NO_GAMEPAD
+#if FLX_GAMEPAD
 import flixel.input.gamepad.FlxGamepadManager;
 #end
 #if android
@@ -169,7 +169,7 @@ class FlxG
 	 */
 	public static var random(default, null):FlxRandom = new FlxRandom();
 	
-	#if !FLX_NO_MOUSE
+	#if FLX_MOUSE
 	/**
 	 * Used for mouse input. e.g.: check if the left mouse button 
 	 * is pressed with if (FlxG.mouse.pressed) { }) in update().
@@ -177,7 +177,7 @@ class FlxG
 	public static var mouse(default, set):FlxMouse;
 	#end
 	
-	#if !FLX_NO_TOUCH
+	#if FLX_TOUCH
 	/**
 	 * Useful for devices with multitouch support.
 	 */
@@ -191,7 +191,7 @@ class FlxG
 	public static var swipes(default, null):Array<FlxSwipe> = [];
 	#end
 
-	#if !FLX_NO_KEYBOARD
+	#if FLX_KEYBOARD
 	/**
 	 * Used for keyboard input e.g.: check if the left arrow key is 
 	 * pressed with if (FlxG.keys.pressed.LEFT) { } in update().
@@ -199,7 +199,7 @@ class FlxG
 	public static var keys(default, null):FlxKeyboard;
 	#end
 	
-	#if !FLX_NO_GAMEPAD
+	#if FLX_GAMEPAD
 	/**
 	 * A reference to a FlxGamepadManager object.
 	 */
@@ -275,7 +275,7 @@ class FlxG
 	public static var initialHeight(default, null):Int = 0;
 	public static var initialZoom(default, null):Float = 0;
 	
-	#if !FLX_NO_SOUND_SYSTEM
+	#if FLX_SOUND_SYSTEM
 	/**
 	 * Contains a list of all sounds and other things to manage or play() sounds.
 	 */
@@ -527,19 +527,19 @@ class FlxG
 		resizeGame(Lib.current.stage.stageWidth, Lib.current.stage.stageHeight);
 		
 		// Instantiate inputs
-		#if !FLX_NO_KEYBOARD
+		#if FLX_KEYBOARD
 		keys = inputs.add(new FlxKeyboard());
 		#end
 		
-		#if !FLX_NO_MOUSE
+		#if FLX_MOUSE
 		mouse = inputs.add(new FlxMouse(game._inputContainer));
 		#end
 		
-		#if !FLX_NO_TOUCH
+		#if FLX_TOUCH
 		touches = inputs.add(new FlxTouchManager());
 		#end
 		
-		#if !FLX_NO_GAMEPAD
+		#if FLX_GAMEPAD
 		gamepads = inputs.add(new FlxGamepadManager());
 		#end
 		
@@ -555,7 +555,7 @@ class FlxG
 		plugins = new PluginFrontEnd();
 		vcr = new VCRFrontEnd();
 		
-		#if !FLX_NO_SOUND_SYSTEM
+		#if FLX_SOUND_SYSTEM
 		sound = new SoundFrontEnd();
 		#end
 	}
@@ -601,7 +601,7 @@ class FlxG
 		
 		bitmap.clearCache();
 		inputs.reset();
-		#if !FLX_NO_SOUND_SYSTEM
+		#if FLX_SOUND_SYSTEM
 		sound.destroy(true);
 		#end
 		autoPause = true;
@@ -620,7 +620,7 @@ class FlxG
 		return ScaleMode;
 	}
 	
-	#if !FLX_NO_MOUSE
+	#if FLX_MOUSE
 	private static function set_mouse(NewMouse:FlxMouse):FlxMouse
 	{
 		if (mouse == null)					//if no mouse, just add it

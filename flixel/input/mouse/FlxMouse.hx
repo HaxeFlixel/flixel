@@ -1,6 +1,6 @@
 package flixel.input.mouse;
 
-#if !FLX_NO_MOUSE
+#if FLX_MOUSE
 import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.Sprite;

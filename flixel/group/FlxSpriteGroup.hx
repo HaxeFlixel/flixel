@@ -50,7 +50,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 */
 	private var _skipTransformChildren:Bool = false;
 	
-	#if !FLX_NO_DEBUG
+	#if FLX_DEBUG
 	/**
 	 * Just a helper variable to check if this group has already been drawn on debug layer
 	 */
@@ -207,7 +207,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	override public function draw():Void 
 	{
 		group.draw();
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		_isDrawnDebug = false;
 		#end
 	}
@@ -874,7 +874,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 */
 	override public function loadGraphicFromSprite(Sprite:FlxSprite):FlxSprite 
 	{
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		throw "This function is not supported in FlxSpriteGroup";
 		#end
 		return this;
@@ -895,7 +895,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 */
 	override public function loadRotatedGraphic(Graphic:FlxGraphicAsset, Rotations:Int = 16, Frame:Int = -1, AntiAliasing:Bool = false, AutoBuffer:Bool = false, ?Key:String):FlxSprite 
 	{
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		throw "This function is not supported in FlxSpriteGroup";
 		#end
 		return this;
@@ -907,7 +907,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 */
 	override public function makeGraphic(Width:Int, Height:Int, Color:Int = 0xffffffff, Unique:Bool = false, ?Key:String):FlxSprite 
 	{
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		throw "This function is not supported in FlxSpriteGroup";
 		#end
 		return this;

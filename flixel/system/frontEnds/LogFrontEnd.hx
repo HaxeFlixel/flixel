@@ -17,28 +17,28 @@ class LogFrontEnd
 	
 	public inline function add(Data:Dynamic):Void
 	{
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		advanced(Data, LogStyle.NORMAL); 
 		#end
 	}
 	
 	public inline function warn(Data:Dynamic):Void
 	{
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		advanced(Data, LogStyle.WARNING, true); 
 		#end
 	}
 	
 	public inline function error(Data:Dynamic):Void
 	{
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		advanced(Data, LogStyle.ERROR, true); 
 		#end
 	}
 	
 	public inline function notice(Data:Dynamic):Void
 	{
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		advanced(Data, LogStyle.NOTICE); 
 		#end
 	}
@@ -52,7 +52,7 @@ class LogFrontEnd
 	 */ 
 	public function advanced(Data:Dynamic, ?Style:LogStyle, FireOnce:Bool = false):Void
 	{
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		if (FlxG.game.debugger == null)
 		{
 			_standardTraceFunction(Data);
@@ -100,7 +100,7 @@ class LogFrontEnd
 	 */
 	public inline function clear():Void
 	{
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		FlxG.game.debugger.log.clear();
 		#end
 	}

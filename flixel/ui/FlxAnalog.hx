@@ -60,7 +60,7 @@ class FlxAnalog extends FlxSpriteGroup
 	 */ 
 	private static var _analogs:Array<FlxAnalog> = [];
 	
-	#if !FLX_NO_TOUCH
+	#if FLX_TOUCH
 	/**
 	 * The current pointer that's active on the analog.
 	 */ 
@@ -131,7 +131,7 @@ class FlxAnalog extends FlxSpriteGroup
 		base.scrollFactor.set();
 		base.solid = false;
 		
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		base.ignoreDrawDebug = true;
 		#end
 		
@@ -151,7 +151,7 @@ class FlxAnalog extends FlxSpriteGroup
 		thumb.scrollFactor.set();
 		thumb.solid = false;
 		
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		thumb.ignoreDrawDebug = true;
 		#end
 		
@@ -190,7 +190,7 @@ class FlxAnalog extends FlxSpriteGroup
 		thumb = null;
 		base = null;
 		
-		#if !FLX_NO_TOUCH
+		#if FLX_TOUCH
 		_currentTouch = null;
 		_tempTouches = null;
 		#end
@@ -201,13 +201,13 @@ class FlxAnalog extends FlxSpriteGroup
 	 */
 	override public function update(elapsed:Float):Void 
 	{
-		#if !FLX_NO_TOUCH
+		#if FLX_TOUCH
 		var touch:FlxTouch = null;
 		#end
 		var offAll:Bool = true;
 		
 		// There is no reason to get into the loop if their is already a pointer on the analog
-		#if !FLX_NO_TOUCH
+		#if FLX_TOUCH
 			if (_currentTouch != null)
 			{
 				_tempTouches.push(_currentTouch);
@@ -268,7 +268,7 @@ class FlxAnalog extends FlxSpriteGroup
 			status = NORMAL;
 		}
 		
-		#if !FLX_NO_TOUCH
+		#if FLX_TOUCH
 		_tempTouches.splice(0, _tempTouches.length);
 		#end
 		
@@ -279,7 +279,7 @@ class FlxAnalog extends FlxSpriteGroup
 	{
 		var offAll:Bool = true;
 		
-		#if !FLX_NO_TOUCH
+		#if FLX_TOUCH
 		// Use the touch to figure out the world position if it's passed in, as 
 		// the screen coordinates passed in touchPoint are wrong
 		// if the control is used in a group, for example.
@@ -295,7 +295,7 @@ class FlxAnalog extends FlxSpriteGroup
 			
 			if (Pressed)
 			{
-				#if !FLX_NO_TOUCH
+				#if FLX_TOUCH
 				if (Touch != null)
 				{
 					_currentTouch = Touch;
@@ -337,7 +337,7 @@ class FlxAnalog extends FlxSpriteGroup
 			}
 			else if (JustReleased && status == PRESSED)
 			{				
-				#if !FLX_NO_TOUCH
+				#if FLX_TOUCH
 				_currentTouch = null;
 				#end
 				
@@ -390,7 +390,7 @@ class FlxAnalog extends FlxSpriteGroup
 	
 	private function get_justPressed():Bool
 	{
-		#if !FLX_NO_TOUCH
+		#if FLX_TOUCH
 		if (_currentTouch != null)
 		{
 			return _currentTouch.justPressed && status == PRESSED;
@@ -409,7 +409,7 @@ class FlxAnalog extends FlxSpriteGroup
 	
 	private function get_justReleased():Bool
 	{
-		#if !FLX_NO_TOUCH
+		#if FLX_TOUCH
 		if (_currentTouch != null)
 		{
 			return _currentTouch.justReleased && status == HIGHLIGHT;

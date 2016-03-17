@@ -18,7 +18,7 @@ class DebuggerFrontEnd
 	 */
 	public var precision:Int = 3; 
 	
-	#if !FLX_NO_KEYBOARD
+	#if FLX_KEYBOARD
 	/**
 	 * The key codes used to toggle the debugger (see FlxG.keys for the keys available).
 	 * Default keys: ` and \. Set to null to deactivate.
@@ -44,7 +44,7 @@ class DebuggerFrontEnd
 	 */
 	public inline function setLayout(Layout:FlxDebuggerLayout):Void
 	{
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		FlxG.game.debugger.setLayout(Layout);
 		#end
 	}
@@ -54,7 +54,7 @@ class DebuggerFrontEnd
 	 */
 	public inline function resetLayout():Void
 	{
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		FlxG.game.debugger.resetLayout();
 		#end
 	}
@@ -71,7 +71,7 @@ class DebuggerFrontEnd
 	 */
 	public function addButton(Alignment:FlxHorizontalAlign, Icon:BitmapData, UpHandler:Void->Void, ToggleMode:Bool = false, UpdateLayout:Bool = true):FlxSystemButton
 	{
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		return FlxG.game.debugger.addButton(Alignment, Icon, UpHandler, ToggleMode, UpdateLayout);
 		#else
 		return null;
@@ -87,7 +87,7 @@ class DebuggerFrontEnd
 	 */
 	public function track(ObjectOrClass:Dynamic, ?WindowTitle:String):Window
 	{
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		if (Tracker.objectsBeingTracked.indexOf(ObjectOrClass) == -1)
 		{
 			var profile = Tracker.findProfile(ObjectOrClass);
@@ -113,7 +113,7 @@ class DebuggerFrontEnd
 	 */
 	public inline function addTrackerProfile(Profile:TrackerProfile):Void
 	{
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		Tracker.addProfile(Profile);
 		#end
 	}
@@ -126,7 +126,7 @@ class DebuggerFrontEnd
 	 */
 	public function removeButton(Button:FlxSystemButton, UpdateLayout:Bool = true):Void
 	{
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		FlxG.game.debugger.removeButton(Button, UpdateLayout);
 		#end
 	}
@@ -136,7 +136,7 @@ class DebuggerFrontEnd
 	
 	private inline function set_drawDebug(Value:Bool):Bool
 	{
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		if (Value != drawDebug)
 			drawDebugChanged.dispatch();
 		#end
@@ -146,7 +146,7 @@ class DebuggerFrontEnd
 	
 	private inline function set_visible(Value:Bool):Bool
 	{
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		FlxG.game.debugger.visible = Value;
 		
 		// if the debugger is non-visible, then we need to focus on game sprite, 

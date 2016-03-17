@@ -24,7 +24,7 @@ private class GraphicMaximizeButton extends BitmapData {}
  * @author Adam "Atomic" Saltsman
  * @author Anton Karlov
  */
-#if !FLX_NO_DEBUG
+#if FLX_DEBUG
 class Stats extends Window
 {
 	/**

@@ -157,7 +157,7 @@ class WatchEntry implements IFlxDestroyable
 		}
 	}
 	
-	#if !FLX_NO_DEBUG
+	#if FLX_DEBUG
 	/**
 	 * Update the variable value on display with the current in-game value.
 	 */
@@ -177,7 +177,7 @@ class WatchEntry implements IFlxDestroyable
 	private function onMouseUp(_):Void
 	{
 		editing = true;
-		#if !FLX_NO_KEYBOARD
+		#if FLX_KEYBOARD
 		FlxG.keys.enabled = false;
 		#end
 		oldValue = Reflect.getProperty(object, field);
@@ -241,7 +241,7 @@ class WatchEntry implements IFlxDestroyable
 		valueDisplay.defaultTextFormat = _whiteText;
 		valueDisplay.background = false;
 		editing = false;
-		#if !FLX_NO_KEYBOARD
+		#if FLX_KEYBOARD
 		FlxG.keys.enabled = true;
 		#end
 	}

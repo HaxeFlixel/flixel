@@ -12,7 +12,7 @@ import flixel.util.FlxDestroyUtil;
  */
 class Watch extends Window
 {
-	#if !FLX_NO_DEBUG
+	#if FLX_DEBUG
 	private static inline var LINE_HEIGHT:Int = 15;
 	
 	private var _names:Sprite;
