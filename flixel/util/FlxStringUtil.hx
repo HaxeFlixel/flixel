@@ -144,6 +144,10 @@ class FlxStringUtil
 			}
 			string = zeroes + helper + comma + string;
 		}
+		
+		if (string == "")
+			string = "0";
+		
 		if (ShowDecimal)
 		{
 			amount = Math.floor(Amount * 100) - (Math.floor(Amount) * 100);
