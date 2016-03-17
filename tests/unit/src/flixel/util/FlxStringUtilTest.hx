@@ -82,5 +82,8 @@ class FlxStringUtilTest
 		Assert.areEqual("110", FlxStringUtil.formatMoney(110.2, false));
 		Assert.areEqual("100,000,000.00", FlxStringUtil.formatMoney(100000000));
 		Assert.areEqual("100.000.000,00", FlxStringUtil.formatMoney(100000000, true, false));
+		Assert.areEqual("0.60", FlxStringUtil.formatMoney(0.6)); // #1754
+		Assert.areEqual("0", FlxStringUtil.formatMoney(0.6, false));
+		Assert.areEqual("0.00", FlxStringUtil.formatMoney(0));
 	}
 }
