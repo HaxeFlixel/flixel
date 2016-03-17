@@ -1,6 +1,5 @@
 package flixel.system;
 
-#if !FLX_HAXE_BUILD
 import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.StageAlign;
@@ -209,7 +208,7 @@ class FlxBasePreloader extends NMEPreloader
 			{
 				return true;
 			}
-			else if ((allowedURL == LOCAL) && (homeDomain == LOCAL))
+			else if (allowedURL == LOCAL && homeDomain == LOCAL)
 			{
 				return true;
 			}
@@ -218,4 +217,3 @@ class FlxBasePreloader extends NMEPreloader
 	}
 	#end
 }
-#end

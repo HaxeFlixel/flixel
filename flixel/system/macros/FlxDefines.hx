@@ -19,11 +19,6 @@ private enum UserDefines
 	FLX_NO_FOCUS_LOST_SCREEN;
 	FLX_NO_DEBUG;
 	FLX_RECORD;
-	/**
-	 * Mostly internal, makes sure that flixel can be built with pure haxe
-	 * (as opposed to lime-tools). Needed for API doc generation and unit tests.
-	 */
-	FLX_HAXE_BUILD;
 	FLX_UNIT_TEST;
 	/* additional rendering define */
 	FLX_RENDER_TRIANGLE;
