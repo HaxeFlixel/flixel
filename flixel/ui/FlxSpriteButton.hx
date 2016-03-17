@@ -44,7 +44,7 @@ class FlxSpriteButton extends FlxTypedButton<FlxSprite> implements IFlxInput
 	 * @param	align	text align for button's label
 	 * @return	this button with generated text graphic.
 	 */
-	public function createTextLabel(Text:String, font:String = null, size:Int = 8, color:Int = 0x333333, align:String = "center"):FlxSpriteButton
+	public function createTextLabel(Text:String, ?font:String, size:Int = 8, color:Int = 0x333333, align:String = "center"):FlxSpriteButton
 	{
 		if (Text != null)
 		{

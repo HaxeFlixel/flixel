@@ -1,14 +1,10 @@
 package flixel.system.debug.log;
 
-#if !FLX_NO_DEBUG
-import flash.geom.Rectangle;
+#if FLX_DEBUG
 import flash.text.TextField;
 import flash.text.TextFormat;
-import flixel.FlxG;
-import flixel.system.debug.FlxDebugger;
-import flixel.math.FlxPoint;
 import flixel.util.FlxStringUtil;
-import haxe.ds.StringMap;
+import flixel.system.debug.FlxDebugger.GraphicLog;
 
 /**
  * A simple trace output window for use in the debugger overlay.
@@ -152,8 +148,8 @@ class Log extends Window
 	{
 		super.updateSize();
 		
-		_text.width = _width-10;
-		_text.height = _height-15;
+		_text.width = _width - 10;
+		_text.height = _height - 15;
 	}
 }
 #end

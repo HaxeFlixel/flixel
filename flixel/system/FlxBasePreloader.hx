@@ -1,6 +1,5 @@
 package flixel.system;
 
-#if !FLX_HAXE_BUILD
 import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.StageAlign;
@@ -91,7 +90,7 @@ class FlxBasePreloader extends NMEPreloader
 	 */
 	override public function onUpdate(bytesLoaded:Int, bytesTotal:Int) 
 	{
-		#if !(desktop || mobile)
+		#if web
 		if (root.loaderInfo.bytesTotal == 0)
 			bytesTotal = 50000;
 		_percent = (bytesTotal != 0)?bytesLoaded / bytesTotal : 0;
@@ -111,7 +110,7 @@ class FlxBasePreloader extends NMEPreloader
 			percent = time / min;
 		update(percent);
 		
-		if (_loaded && (min <= 0 || time/min >= 1))
+		if (_loaded && (min <= 0 || time / min >= 1))
 		{
 			removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 			super.onLoaded();
@@ -123,20 +122,14 @@ class FlxBasePreloader extends NMEPreloader
 	 * This function is called when the project has finished loading.
 	 * Override it to remove all of your objects.
 	 */
-	private function destroy():Void
-	{
-		
-	}
+	private function destroy():Void {}
 	
 	/**
 	 * Override to draw your preloader objects in response to the Percent
 	 * 
 	 * @param	Percent		How much of the program has loaded.
 	 */
-	private function update(Percent:Float):Void
-	{
-		
-	}
+	private function update(Percent:Float):Void {}
 	
 	/**
 	 * This function is called EXTERNALLY once the movie has actually finished being loaded. 
@@ -215,7 +208,7 @@ class FlxBasePreloader extends NMEPreloader
 			{
 				return true;
 			}
-			else if ((allowedURL == LOCAL) && (homeDomain == LOCAL))
+			else if (allowedURL == LOCAL && homeDomain == LOCAL)
 			{
 				return true;
 			}
@@ -224,4 +217,3 @@ class FlxBasePreloader extends NMEPreloader
 	}
 	#end
 }
-#end

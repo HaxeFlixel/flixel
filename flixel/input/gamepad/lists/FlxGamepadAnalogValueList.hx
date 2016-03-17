@@ -11,15 +11,15 @@ class FlxGamepadAnalogValueList
 {
 	private var gamepad:FlxGamepad;
 	
-	public var LEFT_STICK_X   (get, never):Float; inline function get_LEFT_STICK_X()     { return getXAxis(FlxGamepadInputID.LEFT_ANALOG_STICK);      }
-	public var LEFT_STICK_Y   (get, never):Float; inline function get_LEFT_STICK_Y()     { return getYAxis(FlxGamepadInputID.LEFT_ANALOG_STICK);      }
-	public var RIGHT_STICK_X  (get, never):Float; inline function get_RIGHT_STICK_X()    { return getXAxis(FlxGamepadInputID.RIGHT_ANALOG_STICK);     }
-	public var RIGHT_STICK_Y  (get, never):Float; inline function get_RIGHT_STICK_Y()    { return getYAxis(FlxGamepadInputID.RIGHT_ANALOG_STICK);     }
-	public var LEFT_TRIGGER   (get, never):Float; inline function get_LEFT_TRIGGER()     { return getAxis (FlxGamepadInputID.LEFT_TRIGGER);           }
-	public var RIGHT_TRIGGER  (get, never):Float; inline function get_RIGHT_TRIGGER()    { return getAxis (FlxGamepadInputID.RIGHT_TRIGGER);          }
+	public var LEFT_STICK_X   (get, never):Float; inline function get_LEFT_STICK_X()  return getXAxis(FlxGamepadInputID.LEFT_ANALOG_STICK);
+	public var LEFT_STICK_Y   (get, never):Float; inline function get_LEFT_STICK_Y()  return getYAxis(FlxGamepadInputID.LEFT_ANALOG_STICK);
+	public var RIGHT_STICK_X  (get, never):Float; inline function get_RIGHT_STICK_X() return getXAxis(FlxGamepadInputID.RIGHT_ANALOG_STICK);
+	public var RIGHT_STICK_Y  (get, never):Float; inline function get_RIGHT_STICK_Y() return getYAxis(FlxGamepadInputID.RIGHT_ANALOG_STICK);
+	public var LEFT_TRIGGER   (get, never):Float; inline function get_LEFT_TRIGGER()  return getAxis (FlxGamepadInputID.LEFT_TRIGGER);
+	public var RIGHT_TRIGGER  (get, never):Float; inline function get_RIGHT_TRIGGER() return getAxis (FlxGamepadInputID.RIGHT_TRIGGER);
 	
-	public var POINTER_X(get, never):Float; inline function get_POINTER_X()  { return getAxis (FlxGamepadInputID.POINTER_X); }
-	public var POINTER_Y(get, never):Float; inline function get_POINTER_Y()  { return getAxis (FlxGamepadInputID.POINTER_Y); }
+	public var POINTER_X(get, never):Float; inline function get_POINTER_X() return getAxis (FlxGamepadInputID.POINTER_X);
+	public var POINTER_Y(get, never):Float; inline function get_POINTER_Y() return getAxis (FlxGamepadInputID.POINTER_Y);
 	
 	public function new(gamepad:FlxGamepad)
 	{

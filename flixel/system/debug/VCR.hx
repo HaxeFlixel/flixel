@@ -1,6 +1,6 @@
 package flixel.system.debug;
 
-#if !FLX_NO_DEBUG
+#if FLX_DEBUG
 import flash.display.BitmapData;
 import flash.text.TextField;
 import flash.text.TextFieldAutoSize;
@@ -8,9 +8,9 @@ import flash.text.TextFormat;
 import flixel.FlxG;
 import flixel.system.FlxAssets;
 import flixel.system.ui.FlxSystemButton;
+import flixel.system.debug.FlxDebugger.GraphicArrowRight;
 import flixel.util.FlxColor;
 import flixel.util.FlxStringUtil;
-import flixel.system.debug.FlxDebugger;
 
 @:bitmap("assets/images/debugger/buttons/open.png")
 private class GraphicOpen extends BitmapData {}
@@ -65,15 +65,7 @@ class VCR
 		stepBtn = Debugger.addButton(CENTER, new GraphicStep(0, 0), onStep);
 		
 		#if FLX_RECORD
-		runtimeDisplay = new TextField();
-		runtimeDisplay.height = 10;
-		runtimeDisplay.y = -9;
-		runtimeDisplay.selectable = false;
-		runtimeDisplay.multiline = false;
-		runtimeDisplay.embedFonts = true;
-		var format = new TextFormat(FlxAssets.FONT_DEBUGGER, 12, FlxColor.WHITE);
-		runtimeDisplay.defaultTextFormat = format;
-		runtimeDisplay.autoSize = TextFieldAutoSize.LEFT;
+		runtimeDisplay = DebuggerUtil.createTextField(0, -9);
 		updateRuntime(0);
 		
 		var runtimeBtn = Debugger.addButton(CENTER);

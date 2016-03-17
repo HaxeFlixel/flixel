@@ -1,19 +1,16 @@
 package flixel.ui;
 
-import flash.display.BitmapData;
 import flash.events.MouseEvent;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.atlas.FlxAtlas;
 import flixel.graphics.atlas.FlxNode;
-import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxTileFrames;
 import flixel.input.FlxInput;
 import flixel.input.FlxPointer;
 import flixel.input.IFlxInput;
 import flixel.input.mouse.FlxMouseButton;
 import flixel.input.touch.FlxTouch;
-import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.system.FlxSound;
 import flixel.text.FlxText;
@@ -138,7 +135,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	 * If false, the input has to be pressed while hovering over the button.
 	 */
 	public var allowSwiping:Bool = true;
-#if !FLX_NO_MOUSE
+#if FLX_MOUSE
 	/**
 	 * Which mouse buttons can trigger the button - by default only the left mouse button.
 	 */
@@ -217,7 +214,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 		// Since this is a UI element, the default scrollFactor is (0, 0)
 		scrollFactor.set();
 		
-		#if !FLX_NO_MOUSE
+		#if FLX_MOUSE
 			FlxG.stage.addEventListener(MouseEvent.MOUSE_UP, onUpEventListener);
 		#end
 		
@@ -269,7 +266,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 		currentInput = null;
 		input = null;
 		
-		#if !FLX_NO_MOUSE
+		#if FLX_MOUSE
 			FlxG.stage.removeEventListener(MouseEvent.MOUSE_UP, onUpEventListener);
 		#end
 		
@@ -320,7 +317,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 		}
 	}
 	
-#if !FLX_NO_DEBUG
+#if FLX_DEBUG
 	/**
 	 * Helper function to draw the debug graphic for the label as well.
 	 */
@@ -381,7 +378,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 		if (!overlapFound)
 			overlapFound = checkTouchOverlap();
 		
-		#if !FLX_NO_TOUCH // there's only a mouse event listener for onUp
+		#if FLX_TOUCH // there's only a mouse event listener for onUp
 		if (currentInput != null && currentInput.justReleased && Std.is(currentInput, FlxTouch) && overlapFound)
 		{
 			onUpHandler();
@@ -397,7 +394,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	
 	private function checkMouseOverlap():Bool
 	{
-		#if !FLX_NO_MOUSE
+		#if FLX_MOUSE
 		for (camera in cameras)
 		{
 			for (buttonID in mouseButtons)
@@ -416,7 +413,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	
 	private function checkTouchOverlap():Bool
 	{
-		#if !FLX_NO_TOUCH
+		#if FLX_TOUCH
 		for (camera in cameras)
 		{
 			for (touch in FlxG.touches.list)
@@ -494,7 +491,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	 * Using an event listener is necessary for security reasons on flash - 
 	 * certain things like opening a new window are only allowed when they are user-initiated.
 	 */
-#if !FLX_NO_MOUSE
+#if FLX_MOUSE
 	private function onUpEventListener(_):Void
 	{
 		if (visible && exists && active && status == FlxButton.PRESSED)
@@ -624,7 +621,7 @@ private class FlxButtonEvent implements IFlxDestroyable
 	 */
 	public var callback:Void->Void;
 	
-#if !FLX_NO_SOUND_SYSTEM
+#if FLX_SOUND_SYSTEM
 	/**
 	 * The sound to play when this event fires.
 	 */
@@ -639,7 +636,7 @@ private class FlxButtonEvent implements IFlxDestroyable
 	{
 		callback = Callback;
 		
-		#if !FLX_NO_SOUND_SYSTEM
+		#if FLX_SOUND_SYSTEM
 			this.sound = sound;
 		#end
 	}
@@ -651,7 +648,7 @@ private class FlxButtonEvent implements IFlxDestroyable
 	{
 		callback = null;
 		
-		#if !FLX_NO_SOUND_SYSTEM
+		#if FLX_SOUND_SYSTEM
 			sound = FlxDestroyUtil.destroy(sound);
 		#end
 	}
@@ -666,7 +663,7 @@ private class FlxButtonEvent implements IFlxDestroyable
 			callback();
 		}
 		
-		#if !FLX_NO_SOUND_SYSTEM
+		#if FLX_SOUND_SYSTEM
 			if (sound != null) 
 			{
 				sound.play(true);

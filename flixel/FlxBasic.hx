@@ -9,7 +9,7 @@ import flixel.util.FlxStringUtil;
  */
 class FlxBasic implements IFlxDestroyable
 {
-	#if !FLX_NO_DEBUG
+	#if FLX_DEBUG
 	/**
 	 * Static counters for performance tracking.
 	 */
@@ -97,7 +97,7 @@ class FlxBasic implements IFlxDestroyable
 	 */
 	public function update(elapsed:Float):Void 
 	{ 
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		activeCount++;
 		#end
 	}
@@ -108,7 +108,7 @@ class FlxBasic implements IFlxDestroyable
 	 */
 	public function draw():Void
 	{
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		visibleCount++;
 		#end
 	}

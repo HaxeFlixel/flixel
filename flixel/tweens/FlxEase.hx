@@ -65,7 +65,7 @@ class FlxEase
 	
 	public static inline function quartOut(t:Float):Float
 	{
-		return 1 - (t-=1) * t * t * t;
+		return 1 - (t -= 1) * t * t * t;
 	}
 	
 	public static inline function quartInOut(t:Float):Float
@@ -90,7 +90,7 @@ class FlxEase
 	
 	public static inline function sineIn(t:Float):Float
 	{
-		return - Math.cos(PI2 * t) + 1;
+		return -Math.cos(PI2 * t) + 1;
 	}
 	
 	public static inline function sineOut(t:Float):Float
@@ -181,7 +181,7 @@ class FlxEase
 	{
 		t *= 2;
 		if (t < 1) return t * t * (2.70158 * t - 1.70158) / 2;
-		t --;
+		t--;
 		return (1 - (--t) * (t) * (-2.70158 * t - 1.70158)) / 2 + .5;
 	}
 	

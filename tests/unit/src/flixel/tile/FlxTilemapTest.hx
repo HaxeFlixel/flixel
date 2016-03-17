@@ -2,9 +2,7 @@ package flixel.tile;
 
 import flash.display.BitmapData;
 import flash.errors.ArgumentError;
-import flixel.graphics.FlxGraphic;
 import flixel.math.FlxPoint;
-import flixel.tile.FlxTilemap;
 import massive.munit.Assert;
 using StringTools;
 
@@ -121,7 +119,7 @@ class FlxTilemapTest extends FlxTest
 		var mapData = [0, 0, 0]; //3x1 
 		tilemap.loadMapFromArray(mapData, 3, 1, getBitmapData());
 		
-		Assert.isTrue(tilemap.ray(new FlxPoint(0, tilemap.height/2), new FlxPoint(tilemap.width, tilemap.height/2)));
+		Assert.isTrue(tilemap.ray(new FlxPoint(0, tilemap.height / 2), new FlxPoint(tilemap.width, tilemap.height / 2)));
 	}
 	
 	@Test //#1617
@@ -130,7 +128,7 @@ class FlxTilemapTest extends FlxTest
 		var mapData = [0, 1, 0]; //3x1 with a solid block in the middle
 		tilemap.loadMapFromArray(mapData, 3, 1, getBitmapData());
 		
-		Assert.isFalse(tilemap.ray(new FlxPoint(0, tilemap.height/2), new FlxPoint(tilemap.width, tilemap.height/2)));
+		Assert.isFalse(tilemap.ray(new FlxPoint(0, tilemap.height / 2), new FlxPoint(tilemap.width, tilemap.height / 2)));
 	}
 	
 	@Test //#1617
@@ -139,7 +137,7 @@ class FlxTilemapTest extends FlxTest
 		var mapData = [0, 0, 0, 0, 1, 0, 0, 0, 0]; //3x3 with a solid block in the middle
 		tilemap.loadMapFromArray(mapData, 3, 3, getBitmapData());
 		
-		Assert.isFalse(tilemap.ray(new FlxPoint(0, 0), new FlxPoint(tilemap.width-tilemap.width/8, tilemap.height)));
+		Assert.isFalse(tilemap.ray(new FlxPoint(0, 0), new FlxPoint(tilemap.width - tilemap.width / 8, tilemap.height)));
 	}
 	
 	@Test //#1617

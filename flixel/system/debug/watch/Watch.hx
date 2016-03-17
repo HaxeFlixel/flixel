@@ -2,7 +2,7 @@ package flixel.system.debug.watch;
 
 import flash.display.Sprite;
 import flixel.FlxG;
-import flixel.system.debug.FlxDebugger;
+import flixel.system.debug.FlxDebugger.GraphicWatch;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxDestroyUtil;
 
@@ -12,7 +12,7 @@ import flixel.util.FlxDestroyUtil;
  */
 class Watch extends Window
 {
-	#if !FLX_NO_DEBUG
+	#if FLX_DEBUG
 	private static inline var LINE_HEIGHT:Int = 15;
 	
 	private var _names:Sprite;

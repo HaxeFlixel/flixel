@@ -5,12 +5,12 @@ import flash.system.System;
 import flash.text.TextField;
 import flixel.FlxG;
 import flixel.math.FlxMath;
-import flixel.system.debug.FlxDebugger;
 import flixel.system.FlxLinkedList;
 import flixel.system.FlxQuadTree;
+import flixel.system.debug.DebuggerUtil;
+import flixel.system.debug.FlxDebugger.GraphicStats;
 import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxColor;
-import flixel.system.debug.DebuggerUtil;
 
 @:bitmap("assets/images/debugger/buttons/minimize.png")
 private class GraphicMinimizeButton extends BitmapData {}
@@ -24,7 +24,7 @@ private class GraphicMaximizeButton extends BitmapData {}
  * @author Adam "Atomic" Saltsman
  * @author Anton Karlov
  */
-#if !FLX_NO_DEBUG
+#if FLX_DEBUG
 class Stats extends Window
 {
 	/**

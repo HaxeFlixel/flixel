@@ -1,11 +1,9 @@
 package flixel.graphics.frames;
 
 import flash.display.BitmapData;
-import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.graphics.FlxGraphic;
-import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
@@ -273,7 +271,7 @@ class FlxFrame implements IFlxDestroyable
 	 * @param	disposeIfNotEqual	Whether dispose passed bmd or not if its size isn't equal to frame's original size (sourceSize)
 	 * @return	Modified or newly created BitmapData with frame image on it
 	 */
-	public function paint(bmd:BitmapData = null, point:Point = null, mergeAlpha:Bool = false, disposeIfNotEqual:Bool = false):BitmapData
+	public function paint(?bmd:BitmapData, ?point:Point, mergeAlpha:Bool = false, disposeIfNotEqual:Bool = false):BitmapData
 	{
 		if (point == null)
 		{
@@ -318,7 +316,7 @@ class FlxFrame implements IFlxDestroyable
 	 * @param	disposeIfNotEqual	Whether dispose passed bmd or not if its size isn't equal to frame's original size (sourceSize)
 	 * @return	Modified or newly created BitmapData with frame image on it
 	 */
-	public function paintRotatedAndFlipped(bmd:BitmapData = null, point:Point = null, rotation:FlxFrameAngle = FlxFrameAngle.ANGLE_0, flipX:Bool = false, flipY:Bool = false, mergeAlpha:Bool = false, disposeIfNotEqual:Bool = false):BitmapData
+	public function paintRotatedAndFlipped(?bmd:BitmapData, ?point:Point, rotation:FlxFrameAngle = FlxFrameAngle.ANGLE_0, flipX:Bool = false, flipY:Bool = false, mergeAlpha:Bool = false, disposeIfNotEqual:Bool = false):BitmapData
 	{
 		if (type == FlxFrameType.EMPTY && rotation == FlxFrameAngle.ANGLE_0)
 		{
@@ -358,7 +356,7 @@ class FlxFrame implements IFlxDestroyable
 	 * @param	disposeIfNotEqual	Whether dispose passed bmd or not if its size isn't equal to frame's original size (sourceSize)
 	 * @return	Prepared BitmapData for further frame blitting. Output BitmapData could be a different object.
 	 */
-	private inline function checkInputBitmap(bmd:BitmapData = null, point:Point = null, rotation:FlxFrameAngle = FlxFrameAngle.ANGLE_0, mergeAlpha:Bool = false, disposeIfNotEqual:Bool = false):BitmapData
+	private inline function checkInputBitmap(?bmd:BitmapData, ?point:Point, rotation:FlxFrameAngle = FlxFrameAngle.ANGLE_0, mergeAlpha:Bool = false, disposeIfNotEqual:Bool = false):BitmapData
 	{
 		var w:Int = Std.int(sourceSize.x);
 		var h:Int = Std.int(sourceSize.y);
@@ -416,7 +414,7 @@ class FlxFrame implements IFlxDestroyable
 	 * @param	frameToFill		frame to fill with data. If null then new frame will be created
 	 * @return	Specified frameToFill object but filled with data
 	 */
-	public function subFrameTo(rect:FlxRect, frameToFill:FlxFrame = null):FlxFrame
+	public function subFrameTo(rect:FlxRect, ?frameToFill:FlxFrame):FlxFrame
 	{
 		if (frameToFill == null)
 		{
@@ -504,7 +502,7 @@ class FlxFrame implements IFlxDestroyable
 	 * @param	border	Amount to clip from frame
 	 * @return	Clipped frame
 	 */
-	public function setBorderTo(border:FlxPoint, frameToFill:FlxFrame = null):FlxFrame
+	public function setBorderTo(border:FlxPoint, ?frameToFill:FlxFrame):FlxFrame
 	{
 		var rect:FlxRect = FlxRect.get(border.x, border.y, sourceSize.x - 2 * border.x, sourceSize.y - 2 * border.y);
 		frameToFill = this.subFrameTo(rect, frameToFill);
@@ -519,7 +517,7 @@ class FlxFrame implements IFlxDestroyable
 	 * @param	clippedFrame	The frame which will contain result of original frame clipping. If null then new frame will be created.
 	 * @return	Result of applying frame clipping
 	 */
-	public function clipTo(clip:FlxRect, clippedFrame:FlxFrame = null):FlxFrame
+	public function clipTo(clip:FlxRect, ?clippedFrame:FlxFrame):FlxFrame
 	{
 		if (clippedFrame == null)
 		{
@@ -604,7 +602,7 @@ class FlxFrame implements IFlxDestroyable
 	 * @param	clone	Frame to fill data with. If null, then new frame will be created.
 	 * @return	Frame with data of this frame.
 	 */
-	public function copyTo(clone:FlxFrame = null):FlxFrame
+	public function copyTo(?clone:FlxFrame):FlxFrame
 	{
 		if (clone == null)
 		{

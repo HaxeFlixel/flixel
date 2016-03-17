@@ -2,7 +2,7 @@ package flixel.input;
 
 import flash.events.KeyboardEvent;
 import flixel.FlxG;
-import flixel.input.FlxInput;
+import flixel.input.FlxInput.FlxInputState;
 
 @:allow(flixel)
 class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
@@ -141,7 +141,7 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 				return true;
 			}
 		}
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 			else
 			{
 				throw 'Invalid key code: $KeyCode.';

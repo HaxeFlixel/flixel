@@ -1,7 +1,5 @@
 package flixel.text;
 
-import flixel.text.FlxBitmapText;
-
 class FlxBitmapTextTest extends FlxTest
 {
 	var text:FlxBitmapText;

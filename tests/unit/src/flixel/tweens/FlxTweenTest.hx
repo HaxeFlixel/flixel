@@ -1,6 +1,5 @@
 package flixel.tweens;
 
-import flixel.tweens.FlxTween;
 import flixel.util.FlxTimer;
 import massive.munit.Assert;
 
@@ -33,8 +32,9 @@ class FlxTweenTest extends FlxTest
 	{
 		var tweenActive:Bool = false;
 		
-		var tween = FlxTween.tween(this, { value: 50 }, 0.05, { type: FlxTween.LOOPING, onComplete:
-			function (tween:FlxTween)
+		var tween = FlxTween.tween(this, { value: 50 }, 0.05, {
+			type: FlxTween.LOOPING,
+			onComplete: function (tween:FlxTween)
 			{
 				tween.active = false;
 				new FlxTimer().start(0.05, function(_)
@@ -42,7 +42,7 @@ class FlxTweenTest extends FlxTest
 					tweenActive = tween.active;
 				});
 			}
-		} );
+		});
 		
 		step(10);
 		Assert.isFalse(tweenActive);
@@ -73,10 +73,10 @@ class FlxTweenTest extends FlxTest
 	@Test
 	function testCancelNoCallback()
 	{
-		var tween = FlxTween.tween(this, { value: 100 }, 0.01, { onComplete: function (_)
-		{
-			Assert.fail("Callback called");
-		}});
+		var tween = FlxTween.tween(this, { value: 100 }, 0.01, {
+			onComplete: function (_)
+				Assert.fail("Callback called")
+		});
 		tween.cancel();
 		step();
 	}

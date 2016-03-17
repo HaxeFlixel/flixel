@@ -38,7 +38,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 * A `Map<String, Int>` whose values are the static colors of `FlxColor`.
 	 * You can add more colors for `FlxColor.fromString(String)` if you need.
 	 */
-	public static var colorLookup(default, null):Map<String,Int>
+	public static var colorLookup(default, null):Map<String, Int>
 		= FlxMacroUtil.buildMap("flixel.util.FlxColor");
 	
 	public var red(get, set):Int;
@@ -184,7 +184,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 		
 		if (COLOR_REGEX.match(str)) 
 		{
-			var hexColor:String = "0x"+COLOR_REGEX.matched(2);
+			var hexColor:String = "0x" + COLOR_REGEX.matched(2);
 			result = new FlxColor(Std.parseInt(hexColor));
 			if (hexColor.length == 8) 
 			{
@@ -780,13 +780,15 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	}
 }
 
-typedef Harmony = { 
+typedef Harmony =
+{
 	original:FlxColor,
 	warmer:FlxColor,
 	colder:FlxColor
 }
 
-typedef TriadicHarmony = {
+typedef TriadicHarmony =
+{
 	color1:FlxColor,
 	color2:FlxColor,
 	color3:FlxColor

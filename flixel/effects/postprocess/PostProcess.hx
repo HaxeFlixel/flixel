@@ -6,7 +6,11 @@ import flash.geom.Rectangle;
 import flixel.FlxG;
 import openfl.Assets;
 import openfl.display.OpenGLView;
-import openfl.gl.*;
+import openfl.gl.GL;
+import openfl.gl.GLFramebuffer;
+import openfl.gl.GLRenderbuffer;
+import openfl.gl.GLTexture;
+import openfl.gl.GLBuffer;
 import openfl.utils.Float32Array;
 
 private class Uniform
@@ -65,7 +69,7 @@ class PostProcess extends OpenGLView
 		GL.bindBuffer(GL.ARRAY_BUFFER, null);
 
 		postProcessShader = new Shader([
-			{ src: vertexShader, fragment: false },
+			{ src: VERTEX_SHADER, fragment: false },
 			{ src: Assets.getText(fragmentShader), fragment: true }
 		]);
 
@@ -249,7 +253,7 @@ class PostProcess extends OpenGLView
 	private var uniforms:Map<String, Uniform>;
 
 	/* @private Simple full screen vertex shader */
-	private static inline var vertexShader:String = "
+	private static inline var VERTEX_SHADER:String = "
 #ifdef GL_ES
 	precision mediump float;
 #endif
@@ -268,10 +272,10 @@ void main() {
 	{
 		return [
 			-1.0, -1.0, 0, 0,
-			 1.0, -1.0, 1, 0,
+			1.0, -1.0, 1, 0,
 			-1.0,  1.0, 0, 1,
-			 1.0, -1.0, 1, 0,
-			 1.0,  1.0, 1, 1,
+			1.0, -1.0, 1, 0,
+			1.0,  1.0, 1, 1,
 			-1.0,  1.0, 0, 1
 		];
 	}
@@ -291,6 +295,6 @@ class PostProcess
 	public function render(rect:Rectangle) {}
 	public function setUniform(uniform:String, value:Float) {}
 	public var to(never, set):PostProcess;
-	public function set_to(value:PostProcess):PostProcess { return null; }
+	public function set_to(value:PostProcess):PostProcess return null;
 }
 #end

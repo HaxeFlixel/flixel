@@ -5,9 +5,8 @@ import flash.display.BlendMode;
 import flash.geom.ColorTransform;
 import flash.geom.Point;
 import flash.geom.Rectangle;
+import flixel.FlxBasic.IFlxBasic;
 import flixel.animation.FlxAnimationController;
-import flixel.FlxBasic;
-import flixel.FlxG;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.frames.FlxFramesCollection;
@@ -117,7 +116,7 @@ class FlxSprite extends FlxObject
 	 * Whether this sprite is flipped on the Y axis
 	 */
 	public var flipY(default, set):Bool = false;
-	 
+	
 	/**
 	 * WARNING: The origin of the sprite will default to its center. If you change this, 
 	 * the visuals and the collisions will likely be pretty out-of-sync if you do any rotation.
@@ -307,19 +306,19 @@ class FlxSprite extends FlxObject
 	/**
 	 * Load an image from an embedded graphic file.
 	 *
- 	 * HaxeFlixel's graphic caching system keeps track of loaded image data. 
- 	 * When you load an identical copy of a previously used image, by default
- 	 * HaxeFlixel copies the previous reference onto the pixels field instead
- 	 * of creating another copy of the image data, to save memory.
+	 * HaxeFlixel's graphic caching system keeps track of loaded image data. 
+	 * When you load an identical copy of a previously used image, by default
+	 * HaxeFlixel copies the previous reference onto the `pixels` field instead
+	 * of creating another copy of the image data, to save memory.
 	 * 
 	 * @param	Graphic		The image you want to use.
-	 * @param	Animated	Whether the Graphic parameter is a single sprite or a row of sprites.
-	 * @param	Width		Optional, specify the width of your sprite (helps FlxSprite figure out what to do with non-square sprites or sprite sheets).
-	 * @param	Height		Optional, specify the height of your sprite (helps FlxSprite figure out what to do with non-square sprites or sprite sheets).
-	 * @param	Unique		Optional, whether the graphic should be a unique instance in the graphics cache.  Default is false.
-	 *				Set this to true if you want to modify the pixels field without changing the pixels of other sprites with the same BitmapData.
-	 * @param	Key		Optional, set this parameter if you're loading BitmapData.
-	 * @return	This FlxSprite instance (nice for chaining stuff together, if you're into that).
+	 * @param	Animated	Whether the `Graphic` parameter is a single sprite or a row / grid of sprites.
+	 * @param	Width		Specify the width of your sprite (helps figure out what to do with non-square sprites or sprite sheets).
+	 * @param	Height		Specify the height of your sprite (helps figure out what to do with non-square sprites or sprite sheets).
+	 * @param	Unique		Whether the graphic should be a unique instance in the graphics cache.
+	 *				Set this to `true` if you want to modify the `pixels` field without changing the `pixels` of other sprites with the same `BitmapData`.
+	 * @param	Key		Set this parameter if you're loading `BitmapData`.
+	 * @return	This `FlxSprite` instance (nice for chaining stuff together, if you're into that).
 	 */
 	public function loadGraphic(Graphic:FlxGraphicAsset, Animated:Bool = false, Width:Int = 0, Height:Int = 0, Unique:Bool = false, ?Key:String):FlxSprite
 	{
@@ -329,13 +328,13 @@ class FlxSprite extends FlxObject
 		
 		if (Width == 0)
 		{
-			Width = (Animated == true) ? graph.height : graph.width;
+			Width = Animated ? graph.height : graph.width;
 			Width = (Width > graph.width) ? graph.width : Width;
 		}
 		
 		if (Height == 0)
 		{
-			Height = (Animated == true) ? Width : graph.height;
+			Height = Animated ? Width : graph.height;
 			Height = (Height > graph.height) ? graph.height : Height;
 		}
 		
@@ -447,11 +446,11 @@ class FlxSprite extends FlxObject
 	/**
 	 * This function creates a flat colored rectangular image dynamically.
 	 *
- 	 * HaxeFlixel's graphic caching system keeps track of loaded image data. 
- 	 * When you make an identical copy of a previously used image, by default
- 	 * HaxeFlixel copies the previous reference onto the pixels field instead
- 	 * of creating another copy of the image data, to save memory.
- 	 * 
+	 * HaxeFlixel's graphic caching system keeps track of loaded image data. 
+	 * When you make an identical copy of a previously used image, by default
+	 * HaxeFlixel copies the previous reference onto the pixels field instead
+	 * of creating another copy of the image data, to save memory.
+	 * 
 	 * @param	Width		The width of the sprite you want to generate.
 	 * @param	Height		The height of the sprite you want to generate.
 	 * @param	Color		Specifies the color of the generated block (ARGB format).
@@ -471,7 +470,7 @@ class FlxSprite extends FlxObject
 	 * Called whenever a new graphic is loaded for this sprite
 	 * - after loadGraphic(), makeGraphic() etc.
 	 */
-	public function graphicLoaded():Void {  }
+	public function graphicLoaded():Void {}
 	
 	/**
 	 * Resets _flashRect variable used for frame bitmapData calculation
@@ -621,12 +620,12 @@ class FlxSprite extends FlxObject
 			else
 				drawComplex(camera);
 			
-			#if !FLX_NO_DEBUG
+			#if FLX_DEBUG
 			FlxBasic.visibleCount++;
 			#end
 		}
 		
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		if (FlxG.debugger.drawDebug)
 			drawDebug();
 		#end

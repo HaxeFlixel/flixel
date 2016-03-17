@@ -1,6 +1,6 @@
 package flixel.system.debug.console;
 
-#if !FLX_NO_DEBUG
+#if FLX_DEBUG
 import openfl.events.Event;
 import openfl.events.FocusEvent;
 import openfl.events.KeyboardEvent;
@@ -82,7 +82,7 @@ class Console extends Window
 		registerEventListeners();
 		
 		// Install commands
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		new ConsoleCommands(this);
 		#end
 	}
@@ -148,7 +148,7 @@ class Console extends Window
 			return;
 		#end
 		
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		#if flash 
 		// Pause game
 		if (FlxG.console.autoPause)
@@ -156,7 +156,7 @@ class Console extends Window
 		#end
 		
 		// Block keyboard input
-		#if !FLX_NO_KEYBOARD
+		#if FLX_KEYBOARD
 		FlxG.keys.enabled = false;
 		#end
 		
@@ -173,14 +173,14 @@ class Console extends Window
 			return;
 		#end
 		
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		#if flash
 		// Unpause game
 		if (FlxG.console.autoPause)
 			FlxG.vcr.resume();
 		#end
 		// Unblock keyboard input
-		#if !FLX_NO_KEYBOARD
+		#if FLX_KEYBOARD
 		FlxG.keys.enabled = true;
 		#end
 		
@@ -189,6 +189,7 @@ class Console extends Window
 		#end
 		
 		completionList.close();
+		FlxG.game.debugger.onMouseFocusLost();
 	}
 	
 	#if hscript

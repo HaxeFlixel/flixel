@@ -1,6 +1,5 @@
 package flixel.system.debug;
 
-#if !FLX_NO_DEBUG
 import flash.display.BitmapData;
 import flash.display.Sprite;
 import flash.events.MouseEvent;
@@ -14,16 +13,12 @@ import flixel.FlxG;
 import flixel.system.debug.console.Console;
 import flixel.system.debug.log.Log;
 import flixel.system.debug.stats.Stats;
-import flixel.system.debug.VCR;
 import flixel.system.debug.watch.Watch;
 import flixel.system.debug.watch.Tracker;
 import flixel.system.debug.completion.CompletionList;
 import flixel.system.debug.log.BitmapLog;
 import flixel.system.FlxAssets;
 import flixel.system.ui.FlxSystemButton;
-import flixel.util.FlxStringUtil;
-import flixel.util.FlxColor;
-import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxHorizontalAlign;
 using flixel.util.FlxArrayUtil;
 
@@ -60,6 +55,7 @@ class GraphicArrowRight extends BitmapData {}
  */
 class FlxDebugger extends Sprite
 {
+	#if FLX_DEBUG
 	/**
 	 * Internal, used to space out windows from the edges.
 	 */
@@ -76,12 +72,7 @@ class FlxDebugger extends Sprite
 	public var vcr:VCR;
 	public var console:Console;
 	private var completionList:CompletionList;
-	
-	/**
-	 * Whether the mouse is currently over one of the debugger windows or not.
-	 */
-	public var hasMouse:Bool = false;
-	
+
 	/**
 	 * Internal, tracks what debugger window layout user has currently selected.
 	 */
@@ -104,6 +95,10 @@ class FlxDebugger extends Sprite
 	private var _topBar:Sprite;
 	
 	private var _windows:Array<Window> = [];
+
+	private var _usingSystemCursor = false;
+	private var _wasMouseVisible:Bool = true;
+	private var _wasUsingSystemCursor:Bool = false;
 
 	/**
 	 * Instantiates the debugger overlay.
@@ -254,10 +249,10 @@ class FlxDebugger extends Sprite
 				console.resize((_screen.x / 2) - GUTTER * 4, 35);
 				console.reposition(log.x + log.width + GUTTER, _screen.y);
 				watch.resize(_screen.x / 4, 68);
-				watch.reposition(_screen.x,_screen.y);
+				watch.reposition(_screen.x, _screen.y);
 				stats.reposition(_screen.x, 0);
 				bitmapLog.resize(_screen.x / 4, 68);
-				bitmapLog.reposition(0,_screen.y - (68*2) - (GUTTER*2));
+				bitmapLog.reposition(0, _screen.y - (68 * 2) - (GUTTER * 2));
 			case BIG:
 				console.resize(_screen.x - GUTTER * 2, 35);
 				console.reposition(GUTTER, _screen.y);
@@ -266,45 +261,45 @@ class FlxDebugger extends Sprite
 				watch.resize((_screen.x - GUTTER * 3) / 2, _screen.y / 2);
 				watch.reposition(_screen.x, _screen.y - watch.height - console.height - GUTTER * 1.5);
 				stats.reposition(_screen.x, 0);
-				bitmapLog.resize((_screen.x - GUTTER * 3) / 2, _screen.y-(GUTTER*2)-(_screen.y / 2) -(35*2));
+				bitmapLog.resize((_screen.x - GUTTER * 3) / 2, _screen.y - (GUTTER * 2) - (_screen.y / 2) - (35 * 2));
 				bitmapLog.reposition(0, GUTTER * 1.5);
 			case TOP:
 				console.resize(_screen.x - GUTTER * 2, 35);
 				console.reposition(0, 0);
 				log.resize((_screen.x - GUTTER * 3) / 2, _screen.y / 4);
-				log.reposition(0,console.height + GUTTER + 15);
+				log.reposition(0, console.height + GUTTER + 15);
 				watch.resize((_screen.x - GUTTER * 3) / 2, _screen.y / 4);
-				watch.reposition(_screen.x,console.height + GUTTER + 15);
+				watch.reposition(_screen.x, console.height + GUTTER + 15);
 				stats.reposition(_screen.x, _screen.y);
 				bitmapLog.resize((_screen.x - GUTTER * 3) / 2, _screen.y / 4);
-				bitmapLog.reposition(0, console.height + (GUTTER*2) + 15 + (_screen.y / 4) + GUTTER);
+				bitmapLog.reposition(0, console.height + (GUTTER * 2) + 15 + (_screen.y / 4) + GUTTER);
 			case LEFT:
 				console.resize(_screen.x - GUTTER * 2, 35);
 				console.reposition(GUTTER, _screen.y);
 				log.resize(_screen.x / 3, (_screen.y - 15 - GUTTER * 2.5) / 2 - console.height / 2 - GUTTER);
-				log.reposition(0,0);
+				log.reposition(0, 0);
 				watch.resize(_screen.x / 3, (_screen.y - 15 - GUTTER * 2.5) / 2 - console.height / 2);
-				watch.reposition(0,log.y + log.height + GUTTER);
+				watch.reposition(0, log.y + log.height + GUTTER);
 				stats.reposition(_screen.x, 0);
 				bitmapLog.resize(_screen.x / 3, (_screen.y - 15 - GUTTER * 2.5) / 2 - console.height / 2 - GUTTER);
-				bitmapLog.reposition((_screen.x / 3) + GUTTER*2, 0);
+				bitmapLog.reposition((_screen.x / 3) + GUTTER * 2, 0);
 			case RIGHT:
 				console.resize(_screen.x - GUTTER * 2, 35);
 				console.reposition(GUTTER, _screen.y);
 				log.resize(_screen.x / 3, (_screen.y - 15 - GUTTER * 2.5) / 2 - console.height / 2 - GUTTER);
-				log.reposition(_screen.x,0);
+				log.reposition(_screen.x, 0);
 				watch.resize(_screen.x / 3, (_screen.y - 15 - GUTTER * 2.5) / 2 - console.height / 2);
-				watch.reposition(_screen.x,log.y + log.height + GUTTER);
+				watch.reposition(_screen.x, log.y + log.height + GUTTER);
 				stats.reposition(0, 0);
 				bitmapLog.resize(_screen.x / 3, (_screen.y - 15 - GUTTER * 2.5) / 2 - console.height / 2 - GUTTER);
-				bitmapLog.reposition(_screen.x - (GUTTER*2) - ((_screen.x / 3)*2), 0);
+				bitmapLog.reposition(_screen.x - (GUTTER * 2) - ((_screen.x / 3) * 2), 0);
 			case STANDARD:
 				console.resize(_screen.x - GUTTER * 2, 35);
 				console.reposition(GUTTER, _screen.y);
 				log.resize((_screen.x - GUTTER * 3) / 2, _screen.y / 4);
-				log.reposition(0,_screen.y - log.height - console.height - GUTTER * 1.5);
+				log.reposition(0, _screen.y - log.height - console.height - GUTTER * 1.5);
 				watch.resize((_screen.x - GUTTER * 3) / 2, _screen.y / 4);
-				watch.reposition(_screen.x,_screen.y - watch.height - console.height - GUTTER * 1.5);
+				watch.reposition(_screen.x, _screen.y - watch.height - console.height - GUTTER * 1.5);
 				stats.reposition(_screen.x, 0);
 				bitmapLog.resize((_screen.x - GUTTER * 3) / 2, _screen.y / 4);
 				bitmapLog.reposition(0, log.y - GUTTER - bitmapLog.height);
@@ -449,25 +444,41 @@ class FlxDebugger extends Sprite
 	/**
 	 * Mouse handler that helps with fake "mouse focus" type behavior.
 	 */
-	private inline function onMouseOver(_):Void
+	private function onMouseOver(_):Void
 	{
-		hasMouse = true;
-		#if !FLX_NO_MOUSE
-		FlxG.mouse.useSystemCursor = true;
-		#end
+		onMouseFocus();
 	}
-	
+
 	/**
 	 * Mouse handler that helps with fake "mouse focus" type behavior.
 	 */
-	private inline function onMouseOut(_):Void
+	private function onMouseOut(_):Void
 	{
-		hasMouse = false;
-		
-		#if !FLX_NO_MOUSE
-		if (!FlxG.vcr.paused)
-			FlxG.mouse.useSystemCursor = false;
+		onMouseFocusLost();
+	}
+
+	private function onMouseFocus():Void
+	{
+		#if FLX_MOUSE
+		FlxG.mouse.enabled = false;
+		_wasMouseVisible = FlxG.mouse.visible;
+		_wasUsingSystemCursor = FlxG.mouse.useSystemCursor;
+		FlxG.mouse.useSystemCursor = true;
+		_usingSystemCursor = true;
 		#end
+	}
+	
+	@:allow(flixel.system.debug)
+	private function onMouseFocusLost():Void
+	{
+		if (_usingSystemCursor)
+		{
+			#if FLX_MOUSE
+			FlxG.mouse.enabled = true;
+			FlxG.mouse.useSystemCursor = _wasUsingSystemCursor;
+			FlxG.mouse.visible = _wasMouseVisible;
+			#end
+		}	
 	}
 
 	private inline function toggleDrawDebug():Void
@@ -489,8 +500,8 @@ class FlxDebugger extends Sprite
 		}
 		FlxG.openURL(url);
 	}
+	#end
 }
-#end
 
 enum FlxDebuggerLayout
 {

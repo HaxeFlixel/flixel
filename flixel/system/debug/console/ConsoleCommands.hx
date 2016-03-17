@@ -1,6 +1,6 @@
 package flixel.system.debug.console;
 
-#if !FLX_NO_DEBUG
+#if FLX_DEBUG
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxState;
@@ -18,7 +18,7 @@ class ConsoleCommands
 	
 	public function new(console:Console):Void
 	{
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		_console = console;
 		
 		console.registerFunction("help", help, "Displays the help text of a registered object or function. See \"help\".");
@@ -84,7 +84,7 @@ class ConsoleCommands
 		}
 	}
 	
-	#if !FLX_NO_DEBUG
+	#if FLX_DEBUG
 	private inline function close():Void
 	{
 		FlxG.debugger.visible = false;

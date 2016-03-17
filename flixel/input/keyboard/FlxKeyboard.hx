@@ -1,10 +1,9 @@
 package flixel.input.keyboard;
 
-#if !FLX_NO_KEYBOARD
+#if FLX_KEYBOARD
 import flash.events.KeyboardEvent;
 import flixel.FlxG;
 import flixel.input.FlxInput;
-import flixel.input.keyboard.FlxKey;
 import flixel.system.replay.CodeValuePair;
 
 /**
@@ -13,12 +12,12 @@ import flixel.system.replay.CodeValuePair;
 @:allow(flixel)
 class FlxKeyboard extends FlxKeyManager<FlxKey, FlxKeyList>
 {
+	#if !web
 	/**
 	 * Function and numpad keycodes on native targets are incorrect, 
 	 * this workaround fixes that. Thanks @HaxePunk!
 	 * @see https://github.com/openfl/openfl-native/issues/193
 	 */
-	#if !web
 	private var _nativeCorrection:Map<String, Int>;
 	#end
 	
@@ -96,7 +95,7 @@ class FlxKeyboard extends FlxKeyManager<FlxKey, FlxKeyList>
 		super.onKeyUp(event);
 		
 		// Debugger toggle
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 			if (FlxG.game.debugger != null && inKeyArray(FlxG.debugger.toggleKeys, event.keyCode))
 			{
 				FlxG.debugger.visible = !FlxG.debugger.visible;

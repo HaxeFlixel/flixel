@@ -114,7 +114,7 @@ class FlxState extends FlxGroup
 			{
 				subState._created = true;
 				subState._parentState = this;
- 				subState.create();
+				subState.create();
 			}
 		}
 	}

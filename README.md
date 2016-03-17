@@ -7,7 +7,7 @@
 [![Patreon](https://img.shields.io/badge/donate-patreon-blue.svg)](https://www.patreon.com/haxeflixel)
 [![Build Status](https://travis-ci.org/HaxeFlixel/flixel.png)](https://travis-ci.org/HaxeFlixel/flixel)
 
-[![](.github/showcase.png)](http://www.haxeflixel.com/showcase)
+[![](showcase.png)](http://www.haxeflixel.com/showcase)
 
 ##Getting Started
 
