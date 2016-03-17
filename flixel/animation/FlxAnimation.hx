@@ -201,7 +201,7 @@ class FlxAnimation extends FlxBaseAnimation
 			return;
 
 		_frameTimer += elapsed;
-		while (_frameTimer > delay)
+		while (_frameTimer > delay && !finished)
 		{
 			_frameTimer -= delay;
 			
