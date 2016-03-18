@@ -800,13 +800,12 @@ class FlxTweenManager extends FlxBasic
 		}
 	}
 	/**
-	 * Immediately updates all tweens to their endings.
+	 * Immediately updates all tweens of type PERSIST or ONESHOT to their endings.
 	 */
 	public function completeAll():Void
 	{
-		var longestDuration:Float = 0;
 		for (tween in _tweens)
-			longestDuration = Math.max(longestDuration, tween.duration);
-		update(longestDuration);
+			if (tween.type == FlxTween.PERSIST || tween.type == FlxTween.ONESHOT)
+				tween.update(tween.duration);
 	}
 }
