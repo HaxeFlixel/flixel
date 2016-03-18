@@ -275,15 +275,15 @@ class FlxTimerManager extends FlxBasic
 	}
 	
 	/**
-	 * Calls the `onComplete` function of all timers, then removes them from the timer manager.
-	 *
-	 * WARNING: This just calls `onComplete()` without modifying the timer first, so it may not be appropriate
-	 * for use with callbacks that rely on properties of the timer that change throughout the timer's lifespan.
+	 * Immediately updates all non-looping timers to their end points.
 	 */
 	public function completeAll():Void
 	{
+		var timersToFinish:Array<FlxTimer> = [];
 		for (timer in _timers)
-			timer.onComplete(timer);
-		clear();
+            if (timer.loops == 1)
+				timersToFinish.push(timer);
+		for (timer in timersToFinish)
+			timer.update(timer.timeLeft);
 	}
 }
