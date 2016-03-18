@@ -755,10 +755,6 @@ class FlxGame extends Sprite
 		#end
 		
 		#if FLX_POINTER_INPUT
-		for (swipe in FlxG.swipes)
-		{
-			swipe = null;
-		}
 		FlxArrayUtil.clearArray(FlxG.swipes);
 		#end
 		
