@@ -263,13 +263,10 @@ class FlxGame extends Sprite
 	
 	/**
 	 * Sets the filter array to be applied to the game.
-	 * 
-	 * @param	filters
 	 */
 	public function setFilters(filters:Array<BitmapFilter>):Void
 	{
 		_filters = filters;
-		filters = filtersEnabled ? _filters : null;
 	}
 	
 	/**
@@ -764,6 +761,8 @@ class FlxGame extends Sprite
 		}
 		FlxArrayUtil.clearArray(FlxG.swipes);
 		#end
+		
+		filters = filtersEnabled ? _filters : null;
 	}
 	
 	private function updateInput():Void
