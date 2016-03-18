@@ -789,6 +789,8 @@ class FlxCamera extends FlxBasic
 		updateFade(elapsed);
 		updateShake(elapsed);
 		
+		flashSprite.filters = filtersEnabled ? _filters : null;
+		
 		updateFlashSpritePosition();
 	}
 	
@@ -1190,13 +1192,10 @@ class FlxCamera extends FlxBasic
 	
 	/**
 	 * Sets the filter array to be applied to the camera.
-	 * 
-	 * @param	filters
 	 */
 	public function setFilters(filters:Array<BitmapFilter>):Void
 	{
 		_filters = filters;
-		flashSprite.filters = filtersEnabled ? _filters : null;
 	}
 	
 	/**
