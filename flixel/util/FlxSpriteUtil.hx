@@ -43,7 +43,7 @@ class FlxSpriteUtil
 	 * Note: It assumes the source and mask are the same size. Different sizes may result in undesired results.
 	 * It works by copying the source image (your picture) into the output sprite. Then it removes all areas of it that do not
 	 * have an alpha color value in the mask image. So if you draw a big black circle in your mask with a transparent edge, you'll
-	 * get a circular image appear. Look at the mask PNG files in the assets/pics folder for examples.
+	 * get a circular image to appear.
 	 * May lead to unexecpted results if `source` does not have an alpha channel.
 	 * 
 	 * @param	output		The FlxSprite you wish the resulting image to be placed in (will adjust width/height of image)
