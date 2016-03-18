@@ -42,8 +42,7 @@ class Shooter extends FlxTypedGroup<FlxNapeSprite>
 		var background:FlxSprite = new FlxSprite();
 		background.makeGraphic(640, 480, 0xFF000000);
 		background.alpha = 1;
-		FlxG.state.members.insert(0, background);
-		FlxG.state.length++;
+		FlxG.state.insert(0, background);
 		FlxMouseEventManager.add(background, launchProjectile);
 		var color = 0x333333;
 		
