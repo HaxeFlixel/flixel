@@ -28,7 +28,7 @@ class State_DefaultTest extends FlxUIState
 			switch (id)
 			{
 				case "click_button":
-					switch (cast(params[0], String))
+					switch (Std.string(params[0]))
 					{
 						case "back": FlxG.switchState(new State_Title());
 						case "popup":var popup:FlxUIPopup = new FlxUIPopup(); //create the popup

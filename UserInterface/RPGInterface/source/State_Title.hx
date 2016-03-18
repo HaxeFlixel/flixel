@@ -38,6 +38,7 @@ class State_Title extends FlxUIState
 	
 	public override function getEvent(name:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void
 	{
+		trace("getEvent(" + name+"," + sender + "," + data + "," + params + ")");
 		var str:String = "";
 		
 		switch (name)
@@ -51,7 +52,7 @@ class State_Title extends FlxUIState
 			case "click_button":
 				if (params != null && params.length > 0)
 				{
-					switch (cast(params[0], String))
+					switch (Std.string(params[0]))
 					{
 						case "saves": FlxG.switchState(new State_SaveMenu());
 						case "menu": FlxG.switchState(new State_TestMenu());
