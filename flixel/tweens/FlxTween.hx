@@ -683,6 +683,9 @@ typedef TweenOptions =
 	?loopDelay:Null<Float>
 }
 
+/**
+ * A simple manager for tracking and updating game tween objects.  Normally accessed via the static `FlxTween.manager` rather than being created separately.
+ */
 @:access(flixel.tweens.FlxTween)
 class FlxTweenManager extends FlxBasic
 {
@@ -795,5 +798,15 @@ class FlxTweenManager extends FlxBasic
 		{
 			remove(_tweens[0]);
 		}
+	}
+	/**
+	 * Immediately updates all tweens to their endings.
+	 */
+	public function completeAll():Void
+	{
+		var longestDuration:Float = 0;
+		for (tween in _tweens)
+			longestDuration = Math.max(longestDuration, tween.duration);
+		update(longestDuration);
 	}
 }
