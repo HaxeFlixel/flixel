@@ -38,7 +38,6 @@ class State_Title extends FlxUIState
 	
 	public override function getEvent(name:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void
 	{
-		trace("getEvent(" + name+"," + sender + "," + data + "," + params + ")");
 		var str:String = "";
 		
 		switch (name)
