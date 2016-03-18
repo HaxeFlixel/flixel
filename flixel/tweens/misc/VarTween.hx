@@ -55,9 +55,9 @@ class VarTween extends FlxTween
 	
 	override private function update(elapsed:Float):Void
 	{
-		var delay:Float = (executions > 0) ? loopDelay : startDelay;
+		_cachedDelay = (executions > 0) ? loopDelay : startDelay;
 		
-		if (_secondsSinceStart < delay)
+		if (_secondsSinceStart < _cachedDelay)
 		{
 			// Leave properties alone until delay is over
 			super.update(elapsed);
