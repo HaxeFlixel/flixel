@@ -258,7 +258,7 @@ class Stats extends Window
 		
 		if (_updateTimer > UPDATE_DELAY)
 		{
-			fpsGraph.update(currentFps(), averageFps());
+			fpsGraph.update(currentFps());
 			memoryGraph.update(currentMem());
 			updateTexts();
 			
