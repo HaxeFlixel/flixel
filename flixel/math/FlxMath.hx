@@ -88,7 +88,7 @@ class FlxMath
 	 * lerp(a, b, 0) = a
 	 * lerp(a, b, 1) = b
 	 * lerp(5, 15, 0.5) = 10
-	 * lerp(5, 15, 0.5) = -5
+	 * lerp(5, 15, -1) = -5
 	 * ```
 	 */
 	public static inline function lerp(a:Float, b:Float, ratio:Float):Float
