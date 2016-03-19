@@ -808,4 +808,14 @@ class FlxTweenManager extends FlxBasic
 			if (tween.type == FlxTween.PERSIST || tween.type == FlxTween.ONESHOT)
 				tween.update(tween.duration);
 	}
+	/**
+	 * Applies a function to all tweens
+	 * 
+	 * @param   Function   A function that modifies one tween at a time
+	 */
+	public function forEach(Function:FlxTween->Void)
+	{
+		for (tween in _tweens)		
+			Function(tween);
+	}
 }
