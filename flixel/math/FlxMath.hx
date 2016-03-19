@@ -79,16 +79,16 @@ class FlxMath
 	}
 	
 	/**
-	 * Returns linear interpolated value between Max and Min numbers
+	 * Returns linear interpolated value between two numbers
 	 *
-	 * @param Min 		Lower bound.
-	 * @param Max	 	Higher bound.
-	 * @param Ratio 	Defines which number is closer to desired value.
+	 * @param NumberA 		Any number.
+	 * @param NumberB	 	Any number.
+	 * @param Ratio 	How far to interpolate between the two, on a scale of 0 (NumberA) to 1 (NumberB).  For example, 0.5 will result in the midpoint between the two numbers.
 	 * @return 			Interpolated number.
 	 */
-	public static inline function lerp(Min:Float, Max:Float, Ratio:Float):Float
+	public static inline function lerp(NumberA:Float, NumberB:Float, Ratio:Float):Float
 	{
-		return Min + Ratio * (Max - Min);
+		return NumberA + Ratio * (NumberB - NumberA);
 	}
 	
 	/**
