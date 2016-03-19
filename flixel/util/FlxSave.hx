@@ -56,6 +56,7 @@ class FlxSave implements IFlxDestroyable
 	 * Automatically creates or reconnects to locally saved data.
 	 * 
 	 * @param	Name	The name of the object (should be the same each time to access old data).
+	 * 					May not contain spaces or any of the following characters: `~ % & \ ; : " ' , < > ? #`
 	 * @return	Whether or not you successfully connected to the save data.
 	 */
 	public function bind(Name:String):Bool
