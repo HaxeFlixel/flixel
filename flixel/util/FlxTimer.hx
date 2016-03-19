@@ -286,4 +286,14 @@ class FlxTimerManager extends FlxBasic
 		for (timer in timersToFinish)
 			timer.update(timer.timeLeft);
 	}
+	/**
+	 * Applies a function to all timers
+	 * 
+	 * @param   Function   A function that modifies one timer at a time
+	 */
+	public function forEach(Function:FlxTimer->Void)
+	{
+		for (timer in _timers)		
+			Function(timer);
+	}
 }
