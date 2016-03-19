@@ -79,20 +79,21 @@ class FlxMath
 	}
 	
 	/**
-	 * Returns the linear interpolated/extrapolated value of two numbers
-	 *
-	 * @param NumberA 		Any number.
-	 * @param NumberB	 	Any number.
-	 * @param Ratio 	Linear scale, where 0 results in NumberA and 1 results in NumberB.
-	 * 					For example, 0.5 will result in the midpoint between the two numbers.
-	 *					Another example, 2 will result in a number twice as far from NumberA as NumberB is.
-	 *					Finally, negatives are allowed too: -1 will result in a number the same distance as NumberB is from NumberA,
-	 *                  but on the other side of NumberA.
-	 * @return 			Interpolated/extrapolated number.
+	 * Returns the linear interpolation of two numbers if `ratio`
+	 * is between 0 and 1, and the linear extrapolation otherwise.
+	 * 
+	 * Examples:
+	 * 
+	 * ```haxe
+	 * lerp(a, b, 0) = a
+	 * lerp(a, b, 1) = b
+	 * lerp(5, 15, 0.5) = 10
+	 * lerp(5, 15, 0.5) = -5
+	 * ```
 	 */
-	public static inline function lerp(NumberA:Float, NumberB:Float, Ratio:Float):Float
+	public static inline function lerp(a:Float, b:Float, ratio:Float):Float
 	{
-		return NumberA + Ratio * (NumberB - NumberA);
+		return a + ratio * (b - a);
 	}
 	
 	/**
