@@ -88,7 +88,7 @@ class FlxMath
 	 *					Another example, 2 will result in a number twice as far from NumberA as NumberB is.
 	 *					Finally, negatives are allowed too: -1 will result in a number the same distance as NumberB is from NumberA,
 	 *                  but on the other side of NumberA.
-	 * @return 			Interpolated number.
+	 * @return 			Interpolated/extrapolated number.
 	 */
 	public static inline function lerp(NumberA:Float, NumberB:Float, Ratio:Float):Float
 	{
