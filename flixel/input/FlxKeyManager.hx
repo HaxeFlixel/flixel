@@ -73,9 +73,9 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 	}
 	
 	/**
-	 * Get the first key which is currently pressed.
+	 * Get the ID of the first key which is currently pressed.
 	 * 
-	 * @return	The the first pressed Key
+	 * @return	The ID of the first pressed key or -1 if none are pressed.
 	 */
 	public function firstPressed():Int
 	{
@@ -90,9 +90,9 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 	}
 	
 	/**
-	 * Get the name of the first key which has just been pressed.
+	 * Get the ID of the first key which has just been pressed.
 	 * 
-	 * @return	The name of the key or "" if none could be found.
+	 * @return	The ID of the key or -1 if none were just pressed.
 	 */
 	public function firstJustPressed():Int
 	{
@@ -107,9 +107,9 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 	}
 	
 	/**
-	 * Get the name of the first key which has just been released.
+	 * Get the ID of the first key which has just been released.
 	 * 
-	 * @return	The name of the key or "" if none could be found.
+	 * @return	The ID of the key or -1 if none were just released.
 	 */
 	public function firstJustReleased():Int
 	{
