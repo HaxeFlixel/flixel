@@ -1,7 +1,5 @@
 package flixel.util;
 
-import flixel.util.FlxGradient;
-import flixel.util.FlxColor;
 import massive.munit.Assert;
 
 class FlxGradientTest extends FlxTest

@@ -1,6 +1,5 @@
 package flixel.math;
 
-import flixel.math.FlxAngle;
 import massive.munit.Assert;
 
 class FlxAngleTest

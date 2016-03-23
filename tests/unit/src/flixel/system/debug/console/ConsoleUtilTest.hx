@@ -1,7 +1,5 @@
 package flixel.system.debug.console;
 
-import massive.munit.Assert;
-
 class ConsoleUtilTest extends FlxTest
 {
 	@Test

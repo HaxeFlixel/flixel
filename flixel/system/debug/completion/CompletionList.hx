@@ -1,12 +1,9 @@
 package flixel.system.debug.completion;
 
-import openfl.display.Bitmap;
-import openfl.display.BitmapData;
+import flixel.math.FlxMath;
 import openfl.display.Sprite;
 import openfl.events.KeyboardEvent;
 import openfl.ui.Keyboard;
-import flixel.math.FlxMath;
-import flixel.util.FlxColor;
 using flixel.util.FlxStringUtil;
 using StringTools;
 

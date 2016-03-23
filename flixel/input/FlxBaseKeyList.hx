@@ -1,7 +1,6 @@
 package flixel.input;
 
-import flixel.input.FlxInput;
-import flixel.input.FlxKeyManager;
+import flixel.input.FlxInput.FlxInputState;
 
 class FlxBaseKeyList
 {
@@ -25,12 +24,9 @@ class FlxBaseKeyList
 	{
 		for (key in keyManager._keyListArray)
 		{
-			if (key != null)
+			if (key != null && check(key.ID))
 			{
-				if (check(key.ID))
-				{
-					return true;
-				}
+				return true;
 			}
 		}
 		

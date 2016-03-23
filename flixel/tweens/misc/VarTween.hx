@@ -1,7 +1,6 @@
 package flixel.tweens.misc;
 
 import flixel.tweens.FlxTween;
-import flixel.util.FlxArrayUtil;
 
 /**
  * Tweens multiple numeric public properties of an Object simultaneously.
@@ -36,7 +35,7 @@ class VarTween extends FlxTween
 	 */
 	public function tween(object:Dynamic, properties:Dynamic, duration:Float):VarTween
 	{
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		if (object == null)
 		{
 			throw "Cannot tween variables of an object that is null.";

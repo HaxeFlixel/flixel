@@ -1,6 +1,5 @@
 package flixel.system;
 
-#if !FLX_HAXE_BUILD
 import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.StageAlign;
@@ -16,7 +15,8 @@ import flixel.util.FlxColor;
 import flixel.util.FlxStringUtil;
 
 class FlxBasePreloader extends NMEPreloader
-{	
+{
+	#if !js
 	/**
 	 * Add this string to allowedURLs array if you want to be able to test game with enabled site-locking on local machine 
 	 */
@@ -91,7 +91,7 @@ class FlxBasePreloader extends NMEPreloader
 	 */
 	override public function onUpdate(bytesLoaded:Int, bytesTotal:Int) 
 	{
-		#if !(desktop || mobile)
+		#if web
 		if (root.loaderInfo.bytesTotal == 0)
 			bytesTotal = 50000;
 		_percent = (bytesTotal != 0)?bytesLoaded / bytesTotal : 0;
@@ -209,7 +209,7 @@ class FlxBasePreloader extends NMEPreloader
 			{
 				return true;
 			}
-			else if ((allowedURL == LOCAL) && (homeDomain == LOCAL))
+			else if (allowedURL == LOCAL && homeDomain == LOCAL)
 			{
 				return true;
 			}
@@ -217,5 +217,5 @@ class FlxBasePreloader extends NMEPreloader
 		return false;
 	}
 	#end
+	#end
 }
-#end

@@ -8,10 +8,8 @@ import flash.events.MouseEvent;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import flash.text.TextField;
-import flash.text.TextFormat;
 import flixel.FlxG;
 import flixel.math.FlxMath;
-import flixel.system.FlxAssets;
 import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
@@ -111,15 +109,8 @@ class Window extends Sprite
 		_header = new Bitmap(new BitmapData(1, HEADER_HEIGHT, true, HEADER_COLOR));
 		_background.y = _header.height;
 		
-		_title = new TextField();
-		_title.x = 2;
-		_title.y = -1;
+		_title = DebuggerUtil.createTextField(2, -1);
 		_title.alpha = HEADER_ALPHA;
-		_title.height = 20;
-		_title.selectable = false;
-		_title.multiline = false;
-		_title.embedFonts = true;
-		_title.defaultTextFormat = new TextFormat(FlxAssets.FONT_DEBUGGER, 12, 0xffffff);
 		_title.text = Title;
 		
 		addChild(_shadow);
@@ -444,7 +435,7 @@ class Window extends Sprite
 	public function close():Void
 	{
 		destroy();
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		FlxG.game.debugger.removeWindow(this);
 		#end
 	}

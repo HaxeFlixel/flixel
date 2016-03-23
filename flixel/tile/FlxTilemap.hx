@@ -193,7 +193,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		
 		if (FlxG.renderBlit)
 		{
-			#if !FLX_NO_DEBUG
+			#if FLX_DEBUG
 			_debugRect = null;
 			_debugTileNotSolid = null;
 			_debugTilePartial = null;
@@ -330,7 +330,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		}
 	}
 	
-	#if !FLX_NO_DEBUG
+	#if FLX_DEBUG
 	override public function drawDebugOnCamera(Camera:FlxCamera):Void
 	{
 		if (!FlxG.renderTile) return;
@@ -470,12 +470,12 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 				drawTilemap(buffer, camera);
 			}
 			
-			#if !FLX_NO_DEBUG
+			#if FLX_DEBUG
 			FlxBasic.visibleCount++;
 			#end
 		}
 		
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		if (FlxG.debugger.drawDebug)
 			drawDebug();
 		#end
@@ -898,7 +898,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		var tile:FlxTile;
 		var frame:FlxFrame;
 		
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		var debugTile:BitmapData;
 		#end 
 		
@@ -919,7 +919,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 					{
 						frame.paint(Buffer.pixels, _flashPoint, true);
 						
-						#if !FLX_NO_DEBUG
+						#if FLX_DEBUG
 						if (FlxG.debugger.drawDebug && !ignoreDrawDebug) 
 						{
 							if (tile.allowCollisions <= FlxObject.NONE)

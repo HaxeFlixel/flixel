@@ -239,14 +239,7 @@ class FlxCollision
 		}
 		
 		// How deep is pointX/Y within the rect?
-		if (pixelAlpha >= AlphaTolerance)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		return pixelAlpha >= AlphaTolerance;
 	}
 	
 	/**

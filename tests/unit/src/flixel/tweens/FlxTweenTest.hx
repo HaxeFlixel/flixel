@@ -1,6 +1,5 @@
 package flixel.tweens;
 
-import flixel.tweens.FlxTween;
 import flixel.util.FlxTimer;
 import massive.munit.Assert;
 

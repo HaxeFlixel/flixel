@@ -1,6 +1,5 @@
 package flixel.system.debug;
 
-#if !FLX_NO_DEBUG
 import flash.display.BitmapData;
 import flash.display.Sprite;
 import flash.events.MouseEvent;
@@ -14,16 +13,12 @@ import flixel.FlxG;
 import flixel.system.debug.console.Console;
 import flixel.system.debug.log.Log;
 import flixel.system.debug.stats.Stats;
-import flixel.system.debug.VCR;
 import flixel.system.debug.watch.Watch;
 import flixel.system.debug.watch.Tracker;
 import flixel.system.debug.completion.CompletionList;
 import flixel.system.debug.log.BitmapLog;
 import flixel.system.FlxAssets;
 import flixel.system.ui.FlxSystemButton;
-import flixel.util.FlxStringUtil;
-import flixel.util.FlxColor;
-import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxHorizontalAlign;
 using flixel.util.FlxArrayUtil;
 
@@ -60,6 +55,7 @@ class GraphicArrowRight extends BitmapData {}
  */
 class FlxDebugger extends Sprite
 {
+	#if FLX_DEBUG
 	/**
 	 * Internal, used to space out windows from the edges.
 	 */
@@ -76,12 +72,7 @@ class FlxDebugger extends Sprite
 	public var vcr:VCR;
 	public var console:Console;
 	private var completionList:CompletionList;
-	
-	/**
-	 * Whether the mouse is currently over one of the debugger windows or not.
-	 */
-	public var hasMouse:Bool = false;
-	
+
 	/**
 	 * Internal, tracks what debugger window layout user has currently selected.
 	 */
@@ -104,6 +95,10 @@ class FlxDebugger extends Sprite
 	private var _topBar:Sprite;
 	
 	private var _windows:Array<Window> = [];
+
+	private var _usingSystemCursor = false;
+	private var _wasMouseVisible:Bool = true;
+	private var _wasUsingSystemCursor:Bool = false;
 
 	/**
 	 * Instantiates the debugger overlay.
@@ -449,25 +444,41 @@ class FlxDebugger extends Sprite
 	/**
 	 * Mouse handler that helps with fake "mouse focus" type behavior.
 	 */
-	private inline function onMouseOver(_):Void
+	private function onMouseOver(_):Void
 	{
-		hasMouse = true;
-		#if !FLX_NO_MOUSE
-		FlxG.mouse.useSystemCursor = true;
-		#end
+		onMouseFocus();
 	}
-	
+
 	/**
 	 * Mouse handler that helps with fake "mouse focus" type behavior.
 	 */
-	private inline function onMouseOut(_):Void
+	private function onMouseOut(_):Void
 	{
-		hasMouse = false;
-		
-		#if !FLX_NO_MOUSE
-		if (!FlxG.vcr.paused)
-			FlxG.mouse.useSystemCursor = false;
+		onMouseFocusLost();
+	}
+
+	private function onMouseFocus():Void
+	{
+		#if FLX_MOUSE
+		FlxG.mouse.enabled = false;
+		_wasMouseVisible = FlxG.mouse.visible;
+		_wasUsingSystemCursor = FlxG.mouse.useSystemCursor;
+		FlxG.mouse.useSystemCursor = true;
+		_usingSystemCursor = true;
 		#end
+	}
+	
+	@:allow(flixel.system.debug)
+	private function onMouseFocusLost():Void
+	{
+		if (_usingSystemCursor)
+		{
+			#if FLX_MOUSE
+			FlxG.mouse.enabled = true;
+			FlxG.mouse.useSystemCursor = _wasUsingSystemCursor;
+			FlxG.mouse.visible = _wasMouseVisible;
+			#end
+		}	
 	}
 
 	private inline function toggleDrawDebug():Void
@@ -489,8 +500,8 @@ class FlxDebugger extends Sprite
 		}
 		FlxG.openURL(url);
 	}
+	#end
 }
-#end
 
 enum FlxDebuggerLayout
 {

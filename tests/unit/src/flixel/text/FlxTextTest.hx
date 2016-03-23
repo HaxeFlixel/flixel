@@ -1,7 +1,6 @@
 package flixel.text;
 
 import flixel.system.FlxAssets;
-import flixel.text.FlxText;
 import flixel.text.FlxText.FlxTextAlign;
 import flixel.util.FlxColor;
 import massive.munit.Assert;

@@ -5,12 +5,12 @@ import flash.system.System;
 import flash.text.TextField;
 import flixel.FlxG;
 import flixel.math.FlxMath;
-import flixel.system.debug.FlxDebugger;
 import flixel.system.FlxLinkedList;
 import flixel.system.FlxQuadTree;
+import flixel.system.debug.DebuggerUtil;
+import flixel.system.debug.FlxDebugger.GraphicStats;
 import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxColor;
-import flixel.system.debug.DebuggerUtil;
 
 @:bitmap("assets/images/debugger/buttons/minimize.png")
 private class GraphicMinimizeButton extends BitmapData {}
@@ -24,7 +24,7 @@ private class GraphicMaximizeButton extends BitmapData {}
  * @author Adam "Atomic" Saltsman
  * @author Anton Karlov
  */
-#if !FLX_NO_DEBUG
+#if FLX_DEBUG
 class Stats extends Window
 {
 	/**
@@ -53,9 +53,7 @@ class Stats extends Window
 	private var _rightTextField:TextField;
 	
 	private var _itvTime:Int = 0;
-	private var _initTime:Int;
 	private var _frameCount:Int;
-	private var _totalCount:Int;
 	private var _currentTime:Int;
 	
 	private var fpsGraph:StatsGraph;
@@ -68,29 +66,29 @@ class Stats extends Window
 	private var activeCount:Int = 0;
 	private var updateTime:Int = 0;
 	private var drawTime:Int = 0;
-	
+	private var drawCallsCount:Int = 0;
+
 	private var _lastTime:Int = 0;
 	private var _updateTimer:Int = 0;
 	
-	private var _update:Array<Int>;
+	private var _update:Array<Int> = [];
 	private var _updateMarker:Int = 0;
 	
-	private var _draw:Array<Int>;
+	private var _draw:Array<Int> = [];
 	private var _drawMarker:Int = 0;
 	
-	private var _visibleObject:Array<Int>;
+	private var _drawCalls:Array<Int> = [];
+	private var _drawCallsMarker:Int = 0;
+	
+	private var _visibleObject:Array<Int> = [];
 	private var _visibleObjectMarker:Int = 0;
 	
-	private var _activeObject:Array<Int>;
+	private var _activeObject:Array<Int> = [];
 	private var _activeObjectMarker:Int = 0;
 	
 	private var _paused:Bool = true;
 	
 	private var _toggleSizeButton:FlxSystemButton;
-	
-	private var drawCallsCount:Int = 0;
-	private var _drawCalls:Array<Int>;
-	private var _drawCallsMarker:Int = 0;
 	
 	/**
 	 * Creates a new window with fps and memory graphs, as well as other useful stats for debugging.
@@ -146,7 +144,7 @@ class Stats extends Window
 		updateTimeGraph.visible = false;
 		addChild(updateTimeGraph);
 		
-		graphY = (Std.int(_header.height) +  graphHeight + 20);
+		graphY = Std.int(_header.height) +  graphHeight + 20;
 		
 		drawTimeGraph = new StatsGraph(graphX, graphY, graphWidth, graphHeight, DRAW_TIME_COLOR, "ms", 35, "Draw");
 		drawTimeGraph.visible = false;
@@ -175,8 +173,8 @@ class Stats extends Window
 		if (_paused)
 		{
 			_paused = false;
-			_initTime = _itvTime = FlxG.game.ticks;
-			_totalCount = _frameCount = 0;
+			_itvTime = FlxG.game.ticks;
+			_frameCount = 0;
 		}
 	}
 	
@@ -254,11 +252,10 @@ class Stats extends Window
 		_updateTimer += elapsed;
 		
 		_frameCount++;
-		_totalCount++;
 		
 		if (_updateTimer > UPDATE_DELAY)
 		{
-			fpsGraph.update(currentFps(), averageFps());
+			fpsGraph.update(currentFps());
 			memoryGraph.update(currentMem());
 			updateTexts();
 			
@@ -332,22 +329,6 @@ class Stats extends Window
 	public inline function currentFps():Float
 	{
 		return _frameCount / intervalTime();
-	}
-	
-	/**
-	 * Calculates average game fps (takes whole time the game is running).
-	 */
-	public inline function averageFps():Float
-	{
-		return _totalCount / runningTime();
-	}
-	
-	/**
-	 * Application life time.
-	 */
-	public inline function runningTime():Float
-	{
-		return (_currentTime - _initTime) / 1000;
 	}
 	
 	/**

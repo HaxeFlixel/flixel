@@ -1,6 +1,6 @@
 package flixel.system.debug.log;
 
-#if !FLX_NO_DEBUG
+#if FLX_DEBUG
 import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.Graphics;
@@ -16,7 +16,9 @@ import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxStringUtil;
-import flixel.system.debug.FlxDebugger;
+import flixel.system.debug.FlxDebugger.GraphicArrowLeft;
+import flixel.system.debug.FlxDebugger.GraphicArrowRight;
+import flixel.system.debug.FlxDebugger.GraphicBitmapLog;
 using flixel.util.FlxBitmapDataUtil;
 
 /**
@@ -63,7 +65,7 @@ class BitmapLog extends Window
 
 		setVisible(false);
 
-	#if !FLX_NO_MOUSE
+	#if FLX_MOUSE
 		addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
 		#if FLX_MOUSE_ADVANCED
 		addEventListener(MouseEvent.MIDDLE_MOUSE_DOWN, onMiddleDown);
@@ -178,7 +180,7 @@ class BitmapLog extends Window
 			refreshCanvas(_curIndex);
 		}
 
-		_ui.x = _header.width - _ui.width + 43;
+		_ui.x = _header.width - _ui.width - 5;
 
 		_footer.width = _width;
 		_footer.y = _height - _footer.height;

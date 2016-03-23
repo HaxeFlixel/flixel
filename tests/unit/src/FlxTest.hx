@@ -3,10 +3,7 @@ package;
 import flash.errors.Error;
 import flixel.FlxG;
 import flixel.FlxState;
-import flixel.tweens.FlxTween;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
-import massive.munit.async.AsyncFactory;
-import massive.munit.util.Timer;
 import massive.munit.Assert;
 
 class FlxTest

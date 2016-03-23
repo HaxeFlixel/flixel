@@ -188,7 +188,7 @@ class CameraFrontEnd
 				camera.clearDrawStack();
 				camera.canvas.graphics.clear();
 				// Clearing camera's debug sprite
-				#if !FLX_NO_DEBUG
+				#if FLX_DEBUG
 				camera.debugLayer.graphics.clear();
 				#end
 			}

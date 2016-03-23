@@ -1,6 +1,6 @@
 package flixel.system.debug.watch;
 
-#if !FLX_NO_DEBUG
+#if FLX_DEBUG
 import flash.display.DisplayObject;
 import flash.geom.Matrix;
 import flash.geom.Point;
@@ -35,7 +35,7 @@ import flixel.util.FlxStringUtil;
 
 class Tracker extends Watch
 {
-	#if !FLX_NO_DEBUG
+	#if FLX_DEBUG
 	/**
 	 * Order matters here, as the last profile is the most relevant - i.e., if the 
 	 * FlxSprite profile were added before the one for FlxObject, it would never be selected.
@@ -119,16 +119,16 @@ class Tracker extends Watch
 			addProfile(new TrackerProfile(FlxTypedEmitter, ["emitting", "frequency", "bounce"], [FlxTypedGroup, FlxRect]));
 			
 			// Inputs
-			#if !FLX_NO_MOUSE
+			#if FLX_MOUSE
 			addProfile(new TrackerProfile(FlxMouse,
 				["screenX", "screenY", "wheel", "visible", "useSystemCursor", "pressed", "justPressed",
 				"justReleased" #if FLX_MOUSE_ADVANCED , "pressedMiddle", "justPressedMiddle",
 				"justReleasedMiddle", "pressedRight", "justPressedRight", "justReleasedRight" #end], [FlxPoint]));
 			#end
-			#if !FLX_NO_TOUCH 
+			#if FLX_TOUCH 
 			addProfile(new TrackerProfile(FlxTouch, ["screenX", "screenY", "touchPointID", "pressed", "justPressed", "justReleased", "isActive"], [FlxPoint]));
 			#end
-			#if !FLX_NO_GAMEPAD
+			#if FLX_GAMEPAD
 			addProfile(new TrackerProfile(FlxGamepad, ["id", "deadZone", "hat", "ball", "dpadUp", "dpadDown", "dpadLeft", "dpadRight"]));
 			#end
 			

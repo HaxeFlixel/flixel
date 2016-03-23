@@ -1,10 +1,9 @@
 package flixel.system.frontEnds;
 
-#if !FLX_NO_SOUND_SYSTEM
+#if FLX_SOUND_SYSTEM
 import flash.media.Sound;
-import flash.media.SoundTransform;
 import flixel.FlxG;
-import flixel.group.FlxGroup;
+import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.system.FlxAssets.FlxSoundAsset;
 import flixel.system.FlxSoundGroup;
 import flixel.system.FlxSound;
@@ -30,7 +29,7 @@ class SoundFrontEnd
 	 */
 	public var volumeHandler:Float->Void;
 	
-	#if !FLX_NO_KEYBOARD
+	#if FLX_KEYBOARD
 	/**
 	 * The key codes used to increase volume (see FlxG.keys for the keys available).
 	 * Default keys: + (and numpad +). Set to null to deactivate.
@@ -159,45 +158,17 @@ class SoundFrontEnd
 		
 	}
 	
-	#if !FLX_HAXE_BUILD
 	/**
 	 * Calls FlxG.sound.cache() on all sounds that are embedded.
 	 * WARNING: can lead to high memory usage.
 	 */
-	#if (openfl <= "1.4.0")
-	@:access(openfl.Assets)
-	@:access(openfl.AssetType)
-	#end
 	public function cacheAll():Void
 	{
-		#if (openfl > "1.4.0")
 		for (id in Assets.list(AssetType.SOUND)) 
 		{
 			cache(id);
 		}
-		#else
-		Assets.initialize();
-		
-		var defaultLibrary = Assets.libraries.get("default");
-		
-		if (defaultLibrary == null) 
-			return;
-		
-		var types:Map<String, Dynamic> = DefaultAssetLibrary.type;
-		
-		if (types == null) 
-			return;
-		
-		for (key in types.keys())
-		{
-			if (types.get(key) == AssetType.SOUND)
-			{
-				cache(key);
-			}
-		}
-		#end
 	}
-	#end
 	
 	/**
 	 * Plays a sound from an embedded sound. Tries to recycle a cached sound first.
@@ -353,7 +324,7 @@ class SoundFrontEnd
 		if (list != null && list.active)
 			list.update(elapsed);
 		
-		#if !FLX_NO_KEYBOARD
+		#if FLX_KEYBOARD
 		if (FlxG.keys.anyJustReleased(muteKeys))
 			toggleMuted();
 		else if (FlxG.keys.anyJustReleased(volumeUpKeys))

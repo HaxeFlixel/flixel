@@ -19,11 +19,6 @@ private enum UserDefines
 	FLX_NO_FOCUS_LOST_SCREEN;
 	FLX_NO_DEBUG;
 	FLX_RECORD;
-	/**
-	 * Mostly internal, makes sure that flixel can be built with pure haxe
-	 * (as opposed to lime-tools). Needed for API doc generation and unit tests.
-	 */
-	FLX_HAXE_BUILD;
 	FLX_UNIT_TEST;
 	/* additional rendering define */
 	FLX_RENDER_TRIANGLE;
@@ -36,12 +31,20 @@ private enum UserDefines
  */
 private enum HelperDefines
 {
+	FLX_GAMEPAD;
+	FLX_MOUSE;
+	FLX_TOUCH;
+	FLX_KEYBOARD;
+	FLX_SOUND_SYSTEM;
+	FLX_FOCUS_LOST_SCREEN;
+	FLX_DEBUG;
+	
 	FLX_MOUSE_ADVANCED;
 	FLX_NATIVE_CURSOR;
 	FLX_SOUND_TRAY;
+
 	FLX_POINTER_INPUT;
 	FLX_POST_PROCESS;
-	
 	FLX_JOYSTICK_API;
 	FLX_GAMEINPUT_API;
 }
@@ -63,20 +66,17 @@ class FlxDefines
 		#end
 		
 		checkDefines();
+		defineInversions();
 		defineHelperDefines();
 		
 		if (defined("flash"))
-		{
 			checkSwfVersion();
-		}
 	}
 	
 	private static function checkDefines()
 	{
 		for (define in HelperDefines.getConstructors())
-		{
 			abortIfDefined(define);
-		}
 		
 		#if (haxe_ver >= "3.2")
 		var userDefinable = UserDefines.getConstructors();
@@ -93,46 +93,47 @@ class FlxDefines
 	private static function abortIfDefined(define:String)
 	{
 		if (defined(define))
-		{
 			abort('$define can only be defined by flixel.', FlxMacroUtil.here());
-		}
 	}
-	
+
+	private static function defineInversions()
+	{
+		defineInversion(FLX_NO_GAMEPAD, FLX_GAMEPAD);
+		defineInversion(FLX_NO_MOUSE, FLX_MOUSE);
+		defineInversion(FLX_NO_TOUCH, FLX_TOUCH);
+		defineInversion(FLX_NO_KEYBOARD, FLX_KEYBOARD);
+		defineInversion(FLX_NO_SOUND_SYSTEM, FLX_SOUND_SYSTEM);
+		defineInversion(FLX_NO_FOCUS_LOST_SCREEN, FLX_FOCUS_LOST_SCREEN);
+		defineInversion(FLX_NO_DEBUG, FLX_DEBUG);
+	}
+
 	private static function defineHelperDefines()
 	{
 		if (!defined(FLX_NO_MOUSE) && !defined(FLX_NO_MOUSE_ADVANCED) && (!defined("flash") || defined("flash11_2")))
-		{
 			define(FLX_MOUSE_ADVANCED);
-		}
 		
 		if (!defined(FLX_NO_MOUSE) && !defined(FLX_NO_NATIVE_CURSOR) && defined("flash10_2"))
-		{
 			define(FLX_NATIVE_CURSOR);
-		}
-		
-		if ((defined("openfl_next") && !defined("flash")) || defined("flash11_8"))
-		{
-			define(FLX_GAMEINPUT_API);
-		}
-		else if (!defined("openfl_next") && (defined("cpp") || defined("neko")))
-		{
-			define(FLX_JOYSTICK_API);
-		}
 		
 		if (!defined(FLX_NO_SOUND_SYSTEM) && !defined(FLX_NO_SOUND_TRAY))
-		{
 			define(FLX_SOUND_TRAY);
-		}
+		
+		if ((defined("openfl_next") && !defined("flash")) || defined("flash11_8"))
+			define(FLX_GAMEINPUT_API);
+		else if (!defined("openfl_next") && (defined("cpp") || defined("neko")))
+			define(FLX_JOYSTICK_API);
 		
 		if (!defined(FLX_NO_TOUCH) || !defined(FLX_NO_MOUSE))
-		{
 			define(FLX_POINTER_INPUT);
-		}
 		
 		if (defined("cpp") || defined("neko"))
-		{
 			define(FLX_POST_PROCESS);
-		}
+	}
+	
+	private static function defineInversion(userDefine:UserDefines, invertedDefine:HelperDefines)
+	{
+		if (!defined(userDefine))
+			define(invertedDefine);
 	}
 	
 	private static function checkSwfVersion()

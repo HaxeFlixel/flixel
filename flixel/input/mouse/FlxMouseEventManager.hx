@@ -6,12 +6,10 @@ import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
-import flixel.group.FlxGroup;
-import flixel.math.FlxAngle;
-import flixel.util.FlxDestroyUtil;
+import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.input.mouse.FlxMouseButton.FlxMouseButtonID;
 import flixel.math.FlxPoint;
-import flixel.input.mouse.FlxMouseButton;
-import flixel.group.FlxSpriteGroup;
+import flixel.util.FlxDestroyUtil;
 
 /**
  * Provides mouse event detection for FlxObjects and FlxSprites (pixel-perfect for those).
@@ -393,7 +391,7 @@ class FlxMouseEventManager extends FlxBasic
 			}
 		}
 		
-	#if !FLX_NO_MOUSE
+	#if FLX_MOUSE
 		// MouseDown - Look for objects with mouse over when user presses mouse button.
 		for (current in currentOverObjects)
 		{
@@ -444,7 +442,7 @@ class FlxMouseEventManager extends FlxBasic
 	{
 		for (camera in Register.object.cameras)
 		{
-			#if !FLX_NO_MOUSE
+			#if FLX_MOUSE
 			_point = FlxG.mouse.getWorldPosition(camera, _point);
 			
 			if (checkOverlapWithPoint(Register, _point, camera))
@@ -453,7 +451,7 @@ class FlxMouseEventManager extends FlxBasic
 			}
 			#end
 			
-			#if !FLX_NO_TOUCH
+			#if FLX_TOUCH
 			for (touch in FlxG.touches.list)
 			{
 				_point = touch.getWorldPosition(camera, _point);
