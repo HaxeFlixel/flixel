@@ -716,7 +716,7 @@ class FlxAnimationController implements IFlxDestroyable
 	{
 		for (frame in _sprite.frames.frames)
 		{
-			if (StringTools.startsWith(frame.name, Prefix))
+			if (frame.name != null && StringTools.startsWith(frame.name, Prefix))
 			{
 				AnimFrames.push(frame);
 			}
