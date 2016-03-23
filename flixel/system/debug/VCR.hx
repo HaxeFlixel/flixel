@@ -3,13 +3,9 @@ package flixel.system.debug;
 #if FLX_DEBUG
 import flash.display.BitmapData;
 import flash.text.TextField;
-import flash.text.TextFieldAutoSize;
-import flash.text.TextFormat;
 import flixel.FlxG;
-import flixel.system.FlxAssets;
 import flixel.system.ui.FlxSystemButton;
 import flixel.system.debug.FlxDebugger.GraphicArrowRight;
-import flixel.util.FlxColor;
 import flixel.util.FlxStringUtil;
 
 @:bitmap("assets/images/debugger/buttons/open.png")
