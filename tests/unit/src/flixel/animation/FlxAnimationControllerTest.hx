@@ -88,6 +88,15 @@ class FlxAnimationControllerTest extends FlxTest
 		Assert.areEqual(1, timesCalled);
 	}
 	
+	@Test // #1786
+	function testNullFrameName():Void
+	{
+		loadSpriteSheet();
+		sprite.animation.addByPrefix("Test", "test");
+		
+		Assert.isNull(sprite.animation.getByName("Test"));
+	}
+	
 	function loadSpriteSheet():Void
 	{
 		var bitmapData = new BitmapData(2, 1);
