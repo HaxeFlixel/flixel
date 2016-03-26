@@ -7,6 +7,7 @@ import flash.text.TextFieldType;
 import flash.text.TextFormat;
 import flixel.FlxG;
 import flixel.system.FlxAssets;
+import flixel.system.debug.console.ConsoleUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import flixel.util.FlxStringUtil;
 import openfl.events.FocusEvent;
@@ -50,6 +51,7 @@ class WatchEntry implements IFlxDestroyable
 	private var _whiteText:TextFormat;
 	private var _blackText:TextFormat;
 	private var _isQuickWatch:Bool = false;
+	private var _isExprWatch:Bool = false;
 	
 	/**
 	 * Creates a new watch entry in the watch window. 
@@ -66,9 +68,17 @@ class WatchEntry implements IFlxDestroyable
 	{
 		editing = false;
 		
-		if (object == null && field == null && custom != null)
+		if (object == null && custom != null)
 		{
-			_isQuickWatch = true;
+			if (field == null)
+			{
+				_isQuickWatch = true;
+			}
+			else
+			{
+				_isExprWatch = true;
+				this.field = field;
+			}
 		}
 		else
 		{
@@ -98,7 +108,7 @@ class WatchEntry implements IFlxDestroyable
 		valueDisplay.multiline = false;
 		valueDisplay.selectable = true;
 		valueDisplay.doubleClickEnabled = true;
-		if (!_isQuickWatch) // No editing for quickWatch
+		if (!_isQuickWatch && !_isExprWatch) // No editing for quickWatch/watchExpr
 		{
 			valueDisplay.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 			valueDisplay.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
@@ -166,8 +176,15 @@ class WatchEntry implements IFlxDestroyable
 		if (editing || _isQuickWatch)
 			return;
 		
-		var property:Dynamic = Reflect.getProperty(object, field);
-		valueDisplay.text = Std.string(property);
+		if (!_isExprWatch)
+		{
+			var property:Dynamic = Reflect.getProperty(object, field);
+			valueDisplay.text = Std.string(property);
+		}
+		else
+		{
+			valueDisplay.text = Std.string(ConsoleUtil.runCommand(field));
+		}
 	}
 	#end
 	
