@@ -5,6 +5,7 @@
 * `flixel.input.gamepad`: added IDs for analog stick directions to `FlxGamepadInputID` (#1746)
 * `FlxSound`: added `loopTime`, added a `StartTime` argument to `play()` (#1736)
 * `FlxMouse:` added `enabled`
+* `FlxGamepad:` [Flash] fixed potential range errors when checking axis values
 
 4.0.1
 ------------------------------
