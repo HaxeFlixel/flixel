@@ -43,6 +43,10 @@ class ConsoleCommands
 		
 		console.registerFunction("create", create, "Creates a new FlxObject and registers it - by default at the mouse position. \"create(ObjClass:Class<T>, PlaceAtMouse:Bool, ExtraParams:Array<Dynamic>)\" Ex: \"create(FlxSprite, false, [100, 100])\"");
 		
+		console.registerFunction("watch", watch, "Adds the specified field of an object to the watch window.");
+		console.registerFunction("removeWatch", removeWatch, "Removes the specified field of an object from the watch window.");
+		console.registerFunction("watchExpr", watchExpr, "Adds the specified expression to the watch window. Be sure any objects, functions, and classes used are registered!");
+		console.registerFunction("removeExpr", removeExpr, "Removes the specified expression from the watch window or removes expressions by their given display names.");
 		console.registerFunction("watchMouse", watchMouse, "Adds the mouse coordinates to the watch window.");
 		console.registerFunction("track", track, "Adds a tracker window for the specified object or class.");
 		
@@ -161,6 +165,32 @@ class ConsoleCommands
 	private function listFunctions():Void
 	{
 		ConsoleUtil.log("Functions registered: \n" + FlxStringUtil.formatStringMap(_console.registeredFunctions)); 
+	}
+	
+	private function watch(AnyObject:Dynamic, VariableName:String, ?DisplayName:String):Void
+	{
+		if (AnyObject != null) {
+			FlxG.watch.add(AnyObject, VariableName, DisplayName);
+		}
+	}
+	
+	private function removeWatch(AnyObject:Dynamic, VariableName:String):Void
+	{
+		if (AnyObject != null) {
+			FlxG.watch.remove(AnyObject, VariableName);
+		}
+	}
+	
+	private function watchExpr(Expression:String, ?DisplayName:String):Void
+	{
+		if (Expression != null && Expression.length > 0) {
+			FlxG.watch.addExpr(Expression, DisplayName);
+		}
+	}
+	
+	private function removeExpr(?Expression:String, ?DisplayName:String):Void
+	{
+		FlxG.watch.removeExpr(Expression, DisplayName);
 	}
 	
 	private function watchMouse():Void

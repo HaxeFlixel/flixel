@@ -142,6 +142,32 @@ class Watch extends Window
 	}
 	
 	/**
+	 * Remove an expression from the watch list in the debugger.
+	 * You can pass the display name or the entire expression itself to remove it.
+	 * 
+	 * @param	Expression		The Haxe expression that you want to remove. Pass null if you wish to remove it by its display name instead.
+	 * @param	DisplayName		The name of the expression you want to remove. Pass null (or don't pass anything) if the previous parameter is not null.
+	 */
+	public function removeExpr(?Expression:String, ?DisplayName:String):Void
+	{
+		if (DisplayName != null)
+		{
+			for (i in 0..._watchEntries.length)
+			{
+				var watchEntry:WatchEntry = _watchEntries[i];
+				if (watchEntry != null && watchEntry.object == null && watchEntry.custom == DisplayName)
+				{
+					removeEntry(watchEntry, i);
+				}
+			}
+		}
+		else if (Expression != null)
+		{
+			remove(null, Expression);
+		}
+	}
+	
+	/**
 	 * Helper function to acutally remove an entry.
 	 */
 	private function removeEntry(Entry:WatchEntry, Index:Int):Void
