@@ -2,10 +2,12 @@
 ------------------------------
 * `FlxG.vcr`: added an `OpenSaveDialog` argument to `stopRecording()` (#1726)
 * `FlxText`: [Flash] fixed blurry lines on multiline texts with `FlxTextAlign.CENTER` (#1728)
-* `flixel.input.gamepad`: added IDs for analog stick directions to `FlxGamepadInputID` (#1746)
 * `FlxSound`: added `loopTime`, added a `StartTime` argument to `play()` (#1736)
 * `FlxMouse:` added `enabled`
 * `FlxGamepad:` [Flash] fixed potential range errors when checking axis values
+* `FlxGamepadInputID`: added IDs for analog stick directions (#1746)
+* `Console`: added `watch`, `removeWatch`, `watchExpr` and `removeExpr` commands (#1790)
+* `FlxG.watch`: added `addExpr()` and `removeExpr()` (#1790)
 
 4.0.1
 ------------------------------
