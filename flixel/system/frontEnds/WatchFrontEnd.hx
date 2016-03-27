@@ -17,7 +17,8 @@ class WatchFrontEnd
 	public inline function add(AnyObject:Dynamic, VariableName:String, ?DisplayName:String):Void
 	{
 		#if FLX_DEBUG
-		FlxG.game.debugger.watch.add(AnyObject, VariableName, DisplayName);
+		if (AnyObject != null)
+			FlxG.game.debugger.watch.add(AnyObject, VariableName, DisplayName);
 		#end
 	}
 	
@@ -31,7 +32,8 @@ class WatchFrontEnd
 	public inline function remove(AnyObject:Dynamic, ?VariableName:String):Void
 	{
 		#if FLX_DEBUG
-		FlxG.game.debugger.watch.remove(AnyObject, VariableName);
+		if (AnyObject != null)
+			FlxG.game.debugger.watch.remove(AnyObject, VariableName);
 		#end
 	}
 	
@@ -72,7 +74,8 @@ class WatchFrontEnd
 	public function addExpr(Expression:String, ?DisplayName:String):Void
 	{
 		#if (FLX_DEBUG && hscript)
-		FlxG.game.debugger.watch.add(null, Expression, DisplayName);
+		if (Expression != null && Expression.length > 0)
+			FlxG.game.debugger.watch.add(null, Expression, DisplayName);
 		#end
 	}
 	
