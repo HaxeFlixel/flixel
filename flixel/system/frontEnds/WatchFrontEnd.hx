@@ -4,6 +4,8 @@ import flixel.FlxG;
 
 class WatchFrontEnd
 {
+	public function new() {}
+
 	/**
 	 * Add a variable to the watch list in the debugger.
 	 * This lets you see the value of the variable all the time.
@@ -61,32 +63,11 @@ class WatchFrontEnd
 	}
 	
 	/**
-	 * Add the mouse coords to the watch window. Useful for quickly 
-	 * getting coordinates for object placement during prototyping!
-	 */
-	public inline function addMouse():Void
-	{
-		#if FLX_DEBUG
-		add(FlxG, "mouse", "Mouse Position");
-		#end
-	}
-	
-	/**
-	 * Removes the mouse coords from the watch window.
-	 */
-	public inline function removeMouse():Void
-	{
-		#if FLX_DEBUG
-		remove(FlxG, "mouse");
-		#end
-	}
-	
-	/**
 	 * Add an expression to the watch list in the debugger.
 	 * The expression gets evaluated with hscript, and you can see its current value all the time.
 	 * 
 	 * @param	Expression		A Haxe expression written as a string that will be evaluated and watched.
-	 * @param	DisplayName		Optional, display your own string instead of the class name + variable name: e.g. "enemy count".
+	 * @param	DisplayName		Optional, display your own string instead of the expression string: e.g. "enemy count".
 	 */
 	public function addExpr(Expression:String, ?DisplayName:String):Void
 	{
@@ -110,8 +91,23 @@ class WatchFrontEnd
 	}
 	
 	/**
-	 * Just needed to create an instance.
+	 * Add the mouse coords to the watch window. Useful for quickly 
+	 * getting coordinates for object placement during prototyping!
 	 */
-	@:allow(flixel.FlxG)
-	public function new() {}
+	public inline function addMouse():Void
+	{
+		#if FLX_DEBUG
+		add(FlxG, "mouse", "Mouse Position");
+		#end
+	}
+	
+	/**
+	 * Removes the mouse coords from the watch window.
+	 */
+	public inline function removeMouse():Void
+	{
+		#if FLX_DEBUG
+		remove(FlxG, "mouse");
+		#end
+	}
 }
