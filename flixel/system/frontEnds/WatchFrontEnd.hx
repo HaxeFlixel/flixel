@@ -82,6 +82,34 @@ class WatchFrontEnd
 	}
 	
 	/**
+	 * Add an expression to the watch list in the debugger.
+	 * The expression gets evaluated with hscript, and you can see its current value all the time.
+	 * 
+	 * @param	Expression		A Haxe expression written as a string that will be evaluated and watched.
+	 * @param	DisplayName		Optional, display your own string instead of the class name + variable name: e.g. "enemy count".
+	 */
+	public function addExpr(Expression:String, ?DisplayName:String):Void
+	{
+		#if (FLX_DEBUG && hscript)
+		FlxG.game.debugger.watch.add(null, Expression, DisplayName);
+		#end
+	}
+	
+	/**
+	 * Remove an expression from the watch list in the debugger.
+	 * You can pass the display name or the entire expression itself to remove it.
+	 * 
+	 * @param	Expression		The Haxe expression that you want to remove. Pass null if you wish to remove it by its display name instead.
+	 * @param	DisplayName		The name of the expression you want to remove. Pass null (or don't pass anything) if the previous parameter is not null.
+	 */
+	public function removeExpr(?Expression:String, ?DisplayName:String):Void
+	{
+		#if (FLX_DEBUG && hscript)
+		FlxG.game.debugger.watch.removeExpr(Expression, DisplayName);
+		#end
+	}
+	
+	/**
 	 * Just needed to create an instance.
 	 */
 	@:allow(flixel.FlxG)
