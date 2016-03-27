@@ -90,7 +90,7 @@ class WatchFrontEnd
 	 */
 	public function addExpr(Expression:String, ?DisplayName:String):Void
 	{
-		#if FLX_DEBUG
+		#if (FLX_DEBUG && hscript)
 		FlxG.game.debugger.watch.add(null, Expression, DisplayName);
 		#end
 	}
@@ -104,7 +104,7 @@ class WatchFrontEnd
 	 */
 	public function removeExpr(?Expression:String, ?DisplayName:String):Void
 	{
-		#if FLX_DEBUG
+		#if (FLX_DEBUG && hscript)
 		FlxG.game.debugger.watch.removeExpr(Expression, DisplayName);
 		#end
 	}

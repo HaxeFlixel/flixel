@@ -181,10 +181,12 @@ class WatchEntry implements IFlxDestroyable
 			var property:Dynamic = Reflect.getProperty(object, field);
 			valueDisplay.text = Std.string(property);
 		}
+		#if hscript
 		else
 		{
 			valueDisplay.text = Std.string(ConsoleUtil.runCommand(field));
 		}
+		#end
 	}
 	#end
 	
