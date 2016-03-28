@@ -137,6 +137,7 @@ class WatchEntry extends Sprite implements IFlxDestroyable
 	public function destroy()
 	{
 		nameText = FlxDestroyUtil.removeChild(this, nameText);
+		FlxDestroyUtil.destroy(valueText);
 		valueText = FlxDestroyUtil.removeChild(this, valueText);
 	}
 }
