@@ -10,9 +10,10 @@
 * `Console`:
 	* added `watch` and `watchExpression` commands (#1790)
 	* removed `resetState`, `switchState` and `resetGame` commands
+* `CompletionListEntry`: fixed text width exceeding list width
 * `WatchEntry`:
 	* added a remove button
-	* round Floats to `FlxG.debugger.precision` decimals
+	* added `Float` rounding (to `FlxG.debugger.precision` decimals)
 * `FlxStringUtil`: added `isNullOrEmpty()`
 
 4.0.1
