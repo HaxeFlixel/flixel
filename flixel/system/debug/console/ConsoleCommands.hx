@@ -27,10 +27,6 @@ class ConsoleCommands
 		console.registerFunction("clearHistory", _console.history.clear, "Closes the debugger overlay.");
 		console.registerFunction("clearLog", FlxG.log.clear, "Clears the command history.");
 		
-		console.registerFunction("resetState", FlxG.resetState, "Resets the current state.");
-		console.registerFunction("switchState", FlxG.switchState, "Switches to the specified state. Ex: \"switchState(new TestState())\". Be sure the class of the new state is a registered object!");
-		console.registerFunction("resetGame", FlxG.resetGame, "Resets the game.");
-		
 		console.registerFunction("fields", fields, "Lists the fields of a class or instance");
 		
 		console.registerFunction("listObjects", listObjects, "Lists the aliases of all registered objects.");

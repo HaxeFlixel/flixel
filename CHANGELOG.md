@@ -7,7 +7,9 @@
 * `FlxGamepad:` [Flash] fixed potential range errors when checking axis values
 * `FlxGamepadInputID`: added IDs for analog stick directions (#1746)
 * `FlxG.watch`: added `addExpression()` and `removeExpression()` (#1790)
-* `Console`: added `watch` and `watchExpression` commands (#1790)
+* `Console`:
+	* added `watch` and `watchExpression` commands (#1790)
+	* removed `resetState`, `switchState` and `resetGame` commands
 * `WatchEntry`: added a remove button
 * `FlxStringUtil`: added `isNullOrEmpty()`
 
