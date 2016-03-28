@@ -88,8 +88,7 @@ class CompletionHandler
 	private function getGlobals():Array<String>
 	{
 		#if hscript
-		return [for (global in ConsoleUtil.interp.variables.keys()) global]
-			.sortAlphabetically();
+		return ConsoleUtil.interp.getGlobals().sortAlphabetically();
 		#else
 		return [];
 		#end
@@ -99,11 +98,7 @@ class CompletionHandler
 	{
 		var pos = 0.0;
 		for (i in 0...input.text.length)
-			#if flash
-			pos += input.getCharBoundaries(i).width;
-			#else
-			pos += 6;
-			#end
+			pos += #if flash input.getCharBoundaries(i).width #else 6 #end;
 		return pos;
 	}
 	

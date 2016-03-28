@@ -150,6 +150,19 @@ class ConsoleUtil
 #if hscript
 private class Interp extends hscript.Interp
 {
+	public function getGlobals():Array<String>
+	{
+		return toArray(locals.keys()).concat(toArray(variables.keys()));
+	}
+	
+	private function toArray<T>(iterator:Iterator<T>):Array<T>
+	{
+		var array = [];
+		for (element in iterator)
+			array.push(element);
+		return array;
+	}
+	
 	override function get(o:Dynamic, f:String):Dynamic
 	{
 		if (o == null)
