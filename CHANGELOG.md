@@ -11,6 +11,7 @@
 	* added `watch` and `watchExpression` commands (#1790)
 	* removed `resetState`, `switchState` and `resetGame` commands
 * `CompletionListEntry`: fixed text width exceeding list width
+* `CompletionHandler`: added locals declared with `var` to completion
 * `WatchEntry`:
 	* added a remove button
 	* added `Float` rounding (to `FlxG.debugger.precision` decimals)
