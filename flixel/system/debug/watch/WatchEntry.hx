@@ -1,8 +1,10 @@
 package flixel.system.debug.watch;
 
+import flash.display.Sprite;
 import flixel.system.FlxAssets;
 import flixel.system.debug.console.ConsoleUtil;
 import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
@@ -11,17 +13,21 @@ using flixel.util.FlxStringUtil;
 /**
  * Base class for the different watch entry types.
  */
-class WatchEntry implements IFlxDestroyable
+class WatchEntry extends Sprite implements IFlxDestroyable
 {
+	private static inline var GUTTER = 4;
+	
 	public var data:WatchEntryData;
 	public var displayName(default, null):String;
 
-	public var nameText:TextField;
-	public var valueText:TextField;
+	private var nameText:TextField;
+	private var valueText:TextField;
 	private var defaultFormat:TextFormat;
 
 	public function new(displayName:String, data:WatchEntryData)
 	{
+		super();
+		
 		this.displayName = displayName;
 		this.data = data;
 
@@ -47,19 +53,14 @@ class WatchEntry implements IFlxDestroyable
 		var textField = DebuggerUtil.createTextField();
 		textField.selectable = true;
 		textField.defaultTextFormat = defaultFormat;
+		addChild(textField);
 		return textField;
 	}
-	
-	public function setY(y:Float):Void
-	{
-		nameText.y = y;
-		valueText.y = y;
-	}
 
-	public function updateWidth(nameWidth:Float, valueWidth:Float):Void
+	public function updateNameWidth(nameWidth:Float):Void
 	{
 		nameText.width = nameWidth;
-		valueText.width = valueWidth;
+		valueText.x = nameWidth + GUTTER;
 	}
 	
 	private function updateName()
@@ -97,5 +98,14 @@ class WatchEntry implements IFlxDestroyable
 		});
 	}
 	
-	public function destroy() {}
+	public function getNameWidth():Float
+	{
+		return nameText.width;
+	}
+	
+	public function destroy()
+	{
+		nameText = FlxDestroyUtil.removeChild(this, nameText);
+		valueText = FlxDestroyUtil.removeChild(this, valueText);
+	}
 }
