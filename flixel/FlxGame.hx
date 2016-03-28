@@ -512,6 +512,7 @@ class FlxGame extends Sprite
 				}
 				else if (_state == _requestedState) // don't pause a state switch request
 				{
+					debugger.update();
 					return;
 				}
 			}
