@@ -1,11 +1,12 @@
 package flixel.system.debug.watch;
 
 import flixel.FlxG;
+import flixel.math.FlxPoint;
 import flixel.system.debug.FlxDebugger.GraphicWatch;
 import flixel.util.FlxArrayUtil;
-import flixel.util.FlxDestroyUtil;
 import openfl.display.Sprite;
 using flixel.util.FlxStringUtil;
+using flixel.util.FlxArrayUtil;
 
 /**
  * A Visual Studio-style "watch" window, for use in the debugger overlay.
@@ -16,37 +17,20 @@ class Watch extends Window
 	#if FLX_DEBUG
 	private static inline var LINE_HEIGHT:Int = 15;
 	
-	private var names:Sprite;
-	private var values:Sprite;
+	private var entriesContainer:Sprite;
+	private var entriesContainerOffset:FlxPoint = FlxPoint.get(2, 15);
 	private var entries:Array<WatchEntry> = [];
 
 	public function new(closable:Bool = false)
 	{
 		super("Watch", new GraphicWatch(0, 0), 0, 0, true, null, closable);
 		
-		names = createSprite();
-		values = createSprite();
+		entriesContainer = new Sprite();
+		entriesContainer.x = entriesContainerOffset.x;
+		entriesContainer.y = entriesContainerOffset.y;
+		addChild(entriesContainer);
 		
 		FlxG.signals.stateSwitched.add(removeAll);
-	}
-	
-	private function createSprite():Sprite
-	{
-		var sprite = new Sprite();
-		sprite.x = 2;
-		sprite.y = 15;
-		addChild(sprite);
-		return sprite;
-	}
-	
-	override public function destroy():Void
-	{
-		names = FlxDestroyUtil.removeChild(this, names);
-		values = FlxDestroyUtil.removeChild(this, values);
-		entries = FlxDestroyUtil.destroyArray(entries);
-		FlxG.signals.stateSwitched.remove(removeAll);
-		
-		super.destroy();
 	}
 
 	public function add(displayName:String, data:WatchEntryData):Void
@@ -100,10 +84,9 @@ class Watch extends Window
 	private function addEntry(displayName:String, data:WatchEntryData):Void
 	{
 		var entry = new WatchEntry(displayName, data);
-		names.addChild(entry.nameText);
-		values.addChild(entry.valueText);
-		entry.setY(entries.length * LINE_HEIGHT);
 		entries.push(entry);
+		entriesContainer.addChild(entry);
+		resetEntries();
 	}
 	
 	public function remove(displayName:String, data:WatchEntryData):Void
@@ -115,25 +98,16 @@ class Watch extends Window
 	
 	private function removeEntry(entry:WatchEntry):Void
 	{
-		FlxArrayUtil.fastSplice(entries, entry);
-		
-		names.removeChild(entry.nameText);
-		values.removeChild(entry.valueText);
+		entries.fastSplice(entry);
+		entriesContainer.removeChild(entry);
 		entry.destroy();
-		
-		// Reset the display heights of the remaining objects
-		for (i in 0...entries.length)
-			entries[i].setY(i * LINE_HEIGHT);
+		resetEntries();
 	}
 	
-	/**
-	 * Remove everything from the watch window.
-	 */
 	public function removeAll():Void
 	{
-		for (entry in entries)
+		for (entry in entries.copy())
 			removeEntry(entry);
-		
 		entries = [];
 	}
 
@@ -143,33 +117,34 @@ class Watch extends Window
 			entry.updateValue();
 	}
 	
-	/**
-	 * Update the shapes to match the new size, and reposition the header, shadow, and handle accordingly.
-	 * Also adjusts the width of the entries and stuff, and makes sure there is room for all the entries.
-	 */
 	override private function updateSize():Void
 	{
-		var maxHeight = entries.length * LINE_HEIGHT + 17;
-		if (Std.int(_height) < maxHeight)
-			_height = maxHeight;
-		
+		minSize.setTo(
+			entriesContainer.width + entriesContainerOffset.x,
+			entriesContainer.height + entriesContainerOffset.y);
 		super.updateSize();
-		
-		var newNameWidth = getNameWidth();
-		values.x = newNameWidth + 2;
-		
+	}
+	
+	private function resetEntries():Void
+	{
+		for (i in 0...entries.length)
+		{
+			var entry = entries[i];
+			entry.y = i * LINE_HEIGHT;
+			entry.updateNameWidth(getMaxNameWidth());
+		}
+	}
+	
+	private function getMaxNameWidth():Float
+	{
+		var max = 0.0;
 		for (entry in entries)
-			entry.updateWidth(newNameWidth, getValueWidth());
-	}
-	
-	private function getNameWidth():Float
-	{
-		return Math.min(120, _width / 2);
-	}
-	
-	private function getValueWidth():Float
-	{
-		return _width - getNameWidth() - 10;
+		{
+			var nameWidth = entry.getNameWidth();
+			if (nameWidth > max)
+				max = nameWidth;
+		}
+		return max;
 	}
 	#end
 }
