@@ -8,14 +8,17 @@ There's a 1:1 mapping between `.hx` files in Flixel and the unit test project - 
 
 ### Building
 
-- Flash: `haxelib run munit test` (or build from FlashDevelop using `FlixelUnitTests.hxproj`)
-- Neko: `haxelib run lime test neko`
-- Cpp: `haxelib run lime test cpp`
+Run the `.hxml` file in [`/targets`](/targets) to run the tests on that specific target (e.g. `haxe test-flash.hxml`). Currently supported are:
 
+- Flash
+- HTML5
+- CPP
+- Neko
+
+Alternatively, this can done in FlashDevelop by opening [`FlixelUnitTests.hxproj`](FlixelUnitTests.hxproj) and entering the target name into the target dropdown.
 
 ### Limitations
 
-- there's currently no way to run the tests on HTML5
 - there are various issues with including assets, which is why tests that need graphic assets generally create `BitmapData` objects at runtime rather than loading `.png` files
 
 ### Code Style
