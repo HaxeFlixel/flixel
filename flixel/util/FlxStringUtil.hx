@@ -586,6 +586,14 @@ class FlxStringUtil
 		});
 		return list;
 	}
+	
+	/**
+	 * Returns true if `s` equals `null` or is empty.
+	 */
+	public static inline function isNullOrEmpty(s:String):Bool
+	{
+		return s == null || s.length == 0;
+	}
 }
 
 class LabelValuePair implements IFlxDestroyable

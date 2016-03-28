@@ -90,4 +90,13 @@ class FlxStringUtilTest
 		Assert.areEqual("-110.20", FlxStringUtil.formatMoney(-110.2));
 		Assert.areEqual("-0.60", FlxStringUtil.formatMoney(-0.6));
 	}
+	
+	@Test
+	function testIsNullOrEmpty()
+	{
+		Assert.isTrue(FlxStringUtil.isNullOrEmpty(null));
+		Assert.isTrue(FlxStringUtil.isNullOrEmpty(""));
+		Assert.isFalse(FlxStringUtil.isNullOrEmpty("."));
+		Assert.isFalse(FlxStringUtil.isNullOrEmpty("Hello World"));
+	}
 }
