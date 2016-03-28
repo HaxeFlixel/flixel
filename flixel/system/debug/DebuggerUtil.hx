@@ -16,7 +16,11 @@ class DebuggerUtil
 {
 	public static function createTextField(X:Float = 0, Y:Float = 0, Color:FlxColor = FlxColor.WHITE, Size:Int = 12):TextField
 	{
-		var tf = new TextField();
+		return initTextField(new TextField(), X, Y, Color, Size);
+	}
+	
+	public static function initTextField<T:TextField>(tf:T, X:Float = 0, Y:Float = 0, Color:FlxColor = FlxColor.WHITE, Size:Int = 12):T
+	{
 		tf.x = X;
 		tf.y = Y;
 		tf.multiline = false;

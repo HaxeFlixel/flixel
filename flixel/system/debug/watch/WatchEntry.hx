@@ -23,7 +23,7 @@ class WatchEntry extends Sprite implements IFlxDestroyable
 	public var displayName(default, null):String;
 
 	private var nameText:TextField;
-	private var valueText:TextField;
+	private var valueText:EditableTextField;
 	private var removeButton:FlxSystemButton;
 	private var defaultFormat:TextFormat;
 
@@ -35,8 +35,10 @@ class WatchEntry extends Sprite implements IFlxDestroyable
 		this.data = data;
 
 		defaultFormat = new TextFormat(FlxAssets.FONT_DEBUGGER, 12, getTextColor());
-		nameText = createTextField();
-		valueText = createTextField();
+		nameText = initTextField(DebuggerUtil.createTextField());
+		valueText = initTextField(DebuggerUtil.initTextField(
+			new EditableTextField(data.match(FIELD(_, _)), defaultFormat, submitValue)));
+		
 		updateName();
 		
 		addChild(removeButton = new FlxSystemButton(new GraphicCloseButton(0, 0), removeEntry.bind(this)));
@@ -54,9 +56,8 @@ class WatchEntry extends Sprite implements IFlxDestroyable
 		}
 	}
 	
-	private function createTextField():TextField
+	private function initTextField<T:TextField>(textField:T):T
 	{
-		var textField = DebuggerUtil.createTextField();
 		textField.selectable = true;
 		textField.defaultTextFormat = defaultFormat;
 		addChild(textField);
@@ -88,9 +89,9 @@ class WatchEntry extends Sprite implements IFlxDestroyable
 		}
 	}
 	
-	public function updateValue()
+	private function getValue():String
 	{
-		valueText.text = Std.string(switch (data)
+		return Std.string(switch (data)
 		{
 			case FIELD(object, field):
 				Reflect.getProperty(object, field);
@@ -103,6 +104,22 @@ class WatchEntry extends Sprite implements IFlxDestroyable
 			case QUICK(value):
 				value;
 		});
+	}
+	
+	private function submitValue(value:String):Void
+	{
+		switch (data)
+		{
+			case FIELD(object, field):
+				Reflect.setProperty(object, field, value);
+			case _:
+		}
+	}
+	
+	public function updateValue()
+	{
+		if (!valueText.isEditing)
+			valueText.text = getValue();
 	}
 	
 	public function getNameWidth():Float
