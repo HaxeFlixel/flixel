@@ -83,7 +83,7 @@ class Watch extends Window
 	
 	private function addEntry(displayName:String, data:WatchEntryData):Void
 	{
-		var entry = new WatchEntry(displayName, data);
+		var entry = new WatchEntry(displayName, data, removeEntry);
 		entries.push(entry);
 		entriesContainer.addChild(entry);
 		resetEntries();
@@ -120,9 +120,10 @@ class Watch extends Window
 	override private function updateSize():Void
 	{
 		minSize.setTo(
-			entriesContainer.width + entriesContainerOffset.x,
+			getMaxMinWidth() + entriesContainerOffset.x,
 			entriesContainer.height + entriesContainerOffset.y);
 		super.updateSize();
+		resetEntries();
 	}
 	
 	private function resetEntries():Void
@@ -131,18 +132,28 @@ class Watch extends Window
 		{
 			var entry = entries[i];
 			entry.y = i * LINE_HEIGHT;
-			entry.updateNameWidth(getMaxNameWidth());
+			entry.updateSize(getMaxNameWidth(), _width);
 		}
 	}
 	
 	private function getMaxNameWidth():Float
 	{
+		return getMax(function(entry) return entry.getNameWidth());
+	}
+	
+	private function getMaxMinWidth():Float
+	{
+		return getMax(function(entry) return entry.getMinWidth());
+	}
+	
+	private function getMax(getValue:WatchEntry->Float):Float
+	{
 		var max = 0.0;
 		for (entry in entries)
 		{
-			var nameWidth = entry.getNameWidth();
-			if (nameWidth > max)
-				max = nameWidth;
+			var value = getValue(entry);
+			if (value > max)
+				max = value;
 		}
 		return max;
 	}
