@@ -68,7 +68,7 @@ class WatchFrontEnd
 	 * @param	expression		A Haxe expression written as a string that will be evaluated and watched.
 	 * @param	displayName		Optional, display your own string instead of the expression string: e.g. "enemy count".
 	 */
-	public function addExpr(expression:String, ?displayName:String):Void
+	public function addExpression(expression:String, ?displayName:String):Void
 	{
 		#if FLX_DEBUG
 		FlxG.game.debugger.watch.add(displayName, EXPRESSION(expression));
@@ -80,7 +80,7 @@ class WatchFrontEnd
 	 * 
 	 * @param	expression	The Haxe expression that you want to remove.
 	 */
-	public function removeExpr(expression:String):Void
+	public function removeExpression(expression:String):Void
 	{
 		#if FLX_DEBUG
 		FlxG.game.debugger.watch.remove(null, EXPRESSION(expression));
