@@ -10,7 +10,9 @@
 * `Console`:
 	* added `watch` and `watchExpression` commands (#1790)
 	* removed `resetState`, `switchState` and `resetGame` commands
-* `WatchEntry`: added a remove button
+* `WatchEntry`:
+	* added a remove button
+	* round Floats to `FlxG.debugger.precision` decimals
 * `FlxStringUtil`: added `isNullOrEmpty()`
 
 4.0.1

@@ -1,6 +1,7 @@
 package flixel.system.debug.watch;
 
 import flash.display.Sprite;
+import flixel.math.FlxMath;
 import flixel.system.FlxAssets;
 import flixel.system.debug.FlxDebugger.GraphicCloseButton;
 import flixel.system.debug.console.ConsoleUtil;
@@ -12,9 +13,6 @@ import openfl.text.TextField;
 import openfl.text.TextFormat;
 using flixel.util.FlxStringUtil;
 
-/**
- * Base class for the different watch entry types.
- */
 class WatchEntry extends Sprite implements IFlxDestroyable
 {
 	private static inline var GUTTER = 4;
@@ -91,7 +89,7 @@ class WatchEntry extends Sprite implements IFlxDestroyable
 	
 	private function getValue():String
 	{
-		return Std.string(switch (data)
+		var value:Dynamic = switch (data)
 		{
 			case FIELD(object, field):
 				Reflect.getProperty(object, field);
@@ -103,7 +101,11 @@ class WatchEntry extends Sprite implements IFlxDestroyable
 				#end
 			case QUICK(value):
 				value;
-		});
+		};
+		
+		if (Std.is(value, Float))
+			value = FlxMath.roundDecimal(cast value, FlxG.debugger.precision);
+		return Std.string(value);
 	}
 	
 	private function submitValue(value:String):Void
