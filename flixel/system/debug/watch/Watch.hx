@@ -1,10 +1,11 @@
 package flixel.system.debug.watch;
 
-import flash.display.Sprite;
 import flixel.FlxG;
 import flixel.system.debug.FlxDebugger.GraphicWatch;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxDestroyUtil;
+import openfl.display.Sprite;
+using flixel.util.FlxStringUtil;
 
 /**
  * A Visual Studio-style "watch" window, for use in the debugger overlay.
@@ -15,174 +16,114 @@ class Watch extends Window
 	#if FLX_DEBUG
 	private static inline var LINE_HEIGHT:Int = 15;
 	
-	private var _names:Sprite;
-	private var _values:Sprite;
-	private var _watchEntries:Array<WatchEntry> = [];
-	private var _quickWatchList:Map<String, WatchEntry> = new Map<String, WatchEntry>();
-	
-	/**
-	 * Creates a new watch window object.
-	 */
-	public function new(Closable:Bool = false)
+	private var names:Sprite;
+	private var values:Sprite;
+	private var entries:Array<WatchEntry> = [];
+
+	public function new(closable:Bool = false)
 	{
-		super("Watch", new GraphicWatch(0, 0), 0, 0, true, null, Closable);
+		super("Watch", new GraphicWatch(0, 0), 0, 0, true, null, closable);
 		
-		_names = new Sprite();
-		_names.x = 2;
-		_names.y = 15;
-		addChild(_names);
+		names = createSprite();
+		values = createSprite();
 		
-		_values = new Sprite();
-		_values.x = 2;
-		_values.y = 15;
-		addChild(_values);
-		
-		removeAll();
 		FlxG.signals.stateSwitched.add(removeAll);
+	}
+	
+	private function createSprite():Sprite
+	{
+		var sprite = new Sprite();
+		sprite.x = 2;
+		sprite.y = 15;
+		addChild(sprite);
+		return sprite;
 	}
 	
 	override public function destroy():Void
 	{
-		_names = FlxDestroyUtil.removeChild(this, _names);
-		_values = FlxDestroyUtil.removeChild(this, _values);
-		_watchEntries = FlxDestroyUtil.destroyArray(_watchEntries);
-		_quickWatchList = null;
+		names = FlxDestroyUtil.removeChild(this, names);
+		values = FlxDestroyUtil.removeChild(this, values);
+		entries = FlxDestroyUtil.destroyArray(entries);
 		FlxG.signals.stateSwitched.remove(removeAll);
 		
 		super.destroy();
 	}
 
-	/**
-	 * Add a new variable to the watch window. Prevents the same variable being watched twice.
-	 * 
-	 * @param 	AnyObject		The Object containing the variable you want to track, e.g. this or Player.velocity.
-	 * @param 	VariableName	The String name of the variable you want to track, e.g. "width" or "x".
-	 * @param 	DisplayName		Optional String that can be displayed in the watch window instead of the basic class-name information.
-	 */
-	public function add(AnyObject:Dynamic, VariableName:String, ?DisplayName:String):Void
+	public function add(displayName:String, data:WatchEntryData):Void
 	{
-		if (DisplayName == null)
-			DisplayName = VariableName;
+		if (isInvalid(displayName, data))
+			return;
 		
-		// Don't add repeats
-		for (watchEntry in _watchEntries)
+		var existing = getExistingEntry(displayName, data);
+		if (existing != null)
 		{
-			if ((watchEntry.object == AnyObject) && (watchEntry.field == VariableName))
+			switch (data)
 			{
-				return;
+				case QUICK(value):
+					existing.data = data;
+				case _:
 			}
+			return;
 		}
 		
-		// Good, no repeats, add away!
-		addEntry(AnyObject, VariableName, DisplayName);
+		addEntry(displayName, data);
 	}
 	
-	/**
-	 * Add or update a quickWatch entry to the watch list in the debugger. Extremely useful when called in update() 
-	 * functions when there doesn't exist a variable for a value you want to watch - so you won't have to create one.
-	 * 
-	 * @param	Name		The name of the quickWatch entry, for example "mousePressed".
-	 * @param	NewValue	The new value for this entry, for example FlxG.mouse.pressed.
-	 */
-	public function updateQuickWatch(Name:String, NewValue:Dynamic):Void
+	private function isInvalid(displayName:String, data:WatchEntryData):Bool
 	{
-		// Does this quickWatch exist yet? If not, create one.
-		if (_quickWatchList.get(Name) == null)
+		return switch (data)
 		{
-			var quickWatch = addEntry(null, null, Name);
-			_quickWatchList.set(Name, quickWatch);
-		}
-		
-		//  Update the value
-		var quickWatch:WatchEntry = _quickWatchList.get(Name);
-		if (quickWatch != null) 
-		{
-			quickWatch.valueDisplay.text = Std.string(NewValue);
+			case FIELD(object, field):
+				object == null || field == null;
+			case QUICK(value):
+				displayName.isNullOrEmpty();
+			case EXPRESSION(expression):
+				expression.isNullOrEmpty();
 		}
 	}
 	
-	private function addEntry(object:Dynamic, field:String, custom:String):WatchEntry
+	private function getExistingEntry(displayName:String, data:WatchEntryData):WatchEntry
 	{
-		var entry = new WatchEntry(_watchEntries.length * LINE_HEIGHT, getNameWidth(), getValueWidth(), object, field, custom);
-		_names.addChild(entry.nameDisplay);
-		_values.addChild(entry.valueDisplay);
-		_watchEntries.push(entry);
-		return entry;
-	}
-	
-	/**
-	 * Remove a variable from the watch window.
-	 * 
-	 * @param 	AnyObject		The Object containing the variable you want to remove, e.g. this or Player.velocity.
-	 * @param 	VariableName	The String name of the variable you want to remove, e.g. "width" or "x".  If left null, this will remove all variables of that object. 
-	 * @param	QuickWatchName	In case you want to remove a quickWatch entry.
-	 */
-	public function remove(AnyObject:Dynamic, ?VariableName:String, ?QuickWatchName:String):Void
-	{
-		if (QuickWatchName != null) // Remove quickWatch entry
+		for (entry in entries)
 		{
-			var quickWatch:WatchEntry = _quickWatchList.get(QuickWatchName);
-			if (quickWatch != null)
+			if (data.match(QUICK(_)))
 			{
-				removeEntry(quickWatch, _watchEntries.indexOf(quickWatch));
+				if (entry.displayName == displayName)
+					return entry;
 			}
-			_quickWatchList.remove(QuickWatchName);
-			
-			return; // We're done here
+			else if (entry.data.equals(data))
+				return entry;
 		}
-		
-		for (i in 0..._watchEntries.length) // Remove regular entrys
-		{
-			var watchEntry:WatchEntry = _watchEntries[i];
-			if (watchEntry != null && watchEntry.object == AnyObject && ((VariableName == null) || (watchEntry.field == VariableName)))
-			{
-				removeEntry(watchEntry, i);
-			}
-		}
+		return null;
 	}
 	
-	/**
-	 * Remove an expression from the watch list in the debugger.
-	 * You can pass the display name or the entire expression itself to remove it.
-	 * 
-	 * @param	Expression		The Haxe expression that you want to remove. Pass null if you wish to remove it by its display name instead.
-	 * @param	DisplayName		The name of the expression you want to remove. Pass null (or don't pass anything) if the previous parameter is not null.
-	 */
-	public function removeExpr(?Expression:String, ?DisplayName:String):Void
+	private function addEntry(displayName:String, data:WatchEntryData):Void
 	{
-		if (DisplayName != null)
-		{
-			for (i in 0..._watchEntries.length)
-			{
-				var watchEntry:WatchEntry = _watchEntries[i];
-				if (watchEntry != null && watchEntry.object == null && watchEntry.custom == DisplayName)
-				{
-					removeEntry(watchEntry, i);
-				}
-			}
-		}
-		else if (Expression != null)
-		{
-			remove(null, Expression);
-		}
+		var entry = new WatchEntry(displayName, data);
+		names.addChild(entry.nameText);
+		values.addChild(entry.valueText);
+		entry.setY(entries.length * LINE_HEIGHT);
+		entries.push(entry);
 	}
 	
-	/**
-	 * Helper function to acutally remove an entry.
-	 */
-	private function removeEntry(Entry:WatchEntry, Index:Int):Void
+	public function remove(displayName:String, data:WatchEntryData):Void
 	{
-		FlxArrayUtil.fastSplice(_watchEntries, Entry);
+		var existing = getExistingEntry(displayName, data);
+		if (existing != null)
+			removeEntry(existing);
+	}
+	
+	private function removeEntry(entry:WatchEntry):Void
+	{
+		FlxArrayUtil.fastSplice(entries, entry);
 		
-		_names.removeChild(Entry.nameDisplay);
-		_values.removeChild(Entry.valueDisplay);
-		Entry.destroy();
+		names.removeChild(entry.nameText);
+		values.removeChild(entry.valueText);
+		entry.destroy();
 		
 		// Reset the display heights of the remaining objects
-		for (i in 0..._watchEntries.length)
-		{
-			_watchEntries[i].setY(i * LINE_HEIGHT);
-		}
+		for (i in 0...entries.length)
+			entries[i].setY(i * LINE_HEIGHT);
 	}
 	
 	/**
@@ -190,51 +131,40 @@ class Watch extends Window
 	 */
 	public function removeAll():Void
 	{
-		for (watchEntry in _watchEntries)
-		{
-			_names.removeChild(watchEntry.nameDisplay);
-			_values.removeChild(watchEntry.valueDisplay);
-			watchEntry.destroy();
-		}
+		for (entry in entries)
+			removeEntry(entry);
 		
-		_watchEntries = [];
-		_quickWatchList = new Map<String, WatchEntry>();
+		entries = [];
 	}
 
-	/**
-	 * Update all the entries in the watch window.
-	 */
 	override public function update():Void
 	{
-		for (watchEntry in _watchEntries)
-			watchEntry.updateValue();
+		for (entry in entries)
+			entry.updateValue();
 	}
 	
 	/**
-	 * Update the Flash shapes to match the new size, and reposition the header, shadow, and handle accordingly.
+	 * Update the shapes to match the new size, and reposition the header, shadow, and handle accordingly.
 	 * Also adjusts the width of the entries and stuff, and makes sure there is room for all the entries.
 	 */
 	override private function updateSize():Void
 	{
-		if (Std.int(_height) < _watchEntries.length * LINE_HEIGHT + 17)
-		{
-			_height = _watchEntries.length * LINE_HEIGHT + 17;
-		}
+		var maxHeight = entries.length * LINE_HEIGHT + 17;
+		if (Std.int(_height) < maxHeight)
+			_height = maxHeight;
 		
 		super.updateSize();
 		
 		var newNameWidth = getNameWidth();
-		_values.x = newNameWidth + 2;
+		values.x = newNameWidth + 2;
 		
-		for (watchEntry in _watchEntries)
-		{
-			watchEntry.updateWidth(newNameWidth, getValueWidth());
-		}
+		for (entry in entries)
+			entry.updateWidth(newNameWidth, getValueWidth());
 	}
 	
 	private function getNameWidth():Float
 	{
-		return Math.min(100, _width / 2);
+		return Math.min(120, _width / 2);
 	}
 	
 	private function getValueWidth():Float

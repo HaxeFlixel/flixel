@@ -65,12 +65,9 @@ class Tracker extends Watch
 		
 		var lastMatchingProfile:TrackerProfile = null;
 		for (profile in profiles)
-		{
-			if (Std.is(Object, profile.objectClass) || (Object == profile.objectClass))
-			{
+			if (Std.is(Object, profile.objectClass) || Object == profile.objectClass)
 				lastMatchingProfile = profile;
-			}
-		}
+
 		return lastMatchingProfile;
 	}
 	
@@ -158,7 +155,7 @@ class Tracker extends Watch
 		_title.text = (WindowTitle == null) ? FlxStringUtil.getClassName(_object, true) : WindowTitle;
 		visible = true;
 		
-		var lastWatchEntryY:Float = _watchEntries.last().nameDisplay.y;
+		var lastWatchEntryY:Float = entries.last().nameText.y;
 		resize(200, lastWatchEntryY + 30);
 		
 		// Small x and y offset
@@ -181,12 +178,9 @@ class Tracker extends Watch
 	private function findProfileByClass(ObjectClass:Class<Dynamic>):TrackerProfile
 	{
 		for (profile in profiles)
-		{
 			if (profile.objectClass == ObjectClass)
-			{
 				return profile;
-			}
-		}
+		
 		return null;
 	}
 	
@@ -201,32 +195,30 @@ class Tracker extends Watch
 	
 	private function addExtensions(Profile:TrackerProfile):Void
 	{
-		if (Profile.extensions != null)
+		if (Profile.extensions == null)
+			return;
+		
+		for (extension in Profile.extensions)
 		{
-			for (extension in Profile.extensions)
+			if (extension == null)
+				continue;
+			
+			var extensionProfile:TrackerProfile = findProfileByClass(extension);
+			if (extensionProfile != null)
 			{
-				if (extension != null)
-				{
-					var extensionProfile:TrackerProfile = findProfileByClass(extension);
-					if (extensionProfile != null)
-					{
-						addVariables(extensionProfile.variables);
-						addExtensions(extensionProfile); // recursively
-					}
-				}
-			}
+				addVariables(extensionProfile.variables);
+				addExtensions(extensionProfile); // recurse
+			}			
 		}
 	}
 	
 	private function addVariables(Variables:Array<String>):Void
 	{
-		if (Variables != null)
-		{
-			for (variable in Variables)
-			{
-				add(_object, variable, variable);
-			}
-		}
+		if (Variables == null)
+			return;
+		
+		for (variable in Variables)
+			add(variable, FIELD(_object, variable));
 	}
 	#end
 }
