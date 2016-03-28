@@ -15,7 +15,7 @@ using flixel.util.FlxArrayUtil;
 class DebuggerFrontEnd
 {	
 	/**
-	 * The amount of decimals FlxPoints / FlxRects are rounded to in log / watch / trace.
+	 * The amount of decimals Floats are rounded to in the debugger.
 	 */
 	public var precision:Int = 3; 
 	
