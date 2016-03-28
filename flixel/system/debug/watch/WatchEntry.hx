@@ -2,7 +2,9 @@ package flixel.system.debug.watch;
 
 import flash.display.Sprite;
 import flixel.system.FlxAssets;
+import flixel.system.debug.FlxDebugger.GraphicCloseButton;
 import flixel.system.debug.console.ConsoleUtil;
+import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
@@ -22,9 +24,10 @@ class WatchEntry extends Sprite implements IFlxDestroyable
 
 	private var nameText:TextField;
 	private var valueText:TextField;
+	private var removeButton:FlxSystemButton;
 	private var defaultFormat:TextFormat;
 
-	public function new(displayName:String, data:WatchEntryData)
+	public function new(displayName:String, data:WatchEntryData, removeEntry:WatchEntry->Void)
 	{
 		super();
 		
@@ -34,8 +37,11 @@ class WatchEntry extends Sprite implements IFlxDestroyable
 		defaultFormat = new TextFormat(FlxAssets.FONT_DEBUGGER, 12, getTextColor());
 		nameText = createTextField();
 		valueText = createTextField();
-		
 		updateName();
+		
+		addChild(removeButton = new FlxSystemButton(new GraphicCloseButton(0, 0), removeEntry.bind(this)));
+		removeButton.y = (height - removeButton.height) / 2;
+		removeButton.alpha = 0.3;
 	}
 	
 	private function getTextColor():FlxColor
@@ -57,10 +63,11 @@ class WatchEntry extends Sprite implements IFlxDestroyable
 		return textField;
 	}
 
-	public function updateNameWidth(nameWidth:Float):Void
+	public function updateSize(nameWidth:Float, windowWidth:Float):Void
 	{
 		nameText.width = nameWidth;
 		valueText.x = nameWidth + GUTTER;
+		removeButton.x = windowWidth - removeButton.width - GUTTER;
 	}
 	
 	private function updateName()
@@ -91,7 +98,7 @@ class WatchEntry extends Sprite implements IFlxDestroyable
 				#if hscript
 				ConsoleUtil.runCommand(expression);
 				#else
-				"hscript not installed";
+				"hscript is not installed";
 				#end
 			case QUICK(value):
 				value;
@@ -101,6 +108,11 @@ class WatchEntry extends Sprite implements IFlxDestroyable
 	public function getNameWidth():Float
 	{
 		return nameText.width;
+	}
+	
+	public function getMinWidth():Float
+	{
+		return valueText.x + valueText.width + GUTTER * 2 + removeButton.width; 
 	}
 	
 	public function destroy()

@@ -44,9 +44,7 @@ class ConsoleCommands
 		console.registerFunction("create", create, "Creates a new FlxObject and registers it - by default at the mouse position. \"create(ObjClass:Class<T>, PlaceAtMouse:Bool, ExtraParams:Array<Dynamic>)\" Ex: \"create(FlxSprite, false, [100, 100])\"");
 		
 		console.registerFunction("watch", FlxG.watch.add, "Adds the specified field of an object to the watch window.");
-		console.registerFunction("removeWatch", FlxG.watch.remove, "Removes the specified field of an object from the watch window.");
 		console.registerFunction("watchExpression", FlxG.watch.addExpression, "Adds the specified expression to the watch window. Be sure any objects, functions, and classes used are registered!");
-		console.registerFunction("removeExpression", FlxG.watch.removeExpression, "Removes the specified expression from the watch window or removes expressions by their given display names.");
 		console.registerFunction("watchMouse", watchMouse, "Adds the mouse coordinates to the watch window.");
 		console.registerFunction("track", track, "Adds a tracker window for the specified object or class.");
 		

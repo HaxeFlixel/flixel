@@ -49,6 +49,9 @@ class GraphicArrowLeft extends BitmapData {}
 @:bitmap("assets/images/debugger/buttons/arrowRight.png") 
 class GraphicArrowRight extends BitmapData {}
 
+@:bitmap("assets/images/debugger/buttons/close.png")
+class GraphicCloseButton extends BitmapData {}
+
 /**
  * Container for the new debugger overlay. Most of the functionality is in the debug folder widgets,
  * but this class instantiates the widgets and handles their basic formatting and arrangement.
