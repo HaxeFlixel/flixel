@@ -8,7 +8,7 @@ There's a 1:1 mapping between `.hx` files in Flixel and the unit test project - 
 
 ### Building
 
-Run the `.hxml` file in [`/targets`](/targets) to run the tests on that specific target (e.g. `haxe test-flash.hxml`). Currently supported are:
+Run the `.hxml` file in [`/targets`](targets) to run the tests on that specific target (e.g. `haxe test-flash.hxml`). Currently supported are:
 
 - Flash
 - HTML5
