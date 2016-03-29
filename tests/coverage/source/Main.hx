@@ -1,1 +1,3 @@
+package;
+
 class Main {}
