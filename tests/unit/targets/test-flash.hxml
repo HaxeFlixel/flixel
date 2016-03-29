@@ -1,2 +1,3 @@
+-cmd haxelib run munit gen
 -cmd haxelib run lime build flash
 -cmd haxelib run munit test

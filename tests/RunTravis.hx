@@ -26,6 +26,10 @@ class RunTravis
 		if (target == null)
 			target = Target.FLASH;
 		
+		runInDir("unit", function()
+			return haxelibRun(["munit", "gen"])
+		);
+	
 		Sys.exit(getResult([
 			runUnitTests(target),
 			buildCoverageTests(target),
