@@ -3,7 +3,6 @@ package flixel.system.debug.watch;
 import flixel.FlxG;
 import flixel.math.FlxPoint;
 import flixel.system.debug.FlxDebugger.GraphicWatch;
-import flixel.util.FlxArrayUtil;
 import openfl.display.Sprite;
 using flixel.util.FlxStringUtil;
 using flixel.util.FlxArrayUtil;
