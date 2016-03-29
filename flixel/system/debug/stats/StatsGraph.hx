@@ -12,7 +12,7 @@ import flixel.util.FlxDestroyUtil;
 /**
  * This is a helper function for the stats window to draw a graph with given values.
  */
-#if !FLX_NO_DEBUG
+#if FLX_DEBUG
 class StatsGraph extends Sprite
 {
 	private static inline var AXIS_COLOR:FlxColor = 0xffffff;
@@ -29,7 +29,7 @@ class StatsGraph extends Sprite
 	
 	public var graphColor:FlxColor;
 	
-	public var history:Array<Float>;
+	public var history:Array<Float> = [];
 	
 	private var _axis:Shape;
 	private var _width:Int;
@@ -49,8 +49,6 @@ class StatsGraph extends Sprite
 		_unit = Unit;
 		_labelWidth = LabelWidth;
 		_label = (Label == null) ? "" : Label;
-		
-		history = [];
 		
 		_axis = new Shape();
 		_axis.x = _labelWidth + 10;
@@ -114,10 +112,9 @@ class StatsGraph extends Sprite
 		}
 	}
 	
-	public function update(Value:Float, ?Average:Null<Float>):Void
+	public function update(Value:Float):Void
 	{
 		history.unshift(Value);
-		
 		if (history.length > HISTORY_MAX)
 			history.pop();
 		
@@ -129,10 +126,7 @@ class StatsGraph extends Sprite
 		curLabel.text = formatValue(Value);
 		maxLabel.text = formatValue(maxValue);
 		
-		if (Average == null)
-			Average = average();
-		
-		avgLabel.text = _label + "\nAvg: " + formatValue(Average);
+		avgLabel.text = _label + "\nAvg: " + formatValue(average());
 		
 		drawGraph();
 	}

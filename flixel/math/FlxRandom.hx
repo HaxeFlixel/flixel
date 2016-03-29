@@ -1,7 +1,5 @@
 package flixel.math;
 
-import flixel.FlxGame;
-import flixel.system.frontEnds.VCRFrontEnd;
 import flixel.util.FlxColor;
 
 /**
@@ -478,7 +476,7 @@ class FlxRandom
 	/**
 	 * Returns the seed to use for the requested recording.
 	 */
-	@:allow(flixel.FlxGame.step)
+	@:allow(flixel.FlxGame.handleReplayRequests)
 	private static inline function getRecordingSeed():Int
 	{
 		return _recordingSeed;

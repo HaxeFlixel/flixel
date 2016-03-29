@@ -1,7 +1,6 @@
 package flixel.system.frontEnds;
 
 import flixel.tweens.FlxTween;
-import flixel.util.FlxPath;
 import flixel.util.FlxStringUtil;
 import flixel.util.FlxTimer;
 

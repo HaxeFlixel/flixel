@@ -3,7 +3,6 @@ package flixel.util;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.math.FlxPoint;
-import flixel.util.FlxPath;
 import massive.munit.Assert;
 
 class FlxPathTest extends FlxTest

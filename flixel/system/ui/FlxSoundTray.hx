@@ -1,6 +1,6 @@
 package flixel.system.ui;
 
-#if !FLX_NO_SOUND_SYSTEM
+#if FLX_SOUND_SYSTEM
 import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.Sprite;

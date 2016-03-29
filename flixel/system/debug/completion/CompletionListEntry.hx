@@ -4,7 +4,7 @@ import openfl.display.Bitmap;
 import openfl.display.BitmapData;
 import openfl.display.Sprite;
 import openfl.text.TextField;
-import flixel.util.FlxColor;
+import openfl.text.TextFieldAutoSize;
 
 class CompletionListEntry extends Sprite
 {
@@ -34,7 +34,6 @@ class CompletionListEntry extends Sprite
 		
 		label = DebuggerUtil.createTextField();
 		label.x = GUTTER;
-		label.width = WIDTH;
 		addChild(label);
 	}
 	
@@ -49,6 +48,11 @@ class CompletionListEntry extends Sprite
 	public function setItem(item:String)
 	{
 		label.text = item;
+		if (label.width > WIDTH)
+		{
+			label.width = WIDTH;
+			label.autoSize = TextFieldAutoSize.NONE;
+		}
 	}
 	
 	private function set_selected(selected:Bool):Bool

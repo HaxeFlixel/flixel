@@ -41,7 +41,10 @@
 			"type": "EmptyLines",
 			"props": {
 				"max": 1,
-				"allowEmptyLineAfterMultiLineComment": false
+				"allowEmptyLineAfterMultiLineComment": false,
+				"requireEmptyLineAfterClass": false,
+				"requireEmptyLineAfterInterface": false,
+				"requireEmptyLineAfterAbstract": false
 			}
 		},
 		{
@@ -171,6 +174,14 @@
 		},
 		{
 			"type": "AvoidStarImport"
+		},
+		{
+			"type": "UnusedImport",
+			"props": {
+				"ignoreModules": [
+					"haxe.macro.Expr"
+				]
+			}
 		}
 	]
 }

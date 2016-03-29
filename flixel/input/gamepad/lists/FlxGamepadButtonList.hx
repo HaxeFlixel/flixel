@@ -2,7 +2,6 @@ package flixel.input.gamepad.lists;
 
 import flixel.input.FlxInput.FlxInputState;
 import flixel.input.gamepad.FlxGamepadInputID;
-import flixel.input.gamepad.lists.FlxBaseGamepadList;
 
 /**
  * A helper class for gamepad input.

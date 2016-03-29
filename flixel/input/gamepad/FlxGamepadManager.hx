@@ -2,8 +2,7 @@ package flixel.input.gamepad;
 
 import flixel.FlxG;
 import flixel.input.FlxInput.FlxInputState;
-import flixel.input.gamepad.FlxGamepad;
-import flixel.input.gamepad.FlxGamepadInputID;
+import flixel.input.gamepad.FlxGamepad.FlxGamepadModel;
 import flixel.math.FlxPoint;
 import flixel.util.FlxDestroyUtil;
 using flixel.util.FlxStringUtil;

@@ -1,7 +1,6 @@
 package flixel.input.gamepad;
 
 import flixel.input.FlxInput.FlxInputState;
-import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.input.gamepad.lists.FlxGamepadAnalogList;
 import flixel.input.gamepad.lists.FlxGamepadButtonList;
 import flixel.input.gamepad.lists.FlxGamepadMotionValueList;
@@ -15,6 +14,7 @@ import flixel.input.gamepad.mappings.PS4Mapping;
 import flixel.input.gamepad.mappings.PSVitaMapping;
 import flixel.input.gamepad.mappings.WiiRemoteMapping;
 import flixel.input.gamepad.mappings.XInputMapping;
+import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.math.FlxVector;
 import flixel.util.FlxDestroyUtil;
@@ -671,7 +671,7 @@ class FlxGamepad implements IFlxDestroyable
 		{
 			return 0;
 		}
-		if (_device != null && _device.enabled)
+		if (_device != null && _device.enabled && FlxMath.inBounds(AxisID, 0, _device.numControls - 1))
 		{
 			axisValue = _device.getControlAt(AxisID).value;
 		}

@@ -39,7 +39,7 @@
     <hidden path="obj" />
   </hiddenPaths>
   <!-- Executed before build -->
-  <preBuildCommand>haxelib run checkstyle -s ../../flixel -s ../unit/src</preBuildCommand>
+  <preBuildCommand>haxelib run checkstyle -s ../../flixel -s ../unit/src -c ../../checkstyle.json</preBuildCommand>
   <!-- Executed after build -->
   <postBuildCommand alwaysRun="False" />
   <!-- Other project options -->

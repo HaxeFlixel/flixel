@@ -1,7 +1,6 @@
 package flixel.input.mouse;
 
-#if !FLX_NO_MOUSE
-import flash.events.MouseEvent;
+#if FLX_MOUSE
 import flixel.FlxG;
 import flixel.input.FlxSwipe;
 import flixel.util.FlxDestroyUtil;
@@ -14,16 +13,15 @@ class FlxMouseButton extends FlxInput<Int> implements IFlxDestroyable
 		return switch (id)
 		{
 			case LEFT: FlxG.mouse._leftButton;
-			
 			#if FLX_MOUSE_ADVANCED
-				case MIDDLE: FlxG.mouse._middleButton;
-				case RIGHT: FlxG.mouse._rightButton;
+			case MIDDLE: FlxG.mouse._middleButton;
+			case RIGHT: FlxG.mouse._rightButton;
 			#else
-				case _: return null;
+			case _: return null;
 			#end
 		}
 	}
-	
+
 	public var justPressedPosition(default, null) = FlxPoint.get();
 	public var justPressedTimeInTicks(default, null):Float = -1;
 	
@@ -54,16 +52,6 @@ class FlxMouseButton extends FlxInput<Int> implements IFlxDestroyable
 	
 	public function onDown(_):Void
 	{
-		#if !FLX_NO_DEBUG
-		if (ID == FlxMouseButtonID.LEFT && FlxG.debugger.visible)
-		{
-			if (FlxG.game.debugger.hasMouse)
-			{
-				return;
-			}
-		}
-		#end
-		
 		// Check for replay cancel keys
 		#if FLX_RECORD
 		if (FlxG.game.replaying && FlxG.vcr.cancelKeys != null)
@@ -76,24 +64,17 @@ class FlxMouseButton extends FlxInput<Int> implements IFlxDestroyable
 					break;
 				}
 			}
-			return;
 		}
 		#end
 		
-		press();
+		if (FlxG.mouse.enabled)
+			press();
 	}
 	
 	public function onUp(?_):Void
 	{
-		#if !FLX_NO_DEBUG
-		if ((FlxG.debugger.visible && FlxG.game.debugger.hasMouse) 
-			#if (FLX_RECORD) || FlxG.game.replaying #end)
-		{
-			return;
-		}
-		#end
-
-		release();
+		if (FlxG.mouse.enabled)
+			release();
 	}
 }
 #end

@@ -2,7 +2,6 @@ package flixel;
 
 import flash.display.BitmapData;
 import flixel.animation.FlxAnimation;
-import flixel.FlxSprite;
 import flixel.graphics.atlas.FlxAtlas;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;

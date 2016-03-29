@@ -441,12 +441,12 @@ class FlxBitmapText extends FlxSprite
 					drawItem.addQuad(currFrame, _matrix, _colorParams);
 				}
 				
-				#if !FLX_NO_DEBUG
+				#if FLX_DEBUG
 				FlxBasic.visibleCount++;
 				#end
 			}
 			
-			#if !FLX_NO_DEBUG
+			#if FLX_DEBUG
 			if (FlxG.debugger.drawDebug)
 			{
 				drawDebug();

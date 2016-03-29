@@ -1,8 +1,5 @@
 package flixel.graphics.frames;
 
-import flixel.graphics.frames.FlxFrame;
-import massive.munit.Assert;
-
 class FlxFrameTest extends FlxTest
 {
 	@Test

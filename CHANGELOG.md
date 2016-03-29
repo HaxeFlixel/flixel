@@ -1,9 +1,39 @@
 4.1.0
 ------------------------------
-* `FlxG.vcr`:
-	* added an `OpenSaveDialog` argument to `stopRecording()` (#1726)
-* `FlxText`:
-	* [Flash] fixed blurry lines on multiline texts with `FlxTextAlign.CENTER` (#1728)
+* `FlxG.vcr`: added an `OpenSaveDialog` argument to `stopRecording()` (#1726)
+* `FlxText`: [Flash] fixed blurry lines on multiline texts with `FlxTextAlign.CENTER` (#1728)
+* `FlxSound`: added `loopTime`, added a `StartTime` argument to `play()` (#1736)
+* `FlxMouse:` added `enabled`
+* `FlxGamepad:` [Flash] fixed potential range errors when checking axis values
+* `FlxGamepadInputID`: added IDs for analog stick directions (#1746)
+* `FlxG.watch`: added `addExpression()` and `removeExpression()` (#1790)
+* `Console`:
+	* added `watch` and `watchExpression` commands (#1790)
+	* removed `resetState`, `switchState` and `resetGame` commands
+* `CompletionListEntry`: fixed text width exceeding list width
+* `CompletionHandler`: added locals declared with `var` to completion
+* `WatchEntry`:
+	* added a remove button
+	* added `Float` rounding (to `FlxG.debugger.precision` decimals)
+* `FlxStringUtil`: added `isNullOrEmpty()`
+
+4.0.1
+------------------------------
+
+* `FlxDebugger`: [HTML5] fixed version text color (#1727)
+* `FlxFlicker` / `LabelValuePair`: fixed DCE issues (#1757)
+* `FlxMouse`: fixed `useSystemCursor = true` not always working with native cursor API
+* `FlxDebugger` mouse handling fixes (#1775):
+	* fixed `FlxMouse`'s `visible` and `useSystemCursor`  not being restored properly
+	* fixed cursor disappearing after losing Console focus with native cursor API
+	* fixed mouse focus area of windows being too big
+* `FlxAnimationController`: fixed `finishCallback` firing multiple times in one frame (#1781)
+* `FlxPreloader`: [HTML5] fixed preloader not showing up (#1750)
+* `FlxStringUtil.formatMoney()`:
+	* fixed formatting for `Amount < 0` (#1754)
+	* fixed formatting for negative amounts
+	* [HTML5] fixed formatting for amounts > Int32 
+* Debugger Stats window: fixed paused time being taken into account for average FPS
 
 4.0.0
 ------------------------------

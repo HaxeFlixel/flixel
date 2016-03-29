@@ -8,7 +8,7 @@ import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.math.FlxPoint;
 import flixel.system.macros.FlxMacroUtil;
-#if !FLX_NO_TOUCH
+#if FLX_TOUCH
 import flixel.input.touch.FlxTouch;
 #end
 #end
@@ -143,7 +143,7 @@ class FlxAngle
 			return Math.atan2(dy, dx);
 	}
 	
-	#if !FLX_NO_MOUSE
+	#if FLX_MOUSE
 	/**
 	 * Find the angle (in radians) between an FlxSprite and the mouse, taking their x/y and origin into account.
 	 * The angle is calculated in clockwise positive direction (down = 90 degrees positive, right = 0 degrees positive, up = 90 degrees negative)
@@ -172,7 +172,7 @@ class FlxAngle
 	}
 	#end
 	
-	#if !FLX_NO_TOUCH
+	#if FLX_TOUCH
 	/**
 	 * Find the angle (in radians) between an FlxSprite and a FlxTouch, taking their x/y and origin into account.
 	 * The angle is calculated in clockwise positive direction (down = 90 degrees positive, right = 0 degrees positive, up = 90 degrees negative)

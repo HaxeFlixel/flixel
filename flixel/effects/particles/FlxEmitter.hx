@@ -1,10 +1,10 @@
 package flixel.effects.particles;
 
 import flash.display.BlendMode;
-import flixel.effects.particles.FlxParticle;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
+import flixel.effects.particles.FlxParticle.IFlxParticle;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxPoint;
 import flixel.math.FlxVelocity;

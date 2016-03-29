@@ -1,7 +1,5 @@
 package flixel;
 
-import flixel.FlxG;
-import flixel.FlxBasic;
 import massive.munit.Assert;
 
 class FlxBasicTest extends FlxBasic

@@ -3,22 +3,23 @@ package flixel.system.frontEnds;
 import flash.display.BitmapData;
 import flixel.FlxG;
 import flixel.input.keyboard.FlxKey;
-import flixel.system.debug.watch.Tracker;
+import flixel.system.debug.FlxDebugger.FlxDebuggerLayout;
 import flixel.system.debug.Window;
+import flixel.system.debug.watch.Tracker;
 import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxHorizontalAlign;
 import flixel.util.FlxSignal;
-import flixel.util.FlxStringUtil;
-import flixel.system.debug.FlxDebugger;
+using flixel.util.FlxStringUtil;
+using flixel.util.FlxArrayUtil;
 
 class DebuggerFrontEnd
 {	
 	/**
-	 * The amount of decimals FlxPoints / FlxRects are rounded to in log / watch / trace.
+	 * The amount of decimals Floats are rounded to in the debugger.
 	 */
 	public var precision:Int = 3; 
 	
-	#if !FLX_NO_KEYBOARD
+	#if FLX_KEYBOARD
 	/**
 	 * The key codes used to toggle the debugger (see FlxG.keys for the keys available).
 	 * Default keys: ` and \. Set to null to deactivate.
@@ -44,7 +45,7 @@ class DebuggerFrontEnd
 	 */
 	public inline function setLayout(Layout:FlxDebuggerLayout):Void
 	{
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		FlxG.game.debugger.setLayout(Layout);
 		#end
 	}
@@ -54,7 +55,7 @@ class DebuggerFrontEnd
 	 */
 	public inline function resetLayout():Void
 	{
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		FlxG.game.debugger.resetLayout();
 		#end
 	}
@@ -71,7 +72,7 @@ class DebuggerFrontEnd
 	 */
 	public function addButton(Alignment:FlxHorizontalAlign, Icon:BitmapData, UpHandler:Void->Void, ToggleMode:Bool = false, UpdateLayout:Bool = true):FlxSystemButton
 	{
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		return FlxG.game.debugger.addButton(Alignment, Icon, UpHandler, ToggleMode, UpdateLayout);
 		#else
 		return null;
@@ -87,21 +88,19 @@ class DebuggerFrontEnd
 	 */
 	public function track(ObjectOrClass:Dynamic, ?WindowTitle:String):Window
 	{
-		#if !FLX_NO_DEBUG
-		if (Tracker.objectsBeingTracked.indexOf(ObjectOrClass) == -1)
+		#if FLX_DEBUG
+		if (Tracker.objectsBeingTracked.contains(ObjectOrClass))
+			return null;
+		
+		var profile = Tracker.findProfile(ObjectOrClass);
+		if (profile == null)
 		{
-			var profile = Tracker.findProfile(ObjectOrClass);
-			if (profile == null)
-			{
-				FlxG.log.error("Could not find a tracking profile for object of class '" +
-					FlxStringUtil.getClassName(ObjectOrClass, true) + "'."); 
-				return null;
-			}
-			else 
-			{
-				return FlxG.game.debugger.addWindow(new Tracker(profile, ObjectOrClass, WindowTitle));
-			}
+			FlxG.log.error("Could not find a tracking profile for object of class '" +
+				ObjectOrClass.getClassName(true) + "'."); 
+			return null;
 		}
+		else 
+			return FlxG.game.debugger.addWindow(new Tracker(profile, ObjectOrClass, WindowTitle));
 		#end
 		return null;
 	}
@@ -113,7 +112,7 @@ class DebuggerFrontEnd
 	 */
 	public inline function addTrackerProfile(Profile:TrackerProfile):Void
 	{
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		Tracker.addProfile(Profile);
 		#end
 	}
@@ -126,7 +125,7 @@ class DebuggerFrontEnd
 	 */
 	public function removeButton(Button:FlxSystemButton, UpdateLayout:Bool = true):Void
 	{
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		FlxG.game.debugger.removeButton(Button, UpdateLayout);
 		#end
 	}
@@ -136,7 +135,7 @@ class DebuggerFrontEnd
 	
 	private inline function set_drawDebug(Value:Bool):Bool
 	{
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		if (Value != drawDebug)
 			drawDebugChanged.dispatch();
 		#end
@@ -146,7 +145,7 @@ class DebuggerFrontEnd
 	
 	private inline function set_visible(Value:Bool):Bool
 	{
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		FlxG.game.debugger.visible = Value;
 		
 		// if the debugger is non-visible, then we need to focus on game sprite, 

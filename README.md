@@ -6,8 +6,9 @@
 [![Haxelib Version](https://img.shields.io/github/tag/HaxeFlixel/flixel.svg?style=flat&label=haxelib)](http://lib.haxe.org/p/flixel)
 [![Patreon](https://img.shields.io/badge/donate-patreon-blue.svg)](https://www.patreon.com/haxeflixel)
 [![Build Status](https://travis-ci.org/HaxeFlixel/flixel.png)](https://travis-ci.org/HaxeFlixel/flixel)
+[![Issue Count](https://codeclimate.com/github/HaxeFlixel/flixel/badges/issue_count.svg)](https://codeclimate.com/github/HaxeFlixel/flixel/issues)
 
-[![](.github/showcase.png)](http://www.haxeflixel.com/showcase)
+[![](showcase.png)](http://www.haxeflixel.com/showcase)
 
 ##Getting Started
 

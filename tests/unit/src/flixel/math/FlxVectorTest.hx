@@ -1,6 +1,5 @@
 package flixel.math;
 
-import flixel.math.FlxVector;
 import massive.munit.Assert;
 
 class FlxVectorTest extends FlxTest

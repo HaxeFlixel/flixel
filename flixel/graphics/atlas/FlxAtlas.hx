@@ -7,7 +7,6 @@ import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.graphics.frames.FlxFrame.FlxFrameAngle;
 import flixel.graphics.frames.FlxTileFrames;
-import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets;
@@ -161,7 +160,7 @@ class FlxAtlas implements IFlxDestroyable
 		
 		if (key == null) 
 		{
-			#if !FLX_NO_DEBUG
+			#if FLX_DEBUG
 			throw "addNode can't find the key for specified bitmapdata. Please provide not null value as a Key argument.";
 			#end
 			return null;
@@ -174,7 +173,7 @@ class FlxAtlas implements IFlxDestroyable
 		
 		if (data == null)	
 		{
-			#if !FLX_NO_DEBUG
+			#if FLX_DEBUG
 			throw "addNode can't find bitmapdata with specified key: " + Graphic + ". Please provide valid value.";
 			#end
 			return null;
@@ -355,7 +354,7 @@ class FlxAtlas implements IFlxDestroyable
 			
 			if ((maxWidth > 0 && rootWidth > maxWidth) || (maxHeight > 0 && rootHeight > maxHeight))
 			{
-				#if !FLX_NO_DEBUG
+				#if FLX_DEBUG
 				throw "Can't insert node " + key + " with the size of (" + data.width + "; " + data.height + ") in atlas " + name + " with the max size of (" + maxWidth + "; " + maxHeight + ") and powerOfTwo: " + powerOfTwo;
 				#end
 				return null;
@@ -437,7 +436,7 @@ class FlxAtlas implements IFlxDestroyable
 			
 			if (!canExpandRight && !canExpandBottom && !canExpandRightRotate && !canExpandBottomRotate)
 			{
-				#if !FLX_NO_DEBUG
+				#if FLX_DEBUG
 				throw "Can't insert node " + key + " with the size of (" + data.width + "; " + data.height + ") in atlas " + name + " with the max size of (" + maxWidth + "; " + maxHeight + ") and powerOfTwo: " + powerOfTwo;
 				#end
 				return null; // can't expand in any direction
@@ -584,7 +583,7 @@ class FlxAtlas implements IFlxDestroyable
 		
 		if (key == null) 
 		{
-			#if !FLX_NO_DEBUG
+			#if FLX_DEBUG
 			throw "addNodeWithSpacings can't find the key for specified bitmapdata. Please provide not null value as a Key argument.";
 			#end
 			return null;
@@ -599,7 +598,7 @@ class FlxAtlas implements IFlxDestroyable
 		
 		if (data == null) 
 		{
-			#if !FLX_NO_DEBUG
+			#if FLX_DEBUG
 			throw "addNodeWithSpacings can't find bitmapdata with specified key: " + Graphic + ". Please provide valid value.";
 			#end
 			return null;
@@ -610,7 +609,7 @@ class FlxAtlas implements IFlxDestroyable
 		
 		if (node == null) 
 		{
-			#if !FLX_NO_DEBUG
+			#if FLX_DEBUG
 			throw "addNodeWithSpacings can't insert provided image: " + Graphic + ") in atlas. It's probably too big.";
 			#end
 			return null;
@@ -697,7 +696,7 @@ class FlxAtlas implements IFlxDestroyable
 		
 		if (numBitmaps != numKeys)
 		{
-			#if !FLX_NO_DEBUG
+			#if FLX_DEBUG
 			throw "The number of bitmaps (" + numBitmaps + ") should be equal to number of keys (" + numKeys + ")";
 			#end
 			return null;
@@ -1070,7 +1069,7 @@ class FlxAtlas implements IFlxDestroyable
 			{
 				if ((maxWidth > 0 && nextWidth > maxWidth) || (maxHeight > 0 && nextHeight > maxHeight))
 				{
-					#if !FLX_NO_DEBUG
+					#if FLX_DEBUG
 					throw "Can't set powerOfTwo property to true, since it requires to increase atlas size which is bigger that max size";
 					#end
 					return false;
