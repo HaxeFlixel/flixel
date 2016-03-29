@@ -27,7 +27,7 @@ install:
   - haxelib install hamcrest > /dev/null
   - haxelib install lime > /dev/null
   - haxelib install openfl > /dev/null
-  - haxelib install hxcpp > /dev/null
+  - haxelib git hxcpp https://github.com/HaxeFoundation/hxcpp > /dev/null
   - haxelib install systools > /dev/null
   - haxelib install nape > /dev/null
   - haxelib install task > /dev/null
