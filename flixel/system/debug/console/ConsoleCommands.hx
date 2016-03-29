@@ -3,7 +3,6 @@ package flixel.system.debug.console;
 #if FLX_DEBUG
 import flixel.FlxG;
 import flixel.FlxObject;
-import flixel.FlxState;
 import flixel.math.FlxMath;
 import flixel.util.FlxStringUtil;
 using StringTools;
