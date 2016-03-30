@@ -52,14 +52,15 @@ class RunTravis
 
 		var hxcppDir = Sys.getEnv("HOME") + "/haxe/lib/hxcpp/git/";
 		return getResult([
-			compileDir(hxcppDir + "tools/run"),
-			compileDir(hxcppDir + "tools/hxcpp")
+			runCommandInDir(hxcppDir + "tools/run", "haxe", ["compile.hxml"]),
+			runCommandInDir(hxcppDir + "tools/hxcpp", "haxe", ["compile.hxml"]),
+			runCommandInDir(hxcppDir + "project", "neko", ["build.n"])
 		]);
 	}
 	
-	static function compileDir(dir:String):ExitCode
+	static function runCommandInDir(dir:String, cmd:String, args:Array<String>):ExitCode
 	{
-		return runInDir(dir, function() return runCommand("haxe", ["compile.hxml"]));
+		return runInDir(dir, function() return runCommand(cmd, args));
 	}
 	
 	static function runUnitTests(target:Target):ExitCode
