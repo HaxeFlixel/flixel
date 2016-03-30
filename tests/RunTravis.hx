@@ -50,7 +50,7 @@ class RunTravis
 		if (target != Target.CPP)
 			return ExitCode.SUCCESS;
 
-		var hxcppDir = Sys.getEnv("HOME") + "/haxe/lib/hxcpp/";
+		var hxcppDir = Sys.getEnv("HOME") + "/haxe/lib/hxcpp/git/";
 		return getResult([
 			compileDir(hxcppDir + "tools/run"),
 			compileDir(hxcppDir + "tools/hxcpp")
@@ -171,8 +171,8 @@ class RunTravis
 	
 	static function cd(dir:String)
 	{
-		Sys.setCwd(dir);
 		Sys.println("cd " + dir);
+		Sys.setCwd(dir);
 	}
 	
 	static function runCommand(cmd:String, args:Array<String>):ExitCode
