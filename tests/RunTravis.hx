@@ -31,7 +31,7 @@ class RunTravis
 	
 		Sys.exit(getResult([
 			generateMunit(),
-			rebuildHxcpp(target),
+			setupHxcpp(target),
 			runUnitTests(target),
 			buildCoverageTests(target),
 			buildSwfVersionTests(target),
@@ -48,17 +48,22 @@ class RunTravis
 		);
 	}
 	
-	static function rebuildHxcpp(target:Target):ExitCode
+	static function setupHxcpp(target:Target):ExitCode
 	{
 		if (target != Target.CPP)
 			return ExitCode.SUCCESS;
 
+		#if (haxe_ver >= "3.3")
 		var hxcppDir = Sys.getEnv("HOME") + "/haxe/lib/hxcpp/git/";
 		return getResult([
+			runCommand("haxelib", ["git", "hxcpp", "https://github.com/HaxeFoundation/hxcpp"]),
 			runCommandInDir(hxcppDir + "tools/run", "haxe", ["compile.hxml"]),
 			runCommandInDir(hxcppDir + "tools/hxcpp", "haxe", ["compile.hxml"]),
 			runCommandInDir(hxcppDir + "project", "neko", ["build.n"])
 		]);
+		#else
+		return runCommand("haxelib", ["install", "hxcpp"]);
+		#end
 	}
 	
 	static function runCommandInDir(dir:String, cmd:String, args:Array<String>):ExitCode
