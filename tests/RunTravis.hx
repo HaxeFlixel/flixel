@@ -25,12 +25,10 @@ class RunTravis
 		var target:Target = Sys.args()[0];
 		if (target == null)
 			target = Target.FLASH;
-		
-		runInDir("unit", function()
-			return haxelibRun(["munit", "gen"])
-		);
 	
 		Sys.exit(getResult([
+			generateMunit(),
+			rebuildHxcpp(target),
 			runUnitTests(target),
 			buildCoverageTests(target),
 			buildSwfVersionTests(target),
@@ -38,6 +36,30 @@ class RunTravis
 			buildNextDemos(target),
 			buildMechanicsDemos(target)
 		]));
+	}
+	
+	static function generateMunit():ExitCode
+	{
+		return runInDir("unit", function()
+			return haxelibRun(["munit", "gen"])
+		);
+	}
+	
+	static function rebuildHxcpp(target:Target):ExitCode
+	{
+		if (target != Target.CPP)
+			return ExitCode.SUCCESS;
+
+		var hxcppDir = Sys.getEnv("HOME") + "/haxe/lib/hxcpp/";
+		return getResult([
+			compileDir(hxcppDir + "tools/run"),
+			compileDir(hxcppDir + "tools/hxcpp")
+		]);
+	}
+	
+	static function compileDir(dir:String):ExitCode
+	{
+		return runInDir(dir, function() return runCommand("haxe", ["compile.hxml"]));
 	}
 	
 	static function runUnitTests(target:Target):ExitCode
@@ -141,10 +163,16 @@ class RunTravis
 	static function runInDir(dir:String, func:Void->ExitCode):ExitCode
 	{
 		var oldCwd = Sys.getCwd();
-		Sys.setCwd(dir);
+		cd(dir);
 		var result = func();
-		Sys.setCwd(oldCwd);
+		cd(oldCwd);
 		return result;
+	}
+	
+	static function cd(dir:String)
+	{
+		Sys.setCwd(dir);
+		Sys.println("cd " + dir);
 	}
 	
 	static function runCommand(cmd:String, args:Array<String>):ExitCode
