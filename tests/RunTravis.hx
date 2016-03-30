@@ -19,12 +19,15 @@ abstract ExitCode(Int) from Int to Int
 class RunTravis
 {
 	static var importantDemos = ["Mode", "RPGInterface", "FlxNape"];
-	
+	static var dryRun:Bool;
+
 	public static function main():Void
 	{
 		var target:Target = Sys.args()[0];
 		if (target == null)
 			target = Target.FLASH;
+		
+		dryRun = Sys.args().indexOf("-dry-run") != -1;
 	
 		Sys.exit(getResult([
 			generateMunit(),
@@ -173,12 +176,15 @@ class RunTravis
 	static function cd(dir:String)
 	{
 		Sys.println("cd " + dir);
-		Sys.setCwd(dir);
+		if (!dryRun)
+			Sys.setCwd(dir);
 	}
 	
 	static function runCommand(cmd:String, args:Array<String>):ExitCode
 	{
 		Sys.println(cmd + " " + args.join(" "));
+		if (dryRun)
+			return ExitCode.SUCCESS;
 		return Sys.command(cmd, args);
 	}
 }
