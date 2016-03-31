@@ -16,6 +16,8 @@ matrix:
   allow_failures:
     - env: "TARGET=cpp"
       haxe: development
+    - env: "TARGET=flash"
+      haxe: development
 
 before_install:
   - export DISPLAY=:99.0
