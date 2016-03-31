@@ -2,15 +2,11 @@
 
 [flixel](https://github.com/HaxeFlixel/flixel) | [addons](https://github.com/HaxeFlixel/flixel-addons) | [ui](https://github.com/HaxeFlixel/flixel-ui) | [demos](https://github.com/HaxeFlixel/flixel-demos) | [tools](https://github.com/HaxeFlixel/flixel-tools) | [templates](https://github.com/HaxeFlixel/flixel-templates) | [docs](https://github.com/HaxeFlixel/flixel-docs) | [haxeflixel.com](https://github.com/HaxeFlixel/haxeflixel.com)
 
-[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE.md)
-[![Haxelib Version](https://img.shields.io/github/tag/HaxeFlixel/flixel.svg?style=flat&label=haxelib)](http://lib.haxe.org/p/flixel)
-[![Patreon](https://img.shields.io/badge/donate-patreon-blue.svg)](https://www.patreon.com/haxeflixel)
-[![Build Status](https://travis-ci.org/HaxeFlixel/flixel.png)](https://travis-ci.org/HaxeFlixel/flixel)
-[![Code Climate](https://img.shields.io/codeclimate/issues/github/HaxeFlixel/flixel.svg)](https://codeclimate.com/github/HaxeFlixel/flixel/issues)
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE.md) [![Haxelib Version](https://img.shields.io/github/tag/HaxeFlixel/flixel.svg?style=flat-square&label=haxelib)](http://lib.haxe.org/p/flixel) [![Patreon](https://img.shields.io/badge/donate-patreon-blue.svg?style=flat-square)](https://www.patreon.com/haxeflixel) [![Build Status](https://img.shields.io/travis/HaxeFlixel/flixel.svg?style=flat-square)](https://travis-ci.org/HaxeFlixel/flixel) [![Code Climate](https://img.shields.io/codeclimate/issues/github/HaxeFlixel/flixel.svg?style=flat-square)](https://codeclimate.com/github/HaxeFlixel/flixel/issues)
 
 [![](showcase.png)](http://www.haxeflixel.com/showcase)
 
-##Getting Started
+## Getting Started
 
 [Click here to get started making games with HaxeFlixel.](http://haxeflixel.com/documentation/getting-started/)
 
@@ -18,7 +14,7 @@ HaxeFlixel is open source software developed by volunteers, [click here to meet 
 
 If you're a developer and like what we're doing, [read the docs](#for-developers) and get involved.
 
-##Links
+## Links
 
 In case you're looking for resources, help, or just want to interact with the community:
 
@@ -29,7 +25,7 @@ In case you're looking for resources, help, or just want to interact with the co
 - [@HaxeFlixel on Twitter](https://twitter.com/HaxeFlixel)
 - [#haxeflixel IRC channel](http://webchat.freenode.net/?channels=haxeflixel)
 
-##About
+## About
 
 HaxeFlixel was created by Alexander Hohlov, also known as [Beeblerox](https://github.com/beeblerox) who continues to be the project lead. The codebase started largely from a Haxe port of the [AS3 version of Flixel](https://github.com/AdamAtomic/flixel) written by [Adam “Atomic” Saltsman](http://www.adamatomic.com/) and [Richard Davey's](http://www.photonstorm.com/flixel-power-tools) [Power Tools](https://github.com/photonstorm/Flixel-Power-Tools)
 
@@ -48,7 +44,7 @@ HaxeFlixel presents substantial enhancements from the original Flixel AS3 code:
 - A powerful debugger with a console as well as an advanced logging system
 - A vibrant community that keeps updating the engine and adding new features to it
 
-##For Developers
+## For Developers
 
 If you are wanting to contribute code, please review the following documentation:
 
@@ -60,7 +56,7 @@ If you have a question or have not contributed on GitHub before, there are frien
 
 For using git with GitHub we recommended using a GUI application to manage your changes, for example [SourceTree](http://www.sourcetreeapp.com/).
 
-##Runtime Targets
+## Runtime Targets
 The current possible targets are:
 
 | Mobile     | Desktop | Web   |
@@ -70,7 +66,7 @@ The current possible targets are:
 | Android    | Windows |       |
 | WebOS      | Neko    |       |
 
-##Basic Features
+## Basic Features
 
 - Display thousands of moving objects
 - Basic collisions between objects
