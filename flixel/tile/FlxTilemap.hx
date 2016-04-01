@@ -852,7 +852,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 */
 	private function drawTilemap(Buffer:FlxTilemapBuffer, Camera:FlxCamera):Void
 	{
-		var isColored:Bool = ((alpha != 1) || (color != 0xffffff));
+		var isColored:Bool = (alpha != 1) || (color != 0xffffff);
 		
 		//only used for renderTile
 		var drawX:Float = 0;
