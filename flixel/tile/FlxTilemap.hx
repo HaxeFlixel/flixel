@@ -114,7 +114,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	private var _scaledTileWidth:Float = 0;
 	private var _scaledTileHeight:Float = 0;
 	
-	#if (!FLX_NO_DEBUG)
+	#if FLX_DEBUG
 	
 	/**
 	 * Internal, used for rendering the debug bounding box display.
@@ -170,7 +170,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		offset = FlxPoint.get();
 		
 		FlxG.signals.gameResized.add(onGameResize);
-		#if (!FLX_NO_DEBUG)
+		#if FLX_DEBUG
 		if (FlxG.renderBlit)
 		{
 			FlxG.debugger.drawDebugChanged.add(onDrawDebugChanged);
@@ -217,7 +217,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		colorTransform = null;
 		
 		FlxG.signals.gameResized.remove(onGameResize);
-		#if (!FLX_NO_DEBUG)
+		#if FLX_DEBUG
 		if (FlxG.renderBlit)
 		{
 			FlxG.debugger.drawDebugChanged.remove(onDrawDebugChanged);
@@ -294,7 +294,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		}
 		
 		// Create debug tiles for rendering bounding boxes on demand
-		#if (!FLX_NO_DEBUG)
+		#if FLX_DEBUG
 		if (FlxG.renderBlit)
 		{
 			_debugTileNotSolid = makeDebugTile(FlxColor.BLUE);
@@ -316,7 +316,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	
 	override private function updateMap():Void 
 	{
-		#if (!FLX_NO_DEBUG)
+		#if FLX_DEBUG
 		if (FlxG.renderBlit)
 		{
 			_debugRect = new Rectangle(0, 0, _tileWidth, _tileHeight);
@@ -1005,7 +1005,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 * Internal function to clean up the map loading code.
 	 * Just generates a wireframe box the size of a tile with the specified color.
 	 */
-	#if (!FLX_NO_DEBUG)
+	#if FLX_DEBUG
 	private function makeDebugTile(Color:FlxColor):BitmapData
 	{
 		if (FlxG.renderBlit)
@@ -1082,7 +1082,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		}
 	}
 	
-	#if (!FLX_NO_DEBUG)
+	#if FLX_DEBUG
 	private function onDrawDebugChanged():Void
 	{
 		if (FlxG.renderBlit)

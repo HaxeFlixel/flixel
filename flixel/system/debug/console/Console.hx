@@ -246,7 +246,7 @@ class Console extends Window
 			history.addCommand(input.text);
 			
 			// Step forward one frame to see the results of the command
-			#if (flash && !FLX_NO_DEBUG)
+			#if (flash && FLX_DEBUG)
 			if (FlxG.vcr.paused)
 				FlxG.game.debugger.vcr.onStep();
 			#end
