@@ -1065,20 +1065,10 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		if (colorTransform == null)
 			colorTransform = new ColorTransform();
 		
-		if ((alpha != 1) || (color != 0xffffff))
-		{
-			colorTransform.redMultiplier = color.redFloat;
-			colorTransform.greenMultiplier = color.greenFloat;
-			colorTransform.blueMultiplier = color.blueFloat;
-			colorTransform.alphaMultiplier = alpha;
-		}
+		if (alpha != 1 || color != 0xffffff)
+			colorTransform.setMultipliers(color.redFloat, color.greenFloat, color.blueFloat, alpha);
 		else
-		{
-			colorTransform.redMultiplier = 1;
-			colorTransform.greenMultiplier = 1;
-			colorTransform.blueMultiplier = 1;
-			colorTransform.alphaMultiplier = 1;
-		}
+			colorTransform.setMultipliers(1, 1, 1, 1);
 		
 		if (FlxG.renderBlit)
 			setDirty();

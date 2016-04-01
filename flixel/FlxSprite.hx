@@ -772,9 +772,7 @@ class FlxSprite extends FlxObject
 	{
 		var positions:Array<FlxPoint> = FlxBitmapDataUtil.replaceColor(graphic.bitmap, Color, NewColor, FetchPositions);
 		if (positions != null)
-		{
 			dirty = true;
-		}
 		return positions;
 	}
 	
@@ -800,7 +798,7 @@ class FlxSprite extends FlxObject
 		colorTransform.setMultipliers(redMultiplier, greenMultiplier, blueMultiplier, alphaMultiplier);
 		colorTransform.setOffsets(redOffset, greenOffset, blueOffset, alphaOffset);
 		
-		useColorTransform = ((alpha != 1) || (color != 0xffffff) || colorTransform.hasRGBOffsets());
+		useColorTransform = alpha != 1 || color != 0xffffff || colorTransform.hasRGBOffsets();
 		dirty = true;
 	}
 	
@@ -809,16 +807,11 @@ class FlxSprite extends FlxObject
 		if (colorTransform == null)
 			colorTransform = new ColorTransform();
 		
-		if (alpha != 1 || color != 0xffffff)
-		{
+		useColorTransform = alpha != 1 || color != 0xffffff;
+		if (useColorTransform)
 			colorTransform.setMultipliers(color.redFloat, color.greenFloat, color.blueFloat, alpha);
-			useColorTransform = true;
-		}
 		else
-		{
 			colorTransform.setMultipliers(1, 1, 1, 1);
-			useColorTransform = false;
-		}
 		
 		dirty = true;
 	}
