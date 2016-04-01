@@ -229,7 +229,7 @@ class FlxGame extends Sprite
 	 * @param	Zoom			The default level of zoom for the game's cameras (e.g. 2 = all pixels are now drawn at 2x).  Default = 1.
 	 * @param	UpdateFramerate	How frequently the game should update (default is 60 times per second).
 	 * @param	DrawFramerate	Sets the actual display / draw framerate for the game (default is 60 times per second).
-	 * @param	SkipSplash		Whether you want to skip the flixel splash screen in FLX_NO_DEBUG or not.
+	 * @param	SkipSplash		Whether you want to skip the flixel splash screen with `FLX_NO_DEBUG`.
 	 * @param	StartFullscreen	Whether to start the game in fullscreen mode (desktop targets only), false by default
 	 */
 	public function new(GameSizeX:Int = 640, GameSizeY:Int = 480, ?InitialState:Class<FlxState>, Zoom:Float = 1, UpdateFramerate:Int = 60, DrawFramerate:Int = 60, SkipSplash:Bool = false, StartFullscreen:Bool = false)
