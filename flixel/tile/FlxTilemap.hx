@@ -1121,7 +1121,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 */
 	private function defaultTileToSprite(TileProperties:FlxTileProperties):FlxSprite
 	{
-		var tileSprite:FlxSprite = new FlxSprite(TileProperties.x, TileProperties.y);
+		var tileSprite = new FlxSprite(TileProperties.x, TileProperties.y);
 		tileSprite.frames = TileProperties.graphic;
 		tileSprite.scale.copyFrom(TileProperties.scale);
 		TileProperties.scale = FlxDestroyUtil.put(TileProperties.scale);

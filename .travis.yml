@@ -30,8 +30,8 @@ install:
   - haxelib install systools > /dev/null
   - haxelib install nape > /dev/null
   - haxelib install task > /dev/null
-  - haxelib install hscript > /dev/null
   - haxelib install poly2trihx > /dev/null
+  - haxelib git hscript https://github.com/HaxeFoundation/hscript > /dev/null
   - haxelib git spinehaxe https://github.com/bendmorris/spinehaxe > /dev/null
   - haxelib git firetongue https://github.com/larsiusprime/firetongue > /dev/null
   - haxelib git flixel-tools https://github.com/HaxeFlixel/flixel-tools > /dev/null
