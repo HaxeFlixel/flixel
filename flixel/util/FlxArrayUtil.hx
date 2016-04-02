@@ -113,18 +113,15 @@ class FlxArrayUtil
 	
 	/**
 	 * Flattens 2D arrays into 1D arrays.
-	 * Example: [[1, 2], [3, 2], [1, 1]] -> [1, 2, 3, 2, 1, 1]
+	 * Example: `[[1, 2], [3, 2], [1, 1]]` -> `[1, 2, 3, 2, 1, 1]`
 	 */
 	@:generic
 	public static function flatten2DArray<T>(array:Array<Array<T>>):Array<T>
 	{
 		var result = [];
-		
 		for (innerArray in array)
-		{
-			result = result.concat(innerArray);
-		}
-		
+			for (element in innerArray)
+				result.push(element);
 		return result;
 	}
 	
