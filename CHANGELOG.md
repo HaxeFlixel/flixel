@@ -16,6 +16,7 @@
 	* added a remove button
 	* added `Float` rounding (to `FlxG.debugger.precision` decimals)
 * `FlxStringUtil`: added `isNullOrEmpty()`
+* `FlxArrayUtil`: optimized `flatten2DArray()`
 
 4.0.1
 ------------------------------
