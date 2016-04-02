@@ -22,7 +22,6 @@ private class GraphicLogoCorners extends BitmapData {}
  */
 class FlxPreloader extends FlxBasePreloader
 {
-	#if !js
 	private var _buffer:Sprite;
 	private var _bmpBar:Bitmap;
 	private var _text:TextField;
@@ -31,14 +30,15 @@ class FlxPreloader extends FlxBasePreloader
 	
 	/**
 	 * Initialize your preloader here.
+	 * 
+	 * ```haxe
+	 * super(0, ["test.com", FlxPreloaderBase.LOCAL]); // example of site-locking
+	 * super(10); // example of long delay (10 seconds)
+	 * ```
 	 */
 	override public function new(MinDisplayTime:Float = 0, ?AllowedURLs:Array<String>):Void
 	{
 		super(MinDisplayTime, AllowedURLs);
-		
-		// super(0, ["test.com", FlxPreloaderBase.LOCAL]); // example of site-locking
-		
-		// super(10); // example of long delay (10 seconds)
 	}
 	
 	/**
@@ -48,6 +48,7 @@ class FlxPreloader extends FlxBasePreloader
 	 */
 	override private function create():Void
 	{
+		#if !js
 		_buffer = new Sprite();
 		_buffer.scaleX = _buffer.scaleY = 2;
 		addChild(_buffer);
@@ -107,6 +108,7 @@ class FlxPreloader extends FlxBasePreloader
 		bitmap.blendMode = BlendMode.OVERLAY;
 		bitmap.alpha = 0.25;
 		_buffer.addChild(bitmap);
+		#end
 		
 		super.create();
 	}
@@ -117,6 +119,7 @@ class FlxPreloader extends FlxBasePreloader
 	 */
 	override private function destroy():Void
 	{
+		#if !js
 		if (_buffer != null)	
 		{
 			removeChild(_buffer);
@@ -127,6 +130,7 @@ class FlxPreloader extends FlxBasePreloader
 		_logo = null;
 		_logoGlow = null;
 		super.destroy();
+		#end
 	}
 	
 	/**
@@ -135,6 +139,7 @@ class FlxPreloader extends FlxBasePreloader
 	 */
 	override public function update(Percent:Float):Void
 	{
+		#if !js
 		_bmpBar.scaleX = Percent * (_width - 8);
 		_text.text = Std.string(FlxG.VERSION) + " " + Std.int(Percent * 100) + "%";
 		
@@ -172,6 +177,6 @@ class FlxPreloader extends FlxBasePreloader
 		{
 			_buffer.alpha = 1 - (Percent - 0.9) / 0.1;
 		}
+		#end
 	}
-	#end
 }
