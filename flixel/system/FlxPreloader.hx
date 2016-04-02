@@ -17,16 +17,12 @@ private class GraphicLogoCorners extends BitmapData {}
 
 /**
  * This is the Default HaxeFlixel Themed Preloader 
- * You can make your own style of Preloader by overriding FlxPreloaderBase and using this class as an example.
- * To use your Preloader, simply change Project.xml to say: <app preloader="class.path.MyPreloader" />
+ * You can make your own style of Preloader by overriding `FlxPreloaderBase` and using this class as an example.
+ * To use your Preloader, simply change `Project.xml` to say: `<app preloader="class.path.MyPreloader" />`
  */
 class FlxPreloader extends FlxBasePreloader
 {
 	#if !js
-	
-	private static var BlendModeScreen = BlendMode.SCREEN;
-	private static var BlendModeOverlay = BlendMode.OVERLAY;
-	
 	private var _buffer:Sprite;
 	private var _bmpBar:Bitmap;
 	private var _text:TextField;
@@ -86,7 +82,7 @@ class FlxPreloader extends FlxBasePreloader
 		_buffer.addChild(_logo);
 		_logoGlow = new Sprite();
 		FlxAssets.drawLogo(_logoGlow.graphics);
-		_logoGlow.blendMode = BlendModeScreen;
+		_logoGlow.blendMode = BlendMode.SCREEN;
 		_logoGlow.scaleX = _logoGlow.scaleY = _height / 8 * 0.04;
 		_logoGlow.x = (_width - _logoGlow.width) / 2;
 		_logoGlow.y = (_height - _logoGlow.height) / 2;
@@ -108,7 +104,7 @@ class FlxPreloader extends FlxBasePreloader
 			}
 			i += 2;
 		}
-		bitmap.blendMode = BlendModeOverlay;
+		bitmap.blendMode = BlendMode.OVERLAY;
 		bitmap.alpha = 0.25;
 		_buffer.addChild(bitmap);
 		
