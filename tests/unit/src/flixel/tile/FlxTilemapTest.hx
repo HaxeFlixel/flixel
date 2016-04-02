@@ -3,6 +3,9 @@ package flixel.tile;
 import flash.display.BitmapData;
 import flash.errors.ArgumentError;
 import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
+import flixel.util.FlxColor;
+import haxe.PosInfos;
 import massive.munit.Assert;
 using StringTools;
 
@@ -22,7 +25,8 @@ class FlxTilemapTest extends FlxTest
 		sampleMapArray = [
 			0, 1, 0, 1,
 			1, 1, 1, 1,
-			1, 0, 0, 1];
+			1, 0, 0, 1
+		];
 	}
 	
 	@Test
@@ -177,6 +181,33 @@ class FlxTilemapTest extends FlxTest
 		}
 		
 		Assert.isTrue(exceptionThrown);
+	}
+	
+	@Test
+	function testBufferUpdatedOnCameraResize()
+	{
+		if (!FlxG.renderBlit)
+			return;
+		
+		FlxG.camera.setSize(1, 1);
+		tilemap.loadMapFrom2DArray([[1, 1]], new BitmapData(2, 1));
+		FlxG.state.add(tilemap);
+		
+		step();
+
+		assertPixelHasColor(0, 0xFFFFFF);
+		assertPixelHasColor(1, 0x000000);
+		
+		FlxG.camera.setSize(FlxG.width, FlxG.height);
+		step();
+		
+		//assertPixelHasColor(0, 0xFFFFFF);
+		//assertPixelHasColor(1, 0xFFFFFF);
+	}
+	
+	function assertPixelHasColor(x:Int, color:UInt, ?info:PosInfos)
+	{
+		Assert.areEqual(FlxG.camera.buffer.getPixel(x, 0), color, info);
 	}
 	
 	function getBitmapData()
