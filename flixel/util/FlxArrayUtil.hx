@@ -14,26 +14,26 @@ class FlxArrayUtil
 	@:generic
 	public static function setLength<T>(array:Array<T>, newLength:Int):Void
 	{
-		if (newLength < 0) return;
+		if (newLength < 0)
+			return;
+
 		var oldLength:Int = array.length;
 		var diff:Int = newLength - oldLength;
-		if (diff < 0)
-		{
-			#if flash
-			untyped array.length = newLength;
-			#else
-			diff = -diff;
-			for (i in 0...diff)
-			{
-				array.pop();
-			}
-			#end
-		}
+		if (diff >= 0)
+			return;
+		
+		#if flash
+		untyped array.length = newLength;
+		#else
+		diff = -diff;
+		for (i in 0...diff)
+			array.pop();
+		#end
 	}
 	
 	/**
-	 * Safely removes an element from an array by swapping it with the last element and calling pop()
-	 * (won't do anything if the element is not in the array). This is a lot faster than regular splice(), 
+	 * Safely removes an element from an array by swapping it with the last element and calling `pop()`
+	 * (won't do anything if the element is not in the array). This is a lot faster than regular `splice()`, 
 	 * but it can only be used on arrays where order doesn't matter.
 	 * 
 	 * @param	array	The array to remove the element from
@@ -45,18 +45,17 @@ class FlxArrayUtil
 	{
 		var index = array.indexOf(element);
 		if (index != -1)
-		{
 			return swapAndPop(array, index);
-		}
 		return array;
 	}
 	
 	/**
-	 * Removes an element from an array by swapping it with the last element and calling pop().
-	 * This is a lot faster than regular splice(), but it can only be used on arrays where order doesn't matter.
+	 * Removes an element from an array by swapping it with the last element and calling `pop()`.
+	 * This is a lot faster than regular `splice()`, but it can only be used on arrays where order doesn't matter.
 	 * 
 	 * IMPORTANT: always count down from length to zero if removing elements from whithin a loop
 	 * 
+	 * ```haxe
 	 * var i = array.length;
 	 * while (i-- > 0)
 	 * {
@@ -65,6 +64,7 @@ class FlxArrayUtil
 	 *           FlxArrayUtil.swapAndPop(array, i);
 	 *      }
 	 * }
+	 * ```
 	 * 
 	 * @param	array	The array to remove the element from
 	 * @param 	index	The index of the element to be removed from the array
@@ -80,34 +80,30 @@ class FlxArrayUtil
 	
 	/**
 	 * Clears an array structure, but leaves the object data untouched
-	 * Useful for cleaning up temporary references to data you want to preserve
-	 * WARNING: Can lead to memory leaks. Use destroyArray() instead for data you truly want GONE.
+	 * Useful for cleaning up temporary references to data you want to preserve.
+	 * WARNING: Can lead to memory leaks.
 	 *
 	 * @param	array		The array to clear out
 	 * @param	Recursive	Whether to search for arrays inside of arr and clear them out, too (false by default)
 	 */
 	public static function clearArray<T>(array:Array<T>, recursive:Bool = false):Void
 	{
-		if (array != null)
+		if (array == null)
+			return;
+
+		if (recursive)
 		{
-			if (!recursive)
+			while (array.length > 0)
 			{
-				while (array.length > 0)
-				{
-					array.pop();
-				}
+				var thing:T = array.pop();
+				if (Std.is(thing, Array))
+					clearArray(array, recursive);
 			}
-			else
-			{
-				while (array.length > 0)
-				{
-					var thing:T = array.pop();
-					if (Std.is(thing, Array))
-					{
-						clearArray(array, recursive);
-					}
-				}
-			}
+		}
+		else
+		{
+			while (array.length > 0)
+				array.pop();
 		}
 	}
 	
@@ -126,7 +122,7 @@ class FlxArrayUtil
 	}
 	
 	/**
-	 * Compares the contents with == to see if the two arrays are the same.
+	 * Compares the contents with `==` to see if the two arrays are the same.
 	 * Also takes null arrays and the length of the arrays into account.
 	 */
 	public static function equals<T>(array1:Array<T>, array2:Array<T>):Bool
@@ -141,17 +137,14 @@ class FlxArrayUtil
 			return false;
 		
 		for (i in 0...array1.length)
-		{
 			if (array1[i] != array2[i])
-			{
 				return false;
-			}
-		}
+
 		return true;
 	}
 	
 	/**
-	 * Returns the last element of an array or null if the array is null / empty.
+	 * Returns the last element of an array or `null` if the array is `null` / empty.
 	 */
 	public static function last<T>(array:Array<T>):Null<T>
 	{
