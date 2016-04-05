@@ -1,7 +1,6 @@
 package flixel.input.actions;
 import flixel.input.IFlxInputManager;
 import flixel.input.actions.FlxActionInput;
-import flixel.system.frontEnds.InputFrontEnd;
 
 #if steamwrap
 import steamwrap.api.Controller;
@@ -140,7 +139,7 @@ class FlxSteamController
 	private static function getAnalogActionData(controller:Int, action:Int, ?data:ControllerAnalogActionData):ControllerAnalogActionData
 	{
 		data = Steam.controllers.getAnalogActionData(controller, action, data);
-		if (controller >=0 && controller < controllers.length)
+		if (controller >= 0 && controller < controllers.length)
 		{
 			if (data.bActive > 0 && data.x != 0 || data.y != 0)
 			{

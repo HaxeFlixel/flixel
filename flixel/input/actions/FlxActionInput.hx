@@ -62,7 +62,7 @@ class FlxActionInput implements IFlxDestroyable
 	
 	private inline function compareState(a:FlxInputState, b:FlxInputState):Bool
 	{
-		return switch(a)
+		return switch (a)
 		{
 			case PRESSED:       b == PRESSED  || b == JUST_PRESSED;
 			case RELEASED:      b == RELEASED || b == JUST_RELEASED;

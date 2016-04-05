@@ -121,13 +121,16 @@ class FlxActionAnalog extends FlxAction
 	
 	override public function toString():String 
 	{
-		return "FlxAction(" + type+") name:" + name + " x/y:" + _x + "," + _y;
+		return "FlxAction(" + type + ") name:" + name + " x/y:" + _x + "," + _y;
 	}
 	
 	override public function check():Bool 
 	{
 		var val = super.check();
-		if (val && callback != null) { callback(this); }
+		if (val && callback != null)
+		{
+			callback(this);
+		}
 		return val;
 	}
 	
