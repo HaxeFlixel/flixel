@@ -113,7 +113,7 @@ class FlxActionSet implements IFlxDestroyable
 	 * @param	Handle	steam controller handle from FlxSteam.getConnectedControllers(), or FlxInputDeviceID.FIRST_ACTIVE / ALL
 	 * @param	Attach	true: adds inputs, false: removes inputs
 	 */
-	public function attachSteamController(Handle:Int, Attach:Bool=true):Void
+	public function attachSteamController(Handle:Int, Attach:Bool = true):Void
 	{
 		attachSteamControllerSub(Handle, Attach, FlxInputType.DIGITAL, digitalActions, null);
 		attachSteamControllerSub(Handle, Attach, FlxInputType.ANALOG, null, analogActions);

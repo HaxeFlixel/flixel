@@ -9,10 +9,7 @@ import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import flixel.input.FlxInput;
 import flixel.input.IFlxInput;
 import flixel.input.actions.FlxAction;
-import flixel.input.mouse.FlxMouse;
 import flixel.input.mouse.FlxMouseButton;
-import flixel.input.keyboard.FlxKey;
-import flixel.input.gamepad.FlxGamepad;
 import flixel.input.gamepad.FlxGamepadInputID;
 
 #if steamwrap
@@ -165,7 +162,7 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 	 * @param	Device		The device type (Mouse, Keyboard, Gamepad, SteamController, etc)
 	 * @param	DeviceID	FlxGamepad ID or a Steam Controller Handle (ignored for Mouse/Keyboard)
 	 */
-	public function activateSet(ActionSet:Int, Device:FlxInputDevice, ?DeviceID:Int=FlxInputDeviceID.FIRST_ACTIVE)
+	public function activateSet(ActionSet:Int, Device:FlxInputDevice, ?DeviceID:Int = FlxInputDeviceID.FIRST_ACTIVE)
 	{
 		register.activate(ActionSet, Device, DeviceID);
 		onChange();
@@ -380,7 +377,7 @@ class ActionSetRegister implements IFlxDestroyable
 		steamControllerSets = null;
 	}
 	
-	public function activate(ActionSet:Int, Device:FlxInputDevice, DeviceID:Int=FlxInputDeviceID.FIRST_ACTIVE)
+	public function activate(ActionSet:Int, Device:FlxInputDevice, DeviceID:Int = FlxInputDeviceID.FIRST_ACTIVE)
 	{
 		switch (Device)
 		{
