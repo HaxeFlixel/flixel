@@ -384,10 +384,10 @@ class ActionSetRegister implements IFlxDestroyable
 	{
 		switch (Device)
 		{
-			case FlxInputDevice.Mouse   : mouseSet    = ActionSet;
-			case FlxInputDevice.Keyboard: keyboardSet = ActionSet;
+			case FlxInputDevice.MOUSE: mouseSet    = ActionSet;
+			case FlxInputDevice.KEYBOARD: keyboardSet = ActionSet;
 			
-			case FlxInputDevice.Gamepad : 
+			case FlxInputDevice.GAMEPAD: 
 				switch (DeviceID)
 				{
 					case FlxInputDeviceID.ALL:          gamepadAllSet = ActionSet;
@@ -401,7 +401,7 @@ class ActionSetRegister implements IFlxDestroyable
 					default:                            gamepadSets[DeviceID] = ActionSet;
 				}
 			
-			case FlxInputDevice.SteamController :
+			case FlxInputDevice.STEAM_CONTROLLER:
 				switch (DeviceID)
 				{
 					case FlxInputDeviceID.ALL:          steamControllerAllSet = ActionSet;
@@ -411,12 +411,12 @@ class ActionSetRegister implements IFlxDestroyable
 					default:                            steamControllerSets[DeviceID] = ActionSet;
 				}
 			
-			case FlxInputDevice.All:
-				activate(ActionSet, FlxInputDevice.Mouse,    DeviceID);
-				activate(ActionSet, FlxInputDevice.Keyboard, DeviceID);
-				activate(ActionSet, FlxInputDevice.Gamepad,  DeviceID);
+			case FlxInputDevice.ALL:
+				activate(ActionSet, FlxInputDevice.MOUSE,    DeviceID);
+				activate(ActionSet, FlxInputDevice.KEYBOARD, DeviceID);
+				activate(ActionSet, FlxInputDevice.GAMEPAD,  DeviceID);
 				#if steamwrap
-				activate(ActionSet, FlxInputDevice.SteamController, DeviceID);
+				activate(ActionSet, FlxInputDevice.STEAM_CONTROLLER, DeviceID);
 				#end
 				
 			default:
@@ -432,10 +432,10 @@ class ActionSetRegister implements IFlxDestroyable
 			sets[i].active = false;
 		}
 		
-		syncDevice(FlxInputDevice.Mouse, sets);
-		syncDevice(FlxInputDevice.Keyboard, sets);
-		syncDevice(FlxInputDevice.Gamepad, sets);
-		syncDevice(FlxInputDevice.SteamController, sets);
+		syncDevice(FlxInputDevice.MOUSE, sets);
+		syncDevice(FlxInputDevice.KEYBOARD, sets);
+		syncDevice(FlxInputDevice.GAMEPAD, sets);
+		syncDevice(FlxInputDevice.STEAM_CONTROLLER, sets);
 	}
 	
 	public function update(sets:Array<FlxActionSet>)
@@ -563,15 +563,15 @@ class ActionSetRegister implements IFlxDestroyable
 	{
 		switch (device)
 		{
-			case FlxInputDevice.Mouse:
+			case FlxInputDevice.MOUSE:
 				if (mouseSet >= 0 && mouseSet < sets.length)
 					sets[mouseSet].active = true;
 				
-			case FlxInputDevice.Keyboard:
+			case FlxInputDevice.KEYBOARD:
 				if (keyboardSet >= 0 && keyboardSet < sets.length)
 					sets[keyboardSet].active = true;
 				
-			case FlxInputDevice.Gamepad:
+			case FlxInputDevice.GAMEPAD:
 				if (gamepadAllSet >= 0 && gamepadAllSet < sets.length)
 				{
 					sets[gamepadAllSet].active = true;
@@ -588,7 +588,7 @@ class ActionSetRegister implements IFlxDestroyable
 					}
 				}
 				
-			case FlxInputDevice.SteamController:
+			case FlxInputDevice.STEAM_CONTROLLER:
 				updateSteamInputs(sets);
 				if (steamControllerAllSet >= 0 && steamControllerAllSet < sets.length)
 				{
