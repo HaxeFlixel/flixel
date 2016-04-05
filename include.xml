@@ -14,6 +14,7 @@
 	<haxelib name="openfl" unless="create" />
 	<haxelib name="hscript" unless="create||coverage2" optional="true" />
 	
+	<haxedef name="HXCPP_QUIET" />
 	<haxeflag name="--macro" value="flixel.system.macros.FlxDefines.run()" />
 	
 	<section if="setup">
