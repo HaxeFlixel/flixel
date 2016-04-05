@@ -179,7 +179,7 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 	 */
 	public function addDigitalAction(Action:FlxActionDigital, ActionSet:Int):Bool
 	{
-		return addAction(Action, ActionSet, FlxInputType.Digital);
+		return addAction(Action, ActionSet, FlxInputType.DIGITAL);
 	}
 	
 	/**
@@ -190,7 +190,7 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 	 */
 	public function addAnalogAction(Action:FlxActionAnalog, ActionSet:Int):Bool
 	{
-		return addAction(Action, ActionSet, FlxInputType.Analog);
+		return addAction(Action, ActionSet, FlxInputType.ANALOG);
 	}
 	
 	/**
@@ -325,7 +325,7 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 		
 		if (ActionSet >= 0 && ActionSet < sets.length)
 		{
-			success = (type == FlxInputType.Digital) ? 
+			success = (type == FlxInputType.DIGITAL) ? 
 						sets[ActionSet].addDigital(cast Action) :
 						sets[ActionSet].addAnalog (cast Action);
 		}
