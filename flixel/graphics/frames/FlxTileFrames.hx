@@ -411,10 +411,10 @@ class FlxTileFrames extends FlxFramesCollection
 		}
 		
 		var side:Float = Math.sqrt(totalArea);
-		cols = Std.int(side / tileWidth);
-		rows = Math.ceil(totalArea / (cols * tileWidth * tileHeight));
-		var width:Int = Std.int(cols * tileWidth) + (cols - 1) * spaceX;
-		var height:Int = Std.int(rows * tileHeight) + (rows - 1) * spaceY;
+		cols = Std.int(side / (tileWidth + 2 * borderX));
+		rows = Math.ceil(totalArea / (cols * (tileWidth + 2 * borderX) * (tileHeight + 2 * borderY)));
+		var width:Int = Std.int(cols * (tileWidth + 2 * borderX)) + (cols - 1) * spaceX;
+		var height:Int = Std.int(rows * (tileHeight + 2 * borderY)) + (rows - 1) * spaceY;
 		
 		// now we'll create result atlas and will blit every tile on it.
 		var combined:BitmapData = new BitmapData(width, height, true, FlxColor.TRANSPARENT);
@@ -434,10 +434,11 @@ class FlxTileFrames extends FlxFramesCollection
 			for (frame in collection.frames)
 			{
 				frame.paint(combined, destPoint, true);
+				trace(destPoint);
 				result.addAtlasFrame(FlxRect.get(destPoint.x, destPoint.y, tileWidth, tileHeight), FlxPoint.get(tileWidth, tileHeight), FlxPoint.get(0, 0));				
 				destPoint.x += tileWidth + 2 * borderX + spaceX;
 				
-				if (destPoint.x >= combined.width - borderX)
+				if (destPoint.x >= combined.width)
 				{
 					destPoint.x = borderX;
 					destPoint.y += tileHeight + 2 * borderY + spaceY;
