@@ -1076,6 +1076,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 			{
 				if (buffer != null)
 					buffer.destroy();
+
 				_buffers[i] = createBuffer(camera);
 			}
 		}
