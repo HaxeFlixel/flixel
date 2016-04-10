@@ -1065,7 +1065,7 @@ class FlxTextFormat
 	 * @param   FontColor     Set the font color, in 0xRRGGBB format. By default, inherits from the default format.
 	 * @param   Bold          Set the font to bold. The font must support bold. By default, false. 
 	 * @param   Italic        Set the font to italics. The font must support italics. Only works in Flash. By default, false.  
-	 * @param   BorderColor   Set the border color, in 0xRRGGBB format. By default, no border (null / transparent).
+	 * @param   BorderColor   Set the border color, in 0xAARRGGBB format. By default, no border (null / transparent).
 	 */
 	public function new(?FontColor:FlxColor, ?Bold:Bool, ?Italic:Bool, ?BorderColor:FlxColor)
 	{
