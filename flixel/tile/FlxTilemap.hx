@@ -1073,10 +1073,10 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 			
 			
 			// Create a new buffer if the number of columns and rows differs
-			if (buffer != null)
-				buffer.destroy();
 			if (buffer == null || _helperBuffer.columns != buffer.columns || _helperBuffer.rows != buffer.rows)
-			{				
+			{                    
+                if (buffer != null)
+                    buffer.destroy();
 				_buffers[i] = createBuffer(camera);
 			}
 		}
