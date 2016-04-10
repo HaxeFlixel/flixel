@@ -1071,12 +1071,11 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 			_helperBuffer.updateColumns(_tileWidth, widthInTiles, scale.x, camera);
 			_helperBuffer.updateRows(_tileHeight, heightInTiles, scale.y, camera);
 			
-			
 			// Create a new buffer if the number of columns and rows differs
 			if (buffer == null || _helperBuffer.columns != buffer.columns || _helperBuffer.rows != buffer.rows)
 			{                    
-                if (buffer != null)
-                    buffer.destroy();
+				if (buffer != null)
+				buffer.destroy();
 				_buffers[i] = createBuffer(camera);
 			}
 		}
