@@ -152,15 +152,15 @@ class FlxPoint implements IFlxPooled
 	}
 	
 	/**
-	 * Scale this point.
+	 * Multiply this point by a scalar.
 	 * 
-	 * @param	k - scale coefficient
-	 * @return	scaled point
+	 * @param	scalar	How much times this point will be as it before.
+	 * @return	This point.
 	 */
-	public inline function scale(k:Float):FlxPoint
+	public function multiply(scalar:Float):FlxPoint
 	{
-		x *= k;
-		y *= k;
+		x *= scalar;
+		y *= scalar;
 		return this;
 	}
 	
