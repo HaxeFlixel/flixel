@@ -17,6 +17,11 @@
 	* added `Float` rounding (to `FlxG.debugger.precision` decimals)
 * `FlxStringUtil`: added `isNullOrEmpty()`
 * `FlxArrayUtil`: optimized `flatten2DArray()`
+* `FlxDefines`: added inverted versions for all `FLX_NO`-defines (e.g. `FLX_DEBUG` for `FLX_NO_DEBUG`)
+* `FlxTileFrames`: added `spacing` and `border` arguments to `combineTileSets()` and `combineTileFrames()` (#1807)
+* `FlxBitmapDataUtil`: added `copyBorderPixels()`
+* `FlxGame`: `GameWidth` and `GameHeight` in `new()` now use the window size if set to 0 (#1811)
+* `FlxPoint`: added `scale()` (#1811)
 
 4.0.1
 ------------------------------
