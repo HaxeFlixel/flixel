@@ -232,7 +232,7 @@ class FlxGame extends Sprite
 	 * @param	SkipSplash		Whether you want to skip the flixel splash screen in FLX_NO_DEBUG or not.
 	 * @param	StartFullscreen	Whether to start the game in fullscreen mode (desktop targets only), false by default
 	 */
-	public function new(GameSizeX:Int = 640, GameSizeY:Int = 480, ?InitialState:Class<FlxState>, Zoom:Float = 1, UpdateFramerate:Int = 60, DrawFramerate:Int = 60, SkipSplash:Bool = false, StartFullscreen:Bool = false)
+	public function new(GameSizeX:Int = 0, GameSizeY:Int = 0, ?InitialState:Class<FlxState>, Zoom:Float = 1, UpdateFramerate:Int = 60, DrawFramerate:Int = 60, SkipSplash:Bool = false, StartFullscreen:Bool = false)
 	{
 		super();
 		
@@ -243,6 +243,14 @@ class FlxGame extends Sprite
 		// Super high priority init stuff
 		_inputContainer = new Sprite();
 		
+		if (GameSizeX == 0)
+		{
+			GameSizeX = Std.int(Lib.current.stage.window.width);
+		}
+		if (GameSizeY == 0)
+		{
+			GameSizeY = Std.int(Lib.current.stage.window.height);
+		}
 		// Basic display and update setup stuff
 		FlxG.init(this, GameSizeX, GameSizeY, Zoom);
 		
@@ -561,7 +569,7 @@ class FlxGame extends Sprite
 		
 		if (_skipSplash || FlxSplash.nextState != null) // already played
 		{
-			_requestedState = cast Type.createInstance(_initialState, []);
+			_requestedState = cast (Type.createInstance(_initialState, []));
 			if (FlxSplash.nextState == null)
 			{
 				_gameJustStarted = true;
