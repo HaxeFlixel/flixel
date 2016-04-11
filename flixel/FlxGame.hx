@@ -247,9 +247,9 @@ class FlxGame extends Sprite
 		_inputContainer = new Sprite();
 		
 		if (GameWidth == 0)
-			GameWidth = Std.int(FlxG.stage.stageWidth);
+			GameWidth = FlxG.stage.stageWidth;
 		if (GameHeight == 0)
-			GameHeight = Std.int(FlxG.stage.stageHeight);
+			GameHeight = FlxG.stage.stageHeight;
 
 		// Basic display and update setup stuff
 		FlxG.init(this, GameWidth, GameHeight, Zoom);
