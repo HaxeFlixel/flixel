@@ -223,8 +223,8 @@ class FlxGame extends Sprite
 	/**
 	 * Instantiate a new game object.
 	 * 
-	 * @param	GameSizeX		The width of your game in game pixels, not necessarily final display pixels (see Zoom).
-	 * @param	GameSizeY		The height of your game in game pixels, not necessarily final display pixels (see Zoom).
+	 * @param	GameSizeX		The width of your game in game pixels, not necessarily final display pixels (see Zoom). If it is less than 0, HaxeFlixel will auto detect the width according to the current window.
+	 * @param	GameSizeY		The height of your game in game pixels, not necessarily final display pixels (see Zoom). If it is less than 0, HaxeFlixel will auto detect the height according to the current window.
 	 * @param	InitialState	The class name of the state you want to create and switch to first (e.g. MenuState).
 	 * @param	Zoom			The default level of zoom for the game's cameras (e.g. 2 = all pixels are now drawn at 2x).  Default = 1.
 	 * @param	UpdateFramerate	How frequently the game should update (default is 60 times per second).
@@ -243,11 +243,11 @@ class FlxGame extends Sprite
 		// Super high priority init stuff
 		_inputContainer = new Sprite();
 		
-		if (GameSizeX == 0)
+		if (GameSizeX <= 0)
 		{
 			GameSizeX = Std.int(Lib.current.stage.window.width);
 		}
-		if (GameSizeY == 0)
+		if (GameSizeY <= 0)
 		{
 			GameSizeY = Std.int(Lib.current.stage.window.height);
 		}
