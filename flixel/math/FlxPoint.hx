@@ -371,7 +371,7 @@ class FlxPoint implements IFlxPooled
 			{
 				angle = c2 - c1 * ((x + ay) / (ay - x));
 			}
-			angle = ((y < 0) ? - angle : angle) * FlxAngle.TO_DEG;
+			angle = ((y < 0) ? -angle : angle) * FlxAngle.TO_DEG;
 			
 			if (angle > 90)
 			{
