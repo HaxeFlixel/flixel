@@ -245,11 +245,11 @@ class FlxGame extends Sprite
 		
 		if (GameSizeX <= 0)
 		{
-			GameSizeX = Std.int(Lib.current.stage.window.width);
+			GameSizeX = Std.int(Lib.current.stage.stageWidth);
 		}
 		if (GameSizeY <= 0)
 		{
-			GameSizeY = Std.int(Lib.current.stage.window.height);
+			GameSizeY = Std.int(Lib.current.stage.stageHeight);
 		}
 		// Basic display and update setup stuff
 		FlxG.init(this, GameSizeX, GameSizeY, Zoom);
