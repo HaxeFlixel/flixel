@@ -155,9 +155,9 @@ class FlxPoint implements IFlxPooled
 	 * Scale this point.
 	 * 
 	 * @param	k - scale coefficient
-	 * @return	scaled vector
+	 * @return	scaled point
 	 */
-	public inline function scale(k:Float):FlxVector
+	public inline function scale(k:Float):FlxPoint
 	{
 		x *= k;
 		y *= k;
