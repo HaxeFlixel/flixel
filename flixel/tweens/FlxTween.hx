@@ -800,13 +800,18 @@ class FlxTweenManager extends FlxBasic
 		}
 	}
 	/**
-	 * Immediately updates all tweens of type PERSIST or ONESHOT to their endings.
+	 * Immediately updates all tweens of type PERSIST or ONESHOT through their endings, triggering their onComplete callbacks.
+	 * 
+	 * Note: if they haven't yet begun, this will first trigger their onStart callback.
+	 * 
+	 * In no case should it trigger an onUpdate callback.
 	 */
 	public function completeAll():Void
 	{
 		for (tween in _tweens)
-			if (tween.type == FlxTween.PERSIST || tween.type == FlxTween.ONESHOT)
-				tween.update(tween.duration);
+			if (tween.type == FlxTween.PERSIST || tween.type == FlxTween.ONESHOT) {
+				tween.update(Math.POSITIVE_INFINITY);
+			}
 	}
 	/**
 	 * Applies a function to all tweens
