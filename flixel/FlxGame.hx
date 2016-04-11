@@ -226,7 +226,7 @@ class FlxGame extends Sprite
 	 * @param GameWidth       The width of your game in game pixels, not necessarily final display pixels (see `Zoom`).
 	 *                        If equal to 0, the window width specified in the `Project.xml` is used.
 	 * @param GameHeight      The height of your game in game pixels, not necessarily final display pixels (see `Zoom`).
-	 *                        If equal to 0, the window width specified in the `Project.xml` is used.
+	 *                        If equal to 0, the window height specified in the `Project.xml` is used.
 	 * @param InitialState    The class name of the state you want to create and switch to first (e.g. `MenuState`).
 	 * @param Zoom            The default level of zoom for the game's cameras (e.g. 2 = all pixels are now drawn at 2x).
 	 * @param UpdateFramerate How frequently the game should update (default is 60 times per second).
