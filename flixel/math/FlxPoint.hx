@@ -152,6 +152,19 @@ class FlxPoint implements IFlxPooled
 	}
 	
 	/**
+	 * Multiply this point by a scalar.
+	 * 
+	 * @param	scalar	How much times this point will be as it before.
+	 * @return	This point.
+	 */
+	public function multiply(scalar:Float):FlxPoint
+	{
+		x *= scalar;
+		y *= scalar;
+		return this;
+	}
+	
+	/**
 	 * Helper function, just copies the values from the specified point.
 	 * 
 	 * @param	point	Any FlxPoint.
@@ -358,7 +371,7 @@ class FlxPoint implements IFlxPooled
 			{
 				angle = c2 - c1 * ((x + ay) / (ay - x));
 			}
-			angle = ((y < 0) ? -angle : angle) * FlxAngle.TO_DEG;
+			angle = ((y < 0) ? - angle : angle) * FlxAngle.TO_DEG;
 			
 			if (angle > 90)
 			{
