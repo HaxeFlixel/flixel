@@ -1,6 +1,5 @@
 package flixel.system.debug.watch;
 
-import Type.ValueType;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import openfl.events.FocusEvent;
 import openfl.events.KeyboardEvent;
