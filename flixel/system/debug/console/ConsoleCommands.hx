@@ -45,6 +45,14 @@ class ConsoleCommands
 		
 		// Default classes to include
 		console.registerClass(Math);
+		console.registerClass(Reflect);
+		console.registerClass(Std);
+		console.registerClass(StringTools);
+		#if sys
+		console.registerClass(Sys);
+		#end
+		console.registerClass(Type);
+
 		console.registerClass(FlxG);
 		console.registerClass(FlxSprite);
 		console.registerClass(FlxMath);
