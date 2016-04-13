@@ -70,20 +70,23 @@ class EditableTextField extends TextField implements IFlxDestroyable
 		switch (e.keyCode)
 		{
 			case Keyboard.UP:
-				modifyNumericValue(1);
+				if (!modifyNumericValue(1))
+					setSelection(0, 0);
 			case Keyboard.DOWN:
-				modifyNumericValue(-1);
+				if (!modifyNumericValue(-1))
+					setSelection(length, length);
 		}
 	}
 	
-	private function modifyNumericValue(modifier:Int)
+	private function modifyNumericValue(modifier:Int):Bool
 	{
 		var value:Float = Std.parseFloat(text);
 		if (Math.isNaN(value))
-			return;
+			return false;
 
 		value += modifier;
 		text = Std.string(value);
+		return true;
 	}
 
 	private function onFocusLost(_)
