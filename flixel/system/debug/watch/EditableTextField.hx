@@ -1,5 +1,6 @@
 package flixel.system.debug.watch;
 
+import Type.ValueType;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import openfl.events.FocusEvent;
 import openfl.events.KeyboardEvent;
@@ -31,6 +32,7 @@ class EditableTextField extends TextField implements IFlxDestroyable
 			editFormat = new TextFormat(defaultFormat.font, defaultFormat.size, 0x000000);
 			
 			addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
+			addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 			addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 			addEventListener(FocusEvent.FOCUS_OUT, onFocusLost);
 		}
@@ -40,8 +42,9 @@ class EditableTextField extends TextField implements IFlxDestroyable
 	{
 		if (allowEditing)
 		{
-			removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 			removeEventListener(KeyboardEvent.KEY_UP, onKeyUp);
+			removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+			removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 			removeEventListener(FocusEvent.FOCUS_OUT, onFocusLost);
 		}
 	}
@@ -53,12 +56,36 @@ class EditableTextField extends TextField implements IFlxDestroyable
 	
 	private function onKeyUp(e:KeyboardEvent):Void
 	{
-		if (e.keyCode == Keyboard.ENTER)
-			submit();
-		else if (e.keyCode == Keyboard.ESCAPE)
-			setIsEditing(false);
+		switch (e.keyCode)
+		{
+			case Keyboard.ENTER:
+				submit();
+			case Keyboard.ESCAPE:
+				setIsEditing(false);
+		}
+	}
+
+	private function onKeyDown(e:KeyboardEvent):Void
+	{
+		switch (e.keyCode)
+		{
+			case Keyboard.UP:
+				modifyNumericValue(1);
+			case Keyboard.DOWN:
+				modifyNumericValue(-1);
+		}
 	}
 	
+	private function modifyNumericValue(modifier:Int)
+	{
+		var value:Float = Std.parseFloat(text);
+		if (Math.isNaN(value))
+			return;
+
+		value += modifier;
+		text = Std.string(value);
+	}
+
 	private function onFocusLost(_)
 	{
 		setIsEditing(false);
