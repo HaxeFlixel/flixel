@@ -32,7 +32,7 @@ class FlxSubState extends FlxState
 	/**
 	 * @param	BGColor		background color for this substate
 	 */
-	public function new(BGColor:FlxColor = 0)
+	public function new(BGColor:FlxColor = FlxColor.TRANSPARENT)
 	{
 		super();
 		closeCallback = null;
@@ -68,10 +68,7 @@ class FlxSubState extends FlxState
 		super.destroy();
 		closeCallback = null;
 		_parentState = null;
-		if (FlxG.renderTile)
-		{
-			_bgSprite = null;
-		}
+		_bgSprite = null;
 	}
 	
 	/**
@@ -85,20 +82,15 @@ class FlxSubState extends FlxState
 		}
 	}
 	
-	override private inline function get_bgColor():Int
+	override private inline function get_bgColor():FlxColor
 	{
 		return _bgColor;
 	}
 	
-	override private function set_bgColor(Value:Int):Int
+	override private function set_bgColor(Value:FlxColor):FlxColor
 	{
-		if (FlxG.renderTile)
-		{
-			if (_bgSprite != null)
-			{
-				_bgSprite.pixels.setPixel32(0, 0, Value);
-			}
-		}
+		if (FlxG.renderTile && _bgSprite != null)
+			_bgSprite.pixels.setPixel32(0, 0, Value);
 		
 		return _bgColor = Value;
 	}
