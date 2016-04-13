@@ -16,6 +16,7 @@
 * `WatchEntry`:
 	* added a remove button
 	* added `Float` rounding (to `FlxG.debugger.precision` decimals)
+	* added support for in- / decrement of numeric values via up / down keys
 * `FlxStringUtil`: added `isNullOrEmpty()`
 * `FlxArrayUtil`: optimized `flatten2DArray()`
 * `FlxDefines`: added inverted versions for all `FLX_NO`-defines (e.g. `FLX_DEBUG` for `FLX_NO_DEBUG`)
