@@ -54,7 +54,6 @@ class FlxGamepadAnalogStateList
 		{
 			var yReleased = checkRaw(stick.y, RELEASED);
 			var yJustReleased = checkRaw(stick.y, JUST_RELEASED);
-			var yJustPressed = checkRaw(stick.y, JUST_PRESSED);
 			if (yReleased || yJustReleased) 
 			{
 				return true;
@@ -65,7 +64,6 @@ class FlxGamepadAnalogStateList
 		{
 			var xReleased = checkRaw(stick.x, RELEASED);
 			var xJustReleased = checkRaw(stick.x, JUST_RELEASED);
-			var xJustPressed = checkRaw(stick.x, JUST_PRESSED);
 			if (xReleased || xJustReleased)
 			{
 				return true;
