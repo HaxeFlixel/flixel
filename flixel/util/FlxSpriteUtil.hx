@@ -51,44 +51,17 @@ class FlxSpriteUtil
 	 * @param	mask		The mask to apply. Remember the non-alpha zero areas are the parts that will display.
 	 * @return 	The FlxSprite for chaining
 	 */
-	public static function alphaMask(output:FlxSprite, source:Dynamic, mask:Dynamic):FlxSprite
+	public static function alphaMask(output:FlxSprite, source:FlxGraphicSource, mask:FlxGraphicSource):FlxSprite
 	{
-		var data:BitmapData = null;
-		if (Std.is(source, String))
-		{
-			data = FlxAssets.getBitmapData(source);
-		}
-		else if (Std.is(source, Class))
-		{
-			data = Type.createInstance(source, []).bitmapData;
-		}
-		else if (Std.is(source, BitmapData))
-		{
-			data = cast source;
-			data = data.clone();
-		}
-		else
-		{
-			return null;
-		}
-		var maskData:BitmapData = null;
-		if (Std.is(mask, String))
-		{
-			maskData = FlxAssets.getBitmapData(mask);
-		}
-		else if (Std.is(mask, Class))
-		{
-			maskData = Type.createInstance(mask, []).bitmapData;
-		}
-		else if (Std.is(mask, BitmapData))
-		{
-			maskData = mask;
-		}
-		else
+		var data:BitmapData = FlxAssets.resolveBitmapData(source);
+		var maskData:BitmapData = FlxAssets.resolveBitmapData(mask);
+		
+		if (data == null || maskData == null)
 		{
 			return null;
 		}
 		
+		data = data.clone();
 		data.copyChannel(maskData, new Rectangle(0, 0, data.width, data.height), new Point(), BitmapDataChannel.ALPHA, BitmapDataChannel.ALPHA);
 		output.pixels = data;
 		return output;
