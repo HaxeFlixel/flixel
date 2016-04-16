@@ -95,7 +95,7 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 			#end
 			
 			tempFlags |= blending;
-			#if (!openfl_legacy && openfl >= "3.6.0")
+			#if (!openfl_legacy && openfl >= "3.3.9")
 			camera.canvas.graphics.drawTiles(graphics.tilesheet, drawData, (camera.antialiasing || antialiasing), tempFlags, shader, position);
 			#else
 			graphics.tilesheet.drawTiles(camera.canvas.graphics, drawData, (camera.antialiasing || antialiasing), tempFlags, position);
