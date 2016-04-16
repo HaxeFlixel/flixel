@@ -15,10 +15,6 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxStringUtil;
 import openfl.Assets;
 
-#if FLX_SOUND_SYSTEM
-import flixel.system.frontEnds.SoundFrontEnd;
-#end
-
 /**
  * This is the universal flixel sound object, used for streaming, music, and sound effects.
  */
