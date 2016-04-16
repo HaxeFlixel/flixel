@@ -11,9 +11,9 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxState;
-import flixel.FlxSubState;
+import flixel.effects.particles.FlxEmitter.FlxTypedEmitter;
 import flixel.group.FlxSpriteGroup;
-import flixel.group.FlxGroup;
+import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.gamepad.FlxGamepad;
 import flixel.input.mouse.FlxMouse;
 import flixel.input.touch.FlxTouch;
@@ -22,15 +22,15 @@ import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
 import flixel.tweens.FlxTween;
 import flixel.ui.FlxBar;
-import flixel.ui.FlxButton;
+import flixel.ui.FlxButton.FlxTypedButton;
 import flixel.util.FlxPath;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.util.FlxTimer;
 import flixel.animation.FlxAnimationController;
-import flixel.effects.particles.FlxEmitter;
 using flixel.util.FlxArrayUtil;
 #end
+
 import flixel.util.FlxStringUtil;
 
 class Tracker extends Watch

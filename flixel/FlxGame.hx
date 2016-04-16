@@ -1,24 +1,17 @@
 package flixel;
 
-import flash.display.Bitmap;
-import flash.display.BitmapData;
+import flash.Lib;
 import flash.display.Sprite;
 import flash.display.StageAlign;
 import flash.display.StageScaleMode;
 import flash.events.Event;
 import flash.events.FocusEvent;
-import flash.geom.ColorTransform;
-import flash.geom.Matrix;
-import flash.Lib;
 import flixel.effects.postprocess.PostProcess;
 import flixel.graphics.tile.FlxTilesheet;
-import flixel.math.FlxAngle;
 import flixel.math.FlxRandom;
 import flixel.system.FlxSplash;
 import flixel.system.replay.FlxReplay;
 import flixel.util.FlxArrayUtil;
-import flixel.util.FlxColor;
-import flixel.util.FlxDestroyUtil;
 import openfl.Assets;
 import openfl.filters.BitmapFilter;
 
@@ -814,12 +807,13 @@ class FlxGame extends Sprite
 		}
 		else
 		{
+			FlxG.inputs.update();
+		}
+		#else
+		FlxG.inputs.update();
 		#end
 		
-		FlxG.inputs.update();
-		
 		#if FLX_RECORD
-		}
 		if (recording)
 		{
 			_replay.recordFrame();
