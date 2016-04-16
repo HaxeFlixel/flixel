@@ -5,6 +5,7 @@ import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.tile.FlxDrawBaseItem.FlxDrawItemType;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxRect;
+import openfl.display.Shader;
 import openfl.display.Tilesheet;
 import openfl.geom.ColorTransform;
 
@@ -13,6 +14,7 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 	public var drawData:Array<Float> = [];
 	public var position:Int = 0;
 	public var numTiles(get, never):Int;
+	public var shader:Shader;
 	
 	public function new() 
 	{
@@ -24,12 +26,14 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 	{
 		super.reset();
 		position = 0;
+		shader = null;
 	}
 	
 	override public function dispose():Void
 	{
 		super.dispose();
 		drawData = null;
+		shader = null;
 	}
 	
 	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform):Void
@@ -91,7 +95,11 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 			#end
 			
 			tempFlags |= blending;
+			#if (!openfl_legacy && openfl >= "3.6.0")
+			camera.canvas.graphics.drawTiles(graphics.tilesheet, drawData, (camera.antialiasing || antialiasing), tempFlags, shader, position);
+			#else
 			graphics.tilesheet.drawTiles(camera.canvas.graphics, drawData, (camera.antialiasing || antialiasing), tempFlags, position);
+			#end
 			FlxTilesheet._DRAWCALLS++;
 		}
 	}

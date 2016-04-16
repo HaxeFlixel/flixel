@@ -20,6 +20,7 @@ import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.util.FlxBitmapDataUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
+import openfl.display.Shader;
 using flixel.util.FlxColorTransformUtil;
 
 @:keep @:bitmap("assets/images/logo/default.png")
@@ -157,6 +158,8 @@ class FlxSprite extends FlxObject
 	 */
 	public var clipRect(default, set):FlxRect;
 	
+	public var shader:Shader;
+	
 	/**
 	 * The actual frame used for sprite rendering
 	 */
@@ -272,6 +275,8 @@ class FlxSprite extends FlxObject
 		graphic = null;
 		_frame = FlxDestroyUtil.destroy(_frame);
 		_frameGraphic = FlxDestroyUtil.destroy(_frameGraphic);
+		
+		shader = null;
 	}
 	
 	public function clone():FlxSprite
@@ -660,7 +665,7 @@ class FlxSprite extends FlxObject
 			_point.floor();
 		
 		_matrix.translate(_point.x, _point.y);
-		camera.drawPixels(_frame, framePixels, _matrix, colorTransform, blend, antialiasing);
+		camera.drawPixels(_frame, framePixels, _matrix, colorTransform, blend, antialiasing, shader);
 	}
 	
 	/**
