@@ -72,10 +72,10 @@ class FlxBar extends FlxSprite
 	 */
 	public var pct(default, null):Float;
 	/**
-	 * Number of frames FlxBar will have. Default value is 100. 
-	 * But you could set it to 200%, so 100% will mean half-full bar.
+	 * Number of frames FlxBar will have. Default value is 100.
+	 * The bigger value you set then visual will change smoother.
 	 */
-	public var maxPercent(default, set):Int = 100;
+	public var numDivisions(default, set):Int = 100;
 	/**
 	 * This function will be called when value will hit it's minimum
 	 */
@@ -127,6 +127,8 @@ class FlxBar extends FlxSprite
 	
 	private var _filledBarRect:Rectangle;
 	private var _filledBarPoint:Point;
+	
+	private var _maxPercent:Int = 100;
 	
 	/**
 	 * Create a new FlxBar Object
@@ -291,9 +293,9 @@ class FlxBar extends FlxSprite
 		this.min = min;
 		this.max = max;
 		this.range = max - min;
-		this.pct = range / maxPercent;
+		this.pct = range / _maxPercent;
 		
-		pxPerPercent = (_fillHorizontal) ? (barWidth / maxPercent) : (barHeight / maxPercent);
+		pxPerPercent = (_fillHorizontal) ? (barWidth / _maxPercent) : (barHeight / _maxPercent);
 		
 		if (!Math.isNaN(value))
 		{
@@ -664,7 +666,7 @@ class FlxBar extends FlxSprite
 					makeGraphic(barWidth, barHeight, FlxColor.TRANSPARENT, true);
 				}
 				
-				pxPerPercent = (_fillHorizontal) ? (barWidth / maxPercent) : (barHeight / maxPercent);
+				pxPerPercent = (_fillHorizontal) ? (barWidth / _maxPercent) : (barHeight / _maxPercent);
 				updateFilledBar();
 			}
 		}
@@ -727,13 +729,19 @@ class FlxBar extends FlxSprite
 		_filledBarRect.width = barWidth;
 		_filledBarRect.height = barHeight;
 		
+		var fraction:Float = (value - min) / range;
+		var percent:Float = fraction * _maxPercent;
+		var maxScale:Float = (_fillHorizontal) ? barWidth : barHeight;
+		var scaleInterval:Float = maxScale / numDivisions;
+		var interval:Float = Std.int(fraction * maxScale / scaleInterval) * scaleInterval;
+		
 		if (_fillHorizontal)
 		{
-			_filledBarRect.width = Std.int(percent * pxPerPercent);
+			_filledBarRect.width = Std.int(interval);
 		}
 		else
 		{
-			_filledBarRect.height = Std.int(percent * pxPerPercent);
+			_filledBarRect.height = Std.int(interval);
 		}
 		
 		if (percent > 0)
@@ -756,7 +764,7 @@ class FlxBar extends FlxSprite
 					_filledBarPoint.x = Std.int((barWidth / 2) - (_filledBarRect.width / 2));
 				
 				case HORIZONTAL_OUTSIDE_IN:
-					_filledBarRect.width = Std.int(maxPercent - percent * pxPerPercent);
+					_filledBarRect.width = Std.int(maxScale - interval);
 					_filledBarPoint.x = Std.int((barWidth - _filledBarRect.width) / 2);
 				
 				case VERTICAL_INSIDE_OUT:
@@ -764,7 +772,7 @@ class FlxBar extends FlxSprite
 					_filledBarPoint.y = Std.int((barHeight / 2) - (_filledBarRect.height / 2));
 					
 				case VERTICAL_OUTSIDE_IN:
-					_filledBarRect.height = Std.int(maxPercent - percent * pxPerPercent);
+					_filledBarRect.height = Std.int(maxScale - interval);
 					_filledBarPoint.y = Std.int((barHeight - _filledBarRect.height) / 2);
 			}
 			
@@ -879,24 +887,17 @@ class FlxBar extends FlxSprite
 	
 	private function get_percent():Float
 	{
-		#if neko
-		if (value == null) 
-		{
-			value = min;
-		}
-		#end
-
 		if (value > max)
 		{
-			return maxPercent;
+			return _maxPercent;
 		}
 		
-		return Math.floor((value / range) * maxPercent);
+		return Math.floor(((value - min) / range) * _maxPercent);
 	}
 
 	private function set_percent(newPct:Float):Float
 	{
-		if (newPct >= 0 && newPct <= maxPercent)
+		if (newPct >= 0 && newPct <= _maxPercent)
 		{
 			value = pct * newPct;
 		}
@@ -928,13 +929,20 @@ class FlxBar extends FlxSprite
 	
 	private function get_value():Float
 	{
+		#if neko
+		if (value == null) 
+		{
+			value = min;
+		}
+		#end
+		
 		return value;
 	}
 	
-	private function set_maxPercent(newValue:Int):Int
+	private function set_numDivisions(newValue:Int):Int
 	{
-		maxPercent = (newValue > 0) ? newValue : 100;
-		setRange(min, max);
+		numDivisions = (newValue > 0) ? newValue : 100;
+		updateFilledBar();
 		return newValue;
 	}
 	
