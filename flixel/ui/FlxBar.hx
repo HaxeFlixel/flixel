@@ -935,7 +935,6 @@ class FlxBar extends FlxSprite
 	{
 		maxPercent = (newValue > 0) ? newValue : 100;
 		setRange(min, max);
-		updateBar();
 		return newValue;
 	}
 	
