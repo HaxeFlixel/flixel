@@ -23,6 +23,7 @@ import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
 import openfl.display.BlendMode;
+import openfl.display.Shader;
 import openfl.geom.ColorTransform;
 using flixel.util.FlxColorTransformUtil;
 
@@ -89,6 +90,8 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 * Blending modes, just like Photoshop or whatever, e.g. "multiply", "screen", etc.
 	 */
 	public var blend(default, set):BlendMode = null;
+	
+	public var shader:Shader;
 	
 	/**
 	 * Rendering helper, minimize new object instantiation on repetitive methods.
@@ -191,6 +194,8 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		if (FlxG.renderBlit)
 			FlxG.debugger.drawDebugChanged.remove(onDrawDebugChanged);
 		#end
+		
+		shader = null;
 		
 		super.destroy();
 	}
@@ -806,7 +811,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 			scaledHeight = _scaledTileHeight;
 			
 			var hasColorOffsets:Bool = (colorTransform != null && colorTransform.hasRGBAOffsets());
-			drawItem = Camera.startQuadBatch(graphic, isColored, hasColorOffsets, blend);
+			drawItem = Camera.startQuadBatch(graphic, isColored, hasColorOffsets, blend, false, shader);
 		}
 		
 		// Copy tile images into the tile buffer
