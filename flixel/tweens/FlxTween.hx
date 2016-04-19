@@ -17,6 +17,7 @@ import flixel.tweens.motion.QuadPath;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
+import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 
 class FlxTween implements IFlxDestroyable
@@ -810,7 +811,7 @@ class FlxTweenManager extends FlxBasic
 	{
 		for (tween in _tweens)
 			if (tween.type == FlxTween.PERSIST || tween.type == FlxTween.ONESHOT) {
-				tween.update(Math.POSITIVE_INFINITY);
+				tween.update(FlxMath.MAX_VALUE_FLOAT);
 			}
 	}
 	/**
