@@ -73,7 +73,7 @@ class EditableTextField extends TextField implements IFlxDestroyable
 					setSelection(0, 0);
 			case Keyboard.DOWN:
 				if (!modifyNumericValue(-1))
-					setSelection(length, length);
+					setSelection(text.length, text.length);
 		}
 	}
 	
