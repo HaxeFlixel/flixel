@@ -12,7 +12,7 @@ class FlxButtonTest extends FlxTest
 	@Before
 	function before()
 	{
-		button = new FlxButton();
+		button = new FlxButton(1); // put it slightly to the right of the cursor so that it isn't highlighted by default
 		destroyable = button;
 	}
 	
