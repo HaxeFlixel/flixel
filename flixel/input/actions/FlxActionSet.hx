@@ -7,6 +7,7 @@ import flixel.input.actions.FlxAction;
 import flixel.input.actions.FlxActionInput;
 import flixel.input.actions.FlxActionInputAnalog;
 import flixel.input.actions.FlxActionInputDigital;
+import haxe.Json;
 
 #if steamwrap
 import steamwrap.api.Steam;
@@ -94,10 +95,72 @@ class FlxActionSet implements IFlxDestroyable
 	}
 	#end
 	
-	public static function toJSON():String
+	/**
+	 * Create an action set from a parsed JSON object
+	 * 
+	 * @param	Data	A parsed JSON object
+	 * @param	CallbackDigital	A function to call when digital actions fire
+	 * @param	CallbackAnalog	A function to call when analog actions fire
+	 * @return	An action set
+	 */
+	@:access(flixel.input.actions.FlxActionManager)
+	private static function fromJSON(Data:Dynamic, CallbackDigital:FlxActionDigital->Void, CallbackAnalog:FlxActionAnalog->Void):FlxActionSet
 	{
-		//export
-		return "";
+		var digitalActions:Array<FlxActionDigital> = [];
+		var analogActions:Array<FlxActionAnalog> = [];
+		
+		if (Data == null) return null;
+		
+		if (Reflect.hasField(Data, "digitalActions"))
+		{
+			var arrD:Array<Dynamic> = Reflect.field(Data, "digitalActions");
+			for (d in arrD)
+			{
+				var dName:String = cast d;
+				var action = new FlxActionDigital(dName, CallbackDigital);
+				digitalActions.push(action);
+			}
+		}
+		
+		if (Reflect.hasField(Data, "analogActions"))
+		{
+			var arrA:Array<Dynamic> = Reflect.field(Data, "analogActions");
+			for (a in arrA)
+			{
+				var aName:String = cast a;
+				var action = new FlxActionAnalog(aName, CallbackAnalog);
+				analogActions.push(action);
+			}
+		}
+		
+		if (Reflect.hasField(Data, "name"))
+		{
+			var name:String = cast Reflect.field(Data, "name");
+			var set = new FlxActionSet(name, digitalActions, analogActions);
+			return set;
+		}
+		
+		return null;
+	}
+	
+	public function toJSON():String
+	{
+		var space:String = "\t";
+		return Json.stringify(this, function(key:Dynamic, value:Dynamic):Dynamic{
+			
+			if (Std.is(value, FlxAction))
+			{
+				var fa:FlxAction = cast value;
+				return {
+					"type": fa.type,
+					"name": fa.name,
+					"steamHandle": fa.steamHandle
+				}
+			}
+			
+			return value;
+			
+		}, space);
 	}
 	
 	public function new(Name:String, DigitalActions:Array<FlxActionDigital>, AnalogActions:Array<FlxActionAnalog>)
