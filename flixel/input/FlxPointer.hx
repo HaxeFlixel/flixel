@@ -120,8 +120,8 @@ class FlxPointer
 	 */
 	public inline function setGlobalScreenPositionUnsafe(newX:Float, newY:Float):Void 
 	{
-		_globalScreenX = Std.int(newX / FlxG.scaleMode.scale.x);
-		_globalScreenY = Std.int(newY / FlxG.scaleMode.scale.y);
+		_globalScreenX = Std.int(FlxG.scaleMode.mouseMultiplier.x * newX / FlxG.scaleMode.scale.x);
+		_globalScreenY = Std.int(FlxG.scaleMode.mouseMultiplier.y * newY / FlxG.scaleMode.scale.y);
 		
 		updatePositions();
 	}

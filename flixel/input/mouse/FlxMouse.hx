@@ -397,8 +397,8 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 		//actually position the flixel mouse cursor graphic
 		if (visible)
 		{
-			cursorContainer.x = FlxG.game.mouseX;
-			cursorContainer.y = FlxG.game.mouseY;
+			cursorContainer.x = this.screenX;
+			cursorContainer.y = this.screenY;
 		}
 		#end
 		
