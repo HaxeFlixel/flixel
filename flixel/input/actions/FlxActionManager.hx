@@ -11,6 +11,7 @@ import flixel.input.IFlxInput;
 import flixel.input.actions.FlxAction;
 import flixel.input.mouse.FlxMouseButton;
 import flixel.input.gamepad.FlxGamepadInputID;
+import haxe.Json;
 
 #if steamwrap
 import steamwrap.api.Controller;
@@ -266,7 +267,7 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 	 * @param	CallbackAnalog	Callback function for analog actions
 	 * @return	The number of new FlxActionSets created and added. 0 means nothing happened.
 	 */
-	public function initSteam(Config:ControllerConfig, CallbackDigital:FlxActionDigital->Void, CallbackAnalog:FlxActionAnalog->Void)
+	public function initSteam(Config:ControllerConfig, CallbackDigital:FlxActionDigital->Void, CallbackAnalog:FlxActionAnalog->Void):Int
 	{
 		var i:Int = 0;
 		for (set in Config.actionSets)
@@ -282,6 +283,61 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 		return i;
 	}
 	#end
+	
+	/**
+	 * Load action sets from a parsed JSON object
+	 * @param	data	JSON object parsed from the same format that "exportToJSON()" outputs
+	 * @param	CallbackDigital	Callback function for digital actions
+	 * @param	CallbackAnalog	Callback function for analog actions
+	 * @return	The number of new FlxActionSets created and added. 0 means nothing happened.
+	 */
+	public function initFromJSON(data:Dynamic, CallbackDigital:FlxActionDigital->Void, CallbackAnalog:FlxActionAnalog->Void):Int
+	{
+		if (data == null) return 0;
+		
+		var i:Int = 0;
+		var actionSets:Array<Dynamic> = Reflect.hasField(data, "actionSets") ? Reflect.field(data, "actionSets") : null;
+		if (actionSets == null) return 0;
+		
+		for (set in actionSets)
+		{
+			if (addSet(FlxActionSet.fromJSON(set, CallbackDigital, CallbackAnalog)) != -1)
+			{
+				trace("added set : " + sets[sets.length - 1].name);
+				i++;
+			}
+		}
+		
+		onChange();
+		
+		return i;
+	}
+	
+	@:access(flixel.input.actions.FlxAction)
+	public function exportToJSON():String
+	{
+		var space:String = "\t";
+		return Json.stringify({"actionSets":sets}, function(key:Dynamic, value:Dynamic):Dynamic{
+			
+			if (Std.is(value, FlxAction))
+			{
+				var fa:FlxAction = cast value;
+				return fa.name;
+			}
+			if (Std.is(value, FlxActionSet))
+			{
+				var fas:FlxActionSet = cast value;
+				return {
+					"name": fas.name,
+					"digitalActions": fas.digitalActions,
+					"analogActions": fas.analogActions
+				}
+			}
+			
+			return value;
+			
+		}, space);
+	}
 	
 	/**
 	 * Remove a set from the manager
