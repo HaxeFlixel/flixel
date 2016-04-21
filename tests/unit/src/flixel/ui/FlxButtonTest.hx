@@ -12,7 +12,7 @@ class FlxButtonTest extends FlxTest
 	@Before
 	function before()
 	{
-		button = new FlxButton(1); // put it slightly to the right of the cursor so that it isn't highlighted by default
+		button = new FlxButton();
 		destroyable = button;
 	}
 	
@@ -66,10 +66,23 @@ class FlxButtonTest extends FlxTest
 	{
 		setAndAssertText(null);
 	}
+
+	@Test // #1818
+	function testHighlightStatusInUpperLeftCorner()
+	{
+		FlxG.state.add(button);
+
+		button.setPosition();
+		step(1);
+		Assert.areEqual(FlxButton.HIGHLIGHT, button.status);
+
+		FlxG.state.remove(button);
+	}
 	
 	@Test // #1365
 	function testTriggerAnimationOnce()
 	{
+		button.x = 1; // put it slightly to the right of the cursor so that it isn't highlighted by default
 		button.animation.add("normal", [for (i in 0...4) 0], 30, false);
 		FlxG.state.add(button);
 		step(2);
@@ -80,6 +93,7 @@ class FlxButtonTest extends FlxTest
 		step(10);
 		Assert.areEqual("normal", button.animation.curAnim.name);
 		Assert.areEqual(true, button.animation.finished);
+		FlxG.state.remove(button);
 	}
 	
 	function setAndAssertText(text:String)
