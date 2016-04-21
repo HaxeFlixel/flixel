@@ -41,7 +41,7 @@ class FlxSplash extends FlxState
 		_cachedAutoPause = FlxG.autoPause;
 		FlxG.autoPause = false;
 		
-		#if !FLX_NO_KEYBOARD
+		#if FLX_KEYBOARD
 		FlxG.keys.enabled = false;
 		#end
 		
@@ -72,8 +72,8 @@ class FlxSplash extends FlxState
 		
 		onResize(stageWidth, stageHeight);
 		
-		#if !FLX_NO_SOUND_SYSTEM 
-		FlxG.sound.load(FlxAssets.getSound("assets/sounds/flixel")).play();
+		#if FLX_SOUND_SYSTEM 
+		FlxG.sound.load(FlxAssets.getSound("flixel/sounds/flixel")).play();
 		#end
 	}
 	
@@ -108,7 +108,7 @@ class FlxSplash extends FlxState
 		_functions[_curPart]();
 		_text.textColor = _colors[_curPart];
 		_text.text = "HaxeFlixel";
-		_curPart ++;
+		_curPart++;
 		
 		if (_curPart == 5)
 		{
@@ -186,7 +186,7 @@ class FlxSplash extends FlxState
 		FlxG.cameras.bgColor = _cachedBgColor;
 		FlxG.fixedTimestep = _cachedTimestep;
 		FlxG.autoPause = _cachedAutoPause;
-		#if !FLX_NO_KEYBOARD
+		#if FLX_KEYBOARD
 		FlxG.keys.enabled = true;
 		#end
 		FlxG.stage.removeChild(_sprite);

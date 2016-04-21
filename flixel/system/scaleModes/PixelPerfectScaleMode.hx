@@ -15,7 +15,8 @@ class PixelPerfectScaleMode extends BaseScaleMode
 		var scaleFactor:Int = Math.floor(Math.min(scaleFactorX, scaleFactorY));
 		
 		// If the scale factor is less than zero, set it to one and crop
-		if (scaleFactor < 1) scaleFactor = 1;
+		if (scaleFactor < 1)
+			scaleFactor = 1;
 		
 		gameSize.x = FlxG.width * scaleFactor;
 		gameSize.y = FlxG.height * scaleFactor;

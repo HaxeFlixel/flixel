@@ -3,7 +3,6 @@ package flixel.util;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.math.FlxPoint;
-import flixel.util.FlxPath;
 import massive.munit.Assert;
 
 class FlxPathTest extends FlxTest
@@ -32,7 +31,7 @@ class FlxPathTest extends FlxTest
 	}
 	
 	@Test
-	function testImmovableValueAfterCancelNotModfied()
+	function testImmovableValueAfterCancelNotModified()
 	{
 		Assert.isFalse(object.immovable);
 		
@@ -64,6 +63,6 @@ class FlxPathTest extends FlxTest
 	
 	function startPath()
 	{
-		path.start(object, [FlxPoint.get(), FlxPoint.get(100, 100)]);
+		object.path = path.start([FlxPoint.get(), FlxPoint.get(100, 100)]);
 	}
 }

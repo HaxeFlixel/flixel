@@ -2,7 +2,6 @@ package flixel.util;
 
 import flixel.FlxSprite;
 import flixel.math.FlxPoint;
-import flixel.util.FlxColor;
 import massive.munit.Assert;
 using flixel.util.FlxSpriteUtil;
 

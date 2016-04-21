@@ -16,7 +16,7 @@ class FlxPointer
 	private var _globalScreenX:Int = 0;
 	private var _globalScreenY:Int = 0;
 	
- 	public function new() {}
+	public function new() {}
 	
 	/**
 	 * Fetch the world position of the pointer on any given camera.
@@ -71,9 +71,11 @@ class FlxPointer
 	/**
 	 * Returns a FlxPoint with this input's x and y.
 	 */
-	public inline function toPoint():FlxPoint
+	public function getPosition(?point:FlxPoint):FlxPoint
 	{
-		return FlxPoint.get(x, y);
+		if (point == null)
+			point = FlxPoint.get();
+		return point.set(x, y);
 	}
 	
 	/**
@@ -84,7 +86,7 @@ class FlxPointer
 	 * @param 	ObjectOrGroup The object or group being tested.
 	 * @param 	Camera Specify which game camera you want. If null getScreenPosition() will just grab the first global camera.
 	 * @return 	Whether or not the two objects overlap.
-	*/
+	 */
 	public function overlaps(ObjectOrGroup:FlxBasic, ?Camera:FlxCamera):Bool
 	{
 		var result:Bool = false;
@@ -103,7 +105,7 @@ class FlxPointer
 		}
 		else 
 		{
-			var point:FlxPoint = toPoint();
+			var point:FlxPoint = getPosition();
 			var object:FlxObject = cast ObjectOrGroup;
 			result = object.overlapsPoint(point, true, Camera);
 			point.put();
@@ -116,10 +118,12 @@ class FlxPointer
 	 * Directly set the underyling screen position variable. WARNING! You should never use
 	 * this unless you are trying to manually dispatch low-level mouse / touch events to the stage.
 	 */
-	public inline function setGlobalScreenPositionUnsafe(X:Int, Y:Int):Void 
+	public inline function setGlobalScreenPositionUnsafe(newX:Float, newY:Float):Void 
 	{
-		_globalScreenX = X;
-		_globalScreenY = Y;
+		_globalScreenX = Std.int(newX / FlxG.scaleMode.scale.x);
+		_globalScreenY = Std.int(newY / FlxG.scaleMode.scale.y);
+		
+		updatePositions();
 	}
 	
 	public function toString():String

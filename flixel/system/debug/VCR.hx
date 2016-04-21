@@ -1,16 +1,12 @@
 package flixel.system.debug;
 
-#if !FLX_NO_DEBUG
+#if FLX_DEBUG
 import flash.display.BitmapData;
 import flash.text.TextField;
-import flash.text.TextFieldAutoSize;
-import flash.text.TextFormat;
 import flixel.FlxG;
-import flixel.system.FlxAssets;
 import flixel.system.ui.FlxSystemButton;
-import flixel.util.FlxColor;
+import flixel.system.debug.FlxDebugger.GraphicArrowRight;
 import flixel.util.FlxStringUtil;
-import flixel.system.debug.FlxDebugger;
 
 @:bitmap("assets/images/debugger/buttons/open.png")
 private class GraphicOpen extends BitmapData {}
@@ -39,8 +35,8 @@ private class GraphicStop extends BitmapData {}
 class VCR
 {
 	/**
-	* Texfield that displays the runtime display data for a game replay
-	*/
+	 * Texfield that displays the runtime display data for a game replay
+	 */
 	public var runtimeDisplay:TextField;
 	
 	public var runtime:Float = 0;
@@ -56,27 +52,19 @@ class VCR
 	 */
 	public function new(Debugger:FlxDebugger)
 	{
-		restartBtn = Debugger.addButton(MIDDLE, new GraphicRestart(0, 0), FlxG.resetState);
+		restartBtn = Debugger.addButton(CENTER, new GraphicRestart(0, 0), FlxG.resetState);
 		#if FLX_RECORD
-		recordBtn = Debugger.addButton(MIDDLE, new GraphicRecordOff(0, 0), FlxG.vcr.startRecording.bind(true));
-		openBtn = Debugger.addButton(MIDDLE, new GraphicOpen(0, 0), FlxG.vcr.onOpen);
+		recordBtn = Debugger.addButton(CENTER, new GraphicRecordOff(0, 0), FlxG.vcr.startRecording.bind(true));
+		openBtn = Debugger.addButton(CENTER, new GraphicOpen(0, 0), FlxG.vcr.onOpen);
 		#end
-		playbackToggleBtn = Debugger.addButton(MIDDLE, new GraphicPause(0, 0), FlxG.vcr.pause);
-		stepBtn = Debugger.addButton(MIDDLE, new GraphicStep(0, 0), onStep);
+		playbackToggleBtn = Debugger.addButton(CENTER, new GraphicPause(0, 0), FlxG.vcr.pause);
+		stepBtn = Debugger.addButton(CENTER, new GraphicStep(0, 0), onStep);
 		
 		#if FLX_RECORD
-		runtimeDisplay = new TextField();
-		runtimeDisplay.height = 10;
-		runtimeDisplay.y = -9;
-		runtimeDisplay.selectable = false;
-		runtimeDisplay.multiline = false;
-		runtimeDisplay.embedFonts = true;
-		var format = new TextFormat(FlxAssets.FONT_DEBUGGER, 12, FlxColor.WHITE);
-		runtimeDisplay.defaultTextFormat = format;
-		runtimeDisplay.autoSize = TextFieldAutoSize.LEFT;
+		runtimeDisplay = DebuggerUtil.createTextField(0, -9);
 		updateRuntime(0);
 		
-		var runtimeBtn = Debugger.addButton(MIDDLE);
+		var runtimeBtn = Debugger.addButton(CENTER);
 		runtimeBtn.addChild(runtimeDisplay);
 		#end
 	}
@@ -89,7 +77,7 @@ class VCR
 	public inline function recording():Void
 	{
 		recordBtn.changeIcon(new GraphicRecordOn(0, 0));
-		recordBtn.upHandler = FlxG.vcr.stopRecording;
+		recordBtn.upHandler = FlxG.vcr.stopRecording.bind(true);
 	}
 
 	/**

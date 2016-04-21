@@ -1,7 +1,6 @@
 package flixel.system.frontEnds;
 
 import flixel.tweens.FlxTween;
-import flixel.util.FlxPath;
 import flixel.util.FlxStringUtil;
 import flixel.util.FlxTimer;
 
@@ -95,7 +94,7 @@ class PluginFrontEnd
 		{
 			if (Std.is(list[i], ClassType))
 			{
-				list.splice(i,1);
+				list.splice(i, 1);
 				results = true;
 			}
 			i--;
@@ -107,7 +106,6 @@ class PluginFrontEnd
 	@:allow(flixel.FlxG)
 	private function new() 
 	{
-		add(FlxPath.manager = new FlxPathManager());
 		add(FlxTimer.manager = new FlxTimerManager());
 		add(FlxTween.manager = new FlxTweenManager());
 	}

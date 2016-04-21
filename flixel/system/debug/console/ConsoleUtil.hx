@@ -3,6 +3,7 @@ package flixel.system.debug.console;
 import flixel.FlxG;
 import flixel.system.debug.log.LogStyle;
 using flixel.util.FlxStringUtil;
+using flixel.util.FlxArrayUtil;
 using StringTools;
 
 #if hscript
@@ -94,23 +95,42 @@ class ConsoleUtil
 		else if (Reflect.isObject(Object)) // get instance fields
 			fields = Type.getInstanceFields(Type.getClass(Object));
 		
-		// remove getters and setters
+		var filteredFields = [];
+		for (field in fields)
+		{
+			// don't add property getters / setters
+			if (field.startsWith("get_") || field.startsWith("set_"))
+			{
+				var name = field.substr(4);
+				// property without a backing field, needs to be added
+				if (!fields.contains(name) && !filteredFields.contains(name))
+					filteredFields.push(name);
+			}
+			else
+				filteredFields.push(field);
+		}
+		
+		return sortFields(filteredFields);
+	}
+	
+	private static function sortFields(fields:Array<String>):Array<String>
+	{
+		var underscoreList = [];
+		
 		fields = fields.filter(function(field)
 		{
-			return !field.startsWith("get_") && !field.startsWith("set_");
+			if (field.startsWith("_"))
+			{
+				underscoreList.push(field);
+				return false;
+			}
+			return true;
 		});
 		
 		fields.sortAlphabetically();
-		fields.sort(function(a, b)
-		{
-			var aHidden = a.startsWith("_");
-			var bHidden = b.startsWith("_");
-			if (aHidden && !bHidden) return 1;
-			if (!aHidden && bHidden) return -1;
-			return 0;
-		});
+		underscoreList.sortAlphabetically();
 		
-		return fields;
+		return fields.concat(underscoreList);
 	}
 	
 	/**
@@ -130,6 +150,19 @@ class ConsoleUtil
 #if hscript
 private class Interp extends hscript.Interp
 {
+	public function getGlobals():Array<String>
+	{
+		return toArray(locals.keys()).concat(toArray(variables.keys()));
+	}
+	
+	private function toArray<T>(iterator:Iterator<T>):Array<T>
+	{
+		var array = [];
+		for (element in iterator)
+			array.push(element);
+		return array;
+	}
+	
 	override function get(o:Dynamic, f:String):Dynamic
 	{
 		if (o == null)
@@ -141,8 +174,8 @@ private class Interp extends hscript.Interp
 	{
 		if (o == null)
 			throw hscript.Expr.Error.EInvalidAccess(f);
-        Reflect.setProperty(o, f, v);
-        return v;
-    }
+		Reflect.setProperty(o, f, v);
+		return v;
+	}
 }
 #end

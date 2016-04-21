@@ -4,9 +4,15 @@ import flixel.FlxObject;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
+import flixel.system.FlxAssets;
+import flixel.system.FlxAssets.FlxGraphicSource;
 import flixel.system.FlxAssets.FlxTilemapGraphicAsset;
 import flixel.util.FlxArrayUtil;
+import flixel.util.FlxColor;
+import flixel.util.FlxStringUtil;
 import openfl.Assets;
+import openfl.display.BitmapData;
+using StringTools;
 
 class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 {
@@ -179,68 +185,48 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		
 		var regex:EReg = new EReg("[ \t]*((\r\n)|\r|\n)[ \t]*", "g");
 		var lines:Array<String> = regex.split(MapData);
-		var rows:Array<String> = [];
-		for (s in lines) 
-		{
-			if (s != "") rows.push(s);
-		}
+		var rows:Array<String> = lines.filter(function(line) return line != "");
 		
 		heightInTiles = rows.length;
 		widthInTiles = 0;
-		var row:Int = 0;
-		var column:Int;
 		
+		var row:Int = 0;
 		while (row < heightInTiles)
 		{
-			columns = rows[row++].split(",");
+			var rowString = rows[row];
+			if (rowString.endsWith(","))
+				rowString = rowString.substr(0, rowString.length - 1);
+			columns = rowString.split(",");
 			
-			if (columns.length < 1)
+			if (columns.length == 0)
 			{
-				heightInTiles = heightInTiles - 1;
+				heightInTiles--;
 				continue;
 			}
 			if (widthInTiles == 0)
 			{
 				widthInTiles = columns.length;
 			}
-			column = 0;
 			
+			var column = 0;
 			while (column < widthInTiles)
 			{
 				//the current tile to be added:
-				var curTile:Int = Std.parseInt(columns[column]);
+				var columnString = columns[column];
+				var curTile = Std.parseInt(columnString);
 				
+				if (curTile == null)
+					throw 'String in row $row, column $column is not a valid integer: "$columnString"';
+				
+				// anything < 0 should be treated as 0 for compatibility with certain map formats (ogmo)
 				if (curTile < 0)
-				{
-					// anything < 0 should be treated as 0 for compatibility with certain map formats (ogmo)
 					curTile = 0;
-				}
 				
-				//if neko, make sure the value was not null, and if it is null,
-				//make sure it is the last in the row (used to ignore commas)
-				#if neko
-				if (curTile != null)
-				{
-					_data.push(curTile);	
-					column++;
-				}
-				else if (column == columns.length - 1)
-				{
-					//if value was a comma, decrease the width by one
-					widthInTiles--;
-				}
-				else
-				{
-					//if a non-int value was passed not at the end, warn the user
-					throw "Value passed wan NaN";
-				}
-				#else
-				//if not neko, dont worry about the comma
-				_data.push(curTile);	
+				_data.push(curTile);
 				column++;
-				#end
-				
 			}
+			
+			row++;
 		}
 		
 		loadMapHelper(TileGraphic, TileWidth, TileHeight, AutoTile, StartingIndex, DrawIndex, CollideIndex);
@@ -306,6 +292,34 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		loadMapHelper(TileGraphic, TileWidth, TileHeight, AutoTile, StartingIndex, DrawIndex, CollideIndex);
 		return this;
 	}
+	
+	/**
+     * Load the tilemap with image data and a tile graphic. 
+     * Black pixels are flagged as 'solid' by default, non-black pixels are set as non-colliding. Black pixels must be PURE BLACK.
+     * @param   MapGraphic      The image you want to use as a source of map data, where each pixel is a tile (or more than one tile if you change Scale's default value). Preferably black and white.
+     * @param   Invert          Load white pixels as solid instead.
+     * @param   Scale           Default is 1. Scale of 2 means each pixel forms a 2x2 block of tiles, and so on.
+     * @param   ColorMap        An array of color values (alpha values are ignored) in the order they're intended to be assigned as indices
+     * @param   TileGraphic     All the tiles you want to use, arranged in a strip corresponding to the numbers in MapData.
+     * @param   TileWidth       The width of your tiles (e.g. 8) - defaults to height of the tile graphic if unspecified.
+     * @param   TileHeight      The height of your tiles (e.g. 8) - defaults to width if unspecified.
+     * @param   AutoTile        Whether to load the map using an automatic tile placement algorithm (requires 16 tiles!).
+     *                          Setting this to either AUTO or ALT will override any values you put for StartingIndex, DrawIndex, or CollideIndex.
+     * @param   StartingIndex   Used to sort of insert empty tiles in front of the provided graphic.
+     *                          Default is 0, usually safest ot leave it at that.  Ignored if AutoTile is set.
+     * @param   DrawIndex       Initializes all tile objects equal to and after this index as visible.
+     *                          Default value is 1. Ignored if AutoTile is set.
+     * @param   CollideIndex    Initializes all tile objects equal to and after this index as allowCollisions = ANY.
+     *                          Default value is 1.  Ignored if AutoTile is set.  
+     *                          Can override and customize per-tile-type collision behavior using setTileProperties().
+     * @return  A reference to this instance of FlxTilemap, for chaining as usual :)
+     */
+    public function loadMapFromGraphic(MapGraphic:FlxGraphicSource, Invert:Bool = false, Scale:Int = 1, ?ColorMap:Array<FlxColor>, TileGraphic:FlxTilemapGraphicAsset, TileWidth:Int = 0, TileHeight:Int = 0, ?AutoTile:FlxTilemapAutoTiling, StartingIndex:Int = 0, DrawIndex:Int = 1, CollideIndex:Int = 1)
+    {
+        var mapBitmap:BitmapData = FlxAssets.resolveBitmapData(MapGraphic);
+        var mapData:String = FlxStringUtil.bitmapToCSV(mapBitmap, Invert, Scale, ColorMap);
+        return loadMapFromCSV(mapData, TileGraphic, TileWidth, TileHeight, AutoTile, StartingIndex, DrawIndex, CollideIndex);
+    }
 	
 	private function loadMapHelper(TileGraphic:FlxTilemapGraphicAsset, TileWidth:Int = 0, TileHeight:Int = 0, ?AutoTile:FlxTilemapAutoTiling,
 		StartingIndex:Int = 0, DrawIndex:Int = 1, CollideIndex:Int = 1)
@@ -377,7 +391,8 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 
 		if (_randomIndices != null)
 		{
-			var randLambda:Void->Float = _randomLambda != null ? _randomLambda : function() {
+			var randLambda:Void->Float = _randomLambda != null ? _randomLambda : function()
+			{
 				return FlxG.random.float();
 			};
 			
@@ -416,22 +431,22 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		_data[Index] = 0;
 		
 		// UP
-		if ((Index-widthInTiles < 0) || (_data[Index-widthInTiles] > 0))
+		if ((Index - widthInTiles < 0) || (_data[Index - widthInTiles] > 0))
 		{
 			_data[Index] += 1;
 		}
 		// RIGHT
-		if ((Index%widthInTiles >= widthInTiles-1) || (_data[Index+1] > 0))
+		if ((Index % widthInTiles >= widthInTiles - 1) || (_data[Index + 1] > 0))
 		{
 			_data[Index] += 2;
 		}
 		// DOWN
-		if ((Std.int(Index+widthInTiles) >= totalTiles) || (_data[Index+widthInTiles] > 0)) 
+		if ((Std.int(Index + widthInTiles) >= totalTiles) || (_data[Index + widthInTiles] > 0)) 
 		{
 			_data[Index] += 4;
 		}
 		// LEFT
-		if ((Index%widthInTiles <= 0) || (_data[Index-1] > 0))
+		if ((Index % widthInTiles <= 0) || (_data[Index - 1] > 0))
 		{
 			_data[Index] += 8;
 		}
@@ -440,17 +455,17 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		if ((auto == ALT) && (_data[Index] == 15))
 		{
 			// BOTTOM LEFT OPEN
-			if ((Index % widthInTiles > 0) && (Std.int(Index+widthInTiles) < totalTiles) && (_data[Index+widthInTiles-1] <= 0))
+			if ((Index % widthInTiles > 0) && (Std.int(Index + widthInTiles) < totalTiles) && (_data[Index + widthInTiles - 1] <= 0))
 			{
 				_data[Index] = 1;
 			}
 			// TOP LEFT OPEN
-			if ((Index % widthInTiles > 0) && (Index-widthInTiles >= 0) && (_data[Index-widthInTiles-1] <= 0))
+			if ((Index % widthInTiles > 0) && (Index - widthInTiles >= 0) && (_data[Index - widthInTiles - 1] <= 0))
 			{
 				_data[Index] = 2;
 			}
 			// TOP RIGHT OPEN
-			if ((Index % widthInTiles < widthInTiles-1) && (Index-widthInTiles >= 0) && (_data[Index-widthInTiles+1] <= 0))
+			if ((Index % widthInTiles < widthInTiles - 1) && (Index - widthInTiles >= 0) && (_data[Index - widthInTiles + 1] <= 0))
 			{
 				_data[Index] = 4;
 			}
@@ -727,7 +742,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		
 		// Reset the start and end points to be exact
 		var node:FlxPoint;
-		node = points[points.length-1];
+		node = points[points.length - 1];
 		node.copyFrom(Start);
 		node = points[0];
 		node.copyFrom(End);
@@ -875,17 +890,19 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 				
 				if (DiagonalPolicy != NONE)
 				{
-					var WideDiagonal = DiagonalPolicy == WIDE;
+					var wideDiagonal = DiagonalPolicy == WIDE;
 					if (up && right)
 					{
 						index = currentIndex - widthInTiles + 1;
 						
-						if (WideDiagonal && (distances[index] == -1) && (distances[currentIndex-widthInTiles] >= -1) && (distances[currentIndex+1] >= -1))
+						if (wideDiagonal && (distances[index] == -1) &&
+							(distances[currentIndex - widthInTiles] >= -1) &&
+							(distances[currentIndex + 1] >= -1))
 						{
 							distances[index] = distance;
 							neighbors.push(index);
 						}
-						else if (!WideDiagonal && (distances[index] == -1))
+						else if (!wideDiagonal && (distances[index] == -1))
 						{
 							distances[index] = distance;
 							neighbors.push(index);
@@ -895,12 +912,14 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 					{
 						index = currentIndex + widthInTiles + 1;
 						
-						if (WideDiagonal && (distances[index] == -1) && (distances[currentIndex+widthInTiles] >= -1) && (distances[currentIndex+1] >= -1))
+						if (wideDiagonal && (distances[index] == -1) &&
+							(distances[currentIndex + widthInTiles] >= -1) &&
+							(distances[currentIndex + 1] >= -1))
 						{
 							distances[index] = distance;
 							neighbors.push(index);
 						}
-						else if (!WideDiagonal && (distances[index] == -1))
+						else if (!wideDiagonal && (distances[index] == -1))
 						{
 							distances[index] = distance;
 							neighbors.push(index);
@@ -910,12 +929,14 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 					{
 						index = currentIndex + widthInTiles - 1;
 						
-						if (WideDiagonal && (distances[index] == -1) && (distances[currentIndex+widthInTiles] >= -1) && (distances[currentIndex-1] >= -1))
+						if (wideDiagonal && (distances[index] == -1) &&
+							(distances[currentIndex + widthInTiles] >= -1) &&
+							(distances[currentIndex - 1] >= -1))
 						{
 							distances[index] = distance;
 							neighbors.push(index);
 						}
-						else if (!WideDiagonal && (distances[index] == -1))
+						else if (!wideDiagonal && (distances[index] == -1))
 						{
 							distances[index] = distance;
 							neighbors.push(index);
@@ -925,12 +946,14 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 					{
 						index = currentIndex - widthInTiles - 1;
 						
-						if (WideDiagonal && (distances[index] == -1) && (distances[currentIndex-widthInTiles] >= -1) && (distances[currentIndex-1] >= -1))
+						if (wideDiagonal && (distances[index] == -1) &&
+							(distances[currentIndex - widthInTiles] >= -1) &&
+							(distances[currentIndex - 1] >= -1))
 						{
 							distances[index] = distance;
 							neighbors.push(index);
 						}
-						else if (!WideDiagonal && (distances[index] == -1))
+						else if (!wideDiagonal && (distances[index] == -1))
 						{
 							distances[index] = distance;
 							neighbors.push(index);
@@ -1067,7 +1090,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		while (i < l)
 		{
 			node = Points[i];
-			deltaPrevious = (node.x - last.x)/(node.y - last.y);
+			deltaPrevious = (node.x - last.x) / (node.y - last.y);
 			deltaNext = (node.x - Points[i + 1].x) / (node.y - Points[i + 1].y);
 			
 			if ((last.x == Points[i + 1].x) || (last.y == Points[i + 1].y) || (deltaPrevious == deltaNext))
@@ -1105,7 +1128,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 				continue;
 			}
 			
-			if (ray(source,node,_point))
+			if (ray(source, node, _point))
 			{
 				if (lastIndex >= 0)
 				{
@@ -1187,7 +1210,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	private inline function tilemapOverlapsAtCallback(ObjectOrGroup:FlxBasic, X:Float, Y:Float, InScreenSpace:Bool, Camera:FlxCamera):Bool
 	{
 		if (ObjectOrGroup.flixelType == OBJECT || 
-		    ObjectOrGroup.flixelType == TILEMAP)
+			ObjectOrGroup.flixelType == TILEMAP)
 		{
 			return overlapsWithCallback(cast ObjectOrGroup, null, false, _point.set(X, Y));
 		}

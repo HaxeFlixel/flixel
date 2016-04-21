@@ -1,14 +1,10 @@
-package flixel.input.gamepad.id;
+package flixel.input.gamepad.lists;
 
-import flixel.input.FlxInput.FlxInputState;
 import flixel.input.gamepad.FlxGamepad;
-import flixel.input.gamepad.FlxGamepadInputID;
-import flixel.input.gamepad.FlxGamepad.FlxGamepadAnalogStick;
 
 /**
  * A helper class for gamepad input.
  * Provides optimized gamepad button checking using direct array access.
- * 
  */
 @:keep
 class FlxGamepadAnalogList
@@ -19,8 +15,8 @@ class FlxGamepadAnalogList
 	
 	public function new(gamepad:FlxGamepad)
 	{
-		value        = new FlxGamepadAnalogValueList(gamepad);
-		justMoved    = new FlxGamepadAnalogStateList(JUST_PRESSED,  gamepad);
+		value = new FlxGamepadAnalogValueList(gamepad);
+		justMoved = new FlxGamepadAnalogStateList(JUST_PRESSED, gamepad);
 		justReleased = new FlxGamepadAnalogStateList(JUST_RELEASED, gamepad);
 	}
 }

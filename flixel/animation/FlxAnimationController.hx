@@ -8,12 +8,12 @@ import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 class FlxAnimationController implements IFlxDestroyable
 {
 	/**
-	 * Property access for currently playing FlxAnimation (warning: can be null).
+	 * Property access for currently playing animation (warning: can be `null`).
 	 */
 	public var curAnim(get, set):FlxAnimation;
 	
 	/**
-	 * Tell the sprite to change to a specific frame of the _curAnim.
+	 * The frame index of the current animation. Can be changed manually.
 	 */
 	public var frameIndex(default, set):Int = -1;
 	
@@ -24,17 +24,17 @@ class FlxAnimationController implements IFlxDestroyable
 	public var frameName(get, set):String;
 	
 	/**
-	 * Gets or sets the currently playing animation (warning: can be null).
+	 * Gets or sets the currently playing animation (warning: can be `null`).
 	 */
 	public var name(get, set):String;
 	
 	/**
-	 * Pause & resume curAnim.
+	 * Pause or resume the current animation.
 	 */
 	public var paused(get, set):Bool;
 	
 	/**
-	 * Returns whether an animation has finished playing.
+	 * Whether the current animation has finished playing.
 	 */
 	public var finished(get, set):Bool;
 	
@@ -45,7 +45,7 @@ class FlxAnimationController implements IFlxDestroyable
 	public var frames(get, null):Int;
 	
 	/**
-	 * If assigned, will be called each time the current frame changes.
+	 * If assigned, will be called each time the current animation's frame changes.
 	 * A function that has 3 parameters: a string name, a frame number, and a frame index.
 	 */
 	public var callback:String->Int->Int->Void;
@@ -168,12 +168,13 @@ class FlxAnimationController implements IFlxDestroyable
 	
 	/**
 	 * Adds a new animation to the sprite.
-	 * @param	Name		What this animation should be called (e.g. "run").
-	 * @param	Frames		An array of numbers indicating what frames to play in what order (e.g. 1, 2, 3).
-	 * @param	FrameRate	The speed in frames per second that the animation should play at (e.g. 40 fps).
+	 * 
+	 * @param	Name		What this animation should be called (e.g. `"run"`).
+	 * @param	Frames		An array of indices indicating what frames to play in what order (e.g. `[0, 1, 2]`).
+	 * @param	FrameRate	The speed in frames per second that the animation should play at (e.g. `40` fps).
 	 * @param	Looped		Whether or not the animation is looped or just plays once.
-	 * @param	FlipX		Whether the frames should be horizontally flipped
-	 * @param	FlipY		Whether the frames should be vertically flipped
+	 * @param	FlipX		Whether the frames should be flipped horizontally.
+	 * @param	FlipY		Whether the frames should be flipped vertically.
 	 */
 	public function add(Name:String, Frames:Array<Int>, FrameRate:Int = 30, Looped:Bool = true, FlipX:Bool = false, FlipY:Bool = false):Void
 	{
@@ -222,10 +223,11 @@ class FlxAnimationController implements IFlxDestroyable
 	/**
 	 * Adds to an existing animation in the sprite by appending the specified frames to the existing frames.
 	 * Use this method when the indices of the frames in the atlas are already known.
-	 * The animation must already exist in order to append frames to it. FrameRate and Looped are unchanged.
-	 * @param	Name		What the existing animation is called (e.g. "run").
-	 * @param	Frames		An array of numbers indicating what frames to append (e.g. 1, 2, 3).
-	*/
+	 * The animation must already exist in order to append frames to it.
+	 * 
+	 * @param	Name		What the existing animation is called (e.g. `"run"`).
+	 * @param	Frames		An array of indices indicating what frames to append (e.g. `[0, 1, 2]`).
+	 */
 	public function append(Name:String, Frames:Array<Int>):Void
 	{
 		var anim:FlxAnimation = _animations.get(Name);
@@ -253,12 +255,13 @@ class FlxAnimationController implements IFlxDestroyable
 	
 	/**
 	 * Adds a new animation to the sprite.
-	 * @param	Name			What this animation should be called (e.g. "run").
-	 * @param	FrameNames		An array of image names from atlas indicating what frames to play in what order.
-	 * @param	FrameRate		The speed in frames per second that the animation should play at (e.g. 40 fps).
-	 * @param	Looped			Whether or not the animation is looped or just plays once.
-	 * @param	FlipX			Whether the frames should be horizontally flipped
-	 * @param	FlipY			Whether the frames should be vertically flipped
+	 * 
+	 * @param	Name		What this animation should be called (e.g. `"run"`).
+	 * @param	FrameNames	An array of image names from the atlas indicating what frames to play in what order.
+	 * @param	FrameRate	The speed in frames per second that the animation should play at (e.g. `40` fps).
+	 * @param	Looped		Whether or not the animation is looped or just plays once.
+	 * @param	FlipX		Whether the frames should be flipped horizontally.
+	 * @param	FlipY		Whether the frames should be flipped vertically.
 	 */
 	public function addByNames(Name:String, FrameNames:Array<String>, FrameRate:Int = 30, Looped:Bool = true, FlipX:Bool = false, FlipY:Bool = false):Void
 	{
@@ -277,11 +280,12 @@ class FlxAnimationController implements IFlxDestroyable
 	
 	/**
 	 * Adds to an existing animation in the sprite by appending the specified frames to the existing frames.
-	 * Use this method when the exact name of each frame from the atlas is known (e.g. "walk00.png", "walk01.png").
-	 * The animation must already exist in order to append frames to it. FrameRate and Looped are unchanged.
-	 * @param	Name			What the existing animation is called (e.g. "run").
+	 * Use this method when the exact name of each frame from the atlas is known (e.g. `"walk00.png"`, `"walk01.png"`).
+	 * The animation must already exist in order to append frames to it.
+	 * 
+	 * @param	Name			What the existing animation is called (e.g. `"run"`).
 	 * @param	FrameNames		An array of image names from atlas indicating what frames to append.
-	*/
+	 */
 	public function appendByNames(Name:String, FrameNames:Array<String>):Void
 	{
 		var anim:FlxAnimation = _animations.get(Name);
@@ -299,15 +303,16 @@ class FlxAnimationController implements IFlxDestroyable
 	}
 	
 	/**
-	 * Adds a new animation to the sprite. Should works a little bit faster than addByIndices()
-	 * @param	Name			What this _animations should be called (e.g. "run").
-	 * @param	Prefix			Common beginning of image names in atlas (e.g. "tiles-")
-	 * @param	Indices			An array of strings indicating what frames to play in what order (e.g. ["01", "02", "03"]).
-	 * @param	Postfix			Common ending of image names in atlas (e.g. ".png")
-	 * @param	FrameRate		The speed in frames per second that the animation should play at (e.g. 40 fps).
-	 * @param	Looped			Whether or not the animation is looped or just plays once.
-	 * @param	FlipX			Whether the frames should be horizontally flipped
-	 * @param	FlipY			Whether the frames should be vertically flipped
+	 * Adds a new animation to the sprite. Should be slightly faster than `addByIndices()`.
+	 * 
+	 * @param	Name		What this animation should be called (e.g. `"run"`).
+	 * @param	Prefix		Common beginning of image names in the atlas (e.g. `"tiles-"`).
+	 * @param	Indices		An array of strings indicating what frames to play in what order (e.g. `["01", "02", "03"]`).
+	 * @param	Postfix		Common ending of image names in atlas (e.g. `".png"`).
+	 * @param	FrameRate	The speed in frames per second that the animation should play at (e.g. `40` fps).
+	 * @param	Looped		Whether or not the animation is looped or just plays once.
+	 * @param	FlipX		Whether the frames should be flipped horizontally.
+	 * @param	FlipY		Whether the frames should be flipped vertically.
 	 */
 	public function addByStringIndices(Name:String, Prefix:String, Indices:Array<String>, Postfix:String, FrameRate:Int = 30, Looped:Bool = true, FlipX:Bool = false, FlipY:Bool = false):Void
 	{
@@ -325,14 +330,15 @@ class FlxAnimationController implements IFlxDestroyable
 	}
 	
 	/**
-	 * Adds to an existing animation in the sprite by appending the specified frames to the existing frames. Should works a little bit faster than appendByIndices().
-	 * Use this method when the names of each frame from the atlas share a common prefix and postfix (e.g. "walk00.png", "walk01.png").
+	 * Adds to an existing animation in the sprite by appending the specified frames to the existing frames. Should be slightly faster than `appendByIndices()`.
+	 * Use this method when the names of each frame from the atlas share a common prefix and postfix (e.g. `"walk00.png"`, `"walk01.png"`).
 	 * The animation must already exist in order to append frames to it. FrameRate and Looped are unchanged.
-	 * @param	Name			What the existing animation is called (e.g. "run").
-	 * @param	Prefix			Common beginning of image names in atlas (e.g. "tiles-")
-	 * @param	Indices			An array of strings indicating what frames to append (e.g. "01", "02", "03").
-	 * @param	Postfix			Common ending of image names in atlas (e.g. ".png")
-	*/
+	 * 
+	 * @param	Name		What the existing animation is called (e.g. `"run"`).
+	 * @param	Prefix		Common beginning of image names in the atlas (e.g. `"tiles-"`).
+	 * @param	Indices		An array of strings indicating what frames to append (e.g. `["01", "02", "03"]`).
+	 * @param	Postfix		Common ending of image names in atlas (e.g. `".png"`).
+	 */
 	public function appendByStringIndices(Name:String, Prefix:String, Indices:Array<String>, Postfix:String):Void
 	{
 		var anim:FlxAnimation = _animations.get(Name);
@@ -351,14 +357,15 @@ class FlxAnimationController implements IFlxDestroyable
 	
 	/**
 	 * Adds a new animation to the sprite.
-	 * @param	Name			What this animation should be called (e.g. "run").
-	 * @param	Prefix			Common beginning of image names in atlas (e.g. "tiles-")
-	 * @param	Indices			An array of numbers indicating what frames to play in what order (e.g. 1, 2, 3).
-	 * @param	Postfix			Common ending of image names in atlas (e.g. ".png")
-	 * @param	FrameRate		The speed in frames per second that the _animations should play at (e.g. 40 fps).
-	 * @param	Looped			Whether or not the animation is looped or just plays once.
-	 * @param	FlipX			Whether the frames should be horizontally flipped
-	 * @param	FlipY			Whether the frames should be vertically flipped
+	 * 
+	 * @param	Name		What this animation should be called (e.g. `"run"`).
+	 * @param	Prefix		Common beginning of image names in the atlas (e.g. "tiles-").
+	 * @param	Indices		An array of numbers indicating what frames to play in what order (e.g. `[0, 1, 2]`).
+	 * @param	Postfix		Common ending of image names in the atlas (e.g. `".png"`).
+	 * @param	FrameRate	The speed in frames per second that the animation should play at (e.g. `40` fps).
+	 * @param	Looped		Whether or not the animation is looped or just plays once.
+	 * @param	FlipX		Whether the frames should be flipped horizontally.
+	 * @param	FlipY		Whether the frames should be flipped vertically.
 	 */
 	public function addByIndices(Name:String, Prefix:String, Indices:Array<Int>, Postfix:String, FrameRate:Int = 30, Looped:Bool = true, FlipX:Bool = false, FlipY:Bool = false):Void
 	{
@@ -377,17 +384,18 @@ class FlxAnimationController implements IFlxDestroyable
 	
 	/**
 	 * Adds to an existing animation in the sprite by appending the specified frames to the existing frames.
-	 * Use this method when the names of each frame from the atlas share a common prefix and postfix (e.g. "walk00.png", "walk01.png"). Leading zeroes are ignored for matching indices (5 will match "5" and "005").
-	 * The animation must already exist in order to append frames to it. FrameRate and Looped are unchanged.
-	 * @param	Name			What the existing animation is called (e.g. "run").
-	 * @param	Prefix			Common beginning of image names in atlas (e.g. "tiles-")
-	 * @param	Indices			An array of numbers indicating what frames to append (e.g. 1, 2, 3).
-	 * @param	Postfix			Common ending of image names in atlas (e.g. ".png")
-	*/
+	 * Use this method when the names of each frame from the atlas share a common prefix and postfix (e.g. `"walk00.png"`, `"walk01.png"`).
+	 * Leading zeroes are ignored for matching indices (`5` will match `"5"` and `"005"`).
+	 * The animation must already exist in order to append frames to it.
+	 * 
+	 * @param	Name		What the existing animation is called (e.g. `"run"`).
+	 * @param	Prefix		Common beginning of image names in atlas (e.g. `"tiles-"`).
+	 * @param	Indices		An array of numbers indicating what frames to append (e.g. `[0, 1, 2]`).
+	 * @param	Postfix		Common ending of image names in atlas (e.g. `".png"`).
+	 */
 	public function appendByIndices(Name:String, Prefix:String, Indices:Array<Int>, Postfix:String):Void
 	{
 		var anim:FlxAnimation = _animations.get(Name);
-		
 		if (anim == null)
 		{
 			FlxG.log.warn("No animation called \"" + Name + "\"");
@@ -401,10 +409,10 @@ class FlxAnimationController implements IFlxDestroyable
 	}
 	
 	/**
-	 * Find a sprite frame so that for Prefix = "file"; Indice = 5; Postfix = ".png"
-	 * It will find frame with name "file5.png", but if it desn't exist it will try
-	 * to find "file05.png" so allowing 99 frames per animation
-	 * Returns found frame and null if nothing is found
+	 * Find a sprite frame so that for `Prefix = "file"; Indice = 5; Postfix = ".png"`
+	 * It will find frame with name `"file5.png"`. If it desn't exist it will try
+	 * to find `"file05.png"`, allowing 99 frames per animation.
+	 * Returns the found frame or `-1` on failure.
 	 */
 	private function findSpriteFrame(Prefix:String, Index:Int, Postfix:String):Int
 	{
@@ -428,13 +436,14 @@ class FlxAnimationController implements IFlxDestroyable
 	
 	/**
 	 * Adds a new animation to the sprite.
-	 * @param	Name			What this animation should be called (e.g. "run").
-	 * @param	Prefix			Common beginning of image names in atlas (e.g. "tiles-")
-	 * @param	FrameRate		The speed in frames per second that the animation should play at (e.g. 40 fps).
-	 * @param	Looped			Whether or not the animation is looped or just plays once.
-	 * @param	FlipX			Whether the frames should be horizontally flipped
-	 * @param	FlipY			Whether the frames should be vertically flipped
-	*/
+	 * 
+	 * @param	Name		What this animation should be called (e.g. `"run"`).
+	 * @param	Prefix		Common beginning of image names in atlas (e.g. `"tiles-"`).
+	 * @param	FrameRate	The speed in frames per second that the animation should play at (e.g. `40` fps).
+	 * @param	Looped		Whether or not the animation is looped or just plays once.
+	 * @param	FlipX		Whether the frames should be flipped horizontally.
+	 * @param	FlipY		Whether the frames should be flipped vertically.
+	 */
 	public function addByPrefix(Name:String, Prefix:String, FrameRate:Int = 30, Looped:Bool = true, FlipX:Bool = false, FlipY:Bool = false):Void
 	{
 		if (_sprite.frames != null)
@@ -458,15 +467,16 @@ class FlxAnimationController implements IFlxDestroyable
 	
 	/**
 	 * Adds to an existing animation in the sprite by appending the specified frames to the existing frames.
-	 * Use this method when the names of each frame from the atlas share a common prefix (e.g. "walk00.png", "walk01.png"). Frames are sorted numerically while ignoring postfixes (e.g. ".png", ".gif").
-	 * The animation must already exist in order to append frames to it. FrameRate and Looped are unchanged.
-	 * @param	Name			What the existing animation is called (e.g. "run").
-	 * @param	Prefix			Common beginning of image names in atlas (e.g. "tiles-")
-	*/
+	 * Use this method when the names of each frame from the atlas share a common prefix (e.g. `"walk00.png"`, `"walk01.png"`).
+	 * Frames are sorted numerically while ignoring postfixes (e.g. `".png"`, `".gif"`).
+	 * The animation must already exist in order to append frames to it.
+	 * 
+	 * @param	Name	What the existing animation is called (e.g. `"run"`).
+	 * @param	Prefix	Common beginning of image names in atlas (e.g. `"tiles-"`)
+	 */
 	public function appendByPrefix(Name:String, Prefix:String):Void
 	{
 		var anim:FlxAnimation = _animations.get(Name);
-		
 		if (anim == null)
 		{
 			FlxG.log.warn("No animation called \"" + Name + "\"");
@@ -486,14 +496,14 @@ class FlxAnimationController implements IFlxDestroyable
 	}
 	
 	/**
-	 * Plays an existing animation (e.g. "run").
+	 * Plays an existing animation (e.g. `"run"`).
 	 * If you call an animation that is already playing, it will be ignored.
 	 * 
-	 * @param	AnimName		The string name of the animation you want to play.
-	 * @param	Force			Whether to force the animation to restart.
-	 * @param	Reversed		Whether to play animation backwards or not.
-	 * @param	Frame			The frame number in the animation you want to start from (0 by default).
-	 *                     		If you pass negative value then it will start from random frame
+	 * @param	AnimName	The string name of the animation you want to play.
+	 * @param	Force		Whether to force the animation to restart.
+	 * @param	Reversed	Whether to play animation backwards or not.
+	 * @param	Frame		The frame number in the animation you want to start from.
+	 *                     	If a negative value is passed, a random frame is used.
 	 */
 	public function play(AnimName:String, Force:Bool = false, Reversed:Bool = false, Frame:Int = 0):Void
 	{
@@ -597,7 +607,7 @@ class FlxAnimationController implements IFlxDestroyable
 	}
 	
 	/**
-  	 * Gets the FlxAnimation object with the specified name.
+	 * Gets the FlxAnimation object with the specified name.
 	 */
 	public inline function getByName(Name:String):FlxAnimation
 	{
@@ -629,7 +639,7 @@ class FlxAnimationController implements IFlxDestroyable
 	}
 	
 	@:allow(flixel.animation)
-	private inline function fireFinishCallback(name:String = null):Void
+	private inline function fireFinishCallback(?name:String):Void
 	{
 		if (finishCallback != null)
 		{
@@ -706,7 +716,7 @@ class FlxAnimationController implements IFlxDestroyable
 	{
 		for (frame in _sprite.frames.frames)
 		{
-			if (StringTools.startsWith(frame.name, Prefix))
+			if (frame.name != null && StringTools.startsWith(frame.name, Prefix))
 			{
 				AnimFrames.push(frame);
 			}
@@ -827,7 +837,7 @@ class FlxAnimationController implements IFlxDestroyable
 	
 	private inline function set_finished(Value:Bool):Bool
 	{
-		if (Value == true && _curAnim != null)
+		if (Value && _curAnim != null)
 		{
 			_curAnim.finish();
 		}
@@ -841,6 +851,7 @@ class FlxAnimationController implements IFlxDestroyable
 	
 	/**
 	 * Helper function used for finding index of FlxFrame in _framesData's frames array
+	 * 
 	 * @param	Frame	FlxFrame to find
 	 * @return	position of specified FlxFrame object.
 	 */

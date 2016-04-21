@@ -6,8 +6,8 @@ import flixel.system.macros.FlxMacroUtil;
 /**
  * Class representing a color, based on Int. Provides a variety of methods for creating and converting colors.
  * 
- * FlxColor's can be written as Ints. This means you can pass a hex value such as
- * 0xff123456 to a function expecting a FlxColor, and it will automatically become a FlxColor object.
+ * FlxColors can be written as Ints. This means you can pass a hex value such as
+ * 0xff123456 to a function expecting a FlxColor, and it will automatically become a FlxColor "object".
  * Similarly, FlxColors may be treated as Ints.
  * 
  * Note that when using properties of a FlxColor other than ARGB, the values are ultimately stored as
@@ -35,10 +35,10 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	public static inline var CYAN:FlxColor =        0xFF00FFFF;
 	
 	/**
-	 * A Map<String, Int> which values are the static colors of FlxColor.
-	 * You can add more colors for FlxColor.fromString(String) if you need.
+	 * A `Map<String, Int>` whose values are the static colors of `FlxColor`.
+	 * You can add more colors for `FlxColor.fromString(String)` if you need.
 	 */
-	public static var colorLookup(default, null):Map<String,Int>
+	public static var colorLookup(default, null):Map<String, Int>
 		= FlxMacroUtil.buildMap("flixel.util.FlxColor");
 	
 	public var red(get, set):Int;
@@ -163,16 +163,19 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	}
 	
 	/**
-	 * Parses a String and returns a FlxColor or null if the String couldn't be parsed.
+	 * Parses a `String` and returns a `FlxColor` or `null` if the `String` couldn't be parsed.
+	 * 
 	 * Examples (input -> output in hex):
-	 * 0x00FF00    -> 0xFF00FF00
-	 * 0xAA4578C2  -> 0xAA4578C2
-	 * #0000FF     -> 0xFF0000FF
-	 * #3F000011   -> 0x3F000011
-	 * GRAY        -> 0xFF808080
-	 * blue        -> 0xFF0000FF
+	 * 
+	 * - `0x00FF00`    -> `0xFF00FF00`
+	 * - `0xAA4578C2`  -> `0xAA4578C2`
+	 * - `#0000FF`     -> `0xFF0000FF`
+	 * - `#3F000011`   -> `0x3F000011`
+	 * - `GRAY`        -> `0xFF808080`
+	 * - `blue`        -> `0xFF0000FF`
+	 * 
 	 * @param	str 	The string to be parsed
-	 * @return	A FlxColor or null if the String couldn't be parsed
+	 * @return	A `FlxColor` or `null` if the `String` couldn't be parsed
 	 */
 	public static function fromString(str:String):Null<FlxColor>
 	{
@@ -181,7 +184,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 		
 		if (COLOR_REGEX.match(str)) 
 		{
-			var hexColor:String = "0x"+COLOR_REGEX.matched(2);
+			var hexColor:String = "0x" + COLOR_REGEX.matched(2);
 			result = new FlxColor(Std.parseInt(hexColor));
 			if (hexColor.length == 8) 
 			{
@@ -297,7 +300,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 */
 	public inline function getComplementHarmony():FlxColor
 	{		
-		return fromHSB(FlxMath.wrapValue(Std.int(hue), 180, 350), brightness, saturation, alphaFloat);
+		return fromHSB(FlxMath.wrap(Std.int(hue) + 180, 0, 350), brightness, saturation, alphaFloat);
 	}
 	
 	/**
@@ -309,8 +312,8 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 */
 	public inline function getAnalogousHarmony(Threshold:Int = 30):Harmony
 	{
-		var warmer:Int = fromHSB(FlxMath.wrapValue(Std.int(hue), - Threshold, 350), saturation, brightness, alphaFloat);
-		var colder:Int = fromHSB(FlxMath.wrapValue(Std.int(hue), Threshold, 350), saturation, brightness, alphaFloat);
+		var warmer:Int = fromHSB(FlxMath.wrap(Std.int(hue) - Threshold, 0, 350), saturation, brightness, alphaFloat);
+		var colder:Int = fromHSB(FlxMath.wrap(Std.int(hue) + Threshold, 0, 350), saturation, brightness, alphaFloat);
 		
 		return {original: this, warmer: warmer, colder: colder};
 	}
@@ -324,9 +327,9 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 */
 	public inline function getSplitComplementHarmony(Threshold:Int = 30):Harmony
 	{
-		var oppositeHue:Int = FlxMath.wrapValue(Std.int(hue), 180, 350);
-		var warmer:FlxColor = fromHSB(FlxMath.wrapValue(oppositeHue, - Threshold, 350), saturation, brightness, alphaFloat);
-		var colder:FlxColor = fromHSB(FlxMath.wrapValue(oppositeHue, Threshold, 350), saturation, brightness, alphaFloat);
+		var oppositeHue:Int = FlxMath.wrap(Std.int(hue) + 180, 0, 350);
+		var warmer:FlxColor = fromHSB(FlxMath.wrap(oppositeHue - Threshold, 0, 350), saturation, brightness, alphaFloat);
+		var colder:FlxColor = fromHSB(FlxMath.wrap(oppositeHue + Threshold, 0, 350), saturation, brightness, alphaFloat);
 		
 		return {original: this, warmer: warmer, colder: colder};
 	}
@@ -339,8 +342,8 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 */
 	public inline function getTriadicHarmony():TriadicHarmony
 	{
-		var triadic1:FlxColor = fromHSB(FlxMath.wrapValue(Std.int(hue), 120, 359), saturation, brightness, alphaFloat);
-		var triadic2:FlxColor = fromHSB(FlxMath.wrapValue(Std.int(triadic1.hue), 120, 359), saturation, brightness, alphaFloat);
+		var triadic1:FlxColor = fromHSB(FlxMath.wrap(Std.int(hue) + 120, 0, 359), saturation, brightness, alphaFloat);
+		var triadic2:FlxColor = fromHSB(FlxMath.wrap(Std.int(triadic1.hue) + 120, 0, 359), saturation, brightness, alphaFloat);
 		
 		return {color1: this, color2: triadic1, color3: triadic2};
 	}
@@ -554,24 +557,40 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 		this = Value;
 	}
 	
+	private inline function getThis():Int
+	{
+		#if neko
+		return Std.int(this);
+		#else
+		return this;
+		#end
+	}
+	
+	private inline function validate():Void
+	{
+		#if neko
+		this = Std.int(this);
+		#end
+	}
+	
 	private inline function get_red():Int
 	{
-		return (this >> 16) & 0xff;
+		return (getThis() >> 16) & 0xff;
 	}
 	
 	private inline function get_green():Int
 	{
-		return (this >> 8) & 0xff;
+		return (getThis() >> 8) & 0xff;
 	}
 	
 	private inline function get_blue():Int
 	{
-		return this & 0xff;
+		return getThis() & 0xff;
 	}
 	
 	private inline function get_alpha():Int
 	{
-		return (this >> 24) & 0xff;
+		return (getThis() >> 24) & 0xff;
 	}
 	
 	private inline function get_redFloat():Float
@@ -596,6 +615,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	
 	private inline function set_red(Value:Int):Int
 	{
+		validate();
 		this &= 0xff00ffff;
 		this |= boundChannel(Value) << 16;
 		return Value;
@@ -603,6 +623,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	
 	private inline function set_green(Value:Int):Int
 	{
+		validate();
 		this &= 0xffff00ff;
 		this |= boundChannel(Value) << 8;
 		return Value;
@@ -610,6 +631,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	
 	private inline function set_blue(Value:Int):Int
 	{
+		validate();
 		this &= 0xffffff00;
 		this |= boundChannel(Value);
 		return Value;
@@ -617,6 +639,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	
 	private inline function set_alpha(Value:Int):Int
 	{
+		validate();
 		this &= 0x00ffffff;
 		this |= boundChannel(Value) << 24;
 		return Value;
@@ -757,13 +780,15 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	}
 }
 
-typedef Harmony = { 
+typedef Harmony =
+{
 	original:FlxColor,
 	warmer:FlxColor,
 	colder:FlxColor
 }
 
-typedef TriadicHarmony = {
+typedef TriadicHarmony =
+{
 	color1:FlxColor,
 	color2:FlxColor,
 	color3:FlxColor

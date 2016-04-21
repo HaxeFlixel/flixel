@@ -57,14 +57,14 @@ class VCRFrontEnd
 	{
 		if (!paused)
 		{
-			#if !FLX_NO_MOUSE
+			#if FLX_MOUSE
 			if (!FlxG.mouse.useSystemCursor)
 				Mouse.show();
 			#end
 			
 			paused = true;
 			
-			#if !FLX_NO_DEBUG
+			#if FLX_DEBUG
 			FlxG.game.debugger.vcr.onPause();
 			#end
 		}
@@ -77,14 +77,14 @@ class VCRFrontEnd
 	{
 		if (paused)
 		{
-			#if !FLX_NO_MOUSE
+			#if FLX_MOUSE
 			if (!FlxG.mouse.useSystemCursor)
 				Mouse.hide();
 			#end
 			
 			paused = false;
 			
-			#if !FLX_NO_DEBUG
+			#if FLX_DEBUG
 			FlxG.game.debugger.vcr.onResume();
 			#end
 		}
@@ -130,11 +130,15 @@ class VCRFrontEnd
 		replayCallback = Callback;
 		FlxG.game._replayRequested = true;
 		
-		#if !FLX_NO_KEYBOARD
+		#if FLX_KEYBOARD
 		FlxG.keys.enabled = false;
 		#end
+	
+		#if FLX_MOUSE
+		FlxG.mouse.enabled = false;
+		#end
 		
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		FlxG.game.debugger.vcr.runtime = 0;
 		FlxG.game.debugger.vcr.playingReplay();
 		#end
@@ -170,12 +174,16 @@ class VCRFrontEnd
 		FlxG.game.replaying = false;
 		FlxG.inputs.reset();
 		
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		FlxG.game.debugger.vcr.stoppedReplay();
 		#end
 		
-		#if !FLX_NO_KEYBOARD
+		#if FLX_KEYBOARD
 		FlxG.keys.enabled = true;
+		#end
+	
+		#if FLX_MOUSE
+		FlxG.mouse.enabled = true;
 		#end
 	}
 	
@@ -211,7 +219,7 @@ class VCRFrontEnd
 		}
 		
 		FlxG.game._recordingRequested = true;
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		FlxG.game.debugger.vcr.recording();
 		#end
 	}
@@ -219,25 +227,27 @@ class VCRFrontEnd
 	/**
 	 * Stop recording the current replay and return the replay data.
 	 * 
+	 * @param	OpenSaveDialog	If true, and targeting flash, open an OS-native save dialog for the user to choose where to save the data, and save it there.
+	 * 
 	 * @return	The replay data in simple ASCII format (see FlxReplay.save()).
 	 */
-	public inline function stopRecording():String
+	public inline function stopRecording(OpenSaveDialog:Bool = true):String
 	{
 		FlxG.game.recording = false;
 		
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		FlxG.game.debugger.vcr.stoppedRecording();
 		FlxG.game.debugger.vcr.stoppedReplay();
 		#end
 		
 		var data:String = FlxG.game._replay.save();
 		
-		if ((data != null) && (data.length > 0))
+		if (OpenSaveDialog && (data != null) && (data.length > 0))
 		{
 			#if flash
 			_file = new FileReference();
 			_file.addEventListener(Event.COMPLETE, onSaveComplete);
-			_file.addEventListener(Event.CANCEL,onSaveCancel);
+			_file.addEventListener(Event.CANCEL, onSaveCancel);
 			_file.addEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 			_file.save(data, DEFAULT_FILE_NAME);
 			#end
@@ -362,7 +372,7 @@ class VCRFrontEnd
 	{
 		#if flash
 		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
-		_file.removeEventListener(Event.CANCEL,onSaveCancel);
+		_file.removeEventListener(Event.CANCEL, onSaveCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 		_file = null;
 		#end
@@ -375,7 +385,7 @@ class VCRFrontEnd
 	{
 		#if flash
 		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
-		_file.removeEventListener(Event.CANCEL,onSaveCancel);
+		_file.removeEventListener(Event.CANCEL, onSaveCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 		_file = null;
 		FlxG.log.error("Problem saving flixel gameplay record.");

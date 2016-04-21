@@ -73,4 +73,24 @@ class FlxMathTest extends FlxTest
 		
 		Assert.isTrue(eps > maxError);
 	}
+	
+	@Test
+	function testWrap()
+	{
+		Assert.areEqual(0, FlxMath.wrap(0, 0, 0));
+		Assert.areEqual(4, FlxMath.wrap(-1, 0, 4));
+		Assert.areEqual(0, FlxMath.wrap(5, 0, 4));
+		Assert.areEqual(0, FlxMath.wrap(-11, -10, 0));
+		Assert.areEqual(-10, FlxMath.wrap(1, -10, 0));
+		Assert.areEqual(10, FlxMath.wrap(11, 10, 10));
+	}
+	
+	@Test
+	function testLerp()
+	{
+		Assert.areEqual(0, FlxMath.lerp(0, 10, 0));
+		Assert.areEqual(10, FlxMath.lerp(0, 10, 1));
+		Assert.areEqual(10, FlxMath.lerp(5, 15, 0.5));
+		Assert.areEqual(-5, FlxMath.lerp(5, 15, -1));
+	}
 }

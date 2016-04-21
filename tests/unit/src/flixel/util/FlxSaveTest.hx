@@ -1,6 +1,5 @@
 package flixel.util;
 
-import flixel.util.FlxSave;
 import massive.munit.Assert;
 
 class FlxSaveTest extends FlxTest

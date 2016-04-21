@@ -1,14 +1,8 @@
-## Flash
-
--swf bin/as3_test.swf
+-swf bin/flash/bin/TestMain.swf
 -swf-version 11.8
 --no-output
--cmd haxelib run openfl build flash
 
-#-cmd haxelib run lime build html5
-#--next
+--next
 
-## HTML5
-
-#-js bin/html5/bin/TestMain.js
-#--no-output
+-js bin/html5/bin/TestMain.js
+--no-output

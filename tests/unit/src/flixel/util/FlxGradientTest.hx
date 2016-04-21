@@ -1,7 +1,5 @@
 package flixel.util;
 
-import flixel.util.FlxGradient;
-import flixel.util.FlxColor;
 import massive.munit.Assert;
 
 class FlxGradientTest extends FlxTest
@@ -15,7 +13,6 @@ class FlxGradientTest extends FlxTest
 		Assert.areEqual(colors.length, matrix.ratio.length);
 	}
 
-#if (!js || bitfive) // openfl-html5 does not support Graphics#beginGradientFill()
 	@Test
 	function testCreateGradientBitmapData()
 	{
@@ -31,5 +28,4 @@ class FlxGradientTest extends FlxTest
 		}
 		Assert.isTrue(uniqueColors.length >= 3);
 	}
-#end
 }

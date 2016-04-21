@@ -1,6 +1,6 @@
 package flixel.system.ui;
 
-#if !FLX_NO_SOUND_SYSTEM
+#if FLX_SOUND_SYSTEM
 import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.Sprite;
@@ -104,7 +104,7 @@ class FlxSoundTray extends Sprite
 		{
 			_timer -= MS / 1000;
 		}
-		else if (y > - height)
+		else if (y > -height)
 		{
 			y -= (MS / 1000) * FlxG.height * 2;
 			
@@ -130,7 +130,7 @@ class FlxSoundTray extends Sprite
 	{
 		if (!Silent)
 		{
-			FlxG.sound.load(FlxAssets.getSound("assets/sounds/beep")).play();
+			FlxG.sound.load(FlxAssets.getSound("flixel/sounds/beep")).play();
 		}
 		
 		_timer = 1;

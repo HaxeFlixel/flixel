@@ -2,17 +2,19 @@
 <project>
 	<icon path="assets/images/logo/HaxeFlixel.svg" />
 	
-	<assets path="assets/sounds" include="*.ogg" if="html5" unless="unit-test" />
-	<assets path="assets/sounds" include="*.mp3" if="flash" embed="true" />
-	<assets path="assets/sounds" include="*.ogg" unless="flash || html5" embed="true" />
-	<assets path="assets/fonts/nokiafc22.ttf" embed="true" />
-	<assets path="assets/fonts/monsterrat.ttf" embed="true" />
+	<assets path="assets/sounds" rename="flixel/sounds" include="*.ogg" if="html5" unless="unit-test" />
+	<assets path="assets/sounds" rename="flixel/sounds" include="*.mp3" if="flash" embed="true" />
+	<assets path="assets/sounds" rename="flixel/sounds" include="*.ogg" unless="flash || html5" embed="true" />
+	<assets path="assets/fonts/nokiafc22.ttf" rename="flixel/fonts/nokiafc22.ttf" embed="true" />
+	<assets path="assets/fonts/monsterrat.ttf" rename="flixel/fonts/monsterrat.ttf" embed="true" />
+	<assets path="assets/images/ui/button.png" rename="flixel/images/ui/button.png" embed="true" unless="unit-test html5" />
 	
 	<set name="legacy" unless="next" />
 	
 	<haxelib name="openfl" unless="create" />
 	<haxelib name="hscript" unless="create||coverage2" optional="true" />
 	
+	<haxedef name="HXCPP_QUIET" />
 	<haxeflag name="--macro" value="flixel.system.macros.FlxDefines.run()" />
 	
 	<section if="setup">
@@ -26,7 +28,7 @@
 	</section>
 	
 	<section if="create">
-		<sample path="${haxelib:flixel-demos}/Arcade Classics" />
+		<sample path="${haxelib:flixel-demos}/Arcade" />
 		<sample path="${haxelib:flixel-demos}/Editors" />
 		<sample path="${haxelib:flixel-demos}/Effects" />
 		<sample path="${haxelib:flixel-demos}/Flixel Features" />

@@ -6,9 +6,7 @@ import haxe.macro.Expr;
 #if !macro
 import flixel.FlxObject;
 import flixel.FlxSprite;
-import flixel.math.FlxPoint;
-import flixel.system.macros.FlxMacroUtil;
-#if !FLX_NO_TOUCH
+#if FLX_TOUCH
 import flixel.input.touch.FlxTouch;
 #end
 #end
@@ -32,20 +30,16 @@ class FlxAngle
 	 */
 	public static macro function sinCosGenerator(length:Int = 360, sinAmplitude:Float = 1.0, cosAmplitude:Float = 1.0, frequency:Float = 1.0):Expr
 	{
-		var sincos =
-		{
-			cos: new Array<Float>(),
-			sin: new Array<Float>()
-		};
+		var table = { cos: [], sin: [] };
 		
 		for (c in 0...length)
 		{
 			var radian = c * frequency * Math.PI / 180;
-			sincos.cos.push(Math.cos(radian) * cosAmplitude);
-			sincos.sin.push(Math.sin(radian) * sinAmplitude);
+			table.cos.push(Math.cos(radian) * cosAmplitude);
+			table.sin.push(Math.sin(radian) * sinAmplitude);
 		}
 		
-		return Context.makeExpr(sincos, Context.currentPos());
+		return Context.makeExpr(table, Context.currentPos());
 	}
 
 	#if !macro
@@ -60,7 +54,7 @@ class FlxAngle
 	
 	/**
 	 * Keeps an angle value between -180 and +180 by wrapping it
-    * e.g an angle of +270 will be converted to -90
+	 * e.g an angle of +270 will be converted to -90
 	 * Should be called whenever the angle is updated on a FlxSprite to stop it from going insane.
 	 * 
 	 * @param	angle	The angle value to check
@@ -139,13 +133,15 @@ class FlxAngle
 		var dx:Float = (Target.x) - (Sprite.x + Sprite.origin.x);
 		var dy:Float = (Target.y) - (Sprite.y + Sprite.origin.y);
 		
+		Target.putWeak();
+		
 		if (AsDegrees)
 			return asDegrees(Math.atan2(dy, dx));
 		else
 			return Math.atan2(dy, dx);
 	}
 	
-	#if !FLX_NO_MOUSE
+	#if FLX_MOUSE
 	/**
 	 * Find the angle (in radians) between an FlxSprite and the mouse, taking their x/y and origin into account.
 	 * The angle is calculated in clockwise positive direction (down = 90 degrees positive, right = 0 degrees positive, up = 90 degrees negative)
@@ -165,6 +161,8 @@ class FlxAngle
 		var dx:Float = FlxG.mouse.screenX - p.x;
 		var dy:Float = FlxG.mouse.screenY - p.y;
 		
+		p.put();
+		
 		if (AsDegrees)
 			return asDegrees(Math.atan2(dy, dx));
 		else
@@ -172,7 +170,7 @@ class FlxAngle
 	}
 	#end
 	
-	#if !FLX_NO_TOUCH
+	#if FLX_TOUCH
 	/**
 	 * Find the angle (in radians) between an FlxSprite and a FlxTouch, taking their x/y and origin into account.
 	 * The angle is calculated in clockwise positive direction (down = 90 degrees positive, right = 0 degrees positive, up = 90 degrees negative)
@@ -190,6 +188,8 @@ class FlxAngle
 		var dx:Float = Touch.screenX - p.x;
 		var dy:Float = Touch.screenY - p.y;
 		
+		p.put();
+		
 		if (AsDegrees)
 			return asDegrees(Math.atan2(dy, dx));
 		else
@@ -197,13 +197,13 @@ class FlxAngle
 	}
 	#end
 	
-	 /**
-	  *  Translate an object's facing to angle.
-	  * 
-	  * @param	FacingBitmask	Bitmask from which to calculate the angle, as in FlxSprite::facing
-	  * @param	AsDegrees		If you need the value in degrees instead of radians, set to true
-	  * @return	The angle (in radians unless AsDegrees is true)
-	  */
+	/**
+	 *  Translate an object's facing to angle.
+	 * 
+	 * @param	FacingBitmask	Bitmask from which to calculate the angle, as in FlxSprite::facing
+	 * @param	AsDegrees		If you need the value in degrees instead of radians, set to true
+	 * @return	The angle (in radians unless AsDegrees is true)
+	 */
 	public static inline function angleFromFacing(FacingBitmask:Int, AsDegrees:Bool = false):Float
 	{		
 		var degrees = switch (FacingBitmask)
@@ -211,7 +211,7 @@ class FlxAngle
 			case FlxObject.LEFT: 180;
 			case FlxObject.RIGHT: 0;
 			case FlxObject.UP: -90;
-			case FlxObject.DOWN: 90;			
+			case FlxObject.DOWN: 90;
 			case f if (f == FlxObject.UP | FlxObject.LEFT): -135;
 			case f if (f == FlxObject.UP | FlxObject.RIGHT): -45;
 			case f if (f == FlxObject.DOWN | FlxObject.LEFT): 135;
@@ -220,7 +220,6 @@ class FlxAngle
 		}
 		return AsDegrees ? degrees : asRadians(degrees);
 	}
-	
 	
 	/**
 	 * Convert polar coordinates (radius + angle) to cartesian coordinates (x + y)
@@ -234,9 +233,7 @@ class FlxAngle
 	{
 		var p = point;
 		if (p == null)
-		{
 			p = FlxPoint.get();
-		}
 		
 		p.x = Radius * Math.cos(Angle * TO_RAD);
 		p.y = Radius * Math.sin(Angle * TO_RAD);
@@ -255,9 +252,7 @@ class FlxAngle
 	{
 		var p = point;
 		if (p == null)
-		{
 			p = FlxPoint.get();
-		}
 		
 		p.x = Math.sqrt((X * X) + (Y * Y));
 		p.y = Math.atan2(Y, X) * TO_DEG;
@@ -276,7 +271,8 @@ class FlxAngle
 	#end
 }
 
-typedef FlxSinCos = {
-	var cos: Array<Float>;
-	var sin: Array<Float>;
+typedef FlxSinCos =
+{
+	var cos:Array<Float>;
+	var sin:Array<Float>;
 };

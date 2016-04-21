@@ -5,6 +5,7 @@ import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxMatrix;
 import openfl.display.BlendMode;
 import openfl.display.Tilesheet;
+import openfl.geom.ColorTransform;
 
 /**
  * ...
@@ -55,6 +56,7 @@ class FlxDrawBaseItem<T>
 	public var graphics:FlxGraphic;
 	public var antialiasing:Bool = false;
 	public var colored:Bool = false;
+	public var hasColorOffsets:Bool = false;
 	public var blending:Int = 0;
 	
 	public var type:FlxDrawItemType;
@@ -63,7 +65,7 @@ class FlxDrawBaseItem<T>
 	
 	public var numTriangles(get, never):Int;
 	
-	public function new() {  }
+	public function new() {}
 	
 	public function reset():Void
 	{
@@ -81,10 +83,9 @@ class FlxDrawBaseItem<T>
 		nextTyped = null;
 	}
 	
-	public function render(camera:FlxCamera):Void {  }
+	public function render(camera:FlxCamera):Void {}
 	
-	public function addQuad(frame:FlxFrame, matrix:FlxMatrix,
-		red:Float = 1, green:Float = 1, blue:Float = 1, alpha:Float = 1):Void {  }
+	public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform):Void {}
 	
 	private function get_numVertices():Int
 	{

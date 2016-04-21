@@ -48,7 +48,7 @@ class FlxFramesCollection implements IFlxDestroyable
 	 */
 	public var border(default, null):FlxPoint;
 	
-	public function new(parent:FlxGraphic, type:FlxFrameCollectionType = null, border:FlxPoint = null)
+	public function new(parent:FlxGraphic, ?type:FlxFrameCollectionType, ?border:FlxPoint)
 	{
 		this.parent = parent;
 		this.type = type;
@@ -159,17 +159,17 @@ class FlxFramesCollection implements IFlxDestroyable
 	}
 	
 	/**
-	  * Adds new frame to this frame collection. This method runs additional check, and can add rotated frames (from texture atlases).
-	  * @param	frame			region of image
-	  * @param	sourceSize		original size of packed image (if image had been cropped, then original size will be bigger than frame size)
-	  * @param	offset			how frame region is located on original frame image (offset from top left corner of original image)
-	  * @param	name			name for this frame (name of packed image file)
-	  * @param	angle			rotation of packed image (can be 0, 90, -90).
-	  * @param	flipX			if packed image should be horizontally flipped
-	  * @param	flipY			if packed iamge should be vertically flipped
-	  * @return	Newly created and added frame object.
-	  */
-	public function addAtlasFrame(frame:FlxRect, sourceSize:FlxPoint, offset:FlxPoint, name:String = null, angle:FlxFrameAngle = 0, flipX:Bool=false, flipY:Bool=false):FlxFrame
+	 * Adds new frame to this frame collection. This method runs additional check, and can add rotated frames (from texture atlases).
+	 * @param	frame			region of image
+	 * @param	sourceSize		original size of packed image (if image had been cropped, then original size will be bigger than frame size)
+	 * @param	offset			how frame region is located on original frame image (offset from top left corner of original image)
+	 * @param	name			name for this frame (name of packed image file)
+	 * @param	angle			rotation of packed image (can be 0, 90, -90).
+	 * @param	flipX			if packed image should be horizontally flipped
+	 * @param	flipY			if packed iamge should be vertically flipped
+	 * @return	Newly created and added frame object.
+	 */
+	public function addAtlasFrame(frame:FlxRect, sourceSize:FlxPoint, offset:FlxPoint, ?name:String, angle:FlxFrameAngle = 0, flipX:Bool = false, flipY:Bool = false):FlxFrame
 	{
 		if (name != null && framesHash.exists(name))
 		{

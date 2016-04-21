@@ -1,0 +1,192 @@
+{
+	"defaultSeverity": "WARNING",
+	"baseDefines": [
+		"FLX_MOUSE_ADVANCED",
+		"FLX_NATIVE_CURSOR",
+		"FLX_SOUND_TRAY",
+		"FLX_POINTER_INPUT",
+		"FLX_POST_PROCESS",
+		"FLX_RECORD"
+	],
+	"defineCombinations": [
+		["FLX_JOYSTICK_API"],
+		["FLX_GAMEINPUT_API"],
+		["flash", "web"],
+		["html5", "js", "web"],
+		["neko", "desktop", "sys"],
+		["android", "cpp", "mobile"]
+	],
+	"exclude": {
+		"all": [
+			"TestSuite"
+		]
+	},
+	"checks": [
+		{
+			"type": "ModifierOrder",
+				"props": {
+				"modifiers": [
+					"OVERRIDE",
+					"PUBLIC_PRIVATE",
+					"STATIC",
+					"MACRO",
+					"INLINE",
+					"DYNAMIC"
+				]
+			}
+		},
+		{
+			"type": "ConstantName",
+			"props": {
+				"format": "^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$",
+				"tokens": ["INLINE"]
+			}
+		},
+		{
+			"type": "EmptyLines",
+			"props": {
+				"max": 1,
+				"allowEmptyLineAfterMultiLineComment": false,
+				"requireEmptyLineAfterClass": false,
+				"requireEmptyLineAfterInterface": false,
+				"requireEmptyLineAfterAbstract": false
+			}
+		},
+		{
+			"type": "IndentationCharacter"
+		},
+		{
+			"type": "LocalVariableName",
+			"props": {
+				"format": "^[a-z][a-zA-Z0-9]*$"
+			}
+		},
+		{
+			"type": "MemberName",
+			"props": {
+				"format": "^([a-z][a-zA-Z0-9]*|ID)$",
+				"severity": "IGNORE",
+				"tokens": [
+					"CLASS",
+					"TYPEDEF",
+					"PUBLIC"
+				]
+			}
+		},
+		{
+			"type": "MemberName",
+			"props": {
+				"format": "^_?[a-z][a-zA-Z0-9]*$",
+				"tokens": [
+					"CLASS",
+					"PRIVATE"
+				]
+			}
+		},
+		{
+			"type": "MemberName",
+			"props": {
+				"format": "^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$",
+				"tokens": ["ENUM"]
+			}
+		},
+		{
+			"type": "MethodName",
+			"props": {
+				"format": "^[a-z][a-zA-Z0-9]*$"
+			}
+		},
+		{
+			"type": "TypeName",
+			"props": {
+				"format": "^[A-Z]+[a-zA-Z0-9]*$"
+			}
+		},
+		{
+			"type": "Spacing"
+		},
+		{
+			"type": "WhitespaceAround",
+			"props": {
+				"tokens": [
+					"=",
+					"/",
+					"%",
+					">=",
+					"<=",
+					"==",
+					"!=",
+					"&",
+					"|",
+					"^",
+					"&&",
+					"||",
+					"<<",
+					">>",
+					">>>",
+					"+=",
+					"-=",
+					"*=",
+					"/=",
+					"%=",
+					"<<=",
+					">>=",
+					">>>=",
+					"|=",
+					"&=",
+					"^=",
+					"=>",
+					"<",
+					">",
+					"*"
+				]
+			}
+		},
+		{
+			"type": "WhitespaceAfter",
+			"props": {
+				"tokens": [
+					","
+				]
+			}
+		},
+		{
+			"type": "EmptyBlock"
+		},
+		{
+			"type": "LeftCurly",
+			"props": {
+				"option": "nl"
+			}
+		},
+		{
+			"type": "RightCurly"
+		},
+		{
+			"type": "SimplifyBooleanExpression"
+		},
+		{
+			"type": "SimplifyBooleanReturn"
+		},
+		{
+			"type": "NullableParameter"
+		},
+		{
+			"type": "EmptyPackage",
+			"props": {
+				"enforceEmptyPackage": true
+			}
+		},
+		{
+			"type": "AvoidStarImport"
+		},
+		{
+			"type": "UnusedImport",
+			"props": {
+				"ignoreModules": [
+					"haxe.macro.Expr"
+				]
+			}
+		}
+	]
+}

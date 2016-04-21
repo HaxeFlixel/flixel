@@ -4,7 +4,6 @@ import flash.display.BitmapData;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.graphics.FlxGraphic;
-import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
@@ -18,6 +17,11 @@ import haxe.ds.Vector;
  */
 class FlxFrame implements IFlxDestroyable
 {
+	private var point1:Point = new Point();
+	private var point2:Point = new Point();
+	private var rect:Rectangle = new Rectangle();
+	private var matrix:FlxMatrix = new FlxMatrix();
+	
 	/**
 	 * Sorting function for Array<FlxFrame>#sort(),
 	 * e.g. "tiles-001.png", "tiles-003.png", "tiles-002.png".
@@ -97,7 +101,6 @@ class FlxFrame implements IFlxDestroyable
 	@:allow(flixel.graphics.frames)
 	private function cacheFrameMatrix():Void
 	{
-		var matrix:FlxMatrix = FlxMatrix.matrix;
 		prepareBlitMatrix(matrix, true);
 		blitMatrix[0] = matrix.a;
 		blitMatrix[1] = matrix.b;
@@ -268,11 +271,11 @@ class FlxFrame implements IFlxDestroyable
 	 * @param	disposeIfNotEqual	Whether dispose passed bmd or not if its size isn't equal to frame's original size (sourceSize)
 	 * @return	Modified or newly created BitmapData with frame image on it
 	 */
-	public function paint(bmd:BitmapData = null, point:Point = null, mergeAlpha:Bool = false, disposeIfNotEqual:Bool = false):BitmapData
+	public function paint(?bmd:BitmapData, ?point:Point, mergeAlpha:Bool = false, disposeIfNotEqual:Bool = false):BitmapData
 	{
 		if (point == null)
 		{
-			point = FlxPoint.point1;
+			point = point1;
 			point.setTo(0, 0);
 		}
 		
@@ -285,14 +288,13 @@ class FlxFrame implements IFlxDestroyable
 		
 		if (angle == FlxFrameAngle.ANGLE_0)
 		{
-			offset.copyToFlash(FlxPoint.point2);
-			FlxPoint.point2.x += point.x;
-			FlxPoint.point2.y += point.y;
-			bmd.copyPixels(parent.bitmap, frame.copyToFlash(FlxRect.rect), FlxPoint.point2, null, null, mergeAlpha);
+			offset.copyToFlash(point2);
+			point2.x += point.x;
+			point2.y += point.y;
+			bmd.copyPixels(parent.bitmap, frame.copyToFlash(rect), point2, null, null, mergeAlpha);
 		}
 		else
 		{
-			var matrix:FlxMatrix = FlxMatrix.matrix;
 			fillBlitMatrix(matrix);
 			matrix.translate(point.x, point.y);
 			var rect:Rectangle = getDrawFrameRect(matrix);
@@ -314,7 +316,7 @@ class FlxFrame implements IFlxDestroyable
 	 * @param	disposeIfNotEqual	Whether dispose passed bmd or not if its size isn't equal to frame's original size (sourceSize)
 	 * @return	Modified or newly created BitmapData with frame image on it
 	 */
-	public function paintRotatedAndFlipped(bmd:BitmapData = null, point:Point = null, rotation:FlxFrameAngle = FlxFrameAngle.ANGLE_0, flipX:Bool = false, flipY:Bool = false, mergeAlpha:Bool = false, disposeIfNotEqual:Bool = false):BitmapData
+	public function paintRotatedAndFlipped(?bmd:BitmapData, ?point:Point, rotation:FlxFrameAngle = FlxFrameAngle.ANGLE_0, flipX:Bool = false, flipY:Bool = false, mergeAlpha:Bool = false, disposeIfNotEqual:Bool = false):BitmapData
 	{
 		if (type == FlxFrameType.EMPTY && rotation == FlxFrameAngle.ANGLE_0)
 		{
@@ -323,7 +325,7 @@ class FlxFrame implements IFlxDestroyable
 		
 		if (point == null)
 		{
-			point = FlxPoint.point2;
+			point = point2;
 			point.setTo(0, 0);
 		}
 		
@@ -337,7 +339,6 @@ class FlxFrame implements IFlxDestroyable
 		var doFlipX = flipX != this.flipX;
 		var doFlipY = flipY != this.flipY;
 		
-		var matrix:FlxMatrix = FlxMatrix.matrix;
 		prepareTransformedBlitMatrix(matrix, rotation, doFlipX, doFlipY);
 		matrix.translate(point.x, point.y);
 		var rect:Rectangle = getDrawFrameRect(matrix);
@@ -355,7 +356,7 @@ class FlxFrame implements IFlxDestroyable
 	 * @param	disposeIfNotEqual	Whether dispose passed bmd or not if its size isn't equal to frame's original size (sourceSize)
 	 * @return	Prepared BitmapData for further frame blitting. Output BitmapData could be a different object.
 	 */
-	private inline function checkInputBitmap(bmd:BitmapData = null, point:Point = null, rotation:FlxFrameAngle = FlxFrameAngle.ANGLE_0, mergeAlpha:Bool = false, disposeIfNotEqual:Bool = false):BitmapData
+	private inline function checkInputBitmap(?bmd:BitmapData, ?point:Point, rotation:FlxFrameAngle = FlxFrameAngle.ANGLE_0, mergeAlpha:Bool = false, disposeIfNotEqual:Bool = false):BitmapData
 	{
 		var w:Int = Std.int(sourceSize.x);
 		var h:Int = Std.int(sourceSize.y);
@@ -374,7 +375,6 @@ class FlxFrame implements IFlxDestroyable
 		
 		if (bmd != null && !mergeAlpha)
 		{
-			var rect:Rectangle = FlxRect.rect;
 			rect.setTo(point.x, point.y, w, h);
 			bmd.fillRect(rect, FlxColor.TRANSPARENT);
 		}
@@ -395,15 +395,15 @@ class FlxFrame implements IFlxDestroyable
 	 */
 	private inline function getDrawFrameRect(mat:FlxMatrix):Rectangle
 	{
-		var p1:FlxPoint = FlxPoint.flxPoint1.set(frame.x, frame.y);
-		var p2:FlxPoint = FlxPoint.flxPoint2.set(frame.right, frame.bottom);
+		var p1:FlxPoint = FlxPoint.weak(frame.x, frame.y);
+		var p2:FlxPoint = FlxPoint.weak(frame.right, frame.bottom);
 		
 		p1.transform(mat);
 		p2.transform(mat);
 		
-		var flxRect:FlxRect = FlxRect.flxRect.fromTwoPoints(p1, p2);
-		var rect:Rectangle = FlxRect.rect;
+		var flxRect = FlxRect.get().fromTwoPoints(p1, p2);
 		flxRect.copyToFlash(rect);
+		flxRect.put();
 		return rect;
 	}
 	
@@ -414,7 +414,7 @@ class FlxFrame implements IFlxDestroyable
 	 * @param	frameToFill		frame to fill with data. If null then new frame will be created
 	 * @return	Specified frameToFill object but filled with data
 	 */
-	public function subFrameTo(rect:FlxRect, frameToFill:FlxFrame = null):FlxFrame
+	public function subFrameTo(rect:FlxRect, ?frameToFill:FlxFrame):FlxFrame
 	{
 		if (frameToFill == null)
 		{
@@ -447,7 +447,7 @@ class FlxFrame implements IFlxDestroyable
 		var ox:Float = Math.max(offset.x, 0);
 		var oy:Float = Math.max(offset.y, 0);
 		
-		rect.offset( -ox, -oy);
+		rect.offset(-ox, -oy);
 		var frameRect:FlxRect = clippedRect.intersection(rect);
 		clippedRect = FlxDestroyUtil.put(clippedRect);
 		rect.offset(ox, oy);
@@ -464,29 +464,26 @@ class FlxFrame implements IFlxDestroyable
 			frameToFill.type = FlxFrameType.REGULAR;
 			frameToFill.offset.set(frameRect.x, frameRect.y).subtract(rect.x, rect.y).addPoint(offset);
 			
-			var p1:FlxPoint = FlxPoint.flxPoint1.set(frameRect.x, frameRect.y);
-			var p2:FlxPoint = FlxPoint.flxPoint2.set(frameRect.right, frameRect.bottom);
+			var p1 = FlxPoint.weak(frameRect.x, frameRect.y);
+			var p2 = FlxPoint.weak(frameRect.right, frameRect.bottom);
 			
-			var mat:FlxMatrix = FlxMatrix.matrix;
-			mat.identity();
+			matrix.identity();
 			
 			if (angle == FlxFrameAngle.ANGLE_NEG_90)
 			{
-				mat.rotateByPositive90();
-			//	mat.translate(sourceSize.y, 0);
-				mat.translate(frame.width, 0);
+				matrix.rotateByPositive90();
+				matrix.translate(frame.width, 0);
 			}
 			else if (angle == FlxFrameAngle.ANGLE_90)
 			{
-				mat.rotateByNegative90();
-			//	mat.translate(0, sourceSize.x);
-				mat.translate(0, frame.height);
+				matrix.rotateByNegative90();
+				matrix.translate(0, frame.height);
 			}
 			
 			if (angle != FlxFrameAngle.ANGLE_0)
 			{
-				p1.transform(mat);
-				p2.transform(mat);
+				p1.transform(matrix);
+				p2.transform(matrix);
 			}
 			
 			frameRect.fromTwoPoints(p1, p2);
@@ -505,7 +502,7 @@ class FlxFrame implements IFlxDestroyable
 	 * @param	border	Amount to clip from frame
 	 * @return	Clipped frame
 	 */
-	public function setBorderTo(border:FlxPoint, frameToFill:FlxFrame = null):FlxFrame
+	public function setBorderTo(border:FlxPoint, ?frameToFill:FlxFrame):FlxFrame
 	{
 		var rect:FlxRect = FlxRect.get(border.x, border.y, sourceSize.x - 2 * border.x, sourceSize.y - 2 * border.y);
 		frameToFill = this.subFrameTo(rect, frameToFill);
@@ -520,7 +517,7 @@ class FlxFrame implements IFlxDestroyable
 	 * @param	clippedFrame	The frame which will contain result of original frame clipping. If null then new frame will be created.
 	 * @return	Result of applying frame clipping
 	 */
-	public function clipTo(clip:FlxRect, clippedFrame:FlxFrame = null):FlxFrame
+	public function clipTo(clip:FlxRect, ?clippedFrame:FlxFrame):FlxFrame
 	{
 		if (clippedFrame == null)
 		{
@@ -567,29 +564,26 @@ class FlxFrame implements IFlxDestroyable
 			clippedFrame.type = FlxFrameType.REGULAR;
 			clippedFrame.offset.set(frameRect.x, frameRect.y).addPoint(offset);
 			
-			var p1:FlxPoint = FlxPoint.flxPoint1.set(frameRect.x, frameRect.y);
-			var p2:FlxPoint = FlxPoint.flxPoint2.set(frameRect.right, frameRect.bottom);
+			var p1 = FlxPoint.weak(frameRect.x, frameRect.y);
+			var p2 = FlxPoint.weak(frameRect.right, frameRect.bottom);
 			
-			var mat:FlxMatrix = FlxMatrix.matrix;
-			mat.identity();
+			matrix.identity();
 			
 			if (angle == FlxFrameAngle.ANGLE_NEG_90)
 			{
-				mat.rotateByPositive90();
-			//	mat.translate(sourceSize.y, 0);
-				mat.translate(frame.width, 0);
+				matrix.rotateByPositive90();
+				matrix.translate(frame.width, 0);
 			}
 			else if (angle == FlxFrameAngle.ANGLE_90)
 			{
-				mat.rotateByNegative90();
-			//	mat.translate(0, sourceSize.x);
-				mat.translate(0, frame.height);
+				matrix.rotateByNegative90();
+				matrix.translate(0, frame.height);
 			}
 			
 			if (angle != FlxFrameAngle.ANGLE_0)
 			{
-				p1.transform(mat);
-				p2.transform(mat);
+				p1.transform(matrix);
+				p2.transform(matrix);
 			}
 			
 			frameRect.fromTwoPoints(p1, p2);
@@ -608,7 +602,7 @@ class FlxFrame implements IFlxDestroyable
 	 * @param	clone	Frame to fill data with. If null, then new frame will be created.
 	 * @return	Frame with data of this frame.
 	 */
-	public function copyTo(clone:FlxFrame = null):FlxFrame
+	public function copyTo(?clone:FlxFrame):FlxFrame
 	{
 		if (clone == null)
 		{

@@ -1,23 +1,17 @@
 package flixel.system;
 
-#if macro
-import haxe.macro.Context;
-import haxe.macro.Expr;
-import sys.FileSystem;
-using flixel.util.FlxArrayUtil;
-using StringTools;
-#else
+#if !macro
 import flash.display.BitmapData;
 import flash.display.Graphics;
 import flash.media.Sound;
-import flash.text.Font;
 import flixel.FlxG;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxAtlasFrames;
-import flixel.graphics.frames.FlxTileFrames;
-import flixel.graphics.frames.FlxFramesCollection;
 import flixel.graphics.frames.FlxFrame;
-import flixel.util.typeLimit.*;
+import flixel.graphics.frames.FlxFramesCollection;
+import flixel.util.typeLimit.OneOfFour;
+import flixel.util.typeLimit.OneOfThree;
+import flixel.util.typeLimit.OneOfTwo;
 import openfl.Assets;
 import openfl.utils.ByteArray;
 
@@ -28,19 +22,29 @@ class GraphicLogo extends BitmapData {}
 class GraphicVirtualInput extends BitmapData {}
 
 @:file("assets/images/ui/virtual-input.txt")
-class VirtualInputData extends #if (lime_legacy || openfl <= "3.4.0") ByteArray #else ByteArrayData #end {} 
+class VirtualInputData extends #if (lime_legacy || openfl <= "3.4.0") ByteArray #else ByteArrayData #end {}
+
+typedef FlxAngelCodeSource = OneOfTwo<Xml, String>;
+typedef FlxSoundAsset = OneOfThree<String, Sound, Class<Sound>>;
+typedef FlxGraphicAsset = OneOfThree<FlxGraphic, BitmapData, String>;
+typedef FlxGraphicSource = OneOfThree<BitmapData, Class<Dynamic>, String>;
+typedef FlxTilemapGraphicAsset = OneOfFour<FlxFramesCollection, FlxGraphic, BitmapData, String>;
+typedef FlxBitmapFontGraphicAsset = OneOfFour<FlxFrame, FlxGraphic, BitmapData, String>;
 #end
 
 class FlxAssets
 {
 #if macro
 	/**
-	 * Reads files from a directory relative to this project and generates public static inlined
+	 * Reads files from a directory relative to this project and generates `public static inline`
 	 * variables containing the string paths to the files in it. 
 	 * 
 	 * Example usage:
+	 * 
+	 * ```haxe
 	 * @:build(flixel.system.FlxAssets.buildFileReferences("assets/images"))
 	 * class Images {}
+	 * ```
 	 * 
 	 * Mostly copied from:
 	 * @author Mark Knol
@@ -48,66 +52,16 @@ class FlxAssets
 	 * 
 	 * @param   directory          The directory to scan for files
 	 * @param   subDirectories     Whether to include subdirectories
-	 * @param   filterExtensions   Example: ["jpg", "png", "gif"] will only add files with that extension. Null means: all extensions
+	 * @param   filterExtensions   Example: `["jpg", "png", "gif"]` will only add files with that extension.
 	 */
-	macro public static function buildFileReferences(directory:String = "assets/", subDirectories:Bool = false, ?filterExtensions:Array<String>):Array<Field>
+	public static macro function buildFileReferences(directory:String = "assets/", subDirectories:Bool = false, ?filterExtensions:Array<String>):Array<haxe.macro.Expr.Field>
 	{
-		if (!directory.endsWith("/"))
-			directory += "/";
-			
-		var fileReferences:Array<FileReference> = getFileReferences(directory, subDirectories, filterExtensions);
-		
-		var fields:Array<Field> = Context.getBuildFields();
-			
-		for (fileRef in fileReferences)
-		{
-			// create new field based on file references!
-			fields.push({
-				name: fileRef.name,
-				doc: fileRef.documentation,
-				access: [Access.APublic, Access.AStatic, Access.AInline],
-				kind: FieldType.FVar(macro:String, macro $v{ fileRef.value }),
-				pos: Context.currentPos()
-			});
-		}
-		return fields;
-	}
-	
-	private static function getFileReferences(directory:String, subDirectories:Bool = false, ?filterExtensions:Array<String>):Array<FileReference>
-	{
-		var fileReferences:Array<FileReference> = [];
-		var resolvedPath = #if (ios || tvos) Context.resolvePath(directory) #else directory #end;
-		var directoryInfo = FileSystem.readDirectory(resolvedPath);
-		for (name in directoryInfo)
-		{
-			if (!FileSystem.isDirectory(resolvedPath + name))
-			{
-				// ignore invisible files
-				if (name.startsWith("."))
-					continue;
-				
-				if (filterExtensions != null)
-				{
-					var extension:String = name.split(".")[1]; // get the string after the dot
-					if (filterExtensions.indexOf(extension) == -1)
-						continue;
-				}
-				
-				fileReferences.push(new FileReference(directory + name));
-			}
-			else if (subDirectories)
-			{
-				fileReferences = fileReferences.concat(getFileReferences(directory + name + "/", true, filterExtensions));
-			}
-		}
-		
-		return fileReferences;
+		return flixel.system.macros.FlxAssetPaths.buildFileReferences(directory, subDirectories, filterExtensions);
 	}
 #else
 	// fonts
 	public static var FONT_DEFAULT:String = "Nokia Cellphone FC Small";
 	public static var FONT_DEBUGGER:String = "Monsterrat";
-	
 	
 	public static function drawLogo(graph:Graphics):Void
 	{
@@ -264,32 +218,3 @@ class FlxAssets
 	}
 #end
 }
-
-#if macro
-private class FileReference
-{
-	public var name:String;
-	public var value:String;
-	public var documentation:String;
-	
-	public function new(value:String)
-	{
-		this.value = value;
-		
-		// replace some forbidden names to underscores, since variables cannot have these symbols.
-		this.name = value.split("-").join("_").split(".").join("__");
-		var split:Array<String> = name.split("/");
-		this.name = split.last();
-		
-		// auto generate documentation
-		this.documentation = "\"" + value + "\" (auto generated).";
-	}
-}
-#else
-typedef FlxAngelCodeSource = OneOfTwo<Xml, String>;
-typedef FlxSoundAsset = OneOfThree<String, Sound, Class<Sound>>;
-typedef FlxGraphicAsset = OneOfThree<FlxGraphic, BitmapData, String>;
-typedef FlxGraphicSource = OneOfThree<BitmapData, Class<Dynamic>, String>;
-typedef FlxTilemapGraphicAsset = OneOfFour<FlxFramesCollection, FlxGraphic, BitmapData, String>;
-typedef FlxBitmapFontGraphicAsset = OneOfFour<FlxFrame, FlxGraphic, BitmapData, String>;
-#end

@@ -1,20 +1,13 @@
 package flixel.system;
 
-#if !FLX_HAXE_BUILD
 import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.BlendMode;
-import flash.display.Graphics;
 import flash.display.Sprite;
 import flash.Lib;
-import flash.text.Font;
 import flash.text.TextField;
 import flash.text.TextFormat;
 import flixel.FlxG;
-import flixel.system.FlxBasePreloader;
-
-@:font("assets/fonts/nokiafc22.ttf")
-class PreloaderFont extends Font {}
 
 @:bitmap("assets/images/preloader/light.png")
 private class GraphicLogoLight extends BitmapData {}
@@ -24,16 +17,11 @@ private class GraphicLogoCorners extends BitmapData {}
 
 /**
  * This is the Default HaxeFlixel Themed Preloader 
- * You can make your own style of Preloader by overriding FlxPreloaderBase and using this class as an example.
- * To use your Preloader, simply change Project.xml to say: <app preloader="class.path.MyPreloader" />
+ * You can make your own style of Preloader by overriding `FlxPreloaderBase` and using this class as an example.
+ * To use your Preloader, simply change `Project.xml` to say: `<app preloader="class.path.MyPreloader" />`
  */
 class FlxPreloader extends FlxBasePreloader
 {
-	#if (!js && (openfl < "3.0.0-alpha"))
-	
-	private static var BlendModeScreen = BlendMode.SCREEN;
-	private static var BlendModeOverlay = BlendMode.OVERLAY;
-	
 	private var _buffer:Sprite;
 	private var _bmpBar:Bitmap;
 	private var _text:TextField;
@@ -42,14 +30,15 @@ class FlxPreloader extends FlxBasePreloader
 	
 	/**
 	 * Initialize your preloader here.
+	 * 
+	 * ```haxe
+	 * super(0, ["test.com", FlxPreloaderBase.LOCAL]); // example of site-locking
+	 * super(10); // example of long delay (10 seconds)
+	 * ```
 	 */
 	override public function new(MinDisplayTime:Float = 0, ?AllowedURLs:Array<String>):Void
 	{
 		super(MinDisplayTime, AllowedURLs);
-		
-		// super(0, ["test.com", FlxPreloaderBase.LOCAL]); // example of site-locking
-		
-		// super(10); // example of long delay (10 seconds)
 	}
 	
 	/**
@@ -59,6 +48,7 @@ class FlxPreloader extends FlxBasePreloader
 	 */
 	override private function create():Void
 	{
+		#if !js
 		_buffer = new Sprite();
 		_buffer.scaleX = _buffer.scaleY = 2;
 		addChild(_buffer);
@@ -75,9 +65,8 @@ class FlxPreloader extends FlxBasePreloader
 		_bmpBar.y = _height - 11;
 		_buffer.addChild(_bmpBar);
 		
-		Font.registerFont(PreloaderFont);
 		_text = new TextField();
-		_text.defaultTextFormat = new TextFormat("Nokia Cellphone FC Small", 8, 0x5f6aff);
+		_text.defaultTextFormat = new TextFormat(FlxAssets.FONT_DEFAULT, 8, 0x5f6aff);
 		_text.embedFonts = true;
 		_text.selectable = false;
 		_text.multiline = false;
@@ -87,14 +76,14 @@ class FlxPreloader extends FlxBasePreloader
 		_buffer.addChild(_text);
 		
 		_logo = new Sprite();
-		drawLogo(_logo.graphics);
+		FlxAssets.drawLogo(_logo.graphics);
 		_logo.scaleX = _logo.scaleY = _height / 8 * 0.04;
 		_logo.x = (_width - _logo.width) / 2;
 		_logo.y = (_height - _logo.height) / 2;
 		_buffer.addChild(_logo);
 		_logoGlow = new Sprite();
-		drawLogo(_logoGlow.graphics);
-		_logoGlow.blendMode = BlendModeScreen;
+		FlxAssets.drawLogo(_logoGlow.graphics);
+		_logoGlow.blendMode = BlendMode.SCREEN;
 		_logoGlow.scaleX = _logoGlow.scaleY = _height / 8 * 0.04;
 		_logoGlow.x = (_width - _logoGlow.width) / 2;
 		_logoGlow.y = (_height - _logoGlow.height) / 2;
@@ -116,71 +105,12 @@ class FlxPreloader extends FlxBasePreloader
 			}
 			i += 2;
 		}
-		bitmap.blendMode = BlendModeOverlay;
+		bitmap.blendMode = BlendMode.OVERLAY;
 		bitmap.alpha = 0.25;
 		_buffer.addChild(bitmap);
+		#end
 		
 		super.create();
-	}
-	
-	/**
-	 * This function simply draws the HaxeFlixel logo.
-	 * @param	graph
-	 */
-	private function drawLogo(graph:Graphics):Void
-	{
-		// draw green area
-		graph.beginFill(0x00b922);
-		graph.moveTo(50, 13);
-		graph.lineTo(51, 13);
-		graph.lineTo(87, 50);
-		graph.lineTo(87, 51);
-		graph.lineTo(51, 87);
-		graph.lineTo(50, 87);
-		graph.lineTo(13, 51);
-		graph.lineTo(13, 50);
-		graph.lineTo(50, 13);
-		graph.endFill();
-		
-		// draw yellow area
-		graph.beginFill(0xffc132);
-		graph.moveTo(0, 0);
-		graph.lineTo(25, 0);
-		graph.lineTo(50, 13);
-		graph.lineTo(13, 50);
-		graph.lineTo(0, 25);
-		graph.lineTo(0, 0);
-		graph.endFill();
-		
-		// draw red area
-		graph.beginFill(0xf5274e);
-		graph.moveTo(100, 0);
-		graph.lineTo(75, 0);
-		graph.lineTo(51, 13);
-		graph.lineTo(87, 50);
-		graph.lineTo(100, 25);
-		graph.lineTo(100, 0);
-		graph.endFill();
-		
-		// draw blue area
-		graph.beginFill(0x3641ff);
-		graph.moveTo(0, 100);
-		graph.lineTo(25, 100);
-		graph.lineTo(50, 87);
-		graph.lineTo(13, 51);
-		graph.lineTo(0, 75);
-		graph.lineTo(0, 100);
-		graph.endFill();
-		
-		// draw light-blue area
-		graph.beginFill(0x04cdfb);
-		graph.moveTo(100, 100);
-		graph.lineTo(75, 100);
-		graph.lineTo(51, 87);
-		graph.lineTo(87, 51);
-		graph.lineTo(100, 75);
-		graph.lineTo(100, 100);
-		graph.endFill();
 	}
 	
 	/**
@@ -189,6 +119,7 @@ class FlxPreloader extends FlxBasePreloader
 	 */
 	override private function destroy():Void
 	{
+		#if !js
 		if (_buffer != null)	
 		{
 			removeChild(_buffer);
@@ -199,6 +130,7 @@ class FlxPreloader extends FlxBasePreloader
 		_logo = null;
 		_logoGlow = null;
 		super.destroy();
+		#end
 	}
 	
 	/**
@@ -207,6 +139,7 @@ class FlxPreloader extends FlxBasePreloader
 	 */
 	override public function update(Percent:Float):Void
 	{
+		#if !js
 		_bmpBar.scaleX = Percent * (_width - 8);
 		_text.text = Std.string(FlxG.VERSION) + " " + Std.int(Percent * 100) + "%";
 		
@@ -244,7 +177,6 @@ class FlxPreloader extends FlxBasePreloader
 		{
 			_buffer.alpha = 1 - (Percent - 0.9) / 0.1;
 		}
+		#end
 	}
-	#end
 }
-#end

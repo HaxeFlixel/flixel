@@ -12,6 +12,7 @@ import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.system.FlxAssets.FlxGraphicAsset;
+import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSort;
 
@@ -50,7 +51,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 */
 	private var _skipTransformChildren:Bool = false;
 	
-	#if !FLX_NO_DEBUG
+	#if FLX_DEBUG
 	/**
 	 * Just a helper variable to check if this group has already been drawn on debug layer
 	 */
@@ -91,7 +92,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		
 		scale.set(1, 1);
 		scrollFactor.set(1, 1);
-	 	
+
 		initMotionVars();
 	}
 	
@@ -138,16 +139,15 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 */
 	override public function isOnScreen(?Camera:FlxCamera):Bool 
 	{
-		var result:Bool = false;
 		for (sprite in _sprites)
 		{
-			if (sprite != null && sprite.exists && sprite.visible)
+			if (sprite != null && sprite.exists && sprite.visible && sprite.isOnScreen(Camera))
 			{
-				result = result || sprite.isOnScreen(Camera);
+				return true;
 			}
 		}
 		
-		return result;
+		return false;
 	}
 	
 	/**
@@ -208,7 +208,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	override public function draw():Void 
 	{
 		group.draw();
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		_isDrawnDebug = false;
 		#end
 	}
@@ -753,9 +753,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	override private function get_width():Float
 	{
 		if (length == 0)
-		{
 			return 0;
-		}
 		
 		var minX:Float = Math.POSITIVE_INFINITY;
 		var maxX:Float = Math.NEGATIVE_INFINITY;
@@ -775,7 +773,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 				minX = minMemberX;
 			}
 		}
-		return (maxX - minX);
+		return maxX - minX;
 	}
 	
 	/**
@@ -811,7 +809,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 				minY = minMemberY;
 			}
 		}
-		return (maxY - minY);
+		return maxY - minY;
 	}
 	
 	// GROUP FUNCTIONS
@@ -838,35 +836,35 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	
 	// TRANSFORM FUNCTIONS - STATIC TYPING
 	
-	private inline function xTransform(Sprite:FlxSprite, X:Float)								{ Sprite.x += X; }								// addition
-	private inline function yTransform(Sprite:FlxSprite, Y:Float)								{ Sprite.y += Y; }								// addition
-	private inline function angleTransform(Sprite:FlxSprite, Angle:Float)						{ Sprite.angle += Angle; }						// addition
-	private inline function alphaTransform(Sprite:FlxSprite, Alpha:Float)						{ Sprite.alpha *= Alpha; }						// multiplication
-	private inline function facingTransform(Sprite:FlxSprite, Facing:Int)						{ Sprite.facing = Facing; }						// set
-	private inline function flipXTransform(Sprite:FlxSprite, FlipX:Bool)						{ Sprite.flipX = FlipX; }						// set
-	private inline function flipYTransform(Sprite:FlxSprite, FlipY:Bool)						{ Sprite.flipY = FlipY; }						// set
-	private inline function movesTransform(Sprite:FlxSprite, Moves:Bool)						{ Sprite.moves = Moves; }						// set
-	private inline function pixelPerfectTransform(Sprite:FlxSprite, PixelPerfect:Bool)			{ Sprite.pixelPerfectRender = PixelPerfect; }	// set
-	private inline function gColorTransform(Sprite:FlxSprite, Color:Int)						{ Sprite.color = Color; }						// set
-	private inline function blendTransform(Sprite:FlxSprite, Blend:BlendMode)					{ Sprite.blend = Blend; }						// set
-	private inline function immovableTransform(Sprite:FlxSprite, Immovable:Bool)				{ Sprite.immovable = Immovable; }				// set
-	private inline function visibleTransform(Sprite:FlxSprite, Visible:Bool)					{ Sprite.visible = Visible; }					// set
-	private inline function activeTransform(Sprite:FlxSprite, Active:Bool)						{ Sprite.active = Active; }						// set
-	private inline function solidTransform(Sprite:FlxSprite, Solid:Bool)						{ Sprite.solid = Solid; }						// set
-	private inline function aliveTransform(Sprite:FlxSprite, Alive:Bool)						{ Sprite.alive = Alive; }						// set
-	private inline function existsTransform(Sprite:FlxSprite, Exists:Bool)						{ Sprite.exists = Exists; }						// set
-	private inline function camerasTransform(Sprite:FlxSprite, Cameras:Array<FlxCamera>)		{ Sprite.cameras = Cameras; }					// set
+	private inline function xTransform(Sprite:FlxSprite, X:Float)                          Sprite.x += X; // addition
+	private inline function yTransform(Sprite:FlxSprite, Y:Float)                          Sprite.y += Y; // addition
+	private inline function angleTransform(Sprite:FlxSprite, Angle:Float)                  Sprite.angle += Angle; // addition
+	private inline function alphaTransform(Sprite:FlxSprite, Alpha:Float)                  Sprite.alpha *= Alpha; // multiplication
+	private inline function facingTransform(Sprite:FlxSprite, Facing:Int)                  Sprite.facing = Facing;
+	private inline function flipXTransform(Sprite:FlxSprite, FlipX:Bool)                   Sprite.flipX = FlipX;
+	private inline function flipYTransform(Sprite:FlxSprite, FlipY:Bool)                   Sprite.flipY = FlipY;
+	private inline function movesTransform(Sprite:FlxSprite, Moves:Bool)                   Sprite.moves = Moves;
+	private inline function pixelPerfectTransform(Sprite:FlxSprite, PixelPerfect:Bool)     Sprite.pixelPerfectRender = PixelPerfect;
+	private inline function gColorTransform(Sprite:FlxSprite, Color:Int)                   Sprite.color = Color;
+	private inline function blendTransform(Sprite:FlxSprite, Blend:BlendMode)              Sprite.blend = Blend;
+	private inline function immovableTransform(Sprite:FlxSprite, Immovable:Bool)           Sprite.immovable = Immovable;
+	private inline function visibleTransform(Sprite:FlxSprite, Visible:Bool)               Sprite.visible = Visible;
+	private inline function activeTransform(Sprite:FlxSprite, Active:Bool)                 Sprite.active = Active;
+	private inline function solidTransform(Sprite:FlxSprite, Solid:Bool)                   Sprite.solid = Solid;
+	private inline function aliveTransform(Sprite:FlxSprite, Alive:Bool)                   Sprite.alive = Alive;
+	private inline function existsTransform(Sprite:FlxSprite, Exists:Bool)                 Sprite.exists = Exists;
+	private inline function camerasTransform(Sprite:FlxSprite, Cameras:Array<FlxCamera>)   Sprite.cameras = Cameras;
 
-	private inline function offsetTransform(Sprite:FlxSprite, Offset:FlxPoint)					{ Sprite.offset.copyFrom(Offset); }				// set
-	private inline function originTransform(Sprite:FlxSprite, Origin:FlxPoint)					{ Sprite.origin.copyFrom(Origin); }				// set
-	private inline function scaleTransform(Sprite:FlxSprite, Scale:FlxPoint)					{ Sprite.scale.copyFrom(Scale); }				// set
-	private inline function scrollFactorTransform(Sprite:FlxSprite, ScrollFactor:FlxPoint)		{ Sprite.scrollFactor.copyFrom(ScrollFactor); }	// set
+	private inline function offsetTransform(Sprite:FlxSprite, Offset:FlxPoint)             Sprite.offset.copyFrom(Offset);
+	private inline function originTransform(Sprite:FlxSprite, Origin:FlxPoint)             Sprite.origin.copyFrom(Origin);
+	private inline function scaleTransform(Sprite:FlxSprite, Scale:FlxPoint)               Sprite.scale.copyFrom(Scale);
+	private inline function scrollFactorTransform(Sprite:FlxSprite, ScrollFactor:FlxPoint) Sprite.scrollFactor.copyFrom(ScrollFactor);
 
 	// Functions for the FlxCallbackPoint
-	private inline function offsetCallback(Offset:FlxPoint)             { transformChildren(offsetTransform, Offset); }
-	private inline function originCallback(Origin:FlxPoint)             { transformChildren(originTransform, Origin); }
-	private inline function scaleCallback(Scale:FlxPoint)               { transformChildren(scaleTransform, Scale); }
-	private inline function scrollFactorCallback(ScrollFactor:FlxPoint) { transformChildren(scrollFactorTransform, ScrollFactor); }
+	private inline function offsetCallback(Offset:FlxPoint)             transformChildren(offsetTransform, Offset);
+	private inline function originCallback(Origin:FlxPoint)             transformChildren(originTransform, Origin);
+	private inline function scaleCallback(Scale:FlxPoint)               transformChildren(scaleTransform, Scale);
+	private inline function scrollFactorCallback(ScrollFactor:FlxPoint) transformChildren(scrollFactorTransform, ScrollFactor);
 	
 	// NON-SUPPORTED FUNCTIONALITY
 	// THESE METHODS ARE OVERRIDEN FOR SAFETY PURPOSES
@@ -877,7 +875,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 */
 	override public function loadGraphicFromSprite(Sprite:FlxSprite):FlxSprite 
 	{
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		throw "This function is not supported in FlxSpriteGroup";
 		#end
 		return this;
@@ -898,7 +896,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 */
 	override public function loadRotatedGraphic(Graphic:FlxGraphicAsset, Rotations:Int = 16, Frame:Int = -1, AntiAliasing:Bool = false, AutoBuffer:Bool = false, ?Key:String):FlxSprite 
 	{
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		throw "This function is not supported in FlxSpriteGroup";
 		#end
 		return this;
@@ -908,9 +906,9 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 * This functionality isn't supported in SpriteGroup
 	 * @return this sprite group
 	 */
-	override public function makeGraphic(Width:Int, Height:Int, Color:Int = 0xffffffff, Unique:Bool = false, ?Key:String):FlxSprite 
+	override public function makeGraphic(Width:Int, Height:Int, Color:Int = FlxColor.WHITE, Unique:Bool = false, ?Key:String):FlxSprite 
 	{
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		throw "This function is not supported in FlxSpriteGroup";
 		#end
 		return this;

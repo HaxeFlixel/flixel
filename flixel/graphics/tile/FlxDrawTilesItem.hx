@@ -6,12 +6,12 @@ import flixel.graphics.tile.FlxDrawBaseItem.FlxDrawItemType;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxRect;
 import openfl.display.Tilesheet;
+import openfl.geom.ColorTransform;
 
 class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 {
 	public var drawData:Array<Float> = [];
 	public var position:Int = 0;
-	
 	public var numTiles(get, never):Int;
 	
 	public function new() 
@@ -32,8 +32,7 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 		drawData = null;
 	}
 	
-	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix,
-		red:Float = 1, green:Float = 1, blue:Float = 1, alpha:Float = 1):Void
+	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform):Void
 	{
 		drawData[position++] = matrix.tx;
 		drawData[position++] = matrix.ty;
@@ -50,19 +49,30 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 		drawData[position++] = matrix.c;
 		drawData[position++] = matrix.d;
 		
-		if (colored)
+		if (colored && transform != null)
 		{
-			drawData[position++] = red; 
-			drawData[position++] = green;
-			drawData[position++] = blue;
+			drawData[position++] = transform.redMultiplier; 
+			drawData[position++] = transform.greenMultiplier;
+			drawData[position++] = transform.blueMultiplier;
 		}
 		
-		drawData[position++] = alpha;
+		drawData[position++] = transform != null ? transform.alphaMultiplier : 1.0;
+		
+		#if (!openfl_legacy && openfl >= "3.6.0")
+		if (hasColorOffsets && transform != null)
+		{
+			drawData[position++] = transform.redOffset;
+			drawData[position++] = transform.greenOffset;
+			drawData[position++] = transform.blueOffset;
+			drawData[position++] = transform.alphaOffset;
+		}
+		#end
 	}
 	
 	override public function render(camera:FlxCamera):Void
 	{
-		if (!FlxG.renderTile) return;
+		if (!FlxG.renderTile)
+			return;
 		
 		if (position > 0)
 		{
@@ -72,6 +82,13 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 			{
 				tempFlags |= Tilesheet.TILE_RGB;
 			}
+			
+			#if (!openfl_legacy && openfl >= "3.6.0")
+			if (hasColorOffsets)
+			{
+				tempFlags |= Tilesheet.TILE_TRANS_COLOR;
+			}
+			#end
 			
 			tempFlags |= blending;
 			graphics.tilesheet.drawTiles(camera.canvas.graphics, drawData, (camera.antialiasing || antialiasing), tempFlags, position);
@@ -99,5 +116,4 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 	{
 		return 2 * numTiles;
 	}
-	
 }

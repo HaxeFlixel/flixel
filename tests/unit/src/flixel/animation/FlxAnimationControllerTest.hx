@@ -2,9 +2,7 @@ package flixel.animation;
 
 import flash.display.BitmapData;
 import flixel.FlxSprite;
-import flixel.util.FlxColor;
 import massive.munit.Assert;
-using flixel.util.FlxArrayUtil;
 
 class FlxAnimationControllerTest extends FlxTest
 {
@@ -55,10 +53,7 @@ class FlxAnimationControllerTest extends FlxTest
 	function testCallbackNoFrameIndexChange():Void
 	{
 		var timesCalled:Int = 0;
-		sprite.animation.callback = function(s:String, n:Int, i:Int)
-		{
-			timesCalled++;
-		};
+		sprite.animation.callback = function(_, _, _) timesCalled++;
 		
 		sprite.animation.frameIndex = 0;
 		sprite.animation.frameIndex = 0;
@@ -76,7 +71,30 @@ class FlxAnimationControllerTest extends FlxTest
 		loadSpriteSheet();
 		sprite.animation.add("animation", animation);
 		
-		Assert.isTrue([0, 1, 2].equals(animation));
+		FlxAssert.arraysEqual([0, 1, 2], animation);
+	}
+
+	@Test // #1781
+	function testFinishCallbackOnce():Void
+	{
+		loadSpriteSheet();
+		sprite.animation.add("animation", [0, 1, 2], 3000, false);
+		
+		var timesCalled = 0;
+		sprite.animation.finishCallback = function(_) timesCalled++;
+		sprite.animation.play("animation");
+		
+		step();
+		Assert.areEqual(1, timesCalled);
+	}
+	
+	@Test // #1786
+	function testNullFrameName():Void
+	{
+		loadSpriteSheet();
+		sprite.animation.addByPrefix("Test", "test");
+		
+		Assert.isNull(sprite.animation.getByName("Test"));
 	}
 	
 	function loadSpriteSheet():Void

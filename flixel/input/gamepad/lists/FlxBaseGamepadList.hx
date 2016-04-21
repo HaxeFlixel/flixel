@@ -1,4 +1,4 @@
-package flixel.input.gamepad.id;
+package flixel.input.gamepad.lists;
 
 import flixel.input.FlxInput.FlxInputState;
 import flixel.input.gamepad.FlxGamepad;
@@ -31,12 +31,9 @@ class FlxBaseGamepadList
 	{
 		for (button in gamepad.buttons)
 		{
-			if (button != null)
+			if (button != null && checkRaw(button.ID))
 			{
-				if (checkRaw(button.ID))
-				{
-					return true;
-				}
+				return true;
 			}
 		}
 		

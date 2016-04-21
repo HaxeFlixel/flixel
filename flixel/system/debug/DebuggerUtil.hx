@@ -1,7 +1,8 @@
 package flixel.system.debug;
 
-import flash.display.Shape;
+import flash.display.BitmapData;
 import flash.text.TextField;
+import flash.text.TextFieldAutoSize;
 import flash.text.TextFormat;
 import flixel.system.FlxAssets;
 import flixel.util.FlxColor;
@@ -13,18 +14,13 @@ import flash.text.GridFitType;
 
 class DebuggerUtil
 {
-	/**
-	 * Helper method for textfield creation.
-	 *
-	 * @param	X		Textfield x position.
-	 * @param	Y		Textfield y position.
-	 * @param	Color	Textfield color.
-	 * @param	Size	Textfield size.
-	 * @return	New label text field at specified position and format.
-	 */
 	public static function createTextField(X:Float = 0, Y:Float = 0, Color:FlxColor = FlxColor.WHITE, Size:Int = 12):TextField
 	{
-		var tf:TextField = new TextField();
+		return initTextField(new TextField(), X, Y, Color, Size);
+	}
+	
+	public static function initTextField<T:TextField>(tf:T, X:Float = 0, Y:Float = 0, Color:FlxColor = FlxColor.WHITE, Size:Int = 12):T
+	{
 		tf.x = X;
 		tf.y = Y;
 		tf.multiline = false;
@@ -37,6 +33,18 @@ class DebuggerUtil
 		#end
 		tf.defaultTextFormat = new TextFormat(FlxAssets.FONT_DEBUGGER, Size, Color.to24Bit());
 		tf.alpha = Color.alphaFloat;
+		tf.autoSize = TextFieldAutoSize.LEFT;
 		return tf;
+	}
+	
+	@:allow(flixel.system)
+	private static function fixSize(bitmapData:BitmapData):BitmapData
+	{
+		#if html5 // dirty hack for openfl/openfl#682
+		Reflect.setProperty(bitmapData, "width", 11);
+		Reflect.setProperty(bitmapData, "height", 11);
+		#end
+		
+		return bitmapData;
 	}
 }

@@ -94,7 +94,7 @@ class LinearPath extends Motion
 		return points[index % points.length];
 	}
 
-	override private function start():LinearPath
+	override public function start():LinearPath
 	{
 		_index = (backward) ? (points.length - 1) : 0;
 		super.start();

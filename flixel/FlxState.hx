@@ -114,7 +114,7 @@ class FlxState extends FlxGroup
 			{
 				subState._created = true;
 				subState._parentState = this;
- 				subState.create();
+				subState.create();
 			}
 		}
 	}
@@ -130,22 +130,14 @@ class FlxState extends FlxGroup
 	}
 	
 	/**
-	 * Checked by FlxG.switchState to see if a transition is required before switching states
-	 * @return
+	 * Called from `FlxG.switchState()`. If `false` is returned, the state
+	 * switch is cancelled - the default implementation returns `true`.
+	 * 
+	 * Useful for customizing state switches, e.g. for transition effects.
 	 */
-	public function isTransitionNeeded():Bool
+	public function switchTo(nextState:FlxState):Bool
 	{
-		//override in your subclass to enable this functionality
-		return false;
-	}
-	
-	/**
-	 * Perform a visual transition, and when it's complete, call FlxG.switchState
-	 * @param	State
-	 */
-	public function transitionToState(State:FlxState):Void
-	{
-		//override in your subclass to enable this functionality
+		return true;
 	}
 	
 	/**

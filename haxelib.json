@@ -2,10 +2,10 @@
 	"name": "flixel",
 	"url" : "http://haxeflixel.com",
 	"license": "MIT",
-	"tags": ["game", "openfl", "flash", "neko", "cpp", "android", "ios", "cross"],
-	"description": "HaxeFlixel is a 2D game framework based on OpenFL that delivers cross-platform games.",
-	"version": "3.3.11",
-	"releasenote": "Fixes for FlxAssets and compilation with OpenFL next.",
+	"tags": ["game", "openfl", "flash", "html5", "neko", "cpp", "android", "ios", "cross"],
+	"description": "HaxeFlixel is a 2D game engine based on OpenFL that delivers cross-platform games.",
+	"version": "4.0.1",
+	"releasenote": "Fixes for the debugger, DCE, HTML5 and more. See the CHANGELOG.md for more details.",
 	"contributors": ["haxeflixel"],
 	"dependencies": { "lime": "", "openfl": "" }
 }

@@ -102,10 +102,9 @@ class FlxVector extends FlxPoint
 	 * @param	k - scale coefficient
 	 * @return	scaled vector
 	 */
-	public inline function scale(k:Float):FlxVector
+	override public function scale(k:Float):FlxVector
 	{
-		x *= k;
-		y *= k;
+		super.scale(k);
 		return this;
 	}
 	
@@ -209,7 +208,7 @@ class FlxVector extends FlxPoint
 	 */
 	public inline function isZero():Bool
 	{
-		return (Math.abs(x) < EPSILON && Math.abs(y) < EPSILON);
+		return Math.abs(x) < EPSILON && Math.abs(y) < EPSILON;
 	}
 	
 	/**
@@ -355,7 +354,7 @@ class FlxVector extends FlxPoint
 	 * @param	proj	optional argument - result vector
 	 * @return	projection of the vector
 	 */
-	public function projectToNormalized(v:FlxVector, proj:FlxVector = null):FlxVector
+	public function projectToNormalized(v:FlxVector, ?proj:FlxVector):FlxVector
 	{
 		var dp:Float = dotProduct(v);
 		
@@ -427,7 +426,7 @@ class FlxVector extends FlxPoint
 	 * @param	v	the second vector
 	 * @return the point of intersection of vectors if it is in the "bounds" of the vectors
 	 */
-	public function findIntersectionInBounds(a:FlxVector, b:FlxVector, v:FlxVector, intersection:FlxVector = null):FlxVector
+	public function findIntersectionInBounds(a:FlxVector, b:FlxVector, v:FlxVector, ?intersection:FlxVector):FlxVector
 	{
 		if (intersection == null)
 		{
@@ -508,7 +507,7 @@ class FlxVector extends FlxPoint
 	{
 		var dx:Float = v.x - x;
 		var dy:Float = v.y - y;
-		return (dx * dx + dy * dy);
+		return dx * dx + dy * dy;
 	}
 		
 	/**

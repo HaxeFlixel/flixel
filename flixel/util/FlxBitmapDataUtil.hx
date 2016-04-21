@@ -7,8 +7,6 @@ import flixel.math.FlxAngle;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
-import flixel.util.FlxColor;
-import openfl.geom.Matrix;
 
 /**
  * Just a collection of BitmapData utility methods.
@@ -16,6 +14,8 @@ import openfl.geom.Matrix;
  */
 class FlxBitmapDataUtil
 {
+	private static var matrix:FlxMatrix = new FlxMatrix();
+	
 	/**
 	 * Performs per-channel blending from a source image to a destination image.
 	 * 
@@ -34,34 +34,34 @@ class FlxBitmapDataUtil
 		destBitmapData.merge(sourceBitmapData, sourceRect, destPoint, redMultiplier, greenMultiplier, blueMultiplier, alphaMultiplier);
 		#else
 		if (destPoint.x >= destBitmapData.width ||
-		    destPoint.y >= destBitmapData.height ||
-		    sourceRect.x >= sourceBitmapData.width ||
-		    sourceRect.y >= sourceBitmapData.height ||
-		    sourceRect.x + sourceRect.width <= 0 ||
-		    sourceRect.y + sourceRect.height <= 0)
+			destPoint.y >= destBitmapData.height ||
+			sourceRect.x >= sourceBitmapData.width ||
+			sourceRect.y >= sourceBitmapData.height ||
+			sourceRect.x + sourceRect.width <= 0 ||
+			sourceRect.y + sourceRect.height <= 0)
 		{
 			return;
 		}
 		
 		// need to cut off sourceRect if it too big...
 		while (sourceRect.x + sourceRect.width > sourceBitmapData.width ||
-		       sourceRect.y + sourceRect.height > sourceBitmapData.height ||
-		       sourceRect.x < 0 ||
-		       sourceRect.y < 0 ||
-		       destPoint.x < 0 ||
-		       destPoint.y < 0 )
+			sourceRect.y + sourceRect.height > sourceBitmapData.height ||
+			sourceRect.x < 0 ||
+			sourceRect.y < 0 ||
+			destPoint.x < 0 ||
+			destPoint.y < 0 )
 		{
 			if (sourceRect.x + sourceRect.width > sourceBitmapData.width)	sourceRect.width = sourceBitmapData.width - sourceRect.x;
 			if (sourceRect.y + sourceRect.height > sourceBitmapData.height)	sourceRect.height = sourceBitmapData.height - sourceRect.y;
 			
-			if (sourceRect.x < 0)	
+			if (sourceRect.x < 0)
 			{
 				destPoint.x = destPoint.x - sourceRect.x;
 				sourceRect.width = sourceRect.width + sourceRect.x;
 				sourceRect.x = 0;
 			}
 			
-			if (sourceRect.y < 0)	
+			if (sourceRect.y < 0)
 			{
 				destPoint.y = destPoint.y - sourceRect.y;
 				sourceRect.height = sourceRect.height + sourceRect.y;
@@ -112,7 +112,7 @@ class FlxBitmapDataUtil
 		
 		var resultColor:FlxColor = 0x0;
 		destBitmapData.lock();
-		// iterate througn pixels using following rule:
+		// iterate through pixels using following rule:
 		// new redDest = [(redSrc * redMultiplier) + (redDest * (256 - redMultiplier))] / 256; 
 		for (i in 0...width)
 		{
@@ -160,7 +160,7 @@ class FlxBitmapDataUtil
 	 * If the widths of the BitmapData objects are not equal, the method returns the number -3. 
 	 * If the heights of the BitmapData objects are not equal, the method returns the number -4.
 	 */
-	public static function compare(Bitmap1:BitmapData,  Bitmap2:BitmapData):Dynamic
+	public static function compare(Bitmap1:BitmapData, Bitmap2:BitmapData):Dynamic
 	{
 		#if flash
 		return Bitmap1.compare(Bitmap2);
@@ -181,69 +181,37 @@ class FlxBitmapDataUtil
 		{
 			var width:Int = Bitmap1.width;
 			var height:Int = Bitmap1.height;
-			var result:BitmapData = new BitmapData(width, height, true, 0x0);
+			var result = new BitmapData(width, height, true, 0x0);
 			var identical:Bool = true;
-			
-			var pixel1:Int, pixel2:Int;
-			var rgb1:Int, rgb2:Int;
-			var r1:Int, g1:Int, b1:Int;
-			var r2:Int, g2:Int, b2:Int;
-			var alpha1:Int, alpha2:Int;
-			var resultAlpha:Int, resultColor:FlxColor;
-			var resultR:Int, resultG:Int, resultB:Int;
-			var diffR:Int, diffG:Int, diffB:Int, diffA:Int;
-			var checkAlpha:Bool = true;
 			
 			for (i in 0...width)
 			{
 				for (j in 0...height)
 				{
-					pixel1 = Bitmap1.getPixel32(i, j);
-					pixel2 = Bitmap2.getPixel32(i, j);
+					var pixel1:FlxColor = Bitmap1.getPixel32(i, j);
+					var pixel2:FlxColor = Bitmap2.getPixel32(i, j);
 					
 					if (pixel1 != pixel2)
 					{
 						identical = false;
-						checkAlpha = true;
 						
-						rgb1 = pixel1 & 0x00ffffff;
-						rgb2 = pixel2 & 0x00ffffff;
-						
-						if (rgb1 != rgb2)
+						if (pixel1.to24Bit() != pixel2.to24Bit())
 						{
-							r1 = pixel1 >> 16 & 0xFF;
-							g1 = pixel1 >> 8 & 0xFF;
-							b1 = pixel1 & 0xFF;
-							
-							r2 = pixel2 >> 16 & 0xFF;
-							g2 = pixel2 >> 8 & 0xFF;
-							b2 = pixel2 & 0xFF;
-							
-							diffR = r1 - r2;
-							diffG = g1 - g2;
-							diffB = b1 - b2;
-							
-							resultR = (diffR >= 0) ? diffR : (256 + diffR);
-							resultG = (diffG >= 0) ? diffG : (256 + diffG);
-							resultB = (diffB >= 0) ? diffB : (256 + diffB);
-							
-							resultColor = (0xFF << 24 | resultR << 16 | resultG << 8 | resultB);
-							result.setPixel32(i, j, resultColor);
-							
-							checkAlpha = false;
+							result.setPixel32(i, j, FlxColor.fromRGB(
+								getDiff(pixel1.red, pixel2.red),
+								getDiff(pixel1.green, pixel2.green),
+								getDiff(pixel1.blue, pixel2.blue))
+							);
 						}
-						
-						if (checkAlpha)
+						else
 						{
-							alpha1 = (pixel1 >> 24) & 0xff;
-							alpha2 = (pixel2 >> 24) & 0xff;
-							diffA = alpha1 - alpha2;
-							resultAlpha = (diffA >= 0) ? diffA : (256 + diffA);
-							resultColor = (resultAlpha | 0xFF << 16 | 0xFF << 8 | 0xFF);
+							var alpha1 = pixel1.alpha;
+							var alpha2 = pixel2.alpha;
 							
 							if (alpha1 != alpha2)
 							{
-								result.setPixel32(i, j, resultColor);
+								result.setPixel32(i, j, FlxColor.fromRGB(0xFF, 0xFF, 0xFF,
+									getDiff(alpha1, alpha2)));
 							}
 						}	
 					}
@@ -258,6 +226,12 @@ class FlxBitmapDataUtil
 		
 		return 0;
 		#end
+	}
+	
+	private static inline function getDiff(value1:Int, value2:Int):Int
+	{
+		var diff = value1 - value2;
+		return (diff >= 0) ? diff : (256 + diff);
 	}
 	
 	/**
@@ -279,7 +253,7 @@ class FlxBitmapDataUtil
 	 * @param	rect				area to apply color replacement. Optional, uses whole image area if the rect is null
 	 * @return	Array replaced pixels positions
 	 */
-	public static function replaceColor(bitmapData:BitmapData, color:FlxColor, newColor:FlxColor, fetchPositions:Bool = false, rect:FlxRect = null):Array<FlxPoint>
+	public static function replaceColor(bitmapData:BitmapData, color:FlxColor, newColor:FlxColor, fetchPositions:Bool = false, ?rect:FlxRect):Array<FlxPoint>
 	{
 		var positions:Array<FlxPoint> = null;
 		if (fetchPositions)
@@ -348,7 +322,7 @@ class FlxBitmapDataUtil
 	 * @param	region		region of image to use as a source graphics for spritesheet. Default value is null, which means that whole image will be used.
 	 * @return	Image for spritesheet with inserted spaces between tiles.
 	 */
-	public static function addSpacesAndBorders(bitmapData:BitmapData, frameSize:FlxPoint = null, spacing:FlxPoint = null, border:FlxPoint = null, region:FlxRect = null):BitmapData
+	public static function addSpacesAndBorders(bitmapData:BitmapData, ?frameSize:FlxPoint, ?spacing:FlxPoint, ?border:FlxPoint, ?region:FlxRect):BitmapData
 	{
 		if (region == null)
 		{
@@ -385,41 +359,67 @@ class FlxBitmapDataUtil
 			borderY = Std.int(border.y); 
 		}
 		
-		var result:BitmapData = new BitmapData(
-						Std.int(region.width + (numHorizontalFrames - 1) * spaceX + 2 * numHorizontalFrames * borderX), 
-						Std.int(region.height + (numVerticalFrames - 1) * spaceY + 2 * numVerticalFrames * borderY), 
-						true, 
-						FlxColor.TRANSPARENT);
-						
+		var result = new BitmapData(
+			Std.int(region.width + (numHorizontalFrames - 1) * spaceX + 2 * numHorizontalFrames * borderX), 
+			Std.int(region.height + (numVerticalFrames - 1) * spaceY + 2 * numVerticalFrames * borderY), 
+			true, 
+			FlxColor.TRANSPARENT);
+		
 		result.lock();
 		var tempRect:Rectangle = new Rectangle(0, 0, frameWidth, frameHeight);
 		var tempPoint:Point = new Point();
 		
 		// insert spaces
-		for (i in 0...(numHorizontalFrames))
+		for (i in 0...numHorizontalFrames)
 		{
 			tempPoint.x = i * (frameWidth + spaceX + 2 * borderX) + borderX;
 			tempRect.x = i * frameWidth + region.x;
 			
-			for (j in 0...(numVerticalFrames))
+			for (j in 0...numVerticalFrames)
 			{
 				tempPoint.y = j * (frameHeight + spaceY + 2 * borderY) + borderY;
 				tempRect.y = j * frameHeight + region.y;
 				result.copyPixels(bitmapData, tempRect, tempPoint);
 			}
 		}
+		result.unlock();
 		
 		// copy borders
-		tempPoint.setTo(0, 0);
-		tempRect.setTo(0, 0, 1, result.height);
-		for (i in 0...(numHorizontalFrames))
+		copyBorderPixels(result, frameWidth, frameHeight, spaceX, spaceY, borderX, borderY, numHorizontalFrames, numVerticalFrames);
+		return result;
+	}
+	
+	/**
+	 * Helper method for copying border pixels around tiles.
+	 * It modifies provided image, and assumes that there are spaces between tile images already.
+	 * 
+	 * @param	bitmapData 			image with spaces between tiles to fill with border pixels
+	 * @param	frameWidth			tile width
+	 * @param	frameHeight			tile heigth
+	 * @param	spaceX				horizontal spacing between tiles
+	 * @param	spaceY				vertical spacing between tiles
+	 * @param	borderX				how many times to copy border of tiles on horizontal axis.
+	 * @param	borderY				how many times to copy border of tiles on vertical axis.
+	 * @param	horizontalFrames	how many columns of tiles on provided image.
+	 * @param	verticalFrames		how many rows of tiles on provided image.
+	 * 
+	 * @return	Modified spritesheet with copied pixels around tile images.
+	 */
+	public static function copyBorderPixels(bitmapData:BitmapData, frameWidth:Int, frameHeight:Int, spaceX:Int, spaceY:Int, borderX:Int, borderY:Int, horizontalFrames:Int, verticalFrames:Int):BitmapData
+	{
+		// copy borders
+		var tempRect:Rectangle = new Rectangle(0, 0, 1, bitmapData.height);
+		var tempPoint:Point = new Point();
+		bitmapData.lock();
+		
+		for (i in 0...horizontalFrames)
 		{
 			tempRect.x = i * (frameWidth + 2 * borderX + spaceX) + borderX;
 			
 			for (j in 0...borderX)
 			{
 				tempPoint.x = tempRect.x - j - 1;
-				result.copyPixels(result, tempRect, tempPoint);
+				bitmapData.copyPixels(bitmapData, tempRect, tempPoint);
 			}
 			
 			tempRect.x += frameWidth - 1;
@@ -427,20 +427,20 @@ class FlxBitmapDataUtil
 			for (j in 0...borderX)
 			{
 				tempPoint.x = tempRect.x + j + 1;
-				result.copyPixels(result, tempRect, tempPoint);
+				bitmapData.copyPixels(bitmapData, tempRect, tempPoint);
 			}
 		}
 		
 		tempPoint.setTo(0, 0);
-		tempRect.setTo(0, 0, result.width, 1);
-		for (i in 0...(numVerticalFrames))
+		tempRect.setTo(0, 0, bitmapData.width, 1);
+		for (i in 0...verticalFrames)
 		{
 			tempRect.y = i * (frameHeight + 2 * borderY + spaceY) + borderY;
 			
 			for (j in 0...borderY)
 			{
 				tempPoint.y = tempRect.y - j - 1;
-				result.copyPixels(result, tempRect, tempPoint);
+				bitmapData.copyPixels(bitmapData, tempRect, tempPoint);
 			}
 			
 			tempRect.y += frameHeight - 1;
@@ -448,12 +448,12 @@ class FlxBitmapDataUtil
 			for (j in 0...borderY)
 			{
 				tempPoint.y = tempRect.y + j + 1;
-				result.copyPixels(result, tempRect, tempPoint);
+				bitmapData.copyPixels(bitmapData, tempRect, tempPoint);
 			}
 		}
 		
-		result.unlock();
-		return result;
+		bitmapData.unlock();
+		return bitmapData;
 	}
 	
 	/**
@@ -470,7 +470,7 @@ class FlxBitmapDataUtil
 		var brushWidth:Int = brush.width;
 		var brushHeight:Int = brush.height;
 		var max:Int = (brushHeight > brushWidth) ? brushHeight : brushWidth;
-		max = (autoBuffer) ? Std.int(max * 1.5) : max;
+		max = autoBuffer ? Std.int(max * 1.5) : max;
 		
 		var rows:Int = Std.int(Math.sqrt(rotations));
 		var columns:Int = Math.ceil(rotations / rows);
@@ -488,8 +488,6 @@ class FlxBitmapDataUtil
 		var halfBrushHeight:Int = Std.int(brushHeight * 0.5);
 		var midpointX:Int = Std.int(max * 0.5);
 		var midpointY:Int = Std.int(max * 0.5);
-		
-		var matrix:Matrix = FlxMatrix.matrix;
 		
 		while (row < rows)
 		{

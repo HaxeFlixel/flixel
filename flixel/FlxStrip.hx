@@ -1,8 +1,6 @@
 package flixel;
 
 import flixel.graphics.tile.FlxDrawTrianglesItem.DrawData;
-import flixel.system.FlxAssets.FlxGraphicAsset;
-import openfl.Vector;
 
 /**
  * A very basic rendering component which uses drawTriangles.
@@ -20,27 +18,19 @@ class FlxStrip extends FlxSprite
 	/**
 	 * A Vector of Floats where each pair of numbers is treated as a coordinate location (an x, y pair).
 	 */
-	public var vertices:DrawData<Float>;
+	public var vertices:DrawData<Float> = new DrawData<Float>();
 	/**
 	 * A Vector of integers or indexes, where every three indexes define a triangle.
 	 */
-	public var indices:DrawData<Int>;
+	public var indices:DrawData<Int> = new DrawData<Int>();
 	/**
 	 * A Vector of normalized coordinates used to apply texture mapping.
 	 */
-	public var uvtData:DrawData<Float>;
+	public var uvtData:DrawData<Float> = new DrawData<Float>();
 	
-	public var colors:DrawData<Int>;
+	public var colors:DrawData<Int> = new DrawData<Int>();
 	
-	public function new(X:Float = 0, Y:Float = 0, ?SimpleGraphic:FlxGraphicAsset)
-	{
-		super(X, Y, SimpleGraphic);
-		
-		vertices = new #if flash Vector #else Array #end<Float>();
-		indices = new #if flash Vector #else Array #end<Int>();
-		uvtData = new #if flash Vector #else Array #end<Float>();
-		colors = new #if flash Vector #else Array #end<Int>();
-	}
+	public var repeat:Bool = false;
 	
 	override public function destroy():Void 
 	{
@@ -67,7 +57,7 @@ class FlxStrip extends FlxSprite
 			}
 			
 			getScreenPosition(_point, camera);
-			camera.drawTriangles(graphic, vertices, indices, uvtData, colors, _point, blend, antialiasing);
+			camera.drawTriangles(graphic, vertices, indices, uvtData, colors, _point, blend, repeat, antialiasing);
 		}
 	}
 }

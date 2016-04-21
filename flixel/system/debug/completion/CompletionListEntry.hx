@@ -4,7 +4,7 @@ import openfl.display.Bitmap;
 import openfl.display.BitmapData;
 import openfl.display.Sprite;
 import openfl.text.TextField;
-import flixel.util.FlxColor;
+import openfl.text.TextFieldAutoSize;
 
 class CompletionListEntry extends Sprite
 {
@@ -15,12 +15,9 @@ class CompletionListEntry extends Sprite
 	private static inline var COLOR_HIGHLIGHT = 0xFF6D6D6D;
 	private static inline var GUTTER = 4;
 	
-	private static var NORMAL_BITMAP_DATA =
-		new BitmapData(WIDTH, HEIGHT, true, COLOR_NORMAL);
-	
-	private static var HIGHLIGHT_BITMAP_DATA =
-		new BitmapData(WIDTH, HEIGHT, true, COLOR_HIGHLIGHT);
-		
+	private static var normalBitmapData:BitmapData;
+	private static var highlightBitmapData:BitmapData;
+
 	public var selected(default, set):Bool = false;
 	
 	private var background:Bitmap;
@@ -30,18 +27,32 @@ class CompletionListEntry extends Sprite
 	{	
 		super();
 		
+		initBitmapDatas();
+		
 		addChild(background = new Bitmap());
-		background.bitmapData = NORMAL_BITMAP_DATA;
+		background.bitmapData = normalBitmapData;
 		
 		label = DebuggerUtil.createTextField();
 		label.x = GUTTER;
-		label.width = WIDTH;
 		addChild(label);
+	}
+	
+	private function initBitmapDatas()
+	{
+		if (normalBitmapData == null)
+			normalBitmapData = new BitmapData(WIDTH, HEIGHT, true, COLOR_NORMAL);
+		if (highlightBitmapData == null)
+			highlightBitmapData = new BitmapData(WIDTH, HEIGHT, true, COLOR_HIGHLIGHT);
 	}
 	
 	public function setItem(item:String)
 	{
 		label.text = item;
+		if (label.width > WIDTH)
+		{
+			label.width = WIDTH;
+			label.autoSize = TextFieldAutoSize.NONE;
+		}
 	}
 	
 	private function set_selected(selected:Bool):Bool
@@ -50,7 +61,7 @@ class CompletionListEntry extends Sprite
 			return selected;
 		
 		background.bitmapData = selected ?
-			HIGHLIGHT_BITMAP_DATA : NORMAL_BITMAP_DATA;
+			highlightBitmapData : normalBitmapData;
 		
 		return this.selected = selected;
 	}

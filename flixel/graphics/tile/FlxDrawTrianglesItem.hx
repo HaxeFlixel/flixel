@@ -9,6 +9,7 @@ import flixel.math.FlxRect;
 import flixel.util.FlxColor;
 import openfl.display.Graphics;
 import openfl.display.TriangleCulling;
+import openfl.geom.ColorTransform;
 import openfl.Vector;
 
 typedef DrawData<T> = #if flash Vector<T> #else Array<T> #end;
@@ -19,54 +20,42 @@ typedef DrawData<T> = #if flash Vector<T> #else Array<T> #end;
  */
 class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 {
-	public var vertices:DrawData<Float>;
-	public var indices:DrawData<Int>;
-	public var uvtData:DrawData<Float>;
-	public var colors:DrawData<Int>;
+	private static var point:FlxPoint = FlxPoint.get();
+	private static var rect:FlxRect = FlxRect.get();
+	
+	public var vertices:DrawData<Float> = new DrawData<Float>();
+	public var indices:DrawData<Int> = new DrawData<Int>();
+	public var uvtData:DrawData<Float> = new DrawData<Float>();
+	public var colors:DrawData<Int> = new DrawData<Int>();
 	
 	public var verticesPosition:Int = 0;
 	public var indicesPosition:Int = 0;
 	public var colorsPosition:Int = 0;
 	
-	private var bounds:FlxRect;
+	private var bounds:FlxRect = FlxRect.get();
 	
 	public function new() 
 	{
 		super();
 		type = FlxDrawItemType.TRIANGLES;
-		
-		#if flash
-		vertices = new Vector<Float>();
-		indices = new Vector<Int>();
-		uvtData = new Vector<Float>();
-		colors = new Vector<Int>();
-		#else
-		vertices = new Array<Float>();
-		indices = new Array<Int>();
-		uvtData = new Array<Float>();
-		colors = new Array<Int>();
-		#end
-		
-		bounds = FlxRect.get();
 	}
 	
 	override public function render(camera:FlxCamera):Void 
 	{
-		if (!FlxG.renderTile) return;
+		if (!FlxG.renderTile)
+			return;
 		
 		if (numTriangles <= 0)
-		{
 			return;
-		}
 		
 		camera.canvas.graphics.beginBitmapFill(graphics.bitmap, null, true, (camera.antialiasing || antialiasing));
-		#if flash
+		#if !openfl_legacy
 		camera.canvas.graphics.drawTriangles(vertices, indices, uvtData, TriangleCulling.NONE);
 		#else
 		camera.canvas.graphics.drawTriangles(vertices, indices, uvtData, TriangleCulling.NONE, (colored) ? colors : null, blending);
 		#end
 		camera.canvas.graphics.endFill();
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		if (FlxG.debugger.drawDebug)
 		{
 			var gfx:Graphics = camera.debugLayer.graphics;
@@ -102,17 +91,13 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		bounds = null;
 	}
 	
-	public function addTriangles(vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, colors:DrawData<Int> = null, position:FlxPoint = null, cameraBounds:FlxRect = null):Void
+	public function addTriangles(vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, ?colors:DrawData<Int>, ?position:FlxPoint, ?cameraBounds:FlxRect):Void
 	{
 		if (position == null)
-		{
-			position = FlxPoint.flxPoint1.set(0, 0);
-		}
+			position = point.set();
 		
 		if (cameraBounds == null)
-		{
-			cameraBounds = FlxRect.flxRect.set(0, 0, FlxG.width, FlxG.height);
-		}
+			cameraBounds = rect.set(0, 0, FlxG.width, FlxG.height);
 		
 		var verticesLength:Int = vertices.length;
 		var prevVerticesLength:Int = this.vertices.length;
@@ -146,8 +131,7 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 			i += 2;
 		}
 		
-		var vis:Bool = cameraBounds.overlaps(bounds);
-		if (!vis)
+		if (!cameraBounds.overlaps(bounds))
 		{
 			this.vertices.splice(this.vertices.length - verticesLength, verticesLength);
 		}
@@ -178,6 +162,9 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 			verticesPosition += verticesLength;
 			indicesPosition += indicesLength;
 		}
+		
+		position.putWeak();
+		cameraBounds.putWeak();
 	}
 	
 	public static inline function inflateBounds(bounds:FlxRect, x:Float, y:Float):FlxRect
@@ -207,17 +194,14 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		return bounds;
 	}
 	
-	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix,
-		red:Float = 1, green:Float = 1, blue:Float = 1, alpha:Float = 1):Void
+	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform):Void
 	{
 		var prevVerticesPos:Int = verticesPosition;
 		var prevIndicesPos:Int = indicesPosition;
 		var prevColorsPos:Int = colorsPosition;
 		var prevNumberOfVertices:Int = numVertices;
 		
-		var point:FlxPoint = FlxPoint.flxPoint1;
-		
-		point.set(0, 0);
+		var point = FlxPoint.get();
 		point.transform(matrix);
 		
 		vertices[prevVerticesPos] = point.x;
@@ -250,6 +234,8 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		vertices[prevVerticesPos + 6] = point.x;
 		vertices[prevVerticesPos + 7] = point.y;
 		
+		point.put();
+		
 		uvtData[prevVerticesPos + 6] = frame.uv.x;
 		uvtData[prevVerticesPos + 7] = frame.uv.height;
 		
@@ -262,11 +248,23 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		
 		if (colored)
 		{
-			#if neko
-			var color:FlxColor = FlxColor.fromRGBFloat(red, green, blue, 1.0);
-			#else
-			var color:FlxColor = FlxColor.fromRGBFloat(red, green, blue, alpha);
-			#end
+			var red = 1.0;
+			var green = 1.0;
+			var blue = 1.0;
+			var alpha = 1.0;
+			
+			if (transform != null)
+			{
+				red  = transform.redMultiplier;
+				green = transform.greenMultiplier;
+				blue = transform.blueMultiplier;
+				
+				#if !neko
+				alpha = transform.alphaMultiplier;
+				#end
+			}
+			
+			var color = FlxColor.fromRGBFloat(red, green, blue, alpha);
 			
 			colors[prevColorsPos] = color;
 			colors[prevColorsPos + 1] = color;

@@ -5,7 +5,7 @@ import flash.net.SharedObject;
 import flash.net.SharedObjectFlushStatus;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 
-#if flash
+#if (flash && openfl <= "3.4.0")
 import flash.events.NetStatusEvent;
 #end
 
@@ -56,6 +56,7 @@ class FlxSave implements IFlxDestroyable
 	 * Automatically creates or reconnects to locally saved data.
 	 * 
 	 * @param	Name	The name of the object (should be the same each time to access old data).
+	 * 					May not contain spaces or any of the following characters: `~ % & \ ; : " ' , < > ? #`
 	 * @return	Whether or not you successfully connected to the save data.
 	 */
 	public function bind(Name:String):Bool
@@ -66,7 +67,7 @@ class FlxSave implements IFlxDestroyable
 		{
 			_sharedObject = SharedObject.getLocal(name);
 		}
-		catch(e:Error)
+		catch (e:Error)
 		{
 			FlxG.log.error("There was a problem binding to\nthe shared object data from FlxSave.");
 			destroy();
@@ -118,7 +119,11 @@ class FlxSave implements IFlxDestroyable
 			result = _sharedObject.flush(); 
 			#end
 		}
-		catch (e:Error) { return onDone(ERROR); }
+		catch (e:Error)
+		{
+			return onDone(ERROR);
+		}
+
 		#if (flash && openfl <= "3.4.0")
 		if (result == "pending")
 		#else
@@ -157,7 +162,7 @@ class FlxSave implements IFlxDestroyable
 	/**
 	 * Event handler for special case storage requests.
 	 */
-	#if flash
+	#if (flash && openfl <= "3.4.0")
 	private function onFlushStatus(E:NetStatusEvent):Void
 	{
 		_sharedObject.removeEventListener(NetStatusEvent.NET_STATUS, onFlushStatus);

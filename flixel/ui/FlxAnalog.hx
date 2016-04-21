@@ -60,7 +60,7 @@ class FlxAnalog extends FlxSpriteGroup
 	 */ 
 	private static var _analogs:Array<FlxAnalog> = [];
 	
-	#if !FLX_NO_TOUCH
+	#if FLX_TOUCH
 	/**
 	 * The current pointer that's active on the analog.
 	 */ 
@@ -91,9 +91,9 @@ class FlxAnalog extends FlxSpriteGroup
 	 * Create a virtual thumbstick - useful for input on mobile devices.
 	 *  
 	 * @param	X		The X-coordinate of the point in space.
- 	 * @param	Y		The Y-coordinate of the point in space.
- 	 * @param	radius	The radius where the thumb can move. If 0, half the background's width will be used as radius.
- 	 * @param	ease	The duration of the easing. The value must be between 0 and 1.
+	 * @param	Y		The Y-coordinate of the point in space.
+	 * @param	radius	The radius where the thumb can move. If 0, half the background's width will be used as radius.
+	 * @param	ease	The duration of the easing. The value must be between 0 and 1.
 	 */
 	public function new(X:Float = 0, Y:Float = 0, Radius:Float = 0, Ease:Float = 0.25)
 	{
@@ -131,7 +131,7 @@ class FlxAnalog extends FlxSpriteGroup
 		base.scrollFactor.set();
 		base.solid = false;
 		
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		base.ignoreDrawDebug = true;
 		#end
 		
@@ -151,7 +151,7 @@ class FlxAnalog extends FlxSpriteGroup
 		thumb.scrollFactor.set();
 		thumb.solid = false;
 		
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		thumb.ignoreDrawDebug = true;
 		#end
 		
@@ -190,7 +190,7 @@ class FlxAnalog extends FlxSpriteGroup
 		thumb = null;
 		base = null;
 		
-		#if !FLX_NO_TOUCH
+		#if FLX_TOUCH
 		_currentTouch = null;
 		_tempTouches = null;
 		#end
@@ -201,13 +201,13 @@ class FlxAnalog extends FlxSpriteGroup
 	 */
 	override public function update(elapsed:Float):Void 
 	{
-		#if !FLX_NO_TOUCH
+		#if FLX_TOUCH
 		var touch:FlxTouch = null;
 		#end
 		var offAll:Bool = true;
 		
 		// There is no reason to get into the loop if their is already a pointer on the analog
-		#if !FLX_NO_TOUCH
+		#if FLX_TOUCH
 			if (_currentTouch != null)
 			{
 				_tempTouches.push(_currentTouch);
@@ -222,7 +222,7 @@ class FlxAnalog extends FlxSpriteGroup
 					{
 						// Check whether the pointer is already taken by another analog.
 						// TODO: check this place. This line was 'if (analog != this && analog._currentTouch != touch && touchInserted == false)'
-						if (analog == this && analog._currentTouch != touch && touchInserted == false) 
+						if (analog == this && analog._currentTouch != touch && !touchInserted) 
 						{		
 							_tempTouches.push(touch);
 							touchInserted = true;
@@ -235,18 +235,16 @@ class FlxAnalog extends FlxSpriteGroup
 			{
 				_point = touch.getWorldPosition(FlxG.camera, _point);
 				
-				if (updateAnalog(_point, touch.pressed, touch.justPressed, touch.justReleased, touch) == false)
+				if (!updateAnalog(_point, touch.pressed, touch.justPressed, touch.justReleased, touch))
 				{
 					offAll = false;
 					break;
 				}
 			}
-		#end
-		
-		#if !FLX_NO_MOUSE
+		#elseif !FLX_NO_MOUSE
 			_point.set(FlxG.mouse.screenX, FlxG.mouse.screenY);
 			
-			if (updateAnalog(_point, FlxG.mouse.pressed, FlxG.mouse.justPressed, FlxG.mouse.justReleased) == false)
+			if (!updateAnalog(_point, FlxG.mouse.pressed, FlxG.mouse.justPressed, FlxG.mouse.justReleased))
 			{
 				offAll = false;
 			}
@@ -270,7 +268,7 @@ class FlxAnalog extends FlxSpriteGroup
 			status = NORMAL;
 		}
 		
-		#if !FLX_NO_TOUCH
+		#if FLX_TOUCH
 		_tempTouches.splice(0, _tempTouches.length);
 		#end
 		
@@ -281,7 +279,7 @@ class FlxAnalog extends FlxSpriteGroup
 	{
 		var offAll:Bool = true;
 		
-		#if !FLX_NO_TOUCH
+		#if FLX_TOUCH
 		// Use the touch to figure out the world position if it's passed in, as 
 		// the screen coordinates passed in touchPoint are wrong
 		// if the control is used in a group, for example.
@@ -291,13 +289,13 @@ class FlxAnalog extends FlxSpriteGroup
 		}
 		#end
 		
-		if (_zone.containsFlxPoint(TouchPoint) || (status == PRESSED))
+		if (_zone.containsPoint(TouchPoint) || (status == PRESSED))
 		{
 			offAll = false;
 			
 			if (Pressed)
 			{
-				#if !FLX_NO_TOUCH
+				#if FLX_TOUCH
 				if (Touch != null)
 				{
 					_currentTouch = Touch;
@@ -339,7 +337,7 @@ class FlxAnalog extends FlxSpriteGroup
 			}
 			else if (JustReleased && status == PRESSED)
 			{				
-				#if !FLX_NO_TOUCH
+				#if FLX_TOUCH
 				_currentTouch = null;
 				#end
 				
@@ -392,14 +390,12 @@ class FlxAnalog extends FlxSpriteGroup
 	
 	private function get_justPressed():Bool
 	{
-		#if !FLX_NO_TOUCH
+		#if FLX_TOUCH
 		if (_currentTouch != null)
 		{
 			return _currentTouch.justPressed && status == PRESSED;
 		}
-		#end
-		
-		#if !FLX_NO_MOUSE
+		#elseif !FLX_NO_MOUSE
 		return FlxG.mouse.justPressed && status == PRESSED;
 		#end
 		
@@ -413,14 +409,12 @@ class FlxAnalog extends FlxSpriteGroup
 	
 	private function get_justReleased():Bool
 	{
-		#if !FLX_NO_TOUCH
+		#if FLX_TOUCH
 		if (_currentTouch != null)
 		{
 			return _currentTouch.justReleased && status == HIGHLIGHT;
 		}
-		#end
-		
-		#if !FLX_NO_MOUSE
+		#elseif !FLX_NO_MOUSE
 		return FlxG.mouse.justReleased && status == HIGHLIGHT;
 		#end
 		

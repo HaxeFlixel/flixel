@@ -13,6 +13,7 @@ import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import haxe.Utf8;
 import openfl.geom.ColorTransform;
+using flixel.util.FlxColorTransformUtil;
 
 // TODO: use Utf8 util for converting text to upper/lower case
 
@@ -23,8 +24,6 @@ import openfl.geom.ColorTransform;
  */
 class FlxBitmapText extends FlxSprite
 {
-	private static var COLOR_TRANSFORM:ColorTransform = new ColorTransform();
-	
 	/**
 	 * Font for text rendering.
 	 */
@@ -34,6 +33,11 @@ class FlxBitmapText extends FlxSprite
 	 * Text to display.
 	 */
 	public var text(default, set):String = "";
+	
+	/**
+	 * Helper object to avoid many ColorTransform allocations
+	 */
+	private var _colorParams:ColorTransform = new ColorTransform();
 	
 	/**
 	 * Helper array which contains actual strings for rendering.
@@ -230,6 +234,8 @@ class FlxBitmapText extends FlxSprite
 		shadowOffset = FlxDestroyUtil.put(shadowOffset);
 		textBitmap = FlxDestroyUtil.dispose(textBitmap);
 		
+		_colorParams = null;
+		
 		if (FlxG.renderTile)
 		{
 			textData = null;
@@ -256,7 +262,7 @@ class FlxBitmapText extends FlxSprite
 		}
 	}
 	
-	inline private function checkPendingChanges(useTiles:Bool = false):Void
+	private inline function checkPendingChanges(useTiles:Bool = false):Void
 	{
 		if (FlxG.renderBlit)
 		{
@@ -382,10 +388,13 @@ class FlxBitmapText extends FlxSprite
 					}
 					
 					_matrix.translate(_point.x + ox, _point.y + oy);
-					camera.drawPixels(currFrame, null, _matrix, bgRed, bgGreen, bgBlue, bgAlpha, blend, antialiasing);
+					_colorParams.setMultipliers(bgRed, bgGreen, bgBlue, bgAlpha);
+					camera.drawPixels(currFrame, null, _matrix, _colorParams, blend, antialiasing);
 				}
 				
-				drawItem = camera.startQuadBatch(font.parent, true, blend, antialiasing);
+				var hasColorOffsets:Bool = (colorTransform != null && colorTransform.hasRGBAOffsets());
+				
+				drawItem = camera.startQuadBatch(font.parent, true, hasColorOffsets, blend, antialiasing);
 				
 				for (j in 0...borderLength)
 				{
@@ -405,8 +414,8 @@ class FlxBitmapText extends FlxSprite
 					}
 					
 					_matrix.translate(_point.x + ox, _point.y + oy);
-					
-					drawItem.addQuad(currFrame, _matrix, borderRed, borderGreen, borderBlue, bAlpha);
+					_colorParams.setMultipliers(borderRed, borderGreen, borderBlue, bAlpha);
+					drawItem.addQuad(currFrame, _matrix, _colorParams);
 				}
 				
 				for (j in 0...textLength)
@@ -428,15 +437,16 @@ class FlxBitmapText extends FlxSprite
 					
 					_matrix.translate(_point.x + ox, _point.y + oy);
 					
-					drawItem.addQuad(currFrame, _matrix, textRed, textGreen, textBlue, tAlpha);
+					_colorParams.setMultipliers(textRed, textGreen, textBlue, tAlpha);
+					drawItem.addQuad(currFrame, _matrix, _colorParams);
 				}
 				
-				#if !FLX_NO_DEBUG
+				#if FLX_DEBUG
 				FlxBasic.visibleCount++;
 				#end
 			}
 			
-			#if !FLX_NO_DEBUG
+			#if FLX_DEBUG
 			if (FlxG.debugger.drawDebug)
 			{
 				drawDebug();
@@ -498,6 +508,10 @@ class FlxBitmapText extends FlxSprite
 		if (FlxG.renderTile)
 		{
 			drawFrame(RunOnCpp);
+		}
+		else
+		{
+			super.calcFrame(RunOnCpp);
 		}
 	}
 	
@@ -606,11 +620,11 @@ class FlxBitmapText extends FlxSprite
 			charCode = Utf8.charCodeAt(str, c);
 			charWidth = 0;
 			
-			if (charCode == FlxBitmapFont.spaceCode)
+			if (charCode == FlxBitmapFont.SPACE_CODE)
 			{
 				charWidth = spaceWidth;
 			}
-			else if (charCode == FlxBitmapFont.tabCode)
+			else if (charCode == FlxBitmapFont.TAB_CODE)
 			{
 				charWidth = tabWidth;
 			}
@@ -668,11 +682,11 @@ class FlxBitmapText extends FlxSprite
 			{
 				charCode = Utf8.charCodeAt(line, c);
 				
-				if (charCode == FlxBitmapFont.spaceCode)
+				if (charCode == FlxBitmapFont.SPACE_CODE)
 				{
 					charWidth = spaceWidth;
 				}
-				else if (charCode == FlxBitmapFont.tabCode)
+				else if (charCode == FlxBitmapFont.TAB_CODE)
 				{
 					charWidth = tabWidth;
 				}
@@ -756,7 +770,7 @@ class FlxBitmapText extends FlxSprite
 			charCode = Utf8.charCodeAt(line, c);
 			word = wordUtf8.toString();
 			
-			if (charCode == FlxBitmapFont.spaceCode || charCode == FlxBitmapFont.tabCode)
+			if (charCode == FlxBitmapFont.SPACE_CODE || charCode == FlxBitmapFont.TAB_CODE)
 			{
 				if (!isSpaceWord)
 				{
@@ -779,7 +793,7 @@ class FlxBitmapText extends FlxSprite
 					words.push(word);
 					words.push('-');
 				}
-				else if (isSpaceWord == false)
+				else if (!isSpaceWord)
 				{
 					charUtf8 = new Utf8();
 					charUtf8.addChar(charCode);
@@ -849,17 +863,17 @@ class FlxBitmapText extends FlxSprite
 				wordLength = Utf8.length(word);
 				
 				charCode = Utf8.charCodeAt(word, 0);
-				isSpaceWord = (charCode == FlxBitmapFont.spaceCode || charCode == FlxBitmapFont.tabCode);
+				isSpaceWord = (charCode == FlxBitmapFont.SPACE_CODE || charCode == FlxBitmapFont.TAB_CODE);
 				
 				for (c in 0...wordLength)
 				{
 					charCode = Utf8.charCodeAt(word, c);
 					
-					if (charCode == FlxBitmapFont.spaceCode)
+					if (charCode == FlxBitmapFont.SPACE_CODE)
 					{
 						charWidth = spaceWidth;
 					}
-					else if (charCode == FlxBitmapFont.tabCode)
+					else if (charCode == FlxBitmapFont.TAB_CODE)
 					{
 						charWidth = tabWidth;
 					}
@@ -956,7 +970,7 @@ class FlxBitmapText extends FlxSprite
 				wordLength = Utf8.length(word);
 				
 				charCode = Utf8.charCodeAt(word, 0);
-				isSpaceWord = (charCode == FlxBitmapFont.spaceCode || charCode == FlxBitmapFont.tabCode);
+				isSpaceWord = (charCode == FlxBitmapFont.SPACE_CODE || charCode == FlxBitmapFont.TAB_CODE);
 				
 				c = 0;
 				
@@ -964,11 +978,11 @@ class FlxBitmapText extends FlxSprite
 				{
 					charCode = Utf8.charCodeAt(word, c);
 					
-					if (charCode == FlxBitmapFont.spaceCode)
+					if (charCode == FlxBitmapFont.SPACE_CODE)
 					{
 						charWidth = spaceWidth;
 					}
-					else if (charCode == FlxBitmapFont.tabCode)
+					else if (charCode == FlxBitmapFont.TAB_CODE)
 					{
 						charWidth = tabWidth;
 					}
@@ -1055,7 +1069,7 @@ class FlxBitmapText extends FlxSprite
 			
 			textBitmap.lock();
 		}
-		else if(FlxG.renderTile)
+		else if (FlxG.renderTile)
 		{
 			textData.splice(0, textData.length);
 		}
@@ -1138,11 +1152,11 @@ class FlxBitmapText extends FlxSprite
 			{
 				charCode = Utf8.charCodeAt(line, i);
 				
-				if (charCode == FlxBitmapFont.spaceCode)
+				if (charCode == FlxBitmapFont.SPACE_CODE)
 				{
 					numSpaces++;
 				}
-				else if (charCode == FlxBitmapFont.tabCode)
+				else if (charCode == FlxBitmapFont.TAB_CODE)
 				{
 					numSpaces += numSpacesInTab;
 				}
@@ -1159,11 +1173,11 @@ class FlxBitmapText extends FlxSprite
 		{
 			charCode = Utf8.charCodeAt(line, i);
 			
-			if (charCode == FlxBitmapFont.spaceCode)
+			if (charCode == FlxBitmapFont.SPACE_CODE)
 			{
 				curX += spaceWidth;
 			}
-			else if (charCode == FlxBitmapFont.tabCode)
+			else if (charCode == FlxBitmapFont.TAB_CODE)
 			{
 				curX += tabWidth;
 			}
@@ -1208,11 +1222,11 @@ class FlxBitmapText extends FlxSprite
 			{
 				charCode = Utf8.charCodeAt(line, i);
 				
-				if (charCode == FlxBitmapFont.spaceCode)
+				if (charCode == FlxBitmapFont.SPACE_CODE)
 				{
 					numSpaces++;
 				}
-				else if (charCode == FlxBitmapFont.tabCode)
+				else if (charCode == FlxBitmapFont.TAB_CODE)
 				{
 					numSpaces += numSpacesInTab;
 				}
@@ -1229,11 +1243,11 @@ class FlxBitmapText extends FlxSprite
 		{
 			charCode = Utf8.charCodeAt(line, i);
 			
-			if (charCode == FlxBitmapFont.spaceCode)
+			if (charCode == FlxBitmapFont.SPACE_CODE)
 			{
 				curX += spaceWidth;
 			}
-			else if (charCode == FlxBitmapFont.tabCode)
+			else if (charCode == FlxBitmapFont.TAB_CODE)
 			{
 				curX += tabWidth;
 			}
@@ -1400,7 +1414,7 @@ class FlxBitmapText extends FlxSprite
 		pendingPixelsChange = false;
 	}
 	
-	private function drawText(posX:Int, posY:Int, isFront:Bool = true, bitmap:BitmapData = null, useTiles:Bool = false):Void
+	private function drawText(posX:Int, posY:Int, isFront:Bool = true, ?bitmap:BitmapData, useTiles:Bool = false):Void
 	{
 		if (FlxG.renderBlit)
 		{
@@ -1417,12 +1431,12 @@ class FlxBitmapText extends FlxSprite
 		}
 	}
 	
-	private function blitText(posX:Int, posY:Int, isFront:Bool = true, bitmap:BitmapData = null):Void
+	private function blitText(posX:Int, posY:Int, isFront:Bool = true, ?bitmap:BitmapData):Void
 	{
 		_matrix.identity();
 		_matrix.translate(posX, posY);
 		
-		var colorToApply:FlxColor = FlxColor.WHITE;
+		var colorToApply = FlxColor.WHITE;
 		
 		if (isFront && useTextColor)
 		{
@@ -1433,11 +1447,9 @@ class FlxBitmapText extends FlxSprite
 			colorToApply = borderColor;
 		}
 		
-		var cTrans:ColorTransform = COLOR_TRANSFORM;
-		cTrans.redMultiplier = colorToApply.redFloat;
-		cTrans.greenMultiplier = colorToApply.greenFloat;
-		cTrans.blueMultiplier = colorToApply.blueFloat;
-		cTrans.alphaMultiplier = colorToApply.alphaFloat;
+		_colorParams.setMultipliers(
+			colorToApply.redFloat, colorToApply.greenFloat,
+			colorToApply.blueFloat, colorToApply.alphaFloat);
 		
 		if (isFront && !useTextColor)
 		{
@@ -1446,7 +1458,7 @@ class FlxBitmapText extends FlxSprite
 		}
 		else
 		{
-			bitmap.draw(textBitmap, _matrix, cTrans);
+			bitmap.draw(textBitmap, _matrix, _colorParams);
 		}
 	}
 	

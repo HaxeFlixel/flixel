@@ -8,19 +8,15 @@ import flash.events.MouseEvent;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import flash.text.TextField;
-import flash.text.TextFormat;
 import flixel.FlxG;
 import flixel.math.FlxMath;
-import flixel.system.FlxAssets;
+import flixel.system.debug.FlxDebugger.GraphicCloseButton;
 import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 
 @:bitmap("assets/images/debugger/windowHandle.png")
 private class GraphicWindowHandle extends BitmapData {}
-
-@:bitmap("assets/images/debugger/buttons/close.png")
-private class GraphicCloseButton extends BitmapData {}
 
 /**
  * A generic, Flash-based window class, created for use in FlxDebugger.
@@ -111,15 +107,8 @@ class Window extends Sprite
 		_header = new Bitmap(new BitmapData(1, HEADER_HEIGHT, true, HEADER_COLOR));
 		_background.y = _header.height;
 		
-		_title = new TextField();
-		_title.x = 2;
-		_title.y = -1;
+		_title = DebuggerUtil.createTextField(2, -1);
 		_title.alpha = HEADER_ALPHA;
-		_title.height = 20;
-		_title.selectable = false;
-		_title.multiline = false;
-		_title.embedFonts = true;
-		_title.defaultTextFormat = new TextFormat(FlxAssets.FONT_DEBUGGER, 12, 0xffffff);
 		_title.text = Title;
 		
 		addChild(_shadow);
@@ -129,17 +118,18 @@ class Window extends Sprite
 		
 		if (Icon != null)
 		{
-			var _icon = new Bitmap(Icon);
-			_icon.x = 5;
-			_icon.y = 2;
-			_icon.alpha = HEADER_ALPHA;
-			_title.x = _icon.x + _icon.width + 2;
-			addChild(_icon);
+			DebuggerUtil.fixSize(Icon);
+			var icon = new Bitmap(Icon);
+			icon.x = 5;
+			icon.y = 2;
+			icon.alpha = HEADER_ALPHA;
+			_title.x = icon.x + icon.width + 2;
+			addChild(icon);
 		}
 		
 		if (_resizable)
 		{
-			_handle = new Bitmap(new GraphicWindowHandle(0, 0));
+			_handle = new Bitmap(DebuggerUtil.fixSize(new GraphicWindowHandle(0, 0)));
 			addChild(_handle);
 		}
 		
@@ -443,7 +433,7 @@ class Window extends Sprite
 	public function close():Void
 	{
 		destroy();
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		FlxG.game.debugger.removeWindow(this);
 		#end
 	}

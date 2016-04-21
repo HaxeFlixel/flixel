@@ -1,7 +1,6 @@
 package flixel.group;
 
 import flixel.FlxSprite;
-import flixel.group.FlxSpriteGroup;
 import massive.munit.Assert;
 
 class FlxSpriteGroupTest extends FlxTest

@@ -1,7 +1,9 @@
 package flixel.effects.postprocess;
 
 #if FLX_POST_PROCESS
-import openfl.gl.*;
+import openfl.gl.GL;
+import openfl.gl.GLProgram;
+import openfl.gl.GLShader;
 
 /**
  * GLSL Shader object

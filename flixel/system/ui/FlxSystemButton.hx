@@ -4,6 +4,7 @@ import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.Sprite;
 import flash.events.MouseEvent;
+import flixel.system.debug.DebuggerUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 
 /**
@@ -52,10 +53,7 @@ class FlxSystemButton extends Sprite implements IFlxDestroyable
 		super();
 		
 		if (Icon != null)
-		{
-			_icon = new Bitmap(Icon);
-			addChild(_icon);
-		}
+			changeIcon(Icon);
 		
 		#if flash
 		tabEnabled = false;
@@ -74,14 +72,13 @@ class FlxSystemButton extends Sprite implements IFlxDestroyable
 	 * Change the Icon of the button
 	 * 
 	 * @param	Icon	The new icon to use for the button.
- 	 */
+	 */
 	public function changeIcon(Icon:BitmapData):Void
 	{
 		if (_icon != null)
-		{
 			removeChild(_icon);
-		}
 		
+		DebuggerUtil.fixSize(Icon);
 		_icon = new Bitmap(Icon);
 		addChild(_icon);
 	}
@@ -96,7 +93,7 @@ class FlxSystemButton extends Sprite implements IFlxDestroyable
 		upHandler = null;
 	}
 
-	private function onMouseUp(?E:MouseEvent):Void
+	private function onMouseUp(_):Void
 	{
 		if (enabled && _mouseDown)
 		{
@@ -104,23 +101,21 @@ class FlxSystemButton extends Sprite implements IFlxDestroyable
 			_mouseDown = false;
 			
 			if (upHandler != null)
-			{
 				upHandler();
-			}
 		}
 	}
 	
-	private function onMouseDown(?E:MouseEvent):Void
+	private function onMouseDown(_):Void
 	{
 		_mouseDown = true;
 	}
 
-	private inline function onMouseOver(?E:MouseEvent):Void
+	private inline function onMouseOver(_):Void
 	{
 		alpha -= 0.2;
 	}
 
-	private inline function onMouseOut(?E:MouseEvent):Void
+	private inline function onMouseOut(_):Void
 	{
 		alpha += 0.2;
 	}
@@ -128,9 +123,7 @@ class FlxSystemButton extends Sprite implements IFlxDestroyable
 	private function set_toggled(Value:Bool):Bool
 	{
 		if (toggleMode)
-		{
-			alpha = (Value) ? 0.3 : 1;
-		}
+			alpha = Value ? 0.3 : 1;
 		return toggled = Value;
 	}
 }

@@ -1,18 +1,29 @@
 package flixel;
 
+import flash.Lib;
 import flash.display.DisplayObject;
 import flash.display.Stage;
 import flash.display.StageDisplayState;
-import flash.Lib;
 import flash.net.URLRequest;
 import flixel.effects.postprocess.PostProcess;
-import flixel.FlxBasic;
 import flixel.math.FlxMath;
 import flixel.math.FlxRandom;
 import flixel.math.FlxRect;
 import flixel.system.FlxQuadTree;
 import flixel.system.FlxVersion;
-import flixel.system.frontEnds.*;
+import flixel.system.frontEnds.BitmapFrontEnd;
+import flixel.system.frontEnds.BitmapLogFrontEnd;
+import flixel.system.frontEnds.CameraFrontEnd;
+import flixel.system.frontEnds.ConsoleFrontEnd;
+import flixel.system.frontEnds.DebuggerFrontEnd;
+import flixel.system.frontEnds.HTML5FrontEnd;
+import flixel.system.frontEnds.InputFrontEnd;
+import flixel.system.frontEnds.LogFrontEnd;
+import flixel.system.frontEnds.PluginFrontEnd;
+import flixel.system.frontEnds.SignalFrontEnd;
+import flixel.system.frontEnds.SoundFrontEnd;
+import flixel.system.frontEnds.VCRFrontEnd;
+import flixel.system.frontEnds.WatchFrontEnd;
 import flixel.system.scaleModes.BaseScaleMode;
 import flixel.system.scaleModes.RatioScaleMode;
 import flixel.util.FlxCollision;
@@ -20,29 +31,23 @@ import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSave;
 using flixel.util.FlxArrayUtil;
 
-#if !FLX_NO_TOUCH
+#if FLX_TOUCH
 import flixel.input.touch.FlxTouchManager;
 #end
-#if !FLX_NO_KEYBOARD
+#if FLX_KEYBOARD
 import flixel.input.keyboard.FlxKeyboard;
 #end
-#if !FLX_NO_MOUSE
+#if FLX_MOUSE
 import flixel.input.mouse.FlxMouse;
 #end
-#if !FLX_NO_GAMEPAD
+#if FLX_GAMEPAD
 import flixel.input.gamepad.FlxGamepadManager;
-#end
-#if !FLX_NO_SOUND_SYSTEM
-import flixel.system.frontEnds.SoundFrontEnd;
 #end
 #if android
 import flixel.input.android.FlxAndroidKeys;
 #end
 #if mobile
 import flixel.input.FlxAccelerometer;
-#end
-#if js
-import flixel.system.frontEnds.HTML5FrontEnd;
 #end
 #if FLX_POINTER_INPUT
 import flixel.input.FlxSwipe;
@@ -86,7 +91,7 @@ class FlxG
 	 * The HaxeFlixel version, in semantic versioning syntax. Use Std.string()
 	 * on it to get a String formatted like this: "HaxeFlixel MAJOR.MINOR.PATCH-COMMIT_SHA".
 	 */ 
-	public static var VERSION(default, null):FlxVersion = new FlxVersion(4, 0, 0);
+	public static var VERSION(default, null):FlxVersion = new FlxVersion(4, 1, 0);
 	
 	/**
 	 * Internal tracker for game object.
@@ -164,7 +169,7 @@ class FlxG
 	 */
 	public static var random(default, null):FlxRandom = new FlxRandom();
 	
-	#if !FLX_NO_MOUSE
+	#if FLX_MOUSE
 	/**
 	 * Used for mouse input. e.g.: check if the left mouse button 
 	 * is pressed with if (FlxG.mouse.pressed) { }) in update().
@@ -172,7 +177,7 @@ class FlxG
 	public static var mouse(default, set):FlxMouse;
 	#end
 	
-	#if !FLX_NO_TOUCH
+	#if FLX_TOUCH
 	/**
 	 * Useful for devices with multitouch support.
 	 */
@@ -186,7 +191,7 @@ class FlxG
 	public static var swipes(default, null):Array<FlxSwipe> = [];
 	#end
 
-	#if !FLX_NO_KEYBOARD
+	#if FLX_KEYBOARD
 	/**
 	 * Used for keyboard input e.g.: check if the left arrow key is 
 	 * pressed with if (FlxG.keys.pressed.LEFT) { } in update().
@@ -194,7 +199,7 @@ class FlxG
 	public static var keys(default, null):FlxKeyboard;
 	#end
 	
-	#if !FLX_NO_GAMEPAD
+	#if FLX_GAMEPAD
 	/**
 	 * A reference to a FlxGamepadManager object.
 	 */
@@ -266,9 +271,11 @@ class FlxG
 	 */
 	public static var plugins(default, null):PluginFrontEnd;
 	
+	public static var initialWidth(default, null):Int = 0;
+	public static var initialHeight(default, null):Int = 0;
 	public static var initialZoom(default, null):Float = 0;
 	
-	#if !FLX_NO_SOUND_SYSTEM
+	#if FLX_SOUND_SYSTEM
 	/**
 	 * Contains a list of all sounds and other things to manage or play() sounds.
 	 */
@@ -281,11 +288,25 @@ class FlxG
 	public static var signals(default, null):SignalFrontEnd = new SignalFrontEnd();
 	
 	/**
-	 * Handy helper functions that takes care of all the things to resize the game.
+	 * Resizes the game within the window by reapplying the current scale mode.
 	 */
 	public static inline function resizeGame(Width:Int, Height:Int):Void
 	{
 		scaleMode.onMeasure(Width, Height);
+	}
+	
+	/**
+	 * Resizes the window. Only works on desktop targets (neko, windows, linux, mac).
+	 */
+	public static function resizeWindow(Width:Int, Height:Int):Void
+	{
+		#if desktop
+		#if openfl_legacy
+		stage.resize(Width, Height);
+		#else
+		Lib.application.window.resize(Width, Height);
+		#end
+		#end
 	}
 	
 	/**
@@ -297,26 +318,18 @@ class FlxG
 	}
 	
 	/**
-	 * Switch from the current game state to the one specified here.
+	 * Attempts to switch from the current game state to `nextState`.
+	 * The state switch is successful if `switchTo()` of the current `state` returns `true`.
 	 */
-	public static inline function switchState(State:FlxState):Void
+	public static inline function switchState(nextState:FlxState):Void
 	{
-		//If a transition is required
-		if (game._state.isTransitionNeeded())
-		{
-			//Do the transition and exit early
-			game._state.transitionToState(State);
-			return;
-		}
-		//Otherwise do the switch normally
-		else
-		{
-			game._requestedState = State; 
-		}
+		if (state.switchTo(nextState))
+			game._requestedState = nextState;
 	}
 	
 	/**
 	 * Request a reset of the current game state.
+	 * Calls `switchState()` with a new instance of the current `state`.
 	 */
 	public static inline function resetState():Void
 	{
@@ -507,27 +520,26 @@ class FlxG
 		
 		initRenderMethod();
 		
-		BaseScaleMode.gWidth = width;
-		BaseScaleMode.gHeight = height;
-		
+		FlxG.initialWidth = width;
+		FlxG.initialHeight = height;
 		FlxG.initialZoom = FlxCamera.defaultZoom = Zoom;
 		
 		resizeGame(Lib.current.stage.stageWidth, Lib.current.stage.stageHeight);
 		
 		// Instantiate inputs
-		#if !FLX_NO_KEYBOARD
+		#if FLX_KEYBOARD
 		keys = inputs.add(new FlxKeyboard());
 		#end
 		
-		#if !FLX_NO_MOUSE
+		#if FLX_MOUSE
 		mouse = inputs.add(new FlxMouse(game._inputContainer));
 		#end
 		
-		#if !FLX_NO_TOUCH
+		#if FLX_TOUCH
 		touches = inputs.add(new FlxTouchManager());
 		#end
 		
-		#if !FLX_NO_GAMEPAD
+		#if FLX_GAMEPAD
 		gamepads = inputs.add(new FlxGamepadManager());
 		#end
 		
@@ -543,39 +555,39 @@ class FlxG
 		plugins = new PluginFrontEnd();
 		vcr = new VCRFrontEnd();
 		
-		#if !FLX_NO_SOUND_SYSTEM
+		#if FLX_SOUND_SYSTEM
 		sound = new SoundFrontEnd();
 		#end
 	}
 	
 	private static function initRenderMethod():Void
 	{
-		renderMethod = BLIT;
+		renderMethod = BLITTING;
 		
 		#if (!lime_legacy && !flash)
-			if (Lib.application.config.windows[0].hardware == false)
+			if (!Lib.application.config.windows[0].hardware)
 			{
-				renderMethod = BLIT;
+				renderMethod = BLITTING;
 			}
 			else
 			{
-				renderMethod = switch(stage.window.renderer.type)
+				renderMethod = switch (stage.window.renderer.type)
 				{
-					case OPENGL, CONSOLE:      TILES;
-					case CANVAS, FLASH, CAIRO: BLIT;
-					default:                   BLIT;
+					case OPENGL, CONSOLE:      DRAW_TILES;
+					case CANVAS, FLASH, CAIRO: BLITTING;
+					default:                   BLITTING;
 				}
 			}
 		#else
-			#if (flash || js)
-				renderMethod = BLIT;
+			#if web
+				renderMethod = BLITTING;
 			#else
-				renderMethod = TILES;
+				renderMethod = DRAW_TILES;
 			#end
 		#end
 		
-		renderBlit = renderMethod == BLIT;
-		renderTile = renderMethod == TILES;
+		renderBlit = renderMethod == BLITTING;
+		renderTile = renderMethod == DRAW_TILES;
 		
 		FlxObject.defaultPixelPerfectPosition = renderBlit;
 	}
@@ -589,7 +601,7 @@ class FlxG
 		
 		bitmap.clearCache();
 		inputs.reset();
-		#if !FLX_NO_SOUND_SYSTEM
+		#if FLX_SOUND_SYSTEM
 		sound.destroy(true);
 		#end
 		autoPause = true;
@@ -608,7 +620,7 @@ class FlxG
 		return ScaleMode;
 	}
 	
-	#if !FLX_NO_MOUSE
+	#if FLX_MOUSE
 	private static function set_mouse(NewMouse:FlxMouse):FlxMouse
 	{
 		if (mouse == null)					//if no mouse, just add it
@@ -674,8 +686,8 @@ class FlxG
 	
 	private static function get_fullscreen():Bool
 	{
-		return (stage.displayState == StageDisplayState.FULL_SCREEN 
-			|| stage.displayState == StageDisplayState.FULL_SCREEN_INTERACTIVE);
+		return stage.displayState == StageDisplayState.FULL_SCREEN 
+			|| stage.displayState == StageDisplayState.FULL_SCREEN_INTERACTIVE;
 	}
 	
 	private static function set_fullscreen(Value:Bool):Bool
@@ -697,6 +709,6 @@ class FlxG
 
 enum FlxRenderMethod 
 {
-	TILES;
-	BLIT;
+	DRAW_TILES;
+	BLITTING;
 }

@@ -1,4 +1,4 @@
-﻿package flixel.tweens.misc;
+package flixel.tweens.misc;
 
 import flixel.tweens.FlxTween;
 

@@ -1,6 +1,5 @@
 package flixel.system;
 
-#if !FLX_HAXE_BUILD
 import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.StageAlign;
@@ -16,7 +15,7 @@ import flixel.util.FlxColor;
 import flixel.util.FlxStringUtil;
 
 class FlxBasePreloader extends NMEPreloader
-{	
+{
 	/**
 	 * Add this string to allowedURLs array if you want to be able to test game with enabled site-locking on local machine 
 	 */
@@ -29,16 +28,16 @@ class FlxBasePreloader extends NMEPreloader
 	
 	/**
 	 * List of allowed URLs for built-in site-locking.
-	 * Set it in FlxPreloader's constructor as: ['http://adamatomic.com/canabalt/', FlxPreloader.LOCAL];
+	 * Set it in FlxPreloader's constructor as: `['http://adamatomic.com/canabalt/', FlxPreloader.LOCAL]`;
 	 */
 	public var allowedURLs:Array<String>;
 
 	/**
-	* The index of which URL in allowedURLs will be triggered when a user clicks on the Site-lock Message.
-	* For example, if allowedURLs is ['mysite.com', 'othersite.com'], and siteLockURLIndex = 1, then
-	* the user will go to 'othersite.com' when they click the message, but sitelocking will allow either of those URLs to work.
-	* Defaults to 0.
-	*/
+	 * The index of which URL in allowedURLs will be triggered when a user clicks on the Site-lock Message.
+	 * For example, if allowedURLs is `['mysite.com', 'othersite.com']`, and `siteLockURLIndex = 1`, then
+	 * the user will go to 'othersite.com' when they click the message, but sitelocking will allow either of those URLs to work.
+	 * Defaults to 0.
+	 */
 	public var siteLockURLIndex:Int = 0;
 	
 	private var _percent:Float = 0;
@@ -48,7 +47,7 @@ class FlxBasePreloader extends NMEPreloader
 	private var _urlChecked:Bool = false;
 	
 	/**
-	 * FlxPreloaderBase Constructor.
+	 * FlxBasePreloader Constructor.
 	 * @param	MinDisplayTime	Minimum time the preloader should be shown. (Default = 0)
 	 * @param	AllowedURLs		Allowed URLs used for Site-locking. If the game is run anywhere else, a message will be displayed on the screen (Default = [])
 	 */
@@ -56,6 +55,7 @@ class FlxBasePreloader extends NMEPreloader
 	{
 		super();
 		
+		#if !js
 		removeChild(progress);
 		removeChild(outline);
 		
@@ -64,6 +64,7 @@ class FlxBasePreloader extends NMEPreloader
 			allowedURLs = AllowedURLs;
 		else
 			allowedURLs = [];
+		#end
 	}
 	
 	/**
@@ -77,12 +78,14 @@ class FlxBasePreloader extends NMEPreloader
 	override public function onInit() 
 	{
 		super.onInit();
+		
+		#if !js
 		Lib.current.stage.scaleMode = StageScaleMode.NO_SCALE;
 		Lib.current.stage.align = StageAlign.TOP_LEFT;
 		create();
 		checkSiteLock();
 		addEventListener(Event.ENTER_FRAME, onEnterFrame);
-
+		#end
 	}
 	
 	/**
@@ -91,10 +94,12 @@ class FlxBasePreloader extends NMEPreloader
 	 */
 	override public function onUpdate(bytesLoaded:Int, bytesTotal:Int) 
 	{
-		#if !(desktop || mobile)
+		#if flash
 		if (root.loaderInfo.bytesTotal == 0)
 			bytesTotal = 50000;
-		_percent = (bytesTotal != 0)?bytesLoaded / bytesTotal : 0;
+		_percent = (bytesTotal != 0) ? bytesLoaded / bytesTotal : 0;
+		#else
+		super.onUpdate(bytesLoaded, bytesTotal);
 		#end
 	}
 	
@@ -111,7 +116,7 @@ class FlxBasePreloader extends NMEPreloader
 			percent = time / min;
 		update(percent);
 		
-		if (_loaded && (min <= 0 || time/min >= 1))
+		if (_loaded && (min <= 0 || time / min >= 1))
 		{
 			removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 			super.onLoaded();
@@ -123,29 +128,27 @@ class FlxBasePreloader extends NMEPreloader
 	 * This function is called when the project has finished loading.
 	 * Override it to remove all of your objects.
 	 */
-	private function destroy():Void
-	{
-		
-	}
+	private function destroy():Void {}
 	
 	/**
 	 * Override to draw your preloader objects in response to the Percent
 	 * 
 	 * @param	Percent		How much of the program has loaded.
 	 */
-	private function update(Percent:Float):Void
-	{
-		
-	}
+	private function update(Percent:Float):Void {}
 	
 	/**
 	 * This function is called EXTERNALLY once the movie has actually finished being loaded. 
 	 * Highly recommended you DO NO override.
 	 */
 	override public function onLoaded() 
-	{	
+	{
+		#if flash
 		_loaded = true;
 		_percent = 1;
+		#else
+		super.onLoaded();
+		#end
 	}
 	
 	/**
@@ -215,7 +218,7 @@ class FlxBasePreloader extends NMEPreloader
 			{
 				return true;
 			}
-			else if ((allowedURL == LOCAL) && (homeDomain == LOCAL))
+			else if (allowedURL == LOCAL && homeDomain == LOCAL)
 			{
 				return true;
 			}
@@ -224,4 +227,3 @@ class FlxBasePreloader extends NMEPreloader
 	}
 	#end
 }
-#end

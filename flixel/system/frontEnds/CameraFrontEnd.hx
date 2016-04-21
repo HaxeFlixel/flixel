@@ -37,12 +37,9 @@ class CameraFrontEnd
 	 * @param	NewCamera	The camera you want to add.
 	 * @return	This FlxCamera instance.
 	 */
-	@:generic
-	public inline function add<T:FlxCamera>(NewCamera:T):T
+	public function add<T:FlxCamera>(NewCamera:T):T
 	{
-		#if !FLX_RENDER_CRISP
 		FlxG.game.addChildAt(NewCamera.flashSprite, FlxG.game.getChildIndex(FlxG.game._inputContainer));
-		#end
 		FlxG.cameras.list.push(NewCamera);
 		NewCamera.ID = FlxG.cameras.list.length - 1;
 		return NewCamera;
@@ -59,10 +56,7 @@ class CameraFrontEnd
 		var index:Int = list.indexOf(Camera);
 		if ((Camera != null) && index != -1)
 		{
-			#if !FLX_RENDER_CRISP
 			FlxG.game.removeChild(Camera.flashSprite);
-			#end
-			
 			list.splice(index, 1);
 		}
 		else
@@ -92,13 +86,11 @@ class CameraFrontEnd
 	 */
 	public function reset(?NewCamera:FlxCamera):Void
 	{
-		#if !FLX_RENDER_CRISP
 		for (camera in list)
 		{
 			FlxG.game.removeChild(camera.flashSprite);
 			camera.destroy();
 		}
-		#end
 		
 		list.splice(0, list.length);
 		
@@ -121,7 +113,7 @@ class CameraFrontEnd
 	 * @param	OnComplete	A function you want to run when the flash finishes.
 	 * @param	Force		Force the effect to reset.
 	 */
-	public function flash(Color:FlxColor = 0xffffffff, Duration:Float = 1, ?OnComplete:Void->Void, Force:Bool = false):Void
+	public function flash(Color:FlxColor = FlxColor.WHITE, Duration:Float = 1, ?OnComplete:Void->Void, Force:Bool = false):Void
 	{
 		for (camera in list)
 		{
@@ -196,7 +188,7 @@ class CameraFrontEnd
 				camera.clearDrawStack();
 				camera.canvas.graphics.clear();
 				// Clearing camera's debug sprite
-				#if !FLX_NO_DEBUG
+				#if FLX_DEBUG
 				camera.debugLayer.graphics.clear();
 				#end
 			}
@@ -208,7 +200,7 @@ class CameraFrontEnd
 			}
 			else
 			{
-				camera.fill((camera.bgColor & 0x00ffffff), camera.useBgAlphaBlending, ((camera.bgColor >> 24) & 255) / 255);
+				camera.fill(camera.bgColor.to24Bit(), camera.useBgAlphaBlending, camera.bgColor.alphaFloat);
 			}
 		}
 	}

@@ -13,11 +13,6 @@ class FlxPoint implements IFlxPooled
 {
 	public static var pool(get, never):IFlxPool<FlxPoint>;
 	
-	public static var flxPoint1:FlxPoint = new FlxPoint();
-	public static var flxPoint2:FlxPoint = new FlxPoint();
-	public static var point1:Point = new Point();
-	public static var point2:Point = new Point();
-	
 	private static var _pool = new FlxPool<FlxPoint>(FlxPoint);
 	
 	/**
@@ -157,6 +152,19 @@ class FlxPoint implements IFlxPooled
 	}
 	
 	/**
+	 * Scale this point.
+	 * 
+	 * @param	k - scale coefficient
+	 * @return	scaled point
+	 */
+	public function scale(k:Float):FlxPoint
+	{
+		x *= k;
+		y *= k;
+		return this;
+	}
+	
+	/**
 	 * Helper function, just copies the values from the specified point.
 	 * 
 	 * @param	point	Any FlxPoint.
@@ -166,6 +174,7 @@ class FlxPoint implements IFlxPooled
 	{
 		x = point.x;
 		y = point.y;
+		point.putWeak();
 		return this;
 	}
 	
@@ -265,7 +274,7 @@ class FlxPoint implements IFlxPooled
 	 * @param	Rect	The FlxRect to test within
 	 * @return	True if pointX/pointY is within the FlxRect, otherwise false
 	 */
-	public inline function inFlxRect(Rect:FlxRect):Bool
+	public inline function inRect(Rect:FlxRect):Bool
 	{
 		return FlxMath.pointInFlxRect(x, y, Rect);
 	}
@@ -276,9 +285,12 @@ class FlxPoint implements IFlxPooled
 	 * @param 	AnotherPoint	A FlxPoint object to calculate the distance to.
 	 * @return	The distance between the two points as a Float.
 	 */
-	public inline function distanceTo(AnotherPoint:FlxPoint):Float
+	public function distanceTo(point:FlxPoint):Float
 	{
-		return FlxMath.getDistance(this, AnotherPoint);
+		var dx:Float = x - point.x;
+		var dy:Float = y - point.y;
+		point.putWeak();
+		return FlxMath.vectorLength(dx, dy);
 	}
 	
 	/**
@@ -359,7 +371,7 @@ class FlxPoint implements IFlxPooled
 			{
 				angle = c2 - c1 * ((x + ay) / (ay - x));
 			}
-			angle = ((y < 0) ? - angle : angle) * FlxAngle.TO_DEG;
+			angle = ((y < 0) ? -angle : angle) * FlxAngle.TO_DEG;
 			
 			if (angle > 90)
 			{
@@ -383,23 +395,15 @@ class FlxPoint implements IFlxPooled
 	 */
 	public inline function equals(point:FlxPoint):Bool
 	{
-		return FlxMath.equal(x, point.x) && FlxMath.equal(y, point.y);
+		var result = FlxMath.equal(x, point.x) && FlxMath.equal(y, point.y);
+		point.putWeak();
+		return result;
 	}
 	
 	/**
 	 * Necessary for IFlxDestroyable.
 	 */
 	public function destroy() {}
-	
-	/**
-	 * Convert object to readable string name. Useful for debugging, save games, etc.
-	 */
-	public inline function toString():String
-	{
-		return FlxStringUtil.getDebugString([ 
-			LabelValuePair.weak("x", x),
-			LabelValuePair.weak("y", y)]);
-	}
 	
 	/**
 	 * Applies tranformation matrix to this point
@@ -415,7 +419,17 @@ class FlxPoint implements IFlxPooled
 	}
 	
 	/**
-	 * Necessary for FlxPointHelper in FlxSpriteGroup.
+	 * Convert object to readable string name. Useful for debugging, save games, etc.
+	 */
+	public inline function toString():String
+	{
+		return FlxStringUtil.getDebugString([ 
+			LabelValuePair.weak("x", x),
+			LabelValuePair.weak("y", y)]);
+	}
+	
+	/**
+	 * Necessary for FlxCallbackPoint.
 	 */
 	private function set_x(Value:Float):Float 
 	{ 
@@ -423,7 +437,7 @@ class FlxPoint implements IFlxPooled
 	}
 	
 	/**
-	 * Necessary for FlxPointHelper in FlxSpriteGroup.
+	 * Necessary for FlxCallbackPoint.
 	 */
 	private function set_y(Value:Float):Float
 	{

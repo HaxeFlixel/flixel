@@ -1,7 +1,6 @@
 package flixel.graphics.frames;
 
 import flash.display.BitmapData;
-import flixel.graphics.frames.FlxAtlasFrames;
 import massive.munit.Assert;
 
 class FlxAtlasFramesTest extends FlxTest

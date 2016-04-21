@@ -2,8 +2,8 @@ package flixel;
 
 import flash.display.BitmapData;
 import flixel.animation.FlxAnimation;
-import flixel.FlxSprite;
 import flixel.graphics.atlas.FlxAtlas;
+import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import massive.munit.Assert;
 
@@ -113,7 +113,7 @@ class FlxSpriteTest extends FlxTest
 		Assert.areEqual(100, sizeSprite.width);
 		Assert.areEqual(130, sizeSprite.height);
 		
-		sizeSprite.setSize(233,333);
+		sizeSprite.setSize(233, 333);
 		
 		Assert.areEqual(233, sizeSprite.width);
 		Assert.areEqual(333, sizeSprite.height);
@@ -212,5 +212,35 @@ class FlxSpriteTest extends FlxTest
 		Assert.isNotNull(sprite.pixels);
 		Assert.areEqual(10, sprite.pixels.width);
 		Assert.areEqual(20, sprite.pixels.height);
+	}
+	
+	@Test // #1678
+	function testStampTextCrash()
+	{
+		var text = new FlxText(0, 0, 50, 'Text');
+		var sprite = new FlxSprite();
+		sprite.makeGraphic(100, 100, 0, true);
+		sprite.stamp(text);
+	}
+	
+	@Test // #1704
+	function testStampTextColorChange()
+	{
+		var text = new FlxText(0, 0, 0, "Text");
+		text.color = FlxColor.RED;
+		
+		var sprite = new FlxSprite();
+		sprite.makeGraphic(100, 100, FlxColor.BLUE);
+		sprite.stamp(text);
+		
+		var graphic = sprite.updateFramePixels();
+		for (x in 0...graphic.width)
+		{
+			for (y in 0...graphic.height)
+			{
+				var color:Int = graphic.getPixel32(x, y);
+				Assert.isTrue(color < 0xffffffff);
+			}
+		}
 	}
 }

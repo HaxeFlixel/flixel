@@ -2,7 +2,7 @@ package flixel.input;
 
 import flash.events.KeyboardEvent;
 import flixel.FlxG;
-import flixel.input.FlxInput;
+import flixel.input.FlxInput.FlxInputState;
 
 @:allow(flixel)
 class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
@@ -73,9 +73,9 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 	}
 	
 	/**
-	 * Get the first key which is currently pressed.
+	 * Get the ID of the first key which is currently pressed.
 	 * 
-	 * @return	The the first pressed Key
+	 * @return	The ID of the first pressed key or -1 if none are pressed.
 	 */
 	public function firstPressed():Int
 	{
@@ -90,9 +90,9 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 	}
 	
 	/**
-	 * Get the name of the first key which has just been pressed.
+	 * Get the ID of the first key which has just been pressed.
 	 * 
-	 * @return	The name of the key or "" if none could be found.
+	 * @return	The ID of the key or -1 if none were just pressed.
 	 */
 	public function firstJustPressed():Int
 	{
@@ -107,9 +107,9 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 	}
 	
 	/**
-	 * Get the name of the first key which has just been released.
+	 * Get the ID of the first key which has just been released.
 	 * 
-	 * @return	The name of the key or "" if none could be found.
+	 * @return	The ID of the key or -1 if none were just released.
 	 */
 	public function firstJustReleased():Int
 	{
@@ -141,7 +141,7 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 				return true;
 			}
 		}
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 			else
 			{
 				throw 'Invalid key code: $KeyCode.';
@@ -280,12 +280,8 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 		var key:FlxInput<Key> = getKey(keyCode);
 		if (key != null && preventDefaultKeys != null && preventDefaultKeys.indexOf(key.ID) != -1)
 		{
-			#if bitfive
-				event.preventDefault();
-			#else
-				event.stopImmediatePropagation();
-				event.stopPropagation();
-			#end
+			event.stopImmediatePropagation();
+			event.stopPropagation();
 		}
 	}
 	

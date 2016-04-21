@@ -10,10 +10,6 @@ import flixel.util.FlxStringUtil;
  */
 class FlxRect implements IFlxPooled
 {
-	public static var flxRect:FlxRect = new FlxRect();
-	
-	public static var rect:Rectangle = new Rectangle();
-	
 	public static var pool(get, never):IFlxPool<FlxRect>;
 	
 	private static var _pool = new FlxPool<FlxRect>(FlxRect);
@@ -156,6 +152,8 @@ class FlxRect implements IFlxPooled
 		y = Rect.y;
 		width = Rect.width;
 		height = Rect.height;
+		
+		Rect.putWeak();
 		return this;
 	}
 	
@@ -171,6 +169,8 @@ class FlxRect implements IFlxPooled
 		Rect.y = y;
 		Rect.width = width;
 		Rect.height = height;
+		
+		Rect.putWeak();
 		return Rect;
 	}
 	
@@ -217,7 +217,13 @@ class FlxRect implements IFlxPooled
 	 */
 	public inline function overlaps(Rect:FlxRect):Bool
 	{
-		return (Rect.x + Rect.width > x) && (Rect.x < x + width) && (Rect.y + Rect.height > y) && (Rect.y < y + height);
+		var result =
+			(Rect.x + Rect.width > x) &&
+			(Rect.x < x + width) &&
+			(Rect.y + Rect.height > y) &&
+			(Rect.y < y + height);
+		Rect.putWeak();
+		return result;
 	}
 	
 	/**
@@ -226,9 +232,11 @@ class FlxRect implements IFlxPooled
 	 * @param	Point	The FlxPoint to check
 	 * @return	True if the FlxPoint is within this FlxRect, otherwise false
 	 */
-	public inline function containsFlxPoint(Point:FlxPoint):Bool
+	public inline function containsPoint(Point:FlxPoint):Bool
 	{
-		return FlxMath.pointInFlxRect(Point.x, Point.y, this);
+		var result = FlxMath.pointInFlxRect(Point.x, Point.y, this);
+		Point.putWeak();
+		return result;
 	}
 	
 	/**
@@ -245,6 +253,7 @@ class FlxRect implements IFlxPooled
 		var maxX:Float = Math.max(right, Rect.right);
 		var maxY:Float = Math.max(bottom, Rect.bottom);
 		
+		Rect.putWeak();
 		return set(minX, minY, maxX - minX, maxY - minY);
 	}
 	
@@ -299,6 +308,8 @@ class FlxRect implements IFlxPooled
 		var maxX:Float = Math.max(Point1.x, Point2.x);
 		var maxY:Float = Math.max(Point1.y, Point2.y);
 		
+		Point1.putWeak();
+		Point2.putWeak();
 		return this.set(minX, minY, maxX - minX, maxY - minY);
 	}
 	
@@ -316,6 +327,7 @@ class FlxRect implements IFlxPooled
 		var maxX:Float = Math.max(right, Point.x);
 		var maxY:Float = Math.max(bottom, Point.y);
 		
+		Point.putWeak();
 		return set(minX, minY, maxX - minX, maxY - minY);
 	}
 	
@@ -332,18 +344,6 @@ class FlxRect implements IFlxPooled
 	public function destroy() {}
 	
 	/**
-	 * Convert object to readable string name. Useful for debugging, save games, etc.
-	 */
-	public inline function toString():String
-	{
-		return FlxStringUtil.getDebugString([
-			LabelValuePair.weak("x", x),
-			LabelValuePair.weak("y", y),
-			LabelValuePair.weak("w", width),
-			LabelValuePair.weak("h", height)]);
-	}
-	
-	/**
 	 * Checks if this rectangle's properties are equal to properties of provided rect.
 	 * 
 	 * @param	rect	Rectangle to check equality to.
@@ -351,8 +351,13 @@ class FlxRect implements IFlxPooled
 	 */
 	public inline function equals(rect:FlxRect):Bool
 	{
-		return FlxMath.equal(x, rect.x) && FlxMath.equal(y, rect.y)
-			&& FlxMath.equal(width, rect.width) && FlxMath.equal(height, rect.height);
+		var result =
+			FlxMath.equal(x, rect.x) &&
+			FlxMath.equal(y, rect.y) &&
+			FlxMath.equal(width, rect.width) &&
+			FlxMath.equal(height, rect.height);
+		rect.putWeak();
+		return result;
 	}
 	
 	/**
@@ -368,6 +373,7 @@ class FlxRect implements IFlxPooled
 		var x1:Float = right > rect.right ? rect.right : right;
 		if (x1 <= x0) 
 		{	
+			rect.putWeak();
 			return FlxRect.get(0, 0, 0, 0);
 		}
 		
@@ -375,10 +381,24 @@ class FlxRect implements IFlxPooled
 		var y1:Float = bottom > rect.bottom ? rect.bottom : bottom;
 		if (y1 <= y0) 
 		{	
+			rect.putWeak();
 			return FlxRect.get(0, 0, 0, 0);
 		}
 		
+		rect.putWeak();
 		return FlxRect.get(x0, y0, x1 - x0, y1 - y0);
+	}
+	
+	/**
+	 * Convert object to readable string name. Useful for debugging, save games, etc.
+	 */
+	public inline function toString():String
+	{
+		return FlxStringUtil.getDebugString([
+			LabelValuePair.weak("x", x),
+			LabelValuePair.weak("y", y),
+			LabelValuePair.weak("w", width),
+			LabelValuePair.weak("h", height)]);
 	}
 	
 	private inline function get_left():Float
@@ -427,7 +447,7 @@ class FlxRect implements IFlxPooled
 	
 	private inline function get_isEmpty():Bool
 	{
-		return (width == 0 || height == 0);
+		return width == 0 || height == 0;
 	}
 	
 	private static function get_pool():IFlxPool<FlxRect>

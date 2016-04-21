@@ -1,8 +1,7 @@
 package flixel.math;
 
-import flixel.FlxG;
 import flixel.FlxSprite;
-#if !FLX_NO_TOUCH
+#if FLX_TOUCH
 import flixel.input.touch.FlxTouch;
 #end
 
@@ -53,7 +52,7 @@ class FlxVelocity
 		accelerateFromAngle(Source, a, Acceleration, MaxSpeed);
 	}
 	
-	#if !FLX_NO_MOUSE
+	#if FLX_MOUSE
 	/**
 	 * Move the given FlxSprite towards the mouse pointer coordinates at a steady velocity
 	 * If you specify a maxTime then it will adjust the speed (over-writing what you set) so it arrives at the destination in that number of seconds.
@@ -81,7 +80,7 @@ class FlxVelocity
 	}
 	#end
 	
-	#if !FLX_NO_TOUCH
+	#if FLX_TOUCH
 	/**
 	 * Move the given FlxSprite towards a FlxTouch point at a steady velocity
 	 * If you specify a maxTime then it will adjust the speed (over-writing what you set) so it arrives at the destination in that number of seconds.
@@ -109,7 +108,7 @@ class FlxVelocity
 	}
 	#end
 	
-	#if !FLX_NO_MOUSE
+	#if FLX_MOUSE
 	/**
 	 * Sets the x/y acceleration on the source FlxSprite so it will move towards the mouse coordinates at the speed given (in pixels per second)
 	 * You must give a maximum speed value, beyond which the FlxSprite won't go any faster.
@@ -127,7 +126,7 @@ class FlxVelocity
 	}
 	#end
 	
-	#if !FLX_NO_TOUCH
+	#if FLX_TOUCH
 	/**
 	 * Sets the x/y acceleration on the source FlxSprite so it will move towards a FlxTouch at the speed given (in pixels per second)
 	 * You must give a maximum speed value, beyond which the FlxSprite won't go any faster.

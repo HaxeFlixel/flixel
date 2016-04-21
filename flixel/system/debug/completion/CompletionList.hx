@@ -1,12 +1,9 @@
 package flixel.system.debug.completion;
 
-import openfl.display.Bitmap;
-import openfl.display.BitmapData;
+import flixel.math.FlxMath;
 import openfl.display.Sprite;
 import openfl.events.KeyboardEvent;
 import openfl.ui.Keyboard;
-import flixel.math.FlxMath;
-import flixel.util.FlxColor;
 using flixel.util.FlxStringUtil;
 using StringTools;
 
@@ -18,9 +15,10 @@ class CompletionList extends Sprite
 	
 	public var filter(default, set):String;
 	
+	public var items(default, null):Array<String>;
+	
 	private var entries:Array<CompletionListEntry> = [];
 	private var originalItems:Array<String>;
-	private var items:Array<String>;
 	private var selectedIndex:Int = 0;
 	private var lowerVisibleIndex:Int = 0;
 	private var upperVisibleIndex:Int = 0;
@@ -203,16 +201,30 @@ class CompletionList extends Sprite
 		
 		items.sort(function(a, b)
 		{
-			var aStartsWith = a.startsWith(filter);
-			var bStartsWith = b.startsWith(filter);
-			if (aStartsWith && bStartsWith)
-				return Std.int(a.length - b.length);
+			var valueA = startsWithExt(a, filter);
+			var valueB = startsWithExt(b, filter);
+			if (valueA > valueB)
+				return -valueA;
+			if (valueB > valueA)
+				return valueB;
 			
-			if (aStartsWith) return -1;
-			if (bStartsWith) return 1;
+			if (valueA == valueB)
+				return Std.int(a.length - b.length);
 			return 0;
 		});
 		return items;
+	}
+	
+	/**
+	 * Custom startsWith() that ignores leading underscores.
+	 */
+	private function startsWithExt(s:String, start:String):Int
+	{
+		if (s.startsWith(start))
+			return 2;
+		if (~/^[_]+/.replace(s, "").startsWith(start))
+			return 1;
+		return 0;
 	}
 	
 	private function set_filter(filter:String):String

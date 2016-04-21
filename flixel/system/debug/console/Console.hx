@@ -1,7 +1,6 @@
 package flixel.system.debug.console;
 
-#if !FLX_NO_DEBUG
-import openfl.events.Event;
+#if FLX_DEBUG
 import openfl.events.FocusEvent;
 import openfl.events.KeyboardEvent;
 import openfl.events.MouseEvent;
@@ -11,9 +10,10 @@ import openfl.text.TextFormat;
 import openfl.ui.Keyboard;
 import flixel.FlxG;
 import flixel.FlxObject;
-import flixel.system.debug.FlxDebugger;
+import flixel.system.debug.FlxDebugger.GraphicConsole;
 import flixel.system.debug.completion.CompletionList;
 import flixel.system.debug.completion.CompletionHandler;
+import flixel.util.FlxStringUtil;
 using StringTools;
 
 /**
@@ -81,7 +81,7 @@ class Console extends Window
 		registerEventListeners();
 		
 		// Install commands
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		new ConsoleCommands(this);
 		#end
 	}
@@ -147,7 +147,7 @@ class Console extends Window
 			return;
 		#end
 		
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		#if flash 
 		// Pause game
 		if (FlxG.console.autoPause)
@@ -155,7 +155,7 @@ class Console extends Window
 		#end
 		
 		// Block keyboard input
-		#if !FLX_NO_KEYBOARD
+		#if FLX_KEYBOARD
 		FlxG.keys.enabled = false;
 		#end
 		
@@ -172,14 +172,14 @@ class Console extends Window
 			return;
 		#end
 		
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		#if flash
 		// Unpause game
 		if (FlxG.console.autoPause)
 			FlxG.vcr.resume();
 		#end
 		// Unblock keyboard input
-		#if !FLX_NO_KEYBOARD
+		#if FLX_KEYBOARD
 		FlxG.keys.enabled = true;
 		#end
 		
@@ -188,6 +188,7 @@ class Console extends Window
 		#end
 		
 		completionList.close();
+		FlxG.game.debugger.onMouseFocusLost();
 	}
 	
 	#if hscript
@@ -244,7 +245,7 @@ class Console extends Window
 			history.addCommand(input.text);
 			
 			// Step forward one frame to see the results of the command
-			#if (flash && !FLX_NO_DEBUG)
+			#if (flash && FLX_DEBUG)
 			if (FlxG.vcr.paused)
 				FlxG.game.debugger.vcr.onStep();
 			#end
@@ -267,24 +268,6 @@ class Console extends Window
 	#end
 	
 	/**
-	 * Register a new object to use in any command.
-	 * 
-	 * @param 	ObjectAlias		The name with which you want to access the object.
-	 * @param 	AnyObject		The object to register.
-	 * @param 	HelpText		An optional string to trace to the console using the "help" command.
-	 */
-	public inline function registerObject(objectAlias:String, anyObject:Dynamic, ?helpText:String)
-	{
-		registeredObjects.set(objectAlias, anyObject);
-		#if hscript
-		ConsoleUtil.registerObject(objectAlias, anyObject);
-		#end
-		
-		if (helpText != null)
-			registeredHelp.set(objectAlias, helpText);
-	}
-	
-	/**
 	 * Register a new function to use in any command.
 	 * 
 	 * @param 	FunctionAlias	The name with which you want to access the function.
@@ -300,6 +283,30 @@ class Console extends Window
 		
 		if (helpText != null)
 			registeredHelp.set(functionAlias, helpText);
+	}
+	
+	/**
+	 * Register a new object to use in any command.
+	 * 
+	 * @param 	ObjectAlias		The name with which you want to access the object.
+	 * @param 	AnyObject		The object to register.
+	 */
+	public inline function registerObject(objectAlias:String, anyObject:Dynamic)
+	{
+		registeredObjects.set(objectAlias, anyObject);
+		#if hscript
+		ConsoleUtil.registerObject(objectAlias, anyObject);
+		#end
+	}
+	
+	/**
+	 * Register a new class to use in any command.
+	 * 
+	 * @param 	cl			The class to register.
+	 */
+	public inline function registerClass(cl:Class<Dynamic>)
+	{
+		registerObject(FlxStringUtil.getClassName(cl, true), cl);
 	}
 	
 	override public function destroy()

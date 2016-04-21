@@ -1,12 +1,8 @@
 package flixel.input.touch;
 
-#if !FLX_NO_TOUCH
+#if FLX_TOUCH
 import flash.geom.Point;
-import flixel.FlxBasic;
-import flixel.FlxCamera;
 import flixel.FlxG;
-import flixel.FlxObject;
-import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.FlxInput;
 import flixel.input.FlxSwipe;
 import flixel.input.IFlxInput;
@@ -95,13 +91,10 @@ class FlxTouch extends FlxPointer implements IFlxDestroyable implements IFlxInpu
 	 */
 	private function setXY(X:Int, Y:Int):Void
 	{
-		flashPoint.x = X;
-		flashPoint.y = Y;
+		flashPoint.setTo(X, Y);
 		flashPoint = FlxG.game.globalToLocal(flashPoint);
 		
-		_globalScreenX = Std.int(flashPoint.x);
-		_globalScreenY = Std.int(flashPoint.y);
-		updatePositions();
+		setGlobalScreenPositionUnsafe(flashPoint.x, flashPoint.y);
 	}
 	
 	private inline function get_touchPointID():Int

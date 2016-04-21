@@ -1,273 +1,158 @@
 package flixel.system.debug.watch;
 
-import flash.events.KeyboardEvent;
-import flash.events.MouseEvent;
-import flash.text.TextField;
-import flash.text.TextFieldType;
-import flash.text.TextFormat;
-import flixel.FlxG;
-import flixel.math.FlxPoint;
+import flixel.math.FlxMath;
 import flixel.system.FlxAssets;
+import flixel.system.debug.FlxDebugger.GraphicCloseButton;
+import flixel.system.debug.console.ConsoleUtil;
+import flixel.system.ui.FlxSystemButton;
+import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
-import flixel.util.FlxStringUtil;
+import openfl.display.Sprite;
+import openfl.text.TextField;
+import openfl.text.TextFieldAutoSize;
+import openfl.text.TextFormat;
+using flixel.util.FlxStringUtil;
 
-/**
- * Helper class for the debugger overlay's Watch window.
- * Handles the display and modification of game variables on the fly.
- */
-class WatchEntry implements IFlxDestroyable
+class WatchEntry extends Sprite implements IFlxDestroyable
 {
-	/**
-	 * The Object being watched.
-	 */
-	public var object(default, null):Dynamic;
-	/**
-	 * The member variable of that object.
-	 */
-	public var field(default, null):String;	
-	/**
-	 * A custom display name for this object, if there is any.
-	 */
-	public var custom(default, null):String;
-	/**
-	 * The Flash TextField object used to display this entry's name.
-	 */
-	public var nameDisplay(default, null):TextField;
-	/**
-	 * The Flash TextField object used to display and edit this entry's value.
-	 */
-	public var valueDisplay(default, null):TextField;
-	/**
-	 * Whether the entry is currently being edited or not.
-	 */
-	public var editing(default, null):Bool;
-	/**
-	 * The value of the field before it was edited.
-	 */
-	public var oldValue(default, null):Dynamic;
+	private static inline var GUTTER = 4;
+	private static inline var TEXT_HEIGHT = 20;
+	private static inline var MAX_NAME_WIDTH = 125;
 	
-	private var _whiteText:TextFormat;
-	private var _blackText:TextFormat;
-	private var _isQuickWatch:Bool = false;
-	
-	/**
-	 * Creates a new watch entry in the watch window. 
-	 * Will be a "quickWatch" when Obj and Field are null, but a Custom name is set.
-	 * 
-	 * @param 	y			The initial height in the Watch window.
-	 * @param 	nameWidth	The initial width of the name field.
-	 * @param 	valueWidth	The initial width of the value field.
-	 * @param 	object		The Object containing the variable we want to watch.
-	 * @param 	field		The variable name we want to watch.
-	 * @param 	custom		A custom display name (optional).
-	 */
-	public function new(y:Float, nameWidth:Float, valueWidth:Float, object:Dynamic, field:String, ?custom:String)
+	public var data:WatchEntryData;
+	public var displayName(default, null):String;
+
+	private var nameText:TextField;
+	private var valueText:EditableTextField;
+	private var removeButton:FlxSystemButton;
+	private var defaultFormat:TextFormat;
+
+	public function new(displayName:String, data:WatchEntryData, removeEntry:WatchEntry->Void)
 	{
-		editing = false;
+		super();
 		
-		if (object == null && field == null && custom != null)
+		this.displayName = displayName;
+		this.data = data;
+
+		defaultFormat = new TextFormat(FlxAssets.FONT_DEBUGGER, 12, getTextColor());
+		nameText = initTextField(DebuggerUtil.createTextField());
+		valueText = initTextField(DebuggerUtil.initTextField(
+			new EditableTextField(data.match(FIELD(_, _)), defaultFormat, submitValue)));
+
+		updateName();
+		
+		addChild(removeButton = new FlxSystemButton(new GraphicCloseButton(0, 0), removeEntry.bind(this)));
+		removeButton.y = (TEXT_HEIGHT - removeButton.height) / 2;
+		removeButton.alpha = 0.3;
+	}
+	
+	private function getTextColor():FlxColor
+	{
+		return switch (data)
 		{
-			_isQuickWatch = true;
+			case FIELD(_, _): 0xFFFFFF;
+			case QUICK(_): 0xA5F1ED;
+			case EXPRESSION(_): 0xC4FE83;
 		}
-		else
+	}
+	
+	private function initTextField<T:TextField>(textField:T):T
+	{
+		textField.selectable = true;
+		textField.defaultTextFormat = defaultFormat;
+		textField.autoSize = TextFieldAutoSize.NONE;
+		textField.height = TEXT_HEIGHT;
+		addChild(textField);
+		return textField;
+	}
+
+	public function updateSize(nameWidth:Float, windowWidth:Float):Void
+	{
+		var textWidth = windowWidth - removeButton.width - GUTTER;
+		
+		nameText.width = nameWidth;
+		valueText.x = nameWidth + GUTTER;
+		valueText.width = textWidth - nameWidth - GUTTER;
+		removeButton.x = textWidth;
+	}
+	
+	private function updateName()
+	{
+		if (displayName != null)
 		{
-			this.object = object;
-			this.field = field;
+			setNameText(displayName);
+			return;
 		}
 		
-		this.custom = custom;
-		
-		var fontName:String = FlxAssets.FONT_DEBUGGER;
-		
-		// quickWatch is green, normal watch is white
-		var color = _isQuickWatch ? 0xA5F1ED : 0xffffff;
-		_whiteText = new TextFormat(fontName, 12, color);
-		_blackText = new TextFormat(fontName, 12, 0);
-		
-		nameDisplay = new TextField();
-		nameDisplay.y = y;
-		nameDisplay.multiline = false;
-		nameDisplay.selectable = true;
-		nameDisplay.embedFonts = true;
-		nameDisplay.defaultTextFormat = _whiteText;
-		
-		valueDisplay = new TextField();
-		valueDisplay.y = y;
-		valueDisplay.height = 20;
-		valueDisplay.multiline = false;
-		valueDisplay.selectable = true;
-		valueDisplay.doubleClickEnabled = true;
-		if (!_isQuickWatch) // No editing for quickWatch
+		switch (data)
 		{
-			valueDisplay.addEventListener(KeyboardEvent.KEY_UP,onKeyUp);
-			valueDisplay.addEventListener(MouseEvent.MOUSE_UP,onMouseUp);
+			case FIELD(object, field):
+				setNameText(object.getClassName(true) + "." + field);
+			case EXPRESSION(expression):
+				setNameText(expression);
+			case QUICK(_):
 		}
-		valueDisplay.background = false;
-		valueDisplay.backgroundColor = 0xffffff;
-		valueDisplay.embedFonts = true;
-		valueDisplay.defaultTextFormat = _whiteText;
+	}
+	
+	private function setNameText(name:String)
+	{
+		nameText.text = name;
+		var currentWidth = nameText.textWidth + 4;
+		nameText.width = Math.min(currentWidth, MAX_NAME_WIDTH);
+	}
+	
+	private function getValue():String
+	{
+		var value:Dynamic = switch (data)
+		{
+			case FIELD(object, field):
+				Reflect.getProperty(object, field);
+			case EXPRESSION(expression):
+				#if hscript
+				ConsoleUtil.runCommand(expression);
+				#else
+				"hscript is not installed";
+				#end
+			case QUICK(value):
+				value;
+		};
 		
-		updateWidth(nameWidth, valueWidth);
+		if (Std.is(value, Float))
+			value = FlxMath.roundDecimal(cast value, FlxG.debugger.precision);
+		return Std.string(value);
 	}
 	
-	public function destroy():Void
+	private function submitValue(value:String):Void
 	{
-		object = null;
-		oldValue = null;
-		nameDisplay = null;
-		field = null;
-		custom = null;
-		if (valueDisplay != null)
+		switch (data)
 		{
-			valueDisplay.removeEventListener(MouseEvent.MOUSE_UP,onMouseUp);
-			valueDisplay.removeEventListener(KeyboardEvent.KEY_UP,onKeyUp);
-			valueDisplay = null;
+			case FIELD(object, field):
+				Reflect.setProperty(object, field, value);
+			case _:
 		}
 	}
 	
-	public function setY(y:Float):Void
+	public function updateValue()
 	{
-		nameDisplay.y = y;
-		valueDisplay.y = y;
+		if (!valueText.isEditing)
+			valueText.text = getValue();
 	}
 	
-	/**
-	 * Adjust the width of the Flash TextField objects.
-	 */
-	public function updateWidth(nameWidth:Float, valueWidth:Float):Void
+	public function getNameWidth():Float
 	{
-		nameDisplay.width = nameWidth;
-		valueDisplay.width = valueWidth;
-		if (custom != null)
-		{
-			nameDisplay.text = custom;
-		}
-		else if (field != null)
-		{
-			nameDisplay.text = "";
-			if (nameWidth > 120)
-			{
-				nameDisplay.appendText(FlxStringUtil.getClassName(object, true) + ".");
-			}
-			
-			nameDisplay.appendText(field);
-		}
+		return nameText.width;
 	}
 	
-	#if !FLX_NO_DEBUG
-	/**
-	 * Update the variable value on display with the current in-game value.
-	 */
-	public function updateValue():Bool
+	public function getMinWidth():Float
 	{
-		if (editing || _isQuickWatch) 
-		{
-			return false;
-		}
-		
-		var property:Dynamic = Reflect.getProperty(object, field);
-		valueDisplay.text = Std.string(property);
-		
-		return true;
-	}
-	#end
-	
-	/**
-	 * A watch entry was clicked, so flip into edit mode for that entry.
-	 */
-	public function onMouseUp(_):Void
-	{
-		editing = true;
-		#if !FLX_NO_KEYBOARD
-		FlxG.keys.enabled = false;
-		#end
-		oldValue = Reflect.getProperty(object, field);
-		valueDisplay.type = TextFieldType.INPUT;
-		valueDisplay.setTextFormat(_blackText);
-		valueDisplay.background = true;
+		return valueText.x + GUTTER * 2 + removeButton.width; 
 	}
 	
-	/**
-	 * Check to see if Enter, Tab or Escape were just released.
-	 * Enter or Tab submit the change, and Escape cancels it.
-	 */
-	public function onKeyUp(e:KeyboardEvent):Void
+	public function destroy()
 	{
-		if ((e.keyCode == 13) || (e.keyCode == 9) || (e.keyCode == 27)) //enter or tab or escape
-		{
-			if (e.keyCode == 27)
-			{
-				cancel();
-			}
-			else
-			{
-				submit();
-			}
-		}
-	}
-	
-	/**
-	 * Cancel the current edits and stop editing.
-	 */
-	public function cancel():Void
-	{
-		valueDisplay.text = oldValue.toString();
-		doneEditing();
-	}
-	
-	/**
-	 * Submit the current edits and stop editing.
-	 */
-	public function submit():Void
-	{
-		var property:Dynamic = Reflect.getProperty(object, field);
-		
-		// Workaround to be able to edit FlxPoints
-		if (Std.is(property, FlxPoint)) {
-			var xString:String = valueDisplay.text.split(" |")[0];
-			xString = xString.substring(3, xString.length);
-			var xValue:Float = Std.parseFloat(xString);
-			
-			var yString:String = valueDisplay.text.split("| ")[1];
-			yString = yString.substring(3, yString.length);
-			var yValue:Float = Std.parseFloat(yString);
-			
-			if (!Math.isNaN(xValue)) 
-			{
-				Reflect.setField(property, "x", xValue);
-			}
-			if (!Math.isNaN(yValue)) 
-			{
-				Reflect.setField(property, "y", yValue);
-			}
-		}
-		else
-		{
-			Reflect.setProperty(object, field, valueDisplay.text); 
-		}
-		
-		doneEditing();
-	}
-	
-	public function toString():String
-	{
-		return FlxStringUtil.getDebugString([
-			LabelValuePair.weak("object", FlxStringUtil.getClassName(object, true)),
-			LabelValuePair.weak("field", field)]);
-	}
-	
-	/**
-	 * Helper function, switches the text field back to display mode.
-	 */
-	private function doneEditing():Void
-	{
-		valueDisplay.type = TextFieldType.DYNAMIC;
-		valueDisplay.setTextFormat(_whiteText);
-		valueDisplay.defaultTextFormat = _whiteText;
-		valueDisplay.background = false;
-		editing = false;
-		#if !FLX_NO_KEYBOARD
-		FlxG.keys.enabled = true;
-		#end
+		nameText = FlxDestroyUtil.removeChild(this, nameText);
+		FlxDestroyUtil.destroy(valueText);
+		valueText = FlxDestroyUtil.removeChild(this, valueText);
 	}
 }

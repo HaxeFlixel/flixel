@@ -32,7 +32,8 @@ class FlxDestroyUtil
 	{
 		if (array != null)
 		{
-			for (e in array) destroy(e);
+			for (e in array)
+				destroy(e);
 			array.splice(0, array.length);
 		}
 		return null;
@@ -64,7 +65,8 @@ class FlxDestroyUtil
 	{
 		if (array != null)
 		{
-			for (e in array) put(e);
+			for (e in array)
+				put(e);
 			array.splice(0, array.length);
 		}
 		return null;

@@ -2,10 +2,8 @@ package;
 
 import flash.errors.Error;
 import flixel.FlxG;
-import flixel.tweens.FlxTween;
+import flixel.FlxState;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
-import massive.munit.async.AsyncFactory;
-import massive.munit.util.Timer;
 import massive.munit.Assert;
 
 class FlxTest
@@ -28,8 +26,7 @@ class FlxTest
 		}
 		
 		// make sure we have the same starting conditions for each test
-		FlxG.resetGame();
-		step();
+		resetGame();
 	}
 	
 	@:access(flixel)
@@ -42,6 +39,24 @@ class FlxTest
 				callback();
 			totalSteps++;
 		}
+	}
+	
+	function resetGame()
+	{
+		FlxG.resetGame();
+		step();
+	}
+	
+	function switchState(nextState:FlxState)
+	{
+		FlxG.switchState(nextState);
+		step();
+	}
+	
+	function resetState()
+	{
+		FlxG.resetState();
+		step();
 	}
 	
 	@Test

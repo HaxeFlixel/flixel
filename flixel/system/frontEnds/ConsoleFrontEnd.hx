@@ -17,7 +17,7 @@ class ConsoleFrontEnd
 	 */
 	public inline function registerFunction(FunctionAlias:String, Function:Dynamic):Void
 	{
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		FlxG.game.debugger.console.registerFunction(FunctionAlias, Function);
 		#end
 	}
@@ -30,8 +30,20 @@ class ConsoleFrontEnd
 	 */
 	public inline function registerObject(ObjectAlias:String, AnyObject:Dynamic):Void
 	{
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		FlxG.game.debugger.console.registerObject(ObjectAlias, AnyObject);
+		#end
+	}
+	
+	/**
+	 * Register a new class to use in any command.
+	 * 
+	 * @param 	cl			The class to register.
+	 */
+	public inline function registerClass(cl:Class<Dynamic>):Void
+	{
+		#if FLX_DEBUG
+		FlxG.game.debugger.console.registerClass(cl);
 		#end
 	}
 	

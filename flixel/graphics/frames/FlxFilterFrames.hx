@@ -6,7 +6,6 @@ import flash.geom.Rectangle;
 import flixel.FlxSprite;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFramesCollection.FlxFrameCollectionType;
-import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.util.FlxColor;
 import openfl.filters.BitmapFilter;
@@ -18,6 +17,9 @@ import openfl.filters.BitmapFilter;
  */
 class FlxFilterFrames extends FlxFramesCollection
 {
+	private static var point:Point = new Point();
+	private static var rect:Rectangle = new Rectangle();
+	
 	/**
 	 * Generates new frames collection from specified frames.
 	 * 
@@ -27,7 +29,7 @@ class FlxFilterFrames extends FlxFramesCollection
 	 * @param	filters		optional filters array to apply
 	 * @return	New frames collection which you can apply filters to.
 	 */
-	public static inline function fromFrames(frames:FlxFramesCollection, widthInc:Int = 0, heightInc:Int = 0, filters:Array<BitmapFilter> = null):FlxFilterFrames
+	public static inline function fromFrames(frames:FlxFramesCollection, widthInc:Int = 0, heightInc:Int = 0, ?filters:Array<BitmapFilter>):FlxFilterFrames
 	{
 		return new FlxFilterFrames(frames, widthInc, heightInc, filters);
 	}
@@ -52,7 +54,7 @@ class FlxFilterFrames extends FlxFramesCollection
 	 */
 	public var filters(default, set):Array<BitmapFilter>;
 	
-	private function new(sourceFrames:FlxFramesCollection, widthInc:Int = 0, heightInc:Int = 0, filters:Array<BitmapFilter> = null)
+	private function new(sourceFrames:FlxFramesCollection, widthInc:Int = 0, heightInc:Int = 0, ?filters:Array<BitmapFilter>)
 	{
 		super(null, FlxFrameCollectionType.FILTER);
 		
@@ -180,7 +182,7 @@ class FlxFilterFrames extends FlxFramesCollection
 		var numFrames:Int = frames.length;
 		var frame:FlxFrame;
 		var sourceFrame:FlxFrame;
-		var frameOffset:Point;
+		var frameOffset:Point = point;
 		
 		for (i in 0...numFrames)
 		{
@@ -190,8 +192,7 @@ class FlxFilterFrames extends FlxFramesCollection
 			if (fill)
 				frame.parent.bitmap.fillRect(frame.parent.bitmap.rect, FlxColor.TRANSPARENT);
 			
-			frameOffset = FlxPoint.point1;
-			frameOffset.setTo(widthInc, heightInc);
+			frameOffset.setTo(widthInc * 0.5, heightInc * 0.5);
 			
 			sourceFrame.paint(frame.parent.bitmap, frameOffset, true);
 		}
@@ -199,8 +200,6 @@ class FlxFilterFrames extends FlxFramesCollection
 	
 	function applyFilter(filter:BitmapFilter) 
 	{
-		var point:Point = FlxPoint.point1;
-		var rect:Rectangle = FlxRect.rect;
 		var bitmap:BitmapData;
 		
 		for (frame in frames)
