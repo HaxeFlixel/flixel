@@ -1,24 +1,7 @@
 package flixel.input.mouse;
 
 #if FLX_MOUSE
-import flash.display.Bitmap;
-import flash.display.BitmapData;
-import flash.display.Sprite;
-import flash.display.Stage;
-import flash.events.Event;
-import flash.events.MouseEvent;
-import flash.geom.Matrix;
-import flash.geom.Point;
-import flash.Lib;
-import flash.ui.Mouse;
-import flash.Vector;
-import flixel.FlxG;
-import flixel.input.FlxInput.FlxInputState;
-import flixel.input.IFlxInputManager;
-import flixel.input.mouse.FlxMouseButton;
-import flixel.system.FlxAssets;
-import flixel.system.replay.MouseRecord;
-import flixel.util.FlxDestroyUtil;
+
 #if FLX_NATIVE_CURSOR
 import flash.ui.MouseCursor;
 import flash.ui.MouseCursorData;
