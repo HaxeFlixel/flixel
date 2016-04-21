@@ -781,7 +781,7 @@ class FlxObject extends FlxBasic
 	{
 		if (!InScreenSpace)
 		{
-			return (point.x > x) && (point.x < x + width) && (point.y > y) && (point.y < y + height);
+			return (point.x >= x) && (point.x < x + width) && (point.y >= y) && (point.y < y + height);
 		}
 		
 		if (Camera == null)
@@ -792,7 +792,7 @@ class FlxObject extends FlxBasic
 		var yPos:Float = point.y - Camera.scroll.y;
 		getScreenPosition(_point, Camera);
 		point.putWeak();
-		return (xPos > _point.x) && (xPos < _point.x + width) && (yPos > _point.y) && (yPos < _point.y + height);
+		return (xPos >= _point.x) && (xPos < _point.x + width) && (yPos >= _point.y) && (yPos < _point.y + height);
 	}
 	
 	/**
