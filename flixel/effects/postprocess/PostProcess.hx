@@ -39,7 +39,7 @@ class PostProcess extends OpenGLView
 	 * Create a new PostProcess object
 	 * @param fragmentShader  A glsl file in your assets path
 	 */
-	public function new(shader:OneOfTwo<String,Shader>)
+	public function new(shader:OneOfTwo<String, Shader>)
 	{
 		super();
 		uniforms = new Map<String, Uniform>();
@@ -69,13 +69,16 @@ class PostProcess extends OpenGLView
 		GL.bufferData(GL.ARRAY_BUFFER, new Float32Array(#if !openfl_next cast #end vertices), GL.STATIC_DRAW);
 		GL.bindBuffer(GL.ARRAY_BUFFER, null);
 
-		if(Std.is(shader,String)){
+		if (Std.is(shader, String))
+		{
 			postProcessShader = new Shader([
 				{ src: VERTEX_SHADER, fragment: false },
-				{ src: Assets.getText(cast(shader,String)), fragment: true }
+				{ src: Assets.getText(cast(shader, String)), fragment: true }
 			]);
-		}else if(Std.is(shader,Shader)){
-			postProcessShader = cast(shader,Shader);
+		}
+		else if (Std.is(shader, Shader))
+		{
+			postProcessShader = cast(shader, Shader);
 		}
 
 		// default shader variables

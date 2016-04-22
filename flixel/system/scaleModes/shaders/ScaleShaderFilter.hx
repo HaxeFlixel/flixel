@@ -1,13 +1,10 @@
 package flixel.system.scaleModes.shaders;
 
-import openfl.display.Shader;
-import openfl.filters.BitmapFilter;
-import openfl.geom.Matrix;
+import openfl.filters.ShaderFilter;
 import openfl.geom.Rectangle;
-import openfl._internal.renderer.RenderSession;
 
 
-class ScaleShaderFilter extends openfl.filters.ShaderFilter
+class ScaleShaderFilter extends ShaderFilter
 {
 	
 	public var scaleX:Float;

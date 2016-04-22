@@ -7,7 +7,6 @@ import flixel.util.typeLimit.OneOfTwo;
 import flixel.system.scaleModes.shaders.ScaleShaderFilter;
 import flixel.system.scaleModes.shaders.Nearest;
 import flixel.system.scaleModes.shaders.Bilinear;
-import flixel.system.scaleModes.shaders.ScaleShaderFilter;
 
 import openfl.filters.BitmapFilter;
 import openfl.display.Shader;
@@ -192,7 +191,8 @@ void main()
     gl_FragColor = t0;//texture2D(uImage0, vec2(tc.x/scaleX,tc.y/scaleY));
 }";
 
-	public function new(?shader:OneOfTwo<ShaderScaleEnum, Shader> = ShaderScaleEnum.NEAREST, ?scaleX:Float = 1, ?scaleY:Float = 1){
+	public function new(shader:OneOfTwo<ShaderScaleEnum, Shader> = ShaderScaleEnum.NEAREST, scaleX:Float = 1, scaleY:Float = 1)
+	{
 		super();
 
 		if (Std.is(shader, Shader))
@@ -218,7 +218,7 @@ void main()
 		this.setStrength(1);
 	}
 
-	public function setScale(?scaleX:Float = 1, ?scaleY:Float = 1):Void
+	public function setScale(scaleX:Float = 1, scaleY:Float = 1):Void
 	{
 		postProcess.setUniform("scaleX", scaleX);
 		postProcess.setUniform("scaleY", scaleY);
@@ -227,7 +227,7 @@ void main()
 		this.pointerMultiplier = new flixel.math.FlxPoint(1 / scaleX, 1 / scaleY);
 	}
 
-	public function setStrength(?strength:Float = 1):Void
+	public function setStrength(strength:Float = 1):Void
 	{
 		postProcess.setUniform("strength", strength);
 		this.strength = strength;
