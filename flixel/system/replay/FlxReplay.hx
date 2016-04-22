@@ -151,12 +151,12 @@ class FlxReplay
 		
 		#if FLX_KEYBOARD
 		var keysRecord:Array<CodeValuePair> = FlxG.keys.record();
-		if (keysRecord == null) continueFrame = false;
+		if (keysRecord != null) continueFrame = false;
 		#end
 		
 		#if FLX_MOUSE
 		var mouseRecord:MouseRecord = FlxG.mouse.record();
-		if (mouseRecord == null) continueFrame = false;
+		if (mouseRecord != null) continueFrame = false;
 		#end
 
 		if (continueFrame)

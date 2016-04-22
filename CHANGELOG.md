@@ -25,6 +25,11 @@
 * `FlxBitmapDataUtil`: added `copyBorderPixels()`
 * `FlxGame`: `GameWidth` and `GameHeight` in `new()` now use the window size if set to 0 (#1811)
 * `FlxPoint`: added `scale()` (#1811)
+* `FlxCamera`: fixed background scaling for `zoom < 1` on native targets (#1588)
+* `FlxSpriteUtil`: changed `alphaMask()` arguments from `Dynamic` to `FlxGraphicAsset` (#1806)
+* `FlxBar`: added `numDivisions`
+* `FlxBaseTilemap`: added `loadMapFromGraphic()` (#1525)
+* `FlxObject`: fixed `overlapsPoint()` at x / y = 0 (#1818) 
 
 4.0.1
 ------------------------------
