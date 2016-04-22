@@ -4,7 +4,6 @@
  * https://github.com/photonstorm/Flixel-Power-Tools/blob/master/src/org/flixel/plugin/photonstorm/FX/FloodFillFX.as
  * 
  */
-
 package;
 
 import flash.display.BitmapData;
@@ -18,7 +17,7 @@ import flixel.util.FlxDestroyUtil;
 /**
  * "Creates a flood fill effect FlxSprite, useful for bringing in images in cool ways"
  */
-class FlxFloodFill extends FlxSprite
+class FloodFill extends FlxSprite
 {
 	private var complete:Bool = false;
 	private var isFilling:Bool = false;
