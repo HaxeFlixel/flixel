@@ -82,6 +82,9 @@ class FlxTween implements IFlxDestroyable
 	 * FlxTween.num(1, 0, 2.0, { ease: easeFunction, onStart: onStart, onUpdate: onUpdate, onComplete: onComplete, type: FlxTween.ONESHOT }, tweenFunction.bind(mySprite));
 	 * ```
 	 * 
+	 * Trivia: For historical reasons, you can use either onUpdate or TweenFunction to accomplish the same thing, but TweenFunction
+	 * gives you the updated Float as a direct argument.
+	 * 
 	 * @param	FromValue	Start value.
 	 * @param	ToValue		End value.
 	 * @param	Duration	Duration of the tween.
