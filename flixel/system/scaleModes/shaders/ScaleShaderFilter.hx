@@ -7,21 +7,16 @@ import openfl.geom.Rectangle;
 import openfl._internal.renderer.RenderSession;
 
 
-class ScaleShaderFilter extends openfl.filters.ShaderFilter {
+class ScaleShaderFilter extends openfl.filters.ShaderFilter
+{
 	
 	public var scaleX:Float;
 	public var scaleY:Float;
+	public var strength:Float;
 	public var resolution:Array<Float>;
 
-	public function new(shader:Shader) {
-		super(shader);
-	}
-	
-	override public function clone():BitmapFilter {
-		return super.clone();
-	}
-	
-	override function __growBounds (rect:Rectangle) {
+	override function __growBounds (rect:Rectangle):Void
+	{
 		
 		rect.x = 0;
 		rect.y = 0;
@@ -30,13 +25,12 @@ class ScaleShaderFilter extends openfl.filters.ShaderFilter {
 		
 	}
 	
-	override function __preparePass(pass:Int):Shader {
+	public function postDraw():Void
+	{
 		var ts = cast(shader, IScaleShader);
 		ts.uScaleX = this.scaleX;
 		ts.uScaleY = this.scaleY;
+		ts.uStrength = this.strength;
 		ts.uResolution = this.resolution;
-		return shader;
 	}
-
-	
 }
