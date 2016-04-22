@@ -102,10 +102,9 @@ class FlxVector extends FlxPoint
 	 * @param	k - scale coefficient
 	 * @return	scaled vector
 	 */
-	public inline function scale(k:Float):FlxVector
+	override public function scale(k:Float):FlxVector
 	{
-		x *= k;
-		y *= k;
+		super.scale(k);
 		return this;
 	}
 	

@@ -53,9 +53,7 @@ class Stats extends Window
 	private var _rightTextField:TextField;
 	
 	private var _itvTime:Int = 0;
-	private var _initTime:Int;
 	private var _frameCount:Int;
-	private var _totalCount:Int;
 	private var _currentTime:Int;
 	
 	private var fpsGraph:StatsGraph;
@@ -68,29 +66,29 @@ class Stats extends Window
 	private var activeCount:Int = 0;
 	private var updateTime:Int = 0;
 	private var drawTime:Int = 0;
-	
+	private var drawCallsCount:Int = 0;
+
 	private var _lastTime:Int = 0;
 	private var _updateTimer:Int = 0;
 	
-	private var _update:Array<Int>;
+	private var _update:Array<Int> = [];
 	private var _updateMarker:Int = 0;
 	
-	private var _draw:Array<Int>;
+	private var _draw:Array<Int> = [];
 	private var _drawMarker:Int = 0;
 	
-	private var _visibleObject:Array<Int>;
+	private var _drawCalls:Array<Int> = [];
+	private var _drawCallsMarker:Int = 0;
+	
+	private var _visibleObject:Array<Int> = [];
 	private var _visibleObjectMarker:Int = 0;
 	
-	private var _activeObject:Array<Int>;
+	private var _activeObject:Array<Int> = [];
 	private var _activeObjectMarker:Int = 0;
 	
 	private var _paused:Bool = true;
 	
 	private var _toggleSizeButton:FlxSystemButton;
-	
-	private var drawCallsCount:Int = 0;
-	private var _drawCalls:Array<Int>;
-	private var _drawCallsMarker:Int = 0;
 	
 	/**
 	 * Creates a new window with fps and memory graphs, as well as other useful stats for debugging.
@@ -146,7 +144,7 @@ class Stats extends Window
 		updateTimeGraph.visible = false;
 		addChild(updateTimeGraph);
 		
-		graphY = (Std.int(_header.height) +  graphHeight + 20);
+		graphY = Std.int(_header.height) +  graphHeight + 20;
 		
 		drawTimeGraph = new StatsGraph(graphX, graphY, graphWidth, graphHeight, DRAW_TIME_COLOR, "ms", 35, "Draw");
 		drawTimeGraph.visible = false;
@@ -175,8 +173,8 @@ class Stats extends Window
 		if (_paused)
 		{
 			_paused = false;
-			_initTime = _itvTime = FlxG.game.ticks;
-			_totalCount = _frameCount = 0;
+			_itvTime = FlxG.game.ticks;
+			_frameCount = 0;
 		}
 	}
 	
@@ -222,11 +220,7 @@ class Stats extends Window
 		_draw = null;
 		_activeObject = null;
 		_visibleObject = null;
-		
-		if (FlxG.renderTile)
-		{
-			_drawCalls = null;
-		}
+		_drawCalls = null;
 		
 		super.destroy();
 	}
@@ -254,11 +248,10 @@ class Stats extends Window
 		_updateTimer += elapsed;
 		
 		_frameCount++;
-		_totalCount++;
 		
 		if (_updateTimer > UPDATE_DELAY)
 		{
-			fpsGraph.update(currentFps(), averageFps());
+			fpsGraph.update(currentFps());
 			memoryGraph.update(currentMem());
 			updateTexts();
 			
@@ -275,7 +268,7 @@ class Stats extends Window
 			{
 				activeCount += _activeObject[i];
 			}
-			activeCount = Std.int(activeCount / _activeObjectMarker);
+			activeCount = Std.int(divide(activeCount, _activeObjectMarker));
 			
 			drawTime = 0;
 			for (i in 0..._drawMarker)
@@ -287,7 +280,7 @@ class Stats extends Window
 			{
 				visibleCount += _visibleObject[i];
 			}
-			visibleCount = Std.int(visibleCount / _visibleObjectMarker);
+			visibleCount = Std.int(divide(visibleCount, _visibleObjectMarker));
 			
 			if (FlxG.renderTile)
 			{
@@ -295,7 +288,7 @@ class Stats extends Window
 				{
 					drawCallsCount += _drawCalls[i];
 				}
-				drawCallsCount = Std.int(drawCallsCount / _drawCallsMarker);
+				drawCallsCount = Std.int(divide(drawCallsCount, _drawCallsMarker));
 			}
 			
 			_updateMarker = 0;
@@ -313,17 +306,25 @@ class Stats extends Window
 	
 	private function updateTexts():Void
 	{
-		var updTime = FlxMath.roundDecimal(updateTime / _updateMarker, DECIMALS);
-		var drwTime = FlxMath.roundDecimal(drawTime / _drawMarker, DECIMALS);
+		var updTime = FlxMath.roundDecimal(divide(updateTime, _updateMarker), DECIMALS);
+		var drwTime = FlxMath.roundDecimal(divide(drawTime, _drawMarker), DECIMALS);
 		
 		drawTimeGraph.update(drwTime);
 		updateTimeGraph.update(updTime);
 		
-		_rightTextField.text = 	activeCount + " (" + updTime + "ms)\n"
-								+ visibleCount + " (" + drwTime + "ms)\n"
-								+ (FlxG.renderTile ? (drawCallsCount + "\n") : "")
-								+ FlxQuadTree._NUM_CACHED_QUAD_TREES + "\n"
-								+ FlxLinkedList._NUM_CACHED_FLX_LIST;
+		_rightTextField.text =
+			activeCount + " (" + updTime + "ms)\n" +
+			visibleCount + " (" + drwTime + "ms)\n" +
+			(FlxG.renderTile ? (drawCallsCount + "\n") : "") +
+			FlxQuadTree._NUM_CACHED_QUAD_TREES + "\n" +
+			FlxLinkedList._NUM_CACHED_FLX_LIST;
+	}
+	
+	private function divide(f1:Float, f2:Float):Float
+	{
+		if (f2 == 0)
+			return 0;
+		return f1 / f2;
 	}
 	
 	/**
@@ -332,22 +333,6 @@ class Stats extends Window
 	public inline function currentFps():Float
 	{
 		return _frameCount / intervalTime();
-	}
-	
-	/**
-	 * Calculates average game fps (takes whole time the game is running).
-	 */
-	public inline function averageFps():Float
-	{
-		return _totalCount / runningTime();
-	}
-	
-	/**
-	 * Application life time.
-	 */
-	public inline function runningTime():Float
-	{
-		return (_currentTime - _initTime) / 1000;
 	}
 	
 	/**

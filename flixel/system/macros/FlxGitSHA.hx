@@ -1,8 +1,6 @@
 package flixel.system.macros;
 
 #if macro
-import haxe.io.BytesOutput;
-import haxe.io.Eof;
 import haxe.macro.Context;
 import haxe.macro.Expr;
 import sys.io.Process;
@@ -17,7 +15,7 @@ class FlxGitSHA
 	{
 		var fields:Array<Field> = Context.getBuildFields();
 		var libraryPath:String;
-		var sha:String;
+		var sha:String = "";
 		
 		// make sure the build isn't cancelled if a Sys call fails
 		try
@@ -25,10 +23,7 @@ class FlxGitSHA
 			libraryPath = getLibraryPath(library);
 			sha = getGitSHA(libraryPath);
 		}
-		catch (_:Dynamic)
-		{
-			sha = "";
-		}
+		catch (_:Dynamic) {}
 		
 		fields.push({
 			name: "sha",
@@ -68,9 +63,7 @@ class FlxGitSHA
 		var sha = getProcessOutput("git", ["rev-parse", "HEAD"]);
 		var shaRegex = ~/[a-f0-9]{40}/g;
 		if (!shaRegex.match(sha))
-		{
 			sha = "";
-		}
 		
 		Sys.setCwd(oldWd);
 		return sha;
@@ -78,36 +71,7 @@ class FlxGitSHA
 	
 	public static function getProcessOutput(cmd:String, args:Array<String>):String
 	{
-		var output = "";
-		
-		try
-		{
-			var process = new Process(cmd, args);
-			var buffer = new BytesOutput();
-			
-			while (true)
-			{
-				try
-				{
-					var currentOutput = process.stdout.readAll(1024);
-					buffer.write(currentOutput);
-					if (currentOutput.length == 0)
-					{
-						break;
-					}
-				}
-				catch (e:Eof)
-				{
-					break;
-				}
-			}
-			
-			process.close();
-			output = buffer.getBytes().toString();
-		}
-		catch (e:Dynamic) {}
-		
-		return output;
+		return new Process(cmd, args).stdout.readAll().toString();
 	}
 }
 #end

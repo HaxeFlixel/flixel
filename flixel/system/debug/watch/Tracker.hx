@@ -11,9 +11,9 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxState;
-import flixel.FlxSubState;
+import flixel.effects.particles.FlxEmitter.FlxTypedEmitter;
 import flixel.group.FlxSpriteGroup;
-import flixel.group.FlxGroup;
+import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.gamepad.FlxGamepad;
 import flixel.input.mouse.FlxMouse;
 import flixel.input.touch.FlxTouch;
@@ -22,15 +22,15 @@ import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
 import flixel.tweens.FlxTween;
 import flixel.ui.FlxBar;
-import flixel.ui.FlxButton;
+import flixel.ui.FlxButton.FlxTypedButton;
 import flixel.util.FlxPath;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.util.FlxTimer;
 import flixel.animation.FlxAnimationController;
-import flixel.effects.particles.FlxEmitter;
 using flixel.util.FlxArrayUtil;
 #end
+
 import flixel.util.FlxStringUtil;
 
 class Tracker extends Watch
@@ -65,12 +65,9 @@ class Tracker extends Watch
 		
 		var lastMatchingProfile:TrackerProfile = null;
 		for (profile in profiles)
-		{
-			if (Std.is(Object, profile.objectClass) || (Object == profile.objectClass))
-			{
+			if (Std.is(Object, profile.objectClass) || Object == profile.objectClass)
 				lastMatchingProfile = profile;
-			}
-		}
+
 		return lastMatchingProfile;
 	}
 	
@@ -94,7 +91,7 @@ class Tracker extends Watch
 			
 			addProfile(new TrackerProfile(FlxBasic, ["active", "visible", "alive", "exists"]));
 			addProfile(new TrackerProfile(FlxObject, ["velocity", "acceleration", "drag", "angle", "immovable"], [FlxRect, FlxBasic]));
-			addProfile(new TrackerProfile(FlxTilemap, ["auto", "widthInTiles", "heightInTiles", "totalTiles", "scaleX", "scaleY"], [FlxObject]));
+			addProfile(new TrackerProfile(FlxTilemap, ["auto", "widthInTiles", "heightInTiles", "totalTiles", "scale"], [FlxObject]));
 			addProfile(new TrackerProfile(FlxSprite, ["frameWidth", "frameHeight", "alpha", "origin", "offset", "scale"], [FlxObject]));
 			addProfile(new TrackerProfile(FlxTypedButton, ["status", "labelAlphas"], [FlxSprite]));
 			addProfile(new TrackerProfile(FlxBar, ["min", "max", "range", "pct", "pxPerPercent", "value"], [FlxSprite]));
@@ -158,8 +155,7 @@ class Tracker extends Watch
 		_title.text = (WindowTitle == null) ? FlxStringUtil.getClassName(_object, true) : WindowTitle;
 		visible = true;
 		
-		var lastWatchEntryY:Float = _watchEntries.last().nameDisplay.y;
-		resize(200, lastWatchEntryY + 30);
+		resize(200, entriesContainer.height + 30);
 		
 		// Small x and y offset
 		x = _numTrackerWindows * 80;
@@ -181,12 +177,9 @@ class Tracker extends Watch
 	private function findProfileByClass(ObjectClass:Class<Dynamic>):TrackerProfile
 	{
 		for (profile in profiles)
-		{
 			if (profile.objectClass == ObjectClass)
-			{
 				return profile;
-			}
-		}
+		
 		return null;
 	}
 	
@@ -201,32 +194,30 @@ class Tracker extends Watch
 	
 	private function addExtensions(Profile:TrackerProfile):Void
 	{
-		if (Profile.extensions != null)
+		if (Profile.extensions == null)
+			return;
+		
+		for (extension in Profile.extensions)
 		{
-			for (extension in Profile.extensions)
+			if (extension == null)
+				continue;
+			
+			var extensionProfile:TrackerProfile = findProfileByClass(extension);
+			if (extensionProfile != null)
 			{
-				if (extension != null)
-				{
-					var extensionProfile:TrackerProfile = findProfileByClass(extension);
-					if (extensionProfile != null)
-					{
-						addVariables(extensionProfile.variables);
-						addExtensions(extensionProfile); // recursively
-					}
-				}
-			}
+				addVariables(extensionProfile.variables);
+				addExtensions(extensionProfile); // recurse
+			}			
 		}
 	}
 	
 	private function addVariables(Variables:Array<String>):Void
 	{
-		if (Variables != null)
-		{
-			for (variable in Variables)
-			{
-				add(_object, variable, variable);
-			}
-		}
+		if (Variables == null)
+			return;
+		
+		for (variable in Variables)
+			add(variable, FIELD(_object, variable));
 	}
 	#end
 }

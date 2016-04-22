@@ -789,6 +789,8 @@ class FlxCamera extends FlxBasic
 		updateFade(elapsed);
 		updateShake(elapsed);
 		
+		flashSprite.filters = filtersEnabled ? _filters : null;
+		
 		updateFlashSpritePosition();
 	}
 	
@@ -1190,13 +1192,10 @@ class FlxCamera extends FlxBasic
 	
 	/**
 	 * Sets the filter array to be applied to the camera.
-	 * 
-	 * @param	filters
 	 */
 	public function setFilters(filters:Array<BitmapFilter>):Void
 	{
 		_filters = filters;
-		flashSprite.filters = filtersEnabled ? _filters : null;
 	}
 	
 	/**
@@ -1261,7 +1260,7 @@ class FlxCamera extends FlxBasic
 			targetGraphics.beginFill(Color, FxAlpha);
 			// i'm drawing rect with these parameters to avoid light lines at the top and left of the camera,
 			// which could appear while cameras fading
-			targetGraphics.drawRect(-1, -1, width * totalScaleX + 2, height * totalScaleY + 2);
+			targetGraphics.drawRect(-1, -1, width + 2, height + 2);
 			targetGraphics.endFill();
 		}
 	}
@@ -1296,11 +1295,11 @@ class FlxCamera extends FlxBasic
 			
 			if (FlxG.renderBlit)
 			{
-				fill((Std.int(((alphaComponent <= 0) ?0xff : alphaComponent) * _fxFadeAlpha) << 24) + (_fxFadeColor & 0x00ffffff));
+				fill((Std.int(((alphaComponent <= 0) ? 0xff : alphaComponent) * _fxFadeAlpha) << 24) + (_fxFadeColor & 0x00ffffff));
 			}
 			else
 			{
-				fill((_fxFadeColor & 0x00ffffff), true, ((alphaComponent <= 0) ?0xff : alphaComponent) * _fxFadeAlpha / 255, canvas.graphics);
+				fill((_fxFadeColor & 0x00ffffff), true, ((alphaComponent <= 0) ? 0xff : alphaComponent) * _fxFadeAlpha / 255, canvas.graphics);
 			}
 		}
 		

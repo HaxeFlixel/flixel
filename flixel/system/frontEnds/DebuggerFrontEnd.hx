@@ -9,12 +9,13 @@ import flixel.system.debug.watch.Tracker;
 import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxHorizontalAlign;
 import flixel.util.FlxSignal;
-import flixel.util.FlxStringUtil;
+using flixel.util.FlxStringUtil;
+using flixel.util.FlxArrayUtil;
 
 class DebuggerFrontEnd
 {	
 	/**
-	 * The amount of decimals FlxPoints / FlxRects are rounded to in log / watch / trace.
+	 * The amount of decimals Floats are rounded to in the debugger.
 	 */
 	public var precision:Int = 3; 
 	
@@ -88,20 +89,18 @@ class DebuggerFrontEnd
 	public function track(ObjectOrClass:Dynamic, ?WindowTitle:String):Window
 	{
 		#if FLX_DEBUG
-		if (Tracker.objectsBeingTracked.indexOf(ObjectOrClass) == -1)
+		if (Tracker.objectsBeingTracked.contains(ObjectOrClass))
+			return null;
+		
+		var profile = Tracker.findProfile(ObjectOrClass);
+		if (profile == null)
 		{
-			var profile = Tracker.findProfile(ObjectOrClass);
-			if (profile == null)
-			{
-				FlxG.log.error("Could not find a tracking profile for object of class '" +
-					FlxStringUtil.getClassName(ObjectOrClass, true) + "'."); 
-				return null;
-			}
-			else 
-			{
-				return FlxG.game.debugger.addWindow(new Tracker(profile, ObjectOrClass, WindowTitle));
-			}
+			FlxG.log.error("Could not find a tracking profile for object of class '" +
+				ObjectOrClass.getClassName(true) + "'."); 
+			return null;
 		}
+		else 
+			return FlxG.game.debugger.addWindow(new Tracker(profile, ObjectOrClass, WindowTitle));
 		#end
 		return null;
 	}

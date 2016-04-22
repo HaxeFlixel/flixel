@@ -382,18 +382,44 @@ class FlxBitmapDataUtil
 				result.copyPixels(bitmapData, tempRect, tempPoint);
 			}
 		}
+		result.unlock();
 		
 		// copy borders
-		tempPoint.setTo(0, 0);
-		tempRect.setTo(0, 0, 1, result.height);
-		for (i in 0...numHorizontalFrames)
+		copyBorderPixels(result, frameWidth, frameHeight, spaceX, spaceY, borderX, borderY, numHorizontalFrames, numVerticalFrames);
+		return result;
+	}
+	
+	/**
+	 * Helper method for copying border pixels around tiles.
+	 * It modifies provided image, and assumes that there are spaces between tile images already.
+	 * 
+	 * @param	bitmapData 			image with spaces between tiles to fill with border pixels
+	 * @param	frameWidth			tile width
+	 * @param	frameHeight			tile heigth
+	 * @param	spaceX				horizontal spacing between tiles
+	 * @param	spaceY				vertical spacing between tiles
+	 * @param	borderX				how many times to copy border of tiles on horizontal axis.
+	 * @param	borderY				how many times to copy border of tiles on vertical axis.
+	 * @param	horizontalFrames	how many columns of tiles on provided image.
+	 * @param	verticalFrames		how many rows of tiles on provided image.
+	 * 
+	 * @return	Modified spritesheet with copied pixels around tile images.
+	 */
+	public static function copyBorderPixels(bitmapData:BitmapData, frameWidth:Int, frameHeight:Int, spaceX:Int, spaceY:Int, borderX:Int, borderY:Int, horizontalFrames:Int, verticalFrames:Int):BitmapData
+	{
+		// copy borders
+		var tempRect:Rectangle = new Rectangle(0, 0, 1, bitmapData.height);
+		var tempPoint:Point = new Point();
+		bitmapData.lock();
+		
+		for (i in 0...horizontalFrames)
 		{
 			tempRect.x = i * (frameWidth + 2 * borderX + spaceX) + borderX;
 			
 			for (j in 0...borderX)
 			{
 				tempPoint.x = tempRect.x - j - 1;
-				result.copyPixels(result, tempRect, tempPoint);
+				bitmapData.copyPixels(bitmapData, tempRect, tempPoint);
 			}
 			
 			tempRect.x += frameWidth - 1;
@@ -401,20 +427,20 @@ class FlxBitmapDataUtil
 			for (j in 0...borderX)
 			{
 				tempPoint.x = tempRect.x + j + 1;
-				result.copyPixels(result, tempRect, tempPoint);
+				bitmapData.copyPixels(bitmapData, tempRect, tempPoint);
 			}
 		}
 		
 		tempPoint.setTo(0, 0);
-		tempRect.setTo(0, 0, result.width, 1);
-		for (i in 0...numVerticalFrames)
+		tempRect.setTo(0, 0, bitmapData.width, 1);
+		for (i in 0...verticalFrames)
 		{
 			tempRect.y = i * (frameHeight + 2 * borderY + spaceY) + borderY;
 			
 			for (j in 0...borderY)
 			{
 				tempPoint.y = tempRect.y - j - 1;
-				result.copyPixels(result, tempRect, tempPoint);
+				bitmapData.copyPixels(bitmapData, tempRect, tempPoint);
 			}
 			
 			tempRect.y += frameHeight - 1;
@@ -422,12 +448,12 @@ class FlxBitmapDataUtil
 			for (j in 0...borderY)
 			{
 				tempPoint.y = tempRect.y + j + 1;
-				result.copyPixels(result, tempRect, tempPoint);
+				bitmapData.copyPixels(bitmapData, tempRect, tempPoint);
 			}
 		}
 		
-		result.unlock();
-		return result;
+		bitmapData.unlock();
+		return bitmapData;
 	}
 	
 	/**

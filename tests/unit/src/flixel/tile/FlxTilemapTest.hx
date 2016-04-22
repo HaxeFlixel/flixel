@@ -3,6 +3,7 @@ package flixel.tile;
 import flash.display.BitmapData;
 import flash.errors.ArgumentError;
 import flixel.math.FlxPoint;
+import haxe.PosInfos;
 import massive.munit.Assert;
 using StringTools;
 
@@ -22,7 +23,8 @@ class FlxTilemapTest extends FlxTest
 		sampleMapArray = [
 			0, 1, 0, 1,
 			1, 1, 1, 1,
-			1, 0, 0, 1];
+			1, 0, 0, 1
+		];
 	}
 	
 	@Test
@@ -177,6 +179,11 @@ class FlxTilemapTest extends FlxTest
 		}
 		
 		Assert.isTrue(exceptionThrown);
+	}
+	
+	function assertPixelHasColor(x:Int, color:UInt, ?info:PosInfos)
+	{
+		Assert.areEqual(FlxG.camera.buffer.getPixel(x, 0), color, info);
 	}
 	
 	function getBitmapData()

@@ -3,7 +3,6 @@ package flixel.system.debug.console;
 #if FLX_DEBUG
 import flixel.FlxG;
 import flixel.FlxObject;
-import flixel.FlxState;
 import flixel.math.FlxMath;
 import flixel.util.FlxStringUtil;
 using StringTools;
@@ -24,12 +23,8 @@ class ConsoleCommands
 		console.registerFunction("help", help, "Displays the help text of a registered object or function. See \"help\".");
 		console.registerFunction("close", close, "Closes the debugger overlay.");
 		
-		console.registerFunction("clearHistory", clearHistory, "Closes the debugger overlay.");
+		console.registerFunction("clearHistory", _console.history.clear, "Closes the debugger overlay.");
 		console.registerFunction("clearLog", FlxG.log.clear, "Clears the command history.");
-		
-		console.registerFunction("resetState", resetState, "Resets the current state.");
-		console.registerFunction("switchState", switchState, "Switches to the specified state. Ex: \"switchState(new TestState())\". Be sure the class of the new state is a registered object!");
-		console.registerFunction("resetGame", resetGame, "Resets the game.");
 		
 		console.registerFunction("fields", fields, "Lists the fields of a class or instance");
 		
@@ -43,11 +38,21 @@ class ConsoleCommands
 		
 		console.registerFunction("create", create, "Creates a new FlxObject and registers it - by default at the mouse position. \"create(ObjClass:Class<T>, PlaceAtMouse:Bool, ExtraParams:Array<Dynamic>)\" Ex: \"create(FlxSprite, false, [100, 100])\"");
 		
+		console.registerFunction("watch", FlxG.watch.add, "Adds the specified field of an object to the watch window.");
+		console.registerFunction("watchExpression", FlxG.watch.addExpression, "Adds the specified expression to the watch window. Be sure any objects, functions, and classes used are registered!");
 		console.registerFunction("watchMouse", watchMouse, "Adds the mouse coordinates to the watch window.");
-		console.registerFunction("track", track, "Adds a tracker window for the specified object or class.");
+		console.registerFunction("track", FlxG.debugger.track, "Adds a tracker window for the specified object or class.");
 		
 		// Default classes to include
 		console.registerClass(Math);
+		console.registerClass(Reflect);
+		console.registerClass(Std);
+		console.registerClass(StringTools);
+		#if sys
+		console.registerClass(Sys);
+		#end
+		console.registerClass(Type);
+
 		console.registerClass(FlxG);
 		console.registerClass(FlxSprite);
 		console.registerClass(FlxMath);
@@ -88,33 +93,6 @@ class ConsoleCommands
 	private inline function close():Void
 	{
 		FlxG.debugger.visible = false;
-	}
-	
-	private inline function clearHistory():Void
-	{
-		_console.history.clear();
-		ConsoleUtil.log("clearHistory: Command history cleared");
-	}
-	
-	private inline function resetState():Void
-	{
-		FlxG.resetState();
-		ConsoleUtil.log("resetState: State has been reset");
-	}
-	
-	private function switchState(State:FlxState):Void 
-	{
-		if (State == null)
-			return;
-		
-		FlxG.switchState(State);
-		ConsoleUtil.log("switchState: New '" + Type.getClass(State) + "' created");  
-	}
-	
-	private inline function resetGame():Void
-	{
-		FlxG.resetGame();
-		ConsoleUtil.log("resetGame: Game has been reset");
 	}
 	
 	private function create<T:FlxObject>(ObjClass:Class<T>, MousePos:Bool = true, ?Params:Array<Dynamic>):Void
@@ -177,14 +155,6 @@ class ConsoleCommands
 		}
 		
 		_watchingMouse = !_watchingMouse;
-	}
-	
-	private function track(Object:Dynamic):Void
-	{
-		if (Object != null)
-		{
-			FlxG.debugger.track(Object);
-		}
 	}
 	
 	private function pause():Void

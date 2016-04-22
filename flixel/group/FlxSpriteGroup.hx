@@ -12,6 +12,7 @@ import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.system.FlxAssets.FlxGraphicAsset;
+import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSort;
 
@@ -905,7 +906,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 * This functionality isn't supported in SpriteGroup
 	 * @return this sprite group
 	 */
-	override public function makeGraphic(Width:Int, Height:Int, Color:Int = 0xffffffff, Unique:Bool = false, ?Key:String):FlxSprite 
+	override public function makeGraphic(Width:Int, Height:Int, Color:Int = FlxColor.WHITE, Unique:Bool = false, ?Key:String):FlxSprite 
 	{
 		#if FLX_DEBUG
 		throw "This function is not supported in FlxSpriteGroup";
