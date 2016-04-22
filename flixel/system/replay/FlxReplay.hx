@@ -1,9 +1,6 @@
 package flixel.system.replay;
 
 import flixel.FlxG;
-import flixel.system.replay.CodeValuePair;
-import flixel.system.replay.FrameRecord;
-import flixel.system.replay.MouseRecord;
 import flixel.util.FlxArrayUtil;
 
 /**
