@@ -3,7 +3,7 @@ package flixel.system.replay;
 import flixel.input.keyboard.FlxKey;
 import massive.munit.Assert;
 
-class FlxReplayTest
+class FlxReplayTest extends FlxTest
 {
 	var seed:Int;
 	var fgr:String;
@@ -28,6 +28,7 @@ class FlxReplayTest
 			y = FlxG.height - (i % FlxG.height);
 			fgr += i + "k" + key + ":1m" + x + "," + y + ",2,0\n"; // each frame has a simultaneous key-already-down and mouse-just-down
 		}
+		fgr += (frameCount++) + "km0,0,2,0\n"; // put everything back how it was for the next test
 	}
 	
 	@Test
@@ -65,6 +66,7 @@ class FlxReplayTest
 		{
 			replayPlayer.playNextFrame();
 			replayRecorder.recordFrame();
+			step();
 		}
 		var resavedFGR:String = replayRecorder.save();
 		Assert.areEqual(fgr, resavedFGR);
