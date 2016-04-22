@@ -1,4 +1,6 @@
-package ;
+package;
+
+import openfl.display.Shader;
  
 /**
  * Note: BitmapFilters can only be used on 'OpenFL next'
@@ -6,24 +8,24 @@ package ;
 class MosaicEffect
 {
 	/**
-	 * The instance of the actual shader class
-	 */
-	private var shader:MosaicShader;
-	
-	/**
 	 * The effect's "start-value" on the x/y-axes (the effect is not visible with this value).
 	 */
-	public static inline var DEFAULT_VALUE:Float = 1;
+	public static inline var DEFAULT_STRENGTH:Float = 1;
+
+	/**
+	 * The instance of the actual shader class
+	 */
+	public var shader(default, null):MosaicShader;
 	
 	/**
 	 * The effect's strength on the x-axis.
 	 */
-	private var strengthX:Float = DEFAULT_VALUE;
+	public var strengthX(default, null):Float = DEFAULT_STRENGTH;
 	
 	/**
 	 * The effect's strength on the y-axis.
 	 */
-	private var strengthY:Float = DEFAULT_VALUE;
+	public var strengthY(default, null):Float = DEFAULT_STRENGTH;
 	
 	public function new():Void
 	{
@@ -31,57 +33,37 @@ class MosaicEffect
 		shader.uBlocksize = [strengthX, strengthY];
 	}
 	
-	/**
-	 * @return Returns the shader instance.
-	 */
-	public function getShader():MosaicShader
-	{
-		return shader;
-	}
-	
-	/**
-	 * @return Returns the shader's X-axis (horizontal) strength.
-	 */
-	public function getStrenghtX():Float
-	{
-		return strengthX;
-	}
-	
-	/**
-	 * @return Returns the shader's Y-axis (vertical) strength.
-	 */
-	public function getStrenghtY():Float
-	{
-		return strengthY;
-	}
-	
-	/**
-	 * Sets the size of the inflated pixels on the X-axis (horizontally).
-	 * @param	StrengthX Desired effect strength on the X-axis.
-	 */
-	public function setEffectStrengthX(strengthX:Float):Void
-	{
-		setEffectStrengthXY(strengthX, this.strengthY);
-	}
-	
-	/**
-	 * Sets the size of the inflated pixels on the Y-axis (vertically).
-	 * @param	StrengthY Desired effect strength on the Y-axis.
-	 */
-	public function setEffectStrengthY(strengthY:Float):Void
-	{
-		setEffectStrengthXY(this.strengthX, strengthY);
-	}
-	
-	/**
-	 * Sets the size of the inflated pixels on both the x/y-axes.
-	 * @param	StrengthX Desired effect strength on the X-axis (horizontally).
-	 * @param	StrengthY Desired effect strength on the Y-axis (vertically).
-	 */
-	public function setEffectStrengthXY(strengthX:Float, strengthY:Float):Void
+	public function setStrength(strengthX:Float, strengthY:Float):Void
 	{
 		this.strengthX = strengthX;
 		this.strengthY = strengthY;
-		shader.uBlocksize = [this.strengthX, this.strengthY];
+		shader.uBlocksize[0] = strengthX;
+		shader.uBlocksize[1] = strengthY;
 	}
+}
+
+/**
+ * A classic mosaic effect, just like in the old days!
+ * 
+ * Usage notes:
+ * - The effect will be applied to the whole screen.
+ * - Set the x/y-values on the 'uBlocksize' vector to the desired size (setting this to 0 will make the screen go black)
+ */
+class MosaicShader extends Shader
+{
+    @fragment var code = '
+    
+    uniform vec2 uBlocksize;
+
+    void main()
+	{
+        vec2 blocks = ${Shader.uTextureSize} / uBlocksize;
+		gl_FragColor = texture2D(${Shader.uSampler}, floor(${Shader.vTexCoord} * blocks) / blocks);
+    }
+    ';
+    
+    public function new()
+    {
+        super();
+    }
 }

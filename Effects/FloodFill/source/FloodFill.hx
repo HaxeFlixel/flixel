@@ -1,26 +1,21 @@
-/**
- * 
- * A HaxeFlixel port of Photonstorm's 'FloodFillFX':
- * https://github.com/photonstorm/Flixel-Power-Tools/blob/master/src/org/flixel/plugin/photonstorm/FX/FloodFillFX.as
- * 
- */
 package;
 
 import flash.display.BitmapData;
 import flash.geom.Point;
 import flash.geom.Rectangle;
-import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 
 /**
  * "Creates a flood fill effect FlxSprite, useful for bringing in images in cool ways"
+ * 
+ * A HaxeFlixel port of Photonstorm's 'FloodFillFX':
+ * https://github.com/photonstorm/Flixel-Power-Tools/blob/master/src/org/flixel/plugin/photonstorm/FX/FloodFillFX.as
  */
 class FloodFill extends FlxSprite
 {
 	private var complete:Bool = false;
-	private var isFilling:Bool = false;
 	private var dropRect:Rectangle;
 	private var dropPoint:Point;
 	private var dropY:Int;
@@ -42,11 +37,11 @@ class FloodFill extends FlxSprite
 	 * @param fillLinesPerUpdate Number of lines per update to fill the effect with.
 	 * @param delayPerUpdate The time delay between each update.
 	 */
-	public function new(x:Float, y:Float, srcBmd:BitmapData, ?width:Int, ?height:Int, ?fillLinesPerUpdate:Int = 1, ?delayPerUpdate:Float = .05)
+	public function new(x:Float, y:Float, srcBmd:BitmapData, width:Int = 0, height:Int = 0, fillLinesPerUpdate:Int = 1, delayPerUpdate:Float = 0.05)
 	{
 		super(x, y);
 		
-		if ((width != null && width != srcBmd.width) || (height != null && height != srcBmd.height))
+		if ((width != 0 && width != srcBmd.width) || (height != 0 && height != srcBmd.height))
 		{
 			srcBitmapData = new BitmapData(width, height, true, FlxColor.TRANSPARENT);
 			srcBitmapData.copyPixels(srcBmd, new Rectangle(0, 0, srcBmd.width, srcBmd.height), new Point(0, height -srcBmd.height));
@@ -68,7 +63,7 @@ class FloodFill extends FlxSprite
 	
 	override public function update(elapsed:Float)
 	{
-		if (complete == false) 
+		if (!complete) 
 		{
 			fillClock += elapsed;
 			
@@ -76,12 +71,12 @@ class FloodFill extends FlxSprite
 			{
 				pixels.lock();
 				
-				var _y:Int = 0;
-				while (_y < dropY) 
+				var fillY:Int = 0;
+				while (fillY < dropY) 
 				{
-					dropPoint.y = _y;
+					dropPoint.y = fillY;
 					pixels.copyPixels(srcBitmapData, dropRect, dropPoint);
-					_y += fillOffset;
+					fillY += fillOffset;
 				}
 				
 				dropY -= fillOffset;
@@ -92,9 +87,7 @@ class FloodFill extends FlxSprite
 				fillClock = 0;
 				
 				if (dropY <= 0)
-				{
 					complete = true;
-				}
 			}
 		}
 		
@@ -105,9 +98,7 @@ class FloodFill extends FlxSprite
 	{
 		super.destroy();
 		
-		FlxDestroyUtil.dispose(srcBitmapData);
-		srcBitmapData = null;
-		
+		srcBitmapData = FlxDestroyUtil.dispose(srcBitmapData);
 		dropPoint = null;
 		dropRect = null;
 	}

@@ -8,7 +8,7 @@ import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import openfl.Assets;
 
-class DemoState extends FlxState
+class PlayState extends FlxState
 {
 	private var effectSprite:FloodFill;
 	private var effectSprite2:FloodFill;
@@ -18,10 +18,12 @@ class DemoState extends FlxState
 	{
 		add(new FlxSprite(0, 0, "assets/images/backdrop.png"));
 		
-		var effectBitmapData:BitmapData = Assets.getBitmapData("assets/images/logo.png");
-		effectSprite = new FloodFill(100, FlxG.height * .5 - effectBitmapData.height * .5, effectBitmapData, effectBitmapData.width, effectBitmapData.height, 1, .01);
+		var effectBitmapData:BitmapData = Assets.getBitmapData("assets/images/logo.png").clone();
+		effectSprite = new FloodFill(100, FlxG.height * .5 - effectBitmapData.height * .5,
+			effectBitmapData, effectBitmapData.width, effectBitmapData.height, 1, .01);
 		
-		effectSprite2 = new FloodFill(FlxG.width-(effectBitmapData.width+100), 0, effectBitmapData, effectBitmapData.width, Math.floor(effectSprite.y+effectSprite.height), 1, .01);
+		effectSprite2 = new FloodFill(FlxG.width - (effectBitmapData.width + 100), 0,
+			effectBitmapData, effectBitmapData.width, Math.floor(effectSprite.y+effectSprite.height), 1, .01);
 		
 		infoText = new FlxText(10, 10, 100, "Press SPACE key to run the effect.\n\nPress R to restart demo.");
 		infoText.color = FlxColor.BLACK;
@@ -34,9 +36,7 @@ class DemoState extends FlxState
 	override public function update(elapsed:Float):Void
 	{
 		if (FlxG.keys.justPressed.R) 
-		{
 			FlxG.resetState();
-		}
 		
 		if (FlxG.keys.justPressed.SPACE) 
 		{
