@@ -1,7 +1,10 @@
 package flixel.ui;
 
 import flash.display.BitmapData;
+import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.input.FlxInput.FlxInputState;
+import flixel.system.replay.MouseRecord;
 import massive.munit.Assert;
 
 class FlxButtonTest extends FlxTest
@@ -14,6 +17,7 @@ class FlxButtonTest extends FlxTest
 	{
 		button = new FlxButton();
 		destroyable = button;
+		FlxG.mouse.playback(new MouseRecord(0, 0, FlxInputState.RELEASED, 0)); // put the mouse in the upper-left corner to prepare for highlight testing
 	}
 	
 	@Test
