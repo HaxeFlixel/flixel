@@ -18,7 +18,7 @@ abstract ExitCode(Int) from Int to Int
 
 class RunTravis
 {
-	static var importantDemos = ["Mode", "RPGInterface"];
+	static var importantDemos = ["Mode"];
 	static var dryRun:Bool;
 
 	public static function main():Void
