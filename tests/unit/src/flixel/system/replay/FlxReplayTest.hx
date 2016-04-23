@@ -22,9 +22,8 @@ class FlxReplayTest extends FlxTest
 		/* Exclude:
 		 * 1. not-really-keys
 		 * 2. debugger activators (so as not to affect other tests by having the debugger open)
-		 * 3. sound tray hotkeys (so as to avoid travis sound trouble)
 		 */
-		for (key in [ANY, NONE, BACKSLASH, GRAVEACCENT, PLUS, NUMPADPLUS, MINUS, NUMPADMINUS, ZERO, NUMPADZERO])
+		for (key in [ANY, NONE, BACKSLASH, GRAVEACCENT])
 			possibleKeys.remove(key);
 		for (i in 0...frameCount)
 		{
