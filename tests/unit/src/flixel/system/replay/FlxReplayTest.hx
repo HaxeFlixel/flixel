@@ -19,7 +19,11 @@ class FlxReplayTest extends FlxTest
 		var x:Int;
 		var y:Int;
 		var possibleKeys:Array<Int> = [for (key in FlxKey.toStringMap.keys()) key];
-		for (key in [-1, -2, 192, 220]) // exclude not-really-keys, and debugger activators (so as not to affect other tests by having the debugger open)
+		/* Exclude:
+		 * 1. not-really-keys
+		 * 2. debugger activators (so as not to affect other tests by having the debugger open)
+		 */
+		for (key in [ANY, NONE, BACKSLASH, GRAVEACCENT])
 			possibleKeys.remove(key);
 		for (i in 0...frameCount)
 		{
