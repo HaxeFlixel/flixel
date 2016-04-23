@@ -163,7 +163,7 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 	 * @param	Device		The device type (Mouse, Keyboard, Gamepad, SteamController, etc)
 	 * @param	DeviceID	FlxGamepad ID or a Steam Controller Handle (ignored for Mouse/Keyboard)
 	 */
-	public function activateSet(ActionSet:Int, Device:FlxInputDevice, ?DeviceID:Int = FlxInputDeviceID.FIRST_ACTIVE)
+	public function activateSet(ActionSet:Int, Device:FlxInputDevice, ?DeviceID:Int = FlxInputDeviceID.ALL)
 	{
 		register.activate(ActionSet, Device, DeviceID);
 		onChange();
@@ -256,6 +256,62 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 	{
 		if (Index >= 0 && Index < sets.length)
 			return sets[Index];
+		return null;
+	}
+	
+	
+	/**
+	 * Returns the action set that has been activated for this specific device
+	 * @param	device
+	 * @param	deviceID
+	 * @return
+	 */
+	@:access(flixel.input.actions.FlxActionManager.ActionSetRegister)
+	public function getSetActivatedForDevice(device:FlxInputDevice, deviceID:Int = FlxInputDeviceID.ALL):FlxActionSet
+	{
+		var id = -1;
+		var index = -1;
+		
+		switch(device)
+		{
+			case FlxInputDevice.KEYBOARD: index = register.keyboardSet;
+			case FlxInputDevice.MOUSE: index = register.mouseSet;
+			case FlxInputDevice.GAMEPAD:
+				switch(deviceID)
+				{
+					case FlxInputDeviceID.ALL: index = register.gamepadAllSet;
+					case FlxInputDeviceID.FIRST_ACTIVE: id = FlxG.gamepads.getFirstActiveGamepadID();
+					case FlxInputDeviceID.NONE: index = -1;
+					default: id = deviceID;
+				}
+				if (id >= 0 && id < register.gamepadSets.length)
+				{
+					index = register.gamepadSets[id];
+				}
+			case FlxInputDevice.STEAM_CONTROLLER:
+				switch(deviceID)
+				{
+					case FlxInputDeviceID.ALL: index = register.steamControllerAllSet;
+					case FlxInputDeviceID.NONE: index = -1;
+					default: id = deviceID;
+				}
+				if (id >= 0 && id < register.steamControllerSets.length)
+				{
+					index = register.steamControllerSets[id];
+				}
+			case FlxInputDevice.ALL:
+				switch(deviceID)
+				{
+					case FlxInputDeviceID.ALL: index = register.gamepadAllSet;
+				}
+			default: index = -1;
+		}
+		
+		if (index >= 0 && index < sets.length)
+		{
+			return sets[index];
+		}
+		
 		return null;
 	}
 	
