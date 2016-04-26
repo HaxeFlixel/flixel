@@ -98,7 +98,7 @@ class FlxSound extends FlxBasic
 	 */
 	public var loopTime:Float;
 	/**
-	 * The tween used to fade this sounds volume in and out
+	 * The tween used to fade this sound's volume in and out (set via `fadeIn()` and `fadeOut()`)
 	 */
 	public var fadeTween:FlxTween;
 	/**
@@ -463,7 +463,7 @@ class FlxSound extends FlxBasic
 		{
 			fadeTween.cancel();
 		}
-		fadeTween = FlxTween.num(volume, To, Duration, { onComplete:onComplete }, volumeTween);
+		fadeTween = FlxTween.num(volume, To, Duration, { onComplete: onComplete }, volumeTween);
 		
 		return this;
 	}
@@ -485,7 +485,7 @@ class FlxSound extends FlxBasic
 		{
 			fadeTween.cancel();
 		}
-		fadeTween = FlxTween.num(From, To, Duration, { onComplete:onComplete }, volumeTween);
+		fadeTween = FlxTween.num(From, To, Duration, { onComplete: onComplete }, volumeTween);
 		return this;
 	}
 	
