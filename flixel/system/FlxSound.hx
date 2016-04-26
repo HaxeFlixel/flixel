@@ -98,6 +98,10 @@ class FlxSound extends FlxBasic
 	 */
 	public var loopTime:Float;
 	/**
+	 * The tween used to fade this sounds volume in and out
+	 */
+	public var fadeTween:FlxTween;
+	/**
 	 * Internal tracker for a Flash sound object.
 	 */
 	private var _sound:Sound;
@@ -455,7 +459,11 @@ class FlxSound extends FlxBasic
 	 */
 	public inline function fadeOut(Duration:Float = 1, ?To:Float = 0, ?onComplete:FlxTween->Void):FlxSound
 	{
-		FlxTween.num(volume, To, Duration, { onComplete:onComplete }, volumeTween);
+		if (fadeTween != null)
+		{
+			fadeTween.cancel();
+		}
+		fadeTween = FlxTween.num(volume, To, Duration, { onComplete:onComplete }, volumeTween);
 		
 		return this;
 	}
@@ -470,8 +478,14 @@ class FlxSound extends FlxBasic
 	public inline function fadeIn(Duration:Float = 1, From:Float = 0, To:Float = 1, ?onComplete:FlxTween->Void):FlxSound
 	{
 		if (!playing)
+		{
 			play();
-		FlxTween.num(From, To, Duration, { onComplete:onComplete }, volumeTween);
+		}
+		if (fadeTween != null)
+		{
+			fadeTween.cancel();
+		}
+		fadeTween = FlxTween.num(From, To, Duration, { onComplete:onComplete }, volumeTween);
 		return this;
 	}
 	
