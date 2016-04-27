@@ -1,9 +1,9 @@
 package flixel.system.scaleModes;
-
+#if !flash
 import flixel.FlxG;
 import flixel.util.typeLimit.OneOfTwo;
 
-#if !openfl_legacy
+#if !openfl_legacy 
 import flixel.system.scaleModes.shaders.ScaleShaderFilter;
 import flixel.system.scaleModes.shaders.Nearest;
 import flixel.system.scaleModes.shaders.Bilinear;
@@ -14,6 +14,15 @@ import openfl.display.Shader;
 import flixel.effects.postprocess.PostProcess;
 import flixel.effects.postprocess.Shader;
 #end
+
+/**
+ * Scales the screen using shaders.
+ * ShaderScaleEnum has some defaults to look at.
+ * Currently does not work on Flash
+ * 
+ * @version 1.0 - April 27 2016
+ * @author Sean Whiteman
+ */
 
 @:enum
 abstract ShaderScaleEnum(Int)
@@ -61,6 +70,8 @@ class ShaderScaleMode extends flixel.system.scaleModes.BaseScaleMode
 		FlxG.game.filtersEnabled = true;
 
 		FlxG.signals.postDraw.add(postDraw);
+
+		this.updateOffsetY();
 	}
 
 	public function postDraw():Void
@@ -76,6 +87,9 @@ class ShaderScaleMode extends flixel.system.scaleModes.BaseScaleMode
 		this.filter.scaleX = scaleX;
 		this.filter.scaleY = scaleY;
 		this.pointerMultiplier = new flixel.math.FlxPoint(1 / scaleX, 1 / scaleY);
+
+		this.updateOffsetX();
+		this.updateOffsetY();
 	}
 
 	public function setStrength(strength:Float = 1):Void
@@ -108,11 +122,24 @@ class ShaderScaleMode extends flixel.system.scaleModes.BaseScaleMode
 
 	override private function updateOffsetY():Void
 	{
-		offset.y = 0;
+		var tempOffsetY = 0.0;
+    	for (i in 0...FlxG.game.numChildren)
+    	{
+        	var child = FlxG.game.getChildAt(i);
+
+        	if(child.y < 0 && child.y < tempOffsetY)
+        	{
+        		tempOffsetY = child.y;
+        	}
+    	}
+
+    	pointerOffset.y = tempOffsetY * (scaleY - 1) / scaleY;
+		offset.y = tempOffsetY * (scaleY - 1);
 	}
 
 	override private function updateOffsetX():Void
 	{
+		pointerOffset.x = 0;
 		offset.x = 0;
 	}
 	#else
@@ -266,3 +293,4 @@ void main()
 	}
 	#end
 }
+#end

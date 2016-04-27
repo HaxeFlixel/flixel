@@ -20,7 +20,7 @@ void main()
     vec4 c = vec4(0.0,0.0,0.0,0.0);
     
     float a = (uResolution.y - openfl_uObjectSize.y) / openfl_uTextureSize.y;
-    c = texture2D(uImage0, vec2(openfl_vTexCoord.x/uScaleX, (92.0/512.0)*(.5+.5/uScaleY)+(openfl_vTexCoord.y-(92.0/512.0))/(uScaleY)));
+    c = texture2D(uImage0, vec2(openfl_vTexCoord.x/uScaleX, openfl_vTexCoord.y/uScaleY));
 
     gl_FragColor = c;
 }";

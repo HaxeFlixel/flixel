@@ -11,6 +11,7 @@ class BaseScaleMode
 	public var gameSize(default, null):FlxPoint;
 	public var scale(default, null):FlxPoint;
 	public var pointerMultiplier(default, null):FlxPoint;
+	public var pointerOffset(default, null):FlxPoint;
 	public var offset(default, null):FlxPoint;
 	
 	public var horizontalAlign(default, set):FlxHorizontalAlign = CENTER;
@@ -22,6 +23,7 @@ class BaseScaleMode
 		gameSize = FlxPoint.get();
 		scale = FlxPoint.get();
 		pointerMultiplier = FlxPoint.get(1, 1);
+		pointerOffset = FlxPoint.get(0, 0);
 		offset = FlxPoint.get();
 	}
 	
@@ -58,6 +60,7 @@ class BaseScaleMode
 	
 	private function updateOffsetX():Void
 	{
+		pointerOffset.x = 0;
 		offset.x = switch (horizontalAlign)
 		{
 			case FlxHorizontalAlign.LEFT:
@@ -71,6 +74,7 @@ class BaseScaleMode
 	
 	private function updateOffsetY():Void
 	{
+		pointerOffset.y = 0;
 		offset.y = switch (verticalAlign)
 		{
 			case FlxVerticalAlign.TOP:
