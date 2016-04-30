@@ -36,7 +36,7 @@ class FlxAnimation extends FlxBaseAnimation
 	/**
 	 * Whether the current animation gets updated or not.
 	 */
-	public var paused(default, null):Bool = true;
+	public var paused:Bool = true;
 	
 	/**
 	 * Whether or not the animation is looped
