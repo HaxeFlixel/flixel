@@ -17,10 +17,10 @@ import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxGraphicAsset;
+import flixel.system.FlxAssets.FlxShader;
 import flixel.util.FlxBitmapDataUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
-import openfl.display.Shader;
 using flixel.util.FlxColorTransformUtil;
 
 @:keep @:bitmap("assets/images/logo/default.png")
@@ -158,7 +158,7 @@ class FlxSprite extends FlxObject
 	 */
 	public var clipRect(default, set):FlxRect;
 	
-	public var shader:Shader;
+	public var shader:FlxShader;
 	
 	/**
 	 * The actual frame used for sprite rendering

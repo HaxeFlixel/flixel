@@ -16,12 +16,12 @@ import flixel.math.FlxMath;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
+import flixel.system.FlxAssets.FlxShader;
 import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
 import openfl.display.BlendMode;
-import openfl.display.Shader;
 import openfl.filters.BitmapFilter;
 import openfl.geom.Matrix;
 import openfl.Vector;
@@ -367,7 +367,7 @@ class FlxCamera extends FlxBasic
 	
 	@:noCompletion
 	public function startQuadBatch(graphic:FlxGraphic, colored:Bool, hasColorOffsets:Bool = false,
-		?blend:BlendMode, smooth:Bool = false, ?shader:Shader)
+		?blend:BlendMode, smooth:Bool = false, ?shader:FlxShader)
 	{
 		#if FLX_RENDER_TRIANGLE
 		return startTrianglesBatch(graphic, smooth, colored, blend);
@@ -530,7 +530,7 @@ class FlxCamera extends FlxBasic
 	}
 	
 	public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix,
-		?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false, ?shader:Shader):Void
+		?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false, ?shader:FlxShader):Void
 	{
 		if (FlxG.renderBlit)
 		{

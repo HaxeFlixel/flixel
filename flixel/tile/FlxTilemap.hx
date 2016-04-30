@@ -18,12 +18,12 @@ import flixel.math.FlxMath;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
+import flixel.system.FlxAssets.FlxShader;
 import flixel.system.FlxAssets.FlxTilemapGraphicAsset;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
 import openfl.display.BlendMode;
-import openfl.display.Shader;
 import openfl.geom.ColorTransform;
 using flixel.util.FlxColorTransformUtil;
 
@@ -91,7 +91,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 */
 	public var blend(default, set):BlendMode = null;
 	
-	public var shader:Shader;
+	public var shader:FlxShader;
 	
 	/**
 	 * Rendering helper, minimize new object instantiation on repetitive methods.

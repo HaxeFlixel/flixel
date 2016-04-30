@@ -5,7 +5,7 @@ import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.tile.FlxDrawBaseItem.FlxDrawItemType;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxRect;
-import openfl.display.Shader;
+import flixel.system.FlxAssets.FlxShader;
 import openfl.display.Tilesheet;
 import openfl.geom.ColorTransform;
 
@@ -14,7 +14,7 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 	public var drawData:Array<Float> = [];
 	public var position:Int = 0;
 	public var numTiles(get, never):Int;
-	public var shader:Shader;
+	public var shader:FlxShader;
 	
 	public function new() 
 	{
