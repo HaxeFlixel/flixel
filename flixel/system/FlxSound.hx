@@ -83,8 +83,10 @@ class FlxSound extends FlxBasic
 	#end
 	/**
 	 * The position in runtime of the music playback.
+	 * If you set time while sound is playing then sound will immediately move to specified time position.
+	 * If you set time while sound is paused then it will start playing from specified position only after you call resume() method.
 	 */
-	public var time(default, null):Float;
+	public var time(get, set):Float;
 	/**
 	 * The sound group this sound belongs to
 	 */
@@ -121,6 +123,10 @@ class FlxSound extends FlxBasic
 	 * Internal tracker for volume.
 	 */
 	private var _volume:Float;
+	/**
+	 * Internal tracker for sound channel position.
+	 */
+	private var _time:Float = 0;
 	#if (sys && openfl_legacy)
 	/**
 	 * Internal tracker for pitch.
@@ -167,7 +173,7 @@ class FlxSound extends FlxBasic
 		x = 0;
 		y = 0;
 		
-		time = 0;
+		_time = 0;
 		_paused = false;
 		_volume = 1.0;
 		_volumeAdjust = 1.0;
@@ -226,7 +232,7 @@ class FlxSound extends FlxBasic
 			return;
 		}
 		
-		time = _channel.position;
+		_time = _channel.position;
 		
 		var radialMultiplier:Float = 1.0;
 		
@@ -422,7 +428,7 @@ class FlxSound extends FlxBasic
 	{
 		if (_paused)
 		{
-			startSound(time);
+			startSound(_time);
 		}
 		return this;
 	}
@@ -436,7 +442,7 @@ class FlxSound extends FlxBasic
 		{
 			return this;
 		}
-		time = _channel.position;
+		_time = _channel.position;
 		_paused = true;
 		cleanup(false, false);
 		return this;
@@ -545,9 +551,9 @@ class FlxSound extends FlxBasic
 			return;
 		}
 		
-		time = StartTime;
+		_time = StartTime;
 		_paused = false;
-		_channel = _sound.play(time, 0, _transform);
+		_channel = _sound.play(_time, 0, _transform);
 		if (_channel != null)
 		{
 			#if (sys && openfl_legacy)
@@ -609,7 +615,7 @@ class FlxSound extends FlxBasic
 
 		if (resetPosition)
 		{
-			time = 0;
+			_time = 0;
 			_paused = false;
 		}
 	}
@@ -705,6 +711,21 @@ class FlxSound extends FlxBasic
 	private inline function set_pan(pan:Float):Float
 	{
 		return _transform.pan = pan;
+	}
+	
+	private inline function get_time():Float
+	{
+		return _time;
+	}
+	
+	private function set_time(time:Float):Float
+	{
+		if (playing)
+		{
+			cleanup(false, true);
+			startSound(time);
+		}
+		return _time = time;
 	}
 	
 	override public function toString():String
