@@ -21,12 +21,12 @@ import openfl.Assets;
 class FlxSound extends FlxBasic
 {
 	/**
-	 * The X position of this sound in world coordinates.
+	 * The x position of this sound in world coordinates.
 	 * Only really matters if you are doing proximity/panning stuff.
 	 */
 	public var x:Float;
 	/**
-	 * The Y position of this sound in world coordinates.
+	 * The y position of this sound in world coordinates.
 	 * Only really matters if you are doing proximity/panning stuff.
 	 */
 	public var y:Float;
@@ -55,11 +55,11 @@ class FlxSound extends FlxBasic
 	 */
 	public var amplitudeRight(default, null):Float;
 	/**
-	 * Whether to call destroy() when the sound has finished playing.
+	 * Whether to call `destroy()` when the sound has finished playing.
 	 */
 	public var autoDestroy:Bool;
 	/**
-	 * Tracker for sound complete callback. Default is null. If assigend, will be called 
+	 * Tracker for sound complete callback. If assigend, will be called 
 	 * each time when sound reaches its end. Works only on flash and desktop targets.
 	 */
 	public var onComplete:Void->Void;
@@ -82,9 +82,8 @@ class FlxSound extends FlxBasic
 	public var pitch(get, set):Float;
 	#end
 	/**
-	 * The position in runtime of the music playback.
-	 * If you set time while sound is playing then sound will immediately move to specified time position.
-	 * If you set time while sound is paused then it will start playing from specified position only after you call resume() method.
+	 * The position in runtime of the music playback in milliseconds.
+	 * If set while paused, changes only come into effect after a `resume()` call.
 	 */
 	public var time(get, set):Float;
 	/**
@@ -279,8 +278,8 @@ class FlxSound extends FlxBasic
 	 * 
 	 * @param	EmbeddedSound	An embedded Class object representing an MP3 file.
 	 * @param	Looped			Whether or not this sound should loop endlessly.
-	 * @param	AutoDestroy		Whether or not this FlxSound instance should be destroyed when the sound finishes playing.  Default value is false, but FlxG.sound.play() and FlxG.sound.stream() will set it to true by default.
-	 * 
+	 * @param	AutoDestroy		Whether or not this FlxSound instance should be destroyed when the sound finishes playing. 
+	 * 							Default value is false, but `FlxG.sound.play()` and `FlxG.sound.stream()` will set it to true by default.
 	 * @return	This FlxSound instance (nice for chaining stuff together, if you're into that).
 	 */
 	public function loadEmbedded(EmbeddedSound:FlxSoundAsset, Looped:Bool = false, AutoDestroy:Bool = false, ?OnComplete:Void->Void):FlxSound
@@ -323,8 +322,8 @@ class FlxSound extends FlxBasic
 	 * 
 	 * @param	EmbeddedSound	A string representing the URL of the MP3 file you want to play.
 	 * @param	Looped			Whether or not this sound should loop endlessly.
-	 * @param	AutoDestroy		Whether or not this FlxSound instance should be destroyed when the sound finishes playing.  Default value is false, but FlxG.sound.play() and FlxG.sound.stream() will set it to true by default.
-	 * 
+	 * @param	AutoDestroy		Whether or not this FlxSound instance should be destroyed when the sound finishes playing.
+	 * 							Default value is false, but `FlxG.sound.play()` and `FlxG.sound.stream()` will set it to true by default.
 	 * @return	This FlxSound instance (nice for chaining stuff together, if you're into that).
 	 */
 	public function loadStream(SoundURL:String, Looped:Bool = false, AutoDestroy:Bool = false, ?OnComplete:Void->Void):FlxSound
@@ -348,7 +347,8 @@ class FlxSound extends FlxBasic
 	 * 
 	 * @param	Bytes 			A ByteArray object.
 	 * @param	Looped			Whether or not this sound should loop endlessly.
-	 * @param	AutoDestroy		Whether or not this FlxSound instance should be destroyed when the sound finishes playing.  Default value is false, but FlxG.sound.play() and FlxG.sound.stream() will set it to true by default.
+	 * @param	AutoDestroy		Whether or not this FlxSound instance should be destroyed when the sound finishes playing.
+	 * 							Default value is false, but `FlxG.sound.play()` and `FlxG.sound.stream()` will set it to true by default.
 	 * @return	This FlxSound instance (nice for chaining stuff together, if you're into that).
 	 */
 	public function loadByteArray(Bytes:ByteArray, Looped:Bool = false, AutoDestroy:Bool = false, ?OnComplete:Void->Void):FlxSound
