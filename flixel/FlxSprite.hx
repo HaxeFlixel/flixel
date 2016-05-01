@@ -158,6 +158,13 @@ class FlxSprite extends FlxObject
 	 */
 	public var clipRect(default, set):FlxRect;
 	
+	/**
+	 * Shader for this sprite. 
+	 * Doesn't work with openfl legacy mode.
+	 * Try to avoid changing your shaders as much as possible, 
+	 * since this operation is costly.
+	 */
+	#if openfl_legacy @:noCompletion #end
 	public var shader:FlxShader;
 	
 	/**
