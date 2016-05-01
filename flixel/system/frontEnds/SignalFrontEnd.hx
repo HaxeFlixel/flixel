@@ -17,6 +17,10 @@ class SignalFrontEnd
 	public var preGameReset(default, null):FlxSignal = new FlxSignal();
 	public var postGameReset(default, null):FlxSignal = new FlxSignal();
 	/**
+	 * Gets dispatched when camera is resized
+	 */
+	public var cameraResized(default, null):FlxTypedSignal<FlxCamera->Void> = new FlxTypedSignal<FlxCamera->Void>();
+	/**
 	 * Gets dispatched when the game is started (first state after the splash screen).
 	 */
 	public var gameStarted(default, null):FlxSignal = new FlxSignal();

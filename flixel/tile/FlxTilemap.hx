@@ -145,6 +145,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		scale.set(1, 1);
 		
 		FlxG.signals.gameResized.add(onGameResize);
+		FlxG.signals.cameraResized.add(onCameraResize);
 		#if FLX_DEBUG
 		if (FlxG.renderBlit)
 			FlxG.debugger.drawDebugChanged.add(onDrawDebugChanged);
@@ -393,10 +394,16 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 			if (!camera.visible || !camera.exists)
 				continue;
 			
-			if (_buffers[i] == null)
-				_buffers[i] = createBuffer(camera);
-			
 			buffer = _buffers[i];
+			
+			if (buffer == null) // there is no buffer for current camera
+			{
+				buffer = _buffers[i] = createBuffer(camera);
+			}
+			else if (buffer._camera != camera) // the camera object had been replaced with another camera, so we need to update buffer too.
+			{
+				buffer = _buffers[i] = resizeBuffer(buffer, camera);
+			}
 			
 			if (FlxG.renderBlit)
 			{
@@ -409,7 +416,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 				}
 				
 				getScreenPosition(_point, camera).subtractPoint(offset).add(buffer.x, buffer.y).copyToFlash(_flashPoint);
-				buffer.draw(camera, _flashPoint, scale.x, scale.y);
+				buffer.draw(_flashPoint, scale.x, scale.y);
 			}
 			else
 			{
@@ -973,6 +980,25 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		return buffer;
 	}
 	
+	private function resizeBuffer(Buffer:FlxTilemapBuffer, Camera:FlxCamera):FlxTilemapBuffer
+	{
+		// Calculate the required number of columns and rows
+		_helperBuffer._camera = Camera;
+		_helperBuffer.updateColumns(_tileWidth, widthInTiles, scale.x);
+		_helperBuffer.updateRows(_tileHeight, heightInTiles, scale.y);
+		
+		// Create a new buffer if the number of columns and rows differs
+		if (Buffer == null || _helperBuffer.columns != Buffer.columns || _helperBuffer.rows != Buffer.rows)
+		{
+			if (Buffer != null)
+				Buffer.destroy();
+			
+			return createBuffer(Camera);
+		}
+		
+		return Buffer;
+	}
+	
 	/**
 	 * Signal listener for gameResize 
 	 */
@@ -985,20 +1011,18 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		{
 			var camera = cameras[i];
 			var buffer = _buffers[i];
-			
-			// Calculate the required number of columns and rows
-			_helperBuffer.updateColumns(_tileWidth, widthInTiles, scale.x, camera);
-			_helperBuffer.updateRows(_tileHeight, heightInTiles, scale.y, camera);
-			
-			// Create a new buffer if the number of columns and rows differs
-			if (buffer == null || _helperBuffer.columns != buffer.columns || _helperBuffer.rows != buffer.rows)
-			{
-				if (buffer != null)
-					buffer.destroy();
-				
-				_buffers[i] = createBuffer(camera);
-			}
+			_buffers[i] = resizeBuffer(buffer, camera);
 		}
+	}
+	
+	/**
+	 * Signal listener for cameraResize 
+	 */
+	private function onCameraResize(Camera:FlxCamera):Void
+	{
+		var index:Int = cameras.indexOf(Camera);
+		if (index >= 0)
+			_buffers[index] = resizeBuffer(_buffers[index], Camera);
 	}
 	
 	#if FLX_DEBUG
@@ -1097,7 +1121,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 
 		for (i in 0...cameras.length)
 			if (_buffers[i] != null)
-				_buffers[i].updateColumns(_tileWidth, widthInTiles, scale.x, cameras[i]);
+				_buffers[i].updateColumns(_tileWidth, widthInTiles, scale.x);
 	}
 	
 	private function setScaleYCallback(Scale:FlxPoint):Void
@@ -1110,7 +1134,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 
 		for (i in 0...cameras.length)
 			if (_buffers[i] != null)
-				_buffers[i].updateRows(_tileHeight, heightInTiles, scale.y, cameras[i]);
+				_buffers[i].updateRows(_tileHeight, heightInTiles, scale.y);
 	}
 	
 	/**

@@ -63,6 +63,12 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	private var _matrix:Matrix;
 	
 	/**
+	 * Camera object this buffer will be rendered to
+	 */
+	@:allow(flixel.tile.FlxTilemap)
+	private var _camera:FlxCamera;
+	
+	/**
 	 * Instantiates a new camera-specific buffer for storing the visual tilemap data.
 	 * 
 	 * @param   TileWidth       The width of the tiles in this tilemap.
@@ -74,8 +80,9 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	public function new(TileWidth:Int, TileHeight:Int, WidthInTiles:Int, HeightInTiles:Int,
 		?Camera:FlxCamera, ScaleX:Float = 1.0, ScaleY:Float = 1.0)
 	{
-		updateColumns(TileWidth, WidthInTiles, ScaleX, Camera);
-		updateRows(TileHeight, HeightInTiles, ScaleY, Camera);
+		_camera = (Camera == null) ? FlxG.camera : Camera;
+		updateColumns(TileWidth, WidthInTiles, ScaleX);
+		updateRows(TileHeight, HeightInTiles, ScaleY);
 		
 		if (FlxG.renderBlit)
 		{
@@ -92,6 +99,8 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	 */
 	public function destroy():Void
 	{
+		_camera = null;
+		
 		if (FlxG.renderBlit)
 		{
 			pixels = null;
@@ -120,24 +129,24 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	 * @param	Camera		Which camera to draw the buffer onto.
 	 * @param	FlashPoint	Where to draw the buffer at in camera coordinates.
 	 */
-	public function draw(Camera:FlxCamera, FlashPoint:Point, ScaleX:Float = 1.0, ScaleY:Float = 1.0):Void
+	public function draw(FlashPoint:Point, ScaleX:Float = 1.0, ScaleY:Float = 1.0):Void
 	{
-		if (isPixelPerfectRender(Camera))
+		if (isPixelPerfectRender())
 		{
 			FlashPoint.x = Math.floor(FlashPoint.x);
 			FlashPoint.y = Math.floor(FlashPoint.y);
 		}
 		
-		if (isPixelPerfectRender(Camera) && (ScaleX == 1.0 && ScaleY == 1.0) && blend == null)
+		if (isPixelPerfectRender() && (ScaleX == 1.0 && ScaleY == 1.0) && blend == null)
 		{
-			Camera.buffer.copyPixels(pixels, _flashRect, FlashPoint, null, null, true);
+			_camera.buffer.copyPixels(pixels, _flashRect, FlashPoint, null, null, true);
 		}
 		else
 		{
 			_matrix.identity();
 			_matrix.scale(ScaleX, ScaleY);
 			_matrix.translate(FlashPoint.x, FlashPoint.y);
-			Camera.buffer.draw(pixels, _matrix, null, blend);
+			_camera.buffer.draw(pixels, _matrix, null, blend);
 		}
 	}
 	
@@ -148,61 +157,27 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	
 	public function updateColumns(TileWidth:Int, WidthInTiles:Int, ScaleX:Float = 1.0, ?Camera:FlxCamera):Void
 	{
-		if (WidthInTiles < 0) 
-		{
-			WidthInTiles = 0;
-		}
-		
-		if (Camera == null)
-		{
-			Camera = FlxG.camera;
-		}
-
-		columns = Math.ceil(Camera.width / (TileWidth * ScaleX)) + 1;
-		
-		if (columns > WidthInTiles)
-		{
-			columns = WidthInTiles;
-		}
-		
+		WidthInTiles = (WidthInTiles < 0) ? 0 : WidthInTiles;
+		columns = Math.ceil(_camera.width / (TileWidth * ScaleX)) + 1;
+		columns = (columns > WidthInTiles) ? WidthInTiles : columns;
 		width = Std.int(columns * TileWidth * ScaleX);
-		
 		dirty = true;
 	}
 	
 	public function updateRows(TileHeight:Int, HeightInTiles:Int, ScaleY:Float = 1.0, ?Camera:FlxCamera):Void
 	{
-		if (HeightInTiles < 0) 
-		{
-			HeightInTiles = 0;
-		}
-		
-		if (Camera == null)
-		{
-			Camera = FlxG.camera;
-		}
-		
+		HeightInTiles = (HeightInTiles < 0) ? 0 : HeightInTiles;
 		rows = Math.ceil(Camera.height / (TileHeight * ScaleY)) + 1;
-		
-		if (rows > HeightInTiles)
-		{
-			rows = HeightInTiles;
-		}
-		
+		rows = (rows > HeightInTiles) ? HeightInTiles : rows;
 		height = Std.int(rows * TileHeight * ScaleY);	
-		
 		dirty = true;
 	}
 
 	/**
 	 * Check if object is rendered pixel perfect on a specific camera.
 	 */
-	public function isPixelPerfectRender(?Camera:FlxCamera):Bool
+	public function isPixelPerfectRender():Bool
 	{
-		if (Camera == null)
-		{
-			Camera = FlxG.camera;
-		}
-		return pixelPerfectRender == null ? Camera.pixelPerfectRender : pixelPerfectRender;
+		return pixelPerfectRender == null ? _camera.pixelPerfectRender : pixelPerfectRender;
 	}
 }
