@@ -401,7 +401,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 			{
 				buffer = _buffers[i] = createBuffer(camera);
 			}
-			else if (buffer._camera != camera) // the camera object had been replaced with another camera, so we need to update buffer too.
+			else if (buffer._camera != camera || buffer.regen) // the camera object had been replaced with another camera, so we need to update buffer too.
 			{
 				buffer = _buffers[i] = resizeBuffer(buffer, camera);
 			}
@@ -1023,7 +1023,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	{
 		var index:Int = cameras.indexOf(Camera);
 		if (index >= 0)
-			_buffers[index] = resizeBuffer(_buffers[index], Camera);
+			_buffers[index].regen = true;
 	}
 	
 	#if FLX_DEBUG

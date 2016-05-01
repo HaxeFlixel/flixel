@@ -59,6 +59,8 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	
 	public var blend:BlendMode;
 	
+	public var regen:Bool = false;
+	
 	private var _flashRect:Rectangle;
 	private var _matrix:Matrix;
 	
