@@ -188,6 +188,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		colorTransform = null;
 		
 		FlxG.signals.gameResized.remove(onGameResize);
+		FlxG.signals.cameraResized.remove(onCameraResize);
 		#if FLX_DEBUG
 		if (FlxG.renderBlit)
 			FlxG.debugger.drawDebugChanged.remove(onDrawDebugChanged);
