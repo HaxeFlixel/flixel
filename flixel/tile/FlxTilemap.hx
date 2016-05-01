@@ -1038,7 +1038,8 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		var index:Int = cameras.indexOf(Camera);
 		if (index >= 0 && _buffers[index] != null)
 		{
-			_buffers[index] = FlxDestroyUtil.destroy(_buffers[index]);
+			FlxDestroyUtil.destroy(_buffers[index]);
+			_buffers.splice(index, 1);
 		}
 	}
 	
