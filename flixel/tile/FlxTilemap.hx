@@ -1022,8 +1022,10 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	private function onCameraResize(Camera:FlxCamera):Void
 	{
 		var index:Int = cameras.indexOf(Camera);
-		if (index >= 0)
+		if (index >= 0 && _buffers[index] != null)
+		{
 			_buffers[index].regen = true;
+		}
 	}
 	
 	#if FLX_DEBUG

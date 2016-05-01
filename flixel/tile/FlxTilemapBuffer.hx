@@ -157,7 +157,7 @@ class FlxTilemapBuffer implements IFlxDestroyable
 		pixels.colorTransform(_flashRect, Transform);
 	}
 	
-	public function updateColumns(TileWidth:Int, WidthInTiles:Int, ScaleX:Float = 1.0, ?Camera:FlxCamera):Void
+	public function updateColumns(TileWidth:Int, WidthInTiles:Int, ScaleX:Float = 1.0):Void
 	{
 		WidthInTiles = (WidthInTiles < 0) ? 0 : WidthInTiles;
 		columns = Math.ceil(_camera.width / (TileWidth * ScaleX)) + 1;
@@ -166,10 +166,10 @@ class FlxTilemapBuffer implements IFlxDestroyable
 		dirty = true;
 	}
 	
-	public function updateRows(TileHeight:Int, HeightInTiles:Int, ScaleY:Float = 1.0, ?Camera:FlxCamera):Void
+	public function updateRows(TileHeight:Int, HeightInTiles:Int, ScaleY:Float = 1.0):Void
 	{
 		HeightInTiles = (HeightInTiles < 0) ? 0 : HeightInTiles;
-		rows = Math.ceil(Camera.height / (TileHeight * ScaleY)) + 1;
+		rows = Math.ceil(_camera.height / (TileHeight * ScaleY)) + 1;
 		rows = (rows > HeightInTiles) ? HeightInTiles : rows;
 		height = Std.int(rows * TileHeight * ScaleY);	
 		dirty = true;
