@@ -42,6 +42,7 @@ class CameraFrontEnd
 		FlxG.game.addChildAt(NewCamera.flashSprite, FlxG.game.getChildIndex(FlxG.game._inputContainer));
 		FlxG.cameras.list.push(NewCamera);
 		NewCamera.ID = FlxG.cameras.list.length - 1;
+		FlxG.signals.cameraAdded.dispatch(NewCamera);
 		return NewCamera;
 	}
 	
@@ -58,6 +59,7 @@ class CameraFrontEnd
 		{
 			FlxG.game.removeChild(Camera.flashSprite);
 			list.splice(index, 1);
+			FlxG.signals.cameraRemoved.dispatch(Camera);
 		}
 		else
 		{
@@ -89,6 +91,7 @@ class CameraFrontEnd
 		for (camera in list)
 		{
 			FlxG.game.removeChild(camera.flashSprite);
+			FlxG.signals.cameraRemoved.dispatch(camera);
 			camera.destroy();
 		}
 		
@@ -101,6 +104,7 @@ class CameraFrontEnd
 		
 		FlxG.camera = add(NewCamera);
 		NewCamera.ID = 0;
+		FlxG.signals.cameraAdded.dispatch(NewCamera);
 		
 		FlxCamera.defaultCameras = list;
 	}

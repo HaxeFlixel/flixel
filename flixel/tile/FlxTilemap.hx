@@ -146,6 +146,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		
 		FlxG.signals.gameResized.add(onGameResize);
 		FlxG.signals.cameraResized.add(onCameraResize);
+		FlxG.signals.cameraRemoved.add(onCameraRemoved);
 		#if FLX_DEBUG
 		if (FlxG.renderBlit)
 			FlxG.debugger.drawDebugChanged.add(onDrawDebugChanged);
@@ -189,6 +190,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		
 		FlxG.signals.gameResized.remove(onGameResize);
 		FlxG.signals.cameraResized.remove(onCameraResize);
+		FlxG.signals.cameraRemoved.remove(onCameraRemoved);
 		#if FLX_DEBUG
 		if (FlxG.renderBlit)
 			FlxG.debugger.drawDebugChanged.remove(onDrawDebugChanged);
@@ -401,7 +403,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 			{
 				buffer = _buffers[i] = createBuffer(camera);
 			}
-			else if (buffer._camera != camera || buffer.regen) // the camera object had been replaced with another camera, so we need to update buffer too.
+			else if (buffer.regen) // the camera object had been resized, so we need to update buffer.
 			{
 				buffer = _buffers[i] = resizeBuffer(buffer, camera);
 			}
@@ -1025,6 +1027,18 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		if (index >= 0 && _buffers[index] != null)
 		{
 			_buffers[index].regen = true;
+		}
+	}
+	
+	/**
+	 * Signal listener for cameraRemove
+	 */
+	private function onCameraRemoved(Camera:FlxCamera):Void
+	{
+		var index:Int = cameras.indexOf(Camera);
+		if (index >= 0 && _buffers[index] != null)
+		{
+			_buffers[index] = FlxDestroyUtil.destroy(_buffers[index]);
 		}
 	}
 	
