@@ -143,8 +143,13 @@ class FlxPath implements IFlxDestroyable
 	 * 
 	 * or using some more chaining:
 	 * object.path = new FlxPath().add(0, 0).add(100, 0).start(50, FlxPath.FORWARD);
+	 * 
+	 * @param	Nodes	An optional array of points which will be used for path.
 	 */
-	public function new() {}
+	public function new(?Nodes:Array<FlxPoint>) 
+	{
+		_nodes = Nodes;
+	}
 	
 	/**
 	 * Just resets some debugging related variables (for debugger renderer).
@@ -176,6 +181,18 @@ class FlxPath implements IFlxDestroyable
 		nodes = (Nodes != null) ? Nodes : nodes;
 		setPathProperties(Speed, Mode, AutoRotate);
 		restart();
+		return this;
+	}
+	
+	/**
+	 * Just sets nodes for this path, plus returns this path object. Could be useful for chaining.
+	 * @param	Nodes	An array of path waypoints.
+	 * 
+	 * @return	This path object.
+	 */
+	public function setNodes(Nodes:Array<FlxPoint>):FlxPath
+	{
+		_nodes = Nodes;
 		return this;
 	}
 	
