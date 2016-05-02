@@ -312,6 +312,8 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 		
 		if (_spriteLabel != null && _spriteLabel.visible)
 		{
+			_spriteLabel.scale.set(scale.x, scale.y);
+			updateLabelPosition();
 			_spriteLabel.cameras = cameras;
 			_spriteLabel.draw();
 		}
@@ -474,8 +476,9 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	{
 		if (_spriteLabel != null) // Label positioning
 		{
-			_spriteLabel.x = (pixelPerfectPosition ? Math.floor(x) : x) + labelOffsets[status].x;
-			_spriteLabel.y = (pixelPerfectPosition ? Math.floor(y) : y) + labelOffsets[status].y;
+			_spriteLabel.x = (pixelPerfectPosition ? Math.floor(x) : x) + labelOffsets[status].x * scale.x;
+			_spriteLabel.y = (pixelPerfectPosition ? Math.floor(y) : y) + labelOffsets[status].y * scale.y;
+			_spriteLabel.origin.set(origin.x, origin.y); // need to update not only label's position, but its origin. Only in that case scaled label will be rendered at correct position.
 		}
 	}
 	
