@@ -163,7 +163,7 @@ class FlxTimer implements IFlxDestroyable
 	 * Called by timer manager when timer finishes loop.
 	 */
 	@:allow(flixel.util.FlxTimerManager)
-	private inline function onLoop():Void
+	private function onLoop():Void
 	{
 		if (onComplete != null)
 		{
