@@ -419,7 +419,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 				}
 				
 				getScreenPosition(_point, camera).subtractPoint(offset).add(buffer.x, buffer.y).copyToFlash(_flashPoint);
-				buffer.draw(_flashPoint, scale.x, scale.y);
+				buffer.draw(camera, _flashPoint, scale.x, scale.y);
 			}
 			else
 			{
@@ -780,6 +780,9 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 */
 	public function updateBuffers():Void
 	{
+		if (_buffers != null && _buffers.length == 0)
+			return;
+		
 		_buffers = FlxDestroyUtil.destroyArray(_buffers);
 		_buffers = [];
 	}
@@ -986,9 +989,8 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	private function resizeBuffer(Buffer:FlxTilemapBuffer, Camera:FlxCamera):FlxTilemapBuffer
 	{
 		// Calculate the required number of columns and rows
-		_helperBuffer._camera = Camera;
-		_helperBuffer.updateColumns(_tileWidth, widthInTiles, scale.x);
-		_helperBuffer.updateRows(_tileHeight, heightInTiles, scale.y);
+		_helperBuffer.updateColumns(_tileWidth, widthInTiles, scale.x, Camera);
+		_helperBuffer.updateRows(_tileHeight, heightInTiles, scale.y, Camera);
 		
 		// Create a new buffer if the number of columns and rows differs
 		if (Buffer == null || _helperBuffer.columns != Buffer.columns || _helperBuffer.rows != Buffer.rows)
@@ -1002,6 +1004,16 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		return Buffer;
 	}
 	
+	private function resizeBuffers():Void
+	{
+		for (i in 0...cameras.length)
+		{
+			var camera = cameras[i];
+			var buffer = _buffers[i];
+			_buffers[i] = resizeBuffer(buffer, camera);
+		}
+	}
+	
 	/**
 	 * Signal listener for gameResize 
 	 */
@@ -1010,12 +1022,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		if (graphic == null)
 			return;
 		
-		for (i in 0...cameras.length)
-		{
-			var camera = cameras[i];
-			var buffer = _buffers[i];
-			_buffers[i] = resizeBuffer(buffer, camera);
-		}
+		resizeBuffers();
 	}
 	
 	/**
@@ -1035,12 +1042,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 */
 	private function onCameraRemoved(Camera:FlxCamera):Void
 	{
-		var index:Int = cameras.indexOf(Camera);
-		if (index >= 0 && _buffers[index] != null)
-		{
-			FlxDestroyUtil.destroy(_buffers[index]);
-			_buffers.splice(index, 1);
-		}
+		updateBuffers();
 	}
 	
 	#if FLX_DEBUG
@@ -1139,7 +1141,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 
 		for (i in 0...cameras.length)
 			if (_buffers[i] != null)
-				_buffers[i].updateColumns(_tileWidth, widthInTiles, scale.x);
+				_buffers[i].updateColumns(_tileWidth, widthInTiles, scale.x, cameras[i]);
 	}
 	
 	private function setScaleYCallback(Scale:FlxPoint):Void
@@ -1152,7 +1154,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 
 		for (i in 0...cameras.length)
 			if (_buffers[i] != null)
-				_buffers[i].updateRows(_tileHeight, heightInTiles, scale.y);
+				_buffers[i].updateRows(_tileHeight, heightInTiles, scale.y, cameras[i]);
 	}
 	
 	/**
