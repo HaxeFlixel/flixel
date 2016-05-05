@@ -551,7 +551,7 @@ class FlxCamera extends FlxBasic
 	}
 	
 	public function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle,
-		destPoint:Point, ?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false):Void
+		destPoint:Point, ?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false, ?shader:FlxShader):Void
 	{
 		if (FlxG.renderBlit)
 		{
@@ -573,7 +573,7 @@ class FlxCamera extends FlxBasic
 			var hasColorOffsets:Bool = (transform != null && transform.hasRGBAOffsets());
 			
 			#if !FLX_RENDER_TRIANGLE
-			var drawItem:FlxDrawTilesItem = startQuadBatch(frame.parent, isColored, hasColorOffsets, blend, smoothing);
+			var drawItem:FlxDrawTilesItem = startQuadBatch(frame.parent, isColored, hasColorOffsets, blend, smoothing, shader);
 			#else
 			var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(frame.parent, smoothing, isColored, blend);
 			#end
