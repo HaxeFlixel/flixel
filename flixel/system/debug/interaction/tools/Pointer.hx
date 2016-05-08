@@ -72,7 +72,7 @@ class Pointer extends Tool
 		while (i < l)
 		{
 			item = cast _selectedItems.members[i++];
-			if (item != null && item.isOnScreen(FlxG.camera))
+			if (item != null && item.isOnScreen())
 			{
 				// Render a red rectangle centered at the selected item
 				gfx.lineStyle(2, 0xff0000);
@@ -83,12 +83,15 @@ class Pointer extends Tool
 				_label.x = item.x - FlxG.camera.scroll.x;
 				_label.y = item.y - FlxG.camera.scroll.y - 10;
 				_label.text = FlxStringUtil.getClassName(item);
-				_label.draw();
+				//_label.draw();
 			}
 		}
 		
-		// Draw the rectangles to the main camera buffer.
-		//FlxG.camera.buffer.draw(FlxG.flashGfxSprite);
+		if (FlxG.renderBlit)
+		{
+			// Draw the rectangles to the main camera buffer.
+			FlxG.camera.buffer.draw(FlxSpriteUtil.flashGfxSprite);
+		}
 	}
 	
 	private function clearSelection():Void
@@ -97,7 +100,7 @@ class Pointer extends Tool
 	}
 	
 	private function handleItemClick(Item:FlxBasic):Void
-	{
+	{			
 		// Is it the first thing selected or are we adding things using Ctrl?
 		if(_selectedItems.length == 0 || FlxG.keys.pressed.CONTROL)
 		{
@@ -142,7 +145,7 @@ class Pointer extends Tool
 				}
 			}
 		}
-		
+		FlxG.log.add("Pinpointed: " + target);
 		return target;
 	}
 	

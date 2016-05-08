@@ -143,7 +143,6 @@ class FlxDebugger extends Sprite
 		addWindow(stats = new Stats());
 		
 		vcr = new VCR(this);
-		interaction = new Interaction();
 		
 		addButton(LEFT, new GraphicFlixel(0, 0), openHomepage);
 		addButton(LEFT, null, openGitHub).addChild(txt);
@@ -161,6 +160,9 @@ class FlxDebugger extends Sprite
 		{ 
 			drawDebugButton.toggled = FlxG.debugger.drawDebug;
 		});
+		
+		interaction = new Interaction();
+		addButton(RIGHT, new GraphicDrawDebug(0, 0), toggleInteractiveDebug, true);
 		
 		#if FLX_RECORD
 		addButton(CENTER).addChild(vcr.runtimeDisplay);
@@ -490,6 +492,12 @@ class FlxDebugger extends Sprite
 	private inline function toggleDrawDebug():Void
 	{
 		FlxG.debugger.drawDebug = !FlxG.debugger.drawDebug;
+	}
+	
+	private inline function toggleInteractiveDebug():Void
+	{
+		// TODO: make it toggle properly.
+		interaction.activate();
 	}
 	
 	private inline function openHomepage():Void

@@ -43,9 +43,8 @@ class Interaction
 		
 		for (i in 0...availableTools.length)
 		{
-			tool = Type.createInstance(availableTools[i], null);
+			tool = Type.createInstance(availableTools[i], []);
 			tool.init(this);
-			tool.activate();
 			
 			_tools.push(tool);
 			
@@ -114,5 +113,12 @@ class Interaction
 		}
 		
 		return tool;
+	}
+	
+	public function activate():Void
+	{
+		// TODO: improve this!
+		FlxG.mouse.visible = true;
+		_tools[0].activate();
 	}
 }
