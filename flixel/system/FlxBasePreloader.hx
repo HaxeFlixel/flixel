@@ -19,7 +19,7 @@ class FlxBasePreloader extends NMEPreloader
 	/**
 	 * Add this string to allowedURLs array if you want to be able to test game with enabled site-locking on local machine 
 	 */
-	public static inline var LOCAL:String = "local";
+	public static inline var LOCAL:String = #if flash "local" #else "localhost" #end;
 	
 	/**
 	 * Change this if you want the flixel logo to show for more or less time.  Default value is 0 seconds (no delay).
@@ -45,17 +45,17 @@ class FlxBasePreloader extends NMEPreloader
 	private var _height:Int;
 	private var _loaded:Bool = false;
 	private var _urlChecked:Bool = false;
+	private var _startTime:Float;
 	
 	/**
 	 * FlxBasePreloader Constructor.
-	 * @param	MinDisplayTime	Minimum time the preloader should be shown. (Default = 0)
+	 * @param	MinDisplayTime	Minimum time (in seconds) the preloader should be shown. (Default = 0)
 	 * @param	AllowedURLs		Allowed URLs used for Site-locking. If the game is run anywhere else, a message will be displayed on the screen (Default = [])
 	 */
-	public function new(MinDisplayTime:Float = 0, ?AllowedURLs:Array<String>)
+	public function new(?MinDisplayTime:Float = 0, ?AllowedURLs:Array<String>)
 	{
 		super();
 		
-		#if !js
 		removeChild(progress);
 		removeChild(outline);
 		
@@ -64,7 +64,8 @@ class FlxBasePreloader extends NMEPreloader
 			allowedURLs = AllowedURLs;
 		else
 			allowedURLs = [];
-		#end
+			
+		_startTime = Date.now().getTime();
 	}
 	
 	/**
@@ -79,13 +80,11 @@ class FlxBasePreloader extends NMEPreloader
 	{
 		super.onInit();
 		
-		#if !js
 		Lib.current.stage.scaleMode = StageScaleMode.NO_SCALE;
 		Lib.current.stage.align = StageAlign.TOP_LEFT;
 		create();
-		checkSiteLock();
 		addEventListener(Event.ENTER_FRAME, onEnterFrame);
-		#end
+		checkSiteLock();
 	}
 	
 	/**
@@ -97,6 +96,9 @@ class FlxBasePreloader extends NMEPreloader
 		#if flash
 		if (root.loaderInfo.bytesTotal == 0)
 			bytesTotal = 50000;
+		#end
+		
+		#if web
 		_percent = (bytesTotal != 0) ? bytesLoaded / bytesTotal : 0;
 		#else
 		super.onUpdate(bytesLoaded, bytesTotal);
@@ -109,8 +111,8 @@ class FlxBasePreloader extends NMEPreloader
 	 */
 	private function onEnterFrame(E:Event):Void
 	{
-		var time:Int = Lib.getTimer();
-		var min:Int = Std.int(minDisplayTime * 1000);
+		var time = Date.now().getTime() - _startTime;
+		var min = minDisplayTime * 1000;
 		var percent:Float = _percent;
 		if ((min > 0) && (_percent > time / min))
 			percent = time / min;
@@ -143,7 +145,7 @@ class FlxBasePreloader extends NMEPreloader
 	 */
 	override public function onLoaded() 
 	{
-		#if flash
+		#if web
 		_loaded = true;
 		_percent = 1;
 		#else
@@ -156,7 +158,7 @@ class FlxBasePreloader extends NMEPreloader
 	 */
 	private function checkSiteLock():Void
 	{
-		#if flash
+		#if web
 		if (!_urlChecked && (allowedURLs != null))
 		{
 			if (!isHostUrlAllowed())
@@ -194,7 +196,7 @@ class FlxBasePreloader extends NMEPreloader
 		#end
 	}
 	
-	#if flash
+	#if web
 	private function goToMyURL(?e:MouseEvent):Void
 	{
 		//if the chosen URL isn't "local", use FlxG's openURL() function.
@@ -211,7 +213,7 @@ class FlxBasePreloader extends NMEPreloader
 			return true;
 		}
 		
-		var homeDomain:String = FlxStringUtil.getDomain(loaderInfo.loaderURL);
+		var homeDomain:String = FlxStringUtil.getDomain(#if flash loaderInfo.loaderURL #elseif js js.Browser.location.href #end);
 		for (allowedURL in allowedURLs)
 		{
 			if (FlxStringUtil.getDomain(allowedURL) == homeDomain)

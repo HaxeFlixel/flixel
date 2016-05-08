@@ -27,6 +27,8 @@ class FlxPreloader extends FlxBasePreloader
 	private var _text:TextField;
 	private var _logo:Sprite;
 	private var _logoGlow:Sprite;
+	private var _logoLight:Bitmap;
+	private var _corners:Bitmap;
 	
 	/**
 	 * Initialize your preloader here.
@@ -48,18 +50,17 @@ class FlxPreloader extends FlxBasePreloader
 	 */
 	override private function create():Void
 	{
-		#if !js
 		_buffer = new Sprite();
 		_buffer.scaleX = _buffer.scaleY = 2;
 		addChild(_buffer);
 		_width = Std.int(Lib.current.stage.stageWidth / _buffer.scaleX);
 		_height = Std.int(Lib.current.stage.stageHeight / _buffer.scaleY);
 		_buffer.addChild(new Bitmap(new BitmapData(_width, _height, false, 0x00345e)));
-		var bitmap = new Bitmap(new GraphicLogoLight(0, 0));
-		bitmap.smoothing = true;
-		bitmap.width = bitmap.height = _height;
-		bitmap.x = (_width - bitmap.width) / 2;
-		_buffer.addChild(bitmap);
+		_logoLight = new Bitmap(new GraphicLogoLight(0, 0));
+		_logoLight.smoothing = true;
+		_logoLight.width = _logoLight.height = _height;
+		_logoLight.x = (_width - _logoLight.width) / 2;
+		_buffer.addChild(_logoLight);
 		_bmpBar = new Bitmap(new BitmapData(1, 7, false, 0x5f6aff));
 		_bmpBar.x = 4;
 		_bmpBar.y = _height - 11;
@@ -88,12 +89,13 @@ class FlxPreloader extends FlxBasePreloader
 		_logoGlow.x = (_width - _logoGlow.width) / 2;
 		_logoGlow.y = (_height - _logoGlow.height) / 2;
 		_buffer.addChild(_logoGlow);
-		bitmap = new Bitmap(new GraphicLogoCorners(0, 0));
-		bitmap.smoothing = true;
-		bitmap.width = _width;
-		bitmap.height = _height;
-		_buffer.addChild(bitmap);
-		bitmap = new Bitmap(new BitmapData(_width, _height, false, 0xffffff));
+		_corners = new Bitmap(new GraphicLogoCorners(0, 0));
+		_corners.smoothing = true;
+		_corners.width = _width;
+		_corners.height = _height;
+		_buffer.addChild(_corners);
+		
+		var bitmap = new Bitmap(new BitmapData(_width, _height, false, 0xffffff));
 		var i:Int = 0;
 		var j:Int = 0;
 		while (i < _height)
@@ -108,7 +110,6 @@ class FlxPreloader extends FlxBasePreloader
 		bitmap.blendMode = BlendMode.OVERLAY;
 		bitmap.alpha = 0.25;
 		_buffer.addChild(bitmap);
-		#end
 		
 		super.create();
 	}
@@ -119,7 +120,6 @@ class FlxPreloader extends FlxBasePreloader
 	 */
 	override private function destroy():Void
 	{
-		#if !js
 		if (_buffer != null)	
 		{
 			removeChild(_buffer);
@@ -130,7 +130,6 @@ class FlxPreloader extends FlxBasePreloader
 		_logo = null;
 		_logoGlow = null;
 		super.destroy();
-		#end
 	}
 	
 	/**
@@ -139,7 +138,22 @@ class FlxPreloader extends FlxBasePreloader
 	 */
 	override public function update(Percent:Float):Void
 	{
-		#if !js
+		#if html5
+		// size can't be set immediately in html5 (probably because of asynchronous loading...)
+		if (!Math.isFinite(_logoLight.width))
+		{
+			_logoLight.width = _logoLight.height = _height;
+			_logoLight.x = (_width - _logoLight.width) / 2;
+		}
+		if (!Math.isFinite(_corners.width))
+		{		
+			_corners.width = _width;
+			_corners.height = _height;
+		}
+		// in html5, we need to trigger the textfield's __dirty flag every step for the correct font to be used
+		_text.defaultTextFormat = _text.defaultTextFormat;
+		#end
+		
 		_bmpBar.scaleX = Percent * (_width - 8);
 		_text.text = Std.string(FlxG.VERSION) + " " + Std.int(Percent * 100) + "%";
 		
@@ -177,6 +191,5 @@ class FlxPreloader extends FlxBasePreloader
 		{
 			_buffer.alpha = 1 - (Percent - 0.9) / 0.1;
 		}
-		#end
 	}
 }
