@@ -17,6 +17,7 @@ import flixel.system.debug.watch.Watch;
 import flixel.system.debug.watch.Tracker;
 import flixel.system.debug.completion.CompletionList;
 import flixel.system.debug.log.BitmapLog;
+import flixel.system.debug.interaction.Interaction;
 import flixel.system.FlxAssets;
 import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxHorizontalAlign;
@@ -74,6 +75,7 @@ class FlxDebugger extends Sprite
 	public var bitmapLog:BitmapLog;
 	public var vcr:VCR;
 	public var console:Console;
+	public var interaction:Interaction;
 	private var completionList:CompletionList;
 
 	/**
@@ -141,6 +143,7 @@ class FlxDebugger extends Sprite
 		addWindow(stats = new Stats());
 		
 		vcr = new VCR(this);
+		interaction = new Interaction();
 		
 		addButton(LEFT, new GraphicFlixel(0, 0), openHomepage);
 		addButton(LEFT, null, openGitHub).addChild(txt);
