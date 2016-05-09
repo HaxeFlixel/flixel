@@ -57,14 +57,17 @@ class FlxPreloader extends FlxBasePreloader
 		_height = Std.int(Lib.current.stage.stageHeight / _buffer.scaleY);
 		_buffer.addChild(new Bitmap(new BitmapData(_width, _height, false, 0x00345e)));
 		
-		// Access to an embedded bitmap's dimensions or scale should be done in a function passed to the onLoad (5th) constructor parameter.
-		// Anything executed before that will be ignored on html5.
+		// On html5, access to an embedded bitmap's dimensions or scale must be done in a function passed to the onLoad (5th) constructor parameter.
+		// Anything executed before that will be ignored. But to make things harder, there is no such
+		// parameter on any other targets.
 		// The onLoad function takes one parameter, which is a reference to the BitmapData instance that was loaded.
-		_logoLight = new Bitmap(new GraphicLogoLight(0, 0, true, null, function(_)
+		var setSize = function(_)
 		{
 			_logoLight.width = _logoLight.height = _height;
 			_logoLight.x = (_width - _logoLight.width) / 2;
-		}));
+		}
+		_logoLight = new Bitmap(new GraphicLogoLight(0, 0, true, null #if html5 ,setSize #end));
+		#if !html5 setSize(null); #end
 		_logoLight.smoothing = true;
 		_buffer.addChild(_logoLight);
 		_bmpBar = new Bitmap(new BitmapData(1, 7, false, 0x5f6aff));
@@ -95,11 +98,13 @@ class FlxPreloader extends FlxBasePreloader
 		_logoGlow.x = (_width - _logoGlow.width) / 2;
 		_logoGlow.y = (_height - _logoGlow.height) / 2;
 		_buffer.addChild(_logoGlow);
-		_corners = new Bitmap(new GraphicLogoCorners(0, 0, true, null, function(_)
+		setSize = function(_)
 		{
 			_corners.width = _width;
 			_corners.height = _height;
-		}));
+		}
+		_corners = new Bitmap(new GraphicLogoCorners(0, 0, true, null #if html5 ,setSize #end));
+		#if !html5 setSize(null); #end
 		_corners.smoothing = true;
 		_buffer.addChild(_corners);
 		
@@ -147,10 +152,10 @@ class FlxPreloader extends FlxBasePreloader
 	override public function update(Percent:Float):Void
 	{
 		#if html5
-		// in html5, we need to somehow trigger the textfield's __dirty flag every frame for the correct font to be used
+		// in html5, we need to trigger the textfield's __dirty flag every step for the correct font to be used
 		_text.defaultTextFormat = _text.defaultTextFormat;
 		#end
-		
+
 		_bmpBar.scaleX = Percent * (_width - 8);
 		_text.text = Std.string(FlxG.VERSION) + " " + Std.int(Percent * 100) + "%";
 		
