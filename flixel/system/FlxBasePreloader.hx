@@ -52,7 +52,7 @@ class FlxBasePreloader extends NMEPreloader
 	 * @param	MinDisplayTime	Minimum time (in seconds) the preloader should be shown. (Default = 0)
 	 * @param	AllowedURLs		Allowed URLs used for Site-locking. If the game is run anywhere else, a message will be displayed on the screen (Default = [])
 	 */
-	public function new(?MinDisplayTime:Float = 0, ?AllowedURLs:Array<String>)
+	public function new(MinDisplayTime:Float = 0, ?AllowedURLs:Array<String>)
 	{
 		super();
 		

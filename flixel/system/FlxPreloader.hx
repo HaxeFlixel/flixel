@@ -56,10 +56,16 @@ class FlxPreloader extends FlxBasePreloader
 		_width = Std.int(Lib.current.stage.stageWidth / _buffer.scaleX);
 		_height = Std.int(Lib.current.stage.stageHeight / _buffer.scaleY);
 		_buffer.addChild(new Bitmap(new BitmapData(_width, _height, false, 0x00345e)));
-		_logoLight = new Bitmap(new GraphicLogoLight(0, 0));
+		
+		// Access to an embedded bitmap's dimensions or scale should be done in a function passed to the onLoad (5th) constructor parameter.
+		// Anything executed before that will be ignored on html5.
+		// The onLoad function takes one parameter, which is a reference to the BitmapData instance that was loaded.
+		_logoLight = new Bitmap(new GraphicLogoLight(0, 0, true, null, function(_)
+		{
+			_logoLight.width = _logoLight.height = _height;
+			_logoLight.x = (_width - _logoLight.width) / 2;
+		}));
 		_logoLight.smoothing = true;
-		_logoLight.width = _logoLight.height = _height;
-		_logoLight.x = (_width - _logoLight.width) / 2;
 		_buffer.addChild(_logoLight);
 		_bmpBar = new Bitmap(new BitmapData(1, 7, false, 0x5f6aff));
 		_bmpBar.x = 4;
@@ -89,10 +95,12 @@ class FlxPreloader extends FlxBasePreloader
 		_logoGlow.x = (_width - _logoGlow.width) / 2;
 		_logoGlow.y = (_height - _logoGlow.height) / 2;
 		_buffer.addChild(_logoGlow);
-		_corners = new Bitmap(new GraphicLogoCorners(0, 0));
+		_corners = new Bitmap(new GraphicLogoCorners(0, 0, true, null, function(_)
+		{
+			_corners.width = _width;
+			_corners.height = _height;
+		}));
 		_corners.smoothing = true;
-		_corners.width = _width;
-		_corners.height = _height;
 		_buffer.addChild(_corners);
 		
 		var bitmap = new Bitmap(new BitmapData(_width, _height, false, 0xffffff));
@@ -139,18 +147,7 @@ class FlxPreloader extends FlxBasePreloader
 	override public function update(Percent:Float):Void
 	{
 		#if html5
-		// size can't be set immediately in html5 (probably because of asynchronous loading...)
-		if (!Math.isFinite(_logoLight.width))
-		{
-			_logoLight.width = _logoLight.height = _height;
-			_logoLight.x = (_width - _logoLight.width) / 2;
-		}
-		if (!Math.isFinite(_corners.width))
-		{		
-			_corners.width = _width;
-			_corners.height = _height;
-		}
-		// in html5, we need to trigger the textfield's __dirty flag every step for the correct font to be used
+		// in html5, we need to somehow trigger the textfield's __dirty flag every frame for the correct font to be used
 		_text.defaultTextFormat = _text.defaultTextFormat;
 		#end
 		
