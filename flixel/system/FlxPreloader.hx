@@ -57,16 +57,16 @@ class FlxPreloader extends FlxBasePreloader
 		_height = Std.int(Lib.current.stage.stageHeight / _buffer.scaleY);
 		_buffer.addChild(new Bitmap(new BitmapData(_width, _height, false, 0x00345e)));
 		
-		// On html5, access to an embedded bitmap's dimensions or scale must be done in a function passed to the onLoad (5th) constructor parameter.
-		// Anything executed before that will be ignored. But to make things harder, there is no such
-		// parameter on any other targets.
-		// The onLoad function takes one parameter, which is a reference to the BitmapData instance that was loaded.
+		// On html5, access to an embedded bitmap's dimensions or scale must be done in a function passed to the last constructor argument
+		// That function will be called once the bitmap is finished loading, and any access to the size before that will fail.
+		// But to make things harder, there is no such parameter on any other targets.
+		// The function should take one argument, which is a reference to the BitmapData instance that was loaded.
 		var setSize = function(_)
 		{
 			_logoLight.width = _logoLight.height = _height;
 			_logoLight.x = (_width - _logoLight.width) / 2;
 		}
-		_logoLight = new Bitmap(new GraphicLogoLight(0, 0, true, null #if html5 ,setSize #end));
+		_logoLight = new Bitmap(new GraphicLogoLight(0, 0 #if html5 ,setSize #end));
 		#if !html5 setSize(null); #end
 		_logoLight.smoothing = true;
 		_buffer.addChild(_logoLight);
@@ -103,7 +103,7 @@ class FlxPreloader extends FlxBasePreloader
 			_corners.width = _width;
 			_corners.height = _height;
 		}
-		_corners = new Bitmap(new GraphicLogoCorners(0, 0, true, null #if html5 ,setSize #end));
+		_corners = new Bitmap(new GraphicLogoCorners(0, 0 #if html5 ,setSize #end));
 		#if !html5 setSize(null); #end
 		_corners.smoothing = true;
 		_buffer.addChild(_corners);
