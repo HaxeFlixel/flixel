@@ -151,11 +151,6 @@ class FlxPreloader extends FlxBasePreloader
 	 */
 	override public function update(Percent:Float):Void
 	{
-		#if html5
-		// in html5, we need to trigger the textfield's __dirty flag every step for the correct font to be used
-		_text.defaultTextFormat = _text.defaultTextFormat;
-		#end
-
 		_bmpBar.scaleX = Percent * (_width - 8);
 		_text.text = Std.string(FlxG.VERSION) + " " + Std.int(Percent * 100) + "%";
 		
