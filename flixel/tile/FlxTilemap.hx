@@ -115,6 +115,8 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	private var _scaledTileHeight:Float = 0;
 	
 	#if FLX_DEBUG
+	public var debugHideDecorativeTiles:Bool = true;
+	
 	private var _debugTileNotSolid:BitmapData;
 	private var _debugTilePartial:BitmapData;
 	private var _debugTileSolid:BitmapData;
@@ -346,9 +348,12 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 					drawX = _helperPoint.x + (columnIndex % widthInTiles) * rectWidth;
 					drawY = _helperPoint.y + Math.floor(columnIndex / widthInTiles) * rectHeight;
 					
+					var hideTileRect = false;
 					if (tile.allowCollisions <= FlxObject.NONE)
 					{
 						debugColor = FlxColor.BLUE;
+						if (debugHideDecorativeTiles)
+							hideTileRect = true;
 					}
 					else if (tile.allowCollisions != FlxObject.ANY)
 					{
@@ -359,10 +364,13 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 						debugColor = FlxColor.GREEN;
 					}
 					
-					// Copied from makeDebugTile
-					var gfx:Graphics = Camera.debugLayer.graphics;
-					gfx.lineStyle(1, debugColor, 0.5);
-					gfx.drawRect(drawX, drawY, rectWidth, rectHeight);
+					if (!hideTileRect)
+					{
+						// Copied from makeDebugTile
+						var gfx:Graphics = Camera.debugLayer.graphics;
+						gfx.lineStyle(1, debugColor, 0.5);
+						gfx.drawRect(drawX, drawY, rectWidth, rectHeight);
+					}
 				}
 				
 				columnIndex++;
