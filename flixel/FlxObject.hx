@@ -15,9 +15,9 @@ import flixel.util.FlxStringUtil;
 
 typedef DebugColorScheme =
 {
-	var notSolid:FlxColor;
-	var solid:FlxColor;
-	var highlighted:FlxColor;
+	var notSolid:Null<FlxColor>;
+	var solid:Null<FlxColor>;
+	var highlighted:Null<FlxColor>;
 }
 
 /**
