@@ -146,7 +146,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		
 		FlxG.signals.gameResized.add(onGameResize);
 		#if FLX_DEBUG
-		debugColorScheme = { solid: FlxColor.PINK, highlighted: FlxColor.GREEN, notSolid: null };
+		debugColorScheme = { solid: FlxColor.GREEN, highlighted: FlxColor.PINK, notSolid: null };
 
 		if (FlxG.renderBlit)
 			FlxG.debugger.drawDebugChanged.add(onDrawDebugChanged);
@@ -347,7 +347,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 					rect.x = _helperPoint.x + (columnIndex % widthInTiles) * rectWidth;
 					rect.y = _helperPoint.y + Math.floor(columnIndex / widthInTiles) * rectHeight;
 
-					drawDebugBoundingBox(gfx, rect, tile.allowCollisions, tile.allowCollisions == FlxObject.ANY);
+					drawDebugBoundingBox(gfx, rect, tile.allowCollisions, tile.allowCollisions != FlxObject.ANY);
 				}
 				
 				columnIndex++;
