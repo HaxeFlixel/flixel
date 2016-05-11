@@ -13,6 +13,13 @@ import flixel.util.FlxPath;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxStringUtil;
 
+typedef DebugColorScheme =
+{
+	var notSolid:FlxColor;
+	var solid:FlxColor;
+	var highlighted:FlxColor;
+}
+
 /**
  * This is the base class for most of the display objects (FlxSprite, FlxText, etc).
  * It includes some basic attributes about game objects, basic state information, sizes, scrolling, and basic physics and motion.
@@ -536,6 +543,9 @@ class FlxObject extends FlxBasic
 	 * Overriding this will force a specific color to be used for debug rect.
 	 */
 	public var debugBoundingBoxColor:Null<Int> = null;
+	
+	public var debugColorScheme:DebugColorScheme;
+
 	/**
 	 * Setting this to true will prevent the object from appearing
 	 * when FlxG.debugger.drawDebug is true.
@@ -565,6 +575,9 @@ class FlxObject extends FlxBasic
 		y = Y;
 		width = Width;
 		height = Height;
+#if FLX_DEBUG
+		debugColorScheme = { solid: FlxColor.RED, highlighted: FlxColor.GREEN, notSolid: FlxColor.BLUE };
+#end
 		
 		initVars();
 	}
@@ -1021,26 +1034,51 @@ class FlxObject extends FlxBasic
 		}
 		
 		var rect = getBoundingBox(camera);
-		
+		var gfx:Graphics = beginDrawDebug(camera);
+		drawDebugBoundingBox(gfx, rect, allowCollisions, immovable);
+		endDrawDebug(camera);
+	}
+	
+	function drawDebugBoundingBox(gfx:Graphics, rect:FlxRect, allowCollisions:Int, highlight:Bool)
+	{
 		// Find the color to use
-		var color:Null<Int> = debugBoundingBoxColor;
+		/*var color:Null<Int> = null; //debugBoundingBoxColor;
 		if (color == null)
 		{
 			if (allowCollisions != FlxObject.NONE)
 			{
-				color = immovable ? FlxColor.GREEN : FlxColor.RED;
+				color = highlight ? debugColorScheme.highlighted : debugColorScheme.solid;
 			}
 			else
 			{
-				color = FlxColor.BLUE;
+				color = debugColorScheme.notSolid;
+				//return;
+			}
+		}*/
+		
+		var color:Null<Int>;
+		if (debugBoundingBoxColor != null)
+		{
+			color = debugBoundingBoxColor;
+		}
+		else
+		{
+			if (allowCollisions != FlxObject.NONE)
+			{
+				color = highlight ? debugColorScheme.highlighted : debugColorScheme.solid;
+			}
+			else
+			{
+				color = debugColorScheme.notSolid;
 			}
 		}
 		
-		//fill static graphics object with square shape
-		var gfx:Graphics = beginDrawDebug(camera);
-		gfx.lineStyle(1, color, 0.5);
-		gfx.drawRect(rect.x, rect.y, rect.width, rect.height);
-		endDrawDebug(camera);
+		if (color != null)
+		{
+			//fill static graphics object with square shape
+			gfx.lineStyle(1, color, 0.5);
+			gfx.drawRect(rect.x, rect.y, rect.width, rect.height);
+		}
 	}
 
 	private inline function beginDrawDebug(camera:FlxCamera):Graphics

@@ -115,8 +115,6 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	private var _scaledTileHeight:Float = 0;
 	
 	#if FLX_DEBUG
-	public var debugHideDecorativeTiles:Bool = true;
-	
 	private var _debugTileNotSolid:BitmapData;
 	private var _debugTilePartial:BitmapData;
 	private var _debugTileSolid:BitmapData;
@@ -148,6 +146,8 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		
 		FlxG.signals.gameResized.add(onGameResize);
 		#if FLX_DEBUG
+		debugColorScheme = { solid: FlxColor.PINK, highlighted: FlxColor.GREEN, notSolid: null };
+
 		if (FlxG.renderBlit)
 			FlxG.debugger.drawDebugChanged.add(onDrawDebugChanged);
 		#end
@@ -310,12 +310,9 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		_helperPoint.x = x - Camera.scroll.x * scrollFactor.x;
 		_helperPoint.y = y - Camera.scroll.y * scrollFactor.y;
 		
-		var debugColor:FlxColor;
-		var drawX:Float;
-		var drawY:Float;
-		
 		var rectWidth:Float = _scaledTileWidth;
 		var rectHeight:Float = _scaledTileHeight;
+		var rect = FlxRect.get(0, 0, rectWidth, rectHeight);
 		
 		// Copy tile images into the tile buffer
 		// Modified from getScreenPosition()
@@ -335,6 +332,8 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		var tile:FlxTile;
 		var debugTile:BitmapData;
 		
+		var gfx:Graphics = Camera.debugLayer.graphics;
+		
 		for (row in 0...screenRows)
 		{
 			columnIndex = rowIndex;
@@ -345,32 +344,10 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 				
 				if (tile != null && tile.visible)
 				{
-					drawX = _helperPoint.x + (columnIndex % widthInTiles) * rectWidth;
-					drawY = _helperPoint.y + Math.floor(columnIndex / widthInTiles) * rectHeight;
-					
-					var hideTileRect = false;
-					if (tile.allowCollisions <= FlxObject.NONE)
-					{
-						debugColor = FlxColor.BLUE;
-						if (debugHideDecorativeTiles)
-							hideTileRect = true;
-					}
-					else if (tile.allowCollisions != FlxObject.ANY)
-					{
-						debugColor = FlxColor.PINK;
-					}
-					else
-					{
-						debugColor = FlxColor.GREEN;
-					}
-					
-					if (!hideTileRect)
-					{
-						// Copied from makeDebugTile
-						var gfx:Graphics = Camera.debugLayer.graphics;
-						gfx.lineStyle(1, debugColor, 0.5);
-						gfx.drawRect(drawX, drawY, rectWidth, rectHeight);
-					}
+					rect.x = _helperPoint.x + (columnIndex % widthInTiles) * rectWidth;
+					rect.y = _helperPoint.y + Math.floor(columnIndex / widthInTiles) * rectHeight;
+
+					drawDebugBoundingBox(gfx, rect, tile.allowCollisions, tile.allowCollisions == FlxObject.ANY);
 				}
 				
 				columnIndex++;
@@ -378,6 +355,8 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 			
 			rowIndex += widthInTiles;
 		}
+		
+		rect.put();
 	}
 	#end
 	
