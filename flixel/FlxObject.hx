@@ -15,9 +15,9 @@ import flixel.util.FlxStringUtil;
 
 typedef DebugColorScheme =
 {
-	var notSolid:Null<FlxColor>;
-	var solid:Null<FlxColor>;
-	var highlighted:Null<FlxColor>;
+	var notSolid:FlxColor;
+	var solid:FlxColor;
+	var highlighted:FlxColor;
 }
 
 /**
@@ -544,7 +544,15 @@ class FlxObject extends FlxBasic
 	 */
 	public var debugBoundingBoxColor:Null<Int> = null;
 	
-	public var debugColorScheme:DebugColorScheme;
+	public var debugColorScheme(default, set):DebugColorScheme;
+	
+	/**
+	 * Can be overriden for RenderBlit mode to re-render stuff with new colors
+	 */
+	public function set_debugColorScheme(debugColorScheme)
+	{
+		return this.debugColorScheme = debugColorScheme;
+	}
 
 	/**
 	 * Setting this to true will prevent the object from appearing
@@ -1042,7 +1050,7 @@ class FlxObject extends FlxBasic
 	function drawDebugBoundingBox(gfx:Graphics, rect:FlxRect, allowCollisions:Int, highlight:Bool)
 	{
 		// Find the color to use
-		/*var color:Null<Int> = null; //debugBoundingBoxColor;
+		var color:Null<Int> = debugBoundingBoxColor;
 		if (color == null)
 		{
 			if (allowCollisions != FlxObject.NONE)
@@ -1052,28 +1060,10 @@ class FlxObject extends FlxBasic
 			else
 			{
 				color = debugColorScheme.notSolid;
-				//return;
-			}
-		}*/
-		
-		var color:Null<Int>;
-		if (debugBoundingBoxColor != null)
-		{
-			color = debugBoundingBoxColor;
-		}
-		else
-		{
-			if (allowCollisions != FlxObject.NONE)
-			{
-				color = highlight ? debugColorScheme.highlighted : debugColorScheme.solid;
-			}
-			else
-			{
-				color = debugColorScheme.notSolid;
 			}
 		}
 		
-		if (color != null)
+		if (color != FlxColor.TRANSPARENT)
 		{
 			//fill static graphics object with square shape
 			gfx.lineStyle(1, color, 0.5);

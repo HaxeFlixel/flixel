@@ -115,9 +115,19 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	private var _scaledTileHeight:Float = 0;
 	
 	#if FLX_DEBUG
-	private var _debugTileNotSolid:BitmapData;
-	private var _debugTilePartial:BitmapData;
-	private var _debugTileSolid:BitmapData;
+	private var updateDebugTileBoundingBoxesInit = false;
+	
+	override public function set_debugColorScheme(debugColorScheme)
+	{
+		this.debugColorScheme = debugColorScheme;
+		if (updateDebugTileBoundingBoxesInit)
+			updateDebugTileBoundingBoxes();
+		return this.debugColorScheme;
+	}
+	
+	private var _debugTileNotSolid:BitmapData = null;
+	private var _debugTilePartial:BitmapData = null;
+	private var _debugTileSolid:BitmapData = null;
 	private var _debugRect:Rectangle;
 	#end
 	
@@ -146,7 +156,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		
 		FlxG.signals.gameResized.add(onGameResize);
 		#if FLX_DEBUG
-		debugColorScheme = { solid: FlxColor.GREEN, highlighted: FlxColor.PINK, notSolid: null };
+		debugColorScheme = { solid: FlxColor.GREEN, highlighted: FlxColor.PINK, notSolid: FlxColor.TRANSPARENT };
 
 		if (FlxG.renderBlit)
 			FlxG.debugger.drawDebugChanged.add(onDrawDebugChanged);
@@ -254,14 +264,42 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		
 		// Create debug tiles for rendering bounding boxes on demand
 		#if FLX_DEBUG
-		if (FlxG.renderBlit)
-		{
-			_debugTileNotSolid = makeDebugTile(FlxColor.BLUE);
-			_debugTilePartial = makeDebugTile(FlxColor.PINK);
-			_debugTileSolid = makeDebugTile(FlxColor.GREEN);
-		}
+		updateDebugTileBoundingBoxes();
+		updateDebugTileBoundingBoxesInit = true;
 		#end
 	}
+	
+	#if FLX_DEBUG
+	private function updateDebugTileBoundingBoxes():Void 
+	{
+		if (FlxG.renderBlit)
+		{
+			if (_debugTileSolid == null)
+				_debugTileSolid = makeDebugTile(debugColorScheme.solid);
+			else
+			{
+				_debugTileSolid.fillRect(_debugTileSolid.rect, FlxColor.TRANSPARENT);
+				drawDebugTile(_debugTileSolid, debugColorScheme.solid);
+			}
+			
+			if (_debugTilePartial == null)
+				_debugTilePartial = makeDebugTile(debugColorScheme.highlighted);
+			else
+			{
+				_debugTilePartial.fillRect(_debugTilePartial.rect, FlxColor.TRANSPARENT);
+				drawDebugTile(_debugTilePartial, debugColorScheme.highlighted);
+			}
+			
+			if (_debugTileNotSolid == null)
+				_debugTileNotSolid = makeDebugTile(debugColorScheme.notSolid);
+			else
+			{
+				_debugTileNotSolid.fillRect(_debugTileNotSolid.rect, FlxColor.TRANSPARENT);
+				drawDebugTile(_debugTileNotSolid, debugColorScheme.notSolid);
+			}
+		}
+	}
+	#end
 	
 	override private function computeDimensions():Void 
 	{
@@ -917,7 +955,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 * Just generates a wireframe box the size of a tile with the specified color.
 	 */
 	#if FLX_DEBUG
-	private function makeDebugTile(Color:FlxColor):BitmapData
+	private function makeDebugTile(color:FlxColor):BitmapData
 	{
 		if (FlxG.renderTile)
 			return null;
@@ -925,17 +963,25 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		var debugTile:BitmapData;
 		debugTile = new BitmapData(_tileWidth, _tileHeight, true, 0);
 		
-		var gfx:Graphics = FlxSpriteUtil.flashGfx;
-		gfx.clear();
-		gfx.moveTo(0, 0);
-		gfx.lineStyle(1, Color, 0.5);
-		gfx.lineTo(_tileWidth - 1, 0);
-		gfx.lineTo(_tileWidth - 1, _tileHeight - 1);
-		gfx.lineTo(0, _tileHeight - 1);
-		gfx.lineTo(0, 0);
-		
-		debugTile.draw(FlxSpriteUtil.flashGfxSprite);
+		drawDebugTile(debugTile, color);
 		return debugTile;
+	}
+	
+	private function drawDebugTile(debugTile:BitmapData, color:FlxColor):Void
+	{
+		if (color != FlxColor.TRANSPARENT)
+		{
+			var gfx:Graphics = FlxSpriteUtil.flashGfx;
+			gfx.clear();
+			gfx.moveTo(0, 0);
+			gfx.lineStyle(1, color, 0.5);
+			gfx.lineTo(_tileWidth - 1, 0);
+			gfx.lineTo(_tileWidth - 1, _tileHeight - 1);
+			gfx.lineTo(0, _tileHeight - 1);
+			gfx.lineTo(0, 0);
+			
+			debugTile.draw(FlxSpriteUtil.flashGfxSprite);
+		}
 	}
 	#end
 
