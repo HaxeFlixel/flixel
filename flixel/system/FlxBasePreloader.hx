@@ -154,6 +154,57 @@ class FlxBasePreloader extends NMEPreloader
 	}
 	
 	/**
+	 * This should be used whenever you want to create a Bitmap that uses BitmapData embedded with the
+	 * @:bitmap metadata, if you want to support both Flash and HTML5. Because the embedded data is loaded
+	 * asynchronously in HTML5, any code that depends on the pixel data or size of the bitmap should be
+	 * in the onLoad function; any such code executed before it is called will fail on the HTML5 target.
+	 * 
+	 * @param	bitmapDataClass		A reference to the BitmapData child class that contains the embedded data which is to be used.
+	 * @param	onLoad				Executed once the bitmap data is finished loading in HTML5, and immediately in Flash. The new Bitmap instance is passed as an argument.
+	 * @return  The Bitmap instance that was created.
+	 */
+	private function createBitmap(bitmapDataClass:Class<BitmapData>, ?onLoad:Bitmap->Void):Bitmap
+	{
+		#if html5
+		if (onLoad != null && Type.getClassFields(bitmapDataClass).indexOf("preload") != -1)
+		{
+			var bmp = new Bitmap();
+			bmp.bitmapData = Type.createInstance(bitmapDataClass, [0, 0, true, 0xFFFFFFFF, function(_) onLoad(bmp)]);
+			return bmp;
+		}
+		#end
+		var bmp = new Bitmap(Type.createInstance(bitmapDataClass, [0, 0]));
+		if (onLoad != null)
+			onLoad(bmp);
+		return bmp;
+	}
+	
+	/**
+	 * This should be used whenever you want to create a BitmapData object from a class containing data embedded with
+	 * the @:bitmap metadata. Often, you'll want to use the BitmapData in a Bitmap object; in this case, createBitmap()
+	 * can should be used instead. Because the embedded data is loaded asynchronously in HTML5, any code that depends on
+	 * the pixel data or size of the bitmap should be in the onLoad function; any such code executed before it is called
+	 * will fail on the HTML5 target.
+	 * 
+	 * @param	bitmapDataClass		A reference to the BitmapData child class that contains the embedded data which is to be used.
+	 * @param	onLoad				Executed once the bitmap data is finished loading in HTML5, and immediately in Flash. The new BitmapData instance is passed as an argument.
+	 * @return  The BitmapData instance that was created.
+	 */
+	private function loadBitmapData(bitmapDataClass:Class<BitmapData>, onLoad:BitmapData->Void):BitmapData
+	{
+		#if html5
+		if (onLoad != null && Type.getClassFields(bitmapDataClass).indexOf("preload") != -1)
+		{
+			return Type.createInstance(bitmapDataClass, [0, 0, true, 0xFFFFFFFF, onLoad]);
+		}
+		#end
+		var bmpData = Type.createInstance(bitmapDataClass, [0, 0]);
+		if (onLoad != null)
+			onLoad(bmpData);
+		return bmpData;
+	}
+	
+	/**
 	 * Site-locking Functionality
 	 */
 	private function checkSiteLock():Void

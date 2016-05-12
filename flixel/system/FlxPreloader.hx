@@ -27,8 +27,6 @@ class FlxPreloader extends FlxBasePreloader
 	private var _text:TextField;
 	private var _logo:Sprite;
 	private var _logoGlow:Sprite;
-	private var _logoLight:Bitmap;
-	private var _corners:Bitmap;
 	
 	/**
 	 * Initialize your preloader here.
@@ -57,19 +55,13 @@ class FlxPreloader extends FlxBasePreloader
 		_height = Std.int(Lib.current.stage.stageHeight / _buffer.scaleY);
 		_buffer.addChild(new Bitmap(new BitmapData(_width, _height, false, 0x00345e)));
 		
-		// On html5, access to an embedded bitmap's dimensions or scale must be done in a function passed to the last constructor argument
-		// That function will be called once the bitmap is finished loading, and any access to the size before that will fail.
-		// But to make things harder, there is no such parameter on any other targets.
-		// The function should take one argument, which is a reference to the BitmapData instance that was loaded.
-		var setSize = function(_)
+		var logoLight = createBitmap(GraphicLogoLight, function(logoLight:Bitmap)
 		{
-			_logoLight.width = _logoLight.height = _height;
-			_logoLight.x = (_width - _logoLight.width) / 2;
-		}
-		_logoLight = new Bitmap(new GraphicLogoLight(0, 0 #if html5 ,setSize #end));
-		#if !html5 setSize(null); #end
-		_logoLight.smoothing = true;
-		_buffer.addChild(_logoLight);
+			logoLight.width = logoLight.height = _height;
+			logoLight.x = (_width - logoLight.width) / 2;
+		});
+		logoLight.smoothing = true;
+		_buffer.addChild(logoLight);
 		_bmpBar = new Bitmap(new BitmapData(1, 7, false, 0x5f6aff));
 		_bmpBar.x = 4;
 		_bmpBar.y = _height - 11;
@@ -98,15 +90,13 @@ class FlxPreloader extends FlxBasePreloader
 		_logoGlow.x = (_width - _logoGlow.width) / 2;
 		_logoGlow.y = (_height - _logoGlow.height) / 2;
 		_buffer.addChild(_logoGlow);
-		setSize = function(_)
+		var corners = createBitmap(GraphicLogoCorners, function(corners)
 		{
-			_corners.width = _width;
-			_corners.height = _height;
-		}
-		_corners = new Bitmap(new GraphicLogoCorners(0, 0 #if html5 ,setSize #end));
-		#if !html5 setSize(null); #end
-		_corners.smoothing = true;
-		_buffer.addChild(_corners);
+			corners.width = _width;
+			corners.height = height;
+		});
+		corners.smoothing = true;
+		_buffer.addChild(corners);
 		
 		var bitmap = new Bitmap(new BitmapData(_width, _height, false, 0xffffff));
 		var i:Int = 0;
