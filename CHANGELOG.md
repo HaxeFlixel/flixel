@@ -44,6 +44,7 @@
 * `FlxTilemap`:
 	* added `antialiasing` (#1850)
 * Added GLSL `shader` support for `FlxSprite`, `FlxTilemap`, `FlxBar` and `FlxBitmapText` (#1848)
+* `FlxDrawTilesItem`: fix `numTiles` value with color offsets
 
 4.0.1
 ------------------------------

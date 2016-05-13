@@ -104,7 +104,11 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 		var elementsPerTile:Int = 8; // x, y, id, trans (4 elements) and alpha
 		if (colored)
 			elementsPerTile += 3; // r, g, b
-		
+		#if (!openfl_legacy && openfl >= "3.6.0")
+		if (hasColorOffsets)
+			elementsPerTile += 4; // r, g, b, a
+		#end
+
 		return Std.int(position / elementsPerTile);
 	}
 	
