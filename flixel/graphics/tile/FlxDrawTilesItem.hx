@@ -5,6 +5,7 @@ import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.tile.FlxDrawBaseItem.FlxDrawItemType;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxRect;
+import flixel.system.FlxAssets.FlxShader;
 import openfl.display.Tilesheet;
 import openfl.geom.ColorTransform;
 
@@ -13,6 +14,7 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 	public var drawData:Array<Float> = [];
 	public var position:Int = 0;
 	public var numTiles(get, never):Int;
+	public var shader:FlxShader;
 	
 	public function new() 
 	{
@@ -24,12 +26,14 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 	{
 		super.reset();
 		position = 0;
+		shader = null;
 	}
 	
 	override public function dispose():Void
 	{
 		super.dispose();
 		drawData = null;
+		shader = null;
 	}
 	
 	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform):Void
@@ -79,19 +83,18 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 			var tempFlags:Int = Tilesheet.TILE_TRANS_2x2 | Tilesheet.TILE_RECT | Tilesheet.TILE_ALPHA;
 			
 			if (colored)
-			{
 				tempFlags |= Tilesheet.TILE_RGB;
-			}
 			
 			#if (!openfl_legacy && openfl >= "3.6.0")
 			if (hasColorOffsets)
-			{
 				tempFlags |= Tilesheet.TILE_TRANS_COLOR;
-			}
 			#end
 			
-			tempFlags |= blending;
-			graphics.tilesheet.drawTiles(camera.canvas.graphics, drawData, (camera.antialiasing || antialiasing), tempFlags, position);
+			camera.canvas.graphics.drawTiles(graphics.tilesheet, drawData,
+				(camera.antialiasing || antialiasing), tempFlags,
+				#if (!openfl_legacy && openfl >= "3.3.9") shader, #end
+				position);
+
 			FlxTilesheet._DRAWCALLS++;
 		}
 	}
@@ -100,9 +103,7 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 	{
 		var elementsPerTile:Int = 8; // x, y, id, trans (4 elements) and alpha
 		if (colored)
-		{
-			elementsPerTile += 3;	// r, g, b
-		}
+			elementsPerTile += 3; // r, g, b
 		
 		return Std.int(position / elementsPerTile);
 	}

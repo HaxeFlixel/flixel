@@ -18,6 +18,7 @@ import flixel.math.FlxMath;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
+import flixel.system.FlxAssets.FlxShader;
 import flixel.system.FlxAssets.FlxTilemapGraphicAsset;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
@@ -94,6 +95,13 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 * Blending modes, just like Photoshop or whatever, e.g. "multiply", "screen", etc.
 	 */
 	public var blend(default, set):BlendMode = null;
+	
+	/**
+	 * GLSL shader for this tilemap. Only works with OpenFL Next or WebGL.
+	 * Avoid changing it frequently as this is a costly operation.
+	 */
+	#if openfl_legacy @:noCompletion #end
+	public var shader:FlxShader;
 	
 	/**
 	 * Rendering helper, minimize new object instantiation on repetitive methods.
@@ -196,6 +204,8 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		if (FlxG.renderBlit)
 			FlxG.debugger.drawDebugChanged.remove(onDrawDebugChanged);
 		#end
+		
+		shader = null;
 		
 		super.destroy();
 	}
@@ -811,7 +821,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 			scaledHeight = _scaledTileHeight;
 			
 			var hasColorOffsets:Bool = (colorTransform != null && colorTransform.hasRGBAOffsets());
-			drawItem = Camera.startQuadBatch(graphic, isColored, hasColorOffsets, blend, antialiasing);
+			drawItem = Camera.startQuadBatch(graphic, isColored, hasColorOffsets, blend, antialiasing, shader);
 		}
 		
 		// Copy tile images into the tile buffer
