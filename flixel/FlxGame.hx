@@ -708,6 +708,19 @@ class FlxGame extends Sprite
 			return;
 		}
 		
+		if (FlxG.fixedTimestep)
+		{
+			FlxG.elapsed = FlxG.timeScale * _stepSeconds; // fixed timestep
+		}
+		else
+		{
+			FlxG.elapsed = FlxG.timeScale * (_elapsedMS / 1000); // variable timestep
+			
+			var max = FlxG.maxElapsed * FlxG.timeScale;
+			if (FlxG.elapsed > max) 
+				FlxG.elapsed = max;
+		}
+		
 		if (_state != _requestedState)
 		{
 			switchState();
@@ -721,19 +734,6 @@ class FlxGame extends Sprite
 		#end
 		
 		FlxG.signals.preUpdate.dispatch();
-		
-		if (FlxG.fixedTimestep)
-		{
-			FlxG.elapsed = FlxG.timeScale * _stepSeconds; // fixed timestep
-		}
-		else
-		{
-			FlxG.elapsed = FlxG.timeScale * (_elapsedMS / 1000); // variable timestep
-			
-			var max = FlxG.maxElapsed * FlxG.timeScale;
-			if (FlxG.elapsed > max) 
-				FlxG.elapsed = max;
-		}
 		
 		updateInput();
 		
