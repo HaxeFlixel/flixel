@@ -975,10 +975,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	{
 		var buffer = new FlxTilemapBuffer(_tileWidth, _tileHeight, widthInTiles, heightInTiles, camera, scale.x, scale.y);
 		buffer.pixelPerfectRender = pixelPerfectRender;
-		if (FlxG.renderBlit)
-		{
-			buffer.antialiasing = antialiasing;
-		}
+		buffer.antialiasing = antialiasing;
 		return buffer;
 	}
 	
@@ -1024,15 +1021,9 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	
 	private function set_antialiasing(value:Bool):Bool
 	{
-		antialiasing = value;
-		if (FlxG.renderBlit)
-		{
-			for (buffer in _buffers)
-			{
-				buffer.antialiasing = antialiasing;
-			}
-		}
-		return antialiasing;
+		for (buffer in _buffers)
+			buffer.antialiasing = value;
+		return antialiasing = value;
 	}
 	
 	/**
