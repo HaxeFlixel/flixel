@@ -43,8 +43,7 @@
 * Fixed compilation with `hscriptPos` defined (#1840)
 * `FlxTilemap`:
 	* added `antialiasing` (#1850)
-	* added `shader` (#1848)
-* `FlxSprite`: added `shader` (#1848)
+* Added GLSL `shader` support for `FlxSprite`, `FlxTilemap`, `FlxBar` and `FlxBitmapText` (#1848)
 
 4.0.1
 ------------------------------
