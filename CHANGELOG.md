@@ -44,8 +44,7 @@
 * `FlxTilemap`:
 	* added `antialiasing` (#1850)
 	* added `shader` (#1848)
-* `FlxSprite`:
-	* added `shader` (#1848)
+* `FlxSprite`: added `shader` (#1848)
 
 4.0.1
 ------------------------------
