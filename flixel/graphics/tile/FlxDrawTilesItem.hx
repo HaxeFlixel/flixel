@@ -83,23 +83,18 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 			var tempFlags:Int = Tilesheet.TILE_TRANS_2x2 | Tilesheet.TILE_RECT | Tilesheet.TILE_ALPHA;
 			
 			if (colored)
-			{
 				tempFlags |= Tilesheet.TILE_RGB;
-			}
 			
 			#if (!openfl_legacy && openfl >= "3.6.0")
 			if (hasColorOffsets)
-			{
 				tempFlags |= Tilesheet.TILE_TRANS_COLOR;
-			}
 			#end
 			
-			tempFlags |= blending;
-			#if (!openfl_legacy && openfl >= "3.3.9")
-			camera.canvas.graphics.drawTiles(graphics.tilesheet, drawData, (camera.antialiasing || antialiasing), tempFlags, shader, position);
-			#else
-			graphics.tilesheet.drawTiles(camera.canvas.graphics, drawData, (camera.antialiasing || antialiasing), tempFlags, position);
-			#end
+			camera.canvas.graphics.drawTiles(graphics.tilesheet, drawData,
+				(camera.antialiasing || antialiasing), tempFlags,
+				#if (!openfl_legacy && openfl >= "3.3.9") shader, #end
+				position);
+
 			FlxTilesheet._DRAWCALLS++;
 		}
 	}
@@ -108,9 +103,7 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 	{
 		var elementsPerTile:Int = 8; // x, y, id, trans (4 elements) and alpha
 		if (colored)
-		{
-			elementsPerTile += 3;	// r, g, b
-		}
+			elementsPerTile += 3; // r, g, b
 		
 		return Std.int(position / elementsPerTile);
 	}

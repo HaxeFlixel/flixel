@@ -97,10 +97,8 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	public var blend(default, set):BlendMode = null;
 	
 	/**
-	 * Shader for this tilemap. 
-	 * Doesn't work with openfl legacy mode.
-	 * Try to avoid changing your shaders as much as possible, 
-	 * since this operation is costly.
+	 * GLSL shader for this tilemap. Only works with OpenFL Next or WebGL.
+	 * Avoid changing it frequently as this is a costly operation.
 	 */
 	#if openfl_legacy @:noCompletion #end
 	public var shader:FlxShader;

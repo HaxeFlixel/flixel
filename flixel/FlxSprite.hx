@@ -153,16 +153,15 @@ class FlxSprite extends FlxObject
 	
 	/**
 	 * Clipping rectangle for this sprite.
-	 * Changing it's properties doesn't change graphic of the sprite, so you should reapply clipping rect on sprite again.
-	 * Set clipRect to null to discard graphic frame clipping 
+	 * Changing the rect's properties directly doesn't have any effect,
+	 * reassign the property to udpate it (`sprite.clipRect = sprite.clipRect;`).
+	 * Set to `null` to discard graphic frame clipping.
 	 */
 	public var clipRect(default, set):FlxRect;
 	
 	/**
-	 * Shader for this sprite. 
-	 * Doesn't work with openfl legacy mode.
-	 * Try to avoid changing your shaders as much as possible, 
-	 * since this operation is costly.
+	 * GLSL shader for this sprite. Only works with OpenFL Next or WebGL.
+	 * Avoid changing it frequently as this is a costly operation.
 	 */
 	#if openfl_legacy @:noCompletion #end
 	public var shader:FlxShader;
