@@ -21,12 +21,12 @@ import openfl.Assets;
 class FlxSound extends FlxBasic
 {
 	/**
-	 * The X position of this sound in world coordinates.
+	 * The x position of this sound in world coordinates.
 	 * Only really matters if you are doing proximity/panning stuff.
 	 */
 	public var x:Float;
 	/**
-	 * The Y position of this sound in world coordinates.
+	 * The y position of this sound in world coordinates.
 	 * Only really matters if you are doing proximity/panning stuff.
 	 */
 	public var y:Float;
@@ -55,11 +55,11 @@ class FlxSound extends FlxBasic
 	 */
 	public var amplitudeRight(default, null):Float;
 	/**
-	 * Whether to call destroy() when the sound has finished playing.
+	 * Whether to call `destroy()` when the sound has finished playing.
 	 */
 	public var autoDestroy:Bool;
 	/**
-	 * Tracker for sound complete callback. Default is null. If assigend, will be called 
+	 * Tracker for sound complete callback. If assigend, will be called 
 	 * each time when sound reaches its end. Works only on flash and desktop targets.
 	 */
 	public var onComplete:Void->Void;
@@ -82,9 +82,10 @@ class FlxSound extends FlxBasic
 	public var pitch(get, set):Float;
 	#end
 	/**
-	 * The position in runtime of the music playback.
+	 * The position in runtime of the music playback in milliseconds.
+	 * If set while paused, changes only come into effect after a `resume()` call.
 	 */
-	public var time(default, null):Float;
+	public var time(get, set):Float;
 	/**
 	 * The sound group this sound belongs to
 	 */
@@ -97,6 +98,10 @@ class FlxSound extends FlxBasic
 	 * In case of looping, the point (in milliseconds) from where to restart the sound when it loops back
 	 */
 	public var loopTime:Float;
+	/**
+	 * The tween used to fade this sound's volume in and out (set via `fadeIn()` and `fadeOut()`)
+	 */
+	public var fadeTween:FlxTween;
 	/**
 	 * Internal tracker for a Flash sound object.
 	 */
@@ -117,6 +122,10 @@ class FlxSound extends FlxBasic
 	 * Internal tracker for volume.
 	 */
 	private var _volume:Float;
+	/**
+	 * Internal tracker for sound channel position.
+	 */
+	private var _time:Float = 0;
 	#if (sys && openfl_legacy)
 	/**
 	 * Internal tracker for pitch.
@@ -163,7 +172,7 @@ class FlxSound extends FlxBasic
 		x = 0;
 		y = 0;
 		
-		time = 0;
+		_time = 0;
 		_paused = false;
 		_volume = 1.0;
 		_volumeAdjust = 1.0;
@@ -222,7 +231,7 @@ class FlxSound extends FlxBasic
 			return;
 		}
 		
-		time = _channel.position;
+		_time = _channel.position;
 		
 		var radialMultiplier:Float = 1.0;
 		
@@ -269,8 +278,8 @@ class FlxSound extends FlxBasic
 	 * 
 	 * @param	EmbeddedSound	An embedded Class object representing an MP3 file.
 	 * @param	Looped			Whether or not this sound should loop endlessly.
-	 * @param	AutoDestroy		Whether or not this FlxSound instance should be destroyed when the sound finishes playing.  Default value is false, but FlxG.sound.play() and FlxG.sound.stream() will set it to true by default.
-	 * 
+	 * @param	AutoDestroy		Whether or not this FlxSound instance should be destroyed when the sound finishes playing. 
+	 * 							Default value is false, but `FlxG.sound.play()` and `FlxG.sound.stream()` will set it to true by default.
 	 * @return	This FlxSound instance (nice for chaining stuff together, if you're into that).
 	 */
 	public function loadEmbedded(EmbeddedSound:FlxSoundAsset, Looped:Bool = false, AutoDestroy:Bool = false, ?OnComplete:Void->Void):FlxSound
@@ -313,8 +322,8 @@ class FlxSound extends FlxBasic
 	 * 
 	 * @param	EmbeddedSound	A string representing the URL of the MP3 file you want to play.
 	 * @param	Looped			Whether or not this sound should loop endlessly.
-	 * @param	AutoDestroy		Whether or not this FlxSound instance should be destroyed when the sound finishes playing.  Default value is false, but FlxG.sound.play() and FlxG.sound.stream() will set it to true by default.
-	 * 
+	 * @param	AutoDestroy		Whether or not this FlxSound instance should be destroyed when the sound finishes playing.
+	 * 							Default value is false, but `FlxG.sound.play()` and `FlxG.sound.stream()` will set it to true by default.
 	 * @return	This FlxSound instance (nice for chaining stuff together, if you're into that).
 	 */
 	public function loadStream(SoundURL:String, Looped:Bool = false, AutoDestroy:Bool = false, ?OnComplete:Void->Void):FlxSound
@@ -338,7 +347,8 @@ class FlxSound extends FlxBasic
 	 * 
 	 * @param	Bytes 			A ByteArray object.
 	 * @param	Looped			Whether or not this sound should loop endlessly.
-	 * @param	AutoDestroy		Whether or not this FlxSound instance should be destroyed when the sound finishes playing.  Default value is false, but FlxG.sound.play() and FlxG.sound.stream() will set it to true by default.
+	 * @param	AutoDestroy		Whether or not this FlxSound instance should be destroyed when the sound finishes playing.
+	 * 							Default value is false, but `FlxG.sound.play()` and `FlxG.sound.stream()` will set it to true by default.
 	 * @return	This FlxSound instance (nice for chaining stuff together, if you're into that).
 	 */
 	public function loadByteArray(Bytes:ByteArray, Looped:Bool = false, AutoDestroy:Bool = false, ?OnComplete:Void->Void):FlxSound
@@ -418,7 +428,7 @@ class FlxSound extends FlxBasic
 	{
 		if (_paused)
 		{
-			startSound(time);
+			startSound(_time);
 		}
 		return this;
 	}
@@ -432,7 +442,7 @@ class FlxSound extends FlxBasic
 		{
 			return this;
 		}
-		time = _channel.position;
+		_time = _channel.position;
 		_paused = true;
 		cleanup(false, false);
 		return this;
@@ -455,7 +465,11 @@ class FlxSound extends FlxBasic
 	 */
 	public inline function fadeOut(Duration:Float = 1, ?To:Float = 0, ?onComplete:FlxTween->Void):FlxSound
 	{
-		FlxTween.num(volume, To, Duration, { onComplete:onComplete }, volumeTween);
+		if (fadeTween != null)
+		{
+			fadeTween.cancel();
+		}
+		fadeTween = FlxTween.num(volume, To, Duration, { onComplete: onComplete }, volumeTween);
 		
 		return this;
 	}
@@ -470,8 +484,14 @@ class FlxSound extends FlxBasic
 	public inline function fadeIn(Duration:Float = 1, From:Float = 0, To:Float = 1, ?onComplete:FlxTween->Void):FlxSound
 	{
 		if (!playing)
+		{
 			play();
-		FlxTween.num(From, To, Duration, { onComplete:onComplete }, volumeTween);
+		}
+		if (fadeTween != null)
+		{
+			fadeTween.cancel();
+		}
+		fadeTween = FlxTween.num(From, To, Duration, { onComplete: onComplete }, volumeTween);
 		return this;
 	}
 	
@@ -531,9 +551,9 @@ class FlxSound extends FlxBasic
 			return;
 		}
 		
-		time = StartTime;
+		_time = StartTime;
 		_paused = false;
-		_channel = _sound.play(time, 0, _transform);
+		_channel = _sound.play(_time, 0, _transform);
 		if (_channel != null)
 		{
 			#if (sys && openfl_legacy)
@@ -595,7 +615,7 @@ class FlxSound extends FlxBasic
 
 		if (resetPosition)
 		{
-			time = 0;
+			_time = 0;
 			_paused = false;
 		}
 	}
@@ -691,6 +711,21 @@ class FlxSound extends FlxBasic
 	private inline function set_pan(pan:Float):Float
 	{
 		return _transform.pan = pan;
+	}
+	
+	private inline function get_time():Float
+	{
+		return _time;
+	}
+	
+	private function set_time(time:Float):Float
+	{
+		if (playing)
+		{
+			cleanup(false, true);
+			startSound(time);
+		}
+		return _time = time;
 	}
 	
 	override public function toString():String

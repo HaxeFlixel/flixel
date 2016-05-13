@@ -3,6 +3,7 @@ package flixel.tile;
 import flash.display.BitmapData;
 import flash.errors.ArgumentError;
 import flixel.math.FlxPoint;
+import flixel.util.FlxColor;
 import haxe.PosInfos;
 import massive.munit.Assert;
 using StringTools;
@@ -66,6 +67,21 @@ class FlxTilemapTest extends FlxTest
 		Assert.areEqual(3, tilemap.widthInTiles);
 		Assert.areEqual(2, tilemap.heightInTiles);
 		FlxAssert.arraysEqual([0, 1, 0, 1, 1, 1], tilemap.getData());
+	}
+	
+	@Test
+	function testLoadMapFromGraphic()
+	{
+		var map = new BitmapData(2, 2);
+		map.setPixel32(0, 0, FlxColor.WHITE);
+		map.setPixel32(1, 0, FlxColor.BLACK);
+		map.setPixel32(0, 1, FlxColor.BLUE);
+		map.setPixel32(1, 1, FlxColor.YELLOW);
+
+		tilemap.loadMapFromGraphic(map, false, 1,
+			[FlxColor.WHITE, FlxColor.BLACK, FlxColor.BLUE, FlxColor.YELLOW],
+			new BitmapData(4, 1));
+		FlxAssert.arraysEqual([0, 1, 2, 3], tilemap.getData());
 	}
 	
 	@Test
@@ -179,6 +195,15 @@ class FlxTilemapTest extends FlxTest
 		}
 		
 		Assert.isTrue(exceptionThrown);
+	}
+	
+	@Test // #1835
+	function testOverlapsPointCrash()
+	{
+		tilemap.loadMapFromCSV("1,", getBitmapData());
+		var point = FlxPoint.get(1000, 1000);
+		Assert.isFalse(tilemap.overlapsPoint(point, false));
+		Assert.isFalse(tilemap.overlapsPoint(point, true));
 	}
 	
 	function assertPixelHasColor(x:Int, color:UInt, ?info:PosInfos)

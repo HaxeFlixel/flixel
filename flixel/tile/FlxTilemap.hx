@@ -62,6 +62,11 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	public var scale(default, null):FlxPoint;
 
 	/**
+	 * Controls whether the object is smoothed when rotated, affects performance.
+	 */
+	public var antialiasing(default, set):Bool = false;
+	
+	/**
 	 * Use to offset the drawing position of the tilemap,
 	 * just like FlxSprite.
 	 */
@@ -818,7 +823,11 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 			scaledHeight = _scaledTileHeight;
 			
 			var hasColorOffsets:Bool = (colorTransform != null && colorTransform.hasRGBAOffsets());
+<<<<<<< HEAD
 			drawItem = Camera.startQuadBatch(graphic, isColored, hasColorOffsets, blend, false, shader);
+=======
+			drawItem = Camera.startQuadBatch(graphic, isColored, hasColorOffsets, blend, antialiasing);
+>>>>>>> dev
 		}
 		
 		// Copy tile images into the tile buffer
@@ -982,6 +991,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	{
 		var buffer = new FlxTilemapBuffer(_tileWidth, _tileHeight, widthInTiles, heightInTiles, camera, scale.x, scale.y);
 		buffer.pixelPerfectRender = pixelPerfectRender;
+		buffer.antialiasing = antialiasing;
 		return buffer;
 	}
 	
@@ -1024,6 +1034,13 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 				buffer.dirty = true;
 	}
 	#end
+	
+	private function set_antialiasing(value:Bool):Bool
+	{
+		for (buffer in _buffers)
+			buffer.antialiasing = value;
+		return antialiasing = value;
+	}
 	
 	/**
 	 * Internal function for setting graphic property for this object. 

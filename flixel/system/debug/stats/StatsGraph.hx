@@ -68,17 +68,16 @@ class StatsGraph extends Sprite
 		addChild(minLabel);
 		addChild(avgLabel);
 		
-		drawAxis();
+		drawAxes();
 	}
 	
 	/**
 	 * Redraws the axes of the graph.
 	 */
-	private function drawAxis():Void
+	private function drawAxes():Void
 	{
 		var gfx = _axis.graphics;
 		gfx.clear();
-		gfx.beginFill(FlxColor.TRANSPARENT);
 		gfx.lineStyle(1, AXIS_COLOR, AXIS_ALPHA); 
 		
 		// y-Axis
@@ -88,8 +87,6 @@ class StatsGraph extends Sprite
 		// x-Axis
 		gfx.moveTo(0, _height);
 		gfx.lineTo(_width, _height);
-		
-		gfx.endFill();
 	}
 	
 	/**
@@ -100,15 +97,19 @@ class StatsGraph extends Sprite
 		var gfx:Graphics = graphics;
 		gfx.clear();
 		gfx.lineStyle(1, graphColor, 1);
-		gfx.moveTo(_axis.x, _axis.y);
 		
 		var inc:Float = _width / (HISTORY_MAX - 1);
 		var range:Float = Math.max(maxValue - minValue, maxValue * 0.1);
+		var graphX = _axis.x + 1;
 		
 		for (i in 0...history.length)
 		{
 			var value = (history[i] - minValue) / range;
-			gfx.lineTo(_axis.x + (i * inc), (-value * _height) + _height);
+			
+			var pointY = (-value * _height - 1) + _height;
+			if (i == 0)
+				gfx.moveTo(graphX, _axis.y + pointY);
+			gfx.lineTo(graphX + (i * inc), pointY);
 		}
 	}
 	

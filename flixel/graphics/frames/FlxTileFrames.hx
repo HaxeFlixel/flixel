@@ -434,7 +434,7 @@ class FlxTileFrames extends FlxFramesCollection
 			for (frame in collection.frames)
 			{
 				frame.paint(combined, destPoint, true);
-				trace(destPoint);
+
 				result.addAtlasFrame(FlxRect.get(destPoint.x, destPoint.y, tileWidth, tileHeight), FlxPoint.get(tileWidth, tileHeight), FlxPoint.get(0, 0));				
 				destPoint.x += tileWidth + 2 * borderX + spaceX;
 				

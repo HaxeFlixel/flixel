@@ -58,6 +58,7 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	public var pixels(default, null):BitmapData;
 	
 	public var blend:BlendMode;
+	public var antialiasing:Bool = false;
 	
 	private var _flashRect:Rectangle;
 	private var _matrix:Matrix;
@@ -137,7 +138,7 @@ class FlxTilemapBuffer implements IFlxDestroyable
 			_matrix.identity();
 			_matrix.scale(ScaleX, ScaleY);
 			_matrix.translate(FlashPoint.x, FlashPoint.y);
-			Camera.buffer.draw(pixels, _matrix, null, blend);
+			Camera.buffer.draw(pixels, _matrix, null, blend, null, antialiasing);
 		}
 	}
 	

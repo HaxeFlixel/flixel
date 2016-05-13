@@ -2,7 +2,12 @@
 ------------------------------
 * `FlxG.vcr`: added an `OpenSaveDialog` argument to `stopRecording()` (#1726)
 * `FlxText`: [Flash] fixed blurry lines on multiline texts with `FlxTextAlign.CENTER` (#1728)
-* `FlxSound`: added `loopTime`, added a `StartTime` argument to `play()` (#1736)
+* `FlxSound`:
+	* added `loopTime` (#1736)
+	* added a `StartTime` argument to `play()` (#1736)
+	* added `fadeTween` (#1834)
+	* fixed `fadeOut()` and `fadeIn()` not canceling the previous tween (#1834)
+	* added a setter for `time` (#1792)
 * `FlxMouse:` added `enabled`
 * `FlxGamepad:` [Flash] fixed potential range errors when checking axis values
 * `FlxGamepadInputID`: added IDs for analog stick directions (#1746)
@@ -20,11 +25,23 @@
 	* added support for moving selection to start / end via up / down keys (non-numeric values)
 * `FlxStringUtil`: added `isNullOrEmpty()`
 * `FlxArrayUtil`: optimized `flatten2DArray()`
-* `FlxDefines`: added inverted versions for all `FLX_NO`-defines (e.g. `FLX_DEBUG` for `FLX_NO_DEBUG`)
+* `FlxDefines`: added inverted versions of all `FLX_NO`-defines (e.g. `FLX_DEBUG` for `FLX_NO_DEBUG`)
 * `FlxTileFrames`: added `spacing` and `border` arguments to `combineTileSets()` and `combineTileFrames()` (#1807)
 * `FlxBitmapDataUtil`: added `copyBorderPixels()`
 * `FlxGame`: `GameWidth` and `GameHeight` in `new()` now use the window size if set to 0 (#1811)
 * `FlxPoint`: added `scale()` (#1811)
+* `FlxCamera`: fixed background scaling for `zoom < 1` on native targets (#1588)
+* `FlxSpriteUtil`: changed `alphaMask()` arguments from `Dynamic` to `FlxGraphicAsset` (#1806)
+* `FlxBar`: added `numDivisions`
+* `FlxBaseTilemap`:
+	* added `loadMapFromGraphic()` (#1525)
+	* [Neko,HTML5] fixed invalid array access in `overlapsPoint()` (#1835)
+* `FlxObject`: fixed `overlapsPoint()` at x / y = 0 (#1818)
+* `FlxReplay`: fixed simultaneous recording of key and mouse input (#1739)
+* `FlxVelocity`: fixed `accelerateFromAngle()` setting `maxVelocity` to negative values (#1833)
+* `FlxAnimation`: added the ability to set `paused` directly (#1538)
+* Fixed compilation with `hscriptPos` defined (#1840)
+* `FlxTilemap`: add `antialiasing` (#1850)
 
 4.0.1
 ------------------------------

@@ -4,9 +4,14 @@ import flixel.FlxObject;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
+import flixel.system.FlxAssets;
+import flixel.system.FlxAssets.FlxGraphicSource;
 import flixel.system.FlxAssets.FlxTilemapGraphicAsset;
 import flixel.util.FlxArrayUtil;
+import flixel.util.FlxColor;
+import flixel.util.FlxStringUtil;
 import openfl.Assets;
+import openfl.display.BitmapData;
 using StringTools;
 
 class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
@@ -287,6 +292,36 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		loadMapHelper(TileGraphic, TileWidth, TileHeight, AutoTile, StartingIndex, DrawIndex, CollideIndex);
 		return this;
 	}
+	
+	/**
+     * Load the tilemap with image data and a tile graphic. 
+     * Black pixels are flagged as 'solid' by default, non-black pixels are set as non-colliding. Black pixels must be PURE BLACK.
+     * @param   MapGraphic      The image you want to use as a source of map data, where each pixel is a tile (or more than one tile if you change Scale's default value). Preferably black and white.
+     * @param   Invert          Load white pixels as solid instead.
+     * @param   Scale           Default is 1. Scale of 2 means each pixel forms a 2x2 block of tiles, and so on.
+     * @param   ColorMap        An array of color values (alpha values are ignored) in the order they're intended to be assigned as indices
+     * @param   TileGraphic     All the tiles you want to use, arranged in a strip corresponding to the numbers in MapData.
+     * @param   TileWidth       The width of your tiles (e.g. 8) - defaults to height of the tile graphic if unspecified.
+     * @param   TileHeight      The height of your tiles (e.g. 8) - defaults to width if unspecified.
+     * @param   AutoTile        Whether to load the map using an automatic tile placement algorithm (requires 16 tiles!).
+     *                          Setting this to either AUTO or ALT will override any values you put for StartingIndex, DrawIndex, or CollideIndex.
+     * @param   StartingIndex   Used to sort of insert empty tiles in front of the provided graphic.
+     *                          Default is 0, usually safest ot leave it at that.  Ignored if AutoTile is set.
+     * @param   DrawIndex       Initializes all tile objects equal to and after this index as visible.
+     *                          Default value is 1. Ignored if AutoTile is set.
+     * @param   CollideIndex    Initializes all tile objects equal to and after this index as allowCollisions = ANY.
+     *                          Default value is 1.  Ignored if AutoTile is set.  
+     *                          Can override and customize per-tile-type collision behavior using setTileProperties().
+     * @return  A reference to this instance of FlxTilemap, for chaining as usual :)
+     */
+    public function loadMapFromGraphic(MapGraphic:FlxGraphicSource, Invert:Bool = false, Scale:Int = 1, ?ColorMap:Array<FlxColor>,
+		TileGraphic:FlxTilemapGraphicAsset, TileWidth:Int = 0, TileHeight:Int = 0, ?AutoTile:FlxTilemapAutoTiling, StartingIndex:Int = 0,
+		DrawIndex:Int = 1, CollideIndex:Int = 1)
+    {
+        var mapBitmap:BitmapData = FlxAssets.resolveBitmapData(MapGraphic);
+        var mapData:String = FlxStringUtil.bitmapToCSV(mapBitmap, Invert, Scale, ColorMap);
+        return loadMapFromCSV(mapData, TileGraphic, TileWidth, TileHeight, AutoTile, StartingIndex, DrawIndex, CollideIndex);
+    }
 	
 	private function loadMapHelper(TileGraphic:FlxTilemapGraphicAsset, TileWidth:Int = 0, TileHeight:Int = 0, ?AutoTile:FlxTilemapAutoTiling,
 		StartingIndex:Int = 0, DrawIndex:Int = 1, CollideIndex:Int = 1)
@@ -1176,8 +1211,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	
 	private inline function tilemapOverlapsAtCallback(ObjectOrGroup:FlxBasic, X:Float, Y:Float, InScreenSpace:Bool, Camera:FlxCamera):Bool
 	{
-		if (ObjectOrGroup.flixelType == OBJECT || 
-			ObjectOrGroup.flixelType == TILEMAP)
+		if (ObjectOrGroup.flixelType == OBJECT || ObjectOrGroup.flixelType == TILEMAP)
 		{
 			return overlapsWithCallback(cast ObjectOrGroup, null, false, _point.set(X, Y));
 		}
@@ -1198,20 +1232,22 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	override public function overlapsPoint(WorldPoint:FlxPoint, InScreenSpace:Bool = false, ?Camera:FlxCamera):Bool
 	{
 		if (!InScreenSpace)
-		{
-			return _tileObjects[_data[getTileIndexByCoords(WorldPoint)]].allowCollisions > 0;
-		}
+			return tileAtPointAllowsCollisions(WorldPoint);
 		
 		if (Camera == null)
-		{
 			Camera = FlxG.camera;
-		}
 		
 		WorldPoint.subtractPoint(Camera.scroll);
-		
-		var result:Bool =  _tileObjects[_data[getTileIndexByCoords(WorldPoint)]].allowCollisions > 0;
 		WorldPoint.putWeak();
-		return result;
+		return tileAtPointAllowsCollisions(WorldPoint);
+	}
+	
+	private function tileAtPointAllowsCollisions(point:FlxPoint):Bool
+	{
+		var tileIndex = getTileIndexByCoords(point);
+		if (tileIndex < 0 || tileIndex >= _data.length)
+			return false;
+		return _tileObjects[_data[tileIndex]].allowCollisions > 0;
 	}
 
 	/**
@@ -1223,9 +1259,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	public function getBounds(?Bounds:FlxRect):FlxRect
 	{
 		if (Bounds == null)
-		{
 			Bounds = FlxRect.get();
-		}
 		
 		return Bounds.set(x, y, width, height);
 	}

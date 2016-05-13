@@ -180,6 +180,38 @@ class FlxObjectTest extends FlxTest
 		Assert.isTrue(FlxPoint.get(10, 10).equals(object1.getPosition()));
 		Assert.isTrue(FlxPoint.get(10, 10).equals(object1.velocity));
 	}
+	
+	@Test
+	function testOverlapsPoint()
+	{
+		overlapsPointInScreenSpace(true);
+		overlapsPointInScreenSpace(false);
+	}
+
+	function overlapsPointInScreenSpace(inScreenSpace:Bool)
+	{
+		var overlapsPoint = object1.overlapsPoint.bind(_, inScreenSpace, null);
+		object1.setPosition(-5, -5);
+		object1.setSize(10, 10);
+	
+		var rect = object1.getHitbox();
+		var topLeft = FlxPoint.get(rect.left, rect.top);
+		var bottomLeft = FlxPoint.get(rect.left, rect.bottom - 1);
+		var topRight = FlxPoint.get(rect.right - 1, rect.top);
+		var bottomRight = FlxPoint.get(rect.right - 1, rect.bottom - 1);
+		
+		var assertTrue = function(p) Assert.isTrue(overlapsPoint(p));
+		assertTrue(topLeft);
+		assertTrue(bottomLeft);
+		assertTrue(topRight);
+		assertTrue(bottomRight);
+
+		var assertFalse = function(p) Assert.isFalse(overlapsPoint(p));
+		assertFalse(topLeft.add(-1, -1));
+		assertFalse(bottomLeft.add(-1, 1));
+		assertFalse(topRight.add(1, -1));
+		assertFalse(bottomRight.add(1, 1));
+	}
 }
 
 class CollisionState extends FlxState

@@ -1,6 +1,5 @@
 package flixel.system.debug.watch;
 
-import flash.display.Sprite;
 import flixel.math.FlxMath;
 import flixel.system.FlxAssets;
 import flixel.system.debug.FlxDebugger.GraphicCloseButton;
@@ -9,13 +8,17 @@ import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
+import openfl.display.Sprite;
 import openfl.text.TextField;
+import openfl.text.TextFieldAutoSize;
 import openfl.text.TextFormat;
 using flixel.util.FlxStringUtil;
 
 class WatchEntry extends Sprite implements IFlxDestroyable
 {
 	private static inline var GUTTER = 4;
+	private static inline var TEXT_HEIGHT = 20;
+	private static inline var MAX_NAME_WIDTH = 125;
 	
 	public var data:WatchEntryData;
 	public var displayName(default, null):String;
@@ -36,11 +39,11 @@ class WatchEntry extends Sprite implements IFlxDestroyable
 		nameText = initTextField(DebuggerUtil.createTextField());
 		valueText = initTextField(DebuggerUtil.initTextField(
 			new EditableTextField(data.match(FIELD(_, _)), defaultFormat, submitValue)));
-		
+
 		updateName();
 		
 		addChild(removeButton = new FlxSystemButton(new GraphicCloseButton(0, 0), removeEntry.bind(this)));
-		removeButton.y = (height - removeButton.height) / 2;
+		removeButton.y = (TEXT_HEIGHT - removeButton.height) / 2;
 		removeButton.alpha = 0.3;
 	}
 	
@@ -58,33 +61,45 @@ class WatchEntry extends Sprite implements IFlxDestroyable
 	{
 		textField.selectable = true;
 		textField.defaultTextFormat = defaultFormat;
+		textField.autoSize = TextFieldAutoSize.NONE;
+		textField.height = TEXT_HEIGHT;
 		addChild(textField);
 		return textField;
 	}
 
 	public function updateSize(nameWidth:Float, windowWidth:Float):Void
 	{
+		var textWidth = windowWidth - removeButton.width - GUTTER;
+		
 		nameText.width = nameWidth;
 		valueText.x = nameWidth + GUTTER;
-		removeButton.x = windowWidth - removeButton.width - GUTTER;
+		valueText.width = textWidth - nameWidth - GUTTER;
+		removeButton.x = textWidth;
 	}
 	
 	private function updateName()
 	{
 		if (displayName != null)
 		{
-			nameText.text = displayName;
+			setNameText(displayName);
 			return;
 		}
 		
 		switch (data)
 		{
 			case FIELD(object, field):
-				nameText.text = object.getClassName(true) + "." + field;
+				setNameText(object.getClassName(true) + "." + field);
 			case EXPRESSION(expression):
-				nameText.text = expression;
+				setNameText(expression);
 			case QUICK(_):
 		}
+	}
+	
+	private function setNameText(name:String)
+	{
+		nameText.text = name;
+		var currentWidth = nameText.textWidth + 4;
+		nameText.width = Math.min(currentWidth, MAX_NAME_WIDTH);
 	}
 	
 	private function getValue():String
@@ -131,7 +146,7 @@ class WatchEntry extends Sprite implements IFlxDestroyable
 	
 	public function getMinWidth():Float
 	{
-		return valueText.x + valueText.width + GUTTER * 2 + removeButton.width; 
+		return valueText.x + GUTTER * 2 + removeButton.width; 
 	}
 	
 	public function destroy()
