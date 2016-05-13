@@ -708,19 +708,6 @@ class FlxGame extends Sprite
 			return;
 		}
 		
-		if (FlxG.fixedTimestep)
-		{
-			FlxG.elapsed = FlxG.timeScale * _stepSeconds; // fixed timestep
-		}
-		else
-		{
-			FlxG.elapsed = FlxG.timeScale * (_elapsedMS / 1000); // variable timestep
-			
-			var max = FlxG.maxElapsed * FlxG.timeScale;
-			if (FlxG.elapsed > max) 
-				FlxG.elapsed = max;
-		}
-		
 		if (_state != _requestedState)
 		{
 			switchState();
@@ -732,6 +719,8 @@ class FlxGame extends Sprite
 			ticks = getTimer(); // Lib.getTimer() is expensive, only do it if necessary
 		}
 		#end
+		
+		updateElapsed();
 		
 		FlxG.signals.preUpdate.dispatch();
 		
@@ -763,6 +752,22 @@ class FlxGame extends Sprite
 		#end
 		
 		filters = filtersEnabled ? _filters : null;
+	}
+	
+	private function updateElapsed():Void
+	{
+		if (FlxG.fixedTimestep)
+		{
+			FlxG.elapsed = FlxG.timeScale * _stepSeconds; // fixed timestep
+		}
+		else
+		{
+			FlxG.elapsed = FlxG.timeScale * (_elapsedMS / 1000); // variable timestep
+			
+			var max = FlxG.maxElapsed * FlxG.timeScale;
+			if (FlxG.elapsed > max) 
+				FlxG.elapsed = max;
+		}
 	}
 	
 	private function updateInput():Void
