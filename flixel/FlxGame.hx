@@ -171,12 +171,10 @@ class FlxGame extends Sprite
 	 */
 	private var _skipSplash:Bool = false;
 	
-	#if desktop
 	/**
 	 * Should we start Fullscreen or not? This is useful if you want to load Fullscreen settings from a FlxSave and set it when the game starts, instead of having it hard-set in your project XML.
 	 */
 	private var _startFullscreen:Bool = false; 
-	#end
 	
 	/**
 	 * If a state change was requested, the new state object is stored here until we switch to it.
@@ -232,9 +230,7 @@ class FlxGame extends Sprite
 	{
 		super();
 		
-		#if desktop
 		_startFullscreen = StartFullscreen;
-		#end
 		
 		// Super high priority init stuff
 		_inputContainer = new Sprite();
@@ -283,10 +279,8 @@ class FlxGame extends Sprite
 		
 		_total = getTimer();
 		
-		#if desktop
 		FlxG.fullscreen = _startFullscreen;
-		#end
-		
+
 		// Set up the view window and double buffering
 		stage.scaleMode = StageScaleMode.NO_SCALE;
 		stage.align = StageAlign.TOP_LEFT;
@@ -320,7 +314,6 @@ class FlxGame extends Sprite
 		#end
 		
 		// Focus gained/lost monitoring
-		#if desktop
 		stage.addEventListener(FocusEvent.FOCUS_OUT, onFocusLost);
 		stage.addEventListener(FocusEvent.FOCUS_IN, onFocus);
 		#else
