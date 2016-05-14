@@ -52,7 +52,7 @@ class FlxPath implements IFlxDestroyable
 	/**
 	 * The list of FlxPoints that make up the path data.
 	 */
-	public var nodes(get, set):Array<FlxPoint>;
+	public var nodes:Array<FlxPoint> = [];
 	
 	/**
 	 * The speed at which the object is moving on the path.
@@ -115,11 +115,6 @@ class FlxPath implements IFlxDestroyable
 	private var _firstUpdate:Bool = false;
 	
 	/**
-	 * An actual array, which holds all the path points.
-	 */
-	private var _nodes:Array<FlxPoint>;
-	
-	/**
 	 * Object which will follow this path
 	 */
 	@:allow(flixel.FlxObject)
@@ -143,13 +138,8 @@ class FlxPath implements IFlxDestroyable
 	 * 
 	 * or using some more chaining:
 	 * object.path = new FlxPath().add(0, 0).add(100, 0).start(50, FlxPath.FORWARD);
-	 * 
-	 * @param	Nodes	An optional array of points which will be used for path.
 	 */
-	public function new(?Nodes:Array<FlxPoint>) 
-	{
-		_nodes = Nodes;
-	}
+	public function new() { }
 	
 	/**
 	 * Just resets some debugging related variables (for debugger renderer).
@@ -179,20 +169,10 @@ class FlxPath implements IFlxDestroyable
 	public function start(?Nodes:Array<FlxPoint>, Speed:Float = 100, Mode:Int = FlxPath.FORWARD, AutoRotate:Bool = false):FlxPath
 	{
 		nodes = (Nodes != null) ? Nodes : nodes;
-		setPathProperties(Speed, Mode, AutoRotate);
+		speed = Math.abs(Speed);
+		_mode = Mode;
+		_autoRotate = AutoRotate;
 		restart();
-		return this;
-	}
-	
-	/**
-	 * Just sets nodes for this path, plus returns this path object. Could be useful for chaining.
-	 * @param	Nodes	An array of path waypoints.
-	 * 
-	 * @return	This path object.
-	 */
-	public function setNodes(Nodes:Array<FlxPoint>):FlxPath
-	{
-		_nodes = Nodes;
 		return this;
 	}
 	
@@ -521,8 +501,8 @@ class FlxPath implements IFlxDestroyable
 	 */
 	public function destroy():Void
 	{
-		FlxDestroyUtil.putArray(_nodes);
-		_nodes = null;
+		FlxDestroyUtil.putArray(nodes);
+		nodes = null;
 		object = null;
 		onComplete = null;
 	}
@@ -778,17 +758,4 @@ class FlxPath implements IFlxDestroyable
 		}
 	}
 	#end
-	
-	private function get_nodes():Array<FlxPoint>
-	{
-		if (_nodes == null)
-			_nodes = new Array<FlxPoint>();
-		
-		return _nodes;
-	}
-	
-	private function set_nodes(Nodes:Array<FlxPoint>):Array<FlxPoint>
-	{
-		return _nodes = Nodes;
-	}
 }
