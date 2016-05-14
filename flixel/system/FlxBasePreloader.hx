@@ -163,20 +163,17 @@ class FlxBasePreloader extends NMEPreloader
 	 * @param	onLoad				Executed once the bitmap data is finished loading in HTML5, and immediately in Flash. The new Bitmap instance is passed as an argument.
 	 * @return  The Bitmap instance that was created.
 	 */
-	private function createBitmap(bitmapDataClass:Class<BitmapData>, ?onLoad:Bitmap->Void):Bitmap
+	private function createBitmap(bitmapDataClass:Class<BitmapData>, onLoad:Bitmap->Void):Bitmap
 	{
 		#if html5
-		if (onLoad != null && Type.getClassFields(bitmapDataClass).indexOf("preload") != -1)
-		{
-			var bmp = new Bitmap();
-			bmp.bitmapData = Type.createInstance(bitmapDataClass, [0, 0, true, 0xFFFFFFFF, function(_) onLoad(bmp)]);
-			return bmp;
-		}
-		#end
-		var bmp = new Bitmap(Type.createInstance(bitmapDataClass, [0, 0]));
-		if (onLoad != null)
-			onLoad(bmp);
+		var bmp = new Bitmap();
+		bmp.bitmapData = Type.createInstance(bitmapDataClass, [0, 0, true, 0xFFFFFFFF, function(_) onLoad(bmp)]);
 		return bmp;
+		#else
+		var bmp = new Bitmap(Type.createInstance(bitmapDataClass, [0, 0]));
+		onLoad(bmp);
+		return bmp;
+		#end
 	}
 	
 	/**
@@ -193,15 +190,12 @@ class FlxBasePreloader extends NMEPreloader
 	private function loadBitmapData(bitmapDataClass:Class<BitmapData>, onLoad:BitmapData->Void):BitmapData
 	{
 		#if html5
-		if (onLoad != null && Type.getClassFields(bitmapDataClass).indexOf("preload") != -1)
-		{
-			return Type.createInstance(bitmapDataClass, [0, 0, true, 0xFFFFFFFF, onLoad]);
-		}
-		#end
+		return Type.createInstance(bitmapDataClass, [0, 0, true, 0xFFFFFFFF, onLoad]);
+		#else
 		var bmpData = Type.createInstance(bitmapDataClass, [0, 0]);
-		if (onLoad != null)
-			onLoad(bmpData);
+		onLoad(bmpData);
 		return bmpData;
+		#end
 	}
 	
 	/**
