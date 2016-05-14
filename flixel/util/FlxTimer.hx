@@ -159,11 +159,8 @@ class FlxTimer implements IFlxDestroyable
 		}
 	}
 	
-	/**
-	 * Called by timer manager when timer finishes loop.
-	 */
 	@:allow(flixel.util.FlxTimerManager)
-	private function onLoop():Void
+	private function onLoopFinished():Void
 	{
 		if (onComplete != null)
 		{
@@ -241,13 +238,11 @@ class FlxTimerManager extends FlxBasic
 	 */
 	override public function update(elapsed:Float):Void
 	{
-		var timerLoops:Int;
-		
 		for (timer in _timers)
 		{
 			if (timer.active && !timer.finished && timer.time >= 0)
 			{
-				timerLoops = timer.elapsedLoops;
+				var timerLoops:Int = timer.elapsedLoops;
 				timer.update(elapsed);
 				
 				if (timerLoops != timer.elapsedLoops)
@@ -263,7 +258,7 @@ class FlxTimerManager extends FlxBasic
 				{
 					while (_loopedTimers.length > 0)
 					{
-						_loopedTimers.shift().onLoop();
+						_loopedTimers.shift().onLoopFinished();
 					}
 				}
 			}
