@@ -215,15 +215,15 @@ class FlxGame extends Sprite
 	 * Instantiate a new game object.
 	 * 
 	 * @param GameWidth       The width of your game in game pixels, not necessarily final display pixels (see `Zoom`).
-	 *                        If equal to 0, the window width specified in the `Project.xml` is used.
+	 *                        If equal to 0, the window width specified in the `Project.xml` or the width of current display (if `StartFullscreen` is set to true) is used.
 	 * @param GameHeight      The height of your game in game pixels, not necessarily final display pixels (see `Zoom`).
-	 *                        If equal to 0, the window height specified in the `Project.xml` is used.
+	 *                        If equal to 0, the window height specified in the `Project.xml` or the height of current display (if `StartFullscreen` is set to true) is used.
 	 * @param InitialState    The class name of the state you want to create and switch to first (e.g. `MenuState`).
 	 * @param Zoom            The default level of zoom for the game's cameras (e.g. 2 = all pixels are now drawn at 2x).
 	 * @param UpdateFramerate How frequently the game should update (default is 60 times per second).
 	 * @param DrawFramerate   Sets the actual display / draw framerate for the game (default is 60 times per second).
 	 * @param SkipSplash      Whether you want to skip the flixel splash screen with `FLX_NO_DEBUG`.
-	 * @param StartFullscreen Whether to start the game in fullscreen mode (desktop targets only).
+	 * @param StartFullscreen Whether to start the game in fullscreen mode.
 	 */
 	public function new(GameWidth:Int = 0, GameHeight:Int = 0, ?InitialState:Class<FlxState>, Zoom:Float = 1,
 		UpdateFramerate:Int = 60, DrawFramerate:Int = 60, SkipSplash:Bool = false, StartFullscreen:Bool = false)
@@ -235,11 +235,19 @@ class FlxGame extends Sprite
 		// Super high priority init stuff
 		_inputContainer = new Sprite();
 		
+		// The rectangle represents current display in virtual screen
+		var displayRect = FlxG.stage.window.display.bounds;
 		if (GameWidth == 0)
-			GameWidth = FlxG.stage.stageWidth;
+			if (StartFullscreen)
+				GameWidth = Std.int(displayRect.width);
+			else
+				GameWidth = FlxG.stage.stageWidth;
 		if (GameHeight == 0)
-			GameHeight = FlxG.stage.stageHeight;
-
+			if (StartFullscreen)
+				GameHeight = Std.int(displayRect.height);
+			else
+				GameHeight = FlxG.stage.stageHeight;
+		
 		// Basic display and update setup stuff
 		FlxG.init(this, GameWidth, GameHeight, Zoom);
 		
@@ -280,7 +288,7 @@ class FlxGame extends Sprite
 		_total = getTimer();
 		
 		FlxG.fullscreen = _startFullscreen;
-
+		
 		// Set up the view window and double buffering
 		stage.scaleMode = StageScaleMode.NO_SCALE;
 		stage.align = StageAlign.TOP_LEFT;
@@ -314,6 +322,7 @@ class FlxGame extends Sprite
 		#end
 		
 		// Focus gained/lost monitoring
+		#if desktop
 		stage.addEventListener(FocusEvent.FOCUS_OUT, onFocusLost);
 		stage.addEventListener(FocusEvent.FOCUS_IN, onFocus);
 		#else
