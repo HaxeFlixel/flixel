@@ -235,25 +235,16 @@ class FlxGame extends Sprite
 		// Super high priority init stuff
 		_inputContainer = new Sprite();
 		
-		// The rectangle represents current display in virtual screen
-		#if !openfl_legacy
-		var displayRect = FlxG.stage.window.display.bounds;
-		#end
-		
 		if (GameWidth == 0)
-		#if !openfl_legacy
 			if (StartFullscreen)
-				GameWidth = Std.int(displayRect.width);
+				GameWidth = stage.fullScreenWidth;
 			else
-		#end
 				GameWidth = FlxG.stage.stageWidth;
 
 		if (GameHeight == 0)
-		#if !openfl_legacy
 			if (StartFullscreen)
-				GameHeight = Std.int(displayRect.height);
+				GameHeight = stage.fullScreenHeight;
 			else
-		#end
 				GameHeight = FlxG.stage.stageHeight;
 		
 		// Basic display and update setup stuff
