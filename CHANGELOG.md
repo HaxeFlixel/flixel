@@ -41,6 +41,10 @@
 * `FlxVelocity`: fixed `accelerateFromAngle()` setting `maxVelocity` to negative values (#1833)
 * `FlxAnimation`: added the ability to set `paused` directly (#1538)
 * Fixed compilation with `hscriptPos` defined (#1840)
+* `FlxTilemap`:
+	* added `antialiasing` (#1850)
+* Added GLSL `shader` support for `FlxSprite`, `FlxTilemap`, `FlxBar` and `FlxBitmapText` (#1848)
+* `FlxDrawTilesItem`: fix `numTiles` value with color offsets
 
 4.0.1
 ------------------------------

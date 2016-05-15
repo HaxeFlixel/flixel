@@ -1,5 +1,6 @@
 package flixel.system.debug.watch;
 
+import flixel.math.FlxMath;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import openfl.events.FocusEvent;
 import openfl.events.KeyboardEvent;
@@ -66,24 +67,31 @@ class EditableTextField extends TextField implements IFlxDestroyable
 
 	private function onKeyDown(e:KeyboardEvent):Void
 	{
+		var modifier = 1.0;
+		if (e.altKey)
+			modifier = 0.1;
+		if (e.shiftKey)
+			modifier = 10.0;
+		
 		switch (e.keyCode)
 		{
 			case Keyboard.UP:
-				if (!modifyNumericValue(1))
+				if (!modifyNumericValue(modifier))
 					setSelection(0, 0);
 			case Keyboard.DOWN:
-				if (!modifyNumericValue(-1))
+				if (!modifyNumericValue(-modifier))
 					setSelection(text.length, text.length);
 		}
 	}
 	
-	private function modifyNumericValue(modifier:Int):Bool
+	private function modifyNumericValue(modifier:Float):Bool
 	{
 		var value:Float = Std.parseFloat(text);
 		if (Math.isNaN(value))
 			return false;
 
 		value += modifier;
+		value = FlxMath.roundDecimal(value, FlxG.debugger.precision);
 		text = Std.string(value);
 		return true;
 	}
