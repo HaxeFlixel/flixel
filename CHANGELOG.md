@@ -15,7 +15,7 @@
 * `Console`:
 	* added `watch` and `watchExpression` commands (#1790)
 	* removed `resetState`, `switchState` and `resetGame` commands
-	* added `Reflect`, `Std`, `StringTools`, `Sys` and `Type` to default classes
+	* added `Reflect`, `Std`, `StringTools`, `Sys`, `Type` and `FlxTween` to default classes
 * `CompletionListEntry`: fixed text width exceeding list width
 * `CompletionHandler`: added locals declared with `var` to completion
 * `WatchEntry`:
