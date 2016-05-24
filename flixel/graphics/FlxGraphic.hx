@@ -140,15 +140,16 @@ class FlxGraphic implements IFlxDestroyable
 	}
 	
 	/**
-	 * Creates and caches FlxGraphic object from specified FlxFrame object.
+	 * Creates and caches (optionally) FlxGraphic object from specified FlxFrame object.
 	 * It uses frame's BitmapData, not the frame.parent.bitmap.
 	 * 
 	 * @param	FlxFrame to get BitmapData from for FlxGraphic object.
 	 * @param	Unique	Ensures that the bitmap data uses a new slot in the cache. If true, then BitmapData for this FlxGraphic will be cloned, which means extra memory.
 	 * @param	Key	Force the cache to use a specific Key to index the bitmap.
-	 * @return	Cached FlxGraphic object we just created.
+	 * @param	Cache	Whether to use graphic caching or not. Default value is true, which means automatic caching.
+	 * @return	FlxGraphic object we just created.
 	 */
-	public static function fromFrame(Source:FlxFrame, Unique:Bool = false, ?Key:String):FlxGraphic
+	public static function fromFrame(Source:FlxFrame, Unique:Bool = false, ?Key:String, Cache:Bool = true):FlxGraphic
 	{
 		var key:String = Source.name;
 		if (key == null)
@@ -164,7 +165,7 @@ class FlxGraphic implements IFlxDestroyable
 		}
 		
 		var bitmap:BitmapData = Source.paint();
-		graphic = createGraphic(bitmap, key, Unique);
+		graphic = createGraphic(bitmap, key, Unique, Cache);
 		var image:FlxImageFrame = FlxImageFrame.fromGraphic(graphic);
 		image.getByIndex(0).name = Source.name;
 		return graphic;
