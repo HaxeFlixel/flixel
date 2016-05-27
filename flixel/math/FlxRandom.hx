@@ -300,34 +300,37 @@ class FlxRandom
 		return selected;
 	}
 	
-	/**
-	 * Shuffles the entries in an array into a new pseudorandom order.
-	 * 
-	 * @param   Objects        An array to shuffle.
-	 * @param   HowManyTimes   How many swaps to perform during the shuffle operation. 
-	 *                         A good rule of thumb is 2-4 times the number of objects in the list.
+    /**
+	 * Shuffles the entries in an array into a new pseudorandom order, using an 'unbiased' shuffle.
+	 * This means that every permutation of the array is equally likely.
+	 *
+	 * @param   Objects        An array to shuffle in-place.
+	 * @param   HowManyTimes   This parameter is no longer relevant and should not be used.
+	 *                         However if a value of 0 (or less) is specified then no shuffle will be done.
 	 * @return  The newly shuffled array.
 	 */
-	@:generic
-	public function shuffleArray<T>(Objects:Array<T>, HowManyTimes:Int):Array<T>
-	{
-		HowManyTimes = Std.int(Math.max(HowManyTimes, 0));
-		
-		var tempObject:Null<T> = null;
-		
-		for (i in 0...HowManyTimes)
-		{
-			var pick1:Int = int(0, Objects.length - 1);
-			var pick2:Int = int(0, Objects.length - 1);
-			
-			tempObject = Objects[pick1];
-			Objects[pick1] = Objects[pick2];
-			Objects[pick2] = tempObject;
-		}
-		
-		return Objects;
-	}
-	
+    @:generic
+    public function shuffleArray<T>(Objects:Array<T>, HowManyTimes:Int = 1):Array<T>
+    {
+        if (HowManyTimes >= 1)
+        {
+            // Fisher–Yates shuffle. This algorithm produces an unbiased permutation.
+            var i:Int = Objects.length - 1;
+            while (i >= 1)
+            {
+                var j:Int = int(0, i);
+                if (j != i)
+                {
+                    var temp:Null<T> = Objects[i];
+                    Objects[i] = Objects[j];
+                    Objects[j] = temp;
+                }
+                i--;
+            }
+        }
+        return Objects;
+    }
+
 	/**
 	 * Returns a random color.
 	 * 
