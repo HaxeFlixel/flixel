@@ -1,9 +1,11 @@
 package flixel.system.debug.interaction;
 
+import flash.display.Graphics;
 import flash.display.Sprite;
 import flixel.group.FlxGroup;
 import flixel.system.debug.FlxDebugger;
 import flixel.system.debug.interaction.tools.*;
+import flixel.util.FlxSpriteUtil;
 
 /**
  * A plugin to visually and interactively debug a game while it is running.
@@ -95,6 +97,36 @@ class Interaction
 		{
 			tool = _tools[i];
 			tool.draw();
+		}
+		
+		drawItemsSelection();
+	}
+	
+	private function drawItemsSelection():Void 
+	{
+		var i:Int = 0;
+		var length:Int = _selectedItems.members.length;
+		var item:FlxObject;
+		
+		//Set up global flash graphics object to draw out the debug stuff
+		var gfx:Graphics = FlxSpriteUtil.flashGfx;
+		gfx.clear();
+		
+		while (i < length)
+		{
+			item = cast _selectedItems.members[i++];
+			if (item != null && item.scrollFactor != null && item.isOnScreen())
+			{
+				// Render a red rectangle centered at the selected item
+				gfx.lineStyle(1.5, 0xff0000);
+				gfx.drawRect(item.x - FlxG.camera.scroll.x, item.y - FlxG.camera.scroll.y, item.width * 1.0, item.height * 1.0);
+			}
+		}
+		
+		if (FlxG.renderBlit)
+		{
+			// Draw the debug info to the main camera buffer.
+			FlxG.camera.buffer.draw(FlxSpriteUtil.flashGfxSprite);
 		}
 	}
 	

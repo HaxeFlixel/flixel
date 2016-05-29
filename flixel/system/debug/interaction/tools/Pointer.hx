@@ -1,14 +1,10 @@
 package flixel.system.debug.interaction.tools;
 
-import flash.display.*;
-import flixel.*;
+import flash.display.Bitmap;
+import flash.display.BitmapData;
 import flash.events.MouseEvent;
-import flixel.tile.*;
-import flixel.ui.*;
-import flixel.util.*;
 import flixel.group.FlxGroup;
 import flixel.math.FlxPoint;
-import flixel.text.FlxText;
 import flixel.system.debug.interaction.Interaction;
 import flixel.system.debug.interaction.tools.Tool;
 
@@ -24,17 +20,12 @@ class Pointer extends Tool
 {		
 	private var _customCursor:Bitmap;
 	private var _mouse:FlxPoint;
-	private var _label:FlxText;
 	
 	override public function init(Brain:Interaction):Tool 
 	{
 		super.init(Brain);
 		
 		_mouse = new FlxPoint();
-		_label = new FlxText(0, 0, 200);
-		_label.color = 0xffff0000;
-		_label.scrollFactor.x = 0;
-		_label.scrollFactor.y = 0;
 		
 		_customCursor = new Bitmap(new GraphicInteractiveCursor(0, 0));
 		Brain.getContainer().addChild(_customCursor);
@@ -75,44 +66,6 @@ class Pointer extends Tool
 				// User clicked an empty space, so it's time to unselect everything.
 				getBrain().clearSelection();
 			}
-		}
-	}
-	
-	override public function draw():Void 
-	{
-		var selectedItems:FlxGroup = getBrain().getSelectedItems();
-		var i:Int = 0;
-		var l:Int = selectedItems.members.length;
-		var item:FlxObject;
-		
-		//Set up our global flash graphics object to draw out the debug stuff
-		var gfx:Graphics = FlxSpriteUtil.flashGfx;
-		gfx.clear();
-
-		super.draw();
-		
-		while (i < l)
-		{
-			item = cast selectedItems.members[i++];
-			if (item != null && item.isOnScreen())
-			{
-				// Render a red rectangle centered at the selected item
-				gfx.lineStyle(2, 0xff0000);
-				gfx.drawRect(item.x - FlxG.camera.scroll.x, item.y - FlxG.camera.scroll.y, item.width * 1.0, item.height * 1.0);
-				
-				// Position the label above the selected item and show
-				// its class name.
-				_label.x = item.x - FlxG.camera.scroll.x;
-				_label.y = item.y - FlxG.camera.scroll.y - 10;
-				_label.text = FlxStringUtil.getClassName(item);
-				//_label.draw();
-			}
-		}
-		
-		if (FlxG.renderBlit)
-		{
-			// Draw the debug info to the main camera buffer.
-			FlxG.camera.buffer.draw(FlxSpriteUtil.flashGfxSprite);
 		}
 	}
 	
