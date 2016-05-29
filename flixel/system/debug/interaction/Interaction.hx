@@ -1,5 +1,7 @@
 package flixel.system.debug.interaction;
 
+import flash.display.Sprite;
+import flixel.system.debug.FlxDebugger;
 import flixel.system.debug.interaction.tools.*;
 
 /**
@@ -17,10 +19,13 @@ import flixel.system.debug.interaction.tools.*;
  */
 class Interaction
 {
+	private var _container:Sprite;
 	private var _tools:Array<Tool>;
 	
-	public function new()
+	public function new(Container:Sprite)
 	{		
+		_container = Container;
+		
 		// Add all interactive debug tools (pointer, eraser, etc)
 		addTools();
 		
@@ -118,7 +123,15 @@ class Interaction
 	public function activate():Void
 	{
 		// TODO: improve this!
-		FlxG.mouse.visible = true;
 		_tools[0].activate();
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public function getContainer():Sprite
+	{
+		return _container;
 	}
 }

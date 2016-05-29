@@ -2,6 +2,7 @@ package flixel.system.debug.interaction.tools;
 
 import flash.display.*;
 import flixel.*;
+import flash.events.MouseEvent;
 import flixel.tile.*;
 import flixel.ui.*;
 import flixel.util.*;
@@ -9,6 +10,10 @@ import flixel.group.FlxGroup;
 import flixel.math.FlxPoint;
 import flixel.text.FlxText;
 import flixel.system.debug.interaction.Interaction;
+import flixel.system.debug.interaction.tools.Tool;
+
+@:bitmap("assets/images/debugger/buttons/console.png") 
+class GraphicInteractiveCursor extends BitmapData {} // TODO: replace with proper cursor art
 
 /**
  * A tool to use the mouse cursor to select game elements.
@@ -17,19 +22,40 @@ import flixel.system.debug.interaction.Interaction;
  */
 class Pointer extends Tool
 {		
+	private var _customCursor:Bitmap;
 	private var _mouse:FlxPoint;
 	private var _selectedItems:FlxGroup;
 	private var _label:FlxText;
 	
-	public function new()
-	{	
-		super();
+	override public function init(Brain:Interaction):Tool 
+	{
+		super.init(Brain);
+		
 		_mouse = new FlxPoint();
 		_selectedItems = new FlxGroup();
 		_label = new FlxText(0, 0, 200);
 		_label.color = 0xffff0000;
 		_label.scrollFactor.x = 0;
 		_label.scrollFactor.y = 0;
+		
+		_customCursor = new Bitmap(new GraphicInteractiveCursor(0, 0));
+		Brain.getContainer().addChild(_customCursor);
+		
+		FlxG.stage.addEventListener(MouseEvent.MOUSE_MOVE, updateMouse);
+		
+		return this;
+	}
+	
+	public function updateMouse(Event:MouseEvent):Void
+	{
+		// Store Flixel mouse coordinates to speed up all
+		// internal calculations (overlap, etc)
+		_mouse.x = FlxG.mouse.x;
+		_mouse.y = FlxG.mouse.y;
+		
+		// Position the custom interaction mouse cursor
+		_customCursor.x = Event.stageX;
+		_customCursor.y = Event.stageY;
 	}
 	
 	override public function update():Void 
@@ -40,9 +66,6 @@ class Pointer extends Tool
 		
 		if ((FlxG.mouse.justReleased || FlxG.mouse.justPressed) && isActive())
 		{
-			_mouse.x = FlxG.mouse.x;
-			_mouse.y = FlxG.mouse.y;
-			
 			item = pinpointItemInGroup(FlxG.state.members, _mouse);
 			
 			if (item != null)
@@ -89,7 +112,7 @@ class Pointer extends Tool
 		
 		if (FlxG.renderBlit)
 		{
-			// Draw the rectangles to the main camera buffer.
+			// Draw the debug info to the main camera buffer.
 			FlxG.camera.buffer.draw(FlxSpriteUtil.flashGfxSprite);
 		}
 	}

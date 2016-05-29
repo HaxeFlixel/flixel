@@ -161,7 +161,7 @@ class FlxDebugger extends Sprite
 			drawDebugButton.toggled = FlxG.debugger.drawDebug;
 		});
 		
-		interaction = new Interaction();
+		interaction = new Interaction(this);
 		addButton(RIGHT, new GraphicDrawDebug(0, 0), toggleInteractiveDebug, true);
 		
 		#if FLX_RECORD

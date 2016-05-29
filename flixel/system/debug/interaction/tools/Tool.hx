@@ -42,4 +42,9 @@ class Tool extends Sprite
 	{
 		return _active;
 	}
+	
+	public function getBrain():Interaction
+	{
+		return _brain;
+	}
 }
