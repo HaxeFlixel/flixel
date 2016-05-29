@@ -1,6 +1,7 @@
 package flixel.system.debug.interaction;
 
 import flash.display.Sprite;
+import flixel.group.FlxGroup;
 import flixel.system.debug.FlxDebugger;
 import flixel.system.debug.interaction.tools.*;
 
@@ -20,11 +21,13 @@ import flixel.system.debug.interaction.tools.*;
 class Interaction
 {
 	private var _container:Sprite;
+	private var _selectedItems:FlxGroup;
 	private var _tools:Array<Tool>;
 	
 	public function new(Container:Sprite)
 	{		
 		_container = Container;
+		_selectedItems = new FlxGroup();
 		
 		// Add all interactive debug tools (pointer, eraser, etc)
 		addTools();
@@ -133,5 +136,22 @@ class Interaction
 	public function getContainer():Sprite
 	{
 		return _container;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public function getSelectedItems():FlxGroup
+	{
+		return _selectedItems;
+	}
+	
+	/**
+	 * 
+	 */
+	public function clearSelection():Void
+	{
+		_selectedItems.clear();
 	}
 }

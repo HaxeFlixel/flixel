@@ -33,7 +33,7 @@ class Eraser extends Tool
 	
 	private function doDeletion(RemoveFromMemory:Bool):Void
 	{
-		var selectedItems :FlxGroup = findSelectedItemsByPointer();
+		var selectedItems :FlxGroup = getBrain().getSelectedItems();
 		
 		if (selectedItems != null)
 		{
@@ -127,11 +127,5 @@ class Eraser extends Tool
 		}
 		
 		return target;
-	}
-	
-	private function findSelectedItemsByPointer():FlxGroup
-	{
-		var tool:Pointer = cast getBrain().getTool(Pointer);
-		return tool != null ? tool.getSelectedItems() : null;
 	}
 }

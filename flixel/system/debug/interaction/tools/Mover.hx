@@ -52,7 +52,7 @@ class Mover extends Tool
 	
 	private function doDragging():Void
 	{
-		var selectedItems:FlxGroup = findSelectedItemsByPointer();
+		var selectedItems:FlxGroup = getBrain().getSelectedItems();
 		var i:Int = 0;
 		var members:Array<FlxBasic> = selectedItems.members; // TODO: implement some dependency? If Pointer is not loaded, this line will crash.
 		var l:Int = members.length;
@@ -79,11 +79,5 @@ class Mover extends Tool
 	private function stopDragging():Void
 	{
 		_dragging = false;
-	}
-	
-	private function findSelectedItemsByPointer():FlxGroup
-	{
-		var tool:Pointer = cast getBrain().getTool(Pointer);
-		return tool != null ? tool.getSelectedItems() : null;
 	}
 }

@@ -24,7 +24,6 @@ class Pointer extends Tool
 {		
 	private var _customCursor:Bitmap;
 	private var _mouse:FlxPoint;
-	private var _selectedItems:FlxGroup;
 	private var _label:FlxText;
 	
 	override public function init(Brain:Interaction):Tool 
@@ -32,7 +31,6 @@ class Pointer extends Tool
 		super.init(Brain);
 		
 		_mouse = new FlxPoint();
-		_selectedItems = new FlxGroup();
 		_label = new FlxText(0, 0, 200);
 		_label.color = 0xffff0000;
 		_label.scrollFactor.x = 0;
@@ -75,15 +73,16 @@ class Pointer extends Tool
 			else if(FlxG.mouse.justPressed)
 			{
 				// User clicked an empty space, so it's time to unselect everything.
-				clearSelection();
+				getBrain().clearSelection();
 			}
 		}
 	}
 	
 	override public function draw():Void 
 	{
+		var selectedItems:FlxGroup = getBrain().getSelectedItems();
 		var i:Int = 0;
-		var l:Int = _selectedItems.members.length;
+		var l:Int = selectedItems.members.length;
 		var item:FlxObject;
 		
 		//Set up our global flash graphics object to draw out the debug stuff
@@ -94,7 +93,7 @@ class Pointer extends Tool
 		
 		while (i < l)
 		{
-			item = cast _selectedItems.members[i++];
+			item = cast selectedItems.members[i++];
 			if (item != null && item.isOnScreen())
 			{
 				// Render a red rectangle centered at the selected item
@@ -117,27 +116,24 @@ class Pointer extends Tool
 		}
 	}
 	
-	private function clearSelection():Void
-	{
-		_selectedItems.clear();
-	}
-	
 	private function handleItemClick(Item:FlxBasic):Void
 	{			
+		var selectedItems:FlxGroup = getBrain().getSelectedItems();
+		
 		// Is it the first thing selected or are we adding things using Ctrl?
-		if(_selectedItems.length == 0 || FlxG.keys.pressed.CONTROL)
+		if(selectedItems.length == 0 || FlxG.keys.pressed.CONTROL)
 		{
 			// Yeah, that's the case. Just add the new thing to the selection.
-			_selectedItems.add(Item);
+			selectedItems.add(Item);
 		}
 		else
 		{
 			// There is something already selected
-			if (_selectedItems.members.indexOf(Item) == -1)
+			if (selectedItems.members.indexOf(Item) == -1)
 			{
-				clearSelection();
+				getBrain().clearSelection();
 			}
-			_selectedItems.add(Item);
+			selectedItems.add(Item);
 		}
 	}
 	
@@ -170,10 +166,5 @@ class Pointer extends Tool
 		}
 		FlxG.log.add("Pinpointed: " + target);
 		return target;
-	}
-	
-	public function getSelectedItems():FlxGroup
-	{
-		return _selectedItems;
 	}
 }
