@@ -28,40 +28,33 @@ class Interaction
 	{		
 		_container = Container;
 		_selectedItems = new FlxGroup();
+		_tools = [];
 		
-		// Add all interactive debug tools (pointer, eraser, etc)
-		addTools();
+		// Add all built-in tools
+		addTool(new Pointer());
+		addTool(new Mover());
+		addTool(new Eraser());
 		
 		// Subscrite to some Flixel signals
 		FlxG.signals.postDraw.add(postDraw);
 		FlxG.signals.preUpdate.add(preUpdate);
 	}
 	
-	private function addTools():Void
-	{
-		var availableTools:Array<Class<Tool>> = [
-			Pointer,
-			Eraser,
-			Mover
-		];
-		var tool:Tool;
-		var i:Int;
+	/**
+	 * 
+	 * @param	Instance
+	 */
+	public function addTool(Instance :Tool):Void
+	{	
+		Instance.init(this);
 		
-		_tools = [];
+		_tools.push(Instance);
 		
-		for (i in 0...availableTools.length)
+		// If the tool has an icon, it should be displayed in
+		// the tools panel
+		if (Instance.icon != null)
 		{
-			tool = Type.createInstance(availableTools[i], []);
-			tool.init(this);
-			
-			_tools.push(tool);
-			
-			// If the tool has an icon, it should be displayed in
-			// the tools panel (right of the screen).
-			if (tool.icon != null)
-			{
-				// TODO: add icon to debugger
-			}
+			// TODO: add icon to debugger
 		}
 	}
 	
