@@ -141,6 +141,7 @@ class FlxDebugger extends Sprite
 		completionList = new CompletionList(5);
 		addWindow(console = new Console(completionList));
 		addWindow(stats = new Stats());
+		addWindow(interaction = new Interaction(this));
 		
 		vcr = new VCR(this);
 		
@@ -153,6 +154,7 @@ class FlxDebugger extends Sprite
 		addWindowToggleButton(watch, GraphicWatch);
 		addWindowToggleButton(console, GraphicConsole);
 		addWindowToggleButton(stats, GraphicStats);
+		addWindowToggleButton(interaction, GraphicDrawDebug);
 		
 		var drawDebugButton = addButton(RIGHT, new GraphicDrawDebug(0, 0), toggleDrawDebug, true);
 		drawDebugButton.toggled = !FlxG.debugger.drawDebug;
@@ -160,9 +162,6 @@ class FlxDebugger extends Sprite
 		{ 
 			drawDebugButton.toggled = FlxG.debugger.drawDebug;
 		});
-		
-		interaction = new Interaction(this);
-		addButton(RIGHT, new GraphicDrawDebug(0, 0), toggleInteractiveDebug, true);
 		
 		#if FLX_RECORD
 		addButton(CENTER).addChild(vcr.runtimeDisplay);
@@ -492,12 +491,6 @@ class FlxDebugger extends Sprite
 	private inline function toggleDrawDebug():Void
 	{
 		FlxG.debugger.drawDebug = !FlxG.debugger.drawDebug;
-	}
-	
-	private inline function toggleInteractiveDebug():Void
-	{
-		// TODO: make it toggle properly.
-		interaction.activate();
 	}
 	
 	private inline function openHomepage():Void

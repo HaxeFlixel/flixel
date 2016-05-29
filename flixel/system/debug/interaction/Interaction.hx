@@ -1,10 +1,13 @@
 package flixel.system.debug.interaction;
 
+import flash.display.Bitmap;
 import flash.display.Graphics;
 import flash.display.Sprite;
 import flixel.group.FlxGroup;
 import flixel.system.debug.FlxDebugger;
+import flixel.system.debug.Window;
 import flixel.system.debug.interaction.tools.*;
+import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxSpriteUtil;
 
 /**
@@ -20,7 +23,7 @@ import flixel.util.FlxSpriteUtil;
  * 
  * @author	Fernando Bevilacqua (dovyski@gmail.com)
  */
-class Interaction
+class Interaction extends Window
 {
 	private var _container:Sprite;
 	private var _selectedItems:FlxGroup;
@@ -28,6 +31,9 @@ class Interaction
 	
 	public function new(Container:Sprite)
 	{		
+		super("", new GraphicLog(0, 0), 10, 50, false);
+		reposition(0, 100);
+		
 		_container = Container;
 		_selectedItems = new FlxGroup();
 		_tools = [];
@@ -48,22 +54,25 @@ class Interaction
 	 */
 	public function addTool(Instance :Tool):Void
 	{	
-		Instance.init(this);
+		var button :FlxSystemButton;
 		
+		Instance.init(this);
 		_tools.push(Instance);
 		
-		// If the tool has an icon, it should be displayed in
-		// the tools panel
-		if (Instance.icon != null)
+		button = Instance.getButton();
+		
+		// If the tool has a button, add it to the interaction window
+		if (button != null)
 		{
-			// TODO: add icon to debugger
+			button.y = 10 + _tools.length * 10;
+			addChild(button);
 		}
 	}
 	
 	/**
 	 * Clean up memory.
 	 */
-	public function destroy():Void
+	override public function destroy():Void
 	{
 		// TODO: remove all entities and free memory.
 	}

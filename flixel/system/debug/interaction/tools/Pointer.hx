@@ -32,6 +32,9 @@ class Pointer extends Tool
 		
 		FlxG.stage.addEventListener(MouseEvent.MOUSE_MOVE, updateMouse);
 		
+		// TODO: use proper button graphics
+		setButton(GraphicInteractiveCursor);
+		
 		return this;
 	}
 	
