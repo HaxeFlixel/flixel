@@ -38,8 +38,8 @@ class Interaction
 	{
 		var availableTools:Array<Class<Tool>> = [
 			Pointer,
-			//Eraser,
-			//Mover
+			Eraser,
+			Mover
 		];
 		var tool:Tool;
 		var i:Int;

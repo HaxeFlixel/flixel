@@ -3,11 +3,10 @@ package flixel.system.debug.interaction.tools;
 import flash.display.*;
 import flixel.FlxBasic;
 import flixel.FlxG;
-import flixel.FlxGroup;
 import flixel.FlxSprite;
 import flixel.FlxState;
+import flixel.group.FlxGroup;
 import flixel.math.FlxPoint;
-import flixel.system.debug.interaction;
 
 /**
  * A tool to delete items from the screen.
@@ -15,18 +14,14 @@ import flixel.system.debug.interaction;
  * @author Fernando Bevilacqua (dovyski@gmail.com)
  */
 class Eraser extends Tool
-{		
-	public function new()
-	{
-	}
-	
+{			
 	override public function update():Void 
 	{
 		super.update();
 		
-		if (FlxG.keys.justPressed("DELETE"))
+		if (FlxG.keys.justPressed.DELETE)
 		{
-			doDeletion(FlxG.keys.pressed("SHIFT"));
+			doDeletion(FlxG.keys.pressed.SHIFT);
 		}
 	}
 	
@@ -36,7 +31,7 @@ class Eraser extends Tool
 		doDeletion(false);
 	}
 	
-	private function doDeletion(RemoveFromMemory:Boolean):Void
+	private function doDeletion(RemoveFromMemory:Bool):Void
 	{
 		var selectedItems :FlxGroup = findSelectedItemsByPointer();
 		
@@ -47,10 +42,10 @@ class Eraser extends Tool
 		}
 	}
 	
-	private function findAndDelete(Items:FlxGroup, RemoveFromMemory:Boolean = false):Void
+	private function findAndDelete(Items:FlxGroup, RemoveFromMemory:Bool = false):Void
 	{
 		var i:Int = 0;
-		var members:Array = Items.members;
+		var members:Array<FlxBasic> = Items.members;
 		var l:Int = members.length;
 		var item:FlxBasic;
 		
@@ -60,7 +55,7 @@ class Eraser extends Tool
 			
 			if (item != null)
 			{
-				if (item is FlxGroup)
+				if (Std.is(item, FlxGroup))
 				{
 					// TODO: walk in the group, removing all members.
 				}
@@ -79,9 +74,9 @@ class Eraser extends Tool
 	
 	private function removeFromMemory(Item:FlxBasic, ParentGroup:FlxGroup):Void
 	{
-		var i:uint = 0;
-		var members:Array = ParentGroup.members;
-		var l:uint = members.length;
+		var i:Int = 0;
+		var members:Array<FlxBasic> = ParentGroup.members;
+		var l:Int = members.length;
 		var b:FlxBasic;
 		
 		while (i < l)
@@ -90,25 +85,25 @@ class Eraser extends Tool
 
 			if (b != null)
 			{
-				if (b is FlxGroup)
+				if (Std.is(b, FlxGroup))
 				{
-					removeFromMemory(Item, b as FlxGroup);
+					removeFromMemory(Item, cast b);
 				}
 				else if(b == Item)
 				{
 					ParentGroup.remove(b);
-					FlxG.log("InteractiveDebug: deleted " + Item);
+					FlxG.log.add("InteractiveDebug: deleted " + Item);
 				}
 			}
 		}
 	}
 	
-	private function pinpointItemInGroup(Members:Array,Cursor:FlxPoint):FlxBasic
+	private function pinpointItemInGroup(Members:Array<FlxBasic>,Cursor:FlxPoint):FlxBasic
 	{
-		var i:uint = 0;
-		var l:uint = Members.length;
+		var i:Int = 0;
+		var l:Int = Members.length;
 		var b:FlxBasic;
-		var target:FlxBasic;
+		var target:FlxBasic = null;
 		
 		while (i < l)
 		{
@@ -116,11 +111,11 @@ class Eraser extends Tool
 
 			if (b != null)
 			{
-				if (b is FlxGroup)
+				if (Std.is(b, FlxGroup))
 				{
-					target = pinpointItemInGroup((b as FlxGroup).members, Cursor);
+					target = pinpointItemInGroup((cast b).members, Cursor);
 				}
-				else if((b is FlxSprite) && (b as FlxSprite).overlapsPoint(Cursor, true))
+				else if(Std.is(b, FlxSprite) && (cast b).overlapsPoint(Cursor, true))
 				{
 					target = b;
 				}
@@ -136,7 +131,7 @@ class Eraser extends Tool
 	
 	private function findSelectedItemsByPointer():FlxGroup
 	{
-		var tool:Pointer = brain.getTool(Pointer) as Pointer;
-		return tool != null ? tool.selectedItems : null;
+		var tool:Pointer = cast getBrain().getTool(Pointer);
+		return tool != null ? tool.getSelectedItems() : null;
 	}
 }

@@ -1,6 +1,7 @@
 package flixel.system.debug.interaction.tools;
 
 import flixel.*;
+import flixel.group.FlxGroup;
 import flixel.math.FlxPoint;
 import flixel.system.debug.interaction.Interaction;
 
@@ -11,11 +12,12 @@ import flixel.system.debug.interaction.Interaction;
  */
 class Mover extends Tool
 {		
-	private var _dragging:Boolean;
+	private var _dragging:Bool;
 	private var _lastCursorPosition:FlxPoint;
 	
 	public function new()
 	{
+		super();
 		_dragging = false;
 		_lastCursorPosition = new FlxPoint(FlxG.mouse.x, FlxG.mouse.y);
 	}
@@ -24,22 +26,22 @@ class Mover extends Tool
 	{
 		super.update();
 		
-		if (!isActive() && !FlxG.keys.SHIFT)
+		if (!isActive() && !FlxG.keys.pressed.SHIFT)
 		{
 			// Tool is not active nor its hotkey is pressed.
 			// Nothing to do here.
 			return;
 		}
 		
-		if (FlxG.mouse.justPressed() && !_dragging)
+		if (FlxG.mouse.justPressed && !_dragging)
 		{
 			startDragging();
 		}
-		else if (FlxG.mouse.pressed() && _dragging)
+		else if (FlxG.mouse.pressed && _dragging)
 		{
 			doDragging();
 		}
-		else if (FlxG.mouse.justReleased())
+		else if (FlxG.mouse.justReleased)
 		{
 			stopDragging();
 		}
@@ -51,16 +53,16 @@ class Mover extends Tool
 	private function doDragging():Void
 	{
 		var selectedItems:FlxGroup = findSelectedItemsByPointer();
-		var i:uint;
-		var members:Array = selectedItems.members; // TODO: implement some dependency? If Pointer is not loaded, this line will crash.
-		var l:uint = members.length;
+		var i:Int = 0;
+		var members:Array<FlxBasic> = selectedItems.members; // TODO: implement some dependency? If Pointer is not loaded, this line will crash.
+		var l:Int = members.length;
 		var item:FlxObject;
-		var dx:Number = FlxG.mouse.x - _lastCursorPosition.x;
-		var dy:Number = FlxG.mouse.y - _lastCursorPosition.y;
+		var dx:Float = FlxG.mouse.x - _lastCursorPosition.x;
+		var dy:Float = FlxG.mouse.y - _lastCursorPosition.y;
 		
 		while (i < l)
 		{
-			item = members[i++];
+			item = cast members[i++];
 			if (item != null)
 			{
 				item.x += dx;
@@ -81,7 +83,7 @@ class Mover extends Tool
 	
 	private function findSelectedItemsByPointer():FlxGroup
 	{
-		var tool:Pointer = brain.getTool(Pointer) as Pointer;
-		return tool != null ? tool.selectedItems : null;
+		var tool:Pointer = cast getBrain().getTool(Pointer);
+		return tool != null ? tool.getSelectedItems() : null;
 	}
 }
