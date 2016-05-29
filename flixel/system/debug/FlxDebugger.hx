@@ -51,7 +51,10 @@ class GraphicArrowLeft extends BitmapData {}
 class GraphicArrowRight extends BitmapData {}
 
 @:bitmap("assets/images/debugger/buttons/close.png")
-class GraphicCloseButton extends BitmapData {}
+class GraphicCloseButton extends BitmapData { }
+
+@:bitmap("assets/images/debugger/buttons/interactive.png")
+class GraphicInteractive extends BitmapData {}
 
 /**
  * Container for the new debugger overlay. Most of the functionality is in the debug folder widgets,
@@ -154,7 +157,7 @@ class FlxDebugger extends Sprite
 		addWindowToggleButton(watch, GraphicWatch);
 		addWindowToggleButton(console, GraphicConsole);
 		addWindowToggleButton(stats, GraphicStats);
-		addWindowToggleButton(interaction, GraphicDrawDebug);
+		addWindowToggleButton(interaction, GraphicInteractive);
 		
 		var drawDebugButton = addButton(RIGHT, new GraphicDrawDebug(0, 0), toggleDrawDebug, true);
 		drawDebugButton.toggled = !FlxG.debugger.drawDebug;

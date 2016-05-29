@@ -31,7 +31,7 @@ class Interaction extends Window
 	
 	public function new(Container:Sprite)
 	{		
-		super("", new GraphicLog(0, 0), 10, 50, false);
+		super("", new GraphicInteractive(0, 0), 10, 50, false);
 		reposition(0, 100);
 		
 		_container = Container;
@@ -86,6 +86,11 @@ class Interaction extends Window
 		var i:Int;
 		var l:Int = _tools.length;
 		
+		if (!FlxG.debugger.visible)
+		{
+			return;
+		}
+		
 		for (i in 0...l)
 		{
 			tool = _tools[i];
@@ -101,6 +106,11 @@ class Interaction extends Window
 		var tool:Tool;
 		var i:Int;
 		var l:Int = _tools.length;
+		
+		if (!FlxG.debugger.visible)
+		{
+			return;
+		}
 		
 		for (i in 0...l)
 		{

@@ -92,7 +92,6 @@ class Eraser extends Tool
 				else if(b == Item)
 				{
 					ParentGroup.remove(b);
-					FlxG.log.add("InteractiveDebug: deleted " + Item);
 				}
 			}
 		}

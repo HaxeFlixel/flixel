@@ -2,14 +2,18 @@ package flixel.system.debug.interaction.tools;
 
 import flash.display.Bitmap;
 import flash.display.BitmapData;
+import flash.display.Sprite;
 import flash.events.MouseEvent;
 import flixel.group.FlxGroup;
 import flixel.math.FlxPoint;
 import flixel.system.debug.interaction.Interaction;
 import flixel.system.debug.interaction.tools.Tool;
 
-@:bitmap("assets/images/debugger/buttons/console.png") 
-class GraphicInteractiveCursor extends BitmapData {} // TODO: replace with proper cursor art
+@:bitmap("assets/images/debugger/buttons/pointer.png") 
+class GraphicPointerTool extends BitmapData { } // TODO: replace with proper cursor art
+
+@:bitmap("assets/images/debugger/cursorCross.png") 
+class GraphicCursorCross extends BitmapData {}
 
 /**
  * A tool to use the mouse cursor to select game elements.
@@ -18,22 +22,28 @@ class GraphicInteractiveCursor extends BitmapData {} // TODO: replace with prope
  */
 class Pointer extends Tool
 {		
-	private var _customCursor:Bitmap;
+	private var _customCursor:Sprite;
 	private var _mouse:FlxPoint;
 	
 	override public function init(Brain:Interaction):Tool 
 	{
+		var bitmap:Bitmap;
+		
 		super.init(Brain);
 		
 		_mouse = new FlxPoint();
 		
-		_customCursor = new Bitmap(new GraphicInteractiveCursor(0, 0));
+		bitmap = new Bitmap(new GraphicCursorCross(0, 0));
+		bitmap.x = -bitmap.width / 2;
+		bitmap.y = -bitmap.height / 2;
+		_customCursor = new Sprite();
+		_customCursor.mouseEnabled = false;
+		_customCursor.addChild(bitmap);
 		Brain.getContainer().addChild(_customCursor);
 		
 		FlxG.stage.addEventListener(MouseEvent.MOUSE_MOVE, updateMouse);
 		
-		// TODO: use proper button graphics
-		setButton(GraphicInteractiveCursor);
+		setButton(GraphicPointerTool);
 		
 		return this;
 	}
@@ -120,7 +130,7 @@ class Pointer extends Tool
 				}
 			}
 		}
-		FlxG.log.add("Pinpointed: " + target);
+		
 		return target;
 	}
 }
