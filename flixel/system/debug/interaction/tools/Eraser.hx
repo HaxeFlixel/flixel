@@ -46,10 +46,10 @@ class Eraser extends Tool
 	{
 		var i:Int = 0;
 		var members:Array<FlxBasic> = Items.members;
-		var l:Int = members.length;
+		var total:Int = members.length;
 		var item:FlxBasic;
 		
-		while (i < l)
+		while (i < total)
 		{
 			item = members[i++];
 			
@@ -76,10 +76,10 @@ class Eraser extends Tool
 	{
 		var i:Int = 0;
 		var members:Array<FlxBasic> = ParentGroup.members;
-		var l:Int = members.length;
+		var total:Int = members.length;
 		var b:FlxBasic;
 		
-		while (i < l)
+		while (i < total)
 		{
 			b = members[i++];
 
@@ -95,36 +95,5 @@ class Eraser extends Tool
 				}
 			}
 		}
-	}
-	
-	private function pinpointItemInGroup(Members:Array<FlxBasic>,Cursor:FlxPoint):FlxBasic
-	{
-		var i:Int = 0;
-		var l:Int = Members.length;
-		var b:FlxBasic;
-		var target:FlxBasic = null;
-		
-		while (i < l)
-		{
-			b = Members[i++];
-
-			if (b != null)
-			{
-				if (Std.is(b, FlxGroup))
-				{
-					target = pinpointItemInGroup((cast b).members, Cursor);
-				}
-				else if(Std.is(b, FlxSprite) && (cast b).overlapsPoint(Cursor, true))
-				{
-					target = b;
-				}
-				if (target != null)
-				{
-					break;
-				}
-			}
-		}
-		
-		return target;
 	}
 }
