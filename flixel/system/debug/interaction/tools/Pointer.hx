@@ -3,7 +3,6 @@ package flixel.system.debug.interaction.tools;
 import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.Sprite;
-import flash.events.MouseEvent;
 import flixel.group.FlxGroup;
 import flixel.math.FlxPoint;
 import flixel.system.debug.interaction.Interaction;
@@ -23,15 +22,12 @@ class GraphicCursorCross extends BitmapData {}
 class Pointer extends Tool
 {		
 	private var _customCursor:Sprite;
-	private var _mouse:FlxPoint;
 	
 	override public function init(Brain:Interaction):Tool 
 	{
 		var bitmap:Bitmap;
 		
 		super.init(Brain);
-		
-		_mouse = new FlxPoint();
 		
 		bitmap = new Bitmap(new GraphicCursorCross(0, 0));
 		bitmap.x = -bitmap.width / 2;
@@ -41,43 +37,53 @@ class Pointer extends Tool
 		_customCursor.addChild(bitmap);
 		Brain.getContainer().addChild(_customCursor);
 		
-		FlxG.stage.addEventListener(MouseEvent.MOUSE_MOVE, updateMouse);
-		
 		setButton(GraphicPointerTool);
 		
 		return this;
 	}
 	
-	public function updateMouse(Event:MouseEvent):Void
-	{
-		// Store Flixel mouse coordinates to speed up all
-		// internal calculations (overlap, etc)
-		_mouse.x = FlxG.mouse.x;
-		_mouse.y = FlxG.mouse.y;
-		
-		// Position the custom interaction mouse cursor
-		_customCursor.x = Event.stageX;
-		_customCursor.y = Event.stageY;
-	}
-	
 	override public function update():Void 
 	{
 		var item :FlxBasic;
+		var brain :Interaction = getBrain();
 		
 		super.update();
 		
-		if ((FlxG.mouse.justReleased || FlxG.mouse.justPressed) && isActive())
+		// If the tool is active, update the custom cursor cursor
+		if (isActive())
 		{
-			item = pinpointItemInGroup(FlxG.state.members, _mouse);
+			if (!_customCursor.visible)
+			{
+				_customCursor.visible = true;
+			}
+			
+			_customCursor.x = brain.systemPointer.x;
+			_customCursor.y = brain.systemPointer.y;
+		}
+		else
+		{
+			if (_customCursor.visible)
+			{
+				_customCursor.visible = false;
+			}
+			
+			// Tool is not active, nothing else to do here.
+			return;
+		}
+		
+		// Check clicks on the screen
+		if (brain.pointerJustPressed || brain.pointerJustReleased)
+		{
+			item = pinpointItemInGroup(FlxG.state.members, brain.flixelPointer);
 			
 			if (item != null)
 			{
 				handleItemClick(item);
 			}
-			else if(FlxG.mouse.justPressed)
+			else if(brain.pointerJustPressed)
 			{
 				// User clicked an empty space, so it's time to unselect everything.
-				getBrain().clearSelection();
+				brain.clearSelection();
 			}
 		}
 	}

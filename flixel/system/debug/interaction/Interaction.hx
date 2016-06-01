@@ -4,6 +4,8 @@ import flash.display.Bitmap;
 import flash.display.Graphics;
 import flash.display.Sprite;
 import flixel.group.FlxGroup;
+import flash.events.MouseEvent;
+import flixel.math.FlxPoint;
 import flixel.system.debug.FlxDebugger;
 import flixel.system.debug.Window;
 import flixel.system.debug.interaction.tools.*;
@@ -29,6 +31,11 @@ class Interaction extends Window
 	private var _selectedItems:FlxGroup;
 	private var _tools:Array<Tool>;
 	
+	public var flixelPointer:FlxPoint;
+	public var systemPointer:FlxPoint;
+	public var pointerJustPressed:Bool;
+	public var pointerJustReleased:Bool;
+	
 	public function new(Container:Sprite)
 	{		
 		super("", new GraphicInteractive(0, 0), 10, 50, false);
@@ -38,6 +45,11 @@ class Interaction extends Window
 		_selectedItems = new FlxGroup();
 		_tools = [];
 		
+		flixelPointer = new FlxPoint();
+		systemPointer = new FlxPoint();
+		pointerJustPressed = false;
+		pointerJustReleased = false;
+		
 		// Add all built-in tools
 		addTool(new Pointer());
 		addTool(new Mover());
@@ -46,6 +58,29 @@ class Interaction extends Window
 		// Subscrite to some Flixel signals
 		FlxG.signals.postDraw.add(postDraw);
 		FlxG.signals.preUpdate.add(preUpdate);
+		
+		// Listen to important events
+		FlxG.stage.addEventListener(MouseEvent.MOUSE_MOVE, updateMouse);
+		FlxG.stage.addEventListener(MouseEvent.MOUSE_DOWN, handleMouseClick);
+		FlxG.stage.addEventListener(MouseEvent.MOUSE_UP, handleMouseClick);
+	}
+	
+	private function updateMouse(Event:MouseEvent):Void
+	{
+		// Store Flixel mouse coordinates to speed up all
+		// internal calculations (overlap, etc)
+		flixelPointer.x = FlxG.mouse.x; // TODO: calculate mouse according to Flixel coordinate system
+		flixelPointer.y = FlxG.mouse.y; // TODO: calculate mouse according to Flixel coordinate system
+		
+		// Position the custom interaction mouse cursor
+		systemPointer.x = Event.stageX;
+		systemPointer.y = Event.stageY;
+	}
+	
+	private function handleMouseClick(Event:MouseEvent):Void 
+	{
+		pointerJustPressed = Event.type == MouseEvent.MOUSE_DOWN;
+		pointerJustReleased = Event.type == MouseEvent.MOUSE_UP;
 	}
 	
 	/**
@@ -96,6 +131,9 @@ class Interaction extends Window
 			tool = _tools[i];
 			tool.update();
 		}
+		
+		pointerJustPressed = false;
+		pointerJustReleased = false;
 	}
 	
 	/**
