@@ -35,6 +35,7 @@ class Interaction extends Window
 	public var systemPointer:FlxPoint;
 	public var pointerJustPressed:Bool;
 	public var pointerJustReleased:Bool;
+	public var pointerPressed:Bool;
 	
 	public function new(Container:Sprite)
 	{		
@@ -49,6 +50,7 @@ class Interaction extends Window
 		systemPointer = new FlxPoint();
 		pointerJustPressed = false;
 		pointerJustReleased = false;
+		pointerPressed = false;
 		
 		// Add all built-in tools
 		addTool(new Pointer());
@@ -81,6 +83,15 @@ class Interaction extends Window
 	{
 		pointerJustPressed = Event.type == MouseEvent.MOUSE_DOWN;
 		pointerJustReleased = Event.type == MouseEvent.MOUSE_UP;
+		
+		if (pointerJustPressed)
+		{
+			pointerPressed = true;
+		}
+		else if (pointerJustReleased)
+		{
+			pointerPressed = false;
+		}
 	}
 	
 	/**

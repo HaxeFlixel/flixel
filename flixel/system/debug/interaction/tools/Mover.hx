@@ -24,6 +24,8 @@ class Mover extends Tool
 	
 	override public function update():Void 
 	{
+		var brain :Interaction = getBrain();
+		
 		super.update();
 		
 		if (!isActive() && !FlxG.keys.pressed.SHIFT)
@@ -33,32 +35,32 @@ class Mover extends Tool
 			return;
 		}
 		
-		if (FlxG.mouse.justPressed && !_dragging)
+		if (brain.pointerJustPressed && !_dragging)
 		{
 			startDragging();
 		}
-		else if (FlxG.mouse.pressed && _dragging)
+		else if (brain.pointerPressed && _dragging)
 		{
 			doDragging();
 		}
-		else if (FlxG.mouse.justReleased)
+		else if (brain.pointerJustReleased)
 		{
 			stopDragging();
 		}
 		
-		_lastCursorPosition.x = FlxG.mouse.x;
-		_lastCursorPosition.y = FlxG.mouse.y;
+		_lastCursorPosition.x = brain.flixelPointer.x;
+		_lastCursorPosition.y = brain.flixelPointer.y;
 	}
 	
 	private function doDragging():Void
 	{
-		var selectedItems:FlxGroup = getBrain().getSelectedItems();
+		var brain :Interaction = getBrain();
 		var i:Int = 0;
-		var members:Array<FlxBasic> = selectedItems.members; // TODO: implement some dependency? If Pointer is not loaded, this line will crash.
+		var members:Array<FlxBasic> = brain.getSelectedItems().members;
 		var l:Int = members.length;
 		var item:FlxObject;
-		var dx:Float = FlxG.mouse.x - _lastCursorPosition.x;
-		var dy:Float = FlxG.mouse.y - _lastCursorPosition.y;
+		var dx:Float = brain.flixelPointer.x - _lastCursorPosition.x;
+		var dy:Float = brain.flixelPointer.y - _lastCursorPosition.y;
 		
 		while (i < l)
 		{
