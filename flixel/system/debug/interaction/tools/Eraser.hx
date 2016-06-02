@@ -1,6 +1,6 @@
 package flixel.system.debug.interaction.tools;
 
-import flash.display.*;
+import flash.display.BitmapData;
 import flash.ui.Keyboard;
 import flixel.FlxBasic;
 import flixel.FlxG;
@@ -10,6 +10,9 @@ import flixel.group.FlxGroup;
 import flixel.math.FlxPoint;
 import flixel.system.debug.interaction.Interaction;
 
+@:bitmap("assets/images/debugger/buttons/eraser.png") 
+class GraphicEraserTool extends BitmapData { }
+
 /**
  * A tool to delete items from the screen.
  * 
@@ -17,6 +20,13 @@ import flixel.system.debug.interaction.Interaction;
  */
 class Eraser extends Tool
 {			
+	override public function init(Brain:Interaction):Tool 
+	{
+		super.init(Brain);
+		setButton(GraphicEraserTool);
+		return this;
+	}
+	
 	override public function update():Void 
 	{
 		var brain:Interaction = getBrain();

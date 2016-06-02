@@ -9,9 +9,6 @@ import flixel.math.FlxPoint;
 import flixel.system.debug.interaction.Interaction;
 import flixel.system.debug.interaction.tools.Tool;
 
-@:bitmap("assets/images/debugger/buttons/pointer.png") 
-class GraphicPointerTool extends BitmapData { } // TODO: replace with proper cursor art
-
 @:bitmap("assets/images/debugger/cursorCross.png") 
 class GraphicCursorCross extends BitmapData {}
 
@@ -38,7 +35,7 @@ class Pointer extends Tool
 		_customCursor.addChild(bitmap);
 		Brain.getContainer().addChild(_customCursor);
 		
-		setButton(GraphicPointerTool);
+		setButton(GraphicCursorCross);
 		
 		return this;
 	}

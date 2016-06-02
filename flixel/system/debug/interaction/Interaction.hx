@@ -125,8 +125,10 @@ class Interaction extends Window
 		// If the tool has a button, add it to the interaction window
 		if (button != null)
 		{
-			button.y = 10 + _tools.length * 10;
+			button.y = _tools.length * 20; // TODO: fix this hardcoded number
 			addChild(button);
+			
+			resize(10, _tools.length * 25);  // TODO: fix this hardcoded number
 		}
 	}
 	

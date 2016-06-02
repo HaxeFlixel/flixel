@@ -1,10 +1,13 @@
 package flixel.system.debug.interaction.tools;
 
-import flixel.*;
+import flash.display.BitmapData;
 import flash.ui.Keyboard;
 import flixel.group.FlxGroup;
 import flixel.math.FlxPoint;
 import flixel.system.debug.interaction.Interaction;
+
+@:bitmap("assets/images/debugger/buttons/mover.png") 
+class GraphicMoverTool extends BitmapData { }
 
 /**
  * A tool to move selected items.
@@ -16,11 +19,14 @@ class Mover extends Tool
 	private var _dragging:Bool;
 	private var _lastCursorPosition:FlxPoint;
 	
-	public function new()
+	override public function init(Brain:Interaction):Tool 
 	{
-		super();
+		super.init(Brain);
 		_dragging = false;
-		_lastCursorPosition = new FlxPoint(FlxG.mouse.x, FlxG.mouse.y);
+		_lastCursorPosition = new FlxPoint(Brain.flixelPointer.x, Brain.flixelPointer.x);
+		
+		setButton(GraphicMoverTool);
+		return this;
 	}
 	
 	override public function update():Void 
