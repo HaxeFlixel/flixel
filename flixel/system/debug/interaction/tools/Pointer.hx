@@ -3,6 +3,7 @@ package flixel.system.debug.interaction.tools;
 import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.Sprite;
+import flash.ui.Keyboard;
 import flixel.group.FlxGroup;
 import flixel.math.FlxPoint;
 import flixel.system.debug.interaction.Interaction;
@@ -90,10 +91,11 @@ class Pointer extends Tool
 	
 	private function handleItemClick(Item:FlxBasic):Void
 	{			
-		var selectedItems:FlxGroup = getBrain().getSelectedItems();
+		var brain:Interaction = getBrain();
+		var selectedItems:FlxGroup = brain.getSelectedItems();
 		
 		// Is it the first thing selected or are we adding things using Ctrl?
-		if(selectedItems.length == 0 || FlxG.keys.pressed.CONTROL)
+		if(selectedItems.length == 0 || brain.keyPressed(Keyboard.CONTROL))
 		{
 			// Yeah, that's the case. Just add the new thing to the selection.
 			selectedItems.add(Item);
@@ -103,7 +105,7 @@ class Pointer extends Tool
 			// There is something already selected
 			if (selectedItems.members.indexOf(Item) == -1)
 			{
-				getBrain().clearSelection();
+				brain.clearSelection();
 			}
 			selectedItems.add(Item);
 		}

@@ -1,6 +1,7 @@
 package flixel.system.debug.interaction.tools;
 
 import flixel.*;
+import flash.ui.Keyboard;
 import flixel.group.FlxGroup;
 import flixel.math.FlxPoint;
 import flixel.system.debug.interaction.Interaction;
@@ -28,14 +29,14 @@ class Mover extends Tool
 		
 		super.update();
 		
-		if (!isActive() && !FlxG.keys.pressed.SHIFT)
+		if (!isActive() && !brain.keyPressed(Keyboard.SHIFT))
 		{
 			// Tool is not active nor its hotkey is pressed.
 			// Nothing to do here.
 			return;
 		}
 		
-		if (brain.pointerJustPressed && !_dragging)
+		if (brain.pointerPressed && !_dragging)
 		{
 			startDragging();
 		}
