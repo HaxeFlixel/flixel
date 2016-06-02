@@ -3,6 +3,8 @@ package flixel.system.debug.interaction;
 import flash.display.Bitmap;
 import flash.display.Graphics;
 import flash.display.Sprite;
+import flash.events.KeyboardEvent;
+import flash.ui.Keyboard;
 import flixel.group.FlxGroup;
 import flash.events.MouseEvent;
 import flixel.math.FlxPoint;
@@ -30,12 +32,15 @@ class Interaction extends Window
 	private var _container:Sprite;
 	private var _selectedItems:FlxGroup;
 	private var _tools:Array<Tool>;
+	private var _turn:UInt;
 	
 	public var flixelPointer:FlxPoint;
 	public var systemPointer:FlxPoint;
 	public var pointerJustPressed:Bool;
 	public var pointerJustReleased:Bool;
 	public var pointerPressed:Bool;
+	public var keysDown:Array<UInt>;
+	public var keysUp:Array<UInt>;	
 	
 	public function new(Container:Sprite)
 	{		
@@ -45,6 +50,9 @@ class Interaction extends Window
 		_container = Container;
 		_selectedItems = new FlxGroup();
 		_tools = [];
+		keysDown = [];
+		keysUp = [];
+		_turn = 2;
 		
 		flixelPointer = new FlxPoint();
 		systemPointer = new FlxPoint();
@@ -65,6 +73,8 @@ class Interaction extends Window
 		FlxG.stage.addEventListener(MouseEvent.MOUSE_MOVE, updateMouse);
 		FlxG.stage.addEventListener(MouseEvent.MOUSE_DOWN, handleMouseClick);
 		FlxG.stage.addEventListener(MouseEvent.MOUSE_UP, handleMouseClick);
+		FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, handleKeyEvent);
+		FlxG.stage.addEventListener(KeyboardEvent.KEY_UP, handleKeyEvent);
 	}
 	
 	private function updateMouse(Event:MouseEvent):Void
@@ -91,6 +101,18 @@ class Interaction extends Window
 		else if (pointerJustReleased)
 		{
 			pointerPressed = false;
+		}
+	}
+	
+	private function handleKeyEvent(Event:KeyboardEvent):Void
+	{
+		if (Event.type == KeyboardEvent.KEY_DOWN)
+		{
+			keysDown[Event.keyCode] = _turn;
+		}
+		else if (Event.type == KeyboardEvent.KEY_UP)
+		{
+			keysUp[Event.keyCode] = _turn;
 		}
 	}
 	
@@ -145,6 +167,7 @@ class Interaction extends Window
 		
 		pointerJustPressed = false;
 		pointerJustReleased = false;
+		_turn++;
 	}
 	
 	/**
@@ -246,5 +269,25 @@ class Interaction extends Window
 	public function clearSelection():Void
 	{
 		_selectedItems.clear();
+	}
+	
+	/**
+	 * 
+	 * @param	Key
+	 * @return
+	 */
+	public function keyPressed(Key:Int):Bool
+	{
+		return _turn <= keysDown[Key];
+	}
+	
+	/**
+	 * 
+	 * @param	Key
+	 * @return
+	 */
+	public function keyJustPressed(Key:Int):Bool
+	{
+		return (_turn - keysUp[Key]) == 1;
 	}
 }
