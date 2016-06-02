@@ -15,15 +15,9 @@ import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxSpriteUtil;
 
 /**
- * A plugin to visually and interactively debug a game while it is running.
- * 
- * TODO:
- * - Make Tool#init(brain) instead of passing that in the constructor
- * - Make tools setIcon() instead of using _icon or something
- * - Move _selectedItems from brain to Pointer tool (make tools able to communicate with brain.getTool(Class).
- * - Create update/draw methods for tools?
- * - Add signals to tools, so Pointer can dispatch when an item was selected?
- * - Make ToolsPanel only contain the tool icons, not the tools itself, it should be the brain's responsability
+ * Adds a new funcionality to Flixel debugger that allows any object
+ * on the screen to be dragged, moved or deleted while the game is
+ * still running.
  * 
  * @author	Fernando Bevilacqua (dovyski@gmail.com)
  */
@@ -33,25 +27,26 @@ class Interaction extends Window
 	private var _selectedItems:FlxGroup;
 	private var _tools:Array<Tool>;
 	private var _turn:UInt;
+	private var _keysDown:Array<UInt>;
+	private var _keysUp:Array<UInt>;		
 	
 	public var flixelPointer:FlxPoint;
 	public var systemPointer:FlxPoint;
 	public var pointerJustPressed:Bool;
 	public var pointerJustReleased:Bool;
 	public var pointerPressed:Bool;
-	public var keysDown:Array<UInt>;
-	public var keysUp:Array<UInt>;	
+
 	
 	public function new(Container:Sprite)
 	{		
-		super("", new GraphicInteractive(0, 0), 10, 50, false);
+		super("", null, 10, 50, false);
 		reposition(0, 100);
 		
 		_container = Container;
 		_selectedItems = new FlxGroup();
 		_tools = [];
-		keysDown = [];
-		keysUp = [];
+		_keysDown = [];
+		_keysUp = [];
 		_turn = 2;
 		
 		flixelPointer = new FlxPoint();
@@ -65,11 +60,9 @@ class Interaction extends Window
 		addTool(new Mover());
 		addTool(new Eraser());
 		
-		// Subscrite to some Flixel signals
 		FlxG.signals.postDraw.add(postDraw);
 		FlxG.signals.preUpdate.add(preUpdate);
 		
-		// Listen to important events
 		FlxG.stage.addEventListener(MouseEvent.MOUSE_MOVE, updateMouse);
 		FlxG.stage.addEventListener(MouseEvent.MOUSE_DOWN, handleMouseClick);
 		FlxG.stage.addEventListener(MouseEvent.MOUSE_UP, handleMouseClick);
@@ -108,11 +101,11 @@ class Interaction extends Window
 	{
 		if (Event.type == KeyboardEvent.KEY_DOWN)
 		{
-			keysDown[Event.keyCode] = _turn;
+			_keysDown[Event.keyCode] = _turn;
 		}
 		else if (Event.type == KeyboardEvent.KEY_UP)
 		{
-			keysUp[Event.keyCode] = _turn;
+			_keysUp[Event.keyCode] = _turn;
 		}
 	}
 	
@@ -278,7 +271,7 @@ class Interaction extends Window
 	 */
 	public function keyPressed(Key:Int):Bool
 	{
-		return _turn <= keysDown[Key];
+		return _turn <= _keysDown[Key];
 	}
 	
 	/**
@@ -288,6 +281,6 @@ class Interaction extends Window
 	 */
 	public function keyJustPressed(Key:Int):Bool
 	{
-		return (_turn - keysUp[Key]) == 1;
+		return (_turn - _keysUp[Key]) == 1;
 	}
 }
