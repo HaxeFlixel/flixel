@@ -51,7 +51,7 @@ class Tool extends Sprite
 	
 	public function isActive():Bool
 	{
-		return _active;
+		return _active && _brain.visible;
 	}
 	
 	public function getBrain():Interaction
