@@ -241,24 +241,32 @@ class Interaction extends Window
 		return tool;
 	}
 	
-	public function activate():Void
+	override public function toggleVisible():Void 
 	{
-		// TODO: improve this!
-		_tools[0].activate();
+		super.toggleVisible();
+		
+		if (visible)
+		{
+			// Activate the first tool available
+			_tools[0].activate();
+			_tools[0].getButton().toggled = true;
+		}
 	}
 	
 	public function setCustomCursor(Icon:DisplayObject):Void
 	{
-		Icon.x = -Icon.width / 2;
-		Icon.y = -Icon.height / 2;
-		
 		// Remove any previsouly defined custom cursor
 		while (_customCursor.numChildren > 0)
 		{
 			_customCursor.removeChildAt(0);
 		}
 		
-		_customCursor.addChild(Icon);
+		if (Icon != null)
+		{		
+			Icon.x = -Icon.width / 2;
+			Icon.y = -Icon.height / 2;
+			_customCursor.addChild(Icon);
+		}
 	}
 	
 	/**

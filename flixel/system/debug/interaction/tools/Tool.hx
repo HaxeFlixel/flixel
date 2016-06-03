@@ -47,6 +47,10 @@ class Tool extends Sprite
 	public function deactivate():Void
 	{
 		_active = false;
+		if (_cursor != null)
+		{
+			_brain.setCustomCursor(null);
+		}
 	}
 	
 	public function toggleActivation():Void

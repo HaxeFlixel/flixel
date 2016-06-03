@@ -261,7 +261,7 @@ class Window extends Sprite
 		}
 	}
 	
-	public inline function toggleVisible():Void
+	public function toggleVisible():Void
 	{
 		setVisible(!visible);
 	}
