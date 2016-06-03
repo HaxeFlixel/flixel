@@ -19,23 +19,12 @@ class GraphicCursorCross extends BitmapData {}
  */
 class Pointer extends Tool
 {		
-	private var _customCursor:Sprite;
-	
 	override public function init(Brain:Interaction):Tool 
 	{
-		var bitmap:Bitmap;
-		
 		super.init(Brain);
 		
-		bitmap = new Bitmap(new GraphicCursorCross(0, 0));
-		bitmap.x = -bitmap.width / 2;
-		bitmap.y = -bitmap.height / 2;
-		_customCursor = new Sprite();
-		_customCursor.mouseEnabled = false;
-		_customCursor.addChild(bitmap);
-		Brain.getContainer().addChild(_customCursor);
-		
 		setButton(GraphicCursorCross);
+		setCursor(new Bitmap(new GraphicCursorCross(0, 0)));
 		
 		return this;
 	}
@@ -48,24 +37,8 @@ class Pointer extends Tool
 		super.update();
 		
 		// If the tool is active, update the custom cursor cursor
-		if (isActive())
+		if (!isActive())
 		{
-			if (!_customCursor.visible)
-			{
-				_customCursor.visible = true;
-			}
-			
-			_customCursor.x = brain.systemPointer.x;
-			_customCursor.y = brain.systemPointer.y;
-		}
-		else
-		{
-			if (_customCursor.visible)
-			{
-				_customCursor.visible = false;
-			}
-			
-			// Tool is not active, nothing else to do here.
 			return;
 		}
 		

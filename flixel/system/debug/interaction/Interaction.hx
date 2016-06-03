@@ -1,6 +1,6 @@
 package flixel.system.debug.interaction;
 
-import flash.display.Bitmap;
+import flash.display.DisplayObject;
 import flash.display.Graphics;
 import flash.display.Sprite;
 import flash.events.KeyboardEvent;
@@ -24,6 +24,7 @@ import flixel.util.FlxSpriteUtil;
 class Interaction extends Window
 {
 	private var _container:Sprite;
+	private var _customCursor:Sprite;
 	private var _selectedItems:FlxGroup;
 	private var _tools:Array<Tool>;
 	private var _turn:UInt;
@@ -31,7 +32,6 @@ class Interaction extends Window
 	private var _keysUp:Array<UInt>;		
 	
 	public var flixelPointer:FlxPoint;
-	public var systemPointer:FlxPoint;
 	public var pointerJustPressed:Bool;
 	public var pointerJustReleased:Bool;
 	public var pointerPressed:Bool;
@@ -49,8 +49,11 @@ class Interaction extends Window
 		_keysUp = [];
 		_turn = 2;
 		
+		_customCursor = new Sprite();
+		_customCursor.mouseEnabled = false;
+		_container.addChild(_customCursor);
+		
 		flixelPointer = new FlxPoint();
-		systemPointer = new FlxPoint();
 		pointerJustPressed = false;
 		pointerJustReleased = false;
 		pointerPressed = false;
@@ -77,9 +80,8 @@ class Interaction extends Window
 		flixelPointer.x = FlxG.mouse.x; // TODO: calculate mouse according to Flixel coordinate system
 		flixelPointer.y = FlxG.mouse.y; // TODO: calculate mouse according to Flixel coordinate system
 		
-		// Position the custom interaction mouse cursor
-		systemPointer.x = Event.stageX;
-		systemPointer.y = Event.stageY;
+		_customCursor.x = Event.stageX;
+		_customCursor.y = Event.stageY;
 	}
 	
 	private function handleMouseClick(Event:MouseEvent):Void 
@@ -148,10 +150,15 @@ class Interaction extends Window
 		var tool:Tool;
 		var i:Int;
 		var l:Int = _tools.length;
-		
-		if (!FlxG.debugger.visible)
+
+		if (!FlxG.debugger.visible || !visible)
 		{
+			_customCursor.visible = false;
 			return;
+		}
+		else
+		{
+			_customCursor.visible = true;
 		}
 		
 		for (i in 0...l)
@@ -238,6 +245,20 @@ class Interaction extends Window
 	{
 		// TODO: improve this!
 		_tools[0].activate();
+	}
+	
+	public function setCustomCursor(Icon:DisplayObject):Void
+	{
+		Icon.x = -Icon.width / 2;
+		Icon.y = -Icon.height / 2;
+		
+		// Remove any previsouly defined custom cursor
+		while (_customCursor.numChildren > 0)
+		{
+			_customCursor.removeChildAt(0);
+		}
+		
+		_customCursor.addChild(Icon);
 	}
 	
 	/**

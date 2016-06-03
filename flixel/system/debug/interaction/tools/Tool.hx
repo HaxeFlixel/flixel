@@ -14,6 +14,7 @@ class Tool extends Sprite
 	private var _brain:Interaction;
 	private var _active:Bool;
 	private var _button:FlxSystemButton;
+	private var _cursor:DisplayObject;
 	
 	public function init(Brain:Interaction):Tool
 	{
@@ -34,6 +35,13 @@ class Tool extends Sprite
 	public function activate():Void
 	{
 		_active = true;
+		
+		// If the tool has a custom cursor,
+		// show it now
+		if (_cursor != null)
+		{
+			_brain.setCustomCursor(_cursor);
+		}
 	}
 	
 	public function deactivate():Void
@@ -62,6 +70,11 @@ class Tool extends Sprite
 	public function setButton(Icon:Class<BitmapData>):Void
 	{
 		_button = new FlxSystemButton(Type.createInstance(Icon, [0, 0]), toggleActivation, true);
+	}
+	
+	public function setCursor(Icon:DisplayObject):Void
+	{
+		_cursor = Icon;
 	}
 	
 	/**
