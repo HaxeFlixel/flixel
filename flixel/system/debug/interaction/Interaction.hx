@@ -78,8 +78,10 @@ class Interaction extends Window
 	{
 		// Store Flixel mouse coordinates to speed up all
 		// internal calculations (overlap, etc)
+		#if FLX_MOUSE
 		flixelPointer.x = FlxG.mouse.x; // TODO: calculate mouse according to Flixel coordinate system
 		flixelPointer.y = FlxG.mouse.y; // TODO: calculate mouse according to Flixel coordinate system
+		#end
 		
 		_customCursor.x = Event.stageX;
 		_customCursor.y = Event.stageY;
