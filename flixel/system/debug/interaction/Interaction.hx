@@ -27,9 +27,9 @@ class Interaction extends Window
 	private var _customCursor:Sprite;
 	private var _selectedItems:FlxGroup;
 	private var _tools:Array<Tool>;
-	private var _turn:UInt;
-	private var _keysDown:Array<UInt>;
-	private var _keysUp:Array<UInt>;		
+	private var _turn:Int;
+	private var _keysDown:Map<Int, Int>;
+	private var _keysUp:Map<Int, Int>;		
 	private var _activeTool:Tool;		
 	
 	public var flixelPointer:FlxPoint;
@@ -46,8 +46,8 @@ class Interaction extends Window
 		_container = Container;
 		_selectedItems = new FlxGroup();
 		_tools = [];
-		_keysDown = [];
-		_keysUp = [];
+		_keysDown = new Map<Int, Int>();
+		_keysUp = new Map<Int, Int>();
 		_turn = 2;
 		
 		_customCursor = new Sprite();
@@ -113,11 +113,11 @@ class Interaction extends Window
 	{
 		if (Event.type == KeyboardEvent.KEY_DOWN)
 		{
-			_keysDown[Event.keyCode] = _turn;
+			_keysDown.set(Event.keyCode, _turn);
 		}
 		else if (Event.type == KeyboardEvent.KEY_UP)
 		{
-			_keysUp[Event.keyCode] = _turn;
+			_keysUp.set(Event.keyCode, _turn);
 		}
 	}
 	
@@ -339,7 +339,8 @@ class Interaction extends Window
 	 */
 	public function keyPressed(Key:Int):Bool
 	{
-		return _turn <= _keysDown[Key];
+		var value:Int = _keysDown.get(Key) == null ? 0 : _keysDown.get(Key);
+		return _turn <= value;
 	}
 	
 	/**
@@ -349,6 +350,7 @@ class Interaction extends Window
 	 */
 	public function keyJustPressed(Key:Int):Bool
 	{
-		return (_turn - _keysUp[Key]) == 1;
+		var value:Int = _keysUp.get(Key) == null ? 0 : _keysUp.get(Key);
+		return (_turn - value) == 1;
 	}
 }
