@@ -45,7 +45,7 @@ class Eraser extends Tool
 		doDeletion(getBrain().keyPressed(Keyboard.SHIFT));
 		
 		// No need to stay active
-		deactivate();
+		_brain.setActiveTool(null);
 	}
 	
 	private function doDeletion(RemoveFromMemory:Bool):Void
