@@ -26,6 +26,18 @@ class SignalFrontEnd
 	public var postDraw(default, null):FlxSignal = new FlxSignal();
 	public var focusGained(default, null):FlxSignal = new FlxSignal();
 	public var focusLost(default, null):FlxSignal = new FlxSignal();
+	#if FLX_DEBUG
+	/**
+	 * Gets dispatched when the debugger is showed (usually by
+	 * pressing the key below ESC)
+	 */
+	public var debuggerShowed(default, null):FlxSignal = new FlxSignal();
+	/**
+	 * Gets dispatched when the debugger is hid (usually by
+	 * pressing the key below ESC)
+	 */
+	public var debuggerHid(default, null):FlxSignal = new FlxSignal();
+	#end
 	
 	@:allow(flixel.FlxG)
 	private function new() {}
