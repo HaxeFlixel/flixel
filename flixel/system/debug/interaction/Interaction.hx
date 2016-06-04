@@ -30,6 +30,7 @@ class Interaction extends Window
 	private var _turn:UInt;
 	private var _keysDown:Array<UInt>;
 	private var _keysUp:Array<UInt>;		
+	private var _activeTool:Tool;		
 	
 	public var flixelPointer:FlxPoint;
 	public var pointerJustPressed:Bool;
@@ -285,6 +286,20 @@ class Interaction extends Window
 	public function getSelectedItems():FlxGroup
 	{
 		return _selectedItems;
+	}
+	
+	public function getActiveTool():Tool
+	{
+		return _activeTool;
+	}
+	
+	public function setActiveTool(Value:Tool):Void
+	{
+		if (_activeTool != null)
+		{
+			_activeTool.deactivate();
+		}
+		_activeTool = Value;
 	}
 	
 	/**

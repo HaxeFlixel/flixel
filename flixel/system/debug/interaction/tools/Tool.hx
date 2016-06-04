@@ -12,13 +12,11 @@ import flixel.system.ui.FlxSystemButton;
 class Tool extends Sprite
 {		
 	private var _brain:Interaction;
-	private var _active:Bool;
 	private var _button:FlxSystemButton;
 	private var _cursor:DisplayObject;
 	
 	public function init(Brain:Interaction):Tool
 	{
-		_active = false;
 		_brain = Brain;
 		_button = null;
 		return this;
@@ -34,7 +32,8 @@ class Tool extends Sprite
 	
 	public function activate():Void
 	{
-		_active = true;
+		_brain.setActiveTool(this);
+		_button.toggled = true;
 		
 		// If the tool has a custom cursor,
 		// show it now
@@ -46,7 +45,8 @@ class Tool extends Sprite
 	
 	public function deactivate():Void
 	{
-		_active = false;
+		_button.toggled = false;
+		
 		if (_cursor != null)
 		{
 			_brain.setCustomCursor(null);
@@ -63,7 +63,7 @@ class Tool extends Sprite
 	
 	public function isActive():Bool
 	{
-		return _active && _brain.visible;
+		return _brain.getActiveTool() == this && _brain.visible;
 	}
 	
 	public function getBrain():Interaction
