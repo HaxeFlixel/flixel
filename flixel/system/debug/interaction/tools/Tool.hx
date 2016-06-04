@@ -31,10 +31,7 @@ class Tool extends Sprite
 	}
 	
 	public function activate():Void
-	{
-		_brain.setActiveTool(this);
-		_button.toggled = true;
-		
+	{	
 		// If the tool has a custom cursor,
 		// show it now
 		if (_cursor != null)
@@ -44,21 +41,11 @@ class Tool extends Sprite
 	}
 	
 	public function deactivate():Void
-	{
-		_button.toggled = false;
-		
+	{	
 		if (_cursor != null)
 		{
 			_brain.setCustomCursor(null);
 		}
-	}
-	
-	public function toggleActivation():Void
-	{
-		if (isActive())
-			deactivate();
-		else
-			activate();
 	}
 	
 	public function isActive():Bool
@@ -73,12 +60,17 @@ class Tool extends Sprite
 	
 	public function setButton(Icon:Class<BitmapData>):Void
 	{
-		_button = new FlxSystemButton(Type.createInstance(Icon, [0, 0]), toggleActivation, true);
+		_button = new FlxSystemButton(Type.createInstance(Icon, [0, 0]), onButtonClicked, true);
 	}
 	
 	public function setCursor(Icon:DisplayObject):Void
 	{
 		_cursor = Icon;
+	}
+	
+	private function onButtonClicked():Void
+	{
+		_brain.setActiveTool(this);
 	}
 	
 	/**

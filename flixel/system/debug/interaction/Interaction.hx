@@ -305,8 +305,21 @@ class Interaction extends Window
 		if (_activeTool != null)
 		{
 			_activeTool.deactivate();
+			_activeTool.getButton().toggled = false;
 		}
+		
+		if (_activeTool == Value)
+		{
+			Value = null;
+		}
+		
 		_activeTool = Value;
+		
+		if(_activeTool != null)
+		{
+			_activeTool.getButton().toggled = true;
+			_activeTool.activate();
+		}
 	}
 	
 	/**
