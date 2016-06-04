@@ -87,6 +87,13 @@ class Interaction extends Window
 	
 	private function handleMouseClick(Event:MouseEvent):Void 
 	{
+		if (Std.is(Event.target, FlxSystemButton))
+		{
+			// User clicked a debugger icon instead of performing
+			// a click related to a tool.
+			return;
+		}
+		
 		pointerJustPressed = Event.type == MouseEvent.MOUSE_DOWN;
 		pointerJustReleased = Event.type == MouseEvent.MOUSE_UP;
 		
