@@ -42,7 +42,10 @@ class Eraser extends Tool
 	override public function activate():Void 
 	{
 		super.activate();
-		doDeletion(false);
+		doDeletion(getBrain().keyPressed(Keyboard.SHIFT));
+		
+		// No need to stay active
+		deactivate();
 	}
 	
 	private function doDeletion(RemoveFromMemory:Bool):Void
