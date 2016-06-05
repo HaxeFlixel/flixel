@@ -212,10 +212,21 @@ class Interaction extends Window
 		var item:FlxObject;
 		
 		//Set up global flash graphics object to draw out the debug stuff
-		var gfx:Graphics = FlxSpriteUtil.flashGfx;
-		gfx.clear();
+		var gfx:Graphics = null;
 		
-		while (i < length)
+		if (FlxG.renderBlit)
+		{
+			gfx = FlxSpriteUtil.flashGfx;
+			gfx.clear();	
+		}
+		else
+		{
+			#if FLX_DEBUG
+			gfx = FlxG.camera.debugLayer.graphics;
+			#end
+		}
+		
+		while (i < length && gfx != null)
 		{
 			item = cast _selectedItems.members[i++];
 			if (item != null && item.scrollFactor != null && item.isOnScreen())

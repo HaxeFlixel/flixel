@@ -98,7 +98,7 @@ class Pointer extends Tool
 				{
 					target = pinpointItemInGroup((cast b).members, Cursor);
 				}
-				else if(Std.is(b, FlxSprite) && (cast b).overlapsPoint(Cursor, true))
+				else if(Std.is(b, FlxSprite) && (cast(b, FlxSprite).overlapsPoint(Cursor, true)))
 				{
 					target = b;
 				}
