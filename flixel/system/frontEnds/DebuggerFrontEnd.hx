@@ -35,6 +35,10 @@ class DebuggerFrontEnd
 	 * Dispatched when drawDebug is changed.
 	 */
 	public var drawDebugChanged(default, null):FlxSignal = new FlxSignal();
+	/**
+	 * Dispatched when visibility is changed.
+	 */
+	public var visibilityChanged(default, null):FlxTypedSignal<Bool->Void> = new FlxTypedSignal<Bool->Void>();
 	
 	public var visible(default, set):Bool = false;
 	
@@ -156,6 +160,8 @@ class DebuggerFrontEnd
 			FlxG.stage.focus = FlxG.game;
 		}
 		#end
+		
+		visibilityChanged.dispatch(Value);
 		
 		return visible = Value;
 	}
