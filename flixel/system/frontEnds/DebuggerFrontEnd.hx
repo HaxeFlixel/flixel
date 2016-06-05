@@ -38,7 +38,7 @@ class DebuggerFrontEnd
 	/**
 	 * Dispatched when visibility is changed.
 	 */
-	public var visibilityChanged(default, null):FlxTypedSignal<Bool->Void> = new FlxTypedSignal<Bool->Void>();
+	public var visibilityChanged(default, null):FlxSignal = new FlxSignal();
 	
 	public var visible(default, set):Bool = false;
 	
@@ -160,9 +160,10 @@ class DebuggerFrontEnd
 			FlxG.stage.focus = FlxG.game;
 		}
 		
-		visibilityChanged.dispatch(Value);
+		visible = Value;
+		visibilityChanged.dispatch();
 		#end
 		
-		return visible = Value;
+		return visible;
 	}
 }
