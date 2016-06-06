@@ -4,14 +4,12 @@ import flash.display.BitmapData;
 import flash.ui.Keyboard;
 import flixel.FlxBasic;
 import flixel.FlxG;
-import flixel.FlxSprite;
-import flixel.FlxState;
 import flixel.group.FlxGroup;
 import flixel.math.FlxPoint;
 import flixel.system.debug.interaction.Interaction;
 
 @:bitmap("assets/images/debugger/buttons/eraser.png") 
-class GraphicEraserTool extends BitmapData { }
+class GraphicEraserTool extends BitmapData {}
 
 /**
  * A tool to delete items from the screen.
@@ -106,7 +104,7 @@ class Eraser extends Tool
 				{
 					removeFromMemory(Item, cast b);
 				}
-				else if(b == Item)
+				else if (b == Item)
 				{
 					ParentGroup.remove(b);
 				}

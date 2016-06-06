@@ -4,13 +4,14 @@ import flash.display.DisplayObject;
 import flash.display.Graphics;
 import flash.display.Sprite;
 import flash.events.KeyboardEvent;
-import flash.ui.Keyboard;
 import flixel.group.FlxGroup;
 import flash.events.MouseEvent;
 import flixel.math.FlxPoint;
-import flixel.system.debug.FlxDebugger;
 import flixel.system.debug.Window;
-import flixel.system.debug.interaction.tools.*;
+import flixel.system.debug.interaction.tools.Eraser;
+import flixel.system.debug.interaction.tools.Mover;
+import flixel.system.debug.interaction.tools.Pointer;
+import flixel.system.debug.interaction.tools.Tool;
 import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxSpriteUtil;
 
@@ -328,7 +329,7 @@ class Interaction extends Window
 		
 		_activeTool = Value;
 		
-		if(_activeTool != null)
+		if (_activeTool != null)
 		{
 			_activeTool.getButton().toggled = true;
 			_activeTool.activate();

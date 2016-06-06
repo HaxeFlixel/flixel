@@ -1,6 +1,8 @@
 package flixel.system.debug.interaction.tools;
 
-import flash.display.*;
+import flash.display.DisplayObject;
+import flash.display.BitmapData;
+import flash.display.Sprite;
 import flixel.system.debug.interaction.Interaction;
 import flixel.system.ui.FlxSystemButton;
 
@@ -22,13 +24,9 @@ class Tool extends Sprite
 		return this;
 	}
 	
-	public function update():Void
-	{
-	}
+	public function update():Void {}
 	
-	public function draw():Void
-	{
-	}
+	public function draw():Void {}
 	
 	public function activate():Void
 	{	

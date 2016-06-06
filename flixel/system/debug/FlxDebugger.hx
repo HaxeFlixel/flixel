@@ -51,7 +51,7 @@ class GraphicArrowLeft extends BitmapData {}
 class GraphicArrowRight extends BitmapData {}
 
 @:bitmap("assets/images/debugger/buttons/close.png")
-class GraphicCloseButton extends BitmapData { }
+class GraphicCloseButton extends BitmapData {}
 
 @:bitmap("assets/images/debugger/buttons/interactive.png")
 class GraphicInteractive extends BitmapData {}

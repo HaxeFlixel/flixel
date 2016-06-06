@@ -2,12 +2,10 @@ package flixel.system.debug.interaction.tools;
 
 import flash.display.Bitmap;
 import flash.display.BitmapData;
-import flash.display.Sprite;
 import flash.ui.Keyboard;
 import flixel.group.FlxGroup;
 import flixel.math.FlxPoint;
 import flixel.system.debug.interaction.Interaction;
-import flixel.system.debug.interaction.tools.Tool;
 
 @:bitmap("assets/images/debugger/cursorCross.png") 
 class GraphicCursorCross extends BitmapData {}
@@ -51,7 +49,7 @@ class Pointer extends Tool
 			{
 				handleItemClick(item);
 			}
-			else if(brain.pointerJustPressed)
+			else if (brain.pointerJustPressed)
 			{
 				// User clicked an empty space, so it's time to unselect everything.
 				brain.clearSelection();
@@ -65,7 +63,7 @@ class Pointer extends Tool
 		var selectedItems:FlxGroup = brain.getSelectedItems();
 		
 		// Is it the first thing selected or are we adding things using Ctrl?
-		if(selectedItems.length == 0 || brain.keyPressed(Keyboard.CONTROL))
+		if (selectedItems.length == 0 || brain.keyPressed(Keyboard.CONTROL))
 		{
 			// Yeah, that's the case. Just add the new thing to the selection.
 			selectedItems.add(Item);
@@ -81,7 +79,7 @@ class Pointer extends Tool
 		}
 	}
 	
-	private function pinpointItemInGroup(Members:Array<FlxBasic>,Cursor:FlxPoint):FlxBasic
+	private function pinpointItemInGroup(Members:Array<FlxBasic>, Cursor:FlxPoint):FlxBasic
 	{
 		var i:Int = 0;
 		var l:Int = Members.length;
@@ -98,7 +96,7 @@ class Pointer extends Tool
 				{
 					target = pinpointItemInGroup((cast b).members, Cursor);
 				}
-				else if(Std.is(b, FlxSprite) && (cast(b, FlxSprite).overlapsPoint(Cursor, true)))
+				else if (Std.is(b, FlxSprite) && (cast(b, FlxSprite).overlapsPoint(Cursor, true)))
 				{
 					target = b;
 				}
