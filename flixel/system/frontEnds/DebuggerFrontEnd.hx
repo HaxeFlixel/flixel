@@ -159,10 +159,16 @@ class DebuggerFrontEnd
 			FlxG.stage.stageFocusRect = false; // don't show yellow focus rect on flash
 			FlxG.stage.focus = FlxG.game;
 		}
-		
-		visible = Value;
-		visibilityChanged.dispatch();
 		#end
+		
+		if (Value != visible)
+		{
+			visible = Value;
+			
+			#if FLX_DEBUG
+			visibilityChanged.dispatch();
+			#end
+		}
 		
 		return visible;
 	}
