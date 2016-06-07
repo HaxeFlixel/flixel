@@ -5,7 +5,6 @@ import flash.ui.Keyboard;
 import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.group.FlxGroup;
-import flixel.math.FlxPoint;
 import flixel.system.debug.interaction.Interaction;
 
 @:bitmap("assets/images/debugger/buttons/eraser.png") 
