@@ -32,11 +32,11 @@ class DebuggerFrontEnd
 	 */
 	public var drawDebug(default, set):Bool = false;
 	/**
-	 * Dispatched when drawDebug is changed.
+	 * Dispatched when `drawDebug` is changed.
 	 */
 	public var drawDebugChanged(default, null):FlxSignal = new FlxSignal();
 	/**
-	 * Dispatched when visibility is changed.
+	 * Dispatched when `visible` is changed.
 	 */
 	public var visibilityChanged(default, null):FlxSignal = new FlxSignal();
 	
@@ -137,18 +137,25 @@ class DebuggerFrontEnd
 	@:allow(flixel.FlxG)
 	private function new() {}
 	
-	private inline function set_drawDebug(Value:Bool):Bool
+	private function set_drawDebug(Value:Bool):Bool
 	{
+		if (drawDebug == Value)
+			return drawDebug;
+	
+		drawDebug = Value;
 		#if FLX_DEBUG
-		if (Value != drawDebug)
-			drawDebugChanged.dispatch();
+		drawDebugChanged.dispatch();
 		#end
-		
-		return drawDebug = Value;
+		return drawDebug;
 	}
 	
-	private inline function set_visible(Value:Bool):Bool
+	private function set_visible(Value:Bool):Bool
 	{
+		if (visible == Value)
+			return visible;
+
+		visible = Value;
+	
 		#if FLX_DEBUG
 		FlxG.game.debugger.visible = Value;
 		
@@ -159,17 +166,10 @@ class DebuggerFrontEnd
 			FlxG.stage.stageFocusRect = false; // don't show yellow focus rect on flash
 			FlxG.stage.focus = FlxG.game;
 		}
+		
+		visibilityChanged.dispatch();
 		#end
-		
-		if (Value != visible)
-		{
-			visible = Value;
-			
-			#if FLX_DEBUG
-			visibilityChanged.dispatch();
-			#end
-		}
-		
+
 		return visible;
 	}
 }
