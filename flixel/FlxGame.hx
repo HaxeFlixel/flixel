@@ -98,6 +98,12 @@ class FlxGame extends Sprite
 	 */
 	private var _total:Int = 0;
 	/**
+	 * Time stamp of game startup. 
+	 * Need to add this var for js target where Lib.getTimer() returns time stamp of current date, 
+	 * not the time passed since app start.
+	 */
+	private var _startTime:Int = 0;
+	/**
 	 * Total number of milliseconds elapsed since last update loop.
 	 * Counts down as we step through the game loop.
 	 */
@@ -282,6 +288,7 @@ class FlxGame extends Sprite
 		removeEventListener(Event.ADDED_TO_STAGE, create);
 		
 		_total = getTimer();
+		_startTime = _total;
 		
 		#if desktop
 		FlxG.fullscreen = _startFullscreen;
@@ -492,7 +499,7 @@ class FlxGame extends Sprite
 	 */
 	private function onEnterFrame(_):Void
 	{
-		ticks = getTimer();
+		ticks = getTimer() - _startTime;
 		_elapsedMS = ticks - _total;
 		_total = ticks;
 		
@@ -720,20 +727,9 @@ class FlxGame extends Sprite
 		}
 		#end
 		
-		FlxG.signals.preUpdate.dispatch();
+		updateElapsed();
 		
-		if (FlxG.fixedTimestep)
-		{
-			FlxG.elapsed = FlxG.timeScale * _stepSeconds; // fixed timestep
-		}
-		else
-		{
-			FlxG.elapsed = FlxG.timeScale * (_elapsedMS / 1000); // variable timestep
-			
-			var max = FlxG.maxElapsed * FlxG.timeScale;
-			if (FlxG.elapsed > max) 
-				FlxG.elapsed = max;
-		}
+		FlxG.signals.preUpdate.dispatch();
 		
 		updateInput();
 		
@@ -763,6 +759,22 @@ class FlxGame extends Sprite
 		#end
 		
 		filters = filtersEnabled ? _filters : null;
+	}
+	
+	private function updateElapsed():Void
+	{
+		if (FlxG.fixedTimestep)
+		{
+			FlxG.elapsed = FlxG.timeScale * _stepSeconds; // fixed timestep
+		}
+		else
+		{
+			FlxG.elapsed = FlxG.timeScale * (_elapsedMS / 1000); // variable timestep
+			
+			var max = FlxG.maxElapsed * FlxG.timeScale;
+			if (FlxG.elapsed > max) 
+				FlxG.elapsed = max;
+		}
 	}
 	
 	private function updateInput():Void
