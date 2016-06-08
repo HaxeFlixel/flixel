@@ -35,6 +35,10 @@ class DebuggerFrontEnd
 	 * Dispatched when drawDebug is changed.
 	 */
 	public var drawDebugChanged(default, null):FlxSignal = new FlxSignal();
+	/**
+	 * Dispatched when visibility is changed.
+	 */
+	public var visibilityChanged(default, null):FlxSignal = new FlxSignal();
 	
 	public var visible(default, set):Bool = false;
 	
@@ -157,6 +161,15 @@ class DebuggerFrontEnd
 		}
 		#end
 		
-		return visible = Value;
+		if (Value != visible)
+		{
+			visible = Value;
+			
+			#if FLX_DEBUG
+			visibilityChanged.dispatch();
+			#end
+		}
+		
+		return visible;
 	}
 }
