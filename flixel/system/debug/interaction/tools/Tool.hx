@@ -1,6 +1,5 @@
 package flixel.system.debug.interaction.tools;
 
-import flash.display.DisplayObject;
 import flash.display.BitmapData;
 import flash.display.Sprite;
 import flixel.system.debug.interaction.Interaction;
@@ -15,12 +14,14 @@ class Tool extends Sprite
 {		
 	private var _brain:Interaction;
 	private var _button:FlxSystemButton;
-	private var _cursor:DisplayObject;
+	private var _cursor:BitmapData;
+	private var _name:String;
 	
 	public function init(Brain:Interaction):Tool
 	{
 		_brain = Brain;
 		_button = null;
+		_name = "(Unknown tool)";
 		return this;
 	}
 	
@@ -30,20 +31,10 @@ class Tool extends Sprite
 	
 	public function activate():Void
 	{	
-		// If the tool has a custom cursor,
-		// show it now
-		if (_cursor != null)
-		{
-			_brain.setCustomCursor(_cursor);
-		}
 	}
 	
 	public function deactivate():Void
 	{	
-		if (_cursor != null)
-		{
-			_brain.setCustomCursor(null);
-		}
 	}
 	
 	public function isActive():Bool
@@ -61,9 +52,15 @@ class Tool extends Sprite
 		_button = new FlxSystemButton(Type.createInstance(Icon, [0, 0]), onButtonClicked, true);
 	}
 	
-	public function setCursor(Icon:DisplayObject):Void
+	public function setCursor(Icon:BitmapData):Void
 	{
 		_cursor = Icon;
+		_brain.registerCustomCursor(_name, _cursor);
+	}
+	
+	public function setName(Name:String):Void
+	{
+		_name = Name;
 	}
 	
 	private function onButtonClicked():Void
@@ -78,5 +75,15 @@ class Tool extends Sprite
 	public function getButton():FlxSystemButton
 	{
 		return _button;
+	}
+	
+	public function getName():String
+	{
+		return _name;
+	}
+	
+	public function getCursor():BitmapData
+	{
+		return _cursor;
 	}
 }

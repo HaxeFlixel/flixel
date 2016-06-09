@@ -20,6 +20,7 @@ class Eraser extends Tool
 	override public function init(Brain:Interaction):Tool 
 	{
 		super.init(Brain);
+		setName("Eraser");
 		setButton(GraphicEraserTool);
 		return this;
 	}

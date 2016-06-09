@@ -1,5 +1,7 @@
 package flixel.system.debug.interaction;
 
+import flash.display.Bitmap;
+import flash.display.BitmapData;
 import flash.display.DisplayObject;
 import flash.display.Graphics;
 import flash.display.Sprite;
@@ -32,6 +34,8 @@ class Interaction extends Window
 	private var _keysDown:Map<Int, Int>;
 	private var _keysUp:Map<Int, Int>;		
 	private var _activeTool:Tool;		
+	private var _wasMouseVisible:Bool;
+	private var _wasUsingSystemCursor:Bool;
 	
 	public var flixelPointer:FlxPoint;
 	public var pointerJustPressed:Bool;
@@ -67,12 +71,30 @@ class Interaction extends Window
 		
 		FlxG.signals.postDraw.add(postDraw);
 		FlxG.signals.preUpdate.add(preUpdate);
+		FlxG.debugger.visibilityChanged.add(handleDebuggerVisibilityChanged);
 		
 		FlxG.stage.addEventListener(MouseEvent.MOUSE_MOVE, updateMouse);
 		FlxG.stage.addEventListener(MouseEvent.MOUSE_DOWN, handleMouseClick);
 		FlxG.stage.addEventListener(MouseEvent.MOUSE_UP, handleMouseClick);
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, handleKeyEvent);
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_UP, handleKeyEvent);
+	}
+	
+	private function handleDebuggerVisibilityChanged():Void
+	{
+		if (FlxG.debugger.visible)
+		{
+			saveSystemCursorInfo();
+			
+			if (visible)
+			{
+				setActiveTool(_tools[0]); // TODO: restore the last active tool?
+			}
+		}
+		else
+		{
+			restoreSystemCursor();
+		}
 	}
 	
 	private function updateMouse(Event:MouseEvent):Void
@@ -164,12 +186,11 @@ class Interaction extends Window
 
 		if (!FlxG.debugger.visible || !visible)
 		{
-			_customCursor.visible = false;
 			return;
 		}
 		else
 		{
-			_customCursor.visible = true;
+			updateCustomCursors();
 		}
 		
 		for (i in 0...l)
@@ -206,6 +227,7 @@ class Interaction extends Window
 		drawItemsSelection();
 	}
 	
+	// TODO: dont'w draw things if debugger/interaction is inactive
 	private function drawItemsSelection():Void 
 	{
 		var i:Int = 0;
@@ -270,25 +292,92 @@ class Interaction extends Window
 		if (visible)
 		{
 			// Activate the first tool available
-			_tools[0].activate();
-			_tools[0].getButton().toggled = true;
+			setActiveTool(_tools[0]);
+		}
+		else
+		{
+			restoreSystemCursor();
 		}
 	}
 	
-	public function setCustomCursor(Icon:DisplayObject):Void
+	public function registerCustomCursor(Name:String, Icon:BitmapData):Void
 	{
-		// Remove any previsouly defined custom cursor
-		while (_customCursor.numChildren > 0)
-		{
-			_customCursor.removeChildAt(0);
-		}
-		
+		var sprite:Sprite;
+
 		if (Icon != null)
 		{		
-			Icon.x = -Icon.width / 2;
-			Icon.y = -Icon.height / 2;
-			_customCursor.addChild(Icon);
+			#if (FLX_NATIVE_CURSOR && FLX_MOUSE)
+			FlxG.mouse.setSimpleNativeCursorData(Name, Icon);
+			#else
+			sprite = new Sprite();
+			sprite.visible = false;
+			sprite.name = Name;
+			sprite.addChild(new Bitmap(Icon));
+			_customCursor.addChild(sprite);
+			#end
 		}
+	}
+	
+	public function updateCustomCursors():Void
+	{
+		#if FLX_MOUSE
+		var name:String;
+		var sprite:DisplayObject;
+		var i:Int;
+		
+		// Do we have an active tool?
+		if (_activeTool != null)
+		{
+			// Yes, there is an active tool. Does it has a cursor of its own?
+			if (_activeTool.getCursor() != null)
+			{
+				// Yep. Let's show it then
+				name = _activeTool.getName();
+				
+				#if FLX_NATIVE_CURSOR
+				// We have lag-free native cursors available, yay!
+				// Activate it then.
+				FlxG.mouse.setNativeCursor(name);
+				#else
+				// No fancy native cursors, so we have to emulate it.
+				// Let's make the currently active tool's fake cursor visible
+				for (i in 0..._customCursor.numChildren)
+				{
+					sprite = _customCursor.getChildAt(i);
+					sprite.visible = sprite.name == name;
+				}
+				#end
+			}
+			else
+			{
+				// No, the current tool has no cursor of its own.
+				// Let's show the system cursor then for navigation
+				FlxG.mouse.useSystemCursor = true;
+			}
+		}
+		else
+		{
+			// No active tool. Let's show the system cursor for navigation.
+			FlxG.mouse.useSystemCursor = true;
+		}
+		#end
+	}
+	
+	private function saveSystemCursorInfo():Void
+	{
+		#if FLX_MOUSE
+		_wasMouseVisible = FlxG.mouse.visible;
+		_wasUsingSystemCursor = FlxG.mouse.useSystemCursor;
+		#end
+	}
+	
+	private function restoreSystemCursor():Void
+	{
+		#if FLX_MOUSE
+		FlxG.mouse.visible = _wasMouseVisible;
+		FlxG.mouse.useSystemCursor = _wasUsingSystemCursor;
+		_customCursor.visible = false;
+		#end
 	}
 	
 	/**
@@ -331,8 +420,47 @@ class Interaction extends Window
 		
 		if (_activeTool != null)
 		{
+			// A tool is active. Enable cursor specific cursors
+			setToolsCursorVisibility(true);
+			
 			_activeTool.getButton().toggled = true;
 			_activeTool.activate();
+			updateCustomCursors();
+		}
+		else
+		{
+			// No tool is active. Enable the system cursor
+			// so the user can click buttons, drag windows, etc.
+			setSystemCursorVisibility(true);
+		}
+	}
+	
+	private function setSystemCursorVisibility(Status:Bool):Void
+	{
+		#if FLX_MOUSE
+		FlxG.mouse.useSystemCursor = Status;
+		#end
+		_customCursor.visible = !Status;
+	}
+	
+	private function setToolsCursorVisibility(Status:Bool):Void
+	{
+		var i:Int;
+		
+		#if FLX_MOUSE
+		FlxG.mouse.useSystemCursor = #if FLX_NATIVE_CURSOR Status #else false #end;
+		#end
+		_customCursor.visible = Status;
+		
+		// Hide any display-list-based custom cursor.
+		// The proper cursor will be marked as visible
+		// in the update loop.
+		if (Status == false)
+		{
+			for (i in 0..._customCursor.numChildren)
+			{
+				_customCursor.getChildAt(i).visible = false;
+			}
 		}
 	}
 	

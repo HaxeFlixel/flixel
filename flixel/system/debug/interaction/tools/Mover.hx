@@ -1,6 +1,5 @@
 package flixel.system.debug.interaction.tools;
 
-import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.ui.Keyboard;
 import flixel.math.FlxPoint;
@@ -24,9 +23,11 @@ class Mover extends Tool
 		super.init(Brain);
 		_dragging = false;
 		_lastCursorPosition = new FlxPoint(Brain.flixelPointer.x, Brain.flixelPointer.x);
-		
+
+		setName("Mover");
 		setButton(GraphicMoverTool);
-		setCursor(new Bitmap(new GraphicMoverTool(0, 0)));
+		setCursor(new GraphicMoverTool(0, 0));
+
 		return this;
 	}
 	

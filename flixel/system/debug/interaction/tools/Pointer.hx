@@ -1,6 +1,5 @@
 package flixel.system.debug.interaction.tools;
 
-import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.ui.Keyboard;
 import flixel.group.FlxGroup;
@@ -21,8 +20,9 @@ class Pointer extends Tool
 	{
 		super.init(Brain);
 		
+		setName("Pointer");
 		setButton(GraphicCursorCross);
-		setCursor(new Bitmap(new GraphicCursorCross(0, 0)));
+		setCursor(new GraphicCursorCross(0, 0));
 		
 		return this;
 	}
