@@ -48,6 +48,7 @@ class Tool extends Sprite
 	public function setButton(Icon:Class<BitmapData>):Void
 	{
 		_button = new FlxSystemButton(Type.createInstance(Icon, [0, 0]), onButtonClicked, true);
+		_button.toggled = true;
 	}
 	
 	public function setCursor(Icon:BitmapData):Void

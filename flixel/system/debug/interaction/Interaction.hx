@@ -9,6 +9,7 @@ import flash.events.KeyboardEvent;
 import flixel.group.FlxGroup;
 import flash.events.MouseEvent;
 import flixel.math.FlxPoint;
+import flixel.system.debug.FlxDebugger.GraphicInteractive;
 import flixel.system.debug.Window;
 import flixel.system.debug.interaction.tools.Eraser;
 import flixel.system.debug.interaction.tools.Mover;
@@ -45,7 +46,7 @@ class Interaction extends Window
 	
 	public function new(Container:Sprite)
 	{		
-		super("", null, 10, 50, false);
+		super("Tools", new GraphicInteractive(0, 0), 20, 50, false);
 		reposition(0, 100);
 		
 		_container = Container;
@@ -160,10 +161,11 @@ class Interaction extends Window
 		// If the tool has a button, add it to the interaction window
 		if (button != null)
 		{
+			button.x = 5;
 			button.y = _tools.length * 20; // TODO: fix this hardcoded number
 			addChild(button);
 			
-			resize(10, _tools.length * 25);  // TODO: fix this hardcoded number
+			resize(55, _tools.length * 25);  // TODO: fix this hardcoded number
 		}
 	}
 	
@@ -434,7 +436,7 @@ class Interaction extends Window
 		if (_activeTool != null)
 		{
 			_activeTool.deactivate();
-			_activeTool.getButton().toggled = false;
+			_activeTool.getButton().toggled = true;
 		}
 		
 		if (_activeTool == Value)
@@ -449,7 +451,7 @@ class Interaction extends Window
 			// A tool is active. Enable cursor specific cursors
 			setToolsCursorVisibility(true);
 			
-			_activeTool.getButton().toggled = true;
+			_activeTool.getButton().toggled = false;
 			_activeTool.activate();
 			updateCustomCursors();
 		}
