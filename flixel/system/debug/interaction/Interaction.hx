@@ -71,7 +71,6 @@ class Interaction extends Window
 		addTool(new Eraser());
 		
 		FlxG.signals.postDraw.add(postDraw);
-		FlxG.signals.preUpdate.add(preUpdate);
 		FlxG.debugger.visibilityChanged.add(handleDebuggerVisibilityChanged);
 		
 		FlxG.stage.addEventListener(MouseEvent.MOUSE_MOVE, updateMouse);
@@ -177,7 +176,6 @@ class Interaction extends Window
 		var i:Int;
 		
 		FlxG.signals.postDraw.remove(postDraw);
-		FlxG.signals.preUpdate.remove(preUpdate);
 		FlxG.debugger.visibilityChanged.remove(handleDebuggerVisibilityChanged);
 		
 		FlxG.stage.removeEventListener(MouseEvent.MOUSE_MOVE, updateMouse);
@@ -210,10 +208,7 @@ class Interaction extends Window
 		return FlxG.debugger.visible && visible;
 	}
 	
-	/**
-	 * Called before the game gets updated.
-	 */
-	private function preUpdate():Void
+	override public function update():Void 
 	{
 		var tool:Tool;
 		var i:Int;
@@ -223,7 +218,7 @@ class Interaction extends Window
 			return;
 		
 		updateCustomCursors();
-		
+
 		for (i in 0...l)
 		{
 			tool = _tools[i];
