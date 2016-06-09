@@ -29,13 +29,11 @@ class Tool extends Sprite
 	
 	public function draw():Void {}
 	
-	public function activate():Void
-	{	
-	}
+	public function activate():Void	{}
 	
-	public function deactivate():Void
-	{	
-	}
+	public function deactivate():Void {}
+	
+	public function destroy():Void {}
 	
 	public function isActive():Bool
 	{

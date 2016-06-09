@@ -172,7 +172,40 @@ class Interaction extends Window
 	 */
 	override public function destroy():Void
 	{
-		// TODO: remove all entities and free memory.
+		var i:Int;
+		
+		FlxG.signals.postDraw.remove(postDraw);
+		FlxG.signals.preUpdate.remove(preUpdate);
+		FlxG.debugger.visibilityChanged.remove(handleDebuggerVisibilityChanged);
+		
+		FlxG.stage.removeEventListener(MouseEvent.MOUSE_MOVE, updateMouse);
+		FlxG.stage.removeEventListener(MouseEvent.MOUSE_DOWN, handleMouseClick);
+		FlxG.stage.removeEventListener(MouseEvent.MOUSE_UP, handleMouseClick);
+		FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, handleKeyEvent);
+		FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, handleKeyEvent);
+		
+		for (i in 0..._tools.length)
+		{
+			_tools[i].destroy();
+			_tools[i] = null;
+		}
+		
+		_selectedItems.destroy();
+		_tools = null;
+		_customCursor.parent.removeChild(_customCursor);
+		flixelPointer.destroy();
+		
+		_selectedItems = null;
+		_customCursor = null;
+		flixelPointer = null;
+		_keysDown = null;
+		_keysUp = null;
+		_tools = null;
+	}
+	
+	public function isActive():Bool
+	{
+		return FlxG.debugger.visible && visible;
 	}
 	
 	/**
@@ -184,14 +217,10 @@ class Interaction extends Window
 		var i:Int;
 		var l:Int = _tools.length;
 
-		if (!FlxG.debugger.visible || !visible)
-		{
+		if (!isActive())
 			return;
-		}
-		else
-		{
-			updateCustomCursors();
-		}
+		
+		updateCustomCursors();
 		
 		for (i in 0...l)
 		{
@@ -213,10 +242,8 @@ class Interaction extends Window
 		var i:Int;
 		var l:Int = _tools.length;
 		
-		if (!FlxG.debugger.visible)
-		{
+		if (!isActive())
 			return;
-		}
 		
 		for (i in 0...l)
 		{
@@ -227,7 +254,6 @@ class Interaction extends Window
 		drawItemsSelection();
 	}
 	
-	// TODO: dont'w draw things if debugger/interaction is inactive
 	private function drawItemsSelection():Void 
 	{
 		var i:Int = 0;
