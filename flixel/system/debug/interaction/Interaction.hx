@@ -400,8 +400,8 @@ class Interaction extends Window
 	private function restoreSystemCursor():Void
 	{
 		#if FLX_MOUSE
+		FlxG.mouse.useSystemCursor = _wasUsingSystemCursor;		
 		FlxG.mouse.visible = _wasMouseVisible;
-		FlxG.mouse.useSystemCursor = _wasUsingSystemCursor;
 		_customCursor.visible = false;
 		#end
 	}
