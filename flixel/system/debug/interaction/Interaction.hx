@@ -478,7 +478,7 @@ class Interaction extends Window
 		// Hide any display-list-based custom cursor.
 		// The proper cursor will be marked as visible
 		// in the update loop.
-		if (Status == false)
+		if (!Status)
 		{
 			for (i in 0..._customCursor.numChildren)
 			{
