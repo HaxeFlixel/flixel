@@ -28,7 +28,9 @@
 * `FlxDefines`: added inverted versions of all `FLX_NO`-defines (e.g. `FLX_DEBUG` for `FLX_NO_DEBUG`)
 * `FlxTileFrames`: added `spacing` and `border` arguments to `combineTileSets()` and `combineTileFrames()` (#1807)
 * `FlxBitmapDataUtil`: added `copyBorderPixels()`
-* `FlxGame`: `GameWidth` and `GameHeight` in `new()` now use the window size if set to 0 (#1811)
+* `FlxGame`:
+	* `GameWidth` and `GameHeight` in `new()` now use the window size if set to 0 (#1811)
+	* [HTML5] fixed `ticks` holding the current date's timestamp instead of ms since game start
 * `FlxPoint`: added `scale()` (#1811)
 * `FlxCamera`: fixed background scaling for `zoom < 1` on native targets (#1588)
 * `FlxSpriteUtil`: changed `alphaMask()` arguments from `Dynamic` to `FlxGraphicAsset` (#1806)
@@ -44,7 +46,14 @@
 * `FlxTilemap`:
 	* added `antialiasing` (#1850)
 * Added GLSL `shader` support for `FlxSprite`, `FlxTilemap`, `FlxBar` and `FlxBitmapText` (#1848)
-* `FlxDrawTilesItem`: fix `numTiles` value with color offsets
+* `FlxDrawTilesItem`: fixed `numTiles` value with color offsets
+* `FlxG.signals`: changed `preUpdate` to be dispatched _after_ `FlxG.elapsed` is updated (#1836)
+* `FlxBitmapFont`: fixed a crash related to incorrect UTF-8 handling (#1857)
+* `FlxAtlas`: fixed a crash when the constructor is called with `powerOfTwo == true` (#1858)
+* `FlxGraphic`: added an optional `Cache` argument to `fromFrame()`
+* `FlxG.debugger`:
+	* added `visibilityChanged` (#1865)
+	* changed `drawDebugChanged` to be dispatched _after_ `drawDebug` is updated
 
 4.0.1
 ------------------------------
