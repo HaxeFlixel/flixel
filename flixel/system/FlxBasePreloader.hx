@@ -143,11 +143,11 @@ class FlxBasePreloader extends NMEPreloader
 	 */
 	override public function onLoaded() 
 	{
-		#if flash
+		#if js
+		super.onLoaded();
+		#else
 		_loaded = true;
 		_percent = 1;
-		#else
-		super.onLoaded();
 		#end
 	}
 	
