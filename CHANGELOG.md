@@ -51,6 +51,7 @@
 * `FlxDrawTilesItem`: fixed `numTiles` value with color offsets
 * `FlxBitmapFont`: fixed a crash related to incorrect UTF-8 handling (#1857)
 * `FlxAtlas`: fixed a crash when the constructor is called with `powerOfTwo == true` (#1858)
+* `FlxTween`: fixed nested tween chains (#1871)
 
 #### Changes and improvements:
 
