@@ -610,8 +610,18 @@ class FlxTween implements IFlxDestroyable
 			manager.add(tween);
 		}
 		
-		if (_chainedTweens != null)
-			tween._chainedTweens = _chainedTweens;
+		tween.setChain(_chainedTweens);
+	}
+	
+	private function setChain(previousChain:Array<FlxTween>):Void
+	{
+		if (previousChain == null)
+			return;
+		
+		if (_chainedTweens == null)
+			_chainedTweens = previousChain;
+		else
+			_chainedTweens = _chainedTweens.concat(previousChain);
 	}
 	
 	/**
