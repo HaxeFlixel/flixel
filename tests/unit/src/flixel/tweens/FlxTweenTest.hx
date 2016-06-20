@@ -1,5 +1,6 @@
 package flixel.tweens;
 
+import flixel.tweens.FlxTween.TweenCallback;
 import flixel.util.FlxTimer;
 import massive.munit.Assert;
 
@@ -79,5 +80,80 @@ class FlxTweenTest extends FlxTest
 		});
 		tween.cancel();
 		step();
+	}
+
+	@Test
+	function testLinearChain()
+	{
+		testChain(4, function(tweens)
+			tweens[0]
+				.then(tweens[1])
+				.then(tweens[2])
+				.then(tweens[3])
+		);
+	}
+
+	@Test // #1871
+	function testNestedChain()
+	{
+		testChain(4, function(tweens)
+			tweens[0]
+				.then(tweens[1].then(tweens[2]))
+				.then(tweens[3])
+		);
+
+		testChain(4, function(tweens)
+			tweens[0]
+				.then(tweens[1]
+					.then(tweens[2]
+						.then(tweens[3])))
+		);
+	}
+
+	function testChain(numTweens:Int, createChain:Array<FlxTween>->Void)
+	{
+		var complete = [];
+		var tweens = [];
+
+		for (i in 0...numTweens)
+		{
+			complete.push(false);
+			var duration = (numTweens / 10) - (i * 0.1);
+			tweens.push(makeTween(duration, makeCallback(i, complete)));
+		}
+
+		createChain(tweens);
+		
+		for (i in 0...tweens.length)
+		{
+			finishTween(tweens[i]);
+			Assert.isTrue(complete[i]);
+		}
+	}
+
+	function makeCallback(n:Int, complete:Array<Bool>):TweenCallback
+	{
+		return function(_)
+		{
+			for (i in 0...complete.length)
+			{
+				var shouldBe = function(b:Bool)
+				{
+					if (complete[i] != b)
+						Assert.fail('complete[$i] should be "$b" for tween $n');
+				}
+				
+				// all tweens before this one should be complete
+				shouldBe(i < n);
+			}
+			
+			complete[n] = true;
+		};
+	}
+
+	function makeTween(duration:Float, onComplete:TweenCallback):FlxTween
+	{
+		var foo = { f: 0 };
+		return FlxTween.tween(foo, { f: 1 }, duration, { onComplete: onComplete });
 	}
 }

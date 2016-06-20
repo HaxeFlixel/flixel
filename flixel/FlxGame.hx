@@ -98,6 +98,11 @@ class FlxGame extends Sprite
 	 */
 	private var _total:Int = 0;
 	/**
+	 * Time stamp of game startup. Needed on JS where Lib.getTimer()
+	 * returns time stamp of current date, not the time passed since app start.
+	 */
+	private var _startTime:Int = 0;
+	/**
 	 * Total number of milliseconds elapsed since last update loop.
 	 * Counts down as we step through the game loop.
 	 */
@@ -281,7 +286,8 @@ class FlxGame extends Sprite
 		}
 		removeEventListener(Event.ADDED_TO_STAGE, create);
 		
-		_total = getTimer();
+		_startTime = getTimer();
+		_total = getTicks();
 		
 		#if desktop
 		FlxG.fullscreen = _startFullscreen;
@@ -492,7 +498,7 @@ class FlxGame extends Sprite
 	 */
 	private function onEnterFrame(_):Void
 	{
-		ticks = getTimer();
+		ticks = getTicks();
 		_elapsedMS = ticks - _total;
 		_total = ticks;
 		
@@ -715,25 +721,12 @@ class FlxGame extends Sprite
 		
 		#if FLX_DEBUG
 		if (FlxG.debugger.visible)
-		{
-			ticks = getTimer(); // Lib.getTimer() is expensive, only do it if necessary
-		}
+			ticks = getTicks();
 		#end
 		
-		FlxG.signals.preUpdate.dispatch();
+		updateElapsed();
 		
-		if (FlxG.fixedTimestep)
-		{
-			FlxG.elapsed = FlxG.timeScale * _stepSeconds; // fixed timestep
-		}
-		else
-		{
-			FlxG.elapsed = FlxG.timeScale * (_elapsedMS / 1000); // variable timestep
-			
-			var max = FlxG.maxElapsed * FlxG.timeScale;
-			if (FlxG.elapsed > max) 
-				FlxG.elapsed = max;
-		}
+		FlxG.signals.preUpdate.dispatch();
 		
 		updateInput();
 		
@@ -755,7 +748,7 @@ class FlxGame extends Sprite
 		FlxG.signals.postUpdate.dispatch();
 		
 		#if FLX_DEBUG
-		debugger.stats.flixelUpdate(getTimer() - ticks);
+		debugger.stats.flixelUpdate(getTicks() - ticks);
 		#end
 		
 		#if FLX_POINTER_INPUT
@@ -763,6 +756,22 @@ class FlxGame extends Sprite
 		#end
 		
 		filters = filtersEnabled ? _filters : null;
+	}
+	
+	private function updateElapsed():Void
+	{
+		if (FlxG.fixedTimestep)
+		{
+			FlxG.elapsed = FlxG.timeScale * _stepSeconds; // fixed timestep
+		}
+		else
+		{
+			FlxG.elapsed = FlxG.timeScale * (_elapsedMS / 1000); // variable timestep
+			
+			var max = FlxG.maxElapsed * FlxG.timeScale;
+			if (FlxG.elapsed > max) 
+				FlxG.elapsed = max;
+		}
 	}
 	
 	private function updateInput():Void
@@ -837,10 +846,7 @@ class FlxGame extends Sprite
 		
 		#if FLX_DEBUG
 		if (FlxG.debugger.visible)
-		{
-			// getTimer() is expensive, only do it if necessary
-			ticks = getTimer(); 
-		}
+			ticks = getTicks();
 		#end
 		
 		FlxG.signals.preDraw.dispatch();
@@ -877,12 +883,18 @@ class FlxGame extends Sprite
 		FlxG.signals.postDraw.dispatch();
 		
 		#if FLX_DEBUG
-		debugger.stats.flixelDraw(getTimer() - ticks);
+		debugger.stats.flixelDraw(getTicks() - ticks);
 		#end
+	}
+	
+	private inline function getTicks()
+	{
+		return getTimer() - _startTime;
 	}
 	
 	private dynamic function getTimer():Int
 	{
+		// expensive, only call if necessary
 		return Lib.getTimer();
 	}
 }

@@ -1060,7 +1060,7 @@ class FlxAtlas implements IFlxDestroyable
 	
 	private function set_powerOfTwo(value:Bool):Bool
 	{
-		if (value != powerOfTwo && value)
+		if (value != powerOfTwo && value && root != null)
 		{
 			var nextWidth:Int = getNextPowerOfTwo(root.width);
 			var nextHeight:Int = getNextPowerOfTwo(root.height);
