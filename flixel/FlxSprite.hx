@@ -17,6 +17,7 @@ import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxGraphicAsset;
+import flixel.system.FlxAssets.FlxShader;
 import flixel.util.FlxBitmapDataUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
@@ -152,10 +153,18 @@ class FlxSprite extends FlxObject
 	
 	/**
 	 * Clipping rectangle for this sprite.
-	 * Changing it's properties doesn't change graphic of the sprite, so you should reapply clipping rect on sprite again.
-	 * Set clipRect to null to discard graphic frame clipping 
+	 * Changing the rect's properties directly doesn't have any effect,
+	 * reassign the property to update it (`sprite.clipRect = sprite.clipRect;`).
+	 * Set to `null` to discard graphic frame clipping.
 	 */
 	public var clipRect(default, set):FlxRect;
+	
+	/**
+	 * GLSL shader for this sprite. Only works with OpenFL Next or WebGL.
+	 * Avoid changing it frequently as this is a costly operation.
+	 */
+	#if openfl_legacy @:noCompletion #end
+	public var shader:FlxShader;
 	
 	/**
 	 * The actual frame used for sprite rendering
@@ -272,6 +281,8 @@ class FlxSprite extends FlxObject
 		graphic = null;
 		_frame = FlxDestroyUtil.destroy(_frame);
 		_frameGraphic = FlxDestroyUtil.destroy(_frameGraphic);
+		
+		shader = null;
 	}
 	
 	public function clone():FlxSprite
@@ -660,7 +671,7 @@ class FlxSprite extends FlxObject
 			_point.floor();
 		
 		_matrix.translate(_point.x, _point.y);
-		camera.drawPixels(_frame, framePixels, _matrix, colorTransform, blend, antialiasing);
+		camera.drawPixels(_frame, framePixels, _matrix, colorTransform, blend, antialiasing, shader);
 	}
 	
 	/**
@@ -772,9 +783,7 @@ class FlxSprite extends FlxObject
 	{
 		var positions:Array<FlxPoint> = FlxBitmapDataUtil.replaceColor(graphic.bitmap, Color, NewColor, FetchPositions);
 		if (positions != null)
-		{
 			dirty = true;
-		}
 		return positions;
 	}
 	
@@ -800,7 +809,7 @@ class FlxSprite extends FlxObject
 		colorTransform.setMultipliers(redMultiplier, greenMultiplier, blueMultiplier, alphaMultiplier);
 		colorTransform.setOffsets(redOffset, greenOffset, blueOffset, alphaOffset);
 		
-		useColorTransform = ((alpha != 1) || (color != 0xffffff) || colorTransform.hasRGBOffsets());
+		useColorTransform = alpha != 1 || color != 0xffffff || colorTransform.hasRGBOffsets();
 		dirty = true;
 	}
 	
@@ -809,16 +818,11 @@ class FlxSprite extends FlxObject
 		if (colorTransform == null)
 			colorTransform = new ColorTransform();
 		
-		if (alpha != 1 || color != 0xffffff)
-		{
+		useColorTransform = alpha != 1 || color != 0xffffff;
+		if (useColorTransform)
 			colorTransform.setMultipliers(color.redFloat, color.greenFloat, color.blueFloat, alpha);
-			useColorTransform = true;
-		}
 		else
-		{
 			colorTransform.setMultipliers(1, 1, 1, 1);
-			useColorTransform = false;
-		}
 		
 		dirty = true;
 	}

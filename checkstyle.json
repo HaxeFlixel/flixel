@@ -16,6 +16,11 @@
 		["neko", "desktop", "sys"],
 		["android", "cpp", "mobile"]
 	],
+	"exclude": {
+		"all": [
+			"TestSuite"
+		]
+	},
 	"checks": [
 		{
 			"type": "ModifierOrder",

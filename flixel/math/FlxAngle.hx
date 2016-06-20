@@ -6,8 +6,6 @@ import haxe.macro.Expr;
 #if !macro
 import flixel.FlxObject;
 import flixel.FlxSprite;
-import flixel.math.FlxPoint;
-import flixel.system.macros.FlxMacroUtil;
 #if FLX_TOUCH
 import flixel.input.touch.FlxTouch;
 #end

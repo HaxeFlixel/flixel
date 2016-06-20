@@ -43,51 +43,25 @@ class FlxSpriteUtil
 	 * Note: It assumes the source and mask are the same size. Different sizes may result in undesired results.
 	 * It works by copying the source image (your picture) into the output sprite. Then it removes all areas of it that do not
 	 * have an alpha color value in the mask image. So if you draw a big black circle in your mask with a transparent edge, you'll
-	 * get a circular image appear. Look at the mask PNG files in the assets/pics folder for examples.
+	 * get a circular image to appear.
+	 * May lead to unexecpted results if `source` does not have an alpha channel.
 	 * 
 	 * @param	output		The FlxSprite you wish the resulting image to be placed in (will adjust width/height of image)
 	 * @param	source		The source image. Typically the one with the image / picture / texture in it.
 	 * @param	mask		The mask to apply. Remember the non-alpha zero areas are the parts that will display.
 	 * @return 	The FlxSprite for chaining
 	 */
-	public static function alphaMask(output:FlxSprite, source:Dynamic, mask:Dynamic):FlxSprite
+	public static function alphaMask(output:FlxSprite, source:FlxGraphicSource, mask:FlxGraphicSource):FlxSprite
 	{
-		var data:BitmapData = null;
-		if (Std.is(source, String))
-		{
-			data = FlxAssets.getBitmapData(source);
-		}
-		else if (Std.is(source, Class))
-		{
-			data = Type.createInstance(source, []).bitmapData;
-		}
-		else if (Std.is(source, BitmapData))
-		{
-			data = cast source;
-			data = data.clone();
-		}
-		else
-		{
-			return null;
-		}
-		var maskData:BitmapData = null;
-		if (Std.is(mask, String))
-		{
-			maskData = FlxAssets.getBitmapData(mask);
-		}
-		else if (Std.is(mask, Class))
-		{
-			maskData = Type.createInstance(mask, []).bitmapData;
-		}
-		else if (Std.is(mask, BitmapData))
-		{
-			maskData = mask;
-		}
-		else
+		var data:BitmapData = FlxAssets.resolveBitmapData(source);
+		var maskData:BitmapData = FlxAssets.resolveBitmapData(mask);
+		
+		if (data == null || maskData == null)
 		{
 			return null;
 		}
 		
+		data = data.clone();
 		data.copyChannel(maskData, new Rectangle(0, 0, data.width, data.height), new Point(), BitmapDataChannel.ALPHA, BitmapDataChannel.ALPHA);
 		output.pixels = data;
 		return output;
@@ -99,6 +73,7 @@ class FlxSpriteUtil
 	 * It works by copying the source image (your picture) into the output sprite. Then it removes all areas of it that do not
 	 * have an alpha color value in the mask image. So if you draw a big black circle in your mask with a transparent edge, you'll
 	 * get a circular image appear.
+	 * May lead to unexecpted results if `sprite`'s graphic does not have an alpha channel.
 	 * 
 	 * @param	sprite		The source FlxSprite. Typically the one with the image / picture / texture in it.
 	 * @param	mask		The FlxSprite containing the mask to apply. Remember the non-alpha zero areas are the parts that will display.

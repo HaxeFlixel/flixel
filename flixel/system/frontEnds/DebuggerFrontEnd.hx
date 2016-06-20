@@ -9,12 +9,13 @@ import flixel.system.debug.watch.Tracker;
 import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxHorizontalAlign;
 import flixel.util.FlxSignal;
-import flixel.util.FlxStringUtil;
+using flixel.util.FlxStringUtil;
+using flixel.util.FlxArrayUtil;
 
 class DebuggerFrontEnd
 {	
 	/**
-	 * The amount of decimals FlxPoints / FlxRects are rounded to in log / watch / trace.
+	 * The amount of decimals Floats are rounded to in the debugger.
 	 */
 	public var precision:Int = 3; 
 	
@@ -31,9 +32,13 @@ class DebuggerFrontEnd
 	 */
 	public var drawDebug(default, set):Bool = false;
 	/**
-	 * Dispatched when drawDebug is changed.
+	 * Dispatched when `drawDebug` is changed.
 	 */
 	public var drawDebugChanged(default, null):FlxSignal = new FlxSignal();
+	/**
+	 * Dispatched when `visible` is changed.
+	 */
+	public var visibilityChanged(default, null):FlxSignal = new FlxSignal();
 	
 	public var visible(default, set):Bool = false;
 	
@@ -88,20 +93,18 @@ class DebuggerFrontEnd
 	public function track(ObjectOrClass:Dynamic, ?WindowTitle:String):Window
 	{
 		#if FLX_DEBUG
-		if (Tracker.objectsBeingTracked.indexOf(ObjectOrClass) == -1)
+		if (Tracker.objectsBeingTracked.contains(ObjectOrClass))
+			return null;
+		
+		var profile = Tracker.findProfile(ObjectOrClass);
+		if (profile == null)
 		{
-			var profile = Tracker.findProfile(ObjectOrClass);
-			if (profile == null)
-			{
-				FlxG.log.error("Could not find a tracking profile for object of class '" +
-					FlxStringUtil.getClassName(ObjectOrClass, true) + "'."); 
-				return null;
-			}
-			else 
-			{
-				return FlxG.game.debugger.addWindow(new Tracker(profile, ObjectOrClass, WindowTitle));
-			}
+			FlxG.log.error("Could not find a tracking profile for object of class '" +
+				ObjectOrClass.getClassName(true) + "'."); 
+			return null;
 		}
+		else 
+			return FlxG.game.debugger.addWindow(new Tracker(profile, ObjectOrClass, WindowTitle));
 		#end
 		return null;
 	}
@@ -134,18 +137,25 @@ class DebuggerFrontEnd
 	@:allow(flixel.FlxG)
 	private function new() {}
 	
-	private inline function set_drawDebug(Value:Bool):Bool
+	private function set_drawDebug(Value:Bool):Bool
 	{
+		if (drawDebug == Value)
+			return drawDebug;
+	
+		drawDebug = Value;
 		#if FLX_DEBUG
-		if (Value != drawDebug)
-			drawDebugChanged.dispatch();
+		drawDebugChanged.dispatch();
 		#end
-		
-		return drawDebug = Value;
+		return drawDebug;
 	}
 	
-	private inline function set_visible(Value:Bool):Bool
+	private function set_visible(Value:Bool):Bool
 	{
+		if (visible == Value)
+			return visible;
+
+		visible = Value;
+	
 		#if FLX_DEBUG
 		FlxG.game.debugger.visible = Value;
 		
@@ -156,8 +166,10 @@ class DebuggerFrontEnd
 			FlxG.stage.stageFocusRect = false; // don't show yellow focus rect on flash
 			FlxG.stage.focus = FlxG.game;
 		}
-		#end
 		
-		return visible = Value;
+		visibilityChanged.dispatch();
+		#end
+
+		return visible;
 	}
 }

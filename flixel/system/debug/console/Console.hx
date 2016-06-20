@@ -1,7 +1,6 @@
 package flixel.system.debug.console;
 
 #if FLX_DEBUG
-import openfl.events.Event;
 import openfl.events.FocusEvent;
 import openfl.events.KeyboardEvent;
 import openfl.events.MouseEvent;
@@ -11,7 +10,7 @@ import openfl.text.TextFormat;
 import openfl.ui.Keyboard;
 import flixel.FlxG;
 import flixel.FlxObject;
-import flixel.system.debug.FlxDebugger;
+import flixel.system.debug.FlxDebugger.GraphicConsole;
 import flixel.system.debug.completion.CompletionList;
 import flixel.system.debug.completion.CompletionHandler;
 import flixel.util.FlxStringUtil;
@@ -246,7 +245,7 @@ class Console extends Window
 			history.addCommand(input.text);
 			
 			// Step forward one frame to see the results of the command
-			#if (flash && !FLX_NO_DEBUG)
+			#if (flash && FLX_DEBUG)
 			if (FlxG.vcr.paused)
 				FlxG.game.debugger.vcr.onStep();
 			#end

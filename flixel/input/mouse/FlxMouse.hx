@@ -14,7 +14,7 @@ import flash.ui.Mouse;
 import flash.Vector;
 import flixel.FlxG;
 import flixel.input.IFlxInputManager;
-import flixel.input.mouse.FlxMouseButton;
+import flixel.input.mouse.FlxMouseButton.FlxMouseButtonID;
 import flixel.system.FlxAssets;
 import flixel.system.replay.MouseRecord;
 import flixel.util.FlxDestroyUtil;

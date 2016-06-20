@@ -17,16 +17,11 @@ private class GraphicLogoCorners extends BitmapData {}
 
 /**
  * This is the Default HaxeFlixel Themed Preloader 
- * You can make your own style of Preloader by overriding FlxPreloaderBase and using this class as an example.
- * To use your Preloader, simply change Project.xml to say: <app preloader="class.path.MyPreloader" />
+ * You can make your own style of Preloader by overriding `FlxPreloaderBase` and using this class as an example.
+ * To use your Preloader, simply change `Project.xml` to say: `<app preloader="class.path.MyPreloader" />`
  */
 class FlxPreloader extends FlxBasePreloader
 {
-	#if !js
-	
-	private static var BlendModeScreen = BlendMode.SCREEN;
-	private static var BlendModeOverlay = BlendMode.OVERLAY;
-	
 	private var _buffer:Sprite;
 	private var _bmpBar:Bitmap;
 	private var _text:TextField;
@@ -35,14 +30,15 @@ class FlxPreloader extends FlxBasePreloader
 	
 	/**
 	 * Initialize your preloader here.
+	 * 
+	 * ```haxe
+	 * super(0, ["test.com", FlxPreloaderBase.LOCAL]); // example of site-locking
+	 * super(10); // example of long delay (10 seconds)
+	 * ```
 	 */
 	override public function new(MinDisplayTime:Float = 0, ?AllowedURLs:Array<String>):Void
 	{
 		super(MinDisplayTime, AllowedURLs);
-		
-		// super(0, ["test.com", FlxPreloaderBase.LOCAL]); // example of site-locking
-		
-		// super(10); // example of long delay (10 seconds)
 	}
 	
 	/**
@@ -52,6 +48,7 @@ class FlxPreloader extends FlxBasePreloader
 	 */
 	override private function create():Void
 	{
+		#if !js
 		_buffer = new Sprite();
 		_buffer.scaleX = _buffer.scaleY = 2;
 		addChild(_buffer);
@@ -86,7 +83,7 @@ class FlxPreloader extends FlxBasePreloader
 		_buffer.addChild(_logo);
 		_logoGlow = new Sprite();
 		FlxAssets.drawLogo(_logoGlow.graphics);
-		_logoGlow.blendMode = BlendModeScreen;
+		_logoGlow.blendMode = BlendMode.SCREEN;
 		_logoGlow.scaleX = _logoGlow.scaleY = _height / 8 * 0.04;
 		_logoGlow.x = (_width - _logoGlow.width) / 2;
 		_logoGlow.y = (_height - _logoGlow.height) / 2;
@@ -108,9 +105,10 @@ class FlxPreloader extends FlxBasePreloader
 			}
 			i += 2;
 		}
-		bitmap.blendMode = BlendModeOverlay;
+		bitmap.blendMode = BlendMode.OVERLAY;
 		bitmap.alpha = 0.25;
 		_buffer.addChild(bitmap);
+		#end
 		
 		super.create();
 	}
@@ -121,6 +119,7 @@ class FlxPreloader extends FlxBasePreloader
 	 */
 	override private function destroy():Void
 	{
+		#if !js
 		if (_buffer != null)	
 		{
 			removeChild(_buffer);
@@ -131,6 +130,7 @@ class FlxPreloader extends FlxBasePreloader
 		_logo = null;
 		_logoGlow = null;
 		super.destroy();
+		#end
 	}
 	
 	/**
@@ -139,6 +139,7 @@ class FlxPreloader extends FlxBasePreloader
 	 */
 	override public function update(Percent:Float):Void
 	{
+		#if !js
 		_bmpBar.scaleX = Percent * (_width - 8);
 		_text.text = Std.string(FlxG.VERSION) + " " + Std.int(Percent * 100) + "%";
 		
@@ -176,6 +177,6 @@ class FlxPreloader extends FlxBasePreloader
 		{
 			_buffer.alpha = 1 - (Percent - 0.9) / 0.1;
 		}
+		#end
 	}
-	#end
 }

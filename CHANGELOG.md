@@ -1,11 +1,65 @@
 4.1.0
 ------------------------------
+
+#### New features:
+
 * `FlxG.vcr`: added an `OpenSaveDialog` argument to `stopRecording()` (#1726)
-* `FlxText`: [Flash] fixed blurry lines on multiline texts with `FlxTextAlign.CENTER` (#1728)
-* `flixel.input.gamepad`: added IDs for analog stick directions to `FlxGamepadInputID` (#1746)
-*  `FlxGame` / `FlxCamera`: `setFilters()` now needs to be called again on each filter array change (#1761)
-* `FlxSound`: added `loopTime`, added a `StartTime` argument to `play()` (#1736)
+* `FlxSound`:
+	* added `loopTime` (#1736)
+	* added a `StartTime` argument to `play()` (#1736)
+	* added `fadeTween` (#1834)
+	* added a setter for `time` (#1792)
 * `FlxMouse:` added `enabled`
+* `FlxGamepadInputID`: added IDs for analog stick directions (#1746)
+* `FlxG.watch`: added `addExpression()` and `removeExpression()` (#1790)
+* `Console`:
+	* added `watch` and `watchExpression` commands (#1790)
+	* added `Reflect`, `Std`, `StringTools`, `Sys`, `Type` and `FlxTween` to default classes
+* `CompletionHandler`: added locals declared with `var` to completion
+* `WatchEntry`:
+	* added a remove button
+	* added `Float` rounding (to `FlxG.debugger.precision` decimals)
+	* added support for in- / decrement of numeric values via up / down keys
+	* added support for moving selection to start / end via up / down keys (non-numeric values)
+* `FlxStringUtil`: added `isNullOrEmpty()`
+* `FlxDefines`: added inverted versions of all `FLX_NO`-defines (e.g. `FLX_DEBUG` for `FLX_NO_DEBUG`)
+* `FlxTileFrames`: added `spacing` and `border` arguments to `combineTileSets()` and `combineTileFrames()` (#1807)
+* `FlxBitmapDataUtil`: added `copyBorderPixels()`
+* `FlxGame`: `GameWidth` and `GameHeight` in `new()` now use the window size if set to 0 (#1811)
+* `FlxPoint`: added `scale()` (#1811)
+* `FlxBar`: added `numDivisions`
+* `FlxBaseTilemap`: added `loadMapFromGraphic()` (#1525)
+* `FlxAnimation`: added the ability to set `paused` directly (#1538)
+* `FlxTilemap`: added `antialiasing` (#1850)
+* Added GLSL `shader` support for `FlxSprite`, `FlxTilemap`, `FlxBar` and `FlxBitmapText` (#1848)
+* `FlxGraphic`: added an optional `Cache` argument to `fromFrame()`
+* `FlxG.debugger`: added `visibilityChanged` (#1865)
+
+#### Bugfixes:
+
+* `FlxText`: [Flash] fixed blurry lines on multiline texts with `FlxTextAlign.CENTER` (#1728)
+* `FlxSound`: fixed `fadeOut()` and `fadeIn()` not canceling the previous tween (#1834)
+* `FlxGamepad:` [Flash] fixed potential range errors when checking axis values
+* `CompletionListEntry`: fixed text width exceeding list width
+* `FlxGame`: [HTML5] fixed `ticks` holding the current date's timestamp instead of ms since game start
+* `FlxCamera`: fixed background scaling for `zoom < 1` on native targets (#1588)
+* `FlxBaseTilemap`: [Neko,HTML5] fixed invalid array access in `overlapsPoint()` (#1835)
+* `FlxObject`: fixed `overlapsPoint()` at x / y = 0 (#1818)
+* `FlxReplay`: fixed simultaneous recording of key and mouse input (#1739)
+* `FlxVelocity`: fixed `accelerateFromAngle()` setting `maxVelocity` to negative values (#1833)
+* Fixed compilation with `hscriptPos` defined (#1840)
+* `FlxDrawTilesItem`: fixed `numTiles` value with color offsets
+* `FlxBitmapFont`: fixed a crash related to incorrect UTF-8 handling (#1857)
+* `FlxAtlas`: fixed a crash when the constructor is called with `powerOfTwo == true` (#1858)
+* `FlxTween`: fixed nested tween chains (#1871)
+
+#### Changes and improvements:
+
+* `Console`: removed `resetState`, `switchState` and `resetGame` commands
+* `FlxArrayUtil`: optimized `flatten2DArray()`
+* `FlxSpriteUtil`: changed `alphaMask()` arguments from `Dynamic` to `FlxGraphicAsset` (#1806)
+* `FlxG.signals`: changed `preUpdate` to be dispatched _after_ `FlxG.elapsed` is updated (#1836)
+* `FlxG.debugger`: changed `drawDebugChanged` to be dispatched _after_ `drawDebug` is updated
 
 4.0.1
 ------------------------------
@@ -18,6 +72,12 @@
 	* fixed cursor disappearing after losing Console focus with native cursor API
 	* fixed mouse focus area of windows being too big
 * `FlxAnimationController`: fixed `finishCallback` firing multiple times in one frame (#1781)
+* `FlxPreloader`: [HTML5] fixed preloader not showing up (#1750)
+* `FlxStringUtil.formatMoney()`:
+	* fixed formatting for `Amount < 0` (#1754)
+	* fixed formatting for negative amounts
+	* [HTML5] fixed formatting for amounts > Int32 
+* Debugger Stats window: fixed paused time being taken into account for average FPS
 
 4.0.0
 ------------------------------

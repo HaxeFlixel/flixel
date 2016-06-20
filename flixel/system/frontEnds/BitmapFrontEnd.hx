@@ -8,7 +8,6 @@ import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.util.FlxColor;
 import openfl.Assets;
-import openfl.events.Event;
 import openfl.gl.GL;
 
 /**

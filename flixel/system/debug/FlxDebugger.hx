@@ -49,6 +49,9 @@ class GraphicArrowLeft extends BitmapData {}
 @:bitmap("assets/images/debugger/buttons/arrowRight.png") 
 class GraphicArrowRight extends BitmapData {}
 
+@:bitmap("assets/images/debugger/buttons/close.png")
+class GraphicCloseButton extends BitmapData {}
+
 /**
  * Container for the new debugger overlay. Most of the functionality is in the debug folder widgets,
  * but this class instantiates the widgets and handles their basic formatting and arrangement.
@@ -153,7 +156,7 @@ class FlxDebugger extends Sprite
 		drawDebugButton.toggled = !FlxG.debugger.drawDebug;
 		FlxG.debugger.drawDebugChanged.add(function()
 		{ 
-			drawDebugButton.toggled = FlxG.debugger.drawDebug;
+			drawDebugButton.toggled = !FlxG.debugger.drawDebug;
 		});
 		
 		#if FLX_RECORD

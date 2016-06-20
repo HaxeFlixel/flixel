@@ -265,16 +265,26 @@ class FlxVelocity
 		}
 		return Velocity;
 	}
-	
+
+	/**
+	 * Sets the x/y acceleration on the source FlxSprite so it will accelerate in the direction of the specified angle.
+	 * You must give a maximum speed value (in pixels per second), beyond which the FlxSprite won't go any faster.
+	 * 
+	 * @param	Source			The FlxSprite on which the acceleration will be set
+	 * @param	Radians			The angle in which the FlxPoint will be set to accelerate
+	 * @param	Acceleration	The speed it will accelerate in pixels per second
+	 * @param	MaxSpeed		The maximum speed in pixels per second in which the sprite can move
+	 * @param	ResetVelocity	Whether to reset the FlxSprite velocity to 0 each time
+	 */
 	public static inline function accelerateFromAngle(source:FlxSprite, radians:Float, acceleration:Float, maxSpeed:Float, resetVelocity:Bool = true):Void
 	{
-		var sin = Math.sin(radians);
-		var cos = Math.cos(radians);
+		var sinA = Math.sin(radians);
+		var cosA = Math.cos(radians);
 		
 		if (resetVelocity)
 			source.velocity.set(0, 0);
 		
-		source.acceleration.set(cos * acceleration, sin * acceleration);
-		source.maxVelocity.set(cos * maxSpeed, sin * maxSpeed);		
+		source.acceleration.set(cosA * acceleration, sinA * acceleration);
+		source.maxVelocity.set(Math.abs(cosA * maxSpeed), Math.abs(sinA * maxSpeed));		
 	}
 }

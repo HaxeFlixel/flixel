@@ -1,24 +1,17 @@
 package flixel;
 
-import flash.display.Bitmap;
-import flash.display.BitmapData;
+import flash.Lib;
 import flash.display.Sprite;
 import flash.display.StageAlign;
 import flash.display.StageScaleMode;
 import flash.events.Event;
 import flash.events.FocusEvent;
-import flash.geom.ColorTransform;
-import flash.geom.Matrix;
-import flash.Lib;
 import flixel.effects.postprocess.PostProcess;
 import flixel.graphics.tile.FlxTilesheet;
-import flixel.math.FlxAngle;
 import flixel.math.FlxRandom;
 import flixel.system.FlxSplash;
 import flixel.system.replay.FlxReplay;
 import flixel.util.FlxArrayUtil;
-import flixel.util.FlxColor;
-import flixel.util.FlxDestroyUtil;
 import openfl.Assets;
 import openfl.filters.BitmapFilter;
 
@@ -104,6 +97,11 @@ class FlxGame extends Sprite
 	 * Total number of milliseconds elapsed since game start.
 	 */
 	private var _total:Int = 0;
+	/**
+	 * Time stamp of game startup. Needed on JS where Lib.getTimer()
+	 * returns time stamp of current date, not the time passed since app start.
+	 */
+	private var _startTime:Int = 0;
 	/**
 	 * Total number of milliseconds elapsed since last update loop.
 	 * Counts down as we step through the game loop.
@@ -223,16 +221,19 @@ class FlxGame extends Sprite
 	/**
 	 * Instantiate a new game object.
 	 * 
-	 * @param	GameSizeX		The width of your game in game pixels, not necessarily final display pixels (see Zoom).
-	 * @param	GameSizeY		The height of your game in game pixels, not necessarily final display pixels (see Zoom).
-	 * @param	InitialState	The class name of the state you want to create and switch to first (e.g. MenuState).
-	 * @param	Zoom			The default level of zoom for the game's cameras (e.g. 2 = all pixels are now drawn at 2x).  Default = 1.
-	 * @param	UpdateFramerate	How frequently the game should update (default is 60 times per second).
-	 * @param	DrawFramerate	Sets the actual display / draw framerate for the game (default is 60 times per second).
-	 * @param	SkipSplash		Whether you want to skip the flixel splash screen in FLX_NO_DEBUG or not.
-	 * @param	StartFullscreen	Whether to start the game in fullscreen mode (desktop targets only), false by default
+	 * @param GameWidth       The width of your game in game pixels, not necessarily final display pixels (see `Zoom`).
+	 *                        If equal to 0, the window width specified in the `Project.xml` is used.
+	 * @param GameHeight      The height of your game in game pixels, not necessarily final display pixels (see `Zoom`).
+	 *                        If equal to 0, the window height specified in the `Project.xml` is used.
+	 * @param InitialState    The class name of the state you want to create and switch to first (e.g. `MenuState`).
+	 * @param Zoom            The default level of zoom for the game's cameras (e.g. 2 = all pixels are now drawn at 2x).
+	 * @param UpdateFramerate How frequently the game should update (default is 60 times per second).
+	 * @param DrawFramerate   Sets the actual display / draw framerate for the game (default is 60 times per second).
+	 * @param SkipSplash      Whether you want to skip the flixel splash screen with `FLX_NO_DEBUG`.
+	 * @param StartFullscreen Whether to start the game in fullscreen mode (desktop targets only).
 	 */
-	public function new(GameSizeX:Int = 640, GameSizeY:Int = 480, ?InitialState:Class<FlxState>, Zoom:Float = 1, UpdateFramerate:Int = 60, DrawFramerate:Int = 60, SkipSplash:Bool = false, StartFullscreen:Bool = false)
+	public function new(GameWidth:Int = 0, GameHeight:Int = 0, ?InitialState:Class<FlxState>, Zoom:Float = 1,
+		UpdateFramerate:Int = 60, DrawFramerate:Int = 60, SkipSplash:Bool = false, StartFullscreen:Bool = false)
 	{
 		super();
 		
@@ -243,8 +244,13 @@ class FlxGame extends Sprite
 		// Super high priority init stuff
 		_inputContainer = new Sprite();
 		
+		if (GameWidth == 0)
+			GameWidth = FlxG.stage.stageWidth;
+		if (GameHeight == 0)
+			GameHeight = FlxG.stage.stageHeight;
+
 		// Basic display and update setup stuff
-		FlxG.init(this, GameSizeX, GameSizeY, Zoom);
+		FlxG.init(this, GameWidth, GameHeight, Zoom);
 		
 		FlxG.updateFramerate = UpdateFramerate;
 		FlxG.drawFramerate = DrawFramerate;
@@ -263,13 +269,10 @@ class FlxGame extends Sprite
 	
 	/**
 	 * Sets the filter array to be applied to the game.
-	 * 
-	 * @param	filters
 	 */
 	public function setFilters(filters:Array<BitmapFilter>):Void
 	{
 		_filters = filters;
-		filters = filtersEnabled ? _filters : null;
 	}
 	
 	/**
@@ -283,7 +286,8 @@ class FlxGame extends Sprite
 		}
 		removeEventListener(Event.ADDED_TO_STAGE, create);
 		
-		_total = getTimer();
+		_startTime = getTimer();
+		_total = getTicks();
 		
 		#if desktop
 		FlxG.fullscreen = _startFullscreen;
@@ -494,7 +498,7 @@ class FlxGame extends Sprite
 	 */
 	private function onEnterFrame(_):Void
 	{
-		ticks = getTimer();
+		ticks = getTicks();
 		_elapsedMS = ticks - _total;
 		_total = ticks;
 		
@@ -515,6 +519,9 @@ class FlxGame extends Sprite
 				}
 				else if (_state == _requestedState) // don't pause a state switch request
 				{
+					#if FLX_DEBUG
+					debugger.update();
+					#end
 					return;
 				}
 			}
@@ -714,25 +721,12 @@ class FlxGame extends Sprite
 		
 		#if FLX_DEBUG
 		if (FlxG.debugger.visible)
-		{
-			ticks = getTimer(); // Lib.getTimer() is expensive, only do it if necessary
-		}
+			ticks = getTicks();
 		#end
 		
-		FlxG.signals.preUpdate.dispatch();
+		updateElapsed();
 		
-		if (FlxG.fixedTimestep)
-		{
-			FlxG.elapsed = FlxG.timeScale * _stepSeconds; // fixed timestep
-		}
-		else
-		{
-			FlxG.elapsed = FlxG.timeScale * (_elapsedMS / 1000); // variable timestep
-			
-			var max = FlxG.maxElapsed * FlxG.timeScale;
-			if (FlxG.elapsed > max) 
-				FlxG.elapsed = max;
-		}
+		FlxG.signals.preUpdate.dispatch();
 		
 		updateInput();
 		
@@ -754,16 +748,30 @@ class FlxGame extends Sprite
 		FlxG.signals.postUpdate.dispatch();
 		
 		#if FLX_DEBUG
-		debugger.stats.flixelUpdate(getTimer() - ticks);
+		debugger.stats.flixelUpdate(getTicks() - ticks);
 		#end
 		
 		#if FLX_POINTER_INPUT
-		for (swipe in FlxG.swipes)
-		{
-			swipe = null;
-		}
 		FlxArrayUtil.clearArray(FlxG.swipes);
 		#end
+		
+		filters = filtersEnabled ? _filters : null;
+	}
+	
+	private function updateElapsed():Void
+	{
+		if (FlxG.fixedTimestep)
+		{
+			FlxG.elapsed = FlxG.timeScale * _stepSeconds; // fixed timestep
+		}
+		else
+		{
+			FlxG.elapsed = FlxG.timeScale * (_elapsedMS / 1000); // variable timestep
+			
+			var max = FlxG.maxElapsed * FlxG.timeScale;
+			if (FlxG.elapsed > max) 
+				FlxG.elapsed = max;
+		}
 	}
 	
 	private function updateInput():Void
@@ -808,12 +816,13 @@ class FlxGame extends Sprite
 		}
 		else
 		{
+			FlxG.inputs.update();
+		}
+		#else
+		FlxG.inputs.update();
 		#end
 		
-		FlxG.inputs.update();
-		
 		#if FLX_RECORD
-		}
 		if (recording)
 		{
 			_replay.recordFrame();
@@ -837,10 +846,7 @@ class FlxGame extends Sprite
 		
 		#if FLX_DEBUG
 		if (FlxG.debugger.visible)
-		{
-			// getTimer() is expensive, only do it if necessary
-			ticks = getTimer(); 
-		}
+			ticks = getTicks();
 		#end
 		
 		FlxG.signals.preDraw.dispatch();
@@ -877,12 +883,18 @@ class FlxGame extends Sprite
 		FlxG.signals.postDraw.dispatch();
 		
 		#if FLX_DEBUG
-		debugger.stats.flixelDraw(getTimer() - ticks);
+		debugger.stats.flixelDraw(getTicks() - ticks);
 		#end
+	}
+	
+	private inline function getTicks()
+	{
+		return getTimer() - _startTime;
 	}
 	
 	private dynamic function getTimer():Int
 	{
+		// expensive, only call if necessary
 		return Lib.getTimer();
 	}
 }

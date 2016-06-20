@@ -3,6 +3,7 @@ package;
 import flash.errors.Error;
 import flixel.FlxG;
 import flixel.FlxState;
+import flixel.tweens.FlxTween;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import massive.munit.Assert;
 
@@ -75,6 +76,14 @@ class FlxTest
 		catch (e:Error)
 		{
 			Assert.fail(e.message);
+		}
+	}
+	
+	function finishTween(tween:FlxTween)
+	{
+		while (!tween.finished)
+		{
+			step();
 		}
 	}
 }

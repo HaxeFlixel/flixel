@@ -349,60 +349,16 @@ class FlxTileFrames extends FlxFramesCollection
 	 * 
 	 * sprite.frames = combinedFrames;
 	 */
-	public static function combineTileSets(bitmaps:Array<BitmapData>, tileSize:FlxPoint):FlxTileFrames
+	public static function combineTileSets(bitmaps:Array<BitmapData>, tileSize:FlxPoint, ?spacing:FlxPoint, ?border:FlxPoint):FlxTileFrames
 	{
-		// we need to calculate the size of result bitmap first
-		var totalArea:Int = 0;
-		var rows:Int = 0;
-		var cols:Int = 0;
+		var framesCollections:Array<FlxTileFrames> = [];
 		
 		for (bitmap in bitmaps)
 		{
-			cols = Std.int(bitmap.width / tileSize.x);
-			rows = Std.int(bitmap.height / tileSize.y);
-			totalArea += Std.int(cols * tileSize.x * rows * tileSize.y);
+			framesCollections.push(FlxTileFrames.fromRectangle(bitmap, tileSize));
 		}
 		
-		var side:Float = Math.sqrt(totalArea);
-		cols = Std.int(side / tileSize.x);
-		rows = Math.ceil(totalArea / (cols * tileSize.x * tileSize.y));
-		var width:Int = Std.int(cols * tileSize.x);
-		var height:Int = Std.int(rows * tileSize.y);
-		
-		// now we'll create result atlas and will blit every tile on it.
-		var combined:BitmapData = new BitmapData(width, height, true, FlxColor.TRANSPARENT);
-		var graphic:FlxGraphic = FlxG.bitmap.add(combined);
-		var result:FlxTileFrames = new FlxTileFrames(graphic);
-		
-		result.region = FlxRect.get(0, 0, width, height);
-		result.atlasFrame = null;
-		result.tileSize = FlxPoint.get(tileSize.x, tileSize.y);
-		result.tileSpacing = FlxPoint.get(0, 0);
-		result.numCols = cols;
-		result.numRows = rows;
-		
-		var frames:FlxTileFrames;
-		var point:Point = new Point(0, 0);
-		
-		for (bitmap in bitmaps)
-		{
-			frames = FlxTileFrames.fromRectangle(bitmap, tileSize);
-			
-			for (frame in frames.frames)
-			{
-				frame.paint(combined, point, true);
-				result.addAtlasFrame(FlxRect.get(point.x, point.y, tileSize.x, tileSize.y), FlxPoint.get(tileSize.x, tileSize.y), FlxPoint.get(0, 0));				
-				point.x += tileSize.x;
-				
-				if (point.x >= combined.width)
-				{
-					point.x = 0;
-					point.y += tileSize.y;
-				}
-			}
-		}
-		
-		return result;
+		return combineTileFrames(framesCollections, spacing, border);
 	}
 	
 	/**
@@ -419,7 +375,7 @@ class FlxTileFrames extends FlxFramesCollection
 	 * 
 	 * sprite.frames = combinedFrames;
 	 */
-	public static function combineTileFrames(tileframes:Array<FlxTileFrames>):FlxTileFrames
+	public static function combineTileFrames(tileframes:Array<FlxTileFrames>, ?spacing:FlxPoint, ?border:FlxPoint):FlxTileFrames
 	{
 		// we need to calculate the size of result bitmap first
 		var totalArea:Int = 0;
@@ -429,48 +385,68 @@ class FlxTileFrames extends FlxFramesCollection
 		var tileWidth:Int = Std.int(tileframes[0].frames[0].sourceSize.x);
 		var tileHeight:Int = Std.int(tileframes[0].frames[0].sourceSize.y);
 		
+		var spaceX:Int = 0;
+		var spaceY:Int = 0;
+		
+		if (spacing != null)
+		{
+			spaceX = Std.int(spacing.x);
+			spaceY = Std.int(spacing.y);
+		}
+		
+		var borderX:Int = 0;
+		var borderY:Int = 0;
+		
+		if (border != null)
+		{
+			borderX = Std.int(border.x);
+			borderY = Std.int(border.y); 
+		}
+		
 		for (collection in tileframes)
 		{
 			cols = collection.numCols;
 			rows = collection.numRows;
-			totalArea += Std.int(cols * tileWidth * rows * tileHeight);
+			totalArea += Std.int(cols * (tileWidth + 2 * borderX) * rows * (tileHeight + 2 * borderY));
 		}
 		
 		var side:Float = Math.sqrt(totalArea);
-		cols = Std.int(side / tileWidth);
-		rows = Math.ceil(totalArea / (cols * tileWidth * tileHeight));
-		var width:Int = Std.int(cols * tileWidth);
-		var height:Int = Std.int(rows * tileHeight);
+		cols = Std.int(side / (tileWidth + 2 * borderX));
+		rows = Math.ceil(totalArea / (cols * (tileWidth + 2 * borderX) * (tileHeight + 2 * borderY)));
+		var width:Int = Std.int(cols * (tileWidth + 2 * borderX)) + (cols - 1) * spaceX;
+		var height:Int = Std.int(rows * (tileHeight + 2 * borderY)) + (rows - 1) * spaceY;
 		
 		// now we'll create result atlas and will blit every tile on it.
 		var combined:BitmapData = new BitmapData(width, height, true, FlxColor.TRANSPARENT);
 		var graphic:FlxGraphic = FlxG.bitmap.add(combined);
 		var result:FlxTileFrames = new FlxTileFrames(graphic);
-		var point:Point = new Point(0, 0);
+		var destPoint:Point = new Point(borderX, borderY);
 		
 		result.region = FlxRect.get(0, 0, width, height);
 		result.atlasFrame = null;
 		result.tileSize = FlxPoint.get(tileWidth, tileHeight);
-		result.tileSpacing = FlxPoint.get(0, 0);
+		result.tileSpacing = FlxPoint.get(spaceX, spaceY);
 		result.numCols = cols;
 		result.numRows = rows;
-		
+		// paint frames on result canvas with spaces between frames
 		for (collection in tileframes)
 		{
 			for (frame in collection.frames)
 			{
-				frame.paint(combined, point, true);
-				result.addAtlasFrame(FlxRect.get(point.x, point.y, tileWidth, tileHeight), FlxPoint.get(tileWidth, tileHeight), FlxPoint.get(0, 0));				
-				point.x += tileWidth;
+				frame.paint(combined, destPoint, true);
+
+				result.addAtlasFrame(FlxRect.get(destPoint.x, destPoint.y, tileWidth, tileHeight), FlxPoint.get(tileWidth, tileHeight), FlxPoint.get(0, 0));				
+				destPoint.x += tileWidth + 2 * borderX + spaceX;
 				
-				if (point.x >= combined.width)
+				if (destPoint.x >= combined.width)
 				{
-					point.x = 0;
-					point.y += tileHeight;
+					destPoint.x = borderX;
+					destPoint.y += tileHeight + 2 * borderY + spaceY;
 				}
 			}
 		}
-		
+		// and copy pixels around frames
+		FlxBitmapDataUtil.copyBorderPixels(combined, tileWidth, tileHeight, spaceX, spaceY, borderX, borderY, cols, rows);		
 		return result;
 	}
 	

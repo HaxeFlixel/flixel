@@ -394,7 +394,7 @@ class FlxBitmapText extends FlxSprite
 				
 				var hasColorOffsets:Bool = (colorTransform != null && colorTransform.hasRGBAOffsets());
 				
-				drawItem = camera.startQuadBatch(font.parent, true, hasColorOffsets, blend, antialiasing);
+				drawItem = camera.startQuadBatch(font.parent, true, hasColorOffsets, blend, antialiasing, shader);
 				
 				for (j in 0...borderLength)
 				{

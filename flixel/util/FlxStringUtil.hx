@@ -101,59 +101,53 @@ class FlxStringUtil
 	/**
 	 * Automatically commas and decimals in the right places for displaying money amounts.
 	 * Does not include a dollar sign or anything, so doesn't really do much
-	 * if you call say var results:String = FlxString.formatMoney(10,false);
+	 * if you call say `FlxString.formatMoney(10, false)`.
 	 * However, very handy for displaying large sums or decimal money values.
 	 * 
 	 * @param	Amount			How much moneys (in dollars, or the equivalent "main" currency - i.e. not cents).
-	 * @param	ShowDecimal		Whether to show the decimals/cents component. Default value is true.
-	 * @param	EnglishStyle	Major quantities (thousands, millions, etc) separated by commas, and decimal by a period.  Default value is true.
-	 * @return	A nicely formatted String.  Does not include a dollar sign or anything!
+	 * @param	ShowDecimal		Whether to show the decimals/cents component.
+	 * @param	EnglishStyle	Major quantities (thousands, millions, etc) separated by commas, and decimal by a period.
+	 * @return	A nicely formatted String. Does not include a dollar sign or anything!
 	 */
 	public static inline function formatMoney(Amount:Float, ShowDecimal:Bool = true, EnglishStyle:Bool = true):String
 	{
-		var helper:Int;
-		var amount:Int = Math.floor(Amount);
+		var isNegative = Amount < 0;
+		Amount = Math.abs(Amount);
+
 		var string:String = "";
 		var comma:String = "";
-		var zeroes:String = "";
+		var amount:Int = Math.floor(Amount);
 		while (amount > 0)
 		{
-			if ((string.length > 0) && (comma.length <= 0))
-			{
-				if (EnglishStyle)
-				{
-					comma = ",";
-				}
-				else
-				{
-					comma = ".";
-				}
-			}
-			zeroes = "";
-			helper = amount - Math.floor(amount / 1000) * 1000;
+			if (string.length > 0 && comma.length <= 0)
+				comma = (EnglishStyle ? "," : ".");
+
+			var zeroes = "";
+			var helper = amount - Math.floor(amount / 1000) * 1000;
 			amount = Math.floor(amount / 1000);
 			if (amount > 0)
 			{
 				if (helper < 100)
-				{
 					zeroes += "0";
-				}
 				if (helper < 10)
-				{
 					zeroes += "0";
-				}
 			}
 			string = zeroes + helper + comma + string;
 		}
+		
+		if (string == "")
+			string = "0";
+		
 		if (ShowDecimal)
 		{
-			amount = Std.int(Amount * 100) - (Std.int(Amount) * 100);
+			amount = Math.floor(Amount * 100) - (Math.floor(Amount) * 100);
 			string += (EnglishStyle ? "." : ",") + amount;
 			if (amount < 10)
-			{
 				string += "0";
-			}
 		}
+		
+		if (isNegative)
+			string = "-" + string;
 		return string;
 	}
 	
@@ -591,6 +585,14 @@ class FlxStringUtil
 			return 0;
 		});
 		return list;
+	}
+	
+	/**
+	 * Returns true if `s` equals `null` or is empty.
+	 */
+	public static inline function isNullOrEmpty(s:String):Bool
+	{
+		return s == null || s.length == 0;
 	}
 }
 

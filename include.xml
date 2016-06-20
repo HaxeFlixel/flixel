@@ -2,9 +2,12 @@
 <project>
 	<icon path="assets/images/logo/HaxeFlixel.svg" />
 	
-	<assets path="assets/sounds" rename="flixel/sounds" include="*.ogg" if="html5" unless="unit-test" />
-	<assets path="assets/sounds" rename="flixel/sounds" include="*.mp3" if="flash" embed="true" />
-	<assets path="assets/sounds" rename="flixel/sounds" include="*.ogg" unless="flash || html5" embed="true" />
+	<section unless="unit-test">
+		<assets path="assets/sounds" rename="flixel/sounds" include="*.ogg" if="html5" />
+		<assets path="assets/sounds" rename="flixel/sounds" include="*.mp3" if="flash" embed="true" />
+		<assets path="assets/sounds" rename="flixel/sounds" include="*.ogg" unless="flash || html5" embed="true" />
+	</section>
+	
 	<assets path="assets/fonts/nokiafc22.ttf" rename="flixel/fonts/nokiafc22.ttf" embed="true" />
 	<assets path="assets/fonts/monsterrat.ttf" rename="flixel/fonts/monsterrat.ttf" embed="true" />
 	<assets path="assets/images/ui/button.png" rename="flixel/images/ui/button.png" embed="true" unless="unit-test html5" />
@@ -14,6 +17,7 @@
 	<haxelib name="openfl" unless="create" />
 	<haxelib name="hscript" unless="create||coverage2" optional="true" />
 	
+	<haxedef name="HXCPP_QUIET" />
 	<haxeflag name="--macro" value="flixel.system.macros.FlxDefines.run()" />
 	
 	<section if="setup">

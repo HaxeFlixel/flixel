@@ -76,7 +76,7 @@ class FlxBitmapDataPool
 		} 
 		else 	// not found: create a new one
 		{
-			res = new BitmapData(w, h, transparent, fillColor != null ? fillColor : 0xFFFFFFFF);
+			res = new BitmapData(w, h, transparent, fillColor != null ? fillColor : FlxColor.WHITE);
 		}
 		
 		return res;
