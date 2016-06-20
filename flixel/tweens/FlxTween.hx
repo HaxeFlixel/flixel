@@ -834,6 +834,8 @@ class FlxTweenManager extends FlxBasic
 	 * 
 	 * Note: if they haven't yet begun, this will first trigger their onStart callback.
 	 * 
+	 * Note: their onComplete callbacks are triggered in the next frame.  To trigger them immediately, call `FlxTween.manager.update(0);` after this function.
+	 * 
 	 * In no case should it trigger an onUpdate callback.
 	 */
 	public function completeAll():Void
