@@ -148,7 +148,7 @@ class FlxPath implements IFlxDestroyable
 	 * If you are fine with the default values of start (speed, mode, autorate) you can also do:
 	 * object.path = new FlxPath([new FlxPoint(0, 0), new FlxPoint(100, 0)]).start()
 	 */
-	public function new(Nodes:Array<FlxPoint> = null)
+	public function new(?Nodes:Array<FlxPoint>)
 	{
 		if (Nodes != null)
 		{
@@ -203,7 +203,7 @@ class FlxPath implements IFlxDestroyable
 	 * 
 	 * @return	This path object.
 	 */
-	public function start(Nodes:Array<FlxPoint> = null, Speed:Float = 100, Mode:Int = FlxPath.FORWARD, AutoRotate:Bool = false, NodesAsReference:Bool = false) : FlxPath
+	public function start(?Nodes:Array<FlxPoint>, Speed:Float = 100, Mode:Int = FlxPath.FORWARD, AutoRotate:Bool = false, NodesAsReference:Bool = false) : FlxPath
 	{
 		if (Nodes != null)
 		{
@@ -651,7 +651,7 @@ class FlxPath implements IFlxDestroyable
 		{
 			return null;
 		}
-		if (Index >= _nodes.length-1)
+		if (Index >= _nodes.length - 1)
 		{
 			_nodes.pop();
 		}

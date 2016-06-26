@@ -163,14 +163,14 @@ class FlxPathTest extends FlxTest
 		Assert.areEqual(object.path.nodes.length, mypoints.length);
 		for (i in 0...mypoints.length)
 		{
-			Assert.areEqual(i+1, path.nodes[i].x);
-			Assert.areEqual(i+1, path.nodes[i].y);
+			Assert.areEqual(i + 1, path.nodes[i].x);
+			Assert.areEqual(i + 1, path.nodes[i].y);
 		}
 		
 		object.path = path.start(mypoints, 100, FlxPath.FORWARD, false, false);
 		Assert.areEqual(object.path.nodes.length, mypoints.length);
 		object.path.removeAt(0);
-		Assert.areEqual(object.path.nodes.length+1, mypoints.length);
+		Assert.areEqual(object.path.nodes.length + 1, mypoints.length);
 	}
 	
 	@Test
