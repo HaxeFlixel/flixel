@@ -806,7 +806,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		{
 			basic = members[i++];
 			
-			if (basic != null &&  Std.is(basic, ObjectClass))
+			if (basic != null)
 			{
 				if (Recurse)
 				{
@@ -817,7 +817,8 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 					}
 				}
 				
-				Function(cast basic);
+				if (Std.is(basic, ObjectClass))
+					Function(cast basic);
 			}
 		}
 	}
