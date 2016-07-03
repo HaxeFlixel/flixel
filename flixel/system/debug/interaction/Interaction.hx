@@ -99,15 +99,31 @@ class Interaction extends Window
 	
 	private function updateMouse(Event:MouseEvent):Void
 	{
+		var offsetX:Float = 0, offsetY:Float = 0;
+		var cursorIcon:BitmapData;
+		
+		// If the active tool has a custom cursor, we assume its
+		// "point of click" is the center of the cursor icon.
+		if (_activeTool != null)
+		{
+			cursorIcon = _activeTool.getCursor();
+			
+			if (cursorIcon != null)
+			{
+				offsetX = cursorIcon.width / FlxG.scaleMode.scale.x / 2;
+				offsetY = cursorIcon.height / FlxG.scaleMode.scale.y / 2;
+			}
+		}
+		
+		_customCursor.x = Event.stageX + offsetX;
+		_customCursor.y = Event.stageY + offsetY;
+		
 		// Store Flixel mouse coordinates to speed up all
 		// internal calculations (overlap, etc)
 		#if FLX_MOUSE
-		flixelPointer.x = FlxG.mouse.x; // TODO: calculate mouse according to Flixel coordinate system
-		flixelPointer.y = FlxG.mouse.y; // TODO: calculate mouse according to Flixel coordinate system
+		flixelPointer.x = FlxG.mouse.x + offsetX; // TODO: calculate mouse according to Flixel coordinate system
+		flixelPointer.y = FlxG.mouse.y + offsetY; // TODO: calculate mouse according to Flixel coordinate system
 		#end
-		
-		_customCursor.x = Event.stageX;
-		_customCursor.y = Event.stageY;
 	}
 	
 	private function handleMouseClick(Event:MouseEvent):Void 
