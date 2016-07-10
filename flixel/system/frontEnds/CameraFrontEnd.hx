@@ -6,7 +6,6 @@ import flixel.FlxG;
 import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 
-@:allow(flixel.FlxGame)
 class CameraFrontEnd
 {
 	/**
@@ -164,6 +163,7 @@ class CameraFrontEnd
 	/**
 	 * Called by the game object to lock all the camera buffers and clear them for the next draw pass.
 	 */
+	@:allow(flixel.FlxGame)
 	private inline function lock():Void
 	{
 		for (camera in list)
@@ -205,6 +205,7 @@ class CameraFrontEnd
 		}
 	}
 	
+	@:allow(flixel.FlxGame)
 	private inline function render():Void
 	{
 		if (FlxG.renderTile)
@@ -222,6 +223,7 @@ class CameraFrontEnd
 	/**
 	 * Called by the game object to draw the special FX and unlock all the camera buffers.
 	 */
+	@:allow(flixel.FlxGame)
 	private inline function unlock():Void
 	{
 		for (camera in list)
@@ -248,6 +250,7 @@ class CameraFrontEnd
 	/**
 	 * Called by the game object to update the cameras and their tracking/special effects logic.
 	 */
+	@:allow(flixel.FlxGame)
 	private inline function update(elapsed:Float):Void
 	{
 		for (camera in list)
@@ -262,6 +265,7 @@ class CameraFrontEnd
 	/**
 	 * Resizes and moves cameras when the game resizes (onResize signal).
 	 */
+	@:allow(flixel.FlxGame)
 	private function resize():Void
 	{
 		for (camera in list)

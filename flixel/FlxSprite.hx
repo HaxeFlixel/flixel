@@ -1053,6 +1053,7 @@ class FlxSprite extends FlxObject
 	 * @param	saveAnimations		Whether to save animations in animation controller or not
 	 * @return	This sprite with loaded frames
 	 */
+	@:access(flixel.animation.FlxAnimationController)
 	public function setFrames(Frames:FlxFramesCollection, saveAnimations:Bool = true):FlxSprite
 	{
 		if (saveAnimations)

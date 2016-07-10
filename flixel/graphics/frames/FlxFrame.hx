@@ -78,7 +78,8 @@ class FlxFrame implements IFlxDestroyable
 	
 	private var blitMatrix:Vector<Float>;
 	
-	@:allow(flixel)
+	@:allow(flixel.graphics.FlxGraphic)
+	@:allow(flixel.graphics.frames.FlxFramesCollection)
 	private function new(parent:FlxGraphic, angle:FlxFrameAngle = FlxFrameAngle.ANGLE_0, flipX:Bool = false, flipY:Bool = false)
 	{
 		this.parent = parent;
@@ -98,7 +99,8 @@ class FlxFrame implements IFlxDestroyable
 		}
 	}
 	
-	@:allow(flixel.graphics.frames)
+	@:allow(flixel.graphics.frames.FlxFramesCollection)
+	@:allow(flixel.graphics.frames.FlxBitmapFont)
 	private function cacheFrameMatrix():Void
 	{
 		prepareBlitMatrix(matrix, true);

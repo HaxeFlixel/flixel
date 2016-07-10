@@ -366,6 +366,7 @@ class FlxQuadTree extends FlxRect
 	 * @param	ObjectOrGroup	FlxObjects are just added, FlxGroups are recursed and their applicable members added accordingly.
 	 * @param	List			A int flag indicating the list to which you want to add the objects.  Options are A_LIST and B_LIST.
 	 */
+	@:access(flixel.group.FlxTypedGroup.resolveGroup)
 	public function add(ObjectOrGroup:FlxBasic, list:Int):Void
 	{
 		_list = list;

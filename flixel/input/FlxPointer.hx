@@ -87,6 +87,7 @@ class FlxPointer
 	 * @param 	Camera Specify which game camera you want. If null getScreenPosition() will just grab the first global camera.
 	 * @return 	Whether or not the two objects overlap.
 	 */
+	@:access(flixel.group.FlxTypedGroup.resolveGroup)
 	public function overlaps(ObjectOrGroup:FlxBasic, ?Camera:FlxCamera):Bool
 	{
 		var result:Bool = false;
