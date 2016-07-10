@@ -1,3 +1,14 @@
+2.2.0
+------------------------------
+* Compatibility with flixel 4.1.0
+* Added 2 new demos: (#225)
+  * MosaicEffect
+  * FloodFill
+* FlxReplay: [Flash] fixed an exception when loading a replay (#216)
+* TiledEditor: fixed all objects being loaded twice (#220)
+* FlxCamera: added an overlay visualizing the camera deadzone (#224)
+* FlxBunnyMark: added a shader example for OpenFL Next (#229)
+
 2.1.0
 ------------------------------
 * FlxSnake:
