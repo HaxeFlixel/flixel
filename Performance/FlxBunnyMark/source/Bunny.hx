@@ -3,6 +3,7 @@ package;
 import flixel.FlxSprite;
 import flixel.FlxG;
 import flixel.math.FlxRandom;
+import flixel.system.FlxAssets.FlxShader;
 
 /**
  * ...
@@ -10,6 +11,12 @@ import flixel.math.FlxRandom;
  */
 class Bunny extends FlxSprite
 {
+	public var complex(default, set):Bool = false;
+	
+	public var useShader(default, set):Bool = false;
+	
+	private var _shader:FlxShader;
+	
 	public function new() 
 	{
 		super();
@@ -20,7 +27,7 @@ class Bunny extends FlxSprite
 			loadGraphic("assets/wabbit_alpha.png");
 	}
 	
-	public function init(Offscreen:Bool = false):Bunny
+	public function init(Offscreen:Bool = false, UseShader:Bool = false, ?Shader:FlxShader):Bunny
 	{
 		var speedMultiplier:Int = 50;
 		
@@ -28,6 +35,13 @@ class Bunny extends FlxSprite
 		{
 			speedMultiplier = 5000;
 		}
+		
+		if (Shader != null)
+		{
+			_shader = Shader;
+		}
+		
+		useShader = UseShader;
 		
 		velocity.x = speedMultiplier * FlxG.random.float( -5, 5);
 		velocity.y = speedMultiplier * FlxG.random.float( -7.5, 2.5);
@@ -85,8 +99,6 @@ class Bunny extends FlxSprite
 		}
 	}
 	
-	public var complex(default, set):Bool = false;
-	
 	private function set_complex(Value:Bool):Bool
 	{
 		if (Value)
@@ -100,5 +112,19 @@ class Bunny extends FlxSprite
 		}
 		
 		return complex = Value;
+	}
+	
+	private function set_useShader(Value:Bool):Bool
+	{
+		if (Value)
+		{
+			shader = _shader;
+		}
+		else
+		{
+			shader = null;
+		}
+		
+		return useShader = Value;
 	}
 }

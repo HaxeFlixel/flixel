@@ -33,6 +33,8 @@
 	
 	<!--------------------------------LIBRARIES------------------------------------->
 
+	<!-- enable next for shader support -->
+	<!--<set name="next"/>-->
 	<haxelib name="flixel"/>
 	
 	<!--In case you want to use the addons package-->
@@ -75,6 +77,8 @@
 	
 	<!--Enable this for Nape release builds for a serious peformance improvement-->
 	<haxedef name="NAPE_RELEASE_BUILD" unless="debug" />
+	
+	<haxedef name="shaders_supported" unless="flash" if="next" />
 	
 	<!--------------------------------CUSTOM---------------------------------------->
 	
