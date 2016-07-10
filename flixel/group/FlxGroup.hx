@@ -18,7 +18,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	/**
 	 * Helper function for overlap functions in FlxObject and FlxTilemap.
 	 */
-	private static inline function overlaps(Callback:FlxBasic->Float->Float->Bool->FlxCamera->Bool, 
+	private static function overlaps(Callback:FlxBasic->Float->Float->Bool->FlxCamera->Bool, 
 		Group:FlxTypedGroup<FlxBasic>, X:Float, Y:Float, InScreenSpace:Bool, Camera:FlxCamera):Bool
 	{
 		var result:Bool = false;
@@ -42,7 +42,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		return result;
 	}
 	
-	private static inline function resolveGroup(ObjectOrGroup:FlxBasic):FlxTypedGroup<FlxBasic>
+	private static function resolveGroup(ObjectOrGroup:FlxBasic):FlxTypedGroup<FlxBasic>
 	{
 		var group:FlxTypedGroup<FlxBasic> = null;
 		if (ObjectOrGroup != null)
