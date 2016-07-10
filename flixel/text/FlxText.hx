@@ -1052,7 +1052,7 @@ class FlxText extends FlxSprite
 	}
 }
 
-@:allow(flixel)
+@:allow(flixel.text.FlxText.applyFormats)
 class FlxTextFormat
 {
 	/**
@@ -1074,7 +1074,6 @@ class FlxTextFormat
 	}
 }
 
-@:allow(flixel)
 private class FlxTextFormatRange
 {
 	public var range(default, null):FlxRange<Int>;

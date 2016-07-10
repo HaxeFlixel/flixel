@@ -37,7 +37,7 @@ import flixel.system.ui.FlxFocusLostScreen;
  * It is basically only used to create your game object in the first place,
  * after that FlxG and FlxState have all the useful stuff you actually need.
  */
-@:allow(flixel)
+@:allow(flixel.FlxG)
 class FlxGame extends Sprite
 {
 	/**
@@ -49,10 +49,12 @@ class FlxGame extends Sprite
 	/**
 	 * Flag for whether a replay is currently playing.
 	 */
+	@:allow(flixel.system.frontEnds.VCRFrontEnd)
 	public var replaying(default, null):Bool = false;
 	/**
 	 * Flag for whether a new recording is being made.
 	 */
+	@:allow(flixel.system.frontEnds.VCRFrontEnd)
 	public var recording(default, null):Bool = false;
 	#end
 	
@@ -196,14 +198,17 @@ class FlxGame extends Sprite
 	/**
 	 * Container for a game replay object.
 	 */
+	@:allow(flixel.system.frontEnds.VCRFrontEnd)
 	private var _replay:FlxReplay;
 	/**
 	 * Flag for whether a playback of a recording was requested.
 	 */
+	@:allow(flixel.system.frontEnds.VCRFrontEnd)
 	private var _replayRequested:Bool = false;
 	/**
 	 * Flag for whether a new recording was requested.
 	 */
+	@:allow(flixel.system.frontEnds.VCRFrontEnd)
 	private var _recordingRequested:Bool = false;
 	#end
 	
