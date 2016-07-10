@@ -988,7 +988,7 @@ class FlxText extends FlxSprite
 		drawTextFieldTo(graphic);
 	}
 	
-	private inline function applyFormats(FormatAdjusted:TextFormat, UseBorderColor:Bool = false):Void
+	private function applyFormats(FormatAdjusted:TextFormat, UseBorderColor:Bool = false):Void
 	{
 		// Apply the default format
 		copyTextFormat(_defaultFormat, FormatAdjusted, false);
