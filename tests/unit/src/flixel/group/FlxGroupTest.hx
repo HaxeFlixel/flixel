@@ -60,6 +60,36 @@ class FlxGroupTest extends FlxTest
 	}
 	
 	@Test
+	function testForEachOfTypeRecurseTrue():Void
+	{
+		forEachOfTypeGroupSetup(group);
+		forEachOfTypeGroupSetup(subGroup);
+		
+		var timesCalled:Int = 0;
+		group.forEachOfType(FlxObject, function(_) timesCalled++, true);
+		
+		Assert.areEqual(6, timesCalled);
+	}
+	
+	@Test
+	function testForEachOfTypeRecurseFalse():Void
+	{
+		forEachOfTypeGroupSetup(group);
+		forEachOfTypeGroupSetup(subGroup);
+		
+		var timesCalled:Int = 0;
+		group.forEachOfType(FlxObject, function(_) timesCalled++, false);
+		
+		Assert.areEqual(3, timesCalled);
+	}
+	
+	function forEachOfTypeGroupSetup(group:FlxGroup):Void
+	{
+		for (i in 0...3)
+			group.add(new FlxObject());
+	}
+	
+	@Test
 	function testForEachExistsRecurseFalse():Void
 	{
 		forEachExistsGroupSetup(group);
