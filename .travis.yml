@@ -41,6 +41,6 @@ script:
   - export HXCPP_COMPILE_CACHE=~/hxcache
   - cd $HOME/haxe/lib/flixel-tools/git
   - haxe build.hxml
-  - cd $TRAVIS_BUILD_DIR/tests
+  - cd ~/haxe/lib/flixel/git/tests
   - haxe RunTravis.hxml
   - neko RunTravis.n $TARGET
