@@ -3,6 +3,7 @@ package flixel.graphics.frames;
 class FlxFrameTest extends FlxTest
 {
 	@Test
+	@:access(flixel.graphics.frames.FlxFrame.new)
 	function testSortByName()
 	{
 		var indices = [3, 5, 8, 1, 6];
