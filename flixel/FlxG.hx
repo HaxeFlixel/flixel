@@ -694,8 +694,13 @@ class FlxG
 	
 	private static function set_fullscreen(Value:Bool):Bool
 	{
-		stage.displayState = Value ? StageDisplayState.FULL_SCREEN : StageDisplayState.NORMAL;
-		return Value;
+		if (stage.allowsFullScreen)
+		{
+			stage.displayState = Value ? StageDisplayState.FULL_SCREEN : StageDisplayState.NORMAL;
+			return Value;
+		}
+		else
+			return false;
 	}
 	
 	private static inline function get_stage():Stage
