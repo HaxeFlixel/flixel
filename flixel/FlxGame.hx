@@ -236,15 +236,19 @@ class FlxGame extends Sprite
 		_inputContainer = new Sprite();
 		
 		if (GameWidth == 0)
+	#if (!openfl_legacy)
 			if (StartFullscreen)
 				GameWidth = stage.fullScreenWidth;
 			else
+	#end
 				GameWidth = FlxG.stage.stageWidth;
 
 		if (GameHeight == 0)
+	#if (!openfl_legacy)
 			if (StartFullscreen)
 				GameHeight = stage.fullScreenHeight;
 			else
+	#end
 				GameHeight = FlxG.stage.stageHeight;
 		
 		// Basic display and update setup stuff
