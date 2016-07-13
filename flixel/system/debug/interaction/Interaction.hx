@@ -93,11 +93,6 @@ class Interaction extends Window
 		if (FlxG.debugger.visible)
 		{
 			saveSystemCursorInfo();
-			
-			if (visible)
-			{
-				setActiveTool(_tools[0]); // TODO: restore the last active tool?
-			}
 		}
 		else
 		{
@@ -364,13 +359,10 @@ class Interaction extends Window
 	{
 		super.toggleVisible();
 		
-		if (visible)
+		if (!visible)
 		{
-			// Activate the first tool available
-			setActiveTool(_tools[0]);
-		}
-		else
-		{
+			// De-select any activate tool
+			setActiveTool(null);
 			restoreSystemCursor();
 		}
 	}
