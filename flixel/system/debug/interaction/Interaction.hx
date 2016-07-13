@@ -48,7 +48,7 @@ class Interaction extends Window
 	public function new(Container:Sprite)
 	{		
 		super("Tools", new GraphicInteractive(0, 0), 40, 25, false);
-		reposition(0, 100);
+		reposition(2, 100);
 		
 		_container = Container;
 		_selectedItems = new FlxGroup();
