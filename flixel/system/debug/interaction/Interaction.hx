@@ -8,6 +8,7 @@ import flash.display.Sprite;
 import flash.events.KeyboardEvent;
 import flixel.group.FlxGroup;
 import flash.events.MouseEvent;
+import flixel.input.FlxPointer;
 import flixel.math.FlxPoint;
 import flixel.system.debug.FlxDebugger.GraphicInteractive;
 import flixel.system.debug.Window;
@@ -38,6 +39,7 @@ class Interaction extends Window
 	private var _wasMouseVisible:Bool;
 	private var _wasUsingSystemCursor:Bool;
 	private var _debuggerInteraction:Bool;
+	private var _flixelPointer:FlxPointer;
 	
 	public var flixelPointer:FlxPoint;
 	public var pointerJustPressed:Bool;
@@ -57,6 +59,7 @@ class Interaction extends Window
 		_keysUp = new Map<Int, Int>();
 		_turn = 2;
 		_debuggerInteraction = false;
+		_flixelPointer = new FlxPointer();
 		
 		_customCursor = new Sprite();
 		_customCursor.mouseEnabled = false;
@@ -123,11 +126,14 @@ class Interaction extends Window
 		_customCursor.x = Event.stageX + offsetX;
 		_customCursor.y = Event.stageY + offsetY;
 		
+		#if FLX_MOUSE
+		// Calculate in-game coordinates based on mouse position and camera.
+		_flixelPointer.setGlobalScreenPositionUnsafe(Event.stageX, Event.stageY);
+		
 		// Store Flixel mouse coordinates to speed up all
 		// internal calculations (overlap, etc)
-		#if FLX_MOUSE
-		flixelPointer.x = FlxG.mouse.x + offsetX; // TODO: calculate mouse according to Flixel coordinate system
-		flixelPointer.y = FlxG.mouse.y + offsetY; // TODO: calculate mouse according to Flixel coordinate system
+		flixelPointer.x = _flixelPointer.x + offsetX;
+		flixelPointer.y = _flixelPointer.y + offsetY;
 		#end
 	}
 	
