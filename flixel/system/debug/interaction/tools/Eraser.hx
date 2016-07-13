@@ -21,7 +21,6 @@ class Eraser extends Tool
 	{
 		super.init(Brain);
 		setName("Eraser");
-		setButton(GraphicEraserTool);
 		return this;
 	}
 	

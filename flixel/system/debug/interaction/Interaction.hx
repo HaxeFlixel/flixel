@@ -47,7 +47,7 @@ class Interaction extends Window
 	
 	public function new(Container:Sprite)
 	{		
-		super("Tools", new GraphicInteractive(0, 0), 20, 50, false);
+		super("Tools", new GraphicInteractive(0, 0), 40, 25, false);
 		reposition(0, 100);
 		
 		_container = Container;
@@ -200,11 +200,11 @@ class Interaction extends Window
 		// If the tool has a button, add it to the interaction window
 		if (button != null)
 		{
-			button.x = 5;
-			button.y = _tools.length * 20; // TODO: fix this hardcoded number
+			button.x = -10 + _tools.length * 20; // TODO: fix this hardcoded number
+			button.y = 20;
 			addChild(button);
 			
-			resize(55, _tools.length * 25);  // TODO: fix this hardcoded number
+			resize(Math.max(_tools.length * 20, 55), 35);  // TODO: fix this hardcoded number
 		}
 	}
 	
