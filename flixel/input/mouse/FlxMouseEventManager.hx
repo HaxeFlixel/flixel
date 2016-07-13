@@ -276,6 +276,7 @@ class FlxMouseEventManager extends FlxBasic
 		}
 	}
 	
+	@:access(flixel.group.FlxTypedGroup.resolveGroup)
 	private static function traverseFlxGroup(Group:FlxTypedGroup<Dynamic>, OrderedObjects:Array<ObjectMouseData<Dynamic>>):Void
 	{
 		for (basic in Group.members)

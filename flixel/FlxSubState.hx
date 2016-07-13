@@ -7,7 +7,6 @@ import flixel.util.FlxColor;
  * This is the basic game "state" object - e.g. in a simple game you might have a menu state and a play state.
  * It is for all intents and purpose a fancy FlxGroup. And really, it's not even that fancy.
  */
-@:allow(flixel.FlxState)
 class FlxSubState extends FlxState
 {
 	/**
@@ -22,11 +21,13 @@ class FlxSubState extends FlxState
 	
 	/**
 	 * Helper var for close() so closeSubState() can be called on the parent.
-	 */ 
+	 */
+	@:allow(flixel.FlxState.resetSubState)
 	private var _parentState:FlxState;
 	
 	private var _bgColor:FlxColor;
 
+	@:allow(flixel.FlxState.resetSubState)
 	private var _created:Bool = false;
 	
 	/**

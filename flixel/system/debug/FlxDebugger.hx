@@ -163,7 +163,7 @@ class FlxDebugger extends Sprite
 		drawDebugButton.toggled = !FlxG.debugger.drawDebug;
 		FlxG.debugger.drawDebugChanged.add(function()
 		{ 
-			drawDebugButton.toggled = FlxG.debugger.drawDebug;
+			drawDebugButton.toggled = !FlxG.debugger.drawDebug;
 		});
 		
 		#if FLX_RECORD

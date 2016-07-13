@@ -1153,9 +1153,10 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * 
 	 * @param	Object			The object being tested.
 	 * @param	InScreenSpace	Whether to take scroll factors into account when checking for overlap.
-	 * @param	Camera			Specify which game camera you want.  If null getScreenPosition() will just grab the first global camera.
+	 * @param	Camera			Specify which game camera you want. If null, getScreenPosition() will just grab the first global camera.
 	 * @return	Whether or not the two objects overlap.
 	 */
+	@:access(flixel.group.FlxTypedGroup)
 	override public function overlaps(ObjectOrGroup:FlxBasic, InScreenSpace:Bool = false, ?Camera:FlxCamera):Bool
 	{
 		var group = FlxTypedGroup.resolveGroup(ObjectOrGroup);
@@ -1194,6 +1195,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param	Camera			Specify which game camera you want.  If null getScreenPosition() will just grab the first global camera.
 	 * @return	Whether or not the two objects overlap.
 	 */
+	@:access(flixel.group.FlxTypedGroup)
 	override public function overlapsAt(X:Float, Y:Float, ObjectOrGroup:FlxBasic, InScreenSpace:Bool = false, ?Camera:FlxCamera):Bool
 	{
 		var group = FlxTypedGroup.resolveGroup(ObjectOrGroup);

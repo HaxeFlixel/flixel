@@ -117,7 +117,7 @@ class FlxPath implements IFlxDestroyable
 	/**
 	 * Object which will follow this path
 	 */
-	@:allow(flixel.FlxObject)
+	@:allow(flixel.FlxObject.set_path)
 	private var object:FlxObject;
 	
 	/**

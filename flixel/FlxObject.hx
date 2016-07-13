@@ -680,6 +680,7 @@ class FlxObject extends FlxBasic
 	 * @param	Camera			Specify which game camera you want.  If null getScreenPosition() will just grab the first global camera.
 	 * @return	Whether or not the two objects overlap.
 	 */
+	@:access(flixel.group.FlxTypedGroup)
 	public function overlaps(ObjectOrGroup:FlxBasic, InScreenSpace:Bool = false, ?Camera:FlxCamera):Bool
 	{
 		var group = FlxTypedGroup.resolveGroup(ObjectOrGroup);
@@ -729,6 +730,7 @@ class FlxObject extends FlxBasic
 	 * @param	Camera			Specify which game camera you want.  If null getScreenPosition() will just grab the first global camera.
 	 * @return	Whether or not the two objects overlap.
 	 */
+	@:access(flixel.group.FlxTypedGroup)
 	public function overlapsAt(X:Float, Y:Float, ObjectOrGroup:FlxBasic, InScreenSpace:Bool = false, ?Camera:FlxCamera):Bool
 	{
 		var group = FlxTypedGroup.resolveGroup(ObjectOrGroup);
