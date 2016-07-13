@@ -526,6 +526,13 @@ class FlxGame extends Sprite
 				{
 					#if FLX_DEBUG
 					debugger.update();
+					// If the interactive debug is active, the screen must
+					// be rendered because the user might be doing changes
+					// to game objects (e.g. moving things around).
+					if (debugger.interaction.isActive())
+					{
+						draw();
+					}
 					#end
 					return;
 				}
