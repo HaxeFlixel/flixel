@@ -151,13 +151,13 @@ class FlxDebugger extends Sprite
 		addButton(LEFT, new GraphicFlixel(0, 0), openHomepage);
 		addButton(LEFT, null, openGitHub).addChild(txt);
 		
+		addWindowToggleButton(interaction, GraphicInteractive);
 		addWindowToggleButton(bitmapLog, GraphicBitmapLog);
 		addWindowToggleButton(log, GraphicLog);
 		
 		addWindowToggleButton(watch, GraphicWatch);
 		addWindowToggleButton(console, GraphicConsole);
 		addWindowToggleButton(stats, GraphicStats);
-		addWindowToggleButton(interaction, GraphicInteractive);
 		
 		var drawDebugButton = addButton(RIGHT, new GraphicDrawDebug(0, 0), toggleDrawDebug, true);
 		drawDebugButton.toggled = !FlxG.debugger.drawDebug;
