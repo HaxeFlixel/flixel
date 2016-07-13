@@ -37,6 +37,7 @@ class Interaction extends Window
 	private var _activeTool:Tool;		
 	private var _wasMouseVisible:Bool;
 	private var _wasUsingSystemCursor:Bool;
+	private var _debuggerInteraction:Bool;
 	
 	public var flixelPointer:FlxPoint;
 	public var pointerJustPressed:Bool;
@@ -55,6 +56,7 @@ class Interaction extends Window
 		_keysDown = new Map<Int, Int>();
 		_keysUp = new Map<Int, Int>();
 		_turn = 2;
+		_debuggerInteraction = false;
 		
 		_customCursor = new Sprite();
 		_customCursor.mouseEnabled = false;
@@ -78,6 +80,9 @@ class Interaction extends Window
 		FlxG.stage.addEventListener(MouseEvent.MOUSE_UP, handleMouseClick);
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, handleKeyEvent);
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_UP, handleKeyEvent);
+		
+		_container.addEventListener(MouseEvent.MOUSE_OVER, handleMouseInDebugger);
+		_container.addEventListener(MouseEvent.MOUSE_OUT, handleMouseInDebugger);
 	}
 	
 	private function handleDebuggerVisibilityChanged():Void
@@ -148,6 +153,25 @@ class Interaction extends Window
 		}
 	}
 	
+	private function handleMouseInDebugger(Event:MouseEvent):Void 
+	{
+		// If we are not active, we don't really care about
+		// mouse events in the debugger.
+		if (!isActive())
+			return;
+		
+		if (Event.type == MouseEvent.MOUSE_OVER)
+		{
+			_debuggerInteraction = true;
+		}
+		else if (Event.type == MouseEvent.MOUSE_OUT)
+		{
+			_debuggerInteraction = false;
+		}
+		
+		Event.stopPropagation();
+	}
+	
 	private function handleKeyEvent(Event:KeyboardEvent):Void
 	{
 		if (Event.type == KeyboardEvent.KEY_DOWN)
@@ -200,6 +224,12 @@ class Interaction extends Window
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, handleKeyEvent);
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, handleKeyEvent);
 		
+		if (_container != null)
+		{
+			_container.removeEventListener(MouseEvent.MOUSE_OVER, handleMouseInDebugger);
+			_container.removeEventListener(MouseEvent.MOUSE_OUT, handleMouseInDebugger);
+		}
+		
 		for (i in 0..._tools.length)
 		{
 			_tools[i].destroy();
@@ -232,9 +262,9 @@ class Interaction extends Window
 
 		if (!isActive())
 			return;
-		
-		updateCustomCursors();
 
+		updateCustomCursors();
+		
 		for (i in 0...l)
 		{
 			tool = _tools[i];
@@ -364,8 +394,10 @@ class Interaction extends Window
 		var sprite:DisplayObject;
 		var i:Int;
 		
-		// Do we have an active tool?
-		if (_activeTool != null)
+		// Do we have an active tool and we are not interacting
+		// with the debugger (e.g. moving the cursor over the
+		// tools bar or the top bar)?
+		if (_activeTool != null && !_debuggerInteraction)
 		{
 			// Yes, there is an active tool. Does it has a cursor of its own?
 			if (_activeTool.getCursor() != null)
@@ -396,7 +428,8 @@ class Interaction extends Window
 		}
 		else
 		{
-			// No active tool. Let's show the system cursor for navigation.
+			// No active tool or we are using the debugger.
+			// Let's show the system cursor for navigation.
 			FlxG.mouse.useSystemCursor = true;
 		}
 		#end
