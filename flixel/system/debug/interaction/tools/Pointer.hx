@@ -92,6 +92,12 @@ class Pointer extends Tool
 
 			if (b != null)
 			{
+				// Ignore invisible or non-existent entities
+				if (!b.visible || !b.exists)
+				{
+					continue;
+				}
+				
 				if (Std.is(b, FlxGroup))
 				{
 					target = pinpointItemInGroup((cast b).members, Cursor);
