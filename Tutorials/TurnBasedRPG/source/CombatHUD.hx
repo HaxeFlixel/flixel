@@ -22,7 +22,7 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 	// ** These public variables will be used after combat has finished to help tell us what happened.
 	public var e:Enemy;		// we will pass the enemy that the player touched to initialize combat, and this will let us also know which enemy to kill, etc.
 	public var playerHealth(default, null):Int;	// when combat has finished, we will need to know how much remaining health the player has
-	public var outcome(default, null):Outcome;	// when combat has finished, we will need to know if they player killed the enemy or fled
+	public var outcome(default, null):Outcome;	// when combat has finished, we will need to know if the player killed the enemy or fled
 	
 	// ** These are the sprites that we will use to show the combat hud interface
 	private var _sprBack:FlxSprite;	// this is the background sprite
@@ -74,7 +74,7 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 		add(_sprBack);
 		
 		// next, make a 'dummy' player that looks like our player (but can't move) and add it.
-		_sprPlayer = new Player(_sprBack.x + 36 , _sprBack.y + 16);
+		_sprPlayer = new Player(_sprBack.x + 36, _sprBack.y + 16);
 		_sprPlayer.animation.frameIndex = 3;
 		_sprPlayer.active = false;
 		_sprPlayer.facing = FlxObject.RIGHT;
@@ -101,7 +101,7 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 		// create our choices and add them to the group.
 		_choices = new Array<FlxText>();
 		_choices.push(new FlxText(_sprBack.x + 30, _sprBack.y + 48, 85, "FIGHT", 22));
-		_choices.push(new FlxText(_sprBack.x + 30, _choices[0].y + _choices[0].height +  8, 85, "FLEE", 22));
+		_choices.push(new FlxText(_sprBack.x + 30, _choices[0].y + _choices[0].height + 8, 85, "FLEE", 22));
 		add(_choices[0]);
 		add(_choices[1]);
 		
@@ -111,7 +111,7 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 		
 		// create our damage texts. We'll make them be white text with a red shadow (so they stand out). 
 		_damages = new Array<FlxText>();
-		_damages.push(new FlxText(0,0,40));
+		_damages.push(new FlxText(0, 0, 40));
 		_damages.push(new FlxText(0, 0, 40));
 		for (d in _damages)
 		{
@@ -220,7 +220,7 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 	}
 	
 	/**
-	 * After we fade our Hud out, we set it to not be active or visible (no update and no draw)
+	 * After we fade our hud out, we set it to not be active or visible (no update and no draw)
 	 */
 	private function finishFadeOut(_):Void
 	{
@@ -457,7 +457,7 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 	}
 	
 	/**
-	 * This function is triggered when our results text has finished fading in. If we're not defeated, we will fade out the entire HUD after a short delay
+	 * This function is triggered when our results text has finished fading in. If we're not defeated, we will fade out the entire hud after a short delay
 	 */
 	private function doneResultsIn(_):Void
 	{
