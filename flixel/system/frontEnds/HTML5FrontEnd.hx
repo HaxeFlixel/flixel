@@ -1,29 +1,37 @@
 package flixel.system.frontEnds;
 
 import flixel.math.FlxPoint;
+import flixel.util.FlxStringUtil;
 
 #if js
 import js.Browser;
 
 class HTML5FrontEnd
 {
-	public var browser(get, never):FlxBrowser;
-	public var browserWidth(get, never):Int;
-	public var browserHeight(get, never):Int;
+	public var browser(default, null):FlxBrowser;
+	public var browserWidth(default, null):Int;
+	public var browserHeight(default, null):Int;
 	public var browserPosition(get, null):FlxPoint;
-	public var platform(get, never):FlxPlatform;
-	public var isMobile(get, never):Bool;
+	public var platform(default, null):FlxPlatform;
+	public var isMobile(default, null):Bool;
 	
 	@:allow(flixel.FlxG)
-	private function new() {}
-	
-	private function get_browser():FlxBrowser
+	private function new()
 	{
-		if (Browser.navigator.userAgent.indexOf(" OPR/") > -1)
+		browser = getBrowser();
+		browserWidth = getBrowserWidth();
+		browserHeight = getBrowserHeight();
+		platform = getPlatform();
+		isMobile = getIsMobile();
+	}
+	
+	private function getBrowser():FlxBrowser
+	{
+		if (userAgentContains(" OPR/"))
 		{
 			return OPERA;
 		}
-		else if (Browser.navigator.userAgent.toLowerCase().indexOf("chrome") > -1)
+		else if (userAgentContains("chrome", true))
 		{
 			return CHROME;
 		}
@@ -52,57 +60,64 @@ class HTML5FrontEnd
 		return browserPosition;
 	}
 	
-	private inline function get_browserWidth():Int
+	private inline function getBrowserWidth():Int
 	{
 		return Browser.window.innerWidth;
 	}
 	
-	private inline function get_browserHeight():Int
+	private inline function getBrowserHeight():Int
 	{
 		return Browser.window.innerHeight;
 	}
 	
-	private inline function get_platform():FlxPlatform
+	private function getPlatform():FlxPlatform
 	{
 		
-		if (Browser.navigator.userAgent.indexOf("Win") > -1)
+		if (userAgentContains("Win"))
 		{
 			return WINDOWS;
 		}
-		else if (Browser.navigator.userAgent.indexOf("Linux") > -1
-		&& Browser.navigator.userAgent.indexOf("Android") == -1)
+		else if (userAgentContains("Linux")
+		&& !userAgentContains("Android"))
 		{
 			return LINUX;
 		}
-		else if (Browser.navigator.userAgent.indexOf("X11") > -1)
+		else if (userAgentContains("X11"))
 		{
 			return UNIX;
 		}
-		else if (Browser.navigator.userAgent.indexOf("Android") > -1)
+		else if (userAgentContains("Android"))
 		{
 			return ANDROID;
 		}
-		else if (Browser.navigator.userAgent.indexOf("BlackBerry") > -1)
+		else if (userAgentContains("BlackBerry"))
 		{
 			return BLACKBERRY;
 		}
-		else if (Browser.navigator.userAgent.indexOf("iPhone") > -1
-		|| Browser.navigator.userAgent.indexOf("iPad") > -1
-		|| Browser.navigator.userAgent.indexOf("iPod") > -1)
+		else if (userAgentContains("iPhone")
+		|| userAgentContains("iPad")
+		|| userAgentContains("iPod"))
 		{
 			return IOS;
 		}
-		else if (Browser.navigator.userAgent.indexOf("IEMobile") > -1)
+		else if (userAgentContains("IEMobile"))
 		{
 			return WINDOWS_PHONE;
 		}
 		else return FlxPlatform.UNKNOWN;
 	}
 	
-	private inline function get_isMobile():Bool 
+	private inline function getIsMobile():Bool 
 	{
 		var platform = this.platform;
 		return platform == ANDROID || platform == BLACKBERRY || platform == IOS || platform == WINDOWS_PHONE;
+	}
+	
+	private inline function userAgentContains(substring:String, toLowerCase:Bool = false) {
+		var userAgent = Browser.navigator.userAgent;
+		if (toLowerCase)
+			userAgent = userAgent.toLowerCase();
+		return FlxStringUtil.contains(userAgent, substring);
 	}
 }
 
