@@ -113,7 +113,8 @@ class HTML5FrontEnd
 		return platform == ANDROID || platform == BLACKBERRY || platform == IOS || platform == WINDOWS_PHONE;
 	}
 	
-	private inline function userAgentContains(substring:String, toLowerCase:Bool = false) {
+	private inline function userAgentContains(substring:String, toLowerCase:Bool = false)
+	{
 		var userAgent = Browser.navigator.userAgent;
 		if (toLowerCase)
 			userAgent = userAgent.toLowerCase();
