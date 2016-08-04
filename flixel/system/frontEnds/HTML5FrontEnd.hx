@@ -11,8 +11,8 @@ class HTML5FrontEnd
 	public var browser(default, null):FlxBrowser;
 	public var platform(default, null):FlxPlatform;
 	public var isMobile(default, null):Bool;
-	public var browserWidth(get, null):Int;
-	public var browserHeight(get, null):Int;
+	public var browserWidth(get, never):Int;
+	public var browserHeight(get, never):Int;
 	public var browserPosition(get, null):FlxPoint;
 	
 	@:allow(flixel.FlxG)
