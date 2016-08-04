@@ -9,8 +9,8 @@ import js.Browser;
 class HTML5FrontEnd
 {
 	public var browser(default, null):FlxBrowser;
-	public var browserWidth(default, null):Int;
-	public var browserHeight(default, null):Int;
+	public var browserWidth(get, null):Int;
+	public var browserHeight(get, null):Int;
 	public var browserPosition(get, null):FlxPoint;
 	public var platform(default, null):FlxPlatform;
 	public var isMobile(default, null):Bool;
@@ -19,8 +19,6 @@ class HTML5FrontEnd
 	private function new()
 	{
 		browser = getBrowser();
-		browserWidth = getBrowserWidth();
-		browserHeight = getBrowserHeight();
 		platform = getPlatform();
 		isMobile = getIsMobile();
 	}
@@ -60,12 +58,12 @@ class HTML5FrontEnd
 		return browserPosition;
 	}
 	
-	private inline function getBrowserWidth():Int
+	private inline function get_browserWidth():Int
 	{
 		return Browser.window.innerWidth;
 	}
 	
-	private inline function getBrowserHeight():Int
+	private inline function get_browserHeight():Int
 	{
 		return Browser.window.innerHeight;
 	}
@@ -109,7 +107,6 @@ class HTML5FrontEnd
 	
 	private inline function getIsMobile():Bool 
 	{
-		var platform = this.platform;
 		return platform == ANDROID || platform == BLACKBERRY || platform == IOS || platform == WINDOWS_PHONE;
 	}
 	
