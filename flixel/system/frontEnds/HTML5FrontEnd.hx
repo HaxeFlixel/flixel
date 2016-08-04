@@ -1,7 +1,8 @@
 package flixel.system.frontEnds;
 
 import flixel.math.FlxPoint;
-import flixel.util.FlxStringUtil;
+using flixel.util.FlxArrayUtil;
+using flixel.util.FlxStringUtil;
 
 #if js
 import js.Browser;
@@ -50,7 +51,6 @@ class HTML5FrontEnd
 	
 	private function getPlatform():FlxPlatform
 	{
-		
 		if (userAgentContains("Win"))
 		{
 			return WINDOWS;
@@ -59,8 +59,7 @@ class HTML5FrontEnd
 		{
 			return MAC;
 		}
-		else if (userAgentContains("Linux")
-		&& !userAgentContains("Android"))
+		else if (userAgentContains("Linux") && !userAgentContains("Android"))
 		{
 			return LINUX;
 		}
@@ -91,18 +90,18 @@ class HTML5FrontEnd
 		else return FlxPlatform.UNKNOWN;
 	}
 	
-	private inline function getIsMobile():Bool 
+	private function getIsMobile():Bool 
 	{
-		var mobilePlatforms:Array<FlxPlatform> = [ANDROID, BLACKBERRY, WINDOWS_PHONE, IOS(IPHONE), IOS(IPAD), IOS(IPOD)];
-		return mobilePlatforms.indexOf(platform) != -1;
+		return [ANDROID, BLACKBERRY, WINDOWS_PHONE,
+			IOS(IPHONE), IOS(IPAD), IOS(IPOD)].contains(platform);
 	}
 	
-	private inline function userAgentContains(substring:String, toLowerCase:Bool = false)
+	private function userAgentContains(substring:String, toLowerCase:Bool = false)
 	{
 		var userAgent = Browser.navigator.userAgent;
 		if (toLowerCase)
 			userAgent = userAgent.toLowerCase();
-		return FlxStringUtil.contains(userAgent, substring);
+		return userAgent.contains(substring);
 	}
 	
 	private function get_browserPosition():FlxPoint
@@ -147,6 +146,7 @@ enum FlxPlatform
 	IOS(device:FlxIOSDevice);
 	UNKNOWN;
 }
+
 enum FlxIOSDevice
 {
 	IPHONE;
