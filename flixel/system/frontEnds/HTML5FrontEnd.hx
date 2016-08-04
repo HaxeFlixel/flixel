@@ -1,7 +1,6 @@
 package flixel.system.frontEnds;
 
 import flixel.math.FlxPoint;
-import flixel.system.frontEnds.HTML5FrontEnd.IOSPlatform;
 import flixel.util.FlxStringUtil;
 
 #if js
@@ -10,7 +9,6 @@ import js.Browser;
 class HTML5FrontEnd
 {
 	public var browser(default, null):FlxBrowser;
-	public var ios(default, null):IOSPlatform;
 	public var platform(default, null):FlxPlatform;
 	public var isMobile(default, null):Bool;
 	public var browserWidth(get, null):Int;
@@ -21,7 +19,6 @@ class HTML5FrontEnd
 	private function new()
 	{
 		browser = getBrowser();
-		ios = getiOS();
 		platform = getPlatform();
 		isMobile = getIsMobile();
 	}
@@ -49,23 +46,6 @@ class HTML5FrontEnd
 			return SAFARI;
 		}
 		return FlxBrowser.UNKNOWN;
-	}
-	
-	private function getiOS():IOSPlatform
-	{
-		if (userAgentContains("iPhone"))
-		{
-			return IPHONE;
-		}
-		else if (userAgentContains("iPad"))
-		{
-			return IPAD;
-		}
-		else if (userAgentContains("iPod"))
-		{
-			return IPOD;
-		}
-		else return IOSPlatform.UNKNOWN;
 	}
 	
 	private function getPlatform():FlxPlatform
@@ -96,16 +76,24 @@ class HTML5FrontEnd
 		{
 			return BLACKBERRY;
 		}
-		else if (ios != IOSPlatform.UNKNOWN)
+		else if (userAgentContains("iPhone"))
 		{
-			return IOS;
+			return IOS(IPHONE);
+		}
+		else if (userAgentContains("iPad"))
+		{
+			return IOS(IPAD);
+		}
+		else if (userAgentContains("iPod"))
+		{
+			return IOS(IPOD);
 		}
 		else return FlxPlatform.UNKNOWN;
 	}
 	
 	private inline function getIsMobile():Bool 
 	{
-		var mobilePlatforms:Array<FlxPlatform> = [ANDROID, BLACKBERRY, WINDOWS_PHONE, IOS];
+		var mobilePlatforms:Array<FlxPlatform> = [ANDROID, BLACKBERRY, WINDOWS_PHONE, IOS(IPHONE), IOS(IPAD), IOS(IPOD)];
 		return mobilePlatforms.indexOf(platform) != -1;
 	}
 	
@@ -156,14 +144,13 @@ enum FlxPlatform
 	ANDROID;
 	BLACKBERRY;
 	WINDOWS_PHONE;
-	IOS;
+	IOS(device:FlxIOSDevice);
 	UNKNOWN;
 }
-enum IOSPlatform
+enum FlxIOSDevice
 {
 	IPHONE;
 	IPAD;
 	IPOD;
-	UNKNOWN;
 }
 #end
