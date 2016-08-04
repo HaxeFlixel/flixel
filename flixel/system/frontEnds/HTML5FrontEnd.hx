@@ -1,6 +1,7 @@
 package flixel.system.frontEnds;
 
 import flixel.math.FlxPoint;
+import flixel.system.frontEnds.HTML5FrontEnd.IOSPlatform;
 import flixel.util.FlxStringUtil;
 
 #if js
@@ -9,16 +10,18 @@ import js.Browser;
 class HTML5FrontEnd
 {
 	public var browser(default, null):FlxBrowser;
+	public var ios(default, null):IOSPlatform;
+	public var platform(default, null):FlxPlatform;
+	public var isMobile(default, null):Bool;
 	public var browserWidth(get, null):Int;
 	public var browserHeight(get, null):Int;
 	public var browserPosition(get, null):FlxPoint;
-	public var platform(default, null):FlxPlatform;
-	public var isMobile(default, null):Bool;
 	
 	@:allow(flixel.FlxG)
 	private function new()
 	{
 		browser = getBrowser();
+		ios = getiOS();
 		platform = getPlatform();
 		isMobile = getIsMobile();
 	}
@@ -48,24 +51,21 @@ class HTML5FrontEnd
 		return FlxBrowser.UNKNOWN;
 	}
 	
-	private function get_browserPosition():FlxPoint
+	private function getiOS():IOSPlatform
 	{
-		if (browserPosition == null)
+		if (userAgentContains("iPhone"))
 		{
-			browserPosition = FlxPoint.get(0, 0);
+			return IPHONE;
 		}
-		browserPosition.set(Browser.window.screenX, Browser.window.screenY);
-		return browserPosition;
-	}
-	
-	private inline function get_browserWidth():Int
-	{
-		return Browser.window.innerWidth;
-	}
-	
-	private inline function get_browserHeight():Int
-	{
-		return Browser.window.innerHeight;
+		else if (userAgentContains("iPad"))
+		{
+			return IPAD;
+		}
+		else if (userAgentContains("iPod"))
+		{
+			return IPOD;
+		}
+		else return IOSPlatform.UNKNOWN;
 	}
 	
 	private function getPlatform():FlxPlatform
@@ -96,24 +96,16 @@ class HTML5FrontEnd
 		{
 			return BLACKBERRY;
 		}
-		else if (userAgentContains("iPhone"))
+		else if (ios != IOSPlatform.UNKNOWN)
 		{
-			return IPHONE;
-		}
-		else if (userAgentContains("iPad"))
-		{
-			return IPAD;
-		}
-		else if (userAgentContains("iPod"))
-		{
-			return IPOD;
+			return IOS;
 		}
 		else return FlxPlatform.UNKNOWN;
 	}
 	
 	private inline function getIsMobile():Bool 
 	{
-		var mobilePlatforms:Array<FlxPlatform> = [ANDROID, BLACKBERRY, WINDOWS_PHONE, IPHONE, IPAD, IPOD];
+		var mobilePlatforms:Array<FlxPlatform> = [ANDROID, BLACKBERRY, WINDOWS_PHONE, IOS];
 		return mobilePlatforms.indexOf(platform) != -1;
 	}
 	
@@ -123,6 +115,26 @@ class HTML5FrontEnd
 		if (toLowerCase)
 			userAgent = userAgent.toLowerCase();
 		return FlxStringUtil.contains(userAgent, substring);
+	}
+	
+	private function get_browserPosition():FlxPoint
+	{
+		if (browserPosition == null)
+		{
+			browserPosition = FlxPoint.get(0, 0);
+		}
+		browserPosition.set(Browser.window.screenX, Browser.window.screenY);
+		return browserPosition;
+	}
+	
+	private inline function get_browserWidth():Int
+	{
+		return Browser.window.innerWidth;
+	}
+	
+	private inline function get_browserHeight():Int
+	{
+		return Browser.window.innerHeight;
 	}
 }
 
@@ -144,6 +156,11 @@ enum FlxPlatform
 	ANDROID;
 	BLACKBERRY;
 	WINDOWS_PHONE;
+	IOS;
+	UNKNOWN;
+}
+enum IOSPlatform
+{
 	IPHONE;
 	IPAD;
 	IPOD;
