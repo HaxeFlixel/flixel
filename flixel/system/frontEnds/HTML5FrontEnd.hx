@@ -75,14 +75,18 @@ class HTML5FrontEnd
 		{
 			return WINDOWS;
 		}
+		else if (userAgentContains("Mac"))
+		{
+			return MAC;
+		}
 		else if (userAgentContains("Linux")
 		&& !userAgentContains("Android"))
 		{
 			return LINUX;
 		}
-		else if (userAgentContains("X11"))
+		else if (userAgentContains("IEMobile"))
 		{
-			return UNIX;
+			return WINDOWS_PHONE;
 		}
 		else if (userAgentContains("Android"))
 		{
@@ -92,22 +96,25 @@ class HTML5FrontEnd
 		{
 			return BLACKBERRY;
 		}
-		else if (userAgentContains("iPhone")
-		|| userAgentContains("iPad")
-		|| userAgentContains("iPod"))
+		else if (userAgentContains("iPhone"))
 		{
-			return IOS;
+			return IPHONE;
 		}
-		else if (userAgentContains("IEMobile"))
+		else if (userAgentContains("iPad"))
 		{
-			return WINDOWS_PHONE;
+			return IPAD;
+		}
+		else if (userAgentContains("iPod"))
+		{
+			return IPOD;
 		}
 		else return FlxPlatform.UNKNOWN;
 	}
 	
 	private inline function getIsMobile():Bool 
 	{
-		return platform == ANDROID || platform == BLACKBERRY || platform == IOS || platform == WINDOWS_PHONE;
+		var mobilePlatforms:Array<FlxPlatform> = [ANDROID, BLACKBERRY, WINDOWS_PHONE, IPHONE, IPAD, IPOD];
+		return mobilePlatforms.indexOf(platform) != -1;
 	}
 	
 	private inline function userAgentContains(substring:String, toLowerCase:Bool = false)
@@ -133,12 +140,13 @@ enum FlxPlatform
 {
 	WINDOWS;
 	LINUX;
-	UNIX;
 	MAC;
 	ANDROID;
 	BLACKBERRY;
 	WINDOWS_PHONE;
-	IOS;
+	IPHONE;
+	IPAD;
+	IPOD;
 	UNKNOWN;
 }
 #end
