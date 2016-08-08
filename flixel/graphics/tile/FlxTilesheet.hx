@@ -1,8 +1,6 @@
 package flixel.graphics.tile;
 
-import openfl.display.Tilesheet;
-
-class FlxTilesheet extends Tilesheet
+class FlxTilesheet
 {
 	/**
 	 * Tracks total number of drawTiles() calls made each frame.

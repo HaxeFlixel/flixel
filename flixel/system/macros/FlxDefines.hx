@@ -75,7 +75,7 @@ class FlxDefines
 				+' due to a compiler bug (#4343). Please use a different Haxe version.',
 				FlxMacroUtil.here());
 		#end
-		
+		/*
 		#if (openfl >= "4.0.0")
 		abort('Flixel is currently incompatible with OpenFL 4.0.0 or above. ' +
 			'Please use version 3.6.1 or older.', FlxMacroUtil.here());
@@ -85,6 +85,7 @@ class FlxDefines
 		abort('Flixel is currently incompatible with Lime 3.0.0 or above. ' +
 			'Please use version 2.9.1 or older.', FlxMacroUtil.here());
 		#end
+		*/
 	}
 	
 	private static function checkDefines()
