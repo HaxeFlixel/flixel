@@ -55,7 +55,7 @@ class HTML5FrontEnd
 		{
 			return WINDOWS;
 		}
-		else if (userAgentContains("Mac"))
+		else if (userAgentContains("Mac") && !userAgentContains("iPad"))
 		{
 			return MAC;
 		}
@@ -92,8 +92,14 @@ class HTML5FrontEnd
 	
 	private function getIsMobile():Bool 
 	{
-		return [ANDROID, BLACKBERRY, WINDOWS_PHONE,
-			IOS(IPHONE), IOS(IPAD), IOS(IPOD)].contains(platform);
+		return
+		switch (platform)
+		{
+			case ANDROID, BLACKBERRY, WINDOWS_PHONE, IOS(_):
+				true;
+			default:
+				false;
+		};
 	}
 	
 	private function userAgentContains(substring:String, toLowerCase:Bool = false)
