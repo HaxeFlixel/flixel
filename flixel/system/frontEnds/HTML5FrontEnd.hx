@@ -92,7 +92,13 @@ class HTML5FrontEnd
 	
 	private function getIsMobile():Bool 
 	{
-		return Type.enumConstructor(platform) == "IOS" || [ANDROID, BLACKBERRY, WINDOWS_PHONE].contains(platform);
+		return
+		switch (platform) {
+			case ANDROID, BLACKBERRY, WINDOWS_PHONE, IOS(_):
+				true;
+			default:
+				false;
+		};
 	}
 	
 	private function userAgentContains(substring:String, toLowerCase:Bool = false)
