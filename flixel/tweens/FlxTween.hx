@@ -379,6 +379,11 @@ class FlxTween implements IFlxDestroyable
 	public var onComplete:TweenCallback;
 	
 	public var type(default, set):Int;
+	
+	/**
+	 * Value between `0` and `1` that indicates how far along this tween is in its completion.
+	 * A value of `0.33` means that the tween is `33%` complete.
+	 */
 	public var percent(get, set):Float;
 	public var finished(default, null):Bool;
 	public var scale(default, null):Float = 0;
@@ -386,7 +391,7 @@ class FlxTween implements IFlxDestroyable
 	
 	/**
 	 * How many times this tween has been executed / has finished so far - useful to 
-	 * stop the LOOPING and PINGPONG types after a certain amount of time
+	 * stop the `LOOPING` and `PINGPONG` types after a certain amount of time
 	 */
 	public var executions(default, null):Int = 0;
 	
