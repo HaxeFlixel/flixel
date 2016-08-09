@@ -1,6 +1,7 @@
 package flixel.system.render.blit;
 
 import flixel.FlxCamera;
+import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
@@ -8,11 +9,14 @@ import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxShader;
 import flixel.system.render.FlxCameraView;
 import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
 import openfl.display.Bitmap;
 import openfl.display.BitmapData;
 import openfl.display.BlendMode;
 import openfl.display.DisplayObject;
+import openfl.display.Graphics;
 import openfl.display.Sprite;
+import openfl.filters.BitmapFilter;
 import openfl.geom.ColorTransform;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
@@ -90,6 +94,11 @@ class FlxBlitView extends FlxCameraView
 	private static var trianglesSprite:Sprite = new Sprite();
 	
 	/**
+	 * Whether checkResize checks if the camera dimensions have changed to update the buffer dimensions.
+	 */
+	private var regen:Bool = false;
+	
+	/**
 	 * Internal variables, used in blit render mode to draw trianglesSprite on camera's buffer. 
 	 * Added for less garbage creation.
 	 */
@@ -117,6 +126,23 @@ class FlxBlitView extends FlxCameraView
 		super.init();
 		
 		
+	}
+	
+	override public function destroy():Void 
+	{
+		super.destroy();
+		
+		FlxDestroyUtil.removeChild(flashSprite, _scrollRect);
+		FlxDestroyUtil.removeChild(_scrollRect, _flashBitmap);
+		screen = FlxDestroyUtil.destroy(screen);
+		buffer = null;
+		_flashBitmap = null;
+		_fill = FlxDestroyUtil.dispose(_fill);
+		
+		flashSprite = null;
+		_scrollRect = null;
+		_flashRect = null;
+		_flashPoint = null;
 	}
 	
 	public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix,
@@ -231,16 +257,96 @@ class FlxBlitView extends FlxCameraView
 	{
 		if (_flashBitmap != null)
 		{
-			var regen = camera.regen || (camera.width != buffer.width) || (camera.height != buffer.height);
+			regen = regen || (camera.width != buffer.width) || (camera.height != buffer.height);
 			
 			_flashBitmap.x = -0.5 * camera.width * (camera.scaleX - camera.initialZoom) * FlxG.scaleMode.scale.x;
 			_flashBitmap.y = -0.5 * camera.height * (camera.scaleY - camera.initialZoom) * FlxG.scaleMode.scale.y;
 		}
 	}
 	
+	override public function updateFilters():Void 
+	{
+		flashSprite.filters = camera.filtersEnabled ? _filters : null;
+	}
+	
+	override public function checkResize():Void 
+	{
+		if (!regen)
+			return;
+		
+		if (camera.width != buffer.width || camera.height != buffer.height)
+		{
+			var oldBuffer:FlxGraphic = screen.graphic;
+			buffer = new BitmapData(camera.width, camera.height, true, 0);
+			screen.pixels = buffer;
+			screen.origin.set();
+			_flashBitmap.bitmapData = buffer;
+			_flashRect.width = width;
+			_flashRect.height = height;
+			_fill = FlxDestroyUtil.dispose(_fill);
+			_fill = new BitmapData(width, height, true, FlxColor.TRANSPARENT);
+			FlxG.bitmap.removeIfNoUse(oldBuffer);
+		}
+		
+		regen = false;
+	}
+	
+	override public function updateScale():Void 
+	{
+		_flashBitmap.scaleX = camera.totalScaleX;
+		_flashBitmap.scaleY = camera.totalScaleY;
+	}
+	
+	override public function fill(Color:FlxColor, BlendAlpha:Bool = true, FxAlpha:Float = 1.0):Void 
+	{
+		if (BlendAlpha)
+		{
+			_fill.fillRect(_flashRect, Color);
+			buffer.copyPixels(_fill, _flashRect, _flashPoint, null, null, BlendAlpha);
+		}
+		else
+		{
+			buffer.fillRect(_flashRect, Color);
+		}
+	}
+	
+	override public function offsetView(X:Float, Y:Float):Void 
+	{
+		flashSprite.x += X;
+		flashSprite.y += Y;
+	}
+	
 	override public function setColor(Color:FlxColor):FlxColor 
 	{
+		if (_flashBitmap == null)
+			return Color;
 		
+		var colorTransform:ColorTransform = _flashBitmap.transform.colorTransform;
+		colorTransform.redMultiplier = Color.redFloat;
+		colorTransform.greenMultiplier = Color.greenFloat;
+		colorTransform.blueMultiplier = Color.blueFloat;
+		_flashBitmap.transform.colorTransform = colorTransform;
+		return Color;
+	}
+	
+	override public function setAlpha(Alpha:Float):Float 
+	{
+		return _flashBitmap.alpha = Alpha;
+	}
+	
+	override public function setAntialiasing(Antialiasing:Bool):Bool 
+	{
+		return _flashBitmap.smoothing = Antialiasing;
+	}
+	
+	override public function setVisible(visible:Bool):Bool 
+	{
+		if (flashSprite != null)
+		{
+			flashSprite.visible = visible;
+		}
+		
+		return visible;
 	}
 	
 	override function get_display():DisplayObject 

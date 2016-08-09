@@ -8,12 +8,11 @@ import openfl.geom.Matrix;
  */
 class FlxGlView extends FlxCameraView
 {
-	// TODO: use this transform matrix later in hardware accelerated mode...
-	private var _transform:Matrix;
 	
-	
-	public function new() 
+	public function new(camera:FlxCameraView) 
 	{
+		super(camera);
+		
 		
 	}
 	

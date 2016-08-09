@@ -9,10 +9,13 @@ import flixel.math.FlxMatrix;
 import flixel.system.FlxAssets.FlxShader;
 import flixel.system.render.FlxCameraView;
 import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
 import openfl.display.BitmapData;
 import openfl.display.BlendMode;
+import openfl.display.Graphics;
 import openfl.display.Sprite;
 import openfl.geom.ColorTransform;
+import openfl.geom.Matrix;
 import openfl.geom.Rectangle;
 
 /**
@@ -93,7 +96,6 @@ class FlxTilesheetView extends FlxCameraView
 		
 		canvas = new Sprite();
 		_scrollRect.addChild(canvas);
-		_transform = new Matrix();
 		
 		#if FLX_DEBUG
 		debugLayer = new Sprite();
@@ -106,6 +108,38 @@ class FlxTilesheetView extends FlxCameraView
 		super.init();
 		
 		
+	}
+	
+	override public function destroy():Void 
+	{
+		super.destroy();
+		
+		FlxDestroyUtil.removeChild(flashSprite, _scrollRect);
+		
+		#if FLX_DEBUG
+		FlxDestroyUtil.removeChild(_scrollRect, debugLayer);
+		debugLayer = null;
+		#end
+		
+		FlxDestroyUtil.removeChild(_scrollRect, canvas);
+		
+		if (canvas != null)
+		{
+			for (i in 0...canvas.numChildren)
+			{
+				canvas.removeChildAt(0);
+			}
+			canvas = null;
+		}
+		
+		if (_headOfDrawStack != null)
+		{
+			clearDrawStack();
+		}
+		
+		_helperMatrix = null;
+		flashSprite = null;
+		_scrollRect = null;
 	}
 	
 	@:noCompletion
@@ -360,9 +394,50 @@ class FlxTilesheetView extends FlxCameraView
 		}
 	}
 	
+	override public function updateFilters():Void 
+	{
+		flashSprite.filters = camera.filtersEnabled ? _filters : null;
+	}
+	
+	override public function fill(Color:FlxColor, BlendAlpha:Bool = true, FxAlpha:Float = 1.0):Void 
+	{
+		if (FxAlpha == 0)
+		{
+			return;
+		}
+		
+		var targetGraphics:Graphics = (graphics == null) ? canvas.graphics : graphics;
+		
+		targetGraphics.beginFill(Color, FxAlpha);
+		// i'm drawing rect with these parameters to avoid light lines at the top and left of the camera,
+		// which could appear while cameras fading
+		targetGraphics.drawRect(-1, -1, width + 2, height + 2);
+		targetGraphics.endFill();
+	}
+	
 	override public function setColor(Color:FlxColor):FlxColor 
 	{
+		var colorTransform:ColorTransform = canvas.transform.colorTransform;
+		colorTransform.redMultiplier = Color.redFloat;
+		colorTransform.greenMultiplier = Color.greenFloat;
+		colorTransform.blueMultiplier = Color.blueFloat;
+		canvas.transform.colorTransform = colorTransform;
+		return Color;
+	}
+	
+	override public function setAlpha(Alpha:Float):Float 
+	{
+		return canvas.alpha = Alpha;
+	}
+	
+	override public function setVisible(visible:Bool):Bool 
+	{
+		if (flashSprite != null)
+		{
+			flashSprite.visible = visible;
+		}
 		
+		return visible;
 	}
 	
 	override function get_display():DisplayObject 
