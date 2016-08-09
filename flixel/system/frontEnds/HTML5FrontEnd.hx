@@ -93,7 +93,8 @@ class HTML5FrontEnd
 	private function getIsMobile():Bool 
 	{
 		return
-		switch (platform) {
+		switch (platform)
+		{
 			case ANDROID, BLACKBERRY, WINDOWS_PHONE, IOS(_):
 				true;
 			default:
