@@ -1,3 +1,7 @@
+4.1.1
+------------------------------
+* fixed the check for Lime <= 2.9.1
+
 4.1.0
 ------------------------------
 
@@ -52,6 +56,9 @@
 * `FlxBitmapFont`: fixed a crash related to incorrect UTF-8 handling (#1857)
 * `FlxAtlas`: fixed a crash when the constructor is called with `powerOfTwo == true` (#1858)
 * `FlxTween`: fixed nested tween chains (#1871)
+* `FlxTypedGroup`: fixed recursion in `forEachOfType()` (#1876)
+* `Tracker`: [Neko] fixed a crash in `setVisible()` (#1879)
+* Fixed some flixel-internal fields being accessible when they shouldn't be (#1849) 
 
 #### Changes and improvements:
 
@@ -60,6 +67,7 @@
 * `FlxSpriteUtil`: changed `alphaMask()` arguments from `Dynamic` to `FlxGraphicAsset` (#1806)
 * `FlxG.signals`: changed `preUpdate` to be dispatched _after_ `FlxG.elapsed` is updated (#1836)
 * `FlxG.debugger`: changed `drawDebugChanged` to be dispatched _after_ `drawDebug` is updated
+* `FlxDefines`: added a check for incompatible OpenFL / Lime versions (should be < 4.0.0 / < 3.0.0 respectively) 
 
 4.0.1
 ------------------------------

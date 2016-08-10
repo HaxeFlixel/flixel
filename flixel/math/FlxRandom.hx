@@ -455,7 +455,7 @@ class FlxRandom
 	 * 
 	 * @return  The new value of the state seed.
 	 */
-	@:allow(flixel.FlxGame.switchState)
+	@:allow(flixel.FlxGame)
 	private static inline function updateStateSeed():Int
 	{
 		return _stateSeed = FlxG.random.currentSeed;
@@ -467,7 +467,7 @@ class FlxRandom
 	 * 
 	 * @param   StandardMode   If true, entire game will be reset, else just the current state will be reset.
 	 */
-	@:allow(flixel.system.frontEnds.VCRFrontEnd.startRecording)
+	@:allow(flixel.system.frontEnds.VCRFrontEnd)
 	private static inline function updateRecordingSeed(StandardMode:Bool = true):Int
 	{
 		return _recordingSeed = FlxG.random.initialSeed = StandardMode ? FlxG.random.initialSeed : _stateSeed;

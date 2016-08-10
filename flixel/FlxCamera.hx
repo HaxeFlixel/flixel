@@ -39,7 +39,6 @@ using flixel.util.FlxColorTransformUtil;
  * 				|->	canvas:Sprite		(its graphics is used for rendering objects in tile render mode)
  * 				|-> debugLayer:Sprite	(this sprite is used in tile render mode for rendering debug info, like bounding boxes)
  */
-@:allow(flixel.FlxGame)
 class FlxCamera extends FlxBasic
 {
 	/**

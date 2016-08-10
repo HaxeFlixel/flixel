@@ -59,7 +59,6 @@ import openfl.display.OpenGLView;
 /**
  * Global helper class for audio, input, the camera system, the debugger and other global properties.
  */
-@:allow(flixel.FlxGame)
 class FlxG 
 {
 	/**
@@ -91,7 +90,7 @@ class FlxG
 	 * The HaxeFlixel version, in semantic versioning syntax. Use Std.string()
 	 * on it to get a String formatted like this: "HaxeFlixel MAJOR.MINOR.PATCH-COMMIT_SHA".
 	 */ 
-	public static var VERSION(default, null):FlxVersion = new FlxVersion(4, 1, 0);
+	public static var VERSION(default, null):FlxVersion = new FlxVersion(4, 1, 1);
 	
 	/**
 	 * Internal tracker for game object.
@@ -126,6 +125,7 @@ class FlxG
 	/**
 	 * Represents the amount of time in seconds that passed since last frame.
 	 */
+	@:allow(flixel.FlxGame.updateElapsed)
 	public static var elapsed(default, null):Float = 0;
 	/**
 	 * Useful when the timestep is NOT fixed (i.e. variable), to prevent jerky movement or erratic behavior at very low fps.
@@ -512,6 +512,7 @@ class FlxG
 	/**
 	 * Called by FlxGame to set up FlxG during FlxGame's constructor.
 	 */
+	@:allow(flixel.FlxGame.new)
 	private static function init(Game:FlxGame, Width:Int, Height:Int, Zoom:Float):Void
 	{
 		game = Game;
@@ -595,6 +596,7 @@ class FlxG
 	/**
 	 * Called whenever the game is reset, doesn't have to do quite as much work as the basic initialization stuff.
 	 */
+	@:allow(flixel.FlxGame)
 	private static function reset():Void
 	{
 		random.resetInitialSeed();

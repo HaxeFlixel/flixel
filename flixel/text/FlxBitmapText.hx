@@ -467,7 +467,7 @@ class FlxBitmapText extends FlxSprite
 	
 	override private function set_alpha(value:Float):Float
 	{
-		alpha = value;
+		super.set_alpha(value);
 		if (FlxG.renderBlit)
 		{
 			pendingTextBitmapChange = true;

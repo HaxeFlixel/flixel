@@ -1,27 +1,36 @@
 package flixel.system.frontEnds;
 
 import flixel.math.FlxPoint;
+using flixel.util.FlxArrayUtil;
+using flixel.util.FlxStringUtil;
 
 #if js
 import js.Browser;
 
 class HTML5FrontEnd
 {
-	public var browser(get, never):FlxBrowser;
+	public var browser(default, null):FlxBrowser;
+	public var platform(default, null):FlxPlatform;
+	public var isMobile(default, null):Bool;
 	public var browserWidth(get, never):Int;
 	public var browserHeight(get, never):Int;
 	public var browserPosition(get, null):FlxPoint;
 	
 	@:allow(flixel.FlxG)
-	private function new() {}
-	
-	private function get_browser():FlxBrowser
+	private function new()
 	{
-		if (Browser.navigator.userAgent.indexOf(" OPR/") > -1)
+		browser = getBrowser();
+		platform = getPlatform();
+		isMobile = getIsMobile();
+	}
+	
+	private function getBrowser():FlxBrowser
+	{
+		if (userAgentContains(" OPR/"))
 		{
 			return OPERA;
 		}
-		else if (Browser.navigator.userAgent.toLowerCase().indexOf("chrome") > -1)
+		else if (userAgentContains("chrome", true))
 		{
 			return CHROME;
 		}
@@ -37,7 +46,68 @@ class HTML5FrontEnd
 		{
 			return SAFARI;
 		}
-		return UNKNOWN;
+		return FlxBrowser.UNKNOWN;
+	}
+	
+	private function getPlatform():FlxPlatform
+	{
+		if (userAgentContains("Win"))
+		{
+			return WINDOWS;
+		}
+		else if (userAgentContains("Mac") && !userAgentContains("iPad"))
+		{
+			return MAC;
+		}
+		else if (userAgentContains("Linux") && !userAgentContains("Android"))
+		{
+			return LINUX;
+		}
+		else if (userAgentContains("IEMobile"))
+		{
+			return WINDOWS_PHONE;
+		}
+		else if (userAgentContains("Android"))
+		{
+			return ANDROID;
+		}
+		else if (userAgentContains("BlackBerry"))
+		{
+			return BLACKBERRY;
+		}
+		else if (userAgentContains("iPhone"))
+		{
+			return IOS(IPHONE);
+		}
+		else if (userAgentContains("iPad"))
+		{
+			return IOS(IPAD);
+		}
+		else if (userAgentContains("iPod"))
+		{
+			return IOS(IPOD);
+		}
+		else return FlxPlatform.UNKNOWN;
+	}
+	
+	private function getIsMobile():Bool 
+	{
+		return
+		switch (platform)
+		{
+			case ANDROID, BLACKBERRY, WINDOWS_PHONE, IOS(_):
+				true;
+			default:
+				false;
+		};
+	}
+	
+	private function userAgentContains(substring:String, toLowerCase:Bool = false)
+	{
+		var userAgent = Browser.navigator.userAgent;
+		if (toLowerCase)
+			userAgent = userAgent.toLowerCase();
+		return userAgent.contains(substring);
 	}
 	
 	private function get_browserPosition():FlxPoint
@@ -69,5 +139,24 @@ enum FlxBrowser
 	SAFARI;
 	OPERA;
 	UNKNOWN;
+}
+
+enum FlxPlatform
+{
+	WINDOWS;
+	LINUX;
+	MAC;
+	ANDROID;
+	BLACKBERRY;
+	WINDOWS_PHONE;
+	IOS(device:FlxIOSDevice);
+	UNKNOWN;
+}
+
+enum FlxIOSDevice
+{
+	IPHONE;
+	IPAD;
+	IPOD;
 }
 #end

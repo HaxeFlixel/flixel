@@ -123,6 +123,7 @@ class Console extends Window
 	}
 	
 	#if (!next && sys)
+	@:access(flixel.FlxGame.onFocus)
 	override public function update()
 	{
 		super.update();
