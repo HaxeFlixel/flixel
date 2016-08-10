@@ -4,7 +4,7 @@ haxe:
   - 3.2.0
   - development
 
-env: 
+env:
   - TARGET=flash
   - TARGET=neko
   - TARGET=cpp
@@ -21,8 +21,8 @@ before_install:
 install:
   - haxelib install munit > /dev/null
   - haxelib install hamcrest > /dev/null
-  - haxelib install lime > /dev/null
-  - haxelib install openfl > /dev/null
+  - haxelib install lime 2.9.1 > /dev/null
+  - haxelib install openfl 3.6.1 > /dev/null
   - haxelib install systools > /dev/null
   - haxelib install nape > /dev/null
   - haxelib install task > /dev/null
@@ -38,6 +38,7 @@ install:
   - haxelib list
 
 script:
+  - export HXCPP_COMPILE_CACHE=~/hxcache
   - cd $HOME/haxe/lib/flixel-tools/git
   - haxe build.hxml
   - cd $TRAVIS_BUILD_DIR/tests

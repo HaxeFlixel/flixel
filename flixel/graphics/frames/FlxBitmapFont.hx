@@ -521,7 +521,7 @@ class FlxBitmapFont extends FlxFramesCollection
 		var xAdvance:Int = charWidth;
 		font.spaceWidth = xAdvance;
 		var letterIndex:Int = 0;
-		var numLetters:Int = letters.length;
+		var numLetters:Int = Utf8.length(letters);
 		
 		for (j in 0...numRows)
 		{

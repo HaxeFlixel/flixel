@@ -1153,9 +1153,10 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * 
 	 * @param	Object			The object being tested.
 	 * @param	InScreenSpace	Whether to take scroll factors into account when checking for overlap.
-	 * @param	Camera			Specify which game camera you want.  If null getScreenPosition() will just grab the first global camera.
+	 * @param	Camera			Specify which game camera you want. If null, getScreenPosition() will just grab the first global camera.
 	 * @return	Whether or not the two objects overlap.
 	 */
+	@:access(flixel.group.FlxTypedGroup)
 	override public function overlaps(ObjectOrGroup:FlxBasic, InScreenSpace:Bool = false, ?Camera:FlxCamera):Bool
 	{
 		var group = FlxTypedGroup.resolveGroup(ObjectOrGroup);
@@ -1194,6 +1195,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param	Camera			Specify which game camera you want.  If null getScreenPosition() will just grab the first global camera.
 	 * @return	Whether or not the two objects overlap.
 	 */
+	@:access(flixel.group.FlxTypedGroup)
 	override public function overlapsAt(X:Float, Y:Float, ObjectOrGroup:FlxBasic, InScreenSpace:Bool = false, ?Camera:FlxCamera):Bool
 	{
 		var group = FlxTypedGroup.resolveGroup(ObjectOrGroup);
@@ -1211,8 +1213,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	
 	private inline function tilemapOverlapsAtCallback(ObjectOrGroup:FlxBasic, X:Float, Y:Float, InScreenSpace:Bool, Camera:FlxCamera):Bool
 	{
-		if (ObjectOrGroup.flixelType == OBJECT || 
-			ObjectOrGroup.flixelType == TILEMAP)
+		if (ObjectOrGroup.flixelType == OBJECT || ObjectOrGroup.flixelType == TILEMAP)
 		{
 			return overlapsWithCallback(cast ObjectOrGroup, null, false, _point.set(X, Y));
 		}
@@ -1233,20 +1234,22 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	override public function overlapsPoint(WorldPoint:FlxPoint, InScreenSpace:Bool = false, ?Camera:FlxCamera):Bool
 	{
 		if (!InScreenSpace)
-		{
-			return _tileObjects[_data[getTileIndexByCoords(WorldPoint)]].allowCollisions > 0;
-		}
+			return tileAtPointAllowsCollisions(WorldPoint);
 		
 		if (Camera == null)
-		{
 			Camera = FlxG.camera;
-		}
 		
 		WorldPoint.subtractPoint(Camera.scroll);
-		
-		var result:Bool =  _tileObjects[_data[getTileIndexByCoords(WorldPoint)]].allowCollisions > 0;
 		WorldPoint.putWeak();
-		return result;
+		return tileAtPointAllowsCollisions(WorldPoint);
+	}
+	
+	private function tileAtPointAllowsCollisions(point:FlxPoint):Bool
+	{
+		var tileIndex = getTileIndexByCoords(point);
+		if (tileIndex < 0 || tileIndex >= _data.length)
+			return false;
+		return _tileObjects[_data[tileIndex]].allowCollisions > 0;
 	}
 
 	/**
@@ -1258,9 +1261,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	public function getBounds(?Bounds:FlxRect):FlxRect
 	{
 		if (Bounds == null)
-		{
 			Bounds = FlxRect.get();
-		}
 		
 		return Bounds.set(x, y, width, height);
 	}

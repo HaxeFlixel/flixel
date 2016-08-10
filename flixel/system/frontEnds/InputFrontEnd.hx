@@ -4,7 +4,6 @@ import flixel.input.IFlxInputManager;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxStringUtil;
 
-@:allow(flixel)
 class InputFrontEnd
 {
 	/**
@@ -100,8 +99,10 @@ class InputFrontEnd
 		}
 	}
 	
+	@:allow(flixel.FlxG)
 	private function new() {}
 	
+	@:allow(flixel.FlxGame)
 	private inline function update():Void
 	{
 		for (input in list)
@@ -110,6 +111,7 @@ class InputFrontEnd
 		}
 	}
 	
+	@:allow(flixel.FlxGame)
 	private inline function onFocus():Void
 	{
 		for (input in list)
@@ -118,6 +120,7 @@ class InputFrontEnd
 		}
 	}
 	
+	@:allow(flixel.FlxGame)
 	private inline function onFocusLost():Void
 	{
 		for (input in list)
@@ -126,6 +129,8 @@ class InputFrontEnd
 		}
 	}
 	
+	@:allow(flixel.FlxGame)
+	@:allow(flixel.FlxState.resetSubState)
 	private function onStateSwitch():Void
 	{
 		if (resetOnStateSwitch)

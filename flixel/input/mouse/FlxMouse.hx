@@ -13,9 +13,8 @@ import flash.Lib;
 import flash.ui.Mouse;
 import flash.Vector;
 import flixel.FlxG;
-import flixel.input.FlxInput.FlxInputState;
 import flixel.input.IFlxInputManager;
-import flixel.input.mouse.FlxMouseButton;
+import flixel.input.mouse.FlxMouseButton.FlxMouseButtonID;
 import flixel.system.FlxAssets;
 import flixel.system.replay.MouseRecord;
 import flixel.util.FlxDestroyUtil;
@@ -31,7 +30,6 @@ private class GraphicCursor extends BitmapData {}
  * This class helps contain and track the mouse pointer in your game.
  * Automatically accounts for parallax scrolling, etc.
  */
-@:allow(flixel)
 class FlxMouse extends FlxPointer implements IFlxInputManager
 {
 	/**
@@ -102,16 +100,19 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	/**
 	 * The left mouse button.
 	 */
+	@:allow(flixel.input.mouse.FlxMouseButton)
 	private var _leftButton:FlxMouseButton;
 	
 	#if FLX_MOUSE_ADVANCED
 	/**
 	 * The middle mouse button.
 	 */
+	@:allow(flixel.input.mouse.FlxMouseButton)
 	private var _middleButton:FlxMouseButton;
 	/**
 	 * The right mouse button.
 	 */
+	@:allow(flixel.input.mouse.FlxMouseButton)
 	private var _rightButton:FlxMouseButton;
 	#end
 	
@@ -450,7 +451,6 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 		#end
 	}
 	
-	@:allow(flixel.FlxGame)
 	private function onGameStart():Void
 	{
 		// Call set_visible with the value visible has been initialized with
@@ -575,6 +575,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	
 	// Replay functions
 	
+	@:allow(flixel.system.replay.FlxReplay)
 	private function record():MouseRecord
 	{
 		if ((_lastX == _globalScreenX) && (_lastY == _globalScreenY) 
@@ -590,6 +591,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 		return new MouseRecord(_lastX, _lastY, _leftButton.current, _lastWheel);
 	}
 	
+	@:allow(flixel.system.replay.FlxReplay)
 	private function playback(Record:MouseRecord):Void
 	{
 		// Manually dispatch a MOUSE_UP event so that, e.g., FlxButtons click correctly on playback.

@@ -71,7 +71,14 @@ class FlxGitSHA
 	
 	public static function getProcessOutput(cmd:String, args:Array<String>):String
 	{
-		return new Process(cmd, args).stdout.readAll().toString();
+		try
+		{
+			return new Process(cmd, args).stdout.readAll().toString();
+		}
+		catch (_:Dynamic)
+		{
+			return "";
+		}
 	}
 }
 #end

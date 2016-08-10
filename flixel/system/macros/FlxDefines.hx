@@ -53,6 +53,17 @@ class FlxDefines
 {
 	public static function run()
 	{
+		checkDependencyCompatibility();
+		checkDefines();
+		defineInversions();
+		defineHelperDefines();
+		
+		if (defined("flash"))
+			checkSwfVersion();
+	}
+	
+	private static function checkDependencyCompatibility()
+	{
 		#if (haxe_ver < "3.2")
 		abort('The minimum required Haxe version for HaxeFlixel is 3.2.0. '
 			+ 'Please install a newer version.', FlxMacroUtil.here());
@@ -65,12 +76,15 @@ class FlxDefines
 				FlxMacroUtil.here());
 		#end
 		
-		checkDefines();
-		defineInversions();
-		defineHelperDefines();
+		#if (openfl >= "4.0.0")
+		abort('Flixel is currently incompatible with OpenFL 4.0.0 or above. ' +
+			'Please use version 3.6.1 or older.', FlxMacroUtil.here());
+		#end
 		
-		if (defined("flash"))
-			checkSwfVersion();
+		#if ((lime >= "3.0.0") || (tools >= "3.0.0"))
+		abort('Flixel is currently incompatible with Lime 3.0.0 or above. ' +
+			'Please use version 2.9.1 or older.', FlxMacroUtil.here());
+		#end
 	}
 	
 	private static function checkDefines()

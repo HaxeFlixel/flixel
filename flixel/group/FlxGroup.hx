@@ -18,8 +18,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	/**
 	 * Helper function for overlap functions in FlxObject and FlxTilemap.
 	 */
-	@:allow(flixel)
-	private static inline function overlaps(Callback:FlxBasic->Float->Float->Bool->FlxCamera->Bool, 
+	private static function overlaps(Callback:FlxBasic->Float->Float->Bool->FlxCamera->Bool, 
 		Group:FlxTypedGroup<FlxBasic>, X:Float, Y:Float, InScreenSpace:Bool, Camera:FlxCamera):Bool
 	{
 		var result:Bool = false;
@@ -43,8 +42,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		return result;
 	}
 	
-	@:allow(flixel)
-	private static inline function resolveGroup(ObjectOrGroup:FlxBasic):FlxTypedGroup<FlxBasic>
+	private static function resolveGroup(ObjectOrGroup:FlxBasic):FlxTypedGroup<FlxBasic>
 	{
 		var group:FlxTypedGroup<FlxBasic> = null;
 		if (ObjectOrGroup != null)
@@ -88,9 +86,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		super();
 		
 		members = [];
-		
 		maxSize = Std.int(Math.abs(MaxSize));
-		
 		flixelType = GROUP;
 	}
 	
@@ -806,7 +802,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		{
 			basic = members[i++];
 			
-			if (basic != null &&  Std.is(basic, ObjectClass))
+			if (basic != null)
 			{
 				if (Recurse)
 				{
@@ -817,7 +813,8 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 					}
 				}
 				
-				Function(cast basic);
+				if (Std.is(basic, ObjectClass))
+					Function(cast basic);
 			}
 		}
 	}

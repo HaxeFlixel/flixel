@@ -379,6 +379,11 @@ class FlxTween implements IFlxDestroyable
 	public var onComplete:TweenCallback;
 	
 	public var type(default, set):Int;
+	
+	/**
+	 * Value between `0` and `1` that indicates how far along this tween is in its completion.
+	 * A value of `0.33` means that the tween is `33%` complete.
+	 */
 	public var percent(get, set):Float;
 	public var finished(default, null):Bool;
 	public var scale(default, null):Float = 0;
@@ -386,7 +391,7 @@ class FlxTween implements IFlxDestroyable
 	
 	/**
 	 * How many times this tween has been executed / has finished so far - useful to 
-	 * stop the LOOPING and PINGPONG types after a certain amount of time
+	 * stop the `LOOPING` and `PINGPONG` types after a certain amount of time
 	 */
 	public var executions(default, null):Int = 0;
 	
@@ -610,8 +615,18 @@ class FlxTween implements IFlxDestroyable
 			manager.add(tween);
 		}
 		
-		if (_chainedTweens != null)
-			tween._chainedTweens = _chainedTweens;
+		tween.setChain(_chainedTweens);
+	}
+	
+	private function setChain(previousChain:Array<FlxTween>):Void
+	{
+		if (previousChain == null)
+			return;
+		
+		if (_chainedTweens == null)
+			_chainedTweens = previousChain;
+		else
+			_chainedTweens = _chainedTweens.concat(previousChain);
 	}
 	
 	/**
@@ -742,17 +757,15 @@ class FlxTweenManager extends FlxBasic
 		
 		for (tween in _tweens)
 		{
-			if (tween.active)
+			if (!tween.active)
+				continue;
+
+			tween.update(elapsed);
+			if (tween.finished)
 			{
-				tween.update(elapsed);
-				if (tween.finished)
-				{
-					if (finishedTweens == null)
-					{
-						finishedTweens = new Array<FlxTween>();
-					} 
-					finishedTweens.push(tween);
-				}
+				if (finishedTweens == null)
+					finishedTweens = [];
+				finishedTweens.push(tween);
 			}
 		}
 		
@@ -778,16 +791,12 @@ class FlxTweenManager extends FlxBasic
 	{
 		// Don't add a null object
 		if (Tween == null)
-		{
 			return null;
-		}
 		
 		_tweens.push(Tween);
 		
 		if (Start) 
-		{
 			Tween.start();
-		}
 		return Tween;
 	}
 
@@ -802,16 +811,12 @@ class FlxTweenManager extends FlxBasic
 	private function remove(Tween:FlxTween, Destroy:Bool = true):FlxTween
 	{
 		if (Tween == null)
-		{
 			return null;
-		}
 		
 		Tween.active = false;
 		
 		if (Destroy)
-		{
 			Tween.destroy();
-		}
 		
 		FlxArrayUtil.fastSplice(_tweens, Tween);
 		
@@ -823,8 +828,6 @@ class FlxTweenManager extends FlxBasic
 	public function clear():Void
 	{
 		while (_tweens.length > 0)
-		{
 			remove(_tweens[0]);
-		}
 	}
 }
