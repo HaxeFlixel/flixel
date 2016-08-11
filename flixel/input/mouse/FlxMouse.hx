@@ -13,7 +13,7 @@ import flash.Lib;
 import flash.ui.Mouse;
 import flash.Vector;
 import flixel.FlxG;
-import flixel.input.FlxInput.FlxInputState;
+import flixel.input.FlxInput.FlxInputState; 
 import flixel.input.IFlxInputManager;
 import flixel.input.mouse.FlxMouseButton.FlxMouseButtonID;
 import flixel.system.FlxAssets;
