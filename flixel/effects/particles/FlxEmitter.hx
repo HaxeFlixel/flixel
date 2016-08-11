@@ -472,7 +472,8 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		particle.alpha = particle.alphaRange.start;
 		
 		// Particle color settings
-		if (color != null) {
+		if (color != null)
+		{
 			particle.colorRange.start = FlxG.random.color(color.start.min, color.start.max);
 			particle.colorRange.end = FlxG.random.color(color.end.min, color.end.max);
 			particle.colorRange.active = particle.colorRange.start != particle.colorRange.end;
