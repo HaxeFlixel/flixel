@@ -149,7 +149,7 @@ class FlxSteamController
 		return data;
 	}
 	#else
-	private static function getAnalogActionData(controller:Int, action:Int):Dynamic
+	private static function getAnalogActionData(controller:Int, action:Int, ?data:Dynamic):Dynamic
 	{
 		return null;
 	}

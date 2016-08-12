@@ -6,6 +6,8 @@ import flixel.input.actions.FlxActionInputDigital;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 
+using flixel.util.FlxArrayUtil;
+
 /**
  * A digital action is a binary on/off event like "jump" or "fire". 
  * FlxActions let you attach multiple inputs to a single in-game action, 
@@ -272,13 +274,6 @@ class FlxAction implements IFlxDestroyable
 	
 	private function checkExists(input:FlxActionInput):Bool
 	{
-		for (i in inputs)
-		{
-			if (input == i)
-			{
-				return true;
-			}
-		}
-		return false;
+		return inputs.contains(input);
 	}
 }
