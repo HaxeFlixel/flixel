@@ -275,7 +275,10 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 				switch(deviceID)
 				{
 					case FlxInputDeviceID.ALL: index = register.gamepadAllSet;
-					case FlxInputDeviceID.FIRST_ACTIVE: id = FlxG.gamepads.getFirstActiveGamepadID();
+					case FlxInputDeviceID.FIRST_ACTIVE: 
+						#if FLX_GAMEPAD
+						id = FlxG.gamepads.getFirstActiveGamepadID();
+						#end
 					case FlxInputDeviceID.NONE: index = -1;
 					default: id = deviceID;
 				}
@@ -486,7 +489,7 @@ class ActionSetRegister implements IFlxDestroyable
 					                                    clearSetFromArray(-1, gamepadSets);
 					case FlxInputDeviceID.NONE:         clearSetFromArray(ActionSet, gamepadSets);
 					
-					#if !FLX_NO_GAMEPAD
+					#if FLX_GAMEPAD
 					case FlxInputDeviceID.FIRST_ACTIVE: gamepadSets[FlxG.gamepads.getFirstActiveGamepadID()] = ActionSet;
 					#end
 					
