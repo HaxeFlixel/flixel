@@ -19,6 +19,8 @@ import steamwrap.api.Steam;
 import steamwrap.data.ControllerConfig;
 #end
 
+using flixel.util.FlxArrayUtil;
+
 /**
  * High level input manager for FlxActions. This lets you manage multiple input
  * devices and action sets, and is the only supported method for natively
@@ -198,13 +200,8 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 	 */
 	public function addSet(set:FlxActionSet):Int
 	{
-		for (s in sets)
-		{
-			if (s == set)
-			{
-				return -1;
-			}
-		}
+		sets.contains(set)
+			return -1;
 		
 		sets.push(set);
 		
@@ -215,10 +212,8 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 	
 	public function destroy():Void
 	{
-		FlxDestroyUtil.destroyArray(sets);
-		register.destroy();
-		register = null;
-		sets = null;
+		sets = FlxDestroyUtil.destroyArray(sets);
+		register = FlxDestroyUtil.destroy(register);
 	}
 	
 	/**
@@ -359,7 +354,6 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 		{
 			if (addSet(FlxActionSet.fromJSON(set, CallbackDigital, CallbackAnalog)) != -1)
 			{
-				trace("added set : " + sets[sets.length - 1].name);
 				i++;
 			}
 		}
@@ -403,25 +397,14 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 	 */
 	public function removeSet(Set:FlxActionSet, Destroy:Bool = true):Bool
 	{
-		var success = false;
-		for (i in 0...sets.length)
-		{
-			if (sets[i] == Set)
-			{
-				if (Destroy)
-				{
-					sets[i].destroy();
-				}
-				sets.splice(i, 1);
-				success = true;
-				break;
-			}
-		}
-		
+		var success = sets.remove(Set);
 		if (success)
 		{
+			if (Destroy)
+				FlxDestroyUtil.destroy(Set);
+				
 			onChange();
-		}
+		}}
 		
 		return success;
 	}
