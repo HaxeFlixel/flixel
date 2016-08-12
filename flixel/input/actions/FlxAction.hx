@@ -296,8 +296,9 @@ class FlxAction implements IFlxDestroyable
 		
 		var len = inputs != null ? inputs.length : 0;
 		for (i in 0...len)
+		for (i in -(len - 1)...0)
 		{
-			var j = len - i - 1;
+			var j = -i;
 			var input = inputs[j];
 			
 			if (input.destroyed)
@@ -347,10 +348,8 @@ class FlxAction implements IFlxDestroyable
 		{
 			inputs = [];
 		}
-		if (false == checkExists(input))
-		{
-			inputs.push(input);
-		}
+		if (!checkExists(input)) inputs.push(input);
+		
 		return this;
 	}
 	
