@@ -321,7 +321,6 @@ class FlxActionSet implements IFlxDestroyable
 				}
 				else if (inputExists)
 				{
-					//detaching: remove inputs for this controller if they exist
 					action.removeInput(theInput);
 				}
 			}

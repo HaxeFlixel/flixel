@@ -9,6 +9,8 @@ import steamwrap.api.Controller.EControllerActionOrigin;
 
 using flixel.util.FlxArrayUtil;
 
+using flixel.util.FlxArrayUtil;
+
 /**
  * A digital action is a binary on/off event like "jump" or "fire". 
  * FlxActions let you attach multiple inputs to a single in-game action, 

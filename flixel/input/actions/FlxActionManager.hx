@@ -349,7 +349,7 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 				FlxDestroyUtil.destroy(Set);
 				
 			onChange();
-		}
+		}}
 		
 		return success;
 	}
