@@ -92,11 +92,6 @@ class FlxActionInputAnalogMouseMotion extends FlxActionInputAnalog
 		super(FlxInputDevice.MOUSE, -1, cast Trigger, Axis);
 	}
 	
-	override public function destroy():Void 
-	{
-		super.destroy();
-	}
-	
 	override public function update():Void
 	{
 		#if !FLX_NO_MOUSE
