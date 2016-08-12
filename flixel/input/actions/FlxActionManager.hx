@@ -567,7 +567,47 @@ class ActionSetRegister implements IFlxDestroyable
 	
 	public function activate(ActionSet:Int, Device:FlxInputDevice, DeviceID:Int = FlxInputDeviceID.FIRST_ACTIVE)
 	{
-		setActivate(ActionSet, Device, DeviceID);
+		switch (Device)
+		{
+			case FlxInputDevice.MOUSE: mouseSet    = ActionSet;
+			case FlxInputDevice.KEYBOARD: keyboardSet = ActionSet;
+			
+			case FlxInputDevice.GAMEPAD: 
+				switch (DeviceID)
+				{
+					case FlxInputDeviceID.ALL:          gamepadAllSet = ActionSet;
+					                                    clearSetFromArray(-1, gamepadSets);
+					case FlxInputDeviceID.NONE:         clearSetFromArray(ActionSet, gamepadSets);
+					
+					#if FLX_GAMEPAD
+					case FlxInputDeviceID.FIRST_ACTIVE: gamepadSets[FlxG.gamepads.getFirstActiveGamepadID()] = ActionSet;
+					#end
+					
+					default:                            gamepadSets[DeviceID] = ActionSet;
+				}
+			
+			case FlxInputDevice.STEAM_CONTROLLER:
+				switch (DeviceID)
+				{
+					case FlxInputDeviceID.ALL:          steamControllerAllSet = ActionSet;
+					                                    clearSetFromArray( -1, steamControllerSets);
+					case FlxInputDeviceID.NONE:         clearSetFromArray(ActionSet, steamControllerSets);
+					case FlxInputDeviceID.FIRST_ACTIVE: steamControllerSets[FlxSteamController.getFirstActiveHandle()] = ActionSet;
+					default:                            steamControllerSets[DeviceID] = ActionSet;
+				}
+			
+			case FlxInputDevice.ALL:
+				activate(ActionSet, FlxInputDevice.MOUSE,    DeviceID);
+				activate(ActionSet, FlxInputDevice.KEYBOARD, DeviceID);
+				activate(ActionSet, FlxInputDevice.GAMEPAD,  DeviceID);
+				#if steamwrap
+				activate(ActionSet, FlxInputDevice.STEAM_CONTROLLER, DeviceID);
+				#end
+				
+			default:
+				
+				//do nothing
+		}
 	}
 	
 	public function markActiveSets(sets:Array<FlxActionSet>)
