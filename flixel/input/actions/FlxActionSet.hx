@@ -221,7 +221,7 @@ class FlxActionSet implements IFlxDestroyable
 	public function removeDigital(Action:FlxActionDigital, Destroy:Bool = true):Bool
 	{
 		var result = digitalActions.remove(Action);
-		if (result & Destroy)
+		if (result && Destroy)
 		{
 			Action.destroy();
 		}
@@ -237,7 +237,7 @@ class FlxActionSet implements IFlxDestroyable
 	public function removeAnalog(Action:FlxActionAnalog, Destroy:Bool = true):Bool
 	{
 		var result = analogActions.remove(Action);
-		if (result & Destroy)
+		if (result && Destroy)
 		{
 			Action.destroy();
 		}
