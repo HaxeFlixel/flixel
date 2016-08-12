@@ -150,7 +150,7 @@ class FlxActionAnalog extends FlxAction
 	}
 }
 
-@:allow(flixel.input.actions.FlxActionDigital, flixel.input.actions.FlxActionAnalog, flixel.input.actions.FlxActionSet)
+@:allow(flixel.input.actions.FlxActionDigital, flixel.input.actions.FlxActionAnalog, flixel.input.actions.FlxActionSet, flixel.FlxGame)
 class FlxAction implements IFlxDestroyable
 {
 	/**
@@ -295,7 +295,6 @@ class FlxAction implements IFlxDestroyable
 		_check = false;
 		
 		var len = inputs != null ? inputs.length : 0;
-		for (i in 0...len)
 		for (i in -(len - 1)...0)
 		{
 			var j = -i;
