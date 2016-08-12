@@ -148,21 +148,21 @@ class FlxActionSet implements IFlxDestroyable
 	public function toJSON():String
 	{
 		var space:String = "\t";
-		return Json.stringify(this, function(key:Dynamic, value:Dynamic):Dynamic{
-			
-			if (Std.is(value, FlxAction))
+		return Json.stringify(this, 
+			function(key:Dynamic, value:Dynamic):Dynamic
 			{
-				var fa:FlxAction = cast value;
-				return {
-					"type": fa.type,
-					"name": fa.name,
-					"steamHandle": fa.steamHandle
+				if (Std.is(value, FlxAction))
+				{
+					var fa:FlxAction = cast value;
+					return {
+						"type": fa.type,
+						"name": fa.name,
+						"steamHandle": fa.steamHandle
+					}
 				}
+				return value;
 			}
-			
-			return value;
-			
-		}, space);
+		, space);
 	}
 	
 	public function new(Name:String, DigitalActions:Array<FlxActionDigital>, AnalogActions:Array<FlxActionAnalog>)
@@ -302,7 +302,6 @@ class FlxActionSet implements IFlxDestroyable
 				else if(inputExists)
 				{
 					//detaching: remove inputs for this controller if they exist
-					
 					action.removeInput(theInput);
 				}
 			}
