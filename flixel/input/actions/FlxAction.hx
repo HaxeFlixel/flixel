@@ -150,7 +150,7 @@ class FlxActionAnalog extends FlxAction
 	}
 }
 
-@:allow(flixel.input.actions.FlxActionDigital, flixel.input.actions.FlxActionAnalog, flixel.input.actions.FlxActionSet, flixel.FlxGame)
+@:allow(flixel.input.actions.FlxActionDigital, flixel.input.actions.FlxActionAnalog, flixel.input.actions.FlxActionSet)
 class FlxAction implements IFlxDestroyable
 {
 	/**
@@ -280,6 +280,7 @@ class FlxAction implements IFlxDestroyable
 	 * See if this action has just been triggered
 	 * @return
 	 */
+	@:access(FlxG.game)
 	public function check():Bool
 	{
 		_x = null;
