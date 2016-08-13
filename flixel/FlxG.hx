@@ -117,6 +117,8 @@ class FlxG
 	 */
 	public static var drawFramerate(default, set):Int;
 	
+	public static var onMobile(get, null):Bool;
+	
 	public static var renderMethod(default, null):FlxRenderMethod;
 	
 	public static var renderBlit(default, null):Bool;
@@ -706,6 +708,20 @@ class FlxG
 	private static inline function get_state():FlxState
 	{
 		return game._state;
+	}
+	
+	private static inline function get_onMobile():Bool
+	{
+		if (onMobile != null)
+			return onMobile;
+		
+		var mobile = false;
+		#if js
+		mobile = html5.onMobile;
+		#elseif mobile
+		mobile = true;
+		#end
+		return onMobile = mobile;
 	}
 }
 

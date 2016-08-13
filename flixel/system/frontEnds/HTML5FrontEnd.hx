@@ -11,7 +11,7 @@ class HTML5FrontEnd
 {
 	public var browser(default, null):FlxBrowser;
 	public var platform(default, null):FlxPlatform;
-	public var isMobile(default, null):Bool;
+	public var onMobile(default, null):Bool;
 	public var browserWidth(get, never):Int;
 	public var browserHeight(get, never):Int;
 	public var browserPosition(get, null):FlxPoint;
@@ -21,7 +21,7 @@ class HTML5FrontEnd
 	{
 		browser = getBrowser();
 		platform = getPlatform();
-		isMobile = getIsMobile();
+		onMobile = getOnMobile();
 	}
 	
 	private function getBrowser():FlxBrowser
@@ -90,7 +90,7 @@ class HTML5FrontEnd
 		else return FlxPlatform.UNKNOWN;
 	}
 	
-	private function getIsMobile():Bool 
+	private function getOnMobile():Bool 
 	{
 		return
 		switch (platform)
