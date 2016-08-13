@@ -432,7 +432,11 @@ class FlxTilesheetView extends FlxCameraView
 	
 	override public function beginDrawDebug():Graphics 
 	{
+		#if FLX_DEBUG
 		return debugLayer.graphics;
+		#else
+		return null;
+		#end
 	}
 	
 	override public function setColor(Color:FlxColor):FlxColor 

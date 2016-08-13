@@ -139,7 +139,6 @@ class FlxTilemapBuffer implements IFlxDestroyable
 			_matrix.identity();
 			_matrix.scale(ScaleX, ScaleY);
 			_matrix.translate(FlashPoint.x, FlashPoint.y);
-			// TODO: fix this...
 			Camera.drawPixels(pixels, _matrix, null, blend, antialiasing);
 		//	Camera.buffer.draw(pixels, _matrix, null, blend, null, antialiasing);
 		}
