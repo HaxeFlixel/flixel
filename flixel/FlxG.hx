@@ -712,16 +712,18 @@ class FlxG
 	
 	private static inline function get_onMobile():Bool
 	{
-		if (onMobile != null)
-			return onMobile;
+		if (onMobile == null)
+		{	
+			#if js
+			onMobile = html5.onMobile;
+			#elseif mobile
+			onMobile = true;
+			#else
+			onMobile = false;
+			#end
+		}
 		
-		var mobile = false;
-		#if js
-		mobile = html5.onMobile;
-		#elseif mobile
-		mobile = true;
-		#end
-		return onMobile = mobile;
+		return onMobile;
 	}
 }
 
