@@ -299,28 +299,26 @@ class FlxCamera extends FlxBasic
 	 */
 	public var initialZoom(default, null):Float = 1;
 	
-	/**
-	 * Helper rect for drawTriangles visibility checks
-	 */
-	private var _bounds:FlxRect = FlxRect.get();
-	
 	public inline function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix,
 		?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false, ?shader:FlxShader):Void
 	{
-		view.drawPixels(frame, pixels, matrix, transform, blend, smoothing, shader);
+		if (view != null)
+			view.drawPixels(frame, pixels, matrix, transform, blend, smoothing, shader);
 	}
 	
 	public inline function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle,
 		destPoint:Point, ?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false, ?shader:FlxShader):Void
 	{
-		view.copyPixels(frame, pixels, sourceRect, destPoint, transform, blend, smoothing, shader);
+		if (view != null)
+			view.copyPixels(frame, pixels, sourceRect, destPoint, transform, blend, smoothing, shader);
 	}
 	
 	public inline function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>,
 		uvtData:DrawData<Float>, ?colors:DrawData<Int>, ?position:FlxPoint, ?blend:BlendMode,
 		repeat:Bool = false, smoothing:Bool = false):Void
 	{
-		view.drawTriangles(graphic, vertices, indices, uvtData, colors, position, blend, repeat, smoothing);
+		if (view != null)
+			view.drawTriangles(graphic, vertices, indices, uvtData, colors, position, blend, repeat, smoothing);
 	}
 	
 	/**
@@ -342,7 +340,6 @@ class FlxCamera extends FlxBasic
 		// Use the game dimensions if width / height are <= 0
 		width = (Width <= 0) ? FlxG.width : Width;
 		height = (Height <= 0) ? FlxG.height : Height;
-		_flashRect = new Rectangle(0, 0, width, height);
 		
 		if (FlxG.renderBlit)
 		{
@@ -377,7 +374,6 @@ class FlxCamera extends FlxBasic
 	{
 		FlxDestroyUtil.destroy(view);
 		
-		_bounds = null;
 		scroll = FlxDestroyUtil.put(scroll);
 		targetOffset = FlxDestroyUtil.put(targetOffset);
 		deadzone = FlxDestroyUtil.put(deadzone);
@@ -634,7 +630,7 @@ class FlxCamera extends FlxBasic
 			view.updateInternals();
 	}
 	
-	function updateScale():Void
+	private function updateScale():Void
 	{
 		if (view != null)
 			view.updateScale();
@@ -811,6 +807,35 @@ class FlxCamera extends FlxBasic
 			view.setFilters(filters);
 	}
 	
+	public inline function lock(useBufferLocking:Bool):Void
+	{
+		if (view != null)
+			view.lock(useBufferLocking);
+	}
+	
+	public inline function unlock(useBufferLocking:Bool):Void
+	{
+		if (view != null)
+			view.unlock(useBufferLocking);
+	}
+	
+	public inline function render():Void
+	{
+		if (view != null)
+			view.render();
+	}
+	
+	public inline function beginDrawDebug():Graphics
+	{
+		return (view != null) ? view.beginDrawDebug() : null;
+	}
+	
+	public inline function endDrawDebug():Void
+	{
+		if (view != null)
+			view.endDrawDebug();
+	}
+	
 	/**
 	 * Copy the bounds, focus object, and deadzone info from an existing camera.
 	 * 
@@ -847,10 +872,10 @@ class FlxCamera extends FlxBasic
 	 * @param	Color		The color to fill with in 0xAARRGGBB hex format.
 	 * @param	BlendAlpha	Whether to blend the alpha value or just wipe the previous contents.  Default is true.
 	 */
-	public function fill(Color:FlxColor, BlendAlpha:Bool = true, FxAlpha:Float = 1.0, ?graphics:Graphics):Void
+	public function fill(Color:FlxColor, BlendAlpha:Bool = true, FxAlpha:Float = 1.0):Void
 	{
 		if (view != null)
-			view.fill(Color, BlendAlpha, FxAlpha, graphics);
+			view.fill(Color, BlendAlpha, FxAlpha);
 	}
 	
 	/**
@@ -1051,7 +1076,10 @@ class FlxCamera extends FlxBasic
 	private function set_angle(Angle:Float):Float
 	{
 		angle = Angle;
-		flashSprite.rotation = Angle;
+		
+		if (view != null)
+			view.setAngle(Angle);
+		
 		return Angle;
 	}
 	
@@ -1070,7 +1098,7 @@ class FlxCamera extends FlxBasic
 		antialiasing = Antialiasing;
 		
 		if (view != null)
-			view.setAntialiasing(antialiasing);
+			view.antialiasing = antialiasing;
 		
 		return Antialiasing;
 	}

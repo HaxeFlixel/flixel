@@ -173,49 +173,18 @@ class CameraFrontEnd
 				continue;
 			}
 			
-			if (FlxG.renderBlit)
-			{
-				camera.checkResize();
-				
-				if (useBufferLocking)
-				{
-					camera.buffer.lock();
-				}
-			}
-			
-			if (FlxG.renderTile)
-			{
-				camera.clearDrawStack();
-				camera.canvas.graphics.clear();
-				// Clearing camera's debug sprite
-				#if FLX_DEBUG
-				camera.debugLayer.graphics.clear();
-				#end
-			}
-			
-			if (FlxG.renderBlit)
-			{
-				camera.fill(camera.bgColor, camera.useBgAlphaBlending);
-				camera.screen.dirty = true;
-			}
-			else
-			{
-				camera.fill(camera.bgColor.to24Bit(), camera.useBgAlphaBlending, camera.bgColor.alphaFloat);
-			}
+			camera.lock(useBufferLocking);
 		}
 	}
 	
 	@:allow(flixel.FlxGame)
 	private inline function render():Void
 	{
-		if (FlxG.renderTile)
+		for (camera in list)
 		{
-			for (camera in list)
+			if ((camera != null) && camera.exists && camera.visible)
 			{
-				if ((camera != null) && camera.exists && camera.visible)
-				{
-					camera.render();
-				}
+				camera.render();
 			}
 		}
 	}
@@ -234,16 +203,7 @@ class CameraFrontEnd
 			}
 			
 			camera.drawFX();
-			
-			if (FlxG.renderBlit)
-			{
-				if (useBufferLocking)
-				{
-					camera.buffer.unlock();
-				}
-				
-				camera.screen.dirty = true;
-			}
+			camera.unlock(useBufferLocking);
 		}
 	}
 	

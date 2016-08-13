@@ -1,4 +1,5 @@
 package flixel.system.render.tilesheet;
+
 import flixel.FlxCamera;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame;
@@ -6,17 +7,22 @@ import flixel.graphics.tile.FlxDrawBaseItem;
 import flixel.graphics.tile.FlxDrawTilesItem;
 import flixel.graphics.tile.FlxDrawTrianglesItem;
 import flixel.math.FlxMatrix;
+import flixel.math.FlxPoint;
 import flixel.system.FlxAssets.FlxShader;
 import flixel.system.render.FlxCameraView;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import openfl.display.BitmapData;
 import openfl.display.BlendMode;
+import openfl.display.DisplayObject;
 import openfl.display.Graphics;
 import openfl.display.Sprite;
 import openfl.geom.ColorTransform;
 import openfl.geom.Matrix;
+import openfl.geom.Point;
 import openfl.geom.Rectangle;
+
+using flixel.util.FlxColorTransformUtil;
 
 /**
  * ...
@@ -295,8 +301,7 @@ class FlxTilesheetView extends FlxCameraView
 		_headTriangles = null;
 	}
 	
-	@:allow(flixel.system.frontEnds.CameraFrontEnd)
-	private function render():Void
+	override private function render():Void
 	{
 		var currItem:FlxDrawBaseItem<Dynamic> = _headOfDrawStack;
 		while (currItem != null)
@@ -306,7 +311,7 @@ class FlxTilesheetView extends FlxCameraView
 		}
 	}
 	
-	public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix,
+	override public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix,
 		?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false, ?shader:FlxShader):Void
 	{
 		var isColored = (transform != null && transform.hasRGBMultipliers());
@@ -320,7 +325,7 @@ class FlxTilesheetView extends FlxCameraView
 		drawItem.addQuad(frame, matrix, transform);
 	}
 	
-	public function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle,
+	override public function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle,
 		destPoint:Point, ?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false, ?shader:FlxShader):Void
 	{
 		_helperMatrix.identity();
@@ -337,11 +342,11 @@ class FlxTilesheetView extends FlxCameraView
 		drawItem.addQuad(frame, _helperMatrix, transform);
 	}
 	
-	public function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>,
+	override public function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>,
 		uvtData:DrawData<Float>, ?colors:DrawData<Int>, ?position:FlxPoint, ?blend:BlendMode,
 		repeat:Bool = false, smoothing:Bool = false):Void
 	{
-		_bounds.set(0, 0, width, height);
+		_bounds.set(0, 0, camera.width, camera.height);
 		var isColored:Bool = (colors != null && colors.length != 0);
 		var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(graphic, smoothing, isColored, blend);
 		drawItem.addTriangles(vertices, indices, uvtData, colors, position, _bounds);
@@ -351,8 +356,8 @@ class FlxTilesheetView extends FlxCameraView
 	{
 		if (flashSprite != null)
 		{
-			flashSprite.x = x * FlxG.scaleMode.scale.x + _flashOffset.x;
-			flashSprite.y = y * FlxG.scaleMode.scale.y + _flashOffset.y;
+			flashSprite.x = camera.x * FlxG.scaleMode.scale.x + _flashOffset.x;
+			flashSprite.y = camera.y * FlxG.scaleMode.scale.y + _flashOffset.y;
 		}
 	}
 	
@@ -406,13 +411,28 @@ class FlxTilesheetView extends FlxCameraView
 			return;
 		}
 		
-		var targetGraphics:Graphics = (graphics == null) ? canvas.graphics : graphics;
-		
+		var targetGraphics:Graphics = canvas.graphics;
 		targetGraphics.beginFill(Color, FxAlpha);
 		// i'm drawing rect with these parameters to avoid light lines at the top and left of the camera,
 		// which could appear while cameras fading
-		targetGraphics.drawRect(-1, -1, width + 2, height + 2);
+		targetGraphics.drawRect(-1, -1, camera.width + 2, camera.height + 2);
 		targetGraphics.endFill();
+	}
+	
+	override public function lock(useBufferLocking:Bool):Void 
+	{
+		clearDrawStack();
+		canvas.graphics.clear();
+		// Clearing camera's debug sprite
+		#if FLX_DEBUG
+		debugLayer.graphics.clear();
+		#end
+		fill(camera.bgColor.to24Bit(), camera.useBgAlphaBlending, camera.bgColor.alphaFloat);
+	}
+	
+	override public function beginDrawDebug():Graphics 
+	{
+		return debugLayer.graphics;
 	}
 	
 	override public function setColor(Color:FlxColor):FlxColor 
@@ -428,6 +448,16 @@ class FlxTilesheetView extends FlxCameraView
 	override public function setAlpha(Alpha:Float):Float 
 	{
 		return canvas.alpha = Alpha;
+	}
+	
+	override public function setAngle(Angle:Float):Float 
+	{
+		if (flashSprite != null)
+		{
+			flashSprite.rotation = Angle;
+		}
+		
+		return Angle;
 	}
 	
 	override public function setVisible(visible:Bool):Bool 

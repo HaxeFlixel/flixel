@@ -6,6 +6,7 @@ import flixel.graphics.tile.FlxDrawBaseItem.FlxDrawItemType;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxShader;
+import flixel.system.render.tilesheet.FlxTilesheetView;
 import openfl.display.Tilesheet;
 import openfl.geom.ColorTransform;
 
@@ -78,7 +79,7 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 		drawData[position++] = f;
 	}
 	
-	override public function render(camera:FlxCamera):Void
+	override public function render(view:FlxTilesheetView):Void
 	{
 		if (!FlxG.renderTile || position <= 0)
 			return;
@@ -95,8 +96,8 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 
 		flags |= blending;
 
-		camera.canvas.graphics.drawTiles(graphics.tilesheet, drawData,
-			(camera.antialiasing || antialiasing), flags,
+		view.canvas.graphics.drawTiles(graphics.tilesheet, drawData,
+			(view.antialiasing || antialiasing), flags,
 			#if (!openfl_legacy && openfl >= "3.3.9") shader, #end
 			position);
 

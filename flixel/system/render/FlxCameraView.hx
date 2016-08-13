@@ -1,8 +1,11 @@
 package flixel.system.render;
 import flixel.FlxCamera;
+import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame;
+import flixel.graphics.tile.FlxDrawTrianglesItem.DrawData;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxShader;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
@@ -27,6 +30,8 @@ class FlxCameraView implements IFlxDestroyable
 	
 	public var camera(default, null):FlxCamera;
 	
+	public var antialiasing(get, set):Bool;
+	
 	/**
 	 * Internal, used for positioning camera's flashSprite on screen.
 	 * Basically it represents position of camera's center point in game sprite.
@@ -41,12 +46,10 @@ class FlxCameraView implements IFlxDestroyable
 	 */
 	private var _filters:Array<BitmapFilter>;
 	
-	// TODO: try to avoid using this variable.
-	// need to move functionality related to this var into FlxStrip
 	/**
-	 * Internal variable, used for visibility checks to minimize drawTriangles() calls.
+	 * Helper rect for drawTriangles visibility checks
 	 */
-	private static var drawVertices:Vector<Float> = new Vector<Float>();
+	private var _bounds:FlxRect = FlxRect.get();
 	
 	public function new(camera:FlxCamera) 
 	{
@@ -62,6 +65,7 @@ class FlxCameraView implements IFlxDestroyable
 	{
 		display = null;
 		_filters = null;
+		_bounds = null;
 		camera = null;
 		_flashOffset = FlxDestroyUtil.put(_flashOffset);
 	}
@@ -112,6 +116,16 @@ class FlxCameraView implements IFlxDestroyable
 		// TODO: use this methods for flashes and fading...
 	}
 	
+	public function lock(useBufferLocking:Bool):Void
+	{
+		
+	}
+	
+	public function unlock(useBufferLocking:Bool):Void
+	{
+		
+	}
+	
 	public function clear():Void
 	{
 		
@@ -127,7 +141,18 @@ class FlxCameraView implements IFlxDestroyable
 		_filters = filters;
 	}
 	
-	public function render():Void
+	@:allow(flixel.FlxCamera)
+	private function render():Void
+	{
+		
+	}
+	
+	public function beginDrawDebug():Graphics
+	{
+		return null;
+	}
+	
+	public function endDrawDebug():Void
 	{
 		
 	}
@@ -161,14 +186,24 @@ class FlxCameraView implements IFlxDestroyable
 		return Alpha;
 	}
 	
-	public function setAntialiasing(Antialiasing:Bool):Bool
+	private function set_antialiasing(Antialiasing:Bool):Bool
 	{
 		return Antialiasing;
+	}
+	
+	private function get_antialiasing():Bool
+	{
+		return camera.antialiasing;
 	}
 	
 	public function setVisible(visible:Bool):Bool
 	{
 		return visible;
+	}
+	
+	public function setAngle(Angle:Float):Float
+	{
+		return Angle;
 	}
 	
 	private function get_display():DisplayObject

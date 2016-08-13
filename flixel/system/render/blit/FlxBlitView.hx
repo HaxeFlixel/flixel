@@ -3,6 +3,8 @@ package flixel.system.render.blit;
 import flixel.FlxCamera;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame;
+import flixel.graphics.tile.FlxDrawTrianglesItem;
+import flixel.graphics.tile.FlxDrawTrianglesItem.DrawData;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
@@ -10,6 +12,8 @@ import flixel.system.FlxAssets.FlxShader;
 import flixel.system.render.FlxCameraView;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
+import flixel.util.FlxSpriteUtil;
+import openfl.Vector;
 import openfl.display.Bitmap;
 import openfl.display.BitmapData;
 import openfl.display.BlendMode;
@@ -93,6 +97,13 @@ class FlxBlitView extends FlxCameraView
 	 */
 	private static var trianglesSprite:Sprite = new Sprite();
 	
+	// TODO: try to avoid using this variable.
+	// need to move functionality related to this var into FlxStrip
+	/**
+	 * Internal variable, used for visibility checks to minimize drawTriangles() calls.
+	 */
+	private static var drawVertices:Vector<Float> = new Vector<Float>();
+	
 	/**
 	 * Whether checkResize checks if the camera dimensions have changed to update the buffer dimensions.
 	 */
@@ -113,12 +124,13 @@ class FlxBlitView extends FlxCameraView
 		_scrollRect.scrollRect = new Rectangle();
 		
 		screen = new FlxSprite();
-		buffer = new BitmapData(width, height, true, 0);
+		buffer = new BitmapData(camera.width, camera.height, true, 0);
+		_flashRect = new Rectangle(0, 0, camera.width, camera.height);
 		screen.pixels = buffer;
 		screen.origin.set();
 		_flashBitmap = new Bitmap(buffer);
 		_scrollRect.addChild(_flashBitmap);
-		_fill = new BitmapData(width, height, true, FlxColor.TRANSPARENT);
+		_fill = new BitmapData(camera.width, camera.height, true, FlxColor.TRANSPARENT);
 	}
 	
 	override public function init():Void 
@@ -145,13 +157,13 @@ class FlxBlitView extends FlxCameraView
 		_flashPoint = null;
 	}
 	
-	public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix,
+	override public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix,
 		?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false, ?shader:FlxShader):Void
 	{
 		buffer.draw(pixels, matrix, null, blend, null, (smoothing || antialiasing));
 	}
 	
-	public function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle,
+	override public function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle,
 		destPoint:Point, ?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false, ?shader:FlxShader):Void
 	{
 		if (pixels != null)
@@ -164,14 +176,14 @@ class FlxBlitView extends FlxCameraView
 		}
 	}
 	
-	public function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>,
+	override public function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>,
 		uvtData:DrawData<Float>, ?colors:DrawData<Int>, ?position:FlxPoint, ?blend:BlendMode,
 		repeat:Bool = false, smoothing:Bool = false):Void
 	{
 		if (position == null)
 			position = renderPoint.set();
 		
-		_bounds.set(0, 0, width, height);
+		_bounds.set(0, 0, camera.width, camera.height);
 		
 		var verticesLength:Int = vertices.length;
 		var currentVertexPosition:Int = 0;
@@ -179,6 +191,7 @@ class FlxBlitView extends FlxCameraView
 		var tempX:Float, tempY:Float;
 		var i:Int = 0;
 		var bounds = renderRect.set();
+		
 		drawVertices.splice(0, drawVertices.length);
 		
 		while (i < verticesLength)
@@ -221,7 +234,7 @@ class FlxBlitView extends FlxCameraView
 				gfx.clear();
 				gfx.lineStyle(1, FlxColor.BLUE, 0.5);
 				gfx.drawTriangles(drawVertices, indices);
-				camera.buffer.draw(FlxSpriteUtil.flashGfxSprite);
+				buffer.draw(FlxSpriteUtil.flashGfxSprite);
 			}
 			#end
 		}
@@ -233,8 +246,8 @@ class FlxBlitView extends FlxCameraView
 	{
 		if (flashSprite != null)
 		{
-			flashSprite.x = camera.x * FlxG.scaleMode.scale.x + camera._flashOffset.x;
-			flashSprite.y = camera.y * FlxG.scaleMode.scale.y + camera._flashOffset.y;
+			flashSprite.x = camera.x * FlxG.scaleMode.scale.x + _flashOffset.x;
+			flashSprite.y = camera.y * FlxG.scaleMode.scale.y + _flashOffset.y;
 		}
 	}
 	
@@ -281,10 +294,10 @@ class FlxBlitView extends FlxCameraView
 			screen.pixels = buffer;
 			screen.origin.set();
 			_flashBitmap.bitmapData = buffer;
-			_flashRect.width = width;
-			_flashRect.height = height;
+			_flashRect.width = camera.width;
+			_flashRect.height = camera.height;
 			_fill = FlxDestroyUtil.dispose(_fill);
-			_fill = new BitmapData(width, height, true, FlxColor.TRANSPARENT);
+			_fill = new BitmapData(camera.width, camera.height, true, FlxColor.TRANSPARENT);
 			FlxG.bitmap.removeIfNoUse(oldBuffer);
 		}
 		
@@ -310,6 +323,18 @@ class FlxBlitView extends FlxCameraView
 		}
 	}
 	
+	override public function lock(useBufferLocking:Bool):Void 
+	{
+		checkResize();
+		if (useBufferLocking)
+		{
+			buffer.lock();
+		}
+		
+		fill(camera.bgColor, camera.useBgAlphaBlending);
+		screen.dirty = true;
+	}
+	
 	override public function offsetView(X:Float, Y:Float):Void 
 	{
 		flashSprite.x += X;
@@ -331,10 +356,41 @@ class FlxBlitView extends FlxCameraView
 	
 	override public function setAlpha(Alpha:Float):Float 
 	{
-		return _flashBitmap.alpha = Alpha;
+		return super.setAlpha(Alpha);
 	}
 	
-	override public function setAntialiasing(Antialiasing:Bool):Bool 
+	override public function unlock(useBufferLocking:Bool):Void 
+	{
+		if (useBufferLocking)
+		{
+			buffer.unlock();
+		}
+		
+		screen.dirty = true;
+	}
+	
+	override public function beginDrawDebug():Graphics 
+	{
+		FlxSpriteUtil.flashGfx.clear();
+		return FlxSpriteUtil.flashGfx;
+	}
+	
+	override public function endDrawDebug():Void 
+	{
+		buffer.draw(FlxSpriteUtil.flashGfxSprite);
+	}
+	
+	override public function setAngle(Angle:Float):Float 
+	{
+		if (flashSprite != null)
+		{
+			flashSprite.rotation = Angle;
+		}
+		
+		return Angle;
+	}
+	
+	override public function set_antialiasing(Antialiasing:Bool):Bool 
 	{
 		return _flashBitmap.smoothing = Antialiasing;
 	}

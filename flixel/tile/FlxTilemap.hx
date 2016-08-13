@@ -20,6 +20,7 @@ import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxShader;
 import flixel.system.FlxAssets.FlxTilemapGraphicAsset;
+import flixel.system.render.tilesheet.FlxTilesheetView;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
@@ -375,7 +376,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 					}
 					
 					// Copied from makeDebugTile
-					var gfx:Graphics = Camera.debugLayer.graphics;
+					var gfx:Graphics = Camera.beginDrawDebug();
 					gfx.lineStyle(1, debugColor, 0.5);
 					gfx.drawRect(drawX, drawY, rectWidth, rectHeight);
 				}
@@ -821,7 +822,8 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 			scaledHeight = _scaledTileHeight;
 			
 			var hasColorOffsets:Bool = (colorTransform != null && colorTransform.hasRGBAOffsets());
-			drawItem = Camera.startQuadBatch(graphic, isColored, hasColorOffsets, blend, antialiasing, shader);
+			// TODO: avoid this casting operation somehow...
+			drawItem = cast(Camera.view, FlxTilesheetView).startQuadBatch(graphic, isColored, hasColorOffsets, blend, antialiasing, shader);
 		}
 		
 		// Copy tile images into the tile buffer

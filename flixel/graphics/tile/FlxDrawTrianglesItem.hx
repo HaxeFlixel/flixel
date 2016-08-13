@@ -6,6 +6,7 @@ import flixel.graphics.tile.FlxDrawBaseItem.FlxDrawItemType;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
+import flixel.system.render.tilesheet.FlxTilesheetView;
 import flixel.util.FlxColor;
 import openfl.display.Graphics;
 import openfl.display.TriangleCulling;
@@ -40,7 +41,7 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		type = FlxDrawItemType.TRIANGLES;
 	}
 	
-	override public function render(camera:FlxCamera):Void 
+	override public function render(view:FlxTilesheetView):Void 
 	{
 		if (!FlxG.renderTile)
 			return;
@@ -48,17 +49,17 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		if (numTriangles <= 0)
 			return;
 		
-		camera.canvas.graphics.beginBitmapFill(graphics.bitmap, null, true, (camera.antialiasing || antialiasing));
+		view.canvas.graphics.beginBitmapFill(graphics.bitmap, null, true, (view.antialiasing || antialiasing));
 		#if !openfl_legacy
-		camera.canvas.graphics.drawTriangles(vertices, indices, uvtData, TriangleCulling.NONE);
+		view.canvas.graphics.drawTriangles(vertices, indices, uvtData, TriangleCulling.NONE);
 		#else
-		camera.canvas.graphics.drawTriangles(vertices, indices, uvtData, TriangleCulling.NONE, (colored) ? colors : null, blending);
+		view.canvas.graphics.drawTriangles(vertices, indices, uvtData, TriangleCulling.NONE, (colored) ? colors : null, blending);
 		#end
-		camera.canvas.graphics.endFill();
+		view.canvas.graphics.endFill();
 		#if FLX_DEBUG
 		if (FlxG.debugger.drawDebug)
 		{
-			var gfx:Graphics = camera.debugLayer.graphics;
+			var gfx:Graphics = view.debugLayer.graphics;
 			gfx.lineStyle(1, FlxColor.BLUE, 0.5);
 			gfx.drawTriangles(vertices, indices);
 		}
