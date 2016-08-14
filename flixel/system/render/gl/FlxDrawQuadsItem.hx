@@ -1,5 +1,7 @@
 package flixel.system.render.gl;
 
+import flixel.system.render.FlxDrawBaseItem;
+
 /**
  * ...
  * @author Zaphod

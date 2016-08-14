@@ -1,4 +1,4 @@
-package flixel.system.render.tile;
+package flixel.system.render;
 
 import flixel.FlxCamera;
 import flixel.graphics.FlxGraphic;
@@ -6,10 +6,13 @@ import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxMatrix;
 import flixel.system.FlxAssets.FlxShader;
 import flixel.system.render.DrawItem.FlxDrawItemType;
-import flixel.system.render.tile.FlxTilesheetView;
+import flixel.system.render.DrawItem.FlxHardwareView;
 import openfl.display.BlendMode;
-import openfl.display.Tilesheet;
 import openfl.geom.ColorTransform;
+
+#if (openfl < "4.0.0")
+import openfl.display.Tilesheet;
+#end
 
 /**
  * ...
@@ -17,6 +20,7 @@ import openfl.geom.ColorTransform;
  */
 class FlxDrawBaseItem<T>
 {
+	#if (openfl < "4.0.0")
 	public static function blendToInt(blend:BlendMode):Int
 	{
 		if (blend == null)
@@ -52,6 +56,7 @@ class FlxDrawBaseItem<T>
 				Tilesheet.TILE_BLEND_NORMAL;
 		}
 	}
+	#end
 	
 	public var nextTyped:T;
 	
@@ -89,7 +94,7 @@ class FlxDrawBaseItem<T>
 		nextTyped = null;
 	}
 	
-	public function render(view:FlxTilesheetView):Void {}
+	public function render(view:FlxHardwareView):Void {}
 	
 	public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform):Void {}
 	

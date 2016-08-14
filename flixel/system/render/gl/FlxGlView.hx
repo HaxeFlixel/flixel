@@ -13,12 +13,13 @@ import openfl.geom.Matrix;
  */
 class FlxGlView extends FlxCameraView
 {
+	public var drawStack:FlxDrawStack;
 	
 	public function new(camera:FlxCamera) 
 	{
 		super(camera);
 		
-		
+		drawStack = new FlxDrawStack(this);
 	}
 	
 	@:noCompletion
