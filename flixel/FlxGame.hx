@@ -7,7 +7,7 @@ import flash.display.StageScaleMode;
 import flash.events.Event;
 import flash.events.FocusEvent;
 import flixel.effects.postprocess.PostProcess;
-import flixel.graphics.tile.FlxTilesheet;
+import flixel.system.render.FlxCameraView;
 import flixel.math.FlxRandom;
 import flixel.system.FlxSplash;
 import flixel.system.replay.FlxReplay;
@@ -858,7 +858,7 @@ class FlxGame extends Sprite
 		
 		if (FlxG.renderTile)
 		{
-			FlxTilesheet._DRAWCALLS = 0;
+			FlxCameraView._DRAWCALLS = 0;
 		}
 		
 		#if FLX_POST_PROCESS
@@ -879,7 +879,7 @@ class FlxGame extends Sprite
 			FlxG.cameras.render();
 			
 			#if FLX_DEBUG
-			debugger.stats.drawCalls(FlxTilesheet._DRAWCALLS);
+			debugger.stats.drawCalls(FlxCameraView._DRAWCALLS);
 			#end
 		}
 	

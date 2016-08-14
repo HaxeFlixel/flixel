@@ -3,8 +3,8 @@ package flixel.system.render.blit;
 import flixel.FlxCamera;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame;
-import flixel.graphics.tile.FlxDrawTrianglesItem;
-import flixel.graphics.tile.FlxDrawTrianglesItem.DrawData;
+import flixel.system.render.DrawItem.FlxDrawTrianglesItem;
+import flixel.system.render.DrawItem.DrawData;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
@@ -12,6 +12,7 @@ import flixel.system.FlxAssets.FlxShader;
 import flixel.system.render.FlxCameraView;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
+import flixel.util.FlxGeom;
 import flixel.util.FlxSpriteUtil;
 import openfl.Vector;
 import openfl.display.Bitmap;
@@ -208,7 +209,7 @@ class FlxBlitView extends FlxCameraView
 			}
 			else
 			{
-				FlxDrawTrianglesItem.inflateBounds(bounds, tempX, tempY);
+				FlxGeom.inflateBounds(bounds, tempX, tempY);
 			}
 			
 			i += 2;
@@ -321,6 +322,12 @@ class FlxBlitView extends FlxCameraView
 		{
 			buffer.fillRect(_flashRect, Color);
 		}
+	}
+	
+	override public function drawFX(FxColor:FlxColor, FxAlpha:Float = 1.0):Void 
+	{
+		var alphaComponent:Float = FxColor.alpha;
+		fill((Std.int(((alphaComponent <= 0) ? 0xff : alphaComponent) * FxAlpha) << 24) + (FxColor & 0x00ffffff));
 	}
 	
 	override public function lock(useBufferLocking:Bool):Void 

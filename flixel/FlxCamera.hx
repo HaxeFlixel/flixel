@@ -1,17 +1,12 @@
 package flixel;
 
-import flash.display.Bitmap;
 import flash.display.BitmapData;
-import flash.display.Graphics;
-import flash.display.Sprite;
 import flash.geom.ColorTransform;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame;
-import flixel.graphics.tile.FlxDrawBaseItem;
-import flixel.graphics.tile.FlxDrawTilesItem;
-import flixel.graphics.tile.FlxDrawTrianglesItem;
+import flixel.system.render.DrawItem.DrawData;
 import flixel.math.FlxMath;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
@@ -19,16 +14,16 @@ import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxShader;
 import flixel.system.render.FlxCameraView;
 import flixel.system.render.blit.FlxBlitView;
-import flixel.system.render.tilesheet.FlxTilesheetView;
 import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
 import openfl.display.BlendMode;
+import openfl.display.Graphics;
 import openfl.filters.BitmapFilter;
 import openfl.geom.Matrix;
-import openfl.Vector;
-using flixel.util.FlxColorTransformUtil;
+
+typedef HardwareView = #if (openfl >= "4.0.0") flixel.system.render.gl.FlxHardwareView #else flixel.system.render.tile.FlxTilesheetView #end;
 
 /**
  * The camera class is used to display the game's visuals.
@@ -347,9 +342,7 @@ class FlxCamera extends FlxBasic
 		}
 		else
 		{
-			// TODO: add conditionals here
-			// to create Gl view as well (when its needed)
-			view = new FlxTilesheetView(this);
+			view = new HardwareView(this);
 		}
 		
 		pixelPerfectRender = FlxG.renderBlit;
@@ -884,40 +877,19 @@ class FlxCamera extends FlxBasic
 	@:allow(flixel.system.frontEnds.CameraFrontEnd)
 	private function drawFX():Void
 	{
-		var alphaComponent:Float;
-		
 		//Draw the "flash" special effect onto the buffer
 		if (_fxFlashAlpha > 0.0)
 		{
-			alphaComponent = _fxFlashColor.alpha;
-			
-			// TODO: continue from here...
-			//	fill(_fxFlashColor, true, _fxFlashAlpha);
-			if (FlxG.renderBlit)
-			{
-				fill((Std.int(((alphaComponent <= 0) ? 0xff : alphaComponent) * _fxFlashAlpha) << 24) + (_fxFlashColor & 0x00ffffff));
-			}
-			else
-			{
-				fill((_fxFlashColor & 0x00ffffff), true, ((alphaComponent <= 0) ? 0xff : alphaComponent) * _fxFlashAlpha / 255);
-			}
+			view.drawFX(_fxFlashColor, _fxFlashAlpha);
 		}
 		
 		//Draw the "fade" special effect onto the buffer
 		if (_fxFadeAlpha > 0.0)
 		{
-			alphaComponent = _fxFadeColor.alpha;
-			
-			if (FlxG.renderBlit)
-			{
-				fill((Std.int(((alphaComponent <= 0) ? 0xff : alphaComponent) * _fxFadeAlpha) << 24) + (_fxFadeColor & 0x00ffffff));
-			}
-			else
-			{
-				fill((_fxFadeColor & 0x00ffffff), true, ((alphaComponent <= 0) ? 0xff : alphaComponent) * _fxFadeAlpha / 255);
-			}
+			view.drawFX(_fxFadeColor, _fxFadeAlpha);
 		}
 		
+		//Shake the camera view
 		if ((_fxShakeOffset.x != 0) || (_fxShakeOffset.y != 0))
 		{
 			view.offsetView(_fxShakeOffset.x * FlxG.scaleMode.scale.x, _fxShakeOffset.y * FlxG.scaleMode.scale.y);

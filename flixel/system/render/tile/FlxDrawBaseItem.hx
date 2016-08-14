@@ -1,9 +1,11 @@
-package flixel.graphics.tile;
+package flixel.system.render.tile;
 
 import flixel.FlxCamera;
+import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxMatrix;
-import flixel.system.render.tilesheet.FlxTilesheetView;
+import flixel.system.render.DrawItem.FlxDrawItemType;
+import flixel.system.render.tile.FlxTilesheetView;
 import openfl.display.BlendMode;
 import openfl.display.Tilesheet;
 import openfl.geom.ColorTransform;
@@ -97,10 +99,4 @@ class FlxDrawBaseItem<T>
 	{
 		return 0;
 	}
-}
-
-enum FlxDrawItemType 
-{
-	TILES;
-	TRIANGLES;
 }

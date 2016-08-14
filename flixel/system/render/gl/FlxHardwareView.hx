@@ -6,7 +6,7 @@ import openfl.geom.Matrix;
  * ...
  * @author Zaphod
  */
-class FlxGlView extends FlxCameraView
+class FlxHardwareView extends FlxCameraView
 {
 	
 	public function new(camera:FlxCameraView) 

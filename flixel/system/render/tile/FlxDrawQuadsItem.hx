@@ -1,16 +1,17 @@
-package flixel.graphics.tile;
+package flixel.system.render.tile;
 
 import flixel.FlxCamera;
 import flixel.graphics.frames.FlxFrame;
-import flixel.graphics.tile.FlxDrawBaseItem.FlxDrawItemType;
+import flixel.system.render.DrawItem.FlxDrawItemType;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxShader;
-import flixel.system.render.tilesheet.FlxTilesheetView;
+import flixel.system.render.FlxCameraView;
+import flixel.system.render.tile.FlxTilesheetView;
 import openfl.display.Tilesheet;
 import openfl.geom.ColorTransform;
 
-class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
+class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 {
 	public var drawData:Array<Float> = [];
 	public var position:Int = 0;
@@ -101,7 +102,7 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 			#if (!openfl_legacy && openfl >= "3.3.9") shader, #end
 			position);
 		
-		FlxTilesheet._DRAWCALLS++;
+		FlxCameraView._DRAWCALLS++;
 	}
 	
 	private function get_numTiles():Int

@@ -2,7 +2,7 @@ package flixel.system.render;
 import flixel.FlxCamera;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame;
-import flixel.graphics.tile.FlxDrawTrianglesItem.DrawData;
+import flixel.system.render.DrawItem.DrawData;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
@@ -26,6 +26,11 @@ import openfl.geom.Rectangle;
  */
 class FlxCameraView implements IFlxDestroyable
 {
+	/**
+	 * Tracks total number of drawTiles() calls made each frame.
+	 */
+	public static var _DRAWCALLS:Int = 0;
+	
 	public var display(get, null):DisplayObject;
 	
 	public var camera(default, null):FlxCamera;

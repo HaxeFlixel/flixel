@@ -1,19 +1,19 @@
-package flixel.graphics.tile;
+package flixel.system.render.tile;
 
 import flixel.FlxCamera;
 import flixel.graphics.frames.FlxFrame;
-import flixel.graphics.tile.FlxDrawBaseItem.FlxDrawItemType;
+import flixel.system.render.DrawItem.FlxDrawItemType;
+import flixel.system.render.DrawItem.DrawData;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
-import flixel.system.render.tilesheet.FlxTilesheetView;
+import flixel.system.render.FlxCameraView;
+import flixel.system.render.tile.FlxTilesheetView;
 import flixel.util.FlxColor;
+import flixel.util.FlxGeom;
 import openfl.display.Graphics;
 import openfl.display.TriangleCulling;
 import openfl.geom.ColorTransform;
-import openfl.Vector;
-
-typedef DrawData<T> = #if flash Vector<T> #else Array<T> #end;
 
 /**
  * ...
@@ -65,7 +65,7 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		}
 		#end
 		
-		FlxTilesheet._DRAWCALLS++;
+		FlxCameraView._DRAWCALLS++;
 	}
 	
 	override public function reset():Void 
@@ -126,7 +126,7 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 			}
 			else
 			{
-				inflateBounds(bounds, tempX, tempY);
+				FlxGeom.inflateBounds(bounds, tempX, tempY);
 			}
 			
 			i += 2;
@@ -166,33 +166,6 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		
 		position.putWeak();
 		cameraBounds.putWeak();
-	}
-	
-	public static inline function inflateBounds(bounds:FlxRect, x:Float, y:Float):FlxRect
-	{
-		if (x < bounds.x) 
-		{
-			bounds.width += bounds.x - x;
-			bounds.x = x;
-		}
-		
-		if (y < bounds.y) 
-		{
-			bounds.height += bounds.y - y;
-			bounds.y = y;
-		}
-		
-		if (x > bounds.x + bounds.width) 
-		{
-			bounds.width = x - bounds.x;
-		}
-		
-		if (y > bounds.y + bounds.height) 
-		{
-			bounds.height = y - bounds.y;
-		}
-		
-		return bounds;
 	}
 	
 	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform):Void
