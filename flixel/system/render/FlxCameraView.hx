@@ -54,7 +54,10 @@ class FlxCameraView implements IFlxDestroyable
 	/**
 	 * Helper rect for drawTriangles visibility checks
 	 */
+	@:allow(flixel.system.render)
 	private var _bounds:FlxRect = FlxRect.get();
+	
+	public var bounds(get, null):FlxRect;
 	
 	public function new(camera:FlxCamera) 
 	{
@@ -176,6 +179,8 @@ class FlxCameraView implements IFlxDestroyable
 		
 	}
 	
+	// TODO: convert setMethods to properties...
+	
 	public function setColor(Color:FlxColor):FlxColor
 	{
 		return Color;
@@ -209,6 +214,12 @@ class FlxCameraView implements IFlxDestroyable
 	private function get_display():DisplayObject
 	{
 		return null;
+	}
+	
+	private function get_bounds():FlxRect
+	{
+		_bounds.set(0, 0, camera.width, camera.height);
+		return _bounds;
 	}
 	
 }

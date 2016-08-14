@@ -1,7 +1,9 @@
 package flixel.system.render.tile;
 
 import flixel.FlxCamera;
+import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame;
+import flixel.system.FlxAssets.FlxShader;
 import flixel.system.render.DrawItem.FlxDrawItemType;
 import flixel.system.render.DrawItem.DrawData;
 import flixel.math.FlxMatrix;
@@ -11,6 +13,7 @@ import flixel.system.render.FlxCameraView;
 import flixel.system.render.tile.FlxTilesheetView;
 import flixel.util.FlxColor;
 import flixel.util.FlxGeom;
+import openfl.display.BlendMode;
 import openfl.display.Graphics;
 import openfl.display.TriangleCulling;
 import openfl.geom.ColorTransform;
@@ -90,6 +93,22 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		uvtData = null;
 		colors = null;
 		bounds = null;
+	}
+	
+	override public function equals(type:FlxDrawItemType, graphic:FlxGraphic, colored:Bool, hasColorOffsets:Bool = false,
+		?blend:BlendMode, smooth:Bool = false, ?shader:FlxShader):Bool
+	{
+		return (this.type == type 
+			&& this.graphics == graphic 
+			&& this.colored == colored
+			&& this.blending == blend
+			&& this.antialiasing == smooth);
+	}
+	
+	override public function set(graphic:FlxGraphic, colored:Bool, hasColorOffsets:Bool = false,
+		?blend:BlendMode, smooth:Bool = false, ?shader:FlxShader):Void
+	{
+		// TODO: implement and use it...
 	}
 	
 	public function addTriangles(vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, ?colors:DrawData<Int>, ?position:FlxPoint, ?cameraBounds:FlxRect):Void

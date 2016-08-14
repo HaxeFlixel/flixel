@@ -177,14 +177,14 @@ class FlxBlitView extends FlxCameraView
 		if (position == null)
 			position = renderPoint.set();
 		
-		_bounds.set(0, 0, camera.width, camera.height);
+		var viewBounds:FlxRect = this.bounds;
 		
 		var verticesLength:Int = vertices.length;
 		var currentVertexPosition:Int = 0;
 		
 		var tempX:Float, tempY:Float;
 		var i:Int = 0;
-		var bounds = renderRect.set();
+		var triBounds = renderRect.set();
 		
 		drawVertices.splice(0, drawVertices.length);
 		
@@ -198,11 +198,11 @@ class FlxBlitView extends FlxCameraView
 			
 			if (i == 0)
 			{
-				bounds.set(tempX, tempY, 0, 0);
+				triBounds.set(tempX, tempY, 0, 0);
 			}
 			else
 			{
-				FlxGeom.inflateBounds(bounds, tempX, tempY);
+				FlxGeom.inflateBounds(triBounds, tempX, tempY);
 			}
 			
 			i += 2;
@@ -210,7 +210,7 @@ class FlxBlitView extends FlxCameraView
 		
 		position.putWeak();
 		
-		if (!_bounds.overlaps(bounds))
+		if (!viewBounds.overlaps(triBounds))
 		{
 			drawVertices.splice(drawVertices.length - verticesLength, verticesLength);
 		}
@@ -233,7 +233,7 @@ class FlxBlitView extends FlxCameraView
 			#end
 		}
 		
-		bounds.put();
+		triBounds.put();
 	}
 	
 	override public function updatePosition():Void 

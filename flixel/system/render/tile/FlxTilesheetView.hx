@@ -5,6 +5,7 @@ import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame;
 import flixel.system.render.DrawItem.FlxDrawItemType;
 import flixel.system.render.DrawItem.DrawData;
+import flixel.system.render.FlxDrawStack;
 import flixel.system.render.tile.FlxDrawBaseItem;
 import flixel.system.render.tile.FlxDrawQuadsItem;
 import flixel.system.render.tile.FlxDrawTrianglesItem;
@@ -23,8 +24,6 @@ import openfl.geom.ColorTransform;
 import openfl.geom.Matrix;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
-
-using flixel.util.FlxColorTransformUtil;
 
 /**
  * ...
@@ -66,34 +65,7 @@ class FlxTilesheetView extends FlxCameraView
 	public var debugLayer:Sprite;
 	#end
 	
-	private var _helperMatrix:FlxMatrix = new FlxMatrix();
-	
-	/**
-	 * Currently used draw stack item
-	 */
-	private var _currentDrawItem:FlxDrawBaseItem<Dynamic>;
-	/**
-	 * Pointer to head of stack with draw items
-	 */
-	private var _headOfDrawStack:FlxDrawBaseItem<Dynamic>;
-	/**
-	 * Last draw tiles item
-	 */
-	private var _headTiles:FlxDrawQuadsItem;
-	/**
-	 * Last draw triangles item
-	 */
-	private var _headTriangles:FlxDrawTrianglesItem;
-	
-	/**
-	 * Draw tiles stack items that can be reused
-	 */
-	private static var _storageTilesHead:FlxDrawQuadsItem;
-	
-	/**
-	 * Draw triangles stack items that can be reused
-	 */
-	private static var _storageTrianglesHead:FlxDrawTrianglesItem;
+	public var drawStack:FlxDrawStack;
 	
 	public function new(camera:FlxCamera) 
 	{
@@ -109,6 +81,8 @@ class FlxTilesheetView extends FlxCameraView
 		debugLayer = new Sprite();
 		_scrollRect.addChild(debugLayer);
 		#end
+		
+		drawStack = new FlxDrawStack(this);
 	}
 	
 	override public function destroy():Void 
@@ -133,215 +107,34 @@ class FlxTilesheetView extends FlxCameraView
 			canvas = null;
 		}
 		
-		if (_headOfDrawStack != null)
-		{
-			clearDrawStack();
-		}
+		drawStack = FlxDestroyUtil.destroy(drawStack);
 		
-		_helperMatrix = null;
 		flashSprite = null;
 		_scrollRect = null;
 	}
 	
-	@:noCompletion
-	public function startQuadBatch(graphic:FlxGraphic, colored:Bool, hasColorOffsets:Bool = false,
-		?blend:BlendMode, smooth:Bool = false, ?shader:FlxShader)
-	{
-		#if FLX_RENDER_TRIANGLE
-		return startTrianglesBatch(graphic, smooth, colored, blend);
-		#else
-		var itemToReturn:FlxDrawQuadsItem = null;
-		
-		if (_currentDrawItem != null && _currentDrawItem.type == FlxDrawItemType.TILES 
-			&& _headTiles.graphics == graphic 
-			&& _headTiles.colored == colored
-			&& _headTiles.hasColorOffsets == hasColorOffsets
-			&& _headTiles.blending == blend
-			&& _headTiles.antialiasing == smooth
-			&& _headTiles.shader == shader)
-		{	
-			return _headTiles;
-		}
-		
-		if (_storageTilesHead != null)
-		{
-			itemToReturn = _storageTilesHead;
-			var newHead:FlxDrawQuadsItem = _storageTilesHead.nextTyped;
-			itemToReturn.reset();
-			_storageTilesHead = newHead;
-		}
-		else
-		{
-			itemToReturn = new FlxDrawQuadsItem();
-		}
-		
-		itemToReturn.graphics = graphic;
-		itemToReturn.antialiasing = smooth;
-		itemToReturn.colored = colored;
-		itemToReturn.hasColorOffsets = hasColorOffsets;
-		itemToReturn.blending = blend;
-		itemToReturn.shader = shader;
-		
-		itemToReturn.nextTyped = _headTiles;
-		_headTiles = itemToReturn;
-		
-		if (_headOfDrawStack == null)
-		{
-			_headOfDrawStack = itemToReturn;
-		}
-		
-		if (_currentDrawItem != null)
-		{
-			_currentDrawItem.next = itemToReturn;
-		}
-		
-		_currentDrawItem = itemToReturn;
-		
-		return itemToReturn;
-		#end
-	}
-	
-	@:noCompletion
-	public function startTrianglesBatch(graphic:FlxGraphic, smoothing:Bool = false,
-		isColored:Bool = false, ?blend:BlendMode):FlxDrawTrianglesItem
-	{
-		var itemToReturn:FlxDrawTrianglesItem = null;
-		
-		if (_currentDrawItem != null && _currentDrawItem.type == FlxDrawItemType.TRIANGLES 
-			&& _headTriangles.graphics == graphic 
-			&& _headTriangles.antialiasing == smoothing
-			&& _headTriangles.colored == isColored
-			&& _headTriangles.blending == blend)
-		{	
-			return _headTriangles;
-		}
-		
-		return getNewDrawTrianglesItem(graphic, smoothing, isColored, blend);
-	}
-	
-	@:noCompletion
-	public function getNewDrawTrianglesItem(graphic:FlxGraphic, smoothing:Bool = false,
-		isColored:Bool = false, ?blend:BlendMode):FlxDrawTrianglesItem
-	{
-		var itemToReturn:FlxDrawTrianglesItem = null;
-		
-		if (_storageTrianglesHead != null)
-		{
-			itemToReturn = _storageTrianglesHead;
-			var newHead:FlxDrawTrianglesItem = _storageTrianglesHead.nextTyped;
-			itemToReturn.reset();
-			_storageTrianglesHead = newHead;
-		}
-		else
-		{
-			itemToReturn = new FlxDrawTrianglesItem();
-		}
-		
-		itemToReturn.graphics = graphic;
-		itemToReturn.antialiasing = smoothing;
-		itemToReturn.colored = isColored;
-		itemToReturn.blending = blend;
-		
-		itemToReturn.nextTyped = _headTriangles;
-		_headTriangles = itemToReturn;
-		
-		if (_headOfDrawStack == null)
-		{
-			_headOfDrawStack = itemToReturn;
-		}
-		
-		if (_currentDrawItem != null)
-		{
-			_currentDrawItem.next = itemToReturn;
-		}
-		
-		_currentDrawItem = itemToReturn;
-		
-		return itemToReturn;
-	}
-	
-	@:allow(flixel.system.frontEnds.CameraFrontEnd)
-	private function clearDrawStack():Void
-	{	
-		var currTiles:FlxDrawQuadsItem = _headTiles;
-		var newTilesHead:FlxDrawQuadsItem;
-		
-		while (currTiles != null)
-		{
-			newTilesHead = currTiles.nextTyped;
-			currTiles.reset();
-			currTiles.nextTyped = _storageTilesHead;
-			_storageTilesHead = currTiles;
-			currTiles = newTilesHead;
-		}
-		
-		var currTriangles:FlxDrawTrianglesItem = _headTriangles;
-		var newTrianglesHead:FlxDrawTrianglesItem;
-		
-		while (currTriangles != null)
-		{
-			newTrianglesHead = currTriangles.nextTyped;
-			currTriangles.reset();
-			currTriangles.nextTyped = _storageTrianglesHead;
-			_storageTrianglesHead = currTriangles;
-			currTriangles = newTrianglesHead;
-		}
-		
-		_currentDrawItem = null;
-		_headOfDrawStack = null;
-		_headTiles = null;
-		_headTriangles = null;
-	}
-	
 	override private function render():Void
 	{
-		var currItem:FlxDrawBaseItem<Dynamic> = _headOfDrawStack;
-		while (currItem != null)
-		{
-			currItem.render(this);
-			currItem = currItem.next;
-		}
+		drawStack.render();
 	}
 	
 	override public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix,
 		?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false, ?shader:FlxShader):Void
 	{
-		var isColored = (transform != null && transform.hasRGBMultipliers());
-		var hasColorOffsets:Bool = (transform != null && transform.hasRGBAOffsets());
-		
-		#if FLX_RENDER_TRIANGLE
-		var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(frame.parent, smoothing, isColored, blend);
-		#else
-		var drawItem:FlxDrawQuadsItem = startQuadBatch(frame.parent, isColored, hasColorOffsets, blend, smoothing, shader);
-		#end
-		drawItem.addQuad(frame, matrix, transform);
+		drawStack.drawPixels(frame, pixels, matrix, transform, blend, smoothing, shader);
 	}
 	
 	override public function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle,
 		destPoint:Point, ?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false, ?shader:FlxShader):Void
 	{
-		_helperMatrix.identity();
-		_helperMatrix.translate(destPoint.x + frame.offset.x, destPoint.y + frame.offset.y);
-		
-		var isColored = (transform != null && transform.hasRGBMultipliers());
-		var hasColorOffsets:Bool = (transform != null && transform.hasRGBAOffsets());
-		
-		#if !FLX_RENDER_TRIANGLE
-		var drawItem:FlxDrawQuadsItem = startQuadBatch(frame.parent, isColored, hasColorOffsets, blend, smoothing, shader);
-		#else
-		var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(frame.parent, smoothing, isColored, blend);
-		#end
-		drawItem.addQuad(frame, _helperMatrix, transform);
+		drawStack.copyPixels(frame, pixels, sourceRect, destPoint, transform, blend, smoothing, shader);
 	}
 	
 	override public function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>,
 		uvtData:DrawData<Float>, ?colors:DrawData<Int>, ?position:FlxPoint, ?blend:BlendMode,
 		repeat:Bool = false, smoothing:Bool = false):Void
 	{
-		_bounds.set(0, 0, camera.width, camera.height);
-		var isColored:Bool = (colors != null && colors.length != 0);
-		var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(graphic, smoothing, isColored, blend);
-		drawItem.addTriangles(vertices, indices, uvtData, colors, position, _bounds);
+		drawStack.drawTriangles(graphic, vertices, indices, uvtData, colors, position, blend, repeat, smoothing);
 	}
 	
 	override public function updatePosition():Void 
@@ -419,7 +212,7 @@ class FlxTilesheetView extends FlxCameraView
 	
 	override public function lock(useBufferLocking:Bool):Void 
 	{
-		clearDrawStack();
+		drawStack.clearDrawStack();
 		canvas.graphics.clear();
 		// Clearing camera's debug sprite
 		#if FLX_DEBUG

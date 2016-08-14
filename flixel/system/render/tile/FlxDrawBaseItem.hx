@@ -4,6 +4,7 @@ import flixel.FlxCamera;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxMatrix;
+import flixel.system.FlxAssets.FlxShader;
 import flixel.system.render.DrawItem.FlxDrawItemType;
 import flixel.system.render.tile.FlxTilesheetView;
 import openfl.display.BlendMode;
@@ -91,6 +92,18 @@ class FlxDrawBaseItem<T>
 	public function render(view:FlxTilesheetView):Void {}
 	
 	public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform):Void {}
+	
+	public function equals(type:FlxDrawItemType, graphic:FlxGraphic, colored:Bool, hasColorOffsets:Bool = false,
+		?blend:BlendMode, smooth:Bool = false, ?shader:FlxShader):Bool
+	{
+		return false;
+	}
+	
+	public function set(graphic:FlxGraphic, colored:Bool, hasColorOffsets:Bool = false,
+		?blend:BlendMode, smooth:Bool = false, ?shader:FlxShader):Void
+	{
+		
+	}
 	
 	private function get_numVertices():Int
 	{

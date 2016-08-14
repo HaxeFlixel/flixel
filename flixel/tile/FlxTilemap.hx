@@ -824,7 +824,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 			var hasColorOffsets:Bool = (colorTransform != null && colorTransform.hasRGBAOffsets());
 			// TODO: avoid this casting operation somehow...
 			// TODO: fix this for openfl 4.0.0 and above...
-			drawItem = cast(Camera.view, FlxHardwareView).startQuadBatch(graphic, isColored, hasColorOffsets, blend, antialiasing, shader);
+			drawItem = cast(Camera.view, FlxHardwareView).drawStack.startQuadBatch(graphic, isColored, hasColorOffsets, blend, antialiasing, shader);
 		}
 		
 		// Copy tile images into the tile buffer

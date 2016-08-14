@@ -1,6 +1,7 @@
 package flixel.system.render.tile;
 
 import flixel.FlxCamera;
+import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame;
 import flixel.system.render.DrawItem.FlxDrawItemType;
 import flixel.math.FlxMatrix;
@@ -8,6 +9,7 @@ import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxShader;
 import flixel.system.render.FlxCameraView;
 import flixel.system.render.tile.FlxTilesheetView;
+import openfl.display.BlendMode;
 import openfl.display.Tilesheet;
 import openfl.geom.ColorTransform;
 
@@ -36,6 +38,24 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		super.dispose();
 		drawData = null;
 		shader = null;
+	}
+	
+	override public function equals(type:FlxDrawItemType, graphic:FlxGraphic, colored:Bool, hasColorOffsets:Bool = false,
+		?blend:BlendMode, smooth:Bool = false, ?shader:FlxShader):Bool
+	{
+		return (this.type == type 
+			&& this.graphics == graphic 
+			&& this.colored == colored
+			&& this.hasColorOffsets == hasColorOffsets
+			&& this.blending == blend
+			&& this.antialiasing == smooth
+			&& this.shader == shader);
+	}
+	
+	override public function set(graphic:FlxGraphic, colored:Bool, hasColorOffsets:Bool = false,
+		?blend:BlendMode, smooth:Bool = false, ?shader:FlxShader):Void
+	{
+		// TODO: implement and use it...
 	}
 	
 	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform):Void
