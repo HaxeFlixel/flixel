@@ -53,7 +53,7 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		#if !openfl_legacy
 		view.canvas.graphics.drawTriangles(vertices, indices, uvtData, TriangleCulling.NONE);
 		#else
-		view.canvas.graphics.drawTriangles(vertices, indices, uvtData, TriangleCulling.NONE, (colored) ? colors : null, blending);
+		view.canvas.graphics.drawTriangles(vertices, indices, uvtData, TriangleCulling.NONE, (colored) ? colors : null, FlxDrawBaseItem.blendToInt(blending));
 		#end
 		view.canvas.graphics.endFill();
 		#if FLX_DEBUG

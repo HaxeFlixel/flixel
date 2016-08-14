@@ -60,7 +60,7 @@ class FlxDrawBaseItem<T>
 	public var antialiasing:Bool = false;
 	public var colored:Bool = false;
 	public var hasColorOffsets:Bool = false;
-	public var blending:Int = 0;
+	public var blending:BlendMode = null;
 	
 	public var type:FlxDrawItemType;
 	
@@ -74,6 +74,7 @@ class FlxDrawBaseItem<T>
 	{
 		graphics = null;
 		antialiasing = false;
+		blending = null;
 		nextTyped = null;
 		next = null;
 	}
@@ -81,6 +82,7 @@ class FlxDrawBaseItem<T>
 	public function dispose():Void
 	{
 		graphics = null;
+		blending = null;
 		next = null;
 		type = null;
 		nextTyped = null;

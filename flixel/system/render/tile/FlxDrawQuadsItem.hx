@@ -95,7 +95,7 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 			flags |= Tilesheet.TILE_TRANS_COLOR;
 		#end
 		
-		flags |= blending;
+		flags |= FlxDrawBaseItem.blendToInt(blending);
 		
 		view.canvas.graphics.drawTiles(graphics.tilesheet, drawData,
 			(view.antialiasing || antialiasing), flags,

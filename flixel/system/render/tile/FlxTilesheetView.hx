@@ -158,13 +158,12 @@ class FlxTilesheetView extends FlxCameraView
 		return startTrianglesBatch(graphic, smooth, colored, blend);
 		#else
 		var itemToReturn:FlxDrawQuadsItem = null;
-		var blendInt:Int = FlxDrawBaseItem.blendToInt(blend);
 		
 		if (_currentDrawItem != null && _currentDrawItem.type == FlxDrawItemType.TILES 
 			&& _headTiles.graphics == graphic 
 			&& _headTiles.colored == colored
 			&& _headTiles.hasColorOffsets == hasColorOffsets
-			&& _headTiles.blending == blendInt
+			&& _headTiles.blending == blend
 			&& _headTiles.antialiasing == smooth
 			&& _headTiles.shader == shader)
 		{	
@@ -187,7 +186,7 @@ class FlxTilesheetView extends FlxCameraView
 		itemToReturn.antialiasing = smooth;
 		itemToReturn.colored = colored;
 		itemToReturn.hasColorOffsets = hasColorOffsets;
-		itemToReturn.blending = blendInt;
+		itemToReturn.blending = blend;
 		itemToReturn.shader = shader;
 		
 		itemToReturn.nextTyped = _headTiles;
@@ -214,13 +213,12 @@ class FlxTilesheetView extends FlxCameraView
 		isColored:Bool = false, ?blend:BlendMode):FlxDrawTrianglesItem
 	{
 		var itemToReturn:FlxDrawTrianglesItem = null;
-		var blendInt:Int = FlxDrawBaseItem.blendToInt(blend);
 		
 		if (_currentDrawItem != null && _currentDrawItem.type == FlxDrawItemType.TRIANGLES 
 			&& _headTriangles.graphics == graphic 
 			&& _headTriangles.antialiasing == smoothing
 			&& _headTriangles.colored == isColored
-			&& _headTriangles.blending == blendInt)
+			&& _headTriangles.blending == blend)
 		{	
 			return _headTriangles;
 		}
@@ -233,7 +231,6 @@ class FlxTilesheetView extends FlxCameraView
 		isColored:Bool = false, ?blend:BlendMode):FlxDrawTrianglesItem
 	{
 		var itemToReturn:FlxDrawTrianglesItem = null;
-		var blendInt:Int = FlxDrawBaseItem.blendToInt(blend);
 		
 		if (_storageTrianglesHead != null)
 		{
@@ -250,7 +247,7 @@ class FlxTilesheetView extends FlxCameraView
 		itemToReturn.graphics = graphic;
 		itemToReturn.antialiasing = smoothing;
 		itemToReturn.colored = isColored;
-		itemToReturn.blending = blendInt;
+		itemToReturn.blending = blend;
 		
 		itemToReturn.nextTyped = _headTriangles;
 		_headTriangles = itemToReturn;

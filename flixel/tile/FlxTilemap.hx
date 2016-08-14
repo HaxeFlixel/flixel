@@ -20,7 +20,7 @@ import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxShader;
 import flixel.system.FlxAssets.FlxTilemapGraphicAsset;
-import flixel.system.render.tile.FlxTilesheetView;
+import flixel.system.render.DrawItem.FlxHardwareView;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
@@ -823,7 +823,8 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 			
 			var hasColorOffsets:Bool = (colorTransform != null && colorTransform.hasRGBAOffsets());
 			// TODO: avoid this casting operation somehow...
-			drawItem = cast(Camera.view, FlxTilesheetView).startQuadBatch(graphic, isColored, hasColorOffsets, blend, antialiasing, shader);
+			// TODO: fix this for openfl 4.0.0 and above...
+			drawItem = cast(Camera.view, FlxHardwareView).startQuadBatch(graphic, isColored, hasColorOffsets, blend, antialiasing, shader);
 		}
 		
 		// Copy tile images into the tile buffer

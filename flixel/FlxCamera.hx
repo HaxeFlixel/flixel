@@ -23,7 +23,7 @@ import openfl.display.Graphics;
 import openfl.filters.BitmapFilter;
 import openfl.geom.Matrix;
 
-typedef HardwareView = #if (openfl >= "4.0.0") flixel.system.render.gl.FlxHardwareView #else flixel.system.render.tile.FlxTilesheetView #end;
+typedef HardwareView = #if (openfl >= "4.0.0") flixel.system.render.gl.FlxGlView #else flixel.system.render.tile.FlxTilesheetView #end;
 
 /**
  * The camera class is used to display the game's visuals.
