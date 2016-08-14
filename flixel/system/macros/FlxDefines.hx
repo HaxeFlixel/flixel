@@ -75,17 +75,6 @@ class FlxDefines
 				+' due to a compiler bug (#4343). Please use a different Haxe version.',
 				FlxMacroUtil.here());
 		#end
-		/*
-		#if (openfl >= "4.0.0")
-		abort('Flixel is currently incompatible with OpenFL 4.0.0 or above. ' +
-			'Please use version 3.6.1 or older.', FlxMacroUtil.here());
-		#end
-		
-		#if ((lime >= "3.0.0") || (tools >= "3.0.0"))
-		abort('Flixel is currently incompatible with Lime 3.0.0 or above. ' +
-			'Please use version 2.9.1 or older.', FlxMacroUtil.here());
-		#end
-		*/
 	}
 	
 	private static function checkDefines()
@@ -133,10 +122,15 @@ class FlxDefines
 		if (!defined(FLX_NO_SOUND_SYSTEM) && !defined(FLX_NO_SOUND_TRAY))
 			define(FLX_SOUND_TRAY);
 		
+		#if (openfl >= "4.0.0")
+		if (defined("flash11_8") || (defined("cpp") || defined("neko")))
+			define(FLX_GAMEINPUT_API);
+		#else
 		if ((defined("openfl_next") && !defined("flash")) || defined("flash11_8"))
 			define(FLX_GAMEINPUT_API);
 		else if (!defined("openfl_next") && (defined("cpp") || defined("neko")))
 			define(FLX_JOYSTICK_API);
+		#end
 		
 		if (!defined(FLX_NO_TOUCH) || !defined(FLX_NO_MOUSE))
 			define(FLX_POINTER_INPUT);
