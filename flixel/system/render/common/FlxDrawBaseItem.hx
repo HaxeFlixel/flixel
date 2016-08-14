@@ -67,6 +67,7 @@ class FlxDrawBaseItem<T>
 	public var colored:Bool = false;
 	public var hasColorOffsets:Bool = false;
 	public var blending:BlendMode = null;
+	public var shader:FlxShader;
 	
 	public var type:FlxDrawItemType;
 	
@@ -80,7 +81,10 @@ class FlxDrawBaseItem<T>
 	{
 		graphics = null;
 		antialiasing = false;
+		hasColorOffsets = false;
+		colored = false;
 		blending = null;
+		shader = null;
 		nextTyped = null;
 		next = null;
 	}
@@ -89,6 +93,7 @@ class FlxDrawBaseItem<T>
 	{
 		graphics = null;
 		blending = null;
+		shader = null;
 		next = null;
 		type = null;
 		nextTyped = null;
@@ -101,13 +106,24 @@ class FlxDrawBaseItem<T>
 	public function equals(type:FlxDrawItemType, graphic:FlxGraphic, colored:Bool, hasColorOffsets:Bool = false,
 		?blend:BlendMode, smooth:Bool = false, ?shader:FlxShader):Bool
 	{
-		return false;
+		return (this.type == type 
+			&& this.graphics == graphic 
+			&& this.colored == colored
+			&& this.hasColorOffsets == hasColorOffsets
+			&& this.blending == blend
+			&& this.antialiasing == smooth
+			&& this.shader == shader);
 	}
 	
 	public function set(graphic:FlxGraphic, colored:Bool, hasColorOffsets:Bool = false,
 		?blend:BlendMode, smooth:Bool = false, ?shader:FlxShader):Void
 	{
-		
+		this.graphics = graphic;
+		this.colored = colored;
+		this.hasColorOffsets = hasColorOffsets;
+		this.blending = blend;
+		this.antialiasing = smooth;
+		this.shader = shader;
 	}
 	
 	private function get_numVertices():Int

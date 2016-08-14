@@ -27,9 +27,6 @@ using flixel.util.FlxColorTransformUtil;
  */
 class FlxDrawStack implements IFlxDestroyable
 {
-
-	// TODO: use this class in FlxTilesheetView and FlxGlView
-	
 	/**
 	 * Currently used draw stack item
 	 */
@@ -125,24 +122,25 @@ class FlxDrawStack implements IFlxDestroyable
 		#end
 	}
 	
+	// TODO: add shader support for openfl 4.0.0 and later...
 	@:noCompletion
-	public function startTrianglesBatch(graphic:FlxGraphic, smoothing:Bool = false,
-		isColored:Bool = false, ?blend:BlendMode):FlxDrawTrianglesItem
+	public function startTrianglesBatch(graphic:FlxGraphic, smooth:Bool = false,
+		colored:Bool = false, ?blend:BlendMode, ?shader:FlxShader):FlxDrawTrianglesItem
 	{
 		var itemToReturn:FlxDrawTrianglesItem = null;
 		
 		if (_currentDrawItem != null && _currentDrawItem.type == FlxDrawItemType.TRIANGLES 
-			&& _headTriangles.equals(FlxDrawItemType.TRIANGLES, graphic, isColored, false, blend, smoothing))
+			&& _headTriangles.equals(FlxDrawItemType.TRIANGLES, graphic, colored, false, blend, smooth, shader))
 		{	
 			return _headTriangles;
 		}
 		
-		return getNewDrawTrianglesItem(graphic, smoothing, isColored, blend);
+		return getNewDrawTrianglesItem(graphic, smooth, colored, blend, shader);
 	}
 	
 	@:noCompletion
-	public function getNewDrawTrianglesItem(graphic:FlxGraphic, smoothing:Bool = false,
-		isColored:Bool = false, ?blend:BlendMode):FlxDrawTrianglesItem
+	public function getNewDrawTrianglesItem(graphic:FlxGraphic, smooth:Bool = false,
+		colored:Bool = false, ?blend:BlendMode, ?shader:FlxShader):FlxDrawTrianglesItem
 	{
 		var itemToReturn:FlxDrawTrianglesItem = null;
 		
@@ -158,7 +156,7 @@ class FlxDrawStack implements IFlxDestroyable
 			itemToReturn = new FlxDrawTrianglesItem();
 		}
 		
-		itemToReturn.set(graphic, isColored, false, blend, smoothing);
+		itemToReturn.set(graphic, colored, false, blend, smooth, shader);
 		
 		itemToReturn.nextTyped = _headTriangles;
 		_headTriangles = itemToReturn;

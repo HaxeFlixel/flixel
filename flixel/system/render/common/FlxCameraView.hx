@@ -80,86 +80,44 @@ class FlxCameraView implements IFlxDestroyable
 		_flashOffset.y = camera.height * 0.5 * FlxG.scaleMode.scale.y * camera.initialZoom;
 	}
 	
-	public function updatePosition():Void
-	{
-		
-	}
+	public function updatePosition():Void { }
 	
-	public function updateScrollRect():Void
-	{
-		
-	}
+	public function updateScrollRect():Void { }
 	
-	public function updateInternals():Void
-	{
-		
-	}
+	public function updateInternals():Void { }
 	
-	public function updateFilters():Void
-	{
-		
-	}
+	public function updateFilters():Void { }
 	
-	public function updateScale():Void
-	{
-		
-	}
+	public function updateScale():Void { }
 	
-	public function checkResize():Void
-	{
-		
-	}
+	public function checkResize():Void { }
 	
-	public function fill(Color:FlxColor, BlendAlpha:Bool = true, Alpha:Float = 1.0):Void
-	{
-		
-	}
+	public function fill(Color:FlxColor, BlendAlpha:Bool = true, Alpha:Float = 1.0):Void { }
 	
-	public function drawFX(FxColor:FlxColor, FxAlpha:Float = 1.0):Void
-	{
-		// TODO: use this methods for flashes and fading...
-	}
+	public function drawFX(FxColor:FlxColor, FxAlpha:Float = 1.0):Void { }
 	
-	public function lock(useBufferLocking:Bool):Void
-	{
-		
-	}
+	public function lock(useBufferLocking:Bool):Void { }
 	
-	public function unlock(useBufferLocking:Bool):Void
-	{
-		
-	}
+	public function unlock(useBufferLocking:Bool):Void { }
 	
-	public function clear():Void
-	{
-		
-	}
+	public function clear():Void { }
 	
-	public function offsetView(X:Float, Y:Float):Void
-	{
-		
-	}
+	public function offsetView(X:Float, Y:Float):Void { }
 	
-	public function setFilters(filters:Array<BitmapFilter>):Void
-	{
+	public function setFilters(filters:Array<BitmapFilter>):Void 
+	{ 
 		_filters = filters;
 	}
 	
 	@:allow(flixel.FlxCamera)
-	private function render():Void
-	{
-		
-	}
+	private function render():Void { }
 	
 	public function beginDrawDebug():Graphics
 	{
 		return null;
 	}
 	
-	public function endDrawDebug():Void
-	{
-		
-	}
+	public function endDrawDebug():Void { }
 	
 	public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix,
 		?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false, ?shader:FlxShader):Void

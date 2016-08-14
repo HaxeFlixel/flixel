@@ -19,8 +19,6 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 	public var drawData:Array<Float> = [];
 	public var position:Int = 0;
 	public var numTiles(get, never):Int;
-	// TODO: move this var to FlxDrawBaseItem...
-	public var shader:FlxShader;
 	
 	public function new() 
 	{
@@ -32,38 +30,12 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 	{
 		super.reset();
 		position = 0;
-		shader = null;
 	}
 	
 	override public function dispose():Void
 	{
 		super.dispose();
 		drawData = null;
-		shader = null;
-	}
-	
-	// TODO: add "base" subclasses for quad and triangle render items which would have equals() and set() methods...
-	override public function equals(type:FlxDrawItemType, graphic:FlxGraphic, colored:Bool, hasColorOffsets:Bool = false,
-		?blend:BlendMode, smooth:Bool = false, ?shader:FlxShader):Bool
-	{
-		return (this.type == type 
-			&& this.graphics == graphic 
-			&& this.colored == colored
-			&& this.hasColorOffsets == hasColorOffsets
-			&& this.blending == blend
-			&& this.antialiasing == smooth
-			&& this.shader == shader);
-	}
-	
-	override public function set(graphic:FlxGraphic, colored:Bool, hasColorOffsets:Bool = false,
-		?blend:BlendMode, smooth:Bool = false, ?shader:FlxShader):Void
-	{
-		this.graphics = graphic;
-		this.colored = colored;
-		this.hasColorOffsets = hasColorOffsets;
-		this.blending = blend;
-		this.antialiasing = smooth;
-		this.shader = shader;
 	}
 	
 	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform):Void
