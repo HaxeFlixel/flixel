@@ -7,7 +7,7 @@ import flash.display.StageScaleMode;
 import flash.events.Event;
 import flash.events.FocusEvent;
 import flixel.effects.postprocess.PostProcess;
-import flixel.system.render.FlxCameraView;
+import flixel.system.render.common.FlxCameraView;
 import flixel.math.FlxRandom;
 import flixel.system.FlxSplash;
 import flixel.system.replay.FlxReplay;

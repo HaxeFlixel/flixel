@@ -1,4 +1,4 @@
-package flixel.system.render;
+package flixel.system.render.common;
 
 import openfl.Vector;
 

@@ -3,7 +3,8 @@ package flixel.system.render.gl;
 import flixel.FlxCamera;
 import flixel.graphics.FlxGraphic;
 import flixel.system.FlxAssets.FlxShader;
-import flixel.system.render.FlxCameraView;
+import flixel.system.render.common.FlxCameraView;
+import flixel.system.render.common.FlxDrawStack;
 import openfl.display.BlendMode;
 import openfl.geom.Matrix;
 

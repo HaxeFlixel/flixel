@@ -3,11 +3,12 @@ package flixel.system.render.tile;
 import flixel.FlxCamera;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame;
-import flixel.system.render.DrawItem.FlxDrawItemType;
+import flixel.system.render.common.DrawItem.FlxDrawItemType;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxShader;
-import flixel.system.render.FlxCameraView;
+import flixel.system.render.common.FlxCameraView;
+import flixel.system.render.common.FlxDrawBaseItem;
 import flixel.system.render.tile.FlxTilesheetView;
 import openfl.display.BlendMode;
 import openfl.display.Tilesheet;
@@ -18,6 +19,7 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 	public var drawData:Array<Float> = [];
 	public var position:Int = 0;
 	public var numTiles(get, never):Int;
+	// TODO: move this var to FlxDrawBaseItem...
 	public var shader:FlxShader;
 	
 	public function new() 
@@ -40,6 +42,7 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		shader = null;
 	}
 	
+	// TODO: add "base" subclasses for quad and triangle render items which would have equals() and set() methods...
 	override public function equals(type:FlxDrawItemType, graphic:FlxGraphic, colored:Bool, hasColorOffsets:Bool = false,
 		?blend:BlendMode, smooth:Bool = false, ?shader:FlxShader):Bool
 	{

@@ -1,6 +1,5 @@
-package flixel.system.render.gl;
-
-import flixel.system.render.common.FlxDrawBaseItem;
+package flixel.system.render.common;
+import flixel.system.render.common.DrawItem.FlxDrawItemType;
 
 /**
  * ...
@@ -12,6 +11,7 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 	public function new() 
 	{
 		super();
+		type = FlxDrawItemType.TILES;
 	}
 	
 }

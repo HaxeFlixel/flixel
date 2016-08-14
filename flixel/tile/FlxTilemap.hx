@@ -20,12 +20,13 @@ import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxShader;
 import flixel.system.FlxAssets.FlxTilemapGraphicAsset;
-import flixel.system.render.DrawItem.FlxHardwareView;
+import flixel.system.render.common.DrawItem.FlxHardwareView;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
 import openfl.display.BlendMode;
 import openfl.geom.ColorTransform;
+
 using flixel.util.FlxColorTransformUtil;
 
 @:keep @:bitmap("assets/images/tile/autotiles.png")
