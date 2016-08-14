@@ -61,11 +61,6 @@ class FlxCameraView implements IFlxDestroyable
 		this.camera = camera;
 	}
 	
-	public function init():Void
-	{
-		
-	}
-	
 	public function destroy():Void
 	{
 		display = null;

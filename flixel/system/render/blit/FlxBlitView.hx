@@ -134,13 +134,6 @@ class FlxBlitView extends FlxCameraView
 		_fill = new BitmapData(camera.width, camera.height, true, FlxColor.TRANSPARENT);
 	}
 	
-	override public function init():Void 
-	{
-		super.init();
-		
-		
-	}
-	
 	override public function destroy():Void 
 	{
 		super.destroy();

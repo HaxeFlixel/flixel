@@ -111,13 +111,6 @@ class FlxTilesheetView extends FlxCameraView
 		#end
 	}
 	
-	override public function init():Void 
-	{
-		super.init();
-		
-		
-	}
-	
 	override public function destroy():Void 
 	{
 		super.destroy();
