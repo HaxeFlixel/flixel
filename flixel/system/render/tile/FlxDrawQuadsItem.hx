@@ -55,7 +55,12 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 	override public function set(graphic:FlxGraphic, colored:Bool, hasColorOffsets:Bool = false,
 		?blend:BlendMode, smooth:Bool = false, ?shader:FlxShader):Void
 	{
-		// TODO: implement and use it...
+		this.graphics = graphic;
+		this.colored = colored;
+		this.hasColorOffsets = hasColorOffsets;
+		this.blending = blend;
+		this.antialiasing = smooth;
+		this.shader = shader;
 	}
 	
 	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform):Void

@@ -87,12 +87,7 @@ class FlxDrawStack implements IFlxDestroyable
 		var itemToReturn:FlxDrawQuadsItem = null;
 		
 		if (_currentDrawItem != null && _currentDrawItem.type == FlxDrawItemType.TILES 
-			&& _headTiles.graphics == graphic 
-			&& _headTiles.colored == colored
-			&& _headTiles.hasColorOffsets == hasColorOffsets
-			&& _headTiles.blending == blend
-			&& _headTiles.antialiasing == smooth
-			&& _headTiles.shader == shader)
+			&& _headTiles.equals(FlxDrawItemType.TILES, graphic, colored, hasColorOffsets, blend, smooth, shader))
 		{	
 			return _headTiles;
 		}
@@ -109,12 +104,7 @@ class FlxDrawStack implements IFlxDestroyable
 			itemToReturn = new FlxDrawQuadsItem();
 		}
 		
-		itemToReturn.graphics = graphic;
-		itemToReturn.antialiasing = smooth;
-		itemToReturn.colored = colored;
-		itemToReturn.hasColorOffsets = hasColorOffsets;
-		itemToReturn.blending = blend;
-		itemToReturn.shader = shader;
+		itemToReturn.set(graphic, colored, hasColorOffsets, blend, smooth, shader);
 		
 		itemToReturn.nextTyped = _headTiles;
 		_headTiles = itemToReturn;
@@ -142,10 +132,7 @@ class FlxDrawStack implements IFlxDestroyable
 		var itemToReturn:FlxDrawTrianglesItem = null;
 		
 		if (_currentDrawItem != null && _currentDrawItem.type == FlxDrawItemType.TRIANGLES 
-			&& _headTriangles.graphics == graphic 
-			&& _headTriangles.antialiasing == smoothing
-			&& _headTriangles.colored == isColored
-			&& _headTriangles.blending == blend)
+			&& _headTriangles.equals(FlxDrawItemType.TRIANGLES, graphic, isColored, false, blend, smoothing))
 		{	
 			return _headTriangles;
 		}
@@ -171,10 +158,7 @@ class FlxDrawStack implements IFlxDestroyable
 			itemToReturn = new FlxDrawTrianglesItem();
 		}
 		
-		itemToReturn.graphics = graphic;
-		itemToReturn.antialiasing = smoothing;
-		itemToReturn.colored = isColored;
-		itemToReturn.blending = blend;
+		itemToReturn.set(graphic, isColored, false, blend, smoothing);
 		
 		itemToReturn.nextTyped = _headTriangles;
 		_headTriangles = itemToReturn;

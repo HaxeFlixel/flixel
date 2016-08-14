@@ -108,7 +108,10 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 	override public function set(graphic:FlxGraphic, colored:Bool, hasColorOffsets:Bool = false,
 		?blend:BlendMode, smooth:Bool = false, ?shader:FlxShader):Void
 	{
-		// TODO: implement and use it...
+		this.graphics = graphic;
+		this.colored = colored;
+		this.blending = blend;
+		this.antialiasing = smooth;
 	}
 	
 	public function addTriangles(vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, ?colors:DrawData<Int>, ?position:FlxPoint, ?cameraBounds:FlxRect):Void
