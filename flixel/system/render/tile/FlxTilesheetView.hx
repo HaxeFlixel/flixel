@@ -226,7 +226,7 @@ class FlxTilesheetView extends FlxCameraView
 		#end
 	}
 	
-	override public function setColor(Color:FlxColor):FlxColor 
+	override private function set_color(Color:FlxColor):FlxColor 
 	{
 		var colorTransform:ColorTransform = canvas.transform.colorTransform;
 		colorTransform.redMultiplier = Color.redFloat;
@@ -236,12 +236,12 @@ class FlxTilesheetView extends FlxCameraView
 		return Color;
 	}
 	
-	override public function setAlpha(Alpha:Float):Float 
+	override private function set_alpha(Alpha:Float):Float 
 	{
 		return canvas.alpha = Alpha;
 	}
 	
-	override public function setAngle(Angle:Float):Float 
+	override private function set_angle(Angle:Float):Float 
 	{
 		if (flashSprite != null)
 		{
@@ -251,7 +251,7 @@ class FlxTilesheetView extends FlxCameraView
 		return Angle;
 	}
 	
-	override public function setVisible(visible:Bool):Bool 
+	override private function set_visible(visible:Bool):Bool 
 	{
 		if (flashSprite != null)
 		{

@@ -1040,7 +1040,7 @@ class FlxCamera extends FlxBasic
 		alpha = FlxMath.bound(Alpha, 0, 1);
 		
 		if (view != null)
-			view.setAlpha(alpha);
+			view.alpha = alpha;
 		
 		return Alpha;
 	}
@@ -1050,7 +1050,7 @@ class FlxCamera extends FlxBasic
 		angle = Angle;
 		
 		if (view != null)
-			view.setAngle(Angle);
+			view.angle = Angle;
 		
 		return Angle;
 	}
@@ -1060,7 +1060,7 @@ class FlxCamera extends FlxBasic
 		color = Color;
 		
 		if (view != null)
-			view.setColor(color);
+			view.color = color;
 		
 		return Color;
 	}
@@ -1094,11 +1094,13 @@ class FlxCamera extends FlxBasic
 		this.visible = visible;
 		
 		if (view != null)
-			view.setVisible(visible);
+			view.visible = visible;
 		
 		return visible;
 	}
 }
+
+// TODO: convert this to class with camera behavior
 
 enum FlxCameraFollowStyle
 {

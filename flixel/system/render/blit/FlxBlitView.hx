@@ -341,7 +341,7 @@ class FlxBlitView extends FlxCameraView
 		flashSprite.y += Y;
 	}
 	
-	override public function setColor(Color:FlxColor):FlxColor 
+	override private function set_color(Color:FlxColor):FlxColor 
 	{
 		if (_flashBitmap == null)
 			return Color;
@@ -354,9 +354,15 @@ class FlxBlitView extends FlxCameraView
 		return Color;
 	}
 	
-	override public function setAlpha(Alpha:Float):Float 
+	override private function set_alpha(Alpha:Float):Float 
 	{
-		return super.setAlpha(Alpha);
+		if (_flashBitmap == null)
+			return Alpha;
+		
+		var colorTransform:ColorTransform = _flashBitmap.transform.colorTransform;
+		colorTransform.alphaMultiplier = Alpha;
+		_flashBitmap.transform.colorTransform = colorTransform;
+		return Alpha;
 	}
 	
 	override public function unlock(useBufferLocking:Bool):Void 
@@ -380,7 +386,7 @@ class FlxBlitView extends FlxCameraView
 		buffer.draw(FlxSpriteUtil.flashGfxSprite);
 	}
 	
-	override public function setAngle(Angle:Float):Float 
+	override private function set_angle(Angle:Float):Float 
 	{
 		if (flashSprite != null)
 		{
@@ -395,7 +401,7 @@ class FlxBlitView extends FlxCameraView
 		return _flashBitmap.smoothing = Antialiasing;
 	}
 	
-	override public function setVisible(visible:Bool):Bool 
+	override private function set_visible(visible:Bool):Bool 
 	{
 		if (flashSprite != null)
 		{

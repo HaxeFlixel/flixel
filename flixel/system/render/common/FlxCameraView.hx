@@ -38,6 +38,15 @@ class FlxCameraView implements IFlxDestroyable
 	
 	public var antialiasing(get, set):Bool;
 	
+	public var color(get, set):FlxColor;
+	
+	public var alpha(get, set):Float;
+	
+	public var visible(get, set):Bool;
+	
+	public var angle(get, set):Float;
+
+	
 	/**
 	 * Internal, used for positioning camera's flashSprite on screen.
 	 * Basically it represents position of camera's center point in game sprite.
@@ -138,14 +147,22 @@ class FlxCameraView implements IFlxDestroyable
 		
 	}
 	
-	// TODO: convert setMethods to properties...
+	private function get_color():FlxColor
+	{
+		return camera.color;
+	}
 	
-	public function setColor(Color:FlxColor):FlxColor
+	private function set_color(Color:FlxColor):FlxColor
 	{
 		return Color;
 	}
 	
-	public function setAlpha(Alpha:Float):Float
+	private function get_alpha():Float
+	{
+		return camera.alpha;
+	}
+	
+	private function set_alpha(Alpha:Float):Float
 	{
 		return Alpha;
 	}
@@ -160,12 +177,22 @@ class FlxCameraView implements IFlxDestroyable
 		return camera.antialiasing;
 	}
 	
-	public function setVisible(visible:Bool):Bool
+	private function get_visible():Bool
+	{
+		return camera.visible;
+	}
+	
+	private function set_visible(visible:Bool):Bool
 	{
 		return visible;
 	}
+		
+	private function get_angle():Float
+	{
+		return camera.angle;
+	}
 	
-	public function setAngle(Angle:Float):Float
+	private function set_angle(Angle:Float):Float
 	{
 		return Angle;
 	}
