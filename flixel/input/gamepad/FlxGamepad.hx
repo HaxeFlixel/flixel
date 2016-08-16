@@ -142,7 +142,17 @@ class FlxGamepad implements IFlxDestroyable
 		pointer = new FlxGamepadPointerValueList(this);
 		
 		if (Model == null)
-			Model = XINPUT;
+		{
+			#if vita
+				Model = PSVITA;
+			#elseif ps4
+				Model = PS4;
+			#elseif xbox1
+				Model = XINPUT;
+			#else
+				Model = XINPUT;
+			#end
+		}
 			
 		if (Attachment == null)
 			Attachment = NONE;
