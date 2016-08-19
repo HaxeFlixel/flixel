@@ -274,7 +274,7 @@ class FlxSound extends FlxBasic
 	}
 	
 	/**
-	 * One of two main setup functions for sounds, this function loads a sound from an embedded MP3.
+	 * One of the main setup functions for sounds, this function loads a sound from an embedded MP3.
 	 * 
 	 * @param	EmbeddedSound	An embedded Class object representing an MP3 file.
 	 * @param	Looped			Whether or not this sound should loop endlessly.
@@ -318,9 +318,9 @@ class FlxSound extends FlxBasic
 	}
 	
 	/**
-	 * One of two main setup functions for sounds, this function loads a sound from a URL.
+	 * One of the main setup functions for sounds, this function loads a sound from a URL.
 	 * 
-	 * @param	EmbeddedSound	A string representing the URL of the MP3 file you want to play.
+	 * @param	SoundURL		A string representing the URL of the MP3 file you want to play.
 	 * @param	Looped			Whether or not this sound should loop endlessly.
 	 * @param	AutoDestroy		Whether or not this FlxSound instance should be destroyed when the sound finishes playing.
 	 * 							Default value is false, but `FlxG.sound.play()` and `FlxG.sound.stream()` will set it to true by default.
