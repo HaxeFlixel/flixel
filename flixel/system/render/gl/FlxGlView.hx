@@ -50,6 +50,12 @@ class FlxGlView extends FlxCameraView
 		drawStack.render();
 	}
 	
+	override public function lock(useBufferLocking:Bool):Void 
+	{
+		drawStack.clearDrawStack();
+		renderView.clear();
+	}
+	
 	override function get_display():DisplayObject 
 	{
 		return renderView;

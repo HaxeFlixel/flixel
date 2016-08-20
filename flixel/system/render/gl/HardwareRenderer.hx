@@ -151,6 +151,9 @@ class HardwareRenderer extends DisplayObject
 		var i:Int = 0;
 		var offset:Int;
 		
+		// TODO: reset stateNum also...
+		trace(stateNum);
+		
 		while (i < stateNum)
 		{
 			var state:FlxDrawQuadsItem = states[i];
