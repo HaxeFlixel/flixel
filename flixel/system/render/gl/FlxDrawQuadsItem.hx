@@ -33,7 +33,7 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 	
 	public var indexBufferDirty:Bool;
 	public var vertexBufferDirty:Bool;
-	  
+	
 	/** Current amount of filled data in tiles. */
 	public var bufferOffset:Int;
 	/** Overall buffer size */
@@ -44,7 +44,6 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 	public function new() 
 	{
 		super();
-		type = FlxDrawItemType.TILES;
 	}
 	
 	override public function dispose():Void 
@@ -130,7 +129,6 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		fillTint();
 		
 		bufferOffset++;
-	//	state.count++;
 		indexCount += 6;
 		vertexBufferDirty = true;
 	}
@@ -175,6 +173,17 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 			
 			fillIndexBuffer();
 		}
+	}
+	
+	override public function equals(type:FlxDrawItemType, graphic:FlxGraphic, colored:Bool, hasColorOffsets:Bool = false,
+		?blend:BlendMode, smooth:Bool = false, ?shader:FlxShader):Bool
+	{
+		return (this.graphics == graphic 
+			&& this.colored == colored
+			&& this.hasColorOffsets == hasColorOffsets
+			&& this.blending == blend
+			&& this.antialiasing == smooth
+			&& this.shader == shader);
 	}
 
 	private inline function fillIndexBuffer():Void

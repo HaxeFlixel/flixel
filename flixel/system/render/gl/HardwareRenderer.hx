@@ -149,10 +149,8 @@ class HardwareRenderer extends DisplayObject
 		var texture:BitmapData = null;
 		
 		var i:Int = 0;
-		var offset:Int;
 		
 		// TODO: reset stateNum also...
-		trace(stateNum);
 		
 		while (i < stateNum)
 		{
@@ -168,6 +166,20 @@ class HardwareRenderer extends DisplayObject
 			{
 				texture = state.graphics.bitmap;
 				gl.bindTexture(gl.TEXTURE_2D, texture.getTexture(gl));
+			}
+			
+			if (texture != null)
+			{
+				if (state.antialiasing) 
+				{
+					gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+					gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);	
+				} 
+				else 
+				{
+					gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+					gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+				}
 			}
 			
 			if (state.glBuffer == null)

@@ -51,15 +51,15 @@ class TileShader extends Shader
 			
 			void main(void) 
 			{
-				vec4 color = texture2D (uImage0, vTexCoord);
+				vec4 color = texture2D(uImage0, vTexCoord);
 				
 				if (color.a == 0.0) 
 				{
-					gl_FragColor = vec4 (0.0, 0.0, 0.0, 0.0);
+					gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);
 				} 
 				else 
 				{
-					gl_FragColor = vec4 (color.rgb / color.a, color.a * uAlpha) * vColor;
+					gl_FragColor = vec4(color.rgb / color.a, color.a * uAlpha) * vColor;
 				}
 			}";
 		

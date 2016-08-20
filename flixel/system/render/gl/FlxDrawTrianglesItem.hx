@@ -5,6 +5,8 @@ import flixel.math.FlxRect;
 import flixel.system.render.common.DrawItem.DrawData;
 import flixel.system.render.common.FlxDrawBaseItem;
 
+// TODO: make batching for triangle rendering switchable ON/OFF...
+
 /**
  * ...
  * @author Zaphod

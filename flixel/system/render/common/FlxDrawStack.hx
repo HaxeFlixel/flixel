@@ -83,8 +83,9 @@ class FlxDrawStack implements IFlxDestroyable
 		#else
 		var itemToReturn:FlxDrawQuadsItem = null;
 		
-		if (_currentDrawItem != null && _currentDrawItem.type == FlxDrawItemType.TILES 
-			&& _headTiles.equals(FlxDrawItemType.TILES, graphic, colored, hasColorOffsets, blend, smooth, shader))
+		// TODO: change this check. make it more universal, for both harware renderers (tiles and gl)...
+		if (_currentDrawItem != null /* && _currentDrawItem.type == FlxDrawItemType.TILES*/ 
+			&& _currentDrawItem.equals(FlxDrawItemType.TILES, graphic, colored, hasColorOffsets, blend, smooth, shader))
 		{	
 			return _headTiles;
 		}
@@ -129,7 +130,7 @@ class FlxDrawStack implements IFlxDestroyable
 	{
 		var itemToReturn:FlxDrawTrianglesItem = null;
 		
-		if (_currentDrawItem != null && _currentDrawItem.type == FlxDrawItemType.TRIANGLES 
+		if (_currentDrawItem != null /*&& _currentDrawItem.type == FlxDrawItemType.TRIANGLES*/ 
 			&& _headTriangles.equals(FlxDrawItemType.TRIANGLES, graphic, colored, false, blend, smooth, shader))
 		{	
 			return _headTriangles;
