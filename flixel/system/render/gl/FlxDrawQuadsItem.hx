@@ -1,5 +1,6 @@
 package flixel.system.render.gl;
 
+import flixel.math.FlxRect;
 import openfl.geom.ColorTransform;
 import flixel.system.render.common.DrawItem.FlxHardwareView;
 import flixel.math.FlxMatrix;
@@ -9,6 +10,10 @@ import flixel.system.render.common.FlxDrawBaseItem;
 import lime.graphics.opengl.GLBuffer;
 import lime.utils.Float32Array;
 import lime.utils.UInt32Array;
+
+#if !display
+import openfl._internal.renderer.RenderSession;
+#end
 
 /**
  * ...
@@ -30,6 +35,8 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 	/** Overall buffer size */
 	public var bufferSize:Int;
 	
+	public var indexCount:Int = 0;
+	
 	public function new() 
 	{
 		super();
@@ -40,55 +47,21 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		super.dispose();
 	}
 	
-	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform):Void 
+	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform):Void
 	{
-		/*
-		if (smooth == null) smooth = Atlas.smooth;
-		var matrix:Matrix = HXP.matrix;
-		matrix.identity();
-		matrix.scale(scaleX, scaleY);
-		matrix.rotate( -angle * HXP.RAD);
-		matrix.translate(x, y);
-		prepareTileMatrix(rect, layer, matrix.tx, matrix.ty, matrix.a, matrix.b, matrix.c, matrix.d, red, green, blue, alpha, smooth);
-		*/
-	}
-	
-	/**
-	 * Prepares a tile to be drawn using a matrix
-	 * @param  rect   The source rectangle to draw
-	 * @param  layer The layer to draw on
-	 * @param  tx    X-Axis translation
-	 * @param  ty    Y-Axis translation
-	 * @param  a     Top-left
-	 * @param  b     Top-right
-	 * @param  c     Bottom-left
-	 * @param  d     Bottom-right
-	 * @param  red   Red color value
-	 * @param  green Green color value
-	 * @param  blue  Blue color value
-	 * @param  alpha Alpha value
-	 */
-	public inline function prepareTileMatrix(rect:Rectangle, layer:Int,
-		tx:Float, ty:Float, a:Float, b:Float, c:Float, d:Float,
-		red:Float, green:Float, blue:Float, alpha:Float, ?smooth:Bool)
-	{
-		if (smooth == null) smooth = Atlas.smooth;
-		
-		var state:DrawState = DrawState.getDrawState(this, _texture, smooth, blend);
 		ensureElement();
 		
+		var rect:FlxRect = frame.frame;
+		var uv:FlxRect = frame.uv;
+		
 		var data:Float32Array = buffer;
-		var dataIndex:Int = bufferOffset * HardwareRenderer.TILE_SIZE;
+		var dataIndex:Int = bufferOffset * HardwareRenderer.ELEMENTS_PER_TILE;
 		
 		// UV
-		var uvx:Float = rect.x / _texture.width;
-		var uvy:Float = rect.y / _texture.height;
-		var uvx2:Float = rect.right / _texture.width;
-		var uvy2:Float = rect.bottom / _texture.height;
-		
-		// Transformed position
-		var matrix:Matrix = HXP.matrix;
-		matrix.setTo(a, b, c, d, tx, ty);
+		var uvx:Float = uv.x;
+		var uvy:Float = uv.y;
+		var uvx2:Float = uv.width;
+		var uvy2:Float = uv.height;
 		
 		// Position
 		var x :Float = matrix.__transformX(0, 0); // Top-left
@@ -100,21 +73,30 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		var x4:Float = matrix.__transformX(rect.width, rect.height); // Bottom-right
 		var y4:Float = matrix.__transformY(rect.width, rect.height);
 
-		// Set values
-		if (!isRGB)
-		{
-			red = 1;
-			green = 1;
-			blue = 1;
-		}
-		if (!isAlpha) alpha = 1;
+		var r:Float = 1.0;
+		var g:Float = 1.0;
+		var b:Float = 1.0;
+		var a:Float = 1.0;
 		
+		if (colored && transform != null)
+		{
+			if (colored)
+			{
+				r = transform.redMultiplier;
+				g = transform.greenMultiplier;
+				b = transform.blueMultiplier;
+			}
+			
+			a = transform.alphaMultiplier;
+		}
+		
+		// Set values
 		inline function fillTint():Void
 		{
-			data[dataIndex++] = red;
-			data[dataIndex++] = green;
-			data[dataIndex++] = blue;
-			data[dataIndex++] = alpha;
+			data[dataIndex++] = r;
+			data[dataIndex++] = g;
+			data[dataIndex++] = b;
+			data[dataIndex++] = a;
 		}
 		
 		// Triangle 1, top-left
@@ -143,13 +125,14 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		fillTint();
 		
 		bufferOffset++;
-		state.count++;
+	//	state.count++;
+		indexCount += 6;
 		vertexBufferDirty = true;
 	}
 	
 	override public function render(view:FlxHardwareView):Void 
 	{
-		
+		view.drawItem(this);
 	}
 	
 	override public function reset():Void 
@@ -157,6 +140,7 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		super.reset();
 		
 		bufferOffset = 0;
+		indexCount = 0;
 	}
 	
 	private function ensureElement():Void
@@ -164,7 +148,7 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		if (buffer == null)
 		{
 			bufferSize = HardwareRenderer.MINIMUM_TILE_COUNT_PER_BUFFER;
-			buffer = new Float32Array(HardwareRenderer.MINIMUM_TILE_COUNT_PER_BUFFER * HardwareRenderer.TILE_SIZE);
+			buffer = new Float32Array(HardwareRenderer.MINIMUM_TILE_COUNT_PER_BUFFER * HardwareRenderer.ELEMENTS_PER_TILE);
 			indexes = new UInt32Array(HardwareRenderer.MINIMUM_TILE_COUNT_PER_BUFFER * 6);
 			
 			fillIndexBuffer();
@@ -174,7 +158,7 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 			var oldBuffer:Float32Array = buffer;
 			
 			bufferSize += HardwareRenderer.MINIMUM_TILE_COUNT_PER_BUFFER;
-			buffer = new Float32Array(bufferSize * HardwareRenderer.TILE_SIZE);
+			buffer = new Float32Array(bufferSize * HardwareRenderer.ELEMENTS_PER_TILE);
 			indexes = new UInt32Array(bufferSize * 6);
 			
 			var i:Int = 0;
