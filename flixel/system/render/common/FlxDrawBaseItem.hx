@@ -115,7 +115,7 @@ class FlxDrawBaseItem<T>
 			&& this.shader == shader);
 	}
 	
-	public function set(graphic:FlxGraphic, colored:Bool, hasColorOffsets:Bool = false,
+	public inline function set(graphic:FlxGraphic, colored:Bool, hasColorOffsets:Bool = false,
 		?blend:BlendMode, smooth:Bool = false, ?shader:FlxShader):Void
 	{
 		this.graphics = graphic;

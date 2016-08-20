@@ -1,6 +1,10 @@
 package flixel.system.render.gl;
 
+import flixel.graphics.FlxGraphic;
 import flixel.math.FlxRect;
+import flixel.system.FlxAssets.FlxShader;
+import flixel.system.render.common.DrawItem.FlxDrawItemType;
+import openfl.display.BlendMode;
 import openfl.geom.ColorTransform;
 import flixel.system.render.common.DrawItem.FlxHardwareView;
 import flixel.math.FlxMatrix;
@@ -40,6 +44,7 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 	public function new() 
 	{
 		super();
+		type = FlxDrawItemType.TILES;
 	}
 	
 	override public function dispose():Void 
