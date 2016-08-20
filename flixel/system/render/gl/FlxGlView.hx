@@ -2,12 +2,18 @@ package flixel.system.render.gl;
 
 import flixel.FlxCamera;
 import flixel.graphics.FlxGraphic;
+import flixel.graphics.frames.FlxFrame;
+import flixel.math.FlxMatrix;
 import flixel.system.FlxAssets.FlxShader;
 import flixel.system.render.common.FlxCameraView;
 import flixel.system.render.common.FlxDrawStack;
+import openfl.display.BitmapData;
 import openfl.display.BlendMode;
 import openfl.display.DisplayObject;
+import openfl.geom.ColorTransform;
 import openfl.geom.Matrix;
+import openfl.geom.Point;
+import openfl.geom.Rectangle;
 
 /**
  * ...
@@ -27,11 +33,21 @@ class FlxGlView extends FlxCameraView
 		renderView = new HardwareRenderer(camera.width, camera.height);
 	}
 	
-	@:noCompletion
-	public function startQuadBatch(graphic:FlxGraphic, colored:Bool, hasColorOffsets:Bool = false,
-		?blend:BlendMode, smooth:Bool = false, ?shader:FlxShader)
+	override public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix,
+		?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false, ?shader:FlxShader):Void
 	{
-		return new FlxDrawQuadsItem();
+		drawStack.drawPixels(frame, pixels, matrix, transform, blend, smoothing, shader);
+	}
+	
+	override public function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle,
+		destPoint:Point, ?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false, ?shader:FlxShader):Void
+	{
+		drawStack.copyPixels(frame, pixels, sourceRect, destPoint, transform, blend, smoothing, shader);
+	}
+	
+	override private function render():Void
+	{
+		drawStack.render();
 	}
 	
 	override function get_display():DisplayObject 
