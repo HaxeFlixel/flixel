@@ -299,12 +299,13 @@ class FlxText extends FlxSprite
 			if (rule.marker != null && rule.format != null)
 			{
 				var start:Bool = false;
+				var markerLength:Int = Utf8.length(rule.marker);
 				if (input.indexOf(rule.marker) != -1)   //if this marker is present
 				{
 					for (charIndex in 0...Utf8.length(input))   //inspect each character
 					{
 						var charCode = Utf8.charCodeAt(input, charIndex);
-						if (charCode == rule.marker.charCodeAt(0))   //it's one of the markers
+						if (Utf8.compare(Utf8.sub(input, charIndex, markerLength), rule.marker) == 0)   //it's one of the markers
 						{
 							if (!start)   //we're outside of a format block
 							{ 
@@ -344,7 +345,7 @@ class FlxText extends FlxSprite
 			//Consider each range start
 			var delIndex:Int = rangeStarts[i];
 			
-			var markerLength:Int = rulesToApply[i].marker.length;
+			var markerLength:Int = Utf8.length(rulesToApply[i].marker);
 			
 			//Any start or end index that is HIGHER than this must be subtracted by one markerLength
 			for (j in 0...rangeStarts.length)
