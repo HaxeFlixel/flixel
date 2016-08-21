@@ -2,6 +2,7 @@ package flixel.system.debug.interaction.tools;
 
 import flash.display.BitmapData;
 import flash.ui.Keyboard;
+import flixel.FlxObject;
 import flixel.math.FlxPoint;
 import flixel.system.debug.interaction.Interaction;
 
@@ -15,16 +16,15 @@ class GraphicMoverTool extends BitmapData {}
  */
 class Mover extends Tool
 {		
-	private var _dragging:Bool;
+	private var _dragging:Bool = false;
 	private var _lastCursorPosition:FlxPoint;
 	
-	override public function init(Brain:Interaction):Tool 
+	override public function init(brain:Interaction):Tool 
 	{
-		super.init(Brain);
-		_dragging = false;
-		_lastCursorPosition = new FlxPoint(Brain.flixelPointer.x, Brain.flixelPointer.x);
+		super.init(brain);
+		_lastCursorPosition = new FlxPoint(brain.flixelPointer.x, brain.flixelPointer.x);
 
-		setName("Mover");
+		_name = "Mover";
 		setButton(GraphicMoverTool);
 		setCursor(new GraphicMoverTool(0, 0));
 
@@ -33,62 +33,37 @@ class Mover extends Tool
 	
 	override public function update():Void 
 	{
-		var brain :Interaction = getBrain();
-		
-		super.update();
-		
-		if (!isActive() && !brain.keyPressed(Keyboard.SHIFT))
-		{
-			// Tool is not active nor its hotkey is pressed.
-			// Nothing to do here.
+		// Is the tool active or its hotkey pressed?
+		if (!isActive() && !_brain.keyPressed(Keyboard.SHIFT))
 			return;
-		}
 		
-		if (brain.pointerPressed && !_dragging)
-		{
-			startDragging();
-		}
-		else if (brain.pointerPressed && _dragging)
-		{
+		if (_brain.pointerPressed && !_dragging)
+			_dragging = true;	
+		else if (_brain.pointerPressed && _dragging)
 			doDragging();
-		}
-		else if (brain.pointerJustReleased)
-		{
-			stopDragging();
-		}
+		else if (_brain.pointerJustReleased)
+			_dragging = false;
 		
-		_lastCursorPosition.x = brain.flixelPointer.x;
-		_lastCursorPosition.y = brain.flixelPointer.y;
+		_lastCursorPosition.x = _brain.flixelPointer.x;
+		_lastCursorPosition.y = _brain.flixelPointer.y;
 	}
 	
 	private function doDragging():Void
 	{
-		var brain :Interaction = getBrain();
-		var i:Int = 0;
-		var members:Array<FlxBasic> = brain.getSelectedItems().members;
-		var l:Int = members.length;
-		var item:FlxObject;
-		var dx:Float = brain.flixelPointer.x - _lastCursorPosition.x;
-		var dy:Float = brain.flixelPointer.y - _lastCursorPosition.y;
+		var dx:Float = _brain.flixelPointer.x - _lastCursorPosition.x;
+		var dy:Float = _brain.flixelPointer.y - _lastCursorPosition.y;
 		
-		while (i < l)
+		for (member in _brain.selectedItems.members)
 		{
-			item = cast members[i++];
-			if (item != null)
+			if (!Std.is(member, FlxObject))
+				continue;
+
+			var object:FlxObject = cast member;
+			if (object != null)
 			{
-				item.x += dx;
-				item.y += dy;
+				object.x += dx;
+				object.y += dy;
 			}
 		}
-	}
-	
-	private function startDragging():Void
-	{
-		_dragging = true;	
-	}
-	
-	private function stopDragging():Void
-	{
-		_dragging = false;
 	}
 }

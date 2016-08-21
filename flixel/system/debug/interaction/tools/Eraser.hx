@@ -20,94 +20,65 @@ class Eraser extends Tool
 	override public function init(Brain:Interaction):Tool 
 	{
 		super.init(Brain);
-		setName("Eraser");
+		_name = "Eraser";
 		return this;
 	}
 	
 	override public function update():Void 
 	{
-		var brain:Interaction = getBrain();
-		
-		super.update();
-		
-		if (brain.keyJustPressed(Keyboard.DELETE))
-		{
-			doDeletion(brain.keyPressed(Keyboard.SHIFT));
-		}
+		if (_brain.keyJustPressed(Keyboard.DELETE))
+			doDeletion(_brain.keyPressed(Keyboard.SHIFT));
 	}
 	
 	override public function activate():Void 
 	{
-		super.activate();
-		doDeletion(getBrain().keyPressed(Keyboard.SHIFT));
+		doDeletion(_brain.keyPressed(Keyboard.SHIFT));
 		
 		// No need to stay active
 		_brain.setActiveTool(null);
 	}
 	
-	private function doDeletion(RemoveFromMemory:Bool):Void
+	private function doDeletion(remove:Bool):Void
 	{
-		var selectedItems :FlxGroup = getBrain().getSelectedItems();
-		
+		var selectedItems = _brain.selectedItems;
 		if (selectedItems != null)
 		{
-			findAndDelete(selectedItems, RemoveFromMemory);
+			findAndDelete(selectedItems, remove);
 			selectedItems.clear();
 		}
 	}
 	
-	private function findAndDelete(Items:FlxGroup, RemoveFromMemory:Bool = false):Void
+	private function findAndDelete(items:FlxTypedGroup<FlxObject>, remove:Bool = false):Void
 	{
-		var i:Int = 0;
-		var members:Array<FlxBasic> = Items.members;
-		var total:Int = members.length;
-		var item:FlxBasic;
-		
-		while (i < total)
+		for (member in items)
 		{
-			item = members[i++];
+			if (member == null)
+				continue;
 			
-			if (item != null)
+			if (Std.is(member, FlxTypedGroup))
 			{
-				if (Std.is(item, FlxGroup))
-				{
-					// TODO: walk in the group, removing all members.
-				}
-				else
-				{
-					item.kill();
-					
-					if (RemoveFromMemory)
-					{
-						removeFromMemory(item, FlxG.state);
-					}
-				}
+				// TODO: walk in the group, removing all members.
+			}
+			else
+			{
+				member.kill();
+				if (remove)
+					removeFromMemory(member, FlxG.state);
 			}
 		}
 	}
 	
-	private function removeFromMemory(Item:FlxBasic, ParentGroup:FlxGroup):Void
+	private function removeFromMemory(item:FlxBasic, parentGroup:FlxGroup):Void
 	{
-		var i:Int = 0;
-		var members:Array<FlxBasic> = ParentGroup.members;
-		var total:Int = members.length;
-		var b:FlxBasic;
-		
-		while (i < total)
+		for (member in parentGroup.members)
 		{
-			b = members[i++];
-
-			if (b != null)
-			{
-				if (Std.is(b, FlxGroup))
-				{
-					removeFromMemory(Item, cast b);
-				}
-				else if (b == Item)
-				{
-					ParentGroup.remove(b);
-				}
-			}
+			if (member == null)
+				continue;
+			
+			if (Std.is(member, FlxTypedGroup))
+				removeFromMemory(item, cast member);
+			else if (member == item)
+				parentGroup.remove(member);
 		}
 	}
 }

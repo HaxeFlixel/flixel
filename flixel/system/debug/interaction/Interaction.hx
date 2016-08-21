@@ -6,6 +6,7 @@ import flash.display.DisplayObject;
 import flash.display.Graphics;
 import flash.display.Sprite;
 import flash.events.KeyboardEvent;
+import flixel.FlxObject;
 import flixel.group.FlxGroup;
 import flash.events.MouseEvent;
 import flixel.input.FlxPointer;
@@ -17,6 +18,7 @@ import flixel.system.debug.interaction.tools.Mover;
 import flixel.system.debug.interaction.tools.Pointer;
 import flixel.system.debug.interaction.tools.Tool;
 import flixel.system.ui.FlxSystemButton;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
 
 /**
@@ -28,47 +30,34 @@ import flixel.util.FlxSpriteUtil;
  */
 class Interaction extends Window
 {
+	public var activeTool(default, null):Tool;
+	public var selectedItems(default, null):FlxTypedGroup<FlxObject> = new FlxTypedGroup();
+	
+	public var flixelPointer:FlxPoint = new FlxPoint();
+	public var pointerJustPressed:Bool = false;
+	public var pointerJustReleased:Bool = false;
+	public var pointerPressed:Bool = false;
+	
 	private var _container:Sprite;
 	private var _customCursor:Sprite;
-	private var _selectedItems:FlxGroup;
-	private var _tools:Array<Tool>;
-	private var _turn:Int;
-	private var _keysDown:Map<Int, Int>;
-	private var _keysUp:Map<Int, Int>;		
-	private var _activeTool:Tool;		
+	private var _tools:Array<Tool> = [];
+	private var _turn:Int = 2;
+	private var _keysDown:Map<Int, Int> = new Map();
+	private var _keysUp:Map<Int, Int> = new Map();
 	private var _wasMouseVisible:Bool;
 	private var _wasUsingSystemCursor:Bool;
-	private var _debuggerInteraction:Bool;
-	private var _flixelPointer:FlxPointer;
+	private var _debuggerInteraction:Bool = false;
+	private var _flixelPointer:FlxPointer = new FlxPointer();
 	
-	public var flixelPointer:FlxPoint;
-	public var pointerJustPressed:Bool;
-	public var pointerJustReleased:Bool;
-	public var pointerPressed:Bool;
-
-	
-	public function new(Container:Sprite)
-	{		
+	public function new(container:Sprite)
+	{
 		super("Tools", new GraphicInteractive(0, 0), 40, 25, false);
 		reposition(2, 100);
-		
-		_container = Container;
-		_selectedItems = new FlxGroup();
-		_tools = [];
-		_keysDown = new Map<Int, Int>();
-		_keysUp = new Map<Int, Int>();
-		_turn = 2;
-		_debuggerInteraction = false;
-		_flixelPointer = new FlxPointer();
+		_container = container;
 		
 		_customCursor = new Sprite();
 		_customCursor.mouseEnabled = false;
 		_container.addChild(_customCursor);
-		
-		flixelPointer = new FlxPoint();
-		pointerJustPressed = false;
-		pointerJustReleased = false;
-		pointerPressed = false;
 		
 		// Add all built-in tools
 		addTool(new Pointer());
@@ -91,26 +80,21 @@ class Interaction extends Window
 	private function handleDebuggerVisibilityChanged():Void
 	{
 		if (FlxG.debugger.visible)
-		{
 			saveSystemCursorInfo();
-		}
 		else
-		{
 			restoreSystemCursor();
-		}
 	}
 	
-	private function updateMouse(Event:MouseEvent):Void
+	private function updateMouse(event:MouseEvent):Void
 	{
-		var offsetX:Float = 0, offsetY:Float = 0;
-		var cursorIcon:BitmapData;
+		var offsetX = 0.0;
+		var offsetY = 0.0;
 		
 		// If the active tool has a custom cursor, we assume its
 		// "point of click" is the center of the cursor icon.
-		if (_activeTool != null)
+		if (activeTool != null)
 		{
-			cursorIcon = _activeTool.getCursor();
-			
+			var cursorIcon = activeTool.cursor;
 			if (cursorIcon != null)
 			{
 				offsetX = cursorIcon.width / FlxG.scaleMode.scale.x / 2;
@@ -118,12 +102,12 @@ class Interaction extends Window
 			}
 		}
 		
-		_customCursor.x = Event.stageX + offsetX;
-		_customCursor.y = Event.stageY + offsetY;
+		_customCursor.x = event.stageX + offsetX;
+		_customCursor.y = event.stageY + offsetY;
 		
 		#if FLX_MOUSE
 		// Calculate in-game coordinates based on mouse position and camera.
-		_flixelPointer.setGlobalScreenPositionUnsafe(Event.stageX, Event.stageY);
+		_flixelPointer.setGlobalScreenPositionUnsafe(event.stageX, event.stageY);
 		
 		// Store Flixel mouse coordinates to speed up all
 		// internal calculations (overlap, etc)
@@ -132,81 +116,66 @@ class Interaction extends Window
 		#end
 	}
 	
-	private function handleMouseClick(Event:MouseEvent):Void 
+	private function handleMouseClick(event:MouseEvent):Void 
 	{
-		if (Std.is(Event.target, FlxSystemButton))
-		{
-			// User clicked a debugger icon instead of performing
-			// a click related to a tool.
+		// Did the user click a debugger icon instead of performing
+		// a click related to a tool?
+		if (Std.is(event.target, FlxSystemButton))
 			return;
-		}
 		
-		pointerJustPressed = Event.type == MouseEvent.MOUSE_DOWN;
-		pointerJustReleased = Event.type == MouseEvent.MOUSE_UP;
+		pointerJustPressed = event.type == MouseEvent.MOUSE_DOWN;
+		pointerJustReleased = event.type == MouseEvent.MOUSE_UP;
 		
 		if (pointerJustPressed)
-		{
 			pointerPressed = true;
-		}
 		else if (pointerJustReleased)
-		{
 			pointerPressed = false;
-		}
 	}
 	
-	private function handleMouseInDebugger(Event:MouseEvent):Void 
+	private function handleMouseInDebugger(event:MouseEvent):Void 
 	{
 		// If we are not active, we don't really care about
 		// mouse events in the debugger.
 		if (!isActive())
 			return;
 		
-		if (Event.type == MouseEvent.MOUSE_OVER)
+		switch (event.type)
 		{
-			_debuggerInteraction = true;
-		}
-		else if (Event.type == MouseEvent.MOUSE_OUT)
-		{
-			_debuggerInteraction = false;
+			case MouseEvent.MOUSE_OVER:
+				_debuggerInteraction = true;
+			case MouseEvent.MOUSE_OUT:
+				_debuggerInteraction = false;
 		}
 		
-		Event.stopPropagation();
+		event.stopPropagation();
 	}
 	
-	private function handleKeyEvent(Event:KeyboardEvent):Void
+	private function handleKeyEvent(event:KeyboardEvent):Void
 	{
-		if (Event.type == KeyboardEvent.KEY_DOWN)
+		switch (event.type)
 		{
-			_keysDown.set(Event.keyCode, _turn);
-		}
-		else if (Event.type == KeyboardEvent.KEY_UP)
-		{
-			_keysUp.set(Event.keyCode, _turn);
+			case KeyboardEvent.KEY_DOWN:
+				_keysDown.set(event.keyCode, _turn);
+			case KeyboardEvent.KEY_UP:
+				_keysUp.set(event.keyCode, _turn);
 		}
 	}
 	
-	/**
-	 * 
-	 * @param	Instance
-	 */
-	public function addTool(Instance :Tool):Void
-	{	
-		var button :FlxSystemButton;
-		
-		Instance.init(this);
-		_tools.push(Instance);
-		
-		button = Instance.getButton();
+	private function addTool(tool:Tool):Void
+	{
+		tool.init(this);
+		_tools.push(tool);
 		
 		// If the tool has a button, add it to the interaction window
-		if (button != null)
-		{
-			button.x = -10 + _tools.length * 20; // TODO: fix this hardcoded number
-			button.y = 20;
-			addChild(button);
-			
-			resize(Math.max(_tools.length * 20, 55), 35);  // TODO: fix this hardcoded number
-		}
+		var button = tool.button;
+		if (button == null)
+			return;
+
+		button.x = -10 + _tools.length * 20; // TODO: fix this hardcoded number
+		button.y = 20;
+		addChild(button);
+		
+		resize(Math.max(_tools.length * 20, 55), 35);  // TODO: fix this hardcoded number
 	}
 	
 	/**
@@ -214,8 +183,6 @@ class Interaction extends Window
 	 */
 	override public function destroy():Void
 	{
-		var i:Int;
-		
 		FlxG.signals.postDraw.remove(postDraw);
 		FlxG.debugger.visibilityChanged.remove(handleDebuggerVisibilityChanged);
 		
@@ -231,23 +198,18 @@ class Interaction extends Window
 			_container.removeEventListener(MouseEvent.MOUSE_OUT, handleMouseInDebugger);
 		}
 		
-		for (i in 0..._tools.length)
+		if (_customCursor != null)
 		{
-			_tools[i].destroy();
-			_tools[i] = null;
+			_customCursor.parent.removeChild(_customCursor);
+			_customCursor = null;
 		}
 		
-		_selectedItems.destroy();
-		_tools = null;
-		_customCursor.parent.removeChild(_customCursor);
-		flixelPointer.destroy();
+		_tools = FlxDestroyUtil.destroyArray(_tools);
+		selectedItems = FlxDestroyUtil.destroy(selectedItems);
+		flixelPointer = FlxDestroyUtil.destroy(flixelPointer);
 		
-		_selectedItems = null;
-		_customCursor = null;
-		flixelPointer = null;
 		_keysDown = null;
 		_keysUp = null;
-		_tools = null;
 	}
 	
 	public function isActive():Bool
@@ -257,20 +219,13 @@ class Interaction extends Window
 	
 	override public function update():Void 
 	{
-		var tool:Tool;
-		var i:Int;
-		var l:Int = _tools.length;
-
 		if (!isActive())
 			return;
 
 		updateCustomCursors();
 		
-		for (i in 0...l)
-		{
-			tool = _tools[i];
+		for (tool in _tools)
 			tool.update();
-		}
 		
 		pointerJustPressed = false;
 		pointerJustReleased = false;
@@ -282,77 +237,59 @@ class Interaction extends Window
 	 */
 	private function postDraw():Void
 	{
-		var tool:Tool;
-		var i:Int;
-		var l:Int = _tools.length;
-		
 		if (!isActive())
 			return;
 		
-		for (i in 0...l)
-		{
-			tool = _tools[i];
+		for (tool in _tools)
 			tool.draw();
-		}
 		
 		drawItemsSelection();
 	}
 	
-	private function drawItemsSelection():Void 
+	private function getDebugGraphics():Graphics
 	{
-		var i:Int = 0;
-		var length:Int = _selectedItems.members.length;
-		var item:FlxObject;
-		
-		//Set up global flash graphics object to draw out the debug stuff
-		var gfx:Graphics = null;
-		
 		if (FlxG.renderBlit)
 		{
-			gfx = FlxSpriteUtil.flashGfx;
-			gfx.clear();	
-		}
-		else
-		{
-			#if FLX_DEBUG
-			gfx = FlxG.camera.debugLayer.graphics;
-			#end
+			FlxSpriteUtil.flashGfx.clear();
+			return FlxSpriteUtil.flashGfx;
 		}
 		
-		while (i < length && gfx != null)
+		#if FLX_DEBUG
+		return FlxG.camera.debugLayer.graphics;
+		#end
+		
+		return null;
+	}
+	
+	private function drawItemsSelection():Void 
+	{
+		var gfx:Graphics = getDebugGraphics();
+		if (gfx == null)
+			return;
+		
+		for (member in selectedItems)
 		{
-			item = cast _selectedItems.members[i++];
-			if (item != null && item.scrollFactor != null && item.isOnScreen())
+			if (member != null && member.scrollFactor != null && member.isOnScreen())
 			{
 				// Render a red rectangle centered at the selected item
 				gfx.lineStyle(1.5, 0xff0000);
-				gfx.drawRect(item.x - FlxG.camera.scroll.x, item.y - FlxG.camera.scroll.y, item.width * 1.0, item.height * 1.0);
+				gfx.drawRect(member.x - FlxG.camera.scroll.x,
+					member.y - FlxG.camera.scroll.y,
+					member.width * 1.0, member.height * 1.0);
 			}
 		}
 		
+		// Draw the debug info to the main camera buffer.
 		if (FlxG.renderBlit)
-		{
-			// Draw the debug info to the main camera buffer.
 			FlxG.camera.buffer.draw(FlxSpriteUtil.flashGfxSprite);
-		}
 	}
 	
-	public function getTool(ClassName:Class<Tool>):Tool
+	private function getTool(className:Class<Tool>):Tool
 	{
-		var tool:Tool = null;
-		var i:Int;
-		var l:Int = _tools.length;
-		
-		for (i in 0...l)
-		{
-			if (Std.is(_tools[i], ClassName))
-			{
-				tool = _tools[i];
-				break;
-			}
-		}
-		
-		return tool;
+		for (tool in _tools)
+			if (Std.is(tool, className))
+				return tool;
+		return null;
 	}
 	
 	override public function toggleVisible():Void 
@@ -367,53 +304,45 @@ class Interaction extends Window
 		}
 	}
 	
-	public function registerCustomCursor(Name:String, Icon:BitmapData):Void
+	public function registerCustomCursor(name:String, icon:BitmapData):Void
 	{
-		var sprite:Sprite;
-
-		if (Icon != null)
-		{		
-			#if (FLX_NATIVE_CURSOR && FLX_MOUSE)
-			FlxG.mouse.setSimpleNativeCursorData(Name, Icon);
-			#else
-			sprite = new Sprite();
-			sprite.visible = false;
-			sprite.name = Name;
-			sprite.addChild(new Bitmap(Icon));
-			_customCursor.addChild(sprite);
-			#end
-		}
+		if (icon == null)
+			return;
+	
+		#if (FLX_NATIVE_CURSOR && FLX_MOUSE)
+		FlxG.mouse.setSimpleNativeCursorData(name, icon);
+		#else
+		var sprite = new Sprite();
+		sprite.visible = false;
+		sprite.name = name;
+		sprite.addChild(new Bitmap(icon));
+		_customCursor.addChild(sprite);
+		#end
 	}
 	
 	public function updateCustomCursors():Void
 	{
 		#if FLX_MOUSE
-		var name:String;
-		var sprite:DisplayObject;
-		var i:Int;
-		
 		// Do we have an active tool and we are not interacting
 		// with the debugger (e.g. moving the cursor over the
 		// tools bar or the top bar)?
-		if (_activeTool != null && !_debuggerInteraction)
+		if (activeTool != null && !_debuggerInteraction)
 		{
 			// Yes, there is an active tool. Does it has a cursor of its own?
-			if (_activeTool.getCursor() != null)
+			if (activeTool.cursor != null)
 			{
 				// Yep. Let's show it then
-				name = _activeTool.getName();
-				
 				#if FLX_NATIVE_CURSOR
 				// We have lag-free native cursors available, yay!
 				// Activate it then.
-				FlxG.mouse.setNativeCursor(name);
+				FlxG.mouse.setNativeCursor(activeTool.getName());
 				#else
 				// No fancy native cursors, so we have to emulate it.
 				// Let's make the currently active tool's fake cursor visible
 				for (i in 0..._customCursor.numChildren)
 				{
-					sprite = _customCursor.getChildAt(i);
-					sprite.visible = sprite.name == name;
+					var sprite = _customCursor.getChildAt(i);
+					sprite.visible = sprite.name == activeTool.name;
 				}
 				#end
 			}
@@ -450,51 +379,26 @@ class Interaction extends Window
 		#end
 	}
 	
-	/**
-	 * 
-	 * @return
-	 */
-	public function getContainer():Sprite
+	public function setActiveTool(value:Tool):Void
 	{
-		return _container;
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
-	public function getSelectedItems():FlxGroup
-	{
-		return _selectedItems;
-	}
-	
-	public function getActiveTool():Tool
-	{
-		return _activeTool;
-	}
-	
-	public function setActiveTool(Value:Tool):Void
-	{
-		if (_activeTool != null)
+		if (activeTool != null)
 		{
-			_activeTool.deactivate();
-			_activeTool.getButton().toggled = true;
+			activeTool.deactivate();
+			activeTool.button.toggled = true;
 		}
 		
-		if (_activeTool == Value)
-		{
-			Value = null;
-		}
+		if (activeTool == value)
+			value = null;
 		
-		_activeTool = Value;
+		activeTool = value;
 		
-		if (_activeTool != null)
+		if (activeTool != null)
 		{
 			// A tool is active. Enable cursor specific cursors
 			setToolsCursorVisibility(true);
 			
-			_activeTool.getButton().toggled = false;
-			_activeTool.activate();
+			activeTool.button.toggled = false;
+			activeTool.activate();
 			updateCustomCursors();
 		}
 		else
@@ -505,62 +409,45 @@ class Interaction extends Window
 		}
 	}
 	
-	private function setSystemCursorVisibility(Status:Bool):Void
+	private function setSystemCursorVisibility(status:Bool):Void
 	{
 		#if FLX_MOUSE
-		FlxG.mouse.useSystemCursor = Status;
+		FlxG.mouse.useSystemCursor = status;
 		#end
-		_customCursor.visible = !Status;
+		_customCursor.visible = !status;
 	}
 	
-	private function setToolsCursorVisibility(Status:Bool):Void
+	private function setToolsCursorVisibility(status:Bool):Void
 	{
-		var i:Int;
-		
 		#if FLX_MOUSE
-		FlxG.mouse.useSystemCursor = #if FLX_NATIVE_CURSOR Status #else false #end;
+		FlxG.mouse.useSystemCursor = #if FLX_NATIVE_CURSOR status #else false #end;
 		#end
-		_customCursor.visible = Status;
+		_customCursor.visible = status;
+		
+		if (status)
+			return;
 		
 		// Hide any display-list-based custom cursor.
 		// The proper cursor will be marked as visible
 		// in the update loop.
-		if (!Status)
-		{
-			for (i in 0..._customCursor.numChildren)
-			{
-				_customCursor.getChildAt(i).visible = false;
-			}
-		}
+		for (i in 0..._customCursor.numChildren)
+			_customCursor.getChildAt(i).visible = false;
 	}
 	
-	/**
-	 * 
-	 */
 	public function clearSelection():Void
 	{
-		_selectedItems.clear();
+		selectedItems.clear();
 	}
 	
-	/**
-	 * 
-	 * @param	Key
-	 * @return
-	 */
-	public function keyPressed(Key:Int):Bool
+	public function keyPressed(key:Int):Bool
 	{
-		var value:Int = _keysDown.get(Key) == null ? 0 : _keysDown.get(Key);
+		var value:Int = _keysDown.get(key) == null ? 0 : _keysDown.get(key);
 		return _turn <= value;
 	}
 	
-	/**
-	 * 
-	 * @param	Key
-	 * @return
-	 */
-	public function keyJustPressed(Key:Int):Bool
+	public function keyJustPressed(key:Int):Bool
 	{
-		var value:Int = _keysUp.get(Key) == null ? 0 : _keysUp.get(Key);
+		var value:Int = _keysUp.get(key) == null ? 0 : _keysUp.get(key);
 		return (_turn - value) == 1;
 	}
 }
