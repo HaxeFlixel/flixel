@@ -469,10 +469,10 @@ class PlayState extends FlxState
 	/**
 	 * Called when an enemy collides with a goal. Explodes the enemy, damages the goal.
 	 */
-	private function hitGoal(enemy:Dynamic, goal:Dynamic):Void
+	private function hitGoal(enemy:Enemy, goal:FlxSprite):Void
 	{
 		_lives--;
-		enemy.startAtPosition(false);
+		enemy.explode(false);
 		
 		if (_lives >= 0)
 			_lifeGroup.members[_lives].kill();
@@ -486,7 +486,7 @@ class PlayState extends FlxState
 	/**
 	 * Called when a bullet hits an enemy. Damages the enemy, kills the bullet.
 	 */
-	private function hitEnemy(bullet:Dynamic, enemy:Dynamic):Void
+	private function hitEnemy(bullet:Bullet, enemy:FlxSprite):Void
 	{
 		enemy.hurt(bullet.damage);
 		bullet.kill();
