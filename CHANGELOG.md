@@ -1,3 +1,35 @@
+4.2.0
+------------------------------
+#### New features:
+
+* `FlxG.html5`: added `platform` and `onMobile` (#1897)
+* `FlxText`: added support for multi-character markers in `applyMarkup()` (#1908)
+* `FlxG`: added `onMobile` (#1904)
+* `FlxPreloader`: added HTML5 support (#1846)
+* `FlxTweenManager`:
+	* added `forEach()` (#1782)
+	* added `completeAll()` (#1782)
+* `FlxTimerManager`:
+	* added `forEach()` (#1782)
+* `FlxPath`:
+	* added `setPathProperties()` (#1875)
+	* added a `this` return to some methods (#1875)
+* `FlxCameras`: added `cameraAdded`, `cameraRemoved` and `cameraResized` signals
+
+#### Bugfixes:
+
+* `FlxBitmapText`: fixed `alpha` not working (#1877)
+* `FlxEmitter`: fixed properties not being ignored if their `.active` is set to `false` (#1903)
+* `FlxCamera`: fixed scroll bounds not taking zoom into account (#1889)
+* `FlxTilemap`: fixed buffers not being resized on camera changes (#1801)
+* `FlxSpriteGroup`: fixed `drawDebug()` not being called (#1905)
+
+#### Changes and improvements:
+
+* `flixel.util.helpers`: changed the default value of `active` to `true`
+* `FlxGitSHA`: optimized for compiler completion
+* `FlxRect`: added an optional `result` argument to `intersection()`
+
 4.1.1
 ------------------------------
 * fixed the check for Lime <= 2.9.1
