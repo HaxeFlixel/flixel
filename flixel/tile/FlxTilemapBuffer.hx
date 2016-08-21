@@ -60,6 +60,8 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	public var blend:BlendMode;
 	public var antialiasing:Bool = false;
 	
+	public var regen:Bool = false;
+	
 	private var _flashRect:Rectangle;
 	private var _matrix:Matrix;
 	
@@ -149,49 +151,21 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	
 	public function updateColumns(TileWidth:Int, WidthInTiles:Int, ScaleX:Float = 1.0, ?Camera:FlxCamera):Void
 	{
-		if (WidthInTiles < 0) 
-		{
-			WidthInTiles = 0;
-		}
-		
-		if (Camera == null)
-		{
-			Camera = FlxG.camera;
-		}
-
+		WidthInTiles = (WidthInTiles < 0) ? 0 : WidthInTiles;
+		Camera = (Camera == null) ? FlxG.camera : Camera;
 		columns = Math.ceil(Camera.width / (TileWidth * ScaleX)) + 1;
-		
-		if (columns > WidthInTiles)
-		{
-			columns = WidthInTiles;
-		}
-		
+		columns = (columns > WidthInTiles) ? WidthInTiles : columns;
 		width = Std.int(columns * TileWidth * ScaleX);
-		
 		dirty = true;
 	}
 	
 	public function updateRows(TileHeight:Int, HeightInTiles:Int, ScaleY:Float = 1.0, ?Camera:FlxCamera):Void
 	{
-		if (HeightInTiles < 0) 
-		{
-			HeightInTiles = 0;
-		}
-		
-		if (Camera == null)
-		{
-			Camera = FlxG.camera;
-		}
-		
+		HeightInTiles = (HeightInTiles < 0) ? 0 : HeightInTiles;
+		Camera = (Camera == null) ? FlxG.camera : Camera;
 		rows = Math.ceil(Camera.height / (TileHeight * ScaleY)) + 1;
-		
-		if (rows > HeightInTiles)
-		{
-			rows = HeightInTiles;
-		}
-		
+		rows = (rows > HeightInTiles) ? HeightInTiles : rows;
 		height = Std.int(rows * TileHeight * ScaleY);	
-		
 		dirty = true;
 	}
 
@@ -200,10 +174,7 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	 */
 	public function isPixelPerfectRender(?Camera:FlxCamera):Bool
 	{
-		if (Camera == null)
-		{
-			Camera = FlxG.camera;
-		}
+		Camera = (Camera == null) ? FlxG.camera : Camera;
 		return pixelPerfectRender == null ? Camera.pixelPerfectRender : pixelPerfectRender;
 	}
 }
