@@ -17,6 +17,7 @@ import flixel.system.debug.watch.Watch;
 import flixel.system.debug.watch.Tracker;
 import flixel.system.debug.completion.CompletionList;
 import flixel.system.debug.log.BitmapLog;
+import flixel.system.debug.interaction.Interaction;
 import flixel.system.FlxAssets;
 import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxHorizontalAlign;
@@ -52,6 +53,9 @@ class GraphicArrowRight extends BitmapData {}
 @:bitmap("assets/images/debugger/buttons/close.png")
 class GraphicCloseButton extends BitmapData {}
 
+@:bitmap("assets/images/debugger/buttons/interactive.png")
+class GraphicInteractive extends BitmapData {}
+
 /**
  * Container for the new debugger overlay. Most of the functionality is in the debug folder widgets,
  * but this class instantiates the widgets and handles their basic formatting and arrangement.
@@ -74,6 +78,7 @@ class FlxDebugger extends Sprite
 	public var bitmapLog:BitmapLog;
 	public var vcr:VCR;
 	public var console:Console;
+	public var interaction:Interaction;
 	private var completionList:CompletionList;
 
 	/**
@@ -139,12 +144,14 @@ class FlxDebugger extends Sprite
 		completionList = new CompletionList(5);
 		addWindow(console = new Console(completionList));
 		addWindow(stats = new Stats());
+		addWindow(interaction = new Interaction(this));
 		
 		vcr = new VCR(this);
 		
 		addButton(LEFT, new GraphicFlixel(0, 0), openHomepage);
 		addButton(LEFT, null, openGitHub).addChild(txt);
 		
+		addWindowToggleButton(interaction, GraphicInteractive);
 		addWindowToggleButton(bitmapLog, GraphicBitmapLog);
 		addWindowToggleButton(log, GraphicLog);
 		
