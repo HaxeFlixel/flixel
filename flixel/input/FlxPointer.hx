@@ -15,6 +15,7 @@ class FlxPointer
 	
 	private var _globalScreenX:Int = 0;
 	private var _globalScreenY:Int = 0;
+	private static var _cachedPoint:FlxPoint = new FlxPoint();
 	
 	public function new() {}
 	
@@ -36,10 +37,9 @@ class FlxPointer
 		{
 			point = FlxPoint.get();
 		}
-		var screenPosition:FlxPoint = getScreenPosition(Camera);
-		point.x = screenPosition.x + Camera.scroll.x;
-		point.y = screenPosition.y + Camera.scroll.y;
-		screenPosition.put();
+		getScreenPosition(Camera, _cachedPoint);
+		point.x = _cachedPoint.x + Camera.scroll.x;
+		point.y = _cachedPoint.y + Camera.scroll.y;
 		return point;
 	}
 	
@@ -106,10 +106,9 @@ class FlxPointer
 		}
 		else 
 		{
-			var point:FlxPoint = getPosition();
+			getPosition(_cachedPoint);
 			var object:FlxObject = cast ObjectOrGroup;
-			result = object.overlapsPoint(point, true, Camera);
-			point.put();
+			result = object.overlapsPoint(_cachedPoint, true, Camera);
 		}
 		
 		return result;
@@ -140,14 +139,12 @@ class FlxPointer
 	 */
 	private function updatePositions():Void
 	{
-		var screenPosition:FlxPoint = getScreenPosition();
-		screenX = Std.int(screenPosition.x);
-		screenY = Std.int(screenPosition.y);
-		screenPosition.put();
+		getScreenPosition(FlxG.camera, _cachedPoint);
+		screenX = Std.int(_cachedPoint.x);
+		screenY = Std.int(_cachedPoint.y);
 		
-		var worldPosition = getWorldPosition();
-		x = Std.int(worldPosition.x);
-		y = Std.int(worldPosition.y);
-		worldPosition.put();
+		getWorldPosition(FlxG.camera, _cachedPoint);
+		x = Std.int(_cachedPoint.x);
+		y = Std.int(_cachedPoint.y);
 	}
 }

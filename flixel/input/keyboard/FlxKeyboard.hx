@@ -166,13 +166,11 @@ class FlxKeyboard extends FlxKeyManager<FlxKey, FlxKeyList>
 	{
 		var i:Int = 0;
 		var l:Int = Record.length;
-		var o:CodeValuePair;
-		var o2:FlxKeyInput;
 		
 		while (i < l)
 		{
-			o = Record[i++];
-			o2 = getKey(o.code);
+			var o = Record[i++];
+			var o2 = getKey(o.code);
 			o2.current = o.value;
 		}
 	}

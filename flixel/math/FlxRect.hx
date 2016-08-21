@@ -367,14 +367,17 @@ class FlxRect implements IFlxPooled
 	 * @param	rect	Rectangle to check intersection againist.
 	 * @return	The area of intersection of two rectangles.
 	 */
-	public function intersection(rect:FlxRect):FlxRect
+	public function intersection(rect:FlxRect, ?result:FlxRect):FlxRect
 	{
+		if (result == null)
+			result = FlxRect.get();
+		
 		var x0:Float = x < rect.x ? rect.x : x;
 		var x1:Float = right > rect.right ? rect.right : right;
 		if (x1 <= x0) 
 		{	
 			rect.putWeak();
-			return FlxRect.get(0, 0, 0, 0);
+			return result;
 		}
 		
 		var y0:Float = y < rect.y ? rect.y : y;
@@ -382,11 +385,11 @@ class FlxRect implements IFlxPooled
 		if (y1 <= y0) 
 		{	
 			rect.putWeak();
-			return FlxRect.get(0, 0, 0, 0);
+			return result;
 		}
 		
 		rect.putWeak();
-		return FlxRect.get(x0, y0, x1 - x0, y1 - y0);
+		return result.set(x0, y0, x1 - x0, y1 - y0);
 	}
 	
 	/**
