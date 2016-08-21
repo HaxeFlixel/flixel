@@ -50,14 +50,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 * Optimization to allow setting position of group without transforming children twice.
 	 */
 	private var _skipTransformChildren:Bool = false;
-	
-	#if FLX_DEBUG
-	/**
-	 * Just a helper variable to check if this group has already been drawn on debug layer
-	 */
-	private var _isDrawnDebug:Bool = false;
-	#end
-	
+
 	/**
 	 * Array of all the FlxSprites that exist in this group for 
 	 * optimization purposes / static typing on cpp targets.
@@ -208,8 +201,10 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	override public function draw():Void 
 	{
 		group.draw();
+		
 		#if FLX_DEBUG
-		_isDrawnDebug = false;
+		if (FlxG.debugger.drawDebug)
+			drawDebug();
 		#end
 	}
 	
