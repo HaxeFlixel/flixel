@@ -149,11 +149,9 @@ class Console extends Window
 		#end
 		
 		#if FLX_DEBUG
-		#if flash 
 		// Pause game
 		if (FlxG.console.autoPause)
 			FlxG.vcr.pause();
-		#end
 		
 		// Block keyboard input
 		#if FLX_KEYBOARD
@@ -174,11 +172,10 @@ class Console extends Window
 		#end
 		
 		#if FLX_DEBUG
-		#if flash
 		// Unpause game
 		if (FlxG.console.autoPause)
 			FlxG.vcr.resume();
-		#end
+		
 		// Unblock keyboard input
 		#if FLX_KEYBOARD
 		FlxG.keys.enabled = true;
@@ -246,8 +243,8 @@ class Console extends Window
 			history.addCommand(input.text);
 			
 			// Step forward one frame to see the results of the command
-			#if (flash && FLX_DEBUG)
-			if (FlxG.vcr.paused)
+			#if FLX_DEBUG
+			if (FlxG.vcr.paused && FlxG.console.stepAfterCommand)
 				FlxG.game.debugger.vcr.onStep();
 			#end
 			

@@ -10,6 +10,12 @@ class ConsoleFrontEnd
 	public var autoPause:Bool = true;
 	
 	/**
+	 * Whether the console should step() the game after a command is entered.
+	 * Setting this to false allows inputting multiple console commands within the same frame. Use the "step()" command to step the game from the console.
+	 */
+	public var stepAfterCommand:Bool = true;
+	
+	/**
 	 * Register a new function to use in any command.
 	 * 
 	 * @param 	FunctionAlias		The name with which you want to access the function.
