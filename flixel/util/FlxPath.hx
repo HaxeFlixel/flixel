@@ -177,7 +177,7 @@ class FlxPath implements IFlxDestroyable
 	}
 	
 	/**
-	 * Sets this path's following properties: `speed`, `mode` and auto rotation.
+	 * Sets the following properties: `speed`, `mode` and auto rotation.
 	 * 
 	 * @param	Speed			The speed at which the object is moving on the path.
 	 * @param	Mode			Path following behavior (like looping, horizontal only, etc).
@@ -185,7 +185,7 @@ class FlxPath implements IFlxDestroyable
 	 * 
 	 * @return	This path object.
 	 */
-	public function setPathProperties(Speed:Float = 100, Mode:Int = FlxPath.FORWARD, AutoRotate:Bool = false):FlxPath
+	public function setProperties(Speed:Float = 100, Mode:Int = FlxPath.FORWARD, AutoRotate:Bool = false):FlxPath
  	{
  		speed = Math.abs(Speed);
  		_mode = Mode;
@@ -217,7 +217,7 @@ class FlxPath implements IFlxDestroyable
 				_nodes = Nodes.copy();
 			}
 		}
-		setPathProperties(Speed, Mode, AutoRotate);
+		setProperties(Speed, Mode, AutoRotate);
 		if (_nodes.length > 0)
 		{
 			restart();

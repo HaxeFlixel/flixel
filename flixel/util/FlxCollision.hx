@@ -1,8 +1,6 @@
 package flixel.util;
 
 import flash.display.BitmapData;
-import flash.geom.Matrix;
-import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.FlxCamera;
 import flixel.FlxG;

@@ -12,7 +12,7 @@
 * `FlxTimerManager`:
 	* added `forEach()` (#1782)
 * `FlxPath`:
-	* added `setPathProperties()` (#1875)
+	* added `setProperties()` (#1875)
 	* added a `this` return to some methods (#1875)
 * `FlxCameras`: added `cameraAdded`, `cameraRemoved` and `cameraResized` signals
 
