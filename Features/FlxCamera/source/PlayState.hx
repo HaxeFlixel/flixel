@@ -163,34 +163,7 @@ class PlayState extends FlxState
 	
 	public function setZoom(zoom:Float)
 	{
-		zoom = FlxMath.bound(zoom, 0.5, 4);
-		FlxG.camera.zoom = zoom;
-		
-		var zoomDistDiffY;
-		var zoomDistDiffX;
-		
-		if (zoom <= 1) 
-		{
-			zoomDistDiffX = Math.abs((LEVEL_MIN_X + LEVEL_MAX_X) - (LEVEL_MIN_X + LEVEL_MAX_X) / 1 + (1 - zoom));
-			zoomDistDiffY = Math.abs((LEVEL_MIN_Y + LEVEL_MAX_Y) - (LEVEL_MIN_Y + LEVEL_MAX_Y) / 1 + (1 - zoom));
-			zoomDistDiffX *= -.5;
-			zoomDistDiffY *= -.5;
-		}
-		else
-		{
-			zoomDistDiffX = Math.abs((LEVEL_MIN_X + LEVEL_MAX_X) - (LEVEL_MIN_X + LEVEL_MAX_X) / zoom);
-			zoomDistDiffY = Math.abs((LEVEL_MIN_Y + LEVEL_MAX_Y) - (LEVEL_MIN_Y + LEVEL_MAX_Y) / zoom);
-			zoomDistDiffX *= .5;
-			zoomDistDiffY *= .5;
-		}
-		
-		FlxG.camera.setScrollBoundsRect(
-			LEVEL_MIN_X - zoomDistDiffX, 
-			LEVEL_MIN_Y - zoomDistDiffY,
-			LEVEL_MAX_X + Math.abs(LEVEL_MIN_X) + zoomDistDiffX * 2,
-			LEVEL_MAX_Y + Math.abs(LEVEL_MIN_Y) + zoomDistDiffY * 2,
-			false);
-		
+		FlxG.camera.zoom = FlxMath.bound(zoom, 0.5, 4);
 		hud.updateZoom(FlxG.camera.zoom);
 	}
 
