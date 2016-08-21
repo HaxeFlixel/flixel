@@ -1,4 +1,5 @@
 package flixel.system.render.gl;
+
 import flixel.util.FlxColor;
 import openfl.geom.ColorTransform;
 import flixel.math.FlxMatrix;
@@ -9,6 +10,10 @@ import flixel.math.FlxRect;
 import flixel.system.render.common.DrawItem.DrawData;
 import flixel.system.render.common.FlxDrawBaseItem;
 
+import lime.graphics.opengl.GLBuffer;
+import lime.utils.Float32Array;
+import lime.utils.UInt32Array;
+
 // TODO: add culling support???
 // gl.enable(gl.CULL_FACE);
 // gl.cullFace(gl.FRONT);
@@ -17,7 +22,7 @@ import flixel.system.render.common.FlxDrawBaseItem;
  * ...
  * @author Zaphod
  */
-class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
+class FlxDrawTrianglesItem extends FlxDrawHardwareItem<FlxDrawTrianglesItem>
 {
 
 	public function new() 
@@ -27,12 +32,8 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 	
 	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform):Void 
 	{
-		
-		
-		// TODO: implement it...
-		
-		/*
-		ensureElement();
+		ensureElement(HardwareRenderer.ELEMENTS_PER_TILE, HardwareRenderer.INDICES_PER_TILE);
+		var prevVerticesNumber:Int = Std.int(vertexPos / HardwareRenderer.ELEMENTS_PER_VERTEX);
 		
 		var rect:FlxRect = frame.frame;
 		var uv:FlxRect = frame.uv;
@@ -106,9 +107,15 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		data[vertexPos++] = uvy2;
 		fillTint();
 		
-		indexPos += HardwareRenderer.INDICES_PER_TILE;
+		indexes[indexPos++] = prevVerticesNumber + 0;
+		indexes[indexPos++] = prevVerticesNumber + 1;
+		indexes[indexPos++] = prevVerticesNumber + 2;
+		indexes[indexPos++] = prevVerticesNumber + 2;
+		indexes[indexPos++] = prevVerticesNumber + 1;
+		indexes[indexPos++] = prevVerticesNumber + 3;
+		
 		vertexBufferDirty = true;
-		*/
+		indexBufferDirty = true;
 	}
 	
 	// TODO: replace position argument with matrix?
@@ -119,57 +126,44 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		
 	}
 	
-	private function ensureElement():Void
+	private function ensureElement(vertexPosToAdd:Int, indexPosToAdd:Int):Void
 	{
-		// TODO: implement it...
+		var newBufferLength:Int = vertexPos + vertexPosToAdd;
+		var newIndexesLength:Int = indexPos + indexPosToAdd;
 		
-		/*
 		if (buffer == null)
 		{
-			buffer = new Float32Array(HardwareRenderer.MINIMUM_TILE_COUNT_PER_BUFFER * HardwareRenderer.ELEMENTS_PER_TILE);
-			indexes = new UInt32Array(HardwareRenderer.MINIMUM_TILE_COUNT_PER_BUFFER * HardwareRenderer.INDICES_PER_TILE);
-			
-			fillIndexBuffer();
+			buffer = new Float32Array(newBufferLength);
+			indexes = new UInt32Array(newIndexesLength);
 		}
-		else if (vertexPos >= buffer.length)
+		else
 		{
-			var oldBuffer:Float32Array = buffer;
-			var newNumberOfTiles = currentTilesCapacity + HardwareRenderer.MINIMUM_TILE_COUNT_PER_BUFFER;
-			
-			buffer = new Float32Array(newNumberOfTiles * HardwareRenderer.ELEMENTS_PER_TILE);
-			indexes = new UInt32Array(newNumberOfTiles * HardwareRenderer.INDICES_PER_TILE);
-			
-			var oldLength:Int = oldBuffer.length;
-			for (i in 0...oldLength)
+			var oldBubberLength:Int = buffer.length;
+			if (newBufferLength >= oldBubberLength)
 			{
-				buffer[i] = oldBuffer[i];
+				var oldBuffer:Float32Array = buffer;
+				buffer = new Float32Array(newBufferLength);
+				
+				for (i in 0...oldBubberLength)
+				{
+					buffer[i] = oldBuffer[i];
+				}
 			}
 			
-			fillIndexBuffer();
+			var oldIndexesLength:Int = indexes.length;
+			if (newIndexesLength >= oldIndexesLength)
+			{
+				var oldIndexes:UInt32Array = indexes;
+				indexes = new UInt32Array(newIndexesLength);
+				
+				for (i in 0...oldIndexesLength)
+				{
+					indexes[i] = oldIndexes[i];
+				}
+			}
+			
 		}
-		*/
 	}
-	/*
-	private inline function fillIndexBuffer():Void
-	{
-		var i:Int = 0;
-		var vertexOffset:Int = 0;
-		
-		while (i < indexes.length)
-		{
-			indexes[i    ] = vertexOffset;//0;
-			indexes[i + 1] = vertexOffset + 1;
-			indexes[i + 2] = vertexOffset + 2;
-			indexes[i + 3] = vertexOffset + 2;
-			indexes[i + 4] = vertexOffset + 1;
-			indexes[i + 5] = vertexOffset + 3;
-			vertexOffset += 4;
-			i += HardwareRenderer.INDICES_PER_TILE;
-		}
-		
-		indexBufferDirty = true;
-	}
-	*/
 	
 	// TODO: add check if it's possible to add new quad to this item...
 	// TODO: add check if it's possible to add new triangles to this item...
