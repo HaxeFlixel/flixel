@@ -25,9 +25,12 @@ import openfl._internal.renderer.RenderSession;
  */
 class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 {
-
+	public static inline var INDICES_PER_TILE:Int = 6;
+	
+	
 	public var buffer:Float32Array;
 	public var indexes:UInt32Array;
+	
 	public var glBuffer:GLBuffer;
 	public var glIndexes:GLBuffer;
 	
@@ -35,11 +38,13 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 	public var vertexBufferDirty:Bool;
 	
 	/** Current amount of filled data in tiles. */
-	public var bufferOffset:Int;
+	public var numTiles(get, null):Int;
 	/** Overall buffer size */
-	public var bufferSize:Int;
+	public var currentTilesCapacity(get, null):Int;
 	
-	public var indexCount:Int = 0;
+	public var vertexPos:Int = 0;
+	
+	public var indexPos:Int = 0;
 	
 	public function new() 
 	{
@@ -59,7 +64,6 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		var uv:FlxRect = frame.uv;
 		
 		var data:Float32Array = buffer;
-		var dataIndex:Int = bufferOffset * HardwareRenderer.ELEMENTS_PER_TILE;
 		
 		// UV
 		var uvx:Float = uv.x;
@@ -76,7 +80,7 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		var y3:Float = matrix.__transformY(0, rect.height);
 		var x4:Float = matrix.__transformX(rect.width, rect.height); // Bottom-right
 		var y4:Float = matrix.__transformY(rect.width, rect.height);
-
+		
 		var r:Float = 1.0;
 		var g:Float = 1.0;
 		var b:Float = 1.0;
@@ -97,39 +101,38 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		// Set values
 		inline function fillTint():Void
 		{
-			data[dataIndex++] = r;
-			data[dataIndex++] = g;
-			data[dataIndex++] = b;
-			data[dataIndex++] = a;
+			data[vertexPos++] = r;
+			data[vertexPos++] = g;
+			data[vertexPos++] = b;
+			data[vertexPos++] = a;
 		}
 		
 		// Triangle 1, top-left
-		data[dataIndex++] = x;
-		data[dataIndex++] = y;
-		data[dataIndex++] = uvx;
-		data[dataIndex++] = uvy;
+		data[vertexPos++] = x;
+		data[vertexPos++] = y;
+		data[vertexPos++] = uvx;
+		data[vertexPos++] = uvy;
 		fillTint();
 		// Triangle 1, top-right
-		data[dataIndex++] = x2;
-		data[dataIndex++] = y2;
-		data[dataIndex++] = uvx2;
-		data[dataIndex++] = uvy;
+		data[vertexPos++] = x2;
+		data[vertexPos++] = y2;
+		data[vertexPos++] = uvx2;
+		data[vertexPos++] = uvy;
 		fillTint();
 		// Triangle 1, bottom-left
-		data[dataIndex++] = x3;
-		data[dataIndex++] = y3;
-		data[dataIndex++] = uvx;
-		data[dataIndex++] = uvy2;
+		data[vertexPos++] = x3;
+		data[vertexPos++] = y3;
+		data[vertexPos++] = uvx;
+		data[vertexPos++] = uvy2;
 		fillTint();
 		// Triangle 2, bottom-right
-		data[dataIndex++] = x4;
-		data[dataIndex++] = y4;
-		data[dataIndex++] = uvx2;
-		data[dataIndex++] = uvy2;
+		data[vertexPos++] = x4;
+		data[vertexPos++] = y4;
+		data[vertexPos++] = uvx2;
+		data[vertexPos++] = uvy2;
 		fillTint();
 		
-		bufferOffset++;
-		indexCount += 6;
+		indexPos += INDICES_PER_TILE;
 		vertexBufferDirty = true;
 	}
 	
@@ -142,33 +145,31 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 	{
 		super.reset();
 		
-		bufferOffset = 0;
-		indexCount = 0;
+		indexPos = 0;
+		vertexPos = 0;
 	}
 	
 	private function ensureElement():Void
 	{
 		if (buffer == null)
 		{
-			bufferSize = HardwareRenderer.MINIMUM_TILE_COUNT_PER_BUFFER;
 			buffer = new Float32Array(HardwareRenderer.MINIMUM_TILE_COUNT_PER_BUFFER * HardwareRenderer.ELEMENTS_PER_TILE);
-			indexes = new UInt32Array(HardwareRenderer.MINIMUM_TILE_COUNT_PER_BUFFER * 6);
+			indexes = new UInt32Array(HardwareRenderer.MINIMUM_TILE_COUNT_PER_BUFFER * INDICES_PER_TILE);
 			
 			fillIndexBuffer();
 		}
-		else if (bufferOffset >= bufferSize)
+		else if (vertexPos >= buffer.length)
 		{
 			var oldBuffer:Float32Array = buffer;
+			var newNumberOfTiles = currentTilesCapacity + HardwareRenderer.MINIMUM_TILE_COUNT_PER_BUFFER;
 			
-			bufferSize += HardwareRenderer.MINIMUM_TILE_COUNT_PER_BUFFER;
-			buffer = new Float32Array(bufferSize * HardwareRenderer.ELEMENTS_PER_TILE);
-			indexes = new UInt32Array(bufferSize * 6);
+			buffer = new Float32Array(newNumberOfTiles * HardwareRenderer.ELEMENTS_PER_TILE);
+			indexes = new UInt32Array(newNumberOfTiles * INDICES_PER_TILE);
 			
-			var i:Int = 0;
-			while (i < oldBuffer.length)
+			var oldLength:Int = oldBuffer.length;
+			for (i in 0...oldLength)
 			{
 				buffer[i] = oldBuffer[i];
-				i++;
 			}
 			
 			fillIndexBuffer();
@@ -185,7 +186,7 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 			&& this.antialiasing == smooth
 			&& this.shader == shader);
 	}
-
+	
 	private inline function fillIndexBuffer():Void
 	{
 		var i:Int = 0;
@@ -200,10 +201,20 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 			indexes[i + 4] = vertexOffset + 1;
 			indexes[i + 5] = vertexOffset + 3;
 			vertexOffset += 4;
-			i += 6;
+			i += INDICES_PER_TILE;
 		}
 		
 		indexBufferDirty = true;
+	}
+	
+	private function get_numTiles():Int
+	{
+		return Std.int(vertexPos / HardwareRenderer.ELEMENTS_PER_TILE);
+	}
+	
+	private function get_currentTilesCapacity():Int
+	{
+		return (buffer != null) ? Std.int(buffer.length / HardwareRenderer.ELEMENTS_PER_TILE) : 0;
 	}
 	
 }

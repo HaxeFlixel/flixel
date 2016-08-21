@@ -7,6 +7,7 @@ import flixel.math.FlxMatrix;
 import flixel.system.FlxAssets.FlxShader;
 import flixel.system.render.common.FlxCameraView;
 import flixel.system.render.common.FlxDrawStack;
+import flixel.util.FlxDestroyUtil;
 import openfl.display.BitmapData;
 import openfl.display.BlendMode;
 import openfl.display.DisplayObject;
@@ -43,6 +44,13 @@ class FlxGlView extends FlxCameraView
 		destPoint:Point, ?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false, ?shader:FlxShader):Void
 	{
 		drawStack.copyPixels(frame, pixels, sourceRect, destPoint, transform, blend, smoothing, shader);
+	}
+	
+	override public function destroy():Void 
+	{
+		super.destroy();
+		
+		FlxDestroyUtil.destroy(renderView);
 	}
 	
 	override private function render():Void

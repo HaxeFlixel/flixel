@@ -1,6 +1,7 @@
 package flixel.system.render.gl;
 
 import flixel.system.render.common.FlxDrawBaseItem;
+import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import lime.graphics.GLRenderContext;
 import lime.utils.Float32Array;
 import lime.utils.UInt32Array;
@@ -20,17 +21,18 @@ import openfl._internal.renderer.opengl.GLRenderer;
  * ...
  * @author Yanrishatum
  */
-class HardwareRenderer extends DisplayObject
+class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 {
 	public static inline var ELEMENTS_PER_TILE:Int = 8 * 4;
 	public static inline var MINIMUM_TILE_COUNT_PER_BUFFER:Int = 10;
 	public static inline var BYTES_PER_ELEMENT:Int = 4;
-	private static var shader:TileShader;
+	
+	// TODO: make batching for triangle rendering switchable ON/OFF...
+	public static var BATCH_TRIANGLES:Bool = true;
+	
+	private static var texturedTileShader:TileShader;
 
 	private var states:Array<FlxDrawQuadsItem>;
-//	private var stateBuffers:Array<AtlasData>;
-//	private var stateCounts:Array<Int>;
-//	private var stateOffsets:Array<Int>;
 	private var stateNum:Int;
 	
 	#if !flash
@@ -47,15 +49,16 @@ class HardwareRenderer extends DisplayObject
 		__height = height;
 		#end
 		
-		if (shader == null) 
-			shader = new TileShader();
+		if (texturedTileShader == null) 
+			texturedTileShader = new TileShader();
 		
 		states = [];
-	//	stateTextures = new Array();
-	//	stateBuffers = new Array();
-	//	stateCounts = new Array();
-	//	stateOffsets = new Array();
 		stateNum = 0;
+	}
+	
+	public function destroy():Void
+	{
+		// TODO: implement it...
 	}
 
 	public function clear():Void
@@ -67,16 +70,6 @@ class HardwareRenderer extends DisplayObject
 	public function drawItem(item:FlxDrawQuadsItem):Void
 	{
 		states[stateNum++] = item;
-		
-		// TODO: move this code into FlxDrawQuadItem...
-		/*
-		states[stateNum] = state;
-		stateCounts[stateNum] = state.count * 6;
-		stateTextures[stateNum] = state.texture;
-		stateBuffers[stateNum] = state.data;
-		stateOffsets[stateNum] = state.offset * 6 * 4;
-		stateNum++;
-		*/
 	}
 	
 	#if !flash
@@ -141,16 +134,14 @@ class HardwareRenderer extends DisplayObject
 		var gl:GLRenderContext = renderSession.gl;
 		var renderer:GLRenderer = cast renderSession.renderer;
 		
-		renderSession.shaderManager.setShader(shader);
-		gl.uniform1f(shader.data.uAlpha.index, this.__worldAlpha);
-		gl.uniformMatrix4fv(shader.data.uMatrix.index, false, renderer.getMatrix(this.__worldTransform));
+		renderSession.shaderManager.setShader(texturedTileShader);
+		gl.uniform1f(texturedTileShader.data.uAlpha.index, this.__worldAlpha);
+		gl.uniformMatrix4fv(texturedTileShader.data.uMatrix.index, false, renderer.getMatrix(this.__worldTransform));
 		
 		var blend:BlendMode = null;
 		var texture:BitmapData = null;
 		
 		var i:Int = 0;
-		
-		// TODO: reset stateNum also...
 		
 		while (i < stateNum)
 		{
@@ -204,12 +195,11 @@ class HardwareRenderer extends DisplayObject
 				gl.bufferData(gl.ARRAY_BUFFER, state.buffer, gl.DYNAMIC_DRAW);
 			}
 			
-			gl.vertexAttribPointer(shader.data.aPosition.index, 2, gl.FLOAT, false, 8 * Float32Array.BYTES_PER_ELEMENT, 0);
-			gl.vertexAttribPointer(shader.data.aTexCoord.index, 2, gl.FLOAT, false, 8 * Float32Array.BYTES_PER_ELEMENT, 2 * Float32Array.BYTES_PER_ELEMENT);
-			gl.vertexAttribPointer(shader.data.aColor.index, 4, gl.FLOAT, false, 8 * Float32Array.BYTES_PER_ELEMENT, 4 * Float32Array.BYTES_PER_ELEMENT);
+			gl.vertexAttribPointer(texturedTileShader.data.aPosition.index, 2, gl.FLOAT, false, 8 * Float32Array.BYTES_PER_ELEMENT, 0);
+			gl.vertexAttribPointer(texturedTileShader.data.aTexCoord.index, 2, gl.FLOAT, false, 8 * Float32Array.BYTES_PER_ELEMENT, 2 * Float32Array.BYTES_PER_ELEMENT);
+			gl.vertexAttribPointer(texturedTileShader.data.aColor.index, 4, gl.FLOAT, false, 8 * Float32Array.BYTES_PER_ELEMENT, 4 * Float32Array.BYTES_PER_ELEMENT);
 			
-		//	gl.drawElements(gl.TRIANGLES, stateCounts[i], gl.UNSIGNED_INT, stateOffsets[i]);
-			gl.drawElements(gl.TRIANGLES, state.indexCount, gl.UNSIGNED_INT, 0);
+			gl.drawElements(gl.TRIANGLES, state.indexPos, gl.UNSIGNED_INT, 0);
 			
 			i++;
 		}
