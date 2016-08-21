@@ -66,11 +66,12 @@ class FlxReplayTest extends FlxTest
 		var replayRecorder = new FlxReplay();
 		replayRecorder.create(seed);
 		replayPlayer.load(fgr);
-		while (!replayPlayer.finished)
+		while (true)
 		{
 			replayPlayer.playNextFrame();
+			if (replayPlayer.finished)
+				break;
 			replayRecorder.recordFrame();
-			step();
 		}
 		var resavedFGR:String = replayRecorder.save();
 		Assert.areEqual(fgr, resavedFGR);
