@@ -9,7 +9,6 @@ using flixel.util.FlxSpriteUtil;
 
 class PlayState extends FlxState
 {
-	
 	public var text1:FlxText;
 	public var text2:FlxText;
 	
@@ -34,24 +33,14 @@ class PlayState extends FlxState
 		add(text1);
 		
 		text2 = createText(120);
-		text2.applyMarkup("*Forma*_tted_ $v$^i^!a! apply:Markup():", [
-			new FlxTextFormatMarkerPair(format1, "*"),
+		text2.applyMarkup("<y>Forma<y>_tted_ $v$^i^!a! apply:Markup():", [
+			new FlxTextFormatMarkerPair(format1, "<y>"),
 			new FlxTextFormatMarkerPair(format2, "_"),
 			new FlxTextFormatMarkerPair(format3, "$"),
 			new FlxTextFormatMarkerPair(format4, "^"),
 			new FlxTextFormatMarkerPair(format5, "!"),
 			new FlxTextFormatMarkerPair(format6, ":")]);
 		add(text2);
-	}
-	
-	public override function update(elapsed:Float):Void
-	{
-		super.update(elapsed);
-		if (FlxG.keys.justPressed.ONE)
-		{
-			var b = text1.graphic;
-			add(new FlxSprite(0, 0, b));
-		}
 	}
 	
 	function createText(y:Float, ?text:String)
