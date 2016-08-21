@@ -4,24 +4,24 @@ import flash.display.BitmapData;
 import flash.display.Sprite;
 import flixel.system.debug.interaction.Interaction;
 import flixel.system.ui.FlxSystemButton;
+import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 
 /**
  * The base class of all tools in the interactive debug. 
  * 
  * @author Fernando Bevilacqua (dovyski@gmail.com)
  */
-class Tool extends Sprite
-{		
-	private var _brain:Interaction;
-	private var _button:FlxSystemButton;
-	private var _cursor:BitmapData;
-	private var _name:String;
+class Tool extends Sprite implements IFlxDestroyable
+{
+	public var button(default, null):FlxSystemButton;
+	public var cursor(default, null):BitmapData;
 	
-	public function init(Brain:Interaction):Tool
+	private var _name:String = "(Unknown tool)";
+	private var _brain:Interaction;
+	
+	public function init(brain:Interaction):Tool
 	{
-		_brain = Brain;
-		_button = null;
-		_name = "(Unknown tool)";
+		_brain = brain;
 		return this;
 	}
 	
@@ -37,29 +37,19 @@ class Tool extends Sprite
 	
 	public function isActive():Bool
 	{
-		return _brain.getActiveTool() == this && _brain.visible;
+		return _brain.activeTool == this && _brain.visible;
 	}
 	
-	public function getBrain():Interaction
+	private function setButton(Icon:Class<BitmapData>):Void
 	{
-		return _brain;
+		button = new FlxSystemButton(Type.createInstance(Icon, [0, 0]), onButtonClicked, true);
+		button.toggled = true;
 	}
 	
-	public function setButton(Icon:Class<BitmapData>):Void
+	private function setCursor(Icon:BitmapData):Void
 	{
-		_button = new FlxSystemButton(Type.createInstance(Icon, [0, 0]), onButtonClicked, true);
-		_button.toggled = true;
-	}
-	
-	public function setCursor(Icon:BitmapData):Void
-	{
-		_cursor = Icon;
-		_brain.registerCustomCursor(_name, _cursor);
-	}
-	
-	public function setName(Name:String):Void
-	{
-		_name = Name;
+		cursor = Icon;
+		_brain.registerCustomCursor(_name, cursor);
 	}
 	
 	private function onButtonClicked():Void
@@ -67,22 +57,8 @@ class Tool extends Sprite
 		_brain.setActiveTool(this);
 	}
 	
-	/**
-	 * 
-	 * @return
-	 */
-	public function getButton():FlxSystemButton
-	{
-		return _button;
-	}
-	
 	public function getName():String
 	{
 		return _name;
-	}
-	
-	public function getCursor():BitmapData
-	{
-		return _cursor;
 	}
 }
