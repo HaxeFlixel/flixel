@@ -1547,26 +1547,30 @@ class FlxCamera extends FlxBasic
 	
 	private function set_width(Value:Int):Int
 	{
-		if (Value > 0)
+		if (width != Value && Value > 0)
 		{
 			width = Value; 
 			
 			updateFlashOffset();
 			updateScrollRect();
 			updateInternalSpritePositions();
+			
+			FlxG.cameras.cameraResized.dispatch(this);
 		}
 		return Value;
 	}
 	
 	private function set_height(Value:Int):Int
 	{
-		if (Value > 0)
+		if (height != Value && Value > 0)
 		{
 			height = Value;
 			
 			updateFlashOffset();
 			updateScrollRect();
 			updateInternalSpritePositions();
+			
+			FlxG.cameras.cameraResized.dispatch(this);
 		}
 		return Value;
 	}

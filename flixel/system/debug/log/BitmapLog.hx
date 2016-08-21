@@ -246,7 +246,6 @@ class BitmapLog extends Window
 
 	/**
 	 * Clear one bitmap object from the log -- the last one, by default
-	 * @param	Index
 	 */
 	public function clearAt(Index:Int = -1):Void
 	{
