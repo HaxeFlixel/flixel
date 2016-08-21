@@ -17,13 +17,19 @@ class FlxGitSHA
 		var libraryPath:String;
 		var sha:String = "";
 		
-		// make sure the build isn't cancelled if a Sys call fails
+		// don't run git or haxelib in display mode (during completion) -
+		// just slows things down, we don't need the actual SHA value there
+		#if !display
 		try
 		{
 			libraryPath = getLibraryPath(library);
 			sha = getGitSHA(libraryPath);
 		}
-		catch (_:Dynamic) {}
+		catch (_:Dynamic)
+		{
+			// make sure the build isn't cancelled if a Sys call fails
+		}
+		#end
 		
 		fields.push({
 			name: "sha",
