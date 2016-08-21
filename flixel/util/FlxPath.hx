@@ -8,10 +8,38 @@ import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 
 /**
  * This is a simple path data container. Basically a list of points that
- * a FlxObject can follow.  Also has code for drawing debug visuals.
- * FlxTilemap.findPath() returns a path usable by FlxPath, but you can
- * also just make your own, using the add() functions below
+ * a `FlxObject` can follow.  Also has code for drawing debug visuals.
+ * `FlxTilemap.findPath()` returns a path usable by `FlxPath`, but you can
+ * also just make your own, using the `add()` functions below
  * or by creating your own array of points.
+ * 
+ * Every `FlxObject` has a `path` property which can make it move along specified array of way points.
+ * Usage example:
+ * 
+ * ```haxe
+ * var path = new FlxPath();
+ * var points:Array<FlxPoint> = [new FlxPoint(0, 0), new FlxPoint(100, 0)];
+ * object.path = path;
+ * path.start(points, 50, FlxPath.FORWARD);
+ * ```
+ * 
+ * You can also do this in one line:
+ * 
+ * ```haxe
+ * object.path = new FlxPath().start([new FlxPoint(0, 0), new FlxPoint(100, 0)], 50, FlxPath.FORWARD);
+ * ```
+ * 
+ * ...or using some more chaining:
+ * 
+ * ```haxe
+ * object.path = new FlxPath().add(0, 0).add(100, 0).start(50, FlxPath.FORWARD);
+ * ```
+ * 
+ * If you are fine with the default values of start (speed, mode, autorate) you can also do:
+ * 
+ * ```haxe
+ * object.path = new FlxPath([new FlxPoint(0, 0), new FlxPoint(100, 0)]).start();
+ * ```
  */
 class FlxPath implements IFlxDestroyable
 {
@@ -62,8 +90,8 @@ class FlxPath implements IFlxDestroyable
 	/**
 	 * The speed at which the object is moving on the path.
 	 * When an object completes a non-looping path circuit,
-	 * the pathSpeed will be zeroed out, but the path reference
-	 * will NOT be nulled out.  So pathSpeed is a good way
+	 * the path's speed will be zeroed out, but the path reference
+	 * will NOT be nulled out. So `speed` is a good way
 	 * to check if this object is currently following a path or not.
 	 */
 	public var speed:Float = 0;
@@ -122,47 +150,20 @@ class FlxPath implements IFlxDestroyable
 	/**
 	 * Object which will follow this path
 	 */
-	@:allow(flixel.FlxObject.set_path)
+	@:allow(flixel.FlxObject)
 	private var object:FlxObject;
 	
-	/**
-	 * Creates a new FlxPath.
-	 * 
-	 * Every FlxObject have `path` property which can make it move along specified array of way points.
-	 * Everything you need is
-	 * a) create path:
-	 * var path = new FlxPath();
-	 * b) specify array of way points:
-	 * var points:Array<FlxPoint> = [new FlxPoint(0, 0), new FlxPoint(100, 0)];
-	 * c) assign path to object:
-	 * object.path = path;
-	 * d) start path:
-	 * path.start(points, 50, FlxPath.FORWARD);
-	 * 
-	 * You can do this in one line:
-	 * object.path = new FlxPath().start([new FlxPoint(0, 0), new FlxPoint(100, 0)], 50, FlxPath.FORWARD);
-	 * 
-	 * or using some more chaining:
-	 * object.path = new FlxPath().add(0, 0).add(100, 0).start(50, FlxPath.FORWARD);
-	 * 
-	 * If you are fine with the default values of start (speed, mode, autorate) you can also do:
-	 * object.path = new FlxPath([new FlxPoint(0, 0), new FlxPoint(100, 0)]).start()
-	 */
 	public function new(?Nodes:Array<FlxPoint>)
 	{
 		if (Nodes != null)
-		{
 			_nodes = Nodes.copy();
-		}
 		else
-		{
-			_nodes = new Array<FlxPoint>();
-		}
+			_nodes = [];
 	}
 	
 	/**
 	 * Just resets some debugging related variables (for debugger renderer).
-	 * Plus it resets `autoCenter` to true.
+	 * Also resets `autoCenter` to `true`.
 	 * @return	This path object.
 	 */
 	public function reset():FlxPath
@@ -176,7 +177,7 @@ class FlxPath implements IFlxDestroyable
 	}
 	
 	/**
-	 * Sets path following properties: speed, mode and auto rotation.
+	 * Sets this path's following properties: `speed`, `mode` and auto rotation.
 	 * 
 	 * @param	Speed			The speed at which the object is moving on the path.
 	 * @param	Mode			Path following behavior (like looping, horizontal only, etc).
@@ -226,7 +227,7 @@ class FlxPath implements IFlxDestroyable
 	
 	/**
 	 * Restarts this path. So object starts movement again from the first (or last) path point 
-	 * (depends on path movement behavior, specified by `_mode`).
+	 * (depends on path movement behavior mode).
 	 * 
 	 * @return	This path object.
 	 */
@@ -398,7 +399,7 @@ class FlxPath implements IFlxDestroyable
 	/**
 	 * Internal function that decides what node in the path to aim for next based on the behavior flags.
 	 * 
-	 * @return	The node (a FlxPoint object) we are aiming for next.
+	 * @return	The node (a `FlxPoint`) we are aiming for next.
 	 */
 	private function advancePath(Snap:Bool = true):FlxPoint
 	{
@@ -519,7 +520,7 @@ class FlxPath implements IFlxDestroyable
 	}
 	
 	/**
-	 * Called when the path ends, either by completing normally or via cancel().
+	 * Called when the path ends, either by completing normally or via `cancel()`.
 	 */
 	private function onEnd():Void
 	{
@@ -633,10 +634,7 @@ class FlxPath implements IFlxDestroyable
 		{
 			return _nodes.splice(index, 1)[0];
 		}
-		else
-		{
-			return null;
-		}
+		return null;
 	}
 	
 	/**
@@ -688,10 +686,10 @@ class FlxPath implements IFlxDestroyable
 	
 	#if FLX_DEBUG
 	/**
-	 * While this doesn't override FlxBasic.drawDebug(), the behavior is very similar.
+	 * While this doesn't override `FlxBasic.drawDebug()`, the behavior is very similar.
 	 * Based on this path data, it draws a simple lines-and-boxes representation of the path
-	 * if the drawDebug mode was toggled in the debugger overlay. You can use debugColor
-	 * and debugScrollFactor to control the path's appearance.
+	 * if the `drawDebug` mode was toggled in the debugger overlay.
+	 * You can use `debugColor` to control the path's appearance.
 	 * 
 	 * @param	Camera		The camera object the path will draw to.
 	 */
