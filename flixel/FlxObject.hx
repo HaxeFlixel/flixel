@@ -545,6 +545,10 @@ class FlxObject extends FlxBasic
 	
 	/**
 	 * The path this object follows.
+	 * Example:
+	 * 
+	 * var points:Array<FlxPoint> = [new FlxPoint(0, 0), new FlxPoint(100, 0)];
+	 * object.path = new FlxPath().start(points, 50, FlxPath.YOYO);
 	 */
 	public var path(default, set):FlxPath;
 	

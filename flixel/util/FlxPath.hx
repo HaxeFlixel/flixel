@@ -52,7 +52,7 @@ class FlxPath implements IFlxDestroyable
 	/**
 	 * The list of FlxPoints that make up the path data.
 	 */
-	public var nodes:Array<FlxPoint>;
+	public var nodes:Array<FlxPoint> = [];
 	
 	/**
 	 * The speed at which the object is moving on the path.
@@ -122,9 +122,30 @@ class FlxPath implements IFlxDestroyable
 	
 	/**
 	 * Creates a new FlxPath.
+	 * Every FlxObject have `path` property which can make it move along specified array of way points.
+	 * Everything you need is:
+	 * a) create path
+	 * var path = new FlxPath();
+	 * b) specify array of way points
+	 * var points:Array<FlxPoint> = [new FlxPoint(0, 0), new FlxPoint(100, 0)];
+	 * c) assign path to object
+	 * object.path = path;
+	 * d) start path
+	 * path.start(points, 50, FlxPath.FORWARD);
+	 * 
+	 * You can do this in one line:
+	 * object.path = new FlxPath().start([new FlxPoint(0, 0), new FlxPoint(100, 0)], 50, FlxPath.FORWARD);
+	 * 
+	 * or using some more chaining:
+	 * object.path = new FlxPath().add(0, 0).add(100, 0).start(50, FlxPath.FORWARD);
 	 */
-	public function new() {}
+	public function new() { }
 	
+	/**
+	 * Just resets some debugging related variables (for debugger renderer).
+	 * Plus it resets `autoCenter` to true.
+	 * @return	This path object.
+	 */
 	public function reset():FlxPath
 	{
 		#if FLX_DEBUG
@@ -135,9 +156,19 @@ class FlxPath implements IFlxDestroyable
 		return this;
 	}
 	
-	public function start(Nodes:Array<FlxPoint>, Speed:Float = 100, Mode:Int = FlxPath.FORWARD, AutoRotate:Bool = false):FlxPath
+	/**
+	 * Starts movement along specified path.
+	 * 
+	 * @param	Nodes			An optional array of path waypoints. If null then previously added points will be used.
+	 * @param	Speed			The speed at which the object is moving on the path.
+	 * @param	Mode			Path following behavior (like looping, horizontal only, etc).
+	 * @param	AutoRotate		Whether the object's angle should be adjusted to the path angle during path follow behavior.
+	 * 
+	 * @return	This path object.
+	 */
+	public function start(?Nodes:Array<FlxPoint>, Speed:Float = 100, Mode:Int = FlxPath.FORWARD, AutoRotate:Bool = false):FlxPath
 	{
-		nodes = Nodes;
+		nodes = (Nodes != null) ? Nodes : nodes;
 		speed = Math.abs(Speed);
 		_mode = Mode;
 		_autoRotate = AutoRotate;
@@ -145,6 +176,29 @@ class FlxPath implements IFlxDestroyable
 		return this;
 	}
 	
+	/**
+	 * Sets path following properties: speed, mode and auto rotation.
+	 * 
+	 * @param	Speed			The speed at which the object is moving on the path.
+	 * @param	Mode			Path following behavior (like looping, horizontal only, etc).
+	 * @param	AutoRotate		Whether the object's angle should be adjusted to the path angle during path follow behavior.
+	 * 
+	 * @return	This path object.
+	 */
+	public function setPathProperties(Speed:Float = 100, Mode:Int = FlxPath.FORWARD, AutoRotate:Bool = false):FlxPath
+	{
+		speed = Math.abs(Speed);
+		_mode = Mode;
+		_autoRotate = AutoRotate;
+		return this;
+	}
+	
+	/**
+	 * Restarts this path. So object starts movement again from the first (or last) path point 
+	 * (depends on path movement behavior, specified by `_mode`).
+	 * 
+	 * @return	This path object.
+	 */
 	public function restart():FlxPath
 	{
 		finished = false;
@@ -175,8 +229,9 @@ class FlxPath implements IFlxDestroyable
 	 * Change the path node this object is currently at.
 	 * 
 	 * @param  NodeIndex    The index of the new node out of path.nodes.
+	 * @return	This path object.
 	 */
-	public function setNode(NodeIndex:Int):Void
+	public function setNode(NodeIndex:Int):FlxPath
 	{
 		if (NodeIndex < 0) 
 			NodeIndex = 0;
@@ -185,6 +240,7 @@ class FlxPath implements IFlxDestroyable
 		
 		nodeIndex = NodeIndex; 
 		advancePath();
+		return this;
 	} 
 	
 	/**
@@ -410,24 +466,22 @@ class FlxPath implements IFlxDestroyable
 		}
 		
 		if (callComplete && onComplete != null)
-		{
 			onComplete(this);
-		}
 
 		return nodes[nodeIndex];
 	}
 	
 	/**
 	 * Stops path movement and removes this path it from the path manager.
+	 * @return	This path object.
 	 */
-	public function cancel():Void
+	public function cancel():FlxPath
 	{
 		onEnd();
-		
 		if (object != null)
-		{
 			object.velocity.set(0, 0);
-		}
+			
+		return this;
 	}
 	
 	/**
@@ -458,6 +512,8 @@ class FlxPath implements IFlxDestroyable
 	 * 
 	 * @param	X	X position of the new path point in world coordinates.
 	 * @param	Y	Y position of the new path point in world coordinates.
+	 * 
+	 * @return	This path object.
 	 */
 	public function add(X:Float, Y:Float):FlxPath
 	{
@@ -471,6 +527,8 @@ class FlxPath implements IFlxDestroyable
 	 * @param	X		X position of the new path point in world coordinates.
 	 * @param	Y		Y position of the new path point in world coordinates.
 	 * @param	Index	Where within the list of path nodes to insert this new point.
+	 * 
+	 * @return	This path object.
 	 */
 	public function addAt(X:Float, Y:Float, Index:Int):FlxPath
 	{
@@ -490,6 +548,8 @@ class FlxPath implements IFlxDestroyable
 	 * 
 	 * @param	Node			The point in world coordinates you want to add to the path.
 	 * @param	AsReference		Whether to add the point as a reference, or to create a new point with the specified values.
+	 * 
+	 * @return	This path object.
 	 */
 	public function addPoint(Node:FlxPoint, AsReference:Bool = false):FlxPath
 	{
@@ -512,6 +572,8 @@ class FlxPath implements IFlxDestroyable
 	 * @param	Node			The point in world coordinates you want to add to the path.
 	 * @param	Index			Where within the list of path nodes to insert this new point.
 	 * @param	AsReference		Whether to add the point as a reference, or to create a new point with the specified values.
+	 * 
+	 * @return	This path object.
 	 */
 	public function addPointAt(Node:FlxPoint, Index:Int, AsReference:Bool = false):FlxPath
 	{
@@ -578,9 +640,8 @@ class FlxPath implements IFlxDestroyable
 	public function head():FlxPoint
 	{
 		if (nodes.length > 0)
-		{
 			return nodes[0];
-		}
+		
 		return null;
 	}
 	
@@ -592,9 +653,8 @@ class FlxPath implements IFlxDestroyable
 	public function tail():FlxPoint
 	{
 		if (nodes.length > 0)
-		{
 			return nodes[nodes.length - 1];
-		}
+		
 		return null;
 	}
 	
