@@ -139,26 +139,20 @@ class Interaction extends Window
 		if (!isActive())
 			return;
 		
-		switch (event.type)
-		{
-			case MouseEvent.MOUSE_OVER:
-				_debuggerInteraction = true;
-			case MouseEvent.MOUSE_OUT:
-				_debuggerInteraction = false;
-		}
+		if (event.type == MouseEvent.MOUSE_OVER)
+			_debuggerInteraction = true;
+		else if (event.type == MouseEvent.MOUSE_OUT)
+			_debuggerInteraction = false;
 		
 		event.stopPropagation();
 	}
 	
 	private function handleKeyEvent(event:KeyboardEvent):Void
 	{
-		switch (event.type)
-		{
-			case KeyboardEvent.KEY_DOWN:
-				_keysDown.set(event.keyCode, _turn);
-			case KeyboardEvent.KEY_UP:
-				_keysUp.set(event.keyCode, _turn);
-		}
+		if (event.type == KeyboardEvent.KEY_DOWN)
+			_keysDown.set(event.keyCode, _turn);
+		else if (event.type == KeyboardEvent.KEY_UP)
+			_keysUp.set(event.keyCode, _turn);
 	}
 	
 	private function addTool(tool:Tool):Void
