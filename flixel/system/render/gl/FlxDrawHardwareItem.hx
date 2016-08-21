@@ -55,4 +55,13 @@ class FlxDrawHardwareItem<T> extends FlxDrawBaseItem<T>
 		vertexPos = 0;
 	}
 	
+	// Set values
+	private inline function fillTint(r:Float = 1.0, g:Float = 1.0, b:Float = 1.0, a:Float = 1.0):Void
+	{
+		buffer[vertexPos++] = r;
+		buffer[vertexPos++] = g;
+		buffer[vertexPos++] = b;
+		buffer[vertexPos++] = a;
+	}
+	
 }

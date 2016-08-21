@@ -66,7 +66,7 @@ class FlxDrawQuadsItem extends FlxDrawHardwareItem<FlxDrawQuadsItem>
 		var b:Float = 1.0;
 		var a:Float = 1.0;
 		
-		if (colored && transform != null)
+		if (transform != null)
 		{
 			if (colored)
 			{
@@ -78,39 +78,30 @@ class FlxDrawQuadsItem extends FlxDrawHardwareItem<FlxDrawQuadsItem>
 			a = transform.alphaMultiplier;
 		}
 		
-		// Set values
-		inline function fillTint():Void
-		{
-			data[vertexPos++] = r;
-			data[vertexPos++] = g;
-			data[vertexPos++] = b;
-			data[vertexPos++] = a;
-		}
-		
 		// Triangle 1, top-left
 		data[vertexPos++] = x;
 		data[vertexPos++] = y;
 		data[vertexPos++] = uvx;
 		data[vertexPos++] = uvy;
-		fillTint();
+		fillTint(r, g, b, a);
 		// Triangle 1, top-right
 		data[vertexPos++] = x2;
 		data[vertexPos++] = y2;
 		data[vertexPos++] = uvx2;
 		data[vertexPos++] = uvy;
-		fillTint();
+		fillTint(r, g, b, a);
 		// Triangle 1, bottom-left
 		data[vertexPos++] = x3;
 		data[vertexPos++] = y3;
 		data[vertexPos++] = uvx;
 		data[vertexPos++] = uvy2;
-		fillTint();
+		fillTint(r, g, b, a);
 		// Triangle 2, bottom-right
 		data[vertexPos++] = x4;
 		data[vertexPos++] = y4;
 		data[vertexPos++] = uvx2;
 		data[vertexPos++] = uvy2;
-		fillTint();
+		fillTint(r, g, b, a);
 		
 		indexPos += HardwareRenderer.INDICES_PER_TILE;
 		vertexBufferDirty = true;
