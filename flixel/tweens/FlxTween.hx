@@ -731,7 +731,8 @@ typedef TweenOptions =
 }
 
 /**
- * A simple manager for tracking and updating game tween objects.  Normally accessed via the static `FlxTween.manager` rather than being created separately.
+ * A simple manager for tracking and updating game tween objects.
+ * Normally accessed via the static `FlxTween.manager` rather than being created separately.
  */
 @:access(flixel.tweens.FlxTween)
 class FlxTweenManager extends FlxBasic
@@ -826,6 +827,7 @@ class FlxTweenManager extends FlxBasic
 		
 		return Tween;
 	}
+
 	/**
 	 * Removes all FlxTweens.
 	 */
@@ -834,22 +836,25 @@ class FlxTweenManager extends FlxBasic
 		while (_tweens.length > 0)
 			remove(_tweens[0]);
 	}
+
 	/**
-	 * Immediately updates all tweens of type PERSIST or ONESHOT through their endings, triggering their onComplete callbacks.
+	 * Immediately updates all tweens of type `PERSIST` or `ONESHOT` through their endings,
+	 * triggering their `onComplete` callbacks.
 	 * 
-	 * Note: if they haven't yet begun, this will first trigger their onStart callback.
+	 * Note: if they haven't yet begun, this will first trigger their `onStart` callback.
 	 * 
-	 * Note: their onComplete callbacks are triggered in the next frame.  To trigger them immediately, call `FlxTween.manager.update(0);` after this function.
+	 * Note: their `onComplete` callbacks are triggered in the next frame. 
+	 * To trigger them immediately, call `FlxTween.manager.update(0);` after this function.
 	 * 
-	 * In no case should it trigger an onUpdate callback.
+	 * In no case should it trigger an `onUpdate` callback.
 	 */
 	public function completeAll():Void
 	{
 		for (tween in _tweens)
-			if (tween.type == FlxTween.PERSIST || tween.type == FlxTween.ONESHOT) {
+			if (tween.type == FlxTween.PERSIST || tween.type == FlxTween.ONESHOT)
 				tween.update(FlxMath.MAX_VALUE_FLOAT);
-			}
 	}
+
 	/**
 	 * Applies a function to all tweens
 	 * 
