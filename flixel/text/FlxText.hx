@@ -281,11 +281,9 @@ class FlxText extends FlxSprite
 	public function applyMarkup(input:String, rules:Array<FlxTextFormatMarkerPair>):FlxText
 	{
 		if (rules == null || rules.length == 0)
-		{
-			return this;   //there's no point in running the big loop
-		}
+			return this; // there's no point in running the big loop
 		
-		clearFormats();   //start with default formatting
+		clearFormats(); // start with default formatting
 		
 		var rangeStarts:Array<Int> = [];
 		var rangeEnds:Array<Int> = [];
@@ -294,58 +292,56 @@ class FlxText extends FlxSprite
 		var i:Int = 0;
 		for (rule in rules)
 		{
-			if (rule.marker != null && rule.format != null)
+			if (rule.marker == null || rule.format == null)
+				continue;
+
+			var start:Bool = false;
+			var markerLength:Int = Utf8.length(rule.marker);
+			
+			if (input.indexOf(rule.marker) == -1)  
+				continue; // marker not present
+
+			// inspect each character
+			for (charIndex in 0...Utf8.length(input))
 			{
-				var start:Bool = false;
-				var markerLength:Int = Utf8.length(rule.marker);
-				if (input.indexOf(rule.marker) != -1)   //if this marker is present
+				var charCode = Utf8.charCodeAt(input, charIndex);
+				if (Utf8.compare(Utf8.sub(input, charIndex, markerLength), rule.marker) != 0)
+					continue; // it's not one of the markers
+
+				if (start)   
 				{
-					for (charIndex in 0...Utf8.length(input))   //inspect each character
-					{
-						var charCode = Utf8.charCodeAt(input, charIndex);
-						if (Utf8.compare(Utf8.sub(input, charIndex, markerLength), rule.marker) == 0)   //it's one of the markers
-						{
-							if (!start)   //we're outside of a format block
-							{ 
-								start = true;   //start a format block
-								rangeStarts.push(charIndex);
-								rulesToApply.push(rule);
-							}
-							else
-							{
-								start = false;
-								rangeEnds.push(charIndex); //end a format block
-							}
-						}
-					}
-					if (start)
-					{
-						//we ended with an unclosed block, mark it as infinite
-						rangeEnds.push(-1);
-					}
+					start = false;
+					rangeEnds.push(charIndex); //end a format block
 				}
-				i++;
+				else // we're outside of a format block
+				{
+					start = true; //start a format block
+					rangeStarts.push(charIndex);
+					rulesToApply.push(rule);
+				}
 			}
-		}
-		
-		//Remove all of the markers in the string
-		for (rule in rules)
-		{
-			while (input.indexOf(rule.marker) != -1)
+
+			if (start)
 			{
-				input = input.remove(rule.marker);
+				// we ended with an unclosed block, mark it as infinite
+				rangeEnds.push(-1);
 			}
+
+			i++;
 		}
 		
-		//Adjust all the ranges to reflect the removed markers
+		// Remove all of the markers in the string
+		for (rule in rules)
+			input = input.remove(rule.marker);
+		
+		// Adjust all the ranges to reflect the removed markers
 		for (i in 0...rangeStarts.length)
 		{
-			//Consider each range start
+			// Consider each range start
 			var delIndex:Int = rangeStarts[i];
-			
 			var markerLength:Int = Utf8.length(rulesToApply[i].marker);
 			
-			//Any start or end index that is HIGHER than this must be subtracted by one markerLength
+			// Any start or end index that is HIGHER than this must be subtracted by one markerLength
 			for (j in 0...rangeStarts.length)
 			{
 				if (rangeStarts[j] > delIndex)
@@ -358,10 +354,10 @@ class FlxText extends FlxSprite
 				}
 			}
 			
-			//Consider each range end
+			// Consider each range end
 			delIndex = rangeEnds[i];
 			
-			//Any start or end index that is HIGHER than this must be subtracted by one markerLength
+			// Any start or end index that is HIGHER than this must be subtracted by one markerLength
 			for (j in 0...rangeStarts.length)
 			{
 				if (rangeStarts[j] > delIndex)
@@ -375,14 +371,12 @@ class FlxText extends FlxSprite
 			}
 		}
 		
-		//Apply the new text
+		// Apply the new text
 		text = input;
 		
-		//Apply each format selectively to the given range
+		// Apply each format selectively to the given range
 		for (i in 0...rangeStarts.length)
-		{
 			addFormat(rulesToApply[i].format, rangeStarts[i], rangeEnds[i]);
-		}
 		
 		return this;
 	}
@@ -415,16 +409,14 @@ class FlxText extends FlxSprite
 	{
 		for (formatRange in _formatRanges)
 		{
-			if (formatRange.format == Format)
-			{
-				if (Start != null && End != null &&
-					(Start > formatRange.range.end || End < formatRange.range.start))
-				{
-					continue;
-				}
-				
-				_formatRanges.remove(formatRange);
-			}
+			if (formatRange.format != Format)
+				continue;
+			
+			if (Start != null && End != null &&
+				(Start > formatRange.range.end || End < formatRange.range.start))
+				continue;
+			
+			_formatRanges.remove(formatRange);
 		}
 		_regen = true;
 		
@@ -499,23 +491,22 @@ class FlxText extends FlxSprite
 	
 	private function set_fieldWidth(value:Float):Float
 	{
-		if (textField != null)
+		if (textField == null)
+			return value;
+		
+		if (value <= 0)
 		{
-			if (value <= 0)
-			{
-				wordWrap = false;
-				autoSize = true;
-			}
-			else
-			{
-				autoSize = false;
-				wordWrap = true;
-				textField.width = value;
-			}
-			
-			_regen = true;
+			wordWrap = false;
+			autoSize = true;
+		}
+		else
+		{
+			autoSize = false;
+			wordWrap = true;
+			textField.width = value;
 		}
 		
+		_regen = true;
 		return value;
 	}
 	
