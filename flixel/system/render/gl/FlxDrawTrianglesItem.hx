@@ -119,11 +119,65 @@ class FlxDrawTrianglesItem extends FlxDrawHardwareItem<FlxDrawTrianglesItem>
 	}
 	
 	// TODO: replace position argument with matrix?
+	// TODO: check this method...
 	public function addTriangles(vertices:DrawData<Float>, indices:DrawData<Int>, uvData:DrawData<Float>, ?matrix:FlxMatrix, ?transform:ColorTransform):Void
 	{
-		// TODO: implement it...
+		var numVerticesToAdd:Int = Std.int(vertices.length / 2);
+		var numIndexesToAdd:Int = indices.length;
+		var prevVerticesNumber:Int = Std.int(vertexPos / HardwareRenderer.ELEMENTS_PER_VERTEX);
 		
+		ensureElement(numVerticesToAdd * HardwareRenderer.ELEMENTS_PER_VERTEX, numIndexesToAdd);
 		
+		var r:Float = 1.0;
+		var g:Float = 1.0;
+		var b:Float = 1.0;
+		var a:Float = 1.0;
+		
+		if (colored && transform != null)
+		{
+			if (colored)
+			{
+				r = transform.redMultiplier;
+				g = transform.greenMultiplier;
+				b = transform.blueMultiplier;
+			}
+			
+			a = transform.alphaMultiplier;
+		}
+		
+		var data:Float32Array = buffer;
+		
+		// Set values
+		inline function fillTint():Void
+		{
+			data[vertexPos++] = r;
+			data[vertexPos++] = g;
+			data[vertexPos++] = b;
+			data[vertexPos++] = a;
+		}
+		
+		var numUVCoordsPerVertex:Int = (Std.int(uvData.length / 3) == Std.int(vertices.length / 2)) ? 3 : 2;
+		
+		var x:Float, y:Float;
+		for (i in 0...numVerticesToAdd)
+		{
+			x = vertices[i * 2];
+			y = vertices[i * 2 + 1];
+			
+			data[vertexPos++] = matrix.__transformX(x, y);
+			data[vertexPos++] = matrix.__transformY(x, y);
+			data[vertexPos++] = uvData[i * numUVCoordsPerVertex];
+			data[vertexPos++] = uvData[i * numUVCoordsPerVertex + 1];
+			fillTint();
+		}
+		
+		for (i in 0...numIndexesToAdd)
+		{
+			indexes[indexPos++] = prevVerticesNumber + indices[i];
+		}
+		
+		vertexBufferDirty = true;
+		indexBufferDirty = true;
 	}
 	
 	private function ensureElement(vertexPosToAdd:Int, indexPosToAdd:Int):Void
