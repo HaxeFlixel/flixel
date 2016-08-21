@@ -136,6 +136,8 @@ class FlxDrawQuadsItem extends FlxDrawHardwareItem<FlxDrawQuadsItem>
 		indexBufferDirty = true;
 	}
 	
+	// TODO: add methods for adding non-textured quads and triangles...
+	
 	private function get_numTiles():Int
 	{
 		return Std.int(vertexPos / HardwareRenderer.ELEMENTS_PER_TILE);

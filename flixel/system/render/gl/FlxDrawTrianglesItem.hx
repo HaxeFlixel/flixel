@@ -30,6 +30,8 @@ class FlxDrawTrianglesItem extends FlxDrawHardwareItem<FlxDrawTrianglesItem>
 		super();
 	}
 	
+	// TODO: add methods for adding non-textured quads and triangles...
+	
 	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform):Void 
 	{
 		ensureElement(HardwareRenderer.ELEMENTS_PER_TILE, HardwareRenderer.INDICES_PER_TILE);

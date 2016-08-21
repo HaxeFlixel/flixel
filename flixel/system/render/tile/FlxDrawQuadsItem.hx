@@ -38,13 +38,15 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		drawData = null;
 	}
 	
+	// TODO: add methods for adding non-textured quads and triangles...
+	
 	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform):Void
 	{
 		setNext(matrix.tx);
 		setNext(matrix.ty);
-
+		
 		var rect:FlxRect = frame.frame;
-
+		
 		setNext(rect.x);
 		setNext(rect.y);
 		setNext(rect.width);
