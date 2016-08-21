@@ -127,4 +127,6 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 	{
 		return 2 * numTiles;
 	}
+	
+	// TODO: add check if it's possible to add new quad to this item...
 }

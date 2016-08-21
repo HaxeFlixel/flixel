@@ -257,6 +257,8 @@ class FlxDrawStack implements IFlxDestroyable
 	{
 		var isColored:Bool = (colors != null && colors.length != 0);
 		var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(graphic, smoothing, isColored, blend);
-		drawItem.addTriangles(vertices, indices, uvtData, colors, position, view.bounds);
+		
+		// TODO: make it work again...
+	//	drawItem.addTriangles(vertices, indices, uvtData, colors, position, view.bounds);
 	}
 }

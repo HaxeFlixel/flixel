@@ -23,37 +23,17 @@ import openfl._internal.renderer.RenderSession;
  * ...
  * @author Zaphod
  */
-class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
+class FlxDrawQuadsItem extends FlxDrawHardwareItem<FlxDrawQuadsItem>
 {
-	public static inline var INDICES_PER_TILE:Int = 6;
-	
-	
-	public var buffer:Float32Array;
-	public var indexes:UInt32Array;
-	
-	public var glBuffer:GLBuffer;
-	public var glIndexes:GLBuffer;
-	
-	public var indexBufferDirty:Bool;
-	public var vertexBufferDirty:Bool;
-	
 	/** Current amount of filled data in tiles. */
 	public var numTiles(get, null):Int;
 	/** Overall buffer size */
 	public var currentTilesCapacity(get, null):Int;
 	
-	public var vertexPos:Int = 0;
-	
-	public var indexPos:Int = 0;
-	
 	public function new() 
 	{
 		super();
-	}
-	
-	override public function dispose():Void 
-	{
-		super.dispose();
+		type = FlxDrawItemType.TILES;
 	}
 	
 	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform):Void
@@ -132,21 +112,8 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		data[vertexPos++] = uvy2;
 		fillTint();
 		
-		indexPos += INDICES_PER_TILE;
+		indexPos += HardwareRenderer.INDICES_PER_TILE;
 		vertexBufferDirty = true;
-	}
-	
-	override public function render(view:FlxHardwareView):Void 
-	{
-		view.drawItem(this);
-	}
-	
-	override public function reset():Void 
-	{
-		super.reset();
-		
-		indexPos = 0;
-		vertexPos = 0;
 	}
 	
 	private function ensureElement():Void
@@ -154,7 +121,7 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		if (buffer == null)
 		{
 			buffer = new Float32Array(HardwareRenderer.MINIMUM_TILE_COUNT_PER_BUFFER * HardwareRenderer.ELEMENTS_PER_TILE);
-			indexes = new UInt32Array(HardwareRenderer.MINIMUM_TILE_COUNT_PER_BUFFER * INDICES_PER_TILE);
+			indexes = new UInt32Array(HardwareRenderer.MINIMUM_TILE_COUNT_PER_BUFFER * HardwareRenderer.INDICES_PER_TILE);
 			
 			fillIndexBuffer();
 		}
@@ -164,7 +131,7 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 			var newNumberOfTiles = currentTilesCapacity + HardwareRenderer.MINIMUM_TILE_COUNT_PER_BUFFER;
 			
 			buffer = new Float32Array(newNumberOfTiles * HardwareRenderer.ELEMENTS_PER_TILE);
-			indexes = new UInt32Array(newNumberOfTiles * INDICES_PER_TILE);
+			indexes = new UInt32Array(newNumberOfTiles * HardwareRenderer.INDICES_PER_TILE);
 			
 			var oldLength:Int = oldBuffer.length;
 			for (i in 0...oldLength)
@@ -174,17 +141,6 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 			
 			fillIndexBuffer();
 		}
-	}
-	
-	override public function equals(type:FlxDrawItemType, graphic:FlxGraphic, colored:Bool, hasColorOffsets:Bool = false,
-		?blend:BlendMode, smooth:Bool = false, ?shader:FlxShader):Bool
-	{
-		return (this.graphics == graphic 
-			&& this.colored == colored
-			&& this.hasColorOffsets == hasColorOffsets
-			&& this.blending == blend
-			&& this.antialiasing == smooth
-			&& this.shader == shader);
 	}
 	
 	private inline function fillIndexBuffer():Void
@@ -201,7 +157,7 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 			indexes[i + 4] = vertexOffset + 1;
 			indexes[i + 5] = vertexOffset + 3;
 			vertexOffset += 4;
-			i += INDICES_PER_TILE;
+			i += HardwareRenderer.INDICES_PER_TILE;
 		}
 		
 		indexBufferDirty = true;
@@ -216,5 +172,7 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 	{
 		return (buffer != null) ? Std.int(buffer.length / HardwareRenderer.ELEMENTS_PER_TILE) : 0;
 	}
+	
+	// TODO: add check if it's possible to add new quad to this item...
 	
 }

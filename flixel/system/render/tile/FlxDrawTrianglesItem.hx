@@ -284,4 +284,7 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 	{
 		return Std.int(indices.length / 3);
 	}
+	
+	// TODO: add check if it's possible to add new quad to this item...
+	// TODO: add check if it's possible to add new triangles to this item...
 }

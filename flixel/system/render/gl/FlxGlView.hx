@@ -69,7 +69,7 @@ class FlxGlView extends FlxCameraView
 		return renderView;
 	}
 	
-	public function drawItem(item:FlxDrawQuadsItem):Void
+	public function drawItem(item:FlxDrawHardwareItem<Dynamic>):Void
 	{
 		renderView.drawItem(item);
 	}
