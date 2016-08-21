@@ -21,7 +21,7 @@ class FlxPointRangeBounds implements IFlxDestroyable
 	/**
 	 * A flag that can be used to toggle the use of this property.
 	 */
-	public var active:Bool = false;
+	public var active:Bool = true;
 	
 	/**
 	 * Create a new FlxPointRangeBounds object.
