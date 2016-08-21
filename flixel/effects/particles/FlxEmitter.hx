@@ -114,7 +114,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	 */
 	public var alpha(default, null):FlxRangeBounds<Float> = new FlxRangeBounds<Float>(1);
 	/**
-	 * Sets color range of particles launched from this emitter.
+	 * Sets color range of particles launched from this emitter.  Set to null to leave particle colors alone, allowing for customization.
 	 */
 	public var color(default, null):FlxRangeBounds<FlxColor> = new FlxRangeBounds(FlxColor.WHITE, FlxColor.WHITE);
 	/**
@@ -472,10 +472,13 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		particle.alpha = particle.alphaRange.start;
 		
 		// Particle color settings
-		particle.colorRange.start = FlxG.random.color(color.start.min, color.start.max);
-		particle.colorRange.end = FlxG.random.color(color.end.min, color.end.max);
-		particle.colorRange.active = particle.colorRange.start != particle.colorRange.end;
-		particle.color = particle.colorRange.start;
+		if (color != null)
+		{
+			particle.colorRange.start = FlxG.random.color(color.start.min, color.start.max);
+			particle.colorRange.end = FlxG.random.color(color.end.min, color.end.max);
+			particle.colorRange.active = particle.colorRange.start != particle.colorRange.end;
+			particle.color = particle.colorRange.start;
+		}
 		
 		// Particle drag settings
 		particle.dragRange.start.x = FlxG.random.float(drag.start.min.x, drag.start.max.x);
