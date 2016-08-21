@@ -92,14 +92,13 @@ class HTML5FrontEnd
 	
 	private function getOnMobile():Bool 
 	{
-		return
-		switch (platform)
+		return switch (platform)
 		{
 			case ANDROID, BLACKBERRY, WINDOWS_PHONE, IOS(_):
 				true;
 			default:
 				false;
-		};
+		}
 	}
 	
 	private function userAgentContains(substring:String, toLowerCase:Bool = false)

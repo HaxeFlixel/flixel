@@ -117,7 +117,11 @@ class FlxG
 	 */
 	public static var drawFramerate(default, set):Int;
 	
-	@:isVar
+	/**
+	 * Whether the game is running on a mobile device.
+	 * If on HTML5, it returns `FlxG.html5.onMobile`.
+	 * Otherwise, it checks whether the `mobile` haxedef is defined.
+	 */
 	public static var onMobile(get, never):Bool;
 	
 	public static var renderMethod(default, null):FlxRenderMethod;
@@ -713,7 +717,14 @@ class FlxG
 	
 	private static inline function get_onMobile():Bool
 	{
-		return #if js html5.onMobile #elseif mobile true #else false #end;
+		return
+			#if js
+				html5.onMobile
+			#elseif mobile
+				true
+			#else
+				false
+			#end;
 	}
 }
 
