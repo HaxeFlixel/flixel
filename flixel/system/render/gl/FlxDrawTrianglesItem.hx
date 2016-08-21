@@ -74,29 +74,13 @@ class FlxDrawTrianglesItem extends FlxDrawHardwareItem<FlxDrawTrianglesItem>
 		}
 		
 		// Triangle 1, top-left
-		data[vertexPos++] = x;
-		data[vertexPos++] = y;
-		data[vertexPos++] = uvx;
-		data[vertexPos++] = uvy;
-		fillTint(r, g, b, a);
+		addVertexData(x, y, uvx, uvy, r, g, b, a);
 		// Triangle 1, top-right
-		data[vertexPos++] = x2;
-		data[vertexPos++] = y2;
-		data[vertexPos++] = uvx2;
-		data[vertexPos++] = uvy;
-		fillTint(r, g, b, a);
+		addVertexData(x2, y2, uvx2, uvy, r, g, b, a);
 		// Triangle 1, bottom-left
-		data[vertexPos++] = x3;
-		data[vertexPos++] = y3;
-		data[vertexPos++] = uvx;
-		data[vertexPos++] = uvy2;
-		fillTint(r, g, b, a);
+		addVertexData(x3, y3, uvx, uvy2, r, g, b, a);
 		// Triangle 2, bottom-right
-		data[vertexPos++] = x4;
-		data[vertexPos++] = y4;
-		data[vertexPos++] = uvx2;
-		data[vertexPos++] = uvy2;
-		fillTint(r, g, b, a);
+		addVertexData(x4, y4, uvx2, uvy2, r, g, b, a);
 		
 		indexes[indexPos++] = prevVerticesNumber + 0;
 		indexes[indexPos++] = prevVerticesNumber + 1;
@@ -146,11 +130,9 @@ class FlxDrawTrianglesItem extends FlxDrawHardwareItem<FlxDrawTrianglesItem>
 			x = vertices[i * 2];
 			y = vertices[i * 2 + 1];
 			
-			data[vertexPos++] = matrix.__transformX(x, y);
-			data[vertexPos++] = matrix.__transformY(x, y);
-			data[vertexPos++] = uvData[i * numUVCoordsPerVertex];
-			data[vertexPos++] = uvData[i * numUVCoordsPerVertex + 1];
-			fillTint(r, g, b, a);
+			addVertexData(	matrix.__transformX(x, y), matrix.__transformY(x, y),
+							uvData[i * numUVCoordsPerVertex], uvData[i * numUVCoordsPerVertex + 1],
+							r, g, b, a);
 		}
 		
 		for (i in 0...numIndexesToAdd)
