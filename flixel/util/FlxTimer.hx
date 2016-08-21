@@ -156,16 +156,20 @@ class FlxTimer implements IFlxDestroyable
 		{
 			_timeCounter -= time;
 			_loopsCounter++;
-			
-			if (onComplete != null)
-			{
-				onComplete(this);
-			}
-			
-			if (loops > 0 && (_loopsCounter >= loops))
-			{
-				cancel();
-			}
+		}
+	}
+	
+	@:allow(flixel.util.FlxTimerManager)
+	private function onLoopFinished():Void
+	{
+		if (onComplete != null)
+		{
+			onComplete(this);
+		}
+		
+		if (loops > 0 && (_loopsCounter >= loops))
+		{
+			cancel();
 		}
 	}
 	
@@ -203,6 +207,8 @@ class FlxTimerManager extends FlxBasic
 {
 	private var _timers:Array<FlxTimer> = [];
 	
+	private var _loopedTimers:Array<FlxTimer> = [];
+	
 	/**
 	 * Instantiates a new timer manager.
 	 */
@@ -237,7 +243,25 @@ class FlxTimerManager extends FlxBasic
 		{
 			if (timer.active && !timer.finished && timer.time >= 0)
 			{
+				var timerLoops:Int = timer.elapsedLoops;
 				timer.update(elapsed);
+				
+				if (timerLoops != timer.elapsedLoops)
+				{
+					if (_loopedTimers == null)
+					{
+						_loopedTimers = new Array<FlxTimer>();
+					} 
+					_loopedTimers.push(timer);
+				}
+				
+				if (_loopedTimers != null)
+				{
+					while (_loopedTimers.length > 0)
+					{
+						_loopedTimers.shift().onLoopFinished();
+					}
+				}
 			}
 		}
 	}
