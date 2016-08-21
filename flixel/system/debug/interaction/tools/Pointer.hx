@@ -4,7 +4,7 @@ import flash.display.BitmapData;
 import flash.ui.Keyboard;
 import flixel.FlxBasic;
 import flixel.FlxObject;
-import flixel.group.FlxGroup;
+import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxPoint;
 import flixel.system.debug.interaction.Interaction;
 using flixel.util.FlxArrayUtil;

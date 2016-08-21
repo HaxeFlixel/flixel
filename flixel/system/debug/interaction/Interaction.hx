@@ -2,13 +2,12 @@ package flixel.system.debug.interaction;
 
 import flash.display.Bitmap;
 import flash.display.BitmapData;
-import flash.display.DisplayObject;
 import flash.display.Graphics;
 import flash.display.Sprite;
 import flash.events.KeyboardEvent;
 import flixel.FlxObject;
-import flixel.group.FlxGroup;
 import flash.events.MouseEvent;
+import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.FlxPointer;
 import flixel.math.FlxPoint;
 import flixel.system.debug.FlxDebugger.GraphicInteractive;
