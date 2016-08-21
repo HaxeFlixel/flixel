@@ -53,6 +53,133 @@ class FlxPathTest extends FlxTest
 		step();
 	}
 	
+	@Test
+	function testAddAtNoCrashOnEmptyPath()
+	{
+		path.addAt(10, 10, 0);
+		Assert.areEqual(1, path.nodes.length);
+	}
+	
+	@Test
+	function testRemoveAtNoCrashOnEmptyPath()
+	{
+		path.removeAt(0);
+		Assert.areEqual(0, path.nodes.length);
+	}
+	
+	@Test
+	function testHeadNoCrashOnEmpty()
+	{
+		Assert.areEqual(null, path.head());
+	}
+	
+	@Test
+	function testTailNoCrashOnEmpty()
+	{
+		Assert.areEqual(null, path.tail());
+	}
+	
+	@Test
+	function testNotActiveOnEmptyNodesStart()
+	{
+		object.path = path.start(null);
+		Assert.areEqual(false, object.path.active);
+		object.path = path.start([]);
+		Assert.areEqual(false, object.path.active);
+	}
+	
+	@Test
+	function testNoRestartOnNullNodesStart()
+	{
+		startPath();
+		Assert.areEqual(true, object.path.active);
+		Assert.areEqual(false, object.path.finished);
+		
+		object.path.start(null);
+		Assert.areEqual(true, object.path.active);
+		Assert.areEqual(false, object.path.finished);
+	}
+	
+	@Test
+	function testRemoveAt()
+	{
+		for (i in 0...4)
+		{
+			path.add(i, i);
+		}
+		Assert.areEqual(4, path.nodes.length);
+		
+		path.removeAt(5); // Beyond the length
+		Assert.areEqual(3, path.nodes.length);
+		for (i in 0...3)
+		{
+			Assert.areEqual(i, path.nodes[i].x);
+			Assert.areEqual(i, path.nodes[i].y);
+		}
+		
+		path.removeAt(2);
+		Assert.areEqual(2, path.nodes.length);
+		for (i in 0...2)
+		{
+			Assert.areEqual(i, path.nodes[i].x);
+			Assert.areEqual(i, path.nodes[i].y);
+		}
+	}
+	
+	@Test
+	function testAddAt()
+	{
+		for (i in 0...2)
+		{
+			path.add(i, i);
+		}
+		Assert.areEqual(2, path.nodes.length);
+		
+		path.addAt(2, 2, 2);
+		Assert.areEqual(3, path.nodes.length);
+		
+		path.addAt(3, 3, 4);
+		Assert.areEqual(4, path.nodes.length);
+		for (i in 0...4)
+		{
+			Assert.areEqual(i, path.nodes[i].x);
+			Assert.areEqual(i, path.nodes[i].y);
+		}
+	}
+	
+	@Test
+	function testStartNodesAsReference()
+	{
+		var mypoints : Array<FlxPoint> = [new FlxPoint(0, 0), new FlxPoint(1, 1), new FlxPoint(2, 2), new FlxPoint(3, 3)];
+		object.path = path.start(mypoints, 100, FlxPath.FORWARD, false, true);
+		Assert.areEqual(object.path.nodes.length, mypoints.length);
+		for (i in 0...mypoints.length)
+		{
+			Assert.areEqual(i, path.nodes[i].x);
+			Assert.areEqual(i, path.nodes[i].y);
+		}
+		
+		object.path.removeAt(0);
+		Assert.areEqual(object.path.nodes.length, mypoints.length);
+		for (i in 0...mypoints.length)
+		{
+			Assert.areEqual(i + 1, path.nodes[i].x);
+			Assert.areEqual(i + 1, path.nodes[i].y);
+		}
+		
+		object.path = path.start(mypoints, 100, FlxPath.FORWARD, false, false);
+		Assert.areEqual(object.path.nodes.length, mypoints.length);
+		object.path.removeAt(0);
+		Assert.areEqual(object.path.nodes.length + 1, mypoints.length);
+	}
+	
+	@Test
+	function testDefaultStart()
+	{
+		object.path = new FlxPath([new FlxPoint(10, 10), new FlxPoint(20, 20), new FlxPoint(30, 30)]).start();
+		Assert.areEqual(true, object.path.active);
+	}
+	
 	function finishPath()
 	{
 		while (!path.finished)
