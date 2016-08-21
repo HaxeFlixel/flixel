@@ -145,10 +145,8 @@ class FlxBasePreloader extends NMEPreloader
 	 */
 	override public function onLoaded() 
 	{
-		#if web
 		_loaded = true;
 		_percent = 1;
-		#end
 	}
 	
 	/**
