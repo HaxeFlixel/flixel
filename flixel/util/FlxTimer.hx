@@ -196,7 +196,7 @@ class FlxTimer implements IFlxDestroyable
 }
 
 /**
- * A simple manager for tracking and updating game timer objects.
+ * A simple manager for tracking and updating game timer objects.  Normally accessed via the static `FlxTimer.manager` rather than being created separately.
  */
 class FlxTimerManager extends FlxBasic
 {
@@ -272,5 +272,28 @@ class FlxTimerManager extends FlxBasic
 	public inline function clear():Void
 	{
 		FlxArrayUtil.clearArray(_timers);
+	}
+	
+	/**
+	 * Immediately updates all non-looping timers to their end points.
+	 */
+	public function completeAll():Void
+	{
+		var timersToFinish:Array<FlxTimer> = [];
+		for (timer in _timers)
+            if (timer.loops == 1)
+				timersToFinish.push(timer);
+		for (timer in timersToFinish)
+			timer.update(timer.timeLeft);
+	}
+	/**
+	 * Applies a function to all timers
+	 * 
+	 * @param   Function   A function that modifies one timer at a time
+	 */
+	public function forEach(Function:FlxTimer->Void)
+	{
+		for (timer in _timers)		
+			Function(timer);
 	}
 }

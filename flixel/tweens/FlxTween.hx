@@ -17,6 +17,7 @@ import flixel.tweens.motion.QuadPath;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
+import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 
 class FlxTween implements IFlxDestroyable
@@ -729,6 +730,9 @@ typedef TweenOptions =
 	?loopDelay:Null<Float>
 }
 
+/**
+ * A simple manager for tracking and updating game tween objects.  Normally accessed via the static `FlxTween.manager` rather than being created separately.
+ */
 @:access(flixel.tweens.FlxTween)
 class FlxTweenManager extends FlxBasic
 {
@@ -829,5 +833,31 @@ class FlxTweenManager extends FlxBasic
 	{
 		while (_tweens.length > 0)
 			remove(_tweens[0]);
+	}
+	/**
+	 * Immediately updates all tweens of type PERSIST or ONESHOT through their endings, triggering their onComplete callbacks.
+	 * 
+	 * Note: if they haven't yet begun, this will first trigger their onStart callback.
+	 * 
+	 * Note: their onComplete callbacks are triggered in the next frame.  To trigger them immediately, call `FlxTween.manager.update(0);` after this function.
+	 * 
+	 * In no case should it trigger an onUpdate callback.
+	 */
+	public function completeAll():Void
+	{
+		for (tween in _tweens)
+			if (tween.type == FlxTween.PERSIST || tween.type == FlxTween.ONESHOT) {
+				tween.update(FlxMath.MAX_VALUE_FLOAT);
+			}
+	}
+	/**
+	 * Applies a function to all tweens
+	 * 
+	 * @param   Function   A function that modifies one tween at a time
+	 */
+	public function forEach(Function:FlxTween->Void)
+	{
+		for (tween in _tweens)		
+			Function(tween);
 	}
 }
