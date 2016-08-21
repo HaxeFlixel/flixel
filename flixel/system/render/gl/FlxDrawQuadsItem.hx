@@ -43,8 +43,6 @@ class FlxDrawQuadsItem extends FlxDrawHardwareItem<FlxDrawQuadsItem>
 		var rect:FlxRect = frame.frame;
 		var uv:FlxRect = frame.uv;
 		
-		var data:Float32Array = buffer;
-		
 		// UV
 		var uvx:Float = uv.x;
 		var uvy:Float = uv.y;

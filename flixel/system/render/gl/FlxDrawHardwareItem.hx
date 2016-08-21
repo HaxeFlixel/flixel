@@ -68,4 +68,14 @@ class FlxDrawHardwareItem<T> extends FlxDrawBaseItem<T>
 		buffer[vertexPos++] = a;
 	}
 	
+	override private function get_numVertices():Int
+	{
+		return Std.int(vertexPos / HardwareRenderer.ELEMENTS_PER_VERTEX);
+	}
+	
+	override private function get_numTriangles():Int
+	{
+		return Std.int(indexPos / 3);
+	}
+	
 }

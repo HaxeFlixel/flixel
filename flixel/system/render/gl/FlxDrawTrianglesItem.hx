@@ -33,12 +33,10 @@ class FlxDrawTrianglesItem extends FlxDrawHardwareItem<FlxDrawTrianglesItem>
 	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform):Void 
 	{
 		ensureElement(HardwareRenderer.ELEMENTS_PER_TILE, HardwareRenderer.INDICES_PER_TILE);
-		var prevVerticesNumber:Int = Std.int(vertexPos / HardwareRenderer.ELEMENTS_PER_VERTEX);
+		var prevVerticesNumber:Int = numVertices;
 		
 		var rect:FlxRect = frame.frame;
 		var uv:FlxRect = frame.uv;
-		
-		var data:Float32Array = buffer;
 		
 		// UV
 		var uvx:Float = uv.x;
@@ -99,7 +97,7 @@ class FlxDrawTrianglesItem extends FlxDrawHardwareItem<FlxDrawTrianglesItem>
 	{
 		var numVerticesToAdd:Int = Std.int(vertices.length / 2);
 		var numIndexesToAdd:Int = indices.length;
-		var prevVerticesNumber:Int = Std.int(vertexPos / HardwareRenderer.ELEMENTS_PER_VERTEX);
+		var prevVerticesNumber:Int = numVertices;
 		
 		ensureElement(numVerticesToAdd * HardwareRenderer.ELEMENTS_PER_VERTEX, numIndexesToAdd);
 		
@@ -119,8 +117,6 @@ class FlxDrawTrianglesItem extends FlxDrawHardwareItem<FlxDrawTrianglesItem>
 			
 			a = transform.alphaMultiplier;
 		}
-		
-		var data:Float32Array = buffer;
 		
 		var numUVCoordsPerVertex:Int = (Std.int(uvData.length / 3) == Std.int(vertices.length / 2)) ? 3 : 2;
 		
