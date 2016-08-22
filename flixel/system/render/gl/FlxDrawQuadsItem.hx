@@ -148,6 +148,11 @@ class FlxDrawQuadsItem extends FlxDrawHardwareItem<FlxDrawQuadsItem>
 		return (buffer != null) ? Std.int(buffer.length / HardwareRenderer.ELEMENTS_PER_TILE) : 0;
 	}
 	
+	override public function canAddQuad():Bool
+	{
+		return ((this.numTiles + 1) <= HardwareRenderer.QUADS_PER_BATCH);
+	}
+	
 	// TODO: add check if it's possible to add new quad to this item...
 	
 }

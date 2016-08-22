@@ -126,6 +126,16 @@ class FlxDrawBaseItem<T>
 		this.shader = shader;
 	}
 	
+	public function canAddQuad():Bool
+	{
+		return true;
+	}
+	
+	public function canAddTriangles(numVertices:Int, numIndices:Int):Bool
+	{
+		return true;
+	}
+	
 	private function get_numVertices():Int
 	{
 		return 0;

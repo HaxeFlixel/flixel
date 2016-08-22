@@ -93,7 +93,6 @@ class FlxDrawTrianglesItem extends FlxDrawHardwareItem<FlxDrawTrianglesItem>
 		indexBufferDirty = true;
 	}
 	
-	// TODO: replace position argument with matrix?
 	// TODO: check this method...
 	public function addTriangles(vertices:DrawData<Float>, indices:DrawData<Int>, uvData:DrawData<Float>, ?matrix:FlxMatrix, ?transform:ColorTransform):Void
 	{
@@ -179,6 +178,17 @@ class FlxDrawTrianglesItem extends FlxDrawHardwareItem<FlxDrawTrianglesItem>
 			}
 			
 		}
+	}
+	
+	override public function canAddQuad():Bool
+	{
+		return canAddTriangles(4, 6);
+	}
+	
+	override public function canAddTriangles(numVertices:Int, numIndices:Int):Bool
+	{
+		return 	((this.numVertices + numVertices) <= HardwareRenderer.VERTICES_PER_BATCH) &&
+				((this.indexPos + numIndices) <= HardwareRenderer.INDICES_PER_BATCH);
 	}
 	
 	// TODO: add check if it's possible to add new quad to this item...

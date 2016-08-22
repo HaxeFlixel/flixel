@@ -36,7 +36,10 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 	
 	// TODO: add batch size limit...
 	// and use this var...
-	public static var MAX_BATCH_SIZE:Int = 2000;
+	public static var QUADS_PER_BATCH:Int = 2000;
+	
+	public static var VERTICES_PER_BATCH:Int = 7500;
+	public static var INDICES_PER_BATCH:Int = 7500;
 	
 	// TODO: make batching for triangle rendering switchable ON/OFF???
 	public static var BATCH_TRIANGLES:Bool = true;
@@ -182,6 +185,10 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 					gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
 					gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
 				}
+				
+				// TODO: Texture repeat support... (use it later)
+				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
 			}
 			
 			if (state.glBuffer == null)

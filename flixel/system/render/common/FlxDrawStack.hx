@@ -83,9 +83,9 @@ class FlxDrawStack implements IFlxDestroyable
 		#else
 		var itemToReturn:FlxDrawQuadsItem = null;
 		
-		// TODO: change this check. make it more universal, for both harware renderers (tiles and gl)...
 		if (_currentDrawItem != null /* && _currentDrawItem.type == FlxDrawItemType.TILES*/ 
-			&& _currentDrawItem.equals(FlxDrawItemType.TILES, graphic, colored, hasColorOffsets, blend, smooth, shader))
+			&& _currentDrawItem.equals(FlxDrawItemType.TILES, graphic, colored, hasColorOffsets, blend, smooth, shader)
+			&& _currentDrawItem.canAddQuad())
 		{	
 			return _headTiles;
 		}
@@ -126,12 +126,13 @@ class FlxDrawStack implements IFlxDestroyable
 	// TODO: add shader support for openfl 4.0.0 and later...
 	@:noCompletion
 	public function startTrianglesBatch(graphic:FlxGraphic, smooth:Bool = false,
-		colored:Bool = false, ?blend:BlendMode, ?shader:FlxShader):FlxDrawTrianglesItem
+		colored:Bool = false, ?blend:BlendMode, ?shader:FlxShader, numVertices:Int, numIndices:Int):FlxDrawTrianglesItem
 	{
 		var itemToReturn:FlxDrawTrianglesItem = null;
 		
 		if (_currentDrawItem != null /*&& _currentDrawItem.type == FlxDrawItemType.TRIANGLES*/ 
-			&& _headTriangles.equals(FlxDrawItemType.TRIANGLES, graphic, colored, false, blend, smooth, shader))
+			&& _headTriangles.equals(FlxDrawItemType.TRIANGLES, graphic, colored, false, blend, smooth, shader)
+			&& _headTriangles.canAddTriangles(numVertices, numIndices))
 		{	
 			return _headTriangles;
 		}
@@ -227,7 +228,8 @@ class FlxDrawStack implements IFlxDestroyable
 		var hasColorOffsets:Bool = (transform != null && transform.hasRGBAOffsets());
 		
 		#if FLX_RENDER_TRIANGLE
-		var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(frame.parent, smoothing, isColored, blend);
+		// TODO: don't use magic numbers here...
+		var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(frame.parent, smoothing, isColored, blend, null, 4, 6);
 		#else
 		var drawItem:FlxDrawQuadsItem = startQuadBatch(frame.parent, isColored, hasColorOffsets, blend, smoothing, shader);
 		#end
@@ -251,14 +253,14 @@ class FlxDrawStack implements IFlxDestroyable
 		drawItem.addQuad(frame, _helperMatrix, transform);
 	}
 	
+	// TODO: add support for repeat (it's true by default, i guess. need to check it)
 	public function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>,
-		uvtData:DrawData<Float>, ?colors:DrawData<Int>, ?position:FlxPoint, ?blend:BlendMode,
+		uvtData:DrawData<Float>, ?matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, 
 		repeat:Bool = false, smoothing:Bool = false):Void
 	{
-		var isColored:Bool = (colors != null && colors.length != 0);
-		var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(graphic, smoothing, isColored, blend);
+		var isColored:Bool = (transform != null && transform.hasRGBMultipliers());
+		var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(graphic, smoothing, isColored, blend, null, Std.int(vertices.length / 2), vertices.length);
 		
-		// TODO: make it work again...
-	//	drawItem.addTriangles(vertices, indices, uvtData, colors, position, view.bounds);
+		drawItem.addTriangles(vertices, indices, uvtData, matrix, transform);
 	}
 }
