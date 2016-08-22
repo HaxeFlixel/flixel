@@ -188,9 +188,7 @@ class FlxSound extends FlxBasic
 		autoDestroy = false;
 		
 		if (_transform == null)
-		{
 			_transform = new SoundTransform();
-		}
 		_transform.pan = 0;
 	}
 	
@@ -227,15 +225,13 @@ class FlxSound extends FlxBasic
 	override public function update(elapsed:Float):Void
 	{
 		if (!playing)
-		{
 			return;
-		}
 		
 		_time = _channel.position;
 		
 		var radialMultiplier:Float = 1.0;
 		
-		//Distance-based volume control
+		// Distance-based volume control
 		if (_target != null)
 		{
 			var targetPosition = _target.getPosition();
@@ -285,9 +281,7 @@ class FlxSound extends FlxBasic
 	public function loadEmbedded(EmbeddedSound:FlxSoundAsset, Looped:Bool = false, AutoDestroy:Bool = false, ?OnComplete:Void->Void):FlxSound
 	{
 		if (EmbeddedSound == null)
-		{
 			return this;
-		}
 		
 		cleanup(true);
 		
@@ -308,7 +302,7 @@ class FlxSound extends FlxBasic
 				FlxG.log.error('Could not find a Sound asset with an ID of \'$EmbeddedSound\'.');
 		}
 		
-		//NOTE: can't pull ID3 info from embedded sound currently
+		// NOTE: can't pull ID3 info from embedded sound currently
 		looped = Looped; 
 		autoDestroy = AutoDestroy;
 		updateTransform();
@@ -375,7 +369,7 @@ class FlxSound extends FlxBasic
 	 * @param	Y			The Y position of the sound.
 	 * @param	TargetObject		The object you want to track.
 	 * @param	Radius			The maximum distance this sound can travel.
-	 * @param	Pan			Whether panning should be used in addition to the volume changes (default: true).
+	 * @param	Pan			Whether panning should be used in addition to the volume changes.
 	 * @return	This FlxSound instance (nice for chaining stuff together, if you're into that).
 	 */
 	public function proximity(X:Float, Y:Float, TargetObject:FlxObject, Radius:Float, Pan:Bool = true):FlxSound
@@ -391,33 +385,27 @@ class FlxSound extends FlxBasic
 	/**
 	 * Call this function to play the sound - also works on paused sounds.
 	 * 
-	 * @param	ForceRestart	Whether to start the sound over or not.  Default value is false, meaning if the sound is already playing or was paused when you call play(), it will continue playing from its current position, NOT start again from the beginning.
-	 * @param	StartTime		At which point to start plaing the sound, in milliseconds
+	 * @param   ForceRestart   Whether to start the sound over or not. 
+	 *                         Default value is false, meaning if the sound is already playing or was
+	 *                         paused when you call play(), it will continue playing from its current
+	 *                         position, NOT start again from the beginning.
+	 * @param   StartTime      At which point to start plaing the sound, in milliseconds
 	 */
 	public function play(ForceRestart:Bool = false, StartTime:Float = 0.0):FlxSound
 	{
 		if (!exists)
-		{
 			return this;
-		}
+
 		if (ForceRestart)
-		{
 			cleanup(false, true);
-		}
-		else if (playing)
-		{
-			// Already playing sound
+		else if (playing) // Already playing sound
 			return this;
-		}
 		
 		if (_paused)
-		{
 			resume();
-		}
 		else
-		{
 			startSound(StartTime);
-		}
+
 		return this;
 	}
 	
@@ -427,9 +415,7 @@ class FlxSound extends FlxBasic
 	public function resume():FlxSound
 	{
 		if (_paused)
-		{
 			startSound(_time);
-		}
 		return this;
 	}
 	
@@ -439,9 +425,8 @@ class FlxSound extends FlxBasic
 	public function pause():FlxSound
 	{
 		if (!playing)
-		{
 			return this;
-		}
+
 		_time = _channel.position;
 		_paused = true;
 		cleanup(false, false);
@@ -466,9 +451,7 @@ class FlxSound extends FlxBasic
 	public inline function fadeOut(Duration:Float = 1, ?To:Float = 0, ?onComplete:FlxTween->Void):FlxSound
 	{
 		if (fadeTween != null)
-		{
 			fadeTween.cancel();
-		}
 		fadeTween = FlxTween.num(volume, To, Duration, { onComplete: onComplete }, volumeTween);
 		
 		return this;
@@ -484,13 +467,11 @@ class FlxSound extends FlxBasic
 	public inline function fadeIn(Duration:Float = 1, From:Float = 0, To:Float = 1, ?onComplete:FlxTween->Void):FlxSound
 	{
 		if (!playing)
-		{
 			play();
-		}
+
 		if (fadeTween != null)
-		{
 			fadeTween.cancel();
-		}
+
 		fadeTween = FlxTween.num(From, To, Duration, { onComplete: onComplete }, volumeTween);
 		return this;
 	}
@@ -536,20 +517,17 @@ class FlxSound extends FlxBasic
 			(group != null ? group.volume : 1) * _volume * _volumeAdjust;
 		
 		if (_channel != null)
-		{
 			_channel.soundTransform = _transform;
-		}
 	}
 	
 	/**
-	 * An internal helper function used to attempt to start playing the sound and populate the _channel variable.
+	 * An internal helper function used to attempt to start playing
+	 * the sound and populate the _channel variable.
 	 */
 	private function startSound(StartTime:Float):Void
 	{
 		if (_sound == null)
-		{
 			return;
-		}
 		
 		_time = StartTime;
 		_paused = false;
@@ -570,14 +548,13 @@ class FlxSound extends FlxBasic
 	}
 	
 	/**
-	 * An internal helper function used to help Flash clean up finished sounds or restart looped sounds.
+	 * An internal helper function used to help Flash
+	 * clean up finished sounds or restart looped sounds.
 	 */
 	private function stopped(_):Void
 	{
 		if (onComplete != null)
-		{
 			onComplete();
-		}
 		
 		if (looped)
 		{
@@ -585,16 +562,17 @@ class FlxSound extends FlxBasic
 			play(false, loopTime);
 		}
 		else
-		{
 			cleanup(autoDestroy);
-		}
 	}
 	
 	/**
-	 * An internal helper function used to help Flash clean up (and potentially re-use) finished sounds. Will stop the current sound and destroy the associated SoundChannel, plus, any other commands ordered by the passed in parameters.
+	 * An internal helper function used to help Flash clean up (and potentially re-use) finished sounds.
+	 * Will stop the current sound and destroy the associated SoundChannel, plus,
+	 * any other commands ordered by the passed in parameters.
 	 * 
-	 * @param  destroySound    Whether or not to destroy the sound. If this is true, the position and fading will be reset as well.
-	 * @param  resetPosition    Whether or not to reset the position of the sound.
+	 * @param  destroySound    Whether or not to destroy the sound. If this is true,
+	 *                         the position and fading will be reset as well.
+	 * @param  resetPosition   Whether or not to reset the position of the sound.
 	 */
 	private function cleanup(destroySound:Bool, resetPosition:Bool = true):Void
 	{
@@ -635,9 +613,7 @@ class FlxSound extends FlxBasic
 	private function onFocus():Void
 	{
 		if (!_alreadyPaused)
-		{
 			resume();
-		}
 	}
 	
 	@:allow(flixel.system.frontEnds.SoundFrontEnd)
@@ -658,14 +634,10 @@ class FlxSound extends FlxBasic
 			this.group = group;
 			
 			if (oldGroup != null)
-			{
 				oldGroup.remove(this);
-			}
 			
 			if (group != null)
-			{
 				group.add(this);
-			}
 			
 			updateTransform();
 		}
