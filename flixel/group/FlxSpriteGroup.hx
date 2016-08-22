@@ -625,7 +625,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	
 	override private function set_alive(Value:Bool):Bool
 	{
-		if (exists && alive != Value)
+		if (alive != Value)
 			transformChildren(aliveTransform, Value);
 		return super.set_alive(Value);
 	}
