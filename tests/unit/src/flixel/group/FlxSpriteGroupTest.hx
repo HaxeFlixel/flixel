@@ -43,12 +43,12 @@ class FlxSpriteGroupTest extends FlxTest
 		Assert.areEqual(group.length, group.countLiving());
 		Assert.areEqual(0, group.countDead());
 		
-        group.kill();
-        Assert.areEqual(0, group.countLiving());
+		group.kill();
+		Assert.areEqual(0, group.countLiving());
 		Assert.areEqual(group.length, group.countDead());
-
-        group.revive();
-        Assert.areEqual(group.length, group.countLiving());
+		
+		group.revive();
+		Assert.areEqual(group.length, group.countLiving());
 		Assert.areEqual(0, group.countDead());
 	}
 }
