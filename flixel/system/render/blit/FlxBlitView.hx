@@ -171,9 +171,11 @@ class FlxBlitView extends FlxCameraView
 	}
 	
 	override public function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>,
-		uvtData:DrawData<Float>, ?colors:DrawData<Int>, ?position:FlxPoint, ?blend:BlendMode,
-		repeat:Bool = false, smoothing:Bool = false):Void
+		uvtData:DrawData<Float>, ?matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, 
+		repeat:Bool = false, smoothing:Bool = false):Void 
 	{
+		// TODO: fix this...
+		/*
 		if (position == null)
 			position = renderPoint.set();
 		
@@ -234,6 +236,7 @@ class FlxBlitView extends FlxCameraView
 		}
 		
 		triBounds.put();
+		*/
 	}
 	
 	override public function updatePosition():Void 

@@ -6,6 +6,7 @@ import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.system.FlxAssets.FlxShader;
+import flixel.system.render.common.DrawItem.DrawData;
 import flixel.system.render.common.FlxCameraView;
 import flixel.system.render.common.FlxDrawStack;
 import flixel.util.FlxDestroyUtil;
@@ -32,7 +33,9 @@ class FlxGlView extends FlxCameraView
 		super(camera);
 		
 		drawStack = new FlxDrawStack(this);
+		#if !flash
 		renderView = new HardwareRenderer(camera.width, camera.height);
+		#end
 	}
 	
 	override public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix,
@@ -47,11 +50,11 @@ class FlxGlView extends FlxCameraView
 		drawStack.copyPixels(frame, pixels, sourceRect, destPoint, transform, blend, smoothing, shader);
 	}
 	
-	override public function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, ?colors:DrawData<Int>, ?position:FlxPoint, ?blend:BlendMode, repeat:Bool = false, smoothing:Bool = false):Void 
+	override public function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>,
+		uvtData:DrawData<Float>, ?matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, 
+		repeat:Bool = false, smoothing:Bool = false):Void 
 	{
-	//	public function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>,
-	//	uvtData:DrawData<Float>, ?matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, 
-	//	repeat:Bool = false, smoothing:Bool = false):Void
+		drawStack.drawTriangles(graphic, vertices, indices, uvtData, matrix, transform, blend, repeat, smoothing);
 	}
 	
 	override public function destroy():Void 
@@ -69,7 +72,9 @@ class FlxGlView extends FlxCameraView
 	override public function lock(useBufferLocking:Bool):Void 
 	{
 		drawStack.clearDrawStack();
+		#if !flash
 		renderView.clear();
+		#end
 	}
 	
 	override function get_display():DisplayObject 
@@ -79,7 +84,9 @@ class FlxGlView extends FlxCameraView
 	
 	public function drawItem(item:FlxDrawHardwareItem<Dynamic>):Void
 	{
+		#if !flash
 		renderView.drawItem(item);
+		#end
 	}
 	
 }

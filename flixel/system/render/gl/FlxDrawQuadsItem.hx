@@ -15,16 +15,14 @@ import lime.graphics.opengl.GLBuffer;
 import lime.utils.Float32Array;
 import lime.utils.UInt32Array;
 
-#if !display
-import openfl._internal.renderer.RenderSession;
-#end
-
 /**
  * ...
  * @author Zaphod
  */
 class FlxDrawQuadsItem extends FlxDrawHardwareItem<FlxDrawQuadsItem>
 {
+	#if !flash
+	
 	/** Current amount of filled data in tiles. */
 	public var numTiles(get, null):Int;
 	/** Overall buffer size */
@@ -35,6 +33,8 @@ class FlxDrawQuadsItem extends FlxDrawHardwareItem<FlxDrawQuadsItem>
 		super();
 		type = FlxDrawItemType.TILES;
 	}
+	
+	// TODO: add method without frame argument, so i will be able to draw scrolling sprites (with uvs less than 0 and greater than 1.0)...
 	
 	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform):Void
 	{
@@ -154,5 +154,6 @@ class FlxDrawQuadsItem extends FlxDrawHardwareItem<FlxDrawQuadsItem>
 	}
 	
 	// TODO: add check if it's possible to add new quad to this item...
-	
+		
+	#end
 }

@@ -24,7 +24,7 @@ import lime.utils.UInt32Array;
  */
 class FlxDrawTrianglesItem extends FlxDrawHardwareItem<FlxDrawTrianglesItem>
 {
-
+	#if !flash
 	public function new() 
 	{
 		super();
@@ -193,4 +193,11 @@ class FlxDrawTrianglesItem extends FlxDrawHardwareItem<FlxDrawTrianglesItem>
 	
 	// TODO: add check if it's possible to add new quad to this item...
 	// TODO: add check if it's possible to add new triangles to this item...
+	
+	#else
+	public function addTriangles(vertices:DrawData<Float>, indices:DrawData<Int>, uvData:DrawData<Float>, ?matrix:FlxMatrix, ?transform:ColorTransform):Void
+	{
+		
+	}
+	#end
 }

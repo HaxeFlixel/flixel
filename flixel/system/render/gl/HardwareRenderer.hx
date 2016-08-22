@@ -12,7 +12,7 @@ import openfl.display.Shader;
 import openfl.geom.Matrix;
 import openfl.geom.Rectangle;
 
-#if !display
+#if (!display && !flash)
 import openfl._internal.renderer.RenderSession;
 import openfl._internal.renderer.opengl.GLRenderer;
 #end
@@ -44,24 +44,21 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 	// TODO: make batching for triangle rendering switchable ON/OFF???
 	public static var BATCH_TRIANGLES:Bool = true;
 	
+	#if !flash
 	private static var texturedTileShader:TileShader;
 
 	private var states:Array<FlxDrawHardwareItem<Dynamic>>;
 	private var stateNum:Int;
 	
-	#if !flash
 	private var __height:Int;
 	private var __width:Int;
-	#end
-
+	
 	public function new(width:Int, height:Int)
 	{
 		super();
 		
-		#if !flash
 		__width = width;
 		__height = height;
-		#end
 		
 		if (texturedTileShader == null) 
 			texturedTileShader = new TileShader();
@@ -86,7 +83,6 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 		states[stateNum++] = item;
 	}
 	
-	#if !flash
 	@:access(openfl.geom.Rectangle)
 	override private function __getBounds(rect:Rectangle, matrix:Matrix):Void 
 	{
@@ -226,6 +222,12 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 			
 			i++;
 		}
+	}
+	#else
+	
+	public function destroy():Void
+	{
+		
 	}
 	#end
 	
