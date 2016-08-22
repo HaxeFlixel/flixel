@@ -17,8 +17,9 @@ import flixel.util.FlxDestroyUtil;
 class FlxTouch extends FlxPointer implements IFlxDestroyable implements IFlxInput
 {	
 	/**
-	 * The unique ID of this touch. Example: if there are 3 concurrently active touches 
-	 * (and the device supports that many), they will have the IDs 0, 1 and 2.
+	 * The _unique_ ID of this touch. You should not make not any further assumptions
+	 * about this value - IDs are not guruanteed to start from 0 or ascend in order.
+	 * The behavior may vary from device to device.
 	 */
 	public var touchPointID(get, never):Int;
 	
