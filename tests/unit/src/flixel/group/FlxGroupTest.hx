@@ -137,4 +137,19 @@ class FlxGroupTest extends FlxTest
 			Assert.isTrue(each.exists);
 		});
 	}
+	
+	@Test // #1891
+	function testKillRevive()
+	{
+		Assert.areEqual(group.length, group.countLiving());
+		Assert.areEqual(0, group.countDead());
+		
+        group.kill();
+        Assert.areEqual(0, group.countLiving());
+		Assert.areEqual(group.length, group.countDead());
+
+        group.revive();
+        Assert.areEqual(group.length, group.countLiving());
+		Assert.areEqual(0, group.countDead());
+	}
 }
