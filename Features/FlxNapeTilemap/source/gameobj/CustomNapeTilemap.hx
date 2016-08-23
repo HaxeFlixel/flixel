@@ -5,73 +5,71 @@ import flixel.addons.nape.FlxNapeTilemap;
 import flixel.graphics.FlxGraphic;
 import flixel.math.FlxPoint;
 import nape.geom.Vec2;
+using logic.PhysUtil;
 using Lambda;
-using logic.PhyUtil;
 
 class CustomNapeTilemap extends FlxNapeTilemap
 {
-    public var spawnpoints(default, null) = new Array<FlxPoint>();
+    public var spawnPoints(default, null) = new Array<FlxPoint>();
 
-    public function new(tiles: String, graphics: FlxGraphic, tilesize: Int)
+    public function new(tiles:String, graphics:FlxGraphic, tileSize:Int)
     {
         super();
-        loadMapFromCSV(tiles, graphics, tilesize, tilesize);
-        setupTileIndices(TileType.Block);
+        loadMapFromCSV(tiles, graphics, tileSize, tileSize);
+        setupTileIndices(TileType.BLOCK);
 
         var vertices = new Array<Vec2>();
         vertices.push(Vec2.get(16, 0));
         vertices.push(Vec2.get(16, 16));
         vertices.push(Vec2.get(0, 16));
-        placeCustomPolygon(TileType.SlopeSE, vertices);
+        placeCustomPolygon(TileType.SLOPE_SE, vertices);
         vertices[0] = Vec2.get(0, 0);
-        placeCustomPolygon(TileType.SlopeSW, vertices);
+        placeCustomPolygon(TileType.SLOPE_SW, vertices);
         vertices[1] = Vec2.get(16, 0);
-        placeCustomPolygon(TileType.SlopeNW, vertices);
+        placeCustomPolygon(TileType.SLOPE_NW, vertices);
         vertices[2] = Vec2.get(16, 16);
-        placeCustomPolygon(TileType.SlopeNE, vertices);
-        var prevOneWay = false;
-        var length : Int = 0;
-        var startx: Int = 0;
-        var starty: Int = 0;
-
-        for (ty in 0...heightInTiles)   //生成连续的平台，防止卡脚
+        placeCustomPolygon(TileType.SLOPE_NE, vertices);
+        
+        for (ty in 0...heightInTiles)
         {
+            var prevOneWay = false;
+            var length:Int = 0;
+            var startX:Int = 0;
+            var startY:Int = 0;
+
             for (tx in 0...widthInTiles)
             {
-                if (TileType.OneWay.has(getTileByIndex(ty * widthInTiles + tx)))
+                if (TileType.ONE_WAY.has(getTileByIndex(ty * widthInTiles + tx)))
                 {
                     if (!prevOneWay)
                     {
                         prevOneWay = true;
                         length = 0;
-                        startx = tx;
-                        starty = ty;
+                        startX = tx;
+                        startY = ty;
                     }
-                    ++length;
+                    length++;
                 }
-                else
+                else if (prevOneWay)
                 {
-                    if (prevOneWay)
-                    {
-                        prevOneWay = false;
-                        PhyUtil.setOneWayLong(this, getTileCoordsByIndex(starty * widthInTiles + startx,
-                                              false), length);
-                    }
+                    prevOneWay = false;
+                    var startPos = getTileCoordsByIndex(startY * widthInTiles + startX, false);
+                    PhysUtil.setOneWayLong(this, startPos, length);
                 }
             }
+
             if (prevOneWay)
             {
                 prevOneWay = false;
-                PhyUtil.setOneWayLong(this, getTileCoordsByIndex(starty * widthInTiles + startx,
-                                      false), length);
+                var startPos = getTileCoordsByIndex(startY * widthInTiles + startX, false);
+                PhysUtil.setOneWayLong(this, startPos, length);
             }
         }
 
-        for (p in getTileCoords(TileType.Spawn, false))
+        for (point in getTileCoords(TileType.SPAWN, false))
         {
-            //p.y += _scaledTileWidth * 0.5;
-            p.x += _scaledTileHeight * 0.5;
-            spawnpoints.push(p);
+            point.x += _scaledTileHeight * 0.5;
+            spawnPoints.push(point);
         }
     }
 }

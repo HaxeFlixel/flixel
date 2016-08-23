@@ -1,29 +1,25 @@
 package states;
 
-using logic.MathUtil;
 import flixel.addons.nape.*;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.group.FlxGroup;
-import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
 import gameobj.CustomNapeTilemap;
 import gameobj.Player;
-import logic.PhyUtil;
+import logic.PhysUtil;
 import logic.PlayerController;
 import nape.callbacks.CbType;
 import nape.callbacks.InteractionType;
 import nape.callbacks.PreListener;
+using logic.MathUtil;
 
-/**
- * A FlxState which can be used for the actual gameplay.
- */
 class PlayState extends FlxState
 {
-    var allPlayers: FlxGroup = new FlxGroup();
-    var level: CustomNapeTilemap;
+    var allPlayers = new FlxGroup();
+    var level:CustomNapeTilemap;
 
-    function initSpace(): Void
+    function initSpace():Void
     {
         FlxNapeSpace.init();
         FlxNapeSpace.space.gravity.setxy(0, 2000);
@@ -33,7 +29,7 @@ class PlayState extends FlxState
             InteractionType.COLLISION,
             Constants.oneWayType,
             CbType.ANY_BODY,
-            PhyUtil.oneWayHandler,
+            PhysUtil.oneWayHandler,
             0, true
         ));
     }
@@ -45,35 +41,23 @@ class PlayState extends FlxState
         FlxG.camera.bgColor = FlxColor.WHITE;
         level = Cache.loadLevel("default", "assets/testmap.csv");
         level.body.setShapeMaterials(Constants.platformMaterial);
-        level.spawnpoints.sortRandomly();
+        level.spawnPoints.sortRandomly();
         add(level);
 
-        var tempPoint: FlxPoint;
-
-        var player: FlxNapeSprite;
-        var playerctrl: PlayerController;
-        player = new Player(0, 0, FlxColor.BLUE);
-        playerctrl = new PlayerController(player.body, level.body, new PlayerControl([LEFT], [RIGHT], [UP]));
-        tempPoint = level.spawnpoints[0];
-        player.setPosition(tempPoint.x, tempPoint.y - player.height * 0.5);
+        var player = new Player(0, 0, FlxColor.BLUE);
+        var playerCtrl = new PlayerController(player.body, level.body,
+            new PlayerControls([LEFT], [RIGHT], [UP]));
+        var point = level.spawnPoints[0];
+        player.setPosition(point.x, point.y - player.height * 0.5);
         add(player);
-        add(playerctrl);
+        add(playerCtrl);
 
         player = new Player(0, 0, FlxColor.RED);
-        playerctrl = new PlayerController(player.body, level.body, new PlayerControl([A], [D], [W]));
-        tempPoint = level.spawnpoints[1];
-        player.setPosition(tempPoint.x, tempPoint.y - player.height * 0.5);
+        playerCtrl = new PlayerController(player.body, level.body,
+            new PlayerControls([A], [D], [W]));
+        point = level.spawnPoints[1];
+        player.setPosition(point.x, point.y - player.height * 0.5);
         add(player);
-        add(playerctrl);
-    }
-
-    override public function update(dt: Float)
-    {
-        super.update(dt);
-    }
-
-    override public function destroy(): Void
-    {
-        super.destroy();
+        add(playerCtrl);
     }
 }

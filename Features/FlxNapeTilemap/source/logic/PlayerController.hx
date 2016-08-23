@@ -5,80 +5,72 @@ import flixel.FlxG;
 import flixel.input.keyboard.FlxKey;
 import nape.geom.Vec2;
 import nape.phys.Body;
-using logic.PhyUtil;
+using logic.PhysUtil;
 
-@: final
 class PlayerController extends FlxBasic
 {
-    var playerbody: Body;
-    var levelbody: Body;
-    var onGround: Bool;
-    var impg: Float;
-    var impa: Float;
-    var impj: Float;
-    var remainJumps: Int;
-    var maxJumps: Int;
-    var keymap: PlayerControl;
+    var playerBody:Body;
+    var levelBody:Body;
+    var onGround:Bool;
+    var impulseGround:Float;
+    var impulseAir:Float;
+    var impulseJump:Float;
+    var remainingJumps:Int;
+    var maxJumps:Int;
+    var keyMap:PlayerControls;
 
-    public function new(_playerbody: Body, _levelbody: Body,
-                        control : PlayerControl = null,
-                        impulse_ground : Float = 500, impulse_air : Float = 200,
-                        impulse_jump : Float = 200)
+    public function new(playerBody:Body, levelBody:Body, control:PlayerControls = null,
+        impulseGround:Float = 500, impulseAir:Float = 200, impulseJump:Float = 200)
     {
         super();
-        playerbody = _playerbody;
-        levelbody = _levelbody;
-        impg = impulse_ground;
-        impa = impulse_air;
-        impj = impulse_jump;
-        if (control == null) keymap = new PlayerControl([LEFT, A], [RIGHT, D], [UP, W]);
+        this.playerBody = playerBody;
+        this.levelBody = levelBody;
+        this.impulseGround = impulseGround;
+        this.impulseAir = impulseAir;
+        this.impulseJump = impulseJump;
+        if (control == null)
+            keyMap = new PlayerControls([LEFT, A], [RIGHT, D], [UP, W]);
         else
-            keymap = control;
+            keyMap = control;
         maxJumps = 2;
     }
 
-    override public function update(dt: Float)
+    override public function update(elapsed:Float)
     {
-        var impulse = new Vec2();
-        onGround = playerbody.onTop();
-#if debug
-        FlxG.watch.addQuick("On Ground", onGround);
-#end
-
-        var _optimp: Float;
-        if (onGround) _optimp = impg;
-        else _optimp = impa;
-        var totalx = 0.0;
-        if (FlxG.keys.anyPressed(keymap.b_left))
-            totalx = -_optimp;
-        else if (FlxG.keys.anyPressed(keymap.b_right))
-            totalx = _optimp;
+        var impulseVec = new Vec2();
+        onGround = playerBody.onTop();
+        
+        var impulse = if (onGround) impulseGround else impulseAir;
+        var totalX = 0.0;
+        if (FlxG.keys.anyPressed(keyMap.leftKeys))
+            totalX = -impulse;
+        else if (FlxG.keys.anyPressed(keyMap.rightKeys))
+            totalX = impulse;
         else
-            totalx = 0;
-        impulse.x = totalx * dt;
+            totalX = 0;
+        impulseVec.x = totalX * elapsed;
         if (onGround)
-            remainJumps = maxJumps;
-        if (FlxG.keys.anyJustPressed(keymap.b_jump) && remainJumps>0 )
+            remainingJumps = maxJumps;
+
+        if (FlxG.keys.anyJustPressed(keyMap.jumpKeys) && remainingJumps > 0)
         {
-            impulse.y = -impj;
-            remainJumps--;
+            impulseVec.y = -impulseJump;
+            remainingJumps--;
         }
-        playerbody.applyImpulse(impulse);
+        playerBody.applyImpulse(impulseVec);
     }
 }
 
-
-class PlayerControl
+class PlayerControls
 {
-    public var b_left: Array<FlxKey>;
-    public var b_right: Array<FlxKey>;
-    public var b_jump: Array<FlxKey>;
+    public var leftKeys(default, null):Array<FlxKey>;
+    public var rightKeys(default, null):Array<FlxKey>;
+    public var jumpKeys(default, null):Array<FlxKey>;
 
-    public function new(btnleft: Array<FlxKey>, btnright: Array<FlxKey>,
-                        btnjump: Array<FlxKey>)
+    public function new(leftKeys: Array<FlxKey>, rightKeys:Array<FlxKey>, jumpKeys:Array<FlxKey>)
     {
-        b_left = btnleft;
-        b_right = btnright;
-        b_jump = btnjump;
+        this.leftKeys = leftKeys;
+        this.rightKeys = rightKeys;
+        this.jumpKeys = jumpKeys;
     }
 }

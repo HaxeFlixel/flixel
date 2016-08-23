@@ -2,7 +2,6 @@ package logic;
 
 import flixel.addons.nape.FlxNapeSpace;
 import flixel.addons.nape.FlxNapeTilemap;
-import flixel.FlxG;
 import flixel.math.FlxPoint;
 import nape.callbacks.PreCallback;
 import nape.callbacks.PreFlag;
@@ -12,30 +11,18 @@ import nape.phys.Body;
 import nape.phys.Material;
 import nape.shape.Polygon;
 
-@: final
-class PhyUtil
+class PhysUtil
 {
-    public static function contacts(b1: Body, b2: Body): Bool
-    {
-        for (i in b1.arbiters)
-        {
-            if ((i.body1 == b2 || i.body2 == b2) && i.type == ArbiterType.COLLISION)
-                return true;
-        }
-        return false;
-    }
-
-    public static function onTop(thing: Body, ? surface : Body,
-                                 ? error : Float = 0.80): Bool
+    public static function onTop(thing:Body, ?surface:Body, error:Float = 0.80):Bool
     {
         for (contact in thing.arbiters)
         {
             if ((surface == null || contact.body1 == thing || contact.body2 == thing)
-            && contact.type == ArbiterType.COLLISION)
+                && contact.type == ArbiterType.COLLISION)
             {
-                var normal: Float = contact.collisionArbiter.normal.angle;
-                FlxG.watch.addQuick("c", normal);
-                if (contact.body1 == thing) normal = normal - Math.PI;
+                var normal:Float = contact.collisionArbiter.normal.angle;
+                if (contact.body1 == thing)
+                    normal = normal - Math.PI;
                 if (Math.abs(normal + Math.PI / 2) < error)
                     return true;
             }
@@ -43,8 +30,8 @@ class PhyUtil
         return false;
     }
 
-    public static function setOneWay(tilemap: FlxNapeTilemap, index: Int,
-                                     vertices: Array<Vec2>, ? mat : Material)
+    public static function setOneWay(tilemap:FlxNapeTilemap, index:Int, vertices:Array<Vec2>,
+        ?mat:Material)
     {
         tilemap.body.space = null;
         var polygon: Polygon;
@@ -59,12 +46,19 @@ class PhyUtil
         tilemap.body.space = FlxNapeSpace.space;
     }
 
-    public static function setOneWayLong(tilemap: FlxNapeTilemap, startpos: FlxPoint, length: Int, ?mat: Material)
+    public static function setOneWayLong(tilemap:FlxNapeTilemap, startPos:FlxPoint, length:Int,
+        ?mat:Material)
     {
         tilemap.body.space = null;
-        var vertices = [Vec2.get(0,-0.1), Vec2.get(Constants.TILESIZE*length,-0.1), Vec2.get(Constants.TILESIZE*length,Constants.TILESIZE),Vec2.get(0,Constants.TILESIZE)];
+        var vertices = [
+            Vec2.get(0, -0.1),
+            Vec2.get(Constants.TILE_SIZE * length, -0.1),
+            Vec2.get(Constants.TILE_SIZE * length, Constants.TILE_SIZE),
+            Vec2.get(0, Constants.TILE_SIZE)
+        ];
+
         var polygon = new Polygon(vertices, mat);
-        polygon.translate(Vec2.get(startpos.x, startpos.y));
+        polygon.translate(Vec2.get(startPos.x, startPos.y));
         polygon.cbTypes.add(Constants.oneWayType);
         tilemap.body.shapes.add(polygon);
         tilemap.body.space = FlxNapeSpace.space;
@@ -73,13 +67,9 @@ class PhyUtil
     public static function oneWayHandler(cb:PreCallback):PreFlag
     {
         var colArb = cb.arbiter.collisionArbiter;
-
         if ((colArb.normal.y >= 0) != cb.swapped)
-        {
             return PreFlag.IGNORE;
-        }
-        else {
+        else
             return PreFlag.ACCEPT;
-        }
     }
 }
