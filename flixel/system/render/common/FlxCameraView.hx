@@ -21,6 +21,9 @@ import openfl.geom.ColorTransform;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
 
+// TODO: proper camera scaling...
+// with suport for different camera following styles...
+
 /**
  * ...
  * @author Zaphod
@@ -45,7 +48,6 @@ class FlxCameraView implements IFlxDestroyable
 	public var visible(get, set):Bool;
 	
 	public var angle(get, set):Float;
-
 	
 	/**
 	 * Internal, used for positioning camera's flashSprite on screen.

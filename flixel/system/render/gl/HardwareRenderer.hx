@@ -28,7 +28,7 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 	public static inline var MAX_QUADS_PER_BUFFER:Int = 16383;		// (MAX_VERTEX_PER_BUFFER / 4)
 	public static inline var MAX_TRIANGLES_PER_BUFFER:Int = 21844;	// (MAX_VERTEX_PER_BUFFER / 3)
 	
-	public static inline var ELEMENTS_PER_VERTEX:Int = 8;
+	public static inline var ELEMENTS_PER_VERTEX:Int = 8; // TODO: rename and add another const for non-textured elements...
 	public static inline var ELEMENTS_PER_TILE:Int = 8 * 4;
 	public static inline var INDICES_PER_TILE:Int = 6;
 	public static inline var MINIMUM_TILE_COUNT_PER_BUFFER:Int = 10;
@@ -224,7 +224,6 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 		}
 	}
 	#else
-	
 	public function destroy():Void
 	{
 		
