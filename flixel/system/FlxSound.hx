@@ -87,6 +87,10 @@ class FlxSound extends FlxBasic
 	 */
 	public var time(get, set):Float;
 	/**
+	 * The length of the sound in milliseconds.
+	 */
+	public var length(get, never):Float;
+	/**
 	 * The sound group this sound belongs to
 	 */
 	public var group(default, set):FlxSoundGroup;
@@ -126,6 +130,10 @@ class FlxSound extends FlxBasic
 	 * Internal tracker for sound channel position.
 	 */
 	private var _time:Float = 0;
+	/**
+	 * Internal tracker for sound length, so that length can still be obtained while a sound is paused, because _sound becomes null.
+	 */
+	private var _length:Float = 0;
 	#if (sys && openfl_legacy)
 	/**
 	 * Internal tracker for pitch.
@@ -308,6 +316,7 @@ class FlxSound extends FlxBasic
 		updateTransform();
 		exists = true;
 		onComplete = OnComplete;
+		_length = (_sound == null)?0:_sound.length;
 		return this;
 	}
 	
@@ -332,6 +341,7 @@ class FlxSound extends FlxBasic
 		updateTransform();
 		exists = true;
 		onComplete = OnComplete;
+		_length = (_sound == null)?0:_sound.length;
 		return this;
 	}
 	
@@ -357,6 +367,7 @@ class FlxSound extends FlxBasic
 		updateTransform();
 		exists = true;
 		onComplete = OnComplete;
+		_length = (_sound == null)?0:_sound.length;
 		return this;
 	}
 	#end
@@ -705,6 +716,11 @@ class FlxSound extends FlxBasic
 		return FlxStringUtil.getDebugString([
 			LabelValuePair.weak("playing", playing),
 			LabelValuePair.weak("time", time),
+			LabelValuePair.weak("length", length),
 			LabelValuePair.weak("volume", volume)]);
+	}
+	private inline function get_length():Float
+	{
+		return _length;
 	}
 }
