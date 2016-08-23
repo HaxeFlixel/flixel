@@ -2,7 +2,7 @@ package gameobj;
 
 import Constants.TileType;
 import flixel.addons.nape.FlxNapeTilemap;
-import flixel.graphics.FlxGraphic;
+import flixel.system.FlxAssets;
 import flixel.math.FlxPoint;
 import nape.geom.Vec2;
 using logic.PhysUtil;
@@ -12,7 +12,7 @@ class CustomNapeTilemap extends FlxNapeTilemap
 {
     public var spawnPoints(default, null) = new Array<FlxPoint>();
 
-    public function new(tiles:String, graphics:FlxGraphic, tileSize:Int)
+    public function new(tiles:String, graphics:FlxTilemapGraphicAsset, tileSize:Int)
     {
         super();
         loadMapFromCSV(tiles, graphics, tileSize, tileSize);

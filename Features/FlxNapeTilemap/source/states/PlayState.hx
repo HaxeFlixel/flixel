@@ -3,6 +3,7 @@ package states;
 import flixel.addons.nape.*;
 import flixel.FlxG;
 import flixel.FlxState;
+import flixel.text.FlxText;
 import flixel.group.FlxGroup;
 import flixel.util.FlxColor;
 import gameobj.CustomNapeTilemap;
@@ -18,6 +19,8 @@ class PlayState extends FlxState
 {
     var allPlayers = new FlxGroup();
     var level:CustomNapeTilemap;
+    var firstRun:Bool = false;
+    var currentLevel:Level = FIRST;
 
     function initSpace():Void
     {
@@ -34,15 +37,13 @@ class PlayState extends FlxState
         ));
     }
 
-    override public function create(): Void
+    override public function create():Void
     {
-        Cache.init();
-        initSpace();
+        FlxG.mouse.visible = false;
         FlxG.camera.bgColor = FlxColor.WHITE;
-        level = Cache.loadLevel("default", "assets/testmap.csv");
-        level.body.setShapeMaterials(Constants.platformMaterial);
-        level.spawnPoints.sortRandomly();
-        add(level);
+
+        initSpace();
+        loadLevel(currentLevel);
 
         var player = new Player(0, 0, FlxColor.BLUE);
         var playerCtrl = new PlayerController(player.body, level.body,
@@ -59,5 +60,47 @@ class PlayState extends FlxState
         player.setPosition(point.x, point.y - player.height * 0.5);
         add(player);
         add(playerCtrl);
+
+        var instructions = new FlxText(0, 50, FlxG.width,
+            "Space to switch levels, Up / W to double-jump", 16);
+        instructions.color = FlxColor.BLACK;
+        instructions.alignment = FlxTextAlign.CENTER;
+        add(instructions);
     }
+
+    override public function update(elapsed:Float):Void
+    {
+        super.update(elapsed);
+
+        if (FlxG.keys.justPressed.SPACE)
+        {
+            loadLevel(switch (currentLevel)
+            {
+                case FIRST: SECOND;
+                case SECOND: FIRST;
+            });
+        }
+    }
+
+    function loadLevel(file:Level)
+    {
+        currentLevel = file;
+
+        if (level != null)
+        {
+            level.body.space = null;
+            remove(level);
+        }
+        
+        level = new CustomNapeTilemap(file, "assets/tiles.png", Constants.TILE_SIZE);
+        level.body.setShapeMaterials(Constants.platformMaterial);
+        level.spawnPoints.sortRandomly();
+        add(level);
+    }
+}
+
+@:enum abstract Level(String) to String
+{
+    var FIRST = "assets/testmap.csv";
+    var SECOND = "assets/testmap2.csv";
 }

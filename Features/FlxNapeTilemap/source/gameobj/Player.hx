@@ -9,7 +9,7 @@ import nape.shape.Polygon;
 
 class Player extends FlxNapeSprite
 {
-    public function new(x: Float, y: Float, fillColor:FlxColor)
+    public function new(x:Float, y:Float, fillColor:FlxColor)
     {
         super(x, y);
         makeGraphic(18, 26, fillColor);

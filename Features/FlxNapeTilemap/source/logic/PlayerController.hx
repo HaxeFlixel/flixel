@@ -9,6 +9,8 @@ using logic.PhysUtil;
 
 class PlayerController extends FlxBasic
 {
+    inline static var MAX_JUMPS = 2;
+
     var playerBody:Body;
     var levelBody:Body;
     var onGround:Bool;
@@ -19,7 +21,7 @@ class PlayerController extends FlxBasic
     var maxJumps:Int;
     var keyMap:PlayerControls;
 
-    public function new(playerBody:Body, levelBody:Body, control:PlayerControls = null,
+    public function new(playerBody:Body, levelBody:Body, keyMap:PlayerControls,
         impulseGround:Float = 500, impulseAir:Float = 200, impulseJump:Float = 200)
     {
         super();
@@ -28,11 +30,7 @@ class PlayerController extends FlxBasic
         this.impulseGround = impulseGround;
         this.impulseAir = impulseAir;
         this.impulseJump = impulseJump;
-        if (control == null)
-            keyMap = new PlayerControls([LEFT, A], [RIGHT, D], [UP, W]);
-        else
-            keyMap = control;
-        maxJumps = 2;
+        this.keyMap = keyMap;
     }
 
     override public function update(elapsed:Float)
@@ -50,7 +48,7 @@ class PlayerController extends FlxBasic
             totalX = 0;
         impulseVec.x = totalX * elapsed;
         if (onGround)
-            remainingJumps = maxJumps;
+            remainingJumps = MAX_JUMPS;
 
         if (FlxG.keys.anyJustPressed(keyMap.jumpKeys) && remainingJumps > 0)
         {
@@ -67,7 +65,7 @@ class PlayerControls
     public var rightKeys(default, null):Array<FlxKey>;
     public var jumpKeys(default, null):Array<FlxKey>;
 
-    public function new(leftKeys: Array<FlxKey>, rightKeys:Array<FlxKey>, jumpKeys:Array<FlxKey>)
+    public function new(leftKeys:Array<FlxKey>, rightKeys:Array<FlxKey>, jumpKeys:Array<FlxKey>)
     {
         this.leftKeys = leftKeys;
         this.rightKeys = rightKeys;
