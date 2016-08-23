@@ -69,8 +69,12 @@ class Pointer extends Tool
 	private function pinpointItemInGroup(members:Array<FlxBasic>, cursor:FlxPoint):FlxObject
 	{
 		var target:FlxObject = null;
-		for (member in members)
+
+		// we iterate backwards to get the sprites on top first
+		var i = members.length;
+		while (i-- > 0)
 		{
+			var member = members[i];
 			// Ignore invisible or non-existent entities
 			if (member == null || !member.visible || !member.exists)
 				continue;
