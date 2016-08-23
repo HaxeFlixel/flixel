@@ -87,10 +87,6 @@ class FlxSound extends FlxBasic
 	 */
 	public var time(get, set):Float;
 	/**
-	 * The length of the sound in milliseconds.
-	 */
-	public var length(get, never):Float;
-	/**
 	 * The sound group this sound belongs to
 	 */
 	public var group(default, set):FlxSoundGroup;
@@ -738,9 +734,5 @@ class FlxSound extends FlxBasic
 			LabelValuePair.weak("playing", playing),
 			LabelValuePair.weak("time", time),
 			LabelValuePair.weak("volume", volume)]);
-	}
-	private inline function get_length():Float
-	{
-		return _sound.length;
 	}
 }
