@@ -322,7 +322,7 @@ class FlxSound extends FlxBasic
 		updateTransform();
 		exists = true;
 		onComplete = OnComplete;
-		_length = _sound.length;
+		_length = (_sound == null)?0:_sound.length;
 		return this;
 	}
 	
