@@ -316,7 +316,7 @@ class FlxSound extends FlxBasic
 		updateTransform();
 		exists = true;
 		onComplete = OnComplete;
-		_length = (_sound == null)?0:_sound.length;
+		_length = (_sound == null) ? 0 : _sound.length;
 		return this;
 	}
 	
@@ -341,7 +341,7 @@ class FlxSound extends FlxBasic
 		updateTransform();
 		exists = true;
 		onComplete = OnComplete;
-		_length = (_sound == null)?0:_sound.length;
+		_length = (_sound == null) ? 0 : _sound.length;
 		return this;
 	}
 	
@@ -367,7 +367,7 @@ class FlxSound extends FlxBasic
 		updateTransform();
 		exists = true;
 		onComplete = OnComplete;
-		_length = (_sound == null)?0:_sound.length;
+		_length = (_sound == null) ? 0 : _sound.length;
 		return this;
 	}
 	#end
@@ -710,6 +710,11 @@ class FlxSound extends FlxBasic
 		}
 		return _time = time;
 	}
+
+	private inline function get_length():Float
+	{
+		return _length;
+	}
 	
 	override public function toString():String
 	{
@@ -718,9 +723,5 @@ class FlxSound extends FlxBasic
 			LabelValuePair.weak("time", time),
 			LabelValuePair.weak("length", length),
 			LabelValuePair.weak("volume", volume)]);
-	}
-	private inline function get_length():Float
-	{
-		return _length;
 	}
 }
