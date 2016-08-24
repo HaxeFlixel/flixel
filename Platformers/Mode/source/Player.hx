@@ -20,7 +20,7 @@ class Player extends FlxSprite
 	public static var virtualPad:FlxVirtualPad;
 	#end
 	
-	private static var SHOOT_RATE:Float = 1 / 10; // 10 shots per second
+	private static var FIRE_RATE:Float = 1 / 10; // 10 shots per second
 	
 	public var isReadyToJump:Bool = true;
 	public var flickering:Bool = false;
@@ -287,7 +287,7 @@ class Player extends FlxSprite
 	{
 		if (_shootTimer.active)
 			return;
-		_shootTimer.start(SHOOT_RATE);
+		_shootTimer.start(FIRE_RATE);
 		
 		if (flickering)
 		{
