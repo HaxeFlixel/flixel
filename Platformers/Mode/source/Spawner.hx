@@ -19,7 +19,7 @@ class Spawner extends FlxSprite
 	public function new(X:Int, Y:Int, Gibs:FlxEmitter, Bots:FlxTypedGroup<Enemy>, BotBullets:FlxTypedGroup<EnemyBullet>, BotGibs:FlxEmitter, ThePlayer:Player)
 	{
 		super(X, Y);
-		loadGraphic(Reg.SPAWNER, true);
+		loadGraphic(AssetPaths.spawner__png, true);
 		_gibs = Gibs;
 		_bots = Bots;
 		_botBullets = BotBullets;

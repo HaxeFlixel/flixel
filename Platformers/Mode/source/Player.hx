@@ -40,7 +40,7 @@ class Player extends FlxSprite
 	{
 		super(X, Y);
 		
-		loadGraphic(Reg.SPACEMAN, true, 8);
+		loadGraphic(AssetPaths.spaceman__png, true, 8);
 		
 		setFacingFlip(FlxObject.LEFT, true, false);
 		setFacingFlip(FlxObject.RIGHT, false, false);

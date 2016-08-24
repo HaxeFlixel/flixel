@@ -68,7 +68,7 @@ class PlayState extends FlxState
 		_littleGibs.angularVelocity.set( -720);
 		_littleGibs.acceleration.set(0, 350);
 		_littleGibs.elasticity.set(0.5);
-		_littleGibs.loadParticles(Reg.GIBS, 100, 10, true);
+		_littleGibs.loadParticles(AssetPaths.gibs__png, 100, 10, true);
 		
 		// Next we create a smaller pool of larger metal bits for exploding.
 		_bigGibs = new FlxEmitter();
@@ -76,7 +76,7 @@ class PlayState extends FlxState
 		_bigGibs.angularVelocity.set( -720, -720);
 		_bigGibs.acceleration.set(0, 350);
 		_bigGibs.elasticity.set(0.35);
-		_bigGibs.loadParticles(Reg.SPAWNER_GIBS, 50, 20, true);
+		_bigGibs.loadParticles(AssetPaths.spawner_gibs__png, 50, 20, true);
 		
 		// Then we'll set up the rest of our object groups or pools
 		_enemies = new FlxTypedGroup<Enemy>(50);
@@ -409,7 +409,7 @@ class PlayState extends FlxState
 		
 		_tileMap = new FlxTilemap();
 		_tileMap.useScaleHack = true;
-		_tileMap.loadMapFromArray(_map, MAP_WIDTH_IN_TILES, MAP_HEIGHT_IN_TILES, Reg.IMG_TILES, 8, 8);
+		_tileMap.loadMapFromArray(_map, MAP_WIDTH_IN_TILES, MAP_HEIGHT_IN_TILES, AssetPaths.img_tiles__png, 8, 8);
 		add(_tileMap);
 	}
 	
@@ -478,7 +478,7 @@ class PlayState extends FlxState
 			_spawners.add(sp);
 			
 			// Then create a dedicated camera to watch the spawner
-			var miniFrame:FlxSprite = new FlxSprite(3 + (_spawners.length - 1) * 16, 3, Reg.MINI_FRAME);
+			var miniFrame:FlxSprite = new FlxSprite(3 + (_spawners.length - 1) * 16, 3, AssetPaths.miniframe__png);
 			_hud.add(miniFrame);
 			
 			var ratio:Float = FlxCamera.defaultZoom / 2;

@@ -79,8 +79,7 @@
 	
 	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
 	
-	<assets path="assets/images" rename="images" />
-	<assets path="assets/data" rename="data" />
+	<assets path="assets" exclude="*.ogg|*.mp3" />
 	<icon path="assets/images/bot.png" />
 	
 	<assets path="assets/sounds" if="flash">

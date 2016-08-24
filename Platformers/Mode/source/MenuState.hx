@@ -29,9 +29,7 @@ class MenuState extends FlxState
 		FlxG.cameras.bgColor = 0xff131c1b;
 		
 		if (FlxG.sound.music != null)
-		{
 			FlxG.sound.music.stop();
-		}
 		
 		// Simple use of flixel save game object.
 		// Tracks number of times the game has been played.
@@ -40,13 +38,9 @@ class MenuState extends FlxState
 		if (save.bind("Mode"))
 		{
 			if (save.data.plays == null)
-			{
 				save.data.plays = 0.0;
-			}
 			else
-			{
 				save.data.plays++;
-			}
 			
 			FlxG.log.add("Number of plays: " + save.data.plays);
 			save.close();
@@ -59,7 +53,7 @@ class MenuState extends FlxState
 		_gibs.velocity.set(0, -200, 0, -20);
 		_gibs.angularVelocity.set( -720, 720);
 		_gibs.acceleration.set(0, 100);
-		_gibs.loadParticles(Reg.SPAWNER_GIBS, 650, 32, true);
+		_gibs.loadParticles(AssetPaths.spawner_gibs__png, 650, 32, true);
 		_gibs.lifespan.set(5, 5);
 		add(_gibs);
 		
@@ -86,7 +80,7 @@ class MenuState extends FlxState
 		_attractMode = false;
 		
 		#if !FLX_NO_MOUSE
-		FlxG.mouse.load(Reg.CURSOR, 2);
+		FlxG.mouse.load(AssetPaths.cursor__png, 2);
 		FlxG.mouse.visible = true;
 		#end
 		
@@ -134,8 +128,7 @@ class MenuState extends FlxState
 			// Then we're going to add the text and buttons and things that appear
 			// If we were hip we'd use our own button animations, but we'll just recolor
 			// the stock ones for now instead.
-			var text:FlxText;
-			text = new FlxText(FlxG.width / 2 - 50, FlxG.height / 3 + 39, 100, "by Adam Atomic");
+			var text = new FlxText(FlxG.width / 2 - 50, FlxG.height / 3 + 39, 100, "by Adam Atomic");
 			text.alignment = CENTER;
 			text.color = 0x3a5c39;
 			add(text);
@@ -145,18 +138,16 @@ class MenuState extends FlxState
 			text.alignment = CENTER;
 			add(text);
 			
-			var flixelButton:FlxButton = new FlxButton(FlxG.width / 2 - 40, FlxG.height / 3 + 54, "haxeflixel.com", function()
-			{
-				FlxG.openURL("http://haxeflixel.com");
-			});
+			var flixelButton = new FlxButton(FlxG.width / 2 - 40, FlxG.height / 3 + 54, "haxeflixel.com", function()
+				FlxG.openURL("http://haxeflixel.com")
+			);
 			flixelButton.color = 0xff729954;
 			flixelButton.label.color = 0xffd8eba2;
 			add(flixelButton);
 			
-			var dannyButton:FlxButton = new FlxButton(flixelButton.x, flixelButton.y + 22, "music: dannyB", function()
-			{
-				FlxG.openURL("http://dbsoundworks.com");
-			});
+			var dannyButton = new FlxButton(flixelButton.x, flixelButton.y + 22, "music: dannyB", function()
+				FlxG.openURL("http://dbsoundworks.com")
+			);
 			dannyButton.color = flixelButton.color;
 			dannyButton.label.color = flixelButton.label.color;
 			add(dannyButton);
@@ -172,9 +163,7 @@ class MenuState extends FlxState
 		_timer += elapsed;
 		
 		if (_timer >= 10) //go into demo mode if no buttons are pressed for 10 seconds
-		{
 			_attractMode = true;
-		}
 		
 		#if !FLX_NO_KEYBOARD
 		if (!_fading)
@@ -189,9 +178,7 @@ class MenuState extends FlxState
 			}
 			
 			if (FlxG.keys.pressed.R && !_attractMode)
-			{
 				_attractMode = true;
-			}
 		}
 		#end
 		
@@ -224,9 +211,7 @@ class MenuState extends FlxState
 				new PlayState(), ["ANY"], 22, onDemoComplete);
 		}
 		else
-		{
 			FlxG.switchState(new PlayState());
-		}
 	}
 	
 	/**
