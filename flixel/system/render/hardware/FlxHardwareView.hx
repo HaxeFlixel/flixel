@@ -1,14 +1,15 @@
-package flixel.system.render.tile;
+package flixel.system.render.hardware;
 
-import flixel.FlxCamera;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame;
-import flixel.system.render.common.DrawItem.DrawData;
-import flixel.system.render.common.FlxDrawStack;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.system.FlxAssets.FlxShader;
+import flixel.system.render.common.DrawItem.DrawData;
 import flixel.system.render.common.FlxCameraView;
+import flixel.system.render.common.FlxDrawStack;
+import flixel.system.render.hardware.gl.FlxDrawHardwareItem;
+import flixel.system.render.hardware.gl.HardwareRenderer;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import openfl.display.BitmapData;
@@ -17,7 +18,6 @@ import openfl.display.DisplayObject;
 import openfl.display.Graphics;
 import openfl.display.Sprite;
 import openfl.geom.ColorTransform;
-import openfl.geom.Matrix;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
 
@@ -25,8 +25,9 @@ import openfl.geom.Rectangle;
  * ...
  * @author Zaphod
  */
-class FlxTilesheetView extends FlxCameraView
+class FlxHardwareView extends FlxCameraView
 {
+
 	/**
 	 * Used to render buffer to screen space. NOTE: We don't recommend modifying this directly unless you are fairly experienced. 
 	 * Uses include 3D projection, advanced display list modification, and more.
@@ -49,7 +50,12 @@ class FlxTilesheetView extends FlxCameraView
 	 * It is a child of _scrollRect Sprite (which trims graphics that should be unvisible).
 	 * Its position is modified by updateInternalSpritePositions() method, which is called on camera's resize and scale events.
 	 */
+	#if ((openfl >= "4.0.0") && !flash)
+	// TODO: implement canvas version of this class for js target...
+	public var canvas:HardwareRenderer;
+	#else
 	public var canvas:Sprite;
+	#end
 	
 	#if FLX_DEBUG
 	/**
@@ -66,11 +72,15 @@ class FlxTilesheetView extends FlxCameraView
 	public function new(camera:FlxCamera) 
 	{
 		super(camera);
-		
+	
 		flashSprite.addChild(_scrollRect);
 		_scrollRect.scrollRect = new Rectangle();
 		
+		#if ((openfl >= "4.0.0") && !flash)
+		canvas = new HardwareRenderer(camera.width, camera.height);
+		#else
 		canvas = new Sprite();
+		#end
 		_scrollRect.addChild(canvas);
 		
 		#if FLX_DEBUG
@@ -94,6 +104,9 @@ class FlxTilesheetView extends FlxCameraView
 		
 		FlxDestroyUtil.removeChild(_scrollRect, canvas);
 		
+		#if ((openfl >= "4.0.0") && !flash)
+		canvas = FlxDestroyUtil.destroy(canvas);
+		#else
 		if (canvas != null)
 		{
 			for (i in 0...canvas.numChildren)
@@ -102,6 +115,7 @@ class FlxTilesheetView extends FlxCameraView
 			}
 			canvas = null;
 		}
+		#end
 		
 		drawStack = FlxDestroyUtil.destroy(drawStack);
 		
@@ -127,10 +141,10 @@ class FlxTilesheetView extends FlxCameraView
 	}
 	
 	override public function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>,
-		uvtData:DrawData<Float>, ?colors:DrawData<Int>, ?position:FlxPoint, ?blend:BlendMode,
-		repeat:Bool = false, smoothing:Bool = false):Void
+		uvtData:DrawData<Float>, ?matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, 
+		repeat:Bool = false, smoothing:Bool = false):Void 
 	{
-		drawStack.drawTriangles(graphic, vertices, indices, uvtData, colors, position, blend, repeat, smoothing);
+		drawStack.drawTriangles(graphic, vertices, indices, uvtData, matrix, transform, blend, repeat, smoothing);
 	}
 	
 	override public function updatePosition():Void 
@@ -192,12 +206,16 @@ class FlxTilesheetView extends FlxCameraView
 			return;
 		}
 		
+		#if (openfl < "4.0.0")
 		var targetGraphics:Graphics = canvas.graphics;
 		targetGraphics.beginFill(Color, FxAlpha);
 		// i'm drawing rect with these parameters to avoid light lines at the top and left of the camera,
 		// which could appear while cameras fading
 		targetGraphics.drawRect(-1, -1, camera.width + 2, camera.height + 2);
 		targetGraphics.endFill();
+		#else
+		// TODO: implement it...
+		#end
 	}
 	
 	override public function drawFX(FxColor:FlxColor, FxAlpha:Float = 1.0):Void 
@@ -209,7 +227,12 @@ class FlxTilesheetView extends FlxCameraView
 	override public function lock(useBufferLocking:Bool):Void 
 	{
 		drawStack.clearDrawStack();
+		#if ((openfl >= "4.0.0") && !flash)
+		canvas.clear();
+		#else
 		canvas.graphics.clear();
+		#end
+		
 		// Clearing camera's debug sprite
 		#if FLX_DEBUG
 		debugLayer.graphics.clear();
@@ -228,11 +251,16 @@ class FlxTilesheetView extends FlxCameraView
 	
 	override private function set_color(Color:FlxColor):FlxColor 
 	{
+		#if (openfl < "4.0.0")
 		var colorTransform:ColorTransform = canvas.transform.colorTransform;
 		colorTransform.redMultiplier = Color.redFloat;
 		colorTransform.greenMultiplier = Color.greenFloat;
 		colorTransform.blueMultiplier = Color.blueFloat;
 		canvas.transform.colorTransform = colorTransform;
+		#else
+		// TODO: implement this method...
+		
+		#end
 		return Color;
 	}
 	
@@ -264,6 +292,13 @@ class FlxTilesheetView extends FlxCameraView
 	override function get_display():DisplayObject 
 	{
 		return flashSprite;
+	}
+	
+	public function drawItem(item:FlxDrawHardwareItem<Dynamic>):Void
+	{
+		#if ((openfl >= "4.0.0") && !flash)
+		canvas.drawItem(item);
+		#end
 	}
 	
 }

@@ -1,4 +1,4 @@
-package flixel.system.render.tile;
+package flixel.system.render.hardware.tile;
 
 import flixel.FlxCamera;
 import flixel.graphics.FlxGraphic;

@@ -1,4 +1,4 @@
-package flixel.system.render.gl;
+package flixel.system.render.hardware.gl;
 
 import flixel.system.render.common.FlxDrawBaseItem;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;

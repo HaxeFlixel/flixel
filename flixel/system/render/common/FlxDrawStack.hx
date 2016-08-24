@@ -11,7 +11,7 @@ import flixel.system.render.common.DrawItem.DrawData;
 import flixel.system.render.common.DrawItem.FlxDrawItemType;
 import flixel.system.render.common.DrawItem.FlxDrawQuadsItem;
 import flixel.system.render.common.DrawItem.FlxDrawTrianglesItem;
-import flixel.system.render.common.DrawItem.FlxHardwareView;
+import flixel.system.render.hardware.FlxHardwareView;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import openfl.display.BitmapData;
 import openfl.display.BlendMode;

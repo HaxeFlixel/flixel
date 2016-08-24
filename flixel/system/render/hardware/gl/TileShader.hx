@@ -1,4 +1,4 @@
-package flixel.system.render.gl;
+package flixel.system.render.hardware.gl;
 
 import openfl.display.Shader;
 import openfl.gl.GL;

@@ -14,6 +14,7 @@ import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxShader;
 import flixel.system.render.common.FlxCameraView;
 import flixel.system.render.blit.FlxBlitView;
+import flixel.system.render.hardware.FlxHardwareView;
 import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
@@ -22,8 +23,6 @@ import openfl.display.BlendMode;
 import openfl.display.Graphics;
 import openfl.filters.BitmapFilter;
 import openfl.geom.Matrix;
-
-typedef HardwareView = #if (openfl >= "4.0.0") flixel.system.render.gl.FlxGlView #else flixel.system.render.tile.FlxTilesheetView #end;
 
 /**
  * The camera class is used to display the game's visuals.
@@ -342,7 +341,7 @@ class FlxCamera extends FlxBasic
 		}
 		else
 		{
-			view = new HardwareView(this);
+			view = new FlxHardwareView(this);
 		}
 		
 		pixelPerfectRender = FlxG.renderBlit;

@@ -6,7 +6,7 @@ import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxMatrix;
 import flixel.system.FlxAssets.FlxShader;
 import flixel.system.render.common.DrawItem.FlxDrawItemType;
-import flixel.system.render.common.DrawItem.FlxHardwareView;
+import flixel.system.render.hardware.FlxHardwareView;
 import openfl.display.BlendMode;
 import openfl.geom.ColorTransform;
 

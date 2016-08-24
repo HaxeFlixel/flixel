@@ -1,10 +1,10 @@
-package flixel.system.render.gl;
+package flixel.system.render.hardware.gl;
 
+import flixel.system.render.hardware.FlxHardwareView;
 import lime.graphics.opengl.GLBuffer;
 import lime.utils.Float32Array;
 import lime.utils.UInt32Array;
 
-import flixel.system.render.common.DrawItem.FlxHardwareView;
 import flixel.system.render.common.FlxDrawBaseItem;
 
 /**
