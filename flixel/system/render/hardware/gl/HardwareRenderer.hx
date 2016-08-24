@@ -1,5 +1,6 @@
 package flixel.system.render.hardware.gl;
 
+import flixel.graphics.FlxGraphic;
 import flixel.system.render.common.FlxDrawBaseItem;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import lime.graphics.GLRenderContext;
@@ -28,8 +29,12 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 	public static inline var MAX_QUADS_PER_BUFFER:Int = 16383;		// (MAX_VERTEX_PER_BUFFER / 4)
 	public static inline var MAX_TRIANGLES_PER_BUFFER:Int = 21844;	// (MAX_VERTEX_PER_BUFFER / 3)
 	
-	public static inline var ELEMENTS_PER_VERTEX:Int = 8; // TODO: rename and add another const for non-textured elements...
-	public static inline var ELEMENTS_PER_TILE:Int = 8 * 4;
+	public static inline var ELEMENTS_PER_TEXTURED_VERTEX:Int = 8;
+	public static inline var ELEMENTS_PER_TEXTURED_TILE:Int = 8 * 4;
+	
+	public static inline var ELEMENTS_PER_NONTEXTURED_VERTEX:Int = 6;
+	public static inline var ELEMENTS_PER_NONTEXTURED_TILE:Int = 6 * 4;
+	
 	public static inline var INDICES_PER_TILE:Int = 6;
 	public static inline var MINIMUM_TILE_COUNT_PER_BUFFER:Int = 10;
 	public static inline var BYTES_PER_ELEMENT:Int = 4;
@@ -149,7 +154,7 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 		gl.uniformMatrix4fv(texturedTileShader.data.uMatrix.index, false, renderer.getMatrix(this.__worldTransform));
 		
 		var blend:BlendMode = null;
-		var texture:BitmapData = null;
+		var texture:FlxGraphic = null;
 		
 		var i:Int = 0;
 		
@@ -163,10 +168,10 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 				blend = state.blending;
 			}
 			
-			if (texture != state.graphics.bitmap)
+			if (texture != state.graphics)
 			{
-				texture = state.graphics.bitmap;
-				gl.bindTexture(gl.TEXTURE_2D, texture.getTexture(gl));
+				texture = state.graphics;
+				gl.bindTexture(gl.TEXTURE_2D, texture.bitmap.getTexture(gl));
 			}
 			
 			if (texture != null)

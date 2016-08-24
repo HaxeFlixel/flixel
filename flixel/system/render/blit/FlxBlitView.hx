@@ -3,7 +3,6 @@ package flixel.system.render.blit;
 import flixel.FlxCamera;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame;
-import flixel.system.render.common.DrawItem.FlxDrawTrianglesItem;
 import flixel.system.render.common.DrawItem.DrawData;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;

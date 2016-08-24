@@ -75,6 +75,10 @@ class FlxDrawBaseItem<T>
 	
 	public var numTriangles(get, never):Int;
 	
+	public var elementsPerVertex(get, null):Int;
+	
+	public var elementsPerQuad(get, null):Int;
+	
 	public function new() {}
 	
 	public function reset():Void
@@ -142,6 +146,16 @@ class FlxDrawBaseItem<T>
 	}
 	
 	private function get_numTriangles():Int
+	{
+		return 0;
+	}
+	
+	private function get_elementsPerVertex():Int
+	{
+		return 0;
+	}
+	
+	private function get_elementsPerQuad():Int
 	{
 		return 0;
 	}

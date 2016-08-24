@@ -56,7 +56,7 @@ class FlxDrawHardwareItem<T> extends FlxDrawBaseItem<T>
 	}
 	
 	// Set values
-	private inline function addVertexData(x:Float, y:Float, u:Float, v:Float, r:Float = 1.0, g:Float = 1.0, b:Float = 1.0, a:Float = 1.0):Void
+	private inline function addTexturedVertexData(x:Float, y:Float, u:Float, v:Float, r:Float = 1.0, g:Float = 1.0, b:Float = 1.0, a:Float = 1.0):Void
 	{
 		buffer[vertexPos++] = x;
 		buffer[vertexPos++] = y;
@@ -68,14 +68,34 @@ class FlxDrawHardwareItem<T> extends FlxDrawBaseItem<T>
 		buffer[vertexPos++] = a;
 	}
 	
+	private inline function addNonTexturedVertexData(x:Float, y:Float, r:Float = 1.0, g:Float = 1.0, b:Float = 1.0, a:Float = 1.0):Void
+	{
+		buffer[vertexPos++] = x;
+		buffer[vertexPos++] = y;
+		buffer[vertexPos++] = r;
+		buffer[vertexPos++] = g;
+		buffer[vertexPos++] = b;
+		buffer[vertexPos++] = a;
+	}
+	
 	override private function get_numVertices():Int
 	{
-		return Std.int(vertexPos / HardwareRenderer.ELEMENTS_PER_VERTEX);
+		return Std.int(vertexPos / elementsPerVertex);
 	}
 	
 	override private function get_numTriangles():Int
 	{
 		return Std.int(indexPos / 3);
+	}
+	
+	override function get_elementsPerVertex():Int 
+	{
+		return (graphics != null) ? HardwareRenderer.ELEMENTS_PER_TEXTURED_VERTEX : HardwareRenderer.ELEMENTS_PER_NONTEXTURED_VERTEX;
+	}
+	
+	override function get_elementsPerQuad():Int 
+	{
+		return (graphics != null) ? HardwareRenderer.ELEMENTS_PER_TEXTURED_TILE : HardwareRenderer.ELEMENTS_PER_NONTEXTURED_TILE;
 	}
 	
 }

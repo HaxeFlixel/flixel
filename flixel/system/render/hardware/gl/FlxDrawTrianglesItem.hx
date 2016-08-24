@@ -34,7 +34,7 @@ class FlxDrawTrianglesItem extends FlxDrawHardwareItem<FlxDrawTrianglesItem>
 	
 	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform):Void 
 	{
-		ensureElement(HardwareRenderer.ELEMENTS_PER_TILE, HardwareRenderer.INDICES_PER_TILE);
+		ensureElement(HardwareRenderer.ELEMENTS_PER_TEXTURED_TILE, HardwareRenderer.INDICES_PER_TILE);
 		var prevVerticesNumber:Int = numVertices;
 		
 		var rect:FlxRect = frame.frame;
@@ -74,13 +74,13 @@ class FlxDrawTrianglesItem extends FlxDrawHardwareItem<FlxDrawTrianglesItem>
 		}
 		
 		// Triangle 1, top-left
-		addVertexData(x, y, uvx, uvy, r, g, b, a);
+		addTexturedVertexData(x, y, uvx, uvy, r, g, b, a);
 		// Triangle 1, top-right
-		addVertexData(x2, y2, uvx2, uvy, r, g, b, a);
+		addTexturedVertexData(x2, y2, uvx2, uvy, r, g, b, a);
 		// Triangle 1, bottom-left
-		addVertexData(x3, y3, uvx, uvy2, r, g, b, a);
+		addTexturedVertexData(x3, y3, uvx, uvy2, r, g, b, a);
 		// Triangle 2, bottom-right
-		addVertexData(x4, y4, uvx2, uvy2, r, g, b, a);
+		addTexturedVertexData(x4, y4, uvx2, uvy2, r, g, b, a);
 		
 		indexes[indexPos++] = prevVerticesNumber + 0;
 		indexes[indexPos++] = prevVerticesNumber + 1;
@@ -100,7 +100,7 @@ class FlxDrawTrianglesItem extends FlxDrawHardwareItem<FlxDrawTrianglesItem>
 		var numIndexesToAdd:Int = indices.length;
 		var prevVerticesNumber:Int = numVertices;
 		
-		ensureElement(numVerticesToAdd * HardwareRenderer.ELEMENTS_PER_VERTEX, numIndexesToAdd);
+		ensureElement(numVerticesToAdd * HardwareRenderer.ELEMENTS_PER_TEXTURED_TILE, numIndexesToAdd);
 		
 		var r:Float = 1.0;
 		var g:Float = 1.0;
@@ -127,9 +127,9 @@ class FlxDrawTrianglesItem extends FlxDrawHardwareItem<FlxDrawTrianglesItem>
 			x = vertices[i * 2];
 			y = vertices[i * 2 + 1];
 			
-			addVertexData(	matrix.__transformX(x, y), matrix.__transformY(x, y),
-							uvData[i * numUVCoordsPerVertex], uvData[i * numUVCoordsPerVertex + 1],
-							r, g, b, a);
+			addTexturedVertexData(	matrix.__transformX(x, y), matrix.__transformY(x, y),
+									uvData[i * numUVCoordsPerVertex], uvData[i * numUVCoordsPerVertex + 1],
+									r, g, b, a);
 		}
 		
 		for (i in 0...numIndexesToAdd)

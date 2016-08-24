@@ -4,6 +4,7 @@ import flixel.graphics.FlxGraphic;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxShader;
 import flixel.system.render.common.DrawItem.FlxDrawItemType;
+import flixel.util.FlxColor;
 import openfl.display.BlendMode;
 import openfl.geom.ColorTransform;
 import flixel.math.FlxMatrix;
@@ -21,7 +22,6 @@ import lime.utils.UInt32Array;
 class FlxDrawQuadsItem extends FlxDrawHardwareItem<FlxDrawQuadsItem>
 {
 	#if !flash
-	
 	/** Current amount of filled data in tiles. */
 	public var numTiles(get, null):Int;
 	/** Overall buffer size */
@@ -33,14 +33,46 @@ class FlxDrawQuadsItem extends FlxDrawHardwareItem<FlxDrawQuadsItem>
 		type = FlxDrawItemType.TILES;
 	}
 	
-	// TODO: add method without frame argument, so i will be able to draw scrolling sprites (with uvs less than 0 and greater than 1.0)...
-	
-	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform):Void
+	public function addColorQuad(rect:FlxRect, matrix:FlxMatrix, color:FlxColor, alpha:Float = 1.0):Void
 	{
+		if (graphics != null)
+			return;
+			
 		ensureElement();
 		
-		var rect:FlxRect = frame.frame;
-		var uv:FlxRect = frame.uv;
+		// Position
+		var x :Float = matrix.__transformX(0, 0); // Top-left
+		var y :Float = matrix.__transformY(0, 0);
+		var x2:Float = matrix.__transformX(rect.width, 0); // Top-right
+		var y2:Float = matrix.__transformY(rect.width, 0);
+		var x3:Float = matrix.__transformX(0, rect.height); // Bottom-left
+		var y3:Float = matrix.__transformY(0, rect.height);
+		var x4:Float = matrix.__transformX(rect.width, rect.height); // Bottom-right
+		var y4:Float = matrix.__transformY(rect.width, rect.height);
+		
+		var r:Float = color.redFloat;
+		var g:Float = color.greenFloat;
+		var b:Float = color.blueFloat;
+		var a:Float = alpha;
+		
+		// Triangle 1, top-left
+		addNonTexturedVertexData(x, y, r, g, b, a);
+		// Triangle 1, top-right
+		addNonTexturedVertexData(x2, y2, r, g, b, a);
+		// Triangle 1, bottom-left
+		addNonTexturedVertexData(x3, y3, r, g, b, a);
+		// Triangle 2, bottom-right
+		addNonTexturedVertexData(x4, y4, r, g, b, a);
+		
+		indexPos += HardwareRenderer.INDICES_PER_TILE;
+		vertexBufferDirty = true;
+	}
+	
+	// TODO: implement this methods for other renderers...
+	
+	public function addUVQuad(rect:FlxRect, uv:FlxRect, matrix:FlxMatrix, ?transform:ColorTransform):Void
+	{
+		ensureElement();
 		
 		// UV
 		var uvx:Float = uv.x;
@@ -76,23 +108,28 @@ class FlxDrawQuadsItem extends FlxDrawHardwareItem<FlxDrawQuadsItem>
 		}
 		
 		// Triangle 1, top-left
-		addVertexData(x, y, uvx, uvy, r, g, b, a);
+		addTexturedVertexData(x, y, uvx, uvy, r, g, b, a);
 		// Triangle 1, top-right
-		addVertexData(x2, y2, uvx2, uvy, r, g, b, a);
+		addTexturedVertexData(x2, y2, uvx2, uvy, r, g, b, a);
 		// Triangle 1, bottom-left
-		addVertexData(x3, y3, uvx, uvy2, r, g, b, a);
+		addTexturedVertexData(x3, y3, uvx, uvy2, r, g, b, a);
 		// Triangle 2, bottom-right
-		addVertexData(x4, y4, uvx2, uvy2, r, g, b, a);
+		addTexturedVertexData(x4, y4, uvx2, uvy2, r, g, b, a);
 		
 		indexPos += HardwareRenderer.INDICES_PER_TILE;
 		vertexBufferDirty = true;
+	}
+	
+	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform):Void
+	{
+		addUVQuad(frame.frame, frame.uv, matrix, transform);
 	}
 	
 	private function ensureElement():Void
 	{
 		if (buffer == null)
 		{
-			buffer = new Float32Array(HardwareRenderer.MINIMUM_TILE_COUNT_PER_BUFFER * HardwareRenderer.ELEMENTS_PER_TILE);
+			buffer = new Float32Array(HardwareRenderer.MINIMUM_TILE_COUNT_PER_BUFFER * elementsPerQuad);
 			indexes = new UInt32Array(HardwareRenderer.MINIMUM_TILE_COUNT_PER_BUFFER * HardwareRenderer.INDICES_PER_TILE);
 			
 			fillIndexBuffer();
@@ -102,7 +139,7 @@ class FlxDrawQuadsItem extends FlxDrawHardwareItem<FlxDrawQuadsItem>
 			var oldBuffer:Float32Array = buffer;
 			var newNumberOfTiles = currentTilesCapacity + HardwareRenderer.MINIMUM_TILE_COUNT_PER_BUFFER;
 			
-			buffer = new Float32Array(newNumberOfTiles * HardwareRenderer.ELEMENTS_PER_TILE);
+			buffer = new Float32Array(newNumberOfTiles * elementsPerQuad);
 			indexes = new UInt32Array(newNumberOfTiles * HardwareRenderer.INDICES_PER_TILE);
 			
 			var oldLength:Int = oldBuffer.length;
@@ -139,12 +176,12 @@ class FlxDrawQuadsItem extends FlxDrawHardwareItem<FlxDrawQuadsItem>
 	
 	private function get_numTiles():Int
 	{
-		return Std.int(vertexPos / HardwareRenderer.ELEMENTS_PER_TILE);
+		return Std.int(vertexPos / elementsPerQuad);
 	}
 	
 	private function get_currentTilesCapacity():Int
 	{
-		return (buffer != null) ? Std.int(buffer.length / HardwareRenderer.ELEMENTS_PER_TILE) : 0;
+		return (buffer != null) ? Std.int(buffer.length / elementsPerQuad) : 0;
 	}
 	
 	override public function canAddQuad():Bool
@@ -153,6 +190,6 @@ class FlxDrawQuadsItem extends FlxDrawHardwareItem<FlxDrawQuadsItem>
 	}
 	
 	// TODO: add check if it's possible to add new quad to this item...
-		
+	
 	#end
 }

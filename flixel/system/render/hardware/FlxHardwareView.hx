@@ -4,6 +4,7 @@ import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxShader;
 import flixel.system.render.common.DrawItem.DrawData;
 import flixel.system.render.common.FlxCameraView;
@@ -206,15 +207,17 @@ class FlxHardwareView extends FlxCameraView
 			return;
 		}
 		
-		#if (openfl < "4.0.0")
+		#if ((openfl >= "4.0.0") && !flash)
+		// TODO: implement it...
+		// TODO: don't create new rect every time...
+		drawStack.fillRect(new FlxRect( -1, -1, camera.width + 2, camera.height + 2), Color, FxAlpha);
+		#else
 		var targetGraphics:Graphics = canvas.graphics;
 		targetGraphics.beginFill(Color, FxAlpha);
 		// i'm drawing rect with these parameters to avoid light lines at the top and left of the camera,
 		// which could appear while cameras fading
 		targetGraphics.drawRect(-1, -1, camera.width + 2, camera.height + 2);
 		targetGraphics.endFill();
-		#else
-		// TODO: implement it...
 		#end
 	}
 	

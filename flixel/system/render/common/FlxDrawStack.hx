@@ -5,6 +5,7 @@ import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxShader;
 import flixel.system.render.common.FlxDrawBaseItem;
 import flixel.system.render.common.DrawItem.DrawData;
@@ -12,6 +13,7 @@ import flixel.system.render.common.DrawItem.FlxDrawItemType;
 import flixel.system.render.common.DrawItem.FlxDrawQuadsItem;
 import flixel.system.render.common.DrawItem.FlxDrawTrianglesItem;
 import flixel.system.render.hardware.FlxHardwareView;
+import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import openfl.display.BitmapData;
 import openfl.display.BlendMode;
@@ -177,6 +179,16 @@ class FlxDrawStack implements IFlxDestroyable
 		
 		return itemToReturn;
 	}
+	
+	#if ((openfl >= "4.0.0") && !flash)
+	// TODO: implement fill quad with color...
+	public function fillRect(rect:FlxRect, color:FlxColor, alpha:Float = 1.0):Void
+	{
+		_helperMatrix.identity();
+		var drawItem:FlxDrawQuadsItem = startQuadBatch(null, true, false);
+		drawItem.addColorQuad(rect, _helperMatrix, color, alpha);
+	}
+	#end
 	
 	@:noCompletion
 	public function clearDrawStack():Void
