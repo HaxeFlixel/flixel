@@ -6,10 +6,13 @@ import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.gamepad.FlxGamepad;
-import flixel.ui.FlxVirtualPad;
-import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxTimer;
+
+#if VIRTUAL_PAD
+import flixel.ui.FlxVirtualPad;
+import flixel.util.FlxDestroyUtil;
+#end
 
 class Player extends FlxSprite
 {
@@ -101,31 +104,19 @@ class Player extends FlxSprite
 	{
 		#if !FLX_NO_KEYBOARD
 		if (FlxG.keys.anyPressed([A, LEFT]))
-		{
 			moveLeft();
-		}
 		else if (FlxG.keys.anyPressed([D, RIGHT]))
-		{
 			moveRight();
-		}
 		
 		if (FlxG.keys.anyPressed([W, UP]))
-		{
 			moveUp();
-		}
 		else if (FlxG.keys.anyPressed([S, DOWN]))
-		{
 			moveDown();
-		}
 		
 		if (FlxG.keys.pressed.X)
-		{
 			jump();
-		}
 		if (FlxG.keys.pressed.C)
-		{
 			shoot();
-		}
 		#end
 	}
 	
@@ -133,31 +124,19 @@ class Player extends FlxSprite
 	{
 		#if VIRTUAL_PAD
 		if (virtualPad.buttonLeft.pressed)
-		{
 			moveLeft();
-		}
 		else if (virtualPad.buttonRight.pressed)
-		{
 			moveRight();
-		}
 		
 		if (virtualPad.buttonUp.pressed)
-		{
 			moveUp();
-		}
 		else if (virtualPad.buttonDown.pressed)
-		{
 			moveDown();
-		}
 		
 		if (virtualPad.buttonA.justPressed)
-		{
 			jump();
-		}
 		if (virtualPad.buttonB.pressed)
-		{
 			shoot();
-		}
 		#end
 	}
 	
@@ -165,37 +144,24 @@ class Player extends FlxSprite
 	{
 		#if !FLX_NO_GAMEPAD
 		var gamepad:FlxGamepad = FlxG.gamepads.lastActive;
-		if (gamepad == null) return;
+		if (gamepad == null)
+			return;
 		
 		if (gamepad.analog.value.LEFT_STICK_X < 0 || gamepad.pressed.DPAD_LEFT)
-		{
 			moveLeft();
-		}
-		else
-		if (gamepad.analog.value.LEFT_STICK_X > 0 || gamepad.pressed.DPAD_RIGHT)
-		{
+		else if (gamepad.analog.value.LEFT_STICK_X > 0 || gamepad.pressed.DPAD_RIGHT)
 			moveRight();
-		}
 		
 		if (gamepad.analog.value.LEFT_STICK_Y < 0 || gamepad.pressed.DPAD_UP)
-		{
 			moveUp();
-		}
-		else
-		if (gamepad.analog.value.LEFT_STICK_Y > 0 || gamepad.pressed.DPAD_DOWN)
-		{
+		else if (gamepad.analog.value.LEFT_STICK_Y > 0 || gamepad.pressed.DPAD_DOWN)
 			moveDown();
-		}
 		
 		if (gamepad.justPressed.A)
-		{
 			jump();
-		}
 		
 		if (gamepad.pressed.X)
-		{
 			shoot();
-		}
 		#end
 	}
 	
@@ -203,40 +169,21 @@ class Player extends FlxSprite
 	{
 		if (velocity.y != 0)
 		{
-			if (_aim == FlxObject.UP) 
+			animation.play(switch (_aim)
 			{
-				animation.play("jump_up");
-			}
-			else if (_aim == FlxObject.DOWN) 
-			{
-				animation.play("jump_down");
-			}
-			else 
-			{
-				animation.play("jump");
-			}
+				case FlxObject.UP: "jump_up";
+				case FlxObject.DOWN: "jump_down";
+				default: "jump";
+
+			});
 		}
 		else if (velocity.x == 0)
 		{
-			if (_aim == FlxObject.UP) 
-			{
-				animation.play("idle_up");
-			}
-			else 
-			{
-				animation.play("idle");
-			}
+			animation.play(if (_aim == FlxObject.UP) "idle_up" else "idle");
 		}
 		else
 		{
-			if (_aim == FlxObject.UP) 
-			{
-				animation.play("run_up");
-			}
-			else 
-			{
-				animation.play("run");
-			}
+			animation.play(if (_aim == FlxObject.UP) "run_up" else "run");
 		}
 	}
 	
@@ -245,27 +192,19 @@ class Player extends FlxSprite
 		Damage = 0;
 		
 		if (flickering)
-		{
 			return;
-		}
 		
 		FlxG.sound.play("Hurt");
 		
 		flicker(1.3);
 		
 		if (Reg.score > 1000) 
-		{
 			Reg.score -= 1000;
-		}
 		
 		if (velocity.x > 0)
-		{
 			velocity.x = -maxVelocity.x;
-		}
 		else
-		{
 			velocity.x = maxVelocity.x;
-		}
 		
 		super.hurt(Damage);
 	}
@@ -282,9 +221,7 @@ class Player extends FlxSprite
 	override public function kill():Void
 	{
 		if (!alive)
-		{
 			return;
-		}
 		
 		solid = false;
 		FlxG.sound.play("Asplode");
@@ -347,9 +284,7 @@ class Player extends FlxSprite
 	function shoot():Void
 	{
 		if (_shootTimer.active)
-		{
 			return;
-		}
 		_shootTimer.start(SHOOT_RATE);
 		
 		if (flickering)

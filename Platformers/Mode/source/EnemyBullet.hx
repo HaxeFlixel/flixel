@@ -23,9 +23,7 @@ class EnemyBullet extends FlxSprite
 		if (!alive)
 		{
 			if (animation.finished)
-			{
 				exists = false;
-			}
 		}
 		else if (touching != 0)
 		{
@@ -38,14 +36,12 @@ class EnemyBullet extends FlxSprite
 	override public function kill():Void
 	{
 		if (!alive)
-		{
 			return;
-		}
+
 		velocity.set();
 		if (isOnScreen())
-		{
 			FlxG.sound.play("Jump");
-		}
+
 		alive = false;
 		solid = false;
 		animation.play("poof");

@@ -133,25 +133,17 @@ class Enemy extends FlxSprite
 		var da:Float = angleTowardPlayer();
 		
 		if (da < angle)
-		{
 			angularAcceleration = -angularDrag;
-		}
 		else if (da > angle)
-		{
 			angularAcceleration = angularDrag;
-		}
 		else
-		{
 			angularAcceleration = 0;
-		}
 
 		// Figure out if we want the jets on or not.
 		_timer += elapsed;
 		
 		if (_timer > 8)
-		{
 			_timer = 0;
-		}
 		var jetsOn:Bool = _timer < 6;
 		
 		// Set the bot's movement speed and direction
@@ -207,9 +199,7 @@ class Enemy extends FlxSprite
 				_jets.start(false, 0.01);
 				
 				if (isOnScreen())
-				{
 					FlxG.sound.play("Jet");
-				}
 			}
 			// Then, position the jets at the center of the Enemy,
 			// and point the jets the opposite way from where we're moving.
@@ -260,9 +250,7 @@ class Enemy extends FlxSprite
 	override public function kill():Void
 	{
 		if (!alive)
-		{
 			return;
-		}
 		
 		FlxG.sound.play("Asplode");
 		

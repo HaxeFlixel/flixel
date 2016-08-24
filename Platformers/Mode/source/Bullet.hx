@@ -33,9 +33,7 @@ class Bullet extends FlxSprite
 		if (!alive)
 		{
 			if (animation.finished)
-			{
 				exists = false;
-			}
 		}
 		else if (touching != 0)
 		{
@@ -47,16 +45,12 @@ class Bullet extends FlxSprite
 	override public function kill():Void
 	{
 		if (!alive)
-		{
 			return;
-		}
 		
 		velocity.set(0, 0);
 		
 		if (isOnScreen())
-		{
 			FlxG.sound.play("Jump");
-		}
 		
 		alive = false;
 		solid = false;
