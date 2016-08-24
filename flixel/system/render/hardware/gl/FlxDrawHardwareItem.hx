@@ -93,7 +93,7 @@ class FlxDrawHardwareItem<T> extends FlxDrawBaseItem<T>
 		return (graphics != null) ? HardwareRenderer.ELEMENTS_PER_TEXTURED_VERTEX : HardwareRenderer.ELEMENTS_PER_NONTEXTURED_VERTEX;
 	}
 	
-	override function get_elementsPerQuad():Int 
+	override function get_elementsPerTile():Int 
 	{
 		return (graphics != null) ? HardwareRenderer.ELEMENTS_PER_TEXTURED_TILE : HardwareRenderer.ELEMENTS_PER_NONTEXTURED_TILE;
 	}

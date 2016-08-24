@@ -129,7 +129,7 @@ class FlxDrawQuadsItem extends FlxDrawHardwareItem<FlxDrawQuadsItem>
 	{
 		if (buffer == null)
 		{
-			buffer = new Float32Array(HardwareRenderer.MINIMUM_TILE_COUNT_PER_BUFFER * elementsPerQuad);
+			buffer = new Float32Array(HardwareRenderer.MINIMUM_TILE_COUNT_PER_BUFFER * elementsPerTile);
 			indexes = new UInt32Array(HardwareRenderer.MINIMUM_TILE_COUNT_PER_BUFFER * HardwareRenderer.INDICES_PER_TILE);
 			
 			fillIndexBuffer();
@@ -139,7 +139,7 @@ class FlxDrawQuadsItem extends FlxDrawHardwareItem<FlxDrawQuadsItem>
 			var oldBuffer:Float32Array = buffer;
 			var newNumberOfTiles = currentTilesCapacity + HardwareRenderer.MINIMUM_TILE_COUNT_PER_BUFFER;
 			
-			buffer = new Float32Array(newNumberOfTiles * elementsPerQuad);
+			buffer = new Float32Array(newNumberOfTiles * elementsPerTile);
 			indexes = new UInt32Array(newNumberOfTiles * HardwareRenderer.INDICES_PER_TILE);
 			
 			var oldLength:Int = oldBuffer.length;
@@ -176,12 +176,12 @@ class FlxDrawQuadsItem extends FlxDrawHardwareItem<FlxDrawQuadsItem>
 	
 	private function get_numTiles():Int
 	{
-		return Std.int(vertexPos / elementsPerQuad);
+		return Std.int(vertexPos / elementsPerTile);
 	}
 	
 	private function get_currentTilesCapacity():Int
 	{
-		return (buffer != null) ? Std.int(buffer.length / elementsPerQuad) : 0;
+		return (buffer != null) ? Std.int(buffer.length / elementsPerTile) : 0;
 	}
 	
 	override public function canAddQuad():Bool

@@ -77,7 +77,7 @@ class FlxDrawBaseItem<T>
 	
 	public var elementsPerVertex(get, null):Int;
 	
-	public var elementsPerQuad(get, null):Int;
+	public var elementsPerTile(get, null):Int;
 	
 	public function new() {}
 	
@@ -155,7 +155,7 @@ class FlxDrawBaseItem<T>
 		return 0;
 	}
 	
-	private function get_elementsPerQuad():Int
+	private function get_elementsPerTile():Int
 	{
 		return 0;
 	}

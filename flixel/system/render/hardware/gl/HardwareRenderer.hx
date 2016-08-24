@@ -50,7 +50,8 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 	public static var BATCH_TRIANGLES:Bool = true;
 	
 	#if !flash
-	private static var texturedTileShader:TileShader;
+	private static var texturedTileShader:TexturedShader;
+	private static var coloredTileShader:ColorShader;
 
 	private var states:Array<FlxDrawHardwareItem<Dynamic>>;
 	private var stateNum:Int;
@@ -66,8 +67,11 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 		__height = height;
 		
 		if (texturedTileShader == null) 
-			texturedTileShader = new TileShader();
+			texturedTileShader = new TexturedShader();
 		
+		if (coloredTileShader == null) 
+			coloredTileShader = new ColorShader();
+			
 		states = [];
 		stateNum = 0;
 	}
@@ -149,10 +153,15 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 		var gl:GLRenderContext = renderSession.gl;
 		var renderer:GLRenderer = cast renderSession.renderer;
 		
+		var uAlpha = this.__worldAlpha;
+		var uMatrix = renderer.getMatrix(this.__worldTransform);
+		/*
 		renderSession.shaderManager.setShader(texturedTileShader);
 		gl.uniform1f(texturedTileShader.data.uAlpha.index, this.__worldAlpha);
 		gl.uniformMatrix4fv(texturedTileShader.data.uMatrix.index, false, renderer.getMatrix(this.__worldTransform));
-		
+		*/
+		var shader:Shader = null;
+		var nextShader:Shader = null;
 		var blend:BlendMode = null;
 		var texture:FlxGraphic = null;
 		
@@ -161,6 +170,17 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 		while (i < stateNum)
 		{
 			var state:FlxDrawHardwareItem<Dynamic> = states[i];
+			
+			nextShader = (state.graphics != null) ? texturedTileShader : coloredTileShader;
+			
+			if (shader != nextShader || shader == null)
+			{
+				shader = nextShader;
+				
+				renderSession.shaderManager.setShader(shader);
+				gl.uniform1f(shader.data.uAlpha.index, uAlpha);
+				gl.uniformMatrix4fv(shader.data.uMatrix.index, false, uMatrix);
+			}
 			
 			if (blend != state.blending)
 			{
@@ -171,11 +191,12 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 			if (texture != state.graphics)
 			{
 				texture = state.graphics;
-				gl.bindTexture(gl.TEXTURE_2D, texture.bitmap.getTexture(gl));
 			}
 			
 			if (texture != null)
 			{
+				gl.bindTexture(gl.TEXTURE_2D, texture.bitmap.getTexture(gl));
+				
 				if (state.antialiasing) 
 				{
 					gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
@@ -214,14 +235,17 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 				gl.bufferData(gl.ARRAY_BUFFER, state.buffer, gl.DYNAMIC_DRAW);
 			}
 			
-			gl.vertexAttribPointer(texturedTileShader.data.aPosition.index, 2, gl.FLOAT, false, 8 * Float32Array.BYTES_PER_ELEMENT, 0);
+			gl.vertexAttribPointer(shader.data.aPosition.index, 2, gl.FLOAT, false, state.elementsPerVertex * Float32Array.BYTES_PER_ELEMENT, 0);
 			
 			if (texture != null)
 			{
-				gl.vertexAttribPointer(texturedTileShader.data.aTexCoord.index, 2, gl.FLOAT, false, 8 * Float32Array.BYTES_PER_ELEMENT, 2 * Float32Array.BYTES_PER_ELEMENT);
+				gl.vertexAttribPointer(shader.data.aTexCoord.index, 2, gl.FLOAT, false, state.elementsPerVertex * Float32Array.BYTES_PER_ELEMENT, 2 * Float32Array.BYTES_PER_ELEMENT);
+				gl.vertexAttribPointer(shader.data.aColor.index, 4, gl.FLOAT, false, state.elementsPerVertex * Float32Array.BYTES_PER_ELEMENT, 4 * Float32Array.BYTES_PER_ELEMENT);
 			}
-			
-			gl.vertexAttribPointer(texturedTileShader.data.aColor.index, 4, gl.FLOAT, false, 8 * Float32Array.BYTES_PER_ELEMENT, 4 * Float32Array.BYTES_PER_ELEMENT);
+			else
+			{
+				gl.vertexAttribPointer(shader.data.aColor.index, 4, gl.FLOAT, false, state.elementsPerVertex * Float32Array.BYTES_PER_ELEMENT, 2 * Float32Array.BYTES_PER_ELEMENT);
+			}
 			
 			gl.drawElements(gl.TRIANGLES, state.indexPos, gl.UNSIGNED_INT, 0);
 			
