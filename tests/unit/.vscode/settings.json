@@ -1,0 +1,11 @@
+{
+    // These are configurations used for haxe completion.
+    //
+    // Each configuration is an array of arguments that will be passed to the Haxe completion server,
+    // they should only contain arguments and/or hxml files that are needed for completion,
+    // such as -cp, -lib, target output settings and defines.
+    "haxe.displayConfigurations": [
+        ["bin/flash/haxe/debug.hxml"] // if a hxml file is safe to use, we can just pass it as argument
+        // you can add more than one configuration and switch between them
+    ]
+}

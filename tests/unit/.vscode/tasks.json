@@ -1,0 +1,71 @@
+{
+    "version": "0.1.0",
+    "command": "haxe",
+    "tasks": [
+        {
+            "taskName": "targets/test-cpp.hxml",
+            "problemMatcher": {
+                "owner": "haxe",
+                "pattern": {
+                    "regexp": "^(.+):(\\d+): (?:lines \\d+-(\\d+)|character(?:s (\\d+)-| )(\\d+)) : (?:(Warning) : )?(.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "endLine": 3,
+                    "column": 4,
+                    "endColumn": 5,
+                    "severity": 6,
+                    "message": 7
+                }
+            }
+        },
+        {
+            "taskName": "targets/test-flash.hxml",
+            "problemMatcher": {
+                "owner": "haxe",
+                "pattern": {
+                    "regexp": "^(.+):(\\d+): (?:lines \\d+-(\\d+)|character(?:s (\\d+)-| )(\\d+)) : (?:(Warning) : )?(.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "endLine": 3,
+                    "column": 4,
+                    "endColumn": 5,
+                    "severity": 6,
+                    "message": 7
+                }
+            }
+        },
+        {
+            "taskName": "targets/test-html5.hxml",
+            "problemMatcher": {
+                "owner": "haxe",
+                "pattern": {
+                    "regexp": "^(.+):(\\d+): (?:lines \\d+-(\\d+)|character(?:s (\\d+)-| )(\\d+)) : (?:(Warning) : )?(.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "endLine": 3,
+                    "column": 4,
+                    "endColumn": 5,
+                    "severity": 6,
+                    "message": 7
+                }
+            }
+        },
+        {
+            "taskName": "targets/test-neko.hxml",
+            "isBuildCommand": true,
+            "problemMatcher": {
+                "owner": "haxe",
+                "pattern": {
+                    "regexp": "^(.+):(\\d+): (?:lines \\d+-(\\d+)|character(?:s (\\d+)-| )(\\d+)) : (?:(Warning) : )?(.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "endLine": 3,
+                    "column": 4,
+                    "endColumn": 5,
+                    "severity": 6,
+                    "message": 7
+                }
+            }
+        }
+    ]
+}
