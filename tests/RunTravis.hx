@@ -127,7 +127,7 @@ class RunTravis
 	
 	static function buildProjects(target:Target, args:Array<String>):ExitCode
 	{
-		return return haxelibRun(["flixel-tools", "bp", target].concat(args));
+		return haxelibRun(["flixel-tools", "bp", target].concat(args));
 	}
 	
 	static function buildSwfVersionTests(target:Target):ExitCode
