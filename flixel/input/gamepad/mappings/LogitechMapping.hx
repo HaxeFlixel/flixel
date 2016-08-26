@@ -40,16 +40,15 @@ class LogitechMapping extends FlxGamepadMapping
 			case LogitechID.DPAD_RIGHT: DPAD_RIGHT;
 			case LogitechID.DPAD_UP: DPAD_UP;
 			case LogitechID.LOGITECH: GUIDE;
-			default:
-				if (rawID == LogitechID.LEFT_ANALOG_STICK.rawUp)     LEFT_STICK_DIGITAL_UP;
-				if (rawID == LogitechID.LEFT_ANALOG_STICK.rawDown)   LEFT_STICK_DIGITAL_DOWN;
-				if (rawID == LogitechID.LEFT_ANALOG_STICK.rawLeft)   LEFT_STICK_DIGITAL_LEFT;
-				if (rawID == LogitechID.LEFT_ANALOG_STICK.rawRight)  LEFT_STICK_DIGITAL_RIGHT;
-				if (rawID == LogitechID.RIGHT_ANALOG_STICK.rawUp)    RIGHT_STICK_DIGITAL_UP;
-				if (rawID == LogitechID.RIGHT_ANALOG_STICK.rawDown)  RIGHT_STICK_DIGITAL_DOWN;
-				if (rawID == LogitechID.RIGHT_ANALOG_STICK.rawLeft)  RIGHT_STICK_DIGITAL_LEFT;
-				if (rawID == LogitechID.RIGHT_ANALOG_STICK.rawRight) RIGHT_STICK_DIGITAL_RIGHT;
-				NONE;
+			case id if (id == leftStick.rawUp): LEFT_STICK_DIGITAL_UP;
+			case id if (id == leftStick.rawDown): LEFT_STICK_DIGITAL_DOWN;
+			case id if (id == leftStick.rawLeft): LEFT_STICK_DIGITAL_LEFT;
+			case id if (id == leftStick.rawRight): LEFT_STICK_DIGITAL_RIGHT;
+			case id if (id == rightStick.rawUp): RIGHT_STICK_DIGITAL_UP;
+			case id if (id == rightStick.rawDown): RIGHT_STICK_DIGITAL_DOWN;
+			case id if (id == rightStick.rawLeft): RIGHT_STICK_DIGITAL_LEFT;
+			case id if (id == rightStick.rawRight): RIGHT_STICK_DIGITAL_RIGHT;
+			case _: NONE;
 		}
 	}
 
