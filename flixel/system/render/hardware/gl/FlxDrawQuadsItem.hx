@@ -142,12 +142,8 @@ class FlxDrawQuadsItem extends FlxDrawHardwareItem<FlxDrawQuadsItem>
 			buffer = new Float32Array(newNumberOfTiles * elementsPerTile);
 			indexes = new UInt32Array(newNumberOfTiles * HardwareRenderer.INDICES_PER_TILE);
 			
-			var oldLength:Int = oldBuffer.length;
-			for (i in 0...oldLength)
-			{
-				buffer[i] = oldBuffer[i];
-			}
-			
+			buffer.set(oldBuffer);
+			// TODO: optimize this place...
 			fillIndexBuffer();
 		}
 	}

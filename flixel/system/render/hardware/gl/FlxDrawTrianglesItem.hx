@@ -153,30 +153,21 @@ class FlxDrawTrianglesItem extends FlxDrawHardwareItem<FlxDrawTrianglesItem>
 		}
 		else
 		{
-			var oldBubberLength:Int = buffer.length;
+			var oldBuffer:Float32Array = buffer;
+			var oldBubberLength:Int = oldBuffer.length;
 			if (newBufferLength >= oldBubberLength)
 			{
-				var oldBuffer:Float32Array = buffer;
 				buffer = new Float32Array(newBufferLength);
-				
-				for (i in 0...oldBubberLength)
-				{
-					buffer[i] = oldBuffer[i];
-				}
+				buffer.set(oldBuffer);
 			}
 			
-			var oldIndexesLength:Int = indexes.length;
+			var oldIndexes:UInt32Array = indexes;
+			var oldIndexesLength:Int = oldIndexes.length;
 			if (newIndexesLength >= oldIndexesLength)
 			{
-				var oldIndexes:UInt32Array = indexes;
 				indexes = new UInt32Array(newIndexesLength);
-				
-				for (i in 0...oldIndexesLength)
-				{
-					indexes[i] = oldIndexes[i];
-				}
+				indexes.set(oldIndexes);
 			}
-			
 		}
 	}
 	

@@ -125,7 +125,6 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 		}
 		
 		return false;
-		
 	}
 	
 	override private function get_height():Float 
@@ -155,15 +154,14 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 		
 		var uAlpha = this.__worldAlpha;
 		var uMatrix = renderer.getMatrix(this.__worldTransform);
-		/*
-		renderSession.shaderManager.setShader(texturedTileShader);
-		gl.uniform1f(texturedTileShader.data.uAlpha.index, this.__worldAlpha);
-		gl.uniformMatrix4fv(texturedTileShader.data.uMatrix.index, false, renderer.getMatrix(this.__worldTransform));
-		*/
+		
 		var shader:Shader = null;
 		var nextShader:Shader = null;
 		var blend:BlendMode = null;
 		var texture:FlxGraphic = null;
+		
+		// TODO: use this var...
+		var nextTexture:FlxGraphic = null;
 		
 		var i:Int = 0;
 		
@@ -191,12 +189,15 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 			if (texture != state.graphics)
 			{
 				texture = state.graphics;
+				
+				if (texture != null)
+				{
+					gl.bindTexture(gl.TEXTURE_2D, texture.bitmap.getTexture(gl));
+				}
 			}
 			
 			if (texture != null)
 			{
-				gl.bindTexture(gl.TEXTURE_2D, texture.bitmap.getTexture(gl));
-				
 				if (state.antialiasing) 
 				{
 					gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
