@@ -97,8 +97,6 @@ class FlxBlitView extends FlxCameraView
 	 */
 	private static var trianglesSprite:Sprite = new Sprite();
 	
-	// TODO: try to avoid using this variable.
-	// need to move functionality related to this var into FlxStrip
 	/**
 	 * Internal variable, used for visibility checks to minimize drawTriangles() calls.
 	 */
@@ -108,13 +106,6 @@ class FlxBlitView extends FlxCameraView
 	 * Whether checkResize checks if the camera dimensions have changed to update the buffer dimensions.
 	 */
 	private var regen:Bool = false;
-	
-	/**
-	 * Internal variables, used in blit render mode to draw trianglesSprite on camera's buffer. 
-	 * Added for less garbage creation.
-	 */
-	private static var renderPoint:FlxPoint = FlxPoint.get();
-	private static var renderRect:FlxRect = FlxRect.get();
 	
 	public function new(camera:FlxCamera) 
 	{
@@ -173,69 +164,39 @@ class FlxBlitView extends FlxCameraView
 		uvtData:DrawData<Float>, ?matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, 
 		repeat:Bool = false, smoothing:Bool = false):Void 
 	{
-		// TODO: fix this...
-		/*
-		if (position == null)
-			position = renderPoint.set();
-		
-		var viewBounds:FlxRect = this.bounds;
+		drawVertices.splice(0, drawVertices.length);
 		
 		var verticesLength:Int = vertices.length;
-		var currentVertexPosition:Int = 0;
-		
-		var tempX:Float, tempY:Float;
+		var px:Float, py:Float;
 		var i:Int = 0;
-		var triBounds = renderRect.set();
-		
-		drawVertices.splice(0, drawVertices.length);
 		
 		while (i < verticesLength)
 		{
-			tempX = position.x + vertices[i]; 
-			tempY = position.y + vertices[i + 1];
+			px = vertices[i]; 
+			py = vertices[i + 1];
 			
-			drawVertices[currentVertexPosition++] = tempX;
-			drawVertices[currentVertexPosition++] = tempY;
-			
-			if (i == 0)
-			{
-				triBounds.set(tempX, tempY, 0, 0);
-			}
-			else
-			{
-				FlxGeom.inflateBounds(triBounds, tempX, tempY);
-			}
+			drawVertices[i] = px * matrix.a + py * matrix.c + matrix.tx;
+			drawVertices[i + 1] = px * matrix.b + py * matrix.d + matrix.ty;
 			
 			i += 2;
 		}
 		
-		position.putWeak();
+		trianglesSprite.graphics.clear();
+		trianglesSprite.graphics.beginBitmapFill(graphic.bitmap, null, repeat, smoothing);
+		trianglesSprite.graphics.drawTriangles(drawVertices, indices, uvtData);
+		trianglesSprite.graphics.endFill();
+		buffer.draw(trianglesSprite);
 		
-		if (!viewBounds.overlaps(triBounds))
+		#if FLX_DEBUG
+		if (FlxG.debugger.drawDebug)
 		{
-			drawVertices.splice(drawVertices.length - verticesLength, verticesLength);
+			var gfx:Graphics = FlxSpriteUtil.flashGfx;
+			gfx.clear();
+			gfx.lineStyle(1, FlxColor.BLUE, 0.5);
+			gfx.drawTriangles(drawVertices, indices);
+			buffer.draw(FlxSpriteUtil.flashGfxSprite);
 		}
-		else
-		{
-			trianglesSprite.graphics.clear();
-			trianglesSprite.graphics.beginBitmapFill(graphic.bitmap, null, repeat, smoothing);
-			trianglesSprite.graphics.drawTriangles(drawVertices, indices, uvtData);
-			trianglesSprite.graphics.endFill();
-			buffer.draw(trianglesSprite);
-			#if FLX_DEBUG
-			if (FlxG.debugger.drawDebug)
-			{
-				var gfx:Graphics = FlxSpriteUtil.flashGfx;
-				gfx.clear();
-				gfx.lineStyle(1, FlxColor.BLUE, 0.5);
-				gfx.drawTriangles(drawVertices, indices);
-				buffer.draw(FlxSpriteUtil.flashGfxSprite);
-			}
-			#end
-		}
-		
-		triBounds.put();
-		*/
+		#end
 	}
 	
 	override public function updatePosition():Void 

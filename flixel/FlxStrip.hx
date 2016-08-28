@@ -1,11 +1,17 @@
 package flixel;
 
+import flixel.math.FlxRect;
 import flixel.system.render.common.DrawItem.DrawData;
+import flixel.util.FlxGeom;
 
 /**
  * A very basic rendering component which uses drawTriangles.
  * You have access to vertices, indices and uvtData vectors which are used as data storages for rendering.
  * The whole FlxGraphic object is used as a texture for this sprite.
+ * 
+ * You must set `dirty` flag to true to make it update its bounds which are used for visibility checks.
+ * I had to add this requirement for less calculations every frame.
+ * 
  * Use these links for more info about drawTriangles method:
  * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/display/Graphics.html#drawTriangles%28%29
  * @see http://help.adobe.com/en_US/as3/dev/WS84753F1C-5ABE-40b1-A2E4-07D7349976C4.html
@@ -30,6 +36,8 @@ class FlxStrip extends FlxSprite
 	
 	public var repeat:Bool = false;
 	
+	private var bounds:FlxRect = FlxRect.get();
+	
 	override public function destroy():Void 
 	{
 		vertices = null;
@@ -46,6 +54,20 @@ class FlxStrip extends FlxSprite
 			return;
 		}
 		
+		if (dirty && vertices.length >= 6)
+		{
+			// calculate bounds in local coordinates
+			bounds.set(vertices[0], vertices[1], 0, 0);
+			var numVertices:Int = vertices.length;
+			var i:Int = 2;
+			
+			while (i < numVertices)
+			{
+				FlxGeom.inflateBounds(bounds, vertices[i], vertices[i + 1]);
+				i += 2;
+			}
+		}
+		
 		for (camera in cameras)
 		{
 			if (!camera.visible || !camera.exists)
@@ -55,12 +77,21 @@ class FlxStrip extends FlxSprite
 			
 			getScreenPosition(_point, camera);
 			
-			// TODO: add visibility check here...
+			// TODO: add more complex visibility checks like scaling and rotations...
 			
-			_matrix.identity();
-			_matrix.translate(_point.x, _point.y);
+			// TODO: add support for complex transformations for this kind of sprite
 			
-			camera.drawTriangles(graphic, vertices, indices, uvtData, _matrix, colorTransform, blend, repeat, antialiasing);
+			bounds.offset(_point.x, _point.y);
+			
+			if (camera.view.bounds.overlaps(bounds))
+			{
+				_matrix.identity();
+				_matrix.translate(_point.x, _point.y);
+				
+				camera.drawTriangles(graphic, vertices, indices, uvtData, _matrix, colorTransform, blend, repeat, antialiasing);
+			}
+			
+			bounds.offset( -_point.x, -_point.y);
 		}
 	}
 }
