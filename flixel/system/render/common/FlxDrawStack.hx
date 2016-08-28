@@ -80,9 +80,6 @@ class FlxDrawStack implements IFlxDestroyable
 	public function startQuadBatch(graphic:FlxGraphic, colored:Bool, hasColorOffsets:Bool = false,
 		?blend:BlendMode, smooth:Bool = false, ?shader:FlxShader)
 	{
-		#if FLX_RENDER_TRIANGLE
-		return startTrianglesBatch(graphic, smooth, colored, blend);
-		#else
 		var itemToReturn:FlxDrawQuadsItem = null;
 		
 		if (_currentDrawItem != null /* && _currentDrawItem.type == FlxDrawItemType.TILES*/ 
@@ -122,7 +119,6 @@ class FlxDrawStack implements IFlxDestroyable
 		_currentDrawItem = itemToReturn;
 		
 		return itemToReturn;
-		#end
 	}
 	
 	// TODO: add shader support for openfl 4.0.0 and later...
@@ -133,8 +129,8 @@ class FlxDrawStack implements IFlxDestroyable
 		var itemToReturn:FlxDrawTrianglesItem = null;
 		
 		if (_currentDrawItem != null /*&& _currentDrawItem.type == FlxDrawItemType.TRIANGLES*/ 
-			&& _headTriangles.equals(FlxDrawItemType.TRIANGLES, graphic, colored, false, blend, smooth, shader)
-			&& _headTriangles.canAddTriangles(numVertices, numIndices))
+			&& _currentDrawItem.equals(FlxDrawItemType.TRIANGLES, graphic, colored, false, blend, smooth, shader)
+			&& _currentDrawItem.canAddTriangles(numVertices, numIndices))
 		{	
 			return _headTriangles;
 		}
@@ -238,13 +234,7 @@ class FlxDrawStack implements IFlxDestroyable
 	{
 		var isColored = (transform != null && transform.hasRGBMultipliers());
 		var hasColorOffsets:Bool = (transform != null && transform.hasRGBAOffsets());
-		
-		#if FLX_RENDER_TRIANGLE
-		// TODO: don't use magic numbers here...
-		var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(frame.parent, smoothing, isColored, blend, null, 4, 6);
-		#else
 		var drawItem:FlxDrawQuadsItem = startQuadBatch(frame.parent, isColored, hasColorOffsets, blend, smoothing, shader);
-		#end
 		drawItem.addQuad(frame, matrix, transform);
 	}
 	
@@ -257,11 +247,7 @@ class FlxDrawStack implements IFlxDestroyable
 		var isColored = (transform != null && transform.hasRGBMultipliers());
 		var hasColorOffsets:Bool = (transform != null && transform.hasRGBAOffsets());
 		
-		#if !FLX_RENDER_TRIANGLE
 		var drawItem:FlxDrawQuadsItem = startQuadBatch(frame.parent, isColored, hasColorOffsets, blend, smoothing, shader);
-		#else
-		var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(frame.parent, smoothing, isColored, blend);
-		#end
 		drawItem.addQuad(frame, _helperMatrix, transform);
 	}
 	

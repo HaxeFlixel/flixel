@@ -1,6 +1,6 @@
 package flixel;
 
-import flixel.graphics.tile.FlxDrawTrianglesItem.DrawData;
+import flixel.system.render.common.DrawItem.DrawData;
 
 /**
  * A very basic rendering component which uses drawTriangles.
@@ -28,8 +28,6 @@ class FlxStrip extends FlxSprite
 	 */
 	public var uvtData:DrawData<Float> = new DrawData<Float>();
 	
-	public var colors:DrawData<Int> = new DrawData<Int>();
-	
 	public var repeat:Bool = false;
 	
 	override public function destroy():Void 
@@ -37,7 +35,6 @@ class FlxStrip extends FlxSprite
 		vertices = null;
 		indices = null;
 		uvtData = null;
-		colors = null;
 		
 		super.destroy();
 	}
@@ -57,7 +54,13 @@ class FlxStrip extends FlxSprite
 			}
 			
 			getScreenPosition(_point, camera);
-			camera.drawTriangles(graphic, vertices, indices, uvtData, colors, _point, blend, repeat, antialiasing);
+			
+			// TODO: add visibility check here...
+			
+			_matrix.identity();
+			_matrix.translate(_point.x, _point.y);
+			
+			camera.drawTriangles(graphic, vertices, indices, uvtData, _matrix, colorTransform, blend, repeat, antialiasing);
 		}
 	}
 }
