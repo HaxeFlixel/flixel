@@ -2,7 +2,6 @@ package flixel;
 
 import flixel.math.FlxRect;
 import flixel.system.render.common.DrawItem.DrawData;
-import flixel.util.FlxGeom;
 
 /**
  * A very basic rendering component which uses drawTriangles.
@@ -63,7 +62,7 @@ class FlxStrip extends FlxSprite
 			
 			while (i < numVertices)
 			{
-				FlxGeom.inflateBounds(bounds, vertices[i], vertices[i + 1]);
+				bounds.inflate(vertices[i], vertices[i + 1]);
 				i += 2;
 			}
 		}

@@ -13,7 +13,6 @@ import flixel.system.render.common.FlxCameraView;
 import flixel.system.render.common.FlxDrawBaseItem;
 import flixel.system.render.tile.FlxTilesheetView;
 import flixel.util.FlxColor;
-import flixel.util.FlxGeom;
 import openfl.display.BlendMode;
 import openfl.display.Graphics;
 import openfl.display.TriangleCulling;
@@ -115,6 +114,7 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		this.antialiasing = smooth;
 	}
 	
+	// TODO: fix this method for new api, since i've removed colors argument...
 	public function addTriangles(vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, ?colors:DrawData<Int>, ?position:FlxPoint, ?cameraBounds:FlxRect):Void
 	{
 		if (position == null)
@@ -123,6 +123,8 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		if (cameraBounds == null)
 			cameraBounds = rect.set(0, 0, FlxG.width, FlxG.height);
 		
+		// TODO: clean this method, since visibility checks should me made before calling this method...
+			
 		var verticesLength:Int = vertices.length;
 		var prevVerticesLength:Int = this.vertices.length;
 		var numberOfVertices:Int = Std.int(verticesLength / 2);
