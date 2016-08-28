@@ -36,12 +36,13 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 	public static inline var ELEMENTS_PER_NONTEXTURED_TILE:Int = 6 * 4;
 	
 	public static inline var INDICES_PER_TILE:Int = 6;
+	public static inline var VERTICES_PER_TILE:Int = 4;
 	public static inline var MINIMUM_TILE_COUNT_PER_BUFFER:Int = 10;
 	public static inline var BYTES_PER_ELEMENT:Int = 4;
 	
 	// TODO: add batch size limit...
 	// and use this var...
-	public static var QUADS_PER_BATCH:Int = 2000;
+	public static var TILES_PER_BATCH:Int = 2000;
 	
 	public static var VERTICES_PER_BATCH:Int = 7500;
 	public static var INDICES_PER_BATCH:Int = 7500;

@@ -130,7 +130,6 @@ class FlxDrawQuadsItem extends FlxDrawHardwareItem<FlxDrawQuadsItem>
 		if (buffer == null)
 		{
 			buffer = new Float32Array(HardwareRenderer.MINIMUM_TILE_COUNT_PER_BUFFER * elementsPerTile);
-			indexes = new UInt32Array(HardwareRenderer.MINIMUM_TILE_COUNT_PER_BUFFER * HardwareRenderer.INDICES_PER_TILE);
 			
 			fillIndexBuffer();
 		}
@@ -140,19 +139,30 @@ class FlxDrawQuadsItem extends FlxDrawHardwareItem<FlxDrawQuadsItem>
 			var newNumberOfTiles = currentTilesCapacity + HardwareRenderer.MINIMUM_TILE_COUNT_PER_BUFFER;
 			
 			buffer = new Float32Array(newNumberOfTiles * elementsPerTile);
-			indexes = new UInt32Array(newNumberOfTiles * HardwareRenderer.INDICES_PER_TILE);
-			
 			buffer.set(oldBuffer);
-			// TODO: optimize this place...
+			
 			fillIndexBuffer();
 		}
 	}
 	
 	private inline function fillIndexBuffer():Void
 	{
-		var i:Int = 0;
-		var vertexOffset:Int = 0;
+		var oldIndexes:UInt32Array = indexes;
+		var oldLength:Int = (oldIndexes != null) ? oldIndexes.length : 0;
 		
+		indexes = new UInt32Array(currentTilesCapacity * HardwareRenderer.INDICES_PER_TILE);
+		
+		if (oldLength > 0)
+		{
+			indexes.set(oldIndexes);
+		}
+		
+		var i:Int = oldLength;
+		var vertexOffset:Int = Std.int(HardwareRenderer.VERTICES_PER_TILE * oldLength / HardwareRenderer.INDICES_PER_TILE);
+		
+	//	var i:Int = 0;
+	//	var vertexOffset:Int = 0;
+	
 		while (i < indexes.length)
 		{
 			indexes[i    ] = vertexOffset;//0;
@@ -161,7 +171,7 @@ class FlxDrawQuadsItem extends FlxDrawHardwareItem<FlxDrawQuadsItem>
 			indexes[i + 3] = vertexOffset + 2;
 			indexes[i + 4] = vertexOffset + 1;
 			indexes[i + 5] = vertexOffset + 3;
-			vertexOffset += 4;
+			vertexOffset += HardwareRenderer.VERTICES_PER_TILE;
 			i += HardwareRenderer.INDICES_PER_TILE;
 		}
 		
@@ -182,7 +192,7 @@ class FlxDrawQuadsItem extends FlxDrawHardwareItem<FlxDrawQuadsItem>
 	
 	override public function canAddQuad():Bool
 	{
-		return ((this.numTiles + 1) <= HardwareRenderer.QUADS_PER_BATCH);
+		return ((this.numTiles + 1) <= HardwareRenderer.TILES_PER_BATCH);
 	}
 	
 	// TODO: add check if it's possible to add new quad to this item...
