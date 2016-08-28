@@ -34,7 +34,7 @@ class FlxStringUtil
 	 * @param	ShowMS		Whether to show milliseconds after a "." as well.  Default value is false.
 	 * @return	A nicely formatted String, like "1:03".
 	 */
-	public static inline function formatTime(Seconds:Float, ShowMS:Bool = false):String
+	public static function formatTime(Seconds:Float, ShowMS:Bool = false):String
 	{
 		var timeString:String = Std.int(Seconds / 60) + ":";
 		var timeStringHelper:Int = Std.int(Seconds) % 60;
@@ -64,7 +64,7 @@ class FlxStringUtil
 	 * @param	AnyArray	Any Array object.
 	 * @return	A comma-separated String containing the .toString() output of each element in the array.
 	 */
-	public static inline function formatArray(AnyArray:Array<Dynamic>):String
+	public static function formatArray(AnyArray:Array<Dynamic>):String
 	{
 		var string:String = "";
 		if ((AnyArray != null) && (AnyArray.length > 0))
@@ -86,7 +86,7 @@ class FlxStringUtil
 	 * @param  AnyMap    A StringMap object.
 	 * @return  A String formatted like this: key1, key2, ..., keyX
 	 */
-	public static inline function formatStringMap(AnyMap:Map<String, Dynamic>):String
+	public static function formatStringMap(AnyMap:Map<String, Dynamic>):String
 	{
 		var string:String = "";
 		for (key in AnyMap.keys())
@@ -109,7 +109,7 @@ class FlxStringUtil
 	 * @param	EnglishStyle	Major quantities (thousands, millions, etc) separated by commas, and decimal by a period.
 	 * @return	A nicely formatted String. Does not include a dollar sign or anything!
 	 */
-	public static inline function formatMoney(Amount:Float, ShowDecimal:Bool = true, EnglishStyle:Bool = true):String
+	public static function formatMoney(Amount:Float, ShowDecimal:Bool = true, EnglishStyle:Bool = true):String
 	{
 		var isNegative = Amount < 0;
 		Amount = Math.abs(Amount);
@@ -231,7 +231,7 @@ class FlxStringUtil
 	 * @return	The name of the Class as a String object.
 	 */
 	@:extern
-	public static inline function getClassName(Obj:Dynamic, Simple:Bool = false):String
+	public static function getClassName(Obj:Dynamic, Simple:Bool = false):String
 	{
 		var cl:Class<Dynamic>;
 		if (Std.is(Obj, Class))
