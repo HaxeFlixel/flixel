@@ -11,7 +11,7 @@ import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.render.common.FlxCameraView;
 import flixel.system.render.common.FlxDrawBaseItem;
-import flixel.system.render.tile.FlxTilesheetView;
+import flixel.system.render.hardware.FlxHardwareView;
 import flixel.util.FlxColor;
 import openfl.display.BlendMode;
 import openfl.display.Graphics;
@@ -44,7 +44,7 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		type = FlxDrawItemType.TRIANGLES;
 	}
 	
-	override public function render(view:FlxTilesheetView):Void 
+	override public function render(view:FlxHardwareView):Void 
 	{
 		if (!FlxG.renderTile)
 			return;
@@ -105,22 +105,18 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 			&& this.antialiasing == smooth);
 	}
 	
-	override public function set(graphic:FlxGraphic, colored:Bool, hasColorOffsets:Bool = false,
-		?blend:BlendMode, smooth:Bool = false, ?shader:FlxShader):Void
-	{
-		this.graphics = graphic;
-		this.colored = colored;
-		this.blending = blend;
-		this.antialiasing = smooth;
-	}
-	
 	// TODO: fix this method for new api, since i've removed colors argument...
-	public function addTriangles(vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, ?colors:DrawData<Int>, ?position:FlxPoint, ?cameraBounds:FlxRect):Void
+	public function addTriangles(vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, ?matrix:FlxMatrix, ?transform:ColorTransform):Void
 	{
-		/*
-		drawVertices.splice(0, drawVertices.length);
-		
+		var drawVertices = this.vertices;
 		var verticesLength:Int = vertices.length;
+		var prevVerticesLength:Int = drawVertices.length;
+		var numberOfVertices:Int = Std.int(verticesLength / 2);
+		var prevIndicesLength:Int = this.indices.length;
+		var prevUVTDataLength:Int = this.uvtData.length;
+		var prevColorsLength:Int = this.colors.length;
+		var prevNumberOfVertices:Int = this.numVertices;
+		
 		var px:Float, py:Float;
 		var i:Int = 0;
 		
@@ -132,98 +128,33 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 			drawVertices[i] = px * matrix.a + py * matrix.c + matrix.tx;
 			drawVertices[i + 1] = px * matrix.b + py * matrix.d + matrix.ty;
 			
+			verticesPosition += 2;
 			i += 2;
 		}
 		
-		trianglesSprite.graphics.clear();
-		trianglesSprite.graphics.beginBitmapFill(graphic.bitmap, null, repeat, smoothing);
-		trianglesSprite.graphics.drawTriangles(drawVertices, indices, uvtData);
-		trianglesSprite.graphics.endFill();
-		buffer.draw(trianglesSprite);
-		
-		#if FLX_DEBUG
-		if (FlxG.debugger.drawDebug)
+		var uvtDataLength:Int = uvtData.length;
+		for (i in 0...uvtDataLength)
 		{
-			var gfx:Graphics = FlxSpriteUtil.flashGfx;
-			gfx.clear();
-			gfx.lineStyle(1, FlxColor.BLUE, 0.5);
-			gfx.drawTriangles(drawVertices, indices);
-			buffer.draw(FlxSpriteUtil.flashGfxSprite);
-		}
-		#end
-		*/
-		
-		if (cameraBounds == null)
-			cameraBounds = rect.set(0, 0, FlxG.width, FlxG.height);
-		
-		// TODO: clean this method, since visibility checks should me made before calling this method...
-		
-		var verticesLength:Int = vertices.length;
-		var prevVerticesLength:Int = this.vertices.length;
-		var numberOfVertices:Int = Std.int(verticesLength / 2);
-		var prevIndicesLength:Int = this.indices.length;
-		var prevUVTDataLength:Int = this.uvtData.length;
-		var prevColorsLength:Int = this.colors.length;
-		var prevNumberOfVertices:Int = this.numVertices;
-		
-		var tempX:Float, tempY:Float;
-		var i:Int = 0;
-		var currentVertexPosition:Int = prevVerticesLength;
-		
-		while (i < verticesLength)
-		{
-			tempX = position.x + vertices[i]; 
-			tempY = position.y + vertices[i + 1];
-			
-			this.vertices[currentVertexPosition++] = tempX;
-			this.vertices[currentVertexPosition++] = tempY;
-			
-			if (i == 0)
-			{
-				bounds.set(tempX, tempY, 0, 0);
-			}
-			else
-			{
-				FlxGeom.inflateBounds(bounds, tempX, tempY);
-			}
-			
-			i += 2;
+			this.uvtData[prevUVTDataLength + i] = uvtData[i];
 		}
 		
-		if (!cameraBounds.overlaps(bounds))
+		var indicesLength:Int = indices.length;
+		for (i in 0...indicesLength)
 		{
-			this.vertices.splice(this.vertices.length - verticesLength, verticesLength);
-		}
-		else
-		{
-			var uvtDataLength:Int = uvtData.length;
-			for (i in 0...uvtDataLength)
-			{
-				this.uvtData[prevUVTDataLength + i] = uvtData[i];
-			}
-			
-			var indicesLength:Int = indices.length;
-			for (i in 0...indicesLength)
-			{
-				this.indices[prevIndicesLength + i] = indices[i] + prevNumberOfVertices;
-			}
-			
-			if (colored)
-			{
-				for (i in 0...numberOfVertices)
-				{
-					this.colors[prevColorsLength + i] = colors[i];
-				}
-				
-				colorsPosition += numberOfVertices;
-			}
-			
-			verticesPosition += verticesLength;
-			indicesPosition += indicesLength;
+			this.indices[indicesPosition++] = indices[i] + prevNumberOfVertices;
 		}
 		
-		position.putWeak();
-		cameraBounds.putWeak();
+		if (colored)
+		{
+			var color:FlxColor = (transform != null) ? 
+								FlxColor.WHITE : 
+								FlxColor.fromRGBFloat(transform.redMultiplier, transform.greenMultiplier, transform.blueMultiplier, transform.alphaMultiplier);
+			
+			for (i in 0...numberOfVertices)
+			{
+				this.colors[colorsPosition++] = color;
+			}
+		}
 	}
 	
 	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform):Void

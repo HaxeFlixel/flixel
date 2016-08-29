@@ -9,7 +9,7 @@ import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxShader;
 import flixel.system.render.common.FlxCameraView;
 import flixel.system.render.common.FlxDrawBaseItem;
-import flixel.system.render.tile.FlxTilesheetView;
+import flixel.system.render.hardware.FlxHardwareView;
 import openfl.display.BlendMode;
 import openfl.display.Tilesheet;
 import openfl.geom.ColorTransform;
@@ -82,7 +82,7 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		drawData[position++] = f;
 	}
 	
-	override public function render(view:FlxTilesheetView):Void
+	override public function render(view:FlxHardwareView):Void
 	{
 		if (!FlxG.renderTile || position <= 0)
 			return;
