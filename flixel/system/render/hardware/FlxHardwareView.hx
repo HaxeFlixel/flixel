@@ -9,8 +9,6 @@ import flixel.system.FlxAssets.FlxShader;
 import flixel.system.render.common.DrawItem.DrawData;
 import flixel.system.render.common.FlxCameraView;
 import flixel.system.render.common.FlxDrawStack;
-import flixel.system.render.hardware.gl.FlxDrawHardwareItem;
-import flixel.system.render.hardware.gl.HardwareRenderer;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import openfl.display.BitmapData;
@@ -22,13 +20,17 @@ import openfl.geom.ColorTransform;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
 
+#if ((openfl >= "4.0.0") && !flash)
+import flixel.system.render.hardware.gl.FlxDrawHardwareItem;
+import flixel.system.render.hardware.gl.HardwareRenderer;
+#end
+
 /**
  * ...
  * @author Zaphod
  */
 class FlxHardwareView extends FlxCameraView
 {
-
 	/**
 	 * Used to render buffer to screen space. NOTE: We don't recommend modifying this directly unless you are fairly experienced. 
 	 * Uses include 3D projection, advanced display list modification, and more.
@@ -297,11 +299,12 @@ class FlxHardwareView extends FlxCameraView
 		return flashSprite;
 	}
 	
+	#if ((openfl >= "4.0.0") && !flash)
 	public function drawItem(item:FlxDrawHardwareItem<Dynamic>):Void
 	{
-		#if ((openfl >= "4.0.0") && !flash)
 		canvas.drawItem(item);
-		#end
+		
 	}
+	#end
 	
 }

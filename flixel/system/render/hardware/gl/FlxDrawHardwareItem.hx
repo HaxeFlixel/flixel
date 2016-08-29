@@ -7,7 +7,6 @@ import flixel.system.render.common.FlxDrawBaseItem;
 import lime.graphics.opengl.GLBuffer;
 import lime.utils.Float32Array;
 import lime.utils.UInt32Array;
-#end
 
 /**
  * ...
@@ -15,13 +14,11 @@ import lime.utils.UInt32Array;
  */
 class FlxDrawHardwareItem<T> extends FlxDrawBaseItem<T>
 {
-	#if (openfl >= "4.0.0")
 	public var buffer:Float32Array;
 	public var indexes:UInt32Array;
 	
 	public var glBuffer:GLBuffer;
 	public var glIndexes:GLBuffer;
-	#end
 	
 	public var indexBufferDirty:Bool;
 	public var vertexBufferDirty:Bool;
@@ -38,14 +35,12 @@ class FlxDrawHardwareItem<T> extends FlxDrawBaseItem<T>
 	{
 		super.dispose();
 		
-		#if (openfl >= "4.0.0")
 		buffer = null;
 		indexes = null;
 		
 		// TODO: delete buffers via gl.deleteBuffer();
 		glBuffer = null;
 		glIndexes = null;
-		#end
 	}
 	
 	override public function render(view:FlxHardwareView):Void 
@@ -64,7 +59,6 @@ class FlxDrawHardwareItem<T> extends FlxDrawBaseItem<T>
 	// Set values
 	private inline function addTexturedVertexData(x:Float, y:Float, u:Float, v:Float, r:Float = 1.0, g:Float = 1.0, b:Float = 1.0, a:Float = 1.0):Void
 	{
-		#if (openfl >= "4.0.0")
 		buffer[vertexPos++] = x;
 		buffer[vertexPos++] = y;
 		buffer[vertexPos++] = u;
@@ -73,19 +67,16 @@ class FlxDrawHardwareItem<T> extends FlxDrawBaseItem<T>
 		buffer[vertexPos++] = g;
 		buffer[vertexPos++] = b;
 		buffer[vertexPos++] = a;
-		#end
 	}
 	
 	private inline function addNonTexturedVertexData(x:Float, y:Float, r:Float = 1.0, g:Float = 1.0, b:Float = 1.0, a:Float = 1.0):Void
 	{
-		#if (openfl >= "4.0.0")
 		buffer[vertexPos++] = x;
 		buffer[vertexPos++] = y;
 		buffer[vertexPos++] = r;
 		buffer[vertexPos++] = g;
 		buffer[vertexPos++] = b;
 		buffer[vertexPos++] = a;
-		#end
 	}
 	
 	override private function get_numVertices():Int
@@ -109,3 +100,4 @@ class FlxDrawHardwareItem<T> extends FlxDrawBaseItem<T>
 	}
 	
 }
+#end

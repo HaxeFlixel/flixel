@@ -22,6 +22,7 @@ import openfl.geom.ColorTransform;
  * ...
  * @author Zaphod
  */
+// TODO: clean up this class...
 class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 {
 	private static var point:FlxPoint = FlxPoint.get();
@@ -105,7 +106,6 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 			&& this.antialiasing == smooth);
 	}
 	
-	// TODO: fix this method for new api, since i've removed colors argument...
 	public function addTriangles(vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, ?matrix:FlxMatrix, ?transform:ColorTransform):Void
 	{
 		var drawVertices = this.vertices;
@@ -143,7 +143,7 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		
 		if (colored)
 		{
-			var color:FlxColor = (transform != null) ? 
+			var color:FlxColor = (transform == null) ? 
 								FlxColor.WHITE : 
 								FlxColor.fromRGBFloat(transform.redMultiplier, transform.greenMultiplier, transform.blueMultiplier, transform.alphaMultiplier);
 			
