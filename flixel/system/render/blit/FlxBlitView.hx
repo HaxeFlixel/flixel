@@ -97,11 +97,6 @@ class FlxBlitView extends FlxCameraView
 	private static var trianglesSprite:Sprite = new Sprite();
 	
 	/**
-	 * Internal variable, used for visibility checks to minimize drawTriangles() calls.
-	 */
-	private static var drawVertices:Vector<Float> = new Vector<Float>();
-	
-	/**
 	 * Whether checkResize checks if the camera dimensions have changed to update the buffer dimensions.
 	 */
 	private var regen:Bool = false;
@@ -163,28 +158,11 @@ class FlxBlitView extends FlxCameraView
 		uvtData:DrawData<Float>, ?matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, 
 		repeat:Bool = false, smoothing:Bool = false):Void 
 	{
-		drawVertices.splice(0, drawVertices.length);
-		
-		var verticesLength:Int = vertices.length;
-		var px:Float, py:Float;
-		var i:Int = 0;
-		
-		while (i < verticesLength)
-		{
-			px = vertices[i]; 
-			py = vertices[i + 1];
-			
-			drawVertices[i] = px * matrix.a + py * matrix.c + matrix.tx;
-			drawVertices[i + 1] = px * matrix.b + py * matrix.d + matrix.ty;
-			
-			i += 2;
-		}
-		
 		trianglesSprite.graphics.clear();
 		trianglesSprite.graphics.beginBitmapFill(graphic.bitmap, null, repeat, smoothing);
-		trianglesSprite.graphics.drawTriangles(drawVertices, indices, uvtData);
+		trianglesSprite.graphics.drawTriangles(vertices, indices, uvtData);
 		trianglesSprite.graphics.endFill();
-		buffer.draw(trianglesSprite);
+		buffer.draw(trianglesSprite, matrix, transform, blend);
 		
 		#if FLX_DEBUG
 		if (FlxG.debugger.drawDebug)
@@ -192,8 +170,8 @@ class FlxBlitView extends FlxCameraView
 			var gfx:Graphics = FlxSpriteUtil.flashGfx;
 			gfx.clear();
 			gfx.lineStyle(1, FlxColor.BLUE, 0.5);
-			gfx.drawTriangles(drawVertices, indices);
-			buffer.draw(FlxSpriteUtil.flashGfxSprite);
+			gfx.drawTriangles(vertices, indices);
+			buffer.draw(FlxSpriteUtil.flashGfxSprite, matrix);
 		}
 		#end
 	}
