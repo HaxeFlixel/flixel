@@ -3,9 +3,13 @@ package flixel.system.render.hardware.gl;
 import flixel.graphics.FlxGraphic;
 import flixel.system.render.common.FlxDrawBaseItem;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
+
+#if (openfl >= "4.0.0")
 import lime.graphics.GLRenderContext;
 import lime.utils.Float32Array;
 import lime.utils.UInt32Array;
+#end
+
 import openfl.display.BitmapData;
 import openfl.display.BlendMode;
 import openfl.display.DisplayObject;

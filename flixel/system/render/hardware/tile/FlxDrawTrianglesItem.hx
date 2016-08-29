@@ -110,11 +110,8 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 	{
 		var drawVertices = this.vertices;
 		var verticesLength:Int = vertices.length;
-		var prevVerticesLength:Int = drawVertices.length;
 		var numberOfVertices:Int = Std.int(verticesLength / 2);
-		var prevIndicesLength:Int = this.indices.length;
 		var prevUVTDataLength:Int = this.uvtData.length;
-		var prevColorsLength:Int = this.colors.length;
 		var prevNumberOfVertices:Int = this.numVertices;
 		
 		var px:Float, py:Float;
