@@ -389,7 +389,7 @@ class FlxRect implements IFlxPooled
 		return FlxRect.get(x0, y0, x1 - x0, y1 - y0);
 	}
 	
-	public static inline function inflate(x:Float, y:Float):FlxRect
+	public inline function inflate(x:Float, y:Float):FlxRect
 	{
 		if (x < this.x) 
 		{

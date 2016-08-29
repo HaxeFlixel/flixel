@@ -117,14 +117,47 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 	// TODO: fix this method for new api, since i've removed colors argument...
 	public function addTriangles(vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, ?colors:DrawData<Int>, ?position:FlxPoint, ?cameraBounds:FlxRect):Void
 	{
-		if (position == null)
-			position = point.set();
+		/*
+		drawVertices.splice(0, drawVertices.length);
+		
+		var verticesLength:Int = vertices.length;
+		var px:Float, py:Float;
+		var i:Int = 0;
+		
+		while (i < verticesLength)
+		{
+			px = vertices[i]; 
+			py = vertices[i + 1];
+			
+			drawVertices[i] = px * matrix.a + py * matrix.c + matrix.tx;
+			drawVertices[i + 1] = px * matrix.b + py * matrix.d + matrix.ty;
+			
+			i += 2;
+		}
+		
+		trianglesSprite.graphics.clear();
+		trianglesSprite.graphics.beginBitmapFill(graphic.bitmap, null, repeat, smoothing);
+		trianglesSprite.graphics.drawTriangles(drawVertices, indices, uvtData);
+		trianglesSprite.graphics.endFill();
+		buffer.draw(trianglesSprite);
+		
+		#if FLX_DEBUG
+		if (FlxG.debugger.drawDebug)
+		{
+			var gfx:Graphics = FlxSpriteUtil.flashGfx;
+			gfx.clear();
+			gfx.lineStyle(1, FlxColor.BLUE, 0.5);
+			gfx.drawTriangles(drawVertices, indices);
+			buffer.draw(FlxSpriteUtil.flashGfxSprite);
+		}
+		#end
+		*/
 		
 		if (cameraBounds == null)
 			cameraBounds = rect.set(0, 0, FlxG.width, FlxG.height);
 		
 		// TODO: clean this method, since visibility checks should me made before calling this method...
-			
+		
 		var verticesLength:Int = vertices.length;
 		var prevVerticesLength:Int = this.vertices.length;
 		var numberOfVertices:Int = Std.int(verticesLength / 2);
