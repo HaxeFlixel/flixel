@@ -1,8 +1,8 @@
 package flixel.input.android;
 
+#if android
 import flixel.system.macros.FlxMacroUtil;
 
-#if android
 /**
  * Maps enum values and strings to integer keycodes.
  */

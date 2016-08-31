@@ -1,10 +1,9 @@
 package flixel.system.frontEnds;
 
-import flixel.math.FlxPoint;
-using flixel.util.FlxStringUtil;
-
 #if js
 import js.Browser;
+import flixel.math.FlxPoint;
+using flixel.util.FlxStringUtil;
 
 class HTML5FrontEnd
 {

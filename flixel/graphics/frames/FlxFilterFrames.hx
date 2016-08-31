@@ -6,7 +6,6 @@ import flash.geom.Rectangle;
 import flixel.FlxSprite;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFramesCollection.FlxFrameCollectionType;
-import flixel.math.FlxRect;
 import flixel.util.FlxColor;
 import openfl.filters.BitmapFilter;
 	
@@ -100,7 +99,6 @@ class FlxFilterFrames extends FlxFramesCollection
 	{
 		var canvas:BitmapData;
 		var graph:FlxGraphic;
-		var region:FlxRect;
 		var filterFrame:FlxFrame;
 		
 		for (frame in sourceFrames.frames)
