@@ -5,7 +5,6 @@ import flash.display.GraphicsPathCommand;
 import flash.geom.Rectangle;
 import flash.Vector;
 import flixel.FlxG;
-import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.util.FlxSpriteUtil;
 
@@ -142,21 +141,7 @@ class Grid
 	{
 		var gfx:Graphics = FlxSpriteUtil.flashGfx;
 		gfx.clear();
-		
-		//Cache line to bitmap
-		var _thickness:UInt;
-		var _color:UInt = 0x01034f;
-		var _index:UInt;
-		var _upperLeftX:Float;
-		var _upperLeftY:Float;
-		var _upperRightX:Float;
-		var _upperRightY:Float;
-		var _lowerLeftX:Float;
-		var _lowerLeftY:Float;
-		var _lowerRightX:Float;
-		var _lowerRightY:Float;
-		
-		gfx.lineStyle(1, _color);
+		gfx.lineStyle(1, 0x01034f);
 		if (renderGrid) gfx.drawPath(lineCommands, lineData);
 	}
 	

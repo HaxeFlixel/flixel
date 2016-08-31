@@ -13,7 +13,6 @@ import flixel.group.FlxGroup;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.math.FlxPoint;
-import flixel.math.FlxRandom;
 import flixel.util.FlxSpriteUtil;
 
 /**

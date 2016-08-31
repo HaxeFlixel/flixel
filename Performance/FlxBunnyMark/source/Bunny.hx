@@ -2,7 +2,6 @@ package;
 
 import flixel.FlxSprite;
 import flixel.FlxG;
-import flixel.math.FlxRandom;
 import flixel.system.FlxAssets.FlxShader;
 
 /**

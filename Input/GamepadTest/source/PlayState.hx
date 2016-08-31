@@ -168,7 +168,6 @@ class PlayState extends FlxState
 	{
 		var gamepads = [for (i in 0...10) FlxG.gamepads.getByID(i)];
 		var maxIndex = gamepads.length;
-		var i = gamepads.length;
 		while (maxIndex-- > 0)
 		{
 			if (gamepads[maxIndex] != null)

@@ -1,7 +1,6 @@
 package;
 
 import flixel.FlxG;
-import flixel.math.FlxRandom;
 import flixel.system.FlxAssets;
 
 /**

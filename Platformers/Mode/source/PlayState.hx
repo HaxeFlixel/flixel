@@ -494,8 +494,6 @@ class PlayState extends FlxState
 		var numRowsToPush:Int = Math.floor(Height / TILE_SIZE);
 		var xStartIndex:Int = Math.floor(X / TILE_SIZE);
 		var yStartIndex:Int = Math.floor(Y / TILE_SIZE);
-		var startColToPush:Int = Math.floor(X / TILE_SIZE);
-		var startRowToPush:Int = Math.floor(Y / TILE_SIZE);
 		var randomTile:Int;
 		var currentTileIndex:Int;
 		

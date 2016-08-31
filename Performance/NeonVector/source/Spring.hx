@@ -1,7 +1,5 @@
 package;
 
-import flixel.math.FlxMath;
-
 /**
  * @author Masadow
  */

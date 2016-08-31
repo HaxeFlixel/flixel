@@ -4,7 +4,6 @@ import flash.Lib;
 import flixel.FlxG;
 import flixel.math.FlxAngle;
 import flixel.util.FlxColor;
-import flixel.math.FlxRandom;
 
 /**
  * ...

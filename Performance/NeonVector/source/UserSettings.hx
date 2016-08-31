@@ -1,7 +1,6 @@
 package;
 
 import flixel.util.FlxSave;
-import flixel.FlxG;
 
 /**
  * ...
