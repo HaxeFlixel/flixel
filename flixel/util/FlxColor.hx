@@ -388,8 +388,6 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 */
 	public function getColorInfo():String
 	{
-		var result:String = "";
-		
 		// Hex format
 		var result:String = toHexString() + "\n";
 		// RGB format

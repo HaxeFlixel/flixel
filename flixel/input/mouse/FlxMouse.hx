@@ -7,11 +7,8 @@ import flash.display.Sprite;
 import flash.display.Stage;
 import flash.events.Event;
 import flash.events.MouseEvent;
-import flash.geom.Matrix;
-import flash.geom.Point;
 import flash.Lib;
 import flash.ui.Mouse;
-import flash.Vector;
 import flixel.FlxG;
 import flixel.input.IFlxInputManager;
 import flixel.input.mouse.FlxMouseButton.FlxMouseButtonID;
@@ -19,6 +16,9 @@ import flixel.system.FlxAssets;
 import flixel.system.replay.MouseRecord;
 import flixel.util.FlxDestroyUtil;
 #if FLX_NATIVE_CURSOR
+import flash.Vector;
+import flash.geom.Matrix;
+import flash.geom.Point;
 import flash.ui.MouseCursor;
 import flash.ui.MouseCursorData;
 #end

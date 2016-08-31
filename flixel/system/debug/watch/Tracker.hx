@@ -16,7 +16,6 @@ import flixel.group.FlxSpriteGroup;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.gamepad.FlxGamepad;
 import flixel.input.mouse.FlxMouse;
-import flixel.input.touch.FlxTouch;
 import flixel.input.FlxSwipe;
 import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
@@ -28,7 +27,9 @@ import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.util.FlxTimer;
 import flixel.animation.FlxAnimationController;
-using flixel.util.FlxArrayUtil;
+#if FLX_TOUCH
+import flixel.input.touch.FlxTouch;
+#end
 #end
 
 import flixel.util.FlxStringUtil;

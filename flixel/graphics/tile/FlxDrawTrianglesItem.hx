@@ -10,7 +10,10 @@ import flixel.util.FlxColor;
 import openfl.display.Graphics;
 import openfl.display.TriangleCulling;
 import openfl.geom.ColorTransform;
+
+#if flash
 import openfl.Vector;
+#end
 
 typedef DrawData<T> = #if flash Vector<T> #else Array<T> #end;
 

@@ -16,7 +16,6 @@ import flixel.system.frontEnds.BitmapLogFrontEnd;
 import flixel.system.frontEnds.CameraFrontEnd;
 import flixel.system.frontEnds.ConsoleFrontEnd;
 import flixel.system.frontEnds.DebuggerFrontEnd;
-import flixel.system.frontEnds.HTML5FrontEnd;
 import flixel.system.frontEnds.InputFrontEnd;
 import flixel.system.frontEnds.LogFrontEnd;
 import flixel.system.frontEnds.PluginFrontEnd;
@@ -27,9 +26,7 @@ import flixel.system.frontEnds.WatchFrontEnd;
 import flixel.system.scaleModes.BaseScaleMode;
 import flixel.system.scaleModes.RatioScaleMode;
 import flixel.util.FlxCollision;
-import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSave;
-using flixel.util.FlxArrayUtil;
 
 #if FLX_TOUCH
 import flixel.input.touch.FlxTouchManager;
@@ -54,6 +51,11 @@ import flixel.input.FlxSwipe;
 #end
 #if FLX_POST_PROCESS
 import openfl.display.OpenGLView;
+import flixel.util.FlxDestroyUtil;
+using flixel.util.FlxArrayUtil;
+#end
+#if html5
+import flixel.system.frontEnds.HTML5FrontEnd;
 #end
 
 /**

@@ -1,7 +1,6 @@
 package flixel.system.frontEnds;
 
 import flixel.math.FlxPoint;
-using flixel.util.FlxArrayUtil;
 using flixel.util.FlxStringUtil;
 
 #if js

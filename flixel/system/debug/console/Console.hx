@@ -3,7 +3,6 @@ package flixel.system.debug.console;
 #if FLX_DEBUG
 import openfl.events.FocusEvent;
 import openfl.events.KeyboardEvent;
-import openfl.events.MouseEvent;
 import openfl.text.TextField;
 import openfl.text.TextFieldType;
 import openfl.text.TextFormat;
@@ -15,6 +14,10 @@ import flixel.system.debug.completion.CompletionList;
 import flixel.system.debug.completion.CompletionHandler;
 import flixel.util.FlxStringUtil;
 using StringTools;
+
+#if (!next && sys)
+import openfl.events.MouseEvent;
+#end
 
 /**
  * A powerful console for the flixel debugger screen with supports custom commands, registering 

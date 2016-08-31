@@ -10,11 +10,14 @@ import flixel.input.FlxInput;
 import flixel.input.FlxPointer;
 import flixel.input.IFlxInput;
 import flixel.input.mouse.FlxMouseButton;
-import flixel.input.touch.FlxTouch;
 import flixel.math.FlxPoint;
 import flixel.system.FlxSound;
 import flixel.text.FlxText;
 import flixel.util.FlxDestroyUtil;
+
+#if FLX_TOUCH
+import flixel.input.touch.FlxTouch;
+#end
 
 /**
  * A simple button class that calls a function when clicked by the mouse.
