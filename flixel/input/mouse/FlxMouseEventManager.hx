@@ -128,8 +128,7 @@ class FlxMouseEventManager extends FlxBasic
 	public static function reorder():Void
 	{
 		var orderedObjects = new Array<ObjectMouseData<FlxObject>>();
-		var group:Array<FlxBasic> = FlxG.state.members;
-		
+
 		traverseFlxGroup(FlxG.state, orderedObjects);
 		
 		orderedObjects.reverse();
