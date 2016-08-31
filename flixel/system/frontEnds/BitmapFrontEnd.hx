@@ -8,7 +8,10 @@ import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.util.FlxColor;
 import openfl.Assets;
+
+#if !flash
 import openfl.gl.GL;
+#end
 
 /**
  * Internal storage system to prevent graphics from being used repeatedly in memory.

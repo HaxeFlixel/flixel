@@ -420,7 +420,6 @@ class FlxAtlasFrames extends FlxFramesCollection
 			border = FlxPoint.weak();
 		
 		var atlasFrames:Array<FlxAtlasFrames> = cast graphic.getFramesCollections(FlxFrameCollectionType.ATLAS);
-		var atlas:FlxAtlasFrames;
 		
 		for (atlas in atlasFrames)
 		{

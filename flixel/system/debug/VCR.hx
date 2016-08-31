@@ -6,7 +6,9 @@ import flash.text.TextField;
 import flixel.FlxG;
 import flixel.system.ui.FlxSystemButton;
 import flixel.system.debug.FlxDebugger.GraphicArrowRight;
+#if FLX_RECORD
 import flixel.util.FlxStringUtil;
+#end
 
 @:bitmap("assets/images/debugger/buttons/open.png")
 private class GraphicOpen extends BitmapData {}

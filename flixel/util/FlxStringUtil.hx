@@ -1,12 +1,15 @@
 package flixel.util;
 
 import flash.display.BitmapData;
-import flash.geom.Matrix;
 import flixel.FlxG;
 import flixel.math.FlxMath;
 import flixel.system.FlxAssets;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 using StringTools;
+
+#if flash
+import flash.geom.Matrix;
+#end
 
 /**
  * A class primarily containing functions related 

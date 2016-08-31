@@ -82,7 +82,6 @@ class VarTween extends FlxTween
 	
 	private function initializeVars():Void
 	{
-		var p:String;
 		var fields:Array<String>;
 		
 		if (Reflect.isObject(_properties))

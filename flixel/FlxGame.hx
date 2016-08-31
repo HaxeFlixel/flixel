@@ -5,17 +5,18 @@ import flash.display.Sprite;
 import flash.display.StageAlign;
 import flash.display.StageScaleMode;
 import flash.events.Event;
-import flash.events.FocusEvent;
-import flixel.effects.postprocess.PostProcess;
 import flixel.graphics.tile.FlxTilesheet;
-import flixel.math.FlxRandom;
 import flixel.system.FlxSplash;
-import flixel.system.replay.FlxReplay;
 import flixel.util.FlxArrayUtil;
 import openfl.Assets;
 import openfl.filters.BitmapFilter;
 
+#if desktop
+import flash.events.FocusEvent;
+#end
+
 #if FLX_POST_PROCESS
+import flixel.effects.postprocess.PostProcess;
 import openfl.display.OpenGLView;
 #end
 
@@ -29,6 +30,11 @@ import flixel.system.ui.FlxSoundTray;
 
 #if FLX_FOCUS_LOST_SCREEN
 import flixel.system.ui.FlxFocusLostScreen;
+#end
+
+#if FLX_RECORD
+import flixel.math.FlxRandom;
+import flixel.system.replay.FlxReplay;
 #end
 
 /**

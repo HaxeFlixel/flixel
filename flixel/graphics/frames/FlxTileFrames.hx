@@ -463,8 +463,7 @@ class FlxTileFrames extends FlxFramesCollection
 	public static function findFrame(graphic:FlxGraphic, tileSize:FlxPoint, ?region:FlxRect, ?atlasFrame:FlxFrame, ?tileSpacing:FlxPoint, ?border:FlxPoint):FlxTileFrames
 	{
 		var tileFrames:Array<FlxTileFrames> = cast graphic.getFramesCollections(FlxFrameCollectionType.TILES);
-		var sheet:FlxTileFrames;
-		
+
 		for (sheet in tileFrames)
 		{
 			if (sheet.equals(tileSize, region, null, tileSpacing, border))

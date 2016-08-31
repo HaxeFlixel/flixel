@@ -369,7 +369,6 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		var rowIndex:Int = screenYInTiles * widthInTiles + screenXInTiles;
 		var columnIndex:Int;
 		var tile:FlxTile;
-		var debugTile:BitmapData;
 		
 		for (row in 0...screenRows)
 		{

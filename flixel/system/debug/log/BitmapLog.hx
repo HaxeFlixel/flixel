@@ -201,8 +201,6 @@ class BitmapLog extends Window
 			_footerText.x = 0;
 		}
 
-		var start:Float = (_buttonLeft.x + _buttonLeft.width);
-		var range:Float = _buttonRight.x - start;
 		_buttonText.x = 33 - _counterText.textWidth / 2;
 	}
 

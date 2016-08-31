@@ -472,7 +472,6 @@ class FlxGraphic implements IFlxDestroyable
 		_imageFrame = null;	// no need to dispose _imageFrame since it exists in imageFrames
 		
 		var collections:Array<FlxFramesCollection>;
-		var collectionType:FlxFrameCollectionType;
 		for (collectionType in frameCollectionTypes)
 		{
 			collections = cast frameCollections.get(collectionType);

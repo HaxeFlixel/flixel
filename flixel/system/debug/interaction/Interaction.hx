@@ -1,6 +1,5 @@
 package flixel.system.debug.interaction;
 
-import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.Graphics;
 import flash.display.Sprite;
@@ -19,6 +18,10 @@ import flixel.system.debug.interaction.tools.Tool;
 import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
+
+#if !(FLX_NATIVE_CURSOR && FLX_MOUSE)
+import flash.display.Bitmap;
+#end
 
 /**
  * Adds a new funcionality to Flixel debugger that allows any object

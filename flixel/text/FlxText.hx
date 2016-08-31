@@ -16,16 +16,16 @@ import flixel.graphics.frames.FlxFramesCollection;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.system.FlxAssets;
-import flixel.text.FlxText.FlxTextBorderStyle;
-import flixel.text.FlxText.FlxTextFormat;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.helpers.FlxRange;
 import openfl.Assets;
 import haxe.Utf8;
-import openfl.geom.Rectangle;
 using flixel.util.FlxStringUtil;
-using StringTools;
+
+#if flash
+import openfl.geom.Rectangle;
+#end
 
 // TODO: think about filters and text
 
@@ -304,7 +304,6 @@ class FlxText extends FlxSprite
 			// inspect each character
 			for (charIndex in 0...Utf8.length(input))
 			{
-				var charCode = Utf8.charCodeAt(input, charIndex);
 				if (Utf8.compare(Utf8.sub(input, charIndex, markerLength), rule.marker) != 0)
 					continue; // it's not one of the markers
 

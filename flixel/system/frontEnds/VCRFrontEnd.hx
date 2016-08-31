@@ -1,17 +1,19 @@
 package flixel.system.frontEnds;
 
+import flash.ui.Mouse;
+import flixel.FlxG;
+
+#if FLX_RECORD
 import flash.events.Event;
 import flash.events.IOErrorEvent;
-import flash.ui.Mouse;
 import flash.utils.ByteArray;
-import flixel.FlxG;
 import flixel.FlxState;
 import flixel.input.keyboard.FlxKey;
 import flixel.math.FlxRandom;
-
 #if flash
 import flash.net.FileReference;
 import flash.net.FileFilter;
+#end
 #end
 
 class VCRFrontEnd
