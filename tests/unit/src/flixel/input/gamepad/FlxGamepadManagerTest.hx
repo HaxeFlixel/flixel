@@ -1,9 +1,8 @@
 package flixel.input.gamepad;
 
-import massive.munit.Assert;
-
 #if FLX_JOYSTICK_API
 import openfl.events.JoystickEvent;
+import massive.munit.Assert;
 #end
 
 class FlxGamepadManagerTest extends FlxTest
