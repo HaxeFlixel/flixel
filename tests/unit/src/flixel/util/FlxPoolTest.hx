@@ -56,7 +56,7 @@ class FlxPoolTest extends FlxTest
 		var pt1 = ppool.get();
 		var pt2 = ppool.get();
 		var pt3 = ppool.get();
-		var pt4 = ppool.get();
+		ppool.get();
 		var pt5 = ppool.get();
 		// accessible | inaccessible
 		ppool.put(pt3); // 3|4321
