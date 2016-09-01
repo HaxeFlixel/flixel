@@ -59,11 +59,6 @@ class FlxAnimation extends FlxBaseAnimation
 	public var flipY:Bool = false;
 	
 	/**
-	 * Whether or not to automatically play reversed, every second loop.  If true, it's assumed that looped is also true.
-	 */
-	public var pingPong:Bool = false;
-	
-	/**
 	 * A list of frames stored as int objects
 	 */
 	@:allow(flixel.animation)
@@ -209,12 +204,6 @@ class FlxAnimation extends FlxBaseAnimation
 		while (_frameTimer > delay && !finished)
 		{
 			_frameTimer -= delay;
-			if (pingPong) // looped == true assumed
-			{
-				if ((reversed && curFrame == 0) 
-				|| (!reversed && curFrame == numFrames - 1))
-					reversed = !reversed; // if we reached the end in this direction, switch directions (so now we're at the start)
-			}
 			if (reversed)
 			{
 				if (looped && curFrame == 0)
