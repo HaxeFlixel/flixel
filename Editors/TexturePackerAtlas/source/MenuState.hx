@@ -116,6 +116,15 @@ class MenuState extends FlxState
 		x10.frames = tex8;
 		x10.animation.frameName = "wabbit_alpha";
 		add(x10);
+
+		var tex9 = FlxAtlasFrames.fromLibGdx("assets/libgdx/libgdx-packed.png", "assets/libgdx/libgdx-packed.atlas");
+		
+		var x11 = new FlxSprite(0, 300);
+		x11.frames = tex9;
+		x11.animation.addByPrefix("spin", "", 3);
+		x11.animation.play("spin");
+		add(x11);
+
 		
 		// Remove atlas bitmaps from memory (useful for targets with hardware acceleration: cpp only atm).
 		FlxG.bitmap.dumpCache();

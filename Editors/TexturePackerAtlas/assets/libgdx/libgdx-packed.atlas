@@ -1,0 +1,41 @@
+
+libgdx-packed.png
+size: 512,128
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+0000
+  rotate: false
+  xy: 2, 7
+  size: 87, 101
+  orig: 120, 175
+  offset: 11, 13
+  index: -1
+0001
+  rotate: true
+  xy: 214, 38
+  size: 70, 114
+  orig: 120, 175
+  offset: 29, 13
+  index: -1
+0002
+  rotate: true
+  xy: 91, 44
+  size: 64, 121
+  orig: 120, 175
+  offset: 36, 13
+  index: -1
+0003
+  rotate: true
+  xy: 330, 44
+  size: 64, 113
+  orig: 120, 175
+  offset: 36, 13
+  index: -1
+0004
+  rotate: false
+  xy: 445, 2
+  size: 64, 106
+  orig: 120, 175
+  offset: 36, 13
+  index: -1
