@@ -121,18 +121,18 @@ class FlxAnimation extends FlxBaseAnimation
 		paused = false;
 		_frameTimer = 0;
 		
-		var numFramesMinusOne:Int = numFrames - 1;
+		var lastFrameIndex:Int = numFrames - 1;
 		
 		if (Frame >= 0)
 		{
 			// bound frame value
-			Frame = (Frame > numFramesMinusOne) ? numFramesMinusOne : Frame;
+			Frame = (Frame > lastFrameIndex) ? lastFrameIndex : Frame;
 			// "reverse" frame value
-			Frame = reversed ? (numFramesMinusOne - Frame) : Frame;
+			Frame = reversed ? (lastFrameIndex - Frame) : Frame;
 		}
 		
 		if ((delay <= 0) 									// non-positive fps
-			|| (Frame > numFramesMinusOne && !reversed) 	// normal animation
+			|| (Frame > lastFrameIndex && !reversed) 	// normal animation
 			|| (Frame < 0 && reversed))						// reversed animation
 		{
 			finished = true;
@@ -144,7 +144,7 @@ class FlxAnimation extends FlxBaseAnimation
 		
 		if (Frame < 0)
 		{
-			curFrame = FlxG.random.int(0, numFramesMinusOne);
+			curFrame = FlxG.random.int(0, lastFrameIndex);
 		}
 		else
 		{
@@ -204,24 +204,19 @@ class FlxAnimation extends FlxBaseAnimation
 		while (_frameTimer > delay && !finished)
 		{
 			_frameTimer -= delay;
-			
-			if (looped)
+			if (reversed)
 			{
-				var numFramesMinusOne:Int = numFrames - 1;
-				var tempFrame:Int = reversed ? (numFramesMinusOne - curFrame) : curFrame;
-				
-				if (tempFrame == numFramesMinusOne)
-				{
-					curFrame = reversed ? numFramesMinusOne : 0;
-				}
+				if (looped && curFrame == 0)
+					curFrame = numFrames - 1;
 				else
-				{
-					curFrame = reversed ? (curFrame - 1) : (curFrame + 1);
-				}
+					curFrame--;
 			}
 			else
 			{
-				curFrame = reversed ? (curFrame - 1) : (curFrame + 1);
+				if (looped && curFrame == numFrames - 1)
+					curFrame = 0;
+				else
+					curFrame++;
 			}
 		}
 	}
@@ -244,16 +239,16 @@ class FlxAnimation extends FlxBaseAnimation
 	
 	private function set_curFrame(Frame:Int):Int
 	{
-		var numFramesMinusOne:Int = numFrames - 1;
+		var lastFrameIndex:Int = numFrames - 1;
 		// "reverse" frame value (if there is such need)
-		var tempFrame:Int = reversed ? (numFramesMinusOne - Frame) : Frame;
+		var tempFrame:Int = reversed ? (lastFrameIndex - Frame) : Frame;
 		
 		if (tempFrame >= 0)
 		{
-			if (!looped && tempFrame > numFramesMinusOne)
+			if (!looped && tempFrame > lastFrameIndex)
 			{
 				finished = true;
-				curFrame = reversed ? 0 : numFramesMinusOne;
+				curFrame = reversed ? 0 : lastFrameIndex;
 			}
 			else
 			{
@@ -262,7 +257,7 @@ class FlxAnimation extends FlxBaseAnimation
 		}
 		else
 		{
-			curFrame = FlxG.random.int(0, numFramesMinusOne);
+			curFrame = FlxG.random.int(0, lastFrameIndex);
 		}
 		
 		curIndex = _frames[curFrame];
