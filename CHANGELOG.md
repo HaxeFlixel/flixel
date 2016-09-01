@@ -9,12 +9,16 @@
 * `FlxTweenManager`:
 	* added `forEach()` (#1782)
 	* added `completeAll()` (#1782)
-* `FlxTimerManager`:
-	* added `forEach()` (#1782)
+* `FlxTimerManager`: added `forEach()` (#1782)
 * `FlxPath`:
 	* added `setProperties()` (#1875)
 	* added a `this` return to some methods (#1875)
 * `FlxCameras`: added `cameraAdded`, `cameraRemoved` and `cameraResized` signals
+* `FlxDebugger`: added a tools panel to interact with objects (#1862)
+* `ConsoleCommands`: added a `step()` command (#1910)
+* `FlxG.console`: added `stepAfterCommand` (#1910)
+* `FlxSound`: added `length` (#1915)
+* Added an HTML5 template to center games horizontally (#1918)
 
 #### Bugfixes:
 
@@ -22,7 +26,11 @@
 * `FlxEmitter`: fixed properties not being ignored if their `.active` is set to `false` (#1903)
 * `FlxCamera`: fixed scroll bounds not taking zoom into account (#1889)
 * `FlxTilemap`: fixed buffers not being resized on camera changes (#1801)
-* `FlxSpriteGroup`: fixed `drawDebug()` not being called (#1905)
+* `FlxSpriteGroup`:
+	* fixed `drawDebug()` not being called (#1905)
+	* fixed `revive()` not setting children's `alive` (#1891)
+* `flixel.input.gamepad.mappings`: fixed some mappings for digitized stick movements (c04ce96)
+* `FlxAtlasFrames`: fixed offset parsing for whitespace-stripped atlases in `fromLibGdx` (#1923)
 
 #### Changes and improvements:
 
