@@ -192,7 +192,8 @@ class FlxAtlasFrames extends FlxFramesCollection
 			tempString = lines[curIndex++];
 			size = getDimensions(tempString, size);
 			
-			offset = FlxPoint.get(size[0], size[1]);
+			//offset = FlxPoint.get(size[0], size[1]); // this should be how it is, but libgdx's texture packer tool currently outputs the offset from the bottom left, instead:
+			offset = FlxPoint.get(size[0], sourceSize.y - size[1] - imageHeight); // workaround for https://github.com/libgdx/libgdx/issues/4288
 			frames.addAtlasFrame(rect, sourceSize, offset, name, angle);
 		}
 		
