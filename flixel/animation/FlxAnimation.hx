@@ -291,6 +291,6 @@ class FlxAnimation extends FlxBaseAnimation
 		var originalNumFrames = numFrames;
 		var numFramesToAdd = originalNumFrames - (looped?2:1);
 		for (i in 0...numFramesToAdd)
-			_frames.push(_frames[originalNumFrames - 1 - i]);
+			_frames.push(_frames[originalNumFrames - 2 - i]);
 	}
 }
