@@ -207,7 +207,7 @@ class MenuState extends FlxState
 		if (_attractMode)
 		{
 			FlxG.vcr.loadReplay(
-				Assets.getText('data/attract${FlxG.random.int(1, 2)}.fgr'),
+				Assets.getText('assets/data/attract${FlxG.random.int(1, 2)}.fgr'),
 				new PlayState(), ["ANY"], 22, onDemoComplete);
 		}
 		else
