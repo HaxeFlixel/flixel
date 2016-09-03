@@ -289,7 +289,7 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 	 * A Helper function to check whether an array of keycodes contains 
 	 * a certain key safely (returns false if the array is null).
 	 */ 
-	private function inKeyArray(KeyArray:Array<Key>, Key:Key):Bool
+	private function inKeyArray(KeyArray:Array<Key>, Event:KeyboardEvent):Bool
 	{
 		if (KeyArray == null)
 		{
@@ -297,9 +297,10 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 		}
 		else
 		{
+			var code = resolveKeyCode(Event);
 			for (key in KeyArray)
 			{
-				if (key == Key || key == -2)
+				if (key == code || key == -2)
 				{
 					return true;
 				}
