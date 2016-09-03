@@ -5,7 +5,7 @@ import flixel.system.debug.watch.Tracker.TrackerProfile;
 import flixel.util.FlxSignal;
 import massive.munit.Assert;
 
-class DebuggerFontEndTest
+class DebuggerFrontEndTest
 {
 	@Test
 	function testAddTrackerProfile()
