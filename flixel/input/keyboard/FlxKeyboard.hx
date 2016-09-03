@@ -95,7 +95,7 @@ class FlxKeyboard extends FlxKeyManager<FlxKey, FlxKeyList>
 		
 		// Debugger toggle
 		#if FLX_DEBUG
-			if (FlxG.game.debugger != null && inKeyArray(FlxG.debugger.toggleKeys, event.keyCode))
+			if (FlxG.game.debugger != null && inKeyArray(FlxG.debugger.toggleKeys, event))
 			{
 				FlxG.debugger.visible = !FlxG.debugger.visible;
 			}
@@ -108,7 +108,7 @@ class FlxKeyboard extends FlxKeyManager<FlxKey, FlxKeyList>
 		
 		// Attempted to cancel the replay?
 		#if FLX_RECORD
-			if (FlxG.game.replaying && !inKeyArray(FlxG.debugger.toggleKeys, event.keyCode) && inKeyArray(FlxG.vcr.cancelKeys, event.keyCode))
+			if (FlxG.game.replaying && !inKeyArray(FlxG.debugger.toggleKeys, event) && inKeyArray(FlxG.vcr.cancelKeys, event))
 			{
 				FlxG.vcr.cancelReplay();
 			}
