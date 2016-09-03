@@ -22,9 +22,9 @@ class DebuggerFrontEnd
 	#if FLX_KEYBOARD
 	/**
 	 * The key codes used to toggle the debugger (see FlxG.keys for the keys available).
-	 * Default keys: ` and \. Set to null to deactivate.
+	 * Default keys: F2, ` and \. Set to null to deactivate.
 	 */
-	public var toggleKeys:Array<FlxKey> = [GRAVEACCENT, BACKSLASH];
+	public var toggleKeys:Array<FlxKey> = [F2, GRAVEACCENT, BACKSLASH];
 	#end
 	
 	/**
