@@ -98,12 +98,9 @@ class FlxCollision
 		matrixB.identity();
 		matrixB.translate(-(intersect.x - boundsB.x), -(intersect.y - boundsB.y));
 		
-		if (FlxG.renderTile)
-		{
-			Contact.drawFrame();
-			Target.drawFrame();
-		}
-		
+		Contact.drawFrame();
+		Target.drawFrame();
+
 		var testA:BitmapData = Contact.framePixels;
 		var testB:BitmapData = Target.framePixels;
 		
