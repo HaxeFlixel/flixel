@@ -5,6 +5,7 @@ import massive.munit.Assert;
 class FlxTimerTest extends FlxTest
 {
 	var timer:FlxTimer;
+	var loopsCompleted:Int;
 	
 	@Before
 	function before()
@@ -34,6 +35,21 @@ class FlxTimerTest extends FlxTest
 			Assert.fail("Callback called");
 		});
 		timer.cancel();
+		step();
+	}
+	
+	@Test
+	function testCompleteAllMultiLoop()
+	{
+		loopsCompleted = 0;
+		timer.start(1, function(_)
+		{
+			loopsCompleted++;
+		}, 2);
+		Assert.areEqual(2, timer.loopsLeft);
+		FlxTimer.manager.completeAll();
+		Assert.areEqual(0, timer.loopsLeft);
+		Assert.areEqual(2, loopsCompleted);
 		step();
 	}
 }
