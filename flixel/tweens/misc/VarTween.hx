@@ -21,9 +21,9 @@ class VarTween extends FlxTween
 		_properties = null;
 	}
 	
-	private function new(Options:TweenOptions)
+	private function new(Options:TweenOptions, ?manager:FlxTweenManager)
 	{
-		super(Options);
+		super(Options, manager);
 	}
 	
 	/**
