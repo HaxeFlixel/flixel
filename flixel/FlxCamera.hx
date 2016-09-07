@@ -24,6 +24,9 @@ import openfl.display.Graphics;
 import openfl.filters.BitmapFilter;
 import openfl.geom.Matrix;
 
+// TODO: proper camera scaling...
+// with suport for different camera following styles...
+
 /**
  * The camera class is used to display the game's visuals.
  * By default one camera is created automatically, that is the same size as window.
@@ -1105,8 +1108,6 @@ class FlxCamera extends FlxBasic
 		return visible;
 	}
 }
-
-// TODO: convert this to class with camera behavior
 
 enum FlxCameraFollowStyle
 {

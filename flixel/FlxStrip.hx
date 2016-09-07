@@ -76,15 +76,21 @@ class FlxStrip extends FlxSprite
 			
 			getScreenPosition(_point, camera);
 			
-			// TODO: add more complex visibility checks like scaling and rotations...
-			
-			// TODO: add support for complex transformations for this kind of sprite
-			
 			bounds.offset(_point.x, _point.y);
 			
 			if (camera.view.bounds.overlaps(bounds))
 			{
 				_matrix.identity();
+				
+				_matrix.translate(-origin.x, -origin.y);
+				_matrix.scale(scale.x, scale.y);
+				
+				updateTrig();
+				
+				if (angle != 0)
+					_matrix.rotateWithTrig(_cosAngle, _sinAngle);
+				
+				_matrix.translate(origin.x, origin.y);
 				_matrix.translate(_point.x, _point.y);
 				
 				camera.drawTriangles(graphic, vertices, indices, uvtData, _matrix, colorTransform, blend, repeat, antialiasing);

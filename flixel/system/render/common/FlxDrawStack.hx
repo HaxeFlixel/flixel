@@ -28,8 +28,6 @@ using flixel.util.FlxColorTransformUtil;
  * ...
  * @author Zaphod
  */
-
-// TODO: try to clean up this code a bit...
 class FlxDrawStack implements IFlxDestroyable
 {
 	/**
@@ -70,6 +68,8 @@ class FlxDrawStack implements IFlxDestroyable
 	
 	public function destroy():Void
 	{
+		// TODO: destroy all the draw items in the storage and in the queue via gl.deleteBuffer()...
+		
 		if (_headOfDrawStack != null)
 		{
 			clearDrawStack();

@@ -158,6 +158,8 @@ class FlxBlitView extends FlxCameraView
 		uvtData:DrawData<Float>, ?matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, 
 		repeat:Bool = false, smoothing:Bool = false, ?shader:FlxShader):Void 
 	{
+		// TODO: maybe optimize FlxStrip, so it will have its own sprite and buffer
+		// which will be used for rendering (which means less drawTriangles calls)...
 		trianglesSprite.graphics.clear();
 		trianglesSprite.graphics.beginBitmapFill(graphic.bitmap, null, repeat, smoothing);
 		trianglesSprite.graphics.drawTriangles(vertices, indices, uvtData);
@@ -180,6 +182,8 @@ class FlxBlitView extends FlxCameraView
 		?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false, ?shader:FlxShader):Void
 	{
 		// TODO: implement it...
+		
+		
 	}
 	
 	override public function updatePosition():Void 

@@ -45,7 +45,9 @@ class FlxDrawHardwareItem<T> extends FlxDrawBaseItem<T>
 	
 	override public function render(view:FlxHardwareView):Void 
 	{
+		#if !flash
 		view.drawItem(this);
+		#end
 	}
 	
 	override public function reset():Void 
