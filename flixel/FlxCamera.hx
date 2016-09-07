@@ -1353,11 +1353,11 @@ class FlxCamera extends FlxBasic
 		}
 		else
 		{
+			#if openfl_legacy // can't skip this on next, see #1793
 			if (FxAlpha == 0)
-			{
 				return;
-			}
-			
+			#end
+
 			var targetGraphics:Graphics = (graphics == null) ? canvas.graphics : graphics;
 			
 			targetGraphics.beginFill(Color, FxAlpha);
