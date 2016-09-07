@@ -19,7 +19,7 @@ class MenuState extends FlxState
 	private var _title2:FlxText;
 	private var _fading:Bool;
 	private var _timer:Float;
-	private var _attractMode:Bool;
+	private var _demoMode:Bool;
 	
 	/**
 	 * Function that is called up when to state is created to set it up. 
@@ -77,7 +77,7 @@ class MenuState extends FlxState
 		
 		_fading = false;
 		_timer = 0;
-		_attractMode = false;
+		_demoMode = false;
 		
 		#if !FLX_NO_MOUSE
 		FlxG.mouse.load(AssetPaths.cursor__png, 2);
@@ -159,16 +159,16 @@ class MenuState extends FlxState
 		}
 
 		// X + C were pressed, fade out and change to play state.
-		// OR, if we sat on the menu too long, launch the attract mode instead!
+		// OR, if we sat on the menu too long, launch the demo mode instead!
 		_timer += elapsed;
 		
 		if (_timer >= 10) //go into demo mode if no buttons are pressed for 10 seconds
-			_attractMode = true;
+			_demoMode = true;
 		
 		#if !FLX_NO_KEYBOARD
 		if (!_fading)
 		{
-			if  ((FlxG.keys.pressed.X && FlxG.keys.pressed.C) || _attractMode)
+			if  ((FlxG.keys.pressed.X && FlxG.keys.pressed.C) || _demoMode)
 			{
 				_fading = true;
 				FlxG.sound.play("MenuHit2");
@@ -177,8 +177,8 @@ class MenuState extends FlxState
 				FlxG.cameras.fade(0xff131c1b, 1, false, onFade);
 			}
 			
-			if (FlxG.keys.pressed.R && !_attractMode)
-				_attractMode = true;
+			if (FlxG.keys.pressed.R && !_demoMode)
+				_demoMode = true;
 		}
 		#end
 		
@@ -204,10 +204,10 @@ class MenuState extends FlxState
 	 */
 	private function onFade():Void
 	{
-		if (_attractMode)
+		if (_demoMode)
 		{
 			FlxG.vcr.loadReplay(
-				Assets.getText('assets/data/attract${FlxG.random.int(1, 2)}.fgr'),
+				Assets.getText('assets/data/demo${FlxG.random.int(1, 2)}.fgr'),
 				new PlayState(), ["ANY"], 22, onDemoComplete);
 		}
 		else
